@@ -210,10 +210,10 @@ static  grib_context default_grib_context = {
 		0,                            /* no_abort                   */
 		0,                            /* io_buffer_size             */
 		0,                            /* no_big_group_split         */
-		0,                            /* no_spd                     */
-		0,                            /* keep_matrix                */
+		0,                            /* no_spd         */
+		0,                            /* keep_matrix         */
 		0,                            /* grib_definition_files_path */
-		0,                            /* grib_samples_path          */
+		0,                            /* grib_samples_path        */
 		0,                            /* grib_concept_path          */
 		0,                            /* grib_reader                */
 		0,                            /* user data                  */

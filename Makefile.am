@@ -22,7 +22,7 @@ else
   PYTHON_OPT =
 endif
 
-SUBDIRS = src tools definitions samples ifs_samples/grib1 ifs_samples/grib1_mlgrib2 ifs_samples/grib1_mlgrib2_ieee64 tests mars_tests tigge $(FORTRAN_MOD) examples/C $(F90_CHECK) $(PERL_OPT) python examples/python
+SUBDIRS = src tools definitions samples ifs_samples/grib1 ifs_samples/grib1_mlgrib2 ifs_samples/grib1_mlgrib2_ieee64 tests tigge $(FORTRAN_MOD) examples/C $(F90_CHECK) $(PERL_OPT) python examples/python
 
 EXTRA_DIST = README AUTHORS NOTICE LICENSE ChangeLog version.sh html \
                 src/extrules.am \
@@ -93,12 +93,12 @@ EXTRA_DIST = README AUTHORS NOTICE LICENSE ChangeLog version.sh html \
 				data/spherical_pressure_level.grib1 \
 				data/missing.grib2 \
 				data/gfs.c255.grib2 \
-            data/constant_field.grib1 \
-            data/reduced_gaussian_pressure_level_constant.grib1 \
-            data/reduced_latlon_surface_constant.grib1 \
-            data/regular_gaussian_pressure_level_constant.grib1 \
-            data/regular_latlon_surface_constant.grib1 \
-            data/reduced_gaussian_sub_area.grib1 \
+                data/constant_field.grib1 \
+                data/reduced_gaussian_pressure_level_constant.grib1 \
+                data/reduced_latlon_surface_constant.grib1 \
+                data/regular_gaussian_pressure_level_constant.grib1 \
+                data/regular_latlon_surface_constant.grib1 \
+                data/reduced_gaussian_sub_area.grib1 \
 				data/constant_field.grib1 \
 				data/60_model_levels \
 				data/list_points \

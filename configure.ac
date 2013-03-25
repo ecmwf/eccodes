@@ -82,10 +82,10 @@ fi
 
 if test $GRIB_PTHREADS -eq 1
 then
-   AC_GRIB_PTHREADS
-   AC_GRIB_LINUX_PTHREADS
+AC_GRIB_PTHREADS
+AC_GRIB_LINUX_PTHREADS
 else
-   GRIB_LINUX_PTHREADS=0
+GRIB_LINUX_PTHREADS=0
 fi
 
 AC_DEFINE_UNQUOTED(GRIB_PTHREADS,$GRIB_PTHREADS,1->pthreads enabled 0->pthreads disabled)
@@ -128,10 +128,10 @@ AC_CHECK_FUNC([posix_memalign],
 
 AC_ARG_ENABLE([align-memory],
   [AS_HELP_STRING([--enable-align-memory],[enable memory alignment [by default disabled]])],
-                  AC_DEFINE_UNQUOTED(GRIB_MEM_ALIGN,1,memory alignment required),
-)
+AC_DEFINE_UNQUOTED(GRIB_MEM_ALIGN,1,memory alignment required) ,
+	 )
 
-dnl use vectorised code
+dnl use vectorised code     
 AC_ARG_ENABLE([vector],
   [AS_HELP_STRING([--enable-vector],[enable vectorised code [by default disabled]] )],
 	 [vectorise=${enableval}],[vectorise=no])
@@ -167,7 +167,6 @@ fi
 AC_SUBST(DEVEL_RULES)
 AC_SUBST(GRIB_DEVEL)
 
-AM_CONDITIONAL([WITH_MARS_TESTS], [test $GRIB_DEVEL -eq 1])
 
 dnl Large file support
 AC_FUNC_FSEEKO
@@ -268,7 +267,7 @@ then
     AC_MSG_ERROR([unable to find compiler flag for modules inclusion])
   fi
   F90_MODULE_FLAG=$ax_cv_f90_modflag
-  AC_SUBST([F90_MODULE_FLAG])
+     AC_SUBST([F90_MODULE_FLAG])
 fi
 
 dnl ifs_samples
@@ -633,7 +632,7 @@ AC_CHECK_FUNCS([bzero gettimeofday])
 
 AX_LINUX_DISTRIBUTION
 
-AC_OUTPUT( Makefile src/Makefile fortran/Makefile tools/Makefile definitions/Makefile samples/Makefile ifs_samples/grib1/Makefile ifs_samples/grib1_mlgrib2/Makefile ifs_samples/grib1_mlgrib2_ieee64/Makefile tests/Makefile mars_tests/Makefile examples/C/Makefile examples/F90/Makefile tigge/Makefile perl/GRIB-API/Makefile.PL perl/Makefile python/Makefile examples/python/Makefile rpms/grib_api.spec rpms/grib_api.pc rpms/grib_api_f90.pc)
+AC_OUTPUT( Makefile src/Makefile fortran/Makefile tools/Makefile definitions/Makefile samples/Makefile ifs_samples/grib1/Makefile ifs_samples/grib1_mlgrib2/Makefile ifs_samples/grib1_mlgrib2_ieee64/Makefile tests/Makefile examples/C/Makefile examples/F90/Makefile tigge/Makefile perl/GRIB-API/Makefile.PL perl/Makefile python/Makefile examples/python/Makefile rpms/grib_api.spec rpms/grib_api.pc rpms/grib_api_f90.pc)
 
 AC_MSG_NOTICE([
 

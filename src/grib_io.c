@@ -906,7 +906,7 @@ void *wmo_read_gts_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t 
 	r.headers_only = headers_only;
 
 	*err           = read_any_gts(&r);
-	*size	         = r.message_size;
+	*size	       = r.message_size;
 	*offset		   = r.offset;
 
 	return u.buffer;
@@ -929,7 +929,7 @@ static void *_wmo_read_any_from_file_malloc(FILE* f,int* err,size_t *size,off_t 
 	r.headers_only = headers_only;
 
 	*err           = read_any(&r,grib_ok,bufr_ok);
-	*size		      = r.message_size;
+	*size		   = r.message_size;
 	*offset		   = r.offset;
 
 	return u.buffer;
@@ -992,9 +992,9 @@ int grib_read_any_headers_only_from_file_alloc(grib_context* ctx,FILE* f,void **
 
 	err            = read_any(&r,1,GRIB_API_READS_BUFR);
 
- *buffer        = u.buffer;
- *length        = u.length;
- *offset		   = r.offset;
+	*buffer        = u.buffer;
+	*length        = u.length;
+	*offset		   = r.offset;
 
 	return err;
 }
@@ -1019,12 +1019,12 @@ int grib_read_any_from_file_alloc(grib_context* ctx,FILE* f,void **buffer,size_t
 
 	err            = read_any(&r,1,GRIB_API_READS_BUFR);
 
- *buffer        = u.buffer;
- *length        = u.length;
+	*buffer        = u.buffer;
+	*length        = u.length;
 
 	return err;
 }
- */
+*/
 
 
 int grib_read_any_headers_only_from_file(grib_context* ctx,FILE* f,void* buffer,size_t* len)
@@ -1057,7 +1057,7 @@ int grib_read_any_from_file(grib_context* ctx,FILE* f,void* buffer,size_t* len)
 	int         err;
 	user_buffer u; 
 	reader      r; 
-	off_t       offset;
+	off_t 		offset;
 
 	u.user_buffer  = buffer;
 	u.buffer_size  = *len;

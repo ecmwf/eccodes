@@ -8,7 +8,7 @@ then
    exit 1
 fi
 
-grib_filter=/var/tmp/masn/p4/grib_api/main/bin/grib_filter
+grib_filter=/var/tmp/masn/p4/grib_api/releases/2.0.0/bin/grib_filter
 rules_filter=rules.filter$$
 
 force=0
@@ -53,7 +53,7 @@ $grib_filter -o $out  $rules_filter  $in
 
 error=$?
 
-rm -f $rules_filter 
+rm -f  $rules_filter 
 
 exit $error
 
