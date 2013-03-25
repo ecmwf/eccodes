@@ -1,0 +1,38 @@
+/*!  \page grib_convert grib_convert
+\section DESCRIPTION 
+ It converts grib messages applying the rules from a conversion_rules file.
+	The rules are of the type "keyname = value;" and if blocks are allowed as
+	if ( keyname1 == value1 || keyname2 != value2 && keyname3 == value3 ) {
+	 keyname4 = value4;
+	}
+
+\section USAGE 
+ grib_convert 
+ [options] conversion_rules grib_file grib_file ... output_grib_file
+
+\section OPTIONS 
+-f  \n Force. Force the execution not to fail on error.
+ \n \n -M  \n Multi-grib support off. Turn off support for multiple fields in single grib message
+ \n \n -g  \n Copy GTS header. 
+ \n \n -G  \n GRIBEX compatibility mode.
+ \n \n -V  \n Version.
+ \n \n -7  \n Does not fail when the message has wrong length
+ \n \n -v  \n Verbose.
+ \n \n 
+\section grib_convert_examples grib_convert examples
+The following grib_convert rules convert all the grib messages
+contained in the input files in grib edition 2 and if a 2 metre
+temperature is found also the keys contained in the culy bracket are
+changed.\n
+\code 
+editionNumber = 2;
+if( indicatorOfParameter == 11 && indicatorOfTypeOfLevel == 105)
+{
+    productDefinitionTemplateNumber = 1;
+    typeOfFirstFixedSurface         = 103;
+    scaleFactorOfFirstFixedSurface  = 0;
+    scaledValueOfFirstFixedSurface  = 2;
+}
+\endcode
+
+*/

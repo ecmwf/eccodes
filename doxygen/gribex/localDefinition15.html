@@ -1,0 +1,128 @@
+      <table border="3">
+        <tbody>
+          <tr>
+            <th> KSEC1 element</th>
+            <th> Contents</th>
+            <th> GRIB octet</th>
+            <th style="vertical-align: top; text-align: center;">Recommended
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Coded
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Comments<br>
+            </th>
+          </tr>
+          <tr>
+            <td> 37</td>
+            <td>
+            <pre>ECMWF local GRIB use definition identifier.<br>15 = Seasonal forecast data</pre>
+            </td>
+            <td> 41</td>
+            <th style="vertical-align: top; text-align: left;">localDefinitionNumber</th>
+            <td style="vertical-align: top;">localDefinitionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>38</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_class/">Class</a></td>
+            <td>42</td>
+            <th style="vertical-align: top; text-align: left;">class</th>
+            <td style="vertical-align: top;">marsClass</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>39</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_type/">Type</a></td>
+            <td>43</td>
+            <th style="vertical-align: top; text-align: left;">type</th>
+            <td style="vertical-align: top;">marsType</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>40</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_stream/">Stream</a></td>
+            <td>44-45</td>
+            <th style="vertical-align: top; text-align: left;">stream</th>
+            <td style="vertical-align: top;">marsStream</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>41</td>
+            <td>
+            <pre>Version number or experiment identifier.<br>(4 ASCII characters, right justified)</pre>
+            </td>
+            <td>46-49</td>
+            <th style="vertical-align: top; text-align: left;">expver</th>
+            <td style="vertical-align: top;">experimentVersionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 42</td>
+            <td>Ensemble member number</td>
+            <td> 50-51</td>
+            <th style="vertical-align: top; text-align: left;">number<br>
+            </th>
+            <td style="vertical-align: top;">perturbationNumber<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 43</td>
+            <td>
+            <pre>Total number of ensembles.<br>Was set to zero in earlier versions of definition 15<br></pre>
+            </td>
+            <td> 56-57 (note change in sequence of octet order)</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 44</td>
+            <td>
+            <pre>System number<br>  The "scientific version" number.<br>  0 = RD experiment<br>  1 - 65534 = operational version number<br>  65535 = missing </pre>
+            </td>
+            <td> 52-53</td>
+            <th style="vertical-align: top; text-align: left;">system<br>
+            </th>
+            <td style="vertical-align: top;">systemNumber<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 45</td>
+            <td>
+            <pre>Method number<br>  Distinguishes scientifically different forecast ensembles<br>  (eg different calibration/bias correction)<br>  0 = control integration (ie without data assimilation)<br>  1 - 65534 = operational version number<br> </pre>
+            </td>
+            <td> 54-55</td>
+            <th style="vertical-align: top; text-align: left;">method<br>
+            </th>
+            <td style="vertical-align: top;">methodNumber<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> -</td>
+            <td>Spare (set to zero)</td>
+            <td> 58-60</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+        </tbody>
+      </table>

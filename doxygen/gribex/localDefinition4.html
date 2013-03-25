@@ -1,0 +1,889 @@
+      <p>
+      <table border="3">
+        <tbody>
+          <tr>
+            <th> KSEC1 element</th>
+            <th> Contents</th>
+            <th> GRIB octet</th>
+            <th style="vertical-align: top; text-align: center;">Recommended
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Coded
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Comments</th>
+          </tr>
+          <tr>
+            <td> 37</td>
+            <td>
+            <pre>ECMWF local GRIB use definition identifier.<br>4 = Ocean model data.<br></pre>
+            </td>
+            <td> 41</td>
+            <th style="vertical-align: top; text-align: left;">localDefinitionNumber</th>
+            <td style="vertical-align: top;">localDefinitionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>38</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_class/">Class</a></td>
+            <td>42</td>
+            <th style="vertical-align: top; text-align: left;">class</th>
+            <td style="vertical-align: top;">marsClass</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>39</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_type/">Type</a></td>
+            <td>43</td>
+            <th style="vertical-align: top; text-align: left;">type<br>
+            </th>
+            <td style="vertical-align: top;">marsType</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>40</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_stream/">Stream</a></td>
+            <td>44-45</td>
+            <th style="vertical-align: top; text-align: left;">stream<br>
+            </th>
+            <td style="vertical-align: top;">marsStream</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>41</td>
+            <td>
+            <pre>Version number or experiment identifier.<br>(4 ASCII characters, right justified)</pre>
+            </td>
+            <td>46-49</td>
+            <th style="vertical-align: top; text-align: left;">expver<br>
+            </th>
+            <td style="vertical-align: top;">experimentVersionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 42</td>
+            <td> Ensemble member number </td>
+            <td>
+            <pre>50-51, if stream = 1090<br>50, otherwise<br></pre>
+            </td>
+            <th style="vertical-align: top; text-align: left;">number<br>
+            </th>
+            <td style="vertical-align: top;">perturbationNumber<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 43</td>
+            <td> Zero</td>
+            <td> 51, unless stream = 1090</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> -</td>
+            <td> 1 (a flag showing a post-auxiliary array is in use)</td>
+            <td> 52</td>
+            <th style="vertical-align: top; text-align: left;">flagShowingPostAuxiliaryArrayInUse<br>
+            </th>
+            <td style="vertical-align: top;">flagShowingPostAuxiliaryArrayInUse<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 44</td>
+            <td>System number</td>
+            <td> 53</td>
+            <th style="vertical-align: top; text-align: left;">systemNumber<br>
+            </th>
+            <td style="vertical-align: top;">systemNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 45</td>
+            <td>Method number</td>
+            <td> 54</td>
+            <th style="vertical-align: top; text-align: left;">methodNumber<br>
+            </th>
+            <td style="vertical-align: top;">methodNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </p>
+      <p> Used for storing ocean model data in GRIB code. A separate
+version of code table 2 is used for ocean data: ECMWF local Code Table
+2, Version Number <a href="/publications/manuals/libraries/tables/localTable150.html">150</a> or <a
+ href="/publications/manuals/libraries/tables/localTable151.html">151</a> for FM92-VIII. </p>
+      <p> All coordinates in this local use GRIB definition are given
+as 4-byte INTEGERs in the following units: </p>
+      <ul>
+        <li>Latitudes and longitudes: microdegrees </li>
+        <li>Distance (general): metres (default: can be changed) </li>
+        <li>Time: seconds (default: can be changed) </li>
+        <li>Depth below sea level: millimetres (positive downwards) </li>
+        <li>Isopycnic level: potential density - 1000*106.
+          <ul>
+            <li> Permitted range of values is approximately: </li>
+            <li> -2.147*10 9 &lt; i &lt; 2.147*109 </li>
+          </ul>
+        </li>
+      </ul>
+      <p> At several points in the definition, there may be a need for
+a variable amount of supplementary data. This is indicated with '(+<em>info</em>)',
+and in such cases a supplementary data block is specified at the end of
+the local use section. </p>
+      <p> </p>
+      <h3> Coordinate structure definition.</h3>
+      <p>The physical meaning of the (x,y,z,t) coordinate system is
+defined below.</p>
+      <table border="3">
+        <tbody>
+          <tr>
+            <th> KSEC1 element</th>
+            <th> Contents</th>
+            <th> GRIB octet</th>
+            <th style="vertical-align: top; text-align: center;">Recommended
+GRIB API keys</th>
+            <th style="vertical-align: top; text-align: center;">Coded
+GRIB API keys</th>
+            <th style="vertical-align: top; text-align: center;">Comments</th>
+          </tr>
+          <tr>
+            <td> 46</td>
+            <td>
+            <pre>Space unit flag (applies only if lengths not otherwise labelled):<br> 0 = metres<br> i&lt;128 = 10**i metres<br> i&gt;128 = 10**(i-256) metres</pre>
+            </td>
+            <td> 55</td>
+            <th style="vertical-align: top; text-align: left;">spaceUnitFlag<br>
+            </th>
+            <td style="vertical-align: top;">spaceUnitFlag<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 47</td>
+            <td>
+            <pre>Vertical coordinate definition (z):<br> 0 = z above origin<br> 1 = R from origin<br> 2 = h above mean sea level geopotential<br> 3 = h above ground surface<br> 160 = Geopotential depth below mean sea level (mm)<br> 161 = Ocean isopycnic surface (potential density)</pre>
+            </td>
+            <td> 56</td>
+            <th style="vertical-align: top; text-align: left;">verticalCoordinateDefinition<br>
+            </th>
+            <td style="vertical-align: top;">verticalCoordinateDefinition<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 48</td>
+            <td>
+            <pre>Horizontal coordinate definition (x,y):<br> 0 = Latitude/longitude (microdegrees)<br> 1 = Cartesian (fundamental origin)<br> 2 = Cartesian (shifted, rotated origin) (+<em>info</em>)<br> 3 = Regular gaussian grid (microdegrees) (+<em>info</em>)<br> 4 = Polar stereographic (+<em>info</em>)<br> 5 = Spherical harmonic coefficients (INTEGERs) (+<em>info</em>)</pre>
+            </td>
+            <td> 57</td>
+            <th style="vertical-align: top; text-align: left;">horizontalCoordinateDefinition<br>
+            </th>
+            <td style="vertical-align: top;">horizontalCoordinateDefinition<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 49</td>
+            <td>
+            <pre>Time unit flag:<br> 0 = Seconds<br> 1 = Minutes<br> 2 = Hours<br> 3 = Days<br> 4 = Years<br> 5&lt;i&lt;128 = 10**(i-4) years<p> i&gt;128 = 10**(i-256) seconds</p></pre>
+            </td>
+            <td> 58</td>
+            <th style="vertical-align: top; text-align: left;">timeUnitFlag<br>
+            </th>
+            <td style="vertical-align: top;">timeUnitFlag<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 50</td>
+            <td>
+            <pre>Time coordinate definition (t):<br> 0 = Real Earth time (UTC)<br> 1 = Ideal Earth time (360 * 86400s days per year)</pre>
+            </td>
+            <td> 59</td>
+            <th style="vertical-align: top; text-align: left;">timeCoordinateDefinition<br>
+            </th>
+            <td style="vertical-align: top;">timeCoordinateDefinition<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p> </p>
+      <h3> Position definition.</h3>
+      <p> A 2-dimensional field located in 4-dimensional space-time
+needs 2 coordinates to define where the field is located, and 2
+coordinates internal to the field. The locating coordinates are
+specified first. Each coordinate is identified according to the
+following table, in this order where possible: </p>
+      <li>1 = t </li>
+      <li>2 = z </li>
+      <li>3 = x </li>
+      <li>4 = y
+        <h3> Mixed coordinates</h3>
+It is possible to specify mixed coordinates, to allow sections at
+angles to the coordinate system.
+        <p>
+        <table border="3">
+          <tbody>
+            <tr>
+              <th> KSEC1 element</th>
+              <th> Contents</th>
+              <th> GRIB octet</th>
+              <th style="vertical-align: top; text-align: center;">Recommended
+GRIB API keys</th>
+              <th style="vertical-align: top; text-align: center;">Coded
+GRIB API keys</th>
+              <th style="vertical-align: top; text-align: center;">Comments</th>
+            </tr>
+            <tr>
+              <td> 51</td>
+              <td>
+              <pre>Mixed coordinate field flag:<br> 0 = No mixed coordinates<br> 1 = x,y coordinates mixed (+<em>info</em>)<br> 2 = x,z coordinates mixed (+<em>info</em>)<br> 3 = y,z coordinates mixed (+<em>info</em>)<br> 4 = x,t coordinates mixed (+<em>info</em>)<br> 5 = y,t coordinates mixed (+<em>info</em>)<br> 6 = z,t coordinates mixed (+<em>info</em>)</pre>
+              </td>
+              <td> 60</td>
+              <th style="vertical-align: top; text-align: left;">mixedCoordinateFieldFlag<br>
+              </th>
+              <td style="vertical-align: top;">mixedCoordinateFieldFlag<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 52</td>
+              <td> Coordinate 1 flag (usually time).</td>
+              <td> 61</td>
+              <th style="vertical-align: top; text-align: left;">coordinate1Flag<br>
+              </th>
+              <td style="vertical-align: top;">coordinate1Flag<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 53</td>
+              <td>
+              <pre>Averaging flag:<br> 0 = no averaging (data on/at level 1)<br> 1 = inclusive average between level 1 and 2<br> 2 = exclusive average between level 1 and 2</pre>
+              </td>
+              <td> 62</td>
+              <th style="vertical-align: top; text-align: left;">averaging1Flag<br>
+              </th>
+              <td style="vertical-align: top;">averaging1Flag<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 54</td>
+              <td> Position of level 1</td>
+              <td> 63-66</td>
+              <th style="vertical-align: top; text-align: left;">coordinate1Start<br>
+              </th>
+              <td style="vertical-align: top;">coordinate1Start<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 55</td>
+              <td> Position of level 2 (or zero if not used)</td>
+              <td> 67-70</td>
+              <th style="vertical-align: top; text-align: left;">coordinate1End<br>
+              </th>
+              <td style="vertical-align: top;">coordinate1End<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 56</td>
+              <td> Coordinate 2 flag (usually z-coordinate).</td>
+              <td> 71</td>
+              <th style="vertical-align: top; text-align: left;">coordinate2Flag<br>
+              </th>
+              <td style="vertical-align: top;">coordinate2Flag<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 57</td>
+              <td>
+              <pre>Averaging flag:<br> 0 = no averaging (data on/at level 1)<br> 1 = inclusive average between level 1 and 2<br> 2 = exclusive average between level 1 and 2</pre>
+              </td>
+              <td> 72</td>
+              <th style="vertical-align: top; text-align: left;">averaging2Flag<br>
+              </th>
+              <td style="vertical-align: top;">averaging2Flag<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 58</td>
+              <td> Position of level 1</td>
+              <td> 73-76</td>
+              <th style="vertical-align: top; text-align: left;">coordinate2Start<br>
+              </th>
+              <td style="vertical-align: top;">coordinate2Start<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 59</td>
+              <td> Position of level 2 (or zero if not used)</td>
+              <td> 77-80</td>
+              <th style="vertical-align: top; text-align: left;">coordinate2End<br>
+              </th>
+              <td style="vertical-align: top;">coordinate2End<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+An inclusive average discards land points when calculating the average,
+and will produce a value where there is at least one valid ocean point.
+An exclusive average will only produce a value if all of the points
+being averaged are valid. </p>
+        <h3> Data grid definitions</h3>
+        <p>
+        <table border="3">
+          <tbody>
+            <tr>
+              <th> KSEC1 element</th>
+              <th> Contents</th>
+              <th> GRIB octet</th>
+              <th style="vertical-align: top; text-align: center;">Recommended
+GRIB API keys</th>
+              <th style="vertical-align: top; text-align: center;">Coded
+GRIB API keys</th>
+              <th style="vertical-align: top; text-align: center;">Comments</th>
+            </tr>
+            <tr>
+              <td> 60</td>
+              <td> Coordinate 3 flag (x-axis, usually longitude).</td>
+              <td> 81</td>
+              <th style="vertical-align: top; text-align: left;">coordinate3Flag<br>
+              </th>
+              <td style="vertical-align: top;">coordinate3Flag<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 61</td>
+              <td> Coordinate 4 flag (y-axis, usually latitude).</td>
+              <td> 82</td>
+              <th style="vertical-align: top; text-align: left;">coordinate4Flag<br>
+              </th>
+              <td style="vertical-align: top;">coordinate4Flag<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 62</td>
+              <td> Coordinate 4 of first grid point</td>
+              <td> 83-86</td>
+              <th style="vertical-align: top; text-align: left;">coordinate4OfFirstGridPoint<br>
+              </th>
+              <td style="vertical-align: top;">coordinate4OfFirstGridPoint<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 63</td>
+              <td> Coordinate 3 of first grid point</td>
+              <td> 87-90</td>
+              <th style="vertical-align: top; text-align: left;">coordinate3OfFirstGridPoint<br>
+              </th>
+              <td style="vertical-align: top;">coordinate3OfFirstGridPoint<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 64</td>
+              <td> Coordinate 4 of last grid point</td>
+              <td> 91-94</td>
+              <th style="vertical-align: top; text-align: left;">coordinate4OfLastGridPoint<br>
+              </th>
+              <td style="vertical-align: top;">coordinate4OfLastGridPoint<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 65</td>
+              <td> Coordinate 3 of last grid point </td>
+              <td> 95-98</td>
+              <th style="vertical-align: top; text-align: left;">coordinate3OfLastGridPoint<br>
+              </th>
+              <td style="vertical-align: top;">coordinate3OfLastGridPoint<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 66</td>
+              <td> i-increment </td>
+              <td> 99-102</td>
+              <th style="vertical-align: top; text-align: left;">iIncrement<br>
+              </th>
+              <td style="vertical-align: top;">iIncrement<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 67</td>
+              <td> j-increment</td>
+              <td> 103-106</td>
+              <th style="vertical-align: top; text-align: left;">jIncrement<br>
+              </th>
+              <td style="vertical-align: top;">jIncrement<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 68</td>
+              <td>
+              <pre>Flag for irregular grid coordinate list:<br> 0 = none<br> 1 = x-axis values (typically longitude)<br> 2 = y-axis values (typically latitude)<br> 3 = first x-axis, then y-axis values given</pre>
+              </td>
+              <td> 107</td>
+              <th style="vertical-align: top; text-align: left;">flagForIrregularGridCoordinateList<br>
+              </th>
+              <td style="vertical-align: top;">flagForIrregularGridCoordinateList<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 69</td>
+              <td>
+              <pre>Flag for normal or staggered grid:<br> 0 = normal grid (all rows have same x-coordinate system)<br> 1 = staggered grid (odd and even rows have different x-coordinate systems,<br>     eg Arakawa grid).</pre>
+              </td>
+              <td> 108</td>
+              <th style="vertical-align: top; text-align: left;">flagForNormalOrStaggeredGrid<br>
+              </th>
+              <td style="vertical-align: top;">flagForNormalOrStaggeredGrid<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </p>
+        <p> </p>
+        <h3>Auxiliary information</h3>
+        <p>
+        <table border="3">
+          <tbody>
+            <tr>
+              <th> KSEC1 element</th>
+              <th> Contents</th>
+              <th> GRIB octet</th>
+              <th style="vertical-align: top; text-align: center;">Recommended
+GRIB API keys</th>
+              <th style="vertical-align: top; text-align: center;">Coded
+GRIB API keys</th>
+              <th style="vertical-align: top; text-align: center;">Comments</th>
+            </tr>
+            <tr>
+              <td> 70</td>
+              <td>
+              <pre>Flag for any further information:<br> 0 = none<br> 1 = auxiliary array contains x-axis topographic depths/heights.</pre>
+              </td>
+              <td> 109</td>
+              <th style="vertical-align: top; text-align: left;">flagForAnyFurtherInformation<br>
+              </th>
+              <td style="vertical-align: top;">flagForAnyFurtherInformation<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 71</td>
+              <td> Number of entries in the horizontal coordinate
+definition</td>
+              <td> 110</td>
+              <th style="vertical-align: top; text-align: left;">numberInHorizontalCoordinates<br>
+              </th>
+              <td style="vertical-align: top;">numberInHorizontalCoordinates<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 72</td>
+              <td> Number of entries in mixed coordinate definition</td>
+              <td> 111-112</td>
+              <th style="vertical-align: top; text-align: left;">numberInMixedCoordinateDefinition<br>
+              </th>
+              <td style="vertical-align: top;">numberInMixedCoordinateDefinition<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 73</td>
+              <td> Number of entries in the grid coordinate list</td>
+              <td> 113-114</td>
+              <th style="vertical-align: top; text-align: left;">numberInTheGridCoordinateList<br>
+              </th>
+              <td style="vertical-align: top;">numberInTheGridCoordinateList<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> 74</td>
+              <td> Number of entries in the auxiliary array</td>
+              <td> 115-116</td>
+              <th style="vertical-align: top; text-align: left;">numberInTheAuxiliaryArray<br>
+              </th>
+              <td style="vertical-align: top;">numberInTheAuxiliaryArray<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </p>
+        <p>The horizontal coordinate definition, the mixed coordinate
+definition, the grid coordinate list, the auxiliary array and the
+post-auxiliary-array values are stored in GRIB as 4-byte INTEGERs. </p>
+        <p>
+        <table border="3">
+          <caption><strong> Horizontal coordinate definition</strong></caption><tbody>
+            <tr>
+              <th> KSEC1 element</th>
+              <th> Contents</th>
+              <th style="vertical-align: top; text-align: center;">Recommended
+GRIB API keys</th>
+              <th style="vertical-align: top; text-align: center;">Coded
+GRIB API keys</th>
+              <th style="vertical-align: top; text-align: center;">Comments</th>
+            </tr>
+            <tr>
+              <td> A1-nn</td>
+              <td> Horizontal coordinate supplement. Not yet defined.</td>
+              <th style="text-align: left; vertical-align: top;">horizontalCoordinateSupplement<br>
+              </th>
+              <td style="vertical-align: top;">horizontalCoordinateSupplement<br>
+              </td>
+              <td style="vertical-align: top;">"numberInHorizontalCoordinates"
+elements<br>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </p>
+        <p> </p>
+        <p> </p>
+        <p>
+        <table border="3">
+          <caption><strong> Mixed coordinate definition </strong></caption><tbody>
+            <tr>
+              <th> KSEC1 element</th>
+              <th> Contents</th>
+              <th style="vertical-align: top; text-align: center;">Recommended
+GRIB API keys</th>
+              <th style="vertical-align: top; text-align: center;">Coded
+GRIB API keys</th>
+              <th style="vertical-align: top; text-align: center;">Comments</th>
+            </tr>
+            <tr>
+              <td> B1</td>
+              <td>
+              <pre>Flag for regularity of x-y coordinate mixing:<br> 0 = Mixing is regular and linear<br> 1 = Mixing is irregular, code given</pre>
+              </td>
+              <th style="vertical-align: top;">mixedCoordinateDefinition<br>
+              </th>
+              <td style="vertical-align: top;">mixedCoordinateDefinition<br>
+              </td>
+              <td style="vertical-align: top;">"numberInMixedCoordinateDefinition"
+elements<br>
+              </td>
+            </tr>
+            <tr>
+              <td> -</td>
+              <td> For regular, linear mixing.</td>
+              <th style="vertical-align: top;"><br>
+              </th>
+              <td style="vertical-align: top;"><br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> B2</td>
+              <td> Alpha *109</td>
+              <th style="vertical-align: top;"><br>
+              </th>
+              <td style="vertical-align: top;"><br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> B3</td>
+              <td> X0</td>
+              <th style="vertical-align: top;"><br>
+              </th>
+              <td style="vertical-align: top;"><br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> B4</td>
+              <td> Y0</td>
+              <th style="vertical-align: top;"><br>
+              </th>
+              <td style="vertical-align: top;"><br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> -</td>
+              <td> Irregular mixing with code given.</td>
+              <th style="vertical-align: top;"><br>
+              </th>
+              <td style="vertical-align: top;"><br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> B2 </td>
+              <td> Locally defined codes to define section.</td>
+              <th style="vertical-align: top;"><br>
+              </th>
+              <td style="vertical-align: top;"><br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> B3 </td>
+              <td> Locally defined codes to define section.</td>
+              <th style="vertical-align: top;"><br>
+              </th>
+              <td style="vertical-align: top;"><br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> B4</td>
+              <td> Locally defined codes to define section.</td>
+              <th style="vertical-align: top;"><br>
+              </th>
+              <td style="vertical-align: top;"><br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </p>
+        <p> </p>
+        <p>
+        <table border="3">
+          <caption><strong> Grid coordinate list </strong></caption><tbody>
+            <tr>
+              <th> KSEC1 element</th>
+              <th> Contents</th>
+              <th style="vertical-align: top; text-align: center;">Recommended
+GRIB API keys</th>
+              <th style="vertical-align: top; text-align: center;">Coded
+GRIB API keys</th>
+              <th style="vertical-align: top; text-align: center;">Comments</th>
+            </tr>
+            <tr>
+              <td> C1-nn</td>
+              <td>
+              <pre>Coordinates of irregular x and y-axes.<br>The x-axis is given first, then the second x-axis (if staggered grid), and<br>then the y-axis. <br>If the x-axis is regular but staggered, the longitude of the first point of<br>the second row should be specified as the first entry of this list.</pre>
+              </td>
+              <th style="text-align: left; vertical-align: top;">gridCoordinate<br>
+              </th>
+              <td style="vertical-align: top;">gridCoordinate<br>
+              </td>
+              <td style="vertical-align: top;">"numberInTheGridCoordinateList"<br>
+values<br>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </p>
+        <p> </p>
+        <p>
+        <table border="3">
+          <caption><strong> Auxiliary array </strong></caption><tbody>
+            <tr>
+              <th> KSEC1 element</th>
+              <th> Contents</th>
+              <th style="vertical-align: top; text-align: center;">Recommended
+GRIB API keys</th>
+              <th style="vertical-align: top; text-align: center;">Coded
+GRIB API keys</th>
+              <th style="vertical-align: top; text-align: center;">Comments</th>
+            </tr>
+            <tr>
+              <td> D1-nn</td>
+              <td> Auxiliary array values.</td>
+              <th style="text-align: left; vertical-align: top;">auxiliary<br>
+              </th>
+              <td style="vertical-align: top;">auxiliary<br>
+              </td>
+              <td style="vertical-align: top;">"numberInTheAuxiliaryArray"
+values<br>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </p>
+        <p> </p>
+        <p>
+        <table border="3">
+          <caption><strong>Post-auxiliary array </strong></caption><tbody>
+            <tr>
+              <th> KSEC1 element</th>
+              <th> Contents</th>
+              <th style="vertical-align: top; text-align: center;">Recommended
+GRIB API keys</th>
+              <th style="vertical-align: top; text-align: center;">Coded
+GRIB API keys</th>
+              <th style="vertical-align: top; text-align: center;">Comments</th>
+            </tr>
+            <tr>
+              <td> E1</td>
+              <td> Size of post-auxiliary array (number of entries,
+including E1)</td>
+              <th style="vertical-align: top; text-align: left;">sizeOfPostAuxiliaryArrayPlusOne<br>
+              </th>
+              <td style="vertical-align: top;">sizeOfPostAuxiliaryArrayPlusOne<br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> E2-E4</td>
+              <td> Array values</td>
+              <th style="vertical-align: top; text-align: left;">postAuxiliary<br>
+              </th>
+              <td style="vertical-align: top;">postAuxiliary<br>
+              </td>
+              <td style="vertical-align: top;">"sizeOfPostAuxiliaryArrayPlusOne-
+1" valies<br>
+              </td>
+            </tr>
+            <tr>
+              <td> E5-E7</td>
+              <td>Used for hindcast support if E1 &gt; 4</td>
+              <th style="vertical-align: top; text-align: left;"><br>
+              </th>
+              <td style="vertical-align: top;"><br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> E8</td>
+              <td>Used if E1=8</td>
+              <th style="vertical-align: top; text-align: left;"><br>
+              </th>
+              <td style="vertical-align: top;"><br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> E5</td>
+              <td>Reference date (YYYYMMDD)</td>
+              <th style="vertical-align: top; text-align: left;"><br>
+              </th>
+              <td style="vertical-align: top;"><br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> E6</td>
+              <td>Climate date - from (YYYYMMDD), or zero</td>
+              <th style="vertical-align: top; text-align: left;"><br>
+              </th>
+              <td style="vertical-align: top;"><br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> E7</td>
+              <td>Climate date - to (YYYYMMDD), or zero</td>
+              <th style="vertical-align: top; text-align: left;"><br>
+              </th>
+              <td style="vertical-align: top;"><br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+            <tr>
+              <td> E8</td>
+              <td>
+              <pre>Ocean Atmosphere coupling:<br>0 = unspecified<br>1 = uncoupled<br>2 = coupled<br>			</pre>
+              </td>
+              <th style="vertical-align: top; text-align: left;"><br>
+              </th>
+              <td style="vertical-align: top;"><br>
+              </td>
+              <td style="vertical-align: top;"><br>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </p>
+        <p> If the post-auxiliary array is not being used, E1 (the
+value in KSEC1 after the end of the previously defined part of KSEC1)
+must be explicitly set to zero when coding or else errors may result. </p>
+        <p> </p>
+        <h3> Comments on setting other GRIB parameters.</h3>
+The time and time-range data should be set in the main section, if
+possible.
+        <p> The indicator of type of level should be set to 160 (depth
+below sea level) for all oceanographic data. The depth in metres should
+be set to the appropriate value if the field is a horizontal section,
+and to zero in all other cases. </p>
+        <p> It is assumed that the grid description section of the GRIB
+code corresponds to a latitude/longitude grid, with correct values for
+the number of points along parallels/meridians, and the coordinates of
+the first and last data points are in millidegrees (or the appropriate
+units from this section, divided by 1000). </p>
+        <p> The coordinate increments should be given to the extent
+that the field is regular.

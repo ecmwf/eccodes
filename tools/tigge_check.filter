@@ -1,0 +1,114 @@
+# gaussian_grid
+
+ long n = get(h,"numberOfParallelsBetweenAPoleAndTheEquator");
+  static double* values = NULL;
+  static long last_n = 0;
+  double north = dget(h,"latitudeOfFirstGridPointInDegrees");
+  double south = dget(h,"latitudeOfLastGridPointInDegrees");
+
+  double west = dget(h,"longitudeOfFirstGridPointInDegrees");
+  double east = dget(h,"longitudeOfLastGridPointInDegrees");
+
+  int e;
+
+  if(n != last_n)
+  {
+
+    if(values) free(values);
+
+    values = (double*)malloc(2*sizeof(double)*n);
+    if(!values)
+    {
+      printf("%s, field %d [%s]: failed to allocate %ld bytes\n",file,field,param,2*(long)sizeof(double)*(n));
+      error++;
+      return;
+    }
+
+    if((e = grib_get_gaussian_latitudes(n,values)) != GRIB_SUCCESS)
+    {
+      printf("%s, field %d [%s]: cannot get gaussian latitudes for N%ld: %s\n",file,field,param,n,grib_get_error_message(e));
+      error++;
+      free(values);
+      last_n = 0;
+      return;
+    }
+
+    last_n = n;
+  }
+
+  values[0] = rint(values[0]*1e6)/1e6;
+
+  if(north !=  values[0] || south != -values[0])
+    printf("N=%ld n=%f s=%f v=%f n-v=%0.30f s-v=%0.30f\n",n,north,south,values[0],north-values[0],south+values[0]);
+
+  CHECK(north ==  values[0]);
+  CHECK(south == -values[0]);
+
+  CHECK(west == 0.0);
+  CHECK(east == 360.0 - 360.0/(4.0*n));
+
+  if(get(h,"PLPresent")) {
+    size_t count;
+    int e = grib_get_size(h,"pl",&count);
+    double *pl;
+    int i;
+    long total;
+    long numberOfValues = get(h,"numberOfValues");
+    long numberOfDataPoints = get(h,"numberOfDataPoints");
+    int nPl;
+
+    if(e) {
+      printf("%s, field %d [%s]: cannot number of pl: %s\n",file,field,param,grib_get_error_message(e));
+      error++;
+      return;
+    }
+
+    pl = (double*)malloc(sizeof(double)*(count));
+    CHECK(pl != NULL);
+
+    nPl = count;
+    if((e =  grib_get_double_array(h,"pl",pl,&count)))
+    {
+      printf("%s, field %d [%s]: cannot get pl: %s\n",file,field,param,grib_get_error_message(e));
+      free(pl);
+      error++;
+      return;
+
+    }
+    if(nPl != count)
+      printf("nPl=%ld count=%ld\n",(long)nPl,(long)count);
+
+    CHECK(nPl == count);
+
+    total = 0;
+    for(i = 0 ; i < count; i++)
+      total += pl[i];
+
+    free(pl);
+
+    if(numberOfDataPoints != total)
+      printf("GAUSS numberOfValues=%ld numberOfDataPoints=%ld sum(pl)=%ld\n",
+          numberOfValues,
+          numberOfDataPoints,
+          total);
+
+    CHECK(numberOfDataPoints == total);
+
+    CHECK(missing(h,"iDirectionIncrement"));
+    CHECK(missing(h,"iDirectionIncrementInDegrees"));
+
+    CHECK(eq(h,"iDirectionIncrementGiven",0));
+    CHECK(eq(h,"jDirectionIncrementGiven",1));
+
+  }
+
+  CHECK(eq(h,"resolutionAndComponentFlags1",0));
+  CHECK(eq(h,"resolutionAndComponentFlags2",0));
+  CHECK(eq(h,"resolutionAndComponentFlags6",0));
+  CHECK(eq(h,"resolutionAndComponentFlags7",0));
+  CHECK(eq(h,"resolutionAndComponentFlags8",0));
+
+
+}
+
+

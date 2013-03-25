@@ -1,0 +1,255 @@
+      <p>. </p>
+      <p>
+      <table border="3">
+        <tbody>
+          <tr>
+            <th> KSEC1 element</th>
+            <th> Contents</th>
+            <th> GRIB octet</th>
+            <th style="vertical-align: top; text-align: center;">Recommended
+GRIB_API key</th>
+            <th style="vertical-align: top; text-align: center;">Coded
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Comments</th>
+          </tr>
+          <tr>
+            <td> 37</td>
+            <td>
+            <pre>ECMWF local GRIB use definition identifier.<br>23 = Coupled atmospheric, wave and ocean models (with hindcast support)<br></pre>
+            </td>
+            <td> 41</td>
+            <th style="vertical-align: top; text-align: left;">localDefinitionNumber</th>
+            <td style="vertical-align: top;">localDefinitionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>38</td>
+            <td><a href="/publications/manuals/libraries/gribex/gribClass.html">Class</a></td>
+            <td>42</td>
+            <th style="vertical-align: top; text-align: left;">class</th>
+            <td style="vertical-align: top;">marsClass</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>39</td>
+            <td><a href="/publications/manuals/libraries/gribex/gribType.html">Type</a></td>
+            <td>43</td>
+            <th style="vertical-align: top; text-align: left;">type</th>
+            <td style="vertical-align: top;">marsType</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>40</td>
+            <td><a href="/publications/manuals/libraries/gribex/gribStream.html">Stream</a></td>
+            <td>44-45</td>
+            <th style="vertical-align: top; text-align: left;">stream<br>
+            </th>
+            <td style="vertical-align: top;">marsStream</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>41</td>
+            <td>
+            <pre>Version number or experiment identifier.<br>(4 ASCII characters, right justified)<br></pre>
+            </td>
+            <td>46-49</td>
+            <th style="vertical-align: top; text-align: left;">expver<br>
+            </th>
+            <td style="vertical-align: top;">experimentVersionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 42</td>
+            <td>
+            <pre>Ensemble member number.<br>Control forecast is number 0, perturbed forecasts are 1-nn.<br></pre>
+            </td>
+            <td> 50-51</td>
+            <th style="vertical-align: top; text-align: left;">number<br>
+            </th>
+            <td style="vertical-align: top;">perturbationNumber<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 43</td>
+            <td> Number of forecasts in ensemble</td>
+            <td> 81-82</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 44</td>
+            <td>
+            <pre>System number: the "scientific version" number.<br>          0 = RD experiment<br>  1 - 65534 = operational version number<br>      65535 = missing<br></pre>
+            </td>
+            <td>52-53</td>
+            <th style="vertical-align: top; text-align: left;">system<br>
+            </th>
+            <td style="vertical-align: top;">systemNumber<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>45</td>
+            <td>
+            <pre>Method number<br>Distinguishes scientifically different forecast ensembles <br>(eg different calibration/bias correction)<br>          0 = control integration (ie without data assimilation)<br>  1 - 65534 = operational version number<br></pre>
+            </td>
+            <td> 54-55</td>
+            <th style="vertical-align: top; text-align: left;">method<br>
+            </th>
+            <td style="vertical-align: top;">methodNumber<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 46</td>
+            <td> Verifying month (in format YYYYMM), or period used for
+mean (dddDDD for period from time ddd to time DDD)</td>
+            <td> 56-59</td>
+            <th style="vertical-align: top; text-align: left;">verifyingMonth<br>
+            </th>
+            <td style="vertical-align: top;">verifyingMonth<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 47</td>
+            <td> Averaging period (eg 6-hour, 24-hour)</td>
+            <td> 60</td>
+            <th style="vertical-align: top; text-align: left;">averagingPeriod<br>
+            </th>
+            <td style="vertical-align: top;">averagingPeriod<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>48</td>
+            <td>Forecast month</td>
+            <td>61-62</td>
+            <th style="vertical-align: top; text-align: left;">forecastMonth<br>
+            </th>
+            <td style="vertical-align: top;">forecastMonth<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>49</td>
+            <td>Reference date (YYYYMMDD)</td>
+            <td>63-66</td>
+            <th style="vertical-align: top; text-align: left;">refdate<br>
+            </th>
+            <td style="vertical-align: top;">referenceDate<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>50</td>
+            <td>Climate date - from (YYYYMMDD)</td>
+            <td>67-70</td>
+            <th style="vertical-align: top; text-align: left;">climateDateFrom<br>
+            </th>
+            <td style="vertical-align: top;">climateDateFrom<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>51</td>
+            <td>Climate date - to (YYYYMMDD)</td>
+            <td>71-74</td>
+            <th style="vertical-align: top; text-align: left;">climateDateTo<br>
+            </th>
+            <td style="vertical-align: top;">climateDateTo<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>52-59</td>
+            <td>Probability information</td>
+            <td>75-84</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>52</td>
+            <td>Threshold units decimal scale factor.<br>
++ or - power of 10 (or zero).<br>
+Most significant bit = 1 for negative values.</td>
+            <td>75</td>
+            <th style="vertical-align: top; text-align: left;">unitsDecimalScaleFactor<br>
+            </th>
+            <td style="vertical-align: top;">unitsDecimalScaleFactor<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>53</td>
+            <td>Threshold indicator:<br>
+1 = Only lower threshold is present.<br>
+2 = Only upper threshold is present.<br>
+3 = Both upper and lower thresholds are present.</td>
+            <td>76</td>
+            <th style="vertical-align: top; text-align: left;">thresholdIndicator<br>
+            </th>
+            <td style="vertical-align: top;">thresholdIndicator<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>54</td>
+            <td> Lower threshold value.</td>
+            <td>77-78</td>
+            <th style="vertical-align: top; text-align: left;">lowerThresholdValue<br>
+            </th>
+            <td style="vertical-align: top;">lowerThresholdValue<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>55</td>
+            <td> Upper threshold value.</td>
+            <td>79-80</td>
+            <th style="vertical-align: top; text-align: left;">upperThresholdValue<br>
+            </th>
+            <td style="vertical-align: top;">upperThresholdValue<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>56-59</td>
+            <td>Spare (set to zero)</td>
+            <td>83-84</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+        </tbody>
+      </table>

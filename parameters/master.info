@@ -1,0 +1,69 @@
+# 1  ... Grib1 number
+# 2  ... acronym
+# 3  ... title
+# 4  ... levtype
+# 5  ... discipline
+# 6  ... parameterCategory
+# 7  ... parameterNumber
+# 8  ... typeOfFirstFixedSurface
+# 9  ... scaledValueOfFirstFixedSurface
+# 10 ... scaleFactorOfFirstFixedSurface
+# 11 ... typeOfSecondFixedSurface
+# 12 ... scaledValueOfSecondFixedSurface
+# 13 ... scaleFactorOfSecondFixedSurface
+# 14 ... typeOfStatisticalProcessing
+# 15 ... productDefinitionTemplateNumber 
+# 16 ... scaledValueOfLowerLimit 
+# 17 ... scaledValueOfUpperLimit 
+# 18 ... one
+#
+#     # ... means value does not exist or is variable (e.g. value for pressure levels)
+#
+# 1     2                                                3    4    5    6    7      8     9       10     11     12      13
+mars.param mars.abbreviation tigge_name mars.levtype discipline parameterCategory parameterNumber typeOfFirstFixedSurface scaledValueOfFirstFixedSurface scaleFactorOfFirstFixedSurface typeOfSecondFixedSurface scaledValueOfSecondFixedSurface scaleFactorOfSecondFixedSurface typeOfStatisticalProcessing productDefinitionTemplateNumber scaledValueOfLowerLimit scaledValueOfUpperLimit one
+---------------------------------------------------------------------------------------------------------------------------------
+3         pt  potential_temperature                           pv    0    0    2   109     2       6     MISSING    MISSING     MISSING     #	#	#	# #
+228039    sm  soil_moisture                                   sfc   2    0   22   106     0       0     106     2       1      #	#	#  # #
+59      cape  convective_available_potential_energy           sfc   0    7    6    1     MISSING     MISSING     8     MISSING     MISSING     #	#	#	# #
+60        pv  potential_vorticity                             pt    0    2   14   107    320      0     MISSING    MISSING     MISSING     #	#	#	# #
+121    mx2t6  surface_air_maximum_temperature                 sfc   0    0    0   103     #       #     MISSING    MISSING     MISSING     2	#	#	# #
+122    mn2t6  surface_air_minimum_temperature                 sfc   0    0    0   103     #       #     MISSING    MISSING     MISSING     3	#	#	# #
+130        t  temperature                                     pl    0    0    0   100     #       #     MISSING    MISSING     MISSING     #	#	#	# #
+131        u  u_velocity                                      pl    0    2    2   100     #       #     MISSING    MISSING     MISSING     #	#	#	# #
+131        u  u_velocity                                      pv    0    2    2   109     2       6     MISSING    MISSING     MISSING     #	#	#	# #
+132        v  v_velocity                                      pl    0    2    3   100     #       #     MISSING    MISSING     MISSING     #	#	#	# #
+132        v  v_velocity                                      pv    0    2    3   109     2       6     MISSING    MISSING     MISSING     #	#	#	# #
+133        q  specific_humidity                               pl    0    1    0   100     #       #     MISSING    MISSING     MISSING     #	#	#	# #
+134       sp  surface_pressure                                sfc   0    3    0    1     MISSING     MISSING    MISSING    MISSING     MISSING     #	#	#	# #
+136      tcw  total_column_water                              sfc   0    1   51    1     MISSING     MISSING     8     MISSING     MISSING     #	#	#	# #
+228139    st  soil_temperature                                sfc   2    0    2   106     0       0     106     2       1      #	#	#	# #
+228141    sd  snow_depth_water_equivalent                     sfc   0    1   60    1     MISSING     MISSING    MISSING    MISSING     MISSING     #	#	#	# #
+228144    sf  snow_fall_water_equivalent                      sfc   0    1   53    1     MISSING     MISSING    MISSING    MISSING     MISSING     1	#	#	# #
+146     sshf  time_integrated_surface_sensible_heat_flux      sfc   0    0   11    1     MISSING     MISSING    MISSING    MISSING     MISSING     1	#	#	# #
+147     slhf  time_integrated_surface_latent_heat_flux        sfc   0    0   10    1     MISSING     MISSING    MISSING    MISSING     MISSING     1	#	#	# #
+151      msl  mean_sea_level_pressure                         sfc   0    3    0   101    MISSING     MISSING    MISSING    MISSING     MISSING     #	#	#	# #
+156    gh  geopotential_height                             pl    0    3    5   100     #       #     MISSING    MISSING     MISSING     #	#	#	# #
+228164   tcc  total_cloud_cover                               sfc   0    6    1    1     MISSING     MISSING     8     MISSING     MISSING     #	#	#	# #
+165      10u  10_meter_u_velocity                             sfc   0    2    2   103     10      0     MISSING    MISSING     MISSING     #	#	#	# #
+166      10v  10_meter_v_velocity                             sfc   0    2    3   103     10      0     MISSING    MISSING     MISSING     #	#	#	# #
+167       2t  surface_air_temperature                         sfc   0    0    0   103     #       #     MISSING    MISSING     MISSING     #	#	#	# #
+168       2d  surface_air_dew_point_temperature               sfc   0    0    6   103     #       #     MISSING    MISSING     MISSING     #	#	#	# #
+172      lsm  land_sea_mask                                   sfc   2    0    0    1     MISSING     MISSING    MISSING    MISSING     MISSING     #	#	#	# #
+176      ssr  time_integrated_surface_net_solar_radiation     sfc   0    4    9    1     MISSING     MISSING    MISSING    MISSING     MISSING     1	#	#	# #
+177      str  time_integrated_surface_net_thermal_radiation   sfc   0    5    5    1     MISSING     MISSING    MISSING    MISSING     MISSING     1	#	#	# #
+179      ttr  time_integrated_outgoing_long_wave_radiation    sfc   0    5    5    8     MISSING     MISSING    MISSING    MISSING     MISSING     1	#	#	# #
+189     sund  sunshine_duration                               sfc   0    6   24    1     MISSING     MISSING    MISSING    MISSING     MISSING     1	#	#	# #
+228228    tp  total_precipitation                             sfc   0    1   52    1     MISSING     MISSING    MISSING    MISSING     MISSING     1	#	#	# #
+235      skt  skin_temperature                                sfc   0    0   17    1     MISSING     MISSING    MISSING    MISSING     MISSING     #	#	#	# #
+228001    ci  convective_inhibition                           sfc   0    7    7    1     MISSING     MISSING     8     MISSING     MISSING     #	#	#	# #
+228002  orog  orography                                       sfc   0    3    5    1     MISSING     MISSING    MISSING    MISSING     MISSING     #	#	#	# #
+228170    cap  field_capacity                                 sfc   2    3   12   106     0       0     106     2       1      #	#	#	# #
+228171    wilt  wilting_point                                 sfc   2    0   26   106     0       0     106     2       1      #	#	#	# #
+131062    tpg10	total_precipitation_of_at_least_10_mm	 sfc   0    1    52   1     MISSING      MISSING    MISSING    MISSING     MISSING     1	9	10	MISSING #
+131063    tpg20	total_precipitation_of_at_least_20_mm	 sfc   0    1    52   1     MISSING      MISSING    MISSING    MISSING     MISSING     1	9	20	MISSING #
+131070  10fgg15   10_metre_wind_gust_of_at_least_15_m/s  sfc   0    2    22   103     10      0    MISSING    MISSING     MISSING   2	9	15	MISSING #
+131071  10fgg25   10_metre_wind_gust_of_at_least_25_m/s  sfc   0    2    22   103     10      0    MISSING    MISSING     MISSING   2	9	25	MISSING #
+171034  ssta   sea_surface_temperature_anomaly	         sfc   0    0    9    1     MISSING      MISSING    MISSING    MISSING     MISSING  #  # # # #
+49      10u  maximum_wind_gust                             sfc   0    2    22   103     10      0     MISSING    MISSING     MISSING    2 	#	#	# #
+default unknown  unknown # 0 0 0 # # # # # # # # # # #
+

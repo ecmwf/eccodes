@@ -1,0 +1,412 @@
+      <p> </p>
+      <p>The computation of <span class="command">EFI</span> changed
+with the implementation of VarEPS-Monthly in March 2008. This change
+had to be reflected in the information stored in the <span
+ class="command">GRIB Header</span>. Therefore, we have 2 versions
+regarding the content of local definition 19. The layout is the same,
+and applications do not need to be recompiled, unless they make use of
+the extra information. </p>
+      <p> The two definitions follow:</p>
+      <ul>
+        <li><a href="#prior">Definition prior to implementation of
+VarEPS-Monthly (March 2008)</a></li>
+        <li><a href="#after">Definition after implementation of
+VarEPS-Monthly</a></li>
+      </ul>
+Please, refer to the documentation about <a
+ href="http://www.ecmwf.int/products/changes/vareps-monthly/">Implementation
+of VarEPS-Monthly</a> for further information.
+      <h3><a name="prior"></a>Definition prior to March 2008</h3>
+      <table border="3">
+        <caption> <br>
+        </caption> <tbody>
+          <tr>
+            <th> KSEC1 element</th>
+            <th> Contents</th>
+            <th> GRIB octet</th>
+            <th style="vertical-align: top; text-align: center;">Recommended
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Coded
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Comments</th>
+          </tr>
+          <tr>
+            <td> 37 </td>
+            <td>
+            <pre>ECMWF local GRIB use definition identifier.<br>19 = Extreme forecast index data<br></pre>
+            </td>
+            <td> 41 </td>
+            <th style="vertical-align: top; text-align: left;">localDefinitionNumber</th>
+            <td style="vertical-align: top;">localDefinitionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>38</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_class/">Class</a>:
+1 = operations</td>
+            <td>42</td>
+            <th style="vertical-align: top; text-align: left;">class</th>
+            <td style="vertical-align: top;">marsClass</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>39</td>
+            <td>
+            <pre><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_type/">Type</a>:<br> 27 = extreme forecast index<br> 28 = extreme forecast index control<br> </pre>
+            </td>
+            <td>43</td>
+            <th style="vertical-align: top; text-align: left;">type</th>
+            <td style="vertical-align: top;">marsType</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>40</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_stream/">Stream</a>:
+1035 = ensemble forecast</td>
+            <td>44-45</td>
+            <th style="vertical-align: top; text-align: left;">stream</th>
+            <td style="vertical-align: top;">marsStream</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>41</td>
+            <td>
+            <pre>Version number or experiment identifier.<br>(4 ASCII characters, right justified)</pre>
+            </td>
+            <td>46-49</td>
+            <th style="vertical-align: top; text-align: left;">expver</th>
+            <td style="vertical-align: top;">experimentVersionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>42</td>
+            <td>
+            <pre>Zero, for compatibility with Mars labelling</pre>
+            </td>
+            <td>50</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>43</td>
+            <td> Ensemble size. </td>
+            <td>51</td>
+            <th style="vertical-align: top; text-align: left;">ensembleSize<br>
+            </th>
+            <td style="vertical-align: top;">ensembleSize<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>44</td>
+            <td> Power of 10 used to scale climate weight = F, say </td>
+            <td>52</td>
+            <th style="vertical-align: top; text-align: left;">powerOfTenUsedToScaleClimateWeight<br>
+            </th>
+            <td style="vertical-align: top;">powerOfTenUsedToScaleClimateWeight<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>45</td>
+            <td> Weight*10**F applied to climate month 1, stored as an
+integer </td>
+            <td>53 - 56</td>
+            <th style="vertical-align: top; text-align: left;">weightAppliedToClimateMonth1<br>
+            </th>
+            <td style="vertical-align: top;">weightAppliedToClimateMonth1<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>46</td>
+            <td> First month used to build climate month 1, YYYYMM </td>
+            <td>57-59</td>
+            <th style="vertical-align: top; text-align: left;">firstMonthUsedToBuildClimateMonth1<br>
+            </th>
+            <td style="vertical-align: top;">firstMonthUsedToBuildClimateMonth1<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>47</td>
+            <td> Last month used to build climate month 1, YYYYMM </td>
+            <td>60-62</td>
+            <th style="vertical-align: top; text-align: left;">lastMonthUsedToBuildClimateMonth1<br>
+            </th>
+            <td style="vertical-align: top;">lastMonthUsedToBuildClimateMonth1<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>48</td>
+            <td> First month used to build climate month 2, YYYYMM </td>
+            <td>63-65</td>
+            <th style="vertical-align: top; text-align: left;">firstMonthUsedToBuildClimateMonth2<br>
+            </th>
+            <td style="vertical-align: top;">firstMonthUsedToBuildClimateMonth2<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>49</td>
+            <td> Last month used to build climate month 2, YYYYMM </td>
+            <td>66-68</td>
+            <th style="vertical-align: top; text-align: left;">lastMonthUsedToBuildClimateMonth2<br>
+            </th>
+            <td style="vertical-align: top;">lastMonthUsedToBuildClimateMonth2<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>50</td>
+            <td>EFI order</td>
+            <td>69</td>
+            <th style="vertical-align: top; text-align: left;">efiOrder<br>
+            </th>
+            <td style="vertical-align: top;">efiOrder<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>51</td>
+            <td>Set to 0 for this version of EFI(prior to March 2008)</td>
+            <td>70</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td>Set to zero</td>
+            <td>71 - 80</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h3><a name="after"></a>Definition after March 2008 </h3>
+      <table border="3">
+        <caption> <br>
+        </caption> <tbody>
+          <tr>
+            <th> KSEC1 element</th>
+            <th> Contents</th>
+            <th> GRIB octet</th>
+            <th style="vertical-align: top; text-align: center;">Recommended
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Coded
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Comments</th>
+          </tr>
+          <tr>
+            <td> 37 </td>
+            <td>
+            <pre>ECMWF local GRIB use definition identifier.<br>19 = Extreme forecast index data<br></pre>
+            </td>
+            <td> 41 </td>
+            <th style="vertical-align: top; text-align: left;">localDefinitionNumber</th>
+            <td style="vertical-align: top;">localDefinitionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>38</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_class/">Class</a>:
+1 = operations </td>
+            <td>42</td>
+            <th style="vertical-align: top; text-align: left;">class</th>
+            <td style="vertical-align: top;">marsClass</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>39</td>
+            <td>
+            <pre><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_type/">Type</a>:<br> 27 = extreme forecast index<br> 28 = extreme forecast index control<br> </pre>
+            </td>
+            <td>43</td>
+            <th style="vertical-align: top; text-align: left;">type</th>
+            <td style="vertical-align: top;">marsType</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>40</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_stream/">Stream</a>:
+1035 = ensemble forecast</td>
+            <td>44-45</td>
+            <th style="vertical-align: top; text-align: left;">stream</th>
+            <td style="vertical-align: top;">marsStream</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>41</td>
+            <td>
+            <pre>Version number or experiment identifier.<br>(4 ASCII characters, right justified)</pre>
+            </td>
+            <td>46-49</td>
+            <th style="vertical-align: top; text-align: left;">expver</th>
+            <td style="vertical-align: top;">experimentVersionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>42</td>
+            <td>
+            <pre>Zero, for compatibility with Mars labelling</pre>
+            </td>
+            <td>50</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>43</td>
+            <td> Ensemble size. </td>
+            <td>51</td>
+            <th style="vertical-align: top; text-align: left;">ensembleSize</th>
+            <td style="vertical-align: top;">ensembleSize</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>44</td>
+            <td> Version number of the latest experimental Suite(1-255)</td>
+            <td>52</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>45</td>
+            <td> Implementation date of the latest model cycle
+(YYYYMMDDHH)</td>
+            <td>53 - 56</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>46</td>
+            <td> Number of re-forecast years in the model climate
+(Currently set to 18) </td>
+            <td>57-59</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>47</td>
+            <td> Length (in number of days) of the climate sampling
+window centred over the day of the climate run (Currently set to 31) </td>
+            <td>60-62</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>48</td>
+            <td> Sample size of the model climate (Currently set to 0 =
+No climate files prepared for days between two forecast runs) </td>
+            <td>63-65</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>49</td>
+            <td> Version of model climate (Currently set to 0 = No
+climate files prepared for days between two re-forecast runs) </td>
+            <td>66-68</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>50</td>
+            <td> Set to 0 for the EFI </td>
+            <td>69</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>51</td>
+            <td>Set to 1 for this version of EFI(prior to March 2008) </td>
+            <td>70</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td>Set to zero </td>
+            <td>71-80</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+        </tbody>
+      </table>

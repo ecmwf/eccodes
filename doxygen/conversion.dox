@@ -1,0 +1,144 @@
+/*! \page conversion GRIB edition 1 to 2 conversion
+
+GRIB messages are at the moment exchanged in edition 1 or 2.
+Although the information content of two messages in different editions 
+is almost the same, their binary format is very different and 
+organised in a different way.
+
+The conversion from grib edition 1 (grib1) to edition 2 (grib2) is 
+a format translation without any loss of information. Conversely the conversion
+from grib2 to grib1 is not always lossless because the edition 2 format has
+been extended to allow a wider set of scientific fields to be coded.
+
+Since the new grib2 format is going to replace grib1 we will focus more on the 
+grib1 to grib2 conversion rather than the opposite, which sometimes is not possible.
+
+The conversion algorithm should be easy to implement, but there are some 
+factors making it challenging.
+First of all the new designed grib2 is in some points semantically 
+different from grib1. 
+Therefore it doesn't allow an easy mapping of the meaning across
+the two versions.
+Moreover some of the numeric code tables semantically identical
+are numerically different, which doesn't allow again an easy mapping 
+between them, because the numeric codes for the same information element 
+are different. 
+We refer in particular to the type of level which is numerically different 
+in the two editions.
+
+Another element to be considered in a conversion algorithm is that 
+many meteorological operational centres have been developing local patches 
+to the GRIB specification to overcome the limitations of grib1.
+This local extensions or local tables are not coherent and sometimes are 
+not properly organised.
+It is widespread, for example, the use of local parameter tables.
+
+The aim of the conversion facilities provided in GRIB API is to be flexible 
+enough to define conversion rules also for local tables and local 
+extensions and to allow the user to configure locally the library to interpret
+fields coded in a local flavour of the grib specifications.
+
+\section conv_tech Conversion technique
+To convert a grib message from edition 1 to 2 with GRIB API it is enough to 
+set the key edition=2 (see grib_set). 
+The conversion is performed automatically provided that the library is configured 
+properly to translate the parameter information. Indeed the information regarding time
+and space is always translated automatically, while the parameter information,
+which is sometime dependent on local tables has to be configured by the user if it is
+not included in the main set of parameter conversion rules contained in GRIB API 
+distribution.
+
+\section paramconv Parameters conversion
+A <a href="/publications/manuals/d/gribapi/param/">list of all the parameters</a> 
+recognised by the 
+<a href="/products/data/software/download/grib_api.html">latest version of GRIB API</a> 
+is reported for consultation. The list contains their representation 
+in edition 1 and 2 and for some of them the netcdf CF compliant name.
+
+Each parameter is identified by a paramId, which is a valid GRIB API key,  
+and is described through the keys shortName, name, units. 
+
+For each parameter we can have one or more grib1 and/or grib2 representations. 
+A grib representation is a set of keys describing the parameter in the coding 
+format (grib1 or grib2). If for a parameter the grib1 and grib2 
+representations are both present in the list then the conversion from 
+grib1 to grib2 is defined and can be automatically performed by 
+GRIB API just setting edition=2.
+
+A parameter can have more than one representation for a single format, 
+because local representations are allowed depending on the centre 
+defined in the grib message. 
+
+A local description can be added just editing the following definition 
+files: paramId.def, shortName.def, name.def, units.def. 
+The syntax of these files is
+
+value = { key1=value1; key2=value2; key3=value3; ... }.
+
+A definition file containing the rules for a given centre and edition 
+has to be placed in the directory grib[edition]/localConcepts/[centre:s]. 
+Where [edition] is 1 or 2 and [centre:s] is the string describing the 
+centre in the official table 0 of grib1.
+
+The files describing the local parameters for ECMWF grib1 are located in
+grib1/localConcepts/ecmf. 
+If for example we need to define "2 metre temperature" for ECMWF we have 
+to add the following lines to the corresponding files
+
+ - paramId.def \n
+   '167' = {table2Version=128; indicatorOfParameter=167;}
+ - shortName.def \n
+   '2t' = {table2Version=128; indicatorOfParameter=167;}
+ - name.def \n
+   '2 metre temperature' = {table2Version=128; indicatorOfParameter=167;}
+ - units.def \n
+   'K' = {table2Version=128; indicatorOfParameter=167;}
+
+The same syntax can be used to describe the same parameter in grib2 to 
+be able to convert the information from grib1 to grib2 and to be able 
+to have the same paramId, name, shortName, units for both editions.
+
+\section localconf Local configuration 
+A site or user configuration is possible to allow interpretation and conversion of 
+grib 1 messages encoded in non standard local ways.
+To separete the definition files contained in the installation directory from the
+definition files described in the previous section, in which the user can put
+some extra and local parameter definitions, 
+the environment variable GRIB_DEFINITION_PATH can be used.
+
+To set properly this environment variable we have first to find the definitions
+files directory used by GRIB API. 
+At this aim we can use the tool grib_info which is providing some configuration
+information about the library. 
+
+
+\verbatim
+> grib_info
+
+grib_api Version 1.8.0
+
+Default definition files path is used: /usr/local/lib/grib_api/definitions
+Definition files path can be changed setting GRIB_DEFINITION_PATH environment variable
+
+Default SAMPLES path is used: /usr/local/lib/metaps/lib/grib_api/samples
+SAMPLES path can be changed setting GRIB_SAMPLES_PATH environment variable
+\endverbatim
+
+To enable the parameter defintions described in the files contained in our directory
+\code
+/home/u/grib_api/definitions
+\endcode
+
+we have to set the environment variable GRIB_DEFINITION_PATH as
+
+\verbatim
+export GRIB_DEFINITION_PATH=/home/u/definitions:/usr/local/lib/grib_api/definitions
+\endverbatim
+
+so that our definition of the parameters will be read by GRIB API during run time.
+The content of the definition files in the directory /home/u/definitions has to be
+properly written following the instructions of the previous section.
+
+
+
+*/

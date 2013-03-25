@@ -1,0 +1,51 @@
+0 0 Unknown
+1 od Operational archive
+2 rd Research department
+3 er REANALYSE
+4 cs ECSN
+5 e4 REANALYSE40
+6 dm DEMETER
+7 pv PROVOST
+8 el ELDAS
+9 to TOST
+10 co Cosmo Leps
+11 en ENSEMBLES
+12 ti TIGGE
+13 me MERSEA
+14 ei ERA Interim
+15 sr Short-Range Ensemble Prediction System
+16 dt Data Targeting System
+17 la LACE ALADIN
+18 yt YOTC
+19 mc MACC
+20 pe Permanent experiments
+21 em ERA-CLIM model integration for the 20th-century
+22 e2 ERA-CLIM pilot reanalysis of the 20th-century using surface observations only
+23 ea ERA-CLIM pilot reanalysis of the satellite era
+24 ep ERA-CLIM pilot reanalysis of the pre-satellite era
+25 rm EURO4M
+26 nr NOAA/CIRES 20th Century Reanalysis version II
+99 te Test
+100 at Austria
+101 be Belgium
+102 hr Croatia
+103 dk Denmark
+104 fi Finland
+105 fr France
+106 de Germany
+107 gr Greece
+108 hu Hungary
+109 is Iceland
+110 ie Ireland
+111 it Italy
+112 nl Netherlands
+113 no Norway
+114 pt Portugal
+115 si Slovenia
+116 es Spain
+117 se Sweden
+118 ch Switzerland
+119 tr Turkey
+120 uk United Kingdom
+121 ms Member States projects
+199 ma Metaps

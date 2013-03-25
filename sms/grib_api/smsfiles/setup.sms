@@ -1,0 +1,27 @@
+%manual
+
+  The work is carried out in
+
+%end
+%include <qsub.h>
+%include <step1.h>
+%include <head.h>
+%include <grib_api.h>
+
+TMPBASE=%TMPBASE%
+
+cd ${TMPBASE}
+
+[ -d $LIBRARY ] && cd $LIBRARY || { mkdir $LIBRARY ; cd $LIBRARY ; }
+
+rcp $P4_HOST:$LIB_DIR/$PACKAGE_TAR_GZ $PACKAGE_TAR_GZ
+
+[ -f "${PACKAGE_TAR_GZ}" ] && smslabel setup "${PACKAGE_TAR_GZ} is available" || { smslabel setup "${PACKAGE_TAR_GZ} is not available" ; exit ; }
+
+[ -f ${PACKAGE}.tar ] && rm -f ${PACKAGE}.tar
+
+gunzip $PACKAGE_TAR_GZ
+
+%include <endt.h>
+
+%include <step2.h>

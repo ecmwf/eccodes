@@ -1,0 +1,163 @@
+      <p>
+      <table border="3">
+        <caption>&nbsp; </caption> <tbody>
+          <tr>
+            <th> KSEC1 element</th>
+            <th> Contents</th>
+            <th> GRIB octet</th>
+            <th style="vertical-align: top; text-align: center;">Recommended
+GRIB_API key</th>
+            <th style="vertical-align: top; text-align: center;">Coded
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Comments</th>
+          </tr>
+          <tr>
+            <td> 37 </td>
+            <td>
+            <pre>ECMWF local GRIB use definition identifier.<br>191 = Free format data descriptor</pre>
+            </td>
+            <td> 41 </td>
+            <th style="vertical-align: top; text-align: left;">localDefinitionNumber</th>
+            <td style="vertical-align: top;">localDefinitionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>38</td>
+            <td><a href="/services/archive/d/table/grib_class/">Class: </a>121
+= general member state data</td>
+            <td>42</td>
+            <th style="vertical-align: top; text-align: left;">class</th>
+            <td style="vertical-align: top;">marsClass</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>39</td>
+            <td><a href="/services/archive/d/table/grib_type/">Type</a></td>
+            <td>43</td>
+            <th style="vertical-align: top; text-align: left;">type</th>
+            <td style="vertical-align: top;">marsType</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>40</td>
+            <td><a href="/services/archive/d/table/grib_stream/">Stream</a></td>
+            <td>44-45</td>
+            <th style="vertical-align: top; text-align: left;">stream</th>
+            <td style="vertical-align: top;">marsStream</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>41</td>
+            <td>
+            <pre>Version number or experiment identifier.<br>(4 ASCII characters, right justified)</pre>
+            </td>
+            <td>46-49</td>
+            <th style="vertical-align: top; text-align: left;">expver</th>
+            <td style="vertical-align: top;">experimentVersionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>42</td>
+            <td> Zero, for compatibility with Mars labelling </td>
+            <td>50</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>43</td>
+            <td>Zero, for compatibility with Mars labelling </td>
+            <td>51</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>44</td>
+            <td> Format version major number</td>
+            <td>52</td>
+            <th style="vertical-align: top; text-align: left;">formatVersionMajorNumber<br>
+            </th>
+            <td style="vertical-align: top;">formatVersionMajorNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>45</td>
+            <td>Format version minor number </td>
+            <td>53</td>
+            <th style="vertical-align: top; text-align: left;">formatVersionMinorNumber<br>
+            </th>
+            <td style="vertical-align: top;">formatVersionMinorNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>46</td>
+            <td> Original sub-centre identifier</td>
+            <td>54</td>
+            <th style="vertical-align: top; text-align: left;">originalSubCentreIdentifier<br>
+            </th>
+            <td style="vertical-align: top;">originalSubCentreIdentifier</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>47-50 </td>
+            <td> Set to zero</td>
+            <td>55-58</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>51</td>
+            <td> Number of bytes of free format data descriptor (N, say)</td>
+            <td>59-60</td>
+            <th style="vertical-align: top; text-align: left;">numberOfBytesOfFreeFormatData<br>
+            </th>
+            <td style="vertical-align: top;">numberOfBytesOfFreeFormatData</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>52-(51+N/J)</td>
+            <td>
+            <pre>Data descriptor bytes packed in integer array elements<br>(J= the number of bytes in an integer = 4 or 8)<br></pre>
+            </td>
+            <td>61-(60+N)</td>
+            <th style="vertical-align: top; text-align: left;">freeFormData<br>
+            </th>
+            <td style="vertical-align: top;">freeFormData</td>
+            <td style="vertical-align: top;">numberOfBytesOfFreeFormatData
+values.<br>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td>The section is padded with zeroes to make the overall
+length of the section = 60 + 80*M for some M &gt; 0</td>
+            <td>(61+N)-(60+80*M)</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+        </tbody>
+      </table>

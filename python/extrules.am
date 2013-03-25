@@ -1,0 +1,8 @@
+swig : gribapi_swig.i
+	p4 edit swig_wrap_numpy.c swig_wrap_numpy.py swig_wrap_array.c swig_wrap_array.py
+
+	swig -python -module gribapi_swig -DNUMPY -o swig_wrap_numpy.c gribapi_swig.i
+	cp gribapi_swig.py swig_wrap_numpy.py
+
+	swig -python -module gribapi_swig -o swig_wrap_array.c gribapi_swig.i
+	cp gribapi_swig.py swig_wrap_array.py

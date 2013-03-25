@@ -1,0 +1,14 @@
+#!/bin/ksh
+exit
+nice valgrind --num-callers=999999 --leak-check=full --leak-resolution=high -v ./memory $@ 2> mem
+status=$?
+
+grep "blocks are definitely lost" mem && status=1
+grep "ERROR SUMMARY"              mem | grep -v ": 0 errors" && status=1
+if [[ $status -ne 0 ]]
+then
+	cat mem
+	exit 1
+else
+	echo OK
+fi

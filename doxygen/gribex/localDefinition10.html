@@ -1,0 +1,293 @@
+      <table border="3">
+        <tbody>
+          <tr>
+            <th> KSEC1 element</th>
+            <th> Contents</th>
+            <th> GRIB octet</th>
+            <th style="vertical-align: top; text-align: center;">Recommended
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Coded
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Comments</th>
+          </tr>
+          <tr>
+            <td> 37</td>
+            <td>
+            <pre>ECMWF local GRIB use definition identifier.<br>10 = EPS tubes. </pre>
+            </td>
+            <td> 41</td>
+            <th style="vertical-align: top; text-align: left;">localDefinitionNumber</th>
+            <td style="vertical-align: top;">localDefinitionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>38</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_class/">Class</a></td>
+            <td>42</td>
+            <th style="vertical-align: top; text-align: left;">class</th>
+            <td style="vertical-align: top;">marsClass</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>39</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_type/">Type</a></td>
+            <td>43</td>
+            <th style="vertical-align: top; text-align: left;">type</th>
+            <td style="vertical-align: top;">marsType</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>40</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_stream/">Stream</a></td>
+            <td>44-45</td>
+            <th style="vertical-align: top; text-align: left;">stream</th>
+            <td style="vertical-align: top;">marsStream</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>41</td>
+            <td>
+            <pre>Version number or experiment identifier.<br>(4 ASCII characters, right justified)</pre>
+            </td>
+            <td>46-49</td>
+            <th style="vertical-align: top; text-align: left;">expver</th>
+            <td style="vertical-align: top;">experimentVersionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 42</td>
+            <td> Tube number (0=central cluster)</td>
+            <td> 50</td>
+            <th style="vertical-align: top; text-align: left;">number<br>
+            </th>
+            <td style="vertical-align: top;">tubeNumber<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 43</td>
+            <td> Total number of tubes (excluding central cluster)</td>
+            <td> 51</td>
+            <th style="vertical-align: top; text-align: left;">totalNumberOfTubes<br>
+            </th>
+            <td style="vertical-align: top;">totalNumberOfTubes<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 44</td>
+            <td>
+            <pre>Central cluster definition<br> 1: radius = % of total variance<br> 2: radius = predefined value<br></pre>
+            </td>
+            <td> 52</td>
+            <th style="vertical-align: top; text-align: left;">centralClusterDefinition<br>
+            </th>
+            <td style="vertical-align: top;">centralClusterDefinition<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 45</td>
+            <td> Indicator of parameter considered (see code table 2 in
+section 1) </td>
+            <td> 53</td>
+            <th style="vertical-align: top; text-align: left;">parameterIndicator<br>
+            </th>
+            <td style="vertical-align: top;">parameterIndicator<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 46</td>
+            <td> Indicator of type of level considered (see <a
+ href="/publications/manuals/libraries/gribex/wmoCodeTable3.html">WMO code table 3</a>) </td>
+            <td> 54</td>
+            <th style="vertical-align: top; text-align: left;">levelIndicator<br>
+            </th>
+            <td style="vertical-align: top;">levelIndicator<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 47</td>
+            <td> Northern latitude of the domain of tubing</td>
+            <td> 55-57</td>
+            <th style="vertical-align: top; text-align: left;">northLatitudeOfDomainOfTubing<br>
+            </th>
+            <td style="vertical-align: top;">northLatitudeOfDomainOfTubing<br>
+            </td>
+            <td style="vertical-align: top;">"domain" can be used,
+which will contain the 4 coordinates.<br>
+            </td>
+          </tr>
+          <tr>
+            <td> 48</td>
+            <td> Western longitude of the domain of tubing</td>
+            <td> 58-60</td>
+            <th style="vertical-align: top; text-align: left;">westLongitudeOfDomainOfTubing<br>
+            </th>
+            <td style="vertical-align: top;">westLongitudeOfDomainOfTubing<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 49</td>
+            <td> Southern latitude of the domain of tubing</td>
+            <td> 61-63</td>
+            <th style="vertical-align: top; text-align: left;">southLatitudeOfDomainOfTubing<br>
+            </th>
+            <td style="vertical-align: top;">southLatitudeOfDomainOfTubing<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 50</td>
+            <td> Eastern longitude of the domain of tubing</td>
+            <td> 64-66</td>
+            <th style="vertical-align: top; text-align: left;">eastLongitudeOfDomainOfTubing<br>
+            </th>
+            <td style="vertical-align: top;">eastLongitudeOfDomainOfTubing<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 51</td>
+            <td>
+            <pre>Number of tube to which the operational forecast belongs(*)<br> 0 = central cluster,<br> 254 = does not belong to any tube </pre>
+            </td>
+            <td> 67</td>
+            <th style="vertical-align: top; text-align: left;">numberOfOperationalForecastTube<br>
+            </th>
+            <td style="vertical-align: top;">numberOfOperationalForecastTube<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 52</td>
+            <td>
+            <pre>Number of tube to which the control forecast belongs(*)<br> 0 = central cluster,<br> 254 = does not belong to any tube </pre>
+            </td>
+            <td> 68</td>
+            <th style="vertical-align: top; text-align: left;">numberOfControlForecastTube<br>
+            </th>
+            <td style="vertical-align: top;">numberOfControlForecastTube<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 53</td>
+            <td> Height/pressure of level considered (see <a
+ href="/publications/manuals/libraries/gribex/wmoCodeTable3.html">WMO code table 3</a>)</td>
+            <td>69-70</td>
+            <th style="vertical-align: top; text-align: left;">heightOrPressureOfLevel<br>
+            </th>
+            <td style="vertical-align: top;">heightOrPressureOfLevel</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 54</td>
+            <td> Reference step considered (same units of time as
+forecast timesteps) </td>
+            <td> 71-72</td>
+            <th style="vertical-align: top; text-align: left;">reference<br>
+            </th>
+            <td style="vertical-align: top;">referenceStep<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 55</td>
+            <td> Radius of central cluster (in units of parameter
+defined in element 45) </td>
+            <td> 73-74</td>
+            <th style="vertical-align: top; text-align: left;">radiusOfCentralCluster<br>
+            </th>
+            <td style="vertical-align: top;">radiusOfCentralCluster</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 56</td>
+            <td> Ensemble standard deviation (in units of parameter
+defined in element 45) </td>
+            <td> 75-76</td>
+            <th style="vertical-align: top; text-align: left;">ensembleStandardDeviation<br>
+            </th>
+            <td style="vertical-align: top;">ensembleStandardDeviation</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 57</td>
+            <td>
+            <pre>Distance of the tube extreme to the ensemble mean (in units of parameter<br>defined in element 45).<br>Not applicable if this is the central cluster, in which case the value is<br>set = 65535, ie a missing value.</pre>
+            </td>
+            <td> 77-78</td>
+            <th style="vertical-align: top; text-align: left;">distanceFromTubeToEnsembleMean<br>
+            </th>
+            <td style="vertical-align: top;">distanceFromTubeToEnsembleMean</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 58</td>
+            <td> Number of forecasts belonging to the tube or central
+cluster, including the control forecast (N) </td>
+            <td> 79</td>
+            <th style="vertical-align: top; text-align: left;">numberOfForecastsInTube<br>
+            </th>
+            <td style="vertical-align: top;">numberOfForecastsInTube</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 59-&gt;(58+N)</td>
+            <td>
+            <pre>List of N ensemble forecast numbers (**)<br>Order is important, first on the list is the tube extreme </pre>
+            </td>
+            <td> 80-&gt;(79+N)</td>
+            <th style="vertical-align: top; text-align: left;">ensembleForecastNumbers<br>
+            </th>
+            <td style="vertical-align: top;">ensembleForecastNumbers</td>
+            <td style="vertical-align: top;">"numberOfForecastsInTube"
+numbers.<br>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td>Set to zero (present to keep the length of section 1
+constant) </td>
+            <td>(80+N)-&gt;334</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+Notes:
+      <p> * a forecast may belong to several tubes. In this case, the
+forecast is associated with the tube whose extreme is closest. </p>
+      <p> ** by order of decreasing distance to the ensemble mean.

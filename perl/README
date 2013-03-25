@@ -1,0 +1,20 @@
+Batti:
+
+cd grib_api/main/perl/GRIB-API
+perl56 Makefile.PL
+make
+
+./test.pl
+./create.pl
+xdiff data.grib copy.grib
+~emos/bin/linux/compareGribFiles data.grib copy.grib
+
+mars
+ret,targ="data.grib",level=1,levtype=ml
+
+
+./create.pl
+xdiff *.dump
+
+(cannot set "pv")
+

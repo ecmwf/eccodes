@@ -1,0 +1,220 @@
+      <p>
+      <table border="3">
+        <tbody>
+          <tr>
+            <th> KSEC1 element</th>
+            <th> Contents</th>
+            <th> GRIB octet</th>
+            <th style="vertical-align: top; text-align: center;">Recommended
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Coded
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Comments</th>
+          </tr>
+          <tr>
+            <td> 37</td>
+            <td>
+            <pre>ECMWF local GRIB use definition identifier.<br>6 = Surface temperature fields made from SST and SSMI data with first-guess<br>values inserted on land points.</pre>
+            </td>
+            <td> 41</td>
+            <th style="vertical-align: top; text-align: left;">localDefinitionNumber</th>
+            <td style="vertical-align: top;">localDefinitionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>38</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_class/">Class</a></td>
+            <td>42</td>
+            <th style="vertical-align: top; text-align: left;">class</th>
+            <td style="vertical-align: top;">marsClass</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>39</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_type/">Type</a></td>
+            <td>43</td>
+            <th style="vertical-align: top; text-align: left;">type<br>
+            </th>
+            <td style="vertical-align: top;">marsType<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>40</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_stream/">Stream</a></td>
+            <td>44-45</td>
+            <th style="vertical-align: top; text-align: left;">stream<br>
+            </th>
+            <td style="vertical-align: top;">marsStream</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>41</td>
+            <td>
+            <pre>Version number or experiment identifier.<br>(4 ASCII characters, right justified)</pre>
+            </td>
+            <td>46-49</td>
+            <th style="vertical-align: top; text-align: left;">expver</th>
+            <td style="vertical-align: top;">experimentVersionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 42</td>
+            <td> Zero.</td>
+            <td> 50</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 43</td>
+            <td> Zero.</td>
+            <td> 51</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 44</td>
+            <td> Date of SST field used; YYMMDD</td>
+            <td> 52-54</td>
+            <th style="vertical-align: top; text-align: left;">dateSSTFieldUsed<br>
+            </th>
+            <td style="vertical-align: top;">dateSSTFieldUsed<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 45</td>
+            <td>
+            <pre>Type of SST field used:<br> 0 = climatology<br> 1 = 1/1 degree SST data<br> 2 = 2/2 degree sat data</pre>
+            </td>
+            <td> 55</td>
+            <th style="vertical-align: top; text-align: left;">typeOfSSTFieldUsed<br>
+            </th>
+            <td style="vertical-align: top;">typeOfSSTFieldUsed<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 46</td>
+            <td> Count of ICE fields used (N, say)</td>
+            <td> 56</td>
+            <th style="vertical-align: top; text-align: left;">countOfICEFieldsUsed<br>
+            </th>
+            <td style="vertical-align: top;">countOfICEFieldsUsed<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 47</td>
+            <td>
+            <pre>Date of first ICE field used; <br> YYMMDD = zero if missing.</pre>
+            </td>
+            <td> 57-59</td>
+            <th style="vertical-align: top; text-align: left;">dateOfIceFieldUsed[1]<br>
+            </th>
+            <td style="vertical-align: top;">dateOfIceFieldUsed[1]</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 48</td>
+            <td> First day satellite number (ICE data)</td>
+            <td> 60</td>
+            <th style="vertical-align: top; text-align: left;">satelliteNumber[1]<br>
+            </th>
+            <td style="vertical-align: top;">satelliteNumber[1]</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 49</td>
+            <td>
+            <pre>Date of second ICE field used;<br> YYMMDD = zero if missing.</pre>
+            </td>
+            <td> 61-63</td>
+            <th style="vertical-align: top; text-align: left;">dateOfIceFieldUsed[2]</th>
+            <td style="vertical-align: top;">dateOfIceFieldUsed[2]</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 50</td>
+            <td> Second day satellite number (ICE data)</td>
+            <td> 64</td>
+            <th style="vertical-align: top; text-align: left;">satelliteNumber[2]</th>
+            <td style="vertical-align: top;">satelliteNumber[2]</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 51</td>
+            <td>
+            <pre>Date of third ICE field used;<br> YYMMDD = zero if missing.</pre>
+            </td>
+            <td> 65-67</td>
+            <th style="vertical-align: top; text-align: left;">dateOfIceFieldUsed[3]</th>
+            <td style="vertical-align: top;">dateOfIceFieldUsed[3]</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 52</td>
+            <td> Third day satellite number (ICE data).</td>
+            <td> 68</td>
+            <th style="vertical-align: top; text-align: left;">satelliteNumber[3]</th>
+            <td style="vertical-align: top;">satelliteNumber[3]</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> ...</td>
+            <td> ...</td>
+            <td> -</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 45 + (N*2)</td>
+            <td>
+            <pre>Date of Nth field used;<br> YYMMDD = zero if missing.</pre>
+            </td>
+            <td> 56 + N*4</td>
+            <th style="vertical-align: top; text-align: left;">dateOfIceFieldUsed[countOfICEFieldsUsed]</th>
+            <td style="vertical-align: top;">dateOfIceFieldUsed[countOfICEFieldsUsed]</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 46 + (N*2)</td>
+            <td> Nth day satellite number (ICE data).</td>
+            <td> 57 + N*4</td>
+            <th style="vertical-align: top; text-align: left;">satelliteNumber[countOfICEFieldsUsed]</th>
+            <td style="vertical-align: top;">satelliteNumber[countOfICEFieldsUsed]</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+        </tbody>
+      </table>

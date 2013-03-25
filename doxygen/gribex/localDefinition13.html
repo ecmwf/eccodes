@@ -1,0 +1,271 @@
+      <table border="3">
+        <tbody>
+          <tr>
+            <th> KSEC1 element</th>
+            <th> Contents</th>
+            <th> GRIB octet</th>
+            <th style="vertical-align: top; text-align: center;">Recommended
+GRIB_API keys<br>
+            </th>
+            <th style="vertical-align: top; text-align: center;">Coded
+GRIB_API keys<br>
+            </th>
+            <th style="text-align: center; vertical-align: top;">Comments</th>
+          </tr>
+          <tr>
+            <td> 37</td>
+            <td>
+            <pre>ECMWF local GRIB use definition identifier.<br>13 = Wave 2D spectra direction and frequency. </pre>
+            </td>
+            <td> 41</td>
+            <th style="vertical-align: top; text-align: left;">localDefinitionNumber<br>
+            </th>
+            <td style="vertical-align: top; text-align: left;">localDefinitionNumber<br>
+            </td>
+            <td style="text-align: left;">&nbsp;</td>
+          </tr>
+          <tr>
+            <td>38</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_class/">Class</a></td>
+            <td>42</td>
+            <th style="vertical-align: top; text-align: left;">class<br>
+            </th>
+            <td style="vertical-align: top; text-align: left;">marsClass<br>
+            </td>
+            <td style="text-align: left;">&nbsp;</td>
+          </tr>
+          <tr>
+            <td>39</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_type/">Type</a></td>
+            <td>43</td>
+            <th style="vertical-align: top; text-align: left;">type<br>
+            </th>
+            <td style="vertical-align: top; text-align: left;">marsType<br>
+            </td>
+            <td style="text-align: left;">&nbsp;</td>
+          </tr>
+          <tr>
+            <td>40</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_stream/">Stream</a></td>
+            <td>44-45</td>
+            <th style="vertical-align: top; text-align: left;">stream<br>
+            </th>
+            <td style="vertical-align: top; text-align: left;">marsStream<br>
+            </td>
+            <td style="text-align: left;">&nbsp;</td>
+          </tr>
+          <tr>
+            <td>41</td>
+            <td>
+            <pre>Version number or experiment identifier.<br>(4 ASCII characters, right justified)</pre>
+            </td>
+            <td>46-49</td>
+            <th style="vertical-align: top; text-align: left;">expver<br>
+            </th>
+            <td style="vertical-align: top; text-align: left;">experimentVersionNumber</td>
+            <td style="text-align: left;">&nbsp;</td>
+          </tr>
+          <tr>
+            <td> 42</td>
+            <td> As for MARS labelling (eg set to zero, or ensemble
+forecast number if appropriate) </td>
+            <td> 50</td>
+            <th style="text-align: left;">number</th>
+            <td style="vertical-align: top; text-align: left;">number<br>
+            </td>
+            <td style="text-align: left;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 43</td>
+            <td> As for MARS labelling (eg set to zero, or total number
+in ensembles if appropriate) </td>
+            <td> 51</td>
+            <th style="text-align: left;">total</th>
+            <td style="vertical-align: top; text-align: left;">total<br>
+            </td>
+            <td style="text-align: left;">&nbsp;</td>
+          </tr>
+          <tr>
+            <td> 44</td>
+            <td> Direction number </td>
+            <td> 52</td>
+            <th style="text-align: left;">directionNumber</th>
+            <td style="vertical-align: top; text-align: left;">directionNumber<br>
+            </td>
+            <td style="text-align: left;">&nbsp;</td>
+          </tr>
+          <tr>
+            <td> 45</td>
+            <td> Frequency number </td>
+            <td> 53</td>
+            <th style="text-align: left;">frequencyNumber</th>
+            <td style="vertical-align: top; text-align: left;">frequencyNumber<br>
+            </td>
+            <td style="text-align: left;"> <br>
+            </td>
+          </tr>
+          <tr>
+            <td> 46</td>
+            <td> Total number of directions (Nd) </td>
+            <td> 54</td>
+            <th style="text-align: left;">numberOfDirections</th>
+            <td style="vertical-align: top; text-align: left;">numberOfDirections<br>
+            </td>
+            <td style="text-align: left;">&nbsp;</td>
+          </tr>
+          <tr>
+            <td> 47</td>
+            <td> Total number of frequencies (Nf) </td>
+            <td> 55</td>
+            <th style="text-align: left;">numberOfFrequencies </th>
+            <td style="text-align: left;">numberOfFrequencies</td>
+            <td style="vertical-align: top; text-align: left;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 48</td>
+            <td> Integer scaling factor applied to directions in
+following list of direction definitions (4-byte integer) </td>
+            <td> 56-59</td>
+            <th style="text-align: left;">directionScalingFactor </th>
+            <td style="text-align: left;">directionScalingFactor</td>
+            <td style="vertical-align: top; text-align: left;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 49</td>
+            <td> Integer scaling factor applied to frequencies in
+following list of frequency definitions (4-byte integer) </td>
+            <td> 60-63</td>
+            <th style="text-align: left;">frequencyScalingFactor</th>
+            <td style="text-align: left;">frequencyScalingFactor</td>
+            <td style="vertical-align: top; text-align: left;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td>
+            <pre>Flag to show inclusions in the header:<br>0 = system and method are not included<br>1 = system and method are included<br>2 = system, method, reference date, climate date (from)<br>    and climate date (to) are included<br>3 = all information in 2 leg information for variable <br>    resolution systems are included<br></pre>
+            </td>
+            <td>64</td>
+            <th style="text-align: left;">flag</th>
+            <td style="text-align: left;">flag</td>
+            <td style="vertical-align: top; text-align: left;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>50+Nd+Nf</td>
+            <td>System number (65535 = missing)</td>
+            <td>65-66</td>
+            <th style="text-align: left;">systemNumber</th>
+            <td style="text-align: left;">systemNumber</td>
+            <td style="vertical-align: top; text-align: left;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>51+Nd+Nf</td>
+            <td>Method number (65535 = missing)</td>
+            <td>67-68</td>
+            <th style="text-align: left;">methodNumber</th>
+            <td style="text-align: left;">methodNumber</td>
+            <td style="vertical-align: top; text-align: left;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>52+Nd+Nf</td>
+            <td>Reference date (YYYYMMDD)</td>
+            <td>69-72</td>
+            <th style="text-align: left;">referenceDate</th>
+            <td style="text-align: left;">referenceDate</td>
+            <td style="vertical-align: top; text-align: left;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>53+Nd+Nf</td>
+            <td>Climate date - from (YYYYMMDD)</td>
+            <td>73-76</td>
+            <th style="text-align: left;">climateDateFrom</th>
+            <td style="text-align: left;">climateDateFrom</td>
+            <td style="vertical-align: top; text-align: left;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>54+Nd+Nf</td>
+            <td>Climate date - to (YYYYMMDD)</td>
+            <td>77-80</td>
+            <th style="text-align: left;">climateDateTo</th>
+            <td style="text-align: left;">climateDateTo</td>
+            <td style="vertical-align: top; text-align: left;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>55+Nd+Nf</td>
+            <td> Base time of this leg (YYYYMMDD) </td>
+            <td> 81-84</td>
+            <th style="text-align: left;">legBaseDate</th>
+            <td style="text-align: left;">legBaseDateo</td>
+            <td style="vertical-align: top; text-align: left;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>56+Nd+Nf</td>
+            <td> Base time of this leg (HHMM) </td>
+            <td> 85-86</td>
+            <th style="text-align: left;">legBaseTime</th>
+            <td style="text-align: left;">legBaseTime</td>
+            <td style="vertical-align: top; text-align: left;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>57+Nd+Nf</td>
+            <td> Leg number </td>
+            <td> 87</td>
+            <th style="text-align: left;">legNumber</th>
+            <td style="text-align: left;">legNumber</td>
+            <td style="vertical-align: top; text-align: left;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>58+Nd+Nf</td>
+            <td>
+            <pre>	Ocean - Atmosphere coupling: <br>	0 = unspecified<br>	1 = uncoupled<br>	2 = coupled  <br>	</pre>
+            </td>
+            <td> 88</td>
+            <th style="text-align: left;">oceanAtmosphereCoupling</th>
+            <td style="text-align: left;">oceanAtmosphereCoupling</td>
+            <td style="vertical-align: top; text-align: left;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> -</td>
+            <td> Spare (set to zero) </td>
+            <td> 89-100</td>
+            <th style="text-align: left;">spareSetToZero3</th>
+            <td style="text-align: left;">spareSetToZero3</td>
+            <td style="vertical-align: top; text-align: left;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 50-&gt;(49+Nd)</td>
+            <td> List of Nd scaled directions (4-byte integers) </td>
+            <td> 101-&gt;(100+Nd*4)</td>
+            <th style="text-align: left;">scaledDirections</th>
+            <td style="text-align: left;">scaledDirections</td>
+            <td style="vertical-align: top; text-align: left;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> (50+Nd)-&gt;(49+Nd+Nf)</td>
+            <td> List of Nf scaled frequencies (4-byte integers) </td>
+            <td> (101+Nd*4)-&gt;(100+Nd*4+Nf*4)</td>
+            <th style="text-align: left;">scaledFrequencies</th>
+            <td style="text-align: left;">scaledFrequencies</td>
+            <td style="vertical-align: top; text-align: left;"><br>
+            </td>
+          </tr>
+        </tbody>
+      </table>

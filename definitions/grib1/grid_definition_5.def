@@ -1,0 +1,83 @@
+# Copyright 2005-2012 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
+# GRID DEFINITION polar stereographic
+# grib 1 -> 2
+constant gridDefinitionTemplateNumber     = 20;
+
+unsigned[2] Nx  : dump;
+alias Ni =  Nx;
+alias numberOfPointsAlongXAxis =  Nx;
+alias geography.Nx=Nx;
+
+unsigned[2] Ny  : dump;
+alias Nj =  Ny;
+alias numberOfPointsAlongYAxis =  Ny;
+alias geography.Ny=Ny;
+
+signed[3] latitudeOfFirstGridPoint : edition_specific ;
+meta geography.latitudeOfFirstGridPointInDegrees scale(latitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
+alias La1 = latitudeOfFirstGridPoint;
+
+signed[3] longitudeOfFirstGridPoint : edition_specific;
+meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
+alias Lo1 = longitudeOfFirstGridPoint;
+
+include "resolution_flags.def";
+
+#  LoV - orientation of the grid; i.e.  the longitude value of the meridian which is parallel to the Y-axis
+signed[3] orientationOfTheGrid  ;
+meta geography.orientationOfTheGridInDegrees scale(orientationOfTheGrid,oneConstant,grib1divider,truncateDegrees) : dump;
+alias LoV = orientationOfTheGrid ;
+
+#  Dx - X-direction grid length
+unsigned[3] DxInMetres  : dump;
+alias xDirectionGridLengthInMetres=DxInMetres;
+alias Dx=DxInMetres;
+alias geography.DxInMetres=DxInMetres;
+alias Di = DxInMetres;
+
+#  Dy - Y-direction grid length
+unsigned[3] DyInMetres  : dump;
+alias yDirectionGridLengthInMetres=DyInMetres;
+alias Dy = DyInMetres;
+alias Dj = DyInMetres;
+alias geography.DyInMetres=DyInMetres;
+
+constant latitudeWhereDxAndDyAreSpecifiedInDegrees=60;
+constant LaDInDegrees=60;
+alias geography.LaDInDegrees=LaDInDegrees;
+
+#  Projection center flag
+unsigned[1] projectionCentreFlag : dump ;
+alias projectionCenterFlag=projectionCentreFlag;
+
+# for change_scanning_direction
+alias yFirst=latitudeOfFirstGridPointInDegrees;
+alias xFirst=longitudeOfFirstGridPointInDegrees;
+
+include "scanning_mode.def";
+
+pad padding_grid5_1(4);
+
+meta numberOfDataPoints number_of_points(Nx,Ny,PLPresent,pl) : dump;
+alias numberOfPoints=numberOfDataPoints;
+meta numberOfValues number_of_values(values,bitsPerValue,numberOfDataPoints,bitmapPresent,bitmap,numberOfCodedValues) : dump;
+#alias ls.valuesCount=numberOfValues;
+
+iterator polar_stereographic(numberOfPoints,missingValue,values,
+          radius,Nx,Ny,
+          latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
+          LaDInDegrees,orientationOfTheGridInDegrees,
+          Dx,Dy,
+          iScansNegatively,
+          jScansPositively,
+          jPointsAreConsecutive,
+          alternativeRowScanning);
+

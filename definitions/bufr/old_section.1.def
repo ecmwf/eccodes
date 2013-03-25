@@ -1,0 +1,27 @@
+# Copyright 2005-2012 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
+codetable[2] originatingCentrer            'grib1/0.table' : dump;
+unsigned[1]  updateSequenceNumber;
+
+flags[1]     section1Flags 'bufr/section1_flags.table' = 128 : hidden ; # = section 2 present
+
+
+unsigned[1] dataCategory;
+unsigned[1] dataSubCategory;
+unsigned[2] localTablesVersionNumber;
+
+unsigned[1] yearOfCentury;
+unsigned[1] month;
+unsigned[1] day;
+unsigned[1] hour;
+unsigned[1] minute;
+unsigned[1] masterTablesVersionNumber;
+
+alias masterTableNumber = editionNumber; # ?

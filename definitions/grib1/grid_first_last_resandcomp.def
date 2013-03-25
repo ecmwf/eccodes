@@ -1,0 +1,42 @@
+# Copyright 2005-2012 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
+#  La1 - latitude of first grid point
+signed[3] latitudeOfFirstGridPoint :  edition_specific;
+meta geography.latitudeOfFirstGridPointInDegrees scale(latitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) :dump;
+alias La1 = latitudeOfFirstGridPoint;
+
+#  Lo1 - longitude of first grid point
+signed[3] longitudeOfFirstGridPoint  : edition_specific;
+meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
+alias Lo1 = longitudeOfFirstGridPoint;
+
+include "resolution_flags.def";
+
+#  La2 - latitude of last grid point
+signed[3] latitudeOfLastGridPoint :  edition_specific;
+meta geography.latitudeOfLastGridPointInDegrees scale(latitudeOfLastGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
+alias La2 = latitudeOfLastGridPoint;
+
+#  Lo2 - longitude of last grid point
+signed[3] longitudeOfLastGridPoint :  edition_specific;
+meta geography.longitudeOfLastGridPointInDegrees scale(longitudeOfLastGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
+alias Lo2 = longitudeOfLastGridPoint;
+
+# for change_scanning_direction
+alias yFirst=latitudeOfFirstGridPointInDegrees;
+alias yLast=latitudeOfLastGridPointInDegrees;
+alias xFirst=longitudeOfFirstGridPointInDegrees;
+alias xLast=longitudeOfLastGridPointInDegrees;
+
+alias latitudeFirstInDegrees  = latitudeOfFirstGridPointInDegrees;
+alias longitudeFirstInDegrees = longitudeOfFirstGridPointInDegrees;
+alias latitudeLastInDegrees   = latitudeOfLastGridPointInDegrees;
+alias longitudeLastInDegrees  = longitudeOfLastGridPointInDegrees;
+

@@ -1,0 +1,90 @@
+# Copyright 2005-2012 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
+unsigned[2] Ni : can_be_missing,dump;
+alias numberOfPointsAlongAParallel= Ni ;
+alias Nx =Ni;
+
+signed[2] Nj : dump;
+alias numberOfPointsAlongAMeridian=Nj;
+alias Ny=Nj;
+
+# Latitudes and Longitudes of the first and the last points
+# Resolution and component flags
+include "grid_first_last_resandcomp.def";
+
+#  Di - i direction increment
+unsigned[2] iDirectionIncrement : can_be_missing,dump,edition_specific;
+meta geography.iDirectionIncrementInDegrees scale(iDirectionIncrement,oneConstant,grib1divider,truncateDegrees) : can_be_missing,dump;
+alias Di = iDirectionIncrement;
+
+#  N - number of parallels between a pole and the equator
+unsigned[2] N : dump ;
+alias numberOfParallelsBetweenAPoleAndTheEquator=N;
+alias geography.N=N;
+
+# for change_scanning_direction
+alias yFirst=latitudeOfFirstGridPointInDegrees;
+alias yLast=latitudeOfLastGridPointInDegrees;
+alias xFirst=longitudeOfFirstGridPointInDegrees;
+alias xLast=longitudeOfLastGridPointInDegrees;
+
+include "scanning_mode.def";
+
+pad padding_grid4_1(4);
+
+alias latitudeFirstInDegrees  = latitudeOfFirstGridPointInDegrees;
+alias longitudeFirstInDegrees = longitudeOfFirstGridPointInDegrees;
+alias latitudeLastInDegrees   = latitudeOfLastGridPointInDegrees;
+alias longitudeLastInDegrees  = longitudeOfLastGridPointInDegrees;
+alias DiInDegrees = iDirectionIncrementInDegrees;
+
+meta global global_gaussian(N,Ni,iDirectionIncrement,
+                            latitudeOfFirstGridPoint,
+                            longitudeOfFirstGridPoint,
+                            latitudeOfLastGridPoint,
+                            longitudeOfLastGridPoint) = 0 : dump;
+
+meta numberOfDataPoints number_of_points_gaussian(Ni,Nj,PLPresent,pl,
+  N,
+  latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
+  latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees) : dump;
+
+alias numberOfPoints=numberOfDataPoints;
+meta numberOfValues number_of_values(values,bitsPerValue,numberOfDataPoints,bitmapPresent,bitmap,numberOfCodedValues) : dump;
+#alias ls.valuesCount=numberOfValues;
+
+if(missing(Ni)){
+   iterator gaussian_reduced(numberOfPoints,missingValue,values,
+       latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
+       latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,
+       N,pl,Nj);
+   nearest reduced(values,radius,Nj,pl);
+   box reduced_gaussian(latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
+          latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,
+		  N,pl);
+} else {
+   iterator   gaussian(numberOfPoints,missingValue,values,longitudeFirstInDegrees,
+            DiInDegrees  ,Ni,Nj,iScansNegatively ,
+            latitudeFirstInDegrees, latitudeLastInDegrees,
+            N,jScansPositively);
+   nearest regular(values,radius,Ni,Nj);
+ #  box regular_gaussian(latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
+ #         latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,
+#		  DiInDegrees,Ni,N,iScansNegatively,jScansPositively);
+}
+
+meta latLonValues latlonvalues(values);
+alias latitudeLongitudeValues=latLonValues;
+meta latitudes latitudes(values,0);
+meta longitudes longitudes(values,0);
+meta distinctLatitudes latitudes(values,1);
+meta distinctLongitudes longitudes(values,1);
+
+

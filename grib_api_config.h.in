@@ -1,0 +1,17 @@
+#ifndef grib_api_config_h
+#define grib_api_config_h
+
+#include "ecbuild_config.h"
+
+#define GRIB_API_VERSION_STR "@GRIB_API_VERSION@"
+
+#define GRIB_API_MAJOR_VERSION    @GRIB_API_MAJOR_VERSION@
+#define GRIB_API_MINOR_VERSION    @GRIB_API_MINOR_VERSION@
+#define GRIB_API_REVISION_VERSION @GRIB_API_PATCH_VERSION@
+
+#define GRIB_DEFINITION_PATH      "@GRIB_API_DEFINITION_PATH@"
+#define GRIB_SAMPLES_PATH         "@GRIB_API_SAMPLES_PATH@"
+
+#cmakedefine HAVE_LIBSZIP
+
+#endif //grib_api_config_h

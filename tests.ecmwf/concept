@@ -1,0 +1,33 @@
+#!/usr/bin/ksh
+set -e
+#exit
+rm -f $1.out || true
+
+#GRIB_TOOLS_DIR=/usr/local/lib/metaps/bin
+#GRIB_TOOLS_DIR=/marsdev/data/max/grib_api/tools
+GRIB_TOOLS_DIR=/tmp/mac/p4/grib_api/main/tools
+GRIBEX_DIR=/usr/local/lib/metaps/bin
+EMOS_BIN=~emos/bin/$ARCH
+
+packingType=`$GRIB_TOOLS_DIR/grib_ls -f -p packingType $1`
+
+echo "packingType = "$packingType
+
+if [[ ${packingType} == *unknown ]]    
+  then
+    echo "$1: packingType unknown"
+	$GRIB_TOOLS_DIR/grib_debug $1
+	exit 1
+fi
+
+gridType=`$GRIB_TOOLS_DIR/grib_get -p gridType $1`
+
+echo "gridType = "$gridType
+
+if [[ ${gridType} == *unknown ]]    
+  then
+    echo "$1: gridType unknown"
+	$GRIB_TOOLS_DIR/grib_debug $1
+	exit 1
+fi
+

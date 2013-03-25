@@ -1,0 +1,19 @@
+#!/usr/bin/ksh
+#set -e
+#exit
+rm -f $1.out || true
+
+#GRIB_TOOLS_DIR=/usr/local/lib/metaps/bin
+#GRIB_TOOLS_DIR=/marsdev/data/max/grib_api/tools
+GRIB_TOOLS_DIR=/tmp/mac/p4/grib_api/main/tools
+GRIBEX_DIR=/usr/local/lib/metaps/bin
+EMOS_BIN=~emos/bin/$ARCH
+
+$GRIB_TOOLS_DIR/grib_ls $1 
+if [[ $? -ne 0 ]] 
+then
+  $GRIB_TOOLS_DIR/grib_debug $1
+  exit 1
+fi
+
+rm -f $1.out || true

@@ -1,0 +1,16 @@
+/*! \page tools Grib tools
+The following command line tools are provided to help users in all 
+ interactive and batch processing of grib data.\n
+Use of the tools is recommended whenever possible. They provide a ready and tested solution for many 
+situations and their use will avoid the need to write new cod and thus speeding up your work.\n
+To make easier their use the tools are provided with a common set of options 
+so that it's quick to apply the same options to different tools. 
+We suggest to begin with \ref grib_dump, \ref grib_ls and \ref grib_get to inspect 
+the content of some files and then to learn about the other tools 
+to change the content of the grib message (\ref grib_set, \ref grib_filter) 
+or to copy some messages from a file (\ref grib_copy) or to get a latitude/longitude/values
+list of data. 
+A smart compare tool (\ref grib_compare) is also provided to compare grib messages focusing on some keys or
+comparing data with a given precision.
+
+

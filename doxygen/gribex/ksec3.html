@@ -1,0 +1,464 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><!-- #BeginTemplate "/Templates/ecmwf.dwt" --><!-- DW6 -->
+<head profile="http://purl.org/metadata/dublin_core">
+<!-- ECMWF: Standard External Template -->
+<!-- ECMWF: Version 1.062 (banner link corrected) -->
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<META content="$Author: Enrico Fucile $" name="DC.Creator" />
+<LINK REL="SHORTCUT ICON" href="/favicon.ico">
+<!-- #BeginEditable "meta" --> 
+<META content="ECMWF webgroup" name="DC.Publisher" />
+<META content="webgroup documents" name="DC.Subject" />
+<!-- #EndEditable --> <!-- #BeginEditable "metalink" --> 
+<!-- Users insert meta LINK tags here -->
+<!-- #EndEditable --> <!-- #BeginEditable "doctitle" --> 
+<title>GRIB API Manual</title>
+<!-- #EndEditable --><!-- #BeginEditable "customstyle" -->
+<!--put custom style here-->
+<link rel="stylesheet" href="/publications/manuals/grib_api/doxygen.css" type="text/css">
+<!-- #EndEditable -->
+<script type="text/javascript" language="JavaScript" src=
+"/assets/js/ecmwf.js">
+</script>
+
+<link rel="stylesheet" href="/assets/css/ecmwf.css" type=
+"text/css">
+</head>
+<body bgcolor="#FFFFF2" text="#000000">
+<a name="top"></a> 
+
+<table summary="Formatting Table: Page Layout" width="750" border=
+"0" cellspacing="0" cellpadding="0" bgcolor="#FFFFF2">
+<tr>
+<td bgcolor="#CCCE9B" align="left" valign="middle"><a href="/"><img
+src="/assets/images/text_logo.jpg" border="0" alt="Home page"
+width="136" height="26" align="middle"></a></td>
+<td bgcolor="#CCCE9B">&nbsp;</td>
+<td bgcolor="#CCCE9B" valign="middle">
+<form name="search" method="post" action="/cgi-bin/htsearch"><input
+type="hidden" name="restrict" value=""> 
+
+<table summary="Formatting Table: Actions Menu" border="0"
+cellspacing="4" cellpadding="0" align="right">
+<tr>
+<td><a href="/" class="menuitem">Home</a></td>
+<td>&nbsp;</td>
+<td><a href="/your/d/room/" class="menuitem">Your Room</a></td>
+<td>&nbsp;</td>
+<td><a href="/tools/login/" class="menuitem">Login</a></td>
+<td>&nbsp;</td>
+<td><a href="/about/contact/" class="menuitem">Contact</a></td>
+<td>&nbsp;</td>
+<td><a href="/about/feedback/" class="menuitem">Feedback</a></td>
+<td>&nbsp;</td>
+<td><a href="/about/sitemap/" class="menuitem">Site Map</a></td>
+<td>&nbsp;</td>
+<td><a href="/tools/qsearch/" class="menuitem">Search:</a></td>
+<td valign="bottom"><input type="hidden" name="exclude" value="">
+<input type="hidden" name="config" value="wmss"> <input type="text"
+name="words" maxlength="128" size="8" style=
+"height:20px; width:80px"> </td>
+<td>&nbsp;</td>
+</tr>
+</table>
+</form>
+</td>
+</tr>
+
+<tr>
+<td align="center" valign="middle" width="136" bgcolor="#EEEEDE"><a
+href="/samples/d/banner/page.html"><img alt="Discover this product"
+border="0" width="136" height="64" src=
+"/samples/d/banner/image.jpg"></a></td>
+<td bgcolor="#EEEEDE">&nbsp;</td>
+<td align="right" bgcolor="#EEEEDE">
+<table summary="Formatting Table: Top Navigation" cellpadding="2"
+cellspacing="0" border="0" width="100%">
+<tr bgcolor="#EEEEDE">
+<td valign="top" bgcolor="#EEEEDE" width="16%"><a href=
+"/about/"><span class="topnav">About Us</span></a><br>
+ <a class="topnav1" href="/about/overview/">Overview</a><br>
+ <a class="topnav1" href="/about/location/">Getting here</a><br>
+ <a class="topnav1" href="/about/committees/">Committees</a> </td>
+<td valign="top" bgcolor="#EEEEDE" width="16%"><a href=
+"/products/"><span class="topnav">Products</span></a><br>
+ <a class="topnav1" href="/products/forecasts/">Forecasts</a><br>
+ <a class="topnav1" href="/products/data/">Order Data</a><br>
+ <a class="topnav1" href="/products/data/software/">Order
+Software</a><br>
+ </td>
+<td valign="top" bgcolor="#EEEEDE" width="16%"><a href=
+"/services/"><span class="topnav">Services</span></a><br>
+ <a class="topnav1" href="/services/computing/">Computing</a><br>
+ <a class="topnav1" href="/services/archive/">Archive</a><br>
+ <a class="topnav1" href="/services/prepifs/">PrepIFS</a><br>
+ </td>
+<td valign="top" bgcolor="#EEEEDE" width="16%"><a href=
+"/research/"><span class="topnav">Research</span></a><br>
+ <a class="topnav1" href="/research/ifs/">Modelling</a><br>
+ <a class="topnav1" href="/research/era/">Reanalysis</a><br>
+ <a class="topnav1" href="/research/seasonal/">Seasonal</a><br>
+ </td>
+<td valign="top" bgcolor="#EEEEDE" width="16%"><a href=
+"/publications/"><span class="topnav">Publications</span></a><br>
+ <a class="topnav1" href=
+"/publications/newsletters/">Newsletters</a><br>
+ <a class="topnav1" href="/publications/manuals/">Manuals</a><br>
+ <a class="topnav1" href="/publications/manuals/libraries">Libraries</a><br>
+ </td>
+<td valign="top" bgcolor="#EEEEDE" width="20%"><a href=
+"/newsevents/"><span class="topnav">News&amp;Events</span></a><br>
+ <a class="topnav1" href="/newsevents/calendar/">Calendar</a><br>
+ <a class="topnav1" href="/newsevents/employment/">Employment</a><a
+class="topnav1" href="/newsevents/calendar/"></a><br>
+ <a class="topnav1" href="/newsevents/itt/">Open Tenders</a><br>
+ </td>
+</tr>
+</table>
+</td>
+</tr>
+
+<tr>
+<td align="left" valign="middle" width="136" bgcolor="#CCCE9B">
+<!-- #BeginEditable "spare1" -->&nbsp;<!-- #EndEditable --></td>
+<td bgcolor="#CCCE9B">&nbsp;</td>
+<td valign="middle" bgcolor="#CCCE9B">
+<table summary="Formatting Table: Location header" cellpadding="0"
+cellspacing="0" border="0" width="100%">
+<tr>
+<td align="left"><span class="location">
+<!-- #BeginEditable "location" -->
+<!-- #BeginLibraryItem "/PRODUCTS/DATA/LIBRARY/software_top_menu.lbi" --><span
+ class="location"><a href="/">Home</a>&nbsp;&gt;&nbsp;
+<a href= "/publications/index.html">Publications</a>&nbsp;&gt;&nbsp;
+<a href= "/publications/manuals/index.html">Manuals</a> &gt; 
+<!-- #EndLibraryItem -->Grib API&gt;&nbsp;
+<!-- #EndEditable -->&nbsp;</span> </td>
+<td align="right"><!-- #BeginEditable "topprevnext" -->
+<!-- #EndEditable --></td>
+</tr>
+</table>
+</td>
+</tr>
+
+<tr>
+<td align="left"><!-- #BeginEditable "spare2" -->&nbsp;
+<!-- #EndEditable --> </td>
+<td>&nbsp;</td>
+<td align="left">
+<h1><!-- #BeginEditable "heading" -->
+<!-- #EndEditable --></h1>
+</td>
+</tr>
+
+<tr>
+<td valign="top" width="136" background=
+"/assets/images/map_backdrop.jpg"><!-- #BeginEditable "submenu" -->
+<!-- #BeginLibraryItem "/PRODUCTS/DATA/SOFTWARE/" --><!-- + + + + + NAME = [Data]+ + + + + + + + + -->
+<table background="/assets/shim.gif" bgcolor="#FFF1B3" border="0"
+cellpadding="1" cellspacing="0" width="100%" class="submenu">
+<tbody>
+<tr>
+<td><a class="menuheading" href=
+"/publications/manuals/grib_api/index.html">GRIB API Manual</a> </td>
+</tr>
+
+<tr>
+<td>
+<table bgcolor="#ffffff" border="0" cellpadding="3" cellspacing="0"
+width="100%">
+<tr>
+<td>
+<table bgcolor="#ffffff" width="100%">
+<tr>
+<td><a class="menuitem" href=
+"/publications/manuals/grib_api/installation.html">Installation</a></td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/publications/manuals/grib_api/namespacegribapi.html">Python</a></td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/publications/manuals/grib_api/namespacegrib__api.html">Fortran 90</a></td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/publications/manuals/grib_api/modules.html">C</a></td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/publications/manuals/grib_api/conversion.html">GRIB Conversion</a></td>
+</tr>
+
+
+<td><a class="menuitem" href=
+"/publications/manuals/grib_api/gribexkeys/callGribex.html">GRIBEX keys</a></td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/publications/manuals/grib_api/keys.html">Keys</a></td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/publications/manuals/grib_api/grib_examples.html">Examples</a></td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/publications/manuals/grib_api/tools.html">Tools</a></td>
+</tr>
+
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+
+<br>
+ <!-- - - NAME = [archive]- - - - - - - --> 
+<!-- #EndLibraryItem --><!-- #BeginLibraryItem "/products/data/Library/software_rel6.lbi" --><!-- + + + + + NAME = [Data]+ + + + + + + + + -->
+<!-- #BeginLibraryItem "/PRODUCTS/DATA/LIBRARY/software_menu.lbi" --><!-- + + + + + NAME = [Data]+ + + + + + + + + -->
+<table background="/assets/shim.gif" bgcolor="#FFF1B3" border="0"
+cellpadding="1" cellspacing="0" width="100%" class="submenu">
+<tbody>
+<tr>
+<td><a class="menuheading" href=
+"/products/data/software/index.html">Software</a> </td>
+</tr>
+
+<tr>
+<td>
+<table bgcolor="#ffffff" border="0" cellpadding="3" cellspacing="0"
+width="100%">
+<tr>
+<td>
+<table bgcolor="#ffffff" width="100%">
+<tr>
+<td><a class="menuitem" href=
+"/products/data/software/bufr.html">BUFR</a></td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/products/data/software/crex.html">CREX</a></td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/products/data/software/grib.html">GRIBEX</a></td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/products/data/software/grib_api.html">GRIB API</a></td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/products/data/software/interpolation.html">Interpolation</a></td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/products/data/software/magics.html">Magics</a></td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/products/data/software/metview.html">Metview</a></td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/products/data/software/sms.html">SMS</a></td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/products/data/software/forms/ECMWF_software_ordering_form.pdf">Ordering
+forms</a> <img src="/products/data/archive/forms/pdf.gif" width=
+"20" height="20"></td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/products/data/software/forms/ECMWF_software_licence.pdf">Software
+licence<img src="/products/data/archive/forms/pdf.gif" width="20"
+height="20" border="0"></a></td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/products/data/software/payment.html">Payment rules</a></td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+
+<br>
+ <!-- - - NAME = [archive]- - - - - - - --> 
+<!-- #EndLibraryItem --><!-- #BeginLibraryItem "/products/data/Library/software_rel6.lbi" --><!-- + + + + + NAME = [Data]+ + + + + + + + + -->
+ 
+
+<table background="/assets/shim.gif" bgcolor="#CCCE9B" border="0"
+cellpadding="1" cellspacing="0" width="100%" class="submenu">
+<tbody>
+<tr>
+<td><span><a class="menuheading" href=
+"/publications/manuals/index.html">Related Manuals</a></span></td>
+</tr>
+
+<tr>
+<td></td>
+</tr>
+
+<tr>
+<td>
+<table bgcolor="#ffffff" border="0" cellpadding="3" cellspacing="0"
+width="100%">
+<tr>
+<td>
+<table bgcolor="#ffffff" width="100%">
+<tr>
+<td><a class="menuitem" href=
+"/publications/manuals/libraries/gribex/index.html">GRIBEX
+manual</a> </td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/publications/manuals/libraries/interpolation/index.html">Interpolation
+manual</a> </td>
+</tr>
+
+<tr>
+<td><a class="menuitem" href=
+"/publications/manuals/metview/index.html">Metview Manuals</a></td>
+</tr>
+
+<tr>
+<td>
+<p><a class="menuitem" href=
+"/publications/manuals/magics/index.html">Magics Manuals</a></p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+
+<br>
+ <!-- - - NAME = [data]- - - - - - - --> <!-- #EndLibraryItem -->
+<!-- #EndEditable --> &nbsp;<br>
+ </td>
+<td>&nbsp;</td>
+<td valign="top">
+
+
+<!-- #BeginEditable "content"  ****** -->
+<h2><a name="KSEC3">GRIB section 3, the bitmap section</a></h2>
+      <p>An INTEGER array of at least 2 elements. </p>
+      <p> </p>
+      <table border="3">
+        <caption><strong> Contents of KSEC3 </strong></caption><tbody>
+          <tr>
+            <th> Element </th>
+            <th> Contents </th>
+            <th style="vertical-align: middle;">
+              GRIB API keys<br>
+            </th>
+          </tr>
+          <tr>
+            <td> 1 </td>
+            <td>
+            <pre>0          A bitmap is included in the GRIB message.<br>           The data array PSEC4 contains a value which serves as a<br>           missing data indicator for use at missing data points.<br><br>Non-zero   The number of a predefined bitmap.<br>           The bitmap is not included in the message. The binary<br>           data array contains only valid data values; missing<br>           points are suppressed.</pre></td>
+            <th style="vertical-align: top;"><div align="left">bitmapPresent<br>
+            </div></th>
+          </tr>
+          <tr>
+            <td> 2
+            <p> </p>
+            </td>
+            <td> The value used at missing data points in an INTEGER
+data field. This value must be supplied for both encoding and decoding.
+            </td>
+            <th style="vertical-align: top;"><div align="left">missingValue<br>
+            </div></th>
+          </tr>
+        </tbody>
+      </table>
+
+
+
+<!-- #EndEditable --><br>
+ <!-- #BeginEditable "related" --> &nbsp; <!-- #EndEditable -->
+<br>
+ <br>
+ </td>
+</tr>
+
+<tr>
+<td bgcolor="#CCCE9B" valign="baseline">
+<table summary="Formatting Table: date footer" height="16" border=
+"0" cellspacing="0" cellpadding="0">
+<tr>
+<td><a href="#top"><img src="/assets/icons/up.gif" alt=
+"Top of page" border="0" width="18" height="18"></a></td>
+<td><span class="documentdate"><!-- #BeginEditable "version" --><!-- #BeginDate format:Ge1 -->22.10.2010<!-- #EndDate -->--> 
+<!-- #EndEditable --></span></td>
+</tr>
+</table>
+</td>
+<td valign="middle" bgcolor="#CCCE9B">&nbsp;</td>
+<td bgcolor="#CCCE9B" align="right" valign="baseline">
+<table summary="Formatting table: main footer" width="100%" border=
+"0" cellspacing="0" cellpadding="0">
+<tr align="right">
+<td align="left"><span class="info">
+<!-- #BeginEditable "info" -->&nbsp;&nbsp;
+<!-- #EndEditable --></span></td>
+<td bgcolor="#CCCE9B"><span class="editor"><a href=
+"/tools/detailer/"><img alt="Page Details" src=
+"/assets/icons/detailer.gif" border="0" width="18" height="18"></a>
+<!-- #BeginEditable "editor" -->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- #EndEditable --></span></td>
+<td bgcolor="#CCCE9B"><span class="copyright"><a href=
+"/frontpage/copyright/">&copy; ECMWF</a></span> </td>
+<td><!-- #BeginEditable "botprevnext" --><!-- #EndEditable --></td>
+</tr>
+</table>
+</td>
+</tr>
+
+<tr>
+<td height="1" width="136" bgcolor="#CCCB9E"><img alt="shim"
+height="1" width="136" src="/assets/shim.gif"></td>
+<td height="1" width="008" bgcolor="#CCCB9E"><img alt="shim"
+height="1" width="8" src="/assets/shim.gif"></td>
+<td height="1" width="100%" bgcolor="#CCCB9E"><img alt="shim"
+height="1" width="160" src="/assets/shim.gif"></td>
+</tr>
+</table>
+
+</body>
+<!-- #EndTemplate -->
+</html>
+

@@ -1,0 +1,6 @@
+%include <head.h>
+
+rm -f data
+ln -s %SAMPLEDIR%/%FILE% data
+
+%include <tail.h>

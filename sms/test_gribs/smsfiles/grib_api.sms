@@ -1,0 +1,46 @@
+%include <head.h>
+
+name=%FAMILY1%
+rm -fr /scratch/ma/max/problems/$name
+
+export GRIB_DEFINITION_PATH=/home/ma/mab/src/q/definitions
+here=`pwd`
+cd /home/ma/mab/src/q
+test=$(ls *.test)
+cd $here
+cat > info
+fail=0
+for n in $test
+do
+	t=$(basename $n .test)
+	echo -n  "$t " >> info
+	banner $n
+	cat info | perl -e '$/=undef;system("smslabel","info",<>);'
+	set +e
+	rm -f core
+	/home/ma/mab/src/q/$n data > out 2>>info
+	status=$?
+	tail out
+	[[ -f core ]] && ls -l core >> info
+	rm -f core
+	set -e
+
+	if [[ $status -eq 0 ]]
+	then
+		echo OK >> info
+	else
+		echo FAIL >> info
+		fail=1
+	fi
+	cat info | perl -e '$/=undef;system("smslabel","info",<>);'
+
+done
+
+
+if [[ $fail -ne 0 ]]
+then
+cp data /scratch/ma/max/problems/$name
+exit 1
+fi
+
+%include <tail.h>

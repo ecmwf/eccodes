@@ -1,0 +1,43 @@
+.grib.c:;   ./grib2c.pl $<
+# .req.grib:;  mars $<
+
+grib_errors.c : grib_errors.txt errors.pl
+	./errors.pl
+	cmp grib_errors.c grib_errors.c.new || (p4 edit grib_errors.c ; cp grib_errors.c.new grib_errors.c)
+	cmp grib_api.h grib_api.h.new       || (p4 edit grib_api.h ; cp grib_api.h.new grib_api.h)
+	cmp ../fortran/grib_api_constants.h grib_api_constants.h.new || (p4 edit ../fortran/grib_api_constants.h ; cp grib_api_constants.h.new ../fortran/grib_api_constants.h)
+	cmp ../python/grib_errors.h grib_errors.h.new || (p4 edit ../python/grib_errors.h ; cp grib_errors.h.new ../python/grib_errors.h)
+
+
+proto:;-p4 edit grib_api_prototypes.h;mkptypes -A $(libgrib_api_a_prototypes) $(libgrib_api_extra_prototypes) > grib_api_prototypes.h
+test:all;(cd ../tests; make tests)
+
+templates:
+	-p4 edit grib_templates.h
+	./grib2c.pl ../templates/*.grib
+
+grib_lex.c : gribl.l grib_yacc.h
+	$(LEX) gribl.l
+	p4 edit grib_lex.c
+	sed 's/yy/grib_yy/g' < $(LEX_OUTPUT_ROOT).c | sed 's/static void grib_yyunput/void grib_yyunput/' > grib_lex1.c
+	sed 's/fgetc/getc/g' < grib_lex1.c > grib_lex.c
+	rm -f grib_lex1.c
+	rm -f $(LEX_OUTPUT_ROOT).c
+
+grib_yacc.h grib_yacc.c : griby.y
+	$(YACC) -d griby.y
+	p4 edit grib_yacc.c
+	sed 's/yy/grib_yy/g' < y.tab.c > grib_yacc1.c
+	sed 's/fgetc/getc/g' < grib_yacc1.c > grib_yacc.c
+	rm -f grib_yacc1.c
+	p4 edit grib_yacc.h
+	sed 's/yy/grib_yy/g' < y.tab.h > grib_yacc.h
+	rm -f y.tab.c y.tab.h
+
+hash_keys:
+	./make_hash_keys.ksh
+
+grib_accessor_classes_hash.c:
+	./make_accessor_class_hash.ksh
+
+SUFFIXES= .conf .grib .req .txt

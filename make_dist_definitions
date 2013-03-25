@@ -1,0 +1,29 @@
+set -e
+make dist
+
+. ./version.sh
+libraryVersion=$GRIB_API_MAJOR_VERSION.$GRIB_API_MINOR_VERSION.$GRIB_API_REVISION_VERSION
+tar=grib_api-$libraryVersion.tar.gz
+dir=grib_api-$libraryVersion
+
+rm -rf $dir | true
+tar zxvf $tar
+
+version=`grep definitionFilesVersion $dir/definitions/*.def | awk 'BEGIN {FS="\"";}{print $2;}' `
+echo definitions version $version
+
+definitions=grib_def-$version
+
+rm -rf $definitions | true
+
+cp -r $dir/definitions $definitions
+install=$definitions/installDefinitions.sh
+rm -f $install.new
+sed s/%LIBRARY_VERSION%/$libraryVersion/g $install > $install.new
+chmod +w $install.new
+mv $install.new $install
+
+tar zcvf $definitions.tar.gz $definitions
+
+rm -rf $definitions $dir
+

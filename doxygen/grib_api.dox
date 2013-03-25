@@ -1,0 +1,79 @@
+/*! \mainpage GRIB API
+
+\section new New
+
+- <a href="/publications/manuals/grib_api/conversion.html">GRIB edition 1 to 2 conversion</a>
+- <a href="/publications/manuals/d/gribapi/param/">Parameters in GRIB API</a>
+- <b> GRIB API keys </b>
+ - <a href="/publications/manuals/d/gribapi/fm92/grib1/">GRIB edition 1 </a>
+ - <a href="/publications/manuals/d/gribapi/fm92/grib2/">GRIB edition 2 </a>
+ - <a href="/publications/manuals/d/gribapi/keys/">Edition independent</a>
+
+
+\section overview Overview
+
+The grib_api is the application program interface developed at ECMWF
+to provide an easy and realiable way for encoding and 
+decoding WMO FM-92 GRIB 
+<a href="http://www.wmo.ch/pages/prog/www/WMOCodes/Manual/WMO306_vol-I-2-PartB-GRIB1.pdf">edition 1</a> and 
+<a href="http://www.wmo.ch/pages/prog/www/DPS/grib-2.html">edition 2</a> messages. 
+
+With the grib_api library, that is written entirely in C, some command line \ref tools "tools" are 
+provided to give a quick way to manipulate grib data. Moreover a \ref grib_api "Fortran interface 90" is available
+giving access to the main features of the C library. 
+
+The library is designed to access and modify messages in both editions with the same
+\ref get_set "function calls" using a set of \ref keys to access the coded information 
+( examples: \ref get.f90 "get.f90" \ref set.f90 "set.f90", \ref get.c "get.c", \ref set.c "set.c", \ref grib_get_examples "grib_get", \ref grib_set_examples "grib_set" ). 
+
+The \ref keys "keys" available for a message are different depending not only on the edition
+but also and mainly on the type of each message and the information it contains. 
+A list of all the available keys in a message can be obtained dynamically using the 
+library as shown in \ref keys_iterator.c "keys_iterator.c" or using the \ref tools 
+as shown in \ref grib_dump_examples "grib_dump" or \ref grib_keys_examples "grib_keys".
+
+GRIB API will replace the GRIBEX function and a 
+<a href="/publications/manuals/grib_api/gribexkeys/callGribex.html">table of conversion</a> between the
+numeric encoding of GRIBEX and the alphanumeric keys of GRIB API is provided to help
+the migration.
+
+To learn how to use the grib_api we recommend the user works through the \ref grib_examples.
+
+Reference manuals are also provided for the C library (organized in \ref modules) and for the 
+\ref grib_api "Fortran 90 interface".
+
+\ref installation "Installation" instructions are also provided.
+
+\section ecwf_users Compiling and linking on ECMWF platforms
+
+The grib API is installed on all systems at ECMWF with both its components: the library
+and the tools.\n
+The latest version of the tools is always available in the system PATH so that
+users can begin using the tools immediately by typing directly the tool name (\ref tools "see tools reference").\n
+The latest version of the library is also installed on any platform and it is available for linking through the
+following two environment variables: $GRIB_API_INCLUDE $GRIB_API_LIB.\n\n
+Here is a short summary on how to compile and link on ECMWF systems:\n
+
+- ecgate, hpce, hpcf 
+\verbatim
+> xlc -o foo foo.c $GRIB_API_INCLUDE $GRIB_API_LIB -lm
+\endverbatim \n
+\verbatim
+> xlf90 -o foo foo.f90 $GRIB_API_INCLUDE $GRIB_API_LIB
+\endverbatim\n
+- linux cluster (C programs)
+\verbatim
+> gcc -m32 -o foo foo.c $GRIB_API_INCLUDE $GRIB_API_LIB 
+\endverbatim \n
+- workstation (C programs)
+\verbatim
+> gcc -o foo foo.c $GRIB_API_INCLUDE $GRIB_API_LIB 
+\endverbatim \n
+- linux cluster,workstation (Fortran programs)
+\verbatim
+> use pgf90
+> pgf90 -o foo foo.f90 $GRIB_API_INCLUDE $GRIB_API_LIB
+\endverbatim\n
+
+
+*/

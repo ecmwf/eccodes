@@ -1,0 +1,199 @@
+      <p>
+      <table border="3">
+        <caption>&nbsp; </caption> <tbody>
+          <tr>
+            <th> KSEC1 element</th>
+            <th> Contents</th>
+            <th> GRIB octet</th>
+            <th style="vertical-align: top; text-align: center;">Recommended
+GRIB_API key</th>
+            <th style="vertical-align: top; text-align: center;">Coded
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Comments</th>
+          </tr>
+          <tr>
+            <td> 37 </td>
+            <td>
+            <pre>ECMWF local GRIB use definition identifier.<br>50 = Member state data<br></pre>
+            </td>
+            <td> 41 </td>
+            <th style="vertical-align: top; text-align: left;">localDefinitionNumber</th>
+            <td style="vertical-align: top;">localDefinitionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>38</td>
+            <td><a href="/services/archive/d/table/grib_class/">Class</a></td>
+            <td>42</td>
+            <th style="vertical-align: top; text-align: left;">class</th>
+            <td style="vertical-align: top;">marsClass</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>39</td>
+            <td><a href="/services/archive/d/table/grib_type/">Type</a></td>
+            <td>43</td>
+            <th style="vertical-align: top; text-align: left;">type</th>
+            <td style="vertical-align: top;">marsType</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>40</td>
+            <td><a href="/services/archive/d/table/grib_stream/">Stream</a></td>
+            <td>44-45</td>
+            <th style="vertical-align: top; text-align: left;">stream</th>
+            <td style="vertical-align: top;">marsStream</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>41</td>
+            <td>
+            <pre>Version number or experiment identifier.<br>(4 ASCII characters, right justified)</pre>
+            </td>
+            <td>46-49</td>
+            <th style="vertical-align: top; text-align: left;">expver</th>
+            <td style="vertical-align: top;">experimentVersionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>42</td>
+            <td>
+            <pre>Number:<br>  Ensemble forecast number.<br>  Control forecast is number 0,<br>  perturbed foecasts 1 - nn.<br>Set to 0 if not ensemble forecast.<br></pre>
+            </td>
+            <td>50</td>
+            <th style="vertical-align: top; text-align: left;">number<br>
+            </th>
+            <td style="vertical-align: top;">perturbationNumber<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>43</td>
+            <td>
+            <pre>Total:<br>  Total number of forecasts in ensemble.<br>  This number includes the control forecast.<br>Set to 0 if not ensemble forecast.<br></pre>
+            </td>
+            <td>51</td>
+            <th style="vertical-align: top; text-align: left;">numberOfForecastsInEnsemble<br>
+            </th>
+            <td style="vertical-align: top;">numberOfForecastsInEnsemble<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>44</td>
+            <td> Model identifier (in range 1 - 255)</td>
+            <td>52</td>
+            <th style="vertical-align: top; text-align: left;">modelIdentifier<br>
+            </th>
+            <td style="vertical-align: top;">modelIdentifier<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>45</td>
+            <td> Latitude of North-west corner of area (degrees*10^6)</td>
+            <td>53 - 56</td>
+            <th style="vertical-align: top; text-align: left;">latitudeOfNorthWestCornerOfArea<br>
+            </th>
+            <td style="vertical-align: top;">latitudeOfNorthWestCornerOfArea<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>46</td>
+            <td>Longitude of North-west corner of area (degrees*10^6)</td>
+            <td>57 - 60</td>
+            <th style="vertical-align: top; text-align: left;">longitudeOfNorthWestCornerOfArea<br>
+            </th>
+            <td style="vertical-align: top;">longitudeOfNorthWestCornerOfArea<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>47</td>
+            <td>Latitude of South-east corner of area (degrees*10^6) </td>
+            <td>61 - 64</td>
+            <th style="vertical-align: top; text-align: left;">latitudeOfSouthEastCornerOfArea<br>
+            </th>
+            <td style="vertical-align: top;">latitudeOfSouthEastCornerOfArea<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>48</td>
+            <td>Longitude of South-east corner of area (degrees*10^6) </td>
+            <td>65 - 68</td>
+            <th style="vertical-align: top; text-align: left;">longitudeOfSouthEastCornerOfArea<br>
+            </th>
+            <td style="vertical-align: top;">longitudeOfSouthEastCornerOfArea<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>49 - 60</td>
+            <td> Reserved for ECMWF additions</td>
+            <td>69 - 116</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>49</td>
+            <td>Original parameter number</td>
+            <td>69</td>
+            <th style="vertical-align: top; text-align: left;">originalParameterNumber<br>
+            </th>
+            <td style="vertical-align: top;">originalParameterNumber<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>50</td>
+            <td>Original parameter table number</td>
+            <td>70</td>
+            <th style="vertical-align: top; text-align: left;">originalParameterTableNumber<br>
+            </th>
+            <td style="vertical-align: top;">originalParameterTableNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>51 - 60</td>
+            <td>Set to zero</td>
+            <td>71 - 116</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>61 - 106</td>
+            <td>Optional data</td>
+            <td>117 - 300</td>
+            <th style="vertical-align: top; text-align: left;">optionalData<br>
+            </th>
+            <td style="vertical-align: top;">optionalData<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+        </tbody>
+      </table>

@@ -1,0 +1,12 @@
+# assert(16);
+alias mars.fcmonth = marsForecastMonth;
+alias mars.number  = perturbationNumber;
+alias mars.origin = centre;
+
+unalias mars.step;
+
+alias mars.method = methodNumber;
+
+if (class is "od") { alias mars.system = systemNumber; }
+if (class is "me") { alias mars.system = systemNumber; }
+if (class is "en") { alias mars.system = systemNumber; }

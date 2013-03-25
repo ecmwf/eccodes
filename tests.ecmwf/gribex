@@ -1,0 +1,26 @@
+#!/usr/bin/ksh
+set -e
+#set -x
+rm -f $1.dump  $1.gen $1.gen.dump || true
+
+#GRIB_TOOLS_DIR=/usr/local/lib/metaps/bin
+#GRIB_TOOLS_DIR=/marsdev/data/max/grib_api/tools
+GRIB_TOOLS_DIR=/tmp/mac/p4/grib_api/main/tools
+GRIBEX_DIR=/usr/local/lib/metaps/bin
+EMOS_BIN=~emos/bin/$ARCH
+
+$GRIB_TOOLS_DIR/grib_dump -v -f "10%.25f" $1 > $1.dump
+
+$GRIB_TOOLS_DIR/grib_gen $1.dump $1.gen 
+
+# gribex compare
+$EMOS_BIN/compareGribFiles -fail $1 $1.gen
+
+# gribex test
+$GRIBEX_DIR/pgrib.mars $1.gen
+
+# dump diff test
+$GRIB_TOOLS_DIR/grib_dump -v -f "10%.25f" $1.gen > $1.gen.dump
+diff $1.gen.dump $1.dump
+
+rm -f $1.dump  $1.gen $1.gen.dump || true

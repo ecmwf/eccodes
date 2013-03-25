@@ -1,0 +1,19 @@
+%include <head.h>
+
+cd /marsdev/data/max/grib_api
+
+use autoconf
+mkdir -p $TMPDIR
+
+export P4CONFIG=p4config
+p4login
+p4 sync
+
+
+# export CFLAGS="-g -m32 -O3"
+# ./configure --prefix=`pwd` 
+
+pwd
+make
+
+%include <tail.h>

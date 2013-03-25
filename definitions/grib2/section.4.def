@@ -1,0 +1,75 @@
+# Copyright 2005-2012 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+# 
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+transient timeRangeIndicator=0 : no_copy,hidden;
+
+position offsetSection4;
+length[4] section4Length ;
+meta section4Pointer section_pointer(offsetSection4,section4Length,4);
+
+unsigned[1] numberOfSection = 4:read_only;
+
+unsigned[2] NV  : dump ;
+alias numberOfVerticalCoordinateValues=NV ;
+alias numberOfCoordinatesValues=NV;
+# For table 4.5, code 150 Generalized vertical height coordinate
+alias numberOfVerticalGridDescriptors=NV ;
+
+#  Product Definition Template Number
+
+transient neitherPresent = 0;
+
+if (centre==7 || centre==46) {
+   alias disableGrib1LocalSection=one;
+}
+
+codetable[2] productDefinitionTemplateNumber('4.0.table',masterDir,localDir) : dump;
+
+if (section2Used == 1) {
+   when (new()) {
+      set_nofail productDefinitionTemplateNumber=productDefinitionTemplateNumberInternal;
+   }
+}
+
+template productDefinition "grib2/template.4.[productDefinitionTemplateNumber:l].def" ;
+
+if (defined(marsStream) && defined(marsType)) {
+   template_nofail marsKeywords1 "mars/grib1.[marsStream:s].[marsType:s].def";
+}
+
+template parameters "grib2/parameters.def";
+
+# Detect if this is for Generalized vertical height coordinates
+transient genVertHeightCoords = 0;
+if (defined(typeOfFirstFixedSurface)) {
+   if (typeOfFirstFixedSurface == 150) {
+      transient genVertHeightCoords = 1;
+   }
+}
+
+if (genVertHeightCoords) {
+   # Generalized vertical height coordinate case
+   transient PVPresent = 0;
+   ieeefloat nlev  : dump ;
+   alias numberOfVerticalCoordinateValues = nlev ;
+   ieeefloat numberOfVGridUsed : dump;
+   byte[16] uuidOfVGrid : dump;
+}
+else {
+   if (NV  == 0){
+     transient PVPresent = 0;
+   } else {
+     transient PVPresent = 1;
+   }
+   if (PVPresent){
+      ieeefloat pv[numberOfCoordinatesValues] : dump;
+      alias vertical.pv=pv;
+   }
+}
+
+meta md5Section4 md5(offsetSection4,section4Length);

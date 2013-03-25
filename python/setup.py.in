@@ -1,0 +1,68 @@
+#!/usr/bin/env python
+
+from distutils.core import setup, Extension
+import os,sys
+
+attdict = dict(
+   sources = ['gribapi_swig_wrap.c','grib_interface.c'],
+   swig_opts = [],
+   include_dirs = ['.'],
+   library_dirs = ["%s/lib" % sys.prefix],
+   libraries = [],
+   extra_objects = [],
+)
+
+add_attribute = lambda **args: [list.append(attdict[key],value) for key,value in args.items()]
+
+build_dir = '@BUILD_DIR@'
+add_attribute(
+    include_dirs = os.path.join(build_dir,'src'),
+    extra_objects = os.path.join(build_dir, 'src', '.libs', 'libgrib_api.a')
+)
+
+with_jasper = '@LIB_JASPER@'
+if with_jasper:
+    jasper_dir = '@JASPER_DIR@'
+    if jasper_dir and jasper_dir != 'system':
+        add_attribute(
+            include_dirs = os.path.join(jasper_dir,'include'),
+            library_dirs = os.path.join(jasper_dir,'lib')
+        )
+    add_attribute(libraries = 'jasper')
+
+with_openjpeg = '@LIB_OPENJPEG@'
+if with_openjpeg:
+    openjpeg_dir = '@OPENJPEG_DIR@'
+    if openjpeg_dir and openjpeg_dir != 'system':
+        add_attribute(
+            include_dirs = os.path.join(openjpeg_dir,'include'),
+            library_dirs = os.path.join(openjpeg_dir,'lib')
+        )
+    add_attribute(libraries = 'openjpeg')
+
+png = '@LIB_PNG@'
+if png:
+    add_attribute(libraries = 'png')
+
+data_handler = '@DATA_HANDLER@'
+if data_handler == "numpy":
+    import numpy
+    # Obtain the numpy include directory.  This logic works across numpy versions.
+    try:
+        numpy_include = numpy.get_include()
+    except AttributeError:
+        numpy_include = numpy.get_numpy_include()
+
+    add_attribute(
+        include_dirs = numpy_include,
+    )
+
+gribapi_module = Extension('_gribapi_swig',**attdict)
+
+setup (name = 'gribapi',
+       version = '0.1',
+       author      = 'ECMWF',
+       description = """Grib API SWIG module""",
+       ext_modules = [gribapi_module],
+       py_modules = ['gribapi_swig','gribapi'],
+      )

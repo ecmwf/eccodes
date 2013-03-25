@@ -1,0 +1,28 @@
+# Copyright 2005-2012 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
+# TEMPLATE 5.42, Grid point and spectral data - CCSDS szip
+
+include "template.5.packing.def";
+include "template.5.original_values.def";
+
+unsigned[1] szipOptionsMask : dump;
+
+flagbit SZ_ALLOW_K13_OPTION_MASK(szipOptionsMask,0) = 0;
+flagbit SZ_CHIP_OPTION_MASK(szipOptionsMask,1)      = 0;
+flagbit SZ_EC_OPTION_MASK(szipOptionsMask,2)        = 0;
+flagbit SZ_LSB_OPTION_MASK(szipOptionsMask,3)       = 0;
+flagbit SZ_MSB_OPTION_MASK(szipOptionsMask,4)       = 1;
+flagbit SZ_NN_OPTION_MASK(szipOptionsMask,5)        = 1;
+flagbit SZ_RAW_OPTION_MASK(szipOptionsMask,7)       = 1;
+
+unsigned[1] szipBitsPerPixel           : dump;
+unsigned[2] szipPixelPerBlock    = 32  : dump;
+unsigned[2] szipPixelPerScanLine = 128 * szipPixelPerBlock : dump;
+

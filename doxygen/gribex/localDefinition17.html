@@ -1,0 +1,249 @@
+      <p>
+      <table border="3">
+        <tbody>
+          <tr>
+            <th> KSEC1 element</th>
+            <th> Contents</th>
+            <th> GRIB octet</th>
+            <th style="vertical-align: top; text-align: center;">Recommended
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Coded
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Comments</th>
+          </tr>
+          <tr>
+            <td> 37 </td>
+            <td>
+            <pre>ECMWF local GRIB use definition identifier.<br>17 = Surface temperature fields made from SST and SSMI data<br>     with first-guess values inserted on land points.<br></pre>
+            </td>
+            <td> 41 </td>
+            <th style="vertical-align: top; text-align: left;">localDefinitionNumber</th>
+            <td style="vertical-align: top;">localDefinitionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>38</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_class/">Class</a></td>
+            <td>42</td>
+            <th style="vertical-align: top; text-align: left;">class</th>
+            <td style="vertical-align: top;">marsClass</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>39</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_type/">Type</a></td>
+            <td>43</td>
+            <th style="vertical-align: top; text-align: left;">type</th>
+            <td style="vertical-align: top;">marsType</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>40</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_stream/">Stream</a></td>
+            <td>44-45</td>
+            <th style="vertical-align: top; text-align: left;">stream</th>
+            <td style="vertical-align: top;">marsStream</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>41</td>
+            <td>
+            <pre>Version number or experiment identifier.<br>(4 ASCII characters, right justified)</pre>
+            </td>
+            <td>46-49</td>
+            <th style="vertical-align: top; text-align: left;">expver</th>
+            <td style="vertical-align: top;">experimentVersionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 42 </td>
+            <td> Zero. </td>
+            <td> 50 </td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 43 </td>
+            <td> Zero. </td>
+            <td> 51 </td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 44 </td>
+            <td>
+            <pre>Date of SST field used; YYMMDD<br>(Stored in 3 bytes as YYYYMMDD-19000000.<br>Zero = date not given.)<br></pre>
+            </td>
+            <td> 52-54 </td>
+            <th style="vertical-align: top; text-align: left;">dateOfSSTFieldUsed<br>
+            </th>
+            <td style="vertical-align: top;">dateOfSSTFieldUsed<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 45 </td>
+            <td>
+            <pre>Type of SST field used:<br> 0 = climatology<br> 1 = 1/1 degree SST data<br> 2 = 2/2 degree sat data<br></pre>
+            </td>
+            <td> 55 </td>
+            <th style="vertical-align: top; text-align: left;">typeOfSSTFieldUsed<br>
+            </th>
+            <td style="vertical-align: top;">typeOfSSTFieldUsed<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 46 </td>
+            <td>
+            <pre>Count of ICE fields used (N, say)<br> (NB. N maybe 0)<br></pre>
+            </td>
+            <td> 56 </td>
+            <th style="vertical-align: top; text-align: left;">countOfICEFieldsUsed<br>
+            </th>
+            <td style="vertical-align: top;">countOfICEFieldsUsed<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 47 </td>
+            <td>
+            <pre>Date of first ICE field used; YYYYMMDD.<br>(Stored in 3 bytes as YYYYMMDD-19000000.<br>Zero = date not given.)<br></pre>
+            </td>
+            <td> 57-59 </td>
+            <th style="vertical-align: top; text-align: left;">dateOfIceFieldUsed<br>
+            </th>
+            <td style="vertical-align: top;">dateOfIceFieldUsed<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 48 </td>
+            <td> First day satellite number (ICE data) </td>
+            <td> 60 </td>
+            <th style="vertical-align: top; text-align: left;">satelliteNumber<br>
+            </th>
+            <td style="vertical-align: top;">satelliteNumber<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 49 </td>
+            <td>
+            <pre>Date of second ICE field used; YYYYMMDD.<br>(Stored in 3 bytes as YYYYMMDD-19000000.<br>Zero = date not given.)<br></pre>
+            </td>
+            <td> 61-63 </td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 50 </td>
+            <td> Second day satellite number (ICE data) </td>
+            <td> 64 </td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 51 </td>
+            <td>
+            <pre>Date of third ICE field used; YYYYMMDD.<br>(Stored in 3 bytes as YYYYMMDD-19000000.<br>Zero = date not given.)<br></pre>
+            </td>
+            <td> 65-67 </td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 52 </td>
+            <td> Third day satellite number (ICE data). </td>
+            <td> 68 </td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> ... </td>
+            <td> ... </td>
+            <td> - </td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 45 + (N*2) </td>
+            <td>
+            <pre>Date of Nth ICE field used; YYYYMMDD.<br>(Stored in 3 bytes as YYYYMMDD-19000000.<br>Zero = date not given.)<br></pre>
+            </td>
+            <td> 56 + N*4 </td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 46 + (N*2) </td>
+            <td> Nth day satellite number (ICE data). </td>
+            <td> 57 + N*4 </td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td>Slots for dates are allocated 10 at a time, so some
+slots may be empty (set to zero). Empty slots are not included in the
+count N. </td>
+            <td> 57 + M*40 </td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </p>

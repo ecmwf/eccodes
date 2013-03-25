@@ -1,0 +1,44 @@
+tigge_name mars.levtype min1 min2 max1 max2 checks
+---------------------------------------------------------------------------------------------------------------------------------      
+#potential_temperature pv 220 460 3 3 point_in_time,given_level,potential_vorticity_level
+# Changed for ukmo
+potential_temperature pv 220 265 380 1200 point_in_time,given_level,potential_vorticity_level
+soil_moisture sfc -1e-18 0 450 500 point_in_time,given_thickness,has_bitmap
+convective_available_potential_energy sfc 0 0 0 17000 point_in_time,predefined_thickness
+potential_vorticity pt -0.005 -1e-6 1e-6 0.002 point_in_time,given_level,potential_temperature_level
+surface_air_maximum_temperature sfc 190 230 310 330 six_hourly,given_level
+surface_air_minimum_temperature sfc 190 230 310 320 six_hourly,given_level
+temperature pl 185 250 230 330 point_in_time,given_level,pressure_level
+u_velocity pl -120 -20 20 120 point_in_time,given_level,pressure_level
+u_velocity pv -120 -30 70 120 point_in_time,given_level,potential_vorticity_level
+v_velocity pl -120 -20 20 120 point_in_time,given_level,pressure_level
+v_velocity pv -120 -50 55 120 point_in_time,given_level,potential_vorticity_level
+specific_humidity pl -1e-2 1e-4 0.0001 0.050 point_in_time,given_level,pressure_level
+surface_pressure sfc 48000 50500 103000 110000 point_in_time,predefined_level
+total_column_water sfc 0.1 0.21 75 150 point_in_time,predefined_thickness
+soil_temperature sfc 200 230 310 350 point_in_time,given_thickness
+# snow_depth_water_equivalent sfc -4e-19 15 -99 2 point_in_time,predefined_level
+# Changed for ncep
+snow_depth_water_equivalent sfc -4e-19 0 12000 15000 point_in_time,predefined_level
+snow_fall_water_equivalent sfc -1e-9 -1e-9 3.5 3.5 from_start,predefined_level
+time_integrated_surface_sensible_heat_flux sfc -3e+6 -3e+6 1.5e+6 1.5e+6 from_start,predefined_level
+time_integrated_surface_latent_heat_flux sfc -4e+6 -4e+6 700000 700000 from_start,predefined_level
+mean_sea_level_pressure sfc 91000 95000 104000 107000 point_in_time,predefined_level
+geopotential_height pl -810 20000 320 22000 point_in_time,given_level,pressure_level
+total_cloud_cover sfc 0 1e-10 100 100.00001 point_in_time,predefined_thickness
+10_meter_u_velocity sfc -80 -20 20 80 point_in_time,given_level
+10_meter_v_velocity sfc -80 -20 20 80 point_in_time,given_level
+surface_air_temperature sfc 190 230 300 350 point_in_time,given_level
+surface_air_dew_point_temperature sfc 130 230 280 320 point_in_time,given_level
+land_sea_mask sfc 0 0 1 1 point_in_time,predefined_level
+time_integrated_surface_net_solar_radiation sfc 0 0 4e+6 4e+6 from_start,predefined_level
+time_integrated_surface_net_thermal_radiation sfc -1.1e+6 -1.1e+6 700000 700000 from_start,predefined_level
+time_integrated_outgoing_long_wave_radiation sfc -1.5e+6 -1.5e+6 -300000 -300000 from_start,predefined_level
+sunshine_duration sfc 0 0 3600.00000001 3600.00000001 from_start,predefined_level
+total_precipitation sfc -1e-8 -1e-8 45 45 from_start,predefined_level
+skin_temperature sfc 180 210 320 355 point_in_time,predefined_level
+convective_inhibition sfc -1500 -1500 0 0 point_in_time,predefined_thickness
+orography sfc -1300 -109 5600 56000 point_in_time,predefined_level
+wilting_point sfc 1e99 -1e99 99 -99 point_in_time,given_thickness,has_bitmap
+field_capacity sfc 1e99 -1e99 99 -99 point_in_time,given_thickness,has_bitmap
+saturation_of_soil_moisture sfc 1e99 -1e99 99 -99 point_in_time,given_thickness,has_bitmap

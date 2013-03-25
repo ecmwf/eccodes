@@ -1,0 +1,246 @@
+/*!  \page grib_dump grib_dump
+\section DESCRIPTION 
+ Dump the content of a grib file in different formats.
+
+\section USAGE 
+ grib_dump 
+ [options] grib_file grib_file ...
+
+\section OPTIONS 
+-O  \n Octet mode. WMO documentation style dump.
+ \n \n -D  \n Debug mode.
+ \n \n -d  \n Print all data values. Available only in C mode
+ \n \n -C  \n C code mode. A C code program generating the grib message is dumped.
+ \n \n -t  \n Print type information.
+ \n \n -H  \n Print octet content in hexadecimal format.
+ \n \n -a  \n Dump aliases.
+ \n \n -w key[:{s/d/l}]{=/!=}value,key[:{s/d/l}]{=/!=}value,... \n 
+		Where clause.
+		Grib messages are processed only if they match all the key/value constraints.
+		A valid constraint is of type key=value or key!=value.
+		For each key a string (key:s) or a double (key:d) or a long (key:l)
+		type can be specified. Default type is string.
+ \n \n -M  \n Multi-grib support off. Turn off support for multiple fields in single grib message.
+ \n \n -7  \n Does not fail when the message has wrong length
+ \n \n -V  \n Version.
+ \n \n -G  \n GRIBEX compatibility mode.
+ \n \n 
+\section grib_dump_examples grib_dump examples
+-# To dump in a WMO documentation style with hexadecimal octet values (-H).\n
+\verbatim
+>grib_dump -OH ../data/reduced_gaussian_model_level.grib1
+\endverbatim\n
+-# To add key aliases and type information.\n
+\verbatim
+>grib_dump -OtaH ../data/reduced_gaussian_model_level.grib1
+\endverbatim\n
+-# To obtain all the key names (computed keys included) available in a grib file.\n
+\verbatim 
+> grib_dump -D ../data/regular_latlon_surface.grib1
+\endverbatim\n
+-# To obtain a C code example from a grib file.\n
+\code 
+>grib_dump -C ../data/regular_latlon_surface.grib1
+#include <grib_api.h>
+
+/* This code was generated automatically */
+
+
+int main(int argc,const char** argv)
+{
+    grib_handle *h     = NULL;
+    size_t size        = 0;
+    double* vdouble    = NULL;
+    long* vlong        = NULL;
+    FILE* f            = NULL;
+    const char* p      = NULL;
+    const void* buffer = NULL;
+
+    if(argc != 2) {
+       fprintf(stderr,"usage: %s out\n",argv[0]);
+        exit(1);
+    }
+
+    h = grib_handle_new_from_samples(NULL,"GRIB1");
+    if(!h) {
+        fprintf(stderr,"Cannot create grib handle\n");
+        exit(1);
+    }
+
+    GRIB_CHECK(grib_set_long(h,"parametersVersion",1),0);
+    GRIB_CHECK(grib_set_long(h,"truncateLaplacian",0),0);
+    GRIB_CHECK(grib_set_long(h,"truncateDegrees",0),0);
+    GRIB_CHECK(grib_set_long(h,"dummy",1),0);
+    GRIB_CHECK(grib_set_long(h,"changingPrecision",0),0);
+    GRIB_CHECK(grib_set_long(h,"unitsFactor",1),0);
+    GRIB_CHECK(grib_set_long(h,"unitsBias",0),0);
+    GRIB_CHECK(grib_set_long(h,"timeRangeIndicatorFromStepRange",-1),0);
+    GRIB_CHECK(grib_set_long(h,"eps",0),0);
+    GRIB_CHECK(grib_set_long(h,"editionNumber",1),0);
+    GRIB_CHECK(grib_set_long(h,"productionStatusOfProcessedData",0),0);
+    GRIB_CHECK(grib_set_long(h,"table2Version",128),0);
+
+    /* 98 = European Center for Medium-Range Weather Forecasts (grib1/0.table)  */
+    GRIB_CHECK(grib_set_long(h,"centre",98),0);
+
+    GRIB_CHECK(grib_set_long(h,"generatingProcessIdentifier",130),0);
+    GRIB_CHECK(grib_set_long(h,"gridDefinition",255),0);
+
+    /* 128 = 10000000
+    (1=1)  Section 2 included
+    (2=0)  Section 3 omited
+    See grib1/1.table */
+    GRIB_CHECK(grib_set_long(h,"section1Flags",128),0);
+
+
+    /* 167 = 2 metre temperature  (K)  (grib1/2.98.128.table)  */
+    GRIB_CHECK(grib_set_long(h,"indicatorOfParameter",167),0);
+
+
+    /* 1 = Surface  (of the Earth, which includes sea surface)  (grib1/3.table)  */
+    GRIB_CHECK(grib_set_long(h,"indicatorOfTypeOfLevel",1),0);
+
+    GRIB_CHECK(grib_set_long(h,"level",0),0);
+    GRIB_CHECK(grib_set_long(h,"yearOfCentury",8),0);
+    GRIB_CHECK(grib_set_long(h,"month",2),0);
+    GRIB_CHECK(grib_set_long(h,"day",6),0);
+    GRIB_CHECK(grib_set_long(h,"hour",12),0);
+    GRIB_CHECK(grib_set_long(h,"minute",0),0);
+    GRIB_CHECK(grib_set_long(h,"second",0),0);
+
+    /* 1 = Hour (grib1/4.table)  */
+    GRIB_CHECK(grib_set_long(h,"unitOfTimeRange",1),0);
+
+    GRIB_CHECK(grib_set_long(h,"P1",0),0);
+    GRIB_CHECK(grib_set_long(h,"P2",0),0);
+
+    /* 0 = Forecast product valid at reference time + P1  (P1>0)  (grib1/5.table)  */
+    GRIB_CHECK(grib_set_long(h,"timeRangeIndicator",0),0);
+
+    GRIB_CHECK(grib_set_long(h,"numberIncludedInAverage",0),0);
+    GRIB_CHECK(grib_set_long(h,"numberMissingFromAveragesOrAccumulations",0),0);
+    GRIB_CHECK(grib_set_long(h,"centuryOfReferenceTimeOfData",21),0);
+
+    /* 0 = Unknown code table entry (grib1/0.ecmf.table)  */
+    GRIB_CHECK(grib_set_long(h,"subCentre",0),0);
+
+    GRIB_CHECK(grib_set_long(h,"decimalScaleFactor",0),0);
+    GRIB_CHECK(grib_set_long(h,"setLocalDefinition",0),0);
+    GRIB_CHECK(grib_set_long(h,"dataDate",20080206),0);
+    GRIB_CHECK(grib_set_long(h,"dataTime",1200),0);
+
+    /* 1 = Hour (stepUnits.table)  */
+    GRIB_CHECK(grib_set_long(h,"stepUnits",1),0);
+
+    GRIB_CHECK(grib_set_long(h,"deleteLocalDefinition",0),0);
+
+    /* 1 = MARS labelling or ensemble forecast data (grib1/localDefinitionNumber.98.table)  */
+    GRIB_CHECK(grib_set_long(h,"localDefinitionNumber",1),0);
+
+
+    /* 1 = Operational archive (mars/class.table)  */
+    GRIB_CHECK(grib_set_long(h,"marsClass",1),0);
+
+
+    /* 2 = Analysis (mars/type.table)  */
+    GRIB_CHECK(grib_set_long(h,"marsType",2),0);
+
+
+    /* 1025 = Atmospheric model (mars/stream.table)  */
+    GRIB_CHECK(grib_set_long(h,"marsStream",1025),0);
+
+    p    = "0001";
+    size = strlen(p)+1;
+    GRIB_CHECK(grib_set_string(h,"experimentVersionNumber",p,&size),0);
+    GRIB_CHECK(grib_set_long(h,"perturbationNumber",0),0);
+    GRIB_CHECK(grib_set_long(h,"numberOfForecastsInEnsemble",0),0);
+
+    /* x */
+
+    GRIB_CHECK(grib_set_long(h,"gridDescriptionSectionPresent",1),0);
+    GRIB_CHECK(grib_set_long(h,"GDSPresent",1),0);
+    GRIB_CHECK(grib_set_long(h,"bitmapPresent",0),0);
+    GRIB_CHECK(grib_set_long(h,"radius",6367470),0);
+    GRIB_CHECK(grib_set_long(h,"shapeOfTheEarth",6),0);
+    GRIB_CHECK(grib_set_long(h,"numberOfVerticalCoordinateValues",0),0);
+    GRIB_CHECK(grib_set_long(h,"pvlLocation",255),0);
+
+    /* 0 = Latitude/Longitude Grid (grib1/6.table)  */
+    GRIB_CHECK(grib_set_long(h,"dataRepresentationType",0),0);
+
+    GRIB_CHECK(grib_set_long(h,"Ni",16),0);
+    GRIB_CHECK(grib_set_long(h,"Nj",31),0);
+    GRIB_CHECK(grib_set_long(h,"latitudeOfFirstGridPoint",60000),0);
+    GRIB_CHECK(grib_set_long(h,"longitudeOfFirstGridPoint",0),0);
+
+    /* 128 = 10000000
+    (1=1)  Direction increments given
+    (2=0)  Earth assumed spherical with radius = 6367.47 km
+    (5=0)  u and v components resolved relative to easterly and northerly directions
+    See grib1/7.table */
+    GRIB_CHECK(grib_set_long(h,"resolutionAndComponentFlags",128),0);
+
+    GRIB_CHECK(grib_set_long(h,"ijDirectionIncrementGiven",1),0);
+    GRIB_CHECK(grib_set_long(h,"earthIsOblate",0),0);
+    GRIB_CHECK(grib_set_long(h,"uvRelativeToGrid",0),0);
+    GRIB_CHECK(grib_set_long(h,"latitudeOfLastGridPoint",0),0);
+    GRIB_CHECK(grib_set_long(h,"longitudeOfLastGridPoint",30000),0);
+    GRIB_CHECK(grib_set_long(h,"iDirectionIncrement",2000),0);
+    GRIB_CHECK(grib_set_long(h,"jDirectionIncrement",2000),0);
+
+    /* 0 = 00000000
+    (1=0)  Points scan in +i direction
+    (2=0)  Points scan in -j direction
+    (3=0)  Adjacent points in i direction are consecutive 
+    See grib1/8.table */
+    GRIB_CHECK(grib_set_long(h,"scanningMode",0),0);
+
+    GRIB_CHECK(grib_set_long(h,"iScansNegatively",0),0);
+    GRIB_CHECK(grib_set_long(h,"jScansPositively",0),0);
+    GRIB_CHECK(grib_set_long(h,"jPointsAreConsecutive",0),0);
+    GRIB_CHECK(grib_set_long(h,"iScansPositively",1),0);
+
+    /* ITERATOR */
+
+
+    /* NEAREST */
+
+    GRIB_CHECK(grib_set_long(h,"PVPresent",0),0);
+    GRIB_CHECK(grib_set_long(h,"PLPresent",0),0);
+    GRIB_CHECK(grib_set_long(h,"missingValue",9999),0);
+    GRIB_CHECK(grib_set_long(h,"sphericalHarmonics",0),0);
+    GRIB_CHECK(grib_set_long(h,"complexPacking",0),0);
+    GRIB_CHECK(grib_set_long(h,"integerPointValues",0),0);
+    GRIB_CHECK(grib_set_long(h,"additionalFlagPresent",0),0);
+    GRIB_CHECK(grib_set_long(h,"hideThis",0),0);
+    GRIB_CHECK(grib_set_long(h,"bitsPerValue",16),0);
+    GRIB_CHECK(grib_set_long(h,"dirty_statistics",1),0);
+    GRIB_CHECK(grib_set_long(h,"dataLength",124),0);
+    GRIB_CHECK(grib_set_long(h,"changeDecimalPrecision",0),0);
+    GRIB_CHECK(grib_set_long(h,"decimalPrecision",0),0);
+    GRIB_CHECK(grib_set_long(h,"bitsPerValueAndRepack",16),0);
+/* Save the message */
+
+    f = fopen(argv[1],"w");
+    if(!f) {
+        perror(argv[1]);
+        exit(1);
+    }
+
+    GRIB_CHECK(grib_get_message(h,&buffer,&size),0);
+
+    if(fwrite(buffer,1,size,f) != size) {
+        perror(argv[1]);
+        exit(1);
+    }
+
+    if(fclose(f)) {
+        perror(argv[1]);
+        exit(1);
+    }
+
+    grib_handle_delete(h);
+    return 0;
+}
+\endcode\n
+*/

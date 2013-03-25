@@ -1,0 +1,266 @@
+      <h2> Overview.</h2>
+The definitions described in this section are used at ECMWF for special
+purposes.
+      <p> Element KSEC1(24) is set to 1 if an ECMWF local use
+definition is required or has been found in a GRIB message; element
+KSEC1(37) indicates which definition it is. </p>
+      <p> If KSEC1(24) is set to 0, no local use definition is present
+in the message. </p>
+      <p> Currently, the following definitions exist: </p>
+      <ul>
+        <li> <a href="localDefinition1.html">Definition 1</a> - MARS
+labelling or ensemble forecast data </li>
+        <li> <a href="localDefinition2.html">Definition 2</a> -
+Cluster means and standard deviations </li>
+        <li> <a href="localDefinition3.html">Definition 3</a> -
+Satellite image data </li>
+        <li> <a href="localDefinition4.html">Definition 4</a> - Ocean
+model data </li>
+        <li> <a href="localDefinition5.html">Definition 5</a> -
+Forecast probability data </li>
+        <li> <a href="localDefinition6.html">Definition 6</a> -
+Surface temperature data </li>
+        <li> <a href="localDefinition7.html">Definition 7</a> -
+Sensitivity data </li>
+        <li> <a href="localDefinition8.html">Definition 8</a> - ECMWF
+re-analysis data </li>
+        <li> <a href="localDefinition9.html">Definition 9</a> -
+Singular vectors and ensemble perturbations </li>
+        <li> <a href="localDefinition10.html">Definition 10</a> - EPS
+tubes </li>
+        <li> <a href="localDefinition11.html">Definition 11</a> -
+Supplementary data used by the analysis </li>
+        <li> <a href="localDefinition13.html">Definition 13</a> - Wave
+2D spectra direction and frequency </li>
+        <li> <a href="localDefinition14.html">Definition 14</a> -
+Brightness temperature </li>
+        <li> <a href="localDefinition15.html">Definition 15</a> -
+Seasonal forecast data </li>
+        <li> <a href="localDefinition16.html">Definition 16</a> -
+Seasonal forecast monthly mean data </li>
+        <li> <a href="localDefinition17.html">Definition 17</a> -
+Surface temperature or sea-ice data </li>
+        <li> <a href="localDefinition18.html">Definition 18</a> -
+Multi-analysis ensemble data </li>
+        <li> <a href="localDefinition19.html">Definition 19</a> -
+Extreme forecast index data </li>
+        <li> <a href="localDefinition20.html">Definition 20</a> - 4D
+variational increments </li>
+        <li><a href="localDefinition21.html">Definition 21</a> -
+Sensitive area predictions </li>
+        <li><a href="localDefinition22.html">Definition 22</a> -
+Coupled atmospheric, wave and ocean models (with hindcast support) </li>
+        <li><a href="localDefinition23.html">Definition 23</a> -
+Coupled atmospheric, wave and ocean means (with hindcast support) </li>
+        <li><a href="localDefinition24.html">Definition 24</a> -
+Satellite image simulation </li>
+        <li><a href="localDefinition25.html">Definition 25</a> - 4DVar
+model errors</li>
+        <li><a href="localDefinition26.html">Definition 26</a> - MARS
+labelling or ensemble forecast data (with hindcast support)</li>
+        <li><a href="localDefinition27.html">Definition 27</a> -
+Forecasting Systems with Variable Resolution (Obsolete)</li>
+        <li><a href="localDefinition30.html">Definition 30 </a> -
+Forecasting Systems with Variable Resolution</li>
+        <li><a href="localDefinition31.html">Definition 31 </a> -
+EUROSIP products</li>
+        <li><a href="localDefinition50.html">Definition 50</a> - Member
+State data </li>
+        <li><a href="localDefinition190.html">Definition 190</a>
+-Multiple ECMWF local definitions </li>
+        <li><a href="localDefinition191.html">Definition 191</a> - Free
+format data descriptor data </li>
+        <li><a href="localDefinition192.html">Definition 192</a> -
+Multiple ECMWF local definitions </li>
+      </ul>
+      <h2> Octets in section 1</h2>
+The relation between the octets (bytes) in section 1 of a GRIB product
+and the elements in the array KSEC1 is illustrated below.
+      <p>
+      <table border="3">
+        <caption>
+        <center>
+        <h2> Octets in section 1</h2>
+        </center>
+        </caption><tbody>
+          <tr>
+            <th> Octet</th>
+            <th> KSEC1 element</th>
+            <th> Comments</th>
+          </tr>
+          <tr>
+            <td> 1-3</td>
+            <td> -</td>
+            <td> Length of section 1</td>
+          </tr>
+          <tr>
+            <td> 4</td>
+            <td> 1</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_table_2_versions/">
+Version
+number of code table 2</a></td>
+          </tr>
+          <tr>
+            <td> 5</td>
+            <td> 2</td>
+            <td><a href="/publications/manuals/libraries/gribex/wmoCodeTable0.html"> Identification
+of centre (ECMWF = 98)</a></td>
+          </tr>
+          <tr>
+            <td> 6</td>
+            <td> 3</td>
+            <td> Generating process identification number</td>
+          </tr>
+          <tr>
+            <td> 7</td>
+            <td> 4</td>
+            <td> Grid definition</td>
+          </tr>
+          <tr>
+            <td> 8</td>
+            <td> 5</td>
+            <td><a href="/publications/manuals/libraries/gribex/wmoCodeTable1.html"> Section 2/3
+indication flag</a></td>
+          </tr>
+          <tr>
+            <td> 9</td>
+            <td> 6</td>
+            <td><a href="/publications/manuals/libraries/tables/localTable128.html"> Parameter
+indicator</a></td>
+          </tr>
+          <tr>
+            <td> 10</td>
+            <td> 7</td>
+            <td><a href="/publications/manuals/libraries/gribex/wmoCodeTable3.html"> Level
+indicator/satellite identifier</a></td>
+          </tr>
+          <tr>
+            <td> 11</td>
+            <td> 8</td>
+            <td> Height/pressure of level</td>
+          </tr>
+          <tr>
+            <td> 12</td>
+            <td> 9</td>
+            <td> Height/pressure of level</td>
+          </tr>
+          <tr>
+            <td> 13</td>
+            <td> 10</td>
+            <td> Year</td>
+          </tr>
+          <tr>
+            <td> 14</td>
+            <td> 11</td>
+            <td> Month</td>
+          </tr>
+          <tr>
+            <td> 15</td>
+            <td> 12</td>
+            <td> Day</td>
+          </tr>
+          <tr>
+            <td> 16</td>
+            <td> 13</td>
+            <td> Hour</td>
+          </tr>
+          <tr>
+            <td> 17</td>
+            <td> 14</td>
+            <td> Minute</td>
+          </tr>
+          <tr>
+            <td> 18</td>
+            <td> 15</td>
+            <td><a href="/publications/manuals/libraries/gribex/wmoCodeTable4.html"> Time unit
+indicator</a></td>
+          </tr>
+          <tr>
+            <td> 19</td>
+            <td> 16</td>
+            <td> Time period</td>
+          </tr>
+          <tr>
+            <td> 20</td>
+            <td> 17</td>
+            <td> Time period</td>
+          </tr>
+          <tr>
+            <td> 21</td>
+            <td> 18</td>
+            <td><a href="/publications/manuals/libraries/gribex/wmoCodeTable5.html"> Time range
+indicator</a></td>
+          </tr>
+          <tr>
+            <td> 22-23</td>
+            <td> 19</td>
+            <td> Number of products in an average</td>
+          </tr>
+          <tr>
+            <td> 24</td>
+            <td> 20</td>
+            <td> Number of products missing from an average</td>
+          </tr>
+          <tr>
+            <td> 25</td>
+            <td> 21</td>
+            <td> Century</td>
+          </tr>
+          <tr>
+            <td> 26</td>
+            <td> 22</td>
+            <td><a href="/publications/manuals/libraries/gribex/wmoCodeTable0.html"> Sub-centre
+identifier</a></td>
+          </tr>
+          <tr>
+            <td> 27-28</td>
+            <td> 23</td>
+            <td> Decimal scale factor</td>
+          </tr>
+          <tr>
+            <td> -</td>
+            <td> 24</td>
+            <td> Flag to indicate local usage in section 1</td>
+          </tr>
+          <tr>
+            <td> 29-40</td>
+            <td> 25-36</td>
+            <td> Zero</td>
+          </tr>
+          <tr>
+            <td> 41</td>
+            <td> 37</td>
+            <td><a href="/publications/manuals/libraries/gribex/localGRIBUsage.html"> ECMWF local
+GRIB usage definition identifier*</a></td>
+          </tr>
+          <tr>
+            <td> 42</td>
+            <td> 38</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_class/"> Class</a></td>
+          </tr>
+          <tr>
+            <td> 43</td>
+            <td> 39</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_type/"> Type</a></td>
+          </tr>
+          <tr>
+            <td> 44-45</td>
+            <td> 40</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_stream/">
+Stream</a></td>
+          </tr>
+          <tr>
+            <td> 46-49</td>
+            <td> 41</td>
+            <td> Version number or experiment identifier</td>
+          </tr>
+        </tbody>
+      </table>
+      </p>
+      <p> * Local definition numbers 192 to 255 inclusive will never be
+used to define ECMWF local extensions to section 1, GRIB code. They are
+free to be defined and used by Member States.

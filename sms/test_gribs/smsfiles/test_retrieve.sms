@@ -1,0 +1,21 @@
+%include <head.h>
+%include <tail.h>
+
+#export MARS_MD5=1
+#MARSCMD="mars -n"
+
+if [[ ! -f back ]]
+then
+$MARSCMD <<@
+retrieve,
+ database=marsnext,
+ %REQ%,
+# fi=x
+#write,fi=x,
+ tar=tmp
+@
+
+mv tmp back
+fi
+
+%include <tail.h>

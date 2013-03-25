@@ -1,0 +1,128 @@
+/*!  \page grib_filter grib_filter
+Latest training course presentation on grib_filter available <a href="http://www.ecmwf.int/services/computing/training/material/grib_api/grib_api_filter.pdf">here<img src="/assets/icons/pdf.gif" width="20" height="20" align="absmiddle" border="0"></a>.
+\section DESCRIPTION 
+ Apply the rules defined in rules_file to each grib message
+	in the grib files provided as arguments.
+
+\section USAGE 
+ grib_filter 
+ [options] rules_file grib_file grib_file ...
+
+\section OPTIONS 
+-f  \n Force. Force the execution not to fail on error.
+ \n \n -o output_grib_file \n 
+		Output grib is written to ouput_grib_file.
+		If an ouput grib file is required and -o is not used, the ouput grib is written to filtered.out
+ \n \n -M  \n Multi-grib support off. Turn off support for multiple fields in single grib message.
+ \n \n -V  \n Version.
+ \n \n -g  \n Copy GTS header. 
+ \n \n -G  \n GRIBEX compatibility mode.
+ \n \n -7  \n Does not fail when the message has wrong length
+ \n \n -v  \n Verbose.
+ \n \n 
+\section grib_filter_examples grib_filter examples
+-# The grib_filter processes sequentially all grib messages contained in the input files and applies the rules to each one of them. \n
+ Input messages can be written to the output by using the "write" statement. The write statement can be parameterised so that output 
+ is sent to multiple files depending on key values used in the output file name. \n
+ If we write a rules_file containing the only statement:\n \n
+\verbatim
+write "../data/split/[centre]_[dataDate]_[dataType]_[levelType].grib[edition]";
+\endverbatim\n
+Applying this rules_file to the "../data/tigge_pf_ecmwf.grib2" grib file we obtain several files in the ../data/split directory containing 
+ fields split according to their key values\n 
+\verbatim
+>grib_filter rules_file ../data/tigge_pf_ecmwf.grib2
+>ls ../data/split
+ecmf_20060619_pf_sfc.grib2
+ecmf_20060630_pf_sfc.grib2
+ecmf_20070122_pf_pl.grib2
+ecmf_20070122_pf_pt.grib2
+ecmf_20070122_pf_pv.grib2
+ecmf_20070122_pf_sfc.grib2
+\endverbatim\n
+-# The key values in the file name can also be obtained in a different format by indicating explicitly the type required after a colon.
+ - :l for long
+ - :d for double
+ - :s for string
+ .
+The following statement works in a slightly different way from the previous example, 
+ including in the output file name the long values for centre and dataType.\n
+\verbatim
+write "../data/split/[centre:l]_[dataDate]_[dataType:l]_[levelType].grib[edition]";
+\endverbatim\n
+Running the same command again we obtain a different list of files.\n
+\verbatim
+>grib_filter rules_file ../data/tigge_pf_ecmwf.grib2
+>ls ../data/split
+98_20060619_4_sfc.grib2
+98_20060630_4_sfc.grib2
+98_20070122_4_pl.grib2
+98_20070122_4_pt.grib2
+98_20070122_4_pv.grib2
+98_20070122_4_sfc.grib2
+\endverbatim\n
+-# Other statements are allowed in the grib_filter syntax:
+  - comments beginning with #
+  - print "string to print also with key values like in the file name"
+  - transient keyname1 = keyname2;
+  - set keyname = keyvalue;
+  - defined(keyname) to check if a key is defined in a message
+  - if ( condition ) { block of rules } else { block of rules }\n
+    The condition can be made using ==,!= and joining single block conditions with || and && \n
+    The statement can be any valid statement also another nested condition\n
+  .
+A complex example of grib_filter rules is the following to change temperature in a grib edition 1 file.
+\verbatim
+# Temperature
+if ( level == 850 && indicatorOfParameter == 11 ) {
+    print "found indicatorOfParameter=[indicatorOfParameter] level=[level] date=[dataDate]";
+    transient oldtype = type ;
+    set identificationOfOriginatingGeneratingSubCentre=98;
+    set gribTablesVersionNo = 128;
+    set indicatorOfParameter = 130;
+    set localDefinitionNumber=1;
+    set marsClass="od";
+    set marsStream="kwbc";
+    # Negatively/Positively Perturbed Forecast
+    if ( oldtype == 2 || oldtype == 3 ) {
+      set marsType="pf";
+      set experimentVersionNumber="4001";
+    }
+    # Control Forecast
+    if ( oldtype == 1 ) {
+      set marsType="cf";
+      set experimentVersionNumber="0001";
+    }
+    set numberOfForecastsInEnsemble=11;
+    write;
+    print "indicatorOfParameter=[indicatorOfParameter] level=[level] date=[dataDate]";
+    print;
+}
+\endverbatim\n
+-# The switch statement is an enhanced version of the if statement. Its syntax is the following:
+\verbatim
+switch (key1,key2,...,keyn) {
+    case val11,val12,...,val1n:
+        # block of rules;
+    case val21,val22,...,val2n:
+        # block of rules;
+    default:
+        # [ block of rules ]
+}
+\endverbatim\n
+Each value of each key given as argument to the switch statement is matched against the values specified in the case statements.\n
+If there is a match, then the block or rules corresponding to the matching case statement is executed.\n
+Otherwise, the default case is executed. The default case is mandatory, even if empty.\n
+The "~" operator can be used to match "anything".\n\n
+Following is an example showing the use of the switch statement:\n
+\verbatim
+processing paramId=[paramId] [shortName] [stepType]
+switch (shortName,indicatorOfParameter) {
+    case tp:
+        set stepType=accum;
+    case ~,2 :
+        set typeOfLevel=surface;
+    default:
+}
+\endverbatim\n
+*/

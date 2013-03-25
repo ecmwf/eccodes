@@ -1,0 +1,9 @@
+#!/usr/bin/ksh
+set -ex
+#exit
+
+#GRIB_TOOLS_DIR=/usr/local/lib/metaps/bin
+#GRIB_TOOLS_DIR=/marsdev/data/max/grib_api/tools
+GRIB_TOOLS_DIR=/tmp/mac/p4/grib_api/main/tools
+
+$GRIB_TOOLS_DIR/grib_debug $1 > /dev/null

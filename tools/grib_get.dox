@@ -1,0 +1,59 @@
+/*!  \page grib_get grib_get
+\section DESCRIPTION 
+ Get values of some keys from a grib file.
+	It is similar to grib_ls, but fails returning an error code 
+	when an error occurs (e.g. key not found).
+
+\section USAGE 
+ grib_get 
+ [options] grib_file grib_file ...
+
+\section OPTIONS 
+-f  \n Force. Force the execution not to fail on error.
+ \n \n -p key[:{s/d/l}],key[:{s/d/l}],... \n 
+		Declaration of keys to print.
+		For each key a string (key:s) or a double (key:d) or a long (key:l)
+		type can be requested. Default type is string.
+ \n \n -F format \n 
+		C style format for floating point values.
+ \n \n -l Latitude,Longitude[,MODE,file] \n 
+		Value close to the point of a Latitude/Longitude.
+		Allowed values for MODE are:
+		4 (4 values in the nearest points are printed) Default
+		1 (the value at the nearest point is printed)
+		file (file is used as mask. The closer point with mask value>=0.5 is printed)
+ \n \n -P key[:{s/d/l}],key[:{s/d/l}],... \n 
+		As -p adding the declared keys to the default list.
+ \n \n -w key[:{s/d/l}]{=/!=}value,key[:{s/d/l}]{=/!=}value,... \n 
+		Where clause.
+		Grib messages are processed only if they match all the key/value constraints.
+		A valid constraint is of type key=value or key!=value.
+		For each key a string (key:s) or a double (key:d) or a long (key:l)
+		type can be specified. Default type is string.
+ \n \n -n namespace \n 
+		All the keys belonging to namespace are printed.
+ \n \n -s key[:{s/d/l}]=value,key[:{s/d/l}]=value,... \n 
+		Key/values to set.
+		For each key a string (key:s) or a double (key:d) or a long (key:l)
+		type can be defined. By default the native type is set.
+ \n \n -V  \n Version.
+ \n \n -W width \n 
+		Minimum width of each column in output. Default is 10.
+ \n \n -m  \n Mars keys are printed.
+ \n \n -M  \n Multi-grib support off. Turn off support for multiple fields in single grib message.
+ \n \n -g  \n Copy GTS header. 
+ \n \n -G  \n GRIBEX compatibility mode.
+ \n \n -7  \n Does not fail when the message has wrong length
+ \n \n -i index \n 
+		Data value corresponding to the given index is printed.
+ \n \n 
+\section grib_get_examples grib_get examples
+-# grib_get fails if a key is not found.\n 
+\verbatim 
+>grib_get -p gribname ../data/tigge_pf_ecmwf.grib2
+\endverbatim 
+-# To get the step of the first GRIB message in a file: \n
+\verbatim 
+>grib_get -w count=1 -p step ../data/tigge_pf_ecmwf.grib2
+\endverbatim 
+*/

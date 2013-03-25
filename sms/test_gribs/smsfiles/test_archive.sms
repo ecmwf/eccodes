@@ -1,0 +1,16 @@
+%include <head.h>
+%include <tail.h>
+
+
+rm -f back 
+export  GRIB_DEFINITION_PATH=/home/ma/mab/src/q/definitions
+/home/ma/mab/src/q/g2r data || true
+
+$MARSCMD <<@
+archive,
+ database=marsnext,
+ %REQ%,
+source=data
+@
+
+%include <tail.h>

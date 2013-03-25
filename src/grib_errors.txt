@@ -1,0 +1,63 @@
+/* The first one matches EMOSLIB */
+GRIB_SUCCESS                        No error
+GRIB_END_OF_FILE                    End of resource reached
+GRIB_INTERNAL_ERROR                 Internal error
+GRIB_BUFFER_TOO_SMALL               Passed buffer is too small
+GRIB_NOT_IMPLEMENTED                Function not yet implemented
+GRIB_7777_NOT_FOUND                 Missing 7777 at end of message
+/* .... */
+GRIB_ARRAY_TOO_SMALL                Passed array is too small
+GRIB_FILE_NOT_FOUND                 File not found
+GRIB_CODE_NOT_FOUND_IN_TABLE        Code not found in code table
+GRIB_WRONG_ARRAY_SIZE               Array size mismatch
+GRIB_NOT_FOUND                      Key/value not found
+GRIB_IO_PROBLEM                     Input output problem
+GRIB_INVALID_MESSAGE                Message invalid
+GRIB_DECODING_ERROR                 Decoding invalid
+GRIB_ENCODING_ERROR                 Encoding invalid
+GRIB_NO_MORE_IN_SET                 Code cannot unpack because of string too small
+GRIB_GEOCALCULUS_PROBLEM            Problem with calculation of geographic attributes
+GRIB_OUT_OF_MEMORY                  Out of memory
+GRIB_READ_ONLY                      Value is read only
+GRIB_INVALID_ARGUMENT               Invalid argument
+GRIB_NULL_HANDLE                    Null handle
+GRIB_INVALID_SECTION_NUMBER         Invalid section number
+GRIB_VALUE_CANNOT_BE_MISSING        Value cannot be missing
+GRIB_WRONG_LENGTH                   Wrong message length
+GRIB_INVALID_TYPE                   Invalid key type
+GRIB_WRONG_STEP                     Unable to set step
+GRIB_WRONG_STEP_UNIT                Wrong units for step (step must be integer)
+/*  some errors for the fortran interface  */
+GRIB_INVALID_FILE                   Invalid file id
+GRIB_INVALID_GRIB                   Invalid grib id
+GRIB_INVALID_INDEX                  Invalid index id
+GRIB_INVALID_ITERATOR               Invalid iterator id
+GRIB_INVALID_KEYS_ITERATOR          Invalid keys iterator id
+GRIB_INVALID_NEAREST                Invalid nearest id
+/*some errors for the fieldset */
+GRIB_INVALID_ORDERBY                Invalid order by
+GRIB_MISSING_KEY                    Missing a key from the fieldset
+/* errors for the nearest*/
+GRIB_OUT_OF_AREA                    The point is out of the grid area
+/* more errors*/
+GRIB_CONCEPT_NO_MATCH               Concept no match
+GRIB_NO_DEFINITIONS                 Definitions files not found
+GRIB_WRONG_TYPE                     Wrong type while packing
+GRIB_END                            End of resource
+GRIB_NO_VALUES                      Unable to code a field without values
+GRIB_WRONG_GRID                     Grid description is wrong or inconsistent
+GRIB_END_OF_INDEX                   End of index reached
+GRIB_NULL_INDEX						Null index
+/* Even more errors */
+GRIB_PREMATURE_END_OF_FILE          End of resource reached when reading message
+GRIB_INTERNAL_ARRAY_TOO_SMALL       An internal array is too small
+GRIB_MESSAGE_TOO_LARGE              Message is too large for the current architecture
+GRIB_CONSTANT_FIELD                 Constant field
+GRIB_SWITCH_NO_MATCH                Switch unable to find a matching case
+GRIB_UNDERFLOW						Underflow
+GRIB_MESSAGE_MALFORMED              Message malformed
+GRIB_CORRUPTED_INDEX                Index is corrupted
+GRIB_INVALID_BPV                    Invalid number of bits per value
+GRIB_DIFFERENT_EDITION				Edition of two messages is different
+GRIB_VALUE_DIFFERENT                Value is different
+GRIB_INVALID_KEY_VALUE				Invalid key value

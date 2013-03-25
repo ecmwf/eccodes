@@ -1,0 +1,101 @@
+# Copyright 2005-2012 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
+# START 1/local.98.30 ----------------------------------------------------------------------
+# LOCAL 98 30
+#
+#!       localDefinitionTemplate_030
+#!       ---------------------------
+#!
+#! # Forecasting Systems with Variable Resolution
+#!
+#!Description                    Octet   Code    Ksec1   Count
+#!-----------                    -----   ----    -----   -----
+#!
+#localDefinitionNumber           41      I1      37      -
+#class                           42      I1      38      -
+#type                            43      I1      39      -
+#stream                          44      I2      40      -
+#experimentVersionNumber         46      A4      41      -
+
+#number                          50      I1      42      -
+#total                           51      I1      43      -
+
+#oceanAtmosphereCoupling         52      I1      44      -
+#spare                           53      I1      45      -
+#padding                         54      PAD     n/a     2
+#! VAriable Resolution (VAREPS)
+#legBaseDate                     56      I4      46      -     ! yyyymmdd
+#legBaseTime                     60      I2      47      -     ! hhmm
+#legNumber                       62      I1      48      -
+#! For hindcasts
+#dateOfForecastRun               63      I4      49      -     !
+#climateDateFrom                 67      I4      50      -     ! yyyymmdd (ensemble means of hindcasts)
+#climateDateTo                   71      I4      51      -     ! yyyymmdd (ensemble means of hindcasts)
+#spareSetToZero                  75      PAD     n/a    32
+#
+
+constant GRIBEXSection1Problem = 106 - section1Length ;
+
+# used in local definition 13
+transient localFlag=3 : hidden;
+
+# 1-> 2
+alias grib2LocalSectionPresent=present;
+constant grib2LocalSectionNumber=30;
+
+template mars_labeling "grib1/mars_labeling.def";
+
+#1->2
+if (stepType is "instant" ) {
+	if (type is "em" || type is "es" ) {
+	  alias productDefinitionTemplateNumber=epsStatisticsPoint;
+	} else {
+	  alias productDefinitionTemplateNumber=epsPoint;
+	}
+} else {
+	if (type is "em" || type is "es" ) {
+	  alias productDefinitionTemplateNumber=epsStatisticsContinous;
+	} else {
+	  alias productDefinitionTemplateNumber=epsContinous;
+	}
+}
+
+
+unsigned[1] perturbationNumber  : dump;
+alias number=perturbationNumber;
+unsigned[1] numberOfForecastsInEnsemble  : dump;
+alias totalNumber=numberOfForecastsInEnsemble;
+
+
+unsigned[1] oceanAtmosphereCoupling : dump;
+
+pad padding_loc30_1(3);
+
+unsigned[4] legBaseDate  : dump ;
+unsigned[2] legBaseTime : dump ;
+unsigned[1] legNumber : dump ;
+unsigned[4] referenceDate  : dump ;
+unsigned[4] climateDateFrom  : dump ;
+unsigned[4] climateDateTo  : dump;
+
+
+alias local.oceanAtmosphereCoupling=oceanAtmosphereCoupling;
+alias local.legBaseDate=legBaseDate ;
+alias local.legBaseTime=legBaseTime ;
+alias local.legNumber=legNumber ;
+alias local.referenceDate=referenceDate ;
+alias local.climateDateFrom=climateDateFrom ;
+alias local.climateDateTo=climateDateTo;
+
+alias mars._leg_number = legNumber;
+
+pad padding_loc30_2(32);
+
+# END   1/local.98.30 ----------------------------------------------------------------------

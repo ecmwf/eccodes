@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+bindir=@bindir@
+includedir=@includedir@
+libdir=@libdir@
+FC=@FC@
+
+Name: grib_api
+Description: The grib_api library for Fortran 90
+Version: @VERSION@
+Cflags: @CFLAGS@ "@F90_MODULE_FLAG@@includedir@"
+Libs: -L@libdir@ @LDFLAGS@ @LIBS@ -lgrib_api_f90 -lgrib_api

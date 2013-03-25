@@ -1,0 +1,114 @@
+      <table border="3">
+        <tbody>
+          <tr>
+            <th> KSEC1 element</th>
+            <th> Contents</th>
+            <th> GRIB octet</th>
+            <th style="vertical-align: top; text-align: center;">Recommended
+GRIB_API keys<br>
+            </th>
+            <th style="vertical-align: top; text-align: center;">Coded
+GRIB_API keys<br>
+            </th>
+            <th style="text-align: center; vertical-align: top;">Comments</th>
+          </tr>
+          <tr>
+            <td> 37</td>
+            <td>
+            <pre>ECMWF local GRIB use definition identifier.<br>1 = MARS labeling or ensemble forecast data.<br></pre>
+            </td>
+            <td> 41</td>
+            <th style="vertical-align: top; text-align: left;">localDefinitionNumber<br>
+            </th>
+            <td style="vertical-align: top;">localDefinitionNumber<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>38</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_class/">Class</a></td>
+            <td>42</td>
+            <th style="vertical-align: top; text-align: left;">class<br>
+            </th>
+            <td style="vertical-align: top;">marsClass<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>39</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_type/">Type</a></td>
+            <td>43</td>
+            <th style="vertical-align: top; text-align: left;">type<br>
+            </th>
+            <td style="vertical-align: top;">marsType<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>40</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_stream/">Stream</a></td>
+            <td>44-45</td>
+            <th style="vertical-align: top; text-align: left;">stream<br>
+            </th>
+            <td style="vertical-align: top;">marsStream<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>41</td>
+            <td>
+            <pre>Version number or experiment identifier.<br>(4 ASCII characters, right justified)</pre>
+            </td>
+            <td>46-49</td>
+            <th style="vertical-align: top; text-align: left;">expver<br>
+            </th>
+            <td style="vertical-align: top;">experimentVersionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 42</td>
+            <td>
+            <pre>Set to 0 for MARS labeling (simple labeling).<br>When element 40 = 1035, this is the ensemble forecast number.<br>When element 39 = 10, this is the control forecast number and is set to 0.<br>When element 39 = 11, this is the perturbed forecast number in some range 1-nn.<br>Positive perturbations have odd numbers and negative have even numbers. They<br>go in pairs (1,2), (3,4) etc.<br>When element 39 = 17, this is an ensemble mean and the number is set to 0.<br>When element 39 = 18, this is an ensemble standard deviation and the number<br>is set to 0.<br></pre>
+            </td>
+            <td> 50</td>
+            <th style="vertical-align: top; text-align: left;">number<br>
+            </th>
+            <td style="vertical-align: top;">perturbationNumber<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 43</td>
+            <td> Set to 0, if not an ensemble forecast. Otherwise, the
+total number of forecasts in an ensemble; the number includes the
+control forecast.</td>
+            <td> 51</td>
+            <th style="vertical-align: top; text-align: left;">numberOfForecastsInEnsemble<br>
+            </th>
+            <td style="vertical-align: top;">numberOfForecastsInEnsemble<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td> Spare (set to zero).</td>
+            <td> 52</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+        </tbody>
+      </table>

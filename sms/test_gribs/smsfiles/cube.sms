@@ -1,0 +1,11 @@
+%include <head.h>
+
+what=%FAMILY1%
+export SMSLABEL=info
+$SMSHOME/bin/cube.pl $what %PORT%
+cdp<<@
+play -r /mars_server/$what $what.def
+exit 0
+@
+
+%include <tail.h>

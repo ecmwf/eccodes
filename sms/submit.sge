@@ -1,0 +1,22 @@
+#!/bin/ksh
+job=$1
+out=$2
+q="-q mars"
+
+. /usr/local/share/ecmwf/use/sh.sge
+
+rm -f $out
+
+exec 0</dev/null
+exec 1>>/marsdev/data/max/sms/submit.log 2>&1
+
+n=0
+while [[ $n -lt 10 ]]
+do
+	qsub $q -j yes -o $out $job && exit 0
+	echo "$n: $(date) qsub failed: $?"
+	sleep 1
+	n=$((n+1))
+done
+echo "submit failed, too many retries"
+exit 1

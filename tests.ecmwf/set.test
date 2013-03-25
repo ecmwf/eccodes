@@ -1,0 +1,5 @@
+#!/bin/ksh
+#exit
+bin=$(echo $0|sed s/\.test$//)
+export MARS_MISSING_VALUE=9999
+$bin $@

@@ -1,0 +1,57 @@
+/*!  \page grib_copy grib_copy
+\section DESCRIPTION 
+ Copies the content of grib files printing values of some keys.
+
+\section USAGE 
+ grib_copy 
+ [options] grib_file grib_file ... output_grib_file
+
+\section OPTIONS 
+-f  \n Force. Force the execution not to fail on error.
+ \n \n -r  \n Repack data. Sometimes after setting some keys involving properties
+		of the packing algorithm a repacking of data is needed.
+		This repacking is performed setting this -r option.
+ \n \n -p key[:{s/d/l}],key[:{s/d/l}],... \n 
+		Declaration of keys to print.
+		For each key a string (key:s) or a double (key:d) or a long (key:l)
+		type can be requested. Default type is string.
+ \n \n -P key[:{s/d/l}],key[:{s/d/l}],... \n 
+		As -p adding the declared keys to the default list.
+ \n \n -w key[:{s/d/l}]=value,key[:{s/d/l}]=value,... \n 
+		Where clause.
+		Only grib messages matching the key/value constraints are copied to the
+		output_grib_file.
+		For each key a string (key:s) or a double (key:d) or a long (key:l)
+		type can be defined. Default type is string.
+ \n \n -B order by directive \n 
+		Order by. The output will be ordered according the order by directive.
+		Order by example: "step asc, centre desc" (step ascending and centre discending)
+ \n \n -V  \n Version.
+ \n \n -W width \n 
+		Minimum width of each column in output. Default is 10.
+ \n \n -M  \n Multi-grib support off. Turn off support for multiple fields in single grib message.
+ \n \n -g  \n Copy GTS header. 
+ \n \n -G  \n GRIBEX compatibility mode.
+ \n \n -7  \n Does not fail when the message has wrong length
+ \n \n -v  \n Verbose.
+ \n \n 
+\section grib_copy_examples grib_copy examples
+-# To copy only the pressure levels from a file\n
+\verbatim
+> grib_copy -w levtype=pl ../data/tigge_pf_ecmwf.grib2 out.grib
+\endverbatim\n
+-# To copy only the fields that are not on pressure levels from a file\n
+\verbatim
+> grib_copy -w levtype!=pl ../data/tigge_pf_ecmwf.grib2 out.grib
+\endverbatim\n
+-# A grib_file with multi field messages can be converted in single field messages
+with a simple grib_copy.\n
+\verbatim
+> grib_copy multi.grib simple.grib
+\endverbatim\n
+-# Use the square brackets to insert the value of a key
+in the name of the output file.\n
+\verbatim
+> grib_copy in.grib out_[shortName].grib
+\endverbatim\n
+*/

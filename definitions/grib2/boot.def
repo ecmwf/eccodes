@@ -1,0 +1,40 @@
+# Copyright 2005-2012 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+# 
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
+constant one = 1 : hidden ;
+constant million = 1000000 : hidden;
+constant grib2divider   = 1000000;
+alias extraDimensionPresent=zero;
+
+meta gts_header gts_header() : no_copy,hidden,read_only;
+meta gts_TTAAii gts_header(20,6) : no_copy,hidden,read_only;
+meta gts_CCCC gts_header(27,4) : no_copy,hidden,read_only;
+meta gts_ddhh00 gts_header(32,6) : no_copy,hidden,read_only;
+
+
+transient  missingValue   = 9999;
+constant ieeeFloats   = 1 : edition_specific;
+
+include "section.0.def";
+
+template core "grib2/sections.def";
+
+
+#if(!new())
+#{
+  #lookup[4] endOfProduct(0);
+  #while(endOfProduct != `7777`)
+  #{
+    #template core "grib2/sections.def";
+    #lookup[4] endOfProduct(0);
+  #}
+#}
+
+template     section_8 "grib2/section.8.def";
+

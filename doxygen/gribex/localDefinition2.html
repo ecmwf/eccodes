@@ -1,0 +1,232 @@
+      <table border="3">
+        <tbody>
+          <tr>
+            <th> KSEC1 element</th>
+            <th> Contents</th>
+            <th> GRIB octet</th>
+            <th style="vertical-align: top; text-align: center;">Recommended
+GRIB_API keys<br>
+            </th>
+            <th style="vertical-align: top; text-align: center;">Coded
+GRIB_API keys<br>
+            </th>
+            <th style="vertical-align: top; text-align: center;">Comments<br>
+            </th>
+          </tr>
+          <tr>
+            <td> 37</td>
+            <td>
+            <pre>ECMWF local GRIB use definition identifier<br>2 = Cluster means and standard deviations.<br></pre>
+            </td>
+            <td> 41</td>
+            <th style="vertical-align: top; text-align: left;">localDefinitionNumber</th>
+            <td style="vertical-align: top;">localDefinitionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>38</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_class/">Class</a></td>
+            <td>42</td>
+            <th style="vertical-align: top; text-align: left;">class</th>
+            <td style="vertical-align: top;">marsClass</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>39</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_type/">Type</a></td>
+            <td>43</td>
+            <th style="vertical-align: top; text-align: left;">type</th>
+            <td style="vertical-align: top;">marsType</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>40</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_stream/">Stream</a></td>
+            <td>44-45</td>
+            <th style="vertical-align: top; text-align: left;">stream</th>
+            <td style="vertical-align: top;">marsStream</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>41</td>
+            <td>
+            <pre>Version number or experiment identifier.<br>(4 ASCII characters, right justified)</pre>
+            </td>
+            <td>46-49</td>
+            <th style="vertical-align: top; text-align: left;">expver</th>
+            <td style="vertical-align: top;">experimentVersionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 42</td>
+            <td> Cluster number.</td>
+            <td> 50</td>
+            <th style="vertical-align: top; text-align: left;">number<br>
+            </th>
+            <td style="vertical-align: top;">clusterNumber<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 43</td>
+            <td> Total number of clusters.</td>
+            <td> 51</td>
+            <th style="vertical-align: top; text-align: left;">totalNumberOfClusters<br>
+            </th>
+            <td style="vertical-align: top;">totalNumberOfClusters<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td> Spare (set to zero)</td>
+            <td> 52</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 44</td>
+            <td>
+            <pre>Clustering method:<br> 1 = Maximum linkage method<br> 2 = Mixed method<br> 3 = Small linkage method<br></pre>
+            </td>
+            <td> 53</td>
+            <th style="vertical-align: top; text-align: left;">clusteringMethod<br>
+            </th>
+            <td style="vertical-align: top;">clusteringMethod</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 45</td>
+            <td> Start time step considered when clustering. (Same
+units of time as forecast timesteps.)</td>
+            <td> 54-55</td>
+            <th style="vertical-align: top; text-align: left;">startTimeStep<br>
+            </th>
+            <td style="vertical-align: top;">startTimeStep</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 46</td>
+            <td> End time step considered when clustering. (Same units
+of time as forecast timesteps.)</td>
+            <td> 56-57</td>
+            <th style="vertical-align: top; text-align: left;">endTimeStep<br>
+            </th>
+            <td style="vertical-align: top;">endTimeStep</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 47</td>
+            <td> Northern latitude of the domain of clustering.</td>
+            <td> 58-60</td>
+            <th style="vertical-align: top; text-align: left;">northernLatitudeOfDomain<br>
+            </th>
+            <td style="vertical-align: top;">northernLatitudeOfDomain</td>
+            <td style="vertical-align: top;">Key "domain" can be used.
+It contains the 4 coordinates.<br>
+            </td>
+          </tr>
+          <tr>
+            <td> 48</td>
+            <td> Western longitude of the domain of clustering.</td>
+            <td> 61-63</td>
+            <th style="vertical-align: top; text-align: left;">westernLongitudeOfDomain<br>
+            </th>
+            <td style="vertical-align: top;">westernLongitudeOfDomain</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 49</td>
+            <td> Southern latitude of the domain of clustering.</td>
+            <td> 64-66</td>
+            <th style="vertical-align: top; text-align: left;">southernLatitudeOfDomain<br>
+            </th>
+            <td style="vertical-align: top;">southernLatitudeOfDomain</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 50</td>
+            <td> Eastern longitude of the domain of clustering.</td>
+            <td> 67-69</td>
+            <th style="vertical-align: top; text-align: left;">easternLongitudeOfDomain<br>
+            </th>
+            <td style="vertical-align: top;">easternLongitudeOfDomain</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 51</td>
+            <td> Number of cluster to which the operational forecast
+belongs.</td>
+            <td> 70</td>
+            <th style="vertical-align: top; text-align: left;">operationalForecastCluster<br>
+            </th>
+            <td style="vertical-align: top;">operationalForecastCluster</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 52</td>
+            <td> Number of cluster to which the control forecast
+belongs.</td>
+            <td> 71</td>
+            <th style="vertical-align: top; text-align: left;">controlForecastCluster<br>
+            </th>
+            <td style="vertical-align: top;">controlForecastCluster</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 53</td>
+            <td> Number of forecasts belonging to the cluster,
+including the control forecast (N).</td>
+            <td> 72</td>
+            <th style="vertical-align: top; text-align: left;">numberOfForecastsInCluster<br>
+            </th>
+            <td style="vertical-align: top;">numberOfForecastsInCluster</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td> 54-53+N</td>
+            <td> List of N ensemble forecast numbers.</td>
+            <td> 73 -72+N</td>
+            <th style="vertical-align: top; text-align: left;">ensembleForecastNumbers<br>
+            </th>
+            <td style="vertical-align: top;">ensembleForecastNumbers</td>
+            <td style="vertical-align: top;">list of
+numberOfForecastsInCluster numbers<br>
+            </td>
+          </tr>
+          <tr>
+            <td> -</td>
+            <td>Spare to ensure fixed length for section.</td>
+            <td>73+N-328</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+        </tbody>
+      </table>

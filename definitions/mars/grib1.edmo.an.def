@@ -1,0 +1,10 @@
+# NOTE: step is startStep
+
+alias mars.step = endStep;
+
+# Only ERA15 has time and step 
+if(class != 3) { 
+	unalias mars.time; 
+	unalias mars.step; 
+}
+alias mars.number=perturbationNumber;

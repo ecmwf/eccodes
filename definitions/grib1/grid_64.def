@@ -1,0 +1,26 @@
+# Copyright 2005-2012 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
+# Predefined grid 21
+
+constant Ni = 91;
+constant Nj = 46;
+
+constant longitudeOfFirstGridPoint = -180000;
+constant longitudeOfLastGridPoint = 0;
+
+constant latitudeOfFirstGridPoint = -90000;
+constant latitudeOfLastGridPoint = 0;
+
+constant iDirectionIncrement = 2000;
+constant jDirectionIncrement = 2000;
+
+constant numberOfDataPoints=4186;
+constant numberOfValues=4096 ;
+

@@ -1,0 +1,69 @@
+# Negatively/Positively Perturbed Forecast
+transient pNumber=identificationNumber;
+set identificationOfOriginatingGeneratingSubCentre = 98 ;
+set localDefinitionNumber = 1 ;
+set marsClass="od";
+set marsStream="kwbc"; 
+#print "marsType=[marsType:l]";
+if ( marsType == 2 || marsType == 3 ) {
+  set marsType=11; 
+}
+# Control Forecast
+if ( marsType == 1 ) {
+  set marsType="cf"; 
+}
+set experimentVersionNumber="0001";
+set numberOfForecastsInEnsemble=11;
+set perturbationNumber=pNumber;
+
+
+# Geopotential height
+if ( ( level == 500 || level == 1000 )  && indicatorOfParameter == 7 ) {
+	print "found indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	set gribTablesVersionNo = 128;
+	set indicatorOfParameter = 129 ; 
+	print "indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	write "out.grib";
+	print;
+}
+
+# U wind
+if ( level == 250 && indicatorOfParameter == 33 ) {
+	print "found indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	set gribTablesVersionNo = 128;
+	set indicatorOfParameter = 131 ;
+	print "indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	write "out.grib";
+	print;
+}
+
+# V wind
+if ( level == 250 && indicatorOfParameter == 34 ) {
+	print "found indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	set gribTablesVersionNo = 128;
+	set indicatorOfParameter = 132;
+	print "indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	write "out.grib";
+	print;
+}
+
+# Relative humidity 
+if ( level == 700 && indicatorOfParameter == 52 ) {
+	print "found indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	set gribTablesVersionNo = 128;
+	set indicatorOfParameter = 157 ; 
+	print "indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	write "out.grib";
+	print;
+}
+
+# Temperature 
+if ( level == 850 && indicatorOfParameter == 11 ) {
+	print "found indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	set gribTablesVersionNo = 128;
+	set indicatorOfParameter = 130; 
+	print "indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	write "out.grib";
+	print;
+}
+

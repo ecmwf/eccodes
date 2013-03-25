@@ -1,0 +1,125 @@
+# GRIB edition 2
+editionNumber                   = 2;
+
+# TIGGE prod = 4, test = 5
+
+productionStatusOfProcessedData = 5;
+
+# JPEG-2000 packing
+#typeOfPacking                     = "grid_jpeg";
+typeOfPacking = "grid_simple";
+
+# Shape of the Earth
+shapeOfTheEarth = 6;
+
+
+typeOfGeneratingProcess     = 4; # CF of PF
+numberOfForecastsInEnsemble = 11; # 10 Members + 1 Control
+#productDefinitionTemplateNumber = 1;
+
+
+if( subCentre == 100 || subCentre == 0)
+{
+	# Control
+	typeOfProcessedData    = 3;
+	typeOfEnsembleForecast = 1; # Low-res control forecast
+
+
+	number = 0;
+
+}
+
+if( subCentre != 100 && subCentre != 0)
+{
+	typeOfProcessedData    = 4;
+#	typeOfEnsembleForecast = 2; # Negatively perturbed forecast
+	typeOfEnsembleForecast = 3; # Positively perturbed forecast
+
+	number = subCentre - 100;
+}
+
+
+# typeOfEnsembleForecast = ?;
+
+
+# Pressure level
+
+# Temperature
+if( indicatorOfParameter == 11  && indicatorOfTypeOfLevel == 100) { productDefinitionTemplateNumber=1;tigge_short_name = 't'; }
+
+# Geopotential
+if( indicatorOfParameter == 6 )  { productDefinitionTemplateNumber=1;tigge_short_name = 'gh'; }
+
+# U-component
+if( indicatorOfParameter == 33 && indicatorOfTypeOfLevel == 100)  { productDefinitionTemplateNumber=1;tigge_short_name = 'u'; }
+if( indicatorOfParameter == 34 && indicatorOfTypeOfLevel == 100)  { productDefinitionTemplateNumber=1;tigge_short_name = 'v'; }
+
+# Specific humidity
+if( indicatorOfParameter == 51)  { productDefinitionTemplateNumber=1;tigge_short_name = 'q'; }
+
+
+# Single level
+# Orography
+
+if( indicatorOfParameter == 8)  { productDefinitionTemplateNumber=1;tigge_short_name = 'orog'; }
+
+# Wind
+if( indicatorOfParameter == 33 && indicatorOfTypeOfLevel == 105)  { productDefinitionTemplateNumber=1;tigge_short_name = '10u'; }
+if( indicatorOfParameter == 34 && indicatorOfTypeOfLevel == 105)  { productDefinitionTemplateNumber=1;tigge_short_name = '10v'; }
+
+
+# Dew point
+if( indicatorOfParameter == 17)  { 	
+	productDefinitionTemplateNumber = 1;
+	tigge_short_name                = '2d'; 
+	typeOfFirstFixedSurface         = 103;
+	scaleFactorOfFirstFixedSurface  = 0;
+	scaledValueOfFirstFixedSurface  = 2;
+}
+
+# 2Meter temp.
+if( indicatorOfParameter == 11 && indicatorOfTypeOfLevel == 105)  
+{ 
+	productDefinitionTemplateNumber = 1;
+	tigge_short_name                = '2t'; 
+	typeOfFirstFixedSurface         = 103;
+	scaleFactorOfFirstFixedSurface  = 0;
+	scaledValueOfFirstFixedSurface  = 2;
+}
+
+# Cape
+if( indicatorOfParameter == 160)  { productDefinitionTemplateNumber=1;tigge_short_name = 'cape'; }
+
+# Mean sea level pressure
+if( indicatorOfParameter == 2)  { productDefinitionTemplateNumber=1;tigge_short_name = 'msl'; }
+
+# Potential temperature
+if( indicatorOfParameter == 13)  { productDefinitionTemplateNumber=1;tigge_short_name = 'pt'; }
+
+# Snow depth
+if( indicatorOfParameter == 65)  { productDefinitionTemplateNumber=1;tigge_short_name = 'sd'; }
+
+# Snow fall
+if( indicatorOfParameter == 99)  { 
+	productDefinitionTemplateNumber = 11;
+	tigge_short_name = 'sf'; 
+}
+
+
+
+if(indicatorOfParameter == 11 && indicatorOfTypeOfLevel == 1)  { productDefinitionTemplateNumber=1;tigge_short_name = 'skt'; }
+if(indicatorOfParameter == 121)  { productDefinitionTemplateNumber = 11;tigge_short_name = 'slhf'; }
+if(indicatorOfParameter == 1)    { productDefinitionTemplateNumber=1;tigge_short_name = 'sp'; }
+if(indicatorOfParameter == 122)  { productDefinitionTemplateNumber = 11;tigge_short_name = 'sshf'; }
+if(indicatorOfParameter == 111)  { productDefinitionTemplateNumber = 11;tigge_short_name = 'ssr'; }
+if(indicatorOfParameter == 11 && indicatorOfTypeOfLevel == 111)  { productDefinitionTemplateNumber=1;tigge_short_name = 'st'; }
+if(indicatorOfParameter == 112)  { productDefinitionTemplateNumber = 11;tigge_short_name = 'str'; }
+if(indicatorOfParameter == 71)   { productDefinitionTemplateNumber=1;tigge_short_name = 'tcc'; }
+if(indicatorOfParameter == 61)   { productDefinitionTemplateNumber = 11;tigge_short_name = 'tp'; }
+if(indicatorOfParameter == 114)  { productDefinitionTemplateNumber = 11;tigge_short_name = 'ttr'; }
+if(indicatorOfParameter == 167)  { productDefinitionTemplateNumber = 1;tigge_short_name = 'tcw'; }
+
+if( indicatorOfParameter == 33 && indicatorOfTypeOfLevel == 117)  
+{ scaleFactorOfFirstFixedSurface=6;scaledValueOfFirstFixedSurface=2;typeOfFirstFixedSurface=109;productDefinitionTemplateNumber=1;tigge_short_name = 'u'; }
+
+if( indicatorOfParameter == 34 && indicatorOfTypeOfLevel == 117)  { scaleFactorOfFirstFixedSurface=6;scaledValueOfFirstFixedSurface=2;typeOfFirstFixedSurface=109;productDefinitionTemplateNumber=1;tigge_short_name = 'v'; }

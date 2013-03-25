@@ -1,0 +1,22 @@
+%manual
+
+
+  The work is carried out
+
+%end
+%include <qsub.h>
+%include <step1.h>
+%include <head.h>
+%include <grib_api.h>
+
+TMPBASE=%TMPBASE%
+
+cd ${TMPBASE}/${LIBRARY}/${ADDRESS}/${PACKAGE}
+
+make
+
+smslabel buildLibrary "`ls -l src/libgrib_api.a`"
+
+%include <endt.h>
+
+%include <step2.h>

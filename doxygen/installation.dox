@@ -1,0 +1,80 @@
+/*! \page installation GRIB API installation
+GRIB API installation is based on the standard configure utility. It is tested on several platforms
+and with several compilers. However for some platforms modifications to the installation
+engine may be required. If you encounter any problem during the installation procedure please 
+send an e-mail with your problem to Software.Support@ecmwf.int.
+
+The only required package for a standard installation is 
+<a href="http://www.ece.uvic.ca/~mdadams/jasper/">jasper</a> which enables the jpeg2000 
+packing/unpacking algorithm. It is possible to build GRIB API without jasper, by using the 
+--disable-jpeg configure option, but to install a fully functional library, its download is recommended.
+
+
+\section standard_installation Standard installation
+-# Download GRIB API from <a href="http://www.ecmwf.int/products/data/software/download/grib_api.html">ECMWF web site</a>.
+-# Unpack distribution:
+  \code
+  > gunzip grib_api-X.X.X.tar.gz
+  > tar xf grib_api-X.X.X.tar
+  \endcode
+-# Create the directory where to install GRIB API say \e grib_api_dir  
+  \code
+  > mkdir grib_api_dir
+  \endcode
+-# Run the configure in the grib_api-X.X.X
+  \code
+  > cd grib_api-X.X.X
+  > ./configure --prefix=grib_api_dir 
+  \endcode
+  Please give the full path of grib_api_dir to the prefix option.
+-# make, check and install
+  \code
+  > make
+  ...
+  > make check
+  ...
+  > make install
+  ...
+  \endcode
+
+\section parameters_installation Parameter files installation
+The following instructions are valid only if you have already 
+installed GRIB API and you need to update the current parameter files.
+The parameter files should work with any version of GRIB API.
+
+To install the parameter files, then please unpack the downloaded archive
+in the definition files folder of your GRIB API installation, i.e.:
+
+  \code
+  > cd definitions
+  > gunzip grib_api_parameters-vX.tar.gz
+  > tar xf grib_api_parameters-vX.tar
+  \endcode
+
+This process will overwrite any changes you might have done to the parameter files,
+so please do make a backup of the definition files folder before installing the 
+downloaded GRIB API parameter files.
+
+\section definitions_installation Definition files installation
+The following instructions are valid only if you have already 
+installed GRIB API and you need to update the definition files compatible 
+with the same library version you have already installed. 
+Please note that using the definition files with a version 
+of the library different from the one indicated as compatible 
+will cause some problems in decoding/encoding.
+
+-# Download GRIB API definition files from <a href="http://www.ecmwf.int/products/data/software/download/grib_api.html#definitions">ECMWF web site</a>.
+-# Unpack distribution:
+  \code
+  > gunzip grib_def-X.X.X.X.tar.gz
+  > tar xf grib_def-X.X.X.X.tar
+  \endcode
+-# Run the installation script from the grib_def-X.X.X.X directory:
+  \code
+  ./installDefinitions.sh grib_api_dir def_files_dir
+  \endcode
+  where grib_api_dir is the path to a working installation of
+  GRIB API and def_files_dir is the directory where you 
+  want to install the new version of the defintion files.
+
+*/

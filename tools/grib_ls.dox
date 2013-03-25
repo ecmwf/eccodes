@@ -1,0 +1,89 @@
+/*!  \page grib_ls grib_ls
+\section DESCRIPTION 
+ List content of grib files printing values of some keys.
+	It does not fail when a key is not found.
+
+\section USAGE 
+ grib_ls 
+ [options] grib_file grib_file ...
+
+\section OPTIONS 
+-p key[:{s/d/l}],key[:{s/d/l}],... \n 
+		Declaration of keys to print.
+		For each key a string (key:s) or a double (key:d) or a long (key:l)
+		type can be requested. Default type is string.
+ \n \n -F format \n 
+		C style format for floating point values.
+ \n \n -P key[:{s/d/l}],key[:{s/d/l}],... \n 
+		As -p adding the declared keys to the default list.
+ \n \n -w key[:{s/d/l}]{=/!=}value,key[:{s/d/l}]{=/!=}value,... \n 
+		Where clause.
+		Grib messages are processed only if they match all the key/value constraints.
+		A valid constraint is of type key=value or key!=value.
+		For each key a string (key:s) or a double (key:d) or a long (key:l)
+		type can be specified. Default type is string.
+ \n \n -j  \n json output \n \n -B order by directive \n 
+		Order by. The output will be ordered according the order by directive.
+		Order by example: "step asc, centre desc" (step ascending and centre discending)
+ \n \n -l Latitude,Longitude[,MODE,file] \n 
+		Value close to the point of a Latitude/Longitude.
+		Allowed values for MODE are:
+		4 (4 values in the nearest points are printed) Default
+		1 (the value at the nearest point is printed)
+		file (file is used as mask. The closer point with mask value>=0.5 is printed)
+ \n \n -s key[:{s/d/l}]=value,key[:{s/d/l}]=value,... \n 
+		Key/values to set.
+		For each key a string (key:s) or a double (key:d) or a long (key:l)
+		type can be defined. By default the native type is set.
+ \n \n -i index \n 
+		Data value corresponding to the given index is printed.
+ \n \n -n namespace \n 
+		All the keys belonging to namespace are printed.
+ \n \n -m  \n Mars keys are printed.
+ \n \n -V  \n Version.
+ \n \n -W width \n 
+		Minimum width of each column in output. Default is 10.
+ \n \n -M  \n Multi-grib support off. Turn off support for multiple fields in single grib message.
+ \n \n -g  \n Copy GTS header. 
+ \n \n -G  \n GRIBEX compatibility mode.
+ \n \n -7  \n Does not fail when the message has wrong length
+ \n \n -x  \n Fast parsing option, only headers are loaded.
+ \n \n 
+\section grib_ls_examples grib_ls examples
+-# Without options a default list of keys is printed. \n
+The default list is different depending on the type of grib message. \n
+\verbatim 
+> grib_ls ../data/reduced*.grib1 ../data/regular*.grib1 ../data/reduced*.grib2 \n
+\endverbatim\n 
+-# To print offset and count number in file use the keys offset and count\n 
+Also the total count in a set of files is available as countTotal\n
+\verbatim 
+> grib_ls -p offset,count,countTotal ../data/reduced*.grib1
+\endverbatim\n 
+-# To list only a subset of messages use the -w (where option).\n 
+Only the pressure levels are listed with the following line.\n 
+\verbatim 
+> grib_ls -w levelType=pl ../tigge_pf_ecmwf.grib2 
+\endverbatim\n 
+-# All the grib messages not on pressure levels are listed as follows:\n 
+\verbatim 
+> grib_ls -w levelType!=pl ../tigge_pf_ecmwf.grib2 
+\endverbatim\n 
+-# To get the closest grid point to a latitude/longitude.\n
+\code 
+>grib_ls -l 51.46,-1.33,1 -p paramId,name ../data/reduced_gaussian_surface.grib2
+../data/reduced_gaussian_surface.grib2
+paramId     shortName    value 
+167         2t          282.002     
+1 of 1 grib messages in ../data/reduced_gaussian_surface.grib2
+
+1 of 1 total grib messages in 1 files
+Input Point: latitude=51.46  longitude=-1.33
+Grid Point chosen #3 index=749 latitude=51.63 longitude=0.00 distance=93.81 (Km)
+Other grid Points
+- 1 - index=845 latitude=48.84 longitude=0.00 distance=306.86 (Km)
+- 2 - index=944 latitude=48.84 longitude=356.40 distance=333.66 (Km)
+- 3 - index=749 latitude=51.63 longitude=0.00 distance=93.81 (Km)
+- 4 - index=844 latitude=51.63 longitude=356.25 distance=168.37 (Km)
+\endcode\n
+*/

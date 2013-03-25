@@ -1,0 +1,1 @@
+proto:;-p4 edit grib_fortran_prototypes.h;mkptypes -A $(libgrib_api_fortran_prototypes) > grib_fortran_prototypes.h

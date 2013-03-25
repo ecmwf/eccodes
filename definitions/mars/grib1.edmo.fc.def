@@ -1,0 +1,13 @@
+# assert(local=1)
+# NOTE: verificationDate based on startStep
+
+meta  verificationDate   g1verificationdate(dataDate, dataTime, startStep) : read_only;
+alias mars.date        = verificationDate;
+alias mars.step        = endStep;
+
+# Only ERA15 has time and step 
+if(class != 3) { 
+	unalias mars.time; 
+	unalias mars.step; 
+}
+alias mars.number=perturbationNumber;

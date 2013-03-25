@@ -1,0 +1,22 @@
+%manual
+
+  Unpacks the tar file of gribex and pbio sources for the version
+  defined by GRIBEX_CYCLE and "make"s the library.
+
+  The work is carried out in /scratch/ma/mas/CompareGribexVersions
+
+%end
+%include <qsub.h>
+%include <step1.h>
+%include <head.h>
+%include <grib_api.h>
+
+TMPBASE=%TMPBASE%
+
+cd ${TMPBASE}/${LIBRARY}/${ADDRESS}
+
+make check
+
+%include <endt.h>
+
+%include <step2.h>

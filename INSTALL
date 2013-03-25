@@ -1,0 +1,40 @@
+
+The grib_api installation is based on the standard configure utility. 
+It is tested on several platforms and with several compilers. However for some platforms 
+modifications to the installation engine may be required. If you encounter any problem 
+during the installation procedure please send an e-mail with your problem to 
+Software.Support@ecmwf.int.
+
+The only required package for a standard installation is jasper which enables the jpeg2000 
+packing/unpacking algorithm. 
+It is possible to build grib_api without jasper, by using the --disable-jpeg configure option, 
+but to install a fully functional library, its download is recommended.
+
+
+Standard Installation
+=====================
+
+   1. Download grib_api from http://www.ecmwf.int/products/data/software/download/grib_api.html.
+   2. Unpack distribution:
+
+        > gunzip grib_api-X.tar.gz
+        > tar xf grib_api-X.tar
+
+   3. Create the directory where to install grib_api say grib_api_dir
+
+        > mkdir grib_api_dir
+
+   4. Run the configure in the grib_api-X
+
+        > cd grib_api-X
+        > ./configure --prefix=grib_api_dir
+
+   5. make, check and install
+
+        > make
+        ...
+        > make check
+        ...
+        > make install
+        ...
+

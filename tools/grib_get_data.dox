@@ -1,0 +1,45 @@
+/*!  \page grib_get_data grib_get_data
+\section DESCRIPTION 
+ Print a latitude, longitude, data values list 
+
+\section USAGE 
+ grib_get_data 
+ [options] grib_file grib_file ...
+
+\section OPTIONS 
+-M  \n Multi-grib support off. Turn off support for multiple fields in single grib message.
+ \n \n -m missingValue \n 
+		The missing value is given through this option.
+		Any string is allowed and it is printed in place of the missing
+		values. Default is to skip the missing values.
+ \n \n -p key[:{s/d/l}],key[:{s/d/l}],... \n 
+		Declaration of keys to print.
+		For each key a string (key:s) or a double (key:d) or a long (key:l)
+		type can be requested. Default type is string.
+ \n \n -F format \n 
+		C style format for values. Default is "%.10e"
+ \n \n -w key[:{s/d/l}]{=/!=}value,key[:{s/d/l}]{=/!=}value,... \n 
+		Where clause.
+		Grib messages are processed only if they match all the key/value constraints.
+		A valid constraint is of type key=value or key!=value.
+		For each key a string (key:s) or a double (key:d) or a long (key:l)
+		type can be specified. Default type is string.
+ \n \n -f  \n Force. Force the execution not to fail on error.
+ \n \n -G  \n GRIBEX compatibility mode.
+ \n \n -7  \n Does not fail when the message has wrong length
+ \n \n -V  \n Version.
+ \n \n 
+\section grib_get_data_examples grib_get_data examples
+-# To get a latitude, longitude, value list, skipping the missing values(=9999)
+\verbatim
+>grib_get_data ../data/reduced_gaussian_model_level.grib2
+\endverbatim
+-# If you want to define your missing value=1111 and to print the string missing in place of it
+\verbatim
+>grib_get_data -m 1111:missing ../data/reduced_gaussian_model_level.grib2
+\endverbatim
+-# If you want to print the value of other keys with the data value list
+\verbatim
+>grib_get_data -p centre,level,step ../data/reduced_gaussian_model_level.grib2
+\endverbatim
+*/

@@ -1,0 +1,157 @@
+      <p>
+      <table border="3">
+        <tbody>
+          <tr>
+            <th> KSEC1 element</th>
+            <th> Contents</th>
+            <th> GRIB octet</th>
+            <th style="vertical-align: top; text-align: center;">Recommended
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Coded
+GRIB_API keys</th>
+            <th style="vertical-align: top; text-align: center;">Comments</th>
+          </tr>
+          <tr>
+            <td> 37 </td>
+            <td>
+            <pre>ECMWF local GRIB use definition identifier.<br>18 = Multi-analysis ensemble data<br></pre>
+            </td>
+            <td> 41 </td>
+            <th style="vertical-align: top; text-align: left;">localDefinitionNumber</th>
+            <td style="vertical-align: top;">localDefinitionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>38</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_class/">Class</a></td>
+            <td>42</td>
+            <th style="vertical-align: top; text-align: left;">class</th>
+            <td style="vertical-align: top;">marsClass</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>39</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_type/">Type</a></td>
+            <td>43</td>
+            <th style="vertical-align: top; text-align: left;">type</th>
+            <td style="vertical-align: top;">marsType</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>40</td>
+            <td><a
+ href="http://www.ecmwf.int/services/archive/d/table/grib_stream/">Stream</a></td>
+            <td>44-45</td>
+            <th style="vertical-align: top; text-align: left;">stream</th>
+            <td style="vertical-align: top;">marsStream</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>41</td>
+            <td>
+            <pre>Version number or experiment identifier.<br>(4 ASCII characters, right justified)</pre>
+            </td>
+            <td>46-49</td>
+            <th style="vertical-align: top; text-align: left;">expver</th>
+            <td style="vertical-align: top;">experimentVersionNumber</td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>42</td>
+            <td>
+            <pre>Ensemble forecast number:<br>= 0 for a control forecast.<br>Not used for analysis (set to zero)<br></pre>
+            </td>
+            <td>50</td>
+            <th style="vertical-align: top; text-align: left;">perturbationNumber<br>
+            </th>
+            <td style="vertical-align: top;">perturbationNumber<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>43</td>
+            <td>
+            <pre>Total number of forecasts in ensemble.<br>(Set to 1 for analysis)<br></pre>
+            </td>
+            <td>51</td>
+            <th style="vertical-align: top; text-align: left;">numberOfForecastsInEnsemble<br>
+            </th>
+            <td style="vertical-align: top;">numberOfForecastsInEnsemble<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>44</td>
+            <td>
+            <pre>Data origin<br>    = WMO identifier of centre providing the analysis<br>    = 255 for a consensus product<br></pre>
+            </td>
+            <td>52</td>
+            <th style="vertical-align: top; text-align: left;">origin<br>
+            </th>
+            <td style="vertical-align: top;">dataOrigin<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>45</td>
+            <td>
+            <pre>Model<br>    Four character identifier of forecast used<br>    = "ECMF" for ECMWF IFS<br>    = WMO centre CCCC identifier otherwise<br>(4 Ascii characters, right justified)<br></pre>
+            </td>
+            <td>53 - 56</td>
+            <th style="vertical-align: top; text-align: left;">modelIdentifier<br>
+            </th>
+            <td style="vertical-align: top;">modelIdentifier<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>46</td>
+            <td>
+            <pre>Consensus count<br>    Indicates the composition of the starting analysis for a<br>    product (analysis, forecast, ..)<br>    = 0 for a product from one centre (ie not a consensus product)<br>    = n for a consensus product, where n is the number of<br>      analyses used in the consensus analysis.<br>      (nb. This allows the case n = 1.)<br></pre>
+            </td>
+            <td>57</td>
+            <th style="vertical-align: top; text-align: left;">consensusCount<br>
+            </th>
+            <td style="vertical-align: top;">consensusCount<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td>Spare (set to zero)</td>
+            <td>58 - 60</td>
+            <th style="vertical-align: top; text-align: left;"><br>
+            </th>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+          </tr>
+          <tr>
+            <td>47 - 61</td>
+            <td>
+            <pre>WMO centre CCCC identifiers for the analyses used, eg "KWBC".<br>(4 Ascii characters, right justified)<br>Unused list entries are set to four blanks.<br></pre>
+            </td>
+            <td>61 - 120</td>
+            <th style="vertical-align: top; text-align: left;">ccccIdentifiers<br>
+            </th>
+            <td style="vertical-align: top;">ccccIdentifiers<br>
+            </td>
+            <td style="vertical-align: top;">consensusCount<br>
+values<br>
+            </td>
+          </tr>
+        </tbody>
+      </table>

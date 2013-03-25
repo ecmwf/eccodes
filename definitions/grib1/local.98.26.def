@@ -1,0 +1,61 @@
+# Copyright 2005-2012 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
+# START 1/local.98.21 ----------------------------------------------------------------------
+# LOCAL 98 21
+#
+# localDefinitionTemplate_026
+# ---------------------------
+#
+# Description                Octet    Code    Ksec1    Count
+# -----------                -----    ----    -----    -----
+#localDefinitionNumber           41      I1      37      -
+#class                           42      I1      38      -
+#type                            43      I1      39      -
+#stream                          44      I2      40      -
+#experimentVersionNumber         46      A4      41      -
+#number                          50      I1      42      -
+#total                           51      I1      43      -
+#referenceDate                   52      I4      44      -
+#climateDateFrom                 56      I4      45      -
+#climateDateTo                   60      I4      46      -
+#spareSetToZero                  64      PAD     n/a     6
+#
+
+constant GRIBEXSection1Problem = 69 - section1Length ;
+
+#used in local definition 13
+transient localFlag=2 : hidden;
+
+template mars_labeling "grib1/mars_labeling.def";
+#1->2
+alias grib2LocalSectionPresent=present;
+constant grib2LocalSectionNumber=26;
+
+if (stepType is "instant" ) {
+    alias productDefinitionTemplateNumber=epsPoint;
+} else {
+    alias productDefinitionTemplateNumber=epsContinous;
+}
+
+constant wrongPadding=1 : hidden;
+
+unsigned[1] number  : dump;
+unsigned[1] numberOfForecastsInEnsemble    : dump   ;
+alias totalNumber=numberOfForecastsInEnsemble;
+unsigned[4] referenceDate  : dump ;
+unsigned[4] climateDateFrom  : dump;
+unsigned[4] climateDateTo  : dump ;
+pad padding_loc26_1(6);
+alias perturbationNumber=number;
+
+alias local.referenceDate= referenceDate  ;
+alias local.climateDateFrom= climateDateFrom  ;
+alias local.climateDateTo= climateDateTo   ;
+
