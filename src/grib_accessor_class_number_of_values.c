@@ -177,7 +177,10 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
       size=npoints;
       bitmap=(double*)grib_context_malloc(a->parent->h->context,sizeof(double)*size);
       if((ret = grib_get_double_array_internal(a->parent->h,self->bitmap,bitmap,&size))
-                  != GRIB_SUCCESS) return ret;
+                  != GRIB_SUCCESS) {
+			  grib_context_free(a->parent->h->context,bitmap);
+			  return ret;
+	  }
       *val=0;
       for (i=0;i<size;i++)
         if (bitmap[i]!=0) (*val)++;

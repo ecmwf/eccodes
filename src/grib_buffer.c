@@ -134,6 +134,8 @@ static void update_offsets_after(grib_accessor* a,long len)
   }
 }
 
+#if 0
+/* new GCC compiler v4.5.0 complains function is defined but not used*/
 void grib_recompute_sections_lengths(grib_section* s)
 {
   if(s)
@@ -169,6 +171,8 @@ void grib_recompute_sections_lengths(grib_section* s)
     }
   }
 }
+#endif
+
 
 #if 0
 /* new GCC compiler v4.5.0 complains function is defined but not used*/
@@ -178,6 +182,7 @@ static void update_sections_lengths(grib_section* s)
   size_t  len = 1;
 
   if(!s) return;
+
 
   if(s->aclength)
   {
@@ -206,8 +211,10 @@ static void update_sections_lengths(grib_section* s)
 
   if(s->owner)
     update_sections_lengths(s->owner->parent);
+
 }
 #endif
+
 
 void grib_buffer_replace( grib_accessor *a, const unsigned char* data,
                           size_t newsize,int update_lengths,int update_paddings)
@@ -249,13 +256,9 @@ void grib_buffer_replace( grib_accessor *a, const unsigned char* data,
       if(update_paddings)
         grib_update_paddings(a->parent->h->root);
     }
-
   }
 
-
 }
-
-
 
 
 void grib_update_sections_lengths(grib_handle* h) {

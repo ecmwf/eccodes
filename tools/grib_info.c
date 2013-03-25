@@ -13,9 +13,6 @@
  *
  * Description:
  *
- *
- *
- *
  */
 
 #include "grib_tools.h"

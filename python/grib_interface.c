@@ -992,12 +992,12 @@ int grib_c_count_in_file(FILE* f,int* n) {
   return err;
 }
 
-int grib_c_new_gts_from_file(FILE* f, int* gid){
+int grib_c_new_gts_from_file(FILE* f,int headers_only, int* gid){
   grib_handle *h = NULL;
   int err = 0;
 
   if(f){
-    h = grib_gts_handle_new_from_file(0,f,&err);
+    h = eccode_gts_new_from_file(0,f,headers_only,&err);
 
     if(h){
       push_handle(h,gid);
@@ -1012,12 +1012,12 @@ int grib_c_new_gts_from_file(FILE* f, int* gid){
   return GRIB_INVALID_FILE;
 }
 
-int grib_c_new_bufr_from_file(FILE* f, int* gid){
+int grib_c_new_bufr_from_file(FILE* f,int headers_only,int* gid){
   grib_handle *h = NULL;
   int err = 0;
 
   if(f){
-    h = grib_bufr_handle_new_from_file(0,f,&err);
+    h = eccode_bufr_new_from_file(0,f,headers_only,&err);
 
     if(h){
       push_handle(h,gid);
@@ -1037,9 +1037,7 @@ int grib_c_new_from_file(FILE* f, int* gid, int headers_only){
   int err = 0;
 
   if(f){
-    h = headers_only ? 
-      grib_handle_headers_only_new_from_file(0,f,&err) :
-      grib_handle_new_from_file(0,f,&err);
+	h=eccode_grib_new_from_file(0,f,headers_only,&err);
 
     if(h){
       push_handle(h,gid);
@@ -1167,6 +1165,29 @@ int grib_c_get_size_int(int* gid, char* key, int* val){
     *val = tsize;
     return  err;
   }
+}
+
+int grib_c_get_message_offset(int* gid, size_t* offset){
+  int err = GRIB_SUCCESS;
+  off_t myoffset;
+  grib_handle *h = get_handle(*gid);
+
+  if(!h)
+    return GRIB_INVALID_GRIB;
+  else {
+    err=grib_get_message_offset(h, &myoffset);
+    *offset=myoffset;
+    return err;
+  }
+}
+
+int grib_c_get_message_size(int* gid, size_t* size){
+  grib_handle *h = get_handle(*gid);
+
+  if(!h)
+    return GRIB_INVALID_GRIB;
+  else
+    return grib_get_message_size(h, size);
 }
 
 int grib_c_get_string_length(int* gid, char* key, size_t* val){
@@ -1459,7 +1480,7 @@ int grib_c_set_key_vals(int* gid, char* keyvals)
 }
 
 int grib_c_is_missing(int* gid, char* key,int* isMissing){
-  int err=0;
+   int err=0;
 	grib_handle *h = get_handle(*gid);
 	if(!h)  return GRIB_INVALID_GRIB;
 
@@ -1818,14 +1839,6 @@ int grib_c_get_data_real8(int* gid,double* lats, double* lons,double* values,siz
 
 }
 
-int grib_c_get_message_size(int* gid, size_t *len){
-  grib_handle *h = get_handle(*gid);
-  if(!h) return GRIB_INVALID_GRIB;
-
-  *len = h->buffer->ulength;
-  return GRIB_SUCCESS;
-
-}
 
 int grib_c_copy_message(int* gid, void* mess,size_t* len){
   grib_handle *h = get_handle(*gid);

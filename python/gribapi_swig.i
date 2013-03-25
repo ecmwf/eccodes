@@ -40,8 +40,8 @@ import_array();
 
 // creation
 int grib_c_new_from_file(FILE* f, int* INOUT, int headers_only);
-int grib_c_new_bufr_from_file(FILE* f, int* INOUT);
-int grib_c_new_gts_from_file(FILE* f, int* INOUT);
+int grib_c_new_bufr_from_file(FILE* f, int headers_only, int* INOUT);
+int grib_c_new_gts_from_file(FILE* f, int headers_only, int* INOUT);
 int grib_c_iterator_new(int* INPUT, int* OUTPUT, int* INPUT);
 int grib_c_keys_iterator_new(int* INPUT, int* OUTPUT, char* name_space);
 int grib_c_new_from_samples(int* INOUT, char* name);
@@ -134,7 +134,6 @@ int grib_c_set_long_array(int* gid, char* key, long* val, int* size);
 int grib_c_get_real8_element(int* gid, char* key, int* INPUT, double* OUTPUT);
 int grib_c_get_real8_elements(int* gid, char* key, int* index, double* val, int* size);
 int grib_c_set_missing(int* gid, char* key);
-int grib_c_set_key_vals(int* gid, char* keyvals);
 int grib_c_is_missing(int* gid, char* key, int* OUTPUT);
 int grib_c_is_defined(int* gid, char* key, int* OUTPUT);
 

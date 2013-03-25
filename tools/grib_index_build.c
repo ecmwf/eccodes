@@ -11,8 +11,6 @@
 /*
  * C Implementation: grib_copy
  *
- *
- *
  */
 
 #include "grib_tools.h"

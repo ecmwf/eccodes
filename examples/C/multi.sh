@@ -11,9 +11,15 @@
 
 if [ ! -f "${data_dir}/multi.grib2" ] 
 then
-  echo SKIP: $0
-  exit
+  echo "SKIP test 1: $0"
+else
+  ${examples_dir}multi > /dev/null
 fi
-${examples_dir}multi > /dev/null
 
+if [ ! -f "${data_dir}/multi_created.grib2" ]
+then
+  echo "SKIP test 2: $0"
+else
+  ${examples_dir}multi2 > /dev/null
+fi
 

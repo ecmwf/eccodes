@@ -13,9 +13,6 @@
  *
  * Description: how to set key values.
  *
- *
- *
- *
  */
 #include <stdio.h>
 #include <stdlib.h>

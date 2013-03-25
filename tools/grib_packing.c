@@ -13,13 +13,9 @@
  *
  * Description: 
  *
- *
- *
- *
  */
  
 #include "grib_api_internal.h"
-
 void usage(const char* p)
 {
 	printf("Usage: %s [-n minimum] [-x maximum] [-b number of bits] [-d decimal scaling] [-2] [--] [values ..]\n",p);

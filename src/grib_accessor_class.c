@@ -58,7 +58,7 @@ grib_section*  grib_create_root_section(const grib_context *context, grib_handle
   GRIB_PTHREAD_ONCE(&once,&init);
   GRIB_MUTEX_LOCK(&mutex1);
   if(h->context->grib_reader == NULL) {
-	if ((fpath=grib_context_full_path(h->context,"boot.def"))==NULL) {
+	if ((fpath=grib_context_full_defs_path(h->context,"boot.def"))==NULL) {
       grib_context_log(h->context,GRIB_LOG_FATAL,
          "Unable to find boot.def ");
     }

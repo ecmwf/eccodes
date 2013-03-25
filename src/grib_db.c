@@ -12,8 +12,6 @@
  *
  * Description: grib database routines
  *
- *
- *
  */
 #include "grib_api_internal.h"
 #define GRIB_START_ARRAY_SIZE 5000
@@ -38,7 +36,7 @@ static grib_db* grib_db_create_from_keys(grib_context* c,char** keys,int nkeys,i
 static grib_db* grib_db_create_from_keys(grib_context* c,char** keys,int nkeys,int* err);
 static void grib_fieldset* grib_db_fieldset_create(grib_db* db, int* err);
 static int grib_fieldset_compare(grib_fieldset* set,int* i,int* j);
-static void grib_db_sort(grib_set* set, int beg, int end);
+static void grib_db_sort(grib_set* set, int beg, int theEnd);
 static grib_order_by* grib_db_new_order_by(grib_context* c,char* obstr);
 static void grib_db_delete_order_by(grib_context* c,grib_order_by* order_by);
 static int grib_db_resize(grib_db* db,size_t newsize);
@@ -496,12 +494,12 @@ static int grib_fieldset_compare(grib_fieldset* set,int* i,int* j) {
   return ret;
 }
 
-static void grib_db_sort(grib_set* set, int beg, int end) {
+static void grib_db_sort(grib_set* set, int beg, int theEnd) {
    double temp;
    int l=0,r=0;
-   if (end > beg) {
+   if (theEnd > beg) {
       l = beg + 1;
-      r = end;
+      r = theEnd;
       while (l < r) {
          if ( grib_db_compare(set,&l,&beg) <= 0 ) {
            l++;
@@ -521,7 +519,7 @@ static void grib_db_sort(grib_set* set, int beg, int end) {
       }
 
       grib_db_sort(set, beg, l);
-      grib_db_sort(set, r, end);
+      grib_db_sort(set, r, theEnd);
    }
 }
 

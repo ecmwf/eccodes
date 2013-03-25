@@ -707,51 +707,47 @@ static int clear_keys_iterator(int keys_iterator_id){
   return ret;
 }
 
-int grib_f_read_any_headers_only_from_file_(int* fid, char* buffer, int* nbytes) {
+int grib_f_read_any_headers_only_from_file_(int* fid, char* buffer, size_t* nbytes) {
   grib_context* c;
   int err=0;
-  size_t size=(size_t)*nbytes;
   FILE* f=get_file(*fid);
 
   if (f) {
     c=grib_context_get_default( );
-    err=grib_read_any_headers_only_from_file(c,f,buffer,&size);
-	*nbytes=size;
-	return err;
+    err=grib_read_any_headers_only_from_file(c,f,buffer,nbytes);
+	 return err;
   } else {
     return GRIB_INVALID_FILE;
   }
 }
-int grib_f_read_any_headers_only_from_file__(int* fid, char* buffer, int* nbytes) {
+int grib_f_read_any_headers_only_from_file__(int* fid, char* buffer, size_t* nbytes) {
 	return grib_f_read_any_headers_only_from_file_(fid,buffer,nbytes);
 }
-int grib_f_read_any_headers_only_from_file(int* fid, char* buffer, int* nbytes) {
+int grib_f_read_any_headers_only_from_file(int* fid, char* buffer, size_t* nbytes) {
 	return grib_f_read_any_headers_only_from_file_(fid,buffer,nbytes);
 }
 
-int grib_f_read_any_from_file_(int* fid, char* buffer, int* nbytes) {
+int grib_f_read_any_from_file_(int* fid, char* buffer, size_t* nbytes) {
   grib_context* c;
   int err=0;
-  size_t size=(size_t)*nbytes;
   FILE* f=get_file(*fid);
 
   if (f) {
     c=grib_context_get_default( );
-    err=grib_read_any_from_file(c,f,buffer,&size);
-	*nbytes=size;
-	return err;
+    err=grib_read_any_from_file(c,f,buffer,nbytes);
+	 return err;
   } else {
     return GRIB_INVALID_FILE;
   }
 }
-int grib_f_read_any_from_file__(int* fid, char* buffer, int* nbytes) {
+int grib_f_read_any_from_file__(int* fid, char* buffer, size_t* nbytes) {
 	return grib_f_read_any_from_file_(fid,buffer,nbytes);
 }
-int grib_f_read_any_from_file(int* fid, char* buffer, int* nbytes) {
+int grib_f_read_any_from_file(int* fid, char* buffer, size_t* nbytes) {
 	return grib_f_read_any_from_file_(fid,buffer,nbytes);
 }
 
-int grib_f_write_file_(int* fid, char* buffer, int* nbytes) {
+int grib_f_write_file_(int* fid, char* buffer, size_t* nbytes) {
   grib_context* c;
   FILE* f=get_file(*fid);
 
@@ -768,14 +764,14 @@ int grib_f_write_file_(int* fid, char* buffer, int* nbytes) {
     return GRIB_INVALID_FILE;
   }
 }
-int grib_f_write_file__(int* fid, char* buffer, int* nbytes) {
+int grib_f_write_file__(int* fid, char* buffer, size_t* nbytes) {
   return grib_f_write_file_(fid,buffer,nbytes);
 }
-int grib_f_write_file(int* fid, char* buffer, int* nbytes) {
+int grib_f_write_file(int* fid, char* buffer, size_t* nbytes) {
   return grib_f_write_file_(fid,buffer,nbytes);
 }
 
-int grib_f_read_file_(int* fid, char* buffer, int* nbytes) {
+int grib_f_read_file_(int* fid, char* buffer, size_t* nbytes) {
   grib_context* c;
   FILE* f=get_file(*fid);
 
@@ -793,10 +789,10 @@ int grib_f_read_file_(int* fid, char* buffer, int* nbytes) {
   }
 }
 
-int grib_f_read_file__(int* fid, char* buffer, int* nbytes) {
+int grib_f_read_file__(int* fid, char* buffer, size_t* nbytes) {
   return grib_f_read_file_(fid,buffer,nbytes);
 }
-int grib_f_read_file(int* fid, char* buffer, int* nbytes) {
+int grib_f_read_file(int* fid, char* buffer, size_t* nbytes) {
   return grib_f_read_file_(fid,buffer,nbytes);
 }
 
@@ -1134,7 +1130,7 @@ int grib_f_keys_iterator_get_name_(int* iterid,char* name,int len) {
 
   fort_char_clean(name,len);
 
-  sprintf(buf, "%s", grib_keys_iterator_get_name(kiter));
+  sprintf(buf,"%s",grib_keys_iterator_get_name(kiter));
   lsize=strlen(buf);
   if (len < lsize) return GRIB_ARRAY_TOO_SMALL;
 
@@ -1356,7 +1352,7 @@ int grib_f_headers_only_new_from_file_(int* fid, int* gid){
   grib_handle *h = NULL;
 
   if(f){
-    h = grib_handle_headers_only_new_from_file(0,f,&err);
+	h=eccode_grib_new_from_file ( 0, f,1,&err);
     if(h){
       push_handle(h,gid);
       return GRIB_SUCCESS;
@@ -1971,7 +1967,7 @@ int grib_f_set_missing(int* gid, char* key,  int len){
 }
 
 int grib_f_is_missing_(int* gid, char* key,int* isMissing,int len){
-    int err=0;
+	int err=0;
 	grib_handle *h = get_handle(*gid);
 	char buf[1024];
 	if(!h)  return GRIB_INVALID_GRIB;

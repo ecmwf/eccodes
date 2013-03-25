@@ -134,15 +134,15 @@ static void init_class(grib_accessor_class* c)
 
 static int unpack_string(grib_accessor* a, char* val, size_t *len)
 {
-  long start = 0, end = 0;
+  long start = 0, theEnd = 0;
   char tmp[1024];
-  int err = grib_g1_step_get_steps(a,&start,&end);
+  int err = grib_g1_step_get_steps(a,&start,&theEnd);
   size_t l = 0;
 
 
   if(err) return err;
 
-  sprintf(tmp,"%ld-%ld",start/24,end/24);
+  sprintf(tmp,"%ld-%ld",start/24,theEnd/24);
   /*printf("---- FCPERIOD %s [start:%g, end:%g]",tmp,start,end);*/
 
   l = strlen(tmp) + 1;

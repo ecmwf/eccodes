@@ -69,7 +69,7 @@ rm -f tmp_rlls.grib1 | true
 
 # GRIB-305. GRIB edition 1 file with one large message
 if [ -f "sst_globus0083.grib" ]; then
-   ${tools_dir}grib_ls sst_globus0083.grib > /dev/null
+	${tools_dir}grib_ls sst_globus0083.grib > /dev/null
 fi
 
 cd $workdir

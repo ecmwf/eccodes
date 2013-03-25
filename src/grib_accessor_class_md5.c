@@ -188,7 +188,10 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
   while (blacklist && blacklist->value) {
     
     b=grib_find_accessor(a->parent->h,blacklist->value);
-    if (!b) return GRIB_NOT_FOUND;
+    if (!b) { 
+		grib_context_free(a->parent->h->context,mess);
+		return GRIB_NOT_FOUND;
+	}
 
     p=mess+b->offset-offset;
     for (i=0;i<b->length;i++) *(p++)=0;
@@ -199,6 +202,7 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
   grib_md5_init(&md5c);
   grib_md5_add(&md5c,mess,mess_len);
   grib_md5_end(&md5c,v);
+  grib_context_free(a->parent->h->context,mess);
 
   return ret;
 }

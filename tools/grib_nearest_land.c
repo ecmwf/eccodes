@@ -11,10 +11,6 @@
 /*
  * C Implementation: points
  *
- *
- *
- *
- *
  */
 
 #include <stdio.h>

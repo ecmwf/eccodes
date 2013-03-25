@@ -27,7 +27,7 @@
    IMPLEMENTS = init;destroy
    MEMBERS = long section_offset
    MEMBERS = long begin
-   MEMBERS = long end
+   MEMBERS = long theEnd
    END_CLASS_DEF
 
  */
@@ -60,7 +60,7 @@ typedef struct grib_dumper_default {
 /* Members defined in default */
 	long section_offset;
 	long begin;
-	long end;
+	long theEnd;
 } grib_dumper_default;
 
 
@@ -376,7 +376,7 @@ static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)
     fprintf(self->dumper.out,"-READ ONLY- ");
 
   /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
-  /*print_offset(self->dumper.out,self->begin,self->end);*/
+  /*print_offset(self->dumper.out,self->begin,self->theEnd);*/
   if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
         fprintf(self->dumper.out,"%s ",a->creator->op);
 
@@ -574,23 +574,23 @@ static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors
 static void print_offset(FILE* out,grib_dumper* d,grib_accessor* a) {
   int i,k;
   long offset;
-  long begin=0,end=0;
+  long theBegin=0,theEnd=0;
   size_t size=0,more=0;
   grib_dumper_default *self = (grib_dumper_default*)d;
 
-  begin=a->offset-self->section_offset+1;;
-  end =grib_get_next_position_offset(a)-self->section_offset;
+  theBegin=a->offset-self->section_offset+1;;
+  theEnd =grib_get_next_position_offset(a)-self->section_offset;
 
   if ((d->option_flags & GRIB_DUMP_FLAG_HEXADECIMAL) != 0 && a->length != 0) {
-    if (begin == end) {
+    if (theBegin == theEnd) {
       fprintf(self->dumper.out,"  ");
       fprintf(out,"# Octet: ");
-      fprintf(out,"%ld" ,begin);
+      fprintf(out,"%ld" ,theBegin);
     }
     else {
       fprintf(self->dumper.out,"  ");
       fprintf(out,"# Octets: ");
-      fprintf(out,"%ld-%ld" ,begin,end);
+      fprintf(out,"%ld-%ld" ,theBegin,theEnd);
     }
     fprintf(out,"  = ");
     size=a->length;

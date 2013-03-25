@@ -234,7 +234,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   long bits8;
 
   png_structp png  = 0;
-  png_infop info = 0,end = 0;
+  png_infop info = 0,theEnd = 0;
   png_bytepp rows = 0;
   int interlace = 0,colour = 0,compression = 0,filter = 0,depth = 0;
 
@@ -295,8 +295,8 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     goto cleanup;
   }
 
-  end = png_create_info_struct(png);
-  if (!end)
+  theEnd = png_create_info_struct(png);
+  if (!theEnd)
   {
     err = GRIB_DECODING_ERROR;
     goto cleanup;
@@ -358,7 +358,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 
 cleanup:
   if(png)
-    png_destroy_read_struct(&png, info?&info:NULL, end?&end:NULL);
+    png_destroy_read_struct(&png, info?&info:NULL, theEnd?&theEnd:NULL);
   return err;
 
 }

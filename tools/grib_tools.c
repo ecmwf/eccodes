@@ -11,8 +11,6 @@
 /*
  * C Implementation: grib_tools
  *
- *
- *
  */
 
 #include "grib_tools.h"
@@ -98,6 +96,7 @@ grib_runtime_options options={
         0,         /* context  */
         0,         /* stop  */
         0,         /* mode  */
+        0,         /* headers_only  */
         0,         /* skip_all  */
         {{0,},}    /* grib_values tolerance[MAX_KEYS] */
 
@@ -122,15 +121,14 @@ static int is_index_file(const char* filename) {
 	return ret;
 }
 
-static grib_handle* grib_handle_new_from_file_x(grib_context* c,FILE* f,int mode,int *err) {
-	if (mode==MODE_HEADERS_ONLY) 
-		return grib_handle_headers_only_new_from_file(c,f,err);
+static grib_handle* grib_handle_new_from_file_x(grib_context* c,FILE* f,int mode,int headers_only,int *err) {
 	if (mode==MODE_GTS)
-		return grib_gts_handle_new_from_file(c,f,err);
-	if (mode==MODE_BUFR)
-		return grib_bufr_handle_new_from_file(c,f,err);
+		return eccode_gts_new_from_file(c,f,headers_only,err);
 
-	return grib_handle_new_from_file(c,f,err);
+	if (mode==MODE_BUFR)  
+		return eccode_bufr_new_from_file(c,f,headers_only,err);
+
+	return eccode_grib_new_from_file(c,f,headers_only,err);
 }
 
 int grib_tool(int argc, char **argv)
@@ -297,7 +295,8 @@ static int grib_tool_without_orderby(grib_runtime_options* options) {
 		grib_tool_new_file_action(options,infile);
 
 
-		while(!options->skip_all && ((h = grib_handle_new_from_file_x(c,infile->file,options->mode,&err))
+		while(!options->skip_all && ((h = grib_handle_new_from_file_x(c,infile->file,options->mode,
+											options->headers_only,&err))
 				!= NULL || err != GRIB_SUCCESS ) ) {
 			infile->handle_count++;
 			options->handle_count++;
@@ -483,6 +482,7 @@ static int grib_tool_index(grib_runtime_options* options) {
 	return 0;
 }
 
+#ifndef _WIN32
 static int scan(grib_context* c,grib_runtime_options* options,const char* dir) {
 	struct dirent *s;
 	DIR *d;
@@ -503,13 +503,53 @@ static int scan(grib_context* c,grib_runtime_options* options,const char* dir) {
 	}
 	return 0;
 }
+#else
+static int isWinDir(const struct _finddata_t *fileinfo)
+{
+	if((fileinfo->attrib & 16) == 16)
+		return 1;
+	return 0;
+}
+static void doProcessing(grib_context* c,grib_runtime_options* options,const char* dir, const struct _finddata_t *fileinfo)
+{
+	if(isWinDir(fileinfo))
+	{
+		if(strcmp(fileinfo->name, ".") != 0 && strcmp(fileinfo->name,"..") != 0) {
+			char buf[1024];
+			sprintf(buf,"%s/%s",dir,fileinfo->name);
+			process(c,options,buf);
+		}
+	}
+}
+static int scan(grib_context* c,grib_runtime_options* options,const char* dir) {
+	struct _finddata_t fileinfo;
+	intptr_t handle;
+	if((handle = _findfirst(dir, &fileinfo)) != -1)
+        doProcessing(c, options, dir, &fileinfo);
+	else
+    {
+		grib_context_log(c,(GRIB_LOG_ERROR) | (GRIB_LOG_PERROR) , "opendir %s",dir);
+		return GRIB_IO_PROBLEM;
+	}
+	while(!_findnext(handle, &fileinfo))
+        doProcessing(c, options, dir, &fileinfo);
+    return 0;
+}
+#endif
 
 
 static int process(grib_context* c,grib_runtime_options* options,const char* path) {
 	struct stat s;
-	int err=0;
+	int stat_val=0;
 	int ioerr=0;
-	if ( (err = lstat(path,&s)) ) {
+
+#ifndef _WIN32
+	stat_val = lstat(path,&s);
+#else
+	stat_val = stat(path,&s);
+#endif
+
+	if ( stat_val != 0 ) {
 		ioerr=errno;
 		grib_context_log(c,(GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),"Cannot stat %s",path);
 		return GRIB_IO_PROBLEM;
@@ -637,77 +677,77 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
 }
 
 static int to_skip(grib_handle* h,grib_values* v,int *err) {
-	double dvalue=0;
-	int ret=0;
-	long lvalue=0;
-	char value[MAX_STRING_LEN]={0,};
-	size_t len=MAX_STRING_LEN;
-	*err=0;
-
-	switch (v->type) {
-	case GRIB_TYPE_STRING:
-		*err=grib_get_string( h,v->name,value,&len);
-		ret = v->equal ? grib_inline_strcmp(value,v->string_value) : !grib_inline_strcmp(value,v->string_value);
-		break;
-	case GRIB_TYPE_DOUBLE:
-		*err=grib_get_double( h,v->name,&dvalue);
-		ret = v->equal ? (dvalue != v->double_value) : (dvalue == v->double_value);
-		break;
-	case GRIB_TYPE_LONG:
-		*err=grib_get_long( h,v->name,&lvalue);
-		ret = v->equal ? (lvalue != v->long_value) : (lvalue == v->long_value);
-		break;
-	case GRIB_TYPE_MISSING:
-		lvalue=grib_is_missing( h,v->name,err);
-		ret = (lvalue == v->equal) ? 0 : 1;
-		break;
+  double dvalue=0;
+  int ret=0;
+  long lvalue=0;
+  char value[MAX_STRING_LEN]={0,};
+  size_t len=MAX_STRING_LEN;
+  *err=0;
+  
+  switch (v->type) {
+    case GRIB_TYPE_STRING:
+      *err=grib_get_string( h,v->name,value,&len);
+      ret = v->equal ? grib_inline_strcmp(value,v->string_value) : !grib_inline_strcmp(value,v->string_value);
+      break;
+    case GRIB_TYPE_DOUBLE:
+      *err=grib_get_double( h,v->name,&dvalue);
+      ret = v->equal ? (dvalue != v->double_value) : (dvalue == v->double_value);
+      break;
+    case GRIB_TYPE_LONG:
+      *err=grib_get_long( h,v->name,&lvalue);
+      ret = v->equal ? (lvalue != v->long_value) : (lvalue == v->long_value);
+      break;
+    case GRIB_TYPE_MISSING:
+      lvalue=grib_is_missing( h,v->name,err);
+      ret = (lvalue == v->equal) ? 0 : 1;
+      break;
 	default:
-		fprintf(dump_file,"invalid type for %s\n",v->name);
-		exit(1);
+	  fprintf(dump_file,"invalid type for %s\n",v->name);
+	  exit(1);
 
-	}
+  }
 
-	return ret;
+  return ret;
 }
 
 void grib_skip_check(grib_runtime_options* options,grib_handle* h) {
 	int i,ret=0;
-	grib_values* v=NULL;
-	for (i=0;i < options->constraints_count ;i++) {
-		v=&(options->constraints[i]);
-		if (v->equal) {
-			options->skip=1;
-			while (v) {
-				if (!to_skip(h,v,&ret)) {
-					if (!strcmp(v->name,"count") && !v->next)
-						options->skip_all=1;
-					options->skip=0;
-					break;
-				}
-				if (ret != GRIB_SUCCESS && options->fail) {
-					grib_context_log(h->context,GRIB_LOG_ERROR,"unable to get \"%s\" (%s)",
-							v->name,grib_get_error_message(ret));
-					exit(ret);
-				}
-				v=v->next;
-			}
-		} else {
-			options->skip=0;
-			while (v) {
-				if (to_skip(h,v,&ret)) {
-					options->skip=1;
-					break;
-				}
-				if (ret != GRIB_SUCCESS && options->fail) {
-					grib_context_log(h->context,GRIB_LOG_ERROR,"unable to get \"%s\" (%s)",
-							v->name,grib_get_error_message(ret));
-					exit(ret);
-				}
-				v=v->next;
-			}
-		}
-		if (options->skip==1)
-			break;
+    grib_values* v=NULL;
+    for (i=0;i < options->constraints_count ;i++) {
+        v=&(options->constraints[i]);
+        if (v->equal) {
+          options->skip=1;
+          while (v) {
+            if (!to_skip(h,v,&ret)) {
+				if (!strcmp(v->name,"count") && !v->next) 
+					options->skip_all=1;
+              options->skip=0;
+              break;
+            }
+            if (ret != GRIB_SUCCESS && options->fail) {
+                grib_context_log(h->context,GRIB_LOG_ERROR,"unable to get \"%s\" (%s)",
+                        v->name,grib_get_error_message(ret));
+                exit(ret);
+            }
+            v=v->next;
+          }
+        } else {
+          options->skip=0;
+          while (v) {
+            if (to_skip(h,v,&ret)) {
+              options->skip=1;
+              break;
+            }
+            if (ret != GRIB_SUCCESS && options->fail) {
+              grib_context_log(h->context,GRIB_LOG_ERROR,"unable to get \"%s\" (%s)",
+                               v->name,grib_get_error_message(ret));
+              exit(ret);
+            }
+            v=v->next;
+          }
+        }
+        if (options->skip==1)
+          break;
 	}
 
 	if (!options->skip) {
@@ -867,54 +907,67 @@ void grib_print_file_statistics(grib_runtime_options* options,grib_tools_file* f
 	}
 
 void grib_tools_write_message(grib_runtime_options* options, grib_handle* h) {
-	const void *buffer; size_t size;
-	grib_file* of=NULL;
-	int err=0;
-	int ioerr=0;
-	char filename[1024]={0,};
+	const void *buffer;
+	size_t size;
+	grib_file* of = NULL;
+	int err = 0;
+	int ioerr = 0;
+	char filename[1024] = { 0, };
 	Assert(options->outfile!=NULL && options->outfile->name!=NULL);
 
-	if (options->error == GRIB_WRONG_LENGTH) return;
+	if (options->error == GRIB_WRONG_LENGTH)
+		return;
 
-	if ((err=grib_get_message(h,&buffer,&size))!= GRIB_SUCCESS) {
-		grib_context_log(h->context,GRIB_LOG_ERROR,"unable to get binary message\n");
+	if ((err = grib_get_message(h, &buffer, &size)) != GRIB_SUCCESS) {
+		grib_context_log(h->context, GRIB_LOG_ERROR,"unable to get binary message\n");
 		exit(err);
 	}
 
-	err = grib_recompose_name(h,NULL,options->outfile->name,filename,0);
+	err = grib_recompose_name(h, NULL, options->outfile->name, filename, 0);
 
-	of=grib_file_open(filename,"w",&err);
+	of = grib_file_open(filename, "w", &err);
 
 	if (!of || !of->handle) {
-		ioerr=errno;
-		grib_context_log(h->context,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),
-				"unable to open file %s\n",filename);
-		exit(GRIB_IO_PROBLEM);
-	}
-
-	if (options->gts && h->gts_header)
-		fwrite(h->gts_header,1,h->gts_header_len,of->handle);
-
-	if(fwrite(buffer,1,size,of->handle) != size) {
-		ioerr=errno;
-		grib_context_log(h->context,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),
-				"Error writing to %s",filename);
+		ioerr = errno;
+		grib_context_log(h->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
+				"unable to open file %s\n", filename);
 		exit(GRIB_IO_PROBLEM);
 	}
 
 	if (options->gts && h->gts_header) {
-		char gts_trailer[4]={'\x0D','\x0D','\x0A','\x03'};
-		fwrite(gts_trailer,1,4,of->handle);
+		if (fwrite(h->gts_header, 1, h->gts_header_len, of->handle) != h->gts_header_len) {
+			ioerr = errno;
+			grib_context_log(h->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
+					"Error writing GTS header to %s", filename);
+			exit(GRIB_IO_PROBLEM);
+		}
 	}
 
-	grib_file_close(filename,&err);
+	if (fwrite(buffer, 1, size, of->handle) != size) {
+		ioerr = errno;
+		grib_context_log(h->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
+				"Error writing to %s", filename);
+		exit(GRIB_IO_PROBLEM);
+	}
+
+	if (options->gts && h->gts_header) {
+		char gts_trailer[4] = { '\x0D', '\x0D', '\x0A', '\x03' };
+		if (fwrite(gts_trailer, 1, 4, of->handle) != 4) {
+			ioerr = errno;
+			grib_context_log(h->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
+					"Error writing GTS trailer to %s", filename);
+			exit(GRIB_IO_PROBLEM);
+		}
+	}
+
+	grib_file_close(filename, &err);
 
 	if (err != GRIB_SUCCESS) {
-		grib_context_log(h->context,GRIB_LOG_ERROR,"unable to write message\n");
+		grib_context_log(h->context, GRIB_LOG_ERROR,"unable to write message\n");
 		exit(err);
 	}
 
-	options->outfile->file=NULL;
+	options->outfile->file = NULL;
 
 #if 0
 	if (!options->outfile->file)  {

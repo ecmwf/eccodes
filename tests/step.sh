@@ -64,13 +64,13 @@ ${tools_dir}grib_set -s step=78 $grib2File.p8tmp ${grib2File}.tmp
 set `${tools_dir}grib_get -p hourOfEndOfOverallTimeInterval,dayOfEndOfOverallTimeInterval ${grib2File}.tmp`
 hourEnd=$1; dayEnd=$2
 [ "$hourEnd" = "18" ]
-[ "$dayEnd"  = "8" ]
+[ "$dayEnd" = "8" ]
 
 ${tools_dir}grib_set -s step=12 $grib2File.p8tmp ${grib2File}.tmp
 set `${tools_dir}grib_get -p hourOfEndOfOverallTimeInterval,dayOfEndOfOverallTimeInterval ${grib2File}.tmp`
 hourEnd=$1; dayEnd=$2
 [ "$hourEnd" = "0" ]
-[ "$dayEnd"  = "6" ]
+[ "$dayEnd" = "6" ]
 
 rm -f $grib2File.p8tmp ${grib2File}.tmp | true
 

@@ -11,8 +11,6 @@
 /*
  * C Implementation: grib_dump
  *
- *
- *
  */
 
 #include "grib_tools.h"
@@ -32,7 +30,8 @@ grib_option grib_options[]={
 	{"T:",0,0,0,1,0},
     {"7",0,0,0,1,0},
     {"V",0,0,0,1,0},
-    {"q",0,0,1,0,0}
+    {"q",0,0,1,0,0},
+    {"x",0,0,0,1,0}
 };
 
 char* grib_tool_description="Dump the content of a grib file in different formats.";
@@ -120,7 +119,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
   char identifier[100];
   size_t idlen=100;
   int i;
-  GRIB_CHECK_NOLINE(grib_get_long(h,"totalLength",&length),0);
+  if (grib_get_long(h,"totalLength",&length) != GRIB_SUCCESS) 
+  	length=-9999;
 
   for (i=0;i<options->print_keys_count;i++)
     grib_set_flag(h,options->print_keys[i].name,GRIB_ACCESSOR_FLAG_DUMP);

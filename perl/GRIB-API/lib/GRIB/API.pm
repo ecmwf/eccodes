@@ -83,7 +83,7 @@ If you have a web site set up for your module, mention it here.
 
 =head1 AUTHOR
 
-Baudouin Raoult, E<lt>mab@suse.deE<gt>
+Baudouin Raoult
 
 =head1 COPYRIGHT AND LICENSE
 Copyright 2005-2012 ECMWF.

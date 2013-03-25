@@ -106,35 +106,35 @@ grib_action* grib_action_create_write( grib_context* context, const char* name,i
 
 static int execute(grib_action* act, grib_handle *h)
 {
-  int ioerr=0;
-  grib_action_write* a = (grib_action_write*) act;
-  int err =GRIB_SUCCESS;
-  size_t size;
-  const void* buffer=NULL;
-  char* filename;
-  char string[1024]={0,};
+  int ioerr = 0;
+	grib_action_write* a = (grib_action_write*) act;
+	int err = GRIB_SUCCESS;
+	size_t size;
+	const void* buffer = NULL;
+	char* filename;
+	char string[1024] = { 0, };
 
-  grib_file* of=NULL;
+	grib_file* of = NULL;
 
-  if ((err=grib_get_message(h,&buffer,&size))!= GRIB_SUCCESS) {
-    grib_context_log(act->context,GRIB_LOG_ERROR,"unable to get message\n");
-    return err;
-  }
+	if ((err = grib_get_message(h, &buffer, &size)) != GRIB_SUCCESS) {
+		grib_context_log(act->context, GRIB_LOG_ERROR,"unable to get message\n");
+		return err;
+	}
 
-  if (strlen(a->name)!=0) {
-    err = grib_recompose_name(h,NULL,a->name,string,0);
-    filename=string;
-  } else {
-    filename = act->context->outfilename ? act->context->outfilename : "filter.out";
-  }
+	if (strlen(a->name) != 0) {
+		err = grib_recompose_name(h, NULL, a->name, string, 0);
+		filename = string;
+	} else {
+		filename = act->context->outfilename ?	act->context->outfilename : "filter.out";
+	}
 
-  if (a->append) of=grib_file_open(filename,"a",&err);
-  else of=grib_file_open(filename,"w",&err);
+	if (a->append) of = grib_file_open(filename, "a", &err);
+	else           of = grib_file_open(filename, "w", &err);
 
-  if (!of || !of->handle) {
-    grib_context_log(act->context,GRIB_LOG_ERROR,"unable to open file %s\n",filename);
-    return GRIB_IO_PROBLEM;
-  }
+	if (!of || !of->handle) {
+		grib_context_log(act->context, GRIB_LOG_ERROR,"unable to open file %s\n", filename);
+		return GRIB_IO_PROBLEM;
+	}
 
 	if (h->gts_header) {
 		if (fwrite(h->gts_header, 1, h->gts_header_len, of->handle) != h->gts_header_len) {
@@ -145,45 +145,44 @@ static int execute(grib_action* act, grib_handle *h)
 		}
 	}
 
-  if(fwrite(buffer,1,size,of->handle) != size) {
-      ioerr=errno;
-      grib_context_log(act->context,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),
-                   "Error writing to %s",filename);
-      return GRIB_IO_PROBLEM;
-  }
+	if (fwrite(buffer, 1, size, of->handle) != size) {
+		ioerr = errno;
+		grib_context_log(act->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
+				"Error writing to %s", filename);
+		return GRIB_IO_PROBLEM;
+	}
 
-  if (a->padtomultiple) {
-  	char* zeros;
-  	size_t padding=a->padtomultiple - size%a->padtomultiple;
-	/* printf("XXX padding=%d size=%d padtomultiple=%d\n",padding,size,a->padtomultiple); */
-  	zeros=calloc(padding,1);
-  	if(fwrite(zeros,1,padding,of->handle) != padding) {
-      ioerr=errno;
-      grib_context_log(act->context,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),
-                   "Error writing to %s",filename);
-      return GRIB_IO_PROBLEM;
-  	}
-  	free(zeros);
-  }
+	if (a->padtomultiple) {
+		char* zeros;
+		size_t padding = a->padtomultiple - size % a->padtomultiple;
+		/* printf("XXX padding=%d size=%d padtomultiple=%d\n",padding,size,a->padtomultiple); */
+		zeros = calloc(padding, 1);
+		if (fwrite(zeros, 1, padding, of->handle) != padding) {
+			ioerr = errno;
+			grib_context_log(act->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
+					"Error writing to %s", filename);
+			return GRIB_IO_PROBLEM;
+		}
+		free(zeros);
+	}
 
-  if (h->gts_header) {
-        char gts_trailer[4]={'\x0D','\x0D','\x0A','\x03'};
+	if (h->gts_header) {
+		char gts_trailer[4] = { '\x0D', '\x0D', '\x0A', '\x03' };
 		if (fwrite(gts_trailer, 1, 4, of->handle) != 4) {
 			ioerr = errno;
 			grib_context_log(act->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
 					"Error writing GTS trailer to %s", filename);
 			return GRIB_IO_PROBLEM;
-  }
+		}
 	}
 
-  grib_file_close(filename,&err);
+	grib_file_close(filename, &err);
+	if (err != GRIB_SUCCESS) {
+		grib_context_log(act->context, GRIB_LOG_ERROR,"unable to write message\n");
+		return err;
+	}
 
-  if (err != GRIB_SUCCESS) {
-    grib_context_log(act->context,GRIB_LOG_ERROR,"unable to get message\n");
-    return err;
-  }
-
-  return err;
+	return err;
 }
 
 

@@ -9,12 +9,9 @@
  */
 
 /*
- * C Implementation: set
+ * C Implementation: set_pv
  *
- * Description: how to set pv .
- *
- *
- *
+ * Description: how to set pv (vertical coordinate parameters)
  *
  */
 #include <stdio.h>
@@ -30,7 +27,7 @@ int main(int argc, char** argv) {
   size_t pvsize=4;
 
   FILE* in = NULL;
-  char* infile = "../data/regular_latlon_surface.grib1";
+  char* infile = "../../data/regular_latlon_surface.grib1";
   FILE* out = NULL;
   char* outfile = "out.grib1";
   grib_handle *h = NULL;
@@ -38,13 +35,13 @@ int main(int argc, char** argv) {
 
   in = fopen(infile,"r");
   if(!in) {
-    printf("ERROR: unable to open file %s\n",infile);
+    printf("ERROR: unable to open input file %s\n",infile);
     return 1;
   }
 
   out = fopen(outfile,"w");
-  if(!in) {
-    printf("ERROR: unable to open file %s\n",outfile);
+  if(!out) {
+    printf("ERROR: unable to open output file %s\n",outfile);
     return 1;
   }
 

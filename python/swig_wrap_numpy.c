@@ -2682,16 +2682,16 @@ static swig_module_info swig_module = {swig_types, 10, 0, 0, 0, 0};
 #endif
 
 /*-----------------------------------------------
-              @(target):= _gribapi_swig.so
+              @(target):= _eccode_swig.so
   ------------------------------------------------*/
 #if PY_VERSION_HEX >= 0x03000000
-#  define SWIG_init    PyInit__gribapi_swig
+#  define SWIG_init    PyInit__eccode_swig
 
 #else
-#  define SWIG_init    init_gribapi_swig
+#  define SWIG_init    init_eccode_swig
 
 #endif
-#define SWIG_name    "_gribapi_swig"
+#define SWIG_name    "_eccode_swig"
 
 #define SWIGVERSION 0x010340 
 #define SWIG_VERSION SWIGVERSION
@@ -4519,14 +4519,18 @@ fail:
 SWIGINTERN PyObject *_wrap_grib_c_new_bufr_from_file(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   FILE *arg1 = (FILE *) 0 ;
-  int *arg2 = (int *) 0 ;
-  int temp2 ;
-  int res2 = 0 ;
+  int arg2 ;
+  int *arg3 = (int *) 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int temp3 ;
+  int res3 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:grib_c_new_bufr_from_file",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:grib_c_new_bufr_from_file",&obj0,&obj1,&obj2)) SWIG_fail;
   {
     if ( PyFile_Check(obj0) ){
       arg1 = PyFile_AsFile(obj0);
@@ -4535,23 +4539,28 @@ SWIGINTERN PyObject *_wrap_grib_c_new_bufr_from_file(PyObject *SWIGUNUSEDPARM(se
       return NULL;
     }
   }
-  if (!(SWIG_IsOK((res2 = SWIG_ConvertPtr(obj1,SWIG_as_voidptrptr(&arg2),SWIGTYPE_p_int,0))))) {
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "grib_c_new_bufr_from_file" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = (int)(val2);
+  if (!(SWIG_IsOK((res3 = SWIG_ConvertPtr(obj2,SWIG_as_voidptrptr(&arg3),SWIGTYPE_p_int,0))))) {
     int val; 
-    int ecode = SWIG_AsVal_int(obj1, &val);
+    int ecode = SWIG_AsVal_int(obj2, &val);
     if (!SWIG_IsOK(ecode)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "grib_c_new_bufr_from_file" "', argument " "2"" of type '" "int""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "grib_c_new_bufr_from_file" "', argument " "3"" of type '" "int""'");
     }
-    temp2 = (int)(val);
-    arg2 = &temp2;
-    res2 = SWIG_AddTmpMask(ecode);
+    temp3 = (int)(val);
+    arg3 = &temp3;
+    res3 = SWIG_AddTmpMask(ecode);
   }
-  result = (int)grib_c_new_bufr_from_file(arg1,arg2);
+  result = (int)grib_c_new_bufr_from_file(arg1,arg2,arg3);
   resultobj = SWIG_From_int((int)(result));
-  if (SWIG_IsTmpObj(res2)) {
-    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg2)));
+  if (SWIG_IsTmpObj(res3)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg3)));
   } else {
-    int new_flags = SWIG_IsNewObj(res2) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
-    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_int, new_flags));
+    int new_flags = SWIG_IsNewObj(res3) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_int, new_flags));
   }
   return resultobj;
 fail:
@@ -4562,14 +4571,18 @@ fail:
 SWIGINTERN PyObject *_wrap_grib_c_new_gts_from_file(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   FILE *arg1 = (FILE *) 0 ;
-  int *arg2 = (int *) 0 ;
-  int temp2 ;
-  int res2 = 0 ;
+  int arg2 ;
+  int *arg3 = (int *) 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int temp3 ;
+  int res3 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:grib_c_new_gts_from_file",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:grib_c_new_gts_from_file",&obj0,&obj1,&obj2)) SWIG_fail;
   {
     if ( PyFile_Check(obj0) ){
       arg1 = PyFile_AsFile(obj0);
@@ -4578,23 +4591,28 @@ SWIGINTERN PyObject *_wrap_grib_c_new_gts_from_file(PyObject *SWIGUNUSEDPARM(sel
       return NULL;
     }
   }
-  if (!(SWIG_IsOK((res2 = SWIG_ConvertPtr(obj1,SWIG_as_voidptrptr(&arg2),SWIGTYPE_p_int,0))))) {
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "grib_c_new_gts_from_file" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = (int)(val2);
+  if (!(SWIG_IsOK((res3 = SWIG_ConvertPtr(obj2,SWIG_as_voidptrptr(&arg3),SWIGTYPE_p_int,0))))) {
     int val; 
-    int ecode = SWIG_AsVal_int(obj1, &val);
+    int ecode = SWIG_AsVal_int(obj2, &val);
     if (!SWIG_IsOK(ecode)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "grib_c_new_gts_from_file" "', argument " "2"" of type '" "int""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "grib_c_new_gts_from_file" "', argument " "3"" of type '" "int""'");
     }
-    temp2 = (int)(val);
-    arg2 = &temp2;
-    res2 = SWIG_AddTmpMask(ecode);
+    temp3 = (int)(val);
+    arg3 = &temp3;
+    res3 = SWIG_AddTmpMask(ecode);
   }
-  result = (int)grib_c_new_gts_from_file(arg1,arg2);
+  result = (int)grib_c_new_gts_from_file(arg1,arg2,arg3);
   resultobj = SWIG_From_int((int)(result));
-  if (SWIG_IsTmpObj(res2)) {
-    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg2)));
+  if (SWIG_IsTmpObj(res3)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg3)));
   } else {
-    int new_flags = SWIG_IsNewObj(res2) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
-    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_int, new_flags));
+    int new_flags = SWIG_IsNewObj(res3) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_int, new_flags));
   }
   return resultobj;
 fail:
@@ -5360,6 +5378,45 @@ SWIGINTERN PyObject *_wrap_grib_c_get_message_size(PyObject *SWIGUNUSEDPARM(self
     res1 = SWIG_AddTmpMask(ecode);
   }
   result = (int)grib_c_get_message_size(arg1,arg2);
+  resultobj = SWIG_From_int((int)(result));
+  if (SWIG_IsTmpObj(res2)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_size_t((*arg2)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res2) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_size_t, new_flags));
+  }
+  if (SWIG_IsNewObj(res1)) free((char*)arg1);
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res1)) free((char*)arg1);
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_grib_c_get_message_offset(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  int *arg1 = (int *) 0 ;
+  size_t *arg2 = (size_t *) 0 ;
+  int temp1 ;
+  int res1 = 0 ;
+  size_t temp2 ;
+  int res2 = SWIG_TMPOBJ ;
+  PyObject * obj0 = 0 ;
+  int result;
+  
+  arg2 = &temp2;
+  if (!PyArg_ParseTuple(args,(char *)"O:grib_c_get_message_offset",&obj0)) SWIG_fail;
+  if (!(SWIG_IsOK((res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1),SWIGTYPE_p_int,0))))) {
+    int val; 
+    int ecode = SWIG_AsVal_int(obj0, &val);
+    if (!SWIG_IsOK(ecode)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "grib_c_get_message_offset" "', argument " "1"" of type '" "int""'");
+    }
+    temp1 = (int)(val);
+    arg1 = &temp1;
+    res1 = SWIG_AddTmpMask(ecode);
+  }
+  result = (int)grib_c_get_message_offset(arg1,arg2);
   resultobj = SWIG_From_int((int)(result));
   if (SWIG_IsTmpObj(res2)) {
     resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_size_t((*arg2)));
@@ -8176,6 +8233,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"grib_c_clone", _wrap_grib_c_clone, METH_VARARGS, NULL},
 	 { (char *)"grib_c_copy_namespace", _wrap_grib_c_copy_namespace, METH_VARARGS, NULL},
 	 { (char *)"grib_c_get_message_size", _wrap_grib_c_get_message_size, METH_VARARGS, NULL},
+	 { (char *)"grib_c_get_message_offset", _wrap_grib_c_get_message_offset, METH_VARARGS, NULL},
 	 { (char *)"grib_c_get_native_type", _wrap_grib_c_get_native_type, METH_VARARGS, NULL},
 	 { (char *)"grib_c_multi_new", _wrap_grib_c_multi_new, METH_VARARGS, NULL},
 	 { (char *)"grib_c_multi_support_on", _wrap_grib_c_multi_support_on, METH_VARARGS, NULL},

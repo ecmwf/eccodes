@@ -175,6 +175,7 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
     grib_get_long_array_internal(a->parent->h,self->pl,pl, &plsize);
     *val=0;
     for (i=0;i<plsize;i++) *val+=pl[i];
+	grib_context_free(c,pl);
   } else {
     /*regular*/
     *val=ni*nj;

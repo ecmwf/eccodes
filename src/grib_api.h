@@ -26,7 +26,9 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
+#ifndef _WIN32
 #include <sys/times.h>
+#endif
 #include <math.h>
 
 #define GRIB_API_VERSION (GRIB_API_MAJOR_VERSION*10000+GRIB_API_MINOR_VERSION*100+GRIB_API_REVISION_VERSION)
@@ -40,7 +42,7 @@ extern "C" {
 
 
 /* LOG MODES
-Log mode for information for processiong information
+Log mode for information for processing information
 */
 /*  Log mode for info */
 #define GRIB_LOG_INFO           0
@@ -66,7 +68,7 @@ Log mode for information for processiong information
 #define GRIB_TYPE_BYTES 4
 /*  section */
 #define GRIB_TYPE_SECTION 5
-/*  labe */
+/*  label */
 #define GRIB_TYPE_LABEL 6
 /*  missing */
 #define GRIB_TYPE_MISSING 7
@@ -274,7 +276,7 @@ int grib_index_get_size(grib_index* index,const char* key,size_t* size);
  *
  * @param index       : an index created from a file.
  *     The index must have been created with the key in argument.
- * @param key         : key for wich the values are returned
+ * @param key         : key for which the values are returned
  * @param values      : array of values. The array must be allocated before entering this function and its size must be enough to contain all the values.
  * @param size        : size of the values array
  * @return            0 if OK, integer value on error
@@ -287,7 +289,7 @@ int grib_index_get_long(grib_index* index,const char* key,
  *
  * @param index       : an index created from a file.
  *     The index must have been created with the key in argument.
- * @param key         : key for wich the values are returned
+ * @param key         : key for which the values are returned
  * @param values      : array of values. The array must be allocated before entering this function and its size must be enough to contain all the values.
  * @param size        : size of the values array
  * @return            0 if OK, integer value on error
@@ -300,7 +302,7 @@ int grib_index_get_double(grib_index* index,const char* key,
  *
  * @param index       : an index created from a file.
  *     The index must have been created with the key in argument.
- * @param key         : key for wich the values are returned
+ * @param key         : key for which the values are returned
  * @param values      : array of values. The array must be allocated before entering this function and its size must be enough to contain all the values.
  * @param size        : size of the values array
  * @return            0 if OK, integer value on error
@@ -369,7 +371,7 @@ The grib_handle is the structure giving access to parsed grib values by keys.
 /**
 *  Counts the messages contained in a file resource.
 *
-* @param c           : the context from wich the handle will be created (NULL for default context)
+* @param c           : the context from which the handle will be created (NULL for default context)
 * @param f           : the file resource
 * @param n           : the number of messages in the file
 * @return            0 if OK, integer value on error
@@ -382,7 +384,7 @@ int grib_count_in_file(grib_context* c, FILE* f,int* n);
 *  Remember always to delete the handle when it is not needed any more to avoid
 *  memory leaks.
 *
-* @param c           : the context from wich the handle will be created (NULL for default context)
+* @param c           : the context from which the handle will be created (NULL for default context)
 * @param f           : the file resource
 * @param error     : error code set if the returned handle is NULL and the end of file is not reached
 * @return            the new handle, NULL if the resource is invalid or a problem is encountered
@@ -396,7 +398,7 @@ grib_handle* grib_handle_headers_only_new_from_file     (grib_context* c, FILE* 
 *  Remember always to delete the handle when it is not needed any more to avoid
 *  memory leaks.
 *
-* @param c           : the context from wich the handle will be created (NULL for default context)
+* @param c           : the context from which the handle will be created (NULL for default context)
 * @param file        : the file name
 * @param error       : error code set if the returned handle is NULL and the end of file is not reached
 * @return            the new handle, NULL if the resource is invalid or a problem is encountered
@@ -451,7 +453,7 @@ grib_handle* grib_handle_new_from_multi_message(grib_context* c,void** data,
 /**
 *  Create a handle from a user message. The message is copied and will be freed with the handle
 *
-* @param c           : the context from wich the handle will be created (NULL for default context)
+* @param c           : the context from which the handle will be created (NULL for default context)
 * @param data        : the actual message
 * @param data_len    : the length of the message in number of bytes
 * @return            the new handle, NULL if the message is invalid or a problem is encountered
@@ -463,7 +465,7 @@ grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data
 *  Create a handle from a read_only template resource.
 *  The message is copied at the creation of the handle
 *
-* @param c           : the context from wich the handle will be created (NULL for default context)
+* @param c           : the context from which the handle will be created (NULL for default context)
 * @param res_name    : the resource name
 * @return            the new handle, NULL if the resource is invalid or a problem is encountered
 */
@@ -473,7 +475,7 @@ grib_handle* grib_handle_new_from_template (grib_context* c, const char* res_nam
  *  Create a handle from a message contained in a samples directory.
  *  The message is copied at the creation of the handle
  *
- * @param c           : the context from wich the handle will be created (NULL for default context)
+ * @param c           : the context from which the handle will be created (NULL for default context)
  * @param res_name    : the resource name
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
@@ -503,7 +505,7 @@ int   grib_handle_delete   (grib_handle* h);
  *  Remember always to delete the multi handle when it is not needed any more to avoid
  *  memory leaks.
  *
- * @param c           : the context from wich the handle will be created (NULL for default context)
+ * @param c           : the context from which the handle will be created (NULL for default context)
  */
 grib_multi_handle* grib_multi_handle_new     (grib_context* c);
 
@@ -546,7 +548,7 @@ int grib_multi_handle_write(grib_multi_handle* mh,FILE* f);
 /**
 * getting the message attached to a handle
 *
-* @param h              : the grib handle to wich the buffer should be gathered
+* @param h              : the grib handle to which the buffer should be gathered
 * @param message        : the pointer to be set to the handle's data
 * @param message_length : at exist, the message size in number of bytes
 * @return            0 if OK, integer value on error
@@ -557,7 +559,7 @@ int grib_get_message(grib_handle* h ,const void** message, size_t *message_lengt
 /**
 * getting a copy of the message attached to a handle
 *
-* @param h              : the grib handle to wich the buffer should be returned
+* @param h              : the grib handle to which the buffer should be returned
 * @param message        : the pointer to the data buffer to be filled
 * @param message_length : at entry, the size in number of bytes of the allocated empty message.
 *                         At exist, the actual message length in number of bytes
@@ -639,7 +641,7 @@ grib_nearest*      grib_nearest_new      (grib_handle*   h, int* error);
 * The flags are provided to speed up the process of searching. If you are
 * sure that the point you are asking for is not changing from a call
 * to another you can use GRIB_NEAREST_SAME_POINT. The same is valid for
-* the grid. Flags can be used together duing an or.
+* the grid. Flags can be used together doing an or.
 *
 * @param nearest     : nearest structure
 * @param h           : handle from which geography and data values are taken
@@ -735,7 +737,7 @@ int         grib_get_length(grib_handle* h, const char* key,size_t *length);
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param value       : the address of a long where the data will be retreived
+* @param value       : the address of a long where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
 int          grib_get_long         (grib_handle* h, const char* key, long*   value  );
@@ -746,7 +748,7 @@ int          grib_get_long         (grib_handle* h, const char* key, long*   val
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param value       : the address of a double where the data will be retreived
+* @param value       : the address of a double where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
 int grib_get_double       (grib_handle* h, const char* key, double* value                             );
@@ -757,7 +759,7 @@ int grib_get_double       (grib_handle* h, const char* key, double* value       
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
 * @param i           : zero based index
-* @param value       : the address of a double where the data will be retreived
+* @param value       : the address of a double where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
 int grib_get_double_element(grib_handle* h, const char* key, int i, double* value           );
@@ -769,7 +771,7 @@ int grib_get_double_element(grib_handle* h, const char* key, int i, double* valu
 * @param key         : the key to be searched
 * @param i           : zero based array of indexes
 * @param size        : size of the i and value arrays
-* @param value       : the address of a double where the data will be retreived
+* @param value       : the address of a double where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
 int grib_get_double_elements(grib_handle* h, const char* key, int* i, long size,double* value);
@@ -780,7 +782,7 @@ int grib_get_double_elements(grib_handle* h, const char* key, int* i, long size,
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param mesg       : the address of a string where the data will be retreived
+* @param mesg       : the address of a string where the data will be retrieved
 * @param length      : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
 * @return            0 if OK, integer value on error
 */
@@ -792,7 +794,7 @@ int grib_get_string       (grib_handle* h, const char* key, char*   mesg,       
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param bytes       : the address of a byte array where the data will be retreived
+* @param bytes       : the address of a byte array where the data will be retrieved
 * @param length      : the address of a size_t that contains allocated length of the byte array on input, and that contains the actual length of the byte array on output
 * @return            0 if OK, integer value on error
 */
@@ -803,7 +805,7 @@ int grib_get_bytes        (grib_handle* h, const char* key, unsigned char*  byte
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param vals       : the address of a double array where the data will be retreived
+* @param vals       : the address of a double array where the data will be retrieved
 * @param length      : the address of a size_t that contains allocated length of the double array on input, and that contains the actual length of the double array on output
 * @return            0 if OK, integer value on error
 */
@@ -815,7 +817,7 @@ int grib_get_double_array (grib_handle* h, const char* key, double* vals,       
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param vals       : the address of a long array where the data will be retreived
+* @param vals       : the address of a long array where the data will be retrieved
 * @param length      : the address of a size_t that contains allocated length of the long array on input, and that contains the actual length of the long array on output
 * @return            0 if OK, integer value on error
 */int grib_get_long_array   (grib_handle* h, const char* key, long*   vals,           size_t *length  );
@@ -929,7 +931,7 @@ void     grib_get_all_names(grib_handle* h,char* names);
 *  Print all keys from the parsed definition files available in a context
 *
 * @param f           : the File used to print the keys on
-* @param c           : the context that containd the cached definition files to be printed
+* @param c           : the context that contains the cached definition files to be printed
 */
 void     grib_dump_action_tree(grib_context* c,  FILE* f) ;
 
@@ -952,7 +954,7 @@ typedef void  (*grib_free_proc)     (const grib_context* c, void* data);
 * Grib malloc procedure, format of a procedure referenced in the context that is used to allocate memory
 * @param c             : the context where the memory allocation will apply
 * @param length        : length to be allocated in number of bytes
-* @return              a pointer to the alocated memory, NULL if no memory can be allocated
+* @return              a pointer to the allocated memory, NULL if no memory can be allocated
 * must match @see grib_free_proc
 */
 typedef void* (*grib_malloc_proc)   (const grib_context* c, size_t length);
@@ -962,7 +964,7 @@ typedef void* (*grib_malloc_proc)   (const grib_context* c, size_t length);
 * @param c             : the context where the memory allocation will apply
 * @param data          : pointer to the data to be reallocated
 * @param length        : length to be allocated in number of bytes
-* @return              a pointer to the alocated memory
+* @return              a pointer to the allocated memory
 */
 typedef void* (*grib_realloc_proc)   (const grib_context* c, void* data, size_t length);
 
@@ -1061,7 +1063,7 @@ grib_context*    grib_context_new                        (grib_context* c);
 void             grib_context_delete                     (grib_context* c);
 
 /**
-*  Set the gts header mode on.
+*  Set the GTS header mode on.
 *  The GTS headers will be preserved.
 *
 * @param c           : the context
@@ -1069,7 +1071,7 @@ void             grib_context_delete                     (grib_context* c);
 void grib_gts_header_on(grib_context* c) ;
 
 /**
-*  Set the gts header mode off.
+*  Set the GTS header mode off.
 *  The GTS headers will be deleted.
 *
 * @param c           : the context
@@ -1077,23 +1079,23 @@ void grib_gts_header_on(grib_context* c) ;
 void grib_gts_header_off(grib_context* c);
 
 /**
-*  Set the gribex mode on.
-*  Grib files will be compatible with gribex.
+*  Set the GRIBEX mode on.
+*  Grib files will be compatible with GRIBEX.
 *
 * @param c           : the context
 */
 void grib_gribex_mode_on(grib_context* c);
 
 /**
-*  Get the gribex mode.
+*  Get the GRIBEX mode.
 *
 * @param c           : the context
 */
 int grib_get_gribex_mode ( grib_context* c);
 
 /**
-*  Set the gribex mode off.
-*  Grib files won't be always compatible with gribex.
+*  Set the GRIBEX mode off.
+*  GRIB files won't be always compatible with GRIBEX.
 *
 * @param c           : the context
 */
@@ -1111,7 +1113,7 @@ void             grib_context_set_user_data              (grib_context* c, void*
 /**
 *  get userData from a context
 *
-* @param c           : the context from which the user data will be retreived
+* @param c           : the context from which the user data will be retrieved
 * @return            the user data referenced in the context
 */
 void*            grib_context_get_user_data              (grib_context* c);
@@ -1177,17 +1179,25 @@ void grib_multi_support_on(grib_context* c);
 * @param c            : the context to be modified
 */
 void grib_multi_support_off(grib_context* c);
+
+/**
+*  Reset file handle in multiple field support mode
+*
+* @param c            : the context to be modified
+* @param f            : the file pointer
+*/
+void grib_multi_support_reset_file(grib_context* c, FILE* f);
 /*! @} */
 
 /**
-*  Get the api version
+*  Get the API version
 *
-*  @return        api version
+*  @return        API version
 */
 long grib_get_api_version(void);
 
 /**
-*  Prints the api version
+*  Prints the API version
 *
 *
 */
@@ -1199,11 +1209,11 @@ Key names on which the iteration is carried out can be filtered through their
 attributes or by the namespace they belong to.
 */
 /*! @{ */
-/*! Create a new iterator from a valid and initialized handle.
+/*! Create a new iterator from a valid and initialised handle.
 *  @param h             : the handle whose keys you want to iterate
 *  @param filter_flags  : flags to filter out some of the keys through their attributes
 *  @param name_space     : if not null the iteration is carried out only on
-*                         keys belongin to the namespace passed. (NULL for all the keys)
+*                         keys belonging to the namespace passed. (NULL for all the keys)
 *  @return              keys iterator ready to iterate through keys according to filter_flags
 *                         and namespace
 */
@@ -1211,7 +1221,7 @@ grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_f
 
 /*! Step to the next iterator.
 *  @param kiter         : valid grib_keys_iterator
-*  @return              1 if next iterator exitsts, 0 if no more elements to iterate on
+*  @return              1 if next iterator exists, 0 if no more elements to iterate on
 */
 int grib_keys_iterator_next(grib_keys_iterator *kiter);
 
@@ -1278,11 +1288,14 @@ int wmo_read_grib_from_file(FILE* f,void* buffer,size_t* len);
 int wmo_read_bufr_from_file(FILE* f,void* buffer,size_t* len);
 int wmo_read_gts_from_file(FILE* f,void* buffer,size_t* len);
 int wmo_read_any_from_stream(void *stream_data, long (*stream_proc )(void *, void *buffer, long len ), void *buffer, size_t *len);
-void *wmo_read_any_from_file_malloc(FILE *f,size_t *size,int *err);
-void *wmo_read_gts_from_file_malloc(FILE* f,size_t *size,int* err);
-void *wmo_read_bufr_from_file_malloc(FILE* f,size_t *size,int* err);
-grib_handle* grib_gts_handle_new_from_file ( grib_context* c, FILE* f,int *error );
-grib_handle* grib_bufr_handle_new_from_file ( grib_context* c, FILE* f,int *error );
+void *wmo_read_any_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
+void *wmo_read_gts_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
+void *wmo_read_bufr_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
+grib_handle* eccode_gts_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error );
+grib_handle* eccode_bufr_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error );
+grib_handle* eccode_grib_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error );
+int grib_get_message_offset ( grib_handle* h,off_t* offset );
+int grib_get_message_size ( grib_handle* h,size_t* size );
 
 struct grib_points {
     grib_context* context;

@@ -526,7 +526,7 @@
   subroutine grib_read_bytes_char ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         character(len=1),dimension(:), intent(out)       :: buffer
-        integer(kind=kindOfInt), intent(inout)           :: nbytes
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -553,7 +553,7 @@
   subroutine grib_read_bytes_int4 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         integer(kind=4),dimension(:), intent(out)        :: buffer
-        integer(kind=kindOfInt), intent(inout)           :: nbytes
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -580,7 +580,7 @@
   subroutine grib_read_bytes_real4 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         real(kind=4),dimension(:), intent(out)           :: buffer
-        integer(kind=kindOfInt), intent(inout)           :: nbytes
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -607,7 +607,7 @@
   subroutine grib_read_bytes_real8 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         real(kind=8),dimension(:), intent(out)           :: buffer
-        integer(kind=kindOfInt), intent(inout)           :: nbytes
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -633,8 +633,8 @@
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_read_from_file_int4 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
-        integer(kind=4),dimension(:), intent(out)                :: buffer
-        integer(kind=kindOfInt), intent(inout)           :: nbytes
+        integer(kind=4),dimension(:), intent(out)        :: buffer
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -660,8 +660,8 @@
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_read_from_file_real4 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
-        real(kind=4),dimension(:), intent(out)                :: buffer
-        integer(kind=kindOfInt), intent(inout)           :: nbytes
+        real(kind=4),dimension(:), intent(out)           :: buffer
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -688,7 +688,7 @@
   subroutine grib_read_from_file_real8 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         real(kind=8),dimension(:), intent(out)           :: buffer
-        integer(kind=kindOfInt), intent(inout)           :: nbytes
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -715,7 +715,7 @@
   subroutine grib_read_from_file_char ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         character(len=1),dimension(:), intent(out)       :: buffer
-        integer(kind=kindOfInt), intent(inout)           :: nbytes
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -744,7 +744,7 @@
   subroutine grib_write_bytes_char ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         character(len=1), dimension(:),intent(in)        :: buffer
-        integer(kind=kindOfInt), intent(in)              :: nbytes
+        integer(kind=kindOfSize_t), intent(in)           :: nbytes
         integer(kind=kindOfInt),optional,intent(out)     :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -771,7 +771,7 @@
   subroutine grib_write_bytes_int4 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         integer(kind=4), dimension(:),intent(in)         :: buffer
-        integer(kind=kindOfInt), intent(inout)           :: nbytes
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional,intent(out)     :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -797,8 +797,8 @@
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_write_bytes_real4 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
-        real(kind=4), dimension(:),intent(in)         :: buffer
-        integer(kind=kindOfInt), intent(inout)           :: nbytes
+        real(kind=4), dimension(:),intent(in)            :: buffer
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional,intent(out)     :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -824,8 +824,8 @@
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_write_bytes_real8 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
-        real(kind=8), dimension(:),intent(in)         :: buffer
-        integer(kind=kindOfInt), intent(inout)           :: nbytes
+        real(kind=8), dimension(:),intent(in)            :: buffer
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional,intent(out)     :: status
         integer(kind=kindOfInt)                          :: iret
 

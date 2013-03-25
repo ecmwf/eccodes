@@ -19,7 +19,7 @@ use grib_api
   character(len=256) :: filename
   integer(kind=4),dimension(intsize) :: buffer
   !character,dimension(size) :: buffer
-  integer :: len1
+  integer(kind=kindOfSize_t) :: len1
 
 !     Message identifier.
   integer            :: igrib

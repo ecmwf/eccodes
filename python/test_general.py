@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-from gribapi import *
+from eccode import *
 import random
 import traceback
 
@@ -14,7 +14,7 @@ class Usage(Exception):
 
 def test():
     # test new from sample
-    #grib_release(grib_new_from_samples("GRIB2"))
+    #release(grib_new_from_samples("GRIB2"))
 
     if len(sys.argv) < 2:
         raise Usage
@@ -29,7 +29,7 @@ def test():
     while 1:
         gid = grib_new_from_file(fid)
         if not gid: break
-        grib_release(gid)
+        release(gid)
     fid.close()
 
     fid = open(infile,"r")
@@ -70,16 +70,16 @@ def test():
         #grib_print(gid,"centre")
 
         if i == 0:
-            print "Message size: ",grib_get_message_size(gid)
-            nval = grib_get_size(gid,"values")
+            print "Message size: ",get_message_size(gid)
+            nval = get_size(gid,"values")
             print "Number of values in message %d is %d" % (i,nval)
 
             print "== %s %s %s %d ==" % \
                 ( \
-                grib_get_string(gid,"shortName"), \
-                grib_get_string(gid,"name"), \
-                grib_get_string(gid,"typeOfLevel"), \
-                grib_get_long(gid,"level"), \
+                get_string(gid,"shortName"), \
+                get_string(gid,"name"), \
+                get_string(gid,"typeOfLevel"), \
+                get_long(gid,"level"), \
                 )
 
             print "Nearest point to 10,10: "
@@ -91,61 +91,61 @@ def test():
             for i in range(0,5):
                 rand_index = random.randint(1,nval)
                 rand_list.append(rand_index)
-                myval = grib_get_double_element(gid,"values",rand_index)
+                myval = get_double_element(gid,"values",rand_index)
                 print "Random index value[%d] = %.8f" % (rand_index,myval)
 
-            all4rand = grib_get_double_elements(gid,"values",rand_list)
+            all4rand = get_double_elements(gid,"values",rand_list)
             print "All at once index values: ",all4rand
 
-            centre = grib_get_string(gid,"centre")
-            grib_set_string(gid,"centre","ecmf")
-            new_centre = grib_get_string(gid,"centre")
+            centre = get_string(gid,"centre")
+            set_string(gid,"centre","ecmf")
+            new_centre = get_string(gid,"centre")
             print "Before/after string centre: %s/%s" % (centre,new_centre)
 
-            centre = grib_get_long(gid,"centre")
-            grib_set_long(gid,"centre",99)
-            new_centre = grib_get_long(gid,"centre")
+            centre = get_long(gid,"centre")
+            set_long(gid,"centre",99)
+            new_centre = get_long(gid,"centre")
             print "Before/after numeric centre: %d/%d" % (centre,new_centre)
 
-            centre = grib_get_double(gid,"centre")
-            grib_set_double(gid,"centre",9)
-            new_centre = grib_get_double(gid,"centre")
+            centre = get_double(gid,"centre")
+            set_double(gid,"centre",9)
+            new_centre = get_double(gid,"centre")
             print "Before/after numeric floating point centre: %f/%f" % (centre,new_centre)
 
-            vals = grib_get_double_array(gid,"values")
+            vals = get_double_array(gid,"values")
             print "Values before: ",vals[:10]
-            grib_set_double_array(gid,"values",(1.0, 2.0, 3.14))
-            vals = grib_get_double_array(gid,"values")
+            set_double_array(gid,"values",(1.0, 2.0, 3.14))
+            vals = get_double_array(gid,"values")
             print "Values after: ",vals[:10]
 
             print "Saving modified message to %s" % outfile
             if WRITE: grib_write(gid,out)
 
             print "Creating and saving a clone to %s" % clonefile
-            clone_gid = grib_clone(gid)
+            clone_gid = clone(gid)
             if WRITE: grib_write(clone_gid,clone_fid)
-            grib_release(clone_gid)
+            release(clone_gid)
 
-            Ni = grib_get(gid,"Ni")
+            Ni = get(gid,"Ni")
             print "Setting Ni to missing from --> ",Ni
-            grib_set_missing(gid,"Ni")
-            assert grib_is_missing(gid,"Ni")
-            miss_Ni = grib_get(gid,"Ni")
+            set_missing(gid,"Ni")
+            assert is_missing(gid,"Ni")
+            miss_Ni = get(gid,"Ni")
             print "Ni is now --> ",miss_Ni
-            grib_set(gid,"Ni",Ni)
-            new_Ni = grib_get(gid,"Ni")
+            set(gid,"Ni",Ni)
+            new_Ni = get(gid,"Ni")
             print "Set Ni back to its original value --> ",new_Ni
             assert Ni == new_Ni
             
             print "Check some keys to see if they are defined"
-            assert grib_is_defined(gid,"Ni")
-            assert grib_is_defined(gid,"edition")
-            assert not grib_is_defined(gid,"DarkThrone")
+            assert is_defined(gid,"Ni")
+            assert is_defined(gid,"edition")
+            assert not is_defined(gid,"DarkThrone")
 
             #grib_multi_write(gid,multi)
 
 
-        grib_release(gid)
+        release(gid)
 
     fid.close()
     out.close()
@@ -156,7 +156,7 @@ def test():
 def main():
     try:
         test()
-    except GribInternalError,err:
+    except InternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

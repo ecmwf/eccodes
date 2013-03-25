@@ -265,9 +265,9 @@ static int compare(grib_accessor* a,grib_accessor* b) {
 
 static int pack_string(grib_accessor* a, const char* val, size_t *len)
 {
-  char* end=NULL;
-  long v=strtol(val,&end,10);
-  if (end) {
+  char* theEnd=NULL;
+  long v=strtol(val,&theEnd,10);
+  if (theEnd) {
     grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"trying to pack \"%s\" as long",val);
     return GRIB_WRONG_TYPE;
   }

@@ -4,7 +4,7 @@ from distutils.core import setup, Extension
 import os,sys
 
 attdict = dict(
-   sources = ['gribapi_swig_wrap.c','grib_interface.c'],
+   sources = ['eccode_swig_wrap.c','grib_interface.c'],
    swig_opts = [],
    include_dirs = ['.'],
    library_dirs = ["%s/lib" % sys.prefix],
@@ -57,12 +57,12 @@ if data_handler == "numpy":
         include_dirs = numpy_include,
     )
 
-gribapi_module = Extension('_gribapi_swig',**attdict)
+eccode_module = Extension('_eccode_swig',**attdict)
 
-setup (name = 'gribapi',
+setup (name = 'eccode',
        version = '0.1',
        author      = 'ECMWF',
        description = """Grib API SWIG module""",
-       ext_modules = [gribapi_module],
-       py_modules = ['gribapi_swig','gribapi'],
+       ext_modules = [eccode_module],
+       py_modules = ['eccode_swig','eccode'],
       )

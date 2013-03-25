@@ -1,7 +1,17 @@
+#
+# Copyright 2005-2012 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
 import traceback
 import sys
 
-from gribapi import *
+from eccode import *
 
 INPUT='../../data/tigge_pf_ecmwf.grib2'
 VERBOSE=1 # verbose error reporting
@@ -31,24 +41,24 @@ def example():
         print "processing message number",i+1
 
         for key in keys:
-            print '%s=%g' % (key,grib_get(gid,key))
+            print '%s=%g' % (key,get(gid,key))
 
         print 'There are %d, average is %g, min is %g, max is %g' % (
-                  grib_get_size(gid,'values'),
-                  grib_get(gid,'average'),
-                  grib_get(gid,'min'),
-                  grib_get(gid,'max')
+                  get_size(gid,'values'),
+                  get(gid,'average'),
+                  get(gid,'min'),
+                  get(gid,'max')
                )
 
         print '-'*100
 
-        grib_release(gid)
+        release(gid)
 
 
 def main():
     try:
         example()
-    except GribInternalError,err:
+    except InternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

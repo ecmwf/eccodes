@@ -69,8 +69,15 @@ static void print_files_in_dir(const char* dir, const char* extension)
 
 int main(int argc, char *argv[]) { return grib_tool(argc,argv);}
 
-#define SAMPLES_PATH_DELIMITER_CHAR ':'
-#define SAMPLES_PATH_DELIMITER_STR  ":"
+/* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
+/* in order to have multiple samples directories */
+#ifdef _WIN32
+#   define SAMPLES_PATH_DELIMITER_CHAR ';'
+#   define SAMPLES_PATH_DELIMITER_STR  ";"
+#else
+#   define SAMPLES_PATH_DELIMITER_CHAR ':'
+#   define SAMPLES_PATH_DELIMITER_STR  ":"
+#endif
 
 int grib_tool_before_getopt(grib_runtime_options* options) {
 	grib_context *c=grib_context_get_default( );

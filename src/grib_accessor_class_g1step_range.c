@@ -219,7 +219,7 @@ static int u2s[] =  {
 };
 
 
-int grib_g1_step_get_steps(grib_accessor* a,long* start,long* end) {
+int grib_g1_step_get_steps(grib_accessor* a,long* start,long* theEnd) {
 	grib_accessor_g1step_range* self = (grib_accessor_g1step_range*)a;
 	int err = 0;
 	long p1 = 0,p2 = 0,unit = 0,timeRangeIndicator=0,timeRangeIndicatorFromStepRange=0;
@@ -258,23 +258,23 @@ int grib_g1_step_get_steps(grib_accessor* a,long* start,long* end) {
     } else sprintf(stepType,"unknown");
 
 	*start = p1;
-	*end   = p2;
+	*theEnd = p2;
 
-	if (timeRangeIndicator==10) *start = *end = (p1<<8) | (p2<<0);
-	else if (!strcmp(stepType,"instant")) *start = *end = p1;
-    else if (!strcmp(stepType,"accum") && timeRangeIndicator==0 ) {*start =0; *end = p1;}
+	if (timeRangeIndicator==10) *start = *theEnd = (p1<<8) | (p2<<0);
+	else if (!strcmp(stepType,"instant")) *start = *theEnd = p1;
+    else if (!strcmp(stepType,"accum") && timeRangeIndicator==0 ) {*start =0; *theEnd = p1;}
 
-	if (u2s1[unit] == u2s[step_unit] || (*start==0 && *end==0) ) return 0;
+	if (u2s1[unit] == u2s[step_unit] || (*start==0 && *theEnd==0) ) return 0;
 
 	newstart = (*start) * u2s1[unit];
-	newend   = (*end)   * u2s1[unit];
+	newend   = (*theEnd)   * u2s1[unit];
 
 	if (newstart<0 || newend<0) {
 		factor=60;
 		u2sf=u2s1[unit]/factor;
 		if (u2s1[unit] % factor) return GRIB_DECODING_ERROR;
 		newstart = (*start) * u2sf;
-		newend   = (*end)   * u2sf;
+		newend   = (*theEnd)   * u2sf;
 		u2sf_step_unit=u2s[step_unit]/factor;
 		if (u2s[step_unit] % factor) return GRIB_DECODING_ERROR;
 	} else {
@@ -285,7 +285,7 @@ int grib_g1_step_get_steps(grib_accessor* a,long* start,long* end) {
 		return GRIB_DECODING_ERROR;
 	} else {
 		*start = newstart/u2sf_step_unit;
-		*end   = newend/u2sf_step_unit;
+		*theEnd   = newend/u2sf_step_unit;
 	}
 
 	return 0;
@@ -295,14 +295,14 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len) {
 	grib_accessor_g1step_range* self = (grib_accessor_g1step_range*)a;
 	char buf[100];
 	size_t size=0;
-	long start=0,end=0;
+	long start=0,theEnd=0;
 	long timeRangeIndicator=0;
 	long unit;
 	int err=0;
     char stepType[20]={0,};
     size_t stepTypeLen=20;
 
-	if ((err=grib_g1_step_get_steps(a,&start,&end))!=GRIB_SUCCESS) {
+	if ((err=grib_g1_step_get_steps(a,&start,&theEnd))!=GRIB_SUCCESS) {
 		size_t step_unit_string_len=10;
 		char step_unit_string[10];
 
@@ -353,12 +353,12 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len) {
 		(strcmp(stepType,"diff") == 0)
 		)
 	{
-		if(start == end) {
-			sprintf(buf,"%ld",end);
+		if(start == theEnd) {
+			sprintf(buf,"%ld",theEnd);
 		}
 		else
 		{
-			sprintf(buf,"%ld-%ld",start, end);
+			sprintf(buf,"%ld-%ld",start, theEnd);
 		}
 	}
 	else {
@@ -377,7 +377,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len) {
 	return GRIB_SUCCESS;
 }
 
-int grib_g1_step_apply_units(long *start,long *end,long* step_unit,
+int grib_g1_step_apply_units(long *start,long *theEnd,long* step_unit,
 		long *P1,long *P2,long* unit,
 		const int max,const int instant) {
 	int j=0;
@@ -407,7 +407,7 @@ int grib_g1_step_apply_units(long *start,long *end,long* step_unit,
         }
         
 	} else {
-		end_sec=*end*u2s[*step_unit];
+		end_sec=*theEnd*u2s[*step_unit];
 		*unit=units_index[0];
 		for (j=index;j<max_index;j++) {
 			if ( start_sec%u2s1[*unit]==0 &&
@@ -434,7 +434,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len){
 	grib_accessor_g1step_range* self = (grib_accessor_g1step_range*)a;
 	grib_handle* h=a->parent->h;
 	long timeRangeIndicator=0,P1=0,P2=0;
-	long start=0,end=-1,unit=0,ounit=0,step_unit=1;
+	long start=0,theEnd=-1,unit=0,ounit=0,step_unit=1;
 	int ret=0;
 	long end_sec,start_sec;
 	char *p=NULL,*q=NULL;
@@ -465,16 +465,16 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len){
 	ounit=unit;
 
 	start=strtol(val, &p,10);
-	end=start;
-	if ( *p!=0 ) end=strtol(++p, &q,10);
+	theEnd=start;
+	if ( *p!=0 ) theEnd=strtol(++p, &q,10);
 
-	if (start==0 && end==0) {
+	if (start==0 && theEnd==0) {
 		if((ret = grib_set_long_internal(h,self->p1,start)) != GRIB_SUCCESS)
 			return ret;
-		ret = grib_set_long_internal(h,self->p2,end);
+		ret = grib_set_long_internal(h,self->p2,theEnd);
 		return ret;
 	}
-	end_sec=end*u2s[step_unit];
+	end_sec=theEnd*u2s[step_unit];
 	start_sec=start*u2s[step_unit];
 
 	if ( ( end_sec > 918000 || start_sec > 918000 ) &&
@@ -490,15 +490,15 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len){
 	if (timeRangeIndicator == 10) {
 		long off=0;
 		grib_accessor* p1_accessor=NULL;
-		if ( end != start && !h->context->gribex_mode_on) {
+		if ( theEnd != start && !h->context->gribex_mode_on) {
 			if ( h->context->gribex_mode_on==0 ) {
 				grib_context_log(h->context,GRIB_LOG_ERROR,
 					"Unable to set %s: end must be equal to start when timeRangeIndicator=10",
 					a->name);
 				return GRIB_WRONG_STEP; 
-			} else start = end;
+			} else start = theEnd;
 		}
-		if ((ret=grib_g1_step_apply_units(&start,&end,&step_unit,&P1,&P2,&unit,65535,instant))
+		if ((ret=grib_g1_step_apply_units(&start,&theEnd,&step_unit,&P1,&P2,&unit,65535,instant))
 				!=GRIB_SUCCESS) {
 			grib_context_log(h->context,GRIB_LOG_ERROR,"unable to find units to set %s=%s",a->name,val);
 			return ret;
@@ -519,7 +519,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len){
 		return ret;
 	}
 
-	if ( (ret=grib_g1_step_apply_units(&start,&end,&step_unit,&P1,&P2,&unit,255,instant))
+	if ( (ret=grib_g1_step_apply_units(&start,&theEnd,&step_unit,&P1,&P2,&unit,255,instant))
 			!=GRIB_SUCCESS ) {
 
 		if (instant || h->context->gribex_mode_on) {
@@ -530,14 +530,14 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len){
 			/* TODO move to the def file*/
 			if((ret = grib_set_long_internal(h,"timeRangeIndicatorFromStepRange",10)))
 				return ret;
-			if (end != start && !h->context->gribex_mode_on) {
+			if (theEnd != start && !h->context->gribex_mode_on) {
 				grib_context_log(h->context,GRIB_LOG_ERROR,
 					"Unable to set %s: end must be equal to start when timeRangeIndicator=10",
 		 																			a->name);
 				return GRIB_WRONG_STEP;
-			} else start=end;
+			} else start=theEnd;
 			
-			if ((ret=grib_g1_step_apply_units(&start,&end,&step_unit,&P1,&P2,&unit,65535,instant))
+			if ((ret=grib_g1_step_apply_units(&start,&theEnd,&step_unit,&P1,&P2,&unit,65535,instant))
 						  !=GRIB_SUCCESS) {
 				grib_context_log(h->context,GRIB_LOG_ERROR,"unable to find units to set %s=%s",a->name,val);
 				return ret;
@@ -569,7 +569,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len){
 		return ret;
 
 	self->v[0]=start;
-	self->v[1]=end;
+	self->v[1]=theEnd;
 	a->dirty=0;
 
 	return 0;
@@ -656,7 +656,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len) {
 	grib_accessor_g1step_range* self = (grib_accessor_g1step_range*)a;
 	char buff[100];
 	size_t bufflen=100;
-	long start,end;
+	long start,theEnd;
 	char* p=buff;
 	char* q=NULL;
 	int err=0;
@@ -666,14 +666,14 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len) {
 		return err;
 
 	start=strtol(buff, &p,10);
-	end=start;
-	if ( *p!=0 ) end=strtol(++p, &q,10);
+	theEnd=start;
+	if ( *p!=0 ) theEnd=strtol(++p, &q,10);
 
 	if (self->pack_index==1) *val=start;
-	else *val=end;
+	else *val=theEnd;
 
 	self->v[0]=start;
-	self->v[1]=end;
+	self->v[1]=theEnd;
 	a->dirty=0;
 
 	return 0;

@@ -11,8 +11,6 @@
 /*
  * C Implementation: grib_get
  *
- *
- *
  */
 
 #include "grib_tools.h"

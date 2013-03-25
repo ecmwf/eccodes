@@ -9,12 +9,9 @@
  */
 
 /*
- * C Implementation: set
+ * C Implementation: mars_param
  *
- * Description: how to set key values.
- *
- *
- *
+ * Description: how to query MARS params
  *
  */
 #include <stdio.h>

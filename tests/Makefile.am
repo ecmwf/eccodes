@@ -1,8 +1,9 @@
 
      TESTS = definitions.sh \
 			 ieee.sh grib1to2.sh \
-	         grib2to1.sh badgrib.sh ls.sh convert.sh filter.sh  \
-	         multi.sh budg.sh gridType.sh concept.sh decimalPrecision.sh \
+			 unit_tests.sh \
+	       grib2to1.sh badgrib.sh ls.sh convert.sh filter.sh  \
+	       multi.sh budg.sh gridType.sh concept.sh decimalPrecision.sh \
 			 bitsPerValue.sh get_fail.sh missing.sh \
 			 local.sh step.sh set.sh iterator.sh \
 			 compare.sh level.sh index.sh \
@@ -13,7 +14,7 @@
 
      noinst_PROGRAMS = packing_check gauss_sub read_any double_cmp packing pack_unpack \
 	                   multi_from_message julian read_index index gribex_perf\
-	                   jpeg_perf so_perf png_perf bpv_limit laplacian
+	                   jpeg_perf so_perf png_perf bpv_limit laplacian unit_tests
 
 	 multi_from_message_SOURCES = multi_from_message.c
 	 laplacian_SOURCES = laplacian.c
@@ -24,6 +25,7 @@
 	 double_cmp_SOURCES = double_cmp.c
 	 pack_unpack_SOURCES = pack_unpack.c
 	 julian_SOURCES = julian.c
+	 unit_tests_SOURCES = unit_tests.c
 	 index_SOURCES = index.c
 	 read_index_SOURCES = read_index.c
 	 jpeg_perf_SOURCES = jpeg_perf.c

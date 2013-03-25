@@ -11,7 +11,11 @@
 #include "grib_api_internal.h"
 #include <errno.h>
 #include <stdlib.h>
+#ifndef _WIN32
 #include <unistd.h>
+#else
+#include <fcntl.h> /* Windows: for _O_BINARY */
+#endif
 
 grib_string_list grib_file_not_found;
 
@@ -200,79 +204,79 @@ void grib_print_api_version(FILE* out) {
 }
 
 static  grib_context default_grib_context = {
-	0,                            /* inited                     */
-	0,                            /* debug                      */
-	0,                            /* write_on_fail              */
-	0,                            /* no_abort                   */
-	0,                            /* io_buffer_size             */
-	0,                            /* no_big_group_split         */
-	0,                            /* no_spd                     */
-	0,                            /* keep_matrix                */
-	0,                            /* grib_definition_files_path */
-	0,                            /* grib_samples_path          */
-	0,                            /* grib_concept_path          */
-	0,                            /* grib_reader                */
-	0,                            /* user data                  */
-	GRIB_REAL_MODE8,              /* real mode for fortran      */
+		0,                            /* inited                     */
+		0,                            /* debug                      */
+		0,                            /* write_on_fail              */
+		0,                            /* no_abort                   */
+		0,                            /* io_buffer_size             */
+		0,                            /* no_big_group_split         */
+		0,                            /* no_spd                     */
+		0,                            /* keep_matrix                */
+		0,                            /* grib_definition_files_path */
+		0,                            /* grib_samples_path          */
+		0,                            /* grib_concept_path          */
+		0,                            /* grib_reader                */
+		0,                            /* user data                  */
+		GRIB_REAL_MODE8,              /* real mode for fortran      */
 
 #if MANAGE_MEM
-	&grib_transient_free,         /* free_mem                   */
-	&grib_transient_malloc,       /* alloc_mem                  */
-	&grib_transient_realloc,      /* realloc_mem                */
+		&grib_transient_free,                /* free_mem                   */
+		&grib_transient_malloc,              /* alloc_mem                  */
+		&grib_transient_realloc,              /* realloc_mem                  */
 
-	&grib_permanent_free,         /* free_persistant_mem        */
-	&grib_permanent_malloc,       /* alloc_persistant_mem       */
+		&grib_permanent_free,   /* free_persistant_mem        */
+		&grib_permanent_malloc, /* alloc_persistant_mem       */
 
-	&grib_buffer_free,            /* buffer_free_mem            */
-	&grib_buffer_malloc,          /* buffer_alloc_mem           */
-	&grib_buffer_realloc,         /* buffer_realloc_mem         */
+		&grib_buffer_free,                /* buffer_free_mem                   */
+		&grib_buffer_malloc,              /* buffer_alloc_mem                  */
+		&grib_buffer_realloc,              /* buffer_realloc_mem                  */
 
 #else
 
-	&default_free,                /* free_mem                  */
-	&default_malloc,              /* alloc_mem                 */
-	&default_realloc,             /* realloc_mem               */
+		&default_free,                /* free_mem                   */
+		&default_malloc,              /* alloc_mem                  */
+		&default_realloc,             /* realloc_mem                */
 
-	&default_long_lasting_free,   /* free_persistant_mem       */
-	&default_long_lasting_malloc, /* alloc_persistant_mem      */
+		&default_long_lasting_free,   /* free_persistant_mem        */
+		&default_long_lasting_malloc, /* alloc_persistant_mem       */
 
-	&default_buffer_free,         /* free_buffer_mem           */
-	&default_buffer_malloc,       /* alloc_buffer_mem          */
-	&default_buffer_realloc,      /* realloc_buffer_mem        */
+		&default_buffer_free,         /* free_buffer_mem            */
+		&default_buffer_malloc,        /* alloc_buffer_mem           */
+		&default_buffer_realloc,        /* realloc_buffer_mem           */
 #endif
 
-	&default_read,                /* file read procedure        */
-	&default_write,               /* file write procedure       */
-	&default_tell,                /* lfile tell procedure       */
-	&default_seek,                /* lfile seek procedure       */
-	&default_feof,                /* file feof procedure        */
+		&default_read,                /* file read procedure        */
+		&default_write,               /* file write procedure       */
+		&default_tell,                /* lfile tell procedure       */
+		&default_seek,                /* lfile seek procedure       */
+		&default_feof,                /* file feof procedure        */
 
-	&default_log,                 /* logging_procedure          */
-	&default_print,               /* print procedure            */
-	0,                            /* code tables                */
-	0,                            /* files                      */
-	0,                            /* multigrib support on       */
-	0,                            /* multigrib support          */
-	0,                            /* grib_definition_files_dir  */
-	0,                            /* handle_file_count          */
-	0,                            /* handle_total_count         */
-	0,                            /* message_file_offset        */
-	0,                            /* no_fail_on_wrong_length    */
-	0,                            /* gts_header_on              */
-	0,                            /* gribex_mode_on             */
-	0,                            /* large_constant_fields      */
-	0,                            /* keys (grib_trie*)          */
-	0,                            /* keys_count                 */
-	0,                            /* concepts_index             */
-	0,                            /* concepts_count             */
-	{0,},                         /* concepts                   */
-	0,                            /* def_files                  */
-	0,                            /* ieee_packing               */
-	0,                            /* blacklist                  */
-	0,                            /* log_stream                 */
-   0                             /* classes                    */
+		&default_log,                 /* logging_procedure          */
+		&default_print,               /* print procedure            */
+		0,                            /* code tables                */
+		0,                            /* files                      */
+		0,                            /* multigrib support on       */
+		0,                            /* multigrib support          */
+		0,                            /* grib_definition_files_dir  */
+		0,                            /* handle_file_count          */
+		0,                            /* handle_total_count         */
+		0,                            /* message_file_offset        */
+		0,                            /* no_fail_on_wrong_length    */
+		0,                            /* gts_header_on */
+		0,                            /* gribex_mode_on */
+		0,                            /* large_constant_fields */
+		0,                            /* keys (grib_trie*) */
+		0,                            /* keys_count */
+		0,                            /* concepts_index */
+		0,                            /* concepts_count */
+		{0,},                         /* concepts */
+		0,                            /* def_files */
+		0,                            /* ieee_packing */
+		0,                            /* blacklist */
+		0,                            /* log_stream */
+		0                             /* classes */
 #if GRIB_PTHREADS
-		,PTHREAD_MUTEX_INITIALIZER  /* mutex                     */
+		,PTHREAD_MUTEX_INITIALIZER     /*mutex*/
 #endif
 };
 
@@ -307,6 +311,14 @@ grib_context* grib_context_get_default(){
 		no_big_group_split=getenv("GRIB_API_NO_BIG_GROUP_SPLIT");
 		no_spd=getenv("GRIB_API_NO_SPD");
 		keep_matrix=getenv("GRIB_API_KEEP_MATRIX");
+
+		/* On UNIX, when we read from a file we get exactly what is in the file on disk.
+		 * But on Windows a file can be opened in binary or text mode. In binary mode the system behaves exactly as in UNIX.
+		 */
+#ifdef _MSC_VER
+		_set_fmode(_O_BINARY);
+#endif
+
 		default_grib_context.inited = 1;
 		default_grib_context.io_buffer_size = io_buffer_size ? atoi(io_buffer_size) : 0;
 		default_grib_context.no_big_group_split = no_big_group_split ? atoi(no_big_group_split) : 0;
@@ -408,14 +420,28 @@ grib_context* grib_context_new(grib_context* parent)
 static char* resolve_path(grib_context* c, char* path)
 {
 	char* result = NULL;
+#ifdef _WIN32
+	result = grib_context_strdup(c, path);
+#else
 	char resolved[DEF_PATH_MAXLEN+1];
 	if (!realpath(path, resolved)) {
 		result = grib_context_strdup(c, path); /* Failed to resolve. Use original path */
 	} else {
 		result = grib_context_strdup(c, resolved);
 	}
+#endif
 	return result;
 }
+
+/* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
+/* in order to have multiple definitions directories */
+#ifdef _WIN32
+#   define DEFS_PATH_DELIMITER_CHAR ';'
+#   define DEFS_PATH_DELIMITER_STR  ";"
+#else
+#   define DEFS_PATH_DELIMITER_CHAR ':'
+#   define DEFS_PATH_DELIMITER_STR  ":"
+#endif
 
 static int init_definition_files_dir(grib_context* c) {
 	int err=0;
@@ -436,15 +462,16 @@ static int init_definition_files_dir(grib_context* c) {
 	GRIB_MUTEX_LOCK(&mutex_c);
 
 	p=path;
-	while(*p!=':' && *p!='\0') p++;
 
-	if (*p != ':') {
-		/* No colon found so use it as is */
+	while(*p!=DEFS_PATH_DELIMITER_CHAR && *p!='\0') p++;
+
+	if (*p != DEFS_PATH_DELIMITER_CHAR) {
+		/* No delimiter found so this is a single directory */
 		c->grib_definition_files_dir=(grib_string_list*)grib_context_malloc_clear_persistent(c,sizeof(grib_string_list));
 		c->grib_definition_files_dir->value = resolve_path(c, path);
 	} else {
-		/* definitions path contains at least one colon so must consist of several paths */
-		dir=strtok(path,":");
+		/* Definitions path contains multiple directories */
+		dir=strtok(path, DEFS_PATH_DELIMITER_STR);
 
 		while (dir != NULL) {
 			if (next) {
@@ -455,7 +482,7 @@ static int init_definition_files_dir(grib_context* c) {
 				next=c->grib_definition_files_dir;
 			}
 			next->value = resolve_path(c, dir);
-			dir=strtok(NULL,":");
+			dir=strtok(NULL, DEFS_PATH_DELIMITER_STR);
 		}
 	}
 
@@ -464,7 +491,7 @@ static int init_definition_files_dir(grib_context* c) {
 	return err;
 }
 
-char *grib_context_full_path(grib_context* c,const char* basename)
+char *grib_context_full_defs_path(grib_context* c,const char* basename)
 {
 	int err=0;
 	char full[1024]={0,};

@@ -254,6 +254,13 @@ dist_definitionsgrib1_localConcepts_edzw_DATA = \
 	grib1/localConcepts/edzw/shortName.def\
 	grib1/localConcepts/edzw/units.def
 
+definitionsgrib1_localConcepts_kwbcdir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/kwbc
+dist_definitionsgrib1_localConcepts_kwbc_DATA = \
+	grib1/localConcepts/kwbc/name.def\
+	grib1/localConcepts/kwbc/paramId.def\
+	grib1/localConcepts/kwbc/shortName.def\
+	grib1/localConcepts/kwbc/units.def
+
 definitionsgrib1_localConcepts_lfpwdir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/lfpw
 dist_definitionsgrib1_localConcepts_lfpw_DATA = \
 	grib1/localConcepts/lfpw/name.def\

@@ -12,8 +12,6 @@
  *
  * Description: index
  *
- *
- *
  */
 
 #include "grib_api_internal.h"

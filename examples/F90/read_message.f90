@@ -12,10 +12,11 @@
 program read_message
 use grib_api
 implicit none
-  integer                                ::  ifile,ofile
-  integer                                ::  iret,igrib
-  integer , dimension(50000)   ::  buffer
-  integer                                ::  len1,step,level
+  integer                      ::  ifile,ofile
+  integer                      ::  iret,igrib
+  integer , dimension(50000)   :: buffer
+  integer(kind=kindOfSize_t)   :: len1
+  integer                      :: step,level
 
   call grib_open_file(ifile,'../../data/index.grib','r')
   call grib_open_file(ofile,'out.grib','w')

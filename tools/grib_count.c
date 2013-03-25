@@ -1,3 +1,13 @@
+/*
+ * Copyright 2005-2012 ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
+
 #include "grib_api_internal.h"
 
 void usage(char* prog) {
@@ -8,12 +18,13 @@ void usage(char* prog) {
 static int check_file(FILE* in,long *count) {
 	void* mesg=NULL;
 	size_t size=0;
+	off_t offset=0;
 	int err=0;
 	grib_context* c=grib_context_get_default();
 
 	if (!in) return 1;
 
-	while ( (err=grib_read_any_from_file_alloc (c, in,  &mesg , &size))==GRIB_SUCCESS) {
+	while ( (mesg=wmo_read_any_from_file_malloc ( in,0,  &size,&offset,&err))!=NULL && err==GRIB_SUCCESS) {
 		grib_context_free(c,mesg);
 		(*count)++;
 	}

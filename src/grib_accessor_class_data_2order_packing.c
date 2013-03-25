@@ -806,7 +806,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
 
  /*   for(i=0;i < 10;i++)
-      printf("paking value [%d] %g %ld     %ld bias %ld <<\n", i, val[i],sec_val[i],binary_scale_factor,bias );
+      printf("packing value [%d] %g %ld     %ld bias %ld <<\n", i, val[i],sec_val[i],binary_scale_factor,bias );
 */
   nv        = n_vals-n_sp_diff;
   group_val = sec_val+n_sp_diff;
@@ -870,7 +870,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
       grib_encode_unsigned_longb(buf_vals, sec_val[vcount+j]-sd->array_of_group_refs[i] ,&bitp , sd->array_of_group_width[i]);
 
         /*    if(vcount+j < 10)
-             printf(">>paking value [%ld] %g %ld     %ld nb %ld <<\n", vcount+j, val[vcount+j],sec_val[vcount+j],binary_scale_factor,sd->array_of_group_refs[i] );*/
+             printf(">>packing value [%ld] %g %ld     %ld nb %ld <<\n", vcount+j, val[vcount+j],sec_val[vcount+j],binary_scale_factor,sd->array_of_group_refs[i] );*/
             }
          vcount+= sd->array_of_group_size[i];
     }

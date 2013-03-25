@@ -18,8 +18,8 @@ grib_rule_entry *grib_new_rule_entry(grib_context* c,const char* name,grib_expre
 	return e;
 }
 
-#if 0
-/* new GCC compiler v4.5.0 complains function is defined but not used*/
+/*
+new GCC compiler v4.5.0 complains function is defined but not used
 static void grib_rule_entry_delete(grib_context* c,grib_rule_entry* e)
 {
 	if(e)
@@ -30,7 +30,7 @@ static void grib_rule_entry_delete(grib_context* c,grib_rule_entry* e)
 
 	}
 }
-#endif
+*/
 
 grib_rule* grib_new_rule(grib_context* c,grib_expression* condition,grib_rule_entry* entries)
 {
@@ -39,3 +39,5 @@ grib_rule* grib_new_rule(grib_context* c,grib_expression* condition,grib_rule_en
 	r->entries   = entries;
 	return r;
 }
+
+

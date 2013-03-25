@@ -9,12 +9,10 @@
  */
 
 /*
- * C Implementation: multi  
+ * C Implementation: multi_write
  *
  * Description: How to encode grib messages containing multiple
- *              fields. 
- *
- *
+ *              fields
  *
  */
 #include <stdio.h>
@@ -44,7 +42,7 @@ int main(int argc, char** argv) {
   /* open input file */
   in = fopen(filename,"r");
   if(!in) {
-    printf("ERROR: unable to open file %s\n",filename);
+    printf("ERROR: unable to open input file %s\n",filename);
     return 1;
   }
 
@@ -68,7 +66,7 @@ int main(int argc, char** argv) {
   /* open output file */
   of=fopen(ofilename,"w");
   if(!of) {
-	printf("ERROR: unable to open file %s\n",ofilename);
+	printf("ERROR: unable to open output file %s\n",ofilename);
     exit(1);
   }
 

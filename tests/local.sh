@@ -20,28 +20,28 @@ rm -f local.log | true
 # GRIB2 definitions for chemicals and aerosols for MACC
 sample_g2=$GRIB_SAMPLES_PATH/GRIB2.tmpl
 
-#${tools_dir}grib_set -s paramId=210005 $sample_g2 macc.grb2
-#result=`${tools_dir}grib_get -p discipline,parameterCategory,parameterNumber,shortName,units,aerosolType,name macc.grb2`
-#[ "$result" = '0 20 2 aermr05 kg kg**-1 62001 Dust Aerosol (0.55 - 0.9 um) Mixing Ratio' ]
-#[ `${tools_dir}grib_get -p productDefinitionTemplateNumber macc.grb2` = '44' ]
+${tools_dir}grib_set -s paramId=210005 $sample_g2 macc.grb2
+result=`${tools_dir}grib_get -p discipline,parameterCategory,parameterNumber,shortName,units,aerosolType,name macc.grb2`
+[ "$result" = '0 20 2 aermr05 kg kg**-1 62001 Dust Aerosol (0.55 - 0.9 um) Mixing Ratio' ]
+[ `${tools_dir}grib_get -p productDefinitionTemplateNumber macc.grb2` = '44' ]
 
-#${tools_dir}grib_set -s paramId=210001 $sample_g2 macc.grb2
-#result=`${tools_dir}grib_get -p discipline,parameterCategory,parameterNumber,shortName,units,aerosolType,name macc.grb2`
-#[ "$result" = '0 20 2 aermr01 kg kg**-1 62008 Sea Salt Aerosol (0.03 - 0.5 um) Mixing Ratio' ]
+${tools_dir}grib_set -s paramId=210001 $sample_g2 macc.grb2
+result=`${tools_dir}grib_get -p discipline,parameterCategory,parameterNumber,shortName,units,aerosolType,name macc.grb2`
+[ "$result" = '0 20 2 aermr01 kg kg**-1 62008 Sea Salt Aerosol (0.03 - 0.5 um) Mixing Ratio' ]
 
-#${tools_dir}grib_set -s paramId=210007 $sample_g2 macc.grb2
-#result=`${tools_dir}grib_get -p discipline,parameterCategory,parameterNumber,shortName,typeOfSizeInterval,aerosolType,name macc.grb2`
-#[ "$result" = '0 20 2 aermr07 255 62016 Hydrophobic Organic Matter Aerosol Mixing Ratio' ]
+${tools_dir}grib_set -s paramId=210007 $sample_g2 macc.grb2
+result=`${tools_dir}grib_get -p discipline,parameterCategory,parameterNumber,shortName,typeOfSizeInterval,aerosolType,name macc.grb2`
+[ "$result" = '0 20 2 aermr07 255 62016 Hydrophobic Organic Matter Aerosol Mixing Ratio' ]
 
-#${tools_dir}grib_set -s paramId=210061 $sample_g2 macc.grb2
-#result=`${tools_dir}grib_get -p discipline,parameterCategory,parameterNumber,shortName,productDefinitionTemplateNumber,constituentType,name macc.grb2`
-#[ "$result" = '0 20 2 co2 40 3 Carbon Dioxide' ]
+${tools_dir}grib_set -s paramId=210061 $sample_g2 macc.grb2
+result=`${tools_dir}grib_get -p discipline,parameterCategory,parameterNumber,shortName,productDefinitionTemplateNumber,constituentType,name macc.grb2`
+[ "$result" = '0 20 2 co2 40 3 Carbon Dioxide' ]
 
-#${tools_dir}grib_set -s paramId=210062 $sample_g2 macc.grb2
-#result=`${tools_dir}grib_get -p discipline,parameterCategory,parameterNumber,shortName,productDefinitionTemplateNumber,constituentType,name macc.grb2`
-#[ "$result" = '0 20 2 ch4 40 2 Methane' ]
+${tools_dir}grib_set -s paramId=210062 $sample_g2 macc.grb2
+result=`${tools_dir}grib_get -p discipline,parameterCategory,parameterNumber,shortName,productDefinitionTemplateNumber,constituentType,name macc.grb2`
+[ "$result" = '0 20 2 ch4 40 2 Methane' ]
 
-#rm -f macc.grb2 | true
+rm -f macc.grb2 | true
 
 
 ${tools_dir}grib_set -s edition=2,setLocalDefinition=1 reduced_gaussian_model_level.grib1 loc.grib2

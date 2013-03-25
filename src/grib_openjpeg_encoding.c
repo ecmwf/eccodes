@@ -124,7 +124,6 @@ cleanup:
 	return err;
 }
 
-
 int grib_openjpeg_decode(grib_context *c, unsigned char *buf, size_t *buflen, double *val, size_t *n_vals) {
 
 	int err = GRIB_SUCCESS;

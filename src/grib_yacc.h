@@ -225,7 +225,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 32 "griby.y"
+#line 34 "griby.y"
 
     char                    *str;
     long                    lval;

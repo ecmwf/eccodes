@@ -2,11 +2,9 @@ C Copyright 2005-2012 ECMWF.
 C
 C This software is licensed under the terms of the Apache Licence Version 2.0
 C which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-C
+C 
 C In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 C virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-C
-C
 C
 C  Fortran 77 Implementation: keys_iterator
 C

@@ -11,11 +11,11 @@
 #include "grib_api_internal.h"
 #include "grib_fortran_prototypes.h"
 
-int grib_read_file_(int* fid, char* buffer, int* nbytes) {
+int grib_read_file_(int* fid, char* buffer, size_t* nbytes) {
   return grib_f_read_file_(fid,buffer,nbytes);
 }
 
-int grib_read_file__(int* fid, char* buffer, int* nbytes) {
+int grib_read_file__(int* fid, char* buffer, size_t* nbytes) {
   return grib_f_read_file_(fid,buffer,nbytes);
 }
 

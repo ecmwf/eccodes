@@ -188,7 +188,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  double dval=(const double)*val;
+  const double dval=(double)*val;
   return pack_double(a, &dval,len);
 }
 

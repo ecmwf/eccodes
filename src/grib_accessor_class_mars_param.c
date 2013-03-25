@@ -16,7 +16,7 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_ascii
    IMPLEMENTS = pack_string;unpack_string
-   IMPLEMENTS = init
+   IMPLEMENTS = init; string_length
    MEMBERS=  const char* paramId
    MEMBERS=  const char* table
    MEMBERS=  const char* param
@@ -36,6 +36,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_string(grib_accessor*, const char*, size_t *len);
 static int unpack_string (grib_accessor*, char*, size_t *len);
+static size_t string_length(grib_accessor*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -62,7 +63,7 @@ static grib_accessor_class _grib_accessor_class_mars_param = {
     0,                    /* free mem                       */
     0,                       /* describes himself         */
     0,                /* get length of section     */
-    0,              /* get length of string      */
+    &string_length,              /* get length of string      */
     0,                /* get number of values      */
     0,                 /* get number of bytes      */
     0,                /* get offset to bytes           */
@@ -99,7 +100,6 @@ static void init_class(grib_accessor_class* c)
 {
 	c->dump	=	(*(c->super))->dump;
 	c->next_offset	=	(*(c->super))->next_offset;
-	c->string_length	=	(*(c->super))->string_length;
 	c->value_count	=	(*(c->super))->value_count;
 	c->byte_count	=	(*(c->super))->byte_count;
 	c->byte_offset	=	(*(c->super))->byte_offset;
@@ -193,5 +193,10 @@ static int    unpack_string(grib_accessor* a, char* val, size_t *len)
 	sprintf(val,"%ld.%ld",param,table);
 	
 	return GRIB_SUCCESS;
+}
+
+static size_t string_length(grib_accessor* a)
+{
+    return 7;
 }
 

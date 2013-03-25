@@ -79,53 +79,53 @@ static char* try_template_path(grib_context* c,const char* dir,const char* name)
 
 grib_handle* grib_external_template(grib_context* c,const char* name)
 {
-  const char *base = c->grib_samples_path;
-  char buffer[1024];
-  char *p = buffer;
-  grib_handle *g = NULL;
-  /* printf("GRIB_TEMPLATES_PATH=%s\n",base); */
+	const char *base = c->grib_samples_path;
+	char buffer[1024];
+	char *p = buffer;
+	grib_handle *g = NULL;
+	/* printf("GRIB_TEMPLATES_PATH=%s\n",base); */
 
-  if(!base) return NULL;
+	if(!base) return NULL;
 
-  while(*base)
-  {
-    if(*base == ':')
-    {
-      *p = 0;
-      g = try_template(c,buffer,name);
-      if(g) return g;
-      p = buffer;
-      base++; /*advance past delimiter*/
-    }
-    *p++ = *base++;
-  }
+	while(*base)
+	{
+		if(*base == ':')
+		{
+			*p = 0;
+			g = try_template(c,buffer,name);
+			if(g) return g;
+			p = buffer;
+			base++; /*advance past delimiter*/
+		}
+		*p++ = *base++;
+	}
 
-  *p = 0;
-  return g = try_template(c,buffer,name);
+	*p = 0;
+	return g = try_template(c,buffer,name);
 }
 
 char* grib_external_template_path(grib_context* c,const char* name)
 {
-  const char *base = c->grib_samples_path;
-  char buffer[1024];
-  char *p = buffer;
-  char *g = NULL;
+	const char *base = c->grib_samples_path;
+	char buffer[1024];
+	char *p = buffer;
+	char *g = NULL;
 
-  if(!base) return NULL;
+	if(!base) return NULL;
 
-  while(*base)
-  {
-    if(*base == ':')
-    {
-      *p = 0;
-      g = try_template_path(c,buffer,name);
-      if(g) return g;
-      p = buffer;
-      base++;
-    }
-    *p++ = *base++;
-  }
+	while(*base)
+	{
+		if(*base == ':')
+		{
+			*p = 0;
+			g = try_template_path(c,buffer,name);
+			if(g) return g;
+			p = buffer;
+			base++;
+		}
+		*p++ = *base++;
+	}
 
-  *p = 0;
-  return g = try_template_path(c,buffer,name);
+	*p = 0;
+	return g = try_template_path(c,buffer,name);
 }

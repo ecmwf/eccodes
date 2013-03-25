@@ -1,3 +1,11 @@
+# Copyright 2005-2012 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
 BEGIN {
 	OFMT = "%.4f"
 	print "<?xml version=\"1.0\" ?>"
@@ -39,12 +47,6 @@ END {
 	}
 }
 
-
-
-
-
-
-
 function jmeter_sample(dir, test_name,test_type,time,timestamp,success) {
 	print "<sample lb=\"" dir test_name "_" test_type "\" t=\"" time "\" ts=\"" timestamp "\" s=\"" success "\" />"
 }
@@ -58,7 +60,6 @@ function junit_sample(dir,test_name,time,success) {
 		print "</testcase>"
 	}
 }
-
 
 function get_time_in_msecs(timestring) {
 	if ( timestring ~ /s$/ ) {
@@ -83,3 +84,4 @@ function get_dir(dir) {
 	len = split(dir,bits,"/")
 	return bits[len]
 }
+

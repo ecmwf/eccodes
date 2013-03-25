@@ -12,8 +12,6 @@
  *
  * Description: file pool
  *
- *
- *
  */
 
 #include "grib_api_internal.h"
@@ -42,15 +40,16 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
 }
 
 static grib_file_pool file_pool= {
-		0,                    /* grib_context* context;*/
-		0,                    /* grib_file* first;*/
-		0,                    /* grib_file* current; */
-		0,                    /* size_t size;*/
-		0,                    /* int number_of_opened_files;*/
-		GRIB_MAX_OPENED_FILES            /* int max_opened_files; */
+             0,                    /* grib_context* context;*/
+             0,                    /* grib_file* first;*/
+             0,                    /* grib_file* current; */
+             0,                    /* size_t size;*/
+             0,                    /* int number_of_opened_files;*/
+  GRIB_MAX_OPENED_FILES            /* int max_opened_files; */
 };
 
-void grib_file_pool_clean() {
+void grib_file_pool_clean()
+{
 	grib_file *file,*next;
 
 	if (!file_pool.first) return;
@@ -63,7 +62,8 @@ void grib_file_pool_clean() {
 	}
 }
 
-static void grib_file_pool_change_id() {
+static void grib_file_pool_change_id()
+{
 	grib_file *file;
 
 	if (!file_pool.first) return;
@@ -75,7 +75,8 @@ static void grib_file_pool_change_id() {
 	}
 }
 
-static grib_file* grib_read_file(grib_context *c,FILE* fh,int *err) {
+static grib_file* grib_read_file(grib_context *c,FILE* fh,int *err)
+{
 	short marker=0;
 	short id=0;
 	grib_file* file;
@@ -97,7 +98,8 @@ static grib_file* grib_read_file(grib_context *c,FILE* fh,int *err) {
 	return file;
 }
 
-static int grib_write_file(FILE *fh,grib_file* file) {
+static int grib_write_file(FILE *fh,grib_file* file)
+{
 	int err=0;
 
 	if (!file)
@@ -115,11 +117,13 @@ static int grib_write_file(FILE *fh,grib_file* file) {
 	return grib_write_file(fh,file->next);
 }
 
-grib_file* grib_file_pool_get_files() {
+grib_file* grib_file_pool_get_files()
+{
 	return file_pool.first;
 }
 
-int grib_file_pool_read(grib_context* c,FILE* fh) {
+int grib_file_pool_read(grib_context* c,FILE* fh)
+{
 	int err=0;
 	short marker=0;
 	grib_file* file;
@@ -145,7 +149,8 @@ int grib_file_pool_read(grib_context* c,FILE* fh) {
 	return GRIB_SUCCESS;
 }
 
-int grib_file_pool_write(FILE* fh) {
+int grib_file_pool_write(FILE* fh)
+{
 	int err=0;
 	if (!file_pool.first)
 		return grib_write_null_marker(fh);
@@ -156,7 +161,8 @@ int grib_file_pool_write(FILE* fh) {
 	return grib_write_file(fh,file_pool.first);
 }
 
-grib_file* grib_file_open(const char* filename, const char* mode,int* err) {
+grib_file* grib_file_open(const char* filename, const char* mode,int* err)
+{
 	grib_file *file=0,*prev=0;
 	int same_mode=0;
 	int is_new=0;
@@ -232,12 +238,13 @@ grib_file* grib_file_open(const char* filename, const char* mode,int* err) {
 	return file;
 }
 
-void grib_file_close(const char* filename,int* err) {
+void grib_file_close(const char* filename,int* err)
+{
 	grib_file* file=NULL;
 
 	/* Performance: keep the files open to avoid opening and closing files when writing the output. */
 	/* So only call fclose() when too many files are open */
-	if (file_pool.number_of_opened_files > GRIB_MAX_OPENED_FILES) {
+	if ( file_pool.number_of_opened_files > GRIB_MAX_OPENED_FILES ) {
 		/*printf("++ closing file %s\n",filename);*/
 		GRIB_PTHREAD_ONCE(&once,&init);
 		GRIB_MUTEX_LOCK(&mutex1);
@@ -297,7 +304,8 @@ grib_file* grib_get_file(const char* filename,int* err)
 	return file;
 }
 
-grib_file* grib_find_file(short id) {
+grib_file* grib_find_file(short id)
+{
 	grib_file* file=NULL;
 
 	if (file_pool.current->name && id==file_pool.current->id) {
@@ -313,7 +321,8 @@ grib_file* grib_find_file(short id) {
 	return file;
 }
 
-grib_file* grib_file_new(grib_context* c, const char* name, int* err) {
+grib_file* grib_file_new(grib_context* c, const char* name, int* err)
+{
 	grib_file* file;
 
 	if (!c) c=grib_context_get_default( );
@@ -343,7 +352,8 @@ grib_file* grib_file_new(grib_context* c, const char* name, int* err) {
 	return file;
 }
 
-void grib_file_delete(grib_file* file) {
+void grib_file_delete(grib_file* file)
+{
 	GRIB_PTHREAD_ONCE(&once,&init);
 	GRIB_MUTEX_LOCK(&mutex1);
 	if (!file) return;

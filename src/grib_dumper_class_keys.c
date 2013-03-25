@@ -27,7 +27,7 @@
    IMPLEMENTS = init;destroy
    MEMBERS = long section_offset
    MEMBERS = long begin
-   MEMBERS = long end
+   MEMBERS = long theEnd
    END_CLASS_DEF
 
  */
@@ -60,7 +60,7 @@ typedef struct grib_dumper_keys {
 /* Members defined in keys */
 	long section_offset;
 	long begin;
-	long end;
+	long theEnd;
 } grib_dumper_keys;
 
 
@@ -202,7 +202,7 @@ static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)
     fprintf(self->dumper.out,"-READ ONLY- ");
 
   /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
-  /*print_offset(self->dumper.out,self->begin,self->end);*/
+  /*print_offset(self->dumper.out,self->begin,self->theEnd);*/
   if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
         fprintf(self->dumper.out,"%s ",a->creator->op);
 

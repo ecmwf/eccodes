@@ -13,9 +13,6 @@
  *
  * Description: how to control decimal precision when packing fields.
  *
- *
- *
- *
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,13 +41,13 @@ int main(int argc, char** argv) {
 
   in = fopen(infile,"r");
   if(!in) {
-    printf("ERROR: unable to open file %s\n",infile);
+    printf("ERROR: unable to open input file %s\n",infile);
     return 1;
   }
 
   out = fopen(outfile,"w");
-  if(!in) {
-    printf("ERROR: unable to open file %s\n",outfile);
+  if(!out) {
+    printf("ERROR: unable to open output file %s\n",outfile);
     return 1;
   }
 
@@ -121,4 +118,3 @@ int main(int argc, char** argv) {
 
   return 0;
 }
-

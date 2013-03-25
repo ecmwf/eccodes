@@ -13,9 +13,6 @@
  *
  * Description: how to use a fieldset.
  *
- *
- *
- *
  */
 
 #include <stdio.h>

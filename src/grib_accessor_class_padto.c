@@ -134,11 +134,11 @@ static size_t preferred_size(grib_accessor* a,int from_handle)
 	grib_accessor_padto* self = (grib_accessor_padto*)a;
 
 	long length=0;
-	long end;
+	long theEnd;
 
-	grib_expression_evaluate_long(a->parent->h,self->expression,&end);
+	grib_expression_evaluate_long(a->parent->h,self->expression,&theEnd);
 
-	length  = end - a->offset;
+	length  = theEnd - a->offset;
 
 	/* printf("preferred_size: prefered: %ld current:%ld %s %s %ld\n", (long)length,(long)a->length,a->cclass->name,a->name,(long)a->offset); */
 

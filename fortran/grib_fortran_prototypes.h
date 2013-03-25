@@ -1,17 +1,26 @@
+/*
+ * Copyright 2005-2012 ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
 
 /* grib_fortran.c */
-int grib_f_read_any_headers_only_from_file_(int *fid, char *buffer, int *nbytes);
-int grib_f_read_any_headers_only_from_file__(int *fid, char *buffer, int *nbytes);
-int grib_f_read_any_headers_only_from_file(int *fid, char *buffer, int *nbytes);
-int grib_f_read_any_from_file_(int *fid, char *buffer, int *nbytes);
-int grib_f_read_any_from_file__(int *fid, char *buffer, int *nbytes);
-int grib_f_read_any_from_file(int *fid, char *buffer, int *nbytes);
-int grib_f_write_file_(int *fid, char *buffer, int *nbytes);
-int grib_f_write_file__(int *fid, char *buffer, int *nbytes);
-int grib_f_write_file(int *fid, char *buffer, int *nbytes);
-int grib_f_read_file_(int *fid, char *buffer, int *nbytes);
-int grib_f_read_file__(int *fid, char *buffer, int *nbytes);
-int grib_f_read_file(int *fid, char *buffer, int *nbytes);
+int grib_f_read_any_headers_only_from_file_(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_any_headers_only_from_file__(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_any_headers_only_from_file(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_any_from_file_(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_any_from_file__(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_any_from_file(int *fid, char *buffer, size_t *nbytes);
+int grib_f_write_file_(int *fid, char *buffer, size_t *nbytes);
+int grib_f_write_file__(int *fid, char *buffer, size_t *nbytes);
+int grib_f_write_file(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_file_(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_file__(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_file(int *fid, char *buffer, size_t *nbytes);
 int grib_f_open_file_(int *fid, char *name, char *op, int lname, int lop);
 int grib_f_open_file__(int *fid, char *name, char *op, int lname, int lop);
 int grib_f_open_file(int *fid, char *name, char *op, int lname, int lop);

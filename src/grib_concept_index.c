@@ -9,10 +9,7 @@
  */
 
 /*
- *
  * Description: concept index
- *
- *
  *
  */
 

@@ -1,8 +1,18 @@
+#
+# Copyright 2005-2012 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
 import traceback
 import sys
 import random
 
-from gribapi import *
+from eccode import *
 
 INPUT='../../data/constant_field.grib1'
 OUTPUT='out.grib'
@@ -14,21 +24,21 @@ def example():
 
     gid = grib_new_from_file(fin)
 
-    nx = grib_get(gid,'Ni')
-    ny = grib_get(gid,'Nj')
+    nx = get(gid,'Ni')
+    ny = get(gid,'Nj')
 
     for step in range(0,24,6):
-        clone_id = grib_clone(gid)
-        grib_set(clone_id,'step',step)
+        clone_id = clone(gid)
+        set(clone_id,'step',step)
 
         values = [random.random() for i in range(nx*ny)]
 
-        grib_set_values(clone_id,values)
+        set_values(clone_id,values)
 
-        grib_write(clone_id,fout)
-        grib_release(clone_id)
+        write(clone_id,fout)
+        release(clone_id)
 
-    grib_release(gid)
+    release(gid)
 
     fin.close()
     fout.close()
@@ -36,7 +46,7 @@ def example():
 def main():
     try:
         example()
-    except GribInternalError,err:
+    except InternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

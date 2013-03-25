@@ -125,8 +125,8 @@ double grib_ibmfloat_error(double x) {
   /* Overflow */
   if (x > ibm_table.vmax) {
      fprintf(stderr, "grib_ibmfloat_error: Number is too large: x=%.20e > xmax=%.20e\n", x, ibm_table.vmax);
-     Assert(0);
-     return 0;
+  	  Assert(0);
+  	  return 0;
   }
 
   binary_search(ibm_table.v, 127, x, &e);

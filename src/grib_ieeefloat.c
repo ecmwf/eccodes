@@ -335,7 +335,7 @@ unsigned long grib_ieee_to_long(double x) {
 #ifdef IEEE
 
 unsigned long grib_ieee64_to_long(double x) {
-  unsigned long lval;
+  unsigned long lval = 0;
 #if IEEE_LE
   unsigned char s[8]={0,};
   unsigned char* buf=(unsigned char*)&x;
@@ -350,7 +350,7 @@ unsigned long grib_ieee64_to_long(double x) {
 }
 
 double grib_long_to_ieee64(unsigned long x){
-  double dval;
+  double dval = 0.0;
 #if IEEE_LE
   unsigned char s[8]={0,};
   unsigned char* buf=(unsigned char*)&x;
@@ -360,6 +360,8 @@ double grib_long_to_ieee64(unsigned long x){
   memcpy(&dval,s,8);
 #elif IEEE_BE
   memcpy(&dval,&x,8);
+#else
+  Assert(!"Neither IEEE_LE nor IEEE_BE defined.");
 #endif
 
   return dval;

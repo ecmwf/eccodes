@@ -1,7 +1,17 @@
+#
+# Copyright 2005-2012 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
 import traceback
 import sys
 
-from gribapi import *
+from eccode import *
 
 VERBOSE=1 # verbose error reporting
 
@@ -13,13 +23,13 @@ def example():
         gid = grib_new_from_file(f)
         if gid is None: break
 
-        message = grib_get_message(gid)
+        message = get_message(gid)
 
-        newgid = grib_new_from_message(message)
-        grib_write(newgid,out)
-        grib_release(newgid)
+        newgid = new_from_message(message)
+        write(newgid,out)
+        release(newgid)
 
-        grib_release(gid)
+        release(gid)
 
     out.close()
     f.close()
@@ -27,7 +37,7 @@ def example():
 def main():
     try:
         example()
-    except GribInternalError,err:
+    except InternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

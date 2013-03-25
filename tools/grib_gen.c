@@ -13,9 +13,6 @@
  *
  * Description:
  *
- *
- *
- *
  */
 
 #include <stdio.h>

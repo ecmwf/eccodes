@@ -13,8 +13,6 @@
  *
  * Description: prints all the data contained in a grib file
  *
- *
- *
  */
 #include <stdio.h>
 #include <stdlib.h>

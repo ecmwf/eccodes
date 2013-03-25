@@ -168,11 +168,11 @@ static int    unpack_string(grib_accessor* a, char* val, size_t *len)
 			int precision=999;
 			i++;
 			if (uname[i]=='.') {
-				char *end=NULL,*start;
+				char *theEnd=NULL,*start;
 				start=(char*)&(uname[++i]);
-				precision=strtol(start,&end,10);
-				Assert(*end!=0);
-				while (uname[i] != *end) i++;
+				precision=strtol(start,&theEnd,10);
+				Assert(*theEnd!=0);
+				while (uname[i] != *theEnd) i++;
 			} 
 			switch(uname[i]){
 

@@ -11,8 +11,6 @@
 /*
  * C Implementation: grib_filter
  *
- *
- *
  */
 
 #include "grib_tools.h"
@@ -45,54 +43,54 @@ int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 int main(int argc, char *argv[]) { return grib_tool(argc,argv);}
 
 int grib_tool_before_getopt(grib_runtime_options* options) {
-  return 0;
+	return 0;
 }
 
 int grib_tool_init(grib_runtime_options* options) {
 
-  options->action = grib_action_from_filter(options->infile_extra->name);
-  if (!options->action) {
-      fprintf(stderr,"%s: error unable to create action\n",options->infile_extra->name);
-      exit(1);
-  }
+	options->action = grib_action_from_filter(options->infile_extra->name);
+	if (!options->action) {
+		fprintf(stderr,"%s: error unable to create action\n",options->infile_extra->name);
+		exit(1);
+	}
 
-  if ( options->outfile && options->outfile->name )
-    options->action->context->outfilename=options->outfile->name;
+	if ( options->outfile && options->outfile->name )
+		options->action->context->outfilename=options->outfile->name;
 
-  return 0;
+	return 0;
 }
 
 int grib_tool_new_filename_action(grib_runtime_options* options,const char* file) {
-   return 0;
+	return 0;
 }  
 
 int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file) {
-   return 0;
+	return 0;
 }
 
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
-  int err=0;
-  
-  if (options->current_infile->name) {
-    size_t len=strlen(options->current_infile->name);
-    grib_set_string(h,"file",options->current_infile->name,&len);
-  }
+	int err=0;
 
-  err=grib_handle_apply_action(h,options->action);
-  if (err != GRIB_SUCCESS && options->fail) {
-     printf("ERROR: %s\n",grib_get_error_message(err));
-     exit(err);
-  }
-  return 0;
+	if (options->current_infile->name) {
+		size_t len=strlen(options->current_infile->name);
+		grib_set_string(h,"file",options->current_infile->name,&len);
+	}
+
+	err=grib_handle_apply_action(h,options->action);
+	if (err != GRIB_SUCCESS && options->fail) {
+		printf("ERROR: %s\n",grib_get_error_message(err));
+		exit(err);
+	}
+	return 0;
 }
 
 int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h) {
-  grib_handle_delete(h);
-  return 0;
+	grib_handle_delete(h);
+	return 0;
 }
 
 void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h) {
-  grib_print_key_values(options,h);
+	grib_print_key_values(options,h);
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)
@@ -104,6 +102,6 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 		exit(err);
 	}
 
-  grib_file_pool_clean();
-  return 0;
+	grib_file_pool_clean();
+	return 0;
 }

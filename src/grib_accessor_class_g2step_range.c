@@ -155,7 +155,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len) {
   char buf[100];
   int ret=0;
   size_t size=0;
-  long start=0,end=0;
+  long start=0,theEnd=0;
 
   ret = grib_get_long_internal(h,self->startStep,&start);
   if (ret) return ret;
@@ -163,16 +163,16 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len) {
   if (self->endStep==NULL) {
     sprintf(buf,"%ld",start);
   } else {
-    ret = grib_get_long_internal(h,self->endStep,&end);
+    ret = grib_get_long_internal(h,self->endStep,&theEnd);
     if (ret) return ret;
 
-	if(start == end)
+	if(start == theEnd)
 	{
-		sprintf(buf,"%ld",end);
+		sprintf(buf,"%ld",theEnd);
 	}
 	else
 	{
-		sprintf(buf,"%ld-%ld",start,end);
+		sprintf(buf,"%ld-%ld",start,theEnd);
 	}
   }
 
@@ -191,19 +191,19 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len){
   grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
   grib_handle* h=a->parent->h;
 
-  long start=0,end=-1;
+  long start=0,theEnd=-1;
   int ret=0;
   char *p=NULL,*q=NULL;
 
   start=strtol(val, &p,10);
-  end=start;
+  theEnd=start;
   
-  if ( *p!=0 ) end=strtol(++p, &q,10);
+  if ( *p!=0 ) theEnd=strtol(++p, &q,10);
   ret=grib_set_long_internal(h,self->startStep,start);
   if (ret) return ret;
 
   if(self->endStep!=NULL) {
-    ret=grib_set_long_internal(h,self->endStep,end);
+    ret=grib_set_long_internal(h,self->endStep,theEnd);
   }
 
   return 0;
@@ -231,7 +231,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 static int unpack_long(grib_accessor* a, long* val, size_t *len) {
   char buff[100];
   size_t bufflen=100;
-  long start,end;
+  long start,theEnd;
   char* p=buff;
   char* q=NULL;
   int err=0;
@@ -241,10 +241,10 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len) {
     return err;
   
   start=strtol(buff, &p,10);
-  end=start;
-  if ( *p!=0 ) end=strtol(++p, &q,10);
+  theEnd=start;
+  if ( *p!=0 ) theEnd=strtol(++p, &q,10);
 
-  *val=end;
+  *val=theEnd;
 
   return 0;
 }

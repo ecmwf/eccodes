@@ -162,7 +162,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
   int ret=0;
-  long i,j,jr,end,Ni,Nj,k,kp;
+  long i,j,jr,theEnd,Ni,Nj,k,kp;
   double tmp;
   long iScansNegatively=0;
   long jScansPositively=0;
@@ -210,10 +210,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
   }
 
   if (self->axis[0] == 'x') {
-    end=(Ni+0.5)/2;
+    theEnd=(Ni+0.5)/2;
     for (j=0;j<Nj;j++) {
       jr=Ni*j;
-      for (i=0;i<end;i++) {
+      for (i=0;i<theEnd;i++) {
         k=jr+i;
         kp=jr+Ni-i-1;
         tmp=values[k];
@@ -226,10 +226,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
         != GRIB_SUCCESS) return ret;
   } else {
     long kpj;
-    end=(Nj+0.5)/2;
+    theEnd=(Nj+0.5)/2;
     for (i=0;i<Ni;i++) {
       kpj=Ni*(Nj-1);
-      for (j=0;j<end;j++) {
+      for (j=0;j<theEnd;j++) {
         k=Ni*j+i;
         kp=kpj-Ni*j+i;
         tmp=values[k];

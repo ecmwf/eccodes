@@ -76,8 +76,9 @@ static void init_class(grib_action_class* c)
 }
 /* END_CLASS_IMP */
 
-#if 0
-/* new GCC compiler v4.5.0 complains function is defined but not used*/
+/*
+ * new GCC compiler v4.5.0 complains function is defined but not used
+ *
 static void check_sections(grib_section *s,grib_handle* h)
 {
   grib_accessor *a = s?s->block->first:NULL;
@@ -89,7 +90,7 @@ static void check_sections(grib_section *s,grib_handle* h)
     a = a->next;
   }
 }
-#endif
+*/
 
 static int notify_change(grib_action* act, grib_accessor * notified,
                          grib_accessor* changed)

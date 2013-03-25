@@ -1,9 +1,17 @@
+/*
+ * Copyright 2005-2012 ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
+
 #include "Python.h"
 #include "grib_api.h"
 
-
 static PyObject* Error;
-
 
 PyDoc_STRVAR(gribapi__doc__,
 		"gribapi point evalutation kernel");
@@ -185,3 +193,4 @@ initgribapi(void)
 	Py_INCREF(Error);
 	PyModule_AddObject(m, "error", Error);
 }
+

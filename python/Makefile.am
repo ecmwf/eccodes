@@ -4,25 +4,25 @@ if CREATING_SHARED_LIBS
 ###############################################################################
 # Case when shared libraries are enabled
 ###############################################################################
-pkgpyexec_LTLIBRARIES = _gribapi_swig.la
+pkgpyexec_LTLIBRARIES = _eccode_swig.la
 
-_gribapi_swig_la_SOURCES = gribapi_swig_wrap.c grib_interface.c grib_interface.h
-_gribapi_swig_la_LIBADD = $(top_builddir)/src/libgrib_api.la $(PYTHON_LIBS)
-_gribapi_swig_la_LDFLAGS = -module -avoid-version $(PYTHON_LDFLAGS)
+_eccode_swig_la_SOURCES = eccode_swig_wrap.c grib_interface.c grib_interface.h
+_eccode_swig_la_LIBADD = $(top_builddir)/src/libgrib_api.la $(PYTHON_LIBS)
+_eccode_swig_la_LDFLAGS = -module -avoid-version $(PYTHON_LDFLAGS)
 
 INCLUDES = $(PYTHON_INCLUDES) -I$(NUMPY_INCLUDE)
 
-gribapi_swig_wrap.c: swig_wrap_$(PYTHON_DATA_HANDLER).c
-	cp -f swig_wrap_$(PYTHON_DATA_HANDLER).c gribapi_swig_wrap.c
+eccode_swig_wrap.c: swig_wrap_$(PYTHON_DATA_HANDLER).c
+	cp -f swig_wrap_$(PYTHON_DATA_HANDLER).c eccode_swig_wrap.c
 
-gribapi_swig.py: swig_wrap_$(PYTHON_DATA_HANDLER).py
-	cp -f swig_wrap_$(PYTHON_DATA_HANDLER).py gribapi_swig.py
+eccode_swig.py: swig_wrap_$(PYTHON_DATA_HANDLER).py
+	cp -f swig_wrap_$(PYTHON_DATA_HANDLER).py eccode_swig.py
 
 # Extra stuff to go into the distribution
 EXTRA_DIST = grib_interface.h \
 			grib_interface.c \
-			gribapi_swig.i \
-			gribapi.py \
+			eccode_swig.i \
+			eccode.py \
 			numpy.i \
 			grib_errors.h \
 			extrules.am \
@@ -34,13 +34,13 @@ EXTRA_DIST = grib_interface.h \
 
 # What else I want installed
 pkgpyexec_DATA = \
-	gribapi.py \
-	gribapi_swig.py
+	eccode.py \
+	eccode_swig.py
 
 CLEANFILES = \
-			gribapi_swig_wrap.c \
-			gribapi_swig.py \
-			_gribapi_swig.la
+			eccode_swig_wrap.c \
+			eccode_swig.py \
+			_eccode_swig.la
 
 include $(DEVEL_RULES)
 
@@ -52,16 +52,16 @@ else
 noinst_SCRIPTS = setup.py
 
 CLEANFILES = $(noinst_SCRIPTS) \
-			gribapi_swig_wrap.c \
-			gribapi_swig.py \
-			_gribapi_swig.so
+			eccode_swig_wrap.c \
+			eccode_swig.py \
+			_eccode_swig.so
 
 # Extra stuff to go into the distribution
 EXTRA_DIST = setup.py.in \
 			grib_interface.h \
 			grib_interface.c \
-			gribapi_swig.i \
-			gribapi.py \
+			eccode_swig.i \
+			eccode.py \
 			numpy.i \
 			grib_errors.h \
 			extrules.am \
@@ -72,11 +72,11 @@ EXTRA_DIST = setup.py.in \
 			swig_wrap_numpy.py
 
 # What I want installed
-pdir = $(libdir)/python$(PYTHON_VERSION)/site-packages/grib_api
+pdir = $(libdir)/python$(PYTHON_VERSION)/site-packages/eccode
 p_DATA = \
-	_gribapi_swig.so \
-	gribapi.py \
-	gribapi_swig.py
+	_eccode_swig.so \
+	eccode.py \
+	eccode_swig.py
 
 do_subst = sed -e 's,[@]LIB_JASPER[@],$(LIB_JASPER),g' \
 			-e 's,[@]JASPER_DIR[@],$(JASPER_DIR),g' \
@@ -92,13 +92,13 @@ clean-local:
 setup.py: setup.py.in
 	$(do_subst) < setup.py.in > setup.py
 
-gribapi_swig_wrap.c: swig_wrap_$(PYTHON_DATA_HANDLER).c
-	cp -f swig_wrap_$(PYTHON_DATA_HANDLER).c gribapi_swig_wrap.c
+eccode_swig_wrap.c: swig_wrap_$(PYTHON_DATA_HANDLER).c
+	cp -f swig_wrap_$(PYTHON_DATA_HANDLER).c eccode_swig_wrap.c
 
-gribapi_swig.py: swig_wrap_$(PYTHON_DATA_HANDLER).py
-	cp -f swig_wrap_$(PYTHON_DATA_HANDLER).py gribapi_swig.py
+eccode_swig.py: swig_wrap_$(PYTHON_DATA_HANDLER).py
+	cp -f swig_wrap_$(PYTHON_DATA_HANDLER).py eccode_swig.py
 
-_gribapi_swig.so: setup.py gribapi_swig_wrap.c gribapi_swig.py
+_eccode_swig.so: setup.py eccode_swig_wrap.c eccode_swig.py
 	$(PYTHON) setup.py build_ext --inplace
 
 include $(DEVEL_RULES)

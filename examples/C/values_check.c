@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
 	grib_values values[2];
 	int nvalues=2;
 	int i;
-	char* name;
+	char* name = NULL;
 
 	f=fopen(infile,"r");
 	if (!f) {

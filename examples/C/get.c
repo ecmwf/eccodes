@@ -13,8 +13,6 @@
  *
  * Description: how to get values using keys.
  *
- *
- *
  */
 #include <stdio.h>
 #include <stdlib.h>

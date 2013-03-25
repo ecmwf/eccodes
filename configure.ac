@@ -59,7 +59,7 @@ AC_SUBST(PERLDIR)
 
 
 dnl Checks for programs.
-AC_PROG_CC(xlc_r xlc gcc cc pgcc) 
+AC_PROG_CC(xlc_r xlc gcc cc pgcc)
 AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_LN_S
@@ -72,15 +72,20 @@ AC_PROG_FC(pgf90 xlf90 gfortran f90 ifort)
 dnl check availability of pthreads
 AC_ARG_ENABLE([pthread],
   [AS_HELP_STRING([--enable-pthread],[enable POSIX threads [by default disabled]])],
-    GRIB_PTHREADS=1 , GRIB_PTHREADS=0
+    [pthreads=${enableval}] , [pthreads=no]
 )
+if test "x${pthreads}" = xyes; then
+   GRIB_PTHREADS=1
+else
+   GRIB_PTHREADS=0
+fi
 
 if test $GRIB_PTHREADS -eq 1
 then
-AC_GRIB_PTHREADS
-AC_GRIB_LINUX_PTHREADS
+   AC_GRIB_PTHREADS
+   AC_GRIB_LINUX_PTHREADS
 else
-GRIB_LINUX_PTHREADS=0
+   GRIB_LINUX_PTHREADS=0
 fi
 
 AC_DEFINE_UNQUOTED(GRIB_PTHREADS,$GRIB_PTHREADS,1->pthreads enabled 0->pthreads disabled)
@@ -123,10 +128,10 @@ AC_CHECK_FUNC([posix_memalign],
 
 AC_ARG_ENABLE([align-memory],
   [AS_HELP_STRING([--enable-align-memory],[enable memory alignment [by default disabled]])],
-AC_DEFINE_UNQUOTED(GRIB_MEM_ALIGN,1,memory alignment required) ,
-	 )
+                  AC_DEFINE_UNQUOTED(GRIB_MEM_ALIGN,1,memory alignment required),
+)
 
-dnl use vectorised code     
+dnl use vectorised code
 AC_ARG_ENABLE([vector],
   [AS_HELP_STRING([--enable-vector],[enable vectorised code [by default disabled]] )],
 	 [vectorise=${enableval}],[vectorise=no])
@@ -162,6 +167,7 @@ fi
 AC_SUBST(DEVEL_RULES)
 AC_SUBST(GRIB_DEVEL)
 
+AM_CONDITIONAL([WITH_MARS_TESTS], [test $GRIB_DEVEL -eq 1])
 
 dnl Large file support
 AC_FUNC_FSEEKO
@@ -206,7 +212,13 @@ AC_SUBST(GRIB_DEFINITION_PATH)
 dnl Fortran interface
 AC_ARG_ENABLE([fortran],
   [AS_HELP_STRING([--disable-fortran],[disable fortran interface [by default enabled]])],
-     without_fortran=1,without_fortran=0)
+     [with_fortran=${enableval}], [with_fortran=yes])
+
+if test "x${with_fortran}" = xyes; then
+   without_fortran=0
+else
+   without_fortran=1
+fi
 
 if test "x$FC" = "x"
 then
@@ -256,7 +268,7 @@ then
     AC_MSG_ERROR([unable to find compiler flag for modules inclusion])
   fi
   F90_MODULE_FLAG=$ax_cv_f90_modflag
-     AC_SUBST([F90_MODULE_FLAG])
+  AC_SUBST([F90_MODULE_FLAG])
 fi
 
 dnl ifs_samples
@@ -306,9 +318,8 @@ AC_SUBST(EMOS_LIB)
 dnl timer
 AC_ARG_ENABLE([timer],
   [AS_HELP_STRING([--enable-timer],[enable timer [by default disabled]])],
-     with_timer=1,with_timer=0)
-if test ${with_timer} -eq 1
-then
+     [with_timer=${enableval}], [with_timer=no])
+if test "x${with_timer}" = xyes; then
   AC_DEFINE(GRIB_TIMER,1,1->Timer on 0->Timer off)
 else
   AC_DEFINE(GRIB_TIMER,0,1->Timer on 0->Timer off)
@@ -318,9 +329,8 @@ fi
 dnl multithread packing
 AC_ARG_ENABLE([omp-packing],
   [AS_HELP_STRING([--enable-omp-packing],[enable OpenMP multithreaded packing [by default disabled]])],
-     with_omp=1,with_omp=0)
-if test ${with_omp} -eq 1
-then
+     [with_omp=${enableval}], [with_omp=no])
+if test "x${with_omp}" = xyes; then
   AC_DEFINE(OMP_PACKING,1,1->OpenMP packing 0->single thread packing)
 else
   AC_DEFINE(OMP_PACKING,0,1->OpenMP packing 0->single thread packing)
@@ -332,12 +342,12 @@ AC_ARG_WITH([netcdf],
 with_netcdf=0
 if test $netcdf_dir != 'none'
 then
-    with_netcdf=1
-    CFLAGS="$CFLAGS -I${netcdf_dir}/include"
+	with_netcdf=1
+	CFLAGS="$CFLAGS -I${netcdf_dir}/include"
     LDFLAGS="$LDFLAGS -L${netcdf_dir}/lib"
     AC_CHECK_LIB(netcdf,nc_open,netcdf_ok=1,netcdf_ok=0)
-    if test $netcdf_ok -eq 0
-    then
+	if test $netcdf_ok -eq 0
+	then
       AC_MSG_NOTICE([
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   CONFIGURATION ERROR: netcdf test not passed.                                                               
@@ -348,7 +358,7 @@ then
 	  test 0 -eq 1
 	  exit 
     fi
-    LIBS="-lnetcdf $LIBS"
+	LIBS="-lnetcdf $LIBS"
     AC_DEFINE(HAVE_NETCDF,1,NETCDF enabled)
 fi
 
@@ -401,16 +411,16 @@ then
       AC_SUBST(LIB_OPENJPEG)
     elif test $jasper_ok -eq 1
     then
-      jpeg_ok=1
+	  jpeg_ok=1
       LIB_JASPER='-ljasper'
       LIBS="$LIB_JASPER $LIBS"
       AC_DEFINE(HAVE_LIBJASPER,1,Define if you have JPEG version 2 "Jasper" library)
       AC_SUBST(LIB_JASPER)
 	fi
 
-      if test $jpeg_ok -eq 0
-      then
-         AC_MSG_NOTICE([
+	if test $jpeg_ok -eq 0
+	then
+      AC_MSG_NOTICE([
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   CONFIGURATION ERROR: jpeg library (jasper or openjpeg) required.                                                               
@@ -570,12 +580,12 @@ then
     has_numpy=`$PYTHON -c "import numpy;print numpy" 2> /dev/null`
     if test "x$has_numpy" = "x"
     then
-        AC_MSG_RESULT(no)
-        AC_MSG_ERROR([NumPy is not installed. Use --disable-numpy if you want to disable Numpy from the build.])
+       AC_MSG_RESULT(no)
+       AC_MSG_ERROR([NumPy is not installed. Use --disable-numpy if you want to disable Numpy from the build.])
     else
-        AC_MSG_RESULT(yes)
-        NUMPY_INCLUDE=`$PYTHON -c "import numpy;print numpy.get_include()"`
-        AC_SUBST(NUMPY_INCLUDE)
+       AC_MSG_RESULT(yes)
+       NUMPY_INCLUDE=`$PYTHON -c "import numpy;print numpy.get_include()"`
+       AC_SUBST(NUMPY_INCLUDE)
     fi
   else
     data_handler=array
@@ -623,7 +633,7 @@ AC_CHECK_FUNCS([bzero gettimeofday])
 
 AX_LINUX_DISTRIBUTION
 
-AC_OUTPUT( Makefile src/Makefile fortran/Makefile tools/Makefile definitions/Makefile samples/Makefile ifs_samples/grib1/Makefile ifs_samples/grib1_mlgrib2/Makefile ifs_samples/grib1_mlgrib2_ieee64/Makefile tests/Makefile examples/C/Makefile examples/F90/Makefile tigge/Makefile perl/GRIB-API/Makefile.PL perl/Makefile python/Makefile examples/python/Makefile rpms/grib_api.spec rpms/grib_api.pc rpms/grib_api_f90.pc)
+AC_OUTPUT( Makefile src/Makefile fortran/Makefile tools/Makefile definitions/Makefile samples/Makefile ifs_samples/grib1/Makefile ifs_samples/grib1_mlgrib2/Makefile ifs_samples/grib1_mlgrib2_ieee64/Makefile tests/Makefile mars_tests/Makefile examples/C/Makefile examples/F90/Makefile tigge/Makefile perl/GRIB-API/Makefile.PL perl/Makefile python/Makefile examples/python/Makefile rpms/grib_api.spec rpms/grib_api.pc rpms/grib_api_f90.pc)
 
 AC_MSG_NOTICE([
 

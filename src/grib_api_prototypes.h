@@ -1,4 +1,12 @@
-
+/*
+ * Copyright 2005-2012 ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
 /* action.c */
 void grib_dump(grib_action *a, FILE *f, int l);
 void grib_xref(grib_action *a, FILE *f, const char *path);
@@ -674,7 +682,7 @@ long grib_get_api_version(void);
 void grib_print_api_version(FILE *out);
 grib_context *grib_context_get_default(void);
 grib_context *grib_context_new(grib_context *parent);
-char *grib_context_full_path(grib_context *c, const char *basename);
+char *grib_context_full_defs_path(grib_context *c, const char *basename);
 void grib_context_free(const grib_context *c, void *p);
 void grib_context_free_persistent(const grib_context *c, void *p);
 void grib_context_reset(grib_context *c);
@@ -735,7 +743,7 @@ int grib_get_gaussian_latitudes(long trunc, double *lats);
 
 /* grib_handle.c */
 grib_section *grib_section_create(grib_handle *h, grib_accessor *owner);
-void grib_swap_sections(grib_section *old, grib_section *new);
+void grib_swap_sections(grib_section *the_old, grib_section *the_new);
 void grib_empty_section(grib_context *c, grib_section *b);
 void grib_section_delete(grib_context *c, grib_section *b);
 int grib_handle_delete(grib_handle *h);
@@ -750,10 +758,9 @@ grib_handle *grib_handle_new_from_partial_message(grib_context *c, void *data, s
 grib_handle *grib_handle_new_from_message(grib_context *c, void *data, size_t buflen);
 grib_handle *grib_handle_new_from_multi_message(grib_context *c, void **data, size_t *buflen, int *error);
 grib_handle *grib_handle_new_from_file(grib_context *c, FILE *f, int *error);
-grib_handle *grib_handle_new_from_nc_file(grib_context *c, const char *file, int *error);
-grib_handle *grib_handle_headers_only_new_from_file(grib_context *c, FILE *f, int *error);
-grib_handle *grib_gts_handle_new_from_file(grib_context *c, FILE *f, int *error);
-grib_handle *grib_bufr_handle_new_from_file(grib_context *c, FILE *f, int *error);
+grib_handle *eccode_grib_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
+grib_handle *eccode_gts_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
+grib_handle *eccode_bufr_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 grib_multi_handle *grib_multi_handle_new(grib_context *c);
 int grib_multi_handle_delete(grib_multi_handle *h);
 int grib_multi_handle_append(grib_handle *h, int start_section, grib_multi_handle *mh);
@@ -761,6 +768,8 @@ int grib_multi_handle_write(grib_multi_handle *h, FILE *f);
 int grib_get_partial_message(grib_handle *h, const void **msg, size_t *len, int start_section);
 int grib_get_partial_message_copy(grib_handle *h, void *message, size_t *len, int start_section);
 int grib_get_message_copy(grib_handle *h, void *message, size_t *len);
+int grib_get_message_offset(grib_handle *h, off_t *offset);
+int grib_get_message_size(grib_handle *h, size_t *size);
 int grib_get_message(grib_handle *h, const void **msg, size_t *size);
 int grib_get_message_headers(grib_handle *h, const void **msg, size_t *size);
 grib_handle *grib_handle_new(grib_context *c);
@@ -769,6 +778,7 @@ int grib_handle_apply_action(grib_handle *h, grib_action *a);
 int grib_handle_prepare_action(grib_handle *h, grib_action *a);
 void grib_multi_support_on(grib_context *c);
 void grib_multi_support_off(grib_context *c);
+void grib_multi_support_reset_file(grib_context* c, FILE* f);
 void grib_gts_header_on(grib_context *c);
 void grib_gts_header_off(grib_context *c);
 int grib_get_gribex_mode(grib_context *c);
@@ -799,12 +809,10 @@ int wmo_read_grib_from_file(FILE *f, void *buffer, size_t *len);
 int wmo_read_bufr_from_file(FILE *f, void *buffer, size_t *len);
 int wmo_read_gts_from_file(FILE *f, void *buffer, size_t *len);
 int wmo_read_any_from_stream(void *stream_data, long (*stream_proc )(void *, void *buffer, long len ), void *buffer, size_t *len);
-void *wmo_read_gts_from_file_malloc(FILE *f, size_t *size, int *err);
-void *wmo_read_any_from_file_malloc(FILE *f, size_t *size, int *err);
-void *wmo_read_grib_from_file_malloc(FILE *f, size_t *size, int *err);
-void *wmo_read_bufr_from_file_malloc(FILE *f, size_t *size, int *err);
-int grib_read_any_headers_only_from_file_alloc(grib_context *ctx, FILE *f, void **buffer, size_t *length, off_t *offset);
-int grib_read_any_from_file_alloc(grib_context *ctx, FILE *f, void **buffer, size_t *length);
+void *wmo_read_gts_from_file_malloc(FILE *f, int headers_only, size_t *size, off_t *offset, int *err);
+void *wmo_read_any_from_file_malloc(FILE *f, int headers_only, size_t *size, off_t *offset, int *err);
+void *wmo_read_grib_from_file_malloc(FILE *f, int headers_only, size_t *size, off_t *offset, int *err);
+void *wmo_read_bufr_from_file_malloc(FILE *f, int headers_only, size_t *size, off_t *offset, int *err);
 int grib_read_any_headers_only_from_file(grib_context *ctx, FILE *f, void *buffer, size_t *len);
 int grib_read_any_from_file(grib_context *ctx, FILE *f, void *buffer, size_t *len);
 int grib_read_any_from_memory_alloc(grib_context *ctx, unsigned char **data, size_t *data_length, void **buffer, size_t *length);

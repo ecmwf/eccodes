@@ -75,4 +75,6 @@ grib1to2$(EXEEXT): grib1to2.txt
 	sed "s:toolsdir:$(bindir):" grib1to2.txt > grib1to2
 	chmod +x grib1to2
 
-noinst_HEADERS = grib_tools.h
+# wingetopt files are for Microsoft Windows Visual Studio support
+noinst_HEADERS = grib_tools.h wingetopt.h wingetopt.c
+

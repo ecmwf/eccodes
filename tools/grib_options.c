@@ -11,11 +11,13 @@
 /*
  * C Implementation: grib_options
  *
- *
- *
  */
-
 #include "grib_tools.h"
+
+#ifdef _WIN32
+/* Microsoft Windows Visual Studio support */
+#include "wingetopt.h"
+#endif
 
 char* names[]={"parameter","vertical","geography","data","mars","local"};
 int names_count=6;
@@ -102,6 +104,23 @@ grib_options_help grib_options_help_list[] ={
 
 int grib_options_help_count=sizeof(grib_options_help_list)/sizeof(grib_options_help);
 
+
+void usage() {
+  int i=0;
+  printf("\nNAME \t%s\n\n",grib_tool_name);
+  printf("DESCRIPTION\n\t%s\n\n",grib_tool_description);
+  printf("USAGE \n\t%s %s\n\n",grib_tool_name,grib_tool_usage);
+  printf("OPTIONS\n");
+  for (i=0;i<grib_options_count;i++) {
+    if (grib_options[i].command_line)
+      printf("\t-%c %s\t%s",grib_options[i].id[0],
+              grib_options_get_args(grib_options[i].id),
+              grib_options_get_help(grib_options[i].id));
+  }
+  printf("\n\n");
+  exit(1);
+}
+
 char* grib_options_get_option(const char* id) {
   int i=0;
 
@@ -170,7 +189,9 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
   if (grib_options_on("B:"))
     options->orderby=grib_options_get_option("B:");
 
-  if (grib_options_on("x")) options->mode=MODE_HEADERS_ONLY;
+  if (grib_options_on("x")) options->headers_only=1;
+  else options->headers_only=0;
+
   if (grib_options_on("T:")) {
 	char* x=grib_options_get_option("T:");
 	if ( *x == 'T' ) options->mode=MODE_GTS;
@@ -261,9 +282,10 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
   
   options->requested_print_keys_count=MAX_KEYS;
   ret = parse_keyval_string(grib_tool_name,karg,0,GRIB_TYPE_UNDEFINED,
-      options->requested_print_keys,&(options->requested_print_keys_count));
+	      options->requested_print_keys,&(options->requested_print_keys_count));
   if (ret == GRIB_INVALID_ARGUMENT) usage();
   GRIB_CHECK_NOLINE(ret,0);
+
 
   options->strict=grib_options_on("S");
 
@@ -282,14 +304,14 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
   if (grib_options_on("s:")) {
     sarg=grib_options_get_option("s:");
     options->set_values_count=MAX_KEYS;
-    ret=parse_keyval_string(grib_tool_name,sarg,1,GRIB_TYPE_UNDEFINED,options->set_values,&(options->set_values_count));
+    ret=parse_keyval_string(grib_tool_name, sarg,1,GRIB_TYPE_UNDEFINED,options->set_values,&(options->set_values_count));
     if (ret == GRIB_INVALID_ARGUMENT) usage();
   }
 
   if (grib_options_on("R:")) {
     sarg=grib_options_get_option("R:");
     options->tolerance_count=MAX_KEYS;
-    ret=parse_keyval_string(grib_tool_name,sarg,1,GRIB_TYPE_DOUBLE,options->tolerance,&(options->tolerance_count));
+    ret=parse_keyval_string(grib_tool_name, sarg,1,GRIB_TYPE_DOUBLE,options->tolerance,&(options->tolerance_count));
     if (ret == GRIB_INVALID_ARGUMENT) usage();
   }
 
@@ -324,6 +346,7 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
 
   return GRIB_SUCCESS;
 }
+
 
 char* grib_options_get_help(char* id) {
    int i=0;
@@ -364,22 +387,6 @@ char* grib_options_get_args(char* id) {
      }
    }
    return err;
-}
-
-void usage() {
-  int i=0;
-  printf("\nNAME \t%s\n\n",grib_tool_name);
-  printf("DESCRIPTION\n\t%s\n\n",grib_tool_description);
-  printf("USAGE \n\t%s %s\n\n",grib_tool_name,grib_tool_usage);
-  printf("OPTIONS\n");
-  for (i=0;i<grib_options_count;i++) {
-    if (grib_options[i].command_line)
-      printf("\t-%c %s\t%s",grib_options[i].id[0],
-              grib_options_get_args(grib_options[i].id),
-              grib_options_get_help(grib_options[i].id));
-  }
-  printf("\n\n");
-  exit(1);
 }
 
 void usage_doxygen() {

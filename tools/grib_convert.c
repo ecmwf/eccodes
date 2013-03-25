@@ -11,8 +11,6 @@
 /*
  * C Implementation: grib_convert
  *
- *
- *
  */
 
 #include "grib_tools.h"

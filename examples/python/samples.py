@@ -1,7 +1,17 @@
+#
+# Copyright 2005-2012 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
 import traceback
 import sys
 
-from gribapi import *
+from eccode import *
 
 INPUT='../../data/tp_ecmwf.grib'
 OUTPUT='out.grib'
@@ -27,7 +37,7 @@ def example():
         gid = grib_new_from_file(fin)
         if gid is None: break
 
-        curr_vals = grib_get_values(gid)
+        curr_vals = get_values(gid)
 
         if prev_vals is None:
             result = prev_vals = curr_vals
@@ -44,16 +54,16 @@ def example():
             keys['startStep'] += 12
             keys['endStep'] += 12
 
-        clone_id = grib_clone(sample_id)
+        clone_id = clone(sample_id)
 
         for key in keys:
-            grib_set(clone_id,key,keys[key])
+            set(clone_id,key,keys[key])
 
-        grib_set_values(clone_id,result * 1000)
+        set_values(clone_id,result * 1000)
 
-        grib_write(clone_id,fout)
+        write(clone_id,fout)
 
-        grib_release(gid)
+        release(gid)
 
     fin.close()
     fout.close()
@@ -61,7 +71,7 @@ def example():
 def main():
     try:
         example()
-    except GribInternalError,err:
+    except InternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-./prepare_pydocs.pl < ../python/gribapi.py > gribapi.py
+./prepare_pydocs.pl < ../python/eccode.py > eccode.py
 
 cd ../tools
 ./make_dox.ksh

@@ -12,7 +12,6 @@
 !
 !
 !
-!
 program set
   use grib_api
   implicit none

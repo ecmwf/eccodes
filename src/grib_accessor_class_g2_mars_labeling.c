@@ -235,51 +235,51 @@ static int extra_set(grib_accessor* a,long val) {
 	case 1:
 		/* type */
 		switch (val) {
-		case 0:	/* Unknown       (0) */
+		case 0:		/* Unknown       (0) */
 			typeOfProcessedData=255;
 			typeOfGeneratingProcess=255;
 			break;
-		case 1:	/* First guess      (fg) */
-		case 3:	/* Initialised analysis      (ia) */
+		case 1:		/* First guess          (fg) */
+		case 3:		/* Initialised analysis (ia) */
 			typeOfProcessedData=0;
 			typeOfGeneratingProcess=1;
 			break;
-		case 2:	/* Analysis       (an) */
-		case 4:	/* Oi analysis      (oi) */
-		case 5:	/* 3d variational analysis     (3v) */
-		case 6:	/* 4d variational analysis     (4v) */
-		case 7:	/* 3d variational gradients     (3g) */
-		case 8:	/* 4d variational gradients     (4g) */
+		case 2:		/* Analysis                    (an) */
+		case 4:		/* Oi analysis                 (oi) */
+		case 5:		/* 3d variational analysis     (3v) */
+		case 6:		/* 4d variational analysis     (4v) */
+		case 7:		/* 3d variational gradients    (3g) */
+		case 8:		/* 4d variational gradients    (4g) */
 			typeOfProcessedData=0;
 			typeOfGeneratingProcess=0;
 			break;
-		case 9:	/* Forecast       (fc) */
+		case 9:		/* Forecast  (fc) */
 			typeOfProcessedData=1;
 			typeOfGeneratingProcess=2;
 			break;
-		case 10:	/* Control forecast      (cf) */
+		case 10:	/* Control forecast  (cf) */
 			typeOfProcessedData=3;
 			typeOfGeneratingProcess=4;
 			break;
-		case 11:	/* Perturbed forecast      (pf) */
+		case 11:	/* Perturbed forecast    (pf) */
 			typeOfProcessedData=4;
 			typeOfGeneratingProcess=4;
 			break;
-		case 12:	/* Errors in first guess    (ef) */
+		case 12:	/* Errors in first guess  (ef) */
 		case 13:	/* Errors in analysis     (ea) */
 			typeOfProcessedData=255;
 			typeOfGeneratingProcess=7;
 			break;
-		case 14:	/* Cluster means      (cm) */
+		case 14:	/* Cluster means              (cm) */
 		case 15:	/* Cluster std deviations     (cs) */
 			typeOfProcessedData=255;
 			typeOfGeneratingProcess=4;
 			break;
-		case 16:	/* Forecast probability      (fp) */
+		case 16:	/* Forecast probability  (fp) */
 			typeOfProcessedData=8;
 			typeOfGeneratingProcess=5;
 			break;
-		case 17:	/* Ensemble mean      (em) */
+		case 17:	/* Ensemble mean  (em) */
 			derivedForecast=0;
 			grib_get_string(a->parent->h,self->stepType,stepType,&stepTypelen);
 			if (!strcmp(stepType,"instant")) {
@@ -301,72 +301,74 @@ static int extra_set(grib_accessor* a,long val) {
 			typeOfProcessedData=255;
 			typeOfGeneratingProcess=4;
 			break;
-		case 19:		/* Forecast accumulation      (fa) */
-		case 20:		/* Climatology       (cl) */
-		case 21:		/* Climate simulation      (si) */
-		case 22:		/* Climate 30 days simulation    (s3) */
-		case 23:		/* Empirical distribution      (ed) */
-		case 24:		/* Tubes       (tu) */
-		case 25:		/* Flux forcing realtime     (ff) */
-		case 26:		/* Ocean forward      (of) */
-		case 27:		/* Extreme forecast index     (efi) */
-		case 28:		/* Extreme forecast index control    (efic) */
-		case 29:		/* Probability boundaries      (pb) */
+		case 19:	/* Forecast accumulation           (fa)  */
+		case 20:	/* Climatology                     (cl)  */
+		case 21:	/* Climate simulation              (si)  */
+		case 22:	/* Climate 30 days simulation      (s3)  */
+		case 23:	/* Empirical distribution          (ed)  */
+		case 24:	/* Tubes                           (tu)  */
+		case 25:	/* Flux forcing realtime           (ff)  */
+		case 26:	/* Ocean forward                   (of)  */
+		case 27:	/* Extreme forecast index          (efi) */
+		case 28:	/* Extreme forecast index control  (efic)*/
+		case 29:	/* Probability boundaries          (pb)  */
 			typeOfProcessedData=255;
 			typeOfGeneratingProcess=255;
 			break;
-		case 30:		/* Event probability      (ep) */
+		case 30:	/* Event probability      (ep) */
 			typeOfProcessedData=8;
 			typeOfGeneratingProcess=5;
 			break;
-		case 31:		/* Bias-corrected Forecast      (bf) */
+		case 31:	/* Bias-corrected Forecast      (bf) */
 			typeOfProcessedData=1;
 			typeOfGeneratingProcess=3;
 			break;
-		case 32:		/* Climate distribution      (cd) */
-		case 33:		/* 4D analysis increments     (4i) */
-		case 34:		/* Gridded observations      (go) */
-		case 35:		/* Model errors      (me) */
-		case 36:		/* Probability distribution      (pd) */
-		case 37:		/* Cluster information      (ci) */
-		case 38:		/* Shift of Tail     (sot) */
-		case 40:		/* Images       (im) */
-		case 42:		/* Simulated images      (sim) */
+		case 32:	/* Climate distribution      (cd)  */
+		case 33:	/* 4D analysis increments    (4i)  */
+		case 34:	/* Gridded observations      (go)  */
+		case 35:	/* Model errors              (me)  */
+		case 36:	/* Probability distribution  (pd)  */
+		case 37:	/* Cluster information       (ci)  */
+		case 38:	/* Shift of Tail             (sot) */
+		case 40:	/* Images                    (im)  */
+		case 42:	/* Simulated images          (sim) */
 			typeOfProcessedData=255;
 			typeOfGeneratingProcess=255;
 			break;
-		case 43:		/* Weighted ensemble mean     (wem) */
-		case 44:		/* Weighted ensemble standard deviation    (wes) */
-		case 45:		/* Cluster representative      (cr) */
-		case 46:		/* Scaled ensemble standard deviation    (ses) */
+		case 43:	/* Weighted ensemble mean                   (wem)  */
+		case 44:	/* Weighted ensemble standard deviation     (wes)  */
+		case 45:	/* Cluster representative                   (cr)   */
+		case 46:	/* Scaled ensemble standard deviation       (ses)  */
+		case 47:	/* Time average ensemble mean               (taem) */
+		case 48:	/* Time average ensemble standard deviation (taes) */
 			typeOfProcessedData=255;
 			typeOfGeneratingProcess=4;
 			break;
-		case 50:		/* Sensitivity gradient      (sg) */
-		case 52:		/* Sensitivity forecast      (sf) */
-		case 60:		/* Perturbed analysis      (pa) */
-		case 61:		/* Initial condition perturbation     (icp) */
-		case 62:		/* Singular vector      (sv) */
-		case 63:		/* Adjoint singular vector     (as) */
-		case 64:		/* Signal variance      (svar) */
+		case 50:	/* Sensitivity gradient            (sg)   */
+		case 52:	/* Sensitivity forecast            (sf)   */
+		case 60:	/* Perturbed analysis              (pa)   */
+		case 61:	/* Initial condition perturbation  (icp)  */
+		case 62:	/* Singular vector                 (sv)   */
+		case 63:	/* Adjoint singular vector         (as)   */
+		case 64:	/* Signal variance                 (svar) */
 			typeOfProcessedData=255;
 			typeOfGeneratingProcess=255;
 			break;
-		case 65:		/* Calibration/Validation forecast      (cv) */
+		case 65:	/* Calibration/Validation forecast  (cv) */
 			typeOfProcessedData=5;
 			typeOfGeneratingProcess=4;
 			break;
-		case 70:		/* Ocean reanalysis      (or) */
-		case 71:		/* Flux forcing      (fx) */
-		case 80:		/* Forecast mean      (fcmean) */
-		case 81:		/* Forecast maximum      (fcmax) */
-		case 82:		/* Forecast minimum      (fcmin) */
-		case 83:		/* Forecast standard deviation     (fcstdev) */
+		case 70:	/* Ocean reanalysis     (or) */
+		case 71:	/* Flux forcing         (fx) */
+		case 80:	/* Forecast mean        (fcmean) */
+		case 81:	/* Forecast maximum     (fcmax) */
+		case 82:	/* Forecast minimum     (fcmin) */
+		case 83:	/* Forecast standard deviation  (fcstdev) */
 			typeOfProcessedData=255;
 			typeOfGeneratingProcess=255;
 			break;
-		case 84:		/* Ensemble mean of temporal mean   (emtm) */
-		case 85:		/* Ensemble standard deviation of temporal mean  (estdtm) */
+		case 84:	/* Ensemble mean of temporal mean   (emtm) */
+		case 85:	/* Ensemble standard deviation of temporal mean  (estdtm) */
 			typeOfProcessedData=255;
 			typeOfGeneratingProcess=4;
 			break;

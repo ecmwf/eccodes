@@ -6,9 +6,9 @@ use DBI;
 
 use strict;
 
-my $host="wrep-metadata-devel.ecmwf.int";
-my $user="max";
-my $pass="max";
+my $host="wrep-db-misc-prod";
+my $user="ecmwf";
+my $pass="";
 
 my $dbh  = DBI->connect("dbi:mysql:;host=$host",$user,$pass) or die $DBI::errstr;
 

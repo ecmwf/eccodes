@@ -9,13 +9,9 @@
  */
 
 /*
- * C Implementation: fieldset
+ * C Implementation: nearest
  *
- * Description: how to use a fieldset.
- *
- *
- *
- *
+ * Description: how to get nearest point(s)
  */
 
 #include <stdio.h>

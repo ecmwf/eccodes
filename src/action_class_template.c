@@ -136,7 +136,7 @@ grib_action* get_empty_template(grib_context* c,int *err) {
 	char fname[]="empty_template.def";
 	char* path=0;
 	
-	path=grib_context_full_path(c,fname);
+	path=grib_context_full_defs_path(c,fname);
 	if (path) {
 		*err=GRIB_SUCCESS;
 		return grib_parse_file(c, path);
@@ -165,7 +165,7 @@ static int  create_accessor(grib_section* p, grib_action* act, grib_loader *h ){
   if(a->arg){
     ret = grib_recompose_name(p->h,as,a->arg,fname,1);
 
-	if ((fpath=grib_context_full_path(p->h->context,fname))==NULL) {
+	if ((fpath=grib_context_full_defs_path(p->h->context,fname))==NULL) {
       if (!a->nofail) {
         grib_context_log(p->h->context,GRIB_LOG_ERROR,
                          "Unable to find template %s from %s ",act->name,fname);
@@ -212,7 +212,7 @@ static grib_action* reparse(grib_action* a,grib_accessor* acc,int *doit)
     char fname[1024];
     grib_recompose_name(acc->parent->h,NULL,self->arg,fname,1);
 
-    if ((fpath=grib_context_full_path(acc->parent->h->context,fname))==NULL) {
+    if ((fpath=grib_context_full_defs_path(acc->parent->h->context,fname))==NULL) {
       if (!self->nofail) {
         grib_context_log(acc->parent->h->context,GRIB_LOG_ERROR,
                          "Unable to find template %s from %s ",a->name,fname);

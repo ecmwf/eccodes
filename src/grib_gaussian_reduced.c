@@ -19,9 +19,6 @@
  *              ilon_first,ilon_last of the first and last point
  *              given the number of points along a parallel (pl)
  *
- *
- *
- *
  */
 #define EFDEBUG 0
 

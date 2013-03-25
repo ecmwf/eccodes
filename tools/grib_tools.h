@@ -10,7 +10,9 @@
 
 #include "grib_api_internal.h"
 #include <stdio.h>
-#include <unistd.h>
+#ifndef _WIN32
+#  include <unistd.h>
+#endif
 #include <string.h>
 
 #ifndef GRIB_TOOLS_H
@@ -34,9 +36,8 @@
 #define MAX_CONSTRAINT_VALUES 500
 
 #define MODE_GRIB 	      0
-#define MODE_HEADERS_ONLY 1
-#define MODE_GTS          2
-#define MODE_BUFR         3
+#define MODE_GTS          1
+#define MODE_BUFR         2
 
 typedef union grib_typed_value {
   long*        long_value;
@@ -151,6 +152,7 @@ typedef struct grib_runtime_options {
   grib_context* context;
   int stop;
   int mode;
+  int headers_only;
   int skip_all;
   grib_values tolerance[MAX_KEYS];
 } grib_runtime_options;

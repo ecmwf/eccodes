@@ -13,9 +13,6 @@
  *
  * Description:
  *
- *
- *
- *
  */
 
 #include "grib_api_internal.h"
@@ -70,7 +67,7 @@ int grib_keys_iterator_set_flags(grib_keys_iterator* ki,unsigned long flags) {
 
   h=ki->handle;
 
-  if(flags & GRIB_KEYS_ITERATOR_SKIP_DUPLICATES && ki->seen!=NULL )
+  if((flags & GRIB_KEYS_ITERATOR_SKIP_DUPLICATES) && ki->seen!=NULL )
     ki->seen = grib_trie_new(h->context);
 
   if(flags & GRIB_KEYS_ITERATOR_SKIP_FUNCTION)

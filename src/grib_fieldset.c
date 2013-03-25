@@ -12,8 +12,6 @@
  *
  * Description: routines for grib indexing form a set of files
  *
- *
- *
  */
 #include "grib_api_internal.h"
 #define GRIB_START_ARRAY_SIZE 5000
@@ -37,7 +35,7 @@ static int grib_fieldset_resize(grib_fieldset* set,size_t newsize);
 static void grib_trim(char** x);
 static grib_order_by* grib_fieldset_new_order_by(grib_context* c,char* z);
 static int grib_fieldset_compare(grib_fieldset* set,int* i,int* j);
-static void grib_fieldset_sort(grib_fieldset* set, int beg, int end);
+static void grib_fieldset_sort(grib_fieldset* set, int beg, int theEnd);
 static int grib_fieldset_columns_resize(grib_fieldset* set,size_t newsize);
 static grib_int_array* grib_fieldset_create_int_array(grib_context* c,size_t size);
 static int grib_fieldset_resize_int_array(grib_int_array* a,size_t newsize);
@@ -458,12 +456,12 @@ static int grib_fieldset_compare(grib_fieldset* set,int* i,int* j) {
   return ret;
 }
 
-static void grib_fieldset_sort(grib_fieldset* set, int beg, int end) {
+static void grib_fieldset_sort(grib_fieldset* set, int beg, int theEnd) {
    double temp;
    int l=0,r=0;
-   if (end > beg) {
+   if (theEnd > beg) {
       l = beg + 1;
-      r = end;
+      r = theEnd;
       while (l < r) {
          if ( grib_fieldset_compare(set,&l,&beg) <= 0 ) {
            l++;
@@ -483,7 +481,7 @@ static void grib_fieldset_sort(grib_fieldset* set, int beg, int end) {
       }
 
       grib_fieldset_sort(set, beg, l);
-      grib_fieldset_sort(set, r, end);
+      grib_fieldset_sort(set, r, theEnd);
    }
 }
 

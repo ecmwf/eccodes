@@ -27,7 +27,7 @@
    IMPLEMENTS = init;destroy
    MEMBERS = long section_offset
    MEMBERS = long begin
-   MEMBERS = long end
+   MEMBERS = long theEnd
    END_CLASS_DEF
 
  */
@@ -60,7 +60,7 @@ typedef struct grib_dumper_wmo {
 /* Members defined in wmo */
 	long section_offset;
 	long begin;
-	long end;
+	long theEnd;
 } grib_dumper_wmo;
 
 
@@ -88,7 +88,7 @@ grib_dumper_class* grib_dumper_class_wmo = &_grib_dumper_class_wmo;
 
 /* END_CLASS_IMP */
 static void set_begin_end(grib_dumper* d,grib_accessor* a);
-static void print_offset(FILE* out,long begin,long end);
+static void print_offset(FILE* out,long begin,long theEnd);
 static void print_hexadecimal(FILE* out,unsigned long flags,grib_accessor* a);
 
 static void init_class      (grib_dumper_class* c){}
@@ -163,7 +163,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
   set_begin_end(d,a);
 
 
-  print_offset(self->dumper.out,self->begin,self->end);
+  print_offset(self->dumper.out,self->begin,self->theEnd);
 
   if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
         fprintf(self->dumper.out,"%s ",a->creator->op);
@@ -214,7 +214,7 @@ static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
   set_begin_end(d,a);
 
   /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
-  print_offset(self->dumper.out,self->begin,self->end);
+  print_offset(self->dumper.out,self->begin,self->theEnd);
   if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
         fprintf(self->dumper.out,"%s ",a->creator->op);
 
@@ -257,7 +257,7 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 
   /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
 
-  print_offset(self->dumper.out,self->begin,self->end);
+  print_offset(self->dumper.out,self->begin,self->theEnd);
   if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
         fprintf(self->dumper.out,"%s ",a->creator->op);
 
@@ -292,15 +292,17 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
   p=value;
 
   if( a->length == 0  &&
-      (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0)
+      (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0) {
+	grib_context_free(a->parent->h->context,value);
     return;
+  }
 
   set_begin_end(d,a);
 
   while(*p) { if(!isprint(*p)) *p = '.'; p++; }
 
   /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
-  print_offset(self->dumper.out,self->begin,self->end);
+  print_offset(self->dumper.out,self->begin,self->theEnd);
   if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
         fprintf(self->dumper.out,"%s ",a->creator->op);
 
@@ -331,7 +333,7 @@ static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)
   set_begin_end(d,a);
 
   /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
-  print_offset(self->dumper.out,self->begin,self->end);
+  print_offset(self->dumper.out,self->begin,self->theEnd);
   if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
         fprintf(self->dumper.out,"%s ",a->creator->op);
 
@@ -413,7 +415,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
   set_begin_end(d,a);
 
   /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
-  print_offset(self->dumper.out,self->begin,self->end);
+  print_offset(self->dumper.out,self->begin,self->theEnd);
   if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
         fprintf(self->dumper.out,"%s ",a->creator->op);
 
@@ -528,19 +530,19 @@ static void set_begin_end(grib_dumper* d,grib_accessor* a) {
   if ((d->option_flags & GRIB_DUMP_FLAG_OCTECT) != 0) {
 
     self->begin=a->offset-self->section_offset+1;
-    self->end=grib_get_next_position_offset(a)-self->section_offset;
+    self->theEnd=grib_get_next_position_offset(a)-self->section_offset;
   } else {
     self->begin=a->offset;
-    self->end=grib_get_next_position_offset(a);
+    self->theEnd=grib_get_next_position_offset(a);
   }
 }
 
-static void print_offset(FILE* out,long begin,long end) {
+static void print_offset(FILE* out,long begin,long theEnd) {
   char tmp[50];
-  if (begin == end)
+  if (begin == theEnd)
     fprintf(out,"%-10ld" ,begin);
   else {
-    sprintf(tmp,"%ld-%ld" ,begin,end);
+    sprintf(tmp,"%ld-%ld" ,begin,theEnd);
     fprintf(out,"%-10s",tmp);
   }
 }

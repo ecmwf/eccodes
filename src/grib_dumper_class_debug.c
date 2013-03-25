@@ -22,7 +22,7 @@
    IMPLEMENTS = init;destroy
    MEMBERS = long section_offset
    MEMBERS = long begin
-   MEMBERS = long end
+   MEMBERS = long theEnd
    END_CLASS_DEF
 
  */
@@ -55,7 +55,7 @@ typedef struct grib_dumper_debug {
 /* Members defined in debug */
 	long section_offset;
 	long begin;
-	long end;
+	long theEnd;
 } grib_dumper_debug;
 
 
@@ -144,9 +144,9 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 	for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
 
 	if( ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && grib_is_missing_internal(a))
-		fprintf(self->dumper.out,"%ld-%ld %s %s = MISSING",self->begin,self->end,a->creator->op, a->name);
+		fprintf(self->dumper.out,"%ld-%ld %s %s = MISSING",self->begin,self->theEnd,a->creator->op, a->name);
 	else
-		fprintf(self->dumper.out,"%ld-%ld %s %s = %ld",self->begin,self->end,a->creator->op, a->name,value);
+		fprintf(self->dumper.out,"%ld-%ld %s %s = %ld",self->begin,self->theEnd,a->creator->op, a->name,value);
 	if(comment) fprintf(self->dumper.out," [%s]",comment);
 	if(err)
 		fprintf(self->dumper.out," *** ERR=%d (%s)",err,grib_get_error_message(err));
@@ -173,7 +173,7 @@ static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
 	set_begin_end(d,a);
 
 	for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
-	fprintf(self->dumper.out,"%ld-%ld %s %s = %ld [",self->begin,self->end, a->creator->op,a->name,value);
+	fprintf(self->dumper.out,"%ld-%ld %s %s = %ld [",self->begin,self->theEnd, a->creator->op,a->name,value);
 
 	for(i=0;i<(a->length*8);i++) {
 		if(test_bit(value,a->length*8-i-1))
@@ -210,9 +210,9 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 	for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
 
 	if( ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && grib_is_missing_internal(a))
-		fprintf(self->dumper.out,"%ld-%ld %s %s = MISSING",self->begin,self->end,a->creator->op, a->name);
+		fprintf(self->dumper.out,"%ld-%ld %s %s = MISSING",self->begin,self->theEnd,a->creator->op, a->name);
 	else
-		fprintf(self->dumper.out,"%ld-%ld %s %s = %g",self->begin,self->end,a->creator->op, a->name,value);
+		fprintf(self->dumper.out,"%ld-%ld %s %s = %g",self->begin,self->theEnd,a->creator->op, a->name,value);
 	if(comment) fprintf(self->dumper.out," [%s]",comment);
 	if(err)
 		fprintf(self->dumper.out," *** ERR=%d (%s)",err,grib_get_error_message(err));
@@ -251,7 +251,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 	while(*p) { if(!isprint(*p)) *p = '.'; p++; }
 
 	for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
-	fprintf(self->dumper.out,"%ld-%ld %s %s = %s",self->begin,self->end,a->creator->op, a->name,value);
+	fprintf(self->dumper.out,"%ld-%ld %s %s = %s",self->begin,self->theEnd,a->creator->op, a->name,value);
 
 	if(comment) fprintf(self->dumper.out," [%s]",comment);
 	if(err)
@@ -277,7 +277,7 @@ static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)
 	set_begin_end(d,a);
 
 	for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
-	fprintf(self->dumper.out,"%ld-%ld %s %s = %ld",self->begin,self->end,a->creator->op, a->name,a->length);
+	fprintf(self->dumper.out,"%ld-%ld %s %s = %ld",self->begin,self->theEnd,a->creator->op, a->name,a->length);
 	aliases(d,a);
 	fprintf(self->dumper.out," {");
 
@@ -352,7 +352,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 	set_begin_end(d,a);
 
 	for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
-	fprintf(self->dumper.out,"%ld-%ld %s %s = (%ld,%ld)",self->begin,self->end,a->creator->op, a->name,(long)size,a->length);
+	fprintf(self->dumper.out,"%ld-%ld %s %s = (%ld,%ld)",self->begin,self->theEnd,a->creator->op, a->name,(long)size,a->length);
 	aliases(d,a);
 	fprintf(self->dumper.out," {");
 
@@ -452,9 +452,9 @@ static void set_begin_end(grib_dumper* d,grib_accessor* a) {
 	if ((d->option_flags & GRIB_DUMP_FLAG_OCTECT) != 0) {
 
 		self->begin=a->offset-self->section_offset+1;
-		self->end=grib_get_next_position_offset(a)-self->section_offset;
+		self->theEnd=grib_get_next_position_offset(a)-self->section_offset;
 	} else {
 		self->begin=a->offset;
-		self->end=grib_get_next_position_offset(a);
+		self->theEnd=grib_get_next_position_offset(a);
 	}
 }

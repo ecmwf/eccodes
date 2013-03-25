@@ -13,9 +13,6 @@
  *
  * Description: Binary comparison between two files
  *
- *
- *
- *
  */
 #include "grib_api_internal.h"
 

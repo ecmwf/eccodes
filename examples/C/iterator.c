@@ -13,9 +13,6 @@
  *
  * Description: how to use an iterator on lat/lon/values.
  *
- *
- *
- *
  */
 
 #include <stdio.h>

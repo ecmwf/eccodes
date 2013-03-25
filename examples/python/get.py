@@ -1,7 +1,15 @@
 import traceback
 import sys
 
-from gribapi import *
+# Copyright 2005-2012 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+
+from eccode import *
 
 INPUT='../../data/reduced_latlon_surface.grib1'
 VERBOSE=1 # verbose error reporting
@@ -23,26 +31,26 @@ def example():
         if gid is None: break
 
         for key in keys:
-            if not grib_is_defined(gid,key): raise Exception("Key was not defined")
-            print '%s=%s' % (key,grib_get(gid,key))
+            if not is_defined(gid,key): raise Exception("Key was not defined")
+            print '%s=%s' % (key,get(gid,key))
 
-        if grib_is_defined(gid,"A_very_silly_girl"): raise Exception("Key was defined")
-
+        if is_defined(gid,"A_very_silly_girl"): raise Exception("Key was defined")
+        
         print 'There are %d values, average is %f, min is %f, max is %f' % (
-                  grib_get_size(gid,'values'),
-                  grib_get(gid,'average'),
-                  grib_get(gid,'min'),
-                  grib_get(gid,'max')
+                  get_size(gid,'values'),
+                  get(gid,'average'),
+                  get(gid,'min'),
+                  get(gid,'max')
                )
 
-        grib_release(gid)
+        release(gid)
 
     f.close()
 
 def main():
     try:
         example()
-    except GribInternalError,err:
+    except InternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

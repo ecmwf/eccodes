@@ -9,11 +9,9 @@
  */
 
 /*
- * C Implementation: get
+ * C Implementation: list
  *
  * Description: how to get values using keys.
- *
- *
  *
  */
 #include <stdio.h>
