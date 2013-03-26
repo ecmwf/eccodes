@@ -1,0 +1,75 @@
+--- stepType=instant ---
+stepRange=21600 step=21600 startStep=21600 endStep=21600 stepUnits=s
+indicatorOfUnitOfTimeRange=h timeRangeIndicator=0 P1=6 P2=0
+stepRange=21600 step=21600 startStep=21600 endStep=21600 stepUnits=s
+indicatorOfUnitOfTimeRange=h timeRangeIndicator=0 P1=6 P2=0
+stepRange=21600 step=21600 startStep=21600 endStep=21600 stepUnits=s
+indicatorOfUnitOfTimeRange=h timeRangeIndicator=0 P1=6 P2=0
+stepRange=21600 step=21600 startStep=21600 endStep=21600 stepUnits=s
+indicatorOfUnitOfTimeRange=h timeRangeIndicator=0 P1=6 P2=0
+stepRange=16200 step=16200 startStep=16200 endStep=16200 stepUnits=s
+indicatorOfUnitOfTimeRange=15m timeRangeIndicator=0 P1=18 P2=0
+
+stepRange=28800 step=28800 startStep=28800 endStep=28800 stepUnits=m
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=0 P1=160 P2=0
+stepRange=28800 step=28800 startStep=28800 endStep=28800 stepUnits=m
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=0 P1=160 P2=0
+stepRange=28800 step=28800 startStep=28800 endStep=28800 stepUnits=m
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=0 P1=160 P2=0
+stepRange=28800 step=28800 startStep=28800 endStep=28800 stepUnits=m
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=0 P1=160 P2=0
+
+stepRange=1728000 step=1728000 startStep=1728000 endStep=1728000 stepUnits=s
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=0 P1=160 P2=0
+stepRange=480 step=480 startStep=480 endStep=480 stepUnits=h
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=0 P1=160 P2=0
+stepRange=20 step=20 startStep=20 endStep=20 stepUnits=D
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=0 P1=160 P2=0
+set stepUnits=m; set step=225;
+stepRange=225 step=225 startStep=225 endStep=225 stepUnits=m
+indicatorOfUnitOfTimeRange=m timeRangeIndicator=0 P1=225 P2=0
+set step=240;
+set stepUnits=h;
+stepRange=4 step=4 startStep=4 endStep=4 stepUnits=h
+indicatorOfUnitOfTimeRange=h timeRangeIndicator=0 P1=4 P2=0
+set set step=275;
+stepRange=275 step=275 startStep=275 endStep=275 stepUnits=h
+indicatorOfUnitOfTimeRange=h timeRangeIndicator=10 P1=1 P2=19
+
+stepRange=528 step=528 startStep=528 endStep=528 stepUnits=h
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=0 P1=176 P2=0
+stepRange=528 step=528 startStep=528 endStep=528 stepUnits=h
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=0 P1=176 P2=0
+stepRange=528 step=528 startStep=528 endStep=528 stepUnits=h
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=0 P1=176 P2=0
+stepRange=528 step=528 startStep=528 endStep=528 stepUnits=h
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=0 P1=176 P2=0
+
+stepRange=1900800 step=1900800 startStep=1900800 endStep=1900800 stepUnits=s
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=0 P1=176 P2=0
+stepRange=528 step=528 startStep=528 endStep=528 stepUnits=h
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=0 P1=176 P2=0
+stepRange=22 step=22 startStep=22 endStep=22 stepUnits=D
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=0 P1=176 P2=0
+
+--- stepType=diff ---
+stepRange=72-528 step=528 startStep=72 endStep=528 stepUnits=h
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=5 P1=24 P2=176
+stepRange=72-528 step=528 startStep=72 endStep=528 stepUnits=h
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=5 P1=24 P2=176
+
+stepRange=259200-1900800 step=1900800 startStep=259200 endStep=1900800 stepUnits=s
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=5 P1=24 P2=176
+stepRange=72-528 step=528 startStep=72 endStep=528 stepUnits=h
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=5 P1=24 P2=176
+stepRange=3-22 step=22 startStep=3 endStep=22 stepUnits=D
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=5 P1=24 P2=176
+
+--- stepType=instant ---
+stepRange=65700 step=65700 startStep=65700 endStep=65700 stepUnits=h
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=10 P1=85 P2=140
+stepRange=3942000 step=3942000 startStep=3942000 endStep=3942000 stepUnits=m
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=10 P1=85 P2=140
+stepRange=236520000 step=236520000 startStep=236520000 endStep=236520000 stepUnits=s
+indicatorOfUnitOfTimeRange=3h timeRangeIndicator=10 P1=85 P2=140
+
