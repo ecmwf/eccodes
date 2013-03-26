@@ -7,7 +7,7 @@ cd ../tests
 
 cd ../src
 
-p4 edit keys grib_hash_keys.c
+# Editing keys grib_hash_keys.c
 
 gperf -I -t -G -H hash_keys -N grib_keys_hash_get -m 3  ../tests/keys | sed s/__inline//g | sed s/inline//g  > grib_hash_keys.c
 
