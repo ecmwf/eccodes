@@ -2,6 +2,7 @@
 Makefile
 Makefile.in
 *.lo
+*.la
 .deps/
 /libtool
 config.h.in
