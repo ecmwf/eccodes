@@ -21,6 +21,13 @@ rpms/grib_api.pc
 rpms/grib_api.spec
 rpms/grib_api_f90.pc
 aclocal.m4
+src/config.h.in~
+python/gribapi.pyc
+python/gribapi_swig.pyc
+
+
+# IFS samples
+ifs_samples/
 
 # compiled source #
 ###################
