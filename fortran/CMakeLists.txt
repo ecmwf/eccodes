@@ -4,5 +4,6 @@ if( GRB_API_FORTRAN )
 
   # add here the building of fortran bindings
 
+  install( FILES grib_api_F77.h DESTINATION include/${PROJECT_NAME} )
 
 endif()

@@ -13,7 +13,7 @@ proto:;-chmod +w grib_api_prototypes.h;mkptypes -A $(libgrib_api_a_prototypes) $
 test:all;(cd ../tests; make tests)
 
 templates:
-	-chmod +wgrib_templates.h
+	-chmod +w grib_templates.h
 	./grib2c.pl ../templates/*.grib
 
 grib_lex.c : gribl.l grib_yacc.h

@@ -80,7 +80,9 @@ add_subdirectory( definitions )
 add_subdirectory( tests )
 add_subdirectory( tigge )
 add_subdirectory( examples )
-# add_subdirectory( samples )
+
+add_subdirectory( samples )
+add_subdirectory( ifs_samples ) # must come after samples
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
 
