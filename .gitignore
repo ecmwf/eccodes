@@ -1,3 +1,27 @@
+# Generated stuff from libtool, automake etc
+Makefile
+Makefile.in
+*.lo
+*.la
+.deps/
+/libtool
+config.h.in
+lex.yy.c
+stamp-h1
+src/config.h
+autom4te.cache/
+config.log
+config.status
+configure
+grib_api.spec
+grib_api.pc
+grib_api_f90.pc
+perl/GRIB-API/Makefile.PL
+rpms/grib_api.pc
+rpms/grib_api.spec
+rpms/grib_api_f90.pc
+aclocal.m4
+
 # compiled source #
 ###################
 *.com

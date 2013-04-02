@@ -316,3 +316,5 @@ ecbuild_add_library( TARGET    grib_api
 
 
 # TODO: add support for jpg and png
+
+install( FILES grib_api.h DESTINATION include/${PROJECT_NAME} )

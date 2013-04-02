@@ -72,7 +72,7 @@ foreach $name ( @ARGV )
         if(compare_text("$name.tmp",$name))
         {
             print "UPDATING file $name\n";
-            system("p4 edit $name") unless(-w $name);
+            system("chmod +w $name") unless(-w $name);
             cp($name,"$name.old") or die "cp($name,$name.old): $!";
             cp("$name.tmp",$name) or die "cp($name.tmp,$name): $!";
         }
@@ -211,7 +211,7 @@ EOF
             if(-f $file)
             {
                 local $_;
-                system("p4 edit $file") unless(-w $file);
+                system("chmmod +w $file") unless(-w $file);
                 open(F,"<$file") or die "$file: $!";
 
                 while(<F>)
