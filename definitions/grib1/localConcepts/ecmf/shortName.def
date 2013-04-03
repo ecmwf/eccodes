@@ -3274,6 +3274,91 @@
 	 table2Version = 132 ;
 	 indicatorOfParameter = 216 ;
 	}
+#Wave experimental parameter 1
+'wx1' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 80 ;
+	}
+#Wave experimental parameter 2
+'wx2' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 81 ;
+	}
+#Wave experimental parameter 3
+'wx3' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 82 ;
+	}
+#Wave experimental parameter 4
+'wx4' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 83 ;
+	}
+#Wave experimental parameter 5
+'wx5' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 84 ;
+	}
+#Significant wave height of first partition
+'swh1' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 121 ;
+	}
+#Mean wave direction of first partition
+'mwd1' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 122 ;
+	}
+#Mean wave period of first partition
+'mwp1' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 123 ;
+	}
+#Significant wave height of second partition
+'swh2' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 124 ;
+	}
+#Mean wave direction of second partition
+'mwd2' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 125 ;
+	}
+#Mean wave period of second partition
+'mwp2' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 126 ;
+	}
+#Significant wave height of third partition
+'swh3' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 127 ;
+	}
+#Mean wave direction of third partition
+'mwd3' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 128 ;
+	}
+#Mean wave period of third partition
+'mwp3' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 129 ;
+	}
+#Free convective velocity over the oceans
+'wstar' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 208 ;
+	}
+#Air density over the oceans
+'rhoao' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 209 ;
+	}
+#Mean square wave strain in sea ice
+'mswsi' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 210 ;
+	}
 #Normalized energy flux into waves
 'phiaw' = {
 	 table2Version = 140 ;

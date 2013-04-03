@@ -3274,6 +3274,91 @@
 	 table2Version = 132 ;
 	 indicatorOfParameter = 216 ;
 	}
+#Wave experimental parameter 1
+'140080' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 80 ;
+	}
+#Wave experimental parameter 2
+'140081' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 81 ;
+	}
+#Wave experimental parameter 3
+'140082' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 82 ;
+	}
+#Wave experimental parameter 4
+'140083' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 83 ;
+	}
+#Wave experimental parameter 5
+'140084' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 84 ;
+	}
+#Significant wave height of first partition
+'140121' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 121 ;
+	}
+#Mean wave direction of first partition
+'140122' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 122 ;
+	}
+#Mean wave period of first partition
+'140123' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 123 ;
+	}
+#Significant wave height of second partition
+'140124' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 124 ;
+	}
+#Mean wave direction of second partition
+'140125' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 125 ;
+	}
+#Mean wave period of second partition
+'140126' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 126 ;
+	}
+#Significant wave height of third partition
+'140127' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 127 ;
+	}
+#Mean wave direction of third partition
+'140128' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 128 ;
+	}
+#Mean wave period of third partition
+'140129' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 129 ;
+	}
+#Free convective velocity over the oceans
+'140208' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 208 ;
+	}
+#Air density over the oceans
+'140209' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 209 ;
+	}
+#Mean square wave strain in sea ice
+'140210' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 210 ;
+	}
 #Normalized energy flux into waves
 '140211' = {
 	 table2Version = 140 ;
