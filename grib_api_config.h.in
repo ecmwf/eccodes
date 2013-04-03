@@ -12,6 +12,16 @@
 #define GRIB_DEFINITION_PATH      "@GRIB_API_DEFINITION_PATH@"
 #define GRIB_SAMPLES_PATH         "@GRIB_API_SAMPLES_PATH@"
 
+#define IEEE_BE @IEEE_BE@
+#define IEEE_LE @IEEE_LE@
+
+#define HAVE_JPEG         @HAVE_JPEG@
+#define HAVE_LIBJASPER    @HAVE_LIBJASPER@
+#define HAVE_LIBOPENJPEG  @HAVE_LIBOPENJPEG@
+
+#define HAVE_LIBPNG  @HAVE_LIBPNG@
+
 #cmakedefine HAVE_LIBSZIP
+#cmakedefine HAVE_NETCDF
 
 #endif //grib_api_config_h

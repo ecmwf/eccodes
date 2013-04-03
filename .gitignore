@@ -27,7 +27,7 @@ python/gribapi_swig.pyc
 
 
 # IFS samples
-ifs_samples/
+ifs_samples/*/*.tmpl
 
 # compiled source #
 ###################

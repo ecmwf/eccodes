@@ -310,9 +310,21 @@ ecbuild_generate_yy( YYPREFIX  grib_yy
 		DEPENDANT action.c )
 
 ecbuild_add_library( TARGET    grib_api
-		SOURCES   griby.c gribl.c ${grib_api_extra_srcs} ${grib_api_srcs}
-		INCLUDES  ${SZIP_INCLUDE_DIRS}
-		LIBS      ${SZIP_LIBRARY} ${CMATH_LIBRARIES}  )
+		SOURCES   
+            griby.c gribl.c 
+            ${grib_api_extra_srcs} 
+            ${grib_api_srcs}
+		INCLUDES  
+            ${SZIP_INCLUDE_DIRS}
+            ${GRIB_API_NETCDF_LIBRARIES} 
+            ${GRIB_API_JPG_INCLUDE_DIRS} 
+            ${GRIB_API_PNG_INCLUDE_DIRS}
+		LIBS      
+            ${SZIP_LIBRARY}
+            ${GRIB_API_NETCDF_LIBRARIES}
+            ${GRIB_API_JPG_LIBRARIES}
+            ${GRIB_API_PNG_LIBRARIES}
+            ${CMATH_LIBRARIES}  )
 
 
 # TODO: add support for jpg and png

@@ -1,3 +1,5 @@
+### WARNING - support for Python with CMake still not ready
+
 # check for Numpy
 
 if(PYTHON_EXECUTABLE)
@@ -27,6 +29,8 @@ endif()
 # swig python interface
 
 if( GRIB_API_PYTHON AND SWIG_FOUND AND PYTHONLIBS_FOUND )
+
+    message( WARNING "Support for Python with CMake still not ready" )
 
     # preparing for generating setup.py
 

@@ -8,9 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include "grib_api_internal.h"
 
 #ifdef HAVE_NETCDF
 
