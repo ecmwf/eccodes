@@ -8,9 +8,7 @@ dist_definitions_DATA = \
 	./mars_param.table\
 	./param_id.table\
 	./parameters_version.def\
-	./publish_new_parameters.sh\
-	./stepUnits.table\
-	./x.grib
+	./stepUnits.table
 
 definitionsbudgdir = @GRIB_DEFINITION_PATH@/budg
 dist_definitionsbudg_DATA = \
@@ -2109,7 +2107,6 @@ dist_definitionsmars_DATA = \
 	mars/grib1.wmfm.fcmean.def\
 	mars/grib1.wmfm.fcmin.def\
 	mars/grib1.wmfm.fcstdev.def\
-	mars/make_type_switch_case.sh\
 	mars/marsTypeConcept.def\
 	mars/model.96.table\
 	mars/stream.table\
