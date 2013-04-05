@@ -52,6 +52,7 @@ regular_latlon_surface.grib2
 
 for file in $files
 do 
+    [ -f $file ]
 	echo $file >> log
 	${tools_dir}grib_ls -l 40,28 $file  | grep index | awk '{print $4;}' >> log
 done
