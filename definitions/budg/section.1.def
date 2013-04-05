@@ -44,7 +44,7 @@ unsigned[1] hour ;
 unsigned[1] minute ;
 
 
-constant second  = 0;
+transient second  = 0;
 meta      dataDate    budgdate(yearOfCentury,month,day);
 alias ls.date=dataDate;
 meta      dataTime    time(hour,minute,second);
@@ -72,9 +72,9 @@ codetable[1] timeRangeIndicator 'grib1/5.table';
 codetable[1] stepUnits 'grib2/tables/1/4.4.table' = 1 : transient,dump,no_copy;
 
 concept stepType {
-  "instant" = {timeRangeIndicator=0;}
   "instant" = {timeRangeIndicator=1;}
   "instant" = {timeRangeIndicator=10;}
+  "instant" = {timeRangeIndicator=0;}
   "avg"     = {timeRangeIndicator=3;}
   "accum"   = {timeRangeIndicator=4;}
   "max"     = {timeRangeIndicator=2;}

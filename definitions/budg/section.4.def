@@ -23,7 +23,8 @@ unsigned[3] numberOfChars ;
 
 unsigned[3] numberOfFloats ;
 
-unsigned[3] numberOfInts ;
+unsigned[3] numberOfIntegers ;
+alias numberOfInts=numberOfIntegers ;
 
 unsigned[3] numberOfLogicals ;
 
@@ -33,12 +34,13 @@ unsigned[4] reserved=0 : hidden;
 unsigned[4] reserved=0 : hidden;
 unsigned[1] reserved=0 : hidden;
 
-ibmfloat floatVal[numberOfFloats];
+ibmfloat floatValues[numberOfFloats];
+alias floatVal=floatValues;
 
-if(numberOfBytesPerInteger == 1) { signed[1] integerValues[numberOfInts]; }
-if(numberOfBytesPerInteger == 2) { signed[2] integerValues[numberOfInts]; }
-if(numberOfBytesPerInteger == 3) { signed[3] integerValues[numberOfInts]; }
-if(numberOfBytesPerInteger == 4) { signed[4] integerValues[numberOfInts]; }
+if(numberOfBytesPerInteger == 1) { signed[1] integerValues[numberOfIntegers]; }
+if(numberOfBytesPerInteger == 2) { signed[2] integerValues[numberOfIntegers]; }
+if(numberOfBytesPerInteger == 3) { signed[3] integerValues[numberOfIntegers]; }
+if(numberOfBytesPerInteger == 4) { signed[4] integerValues[numberOfIntegers]; }
 
 if(numberOfChars >= 12)
 {
