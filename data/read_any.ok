@@ -1,0 +1,14 @@
+-   1 -	 ed=1	 size=   14156 totalLength=   14156 	 t	 regular_gg	 ml	 level=1	 step=0
+-   2 -	 ed=1	 size=   14156 totalLength=   14156 	 t	 regular_gg	 ml	 level=1	 step=0
+-   3 -	 ed=2	 size=    1552 totalLength=    1552 	 10u	 regular_ll	 sfc	 level=10	 step=96
+-   4 -	 ed=1	 size=   14156 totalLength=   14156 	 t	 regular_gg	 ml	 level=1	 step=0
+-   5 -	 ed=1	 size=   14156 totalLength=   14156 	 t	 regular_gg	 ml	 level=1	 step=0
+-   6 -	 ed=2	 size=    1552 totalLength=    1552 	 10u	 regular_ll	 sfc	 level=10	 step=96
+-   7 -	 ed=2	 size=    1552 totalLength=    1552 	 10u	 regular_ll	 sfc	 level=10	 step=96
+-   8 -	 ed=1	 size=15163284 totalLength=15163284 	 t	 regular_ll	 sfc	 level=0	 step=0
+-   9 -	 ed=1	 size=   14156 totalLength=   14156 	 t	 regular_gg	 ml	 level=1	 step=0
+-  10 -	 ed=1	 size=15163284 totalLength=15163284 	 t	 regular_ll	 sfc	 level=0	 step=0
+-  11 -	 ed=2	 size=    1552 totalLength=    1552 	 10u	 regular_ll	 sfc	 level=10	 step=96
+-  12 -	 ed=1	 size=15163284 totalLength=15163284 	 t	 regular_ll	 sfc	 level=0	 step=0
+-  13 -	 ed=1	 size=11206064 totalLength=11206064 	 2dsp	 reduced_ll	 sfc	 level=0	 step=0
+-  14 -	 ed=1	 size=17706816 totalLength=17706816 	 2dsp	 reduced_ll	 sfc	 level=0	 step=0

@@ -1,0 +1,172 @@
+regular_gaussian_model_level.grib1
+count        edition      centre       typeOfLevel  level        dataDate     stepRange    dataType     shortName    packingType  gridType     
+1            1            ecmf         hybrid       1            20080206     0            an           t            grid_simple  regular_gg  
+1 of 1 grib messages in regular_gaussian_model_level.grib1
+
+1 of 1 total grib messages in 1 files
+regular_gaussian_model_level.grib1
+count       step        
+1           0          
+1 of 1 grib messages in regular_gaussian_model_level.grib1
+
+1 of 1 total grib messages in 1 files
+regular_gaussian_model_level.grib1
+edition      centre       typeOfLevel  level        dataDate     stepRange    dataType     shortName    packingType  gridType     
+1            ecmf         hybrid       1            20080206     0            an           t            grid_simple  regular_gg  
+1 of 1 grib messages in regular_gaussian_model_level.grib1
+
+1 of 1 total grib messages in 1 files
+regular_gaussian_model_level.grib1
+edition      centre       typeOfLevel  level        dataDate     stepRange    dataType     shortName    packingType  gridType      value 
+1            ecmf         hybrid       1            20080206     0            an           t            grid_simple  regular_gg   198.5        
+1 of 1 grib messages in regular_gaussian_model_level.grib1
+
+1 of 1 total grib messages in 1 files
+Input Point: latitude=0.00  longitude=0.00
+Grid Point chosen #2 index=4096 latitude=-1.40 longitude=0.00 distance=155.07 (Km)
+Other grid Points
+- 1 - index=4097 latitude=-1.40 longitude=2.81 distance=348.89 (Km)
+- 2 - index=4096 latitude=-1.40 longitude=0.00 distance=155.07 (Km)
+- 3 - index=3969 latitude=1.40 longitude=2.81 distance=348.89 (Km)
+- 4 - index=3968 latitude=1.40 longitude=0.00 distance=155.07 (Km)
+198.5  
+1 0
+1
+reduced_gaussian_lsm.grib1
+#4
+index=1291
+index=1290
+index=1171
+index=1170
+reduced_gaussian_model_level.grib1
+#4
+index=1291
+index=1290
+index=1171
+index=1170
+reduced_gaussian_model_level.grib2
+#4
+index=1291
+index=1290
+index=1171
+index=1170
+reduced_gaussian_pressure_level.grib1
+#4
+index=1291
+index=1290
+index=1171
+index=1170
+reduced_gaussian_pressure_level.grib2
+#4
+index=1291
+index=1290
+index=1171
+index=1170
+reduced_gaussian_pressure_level_constant.grib1
+#4
+index=1291
+index=1290
+index=1171
+index=1170
+reduced_gaussian_pressure_level_constant.grib2
+#4
+index=1291
+index=1290
+index=1171
+index=1170
+reduced_gaussian_sub_area.grib1
+#3
+index=19985
+index=19984
+index=19665
+index=19664
+reduced_gaussian_sub_area.grib2
+#3
+index=19985
+index=19984
+index=19665
+index=19664
+reduced_gaussian_surface.grib1
+#4
+index=1291
+index=1290
+index=1171
+index=1170
+reduced_gaussian_surface.grib2
+#4
+index=1291
+index=1290
+index=1171
+index=1170
+reduced_latlon_surface.grib1
+#1
+index=54796
+index=54795
+index=54034
+index=54033
+reduced_latlon_surface.grib2
+#1
+index=54796
+index=54795
+index=54034
+index=54033
+regular_gaussian_model_level.grib1
+#3
+index=2314
+index=2313
+index=2186
+index=2185
+regular_gaussian_model_level.grib2
+#3
+index=2314
+index=2313
+index=2186
+index=2185
+regular_gaussian_pressure_level.grib1
+#3
+index=2314
+index=2313
+index=2186
+index=2185
+regular_gaussian_pressure_level.grib2
+#3
+index=2314
+index=2313
+index=2186
+index=2185
+regular_gaussian_pressure_level_constant.grib1
+#3
+index=2314
+index=2313
+index=2186
+index=2185
+regular_gaussian_pressure_level_constant.grib2
+#3
+index=2314
+index=2313
+index=2186
+index=2185
+regular_gaussian_surface.grib1
+#3
+index=2314
+index=2313
+index=2186
+index=2185
+regular_gaussian_surface.grib2
+#3
+index=2314
+index=2313
+index=2186
+index=2185
+regular_latlon_surface.grib1
+#2
+index=175
+index=174
+index=159
+index=158
+regular_latlon_surface.grib2
+#2
+index=175
+index=174
+index=159
+index=158

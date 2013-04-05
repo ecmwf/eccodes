@@ -1,0 +1,130 @@
+# Geopotential height
+if ( ( level == 500 || level == 1000 )  && indicatorOfParameter == 7 ) {
+	print "found indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	transient oldtype = type ;
+    set identificationOfOriginatingGeneratingSubCentre = 98 ;
+	set gribTablesVersionNo = 128;
+	set indicatorOfParameter = 129 ; 
+	set localDefinitionNumber = 1 ;
+	set marsClass="od";
+	set marsStream="kwbc"; 
+	# Negatively/Positively Perturbed Forecast
+	if ( oldtype == 2 || oldtype == 3 ) {
+	  set marsType="pf"; 
+	  set experimentVersionNumber="4001";
+	}
+	# Control Forecast
+	if ( oldtype == 1 ) {
+	  set marsType="cf"; 
+	  set experimentVersionNumber="0001";
+	}
+	set numberOfForecastsInEnsemble=11;
+	write;
+	write "[indicatorOfParameter].grib";
+	print "indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	print;
+}
+
+# U wind
+if ( level == 250 && indicatorOfParameter == 33 ) {
+	print "found indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	transient oldtype = type ;
+    set identificationOfOriginatingGeneratingSubCentre=98;
+	set gribTablesVersionNo = 128;
+	set indicatorOfParameter = 131 ;
+	set localDefinitionNumber=1;
+	set marsClass="od";
+	set marsStream="kwbc"; 
+	# Negatively/Positively Perturbed Forecast
+	if ( oldtype == 2 || oldtype == 3 ) {
+	  set marsType="pf"; 
+	  set experimentVersionNumber="4001";
+	}
+	# Control Forecast
+	if ( oldtype == 1 ) {
+	  set marsType="cf"; 
+	  set experimentVersionNumber="0001";
+	}
+	set numberOfForecastsInEnsemble=11;
+	write ;
+	print "indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	print;
+}
+
+# V wind
+if ( level == 250 && indicatorOfParameter == 34 ) {
+	print "found indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	transient oldtype = type ;
+    set identificationOfOriginatingGeneratingSubCentre=98;
+	set gribTablesVersionNo = 128;
+	set indicatorOfParameter = 132;
+	set localDefinitionNumber=1;
+	set marsClass="od";
+	set marsStream="kwbc"; 
+	# Negatively/Positively Perturbed Forecast
+	if ( oldtype == 2 || oldtype == 3 ) {
+	  set marsType="pf"; 
+	  set experimentVersionNumber="4001";
+	}
+	# Control Forecast
+	if ( oldtype == 1 ) {
+	  set marsType="cf"; 
+	  set experimentVersionNumber="0001";
+	}
+	set numberOfForecastsInEnsemble=11;
+	write ;
+	print "indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	print;
+}
+
+# Relative humidity 
+if ( level == 700 && indicatorOfParameter == 52 ) {
+	print "found indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	transient oldtype = type ;
+    set identificationOfOriginatingGeneratingSubCentre = 98;
+	set gribTablesVersionNo = 128;
+	set indicatorOfParameter = 157 ; 
+	set localDefinitionNumber=1;
+	set marsClass="od";
+	set marsStream="kwbc"; 
+	# Negatively/Positively Perturbed Forecast
+	if ( oldtype == 2 || oldtype == 3 ) {
+	  set marsType="pf"; 
+	  set experimentVersionNumber="4001";
+	}
+	# Control Forecast
+	if ( oldtype == 1 ) {
+	  set marsType="cf"; 
+	  set experimentVersionNumber="0001";
+	}
+	set numberOfForecastsInEnsemble=11;
+	write;
+	print "indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	print;
+}
+
+# Temperature 
+if ( level == 850 && indicatorOfParameter == 11 ) {
+	print "found indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	transient oldtype = type ;
+    set identificationOfOriginatingGeneratingSubCentre=98;
+	set gribTablesVersionNo = 128;
+	set indicatorOfParameter = 130; 
+	set localDefinitionNumber=1;
+	set marsClass="od";
+	set marsStream="kwbc"; 
+	# Negatively/Positively Perturbed Forecast
+	if ( oldtype == 2 || oldtype == 3 ) {
+	  set marsType="pf"; 
+	  set experimentVersionNumber="4001";
+	}
+	# Control Forecast
+	if ( oldtype == 1 ) {
+	  set marsType="cf"; 
+	  set experimentVersionNumber="0001";
+	}
+	set numberOfForecastsInEnsemble=11;
+	write;
+	print "indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
+	print;
+}
