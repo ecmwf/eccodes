@@ -11,7 +11,10 @@
 #ifndef WINGETOPT_H
 #define WINGETOPT_H
 
-#ifdef _WIN32
+/* Microsoft Windows Visual Studio support */
+#include "grib_windef.h"
+
+#ifdef GRIB_ON_WINDOWS
 /* Microsoft Windows Visual Studio support */
 extern int optind, opterr;
 extern char *optarg;

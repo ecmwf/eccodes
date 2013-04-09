@@ -297,6 +297,7 @@ list( APPEND grib_api_srcs
 	jgribapi_GribIterator.h
 	md5.h
 	md5.c
+	grib_windef.h
 )
 
 # list( APPEND grib_api_extra_srcs

@@ -10,7 +10,7 @@
 
 #include "grib_api_internal.h"
 #include <stdio.h>
-#ifndef _WIN32
+#ifndef GRIB_ON_WINDOWS
 #  include <unistd.h>
 #endif
 #include <string.h>

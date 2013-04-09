@@ -14,7 +14,7 @@
  */
 #include "grib_tools.h"
 
-#ifdef _WIN32
+#ifdef GRIB_ON_WINDOWS
 /* Microsoft Windows Visual Studio support */
 #include "wingetopt.h"
 #endif

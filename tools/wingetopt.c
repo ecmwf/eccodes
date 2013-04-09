@@ -8,11 +8,11 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifdef _WIN32
-/* Microsoft Windows Visual Studio support */
+#include "wingetopt.h"
+
+#ifdef GRIB_ON_WINDOWS
 
 #include "string.h"
-#include "wingetopt.h"
 
 char *optarg;		/* global argument pointer */
 int optind = 0; 	/* global argv index */

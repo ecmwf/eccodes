@@ -366,7 +366,9 @@ EXTRA_DIST = README AUTHORS NOTICE LICENSE ChangeLog version.sh html \
 		data/simple_bitmap.grib \
 		data/second_ord_rbr.grib1 \
 		perf/jmeter.awk \
-		perf/time.sh
+				perf/time.sh \
+				windows/msvc/grib_api.sln \
+				windows/msvc/grib_api_lib/grib_api_lib.vcproj
 
 
 perf_dir = @abs_builddir@/perf

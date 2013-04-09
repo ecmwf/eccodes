@@ -153,7 +153,7 @@ int grib_jasper_encode(grib_context *c, j2k_encode_helper *helper) {
 	if( helper->compression != 0)
 	{
 		/* Lossy */
-#ifndef _WIN32
+#ifndef GRIB_ON_WINDOWS
 		snprintf (opts, MAXOPTSSIZE, "mode=real\nrate=%f", 1.0/helper->compression);
 #else
 		/* Microsoft Windows Visual Studio support */

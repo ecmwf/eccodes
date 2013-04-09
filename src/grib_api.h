@@ -26,7 +26,7 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
-#ifndef _WIN32
+#ifndef GRIB_ON_WINDOWS
 #include <sys/times.h>
 #endif
 #include <math.h>

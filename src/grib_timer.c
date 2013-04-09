@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-#ifndef _WIN32
+#ifndef GRIB_ON_WINDOWS
 # include <sys/time.h>
 # include <time.h>
 # include <sys/resource.h>

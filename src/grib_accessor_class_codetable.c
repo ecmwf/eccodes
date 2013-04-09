@@ -540,7 +540,7 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t *len)
   size_t size = 1;
 
   typedef int (*cmpproc)(const char*, const char*);
-#ifndef _WIN32
+#ifndef GRIB_ON_WINDOWS
   cmpproc cmp = a->flags | GRIB_ACCESSOR_FLAG_LOWERCASE ? strcasecmp : strcmp;
 #else
 	/* Microsoft Windows Visual Studio support */

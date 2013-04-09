@@ -482,7 +482,7 @@ static int grib_tool_index(grib_runtime_options* options) {
 	return 0;
 }
 
-#ifndef _WIN32
+#ifndef GRIB_ON_WINDOWS
 static int scan(grib_context* c,grib_runtime_options* options,const char* dir) {
 	struct dirent *s;
 	DIR *d;
@@ -543,7 +543,7 @@ static int process(grib_context* c,grib_runtime_options* options,const char* pat
 	int stat_val=0;
 	int ioerr=0;
 
-#ifndef _WIN32
+#ifndef GRIB_ON_WINDOWS
 	stat_val = lstat(path,&s);
 #else
 	stat_val = stat(path,&s);

@@ -14,7 +14,7 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 
-#ifdef _WIN32
+#ifdef GRIB_ON_WINDOWS
 /* Microsoft Windows Visual Studio support. Implementation of Unix rint() */
 double rint(double x)
 {

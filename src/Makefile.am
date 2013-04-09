@@ -302,6 +302,7 @@ CLEANFILES = libgrib_api.la
 
 noinst_HEADERS = grib_api_internal.h \
                  md5.h \
+                 grib_windef.h \
                  grib_emoslib.h \
                  grib_api_prototypes.h \
                  grib_dumper_class.h \

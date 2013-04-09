@@ -12,13 +12,12 @@
  */
 
 #include <stdlib.h>
-#ifndef _WIN32
-#include <stdint.h>
-#endif
+#include "grib_windef.h"
 
-#ifdef _WIN32
+#ifdef GRIB_ON_WINDOWS
 	typedef unsigned __int64 UnsignedInt64;
 #else
+#   include <stdint.h>
 	typedef uint64_t          UnsignedInt64;
 #endif
 

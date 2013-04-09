@@ -60,12 +60,14 @@ extern "C" {
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#ifndef _WIN32
+/* Microsoft Windows Visual Studio support */
+#include "grib_windef.h"
+
+#ifndef GRIB_ON_WINDOWS
 #  include <dirent.h>
 #  include <unistd.h>
 #  include <inttypes.h>
 #else
-/* Microsoft Windows Visual Studio support */
 #  include <direct.h>
 #  include <io.h>
 

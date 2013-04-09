@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) { return grib_tool(argc,argv);}
 
 /* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
 /* in order to have multiple samples directories */
-#ifdef _WIN32
+#ifdef GRIB_ON_WINDOWS
 #   define SAMPLES_PATH_DELIMITER_CHAR ';'
 #   define SAMPLES_PATH_DELIMITER_STR  ";"
 #else
