@@ -175,6 +175,7 @@
                      grib_get_real8, &
                      grib_get_string, &
                      grib_get_int_array, &
+                     grib_get_byte_array, &
                      grib_get_real4_array, &
                      grib_get_real8_array
   end interface grib_get
@@ -226,6 +227,7 @@
                      grib_set_string, &
                      grib_set_int_array, &
                      grib_set_long_array, &
+                     grib_set_byte_array, &
                      grib_set_real4_array, &
                      grib_set_real8_array
   end interface grib_set

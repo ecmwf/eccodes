@@ -1738,6 +1738,44 @@
     endif
   end subroutine grib_get_long_array
 
+  !> Get the array of bytes (character) for a key from a grib message.
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      id of the grib loaded in memory
+  !> @param key         key name
+  !> @param value       character(len=1) array of byte values
+  !> @param length      (optional) output: number of values retrieved
+  !> @param status      (optional) GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_get_byte_array ( gribid, key, value, length, status )
+  integer(kind=kindOfInt),               intent(in)  :: gribid
+  character(len=*),                      intent(in)  :: key
+  character(len=1),        dimension(:), intent(out) :: value
+  integer(kind=kindOfInt), optional,     intent(out) :: length
+  integer(kind=kindOfInt), optional,     intent(out) :: status
+  integer(kind=kindOfInt)                            :: iret
+  integer(kind=kindOfInt)                            :: nb_values
+  character                                          :: bytes(size(value))
+
+    nb_values = size (value)
+    bytes = ACHAR(0)
+    iret = grib_f_get_byte_array ( gribid, key, bytes, nb_values )
+    value = transfer (bytes, value)
+    if (iret /= 0) then
+       call grib_f_write_on_fail(gribid)
+    endif
+    if (present(length)) then
+       length = nb_values
+    end if
+    if (present(status)) then
+       status = iret
+    else
+       call grib_check(iret,'grib_get',key)
+    endif
+  end subroutine grib_get_byte_array
+
   !> Get the real(4) array of values for a key from a grib message.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
@@ -2095,6 +2133,42 @@
       
   end subroutine grib_set_long_array
 
+  !> Set the array of bytes (character) for a key in a grib message.
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      id of the grib loaded in memory
+  !> @param key         key name
+  !> @param value       character(len=1) array of byte values
+  !> @param length      (optional) output: number of values written
+  !> @param status      (optional) GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_set_byte_array ( gribid, key, value, length, status )
+  integer(kind=kindOfInt),               intent(in)  :: gribid
+  character(len=*),                      intent(in)  :: key
+  character(len=1),        dimension(:), intent(in)  :: value
+  integer(kind=kindOfInt), optional,     intent(out) :: length
+  integer(kind=kindOfInt), optional,     intent(out) :: status
+  integer(kind=kindOfInt)                            :: iret
+  integer(kind=kindOfInt)                            :: nb_values
+  character                                          :: bytes(size(value))
+
+    nb_values = size (value)
+    bytes = transfer (value, bytes)
+    iret = grib_f_set_byte_array ( gribid, key, bytes, nb_values )
+    if (iret /= 0) then
+       call grib_f_write_on_fail(gribid)
+    endif
+    if (present(length)) then
+       length = nb_values
+    end if
+    if (present(status)) then
+       status = iret
+    else
+       call grib_check(iret,'grib_set',key)
+    endif
+  end subroutine grib_set_byte_array
 
   !> Set the real(4) values for an array key in a grib message.
   !>

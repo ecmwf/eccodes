@@ -27,6 +27,7 @@ integer, external :: grib_f_get_data_real4,grib_f_get_data_real8
 integer, external :: grib_f_get_int, grib_f_get_long,grib_f_get_int_array, &
                      grib_f_get_long_array,grib_f_get_real4,&
                      grib_f_get_real4_array, &
+                     grib_f_get_byte_array,&
                      grib_f_get_real8, grib_f_get_real8_array, &
                      grib_f_get_real4_element, grib_f_get_real8_element, &
                      grib_f_get_real4_elements, grib_f_get_real8_elements, &
@@ -50,6 +51,7 @@ integer, external :: grib_f_new_from_index, &
                          
 integer, external :: grib_f_set_int, grib_f_set_int_array, &
                      grib_f_set_long, grib_f_set_long_array, &
+                     grib_f_set_byte_array, &
                      grib_f_set_real4, grib_f_set_real4_array, &
                      grib_f_set_real8, grib_f_set_real8_array, &
                      grib_f_set_string, grib_f_set_missing, &

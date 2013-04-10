@@ -1761,6 +1761,26 @@ int grib_f_get_long_array__(int* gid, char* key, long *val, int* size, int len){
 int grib_f_get_long_array(int* gid, char* key, long *val, int* size, int len){
   return grib_f_get_long_array_( gid,  key, val,  size,  len);
 }
+int grib_f_get_byte_array_(int* gid, char* key, unsigned char *val, int* size, int len){
+
+  grib_handle *h = get_handle(*gid);
+  int err = GRIB_SUCCESS;
+  char buf[1024];
+  size_t lsize = *size;
+
+  if(!h)  return GRIB_INVALID_GRIB;
+
+  err = grib_get_bytes(h, cast_char(buf,key,len), val, &lsize);
+  *size = (int) lsize;
+
+  return  err;
+}
+int grib_f_get_byte_array__(int* gid, char* key, unsigned char *val, int* size, int len){
+    return grib_f_get_byte_array_( gid, key, val, size, len);
+}
+int grib_f_get_byte_array(int* gid, char* key,  unsigned char *val, int* size, int len){
+    return grib_f_get_byte_array_( gid, key, val, size, len);
+}
 
 int grib_f_index_get_string_(int* gid, char* key, char* val, int *eachsize,int* size,  int len){
 
@@ -1922,7 +1942,25 @@ int grib_f_set_long_array__(int* gid, char* key, long* val, int* size,  int len)
 int grib_f_set_long_array(int* gid, char* key, long* val, int* size,  int len){
   return grib_f_set_long_array_( gid,  key,  val,  size,   len);
 }
+int grib_f_set_byte_array_(int* gid, char* key, unsigned char* val, int* size, int len){
+  grib_handle *h = get_handle(*gid);
+  int err = GRIB_SUCCESS;
+  char buf[1024];
+  size_t lsize = *size;
 
+  if(!h) return GRIB_INVALID_GRIB;
+
+  err = grib_set_bytes(h, cast_char(buf,key,len), val, &lsize);
+  *size = (int) lsize;
+  
+  return err;
+}
+int grib_f_set_byte_array__(int* gid, char* key, unsigned char* val, int* size, int len){
+    return grib_f_set_byte_array_( gid, key, val, size, len);
+}
+int grib_f_set_byte_array(int* gid, char* key, unsigned char* val, int* size, int len){
+    return grib_f_set_byte_array_( gid, key, val, size, len);
+}
 
 int grib_f_set_int_(int* gid, char* key, int* val, int len){
   grib_handle *h = get_handle(*gid);
