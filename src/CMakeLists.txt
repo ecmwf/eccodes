@@ -316,18 +316,12 @@ ecbuild_add_library( TARGET    grib_api
             ${grib_api_extra_srcs} 
             ${grib_api_srcs}
 		INCLUDES  
-            ${SZIP_INCLUDE_DIRS}
-            ${GRIB_API_NETCDF_LIBRARIES} 
-            ${GRIB_API_JPG_INCLUDE_DIRS} 
-            ${GRIB_API_PNG_INCLUDE_DIRS}
+            ${GRIB_API_EXTRA_INCLUDE_DIRS} 
 		LIBS      
-            ${SZIP_LIBRARY}
-            ${GRIB_API_NETCDF_LIBRARIES}
-            ${GRIB_API_JPG_LIBRARIES}
-            ${GRIB_API_PNG_LIBRARIES}
+            ${GRIB_API_EXTRA_LIBRARIES}
             ${CMATH_LIBRARIES}  )
 
 
 # TODO: add support for jpg and png
 
-install( FILES grib_api.h DESTINATION include/${PROJECT_NAME} )
+install( FILES grib_api.h DESTINATION include )
