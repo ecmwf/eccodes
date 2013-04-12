@@ -30,22 +30,10 @@ AC_CONFIG_HEADER([src/config.h])
 AC_CONFIG_FILES([grib_api.pc grib_api.spec grib_api_f90.pc])
 AM_INIT_AUTOMAKE($PACKAGE_NAME,[${PACKAGE_VERSION}],[http://www.ecmwf.int])
 
-definition_files_path=/usr/local/share/grib_api/definitions
-samples_files_path=/usr/local/share/grib_api/samples
-ifs_samples_files_path=/usr/local/share/grib_api/ifs_samples
-default_perl_install=/usr/local/perl
-
-if test "$prefix" != 'NONE' ; then
-  definition_files_path=${prefix}/share/grib_api/definitions
-  samples_files_path=${prefix}/share/grib_api/samples
-  ifs_samples_files_path=${prefix}/share/grib_api/ifs_samples
-  default_perl_install=${prefix}/perl
-fi
-
-if test "$datadir" != '${datarootdir}' ; then
-   definition_files_path=$datadir/grib_api/definitions
-fi
-
+definition_files_path="${datadir}/grib_api/definitions"
+samples_files_path="${datadir}/grib_api/samples"
+ifs_samples_files_path="${datadir}/grib_api/ifs_samples"
+default_perl_install="${prefix}/perl"
 
 AC_DEFINE_UNQUOTED(GRIB_API_MAIN_VERSION,$GRIB_API_MAIN_VERSION,Grib Api version)
 AC_DEFINE_UNQUOTED(GRIB_API_MAJOR_VERSION,$GRIB_API_MAJOR_VERSION,Grib Api Major release)
@@ -200,10 +188,6 @@ AC_SUBST(RPM_RELEASE)
 GRIB_SAMPLES_PATH=$samples_files_path
 GRIB_TEMPLATES_PATH=$samples_files_path
 GRIB_DEFINITION_PATH=$definition_files_path
-
-AC_DEFINE_UNQUOTED(GRIB_TEMPLATES_PATH,"$samples_files_path",Directory where templates are)
-AC_DEFINE_UNQUOTED(GRIB_SAMPLES_PATH,"$samples_files_path",Directory where samples are)
-AC_DEFINE_UNQUOTED(GRIB_DEFINITION_PATH,"$definition_files_path",Directory where definition files are)
 
 AC_SUBST(GRIB_TEMPLATES_PATH)
 AC_SUBST(GRIB_SAMPLES_PATH)
