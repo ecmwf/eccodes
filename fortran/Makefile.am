@@ -7,11 +7,11 @@ include_HEADERS = grib_api_f77.h
 
 libgrib_api_f77_la_SOURCES= grib_fortran.c grib_f77.c 
 libgrib_api_f77_la_DEPENDENCIES = $(top_builddir)/src/libgrib_api.la
-libgrib_api_f77_la_LDFLAGS = -release $(GRIB_API_MAIN_VERSION)
+libgrib_api_f77_la_LDFLAGS = -version-info $(GRIB_ABI_CURRENT):$(GRIB_ABI_REVISION):$(GRIB_ABI_AGE)
 
 libgrib_api_f90_la_SOURCES= grib_fortran.c grib_f90.f90 
 libgrib_api_f90_la_DEPENDENCIES = $(top_builddir)/src/libgrib_api.la grib_api_externals.h grib_api_visibility.h grib_api_constants.h grib_kinds.h
-libgrib_api_f90_la_LDFLAGS = -release $(GRIB_API_MAIN_VERSION)
+libgrib_api_f90_la_LDFLAGS = -version-info $(GRIB_ABI_CURRENT):$(GRIB_ABI_REVISION):$(GRIB_ABI_AGE)
 
 libgrib_api_fortran_prototypes= grib_fortran.c
 

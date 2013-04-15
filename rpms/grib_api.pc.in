@@ -7,5 +7,6 @@ libdir=@libdir@
 Name: grib_api
 Description: The grib_api library
 Version: @VERSION@
-Cflags: @CFLAGS@
-Libs: @LDFLAGS@ @LIBS@
+Cflags: -I${includedir}
+Libs: -L${libdir} -lgrib_api
+Libs.private: -L${libdir} -lgrib_api @LIBS@

@@ -294,7 +294,7 @@ libgrib_api_la_SOURCES = $(libgrib_api_la_prototypes) grib_yacc.c  grib_lex.c md
 
 libgrib_api_la_LIBADD = @LIBOBJS@
 libgrib_api_la_DEPENDENCIES = grib_api.h $(libgrib_api_la_LIBADD)
-libgrib_api_la_LDFLAGS = -release $(GRIB_API_MAIN_VERSION)
+libgrib_api_la_LDFLAGS = -version-info $(GRIB_ABI_CURRENT):$(GRIB_ABI_REVISION):$(GRIB_ABI_AGE)
 
 # set the include path
 INCLUDES=  -I.

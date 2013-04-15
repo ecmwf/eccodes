@@ -17,17 +17,21 @@ AC_CONFIG_MACRO_DIR([m4])
 
 GRIB_API_MAIN_VERSION="${GRIB_API_MAJOR_VERSION}.${GRIB_API_MINOR_VERSION}.${GRIB_API_REVISION_VERSION}"
  echo $GRIB_API_MAIN_VERSION
+
 PACKAGE_VERSION="${GRIB_API_MAIN_VERSION}"
 AC_SUBST(GRIB_API_MAIN_VERSION)
-echo "configuring ${PACKAGE_NAME} ${PACKAGE_VERSION}"
+AC_SUBST(GRIB_ABI_CURRENT)
+AC_SUBST(GRIB_ABI_REVISION)
+AC_SUBST(GRIB_ABI_AGE)
 
+echo "configuring ${PACKAGE_NAME} ${PACKAGE_VERSION}"
 
 # Ensure that make can run correctly
 AM_SANITY_CHECK
 
 AC_CONFIG_SRCDIR([src/grib_api.h])
 AC_CONFIG_HEADER([src/config.h])
-AC_CONFIG_FILES([grib_api.pc grib_api.spec grib_api_f90.pc])
+AC_CONFIG_FILES([rpms/grib_api.pc rpms/grib_api.spec rpms/grib_api_f90.pc])
 AM_INIT_AUTOMAKE($PACKAGE_NAME,[${PACKAGE_VERSION}],[http://www.ecmwf.int])
 
 definition_files_path="${datadir}/grib_api/definitions"
@@ -39,6 +43,12 @@ AC_DEFINE_UNQUOTED(GRIB_API_MAIN_VERSION,$GRIB_API_MAIN_VERSION,Grib Api version
 AC_DEFINE_UNQUOTED(GRIB_API_MAJOR_VERSION,$GRIB_API_MAJOR_VERSION,Grib Api Major release)
 AC_DEFINE_UNQUOTED(GRIB_API_MINOR_VERSION,$GRIB_API_MINOR_VERSION,Grib Api Minor release)
 AC_DEFINE_UNQUOTED(GRIB_API_REVISION_VERSION,$GRIB_API_REVISION_VERSION,Grib Api Revision release)
+
+AC_DEFINE_UNQUOTED(GRIB_ABI_CURRENT,$GRIB_ABI_CURRENT,Grib Api Current ABI version)
+AC_DEFINE_UNQUOTED(GRIB_ABI_REVISION,$GRIB_ABI_REVISION,Grib Api Revision ABI version)
+AC_DEFINE_UNQUOTED(GRIB_ABI_AGE,$GRIB_ABI_AGE,Grib Api Age of ABI version)
+
+
 AH_TEMPLATE([_LARGE_FILE_API],
 			[Needs to be undefined on some AIX])
 
@@ -617,7 +627,7 @@ AC_CHECK_FUNCS([bzero gettimeofday])
 
 AX_LINUX_DISTRIBUTION
 
-AC_OUTPUT( Makefile src/Makefile fortran/Makefile tools/Makefile definitions/Makefile samples/Makefile ifs_samples/grib1/Makefile ifs_samples/grib1_mlgrib2/Makefile ifs_samples/grib1_mlgrib2_ieee64/Makefile tests/Makefile mars_tests/Makefile examples/C/Makefile examples/F90/Makefile tigge/Makefile perl/GRIB-API/Makefile.PL perl/Makefile python/Makefile examples/python/Makefile rpms/grib_api.spec rpms/grib_api.pc rpms/grib_api_f90.pc)
+AC_OUTPUT( Makefile src/Makefile fortran/Makefile tools/Makefile definitions/Makefile samples/Makefile ifs_samples/grib1/Makefile ifs_samples/grib1_mlgrib2/Makefile ifs_samples/grib1_mlgrib2_ieee64/Makefile tests/Makefile mars_tests/Makefile examples/C/Makefile examples/F90/Makefile tigge/Makefile perl/GRIB-API/Makefile.PL perl/Makefile python/Makefile examples/python/Makefile)
 
 AC_MSG_NOTICE([
 

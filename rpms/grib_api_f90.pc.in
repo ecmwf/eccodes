@@ -8,5 +8,6 @@ FC=@FC@
 Name: grib_api
 Description: The grib_api library for Fortran 90
 Version: @VERSION@
-Cflags: @CFLAGS@ "@F90_MODULE_FLAG@@includedir@"
-Libs: -L@libdir@ @LDFLAGS@ @LIBS@ -lgrib_api_f90 -lgrib_api
+Cflags: @F90_MODULE_FLAG@@includedir@
+Libs: -L${libdir} -lgrib_api_f90
+Libs.private: -L${libdir} -lgrib_api_f90 -lgrib_api @LIBS@

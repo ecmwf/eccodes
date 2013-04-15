@@ -8,7 +8,7 @@ CONFIGURE_DEPENDENCIES = $(top_srcdir)/version.sh
 $(top_srcdir)/configure: $(top_srcdir)/version.sh
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = grib_api.pc grib_api_f90.pc
+pkgconfig_DATA = rpms/grib_api.pc rpms/grib_api_f90.pc
 
 if WITH_PERL
   PERL_OPT = @PERLDIR@
@@ -387,7 +387,7 @@ check-perf:
 #	-rm -f $(perf_dir)/report.out*
 	@echo "Testing and benchmarks have finished"
 
-rpmspec = $(PACKAGE_TARNAME).spec
+rpmspec = rpms/$(PACKAGE_TARNAME).spec
 
 rpmmacros = \
     --define="_rpmdir $${PWD}"\
@@ -426,7 +426,7 @@ bindist:
 	$(MAKE) DESTDIR=$(abs_top_srcdir)/_dist
 	$(MAKE) DESTDIR=$(abs_top_srcdir)/_dist install
 	cd $(abs_top_srcdir)/_dist; \
-	find . -type f | grep $(prefix) | \
+	find . -type f -o -type l | grep $(prefix) | \
 		cpio -ov -H ustar > $(main_package) ; \
 	gzip $(main_package)
 
