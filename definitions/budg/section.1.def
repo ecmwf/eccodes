@@ -90,7 +90,8 @@ meta ls.stepRange g1step_range(P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRan
 meta startStep long_vector(stepRange,0) : dump;
 meta endStep   long_vector(stepRange,1) : dump;
 
-meta stepRangeInHours g1step_range(P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange,stepType);
+# Set stepUnits to 1 to get step range in hours
+meta stepRangeInHours g1step_range(P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange,one,stepType);
 meta startStepInHours long_vector(stepRangeInHours,0) : dump;
 meta endStepInHours   long_vector(stepRangeInHours,1) : dump;
 
