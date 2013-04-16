@@ -1057,7 +1057,7 @@ int grib_read_any_from_file(grib_context* ctx,FILE* f,void* buffer,size_t* len)
 	int         err;
 	user_buffer u; 
 	reader      r; 
-	off_t 		offset;
+	off_t       offset;
 
 	u.user_buffer  = buffer;
 	u.buffer_size  = *len;

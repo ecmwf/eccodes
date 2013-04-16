@@ -37,26 +37,26 @@ double rint(double x)
 static void set_total_length(unsigned char* buffer,long *section_length,long *section_offset,int edition,size_t totalLength) {
 	long off;
 	switch (edition) {
-		case 1:
-			if(totalLength < 0x800000 ) {
-				off=32;
-				grib_encode_unsigned_long(buffer, (unsigned long)totalLength ,  &off, 24);
-			} else {
-				long s4len,t120;
-				totalLength -= 4;
-				t120  = (totalLength+119)/120;
-				s4len  = t120*120 - totalLength;
-				totalLength  = 0x800000 | t120;
-				off=32;
-				grib_encode_unsigned_long(buffer, (unsigned long)totalLength ,  &off, 24);
-				off=section_offset[4]*8;
-				grib_encode_unsigned_long(buffer, (unsigned long)s4len ,  &off, 24);
-			}
-			break;
-		case 2:
-			off=64;
-			grib_encode_unsigned_long(buffer, (unsigned long)totalLength ,  &off, 64);
-			break;
+	case 1:
+		if(totalLength < 0x800000 ) {
+			off=32;
+			grib_encode_unsigned_long(buffer, (unsigned long)totalLength ,  &off, 24);
+		} else {
+			long s4len,t120;
+			totalLength -= 4;
+			t120  = (totalLength+119)/120;
+			s4len  = t120*120 - totalLength;
+			totalLength  = 0x800000 | t120;
+			off=32;
+			grib_encode_unsigned_long(buffer, (unsigned long)totalLength ,  &off, 24);
+			off=section_offset[4]*8;
+			grib_encode_unsigned_long(buffer, (unsigned long)s4len ,  &off, 24);
+		}
+		break;
+	case 2:
+		off=64;
+		grib_encode_unsigned_long(buffer, (unsigned long)totalLength ,  &off, 64);
+		break;
 	}
 
 }
@@ -77,7 +77,7 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom,grib_handle* 
 
 	*err=grib_get_long(hfrom,"edition",&edition);
 	if (*err) return NULL;
-	
+
 	for (i=0;i<=hfrom->sections_count;i++) {
 
 		if (sections[i]) {h=hfrom;}
@@ -101,33 +101,33 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom,grib_handle* 
 	off=0;
 	for (i=0;i<=hfrom->sections_count;i++) {
 		grib_handle* h;
-        if (sections[i]) h=hfrom;
+		if (sections[i]) h=hfrom;
 		else h=hto;
 		p=memcpy(p,h->buffer->data+section_offset[i],section_length[i]);
 		section_offset[i]=off;
 		off+=section_length[i];
 		p+=section_length[i];
-   }
+	}
 
-   /* copy section 3 present flag*/
-   if (edition==1) {
+	/* copy section 3 present flag*/
+	if (edition==1) {
 		const void* buffer_to=NULL;
 		size_t size_to=0;
 		grib_get_message(hto,&buffer_to,&size_to);
 		memcpy(buffer+15,((unsigned char*)buffer_to)+15,1);
 	}
 
-   set_total_length(buffer,section_length,section_offset,edition,totalLength);
+	set_total_length(buffer,section_length,section_offset,edition,totalLength);
 
-   h=grib_handle_new_from_message(hfrom->context,buffer,totalLength);
+	h=grib_handle_new_from_message(hfrom->context,buffer,totalLength);
 
-   /*to allow free of buffer*/
-   h->buffer->property = GRIB_MY_BUFFER;
+	/*to allow free of buffer*/
+	h->buffer->property = GRIB_MY_BUFFER;
 
-   switch (edition) {
-   	case 1:
+	switch (edition) {
+	case 1:
 		if (sections[1] && sections[2]) break;
-		
+
 		if (sections[1]) {
 			long PVPresent;
 			grib_get_long(hfrom,"PVPresent",&PVPresent);
@@ -178,9 +178,9 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom,grib_handle* 
 			grib_set_long(h,"discipline",discipline);
 		}
 		break;
-   }
+	}
 
-   return h;
+	return h;
 }
 
 grib_handle* grib_util_sections_copy(grib_handle* hfrom,grib_handle* hto,int what,int *err) {
@@ -206,69 +206,69 @@ grib_handle* grib_util_sections_copy(grib_handle* hfrom,grib_handle* hto,int wha
 
 	if (what & GRIB_SECTION_GRID) {
 		switch (edition_from) {
-			case 1:
-				sections_to_copy[2]=1;
-				break;
-			case 2:
-				sections_to_copy[3]=1;
-				break;
+		case 1:
+			sections_to_copy[2]=1;
+			break;
+		case 2:
+			sections_to_copy[3]=1;
+			break;
 		}
 	}
 
 	if (what & GRIB_SECTION_DATA) {
 		switch (edition_from) {
-			case 1:
-				sections_to_copy[3]=1;
-				sections_to_copy[4]=1;
-				break;
-			case 2:
-				sections_to_copy[5]=1;
-				sections_to_copy[6]=1;
-				sections_to_copy[7]=1;
-				break;
+		case 1:
+			sections_to_copy[3]=1;
+			sections_to_copy[4]=1;
+			break;
+		case 2:
+			sections_to_copy[5]=1;
+			sections_to_copy[6]=1;
+			sections_to_copy[7]=1;
+			break;
 		}
 	}
 
 	if (what & GRIB_SECTION_LOCAL) {
 		switch (edition_from) {
-			case 1:
-				sections_to_copy[1]=1;
-				break;
-			case 2:
-				sections_to_copy[2]=1;
-				break;
+		case 1:
+			sections_to_copy[1]=1;
+			break;
+		case 2:
+			sections_to_copy[2]=1;
+			break;
 		}
 	}
 
 	if (what & GRIB_SECTION_PRODUCT) {
 		switch (edition_from) {
-			case 1:
-				grib_get_long(hfrom,"localDefinitionNumber",&localDefinitionNumber);
-				if (localDefinitionNumber==13) {
-					sections_to_copy[4]=1;
-				}
-				sections_to_copy[1]=1;
-				break;
-			case 2:
-				sections_to_copy[1]=1;
+		case 1:
+			grib_get_long(hfrom,"localDefinitionNumber",&localDefinitionNumber);
+			if (localDefinitionNumber==13) {
 				sections_to_copy[4]=1;
-				break;
+			}
+			sections_to_copy[1]=1;
+			break;
+		case 2:
+			sections_to_copy[1]=1;
+			sections_to_copy[4]=1;
+			break;
 		}
 	}
 
 	if (what & GRIB_SECTION_BITMAP) {
 		switch (edition_from) {
-			case 1:
-				sections_to_copy[3]=1;
-				break;
-			case 2:
-				sections_to_copy[6]=1;
-				break;
+		case 1:
+			sections_to_copy[3]=1;
+			break;
+		case 2:
+			sections_to_copy[6]=1;
+			break;
 		}
 	}
 
 	return grib_sections_copy_internal(hfrom,hto,sections_to_copy,err);
-	
+
 }
 
 static grib_trie* init_list(const char* name);
@@ -329,41 +329,41 @@ static grib_trie* init_list(const char* name) {
 }
 
 static void print_values(grib_context* c,const grib_util_grid_spec* spec,const double* data_values,size_t data_values_count,const grib_values *values,int count) {
-		int i;
-		printf("GRIB_API DEBUG grib_util grib_set_values: setting %d values \n",count);
+	int i;
+	printf("GRIB_API DEBUG grib_util grib_set_values: setting %d values \n",count);
 
-		for(i = 0; i < count ; i++)
+	for(i = 0; i < count ; i++)
+	{
+		switch(values[i].type)
 		{
-			switch(values[i].type)
-			{
-				case GRIB_TYPE_LONG: printf("GRIB_API DEBUG grib_util: => %s =  %ld;\n"
-						,values[i].name,(long)values[i].long_value); break;
-				case GRIB_TYPE_DOUBLE: printf("GRIB_API DEBUG grib_util: => %s = %.16e;\n"
-						,values[i].name,values[i].double_value); break;
-				case GRIB_TYPE_STRING: printf("GRIB_API DEBUG grib_util: => %s = \"%s\";\n"
-						,values[i].name,values[i].string_value); break;
-			}
+		case GRIB_TYPE_LONG: printf("GRIB_API DEBUG grib_util: => %s =  %ld;\n"
+				,values[i].name,(long)values[i].long_value); break;
+		case GRIB_TYPE_DOUBLE: printf("GRIB_API DEBUG grib_util: => %s = %.16e;\n"
+				,values[i].name,values[i].double_value); break;
+		case GRIB_TYPE_STRING: printf("GRIB_API DEBUG grib_util: => %s = \"%s\";\n"
+				,values[i].name,values[i].string_value); break;
 		}
+	}
 
-		if(spec->bitmapPresent) {
-			int missing = 0;
-			double min = 1e100;
-			for(i = 0; i < data_values_count ; i++)
-			{
-				double d = data_values[i] - spec->missingValue;
-				if(d < 0) d = -d;
+	if(spec->bitmapPresent) {
+		int missing = 0;
+		double min = 1e100;
+		for(i = 0; i < data_values_count ; i++)
+		{
+			double d = data_values[i] - spec->missingValue;
+			if(d < 0) d = -d;
 
-				if(d < min) {
-					min = d;
-				}
-				
-				if(data_values[i] == spec->missingValue)
-					missing++;
-
-
+			if(d < min) {
+				min = d;
 			}
 
+			if(data_values[i] == spec->missingValue)
+				missing++;
+
+
 		}
+
+	}
 }
 
 #define     ISECTION_2  3000
@@ -402,7 +402,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 	double laplacianOperator;
 	int packingTypeIsSet=0;
 	int setSecondOrder=0;
-    size_t slen=17;
+	size_t slen=17;
 
 	static grib_util_packing_spec default_packing_spec = {0, };
 
@@ -436,63 +436,63 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 
 	if (flags & GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING) {
 		if (packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED && 
-			strcmp(input_packing_type,"grid_simple_matrix")) {
+				strcmp(input_packing_type,"grid_simple_matrix")) {
 			switch (packing_spec->packing_type) {
-				case GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX:
-					if (strcmp(input_packing_type,"spectral_complex") && !strcmp(input_packing_type,"spectral_simple"))
-						SET_STRING_VALUE("packingType","spectral_complex");
-					break;
-				case GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE:
-					if (strcmp(input_packing_type,"spectral_simple") && !strcmp(input_packing_type,"spectral_complex"))
-						SET_STRING_VALUE("packingType","spectral_simple");
-					break;
-				case GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE:
-					if (strcmp(input_packing_type,"grid_simple") && !strcmp(input_packing_type,"grid_complex") )
-						SET_STRING_VALUE("packingType","grid_simple");
-					break;
-				case GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE_MATRIX:
-					SET_STRING_VALUE("packingType","grid_simple_matrix");
-					break;
-				case GRIB_UTIL_PACKING_TYPE_GRID_COMPLEX:
-					if (strcmp(input_packing_type,"grid_complex") && !strcmp(input_packing_type,"grid_simple"))
-						SET_STRING_VALUE("packingType","grid_complex");
-					break;
-				case GRIB_UTIL_PACKING_TYPE_JPEG:
-					if (strcmp(input_packing_type,"grid_jpeg") && !strcmp(input_packing_type,"grid_simple"))
-						SET_STRING_VALUE("packingType","grid_jpeg");
-					break;
-				case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
-						/* we delay the set of grid_second_order because we don't want
+			case GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX:
+				if (strcmp(input_packing_type,"spectral_complex") && !strcmp(input_packing_type,"spectral_simple"))
+					SET_STRING_VALUE("packingType","spectral_complex");
+				break;
+			case GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE:
+				if (strcmp(input_packing_type,"spectral_simple") && !strcmp(input_packing_type,"spectral_complex"))
+					SET_STRING_VALUE("packingType","spectral_simple");
+				break;
+			case GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE:
+				if (strcmp(input_packing_type,"grid_simple") && !strcmp(input_packing_type,"grid_complex") )
+					SET_STRING_VALUE("packingType","grid_simple");
+				break;
+			case GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE_MATRIX:
+				SET_STRING_VALUE("packingType","grid_simple_matrix");
+				break;
+			case GRIB_UTIL_PACKING_TYPE_GRID_COMPLEX:
+				if (strcmp(input_packing_type,"grid_complex") && !strcmp(input_packing_type,"grid_simple"))
+					SET_STRING_VALUE("packingType","grid_complex");
+				break;
+			case GRIB_UTIL_PACKING_TYPE_JPEG:
+				if (strcmp(input_packing_type,"grid_jpeg") && !strcmp(input_packing_type,"grid_simple"))
+					SET_STRING_VALUE("packingType","grid_jpeg");
+				break;
+			case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
+				/* we delay the set of grid_second_order because we don't want
 							to do it on a field with bitsPerValue=0 */
-						setSecondOrder=1;
-					break;
-				default :
-					printf("invalid packing_spec->packing_type = %ld\n",(long)packing_spec->packing_type);
-					abort();
+				setSecondOrder=1;
+				break;
+			default :
+				printf("invalid packing_spec->packing_type = %ld\n",(long)packing_spec->packing_type);
+				abort();
 			}
 			packingTypeIsSet=1;
 		}
 		switch(packing_spec->accuracy) {
 
-			case GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT:
+		case GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT:
 			break;
 
-			case GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES:
-				if (input_bits_per_value!=packing_spec->bitsPerValue)
-					SET_LONG_VALUE("bitsPerValue", packing_spec->bitsPerValue);
-				break;
+		case GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES:
+			if (input_bits_per_value!=packing_spec->bitsPerValue)
+				SET_LONG_VALUE("bitsPerValue", packing_spec->bitsPerValue);
+			break;
 
-			case GRIB_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT:
-				break;
+		case GRIB_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT:
+			break;
 
-			case GRIB_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR:
-				if (input_decimal_scale_factor!=packing_spec->decimalScaleFactor)
-					SET_LONG_VALUE("decimalScaleFactor", packing_spec->decimalScaleFactor);
-				break;
+		case GRIB_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR:
+			if (input_decimal_scale_factor!=packing_spec->decimalScaleFactor)
+				SET_LONG_VALUE("decimalScaleFactor", packing_spec->decimalScaleFactor);
+			break;
 
-			default:
-				printf("invalid packing_spec->accuracy = %ld\n",(long)packing_spec->accuracy);
-				abort();
+		default:
+			printf("invalid packing_spec->accuracy = %ld\n",(long)packing_spec->accuracy);
+			abort();
 		}
 
 		/*nothing to be changed*/
@@ -515,7 +515,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 		}
 		if (h->context->debug==-1) {
 			int j=0;
-		    printf("GRIB_API DEBUG grib_util: grib_set_double_array\n");
+			printf("GRIB_API DEBUG grib_util: grib_set_double_array\n");
 			for (j=0;j<20;j++) printf("GRIB_API DEBUG grib_util %g\n",data_values[j]);
 			printf("GRIB_API DEBUG grib_util: data_values_count=%d \n",(int)data_values_count);
 		}
@@ -529,56 +529,56 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 
 
 		/* convert to second_order if not constant field */
-        if (setSecondOrder ) {
-                size_t slen=17;
-                int ii=0;
-                int constant=1;
-				double missingValue=0;
-                double value=missingValue;
+		if (setSecondOrder ) {
+			size_t slen=17;
+			int ii=0;
+			int constant=1;
+			double missingValue=0;
+			double value=missingValue;
 
-				grib_get_double(h,"missingValue",&missingValue);
-                for (ii=0;ii<data_values_count;ii++) {
-                    if (data_values[ii]!=missingValue) {
-                        if (value==missingValue) {
-                            value=data_values[ii];
-                        } else {
-                            if (value!=data_values[ii]) {
-                                constant=0;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (!constant) {
-					if (editionNumber == 1 ) {
-						long numberOfGroups;
-						grib_handle* htmp=grib_handle_clone(h);
-
-						slen=17;
-						grib_set_string(htmp,"packingType","grid_second_order",&slen);
-						grib_get_long(htmp,"numberOfGroups",&numberOfGroups);
-						/* GRIBEX is not able to decode overflown numberOfGroups with SPD */
-						if (numberOfGroups>65534 && h->context->no_spd ) {
-							slen=24;
-							grib_set_string(h,"packingType","grid_second_order_no_SPD",&slen);
-							grib_handle_delete(htmp);
-						} else {
-							grib_handle_delete(h);
-							h=htmp;
-						}
+			grib_get_double(h,"missingValue",&missingValue);
+			for (ii=0;ii<data_values_count;ii++) {
+				if (data_values[ii]!=missingValue) {
+					if (value==missingValue) {
+						value=data_values[ii];
 					} else {
-						slen=17;
-						grib_set_string(h,"packingType","grid_second_order",&slen);
-						grib_set_double_array(h,"values",data_values,data_values_count);
-					}
-				} else {
-					if (h->context->gribex_mode_on) {
-						h->context->gribex_mode_on=0;
-						grib_set_double_array(h,"values",data_values,data_values_count);
-						h->context->gribex_mode_on=1;
+						if (value!=data_values[ii]) {
+							constant=0;
+							break;
+						}
 					}
 				}
-        }
+			}
+			if (!constant) {
+				if (editionNumber == 1 ) {
+					long numberOfGroups;
+					grib_handle* htmp=grib_handle_clone(h);
+
+					slen=17;
+					grib_set_string(htmp,"packingType","grid_second_order",&slen);
+					grib_get_long(htmp,"numberOfGroups",&numberOfGroups);
+					/* GRIBEX is not able to decode overflown numberOfGroups with SPD */
+					if (numberOfGroups>65534 && h->context->no_spd ) {
+						slen=24;
+						grib_set_string(h,"packingType","grid_second_order_no_SPD",&slen);
+						grib_handle_delete(htmp);
+					} else {
+						grib_handle_delete(h);
+						h=htmp;
+					}
+				} else {
+					slen=17;
+					grib_set_string(h,"packingType","grid_second_order",&slen);
+					grib_set_double_array(h,"values",data_values,data_values_count);
+				}
+			} else {
+				if (h->context->gribex_mode_on) {
+					h->context->gribex_mode_on=0;
+					grib_set_double_array(h,"values",data_values,data_values_count);
+					h->context->gribex_mode_on=1;
+				}
+			}
+		}
 
 		return h;
 	}
@@ -586,41 +586,41 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 
 	switch(spec->grid_type) {
 
-		case GRIB_UTIL_GRID_SPEC_REGULAR_LL:
-			grid_type = "regular_ll";
-			break;
+	case GRIB_UTIL_GRID_SPEC_REGULAR_LL:
+		grid_type = "regular_ll";
+		break;
 
-		case GRIB_UTIL_GRID_SPEC_ROTATED_LL:
-			grid_type = "rotated_ll";
-			break;
+	case GRIB_UTIL_GRID_SPEC_ROTATED_LL:
+		grid_type = "rotated_ll";
+		break;
 
-		case GRIB_UTIL_GRID_SPEC_REGULAR_GG:
-			grid_type = "regular_gg";
-			break;
+	case GRIB_UTIL_GRID_SPEC_REGULAR_GG:
+		grid_type = "regular_gg";
+		break;
 
-		case GRIB_UTIL_GRID_SPEC_ROTATED_GG:
-			grid_type = "rotated_gg";
-			break;
+	case GRIB_UTIL_GRID_SPEC_ROTATED_GG:
+		grid_type = "rotated_gg";
+		break;
 
-		case GRIB_UTIL_GRID_SPEC_REDUCED_LL:
-			grid_type = "reduced_ll";
-			break;
+	case GRIB_UTIL_GRID_SPEC_REDUCED_LL:
+		grid_type = "reduced_ll";
+		break;
 
-		case GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC:
-			grid_type = "polar_stereographic";
-			break;
+	case GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC:
+		grid_type = "polar_stereographic";
+		break;
 
-		case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
-			grid_type = "reduced_gg";
-			break;
+	case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
+		grid_type = "reduced_gg";
+		break;
 
-		case GRIB_UTIL_GRID_SPEC_SH:
-			grid_type = "sh";
-			break;
+	case GRIB_UTIL_GRID_SPEC_SH:
+		grid_type = "sh";
+		break;
 
-		default:
-			*err = GRIB_NOT_IMPLEMENTED;
-			return NULL;
+	default:
+		*err = GRIB_NOT_IMPLEMENTED;
+		return NULL;
 
 	}
 
@@ -633,11 +633,11 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 		size_t n = sizeof(levtype);
 		Assert(grib_get_string(h,"levelType",levtype,&n) == 0);
 		switch (spec->grid_type) {
-			case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
-				sprintf(name, "%s_pl_%ld_grib%ld", grid_type,spec->N, editionNumber);
-				break;
-			default :
-				sprintf(name, "%s_pl_grib%ld", grid_type, editionNumber);
+		case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
+			sprintf(name, "%s_pl_%ld_grib%ld", grid_type,spec->N, editionNumber);
+			break;
+		default :
+			sprintf(name, "%s_pl_grib%ld", grid_type, editionNumber);
 		}
 	}
 
@@ -650,187 +650,187 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 
 	/* Set grid  */
 	switch(spec->grid_type) {
-		case GRIB_UTIL_GRID_SPEC_REGULAR_LL:
-		case GRIB_UTIL_GRID_SPEC_ROTATED_LL:
+	case GRIB_UTIL_GRID_SPEC_REGULAR_LL:
+	case GRIB_UTIL_GRID_SPEC_ROTATED_LL:
 
-			COPY_SPEC_LONG  (bitmapPresent);
-			if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+		COPY_SPEC_LONG  (bitmapPresent);
+		if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
 
-			SET_LONG_VALUE  ("ijDirectionIncrementGiven",    1);
+		SET_LONG_VALUE  ("ijDirectionIncrementGiven",    1);
 
-			/* default iScansNegatively=0 jScansPositively=0 is ok */
-			COPY_SPEC_LONG(iScansNegatively);
-			COPY_SPEC_LONG(jScansPositively);
+		/* default iScansNegatively=0 jScansPositively=0 is ok */
+		COPY_SPEC_LONG(iScansNegatively);
+		COPY_SPEC_LONG(jScansPositively);
 
-			COPY_SPEC_LONG(Ni);
-			COPY_SPEC_LONG(Nj);
+		COPY_SPEC_LONG(Ni);
+		COPY_SPEC_LONG(Nj);
 
-			COPY_SPEC_DOUBLE(iDirectionIncrementInDegrees);
-			COPY_SPEC_DOUBLE(jDirectionIncrementInDegrees);
+		COPY_SPEC_DOUBLE(iDirectionIncrementInDegrees);
+		COPY_SPEC_DOUBLE(jDirectionIncrementInDegrees);
 
-			COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
-			COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
+		COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+		COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
 
-			COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
-			COPY_SPEC_DOUBLE(latitudeOfLastGridPointInDegrees);
+		COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
+		COPY_SPEC_DOUBLE(latitudeOfLastGridPointInDegrees);
 
-			break;
+		break;
 
-		case GRIB_UTIL_GRID_SPEC_REGULAR_GG:
-		case GRIB_UTIL_GRID_SPEC_ROTATED_GG:
+	case GRIB_UTIL_GRID_SPEC_REGULAR_GG:
+	case GRIB_UTIL_GRID_SPEC_ROTATED_GG:
 
-			COPY_SPEC_LONG  (bitmapPresent);
-			if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-			SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
+		COPY_SPEC_LONG  (bitmapPresent);
+		if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+		SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
 
-			/* TODO: add Assert */
+		/* TODO: add Assert */
 
-			COPY_SPEC_LONG(Ni);
-			COPY_SPEC_DOUBLE(iDirectionIncrementInDegrees);
+		COPY_SPEC_LONG(Ni);
+		COPY_SPEC_DOUBLE(iDirectionIncrementInDegrees);
 
-			COPY_SPEC_LONG(Nj);
-			COPY_SPEC_LONG(N);
+		COPY_SPEC_LONG(Nj);
+		COPY_SPEC_LONG(N);
 
-			/* TODO: Compute here ... */
-			COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
-			COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
+		/* TODO: Compute here ... */
+		COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+		COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
 
-			COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
-			COPY_SPEC_DOUBLE(latitudeOfLastGridPointInDegrees);
-			break;
+		COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
+		COPY_SPEC_DOUBLE(latitudeOfLastGridPointInDegrees);
+		break;
 
 
-		case GRIB_UTIL_GRID_SPEC_REDUCED_LL:
-			COPY_SPEC_LONG  (bitmapPresent);
-			if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-			SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
+	case GRIB_UTIL_GRID_SPEC_REDUCED_LL:
+		COPY_SPEC_LONG  (bitmapPresent);
+		if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+		SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
 
-			COPY_SPEC_LONG(Nj);
+		COPY_SPEC_LONG(Nj);
 
-			COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
-			COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
+		COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+		COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
 
-			COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
-			COPY_SPEC_DOUBLE(latitudeOfLastGridPointInDegrees);
-			break;
+		COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
+		COPY_SPEC_DOUBLE(latitudeOfLastGridPointInDegrees);
+		break;
 
-		case GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC:
-			COPY_SPEC_LONG  (bitmapPresent);
-			if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+	case GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC:
+		COPY_SPEC_LONG  (bitmapPresent);
+		if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
 
-			COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
-			COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
-			COPY_SPEC_LONG(Ni);
-			COPY_SPEC_LONG(Nj);
+		COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+		COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
+		COPY_SPEC_LONG(Ni);
+		COPY_SPEC_LONG(Nj);
 
-			/* default iScansNegatively=0 jScansPositively=0 is ok */
-			COPY_SPEC_LONG(iScansNegatively);
-			COPY_SPEC_LONG(jScansPositively);
+		/* default iScansNegatively=0 jScansPositively=0 is ok */
+		COPY_SPEC_LONG(iScansNegatively);
+		COPY_SPEC_LONG(jScansPositively);
 
-			COPY_SPEC_DOUBLE(orientationOfTheGridInDegrees);
+		COPY_SPEC_DOUBLE(orientationOfTheGridInDegrees);
 
-			COPY_SPEC_LONG(DxInMetres);
-			COPY_SPEC_LONG(DyInMetres);
+		COPY_SPEC_LONG(DxInMetres);
+		COPY_SPEC_LONG(DyInMetres);
 
-			break;
+		break;
 
-		case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
-			COPY_SPEC_LONG  (bitmapPresent);
-			if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-			SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
+	case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
+		COPY_SPEC_LONG  (bitmapPresent);
+		if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+		SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
 
-			COPY_SPEC_LONG(Nj);
-			COPY_SPEC_LONG(N);
+		COPY_SPEC_LONG(Nj);
+		COPY_SPEC_LONG(N);
 
-			COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
-			COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
+		COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+		COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
 
-			COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
-			COPY_SPEC_DOUBLE(latitudeOfLastGridPointInDegrees);
+		COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
+		COPY_SPEC_DOUBLE(latitudeOfLastGridPointInDegrees);
 
-			break;
+		break;
 
-		case GRIB_UTIL_GRID_SPEC_SH:
-			*err=grib_get_string(h,"gridType",input_grid_type,&input_grid_type_len);
+	case GRIB_UTIL_GRID_SPEC_SH:
+		*err=grib_get_string(h,"gridType",input_grid_type,&input_grid_type_len);
 
-			SET_LONG_VALUE("J", spec->truncation);
-			SET_LONG_VALUE("K", spec->truncation);
-			SET_LONG_VALUE("M", spec->truncation);
+		SET_LONG_VALUE("J", spec->truncation);
+		SET_LONG_VALUE("K", spec->truncation);
+		SET_LONG_VALUE("M", spec->truncation);
 
-			if(packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX)
-			{
-				SET_STRING_VALUE("packingType", "spectral_complex");
-				packingTypeIsSet=1;
-				SET_LONG_VALUE("JS", 20);
-				SET_LONG_VALUE("KS", 20);
-				SET_LONG_VALUE("MS", 20);
-				if (packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED && editionNumber==2 ) {
-					SET_LONG_VALUE("computeLaplacianOperator", 1);
-				} else if ((!(*err) && strcmp(input_grid_type,"sh")) || packing_spec->computeLaplacianOperator ) {
-					SET_LONG_VALUE("computeLaplacianOperator", 1);
-					if (packing_spec->truncateLaplacian) 
-						SET_LONG_VALUE("truncateLaplacian",1);
-				} else {
-					SET_LONG_VALUE("computeLaplacianOperator", 0);
-					*err=grib_get_double(h,"laplacianOperator",&laplacianOperator);
-					if (packing_spec->truncateLaplacian) SET_LONG_VALUE("truncateLaplacian",1);
-					SET_DOUBLE_VALUE("laplacianOperator", packing_spec->laplacianOperator);
-					if (laplacianOperator) {
-						SET_DOUBLE_VALUE("laplacianOperator", laplacianOperator);
-					}
+		if(packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX)
+		{
+			SET_STRING_VALUE("packingType", "spectral_complex");
+			packingTypeIsSet=1;
+			SET_LONG_VALUE("JS", 20);
+			SET_LONG_VALUE("KS", 20);
+			SET_LONG_VALUE("MS", 20);
+			if (packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED && editionNumber==2 ) {
+				SET_LONG_VALUE("computeLaplacianOperator", 1);
+			} else if ((!(*err) && strcmp(input_grid_type,"sh")) || packing_spec->computeLaplacianOperator ) {
+				SET_LONG_VALUE("computeLaplacianOperator", 1);
+				if (packing_spec->truncateLaplacian)
+					SET_LONG_VALUE("truncateLaplacian",1);
+			} else {
+				SET_LONG_VALUE("computeLaplacianOperator", 0);
+				*err=grib_get_double(h,"laplacianOperator",&laplacianOperator);
+				if (packing_spec->truncateLaplacian) SET_LONG_VALUE("truncateLaplacian",1);
+				SET_DOUBLE_VALUE("laplacianOperator", packing_spec->laplacianOperator);
+				if (laplacianOperator) {
+					SET_DOUBLE_VALUE("laplacianOperator", laplacianOperator);
 				}
-
 			}
 
-			break;
+		}
+
+		break;
 	}
 
 
 	/* Set rotation */
 
 	switch(spec->grid_type) {
-		case GRIB_UTIL_GRID_SPEC_ROTATED_LL:
-		case GRIB_UTIL_GRID_SPEC_ROTATED_GG:
-			COPY_SPEC_LONG(uvRelativeToGrid);
-			COPY_SPEC_DOUBLE(latitudeOfSouthernPoleInDegrees);
-			COPY_SPEC_DOUBLE(longitudeOfSouthernPoleInDegrees);
-			break;
+	case GRIB_UTIL_GRID_SPEC_ROTATED_LL:
+	case GRIB_UTIL_GRID_SPEC_ROTATED_GG:
+		COPY_SPEC_LONG(uvRelativeToGrid);
+		COPY_SPEC_DOUBLE(latitudeOfSouthernPoleInDegrees);
+		COPY_SPEC_DOUBLE(longitudeOfSouthernPoleInDegrees);
+		break;
 	}
 
 	/* process packing options */
 	if (!packingTypeIsSet && 
-		packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED && 
-		strcmp(input_packing_type,"grid_simple_matrix")) {
+			packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED &&
+			strcmp(input_packing_type,"grid_simple_matrix")) {
 
 		switch (packing_spec->packing_type) {
-			case GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX:
-				if (strcmp(input_packing_type,"spectral_complex") && !strcmp(input_packing_type,"spectral_simple"))
-					SET_STRING_VALUE("packingType","spectral_complex");
-				break;
-			case GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE:
-				if (strcmp(input_packing_type,"spectral_simple") && !strcmp(input_packing_type,"spectral_complex"))
-					SET_STRING_VALUE("packingType","spectral_simple");
-				break;
-			case GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE:
-				if (strcmp(input_packing_type,"grid_simple") && !strcmp(input_packing_type,"grid_complex"))
-						SET_STRING_VALUE("packingType","grid_simple");
-				break;
-			case GRIB_UTIL_PACKING_TYPE_GRID_COMPLEX:
-				if (strcmp(input_packing_type,"grid_complex") && !strcmp(input_packing_type,"grid_simple"))
-					SET_STRING_VALUE("packingType","grid_complex");
-				break;
-			case GRIB_UTIL_PACKING_TYPE_JPEG:
-				if (strcmp(input_packing_type,"grid_jpeg") && !strcmp(input_packing_type,"grid_simple"))
-					SET_STRING_VALUE("packingType","grid_jpeg");
-				break;
-			case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
-						/* we delay the set of grid_second_order because we don't want
+		case GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX:
+			if (strcmp(input_packing_type,"spectral_complex") && !strcmp(input_packing_type,"spectral_simple"))
+				SET_STRING_VALUE("packingType","spectral_complex");
+			break;
+		case GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE:
+			if (strcmp(input_packing_type,"spectral_simple") && !strcmp(input_packing_type,"spectral_complex"))
+				SET_STRING_VALUE("packingType","spectral_simple");
+			break;
+		case GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE:
+			if (strcmp(input_packing_type,"grid_simple") && !strcmp(input_packing_type,"grid_complex"))
+				SET_STRING_VALUE("packingType","grid_simple");
+			break;
+		case GRIB_UTIL_PACKING_TYPE_GRID_COMPLEX:
+			if (strcmp(input_packing_type,"grid_complex") && !strcmp(input_packing_type,"grid_simple"))
+				SET_STRING_VALUE("packingType","grid_complex");
+			break;
+		case GRIB_UTIL_PACKING_TYPE_JPEG:
+			if (strcmp(input_packing_type,"grid_jpeg") && !strcmp(input_packing_type,"grid_simple"))
+				SET_STRING_VALUE("packingType","grid_jpeg");
+			break;
+		case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
+			/* we delay the set of grid_second_order because we don't want
 							to do it on a field with bitsPerValue=0 */
-						setSecondOrder=1;
-				break;
-			default :
-				printf("invalid packing_spec->packing_type = %ld\n",(long)packing_spec->packing_type);
-				abort();
+			setSecondOrder=1;
+			break;
+		default :
+			printf("invalid packing_spec->packing_type = %ld\n",(long)packing_spec->packing_type);
+			abort();
 		}
 	} 
 	if (!strcmp(input_packing_type,"grid_simple_matrix")) {
@@ -857,33 +857,33 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 
 	switch(packing_spec->accuracy) {
 
-		case GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT:
-			{
-				long bitsPerValue = 0;
-				Assert(grib_get_long(h, "bitsPerValue", &bitsPerValue) == 0);
-				SET_LONG_VALUE("bitsPerValue", bitsPerValue);
-			}
-			break;
+	case GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT:
+	{
+		long bitsPerValue = 0;
+		Assert(grib_get_long(h, "bitsPerValue", &bitsPerValue) == 0);
+		SET_LONG_VALUE("bitsPerValue", bitsPerValue);
+	}
+	break;
 
-		case GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES:
-			SET_LONG_VALUE("bitsPerValue", packing_spec->bitsPerValue);
-			break;
+	case GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES:
+		SET_LONG_VALUE("bitsPerValue", packing_spec->bitsPerValue);
+		break;
 
-		case GRIB_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT:
-			{
-				long decimalScaleFactor = 0;
-				Assert(grib_get_long(h, "decimalScaleFactor", &decimalScaleFactor) == 0);
-				SET_LONG_VALUE("decimalScaleFactor", decimalScaleFactor);
-			}
-			break;
+	case GRIB_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT:
+	{
+		long decimalScaleFactor = 0;
+		Assert(grib_get_long(h, "decimalScaleFactor", &decimalScaleFactor) == 0);
+		SET_LONG_VALUE("decimalScaleFactor", decimalScaleFactor);
+	}
+	break;
 
-		case GRIB_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR:
-			SET_LONG_VALUE("decimalScaleFactor", packing_spec->decimalScaleFactor);
-			break;
+	case GRIB_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR:
+		SET_LONG_VALUE("decimalScaleFactor", packing_spec->decimalScaleFactor);
+		break;
 
-		default:
-			printf("invalid packing_spec->accuracy = %ld\n",(long)packing_spec->accuracy);
-			abort();
+	default:
+		printf("invalid packing_spec->accuracy = %ld\n",(long)packing_spec->accuracy);
+		abort();
 	}
 
 	if(packing_spec->extra_settings_count) {
@@ -954,58 +954,58 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 			grib_set_string(outh,"packingType","grid_simple",&slen);
 		}
 	}
-	*/
+	 */
 
-		/* convert to second_order if not constant field */
-        if (setSecondOrder ) {
-                int ii=0;
-                int constant=1;
-				double missingValue=0;
-                double value=missingValue;
+	/* convert to second_order if not constant field */
+	if (setSecondOrder ) {
+		int ii=0;
+		int constant=1;
+		double missingValue=0;
+		double value=missingValue;
 
-				grib_get_double(outh,"missingValue",&missingValue);
-                for (ii=0;ii<data_values_count;ii++) {
-                    if (data_values[ii]!=missingValue) {
-                        if (value==missingValue) {
-                            value=data_values[ii];
-                        } else {
-                            if (value!=data_values[ii]) {
-                                constant=0;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (!constant) {
-					if (editionNumber == 1 ) {
-						long numberOfGroups;
-						grib_handle* htmp=grib_handle_clone(outh);
-
-						slen=17;
-						grib_set_string(htmp,"packingType","grid_second_order",&slen);
-						grib_get_long(htmp,"numberOfGroups",&numberOfGroups);
-						/* GRIBEX is not able to decode overflown numberOfGroups with SPD */
-						if (numberOfGroups>65534 && outh->context->no_spd) {
-							slen=24;
-							grib_set_string(outh,"packingType","grid_second_order_no_SPD",&slen);
-							grib_handle_delete(htmp);
-						} else {
-							grib_handle_delete(outh);
-							outh=htmp;
-						}
-					} else {
-						slen=17;
-						grib_set_string(outh,"packingType","grid_second_order",&slen);
-						grib_set_double_array(outh,"values",data_values,data_values_count);
-					}
+		grib_get_double(outh,"missingValue",&missingValue);
+		for (ii=0;ii<data_values_count;ii++) {
+			if (data_values[ii]!=missingValue) {
+				if (value==missingValue) {
+					value=data_values[ii];
 				} else {
-					if (outh->context->gribex_mode_on) {
-						outh->context->gribex_mode_on=0;
-						grib_set_double_array(outh,"values",data_values,data_values_count);
-						outh->context->gribex_mode_on=1;
+					if (value!=data_values[ii]) {
+						constant=0;
+						break;
 					}
 				}
-        }
+			}
+		}
+		if (!constant) {
+			if (editionNumber == 1 ) {
+				long numberOfGroups;
+				grib_handle* htmp=grib_handle_clone(outh);
+
+				slen=17;
+				grib_set_string(htmp,"packingType","grid_second_order",&slen);
+				grib_get_long(htmp,"numberOfGroups",&numberOfGroups);
+				/* GRIBEX is not able to decode overflown numberOfGroups with SPD */
+				if (numberOfGroups>65534 && outh->context->no_spd) {
+					slen=24;
+					grib_set_string(outh,"packingType","grid_second_order_no_SPD",&slen);
+					grib_handle_delete(htmp);
+				} else {
+					grib_handle_delete(outh);
+					outh=htmp;
+				}
+			} else {
+				slen=17;
+				grib_set_string(outh,"packingType","grid_second_order",&slen);
+				grib_set_double_array(outh,"values",data_values,data_values_count);
+			}
+		} else {
+			if (outh->context->gribex_mode_on) {
+				outh->context->gribex_mode_on=0;
+				grib_set_double_array(outh,"values",data_values,data_values_count);
+				outh->context->gribex_mode_on=1;
+			}
+		}
+	}
 
 	if(packing_spec->editionNumber && packing_spec->editionNumber!=editionNumber) 
 		grib_set_long(outh,"edition", packing_spec->editionNumber);
@@ -1015,7 +1015,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 
 	return outh;
 
-cleanup:
+	cleanup:
 	if(outh)  grib_handle_delete(outh);
 	return NULL;
 }
@@ -1106,80 +1106,80 @@ int grib_moments(grib_handle* h,double east,double north,double west,double sout
 /* Helper function for 'parse_keyval_string' */
 static void set_value(grib_values* value,char* str,int equal)
 {
-  char *p=0,*q=0,*s=0;
-  char buf[1000]={0,};
-  grib_context* c=grib_context_get_default();
+	char *p=0,*q=0,*s=0;
+	char buf[1000]={0,};
+	grib_context* c=grib_context_get_default();
 
-  value->equal=equal;
-  q=str;
+	value->equal=equal;
+	q=str;
 
-  while (*q != '/' && *q!=0 ) q++;
-  if (*q=='/') {
-    s=grib_context_strdup(c,q+1);
-    value->next=grib_context_malloc_clear(c,sizeof(grib_values));
-    value->next->type=value->type;
-    value->next->name=grib_context_strdup(c,value->name);
-    set_value(value->next,s,equal);
-    grib_context_free(c,s);
-  }
+	while (*q != '/' && *q!=0 ) q++;
+	if (*q=='/') {
+		s=grib_context_strdup(c,q+1);
+		value->next=grib_context_malloc_clear(c,sizeof(grib_values));
+		value->next->type=value->type;
+		value->next->name=grib_context_strdup(c,value->name);
+		set_value(value->next,s,equal);
+		grib_context_free(c,s);
+	}
 
-  memcpy(buf,str,q-str);
+	memcpy(buf,str,q-str);
 
-  switch (value->type) {
-    case GRIB_TYPE_DOUBLE:
-      value->double_value = strtod(buf,&p);
-      if(*p != 0) value->has_value=1;
-      else if (!strcmp(str,"missing") ||
-               !strcmp(str,"MISSING") ||
-               !strcmp(str,"Missing")  ) {
-        value->type=GRIB_TYPE_MISSING;
-        value->has_value=1;
-      }
-    break;
-    case GRIB_TYPE_LONG:
-      value->long_value = strtol(buf,&p,10);
-      if(*p != 0) value->has_value=1;
-      else if (!strcmp(buf,"missing") ||
-                !strcmp(buf,"MISSING") ||
-                !strcmp(buf,"Missing")  ) {
-        value->type=GRIB_TYPE_MISSING;
-        value->has_value=1;
-      }
-    break;
-    case GRIB_TYPE_STRING:
-      if ( !strcmp(buf,"missing") ||
-            !strcmp(buf,"MISSING") ||
-            !strcmp(buf,"Missing")  ) {
-            value->type=GRIB_TYPE_MISSING;
-            value->has_value=1;
-      } else {
-        value->string_value = grib_context_strdup(c,buf);
-        value->has_value=1;
-      }
-      break;
-    case GRIB_TYPE_UNDEFINED:
-      value->long_value = strtol(buf,&p,10);
-      if(*p == 0) {
-        value->type = GRIB_TYPE_LONG;
-        value->has_value=1;
-      } else {
-        value->double_value = strtod(buf,&p);
-        if(*p == 0) {
-            value->type = GRIB_TYPE_DOUBLE;
-            value->has_value=1;
-        } else if ( !strcmp(buf,"missing") ||
-                    !strcmp(buf,"MISSING") ||
-                    !strcmp(buf,"Missing")  ) {
-            value->type=GRIB_TYPE_MISSING;
-            value->has_value=1;
-        } else {
-          value->string_value = grib_context_strdup(c,buf);
-          value->type         = GRIB_TYPE_STRING;
-          value->has_value=1;
-        }
-      }
-      break;
-   }
+	switch (value->type) {
+	case GRIB_TYPE_DOUBLE:
+		value->double_value = strtod(buf,&p);
+		if(*p != 0) value->has_value=1;
+		else if (!strcmp(str,"missing") ||
+				!strcmp(str,"MISSING") ||
+				!strcmp(str,"Missing")  ) {
+			value->type=GRIB_TYPE_MISSING;
+			value->has_value=1;
+		}
+		break;
+	case GRIB_TYPE_LONG:
+		value->long_value = strtol(buf,&p,10);
+		if(*p != 0) value->has_value=1;
+		else if (!strcmp(buf,"missing") ||
+				!strcmp(buf,"MISSING") ||
+				!strcmp(buf,"Missing")  ) {
+			value->type=GRIB_TYPE_MISSING;
+			value->has_value=1;
+		}
+		break;
+	case GRIB_TYPE_STRING:
+		if ( !strcmp(buf,"missing") ||
+				!strcmp(buf,"MISSING") ||
+				!strcmp(buf,"Missing")  ) {
+			value->type=GRIB_TYPE_MISSING;
+			value->has_value=1;
+		} else {
+			value->string_value = grib_context_strdup(c,buf);
+			value->has_value=1;
+		}
+		break;
+	case GRIB_TYPE_UNDEFINED:
+		value->long_value = strtol(buf,&p,10);
+		if(*p == 0) {
+			value->type = GRIB_TYPE_LONG;
+			value->has_value=1;
+		} else {
+			value->double_value = strtod(buf,&p);
+			if(*p == 0) {
+				value->type = GRIB_TYPE_DOUBLE;
+				value->has_value=1;
+			} else if ( !strcmp(buf,"missing") ||
+					!strcmp(buf,"MISSING") ||
+					!strcmp(buf,"Missing")  ) {
+				value->type=GRIB_TYPE_MISSING;
+				value->has_value=1;
+			} else {
+				value->string_value = grib_context_strdup(c,buf);
+				value->type         = GRIB_TYPE_STRING;
+				value->has_value=1;
+			}
+		}
+		break;
+	}
 }
 
 /*
@@ -1189,7 +1189,7 @@ static void set_value(grib_values* value,char* str,int equal)
  'default_type'     The default type e.g. GRIB_TYPE_UNDEFINED or GRIB_TYPE_DOUBLE
  'values'           The array we populate and return
  'count'            The number of elements
-*/
+ */
 int parse_keyval_string(char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count)
 {
 	char* p;
