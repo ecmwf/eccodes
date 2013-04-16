@@ -2230,6 +2230,68 @@
       endif
   end subroutine grib_set_real8_array
 
+  !> Set the real(4) values for an array key in a grib message, forces the set if the key is read-only.
+  !> Use with great caution!!
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      id of the grib loaded in memory
+  !> @param key     key name
+  !> @param value       real(4) array value
+  !> @param status       GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_set_force_real4_array ( gribid, key, value, status )
+      integer(kind=kindOfInt),                 intent(in)  :: gribid
+      character(len=*),                        intent(in)  :: key
+      real(kind = kindOfFloat), dimension(:),  intent(in)  :: value
+      integer(kind=kindOfInt),optional,        intent(out) :: status
+      integer(kind=kindOfInt)                              :: iret
+      integer(kind=kindOfInt)                              :: nb_values
+
+      nb_values = size(value)
+      iret=grib_f_set_force_real4_array ( gribid, key, value, nb_values )
+	  if (iret /= 0) then
+	    call grib_f_write_on_fail(gribid)
+	  endif
+      if (present(status)) then
+         status = iret
+      else
+         call grib_check(iret,'grib_set',key)
+      endif
+  end subroutine grib_set_force_real4_array
+
+  !> Set the real(8) values for an array key in a grib message, forces the set if the key is read-only.
+  !> Use with great caution!!
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      id of the grib loaded in memory
+  !> @param key     key name
+  !> @param value       real(8) array value
+  !> @param status       GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_set_force_real8_array ( gribid, key, value, status)
+      integer(kind=kindOfInt),                  intent(in)  :: gribid
+      character(len=*),                         intent(in)  :: key
+      real(kind = kindOfDouble), dimension(:),  intent(in)  :: value
+      integer(kind=kindOfInt),optional,         intent(out) :: status
+      integer(kind=kindOfInt)                               :: iret
+      integer(kind=kindOfInt)                               :: nb_values
+
+      nb_values = size(value)
+      iret=grib_f_set_force_real8_array ( gribid, key, value, nb_values )
+	  if (iret /= 0) then
+	    call grib_f_write_on_fail(gribid)
+	  endif
+      if (present(status)) then
+         status = iret
+      else
+         call grib_check(iret,'grib_set',key)
+      endif
+  end subroutine grib_set_force_real8_array
+
   !> Set the character value for a string key in a grib message.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will

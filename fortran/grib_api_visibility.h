@@ -1,4 +1,4 @@
-public :: grib_get, grib_set, grib_get_data, grib_is_missing, grib_is_defined
+public :: grib_get, grib_set, grib_set_force, grib_get_data, grib_is_missing, grib_is_defined
 public :: grib_open_file, grib_close_file,grib_read_bytes,grib_write_bytes
 public :: grib_multi_support_on, grib_multi_support_off
 public :: grib_keys_iterator_new, &

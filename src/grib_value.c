@@ -591,7 +591,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
   return ret;
 }
 
-int grib_set_double_array(grib_handle* h, const char* name, const double* val, size_t length)
+static int __grib_set_double_array(grib_handle* h, const char* name, const double* val, size_t length, int check)
 {
   double v=val[0];
   int constant,i;
@@ -645,7 +645,19 @@ int grib_set_double_array(grib_handle* h, const char* name, const double* val, s
 	  }
   }
 
-  return _grib_set_double_array(h,name,val,length,1);
+	return _grib_set_double_array(h,name,val,length,check);
+}
+
+int grib_set_force_double_array(grib_handle* h, const char* name, const double* val, size_t length)
+{
+	/* GRIB-285: Same as grib_set_double_array but allows setting of READ-ONLY keys like codedValues */
+	/* Use with great caution!! */
+	return __grib_set_double_array(h, name, val, length, /*check=*/0);
+}
+
+int grib_set_double_array(grib_handle* h, const char* name, const double* val, size_t length)
+{
+	return __grib_set_double_array(h, name, val, length, /*check=*/1);
 }
 
 static int _grib_set_long_array_internal(grib_handle* h,grib_accessor* a,const long* val, size_t buffer_len,size_t *encoded_length,int check)

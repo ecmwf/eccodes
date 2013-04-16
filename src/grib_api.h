@@ -895,6 +895,13 @@ int grib_set_bytes        (grib_handle* h, const char*  key, const unsigned char
 int grib_set_double_array (grib_handle* h, const char*  key , const double*        vals   , size_t length  );
 
 /**
+* Same as grib_set_double_array but allows setting of READ-ONLY keys like codedValues.
+* Use with great caution!!
+*/
+int grib_set_force_double_array(grib_handle* h, const char* key, const double* vals, size_t length);
+
+
+/**
 *  Set a long array from a key. If several keys of the same name are present, the last one is set
 *  @see  grib_get_long_array
 *

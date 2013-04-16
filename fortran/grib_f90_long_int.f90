@@ -231,6 +231,10 @@
                      grib_set_real4_array, &
                      grib_set_real8_array
   end interface grib_set
+  interface grib_set_force
+    module procedure grib_set_force_real4_array, &
+                     grib_set_force_real8_array
+  end interface grib_set_force
 
   !> Get a value of specified index from an array key.
   !>

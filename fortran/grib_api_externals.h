@@ -54,6 +54,7 @@ integer, external :: grib_f_set_int, grib_f_set_int_array, &
                      grib_f_set_byte_array, &
                      grib_f_set_real4, grib_f_set_real4_array, &
                      grib_f_set_real8, grib_f_set_real8_array, &
+                     grib_f_set_force_real4_array, grib_f_set_force_real8_array, &
                      grib_f_set_string, grib_f_set_missing, &
                      grib_f_gribex_mode_on,grib_f_gribex_mode_off, &
                      grib_f_find_nearest_single,grib_f_find_nearest_four_single,grib_f_find_nearest_multiple
