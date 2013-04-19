@@ -1,13 +1,11 @@
 0 unknown unknown
-1 MOGREPS-MO-EUA MOGREPS-MO-EUA
-2 AEMet-SREPS-MM-EUAT AEMet-SREPS-MM-EUAT
-3 SRNWP-PEPS SRNWP-PEPS
-4 COSMOLEPS-ARPASIMC-EU COSMOLEPS-ARPASIMC-EU
-5 NORLAMEPS NORLAMEPS
-6 ALADIN-LAEF ALADIN-LAEF
-7 COSMO-DE-EPS COSMO-DE-EPS
-8 COSMO-SREPS-BO-EU COSMO-SREPS-BO-EU
-9 GLAMEPS GLAMEPS
-10 PEARCE PEARCE
-11 DMI-HIRLAM DMI-HIRLAM
-12 OMSZ-ALADIN-EPS OMSZ-ALADIN-EPS
+1 mogreps-mo-eua        Unified model based LAM-EPS run by UK Met Office
+2 aemet-sreps-mm-euat   HIRLAM model based LAM-EPS run by AEMET (Spain)
+3 srnwp-peps            Poor man's LAM-EPS run by DWD (Germany)
+4 cosmoleps-arpasimc-eu COSMO model based LAM-EPS run by ARPA-SIM (Italy)
+6 aladin-laef           ALADIN model based LAM-EPS run by ZAMG (Austria)
+7 cosmo-de-eps          COSMO model based LAM-EPS run by DWD (Germany)
+9 glameps               HIRLAM model based LAM-EPS run by HIRLAM consortium
+10 arome-eps            AROME model based LAM-EPS run by Meteo-France
+11 dmi-hirlam           HIRLAM model based LAM-EPS run by DMI (Denmark)
+12 omsz-aladin-eps      ALADIN model based LAM-EPS run by OMSZ (Hungary)
