@@ -59,7 +59,8 @@ alias integerScalingFactorAppliedToDirections = directionScalingFactor;
 unsigned[4] frequencyScalingFactor  : dump;
 alias integerScalingFactorAppliedToFrequencies =  frequencyScalingFactor ;
 
-codetable[1] localFlag "grib1/local.13.table" = 4;
+constant localFlagLatestVersion = 4 : hidden;
+codetable[1] localFlag "grib1/local.13.table" = localFlagLatestVersion;
 
 #!
 #!  Old versions of wave 2D spectra direction and frequency do not
@@ -177,6 +178,7 @@ if(localFlag == 4)
    
    # Hours
    unsigned[2] offsetToEndOf4DvarWindow : dump;
+   alias anoffset=offsetToEndOf4DvarWindow;
    unsigned[2] lengthOf4DvarWindow : dump;
 
    alias system = systemNumber;
