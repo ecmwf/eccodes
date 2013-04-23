@@ -73,14 +73,14 @@ if( GRIB_API_JPG )
     find_package( OpenJPEG )
 
     if( JASPER_FOUND )
-        set( HAVE_JPEG 1 )        
-        set( HAVE_LIBJASPER 1 )        
+        set( HAVE_JPEG 1 )
+        set( HAVE_LIBJASPER 1 )
         list( APPEND GRIB_API_EXTRA_LIBRARIES    ${JASPER_LIBRARIES} )
         list( APPEND GRIB_API_EXTRA_INCLUDE_DIRS ${JASPER_INCLUDE_DIR} )
     endif()
 
     if( OpenJPEG_FOUND )
-        set( HAVE_JPEG 1 )        
+        set( HAVE_JPEG 1 )
         set( HAVE_LIBOPENJPEG 1 )
         list( APPEND GRIB_API_EXTRA_LIBRARIES    ${OPENJPEG_LIBRARIES} )
         list( APPEND GRIB_API_EXTRA_INCLUDE_DIRS ${OPENJPEG_INCLUDE_DIR} )
@@ -200,12 +200,20 @@ add_subdirectory( ifs_samples ) # must come after samples
 ############################################################################################
 # export to other projects
 
+# temporary -- for old ecbuild 1.0
+
 if( NOT ${PROJECT_NAME} STREQUAL  ${CMAKE_PROJECT_NAME} )
     set( GRIB_API_DEFINITIONS     ${GRIB_API_EXTRA_DEFINITIONS} PARENT_SCOPE )
     set( GRIB_API_INCLUDE_DIRS    ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src ${GRIB_API_EXTRA_INCLUDE_DIRS} PARENT_SCOPE )
     set( GRIB_API_LIBRARIES       grib_api ${GRIB_API_EXTRA_LIBRARIES} ${CMATH_LIBRARIES} PARENT_SCOPE )
     set( GRIB_API_FOUND           TRUE PARENT_SCOPE )
 endif()
+
+# new -- for ecbuild >= 1.1
+
+set( GRIB_API_INCLUDE_DIRS   ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src ${GRIB_API_EXTRA_INCLUDE_DIRS} )
+set( GRIB_API_DEFINITIONS    ${GRIB_API_EXTRA_DEFINITIONS} )
+set( GRIB_API_LIBRARIES      grib_api ${GRIB_API_EXTRA_LIBRARIES} ${CMATH_LIBRARIES} )
 
 ############################################################################################
 # finalize
