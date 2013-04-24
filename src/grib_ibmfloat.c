@@ -125,8 +125,8 @@ double grib_ibmfloat_error(double x) {
   /* Overflow */
   if (x > ibm_table.vmax) {
      fprintf(stderr, "grib_ibmfloat_error: Number is too large: x=%.20e > xmax=%.20e\n", x, ibm_table.vmax);
-  	  Assert(0);
-  	  return 0;
+     Assert(0);
+     return 0;
   }
 
   binary_search(ibm_table.v, 127, x, &e);
@@ -190,7 +190,7 @@ unsigned long grib_ibm_nearest_smaller_to_long(double x)
        if ( m == mmin ) {
          /* printf("grib_ibm_nearest_smaller_to_long: m == mmin (0x%lX) e=%lu\n",m,e);  */
           e = s ? e : e-1;
-          if (e<0) e=0;
+          if (e<0) e=0;        /* this condition is always FALSE -- 'e' is unsigned long */
           if (e>127) e=127;
           /* printf("grib_ibm_nearest_smaller_to_long: e=%lu \n",e);  */
        }
