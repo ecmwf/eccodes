@@ -9,13 +9,14 @@
  */
 
 #include "grib_api_internal.h"
+
+#if GRIB_TIMER
+
 #ifndef GRIB_ON_WINDOWS
 # include <sys/time.h>
 # include <time.h>
 # include <sys/resource.h>
 #endif
-
-#if GRIB_TIMER
 
 static grib_timer *timers = NULL;
 int false=0;
