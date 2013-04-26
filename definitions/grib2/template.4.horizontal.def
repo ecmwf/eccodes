@@ -70,6 +70,8 @@ concept_nofail vertical.typeOfLevel (unknown) {
   'depthBelowSea' = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=255;}
   'entireAtmosphere' = {typeOfFirstFixedSurface=1;typeOfSecondFixedSurface=8;}
   'entireOcean' = {typeOfFirstFixedSurface=1;typeOfSecondFixedSurface=9;}
+  'snow' = {typeOfFirstFixedSurface=114;typeOfSecondFixedSurface=255;}
+  'snowLayer' = {typeOfFirstFixedSurface=114; typeOfSecondFixedSurface=114;}
 }
 
 alias levelType=typeOfFirstFixedSurface;
