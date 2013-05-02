@@ -46,14 +46,17 @@ KEYTYPES = {
 # environment variable is defined
 no_type_checks = os.environ.get('GRIB_API_PYTHON_NO_TYPE_CHECKS') is not None
 
-# function arguments type checking decorator
-# got inspired from http://code.activestate.com/recipes/454322-type-checking-decorator/
+# Function-arguments type-checking decorator
+# inspired from http://code.activestate.com/recipes/454322-type-checking-decorator/
 # modified to support multiple allowed types and all types in the same decorator call
+# This returns a decorator. _params_ is the dict with the type specs
 def require(**_params_):
+    # The actual decorator. Receives the target function in _func_
     def check_types(_func_, _params_ = _params_):
         if no_type_checks:
             return _func_
         @wraps(_func_)
+        # The wrapper function. Replaces the target function and receives its args
         def modified(*args, **kw):
             arg_names = _func_.func_code.co_varnames
             #argnames, varargs, kwargs, defaults = inspect.getargspec(_func_)
@@ -62,7 +65,7 @@ def require(**_params_):
                 param = kw[name]
                 if type(allowed_types) == types.TypeType:
                     allowed_types = (allowed_types,)
-                assert type(param) in allowed_types,  \
+                assert type(param) in allowed_types, \
                     "Parameter '%s' should be type %s" % (name, " or ".join([t.__name__ for t in allowed_types]))
             return _func_(**kw)
         return modified
