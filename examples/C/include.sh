@@ -16,8 +16,8 @@ then
   cpath=`pwd`
   GRIB_DEFINITION_PATH=$cpath/definitions
   export GRIB_DEFINITION_PATH
-  GRIB_TEMPLATES_PATH=$cpath/templates
-  export GRIB_TEMPLATES_PATH
+  GRIB_SAMPLES_PATH=$cpath/samples
+  export GRIB_SAMPLES_PATH
   tools_dir=$cpath/tools/
   examples_dir=$cpath/examples/C/
   data_dir=$cpath/data
