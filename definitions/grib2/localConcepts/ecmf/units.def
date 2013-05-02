@@ -15541,7 +15541,7 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 productDefinitionTemplateNumber = 40 ;
-	 constituentType = 65535 ;
+	 constituentType = 60017 ;
 	}
 #Nitrogen Oxides
 'kg kg**-1' = {
