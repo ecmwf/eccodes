@@ -1,13 +1,11 @@
 if( GRIB_API_FORTRAN )
 
-    ecbuild_enable_fortran( REQUIRED )
-
-    set( CMAKE_Fortran_MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/fortran/modules )
+    ecbuild_enable_fortran( REQUIRED MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/fortran/modules )
 
     set( srcdir ${CMAKE_CURRENT_SOURCE_DIR} )
     set( bindir ${CMAKE_CURRENT_BINARY_DIR} )
 
-    include_directories( ${srcdir} ${bindir} ${CMAKE_Fortran_MODULE_DIRECTORY} )
+    include_directories( ${srcdir} ${bindir} )
 
     ecbuild_add_executable( TARGET  grib_types
                             NOINSTALL
