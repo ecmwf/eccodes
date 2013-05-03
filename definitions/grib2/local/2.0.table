@@ -51,7 +51,7 @@
 85 lfpw French Weather Service - Toulouse
 86 86 Helsinki
 87 87 Belgrade
-88 88 Oslo
+88 enmi Oslo
 89 89 Prague
 90 90 Episkopi
 91 91 Ankara
@@ -77,10 +77,12 @@
 212 212 Lisboa
 213 213 Reykjavik
 214 lemm INM
-215 215 Z�rich
+215 lssw Zurich
 216 216 Service ARGOS Toulouse
 # 217 to 220 Reserved for centres in Region V which are not in the list above
 # 221 to 253 Reserved for centres in Region VI which are not in the list above or below
+224 lowm Austria
+233 eidb Dublin
 235 ingv INGV
 239 crfc CERFAX
 246 ifmk IfM-Kiel
