@@ -1599,51 +1599,6 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 62 ;
 	}
-#Probability of a tropical storm
-'Probability of a tropical storm' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 89 ;
-	}
-#Probability of a hurricane
-'Probability of a hurricane' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 90 ;
-	}
-#Probability of a tropical depression
-'Probability of a tropical depression' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 91 ;
-	}
-#Climatological probability of a tropical storm
-'Climatological probability of a tropical storm' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 92 ;
-	}
-#Climatological probability of a hurricane
-'Climatological probability of a hurricane' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 93 ;
-	}
-#Climatological probability of a tropical depression
-'Climatological probability of a tropical depression' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 94 ;
-	}
-#Probability anomaly of a tropical storm
-'Probability anomaly of a tropical storm' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 95 ;
-	}
-#Probability anomaly of a hurricane
-'Probability anomaly of a hurricane' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 96 ;
-	}
-#Probability anomaly of a tropical depression
-'Probability anomaly of a tropical depression' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 97 ;
-	}
 #Aerosol type 15 mass mixing ratio
 'Aerosol type 15 mass mixing ratio' = {
 	 table2Version = 211 ;

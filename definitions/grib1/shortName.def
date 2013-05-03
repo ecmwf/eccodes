@@ -1599,51 +1599,6 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 62 ;
 	}
-#Probability of a tropical storm
-'pts' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 89 ;
-	}
-#Probability of a hurricane
-'ph' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 90 ;
-	}
-#Probability of a tropical depression
-'ptd' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 91 ;
-	}
-#Climatological probability of a tropical storm
-'cpts' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 92 ;
-	}
-#Climatological probability of a hurricane
-'cph' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 93 ;
-	}
-#Climatological probability of a tropical depression
-'cptd' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 94 ;
-	}
-#Probability anomaly of a tropical storm
-'pats' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 95 ;
-	}
-#Probability anomaly of a hurricane
-'pah' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 96 ;
-	}
-#Probability anomaly of a tropical depression
-'patd' = {
-	 table2Version = 131 ;
-	 indicatorOfParameter = 97 ;
-	}
 #Aerosol type 15 mass mixing ratio
 'aermr15diff' = {
 	 table2Version = 211 ;

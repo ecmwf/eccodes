@@ -3269,6 +3269,51 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 255 ;
 	}
+#Probability of a tropical storm
+'131089' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 89 ;
+	}
+#Probability of a hurricane
+'131090' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 90 ;
+	}
+#Probability of a tropical depression
+'131091' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 91 ;
+	}
+#Climatological probability of a tropical storm
+'131092' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 92 ;
+	}
+#Climatological probability of a hurricane
+'131093' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 93 ;
+	}
+#Climatological probability of a tropical depression
+'131094' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 94 ;
+	}
+#Probability anomaly of a tropical storm
+'131095' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 95 ;
+	}
+#Probability anomaly of a hurricane
+'131096' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 96 ;
+	}
+#Probability anomaly of a tropical depression
+'131097' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 97 ;
+	}
 #Maximum of significant wave height index
 '132216' = {
 	 table2Version = 132 ;
