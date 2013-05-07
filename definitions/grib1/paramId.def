@@ -1599,11 +1599,6 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 62 ;
 	}
-#Aerosol type 15 mass mixing ratio
-'211015' = {
-	 table2Version = 211 ;
-	 indicatorOfParameter = 15 ;
-	}
 #Cloud water
 '260102' = {
 	 table2Version = 1 ;

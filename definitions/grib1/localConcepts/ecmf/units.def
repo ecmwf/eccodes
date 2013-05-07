@@ -4004,6 +4004,11 @@
 	 table2Version = 211 ;
 	 indicatorOfParameter = 14 ;
 	}
+#Aerosol type 15 mass mixing ratio
+'kg kg**-1' = {
+	 table2Version = 211 ;
+	 indicatorOfParameter = 15 ;
+	}
 #SO4 aerosol precursor mass mixing ratio
 'kg kg**-1' = {
 	 table2Version = 211 ;
