@@ -49,16 +49,16 @@ transient genVertHeightCoords = 0;
 if (defined(typeOfFirstFixedSurface)) {
    if (typeOfFirstFixedSurface == 150) {
       transient genVertHeightCoords = 1;
+      transient PVPresent = 0;
+      ieeefloat nlev  : dump ;
+      ieeefloat numberOfVGridUsed : dump;
+      byte[16] uuidOfVGrid : dump;
    }
 }
 
 if (genVertHeightCoords) {
    # Generalized vertical height coordinate case
-   transient PVPresent = 0;
-   ieeefloat nlev  : dump ;
    alias numberOfVerticalCoordinateValues = nlev ;
-   ieeefloat numberOfVGridUsed : dump;
-   byte[16] uuidOfVGrid : dump;
 }
 else {
    if (NV  == 0){

@@ -58,5 +58,20 @@ EOF
 result=`${tools_dir}/grib_filter  ${data_dir}/formatint.rules  $GRIB_SAMPLES_PATH/GRIB1.tmpl`
 [ "$result" = "edition=001, level=  500" ]
 
+# Convert from grib1 to grib2 "Generalized vertical height coordinates"
+cat >temp.filt <<EOF
+set edition=2;
+set PVPresent=1;
+set NV=6;
+set typeOfFirstFixedSurface=150;
+set nlev=41.0;
+write;
+EOF
+
+${tools_dir}/grib_filter -o temp.grib2 temp.filt $GRIB_SAMPLES_PATH/GRIB1.tmpl
+result=`${tools_dir}/grib_get -p typeOfFirstFixedSurface,NV,nlev temp.grib2`
+[ "$result" = "150 6 41" ]
+
+rm -f temp.grib2 temp.filt
 rm -f ${data_dir}/formatint.rules
 

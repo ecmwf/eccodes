@@ -70,7 +70,7 @@ do
 	${tools_dir}grib_set -s edition=2 loc1.grib1 loc1.grib2
 	${tools_dir}grib_get -p localDefinitionNumber loc1.grib1 >> local.log
 	${tools_dir}grib_get -p localDefinitionNumber loc1.grib2 >> local.log
-
+	
 	for localEps in 1 15 26 30
 	do
 		${tools_dir}grib_set -s localDefinitionNumber=$localEps,eps=1,perturbationNumber=2,numberOfForecastsInEnsemble=50 loc1.grib2 eps.grib2
