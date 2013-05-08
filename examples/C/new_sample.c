@@ -8,9 +8,7 @@ int main(int argc,const char** argv)
     grib_handle *h     = NULL;
     size_t size        = 0;
     double* vdouble    = NULL;
-    long* vlong        = NULL;
     FILE* f            = NULL;
-    const char* p      = NULL;
     const void* buffer = NULL;
 
     if(argc != 2) {
@@ -226,7 +224,7 @@ int main(int argc,const char** argv)
     size = 496;
     vdouble    = (double*)calloc(size,sizeof(double));
     if(!vdouble) {
-        fprintf(stderr,"failed to allocate %d bytes\n",size*sizeof(double));
+        fprintf(stderr,"failed to allocate %lu bytes\n",size*sizeof(double));
         exit(1);
     }
 
