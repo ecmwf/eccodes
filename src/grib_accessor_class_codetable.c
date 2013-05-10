@@ -141,7 +141,7 @@ static void init_class(grib_accessor_class* c)
 /* END_CLASS_IMP */
 
 static int grib_load_codetable(grib_context* c,const char* filename,
-           const char* recomposed_name,size_t size,grib_codetable* t); 
+		const char* recomposed_name,size_t size,grib_codetable* t);
 static void init(grib_accessor* a, const long len, grib_arguments* params) {
 	int n=0;
 	grib_accessor_codetable* self  = (grib_accessor_codetable*)a;
@@ -381,7 +381,6 @@ static int grib_load_codetable(grib_context* c,const char* filename,
 		t->entries[code].title        = grib_context_strdup_persistent(c,title);
 		t->entries[code].units        = grib_context_strdup_persistent(c,units);
 
-
 	}
 
 	fclose(f);
@@ -415,8 +414,6 @@ void grib_codetable_delete(grib_context* c) {
 	}
 
 }
-
-
 
 static void dump(grib_accessor* a, grib_dumper* dumper) {
 	grib_accessor_codetable* self  = (grib_accessor_codetable*)a;
@@ -632,7 +629,6 @@ static void destroy(grib_context* context,grib_accessor* a)
 		grib_context_free(context, a->vvalue);
 		a->vvalue=NULL;
 	}
-
 }
 
 static int  get_native_type(grib_accessor* a){
