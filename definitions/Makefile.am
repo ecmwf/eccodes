@@ -285,6 +285,7 @@ dist_definitionsgrib2_DATA = \
 	grib2/local.98.0.def\
 	grib2/local.98.1.def\
 	grib2/local.98.11.def\
+	grib2/local.98.14.def\
 	grib2/local.98.15.def\
 	grib2/local.98.16.def\
 	grib2/local.98.18.def\

@@ -250,7 +250,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 		break;
 
 	case 15: /* Seasonal forecast data */
-	case 16:
+	case 16: /* Seasonal forecast monthly mean data */
 	case 18: /* Multianalysis ensemble data */
 	case 26: /* MARS labelling or ensemble forecast data */
 	case 30: /* Forecasting Systems with Variable Resolution */
@@ -264,6 +264,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 	case 7:  /* Sensitivity data */
 	case 9:  /* Singular vectors and ensemble perturbations */
 	case 11: /* Supplementary data used by the analysis */
+	case 14: /* Brightness temperature */
 	case 20: /* 4D variational increments */
 	case 21: /* Sensitive area predictions */
 	case 23: /* Coupled atmospheric, wave and ocean means */
