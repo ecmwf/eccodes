@@ -161,7 +161,11 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
   if ((ret=grib_get_long_internal(a->parent->h, self->second,&second))!=GRIB_SUCCESS)
     return ret;
 
-  Assert(second == 0);
+  /* We ignore the 'seconds' in our time calculation! */
+  if (second != 0) {
+     grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+                  "Truncating time: non-zero seconds(%d) ignored", second);
+  }
 
   if(*len < 1)
     return GRIB_WRONG_ARRAY_SIZE;
@@ -194,7 +198,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 
   hour    =  v / 100;
   minute  =  v % 100;
-  second  =  0;
+  second  =  0; /* We ignore the 'seconds' in our time calculation! */
 
   if ((ret=grib_set_long_internal(a->parent->h,self->hour,hour))!=GRIB_SUCCESS)
     return ret;
@@ -206,9 +210,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
   return GRIB_SUCCESS;
 }
 
-static int  unpack_string(grib_accessor* a, char* val, size_t *len)
+static int unpack_string(grib_accessor* a, char* val, size_t *len)
 {
-
   long v = 0;
   size_t lsize = 1;
 
@@ -221,7 +224,6 @@ static int  unpack_string(grib_accessor* a, char* val, size_t *len)
     *len = 5;
     return GRIB_BUFFER_TOO_SMALL;
   }
-
 
   sprintf(val,"%04ld",v);
 
