@@ -93,6 +93,7 @@
 { "gds_is_present", &grib_accessor_class_gds_is_present, },
 { "gds_not_present_bitmap", &grib_accessor_class_gds_not_present_bitmap, },
 { "gen", &grib_accessor_class_gen, },
+{ "getenv", &grib_accessor_class_getenv, },
 { "global_gaussian", &grib_accessor_class_global_gaussian, },
 { "gts_header", &grib_accessor_class_gts_header, },
 { "headers_only", &grib_accessor_class_headers_only, },

@@ -143,6 +143,7 @@ libgrib_api_la_prototypes= \
 	grib_accessor_class_scale_values.c \
 	grib_accessor_class_offset_values.c \
 	grib_accessor_class_sprintf.c \
+	grib_accessor_class_getenv.c \
 	grib_accessor_class_round.c \
 	grib_accessor_class_spectral_truncation.c \
 	grib_accessor_class_time.c \

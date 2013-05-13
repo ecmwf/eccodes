@@ -77,6 +77,7 @@ static grib_concept_value *reverse_concept(grib_concept_value *r,grib_concept_va
 %token TRANS
 %token FLAGBIT
 %token CONCEPT
+%token GETENV
 %token CONCEPT_NOFAIL
 %token NIL
 %token DUMMY
@@ -301,6 +302,9 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
     
     | CODETABLE '[' INTEGER ']' IDENT  '(' argument_list ')'   default flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"codetable",$3, $7,$9,$10,NULL,NULL);    free($5); }
+
+    | IDENT  '=' GETENV '(' argument_list ')'   default flags
+	{ $$ = grib_action_create_gen(grib_parser_context,$1,"getenv",0,$5,$7,$8,NULL,NULL);    free($1); }
 
     | COMPLEX_CODETABLE '[' INTEGER ']' IDENT  argument   default flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"complex_codetable",$3, $6,$7,$8,NULL,NULL);    free($5); }

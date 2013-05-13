@@ -94,6 +94,7 @@ FLOAT     {SIGN}?{DIGIT}+\.{DIGIT}+{EXP}?
 "ieeefloat" return FLOAT ;
 "signed"    return SIGNED   ;
 "codetable" return CODETABLE;
+"getenv" return GETENV;
 "complex_codetable" return CODETABLE;
 "flags"     return FLAG     ;
 "lookup"    return LOOKUP   ;

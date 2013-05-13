@@ -360,6 +360,8 @@ int grib_get_g1_message_size(grib_handle *h, grib_accessor *tl, grib_accessor *s
 
 /* grib_accessor_class_sprintf.c */
 
+/* grib_accessor_class_getenv.c */
+
 /* grib_accessor_class_round.c */
 
 /* grib_accessor_class_spectral_truncation.c */

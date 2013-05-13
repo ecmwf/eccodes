@@ -83,6 +83,7 @@ list( APPEND grib_api_srcs
 	grib_accessor_class_g2lon.c
 	grib_accessor_class_global_gaussian.c
 	grib_accessor_class_gen.c
+	grib_accessor_class_getenv.c
 	grib_accessor_class_gts_header.c
 	grib_accessor_class_ifs_param.c
 	grib_accessor_class_julian_day.c
