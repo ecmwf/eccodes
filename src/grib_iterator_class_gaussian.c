@@ -140,7 +140,7 @@ static int init(grib_iterator* i,grib_handle* h,grib_arguments *args){
   if (jScansPositively) {
     for(lai=0;lai<self->nam;lai++) {
       self->las[lai] = lats[istart--];
-      if (istart<0) istart=size-1;       /* this condition is always FALSE -- 'istart' is unsigned long */
+      /*if (istart<0) istart=size-1;  this condition is always FALSE -- 'istart' is unsigned long */
     }
   } else {
     for(lai=0;lai<self->nam;lai++) {
