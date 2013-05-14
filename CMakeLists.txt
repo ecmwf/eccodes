@@ -53,11 +53,11 @@ find_package( CMath )
 
 set( HAVE_LIBSZIP 0 )
 if( GRIB_API_SZIP )
+
     find_package( SZip )
+
     if( SZIP_FOUND )
         set( HAVE_LIBSZIP 1 )
-        list( APPEND GRIB_API_EXTRA_LIBRARIES    ${SZIP_LIBRARIES} )
-        list( APPEND GRIB_API_EXTRA_INCLUDE_DIRS ${SZIP_INCLUDE_DIRS} )
     endif()
 endif()
 
@@ -75,15 +75,11 @@ if( GRIB_API_JPG )
     if( JASPER_FOUND )
         set( HAVE_JPEG 1 )
         set( HAVE_LIBJASPER 1 )
-        list( APPEND GRIB_API_EXTRA_LIBRARIES    ${JASPER_LIBRARIES} )
-        list( APPEND GRIB_API_EXTRA_INCLUDE_DIRS ${JASPER_INCLUDE_DIR} )
     endif()
 
     if( OpenJPEG_FOUND )
         set( HAVE_JPEG 1 )
         set( HAVE_LIBOPENJPEG 1 )
-        list( APPEND GRIB_API_EXTRA_LIBRARIES    ${OPENJPEG_LIBRARIES} )
-        list( APPEND GRIB_API_EXTRA_INCLUDE_DIRS ${OPENJPEG_INCLUDE_DIR} )
     endif()
 
 endif()
@@ -98,9 +94,6 @@ if( GRIB_API_PNG )
 
   if( PNG_FOUND )
         set( HAVE_LIBPNG 1 )
-        list( APPEND GRIB_API_EXTRA_LIBRARIES    ${PNG_LIBRARIES}   )
-        list( APPEND GRIB_API_EXTRA_INCLUDE_DIRS ${PNG_INCLUDE_DIR} )
-        list( APPEND GRIB_API_EXTRA_DEFINITIONS  ${PNG_DEFINITIONS} )
         add_definitions( ${PNG_DEFINITIONS} )
   endif()
 
@@ -116,12 +109,11 @@ if( GRIB_API_NETCDF )
 
   if( NETCDF_FOUND )
         set( HAVE_NETCDF 1 )
-        list( APPEND GRIB_API_EXTRA_LIBRARIES    ${NETCDF_LIBRARIES}   )
-        list( APPEND GRIB_API_EXTRA_INCLUDE_DIRS ${NETCDF_INCLUDE_DIR} )
   endif()
 
 endif()
 
+###############################################################################
 # other options
 
 if( GRIB_TIMER )
@@ -178,10 +170,27 @@ if( CMAKE_COMPILER_IS_GNUCC )
     cmake_add_c_flags("-pedantic")
 endif()
 
+############################################################################################
+# contents
+
+### define dependencies
+
+set( GRIB_API_TPLS            SZip PNG NetCDF Jasper OpenJPEG CMath )
+set( GRIB_API_INCLUDE_DIRS    ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src )
+set( GRIB_API_LIBRARIES       grib_api )
+
+get_directory_property( COMPILE_DEFINITIONS GRIB_API_DEFINITIONS )
+
+foreach( _tpl ${GRIB_API_TPLS} )
+    string( TOUPPER ${_tpl} TPL )
+    list( APPEND GRIB_API_EXTRA_DEFINITIONS   ${${TPL}_DEFINITIONS} )
+    list( APPEND GRIB_API_EXTRA_INCLUDE_DIRS  ${${TPL}_INCLUDE_DIRS} )
+    list( APPEND GRIB_API_EXTRA_LIBRARIES     ${${TPL}_LIBRARIES} )
+endforeach()
+
 ### include directories
 
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}     ${CMAKE_CURRENT_BINARY_DIR} )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src )
+include_directories( ${GRIB_API_INCLUDE_DIRS} )
 
 add_subdirectory( src )
 add_subdirectory( tools )
@@ -200,20 +209,15 @@ add_subdirectory( ifs_samples ) # must come after samples
 ############################################################################################
 # export to other projects
 
-# temporary -- for old ecbuild 1.0
+# temporary -- add support for ecbuild 1.0.x sub-project inclusion
+# to remove once mars server & client use eckit & ecbuild >= 1.1
 
 if( NOT ${PROJECT_NAME} STREQUAL  ${CMAKE_PROJECT_NAME} )
-    set( GRIB_API_DEFINITIONS     ${GRIB_API_EXTRA_DEFINITIONS} PARENT_SCOPE )
-    set( GRIB_API_INCLUDE_DIRS    ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src ${GRIB_API_EXTRA_INCLUDE_DIRS} PARENT_SCOPE )
-    set( GRIB_API_LIBRARIES       grib_api ${GRIB_API_EXTRA_LIBRARIES} ${CMATH_LIBRARIES} PARENT_SCOPE )
+    set( GRIB_API_DEFINITIONS     ${GRIB_API_DEFINITIONS}  PARENT_SCOPE )# includes already TPL definitions
+    set( GRIB_API_INCLUDE_DIRS    ${GRIB_API_INCLUDE_DIRS} ${GRIB_API_EXTRA_INCLUDE_DIRS} PARENT_SCOPE )
+    set( GRIB_API_LIBRARIES       ${GRIB_API_LIBRARIES}    ${GRIB_API_EXTRA_LIBRARIES} ${CMATH_LIBRARIES} PARENT_SCOPE )
     set( GRIB_API_FOUND           TRUE PARENT_SCOPE )
 endif()
-
-# new -- for ecbuild >= 1.1
-
-set( GRIB_API_INCLUDE_DIRS   ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src ${GRIB_API_EXTRA_INCLUDE_DIRS} )
-set( GRIB_API_DEFINITIONS    ${GRIB_API_EXTRA_DEFINITIONS} )
-set( GRIB_API_LIBRARIES      grib_api ${GRIB_API_EXTRA_LIBRARIES} ${CMATH_LIBRARIES} )
 
 ############################################################################################
 # finalize
