@@ -252,6 +252,15 @@ dist_definitionsgrib1_localConcepts_edzw_DATA = \
 	grib1/localConcepts/edzw/shortName.def\
 	grib1/localConcepts/edzw/units.def
 
+definitionsgrib1_localConcepts_eswidir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/eswi
+dist_definitionsgrib1_localConcepts_eswi_DATA = \
+	grib1/localConcepts/eswi/cfName.def\
+	grib1/localConcepts/eswi/name.def\
+	grib1/localConcepts/eswi/paramId.def\
+	grib1/localConcepts/eswi/shortName.def\
+	grib1/localConcepts/eswi/typeOfLevel.def\
+	grib1/localConcepts/eswi/units.def
+
 definitionsgrib1_localConcepts_kwbcdir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/kwbc
 dist_definitionsgrib1_localConcepts_kwbc_DATA = \
 	grib1/localConcepts/kwbc/name.def\
