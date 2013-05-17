@@ -14,5 +14,5 @@ constant gridDefinitionTemplateNumber     = 0;
 
 template commonBlock "grib1/grid_definition_latlon.def";
 
-pad padding_grid0_1(4);
-
+# Padding - See GRIB-370
+ascii[4] zero : read_only;
