@@ -93,7 +93,7 @@ The ECMWF GRIB API is an application program interface accessible from C and FOR
 #%doc doc
 %prefix/include/*.h
 %prefix/lib*/libgrib_api.a
-%prefix/lib*/*.la
+%prefix/lib*/libgrib_api.la
 %prefix/lib*/pkgconfig/*
 %prefix/share/grib_api/samples/*
 %prefix/share/grib_api/ifs_samples/*
