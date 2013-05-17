@@ -91,7 +91,7 @@ The ECMWF GRIB API is an application program interface accessible from C and FOR
 %files devel
 %defattr(-, root, root)
 #%doc doc
-%prefix/include/*.h
+%prefix/include/grib_api.h
 %prefix/lib*/libgrib_api.a
 %prefix/lib*/libgrib_api.la
 %prefix/lib*/pkgconfig/*
@@ -125,6 +125,7 @@ and edition 2 messages.
 %files fortran
 %defattr(-, root,root)
 %prefix/include/*.mod
+%prefix/include/*f77*
 %prefix/lib*/*f90*
 %prefix/lib*/*f77*
 %endif
