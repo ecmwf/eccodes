@@ -19,8 +19,8 @@ VERBOSE=1 # verbose error reporting
 def example():
     f = open(INPUT)
 
-    mcount = grib_count_in_file(f)
-    gid_list = [grib_new_from_file(f) for i in range(mcount)]
+    mcount = count_in_file(f)
+    gid_list = [new_from_file(f) for i in range(mcount)]
 
     f.close()
 

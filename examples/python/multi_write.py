@@ -21,17 +21,17 @@ def example():
     fin = open(INPUT)
     fout = open(OUTPUT,'w')
 
-    gid = grib_new_from_file(fin)
+    gid = new_from_file(fin)
 
-    mgid = grib_multi_new()
+    mgid = multi_new()
 
     for step in range(12,132,12):
         set(gid,"step",step)
-        grib_multi_append(gid,4,mgid)
+        multi_append(gid,4,mgid)
 
-    grib_multi_write(mgid,fout)
+    multi_write(mgid,fout)
 
-    grib_multi_release(mgid)
+    multi_release(mgid)
     release(gid)
     fin.close()
     fout.close() 

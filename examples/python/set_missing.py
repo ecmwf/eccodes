@@ -21,7 +21,7 @@ def example():
     fin = open(INPUT)
     fout = open(OUTPUT,'w')
 
-    gid = grib_new_from_file(fin)
+    gid = new_from_file(fin)
 
     # set type of level to surface
     set(gid,'typeOfFirstFixedSurface','sfc')

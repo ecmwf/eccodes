@@ -205,7 +205,7 @@ def bufr_new_from_file(fileobj,headers_only = False):
         return gribid
 
 @require(fileobj=file)
-def grib_new_from_file(fileobj,headers_only = False):
+def new_from_file(fileobj,headers_only = False):
     """
     @brief Load in memory a grib message from a file.
     
@@ -236,7 +236,7 @@ def grib_new_from_file(fileobj,headers_only = False):
         return gribid
 
 @require(fileobj=file)
-def grib_count_in_file(fileobj):
+def count_in_file(fileobj):
     """
     @brief Count the messages in a file.
     
@@ -250,7 +250,7 @@ def grib_count_in_file(fileobj):
     CHECK(err)
     return num
 
-def grib_multi_support_on():
+def multi_support_on():
     """
     @brief Turn on the support for multiple fields in a single message.
     
@@ -258,7 +258,7 @@ def grib_multi_support_on():
     """
     _internal.grib_c_multi_support_on()
 
-def grib_multi_support_off():
+def multi_support_off():
     """
     @brief Turn off the support for multiple fields in a single message.
     
@@ -311,7 +311,7 @@ def set_string(gribid,key,value):
     """
     CHECK(_internal.grib_c_set_string(gribid,key,value,len(value)))
 
-def grib_gribex_mode_on():
+def gribex_mode_on():
     """
     @brief Turn on the compatibility mode with gribex.
     
@@ -319,7 +319,7 @@ def grib_gribex_mode_on():
     """
     _internal.grib_c_gribex_mode_on()
 
-def grib_gribex_mode_off():
+def gribex_mode_off():
     """
     @brief Turn off the compatibility mode with gribex.
     
@@ -341,7 +341,7 @@ def write(gribid, fileobj):
     CHECK(_internal.grib_c_write(gribid, fileobj))
 
 @require(multigribid=int,fileobj=file)
-def grib_multi_write(multigribid, fileobj):
+def multi_write(multigribid, fileobj):
     """
     @brief Write a multi field message to a file.
 
@@ -354,7 +354,7 @@ def grib_multi_write(multigribid, fileobj):
     CHECK(_internal.grib_c_multi_write(multigribid, fileobj))
 
 @require(ingribid=int,startsection=int,multigribid=int)
-def grib_multi_append(ingribid, startsection, multigribid):
+def multi_append(ingribid, startsection, multigribid):
     """
     @brief Append a single field grib message to a multi field grib message.
 
@@ -400,7 +400,7 @@ def get_string_length(gribid,key):
     return result
 
 @require(iterid=int)
-def grib_skip_computed(iterid):
+def skip_computed(iterid):
     """
     @brief Skip the computed keys in a keys iterator.
     
@@ -415,7 +415,7 @@ def grib_skip_computed(iterid):
     CHECK(_internal.grib_c_skip_computed(iterid))
 
 @require(iterid=int)
-def grib_skip_coded(iterid):
+def skip_coded(iterid):
     """
     @brief Skip the coded keys in a keys iterator.
     
@@ -429,7 +429,7 @@ def grib_skip_coded(iterid):
     CHECK(_internal.grib_c_skip_coded(iterid))
 
 @require(iterid=int)
-def grib_skip_edition_specific(iterid):
+def skip_edition_specific(iterid):
     """
     @brief Skip the edition specific keys in a keys iterator.
     
@@ -441,7 +441,7 @@ def grib_skip_edition_specific(iterid):
     CHECK(_internal.grib_c_skip_edition_specific(iterid))
 
 @require(iterid=int)
-def grib_skip_duplicates(iterid):
+def skip_duplicates(iterid):
     """
     @brief Skip the duplicate keys in a keys iterator.
     
@@ -453,7 +453,7 @@ def grib_skip_duplicates(iterid):
     CHECK(_internal.grib_c_skip_duplicates(iterid))
 
 @require(iterid=int)
-def grib_skip_read_only(iterid):
+def skip_read_only(iterid):
     """
     @brief Skip the read_only keys in a keys iterator.
     
@@ -467,7 +467,7 @@ def grib_skip_read_only(iterid):
     CHECK(_internal.grib_c_skip_read_only(iterid))
 
 @require(iterid=int)
-def grib_skip_function(iterid):
+def skip_function(iterid):
     """
     @brief Skip the function keys in a keys iterator.
 
@@ -678,7 +678,7 @@ def set_double(gribid,key,value):
     CHECK(_internal.grib_c_set_double(gribid,key,value))
 
 @require(samplename=str)
-def grib_new_from_samples(samplename):
+def new_from_samples(samplename):
     """
     @brief Create a new valid gribid from a sample. 
     
@@ -846,7 +846,7 @@ def get_long_array(gribid,key):
 
         return result
 
-def grib_multi_new():
+def multi_new():
     """
     @brief Create a new multi field and return its id.
 
@@ -860,7 +860,7 @@ def grib_multi_new():
     return mgid
 
 @require(gribid=int)
-def grib_multi_release(gribid):
+def multi_release(gribid):
     """
     @brief Release a multi field from memory.
 
@@ -872,7 +872,7 @@ def grib_multi_release(gribid):
     CHECK(_internal.grib_c_multi_release(gribid))
 
 @require(gribid_src=int,namespace=str,gribid_dest=int)
-def grib_copy_namespace(gribid_src,namespace,gribid_dest):
+def copy_namespace(gribid_src,namespace,gribid_dest):
     """
     @brief Copy the value of all the keys belonging to a namespace from the source message
     to the destination message.
@@ -1301,7 +1301,7 @@ def is_defined(gribid,key):
 
 
 @require(gribid=int,inlat=(int,float),inlon=(int,float))
-def grib_find_nearest(gribid,inlat,inlon,is_lsm = False,npoints = 1):
+def find_nearest(gribid,inlat,inlon,is_lsm = False,npoints = 1):
     """
     @brief Find the nearest grid point or the nearest four grid points to a given latitude/longitude.
 
@@ -1404,7 +1404,7 @@ def get(gribid,key, ktype=None):
     return result
 
 @require(gribid=int,key=str)
-def grib_get_array(gribid,key, ktype=None):
+def get_array(gribid,key, ktype=None):
     """
     @brief Get the contents of an array key. 
     

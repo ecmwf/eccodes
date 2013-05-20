@@ -18,7 +18,7 @@ OUTPUT='out.grib'
 VERBOSE=1 # verbose error reporting
 
 def example():
-    sample_id = grib_new_from_samples("regular_ll_sfc_grib1")
+    sample_id = new_from_samples("regular_ll_sfc_grib1")
     fin = open(INPUT)
     fout = open(OUTPUT,'w')
 
@@ -34,7 +34,7 @@ def example():
 
     prev_vals = None
     while 1:
-        gid = grib_new_from_file(fin)
+        gid = new_from_file(fin)
         if gid is None: break
 
         curr_vals = get_values(gid)

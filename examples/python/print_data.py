@@ -18,7 +18,7 @@ VERBOSE=1 # verbose error reporting
 
 def example():
     f = open(INPUT)
-    gid = grib_new_from_file(f)
+    gid = new_from_file(f)
 
     values = get_values(gid)
     for i in xrange(len(values)):

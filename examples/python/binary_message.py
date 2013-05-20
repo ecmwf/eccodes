@@ -20,7 +20,7 @@ def example():
     out = open(sys.argv[2],'w')
 
     while 1:
-        gid = grib_new_from_file(f)
+        gid = new_from_file(f)
         if gid is None: break
 
         message = get_message(gid)
