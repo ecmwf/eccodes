@@ -1459,32 +1459,32 @@
 	 table2Version = 190 ;
 	 indicatorOfParameter = 179 ;
 	}
-#East-West surface stress
+#Eastward turbulent surface stress
 'ewss' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 180 ;
 	}
-#East-West surface stress
+#Eastward turbulent surface stress
 'ewss' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 180 ;
 	}
-#East-West surface stress
+#Eastward turbulent surface stress
 'ewss' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 180 ;
 	}
-#North-South surface stress
+#Northward turbulent surface stress
 'nsss' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 181 ;
 	}
-#North-South surface stress
+#Northward turbulent surface stress
 'nsss' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 181 ;
 	}
-#North-South surface stress
+#Northward turbulent surface stress
 'nsss' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 181 ;
@@ -1624,22 +1624,22 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 194 ;
 	}
-#Longitudinal component of gravity wave stress
+#Eastward gravity wave surface stress
 'lgws' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 195 ;
 	}
-#Longitudinal component of gravity wave stress
+#Eastward gravity wave surface stress
 'lgws' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 195 ;
 	}
-#Meridional component of gravity wave stress
+#Northward gravity wave surface stress
 'mgws' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 196 ;
 	}
-#Meridional component of gravity wave stress
+#Northward gravity wave surface stress
 'mgws' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 196 ;
@@ -1874,22 +1874,22 @@
 	 table2Version = 190 ;
 	 indicatorOfParameter = 228 ;
 	}
-#Instantaneous X surface stress
+#Instantaneous eastward turbulent surface stress
 'iews' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 229 ;
 	}
-#Instantaneous X surface stress
+#Instantaneous eastward turbulent surface stress
 'iews' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 229 ;
 	}
-#Instantaneous Y surface stress
+#Instantaneous northward turbulent surface stress
 'inss' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 230 ;
 	}
-#Instantaneous Y surface stress
+#Instantaneous northward turbulent surface stress
 'inss' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 230 ;

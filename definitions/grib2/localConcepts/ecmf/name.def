@@ -1015,14 +1015,14 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 178 ;
 	}
-#East-West surface stress
-'East-West surface stress' = {
+#Eastward turbulent surface stress
+'Eastward turbulent surface stress' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 180 ;
 	}
-#North-South surface stress
-'North-South surface stress' = {
+#Northward turbulent surface stress
+'Northward turbulent surface stress' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 181 ;
@@ -1093,14 +1093,14 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 193 ;
 	}
-#Longitudinal component of gravity wave stress
-'Longitudinal component of gravity wave stress' = {
+#Eastward gravity wave surface stress
+'Eastward gravity wave surface stress' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 195 ;
 	}
-#Meridional component of gravity wave stress
-'Meridional component of gravity wave stress' = {
+#Northward gravity wave surface stress
+'Northward gravity wave surface stress' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 196 ;
@@ -1294,14 +1294,14 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 unitsFactor = 1000 ;
 	}
-#Instantaneous X surface stress
-'Instantaneous X surface stress' = {
+#Instantaneous eastward turbulent surface stress
+'Instantaneous eastward turbulent surface stress' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 229 ;
 	}
-#Instantaneous Y surface stress
-'Instantaneous Y surface stress' = {
+#Instantaneous northward turbulent surface stress
+'Instantaneous northward turbulent surface stress' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 230 ;
