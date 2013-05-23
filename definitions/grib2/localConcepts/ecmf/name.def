@@ -317,8 +317,8 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 48 ;
 	}
-#10 metre wind gust
-'10 metre wind gust' = {
+#10 metre wind gust since previous post-processing
+'10 metre wind gust since previous post-processing' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 49 ;
