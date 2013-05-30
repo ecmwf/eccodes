@@ -33,6 +33,7 @@ int main(int argc, char** argv) {
   char* outfile = "out.grib1";
   grib_handle *h = NULL;
   const void* buffer = NULL;
+  size_t str_len = 0; /* See the call to grib_set_string later */
 
   in = fopen(infile,"r");
   if(!in) {
@@ -54,6 +55,11 @@ int main(int argc, char** argv) {
 
   /* set centre as a long */
   GRIB_CHECK(grib_set_long(h,"centre",centre),0);
+  
+  /* set paramId and shortName - normally you would do one or the other */
+  GRIB_CHECK(grib_set_long(h,"paramId", 500004),0);
+  /* the value of str_len is not used, it can be anything! */
+  GRIB_CHECK(grib_set_string(h,"shortName", "fis", &str_len),0);
 
   /* get centre as a long */
   GRIB_CHECK(grib_get_long(h,"centre",&long_value),0);
