@@ -7,11 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# TEMPLATE 4.40033, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for simulated (synthetic) satellite data
-
-include "template.4.32.def"
-include "template.4.eps.def"
-
-alias instrument = instrumentType;
-alias ident = satelliteNumber;
-
+#
+# This is deprecated and only included for backward compatibility, use template 4.33
+#
+include "template.4.33.def"

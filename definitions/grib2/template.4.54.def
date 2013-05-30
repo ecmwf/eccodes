@@ -6,8 +6,11 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
+# TEMPLATE 4.54, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for partitioned parameters
 
-#
-# This is deprecated and only included for backward compatibility, use template 4.34
-#
-include "template.4.34.def"
+include "template.4.53.def"
+include "template.4.eps.def"
+
+constant cat="cat";
+alias mars.levtype=cat;
+alias mars.levelist=partitionNumber;

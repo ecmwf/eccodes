@@ -399,11 +399,12 @@ dist_definitionsgrib2_DATA = \
 	grib2/template.4.31.def\
 	grib2/template.4.311.def\
 	grib2/template.4.32.def\
+	grib2/template.4.33.def\
+	grib2/template.4.34.def\
 	grib2/template.4.4.def\
 	grib2/template.4.40.def\
 	grib2/template.4.40033.def\
 	grib2/template.4.40034.def\
-	grib2/template.4.40052.def\
 	grib2/template.4.41.def\
 	grib2/template.4.42.def\
 	grib2/template.4.43.def\
@@ -414,6 +415,8 @@ dist_definitionsgrib2_DATA = \
 	grib2/template.4.48.def\
 	grib2/template.4.5.def\
 	grib2/template.4.51.def\
+	grib2/template.4.53.def\
+	grib2/template.4.54.def\
 	grib2/template.4.6.def\
 	grib2/template.4.7.def\
 	grib2/template.4.8.def\

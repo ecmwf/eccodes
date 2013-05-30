@@ -54,5 +54,4 @@
 # 32768-65534 Reserved for local use 
 40033 40033 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for simulated (synthetic) satellite data
 40034 40034 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer, in a continuous or non-continuous interval for simulated (synthetic) satellite data
-40052 40052 Partitioned parameters at a horizontal level or horizontal layer at a point in time
 65535 65535 Missing 

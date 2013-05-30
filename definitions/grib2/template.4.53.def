@@ -6,8 +6,11 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
+# TEMPLATE 4.53, Partitioned parameters at a horizontal level or in a horizontal layer at a point in time
 
-#
-# This is deprecated and only included for backward compatibility, use template 4.34
-#
-include "template.4.34.def"
+include "template.4.parameter_partition.def"
+include "template.4.point_in_time.def";
+include "template.4.horizontal.def";
+constant cat="cat";
+alias mars.levtype=cat;
+alias mars.levelist=partitionNumber;
