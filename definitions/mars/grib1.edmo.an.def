@@ -1,8 +1,7 @@
-# NOTE: step is startStep
+# NOTE: MARS step is startStep. See GRIB-378
+alias mars.step = startStep;
 
-alias mars.step = endStep;
-
-# Only ERA15 has time and step 
+# Only ERA15 has time and step. class 3 means REANALYSE
 if(class != 3) { 
 	unalias mars.time; 
 	unalias mars.step; 

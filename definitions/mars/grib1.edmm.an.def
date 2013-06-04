@@ -1,4 +1,6 @@
 # class e4
-alias mars.step = endStep;
+
+# NOTE: MARS step is startStep. See GRIB-378
+alias mars.step = startStep;
 alias mars.number=perturbationNumber;
 
