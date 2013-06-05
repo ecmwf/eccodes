@@ -386,11 +386,10 @@ int grib_count_in_file(grib_context* c, FILE* f,int* n);
 *
 * @param c           : the context from which the handle will be created (NULL for default context)
 * @param f           : the file resource
-* @param error     : error code set if the returned handle is NULL and the end of file is not reached
+* @param error       : error code set if the returned handle is NULL and the end of file is not reached
 * @return            the new handle, NULL if the resource is invalid or a problem is encountered
 */
-grib_handle* grib_handle_new_from_file     (grib_context* c, FILE* f, int* error)        ;
-grib_handle* grib_handle_headers_only_new_from_file     (grib_context* c, FILE* f, int* error)        ;
+grib_handle* grib_handle_new_from_file(grib_context* c, FILE* f, int* error);
 
 /**
 *  Create a handle from a file resource.
