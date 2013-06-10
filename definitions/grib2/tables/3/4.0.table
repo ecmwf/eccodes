@@ -33,6 +33,6 @@
 1000 1000 Cross section of analysis and forecast at a point in time
 1001 1001 Cross section of averaged or otherwise statistically processed analysis or forecast over a range of time
 1002 1002 Cross-section of analysis and forecast, averaged or otherwise statistically processed
-1100 1100 Hovm�ller-type grid with no averaging or other statistical processing
-1101 1101 Hovm�ller-type grid with averaging or other statistical processing
+1100 1100 Hovmoller-type grid with no averaging or other statistical processing
+1101 1101 Hovmoller-type grid with averaging or other statistical processing
 65335 65535 Missing

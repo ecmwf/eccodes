@@ -60,7 +60,7 @@
 10021 10021 Benzene
 10022 10022 Toluene
 10023 10023 Xylene
-#10024-10499 10024-10499 reserved for other simple organic molecules (e.g. higher aldehydes, alcohols, peroxides,…)
+#10024-10499 10024-10499 reserved for other simple organic molecules (e.g. higher aldehydes, alcohols, peroxides,...)
 10500 10500 Dimethyl sulphide
 #10501-20000 10501-20000 Reserved
 20001 20001 Hydrogen chloride

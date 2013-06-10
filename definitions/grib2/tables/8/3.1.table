@@ -35,7 +35,7 @@
 # 141-999 Reserved
 1000 1000 Cross-section grid, with points equally spaced on the horizontal
 # 1001-1099 Reserved
-1100 1100 Hovm�ller diagram grid, with points equally spaced on the horizontal
+1100 1100 Hovmoller diagram grid, with points equally spaced on the horizontal
 # 1101-1199 Reserved
 1200 1200 Time section grid
 # 1201-32767 Reserved

@@ -8,7 +8,7 @@
 #
 
 
-# TEMPLATE 3.1100, Hovm�ller diagram grid, with points equally spaced on the horizontal
+# TEMPLATE 3.1100, Hovmoller diagram grid, with points equally spaced on the horizontal
 include "template.3.shape_of_the_earth.def";
 
 #  Number of horizontal points

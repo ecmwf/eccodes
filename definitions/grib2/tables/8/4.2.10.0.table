@@ -45,9 +45,9 @@
 43 43 Kurtosis of the sea surface elevation due to waves (-)
 44 44 Benjamin-Feir index (-)
 45 45 Spectral peakedness factor (s-1)
-46 46 2-dim spectral energy density E (f, θ) (m2 s)
-47 47 Frequency spectral energy density E (f) = ∫ E (f,θ) dθ (m2 s)
-48 48 Directional spectral energy density E (θ)= ∫ E (f,θ) df / m0 (-)
+46 46 2-dim spectral energy density (m2 s)
+47 47 Frequency spectral energy density (m2 s)
+48 48 Directional spectral energy density
 # 49-191 Reserved 
 # 192-254 Reserved for local use 
 255 255 Missing 
