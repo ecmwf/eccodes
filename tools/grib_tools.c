@@ -788,7 +788,7 @@ void grib_print_key_values(grib_runtime_options* options,grib_handle* h) {
 				break;
 			case GRIB_TYPE_LONG:
 				ret=grib_get_long( h,options->print_keys[i].name,&lvalue);
-				sprintf(value,"%d",(int)lvalue);
+				sprintf(value,"%ld", lvalue);
 				break;
 			default:
 				fprintf(dump_file,"invalid format option for %s\n",options->print_keys[i].name);
