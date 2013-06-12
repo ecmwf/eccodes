@@ -166,8 +166,6 @@ int grib_get_g1_message_size(grib_handle* h,grib_accessor* tl,grib_accessor* s4,
 
     slen = tlen - s4->offset - 4; /* 4 is for 7777 */;
 
-
-
     /*printf("DECODING large grib total=%ld section4=%ld\n",tlen,slen);*/
   }
 
@@ -177,11 +175,10 @@ int grib_get_g1_message_size(grib_handle* h,grib_accessor* tl,grib_accessor* s4,
   return GRIB_SUCCESS;
 }
 
-
 static int pack_long(grib_accessor* a, const long* val,size_t *len)
 {
   grib_accessor_g1_message_length *self = (grib_accessor_g1_message_length*)a;
-  grib_accessor_class* super = *(a->cclass->super);
+  /*grib_accessor_class* super = *(a->cclass->super);*/
 
   /* Here we assume that the totalLength will be coded AFTER the section4 length, and
   the section4 length will be overwritten by the totalLength accessor for large GRIBs */
@@ -191,36 +188,39 @@ static int pack_long(grib_accessor* a, const long* val,size_t *len)
   long t120;
   int ret;
 
-
-
   tlen = *val;
   if((tlen < 0x800000 || !a->parent->h->context->gribex_mode_on) && tlen < 0xFFFFFF  )
   {
     /* printf("ENCODING small grib total = %ld\n",tlen); */
-    return super->pack_long(a,val,len);
+    /*return super->pack_long(a,val,len);*/
+
+    /* Do not directly call pack_long on base class */
+    /* because in this special case we want to skip the checks. */
+    /* So we call the helper function which has an extra argument */
+    return pack_long_unsigned_helper(a,val,len, /*check=*/0);
   }
 
   if(!s4) return GRIB_NOT_FOUND;
 
   /* special case for large GRIBs */
-
   tlen -= 4;
   t120  = (tlen+119)/120;
   slen  = t120*120 - tlen;
-
-
   tlen  = 0x800000 | t120;
 
-
   /* printf("ENCODING large grib total = %ld tlen=%ld slen=%ld \n",*val,tlen,slen);  */
-
   *len = 1;
   if((ret = grib_pack_long(s4,&slen,len)) != GRIB_SUCCESS)
     return ret;
 
   *len = 1;
+  /* Do not do the length checks in this special case */
+  if((ret = pack_long_unsigned_helper(a,&tlen,len,/*check=*/0)) != GRIB_SUCCESS)
+      return ret;
+  /*
   if((ret = super->pack_long(a,&tlen,len)) != GRIB_SUCCESS)
     return ret;
+  */
 
   {
       long total_length = -1, sec4_length = -1;
@@ -231,7 +231,6 @@ static int pack_long(grib_accessor* a, const long* val,size_t *len)
         &sec4_length);
 
       Assert(total_length == *val);
-
   }
 
   return GRIB_SUCCESS;

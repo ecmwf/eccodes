@@ -535,6 +535,7 @@ int grib_index_search(grib_index *index, grib_index_key *keys);
 /* grib_accessor_class_statistics_spectral.c */
 
 /* grib_accessor_class_unsigned.c */
+int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t *len, int check);
 
 /* grib_accessor_class_unsigned_bits.c */
 
