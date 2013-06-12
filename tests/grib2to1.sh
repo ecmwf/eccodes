@@ -55,12 +55,14 @@ COUNT=264
 rm -f $filter || true
 echo "set NV=$COUNT;" >> $filter
 echo "set pv={"       >> $filter
-for i in `seq 1 $COUNT`; do
+i=1
+while [ $i -le $COUNT ]; do
   if [ $i = $COUNT ]; then
     echo " $i"        >> $filter
   else
     echo " $i ,"      >> $filter
   fi
+  i=`expr $i + 1`
 done
 echo "};write;"       >> $filter
 # Apply this filter to a grib2 file from samples.
