@@ -8,7 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 . ./include.sh
 
 REDIRECT=/dev/null
@@ -32,25 +31,46 @@ files="constant_field\
 
 for f in `echo $files`
 do
+ file=${data_dir}/$f
+ rm -f ${file}.grib1_ || true
 
-file=${data_dir}/$f
+ ${tools_dir}grib_set -s editionNumber=1 ${file}.grib2 ${file}.grib1_ 2> $REDIRECT > $REDIRECT
 
-rm -f ${file}.grib1_ || true
+ grib1Statistics=`${tools_dir}grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib1_` 
+ grib2Statistics=`${tools_dir}grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib2` 
 
-${tools_dir}grib_set -s editionNumber=1 ${file}.grib2 ${file}.grib1_ 2> $REDIRECT > $REDIRECT
+ if [ "$grib1Statistics" != "$grib2Statistics" ]
+ then 
+   exit 1
+ fi
 
-
-grib1Statistics=`${tools_dir}grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib1_` 
-grib2Statistics=`${tools_dir}grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib2` 
-
-if [ "$grib1Statistics" != "$grib2Statistics" ]
-then 
-  exit 1
-fi
-
-#${tools_dir}grib_compare -A1.0e-8 -c values ${file}.grib1_ ${file}.grib2 2> /dev/null > /dev/null
-
-rm -f ${file}.grib1_ || true
-
+ #${tools_dir}grib_compare -A1.0e-8 -c values ${file}.grib1_ ${file}.grib2 2> /dev/null > /dev/null
+ rm -f ${file}.grib1_ || true
 done
 
+# GRIB-262 Conversion works without error for L137 data
+# First create a grib2 file with NV () > 255 which should not be convertible to grib1
+filter=temp.setpv.filt
+COUNT=264
+rm -f $filter || true
+echo "set NV=$COUNT;" >> $filter
+echo "set pv={"       >> $filter
+for i in `seq 1 $COUNT`; do
+  if [ $i = $COUNT ]; then
+    echo " $i"        >> $filter
+  else
+    echo " $i ,"      >> $filter
+  fi
+done
+echo "};write;"       >> $filter
+# Apply this filter to a grib2 file from samples.
+${tools_dir}grib_filter -o temp.pv.grib2 $filter $GRIB_SAMPLES_PATH/reduced_gg_ml_grib2.tmpl
+# Convert this new grib2 file to grib1. This command SHOULD FAIL
+set +e
+${tools_dir}grib_set -s edition=1 temp.pv.grib2 temp.bad.grib1 2>$REDIRECT
+if [ $? -eq 0 ]; then
+  echo "ERROR: Conversion from grib2 to grib1 should have failed for large NV!" >&2
+  exit 1
+fi
+set -e
+rm -f $filter temp.pv.grib2 || true
