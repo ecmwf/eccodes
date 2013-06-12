@@ -326,6 +326,8 @@ dist_definitionsgrib2_DATA = \
 	grib2/products_3.def\
 	grib2/products_4.def\
 	grib2/products_5.def\
+	grib2/products_6.def\
+	grib2/products_7.def\
 	grib2/rules.def\
 	grib2/section.0.def\
 	grib2/section.1.def\
