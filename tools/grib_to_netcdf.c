@@ -19,7 +19,7 @@
 
 #include <time.h>
 #include <limits.h>
-#include <values.h>
+#include <float.h>
 #include <netcdf.h>
 
 #include "grib_tools.h"
