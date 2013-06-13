@@ -10,3 +10,69 @@
 # S2S
 constant marsExpver = 'prod';
 constant marsClass  = 's2';
+constant marsModel  = 'glob';
+
+alias mars.expver = marsExpver;
+alias mars.class  = marsClass;
+alias mars.param = paramId;
+alias mars.model = marsModel;
+alias mars.origin = centre;
+
+concept marsType {
+
+   fc = {
+     typeOfProcessedData = 2;
+   }
+   "9" = {
+     typeOfProcessedData = 2;
+   }
+
+   cf = {
+     typeOfProcessedData = 3;
+   }
+   "10" = {
+     typeOfProcessedData = 3;
+   }
+
+   pf = {
+     typeOfProcessedData = 4;
+   }
+   "11" = {
+     typeOfProcessedData = 4;
+   }
+
+   "default" = {
+     dummyc = 0;
+   }
+}
+
+concept marsStream {
+
+    oper = {
+      typeOfProcessedData = 0;
+    }
+
+    oper = {
+      typeOfProcessedData = 2;
+    }
+
+    enfo = {
+      typeOfProcessedData = 3;
+    }
+
+    enfo = {
+      typeOfProcessedData = 4;
+    }
+
+    enfo = {
+      typeOfProcessedData = 8;
+    }
+
+    "default" = {
+      dummyc = 0;
+    }
+
+}
+
+alias mars.stream = marsStream;
+alias mars.type   = marsType;
