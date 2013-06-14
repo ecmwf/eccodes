@@ -70,6 +70,7 @@ int grib_c_get_string_length(int* gid, char* key, size_t* OUTPUT);
 int grib_c_clone(int* gid,int* INOUT);
 int grib_c_copy_namespace(int* gid, char* name, int* INPUT);
 int grib_c_get_message_size(int* gid, size_t* OUTPUT);
+int grib_c_get_message_offset(int* gid, size_t* OUTPUT);
 int grib_c_get_native_type(int* gid, char* key, int* OUTPUT);
 // ---
 
@@ -134,6 +135,7 @@ int grib_c_set_long_array(int* gid, char* key, long* val, int* size);
 int grib_c_get_real8_element(int* gid, char* key, int* INPUT, double* OUTPUT);
 int grib_c_get_real8_elements(int* gid, char* key, int* index, double* val, int* size);
 int grib_c_set_missing(int* gid, char* key);
+int grib_c_set_key_vals(int* gid, char* keyvals);
 int grib_c_is_missing(int* gid, char* key, int* OUTPUT);
 int grib_c_is_defined(int* gid, char* key, int* OUTPUT);
 

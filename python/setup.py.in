@@ -4,7 +4,7 @@ from distutils.core import setup, Extension
 import os,sys
 
 attdict = dict(
-   sources = ['eccode_swig_wrap.c','grib_interface.c'],
+   sources = ['gribapi_swig_wrap.c','grib_interface.c'],
    swig_opts = [],
    include_dirs = ['.'],
    library_dirs = ["%s/lib" % sys.prefix],
@@ -14,6 +14,7 @@ attdict = dict(
 
 add_attribute = lambda **args: [list.append(attdict[key],value) for key,value in args.items()]
 
+# assumes build_dir is same as source_dir -- not true for cmake builds
 build_dir = '@BUILD_DIR@'
 add_attribute(
     include_dirs = os.path.join(build_dir,'src'),
@@ -40,6 +41,7 @@ if with_openjpeg:
         )
     add_attribute(libraries = 'openjpeg')
 
+# assumes png is supplied by system paths -- may not be true
 png = '@LIB_PNG@'
 if png:
     add_attribute(libraries = 'png')
@@ -57,12 +59,12 @@ if data_handler == "numpy":
         include_dirs = numpy_include,
     )
 
-eccode_module = Extension('_eccode_swig',**attdict)
+gribapi_module = Extension('_gribapi_swig',**attdict)
 
-setup (name = 'eccode',
+setup (name = 'gribapi',
        version = '0.1',
        author      = 'ECMWF',
        description = """Grib API SWIG module""",
-       ext_modules = [eccode_module],
-       py_modules = ['eccode_swig','eccode'],
+       ext_modules = [gribapi_module],
+       py_modules = ['gribapi_swig','gribapi'],
       )

@@ -11,7 +11,7 @@
 import traceback
 import sys
 
-from eccode import *
+from gribapi import *
 
 INPUT='../../data/sample.grib2'
 OUTPUT='out.grib'
@@ -21,25 +21,25 @@ def example():
     fin = open(INPUT)
     fout = open(OUTPUT,'w')
 
-    gid = new_from_file(fin)
+    gid = grib_new_from_file(fin)
 
-    mgid = multi_new()
+    mgid = grib_multi_new()
 
     for step in range(12,132,12):
-        set(gid,"step",step)
-        multi_append(gid,4,mgid)
+        grib_set(gid,"step",step)
+        grib_multi_append(gid,4,mgid)
 
-    multi_write(mgid,fout)
+    grib_multi_write(mgid,fout)
 
-    multi_release(mgid)
-    release(gid)
+    grib_multi_release(mgid)
+    grib_release(gid)
     fin.close()
     fout.close() 
 
 def main():
     try:
         example()
-    except InternalError,err:
+    except GribInternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

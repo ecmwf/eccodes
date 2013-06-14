@@ -11,14 +11,14 @@
 import traceback
 import sys
 
-from eccode import *
+from gribapi import *
 
 INPUT='../../data/tp_ecmwf.grib'
 OUTPUT='out.grib'
 VERBOSE=1 # verbose error reporting
 
 def example():
-    sample_id = new_from_samples("regular_ll_sfc_grib1")
+    sample_id = grib_new_from_samples("regular_ll_sfc_grib1")
     fin = open(INPUT)
     fout = open(OUTPUT,'w')
 
@@ -34,10 +34,10 @@ def example():
 
     prev_vals = None
     while 1:
-        gid = new_from_file(fin)
+        gid = grib_new_from_file(fin)
         if gid is None: break
 
-        curr_vals = get_values(gid)
+        curr_vals = grib_get_values(gid)
 
         if prev_vals is None:
             result = prev_vals = curr_vals
@@ -54,16 +54,16 @@ def example():
             keys['startStep'] += 12
             keys['endStep'] += 12
 
-        clone_id = clone(sample_id)
+        clone_id = grib_clone(sample_id)
 
         for key in keys:
-            set(clone_id,key,keys[key])
+            grib_set(clone_id,key,keys[key])
 
-        set_values(clone_id,result * 1000)
+        grib_set_values(clone_id,result * 1000)
 
-        write(clone_id,fout)
+        grib_write(clone_id,fout)
 
-        release(gid)
+        grib_release(gid)
 
     fin.close()
     fout.close()
@@ -71,7 +71,7 @@ def example():
 def main():
     try:
         example()
-    except InternalError,err:
+    except GribInternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

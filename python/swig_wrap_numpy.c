@@ -2682,16 +2682,16 @@ static swig_module_info swig_module = {swig_types, 10, 0, 0, 0, 0};
 #endif
 
 /*-----------------------------------------------
-              @(target):= _eccode_swig.so
+              @(target):= _gribapi_swig.so
   ------------------------------------------------*/
 #if PY_VERSION_HEX >= 0x03000000
-#  define SWIG_init    PyInit__eccode_swig
+#  define SWIG_init    PyInit__gribapi_swig
 
 #else
-#  define SWIG_init    init_eccode_swig
+#  define SWIG_init    init_gribapi_swig
 
 #endif
-#define SWIG_name    "_eccode_swig"
+#define SWIG_name    "_gribapi_swig"
 
 #define SWIGVERSION 0x010340 
 #define SWIG_VERSION SWIGVERSION

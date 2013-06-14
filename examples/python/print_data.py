@@ -11,31 +11,31 @@
 import traceback
 import sys
 
-from eccode import *
+from gribapi import *
 
 INPUT='../../data/regular_latlon_surface.grib1'
 VERBOSE=1 # verbose error reporting
 
 def example():
     f = open(INPUT)
-    gid = new_from_file(f)
+    gid = grib_new_from_file(f)
 
-    values = get_values(gid)
+    values = grib_get_values(gid)
     for i in xrange(len(values)):
         print "%d %.10e" % (i+1,values[i])
 
     print '%d values found in %s' % (len(values),INPUT)
 
     for key in ('max','min','average'):
-        print '%s=%.10e' % (key,get(gid,key))
+        print '%s=%.10e' % (key,grib_get(gid,key))
 
-    release(gid)
+    grib_release(gid)
     f.close()
 
 def main():
     try:
         example()
-    except InternalError,err:
+    except GribInternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

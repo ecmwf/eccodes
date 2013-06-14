@@ -11,7 +11,7 @@
 import traceback
 import sys
 
-from eccode import *
+from gribapi import *
 
 INPUT='../../data/tigge/tigge_ecmf_pl_t.grib'
 OUTPUT='out.grib'
@@ -21,23 +21,23 @@ def example():
     fin = open(INPUT)
     fout = open(OUTPUT,'w')
 
-    gid = new_from_file(fin)
+    gid = grib_new_from_file(fin)
 
     # set type of level to surface
-    set(gid,'typeOfFirstFixedSurface','sfc')
-    set_missing(gid,'scaleFactorOfFirstFixedSurface')
-    set_missing(gid,'scaledValueOfFirstFixedSurface')
+    grib_set(gid,'typeOfFirstFixedSurface','sfc')
+    grib_set_missing(gid,'scaleFactorOfFirstFixedSurface')
+    grib_set_missing(gid,'scaledValueOfFirstFixedSurface')
 
-    write(gid,fout)
+    grib_write(gid,fout)
 
-    release(gid)
+    grib_release(gid)
     fin.close()
     fout.close()
 
 def main():
     try:
         example()
-    except InternalError,err:
+    except GribInternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

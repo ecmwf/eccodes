@@ -11,7 +11,7 @@
 import traceback
 import sys
 
-from eccode import *
+from gribapi import *
 
 INPUT='../../data/gts.bufr'
 VERBOSE=1 # verbose error reporting
@@ -23,27 +23,27 @@ def example():
         bid = gts_new_from_file(f)
         if bid is None: break
 
-        iterid = keys_iterator_new(bid)
+        iterid = grib_keys_iterator_new(bid)
 
         # Different types of keys can be skipped
-        # skip_computed(iterid)
-        # skip_coded(iterid)
-        # skip_read_only(iterid)
+        # grib_skip_computed(iterid)
+        # grib_skip_coded(iterid)
+        # grib_skip_read_only(iterid)
 
-        while keys_iterator_next(iterid):
-            keyname = keys_iterator_get_name(iterid)
-            keyval = get_string(iterid,keyname)
+        while grib_keys_iterator_next(iterid):
+            keyname = grib_keys_iterator_get_name(iterid)
+            keyval = grib_get_string(iterid,keyname)
             print "%s = %s" % (keyname,keyval)
 
-        keys_iterator_delete(iterid)
-        release(bid)
+        grib_keys_iterator_delete(iterid)
+        grib_release(bid)
 
     f.close()
 
 def main():
     try:
         example()
-    except InternalError,err:
+    except GribInternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

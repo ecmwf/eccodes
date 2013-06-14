@@ -12,7 +12,7 @@ import traceback
 import sys
 import random
 
-from eccode import *
+from gribapi import *
 
 INPUT='../../data/constant_field.grib1'
 OUTPUT='out.grib'
@@ -22,23 +22,23 @@ def example():
     fin = open(INPUT)
     fout = open(OUTPUT,'w')
 
-    gid = new_from_file(fin)
+    gid = grib_new_from_file(fin)
 
-    nx = get(gid,'Ni')
-    ny = get(gid,'Nj')
+    nx = grib_get(gid,'Ni')
+    ny = grib_get(gid,'Nj')
 
     for step in range(0,24,6):
-        clone_id = clone(gid)
-        set(clone_id,'step',step)
+        clone_id = grib_clone(gid)
+        grib_set(clone_id,'step',step)
 
         values = [random.random() for i in range(nx*ny)]
 
-        set_values(clone_id,values)
+        grib_set_values(clone_id,values)
 
-        write(clone_id,fout)
-        release(clone_id)
+        grib_write(clone_id,fout)
+        grib_release(clone_id)
 
-    release(gid)
+    grib_release(gid)
 
     fin.close()
     fout.close()
@@ -46,7 +46,7 @@ def example():
 def main():
     try:
         example()
-    except InternalError,err:
+    except GribInternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

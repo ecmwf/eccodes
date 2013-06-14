@@ -65,17 +65,17 @@ if( GRIB_API_PYTHON )
 
         include_directories( ${PYTHON_INCLUDE_PATH} )
 
-        set_source_files_properties( eccode_swig.i PROPERTIES C ON )
+        set_source_files_properties( gribapi_swig.i PROPERTIES C ON )
 
-        swig_add_module( eccode_swig python grib_interface.h grib_interface.c eccode_swig.i )
+        swig_add_module( gribapi_swig python grib_interface.h grib_interface.c gribapi_swig.i )
 
-        swig_link_libraries( eccode_swig grib_api ${PYTHON_LIBRARIES} )
+        swig_link_libraries( gribapi_swig grib_api ${PYTHON_LIBRARIES} )
 
         set(PYTHON_DEST "lib/python${PYTHON_VERSION}/site-packages" )
 
-        install(TARGETS _eccode_swig DESTINATION ${PYTHON_DEST} )
+        install(TARGETS _gribapi_swig DESTINATION ${PYTHON_DEST} )
 
-        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/eccode_swig.py  DESTINATION ${PYTHON_DEST})
+        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gribapi_swig.py  DESTINATION ${PYTHON_DEST})
 
     endif()
 

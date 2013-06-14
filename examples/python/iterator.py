@@ -11,7 +11,7 @@
 import traceback
 import sys
 
-from eccode import *
+from gribapi import *
 
 INPUT='../../data/reduced_latlon_surface.grib1'
 VERBOSE=1 # verbose error reporting
@@ -20,16 +20,16 @@ def example():
     f = open(INPUT)
 
     while 1:
-        gid = new_from_file(f)
+        gid = grib_new_from_file(f)
         if gid is None: break
 
-        iterid = iterator_new(gid,0)
+        iterid = grib_iterator_new(gid,0)
 
-        missingValue = get_double(gid,"missingValue")
+        missingValue = grib_get_double(gid,"missingValue")
 
         i=0
         while 1:
-            result = iterator_next(iterid)
+            result = grib_iterator_next(iterid)
             if not result: break
 
             [lat,lon,value] = result
@@ -43,15 +43,15 @@ def example():
 
             i += 1
             
-        iterator_delete(iterid)
-        release(gid)
+        grib_iterator_delete(iterid)
+        grib_release(gid)
 
     f.close()
 
 def main():
     try:
         example()
-    except InternalError,err:
+    except GribInternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
