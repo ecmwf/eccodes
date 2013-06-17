@@ -98,7 +98,8 @@ grib_runtime_options options={
         0,         /* mode  */
         0,         /* headers_only  */
         0,         /* skip_all  */
-        {{0,},}    /* grib_values tolerance[MAX_KEYS] */
+        {{0,},},   /* grib_values tolerance[MAX_KEYS] */
+        0          /* infile_offset */
 
 	};
 
@@ -281,6 +282,13 @@ static int grib_tool_without_orderby(grib_runtime_options* options) {
         if(!infile->file) {
             perror(infile->name);
             exit(1);
+        }
+        if (options->infile_offset) {
+            err=fseeko(infile->file, options->infile_offset, SEEK_SET);
+            if (err) {
+                fprintf(stderr, "Invalid file offset: %ld\n", options->infile_offset);
+                exit(1);
+            }
         }
 
         setvbuf(infile->file,iobuf,_IOFBF,sizeof(iobuf));

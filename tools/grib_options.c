@@ -97,6 +97,7 @@ grib_options_help grib_options_help_list[] ={
   {"T:","T | B","Message type. T->GTS, B->BUFR. The input file is interpreted according the message type.\n"},
   {"V",0,"Version.\n"},
   {"W:","width","\n\t\tMinimum width of each column in output. Default is 10.\n"},
+  {"X:","offset","\n\t\tInput file offset in bytes. Processing of the input file will start from \"offset\".\n"},
   {"x",0,"Fast parsing option, only headers are loaded.\n"},
   {"k:","key1,key2,...","\n\t\tSpecify a list of keys to index on. By default the input files are indexed on the MARS keys.\n"}
 
@@ -105,7 +106,8 @@ grib_options_help grib_options_help_list[] ={
 int grib_options_help_count=sizeof(grib_options_help_list)/sizeof(grib_options_help);
 
 
-void usage() {
+void usage()
+{
   int i=0;
   printf("\nNAME \t%s\n\n",grib_tool_name);
   printf("DESCRIPTION\n\t%s\n\n",grib_tool_description);
@@ -121,9 +123,9 @@ void usage() {
   exit(1);
 }
 
-char* grib_options_get_option(const char* id) {
+char* grib_options_get_option(const char* id)
+{
   int i=0;
-
   for (i=0; i<grib_options_count; i++) {
     if (!strcmp(id,grib_options[i].id))
       return grib_options[i].value;
@@ -131,9 +133,9 @@ char* grib_options_get_option(const char* id) {
   return NULL;
 }
 
-int grib_options_command_line(const char* id) {
+int grib_options_command_line(const char* id)
+{
   int i=0;
-
   for (i=0; i<grib_options_count; i++) {
     if (!strcmp(id,grib_options[i].id))
       return grib_options[i].command_line;
@@ -141,9 +143,9 @@ int grib_options_command_line(const char* id) {
   return 0;
 }
 
-int grib_options_on(const char* id) {
+int grib_options_on(const char* id)
+{
   int i=0;
-
   for (i=0; i<grib_options_count; i++) {
     if (!strcmp(id,grib_options[i].id))
       return grib_options[i].on;
@@ -151,7 +153,8 @@ int grib_options_on(const char* id) {
   return 0;
 }
 
-int grib_get_runtime_options(int argc,char** argv,grib_runtime_options* options) {
+int grib_get_runtime_options(int argc,char** argv,grib_runtime_options* options)
+{
   int i=0,c=0;
   char* optstr=(char*)calloc(1,2*grib_options_count*sizeof(char));
 
@@ -174,7 +177,8 @@ int grib_get_runtime_options(int argc,char** argv,grib_runtime_options* options)
   return 0;
 }
 
-int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib_runtime_options* options) {
+int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib_runtime_options* options)
+{
   int i=0,ret=0;
   int has_output=0;int has_input_extra=0,nfiles=0;
   char *karg=NULL,*warg=NULL,*sarg=NULL,*barg=NULL;
@@ -211,6 +215,9 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
 
   if (grib_options_on("l:"))
     options->latlon=grib_options_get_option("l:");
+
+    if (grib_options_on("X:"))
+        options->infile_offset=atol(grib_options_get_option("X:"));
 
   has_output=grib_options_on("U");
   has_input_extra=grib_options_on("I");
@@ -347,8 +354,8 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
   return GRIB_SUCCESS;
 }
 
-
-char* grib_options_get_help(char* id) {
+char* grib_options_get_help(char* id)
+{
    int i=0;
    char msg[]="ERROR: help not found for option ";
    char* err=(char*)calloc(1,sizeof(msg)+3);
@@ -367,7 +374,8 @@ char* grib_options_get_help(char* id) {
    return err;
 }
 
-char* grib_options_get_args(char* id) {
+char* grib_options_get_args(char* id)
+{
    int i=0;
    char empty[]="";
    char msg[]="ERROR: help not found for option -";
@@ -389,7 +397,8 @@ char* grib_options_get_args(char* id) {
    return err;
 }
 
-void usage_doxygen() {
+void usage_doxygen()
+{
   int i=0;
   printf("/*!  \\page %s %s\n",grib_tool_name,grib_tool_name);
   printf("\\section DESCRIPTION \n %s\n\n",grib_tool_description);

@@ -73,5 +73,15 @@ if [ -f "sst_globus0083.grib" ]; then
 	${tools_dir}grib_ls sst_globus0083.grib > /dev/null
 fi
 
+# GRIB-387 printing key of type byte
+${tools_dir}grib_ls -p uuidOfVGrid test_uuid.grib2 > /dev/null
+
+# GRIB-389 test for -X switch
+result=`${tools_dir}grib_get -wcount=1 -p typeOfLevel,level,shortName tigge_pf_ecmwf.grib2`
+[ "$result" = "heightAboveGround 10 10u" ]
+# Fast-forward to 3rd message
+result=`${tools_dir}grib_get -X 3000 -wcount=1 -p typeOfLevel,level,shortName tigge_pf_ecmwf.grib2`
+[ "$result" = "entireAtmosphere 0 cape" ]
+
 cd $workdir
 

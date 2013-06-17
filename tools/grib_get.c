@@ -35,6 +35,7 @@ grib_option grib_options[]={
 	{"T:",0,0,0,1,0},
     {"7",0,0,0,1,0},
     {"v",0,0,1,0,0},
+    {"X:",0,0,0,1,0},
     {"i:",0,0,0,1,0}
 };
 
@@ -52,12 +53,14 @@ grib_nearest* n=NULL;
 
 int main(int argc, char *argv[]) { return grib_tool(argc,argv);}
 
-int grib_tool_before_getopt(grib_runtime_options* options) {
+int grib_tool_before_getopt(grib_runtime_options* options)
+{
   options->print_keys_count=-1;
   return 0;
 }
 
-int grib_tool_init(grib_runtime_options* options) {
+int grib_tool_init(grib_runtime_options* options)
+{
   char  *theEnd = NULL, *end1=NULL;
   size_t size=4;
   int ret=0;
@@ -147,16 +150,20 @@ int grib_tool_init(grib_runtime_options* options) {
   
   return 0;
 }
-int grib_tool_new_filename_action(grib_runtime_options* options,const char* file) {
+
+int grib_tool_new_filename_action(grib_runtime_options* options,const char* file)
+{
    return 0;
    }
 
 
-int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file) {
+int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
+{
    return 0;
 }
 
-int grib_tool_new_handle_action(grib_runtime_options* options,grib_handle* h) {
+int grib_tool_new_handle_action(grib_runtime_options* options,grib_handle* h)
+{
   size_t size=4;
   int err = 0;
 
@@ -186,23 +193,24 @@ int grib_tool_new_handle_action(grib_runtime_options* options,grib_handle* h) {
 			options->latlon_idx=i;
 		}
 	}
-
   }
   
   return 0;
 }
 
-int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h) {
+int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
+{
   grib_handle_delete(h);
   return 0;
 }
 
-void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h) {
+void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
+{
   grib_print_key_values(options,h);
 }
 
-int grib_tool_finalise_action(grib_runtime_options* options) {
-
+int grib_tool_finalise_action(grib_runtime_options* options)
+{
   if (n) grib_nearest_delete(n);
   
   return 0;
