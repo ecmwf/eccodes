@@ -14920,7 +14920,7 @@
 	 parameterNumber = 3 ;
 	}
 #Dust Aerosol (0.03 - 0.55 um) Mixing Ratio
-'kg kg**-1' = {   
+'kg kg**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;

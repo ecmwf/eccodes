@@ -2162,6 +2162,185 @@
 	 scaledValueOfLowerLimit = 25 ;
 	 typeOfFirstFixedSurface = 103 ;
 	}
+#Sea Salt Aerosol (0.03 - 0.5 um) Mixing Ratio
+'210001' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfSizeInterval = 2 ;
+	 aerosolType = 62008 ;
+	 productDefinitionTemplateNumber = 44 ;
+	 scaledValueOfSecondSize = 5 ;
+	 scaleFactorOfSecondSize = 7 ;
+	 scaledValueOfFirstSize = 3 ;
+	 scaleFactorOfFirstSize = 8 ;
+	}
+#Sea Salt Aerosol (0.5 - 5 um) Mixing Ratio
+'210002' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 62008 ;
+	 productDefinitionTemplateNumber = 44 ;
+	 scaledValueOfSecondSize = 5 ;
+	 scaleFactorOfSecondSize = 6 ;
+	 scaledValueOfFirstSize = 5 ;
+	 scaleFactorOfFirstSize = 7 ;
+	 typeOfSizeInterval = 2 ;
+	}
+#Sea Salt Aerosol (5 - 20 um) Mixing Ratio
+'210003' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 62008 ;
+	 productDefinitionTemplateNumber = 44 ;
+	 scaledValueOfSecondSize = 2 ;
+	 scaleFactorOfSecondSize = 5 ;
+	 scaledValueOfFirstSize = 5 ;
+	 scaleFactorOfFirstSize = 6 ;
+	 typeOfSizeInterval = 2 ;
+	}
+#Dust Aerosol (0.03 - 0.55 um) Mixing Ratio
+'210004' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 62001 ;
+	 typeOfSizeInterval = 2 ;
+	 scaleFactorOfFirstSize = 8 ;
+	 scaledValueOfFirstSize = 3 ;
+	 scaleFactorOfSecondSize = 8 ;
+	 scaledValueOfSecondSize = 55 ;
+	 productDefinitionTemplateNumber = 44 ;
+	}
+#Dust Aerosol (0.55 - 0.9 um) Mixing Ratio
+'210005' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 scaleFactorOfFirstSize = 8 ;
+	 typeOfSizeInterval = 2 ;
+	 aerosolType = 62001 ;
+	 productDefinitionTemplateNumber = 44 ;
+	 scaledValueOfSecondSize = 9 ;
+	 scaleFactorOfSecondSize = 7 ;
+	 scaledValueOfFirstSize = 55 ;
+	}
+#Dust Aerosol (0.9 - 20 um) Mixing Ratio
+'210006' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 scaleFactorOfFirstSize = 7 ;
+	 typeOfSizeInterval = 2 ;
+	 aerosolType = 62001 ;
+	 productDefinitionTemplateNumber = 44 ;
+	 scaledValueOfSecondSize = 2 ;
+	 scaleFactorOfSecondSize = 5 ;
+	 scaledValueOfFirstSize = 9 ;
+	}
+#Hydrophobic Organic Matter Aerosol Mixing Ratio
+'210007' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 productDefinitionTemplateNumber = 44 ;
+	 aerosolType = 62016 ;
+	 typeOfSizeInterval = 255 ;
+	}
+#Hydrophilic Organic Matter Aerosol Mixing Ratio
+'210008' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfSizeInterval = 255 ;
+	 productDefinitionTemplateNumber = 44 ;
+	 aerosolType = 62015 ;
+	}
+#Hydrophobic Black Carbon Aerosol Mixing Ratio
+'210009' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 productDefinitionTemplateNumber = 44 ;
+	 aerosolType = 62014 ;
+	 typeOfSizeInterval = 255 ;
+	}
+#Hydrophilic Black Carbon Aerosol Mixing Ratio
+'210010' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfSizeInterval = 255 ;
+	 productDefinitionTemplateNumber = 44 ;
+	 aerosolType = 62013 ;
+	}
+#Sulphate Aerosol Mixing Ratio
+'210011' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 productDefinitionTemplateNumber = 44 ;
+	 typeOfSizeInterval = 255 ;
+	 aerosolType = 62006 ;
+	}
+#Carbon Dioxide
+'210061' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 productDefinitionTemplateNumber = 40 ;
+	 constituentType = 3 ;
+	}
+#Methane
+'210062' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 productDefinitionTemplateNumber = 40 ;
+	 constituentType = 2 ;
+	}
+#Sulphur dioxide
+'210122' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 productDefinitionTemplateNumber = 40 ;
+	 constituentType = 8 ;
+	}
+#Carbon monoxide
+'210123' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 productDefinitionTemplateNumber = 40 ;
+	 constituentType = 4 ;
+	}
+#Formaldehyde
+'210124' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 productDefinitionTemplateNumber = 40 ;
+	 constituentType = 7 ;
+	}
+#Nitrogen Oxides
+'210129' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 productDefinitionTemplateNumber = 40 ;
+	 constituentType = 60017 ;
+	}
+#GEMS Ozone
+'210203' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 productDefinitionTemplateNumber = 40 ;
+	 constituentType = 0 ;
+	}
 #Convective inhibition
 '228001' = {
 	 discipline = 0 ;
