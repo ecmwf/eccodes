@@ -252,6 +252,20 @@ dist_definitionsgrib1_localConcepts_edzw_DATA = \
 	grib1/localConcepts/edzw/shortName.def\
 	grib1/localConcepts/edzw/units.def
 
+definitionsgrib1_localConcepts_ekmidir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/ekmi
+dist_definitionsgrib1_localConcepts_ekmi_DATA = \
+	grib1/localConcepts/ekmi/name.def\
+	grib1/localConcepts/ekmi/paramId.def\
+	grib1/localConcepts/ekmi/shortName.def\
+	grib1/localConcepts/ekmi/units.def
+
+definitionsgrib1_localConcepts_enmidir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/enmi
+dist_definitionsgrib1_localConcepts_enmi_DATA = \
+	grib1/localConcepts/enmi/name.def\
+	grib1/localConcepts/enmi/paramId.def\
+	grib1/localConcepts/enmi/shortName.def\
+	grib1/localConcepts/enmi/units.def
+
 definitionsgrib1_localConcepts_eswidir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/eswi
 dist_definitionsgrib1_localConcepts_eswi_DATA = \
 	grib1/localConcepts/eswi/cfName.def\
@@ -274,6 +288,13 @@ dist_definitionsgrib1_localConcepts_lfpw_DATA = \
 	grib1/localConcepts/lfpw/paramId.def\
 	grib1/localConcepts/lfpw/shortName.def\
 	grib1/localConcepts/lfpw/units.def
+
+definitionsgrib1_localConcepts_lowmdir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/lowm
+dist_definitionsgrib1_localConcepts_lowm_DATA = \
+	grib1/localConcepts/lowm/name.def\
+	grib1/localConcepts/lowm/paramId.def\
+	grib1/localConcepts/lowm/shortName.def\
+	grib1/localConcepts/lowm/units.def
 
 definitionsgrib1_localConcepts_sbsjdir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/sbsj
 dist_definitionsgrib1_localConcepts_sbsj_DATA = \
@@ -517,6 +538,13 @@ dist_definitionsgrib2_localConcepts_edzw_DATA = \
 	grib2/localConcepts/edzw/paramId.def\
 	grib2/localConcepts/edzw/shortName.def\
 	grib2/localConcepts/edzw/units.def
+
+definitionsgrib2_localConcepts_ekmidir = @GRIB_DEFINITION_PATH@/grib2/localConcepts/ekmi
+dist_definitionsgrib2_localConcepts_ekmi_DATA = \
+	grib2/localConcepts/ekmi/name.def\
+	grib2/localConcepts/ekmi/paramId.def\
+	grib2/localConcepts/ekmi/shortName.def\
+	grib2/localConcepts/ekmi/units.def
 
 definitionsgrib2_localConcepts_kwbcdir = @GRIB_DEFINITION_PATH@/grib2/localConcepts/kwbc
 dist_definitionsgrib2_localConcepts_kwbc_DATA = \
