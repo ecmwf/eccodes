@@ -148,6 +148,16 @@ if( GRIB_API_ALIGN_MEMORY )
   set( GRIB_MEM_ALIGN 1 )
 endif()
 
+# fix for #if IEEE_LE or IEE_BE instead of #ifdef
+
+if( IEEE_BE )
+    set( IEEE_LE 0 )
+endif()
+
+if( IEEE_LE )
+    set( IEEE_BE 0 )
+endif()
+
 ###############################################################################
 # contents
 
