@@ -281,90 +281,97 @@ static  grib_context default_grib_context = {
 };
 
 
-grib_context* grib_context_get_default(){
-	GRIB_PTHREAD_ONCE(&once,&init);
+grib_context* grib_context_get_default()
+{
+    GRIB_PTHREAD_ONCE(&once,&init);
 
-	if(!default_grib_context.inited)
-	{
-		const char * write_on_fail = NULL;
-		const char * large_constant_fields = NULL;
-		const char * no_abort = NULL;
-		const char * debug = NULL;
-		const char *gribex=NULL;
-		const char *ieee_packing=NULL;
-		const char *io_buffer_size=NULL;
-		const char *log_stream=NULL;
-		const char *no_big_group_split=NULL;
-		const char *no_spd=NULL;
-		const char *keep_matrix=NULL;
+    if(!default_grib_context.inited)
+    {
+        const char * write_on_fail = NULL;
+        const char * large_constant_fields = NULL;
+        const char * no_abort = NULL;
+        const char * debug = NULL;
+        const char *gribex=NULL;
+        const char *ieee_packing=NULL;
+        const char *io_buffer_size=NULL;
+        const char *log_stream=NULL;
+        const char *no_big_group_split=NULL;
+        const char *no_spd=NULL;
+        const char *keep_matrix=NULL;
 
-		GRIB_MUTEX_LOCK(&mutex_c);
+        GRIB_MUTEX_LOCK(&mutex_c);
 
-		write_on_fail = getenv("GRIB_API_WRITE_ON_FAIL");
-		large_constant_fields = getenv("GRIB_API_LARGE_CONSTANT_FIELDS");
-		no_abort = getenv("GRIB_API_NO_ABORT");
-		debug = getenv("GRIB_API_DEBUG");
-		gribex=getenv("GRIB_GRIBEX_MODE_ON");
-		ieee_packing=getenv("GRIB_IEEE_PACKING");
-		io_buffer_size=getenv("GRIB_API_IO_BUFFER_SIZE");
-		log_stream=getenv("GRIB_API_LOG_STREAM");
-		no_big_group_split=getenv("GRIB_API_NO_BIG_GROUP_SPLIT");
-		no_spd=getenv("GRIB_API_NO_SPD");
-		keep_matrix=getenv("GRIB_API_KEEP_MATRIX");
+        write_on_fail = getenv("GRIB_API_WRITE_ON_FAIL");
+        large_constant_fields = getenv("GRIB_API_LARGE_CONSTANT_FIELDS");
+        no_abort = getenv("GRIB_API_NO_ABORT");
+        debug = getenv("GRIB_API_DEBUG");
+        gribex=getenv("GRIB_GRIBEX_MODE_ON");
+        ieee_packing=getenv("GRIB_IEEE_PACKING");
+        io_buffer_size=getenv("GRIB_API_IO_BUFFER_SIZE");
+        log_stream=getenv("GRIB_API_LOG_STREAM");
+        no_big_group_split=getenv("GRIB_API_NO_BIG_GROUP_SPLIT");
+        no_spd=getenv("GRIB_API_NO_SPD");
+        keep_matrix=getenv("GRIB_API_KEEP_MATRIX");
 
-		/* On UNIX, when we read from a file we get exactly what is in the file on disk.
-		 * But on Windows a file can be opened in binary or text mode. In binary mode the system behaves exactly as in UNIX.
-		 */
+        /* On UNIX, when we read from a file we get exactly what is in the file on disk.
+         * But on Windows a file can be opened in binary or text mode. In binary mode the system behaves exactly as in UNIX.
+         */
 #ifdef GRIB_ON_WINDOWS
-		_set_fmode(_O_BINARY);
+        _set_fmode(_O_BINARY);
 #endif
 
-		default_grib_context.inited = 1;
-		default_grib_context.io_buffer_size = io_buffer_size ? atoi(io_buffer_size) : 0;
-		default_grib_context.no_big_group_split = no_big_group_split ? atoi(no_big_group_split) : 0;
-		default_grib_context.no_spd = no_spd ? atoi(no_spd) : 0;
-		default_grib_context.keep_matrix = keep_matrix ? atoi(keep_matrix) : 1;
-		default_grib_context.write_on_fail  = write_on_fail ? atoi(write_on_fail) : 0;
-		default_grib_context.no_abort  = no_abort ? atoi(no_abort) : 0;
-		default_grib_context.debug  = debug ? atoi(debug) : 0;
-		default_grib_context.gribex_mode_on=gribex ? atoi(gribex) : 0;
-		default_grib_context.large_constant_fields = large_constant_fields ? atoi(large_constant_fields) : 0;
-		default_grib_context.ieee_packing=ieee_packing ? atoi(ieee_packing) : 0;
-		default_grib_context.grib_samples_path = getenv("GRIB_SAMPLES_PATH");
-		default_grib_context.log_stream=stderr;
-		if (!log_stream) { 
-			default_grib_context.log_stream=stderr;
-		} else if (!strcmp(log_stream,"stderr") ) {
-			default_grib_context.log_stream=stderr;
-		} else if (!strcmp(log_stream,"stdout") ) {
-			default_grib_context.log_stream=stdout;
-		} 
+        default_grib_context.inited = 1;
+        default_grib_context.io_buffer_size = io_buffer_size ? atoi(io_buffer_size) : 0;
+        default_grib_context.no_big_group_split = no_big_group_split ? atoi(no_big_group_split) : 0;
+        default_grib_context.no_spd = no_spd ? atoi(no_spd) : 0;
+        default_grib_context.keep_matrix = keep_matrix ? atoi(keep_matrix) : 1;
+        default_grib_context.write_on_fail  = write_on_fail ? atoi(write_on_fail) : 0;
+        default_grib_context.no_abort  = no_abort ? atoi(no_abort) : 0;
+        default_grib_context.debug  = debug ? atoi(debug) : 0;
+        default_grib_context.gribex_mode_on=gribex ? atoi(gribex) : 0;
+        default_grib_context.large_constant_fields = large_constant_fields ? atoi(large_constant_fields) : 0;
+        default_grib_context.ieee_packing=ieee_packing ? atoi(ieee_packing) : 0;
+        default_grib_context.grib_samples_path = getenv("GRIB_SAMPLES_PATH");
+        default_grib_context.log_stream=stderr;
+        if (!log_stream) {
+            default_grib_context.log_stream=stderr;
+        } else if (!strcmp(log_stream,"stderr") ) {
+            default_grib_context.log_stream=stderr;
+        } else if (!strcmp(log_stream,"stdout") ) {
+            default_grib_context.log_stream=stdout;
+        }
 
-		if (!default_grib_context.grib_samples_path)
-			default_grib_context.grib_samples_path = getenv("GRIB_TEMPLATES_PATH");
+        if (!default_grib_context.grib_samples_path)
+            default_grib_context.grib_samples_path = getenv("GRIB_TEMPLATES_PATH");
 #ifdef GRIB_TEMPLATES_PATH
-		if(!default_grib_context.grib_samples_path)
-			default_grib_context.grib_samples_path = GRIB_TEMPLATES_PATH ;
+        if(!default_grib_context.grib_samples_path)
+            default_grib_context.grib_samples_path = GRIB_TEMPLATES_PATH ;
 #endif
-		default_grib_context.grib_definition_files_path = getenv("GRIB_DEFINITION_PATH");
+
+        default_grib_context.grib_definition_files_path = getenv("GRIB_DEFINITION_PATH");
 #ifdef GRIB_DEFINITION_PATH
-		if(!default_grib_context.grib_definition_files_path)
-			default_grib_context.grib_definition_files_path = GRIB_DEFINITION_PATH ;
+        if(!default_grib_context.grib_definition_files_path)
+            default_grib_context.grib_definition_files_path = GRIB_DEFINITION_PATH ;
 #endif
-		default_grib_context.keys_count=0;
-		default_grib_context.keys=grib_hash_keys_new(&(default_grib_context),
-				&(default_grib_context.keys_count));
 
-		default_grib_context.concepts_index=grib_itrie_new(&(default_grib_context),
-				&(default_grib_context.concepts_count));
-		default_grib_context.def_files=grib_trie_new(&(default_grib_context));
-		default_grib_context.classes=grib_trie_new(&(default_grib_context));
+        grib_context_log(&default_grib_context, GRIB_LOG_DEBUG, "Definitions path: %s",
+                default_grib_context.grib_definition_files_path);
+        grib_context_log(&default_grib_context, GRIB_LOG_DEBUG, "Samples path:     %s",
+                default_grib_context.grib_samples_path);
 
-		GRIB_MUTEX_UNLOCK(&mutex_c);
-	}
+        default_grib_context.keys_count=0;
+        default_grib_context.keys=grib_hash_keys_new(&(default_grib_context),
+                &(default_grib_context.keys_count));
 
+        default_grib_context.concepts_index=grib_itrie_new(&(default_grib_context),
+                &(default_grib_context.concepts_count));
+        default_grib_context.def_files=grib_trie_new(&(default_grib_context));
+        default_grib_context.classes=grib_trie_new(&(default_grib_context));
 
-	return &default_grib_context;
+        GRIB_MUTEX_UNLOCK(&mutex_c);
+    }
+
+    return &default_grib_context;
 }
 
 /* TODO: use parent */
@@ -534,7 +541,6 @@ char *grib_context_full_defs_path(grib_context* c,const char* basename)
 			}
 			dir=dir->next;
 		}
-
 	}
 
 	GRIB_MUTEX_LOCK(&mutex_c);
