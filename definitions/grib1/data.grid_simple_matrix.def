@@ -87,7 +87,9 @@ if(matrixOfValues == 0)
         ) : read_only;
             alias data.packedValues = codedValues;
         meta values data_apply_bitmap(codedValues,bitmap,missingValue,binaryScaleFactor) : dump;
-        when(changed(values)) {set octetAtWichPackedDataBegins=numberOfCodedValues;}
+        # See GRIB-262: The octetAtWichPackedDataBegins cannot be set to a value bigger than 65535!
+        #               This is historic stuff which no longer applies
+        # when(changed(values)) {set octetAtWichPackedDataBegins=numberOfCodedValues;}
 	} else {
 		# For grib1 -> grib2
 		constant bitMapIndicator = 255;
