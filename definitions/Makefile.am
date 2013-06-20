@@ -539,6 +539,13 @@ dist_definitionsgrib2_localConcepts_edzw_DATA = \
 	grib2/localConcepts/edzw/shortName.def\
 	grib2/localConcepts/edzw/units.def
 
+definitionsgrib2_localConcepts_egrrdir = @GRIB_DEFINITION_PATH@/grib2/localConcepts/egrr
+dist_definitionsgrib2_localConcepts_egrr_DATA = \
+	grib2/localConcepts/egrr/name.def\
+	grib2/localConcepts/egrr/paramId.def\
+	grib2/localConcepts/egrr/shortName.def\
+	grib2/localConcepts/egrr/units.def
+
 definitionsgrib2_localConcepts_ekmidir = @GRIB_DEFINITION_PATH@/grib2/localConcepts/ekmi
 dist_definitionsgrib2_localConcepts_ekmi_DATA = \
 	grib2/localConcepts/ekmi/name.def\

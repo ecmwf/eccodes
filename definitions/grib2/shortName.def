@@ -245,6 +245,8 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
 	}
 #2 metre dewpoint temperature
 '2d' = {
@@ -252,6 +254,8 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 6 ;
 	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
 	}
 #Land-sea mask
 'lsm' = {
