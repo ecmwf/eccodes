@@ -155,7 +155,7 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
 	size_t tlen;
 
 	unsigned char* buf = NULL;
-	long i;
+	size_t i;
 	int err = 0;
 	long pos = 0;
 	long bmaplen = 0;

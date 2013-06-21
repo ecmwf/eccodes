@@ -143,6 +143,7 @@ static int test_bit(long a, long b)
 {
   return a&(1<<b);
 }
+
 static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
 {
   grib_accessor_codeflag* self = (grib_accessor_codeflag*)a;
@@ -152,7 +153,7 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
   char num[50];
   char* filename=0;
   char line[1024];
-  int i =0;
+    size_t i =0;
   int j =0;
 
   grib_recompose_name(a->parent->h,NULL, self->tablename, fname,1);
@@ -183,9 +184,10 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
     sscanf(line,"%s %s", num, bval);
 
     if(num[0] != '#')
+        {
       if((test_bit(code, a->length*8-atol(num))>0) == atol(bval))
       {
-#if 1
+                size_t linelen = strlen(line);
         codename[j++] = '(';
         codename[j++] = num[0];
         codename[j++] = '=';
@@ -194,15 +196,16 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
         codename[j++] = ' ';
         if(j)
         codename[j++] = ' ';
-#endif
-        for(i=(strlen(num)+strlen(bval)+2); i < strlen(line)-1;i++)
+
+                for(i=(strlen(num)+strlen(bval)+2); i < linelen-1;i++)
           codename[j++] = line[i];
         if(line[i]!='\n')
           codename[j++] = line[i];
         codename[j++] = ';';
       }
-
   }
+    }
+
   if(j>1 && codename[j-1] == ';') j--;
   codename[j] = 0;
 
@@ -212,6 +215,7 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
   fclose(f);
   return GRIB_SUCCESS;
 }
+
 static long value_count(grib_accessor* a)
 {
   return 1;
@@ -232,7 +236,5 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
   grib_get_codeflag(a, v, flagname);
 
   grib_dump_bits(dumper,a,flagname);
-
-
 
 }

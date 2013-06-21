@@ -149,7 +149,7 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
   size_t tlen;
 
   unsigned char* buf = NULL;
-  long i;
+    size_t i;
   int err = 0;
   long pos = 0;
   long bmaplen = 0;
@@ -208,7 +208,7 @@ static int unpack_bytes(grib_accessor* a, unsigned char* val, size_t *len)
   long length = grib_byte_count(a);
   long offset = grib_byte_offset(a);
 
-  if(*len < length )
+    if(*len < (size_t)length )
   {
     grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Wrong size for %s it is %d bytes long\n", a->name ,length );
     *len = length;
@@ -233,5 +233,3 @@ static void grib_set_bit_on( unsigned char* p, long *bitp){
   *p |= o;
   (*bitp)+=1;
 }
-
-

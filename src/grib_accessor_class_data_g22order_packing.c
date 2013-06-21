@@ -260,7 +260,7 @@ static int find_next_group(const unsigned long* vals, size_t len, unsigned long 
   while(i < len){
     if(vals[i] < lmin) lmin = vals[i];
     if(vals[i] > lmax) lmax = vals[i];
-    Assert((lmax-lmin) >= 0);
+    /*Assert((lmax-lmin) >= 0);*/
     *nbits = calc_bits_needed(lmax-lmin);
     *r_val = lmin;
     i++;
