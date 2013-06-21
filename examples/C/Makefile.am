@@ -2,11 +2,11 @@
 AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@
 
 TESTS = iterator.sh get.sh print_data.sh set.sh keys_iterator.sh multi.sh multi_write.sh \
-	precision.sh list.sh large_grib1.sh
+	precision.sh list.sh large_grib1.sh get_data.sh
 
 noinst_PROGRAMS       = nearest set_bitmap iterator get print_data set set_missing keys_iterator \
 			set_data mars_param values_check box multi multi2 multi_write precision \
-			set_pv list sections_copy large_grib1
+			set_pv list sections_copy large_grib1 get_data
 bin_PROGRAMS          = points
 
 box_SOURCES           = box.c
@@ -29,6 +29,7 @@ points_SOURCES        = points.c
 list_SOURCES          = list.c
 sections_copy_SOURCES = sections_copy.c
 large_grib1_SOURCES   = large_grib1.c
+get_data_SOURCES      = get_data.c
 
 INCLUDES =  -I$(top_builddir)/src
 

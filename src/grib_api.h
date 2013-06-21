@@ -581,6 +581,19 @@ int grib_get_message_copy(grib_handle* h ,  void* message,size_t *message_length
 grib_iterator*      grib_iterator_new      (grib_handle*   h, unsigned long flags,int* error);
 
 /**
+* Get latitude/longitude and data values.
+* The Latitudes, longitudes and values arrays must be properly allocated by the caller.
+* Their required dimension can be obtained by getting the value of the integer key "numberOfPoints".
+*
+* @param h           : handle from which geography and data values are taken
+* @param lats        : returned array of latitudes
+* @param lons        : returned array of longitudes
+* @param values      : returned array of data values
+* @return            0 if OK, integer value on error
+*/
+int grib_get_data(grib_handle *h, double *lats, double *lons, double *values, size_t *size);
+
+/**
 * Get the next value from an iterator.
 *
 * @param i           : the iterator
