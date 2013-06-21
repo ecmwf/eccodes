@@ -87,6 +87,7 @@ program sample
 
   enddo
 
+  call grib_release(igribsample)
   deallocate(v)
   deallocate(v1)
   deallocate(v2)
