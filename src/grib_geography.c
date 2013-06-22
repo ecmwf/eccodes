@@ -24,6 +24,10 @@
 #define NUMBER(x) (sizeof(x)/sizeof(x[0]))
 #define MAXITER  10
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 
 static void gauss_first_guess(long trunc, double* vals)
 {
