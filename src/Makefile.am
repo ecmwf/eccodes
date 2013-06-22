@@ -229,6 +229,7 @@ libgrib_api_la_prototypes= \
 	grib_dumper_class_debug.c \
 	grib_dumper_class_default.c \
 	grib_dumper_class_keys.c \
+	grib_dumper_class_json.c \
 	grib_dumper_class_c_code.c \
 	grib_dumper_class_wmo.c \
 	grib_dumper_class.c \

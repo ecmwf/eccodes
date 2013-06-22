@@ -662,6 +662,8 @@ void grib_dump_footer(grib_dumper *d, grib_handle *h);
 
 /* grib_dumper_class_keys.c */
 
+/* grib_dumper_class_json.c */
+
 /* grib_dumper_class_c_code.c */
 
 /* grib_dumper_class_wmo.c */

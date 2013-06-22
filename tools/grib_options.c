@@ -43,6 +43,7 @@ grib_options_help grib_options_help_list[] ={
   {"G",0,"GRIBEX compatibility mode.\n"},
   {"i:","index",
     "\n\t\tData value corresponding to the given index is printed.\n"},
+  {"j",0,"JSON mode (JavaScript Object Notation).\n"},
   {"l:","Latitude,Longitude[,MODE,file]",
    "\n\t\tValue close to the point of a Latitude/Longitude."
    "\n\t\tAllowed values for MODE are:"

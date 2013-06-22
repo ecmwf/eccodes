@@ -2,6 +2,7 @@
 { "c_code", &grib_dumper_class_c_code, },
 { "debug", &grib_dumper_class_debug, },
 { "default", &grib_dumper_class_default, },
+{ "json", &grib_dumper_class_json, },
 { "keys", &grib_dumper_class_keys, },
 { "serialize", &grib_dumper_class_serialize, },
 { "wmo", &grib_dumper_class_wmo, },
