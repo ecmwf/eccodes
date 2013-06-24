@@ -16,14 +16,14 @@ alias Nb =  numberOfDataBinsAlongRadials;
 unsigned[4] numberOfRadials ;
 alias Nr  = numberOfRadials;
 
-#  La1 - latitude of center point
+#  La1 - latitude of centre point
 signed[4] latitudeOfCenterPoint ;
 alias La1 =  latitudeOfCenterPoint;
 meta  geography.latitudeOfCenterPointInDegrees
         scale(latitudeOfCenterPoint,one,grib2divider,truncateDegrees) : dump;
 alias La1InDegrees=latitudeOfCenterPointInDegrees;
 
-#  Lo1 - longitude of center point
+#  Lo1 - longitude of centre point
 unsigned[4] longitudeOfCenterPoint ;
 alias Lo1 =  longitudeOfCenterPoint;
 meta  geography.longitudeOfCenterPointInDegrees

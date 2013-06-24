@@ -2770,14 +2770,14 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 18 ;
 	}
-#center latitude
+#centre latitude
 '502309' = {
 	 discipline = 0 ;
 	 parameterCategory = 191 ;
 	 parameterNumber = 1 ;
 	 numberOfGridInReference = 1 ;
 	}
-#center longitude
+#centre longitude
 '502310' = {
 	 discipline = 0 ;
 	 parameterCategory = 191 ;

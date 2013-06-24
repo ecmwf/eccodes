@@ -27,7 +27,7 @@ alias gribTablesVersionNo=table2Version;
 
 #assert(section1Length > 5);
 
-#  Identification of originating/generating center
+#  Identification of originating/generating centre
 codetable[1] centre 'grib1/0.table' : dump,string_type;
 alias identificationOfOriginatingGeneratingCentre=centre;
 meta centreDescription codetable_title(centre);
@@ -37,7 +37,7 @@ alias originatingCentre=centre;
 alias ls.centre = centre;
 
 #  Generating process identification number
-# (allocated by originating center)
+# (allocated by originating centre)
 unsigned[1] generatingProcessIdentifier : dump ;
 alias generatingProcessIdentificationNumber=generatingProcessIdentifier;
 alias process=generatingProcessIdentifier;
@@ -313,7 +313,7 @@ if(((section1Length > 40) or new() or setLocalDefinition> 0) and deleteLocalDefi
   else
   { 
 	if ( !new() || setLocalDefinition ) {
-		# Other centers
+		# Other centres
 		pad reservedNeedNotBePresent(12);
 		template_nofail  localDefinition  "grib1/local.[centre:l].def";
     

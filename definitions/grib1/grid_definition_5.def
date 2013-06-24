@@ -54,7 +54,7 @@ constant latitudeWhereDxAndDyAreSpecifiedInDegrees=60;
 constant LaDInDegrees=60;
 alias geography.LaDInDegrees=LaDInDegrees;
 
-#  Projection center flag
+#  Projection centre flag
 unsigned[1] projectionCentreFlag : dump ;
 alias projectionCenterFlag=projectionCentreFlag;
 

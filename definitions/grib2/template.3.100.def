@@ -30,7 +30,7 @@ signed[4] latitudeOfThePolePoint  : dump ;
 unsigned[4] longitudeOfThePolePoint  : dump ;
 meta longitudeOfThePolePointInDegrees g2lon(longitudeOfThePolePoint);
 
-#  Longitude of the center line of the first diamond of the icosahedron on the sphere
+#  Longitude of the centre line of the first diamond of the icosahedron on the sphere
 unsigned[4] longitudeOfFirstDiamondCenterLine  : dump ;
 meta longitudeOfFirstDiamondCenterLineInDegrees g2lon(longitudeOfFirstDiamondCenterLine);
 

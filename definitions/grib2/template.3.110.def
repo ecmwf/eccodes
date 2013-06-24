@@ -20,7 +20,7 @@ unsigned[4] numberOfPointsAlongYAxis : dump  ;
 
 alias Ny =  numberOfPointsAlongYAxis;
 #  La1 - latitude of tangency point
-# (center of grid)
+# (centre of grid)
 signed[4] latitudeOfTangencyPoint  : dump ;
 
 alias La1  = latitudeOfTangencyPoint;
@@ -37,7 +37,7 @@ unsigned[4] Dx  : dump ;
 #  Dy - Y-direction grid length in units of 10 -3 m as measured at the point of the axis
 unsigned[4] Dy  : dump ;
 
-#  Projection center flag
+#  Projection centre flag
 unsigned[1] projectionCenterFlag  : dump ;
 
 include "template.3.scanning_mode.def";
