@@ -116,6 +116,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
   long more=0;
   long count=0;
   int mydepth=depth+2;
+    double missing_value = 9999;
 
   count=grib_value_count(a);
   size=count;
@@ -145,12 +146,20 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     fprintf(self->dumper.out,"%-*s",mydepth," ");
     fprintf(self->dumper.out,"\"%s\" : [ ",a->name);
     tab=lens+mydepth+7;
-    for (i=0;i<size-1;i++) {
+
+        err = grib_get_double(a->parent->h, "missingValue", &missing_value);
+        for (i=0; i<size-1; ++i) {
         if (count>cols || i==0) {fprintf(self->dumper.out,"\n%-*s",tab," ");count=0;}
+            if (values[i] == missing_value)
+                fprintf(self->dumper.out, "%s, ", "null");
+            else
         fprintf(self->dumper.out,"%g, ",values[i]);
         count++;
     }
     if (count>cols) fprintf(self->dumper.out,"\n%-*s",tab," ");
+        if (values[i] == missing_value)
+            fprintf(self->dumper.out, "%s ","null");
+        else
     fprintf(self->dumper.out,"%g ",values[i]);
     if (more)
       fprintf(self->dumper.out,"\n%-*s... %ld more values",tab," ",more);
@@ -316,4 +325,3 @@ static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors
     grib_dump_accessors_block(d,block);
   }
 }
-

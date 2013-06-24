@@ -102,7 +102,8 @@ int grib_tool_init(grib_runtime_options* options) {
 	if (grib_options_on("H"))
 		options->dump_flags |= GRIB_DUMP_FLAG_HEXADECIMAL;
 
-	if (grib_options_on("d"))
+    /* In JSON mode we want to print all data values */
+    if ( grib_options_on("d") || grib_options_on("j") )
 		options->dump_flags |= GRIB_DUMP_FLAG_ALL_DATA;
 
 	return 0;
