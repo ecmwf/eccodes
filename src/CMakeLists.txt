@@ -307,6 +307,8 @@ list( APPEND grib_api_srcs
 #   grib_bits_any_endian_simple.c
 # )
 
+configure_file( grib_api_version.c.in grib_api_version.c @ONLY )
+
 ecbuild_generate_yy( YYPREFIX  grib_yy
 		YACC      griby
 		LEX       gribl
@@ -314,9 +316,12 @@ ecbuild_generate_yy( YYPREFIX  grib_yy
 
 ecbuild_add_library( TARGET    grib_api
 		SOURCES   
+            grib_api_version.c
             griby.c gribl.c 
             ${grib_api_extra_srcs} 
             ${grib_api_srcs}
+        GENERATED
+			grib_api_version.c
 		INCLUDES  
             ${GRIB_API_EXTRA_INCLUDE_DIRS} 
 		LIBS      

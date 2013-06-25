@@ -1,7 +1,5 @@
 if( GRIB_API_PYTHON )
 
-    message( WARNING "support for Python with CMake needs testing" )
-
     ecbuild_find_python( VERSION 2.5 )
 
     find_package( SWIG )

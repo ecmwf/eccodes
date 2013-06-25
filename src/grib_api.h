@@ -1216,6 +1216,13 @@ void grib_multi_support_reset_file(grib_context* c, FILE* f);
 long grib_get_api_version(void);
 
 /**
+*  Get the Git version control SHA1 identifier
+*
+*  @return character string with SHA1 identifier
+*/
+const char* grib_get_git_sha1(void);
+
+/**
 *  Prints the API version
 *
 *
