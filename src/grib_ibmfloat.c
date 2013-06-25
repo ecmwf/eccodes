@@ -10,7 +10,6 @@
 
 #include "grib_api_internal.h"
 
-
 static void init_ibm_table();
 
 typedef struct ibm_table_t ibm_table_t;
@@ -23,7 +22,7 @@ struct ibm_table_t {
   double vmax;
 };
 
-static ibm_table_t ibm_table={ 0,{0,},{0,} };
+static ibm_table_t ibm_table={ 0, {0,}, {0,}, 0, 0 };
 
 static void init_ibm_table() {
   if (!ibm_table.inited) {

@@ -16,7 +16,6 @@
 
 #if 1
 
-
 static void init_ieee_table();
 
 typedef struct ieee_table_t ieee_table_t;
@@ -29,7 +28,7 @@ struct ieee_table_t {
   double vmax;
 };
 
-static ieee_table_t ieee_table={ 0,{0,},{0,} };
+static ieee_table_t ieee_table={ 0,{0,},{0,}, 0, 0 };
 
 static void init_ieee_table() {
   if (!ieee_table.inited) {
@@ -72,8 +71,6 @@ static void binary_search(double xx[], const unsigned long n, double x, unsigned
   }
   *j=jl;
 }
-
-
 
 double grib_ieee_table_e(unsigned long e) {
   if (!ieee_table.inited) init_ieee_table();

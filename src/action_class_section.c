@@ -96,7 +96,7 @@ static int notify_change(grib_action* act, grib_accessor * notified,
                          grib_accessor* changed)
 {
 
-  grib_loader loader = { 0,};
+  grib_loader loader = { 0,0,0,0,0 };
 
   grib_section *old_section = NULL;
   grib_handle *h = notified->parent->h;
