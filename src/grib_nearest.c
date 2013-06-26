@@ -16,12 +16,16 @@
 
 #include "grib_api_internal.h"
 
-
-int grib_nearest_find(grib_nearest *nearest,grib_handle* h,double inlat,double inlon,
-    unsigned long flags,double* outlats,double* outlons,
+int grib_nearest_find(
+        grib_nearest *nearest, grib_handle* h,
+        double inlat, double inlon,
+        unsigned long flags,
+        double* outlats,double* outlons,
     double* values,double* distances, int* indexes, size_t *len)
 {
   grib_nearest_class *c = nearest->cclass;
+    Assert( flags <= (GRIB_NEAREST_SAME_GRID|GRIB_NEAREST_SAME_DATA|GRIB_NEAREST_SAME_POINT) );
+
   while(c)
   {
     grib_nearest_class *s = c->super ? *(c->super) : NULL;
@@ -40,12 +44,9 @@ int grib_nearest_find(grib_nearest *nearest,grib_handle* h,double inlat,double i
   return 0;
 }
 
-
 /* For this one, ALL init are called */
-
 static int init_nearest(grib_nearest_class* c,grib_nearest* i, grib_handle *h, grib_arguments* args)
 {
-
   if(c) {
     int ret = GRIB_SUCCESS;
     grib_nearest_class *s = c->super ? *(c->super) : NULL;
@@ -192,6 +193,3 @@ int grib_nearest_find_multiple(grib_handle* h,int is_lsm,
 
   return ret;
 }
-
-
-
