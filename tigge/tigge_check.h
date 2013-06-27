@@ -10,10 +10,10 @@
 parameter parameters[] = {
    {
       "10_meter_u_velocity_sfc",
-      -80,
-      -20,
-      20,
-      80,
+      -100,
+      -1,
+      1,
+      100,
       {
          {"discipline", 0},
          {"parameterCategory", 2},
@@ -28,10 +28,10 @@ parameter parameters[] = {
 
    {
       "10_meter_v_velocity_sfc",
-      -80,
-      -20,
-      20,
-      80,
+      -100,
+      -1,
+      1,
+      100,
       {
          {"discipline", 0},
          {"parameterCategory", 2},
@@ -47,7 +47,7 @@ parameter parameters[] = {
    {
       "convective_available_potential_energy_sfc",
       0,
-      0,
+      0.1,
       0,
       17000,
       {
@@ -63,10 +63,10 @@ parameter parameters[] = {
 
    {
       "convective_inhibition_sfc",
-      -1500,
-      -1500,
+      -1800,
       0,
-      0,
+      -10,
+      2000,
       {
          {"discipline", 0},
          {"parameterCategory", 7},
@@ -134,8 +134,8 @@ parameter parameters[] = {
    {
       "mean_sea_level_pressure_sfc",
       91000,
-      95000,
-      104000,
+      102000,
+      99000,
       107000,
       {
          {"discipline", 0},
@@ -150,9 +150,9 @@ parameter parameters[] = {
    {
       "orography_sfc",
       -1300,
-      -109,
-      5600,
-      56000,
+      0,
+      2000,
+      8888,
       {
          {"discipline", 0},
          {"parameterCategory", 3},
@@ -322,11 +322,27 @@ parameter parameters[] = {
    },
 
    {
+      "surface_air_temperature_sfc",
+      180,
+      290,
+      270,
+      350,
+      {
+         {"discipline", 0},
+         {"parameterCategory", 0},
+         {"parameterNumber", 0},
+         {"typeOfFirstFixedSurface", 103},
+         {NULL, },
+      },
+      {&point_in_time, &given_level},
+   },
+
+   {
       "surface_air_dew_point_temperature_sfc",
-      130,
-      230,
-      280,
-      320,
+      180,
+      290,
+      270,
+      350,
       {
          {"discipline", 0},
          {"parameterCategory", 0},
@@ -371,21 +387,6 @@ parameter parameters[] = {
       {&six_hourly, &given_level},
    },
 
-   {
-      "surface_air_temperature_sfc",
-      190,
-      230,
-      300,
-      350,
-      {
-         {"discipline", 0},
-         {"parameterCategory", 0},
-         {"parameterNumber", 0},
-         {"typeOfFirstFixedSurface", 103},
-         {NULL, },
-      },
-      {&point_in_time, &given_level},
-   },
 
    {
       "surface_pressure_sfc",
@@ -538,12 +539,14 @@ parameter parameters[] = {
       {&point_in_time, &predefined_thickness},
    },
 
+/*hourly extreems for cumulated parameters! */
+/* 133 because of cosmo-de boundary effects when coupled with IFS */
    {
       "total_precipitation_sfc",
-      -1e-8,
-      -1e-8,
-      45,
-      45,
+      -0.05,
+      0.1,
+      0.,
+      133.,
       {
          {"discipline", 0},
          {"parameterCategory", 1},
@@ -555,12 +558,13 @@ parameter parameters[] = {
       {&from_start, &predefined_level},
    },
 
+/*hourly extreems for cumulated parameters! */
    {
       "large_scale_precipitation_sfc",
-      -1e-8,
-      -1e-8,
-      45,
-      45,
+      -0.05,
+      0.1,
+      0.0,
+      100.,
       {
          {"discipline", 0},
          {"parameterCategory", 1},
@@ -658,10 +662,10 @@ parameter parameters[] = {
    },
    {
       "maximum_wind_gust",
-      -80,
-      -20,
-      20,
-      80,
+      0,
+      10,
+      0,
+      100,
       {
          {"discipline", 0},
          {"parameterCategory", 2},
