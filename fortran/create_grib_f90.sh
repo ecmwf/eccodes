@@ -11,9 +11,19 @@ same=`./same_int_long`
 
 if [ $same -eq 1 ]
 then
- interface=grib_f90_int.f90
+ long=grib_f90_int.f90
 else
- interface=grib_f90_long_int.f90
+ long=grib_f90_long_int.f90
 fi
-cat grib_f90.f90.head $interface grib_f90.f90.tail > grib_f90.f90
+
+same=`./same_int_size_t`
+
+if [ $same -eq 1 ]
+then
+ sizet=grib_f90_int_size_t.f90
+else
+ sizet=grib_f90_long_size_t.f90
+fi
+
+cat grib_f90_head.f90 $long $sizet grib_f90_tail.f90 > grib_f90.f90
 

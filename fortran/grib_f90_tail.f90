@@ -526,11 +526,13 @@
   subroutine grib_read_bytes_char ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         character(len=1),dimension(:), intent(out)       :: buffer
-        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
+        integer(kind=kindOfInt), intent(in)              :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
+        integer(kind=kindOfSize_t)                       :: ibytes
         integer(kind=kindOfInt)                          :: iret
 
-        iret=grib_f_read_file(ifile,buffer,nbytes)
+        ibytes=nbytes
+        iret=grib_f_read_file(ifile,buffer,ibytes)
         if (present(status)) then
            status = iret
         else
@@ -547,17 +549,46 @@
   !>
   !>
   !> @param ifile       id of the opened file to be used in all the file functions.
+  !> @param buffer      binary buffer to be read
+  !> @param nbytes      number of bytes to be read
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_read_bytes_char_size_t ( ifile, buffer, nbytes, status )
+        integer(kind=kindOfInt),intent(in)               :: ifile
+        character(len=1),dimension(:), intent(out)       :: buffer
+        integer(kind=kindOfSize_t), intent(in)           :: nbytes
+        integer(kind=kindOfInt),optional, intent(out)    :: status
+        integer(kind=kindOfInt)                          :: iret
+
+        iret=grib_f_read_file(ifile,buffer,nbytes)
+        if (present(status)) then
+           status = iret
+        else
+           call grib_check(iret,'grib_read_bytes','')
+        endif
+  end subroutine grib_read_bytes_char_size_t
+
+  !> Reads nbytes bytes into the buffer from a file opened with grib_open_file.
+  !>
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !>
+  !> @param ifile       id of the opened file to be used in all the file functions.
   !> @param buffer      buffer to be read
   !> @param nbytes      number of bytes to be read
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_read_bytes_int4 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         integer(kind=4),dimension(:), intent(out)        :: buffer
-        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
+        integer(kind=kindOfInt), intent(in)              :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
+        integer(kind=kindOfSize_t)                       :: ibytes
         integer(kind=kindOfInt)                          :: iret
 
-        iret=grib_f_read_file(ifile,buffer,nbytes)
+        ibytes=nbytes
+        iret=grib_f_read_file(ifile,buffer,ibytes)
         if (present(status)) then
            status = iret
         else
@@ -577,14 +608,43 @@
   !> @param buffer      buffer to be read
   !> @param nbytes      number of bytes to be read
   !> @param status      GRIB_SUCCESS if OK, integer value on error
-  subroutine grib_read_bytes_real4 ( ifile, buffer, nbytes, status )
+  subroutine grib_read_bytes_int4_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
-        real(kind=4),dimension(:), intent(out)           :: buffer
-        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
+        integer(kind=4),dimension(:), intent(out)        :: buffer
+        integer(kind=kindOfSize_t), intent(in)           :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
         iret=grib_f_read_file(ifile,buffer,nbytes)
+        if (present(status)) then
+           status = iret
+        else
+           call grib_check(iret,'grib_read_bytes','')
+        endif
+  end subroutine grib_read_bytes_int4_size_t
+
+  !> Reads nbytes bytes into the buffer from a file opened with grib_open_file.
+  !>
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !>
+  !> @param ifile       id of the opened file to be used in all the file functions.
+  !> @param buffer      buffer to be read
+  !> @param nbytes      number of bytes to be read
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_read_bytes_real4 ( ifile, buffer, nbytes, status )
+        integer(kind=kindOfInt),intent(in)               :: ifile
+        real(kind=4),dimension(:), intent(out)           :: buffer
+        integer(kind=kindOfInt), intent(in)              :: nbytes
+        integer(kind=kindOfInt),optional, intent(out)    :: status
+        integer(kind=kindOfSize_t)                       :: ibytes
+        integer(kind=kindOfInt)                          :: iret
+
+        ibytes=nbytes
+        iret=grib_f_read_file(ifile,buffer,ibytes)
         if (present(status)) then
            status = iret
         else
@@ -604,10 +664,10 @@
   !> @param buffer      buffer to be read
   !> @param nbytes      number of bytes to be read
   !> @param status      GRIB_SUCCESS if OK, integer value on error
-  subroutine grib_read_bytes_real8 ( ifile, buffer, nbytes, status )
+  subroutine grib_read_bytes_real4_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
-        real(kind=8),dimension(:), intent(out)           :: buffer
-        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
+        real(kind=4),dimension(:), intent(out)           :: buffer
+        integer(kind=kindOfSize_t), intent(in)           :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -617,7 +677,63 @@
         else
            call grib_check(iret,'grib_read_bytes','')
         endif
+  end subroutine grib_read_bytes_real4_size_t
+
+  !> Reads nbytes bytes into the buffer from a file opened with grib_open_file.
+  !>
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !>
+  !> @param ifile       id of the opened file to be used in all the file functions.
+  !> @param buffer      buffer to be read
+  !> @param nbytes      number of bytes to be read
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_read_bytes_real8 ( ifile, buffer, nbytes, status )
+        integer(kind=kindOfInt),intent(in)               :: ifile
+        real(kind=8),dimension(:), intent(out)           :: buffer
+        integer(kind=kindOfInt), intent(in)              :: nbytes
+        integer(kind=kindOfInt),optional, intent(out)    :: status
+        integer(kind=kindOfSize_t)                       :: ibytes
+        integer(kind=kindOfInt)                          :: iret
+
+        ibytes=nbytes
+        iret=grib_f_read_file(ifile,buffer,ibytes)
+        if (present(status)) then
+           status = iret
+        else
+           call grib_check(iret,'grib_read_bytes','')
+        endif
   end subroutine grib_read_bytes_real8
+
+  !> Reads nbytes bytes into the buffer from a file opened with grib_open_file.
+  !>
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !>
+  !> @param ifile       id of the opened file to be used in all the file functions.
+  !> @param buffer      buffer to be read
+  !> @param nbytes      number of bytes to be read
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_read_bytes_real8_size_t ( ifile, buffer, nbytes, status )
+        integer(kind=kindOfInt),intent(in)               :: ifile
+        real(kind=8),dimension(:), intent(out)           :: buffer
+        integer(kind=kindOfSize_t), intent(in)           :: nbytes
+        integer(kind=kindOfInt),optional, intent(out)    :: status
+        integer(kind=kindOfInt)                          :: iret
+
+        iret=grib_f_read_file(ifile,buffer,nbytes)
+        if (present(status)) then
+           status = iret
+        else
+           call grib_check(iret,'grib_read_bytes','')
+        endif
+  end subroutine grib_read_bytes_real8_size_t
 
   !> Reads a message in the buffer array from the file opened with grib_open_file.
   !>
@@ -634,11 +750,13 @@
   subroutine grib_read_from_file_int4 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         integer(kind=4),dimension(:), intent(out)        :: buffer
-        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
+        integer(kind=kindOfInt), intent(in)              :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
+        integer(kind=kindOfSize_t)                       :: ibytes
         integer(kind=kindOfInt)                          :: iret
 
-        iret=grib_f_read_any_from_file(ifile,buffer,nbytes)
+        ibytes=nbytes
+        iret=grib_f_read_any_from_file(ifile,buffer,ibytes)
         if (present(status)) then
            status = iret
         else
@@ -658,14 +776,43 @@
   !> @param buffer      binary buffer to be read
   !> @param nbytes      number of bytes to be read
   !> @param status      GRIB_SUCCESS if OK, integer value on error
-  subroutine grib_read_from_file_real4 ( ifile, buffer, nbytes, status )
+  subroutine grib_read_from_file_int4_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
-        real(kind=4),dimension(:), intent(out)           :: buffer
-        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
+        integer(kind=4),dimension(:), intent(out)        :: buffer
+        integer(kind=kindOfSize_t), intent(in)           :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
         iret=grib_f_read_any_from_file(ifile,buffer,nbytes)
+        if (present(status)) then
+           status = iret
+        else
+           call grib_check(iret,'grib_read_from_file','')
+        endif
+  end subroutine grib_read_from_file_int4_size_t
+
+  !> Reads a message in the buffer array from the file opened with grib_open_file.
+  !>
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !>
+  !> @param ifile       id of the opened file to be used in all the file functions.
+  !> @param buffer      binary buffer to be read
+  !> @param nbytes      number of bytes to be read
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_read_from_file_real4 ( ifile, buffer, nbytes, status )
+        integer(kind=kindOfInt),intent(in)               :: ifile
+        real(kind=4),dimension(:), intent(out)           :: buffer
+        integer(kind=kindOfInt), intent(in)              :: nbytes
+        integer(kind=kindOfInt),optional, intent(out)    :: status
+        integer(kind=kindOfSize_t)                       :: ibytes
+        integer(kind=kindOfInt)                          :: iret
+
+        ibytes=nbytes
+        iret=grib_f_read_any_from_file(ifile,buffer,ibytes)
         if (present(status)) then
            status = iret
         else
@@ -685,14 +832,43 @@
   !> @param buffer      binary buffer to be read
   !> @param nbytes      number of bytes to be read
   !> @param status      GRIB_SUCCESS if OK, integer value on error
-  subroutine grib_read_from_file_real8 ( ifile, buffer, nbytes, status )
+  subroutine grib_read_from_file_real4_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
-        real(kind=8),dimension(:), intent(out)           :: buffer
-        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
+        real(kind=4),dimension(:), intent(out)           :: buffer
+        integer(kind=kindOfSize_t), intent(in)           :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
         iret=grib_f_read_any_from_file(ifile,buffer,nbytes)
+        if (present(status)) then
+           status = iret
+        else
+           call grib_check(iret,'grib_read_from_file','')
+        endif
+  end subroutine grib_read_from_file_real4_size_t
+
+  !> Reads a message in the buffer array from the file opened with grib_open_file.
+  !>
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !>
+  !> @param ifile       id of the opened file to be used in all the file functions.
+  !> @param buffer      binary buffer to be read
+  !> @param nbytes      number of bytes to be read
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_read_from_file_real8 ( ifile, buffer, nbytes, status )
+        integer(kind=kindOfInt),intent(in)               :: ifile
+        real(kind=8),dimension(:), intent(out)           :: buffer
+        integer(kind=kindOfInt), intent(in)              :: nbytes
+        integer(kind=kindOfInt),optional, intent(out)    :: status
+        integer(kind=kindOfSize_t)                       :: ibytes
+        integer(kind=kindOfInt)                          :: iret
+
+        ibytes=nbytes
+        iret=grib_f_read_any_from_file(ifile,buffer,ibytes)
         if (present(status)) then
            status = iret
         else
@@ -709,13 +885,13 @@
   !>
   !>
   !> @param ifile       id of the opened file to be used in all the file functions.
-  !> @param buffer      buffer to be read
+  !> @param buffer      binary buffer to be read
   !> @param nbytes      number of bytes to be read
   !> @param status      GRIB_SUCCESS if OK, integer value on error
-  subroutine grib_read_from_file_char ( ifile, buffer, nbytes, status )
+  subroutine grib_read_from_file_real8_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
-        character(len=1),dimension(:), intent(out)       :: buffer
-        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
+        real(kind=8),dimension(:), intent(out)           :: buffer
+        integer(kind=kindOfSize_t), intent(in)           :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -725,10 +901,64 @@
         else
            call grib_check(iret,'grib_read_from_file','')
         endif
+  end subroutine grib_read_from_file_real8_size_t
+
+  !> Reads a message in the buffer array from the file opened with grib_open_file.
+  !>
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !>
+  !> @param ifile       id of the opened file to be used in all the file functions.
+  !> @param buffer      buffer to be read
+  !> @param nbytes      number of bytes to be read
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_read_from_file_char ( ifile, buffer, nbytes, status )
+        integer(kind=kindOfInt),intent(in)               :: ifile
+        character(len=1),dimension(:), intent(out)       :: buffer
+        integer(kind=kindOfInt), intent(in)              :: nbytes
+        integer(kind=kindOfInt),optional, intent(out)    :: status
+        integer(kind=kindOfSize_t)                       :: ibytes
+        integer(kind=kindOfInt)                          :: iret
+
+        ibytes=nbytes
+        iret=grib_f_read_any_from_file(ifile,buffer,ibytes)
+        if (present(status)) then
+           status = iret
+        else
+           call grib_check(iret,'grib_read_from_file','')
+        endif
   end subroutine grib_read_from_file_char
 
-  !> Write nbytes bytes from the buffer in a file opened with grib_open_file.
+  !> Reads a message in the buffer array from the file opened with grib_open_file.
   !>
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !>
+  !> @param ifile       id of the opened file to be used in all the file functions.
+  !> @param buffer      buffer to be read
+  !> @param nbytes      number of bytes to be read
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_read_from_file_char_size_t ( ifile, buffer, nbytes, status )
+        integer(kind=kindOfInt),intent(in)               :: ifile
+        character(len=1),dimension(:), intent(out)       :: buffer
+        integer(kind=kindOfSize_t), intent(in)           :: nbytes
+        integer(kind=kindOfInt),optional, intent(out)    :: status
+        integer(kind=kindOfInt)                          :: iret
+
+        iret=grib_f_read_any_from_file(ifile,buffer,nbytes)
+        if (present(status)) then
+           status = iret
+        else
+           call grib_check(iret,'grib_read_from_file','')
+        endif
+  end subroutine grib_read_from_file_char_size_t
+
   !> Write nbytes bytes from the buffer in a file opened with grib_open_file.
   !>
   !>
@@ -744,11 +974,13 @@
   subroutine grib_write_bytes_char ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         character(len=1), dimension(:),intent(in)        :: buffer
-        integer(kind=kindOfSize_t), intent(in)           :: nbytes
+        integer(kind=kindOfInt), intent(in)              :: nbytes
         integer(kind=kindOfInt),optional,intent(out)     :: status
+        integer(kind=kindOfSize_t)                       :: ibytes
         integer(kind=kindOfInt)                          :: iret
 
-        iret=grib_f_write_file(ifile,buffer,nbytes)
+        ibytes=nbytes
+        iret=grib_f_write_file(ifile,buffer,ibytes)
         if (present(status)) then
            status = iret
         else
@@ -768,14 +1000,43 @@
   !> @param buffer      buffer to be written
   !> @param nbytes      number of bytes to be written
   !> @param status      GRIB_SUCCESS if OK, integer value on error
-  subroutine grib_write_bytes_int4 ( ifile, buffer, nbytes, status )
+  subroutine grib_write_bytes_char_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
-        integer(kind=4), dimension(:),intent(in)         :: buffer
-        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
+        character(len=1), dimension(:),intent(in)        :: buffer
+        integer(kind=kindOfSize_t), intent(in)           :: nbytes
         integer(kind=kindOfInt),optional,intent(out)     :: status
         integer(kind=kindOfInt)                          :: iret
 
         iret=grib_f_write_file(ifile,buffer,nbytes)
+        if (present(status)) then
+           status = iret
+        else
+           call grib_check(iret,'grib_write_bytes','')
+        endif
+  end subroutine grib_write_bytes_char_size_t
+
+  !> Write nbytes bytes from the buffer in a file opened with grib_open_file.
+  !>
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !>
+  !> @param ifile       id of the opened file to be used in all the file functions.
+  !> @param buffer      buffer to be written
+  !> @param nbytes      number of bytes to be written
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_write_bytes_int4 ( ifile, buffer, nbytes, status )
+        integer(kind=kindOfInt),intent(in)               :: ifile
+        integer(kind=4), dimension(:),intent(in)         :: buffer
+        integer(kind=kindOfInt), intent(in)              :: nbytes
+        integer(kind=kindOfInt),optional,intent(out)     :: status
+        integer(kind=kindOfSize_t)                       :: ibytes
+        integer(kind=kindOfInt)                          :: iret
+
+        ibytes=nbytes
+        iret=grib_f_write_file(ifile,buffer,ibytes)
         if (present(status)) then
            status = iret
         else
@@ -795,14 +1056,43 @@
   !> @param buffer      buffer to be written
   !> @param nbytes      number of bytes to be written
   !> @param status      GRIB_SUCCESS if OK, integer value on error
-  subroutine grib_write_bytes_real4 ( ifile, buffer, nbytes, status )
+  subroutine grib_write_bytes_int4_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
-        real(kind=4), dimension(:),intent(in)            :: buffer
-        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
+        integer(kind=4), dimension(:),intent(in)         :: buffer
+        integer(kind=kindOfSize_t), intent(in)           :: nbytes
         integer(kind=kindOfInt),optional,intent(out)     :: status
         integer(kind=kindOfInt)                          :: iret
 
         iret=grib_f_write_file(ifile,buffer,nbytes)
+        if (present(status)) then
+           status = iret
+        else
+           call grib_check(iret,'grib_write_bytes','')
+        endif
+  end subroutine grib_write_bytes_int4_size_t
+
+  !> Write nbytes bytes from the buffer in a file opened with grib_open_file.
+  !>
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !>
+  !> @param ifile       id of the opened file to be used in all the file functions.
+  !> @param buffer      buffer to be written
+  !> @param nbytes      number of bytes to be written
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_write_bytes_real4 ( ifile, buffer, nbytes, status )
+        integer(kind=kindOfInt),intent(in)               :: ifile
+        real(kind=4), dimension(:),intent(in)            :: buffer
+        integer(kind=kindOfInt), intent(in)              :: nbytes
+        integer(kind=kindOfInt),optional,intent(out)     :: status
+        integer(kind=kindOfSize_t)                       :: ibytes
+        integer(kind=kindOfInt)                          :: iret
+
+        ibytes=nbytes
+        iret=grib_f_write_file(ifile,buffer,ibytes)
         if (present(status)) then
            status = iret
         else
@@ -822,10 +1112,10 @@
   !> @param buffer      buffer to be written
   !> @param nbytes      number of bytes to be written
   !> @param status      GRIB_SUCCESS if OK, integer value on error
-  subroutine grib_write_bytes_real8 ( ifile, buffer, nbytes, status )
+  subroutine grib_write_bytes_real4_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
-        real(kind=8), dimension(:),intent(in)            :: buffer
-        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
+        real(kind=4), dimension(:),intent(in)            :: buffer
+        integer(kind=kindOfSize_t), intent(in)           :: nbytes
         integer(kind=kindOfInt),optional,intent(out)     :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -835,7 +1125,63 @@
         else
            call grib_check(iret,'grib_write_bytes','')
         endif
+  end subroutine grib_write_bytes_real4_size_t
+
+  !> Write nbytes bytes from the buffer in a file opened with grib_open_file.
+  !>
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !>
+  !> @param ifile       id of the opened file to be used in all the file functions.
+  !> @param buffer      buffer to be written
+  !> @param nbytes      number of bytes to be written
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_write_bytes_real8 ( ifile, buffer, nbytes, status )
+        integer(kind=kindOfInt),intent(in)               :: ifile
+        real(kind=8), dimension(:),intent(in)            :: buffer
+        integer(kind=kindOfInt), intent(in)              :: nbytes
+        integer(kind=kindOfInt),optional,intent(out)     :: status
+        integer(kind=kindOfSize_t)                       :: ibytes
+        integer(kind=kindOfInt)                          :: iret
+
+        ibytes=nbytes
+        iret=grib_f_write_file(ifile,buffer,ibytes)
+        if (present(status)) then
+           status = iret
+        else
+           call grib_check(iret,'grib_write_bytes','')
+        endif
   end subroutine grib_write_bytes_real8
+
+  !> Write nbytes bytes from the buffer in a file opened with grib_open_file.
+  !>
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !>
+  !> @param ifile       id of the opened file to be used in all the file functions.
+  !> @param buffer      buffer to be written
+  !> @param nbytes      number of bytes to be written
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_write_bytes_real8_size_t ( ifile, buffer, nbytes, status )
+        integer(kind=kindOfInt),intent(in)               :: ifile
+        real(kind=8), dimension(:),intent(in)            :: buffer
+        integer(kind=kindOfSize_t), intent(in)           :: nbytes
+        integer(kind=kindOfInt),optional,intent(out)     :: status
+        integer(kind=kindOfInt)                          :: iret
+
+        iret=grib_f_write_file(ifile,buffer,nbytes)
+        if (present(status)) then
+           status = iret
+        else
+           call grib_check(iret,'grib_write_bytes','')
+        endif
+  end subroutine grib_write_bytes_real8_size_t
 
   !> Close a file.
   !>

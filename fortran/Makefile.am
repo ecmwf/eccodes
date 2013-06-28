@@ -34,10 +34,11 @@ CLEANFILES = libgrib_api_f77.la libgrib_api_f90.la grib_f90.f90 *.mod grib_types
 
 EXTRA_DIST= grib_fortran_prototypes.h grib_api_constants.h grib_api_externals.h \
             grib_api_visibility.h grib_types.f90 create_grib_f90.sh \
-            grib_f90.f90.head grib_f90.f90.tail grib_f90_int.f90 grib_f90_long_int.f90 \
-			same_int_long.f90 grib_fortran_kinds.c
+            grib_f90_head.f90 grib_f90_tail.f90 grib_f90_int.f90 grib_f90_long_int.f90 \
+            grib_f90_int_size_t.f90 grib_f90_long_size_t.f90 \
+            same_int_long.f90 same_int_size_t.f90 grib_fortran_kinds.c
 
-grib_f90.f90: grib_f90.f90.head grib_f90.f90.tail same_int_long grib_kinds.h
+grib_f90.f90: grib_f90_head.f90 grib_f90_tail.f90 grib_f90_int.f90 grib_f90_long_int.f90 grib_f90_int_size_t.f90 grib_f90_long_size_t.f90 same_int_long same_int_size_t grib_kinds.h
 	./create_grib_f90.sh 
 
 grib_f90.o : grib_kinds.h
@@ -50,5 +51,8 @@ grib_types: grib_types.o grib_fortran_kinds.o
 
 same_int_long: same_int_long.o grib_fortran_kinds.o
 	$(FC) $(FCFLAGS) -o same_int_long same_int_long.o grib_fortran_kinds.o
+
+same_int_size_t: same_int_size_t.o grib_fortran_kinds.o
+	$(FC) $(FCFLAGS) -o same_int_size_t same_int_size_t.o grib_fortran_kinds.o
 
 include extrules.am
