@@ -28,7 +28,7 @@ INCLUDES=  -I$(top_builddir)/src
 
 ## Make sure these will be cleaned even when they're not built by
 ## default.
-CLEANFILES = libgrib_api_f77.la libgrib_api_f90.la grib_f90.f90 *.mod grib_types grib_kinds.h
+CLEANFILES = libgrib_api_f77.la libgrib_api_f90.la grib_f90.f90 *.mod grib_types grib_kinds.h same_int_long same_int_size_t
 
 #noinst_HEADERS = 
 
