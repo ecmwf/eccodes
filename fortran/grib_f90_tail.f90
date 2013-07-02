@@ -526,13 +526,17 @@
   subroutine grib_read_bytes_char ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         character(len=1),dimension(:), intent(out)       :: buffer
-        integer(kind=kindOfInt), intent(in)              :: nbytes
+        integer(kind=kindOfInt), intent(inout)           :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfSize_t)                       :: ibytes
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
         iret=grib_f_read_file(ifile,buffer,ibytes)
+        if (ibytes > huge(nbytes)) then
+           iret = GRIB_MESSAGE_TOO_LARGE
+        endif
+        nbytes=ibytes
         if (present(status)) then
            status = iret
         else
@@ -555,7 +559,7 @@
   subroutine grib_read_bytes_char_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         character(len=1),dimension(:), intent(out)       :: buffer
-        integer(kind=kindOfSize_t), intent(in)           :: nbytes
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -582,13 +586,17 @@
   subroutine grib_read_bytes_int4 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         integer(kind=4),dimension(:), intent(out)        :: buffer
-        integer(kind=kindOfInt), intent(in)              :: nbytes
+        integer(kind=kindOfInt), intent(inout)           :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfSize_t)                       :: ibytes
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
         iret=grib_f_read_file(ifile,buffer,ibytes)
+        if (ibytes > huge(nbytes)) then
+           iret = GRIB_MESSAGE_TOO_LARGE
+        endif
+        nbytes=ibytes
         if (present(status)) then
            status = iret
         else
@@ -611,7 +619,7 @@
   subroutine grib_read_bytes_int4_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         integer(kind=4),dimension(:), intent(out)        :: buffer
-        integer(kind=kindOfSize_t), intent(in)           :: nbytes
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -638,13 +646,17 @@
   subroutine grib_read_bytes_real4 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         real(kind=4),dimension(:), intent(out)           :: buffer
-        integer(kind=kindOfInt), intent(in)              :: nbytes
+        integer(kind=kindOfInt), intent(inout)           :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfSize_t)                       :: ibytes
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
         iret=grib_f_read_file(ifile,buffer,ibytes)
+        if (ibytes > huge(nbytes)) then
+           iret = GRIB_MESSAGE_TOO_LARGE
+        endif
+        nbytes=ibytes
         if (present(status)) then
            status = iret
         else
@@ -667,7 +679,7 @@
   subroutine grib_read_bytes_real4_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         real(kind=4),dimension(:), intent(out)           :: buffer
-        integer(kind=kindOfSize_t), intent(in)           :: nbytes
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -694,13 +706,17 @@
   subroutine grib_read_bytes_real8 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         real(kind=8),dimension(:), intent(out)           :: buffer
-        integer(kind=kindOfInt), intent(in)              :: nbytes
+        integer(kind=kindOfInt), intent(inout)           :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfSize_t)                       :: ibytes
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
         iret=grib_f_read_file(ifile,buffer,ibytes)
+        if (ibytes > huge(nbytes)) then
+           iret = GRIB_MESSAGE_TOO_LARGE
+        endif
+        nbytes=ibytes
         if (present(status)) then
            status = iret
         else
@@ -723,7 +739,7 @@
   subroutine grib_read_bytes_real8_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         real(kind=8),dimension(:), intent(out)           :: buffer
-        integer(kind=kindOfSize_t), intent(in)           :: nbytes
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -750,13 +766,17 @@
   subroutine grib_read_from_file_int4 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         integer(kind=4),dimension(:), intent(out)        :: buffer
-        integer(kind=kindOfInt), intent(in)              :: nbytes
+        integer(kind=kindOfInt), intent(inout)           :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfSize_t)                       :: ibytes
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
         iret=grib_f_read_any_from_file(ifile,buffer,ibytes)
+        if (ibytes > huge(nbytes)) then
+          iret = GRIB_MESSAGE_TOO_LARGE
+        endif
+        nbytes=ibytes
         if (present(status)) then
            status = iret
         else
@@ -779,7 +799,7 @@
   subroutine grib_read_from_file_int4_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         integer(kind=4),dimension(:), intent(out)        :: buffer
-        integer(kind=kindOfSize_t), intent(in)           :: nbytes
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -806,13 +826,17 @@
   subroutine grib_read_from_file_real4 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         real(kind=4),dimension(:), intent(out)           :: buffer
-        integer(kind=kindOfInt), intent(in)              :: nbytes
+        integer(kind=kindOfInt), intent(inout)           :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfSize_t)                       :: ibytes
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
         iret=grib_f_read_any_from_file(ifile,buffer,ibytes)
+        if (ibytes > huge(nbytes)) then
+          iret = GRIB_MESSAGE_TOO_LARGE
+        endif
+        nbytes=ibytes
         if (present(status)) then
            status = iret
         else
@@ -835,7 +859,7 @@
   subroutine grib_read_from_file_real4_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         real(kind=4),dimension(:), intent(out)           :: buffer
-        integer(kind=kindOfSize_t), intent(in)           :: nbytes
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -862,13 +886,17 @@
   subroutine grib_read_from_file_real8 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         real(kind=8),dimension(:), intent(out)           :: buffer
-        integer(kind=kindOfInt), intent(in)              :: nbytes
+        integer(kind=kindOfInt), intent(inout)           :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfSize_t)                       :: ibytes
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
         iret=grib_f_read_any_from_file(ifile,buffer,ibytes)
+        if (ibytes > huge(nbytes)) then
+          iret = GRIB_MESSAGE_TOO_LARGE
+        endif
+        nbytes=ibytes
         if (present(status)) then
            status = iret
         else
@@ -891,7 +919,7 @@
   subroutine grib_read_from_file_real8_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         real(kind=8),dimension(:), intent(out)           :: buffer
-        integer(kind=kindOfSize_t), intent(in)           :: nbytes
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -918,13 +946,17 @@
   subroutine grib_read_from_file_char ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         character(len=1),dimension(:), intent(out)       :: buffer
-        integer(kind=kindOfInt), intent(in)              :: nbytes
+        integer(kind=kindOfInt), intent(inout)           :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfSize_t)                       :: ibytes
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
         iret=grib_f_read_any_from_file(ifile,buffer,ibytes)
+        if (ibytes > huge(nbytes)) then
+          iret = GRIB_MESSAGE_TOO_LARGE
+        endif
+        nbytes=ibytes
         if (present(status)) then
            status = iret
         else
@@ -947,7 +979,7 @@
   subroutine grib_read_from_file_char_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         character(len=1),dimension(:), intent(out)       :: buffer
-        integer(kind=kindOfSize_t), intent(in)           :: nbytes
+        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
