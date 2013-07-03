@@ -58,3 +58,15 @@
       module procedure grib_write_bytes_real4
   end interface grib_write_bytes
 
+  !> Get the size of a coded message.
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      id of the grib loaded in memory
+  !> @param nbytes      size in bytes of the message
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  interface grib_get_message_size
+    module procedure grib_get_message_size_int
+  end interface grib_get_message_size

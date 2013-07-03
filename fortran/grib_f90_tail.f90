@@ -526,17 +526,13 @@
   subroutine grib_read_bytes_char ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         character(len=1),dimension(:), intent(out)       :: buffer
-        integer(kind=kindOfInt), intent(inout)           :: nbytes
+        integer(kind=kindOfInt), intent(in)              :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfSize_t)                       :: ibytes
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
         iret=grib_f_read_file(ifile,buffer,ibytes)
-        if (ibytes > huge(nbytes)) then
-           iret = GRIB_MESSAGE_TOO_LARGE
-        endif
-        nbytes=ibytes
         if (present(status)) then
            status = iret
         else
@@ -559,7 +555,7 @@
   subroutine grib_read_bytes_char_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         character(len=1),dimension(:), intent(out)       :: buffer
-        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
+        integer(kind=kindOfSize_t), intent(in)           :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -586,17 +582,13 @@
   subroutine grib_read_bytes_int4 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         integer(kind=4),dimension(:), intent(out)        :: buffer
-        integer(kind=kindOfInt), intent(inout)           :: nbytes
+        integer(kind=kindOfInt), intent(in)              :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfSize_t)                       :: ibytes
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
         iret=grib_f_read_file(ifile,buffer,ibytes)
-        if (ibytes > huge(nbytes)) then
-           iret = GRIB_MESSAGE_TOO_LARGE
-        endif
-        nbytes=ibytes
         if (present(status)) then
            status = iret
         else
@@ -619,7 +611,7 @@
   subroutine grib_read_bytes_int4_size_t ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         integer(kind=4),dimension(:), intent(out)        :: buffer
-        integer(kind=kindOfSize_t), intent(inout)        :: nbytes
+        integer(kind=kindOfSize_t), intent(in)           :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
@@ -646,17 +638,13 @@
   subroutine grib_read_bytes_real4 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         real(kind=4),dimension(:), intent(out)           :: buffer
-        integer(kind=kindOfInt), intent(inout)           :: nbytes
+        integer(kind=kindOfInt), intent(in)              :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfSize_t)                       :: ibytes
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
         iret=grib_f_read_file(ifile,buffer,ibytes)
-        if (ibytes > huge(nbytes)) then
-           iret = GRIB_MESSAGE_TOO_LARGE
-        endif
-        nbytes=ibytes
         if (present(status)) then
            status = iret
         else
@@ -706,17 +694,13 @@
   subroutine grib_read_bytes_real8 ( ifile, buffer, nbytes, status )
         integer(kind=kindOfInt),intent(in)               :: ifile
         real(kind=8),dimension(:), intent(out)           :: buffer
-        integer(kind=kindOfInt), intent(inout)           :: nbytes
+        integer(kind=kindOfInt), intent(in)              :: nbytes
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfSize_t)                       :: ibytes
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
         iret=grib_f_read_file(ifile,buffer,ibytes)
-        if (ibytes > huge(nbytes)) then
-           iret = GRIB_MESSAGE_TOO_LARGE
-        endif
-        nbytes=ibytes
         if (present(status)) then
            status = iret
         else
@@ -1252,7 +1236,7 @@
       integer(kind=kindOfInt),intent(in)              :: ifile
       integer(kind=kindOfInt),intent(out)             :: n
       integer(kind=kindOfInt),optional,intent(out)    :: status
-      integer(kind=kindOfInt)                       :: iret
+      integer(kind=kindOfInt)                         :: iret
 
       iret=grib_f_count_in_file( ifile, n )
       if (present(status)) then
@@ -2097,12 +2081,12 @@
   !> @param value       integer(4) array value
   !> @param status       GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_long_array ( gribid, key, value, status )
-  integer(kind=kindOfInt),               intent(in)  :: gribid
-  character(len=*),      intent(in)  :: key
-  integer(kind=kindOfLong), dimension(:), intent(out) :: value
-  integer(kind=kindOfInt),optional, intent(out)      :: status
-  integer(kind=kindOfInt)                            :: iret
-  integer(kind=kindOfInt)                            :: nb_values
+    integer(kind=kindOfInt),               intent(in)  :: gribid
+    character(len=*),      intent(in)  :: key
+    integer(kind=kindOfLong), dimension(:), intent(out) :: value
+    integer(kind=kindOfInt),optional, intent(out)      :: status
+    integer(kind=kindOfInt)                            :: iret
+    integer(kind=kindOfInt)                            :: nb_values
 
     nb_values = size(value)
     iret=grib_f_get_long_array ( gribid, key, value , nb_values )
@@ -2128,14 +2112,14 @@
   !> @param length      (optional) output: number of values retrieved
   !> @param status      (optional) GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_byte_array ( gribid, key, value, length, status )
-  integer(kind=kindOfInt),               intent(in)  :: gribid
-  character(len=*),                      intent(in)  :: key
-  character(len=1),        dimension(:), intent(out) :: value
-  integer(kind=kindOfInt), optional,     intent(out) :: length
-  integer(kind=kindOfInt), optional,     intent(out) :: status
-  integer(kind=kindOfInt)                            :: iret
-  integer(kind=kindOfInt)                            :: nb_values
-  character                                          :: bytes(size(value))
+    integer(kind=kindOfInt),               intent(in)  :: gribid
+    character(len=*),                      intent(in)  :: key
+    character(len=1),        dimension(:), intent(out) :: value
+    integer(kind=kindOfInt), optional,     intent(out) :: length
+    integer(kind=kindOfInt), optional,     intent(out) :: status
+    integer(kind=kindOfInt)                            :: iret
+    integer(kind=kindOfInt)                            :: nb_values
+    character                                          :: bytes(size(value))
 
     nb_values = size (value)
     bytes = ACHAR(0)
@@ -2705,15 +2689,20 @@
   !> gathered with @ref grib_get_error_string.
   !>
   !> @param gribid      id of the grib loaded in memory
-  !> @param byte_size   size in bytes of the message
+  !> @param nbytes      size in bytes of the message
   !> @param status      GRIB_SUCCESS if OK, integer value on error
-  subroutine grib_get_message_size  ( gribid, byte_size , status)
+  subroutine grib_get_message_size_int  ( gribid, nbytes, status)
       integer(kind=kindOfInt),                      intent(in)  :: gribid
-      integer(kind=kindOfSize_t),                   intent(out) :: byte_size
+      integer(kind=kindOfInt),                      intent(out) :: nbytes
       integer(kind=kindOfInt),optional,             intent(out) :: status
       integer(kind=kindOfInt)                                   :: iret
+      integer(kind=kindOfSize_t)                                :: ibytes
 
-      iret=grib_f_get_message_size ( gribid, byte_size )
+      iret = grib_f_get_message_size ( gribid, ibytes )
+      if (ibytes > huge(nbytes)) then
+        iret = GRIB_MESSAGE_TOO_LARGE
+      endif
+      nbytes = ibytes
 	  if (iret /= 0) then
 	    call grib_f_write_on_fail(gribid)
 	  endif
@@ -2722,7 +2711,33 @@
       else
          call grib_check(iret,'grib_get_message_size','')
       endif
-  end subroutine grib_get_message_size
+  end subroutine grib_get_message_size_int
+
+  !> Get the size of a coded message.
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      id of the grib loaded in memory
+  !> @param nbytes      size in bytes of the message
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_get_message_size_size_t  ( gribid, nbytes, status)
+      integer(kind=kindOfInt),                      intent(in)  :: gribid
+      integer(kind=kindOfSize_t),                   intent(out) :: nbytes
+      integer(kind=kindOfInt),optional,             intent(out) :: status
+      integer(kind=kindOfInt)                                   :: iret
+
+      iret=grib_f_get_message_size ( gribid, nbytes )
+	  if (iret /= 0) then
+	    call grib_f_write_on_fail(gribid)
+	  endif
+      if (present(status)) then
+         status = iret
+      else
+         call grib_check(iret,'grib_get_message_size','')
+      endif
+  end subroutine grib_get_message_size_size_t
 
   !> Copy the coded message into an array.
   !>
