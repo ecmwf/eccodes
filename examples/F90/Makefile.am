@@ -3,7 +3,7 @@ AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@ @FORCE_32_CFLAGS@
 
 TESTS = copy_message.sh get.sh get_data.sh get_pl.sh get_pv.sh keys_iterator.sh \
         nearest.sh precision.sh multi_write.sh multi.sh print_data.sh set.sh set_bitmap.sh set_missing.sh \
-        set_pv.sh samples.sh count_messages.sh read_message.sh index.sh get_set_uuid.sh
+        set_pv.sh samples.sh count_messages.sh read_message.sh read_from_file.sh index.sh get_set_uuid.sh
 
 noinst_PROGRAMS  = index copy_message get get_data get_pl get_pv keys_iterator \
                    multi_write multi nearest precision print_data set set_bitmap set_missing \
