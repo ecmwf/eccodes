@@ -22,8 +22,8 @@ if( GRIB_API_FORTRAN )
     endif()
 
     add_custom_command( OUTPUT  grib_f90.f90
-                        COMMAND cat ${srcdir}/grib_f90.f90.head ${srcdir}/${_long_int_interface} ${srcdir}/grib_f90.f90.tail > grib_f90.f90
-                        DEPENDS grib_f90.f90.head grib_f90.f90.tail grib_kinds.h ${_long_int_interface} )
+                        COMMAND cat ${srcdir}/grib_f90_head.f90 ${srcdir}/${_long_int_interface} ${srcdir}/grib_f90_tail.f90 > grib_f90.f90
+                        DEPENDS grib_f90_head.f90 grib_f90_tail.f90 grib_kinds.h ${_long_int_interface} )
 
     ecbuild_add_library( TARGET     grib_api_f77
                          SOURCES    grib_fortran.c grib_f77.c
