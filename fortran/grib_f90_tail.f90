@@ -757,7 +757,7 @@
 
         ibytes=nbytes
         iret=grib_f_read_any_from_file(ifile,buffer,ibytes)
-        if (ibytes > huge(nbytes)) then
+        if (iret == GRIB_SUCCESS .and. ibytes > huge(nbytes)) then
           iret = GRIB_MESSAGE_TOO_LARGE
         endif
         nbytes=ibytes
@@ -817,7 +817,7 @@
 
         ibytes=nbytes
         iret=grib_f_read_any_from_file(ifile,buffer,ibytes)
-        if (ibytes > huge(nbytes)) then
+        if (iret == GRIB_SUCCESS .and. ibytes > huge(nbytes)) then
           iret = GRIB_MESSAGE_TOO_LARGE
         endif
         nbytes=ibytes
@@ -877,7 +877,7 @@
 
         ibytes=nbytes
         iret=grib_f_read_any_from_file(ifile,buffer,ibytes)
-        if (ibytes > huge(nbytes)) then
+        if (iret == GRIB_SUCCESS .and. ibytes > huge(nbytes)) then
           iret = GRIB_MESSAGE_TOO_LARGE
         endif
         nbytes=ibytes
@@ -937,7 +937,7 @@
 
         ibytes=nbytes
         iret=grib_f_read_any_from_file(ifile,buffer,ibytes)
-        if (ibytes > huge(nbytes)) then
+        if (iret == GRIB_SUCCESS .and. ibytes > huge(nbytes)) then
           iret = GRIB_MESSAGE_TOO_LARGE
         endif
         nbytes=ibytes
@@ -2699,7 +2699,7 @@
       integer(kind=kindOfSize_t)                                :: ibytes
 
       iret = grib_f_get_message_size ( gribid, ibytes )
-      if (ibytes > huge(nbytes)) then
+      if (iret == GRIB_SUCCESS .and. ibytes > huge(nbytes)) then
         iret = GRIB_MESSAGE_TOO_LARGE
       endif
       nbytes = ibytes
