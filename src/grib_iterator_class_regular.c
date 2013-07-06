@@ -88,98 +88,100 @@ static void init_class(grib_iterator_class* c)
 
 
 static int next(grib_iterator* i, double *lat, double *lon, double *val){
-	grib_iterator_regular* self = (grib_iterator_regular*)i;
+    grib_iterator_regular* self = (grib_iterator_regular*)i;
 
-	if((long)i->e >= (long)(i->nv-1))  return 0;
+    if((long)i->e >= (long)(i->nv-1))  return 0;
 
-	i->e++;
+    i->e++;
 
-	*lat = self->las[(long)floor(i->e/self->nap)];
-	*lon = self->los[(long)i->e%self->nap];
-	*val = i->data[i->e];
+    *lat = self->las[(long)floor(i->e/self->nap)];
+    *lon = self->los[(long)i->e%self->nap];
+    *val = i->data[i->e];
 
-	return 1;
+    return 1;
 }
 
 static int previous(grib_iterator* i, double *lat, double *lon, double *val){
-	grib_iterator_regular* self = (grib_iterator_regular*)i;
+    grib_iterator_regular* self = (grib_iterator_regular*)i;
 
-	if(i->e < 0)      return 0;
-	*lat = self->las[(long)floor(i->e/self->nap)];
-	*lon = self->los[i->e%self->nap];
-	*val = i->data[i->e];
-	i->e--;
+    if(i->e < 0)      return 0;
+    *lat = self->las[(long)floor(i->e/self->nap)];
+    *lon = self->los[i->e%self->nap];
+    *val = i->data[i->e];
+    i->e--;
 
-	return 1;
+    return 1;
 }
 
 static int destroy(grib_iterator* i){
-	grib_iterator_regular* self = (grib_iterator_regular*)i;
-	const grib_context *c = i->h->context;
-	grib_context_free(c,self->las);
-	grib_context_free(c,self->los);
-	return GRIB_SUCCESS;
+    grib_iterator_regular* self = (grib_iterator_regular*)i;
+    const grib_context *c = i->h->context;
+    grib_context_free(c,self->las);
+    grib_context_free(c,self->los);
+    return GRIB_SUCCESS;
 }
 
 static int init(grib_iterator* i,grib_handle* h,grib_arguments* args)
 {
-	grib_iterator_regular* self = (grib_iterator_regular*)i;
-	int ret = GRIB_SUCCESS;
+    grib_iterator_regular* self = (grib_iterator_regular*)i;
+    int ret = GRIB_SUCCESS;
 
-	long nap; /* Ni */
-	long nam; /* Nj */
-	double idir, lof,lol;
-	long loi;
+    long nap; /* Ni */
+    long nam; /* Nj */
+    double idir, lof,lol;
+    long loi;
 
-	const char* longoffirst = grib_arguments_get_name(h,args,self->carg++);
-	const char* idirec      = grib_arguments_get_name(h,args,self->carg++);
-	const char* nalpar      = grib_arguments_get_name(h,args,self->carg++);
-	const char* nalmer      = grib_arguments_get_name(h,args,self->carg++);
-	const char* iScansNegatively  = grib_arguments_get_name(h,args,self->carg++);
+    const char* longoffirst = grib_arguments_get_name(h,args,self->carg++);
+    const char* idirec      = grib_arguments_get_name(h,args,self->carg++);
+    const char* nalpar      = grib_arguments_get_name(h,args,self->carg++);
+    const char* nalmer      = grib_arguments_get_name(h,args,self->carg++);
+    const char* iScansNegatively  = grib_arguments_get_name(h,args,self->carg++);
 
-	if((ret = grib_get_double_internal(h,longoffirst,   &lof))) return ret;
-	if((ret = grib_get_double_internal(h,"longitudeOfLastGridPointInDegrees", &lol))) return ret;
-	if((ret = grib_get_double_internal(h,idirec,        &idir))) return ret;
-	if((ret = grib_get_long_internal(h,nalpar,          &nap))) return ret;
-	if((ret = grib_get_long_internal(h,nalmer,          &nam))) return ret;
-	if((ret = grib_get_long_internal(h,iScansNegatively,&self->iScansNegatively)))
-		return ret;
+    if((ret = grib_get_double_internal(h,longoffirst,   &lof))) return ret;
+    if((ret = grib_get_double_internal(h,"longitudeOfLastGridPointInDegrees", &lol))) return ret;
+    if((ret = grib_get_double_internal(h,idirec,        &idir))) return ret;
+    if((ret = grib_get_long_internal(h,nalpar,          &nap))) return ret;
+    if((ret = grib_get_long_internal(h,nalmer,          &nam))) return ret;
+    if((ret = grib_get_long_internal(h,iScansNegatively,&self->iScansNegatively)))
+        return ret;
 
-	/* Note: If first and last longitudes are equal I assume you wanna go round the globle */
-	if (self->iScansNegatively) {
-		if (lof > lol){
-			idir=(lof-lol)/(nap-1);
-		}
-		else {
-			idir=(lof+360.0-lol)/(nap-1);
-		}
-	}
-	else {
-		if (lol > lof){
-			idir=(lol-lof)/(nap-1);
-		}
-		else {
-			idir=(lol+360.0-lof)/(nap-1);
-		}
-	}
+    /* Note: If first and last longitudes are equal I assume you wanna go round the globle */
+    if (self->iScansNegatively) {
+        if (lof > lol){
+            idir=(lof-lol)/(nap-1);
+        }
+        else {
+            idir=(lof+360.0-lol)/(nap-1);
+        }
+    }
+    else {
+        if (lol > lof){
+            idir=(lol-lof)/(nap-1);
+        }
+        else {
+            idir=(lol+360.0-lof)/(nap-1);
+        }
+    }
 
-	if (self->iScansNegatively) {
-		idir=-idir;
-	} else {
-		if (lof+(nap-2)*idir>360) lof-=360;
-		else if (lof+nap*idir>360) idir=360.0/(float)nap;
-	}
+    if (self->iScansNegatively) {
+        idir=-idir;
+    } else {
+        if (lof+(nap-2)*idir>360) lof-=360;
+        else if (lof+(nap-1)*idir>360) { /*See GRIB-396*/
+            idir=360.0/(float)nap;
+        }
+    }
 
-	self->nap = nap;
-	self->nam = nam;
+    self->nap = nap;
+    self->nam = nam;
 
-	self->las = grib_context_malloc(h->context,nam*sizeof(double));
-	self->los = grib_context_malloc(h->context,nap*sizeof(double));
+    self->las = grib_context_malloc(h->context,nam*sizeof(double));
+    self->los = grib_context_malloc(h->context,nap*sizeof(double));
 
-	for( loi = 0; loi < nap; loi++ )  {
-		self->los[loi] = lof;
-		lof += idir ;
-	}
+    for( loi = 0; loi < nap; loi++ )  {
+        self->los[loi] = lof;
+        lof += idir ;
+    }
 
-	return ret;
+    return ret;
 }
