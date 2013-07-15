@@ -196,6 +196,9 @@ concept paramId (paramIdECMF,"paramId.def",conceptsMasterDir,conceptsLocalDirAll
 concept cfNameECMF(defaultName,"cfName.def",conceptsMasterDir,conceptsLocalDirECMF) : dump,no_copy,read_only;
 concept cfName(cfNameECMF,"cfName.def",conceptsMasterDir,conceptsLocalDirAll) : dump,no_copy,read_only;
 
+concept cfVarNameECMF(defaultName,"cfVarName.def",conceptsMasterDir,conceptsLocalDirECMF) : dump,no_copy,read_only;
+concept cfVarName(cfVarNameECMF,"cfVarName.def",conceptsMasterDir,conceptsLocalDirAll) : dump,no_copy,read_only;
+
 concept unitsECMF(defaultName,"units.def",conceptsMasterDir,conceptsLocalDirECMF) : no_copy,read_only;
 concept units(unitsECMF,"units.def",conceptsMasterDir,conceptsLocalDirAll) : dump,no_copy,read_only;
 

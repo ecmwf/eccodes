@@ -78,6 +78,7 @@ dist_definitionsgrib1_DATA = \
 	grib1/9.table\
 	grib1/boot.def\
 	grib1/cfName.def\
+	grib1/cfVarName.def\
 	grib1/cluster_domain.def\
 	grib1/data.grid_ieee.def\
 	grib1/data.grid_jpeg.def\
@@ -240,6 +241,7 @@ dist_definitionsgrib1_localConcepts_cnmc_DATA = \
 definitionsgrib1_localConcepts_ecmfdir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/ecmf
 dist_definitionsgrib1_localConcepts_ecmf_DATA = \
 	grib1/localConcepts/ecmf/cfName.def\
+	grib1/localConcepts/ecmf/cfVarName.def\
 	grib1/localConcepts/ecmf/name.def\
 	grib1/localConcepts/ecmf/paramId.def\
 	grib1/localConcepts/ecmf/shortName.def\
@@ -308,6 +310,7 @@ dist_definitionsgrib2_DATA = \
 	grib2/boot.def\
 	grib2/boot_multifield.def\
 	grib2/cfName.def\
+	grib2/cfVarName.def\
 	grib2/dimension.0.table\
 	grib2/dimensionTableNumber.table\
 	grib2/dimensionType.table\
@@ -527,6 +530,7 @@ dist_definitionsgrib2_localConcepts_cnmc_DATA = \
 definitionsgrib2_localConcepts_ecmfdir = @GRIB_DEFINITION_PATH@/grib2/localConcepts/ecmf
 dist_definitionsgrib2_localConcepts_ecmf_DATA = \
 	grib2/localConcepts/ecmf/cfName.def\
+	grib2/localConcepts/ecmf/cfVarName.def\
 	grib2/localConcepts/ecmf/name.def\
 	grib2/localConcepts/ecmf/paramId.def\
 	grib2/localConcepts/ecmf/shortName.def\

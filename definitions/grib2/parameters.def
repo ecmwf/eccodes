@@ -27,6 +27,9 @@ concept name (nameECMF,"name.def",conceptsMasterDir,conceptsLocalDirAll) : no_co
 concept cfNameECMF (defaultShortName,"cfName.def",conceptsMasterDir,conceptsLocalDirECMF) : no_copy,dump;
 concept cfName (cfNameECMF,"cfName.def",conceptsMasterDir,conceptsLocalDirAll) : no_copy,dump;
 
+concept cfVarNameECMF (defaultShortName,"cfVarName.def",conceptsMasterDir,conceptsLocalDirECMF) : no_copy,dump;
+concept cfVarName (cfVarNameECMF,"cfVarName.def",conceptsMasterDir,conceptsLocalDirAll) : no_copy,dump;
+
 template_nofail names "grib2/products_[productionStatusOfProcessedData].def";
 
 meta ifsParam ifs_param(paramId,type);

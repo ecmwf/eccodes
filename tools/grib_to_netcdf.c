@@ -152,7 +152,6 @@ static parameter *find_parameter(const request *r, const char *parname)
         }
     }
     return NULL;
-
 }
 
 static void _reqmerge(parameter *pa, const parameter *pb, request *a)
@@ -197,7 +196,6 @@ static void _reqmerge(parameter *pa, const parameter *pb, request *a)
 }
 
 /* Fast version if a && b same */
-
 static boolean _reqmerge1(request *a, const request *b)
 {
     parameter *pa = a->params;
@@ -216,6 +214,7 @@ static boolean _reqmerge1(request *a, const request *b)
 
     return (pa == NULL && pb == NULL);
 }
+
 static void free_one_value(value *p)
 {
     grib_context_free(ctx, p->name);
@@ -398,7 +397,6 @@ static void put_value(request *r, const char *parname, const char *valname, bool
         else
             r->params = p;
     }
-
 }
 
 static void add_value(request *r, const char *parname, const char *fmt, ...)
@@ -478,7 +476,6 @@ static void save_all_values(FILE *f, value *r)
             putc('/', f);
         r = r->next;
     }
-
 }
 
 static void save_all_parameters(FILE *f, parameter *r)
@@ -576,6 +573,7 @@ static void set_value(request *r, const char *parname, const char *fmt, ...)
 
     put_value(r, parname, buffer, false, false, false);
 }
+
 static err handle_to_request(request *r, grib_handle* g)
 {
     grib_keys_iterator* ks;
@@ -611,9 +609,20 @@ static err handle_to_request(request *r, grib_handle* g)
      */
 
     len = sizeof(value);
-    if(grib_get_string(g, "shortName", name, &len) == 0)
+    if(grib_get_string(g, "cfVarName", name, &len) == 0)
     {
-        set_value(r, "param", "%s", name);
+        if(strcmp(name,"unknown") != 0)
+        {
+            set_value(r, "param", "%s", name);
+        }
+        else
+        {
+            len = sizeof(value);
+            if(grib_get_string(g, "shortName", name, &len) == 0)
+            {
+                set_value(r, "param", "%s", name);
+            }
+        }
     }
 
     len = sizeof(value);
@@ -684,7 +693,6 @@ typedef struct {
 /* One field .. */
 
 typedef struct field {
-
     int refcnt;
 
     field_state shape;
