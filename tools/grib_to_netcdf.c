@@ -3650,7 +3650,13 @@ int grib_tool_init(grib_runtime_options* options)
 
     if(grib_options_on("R:"))
     {
-        set_value(user_r, "referencedate", grib_options_get_option("R:"));
+        char* theArg = grib_options_get_option("R:");
+        if (!is_number(theArg)) {
+            fprintf(stderr, "Invalid reference date: %s\n", theArg);
+            usage();
+            exit(1);
+        }
+        set_value(user_r, "referencedate", theArg);
     }
     else
     {

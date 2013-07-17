@@ -294,7 +294,6 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
   if (ret == GRIB_INVALID_ARGUMENT) usage();
   GRIB_CHECK_NOLINE(ret,0);
 
-
   options->strict=grib_options_on("S");
 
   if (grib_options_on("M")) grib_multi_support_off(context);
@@ -313,13 +312,6 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
     sarg=grib_options_get_option("s:");
     options->set_values_count=MAX_KEYS;
     ret=parse_keyval_string(grib_tool_name, sarg,1,GRIB_TYPE_UNDEFINED,options->set_values,&(options->set_values_count));
-    if (ret == GRIB_INVALID_ARGUMENT) usage();
-  }
-
-  if (grib_options_on("R:")) {
-    sarg=grib_options_get_option("R:");
-    options->tolerance_count=MAX_KEYS;
-    ret=parse_keyval_string(grib_tool_name, sarg,1,GRIB_TYPE_DOUBLE,options->tolerance,&(options->tolerance_count));
     if (ret == GRIB_INVALID_ARGUMENT) usage();
   }
 

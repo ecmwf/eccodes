@@ -10,14 +10,15 @@
 
 #include "grib_tools.h"
 
-
-GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
+GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
+{
 	if (*a != *b) return 1;
 	while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
 	return (*a==0 && *b==0) ? 0 : 1;
 }
 
-GRIB_INLINE static int grib_inline_rstrcmp(const char* a,const char* b) {
+GRIB_INLINE static int grib_inline_rstrcmp(const char* a,const char* b)
+{
 	char* p=(char*)a;
 	char* q=(char*)b;
 	while (*p != 0) p++;
@@ -60,7 +61,8 @@ int listFromCommandLine;
 int verbose=0;
 int tolerance_factor=1;
 
-GRIB_INLINE static double compare_double_absolute(double *a,double *b,double *err) {
+GRIB_INLINE static double compare_double_absolute(double *a,double *b,double *err)
+{
 	double ret=0;
 	double d=fabs(*a-*b);
 	if (d > *err) {
@@ -70,7 +72,8 @@ GRIB_INLINE static double compare_double_absolute(double *a,double *b,double *er
 	/* return fabs(*a-*b) > *err ? fabs(*a-*b) : 0; */
 }
 
-static double compare_double_relative(double *a,double *b,double *err) {
+static double compare_double_relative(double *a,double *b,double *err)
+{
 	double relativeError;
 
 	if(fabs(*a) <= maxAbsoluteError || fabs(*b) <= maxAbsoluteError)
@@ -83,7 +86,8 @@ static double compare_double_relative(double *a,double *b,double *err) {
 	return relativeError > *err ? relativeError : 0;
 }
 
-static int blacklisted(const char* name) {
+static int blacklisted(const char* name)
+{
 	grib_string_list* b=blacklist;
 	while (b) {
 		if (!strcmp(name,b->value))
@@ -93,7 +97,8 @@ static int blacklisted(const char* name) {
 	return 0;
 }
 
-static double relative_error(double a,double b,double err) {
+static double relative_error(double a,double b,double err)
+{
 	double relativeError;
 	double maxAbsoluteError = 1e-19;
 
@@ -106,7 +111,6 @@ static double relative_error(double a,double b,double err) {
 
 	return relativeError ;
 }
-
 
 grib_option grib_options[]={
 		/*  {id, args, help}, on, command_line, value*/
@@ -151,13 +155,18 @@ char* grib_tool_usage="[options] "
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
-int main(int argc, char *argv[]) { return grib_tool(argc,argv);}
+int main(int argc, char *argv[])
+{
+    return grib_tool(argc,argv);
+}
 
-int grib_tool_before_getopt(grib_runtime_options* options) {
+int grib_tool_before_getopt(grib_runtime_options* options)
+{
 	return 0;
 }
 
-int grib_tool_init(grib_runtime_options* options) {
+int grib_tool_init(grib_runtime_options* options)
+{
 	int ret=0,i;
 	int nfiles=1;
 	char orderby[]="md5Headers";
@@ -263,6 +272,15 @@ int grib_tool_init(grib_runtime_options* options) {
 	if (grib_options_on("T:"))
 		tolerance_factor=atof(grib_options_get_option("T:"));
 
+    if (grib_options_on("R:")) {
+        char* sarg=grib_options_get_option("R:");
+        options->tolerance_count=MAX_KEYS;
+        ret=parse_keyval_string(grib_tool_name, sarg,1,GRIB_TYPE_DOUBLE,options->tolerance,&(options->tolerance_count));
+        if (ret == GRIB_INVALID_ARGUMENT) {
+            usage();
+            exit(1);
+        }
+    }
 
 	return 0;
 }
@@ -274,7 +292,8 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
 	return 0;
 }
 
-static void printInfo(grib_handle* h) {
+static void printInfo(grib_handle* h)
+{
 	char shortName[254]={0,};
 	char levelType[254]={0,};
 	char level[254]={0,};
@@ -309,7 +328,8 @@ static void printInfo(grib_handle* h) {
 
 }
 
-static void print_index_key_values(grib_index* index,int counter) {
+static void print_index_key_values(grib_index* index,int counter)
+{
 	grib_index_key* keys=index->keys;
 	printf("== %d == ",counter);
 	while (keys) {
@@ -318,7 +338,9 @@ static void print_index_key_values(grib_index* index,int counter) {
 	}
 	printf("\n");
 }
-int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
+
+int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
+{
 	int err=0;
 	count++;
 
@@ -386,7 +408,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
 	return 0;
 }
 
-int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h) {
+int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
+{
 	int err=0;
 	if (!options->through_index && !options->random)  {
 		h1=grib_handle_new_from_file(h->context,options->infile_extra->file,&err);
@@ -405,11 +428,13 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h) {
 	return 0;
 }
 
-void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h) {
+void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
+{
 	grib_print_key_values(options,h);
 }
 
-int grib_tool_finalise_action(grib_runtime_options* options) {
+int grib_tool_finalise_action(grib_runtime_options* options)
+{
 	grib_error* e=error_summary;
 	int err=0;
 	grib_context* c=grib_context_get_default();
@@ -455,7 +480,8 @@ int grib_tool_finalise_action(grib_runtime_options* options) {
 	return 0;
 }
 
-static void save_error(grib_context* c,const char* key) {
+static void save_error(grib_context* c,const char* key)
+{
 	grib_error* e=0;
 	grib_error* next=0;
 	int saved=0;
@@ -487,7 +513,8 @@ static void save_error(grib_context* c,const char* key) {
 	}
 }
 
-static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_handle *h2,const char *name,int type) {
+static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_handle *h2,const char *name,int type)
+{
 	size_t len1 = 0;
 	size_t len2 = 0;
 	int err=0,i=0;
@@ -914,9 +941,7 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
 	}
 
 	return GRIB_SUCCESS;
-
 }
-
 
 static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options* options)
 {
