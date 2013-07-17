@@ -59,7 +59,9 @@ FLOAT     {SIGN}?{DIGIT}+\.{DIGIT}+{EXP}?
 
 "=="           return EQ       ;
 ">="           return GE       ;
+">"            return GT       ;
 "<="           return LE       ;
+"<"            return LT       ;
 "!="           return NE       ;
 "<>"           return NE       ;
 "bit"          return BIT      ;

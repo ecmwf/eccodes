@@ -94,63 +94,63 @@ static void init_class(grib_expression_class* c)
 
 static int evaluate_long(grib_expression* g,grib_handle* h,long* lres)
 {
-	int ret;
-	long v=0;
-	grib_expression_unop* e = (grib_expression_unop*)g;
-	ret = grib_expression_evaluate_long(h,e->exp,&v);
-	if (ret != GRIB_SUCCESS) return ret;
-	*lres=e->long_func(v);
-	return GRIB_SUCCESS;
+    int ret;
+    long v=0;
+    grib_expression_unop* e = (grib_expression_unop*)g;
+    ret = grib_expression_evaluate_long(h,e->exp,&v);
+    if (ret != GRIB_SUCCESS) return ret;
+    *lres=e->long_func(v);
+    return GRIB_SUCCESS;
 }
 
 static int evaluate_double(grib_expression* g,grib_handle* h,double* dres)
 {
-	int ret;
-	double v=0;
-	grib_expression_unop* e = (grib_expression_unop*)g;
-	ret = grib_expression_evaluate_double(h,e->exp,&v);
-	if (ret != GRIB_SUCCESS) return ret;
-	*dres = e->double_func ? e->double_func(v) :  e->long_func(v);
-	return GRIB_SUCCESS;
+    int ret;
+    double v=0;
+    grib_expression_unop* e = (grib_expression_unop*)g;
+    ret = grib_expression_evaluate_double(h,e->exp,&v);
+    if (ret != GRIB_SUCCESS) return ret;
+    *dres = e->double_func ? e->double_func(v) :  e->long_func(v);
+    return GRIB_SUCCESS;
 
 }
 
 static void print(grib_context* c,grib_expression* g,grib_handle* f)
 {
-	grib_expression_unop* e = (grib_expression_unop*)g;
-	printf("unop(");
-	grib_expression_print(c,e->exp,f);
-	printf(")");
+    grib_expression_unop* e = (grib_expression_unop*)g;
+    printf("unop(");
+    grib_expression_print(c,e->exp,f);
+    printf(")");
 }
 
 static void destroy(grib_context* c,grib_expression* g)
 {
-	grib_expression_unop* e = (grib_expression_unop*)g;
-	grib_expression_free(c,e->exp);
+    grib_expression_unop* e = (grib_expression_unop*)g;
+    grib_expression_free(c,e->exp);
 }
 
 
 static void  add_dependency(grib_expression* g, grib_accessor* observer){
-	grib_expression_unop* e = (grib_expression_unop*)g;
-	grib_dependency_observe_expression(observer,e->exp);
+    grib_expression_unop* e = (grib_expression_unop*)g;
+    grib_dependency_observe_expression(observer,e->exp);
 }
 
 grib_expression* new_unop_expression(grib_context* c,
-	grib_unop_long_proc long_func,
-	grib_unop_double_proc double_func,
-	grib_expression* exp)
+        grib_unop_long_proc long_func,
+        grib_unop_double_proc double_func,
+        grib_expression* exp)
 {
-	grib_expression_unop* e = grib_context_malloc_clear_persistent(c,sizeof(grib_expression_unop));
-	e->base.cclass                 = grib_expression_class_unop;
-	e->exp                = exp;
-	e->long_func          = long_func;
-	e->double_func         = double_func;
-	return (grib_expression*)e;
+    grib_expression_unop* e = grib_context_malloc_clear_persistent(c,sizeof(grib_expression_unop));
+    e->base.cclass                 = grib_expression_class_unop;
+    e->exp                = exp;
+    e->long_func          = long_func;
+    e->double_func         = double_func;
+    return (grib_expression*)e;
 }
 
 static void compile(grib_expression* g,grib_compiler* c)
 {
-	grib_expression_unop* e = (grib_expression_unop*)g;
+    grib_expression_unop* e = (grib_expression_unop*)g;
     fprintf(c->out,"new_unop_expression(ctx,");
     fprintf(c->out,"%s,",grib_unop_long_proc_name(e->long_func));
     fprintf(c->out,"%s,",grib_unop_double_proc_name(e->double_func));
@@ -160,7 +160,6 @@ static void compile(grib_expression* g,grib_compiler* c)
 
 static int native_type(grib_expression* g,grib_handle *h)
 {
-	grib_expression_unop* e = (grib_expression_unop*)g;
-	return e->double_func ? GRIB_TYPE_LONG : GRIB_TYPE_DOUBLE;
+    grib_expression_unop* e = (grib_expression_unop*)g;
+    return e->double_func ? GRIB_TYPE_DOUBLE : GRIB_TYPE_LONG;
 }
-

@@ -98,82 +98,81 @@ static void init_class(grib_expression_class* c)
 
 static int evaluate_long(grib_expression *g,grib_handle* h,long* lres)
 {
-  long v1=0;
-  long v2=0;
-  int ret;
-  grib_expression_binop* e = (grib_expression_binop*)g;
+    long v1=0;
+    long v2=0;
+    int ret;
+    grib_expression_binop* e = (grib_expression_binop*)g;
 
-  ret = grib_expression_evaluate_long(h,e->left,&v1);
-  if (ret != GRIB_SUCCESS) return ret;
+    ret = grib_expression_evaluate_long(h,e->left,&v1);
+    if (ret != GRIB_SUCCESS) return ret;
 
-  ret = grib_expression_evaluate_long(h,e->right,&v2);
-  if (ret != GRIB_SUCCESS) return ret;
+    ret = grib_expression_evaluate_long(h,e->right,&v2);
+    if (ret != GRIB_SUCCESS) return ret;
 
-  *lres=e->long_func(v1,v2);
-  return GRIB_SUCCESS;
+    *lres=e->long_func(v1,v2);
+    return GRIB_SUCCESS;
 }
 
 static int evaluate_double(grib_expression *g,grib_handle* h,double* dres)
 {
-  double v1=0.0;
-  double v2=0.0;
-  int ret;
+    double v1=0.0;
+    double v2=0.0;
+    int ret;
 
-  grib_expression_binop* e = (grib_expression_binop*)g;
+    grib_expression_binop* e = (grib_expression_binop*)g;
 
-  ret = grib_expression_evaluate_double(h,e->left,&v1);
-  if (ret != GRIB_SUCCESS) return ret;
+    ret = grib_expression_evaluate_double(h,e->left,&v1);
+    if (ret != GRIB_SUCCESS) return ret;
 
-  ret = grib_expression_evaluate_double(h,e->right,&v2);
-  if (ret != GRIB_SUCCESS) return ret;
+    ret = grib_expression_evaluate_double(h,e->right,&v2);
+    if (ret != GRIB_SUCCESS) return ret;
 
-  *dres = e->double_func ? e->double_func(v1,v2) : e->long_func(v1,v2);
+    *dres = e->double_func ? e->double_func(v1,v2) : e->long_func(v1,v2);
 
-  return GRIB_SUCCESS;
-
+    return GRIB_SUCCESS;
 }
 
 static void print(grib_context* c,grib_expression* g,grib_handle* f)
 {
-  grib_expression_binop* e = (grib_expression_binop*)g;
-  printf("binop(");
-  grib_expression_print(c,e->left,f);
-  printf(",");
-  grib_expression_print(c,e->right,f);
-  printf(")");
+    grib_expression_binop* e = (grib_expression_binop*)g;
+    printf("binop(");
+    grib_expression_print(c,e->left,f);
+    printf(",");
+    grib_expression_print(c,e->right,f);
+    printf(")");
 }
 
 static void destroy(grib_context* c,grib_expression* g)
 {
-  grib_expression_binop* e = (grib_expression_binop*)g;
-  grib_expression_free(c,e->left);
-  grib_expression_free(c,e->right);
+    grib_expression_binop* e = (grib_expression_binop*)g;
+    grib_expression_free(c,e->left);
+    grib_expression_free(c,e->right);
 }
 
-
-static void  add_dependency(grib_expression* g, grib_accessor* observer){
-  grib_expression_binop* e = (grib_expression_binop*)g;
-  grib_dependency_observe_expression(observer,e->left);
-  grib_dependency_observe_expression(observer,e->right);
+static void  add_dependency(grib_expression* g, grib_accessor* observer)
+{
+    grib_expression_binop* e = (grib_expression_binop*)g;
+    grib_dependency_observe_expression(observer,e->left);
+    grib_dependency_observe_expression(observer,e->right);
 }
 
 grib_expression* new_binop_expression(grib_context* c,
-  grib_binop_long_proc  long_func,
-  grib_binop_double_proc double_func,
-  grib_expression* left,grib_expression* right)
+        grib_binop_long_proc  long_func,
+        grib_binop_double_proc double_func,
+        grib_expression* left,grib_expression* right)
 {
-  grib_expression_binop* e = grib_context_malloc_clear_persistent(c,sizeof(grib_expression_binop));
-  e->base.cclass                 = grib_expression_class_binop;
-  e->left                = left;
-  e->right               = right;
-  e->long_func            = long_func;
-  e->double_func          = double_func;
-  return (grib_expression*)e;
+    grib_expression_binop* e = grib_context_malloc_clear_persistent(c,sizeof(grib_expression_binop));
+    e->base.cclass                 = grib_expression_class_binop;
+    e->left                = left;
+    e->right               = right;
+    e->long_func            = long_func;
+    e->double_func          = double_func;
+    return (grib_expression*)e;
 }
 
 static void compile(grib_expression* g,grib_compiler* c)
 {
-	grib_expression_binop* e = (grib_expression_binop*)g;
+    grib_expression_binop* e = (grib_expression_binop*)g;
     fprintf(c->out,"new_binop_expression(ctx,");
     fprintf(c->out,"%s,",grib_binop_long_proc_name(e->long_func));
     fprintf(c->out,"%s,",grib_binop_double_proc_name(e->double_func));
@@ -185,6 +184,12 @@ static void compile(grib_expression* g,grib_compiler* c)
 
 static int native_type(grib_expression* g,grib_handle *h)
 {
-  grib_expression_binop* e = (grib_expression_binop*)g;
-  return e->double_func ? GRIB_TYPE_LONG : GRIB_TYPE_DOUBLE;
+    grib_expression_binop* e = (grib_expression_binop*)g;
+    /* See GRIB-394 : The type of this binary expression will be double if any of its operands are double */
+    if (grib_expression_native_type(h, e->left)  == GRIB_TYPE_DOUBLE ||
+        grib_expression_native_type(h, e->right) == GRIB_TYPE_DOUBLE)
+    {
+        return GRIB_TYPE_DOUBLE;
+    }
+    return e->double_func ? GRIB_TYPE_LONG : GRIB_TYPE_DOUBLE;
 }

@@ -359,8 +359,8 @@ static void grib_yy_fatal_error (grib_yyconst char msg[]  );
 	*grib_yy_cp = '\0'; \
 	(grib_yy_c_buf_p) = grib_yy_cp;
 
-#define YY_NUM_RULES 100
-#define YY_END_OF_BUFFER 101
+#define YY_NUM_RULES 102
+#define YY_END_OF_BUFFER 103
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct grib_yy_trans_info
@@ -370,62 +370,62 @@ struct grib_yy_trans_info
 	};
 static grib_yyconst flex_int16_t grib_yy_accept[507] =
     {   0,
-       97,   97,  101,   99,   97,   98,   10,   91,   96,   99,
-       99,   94,   99,   99,   99,   93,   93,   93,   92,   93,
-       93,   93,   93,   93,   93,   93,   93,   93,   93,   93,
-       93,   93,   93,   93,   93,   93,   93,   93,   93,   99,
-       16,   97,    4,   12,    0,    0,   94,    3,    5,    1,
-        2,   93,   93,   93,   93,   93,   93,   93,   93,   93,
-       93,   93,   93,   93,   93,   93,   93,   93,   93,   93,
-       93,   93,   93,   93,   93,   93,   18,   93,    8,   93,
-       93,   93,   93,   93,   93,   93,   93,   93,   93,   93,
-       13,   93,   93,   93,   93,   93,   93,   93,   93,   93,
+       99,   99,  103,  101,   99,  100,   12,   93,   98,  101,
+      101,   96,    5,  101,    3,   95,   95,   95,   94,   95,
+       95,   95,   95,   95,   95,   95,   95,   95,   95,   95,
+       95,   95,   95,   95,   95,   95,   95,   95,   95,  101,
+       18,   99,    6,   14,    0,    0,   96,    4,    7,    1,
+        2,   95,   95,   95,   95,   95,   95,   95,   95,   95,
+       95,   95,   95,   95,   95,   95,   95,   95,   95,   95,
+       95,   95,   95,   95,   95,   95,   20,   95,   10,   95,
+       95,   95,   95,   95,   95,   95,   95,   95,   95,   95,
+       15,   95,   95,   95,   95,   95,   95,   95,   95,   95,
 
-       93,   93,   93,   93,   93,   93,   14,   95,   93,   19,
-       93,   11,   93,   93,   93,    6,   55,   93,   93,   93,
-       93,   93,   93,   93,   93,   93,   93,   93,   30,   93,
-       93,   93,   93,   93,   93,   93,   93,   93,   93,   93,
-       93,   93,   93,   93,   93,   93,   93,   93,   93,   93,
-        9,   93,   93,   43,   93,   93,   93,   93,   93,   78,
-       93,   93,   93,   93,   93,   93,   93,   93,   93,   93,
-       93,   93,    0,   93,   93,   93,   93,   93,   23,   93,
-       81,   93,   93,   93,   93,   93,   93,   70,   93,   20,
-       93,   93,   93,   93,   93,   93,   93,   93,   93,   93,
+       95,   95,   95,   95,   95,   95,   16,   97,   95,   21,
+       95,   13,   95,   95,   95,    8,   57,   95,   95,   95,
+       95,   95,   95,   95,   95,   95,   95,   95,   32,   95,
+       95,   95,   95,   95,   95,   95,   95,   95,   95,   95,
+       95,   95,   95,   95,   95,   95,   95,   95,   95,   95,
+       11,   95,   95,   45,   95,   95,   95,   95,   95,   80,
+       95,   95,   95,   95,   95,   95,   95,   95,   95,   95,
+       95,   95,    0,   95,   95,   95,   95,   95,   25,   95,
+       83,   95,   95,   95,   95,   95,   95,   72,   95,   22,
+       95,   95,   95,   95,   95,   95,   95,   95,   95,   95,
 
-       93,   56,   93,   93,   25,   93,   93,   93,   93,   39,
-       93,   93,   93,   93,   93,   15,   93,   93,   93,   93,
-       93,   93,   93,   93,   93,   89,   93,   93,   93,   93,
-       93,   93,   93,   80,   93,   93,    0,   95,   93,   46,
-       93,   22,   93,   93,   93,   93,   93,   93,   93,   93,
-       93,   93,   93,   37,   93,   93,   93,   93,   93,   93,
-       93,   93,   93,   93,   24,   93,   93,   93,   93,   93,
-       93,   93,   93,   93,   93,   93,   41,   93,   88,   93,
-       93,   93,   93,   93,   93,   93,   93,   93,   93,   93,
-       93,   26,   86,   93,   87,   66,   93,   93,   93,   93,
+       95,   58,   95,   95,   27,   95,   95,   95,   95,   41,
+       95,   95,   95,   95,   95,   17,   95,   95,   95,   95,
+       95,   95,   95,   95,   95,   91,   95,   95,   95,   95,
+       95,   95,   95,   82,   95,   95,    0,   97,   95,   48,
+       95,   24,   95,   95,   95,   95,   95,   95,   95,   95,
+       95,   95,   95,   39,   95,   95,   95,   95,   95,   95,
+       95,   95,   95,   95,   26,   95,   95,   95,   95,   95,
+       95,   95,   95,   95,   95,   95,   43,   95,   90,   95,
+       95,   95,   95,   95,   95,   95,   95,   95,   95,   95,
+       95,   28,   88,   95,   89,   68,   95,   95,   95,   95,
 
-       93,   93,   93,   93,   93,   63,   93,   93,   93,   93,
-       35,   72,   93,   93,   93,   93,   93,   65,   93,   38,
-       93,   93,   59,   93,   93,   93,    7,   93,   93,   93,
-       93,   93,   64,   93,   93,   33,   93,   82,   93,   93,
-       93,   93,   93,   74,   93,   93,   93,   84,   93,   93,
-       77,   83,   93,   57,   93,   93,   93,   93,   93,   90,
-       93,   93,   93,   93,   45,   54,   68,   71,   93,   93,
-       93,   93,   93,   93,   93,   93,   93,   93,   29,   47,
-       93,   93,   93,   93,   93,   49,   93,   93,   93,   93,
-       93,   31,   93,   53,   93,   93,   93,   76,   93,   93,
+       95,   95,   95,   95,   95,   65,   95,   95,   95,   95,
+       37,   74,   95,   95,   95,   95,   95,   67,   95,   40,
+       95,   95,   61,   95,   95,   95,    9,   95,   95,   95,
+       95,   95,   66,   95,   95,   35,   95,   84,   95,   95,
+       95,   95,   95,   76,   95,   95,   95,   86,   95,   95,
+       79,   85,   95,   59,   95,   95,   95,   95,   95,   92,
+       95,   95,   95,   95,   47,   56,   70,   73,   95,   95,
+       95,   95,   95,   95,   95,   95,   95,   95,   31,   49,
+       95,   95,   95,   95,   95,   51,   95,   95,   95,   95,
+       95,   33,   95,   55,   95,   95,   95,   78,   95,   95,
 
-       48,   93,   93,   93,   93,   27,   93,   21,   93,   34,
-       93,   93,   93,   93,   93,   93,   93,   32,   93,   52,
-       17,   40,   93,   67,   93,   93,   93,   93,   50,   93,
-       93,   93,   75,   93,   93,   93,   93,   93,   93,   93,
-       79,   93,   93,   93,   93,   93,   93,   93,   93,   93,
-       58,   93,   93,   51,   93,   93,   93,   93,   93,   93,
-       93,   93,   93,   93,   93,   93,   93,   93,   93,   93,
-       93,   93,   42,   93,   93,   73,   93,   85,   93,   93,
-       93,   93,   93,   93,   93,   93,   93,   93,   93,   44,
-       28,   93,   69,   93,   93,   93,   36,   93,   61,   93,
+       50,   95,   95,   95,   95,   29,   95,   23,   95,   36,
+       95,   95,   95,   95,   95,   95,   95,   34,   95,   54,
+       19,   42,   95,   69,   95,   95,   95,   95,   52,   95,
+       95,   95,   77,   95,   95,   95,   95,   95,   95,   95,
+       81,   95,   95,   95,   95,   95,   95,   95,   95,   95,
+       60,   95,   95,   53,   95,   95,   95,   95,   95,   95,
+       95,   95,   95,   95,   95,   95,   95,   95,   95,   95,
+       95,   95,   44,   95,   95,   75,   95,   87,   95,   95,
+       95,   95,   95,   95,   95,   95,   95,   95,   95,   46,
+       30,   95,   71,   95,   95,   95,   38,   95,   63,   95,
 
-       93,   62,   93,   93,   60,    0
+       95,   64,   95,   95,   62,    0
     } ;
 
 static grib_yyconst flex_int32_t grib_yy_ec[256] =
@@ -1398,167 +1398,167 @@ return GE       ;
 case 3:
 YY_RULE_SETUP
 #line 62 "gribl.l"
-return LE       ;
+return GT       ;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 63 "gribl.l"
-return NE       ;
+return LE       ;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 64 "gribl.l"
-return NE       ;
+return LT       ;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 65 "gribl.l"
-return BIT      ;
+return NE       ;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 66 "gribl.l"
-return BITOFF   ;
+return NE       ;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 68 "gribl.l"
-return IS   ;
+#line 67 "gribl.l"
+return BIT      ;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 69 "gribl.l"
-return NOT   ;
+#line 68 "gribl.l"
+return BITOFF   ;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 70 "gribl.l"
-return NOT   ;
+return IS   ;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 71 "gribl.l"
-return AND   ;
+return NOT   ;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 72 "gribl.l"
-return AND   ;
+return NOT   ;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 73 "gribl.l"
-return OR   ;
+return AND   ;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 74 "gribl.l"
-return OR   ;
+return AND   ;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 76 "gribl.l"
-return NIL   ;
+#line 75 "gribl.l"
+return OR   ;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 77 "gribl.l"
-return DUMMY   ;
+#line 76 "gribl.l"
+return OR   ;
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 79 "gribl.l"
-return LOWERCASE;
+#line 78 "gribl.l"
+return NIL   ;
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 80 "gribl.l"
-return IF       ;
+#line 79 "gribl.l"
+return DUMMY   ;
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 81 "gribl.l"
-return IF_TRANSIENT       ;
+return LOWERCASE;
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 82 "gribl.l"
-return ELSE       ;
+return IF       ;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 83 "gribl.l"
-return UNSIGNED ;
+return IF_TRANSIENT       ;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 84 "gribl.l"
-return ASCII    ;
+return ELSE       ;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 85 "gribl.l"
-return BYTE    ;
+return UNSIGNED ;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 86 "gribl.l"
-return LABEL    ;
+return ASCII    ;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 87 "gribl.l"
-return LIST     ;
+return BYTE    ;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 88 "gribl.l"
-return WHILE     ;
+return LABEL    ;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 89 "gribl.l"
-return TEMPLATE ;
+return LIST     ;
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 90 "gribl.l"
-return TEMPLATE_NOFAIL ;
+return WHILE     ;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 91 "gribl.l"
-return TRIGGER ;
+return TEMPLATE ;
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 92 "gribl.l"
-return END      ;
+return TEMPLATE_NOFAIL ;
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 93 "gribl.l"
-return IBMFLOAT ;
+return TRIGGER ;
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 94 "gribl.l"
-return FLOAT ;
+return END      ;
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 95 "gribl.l"
-return SIGNED   ;
+return IBMFLOAT ;
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
 #line 96 "gribl.l"
-return CODETABLE;
+return FLOAT ;
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
 #line 97 "gribl.l"
-return GETENV;
+return SIGNED   ;
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
@@ -1568,271 +1568,281 @@ return CODETABLE;
 case 37:
 YY_RULE_SETUP
 #line 99 "gribl.l"
-return FLAG     ;
+return GETENV;
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
 #line 100 "gribl.l"
-return LOOKUP   ;
+return CODETABLE;
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
 #line 101 "gribl.l"
-return META     ;
+return FLAG     ;
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
 #line 102 "gribl.l"
-return PADTOEVEN    ;
+return LOOKUP   ;
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
 #line 103 "gribl.l"
-return PADTO    ;
+return META     ;
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
 #line 104 "gribl.l"
-return PADTOMULTIPLE    ;
+return PADTOEVEN    ;
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
 #line 105 "gribl.l"
-return PAD      ;
+return PADTO    ;
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
 #line 106 "gribl.l"
-return SECTION_PADDING      ;
+return PADTOMULTIPLE    ;
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
 #line 107 "gribl.l"
-return MESSAGE      ;
+return PAD      ;
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
 #line 108 "gribl.l"
-return ALIAS    ;
+return SECTION_PADDING      ;
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
 #line 109 "gribl.l"
-return UNALIAS    ;
+return MESSAGE      ;
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
 #line 110 "gribl.l"
-return POS      ;
+return ALIAS    ;
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
 #line 111 "gribl.l"
-return INTCONST ;
+return UNALIAS    ;
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
 #line 112 "gribl.l"
-return TRANS    ;
+return POS      ;
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
 #line 113 "gribl.l"
-return STRING_TYPE   ;
+return INTCONST ;
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
 #line 114 "gribl.l"
-return LONG_TYPE   ;
+return TRANS    ;
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
 #line 115 "gribl.l"
-return ITERATOR ;
+return STRING_TYPE   ;
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
 #line 116 "gribl.l"
-return NEAREST ;
+return LONG_TYPE   ;
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
 #line 117 "gribl.l"
-return BOX ;
+return ITERATOR ;
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
 #line 118 "gribl.l"
-return KSEC    ;
+return NEAREST ;
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
 #line 119 "gribl.l"
-return FLAGBIT    ;
+return BOX ;
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
 #line 120 "gribl.l"
-return KSEC1EXPVER    ;
+return KSEC    ;
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
 #line 121 "gribl.l"
-return MODIFY    ;
+return FLAGBIT    ;
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 123 "gribl.l"
-return G1_HALF_BYTE    ;
+#line 122 "gribl.l"
+return KSEC1EXPVER    ;
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 124 "gribl.l"
-return G1_MESSAGE_LENGTH    ;
+#line 123 "gribl.l"
+return MODIFY    ;
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
 #line 125 "gribl.l"
-return G1_SECTION4_LENGTH    ;
+return G1_HALF_BYTE    ;
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 127 "gribl.l"
-return EXPORT;
+#line 126 "gribl.l"
+return G1_MESSAGE_LENGTH    ;
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 128 "gribl.l"
-return REMOVE;
+#line 127 "gribl.l"
+return G1_SECTION4_LENGTH    ;
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 130 "gribl.l"
-return SECTION_LENGTH     ;
+#line 129 "gribl.l"
+return EXPORT;
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 132 "gribl.l"
-return ASSERT    ;
+#line 130 "gribl.l"
+return REMOVE;
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 134 "gribl.l"
-return READ_ONLY;
+#line 132 "gribl.l"
+return SECTION_LENGTH     ;
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 135 "gribl.l"
-return NO_COPY;
+#line 134 "gribl.l"
+return ASSERT    ;
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
 #line 136 "gribl.l"
-return EDITION_SPECIFIC;
+return READ_ONLY;
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
 #line 137 "gribl.l"
-return DUMP;
+return NO_COPY;
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
 #line 138 "gribl.l"
-return NO_FAIL;
+return EDITION_SPECIFIC;
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
 #line 139 "gribl.l"
-return HIDDEN;
+return DUMP;
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
 #line 140 "gribl.l"
-return CAN_BE_MISSING;
+return NO_FAIL;
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
 #line 141 "gribl.l"
-return MISSING;
+return HIDDEN;
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
 #line 142 "gribl.l"
-return CONSTRAINT;
+return CAN_BE_MISSING;
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
 #line 143 "gribl.l"
-return OVERRIDE;
+return MISSING;
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
 #line 144 "gribl.l"
-return COPY_OK;
+return CONSTRAINT;
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 146 "gribl.l"
-return SET;
+#line 145 "gribl.l"
+return OVERRIDE;
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 147 "gribl.l"
-return SET_NOFAIL;
+#line 146 "gribl.l"
+return COPY_OK;
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
 #line 148 "gribl.l"
-return WHEN;
+return SET;
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
 #line 149 "gribl.l"
-return CASE;
+return SET_NOFAIL;
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
 #line 150 "gribl.l"
-return SWITCH;
+return WHEN;
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
 #line 151 "gribl.l"
-return DEFAULT;
+return CASE;
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
 #line 152 "gribl.l"
-return CONCEPT;
+return SWITCH;
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
 #line 153 "gribl.l"
-return CONCEPT_NOFAIL;
+return DEFAULT;
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
 #line 154 "gribl.l"
-return WRITE;
+return CONCEPT;
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
 #line 155 "gribl.l"
-return APPEND;
+return CONCEPT_NOFAIL;
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
 #line 156 "gribl.l"
-return PRINT;
+return WRITE;
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
 #line 157 "gribl.l"
-return SKIP;
+return APPEND;
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
+#line 158 "gribl.l"
+return PRINT;
+	YY_BREAK
+case 91:
+YY_RULE_SETUP
 #line 159 "gribl.l"
+return SKIP;
+	YY_BREAK
+case 92:
+YY_RULE_SETUP
+#line 161 "gribl.l"
 {
           int c,q;
           while((c = input()) && isspace(c) && c != '\n') ;
@@ -1850,9 +1860,9 @@ YY_RULE_SETUP
           grib_parser_include(grib_yytext);
          }
 	YY_BREAK
-case 91:
+case 93:
 YY_RULE_SETUP
-#line 176 "gribl.l"
+#line 178 "gribl.l"
 {
            int c,q = grib_yytext[0];
 
@@ -1869,9 +1879,9 @@ YY_RULE_SETUP
             return STRING;
         }
 	YY_BREAK
-case 92:
+case 94:
 YY_RULE_SETUP
-#line 192 "gribl.l"
+#line 194 "gribl.l"
 {
            int c;
            unsigned long val = 0;
@@ -1885,24 +1895,24 @@ YY_RULE_SETUP
            return INTEGER;
         }
 	YY_BREAK
-case 93:
-YY_RULE_SETUP
-#line 206 "gribl.l"
-{ grib_yylval.str = strdup(grib_yytext); return IDENT; }
-	YY_BREAK
-case 94:
-YY_RULE_SETUP
-#line 207 "gribl.l"
-{ grib_yylval.lval = atol((const char *)grib_yytext); return INTEGER; }
-	YY_BREAK
 case 95:
 YY_RULE_SETUP
 #line 208 "gribl.l"
-{ grib_yylval.dval = atof((const char *)grib_yytext); return FLOAT; }
+{ grib_yylval.str = strdup(grib_yytext); return IDENT; }
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-#line 211 "gribl.l"
+#line 209 "gribl.l"
+{ grib_yylval.lval = atol((const char *)grib_yytext); return INTEGER; }
+	YY_BREAK
+case 97:
+YY_RULE_SETUP
+#line 210 "gribl.l"
+{ grib_yylval.dval = atof((const char *)grib_yytext); return FLOAT; }
+	YY_BREAK
+case 98:
+YY_RULE_SETUP
+#line 213 "gribl.l"
 {
            int c;
            while((c = input()) && (c != '\n')){}
@@ -1910,28 +1920,28 @@ YY_RULE_SETUP
         grib_yylineno++;
         }
 	YY_BREAK
-case 97:
-YY_RULE_SETUP
-#line 217 "gribl.l"
-;
-	YY_BREAK
-case 98:
-/* rule 98 can match eol */
-YY_RULE_SETUP
-#line 218 "gribl.l"
-grib_yylineno++;
-	YY_BREAK
 case 99:
 YY_RULE_SETUP
-#line 222 "gribl.l"
-return *grib_yytext;
+#line 219 "gribl.l"
+;
 	YY_BREAK
 case 100:
+/* rule 100 can match eol */
+YY_RULE_SETUP
+#line 220 "gribl.l"
+grib_yylineno++;
+	YY_BREAK
+case 101:
 YY_RULE_SETUP
 #line 224 "gribl.l"
+return *grib_yytext;
+	YY_BREAK
+case 102:
+YY_RULE_SETUP
+#line 226 "gribl.l"
 ECHO;
 	YY_BREAK
-#line 1935 "lex.grib_yy.c"
+#line 1945 "lex.grib_yy.c"
 case YY_STATE_EOF(INITIAL):
 	grib_yyterminate();
 
@@ -2929,7 +2939,7 @@ void grib_yyfree (void * ptr )
 
 #define YYTABLES_NAME "grib_yytables"
 
-#line 224 "gribl.l"
+#line 226 "gribl.l"
 
 
 

@@ -72,6 +72,36 @@ ${tools_dir}/grib_filter -o temp.grib2 temp.filt $GRIB_SAMPLES_PATH/GRIB1.tmpl
 result=`${tools_dir}/grib_get -p typeOfFirstFixedSurface,NV,nlev temp.grib2`
 [ "$result" = "150 6 41" ]
 
-rm -f temp.grib2 temp.filt
-rm -f ${data_dir}/formatint.rules
+# GRIB-394: grib_filter arithmetic operators not correct for floating point values
+###################################################################################
+cat > ${data_dir}/binop.rules <<EOF
+transient val_exact=209.53530883789062500000;
+if (referenceValue == val_exact) {
+   print "OK Equality test passed";
+}
+else {
+   print "***ERROR: float equality test";
+   assert(0);
+}
+transient val_lower=209;
+if (referenceValue > val_lower) {
+  print "OK [referenceValue] > [val_lower]";
+}
+else {
+  print "***ERROR: [referenceValue] <= [val_lower]";
+  assert(0);
+}
+transient val_higher=209.99;
+if (referenceValue < val_higher) {
+  print "OK [referenceValue] < [val_higher]";
+}
+else {
+  print "***ERROR: [referenceValue] >= [val_higher]";
+  assert(0);
+}
+EOF
+${tools_dir}/grib_filter  ${data_dir}/binop.rules $GRIB_SAMPLES_PATH/gg_sfc_grib1.tmpl >/dev/null
 
+
+rm -f temp.grib2 temp.filt
+rm -f ${data_dir}/formatint.rules ${data_dir}/binop.rules

@@ -134,6 +134,8 @@ static grib_concept_value *reverse_concept(grib_concept_value *r,grib_concept_va
 %token NE
 %token GE
 %token LE
+%token LT
+%token GT
 %token BIT
 %token BITOFF
 
@@ -627,13 +629,13 @@ term           : term '+' factor    { $$ = new_binop_expression(grib_parser_cont
                | factor
               ;
 
-condition     : condition '>'     term { $$ = new_binop_expression(grib_parser_context,&grib_op_gt,&grib_op_gt_d,$1,$3); }
-             /* | condition '='     term { $$ = new_binop_expression(grib_parser_context,&grib_op_eq,$1,$3); } */
+condition     : condition GT    term { $$ = new_binop_expression(grib_parser_context,&grib_op_gt,&grib_op_gt_d,$1,$3); }
+             /* | condition '=' term { $$ = new_binop_expression(grib_parser_context,&grib_op_eq,$1,$3); } */
              | condition EQ     term { $$ = new_binop_expression(grib_parser_context,&grib_op_eq,&grib_op_eq_d,$1,$3); }
-             | condition '<'     term { $$ = new_binop_expression(grib_parser_context,&grib_op_lt,&grib_op_lt_d,$1,$3); }
-             | condition  GE     term { $$ = new_binop_expression(grib_parser_context,&grib_op_ge,&grib_op_ge_d,$1,$3); }
-             | condition  LE     term { $$ = new_binop_expression(grib_parser_context,&grib_op_le,&grib_op_le_d,$1,$3); }
-             | condition  NE     term { $$ = new_binop_expression(grib_parser_context,&grib_op_ne,&grib_op_ne_d,$1,$3); }
+             | condition LT     term { $$ = new_binop_expression(grib_parser_context,&grib_op_lt,&grib_op_lt_d,$1,$3); }
+             | condition GE     term { $$ = new_binop_expression(grib_parser_context,&grib_op_ge,&grib_op_ge_d,$1,$3); }
+             | condition LE     term { $$ = new_binop_expression(grib_parser_context,&grib_op_le,&grib_op_le_d,$1,$3); }
+             | condition NE     term { $$ = new_binop_expression(grib_parser_context,&grib_op_ne,&grib_op_ne_d,$1,$3); }
              | string_or_ident IS string_or_ident { $$ = new_string_compare_expression(grib_parser_context,$1,$3); }
 /*
              | condition  IN     term { $$ = new_binop_expression(grib_parser_context,grib_op_pow,$1,$3); }

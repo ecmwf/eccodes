@@ -117,16 +117,18 @@
      NE = 333,
      GE = 334,
      LE = 335,
-     BIT = 336,
-     BITOFF = 337,
-     AND = 338,
-     OR = 339,
-     NOT = 340,
-     IS = 341,
-     IDENT = 342,
-     STRING = 343,
-     INTEGER = 344,
-     FLOAT = 345
+     LT = 336,
+     GT = 337,
+     BIT = 338,
+     BITOFF = 339,
+     AND = 340,
+     OR = 341,
+     NOT = 342,
+     IS = 343,
+     IDENT = 344,
+     STRING = 345,
+     INTEGER = 346,
+     FLOAT = 347
    };
 #endif
 /* Tokens.  */
@@ -208,16 +210,18 @@
 #define NE 333
 #define GE 334
 #define LE 335
-#define BIT 336
-#define BITOFF 337
-#define AND 338
-#define OR 339
-#define NOT 340
-#define IS 341
-#define IDENT 342
-#define STRING 343
-#define INTEGER 344
-#define FLOAT 345
+#define LT 336
+#define GT 337
+#define BIT 338
+#define BITOFF 339
+#define AND 340
+#define OR 341
+#define NOT 342
+#define IS 343
+#define IDENT 344
+#define STRING 345
+#define INTEGER 346
+#define FLOAT 347
 
 
 
@@ -246,7 +250,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 250 "y.tab.h"
+#line 254 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define grib_yystype YYSTYPE /* obsolescent; will be withdrawn */
