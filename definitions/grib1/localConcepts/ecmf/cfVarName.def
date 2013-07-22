@@ -2280,7 +2280,7 @@
 	 indicatorOfParameter = 48 ;
 	}
 #10 metre wind gust difference
-'10fgdiff' = {
+'fgdiff10' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 49 ;
 	}
@@ -2620,7 +2620,7 @@
 	 indicatorOfParameter = 122 ;
 	}
 #10 metre wind gust in the last 6 hours difference
-'10fg6diff' = {
+'fg6diff10' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 123 ;
 	}
@@ -2825,17 +2825,17 @@
 	 indicatorOfParameter = 164 ;
 	}
 #10 metre U wind component difference
-'10udiff' = {
+'udiff10' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 165 ;
 	}
 #10 metre V wind component difference
-'10vdiff' = {
+'vdiff10' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 166 ;
 	}
 #2 metre temperature difference
-'2tdiff' = {
+'difft2' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 167 ;
 	}
@@ -3030,7 +3030,7 @@
 	 indicatorOfParameter = 206 ;
 	}
 #10 metre wind speed difference
-'10sidiff' = {
+'sidiff10' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 207 ;
 	}
@@ -3605,12 +3605,12 @@
 	 indicatorOfParameter = 141 ;
 	}
 #100 metre U wind component anomaly
-'100ua' = {
+'ua100' = {
 	 table2Version = 171 ;
 	 indicatorOfParameter = 6 ;
 	}
 #100 metre V wind component anomaly
-'100va' = {
+'va100' = {
 	 table2Version = 171 ;
 	 indicatorOfParameter = 7 ;
 	}
@@ -7830,7 +7830,7 @@
 	 indicatorOfParameter = 27 ;
 	}
 #10 metre wind gust in the last 3 hours
-'10fg3' = {
+'fg310' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 28 ;
 	}
@@ -7955,7 +7955,7 @@
 	 indicatorOfParameter = 245 ;
 	}
 #100 metre wind speed
-'100si' = {
+'si100' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 249 ;
 	}
@@ -8200,7 +8200,7 @@
 	 indicatorOfParameter = 48 ;
 	}
 #10 metre wind gust gradient
-'10fggrd' = {
+'fggrd10' = {
 	 table2Version = 129 ;
 	 indicatorOfParameter = 49 ;
 	}
@@ -8540,7 +8540,7 @@
 	 indicatorOfParameter = 122 ;
 	}
 #10 metre wind gust in the last 6 hours gradient
-'10fg6grd' = {
+'fg6grd10' = {
 	 table2Version = 129 ;
 	 indicatorOfParameter = 123 ;
 	}
@@ -8745,22 +8745,22 @@
 	 indicatorOfParameter = 164 ;
 	}
 #10 metre U wind component gradient
-'10ugrd' = {
+'ugrd10' = {
 	 table2Version = 129 ;
 	 indicatorOfParameter = 165 ;
 	}
 #10 metre V wind component gradient
-'10vgrd' = {
+'vgrd10' = {
 	 table2Version = 129 ;
 	 indicatorOfParameter = 166 ;
 	}
 #2 metre temperature gradient
-'2tgrd' = {
+'grd2t' = {
 	 table2Version = 129 ;
 	 indicatorOfParameter = 167 ;
 	}
 #2 metre dewpoint temperature gradient
-'2dgrd' = {
+'grd2d' = {
 	 table2Version = 129 ;
 	 indicatorOfParameter = 168 ;
 	}
@@ -8955,7 +8955,7 @@
 	 indicatorOfParameter = 206 ;
 	}
 #10 metre wind speed gradient
-'10sigrd' = {
+'sigrd10' = {
 	 table2Version = 129 ;
 	 indicatorOfParameter = 207 ;
 	}
@@ -10830,7 +10830,7 @@
 	 indicatorOfParameter = 255 ;
 	}
 #10 metre wind gust during averaging time
-'10fgrea' = {
+'fgrea10' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 49 ;
 	}
@@ -11065,7 +11065,7 @@
 	 indicatorOfParameter = 243 ;
 	}
 #10 metre wind speed
-'10wsrea' = {
+'wsrea10' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 246 ;
 	}
@@ -11655,7 +11655,7 @@
 	 indicatorOfParameter = 48 ;
 	}
 #10 metre wind gust anomaly
-'10fga' = {
+'fga10' = {
 	 table2Version = 171 ;
 	 indicatorOfParameter = 49 ;
 	}
@@ -11950,22 +11950,22 @@
 	 indicatorOfParameter = 164 ;
 	}
 #10 metre U wind component anomaly
-'10ua' = {
+'ua10' = {
 	 table2Version = 171 ;
 	 indicatorOfParameter = 165 ;
 	}
 #10 metre V wind component anomaly
-'10va' = {
+'va10' = {
 	 table2Version = 171 ;
 	 indicatorOfParameter = 166 ;
 	}
 #2 metre temperature anomaly
-'2ta' = {
+'t2a' = {
 	 table2Version = 171 ;
 	 indicatorOfParameter = 167 ;
 	}
 #2 metre dewpoint temperature anomaly
-'2da' = {
+'d2a' = {
 	 table2Version = 171 ;
 	 indicatorOfParameter = 168 ;
 	}
@@ -12155,7 +12155,7 @@
 	 indicatorOfParameter = 206 ;
 	}
 #10 metre wind speed anomaly
-'10ua' = {
+'ua10' = {
 	 table2Version = 171 ;
 	 indicatorOfParameter = 207 ;
 	}
@@ -13125,7 +13125,7 @@
 	 indicatorOfParameter = 229 ;
 	}
 #2 metre dewpoint temperature difference
-'2ddiff' = {
+'ddiff2' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 168 ;
 	}
@@ -15430,12 +15430,12 @@
 	 indicatorOfParameter = 136 ;
 	}
 #100 metre U wind component
-'100u' = {
+'u100' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 246 ;
 	}
 #100 metre V wind component
-'100v' = {
+'v100' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 247 ;
 	}

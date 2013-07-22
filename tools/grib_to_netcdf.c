@@ -518,7 +518,7 @@ static void save_all_requests(FILE *f, const request *r)
 /* Not used for the moment
 static void print_one_request(const request *r)
 {
-	save_one_request(stdout, r);
+    save_one_request(stdout, r);
 }
  */
 
@@ -601,11 +601,11 @@ static err handle_to_request(request *r, grib_handle* g)
     }
 
     /*
-	 Assert(grib_get_long(g, "validityDate", &l ) == 0);
-	 set_value(r, "validityDate", "%ld", l);
+     Assert(grib_get_long(g, "validityDate", &l ) == 0);
+     set_value(r, "validityDate", "%ld", l);
 
-	 Assert(grib_get_long(g, "validityTime", &l ) == 0);
-	 set_value(r, "validityTime", "%ld", l);
+     Assert(grib_get_long(g, "validityTime", &l ) == 0);
+     set_value(r, "validityTime", "%ld", l);
      */
 
     len = sizeof(value);
@@ -734,7 +734,7 @@ typedef struct fieldset {
  #define MISSING_FIELD(f)      ((f)->missing)
  #define FIELD_HAS_BITMAP(f)   ((f)->bitmap)
 
- #define FASTNEW(type)  	     (type*)calloc(sizeof(type),1)
+ #define FASTNEW(type)         (type*)calloc(sizeof(type),1)
  #define grib_context_free(ctx,x)           grib_context_free(ctx,x)
  */
 
@@ -1623,7 +1623,7 @@ static hypercube *new_hypercube(const request *r)
     memset(h->set, 1, count);
 
     /* This is expensive, but makes the iterator with only
-	 those parameters found as axis */
+       those parameters found as axis */
     h->iterator = empty_request(0);
     for(n = 0; n < NUMBER(axis); ++n)
         if((val = get_value(h->r, axis[n].name, 0)) != NULL)
@@ -2401,11 +2401,11 @@ static void scale_bitmap(double *vals, long n, void *data, dataset_t *subset)
     nc_type nctype = subset->att.nctype;
 
     /*
-	 if(!subset->bitmap)
-	 {
-	 grib_context_log(ctx,GRIB_LOG_DEBUG,"No scale of bitmap required");
-	 return;
-	 }
+     if(!subset->bitmap)
+     {
+      grib_context_log(ctx,GRIB_LOG_DEBUG,"No scale of bitmap required");
+      return;
+     }
      */
 
     switch(nctype)
@@ -2470,11 +2470,11 @@ static void scale(double *vals, long n, void *data, dataset_t *g)
     double add_offset = g->add_offset;
 
     /*
-	 if(!subset->scale)
-	 {
-	 grib_context_log(ctx,GRIB_LOG_DEBUG,"No scale required");
-	 return;
-	 }
+    if(!subset->scale)
+    {
+     grib_context_log(ctx,GRIB_LOG_DEBUG,"No scale required");
+     return;
+    }
      */
 
     switch(nctype)
@@ -3127,7 +3127,7 @@ static void paramtable(const char *p, long *param, long *table, boolean paramIdM
         *table = atol(++p);
 
     /* This version is grib_api... It should rely on what grib_api returns,
-	 either param.table or paramId
+       either param.table or paramId
      */
     if(paramIdMode)
     {
@@ -3175,7 +3175,7 @@ static void find_nc_attributes(const request *subset_r, const request *user_r, n
         request *cfg = (request *) config_r;
         boolean is_param = strcmp(split, "param") == 0;
         /* Only use this parameter in the name if there is more
-		 than one value in the original request or if param */
+           than one value in the original request or if param */
         boolean setname = ((count_values(data_r, split) > 1) || (is_param && set_param_as_name));
 
         while(cfg)
@@ -3197,7 +3197,7 @@ static void find_nc_attributes(const request *subset_r, const request *user_r, n
                     paramtable(dataval, &dataparam, &datatable, false);
 
                     /* If it is not param and they're EXACTLY equal or
-					 being param, they're the same parameter and table */
+                       being param, they're the same parameter and table */
                     if((!is_param && (strcmp(dataval, cfgval) == 0)) || (is_param && (dataparam == cfgparam) && (datatable == cfgtable || (datatable == 0 && (cfgtable == 128)))))
                     {
                         const char *val = NULL;
@@ -3252,11 +3252,11 @@ static void find_nc_attributes(const request *subset_r, const request *user_r, n
         }
     }
 
-
+    /* NetCDF does not allow variable names to start with a digit */
     if(!isalpha(att->name[0]))
     {
         char buf[1024];
-        sprintf(buf,"v%s",att->name);
+        sprintf(buf,"p%s",att->name);
         strcpy(att->name,buf);
     }
 
@@ -3835,8 +3835,8 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     printf("%s: Found %d GRIB field%s in %d file%s.\n", grib_tool_name, fs->count, fs->count>1?"s":"", files, files > 1 ? "s" : "");
 
     /*
-	 grib_context_log(ctx, GRIB_LOG_INFO, "Request representing %d fields ", fs->count);
-	 print_all_requests(data_r);
+     grib_context_log(ctx, GRIB_LOG_INFO, "Request representing %d fields ", fs->count);
+     print_all_requests(data_r);
      */
 
     /* Split the SOURCE from request into as many datasets as specified */

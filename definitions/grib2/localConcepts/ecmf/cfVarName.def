@@ -1664,7 +1664,7 @@
 	 parameterNumber = 48 ;
 	}
 #10 metre wind gust difference
-'10fgdiff' = {
+'fgdiff10' = {
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 49 ;
@@ -2072,7 +2072,7 @@
 	 parameterNumber = 122 ;
 	}
 #10 metre wind gust in the last 6 hours difference
-'10fg6diff' = {
+'fg6diff10' = {
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 123 ;
@@ -2318,19 +2318,19 @@
 	 parameterNumber = 164 ;
 	}
 #10 metre U wind component difference
-'10udiff' = {
+'udiff10' = {
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 165 ;
 	}
 #10 metre V wind component difference
-'10vdiff' = {
+'vdiff10' = {
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 166 ;
 	}
 #2 metre temperature difference
-'2tdiff' = {
+'difft2' = {
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 167 ;
@@ -2564,7 +2564,7 @@
 	 parameterNumber = 206 ;
 	}
 #10 metre wind speed difference
-'10sidiff' = {
+'sidiff10' = {
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 207 ;
@@ -3032,13 +3032,13 @@
 	 parameterNumber = 141 ;
 	}
 #100 metre U wind component anomaly
-'100ua' = {
+'ua100' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 6 ;
 	}
 #100 metre V wind component anomaly
-'100va' = {
+'va100' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 7 ;
@@ -8010,7 +8010,7 @@
 	 lengthOfTimeRange = 3 ;
 	}
 #10 metre wind gust in the last 3 hours
-'10fg3' = {
+'fg310' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 28 ;
@@ -8094,7 +8094,7 @@
 	 parameterNumber = 248 ;
 	}
 #100 metre wind speed
-'100si' = {
+'si100' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 249 ;
@@ -8460,7 +8460,7 @@
 	 parameterNumber = 48 ;
 	}
 #10 metre wind gust gradient
-'10fggrd' = {
+'fggrd10' = {
 	 discipline = 192 ;
 	 parameterCategory = 129 ;
 	 parameterNumber = 49 ;
@@ -8868,7 +8868,7 @@
 	 parameterNumber = 122 ;
 	}
 #10 metre wind gust in the last 6 hours gradient
-'10fg6grd' = {
+'fg6grd10' = {
 	 discipline = 192 ;
 	 parameterCategory = 129 ;
 	 parameterNumber = 123 ;
@@ -9114,25 +9114,25 @@
 	 parameterNumber = 164 ;
 	}
 #10 metre U wind component gradient
-'10ugrd' = {
+'ugrd10' = {
 	 discipline = 192 ;
 	 parameterCategory = 129 ;
 	 parameterNumber = 165 ;
 	}
 #10 metre V wind component gradient
-'10vgrd' = {
+'vgrd10' = {
 	 discipline = 192 ;
 	 parameterCategory = 129 ;
 	 parameterNumber = 166 ;
 	}
 #2 metre temperature gradient
-'2tgrd' = {
+'grd2t' = {
 	 discipline = 192 ;
 	 parameterCategory = 129 ;
 	 parameterNumber = 167 ;
 	}
 #2 metre dewpoint temperature gradient
-'2dgrd' = {
+'grd2d' = {
 	 discipline = 192 ;
 	 parameterCategory = 129 ;
 	 parameterNumber = 168 ;
@@ -9366,7 +9366,7 @@
 	 parameterNumber = 206 ;
 	}
 #10 metre wind speed gradient
-'10sigrd' = {
+'sigrd10' = {
 	 discipline = 192 ;
 	 parameterCategory = 129 ;
 	 parameterNumber = 207 ;
@@ -11632,7 +11632,7 @@
 	 parameterNumber = 255 ;
 	}
 #10 metre wind gust during averaging time
-'10fgrea' = {
+'fgrea10' = {
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 49 ;
@@ -11914,7 +11914,7 @@
 	 parameterNumber = 243 ;
 	}
 #10 metre wind speed
-'10wsrea' = {
+'wsrea10' = {
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 246 ;
@@ -12622,7 +12622,7 @@
 	 parameterNumber = 48 ;
 	}
 #10 metre wind gust anomaly
-'10fga' = {
+'fga10' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 49 ;
@@ -12976,25 +12976,25 @@
 	 parameterNumber = 164 ;
 	}
 #10 metre U wind component anomaly
-'10ua' = {
+'ua10' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 165 ;
 	}
 #10 metre V wind component anomaly
-'10va' = {
+'va10' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 166 ;
 	}
 #2 metre temperature anomaly
-'2ta' = {
+'t2a' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 167 ;
 	}
 #2 metre dewpoint temperature anomaly
-'2da' = {
+'d2a' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 168 ;
@@ -13222,7 +13222,7 @@
 	 parameterNumber = 206 ;
 	}
 #10 metre wind speed anomaly
-'10ua' = {
+'ua10' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 207 ;
@@ -14386,7 +14386,7 @@
 	 parameterNumber = 229 ;
 	}
 #2 metre dewpoint temperature difference
-'2ddiff' = {
+'ddiff2' = {
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 168 ;
@@ -17273,13 +17273,13 @@
 	 parameterNumber = 136 ;
 	}
 #100 metre U wind component
-'100u' = {
+'u100' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 246 ;
 	}
 #100 metre V wind component
-'100v' = {
+'v100' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 247 ;
