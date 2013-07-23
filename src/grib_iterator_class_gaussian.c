@@ -87,42 +87,42 @@ static void init_class(grib_iterator_class* c)
 static void binary_search(double xx[], const unsigned long n, double x, unsigned long *j);
 
 static int init(grib_iterator* i,grib_handle* h,grib_arguments *args){
-  grib_iterator_gaussian* self = (grib_iterator_gaussian*)i;
+    grib_iterator_gaussian* self = (grib_iterator_gaussian*)i;
 
-  double *lats;
+    double *lats;
     double laf; /* latitude of first point in degrees */
     double lal; /* latitude of last point in degrees */
     long trunc; /* number of parallels between a pole and the equator */
-  long lai;
-  long jScansPositively=0;
-  int size;
-  double start;
-  unsigned long istart=0;
-  int ret = GRIB_SUCCESS;
+    long lai;
+    long jScansPositively=0;
+    int size;
+    double start;
+    unsigned long istart=0;
+    int ret = GRIB_SUCCESS;
 
-  const char* latofirst   = grib_arguments_get_name(h,args,self->carg++);
-  const char* latoflast   = grib_arguments_get_name(h,args,self->carg++);
-  const char* numtrunc    = grib_arguments_get_name(h,args,self->carg++);
-  const char* s_jScansPositively    = grib_arguments_get_name(h,args,self->carg++);
+    const char* latofirst   = grib_arguments_get_name(h,args,self->carg++);
+    const char* latoflast   = grib_arguments_get_name(h,args,self->carg++);
+    const char* numtrunc    = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_jScansPositively    = grib_arguments_get_name(h,args,self->carg++);
 
-  if((ret = grib_get_double_internal(h,latofirst,   &laf))) return ret;
-  if((ret = grib_get_double_internal(h,latoflast,   &lal))) return ret;
-  if((ret = grib_get_long_internal(h,numtrunc,&trunc))) return ret;
-  if((ret = grib_get_long_internal(h,s_jScansPositively,&jScansPositively)))
-      return ret;
+    if((ret = grib_get_double_internal(h,latofirst,   &laf))) return ret;
+    if((ret = grib_get_double_internal(h,latoflast,   &lal))) return ret;
+    if((ret = grib_get_long_internal(h,numtrunc,&trunc))) return ret;
+    if((ret = grib_get_long_internal(h,s_jScansPositively,&jScansPositively)))
+        return ret;
 
-  start=laf;
+    start=laf;
 
-  size=trunc*2;
+    size=trunc*2;
 
-  lats = grib_context_malloc(h->context,size*sizeof(double));
+    lats = grib_context_malloc(h->context,size*sizeof(double));
 
-  ret = grib_get_gaussian_latitudes(trunc, lats);
+    ret = grib_get_gaussian_latitudes(trunc, lats);
 
-  if(ret != GRIB_SUCCESS) {
-    grib_context_log(h->context, GRIB_LOG_ERROR,"error %d calculating gaussian points",ret);
-    return ret;
-  }
+    if(ret != GRIB_SUCCESS) {
+        grib_context_log(h->context, GRIB_LOG_ERROR,"error %d calculating gaussian points",ret);
+        return ret;
+    }
 /*
   for(loi=(trunc*2)-1;loi>=0;loi--)
     if(fabs(lats[loi] - lal) < glatPrecision) break;
@@ -131,24 +131,24 @@ static int init(grib_iterator* i,grib_handle* h,grib_arguments *args){
   }
 */
 
-  binary_search(lats,size-1,start,&istart);
+    binary_search(lats,size-1,start,&istart);
     Assert(istart < size);
 
-  if (jScansPositively) {
-    for(lai=0;lai<self->nam;lai++) {
-      self->las[lai] = lats[istart--];
-      /*if (istart<0) istart=size-1;  this condition is always FALSE -- 'istart' is unsigned long */
+    if (jScansPositively) {
+        for(lai=0;lai<self->nam;lai++) {
+            self->las[lai] = lats[istart--];
+            /*if (istart<0) istart=size-1;  this condition is always FALSE -- 'istart' is unsigned long */
+        }
+    } else {
+        for(lai=0;lai<self->nam;lai++) {
+            self->las[lai] = lats[istart++];
+            if (istart>size-1) istart=0;
+        }
     }
-  } else {
-    for(lai=0;lai<self->nam;lai++) {
-      self->las[lai] = lats[istart++];
-      if (istart>size-1) istart=0;
-    }
-  }
 
-  grib_context_free(h->context,lats);
+    grib_context_free(h->context,lats);
 
-  return ret;
+    return ret;
 }
 
 static void binary_search(double xx[], const unsigned long n, double x, unsigned long *j)
@@ -156,18 +156,18 @@ static void binary_search(double xx[], const unsigned long n, double x, unsigned
     /*This routine works only on descending ordered arrays*/
 #define EPSILON 1e-3
 
-  unsigned long ju,jm,jl;
-  jl=0;
-  ju=n;
-  while (ju-jl > 1) {
-    jm=(ju+jl) >> 1;
+    unsigned long ju,jm,jl;
+    jl=0;
+    ju=n;
+    while (ju-jl > 1) {
+        jm=(ju+jl) >> 1;
         if (fabs(x-xx[jm]) < EPSILON) {
             /* found something close enough. We're done */
             *j=jm;
             return;
         }
         if (x < xx[jm]) jl=jm;
-    else ju=jm;
-  }
-  *j=jl;
+        else ju=jm;
+    }
+    *j=jl;
 }

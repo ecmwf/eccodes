@@ -133,108 +133,108 @@ static void init_class(grib_accessor_class* c)
 
 static void init  (grib_accessor* a,const long len, grib_arguments* param)
 {
-  grib_accessor_codeflag* self = (grib_accessor_codeflag*)a;
-  a->length = len;
-  self->tablename = grib_arguments_get_string(a->parent->h,param,0);
-  Assert(a->length>=0);
+    grib_accessor_codeflag* self = (grib_accessor_codeflag*)a;
+    a->length = len;
+    self->tablename = grib_arguments_get_string(a->parent->h,param,0);
+    Assert(a->length>=0);
 }
 
 static int test_bit(long a, long b)
 {
-  return a&(1<<b);
+    return a&(1<<b);
 }
 
 static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
 {
-  grib_accessor_codeflag* self = (grib_accessor_codeflag*)a;
-  FILE* f = NULL;
-  char fname[1024];
-  char bval[50];
-  char num[50];
-  char* filename=0;
-  char line[1024];
+    grib_accessor_codeflag* self = (grib_accessor_codeflag*)a;
+    FILE* f = NULL;
+    char fname[1024];
+    char bval[50];
+    char num[50];
+    char* filename=0;
+    char line[1024];
     size_t i =0;
-  int j =0;
+    int j =0;
 
-  grib_recompose_name(a->parent->h,NULL, self->tablename, fname,1);
+    grib_recompose_name(a->parent->h,NULL, self->tablename, fname,1);
 
-  if ((filename=grib_context_full_defs_path(a->parent->h->context,fname))==NULL) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_WARNING,"Cannot open flag table %s",filename);
-    strcpy(codename, "Cannot open flag table");
-    return GRIB_FILE_NOT_FOUND;
-  }
-
-  f=fopen(filename, "r");
-
-  if (!f)
-  {
-    grib_context_log(a->parent->h->context,(GRIB_LOG_WARNING)|(GRIB_LOG_PERROR),"Cannot open flag table %s",filename);
-    strcpy(codename, "Cannot open flag table");
-    return GRIB_FILE_NOT_FOUND;
-  }
-
-#if 0
-  strcpy(codename, self->tablename);
-  strcat(codename,": ");
-  j = strlen(codename);
-#endif
-
-  while(fgets(line,sizeof(line)-1,f))
-  {
-    sscanf(line,"%s %s", num, bval);
-
-    if(num[0] != '#')
-        {
-      if((test_bit(code, a->length*8-atol(num))>0) == atol(bval))
-      {
-                size_t linelen = strlen(line);
-        codename[j++] = '(';
-        codename[j++] = num[0];
-        codename[j++] = '=';
-        codename[j++] = bval[0];
-        codename[j++] = ')';
-        codename[j++] = ' ';
-        if(j)
-        codename[j++] = ' ';
-
-                for(i=(strlen(num)+strlen(bval)+2); i < linelen-1;i++)
-          codename[j++] = line[i];
-        if(line[i]!='\n')
-          codename[j++] = line[i];
-        codename[j++] = ';';
-      }
-  }
+    if ((filename=grib_context_full_defs_path(a->parent->h->context,fname))==NULL) {
+        grib_context_log(a->parent->h->context,GRIB_LOG_WARNING,"Cannot open flag table %s",filename);
+        strcpy(codename, "Cannot open flag table");
+        return GRIB_FILE_NOT_FOUND;
     }
 
-  if(j>1 && codename[j-1] == ';') j--;
-  codename[j] = 0;
+    f=fopen(filename, "r");
 
-  strcat(codename,":");
-  strcat(codename,self->tablename);
+    if (!f)
+    {
+        grib_context_log(a->parent->h->context,(GRIB_LOG_WARNING)|(GRIB_LOG_PERROR),"Cannot open flag table %s",filename);
+        strcpy(codename, "Cannot open flag table");
+        return GRIB_FILE_NOT_FOUND;
+    }
 
-  fclose(f);
-  return GRIB_SUCCESS;
+#if 0
+    strcpy(codename, self->tablename);
+    strcat(codename,": ");
+    j = strlen(codename);
+#endif
+
+    while(fgets(line,sizeof(line)-1,f))
+    {
+        sscanf(line,"%s %s", num, bval);
+
+        if(num[0] != '#')
+        {
+            if((test_bit(code, a->length*8-atol(num))>0) == atol(bval))
+            {
+                size_t linelen = strlen(line);
+                codename[j++] = '(';
+                codename[j++] = num[0];
+                codename[j++] = '=';
+                codename[j++] = bval[0];
+                codename[j++] = ')';
+                codename[j++] = ' ';
+                if(j)
+                    codename[j++] = ' ';
+
+                for(i=(strlen(num)+strlen(bval)+2); i < linelen-1;i++)
+                    codename[j++] = line[i];
+                if(line[i]!='\n')
+                    codename[j++] = line[i];
+                codename[j++] = ';';
+            }
+        }
+    }
+
+    if(j>1 && codename[j-1] == ';') j--;
+    codename[j] = 0;
+
+    strcat(codename,":");
+    strcat(codename,self->tablename);
+
+    fclose(f);
+    return GRIB_SUCCESS;
 }
 
 static long value_count(grib_accessor* a)
 {
-  return 1;
+    return 1;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_accessor_codeflag* self = (grib_accessor_codeflag*)a;
-  long v;
-  char flagname[1024];
-  char fname[1024];
+    grib_accessor_codeflag* self = (grib_accessor_codeflag*)a;
+    long v;
+    char flagname[1024];
+    char fname[1024];
 
-  size_t llen = 1;
+    size_t llen = 1;
 
-  grib_recompose_name(a->parent->h,NULL, self->tablename, fname,1);
-  grib_unpack_long(a, &v, &llen);
+    grib_recompose_name(a->parent->h,NULL, self->tablename, fname,1);
+    grib_unpack_long(a, &v, &llen);
 
-  grib_get_codeflag(a, v, flagname);
+    grib_get_codeflag(a, v, flagname);
 
-  grib_dump_bits(dumper,a,flagname);
+    grib_dump_bits(dumper,a,flagname);
 
 }

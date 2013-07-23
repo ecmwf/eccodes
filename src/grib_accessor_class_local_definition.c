@@ -9,9 +9,8 @@
  */
 
 /**************************************
- *  Enrico Fucile
+ *  This pertains to GRIB edition 2
  **************************************/
-
 
 #include "grib_api_internal.h"
 /*
@@ -150,158 +149,161 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_local_definition* self = (grib_accessor_local_definition*)a;
-  int n = 0;
+    grib_accessor_local_definition* self = (grib_accessor_local_definition*)a;
+    int n = 0;
 
-  self->grib2LocalSectionNumber = grib_arguments_get_name(a->parent->h,c,n++);
-  self->productDefinitionTemplateNumber = grib_arguments_get_name(a->parent->h,c,n++);
-  self->productDefinitionTemplateNumberInternal = grib_arguments_get_name(a->parent->h,c,n++);
-  self->type = grib_arguments_get_name(a->parent->h,c,n++);
-  self->stream = grib_arguments_get_name(a->parent->h,c,n++);
-  self->class = grib_arguments_get_name(a->parent->h,c,n++);
-  self->eps = grib_arguments_get_name(a->parent->h,c,n++);
-  self->stepType = grib_arguments_get_name(a->parent->h,c,n++);
-  self->derivedForecast = grib_arguments_get_name(a->parent->h,c,n++);
-
+    self->grib2LocalSectionNumber = grib_arguments_get_name(a->parent->h,c,n++);
+    self->productDefinitionTemplateNumber = grib_arguments_get_name(a->parent->h,c,n++);
+    self->productDefinitionTemplateNumberInternal = grib_arguments_get_name(a->parent->h,c,n++);
+    self->type = grib_arguments_get_name(a->parent->h,c,n++);
+    self->stream = grib_arguments_get_name(a->parent->h,c,n++);
+    self->class = grib_arguments_get_name(a->parent->h,c,n++);
+    self->eps = grib_arguments_get_name(a->parent->h,c,n++);
+    self->stepType = grib_arguments_get_name(a->parent->h,c,n++);
+    self->derivedForecast = grib_arguments_get_name(a->parent->h,c,n++);
 }
 
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-	grib_accessor_local_definition* self = (grib_accessor_local_definition*)a;
+    grib_accessor_local_definition* self = (grib_accessor_local_definition*)a;
 
-	return grib_get_long(a->parent->h, self->grib2LocalSectionNumber,val);
+    return grib_get_long(a->parent->h, self->grib2LocalSectionNumber,val);
 }
-
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-	grib_accessor_local_definition* self = (grib_accessor_local_definition*)a;
-	long productDefinitionTemplateNumber=-1;
-	long productDefinitionTemplateNumberInternal=-1;
-	long productDefinitionTemplateNumberNew=-1;
-	long grib2LocalSectionNumber=-1;
-	long type=-1;
-	long stream=-1;
-	long class=-1;
-	long eps=-1;
-	char stepType[15]={0,};
-	size_t slen=15;
-	int localDefinitionNumber=*val;
-	int isInstant=0;
-	int tooEarly=0;
-	long derivedForecast=-1;
+    grib_accessor_local_definition* self = (grib_accessor_local_definition*)a;
+    long productDefinitionTemplateNumber=-1;
+    long productDefinitionTemplateNumberInternal=-1;
+    long productDefinitionTemplateNumberNew=-1;
+    long grib2LocalSectionNumber=-1;
+    long type=-1;
+    long stream=-1;
+    long class=-1;
+    long eps=-1;
+    char stepType[15]={0,};
+    size_t slen=15;
+    int localDefinitionNumber=*val;
+    int isInstant=0;
+    int tooEarly=0;
+    long derivedForecast=-1;
+    long editionNumber = 0;
 
-	if (grib_get_long(a->parent->h, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
-		tooEarly=1;
-	grib_get_long(a->parent->h, self->productDefinitionTemplateNumberInternal,&productDefinitionTemplateNumberInternal);
-	grib_get_long(a->parent->h, self->type,&type);
-	grib_get_long(a->parent->h, self->stream,&stream);
-	grib_get_long(a->parent->h, self->class,&class);
-	grib_get_long(a->parent->h, self->eps,&eps);
-	grib_get_string(a->parent->h, self->stepType,stepType,&slen);
-	if (!strcmp(stepType,"instant")) isInstant=1;
-	grib_get_long(a->parent->h, self->grib2LocalSectionNumber,&grib2LocalSectionNumber);
+    if (grib_get_long(a->parent->h, "editionNumber", &editionNumber)==GRIB_SUCCESS) {
+        Assert(editionNumber == 2);
+    }
 
-	if (productDefinitionTemplateNumber==1 || productDefinitionTemplateNumber==11)
-		eps=1;
+    if (grib_get_long(a->parent->h, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
+        tooEarly=1;
+    grib_get_long(a->parent->h, self->productDefinitionTemplateNumberInternal,&productDefinitionTemplateNumberInternal);
+    grib_get_long(a->parent->h, self->type,&type);
+    grib_get_long(a->parent->h, self->stream,&stream);
+    grib_get_long(a->parent->h, self->class,&class);
+    grib_get_long(a->parent->h, self->eps,&eps);
+    grib_get_string(a->parent->h, self->stepType,stepType,&slen);
+    if (!strcmp(stepType,"instant")) isInstant=1;
+    grib_get_long(a->parent->h, self->grib2LocalSectionNumber,&grib2LocalSectionNumber);
 
-	switch (localDefinitionNumber) {
-	case 0:
-	case 300:
-		productDefinitionTemplateNumberNew=productDefinitionTemplateNumber;
-		break;
+    if (productDefinitionTemplateNumber==1 || productDefinitionTemplateNumber==11)
+        eps=1;
 
-	case 500:
-		productDefinitionTemplateNumberNew=0;
-		break;
+    switch (localDefinitionNumber) {
+    case 0:
+    case 300:
+        productDefinitionTemplateNumberNew=productDefinitionTemplateNumber;
+        break;
 
-	case 1:  /* MARS labelling */
-	case 36: /* MARS labelling for long window 4Dvar system */
-	case 40: /* MARS labeling with domain and model (for LAM) */
-		if (isInstant) {
-			/* type=em || type=es */
-			if (type==17) {
-				productDefinitionTemplateNumberNew=2;
-				derivedForecast=0;
-			} else if (type==18) {
-				productDefinitionTemplateNumberNew=2;
-				derivedForecast=4;
-				/* eps or enda or elda or ewla */
-			} else  if (eps==1 || stream==1030 || stream==1249 || stream==1250) {
-				productDefinitionTemplateNumberNew=1;
-			} else {
-				productDefinitionTemplateNumberNew=0;
-			}
-		} else {
-			/* type=em || type=es */
-			if (type==17) {
-				productDefinitionTemplateNumberNew=12;
-				derivedForecast=0;
-			} else if (type==18) {
-				productDefinitionTemplateNumberNew=12;
-				derivedForecast=4;
-				/* eps or enda or elda or ewla */
-			} else  if (eps==1 || stream==1030 || stream==1249 || stream==1250) {
-				productDefinitionTemplateNumberNew=11;
-			} else {
-				productDefinitionTemplateNumberNew=8;
-			}
-		}
-		break;
+    case 500:
+        productDefinitionTemplateNumberNew=0;
+        break;
 
-	case 15: /* Seasonal forecast data */
-	case 16: /* Seasonal forecast monthly mean data */
-	case 18: /* Multianalysis ensemble data */
-	case 26: /* MARS labelling or ensemble forecast data */
-	case 30: /* Forecasting Systems with Variable Resolution */
-		if (isInstant) {
-			productDefinitionTemplateNumberNew=1;
-		} else {
-			productDefinitionTemplateNumberNew=11;
-		}
-		break;
+    case 1:  /* MARS labelling */
+    case 36: /* MARS labelling for long window 4Dvar system */
+    case 40: /* MARS labeling with domain and model (for LAM) */
+        if (isInstant) {
+            /* type=em || type=es */
+            if (type==17) {
+                productDefinitionTemplateNumberNew=2;
+                derivedForecast=0;
+            } else if (type==18) {
+                productDefinitionTemplateNumberNew=2;
+                derivedForecast=4;
+                /* eps or enda or elda or ewla */
+            } else  if (eps==1 || stream==1030 || stream==1249 || stream==1250) {
+                productDefinitionTemplateNumberNew=1;
+            } else {
+                productDefinitionTemplateNumberNew=0;
+            }
+        } else {
+            /* type=em || type=es */
+            if (type==17) {
+                productDefinitionTemplateNumberNew=12;
+                derivedForecast=0;
+            } else if (type==18) {
+                productDefinitionTemplateNumberNew=12;
+                derivedForecast=4;
+                /* eps or enda or elda or ewla */
+            } else  if (eps==1 || stream==1030 || stream==1249 || stream==1250) {
+                productDefinitionTemplateNumberNew=11;
+            } else {
+                productDefinitionTemplateNumberNew=8;
+            }
+        }
+        break;
 
-	case 7:  /* Sensitivity data */
-	case 9:  /* Singular vectors and ensemble perturbations */
-	case 11: /* Supplementary data used by the analysis */
-	case 14: /* Brightness temperature */
-	case 20: /* 4D variational increments */
-	case 21: /* Sensitive area predictions */
-	case 23: /* Coupled atmospheric, wave and ocean means */
-	case 24: /* Satellite Channel Number Data */
-	case 25:
-	case 28: /* COSMO local area EPS */
-	case 38: /* 4D variational increments for long window 4Dvar system */
-	case 39: /* 4DVar model errors for long window 4Dvar system */
-		if (isInstant) {
-			productDefinitionTemplateNumberNew=0;
-		} else {
-			productDefinitionTemplateNumberNew=8;
-		}
-		break;
+    case 15: /* Seasonal forecast data */
+    case 16: /* Seasonal forecast monthly mean data */
+    case 18: /* Multianalysis ensemble data */
+    case 26: /* MARS labelling or ensemble forecast data */
+    case 30: /* Forecasting Systems with Variable Resolution */
+        if (isInstant) {
+            productDefinitionTemplateNumberNew=1;
+        } else {
+            productDefinitionTemplateNumberNew=11;
+        }
+        break;
 
-	default:
-		grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"Invalid localDefinitionNumber %d",localDefinitionNumber);
-		return GRIB_ENCODING_ERROR;
-		break;
-	}
+    case 7:  /* Sensitivity data */
+    case 9:  /* Singular vectors and ensemble perturbations */
+    case 11: /* Supplementary data used by the analysis */
+    case 14: /* Brightness temperature */
+    case 20: /* 4D variational increments */
+    case 21: /* Sensitive area predictions */
+    case 23: /* Coupled atmospheric, wave and ocean means */
+    case 24: /* Satellite Channel Number Data */
+    case 25:
+    case 28: /* COSMO local area EPS */
+    case 38: /* 4D variational increments for long window 4Dvar system */
+    case 39: /* 4DVar model errors for long window 4Dvar system */
+        if (isInstant) {
+            productDefinitionTemplateNumberNew=0;
+        } else {
+            productDefinitionTemplateNumberNew=8;
+        }
+        break;
 
-	if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
-		if (tooEarly)
-			grib_set_long(a->parent->h, self->productDefinitionTemplateNumberInternal,productDefinitionTemplateNumberNew);
-		else
-			grib_set_long(a->parent->h, self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
-	}
-	if (derivedForecast>=0)
-		grib_set_long(a->parent->h, self->derivedForecast,derivedForecast);
+    default:
+        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"Invalid localDefinitionNumber %d",localDefinitionNumber);
+        return GRIB_ENCODING_ERROR;
+        break;
+    }
 
-	grib_set_long(a->parent->h, self->grib2LocalSectionNumber,*val);
+    if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
+        if (tooEarly)
+            grib_set_long(a->parent->h, self->productDefinitionTemplateNumberInternal,productDefinitionTemplateNumberNew);
+        else
+            grib_set_long(a->parent->h, self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
+    }
+    if (derivedForecast>=0)
+        grib_set_long(a->parent->h, self->derivedForecast,derivedForecast);
 
-	return 0;
+    grib_set_long(a->parent->h, self->grib2LocalSectionNumber,*val);
+
+    return 0;
 }
 
 static long value_count(grib_accessor* a)
 {
-	return 1;
+    return 1;
 }
 
