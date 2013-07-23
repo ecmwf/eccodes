@@ -46,10 +46,10 @@ include "template.3.resolution_flags.def"
 include "template.3.scanning_mode.def";
 
 longitudesList list(Ni) {
-	unsigned[4] longitudes;
+    unsigned[4] longitudes;
 }
 
 latitudesList list(Ni) {
-	signed[4] latitudes;
+    signed[4] latitudes;
 }
 

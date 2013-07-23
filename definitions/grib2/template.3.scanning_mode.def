@@ -17,7 +17,7 @@ flagbit alternativeRowScanning(scanningMode,4) = 0 : edition_specific,dump;
 
 if (jPointsAreConsecutive) {
     alias numberOfRows=Ni;
-	alias numberOfColumns=Nj;
+    alias numberOfColumns=Nj;
 } else {
     alias numberOfRows=Nj;
     alias numberOfColumns=Ni;

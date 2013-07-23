@@ -92,7 +92,7 @@ if (typeOfSecondFixedSurface==255) {
     scaleFactorOfSecondFixedSurface,
     scaledValueOfSecondFixedSurface,
     pressureUnits)  :dump;
-	transient level=topLevel;
+    transient level=topLevel;
 }
 alias ls.level=level;
 alias vertical.level=level;
@@ -101,27 +101,26 @@ alias vertical.topLevel=topLevel;
 
 alias extraDim=zero;
 if (defined(extraDimensionPresent)) {
-	if (extraDimensionPresent) {
-		alias extraDim=one;
-	}
+    if (extraDimensionPresent) {
+        alias extraDim=one;
+    }
 }
 if (extraDim) {
-	alias mars.levelist = dimension;
-	alias mars.levtype = dimensionType;
+    alias mars.levelist = dimension;
+    alias mars.levtype = dimensionType;
 } else {
-	if (!(typeOfLevel is "surface")) {
-		if (pressureUnits is "Pa") {
-			meta marsLevel scale(level,one,hundred) : read_only;
-			alias mars.levelist=marsLevel;
-		} else {
-			alias mars.levelist = level;
-		}
-	}
-	alias mars.levtype  = typeOfFirstFixedSurface;
-	# GRIB-372: levelist alias does not pertain to surface parameters
-	if (levtype is "sfc") {
-		unalias mars.levelist;
-	}
+    if (!(typeOfLevel is "surface")) {
+        if (pressureUnits is "Pa") {
+            meta marsLevel scale(level,one,hundred) : read_only;
+            alias mars.levelist=marsLevel;
+        } else {
+            alias mars.levelist = level;
+        }
+    }
+    alias mars.levtype  = typeOfFirstFixedSurface;
+    # GRIB-372: levelist alias does not pertain to surface parameters
+    if (levtype is "sfc") {
+        unalias mars.levelist;
+    }
 }
 alias ls.typeOfLevel=typeOfLevel;
-

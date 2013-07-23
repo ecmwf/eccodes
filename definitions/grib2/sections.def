@@ -16,9 +16,9 @@
 
    lookup[1]    sectionNumber(4) ;
    
-	transient grib2LocalSectionPresent=0;
-   	alias section2Used=zero;
-   	alias setLocalDefinition=grib2LocalSectionPresent;
+   transient grib2LocalSectionPresent=0;
+   alias section2Used=zero;
+   alias setLocalDefinition=grib2LocalSectionPresent;
 
    if( sectionNumber == 2 or grib2LocalSectionPresent>0 ){
       position     sectionPosition;

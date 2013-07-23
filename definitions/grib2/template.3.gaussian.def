@@ -39,13 +39,13 @@ meta      geography.latitudeOfLastGridPointInDegrees     g2latlon(g2grid,2) : du
 meta      geography.longitudeOfLastGridPointInDegrees    g2latlon(g2grid,3) : dump;
 meta      geography.iDirectionIncrementInDegrees         g2latlon(g2grid,4,iDirectionIncrementGiven) : can_be_missing,dump;
 
-meta global	global_gaussian(N,Ni,iDirectionIncrement,
-							latitudeOfFirstGridPoint,
-							longitudeOfFirstGridPoint,
-	    					latitudeOfLastGridPoint,
-		    				longitudeOfLastGridPoint,
-							basicAngleOfTheInitialProductionDomain,
-							subdivisionsOfBasicAngle) = 0 : dump;
+meta global global_gaussian(N,Ni,iDirectionIncrement,
+                            latitudeOfFirstGridPoint,
+                            longitudeOfFirstGridPoint,
+                            latitudeOfLastGridPoint,
+                            longitudeOfLastGridPoint,
+                            basicAngleOfTheInitialProductionDomain,
+                            subdivisionsOfBasicAngle) = 0 : dump;
 
 alias xFirst=longitudeOfFirstGridPointInDegrees;
 alias yFirst=latitudeOfFirstGridPointInDegrees;

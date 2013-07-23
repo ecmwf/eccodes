@@ -20,24 +20,24 @@ alias tiggeSuiteID = zero;
 transient addEmptySection2 = 0;
 
 if ( addEmptySection2 == 0 ) {
-	if ( grib2LocalSectionPresent==1 or ( section2Length>5 or new() ) ) {
-		alias section2Used=one;
+    if ( grib2LocalSectionPresent==1 or ( section2Length>5 or new() ) ) {
+        alias section2Used=one;
 
-		if(productionStatusOfProcessedData == 4 || productionStatusOfProcessedData == 5) {
-			# This is TIGGE-LAM because of the productionStatusOfProcessedData and the non-empty section 2
-			codetable[2] tiggeLocalVersion 'grib2/tiggeLocalVersion.table' = 1 : dump;
-			template  tiggeSection "grib2/local.tigge.[tiggeLocalVersion:l].def";
-		}
+        if(productionStatusOfProcessedData == 4 || productionStatusOfProcessedData == 5) {
+            # This is TIGGE-LAM because of the productionStatusOfProcessedData and the non-empty section 2
+            codetable[2] tiggeLocalVersion 'grib2/tiggeLocalVersion.table' = 1 : dump;
+            template  tiggeSection "grib2/local.tigge.[tiggeLocalVersion:l].def";
+        }
 
-		codetable[2] grib2LocalSectionNumber 'grib2/grib2LocalSectionNumber.[centreForLocal:l].table' = 1 : dump;
-	
-		if (grib2LocalSectionNumber!=0) {
-			template_nofail local "grib2/local.[centreForLocal:l].def";
-		} else {
-			constant deleteLocalDefinition=1;
-		}
-		position offsetAfterCentreLocalSection;
-	}
+        codetable[2] grib2LocalSectionNumber 'grib2/grib2LocalSectionNumber.[centreForLocal:l].table' = 1 : dump;
+    
+        if (grib2LocalSectionNumber!=0) {
+            template_nofail local "grib2/local.[centreForLocal:l].def";
+        } else {
+            constant deleteLocalDefinition=1;
+        }
+        position offsetAfterCentreLocalSection;
+    }
 }
 
 section_padding section2Padding : read_only;

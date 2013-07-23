@@ -24,7 +24,7 @@ alias parameter.name=name;
 
 if(levtype is "sfc")
 {
-	unalias mars.levelist;
+    unalias mars.levelist;
 }
 
 alias mars.expver = marsExpver;
@@ -36,10 +36,10 @@ alias mars.origin = centre;
 # Tigge-LAM rules
 # productionStatusOfProcessedData == 4
 if (section2Used == 1) {
-	constant marsLamModel = 'lam';
-	alias mars.model = marsLamModel;    # model redefined. It is not 'glob'
-	alias mars.origin = tiggeSuiteID;   # origin is the suiteName for Tigge-LAM
-	unalias mars.domain;                # No mars domain needed
+    constant marsLamModel = 'lam';
+    alias mars.model = marsLamModel;    # model redefined. It is not 'glob'
+    alias mars.origin = tiggeSuiteID;   # origin is the suiteName for Tigge-LAM
+    unalias mars.domain;                # No mars domain needed
 }
 
 concept marsType {
