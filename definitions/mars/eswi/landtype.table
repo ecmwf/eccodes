@@ -1,0 +1,35 @@
+# Model 50 (MATCH) SMHI local definitions landtype
+#
+#  landtype parameter in local extension
+#
+000 ALL All surfaces
+001 WATER Water or Sea Water (fraction)
+002 RURAL Rural (fraction)
+003 URBAN Urban (fraction)
+004 LOWVEG Lowveg (fraction)
+005 FOREST Forest (fraction)
+006 NOVEG Noveg (fraction)
+021 PASTURE Pasture (fraction)
+022 ARABLE Arable (fraction)
+023 BEECHOAK Beech_oak (fraction)
+024 DECIDUOUS Deciduous (fraction)
+025 SPRUCE Spruce (fraction)
+026 PINE Pine (fraction)
+027 WETLAND Wetland (fraction)
+028 MOUNTAIN Mountain (fraction)
+029 BIRCH Birch (fraction)
+051 ICE Ice (fraction)
+052 SNOW Snow (fraction)
+071 HSLOWV Hendersen-Sellers classification
+072 HSFOR Hendersen-Sellers classification
+073 POLITI Politi
+074 MASK Mask
+081 REGIONAL Regional contribution
+082 LONGRANGE Long-range contribution
+083 LOCAL Local (urban) contribution
+090 ZONE Zone index
+100 TOP Top layer
+150 EFFDOSE Effective dose [Sv]
+151 SKIN Skin dose [Sv]
+152 THYROID Thyroid dose [Sv]
+153 LUNG Lung dose [Sv]

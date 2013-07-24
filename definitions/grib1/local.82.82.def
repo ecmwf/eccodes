@@ -1,0 +1,28 @@
+#!	---------------------------
+#!
+#!Description				Octet		Code		Ksec1		Count
+#!-----------				-----	   	-----		-----		-----
+#!
+# OCTET 41-52 ARE DESCRIBED in local.82.0.def
+#spareSetToZero				53		    PAD		    n/a		    1
+#########################
+#
+# author: Sebastien Villaume <Sebastien.Villaume@smhi.se>
+# created: 6 Oct 2011
+# modified: -
+#
+#################################
+### LOCAL SECTION DESCRIPTION ###
+#################################
+
+constant GRIBEXSection1Problem = 53 - section1Length;
+
+include "local.82.0.def";
+pad padding_local1_1(1);
+
+#####################
+### MARS LABELING ###
+#####################
+
+template mars_labeling "grib1/mars_labeling.82.def";
+

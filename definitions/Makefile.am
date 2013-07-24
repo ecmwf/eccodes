@@ -29,6 +29,7 @@ dist_definitionscommon_DATA = \
 definitionsgrib1dir = @GRIB_DEFINITION_PATH@/grib1
 dist_definitionsgrib1_DATA = \
 	grib1/0.ecmf.table\
+	grib1/0.eswi.table\
 	grib1/0.table\
 	grib1/1.table\
 	grib1/10.table\
@@ -42,6 +43,16 @@ dist_definitionsgrib1_DATA = \
 	grib1/2.128.table\
 	grib1/2.253.128.table\
 	grib1/2.46.254.table\
+	grib1/2.82.1.table\
+	grib1/2.82.128.table\
+	grib1/2.82.129.table\
+	grib1/2.82.130.table\
+	grib1/2.82.131.table\
+	grib1/2.82.133.table\
+	grib1/2.82.134.table\
+	grib1/2.82.135.table\
+	grib1/2.82.136.table\
+	grib1/2.82.253.table\
 	grib1/2.98.128.table\
 	grib1/2.98.129.table\
 	grib1/2.98.130.table\
@@ -69,6 +80,7 @@ dist_definitionsgrib1_DATA = \
 	grib1/2.98.228.table\
 	grib1/2.98.230.table\
 	grib1/2.table\
+	grib1/3.82.table\
 	grib1/3.table\
 	grib1/4.table\
 	grib1/5.table\
@@ -151,6 +163,10 @@ dist_definitionsgrib1_DATA = \
 	grib1/local.7.def\
 	grib1/local.78.def\
 	grib1/local.80.def\
+	grib1/local.82.0.def\
+	grib1/local.82.82.def\
+	grib1/local.82.83.def\
+	grib1/local.82.def\
 	grib1/local.96.def\
 	grib1/local.98.1.def\
 	grib1/local.98.10.def\
@@ -197,6 +213,7 @@ dist_definitionsgrib1_DATA = \
 	grib1/local.98.8.def\
 	grib1/local.98.9.def\
 	grib1/local.98.def\
+	grib1/localDefinitionNumber.82.table\
 	grib1/localDefinitionNumber.96.table\
 	grib1/localDefinitionNumber.98.table\
 	grib1/local_no_mars.98.1.def\
@@ -204,6 +221,7 @@ dist_definitionsgrib1_DATA = \
 	grib1/ls.def\
 	grib1/mars_labeling.23.def\
 	grib1/mars_labeling.4.def\
+	grib1/mars_labeling.82.def\
 	grib1/mars_labeling.def\
 	grib1/name.def\
 	grib1/ocean.1.table\
@@ -2287,6 +2305,17 @@ dist_definitionsmars_DATA = \
 	mars/stream.table\
 	mars/type.table\
 	mars/wave_domain.def
+
+definitionsmars_eswidir = @GRIB_DEFINITION_PATH@/mars/eswi
+dist_definitionsmars_eswi_DATA = \
+	mars/eswi/aerosolbinnumber.table\
+	mars/eswi/class.table\
+	mars/eswi/landtype.table\
+	mars/eswi/model.table\
+	mars/eswi/sort.table\
+	mars/eswi/stream.table\
+	mars/eswi/timerepres.table\
+	mars/eswi/type.table
 
 definitionstidedir = @GRIB_DEFINITION_PATH@/tide
 dist_definitionstide_DATA = \

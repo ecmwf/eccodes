@@ -1,0 +1,13 @@
+# Model ##### SMHI local definitions #####
+0 none not set, default
+10 ifs IFS
+20 harmonie HARMONIE
+21 surfex SURFEX
+30 hirlam HIRLAM
+31 rca RCA
+40 hiromb HIROMB
+41 swan SWAN
+42 hbm HBM 
+43 nemo NEMO
+50 match MATCH
+60 mesan MESAN
