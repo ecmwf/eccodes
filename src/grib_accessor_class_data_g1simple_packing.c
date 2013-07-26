@@ -149,193 +149,194 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
-	grib_accessor_data_g1simple_packing *self =(grib_accessor_data_g1simple_packing*)a;
+    grib_accessor_data_g1simple_packing *self =(grib_accessor_data_g1simple_packing*)a;
 
-	self->half_byte    = grib_arguments_get_name(a->parent->h,args,self->carg++);
-	self->packingType    = grib_arguments_get_name(a->parent->h,args,self->carg++);
-	self->ieee_packing    = grib_arguments_get_name(a->parent->h,args,self->carg++);
-	self->precision    = grib_arguments_get_name(a->parent->h,args,self->carg++);
-	self->edition=1;
-	a->flags |= GRIB_ACCESSOR_FLAG_DATA;
+    self->half_byte    = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->packingType    = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->ieee_packing    = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->precision    = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->edition=1;
+    a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 
 }
 
 static long value_count(grib_accessor* a)
 {
-	long number_of_values;
-	grib_accessor_data_g1simple_packing *self =(grib_accessor_data_g1simple_packing*)a;
+    long number_of_values;
+    grib_accessor_data_g1simple_packing *self =(grib_accessor_data_g1simple_packing*)a;
 
-	/* Special case for when values are cleared */
-	/*if(a->length == 0)
+    /* Special case for when values are cleared */
+    /*if(a->length == 0)
     return 0;*/
 
-	if(grib_get_long_internal(a->parent->h,self->number_of_values,&number_of_values) != GRIB_SUCCESS)
-		return 0;
-	return number_of_values;
+    if(grib_get_long_internal(a->parent->h,self->number_of_values,&number_of_values) != GRIB_SUCCESS)
+        return 0;
+    return number_of_values;
 }
 
 static int pack_double(grib_accessor* a, const double* cval, size_t *len)
 {
-	grib_accessor_data_g1simple_packing* self =  (grib_accessor_data_g1simple_packing*)a;
-	grib_accessor_class* super = *(a->cclass->super);
+    grib_accessor_data_g1simple_packing* self =  (grib_accessor_data_g1simple_packing*)a;
+    grib_accessor_class* super = *(a->cclass->super);
 
-	size_t n_vals = *len;
-	long half_byte = 0;
-	int ret = 0;
-	long offsetdata = 0;
-	long offsetsection = 0;
-	double reference_value = 0;
-	long   binary_scale_factor = 0;
-	long   bits_per_value = 0;
-	long   decimal_scale_factor = 0;
-	double decimal = 1;
-	size_t buflen = 0;
-	unsigned char*  buf = NULL;
-	unsigned char*  encoded = NULL;
-	double divisor = 1;
-	int i;
-	long off = 0;
-	grib_context* c=a->parent->h->context;
-	grib_handle* h=a->parent->h;
-	char* ieee_packing_s=NULL;
-	char* packingType_s=NULL;
-	char* precision_s=NULL;
-	double units_factor=1.0;
-	double units_bias=0.0;
-	double* val=(double*)cval;
-	double missingValue=9999.0;
-	long constantFieldHalfByte=0;
-	int err=0;
+    size_t n_vals = *len;
+    long half_byte = 0;
+    int ret = 0;
+    long offsetdata = 0;
+    long offsetsection = 0;
+    double reference_value = 0;
+    long   binary_scale_factor = 0;
+    long   bits_per_value = 0;
+    long   decimal_scale_factor = 0;
+    double decimal = 1;
+    size_t buflen = 0;
+    unsigned char*  buf = NULL;
+    unsigned char*  encoded = NULL;
+    double divisor = 1;
+    int i;
+    long off = 0;
+    grib_context* c=a->parent->h->context;
+    grib_handle* h=a->parent->h;
+    char* ieee_packing_s=NULL;
+    char* packingType_s=NULL;
+    char* precision_s=NULL;
+    double units_factor=1.0;
+    double units_bias=0.0;
+    double* val=(double*)cval;
+    double missingValue=9999.0;
+    long constantFieldHalfByte=0;
+    int err=0;
 
-	if(*len != 0) {
-		if(self->units_factor &&
-				(grib_get_double_internal(a->parent->h,self->units_factor,&units_factor)== GRIB_SUCCESS)) {
-			grib_set_double_internal(a->parent->h,self->units_factor,1.0);
-		}
+    if(*len != 0) {
+        if(self->units_factor &&
+                (grib_get_double_internal(a->parent->h,self->units_factor,&units_factor)== GRIB_SUCCESS)) {
+            grib_set_double_internal(a->parent->h,self->units_factor,1.0);
+        }
 
-		if(self->units_bias &&
-				(grib_get_double_internal(a->parent->h,self->units_bias,&units_bias)== GRIB_SUCCESS)) {
-			grib_set_double_internal(a->parent->h,self->units_bias,0.0);
-		}
+        if(self->units_bias &&
+                (grib_get_double_internal(a->parent->h,self->units_bias,&units_bias)== GRIB_SUCCESS)) {
+            grib_set_double_internal(a->parent->h,self->units_bias,0.0);
+        }
 
-		if (units_factor != 1.0) {
-			if (units_bias != 0.0)
-				for (i=0;i<n_vals;i++) val[i]=val[i]*units_factor+units_bias;
-			else
-				for (i=0;i<n_vals;i++) val[i]*=units_factor;
-		} else if (units_bias != 0.0)
-			for (i=0;i<n_vals;i++) val[i]+=units_bias;
+        if (units_factor != 1.0) {
+            if (units_bias != 0.0)
+                for (i=0;i<n_vals;i++) val[i]=val[i]*units_factor+units_bias;
+            else
+                for (i=0;i<n_vals;i++) val[i]*=units_factor;
+        } else if (units_bias != 0.0)
+            for (i=0;i<n_vals;i++) val[i]+=units_bias;
 
-		if (c->ieee_packing && self->ieee_packing) {
-			long precision=c->ieee_packing==32 ? 1 : 2;
-			size_t lenstr=strlen(self->ieee_packing);
+        if (c->ieee_packing && self->ieee_packing) {
+            long precision=c->ieee_packing==32 ? 1 : 2;
+            size_t lenstr=strlen(self->ieee_packing);
 
-			packingType_s=grib_context_strdup(c,self->packingType);
-			ieee_packing_s=grib_context_strdup(c,self->ieee_packing);
-			precision_s=grib_context_strdup(c,self->precision);
+            packingType_s=grib_context_strdup(c,self->packingType);
+            ieee_packing_s=grib_context_strdup(c,self->ieee_packing);
+            precision_s=grib_context_strdup(c,self->precision);
 
-			grib_set_string(h,packingType_s,ieee_packing_s,&lenstr);
-			grib_set_long(h,precision_s,precision);
+            grib_set_string(h,packingType_s,ieee_packing_s,&lenstr);
+            grib_set_long(h,precision_s,precision);
 
-			grib_context_free(c,packingType_s);
-			grib_context_free(c,ieee_packing_s);
-			grib_context_free(c,precision_s);
-			return grib_set_double_array(h,"values",val,*len);
-		}
-	}
+            grib_context_free(c,packingType_s);
+            grib_context_free(c,ieee_packing_s);
+            grib_context_free(c,precision_s);
+            return grib_set_double_array(h,"values",val,*len);
+        }
+    }
 
-	ret = super->pack_double(a,val,len);
-	switch (ret) {
-	case GRIB_CONSTANT_FIELD:
-		ret=grib_get_long(a->parent->h,"constantFieldHalfByte",&constantFieldHalfByte);
-		if (ret) constantFieldHalfByte=0;
-		if((ret = grib_set_long_internal(a->parent->h,self->half_byte, constantFieldHalfByte))
-				!= GRIB_SUCCESS)
-			return ret;
-		grib_buffer_replace(a, NULL, 0,1,1);
-		return GRIB_SUCCESS;
-		break;
-	case GRIB_NO_VALUES:
-		ret=grib_get_long(a->parent->h,"constantFieldHalfByte",&constantFieldHalfByte);
-		if (ret) constantFieldHalfByte=0;
-		/* TODO move to def file */
-		grib_get_double(a->parent->h,"missingValue", &missingValue);
-		if((err = grib_set_double_internal(a->parent->h,self->reference_value, missingValue)) !=
-				GRIB_SUCCESS)
-			return err;
-		if((ret = grib_set_long_internal(a->parent->h,self->binary_scale_factor, binary_scale_factor))
-				!= GRIB_SUCCESS)
-			return ret;
-		if((ret = grib_set_long_internal(a->parent->h,self->half_byte, constantFieldHalfByte))
-				!= GRIB_SUCCESS)
-			return ret;
-		grib_buffer_replace(a, NULL, 0,1,1);
-		return GRIB_SUCCESS;
-		break;
-	case GRIB_SUCCESS:
-		break;
-	default:
-		grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,"unable to compute packing parameters\n");
-		return ret;
-	}
+    ret = super->pack_double(a,val,len);
+    switch (ret) {
+    case GRIB_CONSTANT_FIELD:
+        ret=grib_get_long(a->parent->h,"constantFieldHalfByte",&constantFieldHalfByte);
+        if (ret) constantFieldHalfByte=0;
+        if((ret = grib_set_long_internal(a->parent->h,self->half_byte, constantFieldHalfByte))
+                != GRIB_SUCCESS)
+            return ret;
+        grib_buffer_replace(a, NULL, 0,1,1);
+        return GRIB_SUCCESS;
+        break;
+    case GRIB_NO_VALUES:
+        ret=grib_get_long(a->parent->h,"constantFieldHalfByte",&constantFieldHalfByte);
+        if (ret) constantFieldHalfByte=0;
+        /* TODO move to def file */
+        grib_get_double(a->parent->h,"missingValue", &missingValue);
+        if((err = grib_set_double_internal(a->parent->h,self->reference_value, missingValue)) !=
+                GRIB_SUCCESS)
+            return err;
+        if((ret = grib_set_long_internal(a->parent->h,self->binary_scale_factor, binary_scale_factor))
+                != GRIB_SUCCESS)
+            return ret;
+        if((ret = grib_set_long_internal(a->parent->h,self->half_byte, constantFieldHalfByte))
+                != GRIB_SUCCESS)
+            return ret;
+        grib_buffer_replace(a, NULL, 0,1,1);
+        return GRIB_SUCCESS;
+        break;
+    case GRIB_INVALID_BPV:
+        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"unable to compute packing parameters\n");
+        return ret;
+    case GRIB_SUCCESS:
+        break;
+    default:
+        grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,"unable to compute packing parameters\n");
+        return ret;
+    }
 
-	if((ret = grib_get_double_internal(a->parent->h,self->reference_value, &reference_value))
-			!= GRIB_SUCCESS)
-		return ret;
+    if((ret = grib_get_double_internal(a->parent->h,self->reference_value, &reference_value))
+            != GRIB_SUCCESS)
+        return ret;
 
-	if((ret = grib_get_long_internal(a->parent->h,self->binary_scale_factor, &binary_scale_factor))
-			!= GRIB_SUCCESS)
-		return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->binary_scale_factor, &binary_scale_factor))
+            != GRIB_SUCCESS)
+        return ret;
 
-	if((ret = grib_get_long_internal(a->parent->h,self->bits_per_value,&bits_per_value)) !=
-			GRIB_SUCCESS)
-		return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->bits_per_value,&bits_per_value)) !=
+            GRIB_SUCCESS)
+        return ret;
 
-	if((ret = grib_get_long_internal(a->parent->h,self->decimal_scale_factor, &decimal_scale_factor))
-			!= GRIB_SUCCESS)
-		return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->decimal_scale_factor, &decimal_scale_factor))
+            != GRIB_SUCCESS)
+        return ret;
 
-	if((ret = grib_get_long_internal(a->parent->h,self->offsetdata,&offsetdata)) != GRIB_SUCCESS)
-		return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->offsetdata,&offsetdata)) != GRIB_SUCCESS)
+        return ret;
 
-	if((ret = grib_get_long_internal(a->parent->h,self->offsetsection,&offsetsection)) != GRIB_SUCCESS)
-		return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->offsetsection,&offsetsection)) != GRIB_SUCCESS)
+        return ret;
 
-	decimal = grib_power(decimal_scale_factor,10) ;
-	divisor = grib_power(-binary_scale_factor,2);
+    decimal = grib_power(decimal_scale_factor,10) ;
+    divisor = grib_power(-binary_scale_factor,2);
 
-	buflen = (((bits_per_value*n_vals)+7)/8)*sizeof(unsigned char);
-	if((buflen + (offsetdata-offsetsection)) %2) {
-		buflen++;
-		/*
+    buflen = (((bits_per_value*n_vals)+7)/8)*sizeof(unsigned char);
+    if((buflen + (offsetdata-offsetsection)) %2) {
+        buflen++;
+        /*
     a->length++;
     a->parent->h->buffer->ulength++;
-		 */
-	}
-	half_byte = (buflen*8)-((*len)*bits_per_value);
-	grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,
-			"HALF byte: buflen=%d bits_per_value=%ld len=%d half_byte=%ld\n",
-			buflen,bits_per_value,*len,half_byte);
+         */
+    }
+    half_byte = (buflen*8)-((*len)*bits_per_value);
+    grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,
+            "HALF byte: buflen=%d bits_per_value=%ld len=%d half_byte=%ld\n",
+            buflen,bits_per_value,*len,half_byte);
 
-	Assert(half_byte <= 0x0f);
+    Assert(half_byte <= 0x0f);
 
-	if((ret = grib_set_long_internal(a->parent->h,self->half_byte, half_byte))
-			!= GRIB_SUCCESS)
-		return ret;
+    if((ret = grib_set_long_internal(a->parent->h,self->half_byte, half_byte))
+            != GRIB_SUCCESS)
+        return ret;
 
-	buf = grib_context_buffer_malloc_clear(a->parent->h->context,buflen);
-	encoded = buf;
+    buf = grib_context_buffer_malloc_clear(a->parent->h->context,buflen);
+    encoded = buf;
 
-	grib_encode_double_array(n_vals,val,bits_per_value,reference_value,decimal,divisor,encoded,&off);
+    grib_encode_double_array(n_vals,val,bits_per_value,reference_value,decimal,divisor,encoded,&off);
 
-	grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
-			"grib_accessor_data_g1simple_packing : pack_double : packing %s, %d values", a->name, n_vals);
+    grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
+            "grib_accessor_data_g1simple_packing : pack_double : packing %s, %d values", a->name, n_vals);
 
-	grib_buffer_replace(a, buf, buflen,1,1);
+    grib_buffer_replace(a, buf, buflen,1,1);
 
-	grib_context_buffer_free(a->parent->h->context,buf);
+    grib_context_buffer_free(a->parent->h->context,buf);
 
-	return GRIB_SUCCESS;
-
+    return GRIB_SUCCESS;
 }
-
