@@ -139,7 +139,6 @@ grib_action* grib_action_create_concept( grib_context* context,
         grib_trie_insert_no_replace(index,c->name,c);
 		c=c->next;
 	}
-	
   }
   act->name      = grib_context_strdup_persistent(context,name);
 
@@ -163,7 +162,6 @@ static void dump(grib_action* act, FILE* f, int lvl)
   printf("}\n");
 }
 
-
 static void destroy(grib_context* context,grib_action* act)
 {
   grib_action_concept* self = (grib_action_concept*) act;
@@ -176,11 +174,9 @@ static void destroy(grib_context* context,grib_action* act)
     grib_concept_value_delete(context,v);
     v = n;
   }
-  
   grib_context_free_persistent(context, self->masterDir);
   grib_context_free_persistent(context, self->localDir);
   grib_context_free_persistent(context, self->basename);
-  
 }
 
 static grib_concept_value* get_concept(grib_handle* h,grib_action_concept* self)
@@ -228,7 +224,9 @@ static grib_concept_value* get_concept(grib_handle* h,grib_action_concept* self)
 
   if ((full=grib_context_full_defs_path(context,master))==NULL) {
     grib_context_log(h->context,GRIB_LOG_ERROR,
-                     "Unable to load %s from %s ",((grib_action*)self)->name,full);
+                "Loading %s: Unable to find definition file %s in %s\nDefinition files path=\"%s\"",
+                ((grib_action*)self)->name,
+                self->basename, master, context->grib_definition_files_path);
     return NULL;
   }
   
@@ -250,7 +248,6 @@ static grib_concept_value* get_concept(grib_handle* h,grib_action_concept* self)
 		  grib_trie_insert_no_replace(index,c->name,c);
 		  c=c->next;
 	  }
-	
   }
 
   return h->context->concepts[id];
@@ -322,7 +319,6 @@ const char* grib_concept_evaluate(grib_handle* h,grib_action* act)
         match = cnt;
         best  = c->name;
       }
-
     }
 
     c = c->next;
@@ -391,8 +387,4 @@ int grib_concept_apply(grib_handle* h,grib_action* act,const char* name)
 	}
 
 	return grib_set_values(h,values,count);
-
 }
-
-
-
