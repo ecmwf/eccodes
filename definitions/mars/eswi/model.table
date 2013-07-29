@@ -1,3 +1,10 @@
+#########################
+##
+## author: Sebastien Villaume <Sebastien.Villaume@smhi.se>
+## created: 6 Oct 2011
+## modified: 13 May 2013
+##
+#
 # Model ##### SMHI local definitions #####
 0 none not set, default
 10 ifs IFS

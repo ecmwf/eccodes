@@ -1,4 +1,3 @@
-#### From Sebastien Villaume of SMHI
 'surface'       = {indicatorOfTypeOfLevel=1;}
 'cloudBase'     = {indicatorOfTypeOfLevel=2;}
 'cloudTop'      = {indicatorOfTypeOfLevel=3;}
@@ -9,6 +8,7 @@
 'nominalTop' = {indicatorOfTypeOfLevel=8;}
 'seaBottom' = {indicatorOfTypeOfLevel=9;}
 'isobaricInhPa' = {indicatorOfTypeOfLevel=100;}
+'isobaricInPa' = {indicatorOfTypeOfLevel=210;}
 'isobaricLayer' = {indicatorOfTypeOfLevel=101;}
 'meanSea' = {indicatorOfTypeOfLevel=102;}
 'isobaricLayerHighPrecision' = {indicatorOfTypeOfLevel=121;}
@@ -31,13 +31,7 @@
 'pressureFromGroundLayer' = {indicatorOfTypeOfLevel=116;}
 'potentialVorticity' = {indicatorOfTypeOfLevel=117;}
 'depthBelowSea' = {indicatorOfTypeOfLevel=160;}
-'northTile' = {indicatorOfTypeOfLevel=191;}
-'northEastTile' = {indicatorOfTypeOfLevel=192;}
-'eastTile' = {indicatorOfTypeOfLevel=193;}
-'southEastTile' = {indicatorOfTypeOfLevel=194;}
-'southTile' = {indicatorOfTypeOfLevel=195;}
-'southWestTile' = {indicatorOfTypeOfLevel=196;}
-'westTile' = {indicatorOfTypeOfLevel=197;}
-'northWestTile'  = {indicatorOfTypeOfLevel=198;}
-'entireAtmosphere' = {indicatorOfTypeOfLevel=200;}
-'entireOcean' = {indicatorOfTypeOfLevel=201;}
+'entireAtmosphere' = {indicatorOfTypeOfLevel=200;level=0;}
+'entireOcean' = {indicatorOfTypeOfLevel=201;level=0;}
+'oceanWave' = {indicatorOfTypeOfLevel=211;}
+'oceanMixedLayer' = {indicatorOfTypeOfLevel=212;}

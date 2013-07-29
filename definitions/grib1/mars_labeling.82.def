@@ -1,56 +1,16 @@
-# Copyright 2005-2007 ECMWF
+#########################
 #
-# Licensed under the GNU Lesser General Public License which
-# incorporates the terms and conditions of version 3 of the GNU
-# General Public License.
-# See LICENSE and gpl-3.0.txt for details.
+# author: Sebastien Villaume <Sebastien.Villaume@smhi.se>
+# created: 6 Oct 2011
+# modified: 13 May 2013
+#
+#########################
 
-concept_nofail pseudoLevType (unknown) {
-        #set uses the last one
-        #get returns the first match
-                    'sfc'  = {indicatorOfTypeOfLevel=1;marsClass=80;}
-                    'sfc'  = {indicatorOfTypeOfLevel=2;marsClass=80;}   
-                    'sfc'  = {indicatorOfTypeOfLevel=3;marsClass=80;}
-                    'sfc'  = {indicatorOfTypeOfLevel=4;marsClass=80;}
-                    'sfc'  = {indicatorOfTypeOfLevel=8;marsClass=80;}
-                    'pl'   = {indicatorOfTypeOfLevel=100;marsClass=80;}
-                    'sfc'  = {indicatorOfTypeOfLevel=102;marsClass=80;}   
-                    'sfc'  = {indicatorOfTypeOfLevel=103;marsClass=80;}
-                    'hl'   = {indicatorOfTypeOfLevel=105;marsClass=80;}
-                    'ml'   = {indicatorOfTypeOfLevel=109;marsClass=80;}
-                    'dp'   = {indicatorOfTypeOfLevel=160;marsClass=80;}
-                    'tile' = {indicatorOfTypeOfLevel=191;marsClass=80;}
-                    'tile' = {indicatorOfTypeOfLevel=192;marsClass=80;}
-                    'tile' = {indicatorOfTypeOfLevel=193;marsClass=80;}
-                    'tile' = {indicatorOfTypeOfLevel=194;marsClass=80;}
-                    'tile' = {indicatorOfTypeOfLevel=195;marsClass=80;}
-                    'tile' = {indicatorOfTypeOfLevel=196;marsClass=80;}
-                    'tile' = {indicatorOfTypeOfLevel=197;marsClass=80;}
-                    'tile' = {indicatorOfTypeOfLevel=198;marsClass=80;}
-                    'sfc'  = {indicatorOfTypeOfLevel=200;marsClass=80;}
-                    'surf' = {indicatorOfTypeOfLevel=1;marsClass=81;}
-                    'bcld' = {indicatorOfTypeOfLevel=2;marsClass=81;}   
-                    'tcld' = {indicatorOfTypeOfLevel=3;marsClass=81;}
-                    'isot' = {indicatorOfTypeOfLevel=4;marsClass=81;}
-                    'tatm' = {indicatorOfTypeOfLevel=8;marsClass=81;}
-                    'pl'   = {indicatorOfTypeOfLevel=100;marsClass=81;}
-                    'msl'  = {indicatorOfTypeOfLevel=102;marsClass=81;}   
-                    'hmsl' = {indicatorOfTypeOfLevel=103;marsClass=81;}
-                    'hl'   = {indicatorOfTypeOfLevel=105;marsClass=81;}
-                    'ml'   = {indicatorOfTypeOfLevel=109;marsClass=81;}
-                    'dp'   = {indicatorOfTypeOfLevel=160;marsClass=81;}
-                    'tile' = {indicatorOfTypeOfLevel=191;marsClass=81;}
-                    'tile' = {indicatorOfTypeOfLevel=192;marsClass=81;}
-                    'tile' = {indicatorOfTypeOfLevel=193;marsClass=81;}
-                    'tile' = {indicatorOfTypeOfLevel=194;marsClass=81;}
-                    'tile' = {indicatorOfTypeOfLevel=195;marsClass=81;}
-                    'tile' = {indicatorOfTypeOfLevel=196;marsClass=81;}
-                    'tile' = {indicatorOfTypeOfLevel=197;marsClass=81;}
-                    'tile' = {indicatorOfTypeOfLevel=198;marsClass=81;}
-                    'atm'  = {indicatorOfTypeOfLevel=200;marsClass=81;}
+#constant conceptsMasterMarsDir="mars" : hidden;
+#constant conceptsLocalMarsDirAll="mars/[centre:s]" : hidden;
 
 
-}
+#concept levTypePacking (unknown,"levTypePackingConcept.def",conceptsLocalMarsDirAll,conceptsMasterMarsDir);
 
 if( indicatorOfTypeOfLevel == 191 ||
     indicatorOfTypeOfLevel == 192 ||
@@ -67,11 +27,30 @@ if( indicatorOfTypeOfLevel == 191 ||
 
 alias mars.class    = marsClass;
 alias mars.type     = marsType;
-alias mars.pseudolevtype = pseudoLevType;
 alias mars.stream   = marsStream;
 alias mars.expver   = experimentVersionNumber;
 alias mars.model    = marsModel;
 alias mars.domain   = globalDomain;
+
+#if ( ( class == 80 && ( indicatorOfTypeOfLevel == 1 ||
+#    			indicatorOfTypeOfLevel == 2 ||
+#    			indicatorOfTypeOfLevel == 3 ||
+#    			indicatorOfTypeOfLevel == 4 ||
+#    			indicatorOfTypeOfLevel == 8 ||
+#    			indicatorOfTypeOfLevel == 102 ||
+#    			indicatorOfTypeOfLevel == 103 ||
+#			indicatorOfTypeOfLevel == 200)) ||
+#    	indicatorOfTypeOfLevel == 191 ||
+#    	indicatorOfTypeOfLevel == 192 ||
+#    	indicatorOfTypeOfLevel == 193 ||
+#    	indicatorOfTypeOfLevel == 194 ||
+#    	indicatorOfTypeOfLevel == 195 ||
+#    	indicatorOfTypeOfLevel == 196 ||
+#    	indicatorOfTypeOfLevel == 197 ||
+#    	indicatorOfTypeOfLevel == 198 ) {
+#    concept trueLevType (unknown,"trueLevType.def",conceptsLocalMarsDirAll,conceptsMasterMarsDir);
+#    alias mars.truelevtype = trueLevType;
+#}
 
 alias ls.dataType   = marsType;
 

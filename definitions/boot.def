@@ -10,6 +10,9 @@ include "parameters_version.def";
 constant definitionFilesVersion="2.0.0.0" : hidden;
 constant internalVersion=22 : hidden;
 
+constant UseEcmfConventions = 1: hidden;
+constant defaultTypeOfLevel="unknown" : hidden;
+
 constant zero=0 : hidden;
 constant one=1 : hidden;
 constant two=1 : hidden;

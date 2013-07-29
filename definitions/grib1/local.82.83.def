@@ -25,7 +25,7 @@
 #
 # author: Sebastien Villaume <Sebastien.Villaume@smhi.se>
 # created: 6 Oct 2011
-# modified: -
+# modified: 13 May 2013
 #
 #################################
 ### LOCAL SECTION DESCRIPTION ###
@@ -33,12 +33,14 @@
 
 constant GRIBEXSection1Problem = 80 - section1Length;
 
+# base file: contains keywords always present
 include "local.82.0.def";
 
-codetable[1]    sort	         "mars/eswi/sort.table"              : dump,lowercase,string_type;
-codetable[1]	timeRepres	 "mars/eswi/timerepres.table"        : dump,lowercase,string_type;
-codetable[1]	landType	 "mars/eswi/landtype.table"	     : dump,lowercase,string_type;
-codetable[2]	aerosolBinNumber "mars/eswi/aerosolbinnumber.table"  : dump,lowercase,string_type;
+# extra keywords specific to local definition 83 (MATCH)
+codetable[1]    matchSort	        "grib1/localConcepts/eswi/sort.table"              : dump,long_type;
+codetable[1]	matchTimeRepres	        "grib1/localConcepts/eswi/timerepres.table"        : dump,long_type;
+codetable[1]	matchLandType	        "grib1/localConcepts/eswi/landtype.table"          : dump,long_type;
+codetable[2]	matchAerosolBinNumber	"grib1/localConcepts/eswi/aerosolbinnumber.table"  : dump,long_type;
 unsigned[2]		molarMass		        : dump;
 unsigned[1]		logTransform		    : dump;
 signed[2]		threshold		        : dump;
@@ -57,17 +59,21 @@ pad padding_local1_1(7);
 
 template mars_labeling "grib1/mars_labeling.82.def";
 
-alias mars.sort                 = sort;
-alias mars.timerepres       	= timeRepres;
-alias mars.landtype         	= landType;
-alias mars.aerosolbinnumber 	= aerosolBinNumber;
+concept_nofail matchAerosolPacking (unknown,"aerosolPackingConcept.def",conceptsLocalMarsDirAll,conceptsMasterMarsDir);
+
+alias mars.sort                 = matchSort;
+alias mars.timerepres       	= matchTimeRepres;
+alias mars.landtype         	= matchLandType;
+alias mars.aerosolbinnumber 	= matchAerosolBinNumber;
+
+alias mars.aerosolpacking       = matchAerosolPacking; 
 
 ###################
 ### LS LABELING ###
 ###################
 
-alias ls.landtype             = landType;
-alias ls.timerepres           = timeRepres;
-alias ls.sort                 = sort;
-alias ls.aerosolbinnumber     = aerosolBinNumber;
+concept_nofail ls.timerepres (unknown,"timeRepresConcept.def",conceptsLocalDirAll,conceptsMasterDir);
+concept_nofail ls.sort (unknown,"sortConcept.def",conceptsLocalDirAll,conceptsMasterDir);
+concept_nofail ls.landtype (unknown,"landTypeConcept.def",conceptsLocalDirAll,conceptsMasterDir);
+concept_nofail ls.aerosolbinnumber (unknown,"aerosolConcept.def",conceptsLocalDirAll,conceptsMasterDir);
 

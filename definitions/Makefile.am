@@ -81,6 +81,7 @@ dist_definitionsgrib1_DATA = \
 	grib1/2.98.230.table\
 	grib1/2.table\
 	grib1/3.82.table\
+	grib1/3.98.table\
 	grib1/3.table\
 	grib1/4.table\
 	grib1/5.table\
@@ -240,6 +241,7 @@ dist_definitionsgrib1_DATA = \
 	grib1/sensitive_area_domain.def\
 	grib1/shortName.def\
 	grib1/tube_domain.def\
+	grib1/typeOfLevel.def\
 	grib1/units.def
 
 definitionsgrib1_localConcepts_ammcdir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/ammc
@@ -263,6 +265,7 @@ dist_definitionsgrib1_localConcepts_ecmf_DATA = \
 	grib1/localConcepts/ecmf/name.def\
 	grib1/localConcepts/ecmf/paramId.def\
 	grib1/localConcepts/ecmf/shortName.def\
+	grib1/localConcepts/ecmf/typeOfLevel.def\
 	grib1/localConcepts/ecmf/units.def
 
 definitionsgrib1_localConcepts_edzwdir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/edzw
@@ -288,10 +291,18 @@ dist_definitionsgrib1_localConcepts_enmi_DATA = \
 
 definitionsgrib1_localConcepts_eswidir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/eswi
 dist_definitionsgrib1_localConcepts_eswi_DATA = \
+	grib1/localConcepts/eswi/aerosolConcept.def\
+	grib1/localConcepts/eswi/aerosolbinnumber.table\
 	grib1/localConcepts/eswi/cfName.def\
+	grib1/localConcepts/eswi/landTypeConcept.def\
+	grib1/localConcepts/eswi/landtype.table\
 	grib1/localConcepts/eswi/name.def\
 	grib1/localConcepts/eswi/paramId.def\
 	grib1/localConcepts/eswi/shortName.def\
+	grib1/localConcepts/eswi/sort.table\
+	grib1/localConcepts/eswi/sortConcept.def\
+	grib1/localConcepts/eswi/timeRepresConcept.def\
+	grib1/localConcepts/eswi/timerepres.table\
 	grib1/localConcepts/eswi/typeOfLevel.def\
 	grib1/localConcepts/eswi/units.def
 
@@ -2308,14 +2319,22 @@ dist_definitionsmars_DATA = \
 
 definitionsmars_eswidir = @GRIB_DEFINITION_PATH@/mars/eswi
 dist_definitionsmars_eswi_DATA = \
-	mars/eswi/aerosolbinnumber.table\
+	mars/eswi/aerosolPackingConcept.def\
 	mars/eswi/class.table\
-	mars/eswi/landtype.table\
+	mars/eswi/grib1.mdfa.fc.def\
+	mars/eswi/grib1.mnth.an.def\
+	mars/eswi/grib1.mnth.fc.def\
+	mars/eswi/grib1.moda.an.def\
+	mars/eswi/grib1.moda.fc.def\
+	mars/eswi/grib1.oper.3v.def\
+	mars/eswi/grib1.oper.4v.def\
+	mars/eswi/grib1.oper.an.def\
+	mars/eswi/grib1.oper.fc.def\
+	mars/eswi/grib1.oper.si.def\
 	mars/eswi/model.table\
-	mars/eswi/sort.table\
 	mars/eswi/stream.table\
-	mars/eswi/timerepres.table\
-	mars/eswi/type.table
+	mars/eswi/type.table\
+	mars/eswi/wave_domain.def
 
 definitionstidedir = @GRIB_DEFINITION_PATH@/tide
 dist_definitionstide_DATA = \

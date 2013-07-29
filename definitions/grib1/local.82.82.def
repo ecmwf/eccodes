@@ -9,7 +9,7 @@
 #
 # author: Sebastien Villaume <Sebastien.Villaume@smhi.se>
 # created: 6 Oct 2011
-# modified: -
+# modified: 13 May 2013 
 #
 #################################
 ### LOCAL SECTION DESCRIPTION ###
@@ -17,7 +17,10 @@
 
 constant GRIBEXSection1Problem = 53 - section1Length;
 
+# base local definition
 include "local.82.0.def";
+
+# nothing else, local definition 82 is the base definition
 pad padding_local1_1(1);
 
 #####################

@@ -1,4 +1,10 @@
-#### From Sebastien Villaume of SMHI
+#########################
+#
+# author: Sebastien Villaume <Sebastien.Villaume@smhi.se>
+# created: 6 Oct 2011
+# modified: 13 May 2013
+#
+#########################
 'surface'       = {indicatorOfTypeOfLevel=1;}
 'cloudBase'     = {indicatorOfTypeOfLevel=2;}
 'cloudTop'      = {indicatorOfTypeOfLevel=3;}
@@ -31,13 +37,5 @@
 'pressureFromGroundLayer' = {indicatorOfTypeOfLevel=116;}
 'potentialVorticity' = {indicatorOfTypeOfLevel=117;}
 'depthBelowSea' = {indicatorOfTypeOfLevel=160;}
-'northTile' = {indicatorOfTypeOfLevel=191;}
-'northEastTile' = {indicatorOfTypeOfLevel=192;}
-'eastTile' = {indicatorOfTypeOfLevel=193;}
-'southEastTile' = {indicatorOfTypeOfLevel=194;}
-'southTile' = {indicatorOfTypeOfLevel=195;}
-'southWestTile' = {indicatorOfTypeOfLevel=196;}
-'westTile' = {indicatorOfTypeOfLevel=197;}
-'northWestTile'  = {indicatorOfTypeOfLevel=198;}
 'entireAtmosphere' = {indicatorOfTypeOfLevel=200;}
 'entireOcean' = {indicatorOfTypeOfLevel=201;}
