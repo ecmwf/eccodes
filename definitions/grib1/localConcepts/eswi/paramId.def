@@ -1,4 +1,6 @@
-#### From Sebastien Villaume of SMHI
+###############   table2Version  1   ############
+###############     WMO/Hirlam       ############
+#################################################
 #Reserved
 '82001000' = {
           table2Version = 1 ;
@@ -909,6 +911,9 @@
           table2Version = 1 ;
           indicatorOfParameter = 255 ;
           }
+###############   table2Version 128  ############
+###############       Match          ############
+#################################################
 #Reserved
 '82128000' = {
           table2Version = 128 ;
@@ -1614,6 +1619,9 @@
           table2Version = 128 ;
           indicatorOfParameter = 255 ;
           }
+###############   table2Version 129  ############
+###############       Mesan          ############
+#################################################
 #Reserved
 '82129000' = {
           table2Version = 129 ;
@@ -2084,6 +2092,9 @@
           table2Version = 129 ;
           indicatorOfParameter = 255 ;
           }
+###############   table2Version 130  ############
+###############        PMP           ############
+#################################################
 #Reserved
 '82130000' = {
           table2Version = 130 ;
@@ -2289,6 +2300,9 @@
           table2Version = 130 ;
           indicatorOfParameter = 255 ;
           }
+###############   table2Version 131  ############
+###############        RCA           ############
+#################################################
 #Reserved
 '82131000' = {
           table2Version = 131 ;
@@ -2444,6 +2458,9 @@
           table2Version = 131 ;
           indicatorOfParameter = 255 ;
           }
+###############   table2Version 133  ############
+###############       Hiromb          ############
+#################################################
 #Reserved
 '82133000' = {
           table2Version = 133 ;
@@ -2904,6 +2921,9 @@
           table2Version = 133 ;
           indicatorOfParameter = 255 ;
           }
+###############   table2Version 134  ############
+###############        Match         ############
+#################################################
 #Reserved
 '82134000' = {
           table2Version = 134 ;
@@ -3349,6 +3369,9 @@
           table2Version = 134 ;
           indicatorOfParameter = 255 ;
           }
+###############   table2Version 135  ############
+###############        Match         ############
+#################################################
 #Reserved
 '82135000' = {
           table2Version = 135 ;
@@ -3859,6 +3882,9 @@
           table2Version = 135 ;
           indicatorOfParameter = 255 ;
           }
+###############   table2Version 136  ############
+###############        Strang        ############
+#################################################
 #Reserved
 '82136000' = {
           table2Version = 136 ;
@@ -3969,6 +3995,9 @@
           table2Version = 136 ;
           indicatorOfParameter = 255 ;
           }
+###############   table2Version 137  ############
+###############        Match         ############
+#################################################
 #Reserved
 '82137000' = {
           table2Version = 137 ;
@@ -4454,6 +4483,9 @@
           table2Version = 137 ;
           indicatorOfParameter = 255 ;
           }
+###############   table2Version 140  ############
+###############   Blixtlokalisering  ############
+#################################################
 #Reserved
 '82140000' = {
           table2Version = 140 ;
@@ -4509,6 +4541,9 @@
           table2Version = 140 ;
           indicatorOfParameter = 255 ;
           }
+###############   table2Version 150  ############
+###############     Hirlam postpr    ############
+#################################################
 #Reserved 
 '82150000' = {
           table2Version = 150 ;
@@ -4529,6 +4564,9 @@
           table2Version = 150 ;
           indicatorOfParameter = 255 ;
           }
+###############   table2Version 151  ############
+###############     ECMWF postpr     ############
+#################################################
 #Reserved
 '82151000' = {
           table2Version = 151 ;

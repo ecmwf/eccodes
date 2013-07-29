@@ -1,4 +1,10 @@
-#### From Sebastien Villaume of SMHI
+#########################
+#
+# author: Sebastien Villaume <Sebastien.Villaume@smhi.se>
+# created: 6 Oct 2011
+# modified: 13 May 2013
+#
+#########################
 'surface'       = {indicatorOfTypeOfLevel=1;}
 'cloudBase'     = {indicatorOfTypeOfLevel=2;}
 'cloudTop'      = {indicatorOfTypeOfLevel=3;}
