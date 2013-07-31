@@ -332,7 +332,8 @@ EXTRA_DIST= dummy.am griby.y gribl.l grib_accessor_classes_hash.c \
             grib_bits_fast_big_endian.c grib_bits_any_endian.c \
             grib_bits_fast_big_endian_vector.c grib_bits_any_endian_vector.c \
             grib_bits_fast_big_endian_simple.c grib_bits_any_endian_simple.c \
-            grib_bits_fast_big_endian_omp.c grib_bits_any_endian_omp.c
+            grib_bits_fast_big_endian_omp.c grib_bits_any_endian_omp.c \
+            encode_double_array.c grib_bits_ibmpow.c grib_bits_ibmpow_opt.c minmax_val.c
 
 include $(DEVEL_RULES)
 

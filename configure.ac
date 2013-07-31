@@ -89,6 +89,19 @@ fi
 AC_DEFINE_UNQUOTED(GRIB_PTHREADS,$GRIB_PTHREADS,1->pthreads enabled 0->pthreads disabled)
 AC_DEFINE_UNQUOTED(GRIB_LINUX_PTHREADS,$GRIB_LINUX_PTHREADS,1->pthreads enabled 0->pthreads disabled)
 
+dnl check IBM POWER 6/7 optimisations option
+AC_ARG_ENABLE([ibmpower67_opt],
+  [AS_HELP_STRING([--enable-ibmpower67_opt],[enable IBM POWER 6/7 optimisations [by default disabled]])],
+    [ibmpower67_opts=${enableval}] , [ibmpower67_opts=no]
+)
+if test "x${ibmpower67_opts}" = xyes; then
+   GRIB_IBMPOWER67_OPT=1
+else
+   GRIB_IBMPOWER67_OPT=0
+fi
+AC_DEFINE_UNQUOTED(GRIB_IBMPOWER67_OPT,$GRIB_IBMPOWER67_OPT,1->IBM Power6/7 Optimisations enabled 0->IBM Power6/7 Optimisations disabled)
+
+
 dnl check on uppercase fortran modules not working to be fixed
 dnl some fortran compilers change the name of the .mod file in upper case!
 ac_cv_prog_f90_uppercase_mod=no

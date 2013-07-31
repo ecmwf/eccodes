@@ -302,33 +302,34 @@ list( APPEND grib_api_srcs
 	grib_windef.h
 )
 
-# list( APPEND grib_api_extra_srcs
-#   grib_bits_any_endian.c
-#   grib_bits_any_endian_simple.c
-# )
+list( APPEND grib_api_extra_srcs
+    grib_bits_fast_big_endian.c grib_bits_any_endian.c
+    grib_bits_fast_big_endian_vector.c grib_bits_any_endian_vector.c
+    grib_bits_fast_big_endian_simple.c grib_bits_any_endian_simple.c
+    grib_bits_fast_big_endian_omp.c grib_bits_any_endian_omp.c
+    encode_double_array.c
+    grib_bits_ibmpow.c
+    grib_bits_ibmpow_opt.c
+    minmax_val.c
+)
 
 configure_file( grib_api_version.c.in grib_api_version.c @ONLY )
 
-ecbuild_generate_yy( YYPREFIX  grib_yy
-		YACC      griby
-		LEX       gribl
-		DEPENDANT action.c )
+ecbuild_generate_yy(YYPREFIX  grib_yy
+                    YACC      griby
+                    LEX       gribl
+                    DEPENDANT action.c )
 
-ecbuild_add_library( TARGET    grib_api
-		SOURCES   
-            grib_api_version.c
-            griby.c gribl.c 
-            ${grib_api_extra_srcs} 
-            ${grib_api_srcs}
-        GENERATED
-			grib_api_version.c
-		INCLUDES  
-            ${GRIB_API_EXTRA_INCLUDE_DIRS} 
-		LIBS      
-            ${GRIB_API_EXTRA_LIBRARIES}
-            ${CMATH_LIBRARIES}  )
+ecbuild_add_library(TARGET    grib_api
+                    SOURCES   grib_api_version.c
+                              griby.c gribl.c
+                             ${grib_api_srcs}
+                    GENERATED grib_api_version.c
+                    INCLUDES  ${GRIB_API_EXTRA_INCLUDE_DIRS} 
+                    LIBS      ${GRIB_API_EXTRA_LIBRARIES}
+		    TEMPLATES ${grib_api_extra_srcs}
+                    ${CMATH_LIBRARIES}  )
 
 
 # TODO: add support for jpg and png
-
 install( FILES grib_api.h DESTINATION include )
