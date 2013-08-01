@@ -24,7 +24,8 @@ struct ibm_table_t {
 
 static ibm_table_t ibm_table={ 0, {0,}, {0,}, 0, 0 };
 
-static void init_ibm_table() {
+static void init_ibm_table()
+{
     if (!ibm_table.inited) {
         unsigned long i;
         unsigned long mmin=0x100000;
@@ -34,7 +35,7 @@ static void init_ibm_table() {
         ibm_table.e[70]=1;
         ibm_table.v[70]=mmin;
         e=1;
-        for (i=1; i<=70;i++) { e/=16; ibm_table.e[-i+70]=e;ibm_table.v[-i+70]=e*mmin;}
+        for (i=1; i<=70;i++) { e/=16; ibm_table.e[70-i]=e;ibm_table.v[70-i]=e*mmin;}
         ibm_table.vmin=ibm_table.v[0];
         ibm_table.vmax=ibm_table.e[127]*mmax;
         ibm_table.inited=1;
@@ -58,7 +59,8 @@ static void binary_search(double xx[], const unsigned long n, double x, unsigned
     *j=jl;
 }
 
-unsigned long grib_ibm_to_long(double x) {
+unsigned long grib_ibm_to_long(double x)
+{
     unsigned long s = 0;
     unsigned long mmax = 0xffffff;
     unsigned long mmin = 0x800000;
@@ -111,7 +113,8 @@ unsigned long grib_ibm_to_long(double x) {
     return (s << 31) | ( e << 24 ) | m;
 }
 
-double grib_ibmfloat_error(double x) {
+double grib_ibmfloat_error(double x)
+{
     unsigned long e=0;
 
     if (!ibm_table.inited) init_ibm_table();
@@ -133,7 +136,8 @@ double grib_ibmfloat_error(double x) {
     return ibm_table.e[e] ;
 }
 
-double grib_long_to_ibm(unsigned long x){
+double grib_long_to_ibm(unsigned long x)
+{
     unsigned long s = x  & 0x80000000;
     unsigned long c = (x & 0x7f000000) >> 24;
     unsigned long m = (x & 0x00ffffff);
@@ -152,12 +156,14 @@ double grib_long_to_ibm(unsigned long x){
     return val;
 }
 
-double grib_ibm_table_e(unsigned long e) {
+double grib_ibm_table_e(unsigned long e)
+{
     if (!ibm_table.inited) init_ibm_table();
     return ibm_table.e[e];
 }
 
-double grib_ibm_table_v(unsigned long e) {
+double grib_ibm_table_v(unsigned long e)
+{
     if (!ibm_table.inited) init_ibm_table();
     return ibm_table.v[e];
 }
@@ -213,7 +219,8 @@ unsigned long grib_ibm_nearest_smaller_to_long(double x)
     return l;
 }
 
-int grib_nearest_smaller_ibm_float(double a,double* ret) {
+int grib_nearest_smaller_ibm_float(double a,double* ret)
+{
     unsigned long l=0;
 
     if (!ibm_table.inited) init_ibm_table();

@@ -30,7 +30,8 @@ struct ieee_table_t {
 
 static ieee_table_t ieee_table={ 0,{0,},{0,}, 0, 0 };
 
-static void init_ieee_table() {
+static void init_ieee_table()
+{
     if (!ieee_table.inited) {
         unsigned long i;
         unsigned long mmin=0x800000;
@@ -46,8 +47,8 @@ static void init_ieee_table() {
         e=1;
         for (i=1; i<150;i++) {
             e/=2;
-            ieee_table.e[-i+150]=e;
-            ieee_table.v[-i+150]=e*mmin;
+            ieee_table.e[150-i]=e;
+            ieee_table.v[150-i]=e*mmin;
         }
         ieee_table.vmin=ieee_table.v[1];
         ieee_table.vmax=ieee_table.e[254]*mmax;
@@ -72,16 +73,20 @@ static void binary_search(double xx[], const unsigned long n, double x, unsigned
     *j=jl;
 }
 
-double grib_ieee_table_e(unsigned long e) {
+double grib_ieee_table_e(unsigned long e)
+{
     if (!ieee_table.inited) init_ieee_table();
     return ieee_table.e[e];
 }
 
-double grib_ieee_table_v(unsigned long e) {
+double grib_ieee_table_v(unsigned long e)
+{
     if (!ieee_table.inited) init_ieee_table();
     return ieee_table.v[e];
 }
-unsigned long grib_ieee_to_long(double x) {
+
+unsigned long grib_ieee_to_long(double x)
+{
     unsigned long s = 0;
     unsigned long mmax = 0xffffff;
     unsigned long mmin = 0x800000;
@@ -134,7 +139,8 @@ unsigned long grib_ieee_to_long(double x) {
     return (s << 31) | ( e << 23 ) | ( m & 0x7fffff );
 }
 
-double grib_ieeefloat_error(double x) {
+double grib_ieeefloat_error(double x)
+{
     unsigned long e=0;
 
     if (!ieee_table.inited) init_ieee_table();
@@ -156,7 +162,8 @@ double grib_ieeefloat_error(double x) {
     return ieee_table.e[e] ;
 }
 
-double grib_long_to_ieee(unsigned long x){
+double grib_long_to_ieee(unsigned long x)
+{
     unsigned long s = x  & 0x80000000;
     unsigned long c = (x & 0x7f800000) >> 23;
     unsigned long m = (x & 0x007fffff);
@@ -226,7 +233,8 @@ unsigned long grib_ieee_nearest_smaller_to_long(double x)
     return l;
 }
 
-int grib_nearest_smaller_ieee_float(double a,double* ret) {
+int grib_nearest_smaller_ieee_float(double a,double* ret)
+{
     unsigned long l=0;
 
     if (!ieee_table.inited) init_ieee_table();
@@ -243,7 +251,8 @@ int grib_nearest_smaller_ieee_float(double a,double* ret) {
 
 double grib_ieeefloat_error(double x) {return 0;}
 
-double grib_long_to_ieee(unsigned long x) {
+double grib_long_to_ieee(unsigned long x)
+{
     unsigned long s = x  & 0x80000000;
     unsigned long c = (x & 0x7f800000) >> 23;
     unsigned long m;
@@ -266,7 +275,8 @@ double grib_long_to_ieee(unsigned long x) {
     return val;
 }
 
-int grib_nearest_smaller_ieee_float(double a,double* x) {
+int grib_nearest_smaller_ieee_float(double a,double* x)
+{
     double e =  grib_long_to_ieee(grib_ieee_to_long(a));
     double b = a;
 
@@ -291,7 +301,8 @@ int grib_nearest_smaller_ieee_float(double a,double* x) {
     return GRIB_SUCCESS;
 }
 
-unsigned long grib_ieee_to_long(double x) {
+unsigned long grib_ieee_to_long(double x)
+{
     /* double y = x; */
     unsigned long s = 0;
     unsigned long m;
@@ -331,7 +342,8 @@ unsigned long grib_ieee_to_long(double x) {
 
 #ifdef IEEE
 
-unsigned long grib_ieee64_to_long(double x) {
+unsigned long grib_ieee64_to_long(double x)
+{
     unsigned long lval = 0;
 #if IEEE_LE
     unsigned char s[8]={0,};
@@ -364,8 +376,8 @@ double grib_long_to_ieee64(unsigned long x){
     return dval;
 }
 
-
-int grib_ieee_decode_array(grib_context* c,unsigned char* buf,size_t nvals,int bytes,double* val) {
+int grib_ieee_decode_array(grib_context* c,unsigned char* buf,size_t nvals,int bytes,double* val)
+{
     int err=0,i=0,j=0;
     unsigned char s[8]={0,};
     float fval;
@@ -409,7 +421,8 @@ int grib_ieee_decode_array(grib_context* c,unsigned char* buf,size_t nvals,int b
 
 #else
 
-int grib_ieee_decode_array(grib_context* c,unsigned char* buf,size_t nvals,int bytes,double* val) {
+int grib_ieee_decode_array(grib_context* c,unsigned char* buf,size_t nvals,int bytes,double* val)
+{
     int err=0,i=0;
     long bitr=0;
 
@@ -469,8 +482,8 @@ int grib_ieee_encode_array(grib_context* c,double* val,size_t nvals,int bytes,
 
 #else
 
-int grib_ieee_encode_array(grib_context* c,double* val,size_t nvals,int bytes,
-        unsigned char* buf) {
+int grib_ieee_encode_array(grib_context* c, double* val, size_t nvals, int bytes, unsigned char* buf)
+{
     int err=0,i=0;
     long bitr=0;
 
