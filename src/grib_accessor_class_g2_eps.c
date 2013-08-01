@@ -142,97 +142,94 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_g2_eps* self = (grib_accessor_g2_eps*)a;
-  int n = 0;
+    grib_accessor_g2_eps* self = (grib_accessor_g2_eps*)a;
+    int n = 0;
 
-  self->productDefinitionTemplateNumber = grib_arguments_get_name(a->parent->h,c,n++);
-  self->type = grib_arguments_get_name(a->parent->h,c,n++);
-  self->stream = grib_arguments_get_name(a->parent->h,c,n++);
-  self->stepType = grib_arguments_get_name(a->parent->h,c,n++);
-  self->derivedForecast = grib_arguments_get_name(a->parent->h,c,n++);
-
+    self->productDefinitionTemplateNumber = grib_arguments_get_name(a->parent->h,c,n++);
+    self->type = grib_arguments_get_name(a->parent->h,c,n++);
+    self->stream = grib_arguments_get_name(a->parent->h,c,n++);
+    self->stepType = grib_arguments_get_name(a->parent->h,c,n++);
+    self->derivedForecast = grib_arguments_get_name(a->parent->h,c,n++);
 }
 
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-	grib_accessor_g2_eps* self = (grib_accessor_g2_eps*)a;
-	long productDefinitionTemplateNumber=0;
+    grib_accessor_g2_eps* self = (grib_accessor_g2_eps*)a;
+    long productDefinitionTemplateNumber=0;
 
-	grib_get_long(a->parent->h, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber);
+    grib_get_long(a->parent->h, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber);
 
-	*val=0;
-	if (productDefinitionTemplateNumber==1 || productDefinitionTemplateNumber==11) 
-		*val=1;
+    *val=0;
+    if (is_productDefinitionTemplateNumber_EPS(productDefinitionTemplateNumber))
+        *val=1;
 
-	return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
-
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-	grib_accessor_g2_eps* self = (grib_accessor_g2_eps*)a;
-	long productDefinitionTemplateNumber=-1;
-	long productDefinitionTemplateNumberNew=-1;
-	long type=-1;
-	long stream=-1;
-	char stepType[15]={0,};
-	size_t slen=15;
-	int eps=*val;
-	int isInstant=0;
-	long derivedForecast=-1;
+    grib_accessor_g2_eps* self = (grib_accessor_g2_eps*)a;
+    long productDefinitionTemplateNumber=-1;
+    long productDefinitionTemplateNumberNew=-1;
+    long type=-1;
+    long stream=-1;
+    char stepType[15]={0,};
+    size_t slen=15;
+    int eps=*val;
+    int isInstant=0;
+    long derivedForecast=-1;
 
-	if (grib_get_long(a->parent->h, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
-		return GRIB_SUCCESS;
+    if (grib_get_long(a->parent->h, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
+        return GRIB_SUCCESS;
 
-	grib_get_long(a->parent->h, self->type,&type);
-	grib_get_long(a->parent->h, self->stream,&stream);
-	grib_get_string(a->parent->h, self->stepType,stepType,&slen);
-	if (!strcmp(stepType,"instant")) isInstant=1;
+    grib_get_long(a->parent->h, self->type,&type);
+    grib_get_long(a->parent->h, self->stream,&stream);
+    grib_get_string(a->parent->h, self->stepType,stepType,&slen);
+    if (!strcmp(stepType,"instant")) isInstant=1;
 
-	/* eps or enda or elda or ewla */
-	if ( eps || stream==1030 || stream==1249 || stream==1250 ) {
-		if (isInstant) {
-			/* type=em || type=es */
-			if (type==17) {
-				productDefinitionTemplateNumberNew=2;
-				derivedForecast=0;
-			} else if (type==18) {
-				productDefinitionTemplateNumberNew=2;
-				derivedForecast=4;
-			} else {
-				productDefinitionTemplateNumberNew=1;
-			}
-		} else {
-			/* type=em || type=es */
-			if (type==17) {
-				productDefinitionTemplateNumberNew=12;
-				derivedForecast=0;
-			} else if (type==18) {
-				productDefinitionTemplateNumberNew=12;
-				derivedForecast=4;
-			} else  {
-				productDefinitionTemplateNumberNew=11;
-			}
-		}
-	} else {
-		if (isInstant) {
-			productDefinitionTemplateNumberNew=0;
-		} else {
-			productDefinitionTemplateNumberNew=8;
-		}
-	}
+    /* eps or stream=(enda or elda or ewla) */
+    if ( eps || stream==1030 || stream==1249 || stream==1250 ) {
+        if (isInstant) {
+            /* type=em || type=es  */
+            if (type==17) {
+                productDefinitionTemplateNumberNew=2;
+                derivedForecast=0;
+            } else if (type==18) {
+                productDefinitionTemplateNumberNew=2;
+                derivedForecast=4;
+            } else {
+                productDefinitionTemplateNumberNew=1;
+            }
+        } else {
+            /* type=em || type=es */
+            if (type==17) {
+                productDefinitionTemplateNumberNew=12;
+                derivedForecast=0;
+            } else if (type==18) {
+                productDefinitionTemplateNumberNew=12;
+                derivedForecast=4;
+            } else  {
+                productDefinitionTemplateNumberNew=11;
+            }
+        }
+    } else {
+        if (isInstant) {
+            productDefinitionTemplateNumberNew=0;
+        } else {
+            productDefinitionTemplateNumberNew=8;
+        }
+    }
 
-	if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
-		grib_set_long(a->parent->h, self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
-		if (derivedForecast>=0)
-			grib_set_long(a->parent->h, self->derivedForecast,derivedForecast);
-	}
+    if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
+        grib_set_long(a->parent->h, self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
+        if (derivedForecast>=0)
+            grib_set_long(a->parent->h, self->derivedForecast,derivedForecast);
+    }
 
-	return 0;
+    return 0;
 }
 
 static long value_count(grib_accessor* a)
 {
-	return 1;
+    return 1;
 }
-

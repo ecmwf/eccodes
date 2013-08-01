@@ -136,115 +136,137 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_select_step_template* self = (grib_accessor_select_step_template*)a;
-  int n = 0;
+    grib_accessor_select_step_template* self = (grib_accessor_select_step_template*)a;
+    int n = 0;
 
-  self->productDefinitionTemplateNumber = grib_arguments_get_name(a->parent->h,c,n++);
-  self->instant = grib_arguments_get_long(a->parent->h,c,n++);
-
+    self->productDefinitionTemplateNumber = grib_arguments_get_name(a->parent->h,c,n++);
+    self->instant = grib_arguments_get_long(a->parent->h,c,n++);
 }
 
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-	*val=1;
-	return GRIB_SUCCESS;
+    *val=1;
+    return GRIB_SUCCESS;
 }
 
-
-static int pack_long(grib_accessor* a, const long* val, size_t *len)
+static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-  grib_accessor_select_step_template* self = (grib_accessor_select_step_template*)a;
-  long productDefinitionTemplateNumber=0;
-  long productDefinitionTemplateNumberNew=0;
+    grib_accessor_select_step_template* self = (grib_accessor_select_step_template*)a;
+    long productDefinitionTemplateNumber=0;
+    long productDefinitionTemplateNumberNew=0;
 
-  grib_get_long(a->parent->h, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber);
+    grib_get_long(a->parent->h, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber);
 
-   if (self->instant) {
-      switch (productDefinitionTemplateNumber) {
-          case 8:
-              productDefinitionTemplateNumberNew=0;
-              break;
-          case 9:
-              productDefinitionTemplateNumberNew=5;
-              break;
-          case 10:
-              productDefinitionTemplateNumberNew=6;
-              break;
-          case 11:
-              productDefinitionTemplateNumberNew=1;
-              break;
-          case 12:
-              productDefinitionTemplateNumberNew=2;
-              break;
-          case 13:
-              productDefinitionTemplateNumberNew=3;
-              break;
-          case 14:
-              productDefinitionTemplateNumberNew=4;
-              break;
-          case 0:
-          case 1:
-          case 2:
-          case 3:
-          case 4:
-          case 5:
-          case 6:
-          case 7:
-          case 15:
-               productDefinitionTemplateNumberNew=productDefinitionTemplateNumber;
-              break;
-          default:
-              productDefinitionTemplateNumberNew=productDefinitionTemplateNumber;
-              break;
-      }
-  } else {
-      switch (productDefinitionTemplateNumber) {
-          case 0:
-              productDefinitionTemplateNumberNew=8;
-              break;
-          case 1:
-              productDefinitionTemplateNumberNew=11;
-              break;
-          case 2:
-              productDefinitionTemplateNumberNew=12;
-              break;
-          case 3:
-              productDefinitionTemplateNumberNew=13;
-              break;
-          case 4:
-              productDefinitionTemplateNumberNew=14;
-              break;
-          case 5:
-              productDefinitionTemplateNumberNew=9;
-              break;
-          case 6:
-              productDefinitionTemplateNumberNew=10;
-              break;
-          case 7:
-          case 8:
-          case 9:
-          case 10:
-          case 11:
-          case 12:
-          case 13:
-          case 14:
-              productDefinitionTemplateNumberNew=productDefinitionTemplateNumber;
-              break;
-          default:
-              productDefinitionTemplateNumberNew=productDefinitionTemplateNumber;
-              break;
-      }
+    if (self->instant) {
+        /* Going from continuous or non-continuous interval to a point-in-time (instantaneous) */
+        switch (productDefinitionTemplateNumber) {
+        case 8:
+            productDefinitionTemplateNumberNew=0;
+            break;
+        case 9:
+            productDefinitionTemplateNumberNew=5;
+            break;
+        case 10:
+            productDefinitionTemplateNumberNew=6;
+            break;
+        case 11:
+            productDefinitionTemplateNumberNew=1;
+            break;
+        case 12:
+            productDefinitionTemplateNumberNew=2;
+            break;
+        case 13:
+            productDefinitionTemplateNumberNew=3;
+            break;
+        case 14:
+            productDefinitionTemplateNumberNew=4;
+            break;
+        case 42: /* non-EPS chemical */
+            productDefinitionTemplateNumberNew=40;
+            break;
+        case 43: /* EPS chemical */
+            productDefinitionTemplateNumberNew=41;
+            break;
+        case 46: /* non-EPS aerosol */
+            productDefinitionTemplateNumberNew=44;
+            break;
+        case 47: /* EPS aerosol */
+            productDefinitionTemplateNumberNew=45;
+            break;
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 15:
+            productDefinitionTemplateNumberNew=productDefinitionTemplateNumber;
+            break;
+        default:
+            productDefinitionTemplateNumberNew=productDefinitionTemplateNumber;
+            break;
+        }
+    } else {
+        /* Going from point-in-time (instantaneous) to continuous or non-continuous interval */
+        switch (productDefinitionTemplateNumber) {
+        case 0:
+            productDefinitionTemplateNumberNew=8;
+            break;
+        case 1:
+            productDefinitionTemplateNumberNew=11;
+            break;
+        case 2:
+            productDefinitionTemplateNumberNew=12;
+            break;
+        case 3:
+            productDefinitionTemplateNumberNew=13;
+            break;
+        case 4:
+            productDefinitionTemplateNumberNew=14;
+            break;
+        case 5:
+            productDefinitionTemplateNumberNew=9;
+            break;
+        case 6:
+            productDefinitionTemplateNumberNew=10;
+            break;
+        case 40: /* non-EPS chemical */
+            productDefinitionTemplateNumberNew=42;
+            break;
+        case 41: /* EPS chemical */
+            productDefinitionTemplateNumberNew=43;
+            break;
+        case 44: /* non-EPS aerosol */
+            productDefinitionTemplateNumberNew=46;
+            break;
+        case 45: /* EPS aerosol */
+            productDefinitionTemplateNumberNew=47;
+            break;
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+        case 13:
+        case 14:
+            productDefinitionTemplateNumberNew=productDefinitionTemplateNumber;
+            break;
+        default:
+            productDefinitionTemplateNumberNew=productDefinitionTemplateNumber;
+            break;
+        }
+    }
 
-  }
+    if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew)
+        grib_set_long(a->parent->h, self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
 
-  if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew)
-	  grib_set_long(a->parent->h, self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
-
-  return 0;
+    return 0;
 }
 
 static long value_count(grib_accessor* a)
 {
-	return 1;
+    return 1;
 }
-

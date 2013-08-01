@@ -204,7 +204,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     if (!strcmp(stepType,"instant")) isInstant=1;
     grib_get_long(a->parent->h, self->grib2LocalSectionNumber,&grib2LocalSectionNumber);
 
-    if (productDefinitionTemplateNumber==1 || productDefinitionTemplateNumber==11)
+    if (is_productDefinitionTemplateNumber_EPS(productDefinitionTemplateNumber))
         eps=1;
 
     switch (localDefinitionNumber) {
@@ -221,7 +221,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     case 36: /* MARS labelling for long window 4Dvar system */
     case 40: /* MARS labeling with domain and model (for LAM) */
         if (isInstant) {
-            /* type=em || type=es */
+            /* type=em || type=es  */
             if (type==17) {
                 productDefinitionTemplateNumberNew=2;
                 derivedForecast=0;
@@ -306,4 +306,3 @@ static long value_count(grib_accessor* a)
 {
     return 1;
 }
-
