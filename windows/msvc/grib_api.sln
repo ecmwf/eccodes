@@ -3,6 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "grib_api_lib", "grib_api_lib\grib_api_lib.vcproj", "{3DE8B13F-7DFE-48ED-9158-B34D774500EC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "grib_dump", "grib_dump\grib_dump.vcproj", "{A785A1F1-2AE8-4CD8-B484-9035D1961D43}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3DE8B13F-7DFE-48ED-9158-B34D774500EC} = {3DE8B13F-7DFE-48ED-9158-B34D774500EC}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +24,14 @@ Global
 		{3DE8B13F-7DFE-48ED-9158-B34D774500EC}.Release|Win32.Build.0 = Release|Win32
 		{3DE8B13F-7DFE-48ED-9158-B34D774500EC}.Release|x64.ActiveCfg = Release|x64
 		{3DE8B13F-7DFE-48ED-9158-B34D774500EC}.Release|x64.Build.0 = Release|x64
+		{A785A1F1-2AE8-4CD8-B484-9035D1961D43}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A785A1F1-2AE8-4CD8-B484-9035D1961D43}.Debug|Win32.Build.0 = Debug|Win32
+		{A785A1F1-2AE8-4CD8-B484-9035D1961D43}.Debug|x64.ActiveCfg = Debug|x64
+		{A785A1F1-2AE8-4CD8-B484-9035D1961D43}.Debug|x64.Build.0 = Debug|x64
+		{A785A1F1-2AE8-4CD8-B484-9035D1961D43}.Release|Win32.ActiveCfg = Release|Win32
+		{A785A1F1-2AE8-4CD8-B484-9035D1961D43}.Release|Win32.Build.0 = Release|Win32
+		{A785A1F1-2AE8-4CD8-B484-9035D1961D43}.Release|x64.ActiveCfg = Release|x64
+		{A785A1F1-2AE8-4CD8-B484-9035D1961D43}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
