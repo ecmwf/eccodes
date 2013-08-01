@@ -94,8 +94,8 @@ alias ls.dataType=typeOfProcessedData;
 
 meta md5Section1 md5(offsetSection1,section1Length);
 
-meta selectStepTemplateInterval select_step_template(productDefinitionTemplateNumber,0);
-meta selectStepTemplateInstant select_step_template(productDefinitionTemplateNumber,1);
+meta selectStepTemplateInterval select_step_template(productDefinitionTemplateNumber,0); # 0 -> not instant
+meta selectStepTemplateInstant  select_step_template(productDefinitionTemplateNumber,1); # 1 -> instant
 
 transient stepTypeInternal="instant" : hidden,no_copy;
 
