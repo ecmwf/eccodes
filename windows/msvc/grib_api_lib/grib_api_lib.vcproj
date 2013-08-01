@@ -797,6 +797,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_accessor_class_getenv.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_global_gaussian.c"
 				>
 			</File>
@@ -1154,6 +1158,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_dumper_class_default.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_dumper_class_json.c"
 				>
 			</File>
 			<File
