@@ -29,6 +29,7 @@ int main(int argc, char** argv) {
 
 	long numberOfContributingSpectralBands;
 	long values[1024];
+	long new_values[1024];
 
 	FILE* in = NULL;
 	char* filename = "../../data/satellite.grib";
@@ -36,7 +37,7 @@ int main(int argc, char** argv) {
 
 	in = fopen(filename,"r");
 	if(!in) {
-		printf("ERROR: unable to open file %s\n",filename);
+		printf("ERROR: unable to open input file %s\n",filename);
 		return 1;
 	}
 
@@ -45,10 +46,15 @@ int main(int argc, char** argv) {
 	if (h == NULL) {
 		printf("Error: unable to create handle from file %s\n",filename);
 	}
+	
+	GRIB_CHECK(grib_get_long(h,"numberOfContributingSpectralBands",&numberOfContributingSpectralBands),0);
+	assert(numberOfContributingSpectralBands == 3);
 
+	/* Shrink NB to 2 */
 	numberOfContributingSpectralBands = 2;
 	GRIB_CHECK(grib_set_long(h,"numberOfContributingSpectralBands",numberOfContributingSpectralBands),0);
 
+	/* Expand NB to 9 */
 	numberOfContributingSpectralBands = 9;
 	GRIB_CHECK(grib_set_long(h,"numberOfContributingSpectralBands",numberOfContributingSpectralBands),0);
 
@@ -66,16 +72,27 @@ int main(int argc, char** argv) {
 	GRIB_CHECK(grib_get_long_array(h,"scaledValueOfCentralWaveNumber",values,&size),0);
 	assert(size == count);
 
-	for(i=0;i<count;i++)
+	for(i=0;i<count;i++) {
 		printf("scaledValueOfCentralWaveNumber %lu = %ld\n",(unsigned long)i,values[i]);
+		if (i == 0) assert( values[i] == 26870 );
+		if (i == 1) assert( values[i] == 9272  );
+	}
 
 	for(i=0;i<count;i++)
-		values[i] = -values[i]; 
+		values[i] = i+1000;
 
 	size = count;
 	/* size--; */
 	GRIB_CHECK(grib_set_long_array(h,"scaledValueOfCentralWaveNumber",values,size),0);
 	assert(size == count);
+	
+	/* check what we set */
+	GRIB_CHECK(grib_get_long_array(h,"scaledValueOfCentralWaveNumber",new_values,&size),0);
+	assert(size == count);
+	for(i=0;i<count;i++) {
+		printf("Now scaledValueOfCentralWaveNumber %lu = %ld\n",(unsigned long)i,new_values[i]);
+		assert( new_values[i] == (i+1000) );
+	}
 
 	grib_handle_delete(h);
 

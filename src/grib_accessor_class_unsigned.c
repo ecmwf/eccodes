@@ -214,6 +214,11 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t *len, in
 		/* Check if value fits into number of bits */
 		if (check) {
 			const long nbits = self->nbytes*8;
+            if (v<0) {
+                grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+                        "Key \"%s\": Trying to encode a negative value of %ld for key of type unsigned\n", a->name, v);
+                return GRIB_ENCODING_ERROR;
+            }
 			if ( nbits < 32 && v != GRIB_MISSING_LONG ) {
 				unsigned long maxval = (1 << nbits)-1;
 				if (v > maxval) {
@@ -296,7 +301,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 	return pack_long_unsigned_helper(a,val,len, /*check=*/1);
 }
 
-static long byte_count(grib_accessor* a){
+static long byte_count(grib_accessor* a)
+{
 	return a->length;
 }
 
@@ -311,19 +317,23 @@ static long value_count(grib_accessor* a)
 	return 1;
 }
 
-static long byte_offset(grib_accessor* a){
+static long byte_offset(grib_accessor* a)
+{
 	return a->offset;
 }
+
 static void update_size(grib_accessor* a,size_t s)
 {
 	a->length = s;
 }
 
-static long next_offset(grib_accessor* a){
+static long next_offset(grib_accessor* a)
+{
 	return grib_byte_offset(a)+grib_byte_count(a);
 }
 
-static int is_missing(grib_accessor* a){
+static int is_missing(grib_accessor* a)
+{
 	int i=0;
 	unsigned char ff=0xff;
 	unsigned long offset=a->offset;
