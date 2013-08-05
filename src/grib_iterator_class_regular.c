@@ -166,8 +166,10 @@ static int init(grib_iterator* i,grib_handle* h,grib_arguments* args)
     if (self->iScansNegatively) {
         idir=-idir;
     } else {
+        const double epsilon = 1e-6;
         if (lof+(nap-2)*idir>360) lof-=360;
-        else if (lof+(nap-1)*idir>360) { /*See GRIB-396*/
+        else if ( (lof+(nap-1)*idir)-360 > epsilon ){
+            /*See GRIB-396*/
             idir=360.0/(float)nap;
         }
     }
