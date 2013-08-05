@@ -159,8 +159,9 @@ static double u2m[] =  {
 static long convert_to_minutes(long step, long stepUnits)
 {
     double result = 0;
-    if (stepUnits == 0) return step;    /* unit=minutes so no change */
-    if (stepUnits == 1) return step*60; /* unit=hours */
+    if (stepUnits == 0)  return step;    /* unit=minutes so no change */
+    if (stepUnits == 1)  return step*60; /* unit=hours */
+    if (stepUnits == 13) return step/60; /* unit=seconds*/
     /* Assert( stepUnits < sizeof(u2m)/sizeof(u2m[0]) ); */
 
     result =  step*u2m[stepUnits];
