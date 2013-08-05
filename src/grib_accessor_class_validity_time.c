@@ -138,95 +138,96 @@ static void init_class(grib_accessor_class* c)
 
 /* Table of multipliers to convert step units to minutes */
 static double u2m[] =  {
-  1,         /* index 0:  minutes  */
-  60,        /* index 1:  hour     */
-  24*60,     /* index 2:  day      */
-  24*60*30,  /* index 3:  month    */
-  -1,        /* index 4:  year     */
-  -1,        /* index 5:  decade   */
-  -1,        /* index 6:  30 years */
-  -1,        /* index 7:  century  */
-  -1,        /* index 8:  RESERVED */
-  -1,        /* index 9:  RESERVED */
-  3*60,      /* index 10: 3 hours  */
-  6*60,      /* index 11: 6 hours  */
-  12*60,     /* index 12: 12 hours */
-  1/60.0,    /* index 13: seconds  */
-  15,        /* index 14: 15 mins  */
-  30         /* index 15: 30 mins  */
+        1,         /* index 0:  minutes  */
+        60,        /* index 1:  hour     */
+        24*60,     /* index 2:  day      */
+        24*60*30,  /* index 3:  month    */
+        -1,        /* index 4:  year     */
+        -1,        /* index 5:  decade   */
+        -1,        /* index 6:  30 years */
+        -1,        /* index 7:  century  */
+        -1,        /* index 8:  RESERVED */
+        -1,        /* index 9:  RESERVED */
+        3*60,      /* index 10: 3 hours  */
+        6*60,      /* index 11: 6 hours  */
+        12*60,     /* index 12: 12 hours */
+        1/60.0,    /* index 13: seconds  */
+        15,        /* index 14: 15 mins  */
+        30         /* index 15: 30 mins  */
 };
 
 static long convert_to_minutes(long step, long stepUnits)
 {
-	if (stepUnits == 0) return step;    /* unit=minutes so no change */
-	if (stepUnits == 1) return step*60; /* unit=hours */
-	/* Assert( stepUnits < sizeof(u2m)/sizeof(u2m[0]) ); */
+    double result = 0;
+    if (stepUnits == 0) return step;    /* unit=minutes so no change */
+    if (stepUnits == 1) return step*60; /* unit=hours */
+    /* Assert( stepUnits < sizeof(u2m)/sizeof(u2m[0]) ); */
 
-	return (long) (step*u2m[stepUnits]);
+    result =  step*u2m[stepUnits];
+    return (long)result;
 }
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-	grib_accessor_validity_time* self = (grib_accessor_validity_time*)a;
-	int n = 0;
+    grib_accessor_validity_time* self = (grib_accessor_validity_time*)a;
+    int n = 0;
 
-	self->date = grib_arguments_get_name(a->parent->h,c,n++);
-	self->time = grib_arguments_get_name(a->parent->h,c,n++);
-	self->step = grib_arguments_get_name(a->parent->h,c,n++);
-	self->stepUnits = grib_arguments_get_name(a->parent->h,c,n++);
-	self->hours = grib_arguments_get_name(a->parent->h,c,n++);
-	self->minutes = grib_arguments_get_name(a->parent->h,c,n++);
+    self->date = grib_arguments_get_name(a->parent->h,c,n++);
+    self->time = grib_arguments_get_name(a->parent->h,c,n++);
+    self->step = grib_arguments_get_name(a->parent->h,c,n++);
+    self->stepUnits = grib_arguments_get_name(a->parent->h,c,n++);
+    self->hours = grib_arguments_get_name(a->parent->h,c,n++);
+    self->minutes = grib_arguments_get_name(a->parent->h,c,n++);
 
-	a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY; 
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-	grib_dump_long(dumper,a,NULL);
+    grib_dump_long(dumper,a,NULL);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {   
-	grib_accessor_validity_time* self = (grib_accessor_validity_time*)a;
-	int ret=0;
-	long date = 0;
-	long time = 0;
-	long step = 0;
-	long stepUnits = 0;
-	long hours = 0, minutes=0, step_mins=0, tmp, tmp_hrs, tmp_mins;
+    grib_accessor_validity_time* self = (grib_accessor_validity_time*)a;
+    int ret=0;
+    long date = 0;
+    long time = 0;
+    long step = 0;
+    long stepUnits = 0;
+    long hours = 0, minutes=0, step_mins=0, tmp, tmp_hrs, tmp_mins;
 
-	if (self->hours) {
-		long hours,minutes;
-		if ((ret=grib_get_long_internal(a->parent->h, self->hours,&hours))!=GRIB_SUCCESS) return ret;
-		if ((ret=grib_get_long_internal(a->parent->h, self->minutes,&minutes))!=GRIB_SUCCESS) return ret;
-		*val=hours*100+minutes;
-		return GRIB_SUCCESS;
-	}
-	if ((ret=grib_get_long_internal(a->parent->h, self->date,&date))!=GRIB_SUCCESS) return ret;
-	if ((ret=grib_get_long_internal(a->parent->h, self->time,&time))!=GRIB_SUCCESS) return ret;
-	if ((ret=grib_get_long_internal(a->parent->h, self->step,&step))!=GRIB_SUCCESS) return ret;
+    if (self->hours) {
+        long hours,minutes;
+        if ((ret=grib_get_long_internal(a->parent->h, self->hours,&hours))!=GRIB_SUCCESS) return ret;
+        if ((ret=grib_get_long_internal(a->parent->h, self->minutes,&minutes))!=GRIB_SUCCESS) return ret;
+        *val=hours*100+minutes;
+        return GRIB_SUCCESS;
+    }
+    if ((ret=grib_get_long_internal(a->parent->h, self->date,&date))!=GRIB_SUCCESS) return ret;
+    if ((ret=grib_get_long_internal(a->parent->h, self->time,&time))!=GRIB_SUCCESS) return ret;
+    if ((ret=grib_get_long_internal(a->parent->h, self->step,&step))!=GRIB_SUCCESS) return ret;
 
-	/* Seconds will always be zero. So convert to minutes */
-	if (self->stepUnits) {
-		if ((ret=grib_get_long_internal(a->parent->h, self->stepUnits,&stepUnits))!=GRIB_SUCCESS) return ret;
-		step_mins = convert_to_minutes(step, stepUnits);
-		Assert(step_mins>=0);
-	}
+    /* Seconds will always be zero. So convert to minutes */
+    if (self->stepUnits) {
+        if ((ret=grib_get_long_internal(a->parent->h, self->stepUnits,&stepUnits))!=GRIB_SUCCESS) return ret;
+        step_mins = convert_to_minutes(step, stepUnits);
+        Assert(step_mins>=0);
+    }
 
-	minutes = time % 100;
-	hours = time / 100;
-	tmp = minutes + step_mins; /* add the step to our minutes */
-	tmp_hrs = tmp/60;          /* how many hours and mins is that? */
-	tmp_mins = tmp%60;
-	hours += tmp_hrs;          /* increment hours */
-	hours = hours % 24;        /* wrap round if >= 24 */
-	time = hours * 100 + tmp_mins;
+    minutes = time % 100;
+    hours = time / 100;
+    tmp = minutes + step_mins; /* add the step to our minutes */
+    tmp_hrs = tmp/60;          /* how many hours and mins is that? */
+    tmp_mins = tmp%60;
+    hours += tmp_hrs;          /* increment hours */
+    hours = hours % 24;        /* wrap round if >= 24 */
+    time = hours * 100 + tmp_mins;
 
-	if(*len < 1)
-		return GRIB_ARRAY_TOO_SMALL;
+    if(*len < 1)
+        return GRIB_ARRAY_TOO_SMALL;
 
-	*val = time;
+    *val = time;
 
-	return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
-
