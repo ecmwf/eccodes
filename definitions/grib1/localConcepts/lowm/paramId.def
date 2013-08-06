@@ -54,13 +54,13 @@
      table2Version = 201 ;
      indicatorOfParameter = 81 ;
     }
-#Surface geopotential
-'162051' = {
+#Geopotential
+'129' = {
      table2Version = 201 ;
      indicatorOfParameter = 235 ;
     }
-#Orography
-'228002' = {
+#Geopotential Height
+'156' = {
      table2Version = 201 ;
      indicatorOfParameter = 233 ;
     }
