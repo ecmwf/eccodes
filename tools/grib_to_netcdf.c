@@ -3010,7 +3010,7 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
 
             time(&now);
             strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S GMT", gmtime(&now));
-            sprintf(history, "%s by grib_to_netcdf-%d.%d.%d (%s)", timestamp, major, minor, revision, argvString);
+            sprintf(history, "%s by grib_to_netcdf-%d.%d.%d: %s", timestamp, major, minor, revision, argvString);
         }
         stat = nc_put_att_text(ncid, NC_GLOBAL, "history", strlen(history), history);
         check_err(stat, __LINE__, __FILE__);
@@ -3601,8 +3601,8 @@ request *user_r = NULL;
 int main(int argc, char *argv[])
 {
     int i, ret = 0;
-    /* GRIB-413: Collect all program arguments into a string (except program itself) */
-    for (i=1; i<argc; ++i) {
+    /* GRIB-413: Collect all program arguments into a string */
+    for (i=0; i<argc; ++i) {
         strcat(argvString, argv[i]);
         if (i != argc-1) strcat(argvString, " ");
     }
