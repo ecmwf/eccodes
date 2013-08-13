@@ -473,6 +473,8 @@ dist_definitionsgrib2_DATA = \
 	grib2/template.4.53.def\
 	grib2/template.4.54.def\
 	grib2/template.4.6.def\
+	grib2/template.4.60.def\
+	grib2/template.4.61.def\
 	grib2/template.4.7.def\
 	grib2/template.4.8.def\
 	grib2/template.4.9.def\
@@ -491,6 +493,7 @@ dist_definitionsgrib2_DATA = \
 	grib2/template.4.point_in_time.def\
 	grib2/template.4.probability.def\
 	grib2/template.4.rectangular_cluster.def\
+	grib2/template.4.reforecast.def\
 	grib2/template.4.statistical.def\
 	grib2/template.5.0.def\
 	grib2/template.5.1.def\
