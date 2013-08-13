@@ -27,6 +27,7 @@
 char* grib_tool_description = "Convert a GRIB file to netCDF format.";
 char* grib_tool_name = "grib_to_netcdf";
 char* grib_tool_usage = "[options] grib_file grib_file ... ";
+static char argvString[2048];
 
 /*=====================================================================*/
 
@@ -1191,7 +1192,7 @@ static boolean eq_date(const char *, const char *);
 static boolean eq_time(const char *, const char *);
 static boolean eq_null(const char *, const char *);
 
-static axis_t axis[] =
+static axis_t global_axis[] =
 {
 
         /* From dhsbase.c 'check_grib' */
@@ -1251,9 +1252,9 @@ static axis_t axis[] =
 static int axisindex(const char *name)
 {
     int i = 0;
-    for(i = 0; i < NUMBER(axis); i++)
+    for(i = 0; i < NUMBER(global_axis); i++)
     {
-        if(strcmp(name, axis[i].name) == 0)
+        if(strcmp(name, global_axis[i].name) == 0)
             return i;
     }
     return -1;
@@ -1278,7 +1279,7 @@ static namecmp comparator(const char *name)
     }
 
     if((i = axisindex(name)) != -1)
-        return axis[i].compare;
+        return global_axis[i].compare;
     grib_context_log(ctx, GRIB_LOG_ERROR, "No comparator for %s", name);
     return eq_string;
 }
@@ -1424,13 +1425,13 @@ static int set_axis(hypercube *h)
     int count = (h && h->r) ? 1 : -1;
 
     reset_axis(h);
-    for(i = (NUMBER(axis) - 1); i >= 0; --i)
+    for(i = (NUMBER(global_axis) - 1); i >= 0; --i)
     {
-        int n = count_dimensions(h, axis[i].name);
+        int n = count_dimensions(h, global_axis[i].name);
         if(n > 1)
         {
-            add_axis(h, axis[i].name);
-            cube_values(h, axis[i].name);
+            add_axis(h, global_axis[i].name);
+            cube_values(h, global_axis[i].name);
             count *= n;
         }
     }
@@ -1465,9 +1466,9 @@ static int count_dimensions(const hypercube *h, const char *axis)
 static int count_hypercube(const request *r)
 {
     int i = 0, count = 1;
-    for(i = 0; i < NUMBER(axis); ++i)
+    for(i = 0; i < NUMBER(global_axis); ++i)
     {
-        int c = count_values(r, axis[i].name);
+        int c = count_values(r, global_axis[i].name);
         count *= c ? c : 1;
     }
 
@@ -1625,9 +1626,9 @@ static hypercube *new_hypercube(const request *r)
     /* This is expensive, but makes the iterator with only
        those parameters found as axis */
     h->iterator = empty_request(0);
-    for(n = 0; n < NUMBER(axis); ++n)
-        if((val = get_value(h->r, axis[n].name, 0)) != NULL)
-            set_value(h->iterator, axis[n].name, val);
+    for(n = 0; n < NUMBER(global_axis); ++n)
+        if((val = get_value(h->r, global_axis[n].name, 0)) != NULL)
+            set_value(h->iterator, global_axis[n].name, val);
 
     return h;
 }
@@ -1698,13 +1699,13 @@ static hypercube *new_hypercube_from_mars_request(const request *r)
 
     /* add single paramters */
 
-    for(i = 0; i < NUMBER(axis); i++)
+    for(i = 0; i < NUMBER(global_axis); i++)
     {
-        int m = count_values(r, axis[i].name);
+        int m = count_values(r, global_axis[i].name);
         if(m == 1)
         {
-            add_value(s.c->cube, "axis", axis[i].name);
-            set_value(s.c->cube, axis[i].name, get_value(r, axis[i].name, 0));
+            add_value(s.c->cube, "axis", global_axis[i].name);
+            set_value(s.c->cube, global_axis[i].name, get_value(r, global_axis[i].name, 0));
         }
     }
 
@@ -3009,7 +3010,7 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
 
             time(&now);
             strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S GMT", gmtime(&now));
-            sprintf(history, "%s by grib_to_netcdf-%d.%d.%d", timestamp, major, minor, revision);
+            sprintf(history, "%s by grib_to_netcdf-%d.%d.%d (%s)", timestamp, major, minor, revision, argvString);
         }
         stat = nc_put_att_text(ncid, NC_GLOBAL, "history", strlen(history), history);
         check_err(stat, __LINE__, __FILE__);
@@ -3348,7 +3349,7 @@ static void values_loop(const request *r, int count, axis_t *parnames, loopproc 
 
 static void names_loop(const request *r, loopproc proc, void *data)
 {
-    values_loop(r, NUMBER(axis), axis, proc, data);
+    values_loop(r, NUMBER(global_axis), global_axis, proc, data);
 }
 
 static request *unwind_one_request(const request *r)
@@ -3596,9 +3597,17 @@ int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 static fieldset *fs = NULL;
 static request* data_r = NULL;
 request *user_r = NULL;
+
 int main(int argc, char *argv[])
 {
-    int ret = grib_tool(argc, argv);
+    int i, ret = 0;
+    /* GRIB-413: Collect all program arguments into a string (except program itself) */
+    for (i=1; i<argc; ++i) {
+        strcat(argvString, argv[i]);
+        if (i != argc-1) strcat(argvString, " ");
+    }
+
+    ret = grib_tool(argc, argv);
     return ret;
 }
 
