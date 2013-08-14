@@ -161,5 +161,5 @@ static void compile(grib_expression* g,grib_compiler* c)
 static int native_type(grib_expression* g,grib_handle *h)
 {
     grib_expression_unop* e = (grib_expression_unop*)g;
-    return e->double_func ? GRIB_TYPE_DOUBLE : GRIB_TYPE_LONG;
+    return e->long_func ? GRIB_TYPE_LONG : GRIB_TYPE_DOUBLE;
 }
