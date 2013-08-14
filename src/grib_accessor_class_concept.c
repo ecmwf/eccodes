@@ -133,143 +133,154 @@ static void init_class(grib_accessor_class* c)
 
 #define MAX_CONCEPT_STRING_LENGTH 255
 
-GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
-  if (*a != *b) return 1;
-  while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
-  return (*a==0 && *b==0) ? 0 : 1;
+GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
+{
+    if (*a != *b) return 1;
+    while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
+    return (*a==0 && *b==0) ? 0 : 1;
 }
 
 static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
-   a->length = 0;
+    a->length = 0;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_string(dumper,a,NULL);
+    grib_dump_string(dumper,a,NULL);
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-  return GRIB_NOT_IMPLEMENTED;
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  char buf[80];
-  size_t s;
-  sprintf(buf,"%ld",*val);
+    char buf[80];
+    size_t s;
+    sprintf(buf,"%ld",*val);
 #if 0
-  if(*len > 1)
-    return GRIB_NOT_IMPLEMENTED;
+    if(*len > 1)
+        return GRIB_NOT_IMPLEMENTED;
 #endif
-  s = strlen(buf)+1;
-  return pack_string(a,buf,&s);
+    s = strlen(buf)+1;
+    return pack_string(a,buf,&s);
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-  return GRIB_NOT_IMPLEMENTED;
-
+    /*
+     * If we want to have a condition which contains tests for paramId as well
+     * as a floating point key, then need to be able to evaluate paramId as a
+     * double. E.g.
+     *   if (referenceValue > 0 && paramId == 129)
+     */
+    /*return GRIB_NOT_IMPLEMENTED*/
+    long lval = 0;
+    int ret = unpack_long(a, &lval, len);
+    if (ret == GRIB_SUCCESS) {
+        *val = lval;
+    }
+    return ret;
 }
+
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  /* TODO properly caling grib_concept_evaluate_long ! */
-  const char *p = grib_concept_evaluate(a->parent->h,a->creator);
+    /* TODO properly calling grib_concept_evaluate_long ! */
+    const char *p = grib_concept_evaluate(a->parent->h,a->creator);
 
-  if(!p) {
-    if (a->creator->defaultkey)
-      return grib_get_long_internal(a->parent->h,a->creator->defaultkey,val);
+    if(!p) {
+        if (a->creator->defaultkey)
+            return grib_get_long_internal(a->parent->h,a->creator->defaultkey,val);
 
-    return GRIB_NOT_FOUND;
-  }
+        return GRIB_NOT_FOUND;
+    }
 
-  *val = atol(p);
-  *len = 1;
+    *val = atol(p);
+    *len = 1;
 
-  return GRIB_SUCCESS;
-
+    return GRIB_SUCCESS;
 }
 
 static int get_native_type(grib_accessor* a)
 {
-	int type=GRIB_TYPE_STRING;
-	if (a->flags & GRIB_ACCESSOR_FLAG_LONG_TYPE)
-		type=GRIB_TYPE_LONG;
-	
-  	return type;
+    int type=GRIB_TYPE_STRING;
+    if (a->flags & GRIB_ACCESSOR_FLAG_LONG_TYPE)
+        type=GRIB_TYPE_LONG;
+
+    return type;
 }
 
 static void destroy(grib_context* c,grib_accessor* a)
 {
-  /*
-  grib_accessor_concept *self = (grib_accessor_concept*)a;
-  grib_context_free(c,self->cval);
-  */
+    /*
+     * grib_accessor_concept *self = (grib_accessor_concept*)a;
+     * grib_context_free(c,self->cval);
+     */
 }
 
-static int unpack_string (grib_accessor* a, char* val, size_t *len){
-  size_t slen ;
-  const char *p = grib_concept_evaluate(a->parent->h,a->creator);
+static int unpack_string (grib_accessor* a, char* val, size_t *len)
+{
+    size_t slen ;
+    const char *p = grib_concept_evaluate(a->parent->h,a->creator);
 
-  if(!p) {
-    if (a->creator->defaultkey)
-      return grib_get_string_internal(a->parent->h,a->creator->defaultkey,val,len);
+    if(!p) {
+        if (a->creator->defaultkey)
+            return grib_get_string_internal(a->parent->h,a->creator->defaultkey,val,len);
 
-    return GRIB_NOT_FOUND;
-  }
+        return GRIB_NOT_FOUND;
+    }
 
-  slen = strlen(p) +1;
-  if(*len < slen)
-  {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Variable unpack_string Wrong size for %s it is %d bytes big (len=%d)", a->name , slen ,*len);
+    slen = strlen(p) +1;
+    if(*len < slen)
+    {
+        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Variable unpack_string Wrong size for %s it is %d bytes big (len=%d)", a->name , slen ,*len);
+        *len = slen;
+        return GRIB_BUFFER_TOO_SMALL;
+    }
+    strcpy(val,p);
     *len = slen;
-    return GRIB_BUFFER_TOO_SMALL;
-  }
-  strcpy(val,p);
-  *len = slen;
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
-
 
 static int pack_string(grib_accessor* a, const char* val, size_t *len)
 {
-  return  grib_concept_apply(a->parent->h,a->creator,val);
+    return  grib_concept_apply(a->parent->h,a->creator,val);
 }
 
 static size_t string_length(grib_accessor* a)
 {
-	return MAX_CONCEPT_STRING_LENGTH;
+    return MAX_CONCEPT_STRING_LENGTH;
 }
 
 static long value_count(grib_accessor* a)
 {
-	return 1;
+    return 1;
 }
 
+static int compare(grib_accessor* a,grib_accessor* b)
+{
+    int retval=0;
+    char *aval=0;
+    char *bval=0;
 
-static int compare(grib_accessor* a,grib_accessor* b) {
-  int retval=0;
-  char *aval=0;
-  char *bval=0;
+    size_t alen = (size_t)grib_value_count(a);
+    size_t blen = (size_t)grib_value_count(b);
 
-  size_t alen = (size_t)grib_value_count(a);
-  size_t blen = (size_t)grib_value_count(b);
+    if (alen != blen) return GRIB_COUNT_MISMATCH;
 
-  if (alen != blen) return GRIB_COUNT_MISMATCH;
+    aval=grib_context_malloc(a->parent->h->context,alen*sizeof(char));
+    bval=grib_context_malloc(b->parent->h->context,blen*sizeof(char));
 
-  aval=grib_context_malloc(a->parent->h->context,alen*sizeof(char));
-  bval=grib_context_malloc(b->parent->h->context,blen*sizeof(char));
+    grib_unpack_string(a,aval,&alen);
+    grib_unpack_string(b,bval,&blen);
 
-  grib_unpack_string(a,aval,&alen);
-  grib_unpack_string(b,bval,&blen);
+    retval = GRIB_SUCCESS;
+    if (!aval || !bval || grib_inline_strcmp(aval,bval)) retval = GRIB_STRING_VALUE_MISMATCH;
 
-  retval = GRIB_SUCCESS;
-  if (!aval || !bval || grib_inline_strcmp(aval,bval)) retval = GRIB_STRING_VALUE_MISMATCH;
+    grib_context_free(a->parent->h->context,aval);
+    grib_context_free(b->parent->h->context,bval);
 
-  grib_context_free(a->parent->h->context,aval);
-  grib_context_free(b->parent->h->context,bval);
-
-  return retval;
+    return retval;
 }
-
