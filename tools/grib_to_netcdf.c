@@ -1697,7 +1697,7 @@ static hypercube *new_hypercube_from_mars_request(const request *r)
 
     free_one_request(s.r);
 
-    /* add single paramters */
+    /* add single parameters */
 
     for(i = 0; i < NUMBER(global_axis); i++)
     {
@@ -3135,7 +3135,6 @@ static void paramtable(const char *p, long *param, long *table, boolean paramIdM
         /* Special case for param=228015 => 15.228 */
         if((*param != NO_PARAM) && (*table == NO_TABLE) && (len == 6))
         {
-
             char tbl[4];
             char par[4];
             p = q;
@@ -3145,7 +3144,6 @@ static void paramtable(const char *p, long *param, long *table, boolean paramIdM
             par[3] = '\0';
             *param = atol(par);
             *table = atol(tbl);
-
         }
     }
 }
@@ -3301,7 +3299,7 @@ static void loop(const request *r, boolean ml, int index, int count, axis_t* str
     {
         parameter *p = find_parameter(r, strings[index].name);
 
-        (void) count_values(r, strings[index].name); /* force list expension */
+        (void) count_values(r, strings[index].name); /* force list expansion */
 
         if(p)
         {
@@ -3624,7 +3622,6 @@ int grib_tool_init(grib_runtime_options* options)
     options->onlyfiles = 1;
     fs = new_fieldset(0);
     data_r = empty_request(0);
-
     user_r = empty_request(0);
 
     if(grib_options_on("D:"))
@@ -3632,8 +3629,11 @@ int grib_tool_init(grib_runtime_options* options)
         set_value(user_r, "accuracy", grib_options_get_option("D:"));
     }
     else
+    {
         set_value(user_r, "accuracy", "NC_SHORT");
+    }
 
+    /* Option -S: Split according to keys */
     if(grib_options_on("S:"))
     {
         list = grib_options_get_option("S:");
@@ -3650,6 +3650,26 @@ int grib_tool_init(grib_runtime_options* options)
     {
         set_value(user_r, "split", "param");
         add_value(user_r, "split", "expver");
+    }
+
+    /* Option -I: Ignore keys */
+    if (grib_options_on("I:"))
+    {
+        list = grib_options_get_option("I:");
+        p = strtok(list, ",");
+        set_value(user_r, "ignore", p);
+        p = strtok(NULL, ",");
+        while(p != NULL) {
+            add_value(user_r, "ignore", p);
+            p = strtok(NULL, ",");
+        }
+    }
+    else {
+        set_value(user_r, "ignore", "method");
+        add_value(user_r, "ignore", "type");
+        add_value(user_r, "ignore", "stream");
+        add_value(user_r, "ignore", "refdate");
+        add_value(user_r, "ignore", "hdate");
     }
 
     if(grib_options_on("T"))
