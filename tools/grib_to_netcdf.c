@@ -232,6 +232,8 @@ static void free_all_values(value *p)
     }
 }
 
+/* Convert the first part of the string 'p' to a number (x) and set n to its length. */
+/* Return the rest of the string */
 static const char *parse1(const char *p, int* x, int *n)
 {
     *x = *n = 0;
@@ -1914,8 +1916,9 @@ static void validation_time(request *r)
         else
         {
             long julian = 0, second = 0;
-            boolean isjul;
-            parsedate(p, &julian, &second, &isjul);
+            boolean isjul, date_ok;
+            date_ok = parsedate(p, &julian, &second, &isjul);
+            if (!date_ok) grib_context_log(ctx, GRIB_LOG_ERROR, "Failed to parse date: '%s'", p);
             date = grib_julian_to_date(julian);
         }
 
@@ -3492,7 +3495,24 @@ static void free_subsets(dataset_t *subsets, int count)
         free_all_requests(subsets[i].request);
     }
     grib_context_free(ctx, subsets);
+}
 
+/* Return the number of the given month or -1 if it fails to match */
+static int convert_month(const char* pMonthString)
+{
+    if (strcmp(pMonthString, "jan")==0) return 1;
+    if (strcmp(pMonthString, "feb")==0) return 2;
+    if (strcmp(pMonthString, "mar")==0) return 3;
+    if (strcmp(pMonthString, "apr")==0) return 4;
+    if (strcmp(pMonthString, "may")==0) return 5;
+    if (strcmp(pMonthString, "jun")==0) return 6;
+    if (strcmp(pMonthString, "jul")==0) return 7;
+    if (strcmp(pMonthString, "aug")==0) return 8;
+    if (strcmp(pMonthString, "sep")==0) return 9;
+    if (strcmp(pMonthString, "oct")==0) return 10;
+    if (strcmp(pMonthString, "nov")==0) return 11;
+    if (strcmp(pMonthString, "dec")==0) return 12;
+    return -1; /*Failed*/
 }
 
 static boolean parsedate(const char *name, long* julian, long *second, boolean* isjul)
@@ -3507,9 +3527,28 @@ static boolean parsedate(const char *name, long* julian, long *second, boolean* 
     if(p == 0 || *p == 0)
         return false;
 
+    /* Special ERA Interim grib1 date format: jul-21, sep-02 etc
+     * See GRIB-416
+     */
+    if (isalpha(*p))
+    {
+        char month[32];
+        int day = 0;
+        int n = sscanf(p, "%[^-]-%d", month, &day);
+        /* Matched two items (month and day) and month is 3 letters */
+        if (n == 2 && strlen(month) == 3) {
+            y = 1900; /* no year specified */
+            m = convert_month(month);
+            if (m == -1) return false;
+            *julian = grib_date_to_julian(y * 10000 + m * 100 + day);
+            *second = 0;
+            return true;
+        }
+    }
+
     /* year */
     p = parse1(p, &y, &n);
-    if(n != 2 && n != 4)
+    if(n != 2 && n != 4) /* year string must be 2 or 4 characters long: 93 or 1993 */
         return false;
     if(*p++ != '-')
         return false;
@@ -3537,11 +3576,14 @@ static boolean parsedate(const char *name, long* julian, long *second, boolean* 
     else
         return false;
 
+    if (m == 0 || m > 12) {
+        return false; /* month out of range */
+    }
+
     while(*p && isspace(*p))
         p++;
 
     /* hour */
-
     p = parse1(p, &H, &n);
     if(n != 0)
     {
@@ -3559,7 +3601,6 @@ static boolean parsedate(const char *name, long* julian, long *second, boolean* 
         if(*p != 0)
         {
             /* second */
-
             if(*p++ != ':')
                 return false;
             p = parse1(p, &S, &n);
@@ -3572,7 +3613,6 @@ static boolean parsedate(const char *name, long* julian, long *second, boolean* 
     *second = H * 3600 + M * 60 + S;
 
     return *p == 0 ? true : false;
-
 }
 
 /*=====================================================================*/
