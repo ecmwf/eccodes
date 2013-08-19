@@ -2705,7 +2705,7 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
 
 static void set_always_a_time(hypercube *h, request *data_r)
 {
-    if((setup.usevalidtime && count_values(data_r, "time") == 1) || (count_values(data_r, "date") <= 1 && count_values(data_r, "time") <= 1 && count_values(data_r, "step") <= 1))
+    if (setup.usevalidtime && count_values(data_r, "time") == 1)
     {
         set_value(h->cube, "time", "%.2lf", atof(get_value(data_r, "_validationtime", 0)));
         add_value(h->cube, "axis", "time");
@@ -2722,7 +2722,6 @@ static void set_always_a_time(hypercube *h, request *data_r)
             for(i = 0; i < n; i++)
                 h->compare[i] = comparator(get_value(h->cube, "axis", i));
         }
-
     }
 }
 
@@ -3739,14 +3738,10 @@ int grib_tool_init(grib_runtime_options* options)
 
 int grib_tool_new_filename_action(grib_runtime_options* options, const char* filename)
 {
-
-    char buf[1024] =
-    { 0, };
+    char buf[1024] = { 0, };
     int e = 0;
     int i = 0;
-
     grib_handle* h = NULL;
-
     grib_file* file = NULL;
 
     printf("%s: Processing input file '%s'.\n", grib_tool_name, filename);
@@ -3761,7 +3756,6 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 
     while((h = grib_handle_new_from_file(ctx, file->handle, &e)) != NULL)
     {
-
         long length;
         field* g;
         request *r;
