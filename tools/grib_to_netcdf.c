@@ -1181,6 +1181,23 @@ static request* field_to_request(field* f)
     return f->r->r;
 }
 
+static request* fieldset_to_request(fieldset *fs)
+{
+    int i;
+    request* r = empty_request("GRIB");
+
+    if(!fs)
+        return 0;
+
+    for(i = 0; i < fs->count; i++)
+    {
+        request *s = field_to_request(fs->fields[i]);
+        reqmerge(r,s);
+    }
+
+    return r;
+}
+
 /*===============================================================================*/
 /* hypercube from mars client */
 /*===============================================================================*/
@@ -1846,6 +1863,21 @@ static long fcmonth2days(long date, long months)
     grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: date: %ld + %ld months = %ld days", date, months, days);
 
     return days;
+}
+
+static long request_fields(request *r)
+{
+    long cnt = 1;
+    parameter *p = r->params;
+    while(p)
+    {
+        if(p->name[0] != '_')
+        {
+            cnt *= count_values(r,p->name);
+        }
+        p = p->next;
+    }
+    return cnt;
 }
 
 /* Transform MARS FCMONTHs into number of months from base date.
@@ -3830,25 +3862,23 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 
     grib_file_close(file->name, &e);
 
-#if 0
-    *data_r = fieldset_to_mars_request(v);
-
+    /* Now do some checks */
+    data_r = fieldset_to_request(fs);
     if(setup.checkvalidtime)
     {
-        int cnt = request_fields(*data_r);
-        if(v->count != i || (cnt < i))
+        int cnt = request_fields(data_r);
+        if(fs->count != i || (cnt < i))
         {
             grib_context_log(ctx, GRIB_LOG_ERROR, "Wrong number of fields");
-            grib_context_log(ctx, GRIB_LOG_ERROR, "File contains %d GRIBs, %d left in internal description, %d in request", i, v->count, cnt);
-            grib_context_log(ctx, GRIB_LOG_ERROR, "MARS description");
-            print_all_requests(setup.mars_description);
+            grib_context_log(ctx, GRIB_LOG_ERROR, "File contains %d GRIBs, %d left in internal description, %d in request", i, fs->count, cnt);
+            /*grib_context_log(ctx, GRIB_LOG_ERROR, "MARS description");*/
+            /*print_all_requests(setup.mars_description);*/
             grib_context_log(ctx, GRIB_LOG_ERROR, "Internal description");
-            print_all_requests(*data_r);
-            return -1;
+            print_all_requests(data_r);
+            exit(1);
         }
     }
-    *fs = v;
-#endif
+
     return e;
 }
 
