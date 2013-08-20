@@ -3694,6 +3694,10 @@ int grib_tool_init(grib_runtime_options* options)
     data_r = empty_request(0);
     user_r = empty_request(0);
 
+    printf("%s: Version ", grib_tool_name);
+    grib_print_api_version(stdout);
+    printf("\n");
+
     if(grib_options_on("D:"))
     {
         set_value(user_r, "accuracy", grib_options_get_option("D:"));
