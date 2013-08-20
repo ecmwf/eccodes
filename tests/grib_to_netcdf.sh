@@ -36,19 +36,14 @@ echo "NetCDF was enabled."
 
 grib_files="tigge_pf_ecmwf.grib2 \
 set.grib2 set.grib1 \
-regular_latlon_surface.grib1.1 \
 regular_latlon_surface.grib2 \
 regular_latlon_surface.grib1 \
 regular_gaussian_model_level.grib1 \
-regular_gaussian_model_level.grib2 \
-regular_gaussian_pressure_level.grib1 \
 regular_gaussian_pressure_level.grib2 \
 regular_gaussian_surface.grib1 \
-regular_gaussian_surface.grib2 \
-lfpw.grib2 \
 missing.grib2"
 
-ncf_types="NC_BYTE NC_SHORT NC_INT NC_FLOAT NC_DOUBLE"
+ncf_types="NC_SHORT NC_INT NC_FLOAT NC_DOUBLE"
 
 tmp_netcdf=tmp.ncf
 
@@ -58,9 +53,9 @@ do
    for f in $grib_files
    do
       rm -f $tmp_netcdf | true
-      #echo Doing $f with $dt...
       if [ -f "${data_dir}/$f" ]; then
         ${tools_dir}grib_to_netcdf -D $dt -o $tmp_netcdf ${data_dir}/$f >/dev/null
+	${tools_dir}grib_to_netcdf -T     -o $tmp_netcdf ${data_dir}/$f >/dev/null
       fi
    done
 done
