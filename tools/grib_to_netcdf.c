@@ -1036,12 +1036,12 @@ static err to_expand_mem(field *g)
 {
     err e = 0;
 
+    Assert(g);
     if(g->shape == expand_mem)
         return 0;
 
     if(g->shape == packed_file)
     {
-
         const void* dummy = NULL;
 
         grib_file* file = grib_file_open(g->file->name, "r", &e);
@@ -1066,7 +1066,6 @@ static err to_expand_mem(field *g)
         if(g->values)
             grib_context_free(ctx, g->values);
         g->values = NULL;
-
     }
 
     if(g->values == NULL)
@@ -3857,26 +3856,28 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
         free_all_requests(r);
 
         grib_handle_delete(h);
-
     }
 
     grib_file_close(file->name, &e);
 
-    /* Now do some checks */
-    data_r = fieldset_to_request(fs);
-    if(setup.checkvalidtime)
     {
-        int cnt = request_fields(data_r);
-        if(fs->count != i || (cnt < i))
+        /* Now do some checks */
+        request* temp_data_r = fieldset_to_request(fs);
+        if(setup.checkvalidtime)
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "Wrong number of fields");
-            grib_context_log(ctx, GRIB_LOG_ERROR, "File contains %d GRIBs, %d left in internal description, %d in request", i, fs->count, cnt);
-            /*grib_context_log(ctx, GRIB_LOG_ERROR, "MARS description");*/
-            /*print_all_requests(setup.mars_description);*/
-            grib_context_log(ctx, GRIB_LOG_ERROR, "Internal description");
-            print_all_requests(data_r);
-            exit(1);
+            int cnt = request_fields(temp_data_r);
+            if(fs->count != i || (cnt < i))
+            {
+                grib_context_log(ctx, GRIB_LOG_ERROR, "Wrong number of fields");
+                grib_context_log(ctx, GRIB_LOG_ERROR, "File contains %d GRIBs, %d left in internal description, %d in request", i, fs->count, cnt);
+                /*grib_context_log(ctx, GRIB_LOG_ERROR, "MARS description");*/
+                /*print_all_requests(setup.mars_description);*/
+                grib_context_log(ctx, GRIB_LOG_ERROR, "Internal description");
+                print_all_requests(temp_data_r);
+                exit(1);
+            }
         }
+        free_all_requests(temp_data_r);
     }
 
     return e;
