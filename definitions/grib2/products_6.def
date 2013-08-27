@@ -48,31 +48,40 @@ concept marsType {
 
 concept marsStream {
 
-    oper = {
-      typeOfProcessedData = 0;
-    }
+   oper = {
+     typeOfProcessedData = 0;
+   }
 
-    oper = {
-      typeOfProcessedData = 2;
-    }
+   oper = {
+     typeOfProcessedData = 2;
+   }
 
-    enfo = {
-      typeOfProcessedData = 3;
-    }
+   enfo = {
+     typeOfProcessedData = 3;
+   }
 
-    enfo = {
-      typeOfProcessedData = 4;
-    }
+   enfo = {
+     typeOfProcessedData = 4;
+   }
 
-    enfo = {
-      typeOfProcessedData = 8;
-    }
+   enfo = {
+     typeOfProcessedData = 8;
+   }
 
-    "default" = {
-      dummyc = 0;
-    }
-
+   "default" = {
+     dummyc = 0;
+   }
 }
 
 alias mars.stream = marsStream;
 alias mars.type   = marsType;
+
+if (isHindcast == 1) {
+   # S2S reforecasts
+   constant theHindcastMarsStream = "enfh";
+   alias mars.stream = theHindcastMarsStream;
+   alias mars.hdate = dataDate;
+   alias mars.date  = dateOfModelVersion;
+   alias mars.time  = timeOfModelVersion;
+}
+
