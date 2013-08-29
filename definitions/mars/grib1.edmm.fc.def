@@ -5,6 +5,18 @@ alias mars.date             = monthlyVerificationDate;
 
 # class e4
 # constant six = 6;
-alias mars.step = endStep;
+
+# There was some forecast data produced incorrectly for stream=edmm with class=em
+# An exception is required for backward compatibility for the wrongly encoded data
+# See GRIB-422
+if (class is "em")
+{
+   alias mars.step = endStep;  # hack for backward compatibility
+}
+else
+{
+   alias mars.step = startStep;
+}
+
 alias mars.number=perturbationNumber;
 
