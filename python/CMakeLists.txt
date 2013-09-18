@@ -1,6 +1,6 @@
 if( GRIB_API_PYTHON )
 
-    ecbuild_find_python( VERSION 2.5 )
+    ecbuild_find_python( VERSION 2.5)
 
     find_package( SWIG )
     if( SWIG_FOUND )
@@ -53,7 +53,7 @@ if( GRIB_API_PYTHON )
         set( LIB_OPENJPEG ${HAVE_LIBOPENJPEG} )
         get_filename_component(OPENJPEG_DIR ${OPENJPEG_INCLUDE_DIR} PATH )
 
-        include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} )
+        include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${PYTHON_INCLUDE_DIRS} )
 
         configure_file( setup.py.in setup.py )
 

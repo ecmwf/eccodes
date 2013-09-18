@@ -69,7 +69,9 @@ set( HAVE_LIBOPENJPEG 0 )
 
 if( GRIB_API_JPG )
 
+    ecbuild_add_extra_search_paths( jasper ) # help standard cmake macro with ecmwf paths
     find_package( Jasper )
+
     find_package( OpenJPEG )
 
     if( JASPER_FOUND )
