@@ -1,0 +1,1 @@
+SET(GRIB_API_PYTHON OFF CACHE BOOL "Enable python")
