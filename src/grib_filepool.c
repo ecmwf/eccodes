@@ -33,7 +33,8 @@ static void init() {
 
 static short next_id=0;
 
-GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
+GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
+{
 	if (*a != *b) return 1;
 	while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
 	return (*a==0 && *b==0) ? 0 : 1;
@@ -369,4 +370,3 @@ void grib_file_delete(grib_file* file)
 	file=NULL;
 	GRIB_MUTEX_UNLOCK(&mutex1);
 }
-
