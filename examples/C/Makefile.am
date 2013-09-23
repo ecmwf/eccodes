@@ -2,7 +2,7 @@
 AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@
 
 TESTS = iterator.sh get.sh print_data.sh set.sh keys_iterator.sh multi.sh multi_write.sh \
-	precision.sh list.sh large_grib1.sh get_data.sh
+	precision.sh list.sh large_grib1.sh get_data.sh sections_copy.sh
 
 noinst_PROGRAMS       = nearest set_bitmap iterator get print_data set set_missing keys_iterator \
 			set_data mars_param values_check box multi multi2 multi_write precision \

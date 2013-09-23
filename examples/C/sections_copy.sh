@@ -9,6 +9,21 @@
 
 . ./include.sh
 
-${examples_dir}sections_copy ../../data/in_copy.grib ../../data/out_copy.grib
+REGUL_GRID_FILE=../../samples/regular_ll_sfc_grib2.tmpl
+GAUSS_GRID_FILE=../../samples/reduced_gg_pl_640_grib2.tmpl
+OUTPUT=temp.sections.grib
+
+${examples_dir}sections_copy $REGUL_GRID_FILE $GAUSS_GRID_FILE $OUTPUT
+# Now the output should have a regular grid i.e. gridDefinitionTemplateNumber==0
+# but its date should be the same as the Gaussian grid sample
+grid_tmpl=`${tools_dir}grib_get -p gridDefinitionTemplateNumber,date $OUTPUT`
+[ "$grid_tmpl" = "0 20100912" ]
 
 
+${examples_dir}sections_copy $GAUSS_GRID_FILE $REGUL_GRID_FILE $OUTPUT
+# Now the output should have a reduced gaussian grid i.e. gridDefinitionTemplateNumber==40
+# but its date should be the same as the Regular grid sample
+grid_tmpl=`${tools_dir}grib_get -p gridDefinitionTemplateNumber,date $OUTPUT`
+[ "$grid_tmpl" = "40 20070323" ]
+
+rm -f $OUTPUT

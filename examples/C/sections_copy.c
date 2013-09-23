@@ -11,6 +11,9 @@
 
 void usage(char* prog) {
 	printf("usage: %s in1.grib in2.grib out.grib\n",prog);
+	printf("in1.grib\t The grib in whose sections we are interested, i.e. the source of the sections (read-only)\n");
+	printf("in2.grib\t The input grib (read-only)\n");
+	printf("out.grib\t The output file\n");
 	exit(1);
 }
 
@@ -47,7 +50,8 @@ int main ( int argc, char* argv[]) {
 	GRIB_CHECK(err,0);
 	fclose(in);
 
-	what=GRIB_SECTION_PRODUCT | GRIB_SECTION_LOCAL;
+	/*what=GRIB_SECTION_PRODUCT | GRIB_SECTION_LOCAL;*/
+	what=GRIB_SECTION_GRID;
 	h=grib_util_sections_copy(hfrom,hto,what,&err);
 	GRIB_CHECK(err,0);
 
