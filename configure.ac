@@ -351,8 +351,11 @@ if test $netcdf_dir != 'none'
 then
 	with_netcdf=1
 	CFLAGS="$CFLAGS -I${netcdf_dir}/include"
-    LDFLAGS="$LDFLAGS -L${netcdf_dir}/lib"
+    NETCDF_LDFLAGS="-L${netcdf_dir}/lib -lnetcdf"
+    ORIG_LDFLAGS=$LDFLAGS
+    LDFLAGS="$LDFLAGS $NETCDF_LDFLAGS"
     AC_CHECK_LIB(netcdf,nc_open,netcdf_ok=1,netcdf_ok=0)
+    LDFLAGS=$ORIG_LDFLAGS
 	if test $netcdf_ok -eq 0
 	then
       AC_MSG_NOTICE([
@@ -365,7 +368,7 @@ then
 	  test 0 -eq 1
 	  exit 
     fi
-	LIBS="-lnetcdf $LIBS"
+    AC_SUBST(NETCDF_LDFLAGS)
     AC_DEFINE(HAVE_NETCDF,1,NETCDF enabled)
 fi
 

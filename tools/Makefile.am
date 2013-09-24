@@ -69,6 +69,8 @@ INCLUDES =  -I$(top_builddir)/src
 LDADD = libgrib_tools.la $(top_builddir)/src/libgrib_api.la
 DEPENDENCIES = $(LDADD)
 
+grib_to_netcdf_LDADD = $(LDADD) $(NETCDF_LDFLAGS) 
+
 ## Make sure these will be cleaned even when they're not built by
 ## default.
 CLEANFILES = libgrib_tools.la
