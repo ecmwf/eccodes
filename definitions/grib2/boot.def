@@ -20,6 +20,7 @@ meta gts_ddhh00 gts_header(32,6) : no_copy,hidden,read_only;
 
 transient  missingValue   = 9999;
 constant ieeeFloats   = 1 : edition_specific;
+constant isHindcast = 0;
 
 include "section.0.def";
 
