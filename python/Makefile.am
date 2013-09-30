@@ -105,5 +105,11 @@ include $(DEVEL_RULES)
 
 endif
 
+else
+# Case when WITH_PYTHON is not defined. Must add this rule otherwise
+# make dist will fail
+gribapi_swig_wrap.c: swig_wrap_array.c
+	cp -f swig_wrap_array.c gribapi_swig_wrap.c
+
 endif
 
