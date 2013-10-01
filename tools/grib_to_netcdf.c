@@ -3652,12 +3652,11 @@ grib_option grib_options[] = {
         { "R:", "date",          "\n\t\tReference date in the format YYYYMMDD. Default value 19000101.\n", 0, 1, "19000101" },
         { "D:", "NC_DATATYPE",   "\n\t\tType of data. Possible values NC_BYTE, NC_SHORT, NC_INT, NC_FLOAT, NC_DOUBLE."
                 "\n\t\tDefault NC_SHORT\n", 0, 1, "NC_SHORT" },
-                { "T", 0, "Don't use time of validity.\n", 0, 1, 0 },
-                { "f", 0, 0, 0, 1, 0 },
-                { "o:", "output file",   "\n\t\tThe name of the netcdf file.\n", 1, 1, 0 },
-                { "k:", 0, 0, 0, 1, 0 },
-                { "V", 0, 0, 0, 1, 0 },
-                { "M", 0, 0, 0, 1, 0 }
+        { "T", 0, "Don't use time of validity.\n", 0, 1, 0 },
+        { "f", 0, 0, 0, 1, 0 },
+        { "o:", "output file",   "\n\t\tThe name of the netcdf file.\n", 1, 1, 0 },
+        { "V", 0, 0, 0, 1, 0 },
+        { "M", 0, 0, 0, 1, 0 }
 };
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
