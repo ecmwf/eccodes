@@ -1577,7 +1577,7 @@ static void cube_indexes(const hypercube *h, request *r, int *indexes, int size)
 
     if(size < c)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "MARS internal error in cube_indexes. size=%d < axis=%d", size, c);
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Internal error in cube_indexes. size=%d < axis=%d", size, c);
     }
 
     if(h->index_cache == 0 || h->index_cache_size != c)
@@ -1610,7 +1610,6 @@ static void cube_indexes(const hypercube *h, request *r, int *indexes, int size)
         }
         indexes[i] = j;
     }
-
 }
 
 /*********************************/
@@ -2785,7 +2784,7 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
         char *longname = (char *) lowaxis;
         n = count_values(cube, axis);
 
-        if(count_values(data_r,"LEVTYPE") > 1)
+        if(count_values(data_r,"levtype") > 1)
         {
             grib_context_log(ctx, GRIB_LOG_ERROR, "Cannot handle fields for different levtypes.\n");
             grib_context_log(ctx, GRIB_LOG_ERROR, "Please split input data into different files. Exiting!\n");

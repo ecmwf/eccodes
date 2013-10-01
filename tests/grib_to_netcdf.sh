@@ -34,7 +34,7 @@ if [ $skip_test -eq 1 ]; then
 fi
 echo "NetCDF was enabled."
 
-grib_files="tigge_pf_ecmwf.grib2 \
+grib_files="\
 set.grib2 set.grib1 \
 regular_latlon_surface.grib2 \
 regular_latlon_surface.grib1 \
