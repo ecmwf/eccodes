@@ -494,7 +494,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
                 !=GRIB_SUCCESS) {
             grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
                     "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
-            exit(GRIB_INTERNAL_ERROR);
+            return GRIB_INTERNAL_ERROR;
         }
         if((err = grib_set_double_internal(a->parent->h,self->reference_value, reference_value)) !=
                 GRIB_SUCCESS)
@@ -578,7 +578,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
                 !=GRIB_SUCCESS) {
             grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
                     "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
-            exit(GRIB_INTERNAL_ERROR);
+            return GRIB_INTERNAL_ERROR;
         }
         /* divisor=1; */
     } else {
@@ -594,7 +594,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
                     !=GRIB_SUCCESS) {
                 grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
                         "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
-                exit(GRIB_INTERNAL_ERROR);
+                return GRIB_INTERNAL_ERROR;
             }
         } else {
             /* printf("max=%g reference_value=%g grib_power(-last,2)=%g decimal_scale_factor=%ld bits_per_value=%ld\n",
@@ -626,13 +626,12 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
                     min,&reference_value)!=GRIB_SUCCESS) {
                 grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
                         "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
-                exit(GRIB_INTERNAL_ERROR);
+                return GRIB_INTERNAL_ERROR;
             }
 
             binary_scale_factor = grib_get_binary_scale_fact(max,reference_value,bits_per_value,&err);
         }
     }
-
 
     if((err = grib_set_double_internal(a->parent->h,self->reference_value, reference_value)) !=
             GRIB_SUCCESS)
