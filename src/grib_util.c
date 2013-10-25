@@ -1264,3 +1264,23 @@ int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber)
         productDefinitionTemplateNumber ==45 || productDefinitionTemplateNumber == 47    /*aerosols*/
     );
 }
+
+/* Return 1 if the productDefinitionTemplateNumber (grib edition 2) is related to atmospheric chemical constituents */
+int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNumber)
+{
+    return (
+        productDefinitionTemplateNumber == 40 ||
+        productDefinitionTemplateNumber == 41 ||
+        productDefinitionTemplateNumber == 42 ||
+        productDefinitionTemplateNumber == 43);
+}
+
+/* Return 1 if the productDefinitionTemplateNumber (grib edition 2) is related to aerosols */
+int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber)
+{
+    return (
+        productDefinitionTemplateNumber == 44 ||
+        productDefinitionTemplateNumber == 45 ||
+        productDefinitionTemplateNumber == 46 ||
+        productDefinitionTemplateNumber == 47);
+}

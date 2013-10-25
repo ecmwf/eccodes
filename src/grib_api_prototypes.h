@@ -457,6 +457,7 @@ second_order_packed *grib_get_second_order_groups(grib_context *c, const unsigne
 /* grib_accessor_class_local_definition.c */
 
 /* grib_accessor_class_g2_eps.c */
+/* grib_accessor_class_g2_chemical.c */
 
 /* grib_accessor_class_g2_mars_labeling.c */
 
@@ -1076,6 +1077,8 @@ grib_handle *grib_util_set_spec(grib_handle *h, const grib_util_grid_spec *spec,
 int grib_moments(grib_handle *h, double east, double north, double west, double south, int order, double *moments, long *count);
 int parse_keyval_string(char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count);
 int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber);
+int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNumber);
+int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber);
 
 /* compile.c */
 void grib_compile_flags(grib_compiler *c, long flags);
