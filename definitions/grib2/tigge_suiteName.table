@@ -9,3 +9,4 @@
 10 aromeeps-mf-eu        AROME model based LAM-EPS run by Meteo-France
 11 hirlam-dmi-eu         HIRLAM model based LAM-EPS run by DMI (Denmark)
 12 aladinhuneps-omsz-eu  ALADIN model based LAM-EPS run by OMSZ (Hungary)
+13 pearp-mf-eu           ARPEGE model based LAM-EPS run by Meteo-France
