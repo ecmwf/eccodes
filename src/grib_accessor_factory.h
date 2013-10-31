@@ -144,6 +144,7 @@
 { "section_padding", &grib_accessor_class_section_padding, },
 { "section_pointer", &grib_accessor_class_section_pointer, },
 { "select_step_template", &grib_accessor_class_select_step_template, },
+{ "g2_chemical", &grib_accessor_class_g2_chemical, },
 { "signed", &grib_accessor_class_signed, },
 { "signed_bits", &grib_accessor_class_signed_bits, },
 { "simple_packing_error", &grib_accessor_class_simple_packing_error, },

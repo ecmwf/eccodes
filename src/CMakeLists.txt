@@ -178,6 +178,7 @@ list( APPEND grib_api_srcs
 	grib_accessor_class_select_step_template.c
 	grib_accessor_class_local_definition.c
 	grib_accessor_class_g2_eps.c
+	grib_accessor_class_g2_chemical.c
 	grib_accessor_class_g2_mars_labeling.c
 	grib_accessor_class_md5.c
 	grib_jasper_encoding.c
@@ -327,7 +328,7 @@ ecbuild_add_library(TARGET    grib_api
                     GENERATED grib_api_version.c
                     INCLUDES  ${GRIB_API_EXTRA_INCLUDE_DIRS} 
                     LIBS      ${GRIB_API_EXTRA_LIBRARIES}
-		    TEMPLATES ${grib_api_extra_srcs}
+                    TEMPLATES ${grib_api_extra_srcs}
                     ${CMATH_LIBRARIES}  )
 
 

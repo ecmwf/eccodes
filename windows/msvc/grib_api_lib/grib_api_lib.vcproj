@@ -737,6 +737,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_accessor_class_g2_chemical.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_g2_eps.c"
 				>
 			</File>

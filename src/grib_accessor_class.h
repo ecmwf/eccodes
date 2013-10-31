@@ -144,6 +144,7 @@ extern grib_accessor_class* grib_accessor_class_section_length;
 extern grib_accessor_class* grib_accessor_class_section_padding;
 extern grib_accessor_class* grib_accessor_class_section_pointer;
 extern grib_accessor_class* grib_accessor_class_select_step_template;
+extern grib_accessor_class* grib_accessor_class_g2_chemical;
 extern grib_accessor_class* grib_accessor_class_signed;
 extern grib_accessor_class* grib_accessor_class_signed_bits;
 extern grib_accessor_class* grib_accessor_class_simple_packing_error;
