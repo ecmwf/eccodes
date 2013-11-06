@@ -386,10 +386,7 @@ int grib_yywrap()
 		parse_file = 0;
 		grib_yyin = NULL;
 		return 1;
-
 	}
-
-
 }
 
 int grib_yyerror(const char* msg)
@@ -399,7 +396,6 @@ int grib_yyerror(const char* msg)
 	error = 1;
 	return 1;
 }
-
 
 void grib_parser_include(const char* fname)
 {
@@ -472,7 +468,6 @@ void grib_parser_include(const char* fname)
 	}
 }
 
-
 extern int grib_yyparse(void);
 
 static int parse(grib_context* gc,const char* filename)
@@ -491,11 +486,15 @@ static int parse(grib_context* gc,const char* filename)
 	top = 0;
 	parse_file = 0;
 	grib_parser_include(filename);
+   if (!grib_yyin) {
+       /* Could not read from file */
+       parse_file = 0;
+       return GRIB_FILE_NOT_FOUND;
+   }
 	err = grib_yyparse();
 	parse_file = 0;
 
 	if (err) grib_context_log(gc,GRIB_LOG_ERROR,"Parsing error %d > %s\n",err, filename);
-
 
 	return err;
 }
@@ -587,7 +586,7 @@ grib_action* grib_parse_file( grib_context* gc,const char* filename)
 		if(error)
 		{
 #if 1
-			grib_free_action(gc,a);
+            if (a) grib_free_action(gc,a);
 			GRIB_MUTEX_UNLOCK(&mutex_file);
 			return NULL;
 #endif
