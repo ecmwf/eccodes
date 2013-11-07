@@ -3415,6 +3415,12 @@
 	 parameterCategory = 211 ;
 	 parameterNumber = 14 ;
 	}
+#Aerosol type 15 mass mixing ratio
+'211015' = {
+	 discipline = 192 ;
+	 parameterCategory = 211 ;
+	 parameterNumber = 15 ;
+	}
 #SO4 aerosol precursor mass mixing ratio
 '211028' = {
 	 discipline = 192 ;
