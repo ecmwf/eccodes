@@ -74,6 +74,7 @@ if( GRIB_API_PYTHON )
         install(TARGETS _gribapi_swig DESTINATION ${PYTHON_DEST} )
 
         install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gribapi_swig.py  DESTINATION ${PYTHON_DEST})
+        install(FILES gribapi.py DESTINATION ${PYTHON_DEST})
 
     endif()
 
