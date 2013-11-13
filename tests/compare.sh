@@ -22,3 +22,4 @@ ${tools_dir}grib_set -s shortName=2d $infile $outfile
 
 ${tools_dir}grib_compare -b indicatorOfParameter,paramId,shortName $infile $outfile > $REDIRECT
 
+rm -f $outfile || true

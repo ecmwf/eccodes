@@ -8,7 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 . ./include.sh
 
 rm -f log | true
@@ -50,11 +49,32 @@ regular_latlon_surface.grib1
 regular_latlon_surface.grib2
 "
 
+# First create the necessary grib2 files
+files2conv="\
+ reduced_gaussian_model_level\
+ reduced_gaussian_pressure_level\
+ reduced_gaussian_model_level\
+ reduced_gaussian_pressure_level\
+ reduced_gaussian_pressure_level_constant\
+ reduced_gaussian_sub_area\
+ reduced_gaussian_surface\
+ reduced_latlon_surface\
+ regular_gaussian_model_level\
+ regular_gaussian_pressure_level\
+ regular_gaussian_pressure_level_constant\
+ regular_gaussian_surface\
+ regular_latlon_surface\
+"
+for f in $files2conv; do
+  rm -f $f.grib2 || true
+  ${tools_dir}grib_set -s editionNumber=2 $f.grib1 $f.grib2
+done
+
 for file in $files
-do 
-	[ -f "$file" ]
-	echo $file >> log
-	${tools_dir}grib_ls -l 40,28 $file  | grep index | awk '{print $4;}' >> log
+do
+  [ -f "$file" ]
+  echo $file >> log
+  ${tools_dir}grib_ls -l 40,28 $file  | grep index | awk '{print $4;}' >> log
 done
 
 diff log ls.log 
@@ -70,11 +90,16 @@ rm -f tmp_rlls.grib1 | true
 
 # GRIB-305. GRIB edition 1 file with one large message
 if [ -f "sst_globus0083.grib" ]; then
-	${tools_dir}grib_ls sst_globus0083.grib > /dev/null
+   ${tools_dir}grib_ls sst_globus0083.grib > /dev/null
 fi
 
 # GRIB-387 printing key of type byte
 ${tools_dir}grib_ls -p uuidOfVGrid test_uuid.grib2 > /dev/null
+
+# Clean up
+for f in $files2conv; do
+  rm -f $f.grib2
+done
 
 cd $workdir
 

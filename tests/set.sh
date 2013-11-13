@@ -8,7 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 . ./include.sh
 
 REDIRECT=/dev/null
@@ -32,7 +31,14 @@ levtype=`${tools_dir}grib_get -p levtype:l $outfile`
 centre=`${tools_dir}grib_get -p centre:l $outfile`
 [ $centre -eq 80 ]
 
-infile=${data_dir}/regular_gaussian_surface.grib2
+rm -f $outfile || true
+
+# Create the grib2 file from grib1
+grib1File=${data_dir}/regular_gaussian_surface.grib1
+grib2File=${data_dir}/regular_gaussian_surface.grib2
+${tools_dir}grib_set -s editionNumber=2 $grib1File $grib2File
+
+infile=$grib2File
 outfile=${data_dir}/set.grib2
 
 rm -f $outfile || true
@@ -57,4 +63,4 @@ ${tools_dir}grib_set -p levtype $infile $outfile 2> $REDIRECT > $REDIRECT
 
 [ $? -ne 0 ]
 
-
+rm -f $outfile $grib2File || true

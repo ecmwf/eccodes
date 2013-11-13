@@ -14,6 +14,10 @@
 files="regular_latlon_surface.grib2 \
        regular_latlon_surface.grib1"
 
+# Create the grib2 file from grib1
+${tools_dir}grib_set -s editionNumber=2 ${data_dir}/regular_latlon_surface.grib1 ${data_dir}/regular_latlon_surface.grib2
+
+
 for file in `echo $files`; do
 
   infile=${data_dir}/$file
@@ -33,3 +37,4 @@ done
 # Extra test for grid_complex_spatial_differencing
 ${tools_dir}grib_get -p decimalScaleFactor,bitsPerValue ${data_dir}/gfs.c255.grib2 > /dev/null
 
+rm -f ${data_dir}/regular_latlon_surface.grib2

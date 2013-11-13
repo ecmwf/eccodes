@@ -56,7 +56,13 @@ rm -f ${data_dir}/log | true
 
 # GRIB-180
 # Set PDT 4.8 where you can find the EndOfOverallTimeInterval keys
-grib2File=${data_dir}/reduced_latlon_surface_constant.grib2
+# First create the necessary grib2 file
+gname=reduced_latlon_surface_constant
+grib1File=${data_dir}/${gname}.grib1
+grib2File=${data_dir}/${gname}.grib2
+rm -f $grib2File || true
+${tools_dir}grib_set -s editionNumber=2 $grib1File $grib2File
+
 ${tools_dir}grib_set -sproductDefinitionTemplateNumber=8 $grib2File ${grib2File}.p8tmp
 
 # 78 hours is 3 days and 6 hours
@@ -73,4 +79,4 @@ hourEnd=$1; dayEnd=$2
 [ "$dayEnd" = "6" ]
 
 rm -f $grib2File.p8tmp ${grib2File}.tmp | true
-
+rm -f $grib2File

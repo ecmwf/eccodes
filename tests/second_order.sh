@@ -82,3 +82,4 @@ test_data
 ${tools_dir}grib_dump second_ord_rbr.grib1 > $REDIRECT
 
 
+rm -f test.filter

@@ -35,7 +35,6 @@ fi
 echo "NetCDF was enabled."
 
 grib_files="\
-set.grib2 set.grib1 \
 regular_latlon_surface.grib2 \
 regular_latlon_surface.grib1 \
 regular_gaussian_model_level.grib1 \

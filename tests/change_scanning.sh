@@ -68,6 +68,7 @@ EOF
       ${tools_dir}grib_get_data -F "%g" ${data_dir}/scan.grib > ${data_dir}/scan_y_${gridType}_${Ni}_${Nj}.dump
       diff ${data_dir}/scan_y_${gridType}_${Ni}_${Nj}.dump ${data_dir}/scan_y_${gridType}_${Ni}_${Nj}_good.dump 
       rm -f ${data_dir}/scan_y_${gridType}_${Ni}_${Nj}.dump
+      rm -f ${data_dir}/change_scanning_${gridType}.filter
 
       done
     done

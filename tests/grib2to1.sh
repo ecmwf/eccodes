@@ -31,21 +31,26 @@ files="constant_field\
 
 for f in `echo $files`
 do
- file=${data_dir}/$f
- rm -f ${file}.grib1_ || true
+  file=${data_dir}/$f
+  
+  # First create the grib2 file
+  rm -f ${file}.grib2 || true
+  ${tools_dir}grib_set -s editionNumber=2 ${file}.grib1 ${file}.grib2 2> $REDIRECT > $REDIRECT
+  
+  rm -f ${file}.grib1_ || true
+  ${tools_dir}grib_set -s editionNumber=1 ${file}.grib2 ${file}.grib1_ 2> $REDIRECT > $REDIRECT
 
- ${tools_dir}grib_set -s editionNumber=1 ${file}.grib2 ${file}.grib1_ 2> $REDIRECT > $REDIRECT
+  grib1Statistics=`${tools_dir}grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib1_` 
+  grib2Statistics=`${tools_dir}grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib2` 
 
- grib1Statistics=`${tools_dir}grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib1_` 
- grib2Statistics=`${tools_dir}grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib2` 
+  if [ "$grib1Statistics" != "$grib2Statistics" ]
+  then 
+    exit 1
+  fi
 
- if [ "$grib1Statistics" != "$grib2Statistics" ]
- then 
-   exit 1
- fi
-
- #${tools_dir}grib_compare -A1.0e-8 -c values ${file}.grib1_ ${file}.grib2 2> /dev/null > /dev/null
- rm -f ${file}.grib1_ || true
+  #${tools_dir}grib_compare -A1.0e-8 -c values ${file}.grib1_ ${file}.grib2 2> /dev/null > /dev/null
+  rm -f ${file}.grib1_ || true
+  rm -f ${file}.grib2  || true
 done
 
 # GRIB-262 Conversion works without error for L137 data

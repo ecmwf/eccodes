@@ -71,5 +71,5 @@ export GRIB_IEEE_PACKING
 #${tools_dir}grib_filter r.filter ${shdata}_64 > ${shdata}_64.txt
 #diff ${shdata}_64.txt ${shdata}.good
 
-rm -f r.filter ${shdata}_64.txt ${shdata}_32.txt 
+rm -f r.filter ${shdata}_64.txt ${shdata}_32.txt $shdata.txt
 

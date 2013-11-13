@@ -21,8 +21,13 @@ set scaledValueOfCentralWaveNumber={26870,9272,8377,22334};
 write "test.grib";
 EOF
 
-file="${data_dir}/reduced_gaussian_model_level.grib2"
+# First create the grib2 file from grib1
+gname=reduced_gaussian_model_level
+grib1File=${data_dir}/${gname}.grib1
+grib2File=${data_dir}/${gname}.grib2
+${tools_dir}grib_set -s editionNumber=2 $grib1File $grib2File
 
+file="$grib2File"
 ${tools_dir}grib_filter  list.filter $file
 
 cat >list.filter<<EOF
@@ -49,5 +54,4 @@ EOF
 
 diff x.out list.ref
 
-rm -f x.out list.ref list.filter test.grib
-
+rm -f x.out list.ref list.filter test.grib $grib2File

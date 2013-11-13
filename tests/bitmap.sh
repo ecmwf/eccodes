@@ -19,6 +19,9 @@ infile=${data_dir}/reduced_gaussian_model_level.grib1
 outfile=${data_dir}/with_bitmap.grib1
 outfile1=${data_dir}/without_bitmap.grib1
 
+# Create the grib2 file from grib1
+${tools_dir}grib_set -s editionNumber=2 $grib1 $grib2 2> $REDIRECT > $REDIRECT
+
 rm -f $outfile || true
 
 ${tools_dir}grib_set -s bitmapPresent=1 $infile $outfile >$REDIRECT
@@ -59,5 +62,5 @@ ${tools_dir}grib_get_data -m missing out.grib2 > out.grib2.data
 diff out.grib1.data out.grib2.data
 
 rm -f  out.grib1.data out.grib2.data out.grib1 out.grib2 bitmap.rules
-
+rm -f $grib2
 

@@ -8,7 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 . ./include.sh
 
 REDIRECT=/dev/null
@@ -34,6 +33,8 @@ fi
 rm -f $infile.1 $infile.2 || true
 
 infile=${data_dir}/reduced_latlon_surface.grib2
+# Create the grib2 file from grib1
+${tools_dir}grib_set -s editionNumber=2 ${data_dir}/reduced_latlon_surface.grib1 ${data_dir}/reduced_latlon_surface.grib2
 
 ${tools_dir}grib_set -s packingType=grid_jpeg $infile $infile.1
 ${tools_dir}grib_compare -P -b $BLACKLIST $infile $infile.1 > $REDIRECT
@@ -47,3 +48,4 @@ res3=`${tools_dir}grib_get '-F%1.2f' -p min,max,avg $infile.2`
 [ "$res1" = "$res3" ]
 
 rm -f $infile.1 $infile.2 || true
+rm -f ${data_dir}/reduced_latlon_surface.grib2
