@@ -8,10 +8,12 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 . ./include.sh
 
 files="regular_latlon_surface.grib2 regular_latlon_surface.grib1"
+
+# Create the grib2 file from grib1
+${tools_dir}grib_set -s editionNumber=2 ${data_dir}/regular_latlon_surface.grib1 ${data_dir}/regular_latlon_surface.grib2
 
 for file in $files
 do
@@ -37,4 +39,5 @@ diff statistics.out ${data_dir}/statistics.out.good
 
 done
 
-
+rm -f statistics.out statistics.filter || true
+rm -f ${data_dir}/regular_latlon_surface.grib2

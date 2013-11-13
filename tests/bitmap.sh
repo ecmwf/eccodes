@@ -52,9 +52,9 @@ set values={1,2,3,4,5,6,7,1111,1111,8,9,10};
 write ;
 EOF
 
-${tools_dir}grib_filter -o out.grib1 bitmap.rules $grib1 
+${tools_dir}grib_filter -o out.grib1 bitmap.rules $grib1
 ${tools_dir}grib_filter -o out.grib2 bitmap.rules $grib2
-exit 0
+#exit 0
 
 ${tools_dir}grib_get_data -m missing out.grib1 > out.grib1.data
 ${tools_dir}grib_get_data -m missing out.grib2 > out.grib2.data
@@ -63,4 +63,3 @@ diff out.grib1.data out.grib2.data
 
 rm -f  out.grib1.data out.grib2.data out.grib1 out.grib2 bitmap.rules
 rm -f $grib2
-

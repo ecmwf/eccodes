@@ -27,5 +27,4 @@ ${test_dir}/read_index ${infile} > index.out
 
 diff index.out ${data_dir}/index.ok
 
-rm -f index.out
-
+rm -f index.out out.gribidx

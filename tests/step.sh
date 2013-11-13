@@ -79,4 +79,4 @@ hourEnd=$1; dayEnd=$2
 [ "$dayEnd" = "6" ]
 
 rm -f $grib2File.p8tmp ${grib2File}.tmp | true
-rm -f $grib2File
+rm -f $grib2File x.grib

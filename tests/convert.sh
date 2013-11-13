@@ -8,7 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 . ./include.sh
 
 REDIRECT=/dev/null
@@ -28,22 +27,16 @@ then
   exit 1
 fi
 
-rm -f ${data_dir}/out.grib2
+rm -f ${data_dir}/out.grib2 rules
 
-exit 0
 
-if [ ! -f "${data_dir}/lfpw.grib1" ] 
-then
-  echo no data to convert
-  exit 0
-fi
-
-tmpdata=grib_api.grib
-
-rm -f $tmpdata || true
-
-${tools_dir}grib_convert ${data_dir}/mf.rules ${data_dir}/lfpw.grib1 $tmpdata 2> $REDIRECT > $REDIRECT
-${tools_dir}grib_compare -f ${data_dir}/lfpw.grib2 $tmpdata
-
-rm -f $tmpdata || true
-
+#if [ ! -f "${data_dir}/lfpw.grib1" ] 
+#then
+#  echo no data to convert
+#  exit 0
+#fi
+#tmpdata=grib_api.grib
+#rm -f $tmpdata || true
+#${tools_dir}grib_convert ${data_dir}/mf.rules ${data_dir}/lfpw.grib1 $tmpdata 2> $REDIRECT > $REDIRECT
+#${tools_dir}grib_compare -f ${data_dir}/lfpw.grib2 $tmpdata
+#rm -f $tmpdata rules || true

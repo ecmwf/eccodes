@@ -50,4 +50,4 @@ do
 	done
 done
 
-rm -f $$_f locx.grib1 locy.grib1
+rm -f $$_f locx.grib1 locy.grib1 loc.grib1
