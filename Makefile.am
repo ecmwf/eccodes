@@ -23,7 +23,7 @@ else
 endif
 
 SUBDIRS = src tools definitions samples ifs_samples/grib1 ifs_samples/grib1_mlgrib2 ifs_samples/grib1_mlgrib2_ieee64 \
-          tests mars_tests tigge $(FORTRAN_MOD) examples/C $(F90_CHECK) $(PERL_OPT) $(PYTHON_OPT) examples/python
+          tests tigge $(FORTRAN_MOD) examples/C $(F90_CHECK) $(PERL_OPT) $(PYTHON_OPT) examples/python
 
 EXTRA_DIST = README AUTHORS NOTICE LICENSE ChangeLog version.sh html \
 		src/extrules.am \
