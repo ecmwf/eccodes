@@ -10,3 +10,4 @@
 . ./include.sh
 
 ${examples_dir}set > /dev/null
+rm -f out.grib1

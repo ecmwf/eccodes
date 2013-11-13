@@ -9,4 +9,10 @@
 
 . ./include.sh
 
+# Create the grib2 file needed for this test
+grib1File=${data_dir}/reduced_gaussian_pressure_level.grib1
+grib2File=${data_dir}/reduced_gaussian_pressure_level.grib2
+${tools_dir}grib_set -s editionNumber=2 $grib1File $grib2File
+
 ${examples_dir}set_missing > /dev/null
+rm -f out_surface_level.grib2 $grib2File

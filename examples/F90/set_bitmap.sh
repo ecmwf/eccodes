@@ -9,3 +9,4 @@
 
 . ./include.sh
 ${examples_dir}set_bitmap > /dev/null
+rm -f out.grib

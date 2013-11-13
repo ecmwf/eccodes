@@ -17,3 +17,5 @@ diff index_f90.out ${data_dir}/index_f90.ok
 # if an index file exists then load the index from it
 ${examples_dir}index > index_f90.out
 diff index_f90.out ${data_dir}/index_f90.ok
+
+rm -f index.idx index_f90.out

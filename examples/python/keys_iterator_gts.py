@@ -47,7 +47,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr,err.msg
+            print >> sys.stderr,err.msg
 
         return 1
 

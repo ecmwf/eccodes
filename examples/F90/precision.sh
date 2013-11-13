@@ -10,3 +10,4 @@
 . ./include.sh
 
 ${examples_dir}precision > /dev/null
+rm -f ${data_dir}/regular_latlon_surface_prec.grib1

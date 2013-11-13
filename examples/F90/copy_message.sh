@@ -10,3 +10,4 @@
 . ./include.sh
 
 ${examples_dir}copy_message > /dev/null
+rm -f out.grib1
