@@ -16,15 +16,15 @@
 101 101 Layer between two isobaric levels pressure of top (kPa) pressure of bottom (kPa)
 102 sfc Mean sea level 0 0
 103 103 Fixed height level height above mean sea level (MSL) in meters
-104 104 Layer between two height levels above msl height of top (hm) above mean sea level height of bottom (hm) above mean sea level
+104 104 Layer between two specfied altitudes above mean sea level - altitude of top, altitude of bottom (hm)
 105 sfc Fixed height above ground height in meters (2 octets)
-106 106 Layer between two height levels above ground height of top (hm) above ground height of bottom (hm) above ground
+106 106 Layer between two height levels above ground - height of top, height of bottom (hm)
 107 107 Sigma level sigma value in 1/10000 (2 octets)
 108 108 Layer between two sigma levels sigma value at top in 1/100 sigma value at bottom in 1/100
 109 ml Hybrid level level number (2 octets)
 110 ml Layer between two hybrid levels level number of top level number of bottom
 111 sfc Depth below land surface centimeters (2 octets)
-112 sfc Layer between two depths below land surface depth of upper surface (cm) depth of lower surface (cm)
+112 sfc Layer between two depths below land surface - depth of upper surface, depth of lower surface (cm)
 113 pt Isentropic (theta) level Potential Temp. degrees K (2 octets)
 114 114 Layer between two isentropic levels 475K minus theta of top in Deg. K 475K minus theta of bottom in Deg. K
 115 115 Level at specified pressure difference from ground to level hPa (2 octets)
