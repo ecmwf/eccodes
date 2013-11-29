@@ -2009,6 +2009,7 @@ static void free_nc_options()
 
 static void get_nc_options(const request *user_r)
 {
+    const char *checkvalidtime_env = NULL;
     const char *validtime = get_value(user_r, "usevalidtime", 0);
     const char *refdate = get_value(user_r, "referencedate", 0);
 
@@ -2023,7 +2024,9 @@ static void get_nc_options(const request *user_r)
     setup.title = title ? grib_context_strdup(ctx, (title)) : NULL;
     setup.history = history ? grib_context_strdup(ctx, (history)) : NULL;
     setup.unlimited = unlimited ? grib_context_strdup(ctx, ((unlimited))) : NULL;
-    setup.checkvalidtime = getenv("checkvalidtime") ? atol(getenv("checkvalidtime")) : 1;
+
+    checkvalidtime_env = getenv("GRIB_TO_NETCDF_CHECKVALIDTIME");
+    setup.checkvalidtime = checkvalidtime_env ? atol(checkvalidtime_env) : 1;
     setup.mars_description = empty_request("MARS");
 }
 
