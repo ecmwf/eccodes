@@ -58,10 +58,12 @@ if (defined(typeOfFirstFixedSurface)) {
 
 if (genVertHeightCoords) {
    # Generalized vertical height coordinate case
-   alias numberOfVerticalCoordinateValues = nlev ;
+   alias numberOfVerticalCoordinateValues = nlev;
+   alias numberOfCoordinatesValues = nlev;
+   alias numberOfVerticalGridDescriptors = nlev;
 }
 else {
-   if (NV  == 0){
+   if (NV == 0){
      transient PVPresent = 0;
    } else {
      transient PVPresent = 1;
