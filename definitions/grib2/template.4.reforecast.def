@@ -10,7 +10,7 @@ unsigned[1] HourOfModelVersion   = 0: edition_specific;
 unsigned[1] MinuteOfModelVersion = 0: edition_specific;
 unsigned[1] SecondOfModelVersion = 0: edition_specific;
 
-meta dateOfModelVersion  g2date(YearOfModelVersion,MonthOfModelVersion,DayOfModelVersion) : dump;
-meta timeOfModelVersion  time(HourOfModelVersion, MinuteOfModelVersion, SecondOfModelVersion) : dump;
+meta modelVersionDate  g2date(YearOfModelVersion,MonthOfModelVersion,DayOfModelVersion) : dump;
+meta modelVersionTime  time(HourOfModelVersion, MinuteOfModelVersion, SecondOfModelVersion) : dump;
 
 constant isHindcast = 1;
