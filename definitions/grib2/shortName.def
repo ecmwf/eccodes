@@ -2164,7 +2164,7 @@
 	 probabilityType = 3 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfLowerLimit = 25 ;
+	 scaledValueOfLowerLimit = 20 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 2 ;

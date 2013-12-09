@@ -2163,7 +2163,7 @@
 	 parameterNumber = 22 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 2 ;
-	 scaledValueOfLowerLimit = 25 ;
+	 scaledValueOfLowerLimit = 20 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfLowerLimit = 0 ;
