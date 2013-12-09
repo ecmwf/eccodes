@@ -27,15 +27,15 @@ ecbuild_declare_project()
 ###############################################################################
 # some variables/options of this project
 
-option( GRIB_API_JPG     "try to add support for JPG encoding"          ON )
-option( GRIB_API_PNG     "try to add support for PNG encoding"          ON )
-option( GRIB_API_NETCDF  "try to add support for NetCDF"                ON )
-option( GRIB_API_SZIP    "try to add support for SZip encoding"         ON )
-option( GRIB_API_PYTHON  "try to build the GRIB_API Python interface"   ON )
-option( GRIB_API_FORTRAN "try to build the GRIB_API Fortran interface"  ON )
+option( ENABLE_JPG     "try to add support for JPG encoding"          ON )
+option( ENABLE_PNG     "try to add support for PNG encoding"          ON )
+option( ENABLE_NETCDF  "try to add support for NetCDF"                ON )
+option( ENABLE_SZIP    "try to add support for SZip encoding"         ON )
+option( ENABLE_PYTHON  "try to build the GRIB_API Python interface"   ON )
+option( ENABLE_FORTRAN "try to build the GRIB_API Fortran interface"  ON )
 
-option( GRIB_API_MEMORY_MANAGEMENT "enable memory management"  OFF )
-option( GRIB_API_ALIGN_MEMORY      "enable memory alignment"   OFF )
+option( ENABLE_MEMORY_MANAGEMENT "enable memory management"  OFF )
+option( ENABLE_ALIGN_MEMORY      "enable memory alignment"   OFF )
 
 option( GRIB_TIMER       "enable timer"    OFF )
 option( GRIB_THREADS     "enable threads"  OFF )
@@ -52,7 +52,7 @@ find_package( CMath )
 ### SZIP support
 
 set( HAVE_LIBSZIP 0 )
-if( GRIB_API_SZIP )
+if( ENABLE_SZIP )
 
     find_package( SZip )
 
@@ -67,7 +67,7 @@ set( HAVE_JPEG 0 )
 set( HAVE_LIBJASPER 0 )
 set( HAVE_LIBOPENJPEG 0 )
 
-if( GRIB_API_JPG )
+if( ENABLE_JPG )
 
     ecbuild_add_extra_search_paths( jasper ) # help standard cmake macro with ecmwf paths
     find_package( Jasper )
@@ -90,7 +90,7 @@ endif()
 
 set( HAVE_LIBPNG 0 )
 
-if( GRIB_API_PNG )
+if( ENABLE_PNG )
 
   find_package( PNG )
 
@@ -105,7 +105,7 @@ endif()
 
 set( HAVE_NETCDF 0 )
 
-if( GRIB_API_NETCDF )
+if( ENABLE_NETCDF )
 
   find_package( NetCDF )
 
@@ -130,7 +130,7 @@ if( EC_BIG_ENDIAN )
 endif()
 
 set( MANAGE_MEM 0 )
-if( GRIB_API_MEMORY_MANAGEMENT )
+if( ENABLE_MEMORY_MANAGEMENT )
     set( MANAGE_MEM 1 )
 endif()
 
@@ -146,7 +146,7 @@ if( GRIB_THREADS AND CMAKE_THREAD_LIBS_INIT )
 endif()
 
 set( GRIB_MEM_ALIGN 0 )
-if( GRIB_API_ALIGN_MEMORY )
+if( ENABLE_ALIGN_MEMORY )
   set( GRIB_MEM_ALIGN 1 )
 endif()
 

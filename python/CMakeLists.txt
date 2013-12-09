@@ -1,4 +1,4 @@
-if( GRIB_API_PYTHON )
+if( ENABLE_PYTHON )
 
     ecbuild_find_python( VERSION 2.5)
 
@@ -33,7 +33,7 @@ if( GRIB_API_PYTHON )
     ###############################################################################
     # swig python interface
 
-    if( GRIB_API_PYTHON AND SWIG_FOUND AND PYTHONLIBS_FOUND )
+	if( ENABLE_PYTHON AND SWIG_FOUND AND PYTHONLIBS_FOUND )
 
         # preparing for generating setup.py -- this may not be needed as cmake can do the swig + shared libs without libtool
 

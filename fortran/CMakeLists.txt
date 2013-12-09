@@ -1,4 +1,4 @@
-if( GRIB_API_FORTRAN )
+if( ENABLE_FORTRAN )
 
     ecbuild_enable_fortran( REQUIRED MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/fortran/modules )
 
