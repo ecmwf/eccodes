@@ -154,6 +154,12 @@ double rint(double x);
 
 #define Assert(a) {if(!(a)) grib_fail(#a,__FILE__,__LINE__);}
 
+ /* Compile time assertion - Thanks to Ralf Holly */
+#define COMPILE_TIME_ASSERT(e) \
+   do { \
+       enum { assert_static__ = 1/(e) }; \
+      } while (0)
+
 #include "grib_api.h"
 
 #define GRIB_UNKNOWN_VALUE   -9999.999

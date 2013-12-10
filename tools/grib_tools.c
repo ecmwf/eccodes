@@ -103,7 +103,8 @@ grib_runtime_options options={
 
 	};
 
-static int is_index_file(const char* filename) {
+static int is_index_file(const char* filename)
+{
     FILE* fh;
     char buf[8]={0,};
     char* str="GRBIDX";
@@ -122,7 +123,8 @@ static int is_index_file(const char* filename) {
     return ret;
 }
 
-static grib_handle* grib_handle_new_from_file_x(grib_context* c,FILE* f,int mode,int headers_only,int *err) {
+static grib_handle* grib_handle_new_from_file_x(grib_context* c,FILE* f,int mode,int headers_only,int *err)
+{
     if (mode==MODE_GTS)
         return eccode_gts_new_from_file(c,f,headers_only,err);
 
@@ -177,7 +179,8 @@ int grib_tool(int argc, char **argv)
 
 }
 
-static int grib_tool_with_orderby(grib_runtime_options* options) {
+static int grib_tool_with_orderby(grib_runtime_options* options)
+{
     int err=0;
     grib_failed *failed=NULL,*p=NULL;
     grib_handle* h=NULL;
@@ -258,7 +261,8 @@ static int grib_tool_with_orderby(grib_runtime_options* options) {
 
 char iobuf[1024*1024];
 
-static int grib_tool_without_orderby(grib_runtime_options* options) {
+static int grib_tool_without_orderby(grib_runtime_options* options)
+{
     int err=0;
     grib_failed *failed=NULL,*p=NULL;
     grib_handle* h=NULL;
@@ -284,9 +288,13 @@ static int grib_tool_without_orderby(grib_runtime_options* options) {
             exit(1);
         }
         if (options->infile_offset) {
+            /* Check at compile time to ensure our file offset is at least 64 bits */
+            COMPILE_TIME_ASSERT( sizeof(options->infile_offset) >= 8 );
+
             err=fseeko(infile->file, options->infile_offset, SEEK_SET);
             if (err) {
-                fprintf(stderr, "Invalid file offset: %ld\n", options->infile_offset);
+                /*fprintf(stderr, "Invalid file offset: %ld\n", options->infile_offset);*/
+                perror("Invalid file offset");
                 exit(1);
             }
         }
@@ -362,7 +370,8 @@ static int grib_tool_without_orderby(grib_runtime_options* options) {
     return 0;
 }
 
-static int navigate(grib_field_tree* fields,grib_runtime_options* options) {
+static int navigate(grib_field_tree* fields,grib_runtime_options* options)
+{
     int err=0;
     if (!fields || options->stop) return 0;
 
@@ -389,7 +398,8 @@ static int navigate(grib_field_tree* fields,grib_runtime_options* options) {
     return err;
 }
 
-static int grib_tool_index(grib_runtime_options* options) {
+static int grib_tool_index(grib_runtime_options* options)
+{
     int err=0;
     grib_context* c=NULL;
     char* f1=options->infile->name;
@@ -482,7 +492,8 @@ static int grib_tool_index(grib_runtime_options* options) {
 }
 
 #ifndef GRIB_ON_WINDOWS
-static int scan(grib_context* c,grib_runtime_options* options,const char* dir) {
+static int scan(grib_context* c,grib_runtime_options* options,const char* dir)
+{
     struct dirent *s;
     DIR *d;
     int err=0;
@@ -562,7 +573,8 @@ static int process(grib_context* c,grib_runtime_options* options,const char* pat
     return 0;
 }
 
-static int grib_tool_onlyfiles(grib_runtime_options* options) {
+static int grib_tool_onlyfiles(grib_runtime_options* options)
+{
     grib_context* c=NULL;
     grib_tools_file* infile=NULL;
 
@@ -581,8 +593,8 @@ static int grib_tool_onlyfiles(grib_runtime_options* options) {
     return 0;
 }
 
-static void grib_print_header(grib_runtime_options* options,grib_handle* h) {
-
+static void grib_print_header(grib_runtime_options* options,grib_handle* h)
+{
     size_t strlenkey=0;
     int width;
     int written_to_dump = 0; /* boolean */
@@ -626,8 +638,8 @@ static void grib_print_header(grib_runtime_options* options,grib_handle* h) {
     }
 }
 
-
-static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle* h, const char* ns) {
+static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle* h, const char* ns)
+{
     int i=0;
     grib_keys_iterator* kiter=NULL;
 
@@ -672,7 +684,8 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
     }
 }
 
-static int to_skip(grib_handle* h,grib_values* v,int *err) {
+static int to_skip(grib_handle* h,grib_values* v,int *err)
+{
     double dvalue=0;
     int ret=0;
     long lvalue=0;
@@ -705,7 +718,8 @@ static int to_skip(grib_handle* h,grib_values* v,int *err) {
     return ret;
 }
 
-void grib_skip_check(grib_runtime_options* options,grib_handle* h) {
+void grib_skip_check(grib_runtime_options* options,grib_handle* h)
+{
     int i,ret=0;
     grib_values* v=NULL;
     for (i=0;i < options->constraints_count ;i++) {
@@ -869,8 +883,8 @@ void grib_print_key_values(grib_runtime_options* options,grib_handle* h)
     }
 }
 
-
-void grib_print_file_statistics(grib_runtime_options* options,grib_tools_file* file) {
+void grib_print_file_statistics(grib_runtime_options* options,grib_tools_file* file)
+{
     grib_failed* failed=NULL;
 
     Assert(file);
