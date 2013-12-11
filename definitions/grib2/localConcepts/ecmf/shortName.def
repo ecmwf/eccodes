@@ -793,23 +793,11 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 128 ;
 	}
-#Geopotential
-'z' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 4 ;
-	}
 #Total column water vapour
 'tcwv' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 137 ;
-	}
-#Vorticity (relative)
-'vo' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 12 ;
 	}
 #Soil temperature level 1
 'stl1' = {
@@ -849,12 +837,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 144 ;
 	}
-#Boundary layer dissipation
-'bld' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 20 ;
-	}
 #Charnock
 'chnk' = {
 	 discipline = 192 ;
@@ -891,18 +873,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 154 ;
-	}
-#Divergence
-'d' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 13 ;
-	}
-#Relative humidity
-'r' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 1 ;
 	}
 #Tendency of surface pressure
 'tsp' = {
@@ -945,24 +915,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 164 ;
-	}
-#10 metre U wind component
-'10u' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 2 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
-#10 metre V wind component
-'10v' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #Surface solar radiation downwards
 'ssrd' = {
