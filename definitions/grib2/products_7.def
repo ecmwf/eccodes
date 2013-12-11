@@ -17,6 +17,7 @@ alias mars.class  = marsClass;
 alias mars.param = paramId;
 alias mars.model = marsModel;
 alias mars.origin = centre;
+unalias mars.domain;
 
 concept marsType {
 
@@ -75,6 +76,7 @@ concept marsStream {
 
 alias mars.stream = marsStream;
 alias mars.type   = marsType;
+alias mars.step   = stepRange;
 
 if (isHindcast == 1) {
    # S2S reforecasts
