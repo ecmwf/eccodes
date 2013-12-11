@@ -13,7 +13,7 @@ cmake_minimum_required( VERSION 2.8.4 FATAL_ERROR )
 
 project( grib_api C )
 
-set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} )
+set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild/cmake")
 
 set( GRIB_API_INSTALL_INCLUDE_DIR include CACHE PATH "GRIB_API override installation directory for header files")
 
