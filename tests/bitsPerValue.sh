@@ -35,6 +35,7 @@ for file in `echo $files`; do
 done
 
 # Extra test for grid_complex_spatial_differencing
-${tools_dir}grib_get -p decimalScaleFactor,bitsPerValue ${data_dir}/gfs.c255.grib2 > /dev/null
+res=`${tools_dir}grib_get -p decimalScaleFactor,bitsPerValue ${data_dir}/gfs.c255.grib2`
+[ "$res" = "1 20" ]
 
 rm -f ${data_dir}/regular_latlon_surface.grib2
