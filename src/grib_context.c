@@ -61,7 +61,6 @@ static void* default_long_lasting_malloc(const grib_context* c, size_t size)
     cntp++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
-    if (ret) memset(ret,0,size);
     return ret;
 }
 
@@ -82,7 +81,6 @@ static void* default_buffer_malloc(const grib_context* c, size_t size)
     cntp++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
-    if (ret) memset(ret,0,size);
     return ret;
 }
 
@@ -110,7 +108,6 @@ static void* default_malloc(const grib_context* c, size_t size)
     cnt++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
-    if (ret) memset(ret,0,size);
     return ret;
 }
 
