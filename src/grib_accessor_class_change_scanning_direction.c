@@ -143,124 +143,112 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
-  int n=0;
-  grib_accessor_change_scanning_direction* self= (grib_accessor_change_scanning_direction*)a;
+    int n=0;
+    grib_accessor_change_scanning_direction* self= (grib_accessor_change_scanning_direction*)a;
 
-  self->values=grib_arguments_get_name(a->parent->h,args,n++);
-  self->Ni=grib_arguments_get_name(a->parent->h,args,n++);
-  self->Nj=grib_arguments_get_name(a->parent->h,args,n++);
-  self->i_scans_negatively=grib_arguments_get_name(a->parent->h,args,n++);
-  self->j_scans_positively=grib_arguments_get_name(a->parent->h,args,n++);
-  self->first=grib_arguments_get_name(a->parent->h,args,n++);
-  self->last=grib_arguments_get_name(a->parent->h,args,n++);
-  self->axis=grib_arguments_get_name(a->parent->h,args,n++);
-  
-  a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
-  a->length = 0;
+    self->values=grib_arguments_get_name(a->parent->h,args,n++);
+    self->Ni=grib_arguments_get_name(a->parent->h,args,n++);
+    self->Nj=grib_arguments_get_name(a->parent->h,args,n++);
+    self->i_scans_negatively=grib_arguments_get_name(a->parent->h,args,n++);
+    self->j_scans_positively=grib_arguments_get_name(a->parent->h,args,n++);
+    self->first=grib_arguments_get_name(a->parent->h,args,n++);
+    self->last=grib_arguments_get_name(a->parent->h,args,n++);
+    self->axis=grib_arguments_get_name(a->parent->h,args,n++);
+
+    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    a->length = 0;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  int ret=0;
-  long i,j,jr,theEnd,Ni,Nj,k,kp;
-  double tmp;
-  long iScansNegatively=0;
-  long jScansPositively=0;
-  long first=0;
-  long last=0;
-  size_t size=0;
-  double* values=NULL;
-  grib_accessor_change_scanning_direction* self= (grib_accessor_change_scanning_direction*)a;
-  grib_context* c=a->parent->h->context;
-  grib_handle* h=a->parent->h;
+    int ret=0;
+    long i,j,jr,theEnd,Ni,Nj,k,kp;
+    double tmp;
+    long iScansNegatively=0;
+    long jScansPositively=0;
+    double first=0;
+    double last=0;
+    size_t size=0;
+    double* values=NULL;
+    grib_accessor_change_scanning_direction* self= (grib_accessor_change_scanning_direction*)a;
+    grib_context* c=a->parent->h->context;
+    grib_handle* h=a->parent->h;
 
-  if (*val==0) return 0;
+    if (*val==0) return 0;
 
-  if((ret = grib_get_long_internal(h,self->Ni,&Ni))
-      != GRIB_SUCCESS) return ret;
+    if((ret = grib_get_long_internal(h,self->Ni,&Ni)) != GRIB_SUCCESS) return ret;
+    if((ret = grib_get_long_internal(h,self->Nj,&Nj)) != GRIB_SUCCESS) return ret;
 
-  if((ret = grib_get_long_internal(h,self->Nj,&Nj))
-      != GRIB_SUCCESS) return ret;
-  
-  if((ret = grib_get_long_internal(h,self->i_scans_negatively,&iScansNegatively))
-      != GRIB_SUCCESS) return ret;
+    if((ret = grib_get_long_internal(h,self->i_scans_negatively,&iScansNegatively)) != GRIB_SUCCESS) return ret;
+    if((ret = grib_get_long_internal(h,self->j_scans_positively,&jScansPositively)) != GRIB_SUCCESS) return ret;
 
-  if((ret = grib_get_long_internal(h,self->j_scans_positively,&jScansPositively))
-      != GRIB_SUCCESS) return ret;
+    if((ret = grib_get_double_internal(h,self->first,&first)) != GRIB_SUCCESS) return ret;
+    if((ret = grib_get_double_internal(h,self->last,&last))   != GRIB_SUCCESS) return ret;
 
-  if((ret = grib_get_long_internal(h,self->first,&first))
-      != GRIB_SUCCESS) return ret;
-  if((ret = grib_get_long_internal(h,self->last,&last))
-      != GRIB_SUCCESS) return ret;
+    if ( (ret=grib_get_size(h,self->values,&size)) != GRIB_SUCCESS)  return ret;
 
-  if ( (ret=grib_get_size(h,self->values,&size)) != GRIB_SUCCESS)  return ret;
+    if (size>Ni*Nj) {
+        grib_context_log(c,GRIB_LOG_ERROR,"change_scanning_direction: wrong values size!=Ni*Nj (%ld!=%ld*%ld)",size,Ni,Nj);
+        return GRIB_WRONG_ARRAY_SIZE;
+    }
 
-  if (size>Ni*Nj) {
-    grib_context_log(c,GRIB_LOG_ERROR,"change_scanning_direction: wrong values size!=Ni*Nj (%ld!=%ld*%ld)",size,Ni,Nj);
-    return GRIB_WRONG_ARRAY_SIZE;
-  }
+    values=(double*)grib_context_malloc(c,size*sizeof(double));
+    if (!values) return GRIB_OUT_OF_MEMORY;
 
-  values=(double*)grib_context_malloc(c,size*sizeof(double));
-  if (!values) return GRIB_OUT_OF_MEMORY;
-
-  if((ret = grib_get_double_array_internal(h,self->values,values,&size))
-       != GRIB_SUCCESS) {
+    if((ret = grib_get_double_array_internal(h,self->values,values,&size))
+            != GRIB_SUCCESS) {
         grib_context_free(c,values);
         return ret;
-  }
-
-  if (self->axis[0] == 'x') {
-    theEnd=(Ni+0.5)/2;
-    for (j=0;j<Nj;j++) {
-      jr=Ni*j;
-      for (i=0;i<theEnd;i++) {
-        k=jr+i;
-        kp=jr+Ni-i-1;
-        tmp=values[k];
-        values[k]=values[kp];
-        values[kp]=tmp;
-      }
     }
-    iScansNegatively=!iScansNegatively;
-    if((ret = grib_set_long_internal(h,self->i_scans_negatively,iScansNegatively))
-        != GRIB_SUCCESS) return ret;
-  } else {
-    long kpj;
-    theEnd=(Nj+0.5)/2;
-    for (i=0;i<Ni;i++) {
-      kpj=Ni*(Nj-1);
-      for (j=0;j<theEnd;j++) {
-        k=Ni*j+i;
-        kp=kpj-Ni*j+i;
-        tmp=values[k];
-        values[k]=values[kp];
-        values[kp]=tmp;
-      }
-    }
-    jScansPositively=!jScansPositively;
-    if((ret = grib_set_long_internal(h,self->j_scans_positively,jScansPositively))
-        != GRIB_SUCCESS) return ret;
-  }
 
-  if((ret = grib_set_double_array_internal(h,self->values,values,size))
-      != GRIB_SUCCESS) {
+    if (self->axis[0] == 'x') {
+        theEnd=(Ni+0.5)/2;
+        for (j=0;j<Nj;j++) {
+            jr=Ni*j;
+            for (i=0;i<theEnd;i++) {
+                k=jr+i;
+                kp=jr+Ni-i-1;
+                tmp=values[k];
+                values[k]=values[kp];
+                values[kp]=tmp;
+            }
+        }
+        iScansNegatively=!iScansNegatively;
+        if((ret = grib_set_long_internal(h,self->i_scans_negatively,iScansNegatively))
+                != GRIB_SUCCESS) return ret;
+    } else {
+        long kpj;
+        theEnd=(Nj+0.5)/2;
+        for (i=0;i<Ni;i++) {
+            kpj=Ni*(Nj-1);
+            for (j=0;j<theEnd;j++) {
+                k=Ni*j+i;
+                kp=kpj-Ni*j+i;
+                tmp=values[k];
+                values[k]=values[kp];
+                values[kp]=tmp;
+            }
+        }
+        jScansPositively=!jScansPositively;
+        if((ret = grib_set_long_internal(h,self->j_scans_positively,jScansPositively))
+                != GRIB_SUCCESS) return ret;
+    }
+
+    if((ret = grib_set_double_array_internal(h,self->values,values,size)) != GRIB_SUCCESS) {
+        grib_context_free(c,values);
+        return ret;
+    }
+
+    if((ret = grib_set_double_internal(h,self->first,last)) != GRIB_SUCCESS) return ret;
+
+    if((ret = grib_set_double_internal(h,self->last,first)) != GRIB_SUCCESS) return ret;
+
     grib_context_free(c,values);
-    return ret;
-  }
 
-  if((ret = grib_set_long_internal(h,self->first,last))
-      != GRIB_SUCCESS) return ret;
-
-  if((ret = grib_set_long_internal(h,self->last,first))
-      != GRIB_SUCCESS) return ret;
-
-  grib_context_free(c,values);
-
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
-static int  get_native_type(grib_accessor* a){
+static int get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_LONG;
 }
-
-
