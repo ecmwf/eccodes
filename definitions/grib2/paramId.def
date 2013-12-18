@@ -81,6 +81,48 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
 	}
+#Cloudy radiance (with respect to wave number)
+'260550' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 16 ;
+	}
+#Clear-sky radiance (with respect to wave number)
+'260551' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 17 ;
+	}
+#Wind speed
+'260552' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 19 ;
+	}
+#Aerosol optical thickness at 0.635 um
+'260553' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 20 ;
+	}
+#Aerosol optical thickness at 0.810 um
+'260554' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 21 ;
+	}
+#Aerosol optical thickness at 1.640 um
+'260555' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 22 ;
+	}
+#Angstrom coefficient
+'260556' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 23 ;
+	}
 #Virtual temperature
 '300012' = {
 	 discipline = 0 ;
