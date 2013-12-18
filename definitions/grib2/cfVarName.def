@@ -21,6 +21,66 @@
          parameterCategory = 1 ;
          parameterNumber = 15 ;
         }
+#Scaled radiance
+'p260530' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	}
+#Scaled albedo
+'p260531' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	}
+#Scaled brightness temperature
+'p260532' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 2 ;
+	}
+#Scaled precipitable water
+'p260533' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	}
+#Scaled lifted index
+'p260534' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 4 ;
+	}
+#Scaled cloud top pressure
+'p260535' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 5 ;
+	}
+#Scaled skin temperature
+'p260536' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 6 ;
+	}
+#Cloud mask
+'p260537' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 7 ;
+	}
+#Pixel scene type
+'p260538' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 8 ;
+	}
+#Fire detection indicator
+'p260539' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 9 ;
+	}
 #Virtual temperature
 'p300012' = {
 	 discipline = 0 ;

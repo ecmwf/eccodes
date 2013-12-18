@@ -21,6 +21,66 @@
          parameterCategory = 1 ;
          parameterNumber = 15 ;
         }
+#Scaled radiance
+'Scaled radiance' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	}
+#Scaled albedo
+'Scaled albedo' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	}
+#Scaled brightness temperature
+'Scaled brightness temperature' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 2 ;
+	}
+#Scaled precipitable water
+'Scaled precipitable water' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	}
+#Scaled lifted index
+'Scaled lifted index' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 4 ;
+	}
+#Scaled cloud top pressure
+'Scaled cloud top pressure' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 5 ;
+	}
+#Scaled skin temperature
+'Scaled skin temperature' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 6 ;
+	}
+#Cloud mask
+'Cloud mask' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 7 ;
+	}
+#Pixel scene type
+'Pixel scene type' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 8 ;
+	}
+#Fire detection indicator
+'Fire detection indicator' = {
+	 discipline = 3 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 9 ;
+	}
 #Virtual temperature
 'Virtual temperature' = {
 	 discipline = 0 ;
