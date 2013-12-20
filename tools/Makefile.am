@@ -77,7 +77,7 @@ CLEANFILES = libgrib_tools.la
 
 grib1to2$(EXEEXT): grib1to2.txt
 	rm -f grib1to2
-	sed "s:toolsdir:$(bindir):" grib1to2.txt > grib1to2
+	sed "s|toolsdir|$(bindir)|" grib1to2.txt > grib1to2
 	chmod +x grib1to2
 
 # wingetopt files are for Microsoft Windows Visual Studio support
