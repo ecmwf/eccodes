@@ -134,6 +134,9 @@ if( ENABLE_MEMORY_MANAGEMENT )
     set( MANAGE_MEM 1 )
 endif()
 
+set( CMAKE_THREAD_PREFER_PTHREAD 1 ) # find thread library, but prefer pthreads
+find_package(Threads REQUIRED)
+
 set( GRIB_PTHREADS 0 )
 set( GRIB_LINUX_PTHREADS 0 )
 if( GRIB_THREADS AND CMAKE_THREAD_LIBS_INIT )
