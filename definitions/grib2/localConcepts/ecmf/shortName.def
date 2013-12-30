@@ -281,12 +281,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 42 ;
 	}
-#Soil type
-'slt' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 0 ;
-	}
 #Snow evaporation
 'es' = {
 	 discipline = 192 ;

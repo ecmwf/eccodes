@@ -281,12 +281,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 42 ;
 	}
-#Soil type
-'43' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 0 ;
-	}
 #Snow evaporation
 '44' = {
 	 discipline = 192 ;
