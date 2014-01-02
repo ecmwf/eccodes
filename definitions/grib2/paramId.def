@@ -11,6 +11,18 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	}
+#Eastward turbulent surface stress
+'180' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 37 ;
+	}
+#Northward turbulent surface stress
+'181' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 36 ;
+	}
 #10 metre wind gust in the last 3 hours
 '228028' = {
 	 discipline = 0 ;
@@ -32,6 +44,12 @@
          discipline = 3 ;
          parameterCategory = 1 ;
          parameterNumber = 15 ;
+	}
+#Snow albedo
+'260512' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 19 ;
         }
 #Scaled radiance
 '260530' = {
@@ -134,6 +152,12 @@
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 23 ;
+	}
+#Water runoff and drainage
+'260557' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 33 ;
 	}
 #Virtual temperature
 '300012' = {
