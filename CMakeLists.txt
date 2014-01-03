@@ -19,6 +19,8 @@ set( GRIB_API_INSTALL_INCLUDE_DIR include CACHE PATH "GRIB_API override installa
 
 include( ecbuild_system )
 
+ecbuild_requires_macro_version( 1.2 )
+
 ###############################################################################
 # local project
 
@@ -174,6 +176,8 @@ if( NOT DEFINED GRIB_API_SAMPLES_PATH )
 endif()
 
 ### config header
+
+ecbuild_generate_config_headers()
 
 configure_file( grib_api_config.h.in grib_api_config.h )
 
