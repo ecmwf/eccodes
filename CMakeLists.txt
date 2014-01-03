@@ -19,7 +19,7 @@ set( GRIB_API_INSTALL_INCLUDE_DIR include CACHE PATH "GRIB_API override installa
 
 include( ecbuild_system )
 
-ecbuild_requires_macro_version( 1.2 )
+ecbuild_requires_macro_version( 1.3 )
 
 ###############################################################################
 # local project
