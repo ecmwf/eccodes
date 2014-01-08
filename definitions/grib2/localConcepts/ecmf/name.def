@@ -13899,12 +13899,6 @@
 	 parameterCategory = 174 ;
 	 parameterNumber = 6 ;
 	}
-#Surface runoff
-'Surface runoff' = {
-	 discipline = 192 ;
-	 parameterCategory = 174 ;
-	 parameterNumber = 8 ;
-	}
 #Sub-surface runoff
 'Sub-surface runoff' = {
 	 discipline = 192 ;

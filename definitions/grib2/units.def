@@ -33,6 +33,54 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Soil moisture top 100 cm
+'kg m**-3' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 scaledValueOfSecondFixedSurface = 10 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Soil moisture top 20 cm
+'kg m**-3' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 scaledValueOfSecondFixedSurface = 2 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Soil temperature top 20 cm
+'K' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 2 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 scaledValueOfSecondFixedSurface = 2 ;
+	}
+#Soil temperature top 100 cm
+'K' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 2 ;
+	 scaledValueOfSecondFixedSurface = 10 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 typeOfFirstFixedSurface = 106 ;
+	}
 #Cloudy brightness temperature
 'K' = {
 	 discipline = 3 ;
@@ -170,6 +218,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
+	}
+#Surface runoff
+'kg m**-2' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 34 ;
 	}
 #Total precipitation of at least 10 mm
 '%' = {
