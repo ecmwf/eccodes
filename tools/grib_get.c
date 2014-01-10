@@ -32,7 +32,7 @@ grib_option grib_options[]={
     {"S",0,0,1,0,0},
     {"g",0,0,0,1,0},
     {"G",0,0,0,1,0},
-	{"T:",0,0,0,1,0},
+    {"T:",0,0,0,1,0},
     {"7",0,0,0,1,0},
     {"v",0,0,1,0,0},
     {"X:",0,0,0,1,0},
@@ -51,7 +51,10 @@ double lon=0;
 int mode=0;
 grib_nearest* n=NULL;
 
-int main(int argc, char *argv[]) { return grib_tool(argc,argv);}
+int main(int argc, char *argv[])
+{
+    return grib_tool(argc,argv);
+}
 
 int grib_tool_before_getopt(grib_runtime_options* options)
 {
@@ -102,8 +105,6 @@ int grib_tool_init(grib_runtime_options* options)
                 options->latlon_mask=strdup(p);
             }
         }
-
-
     }
 
     if (options->latlon && options->latlon_mask) {
@@ -155,7 +156,6 @@ int grib_tool_new_filename_action(grib_runtime_options* options,const char* file
 {
     return 0;
 }
-
 
 int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
 {

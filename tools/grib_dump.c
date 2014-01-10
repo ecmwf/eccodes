@@ -21,7 +21,7 @@ grib_option grib_options[]={
     {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
     {"D",0,0,0,1,0},
     {"d",0,"Print all data values.\n",0,1,0},
-	 {"j",0,0,0,1,0},
+    {"j",0,0,0,1,0},
     {"C",0,0,0,1,0},
     {"t",0,0,0,1,0},
     {"H",0,0,0,1,0},
@@ -45,130 +45,141 @@ static int json=0;
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
 /**
-*grib_dump
-*Dump the content of a grib file
-*
-*/
-int main(int argc, char *argv[]) { return grib_tool(argc,argv);}
-
-int grib_tool_before_getopt(grib_runtime_options* options) {
-	return 0;
+ *grib_dump
+ *Dump the content of a grib file
+ *
+ */
+int main(int argc, char *argv[])
+{
+    return grib_tool(argc,argv);
 }
 
-int grib_tool_init(grib_runtime_options* options) {
+int grib_tool_before_getopt(grib_runtime_options* options)
+{
+    return 0;
+}
 
-	int opt=grib_options_on("C")+grib_options_on("O")+grib_options_on("D")+grib_options_on("j");
+int grib_tool_init(grib_runtime_options* options)
+{
 
-	options->dump_mode = "default";
+    int opt=grib_options_on("C")+grib_options_on("O")+grib_options_on("D")+grib_options_on("j");
 
-	if (opt > 1) {
-		printf("%s: simultaneous j/C/O/D options not allowed\n",grib_tool_name);
-		exit(1);
-	}
+    options->dump_mode = "default";
 
-   if (grib_options_on("j")) {
-     options->dump_mode = "json";
-     json=1;
-	}
+    if (opt > 1) {
+        printf("%s: simultaneous j/C/O/D options not allowed\n",grib_tool_name);
+        exit(1);
+    }
 
-	if (grib_options_on("C")) {
-		options->dump_mode = "c_code";
-		if (grib_options_on("d"))
-			options->dump_flags = 0;
-		else
-			options->dump_flags = GRIB_DUMP_FLAG_NO_DATA;
-	}
+    if (grib_options_on("j")) {
+        options->dump_mode = "json";
+        json=1;
+    }
 
-	if  (grib_options_on("O")) {
-		options->dump_mode = "wmo";
-		options->dump_flags = GRIB_DUMP_FLAG_CODED
-				| GRIB_DUMP_FLAG_OCTECT
-				| GRIB_DUMP_FLAG_VALUES
-				| GRIB_DUMP_FLAG_READ_ONLY;
-	}
+    if (grib_options_on("C")) {
+        options->dump_mode = "c_code";
+        if (grib_options_on("d"))
+            options->dump_flags = 0;
+        else
+            options->dump_flags = GRIB_DUMP_FLAG_NO_DATA;
+    }
 
-	if (grib_options_on("D")) {
-		options->dump_mode = "debug";
-		options->dump_flags = GRIB_DUMP_FLAG_VALUES
-				|  GRIB_DUMP_FLAG_READ_ONLY;
-	}
+    if  (grib_options_on("O")) {
+        options->dump_mode = "wmo";
+        options->dump_flags = GRIB_DUMP_FLAG_CODED
+                | GRIB_DUMP_FLAG_OCTECT
+                | GRIB_DUMP_FLAG_VALUES
+                | GRIB_DUMP_FLAG_READ_ONLY;
+    }
 
-	if (grib_options_on("a"))
-		options->dump_flags |= GRIB_DUMP_FLAG_ALIASES;
+    if (grib_options_on("D")) {
+        options->dump_mode = "debug";
+        options->dump_flags = GRIB_DUMP_FLAG_VALUES
+                |  GRIB_DUMP_FLAG_READ_ONLY;
+    }
 
-	if (grib_options_on("t"))
-		options->dump_flags |= GRIB_DUMP_FLAG_TYPE;
+    if (grib_options_on("a"))
+        options->dump_flags |= GRIB_DUMP_FLAG_ALIASES;
 
-	if (grib_options_on("H"))
-		options->dump_flags |= GRIB_DUMP_FLAG_HEXADECIMAL;
+    if (grib_options_on("t"))
+        options->dump_flags |= GRIB_DUMP_FLAG_TYPE;
+
+    if (grib_options_on("H"))
+        options->dump_flags |= GRIB_DUMP_FLAG_HEXADECIMAL;
 
     /* In JSON mode we want to print all data values */
     if ( grib_options_on("d") || grib_options_on("j") )
-		options->dump_flags |= GRIB_DUMP_FLAG_ALL_DATA;
+        options->dump_flags |= GRIB_DUMP_FLAG_ALL_DATA;
 
-	return 0;
+    return 0;
 }
 
-int grib_tool_new_filename_action(grib_runtime_options* options,const char* file) {
-	return 0;
+int grib_tool_new_filename_action(grib_runtime_options* options,const char* file)
+{
+    return 0;
 }
 
-int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file) {
-	char tmp[1024];
-	if (!options->current_infile->name) return 0;
-	if (json) return 0;
-	sprintf(tmp,"FILE: %s ",options->current_infile->name);
-	if (!grib_options_on("C"))
-		fprintf(stdout,"***** %s\n",tmp);
-	return 0;
+int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
+{
+    char tmp[1024];
+    if (!options->current_infile->name) return 0;
+    if (json) return 0;
+    sprintf(tmp,"FILE: %s ",options->current_infile->name);
+    if (!grib_options_on("C"))
+        fprintf(stdout,"***** %s\n",tmp);
+    return 0;
 }
 
-int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
-	long length=0;
-	char tmp[1024];
-	char identifier[100];
-	size_t idlen=100;
-	int i,err=0;
-	if (grib_get_long(h,"totalLength",&length) != GRIB_SUCCESS)
-		length=-9999;
+int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
+{
+    long length=0;
+    char tmp[1024];
+    char identifier[100];
+    size_t idlen=100;
+    int i,err=0;
+    if (grib_get_long(h,"totalLength",&length) != GRIB_SUCCESS)
+        length=-9999;
 
-	if (!options->skip) {
-		if (options->set_values_count != 0)
-			err=grib_set_values(h,options->set_values,options->set_values_count);
-		if( err != GRIB_SUCCESS && options->fail) exit(err);
-	}
+    if (!options->skip) {
+        if (options->set_values_count != 0)
+            err=grib_set_values(h,options->set_values,options->set_values_count);
+        if( err != GRIB_SUCCESS && options->fail) exit(err);
+    }
 
-	for (i=0;i<options->print_keys_count;i++)
-		grib_set_flag(h,options->print_keys[i].name,GRIB_ACCESSOR_FLAG_DUMP);
+    for (i=0;i<options->print_keys_count;i++)
+        grib_set_flag(h,options->print_keys[i].name,GRIB_ACCESSOR_FLAG_DUMP);
 
-   if(json) {
-	}
-	else {
-	sprintf(tmp,"MESSAGE %d ( length=%ld )",options->handle_count,length);
-	if (!grib_options_on("C"))
-		fprintf(stdout,"#==============   %-38s   ==============\n",tmp);
-	if (!strcmp(options->dump_mode,"default")) {
-		GRIB_CHECK_NOLINE(grib_get_string(h,"identifier",identifier,&idlen),0);
-		printf("%s {\n",identifier);
-	  }
-	}
+    if(json) {
+    }
+    else {
+        sprintf(tmp,"MESSAGE %d ( length=%ld )",options->handle_count,length);
+        if (!grib_options_on("C"))
+            fprintf(stdout,"#==============   %-38s   ==============\n",tmp);
+        if (!strcmp(options->dump_mode,"default")) {
+            GRIB_CHECK_NOLINE(grib_get_string(h,"identifier",identifier,&idlen),0);
+            printf("%s {\n",identifier);
+        }
+    }
 
-	grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
+    grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
 
-	if (!strcmp(options->dump_mode,"default"))
-		printf("}\n");
-	return 0;
+    if (!strcmp(options->dump_mode,"default"))
+        printf("}\n");
+    return 0;
 }
 
-int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h) {
-	grib_handle_delete(h);
-	return 0;
+int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
+{
+    grib_handle_delete(h);
+    return 0;
 }
 
-void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h) {
-	grib_print_key_values(options,h);
+void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
+{
+    grib_print_key_values(options,h);
 }
 
-int grib_tool_finalise_action(grib_runtime_options* options) {
-	return 0;
+int grib_tool_finalise_action(grib_runtime_options* options)
+{
+    return 0;
 }

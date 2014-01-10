@@ -21,10 +21,10 @@ grib_option grib_options[]={
     {"F:",0,0,1,1,"%g"},
     {"P:",0,0,0,1,0},
     {"w:",0,0,0,1,0},
-	{"j",0,"json output\n",0,1,0},
+    {"j",0,"json output\n",0,1,0},
     {"B:",0,0,0,1,0},
     {"l:",0,0,0,1,0},
-	{"s:",0,0,0,1,0},
+    {"s:",0,0,0,1,0},
     {"i:",0,0,0,1,0},
     {"n:",0,0,1,1,"ls"},
     {"m",0,0,0,1,0},
@@ -272,7 +272,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             char value[MAX_STRING_LEN];
             size_t len=MAX_STRING_LEN;
             printf("%s",new_handle);
-            printf(	"{\n");
+            printf("{\n");
             print_key_values(options,h);
             printf("\n, \"selected\" : %d",options->latlon_idx);
             printf(", \"method\" : ");

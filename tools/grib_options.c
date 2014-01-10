@@ -109,113 +109,113 @@ int grib_options_help_count=sizeof(grib_options_help_list)/sizeof(grib_options_h
 
 void usage()
 {
-  int i=0;
-  printf("\nNAME \t%s\n\n",grib_tool_name);
-  printf("DESCRIPTION\n\t%s\n\n",grib_tool_description);
-  printf("USAGE \n\t%s %s\n\n",grib_tool_name,grib_tool_usage);
-  printf("OPTIONS\n");
-  for (i=0;i<grib_options_count;i++) {
-    if (grib_options[i].command_line)
-      printf("\t-%c %s\t%s",grib_options[i].id[0],
-              grib_options_get_args(grib_options[i].id),
-              grib_options_get_help(grib_options[i].id));
-  }
-  printf("\n\n");
-  exit(1);
+    int i=0;
+    printf("\nNAME \t%s\n\n",grib_tool_name);
+    printf("DESCRIPTION\n\t%s\n\n",grib_tool_description);
+    printf("USAGE \n\t%s %s\n\n",grib_tool_name,grib_tool_usage);
+    printf("OPTIONS\n");
+    for (i=0;i<grib_options_count;i++) {
+        if (grib_options[i].command_line)
+            printf("\t-%c %s\t%s",grib_options[i].id[0],
+                    grib_options_get_args(grib_options[i].id),
+                    grib_options_get_help(grib_options[i].id));
+    }
+    printf("\n\n");
+    exit(1);
 }
 
 char* grib_options_get_option(const char* id)
 {
-  int i=0;
-  for (i=0; i<grib_options_count; i++) {
-    if (!strcmp(id,grib_options[i].id))
-      return grib_options[i].value;
-  }
-  return NULL;
+    int i=0;
+    for (i=0; i<grib_options_count; i++) {
+        if (!strcmp(id,grib_options[i].id))
+            return grib_options[i].value;
+    }
+    return NULL;
 }
 
 int grib_options_command_line(const char* id)
 {
-  int i=0;
-  for (i=0; i<grib_options_count; i++) {
-    if (!strcmp(id,grib_options[i].id))
-      return grib_options[i].command_line;
-  }
-  return 0;
+    int i=0;
+    for (i=0; i<grib_options_count; i++) {
+        if (!strcmp(id,grib_options[i].id))
+            return grib_options[i].command_line;
+    }
+    return 0;
 }
 
 int grib_options_on(const char* id)
 {
-  int i=0;
-  for (i=0; i<grib_options_count; i++) {
-    if (!strcmp(id,grib_options[i].id))
-      return grib_options[i].on;
-  }
-  return 0;
+    int i=0;
+    for (i=0; i<grib_options_count; i++) {
+        if (!strcmp(id,grib_options[i].id))
+            return grib_options[i].on;
+    }
+    return 0;
 }
 
 int grib_get_runtime_options(int argc,char** argv,grib_runtime_options* options)
 {
-  int i=0,c=0;
-  char* optstr=(char*)calloc(1,2*grib_options_count*sizeof(char));
+    int i=0,c=0;
+    char* optstr=(char*)calloc(1,2*grib_options_count*sizeof(char));
 
-  if (!optstr) return GRIB_OUT_OF_MEMORY;
+    if (!optstr) return GRIB_OUT_OF_MEMORY;
 
-  for (i=0;i<grib_options_count;i++)
-    if (grib_options[i].command_line)
-     strncat(optstr,grib_options[i].id,2);
+    for (i=0;i<grib_options_count;i++)
+        if (grib_options[i].command_line)
+            strncat(optstr,grib_options[i].id,2);
 
 
-  while ((c = getopt (argc, argv, optstr)) != -1) {
-    if (c == '?') usage();
-    i=0;
-    while ( i < grib_options_count && grib_options[i].id[0] != c) i++;
-    grib_options[i].on=1;
-    if ( grib_options[i].id[1] == ':' )
-      grib_options[i].value=optarg;
-  }
-  free(optstr);
-  return 0;
+    while ((c = getopt (argc, argv, optstr)) != -1) {
+        if (c == '?') usage();
+        i=0;
+        while ( i < grib_options_count && grib_options[i].id[0] != c) i++;
+        grib_options[i].on=1;
+        if ( grib_options[i].id[1] == ':' )
+            grib_options[i].value=optarg;
+    }
+    free(optstr);
+    return 0;
 }
 
 int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib_runtime_options* options)
 {
-  int i=0,ret=0;
-  int has_output=0;int has_input_extra=0,nfiles=0;
-  char *karg=NULL,*warg=NULL,*sarg=NULL,*barg=NULL;
-  
-  if (grib_options_on("V")) {
-    printf("\ngrib_api Version ");
-    grib_print_api_version(stdout);
-    printf("\n\n");
-    exit(0);
-  }
+    int i=0,ret=0;
+    int has_output=0;int has_input_extra=0,nfiles=0;
+    char *karg=NULL,*warg=NULL,*sarg=NULL,*barg=NULL;
 
-  if (grib_options_on("B:"))
-    options->orderby=grib_options_get_option("B:");
+    if (grib_options_on("V")) {
+        printf("\ngrib_api Version ");
+        grib_print_api_version(stdout);
+        printf("\n\n");
+        exit(0);
+    }
 
-  if (grib_options_on("x")) options->headers_only=1;
-  else options->headers_only=0;
+    if (grib_options_on("B:"))
+        options->orderby=grib_options_get_option("B:");
 
-  if (grib_options_on("T:")) {
-	char* x=grib_options_get_option("T:");
-	if ( *x == 'T' ) options->mode=MODE_GTS;
-	else if ( *x == 'B' ) options->mode=MODE_BUFR;
-	else options->mode=MODE_GRIB;
-  }
+    if (grib_options_on("x")) options->headers_only=1;
+    else options->headers_only=0;
 
-  if (grib_options_on("F:"))
-    options->format=grib_options_get_option("F:");
-  else 
-    options->format=strdup("%g");
+    if (grib_options_on("T:")) {
+        char* x=grib_options_get_option("T:");
+        if ( *x == 'T' ) options->mode=MODE_GTS;
+        else if ( *x == 'B' ) options->mode=MODE_BUFR;
+        else options->mode=MODE_GRIB;
+    }
 
-  if (grib_options_on("i:")) {
-    options->index_on=1;
-    options->index=atoi(grib_options_get_option("i:"));
-  }
+    if (grib_options_on("F:"))
+        options->format=grib_options_get_option("F:");
+    else
+        options->format=strdup("%g");
 
-  if (grib_options_on("l:"))
-    options->latlon=grib_options_get_option("l:");
+    if (grib_options_on("i:")) {
+        options->index_on=1;
+        options->index=atoi(grib_options_get_option("i:"));
+    }
+
+    if (grib_options_on("l:"))
+        options->latlon=grib_options_get_option("l:");
 
     if (grib_options_on("X:"))
         options->infile_offset=atol(grib_options_get_option("X:"));
@@ -223,217 +223,217 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
     /* Check at compile time to ensure our file offset is at least 64 bits */
     COMPILE_TIME_ASSERT( sizeof(options->infile_offset) >= 8 );
 
-  has_output=grib_options_on("U");
-  has_input_extra=grib_options_on("I");
-  options->repack=grib_options_on("r");
-  options->gts=grib_options_on("g");
+    has_output=grib_options_on("U");
+    has_input_extra=grib_options_on("I");
+    options->repack=grib_options_on("r");
+    options->gts=grib_options_on("g");
 
-  if (grib_options_on("d:")) {
-    options->constant=atof(grib_options_get_option("d:"));
-    options->repack=1;
-  }
-
-  if (grib_options_on("G")) grib_gribex_mode_on(context);
-
-  nfiles=argc-optind;
-  if ( nfiles < (1+has_output+has_input_extra) && !options->infile ) usage();
-
-  if (has_input_extra) {
-    options->infile_extra=(grib_tools_file*)calloc(1,sizeof(grib_tools_file));
-    options->infile_extra->name=argv[optind];
-  }
-
-  if (!options->infile) {
-    for (i=optind+has_input_extra;i<argc-has_output;i++) {
-      grib_tools_file* p=NULL;
-      grib_tools_file* infile=(grib_tools_file*)calloc(1,sizeof(grib_tools_file));
-      infile->name=argv[i];
-      if (!options->infile) options->infile=infile;
-      else {
-        p=options->infile;
-        while(p->next) p=p->next;
-        p->next=infile;
-      }
+    if (grib_options_on("d:")) {
+        options->constant=atof(grib_options_get_option("d:"));
+        options->repack=1;
     }
-  }
 
-  if (has_output) {
-    options->outfile=(grib_tools_file*)calloc(1,sizeof(grib_tools_file));
-    options->outfile->name=strdup(argv[argc-1]);
-  }
+    if (grib_options_on("G")) grib_gribex_mode_on(context);
 
-  if (grib_options_on("o:")) {
-    options->outfile=(grib_tools_file*)calloc(1,sizeof(grib_tools_file));
-    options->outfile->name=grib_options_get_option("o:");
-  }
+    nfiles=argc-optind;
+    if ( nfiles < (1+has_output+has_input_extra) && !options->infile ) usage();
 
-  options->print_number=grib_options_on("N");
-  options->print_header=grib_options_on("H");
-  options->verbose=grib_options_on("v");
+    if (has_input_extra) {
+        options->infile_extra=(grib_tools_file*)calloc(1,sizeof(grib_tools_file));
+        options->infile_extra->name=argv[optind];
+    }
 
-  if (grib_options_on("q") && grib_options_command_line("q"))
-    options->verbose=0;
+    if (!options->infile) {
+        for (i=optind+has_input_extra;i<argc-has_output;i++) {
+            grib_tools_file* p=NULL;
+            grib_tools_file* infile=(grib_tools_file*)calloc(1,sizeof(grib_tools_file));
+            infile->name=argv[i];
+            if (!options->infile) options->infile=infile;
+            else {
+                p=options->infile;
+                while(p->next) p=p->next;
+                p->next=infile;
+            }
+        }
+    }
 
-  options->fail=!grib_options_on("f");
-  if (grib_options_get_option("W:"))
-    options->default_print_width=atoi(grib_options_get_option("W:"));
+    if (has_output) {
+        options->outfile=(grib_tools_file*)calloc(1,sizeof(grib_tools_file));
+        options->outfile->name=strdup(argv[argc-1]);
+    }
 
-  if (grib_options_on("n:"))
-    options->name_space=grib_options_get_option("n:");
-  
-  if (grib_options_on("m"))
-    options->name_space=strdup("mars");
+    if (grib_options_on("o:")) {
+        options->outfile=(grib_tools_file*)calloc(1,sizeof(grib_tools_file));
+        options->outfile->name=grib_options_get_option("o:");
+    }
 
-  
-  if (grib_options_on("P:")) karg=grib_options_get_option("P:");
-  else if (grib_options_on("p:")) {
-    karg=grib_options_get_option("p:");
-    options->name_space=NULL;
-  }
-  
-  options->requested_print_keys_count=MAX_KEYS;
-  ret = parse_keyval_string(grib_tool_name,karg,0,GRIB_TYPE_UNDEFINED,
-	      options->requested_print_keys,&(options->requested_print_keys_count));
-  if (ret == GRIB_INVALID_ARGUMENT) usage();
-  GRIB_CHECK_NOLINE(ret,0);
+    options->print_number=grib_options_on("N");
+    options->print_header=grib_options_on("H");
+    options->verbose=grib_options_on("v");
 
-  options->strict=grib_options_on("S");
+    if (grib_options_on("q") && grib_options_command_line("q"))
+        options->verbose=0;
 
-  if (grib_options_on("M")) grib_multi_support_off(context);
-  else grib_multi_support_on(context);
+    options->fail=!grib_options_on("f");
+    if (grib_options_get_option("W:"))
+        options->default_print_width=atoi(grib_options_get_option("W:"));
 
-  if (grib_options_on("g")) grib_gts_header_on(context);
-  else grib_gts_header_off(context);
+    if (grib_options_on("n:"))
+        options->name_space=grib_options_get_option("n:");
 
-  if (grib_options_on("V")) {
-    printf("\ngrib_api Version ");
-    grib_print_api_version(stdout);
-    printf("\n\n");
-  }
+    if (grib_options_on("m"))
+        options->name_space=strdup("mars");
 
-  if (grib_options_on("s:")) {
-    sarg=grib_options_get_option("s:");
-    options->set_values_count=MAX_KEYS;
-    ret=parse_keyval_string(grib_tool_name, sarg,1,GRIB_TYPE_UNDEFINED,options->set_values,&(options->set_values_count));
+
+    if (grib_options_on("P:")) karg=grib_options_get_option("P:");
+    else if (grib_options_on("p:")) {
+        karg=grib_options_get_option("p:");
+        options->name_space=NULL;
+    }
+
+    options->requested_print_keys_count=MAX_KEYS;
+    ret = parse_keyval_string(grib_tool_name,karg,0,GRIB_TYPE_UNDEFINED,
+            options->requested_print_keys,&(options->requested_print_keys_count));
     if (ret == GRIB_INVALID_ARGUMENT) usage();
-  }
+    GRIB_CHECK_NOLINE(ret,0);
 
-  if (grib_options_on("b:")) {
-    barg=grib_options_get_option("b:");
-    options->set_values_count=MAX_KEYS;
-    ret=parse_keyval_string(grib_tool_name,barg,0,GRIB_TYPE_STRING,options->set_values,&(options->set_values_count));
-    if (ret == GRIB_INVALID_ARGUMENT) usage();
-  }
+    options->strict=grib_options_on("S");
 
-  if (grib_options_on("c:")) {
-    sarg=grib_options_get_option("c:");
-    options->compare_count=MAX_KEYS;
-    ret=parse_keyval_string(grib_tool_name,sarg,0,GRIB_TYPE_UNDEFINED,options->compare,
+    if (grib_options_on("M")) grib_multi_support_off(context);
+    else grib_multi_support_on(context);
+
+    if (grib_options_on("g")) grib_gts_header_on(context);
+    else grib_gts_header_off(context);
+
+    if (grib_options_on("V")) {
+        printf("\ngrib_api Version ");
+        grib_print_api_version(stdout);
+        printf("\n\n");
+    }
+
+    if (grib_options_on("s:")) {
+        sarg=grib_options_get_option("s:");
+        options->set_values_count=MAX_KEYS;
+        ret=parse_keyval_string(grib_tool_name, sarg,1,GRIB_TYPE_UNDEFINED,options->set_values,&(options->set_values_count));
+        if (ret == GRIB_INVALID_ARGUMENT) usage();
+    }
+
+    if (grib_options_on("b:")) {
+        barg=grib_options_get_option("b:");
+        options->set_values_count=MAX_KEYS;
+        ret=parse_keyval_string(grib_tool_name,barg,0,GRIB_TYPE_STRING,options->set_values,&(options->set_values_count));
+        if (ret == GRIB_INVALID_ARGUMENT) usage();
+    }
+
+    if (grib_options_on("c:")) {
+        sarg=grib_options_get_option("c:");
+        options->compare_count=MAX_KEYS;
+        ret=parse_keyval_string(grib_tool_name,sarg,0,GRIB_TYPE_UNDEFINED,options->compare,
                 &(options->compare_count));
-    if (ret == GRIB_INVALID_ARGUMENT) usage();
-  }
-  if (grib_options_on("e")) {
-    for (i=0;i<names_count; i++) {
-      options->compare[i+options->compare_count].name=names[i];
-      options->compare[i+options->compare_count].type=GRIB_NAMESPACE;
+        if (ret == GRIB_INVALID_ARGUMENT) usage();
     }
-    options->compare_count+=names_count;
-  }
+    if (grib_options_on("e")) {
+        for (i=0;i<names_count; i++) {
+            options->compare[i+options->compare_count].name=names[i];
+            options->compare[i+options->compare_count].type=GRIB_NAMESPACE;
+        }
+        options->compare_count+=names_count;
+    }
 
-  warg=grib_options_get_option("w:");
+    warg=grib_options_get_option("w:");
 
-  options->constraints_count=MAX_KEYS;
-  ret=parse_keyval_string(grib_tool_name,warg,1,GRIB_TYPE_UNDEFINED,
-      options->constraints,&(options->constraints_count));
-  if (ret == GRIB_INVALID_ARGUMENT) usage();
+    options->constraints_count=MAX_KEYS;
+    ret=parse_keyval_string(grib_tool_name,warg,1,GRIB_TYPE_UNDEFINED,
+            options->constraints,&(options->constraints_count));
+    if (ret == GRIB_INVALID_ARGUMENT) usage();
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
 char* grib_options_get_help(char* id)
 {
-   int i=0;
-   char msg[]="ERROR: help not found for option ";
-   char* err=(char*)calloc(1,sizeof(msg)+3);
-   sprintf(err,"%s%c\n",msg,*id);
-   for (i=0; i<grib_options_count;i++) {
-     if (!strcmp(id,grib_options[i].id)) {
-       if (grib_options[i].help != NULL) return grib_options[i].help;
-       else break;
-     }
-   }
-   for (i=0; i<grib_options_help_count;i++) {
-     if (!strcmp(id,grib_options_help_list[i].id)) {
-        return grib_options_help_list[i].help != NULL ? grib_options_help_list[i].help : err;
-     }
-   }
-   return err;
+    int i=0;
+    char msg[]="ERROR: help not found for option ";
+    char* err=(char*)calloc(1,sizeof(msg)+3);
+    sprintf(err,"%s%c\n",msg,*id);
+    for (i=0; i<grib_options_count;i++) {
+        if (!strcmp(id,grib_options[i].id)) {
+            if (grib_options[i].help != NULL) return grib_options[i].help;
+            else break;
+        }
+    }
+    for (i=0; i<grib_options_help_count;i++) {
+        if (!strcmp(id,grib_options_help_list[i].id)) {
+            return grib_options_help_list[i].help != NULL ? grib_options_help_list[i].help : err;
+        }
+    }
+    return err;
 }
 
 char* grib_options_get_args(char* id)
 {
-   int i=0;
-   char empty[]="";
-   char msg[]="ERROR: help not found for option -";
-   char* err=NULL;
-   if (id[1] != ':') return strdup(empty);
-   err=(char*)calloc(1,sizeof(msg)+3);
-   sprintf(err,"%s%c\n",msg,*id);
-   for (i=0; i<grib_options_count;i++) {
-     if (!strcmp(id,grib_options[i].id)) {
-       if (grib_options[i].args != NULL) return grib_options[i].args;
-       else break;
-     }
-   }
-   for (i=0; i<grib_options_help_count;i++) {
-     if (!strcmp(id,grib_options_help_list[i].id)) {
-        return grib_options_help_list[i].args != NULL ? grib_options_help_list[i].args : err;
-     }
-   }
-   return err;
+    int i=0;
+    char empty[]="";
+    char msg[]="ERROR: help not found for option -";
+    char* err=NULL;
+    if (id[1] != ':') return strdup(empty);
+    err=(char*)calloc(1,sizeof(msg)+3);
+    sprintf(err,"%s%c\n",msg,*id);
+    for (i=0; i<grib_options_count;i++) {
+        if (!strcmp(id,grib_options[i].id)) {
+            if (grib_options[i].args != NULL) return grib_options[i].args;
+            else break;
+        }
+    }
+    for (i=0; i<grib_options_help_count;i++) {
+        if (!strcmp(id,grib_options_help_list[i].id)) {
+            return grib_options_help_list[i].args != NULL ? grib_options_help_list[i].args : err;
+        }
+    }
+    return err;
 }
 
 void usage_doxygen()
 {
-  int i=0;
-  printf("/*!  \\page %s %s\n",grib_tool_name,grib_tool_name);
-  printf("\\section DESCRIPTION \n %s\n\n",grib_tool_description);
-  printf("\\section USAGE \n %s \n %s\n\n",grib_tool_name,grib_tool_usage);
-  printf("\\section OPTIONS \n");
-  for (i=0;i<grib_options_count;i++) {
-    if (grib_options[i].command_line) {
-      printf("-%c %s \\n",
-              grib_options[i].id[0],
-              grib_options_get_args(grib_options[i].id));
-      printf(" %s \\n \\n ",
-              grib_options_get_help(grib_options[i].id));
+    int i=0;
+    printf("/*!  \\page %s %s\n",grib_tool_name,grib_tool_name);
+    printf("\\section DESCRIPTION \n %s\n\n",grib_tool_description);
+    printf("\\section USAGE \n %s \n %s\n\n",grib_tool_name,grib_tool_usage);
+    printf("\\section OPTIONS \n");
+    for (i=0;i<grib_options_count;i++) {
+        if (grib_options[i].command_line) {
+            printf("-%c %s \\n",
+                    grib_options[i].id[0],
+                    grib_options_get_args(grib_options[i].id));
+            printf(" %s \\n \\n ",
+                    grib_options_get_help(grib_options[i].id));
+        }
     }
-  }
-  exit(1);
+    exit(1);
 }
 
 #if 0
 void usage_doxygen() {
-  int i=0;
-  printf("/*!  \\page %s %s\n",grib_tool_name,grib_tool_name);
-  printf("\\section DESCRIPTION \n%s\n\n",grib_tool_description);
-  printf("\\section USAGE \n%s \n%s\n\n",grib_tool_name,grib_tool_usage);
-  printf("\\section OPTIONS\n");
-  printf("<table frame=void border=0>\n");
-  for (i=0;i<grib_options_count;i++) {
-    if (grib_options[i].command_line) {
-    printf("<tr>\n");
-      printf("<td colspan=2>-%c %s</td>\n",
-              grib_options[i].id[0],
-              grib_options_get_args(grib_options[i].id));
-    printf("</tr><tr>\n");
-      printf("<td width=20></td><td>%s</td>",
-              grib_options_get_help(grib_options[i].id));
-    printf("</tr><tr><td></td></tr>\n");
-  }
-  }
-  printf("</table>\n");
-  exit(1);
+    int i=0;
+    printf("/*!  \\page %s %s\n",grib_tool_name,grib_tool_name);
+    printf("\\section DESCRIPTION \n%s\n\n",grib_tool_description);
+    printf("\\section USAGE \n%s \n%s\n\n",grib_tool_name,grib_tool_usage);
+    printf("\\section OPTIONS\n");
+    printf("<table frame=void border=0>\n");
+    for (i=0;i<grib_options_count;i++) {
+        if (grib_options[i].command_line) {
+            printf("<tr>\n");
+            printf("<td colspan=2>-%c %s</td>\n",
+                    grib_options[i].id[0],
+                    grib_options_get_args(grib_options[i].id));
+            printf("</tr><tr>\n");
+            printf("<td width=20></td><td>%s</td>",
+                    grib_options_get_help(grib_options[i].id));
+            printf("</tr><tr><td></td></tr>\n");
+        }
+    }
+    printf("</table>\n");
+    exit(1);
 }
 #endif
 
