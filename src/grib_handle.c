@@ -272,8 +272,8 @@ grib_handle* grib_handle_new_from_samples ( grib_context* c, const char* name )
 	return g;
 }
 
-
-int grib_write_message(grib_handle* h,const char* file,const char* mode) {
+int grib_write_message(grib_handle* h,const char* file,const char* mode)
+{
 	FILE* fh=0;
 	int err;
 	const void *buffer; size_t size;
@@ -284,10 +284,14 @@ int grib_write_message(grib_handle* h,const char* file,const char* mode) {
 		return GRIB_IO_PROBLEM;
 	}
 	err=grib_get_message(h,&buffer,&size);
-	if (err) return err;
+    if (err) {
+        fclose(fh);
+        return err;
+    }
 
 	if(fwrite(buffer,1,size,fh) != size) {
 		perror(file);
+        fclose(fh);
 		return GRIB_IO_PROBLEM;
 	}
 	if (fclose(fh) != 0) {
@@ -354,8 +358,6 @@ grib_handle* grib_handle_new_from_partial_message ( grib_context* c,void* data, 
 	gl->partial = 1;
 	return grib_handle_create ( gl,  c, data,  buflen );
 }
-
-
 
 grib_handle* grib_handle_new_from_message ( grib_context* c,void* data, size_t buflen )
 {
@@ -516,7 +518,7 @@ static grib_handle* grib_handle_new_multi ( grib_context* c,unsigned char** data
 	if ( !gl )
 	{
 		*error = GRIB_DECODING_ERROR;
-		grib_context_log ( gl->context, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
+		grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
 		return NULL;
 	}
 
@@ -673,7 +675,7 @@ static grib_handle* grib_handle_new_from_file_multi ( grib_context* c, FILE* f,i
 	if ( !gl )
 	{
 		*error = GRIB_DECODING_ERROR;
-		grib_context_log ( gl->context, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
+		grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
 		grib_context_free ( c,data );
 		return NULL;
 	}
@@ -745,7 +747,7 @@ grib_handle* eccode_gts_new_from_file ( grib_context* c, FILE* f,int headers_onl
 	if ( !gl )
 	{
 		*error = GRIB_DECODING_ERROR;
-		grib_context_log ( gl->context, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
+		grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
 		grib_context_free ( c,data );
 		return NULL;
 	}
@@ -786,7 +788,7 @@ grib_handle* eccode_bufr_new_from_file ( grib_context* c, FILE* f,int headers_on
 	if ( !gl )
 	{
 		*error = GRIB_DECODING_ERROR;
-		grib_context_log ( gl->context, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
+		grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
 		grib_context_free ( c,data );
 		return NULL;
 	}
@@ -1232,7 +1234,6 @@ static void grib2_build_message ( grib_context* context,unsigned char* sections[
 	grib_encode_unsigned_long ( *data,msglen,&bitp,64 );
 
 	*len=msglen;
-
 }
 
 void grib_multi_support_on ( grib_context* c )
@@ -1324,7 +1325,6 @@ static grib_multi_support* grib_get_multi_support ( grib_context* c, FILE* f )
 	return gm;
 }
 
-
 void grib_multi_support_reset ( grib_context* c )
 {
 	grib_multi_support* gm=c->multi_support;
@@ -1342,7 +1342,6 @@ void grib_multi_support_reset ( grib_context* c )
 		grib_context_free ( c,gm );
 		gm=NULL;
 	}
-
 }
 
 static grib_multi_support* grib_multi_support_new ( grib_context* c )
@@ -1363,5 +1362,3 @@ static grib_multi_support* grib_multi_support_new ( grib_context* c )
 
 	return gm;
 }
-
-

@@ -101,11 +101,13 @@ static void compile(grib_action* act, grib_compiler* compiler)
     fprintf(compiler->out,");\n");
 }
 
-static void remove_accessor(grib_accessor *a){
-  grib_section* s = a->parent;
+static void remove_accessor(grib_accessor *a)
+{
+  grib_section* s = NULL;
   int id;
 
   if (!a || !a->previous) return;
+  s = a->parent;
 
   if (a->parent->h->use_trie && *(a->all_names[0]) != '_') {
       id=grib_hash_keys_get_id(a->parent->h->context->keys,a->all_names[0]);

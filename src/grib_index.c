@@ -1259,10 +1259,11 @@ grib_handle* grib_index_get_handle(grib_field* field,int *err)
 
 static int grib_index_execute(grib_index* index)
 {
-    grib_index_key* keys=index->keys;
+    grib_index_key* keys = NULL;
     grib_field_tree* fields;
 
     if (!index) return GRIB_INTERNAL_ERROR;
+    keys = index->keys;
 
     fields=index->fields;
     index->rewind=0;

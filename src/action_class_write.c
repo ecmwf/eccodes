@@ -161,6 +161,7 @@ static int execute(grib_action* act, grib_handle *h)
 			ioerr = errno;
 			grib_context_log(act->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
 					"Error writing to %s", filename);
+			free(zeros);
 			return GRIB_IO_PROBLEM;
 		}
 		free(zeros);

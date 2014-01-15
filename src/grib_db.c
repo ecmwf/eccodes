@@ -748,11 +748,12 @@ static int grib_db_resize_int_array(grib_int_array* a,size_t newsize) {
   return err;
 }
 
-static void grib_db_delete_int_array(grib_int_array* f) {
-
-  grib_context* c=f->context;
+static void grib_db_delete_int_array(grib_int_array* f)
+{
+  grib_context* c = NULL;
 
   if (!f) return;
+  c = f->context;
 
   grib_context_free(c,f->el);
   grib_context_free(c,f);
