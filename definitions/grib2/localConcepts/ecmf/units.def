@@ -3349,6 +3349,36 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 241 ;
 	}
+#Altitude of plume bottom
+'m above sea level' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 242 ;
+	}
+#Volcanic sulphate aerosol optical depth at 550 nm
+'~' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 243 ;
+	}
+#Volcanic ash optical depth at 550 nm
+'~' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 244 ;
+	}
+#Profile of total aerosol dry extinction coefficient
+'m**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 245 ;
+	}
+#Profile of total aerosol dry absorption coefficient
+'m**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 246 ;
+	}
 #Aerosol type 13 mass mixing ratio
 'kg kg**-1' = {
 	 discipline = 192 ;
