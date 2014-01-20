@@ -42,6 +42,7 @@ dist_definitionsgrib1_DATA = \
 	grib1/2.0.3.table\
 	grib1/2.128.table\
 	grib1/2.253.128.table\
+	grib1/2.34.200.table\
 	grib1/2.46.254.table\
 	grib1/2.82.1.table\
 	grib1/2.82.128.table\
@@ -157,6 +158,7 @@ dist_definitionsgrib1_DATA = \
 	grib1/local.214.def\
 	grib1/local.253.def\
 	grib1/local.254.def\
+	grib1/local.34.1.def\
 	grib1/local.34.def\
 	grib1/local.46.def\
 	grib1/local.54.def\
@@ -214,6 +216,7 @@ dist_definitionsgrib1_DATA = \
 	grib1/local.98.8.def\
 	grib1/local.98.9.def\
 	grib1/local.98.def\
+	grib1/localDefinitionNumber.34.table\
 	grib1/localDefinitionNumber.82.table\
 	grib1/localDefinitionNumber.96.table\
 	grib1/localDefinitionNumber.98.table\
@@ -326,6 +329,14 @@ dist_definitionsgrib1_localConcepts_lowm_DATA = \
 	grib1/localConcepts/lowm/paramId.def\
 	grib1/localConcepts/lowm/shortName.def\
 	grib1/localConcepts/lowm/units.def
+
+definitionsgrib1_localConcepts_rjtddir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/rjtd
+dist_definitionsgrib1_localConcepts_rjtd_DATA = \
+	grib1/localConcepts/rjtd/cfVarName.def\
+	grib1/localConcepts/rjtd/name.def\
+	grib1/localConcepts/rjtd/paramId.def\
+	grib1/localConcepts/rjtd/shortName.def\
+	grib1/localConcepts/rjtd/units.def
 
 definitionsgrib1_localConcepts_sbsjdir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/sbsj
 dist_definitionsgrib1_localConcepts_sbsj_DATA = \
