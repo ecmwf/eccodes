@@ -3704,18 +3704,18 @@
 	 table2Version = 174 ;
 	 indicatorOfParameter = 249 ;
 	}
-#Aerosol type 13 mass mixing ratio
-'Aerosol type 13 mass mixing ratio' = {
+#Volcanic ash aerosol mixing ratio
+'Volcanic ash aerosol mixing ratio' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 13 ;
 	}
-#Aerosol type 14 mass mixing ratio
-'Aerosol type 14 mass mixing ratio' = {
+#Volcanic sulphate aerosol mixing ratio
+'Volcanic sulphate aerosol mixing ratio' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 14 ;
 	}
-#Aerosol type 15 mass mixing ratio
-'Aerosol type 15 mass mixing ratio' = {
+#Volcanic SO2 precursor mixing ratio
+'Volcanic SO2 precursor mixing ratio' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 15 ;
 	}
@@ -14619,8 +14619,8 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 11 ;
 	}
-#Aerosol type 12 mixing ratio
-'Aerosol type 12 mixing ratio' = {
+#SO2 precursor mixing ratio
+'SO2 precursor mixing ratio' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 12 ;
 	}

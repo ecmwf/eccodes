@@ -3001,19 +3001,19 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 122 ;
 	}
-#Aerosol type 13 mass mixing ratio
+#Volcanic ash aerosol mixing ratio
 '210013' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 13 ;
 	}
-#Aerosol type 14 mass mixing ratio
+#Volcanic sulphate aerosol mixing ratio
 '210014' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 14 ;
 	}
-#Aerosol type 15 mass mixing ratio
+#Volcanic SO2 precursor mixing ratio
 '210015' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
@@ -16248,7 +16248,7 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 11 ;
 	}
-#Aerosol type 12 mixing ratio
+#SO2 precursor mixing ratio
 '210012' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
