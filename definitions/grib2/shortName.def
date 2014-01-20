@@ -33,17 +33,11 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
-#Soil moisture top 100 cm
-'sm100' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 22 ;
-	 typeOfSecondFixedSurface = 106 ;
-	 typeOfFirstFixedSurface = 106 ;
-	 scaledValueOfSecondFixedSurface = 10 ;
-	 scaleFactorOfSecondFixedSurface = 1 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
+#Snow albedo
+'asn' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 19 ;
 	}
 #Soil moisture top 20 cm
 'sm20' = {
@@ -56,6 +50,18 @@
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = 2 ;
 	 scaleFactorOfSecondFixedSurface = 1 ;
+	}
+#Soil moisture top 100 cm
+'sm100' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 scaledValueOfSecondFixedSurface = 10 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
 	}
 #Soil temperature top 20 cm
 'st20' = {
@@ -81,6 +87,12 @@
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = 10 ;
 	}
+#Water runoff and drainage
+'ro' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 33 ;
+	}
 #Cloudy brightness temperature
 'clbt' = {
 	 discipline = 3 ;
@@ -92,12 +104,6 @@
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 15 ;
-	}
-#Snow albedo
-'asn' = {
-	 discipline = 0 ;
-	 parameterCategory = 19 ;
-	 parameterNumber = 19 ;
 	}
 #Scaled radiance
 '~' = {
@@ -200,12 +206,6 @@
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 23 ;
-	}
-#Water runoff and drainage
-'ro' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 33 ;
 	}
 #Virtual temperature
 'vtmp' = {

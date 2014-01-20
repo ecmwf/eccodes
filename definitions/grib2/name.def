@@ -33,27 +33,33 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
-#Soil moisture top 100 cm
-'Soil moisture top 100 cm' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 22 ;
-	 scaleFactorOfSecondFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 106 ;
-	 typeOfFirstFixedSurface = 106 ;
-	 scaledValueOfSecondFixedSurface = 10 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
+#Snow albedo
+'Snow albedo' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 19 ;
 	}
 #Soil moisture top 20 cm
 'Soil moisture top 20 cm' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 22 ;
-	 scaleFactorOfSecondFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 106 ;
 	 typeOfFirstFixedSurface = 106 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
 	 scaledValueOfSecondFixedSurface = 2 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Soil moisture top 100 cm
+'Soil moisture top 100 cm' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
+	 scaledValueOfSecondFixedSurface = 10 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
@@ -62,11 +68,11 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 typeOfFirstFixedSurface = 106 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaleFactorOfSecondFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 106 ;
-	 typeOfFirstFixedSurface = 106 ;
 	 scaledValueOfSecondFixedSurface = 2 ;
 	}
 #Soil temperature top 100 cm
@@ -74,12 +80,18 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 typeOfFirstFixedSurface = 106 ;
 	 scaledValueOfSecondFixedSurface = 10 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaleFactorOfSecondFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 106 ;
-	 typeOfFirstFixedSurface = 106 ;
+	}
+#Water runoff and drainage
+'Water runoff and drainage' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 33 ;
 	}
 #Cloudy brightness temperature
 'Cloudy brightness temperature' = {
@@ -93,12 +105,6 @@
          parameterCategory = 1 ;
          parameterNumber = 15 ;
         }
-#Snow albedo
-'Snow albedo' = {
-	 discipline = 0 ;
-	 parameterCategory = 19 ;
-	 parameterNumber = 19 ;
-	}
 #Scaled radiance
 'Scaled radiance' = {
 	 discipline = 3 ;
@@ -200,12 +206,6 @@
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 23 ;
-	}
-#Water runoff and drainage
-'Water runoff and drainage' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 33 ;
 	}
 #Virtual temperature
 'Virtual temperature' = {
