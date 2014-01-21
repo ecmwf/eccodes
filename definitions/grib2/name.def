@@ -87,6 +87,14 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaleFactorOfSecondFixedSurface = 1 ;
 	}
+#Convective precipitation
+'Convective precipitation' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 37 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Water runoff and drainage
 'Water runoff and drainage' = {
 	 discipline = 2 ;
