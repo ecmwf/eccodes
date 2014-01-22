@@ -2025,7 +2025,7 @@
 	 parameterNumber = 6 ;
 	}
 #Lapse rate
-'K s**-1' = {
+'K m**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 8 ;

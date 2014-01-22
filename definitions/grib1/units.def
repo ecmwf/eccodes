@@ -288,7 +288,7 @@
 	 indicatorOfParameter = 18 ;
 	}
 #Lapse rate
-'K s**-1' = {
+'K m**-1' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 19 ;
 	}
@@ -969,7 +969,7 @@
 	 indicatorOfParameter = 18 ;
 	}
 #Lapse rate
-'K s**-1' = {
+'K m**-1' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 19 ;
 	}
@@ -1650,7 +1650,7 @@
 	 indicatorOfParameter = 18 ;
 	}
 #Lapse rate
-'K s**-1' = {
+'K m**-1' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 19 ;
 	}
