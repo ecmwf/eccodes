@@ -2097,7 +2097,7 @@
 	 parameterNumber = 2 ;
 	}
 #Montgomery stream Function
-'m**2 s**-1' = {
+'m**2 s**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 6 ;

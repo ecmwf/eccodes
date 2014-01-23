@@ -353,7 +353,7 @@
 	 indicatorOfParameter = 31 ;
 	}
 #Montgomery stream Function
-'m**2 s**-1' = {
+'m**2 s**-2' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 37 ;
 	}
@@ -1034,7 +1034,7 @@
 	 indicatorOfParameter = 31 ;
 	}
 #Montgomery stream Function
-'m**2 s**-1' = {
+'m**2 s**-2' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 37 ;
 	}
@@ -1715,7 +1715,7 @@
 	 indicatorOfParameter = 31 ;
 	}
 #Montgomery stream Function
-'m**2 s**-1' = {
+'m**2 s**-2' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 37 ;
 	}
