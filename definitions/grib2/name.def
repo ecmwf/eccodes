@@ -11,12 +11,6 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 61 ;
 	}
-#Sea surface temperature
-'Sea surface temperature' = {
-	 discipline = 10 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 0 ;
-	}
 #Soil type
 'Soil type' = {
 	 discipline = 2 ;
@@ -1973,12 +1967,6 @@
 	 discipline = 10 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 1 ;
-	}
-#Ice cover
-'Ice cover' = {
-	 discipline = 10 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 0 ;
 	}
 #Ice temperature
 'Ice temperature' = {

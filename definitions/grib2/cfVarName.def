@@ -11,12 +11,6 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 61 ;
 	}
-#Sea surface temperature
-'sst' = {
-	 discipline = 10 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 0 ;
-	}
 #Soil type
 'slt' = {
 	 discipline = 2 ;
@@ -1973,12 +1967,6 @@
 	 discipline = 10 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 1 ;
-	}
-#Ice cover
-'p260238' = {
-	 discipline = 10 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 0 ;
 	}
 #Ice temperature
 'p260239' = {
