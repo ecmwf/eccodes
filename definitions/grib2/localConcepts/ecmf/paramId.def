@@ -209,29 +209,11 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 30 ;
 	}
-#Sea-ice cover
-'31' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 31 ;
-	}
 #Snow albedo
 '32' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 32 ;
-	}
-#Snow density
-'33' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 33 ;
-	}
-#Sea surface temperature
-'34' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 34 ;
 	}
 #Ice temperature layer 1
 '35' = {
@@ -910,12 +892,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 164 ;
 	}
-#Surface solar radiation downwards
-'169' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 169 ;
-	}
 #Soil temperature level 2
 '170' = {
 	 discipline = 192 ;
@@ -940,29 +916,11 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 174 ;
 	}
-#Surface thermal radiation downwards
-'175' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 175 ;
-	}
 #Top net solar radiation
 '178' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 178 ;
-	}
-#Eastward turbulent surface stress
-'180' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 180 ;
-	}
-#Northward turbulent surface stress
-'181' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 181 ;
 	}
 #Evaporation
 '182' = {
