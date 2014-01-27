@@ -11,6 +11,13 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 61 ;
 	}
+#Sea surface temperature
+'sst' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Soil type
 'slt' = {
 	 discipline = 2 ;
@@ -2219,12 +2226,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 1 ;
-	}
-#Water temperature
-'wtmp' = {
-	 discipline = 10 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 0 ;
 	}
 #Soil moisture content
 'ssw' = {
