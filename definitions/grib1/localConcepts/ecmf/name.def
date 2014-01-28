@@ -3799,8 +3799,8 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 118 ;
 	}
-#Altitude of emitter
-'Altitude of emitter' = {
+#Mean altitude of maximum injection
+'Mean altitude of maximum injection' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 119 ;
 	}
@@ -14959,8 +14959,8 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 97 ;
 	}
-#Wildfire observed area
-'Wildfire observed area' = {
+#Number of positive FRP pixels per grid cell
+'Number of positive FRP pixels per grid cell' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 98 ;
 	}

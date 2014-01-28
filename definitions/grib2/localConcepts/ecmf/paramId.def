@@ -3073,7 +3073,7 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 118 ;
 	}
-#Altitude of emitter
+#Mean altitude of maximum injection
 '210119' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
@@ -16630,7 +16630,7 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 97 ;
 	}
-#Wildfire observed area
+#Number of positive FRP pixels per grid cell
 '210098' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;

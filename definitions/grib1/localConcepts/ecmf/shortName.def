@@ -3799,8 +3799,8 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 118 ;
 	}
-#Altitude of emitter
-'ale' = {
+#Mean altitude of maximum injection
+'mami' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 119 ;
 	}
@@ -14959,8 +14959,8 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 97 ;
 	}
-#Wildfire observed area
-'oafire' = {
+#Number of positive FRP pixels per grid cell
+'nofrp' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 98 ;
 	}

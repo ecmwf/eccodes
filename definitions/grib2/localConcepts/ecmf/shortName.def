@@ -3073,8 +3073,8 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 118 ;
 	}
-#Altitude of emitter
-'ale' = {
+#Mean altitude of maximum injection
+'mami' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 119 ;
@@ -16630,8 +16630,8 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 97 ;
 	}
-#Wildfire observed area
-'oafire' = {
+#Number of positive FRP pixels per grid cell
+'nofrp' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 98 ;
