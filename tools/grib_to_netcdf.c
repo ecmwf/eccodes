@@ -2060,6 +2060,11 @@ static void check_err(const int stat, const int line, const char *file)
     if(stat != NC_NOERR)
     {
         (void) fprintf(stderr, "line %d of %s: %s\n", line, file, nc_strerror(stat));
+        if (stat == NC_EVARSIZE) {
+            (void) fprintf(stderr, "\nPlease invoke with the '-L' option to create a 64-bit offset format file, "
+                                   "instead of a netCDF classic format file.\n");
+        }
+
         exit(1);
     }
 }
@@ -3659,6 +3664,7 @@ grib_option grib_options[] = {
         { "f", 0, 0, 0, 1, 0 },
         { "o:", "output file",   "\n\t\tThe name of the netcdf file.\n", 1, 1, 0 },
         { "V", 0, 0, 0, 1, 0 },
+        { "L", 0, "Create netcdf in 64-bit offset format (for very large files).\n", 0, 1, 0 },
         { "M", 0, 0, 0, 1, 0 }
 };
 
@@ -3666,6 +3672,7 @@ int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 static fieldset *fs = NULL;
 static request* data_r = NULL;
 request *user_r = NULL;
+static int create_64bit_offset_format = 0; /* by default create classic format */
 
 int main(int argc, char *argv[])
 {
@@ -3751,6 +3758,9 @@ int grib_tool_init(grib_runtime_options* options)
         set_value(user_r, "usevalidtime", "false");
     else
         set_value(user_r, "usevalidtime", "true");
+
+    if(grib_options_on("L"))
+       create_64bit_offset_format = true; /* Switch to large file format */
 
     if(grib_options_on("R:"))
     {
@@ -3918,6 +3928,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     int ncid;
     int stat;
     int err = 0;
+    int creation_mode = NC_CLOBBER;
 
     if(options->outfile==NULL || options->outfile->name==NULL)
     {
@@ -3951,7 +3962,10 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
     printf("%s: Creating netcdf file '%s'\n", grib_tool_name, options->outfile->name);
     printf("%s: NetCDF library version: %s\n", grib_tool_name, nc_inq_libvers());
-    stat = nc_create(options->outfile->name, NC_CLOBBER, &ncid);
+
+    if (create_64bit_offset_format)
+        creation_mode = NC_CLOBBER | NC_64BIT_OFFSET;
+    stat = nc_create(options->outfile->name, creation_mode, &ncid);
     check_err(stat, __LINE__, __FILE__);
 
     /* Define netcdf dataset */
