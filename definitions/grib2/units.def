@@ -52,6 +52,12 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 36 ;
 	}
+#Snow depth
+'m' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 11 ;
+	}
 #10 metre wind gust in the last 3 hours
 'm s**-1' = {
 	 discipline = 0 ;
@@ -2330,13 +2336,13 @@
 	 parameterNumber = 12 ;
 	}
 #Net short-wave radiation flux (surface)
-'J m**-2' = {
+'W m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 0 ;
 	}
 #Global radiation flux
-'J m**-2' = {
+'W m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 3 ;
@@ -2348,7 +2354,7 @@
 	 parameterNumber = 5 ;
 	}
 #Radiance (with respect to wave length)
-'W m**-1 sr**-1' = {
+'W m**-3 sr**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 6 ;

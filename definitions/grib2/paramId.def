@@ -52,6 +52,12 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 36 ;
 	}
+#Snow depth
+'3066' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 11 ;
+	}
 #10 metre wind gust in the last 3 hours
 '228028' = {
 	 discipline = 0 ;
