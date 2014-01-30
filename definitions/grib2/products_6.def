@@ -81,7 +81,11 @@ concept marsStream {
 
 alias mars.stream = marsStream;
 alias mars.type   = marsType;
-alias mars.step   = stepRange;
+
+# Normally MARS step is endStep but for monthly means we want stepRange
+if (stepType is "avg") {
+   alias mars.step = stepRange;
+}
 
 if (isHindcast == 1) {
    # S2S reforecasts
