@@ -139,10 +139,75 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 78 ;
 	}
+#Maximum wind speed
+'maxgust' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 219 ;
+	}
+#Downward short-wave radiation flux
+'dswrf' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 204 ;
+	}
+#Upward short-wave radiation flux
+'uswrf' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 211 ;
+	}
+#Downward long-wave radiation flux
+'dlwrf' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 205 ;
+	}
+#Upward long-wave radiation flux
+'ulwrf' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 212 ;
+	}
+#Cloud Ice
+'cice' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 58 ;
+	}
 #Cloud water
 'cwat' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 76 ;
+	}
+#Cloud work function
+'cwork' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 146 ;
+	}
+#Total ozone
+'tozne' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 10 ;
+	}
+#Ground heat flux
+'gflux' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 155 ;
+	}
+#Clear Sky Downward Solar Flux
+'csdsf' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 161 ;
+	}
+#Clear Sky Upward Solar Flux
+'csusf' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 160 ;
+	}
+#Clear Sky Upward Long Wave Flux
+'csulf' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 162 ;
+	}
+#Clear Sky Downward Long Wave Flux
+'csdlf' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 163 ;
 	}
 #Albedo
 'al' = {
