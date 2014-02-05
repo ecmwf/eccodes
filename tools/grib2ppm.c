@@ -63,11 +63,14 @@ int main(int argc, char *argv[])
       }
 
       /* PPM header */
-      printf("P5\n%ld %ld\n255\n",width,height);
+      printf("P5\n%ld %ld\n65535\n",width,height);
       for (i=0; i<count;++i)
       {
-        char c = (values[i] - min)*255 / (max - min);
-        printf("%c",c);
+        unsigned long c = (values[i] - min)*65535 / (max - min);
+        unsigned char h = c >> 8;
+        unsigned char l = c & 0xff;
+        printf("%c",h);
+        printf("%c",l);
       }
 
       grib_handle_delete(h);
