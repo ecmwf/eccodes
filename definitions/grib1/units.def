@@ -84,21 +84,6 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 43 ;
 	}
-#Boundary layer dissipation
-'J m**-2' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 123 ;
-	}
-#Surface sensible heat flux
-'J m**-2' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 122 ;
-	}
-#Surface latent heat flux
-'J m**-2' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 121 ;
-	}
 #Mean sea level pressure
 'Pa' = {
 	 table2Version = 3 ;
@@ -226,6 +211,21 @@
 'kg m**-2' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 79 ;
+	}
+#Latent heat flux
+'W m**-2' = {
+	 table2Version = 3 ;
+	 indicatorOfParameter = 121 ;
+	}
+#Sensible heat flux
+'W m**-2' = {
+	 table2Version = 3 ;
+	 indicatorOfParameter = 122 ;
+	}
+#Boundary layer dissipation
+'W m**-2' = {
+	 table2Version = 3 ;
+	 indicatorOfParameter = 123 ;
 	}
 #Convective snow
 'kg m**-2' = {
@@ -795,21 +795,6 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 43 ;
 	}
-#Boundary layer dissipation
-'J m**-2' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 123 ;
-	}
-#Surface sensible heat flux
-'J m**-2' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 122 ;
-	}
-#Surface latent heat flux
-'J m**-2' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 121 ;
-	}
 #Mean sea level pressure
 'Pa' = {
 	 table2Version = 2 ;
@@ -937,6 +922,21 @@
 'kg m**-2' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 79 ;
+	}
+#Latent heat flux
+'W m**-2' = {
+	 table2Version = 2 ;
+	 indicatorOfParameter = 121 ;
+	}
+#Sensible heat flux
+'W m**-2' = {
+	 table2Version = 2 ;
+	 indicatorOfParameter = 122 ;
+	}
+#Boundary layer dissipation
+'W m**-2' = {
+	 table2Version = 2 ;
+	 indicatorOfParameter = 123 ;
 	}
 #Convective snow
 'kg m**-2' = {
@@ -1491,21 +1491,6 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 43 ;
 	}
-#Boundary layer dissipation
-'J m**-2' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 123 ;
-	}
-#Surface sensible heat flux
-'J m**-2' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 122 ;
-	}
-#Surface latent heat flux
-'J m**-2' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 121 ;
-	}
 #Mean sea level pressure
 'Pa' = {
 	 table2Version = 1 ;
@@ -1633,6 +1618,21 @@
 'kg m**-2' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 79 ;
+	}
+#Latent heat flux
+'W m**-2' = {
+	 table2Version = 1 ;
+	 indicatorOfParameter = 121 ;
+	}
+#Sensible heat flux
+'W m**-2' = {
+	 table2Version = 1 ;
+	 indicatorOfParameter = 122 ;
+	}
+#Boundary layer dissipation
+'W m**-2' = {
+	 table2Version = 1 ;
+	 indicatorOfParameter = 123 ;
 	}
 #Convective snow
 'kg m**-2' = {

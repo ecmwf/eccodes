@@ -134,6 +134,21 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 79 ;
 	}
+#Latent heat flux
+'lhf' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 121 ;
+	}
+#Sensible heat flux
+'shf' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 122 ;
+	}
+#Boundary layer dissipation
+'bld' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 123 ;
+	}
 #Convective snow
 'snoc' = {
 	 table2Version = 200 ;
@@ -214,6 +229,221 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 84 ;
 	}
+#Evaporation
+'evpsfc' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 57 ;
+	}
+#Total precipitation
+'tpratsfc' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 61 ;
+	}
+#Large scale precipitation
+'lpratsfc' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 62 ;
+	}
+#Convective precipitation
+'cpratsfc' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 63 ;
+	}
+#Snowfall rate water equivalent
+'srweqsfc' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 64 ;
+	}
+#Water run-off
+'rofsfc' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 90 ;
+	}
+#Square of Brunt-Vaisala frequency
+'bvf2tht' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 132 ;
+	}
+#Adiabatic zonal acceleration
+'aduahbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 151 ;
+	}
+#Meridional water vapour flux
+'vwvclm' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 152 ;
+	}
+#Adiabatic meridional acceleration
+'advaprs' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 165 ;
+	}
+#Frequency of deep convection
+'frcvsfc' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 170 ;
+	}
+#Frequency of shallow convection
+'frcvssfc' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 171 ;
+	}
+#Frequency of stratocumulus parameterisation
+'frscsfc' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 172 ;
+	}
+#Gravity wave zonal acceleration
+'gwduahbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 173 ;
+	}
+#Gravity wave meridional acceleration
+'gwdvahbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 174 ;
+	}
+#Evapotranspiration
+'ltrssfc' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 202 ;
+	}
+#Adiabatic heating rate
+'adhrhbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 222 ;
+	}
+#Moisture storage on canopy
+'mscsfc' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 223 ;
+	}
+#Moisture storage on ground or cover
+'msgsfc' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 224 ;
+	}
+#Mass concentration of condensed water in soil
+'smcugl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 226 ;
+	}
+#Cloud liquid water
+'cwclm' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 227 ;
+	}
+#Upward mass flux at cloud base
+'mflxbhbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 230 ;
+	}
+#Upward mass flux
+'mfluxhbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 231 ;
+	}
+#Adiabatic moistening rate
+'admrhbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 236 ;
+	}
+#Ozone mixing ratio
+'ozonehbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 237 ;
+	}
+#Convective zonal acceleration
+'cnvuahbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 239 ;
+	}
+#Zonal momentum flux by long gravity wave
+'fglusfc' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 147 ;
+	}
+#Meridional momentum flux by long gravity wave
+'fglvsfc' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 148 ;
+	}
+#Meridional momentum flux by short gravity wave
+'fgsvsfc' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 154 ;
+	}
+#Zonal momentum flux by short gravity wave
+'fgsusfc' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 159 ;
+	}
+#Zonal thermal energy flux
+'utheclm' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 190 ;
+	}
+#Meridional thermal energy flux
+'vtheclm' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 191 ;
+	}
+#Convective meridional acceleration
+'cnvvahbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 240 ;
+	}
+#Large scale condensation heating rate
+'lrghrhbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 241 ;
+	}
+#Convective heating rate
+'cnvhrhbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 242 ;
+	}
+#Convective moistening rate
+'cnvmrhbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 243 ;
+	}
+#Vertical diffusion heating rate
+'vdfhrhbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 246 ;
+	}
+#Vertical diffusion zonal acceleration
+'vdfuahbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 247 ;
+	}
+#Vertical diffusion meridional acceleration
+'vdfvahbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 248 ;
+	}
+#Vertical diffusion moistening rate
+'vdfmrhbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 249 ;
+	}
+#Solar radiative heating rate
+'swhrhbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 250 ;
+	}
+#Long wave radiative heating rate
+'lwhrhbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 251 ;
+	}
+#Large scale moistening rate
+'lrgmrhbl' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 253 ;
+	}
 #Virtual temperature
 'vtmp' = {
 	 table2Version = 200 ;
@@ -233,6 +463,16 @@
 'ussl' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 225 ;
+	}
+#Temperature at canopy
+'ctmp' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 144 ;
+	}
+#Ground/surface cover temperature
+'tgsc' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 145 ;
 	}
 #Pressure tendency
 'ptend' = {
@@ -648,6 +888,11 @@
 'vegrea' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 87 ;
+	}
+#Vertical integral of eastward water vapour flux
+'~' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 157 ;
 	}
 #specific cloud water content
 'qc' = {

@@ -84,21 +84,6 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 43 ;
 	}
-#Boundary layer dissipation
-'bld' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 123 ;
-	}
-#Surface sensible heat flux
-'sshf' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 122 ;
-	}
-#Surface latent heat flux
-'slhf' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 121 ;
-	}
 #Mean sea level pressure
 'msl' = {
 	 table2Version = 3 ;
@@ -226,6 +211,21 @@
 'lssf' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 79 ;
+	}
+#Latent heat flux
+'lhf' = {
+	 table2Version = 3 ;
+	 indicatorOfParameter = 121 ;
+	}
+#Sensible heat flux
+'shf' = {
+	 table2Version = 3 ;
+	 indicatorOfParameter = 122 ;
+	}
+#Boundary layer dissipation
+'bld' = {
+	 table2Version = 3 ;
+	 indicatorOfParameter = 123 ;
 	}
 #Convective snow
 'snoc' = {
@@ -795,21 +795,6 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 43 ;
 	}
-#Boundary layer dissipation
-'bld' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 123 ;
-	}
-#Surface sensible heat flux
-'sshf' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 122 ;
-	}
-#Surface latent heat flux
-'slhf' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 121 ;
-	}
 #Mean sea level pressure
 'msl' = {
 	 table2Version = 2 ;
@@ -937,6 +922,21 @@
 'lssf' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 79 ;
+	}
+#Latent heat flux
+'lhf' = {
+	 table2Version = 2 ;
+	 indicatorOfParameter = 121 ;
+	}
+#Sensible heat flux
+'shf' = {
+	 table2Version = 2 ;
+	 indicatorOfParameter = 122 ;
+	}
+#Boundary layer dissipation
+'bld' = {
+	 table2Version = 2 ;
+	 indicatorOfParameter = 123 ;
 	}
 #Convective snow
 'snoc' = {
@@ -1491,21 +1491,6 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 43 ;
 	}
-#Boundary layer dissipation
-'bld' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 123 ;
-	}
-#Surface sensible heat flux
-'sshf' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 122 ;
-	}
-#Surface latent heat flux
-'slhf' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 121 ;
-	}
 #Mean sea level pressure
 'msl' = {
 	 table2Version = 1 ;
@@ -1633,6 +1618,21 @@
 'lssf' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 79 ;
+	}
+#Latent heat flux
+'lhf' = {
+	 table2Version = 1 ;
+	 indicatorOfParameter = 121 ;
+	}
+#Sensible heat flux
+'shf' = {
+	 table2Version = 1 ;
+	 indicatorOfParameter = 122 ;
+	}
+#Boundary layer dissipation
+'bld' = {
+	 table2Version = 1 ;
+	 indicatorOfParameter = 123 ;
 	}
 #Convective snow
 'snoc' = {
