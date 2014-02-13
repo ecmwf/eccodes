@@ -169,6 +169,13 @@ static unsigned long ones[] = {
         0xffffffff,
 };
 
+/* See GRIB-490 */
+static const unsigned long all_ones = -1;
+static int value_is_missing(long val)
+{
+    return (val == GRIB_MISSING_LONG || val == all_ones);
+}
+
 int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t *len, int check)
 {
     grib_accessor_unsigned* self = (grib_accessor_unsigned*)a;
@@ -215,7 +222,7 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t *len, in
         if (check) {
             const long nbits = self->nbytes*8;
             /* See GRIB-23 and GRIB-262 */
-            if (v != GRIB_MISSING_LONG) { /* beware of 32bit platforms */
+            if (! value_is_missing(v) ) {
                 if (v < 0) {
                     grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
                             "Key \"%s\": Trying to encode a negative value of %ld for key of type unsigned\n", a->name, v);

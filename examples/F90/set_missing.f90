@@ -12,12 +12,11 @@
 !
 !
 !
-!
 program set
   use grib_api
   implicit none
   integer              :: infile,outfile
-  integer              :: igrib
+  integer              :: igrib, Ni, is_missing
 
   infile=5
   outfile=6
@@ -35,13 +34,19 @@ program set
   call grib_set(igrib,'typeOfFirstFixedSurface','sfc')
   call grib_set_missing(igrib,'scaleFactorOfFirstFixedSurface')
   call grib_set_missing(igrib,'scaledValueOfFirstFixedSurface')
+  
+  ! See GRIB-490
+  call grib_get(igrib, 'Ni', Ni)
+  call grib_is_missing(igrib,'Ni',is_missing)
+  if ( is_missing == 0 ) then
+    ! Ni should be missing in gribs with Reduced Gaussian grids
+    call grib_check(-2, 'Ni_should_be_missing', '')
+  endif
+  call grib_set(igrib, 'Ni', Ni)
 
   call grib_write(igrib,outfile)
-
   call grib_release(igrib)
-
   call grib_close_file(infile)
-
   call grib_close_file(outfile)
 
 end program set

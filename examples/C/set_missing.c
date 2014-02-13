@@ -16,11 +16,11 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <assert.h>
 #include "grib_api.h"
 
 int main(int argc, char** argv) {
-  int err = 0;
+  int err = 0, is_missing = 0;
 
   FILE* in = NULL;
   char* infile = "../../data/reduced_gaussian_pressure_level.grib2";
@@ -31,6 +31,7 @@ int main(int argc, char** argv) {
   size_t size=0;
   char str[]="sfc";
   size_t str_len=3;
+  long Ni = 0;
 
   in = fopen(infile,"r");
   if(!in) {
@@ -53,6 +54,13 @@ int main(int argc, char** argv) {
   GRIB_CHECK(grib_set_string(h,"typeOfFirstFixedSurface",str,&str_len),0);
   GRIB_CHECK(grib_set_missing(h,"scaleFactorOfFirstFixedSurface"),0);
   GRIB_CHECK(grib_set_missing(h,"scaledValueOfFirstFixedSurface"),0);
+  
+  /* See GRIB-490 */
+  GRIB_CHECK(grib_get_long(h,"Ni",&Ni),0);
+  is_missing = grib_is_missing(h, "Ni", &err);
+  GRIB_CHECK(err,0);
+  assert(is_missing == 1);
+  GRIB_CHECK(grib_set_long(h,"Ni", Ni),0);
 
   /* get the coded message in a buffer */
   GRIB_CHECK(grib_get_message(h,&buffer,&size),0);
