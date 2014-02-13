@@ -21,7 +21,7 @@ temp1="temp.grib1_"
 temp2="temp.grib2_"
 
 # --- Do I want to exclude any file pattern from the comparison ?
-exclusion_pattern="tcw|ssr|str|skt|cap|ci|ttr|st|sm"
+exclusion_pattern="tcw|ssr|str|skt|cap|ci|ttr|st|sm|sd|slhf|sshf"
 
 for file in `ls ${dir}/tigge_*.grib`
 do
