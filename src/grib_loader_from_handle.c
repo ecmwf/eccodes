@@ -79,7 +79,7 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
 	const char* name = NULL;
 	int k = 0;
 	grib_handle *g;
-	int e;
+	int e, pack_missing = 0;
 	grib_context_log(h->context,GRIB_LOG_DEBUG, "XXXXX Copying  %s",   ga->name);
 
 	if(default_value)
@@ -167,7 +167,10 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
 	}
 
 	if((ga->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) && grib_is_missing(h,name,&e) && e == GRIB_SUCCESS && len == 1)
+	{
 		grib_pack_missing(ga);
+		pack_missing = 1;
+	}
 
 	switch(grib_accessor_get_native_type(ga))
 	{
@@ -201,7 +204,23 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
 					ret = GRIB_SUCCESS;
 			}
 			else
+			{
+			    /* See GRIB-492. This is NOT an ideal solution! */
+			    if (*lval == GRIB_MISSING_LONG || pack_missing)
+			    {
+			        ;        /* No checks needed */
+			    }
+			    else
+			    {
+			        /* If we have just one key of type long which has one octet, then do not exceed maximum value */
+			        const long num_octets = ga->length;
+			        if (len == 1 && num_octets == 1 && *lval > 255)
+			        {
+			            *lval = 0; /* Reset to a reasonable value */
+			        }
+			    }
 				ret = grib_pack_long(ga,lval,&len);
+			}
 		}
 
 		grib_context_free(h->context,lval);

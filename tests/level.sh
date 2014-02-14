@@ -8,11 +8,12 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 . ./include.sh
 #set -x
 
 outfile=out.grib
+sample_g1=$GRIB_SAMPLES_PATH/GRIB1.tmpl
+temp=temp.grib
 
 file=${data_dir}/regular_gaussian_pressure_level.grib1
 
@@ -58,6 +59,10 @@ EOF
 ${tools_dir}grib_filter level.filter $file > test.dump
 diff good test.dump
 
-rm -f level.filter good test.dump
+# GRIB-492
+${tools_dir}grib_set -s indicatorOfTypeOfLevel=110 $sample_g1 $temp
+res=`${tools_dir}grib_get -p indicatorOfTypeOfLevel:l,topLevel,bottomLevel $temp`
+[ "$res" = "110 0 0" ]
 
 
+rm -f level.filter good test.dump $temp
