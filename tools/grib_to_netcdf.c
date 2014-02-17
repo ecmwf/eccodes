@@ -580,8 +580,8 @@ static void set_value(request *r, const char *parname, const char *fmt, ...)
 static err handle_to_request(request *r, grib_handle* g)
 {
     grib_keys_iterator* ks;
-    char name[80];
-    char value[80];
+    char name[256];
+    char value[256];
     size_t len = sizeof(value);
     int e = 0;
 
