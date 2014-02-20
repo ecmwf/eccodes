@@ -36,30 +36,31 @@ alias totalNumberOfDataValuesMissingInStatisticalProcess=numberOfMissingInStatis
 
 statisticalProcessesList list(numberOfTimeRange)
 {
+ #  Statistical process used to calculate the processed field from the field at each time increment during the time range
+ codetable[1] typeOfStatisticalProcessing ('4.10.table',masterDir,localDir) : edition_specific;
 
-#  Statistical process used to calculate the processed field from the field at each time increment during the time range
-codetable[1] typeOfStatisticalProcessing ('4.10.table',masterDir,localDir) : edition_specific;
+ #  Type of time increment between successive fields used in the statistical processing
+ codetable[1]  typeOfTimeIncrement ('4.11.table',masterDir,localDir) = 2 : edition_specific;
+ alias typeOfTimeIncrementBetweenSuccessiveFieldsUsedInTheStatisticalProcessing=typeOfTimeIncrement;
 
-#  Type of time increment between successive fields used in the statistical processing
-codetable[1]  typeOfTimeIncrement ('4.11.table',masterDir,localDir) = 2 : edition_specific;
-alias typeOfTimeIncrementBetweenSuccessiveFieldsUsedInTheStatisticalProcessing=typeOfTimeIncrement;
+ #  Indicator of unit of time for time range over which statistical processing is done
+ codetable[1]  indicatorOfUnitForTimeRange ('4.4.table',masterDir,localDir) =1 ;
 
-#  Indicator of unit of time for time range over which statistical processing is done
-codetable[1]  indicatorOfUnitForTimeRange ('4.4.table',masterDir,localDir) =1 ;
+ #  Length of the time range over which statistical processing is done, in units defined by the previous octet
+ unsigned[4] lengthOfTimeRange=0 ;
 
-#  Length of the time range over which statistical processing is done, in units defined by the previous octet
-unsigned[4] lengthOfTimeRange=0 ;
+ #  Indicator of unit of time for the increment between the successive fields used
+ codetable[1]  indicatorOfUnitForTimeIncrement ('4.4.table',masterDir,localDir)=255 ;
 
-#  Indicator of unit of time for the increment between the successive fields used
-codetable[1]  indicatorOfUnitForTimeIncrement ('4.4.table',masterDir,localDir)=255 ;
-
-#  Time increment between successive fields, in units defined by the previous octet
-# NOTE 3 NOT FOUND
-unsigned[4] timeIncrement=0 ;
-alias timeIncrementBetweenSuccessiveFields=timeIncrement;
+ #  Time increment between successive fields, in units defined by the previous octet
+ # NOTE 3 NOT FOUND
+ unsigned[4] timeIncrement=0 ;
+ alias timeIncrementBetweenSuccessiveFields=timeIncrement;
 
 }
-if (numberOfTimeRange==1) {
+
+# See GRIB-488. We only support maximum of 2 time ranges
+if (numberOfTimeRange == 1 || numberOfTimeRange == 2) {
   concept stepTypeInternal {
     "instant" = {typeOfStatisticalProcessing=255;}
     "avg"     = {typeOfStatisticalProcessing=0;typeOfTimeIncrement=2;}
@@ -95,7 +96,9 @@ if (numberOfTimeRange==1) {
     secondOfEndOfOverallTimeInterval,
 
     indicatorOfUnitForTimeRange,
-    lengthOfTimeRange
+    lengthOfTimeRange,
+    typeOfTimeIncrement,
+    numberOfTimeRange
   ) : dump,no_copy;
   
   meta stepRange g2step_range(startStep,endStep): dump;

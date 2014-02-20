@@ -36,6 +36,8 @@
 
   MEMBERS = const char* coded_unit
   MEMBERS = const char* coded_time_range
+  MEMBERS = const char* typeOfTimeIncrement
+  MEMBERS = const char* numberOfTimeRange
 
   END_CLASS_DEF
 
@@ -78,6 +80,8 @@ typedef struct grib_accessor_g2end_step {
 	const char* second_of_end_of_interval;
 	const char* coded_unit;
 	const char* coded_time_range;
+	const char* typeOfTimeIncrement;
+	const char* numberOfTimeRange;
 } grib_accessor_g2end_step;
 
 extern grib_accessor_class* grib_accessor_class_long;
@@ -160,211 +164,394 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-	grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
-	int n = 0;
+    grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
+    int n = 0;
 
-	self->start_step = grib_arguments_get_name(a->parent->h,c,n++);
-	self->unit  = grib_arguments_get_name(a->parent->h,c,n++);
+    self->start_step = grib_arguments_get_name(a->parent->h,c,n++);
+    self->unit  = grib_arguments_get_name(a->parent->h,c,n++);
 
-	self->year = grib_arguments_get_name(a->parent->h,c,n++);
-	self->month = grib_arguments_get_name(a->parent->h,c,n++);
-	self->day = grib_arguments_get_name(a->parent->h,c,n++);
-	self->hour  = grib_arguments_get_name(a->parent->h,c,n++);
-	self->minute  = grib_arguments_get_name(a->parent->h,c,n++);
-	self->second  = grib_arguments_get_name(a->parent->h,c,n++);
+    self->year = grib_arguments_get_name(a->parent->h,c,n++);
+    self->month = grib_arguments_get_name(a->parent->h,c,n++);
+    self->day = grib_arguments_get_name(a->parent->h,c,n++);
+    self->hour  = grib_arguments_get_name(a->parent->h,c,n++);
+    self->minute  = grib_arguments_get_name(a->parent->h,c,n++);
+    self->second  = grib_arguments_get_name(a->parent->h,c,n++);
 
-	self->year_of_end_of_interval = grib_arguments_get_name(a->parent->h,c,n++);
-	self->month_of_end_of_interval  = grib_arguments_get_name(a->parent->h,c,n++);
-	self->day_of_end_of_interval  = grib_arguments_get_name(a->parent->h,c,n++);
-	self->hour_of_end_of_interval = grib_arguments_get_name(a->parent->h,c,n++);
-	self->minute_of_end_of_interval = grib_arguments_get_name(a->parent->h,c,n++);
-	self->second_of_end_of_interval = grib_arguments_get_name(a->parent->h,c,n++);
+    self->year_of_end_of_interval = grib_arguments_get_name(a->parent->h,c,n++);
+    self->month_of_end_of_interval  = grib_arguments_get_name(a->parent->h,c,n++);
+    self->day_of_end_of_interval  = grib_arguments_get_name(a->parent->h,c,n++);
+    self->hour_of_end_of_interval = grib_arguments_get_name(a->parent->h,c,n++);
+    self->minute_of_end_of_interval = grib_arguments_get_name(a->parent->h,c,n++);
+    self->second_of_end_of_interval = grib_arguments_get_name(a->parent->h,c,n++);
 
-	self->coded_unit  = grib_arguments_get_name(a->parent->h,c,n++);
-	self->coded_time_range  = grib_arguments_get_name(a->parent->h,c,n++);
+    self->coded_unit  = grib_arguments_get_name(a->parent->h,c,n++);
+    self->coded_time_range  = grib_arguments_get_name(a->parent->h,c,n++);
+    self->typeOfTimeIncrement = grib_arguments_get_name(a->parent->h,c,n++);
+    self->numberOfTimeRange = grib_arguments_get_name(a->parent->h,c,n++);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-	grib_dump_double(dumper,a,NULL);
+    grib_dump_double(dumper,a,NULL);
 }
 
 static int u2s2[] =  {
-  60,      /* (0) minutes */
-  3600,    /* (1) hour    */
-  86400,   /* (2) day     */
-  2592000, /* (3) month     */
-  -1,      /* (4) */
-  -1,      /* (5) */
-  -1,      /* (6) */
-  -1,      /* (7) */
-  -1,      /* (8) */
-  -1,      /* (9) */
-  10800,   /* (10) 3 hours */
-  21600,   /* (11) 6 hours */
-  43200,   /* (12) 12 hours */
-  1        /* (13) seconds  */
+        60,      /* (0) minutes */
+        3600,    /* (1) hour    */
+        86400,   /* (2) day     */
+        2592000, /* (3) month     */
+        -1,      /* (4) */
+        -1,      /* (5) */
+        -1,      /* (6) */
+        -1,      /* (7) */
+        -1,      /* (8) */
+        -1,      /* (9) */
+        10800,   /* (10) 3 hours */
+        21600,   /* (11) 6 hours */
+        43200,   /* (12) 12 hours */
+        1        /* (13) seconds  */
 };
 
 static int u2s[] =  {
-  60,      /* (0) minutes */
-  3600,    /* (1) hour    */
-  86400,   /* (2) day     */
-  2592000, /* (3) month     */
-  -1,      /* (4) */
-  -1,      /* (5) */
-  -1,      /* (6) */
-  -1,      /* (7) */
-  -1,      /* (8) */
-  -1,      /* (9) */
-  10800,   /* (10) 3 hours */
-  21600,   /* (11) 6 hours */
-  43200,   /* (12) 12 hours */
-  1,       /* (13) seconds  */
-  900,     /* (14) 15 minutes  */
-  1800     /* (15) 30 minutes  */
+        60,      /* (0) minutes */
+        3600,    /* (1) hour    */
+        86400,   /* (2) day     */
+        2592000, /* (3) month     */
+        -1,      /* (4) */
+        -1,      /* (5) */
+        -1,      /* (6) */
+        -1,      /* (7) */
+        -1,      /* (8) */
+        -1,      /* (9) */
+        10800,   /* (10) 3 hours */
+        21600,   /* (11) 6 hours */
+        43200,   /* (12) 12 hours */
+        1,       /* (13) seconds  */
+        900,     /* (14) 15 minutes  */
+        1800     /* (15) 30 minutes  */
 };
+
+/* See GRIB-488 */
+static int is_special_expver(grib_handle* h)
+{
+    if (grib_is_defined(h, "experimentVersionNumber")) {
+        int ret = 0;
+        char strExpVer[50]={0,};
+        size_t slen=50;
+        ret = grib_get_string(h, "experimentVersionNumber", strExpVer, &slen);
+        if (ret == GRIB_SUCCESS && !strcmp(strExpVer, "1605")) {
+            return 1; /* Special case of expVer 1605! */
+        }
+    }
+    return 0;
+}
+
+static int convert_time_range(
+        grib_handle* h,
+        long stepUnits,                      /* unit */
+        long indicatorOfUnitForTimeRange,    /* coded_unit */
+        long* lengthOfTimeRange              /* coded_time_range */
+        )
+{
+    Assert(lengthOfTimeRange != NULL);
+
+    if (indicatorOfUnitForTimeRange != stepUnits) {
+        long u2sf_step_unit;
+        long coded_time_range_sec = (*lengthOfTimeRange)*u2s2[indicatorOfUnitForTimeRange];
+        if (coded_time_range_sec < 0) {
+            long u2sf;
+            int factor = 60;
+            if (u2s2[indicatorOfUnitForTimeRange] % factor)
+                return GRIB_DECODING_ERROR;
+            if (u2s[stepUnits] % factor)
+                return GRIB_DECODING_ERROR;
+            u2sf = u2s2[indicatorOfUnitForTimeRange]/factor;
+            coded_time_range_sec = (*lengthOfTimeRange)*u2sf;
+            u2sf_step_unit = u2s[stepUnits]/factor;
+        } else {
+            u2sf_step_unit = u2s[stepUnits];
+        }
+        if (coded_time_range_sec % u2sf_step_unit != 0) {
+            grib_context_log(h->context,GRIB_LOG_ERROR,"unable to convert endStep in stepUnits");
+            return GRIB_WRONG_STEP_UNIT;
+        }
+        *lengthOfTimeRange = coded_time_range_sec / u2sf_step_unit;
+    }
+
+    return GRIB_SUCCESS;
+}
+
+static int unpack_one_time_range(grib_accessor* a, long* val, size_t *len)
+{
+    grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
+    int err = 0;
+    long start_step;
+    long unit;
+    long coded_unit;
+    long coded_time_range, typeOfTimeIncrement;
+    int add_time_range = 1; /* whether we add lengthOfTimeRange */
+
+    grib_handle* h = a->parent->h;
+
+    if((err = grib_get_long_internal(h,self->start_step,&start_step))) return err;
+    if((err = grib_get_long_internal(h,self->unit,&unit))) return err;
+    if((err = grib_get_long_internal(h,self->coded_unit,&coded_unit))) return err;
+    if((err = grib_get_long_internal(h,self->coded_time_range, &coded_time_range))) return err;
+    if((err = grib_get_long_internal(h,self->typeOfTimeIncrement, &typeOfTimeIncrement))) return err;
+
+    err = convert_time_range(h, unit, coded_unit, &coded_time_range);
+    if (err != GRIB_SUCCESS) return err;
+
+    if (typeOfTimeIncrement == 1) {
+        /* See GRIB-488 */
+        /* Note: For this case, lengthOfTimeRange is not related to step and should not be used to calculate step */
+        add_time_range = 0;
+        if (is_special_expver(h)) {
+            add_time_range = 1;
+        }
+    }
+    if (add_time_range) {
+        *val = start_step + coded_time_range;
+    } else {
+        *val = start_step;
+    }
+
+    return GRIB_SUCCESS;
+}
+
+#define MAX_NUM_TIME_RANGES 16 /* maximum number of time range specifications */
+static int unpack_multiple_time_ranges(grib_accessor* a, long* val, size_t *len)
+{
+    grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
+    int i = 0, err = 0;
+    grib_handle* h = a->parent->h;
+    long numberOfTimeRange = 0, unit = 0, start_step = 0;
+
+    size_t count = 0;
+    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {0,};
+    long arr_coded_unit[MAX_NUM_TIME_RANGES]          = {0,};
+    long arr_coded_time_range[MAX_NUM_TIME_RANGES]    = {0,};
+
+    if((err = grib_get_long_internal(h,self->start_step,&start_step))) return err;
+    if((err = grib_get_long_internal(h,self->unit,&unit))) return err;
+    if((err = grib_get_long_internal(h,self->numberOfTimeRange, &numberOfTimeRange))) return err;
+    if (numberOfTimeRange > MAX_NUM_TIME_RANGES) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Too many time range specifications!");
+        return GRIB_DECODING_ERROR;
+    }
+
+    count = numberOfTimeRange;
+    /* Get the arrays for the N time ranges */
+    if ((err = grib_get_long_array(h, self->typeOfTimeIncrement, arr_typeOfTimeIncrement, &count))) return err;
+    if ((err = grib_get_long_array(h, self->coded_unit,          arr_coded_unit,          &count))) return err;
+    if ((err = grib_get_long_array(h, self->coded_time_range,    arr_coded_time_range,    &count))) return err;
+
+    /* Look in the array of typeOfTimeIncrements for first entry whose typeOfTimeIncrement == 2 */
+    for(i=0; i<count; i++) {
+        if (arr_typeOfTimeIncrement[i] == 2) {
+            /* Found the required time range. Get the other two keys from it */
+            long the_coded_unit = arr_coded_unit[i];
+            long the_coded_time_range = arr_coded_time_range[i];
+
+            err = convert_time_range(h, unit, the_coded_unit, &the_coded_time_range);
+            if (err != GRIB_SUCCESS) return err;
+
+            *val = start_step + the_coded_time_range;
+            return GRIB_SUCCESS;
+        }
+    }
+
+    grib_context_log(h->context, GRIB_LOG_ERROR,
+            "Cannot calculate endStep. No time range specification with typeOfTimeIncrement = 2");
+    return GRIB_DECODING_ERROR;
+}
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-	grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
-	int err = 0;
-	long start_step;
-	long unit;
-	long coded_unit;
-	long coded_time_range;
-	long coded_time_range_sec=0;
-	int factor;
-	long u2sf,u2sf_step_unit;
+    grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
+    int err = 0;
+    long start_step;
+    long numberOfTimeRange;
+    grib_handle* h=a->parent->h;
 
-	grib_handle* h=a->parent->h;
+    if((err = grib_get_long_internal(h,self->start_step,&start_step))) return err;
 
-	if((err = grib_get_long_internal(h,self->start_step,&start_step))) return err;
+    /* point in time */
+    if (self->year == NULL) {
+        *val=start_step;
+        return 0;
+    }
 
-	/*point in time */
-	if (self->year == NULL) {
-		*val=start_step;
-		return 0;
-	}
+    if((err = grib_get_long_internal(h,self->numberOfTimeRange, &numberOfTimeRange))) return err;
+    Assert(numberOfTimeRange == 1 || numberOfTimeRange == 2);
 
-	if((err = grib_get_long_internal(h,self->unit,&unit))) return err;
+    if (numberOfTimeRange == 1) {
+        return unpack_one_time_range(a,val,len);
+    } else {
+        return unpack_multiple_time_ranges(a,val,len);
+    }
 
-	if((err = grib_get_long_internal(h,self->coded_unit,&coded_unit))) return err;
-	if((err = grib_get_long_internal(h,self->coded_time_range,
-			&coded_time_range))) return err;
-
-	if (coded_unit!=unit) {
-		coded_time_range_sec=coded_time_range*u2s2[coded_unit];
-		if (coded_time_range_sec<0) {
-			factor=60;
-			if (u2s2[coded_unit] % factor) return GRIB_DECODING_ERROR;
-			if (u2s[unit] % factor) return GRIB_DECODING_ERROR;
-			u2sf=u2s2[coded_unit]/factor;
-			coded_time_range_sec=coded_time_range*u2sf;
-			u2sf_step_unit=u2s[unit]/factor;
-		} else {
-			u2sf_step_unit=u2s[unit];
-		}
-		if (coded_time_range_sec % u2sf_step_unit!=0) {
-			grib_context_log(h->context,GRIB_LOG_ERROR,"unable to convert endStep in stepUnits");
-			return GRIB_WRONG_STEP_UNIT;
-		}
-		coded_time_range = coded_time_range_sec / u2sf_step_unit;
-	}
-
-	*val = start_step + coded_time_range;
-
-	return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
+
+#if 0
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
+{
+    grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
+    int err = 0;
+    long start_step;
+    long unit;
+    long coded_unit;
+    long coded_time_range, typeOfTimeIncrement, numberOfTimeRange;
+    long coded_time_range_sec=0;
+    int factor;
+    long u2sf,u2sf_step_unit;
+    int add_time_range = 1; /* whether we add lengthOfTimeRange */
+
+    grib_handle* h=a->parent->h;
+
+    if((err = grib_get_long_internal(h,self->start_step,&start_step))) return err;
+
+    /*point in time */
+    if (self->year == NULL) {
+        *val=start_step;
+        return 0;
+    }
+
+    if((err = grib_get_long_internal(h,self->unit,&unit))) return err;
+
+    if((err = grib_get_long_internal(h,self->coded_unit,&coded_unit))) return err;
+    if((err = grib_get_long_internal(h,self->coded_time_range, &coded_time_range))) return err;
+    if((err = grib_get_long_internal(h,self->typeOfTimeIncrement, &typeOfTimeIncrement))) return err;
+    if((err = grib_get_long_internal(h,self->numberOfTimeRange, &numberOfTimeRange))) return err;
+
+    Assert(numberOfTimeRange == 1 || numberOfTimeRange == 2);
+
+    err = convert_time_range(h, unit, coded_unit, &coded_time_range);
+    if (err != GRIB_SUCCESS) return err;
+
+#if 0
+    if (coded_unit!=unit) {
+        coded_time_range_sec=coded_time_range*u2s2[coded_unit];
+        if (coded_time_range_sec<0) {
+            factor=60;
+            if (u2s2[coded_unit] % factor) return GRIB_DECODING_ERROR;
+            if (u2s[unit] % factor) return GRIB_DECODING_ERROR;
+            u2sf=u2s2[coded_unit]/factor;
+            coded_time_range_sec=coded_time_range*u2sf;
+            u2sf_step_unit=u2s[unit]/factor;
+        } else {
+            u2sf_step_unit=u2s[unit];
+        }
+        if (coded_time_range_sec % u2sf_step_unit!=0) {
+            grib_context_log(h->context,GRIB_LOG_ERROR,"unable to convert endStep in stepUnits");
+            return GRIB_WRONG_STEP_UNIT;
+        }
+        coded_time_range = coded_time_range_sec / u2sf_step_unit;
+    }
+#endif
+    if (typeOfTimeIncrement == 1) {
+        /* See GRIB-488 */
+        /* Note: For this case, lengthOfTimeRange is not related to step and should not be used to calculate step */
+        add_time_range = 0;
+        if (is_special_expver(h)) {
+            add_time_range = 1;
+        }
+    }
+    if (add_time_range) {
+        *val = start_step + coded_time_range;
+    } else {
+        *val = start_step;
+    }
+
+    return GRIB_SUCCESS;
+}
+#endif
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-	grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
-	grib_handle* h=a->parent->h;
+    grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
+    grib_handle* h=a->parent->h;
 
-	int err = 0;
+    int err = 0;
 
-	long year;
-	long month;
-	long day;
-	long hour;
-	long minute;
-	long second;
+    long year;
+    long month;
+    long day;
+    long hour;
+    long minute;
+    long second;
 
-	long start_step;
-	long unit,coded_unit;
-	long year_of_end_of_interval;
-	long month_of_end_of_interval;
-	long day_of_end_of_interval;
-	long hour_of_end_of_interval;
-	long minute_of_end_of_interval = 0;
-	long second_of_end_of_interval = 0;
+    long start_step;
+    long unit,coded_unit;
+    long year_of_end_of_interval;
+    long month_of_end_of_interval;
+    long day_of_end_of_interval;
+    long hour_of_end_of_interval;
+    long minute_of_end_of_interval = 0;
+    long second_of_end_of_interval = 0;
 
-	long coded_time_range,time_range;
+    long coded_time_range,time_range, typeOfTimeIncrement;
 
-	double dend, dstep;
+    double dend, dstep;
 
-	/*point in time */
-	if (self->year == NULL) {
-		err = grib_set_long_internal(h,self->start_step,*val);
-		return err;
-	}
+    /*point in time */
+    if (self->year == NULL) {
+        err = grib_set_long_internal(h,self->start_step,*val);
+        return err;
+    }
 
-	if((err = grib_get_long_internal(h,self->coded_unit,&coded_unit))) return err;
-	if((err = grib_get_long_internal(h,self->unit,&unit))) return err;
-	if((err = grib_get_long_internal(h,self->year,&year))) return err;
-	if((err = grib_get_long_internal(h,self->month,&month))) return err;
-	if((err = grib_get_long_internal(h,self->day,&day))) return err;
-	if((err = grib_get_long_internal(h,self->hour,&hour))) return err;
-	if((err = grib_get_long_internal(h,self->minute,&minute))) return err;
-	if((err = grib_get_long_internal(h,self->second,&second))) return err;
+    if((err = grib_get_long_internal(h,self->coded_unit,&coded_unit))) return err;
+    if((err = grib_get_long_internal(h,self->unit,&unit))) return err;
+    if((err = grib_get_long_internal(h,self->year,&year))) return err;
+    if((err = grib_get_long_internal(h,self->month,&month))) return err;
+    if((err = grib_get_long_internal(h,self->day,&day))) return err;
+    if((err = grib_get_long_internal(h,self->hour,&hour))) return err;
+    if((err = grib_get_long_internal(h,self->minute,&minute))) return err;
+    if((err = grib_get_long_internal(h,self->second,&second))) return err;
 
-	if((err = grib_get_long_internal(h,self->start_step,&start_step)))
-		return err;
+    if((err = grib_get_long_internal(h,self->start_step,&start_step))) return err;
+    if((err = grib_get_long_internal(h,self->typeOfTimeIncrement, &typeOfTimeIncrement))) return err;
 
-	time_range  = *val-start_step;
+    time_range  = *val-start_step;
 
-	if (time_range<0){
-		grib_context_log(h->context,GRIB_LOG_ERROR,
-				"endStep < startStep (%ld < %ld)",*val,start_step);
-		return GRIB_WRONG_STEP;
-	}
+    if (time_range<0){
+        grib_context_log(h->context,GRIB_LOG_ERROR,
+                "endStep < startStep (%ld < %ld)",*val,start_step);
+        return GRIB_WRONG_STEP;
+    }
 
-	err=grib_datetime_to_julian(year,month,day,hour,minute,second,&dend);
-	if (err!=GRIB_SUCCESS) return err;
+    err=grib_datetime_to_julian(year,month,day,hour,minute,second,&dend);
+    if (err!=GRIB_SUCCESS) return err;
 
-	dstep=(((double)(*val))*u2s[unit])/u2s[2];
-	dend+=dstep;
+    dstep=(((double)(*val))*u2s[unit])/u2s[2];
+    dend+=dstep;
 
-	err=grib_julian_to_datetime(dend,&year_of_end_of_interval,&month_of_end_of_interval,
-			&day_of_end_of_interval,&hour_of_end_of_interval,
-			&minute_of_end_of_interval,&second_of_end_of_interval);
-	if (err!=GRIB_SUCCESS) return err;
+    err=grib_julian_to_datetime(dend,&year_of_end_of_interval,&month_of_end_of_interval,
+            &day_of_end_of_interval,&hour_of_end_of_interval,
+            &minute_of_end_of_interval,&second_of_end_of_interval);
+    if (err!=GRIB_SUCCESS) return err;
 
-	if((err = grib_set_long_internal(a->parent->h,self->year_of_end_of_interval,
-			year_of_end_of_interval))) return err;
-	if((err = grib_set_long_internal(a->parent->h,self->month_of_end_of_interval,
-			month_of_end_of_interval))) return err;
-	if((err = grib_set_long_internal(a->parent->h,self->day_of_end_of_interval,
-			day_of_end_of_interval))) return err;
-	if((err = grib_set_long_internal(a->parent->h,self->hour_of_end_of_interval,
-			hour_of_end_of_interval))) return err;
-	if((err = grib_set_long_internal(a->parent->h,self->minute_of_end_of_interval,
-			minute_of_end_of_interval))) return err;
-	if((err = grib_set_long_internal(a->parent->h,self->second_of_end_of_interval,
-			second_of_end_of_interval))) return err;
+    if((err = grib_set_long_internal(a->parent->h,self->year_of_end_of_interval,  year_of_end_of_interval))) return err;
+    if((err = grib_set_long_internal(a->parent->h,self->month_of_end_of_interval, month_of_end_of_interval))) return err;
+    if((err = grib_set_long_internal(a->parent->h,self->day_of_end_of_interval,   day_of_end_of_interval))) return err;
+    if((err = grib_set_long_internal(a->parent->h,self->hour_of_end_of_interval,  hour_of_end_of_interval))) return err;
+    if((err = grib_set_long_internal(a->parent->h,self->minute_of_end_of_interval, minute_of_end_of_interval))) return err;
+    if((err = grib_set_long_internal(a->parent->h,self->second_of_end_of_interval, second_of_end_of_interval))) return err;
 
-	if (time_range*u2s[unit]%u2s2[coded_unit]) {
-		coded_unit=unit;
-		if((err = grib_set_long_internal(a->parent->h,self->coded_unit,
-				coded_unit))) return err;
-		coded_time_range=time_range;
-	} else
-		coded_time_range=(time_range*u2s[unit])/u2s2[coded_unit];
+    if (time_range*u2s[unit]%u2s2[coded_unit]) {
+        coded_unit=unit;
+        if((err = grib_set_long_internal(a->parent->h,self->coded_unit, coded_unit))) return err;
+        coded_time_range=time_range;
+    } else
+        coded_time_range=(time_range*u2s[unit])/u2s2[coded_unit];
 
-	if((err = grib_set_long_internal(a->parent->h,self->coded_time_range,
-			coded_time_range))) return err;
+    if (typeOfTimeIncrement != 1) {
+        /* 1 means "Successive times processed have same forecast time, start time of forecast is incremented" */
+        /* Note: For this case, length of timeRange is not related to step and so should NOT be used to calculate step */
+        if((err = grib_set_long_internal(a->parent->h,self->coded_time_range, coded_time_range))) return err;
+    }
 
-	return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
