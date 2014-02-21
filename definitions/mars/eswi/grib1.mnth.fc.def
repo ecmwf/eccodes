@@ -3,6 +3,4 @@ meta verificationDate         g1verificationdate(dataDate, dataTime, endStep) : 
 meta monthlyVerificationDate  g1monthlydate(verificationDate) : dump,no_copy;
 alias mars.date             = monthlyVerificationDate;
 
-# class e4
-# constant six = 6;
 alias mars.step = startStep;

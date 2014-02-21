@@ -21,14 +21,14 @@
 103 hmsl Fixed height level height above mean sea level (MSL) in meters
 104 104 Layer between two height levels above msl height of top (hm) above mean sea level height of bottom (hm) above mean sea level
 105 hl Fixed height above ground height in meters (2 octets)
-106 106 Layer between two height levels above ground height of top (hm) above ground height of bottom (hm) above ground
+106 lhl Layer between two height levels above ground height of top (hm) above ground height of bottom (hm) above ground
 107 107 Sigma level sigma value in 1/10000 (2 octets)
 108 108 Layer between two sigma levels sigma value at top in 1/100 sigma value at bottom in 1/100
 109 ml Hybrid level level number (2 octets)
 110 110 Layer between two hybrid levels level number of top level number of bottom
 111 111 Depth below land surface centimeters (2 octets)
-112 112 Layer between two depths below land surface depth of upper surface (cm) depth of lower surface (cm)
-113 113 Isentropic (theta) level Potential Temp. degrees K (2 octets)
+112 ldl Layer between two depths below land surface depth of upper surface (cm) depth of lower surface (cm)
+113 pt Isentropic (theta) level Potential Temp. degrees K (2 octets)
 114 114 Layer between two isentropic levels 475K minus theta of top in Deg. K 475K minus theta of bottom in Deg. K
 115 115 Level at specified pressure difference from ground to level hPa (2 octets)
 116 116 Layer between two levels at specified pressure differences from ground to levels pressure difference from ground to top level hPa pressure difference from ground to bottom level hPa

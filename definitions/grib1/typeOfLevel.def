@@ -2,9 +2,17 @@
 #
 # author: Sebastien Villaume <Sebastien.Villaume@smhi.se>
 # created: 6 Oct 2011
-# modified: 13 May 2013
+# modified: 20 Feb 2014
 #
 #########################
+#
+# this file is needed when ecmwf conventions are desactivated
+# note that it is only an extraction of a portion of section.1.def
+# minus the ecmwf specific additions.
+# The version including ecmwf specifics is proposed to be included
+# in their local concepts.
+#
+#
 'surface'       = {indicatorOfTypeOfLevel=1;}
 'cloudBase'     = {indicatorOfTypeOfLevel=2;}
 'cloudTop'      = {indicatorOfTypeOfLevel=3;}

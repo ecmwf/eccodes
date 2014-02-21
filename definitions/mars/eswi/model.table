@@ -2,14 +2,15 @@
 ##
 ## author: Sebastien Villaume <Sebastien.Villaume@smhi.se>
 ## created: 6 Oct 2011
-## modified: 13 May 2013
+## modified: 20 Feb 2014
 ##
 #
 # Model ##### SMHI local definitions #####
 0 none not set, default
 10 ifs IFS
-20 harmonie HARMONIE
+20 alaro ALARO 
 21 surfex SURFEX
+22 arome AROME 
 30 hirlam HIRLAM
 31 rca RCA
 40 hiromb HIROMB
@@ -18,3 +19,4 @@
 43 nemo NEMO
 50 match MATCH
 60 mesan MESAN
+61 mescan MESCAN

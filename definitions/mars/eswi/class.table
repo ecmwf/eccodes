@@ -6,7 +6,5 @@
 #
 #########################
 0 none not set, default
-1 od ECMWF Operational data 
-2 rd ECMWF Research data
 80 op SMHI Operational data
 81 re SMHI Research data

@@ -21,15 +21,15 @@
 #MeanSize                        70-71   I2      57      -
 #StandardDeviation               72-73   I2      58      -
 #PartDef                         74      PAD     n/a     7
-#################################################
+################################################################
 #
 # author: Sebastien Villaume <Sebastien.Villaume@smhi.se>
 # created: 6 Oct 2011
-# modified: 13 May 2013
+# modified: 20 Feb 2014
 #
-#################################
-### LOCAL SECTION DESCRIPTION ###
-#################################
+#########################
+### LOCAL SECTION 83 ###
+#########################
 
 constant GRIBEXSection1Problem = 80 - section1Length;
 
@@ -41,39 +41,16 @@ codetable[1]    matchSort	        "grib1/localConcepts/eswi/sort.table"         
 codetable[1]	matchTimeRepres	        "grib1/localConcepts/eswi/timerepres.table"        : dump,long_type;
 codetable[1]	matchLandType	        "grib1/localConcepts/eswi/landtype.table"          : dump,long_type;
 codetable[2]	matchAerosolBinNumber	"grib1/localConcepts/eswi/aerosolbinnumber.table"  : dump,long_type;
-unsigned[2]		molarMass		        : dump;
-unsigned[1]		logTransform		    : dump;
-signed[2]		threshold		        : dump;
-unsigned[1]		reserved		        : dump;
+unsigned[2]		molarMass               : dump;
+unsigned[1]		logTransform            :dump;
+signed[2]		threshold               : dump;
+unsigned[1]		reserved                : dump;
 unsigned[1]		totalAerosolBinsNumbers	: dump;
-signed[1]		integerScaleFactor	    : dump;
-unsigned[2]		lowerRange		        : dump;
-unsigned[2]		upperRange		        : dump;
-unsigned[2]		meanSize		        : dump;
-unsigned[2]		standardDeviation	    : dump;
+signed[1]		integerScaleFactor      : dump;
+unsigned[2]		lowerRange              : dump;
+unsigned[2]		upperRange              : dump;
+unsigned[2]		meanSize                : dump;
+unsigned[2]		standardDeviation       : dump;
 pad padding_local1_1(7);
 
-#####################
-### MARS LABELING ###
-#####################
-
-template mars_labeling "grib1/mars_labeling.82.def";
-
-concept_nofail matchAerosolPacking (unknown,"aerosolPackingConcept.def",conceptsLocalMarsDirAll,conceptsMasterMarsDir);
-
-alias mars.sort                 = matchSort;
-alias mars.timerepres       	= matchTimeRepres;
-alias mars.landtype         	= matchLandType;
-alias mars.aerosolbinnumber 	= matchAerosolBinNumber;
-
-alias mars.aerosolpacking       = matchAerosolPacking; 
-
-###################
-### LS LABELING ###
-###################
-
-concept_nofail ls.timerepres (unknown,"timeRepresConcept.def",conceptsLocalDirAll,conceptsMasterDir);
-concept_nofail ls.sort (unknown,"sortConcept.def",conceptsLocalDirAll,conceptsMasterDir);
-concept_nofail ls.landtype (unknown,"landTypeConcept.def",conceptsLocalDirAll,conceptsMasterDir);
-concept_nofail ls.aerosolbinnumber (unknown,"aerosolConcept.def",conceptsLocalDirAll,conceptsMasterDir);
 

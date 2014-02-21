@@ -223,6 +223,7 @@ dist_definitionsgrib1_DATA = \
 	grib1/local_no_mars.98.1.def\
 	grib1/local_no_mars.98.24.def\
 	grib1/ls.def\
+	grib1/ls_labeling.82.def\
 	grib1/mars_labeling.23.def\
 	grib1/mars_labeling.4.def\
 	grib1/mars_labeling.82.def\
@@ -2458,6 +2459,11 @@ definitionsmars_eswidir = @GRIB_DEFINITION_PATH@/mars/eswi
 dist_definitionsmars_eswi_DATA = \
 	mars/eswi/aerosolPackingConcept.def\
 	mars/eswi/class.table\
+	mars/eswi/grib1.expr.3v.def\
+	mars/eswi/grib1.expr.4v.def\
+	mars/eswi/grib1.expr.an.def\
+	mars/eswi/grib1.expr.fc.def\
+	mars/eswi/grib1.expr.si.def\
 	mars/eswi/grib1.mdfa.fc.def\
 	mars/eswi/grib1.mnth.an.def\
 	mars/eswi/grib1.mnth.fc.def\
