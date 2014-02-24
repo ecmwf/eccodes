@@ -28,7 +28,7 @@ grib_options_help grib_options_help_list[] ={
   {"b:","key,key,...",
      "\n\t\tAll the keys in this list are skipped in the comparison. Bit-by-bit compare on.\n"},
   {"B:","order by directive",
-     "\n\t\tOrder by. The output will be ordered according the order by directive."
+     "\n\t\tOrder by. The output will be ordered according to the order by directive."
      "\n\t\tOrder by example: \"step asc, centre desc\" (step ascending and centre descending)\n"},
   {"c:","key[:l/d/s/n],key[:l/d/s/n],...",
    "\n\t\tOnly the listed keys or namespaces (:n) are compared. The optional letter after the colon is used "
@@ -95,7 +95,7 @@ grib_options_help grib_options_help_list[] ={
 "\n\t\tall=relative_error will compare all the floating point keys using relative_error. Default all=0.\n"},
   {"S",0,"Strict. Only grib messages matching all the constraints are copied to"
    "\n\t\tthe output file\n"},
-  {"T:","T | B","Message type. T->GTS, B->BUFR. The input file is interpreted according the message type.\n"},
+  {"T:","T | B","Message type. T->GTS, B->BUFR. The input file is interpreted according to the message type.\n"},
   {"V",0,"Version.\n"},
   {"W:","width","\n\t\tMinimum width of each column in output. Default is 10.\n"},
   {"X:","offset","\n\t\tInput file offset in bytes. Processing of the input file will start from \"offset\".\n"},
