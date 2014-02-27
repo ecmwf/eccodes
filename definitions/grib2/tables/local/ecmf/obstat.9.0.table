@@ -34,4 +34,19 @@
 33 norm_obs_stdv stdv of normalised observation
 34 anso Average of analyse sensitivity to observations
 35 anso_stdv stdv of analyse sensitivity to observations
+40 fcst_dep1 Average of forecast departure for step 1
+41 fcst_dep1_stdv Standard deviation of forecast departure for step 1
+42 fcst_dep2 Average of forecast departure for step 2
+43 fcst_dep2_stdv Standard deviation of forecast departure for step 2
+44 norm_fcst_dep1 Average of normalised forecast departure for step 1
+45 norm_fcst_dep1_stdv Standard deviation of normalised forecast departure for step 1
+46 norm_fcst_dep2 Average of normalised forecast departure for step 2
+47 norm_fcst_dep2_stdv Standard deviation of normalised forecast departure for step 2
+60 far_rate False alarm rate
+62 miss_rate Miss rate
+64 hit_rate hit rate
+66 corr_nul correct nuls 
+68 est_fg_err Estimated variance of the first guess error
+70 edafgspr EDA first guess variance
+72 edaanspr EDA Analysis variance
 #36-255 Reserved 	 
