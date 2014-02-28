@@ -355,7 +355,12 @@ dist_definitionsgrib2_DATA = \
 	grib2/dimension.0.table\
 	grib2/dimensionTableNumber.table\
 	grib2/dimensionType.table\
+	grib2/grib2LocalSectionNumber.82.table\
 	grib2/grib2LocalSectionNumber.98.table\
+	grib2/local.82.0.def\
+	grib2/local.82.82.def\
+	grib2/local.82.83.def\
+	grib2/local.82.def\
 	grib2/local.98.0.def\
 	grib2/local.98.1.def\
 	grib2/local.98.11.def\
@@ -380,6 +385,8 @@ dist_definitionsgrib2_DATA = \
 	grib2/local.98.def\
 	grib2/local.tigge.1.def\
 	grib2/ls.def\
+	grib2/ls_labeling.82.def\
+	grib2/mars_labeling.82.def\
 	grib2/mars_labeling.def\
 	grib2/meta.def\
 	grib2/name.def\
@@ -600,6 +607,13 @@ dist_definitionsgrib2_localConcepts_ekmi_DATA = \
 	grib2/localConcepts/ekmi/paramId.def\
 	grib2/localConcepts/ekmi/shortName.def\
 	grib2/localConcepts/ekmi/units.def
+
+definitionsgrib2_localConcepts_eswidir = @GRIB_DEFINITION_PATH@/grib2/localConcepts/eswi
+dist_definitionsgrib2_localConcepts_eswi_DATA = \
+	grib2/localConcepts/eswi/name.def\
+	grib2/localConcepts/eswi/paramId.def\
+	grib2/localConcepts/eswi/shortName.def\
+	grib2/localConcepts/eswi/units.def
 
 definitionsgrib2_localConcepts_kwbcdir = @GRIB_DEFINITION_PATH@/grib2/localConcepts/kwbc
 dist_definitionsgrib2_localConcepts_kwbc_DATA = \
