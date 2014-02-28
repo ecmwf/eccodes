@@ -9,5 +9,5 @@ Name: grib_api_f90
 Description: The grib_api library for Fortran 90
 Version: @VERSION@
 Cflags: @F90_MODULE_FLAG@@includedir@
-Libs: -L${libdir} -lgrib_api_f90
+Libs: -L${libdir} -lgrib_api_f90 -lgrib_api
 Libs.private: -L${libdir} -lgrib_api_f90 -lgrib_api @LIBS@
