@@ -890,7 +890,7 @@
 	 indicatorOfParameter = 87 ;
 	}
 #Vertical integral of eastward water vapour flux
-'~' = {
+'vi' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 157 ;
 	}
