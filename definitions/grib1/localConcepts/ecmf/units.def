@@ -12220,7 +12220,7 @@
 	 indicatorOfParameter = 63 ;
 	}
 #Vertical integral of energy conversion
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 64 ;
 	}
@@ -12235,22 +12235,22 @@
 	 indicatorOfParameter = 66 ;
 	}
 #Vertical integral of eastward kinetic energy flux
-'J m**-2' = {
+'W m**-1' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 67 ;
 	}
 #Vertical integral of northward kinetic energy flux
-'J m**-2' = {
+'W m**-1' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 68 ;
 	}
 #Vertical integral of eastward heat flux
-'J m**-2' = {
+'W m**-1' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 69 ;
 	}
 #Vertical integral of northward heat flux
-'J m**-2' = {
+'W m**-1' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 70 ;
 	}
@@ -12265,22 +12265,22 @@
 	 indicatorOfParameter = 72 ;
 	}
 #Vertical integral of eastward geopotential flux
-'J m**-2' = {
+'W m**-1' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 73 ;
 	}
 #Vertical integral of northward geopotential flux
-'J m**-2' = {
+'W m**-1' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 74 ;
 	}
 #Vertical integral of eastward total energy flux
-'J m**-2' = {
+'W m**-1' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 75 ;
 	}
 #Vertical integral of northward total energy flux
-'J m**-2' = {
+'W m**-1' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 76 ;
 	}
@@ -12300,12 +12300,12 @@
 	 indicatorOfParameter = 81 ;
 	}
 #Vertical integral of divergence of kinetic energy flux
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 82 ;
 	}
 #Vertical integral of divergence of thermal energy flux
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 83 ;
 	}
@@ -12315,12 +12315,12 @@
 	 indicatorOfParameter = 84 ;
 	}
 #Vertical integral of divergence of geopotential flux
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 85 ;
 	}
 #Vertical integral of divergence of total energy flux
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 86 ;
 	}

@@ -13210,7 +13210,7 @@
 	 parameterNumber = 63 ;
 	}
 #Vertical integral of energy conversion
-'J m**-2' = {
+'W m**-2' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 64 ;
@@ -13228,25 +13228,25 @@
 	 parameterNumber = 66 ;
 	}
 #Vertical integral of eastward kinetic energy flux
-'J m**-2' = {
+'W m**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 67 ;
 	}
 #Vertical integral of northward kinetic energy flux
-'J m**-2' = {
+'W m**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 68 ;
 	}
 #Vertical integral of eastward heat flux
-'J m**-2' = {
+'W m**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 69 ;
 	}
 #Vertical integral of northward heat flux
-'J m**-2' = {
+'W m**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 70 ;
@@ -13264,25 +13264,25 @@
 	 parameterNumber = 72 ;
 	}
 #Vertical integral of eastward geopotential flux
-'J m**-2' = {
+'W m**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 73 ;
 	}
 #Vertical integral of northward geopotential flux
-'J m**-2' = {
+'W m**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 74 ;
 	}
 #Vertical integral of eastward total energy flux
-'J m**-2' = {
+'W m**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 75 ;
 	}
 #Vertical integral of northward total energy flux
-'J m**-2' = {
+'W m**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 76 ;
@@ -13306,13 +13306,13 @@
 	 parameterNumber = 81 ;
 	}
 #Vertical integral of divergence of kinetic energy flux
-'J m**-2' = {
+'W m**-2' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 82 ;
 	}
 #Vertical integral of divergence of thermal energy flux
-'J m**-2' = {
+'W m**-2' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 83 ;
@@ -13324,13 +13324,13 @@
 	 parameterNumber = 84 ;
 	}
 #Vertical integral of divergence of geopotential flux
-'J m**-2' = {
+'W m**-2' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 85 ;
 	}
 #Vertical integral of divergence of total energy flux
-'J m**-2' = {
+'W m**-2' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 86 ;
