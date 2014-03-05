@@ -288,9 +288,10 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
             exit(1);
         }
         if (options->infile_offset) {
+#ifndef GRIB_ON_WINDOWS
             /* Check at compile time to ensure our file offset is at least 64 bits */
             COMPILE_TIME_ASSERT( sizeof(options->infile_offset) >= 8 );
-
+#endif
             err=fseeko(infile->file, options->infile_offset, SEEK_SET);
             if (err) {
                 /*fprintf(stderr, "Invalid file offset: %ld\n", options->infile_offset);*/
@@ -854,7 +855,7 @@ void grib_print_key_values(grib_runtime_options* options,grib_handle* h)
         double v=0;
         /*if (grib_get_double_element(h,"values",options->index,&v) != GRIB_SUCCESS) {*/
         if (1) {
-            size_t size;
+            size_t size, the_index = 0;
             double* values;
             int err=0;
 
@@ -866,6 +867,12 @@ void grib_print_key_values(grib_runtime_options* options,grib_handle* h)
             }
             values=grib_context_malloc_clear(h->context,size*sizeof(double));
             grib_get_double_array(h,"values",values,&size);
+            the_index = options->index;
+            if (the_index >= size) {
+                fprintf(dump_file,"\n");
+                fprintf(stderr, "invalid index value %d (should be between 0 and %ld)\n", options->index, size-1);
+                exit(1);
+            }
             v=values[options->index];
             grib_context_free(h->context,values);
         }
