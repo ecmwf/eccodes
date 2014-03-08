@@ -44,7 +44,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*,size_t i, double* val);
@@ -149,14 +149,11 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
   a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* n_vals)
 {
   grib_accessor_data_raw_packing *self =(grib_accessor_data_raw_packing*)a;
-  long n_vals= 0;
-  if(grib_get_long_internal(a->parent->h,self->number_of_values,&n_vals) != GRIB_SUCCESS)
-    return 0;
-
-  return n_vals;
+  *n_vals= 0;
+  return grib_get_long_internal(a->parent->h,self->number_of_values,n_vals);
 }
 
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)

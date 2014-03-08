@@ -36,7 +36,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int  get_native_type(grib_accessor*);
 static int unpack_string (grib_accessor*, char*, size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
@@ -128,83 +128,97 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
-  grib_accessor_md5* self = (grib_accessor_md5*)a;
-  int n=0;
+    grib_accessor_md5* self = (grib_accessor_md5*)a;
+    int n=0;
 
-  self->offset = grib_arguments_get_name(a->parent->h,arg,n++);
-  self->length = grib_arguments_get_name(a->parent->h,arg,n++);
-  a->length = 0;
-  a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
+    self->offset = grib_arguments_get_name(a->parent->h,arg,n++);
+    self->length = grib_arguments_get_name(a->parent->h,arg,n++);
+    a->length = 0;
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 
 }
 
 static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_BYTES;
+    return GRIB_TYPE_BYTES;
 }
 
 
 static int compare(grib_accessor* a, grib_accessor* b) {
-  int retval=GRIB_SUCCESS;
+    int retval=GRIB_SUCCESS;
 
-  size_t alen = (size_t)grib_value_count(a);
-  size_t blen = (size_t)grib_value_count(b);
+    size_t alen = 0;
+    size_t blen = 0;
+    int err=0;
+    long count=0;
 
-  if (alen != blen) return GRIB_COUNT_MISMATCH;
+    err=grib_value_count(a,&count);
+    if (err) return err;
+    alen=count;
 
-  return retval;
+    err=grib_value_count(b,&count);
+    if (err) return err;
+    blen=count;
+
+    if (alen != blen) return GRIB_COUNT_MISMATCH;
+
+    return retval;
 }
 
 static int unpack_string(grib_accessor*a , char*  v, size_t *len){
-  grib_accessor_md5* self = (grib_accessor_md5*)a;
-  unsigned mess_len;
-  unsigned char* mess;
-  unsigned char* p;
-  long offset,length;
-  grib_string_list* blacklist=NULL;
-  grib_accessor* b=NULL;
-  int ret=0;
-  int i=0;
-  struct grib_md5_state md5c;
+    grib_accessor_md5* self = (grib_accessor_md5*)a;
+    unsigned mess_len;
+    unsigned char* mess;
+    unsigned char* p;
+    long offset,length;
+    grib_string_list* blacklist=NULL;
+    grib_accessor* b=NULL;
+    int ret=0;
+    int i=0;
+    struct grib_md5_state md5c;
 
-  if (*len <32 ) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"md5: array too small");
-    return GRIB_ARRAY_TOO_SMALL;
-  }
-  
-  if((ret = grib_get_long_internal(a->parent->h,self->offset,&offset))
-      != GRIB_SUCCESS)
+    if (*len <32 ) {
+        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"md5: array too small");
+        return GRIB_ARRAY_TOO_SMALL;
+    }
+
+    if((ret = grib_get_long_internal(a->parent->h,self->offset,&offset))
+            != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->length,&length))
+            != GRIB_SUCCESS)
+        return ret;
+
+
+    mess=grib_context_malloc(a->parent->h->context,length);
+    memcpy(mess,a->parent->h->buffer->data+offset,length);
+    mess_len=length;
+
+    blacklist=a->parent->h->context->blacklist;
+    while (blacklist && blacklist->value) {
+
+        b=grib_find_accessor(a->parent->h,blacklist->value);
+        if (!b) {
+            grib_context_free(a->parent->h->context,mess);
+            return GRIB_NOT_FOUND;
+        }
+
+        p=mess+b->offset-offset;
+        for (i=0;i<b->length;i++) *(p++)=0;
+
+        blacklist=blacklist->next;
+    }
+
+    grib_md5_init(&md5c);
+    grib_md5_add(&md5c,mess,mess_len);
+    grib_md5_end(&md5c,v);
+    grib_context_free(a->parent->h->context,mess);
+
     return ret;
-  if((ret = grib_get_long_internal(a->parent->h,self->length,&length))
-      != GRIB_SUCCESS)
-    return ret;
-
-  
-  mess=grib_context_malloc(a->parent->h->context,length);
-  memcpy(mess,a->parent->h->buffer->data+offset,length);
-  mess_len=length;
-
-  blacklist=a->parent->h->context->blacklist;
-  while (blacklist && blacklist->value) {
-    
-    b=grib_find_accessor(a->parent->h,blacklist->value);
-    if (!b) { 
-		grib_context_free(a->parent->h->context,mess);
-		return GRIB_NOT_FOUND;
-	}
-
-    p=mess+b->offset-offset;
-    for (i=0;i<b->length;i++) *(p++)=0;
-
-    blacklist=blacklist->next;
-  }
-
-  grib_md5_init(&md5c);
-  grib_md5_add(&md5c,mess,mess_len);
-  grib_md5_end(&md5c,v);
-  grib_context_free(a->parent->h->context,mess);
-
-  return ret;
 }
 
-static long value_count(grib_accessor* a) { return 16;}
+static int value_count(grib_accessor* a,long* count)
+{
+    *count=16;
+    return 0;
+}

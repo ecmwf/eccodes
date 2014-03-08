@@ -44,7 +44,7 @@ static int unpack_long(grib_accessor*, long* val,size_t *len);
 static long byte_count(grib_accessor*);
 static long byte_offset(grib_accessor*);
 static long next_offset(grib_accessor*);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
@@ -182,8 +182,11 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 	int i;
 	int ret=0;
 	long pos = a->offset*8;
-	long rlen = value_count(a);
+	long rlen = 0;
 	long numberOfBits = 0;
+
+    ret=value_count(a,&rlen);
+    if (ret) return ret;
 
 	if(*len < rlen)
 	{
@@ -215,7 +218,10 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
 	size_t buflen  = 0;
 	unsigned char *buf = NULL;
 	unsigned long i = 0;
-	unsigned long rlen = value_count(a);
+	long rlen = 0;
+
+    ret=value_count(a,&rlen);
+    if (ret) return ret;
 
 	if(*len != rlen)
 	{
@@ -243,21 +249,21 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
 
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* numberOfElements)
 {
   grib_accessor_spd* self = (grib_accessor_spd*)a;
   int ret;
-  long numberOfElements;
+  *numberOfElements=0;
 
-  ret=grib_get_long(a->parent->h,self->numberOfElements,&numberOfElements);
+  ret=grib_get_long(a->parent->h,self->numberOfElements,numberOfElements);
   if (ret) {
 		grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
 			"%s unable to get %s to compute size",a->name,self->numberOfElements);
-		return 0;
+		return ret;
   }
-  numberOfElements++;
+  (*numberOfElements)++;
 
-  return numberOfElements;
+  return ret;
 }
 
 static long byte_offset(grib_accessor* a){

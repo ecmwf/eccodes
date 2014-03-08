@@ -36,7 +36,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
@@ -216,9 +216,10 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
     return GRIB_SUCCESS;
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
-    return 1;
+    *count = 1;
+    return 0;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -236,5 +237,4 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
     grib_get_codeflag(a, v, flagname);
 
     grib_dump_bits(dumper,a,flagname);
-
 }

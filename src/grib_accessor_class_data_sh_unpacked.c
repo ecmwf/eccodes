@@ -45,7 +45,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -183,7 +183,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
 }
 
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
   grib_accessor_data_sh_unpacked *self =(grib_accessor_data_sh_unpacked*)a;
   int ret = 0;
@@ -203,7 +203,8 @@ static long value_count(grib_accessor* a)
     grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"sub_j=%ld, sub_k=%ld, sub_m=%ld\n",sub_j,sub_k,sub_m);
   	Assert ((sub_j ==  sub_k) && (sub_j == sub_m));
   }
-  return  (sub_j+1)*(sub_j+2);
+  *count=(sub_j+1)*(sub_j+2);
+  return ret;
 }
 
 
@@ -251,10 +252,13 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   long   pen_m= 0;
 
   double operat= 0;
+  int err=0;
 
   decode_float_proc decode_float = NULL;
 
-  n_vals = grib_value_count(a);
+  n_vals = 0;
+  err=grib_value_count(a,&n_vals);
+  if (err) return err;
 
   if(*len < n_vals){
     *len = n_vals;

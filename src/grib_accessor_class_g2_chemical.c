@@ -35,7 +35,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_long(grib_accessor*, const long* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -154,14 +154,14 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     grib_accessor_g2_chemical* self = (grib_accessor_g2_chemical*)a;
     long productDefinitionTemplateNumber=-1;
     long productDefinitionTemplateNumberNew=-1;
-    long type=-1;
-    long stream=-1;
+    /*long type=-1;
+    long stream=-1;*/
     long eps=-1;
     char stepType[15]={0,};
     size_t slen=15;
-    int chemical = *val;
+    /*int chemical = *val;*/
     int isInstant=0;
-    long derivedForecast=-1;
+    /*long derivedForecast=-1;*/
     int ret = 0;
 
     if (grib_get_long(a->parent->h, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
@@ -200,7 +200,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     return 0;
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
-    return 1;
+    *count=1;
+    return 0;
 }

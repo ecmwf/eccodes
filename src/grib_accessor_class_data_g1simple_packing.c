@@ -38,7 +38,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int pack_double(grib_accessor*, const double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -160,18 +160,16 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
 
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* number_of_values)
 {
-    long number_of_values;
     grib_accessor_data_g1simple_packing *self =(grib_accessor_data_g1simple_packing*)a;
+    *number_of_values=0;
 
     /* Special case for when values are cleared */
     /*if(a->length == 0)
     return 0;*/
 
-    if(grib_get_long_internal(a->parent->h,self->number_of_values,&number_of_values) != GRIB_SUCCESS)
-        return 0;
-    return number_of_values;
+    return grib_get_long_internal(a->parent->h,self->number_of_values,number_of_values);
 }
 
 static int pack_double(grib_accessor* a, const double* cval, size_t *len)

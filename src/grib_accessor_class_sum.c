@@ -41,7 +41,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int unpack_double(grib_accessor*, double* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -148,8 +148,12 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
   size_t size=0;
   long* values=0;
   long i;
+  long count=0;
 
-  size=value_count(a);
+  ret=value_count(a,&count);
+  if (ret) return ret;
+  size=count;
+
   if (size==0) {
   	*val=0;
 	return ret;
@@ -175,8 +179,12 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
   size_t size=0;
   double* values=0;
   long i;
+  long count=0;
 
-  size=value_count(a);
+  ret=value_count(a,&count);
+  if (ret) return ret;
+  size=count;
+
   if (size==0) {
   	*val=0;
 	return ret;
@@ -196,17 +204,18 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
 }
 
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
 	grib_accessor_sum* self = (grib_accessor_sum*)a;
 	size_t n=0;
 	int ret=0;
+
     ret = grib_get_size(a->parent->h, self->values,&n);
+	*count=n;
 
 	if (ret) 
 		grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
 				"%s is unable to get size of %s",a->name,self->values);
 
-	return n;
-	
+	return ret;
 }

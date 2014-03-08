@@ -38,7 +38,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_long(grib_accessor*, const long* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
@@ -133,42 +133,44 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_g1p1p2* self = (grib_accessor_g1p1p2*)a;
-  int n = 0;
-  self->p1        = grib_arguments_get_name(a->parent->h,c,n++);
+    grib_accessor_g1p1p2* self = (grib_accessor_g1p1p2*)a;
+    int n = 0;
+    self->p1        = grib_arguments_get_name(a->parent->h,c,n++);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_string(dumper,a,NULL);
+    grib_dump_string(dumper,a,NULL);
 
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  int err=0;
-  long off=0;
-  grib_accessor_g1p1p2* self = (grib_accessor_g1p1p2*)a;
-  grib_accessor* p1_accessor=grib_find_accessor( a->parent->h,self->p1);
-  off = p1_accessor->offset*8;
-  *val=grib_decode_unsigned_long(a->parent->h->buffer->data, &off, 16);
+    int err=0;
+    long off=0;
+    grib_accessor_g1p1p2* self = (grib_accessor_g1p1p2*)a;
+    grib_accessor* p1_accessor=grib_find_accessor( a->parent->h,self->p1);
+    off = p1_accessor->offset*8;
+    *val=grib_decode_unsigned_long(a->parent->h->buffer->data, &off, 16);
 
-  return err;
+    return err;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  long off=0;
-  int err=0;
-  grib_accessor_g1p1p2* self = (grib_accessor_g1p1p2*)a;
-  grib_accessor* p1_accessor=grib_find_accessor( a->parent->h,self->p1);
-  off = p1_accessor->offset*8;
-  err = grib_encode_unsigned_long(a->parent->h->buffer->data, *val,&off,16);
-  if (err == GRIB_SUCCESS) len[0] = 1;
+    long off=0;
+    int err=0;
+    grib_accessor_g1p1p2* self = (grib_accessor_g1p1p2*)a;
+    grib_accessor* p1_accessor=grib_find_accessor( a->parent->h,self->p1);
+    off = p1_accessor->offset*8;
+    err = grib_encode_unsigned_long(a->parent->h->buffer->data, *val,&off,16);
+    if (err == GRIB_SUCCESS) len[0] = 1;
 
-  return err;
+    return err;
 }
 
-static long value_count(grib_accessor* a){  return 1;}
-
-
+static int value_count(grib_accessor* a,long* count)
+{
+    *count=1;
+    return 0;
+}

@@ -37,7 +37,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 static void update_size(grib_accessor*,size_t);
@@ -127,102 +127,99 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-
 static void init(grib_accessor* a,  const long len, grib_arguments* arg)
 {
     grib_accessor_ieeefloat* self = (grib_accessor_ieeefloat*)a;
-  self->arg = arg;
-  a->length = 4*grib_value_count(a);
+    long count=0;
+    self->arg = arg;
+    grib_value_count(a,&count);
+    a->length = 4*count;
 
-  Assert(a->length>=0);
+    Assert(a->length>=0);
 }
 
-static long value_count(grib_accessor* a){
+static int value_count(grib_accessor* a,long* len)
+{
     grib_accessor_ieeefloat* self = (grib_accessor_ieeefloat*)a;
-    long len = 0;
-  int ret =0;
-  if(!self->arg) return 1;
-  ret = grib_get_long_internal(a->parent->h,grib_arguments_get_name(a->parent->h,self->arg,0),&len);
-  if(ret == GRIB_SUCCESS)  return len;
-  return 1;
+    *len = 0;
+
+    if(!self->arg) {*len=1;return 0;}
+    return grib_get_long_internal(a->parent->h,grib_arguments_get_name(a->parent->h,self->arg,0),len);
 }
 
 static int pack_double   (grib_accessor* a, const double* val, size_t *len)
 {
     grib_accessor_ieeefloat* self = (grib_accessor_ieeefloat*)a;
-  int ret = 0;
-  unsigned long i = 0;
-  unsigned long rlen = *len;
-  size_t buflen  = 0;
-  unsigned char *buf = NULL;
-  long off = 0;
+    int ret = 0;
+    unsigned long i = 0;
+    unsigned long rlen = *len;
+    size_t buflen  = 0;
+    unsigned char *buf = NULL;
+    long off = 0;
 
-  if(*len < 1)
-  {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, " wrong size for %s it pack at least 1 values ", a->name , rlen );
-    *len = 0;
-    return GRIB_ARRAY_TOO_SMALL;
-  }
+    if(*len < 1)
+    {
+        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, " wrong size for %s it pack at least 1 values ", a->name , rlen );
+        *len = 0;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
 
-  if (rlen == 1){
-    off = a->offset*8;
-    ret =  grib_encode_unsigned_long(a->parent->h->buffer->data,grib_ieee_to_long(val[0]), &off,  32);
-    if (*len > 1)  grib_context_log(a->parent->h->context, GRIB_LOG_WARNING, "grib_accessor_unsigned : Trying to pack %d values in a scalar %s, packing first value",  *len, a->name  );
-    if (ret == GRIB_SUCCESS) len[0] = 1;
+    if (rlen == 1){
+        off = a->offset*8;
+        ret =  grib_encode_unsigned_long(a->parent->h->buffer->data,grib_ieee_to_long(val[0]), &off,  32);
+        if (*len > 1)  grib_context_log(a->parent->h->context, GRIB_LOG_WARNING, "grib_accessor_unsigned : Trying to pack %d values in a scalar %s, packing first value",  *len, a->name  );
+        if (ret == GRIB_SUCCESS) len[0] = 1;
+        return ret;
+    }
+
+    buflen = rlen*4;
+
+    buf = grib_context_malloc(a->parent->h->context,buflen);
+
+    for(i=0; i < rlen;i++){
+        grib_encode_unsigned_longb(buf,grib_ieee_to_long(val[i]), &off,  32);
+    }
+    ret = grib_set_long_internal(a->parent->h,grib_arguments_get_name(a->parent->h,self->arg,0),rlen);
+
+    if(ret == GRIB_SUCCESS)
+        grib_buffer_replace(a, buf, buflen,1,1);
+    else
+        *len = 0;
+
+    grib_context_free(a->parent->h->context,buf);
+
     return ret;
-  }
-
-  buflen = rlen*4;
-
-  buf = grib_context_malloc(a->parent->h->context,buflen);
-
-  for(i=0; i < rlen;i++){
-    grib_encode_unsigned_longb(buf,grib_ieee_to_long(val[i]), &off,  32);
-  }
-  ret = grib_set_long_internal(a->parent->h,grib_arguments_get_name(a->parent->h,self->arg,0),rlen);
-
-  if(ret == GRIB_SUCCESS)
-    grib_buffer_replace(a, buf, buflen,1,1);
-  else
-    *len = 0;
-
-  grib_context_free(a->parent->h->context,buf);
-
-
-
-  return ret;
-
 }
-
 
 static int unpack_double   (grib_accessor* a, double* val, size_t *len)
 {
+    long rlen = 0;
+    int err=0;
+    unsigned long i = 0;
+    long bitp = a->offset*8;
 
+    err=grib_value_count(a,&rlen);
+    if (err) return err;
 
-  unsigned long rlen = grib_value_count(a);
-  unsigned long i = 0;
-  long bitp = a->offset*8;
+    if(*len < rlen)
+    {
+        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, " wrong size (%ld) for %s it contains %d values ", *len,a->name , rlen);
+        *len = 0;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
+    for(i=0; i< rlen; i++)
+        val[i] = grib_long_to_ieee(grib_decode_unsigned_long(a->parent->h->buffer->data,&bitp,32));
 
-  if(*len < rlen)
-  {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, " wrong size (%ld) for %s it contains %d values ", *len,a->name , rlen);
-    *len = 0;
-    return GRIB_ARRAY_TOO_SMALL;
-  }
-  for(i=0; i< rlen; i++)
-    val[i] = grib_long_to_ieee(grib_decode_unsigned_long(a->parent->h->buffer->data,&bitp,32));
-
-  *len = rlen;
-  return GRIB_SUCCESS;
+    *len = rlen;
+    return GRIB_SUCCESS;
 }
 static void update_size(grib_accessor* a,size_t s)
 {
-  a->length = s;
-  Assert(a->length>=0);
+    a->length = s;
+    Assert(a->length>=0);
 }
 
 static int nearest_smaller_value(grib_accessor* a, double val,double* nearest)
 {
-  return grib_nearest_smaller_ieee_float(val,nearest);
+    return grib_nearest_smaller_ieee_float(val,nearest);
 }
-

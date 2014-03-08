@@ -56,7 +56,7 @@ static int unpack_string (grib_accessor*, char*, size_t *len);
 static long byte_count(grib_accessor*);
 static long byte_offset(grib_accessor*);
 static long next_offset(grib_accessor*);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void destroy(grib_context*,grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
@@ -136,8 +136,9 @@ static long next_offset(grib_accessor* a)
 	return a->offset;
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* c)
 {
+	*c=0;
 	return 0;
 }
 

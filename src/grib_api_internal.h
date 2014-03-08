@@ -272,6 +272,7 @@ typedef  void  (*accessor_init_class_proc)               (grib_accessor_class*);
 
 typedef  int   (*accessor_compare_proc)                  (grib_accessor*, grib_accessor*);
 typedef  size_t  (*accessor_string_proc)                    (grib_accessor*);
+typedef  int  (*accessor_value_with_ret_proc)            (grib_accessor*,long*);
 typedef  long  (*accessor_value_proc)                    (grib_accessor*);
 typedef  void  (*accessor_dump_proc)                     (grib_accessor*, grib_dumper*);
 typedef  void  (*accessor_init_proc)                     (grib_accessor*, const long len, grib_arguments*);
@@ -736,7 +737,7 @@ struct grib_accessor_class
     accessor_value_proc             next_offset;
 
     accessor_string_proc            string_length;
-    accessor_value_proc             value_count;
+    accessor_value_with_ret_proc    value_count;
 
     accessor_value_proc             byte_count;
     accessor_value_proc             byte_offset;

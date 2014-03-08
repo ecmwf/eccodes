@@ -48,7 +48,7 @@ static int unpack_double(grib_accessor*, double* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
 static int unpack_string (grib_accessor*, char*, size_t *len);
 static size_t string_length(grib_accessor*);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void destroy(grib_context*,grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
@@ -254,9 +254,10 @@ static size_t string_length(grib_accessor* a)
     return MAX_CONCEPT_STRING_LENGTH;
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
-    return 1;
+    *count=1;
+    return 0;
 }
 
 static int compare(grib_accessor* a,grib_accessor* b)
@@ -265,8 +266,18 @@ static int compare(grib_accessor* a,grib_accessor* b)
     char *aval=0;
     char *bval=0;
 
-    size_t alen = (size_t)grib_value_count(a);
-    size_t blen = (size_t)grib_value_count(b);
+    size_t alen = 0;
+    size_t blen = 0;
+    int err=0;
+    long count=0;
+
+    err=grib_value_count(a,&count);
+    if (err) return err;
+    alen=count;
+
+    err=grib_value_count(b,&count);
+    if (err) return err;
+    blen=count;
 
     if (alen != blen) return GRIB_COUNT_MISMATCH;
 

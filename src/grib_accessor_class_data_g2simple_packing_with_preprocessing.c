@@ -48,7 +48,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -163,14 +163,12 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
   a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* n_vals)
 {
   grib_accessor_data_g2simple_packing_with_preprocessing *self =(grib_accessor_data_g2simple_packing_with_preprocessing*)a;
-  long n_vals= 0;
+  *n_vals= 0;
 
-  if(grib_get_long_internal(a->parent->h,self->number_of_values,&n_vals) != GRIB_SUCCESS)
-    return 0;
-  return n_vals;
+  return grib_get_long_internal(a->parent->h,self->number_of_values,n_vals);
 }
 
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
@@ -178,11 +176,16 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   grib_accessor_data_g2simple_packing_with_preprocessing* self =  (grib_accessor_data_g2simple_packing_with_preprocessing*)a;
   grib_accessor_class* super = *(a->cclass->super);
 
-  size_t n_vals = grib_value_count(a);
+  size_t n_vals = 0;
+  long nn=0;
   int err = 0;
 
   long    pre_processing;
   double    pre_processing_parameter;
+
+  err=grib_value_count(a,&nn);
+  n_vals=nn;
+  if (err) return err;
 
   if(n_vals==0){
     *len = 0;

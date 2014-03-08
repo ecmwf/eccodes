@@ -46,7 +46,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*,size_t i, double* val);
@@ -202,15 +202,12 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
     }
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* n_vals)
 {
     grib_accessor_data_jpeg2000_packing *self =(grib_accessor_data_jpeg2000_packing*)a;
-    long n_vals= 0;
+    *n_vals= 0;
 
-    if(grib_get_long_internal(a->parent->h,self->number_of_values,&n_vals) != GRIB_SUCCESS)
-        return 0;
-
-    return n_vals;
+    return grib_get_long_internal(a->parent->h,self->number_of_values,n_vals);
 }
 
 #define EXTRA_BUFFER_SIZE 10240
@@ -228,6 +225,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     double dscale = 0;
     unsigned char* buf = NULL;
     size_t n_vals = 0;
+    long nn=0;
 
     long binary_scale_factor = 0;
     long decimal_scale_factor = 0;
@@ -236,7 +234,10 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     double units_factor=1.0;
     double units_bias=0.0;
 
-    n_vals = grib_value_count(a);
+    n_vals = 0;
+    err=grib_value_count(a,&nn);
+    n_vals=nn;
+    if (err) return err;
 
     if(self->units_factor)
         grib_get_double_internal(a->parent->h,self->units_factor,&units_factor);

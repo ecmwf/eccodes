@@ -35,7 +35,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int pack_double(grib_accessor*, const double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -152,36 +152,35 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-static void init(grib_accessor* a,const long v, grib_arguments* args){
- grib_accessor_data_g2complex_packing *self =(grib_accessor_data_g2complex_packing*)a;
- self->numberOfValues    = grib_arguments_get_name(a->parent->h,args,self->carg++);
- self->edition=2;
+static void init(grib_accessor* a,const long v, grib_arguments* args)
+{
+    grib_accessor_data_g2complex_packing *self =(grib_accessor_data_g2complex_packing*)a;
+    self->numberOfValues    = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->edition=2;
 
- a->flags |= GRIB_ACCESSOR_FLAG_DATA;
+    a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-static long value_count(grib_accessor* a) {
- long numberOfValues = 0;
- int ret = GRIB_SUCCESS;
- grib_accessor_data_g2complex_packing* self =  (grib_accessor_data_g2complex_packing*)a;
- if((ret = grib_get_long(a->parent->h,self->numberOfValues,&numberOfValues)) != GRIB_SUCCESS)
-   return 0;
+static int value_count(grib_accessor* a,long* numberOfValues)
+{
+    grib_accessor_data_g2complex_packing* self =  (grib_accessor_data_g2complex_packing*)a;
+    *numberOfValues = 0;
 
- return  numberOfValues;
+    return grib_get_long(a->parent->h,self->numberOfValues,numberOfValues);
 }
 
-static int pack_double(grib_accessor* a, const double* val, size_t *len) {
-  grib_accessor_data_g2complex_packing* self =  (grib_accessor_data_g2complex_packing*)a;
-  int ret = GRIB_SUCCESS;
-  grib_accessor_class* super = *(a->cclass->super);
+static int pack_double(grib_accessor* a, const double* val, size_t *len)
+{
+    grib_accessor_data_g2complex_packing* self =  (grib_accessor_data_g2complex_packing*)a;
+    int ret = GRIB_SUCCESS;
+    grib_accessor_class* super = *(a->cclass->super);
 
-  if (*len ==0) return GRIB_NO_VALUES;
+    if (*len ==0) return GRIB_NO_VALUES;
 
-  ret = super->pack_double(a,val,len);
+    ret = super->pack_double(a,val,len);
 
-  if(ret == GRIB_SUCCESS)
+    if(ret == GRIB_SUCCESS)
         ret = grib_set_long_internal(a->parent->h,self->numberOfValues,*len) ;
 
-  return ret;
+    return ret;
 }
-

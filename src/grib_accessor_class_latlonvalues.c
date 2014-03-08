@@ -39,7 +39,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -132,58 +132,59 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_latlonvalues* self = (grib_accessor_latlonvalues*)a;
-  int n = 0;
+    grib_accessor_latlonvalues* self = (grib_accessor_latlonvalues*)a;
+    int n = 0;
 
-  self->values = grib_arguments_get_name(a->parent->h,c,n++);
+    self->values = grib_arguments_get_name(a->parent->h,c,n++);
 
-  a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
 static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
 {
-  grib_context* c=a->parent->h->context;
-  int ret = 0;
-  double* v=val;
-  double lat,lon,value;
-  size_t size=0;
-  grib_iterator* iter=grib_iterator_new(a->parent->h,0,&ret);
+    grib_context* c=a->parent->h->context;
+    int ret = 0;
+    double* v=val;
+    double lat,lon,value;
+    size_t size=0;
+    long count=0;
+    grib_iterator* iter=grib_iterator_new(a->parent->h,0,&ret);
 
-  size=value_count(a);
+    size=0;
+    ret=value_count(a,&count);
+    if (ret) return ret;
+    size=count;
 
-  if (*len<size) return GRIB_ARRAY_TOO_SMALL;
+    if (*len<size) return GRIB_ARRAY_TOO_SMALL;
 
-  if (ret!=GRIB_SUCCESS) {
-    if (iter) grib_iterator_delete(iter);
-    grib_context_log(c,GRIB_LOG_ERROR,"unable to create iterator");
+    if (ret!=GRIB_SUCCESS) {
+        if (iter) grib_iterator_delete(iter);
+        grib_context_log(c,GRIB_LOG_ERROR,"unable to create iterator");
+        return ret;
+    }
+
+    while(grib_iterator_next(iter,&lat,&lon,&value)) {
+        *(v++)=lat;*(v++)=lon;*(v++)=value;
+    }
+
+    grib_iterator_delete(iter);
+
+    *len=size;
+
     return ret;
-  }
-
-  while(grib_iterator_next(iter,&lat,&lon,&value)) {
-     *(v++)=lat;*(v++)=lon;*(v++)=value;
-  }
-
-  grib_iterator_delete(iter);
-
-  *len=size;
-
-  return ret;
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
-  grib_accessor_latlonvalues* self = (grib_accessor_latlonvalues*)a;
-  grib_handle* h=a->parent->h;
-  int ret;
-  size_t size;
-  if ((ret=grib_get_size(h,self->values,&size))!=GRIB_SUCCESS) {
-    grib_context_log(h->context,GRIB_LOG_ERROR,"unable to get size of %s",self->values);
+    grib_accessor_latlonvalues* self = (grib_accessor_latlonvalues*)a;
+    grib_handle* h=a->parent->h;
+    int ret;
+    size_t size;
+    if ((ret=grib_get_size(h,self->values,&size))!=GRIB_SUCCESS) {
+        grib_context_log(h->context,GRIB_LOG_ERROR,"unable to get size of %s",self->values);
+        return ret;
+    }
+
+    *count=3*size;
     return ret;
-  }
-
-  return (long)(3*size);
-
 }
-
-

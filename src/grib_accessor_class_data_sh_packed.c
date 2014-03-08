@@ -45,7 +45,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -165,240 +165,239 @@ typedef double        (*decode_float_proc)(unsigned long);
 
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
-  grib_accessor_data_sh_packed *self =(grib_accessor_data_sh_packed*)a;
+    grib_accessor_data_sh_packed *self =(grib_accessor_data_sh_packed*)a;
 
-  self->GRIBEX_sh_bug_present     = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->ieee_floats               = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->laplacianOperatorIsSet    = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->laplacianOperator         = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->sub_j                     = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->sub_k                     = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->sub_m                     = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->pen_j                     = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->pen_k                     = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->pen_m                     = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->GRIBEX_sh_bug_present     = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->ieee_floats               = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->laplacianOperatorIsSet    = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->laplacianOperator         = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->sub_j                     = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->sub_k                     = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->sub_m                     = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->pen_j                     = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->pen_k                     = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->pen_m                     = grib_arguments_get_name(a->parent->h,args,self->carg++);
 
-  a->flags |= GRIB_ACCESSOR_FLAG_DATA;
-  a->length=0;
+    a->flags |= GRIB_ACCESSOR_FLAG_DATA;
+    a->length=0;
 }
 
-
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
-  grib_accessor_data_sh_packed *self =(grib_accessor_data_sh_packed*)a;
-  int ret = 0;
+    grib_accessor_data_sh_packed *self =(grib_accessor_data_sh_packed*)a;
+    int ret = 0;
 
-  long   sub_j= 0;
-  long   sub_k= 0;
-  long   sub_m= 0;
-  long   pen_j= 0;
-  long   pen_k= 0;
-  long   pen_m= 0;
+    long   sub_j= 0;
+    long   sub_k= 0;
+    long   sub_m= 0;
+    long   pen_j= 0;
+    long   pen_k= 0;
+    long   pen_m= 0;
 
-  if((ret = grib_get_long_internal(a->parent->h,self->sub_j,&sub_j)) != GRIB_SUCCESS)                         
-  	return ret;
-  if((ret = grib_get_long_internal(a->parent->h,self->sub_k,&sub_k)) != GRIB_SUCCESS)
-  	return ret;
-  if((ret = grib_get_long_internal(a->parent->h,self->sub_m,&sub_m)) != GRIB_SUCCESS)                         
+    if((ret = grib_get_long_internal(a->parent->h,self->sub_j,&sub_j)) != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->sub_k,&sub_k)) != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->sub_m,&sub_m)) != GRIB_SUCCESS)
+        return ret;
+
+    if((ret = grib_get_long_internal(a->parent->h,self->pen_j,&pen_j)) != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->pen_k,&pen_k)) != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->pen_m,&pen_m)) != GRIB_SUCCESS)
+        return ret;
+
+    if (pen_j != pen_k || pen_j!=pen_m ) {
+        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"pen_j=%ld, pen_k=%ld, pen_m=%ld\n",pen_j,pen_k,pen_m);
+        Assert ((pen_j ==  pen_k) && (pen_j == pen_m));
+    }
+    *count=(pen_j+1)*(pen_j+2)-(sub_j+1)*(sub_j+2);
     return ret;
-
-  if((ret = grib_get_long_internal(a->parent->h,self->pen_j,&pen_j)) != GRIB_SUCCESS)                         
-  	return ret;
-  if((ret = grib_get_long_internal(a->parent->h,self->pen_k,&pen_k)) != GRIB_SUCCESS)
-  	return ret;
-  if((ret = grib_get_long_internal(a->parent->h,self->pen_m,&pen_m)) != GRIB_SUCCESS)                         
-    return ret;
-
-  if (pen_j != pen_k || pen_j!=pen_m ) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"pen_j=%ld, pen_k=%ld, pen_m=%ld\n",pen_j,pen_k,pen_m);
-  	Assert ((pen_j ==  pen_k) && (pen_j == pen_m));
-  }
-  return  (pen_j+1)*(pen_j+2)-(sub_j+1)*(sub_j+2);
 }
-
 
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-  grib_accessor_data_sh_packed* self =  (grib_accessor_data_sh_packed*)a;
+    grib_accessor_data_sh_packed* self =  (grib_accessor_data_sh_packed*)a;
 
-  size_t i = 0;
-  int ret = GRIB_SUCCESS;
-  long   hcount = 0;
-  long   lcount = 0;
-  long   hpos = 0;
-  long   lup = 0;
-  long   mmax = 0;
-  long   n_vals = 0;
-  double *scals  = NULL;
-  double *pscals=NULL;
-  double dummy=0;
+    size_t i = 0;
+    int ret = GRIB_SUCCESS;
+    long   hcount = 0;
+    long   lcount = 0;
+    long   hpos = 0;
+    long   lup = 0;
+    long   mmax = 0;
+    long   n_vals = 0;
+    double *scals  = NULL;
+    double *pscals=NULL;
+    double dummy=0;
 
-  double s = 0;
-  double d = 0;
-  double laplacianOperator = 0;
-  unsigned char* buf = NULL;
-  unsigned char* hres = NULL;
-  unsigned char* lres = NULL;
-  unsigned long packed_offset;
-  long   lpos = 0;
+    double s = 0;
+    double d = 0;
+    double laplacianOperator = 0;
+    unsigned char* buf = NULL;
+    unsigned char* hres = NULL;
+    unsigned char* lres = NULL;
+    unsigned long packed_offset;
+    long   lpos = 0;
 
-  long   maxv = 0;
-  long   GRIBEX_sh_bug_present =0;
-  long ieee_floats  = 0;
+    long   maxv = 0;
+    long   GRIBEX_sh_bug_present =0;
+    long ieee_floats  = 0;
 
-  long   offsetdata           = 0;
-  long   bits_per_value          = 0;
-  double reference_value      = 0;
-  long   binary_scale_factor         = 0;
-  long   decimal_scale_factor = 0;
+    long   offsetdata           = 0;
+    long   bits_per_value          = 0;
+    double reference_value      = 0;
+    long   binary_scale_factor         = 0;
+    long   decimal_scale_factor = 0;
 
+    long   sub_j= 0;
+    long   sub_k= 0;
+    long   sub_m= 0;
+    long   pen_j= 0;
+    long   pen_k= 0;
+    long   pen_m= 0;
 
-  long   sub_j= 0;
-  long   sub_k= 0;
-  long   sub_m= 0;
-  long   pen_j= 0;
-  long   pen_k= 0;
-  long   pen_m= 0;
+    double operat= 0;
+    int err=0;
 
-  double operat= 0;
+    decode_float_proc decode_float = NULL;
 
-  decode_float_proc decode_float = NULL;
+    n_vals = 0;
+    err=grib_value_count(a,&n_vals);
+    if (err) return err;
 
-  n_vals = grib_value_count(a);
+    if(*len < n_vals){
+        *len = n_vals;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
 
-  if(*len < n_vals){
-    *len = n_vals;
-    return GRIB_ARRAY_TOO_SMALL;
-  }
+    if((ret = grib_get_long_internal(a->parent->h,self->offsetdata,&offsetdata))
+            != GRIB_SUCCESS)   return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->bits_per_value,&bits_per_value))
+            != GRIB_SUCCESS)   return ret;
+    if((ret = grib_get_double_internal(a->parent->h,self->reference_value,&reference_value))
+            != GRIB_SUCCESS)   return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->binary_scale_factor,&binary_scale_factor))
+            != GRIB_SUCCESS)           return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h,self->offsetdata,&offsetdata))
-      != GRIB_SUCCESS)   return ret;
-  if((ret = grib_get_long_internal(a->parent->h,self->bits_per_value,&bits_per_value))
-      != GRIB_SUCCESS)   return ret;
-  if((ret = grib_get_double_internal(a->parent->h,self->reference_value,&reference_value))
-      != GRIB_SUCCESS)   return ret;
-  if((ret = grib_get_long_internal(a->parent->h,self->binary_scale_factor,&binary_scale_factor))
-      != GRIB_SUCCESS)           return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->decimal_scale_factor,&decimal_scale_factor))
+            != GRIB_SUCCESS)
+        return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h,self->decimal_scale_factor,&decimal_scale_factor))
-      != GRIB_SUCCESS)
-    return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->GRIBEX_sh_bug_present,&GRIBEX_sh_bug_present))
+            != GRIB_SUCCESS)
+        return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h,self->GRIBEX_sh_bug_present,&GRIBEX_sh_bug_present))
-      != GRIB_SUCCESS)
-    return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->ieee_floats,&ieee_floats)) != GRIB_SUCCESS)
+        return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h,self->ieee_floats,&ieee_floats)) != GRIB_SUCCESS)
-    return ret;
+    if((ret = grib_get_double_internal(a->parent->h,self->laplacianOperator,&laplacianOperator))
+            != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->sub_j,&sub_j)) != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->sub_k,&sub_k)) != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->sub_m,&sub_m)) != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->pen_j,&pen_j)) != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->pen_k,&pen_k)) != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_long_internal(a->parent->h,self->pen_m,&pen_m)) != GRIB_SUCCESS)
+        return ret;
 
-  if((ret = grib_get_double_internal(a->parent->h,self->laplacianOperator,&laplacianOperator))
-      != GRIB_SUCCESS)
-    return ret;
-  if((ret = grib_get_long_internal(a->parent->h,self->sub_j,&sub_j)) != GRIB_SUCCESS)
-    return ret;
-  if((ret = grib_get_long_internal(a->parent->h,self->sub_k,&sub_k)) != GRIB_SUCCESS)
-    return ret;
-  if((ret = grib_get_long_internal(a->parent->h,self->sub_m,&sub_m)) != GRIB_SUCCESS)
-    return ret;
-  if((ret = grib_get_long_internal(a->parent->h,self->pen_j,&pen_j)) != GRIB_SUCCESS)
-    return ret;
-  if((ret = grib_get_long_internal(a->parent->h,self->pen_k,&pen_k)) != GRIB_SUCCESS)
-    return ret;
-  if((ret = grib_get_long_internal(a->parent->h,self->pen_m,&pen_m)) != GRIB_SUCCESS)
-    return ret;
+    self->dirty=0;
 
-  self->dirty=0;
-
-  switch (ieee_floats) {
+    switch (ieee_floats) {
     case 0:
-      decode_float=grib_long_to_ibm;
-      break;
+        decode_float=grib_long_to_ibm;
+        break;
     case 1:
-      decode_float=grib_long_to_ieee;
-      break;
+        decode_float=grib_long_to_ieee;
+        break;
     case 2:
-      decode_float=grib_long_to_ieee64;
-      break;
+        decode_float=grib_long_to_ieee64;
+        break;
     default:
-      return GRIB_NOT_IMPLEMENTED;
-  }
-  
-  Assert (sub_j == sub_k);
-  Assert (sub_j == sub_m);
-  Assert (pen_j == pen_k);
-  Assert (pen_j == pen_m);
-
-  buf = (unsigned char*)a->parent->h->buffer->data;
-
-  maxv = pen_j+1;
-
-  buf  += offsetdata;
-  hres = buf;
-  lres = buf;
-
-  packed_offset = offsetdata +  4*(sub_k+1)*(sub_k+2);
-
-  lpos = 8*(packed_offset-offsetdata);
-
-  s = grib_power(binary_scale_factor,2);
-  d = grib_power(-decimal_scale_factor,10) ;
-
-  scals   = (double*)grib_context_malloc(a->parent->h->context,maxv*sizeof(double));
-  Assert(scals);
-
-  scals[0] = 0;
-  for(i=1;i<maxv;i++){
-    operat = pow(i*(i+1),laplacianOperator);
-    if(operat !=  0)
-      scals[i] = (1.0/operat);
-    else{
-      scals[i] = 0;
+        return GRIB_NOT_IMPLEMENTED;
     }
-  }
 
-  i=0;
+    Assert (sub_j == sub_k);
+    Assert (sub_j == sub_m);
+    Assert (pen_j == pen_k);
+    Assert (pen_j == pen_m);
 
-  while(maxv>0)
-  {
-    lup=mmax;
-    if(sub_k>=0)
+    buf = (unsigned char*)a->parent->h->buffer->data;
+
+    maxv = pen_j+1;
+
+    buf  += offsetdata;
+    hres = buf;
+    lres = buf;
+
+    packed_offset = offsetdata +  4*(sub_k+1)*(sub_k+2);
+
+    lpos = 8*(packed_offset-offsetdata);
+
+    s = grib_power(binary_scale_factor,2);
+    d = grib_power(-decimal_scale_factor,10) ;
+
+    scals   = (double*)grib_context_malloc(a->parent->h->context,maxv*sizeof(double));
+    Assert(scals);
+
+    scals[0] = 0;
+    for(i=1;i<maxv;i++){
+        operat = pow(i*(i+1),laplacianOperator);
+        if(operat !=  0)
+            scals[i] = (1.0/operat);
+        else{
+            scals[i] = 0;
+        }
+    }
+
+    i=0;
+
+    while(maxv>0)
     {
-      for(hcount=0;hcount<sub_k+1;hcount++)
-      {
-        dummy =  decode_float(grib_decode_unsigned_long(hres,&hpos,32))*d;
-        dummy =  decode_float(grib_decode_unsigned_long(hres,&hpos,32))*d;
+        lup=mmax;
+        if(sub_k>=0)
+        {
+            for(hcount=0;hcount<sub_k+1;hcount++)
+            {
+                dummy =  decode_float(grib_decode_unsigned_long(hres,&hpos,32))*d;
+                dummy =  decode_float(grib_decode_unsigned_long(hres,&hpos,32))*d;
 
-        lup++;
-      }
-      sub_k--;
+                lup++;
+            }
+            sub_k--;
+        }
+
+        pscals=scals+lup;
+        for(lcount=hcount; lcount < maxv ; lcount++)
+        {
+            val[i++] =  (double) ((grib_decode_unsigned_long(lres, &lpos,
+                    bits_per_value)*s)+reference_value);
+            val[i++] =  (double) ((grib_decode_unsigned_long(lres, &lpos,
+                    bits_per_value)*s)+reference_value);
+            lup++;
+        }
+
+        maxv--;
+        hcount=0;
+        mmax++;
     }
 
-    pscals=scals+lup;
-    for(lcount=hcount; lcount < maxv ; lcount++)
-    {
-      val[i++] =  (double) ((grib_decode_unsigned_long(lres, &lpos,
-                   bits_per_value)*s)+reference_value);
-      val[i++] =  (double) ((grib_decode_unsigned_long(lres, &lpos,
-                   bits_per_value)*s)+reference_value);
-      lup++;
+    Assert(*len >= i);
+    *len = n_vals;
+
+    if(d != 1) {
+        for(i=0;i<*len;i++)
+            val[i++] *= d;
     }
 
-    maxv--;
-    hcount=0;
-    mmax++;
-  }
+    grib_context_free(a->parent->h->context,scals);
 
-  Assert(*len >= i);
-  *len = n_vals;
-
-  if(d != 1) {
-    for(i=0;i<*len;i++)
-      val[i++] *= d;
-  }
-
-  grib_context_free(a->parent->h->context,scals);
-
-  return ret;
-
+    return ret;
 }
-

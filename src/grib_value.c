@@ -964,14 +964,7 @@ int grib_get_string_length(grib_handle* h, const char* name,size_t* size)
 int grib_get_size(grib_handle* h, const char* name,size_t* size)
 {
     grib_accessor* a = grib_find_accessor(h, name);
-    if(!a) return GRIB_NOT_FOUND;
-
-    *size = 0;
-    while(a) {
-        *size += grib_value_count(a);
-        a = a->same;
-    }
-    return GRIB_SUCCESS;
+    return _grib_get_size(h, a,size);
 }
 
 int grib_get_length(grib_handle* h, const char* name, size_t* length)
@@ -995,12 +988,20 @@ int grib_get_count(grib_handle* h, const char* name,size_t* size)
 
 int _grib_get_size(grib_handle* h, grib_accessor* a,size_t* size)
 {
+    long count=0;
+    int err=0;
+
     if(!a) return GRIB_NOT_FOUND;
 
     *size = 0;
     while(a) {
-        *size += grib_value_count(a);
-        a = a->same;
+       if (err==0)
+       {
+          err=grib_value_count(a,&count);
+          if (err) return err;
+          *size += count;
+       }
+       a = a->same;
     }
     return GRIB_SUCCESS;
 }

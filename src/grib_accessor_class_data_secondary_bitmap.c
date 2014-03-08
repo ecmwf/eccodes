@@ -158,13 +158,17 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   size_t j = 0;
   size_t k = 0;
   size_t m = 0;
-  size_t n_vals = grib_value_count(a);
+  size_t n_vals = 0;
+  long nn=0;
   long expand_by =0;
   int err = 0;
   size_t primary_len;
   size_t secondary_len;
   double* primary_vals;
   double* secondary_vals;
+  err=grib_value_count(a,&nn);
+  n_vals=nn;
+  if (err) return err;
 
   if(*len < n_vals)
   {

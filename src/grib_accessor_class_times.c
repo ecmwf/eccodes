@@ -36,7 +36,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_long(grib_accessor*, const long* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -133,83 +133,86 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_times* self = (grib_accessor_times*)a;
-  int n = 0;
+    grib_accessor_times* self = (grib_accessor_times*)a;
+    int n = 0;
 
-  self->value = grib_arguments_get_name(a->parent->h,c,n++);
-  self->factor = grib_arguments_get_name(a->parent->h,c,n++);
-  self->divisor = grib_arguments_get_name(a->parent->h,c,n++);
-  a->length=0;
+    self->value = grib_arguments_get_name(a->parent->h,c,n++);
+    self->factor = grib_arguments_get_name(a->parent->h,c,n++);
+    self->divisor = grib_arguments_get_name(a->parent->h,c,n++);
+    a->length=0;
 }
 
 static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 {
-  grib_accessor_times* self = (grib_accessor_times*)a;
-  int ret = 0;
-  long factor=0;
-  long divisor=1;
-  int *err=&ret;
-  long value = 0;
+    grib_accessor_times* self = (grib_accessor_times*)a;
+    int ret = 0;
+    long factor=0;
+    long divisor=1;
+    int *err=&ret;
+    long value = 0;
 
-  if(*len < 1)
-    return GRIB_ARRAY_TOO_SMALL;
+    if(*len < 1)
+        return GRIB_ARRAY_TOO_SMALL;
 
-  if (grib_is_missing(a->parent->h,self->value,err)!=0) {
-    *val=GRIB_MISSING_LONG;
-    return GRIB_SUCCESS;
-  }
-  if(ret ) return ret;
+    if (grib_is_missing(a->parent->h,self->value,err)!=0) {
+        *val=GRIB_MISSING_LONG;
+        return GRIB_SUCCESS;
+    }
+    if(ret ) return ret;
 
-  ret = grib_get_long_internal(a->parent->h, self->factor,&factor);
-  if(ret ) return ret;
-  if (self->divisor)
-  	ret = grib_get_long_internal(a->parent->h, self->divisor,&divisor);
-  if(ret ) return ret;
-  ret = grib_get_long_internal(a->parent->h, self->value,&value);
-  if(ret ) return ret;
-  /* printf("factor=%ld divisor=%ld value=%ld\n",factor,divisor,value); */
+    ret = grib_get_long_internal(a->parent->h, self->factor,&factor);
+    if(ret ) return ret;
+    if (self->divisor)
+        ret = grib_get_long_internal(a->parent->h, self->divisor,&divisor);
+    if(ret ) return ret;
+    ret = grib_get_long_internal(a->parent->h, self->value,&value);
+    if(ret ) return ret;
+    /* printf("factor=%ld divisor=%ld value=%ld\n",factor,divisor,value); */
 
-  *val =( (double)value * (double)factor) / (double)divisor;
+    *val =( (double)value * (double)factor) / (double)divisor;
 
-  *len = 1;
+    *len = 1;
 
-  return ret;
+    return ret;
 }
 
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  grib_accessor_times* self = (grib_accessor_times*)a;
-  int ret = 0;
-  long value = 0;
-  long factor,v,divisor=1;
+    grib_accessor_times* self = (grib_accessor_times*)a;
+    int ret = 0;
+    long value = 0;
+    long factor,v,divisor=1;
 
-  if (*val==GRIB_MISSING_LONG) 
-    return grib_set_missing(a->parent->h,self->value);
-  
-  ret = grib_get_long_internal(a->parent->h, self->factor,&factor);
-  if(ret ) return ret;
-  if (self->divisor)
-  	ret = grib_get_long_internal(a->parent->h, self->divisor,&divisor);
-  if(ret ) return ret;
+    if (*val==GRIB_MISSING_LONG)
+        return grib_set_missing(a->parent->h,self->value);
 
-  /*Assert((*val%self->factor)==0);*/
-  v=*val*divisor;
-  if ((v%factor)==0) {
-      value = v/factor;
-  } else {
-    value = v > 0 ? ((double)v)/factor+0.5 :
-                       ((double)v)/factor-0.5;
-    /* grib_context_log(a->parent->h->context,GRIB_LOG_WARNING,"%s/%ld = %ld/%ld = %ld. Rounding to convert key.",a->name,self->factor,*val,self->factor,value); */
-  } 
+    ret = grib_get_long_internal(a->parent->h, self->factor,&factor);
+    if(ret ) return ret;
+    if (self->divisor)
+        ret = grib_get_long_internal(a->parent->h, self->divisor,&divisor);
+    if(ret ) return ret;
 
-  ret = grib_set_long_internal(a->parent->h, self->value,value);
-  if(ret ) return ret;
+    /*Assert((*val%self->factor)==0);*/
+    v=*val*divisor;
+    if ((v%factor)==0) {
+        value = v/factor;
+    } else {
+        value = v > 0 ? ((double)v)/factor+0.5 :
+                ((double)v)/factor-0.5;
+        /* grib_context_log(a->parent->h->context,GRIB_LOG_WARNING,"%s/%ld = %ld/%ld = %ld. Rounding to convert key.",a->name,self->factor,*val,self->factor,value); */
+    }
 
-  *len = 1;
+    ret = grib_set_long_internal(a->parent->h, self->value,value);
+    if(ret ) return ret;
 
-  return ret;
+    *len = 1;
+
+    return ret;
 }
 
-static long value_count(grib_accessor* a) { return 1;}
-
+static int value_count(grib_accessor* a,long* count)
+{
+    *count=1;
+    return 0;
+}

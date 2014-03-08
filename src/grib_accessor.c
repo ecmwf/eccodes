@@ -333,15 +333,18 @@ long grib_byte_count(grib_accessor* a)
   return 0;
 }
 
-long grib_value_count(grib_accessor* a)
+long grib_value_count(grib_accessor* a, long* count)
 {
   grib_accessor_class *c = NULL;
-  if (a)  c = a->cclass;
+  int err = 0;
+  if (a) c = a->cclass;
 
   while(c)
   {
-    if(c->value_count)
-      return c->value_count(a);
+    if(c->value_count) {
+        err = c->value_count(a, count);
+        return err;
+    }
     c = c->super ? *(c->super) : NULL;
   }
   Assert(0);

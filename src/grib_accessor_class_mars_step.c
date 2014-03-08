@@ -40,7 +40,7 @@ static int pack_long(grib_accessor*, const long* val,size_t *len);
 static int pack_string(grib_accessor*, const char*, size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
 static int unpack_string (grib_accessor*, char*, size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -130,87 +130,87 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  int n=0;
-	grib_accessor_mars_step* self = (grib_accessor_mars_step*)a;
-  self->stepRange = grib_arguments_get_name(a->parent->h,c,n++);
-  self->stepType = grib_arguments_get_name(a->parent->h,c,n++);
+    int n=0;
+    grib_accessor_mars_step* self = (grib_accessor_mars_step*)a;
+    self->stepRange = grib_arguments_get_name(a->parent->h,c,n++);
+    self->stepType = grib_arguments_get_name(a->parent->h,c,n++);
 }
 
 static int pack_string(grib_accessor* a, const char* val, size_t *len){
-  char stepType[100];
-  size_t stepTypeLen=100;
-  char buf[100]={0,};
-  int ret;
-  grib_accessor_mars_step* self = (grib_accessor_mars_step*)a;
-  grib_accessor* stepRangeAcc=grib_find_accessor(a->parent->h,self->stepRange);
+    char stepType[100];
+    size_t stepTypeLen=100;
+    char buf[100]={0,};
+    int ret;
+    grib_accessor_mars_step* self = (grib_accessor_mars_step*)a;
+    grib_accessor* stepRangeAcc=grib_find_accessor(a->parent->h,self->stepRange);
 
-  if (!stepRangeAcc) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"%s not found",self->stepRange);
-    return GRIB_NOT_FOUND;
-  }
+    if (!stepRangeAcc) {
+        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"%s not found",self->stepRange);
+        return GRIB_NOT_FOUND;
+    }
 
-  if ((ret=grib_get_string(a->parent->h,self->stepType,stepType,&stepTypeLen))!=GRIB_SUCCESS)
-    return ret;
+    if ((ret=grib_get_string(a->parent->h,self->stepType,stepType,&stepTypeLen))!=GRIB_SUCCESS)
+        return ret;
 
-  if (!strcmp(stepType,"instant")) sprintf(buf,"%s",val) ;
-  else sprintf(buf,"0-%s",val);
+    if (!strcmp(stepType,"instant")) sprintf(buf,"%s",val) ;
+    else sprintf(buf,"0-%s",val);
 
-  return grib_pack_string(stepRangeAcc,buf,len);
+    return grib_pack_string(stepRangeAcc,buf,len);
 }
 
 
 static int unpack_string(grib_accessor* a, char* val, size_t *len) {
-  int ret=0;
-	grib_accessor_mars_step* self = (grib_accessor_mars_step*)a;
-  char buf[100]={0,};
-  char* p=NULL;
-  size_t buflen=100;
-  long step;
-  grib_accessor* stepRangeAcc=grib_find_accessor(a->parent->h,self->stepRange);
+    int ret=0;
+    grib_accessor_mars_step* self = (grib_accessor_mars_step*)a;
+    char buf[100]={0,};
+    char* p=NULL;
+    size_t buflen=100;
+    long step;
+    grib_accessor* stepRangeAcc=grib_find_accessor(a->parent->h,self->stepRange);
 
-  if (!stepRangeAcc) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"%s not found",self->stepRange);
-    return GRIB_NOT_FOUND;
-  }
+    if (!stepRangeAcc) {
+        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"%s not found",self->stepRange);
+        return GRIB_NOT_FOUND;
+    }
 
-  if ((ret=grib_unpack_string(stepRangeAcc,buf,&buflen))!=GRIB_SUCCESS)
+    if ((ret=grib_unpack_string(stepRangeAcc,buf,&buflen))!=GRIB_SUCCESS)
+        return ret;
+
+    strcpy(val,buf);
+    step=strtol(buf, &p,10);
+
+    if ( p!=NULL && *p=='-' && step==0 ) strcpy(val,++p);
+
+    *len=strlen(val);
+
     return ret;
-
-  strcpy(val,buf);
-  step=strtol(buf, &p,10);
- 
-  if ( p!=NULL && *p=='-' && step==0 ) strcpy(val,++p);
-  
-  *len=strlen(val);
-	
-	return ret;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  char buff[100]={0,};
-  size_t bufflen=100;
+    char buff[100]={0,};
+    size_t bufflen=100;
 
-  sprintf(buff,"%ld",*val);
-  
-  return pack_string(a,buff,&bufflen);
-  
+    sprintf(buff,"%ld",*val);
+
+    return pack_string(a,buff,&bufflen);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len) {
-  grib_accessor_mars_step* self = (grib_accessor_mars_step*)a;
-  grib_accessor* stepRangeAcc=grib_find_accessor(a->parent->h,self->stepRange);
+    grib_accessor_mars_step* self = (grib_accessor_mars_step*)a;
+    grib_accessor* stepRangeAcc=grib_find_accessor(a->parent->h,self->stepRange);
 
-  if (!stepRangeAcc) return GRIB_NOT_FOUND;
+    if (!stepRangeAcc) return GRIB_NOT_FOUND;
 
-  return grib_unpack_long(stepRangeAcc,val,len);
+    return grib_unpack_long(stepRangeAcc,val,len);
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
-  return 1;
+    *count=1;
+    return 0;
 }
 
 static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_LONG;
+    return GRIB_TYPE_LONG;
 }

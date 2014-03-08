@@ -196,11 +196,16 @@ static int is_missing(grib_accessor* a){
 */
 
 static int unpack_double(grib_accessor* a, double* val,size_t *len){
-  size_t rlen = (size_t)grib_value_count(a);
+  size_t rlen = 0;
+  long count=0;
   unsigned long i = 0;
   long   *values = NULL;
   long   oneval = 0;
   int ret = GRIB_SUCCESS;
+
+  ret=grib_value_count(a,&count);
+  if (ret) return ret;
+  rlen=count;
 
   if(*len < rlen)
   {
@@ -239,9 +244,19 @@ static int compare(grib_accessor* a,grib_accessor* b) {
   int retval=0;
   long *aval=0;
   long *bval=0;
+  long count=0;
 
-  size_t alen = (size_t)grib_value_count(a);
-  size_t blen = (size_t)grib_value_count(b);
+  size_t alen = 0;
+  size_t blen = 0;
+  int err=0;
+
+  err=grib_value_count(a,&count);
+  if (err) return err;
+  alen=count;
+
+  err=grib_value_count(b,&count);
+  if (err) return err;
+  blen=count;
 
   if (alen != blen) return GRIB_COUNT_MISMATCH;
 

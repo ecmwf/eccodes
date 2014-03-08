@@ -35,7 +35,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int unpack_bytes (grib_accessor*,unsigned char*, size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -186,7 +186,7 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
 }
 
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
     grib_accessor_g1bitmap* self = (grib_accessor_g1bitmap*)a;
     long tlen;
@@ -195,8 +195,8 @@ static long value_count(grib_accessor* a)
     if ((err=grib_get_long_internal(a->parent->h, self->unusedBits, &tlen)) != GRIB_SUCCESS)
         grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_class_bitmap.value_count : cannot get %s err=%d",self->unusedBits,err);
 
-    tlen = (a->length*8)-tlen;
-    return tlen;
+  *count = (a->length*8)-tlen;
+  return err;
 }
 
 static int unpack_bytes(grib_accessor* a, unsigned char* val, size_t *len)

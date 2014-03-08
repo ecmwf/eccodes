@@ -50,7 +50,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int  get_native_type(grib_accessor*);
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
@@ -167,20 +167,20 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 }
 
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* number_of_points)
 {
-  long number_of_points=0;
-  int ret;
+  int ret=0;
+
   grib_accessor_data_apply_gdsnotpresent *self =(grib_accessor_data_apply_gdsnotpresent*)a;
 
-  if((ret = grib_get_long(a->parent->h,self->number_of_points,&number_of_points))
+  *number_of_points=0;
+  if((ret = grib_get_long(a->parent->h,self->number_of_points,number_of_points))
        !=  GRIB_SUCCESS) {
     grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
       "grib_accessor_data_apply_gdsnotpresent: value_count: unable to get number of points");
-    return 0;
   }
 
-  return number_of_points;
+  return ret;
 }
 
 
@@ -191,12 +191,17 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   long number_of_points=0,number_of_values=0,ni=0;
   long latitude_of_first_point=0;
   size_t i = 0;
-  size_t  n_vals = grib_value_count(a);
+  size_t  n_vals = 0;
+  long nn=0;
+  int err=0;
   size_t size=0;
   long missing_value;
 
-  int err = 0;
   double* coded_vals = NULL;
+
+  err=grib_value_count(a,&nn);
+  n_vals=nn;
+  if (err) return err;
 
   if((err = grib_get_long(a->parent->h,self->number_of_points,&number_of_points))
        !=  GRIB_SUCCESS) return err;

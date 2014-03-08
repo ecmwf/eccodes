@@ -141,8 +141,10 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
   long *values=NULL;
   int err = 0;
   int i;
+  long count=0;
 
-  size=grib_value_count(a);
+  grib_value_count(a,&count);
+  size=count;
 
   if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
     return;
@@ -441,11 +443,13 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
   int more = 0;
   double*  buf = NULL;
   size_t size=0;
+  long count=0;
 
   if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
     return;
 
-  size=grib_value_count(a);
+  grib_value_count(a,&count);
+  size=count;
   if(size == 1){
     dump_double(d,a,NULL);
     return ;

@@ -39,7 +39,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -153,95 +153,94 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
-	grib_accessor_data_dummy_field* self =  (grib_accessor_data_dummy_field*)a;
-	self->missing_value = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->numberOfPoints = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->bitmap = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    grib_accessor_data_dummy_field* self =  (grib_accessor_data_dummy_field*)a;
+    self->missing_value = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->numberOfPoints = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->bitmap = grib_arguments_get_name(a->parent->h,args,self->carg++);
 }
 
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-	grib_accessor_data_dummy_field* self =  (grib_accessor_data_dummy_field*)a;
-	size_t i = 0;
-	size_t n_vals = 0;
+    grib_accessor_data_dummy_field* self =  (grib_accessor_data_dummy_field*)a;
+    size_t i = 0;
+    size_t n_vals = 0;
     long numberOfPoints;
-	double missing_value = 0;
-	int err = 0;
+    double missing_value = 0;
+    int err = 0;
 
     if((err = grib_get_long_internal(a->parent->h,self->numberOfPoints, &numberOfPoints))
-        != GRIB_SUCCESS)  return err;
+            != GRIB_SUCCESS)  return err;
     n_vals =numberOfPoints;
 
     if((err = grib_get_double_internal(a->parent->h,self->missing_value, &missing_value))
-        != GRIB_SUCCESS)		return err;
+            != GRIB_SUCCESS)		return err;
 
-	if(*len < n_vals){
-		*len = n_vals;
-		return GRIB_ARRAY_TOO_SMALL;
-	}
-
-	for(i=0;i < n_vals;i++)
-		val[i] = missing_value;
-
-    if(grib_find_accessor(a->parent->h,self->bitmap)) {
-      if((err = grib_set_double_array_internal(a->parent->h,self->bitmap,val,n_vals)) != GRIB_SUCCESS)
-        return err;
+    if(*len < n_vals){
+        *len = n_vals;
+        return GRIB_ARRAY_TOO_SMALL;
     }
 
-	*len = (long) n_vals;
-	return err;
+    for(i=0;i < n_vals;i++)
+        val[i] = missing_value;
+
+    if(grib_find_accessor(a->parent->h,self->bitmap)) {
+        if((err = grib_set_double_array_internal(a->parent->h,self->bitmap,val,n_vals)) != GRIB_SUCCESS)
+            return err;
+    }
+
+    *len = (long) n_vals;
+    return err;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-	grib_accessor_data_dummy_field* self =  (grib_accessor_data_dummy_field*)a;
+    grib_accessor_data_dummy_field* self =  (grib_accessor_data_dummy_field*)a;
 
 
-	size_t n_vals = *len;
-	int err = 0;
+    size_t n_vals = *len;
+    int err = 0;
 
-	long   bits_per_value = 0;
+    long   bits_per_value = 0;
 
-	long   half_byte = 0;
+    long   half_byte = 0;
 
-	size_t buflen = 0;
-	unsigned char*  buf = NULL;
+    size_t buflen = 0;
+    unsigned char*  buf = NULL;
 
-  if (*len ==0) return GRIB_NO_VALUES;
+    if (*len ==0) return GRIB_NO_VALUES;
 
-	if((err = grib_get_long_internal(a->parent->h,self->bits_per_value,&bits_per_value)) != GRIB_SUCCESS)
-		return err;
+    if((err = grib_get_long_internal(a->parent->h,self->bits_per_value,&bits_per_value)) != GRIB_SUCCESS)
+        return err;
 
-	buflen = (1+((bits_per_value*n_vals)/8))*sizeof(unsigned char);
+    buflen = (1+((bits_per_value*n_vals)/8))*sizeof(unsigned char);
 
-	buf = grib_context_malloc_clear(a->parent->h->context,buflen);
-	if (!buf) return GRIB_OUT_OF_MEMORY;
+    buf = grib_context_malloc_clear(a->parent->h->context,buflen);
+    if (!buf) return GRIB_OUT_OF_MEMORY;
 
-	half_byte = (buflen*8)-((*len)*bits_per_value);
+    half_byte = (buflen*8)-((*len)*bits_per_value);
 
     if((err = grib_set_long_internal(a->parent->h,self->half_byte, half_byte)) != GRIB_SUCCESS){
-		grib_context_free(a->parent->h->context,buf);
-		return err;
-	}
-	grib_buffer_replace(a, buf, buflen,1,1);
+        grib_context_free(a->parent->h->context,buf);
+        return err;
+    }
+    grib_buffer_replace(a, buf, buflen,1,1);
 
-	grib_context_free(a->parent->h->context,buf);
+    grib_context_free(a->parent->h->context,buf);
 
-	return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* numberOfPoints)
 {
-  grib_accessor_data_dummy_field* self =  (grib_accessor_data_dummy_field*)a;
-  int err=0;
-  long numberOfPoints = 0;
+    grib_accessor_data_dummy_field* self =  (grib_accessor_data_dummy_field*)a;
+    int err=0;
+    *numberOfPoints = 0;
 
-  if((err = grib_get_long_internal(a->parent->h,self->numberOfPoints, &numberOfPoints))
-      != GRIB_SUCCESS) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"unable to get count of %s (%s)",a->name,grib_get_error_message(err));
-    return -1;
-  }
-  return numberOfPoints;
+    if((err = grib_get_long_internal(a->parent->h,self->numberOfPoints, numberOfPoints))
+            != GRIB_SUCCESS) {
+        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"unable to get count of %s (%s)",a->name,grib_get_error_message(err));
+    }
+
+    return err;
 }
-

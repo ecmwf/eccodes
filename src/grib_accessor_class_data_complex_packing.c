@@ -47,7 +47,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -183,7 +183,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
 }
 
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
   grib_accessor_data_complex_packing *self =(grib_accessor_data_complex_packing*)a;
   int ret = 0;
@@ -192,18 +192,24 @@ static long value_count(grib_accessor* a)
   long   pen_k= 0;
   long   pen_m= 0;
 
-  if(a->length == 0)
-    return 0;
+  *count=0;
 
-  if((ret = grib_get_long_internal(a->parent->h,self->pen_j,&pen_j)) != GRIB_SUCCESS)                         return ret;
-  if((ret = grib_get_long_internal(a->parent->h,self->pen_k,&pen_k)) != GRIB_SUCCESS)                         return ret;
-  if((ret = grib_get_long_internal(a->parent->h,self->pen_m,&pen_m)) != GRIB_SUCCESS)                         return ret;
+  if(a->length == 0) return 0;
+
+  if((ret = grib_get_long_internal(a->parent->h,self->pen_j,&pen_j)) != GRIB_SUCCESS)
+    return ret;
+  if((ret = grib_get_long_internal(a->parent->h,self->pen_k,&pen_k)) != GRIB_SUCCESS)
+    return ret;
+  if((ret = grib_get_long_internal(a->parent->h,self->pen_m,&pen_m)) != GRIB_SUCCESS)
+    return ret;
 
   if (pen_j != pen_k || pen_j!=pen_m ) {
     grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"pen_j=%ld, pen_k=%ld, pen_m=%ld\n",pen_j,pen_k,pen_m);
   	Assert ((pen_j ==  pen_k) && (pen_j == pen_m));
   }
-  return  (pen_j+1)*(pen_j+2);
+  *count=(pen_j+1)*(pen_j+2);
+
+  return ret;
 }
 
 
@@ -251,10 +257,12 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 
   double operat= 0;
   int bytes;
+  int err=0;
 
   decode_float_proc decode_float = NULL;
 
-  n_vals = grib_value_count(a);
+  err=grib_value_count(a,&n_vals);
+  if (err) return err;
 
   if(*len < n_vals){
     *len = n_vals;

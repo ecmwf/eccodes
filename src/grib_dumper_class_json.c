@@ -118,7 +118,8 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     int mydepth=depth+2;
     double missing_value = 9999;
 
-    count=grib_value_count(a);
+
+    grib_value_count(a,&count);
     size=count;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
@@ -188,7 +189,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
     long more=0;
     int mydepth=depth+2;
 
-    count = grib_value_count(a);
+    grib_value_count(a,&count);
     size=count;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)

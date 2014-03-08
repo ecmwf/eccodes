@@ -63,7 +63,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void destroy(grib_context*,grib_accessor*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
@@ -196,12 +196,12 @@ static void init_class(grib_accessor_class* c)
 #define EFDEBUG 0
 
 static unsigned long nbits[32]={
-                0x1, 0x2, 0x4, 0x8, 0x10, 0x20,
-                0x40, 0x80, 0x100, 0x200, 0x400, 0x800,
-                0x1000, 0x2000, 0x4000, 0x8000, 0x10000, 0x20000,
-                0x40000, 0x80000, 0x100000, 0x200000, 0x400000, 0x800000,
-                0x1000000, 0x2000000, 0x4000000, 0x8000000, 0x10000000, 0x20000000,
-                0x40000000, 0x80000000
+        0x1, 0x2, 0x4, 0x8, 0x10, 0x20,
+        0x40, 0x80, 0x100, 0x200, 0x400, 0x800,
+        0x1000, 0x2000, 0x4000, 0x8000, 0x10000, 0x20000,
+        0x40000, 0x80000, 0x100000, 0x200000, 0x400000, 0x800000,
+        0x1000000, 0x2000000, 0x4000000, 0x8000000, 0x10000000, 0x20000000,
+        0x40000000, 0x80000000
 };
 
 GRIB_INLINE static long number_of_bits(unsigned long x) {
@@ -245,7 +245,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
 
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
     grib_accessor_data_g1second_order_general_extended_packing* self =  (grib_accessor_data_g1second_order_general_extended_packing*)a;
     long numberOfCodedValues=0;
@@ -254,21 +254,28 @@ static long value_count(grib_accessor* a)
     long *groupLengths;
     long orderOfSPD=0;
     long i;
+    int err=0;
 
-    grib_get_long(a->parent->h,self->numberOfGroups,&numberOfGroups);
+    *count=0;
+
+    err=grib_get_long(a->parent->h,self->numberOfGroups,&numberOfGroups);
+    if (err) return err;
     if (numberOfGroups==0) return 0;
 
     groupLengths=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
     ngroups=numberOfGroups;
-    grib_get_long_array(a->parent->h,self->groupLengths,groupLengths,&ngroups);
+    err=grib_get_long_array(a->parent->h,self->groupLengths,groupLengths,&ngroups);
+    if (err) return err;
 
     for (i=0;i<numberOfGroups;i++) numberOfCodedValues+=groupLengths[i];
 
     grib_context_free(a->parent->h->context,groupLengths);
 
-    grib_get_long(a->parent->h,self->orderOfSPD,&orderOfSPD);
+    err=grib_get_long(a->parent->h,self->orderOfSPD,&orderOfSPD);
 
-    return numberOfCodedValues+orderOfSPD;
+    *count=numberOfCodedValues+orderOfSPD;
+
+    return err;
 }
 
 static int unpack_double(grib_accessor* a, double* values, size_t *len)
@@ -308,7 +315,8 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
     self->dirty=0;
 
     buf += grib_byte_offset(a);
-    numberOfValues=value_count(a);
+    ret=value_count(a,&numberOfValues);
+    if (ret) return ret;
 
     if((ret=grib_get_long_internal(a->parent->h,self->numberOfGroups,&numberOfGroups)) != GRIB_SUCCESS)
         return ret;
@@ -1147,5 +1155,4 @@ static void destroy(grib_context* context,grib_accessor* a)
         grib_context_free(context, self->values);
         self->values=NULL;
     }
-
 }

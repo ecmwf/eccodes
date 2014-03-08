@@ -60,7 +60,7 @@ static size_t string_length(grib_accessor*);
 static long byte_count(grib_accessor*);
 static long byte_offset(grib_accessor*);
 static long next_offset(grib_accessor*);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void destroy(grib_context*,grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
@@ -133,406 +133,410 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a,const long len, grib_arguments* param)
 {
 
- grib_action* act=(grib_action*)(a->creator);
- if (a->flags & GRIB_ACCESSOR_FLAG_TRANSIENT) {
-    a->length = 0;
-	if (!a->vvalue) 
-		a->vvalue = grib_context_malloc_clear(a->parent->h->context,sizeof(grib_virtual_value));
-    a->vvalue->type=grib_accessor_get_native_type(a);
-    a->vvalue->length=len;
-    if (act->default_value!=NULL) {
-       const char* p = 0;
-       size_t len = 1;
-       long l;
-       int ret=0;
-       double d;
-       char tmp[1024];
-	   grib_expression* expression=grib_arguments_get_expression(a->parent->h,act->default_value,0);
-       int type = grib_expression_native_type(a->parent->h,expression);
-       switch(type) {
-         case GRIB_TYPE_DOUBLE:
-           grib_expression_evaluate_double(a->parent->h,expression,&d);
-           grib_pack_double(a,&d,&len);
-           break;
+    grib_action* act=(grib_action*)(a->creator);
+    if (a->flags & GRIB_ACCESSOR_FLAG_TRANSIENT) {
+        a->length = 0;
+        if (!a->vvalue)
+            a->vvalue = grib_context_malloc_clear(a->parent->h->context,sizeof(grib_virtual_value));
+        a->vvalue->type=grib_accessor_get_native_type(a);
+        a->vvalue->length=len;
+        if (act->default_value!=NULL) {
+            const char* p = 0;
+            size_t len = 1;
+            long l;
+            int ret=0;
+            double d;
+            char tmp[1024];
+            grib_expression* expression=grib_arguments_get_expression(a->parent->h,act->default_value,0);
+            int type = grib_expression_native_type(a->parent->h,expression);
+            switch(type) {
+            case GRIB_TYPE_DOUBLE:
+                grib_expression_evaluate_double(a->parent->h,expression,&d);
+                grib_pack_double(a,&d,&len);
+                break;
 
-         case GRIB_TYPE_LONG:
-           grib_expression_evaluate_long(a->parent->h,expression,&l);
-           grib_pack_long(a,&l,&len);
-           break;
+            case GRIB_TYPE_LONG:
+                grib_expression_evaluate_long(a->parent->h,expression,&l);
+                grib_pack_long(a,&l,&len);
+                break;
 
-         default:
-           len = sizeof(tmp);
-           p = grib_expression_evaluate_string(a->parent->h,expression,tmp,&len,&ret);
-           if (ret != GRIB_SUCCESS) {
-             grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"unable to evaluate %s as string",a->name);
-             Assert(0);
-           }
-           len = strlen(p)+1;
-           grib_pack_string(a,p,&len);
-           break;
-       }
-    }
-  } else
-    a->length = len;
+            default:
+                len = sizeof(tmp);
+                p = grib_expression_evaluate_string(a->parent->h,expression,tmp,&len,&ret);
+                if (ret != GRIB_SUCCESS) {
+                    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"unable to evaluate %s as string",a->name);
+                    Assert(0);
+                }
+                len = strlen(p)+1;
+                grib_pack_string(a,p,&len);
+                break;
+            }
+        }
+    } else
+        a->length = len;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  if(a->cclass->unpack_string)
-    grib_dump_string(dumper,a,NULL);
-  else if(a->cclass->unpack_double)
-    grib_dump_double(dumper,a,NULL);
-  else if(a->cclass->unpack_long)
-    grib_dump_long(dumper,a,NULL);
-  else
-    grib_dump_bytes(dumper,a,NULL);
+    if(a->cclass->unpack_string)
+        grib_dump_string(dumper,a,NULL);
+    else if(a->cclass->unpack_double)
+        grib_dump_double(dumper,a,NULL);
+    else if(a->cclass->unpack_long)
+        grib_dump_long(dumper,a,NULL);
+    else
+        grib_dump_bytes(dumper,a,NULL);
 }
 
 static long next_offset(grib_accessor* a)
 {
-  return a->offset+a->length;
+    return a->offset+a->length;
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a, long* count)
 {
-  return 1;
+    *count=1;
+    return 0;
 }
 
 static size_t string_length(grib_accessor* a)
 {
-	return 1024;
+    return 1024;
 }
 
 static long byte_count(grib_accessor* a)
 {
-  return a->length;
+    return a->length;
 }
 
 static int  get_native_type(grib_accessor* a){
-  grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
-      "Accessor %s [%s] must implement 'get_native_type'", a->name,a->cclass->name);
-  return GRIB_TYPE_UNDEFINED;
+    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+            "Accessor %s [%s] must implement 'get_native_type'", a->name,a->cclass->name);
+    return GRIB_TYPE_UNDEFINED;
 }
 
 static long byte_offset(grib_accessor* a)
 {
-  return a->offset;
+    return a->offset;
 }
 
 static int unpack_bytes(grib_accessor* a, unsigned char* val, size_t *len)
 {
-  unsigned char* buf = a->parent->h->buffer->data;
-  long length = grib_byte_count(a);
-  long offset = grib_byte_offset(a);
+    unsigned char* buf = a->parent->h->buffer->data;
+    long length = grib_byte_count(a);
+    long offset = grib_byte_offset(a);
 
 
-  if(*len < length )
-  {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Wrong size for %s it is %d bytes long\n", a->name ,length );
+    if(*len < length )
+    {
+        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Wrong size for %s it is %d bytes long\n", a->name ,length );
+        *len = length;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
+
+
+    memcpy(val,buf + offset,length );
     *len = length;
-    return GRIB_ARRAY_TOO_SMALL;
-  }
 
-
-  memcpy(val,buf + offset,length );
-  *len = length;
-
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
 static int clear(grib_accessor* a)
 {
-  unsigned char* buf = a->parent->h->buffer->data;
-  long length = grib_byte_count(a);
-  long offset = grib_byte_offset(a);
+    unsigned char* buf = a->parent->h->buffer->data;
+    long length = grib_byte_count(a);
+    long offset = grib_byte_offset(a);
 
-  memset(buf + offset,0,length);
+    memset(buf + offset,0,length);
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
 static int  unpack_long   (grib_accessor* a, long*  v, size_t *len){
 
-  if(a->cclass->unpack_double && a->cclass->unpack_double != &unpack_double)
-  {
-    double val = 0.0;
-    size_t l = 1;
-    grib_unpack_double (a , &val, &l);
-    *v = (long)val;
-    grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, " Casting double %s to long", a->name);
-    return GRIB_SUCCESS;
-  }
-
-  if(a->cclass->unpack_string && a->cclass->unpack_string != &unpack_string)
-  {
-    char val[1024];
-    size_t l = sizeof(val);
-    char  *last = NULL;
-    grib_unpack_string (a , val, &l);
-
-    *v = strtol(val,&last,10);
-
-    if(*last == 0)
+    if(a->cclass->unpack_double && a->cclass->unpack_double != &unpack_double)
     {
-      grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
-      return GRIB_SUCCESS;
+        double val = 0.0;
+        size_t l = 1;
+        grib_unpack_double (a , &val, &l);
+        *v = (long)val;
+        grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, " Casting double %s to long", a->name);
+        return GRIB_SUCCESS;
     }
-  }
 
-  return GRIB_NOT_IMPLEMENTED;
+    if(a->cclass->unpack_string && a->cclass->unpack_string != &unpack_string)
+    {
+        char val[1024];
+        size_t l = sizeof(val);
+        char  *last = NULL;
+        grib_unpack_string (a , val, &l);
+
+        *v = strtol(val,&last,10);
+
+        if(*last == 0)
+        {
+            grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
+            return GRIB_SUCCESS;
+        }
+    }
+
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int unpack_double (grib_accessor* a, double*v, size_t *len){
 
-  if(a->cclass->unpack_long && a->cclass->unpack_long != &unpack_long)
-  {
-    long val = 0;
-    size_t l = 1;
-    grib_unpack_long (a , &val, &l);
-    *v = val;
-    grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, " Casting long %s to double", a->name);
-    return GRIB_SUCCESS;
-  }
-
-  if(a->cclass->unpack_string && a->cclass->unpack_string != &unpack_string)
-  {
-    char val[1024];
-    size_t l = sizeof(val);
-    char  *last = NULL;
-    grib_unpack_string (a , val, &l);
-
-    *v = strtod(val,&last);
-
-    if(*last == 0)
+    if(a->cclass->unpack_long && a->cclass->unpack_long != &unpack_long)
     {
-      grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
-      return GRIB_SUCCESS;
+        long val = 0;
+        size_t l = 1;
+        grib_unpack_long (a , &val, &l);
+        *v = val;
+        grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, " Casting long %s to double", a->name);
+        return GRIB_SUCCESS;
     }
-  }
 
-  return GRIB_NOT_IMPLEMENTED;
+    if(a->cclass->unpack_string && a->cclass->unpack_string != &unpack_string)
+    {
+        char val[1024];
+        size_t l = sizeof(val);
+        char  *last = NULL;
+        grib_unpack_string (a , val, &l);
+
+        *v = strtod(val,&last);
+
+        if(*last == 0)
+        {
+            grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
+            return GRIB_SUCCESS;
+        }
+    }
+
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int unpack_string(grib_accessor*a , char*  v, size_t *len){
 
-  if(a->cclass->unpack_double && a->cclass->unpack_double != &unpack_double)
-  {
-    double val = 0.0;
-    size_t l = 1;
-    grib_unpack_double (a , &val, &l);
-    sprintf(v,"%g",val);
-    *len = strlen(v);
-    grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, " Casting double %s to string", a->name);
-    return GRIB_SUCCESS;
-  }
+    if(a->cclass->unpack_double && a->cclass->unpack_double != &unpack_double)
+    {
+        double val = 0.0;
+        size_t l = 1;
+        grib_unpack_double (a , &val, &l);
+        sprintf(v,"%g",val);
+        *len = strlen(v);
+        grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, " Casting double %s to string", a->name);
+        return GRIB_SUCCESS;
+    }
 
-  if(a->cclass->unpack_long && a->cclass->unpack_long != &unpack_long)
-  {
-    long val = 0;
-    size_t l = 1;
-    grib_unpack_long (a , &val, &l);
-    sprintf(v,"%ld",val);
-    *len = strlen(v);
-    grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, " Casting long %s to string  \n", a->name);
-    return GRIB_SUCCESS;
-  }
+    if(a->cclass->unpack_long && a->cclass->unpack_long != &unpack_long)
+    {
+        long val = 0;
+        size_t l = 1;
+        grib_unpack_long (a , &val, &l);
+        sprintf(v,"%ld",val);
+        *len = strlen(v);
+        grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, " Casting long %s to string  \n", a->name);
+        return GRIB_SUCCESS;
+    }
 
-  return GRIB_NOT_IMPLEMENTED;
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_expression(grib_accessor* a, grib_expression *e){
-  size_t len = 1;
-  long   lval;
-  double   dval;
-  const char    *cval;
-  int ret=0;
-  char tmp[1024];
+    size_t len = 1;
+    long   lval;
+    double   dval;
+    const char    *cval;
+    int ret=0;
+    char tmp[1024];
 
-  switch(grib_accessor_get_native_type(a))
-  {
+    switch(grib_accessor_get_native_type(a))
+    {
     case GRIB_TYPE_LONG:
-      len = 1;
-      ret = grib_expression_evaluate_long(a->parent->h,e,&lval);
-      if (ret != GRIB_SUCCESS) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"unable to set %s as long",a->name);
-        return ret;
-      }
-      return grib_pack_long(a,&lval,&len);
-      break;
+        len = 1;
+        ret = grib_expression_evaluate_long(a->parent->h,e,&lval);
+        if (ret != GRIB_SUCCESS) {
+            grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"unable to set %s as long",a->name);
+            return ret;
+        }
+        return grib_pack_long(a,&lval,&len);
+        break;
 
     case GRIB_TYPE_DOUBLE:
-      len = 1;
-      ret = grib_expression_evaluate_double(a->parent->h,e,&dval);
-      return grib_pack_double(a,&dval,&len);
-      break;
+        len = 1;
+        ret = grib_expression_evaluate_double(a->parent->h,e,&dval);
+        return grib_pack_double(a,&dval,&len);
+        break;
 
     case GRIB_TYPE_STRING:
-      len = sizeof(tmp);
-      cval = grib_expression_evaluate_string(a->parent->h,e,tmp,&len,&ret);
-      if (ret != GRIB_SUCCESS) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"unable to set %s as string",a->name);
-        return ret;
-      }
-      len = strlen(cval);
-      return grib_pack_string(a,cval,&len);
-      break;
-  }
+        len = sizeof(tmp);
+        cval = grib_expression_evaluate_string(a->parent->h,e,tmp,&len,&ret);
+        if (ret != GRIB_SUCCESS) {
+            grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"unable to set %s as string",a->name);
+            return ret;
+        }
+        len = strlen(cval);
+        return grib_pack_string(a,cval,&len);
+        break;
+    }
 
-  return GRIB_NOT_IMPLEMENTED;
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_long(grib_accessor* a, const long*  v, size_t *len){
-  grib_context* c=a->parent->h->context;
-  if(a->cclass->pack_double && a->cclass->pack_double != &pack_double)
-  {
-    int i=0,ret=0;
-    double* val = (double*)grib_context_malloc(c,*len*(sizeof(double))) ;
-    if (!val) {
-      grib_context_log(c,GRIB_LOG_ERROR,
-       "unable to allocate %d bytes\n",(int)(*len*(sizeof(double))));
-      return GRIB_OUT_OF_MEMORY;
+    grib_context* c=a->parent->h->context;
+    if(a->cclass->pack_double && a->cclass->pack_double != &pack_double)
+    {
+        int i=0,ret=0;
+        double* val = (double*)grib_context_malloc(c,*len*(sizeof(double))) ;
+        if (!val) {
+            grib_context_log(c,GRIB_LOG_ERROR,
+                    "unable to allocate %d bytes\n",(int)(*len*(sizeof(double))));
+            return GRIB_OUT_OF_MEMORY;
+        }
+        for (i=0;i<*len;i++) val[i]=(long)v[i];
+        ret=grib_pack_double (a , val, len);
+        grib_context_free(c,val);
+        return ret;
     }
-    for (i=0;i<*len;i++) val[i]=(long)v[i];
-    ret=grib_pack_double (a , val, len);
-    grib_context_free(c,val);
-    return ret;
-  }
-  grib_context_log(c,GRIB_LOG_ERROR, " Should not grib_pack %s as long", a->name);
-  Assert(0);
-  return GRIB_NOT_IMPLEMENTED;
+    grib_context_log(c,GRIB_LOG_ERROR, " Should not grib_pack %s as long", a->name);
+    Assert(0);
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_double(grib_accessor* a, const double *v, size_t *len){
-  grib_context* c=a->parent->h->context;
-  if(a->cclass->pack_long && a->cclass->pack_long != &pack_long)
-  {
-    int i=0,ret=0;
-    long* val = (long*)grib_context_malloc(c,*len*(sizeof(long))) ;
-    if (!val) {
-      grib_context_log(c,GRIB_LOG_ERROR,
-       "unable to allocate %d bytes\n",(int)(*len*(sizeof(long))));
-      return GRIB_OUT_OF_MEMORY;
+    grib_context* c=a->parent->h->context;
+    if(a->cclass->pack_long && a->cclass->pack_long != &pack_long)
+    {
+        int i=0,ret=0;
+        long* val = (long*)grib_context_malloc(c,*len*(sizeof(long))) ;
+        if (!val) {
+            grib_context_log(c,GRIB_LOG_ERROR,
+                    "unable to allocate %d bytes\n",(int)(*len*(sizeof(long))));
+            return GRIB_OUT_OF_MEMORY;
+        }
+        for (i=0;i<*len;i++) val[i]=(long)v[i];
+        ret=grib_pack_long (a , val, len);
+        grib_context_free(c,val);
+        return ret;
     }
-    for (i=0;i<*len;i++) val[i]=(long)v[i];
-    ret=grib_pack_long (a , val, len);
-    grib_context_free(c,val);
-    return ret;
-  }
-  grib_context_log(c,GRIB_LOG_ERROR, " Should not grib_pack %s  as double", a->name);
-  return GRIB_NOT_IMPLEMENTED;
+    grib_context_log(c,GRIB_LOG_ERROR, " Should not grib_pack %s  as double", a->name);
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_string(grib_accessor*a , const char*  v, size_t *len){
-  if(a->cclass->pack_double && a->cclass->pack_double != &pack_double)
-  {
-    size_t l = 1;
-    double val = atof(v);
-    return grib_pack_double (a , &val, &l);
-  }
+    if(a->cclass->pack_double && a->cclass->pack_double != &pack_double)
+    {
+        size_t l = 1;
+        double val = atof(v);
+        return grib_pack_double (a , &val, &l);
+    }
 
-  if(a->cclass->pack_long && a->cclass->pack_long != &pack_long)
-  {
-    size_t l = 1;
-    long val = atof(v);
-    return grib_pack_long (a , &val, &l);
-  }
+    if(a->cclass->pack_long && a->cclass->pack_long != &pack_long)
+    {
+        size_t l = 1;
+        long val = atof(v);
+        return grib_pack_long (a , &val, &l);
+    }
 
-  grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
-      " Should not grib_pack %s  as string", a->name);
-  return GRIB_NOT_IMPLEMENTED;
+    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+            " Should not grib_pack %s  as string", a->name);
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_bytes(grib_accessor* a, const unsigned char* val, size_t *len)
 {
-  size_t length = *len;
-  grib_buffer_replace(a, val, length,1,1);
-  return GRIB_SUCCESS;
+    size_t length = *len;
+    grib_buffer_replace(a, val, length,1,1);
+    return GRIB_SUCCESS;
 }
 
 static void destroy(grib_context* ct, grib_accessor* a)
 {
-  grib_dependency_remove_observed(a);
-  grib_dependency_remove_observer(a);
-  if (a->vvalue!=NULL) {
-  	grib_context_free(ct,a->vvalue);
-	a->vvalue=NULL;
-  }
+    grib_dependency_remove_observed(a);
+    grib_dependency_remove_observer(a);
+    if (a->vvalue!=NULL) {
+        grib_context_free(ct,a->vvalue);
+        a->vvalue=NULL;
+    }
 }
 
 static grib_section* sub_section(grib_accessor* a)
 {
-  return NULL;
+    return NULL;
 }
 
 static int notify_change(grib_accessor* self,grib_accessor* observed)
 {
-  /* Default behaviour is to notify creator */
-  return grib_action_notify_change(self->creator,self,observed);
+    /* Default behaviour is to notify creator */
+    return grib_action_notify_change(self->creator,self,observed);
 }
 
 static void update_size(grib_accessor* a,size_t s)
 {
-  grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
-      "Accessor %s [%s] must implement 'update_size'", a->name,a->cclass->name);
-  Assert(0 == 1);
+    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+            "Accessor %s [%s] must implement 'update_size'", a->name,a->cclass->name);
+    Assert(0 == 1);
 }
 
-static grib_accessor* next(grib_accessor* a, int mod) {
-   grib_accessor* next=NULL;
-   if (a->next) {
-     next=a->next;
-   } else {
-     if (a->parent->owner)
-      next=a->parent->owner->cclass->next(a->parent->owner,0);
-   }
-   return next;
+static grib_accessor* next(grib_accessor* a, int mod)
+{
+    grib_accessor* next=NULL;
+    if (a->next) {
+        next=a->next;
+    } else {
+        if (a->parent->owner)
+            next=a->parent->owner->cclass->next(a->parent->owner,0);
+    }
+    return next;
 }
 
-
-static int compare(grib_accessor* a, grib_accessor* b) {
-  return GRIB_NOT_IMPLEMENTED;
+static int compare(grib_accessor* a, grib_accessor* b)
+{
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 /* Redefined in all padding */
 
 static size_t preferred_size(grib_accessor* a,int from_handle)
 {
-  return a->length;
+    return a->length;
 }
 
-static int is_missing(grib_accessor* a){
+static int is_missing(grib_accessor* a)
+{
     int i=0;
     int is_missing=1;
     unsigned char ones=0xff;
     unsigned char* v=NULL;
 
     if (a->flags & GRIB_ACCESSOR_FLAG_TRANSIENT) {
-	  if (a->vvalue == NULL) {
-	    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"%s internal error (flags=0x%X)",a->name,a->flags);
-	  }
-	  Assert(a->vvalue!=NULL);
-	  return a->vvalue->missing;
-	}
+        if (a->vvalue == NULL) {
+            grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"%s internal error (flags=0x%X)",a->name,a->flags);
+        }
+        Assert(a->vvalue!=NULL);
+        return a->vvalue->missing;
+    }
     Assert(a->length>=0);
 
     v=a->parent->h->buffer->data+a->offset;
 
     for (i=0; i < a->length; i++) {
-      if (*v != ones) {
-        is_missing=0;
-        break;
-      }
-      v++;
+        if (*v != ones) {
+            is_missing=0;
+            break;
+        }
+        v++;
     }
 
     return is_missing;
 }
 
-static int unpack_double_element(grib_accessor* a, size_t i, double* val) {
-  return GRIB_NOT_IMPLEMENTED;
+static int unpack_double_element(grib_accessor* a, size_t i, double* val)
+{
+    return GRIB_NOT_IMPLEMENTED;
 }
 
-static int unpack_double_subarray(grib_accessor* a, double* val,size_t start,size_t len) {
-  return GRIB_NOT_IMPLEMENTED;
+static int unpack_double_subarray(grib_accessor* a, double* val,size_t start,size_t len)
+{
+    return GRIB_NOT_IMPLEMENTED;
 }
-

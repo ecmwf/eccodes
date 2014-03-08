@@ -53,7 +53,7 @@ static int pack_long(grib_accessor*, const long* val,size_t *len);
 static int pack_string(grib_accessor*, const char*, size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
 static int unpack_string (grib_accessor*, char*, size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -218,6 +218,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
 
 static int extra_set(grib_accessor* a,long val)
 {
+/*TODO chemicals*/
     int ret=0;
     grib_accessor_g2_mars_labeling* self = (grib_accessor_g2_mars_labeling*)a;
     char stepType[30]={0,};
@@ -479,9 +480,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     return extra_set(a,*val);
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
-    return 1;
+	*count=1;
+	return 0;
 }
 
 static int  get_native_type(grib_accessor* a)

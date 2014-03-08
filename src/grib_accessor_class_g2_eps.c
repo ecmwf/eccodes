@@ -43,7 +43,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_long(grib_accessor*, const long* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -186,7 +186,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     grib_get_long(a->parent->h, self->stream,&stream);
     grib_get_string(a->parent->h, self->stepType,stepType,&slen);
     if (!strcmp(stepType,"instant")) isInstant=1;
-
+/*TODO chemicals*/
     /* eps or stream=(enda or elda or ewla) */
     if ( eps || stream==1030 || stream==1249 || stream==1250 ) {
         if (isInstant) {
@@ -229,7 +229,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     return 0;
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
-    return 1;
+    *count=1;
+    return 0;
 }

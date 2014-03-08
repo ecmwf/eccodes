@@ -39,7 +39,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -145,25 +145,31 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
 	self->reference_value = grib_arguments_get_name(a->parent->h,args,self->carg++);
 
 }
-static long value_count(grib_accessor* a){
+static int value_count(grib_accessor* a,long* count){
 	grib_accessor_data_constant_field* self =  (grib_accessor_data_constant_field*)a;
 	long ni;
 	long nj;
 	int err = 0;
 	if((err = grib_get_long_internal(a->parent->h,self->ni,&ni)) != GRIB_SUCCESS)
-		return 0;
+		return err;
 	if((err = grib_get_long_internal(a->parent->h,self->nj, &nj)) != GRIB_SUCCESS)
-		return 0;
-	return ni*nj;
+		return err;
+	*count=ni*nj;
+
+    return err;
 }
 
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
 	grib_accessor_data_constant_field* self =  (grib_accessor_data_constant_field*)a;
 	size_t i = 0;
-	size_t n_vals = grib_value_count(a);
+	long n_vals = 0;
+	int err=0;
 	double reference_value = 0;
-	int err = 0;
+
+	err=grib_value_count(a,&n_vals);
+	if (err) return err;
+
 	if(*len < n_vals){
 		*len = n_vals;
 		return GRIB_ARRAY_TOO_SMALL;

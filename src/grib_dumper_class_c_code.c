@@ -300,6 +300,8 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
   int type=0;
   char stype[10];
   size_t size=0;
+  long count=0;
+
   stype[0]='\0';
 
   if((a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
@@ -307,7 +309,9 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
           && (d->option_flags & GRIB_DUMP_FLAG_NO_DATA)   ) )
     return;
 
-  size=grib_value_count(a);
+  grib_value_count(a,&count);
+  size=count;
+
   if(size == 1){
     dump_double(d,a,NULL);
     return ;

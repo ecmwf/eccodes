@@ -32,7 +32,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_data_g1shsimple_packing {
@@ -125,52 +125,51 @@ static void init_class(grib_accessor_class* c)
 /* END_CLASS_IMP */
 
 
-
-
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
-  grib_accessor_data_g1shsimple_packing *self =(grib_accessor_data_g1shsimple_packing*)a;
-  size_t len = 0;
-  grib_get_size(a->parent->h,self->coded_values,&len);
-  len += 1;
-  return len;
-}
+    grib_accessor_data_g1shsimple_packing *self =(grib_accessor_data_g1shsimple_packing*)a;
+    size_t len = 0;
+    int err=0;
 
+    err=grib_get_size(a->parent->h,self->coded_values,&len);
+    len += 1;
+
+    *count=len;
+    return err;
+}
 
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-  grib_accessor_data_g1shsimple_packing* self =  (grib_accessor_data_g1shsimple_packing*)a;
-  int err =  GRIB_SUCCESS;
+    grib_accessor_data_g1shsimple_packing* self =  (grib_accessor_data_g1shsimple_packing*)a;
+    int err =  GRIB_SUCCESS;
 
-  size_t coded_n_vals = 0;
-  size_t n_vals = 0;
+    size_t coded_n_vals = 0;
+    size_t n_vals = 0;
 
-  if((err = grib_get_size(a->parent->h,self->coded_values,&coded_n_vals)) != GRIB_SUCCESS)
+    if((err = grib_get_size(a->parent->h,self->coded_values,&coded_n_vals)) != GRIB_SUCCESS)
+        return err;
+
+    n_vals = coded_n_vals + 1;
+
+    if(*len < n_vals)
+    {
+        *len = n_vals;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
+
+    if((err = grib_get_double_internal(a->parent->h,self->real_part,val)) != GRIB_SUCCESS)
+        return err;
+
+    val++;
+
+    if((err = grib_get_double_array_internal(a->parent->h,self->coded_values,val,&coded_n_vals)) != GRIB_SUCCESS)
+        return err;
+
+    grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
+            "grib_accessor_data_g1shsimple_packing_bitmap : unpack_double : creating %s, %d values",
+            a->name, n_vals);
+
+    *len =  n_vals;
+
     return err;
-
-  n_vals = coded_n_vals + 1;
-
-  if(*len < n_vals)
-  {
-    *len = n_vals;
-    return GRIB_ARRAY_TOO_SMALL;
-  }
-
-  if((err = grib_get_double_internal(a->parent->h,self->real_part,val)) != GRIB_SUCCESS)
-    return err;
-
-  val++;
-
-  if((err = grib_get_double_array_internal(a->parent->h,self->coded_values,val,&coded_n_vals)) != GRIB_SUCCESS)
-    return err;
-
-
-  grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
-      "grib_accessor_data_g1shsimple_packing_bitmap : unpack_double : creating %s, %d values",
-      a->name, n_vals);
-
-  *len =  n_vals;
-
-  return err;
 }
-

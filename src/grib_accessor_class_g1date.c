@@ -43,7 +43,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int pack_long(grib_accessor*, const long* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
 static int unpack_string (grib_accessor*, char*, size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
@@ -137,162 +137,161 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-	grib_accessor_g1date* self = (grib_accessor_g1date*)a; 
-	int n = 0;
+    grib_accessor_g1date* self = (grib_accessor_g1date*)a;
+    int n = 0;
 
-	self->century = grib_arguments_get_name(a->parent->h,c,n++);
-	self->year    = grib_arguments_get_name(a->parent->h,c,n++);
-	self->month   = grib_arguments_get_name(a->parent->h,c,n++);
-	self->day     = grib_arguments_get_name(a->parent->h,c,n++);
+    self->century = grib_arguments_get_name(a->parent->h,c,n++);
+    self->year    = grib_arguments_get_name(a->parent->h,c,n++);
+    self->month   = grib_arguments_get_name(a->parent->h,c,n++);
+    self->day     = grib_arguments_get_name(a->parent->h,c,n++);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-	grib_dump_long(dumper,a,NULL);
+    grib_dump_long(dumper,a,NULL);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {   
-  int ret=0;
-  grib_accessor_g1date* self = (grib_accessor_g1date*)a;
+    int ret=0;
+    grib_accessor_g1date* self = (grib_accessor_g1date*)a;
 
-	long year = 0;
-	long century = 0;
-	long month = 0;
-	long day = 0;
+    long year = 0;
+    long century = 0;
+    long month = 0;
+    long day = 0;
 
-	if ((ret=grib_get_long_internal(a->parent->h, self->century,&century))!=GRIB_SUCCESS)
-       return ret;
-  if ((ret=grib_get_long_internal(a->parent->h, self->day,&day))!=GRIB_SUCCESS)
-      return ret;
-  if ((ret=grib_get_long_internal(a->parent->h, self->month,&month))!=GRIB_SUCCESS)
-      return ret;
-  if ((ret=grib_get_long_internal(a->parent->h, self->year,&year))!=GRIB_SUCCESS)
-      return ret;
+    if ((ret=grib_get_long_internal(a->parent->h, self->century,&century))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_get_long_internal(a->parent->h, self->day,&day))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_get_long_internal(a->parent->h, self->month,&month))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_get_long_internal(a->parent->h, self->year,&year))!=GRIB_SUCCESS)
+        return ret;
 
-	if(*len < 1)
-		return GRIB_WRONG_ARRAY_SIZE;
+    if(*len < 1)
+        return GRIB_WRONG_ARRAY_SIZE;
 
-	*val   = ((century-1)*100 + year) * 10000 + month * 100 + day;
+    *val   = ((century-1)*100 + year) * 10000 + month * 100 + day;
 
-	if(year == 255 && day == 255 && month >= 1 && month <= 12)
-	{
-		*val = month;    
-	}
+    if(year == 255 && day == 255 && month >= 1 && month <= 12)
+    {
+        *val = month;
+    }
 
-	if(year == 255 && day != 255 &&  month >= 1 && month <= 12)
-	{
-		*val =  month * 100 + day;
-	}
+    if(year == 255 && day != 255 &&  month >= 1 && month <= 12)
+    {
+        *val =  month * 100 + day;
+    }
 
-	return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  int ret=0;
-	long v = val[0];
-	grib_accessor_g1date* self = (grib_accessor_g1date*)a;
+    int ret=0;
+    long v = val[0];
+    grib_accessor_g1date* self = (grib_accessor_g1date*)a;
 
-	long year    = 0;
-	long century = 0;
-	long month   = 0;
-	long day     = 0;
+    long year    = 0;
+    long century = 0;
+    long month   = 0;
+    long day     = 0;
 
-	if(*len !=  1)
-		return GRIB_WRONG_ARRAY_SIZE;
+    if(*len !=  1)
+        return GRIB_WRONG_ARRAY_SIZE;
 
-	{
-		long d = grib_julian_to_date((long)grib_date_to_julian(v));
-		if(v != d)
-		{
-			grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"grib_accessor_g1date: pack_long invalid date %ld, changed to %ld",v,d);
-			return GRIB_ENCODING_ERROR;
-		}
-	}
+    {
+        long d = grib_julian_to_date((long)grib_date_to_julian(v));
+        if(v != d)
+        {
+            grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"grib_accessor_g1date: pack_long invalid date %ld, changed to %ld",v,d);
+            return GRIB_ENCODING_ERROR;
+        }
+    }
 
-	century =  v / 1000000; v %= 1000000;
-	year    =  v / 10000;   v %= 10000;
-	month   =  v / 100;     v %= 100;
-	day     =  v;
+    century =  v / 1000000; v %= 1000000;
+    year    =  v / 10000;   v %= 10000;
+    month   =  v / 100;     v %= 100;
+    day     =  v;
 
-	if(year == 0)
-		year = 100;
-	else
-		century++;
+    if(year == 0)
+        year = 100;
+    else
+        century++;
 
-  if ((ret=grib_set_long_internal(a->parent->h,self->century,century))!=GRIB_SUCCESS)
-      return ret;
-  if ((ret=grib_set_long_internal(a->parent->h,self->day,day))!=GRIB_SUCCESS)
-      return ret;
-  if ((ret=grib_set_long_internal(a->parent->h,self->month,month))!=GRIB_SUCCESS)
-      return ret;
-  if ((ret=grib_set_long_internal(a->parent->h,self->year,year))!=GRIB_SUCCESS)
-      return ret;
-	
-	return GRIB_SUCCESS;
+    if ((ret=grib_set_long_internal(a->parent->h,self->century,century))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_set_long_internal(a->parent->h,self->day,day))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_set_long_internal(a->parent->h,self->month,month))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_set_long_internal(a->parent->h,self->year,year))!=GRIB_SUCCESS)
+        return ret;
+
+    return GRIB_SUCCESS;
 }
 
 static char* months[] = {
-	"jan","feb","mar","apr",
-	"may","jun","jul","aug",
-	"sep","oct","nov","dec",
+        "jan","feb","mar","apr",
+        "may","jun","jul","aug",
+        "sep","oct","nov","dec",
 };
 
 static int unpack_string(grib_accessor* a, char* val, size_t *len)
 {   
-  int ret=0;
-	char tmp[1024];
-	grib_accessor_g1date* self = (grib_accessor_g1date*)a;
-	long year = 0;
-	long century = 0;
-	long month = 0;
-	long day = 0;
-	size_t l;
+    int ret=0;
+    char tmp[1024];
+    grib_accessor_g1date* self = (grib_accessor_g1date*)a;
+    long year = 0;
+    long century = 0;
+    long month = 0;
+    long day = 0;
+    size_t l;
 
-  if ((ret=grib_get_long_internal(a->parent->h, self->century,&century))!=GRIB_SUCCESS)
-      return ret;
-  if ((ret=grib_get_long_internal(a->parent->h, self->day,&day))!=GRIB_SUCCESS)
-      return ret;
-  if ((ret=grib_get_long_internal(a->parent->h, self->month,&month))!=GRIB_SUCCESS)
-      return ret;
-  if ((ret=grib_get_long_internal(a->parent->h, self->year,&year))!=GRIB_SUCCESS)
-      return ret;
+    if ((ret=grib_get_long_internal(a->parent->h, self->century,&century))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_get_long_internal(a->parent->h, self->day,&day))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_get_long_internal(a->parent->h, self->month,&month))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_get_long_internal(a->parent->h, self->year,&year))!=GRIB_SUCCESS)
+        return ret;
 
-	if(*len < 1)
-		return GRIB_WRONG_ARRAY_SIZE;
+    if(*len < 1)
+        return GRIB_WRONG_ARRAY_SIZE;
 
-	if(year == 255 && day == 255 && month >= 1 && month <= 12)
-	{
-		strcpy(tmp,months[month-1]);
-	}
-	else if(year == 255 && month >= 1 && month <= 12)
-	{
-		sprintf(tmp,"%s-%02ld",months[month-1],day);
-		/* sprintf(tmp,"%02ld-%02ld",month,day); */
-	}
-	else
-	{
-		long x = ((century-1)*100 + year) * 10000 + month * 100 + day;
-		sprintf(tmp,"%ld",x);
-	}
+    if(year == 255 && day == 255 && month >= 1 && month <= 12)
+    {
+        strcpy(tmp,months[month-1]);
+    }
+    else if(year == 255 && month >= 1 && month <= 12)
+    {
+        sprintf(tmp,"%s-%02ld",months[month-1],day);
+        /* sprintf(tmp,"%02ld-%02ld",month,day); */
+    }
+    else
+    {
+        long x = ((century-1)*100 + year) * 10000 + month * 100 + day;
+        sprintf(tmp,"%ld",x);
+    }
 
-	l = strlen(tmp) + 1;
-	if(*len < l)
-	{
-		*len = l;
-		return GRIB_BUFFER_TOO_SMALL;
-	}
+    l = strlen(tmp) + 1;
+    if(*len < l)
+    {
+        *len = l;
+        return GRIB_BUFFER_TOO_SMALL;
+    }
 
-	*len = l;
-	strcpy(val,tmp);
+    *len = l;
+    strcpy(val,tmp);
 
-
-	return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
-  return 1;
+    *count=1;
+    return 0;
 }
-

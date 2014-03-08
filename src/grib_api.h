@@ -515,7 +515,7 @@ grib_multi_handle* grib_multi_handle_new     (grib_context* c);
  *  memory leaks.
  *
  * @param h           : The handle from which the sections are copied.
- * @param start_section : section number. Starting from this section all the sections to then end of the message will be copied.
+ * @param start_section : section number. Starting from this section all the sections to the end of the message will be copied.
  * @param mh           : The multi field handle on which the sections are appended.
  * @return            0 if OK, integer value on error
  */

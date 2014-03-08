@@ -58,7 +58,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -374,8 +374,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
     size_t i = 0;
     size_t j = 0;
-    size_t n_vals = grib_value_count(a);
-
+    long n_vals = 0;
     long     vcount = 0;
     int      err = GRIB_SUCCESS;
 
@@ -417,6 +416,9 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     long numberOfBitsUsedForTheScaledGroupLengths;
     long orderOfSpatialDifferencing;
     long numberOfOctetsExtraDescriptors;
+
+    err=grib_value_count(a,&n_vals);
+    if (err) return err;
 
     if((err = grib_get_long_internal(a->parent->h,self->bits_per_value,&bits_per_value )) != GRIB_SUCCESS)  return err;
     if((err = grib_get_double_internal(a->parent->h,self->reference_value,&reference_value )) != GRIB_SUCCESS)  return err;
@@ -729,12 +731,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     return GRIB_SUCCESS;
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
     grib_accessor_data_g22order_packing* self =  (grib_accessor_data_g22order_packing*)a;
-    long count = 0;
-
-    if(grib_get_long_internal(a->parent->h,self->numberOfValues, &count) != GRIB_SUCCESS)
-        return 0;
-    return count;
+    *count = 0;
+    return grib_get_long_internal(a->parent->h,self->numberOfValues, count);
 }

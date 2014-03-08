@@ -42,7 +42,7 @@ static int pack_string(grib_accessor*, const char*, size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
 static int unpack_string (grib_accessor*, char*, size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -193,7 +193,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 }
 
 
-static long value_count(grib_accessor* a) { return 1; }
+static int value_count(grib_accessor* a,long* count) { *count=1;return 0; }
 
 static int  get_native_type(grib_accessor* a){
   return GRIB_TYPE_STRING;

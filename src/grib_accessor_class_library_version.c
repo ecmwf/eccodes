@@ -33,7 +33,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int unpack_string (grib_accessor*, char*, size_t *len);
 static size_t string_length(grib_accessor*);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -146,9 +146,10 @@ static int    unpack_string(grib_accessor* a, char* val, size_t *len)
 	return GRIB_SUCCESS;
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
-	return 1;
+    *count=1;
+    return 0;
 }
 
 static size_t string_length(grib_accessor* a)

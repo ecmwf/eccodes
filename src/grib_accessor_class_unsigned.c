@@ -44,7 +44,7 @@ static int unpack_long(grib_accessor*, long* val,size_t *len);
 static long byte_count(grib_accessor*);
 static long byte_offset(grib_accessor*);
 static long next_offset(grib_accessor*);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void destroy(grib_context*,grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
@@ -146,15 +146,18 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
         a->vvalue->type=GRIB_TYPE_LONG;
         a->vvalue->length=len;
     } else {
-        a->length = len*grib_value_count(a);
+        long count=0;
+        grib_value_count(a,&count);
+
+        a->length = len*count;
         a->vvalue=NULL;
     }
-
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-    long rlen = grib_value_count(a);
+    long rlen = 0;
+    grib_value_count(a,&rlen);
     if(rlen == 1)
         grib_dump_long(dumper,a,NULL);
     else
@@ -181,11 +184,16 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t *len, in
     grib_accessor_unsigned* self = (grib_accessor_unsigned*)a;
     int ret = 0;
     long off = 0;
-    unsigned long rlen = grib_value_count(a);
+    long rlen = 0;
+    int err = 0;
+
     size_t buflen  = 0;
     unsigned char *buf = NULL;
     unsigned long i = 0;
     unsigned long missing = 0;
+
+    err=grib_value_count(a,&rlen);
+    if (err) return err;
 
     if(a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)
     {
@@ -270,10 +278,16 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t *len, in
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_unsigned* self = (grib_accessor_unsigned*)a;
-    unsigned long rlen = grib_value_count(a);
+    long rlen = 0;
     unsigned long i = 0;
     unsigned long missing = 0;
+    long count=0;
+    int err = 0;
     long pos = a->offset*8;
+
+    err=grib_value_count(a,&count);
+    if (err) return err;
+    rlen=count;
 
     if(*len < rlen)
     {
@@ -316,15 +330,11 @@ static long byte_count(grib_accessor* a)
     return a->length;
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* len)
 {
     grib_accessor_unsigned* self = (grib_accessor_unsigned*)a;
-    long len = 0;
-    int ret =0;
-    if(!self->arg) return 1;
-    ret = grib_get_long_internal(a->parent->h,grib_arguments_get_name(a->parent->h,self->arg,0),&len);
-    if(ret == GRIB_SUCCESS)  return len;
-    return 1;
+    if(!self->arg) {*len=1;return 0;}
+    return grib_get_long_internal(a->parent->h,grib_arguments_get_name(a->parent->h,self->arg,0),len);
 }
 
 static long byte_offset(grib_accessor* a)

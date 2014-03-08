@@ -38,7 +38,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -137,165 +137,170 @@ static void init_class(grib_accessor_class* c)
 static int get_distinct(grib_accessor* a,double** val,long* len);
 
 static int compare_doubles( const void* a, const void* b, int ascending ) {
-	/* ascending is a boolean: 0 or 1 */
-	double* arg1 = (double*) a;
-	double* arg2 = (double*) b;
-	if (ascending) {
-		if( *arg1 < *arg2 ) return -1;		/*Smaller values come before larger ones*/
-	} else {
-		if( *arg1 > *arg2 ) return -1;		/*Larger values come before smaller ones*/
-	}
-	if( *arg1 == *arg2 ) return 0;
-	else return 1;
+    /* ascending is a boolean: 0 or 1 */
+    double* arg1 = (double*) a;
+    double* arg2 = (double*) b;
+    if (ascending) {
+        if( *arg1 < *arg2 ) return -1;		/*Smaller values come before larger ones*/
+    } else {
+        if( *arg1 > *arg2 ) return -1;		/*Larger values come before smaller ones*/
+    }
+    if( *arg1 == *arg2 ) return 0;
+    else return 1;
 }
 static int compare_doubles_ascending( const void* a, const void* b ) {
-	return compare_doubles(a,b,1);
+    return compare_doubles(a,b,1);
 }
 static int compare_doubles_descending( const void* a, const void* b ) {
-	return compare_doubles(a,b,0);
+    return compare_doubles(a,b,0);
 }
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-	grib_accessor_latitudes* self = (grib_accessor_latitudes*)a;
-	int n = 0;
+    grib_accessor_latitudes* self = (grib_accessor_latitudes*)a;
+    int n = 0;
 
-	self->values = grib_arguments_get_name(a->parent->h,c,n++);
-	self->distinct = grib_arguments_get_long(a->parent->h,c,n++);
-	self->save=0;
+    self->values = grib_arguments_get_name(a->parent->h,c,n++);
+    self->distinct = grib_arguments_get_long(a->parent->h,c,n++);
+    self->save=0;
 
-	a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-	grib_context* c=a->parent->h->context;
-	grib_accessor_latitudes* self = (grib_accessor_latitudes*)a;
-	int ret = 0;
-	double* v=val;
-	double dummy=0;
-	size_t size=0;
-	grib_iterator* iter=NULL;
+    grib_context* c=a->parent->h->context;
+    grib_accessor_latitudes* self = (grib_accessor_latitudes*)a;
+    int ret = 0;
+    double* v=val;
+    double dummy=0;
+    size_t size=0;
+    long count=0;
+    grib_iterator* iter=NULL;
 
-	self->save=1;
-	size=value_count(a);
-	if (*len<size) return GRIB_ARRAY_TOO_SMALL;
-	self->save=0;
+    self->save=1;
+    size=0;
+    ret=value_count(a,&count);
+    if (ret) return ret;
+    size=count;
+    if (*len<size) return GRIB_ARRAY_TOO_SMALL;
+    self->save=0;
 
-	/* self->lats are computed in _value_count*/
-	if (self->lats) {
-		int i;
-		*len=self->size;
-		for (i=0;i<size;i++) val[i]=self->lats[i];
-		grib_context_free(c,self->lats);
-		self->lats=NULL;
-		self->size=0;
-		return GRIB_SUCCESS;
-	}
+    /* self->lats are computed in _value_count*/
+    if (self->lats) {
+        int i;
+        *len=self->size;
+        for (i=0;i<size;i++) val[i]=self->lats[i];
+        grib_context_free(c,self->lats);
+        self->lats=NULL;
+        self->size=0;
+        return GRIB_SUCCESS;
+    }
 
-	iter=grib_iterator_new(a->parent->h,0,&ret);
-	if (ret!=GRIB_SUCCESS) {
-		if (iter) grib_iterator_delete(iter);
-		grib_context_log(c,GRIB_LOG_ERROR,"unable to create iterator");
-		return ret;
-	}
+    iter=grib_iterator_new(a->parent->h,0,&ret);
+    if (ret!=GRIB_SUCCESS) {
+        if (iter) grib_iterator_delete(iter);
+        grib_context_log(c,GRIB_LOG_ERROR,"unable to create iterator");
+        return ret;
+    }
 
-	while(grib_iterator_next(iter,v++,&dummy,&dummy)) {}
-	grib_iterator_delete(iter);
+    while(grib_iterator_next(iter,v++,&dummy,&dummy)) {}
+    grib_iterator_delete(iter);
 
-	*len=size;
+    *len=size;
 
-	return ret;
+    return ret;
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* len)
 {
-	grib_accessor_latitudes* self = (grib_accessor_latitudes*)a;
-	grib_handle* h=a->parent->h;
-	grib_context* c=a->parent->h->context;
-	double* val=NULL;
-	int ret;
-	long len;
-	size_t size;
-	if ((ret=grib_get_size(h,self->values,&size))!=GRIB_SUCCESS) {
-		grib_context_log(h->context,GRIB_LOG_ERROR,"unable to get size of %s",self->values);
-		return 0;
-	}
-	len=(long)size;
+    grib_accessor_latitudes* self = (grib_accessor_latitudes*)a;
+    grib_handle* h=a->parent->h;
+    grib_context* c=a->parent->h->context;
+    double* val=NULL;
+    int ret;
+    size_t size;
 
-	if (self->distinct) {
-		ret=get_distinct(a,&val,&len);
-		if (ret!=GRIB_SUCCESS) return 0;
-		if (self->save) {
-			self->lats=val;
-			self->size=len;
-		} else {
-			grib_context_free(c,val);
-		}
-	}
+    *len=0;
+    if ((ret=grib_get_size(h,self->values,&size))!=GRIB_SUCCESS) {
+        grib_context_log(h->context,GRIB_LOG_ERROR,"unable to get size of %s",self->values);
+        return ret;
+    }
+    *len=size;
 
-	return len;
+    if (self->distinct) {
+        ret=get_distinct(a,&val,len);
+        if (ret!=GRIB_SUCCESS) return ret;
+        if (self->save) {
+            self->lats=val;
+            self->size=*len;
+        } else {
+            grib_context_free(c,val);
+        }
+    }
+
+    return ret;
 }
 
 static int get_distinct(grib_accessor* a,double** val,long* len) {
-	long count=0;
-	double prev;
-	double *v=NULL;
-	double *v1=NULL;
-	double dummy;
-	int ret=0;
-	int i;
-	long jScansPositively=0; /*default: north to south*/
-	size_t size=*len;
-	grib_context* c=a->parent->h->context;
-	grib_iterator* iter=grib_iterator_new(a->parent->h,0,&ret);
-	if (ret!=GRIB_SUCCESS) {
-		if (iter) grib_iterator_delete(iter);
-		grib_context_log(c,GRIB_LOG_ERROR,"unable to create iterator");
-		return ret;
-	}
-	v=(double*)grib_context_malloc_clear(c,size*sizeof(double));
-	if (!v) {
-		grib_context_log(c,GRIB_LOG_ERROR,
-				"unable to allocate %ld bytes",(long)size*sizeof(double));
-		return GRIB_OUT_OF_MEMORY;
-	}
-	*val=v;
+    long count=0;
+    double prev;
+    double *v=NULL;
+    double *v1=NULL;
+    double dummy;
+    int ret=0;
+    int i;
+    long jScansPositively=0; /*default: north to south*/
+    size_t size=*len;
+    grib_context* c=a->parent->h->context;
+    grib_iterator* iter=grib_iterator_new(a->parent->h,0,&ret);
+    if (ret!=GRIB_SUCCESS) {
+        if (iter) grib_iterator_delete(iter);
+        grib_context_log(c,GRIB_LOG_ERROR,"unable to create iterator");
+        return ret;
+    }
+    v=(double*)grib_context_malloc_clear(c,size*sizeof(double));
+    if (!v) {
+        grib_context_log(c,GRIB_LOG_ERROR,
+                "unable to allocate %ld bytes",(long)size*sizeof(double));
+        return GRIB_OUT_OF_MEMORY;
+    }
+    *val=v;
 
-	while(grib_iterator_next(iter,v++,&dummy,&dummy)) {}
-	grib_iterator_delete(iter);
-	v=*val;
+    while(grib_iterator_next(iter,v++,&dummy,&dummy)) {}
+    grib_iterator_delete(iter);
+    v=*val;
 
-	/* See which direction the latitudes are to be scanned */
-	if((ret = grib_get_long_internal(a->parent->h, "jScansPositively", &jScansPositively))) return ret;
-	if (jScansPositively) {
-		qsort(v,*len,sizeof(double),&compare_doubles_ascending);		/*South to North*/
-	} else {
-		qsort(v,*len,sizeof(double),&compare_doubles_descending);		/*North to South*/
-	}
+    /* See which direction the latitudes are to be scanned */
+    if((ret = grib_get_long_internal(a->parent->h, "jScansPositively", &jScansPositively))) return ret;
+    if (jScansPositively) {
+        qsort(v,*len,sizeof(double),&compare_doubles_ascending);		/*South to North*/
+    } else {
+        qsort(v,*len,sizeof(double),&compare_doubles_descending);		/*North to South*/
+    }
 
-	v1=(double*)grib_context_malloc_clear(c,size*sizeof(double));
-	if (!v1) {
-		grib_context_log(c,GRIB_LOG_ERROR, "unable to allocate %ld bytes",(long)size*sizeof(double));
-		return GRIB_OUT_OF_MEMORY;
-	}
+    v1=(double*)grib_context_malloc_clear(c,size*sizeof(double));
+    if (!v1) {
+        grib_context_log(c,GRIB_LOG_ERROR, "unable to allocate %ld bytes",(long)size*sizeof(double));
+        return GRIB_OUT_OF_MEMORY;
+    }
 
-	/*Construct a unique set of lats by filtering out duplicates*/
-	prev=v[0];
-	v1[0]=prev;
-	count=1;
-	for (i=1;i<*len;i++) {
-		if (v[i]!=prev) {
-			prev=v[i];
-			v1[count]=prev;		/*Value different from previous so store it*/
-			count++;
-		}
-	}
+    /*Construct a unique set of lats by filtering out duplicates*/
+    prev=v[0];
+    v1[0]=prev;
+    count=1;
+    for (i=1;i<*len;i++) {
+        if (v[i]!=prev) {
+            prev=v[i];
+            v1[count]=prev;		/*Value different from previous so store it*/
+            count++;
+        }
+    }
 
-	grib_context_free(c,v);
+    grib_context_free(c,v);
 
-	*val=v1;
+    *val=v1;
 
-	*len=count;
-	return GRIB_SUCCESS;
+    *len=count;
+    return GRIB_SUCCESS;
 }

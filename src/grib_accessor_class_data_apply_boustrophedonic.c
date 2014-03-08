@@ -42,7 +42,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int  get_native_type(grib_accessor*);
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
@@ -153,16 +153,16 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 }
 
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a, long* numberOfPoints)
 {
 	grib_accessor_data_apply_boustrophedonic *self =(grib_accessor_data_apply_boustrophedonic*)a;
-	long numberOfPoints;
-	int ret;
+	int ret=0;
 
-	ret=grib_get_long_internal(a->parent->h,self->numberOfPoints,&numberOfPoints);
-	if (ret) return 0;
+	*numberOfPoints=0;
+	ret=grib_get_long_internal(a->parent->h,self->numberOfPoints,numberOfPoints);
 
-	return numberOfPoints;
+	return ret;
+
 }
 
 

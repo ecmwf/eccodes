@@ -45,7 +45,7 @@ static int pack_string(grib_accessor*, const char*, size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
 static int unpack_string (grib_accessor*, char*, size_t *len);
 static size_t string_length(grib_accessor*);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
@@ -209,9 +209,10 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len){
   return 0;
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
-	return 1;
+    *count=1;
+    return 0;
 }
 
 static size_t string_length(grib_accessor* a)

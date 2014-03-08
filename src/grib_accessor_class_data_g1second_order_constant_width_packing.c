@@ -53,7 +53,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -198,14 +198,15 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
 
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* numberOfSecondOrderPackedValues)
 {
-  long numberOfSecondOrderPackedValues=0;
+  int err=0;
   grib_accessor_data_g1second_order_constant_width_packing *self =(grib_accessor_data_g1second_order_constant_width_packing*)a;
+  *numberOfSecondOrderPackedValues=0;
 
-  if(grib_get_long_internal(a->parent->h,self->numberOfSecondOrderPackedValues,&numberOfSecondOrderPackedValues) != GRIB_SUCCESS)
-       return 0;
-     return numberOfSecondOrderPackedValues;
+  err=grib_get_long_internal(a->parent->h,self->numberOfSecondOrderPackedValues,numberOfSecondOrderPackedValues);
+
+  return err;
 
 }
 

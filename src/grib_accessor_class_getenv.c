@@ -37,7 +37,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int pack_string(grib_accessor*, const char*, size_t *len);
 static int unpack_string (grib_accessor*, char*, size_t *len);
 static size_t string_length(grib_accessor*);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -130,46 +130,47 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* args)
 {
-	grib_accessor_getenv* self = (grib_accessor_getenv*)a; 
-	static char undefined[]="undefined";
+    grib_accessor_getenv* self = (grib_accessor_getenv*)a;
+    static char undefined[]="undefined";
 
-	self->name=grib_arguments_get_string(a->parent->h,args,0);
-	self->default_value=grib_arguments_get_string(a->parent->h,args,1);
-	if (!self->default_value) self->default_value=undefined;
-	self->value=0;
+    self->name=grib_arguments_get_string(a->parent->h,args,0);
+    self->default_value=grib_arguments_get_string(a->parent->h,args,1);
+    if (!self->default_value) self->default_value=undefined;
+    self->value=0;
 }
 
 static int pack_string(grib_accessor* a, const char* val, size_t *len)
 {
-	return GRIB_NOT_IMPLEMENTED;
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int unpack_string(grib_accessor* a, char* val, size_t *len)
 {
-	grib_accessor_getenv* self = (grib_accessor_getenv*)a;
-	char* v=0;
-	size_t l=0;
+    grib_accessor_getenv* self = (grib_accessor_getenv*)a;
+    char* v=0;
+    size_t l=0;
 
-	if (!self->value) {
-		v=getenv(self->name);
-		if (!v) v=(char*)self->default_value;
-		self->value=v;
-	}
+    if (!self->value) {
+        v=getenv(self->name);
+        if (!v) v=(char*)self->default_value;
+        self->value=v;
+    }
 
-	l=strlen(self->value);
-	if (*len<l) return GRIB_ARRAY_TOO_SMALL;
-	sprintf(val,"%s",self->value);
-	*len=strlen(self->value);
+    l=strlen(self->value);
+    if (*len<l) return GRIB_ARRAY_TOO_SMALL;
+    sprintf(val,"%s",self->value);
+    *len=strlen(self->value);
 
-	return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a, long* count)
 {
-	return 0;
+    *count = 1;
+    return 0;
 }
 
 static size_t string_length(grib_accessor* a)
 {
-	return 1024;
+    return 1024;
 }

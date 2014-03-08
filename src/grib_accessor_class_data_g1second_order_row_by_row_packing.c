@@ -53,7 +53,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -198,7 +198,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
 
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* count)
 {
 	grib_accessor_data_g1second_order_row_by_row_packing *self =(grib_accessor_data_g1second_order_row_by_row_packing*)a;
 	long n=0,i=0;
@@ -231,6 +231,7 @@ static long value_count(grib_accessor* a)
 		if((ret=grib_get_long_array(a->parent->h,self->pl,pl,&plSize)) != GRIB_SUCCESS)
 			return ret;
 	}
+  ret=0;
 
 	n=0;
 	if (bitmapPresent) {
@@ -258,7 +259,8 @@ static long value_count(grib_accessor* a)
 		}
 	}
 
-	return n;
+  *count=n;
+  return ret;
 
 }
 

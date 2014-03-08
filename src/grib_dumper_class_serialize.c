@@ -314,11 +314,14 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
   char* pc=NULL;
   char* pcf=NULL;
   size_t size=0;
+  long count=0;
   values_format=default_format;
 
   if((a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY))
     return;
-  size=grib_value_count(a);
+
+  grib_value_count(a,&count);
+  size=count;
 
   if (self->format) {
     if (self->format[0]=='\"') values_format=self->format+1;

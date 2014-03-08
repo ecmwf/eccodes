@@ -34,7 +34,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int pack_double(grib_accessor*, const double* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -131,108 +131,101 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
-  grib_accessor_data_g2secondary_bitmap *self =(grib_accessor_data_g2secondary_bitmap*)a;
-  self->number_of_values   = grib_arguments_get_name(a->parent->h,args,4);
+    grib_accessor_data_g2secondary_bitmap *self =(grib_accessor_data_g2secondary_bitmap*)a;
+    self->number_of_values   = grib_arguments_get_name(a->parent->h,args,4);
 }
 
-
-
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* len)
 {
-  grib_accessor_data_g2secondary_bitmap *self =(grib_accessor_data_g2secondary_bitmap*)a;
-  int err = 0;
-  long len;
+    grib_accessor_data_g2secondary_bitmap *self =(grib_accessor_data_g2secondary_bitmap*)a;
+    *len = 0;
 
-  if((err = grib_get_long_internal(a->parent->h,self->number_of_values,&len)) != GRIB_SUCCESS)
-    return 0;
-
-return len;
+    return grib_get_long_internal(a->parent->h,self->number_of_values,len);
 }
-
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-  grib_accessor_data_g2secondary_bitmap* self =  (grib_accessor_data_g2secondary_bitmap*)a;
+    grib_accessor_data_g2secondary_bitmap* self =  (grib_accessor_data_g2secondary_bitmap*)a;
 
-  int err = 0;
+    int err = 0;
 
-  long primary_len = 0;
-  long secondary_len = 0;
-  double* primary_bitmap = NULL;
-  double* secondary_bitmap = NULL;
-  long i = 0;
-  long j = 0;
-  long on = 0;
-  long k;
-  long m;
-  double missing_value = 0;
-  double present_value = 0;
-  long expand_by =0;
+    long primary_len = 0;
+    long secondary_len = 0;
+    double* primary_bitmap = NULL;
+    double* secondary_bitmap = NULL;
+    long i = 0;
+    long j = 0;
+    long on = 0;
+    long k;
+    long m;
+    double missing_value = 0;
+    double present_value = 0;
+    long expand_by =0;
 
-  if (*len ==0) return GRIB_NO_VALUES;
+    if (*len ==0) return GRIB_NO_VALUES;
 
-  if((err = grib_get_long(a->parent->h,self->expand_by,&expand_by)) != GRIB_SUCCESS)
-    return err;
+    if((err = grib_get_long(a->parent->h,self->expand_by,&expand_by)) != GRIB_SUCCESS)
+        return err;
 
-  if((err = grib_get_double_internal(a->parent->h,self->missing_value,&missing_value)) != GRIB_SUCCESS)
-    return err;
+    if((err = grib_get_double_internal(a->parent->h,self->missing_value,&missing_value)) != GRIB_SUCCESS)
+        return err;
 
-  Assert(expand_by);
+    Assert(expand_by);
 
-  if(*len % expand_by)
-  {
-    /*TODO: issue warning */
-    return GRIB_ENCODING_ERROR;
-  }
-
-  primary_len = *len / expand_by;
-  primary_bitmap= grib_context_malloc_clear(a->parent->h->context,primary_len*sizeof(double));
-  if(!primary_bitmap) return GRIB_OUT_OF_MEMORY;
-
-  secondary_len = *len ;
-  secondary_bitmap= grib_context_malloc_clear(a->parent->h->context,secondary_len*sizeof(double));
-  if(!secondary_bitmap) {
-    grib_context_free(a->parent->h->context,primary_bitmap);
-    return GRIB_OUT_OF_MEMORY;
-  }
-
-  if(missing_value == 0)
-    present_value = 1;
-  else
-    present_value = 0;
-
-  k = 0;
-  m = 0;
-  for(i=0; i<*len ; i += expand_by)
-  {
-    int cnt = 0;
-    for(j = 0; j < expand_by; j++)
-      if(val[i+j] == missing_value)
-        cnt++;
-
-    if(cnt == expand_by) /* all expand_by values are missing */
-      primary_bitmap[k++] = missing_value;
-    else {
-      primary_bitmap[k++] = present_value;
-      for(j = 0; j < expand_by; j++)
-        secondary_bitmap[m++] = val[i+j];
-      on++;
+    if(*len % expand_by)
+    {
+        /*TODO: issue warning */
+        return GRIB_ENCODING_ERROR;
     }
-  }
 
-  *len = k;
+    primary_len = *len / expand_by;
+    primary_bitmap= grib_context_malloc_clear(a->parent->h->context,primary_len*sizeof(double));
+    if(!primary_bitmap) return GRIB_OUT_OF_MEMORY;
 
-  Assert(k == primary_len);
+    secondary_len = *len ;
+    secondary_bitmap= grib_context_malloc_clear(a->parent->h->context,secondary_len*sizeof(double));
+    if(!secondary_bitmap) {
+        grib_context_free(a->parent->h->context,primary_bitmap);
+        return GRIB_OUT_OF_MEMORY;
+    }
 
-  err = grib_set_double_array_internal(a->parent->h,self->primary_bitmap,primary_bitmap,k);
-  if(err == GRIB_SUCCESS)
-    err = grib_set_double_array_internal(a->parent->h,self->secondary_bitmap,secondary_bitmap,m);
+    if(missing_value == 0)
+        present_value = 1;
+    else
+        present_value = 0;
 
-  grib_context_free(a->parent->h->context,primary_bitmap);
-  grib_context_free(a->parent->h->context,secondary_bitmap);
+    k = 0;
+    m = 0;
+    for(i=0; i<*len ; i += expand_by)
+    {
+        int cnt = 0;
+        for(j = 0; j < expand_by; j++)
+            if(val[i+j] == missing_value)
+                cnt++;
 
-  if(err == GRIB_SUCCESS)
-    err = grib_set_long_internal(a->parent->h,self->number_of_values,*len * expand_by);
+        if(cnt == expand_by) /* all expand_by values are missing */
+            primary_bitmap[k++] = missing_value;
+        else {
+            primary_bitmap[k++] = present_value;
+            for(j = 0; j < expand_by; j++)
+                secondary_bitmap[m++] = val[i+j];
+            on++;
+        }
+    }
 
-  return err;
+    *len = k;
+
+    Assert(k == primary_len);
+
+    err = grib_set_double_array_internal(a->parent->h,self->primary_bitmap,primary_bitmap,k);
+    if(err == GRIB_SUCCESS)
+        err = grib_set_double_array_internal(a->parent->h,self->secondary_bitmap,secondary_bitmap,m);
+
+    grib_context_free(a->parent->h->context,primary_bitmap);
+    grib_context_free(a->parent->h->context,secondary_bitmap);
+
+    if(err == GRIB_SUCCESS)
+        err = grib_set_long_internal(a->parent->h,self->number_of_values,*len * expand_by);
+
+    return err;
 }

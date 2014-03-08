@@ -40,7 +40,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_long(grib_accessor*, const long* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
-static long value_count(grib_accessor*);
+static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -154,7 +154,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     grib_accessor_select_step_template* self = (grib_accessor_select_step_template*)a;
     long productDefinitionTemplateNumber=0;
     long productDefinitionTemplateNumberNew=0;
-
+/*TODO chemicals*/
     grib_get_long(a->parent->h, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber);
 
     if (self->instant) {
@@ -266,7 +266,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     return 0;
 }
 
-static long value_count(grib_accessor* a)
+static int value_count(grib_accessor* a,long* c)
 {
-    return 1;
+    *c=1;
+    return 0;
 }
