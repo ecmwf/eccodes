@@ -179,6 +179,14 @@ int grib_tool_new_filename_action(grib_runtime_options* options,const char* file
 
 int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
 {
+    struct stat s;
+    int stat_val = stat(file->name, &s);
+    if ( stat_val == 0 ) {
+        if (S_ISDIR(s.st_mode)) {
+            fprintf(stderr, "ERROR: \"%s\": Is a directory\n", file->name);
+            exit(1);
+        }
+    }
     return 0;
 }
 
