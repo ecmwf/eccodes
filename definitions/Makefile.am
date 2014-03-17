@@ -30,6 +30,7 @@ definitionsgrib1dir = @GRIB_DEFINITION_PATH@/grib1
 dist_definitionsgrib1_DATA = \
 	grib1/0.ecmf.table\
 	grib1/0.eswi.table\
+	grib1/0.rjtd.table\
 	grib1/0.table\
 	grib1/1.table\
 	grib1/10.table\
@@ -244,9 +245,20 @@ dist_definitionsgrib1_DATA = \
 	grib1/section.5.def\
 	grib1/sensitive_area_domain.def\
 	grib1/shortName.def\
+	grib1/stepType.def\
 	grib1/tube_domain.def\
 	grib1/typeOfLevel.def\
 	grib1/units.def
+
+definitionsgrib1_local_ecmfdir = @GRIB_DEFINITION_PATH@/grib1/local/ecmf
+dist_definitionsgrib1_local_ecmf_DATA = \
+	grib1/local/ecmf/3.table
+
+definitionsgrib1_local_rjtddir = @GRIB_DEFINITION_PATH@/grib1/local/rjtd
+dist_definitionsgrib1_local_rjtd_DATA = \
+	grib1/local/rjtd/252.table\
+	grib1/local/rjtd/3.table\
+	grib1/local/rjtd/5.table
 
 definitionsgrib1_localConcepts_ammcdir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/ammc
 dist_definitionsgrib1_localConcepts_ammc_DATA = \
@@ -269,6 +281,7 @@ dist_definitionsgrib1_localConcepts_ecmf_DATA = \
 	grib1/localConcepts/ecmf/name.def\
 	grib1/localConcepts/ecmf/paramId.def\
 	grib1/localConcepts/ecmf/shortName.def\
+	grib1/localConcepts/ecmf/stepType.def\
 	grib1/localConcepts/ecmf/typeOfLevel.def\
 	grib1/localConcepts/ecmf/units.def
 
@@ -337,6 +350,8 @@ dist_definitionsgrib1_localConcepts_rjtd_DATA = \
 	grib1/localConcepts/rjtd/name.def\
 	grib1/localConcepts/rjtd/paramId.def\
 	grib1/localConcepts/rjtd/shortName.def\
+	grib1/localConcepts/rjtd/stepType.def\
+	grib1/localConcepts/rjtd/typeOfLevel.def\
 	grib1/localConcepts/rjtd/units.def
 
 definitionsgrib1_localConcepts_sbsjdir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/sbsj

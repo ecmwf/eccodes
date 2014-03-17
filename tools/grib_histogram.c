@@ -98,7 +98,8 @@ int main(int argc, const char *argv[])
 				{
 					if(values[j] != missing)
 					{
-						int x = (values[j] - min)/delta * (count-1) + 0.5;
+						int x = (values[j] - min)/delta * count;
+					        if(x==count) x=x-1; /*handle the absolute  maximum*/
 						intervals[x]++;
 					}
 				}
@@ -117,7 +118,8 @@ int main(int argc, const char *argv[])
 
 				for(j = 0; j < size; j++)
 				{
-					int x = (values[j] - min)/delta * (count-1) + 0.5;
+					int x = (values[j] - min)/delta * count;
+					if(x==count) x=x-1; /*handle the absolute  maximum*/
 					intervals[x]++;
 				}
 			}

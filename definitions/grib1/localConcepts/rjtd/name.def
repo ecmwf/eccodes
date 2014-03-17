@@ -444,6 +444,11 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 253 ;
 	}
+#Type of vegetation
+'Type of vegetation' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 252 ;
+	}
 #Virtual temperature
 'Virtual temperature' = {
 	 table2Version = 200 ;

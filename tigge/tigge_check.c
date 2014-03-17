@@ -18,6 +18,7 @@
 #include <math.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include <assert.h>
 
 #define CHECK(a)  check(#a,a)
 #define WARN(a)   warn(#a,a)
@@ -25,7 +26,9 @@
 
 typedef struct pair {
 	const char* key;
-	long       value;
+        int         key_type;
+        long        value_long;
+        char*       value_string;
 } pair;
 
 typedef struct parameter parameter;
@@ -312,6 +315,7 @@ void gaussian_grid(grib_handle* h)
 
 }
 
+
 static void check_range(grib_handle* h,const parameter* p,double min,double max)
 {
 	if(!valueflg)
@@ -349,15 +353,18 @@ static void point_in_time(grib_handle* h,const parameter* p,double min,double ma
 
 	case 3: /* Control forecast products */
 		CHECK(eq(h,"productDefinitionTemplateNumber",1));
-		CHECK(eq(h,"perturbationNumber",0));
+  		CHECK(eq(h,"perturbationNumber",0));
 		CHECK(ne(h,"numberOfForecastsInEnsemble",0));
 		break;
 
 	case 4: /* Perturbed forecast products */
+  		CHECK(ne(h,"perturbationNumber",0));
+		CHECK(ne(h,"numberOfForecastsInEnsemble",0));
 		CHECK(eq(h,"productDefinitionTemplateNumber",1));
 		if (is_lam) {
 			CHECK(le(h,"perturbationNumber",get(h,"numberOfForecastsInEnsemble")));
 		} else {
+                /* Is there always cf in tigge global datasets?? */
 			CHECK(le(h,"perturbationNumber",get(h,"numberOfForecastsInEnsemble")-1));
 		}
 		break;
@@ -581,7 +588,7 @@ static void given_level(grib_handle* h,const parameter* p,double min,double max)
 
 	CHECK(eq(h,"typeOfSecondFixedSurface",255));
 	CHECK(missing(h,"scaleFactorOfSecondFixedSurface"));
-	CHECK(missing(h,"scaleFactorOfSecondFixedSurface"));
+	CHECK(missing(h,"scaledValueOfSecondFixedSurface"));
 }
 
 static void predefined_level(grib_handle* h,const parameter* p,double min,double max)
@@ -592,7 +599,7 @@ static void predefined_level(grib_handle* h,const parameter* p,double min,double
 
 	CHECK(eq(h,"typeOfSecondFixedSurface",255));
 	CHECK(missing(h,"scaleFactorOfSecondFixedSurface"));
-	CHECK(missing(h,"scaleFactorOfSecondFixedSurface"));
+	CHECK(missing(h,"scaledValueOfSecondFixedSurface"));
 }
 
 static void predefined_thickness(grib_handle* h,const parameter* p,double min,double max)
@@ -603,7 +610,7 @@ static void predefined_thickness(grib_handle* h,const parameter* p,double min,do
 
 	CHECK(ne(h,"typeOfSecondFixedSurface",255));
 	CHECK(missing(h,"scaleFactorOfSecondFixedSurface"));
-	CHECK(missing(h,"scaleFactorOfSecondFixedSurface"));
+	CHECK(missing(h,"scaledValueOfSecondFixedSurface"));
 }
 
 static void given_thickness(grib_handle* h,const parameter* p,double min,double max)
@@ -614,7 +621,7 @@ static void given_thickness(grib_handle* h,const parameter* p,double min,double 
 
 	CHECK(ne(h,"typeOfSecondFixedSurface",255));
 	CHECK(!missing(h,"scaleFactorOfSecondFixedSurface"));
-	CHECK(!missing(h,"scaleFactorOfSecondFixedSurface"));
+	CHECK(!missing(h,"scaledValueOfSecondFixedSurface"));
 }
 
 void latlon_grid(grib_handle* h)
@@ -733,7 +740,7 @@ void latlon_grid(grib_handle* h)
 
 void check_parameter(grib_handle* h,double min,double max)
 {
-	int i;
+	int i, err;
 	int best = -1;
 	int match = -1;
 
@@ -744,11 +751,34 @@ void check_parameter(grib_handle* h,double min,double max)
 		while(parameters[i].pairs[j].key != NULL)
 		{
 			long val = -1;
-			if(grib_get_long(h,parameters[i].pairs[j].key,&val) == GRIB_SUCCESS)
-				if(parameters[i].pairs[j].value == val)
-					matches++;
-			/* printf("%s %ld val -> %ld\n",parameters[i].pairs[j].key,parameters[i].pairs[j].value,val); */
+                        const int ktype = parameters[i].pairs[j].key_type;
+                        if (ktype == GRIB_TYPE_LONG) {
+                                if(grib_get_long(h,parameters[i].pairs[j].key,&val) == GRIB_SUCCESS) {
+                                        if(parameters[i].pairs[j].value_long == val) {
+                                                matches++;
+                                        }
+                                }
+                        }
+                        else if (ktype == GRIB_TYPE_STRING) {
+                                char strval[256]={0,};
+                                size_t len = 256;
+                                if (strcasecmp(parameters[i].pairs[j].value_string,"MISSING")==0) {
+                                        int is_miss = grib_is_missing(h, parameters[i].pairs[j].key, &err);
+                                        if (err == GRIB_SUCCESS && is_miss) {
+                                                matches++;
+                                        }
+                                } 
+                                else if(grib_get_string(h,parameters[i].pairs[j].key,strval,&len) == GRIB_SUCCESS) {
+                                        if(strcmp(parameters[i].pairs[j].value_string, strval) == 0) {
+                                                matches++;
+                                        }
+                                }
+                        }
+                        else {
+                                assert(!"Unknown key type");
+                        }
 			j++;
+                     /* printf("%s %ld val -> %d %d %ld %d\n",parameters[i].pairs[j].key,parameters[i].pairs[j].value,val,matches,j,best); */
 		}
 
 		if(matches == j && matches > best)
@@ -761,15 +791,26 @@ void check_parameter(grib_handle* h,double min,double max)
 	if(match >= 0)
 	{
 
+	  	/*int j = 0;*/
 		param = parameters[match].name;
 		i = 0;
 		while(parameters[match].checks[i])
 			(*parameters[match].checks[i++])(h,&parameters[match],min,max);
-
+/*
+                printf("=========================\n");
+                printf("%s -> %d %d\n",param, match, best);
+                while(parameters[match].pairs[j].key != NULL)
+                {
+                     printf("%s val -> %ld %d\n",parameters[match].pairs[j].key,parameters[match].pairs[j].value,j);
+                     j++;
+                }
+                printf("matched parameter: %s\n", param);
+*/
 	}
 	else
 	{
 		printf("%s, field %d [%s]: cannot match parameter\n",file,field,param);
+		X(origin);
 		X(discipline);
 		X(parameterCategory);
 		X(parameterNumber);
@@ -784,88 +825,13 @@ void check_parameter(grib_handle* h,double min,double max)
 	}
 }
 
+
 void verify(grib_handle* h)
 {
 	double min = 0,max = 0;
 
 	CHECK(eq(h,"editionNumber",2));
 	CHECK(missing(h,"reserved") || eq(h,"reserved",0));
-
-	/* Section 1 */
-
-	CHECK(ge(h,"gribMasterTablesVersionNumber",4)); 
-	CHECK(eq(h,"versionNumberOfGribLocalTables",0)); /* Local tables not used */
-
-	CHECK(eq(h,"significanceOfReferenceTime",1)); /* Start of forecast */
-
-	/* Check if the date is OK */
-	{
-		long date = get(h,"date");
-		/* CHECK(date > 20060101); */
-
-		CHECK( (date / 10000)         == get(h,"year"));
-		CHECK( ((date % 10000) / 100) == get(h,"month"));
-		CHECK( ((date % 100))         == get(h,"day"));
-	}
-
-	/* Only 00, 06 12 and 18 Cycle OK */
-	CHECK(eq(h,"hour",0) || eq(h,"hour",6) || eq(h,"hour",12) || eq(h,"hour",18));
-	CHECK(eq(h,"minute",0)); 
-	CHECK(eq(h,"second",0)); 
-
-	CHECK(eq(h,"productionStatusOfProcessedData",4)||eq(h,"productionStatusOfProcessedData",5)); /*  TIGGE Operational */
-
-	if (!is_lam){
-		CHECK((get(h,"step") % 6) == 0);
-	}
-	else
-	{
-		CHECK((get(h,"step") % 3) == 0);
-	}
-	CHECK(ge(h,"startStep",0));
-	CHECK(le(h,"endStep",30*24));
-
-	/* 2 = analysis or forecast , 3 = control forecast, 4 = perturbed forecast */
-	CHECK(eq(h,"typeOfProcessedData",2)||eq(h,"typeOfProcessedData",3)||eq(h,"typeOfProcessedData",4)); 
-
-	/* TODO: validate local usage. Empty for now */
-	/* CHECK(eq(h,"section2.sectionLength",5)); */
-
-	/* Section 3 */
-
-	CHECK(eq(h,"sourceOfGridDefinition",0)); /* Specified in Code table 3.1 */
-
-	switch(get(h,"gridDefinitionTemplateNumber"))
-	{
-	case 0:
-	case 1: /*rotated latlon*/
-		latlon_grid(h);
-		break;
-
-	case 40:
-		gaussian_grid(h);
-		break;
-
-
-	default:
-		printf("%s, field %d [%s]: Unsupported gridDefinitionTemplateNumber %ld\n",
-				file,field,param,
-				get(h,"gridDefinitionTemplateNumber"));
-		error++;
-		return;
-		break;
-	}
-
-	/* If there is no bitmap, this should be true */
-	/* CHECK(eq(h,"bitMapIndicator",255));*/
-
-	if(eq(h,"bitMapIndicator",255))
-		CHECK(get(h,"numberOfValues") == get(h,"numberOfDataPoints"));
-	else
-		CHECK(get(h,"numberOfValues") <= get(h,"numberOfDataPoints"));
-
-	/* Check values */
-	CHECK(eq(h,"typeOfOriginalFieldValues",0)); /* Floating point */
 
 	if (valueflg)
 	{
@@ -933,7 +899,91 @@ void verify(grib_handle* h)
 		}
 		free(values);
 	}
+
 	check_parameter(h,min,max);
+
+	/* Section 1 */
+
+	CHECK(ge(h,"gribMasterTablesVersionNumber",4)); 
+	CHECK(eq(h,"versionNumberOfGribLocalTables",0)); /* Local tables not used */
+
+	CHECK(eq(h,"significanceOfReferenceTime",1)); /* Start of forecast */
+
+	/* Check if the date is OK */
+	{
+		long date = get(h,"date");
+		/* CHECK(date > 20060101); */
+
+		CHECK( (date / 10000)         == get(h,"year"));
+		CHECK( ((date % 10000) / 100) == get(h,"month"));
+		CHECK( ((date % 100))         == get(h,"day"));
+	}
+
+	/* Only 00, 06 12 and 18 Cycle OK */
+	if (!is_lam){
+	        CHECK(eq(h,"hour",0) || eq(h,"hour",6) || eq(h,"hour",12) || eq(h,"hour",18));
+	}
+	else
+	{
+	        CHECK(eq(h,"hour",0) || eq(h,"hour",3) || eq(h,"hour",6) || eq(h,"hour",9) || eq(h,"hour",12) || eq(h,"hour",15) || eq(h,"hour",18) || eq(h,"hour",21));
+	}
+	CHECK(eq(h,"minute",0)); 
+	CHECK(eq(h,"second",0)); 
+
+	CHECK(eq(h,"productionStatusOfProcessedData",4)||eq(h,"productionStatusOfProcessedData",5)); /*  TIGGE Operational */
+
+	if (!is_lam){
+		CHECK((get(h,"step") % 6) == 0);
+	}
+	else
+	{
+		CHECK((get(h,"step") % 3) == 0);
+	}
+	CHECK(ge(h,"startStep",0));
+	CHECK(le(h,"endStep",30*24));
+
+	/* 2 = analysis or forecast , 3 = control forecast, 4 = perturbed forecast */
+	CHECK(eq(h,"typeOfProcessedData",2)||eq(h,"typeOfProcessedData",3)||eq(h,"typeOfProcessedData",4)); 
+
+	/* TODO: validate local usage. Empty for now */
+	/* CHECK(eq(h,"section2.sectionLength",5)); */
+
+	/* Section 3 */
+
+	CHECK(eq(h,"sourceOfGridDefinition",0)); /* Specified in Code table 3.1 */
+
+	switch(get(h,"gridDefinitionTemplateNumber"))
+	{
+	case 0:
+	case 1: /*rotated latlon*/
+		latlon_grid(h);
+		break;
+
+	case 40:
+		gaussian_grid(h);
+		break;
+
+
+	default:
+		printf("%s, field %d [%s]: Unsupported gridDefinitionTemplateNumber %ld\n",
+				file,field,param,
+				get(h,"gridDefinitionTemplateNumber"));
+		error++;
+		return;
+		break;
+	}
+
+	/* If there is no bitmap, this should be true */
+	/* CHECK(eq(h,"bitMapIndicator",255));*/
+
+	if(eq(h,"bitMapIndicator",255))
+		CHECK(get(h,"numberOfValues") == get(h,"numberOfDataPoints"));
+	else
+		CHECK(get(h,"numberOfValues") <= get(h,"numberOfDataPoints"));
+
+	/* Check values */
+	CHECK(eq(h,"typeOfOriginalFieldValues",0)); /* Floating point */
+
 
 }
 

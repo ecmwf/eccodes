@@ -1,4 +1,5 @@
 # CODE TABLE 3 Fixed levels or layers for which the data are included
+# For JMA - Japanese Meteorological Agency
 0 0 Reserved
 1 sfc Surface (of the Earth, which includes sea surface)
 2 sfc Cloud base level
@@ -47,5 +48,11 @@
 201 201 Entire ocean considered as a single layer 0 (2 octets)
 # 202-209 Reserved
 210 pl Isobaric surface (Pa) (ECMWF extension)
+
 # 211-254 Reserved for local use
+# JRA55 levels
+211 sfc Entire soil (considered as a single layer)
+212 sfc The bottom of land surface model
+213 sfc Underground layer number of land surface model
+
 255 255 Indicates a missing value

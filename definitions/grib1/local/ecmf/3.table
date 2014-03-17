@@ -48,4 +48,6 @@
 # 202-209 Reserved
 210 pl Isobaric surface (Pa) (ECMWF extension)
 # 211-254 Reserved for local use
+211 wv Ocean wave level (ECMWF extension)
+212 oml Ocean mixed layer (ECMWF extension)
 255 255 Indicates a missing value

@@ -7,8 +7,8 @@
 5 5 Difference (reference time + P2 minus reference time + P1) product considered valid at reference time + P2
 6 6 Average (reference time - P1 to reference time - P2)
 7 7 Average (reference time - P1 to reference time + P2)
-10 10   P1 occupies octets 19 and 20; product valid at reference time + P1
-51 51   Climatological Mean Value:
+10 10 P1 occupies octets 19 and 20; product valid at reference time + P1
+51 51 Climatological Mean Value:
 113 113 Average of N forecasts (or initialized analyses); each product has forecast period of P1 (P1=0 for initialized analyses); products have reference times at intervals of P2, beginning at the given reference time.
 114 114 Accumulation of N forecasts (or initialized analyses); each product has forecast period of P1 (P1=0 for initialized analyses); products have reference times at intervals of P2, beginning at the given reference time.
 115 115 Average of N forecasts, all with the same reference time; the first has a forecast period of P1, the remaining forecasts follow at intervals of P2.
@@ -19,3 +19,9 @@
 123 123 Average of N uninitialized analyses, starting at the reference time, at intervals of P2.
 124 124 Accumulation of N uninitialized analyses, starting at the reference time, at intervals of P2.
 125 125 Standard deviation of N forecasts, all with the same reference time with respect to time average of the time tendency of forecasts; the first forecast has a forecast period of P1, the remaining forecasts follow at intervals of P2
+# For JRA55
+128 128 Average of N forecast products with a valid time ranging between reference time + P1 and reference time + P2; products have reference times at Intervals of 24 hours, beginning at the given reference time
+129 129 Temporal variance of N forecasts; each product has valid time ranging between reference time + P1 and reference time + P2; products have reference times at intervals of 24 hours, beginning at the given reference time; unit of measurement is square of that in Code Table 2
+130 130 Average of N forecast products; valid time of the first product ranges between R + P1 and R + P2, where R is reference time given in octets 13 to 17, then subsequent products have valid time range at interval of P2 - P1; thus all N products cover continuous time span; products have reference times at intervals of P2 - P1, beginning at the given reference time
+131 131 Temporal variance of N forecasts; valid time of the first product ranges between R + P1 and R + P2, where R is reference time given in octets 13 to 17, then subsequent products have valid time range at interval of P2 - P1; thus all N products cover continuous time span; products have reference times at intervals of P2 - P1, beginning at the given reference time; unit of measurement is square of that in Code Table 2
+132 132 Temporal variance of N uninitialized analyses [P1 = 0] or instantaneous forecasts [P1 > 0]; each product has valid time at the reference time + P1; products have reference times at intervals of P2, beginning at the given reference time; unit of measurement is square of that in Code Table 2

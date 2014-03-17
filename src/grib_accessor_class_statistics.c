@@ -161,8 +161,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     grib_accessor_statistics* self = (grib_accessor_statistics*)a;
     int ret = 0,i=0;
     double* values;
-    size_t size=0;
-    double max,min,avg,sd,value,skew,kurt,x;
+    size_t size=0, real_size=0;
+    double max,min,avg,sd,value,skew,kurt, m2=0,m3=0,m4=0;
     double missing=0;
     size_t number_of_missing=0;
     grib_context* c=a->parent->h->context;
@@ -209,17 +209,25 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     sd=0; skew=0; kurt=0;
     for (i=0;i<size;i++) {
         if (values[i] != missing) {
-            x=(avg-values[i])*(avg-values[i]);
-            sd+=x;
-            x*=(avg-values[i]);
-            skew+=x;
-            kurt+=x*(avg-values[i]);
+            double v = values[i] - avg;
+            double tmp = v*v;
+            m2 += tmp;
+            m3 += v*tmp;
+            m4 += tmp*tmp;
         }
     }
 
-    if (size-number_of_missing!=0)
-        sd=sqrt(sd/(size-number_of_missing));
-
+    real_size = size - number_of_missing;
+    if (real_size != 0) {
+        m2 /= real_size;
+        m3 /= real_size;
+        m4 /= real_size;
+        sd = sqrt(m2);
+    }
+    if(m2 != 0) {
+        skew = m3/(sd*sd*sd);
+        kurt = m4/(m2*m2)-3.0;
+    }
     a->dirty=0;
 
     grib_context_free(c,values);
@@ -241,8 +249,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
 static int value_count(grib_accessor* a,long* count) {
     grib_accessor_statistics* self = (grib_accessor_statistics*)a;
-  *count=self->number_of_elements;
-  return 0;
+    *count=self->number_of_elements;
+    return 0;
 }
 
 static void destroy(grib_context* c,grib_accessor* a)

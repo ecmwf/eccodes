@@ -444,6 +444,11 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 253 ;
 	}
+#Type of vegetation
+'tovg' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 252 ;
+	}
 #Virtual temperature
 'vtmp' = {
 	 table2Version = 200 ;

@@ -219,7 +219,8 @@ static int u2s[] =  {
 };
 
 
-int grib_g1_step_get_steps(grib_accessor* a,long* start,long* theEnd) {
+int grib_g1_step_get_steps(grib_accessor* a,long* start,long* theEnd)
+{
     grib_accessor_g1step_range* self = (grib_accessor_g1step_range*)a;
     int err = 0;
     long p1 = 0,p2 = 0,unit = 0,timeRangeIndicator=0,timeRangeIndicatorFromStepRange=0;
@@ -291,7 +292,8 @@ int grib_g1_step_get_steps(grib_accessor* a,long* start,long* theEnd) {
     return 0;
 }
 
-static int unpack_string(grib_accessor* a, char* val, size_t *len) {
+static int unpack_string(grib_accessor* a, char* val, size_t *len)
+{
     grib_accessor_g1step_range* self = (grib_accessor_g1step_range*)a;
     char buf[100];
     size_t size=0;
@@ -350,8 +352,12 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len) {
             (strcmp(stepType,"min") == 0) ||
             (strcmp(stepType,"max") == 0) ||
             (strcmp(stepType,"rms") == 0) ||
-            (strcmp(stepType,"diff") == 0)
-    )
+            (strcmp(stepType,"diff") == 0)  ||
+            (strcmp(stepType,"avgas") == 0) ||
+            (strcmp(stepType,"avgad") == 0) ||
+            (strcmp(stepType,"varas") == 0) ||
+            (strcmp(stepType,"varad") == 0) ||
+            (strcmp(stepType,"vari") == 0) )
     {
         if(start == theEnd) {
             sprintf(buf,"%ld",theEnd);
@@ -379,7 +385,8 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len) {
 
 int grib_g1_step_apply_units(long *start,long *theEnd,long* step_unit,
         long *P1,long *P2,long* unit,
-        const int max,const int instant) {
+        const int max,const int instant)
+{
     int j=0;
     long start_sec,end_sec;
     int index=0;
@@ -430,7 +437,8 @@ int grib_g1_step_apply_units(long *start,long *theEnd,long* step_unit,
     return GRIB_WRONG_STEP;
 }
 
-static int pack_string(grib_accessor* a, const char* val, size_t *len){
+static int pack_string(grib_accessor* a, const char* val, size_t *len)
+{
     grib_accessor_g1step_range* self = (grib_accessor_g1step_range*)a;
     grib_handle* h=a->parent->h;
     long timeRangeIndicator=0,P1=0,P2=0;
@@ -647,12 +655,14 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
         return pack_string( a,buff,&bufflen);
     default :
         Assert(self->pack_index<2);
+        break;
     }
 
     return GRIB_INTERNAL_ERROR;
 }
 
-static int unpack_long(grib_accessor* a, long* val, size_t *len) {
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
+{
     grib_accessor_g1step_range* self = (grib_accessor_g1step_range*)a;
     char buff[100];
     size_t bufflen=100;
@@ -679,11 +689,13 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len) {
     return 0;
 }
 
-static int  get_native_type(grib_accessor* a){
+static int  get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_STRING;
 }
 
-static void destroy(grib_context* c,grib_accessor* a)  {
+static void destroy(grib_context* c,grib_accessor* a)
+{
     grib_accessor_g1step_range *self = (grib_accessor_g1step_range*)a;
     grib_context_free(c,self->v);
 }

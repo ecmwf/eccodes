@@ -181,4 +181,5 @@
 249 249 VDFMRHBL Vertical diffusion moistening rate (kg kg**-1 per day) 
 250 250 SWHRHBL Solar radiative heating rate (K per day) 
 251 251 LWHRHBL Long wave radiative heating rate (K per day) 
+252 252 Type of vegetation (Code Table JMA-252)
 253 253 LRGMRHBL Large scale moistening rate (kg kg**-1 per day) 

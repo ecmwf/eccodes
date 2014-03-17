@@ -444,6 +444,11 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 253 ;
 	}
+#Type of vegetation
+'Code Table JMA-252' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 252 ;
+	}
 #Virtual temperature
 'K' = {
 	 table2Version = 200 ;

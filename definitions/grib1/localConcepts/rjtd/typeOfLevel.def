@@ -1,6 +1,5 @@
-# ECMWF concept type of level
-#set uses the last one
-#get returns the first match
+# Concepts for JMA levels
+#
 'surface'       = {indicatorOfTypeOfLevel=1;}
 'cloudBase'     = {indicatorOfTypeOfLevel=2;}
 'cloudTop'      = {indicatorOfTypeOfLevel=3;}
@@ -36,5 +35,9 @@
 'depthBelowSea' = {indicatorOfTypeOfLevel=160;}
 'entireAtmosphere' = {indicatorOfTypeOfLevel=200;level=0;}
 'entireOcean' = {indicatorOfTypeOfLevel=201;level=0;}
-'oceanWave' = {indicatorOfTypeOfLevel=211;}
-'oceanMixedLayer' = {indicatorOfTypeOfLevel=212;}
+#
+# The following are specific to JMA
+#
+'deepSoil'    = {indicatorOfTypeOfLevel=211;}
+'subSurface'  = {indicatorOfTypeOfLevel=212;}
+'threeLayers' = {indicatorOfTypeOfLevel=213;}
