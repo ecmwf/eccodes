@@ -242,13 +242,6 @@ static grib_handle* grib_handle_create ( grib_handle  *gl, grib_context* c,void*
 
 }
 
-grib_handle* grib_handle_new_from_template ( grib_context* c, const char* name )
-{
-	if ( !c ) c=grib_context_get_default();
-	/*grib_context_log(c,GRIB_LOG_WARNING,"grib_handle_new_from_template function is deprecated, please use grib_handle_new_from_samples\n");*/
-	return grib_handle_new_from_samples ( c,name );
-}
-
 grib_handle* grib_handle_new_from_samples ( grib_context* c, const char* name )
 {
 	grib_handle* g = 0;
@@ -274,31 +267,31 @@ grib_handle* grib_handle_new_from_samples ( grib_context* c, const char* name )
 
 int grib_write_message(grib_handle* h,const char* file,const char* mode)
 {
-	FILE* fh=0;
-	int err;
-	const void *buffer; size_t size;
+    FILE* fh=0;
+    int err;
+    const void *buffer; size_t size;
 
-	fh=fopen(file,mode);
-	if (!fh) {
-		perror(file);
-		return GRIB_IO_PROBLEM;
-	}
-	err=grib_get_message(h,&buffer,&size);
+    fh=fopen(file,mode);
+    if (!fh) {
+        perror(file);
+        return GRIB_IO_PROBLEM;
+    }
+    err=grib_get_message(h,&buffer,&size);
     if (err) {
         fclose(fh);
         return err;
     }
 
-	if(fwrite(buffer,1,size,fh) != size) {
-		perror(file);
+    if(fwrite(buffer,1,size,fh) != size) {
+        perror(file);
         fclose(fh);
-		return GRIB_IO_PROBLEM;
-	}
-	if (fclose(fh) != 0) {
-		perror(file);
-		return GRIB_IO_PROBLEM;
-	}
-	return 0;
+        return GRIB_IO_PROBLEM;
+    }
+    if (fclose(fh) != 0) {
+        perror(file);
+        return GRIB_IO_PROBLEM;
+    }
+    return 0;
 }
 
 grib_handle* grib_handle_clone ( grib_handle* h )

@@ -738,7 +738,6 @@ void grib_empty_section(grib_context *c, grib_section *b);
 void grib_section_delete(grib_context *c, grib_section *b);
 int grib_handle_delete(grib_handle *h);
 grib_handle *grib_new_handle(grib_context *c);
-grib_handle *grib_handle_new_from_template(grib_context *c, const char *name);
 grib_handle *grib_handle_new_from_samples(grib_context *c, const char *name);
 int grib_write_message(grib_handle *h, const char *file, const char *mode);
 grib_handle *grib_handle_clone(grib_handle *h);

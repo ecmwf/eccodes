@@ -48,7 +48,7 @@ static void check(int code,const char* name)
 static grib_handle* handle()
 {
 	if(h == 0)
-		h = grib_handle_new_from_template(NULL,"GRIB1");
+		h = grib_handle_new_from_samples(NULL,"GRIB1");
 	/* grib_dump_content(h,stdout,"debug",~0,NULL); */
 	return h;
 }

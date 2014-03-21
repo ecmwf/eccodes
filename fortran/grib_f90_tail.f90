@@ -1388,37 +1388,6 @@
       endif
   end subroutine grib_new_from_samples
 
-  !> THIS FUNCTION IS DEPRECATED AND IT WILL DISAPPEAR FROM THE VERSION 2.0
-  !> Create a new valid gribid from a template.
-  !>
-  !> Valid templates are stored in the directory pointed by the\n
-  !> environment variable GRIB_TEMPLATES_PATH or in a templates\n
-  !> default directory if this variable is not defined.\n
-  !> To know where the templates directory is run the grib_info tool.\n
-  !>
-  !> In case of error, if the status parameter (optional) is not given, the program will
-  !> exit with an error message.\n Otherwise the error message can be
-  !> gathered with @ref grib_get_error_string.
-  !>
-  !>
-  !> \b Examples: \ref template.f90 "template.f90"
-  !>
-  !> @param gribid       id of the grib loaded in memory
-  !> @param templatename name of the template to be used
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
-  subroutine grib_new_from_template  ( gribid, templatename, status )
-      integer(kind=kindOfInt),          intent(out) :: gribid
-      character(len=*), intent(in)                  :: templatename
-      integer(kind=kindOfInt),optional, intent(out) :: status
-      integer(kind=kindOfInt)                       :: iret
-
-      iret=grib_f_new_from_template ( gribid, templatename )
-      if (present(status)) then
-         status = iret
-      else
-         call grib_check(iret,'grib_new_from_template','('//templatename//')')
-      endif
-  end subroutine grib_new_from_template
 
   !> Free the memory for the message referred as gribid.
   !>

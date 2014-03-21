@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 	long numberOfPointsAlongAParallel,numberOfPointsAlongAMeridian,numberOfPoints,i,j,k;
 	int option_flags;
 
-  h = grib_handle_new_from_template(0,"bitmap");
+  h = grib_handle_new_from_samples(0,"bitmap");
   if(!h) {
 		printf("ERROR: Unable to create grib handle\n");
 		exit(1);

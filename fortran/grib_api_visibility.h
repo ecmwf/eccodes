@@ -10,7 +10,7 @@ public :: grib_skip_computed, &
           grib_skip_read_only
 public :: grib_keys_iterator_get_name, &
           grib_keys_iterator_rewind
-public :: grib_new_from_message, grib_new_from_template, &
+public :: grib_new_from_message, &
           grib_new_from_samples, grib_new_from_file, &
 		  grib_read_from_file,grib_headers_only_new_from_file
 public :: grib_release

@@ -27,7 +27,6 @@ int grib_c_keys_iterator_rewind(int *kiter);
 int grib_c_new_from_message(int *gid, void *buffer, size_t *bufsize);
 int grib_c_new_from_message_copy(int *gid, void *buffer, size_t *bufsize);
 int grib_c_new_from_samples(int *gid, char *name);
-int grib_c_new_from_template(int *gid, char *name);
 int grib_c_clone(int *gidsrc, int *giddest);
 int grib_c_copy_namespace(int *gidsrc, char *name, int *giddest);
 int grib_c_count_in_file(FILE *f, int *n);

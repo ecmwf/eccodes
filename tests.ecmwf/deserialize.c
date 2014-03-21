@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
   return ret;
 	
 #else
-	grib_handle* gh = grib_handle_new_from_template(NULL,"latlon");
+	grib_handle* gh = grib_handle_new_from_samples(NULL,"latlon");
 	grib_set_long(gh,"editionNumber",2);
 	grib_dump_content(gh,stdout,NULL,0,NULL);
 	  return 0;

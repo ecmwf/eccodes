@@ -207,14 +207,6 @@ int grib_new_from_samples__(int* gid, char* name , int lname){
   return  grib_f_new_from_samples_( gid,  name ,  lname);
 }
 
-int grib_new_from_template_(int* gid, char* name , int lname){
-  return  grib_f_new_from_template_( gid,  name ,  lname);
-}
-
-int grib_new_from_template__(int* gid, char* name , int lname){
-  return  grib_f_new_from_template_( gid,  name ,  lname);
-}
-
 int grib_clone_(int* gidsrc,int* giddest){
   return grib_f_clone_(gidsrc, giddest);
 }

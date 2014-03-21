@@ -194,7 +194,7 @@ int i;
 		exit(1);
 	}
 
-	grib_handle_delete(grib_handle_new_from_template(c,"latlon"));
+	grib_handle_delete(grib_handle_new_from_samples(c,"latlon"));
 
 	rewind(f);
 

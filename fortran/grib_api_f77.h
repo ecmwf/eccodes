@@ -6,8 +6,6 @@
       external grib_read_file
       integer grib_new_from_message
       external grib_new_from_message
-      integer grib_new_from_template
-      external grib_new_from_template
       integer grib_clone
       external grib_clone
       integer grib_new_from_file

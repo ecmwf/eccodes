@@ -14,7 +14,6 @@ integer, external :: grib_f_keys_iterator_get_name, &
                      grib_f_keys_iterator_rewind
 integer, external :: grib_f_new_from_message, &
                      grib_f_new_from_message_copy, &
-                     grib_f_new_from_template, &
                      grib_f_new_from_samples, &
                      grib_f_read_any_from_file, &
                      grib_f_new_from_file, &

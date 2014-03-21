@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 	
 	gc = grib_context_get_default();
 	
-	gh=grib_handle_new_from_template(NULL,"GRIB1");
+	gh=grib_handle_new_from_samples(NULL,"GRIB1");
 	
 	if (!gh) {
 		printf("Error: unable to create grib_handle\n");

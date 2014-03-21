@@ -461,16 +461,6 @@ grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data
 
 
 /**
-*  Create a handle from a read_only template resource.
-*  The message is copied at the creation of the handle
-*
-* @param c           : the context from which the handle will be created (NULL for default context)
-* @param res_name    : the resource name
-* @return            the new handle, NULL if the resource is invalid or a problem is encountered
-*/
-grib_handle* grib_handle_new_from_template (grib_context* c, const char* res_name)  ;
-
-/**
  *  Create a handle from a message contained in a samples directory.
  *  The message is copied at the creation of the handle
  *

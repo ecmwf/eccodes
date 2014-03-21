@@ -144,7 +144,7 @@
 !
 !************************************************************
 !
-      IRT= grib_new_from_template_(GBID2,"GRIB2")
+      IRT= grib_new_from_samples_(GBID2,"GRIB2")
       ISFOFFS=-9999
       IRT=grib_set_int_(GBID2,"editionNumber",2)
       IRT=grib_set_int_(GBID2,"dataRepresentationTemplateNumber",IVAL)
