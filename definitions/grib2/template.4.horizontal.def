@@ -65,8 +65,11 @@ concept_nofail vertical.typeOfLevel (unknown) {
   'pressureFromGroundLayer' = {typeOfFirstFixedSurface=108;typeOfSecondFixedSurface=108;}
   'potentialVorticity' = {typeOfFirstFixedSurface=109; typeOfSecondFixedSurface=255;}
   'eta' = {typeOfFirstFixedSurface=111;  typeOfSecondFixedSurface=255;}
-  'generalVertical' = {typeOfFirstFixedSurface=150;}
-  'generalVerticalLayer' = {typeOfFirstFixedSurface=150; typeOfSecondFixedSurface=150;}
+
+# In the case of Generalized vertical height coordinates, NV must be 6
+  'generalVertical' = {genVertHeightCoords=1; typeOfFirstFixedSurface=150; NV=6;}
+  'generalVerticalLayer' = {genVertHeightCoords=1; typeOfFirstFixedSurface=150; typeOfSecondFixedSurface=150; NV=6;}
+
   'depthBelowSea' = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=255;}
   'entireAtmosphere' = {typeOfFirstFixedSurface=1;typeOfSecondFixedSurface=8;}
   'entireOcean' = {typeOfFirstFixedSurface=1;typeOfSecondFixedSurface=9;}

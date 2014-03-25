@@ -35,7 +35,7 @@ if (section2Used == 1) {
       set_nofail productDefinitionTemplateNumber=productDefinitionTemplateNumberInternal;
    }
 }
-
+transient genVertHeightCoords = 0;
 template productDefinition "grib2/template.4.[productDefinitionTemplateNumber:l].def" ;
 
 if (defined(marsStream) && defined(marsType)) {
@@ -45,19 +45,19 @@ if (defined(marsStream) && defined(marsType)) {
 template parameters "grib2/parameters.def";
 
 # Detect if this is for Generalized vertical height coordinates
-transient genVertHeightCoords = 0;
 if (defined(typeOfFirstFixedSurface)) {
    if (typeOfFirstFixedSurface == 150) {
       transient genVertHeightCoords = 1;
       transient PVPresent = 0;
-      ieeefloat nlev  : dump ;
-      ieeefloat numberOfVGridUsed : dump;
-      byte[16] uuidOfVGrid : dump;
    }
 }
 
 if (genVertHeightCoords) {
    # Generalized vertical height coordinate case
+   ieeefloat nlev  : dump ;
+   ieeefloat numberOfVGridUsed : dump;
+   byte[16] uuidOfVGrid : dump;
+
    alias numberOfVerticalCoordinateValues = nlev;
    alias numberOfCoordinatesValues = nlev;
    alias numberOfVerticalGridDescriptors = nlev;

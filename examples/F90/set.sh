@@ -10,4 +10,8 @@
 . ./include.sh
 
 ${examples_dir}set > /dev/null
-rm -f out.grib1
+
+${examples_dir}set_gvc > /dev/null
+[ -f out_gvc.grib2 ]
+
+rm -f out.grib1 out_gvc.grib2

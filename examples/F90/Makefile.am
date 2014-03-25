@@ -8,7 +8,7 @@ TESTS = copy_message.sh get.sh get_data.sh get_pl.sh get_pv.sh keys_iterator.sh 
 noinst_PROGRAMS  = index copy_message get get_data get_pl get_pv keys_iterator \
                    multi_write multi nearest precision print_data set set_bitmap set_missing \
                    set_pv samples count_messages read_message read_from_file new_from_file \
-                   copy_namespace get_set_uuid
+                   copy_namespace get_set_uuid set_gvc
 
 index_SOURCES=index.f90
 copy_message_SOURCES=copy_message.f90
@@ -33,6 +33,7 @@ read_from_file_SOURCES=read_from_file.f90
 new_from_file_SOURCES=new_from_file.f90
 copy_namespace_SOURCES=copy_namespace.f90
 get_set_uuid_SOURCES=get_set_uuid.f90
+set_gvc_SOURCES=set_gvc.f90
 
 INCLUDES =  -I$(top_builddir)/src
 

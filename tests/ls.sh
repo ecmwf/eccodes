@@ -96,6 +96,9 @@ fi
 # GRIB-387 printing key of type byte
 ${tools_dir}grib_ls -p uuidOfVGrid test_uuid.grib2 > /dev/null
 
+type=`${tools_dir}grib_get -wcount=1 -p typeOfLevel test_uuid.grib2`
+[ "$type" = "generalVertical" ]
+
 # Clean up
 for f in $files2conv; do
   rm -f $f.grib2
