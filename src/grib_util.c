@@ -18,18 +18,18 @@
 /* Microsoft Windows Visual Studio support. Implementation of Unix rint() */
 double rint(double x)
 {
-	char * buf = 0;
-	int decimal=0, sign=0, err = 0;
-	double result = 0;
-	buf = (char*) malloc(_CVTBUFSIZE);
-	err = _fcvt_s(buf, _CVTBUFSIZE, x, 0, &decimal, &sign);
-	Assert(err == 0);
-	result = atof(buf);
-	if(sign == 1) {
-		result = result * -1;
-	}
-	free(buf);
-	return result;
+    char * buf = 0;
+    int decimal=0, sign=0, err = 0;
+    double result = 0;
+    buf = (char*) malloc(_CVTBUFSIZE);
+    err = _fcvt_s(buf, _CVTBUFSIZE, x, 0, &decimal, &sign);
+    Assert(err == 0);
+    result = atof(buf);
+    if(sign == 1) {
+        result = result * -1;
+    }
+    free(buf);
+    return result;
 }
 #endif
 
@@ -288,8 +288,8 @@ grib_string_list* grib_util_get_mars_param(const char* param_id) {
 static grib_trie* init_list(const char* name) {
     char *full_path=0;
     FILE* fh;
-    char s[100];
-    char param[100];
+    char s[101];
+    char param[101];
     grib_string_list* list=0;
     grib_string_list* next=0;
     grib_trie* trie_list;
@@ -304,11 +304,17 @@ static grib_trie* init_list(const char* name) {
 
     list=grib_context_malloc_clear(c,sizeof(grib_string_list));
     trie_list=grib_trie_new(c);
-    if (fscanf(fh,"%s",param)==EOF) return NULL;
-    while (fscanf(fh,"%s",s)!=EOF) {
+    if (fscanf(fh,"%100s",param)==EOF) {
+        fclose(fh);
+        return NULL;
+    }
+    while (fscanf(fh,"%100s",s)!=EOF) {
         if (!strcmp(s,"|")) {
             grib_trie_insert(trie_list, param,list);
-            if (fscanf(fh,"%s",param)==EOF) return trie_list;
+            if (fscanf(fh,"%100s",param)==EOF) {
+                fclose(fh);
+                return trie_list;
+            }
             list=NULL;
         } else {
             if (!list) {
@@ -324,7 +330,6 @@ static grib_trie* init_list(const char* name) {
     }
 
     fclose(fh);
-
     return 0;
 }
 
@@ -359,23 +364,20 @@ static void print_values(grib_context* c,const grib_util_grid_spec* spec,const d
 
             if(data_values[i] == spec->missingValue)
                 missing++;
-
-
         }
-
     }
 }
 
 #define     ISECTION_2  3000
 #define     ISECTION_4  512
 
-grib_handle* grib_util_set_spec(grib_handle* h, 
+grib_handle* grib_util_set_spec(grib_handle* h,
         const grib_util_grid_spec    *spec,
         const grib_util_packing_spec *packing_spec,
-        int		flags,
-        const double*                data_values,
-        size_t                       data_values_count,
-        int* err)
+        int                           flags,
+        const double*                 data_values,
+        size_t                        data_values_count,
+        int*                          err)
 {
 
 #define SET_LONG_VALUE(n,v)   do { Assert(count<1024); values[count].name = n; values[count].type = GRIB_TYPE_LONG;   values[count].long_value = v; count++; } while(0)
@@ -463,12 +465,13 @@ grib_handle* grib_util_set_spec(grib_handle* h,
                 break;
             case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
                 /* we delay the set of grid_second_order because we don't want
-							to do it on a field with bitsPerValue=0 */
+                   to do it on a field with bitsPerValue=0 */
                 setSecondOrder=1;
                 break;
             default :
                 printf("invalid packing_spec->packing_type = %ld\n",(long)packing_spec->packing_type);
                 abort();
+                break;
             }
             packingTypeIsSet=1;
         }
@@ -493,6 +496,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         default:
             printf("invalid packing_spec->accuracy = %ld\n",(long)packing_spec->accuracy);
             abort();
+            break;
         }
 
         /*nothing to be changed*/
@@ -825,18 +829,19 @@ grib_handle* grib_util_set_spec(grib_handle* h,
             break;
         case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
             /* we delay the set of grid_second_order because we don't want
-							to do it on a field with bitsPerValue=0 */
+               to do it on a field with bitsPerValue=0 */
             setSecondOrder=1;
             break;
         default :
             printf("invalid packing_spec->packing_type = %ld\n",(long)packing_spec->packing_type);
             abort();
+            break;
         }
     }
     if (!strcmp(input_packing_type,"grid_simple_matrix")) {
         long numberOfDirections,numberOfFrequencies;
-        int ret;
         if (h->context->keep_matrix) {
+            int ret;
             SET_STRING_VALUE("packingType","grid_simple_matrix");
             ret=grib_get_long(h,"numberOfDirections",&numberOfDirections);
             if (!ret) {
@@ -884,6 +889,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     default:
         printf("invalid packing_spec->accuracy = %ld\n",(long)packing_spec->accuracy);
         abort();
+        break;
     }
 
     if(packing_spec->extra_settings_count) {
@@ -1258,10 +1264,10 @@ int parse_keyval_string(char* grib_tool, char* arg, int values_required, int def
 int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber)
 {
     return (
-        productDefinitionTemplateNumber == 1 || productDefinitionTemplateNumber == 11 ||
-        productDefinitionTemplateNumber ==33 || productDefinitionTemplateNumber == 34 || /*simulated (synthetic) satellite data*/
-        productDefinitionTemplateNumber ==41 || productDefinitionTemplateNumber == 43 || /*atmospheric chemical constituents*/
-        productDefinitionTemplateNumber ==45 || productDefinitionTemplateNumber == 47    /*aerosols*/
+            productDefinitionTemplateNumber == 1 || productDefinitionTemplateNumber == 11 ||
+            productDefinitionTemplateNumber ==33 || productDefinitionTemplateNumber == 34 || /*simulated (synthetic) satellite data*/
+            productDefinitionTemplateNumber ==41 || productDefinitionTemplateNumber == 43 || /*atmospheric chemical constituents*/
+            productDefinitionTemplateNumber ==45 || productDefinitionTemplateNumber == 47    /*aerosols*/
     );
 }
 
@@ -1269,18 +1275,18 @@ int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber)
 int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNumber)
 {
     return (
-        productDefinitionTemplateNumber == 40 ||
-        productDefinitionTemplateNumber == 41 ||
-        productDefinitionTemplateNumber == 42 ||
-        productDefinitionTemplateNumber == 43);
+            productDefinitionTemplateNumber == 40 ||
+            productDefinitionTemplateNumber == 41 ||
+            productDefinitionTemplateNumber == 42 ||
+            productDefinitionTemplateNumber == 43);
 }
 
 /* Return 1 if the productDefinitionTemplateNumber (grib edition 2) is related to aerosols */
 int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber)
 {
     return (
-        productDefinitionTemplateNumber == 44 ||
-        productDefinitionTemplateNumber == 45 ||
-        productDefinitionTemplateNumber == 46 ||
-        productDefinitionTemplateNumber == 47);
+            productDefinitionTemplateNumber == 44 ||
+            productDefinitionTemplateNumber == 45 ||
+            productDefinitionTemplateNumber == 46 ||
+            productDefinitionTemplateNumber == 47);
 }

@@ -546,6 +546,7 @@ static int grib_write_key_values(FILE* fh,grib_string_list* values)
     if (err) return err;
 
     err=grib_write_string(fh,values->value);
+    if (err) return err;
 
     err=grib_write_key_values(fh,values->next);
     if (err) return err;
@@ -769,7 +770,7 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int *err)
     unsigned char marker=0;
     char* identifier=NULL;
     int max=0;
-    FILE* fh;
+    FILE* fh = NULL;
 
     if (!c) c=grib_context_get_default();
 
@@ -784,12 +785,22 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int *err)
     }
 
     identifier=grib_read_string(c,fh,err);
-    if (!identifier) return NULL;
+    if (!identifier) {
+        fclose(fh);
+        return NULL;
+    }
     grib_context_free(c,identifier);
 
     *err = grib_read_uchar(fh,&marker);
-    if(marker == NULL_MARKER) return NULL;
-    if(marker != NOT_NULL_MARKER) {*err=GRIB_CORRUPTED_INDEX;return NULL;}
+    if(marker == NULL_MARKER) {
+        fclose(fh);
+        return NULL;
+    }
+    if(marker != NOT_NULL_MARKER) {
+        *err=GRIB_CORRUPTED_INDEX;
+        fclose(fh);
+        return NULL;
+    }
 
     file = grib_read_files(c,fh,err);
     if (*err) return NULL;
