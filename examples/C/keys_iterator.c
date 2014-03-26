@@ -16,8 +16,6 @@
  * grib_keys_iterator structure to get all the available
  * keys in a message.
  *
- *
- *
  */
 
 #include <assert.h>
@@ -35,69 +33,70 @@ static void usage(char* progname);
 
 int main(int argc, char *argv[])
 {
-  /* To skip read only and not coded keys
+    /* To skip read only and not coded keys
      unsigned long key_iterator_filter_flags=GRIB_KEYS_ITERATOR_SKIP_READ_ONLY ||
      GRIB_KEYS_ITERATOR_SKIP_COMPUTED;
-  */
-  unsigned long key_iterator_filter_flags=GRIB_KEYS_ITERATOR_ALL_KEYS;
+     */
+    unsigned long key_iterator_filter_flags=GRIB_KEYS_ITERATOR_ALL_KEYS;
 
-  /* valid name_spaces are ls and mars */
-  char* name_space="ls";
+    /* Choose a namespace. E.g. "ls", "time", "parameter", "geography", "statistics" */
+    char* name_space="ls";
 
-  /* name_space=NULL to get all the keys */
-  /* char* name_space=0; */
+    /* name_space=NULL to get all the keys */
+    /* char* name_space=0; */
 
-  FILE* f;
-  grib_handle* h=NULL;
-  grib_keys_iterator* kiter=NULL;
-  int err=0;
-  int grib_count=0;
+    FILE* f;
+    grib_handle* h=NULL;
 
-  char value[MAX_VAL_LEN];
-  size_t vlen=MAX_VAL_LEN;
+    int err=0;
+    int grib_count=0;
 
-  if (argc != 2) usage(argv[0]);
+    char value[MAX_VAL_LEN];
+    size_t vlen=MAX_VAL_LEN;
 
-  f = fopen(argv[1],"r");
-  if(!f) {
-    perror(argv[1]);
-    exit(1);
-  }
+    if (argc != 2) usage(argv[0]);
 
-  while((h = grib_handle_new_from_file(0,f,&err)) != NULL) {
-
-    grib_count++;
-    printf("-- GRIB N. %d --\n",grib_count);
-    if(!h) {
-      printf("ERROR: Unable to create grib handle\n");
-      exit(1);
+    f = fopen(argv[1],"r");
+    if(!f) {
+        perror(argv[1]);
+        exit(1);
     }
 
-    kiter=grib_keys_iterator_new(h,key_iterator_filter_flags,name_space);
-    if (!kiter) {
-      printf("ERROR: Unable to create keys iterator\n");
-      exit(1);
-    }
-
-    while(grib_keys_iterator_next(kiter))
+    while((h = grib_handle_new_from_file(0,f,&err)) != NULL)
     {
-      const char* name = grib_keys_iterator_get_name(kiter);
-      vlen=MAX_VAL_LEN;
-      bzero(value,vlen);
-      GRIB_CHECK(grib_get_string(h,name,value,&vlen),name);
-      printf("%s = %s\n",name,value);
+        grib_keys_iterator* kiter=NULL;
+        grib_count++;
+        printf("-- GRIB N. %d --\n",grib_count);
+        if(!h) {
+            printf("ERROR: Unable to create grib handle\n");
+            exit(1);
+        }
+
+        kiter=grib_keys_iterator_new(h,key_iterator_filter_flags,name_space);
+        if (!kiter) {
+            printf("ERROR: Unable to create keys iterator\n");
+            exit(1);
+        }
+
+        while(grib_keys_iterator_next(kiter))
+        {
+            const char* name = grib_keys_iterator_get_name(kiter);
+            vlen=MAX_VAL_LEN;
+            bzero(value,vlen);
+            GRIB_CHECK(grib_get_string(h,name,value,&vlen),name);
+            printf("%s = %s\n",name,value);
+        }
+
+        grib_keys_iterator_delete(kiter);
+        grib_handle_delete(h);
     }
 
-    grib_keys_iterator_delete(kiter);
-
-  }
-
-  return 0;
+    return 0;
 
 }
 
-static void usage(char* progname) {
-  printf("\nUsage: %s grib_file\n",progname);
-  exit(1);
+static void usage(char* progname)
+{
+    printf("\nUsage: %s grib_file\n",progname);
+    exit(1);
 }
-

@@ -31,6 +31,7 @@ int main(int argc, char** argv)
     double *values = NULL;
     size_t values_len= 0;
 
+    /* Note: the full name of the sample file is "regular_ll_pl_grib1.tmpl" */
     const char* sample_filename = "regular_ll_pl_grib1";
     grib_handle *h = NULL;
     double d,e;
@@ -44,13 +45,18 @@ int main(int argc, char** argv)
         exit(1);
     }
 
-    values_len=10000;
+    /* Here we're changing the data values only, so the number of values */
+    /* will be the same as the sample GRIB. */
+    /* But if your data array has a different size, then specify the grid geometry */
+    /* (e.g. keys Ni, Nj etc) and set the correct number of data values */
+    GRIB_CHECK(grib_get_size(h, "values", &values_len),0);
+    
     values = malloc(values_len*sizeof(double));
     d=10e-8;
     e=d;
     count=1;
     for (i=0;i<values_len;i++) {
-        if (count>1000) {e*=10; count=1;}
+        if (count>100) {e*=10; count=1;}
         values[i]=d;
         printf("%g \n",values[i]);
         d+=e;
@@ -59,10 +65,10 @@ int main(int argc, char** argv)
 
     GRIB_CHECK(grib_set_long(h,"bitsPerValue",16),0);
 
-    /* set data values*/
+    /* set data values */
     GRIB_CHECK(grib_set_double_array(h,"values",values,values_len),0);
 
-    grib_write_message(h,argv[1],"w");
+    GRIB_CHECK(grib_write_message(h, argv[1], "w"), 0);
 
     free(values);
     grib_handle_delete(h);
