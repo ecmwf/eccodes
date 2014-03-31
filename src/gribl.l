@@ -52,7 +52,7 @@ SIGNED    {SIGN}?{DIGIT}+
 NUMB      {DIGIT}+
 EXP       {E}{SIGNED}
 IDENT     [_A-Za-z]+[_0-9A-Za-z]*
-FLOAT     {SIGN}?{DIGIT}+\.{DIGIT}+{EXP}?
+FLOAT     {SIGN}?{DIGIT}+\.{DIGIT}+({EXP})?
 
 %%
 
