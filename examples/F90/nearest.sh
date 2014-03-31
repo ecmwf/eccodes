@@ -9,4 +9,4 @@
 
 . ./include.sh
 
-${examples_dir}nearest > /dev/null
+${examples_dir}f_nearest > /dev/null

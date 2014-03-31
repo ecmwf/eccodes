@@ -16,12 +16,12 @@ cp ${data_dir}/regular_latlon_surface.grib1 ${data_dir}/regular_latlon_surface.g
 # Change the GRIB_SAMPLES_PATH: put the data dir first
 GRIB_SAMPLES_PATH=${data_dir}:${samples_dir}
 export GRIB_SAMPLES_PATH
-${examples_dir}samples > /dev/null
+${examples_dir}f_samples > /dev/null
 
 # Extend the GRIB_SAMPLES_PATH: put the data dir second
 GRIB_SAMPLES_PATH=${samples_dir}:${data_dir}
 export GRIB_SAMPLES_PATH
-${examples_dir}samples > /dev/null
+${examples_dir}f_samples > /dev/null
 
 rm -f out.grib1
 rm -f ${data_dir}/regular_latlon_surface.grib1.tmpl

@@ -10,7 +10,7 @@
 7         gridDefinition = 255
 8         section1Flags = 128 [10000000]
 9         indicatorOfParameter = 130 [Temperature  (K)  (grib1/2.98.128.table) ]
-10        indicatorOfTypeOfLevel = 109 [Hybrid level level number  (2 octets)  (grib1/3.table) ]
+10        indicatorOfTypeOfLevel = 109 [Hybrid level level number  (2 octets)  (grib1/3.table , grib1/local/ecmf/3.table) ]
 11-12     level = 1
 13        yearOfCentury = 8
 14        month = 2

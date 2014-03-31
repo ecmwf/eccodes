@@ -1,0 +1,19 @@
+set -ea
+# For CMake
+
+proj_dir=@PROJECT_SOURCE_DIR@
+data_dir=@PROJECT_BINARY_DIR@/data
+
+def_dir=@PROJECT_SOURCE_DIR@/definitions
+GRIB_DEFINITION_PATH="${def_dir}"
+export GRIB_DEFINITION_PATH
+#echo gdp=$GRIB_DEFINITION_PATH
+
+tools_dir=@CMAKE_BINARY_DIR@/bin/
+tigge_dir=@CMAKE_BINARY_DIR@/bin/
+test_dir=@CMAKE_BINARY_DIR@/tests
+
+samp_dir="${proj_dir}/samples"
+GRIB_SAMPLES_PATH=${samp_dir}
+export GRIB_SAMPLES_PATH
+#echo sp=$GRIB_SAMPLES_PATH

@@ -1,7 +1,5 @@
 if( ENABLE_FORTRAN )
-
-    ecbuild_enable_fortran( REQUIRED MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/fortran/modules )
-
+    
     set( srcdir ${CMAKE_CURRENT_SOURCE_DIR} )
     set( bindir ${CMAKE_CURRENT_BINARY_DIR} )
 

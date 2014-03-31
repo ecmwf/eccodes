@@ -8,46 +8,49 @@
 #
 set -ea
 
-echo
-echo "TEST: $0"
+CMAKE_INCLUDE_FILE=include.ctest.sh
+if [ -f "$CMAKE_INCLUDE_FILE" ]; then
+  # This is the config file for Cmake tests
+  . ./$CMAKE_INCLUDE_FILE
 
-data_dir=""
-
-# save current working dir
-save=`pwd`
-
-if [ -z "${data_dir}" ]
-then
-  cd ../
-  cpath=`pwd`
-  GRIB_DEFINITION_PATH=$cpath/definitions
-  export GRIB_DEFINITION_PATH
-  GRIB_SAMPLES_PATH=$cpath/samples
-  export GRIB_SAMPLES_PATH
-  tools_dir=$cpath/tools/
-  tigge_dir=$cpath/tigge/
-  data_dir=$cpath/data
-  test_dir=$cpath/tests
-  def_dir=$cpath/definitions
 else
-  tools_dir=""
-  tigge_dir=""
+  # This is for autotools
+  echo
+  echo "TEST: $0"
+
+  data_dir=""
+  # save current working dir
+  save=`pwd`
+
+  if [ -z "${data_dir}" ]
+  then
+    cd ../
+    cpath=`pwd`
+    GRIB_DEFINITION_PATH=$cpath/definitions
+    export GRIB_DEFINITION_PATH
+    GRIB_SAMPLES_PATH=$cpath/samples
+    export GRIB_SAMPLES_PATH
+    tools_dir=$cpath/tools/
+    tigge_dir=$cpath/tigge/
+    data_dir=$cpath/data
+    test_dir=$cpath/tests
+    def_dir=$cpath/definitions
+  else
+    tools_dir=""
+    tigge_dir=""
+  fi
+
+  if [ -z "${GRIB_API_INCLUDE}" ]
+  then 
+    GRIB_API_INCLUDE=`pwd`/src
+  fi
+
+  if [ -z "${GRIB_API_LIB}" ]
+  then 
+    GRIB_API_LIB=`pwd`/src
+  fi
+
+  # go back to current working dir
+  cd $save
+  set -u
 fi
-
-if [ -z "${GRIB_API_INCLUDE}" ]
-then 
-  GRIB_API_INCLUDE=`pwd`/src
-fi
-
-if [ -z "${GRIB_API_LIB}" ]
-then 
-  GRIB_API_LIB=`pwd`/src
-fi
-
-#${tools_dir}grib_info
-
-# go back to current working dir
-cd $save
-
-set -u
-

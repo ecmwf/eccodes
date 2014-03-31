@@ -14,5 +14,5 @@ grib1File=${data_dir}/reduced_gaussian_pressure_level.grib1
 grib2File=${data_dir}/reduced_gaussian_pressure_level.grib2
 ${tools_dir}grib_set -s editionNumber=2 $grib1File $grib2File
 
-${examples_dir}set_missing > /dev/null
+${examples_dir}f_set_missing > /dev/null
 rm -f out_surface_level.grib2 $grib2File

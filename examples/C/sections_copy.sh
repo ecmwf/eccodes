@@ -9,8 +9,8 @@
 
 . ./include.sh
 
-REGUL_GRID_FILE=../../samples/regular_ll_sfc_grib2.tmpl
-GAUSS_GRID_FILE=../../samples/reduced_gg_pl_640_grib2.tmpl
+REGUL_GRID_FILE=${proj_dir}/samples/regular_ll_sfc_grib2.tmpl
+GAUSS_GRID_FILE=${proj_dir}/samples/reduced_gg_pl_640_grib2.tmpl
 OUTPUT=temp.sections.grib
 
 ${examples_dir}sections_copy $REGUL_GRID_FILE $GAUSS_GRID_FILE $OUTPUT

@@ -17,27 +17,27 @@ REDIRECT=/dev/null
 dir="${data_dir}/tigge/"
 
 # check tigge global
-for file in `ls ${dir}/tigge_*.grib`
+for file in ${dir}/tigge_*.grib
 do
-	${tigge_dir}tigge_check ${file} 2> $REDIRECT > $REDIRECT
+   ${tigge_dir}tigge_check ${file} 2> $REDIRECT > $REDIRECT
 done
 
 # check tigge-lam
-for file in `ls ${dir}/tiggelam_*.grib`
+for file in ${dir}/tiggelam_*.grib
 do
-	${tigge_dir}tigge_check -l ${file} 2> $REDIRECT > $REDIRECT
+   ${tigge_dir}tigge_check -l ${file} 2> $REDIRECT > $REDIRECT
 done
 
 
 # Now test non-TIGGE files too. We now expect tigge_check to fail!
 set +e
 # All the grib files in the samples are non-TIGGE
-for file in `ls ${GRIB_SAMPLES_PATH}/*.tmpl`
+for file in ${GRIB_SAMPLES_PATH}/*.tmpl
 do
-	${tigge_dir}tigge_check ${file} 2> $REDIRECT > $REDIRECT
-	if [ $? -eq 0 ]; then
-		# should have failed and returned a non-zero exit code
-		exit 1
-	fi
+   ${tigge_dir}tigge_check ${file} 2> $REDIRECT > $REDIRECT
+   if [ $? -eq 0 ]; then
+      # should have failed and returned a non-zero exit code
+      exit 1
+   fi
 done
 

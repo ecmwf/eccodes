@@ -23,7 +23,7 @@ temp2="temp.grib2_"
 # --- Do I want to exclude any file pattern from the comparison ?
 exclusion_pattern="tcw|ssr|str|skt|cap|ci|ttr|st|sm|sd|slhf|sshf"
 
-for file in `ls ${dir}/tigge_*.grib`
+for file in ${dir}/tigge_*.grib
 do
 
 exclude=`echo $file | awk " /$exclusion_pattern/ {print \"found\";} "`

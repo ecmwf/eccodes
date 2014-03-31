@@ -14,7 +14,7 @@ out=out.grib
 
 rm -f $out | true
 
-${examples_dir}read_message > /dev/null
+${examples_dir}f_read_message > /dev/null
 
 ${tools_dir}grib_compare $in $out
 

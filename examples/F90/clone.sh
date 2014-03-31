@@ -9,4 +9,4 @@
 
 . ./include.sh
 
-${examples_dir}clone > /dev/null
+${examples_dir}f_clone > /dev/null

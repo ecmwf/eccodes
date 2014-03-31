@@ -9,4 +9,4 @@
 
 . ./include.sh
 
-${examples_dir}get_pl > /dev/null
+${examples_dir}f_get_pl > /dev/null

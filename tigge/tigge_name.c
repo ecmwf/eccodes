@@ -8,7 +8,15 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+/* cmake config header */
+#ifdef HAVE_GRIB_API_CONFIG_H
+#include "grib_api_config.h"
+#endif
+
+/* autoconf config header */
+#ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -21,7 +21,6 @@ foreach( tool ${grib_tools_bins} )
     # here we use the fact that each tool has only one C file that matches its name
     ecbuild_add_executable( TARGET     ${tool}
                           SOURCES    ${tool}.c
-                          INCLUDES   ${GRIB_API_EXTRA_INCLUDE_DIRS}
                           LIBS       grib_tools )
 
 endforeach()

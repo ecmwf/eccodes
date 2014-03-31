@@ -9,4 +9,4 @@
 
 . ./include.sh
 
-${examples_dir}print_data > /dev/null
+${examples_dir}f_print_data > /dev/null
