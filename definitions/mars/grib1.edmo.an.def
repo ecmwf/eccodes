@@ -1,9 +1,10 @@
 # NOTE: MARS step is startStep. See GRIB-378
 alias mars.step = startStep;
 
-# Only ERA15 has time and step. class 3 means REANALYSE
-if(class != 3) { 
-	unalias mars.time; 
-	unalias mars.step; 
+# class 3 is "er" which is 15 year re-analysis (ERA15)
+# Only ERA15 has time and step
+if(class != 3) {
+    unalias mars.time;
+    unalias mars.step;
 }
 alias mars.number=perturbationNumber;

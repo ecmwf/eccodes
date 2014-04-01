@@ -2459,10 +2459,13 @@ dist_definitionsmars_DATA = \
 	mars/grib1.waef.fp.def\
 	mars/grib1.waef.pf.def\
 	mars/grib1.waef.sot.def\
+	mars/grib1.wamd.an.def\
+	mars/grib1.wamd.fc.def\
 	mars/grib1.wamf.cf.def\
 	mars/grib1.wamf.fc.def\
 	mars/grib1.wamo.an.def\
 	mars/grib1.wamo.cl.def\
+	mars/grib1.wamo.fc.def\
 	mars/grib1.wasf.fc.def\
 	mars/grib1.wave.4v.def\
 	mars/grib1.wave.an.def\

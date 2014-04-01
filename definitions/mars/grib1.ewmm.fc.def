@@ -3,8 +3,16 @@ meta verificationDate         g1verificationdate(dataDate, dataTime, endStep) : 
 meta monthlyVerificationDate  g1monthlydate(verificationDate) : dump,no_copy;
 alias mars.date             = monthlyVerificationDate;
 
-# class e4
-# constant six = 6;
-alias mars.step = startStep;
+# See GRIB-422, GRIB-497
+if (class is "em" || class is "e2")
+{
+   alias mars.step = endStep;
+}
+else
+{
+   alias mars.step = startStep;
+}
+
+
 alias mars.number=perturbationNumber;
 
