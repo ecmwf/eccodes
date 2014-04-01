@@ -1,0 +1,19 @@
+# examples/python include file for CMake
+
+set -ea
+proj_dir=@PROJECT_SOURCE_DIR@
+data_dir=@PROJECT_BINARY_DIR@/data
+
+def_dir="${proj_dir}/definitions"
+GRIB_DEFINITION_PATH="${def_dir}"
+export GRIB_DEFINITION_PATH
+
+tools_dir=@CMAKE_BINARY_DIR@/bin/
+examples_dir=@CMAKE_CURRENT_BINARY_DIR@/
+
+samp_dir="${proj_dir}/samples"
+GRIB_SAMPLES_PATH=${samp_dir}
+export GRIB_SAMPLES_PATH
+
+PYTHONPATH=$proj_dir/python:@PROJECT_BINARY_DIR@/python:$PYTHONPATH
+export PYTHONPATH
