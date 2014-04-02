@@ -256,8 +256,6 @@ foreach (f ${tigge_files_to_download})
   LIST(APPEND tgts "${tgt}")
 endforeach()
 
-# debug_var(tgts)
-# Anotehr dummy target which depends on all previous targets
-add_custom_target( get_tigge_data DEPENDS ${tgts} )
-add_dependencies( check get_tigge_data )
+add_custom_target( get_tigge_gribs DEPENDS ${tgts} )
+add_dependencies( check get_tigge_gribs )
 

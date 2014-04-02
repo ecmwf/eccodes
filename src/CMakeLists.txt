@@ -301,6 +301,7 @@ list( APPEND grib_api_srcs
 	md5.h
 	md5.c
     # Ship our generated lex/yacc C files
+    grib_yacc.c  grib_lex.c
 	grib_windef.h
 )
 

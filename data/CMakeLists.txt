@@ -153,6 +153,6 @@ endforeach()
 
 # debug_var(tgts)
 # Another dummy target which depends on all previous targets
-#add_custom_target( getdata ALL DEPENDS ${tgts} )
-add_custom_target( getdata DEPENDS ${tgts} )
-add_dependencies( check getdata )
+#add_custom_target( get_gribs ALL DEPENDS ${tgts} )
+add_custom_target( get_gribs DEPENDS ${tgts} )
+add_dependencies( check get_gribs )
