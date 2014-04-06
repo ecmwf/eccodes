@@ -8909,6 +8909,11 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 28 ;
 	}
+#Instantaneous 10 metre wind gust
+'228029' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 29 ;
+	}
 #Soil wetness index in layer 1
 '228040' = {
 	 table2Version = 228 ;
@@ -8959,6 +8964,11 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 85 ;
 	}
+#Total column supercooled liquid water
+'228088' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 88 ;
+	}
 #Total column rain water
 '228089' = {
 	 table2Version = 228 ;
@@ -8998,6 +9008,61 @@
 '228130' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 130 ;
+	}
+#Instantaneous large-scale surface precipitation fraction
+'228217' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 217 ;
+	}
+#Convective rain rate
+'228218' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 218 ;
+	}
+#Large scale rain rate
+'228219' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 219 ;
+	}
+#Convective snowfall rate water equivalent
+'228220' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 220 ;
+	}
+#Large scale snowfall rate water equivalent
+'228221' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 221 ;
+	}
+#Maximum total precipitation rate in the last 3 hours
+'228222' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 222 ;
+	}
+#Minimum total precipitation rate in the last 3 hours
+'228223' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 223 ;
+	}
+#Maximum total precipitation rate in the last 6 hours
+'228224' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 224 ;
+	}
+#Minimum total precipitation rate in the last 6 hours
+'228225' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 225 ;
+	}
+#Maximum total precipitation rate since previous post-processing
+'228226' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 226 ;
+	}
+#Minimum total precipitation rate since previous post-processing
+'228227' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 227 ;
 	}
 #SMOS first Brightness Temperature Bias Correction parameter
 '228229' = {

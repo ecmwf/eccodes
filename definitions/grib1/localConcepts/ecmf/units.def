@@ -8909,6 +8909,11 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 28 ;
 	}
+#Instantaneous 10 metre wind gust
+'m s**-1' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 29 ;
+	}
 #Soil wetness index in layer 1
 'dimensionless' = {
 	 table2Version = 228 ;
@@ -8959,6 +8964,11 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 85 ;
 	}
+#Total column supercooled liquid water
+'kg m**-2' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 88 ;
+	}
 #Total column rain water
 'kg m**-2' = {
 	 table2Version = 228 ;
@@ -8998,6 +9008,61 @@
 'J m**-2' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 130 ;
+	}
+#Instantaneous large-scale surface precipitation fraction
+'(0 - 1)' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 217 ;
+	}
+#Convective rain rate
+'kg m**-2 s**-1' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 218 ;
+	}
+#Large scale rain rate
+'kg m**-2 s**-1' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 219 ;
+	}
+#Convective snowfall rate water equivalent
+'kg m**-2 s**-1' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 220 ;
+	}
+#Large scale snowfall rate water equivalent
+'kg m**-2 s**-1' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 221 ;
+	}
+#Maximum total precipitation rate in the last 3 hours
+'kg m**-2 s**-1' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 222 ;
+	}
+#Minimum total precipitation rate in the last 3 hours
+'kg m**-2 s**-1' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 223 ;
+	}
+#Maximum total precipitation rate in the last 6 hours
+'kg m**-2 s**-1' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 224 ;
+	}
+#Minimum total precipitation rate in the last 6 hours
+'kg m**-2 s**-1' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 225 ;
+	}
+#Maximum total precipitation rate since previous post-processing
+'kg m**-2 s**-1' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 226 ;
+	}
+#Minimum total precipitation rate since previous post-processing
+'kg m**-2 s**-1' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 227 ;
 	}
 #SMOS first Brightness Temperature Bias Correction parameter
 'K' = {

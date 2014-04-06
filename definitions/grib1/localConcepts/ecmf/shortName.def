@@ -8909,6 +8909,11 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 28 ;
 	}
+#Instantaneous 10 metre wind gust
+'i10fg' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 29 ;
+	}
 #Soil wetness index in layer 1
 'swi1' = {
 	 table2Version = 228 ;
@@ -8959,6 +8964,11 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 85 ;
 	}
+#Total column supercooled liquid water
+'tcslw' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 88 ;
+	}
 #Total column rain water
 'tcrw' = {
 	 table2Version = 228 ;
@@ -8998,6 +9008,61 @@
 'strdc' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 130 ;
+	}
+#Instantaneous large-scale surface precipitation fraction
+'ilspf' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 217 ;
+	}
+#Convective rain rate
+'crr' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 218 ;
+	}
+#Large scale rain rate
+'lsrr' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 219 ;
+	}
+#Convective snowfall rate water equivalent
+'csfr' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 220 ;
+	}
+#Large scale snowfall rate water equivalent
+'lssfr' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 221 ;
+	}
+#Maximum total precipitation rate in the last 3 hours
+'mxtpr3' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 222 ;
+	}
+#Minimum total precipitation rate in the last 3 hours
+'mntpr3' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 223 ;
+	}
+#Maximum total precipitation rate in the last 6 hours
+'mxtpr6' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 224 ;
+	}
+#Minimum total precipitation rate in the last 6 hours
+'mntpr6' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 225 ;
+	}
+#Maximum total precipitation rate since previous post-processing
+'mxtpr' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 226 ;
+	}
+#Minimum total precipitation rate since previous post-processing
+'mntpr' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 227 ;
 	}
 #SMOS first Brightness Temperature Bias Correction parameter
 'smos_tb_cdfa' = {
