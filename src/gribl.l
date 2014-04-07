@@ -114,6 +114,7 @@ FLOAT     {SIGN}?{DIGIT}+\.{DIGIT}+({EXP})?
 "transient" return TRANS    ;
 "string_type" return STRING_TYPE   ;
 "long_type" return LONG_TYPE   ;
+"double_type" return DOUBLE_TYPE   ;
 "iterator"  return ITERATOR ;
 "nearest"  return NEAREST ;
 "box"  return BOX ;

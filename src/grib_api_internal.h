@@ -503,7 +503,8 @@ struct grib_accessor
 #define GRIB_ACCESSOR_FLAG_TRANSIENT        (1<<13)
 #define GRIB_ACCESSOR_FLAG_STRING_TYPE      (1<<14)
 #define GRIB_ACCESSOR_FLAG_LONG_TYPE        (1<<15)
-#define GRIB_ACCESSOR_FLAG_LOWERCASE        (1<<16)
+#define GRIB_ACCESSOR_FLAG_DOUBLE_TYPE      (1<<16)
+#define GRIB_ACCESSOR_FLAG_LOWERCASE        (1<<17)
 /* when adding a flag, update grib_compile_flags*/
 
 /**

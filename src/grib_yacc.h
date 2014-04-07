@@ -75,60 +75,61 @@
      READ_ONLY = 291,
      STRING_TYPE = 292,
      LONG_TYPE = 293,
-     NO_COPY = 294,
-     DUMP = 295,
-     NO_FAIL = 296,
-     EDITION_SPECIFIC = 297,
-     OVERRIDE = 298,
-     HIDDEN = 299,
-     CAN_BE_MISSING = 300,
-     MISSING = 301,
-     CONSTRAINT = 302,
-     COPY_OK = 303,
-     WHEN = 304,
-     SET = 305,
-     SET_NOFAIL = 306,
-     WRITE = 307,
-     APPEND = 308,
-     PRINT = 309,
-     EXPORT = 310,
-     REMOVE = 311,
-     SKIP = 312,
-     PAD = 313,
-     SECTION_PADDING = 314,
-     MESSAGE = 315,
-     PADTO = 316,
-     PADTOEVEN = 317,
-     PADTOMULTIPLE = 318,
-     G1_HALF_BYTE = 319,
-     G1_MESSAGE_LENGTH = 320,
-     G1_SECTION4_LENGTH = 321,
-     SECTION_LENGTH = 322,
-     FLAG = 323,
-     ITERATOR = 324,
-     NEAREST = 325,
-     BOX = 326,
-     KSEC = 327,
-     ASSERT = 328,
-     CASE = 329,
-     SWITCH = 330,
-     DEFAULT = 331,
-     EQ = 332,
-     NE = 333,
-     GE = 334,
-     LE = 335,
-     LT = 336,
-     GT = 337,
-     BIT = 338,
-     BITOFF = 339,
-     AND = 340,
-     OR = 341,
-     NOT = 342,
-     IS = 343,
-     IDENT = 344,
-     STRING = 345,
-     INTEGER = 346,
-     FLOAT = 347
+     DOUBLE_TYPE = 294,
+     NO_COPY = 295,
+     DUMP = 296,
+     NO_FAIL = 297,
+     EDITION_SPECIFIC = 298,
+     OVERRIDE = 299,
+     HIDDEN = 300,
+     CAN_BE_MISSING = 301,
+     MISSING = 302,
+     CONSTRAINT = 303,
+     COPY_OK = 304,
+     WHEN = 305,
+     SET = 306,
+     SET_NOFAIL = 307,
+     WRITE = 308,
+     APPEND = 309,
+     PRINT = 310,
+     EXPORT = 311,
+     REMOVE = 312,
+     SKIP = 313,
+     PAD = 314,
+     SECTION_PADDING = 315,
+     MESSAGE = 316,
+     PADTO = 317,
+     PADTOEVEN = 318,
+     PADTOMULTIPLE = 319,
+     G1_HALF_BYTE = 320,
+     G1_MESSAGE_LENGTH = 321,
+     G1_SECTION4_LENGTH = 322,
+     SECTION_LENGTH = 323,
+     FLAG = 324,
+     ITERATOR = 325,
+     NEAREST = 326,
+     BOX = 327,
+     KSEC = 328,
+     ASSERT = 329,
+     CASE = 330,
+     SWITCH = 331,
+     DEFAULT = 332,
+     EQ = 333,
+     NE = 334,
+     GE = 335,
+     LE = 336,
+     LT = 337,
+     GT = 338,
+     BIT = 339,
+     BITOFF = 340,
+     AND = 341,
+     OR = 342,
+     NOT = 343,
+     IS = 344,
+     IDENT = 345,
+     STRING = 346,
+     INTEGER = 347,
+     FLOAT = 348
    };
 #endif
 /* Tokens.  */
@@ -168,60 +169,61 @@
 #define READ_ONLY 291
 #define STRING_TYPE 292
 #define LONG_TYPE 293
-#define NO_COPY 294
-#define DUMP 295
-#define NO_FAIL 296
-#define EDITION_SPECIFIC 297
-#define OVERRIDE 298
-#define HIDDEN 299
-#define CAN_BE_MISSING 300
-#define MISSING 301
-#define CONSTRAINT 302
-#define COPY_OK 303
-#define WHEN 304
-#define SET 305
-#define SET_NOFAIL 306
-#define WRITE 307
-#define APPEND 308
-#define PRINT 309
-#define EXPORT 310
-#define REMOVE 311
-#define SKIP 312
-#define PAD 313
-#define SECTION_PADDING 314
-#define MESSAGE 315
-#define PADTO 316
-#define PADTOEVEN 317
-#define PADTOMULTIPLE 318
-#define G1_HALF_BYTE 319
-#define G1_MESSAGE_LENGTH 320
-#define G1_SECTION4_LENGTH 321
-#define SECTION_LENGTH 322
-#define FLAG 323
-#define ITERATOR 324
-#define NEAREST 325
-#define BOX 326
-#define KSEC 327
-#define ASSERT 328
-#define CASE 329
-#define SWITCH 330
-#define DEFAULT 331
-#define EQ 332
-#define NE 333
-#define GE 334
-#define LE 335
-#define LT 336
-#define GT 337
-#define BIT 338
-#define BITOFF 339
-#define AND 340
-#define OR 341
-#define NOT 342
-#define IS 343
-#define IDENT 344
-#define STRING 345
-#define INTEGER 346
-#define FLOAT 347
+#define DOUBLE_TYPE 294
+#define NO_COPY 295
+#define DUMP 296
+#define NO_FAIL 297
+#define EDITION_SPECIFIC 298
+#define OVERRIDE 299
+#define HIDDEN 300
+#define CAN_BE_MISSING 301
+#define MISSING 302
+#define CONSTRAINT 303
+#define COPY_OK 304
+#define WHEN 305
+#define SET 306
+#define SET_NOFAIL 307
+#define WRITE 308
+#define APPEND 309
+#define PRINT 310
+#define EXPORT 311
+#define REMOVE 312
+#define SKIP 313
+#define PAD 314
+#define SECTION_PADDING 315
+#define MESSAGE 316
+#define PADTO 317
+#define PADTOEVEN 318
+#define PADTOMULTIPLE 319
+#define G1_HALF_BYTE 320
+#define G1_MESSAGE_LENGTH 321
+#define G1_SECTION4_LENGTH 322
+#define SECTION_LENGTH 323
+#define FLAG 324
+#define ITERATOR 325
+#define NEAREST 326
+#define BOX 327
+#define KSEC 328
+#define ASSERT 329
+#define CASE 330
+#define SWITCH 331
+#define DEFAULT 332
+#define EQ 333
+#define NE 334
+#define GE 335
+#define LE 336
+#define LT 337
+#define GT 338
+#define BIT 339
+#define BITOFF 340
+#define AND 341
+#define OR 342
+#define NOT 343
+#define IS 344
+#define IDENT 345
+#define STRING 346
+#define INTEGER 347
+#define FLOAT 348
 
 
 
@@ -250,7 +252,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 254 "y.tab.h"
+#line 256 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define grib_yystype YYSTYPE /* obsolescent; will be withdrawn */

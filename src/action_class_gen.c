@@ -151,6 +151,7 @@ static void xref( grib_action* act, FILE* f,const char *path)
     F(GRIB_ACCESSOR_FLAG_TRANSIENT);
     F(GRIB_ACCESSOR_FLAG_STRING_TYPE);
     F(GRIB_ACCESSOR_FLAG_LONG_TYPE);
+    F(GRIB_ACCESSOR_FLAG_DOUBLE_TYPE);
 
 
     /* make sure all flags are processed */

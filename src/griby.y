@@ -87,6 +87,7 @@ static grib_concept_value *reverse_concept(grib_concept_value *r,grib_concept_va
 %token READ_ONLY
 %token STRING_TYPE
 %token LONG_TYPE
+%token DOUBLE_TYPE
 %token NO_COPY
 %token DUMP
 %token NO_FAIL
@@ -530,6 +531,7 @@ flag: READ_ONLY         { $$ = GRIB_ACCESSOR_FLAG_READ_ONLY; }
     | TRANS         { $$ = GRIB_ACCESSOR_FLAG_TRANSIENT; }
     | STRING_TYPE         { $$ = GRIB_ACCESSOR_FLAG_STRING_TYPE; }
     | LONG_TYPE         { $$ = GRIB_ACCESSOR_FLAG_LONG_TYPE; }
+    | DOUBLE_TYPE       { $$ = GRIB_ACCESSOR_FLAG_DOUBLE_TYPE; }
     ;
 
 list_block : IDENT LIST '(' expression ')' '{' instructions '}' { $$ = grib_action_create_list(grib_parser_context,$1,$4,$7); free($1); }
