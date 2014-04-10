@@ -830,7 +830,7 @@
 	 indicatorOfParameter = 112 ;
 	}
 #Net short-wave radiationflux(atmosph.top)
-'nlwrt' = {
+'nswrt' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 113 ;
 	}

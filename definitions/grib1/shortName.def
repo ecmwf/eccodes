@@ -618,7 +618,7 @@
 	 indicatorOfParameter = 112 ;
 	}
 #Net short-wave radiationflux(atmosph.top)
-'nlwrt' = {
+'nswrt' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 113 ;
 	}
@@ -1314,7 +1314,7 @@
 	 indicatorOfParameter = 112 ;
 	}
 #Net short-wave radiationflux(atmosph.top)
-'nlwrt' = {
+'nswrt' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 113 ;
 	}
@@ -2010,7 +2010,7 @@
 	 indicatorOfParameter = 112 ;
 	}
 #Net short-wave radiationflux(atmosph.top)
-'nlwrt' = {
+'nswrt' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 113 ;
 	}
