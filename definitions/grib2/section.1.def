@@ -46,10 +46,8 @@ codetable[1] localTablesVersion 'grib2/tables/[tablesVersion]/1.1.table' ;
 alias versionNumberOfGribLocalTables=localTablesVersion;
 
 transient localDir="";
-when (localTablesVersion != 0) {
-  set localDir="grib2/tables/local/[centre]/[localTablesVersion]";
-} else {
-  set localDir="";
+if (localTablesVersion != 0) {
+  transient localDir="grib2/tables/local/[centre]/[localTablesVersion]";
 }
 
 #  Significance of Reference Time
