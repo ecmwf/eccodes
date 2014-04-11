@@ -186,8 +186,6 @@ static grib_concept_value* get_concept(grib_handle* h,grib_action_concept* self)
     char local[1024]={0,};
     char masterDir[1024]={0,};
     size_t lenMasterDir=1024;
-    char localDir[1024]={0,};
-    size_t lenLocalDir=1024;
     char key[1024]={0,};
     char* full=0;
     int id;
@@ -206,6 +204,8 @@ static grib_concept_value* get_concept(grib_handle* h,grib_action_concept* self)
     grib_recompose_name(h,NULL, buf, master,1);
 
     if (self->localDir) {
+        char localDir[1024]={0,};
+        size_t lenLocalDir=1024;
         grib_get_string(h,self->localDir,localDir,&lenLocalDir);
         sprintf(buf,"%s/%s",localDir,self->basename);
         grib_recompose_name(h,NULL, buf, local,1);
@@ -228,7 +228,7 @@ static grib_concept_value* get_concept(grib_handle* h,grib_action_concept* self)
         grib_concept_value* last=c;
         while (last->next) last=last->next;
         if (full) {
-           last->next=grib_parse_concept_file(context,full);
+            last->next=grib_parse_concept_file(context,full);
         }
     } else if (full) {
         c=grib_parse_concept_file(context,full);
@@ -241,7 +241,7 @@ static grib_concept_value* get_concept(grib_handle* h,grib_action_concept* self)
 
     if (full) {
         grib_context_log(h->context,GRIB_LOG_DEBUG,
-            "Loading concept %s from %s",((grib_action*)self)->name,full);
+                "Loading concept %s from %s",((grib_action*)self)->name,full);
     }
 
     h->context->concepts[id]=c;
@@ -331,6 +331,16 @@ const char* grib_concept_evaluate(grib_handle* h,grib_action* act)
     return best;
 }
 
+static int
+cmpstringp(const void *p1, const void *p2)
+{
+    /* The actual arguments to this function are "pointers to
+       pointers to char", but strcmp(3) arguments are "pointers
+       to char", hence the following cast plus dereference */
+    return strcmp(* (char * const *) p1, * (char * const *) p2);
+}
+
+#define MAX_NUM_CONCEPT_VALUES 40
 int grib_concept_apply(grib_handle* h,grib_action* act,const char* name)
 {
     long lres=0;
@@ -353,8 +363,28 @@ int grib_concept_apply(grib_handle* h,grib_action* act,const char* name)
 
     if (!c){
         err= self->nofail ? GRIB_SUCCESS : GRIB_CONCEPT_NO_MATCH;
-        if (err) grib_context_log(h->context,GRIB_LOG_ERROR,
-                "concept: no match for %s=%s", act->name,name);
+        if (err) {
+            size_t i = 0, count = 0;
+            char* all_concept_vals[512] = {NULL,}; /* sorted array containing all concept values */
+            grib_concept_value* pCon = concepts;
+
+            grib_context_log(h->context,GRIB_LOG_ERROR, "concept: no match for %s=%s", act->name,name);
+
+            /* Create a list of all possible values for this concept and sort it */
+            while( pCon ) {
+                all_concept_vals[i++] = pCon->name;
+                pCon = pCon->next;
+            }
+            count = i;
+            /* Printing out all values for concepts like paramId will be silly! */
+            if (count < MAX_NUM_CONCEPT_VALUES) {
+                fprintf(stderr, "Here are the possible values for concept %s:\n", act->name);
+                qsort(&all_concept_vals, count, sizeof(char*), cmpstringp);
+                for(i=0; i<count; ++i) {
+                    fprintf(stderr, "\t%s\n", all_concept_vals[i]);
+                }
+            }
+        }
         return err;
     }
 
@@ -362,9 +392,9 @@ int grib_concept_apply(grib_handle* h,grib_action* act,const char* name)
     while(e)
     {
         Assert(count<1024);
-        values[count].name       = e->name;
+        values[count].name = e->name;
 
-        values[count].type       = grib_expression_native_type(h,e->expression);
+        values[count].type = grib_expression_native_type(h,e->expression);
         switch(values[count].type)
         {
         case GRIB_TYPE_LONG:
@@ -377,10 +407,8 @@ int grib_concept_apply(grib_handle* h,grib_action* act,const char* name)
             break;
         case GRIB_TYPE_STRING:
             size = sizeof(tmp[count]);
-            values[count].string_value =
-                    grib_expression_evaluate_string(h,e->expression,tmp[count],&size,&err);
+            values[count].string_value = grib_expression_evaluate_string(h,e->expression,tmp[count],&size,&err);
             break;
-
         default:
             return GRIB_NOT_IMPLEMENTED;
             break;
