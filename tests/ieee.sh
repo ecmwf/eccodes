@@ -36,7 +36,7 @@ EOF
 
 ${tools_dir}grib_filter -o $outsimple w.filter $infile 
 
-${tools_dir}grib_filter r.filter $outsimple > $outsimple.txt 
+${tools_dir}grib_filter r.filter $outsimple > $outsimple.txt
 diff $outsimple.txt ${data_dir}/ieee_test.good
 
 # Disabled for now. See GRIB-2 and GRIB-80
@@ -54,7 +54,7 @@ diff $outsimple.txt ${data_dir}/ieee_test.good
 
 rm -f $outsimple $out32 $out64 $out32.txt $out64.txt
 rm -f ${data_dir}/$outsimple.txt ${data_dir}/$out32.txt ${data_dir}/$out64.txt 
-rm -f w.filter
+rm -f w.filter $outsimple.txt
 
 ${tools_dir}grib_filter r.filter $shdata > $shdata.txt
 diff $shdata.txt $shdata.good
