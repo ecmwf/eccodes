@@ -44,33 +44,36 @@ extern FILE* dump_file;
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
-int main(int argc, char *argv[]) { return grib_tool(argc,argv);}
+int main(int argc, char *argv[])
+{
+    return grib_tool(argc,argv);
+}
 
-int grib_tool_before_getopt(grib_runtime_options* options) {
+int grib_tool_before_getopt(grib_runtime_options* options)
+{
     return 0;
 }
 
-int grib_tool_init(grib_runtime_options* options) {
-
+int grib_tool_init(grib_runtime_options* options)
+{
     return 0;
 }
 
-int grib_tool_new_filename_action(grib_runtime_options* options,const char* file) {
+int grib_tool_new_filename_action(grib_runtime_options* options,const char* file)
+{
     return 0;
 }
 
-
-int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file) {
-
+int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
+{
     return 0;
 }
 
-int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
+int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
+{
     int err=0;
-    double *lat=0,*lon=0,*val=0;
-    double missing_value=9999.;
+    
     int skip_missing=1;
-    char *kmiss=NULL, *p=NULL;
     char *missing_string=NULL;
     int i=0;
     grib_values* values=NULL;
@@ -79,6 +82,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
     char* default_format="%.10e";
     int print_keys=grib_options_on("p:");
     long numberOfPoints=0;
+    long bitmapPresent = 0;
+    long *bitmap = NULL; /* bitmap array */
+    size_t bmp_len = 0;
     double *data_values=0,*lats=0,*lons=0;
     int n = 0;
     size_t size=0;
@@ -103,6 +109,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
     }
 
     if (iter) {
+        double *lat=0,*lon=0,*val=0;
         lats=(double*)calloc(numberOfPoints+1,sizeof(double));
         lons=(double*)calloc(numberOfPoints+1,sizeof(double));
         lat=lats; lon=lons; val=data_values;
@@ -121,23 +128,19 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
         exit(err);
     }
 
+    GRIB_CHECK(grib_get_long(h,"bitmapPresent",&bitmapPresent),0);
+    if (bitmapPresent)
+    {
+        GRIB_CHECK(grib_get_size(h,"bitmap",&bmp_len),0);
+        bitmap = malloc(bmp_len*sizeof(long));
+        GRIB_CHECK(grib_get_long_array(h,"bitmap",bitmap,&bmp_len),0);
+    }
+    
     skip_missing=1;
     if (grib_options_on("m:")) {
-        char* theEnd=0;
-        double mval=0;
+        /* User wants to see missing values */
         skip_missing=0;
-        kmiss=grib_options_get_option("m:");
-        p=kmiss;
-        while (*p != ':' && *p != '\0') p++;
-        if (*p == ':' && *(p+1) != '\0') {
-            *p='\0';
-            missing_string=strdup(p+1);
-        } else {
-            missing_string=strdup(kmiss);
-        }
-        mval=strtod(kmiss,&theEnd);
-        if (theEnd==NULL) missing_value=mval;
-        grib_set_double(h,"missingValue",missing_value);
+        missing_string=grib_options_get_option("m:");
     }
 
     if (iter)
@@ -155,10 +158,12 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
         values=get_key_values(options,h);
 
     if (skip_missing==0){
+        /* Show missing values in data */
         for (i=0;i<numberOfPoints;i++) {
+            const int is_missing_val = (bitmapPresent && bitmap[i] == 0);
             if (iter) fprintf(dump_file,"%9.3f%9.3f ",lats[i],lons[i]);
 
-            if (data_values[i] == missing_value)
+            if (is_missing_val)
                 fprintf(dump_file,"%s",missing_string);
             else
                 fprintf(dump_file,format,data_values[i]);
@@ -170,8 +175,10 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
         }
 
     } else if ( skip_missing==1 ){
+        /* Skip the missing values in data */
         for (i=0;i<numberOfPoints;i++) {
-            if (data_values[i] != missing_value){
+            const int is_missing_val = (bitmapPresent && bitmap[i] == 0);
+            if (!is_missing_val){
                 if (iter) fprintf(dump_file,"%9.3f%9.3f ",lats[i],lons[i]);
                 fprintf(dump_file,format,data_values[i]);
                 if (print_keys)
@@ -193,30 +200,32 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
     return 0;
 }
 
-int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h) {
+int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
+{
     grib_handle_delete(h);
     return 0;
 }
 
-void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h) {
+void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
+{
     grib_print_key_values(options,h);
 }
 
-int grib_tool_finalise_action(grib_runtime_options* options) {
+int grib_tool_finalise_action(grib_runtime_options* options)
+{
     return 0;
 }
 
-
-static void print_key_values(grib_values* values,int values_count) {
+static void print_key_values(grib_values* values,int values_count)
+{
     int i=0;
     for (i=0; i<values_count; i++) {
         fprintf(dump_file," %s",values[i].string_value);
     }
-
-
 }
 
-static grib_values* get_key_values(grib_runtime_options* options,grib_handle* h) {
+static grib_values* get_key_values(grib_runtime_options* options,grib_handle* h)
+{
     int i=0;
     int ret=0;
     char value[MAX_STRING_LEN]={0,};
@@ -269,4 +278,3 @@ static grib_values* get_key_values(grib_runtime_options* options,grib_handle* h)
     return options->print_keys;
 
 }
-
