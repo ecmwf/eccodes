@@ -29,6 +29,7 @@ EOF
 ${tools_dir}grib_filter ${data_dir}/f.rules ${data_dir}/tigge_pf_ecmwf.grib2 2> $REDIRECT > $REDIRECT
 
 rm -f ${data_dir}/split/*
+rmdir ${data_dir}/split
 rm -f ${data_dir}/f.rules
 
 # Test with nonexistent keys. Note spelling of centre!

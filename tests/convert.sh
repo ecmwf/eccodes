@@ -8,6 +8,12 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
+#
+# ----------------------------------------------------------------------------------
+# Note: the grib_convert tool is now deprecated! So this test is no longer relevant
+# ----------------------------------------------------------------------------------
+#
+
 . ./include.sh
 
 REDIRECT=/dev/null

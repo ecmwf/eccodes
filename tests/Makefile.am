@@ -1,7 +1,7 @@
 TESTS = definitions.sh \
         ieee.sh grib1to2.sh \
         unit_tests.sh \
-        grib2to1.sh badgrib.sh ls.sh convert.sh filter.sh  \
+        grib2to1.sh badgrib.sh ls.sh filter.sh  \
         multi.sh budg.sh gridType.sh concept.sh decimalPrecision.sh \
         bitsPerValue.sh get_fail.sh missing.sh \
         local.sh step.sh set.sh iterator.sh \

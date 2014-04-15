@@ -17,7 +17,7 @@ then
   exit 0
 fi
 
-tmpdata=grib_api.grib
+tmpdata=grib_api.$$.grib
 
 rm -f $tmpdata || true
 

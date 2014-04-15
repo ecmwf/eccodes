@@ -12,7 +12,8 @@
 
 REDIRECT=/dev/null
 
-rm -f ${data_dir}/log | true
+templog=${data_dir}/log.step.$$
+rm -f ${templog} | true
 for i in 0 10
 do
   for s in 0 1200 600 6000
@@ -23,7 +24,7 @@ do
       ${tools_dir}grib_set -s ${key}=$s ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib
 #      echo grib_set -s ${key}=$s ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib
 #      grib_get -p step,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib 
-      ${tools_dir}grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib >> ${data_dir}/log
+      ${tools_dir}grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib >> ${templog}
 	done
   done
 done
@@ -35,24 +36,24 @@ do
    ${tools_dir}grib_set -s ${key}=$s ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib
 #   echo grib_set -s ${key}=$s ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib
 #   grib_ls -p step,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib 
-   ${tools_dir}grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib >> ${data_dir}/log
+   ${tools_dir}grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib >> ${templog}
 done
 
 rm -f ${data_dir}/out.grib | true
 
 # test added for ifs stepType=max,min
 ${tools_dir}grib_set -s stepType=max,startStep=3,endStep=6 ${data_dir}/reduced_gaussian_model_level.grib1 ${data_dir}/out.grib
-${tools_dir}grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l ${data_dir}/reduced_gaussian_model_level.grib1 ${data_dir}/out.grib >> ${data_dir}/log
+${tools_dir}grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l ${data_dir}/reduced_gaussian_model_level.grib1 ${data_dir}/out.grib >> ${templog}
 
 rm -f ${data_dir}/out.grib | true
 
-diff ${data_dir}/log ${data_dir}/step.log
+diff ${templog} ${data_dir}/step.log
 
-(${tools_dir}grib_filter ${data_dir}/step_grib1.filter ${data_dir}/timeRangeIndicator_0.grib > ${data_dir}/log) 2>$REDIRECT
+(${tools_dir}grib_filter ${data_dir}/step_grib1.filter ${data_dir}/timeRangeIndicator_0.grib > ${templog}) 2>$REDIRECT
 
-diff ${data_dir}/log ${data_dir}/step_grib1.log
+diff ${templog} ${data_dir}/step_grib1.log
 
-rm -f ${data_dir}/log | true
+rm -f ${templog} | true
 
 # GRIB-180
 # Set PDT 4.8 where you can find the EndOfOverallTimeInterval keys
