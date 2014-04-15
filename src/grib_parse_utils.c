@@ -31,6 +31,7 @@ static pthread_mutex_t mutex_file = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t mutex_rules = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t mutex_concept = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t mutex_stream = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t mutex_parse = PTHREAD_MUTEX_INITIALIZER;
 
 static void init()
 {
@@ -41,6 +42,7 @@ static void init()
     pthread_mutex_init(&mutex_rules,&attr);
     pthread_mutex_init(&mutex_concept,&attr);
     pthread_mutex_init(&mutex_stream,&attr);
+    pthread_mutex_init(&mutex_parse,&attr);
     pthread_mutexattr_destroy(&attr);
 }
 #endif
@@ -470,13 +472,17 @@ void grib_parser_include(const char* fname)
 
 extern int grib_yyparse(void);
 
-static int parse(grib_context* gc,const char* filename)
+static int parse(grib_context* gc, const char* filename)
 {
     int err = 0;
+    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex_parse);
 
 #ifdef YYDEBUG
-    extern int grib_yydebug;
-    grib_yydebug = getenv("YYDEBUG") != NULL;
+    {
+      extern int grib_yydebug;
+      grib_yydebug = getenv("YYDEBUG") != NULL;
+    }
 #endif
 
     gc = gc ? gc : grib_context_get_default();
@@ -488,6 +494,7 @@ static int parse(grib_context* gc,const char* filename)
     if (!grib_yyin) {
         /* Could not read from file */
         parse_file = 0;
+        GRIB_MUTEX_UNLOCK(&mutex_parse);
         return GRIB_FILE_NOT_FOUND;
     }
     err = grib_yyparse();
@@ -495,6 +502,7 @@ static int parse(grib_context* gc,const char* filename)
 
     if (err) grib_context_log(gc,GRIB_LOG_ERROR,"Parsing error %d > %s\n",err, filename);
 
+    GRIB_MUTEX_UNLOCK(&mutex_parse);
     return err;
 }
 
