@@ -65,8 +65,8 @@ def require(**_params_):
                 param = kw[name]
                 if type(allowed_types) == types.TypeType:
                     allowed_types = (allowed_types,)
-                assert type(param) in allowed_types, \
-                    "Parameter '%s' should be type %s" % (name, " or ".join([t.__name__ for t in allowed_types]))
+                assert any([isinstance(param, type1) for type1 in allowed_types]), \
+                    "Parameter '%s' should be of type %s" % (name, " or ".join([t.__name__ for t in allowed_types]))
             return _func_(**kw)
         return modified
     return check_types
