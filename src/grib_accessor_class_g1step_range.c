@@ -355,6 +355,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
             (strcmp(stepType,"diff") == 0)  ||
             (strcmp(stepType,"avgas") == 0) ||
             (strcmp(stepType,"avgad") == 0) ||
+            (strcmp(stepType,"avgid") == 0) ||
             (strcmp(stepType,"varas") == 0) ||
             (strcmp(stepType,"varad") == 0) ||
             (strcmp(stepType,"vari") == 0) )
