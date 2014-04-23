@@ -4,16 +4,17 @@
 082 wx3 Wave experimental parameter 3
 083 wx4 Wave experimental parameter 4
 084 wx5 Wave experimental parameter 5
-121 swh1 Significant wave height of first partition
-122 mwd1 Mean wave direction of first partition
-123 mwp1 Mean wave period of first partition
-124 swh2 Significant wave height of second partition
-125 mwd2 Mean wave direction of second partition
-126 mwp2 Mean wave period of second partition
-127 swh3 Significant wave height of third partition
-128 mwd3 Mean wave direction of third partition
-129 mwp3 Mean wave period of third partition
+121 swh1 Significant wave height of first swell partition
+122 mwd1 Mean wave direction of first swell partition
+123 mwp1 Mean wave period of first swell partition
+124 swh2 Significant wave height of second swell partition
+125 mwd2 Mean wave direction of second swell partition
+126 mwp2 Mean wave period of second swell partition
+127 swh3 Significant wave height of third swell partition
+128 mwd3 Mean wave direction of third swell partition
+129 mwp3 Mean wave period of third swell partition
 200 maxswh Maximum of significant wave height
+207 wss Wave Spectral Skewness (dimensionless)
 208 wstar Free convective velocity over the oceans
 209 rhoao Air density over the oceans
 210 mswsi Mean square wave strain in sea ice

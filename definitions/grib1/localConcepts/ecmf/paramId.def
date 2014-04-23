@@ -3344,50 +3344,55 @@
 	 table2Version = 140 ;
 	 indicatorOfParameter = 84 ;
 	}
-#Significant wave height of first partition
+#Significant wave height of first swell partition
 '140121' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 121 ;
 	}
-#Mean wave direction of first partition
+#Mean wave direction of first swell partition
 '140122' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 122 ;
 	}
-#Mean wave period of first partition
+#Mean wave period of first swell partition
 '140123' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 123 ;
 	}
-#Significant wave height of second partition
+#Significant wave height of second swell partition
 '140124' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 124 ;
 	}
-#Mean wave direction of second partition
+#Mean wave direction of second swell partition
 '140125' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 125 ;
 	}
-#Mean wave period of second partition
+#Mean wave period of second swell partition
 '140126' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 126 ;
 	}
-#Significant wave height of third partition
+#Significant wave height of third swell partition
 '140127' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 127 ;
 	}
-#Mean wave direction of third partition
+#Mean wave direction of third swell partition
 '140128' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 128 ;
 	}
-#Mean wave period of third partition
+#Mean wave period of third swell partition
 '140129' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 129 ;
+	}
+#Wave Spectral Skewness
+'140207' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 207 ;
 	}
 #Free convective velocity over the oceans
 '140208' = {
