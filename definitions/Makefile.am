@@ -252,7 +252,8 @@ dist_definitionsgrib1_DATA = \
 
 definitionsgrib1_local_ecmfdir = @GRIB_DEFINITION_PATH@/grib1/local/ecmf
 dist_definitionsgrib1_local_ecmf_DATA = \
-	grib1/local/ecmf/3.table
+	grib1/local/ecmf/3.table\
+	grib1/local/ecmf/5.table
 
 definitionsgrib1_local_rjtddir = @GRIB_DEFINITION_PATH@/grib1/local/rjtd
 dist_definitionsgrib1_local_rjtd_DATA = \

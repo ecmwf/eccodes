@@ -20,7 +20,7 @@
 18        unitOfTimeRange = 1 [Hour (grib1/4.table) ]
 19        P1 = 0
 20        P2 = 0
-21        timeRangeIndicator = 0 [Forecast product valid at reference time + P1  (P1>0)  (grib1/5.table) ]
+21        timeRangeIndicator = 0 [Forecast product valid at reference time + P1  (P1>0)  (grib1/5.table , grib1/local/ecmf/5.table) ]
 22-23     numberIncludedInAverage = 0
 24        numberMissingFromAveragesOrAccumulations = 0
 25        centuryOfReferenceTimeOfData = 21

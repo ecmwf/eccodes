@@ -28,3 +28,7 @@
 "cov"     = {timeRangeIndicator=122;}
 "avgua"   = {timeRangeIndicator=123;}
 "avgia"   = {timeRangeIndicator=124;}
+
+"avgas"   = {timeRangeIndicator=128;}
+"avgad"   = {timeRangeIndicator=130;}
+"avgid"   = {timeRangeIndicator=133;}
