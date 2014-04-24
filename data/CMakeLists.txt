@@ -79,7 +79,6 @@ set(files_to_download
     sst_globus0083.grib
     test.grib1
     test_uuid.grib2
-    tigge
     tigge_af_ecmwf.grib2
     tigge_cf_ecmwf.grib2
     tigge_ecmwf.grib2

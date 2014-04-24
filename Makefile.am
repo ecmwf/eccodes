@@ -367,6 +367,7 @@ EXTRA_DIST = README AUTHORS NOTICE LICENSE ChangeLog version.sh html \
 		data/read_any.ok \
 		data/simple_bitmap.grib \
 		data/second_ord_rbr.grib1 \
+		data/download.sh \
 		perf/jmeter.awk \
 		perf/time.sh \
 		windows/msvc/grib_api.sln \

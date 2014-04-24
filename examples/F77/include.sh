@@ -31,6 +31,9 @@ then
   GRIB_API_LIB=`pwd`/src
 fi
 
+# Download the data needed for tests
+${data_dir}/download.sh "${data_dir}"
+
 #${tools_dir}grib_info
 
 set -u
