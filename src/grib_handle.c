@@ -259,7 +259,7 @@ grib_handle* grib_handle_new_from_samples ( grib_context* c, const char* name )
 
 	g=grib_external_template ( c,name );
 	if ( !g )
-		grib_context_log ( c,GRIB_LOG_ERROR,"Unable to locate sample file %s.tmpl\n                    in %s",
+		grib_context_log ( c,GRIB_LOG_ERROR,"Unable to load sample file %s.tmpl\n                    in %s",
 				name, c->grib_samples_path );
 
 	return g;

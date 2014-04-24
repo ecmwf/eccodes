@@ -48,6 +48,10 @@ static grib_handle* try_template(grib_context* c,const char* dir,const char* nam
 
   sprintf(path,"%s/%s.tmpl",dir,name);
 
+  if (c->debug==-1) {
+    printf("GRIB_API DEBUG: try_template path='%s'\n", path);
+  }
+
   if(access(path,F_OK) == 0)
   {
     FILE* f = fopen(path,"r");
@@ -57,6 +61,9 @@ static grib_handle* try_template(grib_context* c,const char* dir,const char* nam
       return NULL;
     }
     g = grib_handle_new_from_file(c,f,&err);
+    if (!g) {
+       grib_context_log(c,GRIB_LOG_ERROR,"cannot create GRIB handle from %s",path);
+    }
     fclose(f);
   }
 
