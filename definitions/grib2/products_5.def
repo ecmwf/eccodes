@@ -11,6 +11,7 @@
 constant marsExpver = 'test';
 constant marsClass = 'ti';
 constant marsModel = 'glob';
+alias is_tigge = one;
 
 alias tigge_short_name=shortName;
 alias short_name=shortName;
