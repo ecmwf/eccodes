@@ -1,0 +1,93 @@
+static grib_section* sub_section(grib_accessor* a);
+static int  get_native_type(grib_accessor*);
+static int pack_missing(grib_accessor*);
+static int is_missing(grib_accessor*);
+static int pack_bytes(grib_accessor*,const unsigned char*, size_t *len);
+static int pack_double(grib_accessor*, const double* val,size_t *len);
+static int pack_long(grib_accessor*, const long* val,size_t *len);
+static int pack_string(grib_accessor*, const char*, size_t *len);
+static int pack_expression(grib_accessor*, grib_expression*);
+static int unpack_bytes (grib_accessor*,unsigned char*, size_t *len);
+static int unpack_double(grib_accessor*, double* val,size_t *len);
+static int unpack_long(grib_accessor*, long* val,size_t *len);
+static int unpack_string (grib_accessor*, char*, size_t *len);
+static size_t string_length(grib_accessor*);
+static long byte_count(grib_accessor*);
+static long byte_offset(grib_accessor*);
+static long next_offset(grib_accessor*);
+static int value_count(grib_accessor*,long*);
+static void destroy(grib_context*,grib_accessor*);
+static void dump(grib_accessor*, grib_dumper*);
+static void init(grib_accessor*,const long, grib_arguments* );
+static void post_init(grib_accessor*);
+static void init_class(grib_accessor_class*);
+static int notify_change(grib_accessor*,grib_accessor*);
+static void update_size(grib_accessor*,size_t);
+static size_t preferred_size(grib_accessor*,int);
+static void resize(grib_accessor*,size_t);
+static int nearest_smaller_value (grib_accessor*, double,double*);
+static grib_accessor* next(grib_accessor*, int);
+static int compare(grib_accessor*, grib_accessor*);
+static int unpack_double_element(grib_accessor*,size_t i, double* val);
+static int unpack_double_subarray(grib_accessor*, double* val,size_t start,size_t len);
+static int clear(grib_accessor*);
+
+typedef struct grib_accessor_NAME {
+    grib_accessor          att;
+MEMBERS
+} grib_accessor_NAME;
+
+extern grib_accessor_class* SUPER;
+
+static grib_accessor_class _grib_accessor_class_NAME = {
+    &SUPER,                      /* super                     */
+    "NAME",                      /* name                      */
+    sizeof(grib_accessor_NAME),  /* size                      */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
+    &init,                       /* init                      */
+    &post_init,                  /* post_init                      */
+    &destroy,                    /* free mem                       */
+    &dump,                       /* describes himself         */
+    &next_offset,                /* get length of section     */
+    &string_length,              /* get length of string      */
+    &value_count,                /* get number of values      */
+    &byte_count,                 /* get number of bytes      */
+    &byte_offset,                /* get offset to bytes           */
+    &get_native_type,            /* get native type               */
+    &sub_section,                /* get sub_section                */
+    &pack_missing,               /* grib_pack procedures long      */
+    &is_missing,               /* grib_pack procedures long      */
+    &pack_long,                  /* grib_pack procedures long      */
+    &unpack_long,                /* grib_unpack procedures long    */
+    &pack_double,                /* grib_pack procedures double    */
+    &unpack_double,              /* grib_unpack procedures double  */
+    &pack_string,                /* grib_pack procedures string    */
+    &unpack_string,              /* grib_unpack procedures string  */
+    &pack_bytes,                 /* grib_pack procedures bytes     */
+    &unpack_bytes,               /* grib_unpack procedures bytes   */
+    &pack_expression,            /* pack_expression */
+    &notify_change,              /* notify_change   */
+    &update_size,                /* update_size   */
+    &preferred_size,            /* preferred_size   */
+    &resize,                    /* resize   */
+    &nearest_smaller_value,      /* nearest_smaller_value */
+    &next,                       /* next accessor    */
+    &compare,                    /* compare vs. another accessor   */
+    &unpack_double_element,     /* unpack only ith value          */
+    &unpack_double_subarray,     /* unpack a subarray         */
+    &clear,             		/* clear          */
+};
+
+
+grib_accessor_class* grib_accessor_class_NAME = &_grib_accessor_class_NAME;
+
+ADD_TO_FILE grib_accessor_class.h      extern grib_accessor_class* grib_accessor_class_NAME;
+ADD_TO_FILE grib_accessor_factory.h    { "NAME", &grib_accessor_class_NAME, },
+ADD_TO_FILE grib_accessor_factory_hash_list     NAME, &grib_accessor_class_NAME
+
+static void init_class(grib_accessor_class* c)
+{
+INIT
+}
+

@@ -1,0 +1,55 @@
+typedef const char* string; /* to keep make_class.pl happy */
+
+
+static void init_class              (grib_expression_class*);
+
+static void        init(grib_expression* e);
+static void        destroy(grib_context*,grib_expression* e);
+
+static void        print(grib_context*,grib_expression*,grib_handle*);
+static void        compile(grib_expression*,grib_compiler*);
+static void        add_dependency(grib_expression* e, grib_accessor* observer);
+static string get_name(grib_expression* e);
+
+static int        native_type(grib_expression*,grib_handle*);
+
+static int        evaluate_long(grib_expression*,grib_handle*,long*);
+static int      evaluate_double(grib_expression*,grib_handle*,double*);
+static string evaluate_string(grib_expression*,grib_handle*,char*,size_t*,int*);
+
+typedef struct grib_expression_NAME{
+  grib_expression base;
+  MEMBERS
+} grib_expression_NAME;
+
+extern grib_expression_class* SUPER;
+
+static grib_expression_class _grib_expression_class_NAME = {
+    &SUPER,                    /* super                     */
+    "NAME",                    /* name                      */
+    sizeof(grib_expression_NAME),/* size of instance          */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
+    &init,                     /* constructor               */
+    &destroy,                  /* destructor                */
+    &print,                 
+    &compile,                 
+    &add_dependency,       
+
+	&native_type,
+	&get_name,
+
+	&evaluate_long,
+	&evaluate_double,
+	&evaluate_string,
+};
+
+grib_expression_class* grib_expression_class_NAME = &_grib_expression_class_NAME;
+
+ADD_TO_FILE grib_expression_class.h      extern grib_expression_class* grib_expression_class_NAME;
+ADD_TO_FILE grib_expression_factory.h    { "NAME", &grib_expression_class_NAME, },
+
+static void init_class(grib_expression_class* c)
+{
+INIT
+}

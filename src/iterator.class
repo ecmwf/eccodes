@@ -1,0 +1,41 @@
+
+static void init_class              (grib_iterator_class*);
+
+static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
+static int next               (grib_iterator* i, double *lat, double *lon, double *val);
+static int previous           (grib_iterator* ei, double *lat, double *lon, double *val);
+static int destroy            (grib_iterator* i);
+static int reset              (grib_iterator* i);
+static long has_next          (grib_iterator* i);
+
+
+typedef struct grib_iterator_NAME{
+  grib_iterator it;
+  MEMBERS
+} grib_iterator_NAME;
+
+extern grib_iterator_class* SUPER;
+
+static grib_iterator_class _grib_iterator_class_NAME = {
+    &SUPER,                    /* super                     */
+    "NAME",                    /* name                      */
+    sizeof(grib_iterator_NAME),/* size of instance          */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
+    &init,                     /* constructor               */
+    &destroy,                  /* destructor                */
+    &next,                     /* Next Value                */
+    &previous,                 /*  Previous Value           */
+    &reset,                    /* Reset the counter         */
+    &has_next,                 /* has next values           */
+};
+
+grib_iterator_class* grib_iterator_class_NAME = &_grib_iterator_class_NAME;
+
+ADD_TO_FILE grib_iterator_class.h      extern grib_iterator_class* grib_iterator_class_NAME;
+ADD_TO_FILE grib_iterator_factory.h    { "NAME", &grib_iterator_class_NAME, },
+
+static void init_class(grib_iterator_class* c)
+{
+INIT
+}

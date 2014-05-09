@@ -1,0 +1,34 @@
+
+static void init_class              (grib_box_class*);
+
+static int init               (grib_box* box,grib_handle* h,grib_arguments* args);
+static grib_points* get_points(grib_box* box, double north, double west, double south,double east,int *err);
+static int destroy            (grib_box* box);
+
+typedef struct grib_box_NAME{
+  grib_box box;
+  MEMBERS
+} grib_box_NAME;
+
+extern grib_box_class* SUPER;
+
+static grib_box_class _grib_box_class_NAME = {
+    &SUPER,                         /* super                     */
+    "NAME",                         /* name                      */
+    sizeof(grib_box_NAME),      /* size of instance          */
+    0,                              /* inited */
+    &init_class,                    /* init_class */
+    &init,                          /* constructor               */
+    &destroy,                       /* destructor                */
+    &get_points,                    /* get points           */
+};
+
+grib_box_class* grib_box_class_NAME = &_grib_box_class_NAME;
+
+ADD_TO_FILE grib_box_class.h      extern grib_box_class* grib_box_class_NAME;
+ADD_TO_FILE grib_box_factory.h    { "NAME", &grib_box_class_NAME, },
+
+static void init_class(grib_box_class* c)
+{
+INIT
+}

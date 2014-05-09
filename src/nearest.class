@@ -1,0 +1,34 @@
+
+static void init_class              (grib_nearest_class*);
+
+static int init               (grib_nearest* nearest,grib_handle* h,grib_arguments* args);
+static int find(grib_nearest* nearest, grib_handle* h,double inlat, double inlon, unsigned long flags, double* outlats,double* outlons, double *values,double *distances, int *indexes,size_t *len);
+static int destroy            (grib_nearest* nearest);
+
+typedef struct grib_nearest_NAME{
+  grib_nearest nearest;
+  MEMBERS
+} grib_nearest_NAME;
+
+extern grib_nearest_class* SUPER;
+
+static grib_nearest_class _grib_nearest_class_NAME = {
+    &SUPER,                         /* super                     */
+    "NAME",                         /* name                      */
+    sizeof(grib_nearest_NAME),      /* size of instance          */
+    0,                              /* inited */
+    &init_class,                    /* init_class */
+    &init,                          /* constructor               */
+    &destroy,                       /* destructor                */
+    &find,                          /* find nearest              */
+};
+
+grib_nearest_class* grib_nearest_class_NAME = &_grib_nearest_class_NAME;
+
+ADD_TO_FILE grib_nearest_class.h      extern grib_nearest_class* grib_nearest_class_NAME;
+ADD_TO_FILE grib_nearest_factory.h    { "NAME", &grib_nearest_class_NAME, },
+
+static void init_class(grib_nearest_class* c)
+{
+INIT
+}
