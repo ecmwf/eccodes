@@ -198,7 +198,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     double bscale = 0;
     double dscale = 0;
     unsigned char* buf = NULL;
-    size_t n_vals = 0;
+    long n_vals = 0;
     size_t size;
     unsigned char* decoded = NULL;
     unsigned char *p = NULL;
@@ -218,7 +218,8 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 
     self->dirty=0;
 
-    n_vals = grib_value_count(a);
+    if((err = grib_value_count(a, &n_vals)) != GRIB_SUCCESS)
+        return err;
 
     if((err = grib_get_long_internal(a->parent->h,self->bits_per_value,&bits_per_value)) != GRIB_SUCCESS)
         return err;
@@ -318,7 +319,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     unsigned char* buf = NULL;
     unsigned char* encoded = NULL;
-    size_t n_vals = 0;
+    long n_vals = 0;
 
     long binary_scale_factor = 0;
     long decimal_scale_factor = 0;
@@ -349,7 +350,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     self->dirty=1;
 
-    n_vals = grib_value_count(a);
+    if((err = grib_value_count(a, &n_vals)) != GRIB_SUCCESS)
+        return err;
 
     if((err = grib_get_long_internal(a->parent->h,self->bits_per_value,&bits_per_value)) != GRIB_SUCCESS)
         return err;
