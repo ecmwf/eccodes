@@ -576,7 +576,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
     int ret=0;
 
     if (h->context->debug==-1)
-        printf("GRIB_API DEBUG grib_set_double_array_internal %ld values\n",(long)length);
+        printf("GRIB_API DEBUG grib_set_double_array_internal key=%s %ld values\n",name, (long)length);
 
     if (length==0) {
         grib_accessor* a = grib_find_accessor(h, name);
@@ -588,6 +588,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
     if (ret!=GRIB_SUCCESS)
         grib_context_log(h->context,GRIB_LOG_ERROR,"unable to set double array %s (%s)",
                 name,grib_get_error_message(ret));
+    /*if (h->context->debug==-1) printf("GRIB_API DEBUG grib_set_double_array_internal key=%s --DONE\n",name);*/
     return ret;
 }
 
@@ -597,7 +598,7 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
     int constant,i;
 
     if (h->context->debug==-1)
-        printf("GRIB_API DEBUG grib_set_double_array %ld values\n",(long)length);
+        printf("GRIB_API DEBUG grib_set_double_array key=%s %ld values\n",name,(long)length);
 
     if (length==0) {
         grib_accessor* a = grib_find_accessor(h, name);
@@ -605,7 +606,7 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
     }
 
     /*second order doesn't have a proper representation for constant fields
-  the best is not to do the change of packing type if the field is constant
+      the best is not to do the change of packing type if the field is constant
      */
     if (!strcmp(name,"values") || !strcmp(name,"codedValues")) {
         double missingValue;

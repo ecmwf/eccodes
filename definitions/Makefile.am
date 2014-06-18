@@ -521,6 +521,7 @@ dist_definitionsgrib2_DATA = \
 	grib2/template.4.horizontal.def\
 	grib2/template.4.parameter.def\
 	grib2/template.4.parameter_aerosol.def\
+	grib2/template.4.parameter_aerosol_44.def\
 	grib2/template.4.parameter_aerosol_optical.def\
 	grib2/template.4.parameter_chemical.def\
 	grib2/template.4.parameter_partition.def\
@@ -2518,5 +2519,7 @@ dist_definitionstide_DATA = \
 	tide/mars_labeling.def\
 	tide/section.1.def\
 	tide/section.4.def
+
+EXTRA_DIST=CMakeLists.txt
 
 include $(DEVEL_RULES)

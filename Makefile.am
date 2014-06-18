@@ -76,6 +76,7 @@ EXTRA_DIST = README AUTHORS NOTICE LICENSE ChangeLog version.sh html \
 		data/scan_y_rotated_ll_8_4_good.dump \
 		data/scan_y_rotated_ll_8_7_good.dump \
 		data/tigge_pf_ecmwf.grib2 \
+		data/tigge_pf_ecmwf.grib2.ref \
 		data/regular_gaussian_pressure_level.grib1 \
 		data/regular_gaussian_model_level.grib1 \
 		data/regular_gaussian_surface.grib1 \
@@ -370,6 +371,19 @@ EXTRA_DIST = README AUTHORS NOTICE LICENSE ChangeLog version.sh html \
 		data/download.sh \
 		perf/jmeter.awk \
 		perf/time.sh \
+		CMakeLists.txt \
+		project_summary.cmake \
+		VERSION.cmake \
+		grib_api_config.h.in \
+		examples/CMakeLists.txt \
+		data/CMakeLists.txt \
+		data/tigge/CMakeLists.txt \
+		ifs_samples/grib1/CMakeLists.txt \
+		ifs_samples/grib1_mlgrib2_ieee64/CMakeLists.txt \
+		ifs_samples/grib1_mlgrib2_ieee32/CMakeLists.txt \
+		ifs_samples/CMakeLists.txt \
+		ifs_samples/grib1_mlgrib2/CMakeLists.txt \
+		samples/CMakeLists.txt \
 		windows/msvc/grib_api.sln \
 		windows/msvc/grib_api_lib/grib_api_lib.vcproj \
 		windows/msvc/grib_dump/grib_dump.vcproj \

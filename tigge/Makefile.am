@@ -14,3 +14,4 @@ INCLUDES =  -I$(top_builddir)/src
 
 LDADD = $(top_builddir)/src/libgrib_api.la
 DEPENDENCIES = $(LDADD)
+EXTRA_DIST = CMakeLists.txt

@@ -30,7 +30,8 @@ EXTRA_DIST = grib_interface.h \
 			swig_wrap_array.c \
 			swig_wrap_numpy.c \
 			swig_wrap_array.py \
-			swig_wrap_numpy.py
+			swig_wrap_numpy.py \
+			CMakeLists.txt
 
 # What else I want installed
 pkgpyexec_DATA = \
@@ -69,7 +70,8 @@ EXTRA_DIST = setup.py.in \
 			swig_wrap_array.c \
 			swig_wrap_numpy.c \
 			swig_wrap_array.py \
-			swig_wrap_numpy.py
+			swig_wrap_numpy.py \
+			CMakeLists.txt
 
 # What I want installed
 pdir = $(libdir)/python$(PYTHON_VERSION)/site-packages/grib_api

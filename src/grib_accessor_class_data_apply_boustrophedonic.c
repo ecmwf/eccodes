@@ -136,199 +136,195 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
-  int n=0;
-  grib_accessor_data_apply_boustrophedonic *self =(grib_accessor_data_apply_boustrophedonic*)a;
+    int n=0;
+    grib_accessor_data_apply_boustrophedonic *self =(grib_accessor_data_apply_boustrophedonic*)a;
 
-  self->values  = grib_arguments_get_name(a->parent->h,args,n++);
-  self->numberOfRows = grib_arguments_get_name(a->parent->h,args,n++);
-  self->numberOfColumns = grib_arguments_get_name(a->parent->h,args,n++);
-  self->numberOfPoints = grib_arguments_get_name(a->parent->h,args,n++);
-  self->pl        = grib_arguments_get_name(a->parent->h,args,n++);
+    self->values  = grib_arguments_get_name(a->parent->h,args,n++);
+    self->numberOfRows = grib_arguments_get_name(a->parent->h,args,n++);
+    self->numberOfColumns = grib_arguments_get_name(a->parent->h,args,n++);
+    self->numberOfPoints = grib_arguments_get_name(a->parent->h,args,n++);
+    self->pl        = grib_arguments_get_name(a->parent->h,args,n++);
 
-  a->length = 0;
+    a->length = 0;
 }
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_values(dumper,a);
+    grib_dump_values(dumper,a);
 }
-
 
 static int value_count(grib_accessor* a, long* numberOfPoints)
 {
-	grib_accessor_data_apply_boustrophedonic *self =(grib_accessor_data_apply_boustrophedonic*)a;
-	int ret=0;
+    grib_accessor_data_apply_boustrophedonic *self =(grib_accessor_data_apply_boustrophedonic*)a;
+    int ret=0;
 
-	*numberOfPoints=0;
-	ret=grib_get_long_internal(a->parent->h,self->numberOfPoints,numberOfPoints);
+    *numberOfPoints=0;
+    ret=grib_get_long_internal(a->parent->h,self->numberOfPoints,numberOfPoints);
 
-	return ret;
-
+    return ret;
 }
 
-
-static int  unpack_double(grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-	grib_accessor_data_apply_boustrophedonic* self =  (grib_accessor_data_apply_boustrophedonic*)a;
-	size_t plSize=0;
-	long *pl=0;
-	double *values=0;
-	double *pvalues=0;
-	double *pval=0;
-	size_t valuesSize=0;
-	long i,j;
-	int ret;
-	long numberOfPoints,numberOfRows,numberOfColumns;
+    grib_accessor_data_apply_boustrophedonic* self =  (grib_accessor_data_apply_boustrophedonic*)a;
+    size_t plSize=0;
+    long *pl=0;
+    double *values=0;
+    double *pvalues=0;
+    double *pval=0;
+    size_t valuesSize=0;
+    long i,j;
+    int ret;
+    long numberOfPoints,numberOfRows,numberOfColumns;
 
-	ret=grib_get_long_internal(a->parent->h,self->numberOfPoints,&numberOfPoints);
-	if (ret) return ret;
+    ret=grib_get_long_internal(a->parent->h,self->numberOfPoints,&numberOfPoints);
+    if (ret) return ret;
 
-	if(*len < numberOfPoints) {
-		*len = numberOfPoints;
-		return GRIB_ARRAY_TOO_SMALL;
-	}
+    if(*len < numberOfPoints) {
+        *len = numberOfPoints;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
 
-	ret=grib_get_size(a->parent->h,self->values,&valuesSize);
-	if (ret) return ret;
+    ret=grib_get_size(a->parent->h,self->values,&valuesSize);
+    if (ret) return ret;
 
-	/* constant field */
-	if (valuesSize==0) return 0;
+    /* constant field */
+    if (valuesSize==0) return 0;
 
-	if (valuesSize!=numberOfPoints) {
-		grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"boustrophedonic ordering error: ( %s=%ld ) != (sizeOf(%s)=%ld)",
-							self->numberOfPoints,numberOfPoints,self->values,(long)valuesSize);
-		return GRIB_DECODING_ERROR;
-	}
+    if (valuesSize!=numberOfPoints) {
+        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"boustrophedonic ordering error: ( %s=%ld ) != (sizeOf(%s)=%ld)",
+                self->numberOfPoints,numberOfPoints,self->values,(long)valuesSize);
+        return GRIB_DECODING_ERROR;
+    }
 
-	values=grib_context_malloc_clear(a->parent->h->context,sizeof(double)*numberOfPoints);
-	ret=grib_get_double_array_internal(a->parent->h,self->values,values,&valuesSize);
-	if (ret) return ret;
+    values=grib_context_malloc_clear(a->parent->h->context,sizeof(double)*numberOfPoints);
+    ret=grib_get_double_array_internal(a->parent->h,self->values,values,&valuesSize);
+    if (ret) return ret;
 
-	pvalues=values;
-	pval=val;
+    pvalues=values;
+    pval=val;
 
-	ret=grib_get_long_internal(a->parent->h,self->numberOfRows,&numberOfRows);
-	if (ret) return ret;
+    ret=grib_get_long_internal(a->parent->h,self->numberOfRows,&numberOfRows);
+    if (ret) return ret;
 
-	ret=grib_get_long_internal(a->parent->h,self->numberOfColumns,&numberOfColumns);
-	if (ret) return ret;
+    ret=grib_get_long_internal(a->parent->h,self->numberOfColumns,&numberOfColumns);
+    if (ret) return ret;
 
-	if (grib_get_size(a->parent->h,self->pl,&plSize) == GRIB_SUCCESS) {
-		Assert(plSize==numberOfRows);
-		pl=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*plSize);
-		ret=grib_get_long_array_internal(a->parent->h,self->pl,pl,&plSize);
-		if (ret) return ret;
+    if (grib_get_size(a->parent->h,self->pl,&plSize) == GRIB_SUCCESS) {
+        Assert(plSize==numberOfRows);
+        pl=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*plSize);
+        ret=grib_get_long_array_internal(a->parent->h,self->pl,pl,&plSize);
+        if (ret) return ret;
 
-		for (j=0;j<numberOfRows;j++) {
-		  if (j%2) {
-			  pval+=pl[j];
-			  for (i=0;i<pl[j];i++) *(pval--)=*(pvalues++);
-			  pval+=pl[j];
-		  } else {
-			  for (i=0;i<pl[j];i++) *(pval++)=*(pvalues++);
-		  }
-		}
+        for (j=0;j<numberOfRows;j++) {
+            if (j%2) {
+                pval+=pl[j];
+                for (i=0;i<pl[j];i++) *(pval--)=*(pvalues++);
+                pval+=pl[j];
+            } else {
+                for (i=0;i<pl[j];i++) *(pval++)=*(pvalues++);
+            }
+        }
 
-		grib_context_free(a->parent->h->context,pl);
+        grib_context_free(a->parent->h->context,pl);
 
-	} else {
+    } else {
 
-		for (j=0;j<numberOfRows;j++) {
-		  if (j%2) {
-			  pval+=numberOfColumns-1;
-			  for (i=0;i<numberOfColumns;i++) *(pval--)=*(pvalues++);
-			  pval+=numberOfColumns+1;
-		  } else {
-			  for (i=0;i<numberOfColumns;i++) *(pval++)=*(pvalues++);
-		  }
-		}
+        for (j=0;j<numberOfRows;j++) {
+            if (j%2) {
+                pval+=numberOfColumns-1;
+                for (i=0;i<numberOfColumns;i++) *(pval--)=*(pvalues++);
+                pval+=numberOfColumns+1;
+            } else {
+                for (i=0;i<numberOfColumns;i++) *(pval++)=*(pvalues++);
+            }
+        }
 
-	}
+    }
 
-	grib_context_free(a->parent->h->context,values);
+    grib_context_free(a->parent->h->context,values);
 
-	return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
-static int  unpack_double_element(grib_accessor* a, size_t idx,double* val)
+static int unpack_double_element(grib_accessor* a, size_t idx,double* val)
 {
-  return GRIB_NOT_IMPLEMENTED;
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-	grib_accessor_data_apply_boustrophedonic* self =  (grib_accessor_data_apply_boustrophedonic*)a;
-	size_t plSize=0;
-	long *pl=0;
-	double *values=0;
-	double *pvalues=0;
-	double *pval=0;
-	size_t valuesSize=0;
-	long i,j;
-	int ret;
-	long numberOfPoints,numberOfRows,numberOfColumns;
+    grib_accessor_data_apply_boustrophedonic* self =  (grib_accessor_data_apply_boustrophedonic*)a;
+    size_t plSize=0;
+    long *pl=0;
+    double *values=0;
+    double *pvalues=0;
+    double *pval=0;
+    size_t valuesSize=0;
+    long i,j;
+    int ret;
+    long numberOfPoints,numberOfRows,numberOfColumns;
 
-	ret=grib_get_long_internal(a->parent->h,self->numberOfPoints,&numberOfPoints);
-	if (ret) return ret;
+    ret=grib_get_long_internal(a->parent->h,self->numberOfPoints,&numberOfPoints);
+    if (ret) return ret;
 
-	if(*len < numberOfPoints) {
-		*len = numberOfPoints;
-		return GRIB_ARRAY_TOO_SMALL;
-	}
+    if(*len < numberOfPoints) {
+        *len = numberOfPoints;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
 
-	valuesSize=numberOfPoints;
+    valuesSize=numberOfPoints;
 
-	values=grib_context_malloc_clear(a->parent->h->context,sizeof(double)*numberOfPoints);
+    values=grib_context_malloc_clear(a->parent->h->context,sizeof(double)*numberOfPoints);
 
-	pvalues=values;
-	pval=(double*)val;
+    pvalues=values;
+    pval=(double*)val;
 
-	ret=grib_get_long_internal(a->parent->h,self->numberOfRows,&numberOfRows);
-	if (ret) return ret;
+    ret=grib_get_long_internal(a->parent->h,self->numberOfRows,&numberOfRows);
+    if (ret) return ret;
 
-	ret=grib_get_long_internal(a->parent->h,self->numberOfColumns,&numberOfColumns);
-	if (ret) return ret;
+    ret=grib_get_long_internal(a->parent->h,self->numberOfColumns,&numberOfColumns);
+    if (ret) return ret;
 
-	if (grib_get_size(a->parent->h,self->pl,&plSize) == GRIB_SUCCESS) {
-		Assert(plSize==numberOfRows);
-		pl=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*plSize);
-		ret=grib_get_long_array_internal(a->parent->h,self->pl,pl,&plSize);
-		if (ret) return ret;
+    if (grib_get_size(a->parent->h,self->pl,&plSize) == GRIB_SUCCESS) {
+        Assert(plSize==numberOfRows);
+        pl=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*plSize);
+        ret=grib_get_long_array_internal(a->parent->h,self->pl,pl,&plSize);
+        if (ret) return ret;
 
-		for (j=0;j<numberOfRows;j++) {
-		  if (j%2) {
-			  pvalues+=pl[j];
-			  for (i=0;i<pl[j] ;i++) { *(--pvalues)=*(pval++); }
-			  pvalues+=pl[j];
-		  } else {
-			  for (i=0;i<pl[j];i++) *(pvalues++)=*(pval++);
-		  }
-		}
+        for (j=0;j<numberOfRows;j++) {
+            if (j%2) {
+                pvalues+=pl[j];
+                for (i=0;i<pl[j] ;i++) { *(--pvalues)=*(pval++); }
+                pvalues+=pl[j];
+            } else {
+                for (i=0;i<pl[j];i++) *(pvalues++)=*(pval++);
+            }
+        }
 
-		grib_context_free(a->parent->h->context,pl);
+        grib_context_free(a->parent->h->context,pl);
 
-	} else {
+    } else {
 
-		for (j=0;j<numberOfRows;j++) {
-		  if (j%2) {
-			  pvalues+=numberOfColumns;
-			  for (i=0;i<numberOfColumns;i++) *(--pvalues)=*(pval++);
-			  pvalues+=numberOfColumns;
-		  } else {
-			  for (i=0;i<numberOfColumns;i++) *(pvalues++)=*(pval++);
-		  }
-		}
+        for (j=0;j<numberOfRows;j++) {
+            if (j%2) {
+                pvalues+=numberOfColumns;
+                for (i=0;i<numberOfColumns;i++) *(--pvalues)=*(pval++);
+                pvalues+=numberOfColumns;
+            } else {
+                for (i=0;i<numberOfColumns;i++) *(pvalues++)=*(pval++);
+            }
+        }
 
-	}
-	ret=grib_set_double_array_internal(a->parent->h,self->values,values,valuesSize);
-	if (ret) return ret;
+    }
+    ret=grib_set_double_array_internal(a->parent->h,self->values,values,valuesSize);
+    if (ret) return ret;
 
-	grib_context_free(a->parent->h->context,values);
+    grib_context_free(a->parent->h->context,values);
 
-
-  return ret;
+    return ret;
 }
 
-static int  get_native_type(grib_accessor* a)
+static int get_native_type(grib_accessor* a)
 {
-   return GRIB_TYPE_DOUBLE;
+    return GRIB_TYPE_DOUBLE;
 }

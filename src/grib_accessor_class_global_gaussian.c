@@ -181,8 +181,8 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 	if((ret = grib_get_long_internal(a->parent->h, self->subdivision,&subdivision)) != GRIB_SUCCESS)
 		return ret;
 
-	if ((basic_angle!=0 && basic_angle!=GRIB_MISSING_LONG) || 
-	  		( subdivision !=0 && subdivision == GRIB_MISSING_LONG)) {
+	if ( (basic_angle !=0 && basic_angle != GRIB_MISSING_LONG) || 
+      ( subdivision  !=0 && subdivision != GRIB_MISSING_LONG) ) {
 		*val=0;
 		return ret;
 	}

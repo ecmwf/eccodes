@@ -214,7 +214,8 @@ static int find(grib_nearest* nearest, grib_handle* h,
 static int find(grib_nearest* nearest, grib_handle* h,
                 double inlat, double inlon,unsigned long flags,
                 double* outlats,double* outlons,
-                double *values,double *distances,int* indexes, size_t *len) {
+                double *values,double *distances,int* indexes, size_t *len)
+{
   grib_nearest_regular* self = (grib_nearest_regular*) nearest;
   int ret=0,kk=0,ii=0,jj=0;
   size_t nvalues=0;
@@ -358,12 +359,29 @@ static int find(grib_nearest* nearest, grib_handle* h,
   }
 
   kk=0;
+
+/*
+ * Brute force algorithm:
+ * First unpack all the values into an array. Then when we need the 4 points
+ * we just index into this array so no need to call grib_get_double_element_internal
+ * 
+ *   if (nearest->values) grib_context_free(nearest->context,nearest->values);
+ *   nearest->values = grib_context_malloc(h->context,nvalues*sizeof(double));
+ *   if (!nearest->values) return GRIB_OUT_OF_MEMORY;
+ *   ret = grib_get_double_array(h, self->values_key, nearest->values ,&nvalues);
+ *   if (ret) return ret;
+ */
+
   for (jj=0;jj<2;jj++) {
     for (ii=0;ii<2;ii++) {
       distances[kk]=self->distances[kk];
       outlats[kk]=self->lats[self->j[jj]];
       outlons[kk]=self->lons[self->i[ii]];
       grib_get_double_element_internal(h,self->values_key,self->k[kk],&(values[kk]));
+      /* Using the brute force approach described above */
+      /* Assert(self->k[kk] < nvalues); */
+      /* values[kk]=nearest->values[self->k[kk]]; */
+
       indexes[kk]=self->k[kk];
       kk++;
     }

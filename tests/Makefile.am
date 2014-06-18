@@ -37,5 +37,5 @@ LDADD = $(top_builddir)/src/libgrib_api.la $(EMOS_LIB)
 INCLUDES   = -I$(top_builddir)/src
 
 EXTRA_DIST = $(TESTS) mf.rules filter_rules include.sh include.ctest.sh.in \
-             lamb_az_eq_area.ref
+             lamb_az_eq_area.ref CMakeLists.txt
 

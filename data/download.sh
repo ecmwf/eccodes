@@ -1,6 +1,7 @@
 #!/bin/sh
 
 DATA_DIR=$1
+VERBOSE=0
 
 # Check if all downloads are already done
 DOWNLOADED=${DATA_DIR}/.downloaded
@@ -10,6 +11,7 @@ fi
 
 files="
     bad.grib
+    in_copy.grib
     budg
     constant_field.grib1
     constant_width_bitmap.grib
@@ -25,13 +27,12 @@ files="
     gen_ext_spd_2.grib
     gen_ext_spd_3_boust_bitmap.grib
     gen_ext_spd_3.grib
-    gep10.t12z.pgrb2af78.grib2
     gfs.c255.grib2
     gts.grib
     index.grib
+    grid_ieee.grib
     jpeg.grib2
     lfpw.grib1
-    lfpw.grib2
     missing_field.grib1
     missing.grib2
     mixed.grib
@@ -336,13 +337,15 @@ files="
 
 download_URL="http://download.ecmwf.org"
 cd ${DATA_DIR}
-#echo "Downloading data files for testing..."
+echo "Downloading data files for testing..."
 for f in $files; do
     # If we haven't already got the file, download it
     if [ ! -f "$f" ]; then
-        wget --no-verbose -q -O $f ${download_URL}/test-data/grib_api/data/$f
+        wget -nv -q -O $f ${download_URL}/test-data/grib_api/data/$f
         #chmod 444 $f
-        #echo "Downloaded $f ..."
+        if [ $VERBOSE -eq 1 ]; then
+            echo "Downloaded $f ..."
+        fi
     fi
 done
 

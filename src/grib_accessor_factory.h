@@ -25,6 +25,7 @@
 { "data_2order_packing_count", &grib_accessor_class_data_2order_packing_count, },
 { "data_apply_bitmap", &grib_accessor_class_data_apply_bitmap, },
 { "data_apply_boustrophedonic", &grib_accessor_class_data_apply_boustrophedonic, },
+{ "data_apply_boustrophedonic_bitmap", &grib_accessor_class_data_apply_boustrophedonic_bitmap, },
 { "data_apply_gdsnotpresent", &grib_accessor_class_data_apply_gdsnotpresent, },
 { "data_complex_packing", &grib_accessor_class_data_complex_packing, },
 { "data_constant_field", &grib_accessor_class_data_constant_field, },

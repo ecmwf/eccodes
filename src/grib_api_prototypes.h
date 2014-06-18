@@ -429,6 +429,7 @@ second_order_packed *grib_get_second_order_groups(grib_context *c, const unsigne
 /* grib_accessor_class_data_apply_bitmap.c */
 
 /* grib_accessor_class_data_apply_boustrophedonic.c */
+/* grib_accessor_class_data_apply_boustrophedonic_bitmap.c */
 
 /* grib_accessor_class_data_secondary_bitmap.c */
 

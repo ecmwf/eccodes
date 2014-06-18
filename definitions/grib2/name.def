@@ -68,11 +68,35 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Relative humidity with respect to water
+'Relative humidity with respect to water' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 93 ;
+	}
+#Relative humidity with respect to ice
+'Relative humidity with respect to ice' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 94 ;
+	}
 #Snow albedo
 'Snow albedo' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 19 ;
+	}
+#Fraction of stratiform precipitation cover
+'Fraction of stratiform precipitation cover' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 36 ;
+	}
+#Fraction of convective precipitation cover
+'Fraction of convective precipitation cover' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 37 ;
 	}
 #Soil moisture top 20 cm
 'Soil moisture top 20 cm' = {

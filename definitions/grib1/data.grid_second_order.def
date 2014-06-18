@@ -77,11 +77,21 @@ if(bitmapPresent)   {
    ): read_only;
    alias data.packedValues = codedValues; 
 
-   if (boustrophedonicOrdering) {
-	   meta preBitmapValues data_apply_bitmap(codedValues,bitmap,missingValue,binaryScaleFactor) : read_only;
-	   meta values data_apply_boustrophedonic(preBitmapValues,numberOfRows,numberOfColumns,numberOfPoints,pl) : dump;
-   } else {
-	   meta values data_apply_bitmap(codedValues,bitmap,missingValue,binaryScaleFactor) : dump;
+   if (boustrophedonicOrdering)
+   {
+      if (GRIBEX_boustrophedonic)
+      {
+         meta preBitmapValues data_apply_boustrophedonic_bitmap(codedValues,bitmap,missingValue,binaryScaleFactor,numberOfRows,numberOfColumns,numberOfPoints): read_only;
+      }
+      else
+      {
+         meta preBitmapValues data_apply_bitmap(codedValues,bitmap,missingValue,binaryScaleFactor) : read_only;
+      }
+      meta values data_apply_boustrophedonic(preBitmapValues,numberOfRows,numberOfColumns,numberOfPoints,pl) : dump;
+   }
+   else
+   {
+       meta values data_apply_bitmap(codedValues,bitmap,missingValue,binaryScaleFactor) : dump;
    }
 } else {
    if (boustrophedonicOrdering) {

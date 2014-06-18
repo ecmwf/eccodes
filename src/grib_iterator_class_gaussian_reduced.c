@@ -103,106 +103,116 @@ static int next(grib_iterator* i, double *lat, double *lon, double *val)
   return 1;
 }
 
-
 static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
 {
-  int ret=GRIB_SUCCESS,j;
-  double lat_first=0,lon_first=0,lat_last=0,lon_last=0,d=0;
-  double* lats;
-  size_t plsize=0;
-  int l=0;
-  long* pl;
-  long nj=0,order=0,ilon_first,ilon_last,i;
-  long row_count=0;
-  grib_context* c=h->context;
-  grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
-  const char* slat_first   = grib_arguments_get_name(h,args,self->carg++);
-  const char* slon_first   = grib_arguments_get_name(h,args,self->carg++);
-  const char* slat_last    = grib_arguments_get_name(h,args,self->carg++);
-  const char* slon_last    = grib_arguments_get_name(h,args,self->carg++);
-  const char* sorder       = grib_arguments_get_name(h,args,self->carg++);
-  const char* spl          = grib_arguments_get_name(h,args,self->carg++);
-  const char* snj          = grib_arguments_get_name(h,args,self->carg++);
+    int ret=GRIB_SUCCESS,j;
+    double lat_first=0,lon_first=0,lat_last=0,lon_last=0,d=0;
+    double* lats;
+    size_t plsize=0;
+    int l=0;
+    long* pl;
+    long nj=0,order=0,ilon_first,ilon_last,i;
+    long row_count=0;
+    grib_context* c=h->context;
+    grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
+    const char* slat_first   = grib_arguments_get_name(h,args,self->carg++);
+    const char* slon_first   = grib_arguments_get_name(h,args,self->carg++);
+    const char* slat_last    = grib_arguments_get_name(h,args,self->carg++);
+    const char* slon_last    = grib_arguments_get_name(h,args,self->carg++);
+    const char* sorder       = grib_arguments_get_name(h,args,self->carg++);
+    const char* spl          = grib_arguments_get_name(h,args,self->carg++);
+    const char* snj          = grib_arguments_get_name(h,args,self->carg++);
 
-  if((ret = grib_get_double_internal(h, slat_first,&lat_first)) != GRIB_SUCCESS)
-    return ret;
-  if((ret = grib_get_double_internal(h, slon_first,&lon_first)) != GRIB_SUCCESS)
-    return ret;
-  if((ret = grib_get_double_internal(h, slat_last,&lat_last)) != GRIB_SUCCESS)
-    return ret;
-  if((ret = grib_get_double_internal(h, slon_last,&lon_last)) != GRIB_SUCCESS)
-    return ret;
+    if((ret = grib_get_double_internal(h, slat_first,&lat_first)) != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_double_internal(h, slon_first,&lon_first)) != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_double_internal(h, slat_last,&lat_last)) != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_double_internal(h, slon_last,&lon_last)) != GRIB_SUCCESS)
+        return ret;
 
-  if((ret = grib_get_long_internal(h, sorder,&order)) != GRIB_SUCCESS)
-    return ret;
-  if((ret = grib_get_long_internal(h, snj,&nj)) != GRIB_SUCCESS)
-    return ret;
+    if((ret = grib_get_long_internal(h, sorder,&order)) != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_long_internal(h, snj,&nj)) != GRIB_SUCCESS)
+        return ret;
 
-  lats=(double*)grib_context_malloc(h->context,sizeof(double)*order*2);
-  if((ret = grib_get_gaussian_latitudes(order, lats)) != GRIB_SUCCESS)
-      return ret;
+    lats=(double*)grib_context_malloc(h->context,sizeof(double)*order*2);
+    if (!lats) return GRIB_OUT_OF_MEMORY;
+    if((ret = grib_get_gaussian_latitudes(order, lats)) != GRIB_SUCCESS)
+        return ret;
 
-  if((ret = grib_get_size(h,spl,&plsize)) != GRIB_SUCCESS)
-      return ret;
+    if((ret = grib_get_size(h,spl,&plsize)) != GRIB_SUCCESS)
+        return ret;
 
-  pl=(long*)grib_context_malloc(c,sizeof(long)*plsize);
-  grib_get_long_array_internal(h,spl,pl, &plsize);
+    pl=(long*)grib_context_malloc(c,sizeof(long)*plsize);
+    if (!pl) return GRIB_OUT_OF_MEMORY;
 
-  self->las = grib_context_malloc(h->context,iter->nv*sizeof(double));
-  self->los = grib_context_malloc(h->context,iter->nv*sizeof(double));
+    grib_get_long_array_internal(h,spl,pl, &plsize);
 
-  while (lon_last<0) lon_last+=360;
-  while (lon_first<0) lon_first+=360;
+    self->las = grib_context_malloc(h->context,iter->nv*sizeof(double));
+    if (!self->las) return GRIB_OUT_OF_MEMORY;
+    self->los = grib_context_malloc(h->context,iter->nv*sizeof(double));
+    if (!self->los) return GRIB_OUT_OF_MEMORY;
 
-  d=fabs(lats[0]-lats[1]);
-  if ( (fabs(lat_first-lats[0]) >= d ) ||
-       (fabs(lat_last+lats[0]) >= d )  ||
-       lon_first != 0                 ||
-       fabs(lon_last  - (360.0-90.0/order)) > 90.0/order
-       ) {
-    /*sub area*/
-	/*find starting latitude */
-	while (fabs(lat_first-lats[l]) > d ) {l++;}
-    iter->e=0;
-    for (j=0;j<plsize;j++) {
-        row_count=0;
-		/*printf("lat=%g\n",lats[j+l]);*/
-		grib_get_reduced_row(pl[j],lon_first,lon_last,
-                  &row_count,&ilon_first,&ilon_last);
-        if (ilon_first>ilon_last) ilon_first-=pl[j];
-        for (i=ilon_first;i<=ilon_last;i++) {
-         self->los[iter->e]=((i)*360.0)/pl[j];
-         self->las[iter->e]=lats[j+l];
-         iter->e++;
+    while (lon_last<0) lon_last+=360;
+    while (lon_first<0) lon_first+=360;
+
+    d=fabs(lats[0]-lats[1]);
+    if ( (fabs(lat_first-lats[0]) >= d ) ||
+            (fabs(lat_last+lats[0]) >= d )  ||
+            lon_first != 0                 ||
+            fabs(lon_last  - (360.0-90.0/order)) > 90.0/order
+    ) {
+        /*sub area*/
+        /*find starting latitude */
+        while (fabs(lat_first-lats[l]) > d ) {l++;}
+        iter->e=0;
+        for (j=0;j<plsize;j++) {
+            row_count=0;
+            grib_get_reduced_row(pl[j],lon_first,lon_last,
+                    &row_count,&ilon_first,&ilon_last);
+            if (ilon_first>ilon_last) ilon_first-=pl[j];
+            for (i=ilon_first;i<=ilon_last;i++) {
+#ifdef DEBUG
+                Assert(0);
+                Assert(iter->e < iter->nv);
+#endif
+                self->los[iter->e]=((i)*360.0)/pl[j];
+                self->las[iter->e]=lats[j+l];
+                iter->e++;
+            }
         }
-     }
-  } else {
-    /*global*/
-    iter->e=0;
-    for (j=0;j<plsize;j++) {
-        row_count=pl[j];
-        for (i=0;i<row_count;i++) {
-         self->los[iter->e]=(i*360.0)/row_count;
-         self->las[iter->e]=lats[j];
-         iter->e++;
+    } else {
+        /*global*/
+        iter->e=0;
+        for (j=0;j<plsize;j++) {
+            row_count=pl[j];
+            for (i=0;i<row_count;i++) {
+#ifdef DEBUG
+                Assert(iter->e < iter->nv);
+#endif
+                self->los[iter->e]=(i*360.0)/row_count;
+                self->las[iter->e]=lats[j];
+                iter->e++;
+            }
         }
-     }
-  }
+    }
 
-  iter->e = -1;
-  grib_context_free(h->context,lats);
-  grib_context_free(h->context,pl);
+    iter->e = -1;
+    grib_context_free(h->context,lats);
+    grib_context_free(h->context,pl);
 
-  return ret;
+    return ret;
 }
 
 static int destroy(grib_iterator* i)
 {
-  grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)i;
-  const grib_context *c = i->h->context;
+    grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)i;
+    const grib_context *c = i->h->context;
 
-  grib_context_free(c,self->las);
-  grib_context_free(c,self->los);
-  return 1;
+    grib_context_free(c,self->las);
+    grib_context_free(c,self->los);
+    return 1;
 }
 

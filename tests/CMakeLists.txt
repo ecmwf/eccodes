@@ -14,6 +14,7 @@ list( APPEND test_bins
       unit_tests
       gauss_sub
 )
+
 foreach( tool ${test_bins} )
     # here we use the fact that each tool has only one C file that matches its name
     ecbuild_add_executable( TARGET    ${tool}
@@ -62,12 +63,14 @@ list( APPEND tests
     debug
     unit_tests
 )
-foreach (test ${tests})
+
+foreach( test ${tests} )
+
     ecbuild_add_test( TARGET t_${test}
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                   RESOURCES include.sh
-)
+    )
 endforeach()
 
 ###########################################
@@ -79,18 +82,16 @@ ecbuild_add_test( TARGET t_lamb_az_eq_area
 )
 
 # These ones are conditional
-if ( ENABLE_NETCDF )
-    ecbuild_add_test( TARGET t_grib_to_netcdf
+ecbuild_add_test( TARGET t_grib_to_netcdf
                   TYPE SCRIPT
+                  CONDITION ENABLE_NETCDF
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_to_netcdf.sh
                   RESOURCES include.sh
-    )
-endif()
+)
 
-if( ENABLE_JPG )
-    ecbuild_add_test( TARGET t_jpeg
-                      TYPE SCRIPT
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/jpeg.sh
-                      RESOURCES include.sh
-    )
-endif()
+ecbuild_add_test( TARGET t_jpeg
+                  TYPE SCRIPT
+                  CONDITION ENABLE_JPG
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/jpeg.sh
+                  RESOURCES include.sh
+)

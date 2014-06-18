@@ -41,7 +41,7 @@ int main(int argc, char** argv)
     grib_iterator* iter=NULL;
 
     if (argc != 2) usage(argv[0]);
-    filename=strdup(argv[1]);
+    filename=argv[1];
     in = fopen(filename,"r");
     if(!in) {
         fprintf(stderr, "ERROR: unable to open file %s\n",filename);

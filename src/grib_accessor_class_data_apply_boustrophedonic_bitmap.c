@@ -24,9 +24,11 @@
    MEMBERS=const char*  coded_values
    MEMBERS=const char*  bitmap
    MEMBERS=const char*  missing_value
-   MEMBERS=const char*  number_of_data_points
-   MEMBERS=const char*  number_of_values
    MEMBERS=const char*  binary_scale_factor
+   MEMBERS=const char*  numberOfRows
+   MEMBERS=const char*  numberOfColumns
+   MEMBERS=const char*  numberOfPoints
+
    END_CLASS_DEF
  */
 
@@ -49,24 +51,25 @@ static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*,size_t i, double* val);
 
-typedef struct grib_accessor_data_apply_bitmap {
+typedef struct grib_accessor_data_apply_boustrophedonic_bitmap {
     grib_accessor          att;
 /* Members defined in gen */
-/* Members defined in data_apply_bitmap */
+/* Members defined in data_apply_boustrophedonic_bitmap */
 	const char*  coded_values;
 	const char*  bitmap;
 	const char*  missing_value;
-	const char*  number_of_data_points;
-	const char*  number_of_values;
 	const char*  binary_scale_factor;
-} grib_accessor_data_apply_bitmap;
+    const char*  numberOfRows;
+    const char*  numberOfColumns;
+    const char*  numberOfPoints;
+} grib_accessor_data_apply_boustrophedonic_bitmap;
 
 extern grib_accessor_class* grib_accessor_class_gen;
 
-static grib_accessor_class _grib_accessor_class_data_apply_bitmap = {
+static grib_accessor_class _grib_accessor_class_data_apply_boustrophedonic_bitmap = {
     &grib_accessor_class_gen,                      /* super                     */
-    "data_apply_bitmap",                      /* name                      */
-    sizeof(grib_accessor_data_apply_bitmap),  /* size                      */
+    "data_apply_boustrophedonic_bitmap",                      /* name                      */
+    sizeof(grib_accessor_data_apply_boustrophedonic_bitmap),  /* size                      */
     0,                           /* inited */
     &init_class,                 /* init_class */
     &init,                       /* init                      */
@@ -104,7 +107,7 @@ static grib_accessor_class _grib_accessor_class_data_apply_bitmap = {
 };
 
 
-grib_accessor_class* grib_accessor_class_data_apply_bitmap = &_grib_accessor_class_data_apply_bitmap;
+grib_accessor_class* grib_accessor_class_data_apply_boustrophedonic_bitmap = &_grib_accessor_class_data_apply_boustrophedonic_bitmap;
 
 
 static void init_class(grib_accessor_class* c)
@@ -139,14 +142,16 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
     int n=0;
-    grib_accessor_data_apply_bitmap *self =(grib_accessor_data_apply_bitmap*)a;
+    grib_accessor_data_apply_boustrophedonic_bitmap *self =(grib_accessor_data_apply_boustrophedonic_bitmap*)a;
 
-    self->coded_values  = grib_arguments_get_name(a->parent->h,args,n++);
-    self->bitmap        = grib_arguments_get_name(a->parent->h,args,n++);
-    self->missing_value = grib_arguments_get_name(a->parent->h,args,n++);
+    self->coded_values    = grib_arguments_get_name(a->parent->h,args,n++);
+    self->bitmap          = grib_arguments_get_name(a->parent->h,args,n++);
+    self->missing_value   = grib_arguments_get_name(a->parent->h,args,n++);
     self->binary_scale_factor = grib_arguments_get_name(a->parent->h,args,n++);
-    self->number_of_data_points = grib_arguments_get_name(a->parent->h,args,n++);
-    self->number_of_values = grib_arguments_get_name(a->parent->h,args,n++);
+
+    self->numberOfRows    = grib_arguments_get_name(a->parent->h,args,n++);
+    self->numberOfColumns = grib_arguments_get_name(a->parent->h,args,n++);
+    self->numberOfPoints  = grib_arguments_get_name(a->parent->h,args,n++);
 
     a->length = 0;
 }
@@ -157,36 +162,41 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 static int value_count(grib_accessor* a,long* count)
 {
-    grib_accessor_data_apply_bitmap *self =(grib_accessor_data_apply_bitmap*)a;
+    grib_accessor_data_apply_boustrophedonic_bitmap *self =(grib_accessor_data_apply_boustrophedonic_bitmap*)a;
     size_t len = 0;
     int ret = 0;
 
-    if(grib_find_accessor(a->parent->h,self->bitmap))
-        ret =  grib_get_size(a->parent->h,self->bitmap,&len);
-    else
-        ret =  grib_get_size(a->parent->h,self->coded_values,&len);
+    /* This accessor is for data with a bitmap after all */
+    Assert(grib_find_accessor(a->parent->h, self->bitmap));
 
+    ret = grib_get_size(a->parent->h, self->bitmap, &len);
     *count=len;
-
     return ret;
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-    grib_accessor_data_apply_bitmap* self =  (grib_accessor_data_apply_bitmap*)a;
+    grib_accessor_data_apply_boustrophedonic_bitmap* self =  (grib_accessor_data_apply_boustrophedonic_bitmap*)a;
 
-    size_t i = 0;
-    size_t j = 0;
-    size_t n_vals = 0;
+    size_t i = 0, j = 0, n_vals = 0, irow = 0;
     long nn=0;
     int err=0;
     size_t coded_n_vals = 0;
     double* coded_vals = NULL;
     double missing_value = 0;
+    long numberOfPoints, numberOfRows, numberOfColumns;
 
     err=grib_value_count(a,&nn);
     n_vals=nn;
     if (err) return err;
+
+    err=grib_get_long_internal(a->parent->h,self->numberOfRows,&numberOfRows);
+    if (err) return err;
+    err=grib_get_long_internal(a->parent->h,self->numberOfColumns,&numberOfColumns);
+    if (err) return err;
+    err=grib_get_long_internal(a->parent->h,self->numberOfPoints,&numberOfPoints);
+    if (err) return err;
+    Assert(nn == numberOfPoints);
 
     if(!grib_find_accessor(a->parent->h,self->bitmap))
         return grib_get_double_array_internal(a->parent->h,self->coded_values,val,len);
@@ -225,8 +235,30 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     }
 
     grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
-            "grib_accessor_class_data_apply_bitmap: unpack_double : creating %s, %d values",
+            "grib_accessor_class_data_apply_boustrophedonic_bitmap: unpack_double : creating %s, %d values",
             a->name, n_vals);
+
+    /* Boustrophedonic ordering (See GRIB-472):
+     * Values on even rank lines (the initial line scanned having rank 1) are swapped
+     */
+    for(irow=0; irow<numberOfRows; ++irow)
+    {
+        if (irow%2)
+        {
+            /* Reverse bitmap entries */
+            size_t k = 0;
+            size_t start = irow*numberOfColumns;
+            size_t end = start + numberOfColumns - 1;
+            size_t mid = (numberOfColumns - 1)/2;
+            for(k=0; k<mid; ++k)
+            {
+                /* Swap value at either end */
+                double temp = val[start+k];
+                val[start+k] = val[end-k];
+                val[end-k] = temp;
+            }
+        }
+    }
 
     for(i=0;i < n_vals;i++)
     {
@@ -240,7 +272,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
             {
                 grib_context_free(a->parent->h->context,coded_vals);
                 grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
-                        "grib_accessor_class_data_apply_bitmap [%s]:"
+                        "grib_accessor_class_data_apply_boustrophedonic_bitmap [%s]:"
                         " unpack_double :  number of coded values does not match bitmap %ld %ld",
                         a->name,coded_n_vals,n_vals);
 
@@ -257,7 +289,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
 static int unpack_double_element(grib_accessor* a, size_t idx,double* val)
 {
-    grib_accessor_data_apply_bitmap* self =  (grib_accessor_data_apply_bitmap*)a;
+    grib_accessor_data_apply_boustrophedonic_bitmap* self =  (grib_accessor_data_apply_boustrophedonic_bitmap*)a;
     int err = 0,i=0;
     size_t cidx=0;
     double missing_value = 0;
@@ -296,13 +328,16 @@ static int unpack_double_element(grib_accessor* a, size_t idx,double* val)
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-    grib_accessor_data_apply_bitmap* self =  (grib_accessor_data_apply_bitmap*)a;
+    grib_accessor_data_apply_boustrophedonic_bitmap* self =  (grib_accessor_data_apply_boustrophedonic_bitmap*)a;
     int err = 0;
     size_t bmaplen = *len;
+    size_t irow = 0;
     long coded_n_vals = 0;
     double* coded_vals = NULL;
+    double *values=0;
     long i = 0;
     long j = 0;
+    long numberOfPoints, numberOfRows, numberOfColumns;
     double missing_value = 0;
 
     if (*len ==0) return GRIB_NO_VALUES;
@@ -310,20 +345,55 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     if(!grib_find_accessor(a->parent->h,self->bitmap)){
         err = grib_set_double_array_internal(a->parent->h,self->coded_values,val,*len);
         /*printf("SETTING TOTAL number_of_data_points %s %ld\n",self->number_of_data_points,*len);*/
-        if(self->number_of_data_points)
-            grib_set_long_internal(a->parent->h,self->number_of_data_points,*len);
+        /*if(self->number_of_data_points)
+            grib_set_long_internal(a->parent->h,self->number_of_data_points,*len);*/
         return err;
     }
 
     if((err = grib_get_double_internal(a->parent->h,self->missing_value,&missing_value)) != GRIB_SUCCESS)
         return err;
 
-    if((err = grib_set_double_array_internal(a->parent->h,self->bitmap,val,bmaplen)) != GRIB_SUCCESS)
+    err=grib_get_long_internal(a->parent->h,self->numberOfRows, &numberOfRows);
+    if (err) return err;
+    err=grib_get_long_internal(a->parent->h,self->numberOfColumns, &numberOfColumns);
+    if (err) return err;
+    err=grib_get_long_internal(a->parent->h,self->numberOfPoints,&numberOfPoints);
+    if (err) return err;
+    Assert(numberOfPoints == bmaplen);
+
+    /* Create a copy of the incoming 'val' array because we're going to change it */
+    values = grib_context_malloc_clear(a->parent->h->context, sizeof(double)*numberOfPoints);
+    if (!values) return GRIB_OUT_OF_MEMORY;
+    for(i=0; i<numberOfPoints; ++i) {
+        values[i] = val[i];
+    }
+
+    /* Boustrophedonic ordering must be applied to the bitmap (See GRIB-472) */
+    for(irow=0; irow<numberOfRows; ++irow)
+    {
+        if (irow%2)
+        {
+            size_t k = 0;
+            size_t start = irow*numberOfColumns;
+            size_t end = start + numberOfColumns - 1;
+            size_t mid = (numberOfColumns - 1)/2;
+            for(k=0; k<mid; ++k)
+            {
+                double temp = values[start+k];
+                values[start+k] = values[end-k];
+                values[end-k] = temp;
+            }
+        }
+    }
+    /* Now set the bitmap based on the array with the boustrophedonic ordering */
+    if((err = grib_set_double_array_internal(a->parent->h,self->bitmap,values,bmaplen)) != GRIB_SUCCESS)
         return err;
+
+    grib_context_free(a->parent->h->context,values);
 
     coded_n_vals = *len;
 
-    if(coded_n_vals <  1){
+    if(coded_n_vals < 1){
         err = grib_set_double_array_internal(a->parent->h,self->coded_values,NULL,0);
         return err;
     }
@@ -333,6 +403,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     for(i=0; i<*len ; i++)
     {
+        /* To set the coded values, look at 'val' (the original array) */
+        /* NOT 'values' (bitmap) which we swapped about */
         if(val[i] != missing_value) {
             coded_vals[j++] = val[i];
         }
@@ -340,8 +412,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     err = grib_set_double_array_internal(a->parent->h,self->coded_values,coded_vals,j);
     if (j==0) {
-        if (self->number_of_values)
-            err=grib_set_long_internal(a->parent->h,self->number_of_values,0);
+        /*if (self->number_of_values)
+            err=grib_set_long_internal(a->parent->h,self->number_of_values,0);*/
         if (self->binary_scale_factor)
             err=grib_set_long_internal(a->parent->h,self->binary_scale_factor,0);
     }
@@ -353,7 +425,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
 static int get_native_type(grib_accessor* a)
 {
-    /*  grib_accessor_data_apply_bitmap* self =  (grib_accessor_data_apply_bitmap*)a;
+    /*  grib_accessor_data_apply_boustrophedonic_bitmap* self =  (grib_accessor_data_apply_boustrophedonic_bitmap*)a;
     return grib_accessor_get_native_type(grib_find_accessor(a->parent->h,self->coded_values));*/
 
     return GRIB_TYPE_DOUBLE;

@@ -177,6 +177,7 @@ libgrib_api_la_prototypes= \
 	grib_accessor_class_g2grid.c \
 	grib_accessor_class_data_apply_bitmap.c \
 	grib_accessor_class_data_apply_boustrophedonic.c \
+	grib_accessor_class_data_apply_boustrophedonic_bitmap.c \
 	grib_accessor_class_data_secondary_bitmap.c \
 	grib_accessor_class_data_g1secondary_bitmap.c \
 	grib_accessor_class_data_g2secondary_bitmap.c \
@@ -334,7 +335,8 @@ EXTRA_DIST= dummy.am griby.y gribl.l grib_accessor_classes_hash.c \
             grib_bits_fast_big_endian_vector.c grib_bits_any_endian_vector.c \
             grib_bits_fast_big_endian_simple.c grib_bits_any_endian_simple.c \
             grib_bits_fast_big_endian_omp.c grib_bits_any_endian_omp.c \
-            encode_double_array.c grib_bits_ibmpow.c grib_bits_ibmpow_opt.c minmax_val.c
+            encode_double_array.c grib_bits_ibmpow.c grib_bits_ibmpow_opt.c minmax_val.c \
+            CMakeLists.txt grib_api_version.c.in
 
 include $(DEVEL_RULES)
 

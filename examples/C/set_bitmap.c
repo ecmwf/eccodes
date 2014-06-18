@@ -21,70 +21,72 @@
 
 #include "grib_api.h"
 
-int main(int argc, char** argv) {
-  int err = 0;
-  size_t size=0;
+int main(int argc, char** argv)
+{
+    int err = 0;
+    size_t size=0;
 
-  FILE* in = NULL;
-  char* infile = "../../data/regular_latlon_surface.grib1";
-  FILE* out = NULL;
-  char* outfile = "out.grib1";
-  grib_handle *h = NULL;
-  const void* buffer = NULL;
-  size_t values_len;
-  double* values;
-  double missing=9999;
-  int i=0;
+    FILE* in = NULL;
+    char* infile = "../../data/regular_latlon_surface.grib1";
+    FILE* out = NULL;
+    char* outfile = "out.grib1";
+    grib_handle *h = NULL;
+    const void* buffer = NULL;
+    size_t values_len;
+    double* values;
+    double missing=9999;
+    int i=0;
 
-  in = fopen(infile,"r");
-  if(!in) {
-    printf("ERROR: unable to open input file %s\n",infile);
-    return 1;
-  }
+    in = fopen(infile,"r");
+    if(!in) {
+        printf("ERROR: unable to open input file %s\n",infile);
+        return 1;
+    }
 
-  out = fopen(outfile,"w");
-  if(!out) {
-    printf("ERROR: unable to open output file %s\n",outfile);
-    return 1;
-  }
+    out = fopen(outfile,"w");
+    if(!out) {
+        printf("ERROR: unable to open output file %s\n",outfile);
+        fclose(in);
+        return 1;
+    }
 
-  h = grib_handle_new_from_file(0,in,&err);
-  if (h == NULL) {
-    printf("Error: unable to create handle from file %s\n",infile);
-  }
+    h = grib_handle_new_from_file(0,in,&err);
+    if (h == NULL) {
+        printf("Error: unable to create handle from file %s\n",infile);
+    }
 
-  GRIB_CHECK(grib_set_double(h,"missingValue",missing),0);
+    GRIB_CHECK(grib_set_double(h,"missingValue",missing),0);
 
-  /* get the size of the values array*/
-  GRIB_CHECK(grib_get_size(h,"values",&values_len),0);
+    /* get the size of the values array*/
+    GRIB_CHECK(grib_get_size(h,"values",&values_len),0);
 
-  values = malloc(values_len*sizeof(double));
+    values = malloc(values_len*sizeof(double));
 
-  /* get data values*/
-  GRIB_CHECK(grib_get_double_array(h,"values",values,&values_len),0);
+    /* get data values*/
+    GRIB_CHECK(grib_get_double_array(h,"values",values,&values_len),0);
 
-  GRIB_CHECK(grib_set_long(h,"bitmapPresent",1),0);
+    GRIB_CHECK(grib_set_long(h,"bitmapPresent",1),0);
 
-  for(i = 0; i < 10; i++)
-    values[i]=missing;
+    for(i = 0; i < 10; i++)
+        values[i]=missing;
 
-  GRIB_CHECK(grib_set_double_array(h,"values",values,values_len),0);
+    GRIB_CHECK(grib_set_double_array(h,"values",values,values_len),0);
 
-  /* get the coded message in a buffer */
-  GRIB_CHECK(grib_get_message(h,&buffer,&size),0);
+    /* get the coded message in a buffer */
+    GRIB_CHECK(grib_get_message(h,&buffer,&size),0);
 
-  /* write the buffer in a file*/
-  if(fwrite(buffer,1,size,out) != size)
-  {
-     perror(outfile);
-     exit(1);
-  }
+    /* write the buffer in a file*/
+    if(fwrite(buffer,1,size,out) != size)
+    {
+        perror(outfile);
+        exit(1);
+    }
 
-  /* delete handle */
-  grib_handle_delete(h);
+    /* delete handle */
+    grib_handle_delete(h);
 
-  fclose(in);
-  fclose(out);
+    fclose(in);
+    fclose(out);
 
-  return 0;
+    return 0;
 }

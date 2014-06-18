@@ -7,8 +7,8 @@
 5 5 Difference (reference time + P2 minus reference time + P1) product considered valid at reference time + P2
 6 6 Average (reference time - P1 to reference time - P2)
 7 7 Average (reference time - P1 to reference time + P2)
-10 10   P1 occupies octets 19 and 20; product valid at reference time + P1
-51 51   Climatological Mean Value:
+10 10 P1 occupies octets 19 and 20; product valid at reference time + P1
+51 51 Climatological Mean Value:
 113 113 Average of N forecasts (or initialized analyses); each product has forecast period of P1 (P1=0 for initialized analyses); products have reference times at intervals of P2, beginning at the given reference time.
 114 114 Accumulation of N forecasts (or initialized analyses); each product has forecast period of P1 (P1=0 for initialized analyses); products have reference times at intervals of P2, beginning at the given reference time.
 115 115 Average of N forecasts, all with the same reference time; the first has a forecast period of P1, the remaining forecasts follow at intervals of P2.

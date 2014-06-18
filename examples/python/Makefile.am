@@ -15,5 +15,6 @@ LDADD = $(top_builddir)/src/libgrib_api.la
 DEPENDENCIES = $(LDADD)
 
 EXTRA_DIST = $(TESTS) include.sh clone.py count_messages.py get.py index.py iterator.py keys_iterator.py multi_write.py \
-             nearest.py print_data.py samples.py set.py set_missing.py binary_message.py set_pv.py set_bitmap.py
+             nearest.py print_data.py samples.py set.py set_missing.py binary_message.py set_pv.py set_bitmap.py \
+             CMakeLists.txt include.ctest.sh.in
 endif

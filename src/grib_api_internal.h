@@ -271,7 +271,7 @@ typedef  int   (*accessor_clear_proc)           (grib_accessor*);
 typedef  void  (*accessor_init_class_proc)               (grib_accessor_class*);
 
 typedef  int   (*accessor_compare_proc)                  (grib_accessor*, grib_accessor*);
-typedef  size_t  (*accessor_string_proc)                    (grib_accessor*);
+typedef  size_t  (*accessor_string_proc)                 (grib_accessor*);
 typedef  int  (*accessor_value_with_ret_proc)            (grib_accessor*,long*);
 typedef  long  (*accessor_value_proc)                    (grib_accessor*);
 typedef  void  (*accessor_dump_proc)                     (grib_accessor*, grib_dumper*);

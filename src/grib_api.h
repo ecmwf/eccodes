@@ -1196,6 +1196,8 @@ void grib_multi_support_off(grib_context* c);
 * @param f            : the file pointer
 */
 void grib_multi_support_reset_file(grib_context* c, FILE* f);
+
+char* grib_samples_path(const grib_context *c);
 /*! @} */
 
 /**
@@ -1240,7 +1242,6 @@ grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_f
 *  @return              1 if next iterator exists, 0 if no more elements to iterate on
 */
 int grib_keys_iterator_next(grib_keys_iterator *kiter);
-
 
 
 /*! get the key name from the iterator

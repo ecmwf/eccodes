@@ -167,7 +167,6 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
     self->decimal_scale_factor = grib_arguments_get_name(a->parent->h,args,self->carg++);
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
     self->dirty=1;
-
 }
 
 static unsigned long nbits[32]={
@@ -179,13 +178,21 @@ static unsigned long nbits[32]={
         0x40000000, 0x80000000
 };
 
-GRIB_INLINE static long number_of_bits(unsigned long x) {
+static int number_of_bits(unsigned long x, long* result)
+{
+    int err = 0;
+    const int count = sizeof(nbits)/sizeof(nbits[0]);
     unsigned long *n=nbits;
-    long i=0;
-    while (x>=*n) {n++;i++;}
-    return i;
+    *result=0;
+    while (x >= *n) {
+        n++;
+        (*result)++;
+        if (*result >= count) {
+            return GRIB_ENCODING_ERROR;
+        }
+    }
+    return GRIB_SUCCESS;
 }
-
 
 static int value_count(grib_accessor* a,long* number_of_values)
 {
@@ -195,7 +202,7 @@ static int value_count(grib_accessor* a,long* number_of_values)
     return grib_get_long_internal(a->parent->h,self->number_of_values,number_of_values);
 }
 
-static int  unpack_double_element(grib_accessor* a, size_t idx, double* val)
+static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 {
     grib_accessor_data_simple_packing* self =  (grib_accessor_data_simple_packing*)a;
 
@@ -281,7 +288,6 @@ static int  unpack_double_element(grib_accessor* a, size_t idx, double* val)
             lvalue |= buf[o++] ;
         }
         *val = (double) (((lvalue*s)+reference_value)*d);
-
     }
 
     return err;
@@ -302,7 +308,6 @@ static int  _unpack_double(grib_accessor* a, double* val, size_t *len,unsigned c
     double d = 0;
     double units_factor=1.0;
     double units_bias=0.0;
-
 
     if(*len < n_vals)
     {
@@ -571,7 +576,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         max*=decimal;
 
         /* bits_per_value=(long)ceil(log((double)(imax-imin+1))/log(2.0)); */
-        bits_per_value=number_of_bits((unsigned long)fabs(max-min));
+        /* See GRIB-540 for why we use ceil */
+        err = number_of_bits( (unsigned long)ceil(fabs(max-min)), &bits_per_value );
+        if (err) {
+            grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+                    "Range of values too large. Try a smaller value for decimal precision (less than %d)",
+                    decimal_scale_factor);
+            return err;
+        }
         /*printf("bits_per_value=%ld\n",bits_per_value);*/
         if((err = grib_set_long_internal(a->parent->h,self->bits_per_value, bits_per_value)) !=
                 GRIB_SUCCESS)
@@ -648,7 +660,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     if((err = grib_set_long_internal(a->parent->h,self->decimal_scale_factor, decimal_scale_factor))
             != GRIB_SUCCESS)
         return err;
-
 
     return GRIB_SUCCESS;
 }

@@ -19,7 +19,8 @@
 #include <assert.h>
 #include "grib_api.h"
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
     int err = 0;
     double *values = NULL;
     size_t values_len= 0;
@@ -118,7 +119,6 @@ int main(int argc, char** argv) {
     }
 
     grib_handle_delete(h);
-
     fclose(in);
     return 0;
 }

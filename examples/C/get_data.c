@@ -54,11 +54,14 @@ int main (int argc, char **argv)
     lons = (double *) malloc (numberOfPoints * sizeof (double));
     if (!lons) {
         printf ("unable to allocate %ld bytes\n", (long) (numberOfPoints * sizeof (double)));
+        free (lats);
         return 1;
     }
     values = (double *) malloc (numberOfPoints * sizeof (double));
     if (!values) {
         printf ("unable to allocate %ld bytes\n", (long) (numberOfPoints * sizeof (double)));
+        free (lats);
+        free (lons);
         return 1;
     }
 

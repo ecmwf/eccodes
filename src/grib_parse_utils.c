@@ -99,6 +99,7 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
                         break;
                     default:
                         grib_context_log(h->context, GRIB_LOG_WARNING,"grib_recompose_name: Problem to recompose filename with : %s, invalid type %d", loc,type);
+                        break;
                     }
 
                     grib_dependency_add(observer,a);
@@ -146,7 +147,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
     int maxcolsd=8;
     int maxcols;
     int mode = -1;
-    char val[1024];
+    char val[1024] = {0,};
     char* sval=NULL;
     char* p=NULL;
     char* pp=NULL;
@@ -303,6 +304,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
                 break;
             default:
                 loc[mode++]=uname[i];
+                break;
             }
         } else if(uname[i]=='[') {
             mode = 0;
@@ -316,7 +318,6 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
 
     return ret;
 }
-
 
 grib_action_file* grib_find_action_file(const char* fname , grib_action_file_list* afl)
 {
@@ -367,7 +368,6 @@ int grib_yywrap()
     /* if (stack[top].io_buffer) free(stack[top].io_buffer); */
 
     grib_yylineno = stack[top].line;
-
 
     if(top)
     {
@@ -449,14 +449,14 @@ void grib_parser_include(const char* fname)
     else
     {
         /*
-		c=grib_context_get_default();
-		if (c->io_buffer_size) {
-			if (posix_memalign(&(io_buffer),sysconf(_SC_PAGESIZE),c->io_buffer_size) ) {
-						grib_context_log(c,GRIB_LOG_FATAL,"grib_parser_include: posix_memalign unable to allocate io_buffer\n");
-			}
-			setvbuf(f,io_buffer,_IOFBF,c->io_buffer_size);
-		}
-         */
+        c=grib_context_get_default();
+        if (c->io_buffer_size) {
+            if (posix_memalign(&(io_buffer),sysconf(_SC_PAGESIZE),c->io_buffer_size) ) {
+                        grib_context_log(c,GRIB_LOG_FATAL,"grib_parser_include: posix_memalign unable to allocate io_buffer\n");
+            }
+            setvbuf(f,io_buffer,_IOFBF,c->io_buffer_size);
+        }
+        */
 
         grib_yyin            = f;
         stack[top].file = f;
@@ -633,4 +633,3 @@ int grib_type_to_int(char id) {
     }
     return GRIB_TYPE_UNDEFINED;
 }
-

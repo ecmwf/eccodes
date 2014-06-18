@@ -19,6 +19,7 @@
    IMPLEMENTS = init
    IMPLEMENTS = pack_double
    IMPLEMENTS = unpack_double
+   IMPLEMENTS = unpack_double_element
    IMPLEMENTS = value_count
    IMPLEMENTS = destroy
    MEMBERS=const char* half_byte
@@ -67,6 +68,7 @@ static int value_count(grib_accessor*,long*);
 static void destroy(grib_context*,grib_accessor*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
+static int unpack_double_element(grib_accessor*,size_t i, double* val);
 
 typedef struct grib_accessor_data_g1second_order_general_extended_packing {
     grib_accessor          att;
@@ -151,7 +153,7 @@ static grib_accessor_class _grib_accessor_class_data_g1second_order_general_exte
     0,      /* nearest_smaller_value */
     0,                       /* next accessor    */
     0,                    /* compare vs. another accessor   */
-    0,     /* unpack only ith value          */
+    &unpack_double_element,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,             		/* clear          */
 };
@@ -185,7 +187,6 @@ static void init_class(grib_accessor_class* c)
 	c->nearest_smaller_value	=	(*(c->super))->nearest_smaller_value;
 	c->next	=	(*(c->super))->next;
 	c->compare	=	(*(c->super))->compare;
-	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
 }
@@ -204,10 +205,15 @@ static unsigned long nbits[32]={
         0x40000000, 0x80000000
 };
 
-GRIB_INLINE static long number_of_bits(unsigned long x) {
+static long number_of_bits(unsigned long x) {
     unsigned long *n=nbits;
+    const int count = sizeof(nbits)/sizeof(nbits[0]);
     long i=0;
-    while (x>=*n) {n++;i++;}
+    while (x>=*n) {
+      n++;
+      i++;
+      Assert(i<count);
+    }
     return i;
 }
 
@@ -275,6 +281,24 @@ static int value_count(grib_accessor* a,long* count)
 
     *count=numberOfCodedValues+orderOfSPD;
 
+    return err;
+}
+
+static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
+    size_t size;
+    double* values;
+    int err=0;
+
+    err=grib_get_size(a->parent->h,"values",&size);
+    if (err) return err;
+    if (idx > size) return GRIB_INVALID_NEAREST;
+
+    values=grib_context_malloc_clear(a->parent->h->context,size*sizeof(double));
+    err=grib_get_double_array(a->parent->h,"values",values,&size);
+    if (err) return err;
+    *val=values[idx];
+    grib_context_free(a->parent->h->context,values);
     return err;
 }
 

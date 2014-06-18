@@ -163,6 +163,7 @@ list( APPEND grib_api_srcs
 	grib_accessor_class_g2grid.c
 	grib_accessor_class_data_apply_bitmap.c
 	grib_accessor_class_data_apply_boustrophedonic.c
+	grib_accessor_class_data_apply_boustrophedonic_bitmap.c
 	grib_accessor_class_data_secondary_bitmap.c
 	grib_accessor_class_data_g1secondary_bitmap.c
 	grib_accessor_class_data_g2secondary_bitmap.c
@@ -280,7 +281,6 @@ list( APPEND grib_api_srcs
 	grib_accessor_class.h
 	grib_accessor_factory.h
 	grib_api.h
-	grib_api_fortran.h
 	grib_api_internal.h
 	grib_api_prototypes.h
 	grib_box_class.h
@@ -295,9 +295,6 @@ list( APPEND grib_api_srcs
 	grib_nearest_factory.h
 	grib_templates.h
 	grib_yacc.h
-	jgribapi_GribFile.h
-	jgribapi_GribHandle.h
-	jgribapi_GribIterator.h
 	md5.h
 	md5.c
     # Ship our generated lex/yacc C files

@@ -53,6 +53,8 @@ dist_samples_DATA = \
     reduced_gg_pl_640_grib2.tmpl \
     reduced_gg_pl_1024_grib1.tmpl \
     reduced_gg_pl_1024_grib2.tmpl \
+    reduced_gg_pl_1280_grib1.tmpl \
+    reduced_gg_pl_1280_grib2.tmpl \
     reduced_gg_pl_2000_grib1.tmpl \
     reduced_gg_pl_2000_grib2.tmpl \
     reduced_gg_pl_80_grib1.tmpl \

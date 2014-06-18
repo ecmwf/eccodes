@@ -30,6 +30,7 @@ list( APPEND test_bins
       iterator_bitmap
       large_grib1
       clone
+      check_gaussian_grid
 )
 foreach( tool ${test_bins} )
     ecbuild_add_executable( TARGET    ${tool}

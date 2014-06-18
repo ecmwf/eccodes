@@ -268,7 +268,7 @@ int grib_g1_step_get_steps(grib_accessor* a,long* start,long* theEnd)
     if (u2s1[unit] == u2s[step_unit] || (*start==0 && *theEnd==0) ) return 0;
 
     newstart = (*start) * u2s1[unit];
-    newend   = (*theEnd)   * u2s1[unit];
+    newend   = (*theEnd) * u2s1[unit];
 
     if (newstart<0 || newend<0) {
         factor=60;
@@ -286,7 +286,7 @@ int grib_g1_step_get_steps(grib_accessor* a,long* start,long* theEnd)
         return GRIB_DECODING_ERROR;
     } else {
         *start = newstart/u2sf_step_unit;
-        *theEnd   = newend/u2sf_step_unit;
+        *theEnd = newend/u2sf_step_unit;
     }
 
     return 0;
@@ -348,10 +348,10 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
     }
     else if(
             (strcmp(stepType,"accum") == 0) ||
-            (strcmp(stepType,"avg") == 0) ||
-            (strcmp(stepType,"min") == 0) ||
-            (strcmp(stepType,"max") == 0) ||
-            (strcmp(stepType,"rms") == 0) ||
+            (strcmp(stepType,"avg") == 0)   ||
+            (strcmp(stepType,"min") == 0)   ||
+            (strcmp(stepType,"max") == 0)   ||
+            (strcmp(stepType,"rms") == 0)   ||
             (strcmp(stepType,"diff") == 0)  ||
             (strcmp(stepType,"avgas") == 0) ||
             (strcmp(stepType,"avgad") == 0) ||

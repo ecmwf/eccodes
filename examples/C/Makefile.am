@@ -6,7 +6,8 @@ TESTS = iterator.sh get.sh print_data.sh set.sh keys_iterator.sh multi.sh multi_
 
 noinst_PROGRAMS  = nearest set_bitmap iterator get print_data set set_missing keys_iterator \
                    set_data mars_param values_check box multi multi2 multi_write precision \
-                   set_pv list sections_copy large_grib1 get_data iterator_bitmap clone
+                   set_pv list sections_copy large_grib1 get_data iterator_bitmap clone new_sample \
+                   check_gaussian_grid
 bin_PROGRAMS            = points
 
 box_SOURCES             = box.c
@@ -32,11 +33,13 @@ sections_copy_SOURCES   = sections_copy.c
 large_grib1_SOURCES     = large_grib1.c
 get_data_SOURCES        = get_data.c
 clone_SOURCES           = clone.c
+new_sample_SOURCES      = new_sample.c
+check_gaussian_grid_SOURCES = check_gaussian_grid.c
 
 INCLUDES =  -I$(top_builddir)/src
 
 LDADD = $(top_builddir)/src/libgrib_api.la
 DEPENDENCIES = $(LDADD)
 
-EXTRA_DIST =$(TESTS) include.sh
+EXTRA_DIST =$(TESTS) include.sh CMakeLists.txt include.ctest.sh.in
 

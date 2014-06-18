@@ -38,7 +38,7 @@ int main(int argc, char** argv)
     const void* buffer = NULL;
     double* values1=NULL;
     double* values2=NULL;
-    double maxa=0,a=0;
+    double maxa=0;
     double maxv=0,minv=0;
     double maxr=0,r=0;
     long decimalPrecision;
@@ -54,6 +54,7 @@ int main(int argc, char** argv)
     out = fopen(outfile,"w");
     if(!out) {
         printf("ERROR: unable to open output file %s\n",outfile);
+        fclose(in);
         return 1;
     }
 
@@ -94,7 +95,7 @@ int main(int argc, char** argv)
     maxv=values2[0];
     minv=maxv;
     for (i=0;i<size;i++) {
-        a=fabs(values2[i]-values1[i]);
+        double a=fabs(values2[i]-values1[i]);
         if ( values2[i] > maxv ) maxv=values2[i];
         if ( values2[i] < minv ) minv=values2[i];
         if ( values2[i] !=0 ) r=fabs((values2[i]-values1[i])/values2[i]);

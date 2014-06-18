@@ -42,5 +42,5 @@ AM_FCFLAGS = $(F90_MODULE_FLAG)$(top_builddir)/fortran
 LDADD = $(top_builddir)/fortran/libgrib_api_f90.la $(top_builddir)/src/libgrib_api.la
 DEPENDENCIES = $(LDADD)
 
-EXTRA_DIST =$(TESTS) include.sh
+EXTRA_DIST =$(TESTS) include.sh CMakeLists.txt include.ctest.sh.in
 

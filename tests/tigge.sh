@@ -30,14 +30,22 @@ done
 
 
 # Now test non-TIGGE files too. We now expect tigge_check to fail!
-set +e
 # All the grib files in the samples are non-TIGGE
 for file in ${GRIB_SAMPLES_PATH}/*.tmpl
 do
+   set +e
    ${tigge_dir}tigge_check ${file} 2> $REDIRECT > $REDIRECT
-   if [ $? -eq 0 ]; then
+   status=$?
+   set -e
+   if [ $status -eq 0 ]; then
       # should have failed and returned a non-zero exit code
       exit 1
    fi
 done
 
+# GRIB-531
+TEMP=temp.$$.tigge.txt
+${tools_dir}grib_get -nparameter ${data_dir}/tigge_pf_ecmwf.grib2 > $TEMP
+diff ${data_dir}/tigge_pf_ecmwf.grib2.ref $TEMP
+
+rm -f $TEMP

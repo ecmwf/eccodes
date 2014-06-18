@@ -1,10 +1,10 @@
 # tools library
 
 ecbuild_add_library( TARGET    grib_tools
-                   TYPE      STATIC
+                     TYPE      STATIC
                      NOINSTALL
-                   SOURCES   grib_tools.c grib_options.c grib_tools.h
-                   LIBS      grib_api )
+                     SOURCES   grib_tools.c grib_options.c grib_tools.h
+                     LIBS      grib_api )
 
 # tools binaries
 
@@ -20,14 +20,14 @@ foreach( tool ${grib_tools_bins} )
     
     # here we use the fact that each tool has only one C file that matches its name
     ecbuild_add_executable( TARGET     ${tool}
-                          SOURCES    ${tool}.c
-                          LIBS       grib_tools )
+                            SOURCES    ${tool}.c
+                            LIBS       grib_tools )
 
 endforeach()
 
     ecbuild_add_executable( TARGET     grib_list_keys
-                          SOURCES    list_keys.c
-                          LIBS       grib_tools  )
+                            SOURCES    list_keys.c
+                            LIBS       grib_tools  )
 
 # missing noinst_PROGRAMS
 

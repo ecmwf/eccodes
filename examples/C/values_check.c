@@ -9,7 +9,8 @@
  */
 #include "grib_api.h"
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
 	FILE* f;
 	int err=0;
 	char infile[]="../../data/reduced_gaussian_model_level.grib1";

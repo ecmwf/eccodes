@@ -8,6 +8,7 @@ foreach my $d ( sort @sub )
 {
   process($d) unless $d =~ /bufr/;
 }
+print "EXTRA_DIST=CMakeLists.txt\n\n";
 print "include \$(DEVEL_RULES)\n";
 
 sub navigate {

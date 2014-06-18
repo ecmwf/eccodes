@@ -23,6 +23,8 @@ nodist_grib1_mlgrib2_DATA = \
 	reduced_gg_ml_grib2.tmpl \
 	reduced_gg_pl_1024_grib1.tmpl \
 	reduced_gg_pl_1024_grib2.tmpl \
+	reduced_gg_pl_1280_grib1.tmpl \
+	reduced_gg_pl_1280_grib2.tmpl \
 	reduced_gg_pl_128_grib1.tmpl \
 	reduced_gg_pl_128_grib2.tmpl \
 	reduced_gg_pl_160_grib1.tmpl \
@@ -113,6 +115,12 @@ reduced_gg_pl_1024_grib1.tmpl: ../../samples/reduced_gg_pl_1024_grib1.tmpl
 
 reduced_gg_pl_1024_grib2.tmpl: ../../samples/reduced_gg_pl_1024_grib2.tmpl
 	cp -f ../../samples/reduced_gg_pl_1024_grib2.tmpl .
+
+reduced_gg_pl_1280_grib1.tmpl: ../../samples/reduced_gg_pl_1280_grib1.tmpl
+	cp -f ../../samples/reduced_gg_pl_1280_grib1.tmpl .
+
+reduced_gg_pl_1280_grib2.tmpl: ../../samples/reduced_gg_pl_1280_grib2.tmpl
+	cp -f ../../samples/reduced_gg_pl_1280_grib2.tmpl .
 
 reduced_gg_pl_128_grib1.tmpl: ../../samples/reduced_gg_pl_128_grib1.tmpl
 	cp -f ../../samples/reduced_gg_pl_128_grib1.tmpl .

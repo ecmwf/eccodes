@@ -525,6 +525,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_accessor_class_data_apply_boustrophedonic_bitmap.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_data_apply_gdsnotpresent.c"
 				>
 			</File>

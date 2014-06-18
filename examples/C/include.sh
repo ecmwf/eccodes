@@ -21,6 +21,7 @@ else
   then
     cd ../../
     cpath=`pwd`
+    proj_dir=$cpath
     GRIB_DEFINITION_PATH=$cpath/definitions
     export GRIB_DEFINITION_PATH
     GRIB_SAMPLES_PATH=$cpath/samples

@@ -13,6 +13,11 @@ constant internalVersion=22 : hidden;
 constant UseEcmfConventions = 1: hidden;
 constant defaultTypeOfLevel="unknown" : hidden;
 
+# GRIBEX special boustrophedonic mode. See GRIB-472
+# If the environment variable is not defined, the key will be 0
+GRIBEX_boustrophedonic = getenv("GRIB_API_GRIBEX_BOUSTROPHEDONIC","0");
+
+
 constant zero=0 : hidden;
 constant one=1 : hidden;
 constant two=1 : hidden;

@@ -19,7 +19,7 @@
 
 #include "grib_api.h"
 
-void usage(char* prog)
+void usage(const char* prog)
 {
     printf("usage: %s out.grib\n",prog);
     exit(1);
@@ -32,6 +32,9 @@ int main(int argc, char** argv)
     size_t values_len= 0;
 
     /* Note: the full name of the sample file is "regular_ll_pl_grib1.tmpl" */
+    /* Sample files are stored in the samples directory (use grib_info to   */
+    /* see where that is).  The default sample path can be changed by       */
+    /* setting the environment variable GRIB_SAMPLES_PATH                   */
     const char* sample_filename = "regular_ll_pl_grib1";
     grib_handle *h = NULL;
     double d,e;

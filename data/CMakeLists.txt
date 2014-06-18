@@ -22,13 +22,11 @@ set(files_to_download
     gen_ext_spd_2.grib
     gen_ext_spd_3_boust_bitmap.grib
     gen_ext_spd_3.grib
-    gep10.t12z.pgrb2af78.grib2
     gfs.c255.grib2
     gts.grib
     index.grib
     jpeg.grib2
     lfpw.grib1
-    lfpw.grib2
     missing_field.grib1
     missing.grib2
     mixed.grib
@@ -103,7 +101,6 @@ endforeach()
 LIST(APPEND other_files
     60_model_levels
     bitmap.diff
-    filter_rules
     ieee_test.good
     index.ok
     index_f90.ok
@@ -111,15 +108,10 @@ LIST(APPEND other_files
     list_points
     local.good.log
     ls.log
-    mf.rules
     multi.ok
-    multi_level.txt
     multi_step.txt
     no_bitmap.diff
-    perf.ksh
     read_any.ok
-    ret.sh
-    sample_grib.txt
     scan_x_regular_gg_5_7_good.dump
     scan_x_regular_ll_5_4_good.dump
     scan_x_regular_ll_5_7_good.dump
@@ -144,6 +136,7 @@ LIST(APPEND other_files
     step_grib1.filter
     step_grib1.log
     typeOfProcessedData.ok
+    tigge_pf_ecmwf.grib2.ref
 )
 
 foreach( file ${other_files} )

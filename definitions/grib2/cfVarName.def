@@ -68,11 +68,35 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	}
+#Relative humidity with respect to water
+'rhw' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 93 ;
+	}
+#Relative humidity with respect to ice
+'rhi' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 94 ;
+	}
 #Snow albedo
 'asn' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 19 ;
+	}
+#Fraction of stratiform precipitation cover
+'fspc' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 36 ;
+	}
+#Fraction of convective precipitation cover
+'fcpc' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 37 ;
 	}
 #Soil moisture top 20 cm
 'sm20' = {

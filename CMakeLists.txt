@@ -37,7 +37,7 @@ option( ENABLE_PYTHON  "try to build the GRIB_API Python interface"   ON )
 option( ENABLE_FORTRAN "try to build the GRIB_API Fortran interface"  ON )
 
 if( ENABLE_FORTRAN )
-	ecbuild_enable_fortran( REQUIRED MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/fortran/modules )
+    ecbuild_enable_fortran( REQUIRED MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/fortran/modules )
 endif()
 
 option( ENABLE_MEMORY_MANAGEMENT "enable memory management"  OFF )
@@ -205,12 +205,12 @@ set( GRIB_API_LIBRARIES       grib_api )
 get_directory_property( COMPILE_DEFINITIONS GRIB_API_DEFINITIONS )
 
 foreach( _tpl ${GRIB_API_TPLS} )
-	string( TOUPPER ${_tpl} TPL )
-	if( ${TPL}_FOUND )
-		list( APPEND GRIB_API_EXTRA_DEFINITIONS   ${${TPL}_DEFINITIONS} )
-		list( APPEND GRIB_API_EXTRA_INCLUDE_DIRS  ${${TPL}_INCLUDE_DIRS} )
-		list( APPEND GRIB_API_EXTRA_LIBRARIES     ${${TPL}_LIBRARIES} )
-	endif()
+    string( TOUPPER ${_tpl} TPL )
+    if( ${TPL}_FOUND )
+        list( APPEND GRIB_API_EXTRA_DEFINITIONS   ${${TPL}_DEFINITIONS} )
+        list( APPEND GRIB_API_EXTRA_INCLUDE_DIRS  ${${TPL}_INCLUDE_DIRS} )
+        list( APPEND GRIB_API_EXTRA_LIBRARIES     ${${TPL}_LIBRARIES} )
+    endif()
 endforeach()
 
 ### include directories

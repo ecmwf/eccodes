@@ -13,17 +13,41 @@ REGUL_GRID_FILE=${proj_dir}/samples/regular_ll_sfc_grib2.tmpl
 GAUSS_GRID_FILE=${proj_dir}/samples/reduced_gg_pl_640_grib2.tmpl
 OUTPUT=temp.sections.grib
 
-${examples_dir}sections_copy $REGUL_GRID_FILE $GAUSS_GRID_FILE $OUTPUT
-# Now the output should have a regular grid i.e. gridDefinitionTemplateNumber==0
+##################
+# Copy the GRID section from REGUL_GRID_FILE
+${examples_dir}sections_copy $REGUL_GRID_FILE $GAUSS_GRID_FILE g $OUTPUT >/dev/null
+
+# Now the output should have a regular grid
 # but its date should be the same as the Gaussian grid sample
-grid_tmpl=`${tools_dir}grib_get -p gridDefinitionTemplateNumber,date $OUTPUT`
-[ "$grid_tmpl" = "0 20100912" ]
+grid_tmpl=`${tools_dir}grib_get -p gridType,date $OUTPUT`
+[ "$grid_tmpl" = "regular_ll 20100912" ]
 
 
-${examples_dir}sections_copy $GAUSS_GRID_FILE $REGUL_GRID_FILE $OUTPUT
-# Now the output should have a reduced gaussian grid i.e. gridDefinitionTemplateNumber==40
-# but its date should be the same as the Regular grid sample
-grid_tmpl=`${tools_dir}grib_get -p gridDefinitionTemplateNumber,date $OUTPUT`
-[ "$grid_tmpl" = "40 20070323" ]
+##################
+# Copy the GRID section from GAUSS_GRID_FILE
+${examples_dir}sections_copy $GAUSS_GRID_FILE $REGUL_GRID_FILE g $OUTPUT >/dev/null
+
+# Now the output should have a gaussian grid
+# but its date should be the same as the regular grid
+grid_tmpl=`${tools_dir}grib_get -p gridType,date $OUTPUT`
+[ "$grid_tmpl" = "reduced_gg 20070323" ]
+
+
+##################
+# Copy both the PRODUCT and GRID sections from REGUL_GRID_FILE
+${examples_dir}sections_copy $REGUL_GRID_FILE $GAUSS_GRID_FILE gp $OUTPUT >/dev/null
+
+# Now the output should have a regular grid
+# and its date should be the same as the regular latlon
+grid_tmpl=`${tools_dir}grib_get -p gridType,date $OUTPUT`
+[ "$grid_tmpl" = "regular_ll 20070323" ]
+
+
+##################
+# Copy all sections from REGUL_GRID_FILE (use commas)
+${examples_dir}sections_copy $REGUL_GRID_FILE $GAUSS_GRID_FILE p,l,g,d,b $OUTPUT >/dev/null
+
+# Now the output should be identical to the regular grib
+${tools_dir}grib_compare $REGUL_GRID_FILE $OUTPUT
 
 rm -f $OUTPUT

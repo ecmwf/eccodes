@@ -265,18 +265,18 @@ static int compare(grib_accessor* a, grib_accessor* b)
     double *aval=0;
     double *bval=0;
 
-  size_t alen = 0;
-  size_t blen = 0;
-  int err=0;
-  long count=0;
+    size_t alen = 0;
+    size_t blen = 0;
+    int err=0;
+    long count=0;
 
-  err=grib_value_count(a,&count);
-  if (err) return err;
-  alen=count;
+    err=grib_value_count(a,&count);
+    if (err) return err;
+    alen=count;
 
-  err=grib_value_count(b,&count);
-  if (err) return err;
-  blen=count;
+    err=grib_value_count(b,&count);
+    if (err) return err;
+    blen=count;
 
     if (alen != blen) return GRIB_COUNT_MISMATCH;
 

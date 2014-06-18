@@ -230,6 +230,9 @@ void grib_print_api_version(FILE* out)
             GRIB_API_MAJOR_VERSION,
             GRIB_API_MINOR_VERSION,
             GRIB_API_REVISION_VERSION);
+    if (GRIB_API_MAJOR_VERSION < 1) {
+        printf(" PRE-RELEASE");
+    }
 }
 
 static grib_context default_grib_context = {
@@ -579,6 +582,12 @@ char *grib_context_full_defs_path(grib_context* c,const char* basename)
     GRIB_MUTEX_UNLOCK(&mutex_c);
     full[0]=0;
     return NULL;
+}
+
+char* grib_samples_path(const grib_context *c)
+{
+    if (!c) c=grib_context_get_default();
+    return c->grib_samples_path;
 }
 
 void grib_context_free(const grib_context* c, void* p)

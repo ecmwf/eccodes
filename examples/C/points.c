@@ -19,12 +19,13 @@
 
 #include "grib_api.h"
 
-void usage(char* prog) {
+void usage(const char* prog) {
     printf("Usage: %s latlon_file grib_orography grib_file grib_file ...\n",prog);
     exit(1);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
     FILE* fin=0;
     int ret=0;
     char* fname=0;
