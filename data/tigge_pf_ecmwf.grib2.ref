@@ -1,0 +1,38 @@
+ecmf 165 10u m s**-1 10 metre U wind component
+ecmf 166 10v m s**-1 10 metre V wind component
+ecmf 59 cape J kg**-1 Convective available potential energy
+ecmf 156 gh gpm Geopotential Height
+ecmf 151 msl Pa Mean sea level pressure
+ecmf 179 ttr J m**-2 Top net thermal radiation
+ecmf 3 pt K Potential temperature
+ecmf 60 pv K m**2 kg**-1 s**-1 Potential vorticity
+ecmf 235 skt K Skin temperature
+ecmf 228141 sd kg m**-2 Snow depth water equivalent
+ecmf 228144 sf kg m**-2 Snow Fall water equivalent
+ecmf 228039 sm kg m**-3 Soil Moisture
+ecmf 228139 st K Soil Temperature
+ecmf 133 q kg kg**-1 Specific humidity
+ecmf 189 sund s Sunshine duration
+ecmf 168 2d K 2 metre dewpoint temperature
+ecmf 121 mx2t6 K Maximum temperature at 2 metres in the last 6 hours
+ecmf 122 mn2t6 K Minimum temperature at 2 metres in the last 6 hours
+ecmf 167 2t K 2 metre temperature
+ecmf 147 slhf J m**-2 Surface latent heat flux
+ecmf 176 ssr J m**-2 Surface net solar radiation
+ecmf 177 str J m**-2 Surface net thermal radiation
+ecmf 134 sp Pa Surface pressure
+ecmf 146 sshf J m**-2 Surface sensible heat flux
+ecmf 130 t K Temperature
+ecmf 179 ttr J m**-2 Top net thermal radiation
+ecmf 147 slhf J m**-2 Surface latent heat flux
+ecmf 176 ssr J m**-2 Surface net solar radiation
+ecmf 177 str J m**-2 Surface net thermal radiation
+ecmf 146 sshf J m**-2 Surface sensible heat flux
+ecmf 228164 tcc % Total Cloud Cover
+ecmf 136 tcw kg m**-2 Total column water
+ecmf 228228 tp kg m**-2 Total Precipitation
+ecmf 131 u m s**-1 U component of wind
+ecmf 131 u m s**-1 U component of wind
+ecmf 131 u m s**-1 U component of wind
+ecmf 132 v m s**-1 V component of wind
+ecmf 132 v m s**-1 V component of wind
