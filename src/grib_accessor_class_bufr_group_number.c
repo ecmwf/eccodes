@@ -8,20 +8,22 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
+/************************************
+ *   Enrico Fucile
+ **********************************/
 
-/* 
+#include "ecCodes_internal.h"
+/*
    This is used by make_class.pl
 
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_long
-   IMPLEMENTS = unpack_long;pack_long
-   IMPLEMENTS = init;dump
-   MEMBERS    = const char* owner
-   MEMBERS    = int bit_index
+   IMPLEMENTS = unpack_long
+   IMPLEMENTS = get_native_type
+   IMPLEMENTS = pack_long
+   IMPLEMENTS = init
    END_CLASS_DEF
-
  */
 
 /* START_CLASS_IMP */
@@ -34,42 +36,40 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
+static int  get_native_type(grib_accessor*);
 static int pack_long(grib_accessor*, const long* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
-static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
-typedef struct grib_accessor_bit {
+typedef struct grib_accessor_bufr_group_number {
     grib_accessor          att;
 /* Members defined in gen */
 /* Members defined in long */
-/* Members defined in bit */
-	const char* owner;
-	int bit_index;
-} grib_accessor_bit;
+/* Members defined in bufr_group_number */
+} grib_accessor_bufr_group_number;
 
 extern grib_accessor_class* grib_accessor_class_long;
 
-static grib_accessor_class _grib_accessor_class_bit = {
+static grib_accessor_class _grib_accessor_class_bufr_group_number = {
     &grib_accessor_class_long,                      /* super                     */
-    "bit",                      /* name                      */
-    sizeof(grib_accessor_bit),  /* size                      */
+    "bufr_group_number",                      /* name                      */
+    sizeof(grib_accessor_bufr_group_number),  /* size                      */
     0,                           /* inited */
     &init_class,                 /* init_class */
     &init,                       /* init                      */
     0,                  /* post_init                      */
     0,                    /* free mem                       */
-    &dump,                       /* describes himself         */
+    0,                       /* describes himself         */
     0,                /* get length of section     */
     0,              /* get length of string      */
     0,                /* get number of values      */
     0,                 /* get number of bytes      */
     0,                /* get offset to bytes           */
-    0,            /* get native type               */
+    &get_native_type,            /* get native type               */
     0,                /* get sub_section                */
     0,               /* grib_pack procedures long      */
-    0,               /* grib_pack procedures long      */
+    0,                 /* grib_pack procedures long      */
     &pack_long,                  /* grib_pack procedures long      */
     &unpack_long,                /* grib_unpack procedures long    */
     0,                /* grib_pack procedures double    */
@@ -94,17 +94,17 @@ static grib_accessor_class _grib_accessor_class_bit = {
 };
 
 
-grib_accessor_class* grib_accessor_class_bit = &_grib_accessor_class_bit;
+grib_accessor_class* grib_accessor_class_bufr_group_number = &_grib_accessor_class_bufr_group_number;
 
 
 static void init_class(grib_accessor_class* c)
 {
+	c->dump	=	(*(c->super))->dump;
 	c->next_offset	=	(*(c->super))->next_offset;
 	c->string_length	=	(*(c->super))->string_length;
 	c->value_count	=	(*(c->super))->value_count;
 	c->byte_count	=	(*(c->super))->byte_count;
 	c->byte_offset	=	(*(c->super))->byte_offset;
-	c->get_native_type	=	(*(c->super))->get_native_type;
 	c->sub_section	=	(*(c->super))->sub_section;
 	c->pack_missing	=	(*(c->super))->pack_missing;
 	c->is_missing	=	(*(c->super))->is_missing;
@@ -131,72 +131,30 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-static void init(grib_accessor* a, const long len , grib_arguments* arg )
+static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-	grib_accessor_bit *ac = (grib_accessor_bit*) a;
-	a->length = 0;
-	ac->owner      = grib_arguments_get_name(a->parent->h,arg,0);
-	ac->bit_index = grib_arguments_get_long(a->parent->h,arg,1);
+  a->bufr_group_number=0;
+  a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
+  a->length=0;
 }
 
-static void dump(grib_accessor* a, grib_dumper* dumper)
+static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
 {
-	grib_dump_long(dumper,a,NULL);
+  a->parent->h->bufr_group_number=*val;
+  return GRIB_SUCCESS;
 }
 
 static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 {
-	grib_accessor_bit *ac = (grib_accessor_bit*) a;
-	int ret = 0;
 
-	long data = 0;
+  *val=a->parent->h->bufr_group_number;
+  *len=1;
 
-	if(*len < 1)
-	{
-		grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_bit : unpack_long : Wrong size for %s it contains %d values ", a->name , 1 );
-		*len = 0;
-		return GRIB_ARRAY_TOO_SMALL;
-	}
-	
-	if((ret = grib_get_long_internal(a->parent->h,ac->owner,&data)) != GRIB_SUCCESS){
-		*len = 0;
-		return ret;
-	}
-
-	if(data & (1<<ac->bit_index))      
-		*val = 1;
-	else
-		*val = 0;
-
-	*len = 1;
-	return GRIB_SUCCESS;
+  return GRIB_SUCCESS;
 }
 
-static int    pack_long   (grib_accessor* a, const long *val, size_t *len)
+static int get_native_type(grib_accessor* a)
 {
-	grib_accessor_bit *ac = (grib_accessor_bit*) a;
-	grib_accessor* owner = NULL;
-	unsigned char *mdata = 0;
-	if(*len < 1)
-	{
-		grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_bit : pack_long : At least one value to pack for %s", a->name );
-		*len = 0;
-		return GRIB_ARRAY_TOO_SMALL;
-	}
-
-	owner = grib_find_accessor(a->parent->h,ac->owner);
-
-	if(!owner){
-		grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_bit : Cannot get the owner %s for computing the bit value of %s ",ac->owner, a->name);
-		*len = 0;
-		return GRIB_NOT_FOUND;
-	}
-
-	mdata = a->parent->h->buffer->data;
-	mdata += grib_byte_offset(owner);
-
-	grib_set_bit( mdata,7-ac->bit_index , *val>0);
-
-	*len = 1;
-	return GRIB_SUCCESS;
+  return GRIB_TYPE_LONG;
 }
+

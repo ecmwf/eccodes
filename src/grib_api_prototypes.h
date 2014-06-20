@@ -56,6 +56,9 @@ grib_action *grib_action_create_meta(grib_context *context, const char *name, co
 /* action_class_remove.c */
 grib_action *grib_action_create_remove(grib_context *context, grib_arguments *args);
 
+/* action_class_rename.c */
+grib_action *grib_action_create_rename(grib_context *context, char *old, char *new);
+
 /* action_class_assert.c */
 grib_action *grib_action_create_assert(grib_context *context, grib_expression *expression);
 
@@ -74,6 +77,32 @@ grib_action *grib_action_create_concept(grib_context *context, const char *name,
 const char *grib_concept_evaluate(grib_handle *h, grib_action *act);
 int grib_concept_apply(grib_handle *h, grib_action *act, const char *name);
 
+/* action_class_hash_array.c */
+grib_action *grib_action_create_hash_array(grib_context *context, const char *name, grib_hash_array_value *hash_array, const char *basename, const char *name_space, const char *defaultkey, const char *masterDir, const char *localDir, const char *ecmfDir, int flags, int nofail);
+grib_hash_array_value *get_hash_array(grib_handle *h, grib_action *a);
+
+/* action_class_assert.c */
+grib_action *grib_action_create_assert(grib_context *context, grib_expression *expression);
+
+/* action_class_template.c */
+grib_action *grib_action_create_template(grib_context *context, int nofail, const char *name, const char *arg1);
+GRIB_INLINE grib_action *get_empty_template(grib_context *c, int *err);
+
+/* action_class_trigger.c */
+grib_action *grib_action_create_trigger(grib_context *context, grib_arguments *args, grib_action *block);
+
+/* action_class_when.c */
+grib_action *grib_action_create_when(grib_context *context, grib_expression *expression, grib_action *block_true, grib_action *block_false);
+
+/* action_class_concept.c */
+grib_action *grib_action_create_concept(grib_context *context, const char *name, grib_concept_value *concept, const char *basename, const char *name_space, const char *defaultkey, const char *masterDir, const char *localDir, const char *ecmfDir, int flags, int nofail);
+const char *grib_concept_evaluate(grib_handle *h, grib_action *act);
+int grib_concept_apply(grib_handle *h, grib_action *act, const char *name);
+
+/* action_class_hash_array.c */
+grib_action *grib_action_create_hash_array(grib_context *context, const char *name, grib_hash_array_value *hash_array, const char *basename, const char *name_space, const char *defaultkey, const char *masterDir, const char *localDir, const char *ecmfDir, int flags, int nofail);
+grib_hash_array_value *get_hash_array(grib_handle *h, grib_action *a);
+
 /* action_class_set.c */
 grib_action *grib_action_create_set(grib_context *context, const char *name, grib_expression *expression, int nofail);
 
@@ -91,6 +120,9 @@ grib_action *grib_action_create_write(grib_context *context, const char *name, i
 
 /* action_class_print.c */
 grib_action *grib_action_create_print(grib_context *context, const char *name, char *outname);
+
+/* action_class_close.c */
+grib_action *grib_action_create_close(grib_context *context, char *filename);
 
 /* action_class_variable.c */
 grib_action *grib_action_create_variable(grib_context *context, const char *name, const char *op, const long len, grib_arguments *params, grib_arguments *default_value, int flags, const char *name_space);
@@ -113,6 +145,7 @@ int grib_unpack_double_subarray(grib_accessor *a, double *v, size_t start, size_
 int grib_unpack_double(grib_accessor *a, double *v, size_t *len);
 int grib_unpack_double_element(grib_accessor *a, size_t i, double *v);
 int grib_unpack_string(grib_accessor *a, char *v, size_t *len);
+int grib_unpack_string_array(grib_accessor *a, char **v, size_t *len);
 int grib_unpack_long(grib_accessor *a, long *v, size_t *len);
 long grib_accessor_get_native_type(grib_accessor *a);
 long grib_get_next_position_offset(grib_accessor *a);
@@ -137,17 +170,39 @@ void grib_concept_value_delete(grib_context *c, grib_concept_value *v);
 grib_concept_condition *grib_concept_condition_new(grib_context *c, const char *name, grib_expression *expression);
 void grib_concept_condition_delete(grib_context *c, grib_concept_condition *v);
 
+/* grib_hash_array.c */
+grib_hash_array_value *grib_integer_hash_array_value_new(grib_context *c, const char *name, grib_iarray *array);
+grib_hash_array_value *grib_double_hash_array_value_new(grib_context *c, const char *name, grib_darray *array);
+void grib_hash_array_value_delete(grib_context *c, grib_hash_array_value *v);
+
 /* grib_darray.c */
 grib_darray *grib_darray_new(grib_context *c, size_t size, size_t incsize);
 grib_darray *grib_darray_resize(grib_context *c, grib_darray *v);
 grib_darray *grib_darray_push(grib_context *c, grib_darray *v, double val);
 void grib_darray_delete(grib_context *c, grib_darray *v);
 
+/* grib_sarray.c */
+grib_sarray *grib_sarray_new(grib_context *c, size_t size, size_t incsize);
+grib_sarray *grib_sarray_resize(grib_context *c, grib_sarray *v);
+grib_sarray *grib_sarray_push(grib_context *c, grib_sarray *v, char *val);
+void grib_sarray_delete(grib_context *c, grib_sarray *v);
+
 /* grib_iarray.c */
+grib_iarray *grib_iarray_new_from_array(grib_context *c, long *a, size_t size);
 grib_iarray *grib_iarray_new(grib_context *c, size_t size, size_t incsize);
-grib_iarray *grib_iarray_resize(grib_context *c, grib_iarray *v);
+long grib_iarray_pop(grib_iarray *a);
+long grib_iarray_pop_front(grib_iarray *a);
+grib_iarray *grib_iarray_resize_to(grib_iarray *v, size_t newsize);
+grib_iarray *grib_iarray_resize(grib_iarray *v);
 grib_iarray *grib_iarray_push(grib_context *c, grib_iarray *v, long val);
-void grib_iarray_delete(grib_context *c, grib_iarray *v);
+grib_iarray *grib_iarray_push_front(grib_iarray *v, long val);
+grib_iarray *grib_iarray_push_array(grib_iarray *v, long *val, size_t size);
+long grib_iarray_get(grib_iarray *a, size_t i);
+void grib_iarray_set(grib_iarray *a, size_t i, long v);
+void grib_iarray_delete(grib_iarray *v);
+void grib_iarray_delete_array(grib_iarray *v);
+long *grib_iarray_get_array(grib_iarray *v);
+size_t grib_iarray_get_used_size(grib_iarray *v);
 
 /* grib_accessor_class_array.c */
 
@@ -163,11 +218,40 @@ void grib_iarray_delete(grib_context *c, grib_iarray *v);
 
 /* grib_accessor_class_bits_per_value.c */
 
+/* grib_accessor_class_bufr_data.c */
+
+/* grib_accessor_class_bufr_data_element.c */
+
+/* grib_accessor_class_bufr_group.c */
+
+/* grib_accessor_class_unpack_bufr_values.c */
+
+/* grib_accessor_class_bufr_uncompressed_data.c */
+
+/* grib_accessor_class_bufr_element.c */
+
+/* grib_accessor_class_bufr_has_delayed_replication.c */
+
+/* grib_accessor_class_bufr_subset_number.c */
+
+/* grib_accessor_class_bufr_group_number.c */
+
+/* grib_accessor_class_apply_operators.c */
+size_t compute_size_AO(long *descriptors, size_t numberOfDescriptors);
+
+/* grib_accessor_class_group.c */
+
+/* grib_accessor_class_non_alpha.c */
+
 /* grib_accessor_class_g1bitmap.c */
 
 /* grib_accessor_class_g2bitmap.c */
 
 /* grib_accessor_class_concept.c */
+
+/* grib_accessor_class_hash_array.c */
+
+/* grib_accessor_class_hash_array.c */
 
 /* grib_accessor_class_decimal_precision.c */
 
@@ -194,6 +278,11 @@ void grib_update_paddings(grib_section *s);
 /* grib_accessor_class_change_scanning_direction.c */
 
 /* grib_accessor_class_codeflag.c */
+
+/* grib_accessor_class_smart_table.c */
+void grib_smart_table_delete(grib_context *c);
+
+/* grib_accessor_class_smart_table_column.c */
 
 /* grib_accessor_class_codetable.c */
 void grib_codetable_delete(grib_context *c);
@@ -239,6 +328,10 @@ int grib_g1_step_apply_units(long *start, long *end, long *step_unit, long *P1, 
 /* grib_accessor_class_data_g22order_packing.c */
 
 /* grib_accessor_class_mars_step.c */
+
+/* grib_accessor_class_message_copy.c */
+
+/* grib_accessor_class_dictionary.c */
 
 /* grib_accessor_class_g1param.c */
 
@@ -426,6 +519,11 @@ second_order_packed *grib_get_second_order_groups(grib_context *c, const unsigne
 
 /* grib_accessor_class_g2grid.c */
 
+/* grib_accessor_class_unexpanded_descriptors.c */
+
+/* grib_accessor_class_expanded_descriptors.c */
+size_t __expand(grib_accessor *a, grib_iarray *unexpanded, grib_iarray *expanded, int *err);
+
 /* grib_accessor_class_data_apply_bitmap.c */
 
 /* grib_accessor_class_data_apply_boustrophedonic.c */
@@ -502,6 +600,7 @@ int grib_index_write(grib_index *index, const char *filename);
 grib_index *grib_index_read(grib_context *c, const char *filename, int *err);
 int grib_index_search_same(grib_index *index, grib_handle *h);
 int grib_index_add_file(grib_index *index, const char *filename);
+int codes_index_add_file(grib_index *index, const char *filename, int message_type);
 grib_index *grib_index_new_from_file(grib_context *c, char *filename, const char *keys, int *err);
 int grib_index_get_size(grib_index *index, const char *key, size_t *size);
 int grib_index_get_string(grib_index *index, const char *key, char **values, size_t *size);
@@ -511,9 +610,11 @@ int grib_index_select_long(grib_index *index, const char *skey, long value);
 int grib_index_select_double(grib_index *index, const char *skey, double value);
 int grib_index_select_string(grib_index *index, const char *skey, char *value);
 grib_handle *grib_index_get_handle(grib_field *field, int *err);
+grib_handle *codes_index_get_handle(grib_field *field, int message_type, int *err);
 void grib_index_dump(grib_index *index);
 char *grib_get_field_file(grib_index *index, off_t *offset);
 grib_handle *grib_handle_new_from_index(grib_index *index, int *err);
+grib_handle *codes_new_from_index(grib_index *index, int message_type, int *err);
 void grib_index_rewind(grib_index *index);
 int grib_index_search(grib_index *index, grib_index_key *keys);
 
@@ -541,6 +642,14 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t *len, in
 /* grib_accessor_class_spd.c */
 
 /* grib_accessor_class_sum.c */
+
+/* grib_accessor_class_to_integer.c */
+
+/* grib_accessor_class_to_double.c */
+
+/* grib_accessor_class_to_string.c */
+
+/* grib_accessor_class_sexagesimal2decimal.c */
 
 /* grib_accessor_class_vector.c */
 
@@ -600,6 +709,8 @@ int grib_nearest_smaller_ieee_float(double a, double *ret);
 unsigned long grib_ieee64_to_long(double x);
 double grib_long_to_ieee64(unsigned long x);
 int grib_ieee_decode_array(grib_context *c, unsigned char *buf, size_t nvals, int bytes, double *val);
+int grib_ieee_decode_array(grib_context *c, unsigned char *buf, size_t nvals, int bytes, double *val);
+int grib_ieee_encode_array(grib_context *c, double *val, size_t nvals, int bytes, unsigned char *buf);
 int grib_ieee_encode_array(grib_context *c, double *val, size_t nvals, int bytes, unsigned char *buf);
 
 /* grib_accessor_class_reference_value_error.c */
@@ -632,6 +743,7 @@ void grib_dumper_delete(grib_dumper *d);
 void grib_dump_long(grib_dumper *d, grib_accessor *a, const char *comment);
 void grib_dump_double(grib_dumper *d, grib_accessor *a, const char *comment);
 void grib_dump_string(grib_dumper *d, grib_accessor *a, const char *comment);
+void grib_dump_string_array(grib_dumper *d, grib_accessor *a, const char *comment);
 void grib_dump_label(grib_dumper *d, grib_accessor *a, const char *comment);
 void grib_dump_bytes(grib_dumper *d, grib_accessor *a, const char *comment);
 void grib_dump_bits(grib_dumper *d, grib_accessor *a, const char *comment);
@@ -649,6 +761,8 @@ void grib_dump_footer(grib_dumper *d, grib_handle *h);
 /* grib_dumper_class_keys.c */
 
 /* grib_dumper_class_json.c */
+
+/* grib_dumper_class_xml.c */
 
 /* grib_dumper_class_c_code.c */
 
@@ -722,6 +836,8 @@ grib_file *grib_file_pool_get_files(void);
 int grib_file_pool_read(grib_context *c, FILE *fh);
 int grib_file_pool_write(FILE *fh);
 grib_file *grib_file_open(const char *filename, const char *mode, int *err);
+void grib_file_pool_delete_file(grib_file *file);
+void grib_file_close_force(const char *filename, int *err);
 void grib_file_close(const char *filename, int *err);
 void grib_file_close_all(int *err);
 grib_file *grib_get_file(const char *filename, int *err);
@@ -751,6 +867,8 @@ grib_handle *grib_handle_new_from_file(grib_context *c, FILE *f, int *error);
 grib_handle *eccode_grib_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 grib_handle *eccode_gts_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 grib_handle *eccode_bufr_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
+grib_handle *taf_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
+grib_handle *metar_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 grib_multi_handle *grib_multi_handle_new(grib_context *c);
 int grib_multi_handle_delete(grib_multi_handle *h);
 int grib_multi_handle_append(grib_handle *h, int start_section, grib_multi_handle *mh);
@@ -798,8 +916,12 @@ int wmo_read_any_from_file(FILE *f, void *buffer, size_t *len);
 int wmo_read_grib_from_file(FILE *f, void *buffer, size_t *len);
 int wmo_read_bufr_from_file(FILE *f, void *buffer, size_t *len);
 int wmo_read_gts_from_file(FILE *f, void *buffer, size_t *len);
+int wmo_read_taf_from_file(FILE *f, void *buffer, size_t *len);
+int wmo_read_metar_from_file(FILE *f, void *buffer, size_t *len);
 int wmo_read_any_from_stream(void *stream_data, long (*stream_proc )(void *, void *buffer, long len ), void *buffer, size_t *len);
 void *wmo_read_gts_from_file_malloc(FILE *f, int headers_only, size_t *size, off_t *offset, int *err);
+void *wmo_read_taf_from_file_malloc(FILE *f, int headers_only, size_t *size, off_t *offset, int *err);
+void *wmo_read_metar_from_file_malloc(FILE *f, int headers_only, size_t *size, off_t *offset, int *err);
 void *wmo_read_any_from_file_malloc(FILE *f, int headers_only, size_t *size, off_t *offset, int *err);
 void *wmo_read_grib_from_file_malloc(FILE *f, int headers_only, size_t *size, off_t *offset, int *err);
 void *wmo_read_bufr_from_file_malloc(FILE *f, int headers_only, size_t *size, off_t *offset, int *err);
@@ -851,14 +973,17 @@ int grib_yywrap(void);
 int grib_yyerror(const char *msg);
 void grib_parser_include(const char *fname);
 grib_concept_value *grib_parse_concept_file(grib_context *gc, const char *filename);
+grib_hash_array_value *grib_parse_hash_array_file(grib_context *gc, const char *filename);
 grib_rule *grib_parse_rules_file(grib_context *gc, const char *filename);
 grib_action *grib_parse_file(grib_context *gc, const char *filename);
 int grib_type_to_int(char id);
 
 /* grib_query.c */
-grib_accessor *grib_find_accessor_fast(grib_handle *h, const char *name);
+int grib_navigate_subgroups(grib_handle *h);
+int grib_not_navigate_subgroups(grib_handle *h);
 grib_accessor *grib_find_accessor(grib_handle *h, const char *name);
 int grib_find_all_accessors(grib_handle *h, const char *name, search_all_callback_proc callback, void *data);
+grib_accessor *grib_find_accessor_fast(grib_handle *h, const char *name);
 
 /* grib_scaling.c */
 double grib_power(long s, long n);
@@ -901,6 +1026,7 @@ int grib_set_double_array(grib_handle *h, const char *name, const double *val, s
 int grib_set_long_array_internal(grib_handle *h, const char *name, const long *val, size_t length);
 int grib_set_long_array(grib_handle *h, const char *name, const long *val, size_t length);
 int grib_get_long_internal(grib_handle *h, const char *name, long *val);
+int grib_is_in_dump(grib_handle *h, const char *name);
 int grib_get_long(grib_handle *h, const char *name, long *val);
 int grib_get_double_internal(grib_handle *h, const char *name, double *val);
 int grib_get_double(grib_handle *h, const char *name, double *val);
@@ -922,6 +1048,8 @@ int grib_get_size(grib_handle *h, const char *name, size_t *size);
 int grib_get_count(grib_handle *h, const char *name, size_t *size);
 int _grib_get_size(grib_handle *h, grib_accessor *a, size_t *size);
 int grib_get_offset(grib_handle *h, const char *key, size_t *val);
+int _grib_get_string_array_internal(grib_handle *h, grib_accessor *a, char **val, size_t buffer_len, size_t *decoded_length);
+int grib_get_string_array(grib_handle *h, const char *name, char **val, size_t *length);
 int _grib_get_long_array_internal(grib_handle *h, grib_accessor *a, long *val, size_t buffer_len, size_t *decoded_length);
 int grib_get_long_array_internal(grib_handle *h, const char *name, long *val, size_t *length);
 int grib_get_long_array(grib_handle *h, const char *name, long *val, size_t *length);
@@ -933,14 +1061,18 @@ int grib_set_values(grib_handle *h, grib_values *args, size_t count);
 int grib_get_nearest_smaller_value(grib_handle *h, const char *name, double val, double *nearest);
 void grib_print_values(grib_values *values, int count);
 int grib_values_check(grib_handle *h, grib_values *values, int count);
+int grib_key_equal(grib_handle *h1, grib_handle *h2, const char *key, int type, int *err);
 
 /* grib_errors.c */
 const char *grib_get_error_message(int code);
 void grib_check(const char *call, const char *file, int line, int e, const char *msg);
-void grib_fail(const char *expr, const char *file, int line);
+void grib_fail(const char *expr, const char *file, int line, int silent);
 
 /* grib_expression_class_binop.c */
 grib_expression *new_binop_expression(grib_context *c, grib_binop_long_proc long_func, grib_binop_double_proc double_func, grib_expression *left, grib_expression *right);
+
+/* grib_expression_class_is_in_dict.c */
+grib_expression *new_is_in_dict_expression(grib_context *c, const char *name, const char *list);
 
 /* grib_expression_class_true.c */
 grib_expression *new_true_expression(grib_context *c);
@@ -955,7 +1087,16 @@ grib_expression *new_unop_expression(grib_context *c, grib_unop_long_proc long_f
 grib_expression *new_func_expression(grib_context *c, const char *name, grib_arguments *args);
 
 /* grib_expression_class_accessor.c */
-grib_expression *new_accessor_expression(grib_context *c, const char *name);
+grib_expression *new_accessor_expression(grib_context *c, const char *name, long start, size_t length);
+
+/* grib_expression_class_is_in_list.c */
+grib_expression *new_is_in_list_expression(grib_context *c, const char *name, const char *list);
+
+/* grib_expression_class_is_integer.c */
+grib_expression *new_is_integer_expression(grib_context *c, const char *name, int start, int length);
+
+/* grib_expression_class_length.c */
+grib_expression *new_length_expression(grib_context *c, const char *name);
 
 /* grib_expression_class_long.c */
 grib_expression *new_long_expression(grib_context *c, long value);
@@ -965,6 +1106,9 @@ grib_expression *new_double_expression(grib_context *c, double value);
 
 /* grib_expression_class_string.c */
 grib_expression *new_string_expression(grib_context *c, const char *value);
+
+/* grib_expression_class_sub_string.c */
+grib_expression *new_sub_string_expression(grib_context *c, const char *value, size_t start, size_t length);
 
 /* grib_box.c */
 grib_points *grib_box_get_points(grib_box *box, double north, double west, double south, double east, int *err);
@@ -1105,6 +1249,8 @@ const char *grib_unop_long_proc_name(grib_unop_long_proc proc);
 const char *grib_unop_double_proc_name(grib_unop_double_proc proc);
 
 /* grib_bits_any_endian.c */
+int grib_is_all_bits_one(long val, long nbits);
+char *grib_decode_string(const unsigned char *bitStream, long *bitOffset, size_t numberOfCharacters, char *string);
 unsigned long grib_decode_unsigned_long(const unsigned char *p, long *bitp, long nbits);
 int grib_encode_unsigned_long(unsigned char *p, unsigned long val, long *bitp, long nbits);
 int grib_encode_unsigned_longb(unsigned char *p, unsigned long val, long *bitp, long nb);

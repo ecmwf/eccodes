@@ -19,11 +19,14 @@ extern int yyerror(const char*);
 
 extern   grib_action*           grib_parser_all_actions;
 extern   grib_concept_value*    grib_parser_concept;
+extern   grib_hash_array_value*    grib_parser_hash_array;
 extern   grib_context*          grib_parser_context;
 extern   grib_rule*             grib_parser_rules;
 
-static grib_concept_value* reverse(grib_concept_value* r);
-static grib_concept_value *reverse_concept(grib_concept_value *r,grib_concept_value *s);
+static grib_concept_value* reverse_concept(grib_concept_value* r);
+static grib_concept_value *_reverse_concept(grib_concept_value *r,grib_concept_value *s);
+static grib_hash_array_value* reverse_hash_array(grib_hash_array_value* r);
+static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_hash_array_value *s);
 
 /* typedef int (*testp_proc)(long,long); */
 /* typedef long (*grib_op_proc)(long,long);   */
@@ -42,6 +45,7 @@ static grib_concept_value *reverse_concept(grib_concept_value *r,grib_concept_va
     grib_expression         *exp;
     grib_concept_condition  *concept_condition;
     grib_concept_value      *concept_value;
+    grib_hash_array_value      *hash_array_value;
 	grib_case               *case_value;
   grib_rule               *rules;
   grib_rule_entry         *rule_entry;
@@ -54,19 +58,30 @@ static grib_concept_value *reverse_concept(grib_concept_value *r,grib_concept_va
 %token IF_TRANSIENT
 %token ELSE
 %token END
+%token CLOSE
 %token UNSIGNED
 %token TEMPLATE
 %token TEMPLATE_NOFAIL
 %token TRIGGER
 %token ASCII
+%token GROUP
+%token NON_ALPHA
 %token KSEC1EXPVER
 %token LABEL
 %token LIST
+%token IS_IN_LIST
+%token IS_IN_DICT
+%token IS_INTEGER
+%token TO_INTEGER
+%token TO_STRING
+%token SEX2DEC
 %token WHILE
 %token IBMFLOAT
 %token SIGNED
 %token BYTE
 %token CODETABLE
+%token SMART_TABLE
+%token DICTIONARY
 %token COMPLEX_CODETABLE
 %token LOOKUP
 %token ALIAS
@@ -78,6 +93,7 @@ static grib_concept_value *reverse_concept(grib_concept_value *r,grib_concept_va
 %token FLAGBIT
 %token CONCEPT
 %token GETENV
+%token HASH_ARRAY
 %token CONCEPT_NOFAIL
 %token NIL
 %token DUMMY
@@ -90,6 +106,8 @@ static grib_concept_value *reverse_concept(grib_concept_value *r,grib_concept_va
 %token DOUBLE_TYPE
 %token NO_COPY
 %token DUMP
+%token JSON
+%token XML
 %token NO_FAIL
 %token EDITION_SPECIFIC
 %token OVERRIDE
@@ -108,11 +126,13 @@ static grib_concept_value *reverse_concept(grib_concept_value *r,grib_concept_va
 
 %token EXPORT
 %token REMOVE
+%token RENAME
 %token SKIP
 
 %token PAD
 %token SECTION_PADDING
 %token MESSAGE
+%token MESSAGE_COPY
 %token PADTO
 %token PADTOEVEN
 %token PADTOMULTIPLE
@@ -120,12 +140,14 @@ static grib_concept_value *reverse_concept(grib_concept_value *r,grib_concept_va
 %token G1_MESSAGE_LENGTH
 %token G1_SECTION4_LENGTH
 %token SECTION_LENGTH
+%token LENGTH
 %token FLAG
 %token ITERATOR
 %token NEAREST
 %token BOX
 %token KSEC
 %token ASSERT
+%token SUBSTR
 
 %token CASE
 %token SWITCH
@@ -153,6 +175,7 @@ static grib_concept_value *reverse_concept(grib_concept_value *r,grib_concept_va
 %token <dval>FLOAT
 
 %type <dvalue> dvalues
+%type <ivalue> integer_array
 
 %type <act>  instructions
 %type <act>  instruction
@@ -164,6 +187,7 @@ static grib_concept_value *reverse_concept(grib_concept_value *r,grib_concept_va
 %type <act>  when_block
 %type <act>  trigger_block
 %type <act>  concept_block
+%type <act>  hash_array_block
 %type <act>  set
 %type <act>  set_list
 
@@ -193,6 +217,9 @@ static grib_concept_value *reverse_concept(grib_concept_value *r,grib_concept_va
 %type <concept_value> concept_value
 %type <concept_value> concept_list
 
+%type <hash_array_value> hash_array_value
+%type <hash_array_value> hash_array_list
+
 %type <case_value> case_value
 %type <case_value> case_list
 
@@ -207,12 +234,15 @@ static grib_concept_value *reverse_concept(grib_concept_value *r,grib_concept_va
 
 %%
 
-all        : empty        { grib_parser_all_actions = 0;grib_parser_concept=0; grib_parser_rules=0; }
-           | concept_list { grib_parser_concept     = reverse($1); }
+all        : empty        { grib_parser_all_actions = 0;grib_parser_concept=0; 
+                            grib_parser_hash_array=0;grib_parser_rules=0; }
+           | concept_list { grib_parser_concept     = reverse_concept($1); }
+           | hash_array_list { grib_parser_hash_array     = reverse_hash_array($1); }
            | instructions { grib_parser_all_actions = $1; }
            | rules        { grib_parser_rules       = $1; }
        /* memory leak here */
-       | error        { grib_parser_all_actions = 0; grib_parser_concept=0; grib_parser_rules=0; }
+       | error        { grib_parser_all_actions = 0; grib_parser_concept=0; 
+	                    grib_parser_hash_array=0; grib_parser_rules=0; }
    ;
 
 empty:;
@@ -222,6 +252,11 @@ dvalues :  FLOAT  { $$=grib_darray_push(0,0,$1);}
     |  dvalues ',' FLOAT { $$=grib_darray_push(0,$1,$3);}
     |  INTEGER { $$=grib_darray_push(0,0,$1);}
     |  dvalues ',' INTEGER { $$=grib_darray_push(0,$1,$3);}
+   ;
+
+integer_array :  INTEGER  { $$=grib_iarray_push(0,$1);}
+    |  integer_array ',' INTEGER { $$=grib_iarray_push($1,$3);}
+   ;
 
 instructions : instruction
          | instruction instructions { $1->next = $2; $$ = $1; }
@@ -235,6 +270,7 @@ instruction: simple  ';'
            | while_block
            | trigger_block
            | concept_block
+           | hash_array_block
            | when_block
            | switch_block
 
@@ -271,6 +307,24 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
     | ASCII   '[' INTEGER ']' IDENT       default flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"ascii",$3,NULL,$6,$7,NULL,NULL);  free($5);  }
 
+    | GROUP   IDENT       default flags
+	{ $$ = grib_action_create_gen(grib_parser_context,$2,"group",0,NULL,$3,$4,NULL,NULL);  free($2);  }
+
+    | GROUP   IDENT   '(' argument_list ')'   default flags
+	{ $$ = grib_action_create_gen(grib_parser_context,$2,"group",0,$4,$6,$7,NULL,NULL);  free($2);  }
+
+    | IDENT   '=' TO_INTEGER '(' argument_list ')'  flags
+	{ $$ = grib_action_create_gen(grib_parser_context,$1,"to_integer",0,$5,0,$7,NULL,NULL);  free($1);  }
+
+    | IDENT   '=' SEX2DEC '(' argument_list ')'  flags
+	{ $$ = grib_action_create_gen(grib_parser_context,$1,"sexagesimal2decimal",0,$5,0,$7,NULL,NULL);  free($1);  }
+
+    | IDENT   '=' TO_STRING '(' argument_list ')'  flags
+	{ $$ = grib_action_create_gen(grib_parser_context,$1,"to_string",0,$5,0,$7,NULL,NULL);  free($1);  }
+
+    | NON_ALPHA   IDENT       default flags
+	{ $$ = grib_action_create_gen(grib_parser_context,$2,"non_alpha",0,NULL,$3,$4,NULL,NULL);  free($2);  }
+
   /* Special case for '7777' */
     | ASCII   '[' INTEGER ']' STRING       default flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"ascii",$3,NULL,$6,$7,NULL,NULL);  free($5);  }
@@ -305,6 +359,12 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
     
     | CODETABLE '[' INTEGER ']' IDENT  '(' argument_list ')'   default flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"codetable",$3, $7,$9,$10,NULL,NULL);    free($5); }
+
+    | SMART_TABLE IDENT  '(' argument_list ')'   default flags
+	{ $$ = grib_action_create_gen(grib_parser_context,$2,"smart_table",0,$4,$6,$7,NULL,NULL);    free($2); }
+
+    | IDENT  '=' DICTIONARY '(' argument_list ')'   default flags
+	{ $$ = grib_action_create_gen(grib_parser_context,$1,"dictionary",0,$5,$7,$8,NULL,NULL);    free($1); }
 
     | IDENT  '=' GETENV '(' argument_list ')'   default flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$1,"getenv",0,$5,$7,$8,NULL,NULL);    free($1); }
@@ -387,6 +447,9 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
     | MESSAGE '[' INTEGER ']'    IDENT  flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"message",$3,0,0,$6,NULL,NULL);   free($5);  }
 
+    | MESSAGE_COPY IDENT  flags
+	{ $$ = grib_action_create_gen(grib_parser_context,$2,"message_copy",0,0,0,$3,NULL,NULL);   free($2);  }
+
     | SECTION_PADDING     IDENT  flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$2,"section_padding",0,0,0,$3,NULL,NULL);   free($2);  }
     | TEMPLATE    IDENT  STRING
@@ -418,7 +481,7 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
         {
       grib_arguments* a = grib_arguments_new(
         grib_parser_context,
-        new_accessor_expression(grib_parser_context,$2),
+        new_accessor_expression(grib_parser_context,$2,0,0),
 		NULL
         );
       a->next=$4;
@@ -430,7 +493,7 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
         {
       grib_arguments* a = grib_arguments_new(
         grib_parser_context,
-        new_accessor_expression(grib_parser_context,$2),
+        new_accessor_expression(grib_parser_context,$2,0,0),
 		NULL
         );
       a->next=$4;
@@ -442,7 +505,7 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
         {
       grib_arguments* a = grib_arguments_new(
         grib_parser_context,
-        new_accessor_expression(grib_parser_context,$2),
+        new_accessor_expression(grib_parser_context,$2,0,0),
 		NULL
         );
       a->next=$4;
@@ -455,6 +518,8 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
 
     | REMOVE argument_list
        { $$ = grib_action_create_remove(grib_parser_context,$2);}
+
+    | RENAME '(' IDENT ',' IDENT ')' { $$ = grib_action_create_rename(grib_parser_context,$3,$5);free($3);free($5);}
 
     | ASSERT '(' expression ')'
        { $$ = grib_action_create_assert(grib_parser_context,$3);}
@@ -478,8 +543,9 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
   | APPEND '(' INTEGER ')' STRING { $$ = grib_action_create_write(grib_parser_context,$5,1,$3); free($5);}
   | APPEND '(' INTEGER ')' { $$ = grib_action_create_write(grib_parser_context,"",1,$3); }
 
+  | CLOSE '(' IDENT ')' { $$ = grib_action_create_close(grib_parser_context,$3); free($3);}
   | PRINT STRING { $$ = grib_action_create_print(grib_parser_context,$2,0); free($2); }
-  | PRINT '(' STRING ')' STRING { $$ = grib_action_create_print(grib_parser_context,$5,$3); free($5); free($3);}
+  | PRINT '(' IDENT ')' STRING { $$ = grib_action_create_print(grib_parser_context,$5,$3); free($5); free($3);}
   | PRINT { $$ = grib_action_create_print(grib_parser_context,"",0);  }
    ;
 
@@ -520,6 +586,8 @@ flag_list  : flag
 flag: READ_ONLY         { $$ = GRIB_ACCESSOR_FLAG_READ_ONLY; }
     | LOWERCASE            { $$ = GRIB_ACCESSOR_FLAG_LOWERCASE; }
     | DUMP            { $$ = GRIB_ACCESSOR_FLAG_DUMP; }
+    | JSON            { $$ = GRIB_ACCESSOR_FLAG_JSON; }
+    | XML            { $$ = GRIB_ACCESSOR_FLAG_XML; }
     | NO_COPY            { $$ = GRIB_ACCESSOR_FLAG_NO_COPY; }
 	| NO_FAIL            { $$ = GRIB_ACCESSOR_FLAG_NO_FAIL; }
     | HIDDEN            { $$ = GRIB_ACCESSOR_FLAG_HIDDEN; }
@@ -567,6 +635,14 @@ concept_list : concept_value
              | concept_list concept_value { $$ = $2; $2->next = $1;   }
        ;
 
+hash_array_list : hash_array_value
+             | hash_array_list hash_array_value { $$ = $2; $2->next = $1;   }
+       ;
+
+hash_array_block : HASH_ARRAY IDENT '{' hash_array_list '}' flags { $$ = grib_action_create_hash_array(grib_parser_context,$2,$4,0,0,0,0,0,0,$6,0);  free($2); }
+   | HASH_ARRAY IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags { $$ = grib_action_create_hash_array(grib_parser_context,$2,0,$6,0,$4,$8,$10,0,$12,0);  free($2);free($6);free($4);free($8);free($10); }
+       ;
+
 case_list : case_value
              | case_list case_value { $$ = $2; $2->next = $1;   }
        ;
@@ -595,9 +671,18 @@ concept_conditions : concept_condition
         ;
 
 concept_condition   : IDENT '=' expression ';' { $$ = grib_concept_condition_new(grib_parser_context,$1,$3); free($1); }
+        ;
 
 
-string_or_ident :  IDENT   { $$ = new_accessor_expression(grib_parser_context,$1); free($1); }
+hash_array_value :  STRING '=' '[' integer_array ']' {
+	  				$$ = grib_integer_hash_array_value_new(grib_parser_context,$1,$4); free($1);}
+  				| IDENT '=' '[' integer_array ']' {
+	  				$$ = grib_integer_hash_array_value_new(grib_parser_context,$1,$4); free($1);}
+        ;
+
+string_or_ident : SUBSTR '(' IDENT ',' INTEGER ',' INTEGER ')'  { $$ = new_accessor_expression(grib_parser_context,$3,$5,$7);  free($3); }
+								| IDENT   { $$ = new_accessor_expression(grib_parser_context,$1,0,0); free($1); }
+                | SUBSTR '(' STRING ',' INTEGER ',' INTEGER ')'  { $$ = new_sub_string_expression(grib_parser_context,$3,$5,$7);  free($3); }
                 | STRING  { $$ = new_string_expression(grib_parser_context,$1);  free($1); }
                 ;
 
@@ -624,6 +709,12 @@ factor         : factor '*' power    { $$ = new_binop_expression(grib_parser_con
             | factor BIT  power   { $$ = new_binop_expression(grib_parser_context,&grib_op_bit,NULL,$1,$3); }
             | factor BITOFF power { $$ = new_binop_expression(grib_parser_context,&grib_op_bitoff,NULL,$1,$3); }
                | power
+            | LENGTH '(' IDENT ')' { $$ = new_length_expression(grib_parser_context,$3); free($3);}
+            | IS_IN_LIST '(' IDENT ',' STRING ')' { $$ = new_is_in_list_expression(grib_parser_context,$3,$5); free($3);free($5);}
+            | IS_IN_DICT '(' IDENT ',' STRING ')' { $$ = new_is_in_dict_expression(grib_parser_context,$3,$5); free($3);free($5);}
+            | IS_INTEGER '(' IDENT ',' INTEGER ')' { $$ = new_is_integer_expression(grib_parser_context,$3,$5,0); free($3);}
+            | IS_INTEGER '(' IDENT ',' INTEGER ',' INTEGER ')' { $$ = new_is_integer_expression(grib_parser_context,$3,$5,$7); free($3);}
+            | IS_INTEGER '(' IDENT ')' { $$ = new_is_integer_expression(grib_parser_context,$3,0,0); free($3);}
                ;
 
 term           : term '+' factor    { $$ = new_binop_expression(grib_parser_context,&grib_op_add,&grib_op_add_d,$1,$3); }
@@ -687,7 +778,7 @@ rules : rule
 
 %%
 
-static grib_concept_value *reverse_concept(grib_concept_value *r,grib_concept_value *s)
+static grib_concept_value *_reverse_concept(grib_concept_value *r,grib_concept_value *s)
 {
     grib_concept_value *v;
 
@@ -695,13 +786,29 @@ static grib_concept_value *reverse_concept(grib_concept_value *r,grib_concept_va
 
     v         = r->next;
     r->next   = s;
-    return reverse_concept(v,r);
+    return _reverse_concept(v,r);
+}
+
+static grib_concept_value* reverse_concept(grib_concept_value* r)
+{
+    return _reverse_concept(r,NULL);
+}
+
+static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_hash_array_value *s)
+{
+    grib_hash_array_value *v;
+
+    if(r == NULL) return s;
+
+    v         = r->next;
+    r->next   = s;
+    return _reverse_hash_array(v,r);
 }
 
 
-static grib_concept_value* reverse(grib_concept_value* r)
+static grib_hash_array_value* reverse_hash_array(grib_hash_array_value* r)
 {
-    return reverse_concept(r,NULL);
+    return _reverse_hash_array(r,NULL);
 }
 
 

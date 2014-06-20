@@ -78,6 +78,9 @@ FLOAT     {SIGN}?{DIGIT}+\.{DIGIT}+({EXP})?
 "null"        return NIL   ;
 "~"           return DUMMY   ;
 
+"substr"        return SUBSTR   ;
+"close"        return CLOSE   ;
+"length"        return LENGTH   ;
 "lowercase" return LOWERCASE;
 "if"        return IF       ;
 "_if"        return IF_TRANSIENT       ;
@@ -97,9 +100,13 @@ FLOAT     {SIGN}?{DIGIT}+\.{DIGIT}+({EXP})?
 "signed"    return SIGNED   ;
 "codetable" return CODETABLE;
 "getenv" return GETENV;
+"smart_table" return SMART_TABLE;
+"dict_search" return DICTIONARY;
 "complex_codetable" return CODETABLE;
 "flags"     return FLAG     ;
 "lookup"    return LOOKUP   ;
+"group"    return GROUP  ;
+"non_alpha"    return NON_ALPHA   ;
 "meta"      return META     ;
 "padtoeven"     return PADTOEVEN    ;
 "padto"     return PADTO    ;
@@ -107,6 +114,7 @@ FLOAT     {SIGN}?{DIGIT}+\.{DIGIT}+({EXP})?
 "pad"       return PAD      ;
 "section_padding"       return SECTION_PADDING      ;
 "message"       return MESSAGE      ;
+"message_copy"       return MESSAGE_COPY      ;
 "alias"     return ALIAS    ;
 "unalias"     return UNALIAS    ;
 "position"  return POS      ;
@@ -129,8 +137,16 @@ FLOAT     {SIGN}?{DIGIT}+\.{DIGIT}+({EXP})?
 
 "export"     return EXPORT;
 "remove"     return REMOVE;
+"rename"     return RENAME;
+"is_in_list"     return IS_IN_LIST;
+"is_in_dict"     return IS_IN_DICT;
+"to_integer"     return TO_INTEGER;
+"to_string"     return TO_STRING;
+"sexagesimal2decimal" return SEX2DEC;
+"is_integer"     return IS_INTEGER;
+"is_number"     return IS_INTEGER;
 
-"length"          return SECTION_LENGTH     ;
+"section_length"          return SECTION_LENGTH     ;
 
 "assert"     return ASSERT    ;
 
@@ -138,6 +154,8 @@ FLOAT     {SIGN}?{DIGIT}+\.{DIGIT}+({EXP})?
 "no_copy"           return NO_COPY;
 "edition_specific"    return EDITION_SPECIFIC;
 "dump"                return DUMP;
+"json"                return JSON;
+"xml"                return XML;
 "no_fail"            return NO_FAIL;
 "hidden"              return HIDDEN;
 "can_be_missing"      return CAN_BE_MISSING;
@@ -154,6 +172,7 @@ FLOAT     {SIGN}?{DIGIT}+\.{DIGIT}+({EXP})?
 "default"     return DEFAULT;
 "concept"     return CONCEPT;
 "concept_nofail"     return CONCEPT_NOFAIL;
+"hash_array"     return HASH_ARRAY;
 "write"       return WRITE;
 "append"       return APPEND;
 "print"       return PRINT;
@@ -181,10 +200,13 @@ FLOAT     {SIGN}?{DIGIT}+\.{DIGIT}+({EXP})?
 
            yyleng = 0;
 
-           while((c = input()) && c != q && c != '\n')
+           while((c = input()) && c != q )
            {
                if(c == '\\') yytext[yyleng++] = input();
-               else yytext[yyleng++] =  c;
+               else {
+									 yytext[yyleng++] =  c;
+									 if (c =='\n') yylineno++;
+							 }
             }
 
             yytext[yyleng++] = 0;

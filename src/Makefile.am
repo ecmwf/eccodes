@@ -28,22 +28,32 @@ libgrib_api_la_prototypes= \
 	action_class_put.c \
 	action_class_meta.c \
 	action_class_remove.c \
+	action_class_rename.c \
 	action_class_assert.c \
 	action_class_template.c \
 	action_class_trigger.c \
 	action_class_when.c \
 	action_class_concept.c \
+    action_class_hash_array.c \
+	action_class_assert.c \
+	action_class_template.c \
+	action_class_trigger.c \
+	action_class_when.c \
+	action_class_hash_array.c \
 	action_class_set.c \
 	action_class_set_darray.c \
 	action_class_set_iarray.c \
 	action_class_noop.c \
 	action_class_write.c \
 	action_class_print.c \
+	action_class_close.c \
 	action_class_variable.c \
 	action_class_modify.c \
 	grib_accessor.c \
 	grib_concept.c \
+	grib_hash_array.c \
 	grib_darray.c \
+	grib_sarray.c \
 	grib_iarray.c \
 	grib_accessor_class_array.c \
 	grib_accessor_class_assert.c \
@@ -52,9 +62,22 @@ libgrib_api_la_prototypes= \
 	grib_accessor_class_bitmap.c \
 	grib_accessor_class_bits.c  \
 	grib_accessor_class_bits_per_value.c \
+	grib_accessor_class_bufr_data.c \
+	grib_accessor_class_bufr_data_element.c \
+	grib_accessor_class_bufr_group.c \
+	grib_accessor_class_unpack_bufr_values.c \
+	grib_accessor_class_bufr_uncompressed_data.c \
+	grib_accessor_class_bufr_element.c \
+	grib_accessor_class_bufr_has_delayed_replication.c \
+	grib_accessor_class_bufr_subset_number.c \
+	grib_accessor_class_bufr_group_number.c \
+	grib_accessor_class_apply_operators.c \
+	grib_accessor_class_group.c \
+	grib_accessor_class_non_alpha.c \
 	grib_accessor_class_g1bitmap.c \
 	grib_accessor_class_g2bitmap.c \
 	grib_accessor_class_concept.c \
+	grib_accessor_class_hash_array.c \
 	grib_accessor_class_decimal_precision.c \
 	grib_accessor_class_divdouble.c \
 	grib_accessor_class_budgdate.c \
@@ -64,6 +87,8 @@ libgrib_api_la_prototypes= \
 	grib_accessor_class.c \
 	grib_accessor_class_change_scanning_direction.c \
 	grib_accessor_class_codeflag.c \
+	grib_accessor_class_smart_table.c \
+	grib_accessor_class_smart_table_column.c \
 	grib_accessor_class_codetable.c \
 	grib_accessor_class_codetable_units.c \
 	grib_accessor_class_codetable_title.c \
@@ -85,6 +110,8 @@ libgrib_api_la_prototypes= \
 	grib_accessor_class_g2step_range.c \
 	grib_accessor_class_data_g22order_packing.c \
 	grib_accessor_class_mars_step.c \
+	grib_accessor_class_message_copy.c \
+	grib_accessor_class_dictionary.c \
 	grib_accessor_class_g1param.c \
 	grib_accessor_class_g1p1p2.c \
 	grib_accessor_class_g1_increment.c \
@@ -175,6 +202,8 @@ libgrib_api_la_prototypes= \
 	grib_accessor_class_data_g1second_order_general_packing.c \
 	grib_accessor_class_data_g1second_order_general_extended_packing.c \
 	grib_accessor_class_g2grid.c \
+	grib_accessor_class_unexpanded_descriptors.c \
+	grib_accessor_class_expanded_descriptors.c \
 	grib_accessor_class_data_apply_bitmap.c \
 	grib_accessor_class_data_apply_boustrophedonic.c \
 	grib_accessor_class_data_apply_boustrophedonic_bitmap.c \
@@ -213,6 +242,10 @@ libgrib_api_la_prototypes= \
 	grib_accessor_class_unsigned_bits.c \
 	grib_accessor_class_spd.c \
 	grib_accessor_class_sum.c \
+	grib_accessor_class_to_integer.c \
+	grib_accessor_class_to_double.c \
+	grib_accessor_class_to_string.c \
+	grib_accessor_class_sexagesimal2decimal.c \
 	grib_accessor_class_vector.c \
 	grib_accessor_class_long_vector.c \
 	grib_gaussian_reduced.c \
@@ -232,6 +265,7 @@ libgrib_api_la_prototypes= \
 	grib_dumper_class_default.c \
 	grib_dumper_class_keys.c \
 	grib_dumper_class_json.c \
+	grib_dumper_class_xml.c \
 	grib_dumper_class_c_code.c \
 	grib_dumper_class_wmo.c \
 	grib_dumper_class.c \
@@ -256,14 +290,19 @@ libgrib_api_la_prototypes= \
 	grib_value.c \
 	grib_errors.c \
 	grib_expression_class_binop.c \
+	grib_expression_class_is_in_dict.c \
 	grib_expression_class_true.c \
 	grib_expression_class_string_compare.c \
 	grib_expression_class_unop.c \
 	grib_expression_class_functor.c \
 	grib_expression_class_accessor.c \
+	grib_expression_class_is_in_list.c \
+	grib_expression_class_is_integer.c \
+	grib_expression_class_length.c \
 	grib_expression_class_long.c \
 	grib_expression_class_double.c \
 	grib_expression_class_string.c \
+	grib_expression_class_sub_string.c \
 	grib_box.c \
 	grib_box_class.c \
 	grib_box_class_gen.c \

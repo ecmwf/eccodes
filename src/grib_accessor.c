@@ -241,6 +241,21 @@ int grib_unpack_string(grib_accessor* a, char* v, size_t *len )
   return 0;
 }
 
+int grib_unpack_string_array(grib_accessor* a, char** v, size_t *len )
+{
+  grib_accessor_class *c = a->cclass;
+  while(c)
+  {
+    if(c->unpack_string_array)
+    {
+      return c->unpack_string_array(a,v,len);
+    }
+    c = c->super ? *(c->super) : NULL;
+  }
+  Assert(0);
+  return 0;
+}
+
 int grib_unpack_long(grib_accessor* a,long* v, size_t *len )
 {
   grib_accessor_class *c = a->cclass;

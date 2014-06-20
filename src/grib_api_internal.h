@@ -152,7 +152,8 @@ double rint(double x);
 #define ftello ftell
 #endif
 
-#define Assert(a) {if(!(a)) grib_fail(#a,__FILE__,__LINE__);}
+#define Assert(a) {if(!(a)) grib_fail(#a,__FILE__,__LINE__,0);}
+#define AssertSilent(a) {if(!(a)) grib_fail(#a,__FILE__,__LINE__,1);}
 
  /* Compile time assertion - Thanks to Ralf Holly */
 #define COMPILE_TIME_ASSERT(e) \
@@ -170,6 +171,7 @@ double rint(double x);
 #define MAX_FILE_HANDLES_WITH_MULTI 10
 #define ACCESSORS_ARRAY_SIZE 2000
 #define MAX_NUM_CONCEPTS 2000
+#define MAX_NUM_HASH_ARRAY 2000
 
 #define GRIB_NAMESPACE      10
 
@@ -180,11 +182,23 @@ double rint(double x);
 #define GRIB_REAL_MODE8    8
 
 #define MAX_NUM_SECTIONS  9
+#define MAX_NUM_GROUPS  10000
 
 #define GRIB_DISPOSABLE_MEMORY      0
 #define GRIB_LONG_LASTING_MEMORY    1
 
 #define GRIB_LOG_PERROR          (1<<10)
+
+#define GRIB_HASH_ARRAY_TYPE_UNKNOWN 0
+#define GRIB_HASH_ARRAY_TYPE_INTEGER 1
+#define GRIB_HASH_ARRAY_TYPE_DOUBLE  2
+#define GRIB_HASH_ARRAY_TYPE_STRING  3
+
+#define CODES_GRIB    1
+#define CODES_BUFR    2
+
+#define MAX_SMART_TABLE_COLUMNS 20
+#define MAX_CODETABLE_ENTRIES 65536
 
 /* ACCESSOR COMPARE FLAGS */
 #define GRIB_COMPARE_NAMES          (1<<0)
@@ -203,6 +217,7 @@ typedef               struct     grib_action_class       grib_action_class;
 typedef               struct     grib_section            grib_section;
 typedef               struct     grib_packer             grib_packer;
 typedef               struct     grib_codetable          grib_codetable;
+typedef               struct     grib_smart_table          grib_smart_table;
 
 typedef               struct     grib_accessor           grib_accessor;
 typedef               struct     grib_iterator_class     grib_iterator_class;
@@ -213,6 +228,8 @@ typedef               struct     grib_dumper_class       grib_dumper_class;
 typedef               struct     grib_dependency         grib_dependency;
 typedef               struct     string_feed             string_feed;
 
+/* typedef void           (*dynamic_key_proc)              (const char*, void*)
+*/
 typedef void           (*nearest_init_class_proc)       (grib_nearest_class*);
 typedef int            (*nearest_init_proc)             (grib_nearest* i,grib_handle*,grib_arguments*);
 
@@ -245,9 +262,10 @@ typedef  void   (*accessor_destroy_proc)                  (grib_context* ,   gri
 
 typedef  int     (*accessor_unpack_long_proc)             (grib_accessor*, long*,   size_t *len);
 typedef  int     (*accessor_unpack_double_proc)           (grib_accessor*, double*, size_t *len);
-typedef  int     (*accessor_unpack_double_element_proc)         (grib_accessor*, size_t, double*);
-typedef  int     (*accessor_unpack_double_subarray_proc)         (grib_accessor*, double*,size_t , size_t);
+typedef  int     (*accessor_unpack_double_element_proc)   (grib_accessor*, size_t, double*);
+typedef  int     (*accessor_unpack_double_subarray_proc)  (grib_accessor*, double*,size_t , size_t);
 typedef  int     (*accessor_unpack_string_proc)           (grib_accessor*, char*,   size_t *len);
+typedef  int     (*accessor_unpack_string_array_proc)     (grib_accessor*, char**,   size_t *len);
 typedef  int     (*accessor_unpack_bytes_proc)            (grib_accessor*, unsigned char*, size_t *len);
 typedef  int     (*accessor_get_native_type_proc)         (grib_accessor*);
 typedef  int     (*accessor_notify_change_proc)           (grib_accessor*,grib_accessor*);
@@ -259,11 +277,12 @@ typedef grib_accessor*  (*accessor_next_proc)            (grib_accessor*,int);
 typedef  grib_section*   (*accessor_sub_section_proc)    (grib_accessor*);
 
 
-typedef  int   (*accessor_pack_missing_proc)                (grib_accessor*);
-typedef  int   (*accessor_pack_is_missing_proc)                (grib_accessor*);
+typedef  int   (*accessor_pack_missing_proc)             (grib_accessor*);
+typedef  int   (*accessor_pack_is_missing_proc)          (grib_accessor*);
 typedef  int   (*accessor_pack_long_proc)                (grib_accessor*, const long*,   size_t *len);
 typedef  int   (*accessor_pack_double_proc)              (grib_accessor*, const double*, size_t *len);
 typedef  int   (*accessor_pack_string_proc)              (grib_accessor*, const char*,   size_t *len);
+typedef  int   (*accessor_pack_string_array_proc)        (grib_accessor*, const char**,   size_t *len);
 typedef  int   (*accessor_pack_bytes_proc)               (grib_accessor*, const unsigned char*, size_t *len);
 typedef  int   (*accessor_pack_expression_proc)           (grib_accessor*, grib_expression*);
 typedef  int   (*accessor_clear_proc)           (grib_accessor*);
@@ -482,6 +501,8 @@ struct grib_accessor
 
   grib_accessor          *same;      /** < accessors with the same name */
   long                   loop;      /** < used in lists */
+  long                   bufr_subset_number;    /** < bufr subset (bufr data accessors belong to different subsets)*/
+  long                   bufr_group_number;     /** < used in bufr */
   grib_virtual_value*    vvalue;    /** < virtual value used when transient flag on **/
   const char*            set;
 
@@ -505,6 +526,8 @@ struct grib_accessor
 #define GRIB_ACCESSOR_FLAG_LONG_TYPE        (1<<15)
 #define GRIB_ACCESSOR_FLAG_DOUBLE_TYPE      (1<<16)
 #define GRIB_ACCESSOR_FLAG_LOWERCASE        (1<<17)
+#define GRIB_ACCESSOR_FLAG_XML              (1<<18)
+#define GRIB_ACCESSOR_FLAG_JSON             (1<<19)
 /* when adding a flag, update grib_compile_flags*/
 
 /**
@@ -606,6 +629,7 @@ struct grib_dumper_class {
    dumper_dump_proc         dump_long;
    dumper_dump_proc         dump_double;
    dumper_dump_proc         dump_string;
+   dumper_dump_proc         dump_string_array;
    dumper_dump_proc         dump_label;
    dumper_dump_proc         dump_bytes;
    dumper_dump_proc         dump_bits;
@@ -665,11 +689,20 @@ typedef struct grib_trie grib_trie;
 typedef struct grib_itrie grib_itrie;
 
 
+struct grib_sarray {
+  char** v;
+  size_t size;
+  size_t n;
+  size_t incsize;
+  grib_context* context;
+} ;
+
 struct grib_darray {
   double* v;
   size_t size;
   size_t n;
   size_t incsize;
+  grib_context* context;
 } ;
 
 struct grib_iarray {
@@ -677,6 +710,8 @@ struct grib_iarray {
   size_t size;
   size_t n;
   size_t incsize;
+  size_t number_of_pop_front;
+  grib_context* context;
 } ;
 
 
@@ -711,6 +746,11 @@ struct grib_handle
     char* section_length[MAX_NUM_SECTIONS];
     int sections_count;
     off_t offset;
+    long bufr_subset_number;   /* bufr subset number */
+    long bufr_group_number;    /* used in bufr */
+    grib_accessor* groups[MAX_NUM_GROUPS];
+    int navigate_subgroups;
+    int unpacked;
 };
 
 struct grib_multi_handle {
@@ -759,6 +799,9 @@ struct grib_accessor_class
     accessor_pack_string_proc       pack_string;
     accessor_unpack_string_proc     unpack_string;
 
+    accessor_pack_string_array_proc       pack_string_array;
+    accessor_unpack_string_array_proc     unpack_string_array;
+
     accessor_pack_bytes_proc        pack_bytes;
     accessor_unpack_bytes_proc      unpack_bytes;
 
@@ -792,6 +835,19 @@ struct grib_multi_support {
     int                             section_number;
     grib_multi_support*             next;
 };
+
+/* Hash_array */
+typedef struct grib_hash_array_value grib_hash_array_value;
+
+struct grib_hash_array_value {
+  grib_hash_array_value*   next;
+  char*                 name;
+  int                   type;
+  grib_iarray*          iarray;
+  grib_darray*          darray;
+  grib_trie*	        index;
+};
+
 
 /* Concepts */
 typedef struct grib_concept_condition grib_concept_condition;
@@ -858,6 +914,7 @@ struct grib_context
     grib_print_proc                 print;
 
     grib_codetable*                 codetable;
+    grib_smart_table*               smart_table;
     char*                           outfilename;
     int                             multi_support_on;
     grib_multi_support*             multi_support;
@@ -874,17 +931,85 @@ struct grib_context
     grib_itrie*                     concepts_index;
     int                             concepts_count;
     grib_concept_value*             concepts[MAX_NUM_CONCEPTS];
+    grib_itrie*                     hash_array_index;
+    int                             hash_array_count;
+    grib_hash_array_value*          hash_array[MAX_NUM_HASH_ARRAY];
     grib_trie*                      def_files;
     
     grib_string_list*                blacklist;
     int                             ieee_packing;
+    int                             unpack;
 	FILE*                           log_stream;
 	grib_trie*                      classes;
+	grib_trie*                      lists;
 #if GRIB_PTHREADS
     pthread_mutex_t                 mutex;
 #endif
 
 };
+
+/* expression*/
+
+typedef int        (*expression_evaluate_long_proc)(grib_expression*,grib_handle*,long*);
+typedef int      (*expression_evaluate_double_proc)(grib_expression*,grib_handle*,double*);
+typedef const char* (*expression_evaluate_string_proc)(grib_expression*,grib_handle*,char*,size_t*,int*);
+typedef const char* (*expression_get_name_proc)(grib_expression*);
+
+typedef void        (*expression_print_proc)(grib_context*,grib_expression*,grib_handle*);
+typedef void        (*expression_compile_proc)(grib_expression*,grib_compiler*);
+typedef void        (*expression_add_dependency_proc) (grib_expression*e, grib_accessor* observer );
+
+typedef struct grib_expression_class grib_expression_class;
+
+typedef void        (*expression_class_init_proc) (grib_expression_class*e);
+typedef void        (*expression_init_proc) (grib_expression*e);
+typedef void        (*expression_destroy_proc) (grib_context*,grib_expression*e);
+
+typedef int        (*expression_native_type_proc)(grib_expression*,grib_handle*);
+
+struct grib_expression {
+	grib_expression_class* cclass;
+};
+
+struct grib_expression_class {
+	
+	grib_expression_class **super;
+	const char *name;
+	size_t size;
+	int inited;
+
+	expression_class_init_proc init_class;
+	expression_init_proc init;
+	expression_destroy_proc destroy;
+
+
+	expression_print_proc              print;
+    expression_compile_proc            compile;
+	expression_add_dependency_proc     add_dependency;
+
+	expression_native_type_proc         native_type;
+	expression_get_name_proc			get_name;
+
+	expression_evaluate_long_proc      evaluate_long;
+	expression_evaluate_double_proc    evaluate_double;
+	expression_evaluate_string_proc    evaluate_string;
+};
+
+
+struct grib_arguments {
+	struct grib_arguments *next;
+	grib_expression       *expression;
+	char value[80];
+};
+
+
+long grib_expression_evaluate(grib_handle*,grib_expression*);
+void grib_expression_free(grib_context*,grib_expression*);
+
+grib_arguments* grib_arguments_new(grib_context*,grib_expression*,grib_arguments*);
+void grib_arguments_free(grib_context*,grib_arguments*);
+
+const char* grib_argument_next(grib_arguments**);
 
 /* file_pool */
 extern grib_string_list grib_file_not_found;
@@ -1117,7 +1242,6 @@ struct grib_action_file_list
     grib_action_file * last ;
 };
 
-#include "grib_expression.h"
 
 /* ----------*/
 /* md5 */
@@ -1168,6 +1292,20 @@ struct grib_codetable {
   grib_codetable*  next;
   size_t           size;
   code_table_entry entries[1];
+};
+
+typedef struct grib_smart_table_entry {
+  int code;
+  char* abbreviation;
+  char* column[MAX_SMART_TABLE_COLUMNS];
+} grib_smart_table_entry;
+
+struct grib_smart_table {
+  char*            filename[2];
+  char*            recomposed_name[2];
+  grib_smart_table*  next;
+  size_t           numberOfEntries;
+  grib_smart_table_entry* entries;
 };
 
 #if GRIB_TIMER

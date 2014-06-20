@@ -21,6 +21,7 @@
    CLASS      = action
    SUPER      = action_class_gen
    IMPLEMENTS = dump
+   IMPLEMENTS = execute
    END_CLASS_DEF
 
  */
@@ -37,6 +38,7 @@ or edit "action.class" and rerun ./make_class.pl
 
 static void init_class      (grib_action_class*);
 static void dump            (grib_action* d, FILE*,int);
+static int execute(grib_action* a,grib_handle* h);
 
 
 typedef struct grib_action_meta {
@@ -65,7 +67,7 @@ static grib_action_class _grib_action_class_meta = {
 
     0,                            /* notify_change */
     0,                            /* reparse */
-    0,                            /* execute */
+    &execute,                            /* execute */
     0,                            /* compile */
 };
 
@@ -77,7 +79,6 @@ static void init_class(grib_action_class* c)
 	c->create_accessor	=	(*(c->super))->create_accessor;
 	c->notify_change	=	(*(c->super))->notify_change;
 	c->reparse	=	(*(c->super))->reparse;
-	c->execute	=	(*(c->super))->execute;
 	c->compile	=	(*(c->super))->compile;
 }
 /* END_CLASS_IMP */
@@ -116,3 +117,7 @@ static void dump( grib_action* act, FILE* f, int lvl)
 	grib_context_print(act->context,f," meta %s \n", act->name );
 }
 
+static int execute(grib_action* act, grib_handle *h) {
+	grib_action_class* super=*(act->cclass)->super; 
+	return super->create_accessor(h->root,act,NULL); 
+}
