@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "ecCodes_internal.h"
+#include "grib_api_internal.h"
 
 /*
    This is used by make_class.pl
@@ -107,7 +107,7 @@ static grib_trie* load_dictionary(grib_context* c,grib_expression* e, int* err) 
 
   *err=GRIB_SUCCESS;
 
-  filename=grib_context_full_path(c,self->dictionary);
+  filename=grib_context_full_defs_path(c,self->dictionary);
   if (!filename) {
     grib_context_log(c,GRIB_LOG_ERROR,"unable to find def file %s",self->dictionary);
     *err=GRIB_FILE_NOT_FOUND;

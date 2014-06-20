@@ -70,6 +70,7 @@ static grib_dumper_class _grib_dumper_class_debug = {
     &dump_long,                          /* dump long         */
     &dump_double,                        /* dump double    */
     &dump_string,                        /* dump string    */
+    0,                        /* dump string array   */
     &dump_label,                         /* dump labels  */
     &dump_bytes,                         /* dump bytes  */
     &dump_bits,                          /* dump bits   */

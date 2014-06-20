@@ -19,7 +19,8 @@
    IMPLEMENTS = get_native_type;init
    IMPLEMENTS = compare;unpack_string;value_count
    MEMBERS = const char* offset
-   MEMBERS = const char* length
+   MEMBERS = grib_expression* length
+   MEMBERS = grib_string_list* blacklist
    END_CLASS_DEF
 
  */
@@ -46,7 +47,8 @@ typedef struct grib_accessor_md5 {
 /* Members defined in gen */
 /* Members defined in md5 */
 	const char* offset;
-	const char* length;
+	grib_expression* length;
+  grib_string_list* blacklist;
 } grib_accessor_md5;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -76,6 +78,8 @@ static grib_accessor_class _grib_accessor_class_md5 = {
     0,              /* grib_unpack procedures double  */
     0,                /* grib_pack procedures string    */
     &unpack_string,              /* grib_unpack procedures string  */
+    0,          /* grib_pack array procedures string    */
+    0,        /* grib_unpack array procedures string  */
     0,                 /* grib_pack procedures bytes     */
     0,               /* grib_unpack procedures bytes   */
     0,            /* pack_expression */
@@ -110,6 +114,8 @@ static void init_class(grib_accessor_class* c)
 	c->pack_double	=	(*(c->super))->pack_double;
 	c->unpack_double	=	(*(c->super))->unpack_double;
 	c->pack_string	=	(*(c->super))->pack_string;
+	c->pack_string_array	=	(*(c->super))->pack_string_array;
+	c->unpack_string_array	=	(*(c->super))->unpack_string_array;
 	c->pack_bytes	=	(*(c->super))->pack_bytes;
 	c->unpack_bytes	=	(*(c->super))->unpack_bytes;
 	c->pack_expression	=	(*(c->super))->pack_expression;
@@ -129,10 +135,25 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
     grib_accessor_md5* self = (grib_accessor_md5*)a;
+  char* b=0;
     int n=0;
+  grib_string_list* current=0;
+  grib_context* context=a->parent->h->context;
 
     self->offset = grib_arguments_get_name(a->parent->h,arg,n++);
-    self->length = grib_arguments_get_name(a->parent->h,arg,n++);
+  self->length = grib_arguments_get_expression(a->parent->h,arg,n++);
+  self->blacklist=0;
+  while ( (b=(char*)grib_arguments_get_name(a->parent->h,arg,n++)) !=NULL) {
+    if (! self->blacklist) {
+      self->blacklist=grib_context_malloc_clear(context,sizeof(grib_string_list));
+      self->blacklist->value=grib_context_strdup(context,b);
+      current=self->blacklist;
+    } else {
+      current->next=grib_context_malloc_clear(context,sizeof(grib_string_list));
+      current->next->value=grib_context_strdup(context,b);
+      current=current->next;
+    }
+  }
     a->length = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
@@ -185,18 +206,20 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
     if((ret = grib_get_long_internal(a->parent->h,self->offset,&offset))
             != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_long_internal(a->parent->h,self->length,&length))
+  if((ret = grib_expression_evaluate_long(a->parent->h,self->length,&length))
             != GRIB_SUCCESS)
         return ret;
-
 
     mess=grib_context_malloc(a->parent->h->context,length);
     memcpy(mess,a->parent->h->buffer->data+offset,length);
     mess_len=length;
 
     blacklist=a->parent->h->context->blacklist;
+  /* passed blacklist overrides context blacklist. 
+     Consider to modify following line to extend context blacklist.
+  */
+  if (self->blacklist) blacklist=self->blacklist;
     while (blacklist && blacklist->value) {
-
         b=grib_find_accessor(a->parent->h,blacklist->value);
         if (!b) {
             grib_context_free(a->parent->h->context,mess);

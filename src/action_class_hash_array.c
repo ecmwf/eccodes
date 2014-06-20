@@ -240,17 +240,17 @@ grib_hash_array_value* get_hash_array(grib_handle* h,grib_action* a)
   id=grib_itrie_get_id(h->context->hash_array_index,key);
   if ((c=h->context->hash_array[id])!=NULL) return c;
 
-  if (*local && (full=grib_context_full_path(context,local))!=NULL) {
+  if (*local && (full=grib_context_full_defs_path(context,local))!=NULL) {
     c=grib_parse_hash_array_file(context,full);
     grib_context_log(h->context,GRIB_LOG_DEBUG,
                      "Loading hash_array %s from %s",((grib_action*)self)->name,full);
-  } else if (*ecmf && (full=grib_context_full_path(context,ecmf))!=NULL) {
+  } else if (*ecmf && (full=grib_context_full_defs_path(context,ecmf))!=NULL) {
     c=grib_parse_hash_array_file(context,full);
     grib_context_log(h->context,GRIB_LOG_DEBUG,
                      "Loading hash_array %s from %s",((grib_action*)self)->name,full);
   }
 
-  full=grib_context_full_path(context,master);
+  full=grib_context_full_defs_path(context,master);
 
   if(c) {
     grib_hash_array_value* last=c;

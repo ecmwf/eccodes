@@ -14,7 +14,7 @@
  *
  ***************************************************************************/
 
-#include "ecCodes_internal.h"
+#include "grib_api_internal.h"
 
 grib_sarray* grib_sarray_new(grib_context* c,size_t size,size_t incsize) {
   grib_sarray* v=NULL;

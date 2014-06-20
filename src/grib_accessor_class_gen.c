@@ -22,6 +22,7 @@
    IMPLEMENTS = unpack_long;pack_long; clear
    IMPLEMENTS = unpack_double;pack_double;unpack_double_element
    IMPLEMENTS = unpack_string;pack_string
+   IMPLEMENTS = unpack_string_array;pack_string_array
    IMPLEMENTS = unpack_bytes;pack_bytes
    IMPLEMENTS = unpack_double_subarray 
    IMPLEMENTS = init;dump;destroy;string_length
@@ -51,11 +52,13 @@ static int pack_bytes(grib_accessor*,const unsigned char*, size_t *len);
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int pack_long(grib_accessor*, const long* val,size_t *len);
 static int pack_string(grib_accessor*, const char*, size_t *len);
+static int pack_string_array(grib_accessor*, const char**, size_t *len);
 static int pack_expression(grib_accessor*, grib_expression*);
 static int unpack_bytes (grib_accessor*,unsigned char*, size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
 static int unpack_string (grib_accessor*, char*, size_t *len);
+static int unpack_string_array (grib_accessor*, char**, size_t *len);
 static size_t string_length(grib_accessor*);
 static long byte_count(grib_accessor*);
 static long byte_offset(grib_accessor*);
@@ -105,6 +108,8 @@ static grib_accessor_class _grib_accessor_class_gen = {
     &unpack_double,              /* grib_unpack procedures double  */
     &pack_string,                /* grib_pack procedures string    */
     &unpack_string,              /* grib_unpack procedures string  */
+    &pack_string_array,          /* grib_pack array procedures string    */
+    &unpack_string_array,        /* grib_unpack array procedures string  */
     &pack_bytes,                 /* grib_pack procedures bytes     */
     &unpack_bytes,               /* grib_unpack procedures bytes   */
     &pack_expression,            /* pack_expression */
@@ -178,14 +183,21 @@ static void init(grib_accessor* a,const long len, grib_arguments* param)
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-    if(a->cclass->unpack_string)
+  int type=grib_accessor_get_native_type(a);
+
+  switch (type) {
+    case GRIB_TYPE_STRING:
         grib_dump_string(dumper,a,NULL);
-    else if(a->cclass->unpack_double)
+	    break;
+    case GRIB_TYPE_DOUBLE:
         grib_dump_double(dumper,a,NULL);
-    else if(a->cclass->unpack_long)
+	    break;
+    case GRIB_TYPE_LONG:
         grib_dump_long(dumper,a,NULL);
-    else
+	    break;
+    default:
         grib_dump_bytes(dumper,a,NULL);
+  }
 }
 
 static long next_offset(grib_accessor* a)
@@ -341,6 +353,10 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
     return GRIB_NOT_IMPLEMENTED;
 }
 
+static int unpack_string_array(grib_accessor*a , char**  v, size_t *len){
+  return GRIB_NOT_IMPLEMENTED;
+}
+
 static int pack_expression(grib_accessor* a, grib_expression *e){
     size_t len = 1;
     long   lval;
@@ -421,6 +437,10 @@ static int pack_double(grib_accessor* a, const double *v, size_t *len){
     }
     grib_context_log(c,GRIB_LOG_ERROR, " Should not grib_pack %s  as double", a->name);
     return GRIB_NOT_IMPLEMENTED;
+}
+
+static int pack_string_array(grib_accessor*a , const char**  v, size_t *len){
+	return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_string(grib_accessor*a , const char*  v, size_t *len){

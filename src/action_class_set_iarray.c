@@ -127,7 +127,7 @@ static void destroy(grib_context* context,grib_action* act)
   grib_action_set_iarray* a = (grib_action_set_iarray*) act;
 
   grib_context_free_persistent(context, a->name);
-  grib_iarray_delete(context,a->iarray);
+  grib_iarray_delete(a->iarray);
   grib_context_free_persistent(context, act->name);
   grib_context_free_persistent(context, act->op);
 

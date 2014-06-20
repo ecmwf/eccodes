@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "ecCodes_internal.h"
+#include "grib_api_internal.h"
 
 /* 
    This is used by make_class.pl
@@ -116,7 +116,7 @@ grib_expression* new_sub_string_expression(grib_context* c,const char* value,siz
 	char v[1024]={0,};
 	grib_expression_sub_string* e = grib_context_malloc_clear_persistent(c,sizeof(grib_expression_sub_string));
 
-	if (start<0) start+=strlen(value); 
+/* 	if (start<0) start+=strlen(value);  */
 
 	memcpy(v,value+start,length);
 	e->base.cclass                 = grib_expression_class_sub_string;

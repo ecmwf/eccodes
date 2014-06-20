@@ -12,7 +12,7 @@
  *  Enrico Fucile
  ****************************************/
 
-#include "ecCodes_internal.h"
+#include "grib_api_internal.h"
 #include <ctype.h>
 
 /*

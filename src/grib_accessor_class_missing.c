@@ -95,6 +95,8 @@ static grib_accessor_class _grib_accessor_class_missing = {
     &unpack_double,              /* grib_unpack procedures double  */
     &pack_string,                /* grib_pack procedures string    */
     &unpack_string,              /* grib_unpack procedures string  */
+    0,          /* grib_pack array procedures string    */
+    0,        /* grib_unpack array procedures string  */
     &pack_bytes,                 /* grib_pack procedures bytes     */
     &unpack_bytes,               /* grib_unpack procedures bytes   */
     &pack_expression,            /* pack_expression */

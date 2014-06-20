@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "ecCodes_internal.h"
+#include "grib_api_internal.h"
 
 /*
    This is used by make_class.pl
@@ -233,7 +233,7 @@ typedef struct grib_accessor_bufr_data_element {
 
 static int number_of_qualifiers=NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES;
 
-static inline int significanceQualifierIndex(X,Y) {
+static inline int significanceQualifierIndex(int X,int Y) {
   int a[]={-1,0,1,-1,-1,-1,-1,-1,2};
   return Y+a[X]*NUMBER_OF_QUALIFIERS_PER_CATEGORY;
 }

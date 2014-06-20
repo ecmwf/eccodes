@@ -44,92 +44,110 @@
      IF_TRANSIENT = 260,
      ELSE = 261,
      END = 262,
-     UNSIGNED = 263,
-     TEMPLATE = 264,
-     TEMPLATE_NOFAIL = 265,
-     TRIGGER = 266,
-     ASCII = 267,
-     KSEC1EXPVER = 268,
-     LABEL = 269,
-     LIST = 270,
-     WHILE = 271,
-     IBMFLOAT = 272,
-     SIGNED = 273,
-     BYTE = 274,
-     CODETABLE = 275,
-     COMPLEX_CODETABLE = 276,
-     LOOKUP = 277,
-     ALIAS = 278,
-     UNALIAS = 279,
-     META = 280,
-     POS = 281,
-     INTCONST = 282,
-     TRANS = 283,
-     FLAGBIT = 284,
-     CONCEPT = 285,
-     GETENV = 286,
-     CONCEPT_NOFAIL = 287,
-     NIL = 288,
-     DUMMY = 289,
-     MODIFY = 290,
-     READ_ONLY = 291,
-     STRING_TYPE = 292,
-     LONG_TYPE = 293,
-     DOUBLE_TYPE = 294,
-     NO_COPY = 295,
-     DUMP = 296,
-     NO_FAIL = 297,
-     EDITION_SPECIFIC = 298,
-     OVERRIDE = 299,
-     HIDDEN = 300,
-     CAN_BE_MISSING = 301,
-     MISSING = 302,
-     CONSTRAINT = 303,
-     COPY_OK = 304,
-     WHEN = 305,
-     SET = 306,
-     SET_NOFAIL = 307,
-     WRITE = 308,
-     APPEND = 309,
-     PRINT = 310,
-     EXPORT = 311,
-     REMOVE = 312,
-     SKIP = 313,
-     PAD = 314,
-     SECTION_PADDING = 315,
-     MESSAGE = 316,
-     PADTO = 317,
-     PADTOEVEN = 318,
-     PADTOMULTIPLE = 319,
-     G1_HALF_BYTE = 320,
-     G1_MESSAGE_LENGTH = 321,
-     G1_SECTION4_LENGTH = 322,
-     SECTION_LENGTH = 323,
-     FLAG = 324,
-     ITERATOR = 325,
-     NEAREST = 326,
-     BOX = 327,
-     KSEC = 328,
-     ASSERT = 329,
-     CASE = 330,
-     SWITCH = 331,
-     DEFAULT = 332,
-     EQ = 333,
-     NE = 334,
-     GE = 335,
-     LE = 336,
-     LT = 337,
-     GT = 338,
-     BIT = 339,
-     BITOFF = 340,
-     AND = 341,
-     OR = 342,
-     NOT = 343,
-     IS = 344,
-     IDENT = 345,
-     STRING = 346,
-     INTEGER = 347,
-     FLOAT = 348
+     CLOSE = 263,
+     UNSIGNED = 264,
+     TEMPLATE = 265,
+     TEMPLATE_NOFAIL = 266,
+     TRIGGER = 267,
+     ASCII = 268,
+     GROUP = 269,
+     NON_ALPHA = 270,
+     KSEC1EXPVER = 271,
+     LABEL = 272,
+     LIST = 273,
+     IS_IN_LIST = 274,
+     IS_IN_DICT = 275,
+     IS_INTEGER = 276,
+     TO_INTEGER = 277,
+     TO_STRING = 278,
+     SEX2DEC = 279,
+     WHILE = 280,
+     IBMFLOAT = 281,
+     SIGNED = 282,
+     BYTE = 283,
+     CODETABLE = 284,
+     SMART_TABLE = 285,
+     DICTIONARY = 286,
+     COMPLEX_CODETABLE = 287,
+     LOOKUP = 288,
+     ALIAS = 289,
+     UNALIAS = 290,
+     META = 291,
+     POS = 292,
+     INTCONST = 293,
+     TRANS = 294,
+     FLAGBIT = 295,
+     CONCEPT = 296,
+     GETENV = 297,
+     HASH_ARRAY = 298,
+     CONCEPT_NOFAIL = 299,
+     NIL = 300,
+     DUMMY = 301,
+     MODIFY = 302,
+     READ_ONLY = 303,
+     STRING_TYPE = 304,
+     LONG_TYPE = 305,
+     DOUBLE_TYPE = 306,
+     NO_COPY = 307,
+     DUMP = 308,
+     JSON = 309,
+     XML = 310,
+     NO_FAIL = 311,
+     EDITION_SPECIFIC = 312,
+     OVERRIDE = 313,
+     HIDDEN = 314,
+     CAN_BE_MISSING = 315,
+     MISSING = 316,
+     CONSTRAINT = 317,
+     COPY_OK = 318,
+     WHEN = 319,
+     SET = 320,
+     SET_NOFAIL = 321,
+     WRITE = 322,
+     APPEND = 323,
+     PRINT = 324,
+     EXPORT = 325,
+     REMOVE = 326,
+     RENAME = 327,
+     SKIP = 328,
+     PAD = 329,
+     SECTION_PADDING = 330,
+     MESSAGE = 331,
+     MESSAGE_COPY = 332,
+     PADTO = 333,
+     PADTOEVEN = 334,
+     PADTOMULTIPLE = 335,
+     G1_HALF_BYTE = 336,
+     G1_MESSAGE_LENGTH = 337,
+     G1_SECTION4_LENGTH = 338,
+     SECTION_LENGTH = 339,
+     LENGTH = 340,
+     FLAG = 341,
+     ITERATOR = 342,
+     NEAREST = 343,
+     BOX = 344,
+     KSEC = 345,
+     ASSERT = 346,
+     SUBSTR = 347,
+     CASE = 348,
+     SWITCH = 349,
+     DEFAULT = 350,
+     EQ = 351,
+     NE = 352,
+     GE = 353,
+     LE = 354,
+     LT = 355,
+     GT = 356,
+     BIT = 357,
+     BITOFF = 358,
+     AND = 359,
+     OR = 360,
+     NOT = 361,
+     IS = 362,
+     IDENT = 363,
+     STRING = 364,
+     INTEGER = 365,
+     FLOAT = 366
    };
 #endif
 /* Tokens.  */
@@ -138,92 +156,110 @@
 #define IF_TRANSIENT 260
 #define ELSE 261
 #define END 262
-#define UNSIGNED 263
-#define TEMPLATE 264
-#define TEMPLATE_NOFAIL 265
-#define TRIGGER 266
-#define ASCII 267
-#define KSEC1EXPVER 268
-#define LABEL 269
-#define LIST 270
-#define WHILE 271
-#define IBMFLOAT 272
-#define SIGNED 273
-#define BYTE 274
-#define CODETABLE 275
-#define COMPLEX_CODETABLE 276
-#define LOOKUP 277
-#define ALIAS 278
-#define UNALIAS 279
-#define META 280
-#define POS 281
-#define INTCONST 282
-#define TRANS 283
-#define FLAGBIT 284
-#define CONCEPT 285
-#define GETENV 286
-#define CONCEPT_NOFAIL 287
-#define NIL 288
-#define DUMMY 289
-#define MODIFY 290
-#define READ_ONLY 291
-#define STRING_TYPE 292
-#define LONG_TYPE 293
-#define DOUBLE_TYPE 294
-#define NO_COPY 295
-#define DUMP 296
-#define NO_FAIL 297
-#define EDITION_SPECIFIC 298
-#define OVERRIDE 299
-#define HIDDEN 300
-#define CAN_BE_MISSING 301
-#define MISSING 302
-#define CONSTRAINT 303
-#define COPY_OK 304
-#define WHEN 305
-#define SET 306
-#define SET_NOFAIL 307
-#define WRITE 308
-#define APPEND 309
-#define PRINT 310
-#define EXPORT 311
-#define REMOVE 312
-#define SKIP 313
-#define PAD 314
-#define SECTION_PADDING 315
-#define MESSAGE 316
-#define PADTO 317
-#define PADTOEVEN 318
-#define PADTOMULTIPLE 319
-#define G1_HALF_BYTE 320
-#define G1_MESSAGE_LENGTH 321
-#define G1_SECTION4_LENGTH 322
-#define SECTION_LENGTH 323
-#define FLAG 324
-#define ITERATOR 325
-#define NEAREST 326
-#define BOX 327
-#define KSEC 328
-#define ASSERT 329
-#define CASE 330
-#define SWITCH 331
-#define DEFAULT 332
-#define EQ 333
-#define NE 334
-#define GE 335
-#define LE 336
-#define LT 337
-#define GT 338
-#define BIT 339
-#define BITOFF 340
-#define AND 341
-#define OR 342
-#define NOT 343
-#define IS 344
-#define IDENT 345
-#define STRING 346
-#define INTEGER 347
-#define FLOAT 348
+#define CLOSE 263
+#define UNSIGNED 264
+#define TEMPLATE 265
+#define TEMPLATE_NOFAIL 266
+#define TRIGGER 267
+#define ASCII 268
+#define GROUP 269
+#define NON_ALPHA 270
+#define KSEC1EXPVER 271
+#define LABEL 272
+#define LIST 273
+#define IS_IN_LIST 274
+#define IS_IN_DICT 275
+#define IS_INTEGER 276
+#define TO_INTEGER 277
+#define TO_STRING 278
+#define SEX2DEC 279
+#define WHILE 280
+#define IBMFLOAT 281
+#define SIGNED 282
+#define BYTE 283
+#define CODETABLE 284
+#define SMART_TABLE 285
+#define DICTIONARY 286
+#define COMPLEX_CODETABLE 287
+#define LOOKUP 288
+#define ALIAS 289
+#define UNALIAS 290
+#define META 291
+#define POS 292
+#define INTCONST 293
+#define TRANS 294
+#define FLAGBIT 295
+#define CONCEPT 296
+#define GETENV 297
+#define HASH_ARRAY 298
+#define CONCEPT_NOFAIL 299
+#define NIL 300
+#define DUMMY 301
+#define MODIFY 302
+#define READ_ONLY 303
+#define STRING_TYPE 304
+#define LONG_TYPE 305
+#define DOUBLE_TYPE 306
+#define NO_COPY 307
+#define DUMP 308
+#define JSON 309
+#define XML 310
+#define NO_FAIL 311
+#define EDITION_SPECIFIC 312
+#define OVERRIDE 313
+#define HIDDEN 314
+#define CAN_BE_MISSING 315
+#define MISSING 316
+#define CONSTRAINT 317
+#define COPY_OK 318
+#define WHEN 319
+#define SET 320
+#define SET_NOFAIL 321
+#define WRITE 322
+#define APPEND 323
+#define PRINT 324
+#define EXPORT 325
+#define REMOVE 326
+#define RENAME 327
+#define SKIP 328
+#define PAD 329
+#define SECTION_PADDING 330
+#define MESSAGE 331
+#define MESSAGE_COPY 332
+#define PADTO 333
+#define PADTOEVEN 334
+#define PADTOMULTIPLE 335
+#define G1_HALF_BYTE 336
+#define G1_MESSAGE_LENGTH 337
+#define G1_SECTION4_LENGTH 338
+#define SECTION_LENGTH 339
+#define LENGTH 340
+#define FLAG 341
+#define ITERATOR 342
+#define NEAREST 343
+#define BOX 344
+#define KSEC 345
+#define ASSERT 346
+#define SUBSTR 347
+#define CASE 348
+#define SWITCH 349
+#define DEFAULT 350
+#define EQ 351
+#define NE 352
+#define GE 353
+#define LE 354
+#define LT 355
+#define GT 356
+#define BIT 357
+#define BITOFF 358
+#define AND 359
+#define OR 360
+#define NOT 361
+#define IS 362
+#define IDENT 363
+#define STRING 364
+#define INTEGER 365
+#define FLOAT 366
 
 
 
@@ -233,7 +269,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 34 "griby.y"
+#line 37 "griby.y"
 
     char                    *str;
     long                    lval;
@@ -245,6 +281,7 @@ typedef union YYSTYPE
     grib_expression         *exp;
     grib_concept_condition  *concept_condition;
     grib_concept_value      *concept_value;
+    grib_hash_array_value      *hash_array_value;
 	grib_case               *case_value;
   grib_rule               *rules;
   grib_rule_entry         *rule_entry;
@@ -252,7 +289,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 256 "y.tab.h"
+#line 293 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define grib_yystype YYSTYPE /* obsolescent; will be withdrawn */

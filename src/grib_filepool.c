@@ -205,11 +205,14 @@ grib_file* grib_file_open(const char* filename, const char* mode,int* err)
 	}
 
 	if (!file->handle) {
-		/*printf("-- opening file %s %s\n",file->name,mode);*/
-		if (!is_new && *mode == 'w')
-			file->handle = fopen(file->name,"a");
-		else
-			file->handle = fopen(file->name,mode);
+       /*printf("-- opening file %s %s\n",file->name,mode);*/
+       if (!is_new && *mode == 'w') {
+          /* fprintf(stderr,"++++ opening %s as append\n",file->name); */
+          file->handle = fopen(file->name,"a");
+       } else {
+          file->handle = fopen(file->name,mode);
+          /* fprintf(stderr,"++++ opening %s as mode\n",file->name); */
+       }
 
 		file->mode=strdup(mode);
 		if (!file->handle) {
@@ -237,6 +240,51 @@ grib_file* grib_file_open(const char* filename, const char* mode,int* err)
 
 	}
 	return file;
+}
+
+void grib_file_pool_delete_file(grib_file* file) {
+    grib_file* prev=NULL;
+	GRIB_PTHREAD_ONCE(&once,&init);
+	GRIB_MUTEX_LOCK(&mutex1);
+
+   if (file==file_pool.first) {
+      file_pool.first=file->next;
+      file_pool.current=file->next;
+   } else {
+
+     prev=file_pool.first;
+     file_pool.current=file_pool.first;
+     while (prev) {
+       if (prev->next==file) break;
+       prev=prev->next;
+     }
+     prev->next=file->next;
+   }
+
+   if (file->handle) {
+        file_pool.number_of_opened_files--;
+   }
+   grib_file_delete(file);
+	GRIB_MUTEX_UNLOCK(&mutex1);
+
+}
+
+void grib_file_close_force(const char* filename,int* err)
+{
+  grib_file* file=NULL;
+
+    /* fprintf(stderr,"++++ closing file %s\n",filename); */
+	GRIB_PTHREAD_ONCE(&once,&init);
+	GRIB_MUTEX_LOCK(&mutex1);
+    file=grib_get_file(filename,err);
+    fclose(file->handle);
+	if (file->buffer) {
+		free(file->buffer);
+		file->buffer=0;
+	}
+    file->handle=NULL;
+    file_pool.number_of_opened_files--;
+	GRIB_MUTEX_UNLOCK(&mutex1);
 }
 
 void grib_file_close(const char* filename,int* err)

@@ -13,7 +13,7 @@
  *   Enrico Fucile
  ******************************************************/
 
-#include "ecCodes_internal.h"
+#include "grib_api_internal.h"
 
 /*
    This is used by make_class.pl

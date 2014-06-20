@@ -16,7 +16,7 @@
    START_CLASS_DEF
    CLASS      = dumper
    IMPLEMENTS = dump_long;dump_bits
-   IMPLEMENTS = dump_double;dump_string
+   IMPLEMENTS = dump_double;dump_string;dump_string_array
    IMPLEMENTS = dump_bytes;dump_values
    IMPLEMENTS = dump_label;dump_section
    IMPLEMENTS = init;destroy
@@ -45,6 +45,7 @@ static void dump_long       (grib_dumper* d, grib_accessor* a,const char* commen
 static void dump_bits       (grib_dumper* d, grib_accessor* a,const char* comment);
 static void dump_double     (grib_dumper* d, grib_accessor* a,const char* comment);
 static void dump_string     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_string_array     (grib_dumper* d, grib_accessor* a,const char* comment);
 static void dump_bytes      (grib_dumper* d, grib_accessor* a,const char* comment);
 static void dump_values     (grib_dumper* d, grib_accessor* a);
 static void dump_label      (grib_dumper* d, grib_accessor* a,const char* comment);
@@ -70,6 +71,7 @@ static grib_dumper_class _grib_dumper_class_json = {
     &dump_long,                          /* dump long         */
     &dump_double,                        /* dump double    */
     &dump_string,                        /* dump string    */
+    &dump_string_array,                        /* dump string array   */
     &dump_label,                         /* dump labels  */
     &dump_bytes,                         /* dump bytes  */
     &dump_bits,                          /* dump bits   */
@@ -265,6 +267,53 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 
 }
 
+static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* comment)
+{
+  grib_dumper_json *self = (grib_dumper_json*)d;
+  char **values;
+  size_t size = 0,i=0;
+  grib_context* c=NULL;
+  int err = 0;
+  int tab=0;
+  long count=0;
+  int mydepth=depth+2;
+
+  c=a->parent->h->context;
+
+  if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+    return;
+
+  grib_value_count(a,&count);
+  size=count;
+  if (size==1) {
+    dump_string(d,a,comment);
+    return;
+  }
+
+  if (!self->begin) fprintf(self->dumper.out,",\n");
+  else self->begin=0;
+
+  values=(char**)grib_context_malloc_clear(c,size*sizeof(char*));
+  if (!values) {
+  	grib_context_log(c,GRIB_LOG_FATAL,"unable to allocate %d bytes",(int)size);
+	return;
+  }
+
+  err = grib_unpack_string_array(a,values,&size);
+
+  fprintf(self->dumper.out,"%-*s",mydepth," ");
+  fprintf(self->dumper.out,"\"%s\" : [\n",a->name);
+  tab=mydepth+1;
+  for  (i=0;i<size-1;i++) {
+      fprintf(self->dumper.out,"%-*s\"%s\",\n",(int)(tab+strlen(a->name)+4)," ",values[i]);
+  }
+  fprintf(self->dumper.out,"%-*s\"%s\"\n",(int)(tab+strlen(a->name)+4)," ",values[i]);
+  fprintf(self->dumper.out,"%-*s",mydepth," ");
+  fprintf(self->dumper.out,"  ],");
+
+  grib_context_free(c,values);
+}
+
 static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_json *self = (grib_dumper_json*)d;
@@ -306,6 +355,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 
 static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)
 {
+
 }
 
 static void dump_label(grib_dumper* d,grib_accessor* a,const char* comment)
@@ -315,14 +365,29 @@ static void dump_label(grib_dumper* d,grib_accessor* a,const char* comment)
 static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors* block)
 {
     grib_dumper_json *self = (grib_dumper_json*)d;
-
-    if ( !grib_inline_strcmp(a->name,"GRIB") ) {
+  if (!grib_inline_strcmp(a->name,"BUFR") ||
+      !grib_inline_strcmp(a->name,"GRIB") ||
+      !grib_inline_strcmp(a->name,"META")
+     ) {
         fprintf(self->dumper.out,"{\n");
         self->begin=1;
         grib_dump_accessors_block(d,block);
         fprintf(self->dumper.out,"\n}\n");
-    }
-    else {
+  } else if (!grib_inline_strcmp(a->name,"groupNumber")) {
+    depth+=2;
+    fprintf(self->dumper.out,",\n");
+    fprintf(self->dumper.out,"%-*s",depth," ");
+    fprintf(self->dumper.out,"\"group%d\" : {",(int)a->bufr_group_number);
+    fprintf(self->dumper.out,"\n");
+    /* fprintf(self->dumper.out,"%-*s",depth," "); */
+    self->begin=1;
+    grib_dump_accessors_block(d,block);
+    fprintf(self->dumper.out,"\n");
+    fprintf(self->dumper.out,"%-*s",depth," ");
+    fprintf(self->dumper.out,"}");
+    depth-=2;
+  } else {
         grib_dump_accessors_block(d,block);
     }
 }
+

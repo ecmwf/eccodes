@@ -194,7 +194,7 @@ long grib_iarray_pop(grib_iarray *a);
 long grib_iarray_pop_front(grib_iarray *a);
 grib_iarray *grib_iarray_resize_to(grib_iarray *v, size_t newsize);
 grib_iarray *grib_iarray_resize(grib_iarray *v);
-grib_iarray *grib_iarray_push(grib_context *c, grib_iarray *v, long val);
+grib_iarray *grib_iarray_push(grib_iarray *v, long val);
 grib_iarray *grib_iarray_push_front(grib_iarray *v, long val);
 grib_iarray *grib_iarray_push_array(grib_iarray *v, long *val, size_t size);
 long grib_iarray_get(grib_iarray *a, size_t i);

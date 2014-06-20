@@ -26,6 +26,8 @@
    IMPLEMENTS = compile
    IMPLEMENTS = add_dependency
    MEMBERS    = char *name
+   MEMBERS    = long start
+   MEMBERS    = size_t length
    END_CLASS_DEF
 
  */
@@ -61,6 +63,8 @@ typedef struct grib_expression_accessor{
   grib_expression base;
 /* Members defined in accessor */
 	char *name;
+	long start;
+	size_t length;
 } grib_expression_accessor;
 
 
@@ -113,10 +117,22 @@ static int evaluate_double(grib_expression *g,grib_handle *h,double* result)
 static string evaluate_string(grib_expression* g,grib_handle* h,char* buf,size_t* size,int* err)
 {
   grib_expression_accessor* e = (grib_expression_accessor*)g;
+  char mybuf[1024]={0,};
+  long start=e->start;
+
   Assert(buf);
-  if((*err=grib_get_string_internal(h,e->name,buf,size)) != GRIB_SUCCESS)
+  if((*err=grib_get_string_internal(h,e->name,mybuf,size)) != GRIB_SUCCESS)
       return NULL;
   
+  if (e->start<0) start+=*size;
+
+  if (e->length != 0) {
+    memcpy(buf,mybuf+start,e->length);
+    buf[e->length]=0;
+  } else {
+    memcpy(buf,mybuf,*size);
+    buf[*size]=0;
+  }
   return buf;
 }
 
@@ -155,11 +171,13 @@ static void  add_dependency(grib_expression* g, grib_accessor* observer){
   grib_dependency_add(observer,observed);
 }
 
-grib_expression* new_accessor_expression(grib_context* c,const char *name)
+grib_expression* new_accessor_expression(grib_context* c,const char *name,long start, size_t length)
 {
   grib_expression_accessor* e = grib_context_malloc_clear_persistent(c,sizeof(grib_expression_accessor));
   e->base.cclass                 = grib_expression_class_accessor;
   e->name                   = grib_context_strdup_persistent(c,name);
+  e->start                  = start;
+  e->length                 = length;
   return (grib_expression*)e;
 }
 

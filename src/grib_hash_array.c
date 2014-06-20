@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "ecCodes_internal.h"
+#include "grib_api_internal.h"
 
 
 grib_hash_array_value* grib_integer_hash_array_value_new(grib_context* c, const char* name,grib_iarray* array)

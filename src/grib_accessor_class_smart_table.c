@@ -12,7 +12,7 @@
  *  Enrico Fucile
  ****************************************/
 
-#include "ecCodes_internal.h"
+#include "grib_api_internal.h"
 #include <ctype.h>
 
 /*
@@ -217,16 +217,16 @@ static grib_smart_table* load_table(grib_accessor_smart_table* self)
     if (*masterDir!=0) {
         sprintf(name,"%s/%s",masterDir,self->tablename);
         grib_recompose_name(h, NULL,name, recomposed,0);
-        filename=grib_context_full_path(c,recomposed);
+        filename=grib_context_full_defs_path(c,recomposed);
     } else {
         grib_recompose_name(h, NULL,self->tablename, recomposed,0);
-        filename=grib_context_full_path(c,recomposed);
+        filename=grib_context_full_defs_path(c,recomposed);
     }
 
     if (*localDir!=0) {
         sprintf(localName,"%s/%s",localDir,self->tablename);
         grib_recompose_name(h, NULL,localName, localRecomposed,0);
-        localFilename=grib_context_full_path(c,localRecomposed);
+        localFilename=grib_context_full_defs_path(c,localRecomposed);
     }
 
     next=c->smart_table;

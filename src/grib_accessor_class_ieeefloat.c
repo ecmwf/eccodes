@@ -78,6 +78,8 @@ static grib_accessor_class _grib_accessor_class_ieeefloat = {
     &unpack_double,              /* grib_unpack procedures double  */
     0,                /* grib_pack procedures string    */
     0,              /* grib_unpack procedures string  */
+    0,          /* grib_pack array procedures string    */
+    0,        /* grib_unpack array procedures string  */
     0,                 /* grib_pack procedures bytes     */
     0,               /* grib_unpack procedures bytes   */
     0,            /* pack_expression */
@@ -112,6 +114,8 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_long	=	(*(c->super))->unpack_long;
 	c->pack_string	=	(*(c->super))->pack_string;
 	c->unpack_string	=	(*(c->super))->unpack_string;
+	c->pack_string_array	=	(*(c->super))->pack_string_array;
+	c->unpack_string_array	=	(*(c->super))->unpack_string_array;
 	c->pack_bytes	=	(*(c->super))->pack_bytes;
 	c->unpack_bytes	=	(*(c->super))->unpack_bytes;
 	c->pack_expression	=	(*(c->super))->pack_expression;

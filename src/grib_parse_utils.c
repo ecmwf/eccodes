@@ -18,6 +18,7 @@
 grib_action*        grib_parser_all_actions = 0;
 grib_context*       grib_parser_context     = 0;
 grib_concept_value* grib_parser_concept     = 0;
+grib_hash_array_value* grib_parser_hash_array     = 0;
 grib_rule*          grib_parser_rules       = 0;
 
 extern FILE* grib_yyin;
@@ -30,6 +31,7 @@ static pthread_once_t once  = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex_file = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t mutex_rules = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t mutex_concept = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t mutex_hash_array = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t mutex_stream = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t mutex_parse = PTHREAD_MUTEX_INITIALIZER;
 
@@ -41,6 +43,7 @@ static void init()
     pthread_mutex_init(&mutex_file,&attr);
     pthread_mutex_init(&mutex_rules,&attr);
     pthread_mutex_init(&mutex_concept,&attr);
+	pthread_mutex_init(&mutex_hash_array,&attr);
     pthread_mutex_init(&mutex_stream,&attr);
     pthread_mutex_init(&mutex_parse,&attr);
     pthread_mutexattr_destroy(&attr);
@@ -157,7 +160,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
     char double_format[]="%g"; /* default format for printing double keys */
     char long_format[]="%ld";  /* default format for printing integer keys */
     char buff[10]={0,};
-    char sbuf[200]={0,};
+    char sbuf[1024]={0,};
     char buff1[1024]={0,};
     char* format=NULL;
     int type=-1;
@@ -217,7 +220,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
                     if (type==-1) type=grib_accessor_get_native_type(a);
                     switch (type) {
                     case GRIB_TYPE_STRING:
-                        replen=200;
+						replen=sizeof(sbuf)/sizeof(*sbuf);;
                         ret = grib_get_string_internal(a->parent->h,a->name,sbuf,&replen);
                         fprintf(out,"%s",sbuf);
                         break;
@@ -435,6 +438,7 @@ void grib_parser_include(const char* fname)
         parse_file = path;
     }
 
+    grib_context_log(grib_parser_context,GRIB_LOG_DEBUG,"parsing include file %s",parse_file);
     f = fopen(parse_file,"r");
     /* for(i = 0; i < top ; i++) printf("   "); */
     /* printf("PARSING %s\n",parse_file); */
@@ -543,6 +547,23 @@ grib_concept_value* grib_parse_concept_file( grib_context* gc,const char* filena
         GRIB_MUTEX_UNLOCK(&mutex_concept);
         return NULL;
     }
+}
+
+grib_hash_array_value* grib_parse_hash_array_file( grib_context* gc,const char* filename)
+{
+	GRIB_PTHREAD_ONCE(&once,&init);
+	GRIB_MUTEX_LOCK(&mutex_hash_array);
+
+	gc = gc ? gc : grib_context_get_default();
+	grib_parser_context = gc;
+
+	if(parse(gc,filename) == 0) {
+		GRIB_MUTEX_UNLOCK(&mutex_hash_array);
+		return grib_parser_hash_array;
+	} else {
+		GRIB_MUTEX_UNLOCK(&mutex_hash_array);
+		return NULL;
+	}
 }
 
 grib_rule* grib_parse_rules_file( grib_context* gc,const char* filename)

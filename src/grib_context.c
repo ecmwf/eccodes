@@ -286,6 +286,7 @@ static grib_context default_grib_context = {
         &default_log,                 /* logging_procedure          */
         &default_print,               /* print procedure            */
         0,                            /* code tables                */
+	0,                            /* smart tables               */
         0,                            /* files                      */
         0,                            /* multigrib support on       */
         0,                            /* multigrib support          */
@@ -302,11 +303,16 @@ static grib_context default_grib_context = {
         0,                            /* concepts_index             */
         0,                            /* concepts_count             */
         {0,},                         /* concepts                   */
+	0,                            /* hash_array_index */
+	0,                            /* hash_array_count */
+	{0,},                         /* hash_array */
         0,                            /* def_files                  */
         0,                            /* ieee_packing               */
+	0,                            /* unpack */
         0,                            /* blacklist                  */
         0,                            /* log_stream                 */
-        0                             /* classes                    */
+    0,                             /* classes */
+    0                             /* lists */
 #if GRIB_PTHREADS
         ,PTHREAD_MUTEX_INITIALIZER  /* mutex                     */
 #endif
@@ -329,6 +335,7 @@ grib_context* grib_context_get_default()
         const char *no_big_group_split=NULL;
         const char *no_spd=NULL;
         const char *keep_matrix=NULL;
+		const char *nounpack=NULL;
 
         GRIB_MUTEX_LOCK(&mutex_c);
 
@@ -343,6 +350,7 @@ grib_context* grib_context_get_default()
         no_big_group_split=getenv("GRIB_API_NO_BIG_GROUP_SPLIT");
         no_spd=getenv("GRIB_API_NO_SPD");
         keep_matrix=getenv("GRIB_API_KEEP_MATRIX");
+        nounpack=getenv("GRIB_API_NO_UNPACK");
 
         /* On UNIX, when we read from a file we get exactly what is in the file on disk.
          * But on Windows a file can be opened in binary or text mode. In binary mode the system behaves exactly as in UNIX.
@@ -356,6 +364,7 @@ grib_context* grib_context_get_default()
         default_grib_context.no_big_group_split = no_big_group_split ? atoi(no_big_group_split) : 0;
         default_grib_context.no_spd = no_spd ? atoi(no_spd) : 0;
         default_grib_context.keep_matrix = keep_matrix ? atoi(keep_matrix) : 1;
+   		default_grib_context.unpack = nounpack ? 0 : 1;
         default_grib_context.write_on_fail  = write_on_fail ? atoi(write_on_fail) : 0;
         default_grib_context.no_abort  = no_abort ? atoi(no_abort) : 0;
         default_grib_context.debug  = debug ? atoi(debug) : 0;
@@ -396,7 +405,10 @@ grib_context* grib_context_get_default()
 
         default_grib_context.concepts_index=grib_itrie_new(&(default_grib_context),
                 &(default_grib_context.concepts_count));
+		default_grib_context.hash_array_index=grib_itrie_new(&(default_grib_context),
+				&(default_grib_context.hash_array_count));
         default_grib_context.def_files=grib_trie_new(&(default_grib_context));
+		default_grib_context.lists=grib_trie_new(&(default_grib_context));
         default_grib_context.classes=grib_trie_new(&(default_grib_context));
 
         GRIB_MUTEX_UNLOCK(&mutex_c);
@@ -440,6 +452,7 @@ grib_context* grib_context_new(grib_context* parent)
     c->print               = default_grib_context.print    ;
     c->user_data           = default_grib_context.user_data;
     c->def_files           = default_grib_context.def_files;
+	c->lists               = default_grib_context.lists;
 
 #if GRIB_PTHREADS
     pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
@@ -634,6 +647,9 @@ void grib_context_reset(grib_context* c)
 
     if(c->codetable) grib_codetable_delete(c);
     c->codetable = NULL;
+
+	if(c->smart_table) grib_smart_table_delete(c);
+	c->smart_table = NULL;
 
     if(c->grib_definition_files_dir)
         grib_context_free(c,c->grib_definition_files_dir);

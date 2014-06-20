@@ -40,25 +40,28 @@ static const char *errors[] = {
 "Missing a key from the fieldset",		/* -34 GRIB_MISSING_KEY */
 "The point is out of the grid area",		/* -35 GRIB_OUT_OF_AREA */
 "Concept no match",		/* -36 GRIB_CONCEPT_NO_MATCH */
-"Definitions files not found",		/* -37 GRIB_NO_DEFINITIONS */
-"Wrong type while packing",		/* -38 GRIB_WRONG_TYPE */
-"End of resource",		/* -39 GRIB_END */
-"Unable to code a field without values",		/* -40 GRIB_NO_VALUES */
-"Grid description is wrong or inconsistent",		/* -41 GRIB_WRONG_GRID */
-"End of index reached",		/* -42 GRIB_END_OF_INDEX */
-"Null index",		/* -43 GRIB_NULL_INDEX */
-"End of resource reached when reading message",		/* -44 GRIB_PREMATURE_END_OF_FILE */
-"An internal array is too small",		/* -45 GRIB_INTERNAL_ARRAY_TOO_SMALL */
-"Message is too large for the current architecture",		/* -46 GRIB_MESSAGE_TOO_LARGE */
-"Constant field",		/* -47 GRIB_CONSTANT_FIELD */
-"Switch unable to find a matching case",		/* -48 GRIB_SWITCH_NO_MATCH */
-"Underflow",		/* -49 GRIB_UNDERFLOW */
-"Message malformed",		/* -50 GRIB_MESSAGE_MALFORMED */
-"Index is corrupted",		/* -51 GRIB_CORRUPTED_INDEX */
-"Invalid number of bits per value",		/* -52 GRIB_INVALID_BPV */
-"Edition of two messages is different",		/* -53 GRIB_DIFFERENT_EDITION */
-"Value is different",		/* -54 GRIB_VALUE_DIFFERENT */
-"Invalid key value",		/* -55 GRIB_INVALID_KEY_VALUE */
+"Hash array no match",		/* -37 GRIB_HASH_ARRAY_NO_MATCH */
+"Definitions files not found",		/* -38 GRIB_NO_DEFINITIONS */
+"Wrong type while packing",		/* -39 GRIB_WRONG_TYPE */
+"End of resource",		/* -40 GRIB_END */
+"Unable to code a field without values",		/* -41 GRIB_NO_VALUES */
+"Grid description is wrong or inconsistent",		/* -42 GRIB_WRONG_GRID */
+"End of index reached",		/* -43 GRIB_END_OF_INDEX */
+"Null index",		/* -44 GRIB_NULL_INDEX */
+"End of resource reached when reading message",		/* -45 GRIB_PREMATURE_END_OF_FILE */
+"An internal array is too small",		/* -46 GRIB_INTERNAL_ARRAY_TOO_SMALL */
+"Message is too large for the current architecture",		/* -47 GRIB_MESSAGE_TOO_LARGE */
+"Constant field",		/* -48 GRIB_CONSTANT_FIELD */
+"Switch unable to find a matching case",		/* -49 GRIB_SWITCH_NO_MATCH */
+"Underflow",		/* -50 GRIB_UNDERFLOW */
+"Message malformed",		/* -51 GRIB_MESSAGE_MALFORMED */
+"Index is corrupted",		/* -52 GRIB_CORRUPTED_INDEX */
+"Invalid number of bits per value",		/* -53 GRIB_INVALID_BPV */
+"Edition of two messages is different",		/* -54 GRIB_DIFFERENT_EDITION */
+"Value is different",		/* -55 GRIB_VALUE_DIFFERENT */
+"Invalid key value",		/* -56 GRIB_INVALID_KEY_VALUE */
+"String is smaller than requested",		/* -57 GRIB_STRING_TOO_SMALL */
+"Wrong type conversion",		/* -58 GRIB_WRONG_CONVERSION */
 "Value mismatch",		/* 1 GRIB_VALUE_MISMATCH */
 "double values are different",		/* 2 GRIB_DOUBLE_VALUE_MISMATCH */
 "long values are different",		/* 3 GRIB_LONG_VALUE_MISMATCH */
@@ -103,7 +106,9 @@ void grib_check(const char* call,const char*  file,int line,int e,const char* ms
     }
 }
 
-void grib_fail(const char* expr,const char* file,int line) {
+
+void grib_fail(const char* expr,const char* file,int line,int silent) {
+	 if (!silent)
    fprintf(stderr,"%s at line %d: assertion failure Assert(%s)\n",file,line,expr);
    abort();
 }
