@@ -62,6 +62,7 @@ static const char *errors[] = {
 "Invalid key value",		/* -56 GRIB_INVALID_KEY_VALUE */
 "String is smaller than requested",		/* -57 GRIB_STRING_TOO_SMALL */
 "Wrong type conversion",		/* -58 GRIB_WRONG_CONVERSION */
+"Missing BUFR table entry for descriptor",		/* -59 GRIB_MISSING_BUFR_ENTRY */
 "Value mismatch",		/* 1 GRIB_VALUE_MISMATCH */
 "double values are different",		/* 2 GRIB_DOUBLE_VALUE_MISMATCH */
 "long values are different",		/* 3 GRIB_LONG_VALUE_MISMATCH */

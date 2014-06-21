@@ -79,43 +79,51 @@ Error codes returned by the grib_api functions.
 #define GRIB_OUT_OF_AREA		-35
 /** Concept no match */
 #define GRIB_CONCEPT_NO_MATCH		-36
+/** Hash array no match */
+#define GRIB_HASH_ARRAY_NO_MATCH		-37
 /** Definitions files not found */
-#define GRIB_NO_DEFINITIONS		-37
+#define GRIB_NO_DEFINITIONS		-38
 /** Wrong type while packing */
-#define GRIB_WRONG_TYPE		-38
+#define GRIB_WRONG_TYPE		-39
 /** End of resource */
-#define GRIB_END		-39
+#define GRIB_END		-40
 /** Unable to code a field without values */
-#define GRIB_NO_VALUES		-40
+#define GRIB_NO_VALUES		-41
 /** Grid description is wrong or inconsistent */
-#define GRIB_WRONG_GRID		-41
+#define GRIB_WRONG_GRID		-42
 /** End of index reached */
-#define GRIB_END_OF_INDEX		-42
+#define GRIB_END_OF_INDEX		-43
 /** Null index */
-#define GRIB_NULL_INDEX		-43
+#define GRIB_NULL_INDEX		-44
 /** End of resource reached when reading message */
-#define GRIB_PREMATURE_END_OF_FILE		-44
+#define GRIB_PREMATURE_END_OF_FILE		-45
 /** An internal array is too small */
-#define GRIB_INTERNAL_ARRAY_TOO_SMALL		-45
+#define GRIB_INTERNAL_ARRAY_TOO_SMALL		-46
 /** Message is too large for the current architecture */
-#define GRIB_MESSAGE_TOO_LARGE		-46
+#define GRIB_MESSAGE_TOO_LARGE		-47
 /** Constant field */
-#define GRIB_CONSTANT_FIELD		-47
+#define GRIB_CONSTANT_FIELD		-48
 /** Switch unable to find a matching case */
-#define GRIB_SWITCH_NO_MATCH		-48
+#define GRIB_SWITCH_NO_MATCH		-49
 /** Underflow */
-#define GRIB_UNDERFLOW		-49
+#define GRIB_UNDERFLOW		-50
 /** Message malformed */
-#define GRIB_MESSAGE_MALFORMED		-50
+#define GRIB_MESSAGE_MALFORMED		-51
 /** Index is corrupted */
-#define GRIB_CORRUPTED_INDEX		-51
+#define GRIB_CORRUPTED_INDEX		-52
 /** Invalid number of bits per value */
-#define GRIB_INVALID_BPV		-52
+#define GRIB_INVALID_BPV		-53
 /** Edition of two messages is different */
-#define GRIB_DIFFERENT_EDITION		-53
+#define GRIB_DIFFERENT_EDITION		-54
 /** Value is different */
-#define GRIB_VALUE_DIFFERENT		-54
+#define GRIB_VALUE_DIFFERENT		-55
 /** Invalid key value */
-#define GRIB_INVALID_KEY_VALUE		-55
+#define GRIB_INVALID_KEY_VALUE		-56
+/** String is smaller than requested */
+#define GRIB_STRING_TOO_SMALL		-57
+/** Wrong type conversion */
+#define GRIB_WRONG_CONVERSION		-58
+/** Missing BUFR table entry for descriptor */
+#define GRIB_MISSING_BUFR_ENTRY		-59
 /*! @}*/
 #endif
