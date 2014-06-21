@@ -94,6 +94,21 @@ void  grib_dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
   Assert(0);
 }
 
+void  grib_dump_string_array(grib_dumper* d,grib_accessor* a,const char* comment)
+{
+  grib_dumper_class *c = d->cclass;
+  while(c)
+  {
+    if(c->dump_string_array)
+    {
+      c->dump_string_array(d, a, comment);
+      return;
+    }
+    c = c->super ? *(c->super) : NULL;
+  }
+  Assert(0);
+}
+
 void  grib_dump_label(grib_dumper* d,grib_accessor* a,const char* comment)
 {
   grib_dumper_class *c = d->cclass;

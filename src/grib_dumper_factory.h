@@ -6,3 +6,4 @@
 { "keys", &grib_dumper_class_keys, },
 { "serialize", &grib_dumper_class_serialize, },
 { "wmo", &grib_dumper_class_wmo, },
+{ "xml", &grib_dumper_class_xml, },

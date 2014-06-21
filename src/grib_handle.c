@@ -109,6 +109,10 @@ void grib_empty_section ( grib_context   *c,grib_section* b )
 	while ( current )
 	{
 		grib_accessor* next = current->next;
+		if (current->sub_section) {
+			grib_section_delete(c,current->sub_section);
+			current->sub_section=0;
+		}
 		grib_free_accessor ( c,current );
 		current = next;
 	}

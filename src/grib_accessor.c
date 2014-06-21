@@ -348,7 +348,7 @@ long grib_byte_count(grib_accessor* a)
   return 0;
 }
 
-long grib_value_count(grib_accessor* a, long* count)
+int grib_value_count(grib_accessor* a,long* count)
 {
   grib_accessor_class *c = NULL;
   int err = 0;

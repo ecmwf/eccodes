@@ -81,6 +81,8 @@ static grib_accessor_class _grib_accessor_class_suppressed = {
     &unpack_double,              /* grib_unpack procedures double  */
     &pack_string,                /* grib_pack procedures string    */
     &unpack_string,              /* grib_unpack procedures string  */
+    0,          /* grib_pack array procedures string    */
+    0,        /* grib_unpack array procedures string  */
     0,                 /* grib_pack procedures bytes     */
     0,               /* grib_unpack procedures bytes   */
     0,            /* pack_expression */
@@ -110,6 +112,8 @@ static void init_class(grib_accessor_class* c)
 	c->sub_section	=	(*(c->super))->sub_section;
 	c->pack_missing	=	(*(c->super))->pack_missing;
 	c->is_missing	=	(*(c->super))->is_missing;
+	c->pack_string_array	=	(*(c->super))->pack_string_array;
+	c->unpack_string_array	=	(*(c->super))->unpack_string_array;
 	c->pack_bytes	=	(*(c->super))->pack_bytes;
 	c->unpack_bytes	=	(*(c->super))->unpack_bytes;
 	c->pack_expression	=	(*(c->super))->pack_expression;

@@ -152,7 +152,7 @@ long grib_get_next_position_offset(grib_accessor *a);
 long grib_string_length(grib_accessor *a);
 long grib_byte_offset(grib_accessor *a);
 long grib_byte_count(grib_accessor *a);
-long grib_value_count(grib_accessor *a, long *count);
+int grib_value_count(grib_accessor *a, long *count);
 int grib_accessor_notify_change(grib_accessor *a, grib_accessor *changed);
 void grib_init_accessor(grib_accessor *a, const long len, grib_arguments *args);
 void grib_free_accessor(grib_context *ct, grib_accessor *a);

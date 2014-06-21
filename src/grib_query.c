@@ -42,7 +42,16 @@ static int matching(grib_accessor* a,const char* name,const char* name_space)
 }
 
 
-static grib_accessor* search(grib_section* s,const char* name,const char* name_space)
+static int matching_group_number(grib_accessor* a) {
+  if ( a->bufr_group_number==0 ||
+       a->parent->h->bufr_group_number==0 ||
+       a->bufr_group_number==a->parent->h->bufr_group_number )
+        return 1;
+  else
+        return 0;
+}
+
+static grib_accessor* search(grib_section* s,const char* name,const char* name_space,int no_group_match)
 {
 
 	grib_accessor* match = NULL;
@@ -57,10 +66,11 @@ static grib_accessor* search(grib_section* s,const char* name,const char* name_s
 	{
 		grib_section* sub = a->sub_section;
 
-		if(matching(a,name,name_space))
+		if(matching(a,name,name_space) && (no_group_match || matching_group_number(a)) )
 			match = a;
 
-		if((b = search(sub,name,name_space)) != NULL)
+		if((b = search(sub,name,name_space,no_group_match) ) != NULL 
+        && (no_group_match || matching_group_number(b)) )
 			match = b;
 
 		a = a->next;
@@ -148,19 +158,46 @@ static grib_accessor* search_and_cache(grib_handle* h, const char* name,const ch
 		{
 			id = grib_hash_keys_get_id(h->context->keys,name);
 
-			if ((a=h->accessors[id])!=NULL && (namespace==NULL || matching(a,name,namespace)))
+			if ((a=h->accessors[id])!=NULL &&
+                (namespace==NULL || matching(a,name,namespace) ) &&
+                 matching_group_number(a))
 				return a;
 		}
 
-		a = search(h->root,name,namespace);
+		a = search(h->root,name,namespace,0);
 		h->accessors[id] = a;
 
 		return a;
 	}
 	else {
-		return search(h->root,name,namespace);
+		return search(h->root,name,namespace,0);
 	}
 
+}
+
+static grib_accessor* _grib_find_accessor_navigate_subgroups(grib_handle* h, const char* name,int recursive)
+{
+	grib_accessor* a = NULL;
+  grib_section* group=h->groups[h->bufr_group_number]->sub_section;
+
+	Assert(name);
+
+	a=search(group,name,NULL,1);
+
+  if (recursive && h->unpacked==0 && a==NULL) {
+    char type[6]={0,};
+    size_t ltype=6;
+    int nav=h->navigate_subgroups;
+    h->navigate_subgroups=0;
+    grib_get_string(h,"identifier",type,&ltype);
+    h->navigate_subgroups=nav;
+    if (!strcmp(type,"BUFR") && h->context->unpack) {
+      grib_set_long(h,"unpack",1);
+      a=_grib_find_accessor_navigate_subgroups(h,name,0);
+    }
+  }
+
+	return a;
 }
 
 /* Only look in trie */
@@ -200,6 +237,18 @@ grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name)
 		a = grib_find_accessor_fast(h->main,name);
 
 	return a;
+}
+
+int grib_navigate_subgroups(grib_handle* h) {
+  if (!h) return GRIB_NULL_HANDLE;
+  h->navigate_subgroups=1;
+  return GRIB_SUCCESS;
+}
+
+int grib_not_navigate_subgroups(grib_handle* h) {
+  if (!h) return GRIB_NULL_HANDLE;
+  h->navigate_subgroups=0;
+  return GRIB_SUCCESS;
 }
 
 grib_accessor* grib_find_accessor(grib_handle* h, const char* name)

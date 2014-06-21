@@ -13,6 +13,64 @@
  *                                                                         *
  ***************************************************************************/
 
+typedef struct bits_all_one_t {
+    int inited;
+    int size;
+    long v[128];
+} bits_all_one_t;
+
+static bits_all_one_t bits_all_one={0,0,{0,}};
+
+static void init_bits_all_one() {
+   int size=sizeof(long)*8;
+   long* v=0;
+   unsigned long cmask=-1;
+   bits_all_one.size=size;
+   bits_all_one.inited=1;
+   v=bits_all_one.v+size;
+   *v= cmask << size;
+   while (size>0)  *(--v)= ~(cmask << --size);
+
+}
+
+int grib_is_all_bits_one(long val, long nbits) {
+
+    if (!bits_all_one.inited) init_bits_all_one();
+    return bits_all_one.v[nbits]==val;
+
+}
+
+
+char* grib_decode_string(const unsigned char* bitStream, long *bitOffset, size_t numberOfCharacters,char* string)
+{
+  size_t i;
+  long byteOffset = *bitOffset / 8;
+  int remainder = *bitOffset % 8;
+  unsigned char c;
+  unsigned char* p;
+  char* s=string;
+  unsigned char mask[] ={ 0, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE };
+  int remainderComplement=8-remainder;
+
+  if (numberOfCharacters==0) return string;
+
+  p=(unsigned char*)bitStream+byteOffset;
+
+  if ( remainder == 0 )  {
+    memcpy(string,bitStream+byteOffset,numberOfCharacters);
+    *bitOffset+=numberOfCharacters*8;
+    return string;
+  }
+
+  for (i=0;i<numberOfCharacters;i++) {
+    c=(*p)<<remainder;
+    p++;
+    *s = ( c | ( (*p) & mask[remainder] )>>remainderComplement );
+    s++;
+  }
+  *bitOffset+=numberOfCharacters*8;
+  return string;
+}
 
 unsigned long grib_decode_unsigned_long(const unsigned char* p, long *bitp, long nbits)
 {

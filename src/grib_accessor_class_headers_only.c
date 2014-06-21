@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***********************************************
- *  Enrico Fucile
- **********************************************/
-
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -19,7 +15,7 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_gen
-   IMPLEMENTS = unpack_long
+   IMPLEMENTS = unpack_long; get_native_type
    IMPLEMENTS = init
    END_CLASS_DEF
  */
@@ -34,6 +30,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
+static int  get_native_type(grib_accessor*);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
@@ -61,7 +58,7 @@ static grib_accessor_class _grib_accessor_class_headers_only = {
     0,                /* get number of values      */
     0,                 /* get number of bytes      */
     0,                /* get offset to bytes           */
-    0,            /* get native type               */
+    &get_native_type,            /* get native type               */
     0,                /* get sub_section                */
     0,               /* grib_pack procedures long      */
     0,               /* grib_pack procedures long      */
@@ -71,6 +68,8 @@ static grib_accessor_class _grib_accessor_class_headers_only = {
     0,              /* grib_unpack procedures double  */
     0,                /* grib_pack procedures string    */
     0,              /* grib_unpack procedures string  */
+    0,          /* grib_pack array procedures string    */
+    0,        /* grib_unpack array procedures string  */
     0,                 /* grib_pack procedures bytes     */
     0,               /* grib_unpack procedures bytes   */
     0,            /* pack_expression */
@@ -98,7 +97,6 @@ static void init_class(grib_accessor_class* c)
 	c->value_count	=	(*(c->super))->value_count;
 	c->byte_count	=	(*(c->super))->byte_count;
 	c->byte_offset	=	(*(c->super))->byte_offset;
-	c->get_native_type	=	(*(c->super))->get_native_type;
 	c->sub_section	=	(*(c->super))->sub_section;
 	c->pack_missing	=	(*(c->super))->pack_missing;
 	c->is_missing	=	(*(c->super))->is_missing;
@@ -107,6 +105,8 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double	=	(*(c->super))->unpack_double;
 	c->pack_string	=	(*(c->super))->pack_string;
 	c->unpack_string	=	(*(c->super))->unpack_string;
+	c->pack_string_array	=	(*(c->super))->pack_string_array;
+	c->unpack_string_array	=	(*(c->super))->unpack_string_array;
 	c->pack_bytes	=	(*(c->super))->pack_bytes;
 	c->unpack_bytes	=	(*(c->super))->unpack_bytes;
 	c->pack_expression	=	(*(c->super))->pack_expression;
@@ -136,5 +136,9 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
   *val = a->parent->h->partial;
   *len =1;
   return 0;
+}
+
+static int  get_native_type(grib_accessor* a){
+  return GRIB_TYPE_LONG;
 }
 

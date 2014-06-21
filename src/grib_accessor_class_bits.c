@@ -22,12 +22,17 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_gen
-   IMPLEMENTS = unpack_long;get_native_type
-   IMPLEMENTS = pack_long
+   IMPLEMENTS = get_native_type
+   IMPLEMENTS = unpack_long; pack_long
+   IMPLEMENTS = unpack_double; pack_double
+   IMPLEMENTS = unpack_string
    IMPLEMENTS = init
    MEMBERS=const char*    argument
    MEMBERS=long    start
    MEMBERS=long    len
+   MEMBERS=double referenceValue
+   MEMBERS=double referenceValuePresent
+   MEMBERS=double scale
    END_CLASS_DEF
 
  */
@@ -43,8 +48,11 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int  get_native_type(grib_accessor*);
+static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int pack_long(grib_accessor*, const long* val,size_t *len);
+static int unpack_double(grib_accessor*, double* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
+static int unpack_string (grib_accessor*, char*, size_t *len);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -55,6 +63,9 @@ typedef struct grib_accessor_bits {
 	const char*    argument;
 	long    start;
 	long    len;
+	double referenceValue;
+	double referenceValuePresent;
+	double scale;
 } grib_accessor_bits;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -80,10 +91,12 @@ static grib_accessor_class _grib_accessor_class_bits = {
     0,               /* grib_pack procedures long      */
     &pack_long,                  /* grib_pack procedures long      */
     &unpack_long,                /* grib_unpack procedures long    */
-    0,                /* grib_pack procedures double    */
-    0,              /* grib_unpack procedures double  */
+    &pack_double,                /* grib_pack procedures double    */
+    &unpack_double,              /* grib_unpack procedures double  */
     0,                /* grib_pack procedures string    */
-    0,              /* grib_unpack procedures string  */
+    &unpack_string,              /* grib_unpack procedures string  */
+    0,          /* grib_pack array procedures string    */
+    0,        /* grib_unpack array procedures string  */
     0,                 /* grib_pack procedures bytes     */
     0,               /* grib_unpack procedures bytes   */
     0,            /* pack_expression */
@@ -114,10 +127,9 @@ static void init_class(grib_accessor_class* c)
 	c->sub_section	=	(*(c->super))->sub_section;
 	c->pack_missing	=	(*(c->super))->pack_missing;
 	c->is_missing	=	(*(c->super))->is_missing;
-	c->pack_double	=	(*(c->super))->pack_double;
-	c->unpack_double	=	(*(c->super))->unpack_double;
 	c->pack_string	=	(*(c->super))->pack_string;
-	c->unpack_string	=	(*(c->super))->unpack_string;
+	c->pack_string_array	=	(*(c->super))->pack_string_array;
+	c->unpack_string_array	=	(*(c->super))->unpack_string_array;
 	c->pack_bytes	=	(*(c->super))->pack_bytes;
 	c->unpack_bytes	=	(*(c->super))->unpack_bytes;
 	c->pack_expression	=	(*(c->super))->pack_expression;
@@ -138,11 +150,22 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
   grib_accessor_bits* self = (grib_accessor_bits*)a;
+  grib_expression* e=NULL;
   int n = 0;
 
   self->argument = grib_arguments_get_name(a->parent->h,c,n++);
   self->start    = grib_arguments_get_long(a->parent->h,c,n++);
   self->len    = grib_arguments_get_long(a->parent->h,c,n++);
+  e=grib_arguments_get_expression(a->parent->h,c,n++);
+  if (e) {
+  	grib_expression_evaluate_double(a->parent->h,e,&(self->referenceValue));
+  	self->referenceValuePresent=1;
+  } else {
+  	self->referenceValuePresent=0;
+  }
+  if (self->referenceValuePresent) {
+  	self->scale=grib_arguments_get_double(a->parent->h,c,n++);
+  }
 
   assert(self->len <= sizeof(long)*8);
 
@@ -175,6 +198,55 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
   return ret;
 }
 
+static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
+{
+  grib_accessor_bits* self = (grib_accessor_bits*)a;
+  grib_accessor* x=NULL;
+  unsigned char* p=NULL;
+  grib_handle* h=a->parent->h;
+  long start,length;
+  int ret=0;
+
+  if(*len < 1) return GRIB_WRONG_ARRAY_SIZE;
+
+  start=self->start;
+  length=self->len;
+
+  x=grib_find_accessor(a->parent->h,self->argument);
+  if (!x) return GRIB_NOT_FOUND;
+
+  p  = h->buffer->data + grib_byte_offset(x);
+  *val=grib_decode_unsigned_long(p,&start,length);
+
+  *val=(*val+self->referenceValue)/self->scale;
+
+  *len=1;
+
+  return ret;
+}
+
+static int pack_double(grib_accessor* a, const double* val, size_t *len)
+{
+  grib_accessor_bits* self = (grib_accessor_bits*)a;
+  grib_accessor* x=NULL;
+  grib_handle* h=a->parent->h;
+  unsigned char* p=NULL;
+  long start,length,lval;
+
+  if(*len != 1) return GRIB_WRONG_ARRAY_SIZE;
+
+  start  = self->start;
+  length = self->len;
+
+  x=grib_find_accessor(a->parent->h,self->argument);
+  if (!x) return GRIB_NOT_FOUND;
+
+  p=h->buffer->data + grib_byte_offset(x);
+
+  lval= *val *self->scale - self->referenceValue;
+  return grib_encode_unsigned_longb(p,lval,&start,length);
+
+}
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
@@ -198,9 +270,47 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 }
 
 static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_BYTES;
+    int type=GRIB_TYPE_BYTES;
+    grib_accessor_bits* self = (grib_accessor_bits*)a;
+
+    if (a->flags & GRIB_ACCESSOR_FLAG_STRING_TYPE)  
+        type=GRIB_TYPE_STRING;
+
+    if (a->flags & GRIB_ACCESSOR_FLAG_LONG_TYPE)
+        type=GRIB_TYPE_LONG;
+
+    if (self->referenceValuePresent) 
+        type=GRIB_TYPE_DOUBLE;
+
+    return type;
+
+
 }
 
+static int unpack_string(grib_accessor*a , char*  v, size_t *len){
+  int ret=0;
+  double dval=0;
+  long lval=0;
+  size_t llen=1;
+
+  switch (get_native_type(a)) {
+    case GRIB_TYPE_LONG:
+      ret=unpack_long(a,&lval,&llen);
+      sprintf(v,"%ld",lval);
+      *len=strlen(v);
+      break;
+
+    case GRIB_TYPE_DOUBLE:
+      ret=unpack_double(a,&dval,&llen);
+      sprintf(v,"%g",dval);
+      *len=strlen(v);
+      break;
+
+    default:
+      Assert(0);
+  }
+  return ret;
+}
 
 
 

@@ -1017,6 +1017,35 @@ int grib_get_offset(grib_handle* h, const char* key,size_t* val)
     return GRIB_NOT_FOUND;
 }
 
+int _grib_get_string_array_internal(grib_handle* h,grib_accessor* a,char** val, size_t buffer_len,size_t *decoded_length)
+{
+  if(a) {
+    int err = _grib_get_string_array_internal(h,a->same,val,buffer_len,decoded_length);
+
+    if(err == GRIB_SUCCESS &&
+      (a->bufr_group_number==0 || h->bufr_group_number==0 || h->bufr_group_number==a->bufr_group_number) )
+    {
+      size_t len = buffer_len - *decoded_length;
+      err  = grib_unpack_string_array(a, val + *decoded_length, &len);
+      *decoded_length += len;
+    }
+
+    return err;
+
+  } else {
+    return GRIB_SUCCESS;
+  }
+}
+
+int grib_get_string_array(grib_handle* h, const char* name, char** val, size_t *length)
+{
+  size_t len = *length;
+  grib_accessor* a = grib_find_accessor(h, name);
+  if(!a) return GRIB_NOT_FOUND;
+
+  *length = 0;
+  return _grib_get_string_array_internal(h,a,val,len,length);
+}
 
 int _grib_get_long_array_internal(grib_handle* h,grib_accessor* a,long* val, size_t buffer_len,size_t *decoded_length)
 {

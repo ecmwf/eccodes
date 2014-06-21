@@ -41,6 +41,7 @@ GRIB_MISSING_KEY                    Missing a key from the fieldset
 GRIB_OUT_OF_AREA                    The point is out of the grid area
 /* more errors*/
 GRIB_CONCEPT_NO_MATCH               Concept no match
+GRIB_HASH_ARRAY_NO_MATCH            Hash array no match
 GRIB_NO_DEFINITIONS                 Definitions files not found
 GRIB_WRONG_TYPE                     Wrong type while packing
 GRIB_END                            End of resource
@@ -61,3 +62,6 @@ GRIB_INVALID_BPV                    Invalid number of bits per value
 GRIB_DIFFERENT_EDITION				Edition of two messages is different
 GRIB_VALUE_DIFFERENT                Value is different
 GRIB_INVALID_KEY_VALUE				Invalid key value
+GRIB_STRING_TOO_SMALL					String is smaller than requested
+GRIB_WRONG_CONVERSION         Wrong type conversion
+GRIB_MISSING_BUFR_ENTRY       Missing BUFR table entry for descriptor
