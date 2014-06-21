@@ -19,7 +19,7 @@ constant tablesLocalDir="grib1/local/[centre:s]" : hidden;
 
 transient productionStatusOfProcessedData=0;
 position offsetSection1;
-length[3] section1Length ;
+section_length[3] section1Length ;
 meta section1Pointer section_pointer(offsetSection1,section1Length,1);
 constant wrongPadding=0;
 

@@ -545,6 +545,7 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
 
   | CLOSE '(' IDENT ')' { $$ = grib_action_create_close(grib_parser_context,$3); free($3);}
   | PRINT STRING { $$ = grib_action_create_print(grib_parser_context,$2,0); free($2); }
+  | PRINT '(' STRING ')' STRING { $$ = grib_action_create_print(grib_parser_context,$5,$3); free($5); free($3);}
   | PRINT '(' IDENT ')' STRING { $$ = grib_action_create_print(grib_parser_context,$5,$3); free($5); free($3);}
   | PRINT { $$ = grib_action_create_print(grib_parser_context,"",0);  }
    ;

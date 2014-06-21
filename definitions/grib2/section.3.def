@@ -15,7 +15,7 @@
 constant gridDescriptionSectionPresent = 1;
 position offsetSection3;
 
-length[4] section3Length ;
+section_length[4] section3Length ;
 meta section3Pointer section_pointer(offsetSection3,section3Length,3);
 
 #  Number of section

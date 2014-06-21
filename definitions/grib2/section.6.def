@@ -15,7 +15,7 @@ label "grib 2 Section 6 BIT-MAP SECTION";
 position offsetSection6;
 position offsetBSection6;
 
-length[4] section6Length ;
+section_length[4] section6Length ;
 meta section6 section_pointer(offsetSection6,section6Length,6);
 
 #  Number of section

@@ -341,7 +341,11 @@ echo "Downloading data files for testing..."
 for f in $files; do
     # If we haven't already got the file, download it
     if [ ! -f "$f" ]; then
-        wget -nv -q -O $f ${download_URL}/test-data/grib_api/data/$f
+        wget --tries=1 --timeout=3 -nc -nv -q -O $f ${download_URL}/test-data/grib_api/data/$f
+        if [ $? -ne 0 ]; then
+            echo "Failed to download file: $f"
+            exit 1
+        fi
         #chmod 444 $f
         if [ $VERBOSE -eq 1 ]; then
             echo "Downloaded $f ..."

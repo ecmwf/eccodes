@@ -8,7 +8,7 @@
 #
 
 position offsetSection2;
-length[4] section2Length ;
+section_length[4] section2Length ;
 
 meta section2Pointer section_pointer(offsetSection2,section2Length,2);
 unsigned[1] numberOfSection = 2 :read_only;

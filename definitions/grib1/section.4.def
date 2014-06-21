@@ -15,7 +15,7 @@ position offsetSection4;
 
 # Due to a trick done by GRIBEX to support large GRIBs, we need a special treatment
 # of the message length and of the section4 lenth, so instead of
-# length[3] section4Length                     ;
+# section_length[3] section4Length                     ;
 # we get:
 g1_section4_length[3] section4Length(totalLength);
 

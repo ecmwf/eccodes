@@ -9,7 +9,7 @@
 transient timeRangeIndicator=0 : no_copy,hidden;
 
 position offsetSection4;
-length[4] section4Length ;
+section_length[4] section4Length ;
 meta section4Pointer section_pointer(offsetSection4,section4Length,4);
 
 unsigned[1] numberOfSection = 4:read_only;

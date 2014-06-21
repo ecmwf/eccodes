@@ -2,11 +2,38 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-length[3]       section4Length ;
+position offsetSection4;
+section_length[3]       section4Length ;
 unsigned[1]     reserved = 0;
+position offsetBeforeData;
+
+#meta subsetNumber bufr_subset_number();
+meta selectGroupNumber bufr_group_number();
+
+transient subsetNumber=0;
+if (compressedData) {
+		meta values bufr_data(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length,
+										numberOfDataSubsets,subsetNumber,
+		  							expandedDescriptorsAfterOperators,abbreviationAfterOperators,
+										typeAfterOperators,nameAfterOperators,unitAfterOperators,
+										referenceAfterOperators,scaleAfterOperators,widthAfterOperators,codeFlags,
+										bitmapNumber,associatedBitmapNumber,associatedBitmapIndex,associatedInfoNumber) : dump;
+} else {
+ 	meta values bufr_uncompressed_data(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length,
+										numberOfDataSubsets,subsetNumber,
+										expandedDescriptorsAfterOperators,abbreviationAfterOperators,
+										typeAfterOperators,nameAfterOperators,unitAfterOperators,
+										referenceAfterOperators,scaleAfterOperators,widthAfterOperators,codeFlags,
+										bitmapNumber,associatedBitmapNumber,associatedBitmapIndex) : dump;
+}
+
+meta unpack unpack_bufr_values(values);
+
 section_padding section4Padding;
+position offsetEndSection4;
+meta md5Data md5(offsetSection4,section4Length);

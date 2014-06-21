@@ -437,6 +437,7 @@ static int read_BUFR(reader *r)
     tmp=malloc(buflen);
     buf=grib_new_buffer(c,tmp,buflen);
     buf->property = GRIB_MY_BUFFER;
+    r->offset=r->tell(r->read_data)-4;
 
     tmp[i++] = 'B';
     tmp[i++] = 'U';

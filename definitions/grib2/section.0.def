@@ -15,7 +15,7 @@ codetable[1] discipline       ('0.0.table',masterDir,localDir) : dump;
 unsigned[1]  editionNumber = 2 : edition_specific,dump;
 
 alias ls.edition = editionNumber;
-length[8]    totalLength;
+section_length[8]    totalLength;
 position startOfHeaders;
 
 

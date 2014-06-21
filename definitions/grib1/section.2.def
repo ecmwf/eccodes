@@ -14,7 +14,7 @@
 # (octets)
 
 position offsetSection2;
-length[3] section2Length ;
+section_length[3] section2Length ;
 meta section2Pointer section_pointer(offsetSection2,section2Length,2);
 transient radius=6367470;
 alias radiusOfTheEarth=radius;

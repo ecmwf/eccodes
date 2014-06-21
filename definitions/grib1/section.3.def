@@ -12,7 +12,7 @@
 #  Length of section
 # (octets)
 position offsetSection3;
-length[3] section3Length ;
+section_length[3] section3Length ;
 meta section3Pointer section_pointer(offsetSection3,section3Length,3);
 
 #  Number of unused bits at end of Section 3

@@ -16,7 +16,7 @@ ascii[4]     identifier;
 ascii[2]     reserved : hidden;
 codetable[1] discipline 'grib2/0.0.table';
 unsigned[1]  editionNumber : edition_specific;
-length[8]    totalLength;
+section_length[8]    totalLength;
 
 
 template     core "grib2/sections.def";

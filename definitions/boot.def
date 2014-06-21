@@ -93,3 +93,15 @@ if(kindOfProduct == 17632522 ){
  constant GTSstr="GTS";
  alias ls.identifier=GTSstr;
 }
+
+if(kindOfProduct == `META` ){
+ template      METAR "metar/boot.def" ;
+ constant METARstr="METAR";
+ alias ls.identifier=METARstr;
+}
+
+if(kindOfProduct == `TAF ` ){
+ template      TAF "taf/boot.def" ;
+ constant TAFstr="TAF";
+ alias ls.identifier=TAFstr;
+}

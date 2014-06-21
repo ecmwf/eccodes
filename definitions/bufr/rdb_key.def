@@ -1,10 +1,10 @@
-unsigned[1]   rdbType ; 
-unsigned[1]   rdbSubtype;
+unsigned[1]   rdbType : dump; 
+unsigned[1]   rdbSubtype: dump;
 
-alias rdb.rdbType=rdbType;
-alias rdb.rdbSubtype=rdbSubtype;
+alias ls.rdbType=rdbType;
+alias ls.rdbSubtype=rdbSubtype;
 
-byte[10]      keyData : hidden; 
+byte[13]      keyData : hidden; 
 
 meta localYear   bits(keyData,0,12) ;
 meta localMonth  bits(keyData,12,4) ;
@@ -14,77 +14,45 @@ meta localMinute bits(keyData,27,6) ;
 meta localSecond bits(keyData,33,6) ;
 meta spare  bits(keyData,39,1); # 40 bits = 10 bytes
 
-meta rdb.typicalDate sprintf("%d%d%d",localYear,localMonth,localDay) : dump;
-meta rdb.typicalTime sprintf("%.2d%.2d%.2d",localHour,localMinute,localSecond) :dump;
+meta ls.typicalDate sprintf("%.4d%.2d%.2d",localYear,localMonth,localDay) : dump;
+meta ls.typicalTime sprintf("%.2d%.2d%.2d",localHour,localMinute,localSecond) :dump;
 
-byte[3]    keyMore : hidden; 
-
-constant zero = 0;
-concept isSatellite(zero) {
-	1 = {keyType = 2;  }
-	1 = {keyType = 3;  }
-	1 = {keyType = 12; }
-}
-
-alias rdb.isSatellite=isSatellite;
-
-# real latitude   = (key latitude  - 9000000.0)/100000.0;
-# real longitude  = (key longitude - 18000000.0)/100000.0;
-
-if(isSatellite)
-{
-	meta rdb.latitude1 bits(keyData,72,25) : dump;
-	meta rdb.latitude2 bits(keyData,136,25) : dump;
-	meta rdb.longitude1 bits(keyData,40,26) : dump;
-	meta rdb.longitude2 bits(keyData,104,26) : dump;
-	meta rdb.satelliteID bits(keyData,176,16) : dump;
-byte[9]    stuff : hidden; 
-
-}
-else
-{
-	meta rdb.latitude bits(keyData,72,25) : dump;
-	meta rdb.longitude bits(keyData,40,26) : dump;
-	ascii[9]    ident : hidden; 
-	alias rdb.ident=ident;
-}
-
-byte[8]    keyMore : hidden; 
-
-meta rdb.numberOfObservations bits(keyData,168,8) : dump;
+# isSatellite and other stuff moved to section 3
+ascii[8]    keyMore : hidden; 
+byte[9]    keySat : hidden; 
 
 # 16 bytes
 unsigned[2] messageLength;
 alias rdb.messageLength=messageLength;
 
 byte[3] rdbtime;
-meta rdb.rdbtimeDay     bits(rdbtime,0,6) : dump;
-meta rdb.rdbtimeHour    bits(rdbtime,6,5) : dump;
-meta rdb.rdbtimeMinute  bits(rdbtime,11,6) : dump;
-meta rdb.rdbtimeSecond  bits(rdbtime,17,6) : dump;
+meta rdbtimeDay     bits(rdbtime,0,6) : dump,long_type;
+meta rdbtimeHour    bits(rdbtime,6,5) : dump,long_type;
+meta rdbtimeMinute  bits(rdbtime,11,6) : dump,long_type;
+meta rdbtimeSecond  bits(rdbtime,17,6) : dump,long_type;
 
 byte[3] rectime;
-meta rdb.rectimeDay     bits(rectime,0,6) : dump;
-meta rdb.rectimeHour    bits(rectime,6,5) : dump;
-meta rdb.rectimeMinute  bits(rectime,11,6) : dump;
-meta rdb.rectimeSecond  bits(rectime,17,6) : dump;
+meta rectimeDay     bits(rectime,0,6) : dump,long_type;
+meta rectimeHour    bits(rectime,6,5) : dump,long_type;
+meta rectimeMinute  bits(rectime,11,6) : dump,long_type;
+meta rectimeSecond  bits(rectime,17,6) : dump,long_type;
 
 byte[1] corr1Data;
-meta rdb.correction1     bits(corr1Data,0,6) : dump;
-meta rdb.correction1Part bits(corr1Data,6,2) : dump;
+meta correction1     bits(corr1Data,0,6) : dump,long_type;
+meta correction1Part bits(corr1Data,6,1) : dump,long_type;
 
 byte[1] corr2Data;
-meta rdb.correction2     bits(corr2Data,0,6) : dump;
-meta rdb.correction2Part bits(corr2Data,6,2) : dump;
+meta correction2     bits(corr2Data,0,6) : dump,long_type;
+meta correction2Part bits(corr2Data,6,1) : dump,long_type;
 
 byte[1] corr3Data;
-meta rdb.correction3     bits(corr3Data,0,6) : dump;
-meta rdb.correction3Part bits(corr3Data,6,2) : dump;
+meta correction3     bits(corr3Data,0,6) : dump,long_type;
+meta correction3Part bits(corr3Data,6,1) : dump,long_type;
 
 byte[1] corr4Data;
-meta rdb.correction4     bits(corr4Data,0,6) : dump;
-meta rdb.correction4Part bits(corr4Data,6,2) : dump;
+meta correction4     bits(corr4Data,0,6) : dump,long_type;
+meta correction4Part bits(corr4Data,6,1) : dump,long_type;
 
-unsigned[1] qualityControl : dump;
-alias rdb.qualityControl=qualityControl;
+unsigned[1] qualityControl : dump,long_type;
+alias qualityControl=qualityControl;
 unsigned[3] spare;

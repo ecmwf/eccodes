@@ -15,7 +15,7 @@ label "grib 2 Section 7 data";
 
 position offsetSection7;
 
-length[4] section7Length ;
+section_length[4] section7Length ;
 meta section7 section_pointer(offsetSection7,section7Length,7);
 
 #  Number of section

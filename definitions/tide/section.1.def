@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-length[3] section1Length ;
+section_length[3] section1Length ;
 unsigned[1] gribTablesVersionNo ;
 codetable[1] centre 'grib1/0.table';
 alias ls.centre=centre;

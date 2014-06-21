@@ -9,7 +9,7 @@
 
 
 position offsetSection1;
-length[4] section1Length ;
+section_length[4] section1Length ;
 meta section1Pointer section_pointer(offsetSection1,section1Length,1);
 
 unsigned[1] numberOfSection = 1 :read_only;

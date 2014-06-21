@@ -8,46 +8,7 @@
 #
 
 lookup[1] ed       (7,editionNumber);
+transient missingValue=999999;
 
-ascii[4] identifier  = "BUFR" : read_only,hidden;
-alias ls.identifier=identifier;
-
-if(ed < 2)
-{
-	unsigned[3] section1Length;
-}
-else
-{
-	unsigned[3]   totalLength ;
-}
-
-unsigned[1] editionNumber = 2;
-
-if(editionNumber < 2)
-{
-	template    section_1 "bufr/old_section.1.def"   ;
-}
-else
-{
-	template    section_1 "bufr/section.1.def"   ;
-}
-
-
-flagbit section2Present(section1Flags,7) = 1;
-
-if(section2Present){
-   template section_2 "bufr/section.2.def"     ;
-}
-else {
-	transient section2Length = 0;
-}
-
-template section_3 "bufr/section.3.def"     ;
-template section_4 "bufr/section.4.def"     ;
-template section_5 "bufr/section.5.def"     ;
-
-if(ed < 2)
-{
-	transient totalLength = section1Length + section2Length + section3Length + section4Length + 8;
-}
+template boot_edition "bufr/boot_edition_[ed:l].def";
 

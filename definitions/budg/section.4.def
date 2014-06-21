@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-length[3] section4Length ;
+section_length[3] section4Length ;
 
 unsigned[1] reserved1=0 : hidden;
 

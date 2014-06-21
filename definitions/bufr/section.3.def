@@ -2,13 +2,101 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-length[3]       section3Length ;
+constant defaultSequence=0;
+constant tablesMasterDir="bufr/tables/[masterTableNumber]/wmo/[masterTablesVersionNumber]" : hidden;
+constant tablesLocalDir="bufr/tables/[masterTableNumber]/local/[localTablesVersionNumber]/[centre:l]/[subCentre]" : hidden;
+
+transient tableNumber=0;
+codetable[24] codeTablesMaster '[tablesMasterDir]/codetables/[tableNumber].table' : string_type,transient;
+codetable[24] codeTablesLocal '[tablesLocalDir]/codetables/[tableNumber].table' : string_type,transient;
+
+hash_array sequences (defaultSequence,"sequence.def",tablesMasterDir,tablesLocalDir): long_type;
+#smart_table codeFlags ("codeFlag.def",tablesMasterDir,tablesLocalDir,...);
+
+position offsetSection3;
+section_length[3]       section3Length ;
 unsigned[1]     reserved = 0;
-unsigned[2]     numberOfDataSubsets;
+unsigned[2]     numberOfDataSubsets : dump;
+
+if (section2Present && centre==98 && section2Length==52) {
+
+		concept isSatelliteType(zero) {
+			1 = {rdbType = 2;  }
+			1 = {rdbType = 3;  }
+			1 = {rdbType = 8;  }
+			1 = {rdbType = 12; }
+		}
+		if (isSatelliteType || numberOfDataSubsets>1) {
+				constant isSatellite=1;
+		} else {
+				constant isSatellite=0;
+		}
+    alias rdb.isSatellite=isSatellite;
+		if (isSatellite) {
+        meta localLongitude1 bits(keyData,40,26,-18000000,100000) : dump;
+        meta localLatitude1 bits(keyData,72,25,-9000000,100000) : dump;
+        meta localLongitude2 bits(keyMore,0,26,-18000000,100000) : dump;
+        meta localLatitude2 bits(keyMore,32,25,-9000000,100000) : dump;
+
+				if (numberOfDataSubsets>255 || 
+						( rdbSubtype>=121 && rdbSubtype <=130 ) || 
+						rdbSubtype==31) {
+						meta ls.umberOfObservations bits(keySat,0,16) : dump,long_type;
+						meta ls.satelliteID bits(keySat,16,16) : dump,long_type;
+				} else {
+						meta ls.numberOfObservations bits(keySat,0,8) : dump,long_type;
+						meta ls.satelliteID bits(keySat,8,16) : dump,long_type;
+				}
+		} else {
+        meta ls.localLatitude bits(keyData,72,25,-9000000,100000) : dump;
+        meta ls.localLongitude bits(keyData,40,26,-18000000,100000) : dump;
+        alias ls.ident=keyMore : dump,string_type;
+    }
+}
+
 flags[1]        section3Flags 'bufr/section3_flags.table';
+flagbit observedData(section3Flags,7) : dump;
+flagbit compressedData(section3Flags,6) : dump;
+position offsetDescriptors;
+meta numberOfUnexpandedDescriptors   evaluate( (section3Length - 7) / 2 ) ;
+meta unexpandedDescriptors unexpanded_descriptors(numberOfUnexpandedDescriptors) :dump;
+
+meta expandedDescriptors expanded_descriptors(unexpandedDescriptors,sequences) ;
+
+#smart_table NAME (VALUES,FILE_NAME,MASTER_DIRECTORY,LOCAL_DIRECTORY,WIDTH_OF_CODE_IN_BITS);
+smart_table elements (expandedDescriptors,"element.table",tablesMasterDir,tablesLocalDir,16) ;
+meta abbreviation 	smart_table_column(elements,0,1) 	: string_type;
+meta type 					smart_table_column(elements,1,0) 	: string_type;
+meta name 					smart_table_column(elements,2,0)	:	string_type;
+meta unit 					smart_table_column(elements,3,0)	:	string_type;
+meta scale 					smart_table_column(elements,4,0)	:	long_type;
+meta reference 			smart_table_column(elements,5,0)	:	long_type;
+meta width 					smart_table_column(elements,6,0)	:	long_type;
+meta crex_unit 			smart_table_column(elements,7,0)	:	long_type;
+meta crex_scale 		smart_table_column(elements,8,0)	:	long_type;
+meta crex_width 		smart_table_column(elements,9,0)	:	long_type;
+
+meta expandedDescriptorsAfterOperators apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,0) : read_only;
+meta scaleAfterOperators apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,1) :read_only;
+meta referenceAfterOperators apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,2) :read_only;
+meta widthAfterOperators apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,3) :read_only;
+meta bitmapNumber apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,4) :read_only;
+meta associatedBitmapNumber apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,5) :read_only;
+meta associatedBitmapIndex apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,6) :read_only;
+meta abbreviationAfterOperators apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,7) :read_only,string_type;
+meta typeAfterOperators apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,8) :read_only,string_type;
+meta nameAfterOperators apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,9) :read_only,string_type;
+meta unitAfterOperators apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,10) :read_only,string_type;
+meta associatedInfoNumber apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,11) :read_only;
+
+meta hasDelayedReplication bufr_has_delayed_replication(expandedDescriptorsAfterOperators);
+
+position endDescriptors;
 section_padding section3Padding;
+meta lengthDescriptors evaluate(endDescriptors-offsetDescriptors);
+meta md5Structure md5(offsetDescriptors,lengthDescriptors);
