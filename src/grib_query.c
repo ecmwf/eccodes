@@ -200,58 +200,7 @@ static grib_accessor* _grib_find_accessor_navigate_subgroups(grib_handle* h, con
 	return a;
 }
 
-/* Only look in trie */
-grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name)
-{
-	grib_accessor* a = NULL;
-	char* p=NULL;
-	char* basename=NULL;
-	char name_space[1024];
-	int i=0,len=0;
-
-	p=(char*)name;
-
-	/* Assert(name); */
-	/*Assert(h->use_trie && !h->trie_invalid);*/
-
-	while ( *p != '.' && *p != '\0' ) p++;
-	if ( *p == '.' ) {
-		basename=p+1;
-		p--;
-		i=0;
-		len=p-name+1;
-
-		for ( i=0;i<len;i++ ) name_space[i] = *(name+i);
-
-		name_space[len]='\0';
-
-		a = h->accessors[grib_hash_keys_get_id(h->context->keys,name)];
-		if(a && !matching(a,name,name_space))
-			a = NULL;
-
-	} else {
-		a = h->accessors[grib_hash_keys_get_id(h->context->keys,name)];
-	}
-
-	if(a == NULL && h->main)
-		a = grib_find_accessor_fast(h->main,name);
-
-	return a;
-}
-
-int grib_navigate_subgroups(grib_handle* h) {
-  if (!h) return GRIB_NULL_HANDLE;
-  h->navigate_subgroups=1;
-  return GRIB_SUCCESS;
-}
-
-int grib_not_navigate_subgroups(grib_handle* h) {
-  if (!h) return GRIB_NULL_HANDLE;
-  h->navigate_subgroups=0;
-  return GRIB_SUCCESS;
-}
-
-grib_accessor* grib_find_accessor(grib_handle* h, const char* name)
+static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name,int recursive)
 {
 	grib_accessor* a = NULL;
 	char* p=NULL;
@@ -281,7 +230,42 @@ grib_accessor* grib_find_accessor(grib_handle* h, const char* name)
 	if(a == NULL && h->main)
 		a = grib_find_accessor(h->main,name);
 
+  if (recursive && h->unpacked==0 && a==NULL) {
+    char type[6]={0,};
+    size_t ltype=6;
+    grib_get_string(h,"identifier",type,&ltype);
+    if (!strcmp(type,"BUFR") && h->context->unpack) {
+      grib_set_long(h,"unpack",1);
+      a=_grib_find_accessor(h,name,0);
+    }
+  }
+
 	return a;
+}
+
+int grib_navigate_subgroups(grib_handle* h) {
+  if (!h) return GRIB_NULL_HANDLE;
+  h->navigate_subgroups=1;
+  return GRIB_SUCCESS;
+}
+
+int grib_not_navigate_subgroups(grib_handle* h) {
+  if (!h) return GRIB_NULL_HANDLE;
+  h->navigate_subgroups=0;
+  return GRIB_SUCCESS;
+}
+
+grib_accessor* grib_find_accessor(grib_handle* h, const char* name)
+{
+  grib_accessor* a=NULL;
+  if (h->navigate_subgroups) {
+    a=_grib_find_accessor_navigate_subgroups(h,name,1);
+    if(a) h->bufr_group_number=a->bufr_group_number;
+  }
+  else {
+    a=_grib_find_accessor(h,name,1);
+  }
+  return a;
 }
 
 int grib_find_all_accessors(grib_handle* h, const char* name,search_all_callback_proc callback,void *data)
@@ -292,6 +276,42 @@ int grib_find_all_accessors(grib_handle* h, const char* name,search_all_callback
 	if(h->main)
 		count += grib_find_all_accessors(h->main,name,callback,data);
 	return count;
+}
+
+/* Only look in trie. Used only in alias. Should not be used in other cases.*/
+grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name)
+{
+	grib_accessor* a = NULL;
+	char* p=NULL;
+	char* basename=NULL;
+	char name_space[1024];
+	int i=0,len=0;
+
+	p=(char*)name;
+
+	while ( *p != '.' && *p != '\0' ) p++;
+	if ( *p == '.' ) {
+		basename=p+1;
+		p--;
+		i=0;
+		len=p-name+1;
+
+		for ( i=0;i<len;i++ ) name_space[i] = *(name+i);
+
+		name_space[len]='\0';
+
+		a = h->accessors[grib_hash_keys_get_id(h->context->keys,name)];
+		if(a && !matching(a,name,name_space))
+			a = NULL;
+
+	} else {
+		a = h->accessors[grib_hash_keys_get_id(h->context->keys,name)];
+	}
+
+	if(a == NULL && h->main)
+		a = grib_find_accessor_fast(h->main,name);
+
+	return a;
 }
 
 
