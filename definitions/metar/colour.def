@@ -1,0 +1,5 @@
+if (g is "BLU" || g is "WHT" || g is "RED" || g is "BLK" || g is "GRN" ) {
+		rename(g,colour);
+		group g : dump; non_alpha na;
+}
+

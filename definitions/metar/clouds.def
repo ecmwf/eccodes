@@ -1,0 +1,62 @@
+if (substr(g,0,3) is "FEW" || substr(g,0,3) is "SCT" ||
+    substr(g,0,3) is "BKN" || substr(g,0,3) is "OVC") {
+
+    rename(g,clouds1);
+    group g : dump; non_alpha na;
+		cloudsAbbreviation1=to_string(clouds1,0,3);
+		cloudsCode1=dict_search("metar/clouds.table",cloudsAbbreviation1,1);
+		cloudsTitle1=dict_search("metar/clouds.table",cloudsAbbreviation1,2) : string_type;
+		cloudsBaseCoded1=to_integer(clouds1,3,3);
+		meta cloudsBase1 evaluate(cloudsBaseCoded1 * 100 );
+    if (substr(g,0,3) is "FEW" || substr(g,0,3) is "SCT" ||
+        substr(g,0,3) is "BKN" || substr(g,0,3) is "OVC") {
+          rename(g,clouds2);
+          group g : dump; non_alpha na;
+				  cloudsAbbreviation2=to_string(clouds2,0,3);
+		      cloudsCode2=dict_search("metar/clouds.table",cloudsAbbreviation2,1);
+	      	cloudsTitle2=dict_search("metar/clouds.table",cloudsAbbreviation2,2) : string_type;
+		      cloudsBaseCoded2=to_integer(clouds2,3,3);
+				  meta cloudsBase2 evaluate(cloudsBaseCoded2 * 100 );
+    }
+    if (substr(g,0,3) is "FEW" || substr(g,0,3) is "SCT" ||
+        substr(g,0,3) is "BKN" || substr(g,0,3) is "OVC") {
+          rename(g,clouds3);
+          group g : dump; non_alpha na;
+				  cloudsAbbreviation3=to_string(clouds3,0,3);
+		      cloudsCode3=dict_search("metar/clouds.table",cloudsAbbreviation3,1);
+	      	cloudsTitle3=dict_search("metar/clouds.table",cloudsAbbreviation3,2) : string_type;
+		      cloudsBaseCoded3=to_integer(clouds3,3,3);
+				  meta cloudsBase3 evaluate(cloudsBaseCoded3 * 100 );
+    }
+    if (substr(g,0,3) is "FEW" || substr(g,0,3) is "SCT" ||
+        substr(g,0,3) is "BKN" || substr(g,0,3) is "OVC") {
+          rename(g,clouds4);
+          group g : dump; non_alpha na;
+				  cloudsAbbreviation4=to_string(clouds4,0,3);
+		      cloudsCode4=dict_search("metar/clouds.table",cloudsAbbreviation4,1);
+	      	cloudsTitle4=dict_search("metar/clouds.table",cloudsAbbreviation4,2) : string_type;
+		      cloudsBaseCoded4=to_integer(clouds4,3,3);
+				  meta cloudsBase4 evaluate(cloudsBaseCoded4 * 100 );
+    }
+} else {
+		if ( g is "SKC"  || g is "CLR" ) {
+				rename(g,skyClear);
+				group g : dump; non_alpha na;
+		} else {
+				if ( substr(g,0,2) is "VV" && length(g)==5) {
+						rename(g,verticalVisibilityElement);
+						group g : dump; non_alpha na;
+						verticalVisibilityCoded=to_integer(verticalVisibilityElement,2,3);
+						meta verticalVisibility evaluate(verticalVisibilityCoded * 100);
+				}
+				if ( g is "NSC" ) {
+						rename(g,noSignificantClouds);
+						group g : dump; non_alpha na;
+				}
+				if ( g is "NCD" ) {
+						rename(g,noCloudsDetected);
+						group g : dump; non_alpha na;
+				}
+		}
+}
+

@@ -1,0 +1,16 @@
+if (g is "RTD") {
+    rename(g,rtd);
+    modify rtd : hidden;
+    group g : dump ; non_alpha na;
+}
+if (g is "CCA") {
+    rename(g,cca);
+    modify cca : hidden;
+    group g : dump ; non_alpha na;
+}
+if (g is "CCB") {
+    rename(g,ccb);
+    modify ccb : hidden;
+    group g : dump ; non_alpha na;
+}
+

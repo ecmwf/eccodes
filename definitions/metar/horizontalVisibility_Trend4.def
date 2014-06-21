@@ -1,0 +1,54 @@
+if ( g is "CAVOK") {
+    rename(g,cavokTrend4); 
+    group g : dump; non_alpha na;
+		constant isCavokTrend4=1;
+		constant ceilingAndVisibilityOKTrend4="true";
+} else {
+		constant ceilingAndVisibilityOKTrend4="false";
+		constant isCavokTrend4=0;
+		if (g is "//" || g is "///" || g is "////" || g is "/////" || g is "//////") {
+				rename(g,missingVisibilityField1Trend4);
+				group g : dump; non_alpha na;
+		} 
+		if (g is "//" || g is "///" || g is "////" || g is "/////" || g is "//////") {
+				rename(g,missingVisibilityField2Trend4);
+				group g : dump; non_alpha na;
+		} 
+		if (substr(g,-3,3) is "NDV" || is_integer(g,0,4)  ) {
+				rename(g,visibilityInMetresTrend4);
+		    group g : dump; non_alpha na;
+				visibilityTrend4=to_integer(visibilityInMetresTrend4,0,4);
+		}
+		if (g is "NDV") {
+				rename(g,ndvTrend4);
+				modify ndv : hidden;
+		    group g : dump; non_alpha na;
+		}
+		if (substr(g,-2,2) is "KM"  ) {
+				rename(g,visibilityInKMTrend4);
+		    group g : dump; non_alpha na;
+				visibilityInKilometresTrend4=to_integer(visibilityInKMTrend4,0,4);
+				meta visibilityTrend4 evaluate(visibilityInKilometresTrend4 * 1000);
+		}
+		if (is_integer(g,0,1)) {
+				rename(g,visibilityIntegerTrend4);
+		    group g : dump; non_alpha na;
+		} 
+		if (substr(g, -2 ,2) is "SM" ) {
+        rename(g,visibilityInStatuteMilesTrend4);
+        group g : dump; non_alpha na;
+		}
+		if ( ( substr(g,4,1) is "N" || substr(g,4,1) is "S" || substr(g,4,1) is "E" || substr(g,4,1) is "W" 
+				||
+				substr(g,4,2) is "NE" || substr(g,4,2) is "SE" || substr(g,4,2) is "NW" || substr(g,4,2) is "SW" 
+				||
+				substr(g,4,1) is "/" )
+				&&
+				is_integer(g,0,4)
+				) {
+				rename(g,directionalVariationInVisibilityTrend4);
+				group g : dump; non_alpha na;
+				variationOfVisibilityTrend4=to_integer(directionalVariationInVisibilityTrend4);
+				variationOfVisibilityDirectionTrend4=dict_search("metar/direction.table",1);
+		}
+} 

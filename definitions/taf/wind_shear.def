@@ -1,0 +1,17 @@
+  if (substr(g,0,2) is "WS" ) {
+      rename(g,windShearPresent);
+      group g : dump; non_alpha na;
+      if (g is "ALL") {
+          rename(g,windShear);
+          group g : dump; non_alpha na;
+          if (g is "RWY") {
+            rename(g,rwy);
+            modify rwy : hidden;
+            group g : dump; non_alpha na;
+          }
+      } else {
+        rename(g,windShear);
+        group g : dump; non_alpha na;
+      }
+  }
+

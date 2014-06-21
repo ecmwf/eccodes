@@ -1,0 +1,5 @@
+  if ( substr(g,0,1) is "W" && substr(g,-2,1) is "S" ) {
+      rename(g,seaState);
+      group g : dump; non_alpha na;
+  }
+

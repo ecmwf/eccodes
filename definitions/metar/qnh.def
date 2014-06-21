@@ -1,0 +1,33 @@
+if ( ! qfePresent && substr(g,0,3) is "QFE" ) {
+		rename(g,qfeInHectoPascal);
+		qfe=to_string(qnhInHectoPascal,1,4) : dump;
+		constant qfeUnits= "hPa" : dump;
+		group g : dump; non_alpha na;
+		alias qfePresent=one;
+}
+if (! qnhPresent && substr(g,0,1) is "Q" ) {
+		rename(g,qnhInHectoPascal);
+		if (is_integer(qnhInHectoPascal,1,4)) {
+				qnh=to_string(qnhInHectoPascal,1,4) : dump;
+				alias qnhPresent=one;
+				constant qnhUnits= "hPa" : dump;
+		}
+		group g : dump; non_alpha na;
+}
+if ( ! qnhAPresent && substr(g,0,1) is "A" ) {
+		rename(g,qnhInHundrethsOfInchOfMercury);
+		#qnh=to_string(qnhInHectoPascal,1,4) : dump;
+		#constant qnhUnits= "hundrethsOfInchOfMercury" : dump;
+		group g : dump; non_alpha na;
+		#alias qnhAPresent=one;
+}
+if (! qnhPresent && substr(g,0,1) is "Q" ) {
+		rename(g,qnhInHectoPascal);
+		if (is_integer(qnhInHectoPascal,1,4)) {
+				qnh=to_string(qnhInHectoPascal,1,4) : dump;
+				alias qnhPresent=one;
+				constant qnhUnits= "hPa" : dump;
+		}
+		group g : dump; non_alpha na;
+}
+

@@ -1,0 +1,31 @@
+if (substr(g,0,1) is "R" && ( substr(g,3,1) is "/" || substr(g,4,1) is "/" ) && length(g) > 9 ) {
+      rename(g,runwayState3);
+      group g : dump; non_alpha na;
+			if (substr(runwayState3,3,1) is "/") {
+				runwayDesignatorState3=to_string(runwayState3,1,2);
+				runwayDepositCodeState3=to_string(runwayState3,4,1);
+				runwayExtentOfContaminationCodeState3=to_string(runwayState3,5,1);
+				runwayDepthOfDepositCodeState3=to_string(runwayState3,6,2);
+				runwayFrictionCoefficientCodeState3=to_string(runwayState3,8,2);
+			} else {
+				runwayDesignatorState3=to_string(runwayState3,1,2);
+				runwaySideCodeState3=to_string(runwayState3,3,1);
+				runwayDepositCodeState3=to_string(runwayState3,5,1);
+				runwayExtentOfContaminationCodeState3=to_string(runwayState3,6,1);
+				runwayDepthOfDepositCodeState3=to_string(runwayState3,7,2);
+				runwayFrictionCoefficientCodeState3=to_string(runwayState3,9,2);
+			}
+			runwayDepositState3=dict_search("metar/runwayStateDeposit.table",runwayDepositCodeState3,2);
+			runwayExtentOfContaminationState3=dict_search("metar/runwayStateExtentOfContamination.table",runwayExtentOfContaminationCodeState3,2);
+			runwayDepthOfDepositState3=dict_search("metar/runwayDepthOfDeposit.table",runwayDepthOfDepositCodeState3,2);
+			if (is_integer(runwayFrictionCoefficientCodeState3)) {
+					runwayFrictionCodeValueState3=to_integer(runwayFrictionCoefficientCodeState3);
+					if (runwayFrictionCodeValueState3 < 91) {
+							runwayFrictionCoefficientState3=dict_search("metar/runwayFrictionCoefficient.table",runwayFrictionCoefficientCodeState3,2);
+					} else {
+							runwayBrakingActionState3=dict_search("metar/runwayFrictionCoefficient.table",runwayFrictionCoefficientCodeState3,2);
+					}
+			} else {
+					runwayBrakingActionState3=dict_search("metar/runwayFrictionCoefficient.table",runwayFrictionCoefficientCodeState3,2);
+			}
+}

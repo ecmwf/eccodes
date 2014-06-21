@@ -1,0 +1,11 @@
+  if (substr(g,0,2) is "RE" ) {
+      rename(g,re);
+		  modify re : hidden;
+      group g : dump; non_alpha na;
+      recentWeatherTry=to_string(re,2);
+			if (is_in_list(recentWeatherTry,"metar/present_weather.list")) {
+				alias recentWeather=recentWeatherTry;
+		  }
+  }
+
+

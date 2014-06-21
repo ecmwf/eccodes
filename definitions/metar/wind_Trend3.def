@@ -1,0 +1,55 @@
+alias windVariableDirectionTrend3 = false;
+if (substr(g,-2,2) is "KT") {
+			constant windUnitsTrend3="knots" :dump;
+      rename(g,windInKnotsTrend3) ;
+			modify windInKnotsTrend3 : hidden;
+			windSpeedTrend3=to_string(windInKnotsTrend3,3,2) : dump;
+			if (substr(windInKnotsTrend3,0,3) is "VRB") {
+					constant windDirectionTrend3= "Variable" : dump;
+					alias windVariableDirectionTrend3 = true;
+			} else {
+					if (is_integer(windInKnotsTrend3,0,3)) {
+							windDirectionTrend3=to_string(windInKnotsTrend3,0,3) : dump;
+					}
+			}
+			if (substr(windInKnotsTrend3,5,1) is "G") {
+				windGustTrend3=to_string(windInKnotsTrend3,6,2);
+			}
+      group g : dump; non_alpha na;
+}
+if (substr(g,-3,3) is "KMH") {
+			constant windUnitsTrend3="km/h" : dump;
+      rename(g,windInKilometresPerHourTrend3) ;
+			modify windInKilometresPerHourTrend3 : hidden;
+			windSpeedTrend3=to_string(windInKilometresPerHourTrend3,3,2) : dump;
+			if (substr(windInKilometresPerHourTrend3,0,3) is "VRB") {
+					constant windDirectionTrend3= "Variable" : dump;
+					alias windVariableDirectionTrend3 = true;
+			} else {
+					if (is_integer(windInKilometresPerHourTrend3,0,3)) {
+							windDirectionTrend3=to_string(windInKilometresPerHourTrend3,0,3) : dump;
+					}
+			}
+			if (substr(windInKilometresPerHourTrend3,5,1) is "G") {
+				windGustTrend3=to_string(windInKilometresPerHourTrend3,6,2);
+			}
+      group g : dump; non_alpha na;
+}
+if (substr(g,-3,3) is "MPS") {
+			constant windUnitsTrend3="m/s" : dump;
+      rename(g,windInMetresPerSecondTrend3) ;
+			modify windInMetresPerSecondTrend3 : hidden;
+			windSpeedTrend3=to_string(windInMetresPerSecondTrend3,3,2) : dump;
+			if (substr(windInMetresPerSecondTrend3,0,3) is "VRB") {
+					constant windDirectionTrend3= "Variable" : dump;
+					alias windVariableDirectionTrend3 = true;
+			} else {
+					if (is_integer(windInMetresPerSecondTrend3,0,3)) {
+							windDirectionTrend3=to_string(windInMetresPerSecondTrend3,0,3) : dump;
+					}
+			}
+      group g : dump; non_alpha na;
+			if (substr(windInMetresPerSecondTrend3,5,1) is "G") {
+				windGustTrend3=to_string(windInMetresPerSecondTrend3,6,2);
+			}
+}

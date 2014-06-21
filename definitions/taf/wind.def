@@ -1,0 +1,74 @@
+alias windVariableDirection = false;
+if (substr(g,-2,2) is "KT") {
+			alias windPresent=one;
+			constant windUnits="knots" :dump;
+      rename(g,windInKnots) ;
+			modify windInKnots : hidden;
+			if (is_integer(windInKnots,3,2)){
+					windSpeed=to_string(windInKnots,3,2) : dump;
+			}
+			if (substr(windInKnots,0,3) is "VRB") {
+					constant windDirection= "Variable" : dump;
+					alias windVariableDirection = true;
+			} else {
+					if (is_integer(windInKnots,0,3)) {
+							windDirection=to_string(windInKnots,0,3) : dump;
+					}
+			}
+			if (substr(windInKnots,5,1) is "G" && is_integer(windInKnots,6,2) ) {
+				windGust=to_string(windInKnots,6,2);
+			}
+      group g : dump; non_alpha na;
+}
+if (substr(g,-3,3) is "KMH") {
+			alias windPresent=one;
+			constant windUnits="km/h" : dump;
+      rename(g,windInKilometresPerHour) ;
+			modify windInKilometresPerHour : hidden;
+			if (is_integer(windInKilometresPerHour,3,2)){
+					windSpeed=to_string(windInKilometresPerHour,3,2) : dump;
+			}
+			if (substr(windInKilometresPerHour,0,3) is "VRB") {
+					constant windDirection= "Variable" : dump;
+					alias windVariableDirection = true;
+			} else {
+					if (is_integer(windInKilometresPerHour,0,3)) {
+							windDirection=to_string(windInKilometresPerHour,0,3) : dump;
+					}
+			}
+			if (substr(windInKilometresPerHour,5,1) is "G" && is_integer(windInKilometresPerHour,6,2) ) {
+				windGust=to_string(windInKilometresPerHour,6,2);
+			}
+      group g : dump; non_alpha na;
+}
+if (substr(g,-3,3) is "MPS") {
+			alias windPresent=one;
+			constant windUnits="m/s" : dump;
+      rename(g,windInMetresPerSecond) ;
+			modify windInMetresPerSecond : hidden;
+			if (is_integer(windInMetresPerSecond,3,2)) {
+					windSpeed=to_string(windInMetresPerSecond,3,2) : dump;
+			}
+			if (substr(windInMetresPerSecond,0,3) is "VRB") {
+					constant windDirection= "Variable" : dump;
+					alias windVariableDirection = true;
+			} else {
+					if (is_integer(windInMetresPerSecond,0,3)) {
+							windDirection=to_string(windInMetresPerSecond,0,3) : dump;
+					}
+			}
+			if (substr(windInMetresPerSecond,5,1) is "G" && is_integer(windInMetresPerSecond,6,2) ) {
+				windGust=to_string(windInMetresPerSecond,6,2);
+			}
+      group g : dump; non_alpha na;
+}
+if ( length(g)==7 && substr(g,3,1) is "V" ) {
+    rename(g,variationInWindDirection);
+    group g : dump; non_alpha na;
+		if (is_integer(variationInWindDirection,0,3)) {
+				extremeClockwiseWindDirection=to_string(variationInWindDirection,0,3);
+		}
+		if (is_integer(variationInWindDirection,4,3)) {
+				extremeCounterClockwiseWindDirection=to_string(variationInWindDirection,4,3);
+		}
+}

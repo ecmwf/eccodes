@@ -1,0 +1,34 @@
+if ( ! temperatureAndDewpointPresent && is_integer(g,0,2)  && substr(g,2,1) is "/" &&
+     (
+				substr(g,3,2) is "//"
+		||
+		(is_integer(g,3,2) || ( substr(g,3,1) is "M" && is_integer(g,4,2) ))
+		)
+		) {
+    rename(g,temperatureAndDewPoint);
+		modify temperatureAndDewPoint : hidden;
+		temperature=to_integer(temperatureAndDewPoint,0,2) : dump;
+		td=to_string(temperatureAndDewPoint,3) : hidden;
+		dewPointTemperature=dict_search("metar/temperature.list",td,1) :dump ;
+		alias temperatureAndDewpointPresent=one;
+    group g : dump; non_alpha na;
+}
+if (! temperatureAndDewpointPresent && ( substr(g,0,1) is "M" && is_integer(g,1,2) )  && substr(g,3,1) is "/" && 
+		 ( 
+				 length(g)==4 
+		 || 
+				substr(g,4,2) is "//"
+		 || 
+				 ( is_integer(g,4,2) || ( substr(g,4,1) is "M" && is_integer(g,5,2) ) ) 
+		 )
+		 ) {
+    rename(g,temperatureAndDewPoint);
+		modify temperatureAndDewPoint : hidden;
+		t=to_string(temperatureAndDewPoint,0,3) : hidden;
+		temperature=dict_search("metar/temperature.list",t,1) :dump ;
+		td=to_string(temperatureAndDewPoint,4) : hidden;
+		dewPointTemperature=dict_search("metar/temperature.list",td,1) :dump ;
+		alias temperatureAndDewpointPresent=one;
+    group g : dump; non_alpha na;
+}
+

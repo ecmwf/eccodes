@@ -1,0 +1,60 @@
+if (substr(g,0,3) is "FEW" || substr(g,0,3) is "SCT" ||
+    substr(g,0,3) is "BKN" || substr(g,0,3) is "OVC") {
+
+    rename(g,clouds1Trend3);
+    group g : dump; non_alpha na;
+		cloudsAbbreviation1Trend3=to_string(clouds1Trend3,0,3);
+		cloudsCode1Trend3=dict_search("metar/clouds.table",cloudsAbbreviation1Trend3,1);
+		cloudsTitle1Trend3=dict_search("metar/clouds.table",cloudsAbbreviation1Trend3,2) : string_type;
+		cloudsBaseCoded1Trend3=to_integer(clouds1Trend3,3,3);
+		meta cloudsBase1Trend3 evaluate(cloudsBaseCoded1Trend3 * 100 );
+    if (substr(g,0,3) is "FEW" || substr(g,0,3) is "SCT" ||
+        substr(g,0,3) is "BKN" || substr(g,0,3) is "OVC") {
+          rename(g,clouds2Trend3);
+          group g : dump; non_alpha na;
+				  cloudsAbbreviation2Trend3=to_string(clouds2Trend3,0,3);
+		      cloudsCode2Trend3=dict_search("metar/clouds.table",cloudsAbbreviation2Trend3,1);
+	      	cloudsTitle2Trend3=dict_search("metar/clouds.table",cloudsAbbreviation2Trend3,2) : string_type;
+		      cloudsBaseCoded2Trend3=to_integer(clouds2Trend3,3,3);
+				  meta cloudsBase2Trend3 evaluate(cloudsBaseCoded2Trend3 * 100 );
+    }
+    if (substr(g,0,3) is "FEW" || substr(g,0,3) is "SCT" ||
+        substr(g,0,3) is "BKN" || substr(g,0,3) is "OVC") {
+          rename(g,clouds3Trend3);
+          group g : dump; non_alpha na;
+				  cloudsAbbreviation3Trend3=to_string(clouds3Trend3,0,3);
+		      cloudsCode3Trend3=dict_search("metar/clouds.table",cloudsAbbreviation3Trend3,1);
+	      	cloudsTitle3Trend3=dict_search("metar/clouds.table",cloudsAbbreviation3Trend3,2) : string_type;
+		      cloudsBaseCoded3Trend3=to_integer(clouds3Trend3,3,3);
+				  meta cloudsBase3Trend3 evaluate(cloudsBaseCoded3Trend3 * 100 );
+    }
+    if (substr(g,0,3) is "FEW" || substr(g,0,3) is "SCT" ||
+        substr(g,0,3) is "BKN" || substr(g,0,3) is "OVC") {
+          rename(g,clouds4Trend3);
+          group g : dump; non_alpha na;
+				  cloudsAbbreviation4Trend3=to_string(clouds4Trend3,0,3);
+		      cloudsCode4Trend3=dict_search("metar/clouds.table",cloudsAbbreviation4Trend3,1);
+	      	cloudsTitle4Trend3=dict_search("metar/clouds.table",cloudsAbbreviation4Trend3,2) : string_type;
+		      cloudsBaseCoded4Trend3=to_integer(clouds4Trend3,3,3);
+				  meta cloudsBase4Trend3 evaluate(cloudsBaseCoded4Trend3 * 100 );
+    }
+} else {
+		if ( g is "SKC"  || g is "CLR" ) {
+				rename(g,skyClearTrend3);
+				group g : dump; non_alpha na;
+		} else {
+				if ( substr(g,0,2) is "VV" ) {
+						rename(g,verticalVisibilityTrend3);
+						group g : dump; non_alpha na;
+				}
+				if ( g is "NSC" ) {
+						rename(g,noSignificantCloudsTrend3);
+						group g : dump; non_alpha na;
+				}
+				if ( g is "NCD" ) {
+						rename(g,noCloudsDetectedTrend3);
+						group g : dump; non_alpha na;
+				}
+		}
+}
+

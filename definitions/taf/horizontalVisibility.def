@@ -1,0 +1,68 @@
+if ( g is "CAVOK") {
+    rename(g,cavok); 
+    group g : dump; non_alpha na;
+		constant isCavok=1;
+		constant ceilingAndVisibilityOK="true";
+		constant cavokOrVisibility=1;
+} else {
+		constant ceilingAndVisibilityOK="false";
+		constant isCavok=0;
+		if (g is "//" || g is "///" || g is "////" || g is "/////" || g is "//////") {
+				rename(g,missingVisibilityField1);
+				group g : dump; non_alpha na;
+		} 
+		if (g is "//" || g is "///" || g is "////" || g is "/////" || g is "//////") {
+				rename(g,missingVisibilityField2);
+				group g : dump; non_alpha na;
+		} 
+		if (substr(g,-3,3) is "NDV" || is_integer(g,0,4)  ) {
+				rename(g,visibilityInMetres);
+		    group g : dump; non_alpha na;
+				if (is_integer(visibilityInMetres,0,4)) {
+						visibility=to_integer(visibilityInMetres,0,4);
+						constant cavokOrVisibility=1;
+				}
+		}
+		if (g is "NDV") {
+				rename(g,ndv);
+				modify ndv : hidden;
+		    group g : dump; non_alpha na;
+		}
+		if (substr(g,-2,2) is "KM"  ) {
+				rename(g,visibilityInKM);
+		    group g : dump; non_alpha na;
+				#visibilityInKilometres=to_integer(visibilityInKM,0);
+				#meta visibility evaluate(visibilityInKilometres * 1000);
+		}
+		if (is_integer(g,0,1)) {
+				rename(g,visibilityInteger);
+		    group g : dump; non_alpha na;
+		} 
+		if (substr(g, -2 ,2) is "SM" ) {
+        rename(g,visibilityInStatuteMiles);
+        group g : dump; non_alpha na;
+		}
+		if ( ( substr(g,4,1) is "N" || substr(g,4,1) is "S" || substr(g,4,1) is "E" || substr(g,4,1) is "W" 
+				||
+				substr(g,4,2) is "NE" || substr(g,4,2) is "SE" || substr(g,4,2) is "NW" || substr(g,4,2) is "SW" 
+				||
+				substr(g,4,1) is "/" )
+				&&
+				is_integer(g,0,4)
+				) {
+				rename(g,directionalVariationInVisibility);
+				group g : dump; non_alpha na;
+				variationOfVisibility=to_integer(directionalVariationInVisibility);
+				if (length(directionalVariationInVisibility) == 5) {
+						directionOfVariation=to_string(directionalVariationInVisibility,4,1);
+				} else {
+						directionOfVariation=to_string(directionalVariationInVisibility,4,2);
+				}
+				variationOfVisibilityDirection=dict_search("metar/direction.table",directionOfVariation,1) : string_type;
+				variationOfVisibilityDirectionAngle=dict_search("metar/direction.table",directionOfVariation,2) ;
+		}
+		include "rvr1.def";
+		include "rvr2.def";
+		include "rvr3.def";
+		include "rvr4.def";
+} 

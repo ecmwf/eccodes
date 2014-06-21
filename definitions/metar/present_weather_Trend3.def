@@ -1,0 +1,45 @@
+alias presentWeather1PresentTrend3=zero;
+alias presentWeather2PresentTrend3=zero;
+alias presentWeather3PresentTrend3=zero;
+if (g is "NSW") {
+		rename(g,nswTrend3);
+		group g : dump; non_alpha na;
+
+} else {
+
+		if (is_in_list(g,"metar/present_weather.list")) {
+				rename(g,presentWeather1Trend3);
+				group g : dump; non_alpha na;
+				alias presentWeather1PresentTrend3=one;
+				if (is_in_list(g,"metar/present_weather.list")) {
+						rename(g,presentWeather2Trend3);
+						group g : dump; non_alpha na;
+						alias presentWeather2PresentTrend3=one;
+				}
+				if (is_in_list(g,"metar/present_weather.list")) {
+						rename(g,presentWeather3Trend3);
+						group g : dump; non_alpha na;
+						alias presentWeather3PresentTrend3=one;
+				}
+		}
+		if (substr(g,0,1) is "-" || substr(g,0,1) is "+" || substr(g,0,2) is "FZ" || g is "//" ) {
+				rename(g,wrongPresentWeatherTrend3);
+				group g : dump; non_alpha na;
+		}
+		if (! presentWeather1PresentTrend3 && is_in_list(g,"metar/present_weather.list")) {
+				rename(g,presentWeather1Trend3);
+				group g : dump; non_alpha na;
+				alias presentWeather1PresentTrend3=one;
+		}
+		if (!presentWeather2PresentTrend3 && is_in_list(g,"metar/present_weather.list")) {
+						rename(g,presentWeather2Trend3);
+						group g : dump; non_alpha na;
+						alias presentWeather2PresentTrend3=one;
+		}
+		if (!presentWeather3PresentTrend3 && is_in_list(g,"metar/present_weather.list")) {
+						rename(g,presentWeather3TrendTrend31);
+						group g : dump; non_alpha na;
+						alias presentWeather3PresentTrend3=one;
+		}
+}
+

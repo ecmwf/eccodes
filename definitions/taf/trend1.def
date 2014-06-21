@@ -1,0 +1,85 @@
+if (g is "NOSIG" ) {
+		rename(g,nosig);
+		group g : dump; non_alpha na;
+		alias nosigPresent=one;
+}
+if (! nosigPresent) {
+
+		if (g is "BECMG" ) {
+				alias presentTrend1=one;
+				rename(g,changeIndicatorCodedTrend1);
+				constant changeIndicatorTrend1="BECOMING";
+				group g : dump; non_alpha na;
+		} 
+		if (!defined(changeIndicatorTrend1) && g is "TEMPO" ) {
+				alias presentTrend1=one;
+				rename(g,changeIndicatorCodedTrend1);
+				group g : dump; non_alpha na;
+				constant changeIndicatorTrend1="TEMPORARY_FLUCTUATIONS";
+		}
+		if (defined(changeIndicatorTrend1)) {
+				if (substr(g,0,2) is "AT" && length(g)==6 ) {
+						rename(g,atTrend1);
+						group g : dump; non_alpha na;
+						beginHourTrend1=to_string(atTrend1,2,2);
+						beginMinuteTrend1=to_string(atTrend1,4,2);
+				}
+				if (! defined(beginHourTrend1) && substr(g,0,2) is "FM" && length(g)==6) {
+						rename(g,fromTrend1);
+						group g : dump; non_alpha na;
+						beginHourTrend1=to_string(fromTrend1,2,2);
+						beginMinuteTrend1=to_string(fromTrend1,4,2);
+				}
+				if (! defined(beginHourTrend1) && substr(g,0,2) is "TL" && length(g)==6) {
+						rename(g,untilTrend1);
+						group g : dump; non_alpha na;
+						endHourTrend1=to_string(untilTrend1,2,2) ;
+						endMinuteTrend1=to_string(untilTrend1,4,2);
+				}
+				include "wind_Trend1.def";
+
+				include "horizontalVisibility_Trend1.def";
+
+				if ( ! isCavokTrend1) { 
+						include "present_weather_Trend1.def";
+						include "clouds_Trend1.def"; 
+				}
+		} else {
+				if (substr(g,0,2) is "FM") {
+						alias presentTrend1=one;
+						rename(g,fromTrend1);
+						constant changeIndicatorTrend1="BECOMING";
+						group g : dump; non_alpha na;
+						beginHourTrend1=to_string(fromTrend1,2,2);
+						beginMinuteTrend1=to_string(fromTrend1,4,2);
+						include "wind_Trend1.def";
+
+						include "horizontalVisibility_Trend1.def";
+
+						if ( ! isCavokTrend1) { 
+								include "present_weather_Trend1.def";
+								include "clouds_Trend1.def"; 
+						}
+				}
+		}
+
+		if (defined(fromTrend1) && !defined(untilTrend1)) {
+				constant endHourTrend1="??";
+				constant endMinuteTrend1="??";
+				constant endDayTrend1="??";
+				constant endMonthTrend1="??";
+				constant endYearTrend1="??";
+		}
+		if (defined(untilTrend1) && !defined(fromTrend1)) {
+				alias beginHourTrend1=hour;
+				alias beginMinuteTrend1=minute;
+				alias beginMonthTrend1=month;
+				alias beginYearTrend1=year;
+				alias beginDayTrend1=year;
+		}
+
+
+
+}
+
+

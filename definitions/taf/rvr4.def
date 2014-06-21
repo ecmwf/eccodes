@@ -1,0 +1,40 @@
+    if (substr(g,0,1) is "R" && ( substr(g,3,1) is "/" || substr(g,3,2) is "C/" 
+				|| substr(g,3,2) is "L/" || substr(g,3,2) is "R/") ) {
+        rename(g,RVR4);
+        group g : dump; non_alpha na;
+				if (substr(RVR4,3,1) is "/") {
+						runwayDesignatorRVR4=to_string(RVR4,1,2);
+						if (substr(RVR4,4,1) is "P" || substr(RVR4,4,1) is "M") {
+								extremeValuesRVR4=to_string(RVR4,4,1);
+								RVR4_1=to_string(RVR4,5);
+						} else {
+								RVR4_1=to_string(RVR4,4);
+						}
+				} else {
+						runwayDesignatorRVR4=to_string(RVR4,1,3);
+						meanValueRVR4=to_string(RVR4,5,4);
+						if (substr(RVR4,5,1) is "P" || substr(RVR4,5,1) is "M") {
+								ExtremeValuesRVR4=to_string(RVR,5,1);
+								RVR4_1=to_string(RVR4,6);
+						} else {
+								RVR4_1=to_string(RVR4,5);
+						}
+				}
+				if (length(RVR4_1)==4 || length(RVR4_1)==5) {
+						meanRVR4=to_string(RVR4_1,0,4);
+				} else {
+						if (substr(RVR4_1,4,1) is "V") {
+								oneMinuteMeanMinimumRVR4=to_string(RVR4_1,0,4);
+								if (substr(RVR4_1,5,1) is "P" || substr(RVR4_1,5,1) is "M") {
+										ExtremeValuesInMaximumRVR4=to_string(RVR_1,5,1);
+										oneMinuteMeanMaximumRVR4=to_string(RVR4_1,6,4);
+								} else {
+										oneMinuteMeanMaximumRVR4=to_string(RVR4_1,5,4);
+								}
+						} 
+				}
+				if (substr(RVR4,-1,1) is "U" ) { constant pastTendencyRVR4="UPWARD"; }
+				if (substr(RVR4,-1,1) is "D" ) { constant pastTendencyRVR4="DOWNWARD"; }
+				if (substr(RVR4,-1,1) is "N" ) { constant pastTendencyRVR4="NO_CHANGE"; }
+
+    }

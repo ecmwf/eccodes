@@ -1,0 +1,11 @@
+if (g is "//" || g is "///" || g is "////" || g is "/////" 
+		|| g is "//////" || g is "/////////") {
+		rename(g,missingField1);
+		group g : dump; non_alpha na;
+}
+if (g is "//" || g is "///" || g is "////" || g is "/////" 
+		|| g is "//////" || g is "/////////") {
+		rename(g,missingField2);
+		group g : dump; non_alpha na;
+}
+
