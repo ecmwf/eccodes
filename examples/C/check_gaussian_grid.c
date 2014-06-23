@@ -29,10 +29,11 @@ int DBL_EQUAL(double d1, double d2, double tolerance)
 
 void usage(const char* prog)
 {
-    printf("usage: %s file\n",prog);
+    printf("usage: %s grib_file grib_file ...\n",prog);
     exit(1);
 }
 
+/* Print an error message and die */
 void error(const char* fmt, ...)
 {
     char msg[1024];
@@ -53,24 +54,20 @@ double get_precision(long edition)
     return 0.0;
 }
 
-int main(int argc, char** argv)
+int process_file(const char* filename)
 {
     int err = 0, msg_num = 0;
-    FILE* in = NULL;
-    char* filename = NULL;
     grib_handle *h = NULL;
 
-    if (argc != 2) {
-        usage(argv[0]);
-        return 1;
-    }
-    filename = argv[1];
-    in = fopen(filename,"r");
+    FILE* in = fopen(filename, "r");
     if(!in) {
         error("ERROR: unable to open input file %s\n",filename);
     }
-
-    while ((h = grib_handle_new_from_file(0,in,&err)) != NULL ) {
+    
+    printf("Checking file %s\n", filename);
+    
+    while ((h = grib_handle_new_from_file(0,in,&err)) != NULL )
+    {
         int is_reduced = 0, is_regular = 0, grid_ok = 0;
         long edition = 0, N = 0, Nj = 0, numberOfDataPoints;
         size_t len = 0, numberOfValues = 0;
@@ -82,7 +79,7 @@ int main(int argc, char** argv)
 
         if (err != GRIB_SUCCESS) GRIB_CHECK(err,0);
         ++msg_num;
-        printf("Processing GRIB message #%d\n", msg_num);
+        printf("\tProcessing GRIB message #%d\n", msg_num);
 
         len = 32;
         GRIB_CHECK(grib_get_string(h,"gridType",gridType,&len),0);
@@ -90,7 +87,10 @@ int main(int argc, char** argv)
         is_reduced = STR_EQUAL(gridType, "reduced_gg");
         grid_ok = is_regular || is_reduced;
         if( !grid_ok ) {
-            error("ERROR: gridType should be Reduced or Regular Gaussian Grid!\n");
+            /*error("ERROR: gridType should be Reduced or Regular Gaussian Grid!\n");*/
+            printf("\tWARNING: gridType should be Reduced or Regular Gaussian Grid! Ignoring\n");
+            grib_handle_delete(h);
+            continue;
         }
         
         GRIB_CHECK(grib_get_long(h,"edition",&edition),0);
@@ -107,6 +107,29 @@ int main(int argc, char** argv)
 
         if ( Nj != 2*N ) {
             error("ERROR: Nj is %ld but should be 2*N (%ld)!\n", Nj, 2*N);
+        }
+
+        if (lon1 != 0) {
+            error("ERROR: latitudeOfFirstGridPointInDegrees=%f but should be 0!\n", lon1);
+        }
+        expected_lon2 = 360.0 - 90.0/N;
+        if (fabs(lon2 - expected_lon2) > angular_tolerance) {
+            error("ERROR: longitudeOfLastGridPointInDegrees=%f but should be %f!\n", lon2, expected_lon2);
+        }
+
+        /* Check first and last latitudes */
+        if (lat1 != -lat2) {
+            error("First latitude must be = last latitude but opposite in sign: lat1=%f, lat2=%f\n",
+                    lat1, lat2);
+        }
+        lats = (double*)malloc(sizeof(double)*Nj);
+        GRIB_CHECK(grib_get_gaussian_latitudes(N,lats), 0);
+
+        if (!DBL_EQUAL(lats[0], lat1, angular_tolerance)) {
+            error("First latitude %f must be %f\n", lat1, lats[0]);
+        }
+        if (!DBL_EQUAL(lats[Nj-1], lat2, angular_tolerance)) {
+            error("Last latitude %f must be %f\n", lat2, lats[Nj-1]);
         }
 
         if (is_reduced) {
@@ -146,29 +169,6 @@ int main(int argc, char** argv)
             free(pl);
         }
 
-        if (lon1 != 0) {
-            error("ERROR: latitudeOfFirstGridPointInDegrees=%f but should be 0!\n", lon1);
-        }
-        expected_lon2 = 360.0 - 90.0/N;
-        if (fabs(lon2 - expected_lon2) > angular_tolerance) {
-            error("ERROR: longitudeOfLastGridPointInDegrees=%f but should be %f!\n", lon2, expected_lon2);
-        }
-
-        /* Check first and last latitudes */
-        if (lat1 != -lat2) {
-            error("First latitude must be = last latitude but opposite in sign: lat1=%f, lat2=%f\n",
-                    lat1, lat2);
-        }
-        lats = (double*)malloc(sizeof(double)*Nj);
-        GRIB_CHECK(grib_get_gaussian_latitudes(N,lats), 0);
-
-        if (!DBL_EQUAL(lats[0], lat1, angular_tolerance)) {
-            error("First latitude %f must be %f\n", lat1, lats[0]);
-        }
-        if (!DBL_EQUAL(lats[Nj-1], lat2, angular_tolerance)) {
-            error("Last latitude %f must be %f\n", lat2, lats[Nj-1]);
-        }
-
         GRIB_CHECK(grib_get_size(h, "values", &numberOfValues),0);
         if (numberOfValues != numberOfDataPoints) {
             error("Number of data points %d different from number of values %d\n",
@@ -179,6 +179,25 @@ int main(int argc, char** argv)
         grib_handle_delete(h);
     }
     fclose(in);
-    printf("\nFile %s OK\n", filename);
+    printf("\nFile %s OK\n\n", filename);
+    return 0;
+}
+
+int main(int argc, char** argv)
+{
+    int i = 0;
+
+    if (argc < 2) {
+        usage(argv[0]);
+        return 1;
+    }
+    
+    for(i=0; i<argc; ++i)
+    {
+        const char* filename = argv[i];
+        process_file(filename);
+    }
+
+    printf("\nALL OK\n");
     return 0;
 }
