@@ -9129,6 +9129,11 @@
 	 table2Version = 230 ;
 	 indicatorOfParameter = 9 ;
 	}
+#Clear sky surface photosynthetically active radiation (variable resolution)
+'Clear sky surface photosynthetically active radiation (variable resolution)' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 20 ;
+	}
 #Total sky direct solar radiation at surface (variable resolution)
 'Total sky direct solar radiation at surface (variable resolution)' = {
 	 table2Version = 230 ;
@@ -9139,15 +9144,65 @@
 	 table2Version = 230 ;
 	 indicatorOfParameter = 22 ;
 	}
+#Large-scale precipitation fraction (variable resolution)
+'Large-scale precipitation fraction (variable resolution)' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 50 ;
+	}
+#Accumulated Carbon Dioxide Net Ecosystem Exchange (variable resolution)
+'Accumulated Carbon Dioxide Net Ecosystem Exchange (variable resolution)' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 80 ;
+	}
+#Accumulated Carbon Dioxide Gross Primary Production (variable resolution)
+'Accumulated Carbon Dioxide Gross Primary Production (variable resolution)' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 81 ;
+	}
+#Accumulated Carbon Dioxide Ecosystem Respiration (variable resolution)
+'Accumulated Carbon Dioxide Ecosystem Respiration (variable resolution)' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 82 ;
+	}
+#Surface solar radiation downward clear-sky (variable resolution)
+'Surface solar radiation downward clear-sky (variable resolution)' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 129 ;
+	}
+#Surface thermal radiation downward clear-sky (variable resolution)
+'Surface thermal radiation downward clear-sky (variable resolution)' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 130 ;
+	}
 #Albedo (variable resolution)
 'Albedo (variable resolution)' = {
 	 table2Version = 230 ;
 	 indicatorOfParameter = 174 ;
 	}
+#Vertically integrated moisture divergence (variable resolution)
+'Vertically integrated moisture divergence (variable resolution)' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 213 ;
+	}
 #Total precipitation (variable resolution)
 'Total precipitation (variable resolution)' = {
 	 table2Version = 230 ;
 	 indicatorOfParameter = 228 ;
+	}
+#Convective snowfall (variable resolution)
+'Convective snowfall (variable resolution)' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 239 ;
+	}
+#Large-scale snowfall (variable resolution)
+'Large-scale snowfall (variable resolution)' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 240 ;
+	}
+#Potential evaporation (variable resolution)
+'Potential evaporation (variable resolution)' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 251 ;
 	}
 #K index
 'K index' = {

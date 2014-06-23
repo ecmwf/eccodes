@@ -9129,6 +9129,11 @@
 	 table2Version = 230 ;
 	 indicatorOfParameter = 9 ;
 	}
+#Clear sky surface photosynthetically active radiation (variable resolution)
+'parcsvar' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 20 ;
+	}
 #Total sky direct solar radiation at surface (variable resolution)
 'fdirvar' = {
 	 table2Version = 230 ;
@@ -9139,15 +9144,65 @@
 	 table2Version = 230 ;
 	 indicatorOfParameter = 22 ;
 	}
+#Large-scale precipitation fraction (variable resolution)
+'lspfvar' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 50 ;
+	}
+#Accumulated Carbon Dioxide Net Ecosystem Exchange (variable resolution)
+'aco2neevar' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 80 ;
+	}
+#Accumulated Carbon Dioxide Gross Primary Production (variable resolution)
+'aco2gppvar' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 81 ;
+	}
+#Accumulated Carbon Dioxide Ecosystem Respiration (variable resolution)
+'aco2recvar' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 82 ;
+	}
+#Surface solar radiation downward clear-sky (variable resolution)
+'ssrdcvar' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 129 ;
+	}
+#Surface thermal radiation downward clear-sky (variable resolution)
+'strdcvar' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 130 ;
+	}
 #Albedo (variable resolution)
 'alvar' = {
 	 table2Version = 230 ;
 	 indicatorOfParameter = 174 ;
 	}
+#Vertically integrated moisture divergence (variable resolution)
+'vimdvar' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 213 ;
+	}
 #Total precipitation (variable resolution)
 'tpvar' = {
 	 table2Version = 230 ;
 	 indicatorOfParameter = 228 ;
+	}
+#Convective snowfall (variable resolution)
+'csfvar' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 239 ;
+	}
+#Large-scale snowfall (variable resolution)
+'lsfvar' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 240 ;
+	}
+#Potential evaporation (variable resolution)
+'pevvar' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 251 ;
 	}
 #K index
 'kx' = {
