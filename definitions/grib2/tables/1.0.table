@@ -12,6 +12,7 @@
 10 10 Version implemented on 7 November 2012
 11 11 Version implemented on 8 May 2013
 12 12 Version implemented on 14 November 2013
-13 13 Pre-operational to be implemented by next amendment
-# 14-254 Future versions
+13 13 Version implemented on 7 May 2014
+14 14 Pre-operational to be implemented by next amendment
+# 15-254 Future versions
 255 255 Master tables not used. Local table entries and local templates may use the entire range of the table, not just those sections marked Reserved for local used.
