@@ -75,9 +75,8 @@ static void init_class(grib_action_class* c)
 }
 /* END_CLASS_IMP */
 
-/*
- * new GCC compiler v4.5.0 complains function is defined but not used
- *
+#if 0
+/* new GCC compiler v4.5.0 complains function is defined but not used*/
 static void check_sections(grib_section *s,grib_handle* h)
 {
   grib_accessor *a = s?s->block->first:NULL;
@@ -89,7 +88,7 @@ static void check_sections(grib_section *s,grib_handle* h)
     a = a->next;
   }
 }
-*/
+#endif
 
 static int notify_change(grib_action* act, grib_accessor * notified,
         grib_accessor* changed)
@@ -106,9 +105,11 @@ static int notify_change(grib_action* act, grib_accessor * notified,
 
     grib_action* la        = NULL;
 
-    grib_context_log(h->context,
-            GRIB_LOG_DEBUG,"------------- SECTION action %s (%s) is triggerred by [%s]",
-            act->name, notified->name, changed->name);
+    if (h->context->debug > 0) {
+        grib_context_log(h->context,
+                GRIB_LOG_DEBUG,"------------- SECTION action %s (%s) is triggered by [%s]",
+                act->name, notified->name, changed->name);
+    }
 
     la = grib_action_reparse(act,notified,&doit);
     old_section = notified->sub_section;
@@ -128,7 +129,7 @@ static int notify_change(grib_action* act, grib_accessor * notified,
         if(la != NULL || old_section->branch != NULL)
             if(la == old_section->branch)
             {
-                grib_context_log(h->context,GRIB_LOG_DEBUG,"IGNORING TRIGGER action %s (%s) is triggerred %p", act->name, notified->name
+                grib_context_log(h->context,GRIB_LOG_DEBUG,"IGNORING TRIGGER action %s (%s) is triggered %p", act->name, notified->name
                         ,(void*)la);
                 return GRIB_SUCCESS;
             }
@@ -191,7 +192,6 @@ static int notify_change(grib_action* act, grib_accessor * notified,
     Assert(tmp_handle->dependencies == NULL);
     /* printf("grib_handle_delete %p\n",(void*)tmp_handle); */
 
-
     grib_handle_delete(tmp_handle);
 
     h->use_trie = 1;
@@ -212,14 +212,13 @@ static int notify_change(grib_action* act, grib_accessor * notified,
 
     grib_update_paddings(old_section);
 
-
     return err;
 }
 
 static grib_action* reparse(grib_action* a,grib_accessor* acc,int* doit)
 {
-    /* Should be inerited */
-    printf("reparse should be inerited: %s\n",a->name);
+    /* Should be inherited */
+    printf("reparse should be inherited: %s\n",a->name);
 
     Assert(1==0);
     return 0;
