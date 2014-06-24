@@ -44,13 +44,13 @@
 'Eastward turbulent surface stress' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
-	 parameterNumber = 37 ;
+	 parameterNumber = 38 ;
 	}
 #Northward turbulent surface stress
 'Northward turbulent surface stress' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
-	 parameterNumber = 36 ;
+	 parameterNumber = 37 ;
 	}
 #Snow depth
 'Snow depth' = {
