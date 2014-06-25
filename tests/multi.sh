@@ -29,7 +29,7 @@ then
 fi
 
 ${tools_dir}grib_copy -w parameterCategory=2,parameterNumber=3 ${data_dir}/multi.grib2  $tmpdata.1
-${tools_dir}grib_cmp ${data_dir}/v.grib2 $tmpdata.1
+${tools_dir}grib_compare ${data_dir}/v.grib2 $tmpdata.1
 
 cat > $tmpdata.rules <<EOF
 if ( parameterCategory==2 && parameterNumber==3) {
