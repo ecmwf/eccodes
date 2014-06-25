@@ -1114,6 +1114,7 @@ static void *_wmo_read_any_from_file_malloc(FILE* f,int* err,size_t *size,off_t 
     reader       r;
 
     u.buffer       = NULL;
+    u.size         = 0;
 
     r.message_size = 0;
     r.read_data    = f;
@@ -1123,6 +1124,7 @@ static void *_wmo_read_any_from_file_malloc(FILE* f,int* err,size_t *size,off_t 
     r.alloc_data   = &u;
     r.alloc        = &allocate_buffer;
     r.headers_only = headers_only;
+    r.offset       = 0;
 
     *err           = read_any(&r,grib_ok,bufr_ok);
     *size          = r.message_size;
