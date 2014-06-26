@@ -14,4 +14,5 @@
 REDIRECT=/dev/null
 
 ${tools_dir}grib_ls ${data_dir}/budg > $REDIRECT
+${tools_dir}grib_dump ${data_dir}/budg > $REDIRECT
 
