@@ -15,7 +15,7 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_ascii
-   IMPLEMENTS = pack_string;unpack_string;value_count
+   IMPLEMENTS = pack_string;unpack_string;value_count;string_length
    IMPLEMENTS = pack_long; unpack_long
    IMPLEMENTS = get_native_type
    IMPLEMENTS = init
@@ -40,6 +40,7 @@ static int pack_long(grib_accessor*, const long* val,size_t *len);
 static int pack_string(grib_accessor*, const char*, size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
 static int unpack_string (grib_accessor*, char*, size_t *len);
+static size_t string_length(grib_accessor*);
 static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
@@ -66,7 +67,7 @@ static grib_accessor_class _grib_accessor_class_mars_step = {
     0,                    /* free mem                       */
     0,                       /* describes himself         */
     0,                /* get length of section     */
-    0,              /* get length of string      */
+    &string_length,              /* get length of string      */
     &value_count,                /* get number of values      */
     0,                 /* get number of bytes      */
     0,                /* get offset to bytes           */
@@ -105,7 +106,6 @@ static void init_class(grib_accessor_class* c)
 {
 	c->dump	=	(*(c->super))->dump;
 	c->next_offset	=	(*(c->super))->next_offset;
-	c->string_length	=	(*(c->super))->string_length;
 	c->byte_count	=	(*(c->super))->byte_count;
 	c->byte_offset	=	(*(c->super))->byte_offset;
 	c->sub_section	=	(*(c->super))->sub_section;
@@ -140,7 +140,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     self->stepType = grib_arguments_get_name(a->parent->h,c,n++);
 }
 
-static int pack_string(grib_accessor* a, const char* val, size_t *len){
+static int pack_string(grib_accessor* a, const char* val, size_t *len)
+{
     char stepType[100];
     size_t stepTypeLen=100;
     char buf[100]={0,};
@@ -162,8 +163,8 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len){
     return grib_pack_string(stepRangeAcc,buf,len);
 }
 
-
-static int unpack_string(grib_accessor* a, char* val, size_t *len) {
+static int unpack_string(grib_accessor* a, char* val, size_t *len)
+{
     int ret=0;
     grib_accessor_mars_step* self = (grib_accessor_mars_step*)a;
     char buf[100]={0,};
@@ -179,6 +180,14 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len) {
 
     if ((ret=grib_unpack_string(stepRangeAcc,buf,&buflen))!=GRIB_SUCCESS)
         return ret;
+
+    if (*len < buflen) {
+        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+                "grib_accessor_class_mars_step: Buffer too small for %s. It is %ld bytes long (len=%ld)\n",
+                a->name, buflen, *len);
+        *len = buflen;
+        return GRIB_BUFFER_TOO_SMALL;
+    }
 
     strcpy(val,buf);
     step=strtol(buf, &p,10);
@@ -200,7 +209,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     return pack_string(a,buff,&bufflen);
 }
 
-static int unpack_long(grib_accessor* a, long* val, size_t *len) {
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
+{
     grib_accessor_mars_step* self = (grib_accessor_mars_step*)a;
     grib_accessor* stepRangeAcc=grib_find_accessor(a->parent->h,self->stepRange);
 
@@ -215,6 +225,12 @@ static int value_count(grib_accessor* a,long* count)
     return 0;
 }
 
-static int  get_native_type(grib_accessor* a){
+static size_t string_length(grib_accessor* a)
+{
+    return 16;
+}
+
+static int  get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_LONG;
 }
