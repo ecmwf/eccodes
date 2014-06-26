@@ -8,7 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 . ./include.sh
 
 REDIRECT=/dev/null
@@ -38,12 +37,6 @@ do
 	${tools_dir}grib_filter $$_f locx.grib1
 	for l2 in $localDefinitions
 	do
-		# There is a problem with these two local def numbers
-		# Sigsegv copying listOfScaledFrequencies!
-		if [ $l1 -eq "37" -a $l2 -eq "14" ] || [ $l1 -eq "14" -a $l2 -eq "37" ]
-		then
-			continue
-		fi
 		#echo "$l1 -> $l2"
 		${tools_dir}grib_set -s localDefinitionNumber=$l2 locx.grib1 locy.grib1
 		${tools_dir}grib_filter $$_f locy.grib1
