@@ -697,6 +697,9 @@
 013096|mwrWaterVapourContent|double|MWR WATER VAPOUR CONTENT|KGM-2|2|0|14|KG M-2|2|5
 013097|mwrLiquidWaterContent|double|MWR LIQUID WATER CONTENT|KGM-2|2|0|14|KG M-2|2|5
 013098|integratedWaterVapourDensity|double|INTEGRATED WATER VAPOUR DENSITY|KGM-2|8|0|30|KG M-2|8|10
+013099|log10IntegratedCloudParticleDensity|double|LOG 10 INTEGRATED WATER VAPOUR DENSITY|numeric|1|0|7|numeric|1|3
+013100|log10IntegratedCloudParticleArea|double|LOG 10 INTEGRATED WATER VAPOUR AREA|numeric|1|-70|7|numeric|1|2
+013101|log10IntegratedCloudParticleVolume|double|LOG 10 INTEGRATED WATER VAPOUR VOLUME|numeric|1|-140|7|numeric|1|3
 013110|massMixingRatio|long|MASS MIXING RATIO|%|0|0|7|%|0|3
 013111|soilMoisture|long|SOIL MOISTURE|G/KG|0|0|10|G/KG|0|4
 013112|objectWetnessDuration|long|OBJECT WETNESS DURATION|S|0|0|17|S|0|5
@@ -787,6 +790,10 @@
 015043|numberOfAveragingKernelLayers|long|NUMBER OF AVERAGING KERNEL LAYERS|NUMERIC|0|0|10|NUMERIC|0|4
 015044|averagingKernelValue|long|AVERAGING KERNEL VALUE|NUMERIC|6|-5000000|24|NUMERIC|6|8
 015051|meteorologicalOpticalRange|long|METEOROLOGICAL OPTICAL RANGE|M|0|0|18|M|0|6
+015052|log10NumberDensityOfParticlesGT5nm|double|LOG10 of number density of aerosol particles with diameter greater than 5 nm|numeric|1|60|6|numeric|1|3
+015053|log10NumberDensityOfParticlesGT14nm|double|LOG10 of number density of aerosol particles with diameter greater than 14 nm|numeric|2|600|9|numeric|2|4
+015054|log10NumberDensityOfParticlesBT0p25_2p5micron|double|LOG10 of number density of aerosol particles with diameter between 0.25 and 2.5 micron|numeric|2|550|9|numeric|2|4
+015055|nonVolatileAerosolRatio|double|Non volatile aerosol ratio|numeric|2|0|7|numeric|2|3
 019001|typeOfSynopticFeature|long|TYPE OF SYNOPTIC FEATURE|CODETABLE|0|0|6|CODE TABLE|0|2
 019002|effectiveRadiusOfFeature|long|EFFECTIVE RADIUS OF FEATURE|M|-2|0|12|M|-2|4
 019003|windSpeedThreshold|long|WIND SPEED THRESHOLD|M/S|0|0|8|M/S|0|3

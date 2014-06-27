@@ -376,7 +376,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
   char *p = NULL;
   size_t size = 0;
   grib_context* c=NULL;
-  int err = grib_get_string_length(a->parent->h,a->name,&size);
+  int err = _grib_get_string_length(a,&size);
 
   c=a->parent->h->context;
   if (size==0) return;

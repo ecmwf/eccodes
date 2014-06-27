@@ -184,6 +184,7 @@ static grib_accessor* _grib_find_accessor_navigate_subgroups(grib_handle* h, con
 
 	a=search(group,name,NULL,1);
 
+  /*
   if (recursive && h->unpacked==0 && a==NULL) {
     char type[6]={0,};
     size_t ltype=6;
@@ -196,6 +197,7 @@ static grib_accessor* _grib_find_accessor_navigate_subgroups(grib_handle* h, con
       a=_grib_find_accessor_navigate_subgroups(h,name,0);
     }
   }
+  */
 
 	return a;
 }
@@ -230,6 +232,7 @@ static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name,int r
 	if(a == NULL && h->main)
 		a = grib_find_accessor(h->main,name);
 
+  /*
   if (recursive && h->unpacked==0 && a==NULL) {
     char type[6]={0,};
     size_t ltype=6;
@@ -239,6 +242,7 @@ static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name,int r
       a=_grib_find_accessor(h,name,0);
     }
   }
+  */
 
 	return a;
 }

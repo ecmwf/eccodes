@@ -148,7 +148,11 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len, grib_arguments* params) {
 
+  grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
   a->length = 0;
+  self->dvalues=0;
+  self->lvalues=0;
+  self->svalues=0;
   /* a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
 }
 

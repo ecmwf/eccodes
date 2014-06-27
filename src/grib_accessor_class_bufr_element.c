@@ -27,6 +27,7 @@
    MEMBERS    = int index
    MEMBERS    = int ielement
    MEMBERS    = int type
+   MEMBERS    = int size
 
    END_CLASS_DEF
 
@@ -61,6 +62,7 @@ typedef struct grib_accessor_bufr_element {
 	int index;
 	int ielement;
 	int type;
+	int size;
 } grib_accessor_bufr_element;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -187,8 +189,10 @@ typedef struct grib_accessor_bufr_uncompressed_data {
 
 
 static void init(grib_accessor* a, const long len, grib_arguments* params) {
+  grib_accessor_bufr_element* self = (grib_accessor_bufr_element*)a;
 
   a->length = 0;
+  self->size=1;
   /* a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
 }
 
@@ -298,7 +302,8 @@ static int unpack_double (grib_accessor* a, double* val, size_t *len)
 
 static int value_count(grib_accessor* a,long* count)
 {
-  *count=1;
+  grib_accessor_bufr_element* self = (grib_accessor_bufr_element*)a;
+  *count=self->size;
 
   return 0;
 }

@@ -221,6 +221,7 @@ typedef struct grib_accessor_bufr_element {
         int index;
         int ielement;
         int type;
+        int size;
 } grib_accessor_bufr_element;
 
 static long init_length(grib_accessor* a)
@@ -328,6 +329,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 }
 
 
+
 static int get_descriptors(grib_accessor* a) {
     int err=0;
     size_t size=0;
@@ -430,14 +432,23 @@ static void push_units_accessor(grib_accessor* a,long groupNumber,long i) {
   grib_push_accessor(gaUnits,a->sub_section->block);
 }
 
+#define MAX_NESTED_REPLICATIONS 8
+
 static int decode_elements(grib_accessor* a) {
     int err=0;
     grib_accessor_bufr_uncompressed_data *self =(grib_accessor_bufr_uncompressed_data*)a;
     unsigned char* data =NULL;
-    long i=0,k=0,jj=0;
+    long i=0,k=0,jj=0,inr;
+    /* long iloop,irr; */
+    long innr;
     char buf[1024]={0,};
     long pos=0;
-    long n=0;
+    long n[MAX_NESTED_REPLICATIONS]={0,};
+    long nn[MAX_NESTED_REPLICATIONS]={0,};
+    long numberOfElementsToRepeat[MAX_NESTED_REPLICATIONS]={0,};
+    long numberOfRepetitions[MAX_NESTED_REPLICATIONS]={0,};
+    long startRepetition[MAX_NESTED_REPLICATIONS]={0,};
+    long numberOfNestedRepetions=0;
     long* width;
     long* reference;
     long groupNumber;
@@ -445,17 +456,21 @@ static int decode_elements(grib_accessor* a) {
     char* sval;
     double* factor;
     double val=0;
-    int numberOfElementsToRepeat=0,numberOfRepetitions=0;
-    int startRepetition;
     int *F,*X,*Y;
     int bitmapIndex[10]={0,};
     long lval=0;
+    int ir;
+    char prevname[1024]={0,};
+    grib_accessor* prevaccessor=NULL;
     grib_iarray* index=0;
     grib_handle* h=a->parent->h;
     grib_context* c=h->context;
 
     grib_accessor* gaGroup=0;
     grib_action creatorGroup = {0, };
+
+    grib_accessor* gaReplications=0;
+    grib_action creatorReplications = {0, };
 
     grib_accessor* ga=0;
     grib_action creator = {0, };
@@ -468,6 +483,11 @@ static int decode_elements(grib_accessor* a) {
     creatorGroup.name_space = "";
     creatorGroup.flags     = GRIB_ACCESSOR_FLAG_DUMP;
     creatorGroup.set        = 0;
+
+    creatorReplications.op         = "variable";
+    creatorReplications.name_space = "";
+    creatorReplications.flags     = GRIB_ACCESSOR_FLAG_DUMP;
+    creatorReplications.set        = 0;
 
     data = (unsigned char*)h->buffer->data;
     pos=a->offset*8;
@@ -503,10 +523,7 @@ static int decode_elements(grib_accessor* a) {
     self->dvalues->n=0;
     self->svalues->n=0;
     self->numberOfElements=0;
-    numberOfElementsToRepeat=0;
-    numberOfRepetitions=0;
     k=0;
-    n=0;
     groupNumber=1;
 
     sprintf(buf,"groupNumber");
@@ -535,12 +552,23 @@ static int decode_elements(grib_accessor* a) {
 
         if (F[i]==1) {
             /* delayed replication */
-            numberOfElementsToRepeat=X[i];
-            n=numberOfElementsToRepeat;
+            inr=numberOfNestedRepetions;
+            numberOfNestedRepetions++;
+            numberOfElementsToRepeat[inr]=X[i];
+            n[inr]=numberOfElementsToRepeat[inr];
             i++;
             lval=grib_decode_unsigned_long(data,&pos,width[i]);
-            numberOfRepetitions=(reference[i]+lval)*factor[i];
-            startRepetition=i;
+            numberOfRepetitions[inr]=(reference[i]+lval)*factor[i];
+            nn[inr]=numberOfRepetitions[inr];
+            sprintf(buf,"numberOfReplications");
+            creatorReplications.name=grib_context_strdup(c,buf);
+            gaReplications = grib_accessor_factory(a->sub_section, &creatorReplications, 0, NULL);
+            gaReplications->bufr_group_number=groupNumber;
+            ((grib_accessor_constant*)gaReplications)->type=GRIB_TYPE_LONG;
+            ((grib_accessor_constant*)gaReplications)->dval=numberOfRepetitions[inr];
+            grib_push_accessor(gaReplications,a->sub_section->block);
+            startRepetition[inr]=i;
+            Assert(numberOfNestedRepetions<=MAX_NESTED_REPLICATIONS);
             continue;
         }
         if (self->bitmapNumber[i]) {
@@ -583,19 +611,28 @@ static int decode_elements(grib_accessor* a) {
             /* printf("++++++> %d %d %s=%g\n",i,jj,self->abbreviation[index->v[jj]],val); */
         } else {
             /* element decoding and accessor creation */
+            int gaindex,isnew;
+            if (!strcmp(prevname,self->abbreviation[i])) {
+              isnew=0;
+              ga=prevaccessor;
+            } else {
+              isnew=1;
+              sprintf(prevname,"%s",self->abbreviation[i]);
             creator.name = self->abbreviation[i];
             ga = grib_accessor_factory(a->sub_section, &creator, 0, NULL);
             ga->bufr_group_number=groupNumber;
+              prevaccessor=ga;
             ((grib_accessor_bufr_element*)ga)->data_accessor=a;
-
             push_units_accessor(a,groupNumber,i);
+            }
+
 
             if ( *(self->type[i])=='s') {
                 /* string element */
                 size_t widthInBytes=width[i]/8;
                 sval=grib_context_malloc_clear(c,widthInBytes+1);
                 sval=grib_decode_string(data,&pos,widthInBytes,sval);
-                ((grib_accessor_bufr_element*)ga)->index=self->svalues->n;
+                gaindex=self->svalues->n;
                 ((grib_accessor_bufr_element*)ga)->ielement=i;
                 ((grib_accessor_bufr_element*)ga)->type=GRIB_TYPE_STRING;
                 grib_sarray_push(c,self->svalues,sval);
@@ -603,12 +640,11 @@ static int decode_elements(grib_accessor* a) {
                 /* number element */
                 lval=grib_decode_unsigned_long(data,&pos,width[i]);
                 if (!grib_is_all_bits_one(lval,width[i])) {
-                /* if ( 1 ) { */
                     val=(reference[i]+lval)*factor[i];
                 } else {
                     val=GRIB_MISSING_DOUBLE;
                 }
-                ((grib_accessor_bufr_element*)ga)->index=self->dvalues->n;
+                gaindex=self->dvalues->n;
                 ((grib_accessor_bufr_element*)ga)->ielement=i;
                 grib_iarray_push(index,i);
                 grib_darray_push(c,self->dvalues,val);
@@ -616,20 +652,46 @@ static int decode_elements(grib_accessor* a) {
                 if ( *(self->type[i])=='l')
                     ((grib_accessor_bufr_element*)ga)->type=GRIB_TYPE_LONG;
             }
+            if (isnew) {
+              ((grib_accessor_bufr_element*)ga)->index=gaindex;
+              ((grib_accessor_bufr_element*)ga)->size=1;
             grib_push_accessor(ga,a->sub_section->block);
+            } else {
+              ((grib_accessor_bufr_element*)ga)->size++;
+            }
 
             k=0;
             jj=0;
         }
 
         /* delayed repetition check */
-        if (numberOfRepetitions)  {
-            if (n>1) {
-                n--;
+        innr=numberOfNestedRepetions-1;
+        for (ir=innr;ir>=0;ir--) {
+          if (nn[ir])  {
+            if (n[ir]>1) {
+                n[ir]--;
+                break;
             } else {
-                n=numberOfElementsToRepeat;
-                numberOfRepetitions--;
-                if (numberOfRepetitions) i=startRepetition;
+                n[ir]=numberOfElementsToRepeat[ir];
+                nn[ir]--;
+                if (nn[ir]) {
+                  i=startRepetition[ir];
+                  break;
+                } else {
+                  if (ir>0)  {
+                    n[ir-1]-=numberOfElementsToRepeat[ir]+1;
+                    i=startRepetition[ir-1];
+                  } else {
+                    i=startRepetition[ir]+numberOfElementsToRepeat[ir];
+                  }
+                  numberOfNestedRepetions--;
+                }
+            }
+          } else {
+            if (ir==0) {
+              i=startRepetition[ir]+numberOfElementsToRepeat[ir]+1;
+              numberOfNestedRepetions=0;
+            }
             }
         }
     }

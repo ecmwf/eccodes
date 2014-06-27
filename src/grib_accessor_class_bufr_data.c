@@ -454,6 +454,8 @@ static void push_units_accessor(grib_section* section,grib_accessor* a,long grou
   if (self->units[i][0]=='C' && ( !strcmp(self->units[i],"CCITTIA5") ||
                                   !strncmp(self->units[i],"COMMON",6)) )
                         return;
+  if (self->units[i][0]=='N' &&  !strcmp(self->units[i],"NUMERIC") )
+                        return;
 
   creatorUnits.op         = "variable";
   creatorUnits.name_space = "";
@@ -462,7 +464,6 @@ static void push_units_accessor(grib_section* section,grib_accessor* a,long grou
 
   sprintf(buf,"%sUnits",self->abbreviation[i]);
   creatorUnits.name=buf;
-  /* creatorUnits.name=grib_context_strdup(c,buf); */
   gaUnits = grib_accessor_factory(section, &creatorUnits, 0, NULL);
   gaUnits->bufr_group_number=groupNumber;
   ((grib_accessor_constant*)gaUnits)->type=GRIB_TYPE_STRING;
@@ -713,11 +714,11 @@ static int decode_elements(grib_accessor* a) {
           indexOfGroupNumber=grib_iarray_get(groupNumberIndex,jj);
           sprintf(name,"%sOf-%s",self->abbreviation[i],self->abbreviation[indexOfReferringElement]);
           jj++;
-          creator.name = grib_context_strdup(c,name);
+          if (grib_iarray_get(bitmap,k)==0) {
+            creator.name = name;
           ga = grib_accessor_factory(section, &creator, 0, NULL);
           ga->bufr_group_number=indexOfGroupNumber;
           ((grib_accessor_bufr_data_element*)ga)->type=GRIB_TYPE_DOUBLE;
-          if (grib_iarray_get(bitmap,k)==0) {
             lval=grib_decode_unsigned_long(data,&pos,self->width[indexOfReferringElement]);
             localReference=lval+self->reference[indexOfReferringElement];
             width=grib_decode_unsigned_long(data,&pos,6);

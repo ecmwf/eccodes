@@ -1043,6 +1043,7 @@ const char *grib_get_accessor_class_name(grib_handle *h, const char *name);
 int _grib_get_double_array_internal(grib_handle *h, grib_accessor *a, double *val, size_t buffer_len, size_t *decoded_length);
 int grib_get_double_array_internal(grib_handle *h, const char *name, double *val, size_t *length);
 int grib_get_double_array(grib_handle *h, const char *name, double *val, size_t *length);
+int _grib_get_string_length(grib_accessor *a, size_t *size);
 int grib_get_string_length(grib_handle *h, const char *name, size_t *size);
 int grib_get_size(grib_handle *h, const char *name, size_t *size);
 int grib_get_count(grib_handle *h, const char *name, size_t *size);

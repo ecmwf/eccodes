@@ -178,7 +178,7 @@ static size_t string_length(grib_accessor* a){
 
   if (self->length) return self->length;
 
-  grib_get_string_length(a->parent->h,self->key,&size);
+  _grib_get_string_length(a,&size);
   return size;
 }
 
