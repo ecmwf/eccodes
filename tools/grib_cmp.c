@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
   grib_context* c;
   size_t size1,size2;
 
-
+  fprintf(stderr, "\nWARNING: The tool %s is deprecated. Please use grib_compare instead.\n\n", argv[0]);
 
   if (argc != 3) usage(argv[0]);
   file1=argv[1];
