@@ -83,7 +83,6 @@ int grib_nearest_delete(grib_nearest *i)
     return 0;
 }
 
-
 void grib_binary_search(double xx[], const unsigned long n, double x,
         int *ju,int *jl)
 {
@@ -101,12 +100,17 @@ void grib_binary_search(double xx[], const unsigned long n, double x,
 
 #define RADIAN(x) ((x) * acos(0.0) / 90.0)
 
-double grib_nearest_distance(double radius,double lon1, double lat1, double lon2, double lat2){
+double grib_nearest_distance(double radius,double lon1, double lat1, double lon2, double lat2)
+{
     double rlat1=RADIAN(lat1);
     double rlat2=RADIAN(lat2);
     double rlon1=lon1;
     double rlon2=lon2;
     double a;
+
+    if (lat1 == lat2 && lon1 == lon2) {
+        return 0.0; /* the two points are identical */
+    }
 
     if (rlon1 >=360) rlon1-=360.0;
     rlon1=RADIAN(rlon1);
