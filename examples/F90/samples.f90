@@ -30,9 +30,9 @@ program sample
   indicatorOfParameter = 61
   decimalPrecision = 2
 
-  !     a new grib message is loaded from an existing sample
-  !     samples are searched in a default sample path (use grib_info
-  !     to see where it is. The default sample path can be changed by
+  !     A new grib message is loaded from an existing sample.
+  !     Samples are searched in a default sample path (use grib_info
+  !     to see where that is). The default sample path can be changed by
   !     setting the environment variable GRIB_SAMPLES_PATH
   call grib_new_from_samples(igribsample, "regular_latlon_surface.grib1")
 
