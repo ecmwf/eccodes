@@ -68,7 +68,8 @@ else {
    } else {
      transient PVPresent = 1;
    }
-   if (PVPresent){
+   # See GRIB-547
+   if (PVPresent || NV>0){
       ieeefloat pv[numberOfCoordinatesValues] : dump;
       alias vertical.pv=pv;
    }
