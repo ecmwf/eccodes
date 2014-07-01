@@ -9,8 +9,8 @@
 
 . ./include.sh
 
-GRIB1=../../data/regular_latlon_surface.grib1
-GRIB2=../../samples/regular_ll_sfc_grib2.tmpl
+GRIB1=${data_dir}/regular_latlon_surface.grib1
+GRIB2=${proj_dir}/samples/regular_ll_sfc_grib2.tmpl
 OUT=temp.$$.out
 
 ${examples_dir}set_pv $GRIB1 $OUT > /dev/null
