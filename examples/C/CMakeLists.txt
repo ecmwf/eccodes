@@ -57,6 +57,7 @@ list( APPEND tests
    set_missing
    clone
    sections_copy
+   set_pv
 )
 foreach (test ${tests})
     ecbuild_add_test( TARGET c_${test}
