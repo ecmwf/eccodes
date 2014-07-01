@@ -10,5 +10,5 @@
 8 8 Land cover (0 = water, 1 = land) (Proportion)
 9 9 Shape factor with respect to salinity profile (-)
 10 10 Shape factor with respect to temperature profile in thermocline (-)
-11 11 Attenuation coefficient of water with respect to solar radiation (m-1)
-12 12 Salinity (kg kg-1)
+11 11 Attenuation coefficient of water with respect to solar radiation (/m)
+12 12 Salinity (kg/kg)

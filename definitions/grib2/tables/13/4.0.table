@@ -39,9 +39,10 @@
 52 52 Reserved 
 53 53 Partitioned parameters at a horizontal level or in a horizontal layer at a point in time 
 54 54 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for partitioned parameters 
+# 55-59 Reserved 
 60 60 Individual ensemble reforecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time
 61 61 Individual ensemble reforecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
-# 55-90 Reserved 
+# 62-90 Reserved 
 91 91 Categorical forecasts at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval 
 # 92-253 Reserved 
 254 254 CCITT IA5 character string 

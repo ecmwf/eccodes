@@ -31,12 +31,12 @@
 102 102 Aerosol optical thickness (Numeric)
 103 103 Single scattering albedo (Numeric)
 104 104 Asymmetry factor (Numeric)
-105 105 Aerosol extinction coefficient (m-1)
-106 106 Aerosol absorption coefficient (m-1)
+105 105 Aerosol extinction coefficient (/m)
+106 106 Aerosol absorption coefficient (/m)
 107 107 Aerosol lidar backscatter from satellite (m-1 sr-1)
 108 108 Aerosol lidar backscatter from the ground (m-1 sr-1)
-109 109 Aerosol lidar extinction from satellite (m-1)
-110 110 Aerosol lidar extinction from the ground (m-1)
+109 109 Aerosol lidar extinction from satellite (/m)
+110 110 Aerosol lidar extinction from the ground (/m)
 # 111-191 Reserved 
 # 192-254 Reserved for local use 
 255 255 Missing 
