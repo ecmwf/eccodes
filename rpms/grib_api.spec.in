@@ -52,7 +52,7 @@ The ECMWF GRIB API is an application program interface accessible from C and FOR
 #%patch
 
 %build
-%GNUconfigure %{?configure_args}
+%configure %{?configure_args}
 # This is why we copy the CFLAGS to the CXXFLAGS in configure.in
 # CFLAGS="%{optflags}" CXXFLAGS="%{optflags}" ./configure %{_target_platform} --prefix=%{prefix}
 make
