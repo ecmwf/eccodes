@@ -6,7 +6,7 @@ use DBI;
 use Data::Dumper;
 
 my $db="param";
-my $host="wrep-db-misc-prod";
+my $host="web-lan-002";
 my $user="ecmwf";
 my $pass="";
 my $filename; my $filebase; my $out; my $conceptDir;

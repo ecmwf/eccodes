@@ -14,7 +14,7 @@ use DBI;
 my $basedir=dirname($0);  # the "definitions" dir in grib_api workspace
 
 my $db="fm92_grib2";
-my $host="wrep-db-misc-prod";
+my $host="web-lan-002";
 my $user="ecmwf";
 my $pass="";
 my $filename; my $filebase; my $out; my $conceptDir;
