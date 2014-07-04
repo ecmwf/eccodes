@@ -1,0 +1,36 @@
+# Copyright 2005-2014 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
+
+position offsetSection1;
+section_length[3] section1Length ;
+
+unsigned[1]  masterTableNumber;
+
+codetable[1] subCentre 'grib1/0.table' : dump;
+unsigned[1] centre            : dump;
+
+unsigned[1]  updateSequenceNumber;
+
+flags[1]     section1Flags 'bufr/section1_flags.table' = 128 : hidden ; # = section 2 present
+
+unsigned[1] dataCategory : dump;
+unsigned[1] dataSubCategory : dump;
+unsigned[1] masterTablesVersionNumber;
+unsigned[1] localTablesVersionNumber;
+
+unsigned[1] typicalYearOfCentury : dump;
+unsigned[1] typicalMonth : dump;
+unsigned[1] typicalDay : dump;
+unsigned[1] typicalHour : dump;
+unsigned[1] typicalMinute : dump;
+unsigned[1] spare; # ???
+
+section_padding section1Padding;
+

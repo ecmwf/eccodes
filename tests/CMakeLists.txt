@@ -62,6 +62,7 @@ list( APPEND tests
     padding
     debug
     unit_tests
+    bufr_dump
 )
 
 foreach( test ${tests} )

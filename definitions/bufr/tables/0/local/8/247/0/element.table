@@ -1,0 +1,41 @@
+#code|abbreviation|type|name|unit|scale|reference|width|crex_unit|crex_scale|crex_width
+001192|typeOfStationIdentifier|string|Type of station identifier|CCITT IA5|0|0|24
+001193|stationIdentifier|string|Station identifier|CCITT IA5|0|0|128
+002181|supplementaryPresentWeatherSensor|long|Supplementary present weather sensor|Flag-Table|0|0|21
+002193|antennaRotationDirection|double|Antenna rotation direction|Code-Table|0|0|2
+007192|pixelSizeInZdirection|double|Pixel size in Z-direction|Meters|-1|0|16
+021036|radarRainfallIntensity|double|Radar rainfall intensity|mm*h-1|2|0|16
+021198|alpha|double|dBZ-value offset (Alpha)|dBZ|2|-6400|14
+021199|beta|double|dBZ-value increment (Beta)|dBZ|1|0|7
+021200|heightOfCAPPI|double|Height of CAPPI|m|0|-1000|15
+021201|rangeBinSize|double|Range-bin size|Meter|0|0|14
+021202|azimuthalResolution|double|Azimuthal resolution|Degree|1|0|8
+021203|rangeBinOffset|double|Range-bin offset|Meter|-1|0|14
+021204|azimuthOffset|double|Azimuth offset|Degree|1|0|12
+021205|av|double|V-value offset (av)|m/s|2|-16384|15
+021206|bv|double|V-value increment (bv)|m/s|2|0|8
+021207|aw|double|W-value offset (aw)|m/s|2|0|14
+021208|bw|double|W-value increment (bw)|m/s|2|0|8
+025192|accumulationMethod|long|Accumulation method|Code-Table|0|0|8
+025193|adjustmentFactor|long|Adjustment factor|Numeric|2|0|10
+029192|typeOfRotationEllipsoid|long|Type of rotation ellipsoid|Code-Table|0|0|3
+029193|longitudeOrigin|double|Longitude Origin|Degree|2|-18000|16
+029194|latitudeOrigin|double|Latitude Origin|Degree|2|-9000|15
+029195|xOffset|double|X-Offset|Meters|0|-33554432|26
+029196|yOffset|double|Y-Offset|Meters|0|-33554432|26
+029197|standardParallel1|double|Standard parallel 1|Degree|2|-9000|15
+029198|standardParallel2|double|Standard parallel 2|Degree|2|-9000|15
+029199|semimajorAxisOfRotationEllipsoid|double|Semi-major axis of rotation ellipsoid|Meters|0|0|26
+029200|semiminorAxisOfRotationEllipsoid|double|Semi-minor axis of rotation ellipsoid|Meters|0|0|26
+029201|projectionType|Projection type|long|Code-Table|0|0|5
+029202|azimuthOfInitialLine|double|Azimuth of initial line|Degree|2|-9000|15
+029203|longitudeOrigin|Longitude Origin|double|Degree|5|-18000000|26
+029204|latitudeOrigin|Latitude Origin|double|Degree|5|-9000000|25
+029205|geographicProjectionAsPROJInit|string|Geographic projection as PROJ initialization string|CCITT IA5|0|0|800
+030192|northSouthViewOrganisations|long|North south view organisation|Code-Table|0|0|3
+030193|eastWestViewOrganisation|long|East west view organisation|Code-Table|0|0|3
+030194|numberOfBinsAlongTheRadial|long|Number of bins along the radial|Numeric|0|0|12
+030195|numberOfAzimuths|long|Number of azimuths|Numeric|0|0|11
+030196|typeOfProduct|long|Type of product|Code-Table|0|0|8
+030197|compressionMethod|long|Compression method|Code-Table|0|0|8
+030198|byteElementOfACompressedArray|double|Byte element of a compressed array|Numeric|0|0|8

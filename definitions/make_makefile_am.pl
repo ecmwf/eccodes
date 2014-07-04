@@ -6,7 +6,7 @@ push @sub , ".";
 navigate(".");
 foreach my $d ( sort @sub )
 {
-  process($d) unless $d =~ /bufr/;
+  process($d);
 }
 print "EXTRA_DIST=CMakeLists.txt\n\n";
 print "include \$(DEVEL_RULES)\n";
@@ -38,7 +38,7 @@ sub process {
 		next if($d =~ /^\./);
 
 		unless (-d $d) {
-			push @files, $d if($d =~ /\.(table|def|grib|sh)$/);
+			push @files, $d if($d =~ /\.(txt|list|table|def|grib|sh)$/);
 		}
 
 	}
