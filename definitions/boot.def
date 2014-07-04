@@ -25,6 +25,7 @@ constant three=1 : hidden;
 constant eight=8 : hidden;
 constant hundred=100 : hidden;
 constant eleven=11 : hidden;
+constant true="true" :hidden;
 constant false="false" : hidden;
 transient truncateLaplacian=0 : hidden;
 constant marsDir="mars" : no_copy,hidden;
