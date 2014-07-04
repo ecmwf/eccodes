@@ -211,20 +211,28 @@ static int pack_double(grib_accessor* a, const double*v, size_t *len){
 
 static int  unpack_long   (grib_accessor* a, long*  v, size_t *len){
 
-  char val[1024];
+  char val[1024]={0,};
   size_t l = sizeof(val);
+  size_t i =0;
   char  *last = NULL;
-  grib_unpack_string (a , val, &l);
+  int err=grib_unpack_string (a , val, &l);
+
+  if (err) return err;
+
+  i=0;
+  while ( val[i]==' ' && val[i]!=0  && i<l-1) i++;
+
+  if (val[i]==0) {
+     *v=0;
+     return 0;
+  }
+  if (val[i+1]==' ' && i<l-2)  val[i+1]=0;
 
   *v = strtol(val,&last,10);
 
-  if(*last == 0)
-  {
-    grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
-    return GRIB_SUCCESS;
-  }
+  grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
+  return GRIB_SUCCESS;
 
-  return GRIB_INVALID_TYPE;
 }
 
 static int unpack_double (grib_accessor* a, double*v, size_t *len){

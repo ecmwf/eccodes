@@ -209,8 +209,23 @@ static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
 {
   grib_dumper_default *self = (grib_dumper_default*)d;
   int i;
-  long value; size_t size = 1;
-  int err = grib_unpack_long(a,&value,&size);
+  long lvalue;
+  double dvalue;
+  size_t size = 1;
+  int err = 0;
+  int isDouble=0;
+
+  switch (grib_accessor_get_native_type(a)) {
+    case GRIB_TYPE_LONG:
+        grib_unpack_long(a,&lvalue,&size);
+        break;
+    case GRIB_TYPE_DOUBLE:
+        grib_unpack_double(a,&dvalue,&size);
+        isDouble=1;
+        break;
+    default:
+        break;
+  }
 
   if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
     return;
@@ -231,7 +246,7 @@ static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
   fprintf(self->dumper.out,"  ");
   fprintf(self->dumper.out,"# flags: ");
   for(i=0;i<(a->length*8);i++) {
-    if(test_bit(value,a->length*8-i-1))
+    if(test_bit(lvalue,a->length*8-i-1))
       fprintf(self->dumper.out,"1");
     else
       fprintf(self->dumper.out,"0");
@@ -246,8 +261,12 @@ static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
 
   if( ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && grib_is_missing_internal(a) )
     fprintf(self->dumper.out,"%s = MISSING;",a->name);
+  else {
+    if (isDouble) 
+        fprintf(self->dumper.out,"%s = %g;",a->name,dvalue);
   else
-    fprintf(self->dumper.out,"%s = %ld;",a->name,value);
+        fprintf(self->dumper.out,"%s = %ld;",a->name,lvalue);
+  }
 
 
   if(err) {
@@ -574,7 +593,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     int j;
     fprintf(self->dumper.out,"  ");
     for(j = 0; j < 5 && k < size; j++, k++)  {
-      fprintf(self->dumper.out,"%.10e",buf[k]);
+      fprintf(self->dumper.out,"%g",buf[k]);
       if(k != size-1)
         fprintf(self->dumper.out,", ");
     }
@@ -612,6 +631,7 @@ static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors
   char tmp[512];
   char *p=NULL,*q=NULL;
   if (!strncmp(a->name,"section",7)) is_default_section=1;
+  if (!strcmp(a->creator->op,"bufr_group")) { dump_long(d,a,NULL); }
 
   /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
   if (is_default_section) {
@@ -631,8 +651,6 @@ static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors
     */
     free(upper);
     self->section_offset=a->offset;
-  } else {
-
   }
 
   /*printf("------------- section_offset = %ld\n",self->section_offset);*/

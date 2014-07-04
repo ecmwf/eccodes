@@ -732,6 +732,14 @@ int grib_get_long_internal(grib_handle* h, const char* name, long* val)
     return ret;
 }
 
+int grib_is_in_dump(grib_handle* h, const char* name) {
+  grib_accessor* a=grib_find_accessor(h, name);
+  if (a!=NULL && (a->flags & GRIB_ACCESSOR_FLAG_DUMP))
+    return 1;
+  else
+    return 0;
+}
+
 int grib_get_long(grib_handle* h, const char* name, long* val)
 {
     grib_accessor* act = NULL;

@@ -79,7 +79,7 @@ if(kindOfProduct == `TIDE`){
 if(kindOfProduct == `BUFR`){
  template      BUFR "bufr/boot.def" ;
  constant  BUFRstr="BUFR";
- alias ls.identifier=BUFRstr;
+ alias identifier=BUFRstr;
 }
 
 if(kindOfProduct == `CDFX`){

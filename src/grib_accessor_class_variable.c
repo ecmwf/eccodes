@@ -150,6 +150,7 @@ static void init(grib_accessor* a, const long length , grib_arguments* args )
     char tmp[1024];
 
     a->length = 0;
+    if (self->type==GRIB_TYPE_UNDEFINED && expression) {
     self->type = grib_expression_native_type(a->parent->h,expression);
 
     switch(self->type)
@@ -175,6 +176,7 @@ static void init(grib_accessor* a, const long length , grib_arguments* args )
         pack_string(a,p,&len);
         break;
     }
+  }
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)

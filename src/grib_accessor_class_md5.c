@@ -161,7 +161,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
 }
 
 static int  get_native_type(grib_accessor* a){
-    return GRIB_TYPE_BYTES;
+  return GRIB_TYPE_STRING;
 }
 
 
