@@ -335,13 +335,26 @@ files="
     tigge/tiggelam_cnmc_sfc.grib
   "
 
+# Decide what tool to use to download data
+DNLD_PROG=""
+if command -v wget >/dev/null 2>&1; then
+   DNLD_PROG="wget --tries=1 --timeout=3 -nv -q -O"
+fi
+if command -v curl >/dev/null 2>&1; then
+   DNLD_PROG="curl --silent --show-error --fail --output"
+fi
+if test "x$DNLD_PROG" = "x"; then
+   echo "Cannot find tool to transfer data from download server. Aborting." 1>&2
+   exit 1
+fi
+
 download_URL="http://download.ecmwf.org"
 cd ${DATA_DIR}
 echo "Downloading data files for testing..."
 for f in $files; do
     # If we haven't already got the file, download it
     if [ ! -f "$f" ]; then
-        wget --tries=1 --timeout=3 -nv -q -O $f ${download_URL}/test-data/grib_api/data/$f
+        $DNLD_PROG $f ${download_URL}/test-data/grib_api/data/$f
         if [ $? -ne 0 ]; then
             echo "Failed to download file: $f"
             exit 1
