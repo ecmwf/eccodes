@@ -81,13 +81,6 @@ int grib_concept_apply(grib_handle *h, grib_action *act, const char *name);
 grib_action *grib_action_create_hash_array(grib_context *context, const char *name, grib_hash_array_value *hash_array, const char *basename, const char *name_space, const char *defaultkey, const char *masterDir, const char *localDir, const char *ecmfDir, int flags, int nofail);
 grib_hash_array_value *get_hash_array(grib_handle *h, grib_action *a);
 
-/* action_class_assert.c */
-grib_action *grib_action_create_assert(grib_context *context, grib_expression *expression);
-
-/* action_class_template.c */
-grib_action *grib_action_create_template(grib_context *context, int nofail, const char *name, const char *arg1);
-GRIB_INLINE grib_action *get_empty_template(grib_context *c, int *err);
-
 /* action_class_trigger.c */
 grib_action *grib_action_create_trigger(grib_context *context, grib_arguments *args, grib_action *block);
 

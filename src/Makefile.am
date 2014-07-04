@@ -35,11 +35,6 @@ libgrib_api_la_prototypes= \
 	action_class_when.c \
 	action_class_concept.c \
     action_class_hash_array.c \
-	action_class_assert.c \
-	action_class_template.c \
-	action_class_trigger.c \
-	action_class_when.c \
-	action_class_hash_array.c \
 	action_class_set.c \
 	action_class_set_darray.c \
 	action_class_set_iarray.c \
