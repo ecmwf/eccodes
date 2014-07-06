@@ -11,13 +11,18 @@ noinst_LTLIBRARIES = libgrib_tools.la
 libgrib_tools_la_SOURCES = grib_tools.c \
                         grib_options.c
 
+bin_SCRIPTS =  bufr_compare_dir
 
 bin_PROGRAMS = grib_keys grib_histogram grib_error grib_add big2gribex \
                grib_debug grib_info grib_filter grib_ls grib_dump \
                grib2ppm grib_set grib_get grib_get_data grib_copy grib_repair \
                grib_packing grib_cmp grib_convert  grib_distance grib_corruption_check\
                grib_compare grib_list_keys parser grib_count grib_index_build grib1to2 \
-               gg_sub_area_check grib_moments grib_to_netcdf grib_to_json
+               gg_sub_area_check grib_moments grib_to_netcdf grib_to_json \
+               bufr_filter bufr_ls bufr_dump bufr_set bufr_get \
+               bufr_copy bufr_compare bufr_index_build \
+               taf_dump taf_ls taf_get taf_filter \
+               metar_dump metar_ls metar_get metar_filter
 
 noinst_PROGRAMS =  gaussian grib_diff mars_request xref all_keys #compile #dumpload grib_compare_old
 
@@ -62,6 +67,25 @@ xref_SOURCES                  =  xref.c
 gaussian_SOURCES              =  gaussian.c
 gg_sub_area_check_SOURCES     =  gg_sub_area_check.c
 grib1to2_SOURCES              = grib1to2.txt
+
+bufr_filter_SOURCES   = bufr_filter.c
+bufr_ls_SOURCES   = bufr_ls.c
+bufr_dump_SOURCES   = bufr_dump.c
+bufr_set_SOURCES   = bufr_set.c
+bufr_get_SOURCES   = bufr_get.c
+bufr_copy_SOURCES   = bufr_copy.c
+bufr_compare_SOURCES   = bufr_compare.c
+bufr_index_build_SOURCES   = bufr_index_build.c
+
+metar_dump_SOURCES   = metar_dump.c
+metar_ls_SOURCES   = metar_ls.c
+metar_get_SOURCES   = metar_get.c
+metar_filter_SOURCES   = metar_filter.c
+
+taf_dump_SOURCES   = taf_dump.c
+taf_ls_SOURCES   = taf_ls.c
+taf_get_SOURCES   = taf_get.c
+taf_filter_SOURCES   = taf_filter.c
 
 INCLUDES =  -I$(top_builddir)/src
 
