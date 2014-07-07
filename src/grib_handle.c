@@ -393,7 +393,7 @@ grib_handle* grib_handle_new_from_multi_message ( grib_context* c,void** data,
 
 grib_handle* grib_handle_new_from_file ( grib_context* c, FILE* f,int *error )
 {
-	return eccode_grib_new_from_file(c,f,0,error);
+	return grib_new_from_file(c,f,0,error);
 }
 
 static grib_handle* grib_handle_new_multi ( grib_context* c,unsigned char** data,
@@ -694,7 +694,7 @@ static grib_handle* grib_handle_new_from_file_multi ( grib_context* c, FILE* f,i
 	return gl;
 }
 
-grib_handle* eccode_grib_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error )
+grib_handle* grib_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error )
 {
 	grib_handle* h=0;
 	if (!f) {*error=GRIB_IO_PROBLEM; return NULL;}
@@ -716,7 +716,7 @@ grib_handle* eccode_grib_new_from_file ( grib_context* c, FILE* f,int headers_on
 }
 
 
-grib_handle* eccode_gts_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error )
+grib_handle* gts_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error )
 {
 	void *data = NULL;
 	size_t olen = 0;
@@ -757,7 +757,130 @@ grib_handle* eccode_gts_new_from_file ( grib_context* c, FILE* f,int headers_onl
 	return gl;
 }
 
-grib_handle* eccode_bufr_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error )
+grib_handle* taf_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error )
+{
+	void *data = NULL;
+	size_t olen = 0;
+	grib_handle  *gl = NULL;
+	off_t offset=0;
+
+	if ( c == NULL ) c = grib_context_get_default();
+
+	data = wmo_read_taf_from_file_malloc ( f, headers_only,&olen,&offset,error );
+
+	if ( *error != GRIB_SUCCESS )
+	{
+		if ( data ) grib_context_free ( c,data );
+
+		if ( *error == GRIB_END_OF_FILE ) *error = GRIB_SUCCESS;
+		return NULL;
+	}
+
+	if (headers_only) {
+		gl = grib_handle_new_from_partial_message ( c, data, olen );
+	} else {
+		gl = grib_handle_new_from_message ( c, data, olen );
+	}
+
+	if ( !gl )
+	{
+		*error = GRIB_DECODING_ERROR;
+		grib_context_log ( gl->context, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
+		grib_context_free ( c,data );
+		return NULL;
+	}
+
+    gl->offset=offset;
+	gl->buffer->property = GRIB_MY_BUFFER;
+	c->handle_file_count++;
+	c->handle_total_count++;
+
+	return gl;
+}
+
+grib_handle* metar_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error )
+{
+	void *data = NULL;
+	size_t olen = 0;
+	grib_handle  *gl = NULL;
+	off_t offset=0;
+
+	if ( c == NULL ) c = grib_context_get_default();
+
+	data = wmo_read_metar_from_file_malloc ( f, headers_only,&olen,&offset,error );
+
+	if ( *error != GRIB_SUCCESS )
+	{
+		if ( data ) grib_context_free ( c,data );
+
+		if ( *error == GRIB_END_OF_FILE ) *error = GRIB_SUCCESS;
+		return NULL;
+	}
+
+	if (headers_only) {
+		gl = grib_handle_new_from_partial_message ( c, data, olen );
+	} else {
+		gl = grib_handle_new_from_message ( c, data, olen );
+	}
+
+	if ( !gl )
+	{
+		*error = GRIB_DECODING_ERROR;
+		grib_context_log ( gl->context, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
+		grib_context_free ( c,data );
+		return NULL;
+	}
+
+    gl->offset=offset;
+	gl->buffer->property = GRIB_MY_BUFFER;
+	c->handle_file_count++;
+	c->handle_total_count++;
+
+	return gl;
+}
+
+grib_handle* codes_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error )
+{
+	void *data = NULL;
+	size_t olen = 0;
+	grib_handle  *gl = NULL;
+	off_t offset=0;
+
+	if ( c == NULL ) c = grib_context_get_default();
+
+	data = wmo_read_any_from_file_malloc ( f, headers_only,&olen,&offset,error );
+
+	if ( *error != GRIB_SUCCESS )
+	{
+
+		if ( *error == GRIB_END_OF_FILE ) *error = GRIB_SUCCESS;
+		return NULL;
+	}
+
+	if (headers_only) {
+		gl = grib_handle_new_from_partial_message ( c, data, olen );
+	} else {
+		gl = grib_handle_new_from_message ( c, data, olen );
+	}
+
+	if ( !gl )
+	{
+		*error = GRIB_DECODING_ERROR;
+		grib_context_log ( gl->context, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
+		grib_context_free ( c,data );
+		return NULL;
+	}
+
+    gl->offset=offset;
+	gl->buffer->property = GRIB_MY_BUFFER;
+	c->handle_file_count++;
+	c->handle_total_count++;
+
+	return gl;
+}
+
+
+grib_handle* bufr_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error )
 {
 	void *data = NULL;
 	size_t olen = 0;

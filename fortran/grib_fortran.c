@@ -904,6 +904,29 @@ int grib_f_multi_support_off(){
   return grib_f_multi_support_off_();
 }
 
+int grib_f_navigate_subgroups_(int* gid){
+		grib_handle* h=get_handle(*gid);
+    if (!h) return GRIB_NULL_HANDLE;
+    return grib_navigate_subgroups(h);
+}
+int grib_f_navigate_subgroups__(int* gid){
+  return grib_f_navigate_subgroups_(gid);
+}
+int grib_f_navigate_subgroups(int* gid){
+  return grib_f_navigate_subgroups_(gid);
+}
+
+int grib_f_not_navigate_subgroups_(int* gid){
+		grib_handle* h=get_handle(*gid);
+    if (!h) return GRIB_NULL_HANDLE;
+    return grib_not_navigate_subgroups(h);
+}
+int grib_f_not_navigate_subgroups__(int* gid){
+  return grib_f_not_navigate_subgroups_(gid);
+}
+int grib_f_not_navigate_subgroups(int* gid){
+  return grib_f_not_navigate_subgroups_(gid);
+}
 
 static int _grib_f_iterator_new_(int* gid,int* iterid,int* mode) {
   int err=0;
@@ -1294,6 +1317,34 @@ int grib_f_count_in_file__(int* fid,int* n) {
   return grib_f_count_in_file(fid,n);
 }
 
+int bufr_f_new_from_file_(int* fid, int* gid){
+  int err = 0;
+  FILE* f = get_file(*fid);
+
+  grib_handle *h = NULL;
+
+  if(f){
+    h = bufr_new_from_file(0,f,0,&err);
+    if(h){
+      push_handle(h,gid);
+      return GRIB_SUCCESS;
+    } else {
+      *gid=-1;
+      return GRIB_END_OF_FILE;
+    }
+  }
+
+  *gid=-1;
+  return GRIB_INVALID_FILE;
+}
+
+int bufr_f_new_from_file__(int* fid, int* gid){
+  return bufr_f_new_from_file_( fid, gid);
+}
+int bufr_f_new_from_file(int* fid, int* gid){
+  return bufr_f_new_from_file_( fid, gid);
+}
+
 int grib_f_new_from_file_(int* fid, int* gid){
   int err = 0;
   FILE* f = get_file(*fid);
@@ -1329,7 +1380,7 @@ int grib_f_headers_only_new_from_file_(int* fid, int* gid){
   grib_handle *h = NULL;
 
   if(f){
-	h=eccode_grib_new_from_file ( 0, f,1,&err);
+	h=grib_new_from_file ( 0, f,1,&err);
     if(h){
       push_handle(h,gid);
       return GRIB_SUCCESS;

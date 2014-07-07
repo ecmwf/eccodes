@@ -857,11 +857,13 @@ grib_handle *grib_handle_new_from_partial_message(grib_context *c, void *data, s
 grib_handle *grib_handle_new_from_message(grib_context *c, void *data, size_t buflen);
 grib_handle *grib_handle_new_from_multi_message(grib_context *c, void **data, size_t *buflen, int *error);
 grib_handle *grib_handle_new_from_file(grib_context *c, FILE *f, int *error);
+grib_handle *grib_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 grib_handle *eccode_grib_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
-grib_handle *eccode_gts_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
-grib_handle *eccode_bufr_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
+grib_handle *gts_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
+grib_handle *bufr_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 grib_handle *taf_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 grib_handle *metar_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
+grib_handle *codes_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 grib_multi_handle *grib_multi_handle_new(grib_context *c);
 int grib_multi_handle_delete(grib_multi_handle *h);
 int grib_multi_handle_append(grib_handle *h, int start_section, grib_multi_handle *mh);

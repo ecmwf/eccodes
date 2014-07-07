@@ -126,12 +126,21 @@ static int is_index_file(const char* filename)
 static grib_handle* grib_handle_new_from_file_x(grib_context* c,FILE* f,int mode,int headers_only,int *err)
 {
     if (mode==MODE_GTS)
-        return eccode_gts_new_from_file(c,f,headers_only,err);
+        return gts_new_from_file(c,f,headers_only,err);
 
     if (mode==MODE_BUFR)
-        return eccode_bufr_new_from_file(c,f,headers_only,err);
+        return bufr_new_from_file(c,f,headers_only,err);
 
-    return eccode_grib_new_from_file(c,f,headers_only,err);
+	if (mode==MODE_METAR)  
+		return metar_new_from_file(c,f,headers_only,err);
+
+	if (mode==MODE_TAF)  
+		return taf_new_from_file(c,f,headers_only,err);
+
+	if (mode==MODE_GRIB)  
+		return grib_new_from_file(c,f,headers_only,err);
+
+	return codes_new_from_file(c,f,headers_only,err);
 }
 
 int grib_tool(int argc, char **argv)
@@ -374,10 +383,23 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
 static int navigate(grib_field_tree* fields,grib_runtime_options* options)
 {
     int err=0;
+  int message_type=0;
+
     if (!fields || options->stop) return 0;
 
+  switch (options->mode) {
+    case MODE_GRIB:
+      message_type=CODES_GRIB;
+      break;
+    case MODE_BUFR:
+      message_type=CODES_BUFR;
+      break;
+    default :
+      Assert(0);
+  }
+
     if (fields->field) {
-        grib_handle* h=grib_index_get_handle(fields->field,&err);
+		grib_handle* h=codes_index_get_handle(fields->field,message_type,&err);
         if (!options->index2->current)
             options->index2->current=grib_context_malloc_clear(options->context,sizeof(grib_field_list));
         options->index2->current->field=fields->field;

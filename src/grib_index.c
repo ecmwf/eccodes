@@ -897,6 +897,177 @@ int grib_index_search_same(grib_index* index, grib_handle* h)
     return 0;
 }
 
+int grib_index_add_file(grib_index* index,const char* filename) {
+  return codes_index_add_file(index,filename,CODES_GRIB);
+}
+
+int codes_index_add_file(grib_index* index,const char* filename,int message_type)
+{
+	double dval;
+	size_t svallen;
+	long length,lval;
+	char buf[1024]={0,};
+	int err=0;
+	grib_file* indfile;
+	grib_file* newfile;
+
+	grib_index_key* index_key=NULL;
+	grib_handle* h=NULL;
+	grib_field* field;
+	grib_field_tree* field_tree;
+	grib_file* file=NULL;
+	grib_context* c;
+    typedef grib_handle* (*message_new_proc) ( grib_context*,FILE*,int,int* );
+    message_new_proc message_new=NULL;
+
+    switch (message_type) {
+     case CODES_GRIB:
+        message_new=grib_new_from_file;
+        break;
+     case CODES_BUFR:
+        message_new=bufr_new_from_file;
+        break;
+     default:
+        Assert(0);
+    }
+
+	if (!index) return GRIB_NULL_INDEX;
+	c=index->context;
+
+	file=grib_file_open(filename,"r",&err);
+
+	if (!file || !file->handle) return err;
+
+	if (!index->files) {
+		grib_filesid++;
+		newfile=grib_context_malloc_clear(c,sizeof(grib_file));
+		newfile->id=grib_filesid;
+		newfile->name=strdup(file->name);
+		index->files=newfile;
+	} else {
+		indfile=index->files;
+		while(indfile) {
+			if (!strcmp(indfile->name,file->name)) return 0;
+			indfile=indfile->next;
+		}
+		indfile=index->files;
+		while(indfile->next) indfile=indfile->next;
+		grib_filesid++;
+		newfile=grib_context_malloc_clear(c,sizeof(grib_file));
+		newfile->id=grib_filesid;
+		newfile->name=strdup(file->name);
+		indfile->next=newfile;
+	}
+
+	fseeko(file->handle,0,SEEK_SET);
+
+	while ((h=message_new(c,file->handle,0,&err))!=NULL) {
+		grib_string_list* v=0;
+		index_key=index->keys;
+		field_tree=index->fields;
+		index_key->value[0]=0;
+
+		while (index_key) {
+			if (index_key->type==GRIB_TYPE_UNDEFINED) {
+				err=grib_get_native_type(h,index_key->name,&(index_key->type));
+				if (err) index_key->type=GRIB_TYPE_STRING;
+			}
+			svallen=1024;
+			switch (index_key->type) {
+				case GRIB_TYPE_STRING:
+					err=grib_get_string(h,index_key->name,buf,&svallen);
+					if (err==GRIB_NOT_FOUND) sprintf(buf,GRIB_KEY_UNDEF);
+					break;
+				case GRIB_TYPE_LONG:
+					err=grib_get_long(h,index_key->name,&lval);
+					if (err==GRIB_NOT_FOUND) sprintf(buf,GRIB_KEY_UNDEF);
+					else sprintf(buf,"%ld",lval);
+					break;
+				case GRIB_TYPE_DOUBLE:
+					err=grib_get_double(h,index_key->name,&dval);
+					if (err==GRIB_NOT_FOUND) sprintf(buf,GRIB_KEY_UNDEF);
+					else sprintf(buf,"%g",dval);
+					break;
+				default :
+					err=GRIB_WRONG_TYPE;
+					return err;
+			}
+			if (err && err != GRIB_NOT_FOUND) {
+				grib_context_log(c,GRIB_LOG_ERROR,"unable to create index. \"%s\": %s",index_key->name,grib_get_error_message(err));
+				return err;
+			}
+
+			if (!index_key->values->value) {
+				index_key->values->value=grib_context_strdup(c,buf);
+				index_key->values_count++;
+			} else {
+				v=index_key->values;
+				while (v->next && strcmp(v->value,buf)) v=v->next;
+				if (strcmp(v->value,buf)) {
+					index_key->values_count++;
+					if (v->next) v=v->next;
+					v->next=grib_context_malloc_clear(c,sizeof(grib_string_list));
+					v->next->value=grib_context_strdup(c,buf);
+				}
+			}
+
+			if (!field_tree->value) {
+				field_tree->value=grib_context_strdup(c,buf);
+			} else {
+				while (field_tree->next &&
+								   (field_tree->value==NULL ||
+								   strcmp(field_tree->value,buf)))
+					field_tree=field_tree->next;
+
+				if (!field_tree->value || strcmp(field_tree->value,buf)){
+					field_tree->next=
+							(grib_field_tree*)grib_context_malloc_clear(c,
+							 sizeof(grib_field_tree));
+					field_tree=field_tree->next;
+					field_tree->value=grib_context_strdup(c,buf);
+				}
+			}
+
+			if (index_key->next) {
+				if (!field_tree->next_level) {
+					field_tree->next_level=
+							grib_context_malloc_clear(c,sizeof(grib_field_tree));
+				}
+				field_tree=field_tree->next_level;
+			}
+			index_key=index_key->next;
+		}
+
+		field=grib_context_malloc_clear(c,sizeof(grib_field));
+		field->file=file;
+		index->count++;
+		field->offset=h->offset;;
+
+		err=grib_get_long(h,"totalLength",&length);
+		if (err) return err;
+		field->length=length;
+
+
+		if (field_tree->field) {
+			grib_field* pfield=field_tree->field;
+			while (pfield->next) pfield=pfield->next;
+			pfield->next=field;
+		} else
+			field_tree->field=field;
+
+		if (h) grib_handle_delete(h);
+
+	}
+
+	grib_file_close(file->name,&err);
+
+	if (err) return err;
+	index->rewind=1;
+	return GRIB_SUCCESS;
+	
+}
+
+#if 0
 int grib_index_add_file(grib_index* index, const char* filename)
 {
     double dval;
@@ -1056,6 +1227,7 @@ int grib_index_add_file(grib_index* index, const char* filename)
     index->rewind=1;
     return GRIB_SUCCESS;
 }
+#endif
 
 grib_index* grib_index_new_from_file(grib_context* c, char* filename, const char* keys, int *err)
 {
@@ -1253,20 +1425,53 @@ int grib_index_select_string(grib_index* index,const char* skey,char* value)
     return 0;
 }
 
-grib_handle* grib_index_get_handle(grib_field* field,int *err)
-{
-    grib_handle* h=NULL;
-    grib_file_open(field->file->name,"r",err);
-
-    if (*err!=GRIB_SUCCESS) return NULL;
-
-    fseeko(field->file->handle,field->offset,SEEK_SET);
-    h=grib_handle_new_from_file(0,field->file->handle,err);
-    if (*err!=GRIB_SUCCESS) return NULL;
-
-    grib_file_close(field->file->name,err);
-    return h;
+grib_handle* grib_index_get_handle(grib_field* field,int *err) {
+  return codes_index_get_handle(field,CODES_GRIB,err);
 }
+
+grib_handle* codes_index_get_handle(grib_field* field,int message_type,int *err)
+{
+  grib_handle* h=NULL;
+  typedef grib_handle* (*message_new_proc) ( grib_context*,FILE*,int,int* );
+  message_new_proc message_new=NULL;
+  grib_file_open(field->file->name,"r",err);
+
+	if (*err!=GRIB_SUCCESS) return NULL;
+  switch (message_type) {
+    case CODES_GRIB:
+      message_new=grib_new_from_file;
+      break;
+    case CODES_BUFR:
+      message_new=bufr_new_from_file;
+      break;
+    default :
+      Assert(0);
+  }
+
+	fseeko(field->file->handle,field->offset,SEEK_SET);
+	h=message_new(0,field->file->handle,0,err);
+	if (*err!=GRIB_SUCCESS) return NULL;
+
+	grib_file_close(field->file->name,err);
+	return h;
+}
+
+/*
+ * grib_handle* grib_index_get_handle(grib_field* field,int *err)
+ * {
+ *     grib_handle* h=NULL;
+ *     grib_file_open(field->file->name,"r",err);
+ * 
+ *     if (*err!=GRIB_SUCCESS) return NULL;
+ * 
+ *     fseeko(field->file->handle,field->offset,SEEK_SET);
+ *     h=grib_handle_new_from_file(0,field->file->handle,err);
+ *     if (*err!=GRIB_SUCCESS) return NULL;
+ * 
+ *     grib_file_close(field->file->name,err);
+ *     return h;
+ * }
+ */
 
 static int grib_index_execute(grib_index* index)
 {
@@ -1322,65 +1527,69 @@ char* grib_get_field_file(grib_index* index,off_t *offset)
     return file;
 }
 
-grib_handle* grib_handle_new_from_index(grib_index* index,int *err)
-{
-    grib_index_key* keys;
-    grib_field_list *fieldset,*next;
-    grib_handle* h=NULL;
-    grib_context* c=NULL;
+grib_handle* grib_handle_new_from_index(grib_index* index,int *err) {
+  return codes_new_from_index(index,CODES_GRIB,err);
+}
 
-    if (!index) return NULL;
-    c=index->context;
-    if (!index->rewind) {
-        if (!index->current) {
-            *err=GRIB_END_OF_INDEX;
-            return NULL;
-        }
+grib_handle* codes_new_from_index(grib_index* index,int message_type,int *err) {
+	grib_index_key* keys;
+	grib_field_list *fieldset,*next;
+	grib_handle* h=NULL;
+	grib_context* c=NULL;
 
-        if (index->current->field->next)
-            index->current->field=index->current->field->next;
-        else if(index->current->next)
-            index->current=index->current->next;
-        else  {*err=GRIB_END_OF_INDEX;return NULL;}
+	if (!index) return NULL;
+	c=index->context;
+	if (!index->rewind) {
+		if (!index->current) {
+                *err=GRIB_END_OF_INDEX;
+                return NULL;
+            }
 
-        h=grib_index_get_handle(index->current->field,err);
-        return h;
-    }
+		if (index->current->field->next)
+			index->current->field=index->current->field->next;
+		else if(index->current->next)
+			index->current=index->current->next;
+		else  {*err=GRIB_END_OF_INDEX;return NULL;}
 
-    if (!index->fieldset) {
-        index->fieldset=grib_context_malloc_clear(index->context,
-                sizeof(grib_field_list));
-        if (!index->fieldset) {
-            grib_context_log(index->context,GRIB_LOG_ERROR,
-                    "unable to allocat %d bytes",
-                    sizeof(grib_field_list));
-            return NULL;
-        }
-        index->current=index->fieldset;
-    } else {
-        fieldset=index->fieldset;
-        while(fieldset->next) {
-            next=fieldset->next;
-            grib_context_free(c,fieldset);
-            fieldset=next;
-        }
-        fieldset->field=NULL;
-        fieldset->next=NULL;
-        index->fieldset=fieldset;
-        index->current=fieldset;
-    }
+		h=codes_index_get_handle(index->current->field,message_type,err);
+		return h;
+	}
 
-    *err=GRIB_END_OF_INDEX;
-    h=NULL;
-    keys=index->keys;
+	if (!index->fieldset) {
+		index->fieldset=grib_context_malloc_clear(index->context,
+				sizeof(grib_field_list));
+		if (!index->fieldset) {
+			grib_context_log(index->context,GRIB_LOG_ERROR,
+					"unable to allocat %d bytes",
+					sizeof(grib_field_list));
+			return NULL;
+		}
+		index->current=index->fieldset;
+	} else {
+		fieldset=index->fieldset;
+		while(fieldset->next) {
+			next=fieldset->next;
+			grib_context_free(c,fieldset);
+			fieldset=next;
+		}
+		fieldset->field=NULL;
+		fieldset->next=NULL;
+		index->fieldset=fieldset;
+		index->current=fieldset;
+	}
 
-    if ((*err=grib_index_execute(index))==GRIB_SUCCESS) {
+	*err=GRIB_END_OF_INDEX;
+	h=NULL;
+	keys=index->keys;
 
-        if (!index->fieldset) {*err=GRIB_END_OF_INDEX;return NULL;}
-        index->current=index->fieldset;
-        h=grib_index_get_handle(index->current->field,err);
-    }
-    return h;
+	if ((*err=grib_index_execute(index))==GRIB_SUCCESS) {
+
+		if (!index->fieldset) {*err=GRIB_END_OF_INDEX;return NULL;}
+		index->current=index->fieldset;
+		h=codes_index_get_handle(index->current->field,message_type,err);
+	}
+	return h;
+
 }
 
 void grib_index_rewind(grib_index* index)
