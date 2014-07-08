@@ -2415,7 +2415,7 @@ int grib_f_find_nearest_four_single__(int* gid,int* is_lsm,
     double* values,double* distances,
     int* indexes) {
 
-  return grib_f_find_nearest_single_(gid,is_lsm,
+  return grib_f_find_nearest_four_single_(gid,is_lsm,
     inlats,inlons,outlats,outlons,values,
     distances,indexes);
 }
@@ -2425,7 +2425,7 @@ int grib_f_find_nearest_four_single(int* gid,int* is_lsm,
     double* values,double* distances,
     int* indexes) {
 
-  return grib_f_find_nearest_single_(gid,is_lsm,
+  return grib_f_find_nearest_four_single_(gid,is_lsm,
     inlats,inlons,outlats,outlons,values,
     distances,indexes);
 }
