@@ -805,6 +805,7 @@ dist_definitionsgrib1_localConcepts_edzw_DATA = \
 	grib1/localConcepts/edzw/name.def\
 	grib1/localConcepts/edzw/paramId.def\
 	grib1/localConcepts/edzw/shortName.def\
+	grib1/localConcepts/edzw/stepType.def\
 	grib1/localConcepts/edzw/units.def
 
 definitionsgrib1_localConcepts_ekmidir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/ekmi
