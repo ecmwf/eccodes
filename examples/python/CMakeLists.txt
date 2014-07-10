@@ -18,7 +18,9 @@ foreach( tool ${test_bins} )
                            SOURCES   ${tool}.c
                            LIBS      grib_api
    )
+   list( APPEND ptools  p_${tool} )
 endforeach()
+
 
 # Now add each test
 #################################################
@@ -41,7 +43,7 @@ list( APPEND tests
 foreach (test ${tests})
     ecbuild_add_test( TARGET p_${test}_test
                   TYPE       SCRIPT
-                  DEPENDS    p_${tool}
+                  DEPENDS    ${ptools}
                   COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                   RESOURCES  include.sh ${test}.py
                   ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}

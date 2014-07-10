@@ -54,6 +54,7 @@ foreach( tool ${tests} )
     ecbuild_add_test( TARGET f_${tool}_test
                       TYPE SCRIPT
                       DEPENDS f_${tool}
+                      CONDITION ENABLE_FORTRAN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
                       RESOURCES include.sh
     )
