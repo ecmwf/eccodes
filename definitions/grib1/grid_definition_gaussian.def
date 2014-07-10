@@ -57,6 +57,7 @@ meta numberOfDataPoints number_of_points_gaussian(Ni,Nj,PLPresent,pl,
   latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees) : dump;
 
 alias numberOfPoints=numberOfDataPoints;
+# alias numberOfExpectedPoints=numberOfDataPoints;
 meta numberOfValues number_of_values(values,bitsPerValue,numberOfDataPoints,bitmapPresent,bitmap,numberOfCodedValues) : dump;
 #alias ls.valuesCount=numberOfValues;
 
