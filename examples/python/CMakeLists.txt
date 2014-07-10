@@ -16,6 +16,7 @@ foreach( tool ${test_bins} )
    ecbuild_add_executable( TARGET    p_${tool}
                            NOINSTALL
                            SOURCES   ${tool}.c
+                           CONDITION  ENABLE_PYTHON
                            LIBS      grib_api
    )
    list( APPEND ptools  p_${tool} )
@@ -45,6 +46,7 @@ foreach (test ${tests})
                   TYPE       SCRIPT
                   DEPENDS    ${ptools}
                   COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                  CONDITION  ENABLE_PYTHON
                   RESOURCES  include.sh ${test}.py
                   ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
     )
