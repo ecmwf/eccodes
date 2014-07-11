@@ -231,6 +231,11 @@ add_subdirectory( samples )
 add_subdirectory( ifs_samples ) # must come after samples
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
+ecbuild_dont_pack( DIRS
+     concepts html tests.ecmwf doxygen examples.dev templates sms parameters java
+     perl/GRIB-API/lib perl/GRIB-API/t gaussian_experimental gribex examples/F77
+     examples/extra bamboo definitions/bufr use fortran/fortranCtypes tigge/tools
+)
 
 ############################################################################################
 # export to other projects
