@@ -147,4 +147,4 @@ endforeach()
 # Another dummy target which depends on all previous targets
 #add_custom_target( get_gribs ALL DEPENDS ${tgts} )
 add_custom_target( get_gribs DEPENDS ${tgts} )
-add_dependencies( check get_gribs )
+

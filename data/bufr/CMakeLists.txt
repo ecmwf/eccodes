@@ -148,5 +148,4 @@ foreach (f ${bufr_files_to_download})
 endforeach()
 
 add_custom_target( get_bufr_gribs DEPENDS ${tgts} )
-add_dependencies( check get_bufr_gribs )
 

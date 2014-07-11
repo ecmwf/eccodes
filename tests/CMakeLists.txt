@@ -66,9 +66,12 @@ list( APPEND tests
 )
 
 foreach( test ${tests} )
-
+    # Note: making the test dependent on the grib data files
+    #       means they will be downloaded at "make" time
+    #       rather than when you do "make test"
     ecbuild_add_test( TARGET t_${test}
                   TYPE SCRIPT
+                  DEPENDS get_gribs get_tigge_gribs get_bufr_gribs
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                   RESOURCES include.sh
     )
