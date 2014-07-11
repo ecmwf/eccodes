@@ -237,6 +237,8 @@ ecbuild_dont_pack( DIRS
      examples/extra bamboo definitions/bufr use fortran/fortranCtypes tigge/tools
 )
 
+add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
+
 ############################################################################################
 # export to other projects
 
