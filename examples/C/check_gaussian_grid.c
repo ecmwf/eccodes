@@ -22,6 +22,9 @@
 
 #define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
 
+int exit_on_error = 1; /* By default exit if any check fails */
+int error_count = 0;
+
 int DBL_EQUAL(double d1, double d2, double tolerance)
 {
     return fabs(d1-d2) <= tolerance;
@@ -29,7 +32,8 @@ int DBL_EQUAL(double d1, double d2, double tolerance)
 
 void usage(const char* prog)
 {
-    printf("usage: %s grib_file grib_file ...\n",prog);
+    printf("usage: %s [-f] grib_file grib_file ...\n\n",prog);
+    printf("-f  Do not exit on first error\n");
     exit(1);
 }
 
@@ -43,7 +47,10 @@ void error(const char* fmt, ...)
     va_end(list);
 
     fprintf(stderr,msg);
-    exit(1);
+    ++error_count;
+    if (exit_on_error) {
+        exit(1);
+    }
 }
 
 double get_precision(long edition)
@@ -187,17 +194,40 @@ int main(int argc, char** argv)
 {
     int i = 0;
 
-    if (argc < 2) {
+    if (argc < 2)
+    {
         usage(argv[0]);
         return 1;
     }
     
-    for(i=0; i<argc; ++i)
+    for(i=1; i<argc; ++i)
     {
-        const char* filename = argv[i];
-        process_file(filename);
+        const char* arg = argv[i];
+        if (STR_EQUAL(arg, "-f"))
+        {
+            if (argc < 3) {
+                usage(argv[0]);
+                return 1;
+            }
+            /* Process switches */
+            exit_on_error = 0;
+        }
+        else
+        {
+            /* We have a grib file */
+            process_file(arg);
+        }
     }
 
-    printf("\nALL OK\n");
+    printf("###############\n");
+    if (error_count == 0)
+    {
+        printf("ALL OK\n");
+    }
+    else
+    {
+        printf("Error count: %d\n", error_count);
+    }
+    
     return 0;
 }
