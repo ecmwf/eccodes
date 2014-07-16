@@ -112,8 +112,10 @@ if (extraDim) {
     alias mars.levelist = dimension;
     alias mars.levtype = dimensionType;
 } else {
+    # See GRIB-74 why we store the pressureUnits in a transient
+    transient tempPressureUnits=pressureUnits;
     if (!(typeOfLevel is "surface")) {
-        if (pressureUnits is "Pa") {
+        if (tempPressureUnits is "Pa") {
             meta marsLevel scale(level,one,hundred) : read_only;
             alias mars.levelist=marsLevel;
         } else {
