@@ -213,11 +213,11 @@ void grib_section_post_init(grib_section* s)
             grib_section_post_init(a->sub_section);
         a = a->next;
     }
-
 }
 
-void grib_section_adjust_sizes(grib_section* s,int update,int depth)
+int grib_section_adjust_sizes(grib_section* s,int update,int depth)
 {
+    int err = 0;
     grib_accessor* a = s ? s->block->first : NULL;
     size_t length = update ? 0 : (s?s->padding:0);
     size_t offset = (s && s->owner) ? s->owner->offset:0;
@@ -226,13 +226,16 @@ void grib_section_adjust_sizes(grib_section* s,int update,int depth)
     while(a)  {
         register long l;
         /* grib_section_adjust_sizes(grib_get_sub_section(a),update,depth+1); */
-        grib_section_adjust_sizes(a->sub_section,update,depth+1);
+        err = grib_section_adjust_sizes(a->sub_section,update,depth+1);
+        if (err) return err;
 
         l = a->length;
 
         if(offset != a->offset)    {
-            grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,"Offset mismatch %s A->offset %ld offset %ld\n",a->name,(long)a->offset, (long)offset);
+            grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+                    "Offset mismatch %s A->offset %ld offset %ld\n",a->name,(long)a->offset, (long)offset);
             a->offset = offset;
+            return GRIB_DECODING_ERROR;
         }
         length += l;
         offset += l;
@@ -275,7 +278,7 @@ void grib_section_adjust_sizes(grib_section* s,int update,int depth)
         if(s->owner) s->owner->length = length;
         s->length = length;
     }
-
+    return err;
 }
 
 int grib_get_block_length(grib_section* s, size_t *l)

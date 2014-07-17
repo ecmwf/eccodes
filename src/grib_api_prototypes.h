@@ -263,7 +263,7 @@ grib_section *grib_create_root_section(const grib_context *context, grib_handle 
 grib_accessor *grib_accessor_factory(grib_section *p, grib_action *creator, const long len, grib_arguments *params);
 void grib_push_accessor(grib_accessor *a, grib_block_of_accessors *l);
 void grib_section_post_init(grib_section *s);
-void grib_section_adjust_sizes(grib_section *s, int update, int depth);
+int grib_section_adjust_sizes(grib_section *s, int update, int depth);
 int grib_get_block_length(grib_section *s, size_t *l);
 grib_accessor *find_paddings(grib_section *s);
 void grib_update_paddings(grib_section *s);

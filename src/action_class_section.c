@@ -166,8 +166,10 @@ static int notify_change(grib_action* act, grib_accessor * notified,
     tmp_handle->use_trie=1;
 
     err=grib_create_accessor(tmp_handle->root, act, &loader);
+    if (err) return err;
 
-    grib_section_adjust_sizes(tmp_handle->root,1,0);
+    err = grib_section_adjust_sizes(tmp_handle->root,1,0);
+    if (err) return err;
 
     grib_section_post_init(tmp_handle->root);
 
@@ -198,7 +200,8 @@ static int notify_change(grib_action* act, grib_accessor * notified,
     h->trie_invalid=1;
     h->kid = NULL;
 
-    grib_section_adjust_sizes(h->root,1,0);
+    err = grib_section_adjust_sizes(h->root,1,0);
+    if (err) return err;
 
     grib_section_post_init(h->root);
 

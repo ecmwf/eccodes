@@ -197,6 +197,7 @@ static void check_definitions_version(grib_handle* h)
 static grib_handle* grib_handle_create ( grib_handle  *gl, grib_context* c,void* data, size_t buflen )
 {
 	grib_action* next = NULL;
+	int err = 0;
 
 	if ( gl == NULL )
 		return NULL;
@@ -237,7 +238,13 @@ static grib_handle* grib_handle_create ( grib_handle  *gl, grib_context* c,void*
 		next = next->next;
 	}
 
-	grib_section_adjust_sizes ( gl->root,0,0 );
+	err = grib_section_adjust_sizes ( gl->root,0,0 );
+	if (err)
+	{
+		grib_handle_delete ( gl );
+		return NULL;
+	}
+
 	grib_section_post_init ( gl->root );
 
 	check_definitions_version(gl);
