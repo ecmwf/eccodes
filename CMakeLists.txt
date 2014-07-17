@@ -30,9 +30,9 @@ ecbuild_declare_project()
 # some variables/options of this project
 
 option( ENABLE_JPG     "try to add support for JPG encoding"          ON )
-option( ENABLE_PNG     "try to add support for PNG encoding"          ON )
+option( ENABLE_PNG     "try to add support for PNG encoding"          OFF )
 option( ENABLE_NETCDF  "try to add support for NetCDF"                ON )
-option( ENABLE_SZIP    "try to add support for SZip encoding"         ON )
+option( ENABLE_SZIP    "try to add support for SZip encoding"         OFF )
 option( ENABLE_PYTHON  "try to build the GRIB_API Python interface"   ON )
 option( ENABLE_FORTRAN "try to build the GRIB_API Fortran interface"  ON )
 
