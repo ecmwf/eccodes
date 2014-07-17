@@ -2394,9 +2394,10 @@ int grib_f_find_nearest_four_single_(int* gid,int* is_lsm,
     double* inlat,double* inlon,
     double* outlats,double* outlons,
     double* values,double* distances,
-    int* indexes) {
+    int* indexes)
+{
     grib_nearest* nearest=NULL;
-    int err=0;
+    int err=0, result=0;
     unsigned long flags=0;
     size_t len=4;
     grib_handle *h = get_handle(*gid);
@@ -2406,8 +2407,11 @@ int grib_f_find_nearest_four_single_(int* gid,int* is_lsm,
     nearest=grib_nearest_new(h,&err);
     if (err!=GRIB_SUCCESS) return err;
 
-    return grib_nearest_find(nearest,h,*inlat,*inlon,
+    result = grib_nearest_find(nearest,h,*inlat,*inlon,
     flags,outlats,outlons,values,distances,indexes,&len);
+  	
+    grib_nearest_delete(nearest);
+    return result;
 }
 int grib_f_find_nearest_four_single__(int* gid,int* is_lsm,
     double* inlats,double* inlons,
@@ -2501,8 +2505,6 @@ int grib_f_find_nearest_multiple(int* gid,int* is_lsm,
 }
 
 
-
-
 int grib_f_get_real8_array_(int* gid, char* key, double*val, int* size, int len){
 
   grib_handle *h = get_handle(*gid);
@@ -2535,9 +2537,7 @@ int grib_f_set_force_real8_array(int* gid, char* key, double *val, int* size, in
 int grib_f_set_force_real8_array_(int* gid, char* key, double*val, int* size, int len){
 
   grib_handle *h = get_handle(*gid);
-
   char buf[1024];
-
   size_t lsize = *size;
 
   if(!h)   return GRIB_INVALID_GRIB;
@@ -2549,9 +2549,7 @@ int grib_f_set_force_real8_array_(int* gid, char* key, double*val, int* size, in
 int grib_f_set_real8_array_(int* gid, char* key, double*val, int* size, int len){
 
   grib_handle *h = get_handle(*gid);
-
   char buf[1024];
-
   size_t lsize = *size;
 
   if(!h)   return GRIB_INVALID_GRIB;
