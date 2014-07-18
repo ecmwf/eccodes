@@ -145,7 +145,7 @@ static int init(grib_iterator* i,grib_handle* h,grib_arguments* args)
     if((ret = grib_get_long_internal(h,iScansNegatively,&self->iScansNegatively)))
         return ret;
 
-    /* Note: If first and last longitudes are equal I assume you wanna go round the globle */
+    /* Note: If first and last longitudes are equal I assume you wanna go round the globe */
     if (self->iScansNegatively) {
         if (lof > lol){
             idir=(lof-lol)/(nap-1);

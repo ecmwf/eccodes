@@ -3,4 +3,5 @@
 { "latlon_reduced", &grib_nearest_class_latlon_reduced, },
 { "reduced", &grib_nearest_class_reduced, },
 { "regular", &grib_nearest_class_regular, },
+{ "lambert_conformal", &grib_nearest_class_lambert_conformal, },
 { "sh", &grib_nearest_class_sh, },

@@ -116,9 +116,10 @@ meta latLonValues latlonvalues(values);
 alias latitudeLongitudeValues=latLonValues;
 meta latitudes latitudes(values,0);
 meta longitudes longitudes(values,0);
-#meta distinctLatitudes latitudes(values,1);
-#meta distinctLongitudes longitudes(values,1);
+meta distinctLatitudes latitudes(values,1);
+meta distinctLongitudes longitudes(values,1);
 
+nearest lambert_conformal(values,radius,Nx,Ny);
 
 pad padding_grid3_1(2);
 

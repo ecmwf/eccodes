@@ -1357,6 +1357,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_nearest_class_lambert_conformal.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_nearest_class_latlon_reduced.c"
 				>
 			</File>
