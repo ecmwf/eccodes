@@ -16,6 +16,7 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_long
+   IMPLEMENTS = unpack_double
    IMPLEMENTS = unpack_long;pack_long;init;dump;is_missing
    MEMBERS=const char* type_first
    MEMBERS=const char* scale_first
@@ -37,6 +38,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int is_missing(grib_accessor*);
 static int pack_long(grib_accessor*, const long* val,size_t *len);
+static int unpack_double(grib_accessor*, double* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
@@ -77,7 +79,7 @@ static grib_accessor_class _grib_accessor_class_g2level = {
     &pack_long,                  /* grib_pack procedures long      */
     &unpack_long,                /* grib_unpack procedures long    */
     0,                /* grib_pack procedures double    */
-    0,              /* grib_unpack procedures double  */
+    &unpack_double,   /* grib_unpack procedures double  */
     0,                /* grib_pack procedures string    */
     0,              /* grib_unpack procedures string  */
     0,          /* grib_pack array procedures string    */
@@ -112,7 +114,6 @@ static void init_class(grib_accessor_class* c)
 	c->sub_section	=	(*(c->super))->sub_section;
 	c->pack_missing	=	(*(c->super))->pack_missing;
 	c->pack_double	=	(*(c->super))->pack_double;
-	c->unpack_double	=	(*(c->super))->unpack_double;
 	c->pack_string	=	(*(c->super))->pack_string;
 	c->unpack_string	=	(*(c->super))->unpack_string;
 	c->pack_string_array	=	(*(c->super))->pack_string_array;
@@ -151,8 +152,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
   grib_dump_long(dumper,a,NULL);
 }
 
-
-static int unpack_long(grib_accessor* a, long* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
 	int ret=0;
 	grib_accessor_g2level* self = (grib_accessor_g2level*)a;
@@ -217,9 +217,19 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 		break;
 	}
 
-	val[0] =  (long)(v+0.5);
+    *val=v;
 
 	return GRIB_SUCCESS;
+}
+
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
+{
+    double dval = 0;
+    int ret = unpack_double(a, &dval, len);
+    if (ret == GRIB_SUCCESS) {
+        *val = (long)(dval+0.5); /* round up */
+    }
+    return ret;
 }
 
 /* TODO: Support double */
