@@ -151,7 +151,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
     double lat=0,lon=0;
 
     /* array of candidates for nearest neighbours */
-    PointStore* neighbours;
+    PointStore* neighbours = NULL;
 
     while (inlon<0) inlon+=360;
     while (inlon>360) inlon-=360;

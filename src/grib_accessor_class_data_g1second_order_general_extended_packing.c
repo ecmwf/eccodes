@@ -605,7 +605,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     long numberOfGroups;
     long groupLengthC,groupLengthA,remainingValues,count;
-    long maxA,minA;
+    long maxA=0,minA=0;
     long maxC,minC,offsetC;
     long maxAC,minAC;
     long range,bias=0,maxSPD;

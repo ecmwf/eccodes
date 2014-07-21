@@ -40,7 +40,7 @@ int main(int argc, char** argv)
     double average = 0;
 
     FILE* in = NULL;
-    char* filename = "../../data/regular_latlon_surface.grib1";
+    const char* filename = "../../data/regular_latlon_surface.grib1";
     grib_handle *h = NULL;
 
     in = fopen(filename,"r");
@@ -110,12 +110,14 @@ int main(int argc, char** argv)
     printf("There are %d values, average is %g\n",(int)values_len,average);
 
     {
+        int eq = 0;
         /* Now retrieve the value of the key "file" */
         char file[256]={0,};
         GRIB_CHECK(grib_get_length(h, "file", &len),0);
         assert(len == 1+strlen(filename));
         grib_get_string(h, "file", file, &len);
-        assert( strcmp(file, filename) == 0 );
+        eq = strcmp(file, filename);
+        assert( eq == 0 );
     }
 
     grib_handle_delete(h);
