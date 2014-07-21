@@ -23,6 +23,11 @@ def example():
 
     gid = grib_new_from_file(fin)
 
+    grib_set_long(gid, "scaledValueOfFirstFixedSurface", 15);
+    grib_set_long(gid, "scaleFactorOfFirstFixedSurface", 1)
+    level=grib_get_double(gid, "level")
+    assert( level == 1.5 )
+
     # set type of level to surface
     grib_set(gid,'typeOfFirstFixedSurface','sfc')
     grib_set_missing(gid,'scaleFactorOfFirstFixedSurface')

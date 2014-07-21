@@ -13,6 +13,7 @@
 
 outfile=out.grib
 sample_g1=$GRIB_SAMPLES_PATH/GRIB1.tmpl
+sample_g2=$GRIB_SAMPLES_PATH/GRIB2.tmpl
 temp=temp.grib
 
 file=${data_dir}/regular_gaussian_pressure_level.grib1
@@ -63,6 +64,11 @@ diff good test.dump
 ${tools_dir}grib_set -s indicatorOfTypeOfLevel=110 $sample_g1 $temp
 res=`${tools_dir}grib_get -p indicatorOfTypeOfLevel:l,topLevel,bottomLevel $temp`
 [ "$res" = "110 0 0" ]
+
+# GRIB-415 evaluate level as a double
+${tools_dir}grib_set -s scaledValueOfFirstFixedSurface=15,scaleFactorOfFirstFixedSurface=1 $sample_g2 $temp
+res=`${tools_dir}grib_get -p level:d $temp`
+[ "$res" = "1.5" ]
 
 
 rm -f level.filter good test.dump $temp
