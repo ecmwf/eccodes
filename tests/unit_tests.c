@@ -52,10 +52,32 @@ void test_grib_nearest_smaller_ieeefloat()
     check_float_representation(7.85, 7.8499999046325, IEEE_FLOAT);
 }
 
-void test_gaussian_latitudes()
+void test_gaussian_latitudes(int order)
 {
-	int order = 640, ret = 0;
-	int num = 2 * order;
+    int ret = 0;
+    const int num = 2 * order;
+    const double tolerance = 1e-6;
+    double lat1 = 0, lat2 = 0, lon2 = 0;
+
+    double* lats = (double*)malloc( sizeof(double)*num );
+
+    ret = grib_get_gaussian_latitudes(order, lats);
+    assert(ret == GRIB_SUCCESS);
+
+    lat1 = lats[0];
+    lat2 = lats[num-1];
+    /* Check first and last latitudes are the same with opposite sign */
+    compare_doubles(lat1, -lat2, 1.0e-6);
+
+    free(lats);
+}
+
+void test_gaussian_latitude_640()
+{
+    /* Test all latitudes for one specific Gaussian number */
+	const int order = 640;
+	const int num = 2 * order;
+	int ret = 0;
 	const double tolerance = 1e-6;
 	double* lats = (double*)malloc( sizeof(double)*num );
 	ret = grib_get_gaussian_latitudes(order, lats);
@@ -1347,11 +1369,27 @@ void test_gaussian_latitudes()
 
 int main(int argc, char** argv)
 {
-	/*printf("Doing test gauss... GRIB API version = %ld\n", grib_get_api_version());*/
-	
-	test_gaussian_latitudes();
-	test_grib_nearest_smaller_ibmfloat();
-	test_grib_nearest_smaller_ieeefloat();
-	
-	return 0;
+    /*printf("Doing unit tests. GRIB API version = %ld\n", grib_get_api_version());*/
+
+    test_gaussian_latitude_640();
+
+    test_gaussian_latitudes(32);
+    test_gaussian_latitudes(48);
+    test_gaussian_latitudes(80);
+    test_gaussian_latitudes(128);
+    test_gaussian_latitudes(160);
+    test_gaussian_latitudes(200);
+    test_gaussian_latitudes(256);
+    test_gaussian_latitudes(320);
+    test_gaussian_latitudes(400);
+    test_gaussian_latitudes(512);
+    test_gaussian_latitudes(640);
+    test_gaussian_latitudes(1024);
+    test_gaussian_latitudes(1280);
+    test_gaussian_latitudes(2000);
+
+    test_grib_nearest_smaller_ibmfloat();
+    test_grib_nearest_smaller_ieeefloat();
+
+    return 0;
 }
