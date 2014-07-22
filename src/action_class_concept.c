@@ -341,7 +341,6 @@ cmpstringp(const void *p1, const void *p2)
 }
 
 #define MAX_NUM_CONCEPT_VALUES 40
-#define MAX_NUM_TOTAL_CONCEPTS 5000
 int grib_concept_apply(grib_handle* h,grib_action* act,const char* name)
 {
     long lres=0;
@@ -366,14 +365,15 @@ int grib_concept_apply(grib_handle* h,grib_action* act,const char* name)
         err= self->nofail ? GRIB_SUCCESS : GRIB_CONCEPT_NO_MATCH;
         if (err) {
             size_t i = 0, count = 0;
-            char* all_concept_vals[MAX_NUM_TOTAL_CONCEPTS] = {NULL,}; /* sorted array containing all concept values */
+            char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {NULL,}; /* sorted array containing concept values */
             grib_concept_value* pCon = concepts;
 
             grib_context_log(h->context,GRIB_LOG_ERROR, "concept: no match for %s=%s", act->name,name);
 
             /* Create a list of all possible values for this concept and sort it */
-            while( pCon ) {
-                Assert( i < MAX_NUM_TOTAL_CONCEPTS );
+            while (pCon) {
+                if (i >= MAX_NUM_CONCEPT_VALUES)
+                    break;
                 all_concept_vals[i++] = pCon->name;
                 pCon = pCon->next;
             }
@@ -383,7 +383,9 @@ int grib_concept_apply(grib_handle* h,grib_action* act,const char* name)
                 fprintf(stderr, "Here are the possible values for concept %s:\n", act->name);
                 qsort(&all_concept_vals, count, sizeof(char*), cmpstringp);
                 for(i=0; i<count; ++i) {
-                    fprintf(stderr, "\t%s\n", all_concept_vals[i]);
+                    if (all_concept_vals[i]) {
+                        fprintf(stderr, "\t%s\n", all_concept_vals[i]);
+                    }
                 }
             }
         }
