@@ -167,16 +167,14 @@ static int create_accessor( grib_section* p, grib_action* act, grib_loader *h)
     else
         next = a->block_false;
 
-#if 0
     if(p->h->context->debug > 1)
     {
         printf("EVALUATE create_accessor_handle ");
         grib_expression_print(p->h->context,a->expression,p->h);
-        printf(" [%d]\n", next == a->block_true);
+        printf(" [%s][_if%p]\n", (next == a->block_true ? "true":"false"), (void*)a);
 
-        grib_dump_action_branch(stdout,next,5);
+        /*grib_dump_action_branch(stdout,next,5);*/
     }
-#endif
 
     gs->branch = next;
     grib_dependency_observe_expression(as,a->expression);
