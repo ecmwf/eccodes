@@ -88,7 +88,7 @@ set(files_to_download
     v.grib2
 )
 
-foreach (f ${files_to_download})
+foreach ( f ${files_to_download} )
   set(tgt data_${f})
   # Download the file and create a dummy target for it
   ecbuild_get_test_data(TARGET "${tgt}" NAME "${f}" DIRNAME ${PROJECT_NAME}/data NOCHECK)
