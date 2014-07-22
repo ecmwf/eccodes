@@ -296,7 +296,7 @@ static int grib_load_codetable(grib_context* c,const char* filename,
     FILE *f = NULL;
     int lineNumber = 0;
 
-    grib_context_log(c,GRIB_LOG_DEBUG,"Loading code table form %s",filename);
+    grib_context_log(c,GRIB_LOG_DEBUG,"Loading code table from %s",filename);
 
     f=fopen(filename, "r");
     if (!f) return GRIB_IO_PROBLEM;
@@ -354,7 +354,7 @@ static int grib_load_codetable(grib_context* c,const char* filename,
 
         if(code <0 || code >= size)
         {
-            grib_context_log(c,GRIB_LOG_WARNING,"code_table_entry: invalide code in %s: %d (table size=%d)",filename,code,size);
+            grib_context_log(c,GRIB_LOG_WARNING,"code_table_entry: invalid code in %s: %d (table size=%d)",filename,code,size);
             continue;
         }
 

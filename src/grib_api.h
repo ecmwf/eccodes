@@ -540,7 +540,7 @@ int grib_multi_handle_write(grib_multi_handle* mh,FILE* f);
 *
 * @param h              : the grib handle to which the buffer should be gathered
 * @param message        : the pointer to be set to the handle's data
-* @param message_length : at exist, the message size in number of bytes
+* @param message_length : On exit, the message size in number of bytes
 * @return            0 if OK, integer value on error
 */
 int grib_get_message(grib_handle* h ,const void** message, size_t *message_length  );
@@ -551,8 +551,8 @@ int grib_get_message(grib_handle* h ,const void** message, size_t *message_lengt
 *
 * @param h              : the grib handle to which the buffer should be returned
 * @param message        : the pointer to the data buffer to be filled
-* @param message_length : at entry, the size in number of bytes of the allocated empty message.
-*                         At exist, the actual message length in number of bytes
+* @param message_length : On entry, the size in number of bytes of the allocated empty message.
+*                         On exit, the actual message length in number of bytes
 * @return            0 if OK, integer value on error
 */
 int grib_get_message_copy(grib_handle* h ,  void* message,size_t *message_length );
