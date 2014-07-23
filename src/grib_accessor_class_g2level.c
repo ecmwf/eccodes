@@ -16,7 +16,7 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_long
-   IMPLEMENTS = unpack_double
+   IMPLEMENTS = unpack_double;pack_double
    IMPLEMENTS = unpack_long;pack_long;init;dump;is_missing
    MEMBERS=const char* type_first
    MEMBERS=const char* scale_first
@@ -38,6 +38,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int is_missing(grib_accessor*);
 static int pack_long(grib_accessor*, const long* val,size_t *len);
+static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
 static void dump(grib_accessor*, grib_dumper*);
@@ -78,7 +79,7 @@ static grib_accessor_class _grib_accessor_class_g2level = {
     &is_missing,               /* grib_pack procedures long      */
     &pack_long,                  /* grib_pack procedures long      */
     &unpack_long,                /* grib_unpack procedures long    */
-    0,                /* grib_pack procedures double    */
+    &pack_double,     /* grib_pack procedures double    */
     &unpack_double,   /* grib_unpack procedures double  */
     0,                /* grib_pack procedures string    */
     0,              /* grib_unpack procedures string  */
@@ -113,7 +114,6 @@ static void init_class(grib_accessor_class* c)
 	c->get_native_type	=	(*(c->super))->get_native_type;
 	c->sub_section	=	(*(c->super))->sub_section;
 	c->pack_missing	=	(*(c->super))->pack_missing;
-	c->pack_double	=	(*(c->super))->pack_double;
 	c->pack_string	=	(*(c->super))->pack_string;
 	c->unpack_string	=	(*(c->super))->unpack_string;
 	c->pack_string_array	=	(*(c->super))->pack_string_array;
@@ -134,7 +134,6 @@ static void init_class(grib_accessor_class* c)
 }
 
 /* END_CLASS_IMP */
-
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
@@ -232,7 +231,55 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     return ret;
 }
 
-/* TODO: Support double */
+static int pack_double(grib_accessor* a, const double* val, size_t *len)
+{
+    grib_accessor_g2level* self = (grib_accessor_g2level*)a;
+    int ret=0;
+    double value_first = *val;
+    long scale_first = 0;
+    long type_first   = 0;
+    char pressure_units[10]={0,};
+    size_t pressure_units_len=10;
+
+    if(*len !=  1)
+        return GRIB_WRONG_ARRAY_SIZE;
+
+    if((ret = grib_get_long_internal(a->parent->h, self->type_first,&type_first))
+            !=GRIB_SUCCESS) return ret;
+
+    if((ret = grib_get_string_internal(a->parent->h, self->pressure_units,pressure_units,&pressure_units_len))
+            !=GRIB_SUCCESS) return ret;
+
+    switch(type_first)
+    {
+    case 100: /* Pa */
+        scale_first  = 0;
+        if (!strcmp(pressure_units,"hPa"))
+            value_first *= 100;
+        break;
+
+    default:
+        break;
+    }
+    /*
+     * final = scaled_value * 10 ^ -scale_factor
+     *      = scaled_value / (10^scale_factor)
+     *
+     * Choose 2 decimal places
+     */
+    scale_first = 2;
+    value_first *= 100;
+    value_first = value_first+0.5; /* round up */
+
+    if ( type_first>9 ) {
+        if((ret = grib_set_long_internal(a->parent->h, self->scale_first,scale_first))
+                !=GRIB_SUCCESS) return ret;
+        if((ret = grib_set_long_internal(a->parent->h, self->value_first,(long)value_first))
+                !=GRIB_SUCCESS) return ret;
+    }
+
+    return GRIB_SUCCESS;
+}
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
@@ -247,6 +294,16 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 
   if(*len !=  1)
     return GRIB_WRONG_ARRAY_SIZE;
+
+/*Not sure if this is necessary
+ *     if (value_first == GRIB_MISSING_LONG) {
+ *         if ((ret=grib_set_missing_internal(a->parent->h, self->scale_first)) != GRIB_SUCCESS)
+ *             return ret;
+ *         if ((ret=grib_set_missing_internal(a->parent->h, self->value_first)) != GRIB_SUCCESS)
+ *                 return ret;
+ *         return GRIB_SUCCESS;
+ *     }
+ */
 
   if((ret = grib_get_long_internal(a->parent->h, self->type_first,&type_first))
       !=GRIB_SUCCESS) return ret;
@@ -272,7 +329,6 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 	if((ret = grib_set_long_internal(a->parent->h, self->value_first,value_first))
 		!=GRIB_SUCCESS) return ret;
   }
-
   return GRIB_SUCCESS;
 }
 
@@ -285,5 +341,4 @@ static int is_missing(grib_accessor* a){
   ret=grib_is_missing(a->parent->h, self->scale_first,&err) +
       grib_is_missing(a->parent->h, self->value_first,&err);
   return ret;
-
 }
