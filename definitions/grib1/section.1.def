@@ -55,7 +55,8 @@ codetable[1] indicatorOfParameter 'grib1/2.[centreForTable2:l].[table2Version:l]
 meta parameterName codetable_title(indicatorOfParameter);
 meta parameterUnits codetable_units(indicatorOfParameter);
 
-codetable[1] indicatorOfTypeOfLevel ('3.table',tablesMasterDir,tablesLocalDir) : edition_specific,no_copy,dump,string_type;
+# Local comes before Master to give precedence to the local, centre-specific table
+codetable[1] indicatorOfTypeOfLevel ('3.table',tablesLocalDir,tablesMasterDir) : edition_specific,no_copy,dump,string_type;
 alias levelType=indicatorOfTypeOfLevel;
 
 transient pressureUnits="hPa";
@@ -128,7 +129,8 @@ unsigned[1] P1 : edition_specific;
 
 unsigned[1] P2 : edition_specific;
 
-codetable[1] timeRangeIndicator ('5.table',tablesMasterDir,tablesLocalDir) = 1 : dump,edition_specific; 
+# Local comes before Master to give precedence to the local, centre-specific table
+codetable[1] timeRangeIndicator ('5.table',tablesLocalDir,tablesMasterDir) = 1 : dump,edition_specific; 
 
 unsigned[2] numberIncludedInAverage;
 
