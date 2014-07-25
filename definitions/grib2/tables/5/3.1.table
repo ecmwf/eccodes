@@ -1,14 +1,14 @@
 # CODE TABLE 3.1, Grid Definition Template Number
-0 0 Latitude/longitude. Also called equidistant cylindrical, or Plate Carree
+0 0 Latitude/longitude (Also called equidistant cylindrical, or Plate Carree)
 1 1 Rotated latitude/longitude
 2 2 Stretched latitude/longitude
 3 3 Stretched and rotated latitude/longitude
 # 4-9 Reserved
 10 10 Mercator
 # 11-19 Reserved
-20 20 Polar stereographic can be south or north
+20 20 Polar stereographic (can be south or north)
 # 21-29 Reserved
-30 30 Lambert Conformal can be secant or tangent, conical or bipolar
+30 30 Lambert Conformal (can be secant or tangent, conical or bipolar)
 31 31 Albers equal-area
 # 32-39 Reserved
 40 40 Gaussian latitude/longitude
