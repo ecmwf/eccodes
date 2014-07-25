@@ -257,6 +257,14 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         int err=0;
         double min;
         if (!n) n=grib_nearest_new(h,&err);
+        if (err == GRIB_NOT_IMPLEMENTED) {
+            char grid_type[100];
+            size_t grid_type_len=100;
+            int err1=grib_get_string(h, "gridType", grid_type, &grid_type_len);
+            if (err1 == GRIB_SUCCESS) {
+                fprintf(stderr,"Nearest neighbour functionality is not supported for grid type: %s\n", grid_type);
+            }
+        }
         GRIB_CHECK_NOLINE(err,0);
         GRIB_CHECK_NOLINE(grib_nearest_find(n,h,lat,lon,0,
                 options->lats,options->lons,options->values,
