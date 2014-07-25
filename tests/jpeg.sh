@@ -47,5 +47,9 @@ res3=`${tools_dir}grib_get '-F%1.2f' -p min,max,avg $infile.2`
 [ "$res1" = "$res2" ]
 [ "$res1" = "$res3" ]
 
+# GRIB-564 nearest 4 neighbours with JPEG packing
+res=`${tools_dir}grib_get -l 0,50 $infile.1`
+[ "$res" = "2.47244 2.47244 2.5115 2.51931 " ]
+
 rm -f $infile.1 $infile.2 || true
 rm -f ${data_dir}/reduced_latlon_surface.grib2

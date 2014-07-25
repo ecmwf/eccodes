@@ -81,5 +81,22 @@ test_data
 # See GRIB-147
 ${tools_dir}grib_dump second_ord_rbr.grib1 > $REDIRECT
 
+# Test nearest neighbour on second order with a bitmap
+# GRIB-541
+sec_ord_bmp=sec_ord_bmp.$$.grib1
 
+# Convert to second order packing
+${tools_dir}grib_set -r -s packingType=grid_second_order gen_bitmap.grib $sec_ord_bmp
+# Check there are missing values
+nums=`${tools_dir}grib_get -p numberOfDataPoints,numberOfCodedValues,numberOfMissing $sec_ord_bmp`
+[ "$nums" = "5969 4 5965" ]
+
+res=`${tools_dir}grib_get -l 33,88.5 $sec_ord_bmp`
+[ "$res" = "9999 5.51552 9999 9999 " ]
+
+res=`${tools_dir}/grib_get -l 28.5,90 $sec_ord_bmp`
+[ "$res" = "3.51552 9999 5.26552 9999 " ]
+
+
+rm -f $sec_ord_bmp
 rm -f test.filter
