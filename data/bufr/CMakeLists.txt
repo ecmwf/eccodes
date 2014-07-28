@@ -135,7 +135,7 @@ set(bufr_files_to_download
    wavb_134.bufr
 )
 
-foreach ( f ${bufr_files_to_download} )
+foreach( f ${bufr_files_to_download} )
   set(tgt bufr_data_${f})
   # Download the file and create a dummy target for it
   ecbuild_get_test_data(TARGET "${tgt}"

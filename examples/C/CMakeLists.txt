@@ -59,7 +59,7 @@ list( APPEND tests
    sections_copy
    set_pv
 )
-foreach ( test ${tests} )
+foreach( test ${tests} )
     ecbuild_add_test( TARGET c_${test}
                   TYPE       SCRIPT
                   COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh

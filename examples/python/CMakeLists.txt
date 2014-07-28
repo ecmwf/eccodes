@@ -41,7 +41,7 @@ list( APPEND tests
    binary_message
    set_bitmap
 )
-foreach ( test ${tests} )
+foreach( test ${tests} )
     ecbuild_add_test( TARGET p_${test}_test
                   TYPE       SCRIPT
                   DEPENDS    ${ptools}

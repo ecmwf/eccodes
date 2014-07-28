@@ -244,7 +244,7 @@ set(tigge_files_to_download
     tiggelam_cnmc_sfc.grib
 )
 
-foreach ( f ${tigge_files_to_download} )
+foreach( f ${tigge_files_to_download} )
   set(tgt tigge_data_${f})
   # Download the file and create a dummy target for it
   ecbuild_get_test_data(TARGET "${tgt}"
