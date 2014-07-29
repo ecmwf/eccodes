@@ -48,7 +48,8 @@ static const char* mars_keys =
 	"mars.model,mars.origin,mars.quantile,mars.range,mars.refdate,mars.direction,mars.frequency";
 
 
-static int grib_filesid=0;
+/* See GRIB-32: start off ID with -1 as it is incremented before being used */
+static int grib_filesid=-1;
 static int index_count;
 
 static char* get_key(char** keys,int *type)
@@ -626,7 +627,6 @@ static void grib_field_delete(grib_context* c,grib_field* field)
     grib_context_free(c,field);
 
     return;
-
 }
 
 static void grib_field_tree_delete(grib_context* c,grib_field_tree* tree)
@@ -726,7 +726,9 @@ int grib_index_write(grib_index* index,const char* filename)
     err=grib_write_not_null_marker(fh);
     if (err) return err;
 
-    files=grib_file_pool_get_files();
+    /* See GRIB-32: Do not use the file pool */
+    /* files=grib_file_pool_get_files(); */
+    files=index->files;
     err=grib_write_files(fh,files);
     if (err) {
         grib_context_log(index->context,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),
@@ -734,7 +736,6 @@ int grib_index_write(grib_index* index,const char* filename)
         perror(filename);
         return err;
     }
-
 
     err=grib_write_index_keys(fh,index->keys);
     if (err) {
@@ -817,7 +818,7 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int *err)
     while (f) {
         grib_file_open(f->name,"r",err);
         if (*err) return NULL;
-        files[f->id]=grib_get_file(f->name,err);
+        files[f->id]=grib_get_file(f->name,err); /* fetch from pool */
         f=f->next;
     }
 
@@ -1434,6 +1435,7 @@ grib_handle* codes_index_get_handle(grib_field* field,int message_type,int *err)
   grib_handle* h=NULL;
   typedef grib_handle* (*message_new_proc) ( grib_context*,FILE*,int,int* );
   message_new_proc message_new=NULL;
+  Assert(field->file);
   grib_file_open(field->file->name,"r",err);
 
 	if (*err!=GRIB_SUCCESS) return NULL;
