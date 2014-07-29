@@ -16,12 +16,13 @@ static void usage(const char* name) {
 }
 
 #define SIZE 50*1024*1024
+char buffer[SIZE];
 
 int main(int argc,char **argv) {
 
 	FILE* in, *out, *bad;
 	char *cin, *cout, *cbad;
-	char buffer[SIZE];
+	
 	size_t data_len = SIZE;
 	long count = 0;
 	unsigned char *data;
