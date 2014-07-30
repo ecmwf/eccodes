@@ -645,11 +645,18 @@ static void grib_field_tree_delete(grib_context* c,grib_field_tree* tree)
     return;
 }
 
+static void grib_field_list_delete(grib_context* c, grib_field_list* field_list)
+{
+    if (!field_list) return;
+    grib_context_free(c,field_list);
+}
+
 void grib_index_delete(grib_index* index)
 {
     grib_file* file=index->files;
     grib_index_key_delete(index->context,index->keys);
     grib_field_tree_delete(index->context,index->fields);
+    grib_field_list_delete(index->context,index->fieldset);
     while (file) {
         grib_file* f=file;
         file=file->next;
