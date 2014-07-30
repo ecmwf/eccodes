@@ -48,11 +48,13 @@ void _grib_ignore_yyunput_unused_error() { yyunput(0,0); }
 SIGN      [\-\+]
 E         [eE]
 DIGIT     [0-9]
-SIGNED    {SIGN}?{DIGIT}+
+NSIGNED   {SIGN}?{DIGIT}+
 NUMB      {DIGIT}+
-EXP       {E}{SIGNED}
+EXP       {E}{NSIGNED}
 IDENT     [_A-Za-z]+[_0-9A-Za-z]*
-FLOAT     {SIGN}?{DIGIT}+\.{DIGIT}+({EXP})?
+FLOAT1    {NSIGNED}+"."{DIGIT}*{EXP}?
+FLOAT2    {NSIGNED}*"."{DIGIT}+{EXP}?
+FLOAT3    {NSIGNED}+{EXP}?
 
 %%
 
@@ -230,7 +232,10 @@ FLOAT     {SIGN}?{DIGIT}+\.{DIGIT}+({EXP})?
 
 {IDENT}       { yylval.str = strdup(yytext); return IDENT; }
 {NUMB}        { yylval.lval = atol((const char *)yytext); return INTEGER; }
-{FLOAT}      { yylval.dval = atof((const char *)yytext); return FLOAT; }
+{NSIGNED}     { yylval.lval = atol((const char *)yytext); return INTEGER; }
+{FLOAT1}      { yylval.dval = atof((const char *)yytext); return FLOAT; }
+{FLOAT2}      { yylval.dval = atof((const char *)yytext); return FLOAT; }
+{FLOAT3}      { yylval.dval = atof((const char *)yytext); return FLOAT; }
 
 
 \#      {
