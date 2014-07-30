@@ -41,6 +41,7 @@ grib_keys_iterator*  grib_keys_iterator_new(grib_handle* h,unsigned long filter_
 
     ki= grib_context_malloc_clear(h->context,sizeof(grib_keys_iterator));
     if (!ki) return NULL;
+    Assert(ki->accessor_flags == 0);
 
     ki->filter_flags = filter_flags;
     ki->handle       = h;
@@ -68,6 +69,10 @@ int grib_keys_iterator_set_flags(grib_keys_iterator* ki,unsigned long flags)
 
     if((flags & GRIB_KEYS_ITERATOR_SKIP_DUPLICATES) && ki->seen==NULL )
         ki->seen = grib_trie_new(h->context);
+
+    /* GRIB-566 */
+    if(flags & GRIB_KEYS_ITERATOR_SKIP_COMPUTED) ki->filter_flags |= GRIB_KEYS_ITERATOR_SKIP_COMPUTED;
+    if(flags & GRIB_KEYS_ITERATOR_SKIP_CODED)    ki->filter_flags |= GRIB_KEYS_ITERATOR_SKIP_CODED;
 
     if(flags & GRIB_KEYS_ITERATOR_SKIP_FUNCTION)
         ki->accessor_flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
