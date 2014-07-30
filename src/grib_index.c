@@ -1514,9 +1514,90 @@ static int grib_index_execute(grib_index* index)
     return 0;
 }
 
-void grib_index_dump(grib_index* index)
+static void grib_dump_files(FILE* fout, grib_file* files)
 {
+    if (!files) return;
+    fprintf(fout, "file = %s\n", files->name);
+    fprintf(fout, "ID = %d\n", files->id);
+    grib_dump_files(fout, files->next);
+}
+static void grib_dump_key_values(FILE* fout, grib_string_list* values)
+{
+    grib_string_list* sl = values;
+    int first = 1; /* boolean for commas */
+    fprintf(fout, "values = ");
+    while (sl) {
+        if (!first) {
+            fprintf(fout, ", ");
+        }
+        fprintf(fout, "%s", sl->value);
+        first = 0;
+        sl = sl->next;
+    }
+    fprintf(fout, "\n");
+}
+static void grib_dump_index_keys(FILE* fout, grib_index_key* keys)
+{
+    if (!keys) return;
+    fprintf(fout, "key name = %s\n", keys->name);
+    /* fprintf(fout, "key type = %d\n", keys->type); */
 
+    grib_dump_key_values(fout, keys->values);
+    grib_dump_index_keys(fout, keys->next);
+}
+#if 0
+static void grib_dump_field(FILE* fout, grib_field* field)
+{
+    if (!field) return;
+    fprintf(fout, "field name = %s\n", field->file->name);
+    /*fprintf(fout, "field FID = %d\n", field->file->id);
+    * fprintf(fout, "field offset = %ld\n", field->offset);
+    * fprintf(fout, "field length = %ld\n", field->length);
+    */
+
+    grib_dump_field(fout, field->next);
+}
+static void grib_dump_field_tree(FILE* fout, grib_field_tree* tree)
+{
+    if(!tree) return;
+    grib_dump_field(fout,tree->field);
+
+    fprintf(fout, "tree value = %s\n", tree->value);
+
+    grib_dump_field_tree(fout,tree->next_level);
+    grib_dump_field_tree(fout,tree->next);
+}
+#endif
+
+void grib_index_dump(FILE* fout, grib_index* index)
+{
+    char* field_file = NULL;
+    grib_field_tree* ftree = NULL;
+
+    if (!index) return;
+    Assert(fout);
+    
+    grib_dump_files(fout, index->files);
+
+    ftree = index->fields;
+    if (ftree) {
+        grib_field* fld = ftree->field;
+        if (fld) {
+            grib_file* file = fld->file;
+            field_file = fld->file->name;
+        }
+    }
+    if (field_file) fprintf(fout, "Field file: %s\n", field_file);
+
+    fprintf(fout, "Index keys:\n");
+    grib_dump_index_keys(fout, index->keys);
+
+    /*
+    fprintf(fout, "Index field tree:\n");
+    grib_dump_field_tree(fout, index->fields);
+    */
+
+    fprintf(fout, "Index count = %d\n", index->count);
 }
 
 char* grib_get_field_file(grib_index* index,off_t *offset)

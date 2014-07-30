@@ -604,7 +604,7 @@ int grib_index_select_double(grib_index *index, const char *skey, double value);
 int grib_index_select_string(grib_index *index, const char *skey, char *value);
 grib_handle *grib_index_get_handle(grib_field *field, int *err);
 grib_handle *codes_index_get_handle(grib_field *field, int message_type, int *err);
-void grib_index_dump(grib_index *index);
+void grib_index_dump(FILE* fout, grib_index *index);
 char *grib_get_field_file(grib_index *index, off_t *offset);
 grib_handle *grib_handle_new_from_index(grib_index *index, int *err);
 grib_handle *codes_new_from_index(grib_index *index, int message_type, int *err);

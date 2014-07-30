@@ -118,6 +118,25 @@ int grib_tool_new_filename_action(grib_runtime_options* options,const char* file
 {
     return 0;
 }
+static int is_index_file(const char* filename)
+{
+    FILE* fh;
+    char buf[8]={0,};
+    char* str="GRBIDX";
+    int ret=0;
+
+    fh=fopen(filename,"r");
+    if (!fh) return 0;
+
+    fread(buf,1,1,fh);
+    fread(buf,6,1,fh);
+
+    ret=!strcmp(buf,str);
+
+    fclose(fh);
+
+    return ret;
+}
 
 int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
 {
@@ -127,6 +146,27 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
     sprintf(tmp,"FILE: %s ",options->current_infile->name);
     if (!grib_options_on("C"))
         fprintf(stdout,"***** %s\n",tmp);
+
+    /*
+     * In debug dump mode, allow dumping of GRIB INDEX files
+     */
+    if (strcmp(options->dump_mode, "debug")==0)
+    {
+        if (is_index_file(options->current_infile->name))
+        {
+            int err = 0;
+            const char* filename = options->current_infile->name;
+            grib_index* index = grib_index_read(grib_context_get_default(), filename, &err);
+            if (err || index == NULL) {
+                printf("%s: Could not read index file\n", grib_tool_name);
+                exit(1);
+            }
+            grib_index_dump(stdout, index);
+            grib_index_delete(index);
+            index = NULL;
+            options->fail = 0;
+        }
+    }
     return 0;
 }
 
