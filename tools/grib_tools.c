@@ -103,26 +103,6 @@ grib_runtime_options options={
 
 	};
 
-static int is_index_file(const char* filename)
-{
-    FILE* fh;
-    char buf[8]={0,};
-    char* str="GRBIDX";
-    int ret=0;
-
-    fh=fopen(filename,"r");
-    if (!fh) return 0;
-
-    fread(buf,1,1,fh);
-    fread(buf,6,1,fh);
-
-    ret=!strcmp(buf,str);
-
-    fclose(fh);
-
-    return ret;
-}
-
 static grib_handle* grib_handle_new_from_file_x(grib_context* c,FILE* f,int mode,int headers_only,int *err)
 {
     if (mode==MODE_GTS)

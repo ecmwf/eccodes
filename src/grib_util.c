@@ -1290,3 +1290,23 @@ int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNum
             productDefinitionTemplateNumber == 46 ||
             productDefinitionTemplateNumber == 47);
 }
+
+int is_index_file(const char* filename)
+{
+    FILE* fh;
+    char buf[8]={0,};
+    char* str="GRBIDX";
+    int ret=0;
+
+    fh=fopen(filename,"r");
+    if (!fh) return 0;
+
+    fread(buf,1,1,fh);
+    fread(buf,6,1,fh);
+
+    ret=!strcmp(buf,str);
+
+    fclose(fh);
+
+    return ret;
+}

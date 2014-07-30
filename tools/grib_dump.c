@@ -118,25 +118,6 @@ int grib_tool_new_filename_action(grib_runtime_options* options,const char* file
 {
     return 0;
 }
-static int is_index_file(const char* filename)
-{
-    FILE* fh;
-    char buf[8]={0,};
-    char* str="GRBIDX";
-    int ret=0;
-
-    fh=fopen(filename,"r");
-    if (!fh) return 0;
-
-    fread(buf,1,1,fh);
-    fread(buf,6,1,fh);
-
-    ret=!strcmp(buf,str);
-
-    fclose(fh);
-
-    return ret;
-}
 
 int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
 {
@@ -155,15 +136,20 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
         if (is_index_file(options->current_infile->name))
         {
             int err = 0;
+            grib_context* c = grib_context_get_default();
             const char* filename = options->current_infile->name;
-            grib_index* index = grib_index_read(grib_context_get_default(), filename, &err);
+            grib_index* index = grib_index_read(c, filename, &err);
             if (err || index == NULL) {
-                printf("%s: Could not read index file\n", grib_tool_name);
+                grib_context_log(c, GRIB_LOG_ERROR, "%s: Could not read index file. %s\n",
+                        grib_tool_name, grib_get_error_message(err));
                 exit(1);
             }
             grib_index_dump(stdout, index);
             grib_index_delete(index);
             index = NULL;
+            /* Since there are no GRIB messages, we have to stop tool exiting in case there
+             * are more index files
+            */
             options->fail = 0;
         }
     }

@@ -1202,6 +1202,7 @@ int parse_keyval_string(char* grib_tool, char* arg, int values_required, int def
 int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber);
 int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNumber);
 int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber);
+int is_index_file(const char* filename);
 
 /* compile.c */
 void grib_compile_flags(grib_compiler *c, long flags);
