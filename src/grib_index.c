@@ -1591,7 +1591,7 @@ void grib_index_dump(FILE* fout, grib_index* index)
         grib_field* fld = ftree->field;
         if (fld) {
             grib_file* file = fld->file;
-            field_file = fld->file->name;
+            field_file = file->name;
         }
     }
     if (field_file) fprintf(fout, "Field file: %s\n", field_file);

@@ -56,8 +56,7 @@ void test_gaussian_latitudes(int order)
 {
     int ret = 0;
     const int num = 2 * order;
-    const double tolerance = 1e-6;
-    double lat1 = 0, lat2 = 0, lon2 = 0;
+    double lat1 = 0, lat2 = 0;
 
     double* lats = (double*)malloc( sizeof(double)*num );
 

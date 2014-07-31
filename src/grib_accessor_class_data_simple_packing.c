@@ -184,7 +184,6 @@ static unsigned long nbits[32]={
 
 static int number_of_bits(unsigned long x, long* result)
 {
-    int err = 0;
     const int count = sizeof(nbits)/sizeof(nbits[0]);
     unsigned long *n=nbits;
     *result=0;
