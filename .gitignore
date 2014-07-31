@@ -206,7 +206,13 @@ ehthumbs.db
 Thumbs.db
 .directory
 
-data/
+data/.downloaded
+data/budg
+data/*.grib
+data/*.grib2
+data/*.grib1
+data/tigge/tigge*.grib
+data/bufr/*.bufr
 
 CMakeLists.txt.user*
 
