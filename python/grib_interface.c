@@ -1029,7 +1029,12 @@ int grib_c_new_from_file(FILE* f, int* gid, int headers_only){
       return GRIB_SUCCESS;
     } else {
       *gid=-1;
-      return GRIB_END_OF_FILE;
+      if (err == GRIB_SUCCESS) {
+        return GRIB_END_OF_FILE;
+      } else {
+        /* A real error occurred */
+        return err;
+      }
     }
   }
 
