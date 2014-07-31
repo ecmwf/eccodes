@@ -314,7 +314,7 @@ static int apply_operators(grib_accessor* a) {
   double referenceValueFactor=1;
   int X,F,Y;
   long extraWidth=0,extraScale=0,localDescriptorWidth=0;
-	size_t size=0,sizeAO=0,iq,numberOfDescriptors;
+	size_t size=0,sizeAO=0,iq=0,numberOfDescriptors;
 	size_t i=0,j=0,ielement=0;
 	int err=0;
   char* missing="???";
