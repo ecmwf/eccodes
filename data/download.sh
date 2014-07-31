@@ -467,6 +467,9 @@ files="
     bufr/wavb_134.bufr
   "
 
+[ -d "${DATA_DIR}/bufr" ]  || mkdir "${DATA_DIR}/bufr"
+[ -d "${DATA_DIR}/tigge" ] || mkdir "${DATA_DIR}/tigge"
+
 # Decide what tool to use to download data
 DNLD_PROG=""
 if command -v wget >/dev/null 2>&1; then

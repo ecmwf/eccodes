@@ -11,7 +11,7 @@ noinst_LTLIBRARIES = libgrib_tools.la
 libgrib_tools_la_SOURCES = grib_tools.c \
                         grib_options.c
 
-bin_SCRIPTS =  bufr_compare_dir
+dist_bin_SCRIPTS = bufr_compare_dir
 
 bin_PROGRAMS = grib_keys grib_histogram grib_error grib_add big2gribex \
                grib_debug grib_info grib_filter grib_ls grib_dump \

@@ -378,6 +378,7 @@ EXTRA_DIST = README AUTHORS NOTICE LICENSE ChangeLog version.sh html \
 		examples/CMakeLists.txt \
 		data/CMakeLists.txt \
 		data/tigge/CMakeLists.txt \
+		data/bufr/CMakeLists.txt \
 		ifs_samples/grib1/CMakeLists.txt \
 		ifs_samples/grib1_mlgrib2_ieee64/CMakeLists.txt \
 		ifs_samples/grib1_mlgrib2_ieee32/CMakeLists.txt \
