@@ -103,5 +103,19 @@ EOF
 ${tools_dir}/grib_filter  ${data_dir}/binop.rules $GRIB_SAMPLES_PATH/gg_sfc_grib1.tmpl >/dev/null
 
 
+# GRIB-526 grib_filter very picky about format of floats
+########################################################
+cat >temp.filt <<EOF
+set values = {
+  -1000.0,
+  3.1e5,
+  66,
+  -77,
+  .4,
+  45. };
+EOF
+${tools_dir}/grib_filter temp.filt $GRIB_SAMPLES_PATH/GRIB1.tmpl
+
+
 rm -f temp.grib2 temp.filt
 rm -f ${data_dir}/formatint.rules ${data_dir}/binop.rules
