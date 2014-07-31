@@ -1650,7 +1650,7 @@ grib_handle* codes_new_from_index(grib_index* index,int message_type,int *err) {
 				sizeof(grib_field_list));
 		if (!index->fieldset) {
 			grib_context_log(index->context,GRIB_LOG_ERROR,
-					"unable to allocat %d bytes",
+					"unable to allocate %d bytes",
 					sizeof(grib_field_list));
 			return NULL;
 		}
