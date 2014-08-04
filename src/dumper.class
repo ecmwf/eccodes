@@ -5,6 +5,7 @@ static void dump_long       (grib_dumper* d, grib_accessor* a,const char* commen
 static void dump_bits       (grib_dumper* d, grib_accessor* a,const char* comment);
 static void dump_double     (grib_dumper* d, grib_accessor* a,const char* comment);
 static void dump_string     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_string_array     (grib_dumper* d, grib_accessor* a,const char* comment);
 static void dump_bytes      (grib_dumper* d, grib_accessor* a,const char* comment);
 static void dump_values     (grib_dumper* d, grib_accessor* a);
 static void dump_label      (grib_dumper* d, grib_accessor* a,const char* comment);
@@ -30,6 +31,7 @@ static grib_dumper_class _grib_dumper_class_NAME = {
     &dump_long,                          /* dump long         */
     &dump_double,                        /* dump double    */
     &dump_string,                        /* dump string    */
+    &dump_string_array,                        /* dump string array   */
     &dump_label,                         /* dump labels  */
     &dump_bytes,                         /* dump bytes  */
     &dump_bits,                          /* dump bits   */

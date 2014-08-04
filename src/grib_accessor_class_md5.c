@@ -48,7 +48,7 @@ typedef struct grib_accessor_md5 {
 /* Members defined in md5 */
 	const char* offset;
 	grib_expression* length;
-  grib_string_list* blacklist;
+	grib_string_list* blacklist;
 } grib_accessor_md5;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -71,7 +71,7 @@ static grib_accessor_class _grib_accessor_class_md5 = {
     &get_native_type,            /* get native type               */
     0,                /* get sub_section                */
     0,               /* grib_pack procedures long      */
-    0,               /* grib_pack procedures long      */
+    0,                 /* grib_pack procedures long      */
     0,                  /* grib_pack procedures long      */
     0,                /* grib_unpack procedures long    */
     0,                /* grib_pack procedures double    */

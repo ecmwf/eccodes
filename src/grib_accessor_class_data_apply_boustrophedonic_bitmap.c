@@ -59,9 +59,9 @@ typedef struct grib_accessor_data_apply_boustrophedonic_bitmap {
 	const char*  bitmap;
 	const char*  missing_value;
 	const char*  binary_scale_factor;
-    const char*  numberOfRows;
-    const char*  numberOfColumns;
-    const char*  numberOfPoints;
+	const char*  numberOfRows;
+	const char*  numberOfColumns;
+	const char*  numberOfPoints;
 } grib_accessor_data_apply_boustrophedonic_bitmap;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -84,7 +84,7 @@ static grib_accessor_class _grib_accessor_class_data_apply_boustrophedonic_bitma
     &get_native_type,            /* get native type               */
     0,                /* get sub_section                */
     0,               /* grib_pack procedures long      */
-    0,               /* grib_pack procedures long      */
+    0,                 /* grib_pack procedures long      */
     0,                  /* grib_pack procedures long      */
     0,                /* grib_unpack procedures long    */
     &pack_double,                /* grib_pack procedures double    */
@@ -125,7 +125,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_long	=	(*(c->super))->unpack_long;
 	c->pack_string	=	(*(c->super))->pack_string;
 	c->unpack_string	=	(*(c->super))->unpack_string;
-    c->pack_string_array	=	(*(c->super))->pack_string_array;
+	c->pack_string_array	=	(*(c->super))->pack_string_array;
 	c->unpack_string_array	=	(*(c->super))->unpack_string_array;
 	c->pack_bytes	=	(*(c->super))->pack_bytes;
 	c->unpack_bytes	=	(*(c->super))->unpack_bytes;
