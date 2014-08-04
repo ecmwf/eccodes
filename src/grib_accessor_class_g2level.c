@@ -37,8 +37,8 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int is_missing(grib_accessor*);
-static int pack_long(grib_accessor*, const long* val,size_t *len);
 static int pack_double(grib_accessor*, const double* val,size_t *len);
+static int pack_long(grib_accessor*, const long* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
 static void dump(grib_accessor*, grib_dumper*);
@@ -76,11 +76,11 @@ static grib_accessor_class _grib_accessor_class_g2level = {
     0,            /* get native type               */
     0,                /* get sub_section                */
     0,               /* grib_pack procedures long      */
-    &is_missing,               /* grib_pack procedures long      */
+    &is_missing,                 /* grib_pack procedures long      */
     &pack_long,                  /* grib_pack procedures long      */
     &unpack_long,                /* grib_unpack procedures long    */
-    &pack_double,     /* grib_pack procedures double    */
-    &unpack_double,   /* grib_unpack procedures double  */
+    &pack_double,                /* grib_pack procedures double    */
+    &unpack_double,              /* grib_unpack procedures double  */
     0,                /* grib_pack procedures string    */
     0,              /* grib_unpack procedures string  */
     0,          /* grib_pack array procedures string    */

@@ -70,7 +70,7 @@ static grib_accessor_class _grib_accessor_class_double = {
     &get_native_type,            /* get native type               */
     0,                /* get sub_section                */
     &pack_missing,               /* grib_pack procedures long      */
-    0,               /* grib_pack procedures long      */
+    0,                 /* grib_pack procedures long      */
     0,                  /* grib_pack procedures long      */
     0,                /* grib_unpack procedures long    */
     0,                /* grib_pack procedures double    */

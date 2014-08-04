@@ -101,7 +101,7 @@ static grib_accessor_class _grib_accessor_class_gen = {
     &get_native_type,            /* get native type               */
     &sub_section,                /* get sub_section                */
     0,               /* grib_pack procedures long      */
-    &is_missing,               /* grib_pack procedures long      */
+    &is_missing,                 /* grib_pack procedures long      */
     &pack_long,                  /* grib_pack procedures long      */
     &unpack_long,                /* grib_unpack procedures long    */
     &pack_double,                /* grib_pack procedures double    */

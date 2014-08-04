@@ -79,7 +79,7 @@ static grib_accessor_class _grib_accessor_class_ascii = {
     &get_native_type,            /* get native type               */
     0,                /* get sub_section                */
     0,               /* grib_pack procedures long      */
-    0,               /* grib_pack procedures long      */
+    0,                 /* grib_pack procedures long      */
     &pack_long,                  /* grib_pack procedures long      */
     &unpack_long,                /* grib_unpack procedures long    */
     &pack_double,                /* grib_pack procedures double    */

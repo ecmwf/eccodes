@@ -46,7 +46,7 @@ or edit "nearest.class" and rerun ./make_class.pl
 static void init_class              (grib_nearest_class*);
 
 static int init               (grib_nearest* nearest,grib_handle* h,grib_arguments* args);
-static int find(grib_nearest*, grib_handle*, double, double,unsigned long, double*,double*, double*,double*,int*,size_t*);
+static int find(grib_nearest* nearest, grib_handle* h,double inlat, double inlon, unsigned long flags, double* outlats,double* outlons, double *values,double *distances, int *indexes,size_t *len);
 static int destroy            (grib_nearest* nearest);
 
 typedef struct grib_nearest_lambert_conformal{
@@ -61,9 +61,9 @@ typedef struct grib_nearest_lambert_conformal{
 	double* lons;
 	int  lons_count;
 	double* distances;
-	int* k;   /* index */
-	int* i;   /* index into the lons array */
-	int* j;   /* index into the lats array */
+	int* k;
+	int* i;
+	int* j;
 	const char* Ni;
 	const char* Nj;
 } grib_nearest_lambert_conformal;

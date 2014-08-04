@@ -1,12 +1,4 @@
-/*
- * Copyright 2005-2014 ECMWF.
- *
- * This software is licensed under the terms of the Apache Licence Version 2.0
- * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
- *
- * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
- * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
- */
+
 /* action.c */
 void grib_dump(grib_action *a, FILE *f, int l);
 void grib_xref(grib_action *a, FILE *f, const char *path);
@@ -65,21 +57,6 @@ grib_action *grib_action_create_assert(grib_context *context, grib_expression *e
 /* action_class_template.c */
 grib_action *grib_action_create_template(grib_context *context, int nofail, const char *name, const char *arg1);
 grib_action *get_empty_template(grib_context *c, int *err);
-
-/* action_class_trigger.c */
-grib_action *grib_action_create_trigger(grib_context *context, grib_arguments *args, grib_action *block);
-
-/* action_class_when.c */
-grib_action *grib_action_create_when(grib_context *context, grib_expression *expression, grib_action *block_true, grib_action *block_false);
-
-/* action_class_concept.c */
-grib_action *grib_action_create_concept(grib_context *context, const char *name, grib_concept_value *concept, const char *basename, const char *name_space, const char *defaultkey, const char *masterDir, const char *localDir, const char *ecmfDir, int flags, int nofail);
-const char *grib_concept_evaluate(grib_handle *h, grib_action *act);
-int grib_concept_apply(grib_handle *h, grib_action *act, const char *name);
-
-/* action_class_hash_array.c */
-grib_action *grib_action_create_hash_array(grib_context *context, const char *name, grib_hash_array_value *hash_array, const char *basename, const char *name_space, const char *defaultkey, const char *masterDir, const char *localDir, const char *ecmfDir, int flags, int nofail);
-grib_hash_array_value *get_hash_array(grib_handle *h, grib_action *a);
 
 /* action_class_trigger.c */
 grib_action *grib_action_create_trigger(grib_context *context, grib_arguments *args, grib_action *block);
@@ -244,8 +221,6 @@ size_t compute_size_AO(long *descriptors, size_t numberOfDescriptors);
 
 /* grib_accessor_class_hash_array.c */
 
-/* grib_accessor_class_hash_array.c */
-
 /* grib_accessor_class_decimal_precision.c */
 
 /* grib_accessor_class_divdouble.c */
@@ -278,6 +253,7 @@ void grib_smart_table_delete(grib_context *c);
 /* grib_accessor_class_smart_table_column.c */
 
 /* grib_accessor_class_codetable.c */
+int grib_strcasecmp(const char *s1, const char *s2);
 void grib_codetable_delete(grib_context *c);
 
 /* grib_accessor_class_codetable_units.c */
@@ -313,8 +289,8 @@ void grib_codetable_delete(grib_context *c);
 /* grib_accessor_class_g1forecastmonth.c */
 
 /* grib_accessor_class_g1step_range.c */
-int grib_g1_step_get_steps(grib_accessor *a, long *start, long *end);
-int grib_g1_step_apply_units(long *start, long *end, long *step_unit, long *P1, long *P2, long *unit, const int max, const int instant);
+int grib_g1_step_get_steps(grib_accessor *a, long *start, long *theEnd);
+int grib_g1_step_apply_units(long *start, long *theEnd, long *step_unit, long *P1, long *P2, long *unit, const int max, const int instant);
 
 /* grib_accessor_class_g2step_range.c */
 
@@ -456,13 +432,13 @@ int grib_get_g1_message_size(grib_handle *h, grib_accessor *tl, grib_accessor *s
 
 /* grib_accessor_class_transient.c */
 
-/* grib_accessor_class_g1_half_byte_codeflag.c */
-
 /* grib_accessor_class_values.c */
 
 /* grib_accessor_class_simple_packing_error.c */
 
 /* grib_accessor_class_data_simple_packing.c */
+
+/* grib_accessor_class_data_szip_packing.c */
 
 /* grib_accessor_class_count_missing.c */
 
@@ -520,6 +496,7 @@ size_t __expand(grib_accessor *a, grib_iarray *unexpanded, grib_iarray *expanded
 /* grib_accessor_class_data_apply_bitmap.c */
 
 /* grib_accessor_class_data_apply_boustrophedonic.c */
+
 /* grib_accessor_class_data_apply_boustrophedonic_bitmap.c */
 
 /* grib_accessor_class_data_secondary_bitmap.c */
@@ -549,6 +526,7 @@ size_t __expand(grib_accessor *a, grib_iarray *unexpanded, grib_iarray *expanded
 /* grib_accessor_class_local_definition.c */
 
 /* grib_accessor_class_g2_eps.c */
+
 /* grib_accessor_class_g2_chemical.c */
 
 /* grib_accessor_class_g2_mars_labeling.c */
@@ -559,10 +537,13 @@ size_t __expand(grib_accessor *a, grib_iarray *unexpanded, grib_iarray *expanded
 int grib_jasper_decode(grib_context *c, unsigned char *buf, size_t *buflen, double *values, size_t *no_values);
 int grib_jasper_encode(grib_context *c, j2k_encode_helper *helper);
 int grib_jasper_decode(grib_context *c, unsigned char *buf, size_t *buflen, double *val, size_t *n_vals);
+int grib_jasper_encode(grib_context *c, j2k_encode_helper *helper);
 
 /* grib_openjpeg_encoding.c */
 int grib_openjpeg_encode(grib_context *c, j2k_encode_helper *helper);
 int grib_openjpeg_decode(grib_context *c, unsigned char *buf, size_t *buflen, double *val, size_t *n_vals);
+int grib_openjpeg_decode(grib_context *c, unsigned char *buf, size_t *buflen, double *val, size_t *n_vals);
+int grib_openjpeg_encode(grib_context *c, j2k_encode_helper *helper);
 
 /* action_class_set_missing.c */
 grib_action *grib_action_create_set_missing(grib_context *context, const char *name);
@@ -594,6 +575,7 @@ grib_index *grib_index_read(grib_context *c, const char *filename, int *err);
 int grib_index_search_same(grib_index *index, grib_handle *h);
 int grib_index_add_file(grib_index *index, const char *filename);
 int codes_index_add_file(grib_index *index, const char *filename, int message_type);
+int grib_index_add_file(grib_index *index, const char *filename);
 grib_index *grib_index_new_from_file(grib_context *c, char *filename, const char *keys, int *err);
 int grib_index_get_size(grib_index *index, const char *key, size_t *size);
 int grib_index_get_string(grib_index *index, const char *key, char **values, size_t *size);
@@ -604,7 +586,7 @@ int grib_index_select_double(grib_index *index, const char *skey, double value);
 int grib_index_select_string(grib_index *index, const char *skey, char *value);
 grib_handle *grib_index_get_handle(grib_field *field, int *err);
 grib_handle *codes_index_get_handle(grib_field *field, int message_type, int *err);
-void grib_index_dump(FILE* fout, grib_index *index);
+void grib_index_dump(FILE *fout, grib_index *index);
 char *grib_get_field_file(grib_index *index, off_t *offset);
 grib_handle *grib_handle_new_from_index(grib_index *index, int *err);
 grib_handle *codes_new_from_index(grib_index *index, int message_type, int *err);
@@ -628,7 +610,7 @@ int grib_index_search(grib_index *index, grib_index_key *keys);
 /* grib_accessor_class_statistics_spectral.c */
 
 /* grib_accessor_class_unsigned.c */
-int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t *len, int check);
+int pack_long_unsigned_helper(grib_accessor *a, const long *val, size_t *len, int check);
 
 /* grib_accessor_class_unsigned_bits.c */
 
@@ -680,6 +662,14 @@ void grib_timer_print(grib_timer *t);
 void grib_timer_partial_rate(grib_timer *t, double start, long total);
 void grib_print_all_timers(void);
 void grib_reset_all_timers(void);
+grib_timer *grib_get_timer(grib_context *c, const char *name, const char *statname, int elapsed);
+int grib_timer_start(grib_timer *t);
+int grib_timer_stop(grib_timer *t, long total);
+double grib_timer_value(grib_timer *t);
+void grib_timer_print(grib_timer *t);
+void grib_timer_partial_rate(grib_timer *t, double start, long total);
+void grib_print_all_timers(void);
+void grib_reset_all_timers(void);
 
 /* grib_ibmfloat.c */
 unsigned long grib_ibm_to_long(double x);
@@ -698,7 +688,10 @@ double grib_ieeefloat_error(double x);
 double grib_long_to_ieee(unsigned long x);
 unsigned long grib_ieee_nearest_smaller_to_long(double x);
 int grib_nearest_smaller_ieee_float(double a, double *ret);
-
+double grib_ieeefloat_error(double x);
+double grib_long_to_ieee(unsigned long x);
+int grib_nearest_smaller_ieee_float(double a, double *x);
+unsigned long grib_ieee_to_long(double x);
 unsigned long grib_ieee64_to_long(double x);
 double grib_long_to_ieee64(unsigned long x);
 int grib_ieee_decode_array(grib_context *c, unsigned char *buf, size_t nvals, int bytes, double *val);
@@ -781,6 +774,7 @@ void grib_print_api_version(FILE *out);
 grib_context *grib_context_get_default(void);
 grib_context *grib_context_new(grib_context *parent);
 char *grib_context_full_defs_path(grib_context *c, const char *basename);
+char *grib_samples_path(const grib_context *c);
 void grib_context_free(const grib_context *c, void *p);
 void grib_context_free_persistent(const grib_context *c, void *p);
 void grib_context_reset(grib_context *c);
@@ -858,12 +852,11 @@ grib_handle *grib_handle_new_from_message(grib_context *c, void *data, size_t bu
 grib_handle *grib_handle_new_from_multi_message(grib_context *c, void **data, size_t *buflen, int *error);
 grib_handle *grib_handle_new_from_file(grib_context *c, FILE *f, int *error);
 grib_handle *grib_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
-grib_handle *eccode_grib_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 grib_handle *gts_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
-grib_handle *bufr_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 grib_handle *taf_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 grib_handle *metar_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 grib_handle *codes_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
+grib_handle *bufr_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 grib_multi_handle *grib_multi_handle_new(grib_context *c);
 int grib_multi_handle_delete(grib_multi_handle *h);
 int grib_multi_handle_append(grib_handle *h, int start_section, grib_multi_handle *mh);
@@ -881,7 +874,7 @@ int grib_handle_apply_action(grib_handle *h, grib_action *a);
 int grib_handle_prepare_action(grib_handle *h, grib_action *a);
 void grib_multi_support_on(grib_context *c);
 void grib_multi_support_off(grib_context *c);
-void grib_multi_support_reset_file(grib_context* c, FILE* f);
+void grib_multi_support_reset_file(grib_context *c, FILE *f);
 void grib_gts_header_on(grib_context *c);
 void grib_gts_header_off(grib_context *c);
 int grib_get_gribex_mode(grib_context *c);
@@ -988,6 +981,7 @@ long grib_get_decimal_scale_fact(double max, double min, long bpval, long binary
 
 /* grib_templates.c */
 grib_handle *grib_internal_template(grib_context *c, const char *name);
+grib_handle *grib_internal_template(grib_context *c, const char *name);
 grib_handle *grib_external_template(grib_context *c, const char *name);
 char *grib_external_template_path(grib_context *c, const char *name);
 
@@ -1015,8 +1009,10 @@ int grib_clear(grib_handle *h, const char *name);
 int grib_set_missing_internal(grib_handle *h, const char *name);
 int grib_set_missing(grib_handle *h, const char *name);
 int grib_is_missing(grib_handle *h, const char *name, int *err);
+int grib_is_defined(grib_handle *h, const char *name);
 int grib_set_flag(grib_handle *h, const char *name, unsigned long flag);
 int grib_set_double_array_internal(grib_handle *h, const char *name, const double *val, size_t length);
+int grib_set_force_double_array(grib_handle *h, const char *name, const double *val, size_t length);
 int grib_set_double_array(grib_handle *h, const char *name, const double *val, size_t length);
 int grib_set_long_array_internal(grib_handle *h, const char *name, const long *val, size_t length);
 int grib_set_long_array(grib_handle *h, const char *name, const long *val, size_t length);
@@ -1041,6 +1037,7 @@ int grib_get_double_array(grib_handle *h, const char *name, double *val, size_t 
 int _grib_get_string_length(grib_accessor *a, size_t *size);
 int grib_get_string_length(grib_handle *h, const char *name, size_t *size);
 int grib_get_size(grib_handle *h, const char *name, size_t *size);
+int grib_get_length(grib_handle *h, const char *name, size_t *length);
 int grib_get_count(grib_handle *h, const char *name, size_t *size);
 int _grib_get_size(grib_handle *h, grib_accessor *a, size_t *size);
 int grib_get_offset(grib_handle *h, const char *key, size_t *val);
@@ -1143,9 +1140,13 @@ grib_nearest *grib_nearest_factory(grib_handle *h, grib_arguments *args);
 
 /* grib_nearest_class_sh.c */
 
+/* grib_nearest_class_lambert_conformal.c */
+int compare_points(const void *a, const void *b);
+
 /* grib_iterator_class_polar_stereographic.c */
 
 /* grib_iterator_class_lambert_azimuthal_equal_area.c */
+
 /* grib_iterator_class_lambert_conformal.c */
 
 /* grib_iterator.c */
@@ -1193,16 +1194,17 @@ double grib_arguments_get_double(grib_handle *h, grib_arguments *args, int n);
 grib_expression *grib_arguments_get_expression(grib_handle *h, grib_arguments *args, int n);
 
 /* grib_util.c */
+double rint(double x);
 grib_handle *grib_util_sections_copy(grib_handle *hfrom, grib_handle *hto, int what, int *err);
 grib_string_list *grib_util_get_param_id(const char *mars_param);
 grib_string_list *grib_util_get_mars_param(const char *param_id);
 grib_handle *grib_util_set_spec(grib_handle *h, const grib_util_grid_spec *spec, const grib_util_packing_spec *packing_spec, int flags, const double *data_values, size_t data_values_count, int *err);
 int grib_moments(grib_handle *h, double east, double north, double west, double south, int order, double *moments, long *count);
-int parse_keyval_string(char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count);
+int parse_keyval_string(char *grib_tool, char *arg, int values_required, int default_type, grib_values values[], int *count);
 int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber);
 int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNumber);
 int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber);
-int is_index_file(const char* filename);
+int is_index_file(const char *filename);
 
 /* compile.c */
 void grib_compile_flags(grib_compiler *c, long flags);
