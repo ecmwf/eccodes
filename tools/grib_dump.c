@@ -129,7 +129,7 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
         fprintf(stdout,"***** %s\n",tmp);
 
     /*
-     * In debug dump mode, allow dumping of GRIB INDEX files
+     * In debug dump mode, allow dumping of GRIB index files
      */
     if (strcmp(options->dump_mode, "debug")==0)
     {
@@ -138,15 +138,15 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
             int err = 0;
             grib_context* c = grib_context_get_default();
             const char* filename = options->current_infile->name;
-            grib_index* index = grib_index_read(c, filename, &err);
-            if (err || index == NULL) {
-                grib_context_log(c, GRIB_LOG_ERROR, "%s: Could not read index file. %s\n",
-                        grib_tool_name, grib_get_error_message(err));
+            
+            err = grib_index_dump_file(stdout, filename);
+            if (err) {
+                grib_context_log(c, GRIB_LOG_ERROR, "%s: Could not dump index file \"%s\".\n%s\n",
+                        grib_tool_name,
+                        filename,
+                        grib_get_error_message(err));
                 exit(1);
             }
-            grib_index_dump(stdout, index);
-            grib_index_delete(index);
-            index = NULL;
             /* Since there are no GRIB messages, we have to stop tool exiting in case there
              * are more index files
             */

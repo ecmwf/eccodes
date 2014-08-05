@@ -1504,13 +1504,6 @@ static int grib_index_execute(grib_index* index)
     return 0;
 }
 
-static void grib_dump_files(FILE* fout, grib_file* files)
-{
-    if (!files) return;
-    fprintf(fout, "file = %s\n", files->name);
-    fprintf(fout, "ID = %d\n", files->id);
-    grib_dump_files(fout, files->next);
-}
 static void grib_dump_key_values(FILE* fout, grib_string_list* values)
 {
     grib_string_list* sl = values;
@@ -1536,6 +1529,13 @@ static void grib_dump_index_keys(FILE* fout, grib_index_key* keys)
     grib_dump_index_keys(fout, keys->next);
 }
 #if 0
+static void grib_dump_files(FILE* fout, grib_file* files)
+{
+    if (!files) return;
+    fprintf(fout, "file = %s\n", files->name);
+    fprintf(fout, "ID = %d\n", files->id);
+    grib_dump_files(fout, files->next);
+}
 static void grib_dump_field(FILE* fout, grib_field* field)
 {
     if (!field) return;
@@ -1559,32 +1559,62 @@ static void grib_dump_field_tree(FILE* fout, grib_field_tree* tree)
 }
 #endif
 
+int grib_index_dump_file(FILE* fout, const char* filename)
+{
+    int err = 0;
+    grib_index* index = NULL;
+    grib_context* c = grib_context_get_default();
+    FILE* fh = NULL;
+
+    Assert(fout);
+    Assert(filename);
+    index = grib_index_read(c, filename, &err);
+    if (err) return err;
+    
+    /* To get the GRIB files referenced we have */
+    /* to resort to low level reading of the index file! */
+    fh=fopen(filename,"r");
+    if (fh) {
+        grib_file *file,*f;
+        char* identifier=NULL;
+        unsigned char marker=0;
+
+        identifier = grib_read_string(c,fh,&err);
+        if (err) return err;
+        grib_context_free(c,identifier);
+        err = grib_read_uchar(fh,&marker);
+        if (err) return err;
+        file = grib_read_files(c,fh,&err);
+        if (err) return err;
+        f=file;
+        while (f) {
+            fprintf(fout, "GRIB File: %s\n", f->name);
+            f=f->next;
+        }
+        fclose(fh);
+    }
+    
+    grib_index_dump(fout, index);
+    grib_index_delete(index);
+    
+    return GRIB_SUCCESS;
+}
+
 void grib_index_dump(FILE* fout, grib_index* index)
 {
-    char* field_file = NULL;
-    grib_field_tree* ftree = NULL;
-
     if (!index) return;
     Assert(fout);
-    
-    grib_dump_files(fout, index->files);
 
-    ftree = index->fields;
-    if (ftree) {
-        grib_field* fld = ftree->field;
-        if (fld) {
-            grib_file* file = fld->file;
-            field_file = file->name;
-        }
-    }
-    if (field_file) fprintf(fout, "Field file: %s\n", field_file);
+    /* The grib_dump_files does not print anything as  */
+    /* the index object does not store the file names! */
+    /* grib_dump_files(fout, index->files); */
 
     fprintf(fout, "Index keys:\n");
     grib_dump_index_keys(fout, index->keys);
 
     /*
-    fprintf(fout, "Index field tree:\n");
-    grib_dump_field_tree(fout, index->fields);
+    * fprintf(fout, "Index field tree:\n");
+    * grib_dump_field_tree(fout, index->fields);
     */
 
     fprintf(fout, "Index count = %d\n", index->count);
@@ -1664,7 +1694,6 @@ grib_handle* codes_new_from_index(grib_index* index,int message_type,int *err)
 		h=codes_index_get_handle(index->current->field,message_type,err);
 	}
 	return h;
-
 }
 
 void grib_index_rewind(grib_index* index)
