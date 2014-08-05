@@ -233,7 +233,7 @@ typedef struct grib_accessor_bufr_data_element {
 
 static int number_of_qualifiers=NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES;
 
-static inline int significanceQualifierIndex(int X,int Y) {
+static GRIB_INLINE int significanceQualifierIndex(int X,int Y) {
   int a[]={-1,0,1,-1,-1,-1,-1,-1,2};
   return Y+a[X]*NUMBER_OF_QUALIFIERS_PER_CATEGORY;
 }
@@ -507,13 +507,13 @@ static grib_section* find_section_of_associated_group(grib_section** groupNumber
     return section;
 }
 
-static inline void reset_qualifiers(grib_accessor* significanceQualifierGroup[]) {
+static GRIB_INLINE void reset_qualifiers(grib_accessor* significanceQualifierGroup[]) {
   int i;
   for (i=0;i<number_of_qualifiers;i++) 
       significanceQualifierGroup[i]=0;
 }
 
-static inline void reset_deeper_qualifiers(grib_accessor* significanceQualifierGroup[],int* significanceQualifierDepth, int depth) {
+static GRIB_INLINE void reset_deeper_qualifiers(grib_accessor* significanceQualifierGroup[],int* significanceQualifierDepth, int depth) {
   int i;
   for (i=0;i<number_of_qualifiers;i++) {
     if (significanceQualifierDepth[i]>depth) {
