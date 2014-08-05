@@ -1445,42 +1445,25 @@ grib_handle* codes_index_get_handle(grib_field* field,int message_type,int *err)
   Assert(field->file);
   grib_file_open(field->file->name,"r",err);
 
-	if (*err!=GRIB_SUCCESS) return NULL;
+  if (*err!=GRIB_SUCCESS) return NULL;
   switch (message_type) {
-    case CODES_GRIB:
-      message_new=grib_new_from_file;
-      break;
-    case CODES_BUFR:
-      message_new=bufr_new_from_file;
-      break;
-    default :
-      Assert(0);
+     case CODES_GRIB:
+       message_new=grib_new_from_file;
+       break;
+     case CODES_BUFR:
+       message_new=bufr_new_from_file;
+       break;
+     default :
+       Assert(0);
   }
 
-	fseeko(field->file->handle,field->offset,SEEK_SET);
-	h=message_new(0,field->file->handle,0,err);
-	if (*err!=GRIB_SUCCESS) return NULL;
+  fseeko(field->file->handle,field->offset,SEEK_SET);
+  h=message_new(0,field->file->handle,0,err);
+  if (*err!=GRIB_SUCCESS) return NULL;
 
-	grib_file_close(field->file->name,err);
-	return h;
+  grib_file_close(field->file->name,err);
+  return h;
 }
-
-/*
- * grib_handle* grib_index_get_handle(grib_field* field,int *err)
- * {
- *     grib_handle* h=NULL;
- *     grib_file_open(field->file->name,"r",err);
- * 
- *     if (*err!=GRIB_SUCCESS) return NULL;
- * 
- *     fseeko(field->file->handle,field->offset,SEEK_SET);
- *     h=grib_handle_new_from_file(0,field->file->handle,err);
- *     if (*err!=GRIB_SUCCESS) return NULL;
- * 
- *     grib_file_close(field->file->name,err);
- *     return h;
- * }
- */
 
 static int grib_index_execute(grib_index* index)
 {
@@ -1617,11 +1600,13 @@ char* grib_get_field_file(grib_index* index,off_t *offset)
     return file;
 }
 
-grib_handle* grib_handle_new_from_index(grib_index* index,int *err) {
+grib_handle* grib_handle_new_from_index(grib_index* index,int *err)
+{
   return codes_new_from_index(index,CODES_GRIB,err);
 }
 
-grib_handle* codes_new_from_index(grib_index* index,int message_type,int *err) {
+grib_handle* codes_new_from_index(grib_index* index,int message_type,int *err)
+{
 	grib_index_key* keys;
 	grib_field_list *fieldset,*next;
 	grib_handle* h=NULL;
