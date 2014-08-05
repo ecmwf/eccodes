@@ -1,6 +1,6 @@
 # data/CMakeLists.txt
 add_subdirectory(tigge)
-
+add_subdirectory(bufr)
 
 
 # Download all the binary grib data from website
