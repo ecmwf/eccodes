@@ -111,6 +111,7 @@ GRIB_INVALID_ORDERBY = _gribapi_swig.GRIB_INVALID_ORDERBY
 GRIB_MISSING_KEY = _gribapi_swig.GRIB_MISSING_KEY
 GRIB_OUT_OF_AREA = _gribapi_swig.GRIB_OUT_OF_AREA
 GRIB_CONCEPT_NO_MATCH = _gribapi_swig.GRIB_CONCEPT_NO_MATCH
+GRIB_HASH_ARRAY_NO_MATCH = _gribapi_swig.GRIB_HASH_ARRAY_NO_MATCH
 GRIB_NO_DEFINITIONS = _gribapi_swig.GRIB_NO_DEFINITIONS
 GRIB_WRONG_TYPE = _gribapi_swig.GRIB_WRONG_TYPE
 GRIB_END = _gribapi_swig.GRIB_END
@@ -130,6 +131,9 @@ GRIB_INVALID_BPV = _gribapi_swig.GRIB_INVALID_BPV
 GRIB_DIFFERENT_EDITION = _gribapi_swig.GRIB_DIFFERENT_EDITION
 GRIB_VALUE_DIFFERENT = _gribapi_swig.GRIB_VALUE_DIFFERENT
 GRIB_INVALID_KEY_VALUE = _gribapi_swig.GRIB_INVALID_KEY_VALUE
+GRIB_STRING_TOO_SMALL = _gribapi_swig.GRIB_STRING_TOO_SMALL
+GRIB_WRONG_CONVERSION = _gribapi_swig.GRIB_WRONG_CONVERSION
+GRIB_MISSING_BUFR_ENTRY = _gribapi_swig.GRIB_MISSING_BUFR_ENTRY
 class intp(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, intp, name, value)
