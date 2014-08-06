@@ -85,34 +85,6 @@ examples/C/set_data
 examples/C/set_missing
 examples/C/set_pv
 examples/C/values_check
-examples/F90/.libs/
-examples/F90/copy_message
-examples/F90/copy_namespace
-examples/F90/count_messages
-examples/F90/get
-examples/F90/get_data
-examples/F90/get_pl
-examples/F90/get_pv
-examples/F90/get_set_uuid
-examples/F90/index
-examples/F90/keys_iterator
-examples/F90/multi
-examples/F90/multi_write
-examples/F90/nearest
-examples/F90/new_from_file
-examples/F90/precision
-examples/F90/print_data
-examples/F90/read_from_file
-examples/F90/read_message
-examples/F90/samples
-examples/F90/set
-examples/F90/set_bitmap
-examples/F90/set_missing
-examples/F90/set_pv
-examples/python/count_messages
-examples/python/iterator
-examples/python/keys_iterator
-examples/python/print_data
 fortran/.libs/
 fortran/grib_api.mod
 fortran/grib_f90.f90
@@ -224,6 +196,8 @@ myconfigemos*
 myconfigemosgprof*
 myconfiggprof*
 myconfignopy*
+INSTALL
+share/
 
 #from make
 examples/C/check_gaussian_grid
