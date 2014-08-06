@@ -159,7 +159,10 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
     if (ret) return ret;
     size=count;
 
-    if (*len<size) return GRIB_ARRAY_TOO_SMALL;
+    if (*len<size) {
+        if (iter) grib_iterator_delete(iter);
+        return GRIB_ARRAY_TOO_SMALL;
+    }
 
     if (ret!=GRIB_SUCCESS) {
         if (iter) grib_iterator_delete(iter);
