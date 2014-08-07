@@ -189,10 +189,6 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-#define IS_QUALIFIER(a) (a==8 || a==1 || a==2)
-#define NUMBER_OF_QUALIFIERS_PER_CATEGORY 256
-#define NUMBER_OF_QUALIFIERS_CATEGORIES 3
-
 static long init_length(grib_accessor* a)
 {
   grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
