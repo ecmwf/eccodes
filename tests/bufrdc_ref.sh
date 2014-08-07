@@ -20,12 +20,17 @@ EOF
 
 for file in ${data_dir}/bufr/*.bufr
 do
-  REDIRECT=stdout
+  REDIRECT=/dev/null
+
+  rm -f $file.test | true
 
   ${tools_dir}bufr_filter bufrdc_ref.filter $file 2> $REDIRECT > $file.test
 
   numdiff $file.ref $file.test
 
+  rm -f $file.test
+
 
 done
 
+rm -f bufrdc_ref.filter
