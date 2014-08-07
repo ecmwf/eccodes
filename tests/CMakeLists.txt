@@ -63,6 +63,7 @@ list( APPEND tests
     debug
     unit_tests
     bufr_dump
+    bufrdc_ref
 )
 
 foreach( test ${tests} )
@@ -71,7 +72,7 @@ foreach( test ${tests} )
     #       rather than when you do "make test"
     ecbuild_add_test( TARGET t_${test}
                   TYPE SCRIPT
-                  DEPENDS get_gribs get_tigge_gribs get_bufr_gribs
+                  DEPENDS get_gribs get_tigge_gribs get_bufrs
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                   RESOURCES include.sh
     )
