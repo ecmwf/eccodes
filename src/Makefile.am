@@ -50,6 +50,9 @@ libgrib_api_la_prototypes= \
 	grib_darray.c \
 	grib_sarray.c \
 	grib_iarray.c \
+	grib_vdarray.c \
+	grib_vsarray.c \
+	grib_viarray.c \
 	grib_accessor_class_array.c \
 	grib_accessor_class_assert.c \
 	grib_accessor_class_ascii.c \
