@@ -147,5 +147,5 @@ foreach( f ${bufr_files_to_download} )
   LIST(APPEND tgts "${tgt}")
 endforeach()
 
-add_custom_target( get_bufr_gribs DEPENDS ${tgts} )
+add_custom_target( get_bufrs DEPENDS ${tgts} )
 

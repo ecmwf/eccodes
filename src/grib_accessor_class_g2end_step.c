@@ -386,6 +386,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
         return 0;
     }
 
+    Assert(self->numberOfTimeRange);
     if((err = grib_get_long_internal(h,self->numberOfTimeRange, &numberOfTimeRange))) return err;
     Assert(numberOfTimeRange == 1 || numberOfTimeRange == 2);
 

@@ -14,7 +14,7 @@ but to install a fully functional library, its download is recommended.
 Standard Installation
 =====================
 
-   1. Download grib_api from http://www.ecmwf.int/products/data/software/download/grib_api.html.
+   1. Download grib_api from https://software.ecmwf.int/wiki/display/GRIB/Releases.
    2. Unpack distribution:
 
         > gunzip grib_api-X.tar.gz

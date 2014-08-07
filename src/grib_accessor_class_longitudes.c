@@ -176,7 +176,14 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
     if (ret) return ret;
     size=count;
 
-    if (*len<size) return GRIB_ARRAY_TOO_SMALL;
+    if (*len<size) {
+    	/* self->lons are computed in value_count*/
+    	if (self->lons) {
+    		grib_context_free(c,self->lons);
+    		self->lons=NULL;
+    	}
+    	return GRIB_ARRAY_TOO_SMALL;
+    }
     self->save=0;
 
     /* self->lons are computed in value_count*/
