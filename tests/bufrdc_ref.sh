@@ -8,7 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 . ./include.sh
 
 REDIRECT=/dev/null
@@ -22,14 +21,18 @@ for file in ${data_dir}/bufr/*.bufr
 do
   REDIRECT=/dev/null
 
-  rm -f $file.test | true
+  # Test numeric data: compare output of filter (res) with reference file (ref)
+  res_num=$file.num.test
+  ref_num=$file.num.ref
 
-  ${tools_dir}bufr_filter bufrdc_ref.filter $file 2> $REDIRECT > $file.test
+  rm -f $res_num | true
 
-  numdiff $file.ref $file.test
+  ${tools_dir}bufr_filter bufrdc_ref.filter $file 2> $REDIRECT > $res_num
 
-  rm -f $file.test
+  # Cannot use plain diff. We need to compare FLOAT NUMBERS with a tolerance
+  numdiff $ref_num $res_num
 
+  rm -f $res_num
 
 done
 
