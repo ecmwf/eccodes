@@ -148,6 +148,8 @@ typedef struct grib_accessor_smart_table {
         const char* tablename;
         const char* masterDir;
         const char* localDir;
+        const char* extraDir;
+        const char* extraTable;
         int widthOfCode;
         long* tableCodes;
         size_t tableCodesSize;

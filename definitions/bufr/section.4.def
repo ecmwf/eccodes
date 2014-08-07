@@ -17,22 +17,15 @@ meta selectGroupNumber bufr_group_number();
 
 transient subsetNumber=0;
 if (compressedData) {
-		meta values bufr_data(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length,
-										numberOfDataSubsets,subsetNumber,
-		  							expandedDescriptorsAfterOperators,abbreviationAfterOperators,
-										typeAfterOperators,nameAfterOperators,unitAfterOperators,
-										referenceAfterOperators,scaleAfterOperators,widthAfterOperators,codeFlags,
-										bitmapNumber,associatedBitmapNumber,associatedBitmapIndex,associatedInfoNumber) : dump;
+meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length,
+                        numberOfDataSubsets,subsetNumber,
+                        expandedDescriptors,type,reference,scale,width,
+                        stringValues,elementsFXY,compressedData) ;
 } else {
- 	meta values bufr_uncompressed_data(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length,
-										numberOfDataSubsets,subsetNumber,
-										expandedDescriptorsAfterOperators,abbreviationAfterOperators,
-										typeAfterOperators,nameAfterOperators,unitAfterOperators,
-										referenceAfterOperators,scaleAfterOperators,widthAfterOperators,codeFlags,
-										bitmapNumber,associatedBitmapNumber,associatedBitmapIndex) : dump;
+  assert(0);
 }
 
-meta unpack unpack_bufr_values(values);
+meta unpack unpack_bufr_values(numericValues);
 
 section_padding section4Padding;
 position offsetEndSection4;

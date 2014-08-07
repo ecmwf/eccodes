@@ -206,6 +206,13 @@ ehthumbs.db
 Thumbs.db
 .directory
 
+src/tags
+
+data/exp
+data/bufr/*.ref
+data/bufr/*.test
+data/bufr/*.json
+data/bufr/*.no
 data/.downloaded
 data/budg
 data/*.grib
@@ -213,6 +220,7 @@ data/*.grib2
 data/*.grib1
 data/tigge/tigge*.grib
 data/bufr/*.bufr
+data/exp/
 
 CMakeLists.txt.user*
 

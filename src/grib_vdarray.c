@@ -16,79 +16,78 @@
 
 #include "grib_api_internal.h"
 
-grib_sarray* grib_sarray_new(grib_context* c,size_t size,size_t incsize) {
-  grib_sarray* v=NULL;
+grib_vdarray* grib_vdarray_new(grib_context* c,size_t size,size_t incsize) {
+  grib_vdarray* v=NULL;
   if (!c) c=grib_context_get_default();
-  v=(grib_sarray*)grib_context_malloc_clear(c,sizeof(grib_sarray));
+  v=(grib_vdarray*)grib_context_malloc_clear(c,sizeof(grib_vdarray));
   if (!v) {
     grib_context_log(c,GRIB_LOG_ERROR,
-          "grib_sarray_new unable to allocate %d bytes\n",sizeof(grib_sarray));
+          "grib_vdarray_new unable to allocate %d bytes\n",sizeof(grib_vdarray));
     return NULL;
   }
   v->size=size;
   v->n=0;
   v->incsize=incsize;
-  v->v=(char**)grib_context_malloc_clear(c,sizeof(char*)*size);
+  v->v=(grib_darray**)grib_context_malloc_clear(c,sizeof(grib_darray*)*size);
   if (!v->v) {
     grib_context_log(c,GRIB_LOG_ERROR,
-          "grib_sarray_new unable to allocate %d bytes\n",sizeof(char*)*size);
+          "grib_vdarray_new unable to allocate %d bytes\n",sizeof(grib_darray*)*size);
     return NULL;
   }
   return v;
 }
 
-grib_sarray* grib_sarray_resize(grib_context* c,grib_sarray* v) {
+grib_vdarray* grib_vdarray_resize(grib_context* c,grib_vdarray* v) {
   int newsize=v->incsize+v->size;
 
   if (!c) c=grib_context_get_default();
 
-  v->v=grib_context_realloc(c,v->v,newsize*sizeof(char*));
+  v->v=grib_context_realloc(c,v->v,newsize*sizeof(grib_darray*));
   v->size=newsize;
   if (!v->v) {
     grib_context_log(c,GRIB_LOG_ERROR,
-          "grib_sarray_resize unable to allocate %d bytes\n",sizeof(char*)*newsize);
+          "grib_vdarray_resize unable to allocate %d bytes\n",sizeof(grib_darray*)*newsize);
     return NULL;
   }
   return v;
 }
 
-grib_sarray* grib_sarray_push(grib_context* c,grib_sarray* v,char* val) {
+grib_vdarray* grib_vdarray_push(grib_context* c,grib_vdarray* v,grib_darray* val) {
   size_t start_size=100;
   size_t start_incsize=100;
-  if (!v) v=grib_sarray_new(c,start_size,start_incsize);
+  if (!v) v=grib_vdarray_new(c,start_size,start_incsize);
 
-  if (v->n >= v->size) v=grib_sarray_resize(c,v);
+  if (v->n >= v->size) v=grib_vdarray_resize(c,v);
   v->v[v->n]=val;
   v->n++;
   return v;
 }
 
-void grib_sarray_delete(grib_context* c,grib_sarray* v) {
+void grib_vdarray_delete(grib_context* c,grib_vdarray* v) {
   if (!v) return;
   if (!c) grib_context_get_default();
   if (v->v) grib_context_free(c,v->v);
   grib_context_free(c,v);
 }
 
-void grib_sarray_delete_content(grib_context* c,grib_sarray* v) {
+void grib_vdarray_delete_content(grib_context* c,grib_vdarray* v) {
   int i;
   if (!v | !v->v) return;
   if (!c) grib_context_get_default();
   for (i=0;i<v->n;i++) {
-    grib_context_free(c,v->v[i]);
+    grib_darray_delete(c,v->v[i]);
     v->v[i]=0;
   }
   v->n=0;
 }
 
-
-char** grib_sarray_get_array(grib_context* c,grib_sarray* v) {
-  char** ret;
+grib_darray** grib_vdarray_get_array(grib_context* c,grib_vdarray* v) {
+  grib_darray** ret;
   int i;
   if (!v) return NULL;
-  ret=grib_context_malloc_clear(c,sizeof(char*)*v->n);
+  ret=grib_context_malloc_clear(c,sizeof(grib_darray*)*v->n);
   for (i=0;i<v->n;i++) ret[i]=v->v[i];
   return ret;
 }
 
-size_t grib_sarray_used_size(grib_sarray* v) { return v->n;}
+size_t grib_vdarray_used_size(grib_vdarray* v) { return v->n;}

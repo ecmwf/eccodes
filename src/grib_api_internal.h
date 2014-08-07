@@ -714,6 +714,29 @@ struct grib_iarray {
   grib_context* context;
 } ;
 
+struct grib_vdarray {
+  grib_darray** v;
+  size_t size;
+  size_t n;
+  size_t incsize;
+  grib_context* context;
+} ;
+
+struct grib_vsarray {
+  grib_sarray** v;
+  size_t size;
+  size_t n;
+  size_t incsize;
+  grib_context* context;
+} ;
+
+struct grib_viarray {
+  grib_iarray** v;
+  size_t size;
+  size_t n;
+  size_t incsize;
+  grib_context* context;
+} ;
 
 #define MAX_SET_VALUES      10
 #define MAX_ACCESSOR_CACHE  100

@@ -150,12 +150,17 @@ grib_darray *grib_darray_new(grib_context *c, size_t size, size_t incsize);
 grib_darray *grib_darray_resize(grib_context *c, grib_darray *v);
 grib_darray *grib_darray_push(grib_context *c, grib_darray *v, double val);
 void grib_darray_delete(grib_context *c, grib_darray *v);
+double *grib_darray_get_array(grib_context *c, grib_darray *v);
+size_t grib_darray_used_size(grib_darray *v);
 
 /* grib_sarray.c */
 grib_sarray *grib_sarray_new(grib_context *c, size_t size, size_t incsize);
 grib_sarray *grib_sarray_resize(grib_context *c, grib_sarray *v);
 grib_sarray *grib_sarray_push(grib_context *c, grib_sarray *v, char *val);
 void grib_sarray_delete(grib_context *c, grib_sarray *v);
+void grib_sarray_delete_content(grib_context *c, grib_sarray *v);
+char **grib_sarray_get_array(grib_context *c, grib_sarray *v);
+size_t grib_sarray_used_size(grib_sarray *v);
 
 /* grib_iarray.c */
 grib_iarray *grib_iarray_new_from_array(grib_context *c, long *a, size_t size);
@@ -174,6 +179,33 @@ void grib_iarray_delete_array(grib_iarray *v);
 long *grib_iarray_get_array(grib_iarray *v);
 size_t grib_iarray_get_used_size(grib_iarray *v);
 
+/* grib_vdarray.c */
+grib_vdarray *grib_vdarray_new(grib_context *c, size_t size, size_t incsize);
+grib_vdarray *grib_vdarray_resize(grib_context *c, grib_vdarray *v);
+grib_vdarray *grib_vdarray_push(grib_context *c, grib_vdarray *v, grib_darray *val);
+void grib_vdarray_delete(grib_context *c, grib_vdarray *v);
+void grib_vdarray_delete_content(grib_context *c, grib_vdarray *v);
+grib_darray **grib_vdarray_get_array(grib_context *c, grib_vdarray *v);
+size_t grib_vdarray_used_size(grib_vdarray *v);
+
+/* grib_vsarray.c */
+grib_vsarray *grib_vsarray_new(grib_context *c, size_t size, size_t incsize);
+grib_vsarray *grib_vsarray_resize(grib_context *c, grib_vsarray *v);
+grib_vsarray *grib_vsarray_push(grib_context *c, grib_vsarray *v, grib_sarray *val);
+void grib_vsarray_delete(grib_context *c, grib_vsarray *v);
+void grib_vsarray_delete_content(grib_context *c, grib_vsarray *v);
+grib_sarray **grib_vsarray_get_array(grib_context *c, grib_vsarray *v);
+size_t grib_vsarray_used_size(grib_vsarray *v);
+
+/* grib_viarray.c */
+grib_viarray *grib_viarray_new(grib_context *c, size_t size, size_t incsize);
+grib_viarray *grib_viarray_resize(grib_context *c, grib_viarray *v);
+grib_viarray *grib_viarray_push(grib_context *c, grib_viarray *v, grib_iarray *val);
+void grib_viarray_delete(grib_context *c, grib_viarray *v);
+void grib_viarray_delete_content(grib_context *c, grib_viarray *v);
+grib_iarray **grib_viarray_get_array(grib_context *c, grib_viarray *v);
+size_t grib_viarray_used_size(grib_viarray *v);
+
 /* grib_accessor_class_array.c */
 
 /* grib_accessor_class_assert.c */
@@ -189,6 +221,8 @@ size_t grib_iarray_get_used_size(grib_iarray *v);
 /* grib_accessor_class_bits_per_value.c */
 
 /* grib_accessor_class_bufr_data.c */
+
+/* grib_accessor_class_bufr_data_array.c */
 
 /* grib_accessor_class_bufr_data_element.c */
 

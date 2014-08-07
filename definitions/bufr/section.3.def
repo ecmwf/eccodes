@@ -10,6 +10,7 @@
 constant defaultSequence=0;
 constant tablesMasterDir="bufr/tables/[masterTableNumber]/wmo/[masterTablesVersionNumber]" : hidden;
 constant tablesLocalDir="bufr/tables/[masterTableNumber]/local/[localTablesVersionNumber]/[centre:l]/[subCentre]" : hidden;
+constant rootTablesDir="bufr/tables" : hidden;
 
 transient tableNumber=0;
 codetable[24] codeTablesMaster '[tablesMasterDir]/codetables/[tableNumber].table' : string_type,transient;
@@ -68,31 +69,18 @@ meta unexpandedDescriptors unexpanded_descriptors(numberOfUnexpandedDescriptors)
 
 meta expandedDescriptors expanded_descriptors(unexpandedDescriptors,sequences) ;
 
-#smart_table NAME (VALUES,FILE_NAME,MASTER_DIRECTORY,LOCAL_DIRECTORY,WIDTH_OF_CODE_IN_BITS);
-smart_table elements (expandedDescriptors,"element.table",tablesMasterDir,tablesLocalDir,16) ;
-meta abbreviation 	smart_table_column(elements,0,1) 	: string_type;
-meta type 					smart_table_column(elements,1,0) 	: string_type;
-meta name 					smart_table_column(elements,2,0)	:	string_type;
-meta unit 					smart_table_column(elements,3,0)	:	string_type;
-meta scale 					smart_table_column(elements,4,0)	:	long_type;
-meta reference 			smart_table_column(elements,5,0)	:	long_type;
-meta width 					smart_table_column(elements,6,0)	:	long_type;
-meta crex_unit 			smart_table_column(elements,7,0)	:	long_type;
-meta crex_scale 		smart_table_column(elements,8,0)	:	long_type;
-meta crex_width 		smart_table_column(elements,9,0)	:	long_type;
-
-meta expandedDescriptorsAfterOperators apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,0) : read_only;
-meta scaleAfterOperators apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,1) :read_only;
-meta referenceAfterOperators apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,2) :read_only;
-meta widthAfterOperators apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,3) :read_only;
-meta bitmapNumber apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,4) :read_only;
-meta associatedBitmapNumber apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,5) :read_only;
-meta associatedBitmapIndex apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,6) :read_only;
-meta abbreviationAfterOperators apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,7) :read_only,string_type;
-meta typeAfterOperators apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,8) :read_only,string_type;
-meta nameAfterOperators apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,9) :read_only,string_type;
-meta unitAfterOperators apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,10) :read_only,string_type;
-meta associatedInfoNumber apply_operators(expandedDescriptors,abbreviation,type,name,unit,scale,reference,width,11) :read_only;
+#smart_table NAME (VALUES,FILE_NAME,MASTER_DIRECTORY,LOCAL_DIRECTORY,WIDTH_OF_CODE_IN_BITS,EXTRA_DIRECTORY,EXTRA_FILE_NAME);
+smart_table expanded (expandedDescriptors,"element.table",tablesMasterDir,tablesLocalDir,18,rootTablesDir,"operators.table") ;
+meta abbreviation 	smart_table_column(expanded,0,1) 	: string_type;
+meta type 					smart_table_column(expanded,1,0) 	: string_type;
+meta name 					smart_table_column(expanded,2,0)	:	string_type;
+meta unit 					smart_table_column(expanded,3,0)	:	string_type;
+meta scale 					smart_table_column(expanded,4,0)	:	long_type;
+meta reference 			smart_table_column(expanded,5,0)	:	long_type;
+meta width 					smart_table_column(expanded,6,0)	:	long_type;
+meta crex_unit 			smart_table_column(expanded,7,0)	:	long_type;
+meta crex_scale 		smart_table_column(expanded,8,0)	:	long_type;
+meta crex_width 		smart_table_column(expanded,9,0)	:	long_type;
 
 meta hasDelayedReplication bufr_has_delayed_replication(expandedDescriptorsAfterOperators);
 

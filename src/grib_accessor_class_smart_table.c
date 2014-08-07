@@ -27,6 +27,8 @@
    MEMBERS    =  const char* tablename
    MEMBERS    =  const char* masterDir
    MEMBERS    =  const char* localDir
+   MEMBERS    =  const char* extraDir
+   MEMBERS    =  const char* extraTable
    MEMBERS    =  int widthOfCode
    MEMBERS    =  long* tableCodes
    MEMBERS    =  size_t tableCodesSize
@@ -67,6 +69,8 @@ typedef struct grib_accessor_smart_table {
 	const char* tablename;
 	const char* masterDir;
 	const char* localDir;
+	const char* extraDir;
+	const char* extraTable;
 	int widthOfCode;
 	long* tableCodes;
 	size_t tableCodesSize;
@@ -181,6 +185,8 @@ static void init(grib_accessor* a, const long len, grib_arguments* params) {
   self->masterDir = grib_arguments_get_name(a->parent->h,params,n++);
   self->localDir = grib_arguments_get_name(a->parent->h,params,n++);
   self->widthOfCode = grib_arguments_get_long(a->parent->h,params,n++);
+  self->extraDir = grib_arguments_get_name(a->parent->h,params,n++);
+  self->extraTable = grib_arguments_get_string(a->parent->h,params,n++);
 
   a->length = 0;
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -202,17 +208,28 @@ static grib_smart_table* load_table(grib_accessor_smart_table* self)
     char recomposed[1024]={0,};
     char localRecomposed[1024]={0,};
     char *localFilename=0;
+    char extraRecomposed[1024]={0,};
+    char *extraFilename=0;
     char localName[1024]={0,};
     char masterDir[1024]={0,};
     char localDir[1024]={0,};
+    char extraDir[1024]={0,};
+    char extraTable[1024]={0,};
     size_t len=1024;
 
-    if (self->masterDir != NULL)
+    if (self->masterDir != NULL) {
         grib_get_string(h,self->masterDir,masterDir,&len);
+    }
 
     len=1024;
-    if (self->localDir != NULL)
+    if (self->localDir != NULL) {
         grib_get_string(h,self->localDir,localDir,&len);
+    }
+
+    len=1024;
+    if (self->extraDir != NULL && self->extraTable!=NULL) {
+        grib_get_string(h,self->extraDir,extraDir,&len);
+    }
 
     if (*masterDir!=0) {
         sprintf(name,"%s/%s",masterDir,self->tablename);
@@ -227,6 +244,12 @@ static grib_smart_table* load_table(grib_accessor_smart_table* self)
         sprintf(localName,"%s/%s",localDir,self->tablename);
         grib_recompose_name(h, NULL,localName, localRecomposed,0);
         localFilename=grib_context_full_defs_path(c,localRecomposed);
+    }
+
+    if (*extraDir!=0) {
+        sprintf(extraTable,"%s/%s",extraDir,self->extraTable);
+        grib_recompose_name(h, NULL,extraTable, extraRecomposed,0);
+        extraFilename=grib_context_full_defs_path(c,extraRecomposed);
     }
 
     next=c->smart_table;
@@ -248,6 +271,8 @@ static grib_smart_table* load_table(grib_accessor_smart_table* self)
     if (filename!=0) grib_load_smart_table(c,filename,recomposed,size,t);
 
     if (localFilename!=0) grib_load_smart_table(c,localFilename,localRecomposed,size,t);
+
+    if (extraFilename!=0) grib_load_smart_table(c,extraFilename,extraRecomposed,size,t);
 
     if (t->filename[0]==NULL && t->filename[1]==NULL) {
         grib_context_free_persistent(c,t);

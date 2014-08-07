@@ -70,3 +70,13 @@ void grib_darray_delete(grib_context* c,grib_darray* v) {
   grib_context_free(c,v);
 }
 
+double* grib_darray_get_array(grib_context* c,grib_darray* v) {
+  double* ret;
+  int i;
+  if (!v) return NULL;
+  ret=grib_context_malloc_clear(c,sizeof(double)*v->n);
+  for (i=0;i<v->n;i++) ret[i]=v->v[i];
+  return ret;
+}
+
+size_t grib_darray_used_size(grib_darray* v) { return v->n;}
