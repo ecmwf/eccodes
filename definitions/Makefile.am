@@ -543,6 +543,7 @@ dist_definitionscommon_DATA = \
 definitionsgrib1dir = @GRIB_DEFINITION_PATH@/grib1
 dist_definitionsgrib1_DATA = \
 	grib1/0.ecmf.table\
+	grib1/0.eidb.table\
 	grib1/0.eswi.table\
 	grib1/0.rjtd.table\
 	grib1/0.table\
@@ -556,6 +557,8 @@ dist_definitionsgrib1_DATA = \
 	grib1/2.0.2.table\
 	grib1/2.0.3.table\
 	grib1/2.128.table\
+	grib1/2.233.1.table\
+	grib1/2.233.253.table\
 	grib1/2.253.128.table\
 	grib1/2.34.200.table\
 	grib1/2.46.254.table\
@@ -596,6 +599,7 @@ dist_definitionsgrib1_DATA = \
 	grib1/2.98.228.table\
 	grib1/2.98.230.table\
 	grib1/2.table\
+	grib1/3.233.table\
 	grib1/3.82.table\
 	grib1/3.98.table\
 	grib1/3.table\
@@ -812,6 +816,15 @@ dist_definitionsgrib1_localConcepts_edzw_DATA = \
 	grib1/localConcepts/edzw/shortName.def\
 	grib1/localConcepts/edzw/stepType.def\
 	grib1/localConcepts/edzw/units.def
+
+definitionsgrib1_localConcepts_eidbdir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/eidb
+dist_definitionsgrib1_localConcepts_eidb_DATA = \
+	grib1/localConcepts/eidb/cfName.def\
+	grib1/localConcepts/eidb/name.def\
+	grib1/localConcepts/eidb/paramId.def\
+	grib1/localConcepts/eidb/shortName.def\
+	grib1/localConcepts/eidb/typeOfLevel.def\
+	grib1/localConcepts/eidb/units.def
 
 definitionsgrib1_localConcepts_ekmidir = @GRIB_DEFINITION_PATH@/grib1/localConcepts/ekmi
 dist_definitionsgrib1_localConcepts_ekmi_DATA = \
