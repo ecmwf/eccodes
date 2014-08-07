@@ -193,16 +193,6 @@ static void init_class(grib_accessor_class* c)
 #define NUMBER_OF_QUALIFIERS_PER_CATEGORY 256
 #define NUMBER_OF_QUALIFIERS_CATEGORIES 3
 
-<<<<<<< HEAD
-=======
-static int number_of_qualifiers=NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES;
-
-static GRIB_INLINE int significanceQualifierIndex(int X,int Y) {
-  int a[]={-1,0,1,-1,-1,-1,-1,-1,2};
-  return Y+a[X]*NUMBER_OF_QUALIFIERS_PER_CATEGORY;
-}
-
->>>>>>> 25e8f0ed91902a8ccb113de6b71a09ecc73f8e01
 static long init_length(grib_accessor* a)
 {
   grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
@@ -418,7 +408,6 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
     modifiedWidth= self->width[i]+extraWidth;
   }
 
-<<<<<<< HEAD
   lval=grib_decode_unsigned_long(data,pos,modifiedWidth);
   localReference=lval+modifiedReference;
   width=grib_decode_unsigned_long(data,pos,6);
@@ -432,33 +421,6 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
         dval=(lval+localReference)*modifiedFactor;
       }
       grib_darray_push(c,ret,dval);
-=======
-  startIndex++;
-  return startIndex;
-}
-
-static grib_section* find_section_of_associated_group(grib_section** groupNumberSection,
-                      long* bitmapStartElement,grib_iarray* groupNumberIndex,long bitmapNumber) {
-    grib_section* section=0;
-    long indexOfGroupNumber=0;
-    long jj=bitmapStartElement[bitmapNumber];
-    indexOfGroupNumber=grib_iarray_get(groupNumberIndex,jj);
-    section=groupNumberSection[indexOfGroupNumber+1];
-    return section;
-}
-
-static GRIB_INLINE void reset_qualifiers(grib_accessor* significanceQualifierGroup[]) {
-  int i;
-  for (i=0;i<number_of_qualifiers;i++) 
-      significanceQualifierGroup[i]=0;
-}
-
-static GRIB_INLINE void reset_deeper_qualifiers(grib_accessor* significanceQualifierGroup[],int* significanceQualifierDepth, int depth) {
-  int i;
-  for (i=0;i<number_of_qualifiers;i++) {
-    if (significanceQualifierDepth[i]>depth) {
-      significanceQualifierGroup[i]=0;
->>>>>>> 25e8f0ed91902a8ccb113de6b71a09ecc73f8e01
     }
   } else {
     if (grib_is_all_bits_one(lval,modifiedWidth) && canBeMissing) {

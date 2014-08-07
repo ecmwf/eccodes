@@ -180,7 +180,6 @@ Thumbs.db
 
 src/tags
 
-data/exp
 data/bufr/*.ref
 data/bufr/*.test
 data/bufr/*.json

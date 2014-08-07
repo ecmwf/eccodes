@@ -39,6 +39,10 @@ dist_definitionsbufr_DATA = \
 	bufr/section1_flags.table\
 	bufr/section3_flags.table
 
+definitionsbufr_tablesdir = @GRIB_DEFINITION_PATH@/bufr/tables
+dist_definitionsbufr_tables_DATA = \
+	bufr/tables/operators.table
+
 definitionsbufr_tables_0_local_1_98_0dir = @GRIB_DEFINITION_PATH@/bufr/tables/0/local/1/98/0
 dist_definitionsbufr_tables_0_local_1_98_0_DATA = \
 	bufr/tables/0/local/1/98/0/element.table\

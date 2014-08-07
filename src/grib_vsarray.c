@@ -72,7 +72,7 @@ void grib_vsarray_delete(grib_context* c,grib_vsarray* v) {
 
 void grib_vsarray_delete_content(grib_context* c,grib_vsarray* v) {
   int i;
-  if (!v | !v->v) return;
+  if (!v || !v->v) return;
   if (!c) grib_context_get_default();
   for (i=0;i<v->n;i++) {
     grib_sarray_delete_content(c,v->v[i]);
