@@ -30,7 +30,8 @@ do
   ${tools_dir}bufr_filter bufrdc_ref.filter $file 2> $REDIRECT > $res_num
 
   # Cannot use plain diff. We need to compare FLOAT NUMBERS with a tolerance
-  numdiff $ref_num $res_num >$REDIRECT
+  #numdiff $ref_num $res_num >$REDIRECT
+  perl number_compare.pl $ref_num $res_num >$REDIRECT 2> $REDIRECT
 
   rm -f $res_num
 
