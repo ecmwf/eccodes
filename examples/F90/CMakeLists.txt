@@ -28,6 +28,7 @@ list( APPEND tests
       read_message
       read_from_file
       get_set_uuid
+      clone
 )
 
 # Simplify tests: no need to build executable and then test. All in one

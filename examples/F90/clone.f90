@@ -23,7 +23,6 @@ program clone
   integer                                       :: igrib_out
   character(len=2)                              :: step
   double precision, dimension(:,:), allocatable :: field2D
-
   
   call grib_open_file(infile,'../../data/constant_field.grib1','r')
   call grib_open_file(outfile,'out.grib1','w')
@@ -46,24 +45,22 @@ program clone
   do i=0,18,6
     call grib_clone(igrib_in, igrib_out)
     write(step,'(i2)') i
-! Careful: stepRange is a string (could be 0-6, 12-24, etc.)
-! use adjustl to remove blank from the left.
+    ! Careful: stepRange is a string (could be 0-6, 12-24, etc.)
+    ! use adjustl to remove blank from the left.
     call grib_set(igrib_out,'stepRange',adjustl(step))
 
     call generate_field(field2D)
 
-! use pack to create 1D values
+    ! use pack to create 1D values
     call grib_set(igrib_out,'values',pack(field2D, mask=.true.))
  
-  !     write cloned messages to a file
+    ! write cloned messages to a file
     call grib_write(igrib_out,outfile)
     call grib_release(igrib_out)
   end do
 
   call grib_release(igrib_in)
-
   call grib_close_file(infile)
-
   call grib_close_file(outfile)
   deallocate(field2D)
 
