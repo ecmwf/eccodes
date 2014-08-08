@@ -211,6 +211,7 @@ examples/C/check_gaussian_grid
 examples/C/clone
 examples/C/iterator_bitmap
 examples/C/new_sample
+examples/F90/f_clone
 examples/F90/f_copy_message
 examples/F90/f_copy_namespace
 examples/F90/f_count_messages
