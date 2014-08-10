@@ -17,12 +17,15 @@ meta selectGroupNumber bufr_group_number();
 
 transient subsetNumber=0;
 if (compressedData) {
-meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length,
+  meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length,
                         numberOfDataSubsets,subsetNumber,
-                        expandedDescriptors,type,reference,scale,width,
+                        expandedDescriptors,type,unit,reference,scale,width,
                         stringValues,elementsFXY,compressedData) ;
 } else {
-  assert(0);
+  meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length,
+                        numberOfDataSubsets,subsetNumber,
+                        expandedDescriptors,type,unit,reference,scale,width,
+                        stringValues,elementsFXY,compressedData) ;
 }
 
 meta unpack unpack_bufr_values(numericValues);

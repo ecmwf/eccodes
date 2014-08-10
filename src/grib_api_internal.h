@@ -200,6 +200,12 @@ double rint(double x);
 #define MAX_SMART_TABLE_COLUMNS 20
 #define MAX_CODETABLE_ENTRIES 65536
 
+/* types of BUFR table B elements */
+#define BUFR_TYPE_STRING      1
+#define BUFR_TYPE_DOUBLE      2
+#define BUFR_TYPE_CODETABLE   3
+#define BUFR_TYPE_FLAGTABLE   4
+
 /* ACCESSOR COMPARE FLAGS */
 #define GRIB_COMPARE_NAMES          (1<<0)
 #define GRIB_COMPARE_TYPES          (1<<1)

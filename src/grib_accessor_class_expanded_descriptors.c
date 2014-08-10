@@ -174,7 +174,7 @@ size_t __expand(grib_accessor* a,grib_iarray* unexpanded,grib_iarray* expanded, 
   grib_context* c=a->parent->h->context;
   long us;
 
-  if (grib_iarray_get_used_size(unexpanded)==0) return 0;
+  if (grib_iarray_used_size(unexpanded)==0) return 0;
 
   us=grib_iarray_get(unexpanded,0);
 

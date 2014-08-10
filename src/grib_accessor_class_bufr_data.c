@@ -692,7 +692,7 @@ static int decode_elements(grib_accessor* a) {
             if (width) {Assert(0);}
 
             if(bitmapIndex[self->bitmapNumber[i]]==-1)
-                bitmapIndex[self->bitmapNumber[i]]=grib_iarray_get_used_size(bitmap);
+                bitmapIndex[self->bitmapNumber[i]]=grib_iarray_used_size(bitmap);
             grib_iarray_push(index,i);
             grib_iarray_push(groupNumberIndex,groupNumber);
             groupNumberSection[groupNumber]=section;

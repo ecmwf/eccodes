@@ -177,7 +177,7 @@ void grib_iarray_set(grib_iarray *a, size_t i, long v);
 void grib_iarray_delete(grib_iarray *v);
 void grib_iarray_delete_array(grib_iarray *v);
 long *grib_iarray_get_array(grib_iarray *v);
-size_t grib_iarray_get_used_size(grib_iarray *v);
+size_t grib_iarray_used_size(grib_iarray *v);
 
 /* grib_vdarray.c */
 grib_vdarray *grib_vdarray_new(grib_context *c, size_t size, size_t incsize);
@@ -620,8 +620,8 @@ int grib_index_select_double(grib_index *index, const char *skey, double value);
 int grib_index_select_string(grib_index *index, const char *skey, char *value);
 grib_handle *grib_index_get_handle(grib_field *field, int *err);
 grib_handle *codes_index_get_handle(grib_field *field, int message_type, int *err);
+int grib_index_dump_file(FILE *fout, const char *filename);
 void grib_index_dump(FILE *fout, grib_index *index);
-int grib_index_dump_file(FILE* fout, const char* filename);
 char *grib_get_field_file(grib_index *index, off_t *offset);
 grib_handle *grib_handle_new_from_index(grib_index *index, int *err);
 grib_handle *codes_new_from_index(grib_index *index, int message_type, int *err);
@@ -697,6 +697,14 @@ void grib_timer_print(grib_timer *t);
 void grib_timer_partial_rate(grib_timer *t, double start, long total);
 void grib_print_all_timers(void);
 void grib_reset_all_timers(void);
+grib_timer *grib_get_timer(grib_context *c, const char *name, const char *statname, int elapsed);
+int grib_timer_start(grib_timer *t);
+int grib_timer_stop(grib_timer *t, long total);
+double grib_timer_value(grib_timer *t);
+void grib_timer_print(grib_timer *t);
+void grib_timer_partial_rate(grib_timer *t, double start, long total);
+void grib_print_all_timers(void);
+void grib_reset_all_timers(void);
 
 /* grib_ibmfloat.c */
 unsigned long grib_ibm_to_long(double x);
@@ -715,6 +723,10 @@ double grib_ieeefloat_error(double x);
 double grib_long_to_ieee(unsigned long x);
 unsigned long grib_ieee_nearest_smaller_to_long(double x);
 int grib_nearest_smaller_ieee_float(double a, double *ret);
+double grib_ieeefloat_error(double x);
+double grib_long_to_ieee(unsigned long x);
+int grib_nearest_smaller_ieee_float(double a, double *x);
+unsigned long grib_ieee_to_long(double x);
 unsigned long grib_ieee64_to_long(double x);
 double grib_long_to_ieee64(unsigned long x);
 int grib_ieee_decode_array(grib_context *c, unsigned char *buf, size_t nvals, int bytes, double *val);

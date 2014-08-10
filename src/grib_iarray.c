@@ -199,5 +199,5 @@ long* grib_iarray_get_array(grib_iarray* v) {
     return vv;
 }
 
-size_t grib_iarray_get_used_size(grib_iarray* v) {return v->n;}
+size_t grib_iarray_used_size(grib_iarray* v) {return v->n;}
 
