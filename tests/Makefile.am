@@ -1,4 +1,5 @@
 TESTS = definitions.sh \
+        bufrdc_ref.sh bufr_dump.sh \
         ieee.sh grib1to2.sh \
         unit_tests.sh \
         grib2to1.sh badgrib.sh ls.sh filter.sh  \
@@ -10,7 +11,7 @@ TESTS = definitions.sh \
         multi_from_message.sh change_scanning.sh \
         julian.sh statistics.sh tigge.sh tigge_conversions.sh \
         read_any.sh padding.sh lamb_az_eq_area.sh grib_to_netcdf.sh \
-        bufrdc_ref.sh bufr_dump.sh debug.sh $(JPEG_TEST)
+        debug.sh $(JPEG_TEST)
 
 noinst_PROGRAMS = packing_check gauss_sub read_any double_cmp packing pack_unpack \
                   multi_from_message julian read_index index gribex_perf\
