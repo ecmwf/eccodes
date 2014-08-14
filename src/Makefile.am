@@ -203,6 +203,7 @@ libgrib_api_la_prototypes= \
 	grib_accessor_class_g2grid.c \
 	grib_accessor_class_unexpanded_descriptors.c \
 	grib_accessor_class_expanded_descriptors.c \
+	grib_accessor_class_bufrdc_expanded_descriptors.c \
 	grib_accessor_class_data_apply_bitmap.c \
 	grib_accessor_class_data_apply_boustrophedonic.c \
 	grib_accessor_class_data_apply_boustrophedonic_bitmap.c \

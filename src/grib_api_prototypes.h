@@ -527,6 +527,8 @@ second_order_packed *grib_get_second_order_groups(grib_context *c, const unsigne
 /* grib_accessor_class_expanded_descriptors.c */
 size_t __expand(grib_accessor *a, grib_iarray *unexpanded, grib_iarray *expanded, int *err);
 
+/* grib_accessor_class_bufrdc_expanded_descriptors.c */
+
 /* grib_accessor_class_data_apply_bitmap.c */
 
 /* grib_accessor_class_data_apply_boustrophedonic.c */

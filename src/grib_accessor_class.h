@@ -20,6 +20,7 @@ extern grib_accessor_class* grib_accessor_class_bufr_group_number;
 extern grib_accessor_class* grib_accessor_class_bufr_has_delayed_replication;
 extern grib_accessor_class* grib_accessor_class_bufr_subset_number;
 extern grib_accessor_class* grib_accessor_class_bufr_uncompressed_data;
+extern grib_accessor_class* grib_accessor_class_bufrdc_expanded_descriptors;
 extern grib_accessor_class* grib_accessor_class_bytes;
 extern grib_accessor_class* grib_accessor_class_change_scanning_direction;
 extern grib_accessor_class* grib_accessor_class_codeflag;

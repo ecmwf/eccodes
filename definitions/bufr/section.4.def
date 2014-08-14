@@ -20,12 +20,12 @@ if (compressedData) {
   meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length,
                         numberOfDataSubsets,subsetNumber,
                         expandedDescriptors,type,unit,reference,scale,width,
-                        stringValues,elementsFXY,compressedData) ;
+                        stringValues,elementsDescriptorsIndex,compressedData) ;
 } else {
   meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length,
                         numberOfDataSubsets,subsetNumber,
                         expandedDescriptors,type,unit,reference,scale,width,
-                        stringValues,elementsFXY,compressedData) ;
+                        stringValues,elementsDescriptorsIndex,compressedData) ;
 }
 
 meta unpack unpack_bufr_values(numericValues);
