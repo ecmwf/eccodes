@@ -205,8 +205,6 @@ myconfiggprof*
 myconfignopy*
 INSTALL
 share/
-lib
-include
 
 #from make
 examples/C/check_gaussian_grid
@@ -264,3 +262,7 @@ tools/taf_ls
 python/.libs/
 python/gribapi_swig.py
 python/gribapi_swig_wrap.c
+
+data/bufr/*diff
+data/bufr/*decode
+data/bufr/*test
