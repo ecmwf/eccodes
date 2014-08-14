@@ -12,7 +12,8 @@
 #
 # It exits with status 0 if the files are considered the same
 # otherwise status is 1.
-# The actual differences are NOT printed
+# 
+# Only the first difference is printed
 #
 ########################################################################
 
@@ -36,6 +37,7 @@ die "$!" unless (-e $fileA && -e $fileB);
 
 #print "DEBUG:  f1=$fileA, f2=$fileB, tol=$tolerance\n";
 
+my $line_num=1;
 use File::Compare 'cmp';
 
 sub munge($) {
@@ -49,7 +51,19 @@ sub munge($) {
 
 my $delta = $tolerance;
 
-if (not cmp($fileA, $fileB, sub {abs(munge $_[0] - munge $_[1])>$delta} ))
+if (not cmp($fileA, $fileB, sub {
+        my $arg1 = munge $_[0];
+        my $arg2 = munge $_[1];
+        #print "Line $line_num: Comparing $arg1 with $arg2 ...\n";
+        my $result = (abs($arg1 - $arg2) > $delta);
+        if ($result) {
+            print "Line $line_num differs: [$arg1] <=> [$arg2]\n";
+            print "Absolute error = ". abs($arg1 - $arg2) . "\n";
+        }
+        ++$line_num;
+        return $result;
+        # abs(munge $_[0] - munge $_[1])>$delta
+    } ))
 {
     #print "FLOAT: fileA and fileB are considered the same. HOORA\n";
     exit 0;

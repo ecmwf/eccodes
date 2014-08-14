@@ -28,6 +28,8 @@ endforeach()
 #################################################
 list( APPEND tests
     definitions
+    bufr_dump
+    bufrdc_ref
     ieee
     grib1to2
     grib2to1
@@ -62,8 +64,6 @@ list( APPEND tests
     padding
     debug
     unit_tests
-    bufr_dump
-    bufrdc_ref
 )
 
 foreach( test ${tests} )
