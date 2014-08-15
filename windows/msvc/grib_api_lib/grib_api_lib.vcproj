@@ -517,6 +517,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_accessor_class_bufrdc_expanded_descriptors.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_bytes.c"
 				>
 			</File>
@@ -1562,6 +1566,18 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_value.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_vdarray.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_viarray.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_vsarray.c"
 				>
 			</File>
 			<File
