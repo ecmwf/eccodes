@@ -205,6 +205,8 @@ myconfiggprof*
 myconfignopy*
 INSTALL
 share/
+lib
+include
 
 #from make
 examples/C/check_gaussian_grid
