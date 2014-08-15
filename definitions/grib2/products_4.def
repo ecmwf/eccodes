@@ -71,6 +71,7 @@ concept marsType {
    }
 }
 
+# See GRIB-205 re no_copy
 concept marsStream {
 
     oper = {
@@ -96,9 +97,7 @@ concept marsStream {
     "default" = {
       dummyc = 0;
     }
-
-}
+} : no_copy;
 
 alias mars.stream = marsStream;
 alias mars.type   = marsType;
-
