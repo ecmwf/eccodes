@@ -706,8 +706,13 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
             save_error(c,name);
         }
 
-
-        if(err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS)
+        if(err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1!=len2)
+        {
+            printInfo(h1);
+            printf("Different size for \"%s\"  [%ld]  [%ld]\n",name,(long)len1,(long)len2);
+            save_error(c,name);
+        }
+        if(err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1==len2)
         {
             int i;
             countdiff=0;
