@@ -850,15 +850,17 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
                     if (packingError2!=0 || packingError1!=0)
                         printf(" packingError: [%g] [%g]",packingError1,packingError2);
 
-
                     if (!grib_inline_strcmp(name,"packedValues") || !grib_inline_strcmp(name,"values")
                             || !grib_inline_strcmp(name,"codedValues")) {
-                        double max1,min1,max2,min2;
-                        grib_get_double(h1,"max",&max1);
-                        grib_get_double(h1,"min",&min1);
-                        grib_get_double(h2,"max",&max2);
-                        grib_get_double(h2,"min",&min2);
-                        printf("\n\tvalues max= [%g]  [%g]         min= [%g] [%g]",max1,max2,min1,min2);
+                        double max1=0,min1=0,max2=0,min2=0;
+                        /* Note: some packings like spectral do not have min,max */
+                        if (grib_get_double(h1,"max",&max1) == GRIB_SUCCESS &&
+                            grib_get_double(h1,"min",&min1) == GRIB_SUCCESS &&
+                            grib_get_double(h2,"max",&max2) == GRIB_SUCCESS &&
+                            grib_get_double(h2,"min",&min2) == GRIB_SUCCESS)
+                        {
+                            printf("\n\tvalues max= [%g]  [%g]         min= [%g] [%g]",max1,max2,min1,min2);
+                        }
                     }
                     printf("\n");
                 } else {
