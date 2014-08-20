@@ -49,24 +49,35 @@ alias latitudeWhereDxAndDyAreSpecifiedInDegrees=LaDInDegrees;
 # NOTE 2 NOT FOUND
 signed[4] orientationOfTheGrid  : edition_specific;
 alias LoV =  orientationOfTheGrid ;
-
 meta geography.orientationOfTheGridInDegrees scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) : dump;
+
 #  Dx - X-direction grid length
-# NOTE 3 NOT FOUND
+# NOTE 3: Grid length is in units of 10–3 m at the latitude specified by LaD
 unsigned[4] Dx  : edition_specific;
-meta geography.DxInMetres scale(Dx,oneConstant,grib1divider,truncateDegrees) : dump;
+meta geography.DxInMetres scale(Dx,one,thousand,truncateDegrees) : dump;
 alias xDirectionGridLength=Dx;
 
 #  Dy - Y-direction grid length
-# NOTE 3 NOT FOUND
+# NOTE 3: Grid length is in units of 10–3 m at the latitude specified by LaD
 unsigned[4] Dy  : edition_specific;
-meta geography.DyInMetres scale(Dy,oneConstant,grib1divider,truncateDegrees) : dump;
+meta geography.DyInMetres scale(Dy,one,thousand,truncateDegrees) : dump;
 alias yDirectionGridLength=Dy;
 
 #  Projection centre flag
 flags[1] projectionCentreFlag 'grib2/tables/[tablesVersion]/3.5.table' : dump;
 
 include "template.3.scanning_mode.def";
+
+
+iterator polar_stereographic(numberOfPoints,missingValue,values,
+          radius,Nx,Ny,
+          latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
+          LaDInDegrees,orientationOfTheGridInDegrees,
+          DxInMetres,DyInMetres,
+          iScansNegatively,
+          jScansPositively,
+          jPointsAreConsecutive,
+          alternativeRowScanning);
 
 
 # END   2/template.3.20 ----------------------------------------------------------------------
