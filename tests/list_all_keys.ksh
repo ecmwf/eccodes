@@ -16,7 +16,7 @@ for file in `find $GRIB_DEFINITION_PATH -name '*.def' -print`
 do
   ${tools_dir}grib_list_keys $file >> tmp$$  
 done
-p4 edit keys
+
 cat >keys <<EOF
 %{
 #include "grib_api_internal.h"
