@@ -187,7 +187,6 @@ static int value_count(grib_accessor* a, long* count)
 
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-
     grib_accessor_data_ccsds_packing *self =(grib_accessor_data_ccsds_packing*)a;
 
     int err = GRIB_SUCCESS;
@@ -197,11 +196,12 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     double bscale = 0;
     double dscale = 0;
     unsigned char* buf = NULL;
-    long n_vals = 0;
+    size_t n_vals = 0;
     size_t size;
     unsigned char* decoded = NULL;
     unsigned char *p = NULL;
     long pos = 0;
+    long nn=0;
 
     long binary_scale_factor = 0;
     long decimal_scale_factor = 0;
@@ -215,8 +215,9 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 
     self->dirty=0;
 
-    if((err = grib_value_count(a, &n_vals)) != GRIB_SUCCESS)
+    if((err = grib_value_count(a, &nn)) != GRIB_SUCCESS)
         return err;
+    n_vals=nn;
 
     if((err = grib_get_long_internal(a->parent->h,self->bits_per_value,&bits_per_value)) != GRIB_SUCCESS)
         return err;
@@ -233,7 +234,6 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
         return err;
     if((err = grib_get_long_internal(a->parent->h,self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
-
 
     bscale = grib_power(binary_scale_factor,2);
     dscale = grib_power(-decimal_scale_factor,10);
@@ -316,7 +316,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     unsigned char* buf = NULL;
     unsigned char* encoded = NULL;
-    long n_vals = 0;
+    size_t n_vals = 0;
+    long nn=0;
 
     long binary_scale_factor = 0;
     long decimal_scale_factor = 0;
@@ -326,7 +327,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     double max,min;
 
     double d;
-
 
     unsigned char *p;
     double divisor;
@@ -341,8 +341,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     self->dirty=1;
 
-    if((err = grib_value_count(a, &n_vals)) != GRIB_SUCCESS)
+    if((err = grib_value_count(a, &nn)) != GRIB_SUCCESS)
         return err;
+    n_vals=nn;
 
     if((err = grib_get_long_internal(a->parent->h,self->bits_per_value,&bits_per_value)) != GRIB_SUCCESS)
         return err;
