@@ -63,7 +63,7 @@ extern grib_accessor_class* grib_accessor_class_data_sh_packed;
 extern grib_accessor_class* grib_accessor_class_data_sh_unpacked;
 extern grib_accessor_class* grib_accessor_class_data_shsimple_packing;
 extern grib_accessor_class* grib_accessor_class_data_simple_packing;
-extern grib_accessor_class* grib_accessor_class_data_szip_packing;
+extern grib_accessor_class* grib_accessor_class_data_ccsds_packing;
 extern grib_accessor_class* grib_accessor_class_decimal_precision;
 extern grib_accessor_class* grib_accessor_class_dictionary;
 extern grib_accessor_class* grib_accessor_class_dirty;

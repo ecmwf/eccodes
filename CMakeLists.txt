@@ -32,7 +32,7 @@ ecbuild_declare_project()
 option( ENABLE_JPG     "try to add support for JPG encoding"          ON )
 option( ENABLE_PNG     "try to add support for PNG encoding"          OFF )
 option( ENABLE_NETCDF  "try to add support for NetCDF"                ON )
-option( ENABLE_SZIP    "try to add support for SZip encoding"         OFF )
+option( ENABLE_AEC     "try to add support for Adaptive Entropy Coding" OFF )
 option( ENABLE_PYTHON  "try to build the GRIB_API Python interface"   ON )
 option( ENABLE_FORTRAN "try to build the GRIB_API Fortran interface"  ON )
 
@@ -55,15 +55,15 @@ set( GRIB_API_EXTRA_DEFINITIONS  "" )
 
 find_package( CMath )
 
-### SZIP support
+### AEC support (Adaptive Entropy Coding)
 
-set( HAVE_LIBSZIP 0 )
-if( ENABLE_SZIP )
+set( HAVE_LIBAEC 0 )
+if( ENABLE_AEC )
 
-    find_package( SZip )
+    find_package( AEC )
 
-    if( SZIP_FOUND )
-        set( HAVE_LIBSZIP 1 )
+    if( AEC_FOUND )
+        set( HAVE_LIBAEC 1 )
     endif()
 endif()
 
@@ -198,7 +198,7 @@ endif()
 
 ### export package to other ecbuild packages
 
-set( GRIB_API_TPLS            SZip PNG NetCDF Jasper OpenJPEG CMath )
+set( GRIB_API_TPLS            AEC PNG NetCDF Jasper OpenJPEG CMath )
 set( GRIB_API_INCLUDE_DIRS    ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src )
 set( GRIB_API_LIBRARIES       grib_api )
 

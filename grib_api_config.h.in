@@ -93,7 +93,7 @@
 
 #define HAVE_LIBPNG  @HAVE_LIBPNG@
 
-#cmakedefine HAVE_LIBSZIP
+#cmakedefine HAVE_LIBAEC
 
 #cmakedefine HAVE_NETCDF
 

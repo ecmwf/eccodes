@@ -100,3 +100,11 @@ ecbuild_add_test( TARGET t_jpeg
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/jpeg.sh
                   RESOURCES include.sh
 )
+
+ecbuild_add_test( TARGET t_ccsds
+                  TYPE SCRIPT
+                  CONDITION ENABLE_AEC
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ccsds.sh
+                  RESOURCES include.sh
+)
+

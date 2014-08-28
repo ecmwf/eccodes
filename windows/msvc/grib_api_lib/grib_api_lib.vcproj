@@ -689,7 +689,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\grib_accessor_class_data_szip_packing.c"
+				RelativePath="..\..\..\src\grib_accessor_class_data_ccsds_packing.c"
 				>
 			</File>
 			<File

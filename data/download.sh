@@ -123,6 +123,7 @@ files="
     timeRangeIndicator_5.grib
     tp_ecmwf.grib
     v.grib2
+    ccsds.grib2
     tigge/tigge_ammc_pl_gh.grib
     tigge/tigge_ammc_pl_q.grib
     tigge/tigge_ammc_pl_t.grib

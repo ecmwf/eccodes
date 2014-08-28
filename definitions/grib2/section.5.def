@@ -45,7 +45,7 @@ concept packingType (unknown) {
   "grid_jpeg"                             = { dataRepresentationTemplateNumber = 40;    }
   "grid_png"                              = { dataRepresentationTemplateNumber = 40010; }
   "grid_png"                              = { dataRepresentationTemplateNumber = 41;    }
-  "grid_szip"                             = { dataRepresentationTemplateNumber = 42; }
+  "grid_ccsds"                            = { dataRepresentationTemplateNumber = 42; }
   "grid_ieee"                             = { dataRepresentationTemplateNumber = 4;     }
   "grid_second_order"                     = { dataRepresentationTemplateNumber = 50001; }
   "grid_second_order"                     = { dataRepresentationTemplateNumber = 50002; }

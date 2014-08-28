@@ -177,7 +177,7 @@ libgrib_api_la_prototypes= \
 	grib_accessor_class_values.c \
 	grib_accessor_class_simple_packing_error.c \
 	grib_accessor_class_data_simple_packing.c \
-	grib_accessor_class_data_szip_packing.c \
+	grib_accessor_class_data_ccsds_packing.c \
 	grib_accessor_class_count_missing.c \
 	grib_accessor_class_data_sh_packed.c \
 	grib_accessor_class_data_sh_unpacked.c \
