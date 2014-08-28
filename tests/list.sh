@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -21,13 +21,8 @@ set scaledValueOfCentralWaveNumber={26870,9272,8377,22334};
 write "test.grib";
 EOF
 
-# First create the grib2 file from grib1
-gname=reduced_gaussian_model_level
-grib1File=${data_dir}/${gname}.grib1
-grib2File=${data_dir}/${gname}.grib2
-${tools_dir}grib_set -s editionNumber=2 $grib1File $grib2File
+file="${data_dir}/reduced_gaussian_model_level.grib2"
 
-file="$grib2File"
 ${tools_dir}grib_filter  list.filter $file
 
 cat >list.filter<<EOF
@@ -54,4 +49,5 @@ EOF
 
 diff x.out list.ref
 
-rm -f x.out list.ref list.filter test.grib $grib2File
+rm -f x.out list.ref list.filter test.grib
+
