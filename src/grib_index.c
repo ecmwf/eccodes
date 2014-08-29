@@ -621,8 +621,10 @@ static void grib_field_delete(grib_context* c,grib_field* field)
 
     grib_field_delete(c,field->next);
 
-    grib_file_close(field->file->name,&err);
-    field->file=NULL;
+    if (field->file) {
+        grib_file_close(field->file->name,&err);
+        field->file=NULL;
+    }
 
     grib_context_free(c,field);
 
@@ -1290,8 +1292,7 @@ int grib_index_get_long(grib_index* index, const char* key, long* values, size_t
     while (k && strcmp(k->name,key)) k=k->next;
     if (!k) return GRIB_NOT_FOUND;
     if (k->type != GRIB_TYPE_LONG) {
-        grib_context_log(index->context,GRIB_LOG_ERROR,
-                "unable to get index %s as long");
+        grib_context_log(index->context,GRIB_LOG_ERROR, "unable to get index %s as long", key);
         return GRIB_WRONG_TYPE;
     }
     if (k->values_count > *size) return GRIB_ARRAY_TOO_SMALL;
@@ -1317,8 +1318,7 @@ int grib_index_get_double(grib_index* index,const char* key, double* values,size
     while (k && strcmp(k->name,key)) k=k->next;
     if (!k) return GRIB_NOT_FOUND;
     if (k->type != GRIB_TYPE_DOUBLE) {
-        grib_context_log(index->context,GRIB_LOG_ERROR,
-                "unable to get index %s as double");
+        grib_context_log(index->context,GRIB_LOG_ERROR, "unable to get index %s as double", key);
         return GRIB_WRONG_TYPE;
     }
     if (k->values_count>*size) return GRIB_ARRAY_TOO_SMALL;
