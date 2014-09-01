@@ -13,10 +13,9 @@ import sys
 
 from gribapi import *
 
-INPUT='../../data/reduced_latlon_surface.grib1'
 VERBOSE=1 # verbose error reporting
 
-def example():
+def example(INPUT):
     f = open(INPUT)
 
     while 1:
@@ -50,7 +49,7 @@ def example():
 
 def main():
     try:
-        example()
+        example(sys.argv[1])
     except GribInternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)

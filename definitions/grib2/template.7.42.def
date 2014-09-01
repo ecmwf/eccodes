@@ -9,9 +9,9 @@
 
 
 # START 2/template.7.42 ----------------------------------------------------------------------
-# TEMPLATE 7.42, Grid point data - CCSDS szip
+# TEMPLATE 7.42, Grid point data - CCSDS
 
-    meta codedValues data_szip_packing(
+    meta codedValues data_ccsds_packing(
               section7Length,
               offsetBeforeData,
               offsetSection7,
@@ -23,10 +23,9 @@
 
               numberOfDataPoints,
 
-              szipOptionsMask,
-              szipBitsPerPixel,
-              szipPixelPerBlock,
-              szipPixelPerScanLine
+              ccsdsFlags,
+              ccsdsBlockSize,
+              ccsdsRsi
 
             ): read_only;
 

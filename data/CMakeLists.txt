@@ -86,6 +86,7 @@ set(files_to_download
     timeRangeIndicator_5.grib
     tp_ecmwf.grib
     v.grib2
+    ccsds.grib2
 )
 
 foreach( f ${files_to_download} )

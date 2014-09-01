@@ -7,22 +7,19 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# TEMPLATE 5.42, Grid point and spectral data - CCSDS szip
+# TEMPLATE 5.42, Grid point and spectral data - CCSDS
 
 include "template.5.packing.def";
 include "template.5.original_values.def";
 
-unsigned[1] szipOptionsMask : dump;
+unsigned[1] ccsdsFlags : dump;
 
-flagbit SZ_ALLOW_K13_OPTION_MASK(szipOptionsMask,0) = 0;
-flagbit SZ_CHIP_OPTION_MASK(szipOptionsMask,1)      = 0;
-flagbit SZ_EC_OPTION_MASK(szipOptionsMask,2)        = 0;
-flagbit SZ_LSB_OPTION_MASK(szipOptionsMask,3)       = 0;
-flagbit SZ_MSB_OPTION_MASK(szipOptionsMask,4)       = 1;
-flagbit SZ_NN_OPTION_MASK(szipOptionsMask,5)        = 1;
-flagbit SZ_RAW_OPTION_MASK(szipOptionsMask,7)       = 1;
+flagbit AEC_DATA_SIGNED_OPTION_MASK(ccsdsFlags,0)     = 0;
+flagbit AEC_DATA_3BYTE_OPTION_MASK(ccsdsFlags,1)      = 0;
+flagbit AEC_DATA_MSB_OPTION_MASK(ccsdsFlags,2)        = 1;
+flagbit AEC_DATA_PREPROCESS_OPTION_MASK(ccsdsFlags,3) = 1;
+flagbit AEC_RESTRICTED_OPTION_MASK(ccsdsFlags,4)      = 0;
+flagbit AEC_PAD_RSI_OPTION_MASK(ccsdsFlags,5)         = 0;
 
-unsigned[1] szipBitsPerPixel           : dump;
-unsigned[2] szipPixelPerBlock    = 32  : dump;
-unsigned[2] szipPixelPerScanLine = 128 * szipPixelPerBlock : dump;
-
+unsigned[1] ccsdsBlockSize = 32 : dump;
+unsigned[2] ccsdsRsi = 128      : dump;

@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -15,8 +15,8 @@ REDIRECT=/dev/null
 files="regular_latlon_surface.grib2 \
        regular_latlon_surface.grib1"
 
-# First create the necessary grib2 files
-${tools_dir}grib_set -s editionNumber=2 ${data_dir}/regular_latlon_surface.grib1 ${data_dir}/regular_latlon_surface.grib2
+
+
 
 for file in `echo $files`
 do
@@ -31,4 +31,3 @@ do
  rm -f $outfile1 $outfile2 || true
 done
 
-rm -f ${data_dir}/regular_latlon_surface.grib2

@@ -495,8 +495,6 @@ int grib_get_g1_message_size(grib_handle *h, grib_accessor *tl, grib_accessor *s
 
 /* grib_accessor_class_data_simple_packing.c */
 
-/* grib_accessor_class_data_szip_packing.c */
-
 /* grib_accessor_class_count_missing.c */
 
 /* grib_accessor_class_data_sh_packed.c */

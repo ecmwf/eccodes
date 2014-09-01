@@ -10,12 +10,8 @@
 . ./include.sh
 #set -x
 
-GRIB1_INFILE=${data_dir}/regular_gaussian_pressure_level_constant.grib1
-GRIB2_INFILE=${data_dir}/regular_gaussian_pressure_level_constant.grib2
+GRIB_INFILE=${data_dir}/regular_gaussian_pressure_level_constant.grib2
 REF_FILE=lamb_az_eq_area.ref
-
-# First create the grib2 file from grib1
-${tools_dir}grib_set -s editionNumber=2 $GRIB1_INFILE $GRIB2_INFILE
 
 # Temporary files created for this test
 FILTER_FILE=lamb_az_eq_area.filter
@@ -45,7 +41,7 @@ write "lamb_az_eq_area.grib2";
 EOF
 
 # Use this filter and the input GRIB to create a new GRIB
-${tools_dir}grib_filter $FILTER_FILE $GRIB2_INFILE
+${tools_dir}grib_filter $FILTER_FILE $GRIB_INFILE
 if [ ! -f "$GRIB_OUTFILE" ]; then
    echo Failed to create output GRIB from filter >&2
    exit 1
@@ -57,5 +53,5 @@ ${tools_dir}grib_get_data $GRIB_OUTFILE > $DATA_OUTFILE
 diff $DATA_OUTFILE $REF_FILE
 
 # Clean up
-rm -f $FILTER_FILE $GRIB_OUTFILE $DATA_OUTFILE $GRIB2_INFILE
+rm -f $FILTER_FILE $GRIB_OUTFILE $DATA_OUTFILE
 

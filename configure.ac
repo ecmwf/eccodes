@@ -455,6 +455,23 @@ then
   AC_SUBST(JPEG_TEST)
 fi
 
+dnl check for libaec
+CCSDS_TEST=""
+AC_ARG_WITH([aec],
+            [AS_HELP_STRING([--with-aec=DIR],
+                            [use specified libaec installation directory])],
+            ,[with_aec=no])
+
+if test "x$with_aec" != xno ; then
+  if test "x$with_aec" != xyes ; then
+    LDFLAGS="$LDFLAGS -L$with_aec/lib"
+    CPPFLAGS="$CPPFLAGS -I$with_aec/include"
+  fi
+  AC_CHECK_LIB(aec, aec_encode, , [AC_MSG_FAILURE(
+                 [aec test failed (--without-aec to disable)])])
+  CCSDS_TEST="ccsds.sh"
+fi
+AC_SUBST(CCSDS_TEST)
 
 dnl Check for png
 AC_ARG_WITH([png-support],

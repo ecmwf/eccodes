@@ -205,7 +205,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_data_g2secondary_bitmap.c
     grib_accessor_class_data_jpeg2000_packing.c
     grib_accessor_class_data_png_packing.c
-    grib_accessor_class_data_szip_packing.c
+    grib_accessor_class_data_ccsds_packing.c
     grib_accessor_class_data_raw_packing.c
     grib_accessor_class_data_complex_packing.c
     grib_accessor_class_data_g1complex_packing.c

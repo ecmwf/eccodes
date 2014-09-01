@@ -126,7 +126,7 @@ concept packingType {
 									plusOneinOrdersOfSPD=1; twoOrdersOfSPD=1; }
   "grid_jpeg"                         = { sphericalHarmonics = 0; complexPacking = 0; additionalFlagPresent = 0;}
   "grid_png"                          = { sphericalHarmonics = 0; complexPacking = 0; additionalFlagPresent = 0;}
-  "grid_szip"                          = { sphericalHarmonics = 0; complexPacking = 0; additionalFlagPresent = 0;}
+  "grid_ccsds"                        = { sphericalHarmonics = 0; complexPacking = 0; additionalFlagPresent = 0;}
   "grid_simple_log_preprocessing"= { sphericalHarmonics = 0; complexPacking = 0; additionalFlagPresent = 0;}
 } : dump;
 

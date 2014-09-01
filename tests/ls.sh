@@ -49,27 +49,6 @@ regular_latlon_surface.grib1
 regular_latlon_surface.grib2
 "
 
-# First create the necessary grib2 files
-files2conv="\
- reduced_gaussian_model_level\
- reduced_gaussian_pressure_level\
- reduced_gaussian_model_level\
- reduced_gaussian_pressure_level\
- reduced_gaussian_pressure_level_constant\
- reduced_gaussian_sub_area\
- reduced_gaussian_surface\
- reduced_latlon_surface\
- regular_gaussian_model_level\
- regular_gaussian_pressure_level\
- regular_gaussian_pressure_level_constant\
- regular_gaussian_surface\
- regular_latlon_surface\
-"
-for f in $files2conv; do
-  rm -f $f.grib2 || true
-  ${tools_dir}grib_set -s editionNumber=2 $f.grib1 $f.grib2
-done
-
 for file in $files
 do
   [ -f "$file" ]
@@ -98,11 +77,6 @@ ${tools_dir}grib_ls -p uuidOfVGrid test_uuid.grib2 > /dev/null
 
 type=`${tools_dir}grib_get -wcount=1 -p typeOfLevel test_uuid.grib2`
 [ "$type" = "generalVertical" ]
-
-# Clean up
-for f in $files2conv; do
-  rm -f $f.grib2
-done
 
 cd $workdir
 

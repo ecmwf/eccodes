@@ -28,10 +28,9 @@
 
    MEMBERS=const char*   number_of_data_points
 
-   MEMBERS=const char*   szip_options_mask
-   MEMBERS=const char*   szip_bits_per_pixel
-   MEMBERS=const char*   szip_pixels_per_block
-   MEMBERS=const char*   szip_pixels_per_scanline
+   MEMBERS=const char*   ccsds_flags
+   MEMBERS=const char*   ccsds_block_size
+   MEMBERS=const char*   ccsds_rsi
 
    END_CLASS_DEF
 
@@ -49,11 +48,11 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
-static int value_count(grib_accessor*,long*);
+static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
-typedef struct grib_accessor_data_szip_packing {
+typedef struct grib_accessor_data_ccsds_packing {
     grib_accessor          att;
 /* Members defined in gen */
 /* Members defined in values */
@@ -62,25 +61,24 @@ typedef struct grib_accessor_data_szip_packing {
 	const char* offsetdata;
 	const char* offsetsection;
 	int dirty;
-/* Members defined in data_szip_packing */
+/* Members defined in data_ccsds_packing */
 	const char*   number_of_values;
 	const char*   reference_value;
 	const char*   binary_scale_factor;
 	const char*   decimal_scale_factor;
 	const char*   bits_per_value;
 	const char*   number_of_data_points;
-	const char*   szip_options_mask;
-	const char*   szip_bits_per_pixel;
-	const char*   szip_pixels_per_block;
-	const char*   szip_pixels_per_scanline;
-} grib_accessor_data_szip_packing;
+	const char*   ccsds_flags;
+	const char*   ccsds_block_size;
+	const char*   ccsds_rsi;
+} grib_accessor_data_ccsds_packing;
 
 extern grib_accessor_class* grib_accessor_class_values;
 
-static grib_accessor_class _grib_accessor_class_data_szip_packing = {
+static grib_accessor_class _grib_accessor_class_data_ccsds_packing = {
     &grib_accessor_class_values,                      /* super                     */
-    "data_szip_packing",                      /* name                      */
-    sizeof(grib_accessor_data_szip_packing),  /* size                      */
+    "data_ccsds_packing",                      /* name                      */
+    sizeof(grib_accessor_data_ccsds_packing),  /* size                      */
     0,                           /* inited */
     &init_class,                 /* init_class */
     &init,                       /* init                      */
@@ -95,7 +93,7 @@ static grib_accessor_class _grib_accessor_class_data_szip_packing = {
     0,            /* get native type               */
     0,                /* get sub_section                */
     0,               /* grib_pack procedures long      */
-    0,                 /* grib_pack procedures long      */
+    0,               /* grib_pack procedures long      */
     0,                  /* grib_pack procedures long      */
     0,                /* grib_unpack procedures long    */
     &pack_double,                /* grib_pack procedures double    */
@@ -120,7 +118,7 @@ static grib_accessor_class _grib_accessor_class_data_szip_packing = {
 };
 
 
-grib_accessor_class* grib_accessor_class_data_szip_packing = &_grib_accessor_class_data_szip_packing;
+grib_accessor_class* grib_accessor_class_data_ccsds_packing = &_grib_accessor_class_data_ccsds_packing;
 
 
 static void init_class(grib_accessor_class* c)
@@ -138,8 +136,6 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_long	=	(*(c->super))->unpack_long;
 	c->pack_string	=	(*(c->super))->pack_string;
 	c->unpack_string	=	(*(c->super))->unpack_string;
-	c->pack_string_array	=	(*(c->super))->pack_string_array;
-	c->unpack_string_array	=	(*(c->super))->unpack_string_array;
 	c->pack_bytes	=	(*(c->super))->pack_bytes;
 	c->unpack_bytes	=	(*(c->super))->unpack_bytes;
 	c->pack_expression	=	(*(c->super))->pack_expression;
@@ -159,54 +155,53 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
-    grib_accessor_data_szip_packing *self =(grib_accessor_data_szip_packing*)a;
+    grib_accessor_data_ccsds_packing *self =(grib_accessor_data_ccsds_packing*)a;
 
     self->number_of_values      = grib_arguments_get_name(a->parent->h,args,self->carg++);
     self->reference_value       = grib_arguments_get_name(a->parent->h,args,self->carg++);
     self->binary_scale_factor   = grib_arguments_get_name(a->parent->h,args,self->carg++);
     self->decimal_scale_factor  = grib_arguments_get_name(a->parent->h,args,self->carg++);
-    self->bits_per_value           = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->bits_per_value        = grib_arguments_get_name(a->parent->h,args,self->carg++);
 
     self->number_of_data_points  = grib_arguments_get_name(a->parent->h,args,self->carg++);
 
-
-    self->szip_options_mask  = grib_arguments_get_name(a->parent->h,args,self->carg++);
-    self->szip_bits_per_pixel  = grib_arguments_get_name(a->parent->h,args,self->carg++);
-    self->szip_pixels_per_block  = grib_arguments_get_name(a->parent->h,args,self->carg++);
-    self->szip_pixels_per_scanline  = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->ccsds_flags  = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->ccsds_block_size  = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->ccsds_rsi  = grib_arguments_get_name(a->parent->h,args,self->carg++);
 
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
+
 }
 
 static int value_count(grib_accessor* a, long* count)
 {
-    grib_accessor_data_szip_packing *self =(grib_accessor_data_szip_packing*)a;
+    grib_accessor_data_ccsds_packing *self =(grib_accessor_data_ccsds_packing*)a;
     *count = 0;
     return grib_get_long_internal(a->parent->h,self->number_of_values,count);
 }
 
-#ifdef HAVE_LIBSZIP
+#ifdef HAVE_LIBAEC
 
-#include "szlib.h"
+#include <libaec.h>
 
 
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-
-    grib_accessor_data_szip_packing *self =(grib_accessor_data_szip_packing*)a;
+    grib_accessor_data_ccsds_packing *self =(grib_accessor_data_ccsds_packing*)a;
 
     int err = GRIB_SUCCESS;
-    int i,j;
+    int i;
     size_t buflen = grib_byte_count(a);
-    SZ_com_t sz_options;
+    struct aec_stream strm;
     double bscale = 0;
     double dscale = 0;
     unsigned char* buf = NULL;
-    long n_vals = 0;
+    size_t n_vals = 0;
     size_t size;
     unsigned char* decoded = NULL;
     unsigned char *p = NULL;
     long pos = 0;
+    long nn=0;
 
     long binary_scale_factor = 0;
     long decimal_scale_factor = 0;
@@ -214,16 +209,15 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     long bits_per_value =0;
     long bits8;
 
-
-    long szip_options_mask ;
-    long szip_bits_per_pixel ;
-    long szip_pixels_per_block  ;
-    long szip_pixels_per_scanline  ;
+    long ccsds_flags;
+    long ccsds_block_size;
+    long ccsds_rsi;
 
     self->dirty=0;
 
-    if((err = grib_value_count(a, &n_vals)) != GRIB_SUCCESS)
+    if((err = grib_value_count(a, &nn)) != GRIB_SUCCESS)
         return err;
+    n_vals=nn;
 
     if((err = grib_get_long_internal(a->parent->h,self->bits_per_value,&bits_per_value)) != GRIB_SUCCESS)
         return err;
@@ -234,16 +228,12 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     if((err = grib_get_long_internal(a->parent->h,self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-
-    if((err = grib_get_long_internal(a->parent->h,self->szip_options_mask,&szip_options_mask)) != GRIB_SUCCESS)
+    if((err = grib_get_long_internal(a->parent->h,self->ccsds_flags,&ccsds_flags)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_long_internal(a->parent->h,self->szip_bits_per_pixel, &szip_bits_per_pixel)) != GRIB_SUCCESS)
+    if((err = grib_get_long_internal(a->parent->h,self->ccsds_block_size, &ccsds_block_size)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_long_internal(a->parent->h,self->szip_pixels_per_block, &szip_pixels_per_block)) != GRIB_SUCCESS)
+    if((err = grib_get_long_internal(a->parent->h,self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_long_internal(a->parent->h,self->szip_pixels_per_scanline, &szip_pixels_per_scanline)) != GRIB_SUCCESS)
-        return err;
-
 
     bscale = grib_power(binary_scale_factor,2);
     dscale = grib_power(-decimal_scale_factor,10);
@@ -265,11 +255,13 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     buf = (unsigned char*)a->parent->h->buffer->data;
     buf += grib_byte_offset(a);
 
-    memset(&sz_options, 0, sizeof(sz_options));
-    sz_options.options_mask         = szip_options_mask;
-    sz_options.bits_per_pixel       = szip_bits_per_pixel;
-    sz_options.pixels_per_block     = szip_pixels_per_block;
-    sz_options.pixels_per_scanline  = szip_pixels_per_scanline;
+    strm.flags = ccsds_flags;
+    strm.bits_per_sample = bits_per_value;
+    strm.block_size = ccsds_block_size;
+    strm.rsi = ccsds_rsi;
+
+    strm.next_in = buf;
+    strm.avail_in = buflen;
 
 /*
     printf("sz_options.options_mask %d\n", sz_options.options_mask);
@@ -278,18 +270,19 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     printf("sz_options.pixels_per_scanline %d\n", sz_options.pixels_per_scanline);
     */
 
-    bits8 = ((szip_bits_per_pixel + 7)/8)*8;
-    size = n_vals * (szip_bits_per_pixel + 7)/8;
+    bits8 = ((bits_per_value + 7)/8)*8;
+    size = n_vals * (bits_per_value + 7)/8;
     decoded = grib_context_buffer_malloc_clear(a->parent->h->context,size);
     if(!decoded) {
         err = GRIB_OUT_OF_MEMORY;
         goto cleanup;
     }
+    strm.next_out = decoded;
+    strm.avail_out = size;
 
-
-    if((err = SZ_BufftoBuffDecompress( decoded,&size,buf, buflen , &sz_options)) != SZ_OK)
+    if((err = aec_buffer_decode(&strm)) != AEC_OK)
     {
-        printf("SZ_BufftoBuffDecompress Error %d\n", err);
+        printf("aec_buffer_decode Error %d\n", err);
         err = GRIB_ENCODING_ERROR;
         goto cleanup;
     }
@@ -315,7 +308,7 @@ cleanup:
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-    grib_accessor_data_szip_packing *self =(grib_accessor_data_szip_packing*)a;
+    grib_accessor_data_ccsds_packing *self =(grib_accessor_data_ccsds_packing*)a;
 
     int err = GRIB_SUCCESS;
     int i;
@@ -323,7 +316,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     unsigned char* buf = NULL;
     unsigned char* encoded = NULL;
-    long n_vals = 0;
+    size_t n_vals = 0;
+    long nn=0;
 
     long binary_scale_factor = 0;
     long decimal_scale_factor = 0;
@@ -334,28 +328,22 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     double d;
 
-
     unsigned char *p;
     double divisor;
 
-    long ni,nj;
-    long scanning_mode;
-    long list_defining_points;
     long number_of_data_points;
 
-    long szip_options_mask ;
-    long szip_bits_per_pixel ;
-    long szip_pixels_per_block  ;
-    long szip_pixels_per_scanline  ;
+    long ccsds_flags;
+    long ccsds_block_size;
+    long ccsds_rsi;
 
-    size_t width, height;
-
-    SZ_com_t sz_options;
+    struct aec_stream strm;
 
     self->dirty=1;
 
-    if((err = grib_value_count(a, &n_vals)) != GRIB_SUCCESS)
+    if((err = grib_value_count(a, &nn)) != GRIB_SUCCESS)
         return err;
+    n_vals=nn;
 
     if((err = grib_get_long_internal(a->parent->h,self->bits_per_value,&bits_per_value)) != GRIB_SUCCESS)
         return err;
@@ -367,13 +355,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         return err;
 
 
-    if((err = grib_get_long_internal(a->parent->h,self->szip_options_mask,&szip_options_mask)) != GRIB_SUCCESS)
+    if((err = grib_get_long_internal(a->parent->h,self->ccsds_flags,&ccsds_flags)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_long_internal(a->parent->h,self->szip_bits_per_pixel, &szip_bits_per_pixel)) != GRIB_SUCCESS)
+    if((err = grib_get_long_internal(a->parent->h,self->ccsds_block_size, &ccsds_block_size)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_long_internal(a->parent->h,self->szip_pixels_per_block, &szip_pixels_per_block)) != GRIB_SUCCESS)
-        return err;
-    if((err = grib_get_long_internal(a->parent->h,self->szip_pixels_per_scanline, &szip_pixels_per_scanline)) != GRIB_SUCCESS)
+    if((err = grib_get_long_internal(a->parent->h,self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
 
@@ -470,7 +456,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     /*       buflen = n_vals*(bits_per_value/8);*/
 
     grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
-                     "grib_accessor_data_szip_packing : pack_double : packing %s, %d values", a->name, n_vals);
+                     "grib_accessor_data_ccsds_packing : pack_double : packing %s, %d values", a->name, n_vals);
 
     buflen += 10240;
     buf = grib_context_buffer_malloc_clear(a->parent->h->context,buflen);
@@ -497,11 +483,15 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         return err;
 
 
-    memset(&sz_options, 0, sizeof(sz_options));
-    sz_options.options_mask         = szip_options_mask;
-    sz_options.bits_per_pixel       = bits_per_value;
-    sz_options.pixels_per_block     = szip_pixels_per_block;
-    sz_options.pixels_per_scanline  = szip_pixels_per_scanline;
+    strm.flags = ccsds_flags;
+    strm.bits_per_sample = bits_per_value;
+    strm.block_size = ccsds_block_size;
+    strm.rsi = ccsds_rsi;
+
+    strm.next_out = buf;
+    strm.avail_out = buflen;
+    strm.next_in = encoded;
+    strm.avail_in = bits8/8*n_vals;
 
     /*
 
@@ -516,9 +506,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     printf("sz_options.pixels_per_scanline %d\n", sz_options.pixels_per_scanline);
     */
 
-    if((err = SZ_BufftoBuffCompress(buf,&buflen,encoded, bits8/8*n_vals, &sz_options)) != SZ_OK)
+    if((err = aec_buffer_encode(&strm)) != AEC_OK)
     {
-        printf("SZ_BufftoBuffCompress Error %d\n", err);
+        printf("aec_buffer_encode Error %d\n", err);
         err = GRIB_ENCODING_ERROR;
         goto cleanup;
     }
@@ -528,7 +518,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     printf("n_vals = %ld, bits8 = %ld\n", (long)n_vals, (long)bits8);
     printf("in %ld out => %ld\n", (long)bits8/8*n_vals,(long) buflen);
     */
-
+    buflen = strm.total_out;
     grib_buffer_replace(a, buf, buflen ,1,1);
 
 cleanup:
@@ -539,7 +529,7 @@ cleanup:
         err = grib_set_long_internal(a->parent->h,self->number_of_values, *len);
 
     if(err == GRIB_SUCCESS)
-        err = grib_set_long_internal(a->parent->h,self->szip_bits_per_pixel, sz_options.bits_per_pixel);
+        err = grib_set_long_internal(a->parent->h,self->bits_per_value, strm.bits_per_sample);
 
     return err;
 }
@@ -548,14 +538,14 @@ cleanup:
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
     grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
-                     "grib_accessor_data_szip_packing : szip support no enabled. Please rerun configure with --with-szip-support");
+                     "grib_accessor_data_ccsds_packing : ccsds support no enabled. Please rerun configure with --with-aec");
     return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
     grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
-                     "grib_accessor_data_szip_packing : szip support no enabled. Please rerun configure with --with-szip-support");
+                     "grib_accessor_data_ccsds_packing : ccsds support no enabled. Please rerun configure with --with-aec");
     return GRIB_NOT_IMPLEMENTED;
 }
 

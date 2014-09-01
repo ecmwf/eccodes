@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/********************************
- *  Enrico Fucile
- ********************************/
-
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -180,18 +176,13 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
 
   if(*len < 1) return GRIB_ARRAY_TOO_SMALL;
 
-  if((ret = grib_get_long_internal(a->parent->h,
-      self->directionIncrementGiven,&directionIncrementGiven))
-          != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(a->parent->h, self->directionIncrementGiven,&directionIncrementGiven)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->scansPositively,&scansPositively))
-          != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(a->parent->h, self->scansPositively,&scansPositively)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h,
-      self->directionIncrement,&directionIncrement))
-        != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(a->parent->h, self->directionIncrement,&directionIncrement)) != GRIB_SUCCESS)
     return ret;
 
   if((ret = grib_get_double_internal(a->parent->h, self->first,&first)) != GRIB_SUCCESS)
@@ -200,27 +191,47 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
   if((ret = grib_get_double_internal(a->parent->h, self->last,&last)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->numberOfPoints,&numberOfPoints))
-      != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(a->parent->h, self->numberOfPoints,&numberOfPoints)) != GRIB_SUCCESS)
     return ret;
 
   if((ret = grib_get_long_internal(a->parent->h, self->angleMultiplier,&angleMultiplier)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->angleDivisor,&angleDivisor))
-      != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(a->parent->h, self->angleDivisor,&angleDivisor)) != GRIB_SUCCESS)
     return ret;
 
   if (self->isLongitude) {
     if (last < first && scansPositively) last+=360;
-    if (last > first && !scansPositively) first-=360;
+        /*if (last > first && !scansPositively) first-=360;*/
   }
 
-  if (!directionIncrementGiven && numberOfPoints != GRIB_MISSING_LONG) {
-    *val = fabs(last-first)/(double)(numberOfPoints-1);
-  } else if (numberOfPoints == GRIB_MISSING_LONG){
+    if (!directionIncrementGiven && numberOfPoints != GRIB_MISSING_LONG)
+    {
+        if (!scansPositively) { /* scans negatively */
+            if (first > last){
+                *val=(first-last)/(numberOfPoints-1);
+            }
+            else {
+                *val=(first+360.0-last)/(numberOfPoints-1);
+            }
+        }
+        else
+        {
+            /* scans positively */
+            if (last > first){
+                *val=(last-first)/(numberOfPoints-1);
+            }
+            else {
+                *val=(last+360.0-first)/(numberOfPoints-1);
+            }
+        }
+    }
+    else if (numberOfPoints == GRIB_MISSING_LONG)
+    {
     *val = GRIB_MISSING_DOUBLE;
-  } else {
+    }
+    else
+    {
     Assert(angleDivisor!=0);
     *val = (double)directionIncrement/angleDivisor*angleMultiplier;
   }
@@ -238,7 +249,6 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
 
   return ret;
 }
-
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
@@ -296,11 +306,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     }
   }
 
-
   /*ret = grib_set_long_internal(a->parent->h, self->numberOfPoints,numberOfPoints);
   if(ret )
-  grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Accessor %s cannont pack value for %s error %d \n", a->name, self->numberOfPoints, ret);*/
-
+     grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Accessor %s cannot pack value for %s error %d \n", a->name, self->numberOfPoints, ret);
+    */
 
   grib_get_long_internal(a->parent->h, self->numberOfPoints,&codedNumberOfPoints);
 
@@ -334,4 +343,3 @@ static int is_missing(grib_accessor* a){
 
   return (val == GRIB_MISSING_DOUBLE);
 }
-

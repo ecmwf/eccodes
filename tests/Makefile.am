@@ -10,12 +10,13 @@ TESTS = definitions.sh \
         bitmap.sh list.sh second_order.sh \
         multi_from_message.sh change_scanning.sh \
         julian.sh statistics.sh tigge.sh tigge_conversions.sh \
-        read_any.sh padding.sh lamb_az_eq_area.sh grib_to_netcdf.sh \
-        debug.sh $(JPEG_TEST)
+        read_any.sh padding.sh lamb_az_eq_area.sh grib_to_netcdf.sh debug.sh \
+        $(JPEG_TEST) $(CCSDS_TEST)
 
 noinst_PROGRAMS = packing_check gauss_sub read_any double_cmp packing pack_unpack \
                   multi_from_message julian read_index index gribex_perf\
-                  jpeg_perf so_perf png_perf bpv_limit laplacian unit_tests
+                  jpeg_perf ccsds_perf so_perf png_perf bpv_limit laplacian \
+                  unit_tests
 
 multi_from_message_SOURCES = multi_from_message.c
 laplacian_SOURCES = laplacian.c
@@ -31,6 +32,7 @@ read_index_SOURCES = read_index.c
 jpeg_perf_SOURCES = jpeg_perf.c
 so_perf_SOURCES = so_perf.c
 png_perf_SOURCES = png_perf.c
+ccsds_perf_SOURCES  = ccsds_perf.c
 gribex_perf_SOURCES = gribex_perf.c
 gauss_sub_SOURCES = gauss_sub.c
 
