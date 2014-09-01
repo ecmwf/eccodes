@@ -38,6 +38,8 @@ list( APPEND grib_api_srcs
     grib_accessor.c
     grib_concept.c
     grib_hash_array.c
+    grib_bufr_descriptor.c
+    grib_bufr_descriptors_array.c
     grib_darray.c
     grib_sarray.c
     grib_vdarray.c

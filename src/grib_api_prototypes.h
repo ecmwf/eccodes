@@ -145,6 +145,29 @@ grib_hash_array_value *grib_integer_hash_array_value_new(grib_context *c, const 
 grib_hash_array_value *grib_double_hash_array_value_new(grib_context *c, const char *name, grib_darray *array);
 void grib_hash_array_value_delete(grib_context *c, grib_hash_array_value *v);
 
+/* grib_bufr_descriptor.c */
+bufr_descriptor *grib_bufr_descriptor_new(grib_context *c, int code);
+bufr_descriptor *grib_bufr_descriptor_clone(grib_context *c, bufr_descriptor *d);
+void grib_bufr_descriptor_set_code(bufr_descriptor *v, int code);
+void grib_bufr_descriptor_set_values(bufr_descriptor *v, int scale, int reference, int width);
+void grib_bufr_descriptor_delete(grib_context *c, bufr_descriptor *v);
+
+/* grib_bufr_descriptors_array.c */
+bufr_descriptors_array *grib_bufr_descriptors_array_new(grib_context *c, size_t size, size_t incsize);
+bufr_descriptor *grib_bufr_descriptors_array_pop(bufr_descriptors_array *a);
+bufr_descriptor *grib_bufr_descriptors_array_pop_front(bufr_descriptors_array *a);
+bufr_descriptors_array *grib_bufr_descriptors_array_resize_to(bufr_descriptors_array *v, size_t newsize);
+bufr_descriptors_array *grib_bufr_descriptors_array_resize(bufr_descriptors_array *v);
+bufr_descriptors_array *grib_bufr_descriptors_array_push(bufr_descriptors_array *v, bufr_descriptor *val);
+bufr_descriptors_array *grib_bufr_descriptors_array_append(bufr_descriptors_array *v, bufr_descriptors_array *ar);
+bufr_descriptors_array *grib_bufr_descriptors_array_push_front(bufr_descriptors_array *v, bufr_descriptor *val);
+bufr_descriptor *grib_bufr_descriptors_array_get(bufr_descriptors_array *a, size_t i);
+void grib_bufr_descriptors_array_set(bufr_descriptors_array *a, size_t i, bufr_descriptor *v);
+void grib_bufr_descriptors_array_delete(bufr_descriptors_array *v);
+void grib_bufr_descriptors_array_delete_array(bufr_descriptors_array *v);
+bufr_descriptor **grib_bufr_descriptors_array_get_array(bufr_descriptors_array *v);
+size_t grib_bufr_descriptors_array_used_size(bufr_descriptors_array *v);
+
 /* grib_darray.c */
 grib_darray *grib_darray_new(grib_context *c, size_t size, size_t incsize);
 grib_darray *grib_darray_resize(grib_context *c, grib_darray *v);
@@ -525,7 +548,6 @@ second_order_packed *grib_get_second_order_groups(grib_context *c, const unsigne
 /* grib_accessor_class_unexpanded_descriptors.c */
 
 /* grib_accessor_class_expanded_descriptors.c */
-size_t __expand(grib_accessor *a, grib_iarray *unexpanded, grib_iarray *expanded, int *err);
 
 /* grib_accessor_class_bufrdc_expanded_descriptors.c */
 
@@ -699,6 +721,14 @@ void grib_timer_print(grib_timer *t);
 void grib_timer_partial_rate(grib_timer *t, double start, long total);
 void grib_print_all_timers(void);
 void grib_reset_all_timers(void);
+grib_timer *grib_get_timer(grib_context *c, const char *name, const char *statname, int elapsed);
+int grib_timer_start(grib_timer *t);
+int grib_timer_stop(grib_timer *t, long total);
+double grib_timer_value(grib_timer *t);
+void grib_timer_print(grib_timer *t);
+void grib_timer_partial_rate(grib_timer *t, double start, long total);
+void grib_print_all_timers(void);
+void grib_reset_all_timers(void);
 
 /* grib_ibmfloat.c */
 unsigned long grib_ibm_to_long(double x);
@@ -717,6 +747,10 @@ double grib_ieeefloat_error(double x);
 double grib_long_to_ieee(unsigned long x);
 unsigned long grib_ieee_nearest_smaller_to_long(double x);
 int grib_nearest_smaller_ieee_float(double a, double *ret);
+double grib_ieeefloat_error(double x);
+double grib_long_to_ieee(unsigned long x);
+int grib_nearest_smaller_ieee_float(double a, double *x);
+unsigned long grib_ieee_to_long(double x);
 unsigned long grib_ieee64_to_long(double x);
 double grib_long_to_ieee64(unsigned long x);
 int grib_ieee_decode_array(grib_context *c, unsigned char *buf, size_t nvals, int bytes, double *val);

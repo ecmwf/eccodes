@@ -205,6 +205,8 @@ typedef struct grib_iarray grib_iarray;
 typedef struct grib_vdarray grib_vdarray;
 typedef struct grib_vsarray grib_vsarray;
 typedef struct grib_viarray grib_viarray;
+typedef struct bufr_descriptor bufr_descriptor;
+typedef struct bufr_descriptors_array bufr_descriptors_array;
 
 grib_fieldset *grib_fieldset_new_from_files(grib_context *c, char *filenames[], int nfiles, char **keys, int nkeys, char *where_string, char *order_by_string, int *err);
 

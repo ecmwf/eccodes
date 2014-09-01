@@ -514,6 +514,12 @@ struct grib_accessor
 
 };
 
+#define BUFR_DESCRIPTOR_FLAG_HAS_VALUES       (1<<1)
+#define BUFR_DESCRIPTOR_FLAG_DEFAULT_VALUES   (1<<2)
+#define BUFR_DESCRIPTOR_FLAG_MODIFIED_VALUES  (1<<3)
+#define BUFR_DESCRIPTOR_FLAG_IS_TABLE         (1<<4)
+#define BUFR_DESCRIPTOR_FLAG_IS_FLAG          (1<<5)
+#define BUFR_DESCRIPTOR_FLAG_IS_STRING        (1<<6)
 
 #define GRIB_ACCESSOR_FLAG_READ_ONLY        (1<<1)
 #define GRIB_ACCESSOR_FLAG_DUMP             (1<<2)
@@ -741,6 +747,26 @@ struct grib_viarray {
   size_t size;
   size_t n;
   size_t incsize;
+  grib_context* context;
+} ;
+
+struct bufr_descriptor {
+  long code;
+  int F;
+  int X;
+  int Y;
+  int flags;
+  long scale;
+  double reference;
+  long width;
+} ;
+
+struct bufr_descriptors_array {
+  bufr_descriptor** v;
+  size_t size;
+  size_t n;
+  size_t incsize;
+  size_t number_of_pop_front;
   grib_context* context;
 } ;
 

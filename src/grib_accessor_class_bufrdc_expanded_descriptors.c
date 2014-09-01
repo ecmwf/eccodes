@@ -183,7 +183,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 
   rlen=0;
   for (i=0;i<l;i++) {
-    if (v[i] < 100000 || v[i] > 221999 )
+    if ((v[i] < 100000 || v[i] > 221999 ) )
       val[rlen++]=v[i];
   }
   *len=rlen;

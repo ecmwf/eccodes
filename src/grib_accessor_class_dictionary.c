@@ -26,6 +26,8 @@
    MEMBERS    =  const char* dictionary
    MEMBERS    =  const char* key
    MEMBERS    =  long column
+   MEMBERS    =  const char* masterDir
+   MEMBERS    =  const char* localDir
    END_CLASS_DEF
 
  */
@@ -56,6 +58,8 @@ typedef struct grib_accessor_dictionary {
 	const char* dictionary;
 	const char* key;
 	long column;
+	const char* masterDir;
+	const char* localDir;
 } grib_accessor_dictionary;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -144,6 +148,8 @@ static void init(grib_accessor* a, const long len, grib_arguments* params) {
   self->dictionary = grib_arguments_get_string(a->parent->h,params,n++);
   self->key = grib_arguments_get_name(a->parent->h,params,n++);
   self->column = grib_arguments_get_long(a->parent->h,params,n++);
+  self->masterDir = grib_arguments_get_name(a->parent->h,params,n++);
+  self->localDir = grib_arguments_get_name(a->parent->h,params,n++);
 
   a->length = 0;
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -157,14 +163,45 @@ static grib_trie* load_dictionary(grib_context* c,grib_accessor* a, int* err) {
   char* filename=NULL;
   char line[1024]={0,};
   char key[1024]={0,};
+  char masterDir[1024]={0,};
+  char localDir[1024]={0,};
+  char name[1024]={0,};
+  char localName[1024]={0,};
+  char recomposed[1024]={0,};
+  char localRecomposed[1024]={0,};
+  char dictName[1024]={0,};
+  char *localFilename=0;
   char* list=0;
+  size_t len=1024;
   grib_trie* dictionary=NULL;
   FILE* f=NULL;
   int i=0;
+  grib_handle* h=a->parent->h;
 
   *err=GRIB_SUCCESS;
 
-  filename=grib_context_full_defs_path(c,self->dictionary);
+  len=1024;
+  if (self->masterDir != NULL) grib_get_string(h,self->masterDir,masterDir,&len);
+  len=1024;
+  if (self->localDir != NULL) grib_get_string(h,self->localDir,localDir,&len);
+
+  if (*masterDir!=0) {
+    sprintf(name,"%s/%s",masterDir,self->dictionary);
+    grib_recompose_name(h, NULL,name, recomposed,0);
+    filename=grib_context_full_defs_path(c,recomposed);
+  } else {
+    filename=grib_context_full_defs_path(c,self->dictionary);
+  }
+
+  if (*localDir!=0) {
+    sprintf(localName,"%s/%s",localDir,self->dictionary);
+    grib_recompose_name(h, NULL,localName, localRecomposed,0);
+    localFilename=grib_context_full_defs_path(c,localRecomposed);
+    sprintf(dictName,"%s:%s",localFilename,filename);
+  } else {
+    sprintf(dictName,"%s",filename);
+  }
+
   if (!filename) {
     grib_context_log(c,GRIB_LOG_ERROR,"unable to find def file %s",self->dictionary);
     *err=GRIB_FILE_NOT_FOUND;
@@ -172,7 +209,7 @@ static grib_trie* load_dictionary(grib_context* c,grib_accessor* a, int* err) {
   } else {
     grib_context_log(c,GRIB_LOG_DEBUG,"found def file %s",filename);
   }
-  dictionary=grib_trie_get(c->lists,filename);
+  dictionary=grib_trie_get(c->lists,dictName);
   if (dictionary) {
         grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from cache",self->dictionary);
         return dictionary;
@@ -197,10 +234,28 @@ static grib_trie* load_dictionary(grib_context* c,grib_accessor* a, int* err) {
         grib_trie_insert(dictionary,key,list);
   }
 
-  grib_trie_insert(c->lists,filename,dictionary);
-
   fclose(f);
 
+  if (localFilename!=0) {
+    f=fopen(localFilename,"r");
+    if (!f) {*err=GRIB_IO_PROBLEM; return NULL;}
+
+    while(fgets(line,sizeof(line)-1,f)) {
+        i=0;
+        while (line[i] != '|' && line[i] != 0)  {
+          key[i]=line[i];
+          i++;
+        }
+        key[i]=0;
+        list=grib_context_malloc_clear(c,strlen(line)+1);
+        memcpy(list,line,strlen(line));
+        grib_trie_insert(dictionary,key,list);
+    }
+
+
+    fclose(f);
+  }
+  grib_trie_insert(c->lists,filename,dictionary);
   return dictionary;
 
 }

@@ -308,6 +308,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
   return GRIB_NOT_IMPLEMENTED;
 }
 
+#if 0
 static void apply_early_operators(grib_accessor *a) {
   long* descriptors;
   int i,j,F,X,Y,elementsToRepeat,jReplication;
@@ -392,6 +393,7 @@ static void apply_early_operators(grib_accessor *a) {
   self->expandedDescriptors=descriptors;
 
 }
+#endif
 
 static int get_descriptors(grib_accessor* a) {
     int err=0;
@@ -487,7 +489,7 @@ static int get_descriptors(grib_accessor* a) {
     err=grib_get_long(h,self->compressedDataName,&(self->compressedData));
     err=grib_get_long(h,self->subsetNumberName,&(self->subsetNumber));
 
-    apply_early_operators(a);
+    /* apply_early_operators(a); */
 
     return err;
 }

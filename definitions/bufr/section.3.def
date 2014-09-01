@@ -67,7 +67,21 @@ position offsetDescriptors;
 meta numberOfUnexpandedDescriptors   evaluate( (section3Length - 7) / 2 ) ;
 meta unexpandedDescriptors unexpanded_descriptors(numberOfUnexpandedDescriptors) :dump;
 
-meta expandedDescriptors expanded_descriptors(unexpandedDescriptors,sequences) ;
+transient elementCode="000000";
+elementAbbreviation=dict_search("element.table",elementCode,1,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
+elementType=dict_search("element.table",elementCode,2,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
+elementName=dict_search("element.table",elementCode,3,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
+elementUnit=dict_search("element.table",elementCode,4,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
+elementScale=dict_search("element.table",elementCode,5,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
+elementReference=dict_search("element.table",elementCode,6,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
+elementWidth=dict_search("element.table",elementCode,7,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
+
+meta expandedDescriptors expanded_descriptors(expandedDescriptors,0,unexpandedDescriptors,sequences,
+                                    elementCode,elementUnit,elementScale,elementReference,elementWidth); 
+meta expandedFactors expanded_descriptors(expandedDescriptors,1);
+meta expandedReferences expanded_descriptors(expandedDescriptors,2);
+meta expandedWidths expanded_descriptors(expandedDescriptors,3);
+
 meta bufrdcExpandedDescriptors bufrdc_expanded_descriptors(expandedDescriptors);
 
 #smart_table NAME (VALUES,FILE_NAME,MASTER_DIRECTORY,LOCAL_DIRECTORY,WIDTH_OF_CODE_IN_BITS,EXTRA_DIRECTORY,EXTRA_FILE_NAME);
@@ -82,8 +96,6 @@ meta width 					smart_table_column(expanded,6,0)	:	long_type;
 meta crex_unit 			smart_table_column(expanded,7,0)	:	long_type;
 meta crex_scale 		smart_table_column(expanded,8,0)	:	long_type;
 meta crex_width 		smart_table_column(expanded,9,0)	:	long_type;
-
-meta hasDelayedReplication bufr_has_delayed_replication(expandedDescriptorsAfterOperators);
 
 position endDescriptors;
 section_padding section3Padding;

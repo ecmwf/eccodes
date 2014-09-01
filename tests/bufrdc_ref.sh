@@ -8,32 +8,41 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
+set -ex
 . ./include.sh
 
 REDIRECT=/dev/null
 
-cat > bufrdc_ref.filter<<EOF
+cat > bufrdc_num_ref.filter<<EOF
 set subsetNumber=0;
 print "[numericValues!1%23.14e]";
 EOF
 
 for file in ${data_dir}/bufr/*.bufr
 do
-  REDIRECT=/dev/null
-
   # Test numeric data: compare output of filter (res) with reference file (ref)
   res_num=$file.num.test
   ref_num=$file.num.ref
+  diff_num=$file.num.diff
 
   rm -f $res_num | true
 
-  ${tools_dir}bufr_filter bufrdc_ref.filter $file 2> $REDIRECT > $res_num
+  #set +e
+  ${tools_dir}bufr_filter bufrdc_num_ref.filter $file 2> $REDIRECT > $res_num
+  if [ $? != 0 ]
+  then
+    mv $file $file.no
+  fi
 
   # Cannot use plain diff. We need to compare FLOAT NUMBERS with a tolerance
-  #numdiff $ref_num $res_num >$REDIRECT
-  perl number_compare.pl $ref_num $res_num >$REDIRECT 2> $REDIRECT
+  #perl number_compare.pl $ref_num $res_num >$REDIRECT 2> $REDIRECT
+  numdiff $ref_num $res_num > $diff_num 2> $diff_num
+  if [ $? != 0 ]
+  then
+    mv $file $file.no
+  fi
 
-  rm -f $res_num
+  #rm -f $res_num $diff_num
 
 done
 

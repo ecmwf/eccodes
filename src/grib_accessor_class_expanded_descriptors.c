@@ -27,8 +27,15 @@ IMPLEMENTS = init;dump;destroy
 IMPLEMENTS = value_count
 MEMBERS    = const char* unexpandedDescriptors
 MEMBERS    = const char* sequence
-MEMBERS    = long* expanded
-MEMBERS    = size_t expandedSize
+MEMBERS    = const char* expandedName
+MEMBERS    = const char* elementCode
+MEMBERS    = const char* elementUnit
+MEMBERS    = const char* elementScale
+MEMBERS    = const char* elementReference
+MEMBERS    = const char* elementWidth
+MEMBERS    = bufr_descriptors_array* expanded
+MEMBERS    = int rank
+MEMBERS    = grib_accessor* expandedAccessor
 MEMBERS    = int dirty
 
 END_CLASS_DEF
@@ -60,8 +67,15 @@ typedef struct grib_accessor_expanded_descriptors {
 /* Members defined in expanded_descriptors */
 	const char* unexpandedDescriptors;
 	const char* sequence;
-	long* expanded;
-	size_t expandedSize;
+	const char* expandedName;
+	const char* elementCode;
+	const char* elementUnit;
+	const char* elementScale;
+	const char* elementReference;
+	const char* elementWidth;
+	bufr_descriptors_array* expanded;
+	int rank;
+	grib_accessor* expandedAccessor;
 	int dirty;
 } grib_accessor_expanded_descriptors;
 
@@ -146,12 +160,35 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
+#define MYDEBUG 0
+
+typedef struct change_coding_params {
+	int associatedFieldWidth;
+	int localDescriptorWidth;
+	int extraWidth;
+	int extraScale;
+	double referenceFactor;
+} change_coding_params ;
+
+
 static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
   grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
   int n=0;
+  self->expandedName=grib_arguments_get_name(a->parent->h,args,n++);
+  self->rank=grib_arguments_get_long(a->parent->h,args,n++);
+  if (self->rank!=0) {
+    self->expandedAccessor=grib_find_accessor(a->parent->h,self->expandedName);
+  } else {
+    self->expandedAccessor=0;
+  }
   self->unexpandedDescriptors=grib_arguments_get_name(a->parent->h,args,n++);
   self->sequence=grib_arguments_get_name(a->parent->h,args,n++);
+  self->elementCode=grib_arguments_get_name(a->parent->h,args,n++);
+  self->elementUnit=grib_arguments_get_name(a->parent->h,args,n++);
+  self->elementScale=grib_arguments_get_name(a->parent->h,args,n++);
+  self->elementReference=grib_arguments_get_name(a->parent->h,args,n++);
+  self->elementWidth=grib_arguments_get_name(a->parent->h,args,n++);
   self->dirty=1;
   self->expanded=0;
   a->length = 0;
@@ -162,148 +199,375 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
   grib_dump_long(dumper,a,NULL);
 }
 
-size_t __expand(grib_accessor* a,grib_iarray* unexpanded,grib_iarray* expanded, int* err) {
-  int FF,F,X,Y,k,j;
+static bufr_descriptors_array* _expand(grib_accessor* a,bufr_descriptors_array* unexpanded,change_coding_params* ccp,int *err);
+
+static int depth=-1;
+
+static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_descriptors_array* expanded,
+                change_coding_params* ccp,int* err) {
+  int k,j,i;
   grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
+  long scale,reference,width;
   size_t size;
+  char code[]="000000";
+  size_t len_code=6;
+  char unit[100]={0,};
+  size_t len_unit=100;
   long* v;
-  long u;
-  long* ur;
+  bufr_descriptor* u;
+  bufr_descriptor* vv;
+  bufr_descriptor** ur;
   int idx;
-  long u0;
+  bufr_descriptor* u0;
   grib_context* c=a->parent->h->context;
-  long us;
+  bufr_descriptor* us;
+  bufr_descriptors_array* inner_expanded;
+  bufr_descriptors_array* inner_unexpanded;
+#if MYDEBUG
+  int idepth;
+#endif
 
-  if (grib_iarray_used_size(unexpanded)==0) return 0;
 
-  us=grib_iarray_get(unexpanded,0);
+  if (grib_bufr_descriptors_array_used_size(unexpanded)==0) return 0;
+
+  us=grib_bufr_descriptors_array_get(unexpanded,0);
 
   *err=0;
-  F=us/100000;
-  X=(us-F*100000)/1000;
-  Y=(us-F*100000)%1000;
-  /* printf("\n__expand ==> %d-%.2d-%.3d\n",F,X,Y); */
-  switch (F) {
+#if MYDEBUG
+  for (idepth=0;idepth<depth;idepth++) printf("\t");
+  printf("expanding ==> %d-%02d-%03d\n",us->F,us->X,us->Y);
+#endif
+  switch (us->F) {
     case 3:
       /* sequence */
-      u=grib_iarray_pop_front(unexpanded);
-      /* printf("+++ pop %ld\n",u); */
+      u=grib_bufr_descriptors_array_pop_front(unexpanded);
+#if MYDEBUG
+      for (idepth=0;idepth<depth;idepth++) printf("\t");
+      printf("+++ pop  %06ld\n",u->code);
+#endif
       /*this is to get the sequence elements of the sequence unexpanded[i] */
-      *err=grib_set_long(a->parent->h,self->sequence,u);
+      *err=grib_set_long(a->parent->h,self->sequence,u->code);
       *err=grib_get_size(a->parent->h,self->sequence,&size);
       if (*err) return 0;
       v=grib_context_malloc_clear(c,sizeof(long)*size);
       *err=grib_get_long_array(a->parent->h,self->sequence,v,&size);
       if (*err) return 0;
-      expanded=grib_iarray_push_array(expanded,v,size);
-      /* printf("=== push array \n"); */
-      /* for (i=0;i<size;i++) printf("=== push %ld\n",v[i]); */
-      /* for (i=0;i<expanded->n;i++) printf("=== %ld\n",grib_iarray_get(expanded,i)); */
+      inner_unexpanded=grib_bufr_descriptors_array_new(c,100,100);
+      inner_expanded=grib_bufr_descriptors_array_new(c,100,100);
+      for (i=0;i<size;i++) {
+        vv=grib_bufr_descriptor_new(c,v[i]);
+        inner_unexpanded=grib_bufr_descriptors_array_push(inner_unexpanded,vv);
+      }
       grib_context_free(c,v);
+      inner_expanded=_expand(a,inner_unexpanded,ccp,err);
+#if MYDEBUG
+      for (i=0;i<inner_expanded->n;i++) {
+        for (idepth=0;idepth<depth;idepth++) printf("\t");
+        printf("+++ push %06ld\n",inner_expanded->v[i]->code);
+      }
+#endif
+      expanded=grib_bufr_descriptors_array_append(expanded,inner_expanded);
+      size=grib_bufr_descriptors_array_used_size(inner_expanded);
       break;
 
     case 1:
-      if (Y==0) {
-        u=grib_iarray_pop_front(unexpanded);
-        /* printf("+++ pop %ld\n",u); */
-        /* printf("=== push %ld\n",u); */
-        grib_iarray_push(expanded,u);
+      if (us->Y==0) {
+        /* delayed replication */
+        bufr_descriptor* uidx=0;
+        u=grib_bufr_descriptors_array_pop_front(unexpanded);
+#if MYDEBUG
+      for (idepth=0;idepth<depth;idepth++) printf("\t");
+      printf("+++ pop  %06ld\n",u->code);
+      for (idepth=0;idepth<depth;idepth++) printf("\t");
+      printf("+++ push %06ld\n",u->code);
+#endif
+        grib_bufr_descriptors_array_push(expanded,u);
         idx=expanded->n-1;
-        u=grib_iarray_pop_front(unexpanded);
-        /* printf("+++ pop %ld\n",u); */
-        /* printf("=== push %ld\n",u); */
-        grib_iarray_push(expanded,u);
+        u=grib_bufr_descriptors_array_pop_front(unexpanded);
+#if MYDEBUG
+        for (idepth=0;idepth<depth;idepth++) printf("\t");
+        printf("+++ pop  %06ld\n",u->code);
+        for (idepth=0;idepth<depth;idepth++) printf("\t");
+        printf("+++ push %06ld\n",u->code);
+#endif
+        grib_bufr_descriptors_array_push(expanded,u);
         size=0;
-        for (j=0;j<X;j++) {
-          u0=grib_iarray_get(unexpanded,0);
-          if ((FF=u0/100000)==1)
-              j+=(u0-FF*100000)/1000;
-          size+=__expand(a,unexpanded,expanded,err);
+        inner_unexpanded=grib_bufr_descriptors_array_new(c,100,100);
+        inner_expanded=grib_bufr_descriptors_array_new(c,100,100);
+        for (j=0;j<us->X;j++) {
+          u0=grib_bufr_descriptors_array_pop_front(unexpanded);
+          grib_bufr_descriptors_array_push(inner_unexpanded,u0);
+#if MYDEBUG
+          for (idepth=0;idepth<depth;idepth++) printf("\t");
+          printf("+++ pop  %06ld\n",u0->code);
+#endif
         }
-        grib_iarray_set(expanded,idx,size*1000+100000);
+        inner_expanded=_expand(a,inner_unexpanded,ccp,err);
+        size=grib_bufr_descriptors_array_used_size(inner_expanded);
+#if MYDEBUG
+        for (i=0;i<inner_expanded->n;i++) {
+          for (idepth=0;idepth<depth;idepth++) printf("\t");
+          printf("+++ push %06ld\n",inner_expanded->v[i]->code);
+        }
+#endif
+        expanded=grib_bufr_descriptors_array_append(expanded,inner_expanded);
+        uidx=grib_bufr_descriptors_array_get(expanded,idx);
+        grib_bufr_descriptor_set_code(uidx,size*1000+100000);
         size++;
       } else {
-        u=grib_iarray_pop_front(unexpanded);
-        /* printf("+++ pop %ld\n",u); */
-        size=X*Y;
-        ur=grib_context_malloc_clear(c,X*sizeof(long));
-        for (j=0;j<X;j++) {
-          ur[j]=grib_iarray_pop_front(unexpanded);
-          /* printf("+++ pop front %ld\n",ur[j]); */
+        u=grib_bufr_descriptors_array_pop_front(unexpanded);
+#if MYDEBUG
+        for (idepth=0;idepth<depth;idepth++) printf("\t");
+        printf("+++ pop  %06ld\n",u->code);
+#endif
+        size=us->X*us->Y;
+        ur=(bufr_descriptor**)grib_context_malloc_clear(c,us->X*sizeof(bufr_descriptor));
+        for (j=0;j<us->X;j++) {
+          ur[j]=grib_bufr_descriptors_array_pop_front(unexpanded);
+#if MYDEBUG
+          for (idepth=0;idepth<depth;idepth++) printf("\t");
+          printf("+++ pop  %06ld\n",ur[j]->code);
+#endif
         }
-        for (k=0;k<Y;k++) {
-              for (j=0;j<X;j++) {
-                  /* printf("=== push %ld\n",ur[j]); */
-                  grib_iarray_push(expanded,ur[j]);
+        inner_unexpanded=grib_bufr_descriptors_array_new(c,100,100);
+        for (k=0;k<us->Y;k++) {
+              for (j=0;j<us->X;j++) {
+                  grib_bufr_descriptors_array_push(inner_unexpanded,ur[j]);
               }
         }
+        inner_expanded=_expand(a,inner_unexpanded,ccp,err);
+#if MYDEBUG
+        for (i=0;i<inner_expanded->n;i++) {
+          for (idepth=0;idepth<depth;idepth++) printf("\t");
+          printf("+++ push %06ld\n",inner_expanded->v[i]->code);
+        }
+#endif
+        expanded=grib_bufr_descriptors_array_append(expanded,inner_expanded);
+        size=grib_bufr_descriptors_array_used_size(inner_expanded);
         grib_context_free(c,ur);
       }
       break;
 
+    case 0:
+      u=grib_bufr_descriptors_array_pop_front(unexpanded);
+#if MYDEBUG
+      for (idepth=0;idepth<depth;idepth++) printf("\t");
+      printf("+++ pop  %06ld\n",u->code);
+#endif
+      if ((u->flags & BUFR_DESCRIPTOR_FLAG_HAS_VALUES) == 0) {
+        sprintf(code,"%06ld",u->code);
+        len_code=strlen(code);
+        grib_set_string(a->parent->h,self->elementCode,code,&len_code);
+        *err=grib_get_long(a->parent->h,self->elementScale,&scale);
+        if (*err==GRIB_SUCCESS) {
+          *err=grib_get_long(a->parent->h,self->elementReference,&reference);
+          *err=grib_get_long(a->parent->h,self->elementWidth,&width);
+          grib_bufr_descriptor_set_values(u,scale,reference,width);
+          *err=grib_get_string(a->parent->h,self->elementUnit,unit,&len_unit);
+          if (!strcmp(unit,"CCITTIA5")) u->flags |= BUFR_DESCRIPTOR_FLAG_IS_STRING;
+          else if (strstr(unit,"TABLE") ) {
+            if (strstr(unit,"FLAG")) {
+              u->flags |= BUFR_DESCRIPTOR_FLAG_IS_FLAG;
+            } else {
+              u->flags |= BUFR_DESCRIPTOR_FLAG_IS_TABLE;
+            }
+          }
+          u->flags |= BUFR_DESCRIPTOR_FLAG_HAS_VALUES;
+        } else {
+          grib_context_log(c,GRIB_LOG_ERROR,"element %s not in table B",code);
+          return 0;
+        }
+      }
+#if MYDEBUG
+      for (idepth=0;idepth<depth;idepth++) printf("\t");
+      printf("+++ push %06ld [%d,isFlag=%d,isTable=%d,isString=%d] (%ld %g %ld)",u->code,
+          (u->flags & BUFR_DESCRIPTOR_FLAG_HAS_VALUES)==BUFR_DESCRIPTOR_FLAG_HAS_VALUES,
+          (u->flags & BUFR_DESCRIPTOR_FLAG_IS_FLAG)==BUFR_DESCRIPTOR_FLAG_IS_FLAG,
+          (u->flags & BUFR_DESCRIPTOR_FLAG_IS_TABLE)==BUFR_DESCRIPTOR_FLAG_IS_TABLE,
+          (u->flags & BUFR_DESCRIPTOR_FLAG_IS_STRING)==BUFR_DESCRIPTOR_FLAG_IS_STRING,
+          u->scale,u->reference,u->width);
+#endif
+      if ((u->flags & ( BUFR_DESCRIPTOR_FLAG_IS_FLAG |
+                       BUFR_DESCRIPTOR_FLAG_IS_TABLE |
+                       BUFR_DESCRIPTOR_FLAG_IS_STRING)) == 0) {
+        u->width= ccp->localDescriptorWidth>0 ? ccp->localDescriptorWidth : u->width+ccp->extraWidth;
+        u->reference=u->reference* ccp->referenceFactor;
+        u->scale=u->scale+ccp->extraScale;
+      }
+#if MYDEBUG
+      printf("->(%ld %g %ld)\n",u->scale,u->reference,u->width);
+#endif
+      grib_bufr_descriptors_array_push(expanded,u);
+      size=1;
+      if (ccp->associatedFieldWidth) {
+        bufr_descriptor* au=grib_bufr_descriptor_new(c,999999);
+        au->width=ccp->associatedFieldWidth;
+#if MYDEBUG
+      for (idepth=0;idepth<depth;idepth++) printf("\t");
+      printf("+++ push %06ld (%ld %g %ld)",au->code,au->scale,au->reference,au->width);
+#endif
+        grib_bufr_descriptors_array_push(expanded,au);
+        size++;
+        /* bufrdc bug!!*/
+        ccp->associatedFieldWidth=0;
+      }
+      break;
+
+    case 2:
+      u=grib_bufr_descriptors_array_pop_front(unexpanded);
+#if MYDEBUG
+      for (idepth=0;idepth<depth;idepth++) printf("\t");
+      printf("+++ pop  %06ld\n",u->code);
+#endif
+      switch(us->X) {
+        case 1:
+          ccp->extraWidth = us->Y ? us->Y-128 : 0;
+          size=0;
+          break;
+        case 2:
+          ccp->extraScale = us->Y ? us->Y-128 : 0;
+          size=0;
+          break;
+        case 4:
+         /* associated field*/
+          ccp->associatedFieldWidth=us->Y;
+          break;
+        case 6:
+          /*signify data width*/
+          ccp->localDescriptorWidth=us->Y;
+          size=0;
+          break;
+        case 7:
+          if (us->Y) {
+            ccp->extraScale = us->Y;
+            ccp->referenceFactor=grib_power(us->Y,10);
+            ccp->extraWidth=((10*us->Y)+2)/3;
+          } else {
+            ccp->extraWidth=0;
+            ccp->extraScale=0;
+            ccp->referenceFactor=1;
+          }
+          size=0;
+          break;
+        default:
+#if MYDEBUG
+          for (idepth=0;idepth<depth;idepth++) printf("\t");
+          printf("+++ push %06ld\n",u->code);
+#endif
+          grib_bufr_descriptors_array_push(expanded,u);
+          size=1;
+      }
+      break;
+
     default:
-      u=grib_iarray_pop_front(unexpanded);
-      /* printf("+++ pop front %ld\n",u); */
-      /* printf("=== push %ld\n",u); */
-      grib_iarray_push(expanded,u);
+      u=grib_bufr_descriptors_array_pop_front(unexpanded);
+#if MYDEBUG
+      for (idepth=0;idepth<depth;idepth++) printf("\t");
+      printf("+++ pop  %06ld\n",u->code);
+      for (idepth=0;idepth<depth;idepth++) printf("\t");
+      printf("+++ push %06ld\n",u->code);
+#endif
+      grib_bufr_descriptors_array_push(expanded,u);
       size=1;
   }
-    /* printf("__expand <== %d-%.2d-%.3d (%ld)\n",F,X,Y,size); */
+#if MYDEBUG
+    for (idepth=0;idepth<depth;idepth++) printf("\t");
+    printf("expanding <== %d-%.2d-%.3d (size=%ld)\n\n",us->F,us->X,us->Y,size);
+#endif
     return size;
 }
 
-static long* _expand(grib_accessor* a,long* u,size_t unexpandedSize,size_t *size,int *err)
+static bufr_descriptors_array* _expand(grib_accessor* a,bufr_descriptors_array* unexpanded,change_coding_params* ccp,int *err)
 {
-  grib_iarray* expanded=NULL;
-  long *expanded_array=0;
-  long *ar=0;
-  size_t i=0;
-  grib_iarray* unexpanded;
+  bufr_descriptors_array* expanded=NULL;
   grib_context* c=a->parent->h->context;
-  expanded=grib_iarray_new(c,unexpandedSize,100);
-  unexpanded=grib_iarray_new_from_array(c,u,unexpandedSize);
+#if MYDEBUG
+  int idepth;
+#endif
 
-  *size=0;
-  while (unexpanded->n)
-    __expand(a,unexpanded,expanded,err);
+  depth++;
 
-  ar=grib_iarray_get_array(expanded);
-  expanded_array=grib_context_malloc_clear(c,sizeof(long)*expanded->n);
-  for (i=0;i<expanded->n;i++) expanded_array[i]=ar[i];
-  *size=expanded->n;
-  grib_iarray_delete(expanded);
-  grib_context_free(c,ar);
-  grib_iarray_delete(unexpanded);
-  return expanded_array;
-}
+  expanded=grib_bufr_descriptors_array_new(c,100,100);
 
-static long* expand(grib_accessor* a,size_t *expandedSize,int *err)
-{
-  grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
-  long *expanded=0;
-  size_t unexpandedSize=0;
-  long* unexpanded=NULL;
-  grib_context* c=a->parent->h->context;
-
-  *err=grib_get_size(a->parent->h,self->unexpandedDescriptors,&unexpandedSize);
-  if (*err) return NULL;
-  unexpanded=grib_context_malloc_clear(c,sizeof(long)*unexpandedSize);
-  if (!unexpanded) {*err=GRIB_OUT_OF_MEMORY; return NULL;}
-  *err=grib_get_long_array(a->parent->h,self->unexpandedDescriptors,unexpanded,&unexpandedSize);
-  if (*err) return NULL;
-
-  *expandedSize=unexpandedSize;
-  while (1) {
-    expanded=_expand(a,unexpanded,unexpandedSize,expandedSize,err);
-    /* printf("unexpandedSize=%ld expandedSize=%ld\n",unexpandedSize,*expandedSize); */
-    grib_context_free(c,unexpanded);
-    if (unexpandedSize==*expandedSize) break;
-    unexpanded=expanded;
-    expanded=0;
-    unexpandedSize=*expandedSize;
+#if MYDEBUG
+    {
+    int i;
+    for (idepth=0;idepth<depth;idepth++) printf("\t");
+    printf("to be expanded ==> \n");
+         for (i=0;i<unexpanded->n;i++) {
+           bufr_descriptor* xx=grib_bufr_descriptors_array_get(unexpanded,i);
+           for (idepth=0;idepth<depth;idepth++) printf("\t");
+           printf("%06ld\n",xx->code);
+         }
+    for (idepth=0;idepth<depth;idepth++) printf("\t");
+    printf("to be expanded <== \n\n");
+    }
+#endif
+  while (unexpanded->n) {
+    __expand(a,unexpanded,expanded,ccp,err);
   }
+#if MYDEBUG
+    {
+    int i;
+    for (idepth=0;idepth<depth;idepth++) printf("\t");
+    printf("expanded ==> \n");
+         for (i=0;i<expanded->n;i++) {
+           bufr_descriptor* xx=grib_bufr_descriptors_array_get(expanded,i);
+           for (idepth=0;idepth<depth;idepth++) printf("\t");
+           printf("==  %-6d== %06ld ",i,xx->code);
+           if (xx->flags & BUFR_DESCRIPTOR_FLAG_HAS_VALUES) {
+             printf("%ld %g %ld",xx->scale,xx->reference,xx->width);
+           }
+           printf("\n");
+         }
+    for (idepth=0;idepth<depth;idepth++) printf("\t");
+    printf("expanded <== \n\n");
+    }
+#endif
+
+  depth--;
 
   return expanded;
+}
+
+static int expand(grib_accessor* a)
+{
+  grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
+  int err=0;
+  size_t unexpandedSize=0;
+  int i;
+  long* u=0;
+  change_coding_params ccp;
+  bufr_descriptors_array* unexpanded=NULL;
+  grib_context* c=a->parent->h->context;
+
+  if (!self->dirty) return err;
+  self->dirty=0;
+
+
+  grib_bufr_descriptors_array_delete(self->expanded);
+  err=grib_get_size(a->parent->h,self->unexpandedDescriptors,&unexpandedSize);
+  if (err) return err;
+  u=grib_context_malloc_clear(c,sizeof(long)*unexpandedSize);
+  if (!u) {err=GRIB_OUT_OF_MEMORY; return err;}
+  err=grib_get_long_array(a->parent->h,self->unexpandedDescriptors,u,&unexpandedSize);
+  if (err) return err;
+
+  unexpanded=grib_bufr_descriptors_array_new(c,unexpandedSize,100);
+  for (i=0;i<unexpandedSize;i++)
+    grib_bufr_descriptors_array_push(unexpanded,grib_bufr_descriptor_new(c,u[i]));
+
+  grib_context_free(c,u);
+
+  ccp.extraWidth=0;
+  ccp.localDescriptorWidth=-1;
+  ccp.extraScale=0;
+  ccp.referenceFactor=1;
+  ccp.associatedFieldWidth=0;
+  self->expanded=_expand(a,unexpanded,&ccp,&err);
+  grib_bufr_descriptors_array_delete(unexpanded);
+
+  return err;
 
 }
 
@@ -314,15 +578,9 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
   size_t rlen=0;
   size_t i;
 
-  if (self->dirty) {
-    if (self->expanded)
-        grib_context_free(a->parent->h->context,self->expanded);
-    self->expanded=expand(a,&rlen,&ret);
-    self->expandedSize=rlen;
-    self->dirty=0;
-    if (ret) return ret;
-  }
-
+  ret=expand(a);
+  if (ret) return ret;
+  rlen=grib_bufr_descriptors_array_used_size(self->expanded);
 
   if(*len < rlen)
   {
@@ -332,8 +590,8 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
     return GRIB_ARRAY_TOO_SMALL;
   }
 
-  *len = self->expandedSize;
-  for (i=0;i<*len;i++) val[i]=self->expanded[i];
+  *len = rlen;
+  for (i=0;i<*len;i++) val[i]=self->expanded->v[i]->code;
 
   return GRIB_SUCCESS;
 }
@@ -343,7 +601,6 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
   grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
   self->dirty=1;
   return GRIB_NOT_IMPLEMENTED;
-  
 }
 
 
@@ -354,16 +611,13 @@ static int value_count(grib_accessor* a,long* rlen)
   grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
   *rlen=0;
 
-  if (self->expanded) grib_context_free(c,self->expanded);
-  self->expanded=expand(a,&(self->expandedSize),&ret);
-  self->dirty=0;
+  ret=expand(a);
   if (ret) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
-		    "%s unable to compute size",a->name);
-		    return ret;
+    grib_context_log(c,GRIB_LOG_ERROR,"%s unable to compute size",a->name);
+		return ret;
   }
 
-  *rlen=self->expandedSize;
+  *rlen = grib_bufr_descriptors_array_used_size(self->expanded);
 
   return ret;
 }

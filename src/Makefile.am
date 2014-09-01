@@ -47,6 +47,8 @@ libgrib_api_la_prototypes= \
 	grib_accessor.c \
 	grib_concept.c \
 	grib_hash_array.c \
+	grib_bufr_descriptor.c \
+	grib_bufr_descriptors_array.c \
 	grib_darray.c \
 	grib_sarray.c \
 	grib_iarray.c \
