@@ -76,26 +76,27 @@ elementScale=dict_search("element.table",elementCode,5,tablesMasterDir,tablesLoc
 elementReference=dict_search("element.table",elementCode,6,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
 elementWidth=dict_search("element.table",elementCode,7,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
 
-meta expandedDescriptors expanded_descriptors(expandedDescriptors,0,unexpandedDescriptors,sequences,
-                                    elementCode,elementUnit,elementScale,elementReference,elementWidth); 
-meta expandedFactors expanded_descriptors(expandedDescriptors,1);
-meta expandedReferences expanded_descriptors(expandedDescriptors,2);
-meta expandedWidths expanded_descriptors(expandedDescriptors,3);
+meta expandedCodes      expanded_descriptors(expandedCodes,0,unexpandedDescriptors,sequences,elementCode,
+                                              elementUnit,elementScale,elementReference,elementWidth); 
+meta expandedScales     expanded_descriptors(expandedCodes,1);
+meta expandedReferences expanded_descriptors(expandedCodes,2);
+meta expandedWidths     expanded_descriptors(expandedCodes,3);
+meta expandedFlags      expanded_descriptors(expandedCodes,4);
 
-meta bufrdcExpandedDescriptors bufrdc_expanded_descriptors(expandedDescriptors);
+meta bufrdcExpandedDescriptors bufrdc_expanded_descriptors(expandedCodes);
 
 #smart_table NAME (VALUES,FILE_NAME,MASTER_DIRECTORY,LOCAL_DIRECTORY,WIDTH_OF_CODE_IN_BITS,EXTRA_DIRECTORY,EXTRA_FILE_NAME);
-smart_table expanded (expandedDescriptors,"element.table",tablesMasterDir,tablesLocalDir,18,rootTablesDir,"operators.table") ;
-meta abbreviation 	smart_table_column(expanded,0,1) 	: string_type;
-meta type 					smart_table_column(expanded,1,0) 	: string_type;
-meta name 					smart_table_column(expanded,2,0)	:	string_type;
-meta unit 					smart_table_column(expanded,3,0)	:	string_type;
-meta scale 					smart_table_column(expanded,4,0)	:	long_type;
-meta reference 			smart_table_column(expanded,5,0)	:	long_type;
-meta width 					smart_table_column(expanded,6,0)	:	long_type;
-meta crex_unit 			smart_table_column(expanded,7,0)	:	long_type;
-meta crex_scale 		smart_table_column(expanded,8,0)	:	long_type;
-meta crex_width 		smart_table_column(expanded,9,0)	:	long_type;
+smart_table expandedOriginalCodes (expandedCodes,"element.table",tablesMasterDir,tablesLocalDir,18,rootTablesDir,"operators.table") ;
+meta expandedAbbreviations 	      smart_table_column(expandedOriginalCodes,0,1) : string_type;
+meta expandedTypes 					      smart_table_column(expandedOriginalCodes,1,0) : string_type;
+meta expandedNames 					      smart_table_column(expandedOriginalCodes,2,0)	:	string_type;
+meta expandedUnits 					      smart_table_column(expandedOriginalCodes,3,0)	:	string_type;
+meta expandedOriginalScales 	    smart_table_column(expandedOriginalCodes,4,0)	:	long_type;
+meta expandedOriginalReferences 	smart_table_column(expandedOriginalCodes,5,0)	:	long_type;
+meta expandedOriginalWidths 			smart_table_column(expandedOriginalCodes,6,0)	:	long_type;
+meta expandedCrex_units 			    smart_table_column(expandedOriginalCodes,7,0)	:	long_type;
+meta expandedCrex_scales 		      smart_table_column(expandedOriginalCodes,8,0)	:	long_type;
+meta expandedCrex_widths 		      smart_table_column(expandedOriginalCodes,9,0)	:	long_type;
 
 position endDescriptors;
 section_padding section3Padding;

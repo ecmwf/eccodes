@@ -37,10 +37,11 @@ or edit "action.class" and rerun ./make_class.pl
 
 */
 
-static void init_class    (grib_action_class*);
-static void xref           (grib_action* d, FILE* f,const char* path);
-static int notify_change  (grib_action* a, grib_accessor* observer,grib_accessor* observed);
+static void init_class      (grib_action_class*);
+static void xref            (grib_action* d, FILE* f,const char* path);
+static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* observed);
 static grib_action* reparse(grib_action* a,grib_accessor* acc,int *doit);
+
 
 typedef struct grib_action_section {
     grib_action          act;  

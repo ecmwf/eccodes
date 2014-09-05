@@ -150,6 +150,7 @@ bufr_descriptor *grib_bufr_descriptor_new(grib_context *c, int code);
 bufr_descriptor *grib_bufr_descriptor_clone(grib_context *c, bufr_descriptor *d);
 void grib_bufr_descriptor_set_code(bufr_descriptor *v, int code);
 void grib_bufr_descriptor_set_values(bufr_descriptor *v, int scale, int reference, int width);
+void grib_bufr_descriptor_set_scale(bufr_descriptor *v, int scale);
 void grib_bufr_descriptor_delete(grib_context *c, bufr_descriptor *v);
 
 /* grib_bufr_descriptors_array.c */
@@ -495,6 +496,8 @@ int grib_get_g1_message_size(grib_handle *h, grib_accessor *tl, grib_accessor *s
 
 /* grib_accessor_class_data_simple_packing.c */
 
+/* grib_accessor_class_data_ccsds_packing.c */
+
 /* grib_accessor_class_count_missing.c */
 
 /* grib_accessor_class_data_sh_packed.c */
@@ -546,6 +549,7 @@ second_order_packed *grib_get_second_order_groups(grib_context *c, const unsigne
 /* grib_accessor_class_unexpanded_descriptors.c */
 
 /* grib_accessor_class_expanded_descriptors.c */
+bufr_descriptors_array *grib_accessor_class_expanded_descriptors_get_expanded(grib_accessor *a, int *err);
 
 /* grib_accessor_class_bufrdc_expanded_descriptors.c */
 

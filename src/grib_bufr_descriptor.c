@@ -50,6 +50,13 @@ void grib_bufr_descriptor_set_values(bufr_descriptor* v,int scale,int reference,
   v->reference=reference;
   v->width=width;
   v->flags=BUFR_DESCRIPTOR_FLAG_HAS_VALUES;
+  v->factor=grib_power(-scale,10);
+}
+
+void grib_bufr_descriptor_set_scale(bufr_descriptor* v,int scale) {
+  if (!v) return;
+  v->scale=scale;
+  v->factor=grib_power(-scale,10);
 }
 
 void grib_bufr_descriptor_delete(grib_context* c,bufr_descriptor* v) {

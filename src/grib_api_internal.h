@@ -757,6 +757,7 @@ struct bufr_descriptor {
   int Y;
   int flags;
   long scale;
+  double factor;
   double reference;
   long width;
 } ;

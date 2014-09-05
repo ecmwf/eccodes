@@ -18,13 +18,11 @@ meta selectGroupNumber bufr_group_number();
 transient subsetNumber=0;
 if (compressedData) {
   meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length,
-                        numberOfDataSubsets,subsetNumber,
-                        expanded,type,unit,reference,scale,width,
+                        numberOfDataSubsets,subsetNumber,expandedCodes,expandedFlags,
                         stringValues,elementsDescriptorsIndex,compressedData) ;
 } else {
   meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length,
-                        numberOfDataSubsets,subsetNumber,
-                        expanded,types,units,references,scales,widths,
+                        numberOfDataSubsets,subsetNumber,expandedCodes,expandedFlags,
                         stringValues,elementsDescriptorsIndex,compressedData) ;
 }
 
