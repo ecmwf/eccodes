@@ -8,7 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-set -ex
 . ./include.sh
 
 REDIRECT=/dev/null
@@ -46,4 +45,4 @@ do
 
 done
 
-rm -f bufrdc_ref.filter
+rm -f bufrdc_num_ref.filter
