@@ -1241,6 +1241,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_bufr_descriptor.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_bufr_descriptors_array.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_concept.c"
 				>
 			</File>
