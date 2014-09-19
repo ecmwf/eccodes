@@ -49,7 +49,7 @@ longitudesList list(Ni) {
     unsigned[4] longitudes;
 }
 
-latitudesList list(Ni) {
+latitudesList list(Nj) {
     signed[4] latitudes;
 }
 
