@@ -9,7 +9,9 @@
  */
 
 /*
- * Description: index a GRIB file, select 2t and compute ensemble mean.
+ * C Implementation: ensemble_mean
+ *
+ * Description: index a GRIB file, select a specific parameter and compute ensemble mean.
  *
  */
 
@@ -25,7 +27,7 @@ int main(int argc, char * argv[])
     long* number;
     double* values;
     double* result=NULL;
-    double min=1000,max=0,avg=0;
+    double min=1e13,max=-1e13,avg=0;
     grib_index* index;
     grib_handle* h=NULL;
 
@@ -43,7 +45,7 @@ int main(int argc, char * argv[])
 
     /* get size of ensemble number list */
     GRIB_CHECK(grib_index_get_size(index, "number", &numberSize),0);
-    printf("grib contains %ld different ensemble members\n",numberSize);
+    printf("GRIB contains %ld different ensemble members\n",numberSize);
     /* allocate memory for ensemble number list */
     number = (long*) malloc(numberSize * sizeof(long));
     /* get list of ensemble numbers */
@@ -58,17 +60,17 @@ int main(int argc, char * argv[])
         /* select an individual ensemble number */
         GRIB_CHECK(grib_index_select_long(index, "number", number[i]), 0);
 
-        /* create handle for next grib message */
+        /* create handle for next GRIB message */
         h=grib_handle_new_from_index(index, &ret);
         if (ret) {
-            printf("error: %d\n", ret);
+            printf("Error: %s\n", grib_get_error_message(ret));
             exit(ret);
         }
 
         /* get the size of the values array */
         GRIB_CHECK(grib_get_size(h, "values", &values_len), 0);
 
-        /* allocate memory for the grib message */
+        /* allocate memory for the GRIB message */
         values = malloc(values_len * sizeof(double));
 
         /* allocate memory for result */
@@ -83,7 +85,7 @@ int main(int argc, char * argv[])
         for (j = 0; j < values_len; j++)
             result[j] = result[j] + values[j];
 
-        /* free memory and grib message handle */
+        /* free memory and GRIB message handle */
         free(values);
         GRIB_CHECK(grib_handle_delete(h), 0);
     }
