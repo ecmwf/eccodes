@@ -304,7 +304,10 @@ int grib_write_unsigned_long(FILE* fh,unsigned long val)
 
 int grib_write_string(FILE* fh,const char* s)
 {
-    size_t len = strlen(s);
+    size_t len = 0;
+    if (s == NULL)
+        return GRIB_IO_PROBLEM;
+    len = strlen(s);
     grib_write_uchar(fh,(unsigned char)len);
     if (fwrite(s,1,len,fh)<len)
         return GRIB_IO_PROBLEM;
@@ -490,7 +493,6 @@ grib_index* grib_index_new(grib_context* c,const char* key,int *err)
 
 static void grib_index_values_delete(grib_context* c,grib_string_list* values)
 {
-
     if (!values) return;
 
     grib_index_values_delete(c,values->next);
@@ -511,7 +513,6 @@ static void grib_index_key_delete(grib_context* c,grib_index_key* keys)
     grib_context_free(c,keys->name);
     grib_context_free(c,keys);
 
-    return;
 }
 
 static long values_count=0;
@@ -628,7 +629,6 @@ static void grib_field_delete(grib_context* c,grib_field* field)
 
     grib_context_free(c,field);
 
-    return;
 }
 
 static void grib_field_tree_delete(grib_context* c,grib_field_tree* tree)
@@ -644,7 +644,6 @@ static void grib_field_tree_delete(grib_context* c,grib_field_tree* tree)
 
     grib_context_free(c,tree);
 
-    return;
 }
 
 static void grib_field_list_delete(grib_context* c, grib_field_list* field_list)
@@ -1275,6 +1274,8 @@ int grib_index_get_string(grib_index* index, const char* key, char** values, siz
     if (k->values_count>*size) return GRIB_ARRAY_TOO_SMALL;
     kv=k->values;
     while (kv) {
+        if (kv->value == NULL)
+            return GRIB_IO_PROBLEM;
         values[i++]=grib_context_strdup(index->context,kv->value);
         kv=kv->next;
     }
