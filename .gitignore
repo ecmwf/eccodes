@@ -211,6 +211,7 @@ include
 
 #from make
 examples/C/check_gaussian_grid
+examples/C/ensemble_index
 examples/C/clone
 examples/C/iterator_bitmap
 examples/C/new_sample

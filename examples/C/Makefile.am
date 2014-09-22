@@ -7,7 +7,7 @@ TESTS = iterator.sh get.sh print_data.sh set.sh keys_iterator.sh multi.sh multi_
 noinst_PROGRAMS  = nearest set_bitmap iterator get print_data set set_missing keys_iterator \
                    set_data mars_param values_check box multi multi2 multi_write precision \
                    set_pv list sections_copy large_grib1 get_data iterator_bitmap clone new_sample \
-                   check_gaussian_grid
+                   check_gaussian_grid ensemble_index
 bin_PROGRAMS            = points
 
 box_SOURCES             = box.c
@@ -35,6 +35,7 @@ get_data_SOURCES        = get_data.c
 clone_SOURCES           = clone.c
 new_sample_SOURCES      = new_sample.c
 check_gaussian_grid_SOURCES = check_gaussian_grid.c
+ensemble_index_SOURCES = ensemble_index.c
 
 INCLUDES =  -I$(top_builddir)/src
 
