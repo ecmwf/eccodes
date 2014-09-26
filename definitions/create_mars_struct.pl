@@ -6,7 +6,7 @@ use DBI;
 use Data::Dumper;
 
 my $db="param";
-my $host="web-lan-002";
+my $host="grib-param-db-prod.ecmwf.int";
 my $user="ecmwf";
 my $pass="";
 my $filename; my $filebase; my $out; my $conceptDir;
