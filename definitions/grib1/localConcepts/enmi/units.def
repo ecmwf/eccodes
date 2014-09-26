@@ -4,6 +4,11 @@
      table2Version = 1 ;
      indicatorOfParameter = 61 ;
     }
+#Convective available potential energy
+'J kg**-1' = {
+	 table2Version = 1 ;
+	 indicatorOfParameter = 225 ;
+}
 #10 metre wind gust
 'm s**-1' = {
      table2Version = 1 ;
