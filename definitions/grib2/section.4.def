@@ -73,6 +73,12 @@ else {
       ieeefloat pv[numberOfCoordinatesValues] : dump;
       alias vertical.pv=pv;
    }
+
+   # GRIB-534: To easily remove vertical coordinates, set this key to 1
+   concept_nofail deletePV(unknown) {
+      "1" = { PVPresent=0; NV=0; }
+   }
+
 }
 
 meta md5Section4 md5(offsetSection4,section4Length);
