@@ -152,7 +152,7 @@ int process_file(const char* filename)
             if (pl_len != 2*N) {
                 error("ERROR: Length of pl array is %ld but should be 2*N (%ld)!\n", pl_len, 2*N);
             }
-            pl = malloc(pl_len*sizeof(long));
+            pl = (long*)malloc(pl_len*sizeof(long));
             assert(pl);
             GRIB_CHECK(grib_get_long_array(h, "pl", pl, &pl_len),0);
 

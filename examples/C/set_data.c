@@ -54,7 +54,7 @@ int main(int argc, char** argv)
     /* (e.g. keys Ni, Nj etc) and set the correct number of data values */
     GRIB_CHECK(grib_get_size(h, "values", &values_len),0);
     
-    values = malloc(values_len*sizeof(double));
+    values = (double*)malloc(values_len*sizeof(double));
     d=10e-8;
     e=d;
     count=1;

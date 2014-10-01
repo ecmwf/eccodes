@@ -71,7 +71,7 @@ int main(int argc, char * argv[])
         GRIB_CHECK(grib_get_size(h, "values", &values_len), 0);
 
         /* allocate memory for the GRIB message */
-        values = malloc(values_len * sizeof(double));
+        values = (double*)malloc(values_len * sizeof(double));
 
         /* allocate memory for result */
         if ( i == 0 ) {

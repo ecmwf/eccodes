@@ -56,13 +56,13 @@ int main(int argc, char** argv)
         if (bitmapPresent)
         {
             GRIB_CHECK(grib_get_size(h,"bitmap",&bmp_len),0);
-            bitmap = malloc(bmp_len*sizeof(long));
+            bitmap = (long*)malloc(bmp_len*sizeof(long));
             GRIB_CHECK(grib_get_long_array(h,"bitmap",bitmap,&bmp_len),0);
             printf("Bitmap is present. Num = %ld\n", bmp_len);
         }
         /* Sanity check. Number of values must match number in bitmap */
         GRIB_CHECK(grib_get_size(h,"values",&values_len),0);
-        values = malloc(values_len*sizeof(double));
+        values = (double*)malloc(values_len*sizeof(double));
         GRIB_CHECK(grib_get_double_array(h,"values",values,&values_len),0);
         if (bitmapPresent) {
             assert(values_len==bmp_len);

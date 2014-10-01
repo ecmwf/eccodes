@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
 
 	points=grib_box_get_points(box,north,west,south,east,&err);
 
-	val=malloc(sizeof(double)*points->n);
+	val=(double*)malloc(sizeof(double)*points->n);
 	grib_points_get_values(h,points,val);
 
 	for (i=0;i<points->n;i++) {

@@ -72,7 +72,7 @@ int main(int argc, char** argv)
     GRIB_CHECK(grib_get_size(h,"values",&size),0);
     assert(size == 496);
 
-    values1 = malloc(size*sizeof(double));
+    values1 = (double*)malloc(size*sizeof(double));
     /* get data values before changing the packing parameters*/
     GRIB_CHECK(grib_get_double_array(h,"values",values1,&size),0);
 
@@ -85,7 +85,7 @@ int main(int argc, char** argv)
     GRIB_CHECK(grib_get_long(h,"bitsPerValue",&bitsPerValue2),0);
     assert(bitsPerValue2 == 12);
 
-    values2 = malloc(size*sizeof(double));
+    values2 = (double*)malloc(size*sizeof(double));
     /* get data values after changing the packing parameters*/
     GRIB_CHECK(grib_get_double_array(h,"values",values2,&size),0);
 
