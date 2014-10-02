@@ -81,7 +81,7 @@ grib_iarray* grib_iarray_resize_to(grib_iarray* v,size_t newsize) {
 
   if (!c) c=grib_context_get_default();
 
-  newv=grib_context_malloc_clear(c,newsize*sizeof(long));
+  newv=(long*)grib_context_malloc_clear(c,newsize*sizeof(long));
   if (!newv) {
     grib_context_log(c,GRIB_LOG_ERROR,
           "grib_iarray_resize unable to allocate %d bytes\n",sizeof(long)*newsize);
@@ -193,7 +193,7 @@ long* grib_iarray_get_array(grib_iarray* v) {
     size_t i;
     grib_context* c=grib_context_get_default();
 
-    vv=grib_context_malloc_clear(c,sizeof(long)*v->n);
+    vv=(long*)grib_context_malloc_clear(c,sizeof(long)*v->n);
     for (i=0;i<v->n;i++) vv[i]=v->v[i];
 
     return vv;

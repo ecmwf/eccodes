@@ -13,7 +13,7 @@
 
 grib_hash_array_value* grib_integer_hash_array_value_new(grib_context* c, const char* name,grib_iarray* array)
 {
-	grib_hash_array_value* v = grib_context_malloc_clear_persistent(c,sizeof(grib_hash_array_value));
+	grib_hash_array_value* v = (grib_hash_array_value*)grib_context_malloc_clear_persistent(c,sizeof(grib_hash_array_value));
 
 	v->name = grib_context_strdup_persistent(c,name);
 	v->type=GRIB_HASH_ARRAY_TYPE_INTEGER;
@@ -23,7 +23,7 @@ grib_hash_array_value* grib_integer_hash_array_value_new(grib_context* c, const 
 
 grib_hash_array_value* grib_double_hash_array_value_new(grib_context* c,const char* name,grib_darray* array)
 {
-	grib_hash_array_value* v = grib_context_malloc_clear_persistent(c,sizeof(grib_hash_array_value));
+	grib_hash_array_value* v = (grib_hash_array_value*)grib_context_malloc_clear_persistent(c,sizeof(grib_hash_array_value));
 
 	v->name = grib_context_strdup_persistent(c,name);
 	v->type=GRIB_HASH_ARRAY_TYPE_DOUBLE;

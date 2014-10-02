@@ -21,8 +21,8 @@
    IMPLEMENTS = create_accessor
    IMPLEMENTS = dump
    IMPLEMENTS = destroy; xref; compile
-   MEMBERS    = char* old
-   MEMBERS    = char* new
+   MEMBERS    = char* the_old
+   MEMBERS    = char* the_new
    END_CLASS_DEF
 
  */
@@ -48,8 +48,8 @@ static int create_accessor(grib_section*,grib_action*,grib_loader*);
 typedef struct grib_action_rename {
     grib_action          act;  
 /* Members defined in rename */
-	char* old;
-	char* new;
+	char* the_old;
+	char* the_new;
 } grib_action_rename;
 
 
@@ -80,7 +80,7 @@ static void init_class(grib_action_class* c)
 }
 /* END_CLASS_IMP */
 
-grib_action* grib_action_create_rename( grib_context* context, char* old, char* new)
+grib_action* grib_action_create_rename( grib_context* context, char* the_old, char* the_new)
 {
   grib_action_rename*  a    =  NULL;
   grib_action_class* c   =  grib_action_class_rename;
@@ -91,8 +91,8 @@ grib_action* grib_action_create_rename( grib_context* context, char* old, char* 
   act->cclass            =  c;
   act->context           =  context;
   a                      =  (grib_action_rename*)act;
-  a->old=grib_context_strdup_persistent(context,old);
-  a->new=grib_context_strdup_persistent(context,new);
+  a->the_old=grib_context_strdup_persistent(context,the_old);
+  a->the_new=grib_context_strdup_persistent(context,the_new);
   return act;
 }
 
@@ -103,7 +103,7 @@ static void compile(grib_action* act, grib_compiler* compiler)
 
 static void rename_accessor(grib_accessor *a,char* name){
   int id;
-  char* old=(char*)a->all_names[0];
+  char* the_old=(char*)a->all_names[0];
 
   if (a->parent->h->use_trie && *(a->all_names[0]) != '_') {
       id=grib_hash_keys_get_id(a->parent->h->context->keys,a->all_names[0]);
@@ -113,8 +113,8 @@ static void rename_accessor(grib_accessor *a,char* name){
   }
   a->all_names[0]=grib_context_strdup_persistent(a->parent->h->context,name);
   a->name=a->all_names[0];
-  grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,"Renaming %s to %s",old,name);
-  /* grib_context_free(a->parent->h->context,old); */
+  grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,"Renaming %s to %s",the_old,name);
+  /* grib_context_free(a->parent->h->context,the_old); */
 
   return;
 }
@@ -127,12 +127,12 @@ static int create_accessor(grib_section* p, grib_action* act,grib_loader*h)
   grib_accessor* ga = NULL;
 
 
-  ga = grib_find_accessor(p->h, a->old);
+  ga = grib_find_accessor(p->h, a->the_old);
 
   if(ga) {
-    rename_accessor(ga,a->new);
+    rename_accessor(ga,a->the_new);
   } else{
-    grib_context_log(act->context, GRIB_LOG_DEBUG, "Action_class_rename  : create_accessor_buffer : No accessor named %s to rename ", a->old);
+    grib_context_log(act->context, GRIB_LOG_DEBUG, "Action_class_rename  : create_accessor_buffer : No accessor named %s to rename ", a->the_old);
   }
 
   return GRIB_SUCCESS;
@@ -147,15 +147,15 @@ static void dump( grib_action* act, FILE* f, int lvl)
 
   for (i=0;i<lvl;i++) grib_context_print(act->context,f,"     ");
 
-  grib_context_print(act->context,f,"rename %s as %s in %s\n",a->old,act->name,a->new);
+  grib_context_print(act->context,f,"rename %s as %s in %s\n",a->the_old,act->name,a->the_new);
 
 }
 static void destroy(grib_context* context, grib_action* act)
 {
   grib_action_rename* a = ( grib_action_rename*)act;
 
-  grib_context_free_persistent(context, a->old);
-  grib_context_free_persistent(context, a->new);
+  grib_context_free_persistent(context, a->the_old);
+  grib_context_free_persistent(context, a->the_new);
   grib_context_free_persistent(context, act->name);
   grib_context_free_persistent(context, act->op);
 }

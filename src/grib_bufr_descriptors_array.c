@@ -61,7 +61,7 @@ bufr_descriptors_array* grib_bufr_descriptors_array_resize_to(bufr_descriptors_a
 
   if (!c) c=grib_context_get_default();
 
-  newv=grib_context_malloc_clear(c,newsize*sizeof(bufr_descriptor*));
+  newv=(bufr_descriptor**)grib_context_malloc_clear(c,newsize*sizeof(bufr_descriptor*));
   if (!newv) {
     grib_context_log(c,GRIB_LOG_ERROR,
           "grib_bufr_descriptors_array_resize unable to allocate %d bytes\n",sizeof(bufr_descriptor*)*newsize);
@@ -174,7 +174,7 @@ bufr_descriptor** grib_bufr_descriptors_array_get_array(bufr_descriptors_array* 
     size_t i;
     grib_context* c=grib_context_get_default();
 
-    vv=grib_context_malloc_clear(c,sizeof(bufr_descriptor*)*v->n);
+    vv=(bufr_descriptor**)grib_context_malloc_clear(c,sizeof(bufr_descriptor*)*v->n);
     for (i=0;i<v->n;i++) vv[i]=grib_bufr_descriptor_clone(c,v->v[i]);
 
     return vv;

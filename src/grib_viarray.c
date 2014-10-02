@@ -42,7 +42,7 @@ grib_viarray* grib_viarray_resize(grib_context* c,grib_viarray* v) {
 
   if (!c) c=grib_context_get_default();
 
-  v->v=grib_context_realloc(c,v->v,newsize*sizeof(grib_iarray*));
+  v->v=(grib_iarray**)grib_context_realloc(c,v->v,newsize*sizeof(grib_iarray*));
   v->size=newsize;
   if (!v->v) {
     grib_context_log(c,GRIB_LOG_ERROR,
@@ -85,7 +85,7 @@ grib_iarray** grib_viarray_get_array(grib_context* c,grib_viarray* v) {
   grib_iarray** ret;
   int i;
   if (!v) return NULL;
-  ret=grib_context_malloc_clear(c,sizeof(grib_iarray*)*v->n);
+  ret=(grib_iarray**)grib_context_malloc_clear(c,sizeof(grib_iarray*)*v->n);
   for (i=0;i<v->n;i++) ret[i]=v->v[i];
   return ret;
 }

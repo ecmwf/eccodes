@@ -49,7 +49,7 @@ grib_action *grib_action_create_meta(grib_context *context, const char *name, co
 grib_action *grib_action_create_remove(grib_context *context, grib_arguments *args);
 
 /* action_class_rename.c */
-grib_action *grib_action_create_rename(grib_context *context, char *old, char *new);
+grib_action *grib_action_create_rename(grib_context *context, char *the_old, char *the_new);
 
 /* action_class_assert.c */
 grib_action *grib_action_create_assert(grib_context *context, grib_expression *expression);
@@ -1255,7 +1255,6 @@ double grib_arguments_get_double(grib_handle *h, grib_arguments *args, int n);
 grib_expression *grib_arguments_get_expression(grib_handle *h, grib_arguments *args, int n);
 
 /* grib_util.c */
-double rint(double x);
 grib_handle *grib_util_sections_copy(grib_handle *hfrom, grib_handle *hto, int what, int *err);
 grib_string_list *grib_util_get_param_id(const char *mars_param);
 grib_string_list *grib_util_get_mars_param(const char *param_id);
