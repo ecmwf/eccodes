@@ -67,13 +67,13 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	}
 
-	m1=grib_context_malloc_clear(c,sizeof(double)*order*order);
-	m2=grib_context_malloc_clear(c,sizeof(double)*order*order);
-	dm=grib_context_malloc_clear(c,sizeof(double)*order*order);
-	east=grib_context_malloc_clear(c,sizeof(double)*split);
-	south=grib_context_malloc_clear(c,sizeof(double)*split);
-	north=grib_context_malloc_clear(c,sizeof(double)*split);
-	west=grib_context_malloc_clear(c,sizeof(double)*split);
+	m1=(double*)grib_context_malloc_clear(c,sizeof(double)*order*order);
+	m2=(double*)grib_context_malloc_clear(c,sizeof(double)*order*order);
+	dm=(double*)grib_context_malloc_clear(c,sizeof(double)*order*order);
+	east=(double*)grib_context_malloc_clear(c,sizeof(double)*split);
+	south=(double*)grib_context_malloc_clear(c,sizeof(double)*split);
+	north=(double*)grib_context_malloc_clear(c,sizeof(double)*split);
+	west=(double*)grib_context_malloc_clear(c,sizeof(double)*split);
 
 	count=0;
 	while ((h1=grib_handle_new_from_file(0,f1,&ret))!=NULL && (h2=grib_handle_new_from_file(0,f2,&ret))!=NULL) {

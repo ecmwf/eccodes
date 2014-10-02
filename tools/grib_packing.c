@@ -36,7 +36,7 @@ double unpack(unsigned long v,double ref,long bscale,long dscale)
 	return (v*b+ref)*d;
 }
 
-void try(const char* txt,double v,double ref,long bscale,long dscale)
+void try_this(const char* txt,double v,double ref,long bscale,long dscale)
 {
 	double x;
 	if(txt) printf("%-18s  : ",txt);
@@ -134,11 +134,11 @@ int main(int argc, char *argv[])
 	printf("\n");
 	printf("Packing/unpacking   :\n");
 	printf("\n");
-	try("Minimum",min,ref,bscale,dscale);
-	try("Maximum",max,ref,bscale,dscale);
+	try_this("Minimum",min,ref,bscale,dscale);
+	try_this("Maximum",max,ref,bscale,dscale);
 
 	for(;optind < argc; optind++)
-		try(argv[optind],atof(argv[optind]),ref,bscale,dscale);
+		try_this(argv[optind],atof(argv[optind]),ref,bscale,dscale);
 
 
 	return 0;

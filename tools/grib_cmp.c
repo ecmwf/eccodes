@@ -21,7 +21,7 @@ void usage(char* progname) {
   exit(1);
 }
 
-extern int errno;
+/*extern int errno;*/
 
 int main(int argc, char *argv[]) {
   int err=0,count=0,ret1=0,ret2=0;

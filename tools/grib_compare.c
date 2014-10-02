@@ -206,11 +206,11 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("b:")) {
         grib_string_list *next=0;
         int i=0;
-        blacklist=grib_context_malloc_clear(context,sizeof(grib_string_list));
+        blacklist=(grib_string_list*)grib_context_malloc_clear(context,sizeof(grib_string_list));
         blacklist->value=grib_context_strdup(context,options->set_values[0].name);
         next=blacklist;
         for (i=1;i<options->set_values_count;i++) {
-            next->next=grib_context_malloc_clear(context,sizeof(grib_string_list));
+            next->next=(grib_string_list*)grib_context_malloc_clear(context,sizeof(grib_string_list));
             next->next->value=grib_context_strdup(context,options->set_values[i].name);
             next=next->next;
         }
@@ -487,7 +487,7 @@ static void save_error(grib_context* c,const char* key)
     int saved=0;
 
     if (!error_summary) {
-        error_summary=grib_context_malloc_clear(c,sizeof(grib_error));
+        error_summary=(grib_error*)grib_context_malloc_clear(c,sizeof(grib_error));
         error_summary->count=1;
         error_summary->key=grib_context_strdup(c,key);
         return;
@@ -507,7 +507,7 @@ static void save_error(grib_context* c,const char* key)
     }
 
     if (!saved) {
-        e->next=grib_context_malloc_clear(c,sizeof(grib_error));
+        e->next=(grib_error*)grib_context_malloc_clear(c,sizeof(grib_error));
         e->next->count=1;
         e->next->key=grib_context_strdup(c,key);
     }
@@ -645,8 +645,8 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
         if (verbose) printf(" as string\n");
         grib_get_string_length(h1,name,&len1);
         grib_get_string_length(h2,name,&len2);
-        sval1 = grib_context_malloc(h1->context,len1*sizeof(char));
-        sval2 = grib_context_malloc(h2->context,len2*sizeof(char));
+        sval1 = (char*)grib_context_malloc(h1->context,len1*sizeof(char));
+        sval2 = (char*)grib_context_malloc(h2->context,len2*sizeof(char));
 
         if((err1 = grib_get_string(h1,name,sval1,&len1)) != GRIB_SUCCESS)
         {
@@ -687,8 +687,8 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
     case GRIB_TYPE_LONG:
         if (verbose) printf(" as long\n");
 
-        lval1 = grib_context_malloc(h1->context,len1*sizeof(long));
-        lval2 = grib_context_malloc(h2->context,len2*sizeof(long));
+        lval1 = (long*)grib_context_malloc(h1->context,len1*sizeof(long));
+        lval2 = (long*)grib_context_malloc(h2->context,len2*sizeof(long));
 
         if((err1 = grib_get_long_array(h1,name,lval1,&len1)) != GRIB_SUCCESS)
         {
@@ -742,8 +742,8 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
 
     case GRIB_TYPE_DOUBLE:
         if (verbose) printf(" as double");
-        dval1 = grib_context_malloc(h1->context,len1*sizeof(double));
-        dval2 = grib_context_malloc(h2->context,len2*sizeof(double));
+        dval1 = (double*)grib_context_malloc(h1->context,len1*sizeof(double));
+        dval2 = (double*)grib_context_malloc(h2->context,len2*sizeof(double));
 
         isangle=0;
         value_tolerance=global_tolerance;
@@ -884,8 +884,8 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
         if (verbose) printf(" as bytes\n");
         if (len1<2) len1=512;
         if (len2<2) len2=512;
-        uval1 = grib_context_malloc(h1->context,len1*sizeof(unsigned char));
-        uval2 = grib_context_malloc(h2->context,len2*sizeof(unsigned char));
+        uval1 = (unsigned char*)grib_context_malloc(h1->context,len1*sizeof(unsigned char));
+        uval2 = (unsigned char*)grib_context_malloc(h2->context,len2*sizeof(unsigned char));
 
         if((err1 = grib_get_bytes(h1,name,uval1,&len1)) != GRIB_SUCCESS)
         {

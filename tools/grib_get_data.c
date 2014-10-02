@@ -72,7 +72,7 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     int err=0;
-    
+
     int skip_missing=1;
     char *missing_string=NULL;
     int i=0;
@@ -132,10 +132,10 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     if (bitmapPresent)
     {
         GRIB_CHECK(grib_get_size(h,"bitmap",&bmp_len),0);
-        bitmap = malloc(bmp_len*sizeof(long));
+        bitmap = (long*)malloc(bmp_len*sizeof(long));
         GRIB_CHECK(grib_get_long_array(h,"bitmap",bitmap,&bmp_len),0);
     }
-    
+
     skip_missing=1;
     if (grib_options_on("m:")) {
         /* User wants to see missing values */

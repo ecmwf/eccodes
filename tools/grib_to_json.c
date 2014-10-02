@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
             /*========== data *============*/
             size=0;
             GRIB_CHECK(grib_get_size(h,"values",&size),0);
-            values = malloc(sizeof(double)*size);
+            values = (double*)malloc(sizeof(double)*size);
 
             if (!values) {
                 fprintf(stderr,"%s: out of memory\n", argv[0]);

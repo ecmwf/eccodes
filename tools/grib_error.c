@@ -95,10 +95,10 @@ static void compare_handles(int n,grib_handle* h1,grib_handle* h2,FILE* out)
     exit(1);
   }
 
-  dval1 = grib_context_malloc(h1->context,len1*sizeof(double)); Assert(dval1);
-  dval2 = grib_context_malloc(h2->context,len2*sizeof(double)); Assert(dval2);
+  dval1 = (double*)grib_context_malloc(h1->context,len1*sizeof(double)); Assert(dval1);
+  dval2 = (double*)grib_context_malloc(h2->context,len2*sizeof(double)); Assert(dval2);
   if(out)
-    dval3 = grib_context_malloc(h2->context,len2*sizeof(double)); Assert(dval2);
+    dval3 = (double*)grib_context_malloc(h2->context,len2*sizeof(double)); Assert(dval2);
 
   GRIB_CHECK(grib_get_double_array(h1,"values",dval1,&len1),NULL);
   GRIB_CHECK(grib_get_double_array(h2,"values",dval2,&len2),NULL);

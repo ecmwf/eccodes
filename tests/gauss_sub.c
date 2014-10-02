@@ -57,11 +57,11 @@ int main(int argc, char* argv[]) {
 			exit(1);
 		}
 		GRIB_CHECK(grib_get_size(h1,"values",&size1),0);
-		v1=malloc(size1*sizeof(double));
+		v1=(double*)malloc(size1*sizeof(double));
 		if (!v1) {printf("unable to allocate v1\n");exit(1);}
-		lat1=malloc(size1*sizeof(double));
+		lat1=(double*)malloc(size1*sizeof(double));
 		if (!lat1) {printf("unable to allocate lat1\n");exit(1);}
-		lon1=malloc(size1*sizeof(double));
+		lon1=(double*)malloc(size1*sizeof(double));
 		if (!lon1) {printf("unable to allocate lon1\n");exit(1);}
 		GRIB_CHECK(grib_get_double(h1,"packingError",&err1),0);
 
@@ -69,11 +69,11 @@ int main(int argc, char* argv[]) {
 		GRIB_CHECK(ret,0);
 
 		GRIB_CHECK(grib_get_size(h2,"values",&size2),0);
-		v2=malloc(size2*sizeof(double));
+		v2=(double*)malloc(size2*sizeof(double));
 		if (!v2) {printf("unable to allocate v2\n");exit(1);}
-		lat2=malloc(size2*sizeof(double));
+		lat2=(double*)malloc(size2*sizeof(double));
 		if (!lat2) {printf("unable to allocate lat2\n");exit(1);}
-		lon2=malloc(size2*sizeof(double));
+		lon2=(double*)malloc(size2*sizeof(double));
 		if (!lon2) {printf("unable to allocate lon2\n");exit(1);}
 		GRIB_CHECK(grib_get_double(h2,"packingError",&err2),0);
 

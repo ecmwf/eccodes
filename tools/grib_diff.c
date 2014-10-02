@@ -122,8 +122,8 @@ static int compare_values(grib_handle* h1,grib_handle *h2,const char *name)
   {
     case GRIB_TYPE_STRING:
 
-      sval1 = grib_context_malloc(h1->context,len1*sizeof(char));
-      sval2 = grib_context_malloc(h2->context,len2*sizeof(char));
+      sval1 = (char*)grib_context_malloc(h1->context,len1*sizeof(char));
+      sval2 = (char*)grib_context_malloc(h2->context,len2*sizeof(char));
 
       if((err1 = grib_get_string(h1,name,sval1,&len1)) != GRIB_SUCCESS)
       {
@@ -157,8 +157,8 @@ static int compare_values(grib_handle* h1,grib_handle *h2,const char *name)
 
     case GRIB_TYPE_LONG:
 
-      lval1 = grib_context_malloc(h1->context,len1*sizeof(long));
-      lval2 = grib_context_malloc(h2->context,len2*sizeof(long));
+      lval1 = (long*)grib_context_malloc(h1->context,len1*sizeof(long));
+      lval2 = (long*)grib_context_malloc(h2->context,len2*sizeof(long));
 
       if((err1 = grib_get_long_array(h1,name,lval1,&len1)) != GRIB_SUCCESS)
       {
@@ -198,8 +198,8 @@ static int compare_values(grib_handle* h1,grib_handle *h2,const char *name)
       break;
 
     case GRIB_TYPE_DOUBLE:
-      dval1 = grib_context_malloc(h1->context,len1*sizeof(double));
-      dval2 = grib_context_malloc(h2->context,len2*sizeof(double));
+      dval1 = (double*)grib_context_malloc(h1->context,len1*sizeof(double));
+      dval2 = (double*)grib_context_malloc(h2->context,len2*sizeof(double));
 
       if((err1 = grib_get_double_array(h1,name,dval1,&len1)) != GRIB_SUCCESS)
       {
@@ -240,8 +240,8 @@ static int compare_values(grib_handle* h1,grib_handle *h2,const char *name)
 
     case GRIB_TYPE_BYTES:
 
-      uval1 = grib_context_malloc(h1->context,len1*sizeof(unsigned char));
-      uval2 = grib_context_malloc(h2->context,len2*sizeof(unsigned char));
+      uval1 = (unsigned char*)grib_context_malloc(h1->context,len1*sizeof(unsigned char));
+      uval2 = (unsigned char*)grib_context_malloc(h2->context,len2*sizeof(unsigned char));
 
       if((err1 = grib_get_bytes(h1,name,uval1,&len1)) != GRIB_SUCCESS)
       {

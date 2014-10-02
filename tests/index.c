@@ -47,7 +47,7 @@ int main(int argc,char* argv[])
 
         /* get the number of distinct values of "step" in the index */
         GRIB_CHECK(grib_index_get_size(index,"step",&stepSize),0);
-        step=malloc(sizeof(long)*stepSize);
+        step=(long*)malloc(sizeof(long)*stepSize);
         if (!step) exit(1);
         /* get the list of distinct steps from the index */
         /* the list is in ascending order */
@@ -58,7 +58,7 @@ int main(int argc,char* argv[])
 
         /*same as for "step"*/
         GRIB_CHECK(grib_index_get_size(index,"level",&levelSize),0);
-        level=malloc(sizeof(long)*levelSize);
+        level=(long*)malloc(sizeof(long)*levelSize);
         if (!level) exit(1);
         /*same as for "step"*/
         GRIB_CHECK(grib_index_get_long(index,"level",level,&levelSize),0);
@@ -68,7 +68,7 @@ int main(int argc,char* argv[])
 
         /*same as for "step"*/
         GRIB_CHECK(grib_index_get_size(index,"number",&numberSize),0);
-        number=malloc(sizeof(long)*numberSize);
+        number=(long*)malloc(sizeof(long)*numberSize);
         if (!number) exit(1);
         /*same as for "step"*/
         GRIB_CHECK(grib_index_get_long(index,"number",number,&numberSize),0);

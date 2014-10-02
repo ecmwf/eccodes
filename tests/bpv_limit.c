@@ -72,7 +72,7 @@ int main(int argc, char** argv) {
     /* get the size of the values array*/
     GRIB_CHECK(grib_get_size(h,"values",&values_len),0);
 
-    values = malloc(values_len*sizeof(double));
+    values = (double*)malloc(values_len*sizeof(double));
 
     err = grib_get_double_array(h,"values",values,&values_len);
 
@@ -98,7 +98,7 @@ int main(int argc, char** argv) {
       exit(1);
     }
 
-    values = malloc(values_len*sizeof(double));
+    values = (double*)malloc(values_len*sizeof(double));
     err = grib_get_double_array(h,"values",values,&values_len);
 
     /*
