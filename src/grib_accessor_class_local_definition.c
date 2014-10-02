@@ -26,7 +26,7 @@
    MEMBERS=const char* grib2LocalSectionNumber
    MEMBERS=const char* type
    MEMBERS=const char* stream
-   MEMBERS=const char* class
+   MEMBERS=const char* the_class
    MEMBERS=const char* eps
    MEMBERS=const char* stepType
    MEMBERS=const char* derivedForecast
@@ -63,7 +63,7 @@ typedef struct grib_accessor_local_definition {
 	const char* grib2LocalSectionNumber;
 	const char* type;
 	const char* stream;
-	const char* class;
+	const char* the_class;
 	const char* eps;
 	const char* stepType;
 	const char* derivedForecast;
@@ -161,7 +161,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     self->productDefinitionTemplateNumberInternal = grib_arguments_get_name(a->parent->h,c,n++);
     self->type = grib_arguments_get_name(a->parent->h,c,n++);
     self->stream = grib_arguments_get_name(a->parent->h,c,n++);
-    self->class = grib_arguments_get_name(a->parent->h,c,n++);
+    self->the_class = grib_arguments_get_name(a->parent->h,c,n++);
     self->eps = grib_arguments_get_name(a->parent->h,c,n++);
     self->stepType = grib_arguments_get_name(a->parent->h,c,n++);
     self->derivedForecast = grib_arguments_get_name(a->parent->h,c,n++);
@@ -183,7 +183,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     long grib2LocalSectionNumber=-1;
     long type=-1;
     long stream=-1;
-    long class=-1;
+    long the_class=-1;
     long eps=-1;
     char stepType[15]={0,};
     size_t slen=15;
@@ -202,7 +202,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     grib_get_long(a->parent->h, self->productDefinitionTemplateNumberInternal,&productDefinitionTemplateNumberInternal);
     grib_get_long(a->parent->h, self->type,&type);
     grib_get_long(a->parent->h, self->stream,&stream);
-    grib_get_long(a->parent->h, self->class,&class);
+    grib_get_long(a->parent->h, self->the_class,&the_class);
     grib_get_long(a->parent->h, self->eps,&eps);
     grib_get_string(a->parent->h, self->stepType,stepType,&slen);
     if (!strcmp(stepType,"instant")) isInstant=1;

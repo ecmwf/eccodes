@@ -237,7 +237,7 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
     if (ret) return ret;
 
     buflen = compute_byte_count(a);
-    buf = grib_context_malloc_clear(a->parent->h->context,buflen+sizeof(long));
+	buf = (unsigned char*)grib_context_malloc_clear(a->parent->h->context,buflen+sizeof(long));
 
     for(i=0; i < rlen;i++)
         grib_encode_signed_longb(buf, val[i] ,  &off,  numberOfBits);
@@ -247,7 +247,6 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
     grib_context_free(a->parent->h->context,buf);
 
     return ret;
-
 }
 
 static int value_count(grib_accessor* a,long* numberOfElements)

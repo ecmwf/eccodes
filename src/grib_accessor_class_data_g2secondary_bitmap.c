@@ -183,11 +183,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     }
 
     primary_len = *len / expand_by;
-    primary_bitmap= grib_context_malloc_clear(a->parent->h->context,primary_len*sizeof(double));
+    primary_bitmap= (double*)grib_context_malloc_clear(a->parent->h->context,primary_len*sizeof(double));
     if(!primary_bitmap) return GRIB_OUT_OF_MEMORY;
 
     secondary_len = *len ;
-    secondary_bitmap= grib_context_malloc_clear(a->parent->h->context,secondary_len*sizeof(double));
+    secondary_bitmap= (double*)grib_context_malloc_clear(a->parent->h->context,secondary_len*sizeof(double));
     if(!secondary_bitmap) {
         grib_context_free(a->parent->h->context,primary_bitmap);
         return GRIB_OUT_OF_MEMORY;

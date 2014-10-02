@@ -396,7 +396,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
     divisor = grib_power(-binary_scale_factor,2);
 
     simple_packing_size = (((bits_per_value*n_vals)+7)/8)*sizeof(unsigned char);
-    buf  = grib_context_malloc_clear(a->parent->h->context,simple_packing_size+EXTRA_BUFFER_SIZE);
+    buf  = (unsigned char*)grib_context_malloc_clear(a->parent->h->context,simple_packing_size+EXTRA_BUFFER_SIZE);
     if(!buf) {
         err = GRIB_OUT_OF_MEMORY;
         goto cleanup;
@@ -556,7 +556,7 @@ static int  unpack_double_element(grib_accessor* a, size_t idx, double* val)
     if (err) return err;
     if (idx > size) return GRIB_INVALID_NEAREST;
 
-    values=grib_context_malloc_clear(a->parent->h->context,size*sizeof(double));
+    values=(double*)grib_context_malloc_clear(a->parent->h->context,size*sizeof(double));
     err=grib_get_double_array(a->parent->h,"codedValues",values,&size);
     if (err) return err;
     *val=values[idx];

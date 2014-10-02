@@ -128,7 +128,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         return;
 
     if (size>1) {
-        values=grib_context_malloc_clear(a->parent->h->context,sizeof(double)*size);
+        values=(double*)grib_context_malloc_clear(a->parent->h->context,sizeof(double)*size);
         err=grib_unpack_double(a,values,&size);
     } else {
         err=grib_unpack_double(a,&value,&size);
@@ -198,7 +198,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
         return;
 
     if (size>1) {
-        values=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*size);
+        values=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*size);
         err=grib_unpack_long(a,values,&size);
     } else {
         err=grib_unpack_long(a,&value,&size);
@@ -330,7 +330,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
-    value=grib_context_malloc_clear(c,size);
+    value=(char*)grib_context_malloc_clear(c,size);
     if (!value) {
         grib_context_log(c,GRIB_LOG_FATAL,"unable to allocate %d bytes",(int)size);
         return;
@@ -355,7 +355,6 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 
 static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)
 {
-
 }
 
 static void dump_label(grib_dumper* d,grib_accessor* a,const char* comment)

@@ -14,7 +14,7 @@
 #include "grib_yacc.h"
 #include <ctype.h>
 
-int yylineno;
+extern int yylineno;
 
 /* Keep -Wall quiet */
 

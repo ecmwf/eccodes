@@ -293,8 +293,9 @@ struct grib_itrie {
 };
 
 
-grib_itrie *grib_itrie_new(grib_context* c,int* count) {
-  grib_itrie* t = grib_context_malloc_clear(c,sizeof(grib_itrie));
+grib_itrie *grib_itrie_new(grib_context* c,int* count)
+{
+  grib_itrie* t = (grib_itrie*)grib_context_malloc_clear(c,sizeof(grib_itrie));
   t->context = c;
   t->id=-1;
   t->count=count;

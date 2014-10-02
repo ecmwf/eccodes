@@ -253,7 +253,7 @@ static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)
   if(size == 0)
     return;
 
-  buf = grib_context_malloc(d->handle->context,size);
+  buf = (unsigned char*)grib_context_malloc(d->handle->context,size);
 
   if(!buf)
   {
@@ -330,7 +330,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
        return;
   }
 
-  buf = grib_context_malloc(d->handle->context,size * sizeof(double));
+  buf = (double*)grib_context_malloc(d->handle->context,size * sizeof(double));
   if(!buf)
   {
     fprintf(self->dumper.out,"/* %s: cannot malloc(%ld) */\n",a->name,(long)size);

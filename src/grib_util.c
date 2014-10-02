@@ -95,7 +95,7 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom,grib_handle* 
 
     }
 
-    buffer=grib_context_malloc_clear(hfrom->context,totalLength*sizeof(char));
+    buffer=(unsigned char*)grib_context_malloc_clear(hfrom->context,totalLength*sizeof(char));
 
     p=buffer;
     off=0;
@@ -103,7 +103,7 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom,grib_handle* 
         grib_handle* h;
         if (sections[i]) h=hfrom;
         else h=hto;
-        p=memcpy(p,h->buffer->data+section_offset[i],section_length[i]);
+        p=(unsigned char*)memcpy(p,h->buffer->data+section_offset[i],section_length[i]);
         section_offset[i]=off;
         off+=section_length[i];
         p+=section_length[i];
@@ -138,7 +138,7 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom,grib_handle* 
 
                 grib_get_long(hfrom,"numberOfVerticalCoordinateValues",&numberOfVerticalCoordinateValues);
                 size=numberOfVerticalCoordinateValues;
-                pv=grib_context_malloc_clear(hfrom->context,numberOfVerticalCoordinateValues*sizeof(double));
+                pv=(double*)grib_context_malloc_clear(hfrom->context,numberOfVerticalCoordinateValues*sizeof(double));
                 grib_get_double_array(hfrom,"pv",pv,&size);
                 grib_set_long(h,"PVPresent",1);
                 grib_set_double_array(h,"pv",pv,size);
@@ -159,7 +159,7 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom,grib_handle* 
 
                 grib_get_long(hto,"numberOfVerticalCoordinateValues",&numberOfVerticalCoordinateValues);
                 size=numberOfVerticalCoordinateValues;
-                pv=grib_context_malloc_clear(hto->context,numberOfVerticalCoordinateValues*sizeof(double));
+                pv=(double*)grib_context_malloc_clear(hto->context,numberOfVerticalCoordinateValues*sizeof(double));
                 grib_get_double_array(hto,"pv",pv,&size);
                 grib_set_long(h,"PVPresent",1);
                 grib_set_double_array(h,"pv",pv,size);
@@ -277,12 +277,12 @@ static grib_trie* mars_param_list = NULL;
 /* TODO thread safe */
 grib_string_list* grib_util_get_param_id(const char* mars_param) {
     if (!mars_param_list && (mars_param_list=init_list("mars_param.table"))==NULL) return NULL;
-    return grib_trie_get(mars_param_list,mars_param);
+    return (grib_string_list*)grib_trie_get(mars_param_list,mars_param);
 }
 
 grib_string_list* grib_util_get_mars_param(const char* param_id) {
     if (!param_id_list && (param_id_list=init_list("param_id.table"))==NULL) return NULL;
-    return grib_trie_get(param_id_list,param_id);
+    return (grib_string_list*)grib_trie_get(param_id_list,param_id);
 }
 
 static grib_trie* init_list(const char* name) {
@@ -302,7 +302,7 @@ static grib_trie* init_list(const char* name) {
         return NULL;
     }
 
-    list=grib_context_malloc_clear(c,sizeof(grib_string_list));
+    list=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
     trie_list=grib_trie_new(c);
     if (fscanf(fh,"%100s",param)==EOF) {
         fclose(fh);
@@ -318,12 +318,12 @@ static grib_trie* init_list(const char* name) {
             list=NULL;
         } else {
             if (!list) {
-                list=grib_context_malloc_clear(c,sizeof(grib_string_list));
+                list=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
                 list->value=grib_context_strdup(c,s);
             } else {
                 next=list;
                 while(next->next) next=next->next;
-                next->next=grib_context_malloc_clear(c,sizeof(grib_string_list));
+                next->next=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
                 next->next->value=grib_context_strdup(c,s);
             }
         }
@@ -1041,9 +1041,9 @@ int grib_moments(grib_handle* h,double east,double north,double west,double sout
     ret=grib_get_size(h,"values",&n);
     if (ret) return ret;
 
-    lat=grib_context_malloc_clear(c,sizeof(double)*n);
-    lon=grib_context_malloc_clear(c,sizeof(double)*n);
-    values=grib_context_malloc_clear(c,sizeof(double)*n);
+    lat=(double*)grib_context_malloc_clear(c,sizeof(double)*n);
+    lon=(double*)grib_context_malloc_clear(c,sizeof(double)*n);
+    values=(double*)grib_context_malloc_clear(c,sizeof(double)*n);
 
     iter=grib_iterator_new(h,0,&ret);
     numberOfPoints=0;
@@ -1122,7 +1122,7 @@ static void set_value(grib_values* value,char* str,int equal)
     while (*q != '/' && *q!=0 ) q++;
     if (*q=='/') {
         s=grib_context_strdup(c,q+1);
-        value->next=grib_context_malloc_clear(c,sizeof(grib_values));
+        value->next=(grib_values*)grib_context_malloc_clear(c,sizeof(grib_values));
         value->next->type=value->type;
         value->next->name=grib_context_strdup(c,value->name);
         set_value(value->next,s,equal);

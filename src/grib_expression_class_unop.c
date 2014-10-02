@@ -140,7 +140,7 @@ grib_expression* new_unop_expression(grib_context* c,
         grib_unop_double_proc double_func,
         grib_expression* exp)
 {
-    grib_expression_unop* e = grib_context_malloc_clear_persistent(c,sizeof(grib_expression_unop));
+	grib_expression_unop* e = (grib_expression_unop*)grib_context_malloc_clear_persistent(c,sizeof(grib_expression_unop));
     e->base.cclass                 = grib_expression_class_unop;
     e->exp                = exp;
     e->long_func          = long_func;

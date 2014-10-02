@@ -284,7 +284,7 @@ grib_trie *grib_trie_new(grib_context* c) {
 #ifdef RECYCLE_TRIE
   grib_trie* t = grib_context_malloc_clear_persistent(c,sizeof(grib_trie));
 #else
-  grib_trie* t = grib_context_malloc_clear(c,sizeof(grib_trie));
+  grib_trie* t = (grib_trie*)grib_context_malloc_clear(c,sizeof(grib_trie));
 #endif
   t->context = c;
   t->first=SIZE;

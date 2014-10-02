@@ -159,7 +159,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
   }
 
   if (size>1) {
-    values=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*size);
+    values=(long *)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*size);
     err=grib_unpack_long(a,values,&size);
   } else {
     err=grib_unpack_long(a,&value,&size);

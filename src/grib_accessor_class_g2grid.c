@@ -282,7 +282,7 @@ static int is_ok(const double* val,long v[6],double basic_angle,double sub_divis
   return ok;
 }
 
-static int try(const double* val,long v[6],long* basic_angle,long* sub_division)
+static int trial(const double* val,long v[6],long* basic_angle,long* sub_division)
 {
   int i = 0;
   long ni, nj;
@@ -336,7 +336,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     basic_angle = 1;
     sub_division = 1000000;
   }
-  else if(try(val,v,&basic_angle,&sub_division))
+  else if(trial(val,v,&basic_angle,&sub_division))
   {
 
   }

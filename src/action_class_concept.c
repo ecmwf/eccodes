@@ -357,9 +357,9 @@ int grib_concept_apply(grib_handle* h,grib_action* act,const char* name)
 
     Assert(concepts!=NULL);
 
-    c=grib_trie_get(concepts->index,name);
+    c=(grib_concept_value*)grib_trie_get(concepts->index,name);
 
-    if (!c) c=grib_trie_get(concepts->index,"default");
+    if (!c) c=(grib_concept_value*)grib_trie_get(concepts->index,"default");
 
     if (!c){
         err= self->nofail ? GRIB_SUCCESS : GRIB_CONCEPT_NO_MATCH;

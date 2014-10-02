@@ -142,7 +142,7 @@ static void init(grib_accessor* a,const long len, grib_arguments* param)
     if (a->flags & GRIB_ACCESSOR_FLAG_TRANSIENT) {
         a->length = 0;
         if (!a->vvalue)
-            a->vvalue = grib_context_malloc_clear(a->parent->h->context,sizeof(grib_virtual_value));
+            a->vvalue = (grib_virtual_value*)grib_context_malloc_clear(a->parent->h->context,sizeof(grib_virtual_value));
         a->vvalue->type=grib_accessor_get_native_type(a);
         a->vvalue->length=len;
         if (act->default_value!=NULL) {

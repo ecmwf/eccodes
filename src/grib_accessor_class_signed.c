@@ -246,7 +246,6 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
             if(v == GRIB_MISSING_LONG)
                 v = missing;
 
-
         off = a->offset;
         ret = grib_encode_signed_long(a->parent->h->buffer->data, v ,  off,  a->length);
         if (ret == GRIB_SUCCESS) len[0] = 1;
@@ -257,11 +256,9 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 
     /* TODO: We assume that there are no missing values if there are more that 1 value */
 
-
-
     buflen = *len*a->length;
 
-    buf = grib_context_malloc(a->parent->h->context,buflen);
+    buf = (unsigned char*)grib_context_malloc(a->parent->h->context,buflen);
 
     for(i=0; i < *len;i++){
         grib_encode_signed_long(buf, val[i] ,  off,  a->length);

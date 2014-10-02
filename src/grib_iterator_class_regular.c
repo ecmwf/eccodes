@@ -177,8 +177,8 @@ static int init(grib_iterator* i,grib_handle* h,grib_arguments* args)
     self->nap = nap;
     self->nam = nam;
 
-    self->las = grib_context_malloc(h->context,nam*sizeof(double));
-    self->los = grib_context_malloc(h->context,nap*sizeof(double));
+    self->las = (double*)grib_context_malloc(h->context,nam*sizeof(double));
+    self->los = (double*)grib_context_malloc(h->context,nap*sizeof(double));
 
     for( loi = 0; loi < nap; loi++ )  {
         self->los[loi] = lof;

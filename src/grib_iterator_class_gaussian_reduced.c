@@ -150,9 +150,9 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
 
     grib_get_long_array_internal(h,spl,pl, &plsize);
 
-    self->las = grib_context_malloc(h->context,iter->nv*sizeof(double));
+    self->las = (double*)grib_context_malloc(h->context,iter->nv*sizeof(double));
     if (!self->las) return GRIB_OUT_OF_MEMORY;
-    self->los = grib_context_malloc(h->context,iter->nv*sizeof(double));
+    self->los = (double*)grib_context_malloc(h->context,iter->nv*sizeof(double));
     if (!self->los) return GRIB_OUT_OF_MEMORY;
 
     while (lon_last<0) lon_last+=360;

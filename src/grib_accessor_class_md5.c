@@ -210,7 +210,7 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
             != GRIB_SUCCESS)
         return ret;
 
-    mess=grib_context_malloc(a->parent->h->context,length);
+    mess=(unsigned char*)grib_context_malloc(a->parent->h->context,length);
     memcpy(mess,a->parent->h->buffer->data+offset,length);
     mess_len=length;
 

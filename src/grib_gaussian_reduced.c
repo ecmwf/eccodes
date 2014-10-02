@@ -7,8 +7,7 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
-
-#include <stdio.h>
+#include "grib_api_internal.h"
 #include <assert.h>
 
 /*
@@ -22,7 +21,8 @@
  */
 #define EFDEBUG 0
 
-void grib_get_reduced_row(long pl,double lon_first,double lon_last,long* npoints,long* ilon_first, long* ilon_last ) {
+void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last )
+{
   double range=0,dlon_first=0,dlon_last=0;
   long irange;
 
@@ -110,7 +110,3 @@ void grib_get_reduced_row(long pl,double lon_first,double lon_last,long* npoints
 
   return;
 }
-
-
-
-

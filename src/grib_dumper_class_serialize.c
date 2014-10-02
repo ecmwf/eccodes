@@ -240,7 +240,7 @@ static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)
   int i,k,err =0;
   int more = 0;
   size_t size = a->length;
-  unsigned char* buf = grib_context_malloc(d->handle->context,size);
+  unsigned char* buf = (unsigned char*)grib_context_malloc(d->handle->context,size);
 
   if(  (a->flags & GRIB_ACCESSOR_FLAG_HIDDEN) != 0 )
     return;
@@ -345,7 +345,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 
   if (len>0) {
     columns_str=(char*)malloc((len+1)*sizeof(char));
-    columns_str=memcpy(columns_str,pcf,len);
+    columns_str=(char*)memcpy(columns_str,pcf,len);
     columns_str[len]='\0';
     columns=atoi(columns_str);
     free(columns_str);
@@ -358,7 +358,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 
   if ((d->option_flags & GRIB_DUMP_FLAG_VALUES) == 0 ) return;
 
-  buf = grib_context_malloc(d->handle->context,size * sizeof(double));
+  buf = (double*)grib_context_malloc(d->handle->context,size * sizeof(double));
 
   fprintf(self->dumper.out,"%s (%ld) {",a->name,(long)size);
 

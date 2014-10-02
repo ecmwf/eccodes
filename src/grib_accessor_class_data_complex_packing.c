@@ -670,13 +670,13 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len) {
   if (pen_j == sub_j) {
 	double* values;
 	if (d) {
-		values=grib_context_malloc_clear(a->parent->h->context,sizeof(double)*n_vals);
+		values=(double*)grib_context_malloc_clear(a->parent->h->context,sizeof(double)*n_vals);
 		for (i=0;i<n_vals;i++) values[i]=val[i]*d;
 	} else {
 		values=(double*)val;
 	}
 	buflen=n_vals*bytes;
-	buf  = grib_context_malloc_clear(a->parent->h->context,buflen);
+	buf = (unsigned char*)grib_context_malloc_clear(a->parent->h->context,buflen);
   	grib_ieee_encode_array(a->parent->h->context,values,n_vals,bytes,buf);
 	if (d) grib_context_free(a->parent->h->context,values);
 	grib_buffer_replace(a, buf, buflen,1,1);
@@ -699,7 +699,7 @@ printf("PACKING LAPLACE set=%ld value=%.20f\n",laplacianOperatorIsSet,laplacianO
 
   buflen = hsize+lsize;
 
-  buf  = grib_context_malloc(a->parent->h->context,buflen);
+  buf  = (unsigned char*)grib_context_malloc(a->parent->h->context,buflen);
   hres = buf;
   lres = buf+hsize;
 

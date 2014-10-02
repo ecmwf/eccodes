@@ -58,8 +58,9 @@ void grib_free_second_order_groups(grib_context *c,second_order_packed* sp){
   grib_context_free(c,sp->array_of_group_width);
   grib_context_free(c,sp);
 }
-second_order_packed* grib_get_second_order_groups(grib_context *c, const unsigned long* vals, size_t len){
-    second_order_packed* s = grib_context_malloc_clear(c,sizeof(second_order_packed));
+second_order_packed* grib_get_second_order_groups(grib_context *c, const unsigned long* vals, size_t len)
+{
+    second_order_packed* s = (second_order_packed*)grib_context_malloc_clear(c,sizeof(second_order_packed));
     const unsigned long* group_val = vals;
     size_t nv = len;
     size_t i = 0;
@@ -80,10 +81,9 @@ second_order_packed* grib_get_second_order_groups(grib_context *c, const unsigne
   }
     s->packed_byte_count     =  ((s->packed_byte_count+7)/8);
 
-
-    s->array_of_group_size  = grib_context_malloc_clear(c,sizeof(unsigned long)*s->size_of_group_array);
-    s->array_of_group_width = grib_context_malloc_clear(c,sizeof(unsigned long)*s->size_of_group_array);
-    s->array_of_group_refs  = grib_context_malloc_clear(c,sizeof( long)*s->size_of_group_array);
+    s->array_of_group_size  = (unsigned long*)grib_context_malloc_clear(c,sizeof(unsigned long)*s->size_of_group_array);
+    s->array_of_group_width = (unsigned long*)grib_context_malloc_clear(c,sizeof(unsigned long)*s->size_of_group_array);
+    s->array_of_group_refs  = (long*)grib_context_malloc_clear(c,sizeof( long)*s->size_of_group_array);
 
      group_val = vals;
      nv = len;

@@ -225,7 +225,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
   int code = GRIB_SUCCESS;
 
-
   size_t bufsize = 0;
 
   if (*len ==0) return GRIB_NO_VALUES;
@@ -254,7 +253,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
   bufsize = bytes*inlen;
 
-  buffer = grib_context_malloc(a->parent->h->context, bufsize);
+  buffer = (unsigned char*)grib_context_malloc(a->parent->h->context, bufsize);
 
   if(!buffer)
   {

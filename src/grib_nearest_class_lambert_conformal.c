@@ -61,9 +61,9 @@ typedef struct grib_nearest_lambert_conformal{
 	double* lons;
 	int  lons_count;
 	double* distances;
-	int* k;
-	int* i;
-	int* j;
+	int* k;   /* index */
+	int* i;   /* index into the lons array */
+	int* j;   /* index into the lats array */
 	const char* Ni;
 	const char* Nj;
 } grib_nearest_lambert_conformal;
@@ -192,11 +192,11 @@ static int find(grib_nearest* nearest, grib_handle* h,
         self->lats_count=nvalues;
 
         if (self->lats) grib_context_free(nearest->context,self->lats);
-        self->lats=grib_context_malloc( nearest->context, nvalues* sizeof(double));
+        self->lats=(double*)grib_context_malloc( nearest->context, nvalues* sizeof(double));
         if (!self->lats) return GRIB_OUT_OF_MEMORY;
 
         if (self->lons) grib_context_free(nearest->context,self->lons);
-        self->lons=grib_context_malloc( nearest->context, nvalues*sizeof(double));
+        self->lons=(double*)grib_context_malloc( nearest->context, nvalues*sizeof(double));
         if (!self->lons) return GRIB_OUT_OF_MEMORY;
 
         neighbours = (PointStore*)grib_context_malloc( nearest->context, nvalues*sizeof(PointStore) );

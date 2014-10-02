@@ -231,7 +231,7 @@ static int value_count(grib_accessor* a,long* count)
 	plSize=0;
 	ret=grib_get_size(a->parent->h,self->pl,&plSize);
 	if (ret==GRIB_SUCCESS) {
-		pl=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*plSize);
+        pl=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*plSize);
 		if((ret=grib_get_long_array(a->parent->h,self->pl,pl,&plSize)) != GRIB_SUCCESS)
 			return ret;
 	}
@@ -248,7 +248,7 @@ static int value_count(grib_accessor* a,long* count)
 		} else {
 			numberOfPoints=Ni*Nj;
 		}
-		bitmap=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfPoints);
+        bitmap=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfPoints);
 		pbitmap=bitmap;
 		grib_get_long_array(a->parent->h,self->bitmap,bitmap,&numberOfPoints);
 		for (i=0;i<numberOfPoints;i++) n+=*(bitmap++);
@@ -304,7 +304,7 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
 	if (self->bitmap) bitmapPresent=1;
 	ret=grib_get_size(a->parent->h,self->pl,&plSize);
 	if (ret==GRIB_SUCCESS) {
-		pl=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*plSize);
+        pl=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*plSize);
 		if((ret=grib_get_long_array(a->parent->h,self->pl,pl,&plSize)) != GRIB_SUCCESS)
 			return ret;
 	}
@@ -321,7 +321,7 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
 		numberOfColumns=Ni;
 	}
 
-	numbersPerRow=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfRows);
+    numbersPerRow=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfRows);
 	if (bitmapPresent) {
 		long *bitmap,*pbitmap;
 		size_t numberOfPoints=Ni*Nj;
@@ -330,7 +330,7 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
 			numberOfPoints=0;
 			for (i=0;i<numberOfRows;i++) numberOfPoints+=pl[i];
 		}
-		bitmap=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfPoints);
+        bitmap=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfPoints);
 		pbitmap=bitmap;
 		grib_get_long_array(a->parent->h,self->bitmap,bitmap,&numberOfPoints);
 		if (plSize) {
@@ -374,19 +374,19 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
 					&numberOfSecondOrderPackedValues)) != GRIB_SUCCESS)
 		return ret;
 
-	groupWidths=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
+    groupWidths=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
 	groupWidthsSize=numberOfGroups;
 	if((ret=grib_get_long_array_internal(a->parent->h,self->groupWidths, groupWidths,&groupWidthsSize)) != GRIB_SUCCESS)
 		return ret;
 
-	firstOrderValues=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
+    firstOrderValues=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
 	grib_decode_long_array(buf,&pos,widthOfFirstOrderValues,numberOfGroups,firstOrderValues);
 	pos = 8 * ( (pos + 7 ) / 8);
 
 	n=0;
 	for (i=0; i<numberOfGroups; i++) n+=numbersPerRow[i];
 
-	X=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*n);
+    X=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*n);
 	n=0;
 	k=0;
 	for (i=0; i<numberOfGroups; i++) {

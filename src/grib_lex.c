@@ -1397,7 +1397,7 @@ char *grib_yytext;
 #include "grib_yacc.h"
 #include <ctype.h>
 
-int grib_yylineno;
+extern int grib_yylineno;
 
 /* Keep -Wall quiet */
 

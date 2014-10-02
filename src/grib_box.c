@@ -75,13 +75,13 @@ int grib_box_delete(grib_box *box)
 }
 
 grib_points* grib_points_new(grib_context* c,size_t size) {
-	grib_points* points=grib_context_malloc_clear(c,sizeof(grib_points));
+	grib_points* points=(grib_points*)grib_context_malloc_clear(c,sizeof(grib_points));
 
-	points->latitudes=grib_context_malloc_clear(c,sizeof(double)*size);
-    points->longitudes=grib_context_malloc_clear(c,sizeof(double)*size);
-	points->indexes=grib_context_malloc_clear(c,sizeof(double)*size);
-	points->group_start=grib_context_malloc_clear(c,sizeof(double)*size);
-	points->group_len=grib_context_malloc_clear(c,sizeof(double)*size);
+	points->latitudes  =(double*)grib_context_malloc_clear(c,sizeof(double)*size);
+    points->longitudes =(double*)grib_context_malloc_clear(c,sizeof(double)*size);
+	points->indexes    =(size_t*)grib_context_malloc_clear(c,sizeof(double)*size);
+	points->group_start=(size_t*)grib_context_malloc_clear(c,sizeof(double)*size);
+	points->group_len  =(size_t*)grib_context_malloc_clear(c,sizeof(double)*size);
 	points->size=size;
 	points->context=c;
 

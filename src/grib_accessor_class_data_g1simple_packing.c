@@ -328,7 +328,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
             != GRIB_SUCCESS)
         return ret;
 
-    buf = grib_context_buffer_malloc_clear(a->parent->h->context,buflen);
+    buf = (unsigned char*)grib_context_buffer_malloc_clear(a->parent->h->context,buflen);
     encoded = buf;
 
     grib_encode_double_array(n_vals,val,bits_per_value,reference_value,decimal,divisor,encoded,&off);

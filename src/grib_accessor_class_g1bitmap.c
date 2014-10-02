@@ -165,7 +165,7 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
             != GRIB_SUCCESS)
         return err;
 
-    buf = grib_context_malloc_clear(a->parent->h->context,tlen);
+    buf = (unsigned char*)grib_context_malloc_clear(a->parent->h->context,tlen);
     if(!buf) return GRIB_OUT_OF_MEMORY;
     pos=0;
     for(i=0;i<*len;i++)

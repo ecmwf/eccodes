@@ -115,7 +115,7 @@ static int init(grib_iterator* i,grib_handle* h,grib_arguments *args){
 
     size=trunc*2;
 
-    lats = grib_context_malloc(h->context,size*sizeof(double));
+    lats = (double*)grib_context_malloc(h->context,size*sizeof(double));
 
     ret = grib_get_gaussian_latitudes(trunc, lats);
 

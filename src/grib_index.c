@@ -212,7 +212,7 @@ static grib_index_key* grib_index_new_key(grib_context* c,grib_index_key* keys,
         *err=GRIB_OUT_OF_MEMORY;
         return NULL;
     }
-    values=grib_context_malloc_clear(c,sizeof(grib_string_list));
+    values=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
     if (!values) {
         grib_context_log(c,GRIB_LOG_ERROR,
                 "unable to allocate %d bytes",
@@ -336,7 +336,7 @@ char *grib_read_string(grib_context* c,FILE* fh,int *err)
     *err = grib_read_uchar(fh,&len);
 
     if (*err) return NULL;
-    s = grib_context_malloc_clear(c,len+1);
+    s = (char*)grib_context_malloc_clear(c,len+1);
     if (fread(s,len,1,fh) < 1)
     {
         if (feof(fh)) *err=GRIB_END_OF_FILE;
@@ -385,7 +385,7 @@ static grib_field* grib_read_field(grib_context* c, FILE* fh, grib_file** files,
     if(marker != NOT_NULL_MARKER) {*err=GRIB_CORRUPTED_INDEX;return NULL;}
 
     index_count++;
-    field=grib_context_malloc(c,sizeof(grib_field));
+    field=(grib_field*)grib_context_malloc(c,sizeof(grib_field));
     *err=grib_read_short(fh,&file_id);
     if (*err) return NULL;
 
@@ -437,7 +437,7 @@ grib_field_tree* grib_read_field_tree(grib_context* c, FILE* fh, grib_file** fil
     if(marker == NULL_MARKER) return NULL;
     if(marker != NOT_NULL_MARKER) {*err=GRIB_CORRUPTED_INDEX;return NULL;}
 
-    tree = grib_context_malloc(c, sizeof(grib_field_tree));
+    tree = (grib_field_tree*)grib_context_malloc(c, sizeof(grib_field_tree));
     tree->field = grib_read_field(c,fh,files,err);
     if (*err) return NULL;
 
@@ -527,7 +527,7 @@ static grib_string_list* grib_read_key_values(grib_context* c,FILE* fh,int *err)
 
     values_count++;
 
-    values=grib_context_malloc_clear(c,sizeof(grib_string_list));
+    values=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
     values->value=grib_read_string(c,fh,err);
     if (*err) return NULL;
 
@@ -568,7 +568,7 @@ static grib_index_key* grib_read_index_keys(grib_context* c,FILE* fh,int *err)
     if(marker == NULL_MARKER) return NULL;
     if(marker != NOT_NULL_MARKER) {*err=GRIB_CORRUPTED_INDEX;return NULL;}
 
-    keys= grib_context_malloc_clear(c,sizeof(grib_index_key));
+    keys= (grib_index_key*)grib_context_malloc_clear(c,sizeof(grib_index_key));
     keys->name = grib_read_string(c,fh,err);
     if (*err) return NULL;
 
@@ -693,7 +693,7 @@ static grib_file* grib_read_files(grib_context *c, FILE* fh, int *err)
     if(marker == NULL_MARKER) return NULL;
     if(marker != NOT_NULL_MARKER) {*err=GRIB_CORRUPTED_INDEX;return NULL;}
 
-    file=grib_context_malloc(c,sizeof(grib_file));
+    file=(grib_file*)grib_context_malloc(c,sizeof(grib_file));
     file->name=grib_read_string(c,fh,err);
     if (*err) return NULL;
 
@@ -820,7 +820,7 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int *err)
         f=f->next;
     }
 
-    files=grib_context_malloc_clear(c,sizeof(grib_file)*(max+1));
+    files=(grib_file**)grib_context_malloc_clear(c,sizeof(grib_file)*(max+1));
 
     f=file;
     while (f) {
@@ -837,7 +837,7 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int *err)
         grib_context_free(c,f);
     }
 
-    index=grib_context_malloc_clear(c,sizeof(grib_index));
+    index=(grib_index*)grib_context_malloc_clear(c,sizeof(grib_index));
     index->context=c;
 
     index->keys=grib_read_index_keys(c,fh,err);
@@ -1103,7 +1103,7 @@ int grib_index_add_file(grib_index* index, const char* filename)
 
     if (!index->files) {
         grib_filesid++;
-        newfile=grib_context_malloc_clear(c,sizeof(grib_file));
+        newfile=(grib_file*)grib_context_malloc_clear(c,sizeof(grib_file));
         newfile->id=grib_filesid;
         newfile->name=strdup(file->name);
         index->files=newfile;
@@ -1116,7 +1116,7 @@ int grib_index_add_file(grib_index* index, const char* filename)
         indfile=index->files;
         while(indfile->next) indfile=indfile->next;
         grib_filesid++;
-        newfile=grib_context_malloc_clear(c,sizeof(grib_file));
+        newfile=(grib_file*)grib_context_malloc_clear(c,sizeof(grib_file));
         newfile->id=grib_filesid;
         newfile->name=strdup(file->name);
         indfile->next=newfile;
@@ -1177,7 +1177,7 @@ int grib_index_add_file(grib_index* index, const char* filename)
                 if (strcmp(v->value,buf)) {
                     index_key->values_count++;
                     if (v->next) v=v->next;
-                    v->next=grib_context_malloc_clear(c,sizeof(grib_string_list));
+                    v->next=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
                     v->next->value=grib_context_strdup(c,buf);
                 }
             }
@@ -1202,14 +1202,14 @@ int grib_index_add_file(grib_index* index, const char* filename)
             if (index_key->next) {
                 if (!field_tree->next_level) {
                     field_tree->next_level=
-                            grib_context_malloc_clear(c,sizeof(grib_field_tree));
+                            (grib_field_tree*)grib_context_malloc_clear(c,sizeof(grib_field_tree));
                 }
                 field_tree=field_tree->next_level;
             }
             index_key=index_key->next;
         }
 
-        field=grib_context_malloc_clear(c,sizeof(grib_field));
+        field=(grib_field*)grib_context_malloc_clear(c,sizeof(grib_field));
         field->file=file;
         index->count++;
         field->offset=h->offset;;

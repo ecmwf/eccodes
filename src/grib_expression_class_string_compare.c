@@ -150,7 +150,7 @@ static void  add_dependency(grib_expression* g, grib_accessor* observer){
 grib_expression* new_string_compare_expression(grib_context* c,
   grib_expression* left,grib_expression* right)
 {
-  grib_expression_string_compare* e = grib_context_malloc_clear_persistent(c,sizeof(grib_expression_string_compare));
+  grib_expression_string_compare* e = (grib_expression_string_compare*)grib_context_malloc_clear_persistent(c,sizeof(grib_expression_string_compare));
   e->base.cclass                 = grib_expression_class_string_compare;
   e->left                = left;
   e->right               = right;

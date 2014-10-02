@@ -115,7 +115,7 @@ static int init(grib_box* box,grib_handle* h,grib_arguments* args)
 	key = (char*)grib_arguments_get_name(h,args,n++);
 	ret=grib_get_size(h,key,&self->nlats);
 	if (ret) return ret;
-	pl=grib_context_malloc(h->context,self->nlats*sizeof(long));
+	pl=(long*)grib_context_malloc(h->context,self->nlats*sizeof(long));
 	ret=grib_get_long_array(h,key,pl,&self->nlats);  
 	if (ret) return ret;
 
@@ -136,7 +136,7 @@ static int init(grib_box* box,grib_handle* h,grib_arguments* args)
 		grib_context_free(box->context,lats);
 	}
 
-	self->lons=grib_context_malloc_clear(box->context,sizeof(double*)*self->nlats);
+	self->lons=(double**)grib_context_malloc_clear(box->context,sizeof(double*)*self->nlats);
 	self->size=0;
 	if (lon_first != 0                 ||
 			fabs(lon_last  - (360.0-90.0/order)) > 90.0/order) {
@@ -148,7 +148,7 @@ static int init(grib_box* box,grib_handle* h,grib_arguments* args)
 			self->size+=row_count;
 			if (ilon_first>ilon_last) ilon_first-=pl[j];
 			l=0;
-			self->lons[j]=grib_context_malloc_clear(c,sizeof(double)*row_count);
+			self->lons[j]=(double*)grib_context_malloc_clear(c,sizeof(double)*row_count);
 			for (i=ilon_first;i<=ilon_last;i++) 
 				self->lons[j][l++]=((i)*360.0)/pl[j];
 			pl[j]=row_count;
@@ -156,7 +156,7 @@ static int init(grib_box* box,grib_handle* h,grib_arguments* args)
 	} else {
 		/* global (longitudes) */
 		for (j=0;j<self->nlats;j++) {
-			self->lons[j]=grib_context_malloc_clear(c,sizeof(double)*pl[j]);
+			self->lons[j]=(double*)grib_context_malloc_clear(c,sizeof(double)*pl[j]);
 			self->size+=pl[j];
 			for (i=0;i<pl[j];i++) 
 				self->lons[j][i]=(i*360.0)/pl[j];

@@ -84,7 +84,7 @@ static grib_file* grib_read_file(grib_context *c,FILE* fh,int *err)
 	*err = grib_read_short(fh,&marker);
 	if(!marker) return NULL;
 
-	file=grib_context_malloc_clear(c,sizeof(grib_file));
+	file=(grib_file*)grib_context_malloc_clear(c,sizeof(grib_file));
 	file->buffer=0;
 	file->name=grib_read_string(c,fh,err);
 	if (*err) return NULL;
@@ -376,7 +376,7 @@ grib_file* grib_file_new(grib_context* c, const char* name, int* err)
 
 	if (!c) c=grib_context_get_default( );
 
-	file=grib_context_malloc_clear( c,sizeof(grib_file));
+	file=(grib_file*)grib_context_malloc_clear( c,sizeof(grib_file));
 
 	if (!file) {
 		grib_context_log(c,GRIB_LOG_ERROR,"grib_file_new: unable to allocate memory");

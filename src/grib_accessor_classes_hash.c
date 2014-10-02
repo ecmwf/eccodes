@@ -62,9 +62,7 @@ struct accessor_class_hash { char *name; grib_accessor_class **cclass;};
 #endif
 #endif
 static unsigned int
-grib_accessor_classes_get_id (str, len)
-     register const char *str;
-     register unsigned int len;
+grib_accessor_classes_get_id (const char *str, unsigned int len)
 {
   static unsigned short asso_values[] =
     {
@@ -487,9 +485,7 @@ static struct accessor_class_hash classes[] =
 
 #endif
 struct accessor_class_hash *
-grib_accessor_classes_hash (str, len)
-     register const char *str;
-     register unsigned int len;
+grib_accessor_classes_hash (const char * str, unsigned int len)
 {
   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
     {

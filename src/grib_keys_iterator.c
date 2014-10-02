@@ -39,7 +39,7 @@ grib_keys_iterator*  grib_keys_iterator_new(grib_handle* h,unsigned long filter_
 
     if (!h) return NULL;
 
-    ki= grib_context_malloc_clear(h->context,sizeof(grib_keys_iterator));
+    ki= (grib_keys_iterator*)grib_context_malloc_clear(h->context,sizeof(grib_keys_iterator));
     if (!ki) return NULL;
     Assert(ki->accessor_flags == 0);
 

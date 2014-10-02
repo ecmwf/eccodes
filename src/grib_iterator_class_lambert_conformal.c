@@ -217,12 +217,12 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
 	}
 
 	/* Allocate latitude and longitude arrays */
-	self->lats = grib_context_malloc(h->context,iter->nv*sizeof(double));
+	self->lats = (double*)grib_context_malloc(h->context,iter->nv*sizeof(double));
 	if (!self->lats) {
 		grib_context_log(h->context,GRIB_LOG_ERROR,	"unable to allocate %ld bytes",iter->nv*sizeof(double));
 		return GRIB_OUT_OF_MEMORY;
 	}
-	self->lons = grib_context_malloc(h->context,iter->nv*sizeof(double));
+	self->lons = (double*)grib_context_malloc(h->context,iter->nv*sizeof(double));
 	if (!self->lats) {
 		grib_context_log(h->context,GRIB_LOG_ERROR,	"unable to allocate %ld bytes",iter->nv*sizeof(double));
 		return GRIB_OUT_OF_MEMORY;

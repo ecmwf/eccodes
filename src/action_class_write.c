@@ -78,7 +78,7 @@ static void init_class(grib_action_class* c)
 }
 /* END_CLASS_IMP */
 
-extern int errno;
+/*extern int errno;*/
 
 grib_action* grib_action_create_write( grib_context* context, const char* name,int append,int padtomultiple)
 {
@@ -111,7 +111,7 @@ static int execute(grib_action* act, grib_handle *h)
 	int err = GRIB_SUCCESS;
 	size_t size;
 	const void* buffer = NULL;
-	char* filename;
+	const char* filename;
 	char string[1024] = { 0, };
 
 	grib_file* of = NULL;
@@ -156,7 +156,7 @@ static int execute(grib_action* act, grib_handle *h)
 		char* zeros;
 		size_t padding = a->padtomultiple - size % a->padtomultiple;
 		/* printf("XXX padding=%d size=%d padtomultiple=%d\n",padding,size,a->padtomultiple); */
-		zeros = calloc(padding, 1);
+		zeros = (char*)calloc(padding, 1);
 		if (fwrite(zeros, 1, padding, of->handle) != padding) {
 			ioerr = errno;
 			grib_context_log(act->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),

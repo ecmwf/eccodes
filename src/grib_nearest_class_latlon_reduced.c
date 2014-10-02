@@ -148,12 +148,12 @@ static int find(grib_nearest* nearest, grib_handle* h,
 		self->lats_count=n;
 
 		if (self->lats) grib_context_free(nearest->context,self->lats);
-		self->lats=grib_context_malloc( nearest->context,
+    self->lats=(double*)grib_context_malloc( nearest->context,
 				self->lats_count* sizeof(double));
 		if (!self->lats) return GRIB_OUT_OF_MEMORY;
 
 		if (self->lons) grib_context_free(nearest->context,self->lons);
-		self->lons=grib_context_malloc( nearest->context,
+    self->lons=(double*)grib_context_malloc( nearest->context,
 				nearest->values_count*sizeof(double));
 		if (!self->lons) return GRIB_OUT_OF_MEMORY;
 
@@ -199,7 +199,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
 		plsize=self->lats_count;
 		if( (ret=grib_get_size(h,self->pl,&plsize))!= GRIB_SUCCESS)
 			return ret;
-		pla=grib_context_malloc(h->context,plsize*sizeof(long));
+    pla=(long*)grib_context_malloc(h->context,plsize*sizeof(long));
 		if (!pla) return GRIB_OUT_OF_MEMORY;
 		if( (ret=grib_get_long_array(h,self->pl,pla,&plsize))!= GRIB_SUCCESS)
 			return ret;

@@ -209,7 +209,7 @@ static int pack_double   (grib_accessor* a, const double* val, size_t *len)
 
     buflen = rlen*4;
 
-    buf = grib_context_malloc(a->parent->h->context,buflen);
+    buf = (unsigned char*)grib_context_malloc(a->parent->h->context,buflen);
 
     for(i=0; i < rlen;i++){
         grib_encode_unsigned_longb(buf,grib_ibm_to_long(val[i]), &off,  32);

@@ -218,7 +218,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     buflen = (1+((bits_per_value*n_vals)/8))*sizeof(unsigned char);
 
-    buf = grib_context_malloc_clear(a->parent->h->context,buflen);
+    buf = (unsigned char*)grib_context_malloc_clear(a->parent->h->context,buflen);
     if (!buf) return GRIB_OUT_OF_MEMORY;
 
     half_byte = (buflen*8)-((*len)*bits_per_value);

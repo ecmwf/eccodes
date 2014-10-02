@@ -229,7 +229,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   }
 
   if(number_of_values > 0){
-    coded_vals = grib_context_malloc(a->parent->h->context,number_of_values*sizeof(double));
+    coded_vals = (double*)grib_context_malloc(a->parent->h->context,number_of_values*sizeof(double));
 
     if(coded_vals == NULL)
       return GRIB_OUT_OF_MEMORY;

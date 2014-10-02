@@ -218,7 +218,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
             != GRIB_SUCCESS)
         return err;
 
-    coded_vals = grib_context_malloc(a->parent->h->context,coded_n_vals*sizeof(double));
+    coded_vals = (double*)grib_context_malloc(a->parent->h->context,coded_n_vals*sizeof(double));
     if(coded_vals == NULL) return GRIB_OUT_OF_MEMORY;
 
     if((err = grib_get_double_array_internal(a->parent->h,self->coded_values,coded_vals,&coded_n_vals))
@@ -284,7 +284,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx,double* val)
 
     if (*val == 0) {*val=missing_value;return GRIB_SUCCESS;}
 
-    bvals = grib_context_malloc(a->parent->h->context,n_vals*sizeof(double));
+    bvals = (double*)grib_context_malloc(a->parent->h->context,n_vals*sizeof(double));
     if(bvals == NULL) return GRIB_OUT_OF_MEMORY;
 
     if((err = grib_get_double_array_internal(a->parent->h,self->bitmap,bvals,&n_vals)) != GRIB_SUCCESS)
@@ -332,7 +332,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         return err;
     }
 
-    coded_vals = grib_context_malloc_clear(a->parent->h->context,coded_n_vals*sizeof(double));
+    coded_vals = (double*)grib_context_malloc_clear(a->parent->h->context,coded_n_vals*sizeof(double));
     if(!coded_vals) return GRIB_OUT_OF_MEMORY;
 
     for(i=0; i<*len ; i++)

@@ -146,7 +146,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
     if (a->flags & GRIB_ACCESSOR_FLAG_TRANSIENT) {
         a->length=0;
         if (!a->vvalue)
-            a->vvalue=grib_context_malloc_clear(a->parent->h->context,sizeof(grib_virtual_value));
+            a->vvalue=(grib_virtual_value*)grib_context_malloc_clear(a->parent->h->context,sizeof(grib_virtual_value));
         a->vvalue->type=GRIB_TYPE_LONG;
         a->vvalue->length=len;
     } else {
@@ -263,7 +263,7 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t *len, in
     /* TODO: We assume that there are no missing values if there are more that 1 value */
     buflen = *len*self->nbytes;
 
-    buf = grib_context_malloc(a->parent->h->context,buflen);
+    buf = (unsigned char*)grib_context_malloc(a->parent->h->context,buflen);
 
     for(i=0; i < *len;i++)
         grib_encode_unsigned_long(buf, val[i] ,  &off,  self->nbytes*8);

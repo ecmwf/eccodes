@@ -139,11 +139,11 @@ static int init(grib_iterator* i,grib_handle* h,grib_arguments* args)
 	if(( ret = grib_get_double_internal(h,jdirec,&jdirinc))) return ret;
 
 	plsize = nlats;
-	pl  = grib_context_malloc(h->context,plsize*sizeof(long));
+	pl  = (long*)grib_context_malloc(h->context,plsize*sizeof(long));
 	grib_get_long_array_internal(h,plac,pl, &plsize);
 
-	self->las = grib_context_malloc(h->context,i->nv*sizeof(double));
-	self->los = grib_context_malloc(h->context,i->nv*sizeof(double));
+	self->las = (double*)grib_context_malloc(h->context,i->nv*sizeof(double));
+	self->los = (double*)grib_context_malloc(h->context,i->nv*sizeof(double));
 
 	plmax=pl[0];
 	for (j=0;j<nlats;j++) if (plmax<pl[j]) plmax=pl[j];

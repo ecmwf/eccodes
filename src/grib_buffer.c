@@ -20,7 +20,7 @@ void grib_get_buffer_ownership(const grib_context *c, grib_buffer *b)
   if(b->property == GRIB_MY_BUFFER)
     return;
 
-  newdata = grib_context_malloc(c, b->length);
+  newdata = (unsigned char*)grib_context_malloc(c, b->length);
   memcpy(newdata, b->data, b->length);
   b->data = newdata;
   b->property = GRIB_MY_BUFFER;
@@ -39,7 +39,7 @@ grib_buffer* grib_create_growable_buffer(const grib_context* c)
   b->property = GRIB_MY_BUFFER;
   b->length   = 10240;
   b->ulength  = 0;
-  b->data     = grib_context_malloc_clear(c,b->length);
+  b->data     = (unsigned char*)grib_context_malloc_clear(c,b->length);
   b->growable = 1;
 
   if(!b->data)
@@ -50,9 +50,7 @@ grib_buffer* grib_create_growable_buffer(const grib_context* c)
   }
 
   return b;
-
 }
-
 
 grib_buffer* grib_new_buffer(const grib_context* c,unsigned char* data,size_t buflen)
 {
@@ -64,7 +62,6 @@ grib_buffer* grib_new_buffer(const grib_context* c,unsigned char* data,size_t bu
     return NULL;
   }
 
-
   b->property = GRIB_USER_BUFFER;
   b->length   = buflen;
   b->ulength  = buflen;
@@ -75,13 +72,11 @@ grib_buffer* grib_new_buffer(const grib_context* c,unsigned char* data,size_t bu
 
 void grib_buffer_delete(const grib_context *c, grib_buffer *b)
 {
-
   if(b->property == GRIB_MY_BUFFER)
     grib_context_free(c,b->data);
   b->length = 0;
   b->ulength = 0;
   grib_context_free(c,b);
-
 }
 
 static void grib_grow_buffer_to(const grib_context *c, grib_buffer *b, size_t ns)
@@ -91,7 +86,7 @@ static void grib_grow_buffer_to(const grib_context *c, grib_buffer *b, size_t ns
   if(ns>b->length)
   {
     grib_get_buffer_ownership(c, b);
-    newdata = grib_context_malloc_clear(c, ns);
+    newdata = (unsigned char*)grib_context_malloc_clear(c, ns);
     memcpy(newdata, b->data, b->length);
     grib_context_free(c,b->data);
     b->data = newdata;
@@ -111,7 +106,6 @@ void grib_buffer_set_ulength(const grib_context *c, grib_buffer *b, size_t lengt
   b->ulength = length;
 }
 
-
 static void update_offsets(grib_accessor* a,long len)
 {
   while(a)
@@ -123,7 +117,6 @@ static void update_offsets(grib_accessor* a,long len)
     a = a->next;
   }
 }
-
 
 static void update_offsets_after(grib_accessor* a,long len)
 {
@@ -245,7 +238,6 @@ void grib_buffer_replace( grib_accessor *a, const unsigned char* data,
 
   memcpy(buffer->data + offset, data, newsize);
 
-  /* if(increase) */
   if(increase)
   {
     update_offsets_after(a,increase);
@@ -260,12 +252,8 @@ void grib_buffer_replace( grib_accessor *a, const unsigned char* data,
 
 }
 
-
 void grib_update_sections_lengths(grib_handle* h) {
   grib_section_adjust_sizes(h->root,2,0);
     grib_update_paddings(h->root);
 }
-
-
-
 

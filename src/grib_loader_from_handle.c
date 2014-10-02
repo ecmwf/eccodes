@@ -178,7 +178,7 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
 
 		/* len = len > 1024 ? len : 1024; */
 		_grib_get_string_length(ga,&len);
-		sval = grib_context_malloc(h->context,len);
+		sval = (char*)grib_context_malloc(h->context,len);
 		ret = grib_get_string_internal(h,name,sval,&len);
 		if(ret == GRIB_SUCCESS)
 		{
@@ -190,7 +190,7 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
 		break;
 
 	case GRIB_TYPE_LONG:
-		lval = grib_context_malloc(h->context,len*sizeof(long));
+		lval = (long*)grib_context_malloc(h->context,len*sizeof(long));
 		ret = grib_get_long_array_internal(h,name,lval,&len);
 		if(ret == GRIB_SUCCESS)
 		{
@@ -228,7 +228,7 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
 		break;
 
 	case GRIB_TYPE_DOUBLE:
-		dval = grib_context_malloc(h->context,len*sizeof(double));
+		dval = (double*)grib_context_malloc(h->context,len*sizeof(double));
 		ret = grib_get_double_array_internal(h,name,dval,&len);
 		if(ret == GRIB_SUCCESS)
 		{
@@ -249,7 +249,7 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
 
 	case GRIB_TYPE_BYTES:
 
-		uval = grib_context_malloc(h->context,len*sizeof(char));
+		uval = (unsigned char*)grib_context_malloc(h->context,len*sizeof(char));
 		ret = grib_get_bytes_internal(h,name,uval,&len);
 		if(ret == GRIB_SUCCESS)
 		{

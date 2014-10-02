@@ -191,7 +191,7 @@ grib_expression* new_binop_expression(grib_context* c,
         grib_binop_double_proc double_func,
         grib_expression* left,grib_expression* right)
 {
-    grib_expression_binop* e = grib_context_malloc_clear_persistent(c,sizeof(grib_expression_binop));
+    grib_expression_binop* e = (grib_expression_binop*)grib_context_malloc_clear_persistent(c,sizeof(grib_expression_binop));
     e->base.cclass                 = grib_expression_class_binop;
     e->left                = left;
     e->right               = right;

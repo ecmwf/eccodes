@@ -121,17 +121,17 @@ static void* default_realloc(const grib_context* c, void* p, size_t size)
 
 static size_t default_read(const grib_context* c, void *ptr, size_t size, void *stream)
 {
-    return fread(ptr,  1, size,  stream);
+    return fread(ptr,  1, size,  (FILE*)stream);
 }
 
 static off_t default_tell(const grib_context* c, void *stream)
 {
-    return ftello(stream);
+    return ftello((FILE*)stream);
 }
 
 static off_t default_seek(const grib_context* c, off_t offset,int whence, void *stream)
 {
-    return fseeko(stream,offset,whence);
+    return fseeko((FILE*)stream,offset,whence);
 }
 
 static int default_feof(const grib_context* c, void *stream)
@@ -141,7 +141,7 @@ static int default_feof(const grib_context* c, void *stream)
 
 static size_t default_write(const grib_context* c,const void *ptr, size_t size, void *stream)
 {
-    return fwrite(ptr,  1, size,  stream);
+    return fwrite(ptr,  1, size,  (FILE*)stream);
 }
 
 size_t grib_context_read(const grib_context* c, void *ptr, size_t size, void *stream)
@@ -198,7 +198,7 @@ static void default_log(const grib_context* c, int level, const char* mess)
 
 static void default_print(const grib_context* c, void* descriptor, const char* mess)
 {
-    fprintf(descriptor, "%s", mess);
+    fprintf((FILE*)descriptor, "%s", mess);
 }
 
 void grib_context_set_print_proc(grib_context* c, grib_print_proc p)
@@ -561,7 +561,7 @@ char *grib_context_full_defs_path(grib_context* c,const char* basename)
     if(*basename == '/' || *basename ==  '.') {
         return (char*)basename;
     } else {
-        fullpath=grib_trie_get(c->def_files,basename);
+        fullpath=(grib_string_list*)grib_trie_get(c->def_files,basename);
         if (fullpath!=NULL) {
             return fullpath->value;
         }
@@ -580,7 +580,7 @@ char *grib_context_full_defs_path(grib_context* c,const char* basename)
         while (dir) {
             sprintf(full,"%s/%s",dir->value,basename);
             if (!access(full,F_OK)) {
-                fullpath=grib_context_malloc_clear_persistent(c,sizeof(grib_string_list));
+                fullpath=(grib_string_list*)grib_context_malloc_clear_persistent(c,sizeof(grib_string_list));
                 Assert(fullpath);
                 fullpath->value=grib_context_strdup(c,full);
                 GRIB_MUTEX_LOCK(&mutex_c);

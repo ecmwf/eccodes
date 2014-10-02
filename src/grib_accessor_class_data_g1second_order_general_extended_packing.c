@@ -272,7 +272,7 @@ static int value_count(grib_accessor* a,long* count)
     if (err) return err;
     if (numberOfGroups==0) return 0;
 
-    groupLengths=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
+    groupLengths=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
     ngroups=numberOfGroups;
     err=grib_get_long_array(a->parent->h,self->groupLengths,groupLengths,&ngroups);
     if (err) return err;
@@ -300,7 +300,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     if (err) return err;
     if (idx >= size) return GRIB_INVALID_NEAREST;
 
-    values=grib_context_malloc_clear(a->parent->h->context,size*sizeof(double));
+    values=(double*)grib_context_malloc_clear(a->parent->h->context,size*sizeof(double));
     err=grib_get_double_array(a->parent->h,"codedValues",values,&size);
     if (err) return err;
     *val=values[idx];
@@ -355,15 +355,15 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
         return ret;
 
     ngroups=numberOfGroups;
-    groupWidths=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
+    groupWidths=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
     ret=grib_get_long_array(a->parent->h,self->groupWidths,groupWidths,&ngroups);
     if(ret != GRIB_SUCCESS) return ret;
 
-    groupLengths=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
+    groupLengths=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
     ret=grib_get_long_array(a->parent->h,self->groupLengths,groupLengths,&ngroups);
     if(ret != GRIB_SUCCESS) return ret;
 
-    firstOrderValues=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
+    firstOrderValues=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
     ret=grib_get_long_array(a->parent->h,self->firstOrderValues,firstOrderValues,&ngroups);
     if(ret != GRIB_SUCCESS) return ret;
 
@@ -382,13 +382,13 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
 
     if (orderOfSPD) {
         size_t nSPD=orderOfSPD+1;
-        SPD=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*nSPD);
+        SPD=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*nSPD);
         ret=grib_get_long_array(a->parent->h,self->SPD,SPD,&nSPD);
         bias=SPD[orderOfSPD];
         if(ret != GRIB_SUCCESS) return ret;
     }
 
-    X=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfValues);
+    X=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfValues);
 
     n=orderOfSPD;
     for (i=0;i<numberOfGroups;i++) {
@@ -450,10 +450,10 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
     if (self->values) {
         if (numberOfValues!=self->size) {
             grib_context_free(a->parent->h->context,self->values);
-            self->values=grib_context_malloc_clear(a->parent->h->context,sizeof(double)*numberOfValues);
+            self->values=(double*)grib_context_malloc_clear(a->parent->h->context,sizeof(double)*numberOfValues);
         }
     } else {
-        self->values=grib_context_malloc_clear(a->parent->h->context,sizeof(double)*numberOfValues);
+        self->values=(double*)grib_context_malloc_clear(a->parent->h->context,sizeof(double)*numberOfValues);
     }
 
     s = grib_power(binary_scale_factor,2);
@@ -497,7 +497,7 @@ static void grib_split_long_groups(grib_context* c,long* numberOfGroups,long* le
         Here we try to reduce the size of the message splitting the big groups.
      */
 
-    widthsOfLengths=grib_context_malloc_clear(c,sizeof(long)*maxNumberOfGroups);
+    widthsOfLengths=(long*)grib_context_malloc_clear(c,sizeof(long)*maxNumberOfGroups);
     j=0;
     /* compute the widthOfLengths and the number of big groups */
     for (i=0;i<*numberOfGroups;i++) {
@@ -517,10 +517,10 @@ static void grib_split_long_groups(grib_context* c,long* numberOfGroups,long* le
         return;
     }
 
-    localWidthsOfLengths=grib_context_malloc_clear(c,sizeof(long)*maxNumberOfGroups);
-    localLengths=grib_context_malloc_clear(c,sizeof(long)*maxNumberOfGroups);
-    localWidths=grib_context_malloc_clear(c,sizeof(long)*maxNumberOfGroups);
-    localFirstOrderValues=grib_context_malloc_clear(c,sizeof(long)*maxNumberOfGroups);
+    localWidthsOfLengths=(long*)grib_context_malloc_clear(c,sizeof(long)*maxNumberOfGroups);
+    localLengths=(long*)grib_context_malloc_clear(c,sizeof(long)*maxNumberOfGroups);
+    localWidths=(long*)grib_context_malloc_clear(c,sizeof(long)*maxNumberOfGroups);
+    localFirstOrderValues=(long*)grib_context_malloc_clear(c,sizeof(long)*maxNumberOfGroups);
 
     while (newWidth>0) {
         /* it is worth to split big groups */
@@ -679,14 +679,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         return ret;
 
     divisor = grib_power(-binary_scale_factor,2);
-    X=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfValues);
+    X=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfValues);
     for(i=0;i< numberOfValues;i++){
         X[i] = (((val[i]*decimal)-reference_value)*divisor)+0.5;
     }
 
-    groupLengths=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfValues);
-    groupWidths=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfValues);
-    firstOrderValues=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfValues);
+    groupLengths=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfValues);
+    groupWidths=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfValues);
+    firstOrderValues=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfValues);
 
     /* spatial differencing */
     switch (orderOfSPD) {
@@ -950,7 +950,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
            Focus on groups which have been shrank as left groups of an A group taking
            some of their elements.
          */
-        offsets=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
+        offsets=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
         offsets[0]=orderOfSPD;
         for (i=1;i<numberOfGroups;i++) offsets[i]=offsets[i-1]+groupLengths[i-1];
         for (i=numberOfGroups-2;i>=0;i--) {
@@ -1124,7 +1124,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     if((ret = grib_set_long_internal(a->parent->h,self->half_byte, half_byte)) != GRIB_SUCCESS)
         return ret;
 
-    buffer=grib_context_malloc_clear(a->parent->h->context,size);
+    buffer=(unsigned char*)grib_context_malloc_clear(a->parent->h->context,size);
 
     pos=0;
     if (orderOfSPD) {

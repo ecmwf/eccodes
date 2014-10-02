@@ -359,7 +359,7 @@ static grib_fieldset* grib_fieldset_create_from_order_by(grib_context* c,grib_or
 
   while(next) {nkeys++;next=next->next;}
 
-  keys=grib_context_malloc_clear( c,nkeys*sizeof(char*));
+  keys=(char**)grib_context_malloc_clear( c,nkeys*sizeof(char*));
 
   next=ob;
   i=0;

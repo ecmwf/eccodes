@@ -113,20 +113,17 @@ static void destroy(grib_context* c,grib_expression* g)
 	/* grib_expression_long* e = (grib_expression_long*)g; */
 }
 
-
 static void  add_dependency(grib_expression* g, grib_accessor* observer){
 	/* grib_expression_long* e = (grib_expression_long*)g; */
 }
 
-
 grib_expression* new_long_expression(grib_context* c,long value)
 {
-	grib_expression_long* e = grib_context_malloc_clear_persistent(c,sizeof(grib_expression_long));
+	grib_expression_long* e = (grib_expression_long*)grib_context_malloc_clear_persistent(c,sizeof(grib_expression_long));
 	e->base.cclass                 = grib_expression_class_long;
 	e->value               = value;
 	return (grib_expression*)e;
 }
-
 
 static int native_type(grib_expression* g,grib_handle *h)
 {

@@ -105,15 +105,13 @@ static void destroy(grib_context* c,grib_expression* g)
 	grib_context_free_persistent(c,e->value);
 }
 
-
 static void  add_dependency(grib_expression* g, grib_accessor* observer){
 	/* grib_expression_string* e = (grib_expression_string*)g; */
 }
 
-
 grib_expression* new_string_expression(grib_context* c,const char* value)
 {
-	grib_expression_string* e = grib_context_malloc_clear_persistent(c,sizeof(grib_expression_string));
+	grib_expression_string* e = (grib_expression_string*)grib_context_malloc_clear_persistent(c,sizeof(grib_expression_string));
 	e->base.cclass                 = grib_expression_class_string;
 	e->value               = grib_context_strdup_persistent(c,value);
 	return (grib_expression*)e;
@@ -124,7 +122,6 @@ static void compile(grib_expression* g,grib_compiler* c)
 	grib_expression_string* e = (grib_expression_string*)g;
     fprintf(c->out,"new_string_expression(ctx,\"%s\")",e->value);
 }
-
 
 static int native_type(grib_expression* g,grib_handle *h)
 {

@@ -236,7 +236,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
         size = 10; /* big enough to hold the string "missing" */
     }
 
-    value=grib_context_malloc_clear(a->parent->h->context,size);
+    value=(char*)grib_context_malloc_clear(a->parent->h->context,size);
     if (!value) return;
     err=grib_unpack_string(a,value,&size);
 
@@ -269,7 +269,7 @@ static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)
     int i,k,err =0;
     int more = 0;
     size_t size = a->length;
-    unsigned char* buf = grib_context_malloc(d->handle->context,size);
+    unsigned char* buf = (unsigned char*)grib_context_malloc(d->handle->context,size);
 
     if( a->length == 0  &&
             (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0)
@@ -350,7 +350,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         dump_double(d,a,NULL);
         return ;
     }
-    buf = grib_context_malloc(d->handle->context,size * sizeof(double));
+    buf = (double*)grib_context_malloc(d->handle->context,size * sizeof(double));
 
     set_begin_end(d,a);
 

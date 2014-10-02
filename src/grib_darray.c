@@ -42,7 +42,7 @@ grib_darray* grib_darray_resize(grib_context* c,grib_darray* v) {
 
   if (!c) c=grib_context_get_default();
 
-  v->v=grib_context_realloc(c,v->v,newsize*sizeof(double));
+  v->v = (double*)grib_context_realloc(c,v->v,newsize*sizeof(double));
   v->size=newsize;
   if (!v->v) {
     grib_context_log(c,GRIB_LOG_ERROR,

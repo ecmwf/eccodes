@@ -113,15 +113,13 @@ static void destroy(grib_context* c,grib_expression* g)
 	/* grib_expression_double* e = (grib_expression_double*)g; */
 }
 
-
 static void  add_dependency(grib_expression* g, grib_accessor* observer){
 	/* grib_expression_double* e = (grib_expression_double*)g; */
 }
 
-
 grib_expression* new_double_expression(grib_context* c,double value)
 {
-	grib_expression_double* e = grib_context_malloc_clear_persistent(c,sizeof(grib_expression_double));
+	grib_expression_double* e = (grib_expression_double*)grib_context_malloc_clear_persistent(c,sizeof(grib_expression_double));
 	e->base.cclass  = grib_expression_class_double;
 	e->value = value;
 	return (grib_expression*)e;
@@ -133,9 +131,7 @@ static void compile(grib_expression* g,grib_compiler* c)
     fprintf(c->out,"new_double_expression(ctx,%g)",e->value);
 }
 
-
 static int native_type(grib_expression* g,grib_handle *h)
 {
 	return GRIB_TYPE_DOUBLE;
 }
-

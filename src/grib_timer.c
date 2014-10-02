@@ -19,8 +19,8 @@
 #endif
 
 static grib_timer *timers = NULL;
-int false=0;
-int true=1;
+int value_false=0;
+int value_true=1;
 #define long64 long
 
 #define ROUND(a)     ((long)((a)+0.5))
@@ -84,10 +84,10 @@ grib_timer *grib_get_timer(grib_context* c,const char* name, const char *statnam
     t = t->next_;
   }
 
-  t = grib_context_malloc_clear(c,sizeof(grib_timer));
+  t = (grib_timer*)grib_context_malloc_clear(c,sizeof(grib_timer));
   t->name_  = (char*) name;
   t->context =c;
-  t->active_  = false;
+  t->active_  = value_false;
   t->count_   = 0;
   t->timer_   = 0;
   t->total_   = 0;
@@ -111,7 +111,7 @@ int grib_timer_start(grib_timer* t)
   int e = gettimeofday(&t->start_,NULL);
   if(e != 0)
     grib_context_log(t->context,GRIB_LOG_WARNING|GRIB_LOG_PERROR,"Error starting timer '%s'",t->name_?t->name_:"unnamed");
-  t->active_ = true;
+  t->active_ = value_true;
   t->cpu_    = proc_cpu();
   return e;
 }
@@ -144,7 +144,7 @@ int grib_timer_stop(grib_timer* t, long total)
   t->total_ += total;
   t->total_cpu_ += (c - t->cpu_);
 
-  t->active_=false;
+  t->active_=value_false;
   t->count_++;
 
   return e;
@@ -177,7 +177,7 @@ const char *bytename(double bytes)
 void grib_timer_print(grib_timer* t)
 {
   char cpu[1024] = "";
-  char *name = t->name_?t->name_:"";
+  const char *name = t->name_ ? t->name_ : "";
   if(t->timer_>=1)  {
     if(! t->elapsed_ && t->total_cpu_ >= 1.0)
       sprintf(cpu,"cpu: %s",timename(t->total_cpu_));
@@ -205,7 +205,7 @@ void grib_timer_partial_rate(grib_timer *t, double start, long total)
 {
   double ptime = t->timer_ - start;
   long ptotal = total;
-  char *name = t->name_?t->name_:"";
+  const char *name = t->name_?t->name_:"";
   if(ptime>=1)
   {
     double rate = (double)ptotal/ptime;

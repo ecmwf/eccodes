@@ -173,7 +173,7 @@ static void  add_dependency(grib_expression* g, grib_accessor* observer){
 
 grib_expression* new_accessor_expression(grib_context* c,const char *name,long start, size_t length)
 {
-  grib_expression_accessor* e = grib_context_malloc_clear_persistent(c,sizeof(grib_expression_accessor));
+  grib_expression_accessor* e = (grib_expression_accessor*)grib_context_malloc_clear_persistent(c,sizeof(grib_expression_accessor));
   e->base.cclass                 = grib_expression_class_accessor;
   e->name                   = grib_context_strdup_persistent(c,name);
   e->start                  = start;

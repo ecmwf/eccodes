@@ -137,7 +137,8 @@ static void init_class(grib_accessor_class* c)
 /* END_CLASS_IMP */
 
 
-static long byte_count(grib_accessor* a){
+static long byte_count(grib_accessor* a)
+{
 	return a->length;
 }
 
@@ -236,7 +237,7 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
 	if (ret) return ret;
 
 	buflen = compute_byte_count(a);
-	buf = grib_context_malloc_clear(a->parent->h->context,buflen);
+    buf = (unsigned char*)grib_context_malloc_clear(a->parent->h->context,buflen);
 
 	for(i=0; i < rlen-1;i++) {
 		grib_encode_unsigned_longb(buf, val[i] ,  &off,  numberOfBits);
@@ -270,7 +271,8 @@ static int value_count(grib_accessor* a,long* numberOfElements)
   return ret;
 }
 
-static long byte_offset(grib_accessor* a){
+static long byte_offset(grib_accessor* a)
+{
   return a->offset;
 }
 
@@ -279,7 +281,7 @@ static void update_size(grib_accessor* a,size_t s)
   a->length = s;
 }
 
-static long next_offset(grib_accessor* a){
+static long next_offset(grib_accessor* a)
+{
   return byte_offset(a)+a->length;
 }
-

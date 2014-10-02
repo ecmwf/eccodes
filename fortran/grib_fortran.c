@@ -58,7 +58,7 @@ static void init() {
 
 int GRIB_NULL=-1;
 int GRIB_NULL_NEAREST=-1;
-extern int errno;
+/*extern int errno;*/
 
 typedef struct l_grib_file l_grib_file;
 
@@ -147,15 +147,14 @@ static void fort_char_clean(char* str,int len) {
   *p=' ';
 }
 
-
 static int push_file(FILE* f,char* buffer){
   l_grib_file* current  = file_set;
   l_grib_file* previous = file_set;
-  l_grib_file* new      = NULL;
+  l_grib_file* the_new      = NULL;
   int myindex = MIN_FILE_ID;
 
   if(!file_set){
-    file_set = malloc(sizeof(l_grib_file));
+    file_set = (l_grib_file*)malloc(sizeof(l_grib_file));
     file_set->id   = myindex;
     file_set->f    = f;
 	file_set->buffer =buffer;
@@ -176,19 +175,19 @@ static int push_file(FILE* f,char* buffer){
     }
   }
 
-  new = malloc(sizeof(l_grib_file));
-  new->id   = myindex;
-  new->f    = f;
-  new->buffer    = buffer;
-  new->next = current;
-  previous->next = new;
+  the_new = (l_grib_file*)malloc(sizeof(l_grib_file));
+  the_new->id   = myindex;
+  the_new->f    = f;
+  the_new->buffer    = buffer;
+  the_new->next = current;
+  previous->next = the_new;
   return myindex;
 }
 
 static void _push_handle(grib_handle *h,int *gid){
   l_grib_handle* current= handle_set;
   l_grib_handle* previous= handle_set;
-  l_grib_handle* new= NULL;
+  l_grib_handle* the_new= NULL;
   int myindex= 1;
 
   /*
@@ -206,7 +205,7 @@ static void _push_handle(grib_handle *h,int *gid){
   */
 
   if(!handle_set){
-    handle_set = malloc(sizeof(l_grib_handle));
+    handle_set = (l_grib_handle*)malloc(sizeof(l_grib_handle));
     handle_set->id   = myindex;
     handle_set->h    = h;
     handle_set->next = NULL;
@@ -230,11 +229,11 @@ static void _push_handle(grib_handle *h,int *gid){
     }
   }
 
-  new = malloc(sizeof(l_grib_handle));
-  new->id   = myindex;
-  new->h    = h;
-  new->next = current;
-  previous->next = new;
+  the_new = (l_grib_handle*)malloc(sizeof(l_grib_handle));
+  the_new->id   = myindex;
+  the_new->h    = h;
+  the_new->next = current;
+  previous->next = the_new;
 
   *gid=myindex;
   return;
@@ -243,7 +242,7 @@ static void _push_handle(grib_handle *h,int *gid){
 static void _push_index(grib_index *h,int *gid){
   l_grib_index* current= index_set;
   l_grib_index* previous= index_set;
-  l_grib_index* new= NULL;
+  l_grib_index* the_new= NULL;
   int myindex= 1;
 
 /*
@@ -261,7 +260,7 @@ static void _push_index(grib_index *h,int *gid){
   */
 
   if(!index_set){
-    index_set = malloc(sizeof(l_grib_index));
+    index_set = (l_grib_index*)malloc(sizeof(l_grib_index));
     index_set->id   = myindex;
     index_set->h    = h;
     index_set->next = NULL;
@@ -285,11 +284,11 @@ static void _push_index(grib_index *h,int *gid){
     }
   }
 
-  new = malloc(sizeof(l_grib_index));
-  new->id   = myindex;
-  new->h    = h;
-  new->next = current;
-  previous->next = new;
+  the_new = (l_grib_index*)malloc(sizeof(l_grib_index));
+  the_new->id   = myindex;
+  the_new->h    = h;
+  the_new->next = current;
+  previous->next = the_new;
 
   *gid=myindex;
   return;
@@ -298,7 +297,7 @@ static void _push_index(grib_index *h,int *gid){
 static void _push_multi_handle(grib_multi_handle *h,int *gid){
   l_grib_multi_handle* current= multi_handle_set;
   l_grib_multi_handle* previous= multi_handle_set;
-  l_grib_multi_handle* new= NULL;
+  l_grib_multi_handle* the_new= NULL;
   int myindex= 1;
 
 /*
@@ -316,7 +315,7 @@ static void _push_multi_handle(grib_multi_handle *h,int *gid){
   */
 
   if(!multi_handle_set){
-    multi_handle_set = malloc(sizeof(l_grib_multi_handle));
+    multi_handle_set = (l_grib_multi_handle*)malloc(sizeof(l_grib_multi_handle));
     multi_handle_set->id   = myindex;
     multi_handle_set->h    = h;
     multi_handle_set->next = NULL;
@@ -340,11 +339,11 @@ static void _push_multi_handle(grib_multi_handle *h,int *gid){
     }
   }
 
-  new = malloc(sizeof(l_grib_multi_handle));
-  new->id   = myindex;
-  new->h    = h;
-  new->next = current;
-  previous->next = new;
+  the_new = (l_grib_multi_handle*)malloc(sizeof(l_grib_multi_handle));
+  the_new->id   = myindex;
+  the_new->h    = h;
+  the_new->next = current;
+  previous->next = the_new;
 
   *gid=myindex;
   return;
@@ -378,11 +377,11 @@ static void push_multi_handle(grib_multi_handle *h,int *gid){
 static int _push_iterator(grib_iterator *i){
   l_grib_iterator* current  = iterator_set;
   l_grib_iterator* previous = iterator_set;
-  l_grib_iterator* new      = NULL;
+  l_grib_iterator* the_new      = NULL;
   int myindex = 1;
   
   if(!iterator_set){
-    iterator_set = malloc(sizeof(l_grib_iterator));
+    iterator_set = (l_grib_iterator*)malloc(sizeof(l_grib_iterator));
     iterator_set->id   = myindex;
     iterator_set->i    = i;
     iterator_set->next = NULL;
@@ -402,11 +401,11 @@ static int _push_iterator(grib_iterator *i){
     }
   }
 
-  new = malloc(sizeof(l_grib_iterator));
-  new->id   = myindex;
-  new->i    = i;
-  new->next = current;
-  previous->next = new;
+  the_new = (l_grib_iterator*)malloc(sizeof(l_grib_iterator));
+  the_new->id   = myindex;
+  the_new->i    = i;
+  the_new->next = current;
+  previous->next = the_new;
 
   return myindex;
 }
@@ -423,11 +422,11 @@ static int push_iterator(grib_iterator *i){
 static int _push_keys_iterator(grib_keys_iterator *i){
   l_grib_keys_iterator* current  = keys_iterator_set;
   l_grib_keys_iterator* previous = keys_iterator_set;
-  l_grib_keys_iterator* new      = NULL;
+  l_grib_keys_iterator* the_new      = NULL;
   int myindex = 1;
   
   if(!keys_iterator_set){
-    keys_iterator_set = malloc(sizeof(l_grib_keys_iterator));
+    keys_iterator_set = (l_grib_keys_iterator*)malloc(sizeof(l_grib_keys_iterator));
     keys_iterator_set->id   = myindex;
     keys_iterator_set->i    = i;
     keys_iterator_set->next = NULL;
@@ -448,11 +447,11 @@ static int _push_keys_iterator(grib_keys_iterator *i){
   }
   if(!previous) return -1;
 
-  new = malloc(sizeof(l_grib_keys_iterator));
-  new->id   = myindex;
-  new->i    = i;
-  new->next = current;
-  previous->next = new;
+  the_new = (l_grib_keys_iterator*)malloc(sizeof(l_grib_keys_iterator));
+  the_new->id   = myindex;
+  the_new->i    = i;
+  the_new->next = current;
+  previous->next = the_new;
 
   return myindex;
 }
@@ -1750,9 +1749,9 @@ int grib_f_get_int_array_(int* gid, char* key, int *val, int* size,  int len){
     return  err;
   }
   if(*size)
-    long_val = grib_context_malloc(h->context,(*size)*(sizeof(long)));
+    long_val = (long*)grib_context_malloc(h->context,(*size)*(sizeof(long)));
   else
-    long_val = grib_context_malloc(h->context,(sizeof(long)));
+    long_val = (long*)grib_context_malloc(h->context,(sizeof(long)));
 
   if(!long_val) return GRIB_OUT_OF_MEMORY;
   err = grib_get_long_array(h, cast_char(buf,key,len), long_val, &lsize);
@@ -1882,7 +1881,7 @@ int grib_f_index_get_int_(int* gid, char* key, int *val, int* size,  int len){
 
   if(!h)  return GRIB_INVALID_GRIB;
 
-  lval=grib_context_malloc(h->context,sizeof(long)* *size);
+  lval=(long*)grib_context_malloc(h->context,sizeof(long)* *size);
   if (!lval) return GRIB_OUT_OF_MEMORY;
   
   err = grib_index_get_long(h, cast_char(buf,key,len), lval, &lsize);
@@ -1932,9 +1931,9 @@ int grib_f_set_int_array_(int* gid, char* key, int* val, int* size,  int len){
   }
 
   if(lsize)
-    long_val = grib_context_malloc(h->context,(lsize)*(sizeof(long)));
+    long_val = (long*)grib_context_malloc(h->context,(lsize)*(sizeof(long)));
   else
-    long_val = grib_context_malloc(h->context,(sizeof(long)));
+    long_val = (long*)grib_context_malloc(h->context,(sizeof(long)));
 
   if(!long_val) return GRIB_OUT_OF_MEMORY;
 
@@ -2111,9 +2110,9 @@ int grib_f_get_real4_elements_(int* gid, char* key,int* index, float *val,int* s
   if(!h) return GRIB_INVALID_GRIB;
 
   if(*size)
-    val8 = grib_context_malloc(h->context,(*size)*(sizeof(double)));
+    val8 = (double*)grib_context_malloc(h->context,(*size)*(sizeof(double)));
   else
-    val8 = grib_context_malloc(h->context,sizeof(double));
+    val8 = (double*)grib_context_malloc(h->context,sizeof(double));
 
   if(!val8) return GRIB_OUT_OF_MEMORY;
 
@@ -2166,9 +2165,9 @@ int grib_f_get_real4_array_(int* gid, char* key, float *val, int* size,  int len
   if(!h) return GRIB_INVALID_GRIB;
 
   if(*size)
-    val8 = grib_context_malloc(h->context,(*size)*(sizeof(double)));
+    val8 = (double*)grib_context_malloc(h->context,(*size)*(sizeof(double)));
   else
-    val8 = grib_context_malloc(h->context,sizeof(double));
+    val8 = (double*)grib_context_malloc(h->context,sizeof(double));
 
   if(!val8) return GRIB_OUT_OF_MEMORY;
 
@@ -2200,9 +2199,9 @@ int grib_f_set_force_real4_array_(int* gid, char* key, float*val, int* size, int
   if(!h) return GRIB_INVALID_GRIB;
 
   if(*size)
-    val8 = grib_context_malloc(h->context,lsize*(sizeof(double)));
+    val8 = (double*)grib_context_malloc(h->context,lsize*(sizeof(double)));
   else
-    val8 = grib_context_malloc(h->context,sizeof(double));
+    val8 = (double*)grib_context_malloc(h->context,sizeof(double));
 
   if(!val8) return GRIB_OUT_OF_MEMORY;
 
@@ -2234,9 +2233,9 @@ int grib_f_set_real4_array_(int* gid, char* key, float*val, int* size, int len){
   if(!h) return GRIB_INVALID_GRIB;
 
   if(*size)
-    val8 = grib_context_malloc(h->context,lsize*(sizeof(double)));
+    val8 = (double*)grib_context_malloc(h->context,lsize*(sizeof(double)));
   else
-    val8 = grib_context_malloc(h->context,sizeof(double));
+    val8 = (double*)grib_context_malloc(h->context,sizeof(double));
 
   if(!val8) return GRIB_OUT_OF_MEMORY;
 
@@ -2620,11 +2619,11 @@ int grib_f_get_data_real4_(int* gid,float* lats, float* lons,float* values,size_
 
   if(!h) return GRIB_INVALID_GRIB;
 
-  val8 = grib_context_malloc(h->context,(*size)*(sizeof(double)));
+  val8 = (double*)grib_context_malloc(h->context,(*size)*(sizeof(double)));
   if(!val8) return GRIB_OUT_OF_MEMORY;
-  lon8 = grib_context_malloc(h->context,(*size)*(sizeof(double)));
+  lon8 = (double*)grib_context_malloc(h->context,(*size)*(sizeof(double)));
   if(!lon8) return GRIB_OUT_OF_MEMORY;
-  lat8 = grib_context_malloc(h->context,(*size)*(sizeof(double)));
+  lat8 = (double*)grib_context_malloc(h->context,(*size)*(sizeof(double)));
   if(!lat8) return GRIB_OUT_OF_MEMORY;
 
   err=grib_get_data(h,lat8,lon8,val8,size);

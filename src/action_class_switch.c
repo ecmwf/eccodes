@@ -115,7 +115,7 @@ grib_action* grib_action_create_switch( grib_context* context,
 
 grib_case* grib_case_new(grib_context* c,grib_arguments* values,grib_action* action)
 {
-    grib_case* Case = grib_context_malloc_clear_persistent(c,sizeof(grib_case));
+    grib_case* Case = (grib_case*)grib_context_malloc_clear_persistent(c,sizeof(grib_case));
 
 	Case->values=values;
 	Case->action=action;

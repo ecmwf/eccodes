@@ -172,12 +172,12 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
 
     Dx = iScansNegatively == 0 ? Dx : -Dx;
     Dy = jScansPositively == 1 ? Dy : -Dy;
-    self->lats = grib_context_malloc(h->context,iter->nv*sizeof(double));
+    self->lats = (double*)grib_context_malloc(h->context,iter->nv*sizeof(double));
     if (!self->lats) {
         grib_context_log(h->context,GRIB_LOG_ERROR, "unable to allocate %ld bytes",iter->nv*sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
-    self->lons = grib_context_malloc(h->context,iter->nv*sizeof(double));
+    self->lons = (double*)grib_context_malloc(h->context,iter->nv*sizeof(double));
     if (!self->lats) {
         grib_context_log(h->context,GRIB_LOG_ERROR, "unable to allocate %ld bytes",iter->nv*sizeof(double));
         return GRIB_OUT_OF_MEMORY;
@@ -206,11 +206,18 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
             y=yFirst;
             for (j=0;j<ny;j++) {
                 rho=sqrt(x*x+y*y);
-                c=2*atan2(rho,(2.0*radius));
-                cosc=cos(c);
-                sinc=sin(c);
-                *lats = asin( cosc*sinphi1 + y*sinc*cosphi1/rho ) * RAD2DEG;
-                *lons = (lambda0+atan2(x*sinc, rho*cosphi1*cosc - y*sinphi1*sinc)) * RAD2DEG;
+                if (rho == 0) {
+                    /* indeterminate case */
+                    *lats = standardParallel;
+                    *lons = centralLongitude;
+                }
+                else {
+                    c=2*atan2(rho,(2.0*radius));
+                    cosc=cos(c);
+                    sinc=sin(c);
+                    *lats = asin( cosc*sinphi1 + y*sinc*cosphi1/rho ) * RAD2DEG;
+                    *lons = (lambda0+atan2(x*sinc, rho*cosphi1*cosc - y*sinphi1*sinc)) * RAD2DEG;
+                }
                 if (*lons<0) *lons+=360;
                 lons++;
                 lats++;
@@ -227,11 +234,18 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
             x=xFirst;
             for (i=0;i<nx;i++) {
                 rho=sqrt(x*x+y*y);
-                c=2*atan2(rho,(2.0*radius));
-                cosc=cos(c);
-                sinc=sin(c);
-                *lats = asin( cosc*sinphi1 + y*sinc*cosphi1/rho ) * RAD2DEG;
-                *lons = (lambda0+atan2(x*sinc, rho*cosphi1*cosc - y*sinphi1*sinc)) * RAD2DEG;
+                if (rho == 0) {
+                    /* indeterminate case */
+                    *lats = standardParallel;
+                    *lons = centralLongitude;
+                }
+                else {
+                    c=2*atan2(rho,(2.0*radius));
+                    cosc=cos(c);
+                    sinc=sin(c);
+                    *lats = asin( cosc*sinphi1 + y*sinc*cosphi1/rho ) * RAD2DEG;
+                    *lons = (lambda0+atan2(x*sinc, rho*cosphi1*cosc - y*sinphi1*sinc)) * RAD2DEG;
+                }
                 if (*lons<0) *lons+=360;
                 lons++;
                 lats++;

@@ -159,7 +159,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src) {
     }
 
     while(grib_keys_iterator_next(iter))  {
-        grib_key_err* k=grib_context_malloc_clear(src->context,sizeof(grib_key_err));
+        grib_key_err* k=(grib_key_err*)grib_context_malloc_clear(src->context,sizeof(grib_key_err));
         k->err=GRIB_NOT_FOUND;
         k->name=grib_context_strdup(src->context,grib_keys_iterator_get_name(iter));
         if (key_err==NULL) {
@@ -214,7 +214,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src) {
             switch (type) {
             case GRIB_TYPE_STRING:
                 len=512;
-                sval = grib_context_malloc(src->context,len*sizeof(char));
+                sval = (char*)grib_context_malloc(src->context,len*sizeof(char));
 
                 if((*err = grib_get_string(src,key,sval,&len)) != GRIB_SUCCESS)
                     return *err;
@@ -226,7 +226,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src) {
                 break;
 
             case GRIB_TYPE_LONG:
-                lval = grib_context_malloc(src->context,len*sizeof(long));
+                lval = (long*)grib_context_malloc(src->context,len*sizeof(long));
 
                 if((*err = grib_get_long_array(src,key,lval,&len)) != GRIB_SUCCESS)
                     return *err;
@@ -238,7 +238,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src) {
                 break;
 
             case GRIB_TYPE_DOUBLE:
-                dval = grib_context_malloc(src->context,len*sizeof(double));
+                dval = (double*)grib_context_malloc(src->context,len*sizeof(double));
 
                 if((*err = grib_get_double_array(src,key,dval,&len)) != GRIB_SUCCESS)
                     return *err;
@@ -250,7 +250,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src) {
 
             case GRIB_TYPE_BYTES:
                 if (len==0) len=512;
-                uval = grib_context_malloc(src->context,len*sizeof(unsigned char));
+                uval = (unsigned char *)grib_context_malloc(src->context,len*sizeof(unsigned char));
 
                 if((*err = grib_get_bytes(src,key,uval,&len)) != GRIB_SUCCESS)
                     return *err;
@@ -831,7 +831,7 @@ int grib_get_double_elements(grib_handle* h, const char* name, int* i, long len,
         return ret;
     }
 
-    values=grib_context_malloc( h->context,size * sizeof(double));
+    values=(double*)grib_context_malloc( h->context,size * sizeof(double));
 
     if (!values) {
         grib_context_log(h->context,GRIB_LOG_ERROR,"grib_get_double_elements: unable to allocate %ld bytes\n",
@@ -1137,36 +1137,36 @@ static int grib_get_key_value(grib_handle* h,grib_key_value_list* kv) {
 
     switch (kv->type) {
     case GRIB_TYPE_LONG:
-        kv->long_value=grib_context_malloc_clear(h->context,size*sizeof(long));
+        kv->long_value=(long*)grib_context_malloc_clear(h->context,size*sizeof(long));
         ret=grib_get_long_array(h,kv->name,kv->long_value,&size);
         kv->error=ret;
         break;
     case GRIB_TYPE_DOUBLE:
-        kv->double_value=grib_context_malloc_clear(h->context,size*sizeof(double));
+        kv->double_value=(double*)grib_context_malloc_clear(h->context,size*sizeof(double));
         ret=grib_get_double_array(h,kv->name,kv->double_value,&size);
         kv->error=ret;
         break;
     case GRIB_TYPE_STRING:
         grib_get_string_length(h,kv->name,&size);
-        kv->string_value=grib_context_malloc_clear(h->context,size*sizeof(char));
+        kv->string_value=(char*)grib_context_malloc_clear(h->context,size*sizeof(char));
         ret=grib_get_string(h,kv->name,kv->string_value,&size);
         kv->error=ret;
         break;
     case GRIB_TYPE_BYTES:
-        kv->string_value=grib_context_malloc_clear(h->context,size*sizeof(char));
+        kv->string_value=(char*)grib_context_malloc_clear(h->context,size*sizeof(char));
         ret=grib_get_bytes(h,kv->name,(unsigned char*)kv->string_value,&size);
         kv->error=ret;
         break;
     case GRIB_NAMESPACE:
         iter=grib_keys_iterator_new(h,0,(char*)kv->name);
-        list=grib_context_malloc_clear(h->context,sizeof(grib_key_value_list));
+        list=(grib_key_value_list*)grib_context_malloc_clear(h->context,sizeof(grib_key_value_list));
         kv->namespace_value=list;
         while(grib_keys_iterator_next(iter))
         {
             list->name=grib_keys_iterator_get_name(iter);
             ret=grib_get_native_type(h,list->name,&(list->type));
             ret=grib_get_key_value(h,list);
-            list->next=grib_context_malloc_clear(h->context,sizeof(grib_key_value_list));
+            list->next=(grib_key_value_list*)grib_context_malloc_clear(h->context,sizeof(grib_key_value_list));
             list=list->next;
         }
         grib_keys_iterator_delete(iter);
@@ -1183,7 +1183,7 @@ static int grib_get_key_value(grib_handle* h,grib_key_value_list* kv) {
 
 grib_key_value_list* grib_key_value_list_clone(grib_context* c,grib_key_value_list* list) {
     grib_key_value_list* next=list;
-    grib_key_value_list* clone=grib_context_malloc_clear(c,sizeof(grib_key_value_list));
+    grib_key_value_list* clone=(grib_key_value_list*)grib_context_malloc_clear(c,sizeof(grib_key_value_list));
     grib_key_value_list* p=clone;
 
     while (next && next->name) {

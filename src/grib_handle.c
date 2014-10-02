@@ -204,7 +204,7 @@ static grib_handle* grib_handle_create ( grib_handle  *gl, grib_context* c,void*
 
 	gl->use_trie = 1;
 	gl->trie_invalid=0;
-	gl->buffer = grib_new_buffer ( gl->context,data,buflen );
+	gl->buffer = grib_new_buffer ( gl->context,(unsigned char*)data,buflen );
 
 	if ( gl->buffer == NULL )
 	{
@@ -424,7 +424,7 @@ static grib_handle* grib_handle_new_multi ( grib_context* c,unsigned char** data
 	{
 		*error = grib_read_any_from_memory_alloc ( c, data,buflen,&message, &olen );
 		gm->message_length=olen;
-		gm->message=message;
+		gm->message=(unsigned char*)message;
 		if ( *error != GRIB_SUCCESS || !message )
 		{
 			if ( *error == GRIB_END_OF_FILE ) *error = GRIB_SUCCESS;
@@ -437,20 +437,20 @@ static grib_handle* grib_handle_new_multi ( grib_context* c,unsigned char** data
 		message=gm->message;
 	}
 
-	edition=grib_decode_unsigned_byte_long ( message,7,1 );
+	edition=grib_decode_unsigned_byte_long ( (const unsigned char*)message,7,1 );
 
 	if ( edition == 2 )
 	{
 		olen=gm->message_length;
 		if ( gm->section_number == 0 )
 		{
-			gm->sections[0]=message;
+			gm->sections[0]=(unsigned char*)message;
 		}
 		secbegin=gm->sections[gm->section_number];
 		seclen=gm->sections_length[gm->section_number];
 		secnum=gm->section_number;
 		seccount=0;
-		while ( grib2_get_next_section ( message,olen,&secbegin,&seclen,&secnum,&err ) )
+		while ( grib2_get_next_section ( (unsigned char*)message,olen,&secbegin,&seclen,&secnum,&err ) )
 		{
 			seccount++;
 			/*printf("   - %d - section %d length=%d\n",(int)seccount,(int)secnum,(int)seclen);*/
@@ -480,7 +480,7 @@ static grib_handle* grib_handle_new_multi ( grib_context* c,unsigned char** data
 						gm->bitmap_section=NULL;
 					}
 					gm->bitmap_section = ( unsigned char* ) grib_context_malloc ( c,seclen );
-					gm->bitmap_section = memcpy ( gm->bitmap_section,secbegin,seclen );
+					gm->bitmap_section = (unsigned char*)memcpy ( gm->bitmap_section,secbegin,seclen );
 					gm->bitmap_section_length=seclen;
 				}
 			}
@@ -491,9 +491,9 @@ static grib_handle* grib_handle_new_multi ( grib_context* c,unsigned char** data
 				len=olen;
 				grib2_build_message ( c,gm->sections,gm->sections_length,&message,&len );
 
-				if ( grib2_has_next_section ( p,olen,secbegin,seclen,&err ) )
+				if ( grib2_has_next_section ( (unsigned char*)p,olen,secbegin,seclen,&err ) )
 				{
-					gm->message=p;
+					gm->message=(unsigned char*)p;
 					gm->section_number=secnum;
 					olen=len;
 				}
@@ -560,7 +560,7 @@ static grib_handle* grib_handle_new_from_file_multi ( grib_context* c, FILE* f,i
 		end_msg_offset=grib_context_tell ( c,f );
 
 		gm->message_length=olen;
-		gm->message=data;
+		gm->message=(unsigned char*)data;
 		gm->offset=offset;
 		if ( *error != GRIB_SUCCESS || !data )
 		{
@@ -576,7 +576,7 @@ static grib_handle* grib_handle_new_from_file_multi ( grib_context* c, FILE* f,i
 			int g=0;
 			grib_context_seek ( c,gts_header_offset,SEEK_SET,f );
 			gtslen=offset-gts_header_offset;
-			gts_header=grib_context_malloc_clear ( c,sizeof ( unsigned char ) *gtslen );
+			gts_header=(char*)grib_context_malloc_clear ( c,sizeof ( unsigned char ) *gtslen );
 			save_gts_header=gts_header;
 			grib_context_read ( c,gts_header,gtslen,f );
 			g=gtslen;
@@ -595,20 +595,20 @@ static grib_handle* grib_handle_new_from_file_multi ( grib_context* c, FILE* f,i
 	else
 		data=gm->message;
 
-	edition=grib_decode_unsigned_byte_long ( data,7,1 );
+	edition=grib_decode_unsigned_byte_long ( (const unsigned char*)data,7,1 );
 
 	if ( edition == 2 )
 	{
 		olen=gm->message_length;
 		if ( gm->section_number == 0 )
 		{
-			gm->sections[0]=data;
+			gm->sections[0]=(unsigned char*)data;
 		}
 		secbegin=gm->sections[gm->section_number];
 		seclen=gm->sections_length[gm->section_number];
 		secnum=gm->section_number;
 		seccount=0;
-		while ( grib2_get_next_section ( data,olen,&secbegin,&seclen,&secnum,&err ) )
+		while ( grib2_get_next_section ( (unsigned char*)data,olen,&secbegin,&seclen,&secnum,&err ) )
 		{
 			seccount++;
 			/*printf("   - %d - section %d length=%d\n",(int)seccount,(int)secnum,(int)seclen);*/
@@ -638,7 +638,7 @@ static grib_handle* grib_handle_new_from_file_multi ( grib_context* c, FILE* f,i
 						gm->bitmap_section=NULL;
 					}
 					gm->bitmap_section = ( unsigned char* ) grib_context_malloc ( c,seclen );
-					gm->bitmap_section = memcpy ( gm->bitmap_section,secbegin,seclen );
+					gm->bitmap_section = (unsigned char*)memcpy ( gm->bitmap_section,secbegin,seclen );
 					gm->bitmap_section_length=seclen;
 				}
 			}
@@ -649,9 +649,9 @@ static grib_handle* grib_handle_new_from_file_multi ( grib_context* c, FILE* f,i
 				len=olen;
 				grib2_build_message ( c,gm->sections,gm->sections_length,&data,&len );
 
-				if ( grib2_has_next_section ( old_data,olen,secbegin,seclen,&err ) )
+				if ( grib2_has_next_section ( (unsigned char*)old_data,olen,secbegin,seclen,&err ) )
 				{
-					gm->message=old_data;
+					gm->message=(unsigned char*)old_data;
 					gm->section_number=secnum;
 					olen=len;
 				}
@@ -691,7 +691,7 @@ static grib_handle* grib_handle_new_from_file_multi ( grib_context* c, FILE* f,i
 
 	if ( c->gts_header_on && gtslen >=8 )
 	{
-		gl->gts_header=grib_context_malloc_clear ( c,sizeof ( unsigned char ) *gtslen );
+		gl->gts_header=(char*)grib_context_malloc_clear ( c,sizeof ( unsigned char ) *gtslen );
 		memcpy ( gl->gts_header,gts_header,gtslen );
 		gl->gts_header_len=gtslen;
 		grib_context_free ( c,save_gts_header );
@@ -955,7 +955,7 @@ static grib_handle* grib_handle_new_from_file_no_multi ( grib_context* c,FILE* f
 		int g=0;
 		grib_context_seek ( c,gts_header_offset,SEEK_SET,f );
 		gtslen=offset-gts_header_offset;
-		gts_header=grib_context_malloc ( c,sizeof ( unsigned char ) *gtslen );
+		gts_header=(char*)grib_context_malloc ( c,sizeof ( unsigned char ) *gtslen );
 		save_gts_header=gts_header;
 		grib_context_read ( c,gts_header,gtslen,f );
 		g=gtslen;
@@ -992,7 +992,7 @@ static grib_handle* grib_handle_new_from_file_no_multi ( grib_context* c,FILE* f
 
 	if ( c->gts_header_on && gtslen >=8 )
 	{
-		gl->gts_header=grib_context_malloc ( c,sizeof ( unsigned char ) *gtslen );
+		gl->gts_header=(char*)grib_context_malloc ( c,sizeof ( unsigned char ) *gtslen );
 		memcpy ( gl->gts_header,gts_header,gtslen );
 		gl->gts_header_len=gtslen;
 		grib_context_free ( c,save_gts_header );
@@ -1345,7 +1345,7 @@ static void grib2_build_message ( grib_context* context,unsigned char* sections[
 	if ( *len<msglen ) msglen=*len;
 
 	*data= ( unsigned char* ) grib_context_malloc ( context,msglen );
-	p=*data;
+	p=(unsigned char*)*data;
 
 	for ( i=0;i<8;i++ )
 	{
@@ -1358,7 +1358,7 @@ static void grib2_build_message ( grib_context* context,unsigned char* sections[
 
 	memcpy ( p,theEnd,4 );
 
-	grib_encode_unsigned_long ( *data,msglen,&bitp,64 );
+	grib_encode_unsigned_long ( (unsigned char*)*data,msglen,&bitp,64 );
 
 	*len=msglen;
 }

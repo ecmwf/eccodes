@@ -469,7 +469,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
      fprintf(stdout," orderOfSpatialDifferencing = %d\n", orderOfSpatialDifferencing);
      fprintf(stdout,"\n****************************************\n");
      */
-    sec_val     =   grib_context_malloc(a->parent->h->context,(n_vals)*sizeof(unsigned long));
+    sec_val     =   (unsigned long*)grib_context_malloc(a->parent->h->context,(n_vals)*sizeof(unsigned long));
     if (sec_val) memset(sec_val, 0, (n_vals)*sizeof(unsigned long)); /* See SUP-718 */
 
     buf_ref     =   buf + a->offset ;
@@ -616,7 +616,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     /*     calculation of integer array   */
     sec_val  = NULL;
-    sec_val  = grib_context_malloc(a->parent->h->context,(n_vals)*sizeof(long));
+    sec_val  = (unsigned long*)grib_context_malloc(a->parent->h->context,(n_vals)*sizeof(long));
     if(!sec_val) return GRIB_OUT_OF_MEMORY;
 
     d = grib_power(decimal_scale_factor,10) ;
@@ -673,7 +673,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     buf_size  +=  (vals_p/8)  + (vals_p%8?1:0);
 
-    buf = grib_context_malloc_clear(a->parent->h->context,buf_size);
+    buf = (unsigned char*)grib_context_malloc_clear(a->parent->h->context,buf_size);
 
     buf_ref    = buf;
     buf_width  = buf_ref + (7+(numberOfGroupsOfDataValues*bits_per_value))/8;

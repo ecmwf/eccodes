@@ -102,7 +102,7 @@ static int init(grib_iterator* i,grib_handle *h, grib_arguments* args)
     return GRIB_WRONG_GRID;
   }
   i->nv = dli;
-  i->data = grib_context_malloc(h->context,(i->nv)*sizeof(double));
+  i->data = (double*)grib_context_malloc(h->context,(i->nv)*sizeof(double));
 
   if( (ret = grib_get_double_array_internal(h,rawdat,i->data ,&(i->nv))))
     return ret;

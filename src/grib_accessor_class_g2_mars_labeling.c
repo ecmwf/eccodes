@@ -24,7 +24,7 @@
    IMPLEMENTS = unpack_string;pack_string
    IMPLEMENTS = init; get_native_type
    MEMBERS=int index
-   MEMBERS=const char* class
+   MEMBERS=const char* the_class
    MEMBERS=const char* stream
    MEMBERS=const char* type
    MEMBERS=const char* expver
@@ -62,7 +62,7 @@ typedef struct grib_accessor_g2_mars_labeling {
 /* Members defined in gen */
 /* Members defined in g2_mars_labeling */
 	int index;
-	const char* class;
+	const char* the_class;
 	const char* stream;
 	const char* type;
 	const char* expver;
@@ -158,7 +158,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     int n = 0;
 
     self->index = grib_arguments_get_long(a->parent->h,c,n++);
-    self->class = grib_arguments_get_name(a->parent->h,c,n++);
+    self->the_class = grib_arguments_get_name(a->parent->h,c,n++);
     self->type = grib_arguments_get_name(a->parent->h,c,n++);
     self->stream = grib_arguments_get_name(a->parent->h,c,n++);
     self->expver = grib_arguments_get_name(a->parent->h,c,n++);
@@ -176,7 +176,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
     switch (self->index) {
     case 0:
-        key=(char*)self->class;
+        key=(char*)self->the_class;
         break;
     case 1:
         key=(char*)self->type;
@@ -201,7 +201,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
 
     switch (self->index) {
     case 0:
-        key=(char*)self->class;
+        key=(char*)self->the_class;
         break;
     case 1:
         key=(char*)self->type;
@@ -431,7 +431,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len)
 
     switch (self->index) {
     case 0:
-        key=(char*)self->class;
+        key=(char*)self->the_class;
         break;
     case 1:
         key=(char*)self->type;
@@ -463,7 +463,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 
     switch (self->index) {
     case 0:
-        key=(char*)self->class;
+        key=(char*)self->the_class;
         break;
     case 1:
         key=(char*)self->type;
@@ -499,7 +499,7 @@ static int  get_native_type(grib_accessor* a)
 
     switch (self->index) {
     case 0:
-        key=(char*)self->class;
+        key=(char*)self->the_class;
         break;
     case 1:
         key=(char*)self->type;

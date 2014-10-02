@@ -239,7 +239,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
 	divisor = grib_power(-binary_scale_factor,2);
 
 	buflen = (((bits_per_value*n_vals)+7)/8)*sizeof(unsigned char);
-	buf = grib_context_buffer_malloc_clear(a->parent->h->context,buflen);
+	buf = (unsigned char*)grib_context_buffer_malloc_clear(a->parent->h->context,buflen);
 	encoded = buf;
 
 	grib_encode_double_array(n_vals,val,bits_per_value,reference_value,decimal,divisor,encoded,&off);

@@ -26,7 +26,7 @@ int grib_jasper_decode(grib_context *c,unsigned char *buf, size_t *buflen, doubl
     jas_image_cmpt_t *p;
     int i,j,k;
 
-    jpeg = jas_stream_memopen((void*)buf,*buflen);
+    jpeg = jas_stream_memopen((char*)buf,*buflen);
     if(!jpeg) {
         code = GRIB_DECODING_ERROR;
         goto cleanup;
@@ -120,7 +120,7 @@ int grib_jasper_encode(grib_context *c, j2k_encode_helper *helper) {
     /* Simple packing encoding */
     bits8   = (helper->bits_per_value+7)/8*8;
     Assert(bits8 > 0);
-    encoded = grib_context_malloc_clear(c,bits8/8*no_values);
+    encoded = (unsigned char*)grib_context_malloc_clear(c,bits8/8*no_values);
 
     if(!encoded) {
         code = GRIB_OUT_OF_MEMORY;

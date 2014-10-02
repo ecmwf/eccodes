@@ -78,10 +78,10 @@ grib_section*  grib_create_root_section(const grib_context *context, grib_handle
 
 static GRIB_INLINE grib_accessor_class* get_class(grib_context* c,char* type) {
     int i;
-    grib_accessor_class** class=NULL;
+    grib_accessor_class** the_class=NULL;
 
-    if ( (class=grib_trie_get(c->classes,type))!=NULL)
-        return *(class);
+    if ( (the_class=(grib_accessor_class**)grib_trie_get(c->classes,type))!=NULL)
+        return *(the_class);
 
     for(i = 0; i < NUMBER(table) ; i++) {
         if( grib_inline_strcmp(type,table[i].type) == 0 )
