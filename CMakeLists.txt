@@ -37,7 +37,8 @@ option( ENABLE_PYTHON  "try to build the GRIB_API Python interface"   ON )
 option( ENABLE_FORTRAN "try to build the GRIB_API Fortran interface"  ON )
 
 if( ENABLE_FORTRAN )
-    ecbuild_enable_fortran( REQUIRED MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/fortran/modules )
+    # will set EC_HAVE_FORTRAN with the result
+    ecbuild_enable_fortran( MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/fortran/modules )
 endif()
 
 option( ENABLE_MEMORY_MANAGEMENT "enable memory management"  OFF )

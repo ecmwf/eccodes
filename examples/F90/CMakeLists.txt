@@ -38,7 +38,7 @@ list( APPEND tests
 #   SOURCES samples.f90
 #   LIBS    grib_api_f90 grib_api
 #   COMMAND  ${CMAKE_CURRENT_SOURCE_DIR}/samples.sh
-#   CONDITION  ENABLE_FORTRAN
+#   CONDITION  EC_HAVE_FORTRAN
 # )
 
 foreach( tool ${tests} )
@@ -47,7 +47,7 @@ foreach( tool ${tests} )
     ecbuild_add_executable( TARGET    f_${tool}
                             NOINSTALL
                             SOURCES   ${tool}.f90
-                            CONDITION ENABLE_FORTRAN
+                            CONDITION EC_HAVE_FORTRAN
                             LINKER_LANGUAGE Fortran
                             LIBS      grib_api_f90 grib_api 
     )
@@ -55,7 +55,7 @@ foreach( tool ${tests} )
     ecbuild_add_test( TARGET f_${tool}_test
                       TYPE SCRIPT
                       DEPENDS f_${tool}
-                      CONDITION ENABLE_FORTRAN
+                      CONDITION EC_HAVE_FORTRAN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
                       RESOURCES include.sh
     )
@@ -66,21 +66,21 @@ endforeach()
 ecbuild_add_executable( TARGET    f_new_from_file
                         NOINSTALL
                         SOURCES   new_from_file.f90
-                        CONDITION ENABLE_FORTRAN
+                        CONDITION EC_HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
                         LIBS      grib_api_f90 grib_api 
 )
 ecbuild_add_executable( TARGET    f_copy_namespace
                         NOINSTALL
                         SOURCES   copy_namespace.f90
-                        CONDITION ENABLE_FORTRAN
+                        CONDITION EC_HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
                         LIBS      grib_api_f90 grib_api 
 )
 ecbuild_add_executable( TARGET    f_set_gvc
                         NOINSTALL
                         SOURCES   set_gvc.f90
-                        CONDITION ENABLE_FORTRAN
+                        CONDITION EC_HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
                         LIBS      grib_api_f90 grib_api 
 )
