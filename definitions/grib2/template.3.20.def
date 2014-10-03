@@ -52,19 +52,23 @@ alias LoV =  orientationOfTheGrid ;
 meta geography.orientationOfTheGridInDegrees scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) : dump;
 
 #  Dx - X-direction grid length
-# NOTE 3: Grid length is in units of 10–3 m at the latitude specified by LaD
+# NOTE 3: Grid length is in units of 10-3 m at the latitude specified by LaD
 unsigned[4] Dx  : edition_specific;
 meta geography.DxInMetres scale(Dx,one,thousand,truncateDegrees) : dump;
 alias xDirectionGridLength=Dx;
 
 #  Dy - Y-direction grid length
-# NOTE 3: Grid length is in units of 10–3 m at the latitude specified by LaD
+# NOTE 3: Grid length is in units of 10-3 m at the latitude specified by LaD
 unsigned[4] Dy  : edition_specific;
 meta geography.DyInMetres scale(Dy,one,thousand,truncateDegrees) : dump;
 alias yDirectionGridLength=Dy;
 
 #  Projection centre flag
 flags[1] projectionCentreFlag 'grib2/tables/[tablesVersion]/3.5.table' : dump;
+# Note our flagbit numbers go from 7 to 0, while WMO convention is from 1 to 8
+# If bit 1 is 0, then the North Pole is on the projection plane
+# If bit 1 is 1, then the South Pole is on the projection plane
+flagbit southPoleOnProjectionPlane(projectionCentreFlag,7) : dump;   # WMO bit 1
 
 include "template.3.scanning_mode.def";
 
@@ -72,7 +76,8 @@ include "template.3.scanning_mode.def";
 iterator polar_stereographic(numberOfPoints,missingValue,values,
           radius,Nx,Ny,
           latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
-          LaDInDegrees,orientationOfTheGridInDegrees,
+          southPoleOnProjectionPlane,
+          orientationOfTheGridInDegrees,
           DxInMetres,DyInMetres,
           iScansNegatively,
           jScansPositively,

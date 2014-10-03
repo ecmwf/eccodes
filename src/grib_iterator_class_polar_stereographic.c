@@ -105,10 +105,10 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     double *lats,*lons;
     double lonFirstInDegrees,latFirstInDegrees,lonFirst,latFirst,radius=0;
     long nx,ny,standardParallel,centralLongitude;
-    double phi,lambda0,xFirst,yFirst,x,y,Dx,Dy;
+    double lambda0,xFirst,yFirst,x,y,Dx,Dy;
     double k,sinphi1,cosphi1;
     long alternativeRowScanning,iScansNegatively;
-    long jScansPositively,jPointsAreConsecutive;
+    long jScansPositively,jPointsAreConsecutive, southPoleOnPlane;
     double sinphi,cosphi,cosdlambda,sindlambda;
     double cosc,sinc;
     long i,j;
@@ -120,7 +120,7 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     const char* sny                     = grib_arguments_get_name(h,args,self->carg++);
     const char* slatFirstInDegrees      = grib_arguments_get_name(h,args,self->carg++);
     const char* slonFirstInDegrees      = grib_arguments_get_name(h,args,self->carg++);
-    const char* sstandardParallel       = grib_arguments_get_name(h,args,self->carg++);
+    const char* ssouthPoleOnPlane       = grib_arguments_get_name(h,args,self->carg++);
     const char* scentralLongitude       = grib_arguments_get_name(h,args,self->carg++);
     const char* sDx                     = grib_arguments_get_name(h,args,self->carg++);
     const char* sDy                     = grib_arguments_get_name(h,args,self->carg++);
@@ -129,8 +129,7 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     const char* sjPointsAreConsecutive  = grib_arguments_get_name(h,args,self->carg++);
     const char* salternativeRowScanning = grib_arguments_get_name(h,args,self->carg++);
     double c,rho;
-    /*double pi4=acos(0.0)/2.0;*/
-    sinphi1 = cosphi1 = phi = 0.0;
+    sinphi1 = cosphi1 = 0.0;
 
     if((ret = grib_get_double_internal(h, sradius,&radius)) != GRIB_SUCCESS)
         return ret;
@@ -147,7 +146,7 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
         return ret;
     if((ret = grib_get_double_internal(h, slonFirstInDegrees,&lonFirstInDegrees)) != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_long_internal(h, sstandardParallel,&standardParallel)) != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(h, ssouthPoleOnPlane,&southPoleOnPlane)) != GRIB_SUCCESS)
         return ret;
     if((ret = grib_get_long_internal(h, scentralLongitude,&centralLongitude)) != GRIB_SUCCESS)
         return ret;
@@ -164,6 +163,7 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     if((ret = grib_get_long_internal(h, salternativeRowScanning,&alternativeRowScanning)) != GRIB_SUCCESS)
         return ret;
 
+    standardParallel = (southPoleOnPlane == 1) ? -90 : +90;
     sinphi1 = sin(standardParallel*DEG2RAD);
     cosphi1 = cos(standardParallel*DEG2RAD);
     lambda0 = centralLongitude*DEG2RAD;
