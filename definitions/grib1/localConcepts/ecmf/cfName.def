@@ -139,13 +139,13 @@
 	 indicatorOfParameter = 174 ;
 	 table2Version = 128 ;
 	}
-#Surface solar radiation
-'surface_net_upward_longwave_flux' = {
+#Surface net solar radiation
+'surface_net_downward_shortwave_flux' = {
 	 indicatorOfParameter = 176 ;
 	 table2Version = 128 ;
 	}
-#Surface thermal radiation
-'surface_net_upward_shortwave_flux' = {
+#Surface net thermal radiation
+'surface_net_upward_longwave_flux' = {
 	 indicatorOfParameter = 177 ;
 	 table2Version = 128 ;
 	}
