@@ -36,12 +36,12 @@ grib_iarray* grib_iarray_new(grib_context* c,size_t size,size_t incsize) {
   if (!c) c=grib_context_get_default();
 
   v=(grib_iarray*)grib_context_malloc(c,sizeof(grib_iarray));
-  v->context=c;
   if (!v) {
     grib_context_log(c,GRIB_LOG_ERROR,
           "grib_iarray_new unable to allocate %d bytes\n",sizeof(grib_iarray));
     return NULL;
   }
+  v->context=c;
   v->size=size;
   v->n=0;
   v->incsize=incsize;

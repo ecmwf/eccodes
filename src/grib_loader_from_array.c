@@ -18,44 +18,44 @@
 int grib_lookup_long_from_array(grib_context* gc,grib_loader* loader,const char* name,long* lvalue)
 {
 
-  char* strvalue=0;
-  size_t size=0;
-  char* pstr=NULL;
-  int retval;
-  grib_associative_array* ar;
-  grib_runtime_type* rt=grib_runtimetype_new(gc);
-  int type=0;
+    char* strvalue=0;
+    size_t size=0;
+    char* pstr=NULL;
+    int retval;
+    grib_associative_array* ar;
+    grib_runtime_type* rt=grib_runtimetype_new(gc);
+    int type=0;
 
-  ar=(grib_associative_array*)loader->data;
+    ar=(grib_associative_array*)loader->data;
 
-  if ((retval=grib_associative_array_get(ar,(char*)name,&rt)) != GRIB_ARRAY_SUCCESS)
-    return GRIB_NOT_FOUND;
+    if ((retval=grib_associative_array_get(ar,(char*)name,&rt)) != GRIB_ARRAY_SUCCESS)
+        return GRIB_NOT_FOUND;
 
-  grib_runtimetype_get_type(rt,&type);
+    grib_runtimetype_get_type(rt,&type);
 
-  switch (type) {
+    switch (type) {
     case GRIB_RUNTIMETYPE_LONG:
-    grib_runtimetype_get_long(rt,&lvalue,&size);
-    printf("lookup: getting long %ld\n",*lvalue);
-    break;
+        grib_runtimetype_get_long(rt,&lvalue,&size);
+        printf("lookup: getting long %ld\n",*lvalue);
+        break;
     case GRIB_RUNTIMETYPE_CHAR:
-      *lvalue = 0;
-    grib_runtimetype_get_char(rt,&strvalue,&size);
-    printf("lookup: getting char %s\n",strvalue);
-      pstr=strvalue;
-      while(*pstr)
-      {
-        *lvalue <<= 8;
-        *lvalue |=  *pstr++;
-      }
-    break;
+        *lvalue = 0;
+        grib_runtimetype_get_char(rt,&strvalue,&size);
+        printf("lookup: getting char %s\n",strvalue);
+        pstr=strvalue;
+        while(*pstr)
+        {
+            *lvalue <<= 8;
+            *lvalue |=  *pstr++;
+        }
+        break;
     default:
-    return GRIB_NOT_FOUND;
-    printf("lookup: wrong type (%d)\n",type);
-    break;
-  }
+        printf("lookup: wrong type (%d)\n",type);
+        return GRIB_NOT_FOUND;
+        break;
+    }
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
 int grib_init_accessor_from_array(grib_loader* loader,grib_accessor* ga,grib_arguments* default_value)
