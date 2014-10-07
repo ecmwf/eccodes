@@ -296,8 +296,10 @@ void grib_trie_delete(grib_trie *t) {
   if(t)  {
     int i;
     for(i = t->first; i <= t->last; i++)
-      if (t->next[i])
+      if (t->next[i]) {
+        grib_context_free( t->context, t->next[i]->data );
         grib_trie_delete(t->next[i]);
+      }
 #ifdef RECYCLE_TRIE
     grib_context_free_persistent(t->context,t);
 #else

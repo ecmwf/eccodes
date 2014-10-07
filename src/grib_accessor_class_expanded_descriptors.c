@@ -267,8 +267,8 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
         printf("+++ push %06ld\n",inner_expanded->v[i]->code);
       }
 #endif
-      expanded=grib_bufr_descriptors_array_append(expanded,inner_expanded);
       size=grib_bufr_descriptors_array_used_size(inner_expanded);
+      expanded=grib_bufr_descriptors_array_append(expanded,inner_expanded);
       break;
 
     case 1:
@@ -338,8 +338,8 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
           printf("+++ push %06ld\n",inner_expanded->v[i]->code);
         }
 #endif
-        expanded=grib_bufr_descriptors_array_append(expanded,inner_expanded);
         size=grib_bufr_descriptors_array_used_size(inner_expanded);
+        expanded=grib_bufr_descriptors_array_append(expanded,inner_expanded);
         grib_context_free(c,ur);
       }
       break;
