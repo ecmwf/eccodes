@@ -541,7 +541,7 @@ static void push_zero_element(grib_accessor_bufr_data_array* self,grib_darray* d
 static int decode_elements(grib_accessor* a) {
   int err=0;
   int associatedFieldWidth=0,localDescriptorWidth=0;
-  int nn;
+  int nn=0;
   int numberOfElementsToRepeat=0,numberOfRepetitions=0;
   int startRepetition=0;
   unsigned char* data=0;
