@@ -30,7 +30,7 @@ do
   ${tools_dir}bufr_filter bufrdc_num_ref.filter $file 2> $REDIRECT > $res_num
   if [ $? != 0 ]
   then
-    mv $file $file.no
+    cp $file $file.no
   fi
 
   # Cannot use plain diff. We need to compare FLOAT NUMBERS with a tolerance
@@ -38,7 +38,7 @@ do
   numdiff $ref_num $res_num > $diff_num 2> $diff_num
   if [ $? != 0 ]
   then
-    mv $file $file.no
+    cp $file $file.no
   fi
 
   #rm -f $res_num $diff_num
