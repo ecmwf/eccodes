@@ -32,22 +32,57 @@ alias scaleFactorOfMinorAxisOfOblateSpheroidEarth=scaleFactorOfEarthMinorAxis ;
 unsigned[4] scaledValueOfEarthMinorAxis = missing(): can_be_missing, edition_specific;
 alias scaledValueOfMinorAxisOfOblateSpheroidEarth=scaledValueOfEarthMinorAxis;
 
-_if (shapeOfTheEarth==0) {
+alias earthIsOblate=one;
+
+_if (shapeOfTheEarth == 0) {
   transient radius=6367470;
   alias radiusOfTheEarth=radius;
   alias radiusInMetres=radius;
+  alias earthIsOblate=zero;
 }
-_if (shapeOfTheEarth==1){
+_if (shapeOfTheEarth == 1){
   meta radius from_scale_factor_scaled_value(
                           scaleFactorOfRadiusOfSphericalEarth,
                           scaledValueOfRadiusOfSphericalEarth);
   alias radiusOfTheEarth=radius;
   alias radiusInMetres=radius;
+  alias earthIsOblate=zero;
 }
-_if (shapeOfTheEarth==6){
+_if (shapeOfTheEarth == 6){
   transient radius=6371229;
   alias radiusOfTheEarth=radius;
   alias radiusInMetres=radius;
+  alias earthIsOblate=zero;
+}
+
+_if (shapeOfTheEarth == 8){
+  transient radius=6371200;
+  alias radiusOfTheEarth=radius;
+  alias radiusInMetres=radius;
+  alias earthIsOblate=zero;
 }
 
 
+# Oblate spheroid cases
+_if (shapeOfTheEarth == 2){
+  # IAU in 1965
+  transient earthMajorAxis = 6378160.0;
+  transient earthMinorAxis = 6356775.0;
+  alias earthMajorAxisInMetres=earthMajorAxis;
+  alias earthMinorAxisInMetres=earthMinorAxis;
+}
+_if (shapeOfTheEarth == 4 || shapeOfTheEarth == 5){
+  # 4 -> IAG-GRS80 model
+  # 5 -> WGS84
+  transient earthMajorAxis = 6378137.0;
+  transient earthMinorAxis = 6356752.314;
+  alias earthMajorAxisInMetres=earthMajorAxis;
+  alias earthMinorAxisInMetres=earthMinorAxis;
+}
+_if (shapeOfTheEarth == 9){
+  # Airy 1830
+  transient earthMajorAxis = 6377563.396;
+  transient earthMinorAxis = 6356256.909;
+  alias earthMajorAxisInMetres=earthMajorAxis;
+  alias earthMinorAxisInMetres=earthMinorAxis;
+}

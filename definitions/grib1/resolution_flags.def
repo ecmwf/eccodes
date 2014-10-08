@@ -22,6 +22,14 @@ alias DiGiven = ijDirectionIncrementGiven;
 alias DjGiven = ijDirectionIncrementGiven;
 
 flagbit earthIsOblate(resolutionAndComponentFlags,6) : dump;
+if (earthIsOblate) {
+  # Earth assumed oblate spheroidal with size as determined by IAU in 1965
+  transient earthMajorAxis = 6378160.0;
+  transient earthMinorAxis = 6356775.0;
+  alias earthMajorAxisInMetres=earthMajorAxis;
+  alias earthMinorAxisInMetres=earthMinorAxis;
+}
+
 
 flagbit resolutionAndComponentFlags3(resolutionAndComponentFlags,5) = 0: read_only;
 flagbit resolutionAndComponentFlags4(resolutionAndComponentFlags,4) = 0: read_only;
