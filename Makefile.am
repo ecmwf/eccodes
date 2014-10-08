@@ -28,8 +28,10 @@ SUBDIRS = src tools definitions samples ifs_samples/grib1 ifs_samples/grib1_mlgr
 EXTRA_DIST = README AUTHORS NOTICE LICENSE ChangeLog version.sh html \
 		src/extrules.am \
 		definitions/extrules.am \
+		python/extrules.am \
 		src/dummy.am \
 		definitions/dummy.am \
+		definitions/make_makefile_am.pl \
 		data/ls.log \
 		data/multi.ok \
 		data/in_copy.grib \
