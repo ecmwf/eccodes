@@ -42,6 +42,12 @@ void _grib_ignore_yyunput_unused_error() { yyunput(0,0); }
 #endif
 */
 
+#ifdef __cplusplus
+ #define GET_INPUT yyinput
+#else
+ #define GET_INPUT input
+#endif
+
 %}
 
 
@@ -182,13 +188,13 @@ FLOAT3    {NSIGNED}+{EXP}?
 
 "include"       {
           int c,q;
-          while((c = input()) && isspace(c) && c != '\n') ;
+          while((c = GET_INPUT()) && isspace(c) && c != '\n') ;
           q = c; /* the quote */
 
           yyleng = 0;
-          while((c = input()) && c != q && c != '\n')
+          while((c = GET_INPUT()) && c != q && c != '\n')
                 {
-                    if(c == '\\') yytext[yyleng++] = input();
+                    if(c == '\\') yytext[yyleng++] = GET_INPUT();
                     else yytext[yyleng++] =  c;
                 }
 
@@ -202,9 +208,9 @@ FLOAT3    {NSIGNED}+{EXP}?
 
            yyleng = 0;
 
-           while((c = input()) && c != q )
+           while((c = GET_INPUT()) && c != q )
            {
-               if(c == '\\') yytext[yyleng++] = input();
+               if(c == '\\') yytext[yyleng++] = GET_INPUT();
                else {
 									 yytext[yyleng++] =  c;
 									 if (c =='\n') yylineno++;
@@ -220,7 +226,7 @@ FLOAT3    {NSIGNED}+{EXP}?
            int c;
            unsigned long val = 0;
 
-           while((c = input()) && c != '`' && c != '\n')
+           while((c = GET_INPUT()) && c != '`' && c != '\n')
            {
                 val <<= 8;
                 val |= c;
@@ -240,7 +246,7 @@ FLOAT3    {NSIGNED}+{EXP}?
 
 \#      {
            int c;
-           while((c = input()) && (c != '\n')){}
+           while((c = GET_INPUT()) && (c != '\n')){}
 
         yylineno++;
         }

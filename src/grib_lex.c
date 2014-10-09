@@ -1425,7 +1425,13 @@ void _grib_ignore_grib_yyunput_unused_error() { grib_yyunput(0,0); }
 #endif
 */
 
-#line 1429 "lex.grib_yy.c"
+#ifdef __cplusplus
+ #define GET_INPUT grib_yyinput
+#else
+ #define GET_INPUT input
+#endif
+
+#line 1435 "lex.grib_yy.c"
 
 #define INITIAL 0
 
@@ -1607,11 +1613,11 @@ YY_DECL
 	register char *grib_yy_cp, *grib_yy_bp;
 	register int grib_yy_act;
     
-#line 59 "gribl.l"
+#line 65 "gribl.l"
 
 
 
-#line 1615 "lex.grib_yy.c"
+#line 1621 "lex.grib_yy.c"
 
 	if ( !(grib_yy_init) )
 		{
@@ -1696,571 +1702,571 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 62 "gribl.l"
+#line 68 "gribl.l"
 return EQ       ;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 63 "gribl.l"
+#line 69 "gribl.l"
 return GE       ;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 64 "gribl.l"
+#line 70 "gribl.l"
 return GT       ;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 65 "gribl.l"
+#line 71 "gribl.l"
 return LE       ;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 66 "gribl.l"
+#line 72 "gribl.l"
 return LT       ;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 67 "gribl.l"
+#line 73 "gribl.l"
 return NE       ;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 68 "gribl.l"
+#line 74 "gribl.l"
 return NE       ;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 69 "gribl.l"
+#line 75 "gribl.l"
 return BIT      ;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 70 "gribl.l"
+#line 76 "gribl.l"
 return BITOFF   ;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 72 "gribl.l"
+#line 78 "gribl.l"
 return IS   ;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 73 "gribl.l"
+#line 79 "gribl.l"
 return NOT   ;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 74 "gribl.l"
+#line 80 "gribl.l"
 return NOT   ;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 75 "gribl.l"
+#line 81 "gribl.l"
 return AND   ;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 76 "gribl.l"
+#line 82 "gribl.l"
 return AND   ;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 77 "gribl.l"
+#line 83 "gribl.l"
 return OR   ;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 78 "gribl.l"
+#line 84 "gribl.l"
 return OR   ;
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 80 "gribl.l"
+#line 86 "gribl.l"
 return NIL   ;
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 81 "gribl.l"
+#line 87 "gribl.l"
 return DUMMY   ;
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 83 "gribl.l"
+#line 89 "gribl.l"
 return SUBSTR   ;
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 84 "gribl.l"
+#line 90 "gribl.l"
 return CLOSE   ;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 85 "gribl.l"
+#line 91 "gribl.l"
 return LENGTH   ;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 86 "gribl.l"
+#line 92 "gribl.l"
 return LOWERCASE;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 87 "gribl.l"
+#line 93 "gribl.l"
 return IF       ;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 88 "gribl.l"
+#line 94 "gribl.l"
 return IF_TRANSIENT       ;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 89 "gribl.l"
+#line 95 "gribl.l"
 return ELSE       ;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 90 "gribl.l"
+#line 96 "gribl.l"
 return UNSIGNED ;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 91 "gribl.l"
+#line 97 "gribl.l"
 return ASCII    ;
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 92 "gribl.l"
+#line 98 "gribl.l"
 return BYTE    ;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 93 "gribl.l"
+#line 99 "gribl.l"
 return LABEL    ;
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 94 "gribl.l"
+#line 100 "gribl.l"
 return LIST     ;
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 95 "gribl.l"
+#line 101 "gribl.l"
 return WHILE     ;
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 96 "gribl.l"
+#line 102 "gribl.l"
 return TEMPLATE ;
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 97 "gribl.l"
+#line 103 "gribl.l"
 return TEMPLATE_NOFAIL ;
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 98 "gribl.l"
+#line 104 "gribl.l"
 return TRIGGER ;
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 99 "gribl.l"
+#line 105 "gribl.l"
 return END      ;
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 100 "gribl.l"
+#line 106 "gribl.l"
 return IBMFLOAT ;
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 101 "gribl.l"
+#line 107 "gribl.l"
 return FLOAT ;
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 102 "gribl.l"
+#line 108 "gribl.l"
 return SIGNED   ;
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 103 "gribl.l"
+#line 109 "gribl.l"
 return CODETABLE;
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 104 "gribl.l"
+#line 110 "gribl.l"
 return GETENV;
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 105 "gribl.l"
+#line 111 "gribl.l"
 return SMART_TABLE;
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 106 "gribl.l"
+#line 112 "gribl.l"
 return DICTIONARY;
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 107 "gribl.l"
+#line 113 "gribl.l"
 return CODETABLE;
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 108 "gribl.l"
+#line 114 "gribl.l"
 return FLAG     ;
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 109 "gribl.l"
+#line 115 "gribl.l"
 return LOOKUP   ;
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 110 "gribl.l"
+#line 116 "gribl.l"
 return GROUP  ;
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 111 "gribl.l"
+#line 117 "gribl.l"
 return NON_ALPHA   ;
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 112 "gribl.l"
+#line 118 "gribl.l"
 return META     ;
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 113 "gribl.l"
+#line 119 "gribl.l"
 return PADTOEVEN    ;
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 114 "gribl.l"
+#line 120 "gribl.l"
 return PADTO    ;
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 115 "gribl.l"
+#line 121 "gribl.l"
 return PADTOMULTIPLE    ;
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 116 "gribl.l"
+#line 122 "gribl.l"
 return PAD      ;
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 117 "gribl.l"
+#line 123 "gribl.l"
 return SECTION_PADDING      ;
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 118 "gribl.l"
+#line 124 "gribl.l"
 return MESSAGE      ;
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 119 "gribl.l"
+#line 125 "gribl.l"
 return MESSAGE_COPY      ;
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 120 "gribl.l"
+#line 126 "gribl.l"
 return ALIAS    ;
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 121 "gribl.l"
+#line 127 "gribl.l"
 return UNALIAS    ;
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 122 "gribl.l"
+#line 128 "gribl.l"
 return POS      ;
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 123 "gribl.l"
+#line 129 "gribl.l"
 return INTCONST ;
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 124 "gribl.l"
+#line 130 "gribl.l"
 return TRANS    ;
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 125 "gribl.l"
+#line 131 "gribl.l"
 return STRING_TYPE   ;
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 126 "gribl.l"
+#line 132 "gribl.l"
 return LONG_TYPE   ;
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 127 "gribl.l"
+#line 133 "gribl.l"
 return DOUBLE_TYPE   ;
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 128 "gribl.l"
+#line 134 "gribl.l"
 return ITERATOR ;
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 129 "gribl.l"
+#line 135 "gribl.l"
 return NEAREST ;
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 130 "gribl.l"
+#line 136 "gribl.l"
 return BOX ;
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 131 "gribl.l"
+#line 137 "gribl.l"
 return KSEC    ;
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 132 "gribl.l"
+#line 138 "gribl.l"
 return FLAGBIT    ;
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 133 "gribl.l"
+#line 139 "gribl.l"
 return KSEC1EXPVER    ;
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 134 "gribl.l"
+#line 140 "gribl.l"
 return MODIFY    ;
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 136 "gribl.l"
+#line 142 "gribl.l"
 return G1_HALF_BYTE    ;
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 137 "gribl.l"
+#line 143 "gribl.l"
 return G1_MESSAGE_LENGTH    ;
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 138 "gribl.l"
+#line 144 "gribl.l"
 return G1_SECTION4_LENGTH    ;
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 140 "gribl.l"
+#line 146 "gribl.l"
 return EXPORT;
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 141 "gribl.l"
+#line 147 "gribl.l"
 return REMOVE;
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 142 "gribl.l"
+#line 148 "gribl.l"
 return RENAME;
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 143 "gribl.l"
+#line 149 "gribl.l"
 return IS_IN_LIST;
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 144 "gribl.l"
+#line 150 "gribl.l"
 return IS_IN_DICT;
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 145 "gribl.l"
+#line 151 "gribl.l"
 return TO_INTEGER;
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 146 "gribl.l"
+#line 152 "gribl.l"
 return TO_STRING;
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 147 "gribl.l"
+#line 153 "gribl.l"
 return SEX2DEC;
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 148 "gribl.l"
+#line 154 "gribl.l"
 return IS_INTEGER;
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 149 "gribl.l"
+#line 155 "gribl.l"
 return IS_INTEGER;
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 151 "gribl.l"
+#line 157 "gribl.l"
 return SECTION_LENGTH     ;
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 153 "gribl.l"
+#line 159 "gribl.l"
 return ASSERT    ;
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 155 "gribl.l"
+#line 161 "gribl.l"
 return READ_ONLY;
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 156 "gribl.l"
+#line 162 "gribl.l"
 return NO_COPY;
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 157 "gribl.l"
+#line 163 "gribl.l"
 return EDITION_SPECIFIC;
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 158 "gribl.l"
+#line 164 "gribl.l"
 return DUMP;
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
-#line 159 "gribl.l"
+#line 165 "gribl.l"
 return JSON;
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 160 "gribl.l"
+#line 166 "gribl.l"
 return XML;
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 161 "gribl.l"
+#line 167 "gribl.l"
 return NO_FAIL;
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-#line 162 "gribl.l"
+#line 168 "gribl.l"
 return HIDDEN;
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-#line 163 "gribl.l"
+#line 169 "gribl.l"
 return CAN_BE_MISSING;
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-#line 164 "gribl.l"
+#line 170 "gribl.l"
 return MISSING;
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-#line 165 "gribl.l"
+#line 171 "gribl.l"
 return CONSTRAINT;
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-#line 166 "gribl.l"
+#line 172 "gribl.l"
 return OVERRIDE;
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 167 "gribl.l"
+#line 173 "gribl.l"
 return COPY_OK;
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-#line 169 "gribl.l"
+#line 175 "gribl.l"
 return SET;
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 170 "gribl.l"
+#line 176 "gribl.l"
 return SET_NOFAIL;
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
-#line 171 "gribl.l"
+#line 177 "gribl.l"
 return WHEN;
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-#line 172 "gribl.l"
+#line 178 "gribl.l"
 return CASE;
 	YY_BREAK
 case 103:
 YY_RULE_SETUP
-#line 173 "gribl.l"
+#line 179 "gribl.l"
 return SWITCH;
 	YY_BREAK
 case 104:
 YY_RULE_SETUP
-#line 174 "gribl.l"
+#line 180 "gribl.l"
 return DEFAULT;
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-#line 175 "gribl.l"
+#line 181 "gribl.l"
 return CONCEPT;
 	YY_BREAK
 case 106:
 YY_RULE_SETUP
-#line 176 "gribl.l"
+#line 182 "gribl.l"
 return CONCEPT_NOFAIL;
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
-#line 177 "gribl.l"
+#line 183 "gribl.l"
 return HASH_ARRAY;
 	YY_BREAK
 case 108:
 YY_RULE_SETUP
-#line 178 "gribl.l"
+#line 184 "gribl.l"
 return WRITE;
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
-#line 179 "gribl.l"
+#line 185 "gribl.l"
 return APPEND;
 	YY_BREAK
 case 110:
 YY_RULE_SETUP
-#line 180 "gribl.l"
+#line 186 "gribl.l"
 return PRINT;
 	YY_BREAK
 case 111:
 YY_RULE_SETUP
-#line 181 "gribl.l"
+#line 187 "gribl.l"
 return SKIP;
 	YY_BREAK
 case 112:
 YY_RULE_SETUP
-#line 183 "gribl.l"
+#line 189 "gribl.l"
 {
           int c,q;
-          while((c = input()) && isspace(c) && c != '\n') ;
+          while((c = GET_INPUT()) && isspace(c) && c != '\n') ;
           q = c; /* the quote */
 
           grib_yyleng = 0;
-          while((c = input()) && c != q && c != '\n')
+          while((c = GET_INPUT()) && c != q && c != '\n')
                 {
-                    if(c == '\\') grib_yytext[grib_yyleng++] = input();
+                    if(c == '\\') grib_yytext[grib_yyleng++] = GET_INPUT();
                     else grib_yytext[grib_yyleng++] =  c;
                 }
 
@@ -2271,15 +2277,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
-#line 200 "gribl.l"
+#line 206 "gribl.l"
 {
            int c,q = grib_yytext[0];
 
            grib_yyleng = 0;
 
-           while((c = input()) && c != q )
+           while((c = GET_INPUT()) && c != q )
            {
-               if(c == '\\') grib_yytext[grib_yyleng++] = input();
+               if(c == '\\') grib_yytext[grib_yyleng++] = GET_INPUT();
                else {
 									 grib_yytext[grib_yyleng++] =  c;
 									 if (c =='\n') grib_yylineno++;
@@ -2293,12 +2299,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 114:
 YY_RULE_SETUP
-#line 219 "gribl.l"
+#line 225 "gribl.l"
 {
            int c;
            unsigned long val = 0;
 
-           while((c = input()) && c != '`' && c != '\n')
+           while((c = GET_INPUT()) && c != '`' && c != '\n')
            {
                 val <<= 8;
                 val |= c;
@@ -2309,66 +2315,66 @@ YY_RULE_SETUP
 	YY_BREAK
 case 115:
 YY_RULE_SETUP
-#line 233 "gribl.l"
+#line 239 "gribl.l"
 { grib_yylval.str = strdup(grib_yytext); return IDENT; }
 	YY_BREAK
 case 116:
 YY_RULE_SETUP
-#line 234 "gribl.l"
+#line 240 "gribl.l"
 { grib_yylval.lval = atol((const char *)grib_yytext); return INTEGER; }
 	YY_BREAK
 case 117:
 YY_RULE_SETUP
-#line 235 "gribl.l"
+#line 241 "gribl.l"
 { grib_yylval.lval = atol((const char *)grib_yytext); return INTEGER; }
 	YY_BREAK
 case 118:
 YY_RULE_SETUP
-#line 236 "gribl.l"
+#line 242 "gribl.l"
 { grib_yylval.dval = atof((const char *)grib_yytext); return FLOAT; }
 	YY_BREAK
 case 119:
 YY_RULE_SETUP
-#line 237 "gribl.l"
+#line 243 "gribl.l"
 { grib_yylval.dval = atof((const char *)grib_yytext); return FLOAT; }
 	YY_BREAK
 case 120:
 YY_RULE_SETUP
-#line 238 "gribl.l"
+#line 244 "gribl.l"
 { grib_yylval.dval = atof((const char *)grib_yytext); return FLOAT; }
 	YY_BREAK
 case 121:
 YY_RULE_SETUP
-#line 241 "gribl.l"
+#line 247 "gribl.l"
 {
            int c;
-           while((c = input()) && (c != '\n')){}
+           while((c = GET_INPUT()) && (c != '\n')){}
 
         grib_yylineno++;
         }
 	YY_BREAK
 case 122:
 YY_RULE_SETUP
-#line 247 "gribl.l"
+#line 253 "gribl.l"
 ;
 	YY_BREAK
 case 123:
 /* rule 123 can match eol */
 YY_RULE_SETUP
-#line 248 "gribl.l"
+#line 254 "gribl.l"
 grib_yylineno++;
 	YY_BREAK
 case 124:
 YY_RULE_SETUP
-#line 252 "gribl.l"
+#line 258 "gribl.l"
 return *grib_yytext;
 	YY_BREAK
 case 125:
 YY_RULE_SETUP
-#line 254 "gribl.l"
+#line 260 "gribl.l"
 ECHO;
 	YY_BREAK
-#line 2372 "lex.grib_yy.c"
+#line 2378 "lex.grib_yy.c"
 case YY_STATE_EOF(INITIAL):
 	grib_yyterminate();
 
@@ -3366,7 +3372,7 @@ void grib_yyfree (void * ptr )
 
 #define YYTABLES_NAME "grib_yytables"
 
-#line 254 "gribl.l"
+#line 260 "gribl.l"
 
 
 
