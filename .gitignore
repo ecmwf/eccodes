@@ -62,6 +62,7 @@ tools/grib_to_netcdf
 tools/mars_request
 tools/parser
 tools/xref
+tools/grib1to2
 examples/C/.libs/
 examples/C/box
 examples/C/get
