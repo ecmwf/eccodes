@@ -383,7 +383,7 @@ static int get_descriptors(grib_accessor* a) {
     err=_grib_get_size(a->parent->h,expandedDescriptors,&(self->numberOfDescriptors));
     if (err) return err;
 
-    self->expandedDescriptors=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*self->numberOfDescriptors);
+    self->expandedDescriptors=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*self->numberOfDescriptors);
     if (!self->expandedDescriptors) {
       grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,
           "unable to allocate %ld bytes",(long)(self->numberOfDescriptors));
@@ -407,11 +407,11 @@ static int get_descriptors(grib_accessor* a) {
     self->units=(char**)grib_context_malloc_clear(c,size*sizeof(char*));
     err=grib_get_string_array(h,self->unitName,self->units,&size);
 
-    self->reference=grib_context_malloc_clear(c,size*sizeof(long));
+    self->reference=(long*)grib_context_malloc_clear(c,size*sizeof(long));
     err=grib_get_long_array(h,self->referenceName,self->reference,&size);
 
-    scale=grib_context_malloc_clear(c,size*sizeof(long));
-    factor=grib_context_malloc_clear(c,size*sizeof(double));
+    scale=(long*)grib_context_malloc_clear(c,size*sizeof(long));
+    factor=(double*)grib_context_malloc_clear(c,size*sizeof(double));
     err=grib_get_long_array(h,self->scaleName,scale,&size);
     for (i=0;i<size;i++) {
       if (scale[i]==GRIB_MISSING_LONG) {
@@ -423,19 +423,19 @@ static int get_descriptors(grib_accessor* a) {
     self->factor=factor;
     grib_context_free(c,scale);
 
-    self->width=grib_context_malloc_clear(c,size*sizeof(long));
+    self->width=(long*)grib_context_malloc_clear(c,size*sizeof(long));
     err=grib_get_long_array(h,self->widthName,self->width,&size);
 
-    self->bitmapNumber=grib_context_malloc_clear(c,size*sizeof(long));
+    self->bitmapNumber=(long*)grib_context_malloc_clear(c,size*sizeof(long));
     err=grib_get_long_array(h,self->bitmapNumberName,self->bitmapNumber,&size);
 
-    self->associatedBitmapNumber=grib_context_malloc_clear(c,size*sizeof(long));
+    self->associatedBitmapNumber=(long*)grib_context_malloc_clear(c,size*sizeof(long));
     err=grib_get_long_array(h,self->associatedBitmapNumberName,self->associatedBitmapNumber,&size);
 
-    self->associatedBitmapIndex=grib_context_malloc_clear(c,size*sizeof(long));
+    self->associatedBitmapIndex=(long*)grib_context_malloc_clear(c,size*sizeof(long));
     err=grib_get_long_array(h,self->associatedBitmapIndexName,self->associatedBitmapIndex,&size);
 
-    self->associatedInfoNumber=grib_context_malloc_clear(c,size*sizeof(long));
+    self->associatedInfoNumber=(long*)grib_context_malloc_clear(c,size*sizeof(long));
     err=grib_get_long_array(h,self->associatedInfoNumberName,self->associatedInfoNumber,&size);
 
     err=grib_get_long(h,self->numberOfDataSubsetsName,&(self->numberOfDataSubsets));
@@ -591,9 +591,9 @@ static int decode_elements(grib_accessor* a) {
     totalNumberOfValues=self->numberOfDescriptors*self->numberOfDataSubsets;
     numberOfValuesPerElement=self->numberOfDataSubsets;
 
-    F=grib_context_malloc_clear(c,sizeof(int)*self->numberOfDescriptors);
-    X=grib_context_malloc_clear(c,sizeof(int)*self->numberOfDescriptors);
-    Y=grib_context_malloc_clear(c,sizeof(int)*self->numberOfDescriptors);
+    F=(int*)grib_context_malloc_clear(c,sizeof(int)*self->numberOfDescriptors);
+    X=(int*)grib_context_malloc_clear(c,sizeof(int)*self->numberOfDescriptors);
+    Y=(int*)grib_context_malloc_clear(c,sizeof(int)*self->numberOfDescriptors);
     for (i=0;i<self->numberOfDescriptors;i++) {
         F[i]=self->expandedDescriptors[i]/100000;
         X[i]=(self->expandedDescriptors[i]-F[i]*100000)/1000;
@@ -729,7 +729,7 @@ static int decode_elements(grib_accessor* a) {
               ((grib_accessor_bufr_data_element*)ga)->isConstant=1;
               n=1;
             }
-            dvalues=grib_context_malloc_clear(c,sizeof(double)*n);
+            dvalues=(double*)grib_context_malloc_clear(c,sizeof(double)*n);
             if (((grib_accessor_bufr_data_element*)ga)->isConstant) {
                  if (!grib_is_all_bits_one(lval,self->width[indexOfReferringElement])) {
                      dvalues[0]=localReference*self->factor[indexOfReferringElement];
@@ -757,7 +757,7 @@ static int decode_elements(grib_accessor* a) {
 
           if (*(self->type[i])=='s') {
             svalues=grib_sarray_new(c,numberOfValuesPerElement,100);
-            sval=grib_context_malloc_clear(c,self->width[i]/8+1);
+            sval=(char*)grib_context_malloc_clear(c,self->width[i]/8+1);
             grib_decode_string(data,&pos,self->width[i]/8,sval);
             grib_sarray_push(c,svalues,sval);
           } else {
@@ -786,14 +786,14 @@ static int decode_elements(grib_accessor* a) {
               n=1;
             }
             for (j=1;j<n;j++) {
-              sval=grib_context_malloc_clear(c,width/8+1);
+              sval=(char*)grib_context_malloc_clear(c,width/8+1);
               grib_decode_string(data,&pos,width/8,sval);
               grib_sarray_push(c,svalues,sval);
             }
             ((grib_accessor_bufr_data_element*)ga)->type=GRIB_TYPE_STRING;
             ((grib_accessor_bufr_data_element*)ga)->svalues=svalues;
           } else {
-            dvalues=grib_context_malloc_clear(c,sizeof(double)*n);
+            dvalues=(double*)grib_context_malloc_clear(c,sizeof(double)*n);
             if (((grib_accessor_bufr_data_element*)ga)->isConstant) {
                  if (!grib_is_all_bits_one(lval,self->width[i])) {
                      dvalues[0]=localReference*self->factor[i];

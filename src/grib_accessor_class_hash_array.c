@@ -210,8 +210,8 @@ static grib_hash_array_value* find_hash_value(grib_accessor* a,int *err) {
     return NULL;
   }
 
-  ha_ret=grib_trie_get(ha->index,self->key);
-  if (!ha_ret) ha_ret=grib_trie_get(ha->index,"default");
+  ha_ret=(grib_hash_array_value*)grib_trie_get(ha->index,self->key);
+  if (!ha_ret) ha_ret=(grib_hash_array_value*)grib_trie_get(ha->index,"default");
 
   if (!ha_ret)  {
       *err=GRIB_HASH_ARRAY_NO_MATCH;

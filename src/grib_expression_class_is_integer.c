@@ -185,7 +185,7 @@ static void  add_dependency(grib_expression* g, grib_accessor* observer){
 
 grib_expression* new_is_integer_expression(grib_context* c,const char *name,int start,int length)
 {
-  grib_expression_is_integer* e = grib_context_malloc_clear_persistent(c,sizeof(grib_expression_is_integer));
+  grib_expression_is_integer* e = (grib_expression_is_integer*)grib_context_malloc_clear_persistent(c,sizeof(grib_expression_is_integer));
   e->base.cclass                 = grib_expression_class_is_integer;
   e->name                   = grib_context_strdup_persistent(c,name);
   e->start	= start;

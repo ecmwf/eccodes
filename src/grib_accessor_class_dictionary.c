@@ -209,7 +209,7 @@ static grib_trie* load_dictionary(grib_context* c,grib_accessor* a, int* err) {
     } else {
         grib_context_log(c,GRIB_LOG_DEBUG,"found def file %s",filename);
     }
-    dictionary=grib_trie_get(c->lists,dictName);
+    dictionary=(grib_trie*)grib_trie_get(c->lists,dictName);
     if (dictionary) {
         grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from cache",self->dictionary);
         return dictionary;
@@ -229,7 +229,7 @@ static grib_trie* load_dictionary(grib_context* c,grib_accessor* a, int* err) {
             i++;
         }
         key[i]=0;
-        list=grib_context_malloc_clear(c,strlen(line)+1);
+        list=(char*)grib_context_malloc_clear(c,strlen(line)+1);
         memcpy(list,line,strlen(line));
         grib_trie_insert(dictionary,key,list);
     }
@@ -247,7 +247,7 @@ static grib_trie* load_dictionary(grib_context* c,grib_accessor* a, int* err) {
                 i++;
             }
             key[i]=0;
-            list=grib_context_malloc_clear(c,strlen(line)+1);
+            list=(char*)grib_context_malloc_clear(c,strlen(line)+1);
             memcpy(list,line,strlen(line));
             grib_trie_insert(dictionary,key,list);
         }
@@ -295,7 +295,7 @@ static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
         return err;
     }
 
-    list=grib_trie_get(dictionary,key);
+    list=(char*)grib_trie_get(dictionary,key);
     if (!list) {
         grib_trie_delete(dictionary);
         return GRIB_NOT_FOUND;

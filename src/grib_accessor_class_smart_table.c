@@ -466,7 +466,7 @@ static int get_table_codes(grib_accessor* a)
     return err;
   }
 
-  v=grib_context_malloc_clear(a->parent->h->context,size*sizeof(long));
+  v=(long*)grib_context_malloc_clear(a->parent->h->context,size*sizeof(long));
 
   grib_get_long_array(a->parent->h,self->values,v,&size);
 
@@ -475,7 +475,7 @@ static int get_table_codes(grib_accessor* a)
     if (v[i] < table_size) count++;
   }
   if (self->tableCodes) grib_context_free(a->parent->h->context,self->tableCodes);
-  self->tableCodes=grib_context_malloc_clear(a->parent->h->context,count*sizeof(long));
+  self->tableCodes=(long*)grib_context_malloc_clear(a->parent->h->context,count*sizeof(long));
   j=0;
   for (i=0;i<size;i++) {
     if (v[i] < table_size) self->tableCodes[j++]=v[i];

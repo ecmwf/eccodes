@@ -208,7 +208,7 @@ static int unpack_string_array (grib_accessor* a, char** buffer, size_t *len)
     return GRIB_BUFFER_TOO_SMALL;
   }
 
-  code=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*size);
+  code=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*size);
   if (!code) {
     grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,
         "unable to allocate %ld bytes",(long)size);
@@ -268,7 +268,7 @@ static int unpack_long (grib_accessor* a, long* val, size_t *len)
     return GRIB_BUFFER_TOO_SMALL;
   }
 
-  code=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*size);
+  code=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*size);
   if (!code) {
     grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,
         "unable to allocate %ld bytes",(long)size);

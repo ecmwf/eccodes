@@ -306,7 +306,7 @@ static int get_descriptors(grib_accessor* a) {
   self->expanded=grib_accessor_class_expanded_descriptors_get_expanded(self->expandedAccessor,&ret);
 
   numberOfDescriptors=grib_bufr_descriptors_array_used_size(self->expanded);
-  self->canBeMissing=grib_context_malloc_clear(c,numberOfDescriptors*sizeof(int));
+  self->canBeMissing=(int*)grib_context_malloc_clear(c,numberOfDescriptors*sizeof(int));
   for (i=0;i<numberOfDescriptors;i++)
     self->canBeMissing[i]=can_be_missing(self->expanded->v[i]->code);
 
@@ -328,14 +328,14 @@ static grib_sarray* decode_string_array(grib_context* c,unsigned char* data,long
   modifiedFactor= self->expanded->v[i]->factor;
 
   ret=grib_sarray_new(c,10,10);
-  sval=grib_context_malloc_clear(c,modifiedWidth/8+1);
+  sval=(char*)grib_context_malloc_clear(c,modifiedWidth/8+1);
   grib_decode_string(data,pos,modifiedWidth/8,sval);
   width=grib_decode_unsigned_long(data,pos,6);
   ret=grib_sarray_new(c,10,10);
   if (width) {
     grib_context_free(c,sval);
     for (j=1;j<self->numberOfDataSubsets;j++) {
-      sval=grib_context_malloc_clear(c,width/8+1);
+      sval=(char*)grib_context_malloc_clear(c,width/8+1);
       grib_decode_string(data,pos,width/8,sval);
       grib_sarray_push(c,ret,sval);
     }
@@ -393,7 +393,7 @@ static char* decode_string_value(grib_context* c,unsigned char* data,long* pos, 
   modifiedReference= self->expanded->v[i]->reference;
   modifiedFactor= self->expanded->v[i]->factor;
 
-  sval=grib_context_malloc_clear(c,modifiedWidth/8+1);
+  sval=(char*)grib_context_malloc_clear(c,modifiedWidth/8+1);
   grib_decode_string(data,pos,modifiedWidth/8,sval);
 
   return sval;

@@ -341,10 +341,10 @@ static int apply_operators(grib_accessor* a) {
 	if (err) return err;
   numberOfDescriptors=size;
 
-	descriptors=grib_context_malloc_clear(c,sizeof(long)*size);
-	scale=grib_context_malloc_clear(c,sizeof(long)*size);
-	reference=grib_context_malloc_clear(c,sizeof(long)*size);
-	width=grib_context_malloc_clear(c,sizeof(long)*size);
+	descriptors=(long*)grib_context_malloc_clear(c,sizeof(long)*size);
+	scale=(long*)grib_context_malloc_clear(c,sizeof(long)*size);
+	reference=(long*)grib_context_malloc_clear(c,sizeof(long)*size);
+	width=(long*)grib_context_malloc_clear(c,sizeof(long)*size);
 
 	abbreviations=(char**)grib_context_malloc_clear(c,sizeof(char*)*size);
 	types=(char**)grib_context_malloc_clear(c,sizeof(char*)*size);
@@ -370,18 +370,18 @@ static int apply_operators(grib_accessor* a) {
 	if (err) return err;
 
   sizeAO=compute_size_AO(descriptors,numberOfDescriptors);
-	self->expandedAO=grib_context_malloc_clear(c,sizeof(long)*sizeAO);
-	self->scaleAO=grib_context_malloc_clear(c,sizeof(long)*sizeAO);
-	self->referenceAO=grib_context_malloc_clear(c,sizeof(double)*sizeAO);
-	self->widthAO=grib_context_malloc_clear(c,sizeof(long)*sizeAO);
-	self->bitmapNumber=grib_context_malloc_clear(c,sizeof(long)*sizeAO);
-	self->associatedBitmapNumber=grib_context_malloc_clear(c,sizeof(long)*sizeAO);
-	self->associatedBitmapIndex=grib_context_malloc_clear(c,sizeof(long)*sizeAO);
-	self->associatedInfoNumber=grib_context_malloc_clear(c,sizeof(long)*sizeAO);
-	self->abbreviations=grib_context_malloc_clear(c,sizeof(char*)*sizeAO);
-	self->types=grib_context_malloc_clear(c,sizeof(char*)*sizeAO);
-	self->names=grib_context_malloc_clear(c,sizeof(char*)*sizeAO);
-	self->units=grib_context_malloc_clear(c,sizeof(char*)*sizeAO);
+	self->expandedAO=(long*)grib_context_malloc_clear(c,sizeof(long)*sizeAO);
+	self->scaleAO=(long*)grib_context_malloc_clear(c,sizeof(long)*sizeAO);
+	self->referenceAO=(double*)grib_context_malloc_clear(c,sizeof(double)*sizeAO);
+	self->widthAO=(long*)grib_context_malloc_clear(c,sizeof(long)*sizeAO);
+	self->bitmapNumber=(long*)grib_context_malloc_clear(c,sizeof(long)*sizeAO);
+	self->associatedBitmapNumber=(long*)grib_context_malloc_clear(c,sizeof(long)*sizeAO);
+	self->associatedBitmapIndex=(long*)grib_context_malloc_clear(c,sizeof(long)*sizeAO);
+	self->associatedInfoNumber=(long*)grib_context_malloc_clear(c,sizeof(long)*sizeAO);
+	self->abbreviations=(char**)grib_context_malloc_clear(c,sizeof(char*)*sizeAO);
+	self->types=(char**)grib_context_malloc_clear(c,sizeof(char*)*sizeAO);
+	self->names=(char**)grib_context_malloc_clear(c,sizeof(char*)*sizeAO);
+	self->units=(char**)grib_context_malloc_clear(c,sizeof(char*)*sizeAO);
 
 	j=0;
   ielement=0;

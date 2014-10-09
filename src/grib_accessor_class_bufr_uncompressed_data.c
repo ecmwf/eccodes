@@ -351,7 +351,7 @@ static int get_descriptors(grib_accessor* a) {
     err=_grib_get_size(a->parent->h,expandedDescriptors,&(self->numberOfDescriptors));
     if (err) return err;
 
-    self->expandedDescriptors=grib_context_malloc_clear(a->parent->h->context,sizeof(long)*self->numberOfDescriptors);
+    self->expandedDescriptors=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*self->numberOfDescriptors);
     if (!self->expandedDescriptors) {
       grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,
           "unable to allocate %ld bytes",(long)(self->numberOfDescriptors));
@@ -375,26 +375,26 @@ static int get_descriptors(grib_accessor* a) {
     self->units=(char**)grib_context_malloc_clear(c,size*sizeof(char*));
     err=grib_get_string_array(h,self->unitName,self->units,&size);
 
-    self->reference=grib_context_malloc_clear(c,size*sizeof(long));
+    self->reference=(long*)grib_context_malloc_clear(c,size*sizeof(long));
     err=grib_get_long_array(h,self->referenceName,self->reference,&size);
 
-    scale=grib_context_malloc_clear(c,size*sizeof(long));
-    factor=grib_context_malloc_clear(c,size*sizeof(double));
+    scale=(long*)grib_context_malloc_clear(c,size*sizeof(long));
+    factor=(double*)grib_context_malloc_clear(c,size*sizeof(double));
     err=grib_get_long_array(h,self->scaleName,scale,&size);
     for (i=0;i<size;i++) factor[i]=grib_power(-scale[i],10);
     self->factor=factor;
     grib_context_free(c,scale);
 
-    self->width=grib_context_malloc_clear(c,size*sizeof(long));
+    self->width=(long*)grib_context_malloc_clear(c,size*sizeof(long));
     err=grib_get_long_array(h,self->widthName,self->width,&size);
 
-    self->bitmapNumber=grib_context_malloc_clear(c,size*sizeof(long));
+    self->bitmapNumber=(long*)grib_context_malloc_clear(c,size*sizeof(long));
     err=grib_get_long_array(h,self->bitmapNumberName,self->bitmapNumber,&size);
 
-    self->associatedBitmapNumber=grib_context_malloc_clear(c,size*sizeof(long));
+    self->associatedBitmapNumber=(long*)grib_context_malloc_clear(c,size*sizeof(long));
     err=grib_get_long_array(h,self->associatedBitmapNumberName,self->associatedBitmapNumber,&size);
 
-    self->associatedBitmapIndex=grib_context_malloc_clear(c,size*sizeof(long));
+    self->associatedBitmapIndex=(long*)grib_context_malloc_clear(c,size*sizeof(long));
     err=grib_get_long_array(h,self->associatedBitmapIndexName,self->associatedBitmapIndex,&size);
 
     return err;
@@ -504,9 +504,9 @@ static int decode_elements(grib_accessor* a) {
     /* TODO: implement multiple subsets*/
     Assert(self->numberOfDataSubsets==1);
 
-    F=grib_context_malloc_clear(c,sizeof(int)*self->numberOfDescriptors);
-    X=grib_context_malloc_clear(c,sizeof(int)*self->numberOfDescriptors);
-    Y=grib_context_malloc_clear(c,sizeof(int)*self->numberOfDescriptors);
+    F=(int*)grib_context_malloc_clear(c,sizeof(int)*self->numberOfDescriptors);
+    X=(int*)grib_context_malloc_clear(c,sizeof(int)*self->numberOfDescriptors);
+    Y=(int*)grib_context_malloc_clear(c,sizeof(int)*self->numberOfDescriptors);
     for (i=0;i<self->numberOfDescriptors;i++) {
         F[i]=self->expandedDescriptors[i]/100000;
         X[i]=(self->expandedDescriptors[i]-F[i]*100000)/1000;
@@ -630,7 +630,7 @@ static int decode_elements(grib_accessor* a) {
             if ( *(self->type[i])=='s') {
                 /* string element */
                 size_t widthInBytes=width[i]/8;
-                sval=grib_context_malloc_clear(c,widthInBytes+1);
+                sval=(char*)grib_context_malloc_clear(c,widthInBytes+1);
                 sval=grib_decode_string(data,&pos,widthInBytes,sval);
                 gaindex=self->svalues->n;
                 ((grib_accessor_bufr_element*)ga)->ielement=i;

@@ -115,7 +115,7 @@ static grib_trie* load_dictionary(grib_context* c,grib_expression* e, int* err) 
   } else {
     grib_context_log(c,GRIB_LOG_DEBUG,"found def file %s",filename);
   }
-  dictionary=grib_trie_get(c->lists,filename);
+  dictionary=(grib_trie*)grib_trie_get(c->lists,filename);
   if (dictionary) {
         grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from cache",self->dictionary);
         return dictionary;
@@ -227,7 +227,7 @@ static void print(grib_context* c,grib_expression* g,grib_handle* f)
 
 grib_expression* new_is_in_dict_expression(grib_context* c,const char* name,const char* list)
 {
-  grib_expression_is_in_dict* e = grib_context_malloc_clear_persistent(c,sizeof(grib_expression_is_in_dict));
+  grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)grib_context_malloc_clear_persistent(c,sizeof(grib_expression_is_in_dict));
   e->base.cclass            = grib_expression_class_is_in_dict;
   e->key                   = grib_context_strdup_persistent(c,name);
   e->dictionary                   = grib_context_strdup_persistent(c,list);

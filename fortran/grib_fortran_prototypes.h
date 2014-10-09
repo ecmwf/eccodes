@@ -9,6 +9,10 @@
  */
 
 /* grib_fortran.c */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int grib_f_read_any_headers_only_from_file_(int *fid, char *buffer, size_t *nbytes);
 int grib_f_read_any_headers_only_from_file__(int *fid, char *buffer, size_t *nbytes);
 int grib_f_read_any_headers_only_from_file(int *fid, char *buffer, size_t *nbytes);
@@ -28,6 +32,8 @@ int grib_f_close_file_(int *fid);
 int grib_f_close_file__(int *fid);
 int grib_f_close_file(int *fid);
 void grib_f_write_on_fail(int *gid);
+void grib_f_write_on_fail_(int* gid);
+void grib_f_write_on_fail__(int* gid);
 int grib_f_multi_support_on_(void);
 int grib_f_multi_support_on__(void);
 int grib_f_multi_support_on(void);
@@ -296,3 +302,7 @@ int grib_f_multi_write(int *gid, int *fid);
 int grib_f_multi_append_(int *ingid, int *sec, int *mgid);
 int grib_f_multi_append(int *ingid, int *sec, int *mgid);
 int grib_f_multi_append__(int *ingid, int *sec, int *mgid);
+
+#ifdef __cplusplus
+}
+#endif

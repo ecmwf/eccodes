@@ -250,7 +250,7 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
       *err=grib_set_long(a->parent->h,self->sequence,u->code);
       *err=grib_get_size(a->parent->h,self->sequence,&size);
       if (*err) return 0;
-      v=grib_context_malloc_clear(c,sizeof(long)*size);
+      v=(long*)grib_context_malloc_clear(c,sizeof(long)*size);
       *err=grib_get_long_array(a->parent->h,self->sequence,v,&size);
       if (*err) return 0;
       inner_unexpanded=grib_bufr_descriptors_array_new(c,100,100);
@@ -558,7 +558,7 @@ static int expand(grib_accessor* a)
   grib_bufr_descriptors_array_delete(self->expanded);
   err=grib_get_size(a->parent->h,self->unexpandedDescriptors,&unexpandedSize);
   if (err) return err;
-  u=grib_context_malloc_clear(c,sizeof(long)*unexpandedSize);
+  u=(long*)grib_context_malloc_clear(c,sizeof(long)*unexpandedSize);
   if (!u) {err=GRIB_OUT_OF_MEMORY; return err;}
   err=grib_get_long_array(a->parent->h,self->unexpandedDescriptors,u,&unexpandedSize);
   if (err) return err;
@@ -594,7 +594,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len) {
   size_t expandedSize;
 
   if (self->rank!=2) {
-    long* lval=grib_context_malloc_clear(a->parent->h->context,*len*sizeof(long));
+    long* lval=(long*)grib_context_malloc_clear(a->parent->h->context,*len*sizeof(long));
     ret=unpack_long(a,lval,len);
     if (ret) return ret;
     for (i=0;i<*len;i++) val[i]=(double)lval[i];

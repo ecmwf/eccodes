@@ -10,6 +10,10 @@
 
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void f_sizeof(void *x,void *y, int *size) {
   *size=((char*)y)-((char*)x);
 }
@@ -50,3 +54,6 @@ void check_size_t(size_t *x,size_t *y,char* ret) {
 void check_size_t_(size_t *x,size_t *y,char* ret) {check_size_t(x,y,ret);}
 void check_size_t__(size_t *x,size_t *y,char* ret) {check_size_t(x,y,ret);}
 
+#ifdef __cplusplus
+}
+#endif

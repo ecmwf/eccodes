@@ -114,7 +114,7 @@ static grib_trie* load_list(grib_context* c,grib_expression* e, int* err) {
   } else {
     grib_context_log(c,GRIB_LOG_DEBUG,"found def file %s",filename);
   }
-  list=grib_trie_get(c->lists,filename);
+  list=(grib_trie*)grib_trie_get(c->lists,filename);
   if (list) {
 	grib_context_log(c,GRIB_LOG_DEBUG,"using list %s from cache",self->list);
   	return list;
@@ -241,7 +241,7 @@ static void  add_dependency(grib_expression* g, grib_accessor* observer){
 
 grib_expression* new_is_in_list_expression(grib_context* c,const char* name,const char* list)
 {
-  grib_expression_is_in_list* e = grib_context_malloc_clear_persistent(c,sizeof(grib_expression_is_in_list));
+  grib_expression_is_in_list* e = (grib_expression_is_in_list*)grib_context_malloc_clear_persistent(c,sizeof(grib_expression_is_in_list));
   e->base.cclass            = grib_expression_class_is_in_list;
   e->name                   = grib_context_strdup_persistent(c,name);
   e->list                   = grib_context_strdup_persistent(c,list);

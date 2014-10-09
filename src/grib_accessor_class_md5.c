@@ -145,11 +145,11 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
   self->blacklist=0;
   while ( (b=(char*)grib_arguments_get_name(a->parent->h,arg,n++)) !=NULL) {
     if (! self->blacklist) {
-      self->blacklist=grib_context_malloc_clear(context,sizeof(grib_string_list));
+      self->blacklist=(grib_string_list*)grib_context_malloc_clear(context,sizeof(grib_string_list));
       self->blacklist->value=grib_context_strdup(context,b);
       current=self->blacklist;
     } else {
-      current->next=grib_context_malloc_clear(context,sizeof(grib_string_list));
+      current->next=(grib_string_list*)grib_context_malloc_clear(context,sizeof(grib_string_list));
       current->next->value=grib_context_strdup(context,b);
       current=current->next;
     }

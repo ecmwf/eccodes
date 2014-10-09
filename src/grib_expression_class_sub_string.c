@@ -114,7 +114,7 @@ static void  add_dependency(grib_expression* g, grib_accessor* observer){
 grib_expression* new_sub_string_expression(grib_context* c,const char* value,size_t start,size_t length)
 {
 	char v[1024]={0,};
-	grib_expression_sub_string* e = grib_context_malloc_clear_persistent(c,sizeof(grib_expression_sub_string));
+	grib_expression_sub_string* e = (grib_expression_sub_string*)grib_context_malloc_clear_persistent(c,sizeof(grib_expression_sub_string));
 
 /* 	if (start<0) start+=strlen(value);  */
 

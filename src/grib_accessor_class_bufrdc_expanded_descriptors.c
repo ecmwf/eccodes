@@ -177,7 +177,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
   if (!descriptors) return GRIB_NOT_FOUND;
 
   grib_value_count(a,&lenall);
-  v=grib_context_malloc_clear(c,sizeof(long)*lenall);
+  v=(long*)grib_context_malloc_clear(c,sizeof(long)*lenall);
   l=lenall;
   grib_unpack_long(descriptors,v,&l);
 
@@ -206,7 +206,7 @@ static int unpack_string_array (grib_accessor* a, char** buffer, size_t *len)
   value_count(descriptors,&l);
   if (l>*len) return GRIB_ARRAY_TOO_SMALL;
 
-  v=grib_context_malloc_clear(c,sizeof(long)*l);
+  v=(long*)grib_context_malloc_clear(c,sizeof(long)*l);
   size=l;
   unpack_long(a,v,&size);
 

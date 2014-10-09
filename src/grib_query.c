@@ -134,7 +134,7 @@ static void rebuild_hash_keys (grib_handle* h,grib_section* s)
 	}
 }
 
-static grib_accessor* search_and_cache(grib_handle* h, const char* name,const char *namespace)
+static grib_accessor* search_and_cache(grib_handle* h, const char* name,const char *the_namespace)
 {
 	if(h->use_trie)
 	{
@@ -159,18 +159,18 @@ static grib_accessor* search_and_cache(grib_handle* h, const char* name,const ch
 			id = grib_hash_keys_get_id(h->context->keys,name);
 
 			if ((a=h->accessors[id])!=NULL &&
-                (namespace==NULL || matching(a,name,namespace) ) &&
+                (the_namespace==NULL || matching(a,name,the_namespace) ) &&
                  matching_group_number(a))
 				return a;
 		}
 
-		a = search(h->root,name,namespace,0);
+		a = search(h->root,name,the_namespace,0);
 		h->accessors[id] = a;
 
 		return a;
 	}
 	else {
-		return search(h->root,name,namespace,0);
+		return search(h->root,name,the_namespace,0);
 	}
 
 }

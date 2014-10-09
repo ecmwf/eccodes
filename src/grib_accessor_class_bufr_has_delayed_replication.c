@@ -156,7 +156,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
   err=grib_get_size(a->parent->h,self->expandedDescriptors,&size);
   if (err) return err;
 
-  descriptors=grib_context_malloc_clear(c,sizeof(long)*size);
+  descriptors=(long*)grib_context_malloc_clear(c,sizeof(long)*size);
 
   err=grib_get_long_array(a->parent->h,self->expandedDescriptors,descriptors,&size);
   if (err) return err;
