@@ -46,6 +46,18 @@ png = '@LIB_PNG@'
 if png:
     add_attribute(libraries = 'png')
 
+
+with_aec = '@LIB_AEC@'
+if with_aec:
+    aec_dir = '@AEC_DIR@'
+    if aec_dir and aec_dir != 'system':
+        add_attribute(
+            include_dirs = os.path.join(aec_dir,'include'),
+            library_dirs = os.path.join(aec_dir,'lib')
+        )
+    add_attribute(libraries = 'aec')
+
+
 data_handler = '@DATA_HANDLER@'
 if data_handler == "numpy":
     import numpy

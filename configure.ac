@@ -470,6 +470,11 @@ if test "x$with_aec" != xno ; then
   AC_CHECK_LIB(aec, aec_encode, , [AC_MSG_FAILURE(
                  [aec test failed (--without-aec to disable)])])
   CCSDS_TEST="ccsds.sh"
+  LIB_AEC='-laec'
+  AC_SUBST(LIB_AEC)
+  AEC_DIR="$with_aec"
+  AC_SUBST(AEC_DIR)
+
 fi
 AC_SUBST(CCSDS_TEST)
 

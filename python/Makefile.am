@@ -84,6 +84,8 @@ do_subst = sed -e 's,[@]LIB_JASPER[@],$(LIB_JASPER),g' \
 			-e 's,[@]JASPER_DIR[@],$(JASPER_DIR),g' \
 			-e 's,[@]LIB_OPENJPEG[@],$(LIB_OPENJPEG),g' \
 			-e 's,[@]OPENJPEG_DIR[@],$(OPENJPEG_DIR),g' \
+			-e   's,[@]LIB_AEC[@],$(LIB_AEC),g' \
+			-e   's,[@]AEC_DIR[@],$(AEC_DIR),g' \
 			-e 's,[@]LIB_PNG[@],$(LIB_PNG),g' \
 			-e 's,[@]BUILD_DIR[@],$(top_builddir),g' \
 			-e 's,[@]DATA_HANDLER[@],$(PYTHON_DATA_HANDLER),g'
