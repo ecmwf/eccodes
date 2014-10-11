@@ -949,7 +949,7 @@ int codes_index_add_file(grib_index* index,const char* filename,int message_type
 
 	if (!index->files) {
 		grib_filesid++;
-		newfile=grib_context_malloc_clear(c,sizeof(grib_file));
+		newfile=(grib_file*)grib_context_malloc_clear(c,sizeof(grib_file));
 		newfile->id=grib_filesid;
 		newfile->name=strdup(file->name);
 		index->files=newfile;
@@ -962,7 +962,7 @@ int codes_index_add_file(grib_index* index,const char* filename,int message_type
 		indfile=index->files;
 		while(indfile->next) indfile=indfile->next;
 		grib_filesid++;
-		newfile=grib_context_malloc_clear(c,sizeof(grib_file));
+		newfile=(grib_file*)grib_context_malloc_clear(c,sizeof(grib_file));
 		newfile->id=grib_filesid;
 		newfile->name=strdup(file->name);
 		indfile->next=newfile;
@@ -1015,7 +1015,7 @@ int codes_index_add_file(grib_index* index,const char* filename,int message_type
 				if (strcmp(v->value,buf)) {
 					index_key->values_count++;
 					if (v->next) v=v->next;
-					v->next=grib_context_malloc_clear(c,sizeof(grib_string_list));
+					v->next=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
 					v->next->value=grib_context_strdup(c,buf);
 				}
 			}
@@ -1040,14 +1040,14 @@ int codes_index_add_file(grib_index* index,const char* filename,int message_type
 			if (index_key->next) {
 				if (!field_tree->next_level) {
 					field_tree->next_level=
-							grib_context_malloc_clear(c,sizeof(grib_field_tree));
+							(grib_field_tree*)grib_context_malloc_clear(c,sizeof(grib_field_tree));
 				}
 				field_tree=field_tree->next_level;
 			}
 			index_key=index_key->next;
 		}
 
-		field=grib_context_malloc_clear(c,sizeof(grib_field));
+		field=(grib_field*)grib_context_malloc_clear(c,sizeof(grib_field));
 		field->file=file;
 		index->count++;
 		field->offset=h->offset;;
@@ -1662,7 +1662,7 @@ grib_handle* codes_new_from_index(grib_index* index,int message_type,int *err)
 	}
 
 	if (!index->fieldset) {
-		index->fieldset=grib_context_malloc_clear(index->context,
+		index->fieldset=(grib_field_list*)grib_context_malloc_clear(index->context,
 				sizeof(grib_field_list));
 		if (!index->fieldset) {
 			grib_context_log(index->context,GRIB_LOG_ERROR,

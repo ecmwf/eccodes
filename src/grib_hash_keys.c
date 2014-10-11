@@ -51,9 +51,7 @@ struct grib_keys_hash { char* name; int id;};
 #endif
 #endif
 static unsigned int
-hash_keys (str, len)
-     register const char *str;
-     register unsigned int len;
+hash_keys (const char *str, unsigned int len)
 {
   static unsigned short asso_values[] =
     {
@@ -7310,9 +7308,7 @@ static struct grib_keys_hash wordlist[] =
 #endif
 #endif
 struct grib_keys_hash *
-grib_keys_hash_get (str, len)
-     register const char *str;
-     register unsigned int len;
+grib_keys_hash_get (const char *str, unsigned int len)
 {
   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
     {
@@ -7625,7 +7621,7 @@ struct grib_itrie {
 
 
 grib_itrie *grib_hash_keys_new(grib_context* c,int* count) {
-  grib_itrie* t = grib_context_malloc_clear(c,sizeof(grib_itrie));
+  grib_itrie* t = (grib_itrie*)grib_context_malloc_clear(c,sizeof(grib_itrie));
   t->context = c;
   t->id=-1;
   t->count=count;

@@ -287,7 +287,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
   char *p=NULL;
   int err = _grib_get_string_length(a,&size);
 
-  value=grib_context_malloc_clear(a->parent->h->context,size);
+  value=(char*)grib_context_malloc_clear(a->parent->h->context,size);
   if (!value) {
   	grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,"unable to allocate %d bytes",(int)size);
 	return;

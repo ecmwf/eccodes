@@ -400,7 +400,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
   c=a->parent->h->context;
   if (size==0) return;
 
-  value=grib_context_malloc_clear(c,size);
+  value=(char*)grib_context_malloc_clear(c,size);
   if (!value) {
   	grib_context_log(c,GRIB_LOG_FATAL,"unable to allocate %d bytes",(int)size);
 	return;
@@ -542,7 +542,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     dump_double(d,a,NULL);
     return ;
   }
-  buf = grib_context_malloc(d->handle->context,size * sizeof(double));
+  buf = (double*)grib_context_malloc(d->handle->context,size * sizeof(double));
 
    print_offset(self->dumper.out,d,a);
 

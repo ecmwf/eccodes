@@ -381,7 +381,7 @@ static int navigate(grib_field_tree* fields,grib_runtime_options* options)
     if (fields->field) {
 		grib_handle* h=codes_index_get_handle(fields->field,message_type,&err);
         if (!options->index2->current)
-            options->index2->current=grib_context_malloc_clear(options->context,sizeof(grib_field_list));
+            options->index2->current=(grib_field_list*)grib_context_malloc_clear(options->context,sizeof(grib_field_list));
         options->index2->current->field=fields->field;
         if (!h) return err;
         grib_skip_check(options,h);
@@ -867,7 +867,7 @@ void grib_print_key_values(grib_runtime_options* options,grib_handle* h)
                 if (!options->fail) exit(err);
                 return;
             }
-            values=grib_context_malloc_clear(h->context,size*sizeof(double));
+            values=(double*)grib_context_malloc_clear(h->context,size*sizeof(double));
             grib_get_double_array(h,"values",values,&size);
             the_index = options->index;
             if (the_index >= size) {
