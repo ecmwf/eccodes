@@ -62,18 +62,18 @@ alias jDirectionIncrementGridLength = Dj;
 meta geography.DjInMetres scale(Dj,oneConstant,hundred,truncateDegrees) : dump;
 
 # x1 - i-direction coordinate of the first grid point in units of 10-2 m
-unsigned[4] X1 : no_copy;
+signed[4] X1 : no_copy;
 meta geography.X1InGridLengths scale(X1,one,hundred) : dump;
 
 # y1 - j-direction coordinate of the first grid point in units of 10-2 m
-unsigned[4] Y1 : no_copy;
+signed[4] Y1 : no_copy;
 meta geography.Y1InGridLengths scale(Y1,one,hundred) : dump;
 
 # x2 - i-direction coordinate of the last grid point in units of 10-2 m
-unsigned[4] X2 : no_copy;
+signed[4] X2 : no_copy;
 meta geography.X2InGridLengths scale(X2,one,hundred) : dump;
 
 # y2 - j-direction coordinate of the last grid point in units of 10-2 m
-unsigned[4] Y2 : no_copy;
+signed[4] Y2 : no_copy;
 meta geography.Y2InGridLengths scale(Y2,one,hundred) : dump;
 
