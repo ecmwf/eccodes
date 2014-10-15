@@ -55,9 +55,9 @@ grib_options_help grib_options_help_list[] ={
    "\n\t\tAll the keys belonging to namespace are printed.\n"},
   {"m",0,"Mars keys are printed.\n"},
   {"o:","output_grib_file",
-   "\n\t\tOutput grib is written to ouput_grib_file."
-   "\n\t\tIf an ouput grib file is required and -o is not used, the"
-   " ouput grib is written to filtered.out\n"},
+   "\n\t\tOutput grib is written to output_grib_file."
+   "\n\t\tIf an output grib file is required and -o is not used, the"
+   " output grib is written to filtered.out\n"},
   {"p:","key[:{s/d/l}],key[:{s/d/l}],...",
    "\n\t\tDeclaration of keys to print."
    "\n\t\tFor each key a string (key:s) or a double (key:d) or a long (key:l)"
