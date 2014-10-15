@@ -25,13 +25,17 @@ char* default_keys = "mars";
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value */
         {"f",0,0,0,1,0},
-        {"o:",0,0,1,1,"gribidx"},
+        {"o:","output_index_file",
+              "\n\t\tOutput is written to output_index_file."
+              "\n\t\tIf an output index file is required and -o is not used, the"
+              " output index is written to gribidx\n",
+              1,1,"gribidx"},
         {"k:",0,0,0,1,0},
         {"V",0,0,0,1,0},
         {"T:",0,0,0,1,0},
         {"M",0,0,0,1,0},
         {"N",0,"Do not compress index."
-               "\n\t\tBy default the index is compressed to remove keys with only one value.\n",0,1,0}
+             "\n\t\tBy default the index is compressed to remove keys with only one value.\n",0,1,0}
 };
 
 int compress_index;

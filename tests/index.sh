@@ -28,3 +28,11 @@ ${test_dir}/read_index ${infile} > index.out
 diff index.out ${data_dir}/index.ok
 
 rm -f index.out out.gribidx
+
+# test grib_index_build
+#
+tempIndex=temp.$$.ix
+${tools_dir}grib_index_build -o $tempIndex ${infile} >/dev/null
+${tools_dir}grib_dump -D ${tempIndex} > /dev/null
+
+rm -f $tempIndex
