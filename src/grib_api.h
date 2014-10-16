@@ -31,6 +31,13 @@ extern "C" {
 #endif
 #include <math.h>
 
+#if defined( __GNUC__) || defined(__clang__)
+#define DEPRECATED __attribute__((deprecated))
+#else
+#define DEPRECATED
+#endif
+
+
 #define GRIB_API_VERSION (GRIB_API_MAJOR_VERSION*10000+GRIB_API_MINOR_VERSION*100+GRIB_API_REVISION_VERSION)
 
 /* sections */
