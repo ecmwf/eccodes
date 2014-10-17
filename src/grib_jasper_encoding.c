@@ -172,9 +172,11 @@ int grib_jasper_encode(grib_context *c, j2k_encode_helper *helper) {
         /* increase the number of guard bits */
         strcat(opts,"\nnumgbits=4");
         grib_context_log(c, GRIB_LOG_ERROR, "JASPER: error %d, increasing the number of guard bits", jaserr);
-        jaserr=jas_stream_close(istream);
+        jas_stream_close(istream);   istream = 0;
+        jas_stream_close(jpcstream); jpcstream = 0;
+
         istream         = jas_stream_memopen((char *)encoded,buflen);
-        jaserr=jas_stream_close(jpcstream);
+        cmpt.stream_    = istream;
         jpcstream       = jas_stream_memopen((char*)helper->jpeg_buffer,helper->buffer_size);
         jaserr          = jpc_encode(&image,jpcstream,opts);
     }
