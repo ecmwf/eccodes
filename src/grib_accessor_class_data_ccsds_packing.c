@@ -180,7 +180,7 @@ static int value_count(grib_accessor* a, long* count)
     return grib_get_long_internal(a->parent->h,self->number_of_values,count);
 }
 
-#ifdef HAVE_LIBAEC
+#if defined (HAVE_LIBAEC) || defined(HAVE_AEC)
 
 #include <libaec.h>
 

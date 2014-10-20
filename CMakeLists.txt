@@ -29,23 +29,60 @@ ecbuild_declare_project()
 ###############################################################################
 # some variables/options of this project
 
-option( ENABLE_JPG     "try to add support for JPG encoding"          ON )
-option( ENABLE_PNG     "try to add support for PNG encoding"          OFF )
-option( ENABLE_NETCDF  "try to add support for NetCDF"                ON )
-option( ENABLE_AEC     "try to add support for Adaptive Entropy Coding" OFF )
-option( ENABLE_PYTHON  "try to build the GRIB_API Python interface"   ON )
-option( ENABLE_FORTRAN "try to build the GRIB_API Fortran interface"  ON )
+ecbuild_add_option( FEATURE JPG
+	DESCRIPTION "support for JPG encoding"
+	DEFAULT ON
+)
+
+ecbuild_add_option( FEATURE PNG
+	DESCRIPTION "support for PNG encoding"
+	DEFAULT OFF
+	REQUIRED_PACKAGES PNG
+)
+
+if( HAVE_PNG )
+	set( HAVE_LIBPNG 1 ) # compatibility with autotools
+	add_definitions( ${PNG_DEFINITIONS} )
+else()
+	set( HAVE_LIBPNG 0 )
+endif()
+
+ecbuild_add_option( FEATURE NETCDF
+	DESCRIPTION "support for NetCDF"
+	DEFAULT ON
+	REQUIRED_PACKAGES NetCDF
+)
+
+ecbuild_add_option( FEATURE AEC
+	DESCRIPTION "support for Adaptive Entropy Coding"
+	DEFAULT OFF
+	REQUIRED_PACKAGES AEC
+)
+
+ecbuild_add_option( FEATURE PYTHON
+	DESCRIPTION "build the GRIB_API Python interface"
+	DEFAULT ON
+)
+
+ecbuild_add_option( FEATURE FORTRAN
+	DESCRIPTION "build the GRIB_API Fortran interface"
+	DEFAULT ON
+)
+
 
 if( ENABLE_FORTRAN )
     # will set EC_HAVE_FORTRAN with the result
     ecbuild_enable_fortran( MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/fortran/modules )
+	set( HAVE_FORTRAN ${EC_HAVE_FORTRAN} )
 endif()
 
-option( ENABLE_MEMORY_MANAGEMENT "enable memory management"  OFF )
-option( ENABLE_ALIGN_MEMORY      "enable memory alignment"   OFF )
+# advanced options (not visible in cmake-gui )
 
-option( GRIB_TIMER       "enable timer"    OFF )
-option( GRIB_THREADS     "enable threads"  OFF )
+ecbuild_add_option( FEATURE MEMORY_MANAGEMENT DESCRIPTION "enable memory management" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ALIGN_MEMORY      DESCRIPTION "enable memory alignment"  DEFAULT OFF ADVANCED )
+
+ecbuild_add_option( FEATURE GRIB_TIMER       DESCRIPTION "enable timer"   DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE GRIB_THREADS     DESCRIPTION "enable threads" DEFAULT OFF ADVANCED )
 
 ###############################################################################
 # macro processing
@@ -55,18 +92,6 @@ set( GRIB_API_EXTRA_INCLUDE_DIRS "" )
 set( GRIB_API_EXTRA_DEFINITIONS  "" )
 
 find_package( CMath )
-
-### AEC support (Adaptive Entropy Coding)
-
-set( HAVE_LIBAEC 0 )
-if( ENABLE_AEC )
-
-    find_package( AEC )
-
-    if( AEC_FOUND )
-        set( HAVE_LIBAEC 1 )
-    endif()
-endif()
 
 ### JPG support
 
@@ -93,34 +118,6 @@ if( ENABLE_JPG )
 
 endif()
 
-### PNG support
-
-set( HAVE_LIBPNG 0 )
-
-if( ENABLE_PNG )
-
-  find_package( PNG )
-
-  if( PNG_FOUND )
-        set( HAVE_LIBPNG 1 )
-        add_definitions( ${PNG_DEFINITIONS} )
-  endif()
-
-endif()
-
-### NetCDF support
-
-set( HAVE_NETCDF 0 )
-
-if( ENABLE_NETCDF )
-
-  find_package( NetCDF )
-
-  if( NETCDF_FOUND )
-        set( HAVE_NETCDF 1 )
-  endif()
-
-endif()
 
 ###############################################################################
 # other options
