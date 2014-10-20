@@ -47,7 +47,8 @@
    MEMBERS    = grib_vsarray* stringValues
    MEMBERS    = grib_viarray* elementsDescriptorsIndex
    MEMBERS    = int do_decode
-   MEMBERS    = int bitmapStartReferredDescriptorsIndex
+   MEMBERS    = int bitmapStartElementsDescriptorsIndex
+   MEMBERS    = int bitmapCurrentElementsDescriptorsIndex
    MEMBERS    = int bitmapSize
    MEMBERS    = int bitmapStart
    MEMBERS    = int bitmapCurrent
@@ -107,7 +108,8 @@ typedef struct grib_accessor_bufr_data_array {
 	grib_vsarray* stringValues;
 	grib_viarray* elementsDescriptorsIndex;
 	int do_decode;
-	int bitmapStartReferredDescriptorsIndex;
+	int bitmapStartElementsDescriptorsIndex;
+	int bitmapCurrentElementsDescriptorsIndex;
 	int bitmapSize;
 	int bitmapStart;
 	int bitmapCurrent;
@@ -193,7 +195,10 @@ static int can_be_missing(int descriptor) {
   return ret;
 }
 
-static void restart_bitmap(grib_accessor_bufr_data_array *self) { self->bitmapCurrent=-1; }
+static void restart_bitmap(grib_accessor_bufr_data_array *self) { 
+  self->bitmapCurrent=-1;
+  self->bitmapCurrentElementsDescriptorsIndex=self->bitmapStartElementsDescriptorsIndex-1; 
+}
 
 static void cancel_bitmap(grib_accessor_bufr_data_array *self) { self->bitmapCurrent=-1;self->bitmapStart=-1; }
 
@@ -422,7 +427,7 @@ static void decode_element(grib_context* c,grib_accessor_bufr_data_array* self,
             unsigned char* data,long *pos,int i,grib_darray* dval,grib_sarray* sval) {
   grib_darray* dar=0;
   grib_sarray* sar=0;
-  int index=0,ii,idx,sar_size;
+  int index=0,ii,sar_size;
   char* csval=0;
   double cdval=0,x;
   if (self->expanded->v[i]->flags & BUFR_DESCRIPTOR_FLAG_IS_STRING) {
@@ -433,11 +438,11 @@ static void decode_element(grib_context* c,grib_accessor_bufr_data_array* self,
       index=grib_vsarray_used_size(self->stringValues);
       dar=grib_darray_new(c,self->numberOfDataSubsets,10);
       sar_size=grib_sarray_used_size(sar);
-      for (ii=0;ii<self->numberOfDataSubsets;ii++) {
-        idx = sar_size==1 ? 0 : ii;
-        x=index*1000+strlen(sar->v[idx]);
+      index=self->numberOfDataSubsets*(index-1);
+      for (ii=1;ii<=self->numberOfDataSubsets;ii++) {
+        x=(index+ii)*1000+self->expanded->v[i]->width/8;
+        /* x=index*1000+strlen(sar->v[idx]); */
         grib_darray_push(c,dar,x);
-        index++;
       }
       grib_vdarray_push(c,self->numericValues,dar);
     } else {
@@ -459,20 +464,21 @@ static void decode_element(grib_context* c,grib_accessor_bufr_data_array* self,
   }
 }
 
-static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,long* pos,int iBitmapOperator) {
+static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,long* pos,grib_iarray* elementsDescriptorsIndex,int iBitmapOperator) {
   int bitmapSize,iDelayedReplication=0;
-  int i,localReference,width,bitmapEndReferredDescriptorsIndex;
-  long ppos;
+  int i,localReference,width,bitmapEndElementsDescriptorsIndex;
+  long ppos,n;
   grib_accessor* a=(grib_accessor*)self;
   grib_context* c=a->parent->h->context;
   bufr_descriptor** descriptors=self->expanded->v;
+  long* edi=elementsDescriptorsIndex->v;
+  int iel=grib_iarray_used_size(elementsDescriptorsIndex)-1;
 
   switch (descriptors[iBitmapOperator]->code) {
     case 236000:
       cancel_bitmap(self);
-      i=iBitmapOperator;
-      /* while (descriptors[i]->code>200000) i--; */
-      bitmapEndReferredDescriptorsIndex=i-1;
+      while (descriptors[edi[iel]]->code>=100000) iel--;
+      bitmapEndElementsDescriptorsIndex=iel;
       i=iBitmapOperator+1;
       if (descriptors[i]->code==101000)  {
         iDelayedReplication=iBitmapOperator+2;
@@ -500,7 +506,13 @@ static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,
         bitmapSize=0;
         while (descriptors[i]->code==31031) {bitmapSize++;i++;}
       }
-      self->bitmapStartReferredDescriptorsIndex=bitmapEndReferredDescriptorsIndex-bitmapSize+1;
+      iel=bitmapEndElementsDescriptorsIndex;
+      n=bitmapSize-1;
+      while ( n>0 && iel>=0 ) {
+        if (descriptors[edi[iel]]->code<100000) n--;
+        iel--;
+      }
+      self->bitmapStartElementsDescriptorsIndex=iel;
       restart_bitmap(self);
       break;
     default :
@@ -511,18 +523,36 @@ static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,
   return GRIB_SUCCESS;
 }
 
-static int get_next_bitmap_descriptor_index(grib_accessor_bufr_data_array *self,int isubset) {
-  /* isubset is not used for compressed data*/
-  int ret,i;
+static int get_next_bitmap_descriptor_index(grib_accessor_bufr_data_array *self,grib_iarray* elementsDescriptorsIndex,grib_darray* numericValues) {
+  int i;
+  bufr_descriptor** descriptors=self->expanded->v;
   self->bitmapCurrent++;
+  self->bitmapCurrentElementsDescriptorsIndex++;
   i=self->bitmapCurrent+self->bitmapStart;
+
   if (self->compressedData) {
-    while (self->numericValues->v[i]->v[0]==1) {self->bitmapCurrent++;i++;}
+    while (self->numericValues->v[i]->v[0]==1) {
+      self->bitmapCurrent++;
+      self->bitmapCurrentElementsDescriptorsIndex++;
+      while (descriptors[elementsDescriptorsIndex->v[self->bitmapCurrentElementsDescriptorsIndex]]->code
+                >100000) 
+        self->bitmapCurrentElementsDescriptorsIndex++;
+      i++;
+    }
   } else {
-    while (self->numericValues->v[isubset]->v[i]==1) {self->bitmapCurrent++;i++;}
+    while (numericValues->v[i]==1) {
+      self->bitmapCurrent++;
+      self->bitmapCurrentElementsDescriptorsIndex++;
+      while (descriptors[elementsDescriptorsIndex->v[self->bitmapCurrentElementsDescriptorsIndex]]->code
+                >100000) 
+        self->bitmapCurrentElementsDescriptorsIndex++;
+      i++;
+    }
   }
-  ret=self->bitmapStartReferredDescriptorsIndex+self->bitmapCurrent;
-  return ret;
+  while (descriptors[elementsDescriptorsIndex->v[self->bitmapCurrentElementsDescriptorsIndex]]->code
+              >100000) 
+     self->bitmapCurrentElementsDescriptorsIndex++;
+  return elementsDescriptorsIndex->v[self->bitmapCurrentElementsDescriptorsIndex];
 }
 
 static void push_zero_element(grib_accessor_bufr_data_array* self,grib_darray* dval) {
@@ -601,7 +631,7 @@ static int decode_elements(grib_accessor* a) {
           /* Table B element */
           grib_iarray_push(elementsDescriptorsIndex,i);
           if (descriptors[i]->code==31031 && !is_bitmap_start_defined(self))
-            self->bitmapStart=grib_iarray_used_size(elementsDescriptorsIndex);
+            self->bitmapStart=grib_iarray_used_size(elementsDescriptorsIndex)-1;
           decode_element(c,self,data,&pos,i,dval,sval);
           break;
         case 1:
@@ -662,7 +692,7 @@ static int decode_elements(grib_accessor* a) {
             case 32:
               /*replaced/retained values marker operator*/
               if (descriptors[i]->Y==255) {
-                index=get_next_bitmap_descriptor_index(self,iss);
+                index=get_next_bitmap_descriptor_index(self,elementsDescriptorsIndex,dval);
                 decode_element(c,self,data,&pos,index,dval,sval);
                 grib_iarray_push(elementsDescriptorsIndex,index);
               } else {
@@ -683,7 +713,7 @@ static int decode_elements(grib_accessor* a) {
               /* bitmap */
               grib_iarray_push(elementsDescriptorsIndex,i);
               push_zero_element(self,dval);
-              build_bitmap(self,data,&pos,i);
+              build_bitmap(self,data,&pos,elementsDescriptorsIndex,i);
               break;
             case 37:
               /* reuse defined bitmap */
