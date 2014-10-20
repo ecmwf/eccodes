@@ -67,5 +67,6 @@ dist_samples_DATA = \
     gg_sfc_grib1.tmpl \
     gg_sfc_grib2.tmpl \
     sh_sfc_grib1.tmpl \
-    sh_sfc_grib2.tmpl
+    sh_sfc_grib2.tmpl \
+    clusters_grib1.tmpl
 

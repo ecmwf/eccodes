@@ -75,7 +75,8 @@ nodist_grib1_DATA = \
 	sh_pl_grib1.tmpl \
 	sh_pl_grib2.tmpl \
 	sh_sfc_grib1.tmpl \
-	sh_sfc_grib2.tmpl 
+	sh_sfc_grib2.tmpl \
+    clusters_grib1.tmpl
 
 GRIB1.tmpl: ../../samples/GRIB1.tmpl
 	cp -f ../../samples/GRIB1.tmpl .
@@ -275,6 +276,6 @@ sh_sfc_grib1.tmpl: ../../samples/sh_sfc_grib1.tmpl
 sh_sfc_grib2.tmpl: ../../samples/sh_sfc_grib2.tmpl
 	cp -f ../../samples/sh_sfc_grib2.tmpl .
 
-
-
+clusters_grib1.tmpl: ../../samples/clusters_grib1.tmpl
+	cp -f ../../samples/clusters_grib1.tmpl .
 
