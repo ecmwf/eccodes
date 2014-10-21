@@ -27,20 +27,20 @@ if( ENABLE_PYTHON )
               DOC "Directory where the arrayobject.h header file can be found. This file is part of the numpy package" )
 
     if( PYTHON_NUMPY_INCLUDE_DIR )
-      set(PYTHON_NUMPY_FOUND 1 CACHE INTERNAL "Python numpy development package is available")
+        set(PYTHON_NUMPY_FOUND 1 CACHE INTERNAL "Python numpy development package is available")
     endif()
 
     ###############################################################################
     # swig python interface
 
-	if( ENABLE_PYTHON AND SWIG_FOUND AND PYTHONLIBS_FOUND )
+    if( ENABLE_PYTHON AND SWIG_FOUND AND PYTHONLIBS_FOUND )
 
         # preparing for generating setup.py -- this may not be needed as cmake can do the swig + shared libs without libtool
 
         if( PYTHON_NUMPY_FOUND )
-          set( DATA_HANDLER "numpy" )
+            set( DATA_HANDLER "numpy" )
         else()
-          set( DATA_HANDLER "array" )
+            set( DATA_HANDLER "array" )
         endif()
 
         set( BUILD_DIR "${PROJECT_SOURCE_DIR}" ) # setup.py assumes build_dir is same as source_dir -- not true for cmake builds
@@ -69,7 +69,7 @@ if( ENABLE_PYTHON )
 
         swig_link_libraries( gribapi_swig grib_api ${PYTHON_LIBRARIES} )
 
-        set(PYTHON_DEST "lib/python${PYTHON_VERSION}/site-packages" )
+        set(PYTHON_DEST "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages" )
 
         install(TARGETS _gribapi_swig DESTINATION ${PYTHON_DEST} )
 
