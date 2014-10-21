@@ -568,12 +568,18 @@ static void push_zero_element(grib_accessor_bufr_data_array* self,grib_darray* d
   }
 }
 
+#define MAX_NESTED_REPLICATIONS 8
+
 static int decode_elements(grib_accessor* a) {
   int err=0;
   int associatedFieldWidth=0,localDescriptorWidth=0;
-  int nn=0;
-  int numberOfElementsToRepeat=0,numberOfRepetitions=0;
-  int startRepetition=0;
+  long  inr,innr,ir;
+  long n[MAX_NESTED_REPLICATIONS]={0,};
+  long nn[MAX_NESTED_REPLICATIONS]={0,};
+  long numberOfElementsToRepeat[MAX_NESTED_REPLICATIONS]={0,};
+  long numberOfRepetitions[MAX_NESTED_REPLICATIONS]={0,};
+  long startRepetition[MAX_NESTED_REPLICATIONS]={0,};
+  long numberOfNestedRepetions=0;
   unsigned char* data=0;
   int i;
   grib_iarray* elementsDescriptorsIndex=0;
@@ -636,8 +642,11 @@ static int decode_elements(grib_accessor* a) {
           break;
         case 1:
           /* Delayed replication */
-          numberOfElementsToRepeat=descriptors[i]->X;
-          nn=numberOfElementsToRepeat;
+          inr=numberOfNestedRepetions;
+          numberOfNestedRepetions++;
+          Assert(numberOfNestedRepetions<=MAX_NESTED_REPLICATIONS);
+          numberOfElementsToRepeat[inr]=descriptors[i]->X;
+          n[inr]=numberOfElementsToRepeat[inr];
           i++;
           if (self->compressedData) {
             localReference=grib_decode_unsigned_long(data,&pos,descriptors[i]->width)+descriptors[i]->reference;
@@ -646,23 +655,24 @@ static int decode_elements(grib_accessor* a) {
               /* delayed replication number is not constant. NOT IMPLEMENTED */
               Assert(0);
             } else {
-              numberOfRepetitions=localReference*descriptors[i]->factor;
-              startRepetition=i;
+              numberOfRepetitions[inr]=localReference*descriptors[i]->factor;
+              startRepetition[inr]=i;
             }
           } else {
-            numberOfRepetitions=grib_decode_unsigned_long(data,&pos,descriptors[i]->width)+
+            numberOfRepetitions[inr]=grib_decode_unsigned_long(data,&pos,descriptors[i]->width)+
                                       descriptors[i]->reference*descriptors[i]->factor;
-            startRepetition=i;
+            startRepetition[inr]=i;
           }
+          nn[inr]=numberOfRepetitions[inr];
           grib_iarray_push(elementsDescriptorsIndex,i);
           if (self->compressedData) {
             dval=grib_darray_new(c,1,100);
-            grib_darray_push(c,dval,(double)numberOfRepetitions);
+            grib_darray_push(c,dval,(double)numberOfRepetitions[inr]);
             grib_vdarray_push(c,self->numericValues,dval);
           } else {
-            grib_darray_push(c,dval,(double)numberOfRepetitions);
+            grib_darray_push(c,dval,(double)numberOfRepetitions[inr]);
           }
-          if (numberOfRepetitions==0) i+=numberOfElementsToRepeat;
+          if (numberOfRepetitions[inr]==0) i+=numberOfElementsToRepeat[inr];
           continue;
         case 2:
           /* Operator */
@@ -743,15 +753,35 @@ static int decode_elements(grib_accessor* a) {
       }
 
       /* delayed repetition check */
-      if (numberOfRepetitions)  {
-        if (nn>1) {
-          nn--;
-        } else {
-          nn=numberOfElementsToRepeat;
-          numberOfRepetitions--;
-          if (numberOfRepetitions>0) i=startRepetition;
+      innr=numberOfNestedRepetions-1;
+        for (ir=innr;ir>=0;ir--) {
+          if (nn[ir])  {
+            if (n[ir]>1) {
+                n[ir]--;
+                break;
+            } else {
+                n[ir]=numberOfElementsToRepeat[ir];
+                nn[ir]--;
+                if (nn[ir]) {
+                  i=startRepetition[ir];
+                  break;
+                } else {
+                  if (ir>0)  {
+                    n[ir-1]-=numberOfElementsToRepeat[ir]+1;
+                    i=startRepetition[ir-1];
+                  } else {
+                    i=startRepetition[ir]+numberOfElementsToRepeat[ir];
+                  }
+                  numberOfNestedRepetions--;
+                }
+            }
+          } else {
+            if (ir==0) {
+              i=startRepetition[ir]+numberOfElementsToRepeat[ir]+1;
+              numberOfNestedRepetions=0;
+            }
+          }
         }
-      }
 
     }
     grib_viarray_push(c,self->elementsDescriptorsIndex,elementsDescriptorsIndex);
