@@ -1,0 +1,59 @@
+#!/bin/sh
+set -e
+
+if [ $# -lt 2 ]
+then
+   echo "usage: $0 [-f] in.grib1 out.grib2"
+   echo "-f   convert to grib2 only typeOfLevel='hybrid' and copy other level types as grib1"
+   exit 1
+fi
+
+grib_filter=@CMAKE_INSTALL_PREFIX@/bin/grib_filter
+rules_filter=rules.filter$$
+
+force=0
+out=$2
+in=$1
+while getopts fd:D:t:b:w:e:r:s:n:p: options
+do
+    case $options in
+		f)  force=1
+			out=$3
+			in=$2
+			;;
+	esac
+done
+
+
+if [ $force = 1 ]
+then
+
+ cat >> $rules_filter <<EOF
+ if ( typeOfLevel is 'hybrid' ) {
+   set edition=2;
+ }
+ write;
+EOF
+
+else
+
+ cat >> $rules_filter <<EOF
+ if ( ! typeOfLevel is 'hybrid' ) {
+   print "Error: typeOfLevel='[typeOfLevel]' unable to convert. Only typeOfLevel='hybrid' can be converted.";
+   assert( typeOfLevel is 'hybrid' );
+ }
+ set edition=2;
+ write;
+EOF
+
+fi
+
+set +e
+$grib_filter -o $out  $rules_filter  $in
+
+error=$?
+
+rm -f $rules_filter 
+
+exit $error
+

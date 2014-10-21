@@ -36,4 +36,10 @@ endforeach()
 
 # missing noinst_PROGRAMS
 
-# missing grib1to2
+# grib1to2 script
+configure_file( grib1to2.in  grib1to2 )
+install( FILES ${CMAKE_CURRENT_BINARY_DIR}/grib1to2
+         DESTINATION ${INSTALL_BIN_DIR}
+         PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
+                     GROUP_EXECUTE GROUP_READ
+                     WORLD_EXECUTE WORLD_READ )

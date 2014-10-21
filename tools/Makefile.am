@@ -106,4 +106,4 @@ grib1to2$(EXEEXT): grib1to2.txt
 # wingetopt files are for Microsoft Windows Visual Studio support
 noinst_HEADERS = grib_tools.h wingetopt.h wingetopt.c
 
-EXTRA_DIST= CMakeLists.txt
+EXTRA_DIST= CMakeLists.txt grib1to2.in
