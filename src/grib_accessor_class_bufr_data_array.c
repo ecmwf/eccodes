@@ -579,7 +579,7 @@ static int decode_elements(grib_accessor* a) {
   long numberOfElementsToRepeat[MAX_NESTED_REPLICATIONS]={0,};
   long numberOfRepetitions[MAX_NESTED_REPLICATIONS]={0,};
   long startRepetition[MAX_NESTED_REPLICATIONS]={0,};
-  long numberOfNestedRepetions=0;
+  long numberOfNestedRepetitions=0;
   unsigned char* data=0;
   int i;
   grib_iarray* elementsDescriptorsIndex=0;
@@ -642,9 +642,9 @@ static int decode_elements(grib_accessor* a) {
           break;
         case 1:
           /* Delayed replication */
-          inr=numberOfNestedRepetions;
-          numberOfNestedRepetions++;
-          Assert(numberOfNestedRepetions<=MAX_NESTED_REPLICATIONS);
+          inr=numberOfNestedRepetitions;
+          numberOfNestedRepetitions++;
+          Assert(numberOfNestedRepetitions<=MAX_NESTED_REPLICATIONS);
           numberOfElementsToRepeat[inr]=descriptors[i]->X;
           n[inr]=numberOfElementsToRepeat[inr];
           i++;
@@ -672,7 +672,11 @@ static int decode_elements(grib_accessor* a) {
           } else {
             grib_darray_push(c,dval,(double)numberOfRepetitions[inr]);
           }
-          if (numberOfRepetitions[inr]==0) i+=numberOfElementsToRepeat[inr];
+          if (numberOfRepetitions[inr]==0) {
+            i+=numberOfElementsToRepeat[inr];
+            if (inr>0) n[inr-1]-=numberOfElementsToRepeat[inr]+2;
+            numberOfNestedRepetitions--;
+          }
           continue;
         case 2:
           /* Operator */
@@ -753,7 +757,7 @@ static int decode_elements(grib_accessor* a) {
       }
 
       /* delayed repetition check */
-      innr=numberOfNestedRepetions-1;
+      innr=numberOfNestedRepetitions-1;
         for (ir=innr;ir>=0;ir--) {
           if (nn[ir])  {
             if (n[ir]>1) {
@@ -767,18 +771,21 @@ static int decode_elements(grib_accessor* a) {
                   break;
                 } else {
                   if (ir>0)  {
-                    n[ir-1]-=numberOfElementsToRepeat[ir]+1;
-                    i=startRepetition[ir-1];
+                    n[ir-1]-=numberOfElementsToRepeat[ir]+2;
+                    /* i=startRepetition[ir-1]; */
+                    i=startRepetition[ir]+numberOfElementsToRepeat[ir];
                   } else {
                     i=startRepetition[ir]+numberOfElementsToRepeat[ir];
                   }
-                  numberOfNestedRepetions--;
+                  numberOfNestedRepetitions--;
                 }
             }
           } else {
             if (ir==0) {
               i=startRepetition[ir]+numberOfElementsToRepeat[ir]+1;
-              numberOfNestedRepetions=0;
+              numberOfNestedRepetitions=0;
+            } else {
+              numberOfNestedRepetitions--;
             }
           }
         }
