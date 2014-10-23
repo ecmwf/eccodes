@@ -8,27 +8,8 @@ if( ENABLE_PYTHON )
     endif()
 
     # check for Numpy
+    find_package( NumPy )
 
-    if(PYTHON_EXECUTABLE)
-
-        file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/numpy_path.py "try: import numpy; print numpy.get_include()\nexcept: pass\n")
-        exec_program( ${PYTHON_EXECUTABLE}
-                       ARGS "\"${CMAKE_CURRENT_BINARY_DIR}/determineNumpyPath.py\""
-                       OUTPUT_VARIABLE NUMPY_PATH )
-    endif()
-
-    find_path( PYTHON_NUMPY_INCLUDE_DIR arrayobject.h
-              "${NUMPY_PATH}/numpy/"
-              "${PYTHON_INCLUDE_PATH}/numpy/"
-              /usr/include/python2.6/numpy/
-              /usr/include/python2.5/numpy/
-              /usr/include/python2.4/numpy/
-              /usr/include/python2.3/numpy/
-              DOC "Directory where the arrayobject.h header file can be found. This file is part of the numpy package" )
-
-    if( PYTHON_NUMPY_INCLUDE_DIR )
-        set(PYTHON_NUMPY_FOUND 1 CACHE INTERNAL "Python numpy development package is available")
-    endif()
 
     ###############################################################################
     # swig python interface
@@ -37,7 +18,7 @@ if( ENABLE_PYTHON )
 
         # preparing for generating setup.py -- this may not be needed as cmake can do the swig + shared libs without libtool
 
-        if( PYTHON_NUMPY_FOUND )
+        if( NUMPY_FOUND )
             set( DATA_HANDLER "numpy" )
         else()
             set( DATA_HANDLER "array" )
