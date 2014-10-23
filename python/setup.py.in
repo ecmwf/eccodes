@@ -10,6 +10,7 @@ attdict = dict(
    library_dirs = ["%s/lib" % sys.prefix],
    libraries = [],
    extra_objects = [],
+   extra_link_args = [],    # See GRIB-616
 )
 
 add_attribute = lambda **args: [list.append(attdict[key],value) for key,value in args.items()]
@@ -27,7 +28,8 @@ if with_jasper:
     if jasper_dir and jasper_dir != 'system':
         add_attribute(
             include_dirs = os.path.join(jasper_dir,'include'),
-            library_dirs = os.path.join(jasper_dir,'lib')
+            library_dirs = os.path.join(jasper_dir,'lib'),
+            extra_link_args = '-Wl,-rpath,' + os.path.join(jasper_dir,'lib')
         )
     add_attribute(libraries = 'jasper')
 
@@ -37,7 +39,8 @@ if with_openjpeg:
     if openjpeg_dir and openjpeg_dir != 'system':
         add_attribute(
             include_dirs = os.path.join(openjpeg_dir,'include'),
-            library_dirs = os.path.join(openjpeg_dir,'lib')
+            library_dirs = os.path.join(openjpeg_dir,'lib'),
+            extra_link_args = '-Wl,-rpath,' + os.path.join(openjpeg_dir,'lib')
         )
     add_attribute(libraries = 'openjpeg')
 
@@ -53,7 +56,8 @@ if with_aec:
     if aec_dir and aec_dir != 'system':
         add_attribute(
             include_dirs = os.path.join(aec_dir,'include'),
-            library_dirs = os.path.join(aec_dir,'lib')
+            library_dirs = os.path.join(aec_dir,'lib'),
+            extra_link_args = '-Wl,-rpath,' + os.path.join(aec_dir,'lib')
         )
     add_attribute(libraries = 'aec')
 
