@@ -15,6 +15,12 @@
 
 #include "grib_tools.h"
 #if HAVE_LIBJASPER
+/* Remove compiler warnings re macros being redefined */
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING
+#undef PACKAGE_TARNAME
+#undef PACKAGE_VERSION
 #include "jasper/jasper.h"
 #endif
 
