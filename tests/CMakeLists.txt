@@ -89,21 +89,21 @@ ecbuild_add_test( TARGET t_lamb_az_eq_area
 # These ones are conditional
 ecbuild_add_test( TARGET t_grib_to_netcdf
                   TYPE SCRIPT
-                  CONDITION ENABLE_NETCDF
+                  CONDITION HAVE_NETCDF
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_to_netcdf.sh
                   RESOURCES include.sh
 )
 
 ecbuild_add_test( TARGET t_jpeg
                   TYPE SCRIPT
-                  CONDITION ENABLE_JPG
+                  CONDITION HAVE_JPEG
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/jpeg.sh
                   RESOURCES include.sh
 )
 
 ecbuild_add_test( TARGET t_ccsds
                   TYPE SCRIPT
-                  CONDITION ENABLE_AEC
+                  CONDITION HAVE_AEC
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ccsds.sh
                   RESOURCES include.sh
 )

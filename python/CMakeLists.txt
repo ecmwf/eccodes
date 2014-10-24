@@ -1,4 +1,4 @@
-if( ENABLE_PYTHON )
+if( HAVE_PYTHON )
 
     ecbuild_find_python( VERSION 2.5)
 
@@ -14,7 +14,7 @@ if( ENABLE_PYTHON )
     ###############################################################################
     # swig python interface
 
-    if( ENABLE_PYTHON AND SWIG_FOUND AND PYTHONLIBS_FOUND )
+    if( HAVE_PYTHON AND SWIG_FOUND AND PYTHONLIBS_FOUND )
 
         # preparing for generating setup.py -- this may not be needed as cmake can do the swig + shared libs without libtool
 
@@ -29,10 +29,14 @@ if( ENABLE_PYTHON )
         set( LIB_PNG "${HAVE_LIBPNG}" )
 
         set( LIB_JASPER ${HAVE_LIBJASPER} )
-        get_filename_component(JASPER_DIR ${JASPER_INCLUDE_DIR} PATH )
+        if( HAVE_LIBJASPER )
+            get_filename_component(JASPER_DIR ${JASPER_INCLUDE_DIR} PATH )
+        endif()
 
         set( LIB_OPENJPEG ${HAVE_LIBOPENJPEG} )
-        get_filename_component(OPENJPEG_DIR ${OPENJPEG_INCLUDE_DIR} PATH )
+        if( HAVE_LIBOPENJPEG )
+            get_filename_component(OPENJPEG_DIR ${OPENJPEG_INCLUDE_DIR} PATH )
+        endif()
 
         include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${PYTHON_INCLUDE_DIRS} )
 
