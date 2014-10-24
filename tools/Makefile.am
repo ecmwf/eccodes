@@ -66,7 +66,7 @@ xref_SOURCES                  =  xref.c
 #compile_SOURCES              =  compile.c
 gaussian_SOURCES              =  gaussian.c
 gg_sub_area_check_SOURCES     =  gg_sub_area_check.c
-grib1to2_SOURCES              = grib1to2.txt
+grib1to2_SOURCES              = grib1to2.in
 
 bufr_filter_SOURCES   = bufr_filter.c
 bufr_ls_SOURCES   = bufr_ls.c
@@ -98,9 +98,9 @@ grib_to_netcdf_LDADD = $(LDADD) $(NETCDF_LDFLAGS)
 ## default.
 CLEANFILES = libgrib_tools.la
 
-grib1to2$(EXEEXT): grib1to2.txt
+grib1to2$(EXEEXT): grib1to2.in
 	rm -f grib1to2
-	sed "s|toolsdir|$(bindir)|" grib1to2.txt > grib1to2
+	sed "s|@CMAKE_INSTALL_PREFIX@/bin|$(bindir)|" grib1to2.in > grib1to2
 	chmod +x grib1to2
 
 # wingetopt files are for Microsoft Windows Visual Studio support
