@@ -74,7 +74,7 @@ foreach( test ${tests} )
                   TYPE SCRIPT
                   DEPENDS get_gribs get_tigge_gribs get_bufrs
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                  RESOURCES include.sh
+                  RESOURCES include.sh number_compare.pl
     )
 endforeach()
 
