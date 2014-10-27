@@ -339,9 +339,9 @@ static grib_sarray* decode_string_array(grib_context* c,unsigned char* data,long
   ret=grib_sarray_new(c,10,10);
   if (width) {
     grib_context_free(c,sval);
-    for (j=1;j<self->numberOfDataSubsets;j++) {
-      sval=(char*)grib_context_malloc_clear(c,width/8+1);
-      grib_decode_string(data,pos,width/8,sval);
+    for (j=0;j<self->numberOfDataSubsets;j++) {
+      sval=(char*)grib_context_malloc_clear(c,width+1);
+      grib_decode_string(data,pos,width,sval);
       grib_sarray_push(c,ret,sval);
     }
   } else {
@@ -772,11 +772,8 @@ static int decode_elements(grib_accessor* a) {
                 } else {
                   if (ir>0)  {
                     n[ir-1]-=numberOfElementsToRepeat[ir]+2;
-                    /* i=startRepetition[ir-1]; */
-                    i=startRepetition[ir]+numberOfElementsToRepeat[ir];
-                  } else {
-                    i=startRepetition[ir]+numberOfElementsToRepeat[ir];
                   }
+                  i=startRepetition[ir]+numberOfElementsToRepeat[ir];
                   numberOfNestedRepetitions--;
                 }
             }
