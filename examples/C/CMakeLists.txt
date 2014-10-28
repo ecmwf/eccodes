@@ -59,6 +59,7 @@ list( APPEND tests
    clone
    sections_copy
    set_pv
+   check_gaussian_grids
 )
 foreach( test ${tests} )
     ecbuild_add_test( TARGET c_${test}
