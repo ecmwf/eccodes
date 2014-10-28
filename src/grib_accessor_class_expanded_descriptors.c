@@ -360,7 +360,7 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
           *err=grib_get_long(a->parent->h,self->elementWidth,&width);
           grib_bufr_descriptor_set_values(u,scale,reference,width);
           *err=grib_get_string(a->parent->h,self->elementUnit,unit,&len_unit);
-          if (!strcmp(unit,"CCITT")) u->flags |= BUFR_DESCRIPTOR_FLAG_IS_STRING;
+          if (strstr(unit,"CCITT")) u->flags |= BUFR_DESCRIPTOR_FLAG_IS_STRING;
           else if (strstr(unit,"TABLE") ) {
             if (strstr(unit,"FLAG")) {
               u->flags |= BUFR_DESCRIPTOR_FLAG_IS_FLAG;
