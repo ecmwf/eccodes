@@ -1305,6 +1305,7 @@ grib_handle* grib_handle_new_from_partial_message(grib_context* c,void* data, si
 int grib_is_missing(grib_handle* h, const char* key, int* err);
 int grib_is_defined(grib_handle* h, const char* key);
 int grib_set_missing(grib_handle* h, const char* key);
+/* The truncation is the Gaussian number (or order) */
 int grib_get_gaussian_latitudes(long truncation,double* latitudes);
 
 int grib_julian_to_datetime(double jd, long *year, long *month, long *day, long *hour, long *minute, long *second);

@@ -60,6 +60,8 @@ static void gauss_first_guess(long trunc, double* vals)
 	}
 }
 
+/* 'trunc' is the Gaussian number (or order) */
+/* i.e. Number of parallels between a pole and the equator */
 int grib_get_gaussian_latitudes(long trunc, double *lats)
 {
 	long jlat, iter, legi;
@@ -102,7 +104,7 @@ int grib_get_gaussian_latitudes(long trunc, double *lats)
 			conv = legfonc / ((((double)nlat) * (mem2 - root * legfonc) ) / (1.0 - (root *root)));
 			root -= conv;
 
-			/*  Routine fails if no convergence after JPMAXITER iterations  */
+			/*  Routine fails if no convergence after MAXITER iterations  */
 			if( iter++ > MAXITER )
 			{
 				return GRIB_GEOCALCULUS_PROBLEM;
