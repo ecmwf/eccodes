@@ -48,6 +48,8 @@ nodist_grib1_mlgrib2_ieee32_DATA = \
 	reduced_gg_pl_640_grib2.tmpl \
 	reduced_gg_pl_80_grib1.tmpl \
 	reduced_gg_pl_80_grib2.tmpl \
+	reduced_gg_pl_96_grib1.tmpl \
+	reduced_gg_pl_96_grib2.tmpl \
 	reduced_gg_pl_grib1.tmpl \
 	reduced_gg_pl_grib2.tmpl \
 	reduced_gg_sfc_grib1.tmpl \
@@ -190,6 +192,12 @@ reduced_gg_pl_80_grib1.tmpl: ../../samples/reduced_gg_pl_80_grib1.tmpl
 
 reduced_gg_pl_80_grib2.tmpl: ../../samples/reduced_gg_pl_80_grib2.tmpl
 	cp -f ../../samples/reduced_gg_pl_80_grib2.tmpl .
+
+reduced_gg_pl_96_grib1.tmpl: ../../samples/reduced_gg_pl_96_grib1.tmpl
+	cp -f ../../samples/reduced_gg_pl_96_grib1.tmpl .
+
+reduced_gg_pl_96_grib2.tmpl: ../../samples/reduced_gg_pl_96_grib2.tmpl
+	cp -f ../../samples/reduced_gg_pl_96_grib2.tmpl .
 
 reduced_gg_pl_grib1.tmpl: ../../samples/reduced_gg_pl_grib1.tmpl
 	cp -f ../../samples/reduced_gg_pl_grib1.tmpl .
