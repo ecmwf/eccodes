@@ -3298,8 +3298,6 @@ static void find_nc_attributes(const request *subset_r, const request *user_r, n
         sprintf(buf,"p%s",att->name);
         strcpy(att->name,buf);
     }
-
-
 }
 
 static request *first;
@@ -3392,7 +3390,6 @@ static void names_loop(const request *r, loopproc proc, void *data)
 
 static request *unwind_one_request(const request *r)
 {
-
     int n = 0;
     first = last = NULL;
     names_loop(r, reqcb, &n);
@@ -3652,6 +3649,24 @@ static boolean parsedate(const char *name, long* julian, long *second, boolean* 
     return *p == 0 ? TRUE : FALSE;
 }
 
+static boolean check_dimension_name(const char* dim)
+{
+    /* Dimension name must begin with an alphabetic character, followed by zero
+     * or more alphanumeric characters including the underscore */
+    int i = 0, len = 0;
+    if (!dim) return FALSE;
+
+    len = strlen(dim);
+    if (len==0)  return FALSE;
+    if (!isalpha(dim[0])) return FALSE;
+
+    for (i=1; i<len; ++i) {
+        const char c = dim[i];
+        const int ok = isalnum(c) || c == '_';
+        if (!ok) return FALSE;
+    }
+    return TRUE;
+}
 /*=====================================================================*/
 
 grib_option grib_options[] = {
@@ -3665,7 +3680,8 @@ grib_option grib_options[] = {
         { "o:", "output file",   "\n\t\tThe name of the netcdf file.\n", 1, 1, 0 },
         { "V", 0, 0, 0, 1, 0 },
         { "L", 0, "Create netcdf in 64-bit offset format (for very large files).\n", 0, 1, 0 },
-        { "M", 0, 0, 0, 1, 0 }
+        { "M", 0, 0, 0, 1, 0 },
+        { "u:", "dimension",  "\n\t\tSet dimension to be an unlimited dimension", 0, 1, "time" }
 };
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
@@ -3775,6 +3791,15 @@ int grib_tool_init(grib_runtime_options* options)
     else
     {
         set_value(user_r, "referencedate", "19000101");
+    }
+
+    if (grib_options_on("u:")) {
+        char* theDimension = grib_options_get_option("u:");
+        if ( !check_dimension_name(theDimension) ) {
+            fprintf(stderr, "Invalid dimension: \"%s\"\n", theDimension);
+            exit(1);
+        }
+        set_value(user_r, "unlimited", theDimension);
     }
 
     get_nc_options(user_r);
