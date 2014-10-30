@@ -58,7 +58,7 @@
 91 91 Ankara
 92 92 Frankfurt/Main (RAFC)
 93 93 London (WAFC)
-94 94 Copenhagen
+94 ekmi Copenhagen
 95 95 Rota
 96 96 Athens
 97 97 European Space Agency (ESA)
@@ -73,8 +73,9 @@
 # 161 to 185 Reserved for centres in Region IV which are not in the list above
 # 186 to 198 Reserved for centres in Region I which are not listed above
 # 199 to 209 Reserved for centres in Region V which are not in the list above
+195 wiix Indonesia (NMC)
 210 210 Frascati (ESA/ESRIN)
-211 211 Lanion
+211 211 Lannion
 212 212 Lisboa
 213 213 Reykjavik
 214 lemm INM
@@ -82,6 +83,7 @@
 216 216 Service ARGOS Toulouse
 218 habp Budapest
 224 lowm Austria
+227 ebum Belgium (NMC)
 233 eidb Dublin
 235 ingv INGV
 239 crfc CERFAX

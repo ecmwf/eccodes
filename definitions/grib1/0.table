@@ -73,13 +73,14 @@
 # 161 to 185 Reserved for centres in Region IV which are not in the list above
 # 186 to 198 Reserved for centres in Region I which are not listed above
 # 199 to 209 Reserved for centres in Region V which are not in the list above
-210 210 Frascati (ESA/ESRIN)
-211 211 Lannion
-212 212 Lisboa
-213 213 Reykjavik
+195 wiix Indonesia (NMC)
+210 210  Frascati (ESA/ESRIN)
+211 211  Lannion
+212 212  Lisboa
+213 213  Reykjavik
 214 lemm INM
 215 lssw Zurich
-216 216 Service ARGOS Toulouse
+216 216  Service ARGOS Toulouse
 218 habp Budapest
 224 lowm Austria
 227 ebum Belgium (NMC)
