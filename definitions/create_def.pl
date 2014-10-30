@@ -10,8 +10,8 @@ my $basedir = dirname($0);
 
 my $db="param";
 my $host="grib-param-db-prod.ecmwf.int";
-my $user="ecmwf";
-my $pass="";
+my $user="ecmwf_ro";
+my $pass="ecmwf_ro";
 my $filename; my $filebase; my $out; my $conceptDir;
 my $query; my $q; my $qh;
 
