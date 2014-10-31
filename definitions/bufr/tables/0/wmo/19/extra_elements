@@ -1,4 +1,0 @@
-033084|pixelLevelQuality|long|Pixel level quality flags|FLAGTABLE|0|0|16|FLAG TABLE|0|6
-033085|aerosolOpticalThickness|long|Aerosol optical thickness quality flags|FLAGTABLE|0|0|18|FLAG TABLE|0|6
-033086|qualityOfPixelLevelRetrieval|long|Quality of pixel level retrieval|FLAGTABLE|0|0|3|FLAG TABLE|0|1
-033087|extentOfSatelliteWithinSouthAtlanticAnomaly|long|Extent of satellite within South Atlantic anomaly|FLAGTABLE|0|0|4|FLAG TABLE|0|1
