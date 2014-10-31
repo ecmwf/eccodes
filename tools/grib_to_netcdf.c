@@ -3119,14 +3119,23 @@ static int fill_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid)
         stat = nc_inq_varid(ncid, (lowaxis), &var_id);
         check_err(stat, __LINE__, __FILE__);
 
-        if(strcmp("time", axis) == 0 && setup.unlimited != NULL && strcmp(setup.unlimited, "time") == 0 && setup.usevalidtime)
+        /* if ( strcmp("time", axis) == 0 && setup.unlimited != NULL && strcmp(setup.unlimited, "time") == 0 && setup.usevalidtime) */
+        /* GRIB-437, GRIB-625 Special treatment of RECORD (unlimited) dimension */
+        /* See "The NetCDF C Interface Guide" Section 6.23 */
+        if ( setup.unlimited != NULL && strcmp(setup.unlimited, axis) == 0 )
         {
-            /* This is tricky. I'm not sure it works when time is not outer dimension */
+            /* This is tricky. I'm not sure it works when this dimension is not outer dimension */
             size_t start[NC_MAX_DIMS];
             size_t count[NC_MAX_DIMS];
+            nc_type dim_type = 0;
+
             start[0] = 0;
             count[0] = n;
-            stat = nc_put_vara_type(ncid, var_id, start, count, values, NC_INT);
+
+            stat = nc_inq_vartype(ncid, var_id, &dim_type); /* get the type of this dimension */
+            check_err(stat, __LINE__, __FILE__);
+
+            stat = nc_put_vara_type(ncid, var_id, start, count, values, dim_type);
             check_err(stat, __LINE__, __FILE__);
         }
         else
