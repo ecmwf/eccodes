@@ -3029,7 +3029,7 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
         char timestamp[80];
         time_t now;
         /* char *convention = "MARS;CF"; */
-        char *convention = "CF-1.0";
+        char *convention = "CF-1.6";
         char history[10240];
         /* char *institution = "ECMWF Meteorological Archival and Retrieval System"; */
 
