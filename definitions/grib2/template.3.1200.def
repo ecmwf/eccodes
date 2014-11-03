@@ -7,7 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 # TEMPLATE 3.1200, Time section grid
 #  NT - Number of time steps
 unsigned[4] numberOfTimeSteps  : dump;

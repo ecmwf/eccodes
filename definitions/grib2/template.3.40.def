@@ -7,5 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
+# TEMPLATE 3.40, Gaussian latitude/longitude
+
 include "template.3.shape_of_the_earth.def";
 include "template.3.gaussian.def";
