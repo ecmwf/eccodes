@@ -34,3 +34,4 @@ cat temp_comp.3 temp_comp.2 temp_comp.1 > temp_comp.321
 ${tools_dir}grib_compare -r temp_comp.123 temp_comp.321
 
 rm -f temp_comp.1 temp_comp.2 temp_comp.3 temp_comp.123 temp_comp.321
+rm -f $outfile || true
