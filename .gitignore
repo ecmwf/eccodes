@@ -129,6 +129,7 @@ examples/F90/multi.out
 examples/F90/multi_created.grib2
 examples/F90/out.grib1
 examples/F90/out_surface_level.grib2
+examples/F90/.libs/
 tests/bitmap.rules
 tests/loc.grib1
 tests/out.grib1
