@@ -2900,12 +2900,17 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
         {
             if(setup.usevalidtime)
             {
+                const char *cal = "gregorian";
+
                 if(setup.mmeans)
                 {
                     char *period = "0000-01-00 00:00:00";
                     stat = nc_put_att_text(ncid, var_id, "avg_period", strlen(period), period);
                     check_err(stat, __LINE__, __FILE__);
                 }
+
+                stat = nc_put_att_text(ncid, var_id, "calendar", strlen(cal), cal);
+                check_err(stat, __LINE__, __FILE__);
             }
         }
     }
