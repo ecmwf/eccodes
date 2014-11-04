@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-set -ex
+set -e
 
 . ./include.sh
 
