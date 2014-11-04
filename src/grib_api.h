@@ -1598,5 +1598,7 @@ Error codes returned by the grib_api functions.
 #define GRIB_WRONG_CONVERSION		-58
 /** Missing BUFR table entry for descriptor */
 #define GRIB_MISSING_BUFR_ENTRY		-59
+/** Null pointer */
+#define GRIB_NULL_POINTER		-60
 /*! @}*/
 #endif

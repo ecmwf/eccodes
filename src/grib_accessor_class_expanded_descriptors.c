@@ -29,15 +29,12 @@ IMPLEMENTS = value_count; get_native_type
 MEMBERS    = const char* unexpandedDescriptors
 MEMBERS    = const char* sequence
 MEMBERS    = const char* expandedName
-MEMBERS    = const char* elementCode
-MEMBERS    = const char* elementUnit
-MEMBERS    = const char* elementScale
-MEMBERS    = const char* elementReference
-MEMBERS    = const char* elementWidth
+MEMBERS    = const char* tablesAccessorName
 MEMBERS    = bufr_descriptors_array* expanded
 MEMBERS    = int rank
 MEMBERS    = grib_accessor* expandedAccessor
 MEMBERS    = int dirty
+MEMBERS    = grib_accessor* tablesAccessor
 
 END_CLASS_DEF
 
@@ -71,15 +68,12 @@ typedef struct grib_accessor_expanded_descriptors {
 	const char* unexpandedDescriptors;
 	const char* sequence;
 	const char* expandedName;
-	const char* elementCode;
-	const char* elementUnit;
-	const char* elementScale;
-	const char* elementReference;
-	const char* elementWidth;
+	const char* tablesAccessorName;
 	bufr_descriptors_array* expanded;
 	int rank;
 	grib_accessor* expandedAccessor;
 	int dirty;
+	grib_accessor* tablesAccessor;
 } grib_accessor_expanded_descriptors;
 
 extern grib_accessor_class* grib_accessor_class_long;
@@ -176,6 +170,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
   grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
   int n=0;
+  self->tablesAccessorName=grib_arguments_get_name(a->parent->h,args,n++);
   self->expandedName=grib_arguments_get_name(a->parent->h,args,n++);
   self->rank=grib_arguments_get_long(a->parent->h,args,n++);
   if (self->rank!=0) {
@@ -185,11 +180,6 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
   }
   self->unexpandedDescriptors=grib_arguments_get_name(a->parent->h,args,n++);
   self->sequence=grib_arguments_get_name(a->parent->h,args,n++);
-  self->elementCode=grib_arguments_get_name(a->parent->h,args,n++);
-  self->elementUnit=grib_arguments_get_name(a->parent->h,args,n++);
-  self->elementScale=grib_arguments_get_name(a->parent->h,args,n++);
-  self->elementReference=grib_arguments_get_name(a->parent->h,args,n++);
-  self->elementWidth=grib_arguments_get_name(a->parent->h,args,n++);
   self->dirty=1;
   self->expanded=0;
   a->length = 0;
@@ -208,12 +198,7 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
                 change_coding_params* ccp,int* err) {
   int k,j,i;
   grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
-  long scale,reference,width;
   size_t size;
-  char code[]="000000";
-  size_t len_code=6;
-  char unit[100]={0,};
-  size_t len_unit=100;
   long* v;
   bufr_descriptor* u;
   bufr_descriptor* vv;
@@ -256,7 +241,7 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
       inner_unexpanded=grib_bufr_descriptors_array_new(c,100,100);
       inner_expanded=grib_bufr_descriptors_array_new(c,100,100);
       for (i=0;i<size;i++) {
-        vv=grib_bufr_descriptor_new(c,v[i]);
+        vv=grib_bufr_descriptor_new(self->tablesAccessor,v[i],err);
         inner_unexpanded=grib_bufr_descriptors_array_push(inner_unexpanded,vv);
       }
       grib_context_free(c,v);
@@ -305,7 +290,7 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
 #endif
         expanded=grib_bufr_descriptors_array_append(expanded,inner_expanded);
         uidx=grib_bufr_descriptors_array_get(expanded,idx);
-        grib_bufr_descriptor_set_code(uidx,(size-1)*1000+100000);
+        grib_bufr_descriptor_set_code(0,(size-1)*1000+100000,uidx);
         size++;
       } else {
         u=grib_bufr_descriptors_array_pop_front(unexpanded);
@@ -328,7 +313,7 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
         }
         for (k=1;k<us->Y;k++) {
               for (j=0;j<us->X;j++) {
-                  grib_bufr_descriptors_array_push(inner_unexpanded,grib_bufr_descriptor_clone(c,ur[j]));
+                  grib_bufr_descriptors_array_push(inner_unexpanded,grib_bufr_descriptor_clone(ur[j]));
               }
         }
         inner_expanded=_expand(a,inner_unexpanded,ccp,err);
@@ -349,43 +334,13 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
 #if MYDEBUG
       for (idepth=0;idepth<depth;idepth++) printf("\t");
       printf("+++ pop  %06ld\n",u->code);
-#endif
-      if ((u->flags & BUFR_DESCRIPTOR_FLAG_HAS_VALUES) == 0) {
-        sprintf(code,"%06ld",u->code);
-        len_code=strlen(code);
-        grib_set_string(a->parent->h,self->elementCode,code,&len_code);
-        *err=grib_get_long(a->parent->h,self->elementScale,&scale);
-        if (*err==GRIB_SUCCESS) {
-          *err=grib_get_long(a->parent->h,self->elementReference,&reference);
-          *err=grib_get_long(a->parent->h,self->elementWidth,&width);
-          grib_bufr_descriptor_set_values(u,scale,reference,width);
-          *err=grib_get_string(a->parent->h,self->elementUnit,unit,&len_unit);
-          if (strstr(unit,"CCITT")) u->flags |= BUFR_DESCRIPTOR_FLAG_IS_STRING;
-          else if (strstr(unit,"TABLE") ) {
-            if (strstr(unit,"FLAG")) {
-              u->flags |= BUFR_DESCRIPTOR_FLAG_IS_FLAG;
-            } else {
-              u->flags |= BUFR_DESCRIPTOR_FLAG_IS_TABLE;
-            }
-          }
-          u->flags |= BUFR_DESCRIPTOR_FLAG_HAS_VALUES;
-        } else {
-          grib_context_log(c,GRIB_LOG_ERROR,"element %s not in table B",code);
-          return 0;
-        }
-      }
-#if MYDEBUG
       for (idepth=0;idepth<depth;idepth++) printf("\t");
-      printf("+++ push %06ld [%d,isFlag=%d,isTable=%d,isString=%d] (%ld %g %ld)",u->code,
-          (u->flags & BUFR_DESCRIPTOR_FLAG_HAS_VALUES)==BUFR_DESCRIPTOR_FLAG_HAS_VALUES,
-          (u->flags & BUFR_DESCRIPTOR_FLAG_IS_FLAG)==BUFR_DESCRIPTOR_FLAG_IS_FLAG,
-          (u->flags & BUFR_DESCRIPTOR_FLAG_IS_TABLE)==BUFR_DESCRIPTOR_FLAG_IS_TABLE,
-          (u->flags & BUFR_DESCRIPTOR_FLAG_IS_STRING)==BUFR_DESCRIPTOR_FLAG_IS_STRING,
-          u->scale,u->reference,u->width);
+      printf("+++ push %06ld [type=%d] (%ld %g %ld)",u->code,
+          u->type,u->scale,u->reference,u->width);
 #endif
-      if ((u->flags & ( BUFR_DESCRIPTOR_FLAG_IS_FLAG |
-                       BUFR_DESCRIPTOR_FLAG_IS_TABLE |
-                       BUFR_DESCRIPTOR_FLAG_IS_STRING)) == 0) {
+      if ( u->type!=BUFR_DESCRIPTOR_TYPE_FLAG  &&
+           u->type!=BUFR_DESCRIPTOR_TYPE_TABLE &&
+           u->type!=BUFR_DESCRIPTOR_TYPE_STRING  ) {
         if (ccp->localDescriptorWidth>0) {
           u->width=ccp->localDescriptorWidth;
           u->reference=0;
@@ -403,7 +358,7 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
       grib_bufr_descriptors_array_push(expanded,u);
       size=1;
       if (ccp->associatedFieldWidth) {
-        bufr_descriptor* au=grib_bufr_descriptor_new(c,999999);
+        bufr_descriptor* au=grib_bufr_descriptor_new(self->tablesAccessor,999999,err);
         au->width=ccp->associatedFieldWidth;
 #if MYDEBUG
       for (idepth=0;idepth<depth;idepth++) printf("\t");
@@ -518,9 +473,7 @@ static bufr_descriptors_array* _expand(grib_accessor* a,bufr_descriptors_array* 
            bufr_descriptor* xx=grib_bufr_descriptors_array_get(expanded,i);
            for (idepth=0;idepth<depth;idepth++) printf("\t");
            printf("==  %-6d== %06ld ",i,xx->code);
-           if (xx->flags & BUFR_DESCRIPTOR_FLAG_HAS_VALUES) {
-             printf("%ld %g %ld",xx->scale,xx->reference,xx->width);
-           }
+           printf("%ld %g %ld",xx->scale,xx->reference,xx->width);
            printf("\n");
          }
     for (idepth=0;idepth<depth;idepth++) printf("\t");
@@ -548,6 +501,10 @@ static int expand(grib_accessor* a)
     return err;
   }
   self->dirty=0;
+  if (!self->tablesAccessor) {
+    self->tablesAccessor=grib_find_accessor(a->parent->h,self->tablesAccessorName);
+    Assert(self->tablesAccessor);
+  }
 
   if (self->rank!=0) {
     err=expand(self->expandedAccessor);
@@ -564,8 +521,9 @@ static int expand(grib_accessor* a)
   if (err) return err;
 
   unexpanded=grib_bufr_descriptors_array_new(c,unexpandedSize,100);
-  for (i=0;i<unexpandedSize;i++)
-    grib_bufr_descriptors_array_push(unexpanded,grib_bufr_descriptor_new(c,u[i]));
+  for (i=0;i<unexpandedSize;i++) {
+    grib_bufr_descriptors_array_push(unexpanded,grib_bufr_descriptor_new(self->tablesAccessor,u[i],&err));
+  }
 
   grib_context_free(c,u);
 
@@ -651,7 +609,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
       for (i=0;i<*len;i++) val[i]=self->expanded->v[i]->width;
       break;
     case 4:
-      for (i=0;i<*len;i++) val[i]=self->expanded->v[i]->flags;
+      for (i=0;i<*len;i++) val[i]=self->expanded->v[i]->type;
       break;
   }
 
@@ -685,7 +643,9 @@ static int value_count(grib_accessor* a,long* rlen)
 
 static void destroy(grib_context* c,grib_accessor* a) {
   grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
-  if (self->rank==0 && self->expanded) grib_context_free(c,self->expanded);
+  if (self->rank==0 && self->expanded) {
+    grib_bufr_descriptors_array_delete(self->expanded);
+  }
 }
 
 static int  get_native_type(grib_accessor* a)

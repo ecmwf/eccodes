@@ -37,7 +37,6 @@ int main(int argc, char** argv)
     /* setting the environment variable GRIB_SAMPLES_PATH                   */
     const char* sample_filename = "regular_ll_pl_grib1";
     /* Here is how you can get the samples path */
-    const char* samples_path = grib_samples_path(NULL);
     grib_handle *h = NULL;
     double d,e;
     long count;

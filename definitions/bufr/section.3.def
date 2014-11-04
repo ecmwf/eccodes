@@ -67,21 +67,22 @@ position offsetDescriptors;
 meta numberOfUnexpandedDescriptors   evaluate( (section3Length - 7) / 2 ) ;
 meta unexpandedDescriptors unexpanded_descriptors(numberOfUnexpandedDescriptors) :dump;
 
-transient elementCode="000000";
-elementAbbreviation=dict_search("element.table",elementCode,1,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
-elementType=dict_search("element.table",elementCode,2,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
-elementName=dict_search("element.table",elementCode,3,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
-elementUnit=dict_search("element.table",elementCode,4,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
-elementScale=dict_search("element.table",elementCode,5,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
-elementReference=dict_search("element.table",elementCode,6,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
-elementWidth=dict_search("element.table",elementCode,7,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
+meta elementsTable bufr_elements_table("element.table",tablesMasterDir,tablesLocalDir) : hidden; 
 
-meta expandedCodes      expanded_descriptors(expandedCodes,0,unexpandedDescriptors,sequences,elementCode,
-                                              elementUnit,elementScale,elementReference,elementWidth); 
-meta expandedScales     expanded_descriptors(expandedCodes,1);
-meta expandedReferences expanded_descriptors(expandedCodes,2);
-meta expandedWidths     expanded_descriptors(expandedCodes,3);
-meta expandedFlags      expanded_descriptors(expandedCodes,4);
+#transient elementCode="000000";
+#elementAbbreviation=dict_search("element.table",elementCode,1,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
+#elementType=dict_search("element.table",elementCode,2,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
+#elementName=dict_search("element.table",elementCode,3,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
+#elementUnit=dict_search("element.table",elementCode,4,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
+#elementScale=dict_search("element.table",elementCode,5,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
+#elementReference=dict_search("element.table",elementCode,6,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
+#elementWidth=dict_search("element.table",elementCode,7,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
+
+meta expandedCodes      expanded_descriptors(elementsTable,expandedCodes,0,unexpandedDescriptors,sequences); 
+#meta expandedScales     expanded_descriptors(elemetsTable,expandedCodes,1);
+#meta expandedReferences expanded_descriptors(elemetsTable,expandedCodes,2);
+#meta expandedWidths     expanded_descriptors(elemetsTable,expandedCodes,3);
+#meta expandedType       expanded_descriptors(elemetsTable,expandedCodes,4);
 
 meta bufrdcExpandedDescriptors bufrdc_expanded_descriptors(expandedCodes);
 

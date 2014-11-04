@@ -63,6 +63,7 @@ static const char *errors[] = {
 "String is smaller than requested",		/* -57 GRIB_STRING_TOO_SMALL */
 "Wrong type conversion",		/* -58 GRIB_WRONG_CONVERSION */
 "Missing BUFR table entry for descriptor",		/* -59 GRIB_MISSING_BUFR_ENTRY */
+"Null pointer",		/* -60 GRIB_NULL_POINTER */
 "Value mismatch",		/* 1 GRIB_VALUE_MISMATCH */
 "double values are different",		/* 2 GRIB_DOUBLE_VALUE_MISMATCH */
 "long values are different",		/* 3 GRIB_LONG_VALUE_MISMATCH */

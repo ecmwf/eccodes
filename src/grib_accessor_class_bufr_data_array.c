@@ -430,7 +430,7 @@ static void decode_element(grib_context* c,grib_accessor_bufr_data_array* self,
   int index=0,ii,sar_size;
   char* csval=0;
   double cdval=0,x;
-  if (self->expanded->v[i]->flags & BUFR_DESCRIPTOR_FLAG_IS_STRING) {
+  if (self->expanded->v[i]->type==BUFR_DESCRIPTOR_TYPE_STRING) {
     /* string */
     if (self->compressedData) {
       sar=decode_string_array(c,data,pos,i,self);
@@ -567,6 +567,48 @@ static void push_zero_element(grib_accessor_bufr_data_array* self,grib_darray* d
     grib_darray_push(c,dval,0);
   }
 }
+
+/*
+static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,long ide,long subset) {
+  grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
+  grib_accessor* elementAccessor=NULL;
+  grib_action creator = {0, };
+  creator.op         = "bufr_data_element";
+  creator.name_space = "";
+  creator.flags     = GRIB_ACCESSOR_FLAG_DUMP;
+  creator.set        = 0;
+
+  creator.name=self->expanded->v[self->elementsDescriptorsIndex->v[ide]]->name;
+  elementAccessor = grib_accessor_factory(section, &creator, 0, NULL);
+  accessor_bufr_data_element_set_index(elementAccessor,ide);
+  accessor_bufr_data_element_set_descriptors(elementAccessor,self->expanded);
+  accessor_bufr_data_element_set_numericValues(elementAccessor,self->numericValues);
+  accessor_bufr_data_element_set_stringValue(elementAccessor,self->stringValue);
+  accessor_bufr_data_element_set_compressedData(elementAccessor,self->compressedData);
+
+  return elementAccessor;
+}
+
+static int create_keys(grib_accessor* a) {
+  grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
+  int err=0;
+  long iss,end,elementsInSubset,ide;
+  grib_context* c=a->parent->h->context;
+
+  end= self->compressedData ? 1 : self->numberOfDataSubsets;
+
+  for (iss=0;iss<end;iss++) {
+    elementsInSubset= self->compressedData ? grib_viarray_used_size(self->elementsDescriptorsIndex) :
+                                             grib_iarray_used_size(self->elementsDescriptorsIndex->v[iss]);
+    for (ide=0;ide<elementsInSubset;ide++) {
+      elementAccessor=create_accessor_from_descriptor(a,ide);
+      grib_push_accessor(elementAccessor,a->subsection->block);
+    }
+  }
+
+  return err;
+}
+*/
 
 #define MAX_NESTED_REPLICATIONS 8
 
@@ -794,6 +836,8 @@ static int decode_elements(grib_accessor* a) {
       grib_vsarray_push(c,self->stringValues,sval);
     }
   }
+
+  /* err=create_keys(a); */
 
   return err;
 }
