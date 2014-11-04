@@ -58,7 +58,7 @@
           table2Version = 1 ;
           indicatorOfParameter = 11 ;
           }
-#Virtual temperature
+#Virtual potential temperature
 'K' = {
           table2Version = 1 ;
           indicatorOfParameter = 12 ;
@@ -823,7 +823,7 @@
           table2Version = 253 ;
           indicatorOfParameter = 11 ;
           }
-#Virtual temperature
+#Virtual potential temperature
 'K' = {
           table2Version = 253 ;
           indicatorOfParameter = 12 ;
@@ -1458,6 +1458,11 @@
           table2Version = 253 ;
           indicatorOfParameter = 139 ;
           }
+#Direct normal irradiance
+'W m**-2' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 140 ;
+          }
 #Precipitation Type
 '-' = {
           table2Version = 253 ;
@@ -1497,6 +1502,36 @@
 'kg kg**-1' = {
           table2Version = 253 ;
           indicatorOfParameter = 167 ;
+          }
+#Brightness temperature OZ clear
+'K' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 170 ;
+          }
+#Brightness temperature OZ cloud
+'K' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 171 ;
+          }
+#Brightness temperature IR clear
+'K' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 172 ;
+          }
+#Brightness temperature IR cloud
+'K' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 173 ;
+          }
+#Brightness temperature WV clear
+'K' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 174 ;
+          }
+#Brightness temperature WV cloud
+'K' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 175 ;
           }
 #Rain
 'kg m**-2' = {
@@ -1553,7 +1588,7 @@
           table2Version = 253 ;
           indicatorOfParameter = 192 ;
           }
-#Water on canopy (Interception content)
+#Soil ice
 'kg m**-2' = {
           table2Version = 253 ;
           indicatorOfParameter = 193 ;
@@ -1583,18 +1618,8 @@
           table2Version = 253 ;
           indicatorOfParameter = 204 ;
           }
-#Rain rate
-'kg m**-2 s**-1' = {
-          table2Version = 253 ;
-          indicatorOfParameter = 207 ;
-          }
-#Snow rate
-'kg m**-2 s**-1' = {
-          table2Version = 253 ;
-          indicatorOfParameter = 208 ;
-          }
-#Graupel rate
-'kg m**-2 s**-1' = {
+#Lightning
+'-' = {
           table2Version = 253 ;
           indicatorOfParameter = 209 ;
           }
@@ -1602,11 +1627,6 @@
 'dBz' = {
           table2Version = 253 ;
           indicatorOfParameter = 210 ;
-          }
-#Lightning
-'-' = {
-          table2Version = 253 ;
-          indicatorOfParameter = 211 ;
           }
 #Pressure departure
 'Pa' = {

@@ -9,7 +9,7 @@
 9 hstdv HSTDV Standard deviation of height m
 10 tco3 TCO3 Total column ozone Dobson
 11 t T Temperature K
-12 vptmp VPTMP Virtual temperature K
+12 vptmp VPTMP Virtual potential temperature K
 13 pt PT Potential temperature K
 14 papt PAPT Pseudo-adiabatic potential temperature K
 15 tmax TMAX Maximum temperature K
@@ -29,15 +29,15 @@
 29 wvsp2 WVSP2 Wave spectra (2) -
 30 wvsp3 WVSP3 Wave spectra (3) -
 31 wdir WDIR Wind direction Degree true
-32 wspd WSPD Wind speed m s**-1
+32 ws WS Wind speed m s**-1
 33 u U u-component of wind m s**-1
 34 v V v-component of wind m s**-1
 35 strf STRF Stream function m2 s**-1
 36 vp VP Velocity potential m2 s**-1
 37 mntsf MNTSF Montgomery stream function m**2 s**-1
-38 sigma SIGMA Sigma coordinate vertical velocity s**-1
-39 omega OMEGA Pressure Vertical velocity Pa s**-1
-40 w W Vertical velocity m s**-1
+38 sgcvv SGCVV Sigma coordinate vertical velocity s**-1
+39 w W Pressure Vertical velocity Pa s**-1
+40 tw TW Vertical velocity m s**-1
 41 absv ABSV Absolute vorticity s**-1
 42 absd ABSD Absolute divergence s**-1
 43 vo VO Relative vorticity s**-1
@@ -45,7 +45,7 @@
 45 vucsh VUCSH Vertical u-component shear s**-1
 46 vvcsh VVCSH Vertical v-component shear s**-1
 47 dirc DIRC Direction of current Degree true
-48 spdc SPDC Speed of current m s**-1
+48 spc SPC Speed of current m s**-1
 49 ucurr UCURR U-component of current m s**-1
 50 vcurr VCURR V-component of current m s**-1
 51 q Q Specific humidity kg kg**-1
@@ -65,7 +65,7 @@
 65 sf SF Water equivalent of accumulated snow depth kg m**-2
 66 sd SD Snow depth m
 67 mld MLD Mixed layer depth m
-68 tthd TTHD Transient thermocline depth m
+68 tthdp TTHDP Transient thermocline depth m
 69 mthd MTHD Main thermocline depth m
 70 mtha MTHA Main thermocline anomaly m
 71 tcc TCC Total cloud cover (0 - 1)
@@ -108,7 +108,7 @@
 108 mpps MPPS Mean period of primary swell s
 109 dirsw DIRSW Secondary wave direction Degree true
 110 swp SWP Secondary wave mean period s
-111 mswrs MSWRS Net short-wave radiation flux (surface) W m**-2
+111 nswrs NSWRS Net short-wave radiation flux (surface) W m**-2
 112 nlwrs NLWRS Net long-wave radiation flux (surface) W m**-2
 113 nswrt NSWRT Net short-wave radiation flux (atmosph.top) W m**-2
 114 nlwrt NLWRT Net long-wave radiation flux (atmosph.top) W m**-2
@@ -136,6 +136,7 @@
 137 pstb PSTB Pseudo satellite image: water vapour Tb -
 138 pstbc PSTBC Pseudo satellite image: water vapour Tb + correction for clouds -
 139 pscw PSCW Pseudo satellite image: cloud water reflectivity (visible) -
+140 dni DNI Direct normal irradiance W m**-2
 144 prtp PRTP Precipitation Type -
 158 mrad MRAD Surface downward moon radiation -
 160 cape CAPE CAPE out of the model J kg-1
@@ -144,6 +145,12 @@
 163 vgst VGST Gust, v-component m s*-1
 166 mcn MCN MOCON out of the model  kg kg**-1 s**-1
 167 totqv TOTQV Total water vapour kg kg**-1
+170 bt_oz_cs BT_OZ_CS Brightness temperature OZ clear K
+171 bt_oz_cl BT_OZ_CL Brightness temperature OZ cloud K
+172 bt_ir_cs BT_IR_CS Brightness temperature IR clear K
+173 bt_ir_cl BT_IR_CL Brightness temperature IR cloud K
+174 bt_wv_cs BT_WV_CS Brightness temperature WV clear K
+175 bt_wv_cl BT_WV_CL Brightness temperature WV cloud K
 181 rain RAIN Rain kg m**-2
 182 srain SRAIN Stratiform rain kg m**-2
 183 cr CR Convective rain kg m**-2
@@ -155,17 +162,14 @@
 190 asn ASN Snow albedo (0-1)
 191 rsn RSN Snow density kg m**-3
 192 w_i W_I Water on canopy (Interception content) kg m**-2
-193 w_so_ice W_SO_ICE Water on canopy (Interception content) kg m**-2
+193 w_so_ice W_SO_ICE Soil ice kg m**-2
 195 gwdu GWDU Gravity wave stress U-comp kg m**-1 s**-1
 196 gwdv GWDV Gravity wave stress V-comp kg m**-1 s**-1
 200 tke TKE TKE m**2 s**-2
 201 grpl GRPL Graupel kg m**-2
 204 hail HAIL Hail kg m**-2
-207 rrt RRT Rain rate kg m**-2 s**-1
-208 srt SRT Snow rate kg m**-2 s**-1
-209 grt GRT Graupel rate kg m**-2 s**-1
+209 lgt LGT Lightning -
 210 refl REFL Simulated reflectivity dBz
-211 lgt LGT Lightning -
 212 pdep PDEP Pressure departure Pa
 213 vdiv VDIV Vertical Divergence s**-1
 214 upom UPOM Updraft omega ms*-1

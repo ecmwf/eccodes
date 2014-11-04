@@ -58,8 +58,8 @@
           table2Version = 1 ;
           indicatorOfParameter = 11 ;
           }
-#Virtual temperature
-'Virtual temperature' = {
+#Virtual potential temperature
+'Virtual potential temperature' = {
           table2Version = 1 ;
           indicatorOfParameter = 12 ;
           }
@@ -823,8 +823,8 @@
           table2Version = 253 ;
           indicatorOfParameter = 11 ;
           }
-#Virtual temperature
-'Virtual temperature' = {
+#Virtual potential temperature
+'Virtual potential temperature' = {
           table2Version = 253 ;
           indicatorOfParameter = 12 ;
           }
@@ -1458,6 +1458,11 @@
           table2Version = 253 ;
           indicatorOfParameter = 139 ;
           }
+#Direct normal irradiance
+'Direct normal irradiance' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 140 ;
+          }
 #Precipitation Type
 'Precipitation Type' = {
           table2Version = 253 ;
@@ -1497,6 +1502,36 @@
 'Total water vapour' = {
           table2Version = 253 ;
           indicatorOfParameter = 167 ;
+          }
+#Brightness temperature OZ clear
+'Brightness temperature OZ clear' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 170 ;
+          }
+#Brightness temperature OZ cloud
+'Brightness temperature OZ cloud' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 171 ;
+          }
+#Brightness temperature IR clear
+'Brightness temperature IR clear' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 172 ;
+          }
+#Brightness temperature IR cloud
+'Brightness temperature IR cloud' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 173 ;
+          }
+#Brightness temperature WV clear
+'Brightness temperature WV clear' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 174 ;
+          }
+#Brightness temperature WV cloud
+'Brightness temperature WV cloud' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 175 ;
           }
 #Rain
 'Rain' = {
@@ -1553,8 +1588,8 @@
           table2Version = 253 ;
           indicatorOfParameter = 192 ;
           }
-#Water on canopy (Interception content)
-'Water on canopy (Interception content)' = {
+#Soil ice
+'Soil ice' = {
           table2Version = 253 ;
           indicatorOfParameter = 193 ;
           }
@@ -1583,18 +1618,8 @@
           table2Version = 253 ;
           indicatorOfParameter = 204 ;
           }
-#Rain rate
-'Rain rate' = {
-          table2Version = 253 ;
-          indicatorOfParameter = 207 ;
-          }
-#Snow rate
-'Snow rate' = {
-          table2Version = 253 ;
-          indicatorOfParameter = 208 ;
-          }
-#Graupel rate
-'Graupel rate' = {
+#Lightning
+'Lightning' = {
           table2Version = 253 ;
           indicatorOfParameter = 209 ;
           }
@@ -1602,11 +1627,6 @@
 'Simulated reflectivity' = {
           table2Version = 253 ;
           indicatorOfParameter = 210 ;
-          }
-#Lightning
-'Lightning' = {
-          table2Version = 253 ;
-          indicatorOfParameter = 211 ;
           }
 #Pressure departure
 'Pressure departure' = {

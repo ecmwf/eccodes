@@ -10,7 +10,7 @@
 9 hstdv HSTDV Standard deviation of height m
 10 tco3 TCO3 Total column ozone Dobson
 11 t T Temperature K
-12 vptmp VPTMP Virtual temperature K
+12 vptmp VPTMP Virtual potential temperature K
 13 pt PT Potential temperature K
 14 papt PAPT Pseudo-adiabatic potential temperature K
 15 tmax TMAX Maximum temperature K
@@ -30,15 +30,15 @@
 29 wvsp2 WVSP2 Wave spectra (2) -
 30 wvsp3 WVSP3 Wave spectra (3) -
 31 wdir WDIR Wind direction Degree true
-32 wspd WSPD Wind speed m s**-1
+32 ws WS Wind speed m s**-1
 33 u U u-component of wind m s**-1
 34 v V v-component of wind m s**-1
 35 strf STRF Stream function m2 s**-1
 36 vp VP Velocity potential m2 s**-1
 37 mntsf MNTSF Montgomery stream function m**2 s**-1
-38 sigma SIGMA Sigma coordinate vertical velocity s**-1
-39 omega OMEGA Pressure Vertical velocity Pa s**-1
-40 w W Vertical velocity m s**-1
+38 sgcvv SGCVV Sigma coordinate vertical velocity s**-1
+39 w W Pressure Vertical velocity Pa s**-1
+40 tw TW Vertical velocity m s**-1
 41 absv ABSV Absolute vorticity s**-1
 42 absd ABSD Absolute divergence s**-1
 43 vo VO Relative vorticity s**-1
@@ -46,7 +46,7 @@
 45 vucsh VUCSH Vertical u-component shear s**-1
 46 vvcsh VVCSH Vertical v-component shear s**-1
 47 dirc DIRC Direction of current Degree true
-48 spdc SPDC Speed of current m s**-1
+48 spc SPC Speed of current m s**-1
 49 ucurr UCURR U-component of current m s**-1
 50 vcurr VCURR V-component of current m s**-1
 51 q Q Specific humidity kg kg**-1
@@ -66,7 +66,7 @@
 65 sf SF Water equivalent of accumulated snow depth kg m**-2
 66 sd SD Snow depth m
 67 mld MLD Mixed layer depth m
-68 tthd TTHD Transient thermocline depth m
+68 tthdp TTHDP Transient thermocline depth m
 69 mthd MTHD Main thermocline depth m
 70 mtha MTHA Main thermocline anomaly m
 71 tcc TCC Total cloud cover (0 - 1)
@@ -109,7 +109,7 @@
 108 mpps MPPS Mean period of primary swell s
 109 dirsw DIRSW Secondary wave direction Degree true
 110 swp SWP Secondary wave mean period s
-111 mswrs MSWRS Net short-wave radiation flux (surface) W m**-2
+111 nswrs NSWRS Net short-wave radiation flux (surface) W m**-2
 112 nlwrs NLWRS Net long-wave radiation flux (surface) W m**-2
 113 nswrt NSWRT Net short-wave radiation flux (atmosph.top) W m**-2
 114 nlwrt NLWRT Net long-wave radiation flux (atmosph.top) W m**-2
