@@ -146,11 +146,13 @@ grib_hash_array_value *grib_double_hash_array_value_new(grib_context *c, const c
 void grib_hash_array_value_delete(grib_context *c, grib_hash_array_value *v);
 
 /* grib_bufr_descriptor.c */
-bufr_descriptor *grib_bufr_descriptor_new(grib_context *c, int code);
-bufr_descriptor *grib_bufr_descriptor_clone(grib_context *c, bufr_descriptor *d);
-void grib_bufr_descriptor_set_code(bufr_descriptor *v, int code);
+bufr_descriptor *grib_bufr_descriptor_new(grib_accessor *tables_accessor, int code, int *err);
+bufr_descriptor *grib_bufr_descriptor_clone(bufr_descriptor *d);
 void grib_bufr_descriptor_set_values(bufr_descriptor *v, int scale, int reference, int width);
-void grib_bufr_descriptor_set_scale(bufr_descriptor *v, int scale);
+int grib_bufr_descriptor_set_code(grib_accessor *tables_accessor, int code, bufr_descriptor *v);
+void grib_bufr_descriptor_set_reference(bufr_descriptor *v, double reference);
+void grib_bufr_descriptor_set_width(bufr_descriptor *v, long width);
+void grib_bufr_descriptor_set_scale(bufr_descriptor *v, long scale);
 void grib_bufr_descriptor_delete(grib_context *c, bufr_descriptor *v);
 
 /* grib_bufr_descriptors_array.c */
@@ -249,6 +251,13 @@ size_t grib_viarray_used_size(grib_viarray *v);
 /* grib_accessor_class_bufr_data_array.c */
 
 /* grib_accessor_class_bufr_data_element.c */
+void accessor_bufr_data_element_set_index(grib_accessor *a, long index);
+void accessor_bufr_data_element_set_type(grib_accessor *a, int type);
+void accessor_bufr_data_element_set_compressedData(grib_accessor *a, int compressedData);
+void accessor_bufr_data_element_set_descriptors(grib_accessor *a, bufr_descriptors_array *descriptors);
+void accessor_bufr_data_element_set_numericValues(grib_accessor *a, grib_vdarray *numericValues);
+void accessor_bufr_data_element_set_stringValues(grib_accessor *a, grib_vsarray *stringValues);
+void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor *a, grib_viarray *elementsDescriptorsIndex);
 
 /* grib_accessor_class_bufr_group.c */
 
@@ -257,6 +266,10 @@ size_t grib_viarray_used_size(grib_viarray *v);
 /* grib_accessor_class_bufr_uncompressed_data.c */
 
 /* grib_accessor_class_bufr_element.c */
+
+/* grib_accessor_class_bufr_elements_table.c */
+char **str_split(char *a_str, const char a_delim);
+bufr_descriptor *accessor_bufr_elements_table_get_descriptor(grib_accessor *a, int code, int *err);
 
 /* grib_accessor_class_bufr_has_delayed_replication.c */
 
@@ -1255,6 +1268,7 @@ double grib_arguments_get_double(grib_handle *h, grib_arguments *args, int n);
 grib_expression *grib_arguments_get_expression(grib_handle *h, grib_arguments *args, int n);
 
 /* grib_util.c */
+double rint(double x);
 grib_handle *grib_util_sections_copy(grib_handle *hfrom, grib_handle *hto, int what, int *err);
 grib_string_list *grib_util_get_param_id(const char *mars_param);
 grib_string_list *grib_util_get_mars_param(const char *param_id);

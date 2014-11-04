@@ -175,7 +175,7 @@ bufr_descriptor** grib_bufr_descriptors_array_get_array(bufr_descriptors_array* 
     grib_context* c=grib_context_get_default();
 
     vv=(bufr_descriptor**)grib_context_malloc_clear(c,sizeof(bufr_descriptor*)*v->n);
-    for (i=0;i<v->n;i++) vv[i]=grib_bufr_descriptor_clone(c,v->v[i]);
+    for (i=0;i<v->n;i++) vv[i]=grib_bufr_descriptor_clone(v->v[i]);
 
     return vv;
 }

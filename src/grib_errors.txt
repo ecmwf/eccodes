@@ -65,3 +65,4 @@ GRIB_INVALID_KEY_VALUE				Invalid key value
 GRIB_STRING_TOO_SMALL					String is smaller than requested
 GRIB_WRONG_CONVERSION         Wrong type conversion
 GRIB_MISSING_BUFR_ENTRY       Missing BUFR table entry for descriptor
+GRIB_NULL_POINTER             Null pointer

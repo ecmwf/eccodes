@@ -200,12 +200,6 @@ double rint(double x);
 #define MAX_SMART_TABLE_COLUMNS 20
 #define MAX_CODETABLE_ENTRIES 65536
 
-/* types of BUFR table B elements */
-#define BUFR_TYPE_STRING      1
-#define BUFR_TYPE_DOUBLE      2
-#define BUFR_TYPE_CODETABLE   3
-#define BUFR_TYPE_FLAGTABLE   4
-
 /* ACCESSOR COMPARE FLAGS */
 #define GRIB_COMPARE_NAMES          (1<<0)
 #define GRIB_COMPARE_TYPES          (1<<1)
@@ -514,13 +508,6 @@ struct grib_accessor
 
 };
 
-#define BUFR_DESCRIPTOR_FLAG_HAS_VALUES       (1<<1)
-#define BUFR_DESCRIPTOR_FLAG_DEFAULT_VALUES   (1<<2)
-#define BUFR_DESCRIPTOR_FLAG_MODIFIED_VALUES  (1<<3)
-#define BUFR_DESCRIPTOR_FLAG_IS_TABLE         (1<<4)
-#define BUFR_DESCRIPTOR_FLAG_IS_FLAG          (1<<5)
-#define BUFR_DESCRIPTOR_FLAG_IS_STRING        (1<<6)
-
 #define GRIB_ACCESSOR_FLAG_READ_ONLY        (1<<1)
 #define GRIB_ACCESSOR_FLAG_DUMP             (1<<2)
 #define GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC (1<<3)
@@ -750,12 +737,27 @@ struct grib_viarray {
   grib_context* context;
 } ;
 
+/* types of BUFR descriptors used in bufr_descriptor->type*/
+#define BUFR_DESCRIPTOR_TYPE_UNKNOWN      0
+#define BUFR_DESCRIPTOR_TYPE_STRING       1
+#define BUFR_DESCRIPTOR_TYPE_DOUBLE       2
+#define BUFR_DESCRIPTOR_TYPE_LONG         3
+#define BUFR_DESCRIPTOR_TYPE_TABLE        4
+#define BUFR_DESCRIPTOR_TYPE_FLAG         5
+#define BUFR_DESCRIPTOR_TYPE_REPLICATION  6
+#define BUFR_DESCRIPTOR_TYPE_OPERATOR     7
+#define BUFR_DESCRIPTOR_TYPE_SEQUENCE     8
+
 struct bufr_descriptor {
+  grib_context* context;
   long code;
   int F;
   int X;
   int Y;
-  int flags;
+  int type;
+  char* name;
+  char* shortName;
+  char* units;
   long scale;
   double factor;
   double reference;
@@ -773,8 +775,6 @@ struct bufr_descriptors_array {
 
 #define MAX_SET_VALUES      10
 #define MAX_ACCESSOR_CACHE  100
-
-
 
 struct grib_handle
 {
@@ -991,7 +991,6 @@ struct grib_context
     int                             hash_array_count;
     grib_hash_array_value*          hash_array[MAX_NUM_HASH_ARRAY];
     grib_trie*                      def_files;
-    
     grib_string_list*                blacklist;
     int                             ieee_packing;
     int                             unpack;

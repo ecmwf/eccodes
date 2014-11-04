@@ -60,6 +60,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_unpack_bufr_values.c 
     grib_accessor_class_bufr_uncompressed_data.c 
     grib_accessor_class_bufr_element.c 
+    grib_accessor_class_bufr_elements_table.c
     grib_accessor_class_bufr_has_delayed_replication.c 
     grib_accessor_class_bufr_subset_number.c 
     grib_accessor_class_bufr_group_number.c 

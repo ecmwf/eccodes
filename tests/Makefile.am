@@ -1,5 +1,5 @@
 TESTS = definitions.sh \
-        bufrdc_ref.sh bufr_dump.sh \
+        bufrdc_desc_ref.sh bufrdc_ref.sh bufr_dump.sh \
         ieee.sh grib1to2.sh \
         unit_tests.sh \
         grib2to1.sh badgrib.sh ls.sh filter.sh  \

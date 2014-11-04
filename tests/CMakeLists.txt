@@ -29,6 +29,7 @@ endforeach()
 list( APPEND tests
     definitions
     bufr_dump
+    bufrdc_desc_ref
     bufrdc_ref
     ieee
     grib1to2

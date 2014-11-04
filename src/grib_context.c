@@ -728,8 +728,11 @@ void* grib_context_realloc(const grib_context* c, void *p,size_t size)
 
 char* grib_context_strdup(const grib_context* c,const char* s)
 {
-    char *dup = (char*)grib_context_malloc(c,(strlen(s)*sizeof(char))+1);
-    if(dup) strcpy(dup,s);
+    char *dup=0;
+    if (s) {
+      dup = (char*)grib_context_malloc(c,(strlen(s)*sizeof(char))+1);
+      if(dup) strcpy(dup,s);
+    }
     return dup;
 }
 

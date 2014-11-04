@@ -15,6 +15,7 @@
 { "bufr_data_array", &grib_accessor_class_bufr_data_array, },
 { "bufr_data_element", &grib_accessor_class_bufr_data_element, },
 { "bufr_element", &grib_accessor_class_bufr_element, },
+{ "bufr_elements_table", &grib_accessor_class_bufr_elements_table, },
 { "bufr_group", &grib_accessor_class_bufr_group, },
 { "bufr_group_number", &grib_accessor_class_bufr_group_number, },
 { "bufr_has_delayed_replication", &grib_accessor_class_bufr_has_delayed_replication, },

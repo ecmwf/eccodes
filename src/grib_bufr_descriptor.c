@@ -11,49 +11,92 @@
 
 #include "grib_api_internal.h"
 
-bufr_descriptor* grib_bufr_descriptor_new(grib_context* c,int code) {
-  bufr_descriptor* v=NULL;
-
-  if (!c) c=grib_context_get_default();
-
-  v=(bufr_descriptor*)grib_context_malloc_clear(c,sizeof(bufr_descriptor));
-  if (!v) {
-    grib_context_log(c,GRIB_LOG_ERROR,
-          "grib_bufr_descriptor_new unable to allocate %d bytes\n",sizeof(bufr_descriptor));
-    return NULL;
-  }
-
-  grib_bufr_descriptor_set_code(v,code);
-
-  return v;
+bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor,int code,int *err) {
+  bufr_descriptor* ret=accessor_bufr_elements_table_get_descriptor(tables_accessor,code,err);
+  if (*err) grib_context_log(tables_accessor->parent->h->context,GRIB_LOG_ERROR,
+      "unable to get descriptor %06d from table",code);
+  return ret;
 }
 
-bufr_descriptor* grib_bufr_descriptor_clone(grib_context* c,bufr_descriptor* d) {
+bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d) {
+
+  bufr_descriptor* cd=0;
 
   if (!d) return NULL;
 
-  return grib_bufr_descriptor_new(c,d->code);
-}
+  cd=grib_context_malloc_clear(d->context,sizeof(bufr_descriptor));
 
-void grib_bufr_descriptor_set_code(bufr_descriptor* v,int code) {
-  if (!v) return;
+  cd->code=d->code;
+  cd->F=d->F;
+  cd->X=d->X;
+  cd->Y=d->Y;
+  cd->name=grib_context_strdup(d->context,d->name);
+  cd->shortName=grib_context_strdup(d->context,d->shortName);
+  cd->units=grib_context_strdup(d->context,d->units);
+  cd->scale=d->scale;
+  cd->factor=d->factor;
+  cd->width=d->width;
+  cd->reference=d->reference;
+  cd->type=d->type;
 
-  v->code=code;
-  v->F=code/100000;
-  v->X=(code-v->F*100000)/1000;
-  v->Y=(code-v->F*100000)%1000;
+  return cd;
 }
 
 void grib_bufr_descriptor_set_values(bufr_descriptor* v,int scale,int reference,int width) {
   if (!v) return;
   v->scale=scale;
-  v->reference=reference;
   v->width=width;
-  v->flags=BUFR_DESCRIPTOR_FLAG_HAS_VALUES;
   v->factor=grib_power(-scale,10);
 }
 
-void grib_bufr_descriptor_set_scale(bufr_descriptor* v,int scale) {
+int grib_bufr_descriptor_set_code(grib_accessor* tables_accessor,int code,bufr_descriptor* v) {
+  int err=0;
+  grib_context* c;
+  bufr_descriptor* d;
+
+  if (!v) return GRIB_NULL_POINTER;
+
+  c=v->context;
+
+  if (v->type==BUFR_DESCRIPTOR_TYPE_REPLICATION || v->type==BUFR_DESCRIPTOR_TYPE_OPERATOR) {
+    v->code=code;
+    v->F=code/100000;
+    v->X=(code-v->F*100000)/1000;
+    v->Y=(code-v->F*100000)%1000;
+  } else {
+    if (tables_accessor==NULL) return GRIB_NULL_POINTER;
+    d=accessor_bufr_elements_table_get_descriptor(tables_accessor,code,&err);
+    v->code=d->code;
+    v->F=d->F;
+    v->X=d->X;
+    v->Y=d->Y;
+    grib_context_free(c,v->name);
+    v->name=grib_context_strdup(c,d->name);
+    grib_context_free(c,v->shortName);
+    v->shortName=grib_context_strdup(c,d->shortName);
+    grib_context_free(c,v->units);
+    v->units=grib_context_strdup(c,d->units);
+    v->scale=d->scale;
+    v->factor=d->factor;
+    v->width=d->width;
+    v->reference=d->reference;
+    v->type=d->type;
+    grib_bufr_descriptor_delete(c,d);
+  }
+  return err;
+}
+
+void grib_bufr_descriptor_set_reference(bufr_descriptor* v,double reference) {
+  if (!v) return;
+  v->reference=reference;
+}
+
+void grib_bufr_descriptor_set_width(bufr_descriptor* v,long width) {
+  if (!v) return;
+  v->width=width;
+}
+
+void grib_bufr_descriptor_set_scale(bufr_descriptor* v,long scale) {
   if (!v) return;
   v->scale=scale;
   v->factor=grib_power(-scale,10);
@@ -63,6 +106,9 @@ void grib_bufr_descriptor_delete(grib_context* c,bufr_descriptor* v) {
 
   if (!v) return;
 
+  grib_context_free(c,v->name);
+  grib_context_free(c,v->shortName);
+  grib_context_free(c,v->units);
   grib_context_free(c,v);
 }
 
