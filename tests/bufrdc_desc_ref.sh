@@ -24,6 +24,7 @@ do
   # Test descriptors: compare output of filter (res) with reference file (ref)
   res_desc=$file.desc.test
   ref_desc=$file.desc.ref
+  [ -f "$ref_desc" ]
   diff_desc=$file.desc.diff
 
   rm -f $res_desc

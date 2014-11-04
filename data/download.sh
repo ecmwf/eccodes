@@ -124,6 +124,7 @@ files="
     tp_ecmwf.grib
     v.grib2
     ccsds.grib2
+
     tigge/tigge_ammc_pl_gh.grib
     tigge/tigge_ammc_pl_q.grib
     tigge/tigge_ammc_pl_t.grib
@@ -365,6 +366,7 @@ files="
     tigge/tigge_sbsj_sfc_tcw.grib
     tigge/tigge_sbsj_sfc_tp.grib
     tigge/tiggelam_cnmc_sfc.grib
+    
     bufr/aaen_55.bufr
     bufr/aben_55.bufr
     bufr/ahws_139.bufr
@@ -629,6 +631,139 @@ files="
     bufr/tmr7_129.bufr.num.ref
     bufr/tros_31.bufr.num.ref
     bufr/wavb_134.bufr.num.ref
+    
+    bufr/aaen_55.bufr.desc.ref
+    bufr/aben_55.bufr.desc.ref
+    bufr/ahws_139.bufr.desc.ref
+    bufr/airc_142.bufr.desc.ref
+    bufr/airc_144.bufr.desc.ref
+    bufr/airs_57.bufr.desc.ref
+    bufr/alws_139.bufr.desc.ref
+    bufr/amda_144.bufr.desc.ref
+    bufr/amsa_55.bufr.desc.ref
+    bufr/amsb_55.bufr.desc.ref
+    bufr/amse_55.bufr.desc.ref
+    bufr/amsu_55.bufr.desc.ref
+    bufr/amv2_87.bufr.desc.ref
+    bufr/amv3_87.bufr.desc.ref
+    bufr/asbh_139.bufr.desc.ref
+    bufr/asbl_139.bufr.desc.ref
+    bufr/asca_139.bufr.desc.ref
+    bufr/asch_139.bufr.desc.ref
+    bufr/ascs_139.bufr.desc.ref
+    bufr/aseh_139.bufr.desc.ref
+    bufr/asel_139.bufr.desc.ref
+    bufr/ashs_139.bufr.desc.ref
+    bufr/atap_55.bufr.desc.ref
+    bufr/ateu_155.bufr.desc.ref
+    bufr/atms_201.bufr.desc.ref
+    bufr/atov_55.bufr.desc.ref
+    bufr/avhm_87.bufr.desc.ref
+    bufr/avhn_87.bufr.desc.ref
+    bufr/avhr_58.bufr.desc.ref
+    bufr/b002_95.bufr.desc.ref
+    bufr/b002_96.bufr.desc.ref
+    bufr/b003_56.bufr.desc.ref
+    bufr/b004_145.bufr.desc.ref
+    bufr/b005_87.bufr.desc.ref
+    bufr/b005_89.bufr.desc.ref
+    bufr/b006_96.bufr.desc.ref
+    bufr/b007_31.bufr.desc.ref
+    bufr/bssh_170.bufr.desc.ref
+    bufr/bssh_176.bufr.desc.ref
+    bufr/bssh_178.bufr.desc.ref
+    bufr/bssh_180.bufr.desc.ref
+    bufr/btem_109.bufr.desc.ref
+    bufr/buoy_27.bufr.desc.ref
+    bufr/cmwi_87.bufr.desc.ref
+    bufr/cmwn_87.bufr.desc.ref
+    bufr/cnow_28.bufr.desc.ref
+    bufr/cori_156.bufr.desc.ref
+    bufr/crit_202.bufr.desc.ref
+    bufr/csrh_189.bufr.desc.ref
+    bufr/emsg_189.bufr.desc.ref
+    bufr/emsg_87.bufr.desc.ref
+    bufr/euwv_87.bufr.desc.ref
+    bufr/fy3a_154.bufr.desc.ref
+    bufr/fy3b_154.bufr.desc.ref
+    bufr/g2nd_208.bufr.desc.ref
+    bufr/g2to_206.bufr.desc.ref
+    bufr/go15_87.bufr.desc.ref
+    bufr/goee_87.bufr.desc.ref
+    bufr/goes_87.bufr.desc.ref
+    bufr/goga_89.bufr.desc.ref
+    bufr/gosat.bufr.desc.ref
+    bufr/grst_26.bufr.desc.ref
+    bufr/gsd1_208.bufr.desc.ref
+    bufr/gsd2_208.bufr.desc.ref
+    bufr/gsd3_208.bufr.desc.ref
+    bufr/gst4_26.bufr.desc.ref
+    bufr/hirb_55.bufr.desc.ref
+    bufr/hirs_55.bufr.desc.ref
+    bufr/ias1_240.bufr.desc.ref
+    bufr/iasi_241.bufr.desc.ref
+    bufr/ifco_208.bufr.desc.ref
+    bufr/ikco_217.bufr.desc.ref
+    bufr/itrg_208.bufr.desc.ref
+    bufr/itwt_233.bufr.desc.ref
+    bufr/j2eo_216.bufr.desc.ref
+    bufr/j2nb_216.bufr.desc.ref
+    bufr/jaso_214.bufr.desc.ref
+    bufr/kond_209.bufr.desc.ref
+    bufr/maer_207.bufr.desc.ref
+    bufr/meta_140.bufr.desc.ref
+    bufr/mhen_55.bufr.desc.ref
+    bufr/mhsa_55.bufr.desc.ref
+    bufr/mhsb_55.bufr.desc.ref
+    bufr/mhse_55.bufr.desc.ref
+    bufr/mloz_206.bufr.desc.ref
+    bufr/modi_87.bufr.desc.ref
+    bufr/modw_87.bufr.desc.ref
+    bufr/monw_87.bufr.desc.ref
+    bufr/nomi_206.bufr.desc.ref
+    bufr/nos1_208.bufr.desc.ref
+    bufr/nos2_208.bufr.desc.ref
+    bufr/nos3_208.bufr.desc.ref
+    bufr/nos4_208.bufr.desc.ref
+    bufr/nos5_208.bufr.desc.ref
+    bufr/nos6_208.bufr.desc.ref
+    bufr/nos7_208.bufr.desc.ref
+    bufr/nos8_208.bufr.desc.ref
+    bufr/ocea_131.bufr.desc.ref
+    bufr/ocea_132.bufr.desc.ref
+    bufr/ocea_133.bufr.desc.ref
+    bufr/ocea_21.bufr.desc.ref
+    bufr/pgps_110.bufr.desc.ref
+    bufr/pilo_91.bufr.desc.ref
+    bufr/rada_250.bufr.desc.ref
+    bufr/rado_250.bufr.desc.ref
+    bufr/s4kn_165.bufr.desc.ref
+    bufr/sb19_206.bufr.desc.ref
+    bufr/sbu8_206.bufr.desc.ref
+    bufr/ship_11.bufr.desc.ref
+    bufr/ship_12.bufr.desc.ref
+    bufr/ship_13.bufr.desc.ref
+    bufr/ship_14.bufr.desc.ref
+    bufr/ship_19.bufr.desc.ref
+    bufr/ship_9.bufr.desc.ref
+    bufr/smin_49.bufr.desc.ref
+    bufr/smis_49.bufr.desc.ref
+    bufr/smiu_49.bufr.desc.ref
+    bufr/smos_203.bufr.desc.ref
+    bufr/sn4k_165.bufr.desc.ref
+    bufr/soil_7.bufr.desc.ref
+    bufr/ssbt_127.bufr.desc.ref
+    bufr/stuk_7.bufr.desc.ref
+    bufr/syno_1.bufr.desc.ref
+    bufr/syno_2.bufr.desc.ref
+    bufr/syno_3.bufr.desc.ref
+    bufr/syno_4.bufr.desc.ref
+    bufr/temp_101.bufr.desc.ref
+    bufr/temp_102.bufr.desc.ref
+    bufr/temp_106.bufr.desc.ref
+    bufr/tmr7_129.bufr.desc.ref
+    bufr/tros_31.bufr.desc.ref
+    bufr/wavb_134.bufr.desc.ref
   "
 
 [ -d "${DATA_DIR}/tigge" ] || mkdir "${DATA_DIR}/tigge"
