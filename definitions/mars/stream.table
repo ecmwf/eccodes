@@ -1,6 +1,6 @@
 0 0 Unknown
 1022 fsob Forecast sensitivity to observations
-1023 fsow Forecast sensitivity to observations wave 
+1023 fsow Forecast sensitivity to observations wave
 1024 dahc Daily archive hindcast
 1025 oper Atmospheric model
 1026 scda Atmospheric model (short cutoff)
@@ -96,4 +96,3 @@
 2231 cnrm Meteo France climate centre
 2232 mpic Max Plank Institute
 2233 ukmo UKMO climate centre
-
