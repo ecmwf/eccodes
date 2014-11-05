@@ -3067,12 +3067,6 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 79 ;
 	}
-#Wildfire Flux of Ethane (C2H6)
-'c2h6fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 118 ;
-	}
 #Mean altitude of maximum injection
 'mami' = {
 	 discipline = 192 ;
@@ -3241,72 +3235,6 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 230 ;
 	}
-#Wildfire Flux of Toluene (C7H8)
-'c7h8fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 231 ;
-	}
-#Wildfire Flux of Benzene (C6H6)
-'c6h6fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 232 ;
-	}
-#Wildfire Flux of Xylene (C8H10)
-'c8h10fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 233 ;
-	}
-#Wildfire Flux of Butenes (C4H8)
-'c4h8fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 234 ;
-	}
-#Wildfire Flux of Pentenes (C5H10)
-'c5h10fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 235 ;
-	}
-#Wildfire Flux of Hexene (C6H12)
-'c6h12fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 236 ;
-	}
-#Wildfire Flux of Octene (C8H16)
-'c8h16fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 237 ;
-	}
-#Wildfire Flux of Butanes (C4H10)
-'c4h10fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 238 ;
-	}
-#Wildfire Flux of Pentanes (C5H12)
-'c5h12fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 239 ;
-	}
-#Wildfire Flux of Hexanes (C6H14)
-'c6h14fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 240 ;
-	}
-#Wildfire Flux of Heptane (C7H16)
-'c7h16fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 241 ;
-	}
 #Altitude of plume bottom
 'apb' = {
 	 discipline = 192 ;
@@ -3402,12 +3330,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 56 ;
-	}
-#Wildfire Flux of Ethane (C2H6)
-'c2h6firediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 118 ;
 	}
 #Altitude of emitter
 'alediff' = {
@@ -16510,78 +16432,6 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 71 ;
 	}
-#Wildfire flux of Carbon Dioxide
-'co2fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 80 ;
-	}
-#Wildfire flux of Carbon Monoxide
-'cofire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 81 ;
-	}
-#Wildfire flux of Methane
-'ch4fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 82 ;
-	}
-#Wildfire flux of Non-Methane Hydro-Carbons
-'nmhcfire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 83 ;
-	}
-#Wildfire flux of Hydrogen
-'h2fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 84 ;
-	}
-#Wildfire flux of Nitrogen Oxides NOx
-'noxfire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 85 ;
-	}
-#Wildfire flux of Nitrous Oxide
-'n2ofire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 86 ;
-	}
-#Wildfire flux of Particulate Matter PM2.5
-'pm2p5fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 87 ;
-	}
-#Wildfire flux of Total Particulate Matter
-'tpmfire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 88 ;
-	}
-#Wildfire flux of Total Carbon in Aerosols
-'tcfire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 89 ;
-	}
-#Wildfire flux of Organic Carbon
-'ocfire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 90 ;
-	}
-#Wildfire flux of Black Carbon
-'bcfire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 91 ;
-	}
 #Wildfire overall flux of burnt Carbon
 'cfire' = {
 	 discipline = 192 ;
@@ -17390,78 +17240,6 @@
 	 parameterCategory = 211 ;
 	 parameterNumber = 71 ;
 	}
-#Wildfire flux of Carbon Dioxide
-'co2firediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 80 ;
-	}
-#Wildfire flux of Carbon Monoxide
-'cofirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 81 ;
-	}
-#Wildfire flux of Methane
-'ch4firediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 82 ;
-	}
-#Wildfire flux of Non-Methane Hydro-Carbons
-'nmhcfirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 83 ;
-	}
-#Wildfire flux of Hydrogen
-'h2firediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 84 ;
-	}
-#Wildfire flux of Nitrogen Oxides NOx
-'noxfirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 85 ;
-	}
-#Wildfire flux of Nitrous Oxide
-'n2ofirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 86 ;
-	}
-#Wildfire flux of Particulate Matter PM2.5
-'pm2p5firediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 87 ;
-	}
-#Wildfire flux of Total Particulate Matter
-'tpmfirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 88 ;
-	}
-#Wildfire flux of Total Carbon in Aerosols
-'tcfirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 89 ;
-	}
-#Wildfire flux of Organic Carbon
-'ocfirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 90 ;
-	}
-#Wildfire flux of Black Carbon
-'bcfirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 91 ;
-	}
 #Wildfire overall flux of burnt Carbon
 'cfirediff' = {
 	 discipline = 192 ;
@@ -18056,203 +17834,11 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 101 ;
 	}
-#Wildfire flux of Sulfur Dioxide
-'so2fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 102 ;
-	}
-#Wildfire Flux of Methanol (CH3OH)
-'ch3ohfire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 103 ;
-	}
-#Wildfire Flux of Ethanol (C2H5OH)
-'c2h5ohfire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 104 ;
-	}
-#Wildfire Flux of Propane (C3H8)
-'c3h8fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 105 ;
-	}
-#Wildfire Flux of Ethene (C2H4)
-'c2h4fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 106 ;
-	}
-#Wildfire Flux of Propene (C3H6)
-'c3h6fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 107 ;
-	}
-#Wildfire Flux of Isoprene (C5H8)
-'c5h8fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 108 ;
-	}
-#Wildfire Flux of Terpenes (C5H8)n
-'terpenesfire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 109 ;
-	}
-#Wildfire Flux of Toluene_lump (C7H8+ C6H6 + C8H10)
-'toluenefire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 110 ;
-	}
-#Wildfire Flux of Higher Alkenes (CnH2n, C>=4)
-'hialkenesfire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 111 ;
-	}
-#Wildfire Flux of Higher Alkanes (CnH2n+2, C>=4)
-'hialkanesfire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 112 ;
-	}
-#Wildfire Flux of Formaldehyde (CH2O)
-'ch2ofire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 113 ;
-	}
-#Wildfire Flux of Acetaldehyde (C2H4O)
-'c2h4ofire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 114 ;
-	}
-#Wildfire Flux of Acetone (C3H6O)
-'c3h6ofire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 115 ;
-	}
-#Wildfire Flux of Ammonia (NH3)
-'nh3fire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 116 ;
-	}
-#Wildfire Flux of Dimethyl Sulfide (DMS) (C2H6S)
-'c2h6sfire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 117 ;
-	}
 #Wildfire radiative power maximum
 'maxfrpfirediff' = {
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 101 ;
-	}
-#Wildfire flux of Sulfur Dioxide
-'so2firediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 102 ;
-	}
-#Wildfire Flux of Methanol (CH3OH)
-'ch3ohfirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 103 ;
-	}
-#Wildfire Flux of Ethanol (C2H5OH)
-'c2h5ohfirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 104 ;
-	}
-#Wildfire Flux of Propane (C3H8)
-'c3h8firediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 105 ;
-	}
-#Wildfire Flux of Ethene (C2H4)
-'c2h4firediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 106 ;
-	}
-#Wildfire Flux of Propene (C3H6)
-'c3h6firediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 107 ;
-	}
-#Wildfire Flux of Isoprene (C5H8)
-'c5h8firediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 108 ;
-	}
-#Wildfire Flux of Terpenes (C5H8)n
-'terpenesfirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 109 ;
-	}
-#Wildfire Flux of Toluene_lump (C7H8+ C6H6 + C8H10)
-'toluenefirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 110 ;
-	}
-#Wildfire Flux of Higher Alkenes (CnH2n, C>=4)
-'hialkenesfirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 111 ;
-	}
-#Wildfire Flux of Higher Alkanes (CnH2n+2, C>=4)
-'hialkanesfirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 112 ;
-	}
-#Wildfire Flux of Formaldehyde (CH2O)
-'ch2ofirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 113 ;
-	}
-#Wildfire Flux of Acetaldehyde (C2H4O)
-'c2h4ofirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 114 ;
-	}
-#Wildfire Flux of Acetone (C3H6O)
-'c3h6ofirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 115 ;
-	}
-#Wildfire Flux of Ammonia (NH3)
-'nh3firediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 116 ;
-	}
-#Wildfire Flux of Dimethyl Sulfide (DMS) (C2H6S)
-'c2h6sfirediff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 117 ;
 	}
 #V-tendency from non-orographic wave drag
 'vtnowd' = {
