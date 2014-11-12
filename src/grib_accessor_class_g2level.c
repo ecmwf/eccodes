@@ -186,6 +186,11 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
 	if(scale_first != GRIB_MISSING_LONG)
 	{
+        /* GRIB-637 Potential vorticity surface */
+        if (type_first == 109) {
+            scale_first -= 6;
+        }
+
 		while(scale_first<0 && v!=0)  { v *= 10.0; scale_first ++; }
 		while(scale_first>0 && v!=0)  { v /= 10.0; scale_first --; }
 	}
@@ -209,10 +214,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 				v=x;
 			}
 		}
-		break;
-
-	case 109: /* Potential vorticity surface */
-		v  *= 1e6;
 		break;
 	}
 

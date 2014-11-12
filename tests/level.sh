@@ -70,5 +70,9 @@ ${tools_dir}grib_set -s scaledValueOfFirstFixedSurface=15,scaleFactorOfFirstFixe
 res=`${tools_dir}grib_get -p level:d $temp`
 [ "$res" = "1.5" ]
 
+# GRIB-637 grib2 Potential vorticity surface
+input=${data_dir}/tigge_pf_ecmwf.grib2
+res=`${tools_dir}grib_get -wcount=7 -F%.20f -p level:d $input`
+[ "$res" = "2.00000000000000000000" ]
 
 rm -f level.filter good test.dump $temp
