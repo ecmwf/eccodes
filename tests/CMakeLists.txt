@@ -28,6 +28,7 @@ endforeach()
 #################################################
 list( APPEND tests
     definitions
+    calendar
     bufr_dump
     bufrdc_desc_ref
     bufrdc_ref

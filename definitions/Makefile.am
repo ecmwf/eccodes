@@ -4655,6 +4655,11 @@ dist_definitionsgrib2_DATA = \
 	grib2/section.8.def\
 	grib2/sections.def\
 	grib2/shortName.def\
+	grib2/template.1.0.def\
+	grib2/template.1.1.def\
+	grib2/template.1.2.def\
+	grib2/template.1.calendar.def\
+	grib2/template.1.offset.def\
 	grib2/template.3.0.def\
 	grib2/template.3.1.def\
 	grib2/template.3.10.def\

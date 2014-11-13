@@ -1,4 +1,4 @@
-TESTS = definitions.sh \
+TESTS = definitions.sh calendar.sh \
         bufrdc_desc_ref.sh bufrdc_ref.sh bufr_dump.sh \
         ieee.sh grib1to2.sh \
         unit_tests.sh \
