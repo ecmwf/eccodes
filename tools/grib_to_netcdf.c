@@ -3160,8 +3160,24 @@ static void remove_param(request *r, void *data, const char *p)
     const char *ignore;
     int i = 0;
 
-    while((ignore = get_value(config, p, i++)) != NULL)
+    while((ignore = get_value(config, p, i++)) != NULL) {
         unset_value(r, ignore);
+    }
+}
+
+static void print_ignored_keys(FILE* f, request* data)
+{
+    const char *ignore = NULL;
+    int i = 0;
+    while ((ignore = get_value(data, "ignore", i)) != NULL) {
+        if (i==0) {
+            fprintf(f, "%s: Ignoring key(s): %s", grib_tool_name, ignore);
+        } else {
+            fprintf(f, ", %s", ignore);
+        }
+        ++i;
+    }
+    if (i>0) fprintf(f, "\n");
 }
 
 #define NO_TABLE -1
@@ -3991,6 +4007,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     count = split_fieldset(fs, data_r, &subsets, user_r, config_r);
     remove_param(data_r, (void *) user_r, "ignore");
     remove_param(data_r, (void *) user_r, "split");
+    print_ignored_keys(stdout, user_r);
     dims = new_simple_hypercube_from_mars_request(data_r);
 
     /* In case there is only 1 DATE+TIME+STEP, set at least 1 time as axis */
