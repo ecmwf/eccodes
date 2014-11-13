@@ -1,1 +1,0 @@
-ctest_parallel="no"
