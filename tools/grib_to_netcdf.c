@@ -2061,10 +2061,9 @@ static void check_err(const int stat, const int line, const char *file)
     {
         (void) fprintf(stderr, "line %d of %s: %s\n", line, file, nc_strerror(stat));
         if (stat == NC_EVARSIZE) {
-            (void) fprintf(stderr, "\nPlease invoke with the '-L' option to create a 64-bit offset format file, "
-                                   "instead of a netCDF classic format file.\n");
+            (void) fprintf(stderr, "\nCannot create netCDF classic format, dataset is too large!\n"
+                    "Try splitting the input GRIB(s).\n");
         }
-
         exit(1);
     }
 }
@@ -3693,7 +3692,6 @@ grib_option grib_options[] = {
         { "f", 0, 0, 0, 1, 0 },
         { "o:", "output file",   "\n\t\tThe name of the netcdf file.\n", 1, 1, 0 },
         { "V", 0, 0, 0, 1, 0 },
-        { "L", 0, "Create netcdf in 64-bit offset format (for very large files).\n", 0, 1, 0 },
         { "M", 0, 0, 0, 1, 0 },
         { "u:", "dimension",  "\n\t\tSet dimension to be an unlimited dimension", 0, 1, "time" }
 };
@@ -3789,8 +3787,9 @@ int grib_tool_init(grib_runtime_options* options)
     else
         set_value(user_r, "usevalidtime", "true");
 
-    if(grib_options_on("L"))
-       create_64bit_offset_format = TRUE; /* Switch to large file format */
+    /*if(grib_options_on("L"))
+       create_64bit_offset_format = TRUE;
+    */
 
     if(grib_options_on("R:"))
     {
