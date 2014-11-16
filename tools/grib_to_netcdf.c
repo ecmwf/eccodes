@@ -2144,7 +2144,7 @@ static int def_latlon(int ncid, fieldset *fs)
     n = l;
     var_id = set_dimension(ncid, "latitude", n, NC_FLOAT, "degrees_north", "latitude");
 
-    /* g->purge_header = true; */
+    /* g->purge_header = TRUE; */
     release_field(g);
 
     return e;
@@ -2249,7 +2249,7 @@ static int put_latlon(int ncid, fieldset *fs)
     stat = nc_put_var_float(ncid, var_id, fvalues);
     check_err(stat, __LINE__, __FILE__);
 
-    /* g->purge_header = true; */
+    /* g->purge_header = TRUE; */
     release_field(g);
     grib_context_free(ctx, fvalues);
     grib_context_free(ctx, dvalues);
@@ -2329,7 +2329,7 @@ static int compute_scale(dataset_t *subset)
                     min = vals[j];
             }
         }
-        /* g->purge_header = true; */
+        /* g->purge_header = TRUE; */
         release_field(g);
     }
 
@@ -2645,7 +2645,7 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
     count[naxis] = nj; /* latitude */
     count[naxis + 1] = ni; /* longitude */
 
-    /* f->purge_header = true; */
+    /* f->purge_header = TRUE; */
     release_field(f);
 
     stat = nc_inq_varid(ncid, name, &dataid);
@@ -2733,7 +2733,7 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
             check_err(stat, __LINE__, __FILE__);
         }
 
-        /* g->purge_header = true; */
+        /* g->purge_header = TRUE; */
         release_field(g);
     }
     grib_context_free(ctx, vscaled);
@@ -3462,7 +3462,7 @@ static int split_fieldset(fieldset *fs, request *data_r, dataset_t **subsets, co
         filters[i].count = 0;
         filters[i].filter_request = clone_one_request(s);
         filters[i].bitmap = FALSE;
-        /* filters[i].mmeans  = false; */
+        /* filters[i].mmeans  = FALSE; */
 
         s = s->next;
     }
@@ -3506,7 +3506,7 @@ static int split_fieldset(fieldset *fs, request *data_r, dataset_t **subsets, co
             print_hypercube(filters[0].filter);
             exit(1);
         }
-        /* f->purge_header = true; */
+        /* f->purge_header = TRUE; */
         release_field(f);
     }
 
