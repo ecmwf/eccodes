@@ -145,7 +145,7 @@ typedef struct grib_accessor_bufr_compressed_data {
         const char* offsetBeforeDataName;
         const char* offsetEndSection4Name;
         const char* section4LengthName;
-        const char* numberOfDataSubsetsName;
+        const char* numberOfSubsetsName;
         const char* subsetNumberName;
         const char* expandedDescriptorsName;
         const char* elementsName;
@@ -169,7 +169,7 @@ typedef struct grib_accessor_bufr_compressed_data {
         long* scale;
         long* width;
         long numberOfElements;
-        long numberOfDataSubsets;
+        long numberOfSubsets;
         size_t numberOfDescriptors;
         double* values;
         int* is_constant;

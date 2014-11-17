@@ -22,7 +22,7 @@ hash_array sequences (defaultSequence,"sequence.def",tablesMasterDir,tablesLocal
 position offsetSection3;
 section_length[3]       section3Length ;
 unsigned[1]     reserved = 0;
-unsigned[2]     numberOfDataSubsets : dump;
+unsigned[2]     numberOfSubsets : dump;
 
 if (section2Present && centre==98 && section2Length==52) {
 
@@ -32,7 +32,7 @@ if (section2Present && centre==98 && section2Length==52) {
 			1 = {rdbType = 8;  }
 			1 = {rdbType = 12; }
 		}
-		if (isSatelliteType || numberOfDataSubsets>1) {
+		if (isSatelliteType || numberOfSubsets>1) {
 				constant isSatellite=1;
 		} else {
 				constant isSatellite=0;
@@ -44,7 +44,7 @@ if (section2Present && centre==98 && section2Length==52) {
         meta localLongitude2 bits(keyMore,0,26,-18000000,100000) : dump;
         meta localLatitude2 bits(keyMore,32,25,-9000000,100000) : dump;
 
-				if (numberOfDataSubsets>255 || 
+				if (numberOfSubsets>255 || 
 						( rdbSubtype>=121 && rdbSubtype <=130 ) || 
 						rdbSubtype==31) {
 						meta ls.umberOfObservations bits(keySat,0,16) : dump,long_type;

@@ -9,6 +9,8 @@
 #
 
 
+set -ex 
+
 . ./include.sh
 
 REDIRECT=/dev/null

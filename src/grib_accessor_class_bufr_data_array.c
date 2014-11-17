@@ -29,7 +29,7 @@
    MEMBERS    = const char* offsetBeforeDataName
    MEMBERS    = const char* offsetEndSection4Name
    MEMBERS    = const char* section4LengthName
-   MEMBERS    = const char* numberOfDataSubsetsName
+   MEMBERS    = const char* numberOfSubsetsName
    MEMBERS    = const char* subsetNumberName
    MEMBERS    = const char* expandedDescriptorsName
    MEMBERS    = const char* flagsName
@@ -41,7 +41,7 @@
    MEMBERS    = grib_accessor* expandedAccessor
    MEMBERS    = int* canBeMissing
    MEMBERS    = long subsetNumber
-   MEMBERS    = long numberOfDataSubsets
+   MEMBERS    = long numberOfSubsets
    MEMBERS    = long compressedData
    MEMBERS    = grib_vdarray* numericValues
    MEMBERS    = grib_vsarray* stringValues
@@ -90,7 +90,7 @@ typedef struct grib_accessor_bufr_data_array {
 	const char* offsetBeforeDataName;
 	const char* offsetEndSection4Name;
 	const char* section4LengthName;
-	const char* numberOfDataSubsetsName;
+	const char* numberOfSubsetsName;
 	const char* subsetNumberName;
 	const char* expandedDescriptorsName;
 	const char* flagsName;
@@ -102,7 +102,7 @@ typedef struct grib_accessor_bufr_data_array {
 	grib_accessor* expandedAccessor;
 	int* canBeMissing;
 	long subsetNumber;
-	long numberOfDataSubsets;
+	long numberOfSubsets;
 	long compressedData;
 	grib_vdarray* numericValues;
 	grib_vsarray* stringValues;
@@ -227,7 +227,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
   self->offsetBeforeDataName = grib_arguments_get_name(a->parent->h,params,n++);
   self->offsetEndSection4Name = grib_arguments_get_name(a->parent->h,params,n++);
   self->section4LengthName = grib_arguments_get_name(a->parent->h,params,n++);
-  self->numberOfDataSubsetsName = grib_arguments_get_name(a->parent->h,params,n++);
+  self->numberOfSubsetsName = grib_arguments_get_name(a->parent->h,params,n++);
   self->subsetNumberName    = grib_arguments_get_name(a->parent->h,params,n++);
   self->expandedDescriptorsName = grib_arguments_get_name(a->parent->h,params,n++);
   self->flagsName = grib_arguments_get_name(a->parent->h,params,n++);
@@ -315,7 +315,7 @@ static int get_descriptors(grib_accessor* a) {
   for (i=0;i<numberOfDescriptors;i++)
     self->canBeMissing[i]=can_be_missing(self->expanded->v[i]->code);
 
-  ret=grib_get_long(h,self->numberOfDataSubsetsName,&(self->numberOfDataSubsets));
+  ret=grib_get_long(h,self->numberOfSubsetsName,&(self->numberOfSubsets));
   ret=grib_get_long(h,self->compressedDataName,&(self->compressedData));
   ret=grib_get_long(h,self->subsetNumberName,&(self->subsetNumber));
 
@@ -339,7 +339,7 @@ static grib_sarray* decode_string_array(grib_context* c,unsigned char* data,long
   ret=grib_sarray_new(c,10,10);
   if (width) {
     grib_context_free(c,sval);
-    for (j=0;j<self->numberOfDataSubsets;j++) {
+    for (j=0;j<self->numberOfSubsets;j++) {
       sval=(char*)grib_context_malloc_clear(c,width+1);
       grib_decode_string(data,pos,width,sval);
       grib_sarray_push(c,ret,sval);
@@ -368,7 +368,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
   localWidth=grib_decode_unsigned_long(data,pos,6);
   ret=grib_darray_new(c,100,100);
   if (localWidth) {
-    for (j=0;j<self->numberOfDataSubsets;j++) {
+    for (j=0;j<self->numberOfSubsets;j++) {
       lval=grib_decode_unsigned_long(data,pos,localWidth);
       if (grib_is_all_bits_one(lval,localWidth) && self->canBeMissing[i]) {
         dval=GRIB_MISSING_DOUBLE;
@@ -436,12 +436,11 @@ static void decode_element(grib_context* c,grib_accessor_bufr_data_array* self,
       sar=decode_string_array(c,data,pos,i,self);
       grib_vsarray_push(c,self->stringValues,sar);
       index=grib_vsarray_used_size(self->stringValues);
-      dar=grib_darray_new(c,self->numberOfDataSubsets,10);
+      dar=grib_darray_new(c,self->numberOfSubsets,10);
       sar_size=grib_sarray_used_size(sar);
-      index=self->numberOfDataSubsets*(index-1);
-      for (ii=1;ii<=self->numberOfDataSubsets;ii++) {
+      index=self->numberOfSubsets*(index-1);
+      for (ii=1;ii<=self->numberOfSubsets;ii++) {
         x=(index+ii)*1000+self->expanded->v[i]->width/8;
-        /* x=index*1000+strlen(sar->v[idx]); */
         grib_darray_push(c,dar,x);
       }
       grib_vdarray_push(c,self->numericValues,dar);
@@ -568,9 +567,10 @@ static void push_zero_element(grib_accessor_bufr_data_array* self,grib_darray* d
   }
 }
 
-/*
 static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,long ide,long subset) {
   grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
+  int idx=0;
+  grib_section* section=0;
   grib_accessor* elementAccessor=NULL;
   grib_action creator = {0, };
   creator.op         = "bufr_data_element";
@@ -578,13 +578,22 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,long ide,
   creator.flags     = GRIB_ACCESSOR_FLAG_DUMP;
   creator.set        = 0;
 
-  creator.name=self->expanded->v[self->elementsDescriptorsIndex->v[ide]]->name;
-  elementAccessor = grib_accessor_factory(section, &creator, 0, NULL);
-  accessor_bufr_data_element_set_index(elementAccessor,ide);
-  accessor_bufr_data_element_set_descriptors(elementAccessor,self->expanded);
-  accessor_bufr_data_element_set_numericValues(elementAccessor,self->numericValues);
-  accessor_bufr_data_element_set_stringValue(elementAccessor,self->stringValue);
-  accessor_bufr_data_element_set_compressedData(elementAccessor,self->compressedData);
+  idx = self->compressedData ? self->elementsDescriptorsIndex->v[0]->v[ide] :
+                               self->elementsDescriptorsIndex->v[ide]->v[subset];
+
+  creator.name=self->expanded->v[idx]->shortName;
+  if (creator.name) {
+    section=a->sub_section;
+    elementAccessor = grib_accessor_factory(section, &creator, 0, NULL);
+    accessor_bufr_data_element_set_index(elementAccessor,ide);
+    accessor_bufr_data_element_set_descriptors(elementAccessor,self->expanded);
+    accessor_bufr_data_element_set_numericValues(elementAccessor,self->numericValues);
+    accessor_bufr_data_element_set_stringValues(elementAccessor,self->stringValues);
+    accessor_bufr_data_element_set_compressedData(elementAccessor,self->compressedData);
+    accessor_bufr_data_element_set_type(elementAccessor,self->expanded->v[idx]->type);
+    accessor_bufr_data_element_set_numberOfSubsets(elementAccessor,self->numberOfSubsets);
+    accessor_bufr_data_element_set_subsetNumber(elementAccessor,subset);
+  }
 
   return elementAccessor;
 }
@@ -592,23 +601,23 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,long ide,
 static int create_keys(grib_accessor* a) {
   grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
   int err=0;
+  grib_accessor* elementAccessor=0;
   long iss,end,elementsInSubset,ide;
-  grib_context* c=a->parent->h->context;
+  grib_section* section=a->sub_section;
 
-  end= self->compressedData ? 1 : self->numberOfDataSubsets;
+  end= self->compressedData ? 1 : self->numberOfSubsets;
 
   for (iss=0;iss<end;iss++) {
-    elementsInSubset= self->compressedData ? grib_viarray_used_size(self->elementsDescriptorsIndex) :
+    elementsInSubset= self->compressedData ? grib_iarray_used_size(self->elementsDescriptorsIndex->v[0]) :
                                              grib_iarray_used_size(self->elementsDescriptorsIndex->v[iss]);
     for (ide=0;ide<elementsInSubset;ide++) {
-      elementAccessor=create_accessor_from_descriptor(a,ide);
-      grib_push_accessor(elementAccessor,a->subsection->block);
+      elementAccessor=create_accessor_from_descriptor(a,ide,iss);
+      if (elementAccessor) grib_push_accessor(elementAccessor,section->block);
     }
   }
 
   return err;
 }
-*/
 
 #define MAX_NESTED_REPLICATIONS 8
 
@@ -662,7 +671,7 @@ static int decode_elements(grib_accessor* a) {
   if (self->elementsDescriptorsIndex) grib_viarray_delete(c,self->elementsDescriptorsIndex);
   self->elementsDescriptorsIndex=grib_viarray_new(c,100,100);
 
-  end= self->compressedData ? 1 : self->numberOfDataSubsets;
+  end= self->compressedData ? 1 : self->numberOfSubsets;
 
   numberOfDescriptors=grib_bufr_descriptors_array_used_size(self->expanded);
 
@@ -837,7 +846,7 @@ static int decode_elements(grib_accessor* a) {
     }
   }
 
-  /* err=create_keys(a); */
+  err=create_keys(a);
 
   return err;
 }
@@ -863,9 +872,9 @@ static int value_count(grib_accessor* a,long* count)
 
   err=grib_get_long(a->parent->h,self->subsetNumberName,&subsetNumber);
   if (err) return err;
-  if (subsetNumber>self->numberOfDataSubsets) {
+  if (subsetNumber>self->numberOfSubsets) {
     err=GRIB_INVALID_KEY_VALUE;
-    grib_context_log(c,GRIB_LOG_ERROR,"%s=%ld is too big, %s=%ld",self->subsetNumberName,self->numberOfDataSubsetsName);
+    grib_context_log(c,GRIB_LOG_ERROR,"%s=%ld is too big, %s=%ld",self->subsetNumberName,self->numberOfSubsetsName);
     return err;
   }
 
@@ -874,14 +883,14 @@ static int value_count(grib_accessor* a,long* count)
 
     *count=l;
     if (subsetNumber<=0) {
-      *count *= self->numberOfDataSubsets;
+      *count *= self->numberOfSubsets;
     }
   } else {
     if (subsetNumber>0) {
       *count=grib_iarray_used_size(self->elementsDescriptorsIndex->v[subsetNumber-1]);
     } else {
       *count=0;
-      for (i=0;i<self->numberOfDataSubsets;i++)
+      for (i=0;i<self->numberOfSubsets;i++)
         *count+=grib_iarray_used_size(self->elementsDescriptorsIndex->v[i]);
     }
   }
@@ -904,11 +913,11 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len) {
     l=grib_vdarray_used_size(self->numericValues);
     err=grib_get_long(a->parent->h,self->subsetNumberName,&n);
     if (err) return err;
-    err=grib_get_long(a->parent->h,self->numberOfDataSubsetsName,&numberOfSubsets);
+    err=grib_get_long(a->parent->h,self->numberOfSubsetsName,&numberOfSubsets);
     if (err) return err;
     if (n>numberOfSubsets) {
       err=GRIB_INVALID_KEY_VALUE;
-      grib_context_log(c,GRIB_LOG_ERROR,"%s=%ld is too big, %s=%ld",self->subsetNumberName,self->numberOfDataSubsetsName);
+      grib_context_log(c,GRIB_LOG_ERROR,"%s=%ld is too big, %s=%ld",self->subsetNumberName,self->numberOfSubsetsName);
       return err;
     }
 

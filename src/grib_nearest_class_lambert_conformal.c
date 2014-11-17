@@ -61,9 +61,9 @@ typedef struct grib_nearest_lambert_conformal{
 	double* lons;
 	int  lons_count;
 	double* distances;
-	int* k;   /* index */
-	int* i;   /* index into the lons array */
-	int* j;   /* index into the lats array */
+	int* k;
+	int* i;
+	int* j;
 	const char* Ni;
 	const char* Nj;
 } grib_nearest_lambert_conformal;

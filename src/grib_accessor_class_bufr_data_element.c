@@ -26,6 +26,8 @@
    MEMBERS    = long index
    MEMBERS    = int type
    MEMBERS    = long compressedData
+   MEMBERS    = long subsetNumber
+   MEMBERS    = long numberOfSubsets
    MEMBERS    = bufr_descriptors_array* descriptors
    MEMBERS    = grib_vdarray* numericValues
    MEMBERS    = grib_vsarray* stringValues
@@ -63,6 +65,8 @@ typedef struct grib_accessor_bufr_data_element {
 	long index;
 	int type;
 	long compressedData;
+	long subsetNumber;
+	long numberOfSubsets;
 	bufr_descriptors_array* descriptors;
 	grib_vdarray* numericValues;
 	grib_vsarray* stringValues;
@@ -157,6 +161,16 @@ void accessor_bufr_data_element_set_type(grib_accessor* a,int type) {
   self->type=type;
 }
 
+void accessor_bufr_data_element_set_numberOfSubsets(grib_accessor* a,long numberOfSubsets) {
+  grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
+  self->numberOfSubsets=numberOfSubsets;
+}
+
+void accessor_bufr_data_element_set_subsetNumber(grib_accessor* a,long subsetNumber) {
+  grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
+  self->subsetNumber=subsetNumber;
+}
+
 void accessor_bufr_data_element_set_compressedData(grib_accessor* a,int compressedData) {
   grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
   self->compressedData=compressedData;
@@ -184,9 +198,8 @@ void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor* a,gr
 
 static void init(grib_accessor* a, const long len, grib_arguments* params) {
 
- /* grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a; */
   a->length = 0;
-  /* a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
+  a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -208,29 +221,89 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 static int unpack_string_array (grib_accessor* a, char** val, size_t *len)
 {
-  /* grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a; */
+  grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
 
-  return GRIB_NOT_IMPLEMENTED;
+  int ret=0,i,idx;
+  long count=0;
+  grib_context* c=a->parent->h->context;
+
+  value_count(a,&count);
+
+  if (*len<count) return GRIB_ARRAY_TOO_SMALL;
+
+  if (self->compressedData) {
+    for (i=0;i<count;i++) {
+      idx=(int)self->numericValues->v[self->index]->v[i]/1000;
+      val[i]=grib_context_strdup(c,self->stringValues->v[idx]->v[i]);
+    }
+  } else {
+    idx=(int)self->numericValues->v[self->subsetNumber]->v[self->index]/1000;
+    val[0]=grib_context_strdup(c,self->stringValues->v[self->subsetNumber]->v[idx]);
+  }
+
+  return ret;
 }
 
 static int unpack_string (grib_accessor* a, char* val, size_t *len)
 {
-  return GRIB_NOT_IMPLEMENTED;
+  sprintf(val,"test");
+  return 0;
 }
 
 static int unpack_long (grib_accessor* a, long* val, size_t *len)
 {
-  return GRIB_NOT_IMPLEMENTED;
+  grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
+  int ret=0,i;
+  long count=0;
+
+  value_count(a,&count);
+
+  if (*len<count) return GRIB_ARRAY_TOO_SMALL;
+
+  if (self->compressedData) {
+    for (i=0;i<count;i++) {
+      val[i]=(long)self->numericValues->v[self->index]->v[i];
+    }
+  } else {
+    val[0]=(long)self->numericValues->v[self->subsetNumber]->v[self->index];
+  }
+
+  return ret;
 }
 
 static int unpack_double (grib_accessor* a, double* val, size_t *len)
 {
-  return GRIB_NOT_IMPLEMENTED;
+  grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
+  int ret=0,i;
+  long count=0;
+
+  value_count(a,&count);
+
+  if (*len<count) return GRIB_ARRAY_TOO_SMALL;
+
+  if (self->compressedData) {
+    for (i=0;i<count;i++) {
+      val[i]=self->numericValues->v[self->index]->v[i];
+    }
+  } else {
+    val[0]=self->numericValues->v[self->subsetNumber]->v[self->index];
+  }
+
+  return ret;
 }
 
 static int value_count(grib_accessor* a,long* count)
 {
-  return 0;
+  int ret,size;
+  grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
+
+  if (!self->compressedData) return 1;
+
+  size=grib_darray_used_size(self->numericValues->v[self->index]);
+
+  ret= size == 1 ? 1 : self->numberOfSubsets;
+
+  return ret;
 }
 
 static void destroy(grib_context* context,grib_accessor* a)
@@ -239,15 +312,27 @@ static void destroy(grib_context* context,grib_accessor* a)
 
 static int  get_native_type(grib_accessor* a){
   grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
+  int ret=GRIB_TYPE_DOUBLE;
 
-/*
-  if (self->compressedData) {
-    
-  } else {
+  switch (self->type) {
+    case BUFR_DESCRIPTOR_TYPE_STRING:
+     ret=GRIB_TYPE_STRING;
+     break;
+    case BUFR_DESCRIPTOR_TYPE_DOUBLE:
+     ret=GRIB_TYPE_DOUBLE;
+     break;
+    case BUFR_DESCRIPTOR_TYPE_LONG:
+     ret=GRIB_TYPE_LONG;
+     break;
+    case BUFR_DESCRIPTOR_TYPE_TABLE:
+     ret=GRIB_TYPE_LONG;
+     break;
+    case BUFR_DESCRIPTOR_TYPE_FLAG:
+     ret=GRIB_TYPE_LONG;
+     break;
   }
-  */
 
-  return self->type;
+  return ret;
 }
 
 
