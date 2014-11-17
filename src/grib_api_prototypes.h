@@ -253,6 +253,8 @@ size_t grib_viarray_used_size(grib_viarray *v);
 /* grib_accessor_class_bufr_data_element.c */
 void accessor_bufr_data_element_set_index(grib_accessor *a, long index);
 void accessor_bufr_data_element_set_type(grib_accessor *a, int type);
+void accessor_bufr_data_element_set_numberOfSubsets(grib_accessor *a, long numberOfSubsets);
+void accessor_bufr_data_element_set_subsetNumber(grib_accessor *a, long subsetNumber);
 void accessor_bufr_data_element_set_compressedData(grib_accessor *a, int compressedData);
 void accessor_bufr_data_element_set_descriptors(grib_accessor *a, bufr_descriptors_array *descriptors);
 void accessor_bufr_data_element_set_numericValues(grib_accessor *a, grib_vdarray *numericValues);

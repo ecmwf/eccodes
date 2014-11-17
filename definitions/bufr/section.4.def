@@ -18,15 +18,15 @@ meta selectGroupNumber bufr_group_number();
 transient subsetNumber=0;
 if (compressedData) {
   meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length,
-                        numberOfDataSubsets,subsetNumber,expandedCodes,expandedFlags,
-                        stringValues,elementsDescriptorsIndex,compressedData) ;
+                        numberOfSubsets,subsetNumber,expandedCodes,expandedFlags,
+                        stringValues,elementsDescriptorsIndex,compressedData) : dump;
 } else {
   meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length,
-                        numberOfDataSubsets,subsetNumber,expandedCodes,expandedFlags,
-                        stringValues,elementsDescriptorsIndex,compressedData) ;
+                        numberOfSubsets,subsetNumber,expandedCodes,expandedFlags,
+                        stringValues,elementsDescriptorsIndex,compressedData) : dump;
 }
 
-meta unpack unpack_bufr_values(numericValues);
+meta unpack unpack_bufr_values(numericValues) ;
 
 section_padding section4Padding;
 position offsetEndSection4;

@@ -14,7 +14,7 @@ libgrib_tools_la_SOURCES = grib_tools.c \
 dist_bin_SCRIPTS = bufr_compare_dir
 
 bin_PROGRAMS = grib_keys grib_histogram grib_error grib_add big2gribex \
-               grib_debug grib_info grib_filter grib_ls grib_dump \
+               grib_debug grib_info grib_filter grib_ls grib_dump grib_merge \
                grib2ppm grib_set grib_get grib_get_data grib_copy grib_repair \
                grib_packing grib_distance grib_corruption_check\
                grib_compare grib_list_keys parser grib_count grib_index_build grib1to2 \
@@ -32,6 +32,7 @@ noinst_PROGRAMS =  gaussian grib_diff mars_request xref all_keys #compile #dumpl
 
 grib_corruption_check_SOURCES =  grib_corruption_check.c
 grib_moments_SOURCES          =  grib_moments.c
+grib_merge_SOURCES            =  grib_merge.c
 grib_to_netcdf_SOURCES        =  grib_to_netcdf.c
 grib_to_json_SOURCES          =  grib_to_json.c
 grib_dump_SOURCES             =  grib_dump.c

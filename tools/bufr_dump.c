@@ -139,6 +139,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
     grib_set_flag(h,options->print_keys[i].name,GRIB_ACCESSOR_FLAG_DUMP);
 
   if (json) {
+    grib_set_long(h,"unpack",1);
   } else {
     sprintf(tmp,"MESSAGE %d ( length=%ld )",options->handle_count,length);
     if (!grib_options_on("C"))
