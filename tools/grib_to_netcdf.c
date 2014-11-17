@@ -2061,10 +2061,9 @@ static void check_err(const int stat, const int line, const char *file)
     {
         (void) fprintf(stderr, "line %d of %s: %s\n", line, file, nc_strerror(stat));
         if (stat == NC_EVARSIZE) {
-            (void) fprintf(stderr, "\nPlease invoke with the '-L' option to create a 64-bit offset format file, "
-                                   "instead of a netCDF classic format file.\n");
+            (void) fprintf(stderr, "\nCannot create netCDF classic format, dataset is too large!\n"
+                    "Try splitting the input GRIB(s).\n");
         }
-
         exit(1);
     }
 }
@@ -2145,7 +2144,7 @@ static int def_latlon(int ncid, fieldset *fs)
     n = l;
     var_id = set_dimension(ncid, "latitude", n, NC_FLOAT, "degrees_north", "latitude");
 
-    /* g->purge_header = true; */
+    /* g->purge_header = TRUE; */
     release_field(g);
 
     return e;
@@ -2250,7 +2249,7 @@ static int put_latlon(int ncid, fieldset *fs)
     stat = nc_put_var_float(ncid, var_id, fvalues);
     check_err(stat, __LINE__, __FILE__);
 
-    /* g->purge_header = true; */
+    /* g->purge_header = TRUE; */
     release_field(g);
     grib_context_free(ctx, fvalues);
     grib_context_free(ctx, dvalues);
@@ -2330,7 +2329,7 @@ static int compute_scale(dataset_t *subset)
                     min = vals[j];
             }
         }
-        /* g->purge_header = true; */
+        /* g->purge_header = TRUE; */
         release_field(g);
     }
 
@@ -2646,7 +2645,7 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
     count[naxis] = nj; /* latitude */
     count[naxis + 1] = ni; /* longitude */
 
-    /* f->purge_header = true; */
+    /* f->purge_header = TRUE; */
     release_field(f);
 
     stat = nc_inq_varid(ncid, name, &dataid);
@@ -2734,7 +2733,7 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
             check_err(stat, __LINE__, __FILE__);
         }
 
-        /* g->purge_header = true; */
+        /* g->purge_header = TRUE; */
         release_field(g);
     }
     grib_context_free(ctx, vscaled);
@@ -3161,8 +3160,24 @@ static void remove_param(request *r, void *data, const char *p)
     const char *ignore;
     int i = 0;
 
-    while((ignore = get_value(config, p, i++)) != NULL)
+    while((ignore = get_value(config, p, i++)) != NULL) {
         unset_value(r, ignore);
+    }
+}
+
+static void print_ignored_keys(FILE* f, request* data)
+{
+    const char *ignore = NULL;
+    int i = 0;
+    while ((ignore = get_value(data, "ignore", i)) != NULL) {
+        if (i==0) {
+            fprintf(f, "%s: Ignoring key(s): %s", grib_tool_name, ignore);
+        } else {
+            fprintf(f, ", %s", ignore);
+        }
+        ++i;
+    }
+    if (i>0) fprintf(f, "\n");
 }
 
 #define NO_TABLE -1
@@ -3447,7 +3462,7 @@ static int split_fieldset(fieldset *fs, request *data_r, dataset_t **subsets, co
         filters[i].count = 0;
         filters[i].filter_request = clone_one_request(s);
         filters[i].bitmap = FALSE;
-        /* filters[i].mmeans  = false; */
+        /* filters[i].mmeans  = FALSE; */
 
         s = s->next;
     }
@@ -3491,7 +3506,7 @@ static int split_fieldset(fieldset *fs, request *data_r, dataset_t **subsets, co
             print_hypercube(filters[0].filter);
             exit(1);
         }
-        /* f->purge_header = true; */
+        /* f->purge_header = TRUE; */
         release_field(f);
     }
 
@@ -3693,7 +3708,6 @@ grib_option grib_options[] = {
         { "f", 0, 0, 0, 1, 0 },
         { "o:", "output file",   "\n\t\tThe name of the netcdf file.\n", 1, 1, 0 },
         { "V", 0, 0, 0, 1, 0 },
-        { "L", 0, "Create netcdf in 64-bit offset format (for very large files).\n", 0, 1, 0 },
         { "M", 0, 0, 0, 1, 0 },
         { "u:", "dimension",  "\n\t\tSet dimension to be an unlimited dimension", 0, 1, "time" }
 };
@@ -3789,8 +3803,9 @@ int grib_tool_init(grib_runtime_options* options)
     else
         set_value(user_r, "usevalidtime", "true");
 
-    if(grib_options_on("L"))
-       create_64bit_offset_format = TRUE; /* Switch to large file format */
+    /*if(grib_options_on("L"))
+       create_64bit_offset_format = TRUE;
+    */
 
     if(grib_options_on("R:"))
     {
@@ -3992,6 +4007,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     count = split_fieldset(fs, data_r, &subsets, user_r, config_r);
     remove_param(data_r, (void *) user_r, "ignore");
     remove_param(data_r, (void *) user_r, "split");
+    print_ignored_keys(stdout, user_r);
     dims = new_simple_hypercube_from_mars_request(data_r);
 
     /* In case there is only 1 DATE+TIME+STEP, set at least 1 time as axis */

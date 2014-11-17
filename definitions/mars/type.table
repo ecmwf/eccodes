@@ -1,4 +1,4 @@
-0 0  Unknown
+0 0 Unknown
 1 fg First guess
 2 an Analysis
 3 ia Initialised analysis
@@ -44,7 +44,7 @@
 45 cr Cluster representative
 46 ses Scaled ensemble standard deviation
 47 taem Time average ensemble mean
-48 taes Time average ensemble standard deviation 
+48 taes Time average ensemble standard deviation
 50 sg Sensitivity gradient
 52 sf Sensitivity forecast
 60 pa Perturbed analysis
@@ -63,4 +63,3 @@
 85 estdtm Ensemble standard deviation of temporal mean
 86 hcmean Hindcast climate mean
 87 ssd Simulated satellite data
-

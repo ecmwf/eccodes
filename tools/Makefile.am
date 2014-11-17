@@ -16,7 +16,7 @@ dist_bin_SCRIPTS = bufr_compare_dir
 bin_PROGRAMS = grib_keys grib_histogram grib_error grib_add big2gribex \
                grib_debug grib_info grib_filter grib_ls grib_dump grib_merge \
                grib2ppm grib_set grib_get grib_get_data grib_copy grib_repair \
-               grib_packing grib_cmp grib_convert  grib_distance grib_corruption_check\
+               grib_packing grib_distance grib_corruption_check\
                grib_compare grib_list_keys parser grib_count grib_index_build grib1to2 \
                gg_sub_area_check grib_moments grib_to_netcdf grib_to_json \
                bufr_filter bufr_ls bufr_dump bufr_set bufr_get \
@@ -37,7 +37,6 @@ grib_to_netcdf_SOURCES        =  grib_to_netcdf.c
 grib_to_json_SOURCES          =  grib_to_json.c
 grib_dump_SOURCES             =  grib_dump.c
 grib_count_SOURCES            =  grib_count.c
-grib_cmp_SOURCES              =  grib_cmp.c
 grib_packing_SOURCES          =  grib_packing.c
 grib_histogram_SOURCES        =  grib_histogram.c
 grib_distance_SOURCES         =  grib_distance.c
@@ -51,7 +50,6 @@ grib_keys_SOURCES             =  grib_keys.c
 grib_ls_SOURCES               =  grib_ls.c
 grib_copy_SOURCES             =  grib_copy.c
 grib_repair_SOURCES           =  grib_repair.c
-grib_convert_SOURCES          =  grib_convert.c
 grib_filter_SOURCES           =  grib_filter.c
 grib_set_SOURCES              =  grib_set.c
 grib_index_build_SOURCES      =  grib_index_build.c

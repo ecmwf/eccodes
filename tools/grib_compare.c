@@ -90,6 +90,7 @@ static int blacklisted(const char* name)
 {
     grib_string_list* b=blacklist;
     while (b) {
+        Assert(b->value);
         if (!strcmp(name,b->value))
             return 1;
         b=b->next;
@@ -529,7 +530,6 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
     unsigned char *uval1 = NULL,*uval2 = NULL;
     double *dval1 = NULL, *dval2 = NULL;
     long *lval1 = NULL, *lval2 = NULL;
-    int failed=0;
     double maxdiff=0;
     double packingError1=0,packingError2=0;
     double value_tolerance=0;
@@ -741,7 +741,7 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
         break;
 
     case GRIB_TYPE_DOUBLE:
-        if (verbose) printf(" as double");
+        if (verbose) printf(" as double\n");
         dval1 = (double*)grib_context_malloc(h1->context,len1*sizeof(double));
         dval2 = (double*)grib_context_malloc(h2->context,len2*sizeof(double));
 
@@ -828,7 +828,6 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
             if (verbose) printf("  (%d values) tolerance=%g\n",(int)len1,value_tolerance);
             for(i = 0; i < len1; i++) {
                 if((diff=compare_double(pv1++,pv2++,&value_tolerance))!=0) {
-                    failed=1;
                     countdiff++;
                     if (maxdiff < diff) {maxdiff=diff;imaxdiff=i;}
                     err1 = GRIB_VALUE_MISMATCH;

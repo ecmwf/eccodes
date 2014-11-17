@@ -58,7 +58,7 @@
           table2Version = 1 ;
           indicatorOfParameter = 11 ;
           }
-#Virtual temperature
+#Virtual potential temperature
 '233001012' = {
           table2Version = 1 ;
           indicatorOfParameter = 12 ;
@@ -823,7 +823,7 @@
           table2Version = 253 ;
           indicatorOfParameter = 11 ;
           }
-#Virtual temperature
+#Virtual potential temperature
 '233253012' = {
           table2Version = 253 ;
           indicatorOfParameter = 12 ;
@@ -1458,6 +1458,11 @@
           table2Version = 253 ;
           indicatorOfParameter = 139 ;
           }
+#Direct normal irradiance
+'233253140' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 140 ;
+          }
 #Precipitation Type
 '233253144' = {
           table2Version = 253 ;
@@ -1497,6 +1502,36 @@
 '233253167' = {
           table2Version = 253 ;
           indicatorOfParameter = 167 ;
+          }
+#Brightness temperature OZ clear
+'233253170' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 170 ;
+          }
+#Brightness temperature OZ cloud
+'233253171' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 171 ;
+          }
+#Brightness temperature IR clear
+'233253172' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 172 ;
+          }
+#Brightness temperature IR cloud
+'233253173' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 173 ;
+          }
+#Brightness temperature WV clear
+'233253174' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 174 ;
+          }
+#Brightness temperature WV cloud
+'233253175' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 175 ;
           }
 #Rain
 '233253181' = {
@@ -1553,7 +1588,7 @@
           table2Version = 253 ;
           indicatorOfParameter = 192 ;
           }
-#Water on canopy (Interception content)
+#Soil ice
 '233253193' = {
           table2Version = 253 ;
           indicatorOfParameter = 193 ;
@@ -1583,17 +1618,7 @@
           table2Version = 253 ;
           indicatorOfParameter = 204 ;
           }
-#Rain rate
-'233253207' = {
-          table2Version = 253 ;
-          indicatorOfParameter = 207 ;
-          }
-#Snow rate
-'233253208' = {
-          table2Version = 253 ;
-          indicatorOfParameter = 208 ;
-          }
-#Graupel rate
+#Lightning
 '233253209' = {
           table2Version = 253 ;
           indicatorOfParameter = 209 ;
@@ -1602,11 +1627,6 @@
 '233253210' = {
           table2Version = 253 ;
           indicatorOfParameter = 210 ;
-          }
-#Lightning
-'233253211' = {
-          table2Version = 253 ;
-          indicatorOfParameter = 211 ;
           }
 #Pressure departure
 '233253212' = {

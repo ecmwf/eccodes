@@ -98,13 +98,13 @@ program get
           ' min is ',  min_val, &
           ' max is ',  max_val
      write(*,*) '---------------------'
+     deallocate(values)
   END DO
 
   DO i=1,n
     call grib_release(igrib(i))
   END DO
 
-  deallocate(values)
   deallocate(igrib)
 
 end program get

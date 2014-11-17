@@ -58,7 +58,7 @@
           table2Version = 1 ;
           indicatorOfParameter = 11 ;
           }
-#Virtual temperature
+#Virtual potential temperature
 'vptmp' = {
           table2Version = 1 ;
           indicatorOfParameter = 12 ;
@@ -159,7 +159,7 @@
           indicatorOfParameter = 31 ;
           }
 #Wind speed
-'wspd' = {
+'ws' = {
           table2Version = 1 ;
           indicatorOfParameter = 32 ;
           }
@@ -189,17 +189,17 @@
           indicatorOfParameter = 37 ;
           }
 #Sigma coordinate vertical velocity
-'sigma' = {
+'sgcvv' = {
           table2Version = 1 ;
           indicatorOfParameter = 38 ;
           }
 #Pressure Vertical velocity
-'omega' = {
+'w' = {
           table2Version = 1 ;
           indicatorOfParameter = 39 ;
           }
 #Vertical velocity
-'w' = {
+'tw' = {
           table2Version = 1 ;
           indicatorOfParameter = 40 ;
           }
@@ -239,7 +239,7 @@
           indicatorOfParameter = 47 ;
           }
 #Speed of current
-'spdc' = {
+'spc' = {
           table2Version = 1 ;
           indicatorOfParameter = 48 ;
           }
@@ -339,7 +339,7 @@
           indicatorOfParameter = 67 ;
           }
 #Transient thermocline depth
-'tthd' = {
+'tthdp' = {
           table2Version = 1 ;
           indicatorOfParameter = 68 ;
           }
@@ -554,7 +554,7 @@
           indicatorOfParameter = 110 ;
           }
 #Net short-wave radiation flux (surface)
-'mswrs' = {
+'nswrs' = {
           table2Version = 1 ;
           indicatorOfParameter = 111 ;
           }
@@ -823,7 +823,7 @@
           table2Version = 253 ;
           indicatorOfParameter = 11 ;
           }
-#Virtual temperature
+#Virtual potential temperature
 'vptmp' = {
           table2Version = 253 ;
           indicatorOfParameter = 12 ;
@@ -924,7 +924,7 @@
           indicatorOfParameter = 31 ;
           }
 #Wind speed
-'wspd' = {
+'ws' = {
           table2Version = 253 ;
           indicatorOfParameter = 32 ;
           }
@@ -954,17 +954,17 @@
           indicatorOfParameter = 37 ;
           }
 #Sigma coordinate vertical velocity
-'sigma' = {
+'sgcvv' = {
           table2Version = 253 ;
           indicatorOfParameter = 38 ;
           }
 #Pressure Vertical velocity
-'omega' = {
+'w' = {
           table2Version = 253 ;
           indicatorOfParameter = 39 ;
           }
 #Vertical velocity
-'w' = {
+'tw' = {
           table2Version = 253 ;
           indicatorOfParameter = 40 ;
           }
@@ -1004,7 +1004,7 @@
           indicatorOfParameter = 47 ;
           }
 #Speed of current
-'spdc' = {
+'spc' = {
           table2Version = 253 ;
           indicatorOfParameter = 48 ;
           }
@@ -1104,7 +1104,7 @@
           indicatorOfParameter = 67 ;
           }
 #Transient thermocline depth
-'tthd' = {
+'tthdp' = {
           table2Version = 253 ;
           indicatorOfParameter = 68 ;
           }
@@ -1319,7 +1319,7 @@
           indicatorOfParameter = 110 ;
           }
 #Net short-wave radiation flux (surface)
-'mswrs' = {
+'nswrs' = {
           table2Version = 253 ;
           indicatorOfParameter = 111 ;
           }
@@ -1458,6 +1458,11 @@
           table2Version = 253 ;
           indicatorOfParameter = 139 ;
           }
+#Direct normal irradiance
+'dni' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 140 ;
+          }
 #Precipitation Type
 'prtp' = {
           table2Version = 253 ;
@@ -1497,6 +1502,36 @@
 'totqv' = {
           table2Version = 253 ;
           indicatorOfParameter = 167 ;
+          }
+#Brightness temperature OZ clear
+'bt_oz_cs' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 170 ;
+          }
+#Brightness temperature OZ cloud
+'bt_oz_cl' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 171 ;
+          }
+#Brightness temperature IR clear
+'bt_ir_cs' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 172 ;
+          }
+#Brightness temperature IR cloud
+'bt_ir_cl' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 173 ;
+          }
+#Brightness temperature WV clear
+'bt_wv_cs' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 174 ;
+          }
+#Brightness temperature WV cloud
+'bt_wv_cl' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 175 ;
           }
 #Rain
 'rain' = {
@@ -1553,7 +1588,7 @@
           table2Version = 253 ;
           indicatorOfParameter = 192 ;
           }
-#Water on canopy (Interception content)
+#Soil ice
 'w_so_ice' = {
           table2Version = 253 ;
           indicatorOfParameter = 193 ;
@@ -1583,18 +1618,8 @@
           table2Version = 253 ;
           indicatorOfParameter = 204 ;
           }
-#Rain rate
-'rrt' = {
-          table2Version = 253 ;
-          indicatorOfParameter = 207 ;
-          }
-#Snow rate
-'srt' = {
-          table2Version = 253 ;
-          indicatorOfParameter = 208 ;
-          }
-#Graupel rate
-'grt' = {
+#Lightning
+'lgt' = {
           table2Version = 253 ;
           indicatorOfParameter = 209 ;
           }
@@ -1602,11 +1627,6 @@
 'refl' = {
           table2Version = 253 ;
           indicatorOfParameter = 210 ;
-          }
-#Lightning
-'lgt' = {
-          table2Version = 253 ;
-          indicatorOfParameter = 211 ;
           }
 #Pressure departure
 'pdep' = {

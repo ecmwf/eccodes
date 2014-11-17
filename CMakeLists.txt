@@ -232,8 +232,10 @@ add_subdirectory( ifs_samples ) # must come after samples
 ecbuild_dont_pack( DIRS
      concepts html tests.ecmwf doxygen examples.dev templates sms parameters java
      perl/GRIB-API/lib perl/GRIB-API/t gaussian_experimental gribex examples/F77
-     examples/extra bamboo definitions/bufr use fortran/fortranCtypes tigge/tools
+     examples/extra bamboo use fortran/fortranCtypes tigge/tools share/grib_api grib_api_for_mars
 )
+#ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
+#ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
 
 add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 
