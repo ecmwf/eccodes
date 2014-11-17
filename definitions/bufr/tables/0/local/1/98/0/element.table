@@ -62,6 +62,7 @@
 008194|tovsOrAtovsProductQualifier|table|TOVS/ATOVS PRODUCT QUALIFIER|Code table|0|0|4|Code table|0|2
 008195|dataType|table|DATA TYPE|Code table|0|0|7|Code table|0|3
 008200|numberOfObservations|long|NUMBER OF OBSERVATIONS|Numeric|0|0|8|Numeric|0|3
+008201|coordinatesSignificance|table|COORDINATES SIGNIFICANCE|Code table|0|0|15|NA|0|0
 008222|generatorSignificance|table|GENERATOR SIGNIFICANCE|Code table|0|0|4|Code table|0|2
 008223|landOrIceSurfaceFlag|flag|LAND/ICE SURFACE FLAG|Flag table|0|0|7|Flag table|0|3
 008224|landOrSeaFraction|long|LAND/SEA FRACTION|Numeric|3|0|10|Numeric|3|4
@@ -291,8 +292,8 @@
 040202|integratedCo2Density|double|INTEGRATED CO2 DENSITY|kg m-2|3|0|16|NA|0|0
 040203|coldOrWarmLoadFlag|flag|COLD/WARM LOAD FLAG|Flag table|0|0|12|NA|0|0
 040210|oceansat2Sigma0Flag|flag|OCEANSAT2 SIGMA_0 FLAG|Flag table|0|0|25|NA|0|0
-040211|gmiQualityFlag|table|GMI QUALITY FLAG (GROUP S1)|Code table|0|0|15|NA|0|0
-040212|sunGlintAngle|table|SUN GLINT ANGLE (GROUP S1)|Code table|2|0|15|NA|0|0
+040211|gmiQualityFlag|flag|GMI QUALITY FLAG|Flag table|0|0|15|NA|0|0
+040212|sunGlintAngle|double|SUN GLINT ANGLE|deg|2|0|15|NA|0|0
 049193|sarInversionQcFlags|flag|SAR INVERSION QC FLAGS|Flag table|0|0|15|NA|0|0
 049194|altimeterWaveHeightQcFlafs|flag|ALTIMETER WAVE HEIGHT QC FLAFS|Flag table|0|0|15|NA|0|0
 055003|dataExtractionIndicator|flag|DATA EXTRACTION INDICATOR|Flag table|0|0|8|NA|0|0

@@ -700,7 +700,7 @@
 013110|massMixingRatio|long|MASS MIXING RATIO|%|0|0|7|%|0|3
 013111|soilMoisture|long|SOIL MOISTURE|g kg-1|0|0|10|g kg-1|0|4
 013112|objectWetnessDuration|long|OBJECT WETNESS DURATION|s|0|0|17|s|0|5
-013114|rateOfIceAccretionEstimated|double|RATE OF ICE ACCRETION|kg m-2 h-1|1|0|11|kg m-2 h-1|1|4
+013114|rateOfIceAccretion|double|RATE OF ICE ACCRETION|kg m-2 h-1|1|0|11|kg m-2 h-1|1|4
 013115|iceThickness|double|ICE THICKNESS|m|2|0|19|m|2|6
 013117|snowDensityLiquidWaterContent|long|SNOW DENSITY (LIQUID WATER CONTENT)|kg m-3|0|0|10|kg m-3|0|3
 013118|freshSnowDepth|double|DEPTH OF FRESH SNOW (HIGH ACCURACY)|m|3|0|14|m|3|5
