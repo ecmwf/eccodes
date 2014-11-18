@@ -1277,8 +1277,13 @@ int grib_keys_iterator_delete( grib_keys_iterator* kiter);
 */
 int grib_keys_iterator_rewind(grib_keys_iterator* kiter);
 
-
 int grib_keys_iterator_set_flags(grib_keys_iterator *kiter,unsigned long flags);
+
+int grib_keys_iterator_get_long(grib_keys_iterator *kiter, long *v, size_t *len);
+int grib_keys_iterator_get_double(grib_keys_iterator *kiter, double *v, size_t *len);
+int grib_keys_iterator_get_string(grib_keys_iterator *kiter, char *v, size_t *len);
+int grib_keys_iterator_get_bytes(grib_keys_iterator *kiter, unsigned char *v, size_t *len);
+
 /* @} */
 
 void grib_update_sections_lengths(grib_handle* h);
