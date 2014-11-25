@@ -38,6 +38,7 @@ int main(int argc, char** argv)
     long numberOfPointsAlongAMeridian;
 
     double average = 0;
+    char* packingType = NULL;
 
     FILE* in = NULL;
     const char* filename = "../../data/regular_latlon_surface.grib1";
@@ -90,6 +91,13 @@ int main(int argc, char** argv)
     /* get as a double*/
     GRIB_CHECK(grib_get_double(h,"iDirectionIncrementInDegrees",&iDirectionIncrementInDegrees),0);
     printf("iDirectionIncrementInDegrees=%g\n",iDirectionIncrementInDegrees);
+
+    /* get as string */
+    GRIB_CHECK(grib_get_length(h, "packingType", &len), 0);
+    packingType = (char*)malloc(len*sizeof(char));
+    grib_get_string(h, "packingType", packingType, &len);
+    printf("packingType=%s\n", packingType);
+    free(packingType);
 
     /* get the size of the values array*/
     GRIB_CHECK(grib_get_size(h,"values",&values_len),0);
