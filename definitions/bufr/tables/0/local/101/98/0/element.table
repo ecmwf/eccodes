@@ -1,44 +1,44 @@
-001192|modelVersionNumber|table|MODEL VERSION NUMBER|Code table|0|0|8|NA|0|0
-001193|sigma0SimulationMethod|table|SIGMA_0 SIMULATION METHOD|Code table|0|0|4|NA|0|0
+001192|modelVersionNumber|table|MODEL VERSION NUMBER|CODE TABLE|0|0|8|NA|0|0
+001193|sigma0SimulationMethod|table|SIGMA_0 SIMULATION METHOD|CODE TABLE|0|0|4|NA|0|0
 001194|carrierBalloonOrAircraftIdentifier|string|CARRIER BALLOON/AIRCRAFT IDENTIFIER|CCITT IA5|0|0|72|NA|0|0
 001195|mobilLandStationIdentifier|string|MOBIL LAND STATION IDENTIFIER|CCITT IA5|0|0|72|NA|0|0
 001196|constantLevelBalloonIdentifier|string|CONSTANT LEVEL BALLOON IDENTIFIER|CCITT IA5|0|0|72|NA|0|0
-001197|rtpPlatformType|table|RTP - PLATFORM TYPE|Code table|0|0|10|NA|0|0
-001198|itpDeckId|table|ITP - DECK ID|Code table|0|0|10|NA|0|0
-001199|dupDuplicateStatus|table|DUP - DUPLICATE STATUS|Code table|0|0|4|NA|0|0
-001201|generatingApplication|table|GENERATING APPLICATION|Code table|0|0|8|NA|0|0
-001205|satelliteIdentifier|table|SATELLITE IDENTIFIER|Code table|0|0|10|NA|0|0
+001197|rtpPlatformType|table|RTP - PLATFORM TYPE|CODE TABLE|0|0|10|NA|0|0
+001198|itpDeckId|table|ITP - DECK ID|CODE TABLE|0|0|10|NA|0|0
+001199|dupDuplicateStatus|table|DUP - DUPLICATE STATUS|CODE TABLE|0|0|4|NA|0|0
+001201|generatingApplication|table|GENERATING APPLICATION|CODE TABLE|0|0|8|NA|0|0
+001205|satelliteIdentifier|table|SATELLITE IDENTIFIER|CODE TABLE|0|0|10|NA|0|0
 001208|velocityOfPlatformX|double|VELOCITY OF PLATFORM, X|m s-1|5|-1073741824|31|NA|0|0
 001209|velocityOfPlatformY|double|VELOCITY OF PLATFORM, Y|m s-1|5|-1073741824|31|NA|0|0
 001210|velocityOfPlatformZ|double|VELOCITY OF PLATFORM, Z|m s-1|5|-1073741824|31|NA|0|0
-001211|originatorOfRetrievedAtmosphericConstituent|table|ORIGINATOR OF RETRIEVED ATMOSPHERIC CONSTITUENT|Code table|0|0|8|NA|0|0
-002171|instrumentSerialNumberForWaterTemperatureProfile|table|(TBP) MODIS AEROSOL ALGORITHM|Code table|0|0|4|NA|0|0
+001211|originatorOfRetrievedAtmosphericConstituent|table|ORIGINATOR OF RETRIEVED ATMOSPHERIC CONSTITUENT|CODE TABLE|0|0|8|NA|0|0
+002171|instrumentSerialNumberForWaterTemperatureProfile|table|(TBP) MODIS AEROSOL ALGORITHM|CODE TABLE|0|0|4|NA|0|0
 002192|sarAzimuthAngle|long|SAR AZIMUTH ANGLE|deg|0|0|9|NA|0|0
-002193|1dVarSatelliteChannelSUsed|flag|1D VAR SATELLITE CHANNEL(S) USED|Flag table|0|0|28|NA|0|0
-002194|constantLevelBalloonType|table|CONSTANT LEVEL BALLOON TYPE|Code table|0|0|4|NA|0|0
-002195|typeOfSatelliteInstrumentation|table|TYPE OF SATELLITE INSTRUMENTATION|Code table|0|0|4|NA|0|0
-002196|satelliteClassification|table|SATELLITE CLASSIFICATION|Code table|0|0|9|NA|0|0
+002193|1dVarSatelliteChannelSUsed|flag|1D VAR SATELLITE CHANNEL(S) USED|FLAG TABLE|0|0|28|NA|0|0
+002194|constantLevelBalloonType|table|CONSTANT LEVEL BALLOON TYPE|CODE TABLE|0|0|4|NA|0|0
+002195|typeOfSatelliteInstrumentation|table|TYPE OF SATELLITE INSTRUMENTATION|CODE TABLE|0|0|4|NA|0|0
+002196|satelliteClassification|table|SATELLITE CLASSIFICATION|CODE TABLE|0|0|9|NA|0|0
 002197|satelliteChannelCentreFrequency|long|SATELLITE CHANNEL CENTRE FREQUENCY|Hz|-8|0|26|NA|0|0
 002198|satelliteChannelBandWidth|long|SATELLITE CHANNEL BAND WIDTH|Hz|-8|0|26|NA|0|0
-002199|meanHumidityComputationalMethod|table|INTEGRATED MEAN HUMIDITY COMPUTATIONAL METHOD|Code table|0|0|4|NA|0|0
-002201|simulatedSatelliteInstrument|flag|SIMULATED SATELLITE INSTRUMENT|Flag table|0|0|4|NA|0|0
-002202|simulatedDataProcessingTechniqueUsed|flag|SIMULATED DATA PROCESSING TECHNIQUE USED|Flag table|0|0|4|NA|0|0
-002220|dataProducer|table|DATA PRODUCER|Code table|0|0|9|NA|0|0
+002199|meanHumidityComputationalMethod|table|INTEGRATED MEAN HUMIDITY COMPUTATIONAL METHOD|CODE TABLE|0|0|4|NA|0|0
+002201|simulatedSatelliteInstrument|flag|SIMULATED SATELLITE INSTRUMENT|FLAG TABLE|0|0|4|NA|0|0
+002202|simulatedDataProcessingTechniqueUsed|flag|SIMULATED DATA PROCESSING TECHNIQUE USED|FLAG TABLE|0|0|4|NA|0|0
+002220|dataProducer|table|DATA PRODUCER|CODE TABLE|0|0|9|NA|0|0
 002221|segmentSizeAtNadirInXDirection|long|SEGMENT SIZE AT NADIR IN X DIRECTION|m|0|0|18|NA|0|0
 002222|segmentSizeAtNadirInYDirection|long|SEGMENT SIZE AT NADIR IN Y DIRECTION|m|0|0|18|NA|0|0
-002223|tovsOrAtovsOrAvhrrChannelNumber|table|TOVS/ATOVS/AVHRR CHANNEL NUMBER|Code table|0|0|6|NA|0|0
-002231|heightAssignmentMethod|table|HEIGHT ASSIGNMENT METHOD|Code table|0|0|4|NA|0|0
-002232|tracerCorrelationMethod|table|TRACER CORRELATION METHOD|Code table|0|0|3|NA|0|0
-002240|typeOfTermodynamicSensing|table|TYPE OF TERMODYNAMIC SENSING|Code table|0|0|8|NA|0|0
-002241|typeOfRocketMotor|table|TYPE OF ROCKET MOTOR|Code table|0|0|3|NA|0|0
-002242|typeOfWindSensingEquipment|table|TYPE OF WIND SENSING EQUIPMENT|Code table|0|0|8|NA|0|0
-002243|termodynamicCorrectionTechnique|table|TERMODYNAMIC CORRECTION TECHNIQUE|Code table|0|0|3|NA|0|0
-002244|windCorrectionTechnique|table|WIND CORRECTION TECHNIQUE|Code table|0|0|3|NA|0|0
-002245|methodOfReducingOfData|table|METHOD OF REDUCING OF DATA|Code table|0|0|4|NA|0|0
-002251|radianceComputationalMethod|table|RADIANCE COMPUTATIONAL METHOD|Code table|0|0|4|NA|0|0
-002252|satelliteInstrumentDataUsedInProcessing|flag|SATELLITE INSTRUMENT DATA USED IN PROCESSING|Flag table|0|0|31|NA|0|0
-002253|humidityComputationalMethod|table|HUMIDITY COMPUTATIONAL METHOD|Code table|0|0|8|NA|0|0
-002254|radianceType|table|RADIANCE TYPE|Code table|0|0|4|NA|0|0
+002223|tovsOrAtovsOrAvhrrChannelNumber|table|TOVS/ATOVS/AVHRR CHANNEL NUMBER|CODE TABLE|0|0|6|NA|0|0
+002231|heightAssignmentMethod|table|HEIGHT ASSIGNMENT METHOD|CODE TABLE|0|0|4|NA|0|0
+002232|tracerCorrelationMethod|table|TRACER CORRELATION METHOD|CODE TABLE|0|0|3|NA|0|0
+002240|typeOfTermodynamicSensing|table|TYPE OF TERMODYNAMIC SENSING|CODE TABLE|0|0|8|NA|0|0
+002241|typeOfRocketMotor|table|TYPE OF ROCKET MOTOR|CODE TABLE|0|0|3|NA|0|0
+002242|typeOfWindSensingEquipment|table|TYPE OF WIND SENSING EQUIPMENT|CODE TABLE|0|0|8|NA|0|0
+002243|termodynamicCorrectionTechnique|table|TERMODYNAMIC CORRECTION TECHNIQUE|CODE TABLE|0|0|3|NA|0|0
+002244|windCorrectionTechnique|table|WIND CORRECTION TECHNIQUE|CODE TABLE|0|0|3|NA|0|0
+002245|methodOfReducingOfData|table|METHOD OF REDUCING OF DATA|CODE TABLE|0|0|4|NA|0|0
+002251|radianceComputationalMethod|table|RADIANCE COMPUTATIONAL METHOD|CODE TABLE|0|0|4|NA|0|0
+002252|satelliteInstrumentDataUsedInProcessing|flag|SATELLITE INSTRUMENT DATA USED IN PROCESSING|FLAG TABLE|0|0|31|NA|0|0
+002253|humidityComputationalMethod|table|HUMIDITY COMPUTATIONAL METHOD|CODE TABLE|0|0|8|NA|0|0
+002254|radianceType|table|RADIANCE TYPE|CODE TABLE|0|0|4|NA|0|0
 005193|alongTrackRowNumberAt50Km|long|ALONG TRACK ROW NUMBER AT 50 KM|Numeric|0|0|10|NA|0|0
 005194|alongTrackRowNumberAt25Km|long|ALONG TRACK ROW NUMBER AT 25 KM|Numeric|0|0|11|NA|0|0
 005195|ensembleMemberNumber|long|ENSEMBLE MEMBER NUMBER|Numeric|0|0|7|NA|0|0
@@ -47,16 +47,16 @@
 006193|crossTrackCellNumberAt50Km|long|CROSS TRACK CELL NUMBER AT 50 KM|Numeric|0|0|6|NA|0|0
 006194|crossTrackCellNumberAt25Km|long|CROSS TRACK CELL NUMBER AT 25 KM|Numeric|0|0|7|NA|0|0
 006217|locationOfPlatformY|double|LOCATION OF PLATFORM, Y|m|2|-1073741824|31|NA|0|0
-006232|wavenumberSpectral|double|WAVENUMBER (SPECTRAL)|rad m-1|5|0|13|NA|0|0
+006232|waveNumberSpectral|double|WAVENUMBER (SPECTRAL)|rad m-1|5|0|13|NA|0|0
 007065|waterPressure|double|(VAL) REPRESENTATIVE HEIGHT OF SENSOR ABOVE LOCAL GROUND (OR DEC|m|2|0|16|NA|0|0
 007217|locationOfPlatformZ|double|LOCATION OF PLATFORM, Z|m|2|-1073741824|31|NA|0|0
-008079|productStatus|table|(VAL) CHANGE IN STATUS OF FOLLOWING PRODUCT|Code table|0|0|3|NA|0|0
-008193|timeQualifier|table|TIME QUALIFIER|Code table|0|0|6|NA|0|0
-008194|tovsOrAtovsProductQualifier|table|TOVS/ATOVS PRODUCT QUALIFIER|Code table|0|0|4|NA|0|0
-008195|dataType|table|DATA TYPE|Code table|0|0|7|NA|0|0
+008079|productStatus|table|(VAL) CHANGE IN STATUS OF FOLLOWING PRODUCT|CODE TABLE|0|0|3|NA|0|0
+008193|timeQualifier|table|TIME QUALIFIER|CODE TABLE|0|0|6|NA|0|0
+008194|tovsOrAtovsProductQualifier|table|TOVS/ATOVS PRODUCT QUALIFIER|CODE TABLE|0|0|4|NA|0|0
+008195|dataType|table|DATA TYPE|CODE TABLE|0|0|7|NA|0|0
 008200|numberOfObservations|long|NUMBER OF OBSERVATIONS|Numeric|0|0|8|NA|0|0
-008222|generatorSignificance|table|GENERATOR SIGNIFICANCE|Code table|0|0|4|NA|0|0
-008223|landOrIceSurfaceFlag|flag|LAND/ICE SURFACE FLAG|Flag table|0|0|7|NA|0|0
+008222|generatorSignificance|table|GENERATOR SIGNIFICANCE|CODE TABLE|0|0|4|NA|0|0
+008223|landOrIceSurfaceFlag|flag|LAND/ICE SURFACE FLAG|FLAG TABLE|0|0|7|NA|0|0
 008224|landOrSeaFraction|long|LAND/SEA FRACTION|Numeric|3|0|10|NA|0|0
 010083|squaredOffNadirAngleOfSatelliteFromPlatformData|double|(CBS) OFF NADIR ANGLE OF THE SATELLITE FROM PLATFORM DATA|deg|2|-36000|17|NA|0|0
 010084|squaredOffNadirAngleOfSatelliteFromWaveformData|double|(CBS) OFF NADIR ANGLE OF THE SATELLITE FROM WAVEFORM DATA|deg|2|-36000|17|NA|0|0
@@ -91,10 +91,10 @@
 013195|rainRate|long|RAIN RATE|kg m-2 h-1|0|0|5|NA|0|0
 013196|antecedentPrecipitationIndex|long|ANTECEDENT PRECIPITATION INDEX|kg m-2|0|0|7|NA|0|0
 013197|totalColumnWaterVapour|double|TOTAL COLUMN WATER VAPOUR|kg m-2|1|0|10|NA|0|0
-013198|rainFlag|table|RAIN FLAG|Code table|0|0|3|NA|0|0
+013198|rainFlag|table|RAIN FLAG|CODE TABLE|0|0|3|NA|0|0
 013199|specificHumidityAt2M|double|SPECIFIC HUMIDITY AT 2 M|kg kg-1|5|0|14|NA|0|0
 013201|cloudLiquidWater|double|CLOUD LIQUID WATER|kg kg-1|7|0|14|NA|0|0
-013202|typeOfSurface|table|TYPE OF SURFACE|Code table|0|0|8|NA|0|0
+013202|typeOfSurface|table|TYPE OF SURFACE|CODE TABLE|0|0|8|NA|0|0
 013203|1dVarEstimateOfRainRate|double|1D VAR ESTIMATE OF RAIN RATE|kg m-2 h-1|2|0|12|NA|0|0
 013204|ssmiIndependentEstimateOfRainRate|double|SSMI INDEPENDENT ESTIMATE OF RAIN RATE|kg m-2 h-1|2|0|12|NA|0|0
 013205|cloudLiquidWaterPath|double|CLOUD LIQUID WATER PATH|kg m-2|4|0|14|NA|0|0
@@ -115,31 +115,31 @@
 015043|numberOfAveragingKernelLayers|long|NUMBER OF AVERAGING KERNEL LAYERS|Numeric|0|0|10|Numeric|0|4
 015044|averagingKernelValue|long|(VAL) AVERAGING KERNEL VALUE|Numeric|6|-5000000|31|NA|0|0
 015202|integratedElectronDensity|double|INTEGRATED ELECTRON DENSITY|m-2|3|13000|12|NA|0|0
-020079|snowOrIceCrystalsIndicator|flag|(VAL) SNOW/ICE CRYSTALS INDICATOR|Flag table|0|0|2|NA|0|0
-020192|specialPhenomena|table|SPECIAL PHENOMENA|Code table|0|0|14|NA|0|0
+020079|snowOrIceCrystalsIndicator|flag|(VAL) SNOW/ICE CRYSTALS INDICATOR|FLAG TABLE|0|0|2|NA|0|0
+020192|specialPhenomena|table|SPECIAL PHENOMENA|CODE TABLE|0|0|14|NA|0|0
 020193|cloudAmountInSegment|long|CLOUD AMOUNT IN SEGMENT|%|0|0|7|NA|0|0
 020194|amountOfSegmentCloudFree|long|AMOUNT OF SEGMENT CLOUD FREE|%|0|0|7|NA|0|0
 020215|pressureAtTheBaseOfCloud|long|PRESSURE AT THE BASE OF CLOUD|Pa|-1|0|14|NA|0|0
-020250|calculatedSurfaceType|table|CALCULATED SURFACE TYPE|Code table|0|0|5|NA|0|0
-020251|iceAge|table|ICE AGE|Code table|0|0|3|NA|0|0
-020252|iceEdge|table|ICE EDGE|Code table|0|0|3|NA|0|0
-020253|surfaceType|table|SURFACE TYPE|Code table|0|0|3|NA|0|0
+020250|calculatedSurfaceType|table|CALCULATED SURFACE TYPE|CODE TABLE|0|0|5|NA|0|0
+020251|iceAge|table|ICE AGE|CODE TABLE|0|0|3|NA|0|0
+020252|iceEdge|table|ICE EDGE|CODE TABLE|0|0|3|NA|0|0
+020253|surfaceType|table|SURFACE TYPE|CODE TABLE|0|0|3|NA|0|0
 020254|iceConcentration|long|ICE CONCENTRATION|%|0|0|7|NA|0|0
 021192|radarBackScatter|double|RADAR BACK SCATTER|dB|2|-5000|13|NA|0|0
 021193|noiseFigure|long|NOISE FIGURE|%|0|0|7|NA|0|0
 021194|backgroundNoiseLevel|long|BACKGROUND NOISE LEVEL|Numeric|0|0|8|NA|0|0
 021195|missingPacketCounter|long|MISSING PACKET COUNTER|Numeric|0|-127|8|NA|0|0
-021196|uwaProductConfidence|flag|UWA PRODUCT CONFIDENCE|Flag table|0|0|12|NA|0|0
-021197|uwiProductConfidence|flag|UWI PRODUCT CONFIDENCE|Flag table|0|0|12|NA|0|0
-021198|uraProductConfidence|flag|URA PRODUCT CONFIDENCE|Flag table|0|0|8|NA|0|0
-021199|uatProductConfidence|flag|UAT PRODUCT CONFIDENCE|Flag table|0|0|7|NA|0|0
-021200|mwiProductConfidence|flag|MWI PRODUCT CONFIDENCE|Flag table|0|0|15|NA|0|0
+021196|uwaProductConfidence|flag|UWA PRODUCT CONFIDENCE|FLAG TABLE|0|0|12|NA|0|0
+021197|uwiProductConfidence|flag|UWI PRODUCT CONFIDENCE|FLAG TABLE|0|0|12|NA|0|0
+021198|uraProductConfidence|flag|URA PRODUCT CONFIDENCE|FLAG TABLE|0|0|8|NA|0|0
+021199|uatProductConfidence|flag|UAT PRODUCT CONFIDENCE|FLAG TABLE|0|0|7|NA|0|0
+021200|mwiProductConfidence|flag|MWI PRODUCT CONFIDENCE|FLAG TABLE|0|0|15|NA|0|0
 021201|peakiness|long|PEAKINESS|Numeric|0|0|16|NA|0|0
-021202|altimeterCalibrationStatus|flag|ALTIMETER CALIBRATION STATUS|Flag table|0|0|4|NA|0|0
-021203|altimeterInstrumentMode|flag|ALTIMETER INSTRUMENT MODE|Flag table|0|0|9|NA|0|0
+021202|altimeterCalibrationStatus|flag|ALTIMETER CALIBRATION STATUS|FLAG TABLE|0|0|4|NA|0|0
+021203|altimeterInstrumentMode|flag|ALTIMETER INSTRUMENT MODE|FLAG TABLE|0|0|9|NA|0|0
 021204|multiOrSingleViewDifference|double|MULTI/SINGLE VIEW DIFFERENCE|K|2|-512|10|NA|0|0
 021205|spectralIntensity|long|SPECTRAL INTENSITY|Numeric|0|0|8|NA|0|0
-021206|representationOfIntensity|table|REPRESENTATION OF INTENSITY|Code table|0|0|3|NA|0|0
+021206|representationOfIntensity|table|REPRESENTATION OF INTENSITY|CODE TABLE|0|0|3|NA|0|0
 021207|altitudeCorrectionIonosphere|double|ALTITUDE CORRECTION (IONOSPHERE)|m|3|0|14|NA|0|0
 021208|altitudeCorrectionDryTroposphere|double|ALTITUDE CORRECTION (DRY TROPOSPHERE)|m|3|0|9|NA|0|0
 021209|altitudeCorrectionWetTroposphere|double|LTITUDE CORRECTION (WET TROPOSPHERE)|m|3|2000|10|NA|0|0
@@ -147,17 +147,17 @@
 021211|openLoopCorrectionHtl|double|OPEN LOOP CORRECTION (HTL)|m|3|0|10|NA|0|0
 021212|openLoopCorrectionAgc|double|OPEN LOOP CORRECTION (AGC)|dB|3|-3000|14|NA|0|0
 021213|ambiguityRemovalConfidence|long|AMBIGUITY REMOVAL CONFIDENCE|%|0|0|7|NA|0|0
-021214|uatQualitySummary|table|UAT QUALITY SUMMARY|Code table|0|0|3|NA|0|0
+021214|uatQualitySummary|table|UAT QUALITY SUMMARY|CODE TABLE|0|0|3|NA|0|0
 021215|uatAcrossTrackBandNo|long|UAT ACROSS-TRACK BAND NO.|Numeric|0|0|4|NA|0|0
 021222|dopplerSpectrum0ThMomentAmplitude|long|DOPPLER SPECTRUM 0 TH MOMENT (AMPLITUDE)|dB|0|0|7|NA|0|0
-021225|prescatProductConfidence|flag|PRESCAT PRODUCT CONFIDENCE|Flag table|0|0|6|NA|0|0
+021225|prescatProductConfidence|flag|PRESCAT PRODUCT CONFIDENCE|FLAG TABLE|0|0|6|NA|0|0
 021226|backscatterDistance|long|BACKSCATER DISTANCE|Numeric|1|-4096|13|NA|0|0
 021230|numberOfVectorAmbiguities|long|NUMBER OF VECTOR AMBIGUITIES|Numeric|0|0|3|NA|0|0
 021231|indexOfSelectedWindVector|long|INDEX OF SELECTED WIND VECTOR|Numeric|0|0|3|NA|0|0
 021232|totalNmberOfSigma0Measurements|long|TOTAL NMBER OF SIGMA-0 MEASUREMENTS|Numeric|0|0|5|NA|0|0
 021233|numberOfSigma0UsableForWind|long|NUMBER OF SIGMA-0 USABLE FOR WIND|Numeric|0|0|5|NA|0|0
 021234|likelihoodComputedForSolution|long|LIKELIHOOD COMPUTED FOR SOLUTION|Numeric|1|-10000|14|NA|0|0
-021235|windVectorCellQualityFlag|flag|WIND VECTOR CELL QUALITY FLAG|Flag table|0|0|3|NA|0|0
+021235|windVectorCellQualityFlag|flag|WIND VECTOR CELL QUALITY FLAG|FLAG TABLE|0|0|3|NA|0|0
 021236|numberOfForeBeamSigma0|long|NUMBER OF FORE-BEAM SIGMA-0|Numeric|1|0|6|NA|0|0
 021237|numberOfMidBeamVPolSigma0|long|NUMBER OF MID-BEAM V-POL SIGMA-0|Numeric|1|0|6|NA|0|0
 021238|numberOfMidBeamHPolSigma0|long|NUMBER OF MID-BEAM H-POL SIGMA-0|Numeric|1|0|6|NA|0|0
@@ -166,7 +166,7 @@
 021241|kpVarianceCoefficientAlpha|long|Kp VARIANCE COEFFICIENT (ALPHA)|Numeric|5|0|14|NA|0|0
 021242|kpVarianceCoefficientBetha|long|Kp VARIANCE COEFFICIENT (BETHA)|Numeric|6|0|16|NA|0|0
 021243|kpVarianceCoefficientGamma|long|Kp VARIANCE COEFFICIENT (GAMMA)|Numeric|6|0|16|NA|0|0
-021244|sigma0QualityFlag|flag|SIGMA-0 QUALITY FLAG|Flag table|0|0|15|NA|0|0
+021244|sigma0QualityFlag|flag|SIGMA-0 QUALITY FLAG|FLAG TABLE|0|0|15|NA|0|0
 022192|spectralPeriod|double|SPECTRAL PERIOD|s|2|0|13|NA|0|0
 022193|meanWavenumber|double|MEAN WAVENUMBER|m-1|5|0|15|NA|0|0
 022194|peakWavenumber|double|PEAK WAVENUMBER|m-1|5|0|15|NA|0|0
@@ -196,10 +196,10 @@
 025200|bandwidthCorrectionCoefficient2|long|BANDWIDTH CORRECTION COEFFICIENT 2|Numeric|5|0|17|NA|0|0
 025201|albedoRadSolarFilteredIrradiance|long|ALBEDO-RAD SOLAR FILTERED IRRADIANCE|Numeric|4|0|24|NA|0|0
 025202|albedoRadEquivalentFilterWidth|long|ALBEDO-RAD EQUIVALENT FILTER WIDTH|Numeric|10|0|14|NA|0|0
-025203|scanLineStatusFlagsForAtovs|flag|SCAN LINE STATUS FLAGS FOR ATOVS|Flag table|0|0|31|NA|0|0
-025204|scanLineQualityFlagsForAtovs|flag|SCAN LINE QUALITY FLAGS FOR ATOVS|Flag table|0|0|31|NA|0|0
-025205|channelQualityFlagsForAtovs|flag|CHANNEL QUALITY FLAGS FOR ATOVS|Flag table|0|0|31|NA|0|0
-025206|fovQualityFlagsForAtovs|flag|FOV QUALITY FLAGS FOR ATOVS|Flag table|0|0|31|NA|0|0
+025203|scanLineStatusFlagsForAtovs|flag|SCAN LINE STATUS FLAGS FOR ATOVS|FLAG TABLE|0|0|31|NA|0|0
+025204|scanLineQualityFlagsForAtovs|flag|SCAN LINE QUALITY FLAGS FOR ATOVS|FLAG TABLE|0|0|31|NA|0|0
+025205|channelQualityFlagsForAtovs|flag|CHANNEL QUALITY FLAGS FOR ATOVS|FLAG TABLE|0|0|31|NA|0|0
+025206|fovQualityFlagsForAtovs|flag|FOV QUALITY FLAGS FOR ATOVS|FLAG TABLE|0|0|31|NA|0|0
 026193|year|long|YEAR|a|0|0|12|NA|0|0
 026194|month|long|MONTH|mon|0|0|4|NA|0|0
 026195|day|long|DAY|d|0|0|6|NA|0|0
@@ -207,75 +207,75 @@
 026197|minute|long|MINUTE|min|0|0|6|NA|0|0
 026198|second|long|SECOND|s|0|0|6|NA|0|0
 026200|locationWithinAssimilationWindowInTime|long|LOCATION WITHIN ASSIMILATION WINDOW IN TIME|Numeric|6|0|20|NA|0|0
-026201|hoursIncluded|flag|HOURS INCLUDED|Flag table|0|0|26|NA|0|0
+026201|hoursIncluded|flag|HOURS INCLUDED|FLAG TABLE|0|0|26|NA|0|0
 027193|solarAzimuth|double|SOLAR AZIMUTH|deg|2|0|16|NA|0|0
 030193|positionNumberAlongScan|long|POSITION NUMBER ALONG SCAN|Numeric|0|0|8|NA|0|0
 031192|dataPresentIndicator|long|DATA PRESENT INDICATOR|Numeric|0|0|1|NA|0|0
-033054|overallQualityOfRetrievedAtmosphericProfile|table|(TBP) OVERALL QUALITY OF RETRIEVED ATMOSPHERIC PROFILE|Code table|0|0|3|NA|0|0
+033054|overallQualityOfRetrievedAtmosphericProfile|table|(TBP) OVERALL QUALITY OF RETRIEVED ATMOSPHERIC PROFILE|CODE TABLE|0|0|3|NA|0|0
 033192|tem1Confidence|long|TEM1 CONFIDENCE|%|0|0|7|NA|0|0
-033193|dataQuality3BitCode|table|DATA QUALITY 3 BIT CODE|Code table|0|0|3|NA|0|0
-033194|dataQuality2BitCode|table|DATA QUALITY 2 BIT CODE|Code table|0|0|2|NA|0|0
-033195|ecmwfSarQcIndicator|table|ECMWF SAR QC INDICATOR|Code table|0|0|5|NA|0|0
-033196|ecmwfWamQcIndicator|table|ECMWF WAM QC INDICATOR|Code table|0|0|2|NA|0|0
-033197|ecmwfSarInversionQcIndicator|table|ECMWF SAR INVERSION QC INDICATOR|Code table|0|0|3|NA|0|0
+033193|dataQuality3BitCode|table|DATA QUALITY 3 BIT CODE|CODE TABLE|0|0|3|NA|0|0
+033194|dataQuality2BitCode|table|DATA QUALITY 2 BIT CODE|CODE TABLE|0|0|2|NA|0|0
+033195|ecmwfSarQcIndicator|table|ECMWF SAR QC INDICATOR|CODE TABLE|0|0|5|NA|0|0
+033196|ecmwfWamQcIndicator|table|ECMWF WAM QC INDICATOR|CODE TABLE|0|0|2|NA|0|0
+033197|ecmwfSarInversionQcIndicator|table|ECMWF SAR INVERSION QC INDICATOR|CODE TABLE|0|0|3|NA|0|0
 033198|minimumCost|long|MINIMUM COST|Numeric|4|0|14|NA|0|0
 033199|1dVarTotalPrecipitableWaterRetrievedError|double|1D VAR TOTAL PRECIPITABLE WATER RETRIEVED ERROR(S)|kg m-2|2|0|11|NA|0|0
-033200|analysisReportEvents|flag|ANALYSIS REPORT EVENTS|Flag table|0|0|31|NA|0|0
-033201|analysisReportStatusEvent|flag|ANALYSIS REPORT STATUS EVENT|Flag table|0|0|13|NA|0|0
-033202|analysisDatumEventFlags1|flag|ANALYSIS DATUM EVENT FLAGS (1)|Flag table|0|0|31|NA|0|0
-033203|analysisDatumEventFlags2|flag|ANALYSIS DATUM EVENT FLAGS (2)|Flag table|0|0|11|NA|0|0
-033204|analysisDatumStatusFlags|flag|ANALYSIS DATUM STATUS FLAGS|Flag table|0|0|21|NA|0|0
-033205|variationalAnalysisBlackListFlag|table|VARIATIONAL ANALYSIS BLACK LIST FLAG|Code table|0|0|4|NA|0|0
-033206|variationalAnalysisQualityControlFlag|table|VARIATIONAL ANALYSIS QUALITY CONTROL FLAG|Code table|0|0|4|NA|0|0
-033207|variationalAnalysisDepartureFlag|table|VARIATIONAL ANALYSIS DEPARTURE FLAG|Code table|0|0|4|NA|0|0
-033208|variationalAnalysisFirstQuessCheckFlag|table|VARIATIONAL ANALYSIS FIRST QUESS CHECK FLAG|Code table|0|0|4|NA|0|0
-033209|variationalAnalysisFinalFlag|table|VARIATIONAL ANALYSIS FINAL FLAG|Code table|0|0|4|NA|0|0
+033200|analysisReportEvents|flag|ANALYSIS REPORT EVENTS|FLAG TABLE|0|0|31|NA|0|0
+033201|analysisReportStatusEvent|flag|ANALYSIS REPORT STATUS EVENT|FLAG TABLE|0|0|13|NA|0|0
+033202|analysisDatumEventFlags1|flag|ANALYSIS DATUM EVENT FLAGS (1)|FLAG TABLE|0|0|31|NA|0|0
+033203|analysisDatumEventFlags2|flag|ANALYSIS DATUM EVENT FLAGS (2)|FLAG TABLE|0|0|11|NA|0|0
+033204|analysisDatumStatusFlags|flag|ANALYSIS DATUM STATUS FLAGS|FLAG TABLE|0|0|21|NA|0|0
+033205|variationalAnalysisBlackListFlag|table|VARIATIONAL ANALYSIS BLACK LIST FLAG|CODE TABLE|0|0|4|NA|0|0
+033206|variationalAnalysisQualityControlFlag|table|VARIATIONAL ANALYSIS QUALITY CONTROL FLAG|CODE TABLE|0|0|4|NA|0|0
+033207|variationalAnalysisDepartureFlag|table|VARIATIONAL ANALYSIS DEPARTURE FLAG|CODE TABLE|0|0|4|NA|0|0
+033208|variationalAnalysisFirstQuessCheckFlag|table|VARIATIONAL ANALYSIS FIRST QUESS CHECK FLAG|CODE TABLE|0|0|4|NA|0|0
+033209|variationalAnalysisFinalFlag|table|VARIATIONAL ANALYSIS FINAL FLAG|CODE TABLE|0|0|4|NA|0|0
 033210|incrementalVariationalAnalysisUpdateNumber|long|INCREMENTAL VARIATIONAL ANALYSIS UPDATE NUMBER|Numeric|0|0|7|NA|0|0
 033211|minimisationSimulationNumber|long|MINIMISATION SIMULATION NUMBER|Numeric|0|0|10|NA|0|0
 033212|1dVarIterationNumber|long|1D VAR ITERATION NUMBER|Numeric|0|0|10|NA|0|0
 033213|1dVarRadianceCost|long|1D VAR RADIANCE COST|Numeric|1|-1000|11|NA|0|0
-033214|1dVarErrorS|flag|1D VAR ERROR(S)|Flag table|0|0|11|NA|0|0
+033214|1dVarErrorS|flag|1D VAR ERROR(S)|FLAG TABLE|0|0|11|NA|0|0
 033215|directionalSkill|long|DIRECTIONAL SKILL|Numeric|1|-4096|13|NA|0|0
-033216|1dVarSurfaceTypeQualityControl|table|1D VAR SURFACE TYPE QUALITY CONTROL|Code table|0|0|3|NA|0|0
-033217|1dVarFailureIndicator|table|1D VAR FAILURE INDICATOR|Code table|0|0|2|NA|0|0
+033216|1dVarSurfaceTypeQualityControl|table|1D VAR SURFACE TYPE QUALITY CONTROL|CODE TABLE|0|0|3|NA|0|0
+033217|1dVarFailureIndicator|table|1D VAR FAILURE INDICATOR|CODE TABLE|0|0|2|NA|0|0
 033218|1dVarEstimateOfScattering|long|1D VAR ESTIMATE OF SCATTERING|Numeric|2|0|12|NA|0|0
 033219|ssmiIndipendentScatteringIndex|long|SSMI INDIPENDENT SCATTERING INDEX|Numeric|2|-50000|16|NA|0|0
-033220|variationalAnalysisReportEvents1|flag|VARIATIONAL ANALYSIS REPORT EVENTS (1)|Flag table|0|0|31|NA|0|0
-033221|variationalAnalysisSynopEvents2|flag|VARIATIONAL ANALYSIS SYNOP EVENTS (2)|Flag table|0|0|31|NA|0|0
-033222|variationalAnalysisAirepEvents2|flag|VARIATIONAL ANALYSIS AIREP EVENTS (2)|Flag table|0|0|31|NA|0|0
-033223|variationalAnalysisSatobEvents2|flag|VARIATIONAL ANALYSIS SATOB EVENTS (2)|Flag table|0|0|31|NA|0|0
-033224|variationalAnalysisDribuEvents2|flag|VARIATIONAL ANALYSIS DRIBU EVENTS (2)|Flag table|0|0|31|NA|0|0
-033225|variationalAnalysisTempEvents2|flag|VARIATIONAL ANALYSIS TEMP EVENTS (2)|Flag table|0|0|31|NA|0|0
-033226|variationalAnalysisPilotEvents2|flag|VARIATIONAL ANALYSIS PILOT EVENTS (2)|Flag table|0|0|31|NA|0|0
-033227|variationalAnalysisSatemOrTovsEvents2|flag|VARIATIONAL ANALYSIS SATEM/TOVS EVENTS (2)|Flag table|0|0|31|NA|0|0
-033228|variationalAnalysisPaobEvents2|flag|VARIATIONAL ANALYSIS PAOB EVENTS (2)|Flag table|0|0|31|NA|0|0
-033229|variationalAnalysisScatterometerEvents2|flag|VARIATIONAL ANALYSIS SCATTEROMETER EVENTS (2)|Flag table|0|0|31|NA|0|0
-033230|variationalAnalysisRawRadiancesEvents2|flag|VARIATIONAL ANALYSIS RAW RADIANCES EVENTS (2)|Flag table|0|0|31|NA|0|0
-033231|presatSummaryFlags|flag|PRESAT SUMMARY FLAGS|Flag table|0|0|6|NA|0|0
-033232|reportBlackListEvents|flag|REPORT BLACK LIST EVENTS|Flag table|0|0|31|NA|0|0
-033233|variationalAnalysisReportStatus|flag|VARIATIONAL ANALYSIS REPORT STATUS|Flag table|0|0|31|NA|0|0
-033234|variationalAnalysisDatumStatus|flag|VARIATIONAL ANALYSIS DATUM STATUS|Flag table|0|0|31|NA|0|0
-033236|variationalAnalysisDatumEvents1|flag|VARIATIONAL ANALYSIS DATUM EVENTS (1)|Flag table|0|0|31|NA|0|0
-033237|variationalAnalysisSynopDatumEvents2|flag|VARIATIONAL ANALYSIS SYNOP DATUM EVENTS (2)|Flag table|0|0|31|NA|0|0
-033238|variationalAnalysisAirepDatumEvents2|flag|VARIATIONAL ANALYSIS AIREP DATUM EVENTS (2)|Flag table|0|0|31|NA|0|0
-033239|variationalAnalysisSatobDatumEvents2|flag|VARIATIONAL ANALYSIS SATOB DATUM EVENTS (2)|Flag table|0|0|31|NA|0|0
-033240|variationalAnalysisDribuDatumEvents2|flag|VARIATIONAL ANALYSIS DRIBU DATUM EVENTS (2)|Flag table|0|0|31|NA|0|0
+033220|variationalAnalysisReportEvents1|flag|VARIATIONAL ANALYSIS REPORT EVENTS (1)|FLAG TABLE|0|0|31|NA|0|0
+033221|variationalAnalysisSynopEvents2|flag|VARIATIONAL ANALYSIS SYNOP EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033222|variationalAnalysisAirepEvents2|flag|VARIATIONAL ANALYSIS AIREP EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033223|variationalAnalysisSatobEvents2|flag|VARIATIONAL ANALYSIS SATOB EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033224|variationalAnalysisDribuEvents2|flag|VARIATIONAL ANALYSIS DRIBU EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033225|variationalAnalysisTempEvents2|flag|VARIATIONAL ANALYSIS TEMP EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033226|variationalAnalysisPilotEvents2|flag|VARIATIONAL ANALYSIS PILOT EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033227|variationalAnalysisSatemOrTovsEvents2|flag|VARIATIONAL ANALYSIS SATEM/TOVS EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033228|variationalAnalysisPaobEvents2|flag|VARIATIONAL ANALYSIS PAOB EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033229|variationalAnalysisScatterometerEvents2|flag|VARIATIONAL ANALYSIS SCATTEROMETER EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033230|variationalAnalysisRawRadiancesEvents2|flag|VARIATIONAL ANALYSIS RAW RADIANCES EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033231|presatSummaryFlags|flag|PRESAT SUMMARY FLAGS|FLAG TABLE|0|0|6|NA|0|0
+033232|reportBlackListEvents|flag|REPORT BLACK LIST EVENTS|FLAG TABLE|0|0|31|NA|0|0
+033233|variationalAnalysisReportStatus|flag|VARIATIONAL ANALYSIS REPORT STATUS|FLAG TABLE|0|0|31|NA|0|0
+033234|variationalAnalysisDatumStatus|flag|VARIATIONAL ANALYSIS DATUM STATUS|FLAG TABLE|0|0|31|NA|0|0
+033236|variationalAnalysisDatumEvents1|flag|VARIATIONAL ANALYSIS DATUM EVENTS (1)|FLAG TABLE|0|0|31|NA|0|0
+033237|variationalAnalysisSynopDatumEvents2|flag|VARIATIONAL ANALYSIS SYNOP DATUM EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033238|variationalAnalysisAirepDatumEvents2|flag|VARIATIONAL ANALYSIS AIREP DATUM EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033239|variationalAnalysisSatobDatumEvents2|flag|VARIATIONAL ANALYSIS SATOB DATUM EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033240|variationalAnalysisDribuDatumEvents2|flag|VARIATIONAL ANALYSIS DRIBU DATUM EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
 033241|grossErrorProbability|long|GROSS ERROR PROBABILITY|Numeric|3|0|10|NA|0|0
-033242|grossErrorIndicator|table|GROSS ERROR INDICATOR|Code table|0|0|2|NA|0|0
-033243|variationalAnalysisTempDatumEvents2|flag|VARIATIONAL ANALYSIS TEMP DATUM EVENTS (2)|Flag table|0|0|31|NA|0|0
-033244|variationalAnalysisPilotDatumEvents2|flag|VARIATIONAL ANALYSIS PILOT DATUM EVENTS (2)|Flag table|0|0|31|NA|0|0
-033245|variationalAnalysisSatemOrTovsDatumEvents2|flag|VARIATIONAL ANALYSIS SATEM/TOVS DATUM EVENTS (2)|Flag table|0|0|31|NA|0|0
-033246|variationalAnalysisPaobDatumEvents2|flag|VARIATIONAL ANALYSIS PAOB DATUM EVENTS (2)|Flag table|0|0|31|NA|0|0
-033247|variationalAnalysisScatterometerDatumEvents2|flag|VARIATIONAL ANALYSIS SCATTEROMETER DATUM EVENTS (2)|Flag table|0|0|31|NA|0|0
-033248|variationalAnalysisRawRadiancesDatumEvents2|flag|VARIATIONAL ANALYSIS RAW RADIANCES DATUM EVENTS (2)|Flag table|0|0|31|NA|0|0
-033249|datumBlackListEvents|flag|DATUM BLACK LIST EVENTS|Flag table|0|0|31|NA|0|0
+033242|grossErrorIndicator|table|GROSS ERROR INDICATOR|CODE TABLE|0|0|2|NA|0|0
+033243|variationalAnalysisTempDatumEvents2|flag|VARIATIONAL ANALYSIS TEMP DATUM EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033244|variationalAnalysisPilotDatumEvents2|flag|VARIATIONAL ANALYSIS PILOT DATUM EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033245|variationalAnalysisSatemOrTovsDatumEvents2|flag|VARIATIONAL ANALYSIS SATEM/TOVS DATUM EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033246|variationalAnalysisPaobDatumEvents2|flag|VARIATIONAL ANALYSIS PAOB DATUM EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033247|variationalAnalysisScatterometerDatumEvents2|flag|VARIATIONAL ANALYSIS SCATTEROMETER DATUM EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033248|variationalAnalysisRawRadiancesDatumEvents2|flag|VARIATIONAL ANALYSIS RAW RADIANCES DATUM EVENTS (2)|FLAG TABLE|0|0|31|NA|0|0
+033249|datumBlackListEvents|flag|DATUM BLACK LIST EVENTS|FLAG TABLE|0|0|31|NA|0|0
 033250|probabilityOfGrossError|long|PROBABILITY OF GROSS ERROR|Numeric|6|0|20|NA|0|0
 033251|rangeOfPossibleValues|long|RANGE OF POSSIBLE VALUES|Numeric|2|0|14|NA|0|0
-033252|manualAutomaticQualityControl|table|MANUAL-AUTOMATIC QUALITY CONTROL|Code table|0|0|4|NA|0|0
+033252|manualAutomaticQualityControl|table|MANUAL-AUTOMATIC QUALITY CONTROL|CODE TABLE|0|0|4|NA|0|0
 033253|nominalConfidenceThreshold|long|NOMINAL CONFIDENCE THRESHOLD|%|0|0|7|NA|0|0
-033254|windCorrelationMethod|flag|WIND CORRELATION METHOD|Flag table|0|0|20|NA|0|0
-049193|sarInversionQcFlags|flag|SAR INVERSION QC FLAGS|Flag table|0|0|15|NA|0|0
-049194|altimeterWaveHeightQcFlafs|flag|ALTIMETER WAVE HEIGHT QC FLAFS|Flag table|0|0|15|NA|0|0
-062190|statisticsApplication|table|STATISTICS APPLICATION|Code table|0|0|8|NA|0|0
-062191|typeOfStatistics|table|TYPE OF STATISTICS|Code table|0|0|8|NA|0|0
-063190|applicationDerivingSubstituteOrAlternativeValue|table|APPLICATION DERIVING SUBSTITUTE OR ALTERNATIVE VALUE|Code table|0|0|8|NA|0|0
+033254|windCorrelationMethod|flag|WIND CORRELATION METHOD|FLAG TABLE|0|0|20|NA|0|0
+049193|sarInversionQcFlags|flag|SAR INVERSION QC FLAGS|FLAG TABLE|0|0|15|NA|0|0
+049194|altimeterWaveHeightQcFlafs|flag|ALTIMETER WAVE HEIGHT QC FLAFS|FLAG TABLE|0|0|15|NA|0|0
+062190|statisticsApplication|table|STATISTICS APPLICATION|CODE TABLE|0|0|8|NA|0|0
+062191|typeOfStatistics|table|TYPE OF STATISTICS|CODE TABLE|0|0|8|NA|0|0
+063190|applicationDerivingSubstituteOrAlternativeValue|table|APPLICATION DERIVING SUBSTITUTE OR ALTERNATIVE VALUE|CODE TABLE|0|0|8|NA|0|0

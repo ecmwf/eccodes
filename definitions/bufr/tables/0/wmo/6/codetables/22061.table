@@ -1,0 +1,11 @@
+0 0 CALM (GLASSY)            HEIGHT     0            M
+1 1 CALM (RIPPLED)           HEIGHT     0     - 0.1  M
+2 2 SMOOTH (WAVELETS)        HEIGHT     0.1   - 0.5  M
+3 3 SLIGHT                   HEIGHT     0.5   - 1.5  M
+4 4 MODERATE                 HEIGHT     1.25  - 2.5  M
+5 5 ROUGH                    HEIGHT     2.5   - 4    M
+6 6 VERY ROUGH               HEIGHT     4     - 6    M
+7 7 HIGH                     HEIGHT     6     - 9    M
+8 8 VERY HIGH                HEIGHT     9     -14    M
+9 9 PHENOMANAL               HEIGHT     OVER   14    M
+15 15 MISSING VALUE
