@@ -63,3 +63,5 @@
 85 estdtm Ensemble standard deviation of temporal mean
 86 hcmean Hindcast climate mean
 87 ssd Simulated satellite data
+88 gsd Gridded satellite data
+89 ga GFAS analysis
