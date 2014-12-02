@@ -8981,6 +8981,8 @@ dist_definitionsmars_DATA = \
 	mars/grib1.ewmo.cl.def\
 	mars/grib1.ewmo.def\
 	mars/grib1.ewmo.fc.def\
+	mars/grib1.gfas.ga.def\
+	mars/grib1.gfas.gsd.def\
 	mars/grib1.kwbc.pf.def\
 	mars/grib1.lwda.4i.def\
 	mars/grib1.lwda.4v.def\
