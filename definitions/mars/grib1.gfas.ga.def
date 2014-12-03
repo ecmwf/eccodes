@@ -1,4 +1,2 @@
-unalias mars.levtype;
-unalias mars.levelist;
-unalias mars.channel;
-
+# See GRIB-653
+alias mars.step = stepRange;
