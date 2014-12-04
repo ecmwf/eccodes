@@ -3435,37 +3435,37 @@
 	 indicatorOfParameter = 193 ;
 	}
 #Vertical integral of divergence of cloud liquid water flux
-'~' = {
+'vilwd' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 79 ;
 	}
 #Vertical integral of divergence of cloud frozen water flux
-'~' = {
+'viiwd' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 80 ;
 	}
 #Vertical integral of eastward cloud liquid water flux
-'~' = {
+'vilwe' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 88 ;
 	}
 #Vertical integral of northward cloud liquid water flux
-'~' = {
+'vilwn' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 89 ;
 	}
 #Vertical integral of eastward cloud frozen water flux
-'~' = {
+'viiwe' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 90 ;
 	}
 #Vertical integral of northward cloud frozen water flux 
-'~' = {
+'viiwn' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 91 ;
 	}
 #Vertical integral of mass tendency
-'~' = {
+'vimat' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 92 ;
 	}
@@ -12290,237 +12290,237 @@
 	 indicatorOfParameter = 51 ;
 	}
 #Vertical integral of mass of atmosphere
-'~' = {
+'vima' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 53 ;
 	}
 #Vertical integral of temperature
-'~' = {
+'vit' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 54 ;
 	}
 #Vertical integral of water vapour
-'~' = {
+'viwv' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 55 ;
 	}
 #Vertical integral of cloud liquid water
-'~' = {
+'vilw' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 56 ;
 	}
 #Vertical integral of cloud frozen water
-'~' = {
+'viiw' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 57 ;
 	}
 #Vertical integral of ozone
-'~' = {
+'vioz' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 58 ;
 	}
 #Vertical integral of kinetic energy
-'~' = {
+'vike' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 59 ;
 	}
 #Vertical integral of thermal energy
-'~' = {
+'vithe' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 60 ;
 	}
 #Vertical integral of potential+internal energy
-'~' = {
+'vipie' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 61 ;
 	}
 #Vertical integral of potential+internal+latent energy
-'~' = {
+'vipile' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 62 ;
 	}
 #Vertical integral of total energy
-'~' = {
+'vitoe' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 63 ;
 	}
 #Vertical integral of energy conversion
-'~' = {
+'viec' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 64 ;
 	}
 #Vertical integral of eastward mass flux
-'~' = {
+'vimae' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 65 ;
 	}
 #Vertical integral of northward mass flux
-'~' = {
+'viman' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 66 ;
 	}
 #Vertical integral of eastward kinetic energy flux
-'~' = {
+'vikee' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 67 ;
 	}
 #Vertical integral of northward kinetic energy flux
-'~' = {
+'viken' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 68 ;
 	}
 #Vertical integral of eastward heat flux
-'~' = {
+'vithee' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 69 ;
 	}
 #Vertical integral of northward heat flux
-'~' = {
+'vithen' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 70 ;
 	}
 #Vertical integral of eastward water vapour flux
-'~' = {
+'viwve' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 71 ;
 	}
 #Vertical integral of northward water vapour flux
-'~' = {
+'viwvn' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 72 ;
 	}
 #Vertical integral of eastward geopotential flux
-'~' = {
+'vige' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 73 ;
 	}
 #Vertical integral of northward geopotential flux
-'~' = {
+'vign' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 74 ;
 	}
 #Vertical integral of eastward total energy flux
-'~' = {
+'vitoee' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 75 ;
 	}
 #Vertical integral of northward total energy flux
-'~' = {
+'vitoen' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 76 ;
 	}
 #Vertical integral of eastward ozone flux
-'~' = {
+'vioze' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 77 ;
 	}
 #Vertical integral of northward ozone flux
-'~' = {
+'viozn' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 78 ;
 	}
 #Vertical integral of divergence of mass flux
-'~' = {
+'vimad' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 81 ;
 	}
 #Vertical integral of divergence of kinetic energy flux
-'~' = {
+'viked' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 82 ;
 	}
 #Vertical integral of divergence of thermal energy flux
-'~' = {
+'vithed' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 83 ;
 	}
 #Vertical integral of divergence of moisture flux
-'~' = {
+'viwvd' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 84 ;
 	}
 #Vertical integral of divergence of geopotential flux
-'~' = {
+'vigd' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 85 ;
 	}
 #Vertical integral of divergence of total energy flux
-'~' = {
+'vitoed' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 86 ;
 	}
 #Vertical integral of divergence of ozone flux
-'~' = {
+'viozd' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 87 ;
 	}
 #Tendency of short wave radiation
-'~' = {
+'srta' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 100 ;
 	}
 #Tendency of long wave radiation
-'~' = {
+'trta' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 101 ;
 	}
 #Tendency of clear sky short wave radiation
-'~' = {
+'srtca' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 102 ;
 	}
 #Tendency of clear sky long wave radiation
-'~' = {
+'trtca' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 103 ;
 	}
 #Updraught mass flux
-'~' = {
+'umfa' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 104 ;
 	}
 #Downdraught mass flux
-'~' = {
+'dmfa' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 105 ;
 	}
 #Updraught detrainment rate
-'~' = {
+'udra' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 106 ;
 	}
 #Downdraught detrainment rate
-'~' = {
+'ddra' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 107 ;
 	}
 #Total precipitation flux
-'~' = {
+'tpfa' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 108 ;
 	}
 #Turbulent diffusion coefficient for heat
-'~' = {
+'tdcha' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 109 ;
 	}
 #Tendency of temperature due to physics
-'~' = {
+'ttpha' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 110 ;
 	}
 #Tendency of specific humidity due to physics
-'~' = {
+'qtpha' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 111 ;
 	}
 #Tendency of u component due to physics
-'~' = {
+'utpha' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 112 ;
 	}
 #Tendency of v component due to physics
-'~' = {
+'vtpha' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 113 ;
 	}
