@@ -29,9 +29,6 @@ meta section0Pointer section_pointer(offsetSection0,section0Length,0);
 # of the message length and of the section4 lenth, so instead of
 # section_length[3] totalLength                     ;
 # we get:
-
-
-
 g1_message_length[3] totalLength(section4Length) ;
 position startOfHeaders;
 unsigned[1] editionNumber = 1 : edition_specific,dump;
@@ -48,6 +45,7 @@ meta GDSPresent gds_is_present(gridDescriptionSectionPresent,gridDefinition,bitm
 flagbit bitmapPresent(section1Flags,6) :dump;
 alias bitmapSectionPresent=bitmapPresent;
 alias geography.bitmapPresent=bitmapPresent;
+transient angularPrecision=1000;  # milli degrees
 
 if(gridDescriptionSectionPresent){
    template section_2 "grib1/section.2.def"     ;
