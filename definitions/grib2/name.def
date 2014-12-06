@@ -24,6 +24,24 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	}
+#Specific rain water content
+'Specific rain water content' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 85 ;
+	}
+#Specific snow water content
+'Specific snow water content' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 86 ;
+	}
+#Eta-coordinate vertical velocity
+'Eta-coordinate vertical velocity' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 32 ;
+	}
 #Surface solar radiation downwards
 'Surface solar radiation downwards' = {
 	 discipline = 0 ;
@@ -51,6 +69,30 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 37 ;
+	}
+#Ozone mass mixing ratio
+'Ozone mass mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 1 ;
+	}
+#Specific cloud liquid water content
+'Specific cloud liquid water content' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 83 ;
+	}
+#Specific cloud ice water content
+'Specific cloud ice water content' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 84 ;
+	}
+#Cloud cover
+'Cloud cover' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 32 ;
 	}
 #Snow depth
 'Snow depth' = {
@@ -285,6 +327,24 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
+	}
+#Significant height of combined wind waves and swell
+'Significant height of combined wind waves and swell' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	}
+#Mean wave direction
+'Mean wave direction' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 14 ;
+	}
+#Mean wave period
+'Mean wave period' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 15 ;
 	}
 #Surface runoff
 'Surface runoff' = {

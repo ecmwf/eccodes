@@ -435,24 +435,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 74 ;
 	}
-#Specific rain water content
-'crwc' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 85 ;
-	}
-#Specific snow water content
-'cswc' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 86 ;
-	}
-#Eta-coordinate vertical velocity
-'etadot' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 32 ;
-	}
 #Total column liquid water
 'tclw' = {
 	 discipline = 192 ;
@@ -904,12 +886,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 171 ;
 	}
-#Surface roughness
-'sr' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 1 ;
-	}
 #Albedo
 'al' = {
 	 discipline = 192 ;
@@ -1035,12 +1011,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 202 ;
-	}
-#Ozone mass mixing ratio
-'o3' = {
-	 discipline = 0 ;
-	 parameterCategory = 14 ;
-	 parameterNumber = 1 ;
 	}
 #Precipitation analysis weights
 'paw' = {
@@ -1284,24 +1254,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 245 ;
-	}
-#Specific cloud liquid water content
-'clwc' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 83 ;
-	}
-#Specific cloud ice water content
-'ciwc' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 84 ;
-	}
-#Cloud cover
-'cc' = {
-	 discipline = 0 ;
-	 parameterCategory = 6 ;
-	 parameterNumber = 32 ;
 	}
 #Accumulated ice water tendency
 'aiw' = {
@@ -11907,29 +11859,11 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 228 ;
 	}
-#Significant height of combined wind waves and swell
-'swh' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 3 ;
-	}
-#Mean wave direction
-'mwd' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 14 ;
-	}
 #Peak period of 1D spectra
 'pp1d' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 231 ;
-	}
-#Mean wave period
-'mwp' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 15 ;
 	}
 #Coefficient of drag with waves
 'cdww' = {
@@ -13054,283 +12988,283 @@
 	 parameterNumber = 51 ;
 	}
 #Vertical integral of mass of atmosphere
-'~' = {
+'vima' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 53 ;
 	}
 #Vertical integral of temperature
-'~' = {
+'vit' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 54 ;
 	}
 #Vertical integral of water vapour
-'~' = {
+'viwv' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 55 ;
 	}
 #Vertical integral of cloud liquid water
-'~' = {
+'vilw' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 56 ;
 	}
 #Vertical integral of cloud frozen water
-'~' = {
+'viiw' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 57 ;
 	}
 #Vertical integral of ozone
-'~' = {
+'vioz' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 58 ;
 	}
 #Vertical integral of kinetic energy
-'~' = {
+'vike' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 59 ;
 	}
 #Vertical integral of thermal energy
-'~' = {
+'vithe' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 60 ;
 	}
 #Vertical integral of potential+internal energy
-'~' = {
+'vipie' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 61 ;
 	}
 #Vertical integral of potential+internal+latent energy
-'~' = {
+'vipile' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 62 ;
 	}
 #Vertical integral of total energy
-'~' = {
+'vitoe' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 63 ;
 	}
 #Vertical integral of energy conversion
-'~' = {
+'viec' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 64 ;
 	}
 #Vertical integral of eastward mass flux
-'~' = {
+'vimae' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 65 ;
 	}
 #Vertical integral of northward mass flux
-'~' = {
+'viman' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 66 ;
 	}
 #Vertical integral of eastward kinetic energy flux
-'~' = {
+'vikee' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 67 ;
 	}
 #Vertical integral of northward kinetic energy flux
-'~' = {
+'viken' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 68 ;
 	}
 #Vertical integral of eastward heat flux
-'~' = {
+'vithee' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 69 ;
 	}
 #Vertical integral of northward heat flux
-'~' = {
+'vithen' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 70 ;
 	}
 #Vertical integral of eastward water vapour flux
-'~' = {
+'viwve' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 71 ;
 	}
 #Vertical integral of northward water vapour flux
-'~' = {
+'viwvn' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 72 ;
 	}
 #Vertical integral of eastward geopotential flux
-'~' = {
+'vige' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 73 ;
 	}
 #Vertical integral of northward geopotential flux
-'~' = {
+'vign' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 74 ;
 	}
 #Vertical integral of eastward total energy flux
-'~' = {
+'vitoee' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 75 ;
 	}
 #Vertical integral of northward total energy flux
-'~' = {
+'vitoen' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 76 ;
 	}
 #Vertical integral of eastward ozone flux
-'~' = {
+'vioze' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 77 ;
 	}
 #Vertical integral of northward ozone flux
-'~' = {
+'viozn' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 78 ;
 	}
 #Vertical integral of divergence of mass flux
-'~' = {
+'vimad' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 81 ;
 	}
 #Vertical integral of divergence of kinetic energy flux
-'~' = {
+'viked' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 82 ;
 	}
 #Vertical integral of divergence of thermal energy flux
-'~' = {
+'vithed' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 83 ;
 	}
 #Vertical integral of divergence of moisture flux
-'~' = {
+'viwvd' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 84 ;
 	}
 #Vertical integral of divergence of geopotential flux
-'~' = {
+'vigd' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 85 ;
 	}
 #Vertical integral of divergence of total energy flux
-'~' = {
+'vitoed' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 86 ;
 	}
 #Vertical integral of divergence of ozone flux
-'~' = {
+'viozd' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 87 ;
 	}
 #Tendency of short wave radiation
-'~' = {
+'srta' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 100 ;
 	}
 #Tendency of long wave radiation
-'~' = {
+'trta' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 101 ;
 	}
 #Tendency of clear sky short wave radiation
-'~' = {
+'srtca' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 102 ;
 	}
 #Tendency of clear sky long wave radiation
-'~' = {
+'trtca' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 103 ;
 	}
 #Updraught mass flux
-'~' = {
+'umfa' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 104 ;
 	}
 #Downdraught mass flux
-'~' = {
+'dmfa' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 105 ;
 	}
 #Updraught detrainment rate
-'~' = {
+'udra' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 106 ;
 	}
 #Downdraught detrainment rate
-'~' = {
+'ddra' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 107 ;
 	}
 #Total precipitation flux
-'~' = {
+'tpfa' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 108 ;
 	}
 #Turbulent diffusion coefficient for heat
-'~' = {
+'tdcha' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 109 ;
 	}
 #Tendency of temperature due to physics
-'~' = {
+'ttpha' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 110 ;
 	}
 #Tendency of specific humidity due to physics
-'~' = {
+'qtpha' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 111 ;
 	}
 #Tendency of u component due to physics
-'~' = {
+'utpha' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 112 ;
 	}
 #Tendency of v component due to physics
-'~' = {
+'vtpha' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 113 ;

@@ -85,6 +85,9 @@ int main(int argc, char *argv[])
             bzero(value,vlen);
             GRIB_CHECK(grib_get_string(h,name,value,&vlen),name);
             printf("%s = %s\n",name,value);
+
+            /* Alternative way of getting the string value */
+            GRIB_CHECK(grib_keys_iterator_get_string(kiter, value, &vlen),0);
         }
 
         grib_keys_iterator_delete(kiter);

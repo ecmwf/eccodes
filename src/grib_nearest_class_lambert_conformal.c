@@ -205,6 +205,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         }
 
         iter=grib_iterator_new(h,0,&ret);
+        if (ret) return ret;
         /* First pass: collect all latitudes and longitudes */
         while(grib_iterator_next(iter,&lat,&lon,&the_value))
         {

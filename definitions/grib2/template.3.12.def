@@ -35,7 +35,7 @@ include "template.3.resolution_flags.def";
 
 # m - scale factor at reference point ratio of distance on map to distance on spheroid
 # (IEEE 32-bit floating-point values)
-signed[4] scaleFactorAtReferencePoint : edition_specific,no_copy;
+ieeefloat scaleFactorAtReferencePoint : edition_specific,no_copy;
 alias m = scaleFactorAtReferencePoint;
 alias geography.m=m;
 

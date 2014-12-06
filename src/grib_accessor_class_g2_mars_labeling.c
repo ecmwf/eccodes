@@ -370,6 +370,8 @@ static int extra_set(grib_accessor* a,long val)
         case 81:	/* Forecast maximum     (fcmax) */
         case 82:	/* Forecast minimum     (fcmin) */
         case 83:	/* Forecast standard deviation  (fcstdev) */
+        case 88:	/* Gridded satellite data */
+        case 89:	/* GFAS analysis */
             typeOfProcessedData=255;
             typeOfGeneratingProcess=255;
             break;

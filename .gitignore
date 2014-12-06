@@ -54,6 +54,7 @@ tools/grib_info
 tools/grib_keys
 tools/grib_list_keys
 tools/grib_ls
+tools/grib_merge
 tools/grib_moments
 tools/grib_packing
 tools/grib_repair

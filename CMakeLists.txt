@@ -170,11 +170,17 @@ endif()
 ###############################################################################
 # contents
 
+if( NOT ${DEVELOPER_MODE} )
+	set( grib_api_default_data_prefix ${CMAKE_INSTALL_PREFIX} )
+else()
+	set( grib_api_default_data_prefix ${CMAKE_BINARY_DIR} )
+endif()
+
 if( NOT DEFINED GRIB_API_DEFINITION_PATH )
-    set( GRIB_API_DEFINITION_PATH ${CMAKE_INSTALL_PREFIX}/share/grib_api/definitions )
+	set( GRIB_API_DEFINITION_PATH ${grib_api_default_data_prefix}/share/grib_api/definitions )
 endif()
 if( NOT DEFINED GRIB_API_SAMPLES_PATH )
-    set( GRIB_API_SAMPLES_PATH ${CMAKE_INSTALL_PREFIX}/share/grib_api/samples )
+	set( GRIB_API_SAMPLES_PATH ${grib_api_default_data_prefix}/share/grib_api/samples )
 endif()
 
 ### config header

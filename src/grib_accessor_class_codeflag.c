@@ -185,7 +185,7 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
 
     while(fgets(line,sizeof(line)-1,f))
     {
-        sscanf(line,"%s %s", num, bval);
+        sscanf(line,"%49s %49s", num, bval);
 
         if(num[0] != '#')
         {

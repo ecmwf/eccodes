@@ -435,24 +435,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 74 ;
 	}
-#Specific rain water content
-'Specific rain water content' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 85 ;
-	}
-#Specific snow water content
-'Specific snow water content' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 86 ;
-	}
-#Eta-coordinate vertical velocity
-'Eta-coordinate vertical velocity' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 32 ;
-	}
 #Total column liquid water
 'Total column liquid water' = {
 	 discipline = 192 ;
@@ -904,12 +886,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 171 ;
 	}
-#Surface roughness
-'Surface roughness' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 1 ;
-	}
 #Albedo
 'Albedo' = {
 	 discipline = 192 ;
@@ -1035,12 +1011,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 202 ;
-	}
-#Ozone mass mixing ratio
-'Ozone mass mixing ratio' = {
-	 discipline = 0 ;
-	 parameterCategory = 14 ;
-	 parameterNumber = 1 ;
 	}
 #Precipitation analysis weights
 'Precipitation analysis weights' = {
@@ -1284,24 +1254,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 245 ;
-	}
-#Specific cloud liquid water content
-'Specific cloud liquid water content' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 83 ;
-	}
-#Specific cloud ice water content
-'Specific cloud ice water content' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 84 ;
-	}
-#Cloud cover
-'Cloud cover' = {
-	 discipline = 0 ;
-	 parameterCategory = 6 ;
-	 parameterNumber = 32 ;
 	}
 #Accumulated ice water tendency
 'Accumulated ice water tendency' = {
@@ -11907,29 +11859,11 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 228 ;
 	}
-#Significant height of combined wind waves and swell
-'Significant height of combined wind waves and swell' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 3 ;
-	}
-#Mean wave direction
-'Mean wave direction' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 14 ;
-	}
 #Peak period of 1D spectra
 'Peak period of 1D spectra' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 231 ;
-	}
-#Mean wave period
-'Mean wave period' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 15 ;
 	}
 #Coefficient of drag with waves
 'Coefficient of drag with waves' = {

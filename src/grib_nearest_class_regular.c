@@ -157,6 +157,10 @@ static int find(grib_nearest* nearest, grib_handle* h,
       if (!self->lons) return GRIB_OUT_OF_MEMORY;
 
       iter=grib_iterator_new(h,0,&ret);
+      if (ret) {
+          grib_context_log(nearest->context,GRIB_LOG_ERROR,"unable to create iterator");
+          return ret;
+      }
       while(grib_iterator_next(iter,&lat,&lon,&dummy)) {
         if (olat != lat) {
           self->lats[ilat++]=lat;

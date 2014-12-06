@@ -153,6 +153,11 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
     size_t size=0;
     long count=0;
     grib_iterator* iter=grib_iterator_new(a->parent->h,0,&ret);
+    if (ret!=GRIB_SUCCESS) {
+        if (iter) grib_iterator_delete(iter);
+        grib_context_log(c,GRIB_LOG_ERROR,"unable to create iterator");
+        return ret;
+    }
 
     size=0;
     ret=value_count(a,&count);
@@ -162,12 +167,6 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
     if (*len<size) {
         if (iter) grib_iterator_delete(iter);
         return GRIB_ARRAY_TOO_SMALL;
-    }
-
-    if (ret!=GRIB_SUCCESS) {
-        if (iter) grib_iterator_delete(iter);
-        grib_context_log(c,GRIB_LOG_ERROR,"unable to create iterator");
-        return ret;
     }
 
     while(grib_iterator_next(iter,&lat,&lon,&value)) {
