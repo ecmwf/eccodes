@@ -567,6 +567,7 @@ static void push_zero_element(grib_accessor_bufr_data_array* self,grib_darray* d
   }
 }
 
+#if 0
 static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,long ide,long subset) {
   grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
   int idx=0;
@@ -618,6 +619,7 @@ static int create_keys(grib_accessor* a) {
 
   return err;
 }
+#endif
 
 #define MAX_NESTED_REPLICATIONS 8
 
@@ -846,7 +848,7 @@ static int decode_elements(grib_accessor* a) {
     }
   }
 
-  err=create_keys(a);
+  /* err=create_keys(a); */
 
   return err;
 }

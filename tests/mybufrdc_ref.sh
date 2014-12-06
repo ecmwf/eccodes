@@ -8,8 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-set -e
-
+set -x
 . ./include.sh
 
 REDIRECT=/dev/null
@@ -28,13 +27,25 @@ do
 
   rm -f $res_num | true
 
+  set +e
   ${tools_dir}bufr_filter bufrdc_num_ref.filter $file 2> $REDIRECT > $res_num
+  if [ $? != 0 ]
+  then
+    mv $file $file.no
+  fi
 
   # Cannot use plain diff. We need to compare FLOAT NUMBERS with a tolerance
-  # perl number_compare.pl $ref_num $res_num >$REDIRECT 2> $REDIRECT
-  numdiff $ref_num $res_num >$REDIRECT 2> $REDIRECT
+  #perl number_compare.pl $ref_num $res_num >$REDIRECT 2> $REDIRECT
+  numdiff $ref_num $res_num > $diff_num 2> $diff_num
+  if [ $? != 0 ]
+  then
+    mv $file $file.no
+  else 
+    rm -f $res_num $diff_num
+  fi
 
+  #rm -f $res_num $diff_num
 
 done
 
-rm -f bufrdc_num_ref.filter
+#rm -f bufrdc_num_ref.filter
