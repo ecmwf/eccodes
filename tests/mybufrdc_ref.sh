@@ -35,8 +35,8 @@ do
   fi
 
   # Cannot use plain diff. We need to compare FLOAT NUMBERS with a tolerance
-  #perl number_compare.pl $ref_num $res_num >$REDIRECT 2> $REDIRECT
-  numdiff $ref_num $res_num > $diff_num 2> $diff_num
+  perl number_compare.pl $ref_num $res_num > $diff_num 2> $diff_num
+  #numdiff               $ref_num $res_num > $diff_num 2> $diff_num
   if [ $? != 0 ]
   then
     mv $file $file.no

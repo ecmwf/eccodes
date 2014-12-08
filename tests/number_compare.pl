@@ -26,7 +26,7 @@ if (scalar @ARGV < 2) {
   &usage;
 }
 # Tolerance is optional
-my $tolerance = 0.0000000000001;
+my $tolerance = 1e-9;
 my $result = GetOptions (
   "t=s" => \$tolerance
   );
