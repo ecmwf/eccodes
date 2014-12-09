@@ -333,7 +333,8 @@ libgrib_api_la_prototypes= \
 	grib_expression.c \
 	grib_util.c \
 	compile.c \
-	functions.c 
+	functions.c \
+	grib_api_version.c
 
 libgrib_api_extra_prototypes = grib_bits_any_endian.c grib_bits_any_endian_simple.c
 
