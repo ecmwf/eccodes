@@ -345,8 +345,6 @@ list( APPEND grib_api_srcs
     grib_yacc.h
     md5.h
     md5.c
-    # Ship our generated lex/yacc C files
-    grib_yacc.c  grib_lex.c
     grib_windef.h
 )
 
@@ -363,20 +361,18 @@ list( APPEND grib_api_extra_srcs
 
 configure_file( grib_api_version.c.in grib_api_version.c @ONLY )
 
-# Only the developer should generate the lex/yacc C files
-#ecbuild_generate_yy(YYPREFIX  grib_yy
-#                    YACC      griby
-#                    LEX       gribl
-#                    FLEX_FLAGS ""
-#                    LEX_FLAGS  ""
-#                    BISON_FLAGS "-y"
-#                    YACC_FLAGS  "-y"
-#                    DEPENDANT action.c )
+ecbuild_generate_yy(YYPREFIX  grib_yy
+                    YACC      griby
+                    LEX       gribl
+                    FLEX_FLAGS " "
+                    LEX_FLAGS  " "
+                    BISON_FLAGS "-y"
+                    YACC_FLAGS  "-y"
+                    DEPENDANT action.c )
 
 ecbuild_add_library(TARGET    grib_api
                     SOURCES   grib_api_version.c
-                              #griby.c gribl.c
-                              grib_yacc.c  grib_lex.c
+                              griby.c gribl.c
                              ${grib_api_srcs}
                     GENERATED grib_api_version.c
                     LIBS      ${GRIB_API_EXTRA_LIBRARIES}
