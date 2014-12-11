@@ -497,6 +497,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_accessor_class_bufr_elements_table.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_bufr_group.c"
 				>
 			</File>
@@ -1210,6 +1214,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_accessor_class_when.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_api_version.c"
 				>
 			</File>
 			<File
