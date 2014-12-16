@@ -30,12 +30,12 @@ ecbuild_declare_project()
 # some variables/options of this project
 
 ecbuild_add_option( FEATURE JPG
-	DESCRIPTION "support for JPG encoding"
+	DESCRIPTION "support for JPG decoding/encoding"
 	DEFAULT ON
 )
 
 ecbuild_add_option( FEATURE PNG
-	DESCRIPTION "support for PNG encoding"
+	DESCRIPTION "support for PNG decoding/encoding"
 	DEFAULT OFF
 	REQUIRED_PACKAGES PNG
 )
@@ -48,7 +48,7 @@ else()
 endif()
 
 ecbuild_add_option( FEATURE NETCDF
-	DESCRIPTION "support for NetCDF"
+	DESCRIPTION "support for GRIB to NetCDF conversion"
 	DEFAULT ON
 	REQUIRED_PACKAGES NetCDF
 )
