@@ -265,7 +265,7 @@ static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)
   err = grib_unpack_bytes(a,buf,&size);
   if(err){
     grib_context_free(d->handle->context,buf);
-    fprintf(self->dumper.out," *** ERR=%d (%s) \n}",err,grib_get_error_message(err));
+    fprintf(self->dumper.out," *** ERR=%d (%s) [grib_dumper_c_code::dump_bytes]\n}",err,grib_get_error_message(err));
     return ;
   }
 

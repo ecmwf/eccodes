@@ -933,6 +933,7 @@ grib_handle *taf_new_from_file(grib_context *c, FILE *f, int headers_only, int *
 grib_handle *metar_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 grib_handle *codes_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 grib_handle *bufr_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
+grib_handle *any_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 grib_multi_handle *grib_multi_handle_new(grib_context *c);
 int grib_multi_handle_delete(grib_multi_handle *h);
 int grib_multi_handle_append(grib_handle *h, int start_section, grib_multi_handle *mh);

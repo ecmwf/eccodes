@@ -95,7 +95,7 @@ grib_options_help grib_options_help_list[] ={
 "\n\t\tall=relative_error will compare all the floating point keys using relative_error. Default all=0.\n"},
   {"S",0,"Strict. Only grib messages matching all the constraints are copied to"
    "\n\t\tthe output file\n"},
-  {"T:","T | B","Message type. T->GTS, B->BUFR. The input file is interpreted according to the message type.\n"},
+  {"T:","T | B | A","Message type. T->GTS, B->BUFR, A->Any (Experimental). The input file is interpreted according to the message type.\n"},
   {"V",0,"Version.\n"},
   {"W:","width","\n\t\tMinimum width of each column in output. Default is 10.\n"},
   {"X:","offset","\n\t\tInput file offset in bytes. Processing of the input file will start from \"offset\".\n"},
@@ -201,6 +201,7 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
         char* x=grib_options_get_option("T:");
         if ( *x == 'T' ) options->mode=MODE_GTS;
         else if ( *x == 'B' ) options->mode=MODE_BUFR;
+        else if ( *x == 'A' ) options->mode=MODE_ANY;
         else options->mode=MODE_GRIB;
     }
 

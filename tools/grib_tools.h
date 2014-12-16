@@ -40,6 +40,7 @@
 #define MODE_BUFR         2
 #define MODE_METAR        3
 #define MODE_TAF          5
+#define MODE_ANY          6
 
 typedef union grib_typed_value {
   long*        long_value;

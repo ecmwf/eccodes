@@ -1,0 +1,29 @@
+# http://www.hdfgroup.org/HDF5/doc/H5.format.html#Superblock
+constant identifier="HDF5";
+
+
+ascii[8] signature : dump;
+uint8 versionNumberOfSuperblock : dump;
+
+if(versionNumberOfSuperblock == 2) {
+	uint8 sizeOfOffsets : dump;
+	uint8 sizeOfLength : dump;
+	uint8 fileConsistencyFlags : dump;
+
+	if(sizeOfOffsets == 8) {
+		uint64_little_endian baseAddress : dump;
+		uint64_little_endian superblockExtensionAddress : dump;
+		uint64_little_endian endOfFileAddress : dump;
+		uint64_little_endian rootGroupObjectHeaderAddress : dump;
+	}
+
+	if(sizeOfOffsets == 4) {
+		uint32_little_endian baseAddress : dump;
+		uint32_little_endian superblockExtensionAddress : dump;
+		uint32_little_endian endOfFileAddress : dump;
+		uint32_little_endian rootGroupObjectHeaderAddress : dump;
+	}
+
+	#ascii[4] superblockChecksum;
+
+}

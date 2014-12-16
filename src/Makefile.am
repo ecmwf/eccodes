@@ -128,6 +128,21 @@ libgrib_api_la_prototypes= \
 	grib_accessor_class_gen.c \
 	grib_accessor_class_gts_header.c \
 	grib_accessor_class_ifs_param.c \
+	grib_accessor_class_int16.c \
+	grib_accessor_class_int16_little_endian.c \
+	grib_accessor_class_int32.c \
+	grib_accessor_class_int32_little_endian.c \
+	grib_accessor_class_int64.c \
+	grib_accessor_class_int64_little_endian.c \
+	grib_accessor_class_int8.c \
+	grib_accessor_class_uint16.c \
+	grib_accessor_class_uint16_little_endian.c \
+	grib_accessor_class_uint32.c \
+	grib_accessor_class_uint32_little_endian.c \
+	grib_accessor_class_uint64.c \
+	grib_accessor_class_uint64_little_endian.c \
+	grib_accessor_class_uint8.c \
+	grib_accessor_class_blob.c \
 	grib_accessor_class_julian_day.c \
 	grib_accessor_class_latlonvalues.c \
 	grib_accessor_class_latitudes.c \

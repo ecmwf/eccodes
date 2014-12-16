@@ -111,6 +111,9 @@ grib_runtime_options options={
 
 static grib_handle* grib_handle_new_from_file_x(grib_context* c,FILE* f,int mode,int headers_only,int *err)
 {
+    if (mode==MODE_ANY)
+        return any_new_from_file(c,f,headers_only,err);
+
     if (mode==MODE_GTS)
         return gts_new_from_file(c,f,headers_only,err);
 

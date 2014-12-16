@@ -16,8 +16,13 @@
 #define  DIAG 0x44494147
 #define  TIDE 0x54494445
 #define  BUFR 0x42554652
+#define  HDF5 0x89484446
+#define  WRAP 0x57524150
 
 #define GRIB_API_READS_BUFR 1
+#define GRIB_API_READS_HDF5 1
+#define GRIB_API_READS_WRAP 1
+
 
 typedef struct alloc_buffer {
     size_t size;
@@ -46,7 +51,7 @@ typedef struct reader {
 
 } reader;
 
-static int read_the_rest(reader* r,size_t message_length,unsigned char* tmp, int already_read)
+static int read_the_rest(reader* r,size_t message_length,unsigned char* tmp, int already_read, int check7777)
 {
     int err            = 0;
     size_t buffer_size;
@@ -65,7 +70,7 @@ static int read_the_rest(reader* r,size_t message_length,unsigned char* tmp, int
     if((r->read(r->read_data,buffer+already_read,rest,&err) != rest) || err)
         return err;
 
-    if(!r->headers_only && (buffer[message_length-4] != '7' ||
+    if(check7777 && !r->headers_only && (buffer[message_length-4] != '7' ||
             buffer[message_length-3] != '7' ||
             buffer[message_length-2] != '7' ||
             buffer[message_length-1] != '7')) {
@@ -361,7 +366,7 @@ static int read_GRIB(reader* r)
     }
 
     /* Assert(i <= buf->length); */
-    err=read_the_rest(r,length,tmp,i);
+    err=read_the_rest(r, length, tmp, i, 1);
 
     grib_buffer_delete(c,buf);
 
@@ -415,7 +420,150 @@ static int read_PSEUDO(reader *r,const char* type)
     /* fprintf(stderr,"%s sec4len=%d i=%d l=%d\n",type,sec4len,i,4+sec1len+sec4len+4); */
 
     Assert(i <= sizeof(tmp));
-    return read_the_rest(r,4+sec1len+sec4len+4,tmp,i);
+    return read_the_rest(r,4+sec1len+sec4len+4,tmp,i, 1);
+}
+
+
+static int read_HDF5_offset(reader *r, int length, unsigned long* v, unsigned char *tmp, int* i) {
+    unsigned char buf[8];
+    int j, k;
+    int err = 0;
+
+
+    if( (r->read(r->read_data, buf, length, &err) != length) || err) {
+        return err;
+    }
+
+    k = *i;
+    for(j = 0; j < length; j++) {
+        tmp[k++] = buf[j];
+    }
+    *i = k;
+
+    *v = 0;
+    for(j = length-1; j >= 0; j--) {
+        *v <<= 8;
+        *v |= buf[j];
+    }
+
+    return 0;
+}
+
+static int read_HDF5(reader *r)
+{
+    /* See: http://www.hdfgroup.org/HDF5/doc/H5.format.html#Superblock */
+    unsigned char tmp[36]; /* Should be enough */
+    unsigned char buf[4];
+
+    unsigned char version_of_superblock,  size_of_offsets, size_of_lengths, consistency_flags;
+    unsigned long base_address, superblock_extension_address, end_of_file_address;
+
+    int i = 0, j;
+    int err = 0;
+    grib_context* c = grib_context_get_default();
+
+    tmp[i++] = 137;
+    tmp[i++] = 'H';
+    tmp[i++] = 'D';
+    tmp[i++] = 'F';
+
+    if( (r->read(r->read_data, buf, 4, &err) != 4) || err) {
+        return err;
+    }
+
+    if( !(buf[0] == '\r' && buf[1] == '\n' && buf[2] == 26 && buf[3] == '\n')) {
+        /* Invalid magic, we should not use grib_context_log without a context */
+        grib_context_log(c, GRIB_LOG_ERROR,"read_HDF5: invalid signature");
+        return GRIB_INVALID_MESSAGE;
+    }
+
+    for(j = 0; j < 4; j++) {
+        tmp[i++] = buf[j];
+    }
+
+    if( (r->read(r->read_data, &version_of_superblock, 1,  &err)  != 1) || err) {
+        return err;
+    }
+
+    tmp[i++] = version_of_superblock;
+
+    if(version_of_superblock != 2) {
+        grib_context_log(c, GRIB_LOG_ERROR,"read_HDF5: invalid version_of_superblock: %ld, only version 2 is supported", (long)version_of_superblock);
+        return GRIB_NOT_IMPLEMENTED;
+    }
+
+    if( (r->read(r->read_data, &size_of_offsets, 1, &err) != 1) || err) {
+        return err;
+    }
+
+    tmp[i++] = size_of_offsets;
+
+
+    if(size_of_offsets > 8) {
+        grib_context_log(c, GRIB_LOG_ERROR,"read_HDF5: invalid size_of_offsets: %ld, only <= 8 is supported", (long)size_of_offsets);
+        return GRIB_NOT_IMPLEMENTED;
+    }
+
+    if( (r->read(r->read_data, &size_of_lengths, 1, &err) != 1) || err) {
+        return err;
+    }
+
+    tmp[i++] = size_of_lengths;
+
+    if( (r->read(r->read_data, &consistency_flags, 1, &err) != 1) || err) {
+        return err;
+    }
+
+    tmp[i++] = consistency_flags;
+
+    err = read_HDF5_offset(r, size_of_offsets, &base_address, tmp, &i);
+    if(err) {
+        return err;
+    }
+
+    err = read_HDF5_offset(r, size_of_offsets, &superblock_extension_address, tmp, &i);
+    if(err) {
+        return err;
+    }
+
+    err = read_HDF5_offset(r, size_of_offsets, &end_of_file_address, tmp, &i);
+    if(err) {
+        return err;
+    }
+
+    Assert(i <= sizeof(tmp));
+    return read_the_rest(r, end_of_file_address, tmp, i, 0);
+}
+
+static int read_WRAP(reader *r)
+{
+    /* See: http://www.hdfgroup.org/HDF5/doc/H5.format.html#Superblock */
+    unsigned char tmp[36]; /* Should be enough */
+    unsigned char buf[8];
+
+    unsigned long long length = 0;
+
+    int i = 0, j;
+    int err = 0;
+
+    tmp[i++] = 'W';
+    tmp[i++] = 'R';
+    tmp[i++] = 'A';
+    tmp[i++] = 'P';
+
+    if( (r->read(r->read_data, buf, 8, &err) != 8) || err) {
+        printf("error\n");
+        return err;
+    }
+
+    for(j = 0; j < 8; j++) {
+        length <<= 8;
+        length |= buf[j];
+        tmp[i++] = buf[j];
+    }
+
+    Assert(i <= sizeof(tmp));
+    return read_the_rest(r, length, tmp, i, 1);
 }
 
 static int read_BUFR(reader *r)
@@ -585,14 +733,14 @@ static int read_BUFR(reader *r)
     }
 
     /* Assert(i <= sizeof(tmp)); */
-    err=read_the_rest(r,length,tmp,i);
+    err=read_the_rest(r, length, tmp, i, 1);
 
     grib_buffer_delete(c,buf);
 
     return err;
 }
 
-static int read_any(reader *r,int grib_ok,int bufr_ok)
+static int read_any(reader *r,int grib_ok,int bufr_ok, int hdf5_ok, int wrap_ok)
 {
     unsigned char c;
     int err = 0;
@@ -617,6 +765,22 @@ static int read_any(reader *r,int grib_ok,int bufr_ok)
             if(bufr_ok)
             {
                 err =  read_BUFR(r);
+                return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
+            }
+            break;
+
+        case HDF5:
+            if(hdf5_ok)
+            {
+                err =  read_HDF5(r);
+                return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
+            }
+            break;
+
+        case WRAP:
+            if(wrap_ok)
+            {
+                err =  read_WRAP(r);
                 return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
             }
             break;
@@ -854,7 +1018,7 @@ static void* user_provider_buffer(void *data,size_t* length,int *err)
 }
 
 static
-int _wmo_read_any_from_file(FILE* f,void* buffer,size_t* len,int grib_ok,int bufr_ok)
+int _wmo_read_any_from_file(FILE* f,void* buffer,size_t* len,int grib_ok,int bufr_ok, int hdf5_ok, int wrap_ok)
 {
     int         err;
     user_buffer u;
@@ -872,7 +1036,7 @@ int _wmo_read_any_from_file(FILE* f,void* buffer,size_t* len,int grib_ok,int buf
     r.alloc        = &user_provider_buffer;
     r.headers_only = 0;
 
-    err            = read_any(&r,grib_ok,bufr_ok);
+    err            = read_any(&r, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
     *len           = r.message_size;
 
     return err;
@@ -880,17 +1044,17 @@ int _wmo_read_any_from_file(FILE* f,void* buffer,size_t* len,int grib_ok,int buf
 
 int wmo_read_any_from_file(FILE* f,void* buffer,size_t* len)
 {
-    return _wmo_read_any_from_file(f,buffer,len,1,1);
+    return _wmo_read_any_from_file(f, buffer, len, 1, 1, 1 ,1);
 }
 
 int wmo_read_grib_from_file(FILE* f,void* buffer,size_t* len)
 {
-    return _wmo_read_any_from_file(f,buffer,len,1,0);
+    return _wmo_read_any_from_file(f, buffer, len, 1, 0, 0, 0);
 }
 
 int wmo_read_bufr_from_file(FILE* f,void* buffer,size_t* len)
 {
-    return _wmo_read_any_from_file(f,buffer,len,0,1);
+    return _wmo_read_any_from_file(f, buffer, len, 0, 1, 0, 0);
 }
 
 int wmo_read_gts_from_file(FILE* f,void* buffer,size_t* len)
@@ -1022,7 +1186,7 @@ int wmo_read_any_from_stream(void* stream_data,long (*stream_proc)(void*,void* b
     r.alloc        = &user_provider_buffer;
     r.headers_only = 0;
 
-    err            = read_any(&r,1,1);
+    err            = read_any(&r, 1, 1, 1, 1);
     *len           = r.message_size;
 
     return err;
@@ -1046,6 +1210,7 @@ void *wmo_read_gts_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t 
     reader       r;
 
     u.buffer       = NULL;
+    r.offset       = 0;
 
     r.message_size = 0;
     r.read_data    = f;
@@ -1108,7 +1273,7 @@ void *wmo_read_metar_from_file_malloc(FILE* f,int headers_only,size_t *size,off_
 }
 
 static void *_wmo_read_any_from_file_malloc(FILE* f,int* err,size_t *size,off_t *offset,
-        int grib_ok,int bufr_ok,int headers_only)
+        int grib_ok,int bufr_ok, int hdf5_ok, int wrap_ok, int headers_only)
 {
     alloc_buffer u;
     reader       r;
@@ -1126,7 +1291,7 @@ static void *_wmo_read_any_from_file_malloc(FILE* f,int* err,size_t *size,off_t 
     r.headers_only = headers_only;
     r.offset       = 0;
 
-    *err           = read_any(&r,grib_ok,bufr_ok);
+    *err           = read_any(&r, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
     *size          = r.message_size;
     *offset        = r.offset;
 
@@ -1134,17 +1299,17 @@ static void *_wmo_read_any_from_file_malloc(FILE* f,int* err,size_t *size,off_t 
 }
 void *wmo_read_any_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err)
 {
-    return _wmo_read_any_from_file_malloc(f,err,size,offset,1,1,headers_only);
+    return _wmo_read_any_from_file_malloc(f,err,size,offset, 1, 1, 1, 1, headers_only);
 }
 
 void *wmo_read_grib_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err)
 {
-    return _wmo_read_any_from_file_malloc(f,err,size,offset,1,0,headers_only);
+    return _wmo_read_any_from_file_malloc(f,err,size,offset, 1, 0, 0, 0, headers_only);
 }
 
 void *wmo_read_bufr_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err)
 {
-    return _wmo_read_any_from_file_malloc(f,err,size,offset,0,1,headers_only);
+    return _wmo_read_any_from_file_malloc(f,err,size,offset, 0, 1, 0, 0, headers_only);
 }
 
 
@@ -1239,7 +1404,7 @@ int grib_read_any_headers_only_from_file(grib_context* ctx,FILE* f,void* buffer,
     r.alloc        = &user_provider_buffer;
     r.headers_only = 1;
 
-    err            = read_any(&r,1,GRIB_API_READS_BUFR);
+    err            = read_any(&r, 1, GRIB_API_READS_BUFR, GRIB_API_READS_HDF5, GRIB_API_READS_WRAP);
 
     *len           = r.message_size;
 
@@ -1267,7 +1432,7 @@ int grib_read_any_from_file(grib_context* ctx,FILE* f,void* buffer,size_t* len)
 
     offset=ftello(f);
 
-    err            = read_any(&r,1,GRIB_API_READS_BUFR);
+    err            = read_any(&r, 1, GRIB_API_READS_BUFR, GRIB_API_READS_HDF5, GRIB_API_READS_WRAP);
 
     if (err==GRIB_BUFFER_TOO_SMALL) {
         if (fseeko(f,offset,SEEK_SET))
@@ -1337,7 +1502,7 @@ int grib_read_any_from_memory_alloc(grib_context* ctx,unsigned char** data,size_
     r.alloc        = &context_allocate_buffer;
     r.headers_only = 0;
 
-    err            = read_any(&r,1,GRIB_API_READS_BUFR);
+    err            = read_any(&r, 1, GRIB_API_READS_BUFR, GRIB_API_READS_HDF5, GRIB_API_READS_WRAP);
     *buffer        = u.buffer;
     *length        = u.length;
 
@@ -1369,7 +1534,7 @@ int grib_read_any_from_memory(grib_context* ctx,unsigned char** data,size_t* dat
     r.alloc        = &user_provider_buffer;
     r.headers_only = 0;
 
-    err            = read_any(&r,1,GRIB_API_READS_BUFR);
+    err            = read_any(&r, 1, GRIB_API_READS_BUFR, GRIB_API_READS_HDF5, GRIB_API_READS_WRAP);
     *len           = r.message_size;
 
     *data_length   = m.data_len;

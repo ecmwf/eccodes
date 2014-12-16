@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 use strict;
 use Data::Dumper;
-use Switch;
 
 
 my $name;
@@ -266,17 +265,15 @@ EOF
 			if ($mtype=~ /\*/) { $is_pointer=1; $mtype =~ s/\*//; }
 
 			if ($is_pointer) { 
-				switch ($mtype) {
-					case "char" {
+				if ($mtype =~ "\bchar\b") {
 						print OUT "\tif (self->$mname) \n\t\tc->$mname=grib_context_strdup(a->parent->h,self->$mname);\n\n";
-					} 
-					case /double|long|int|float/ {
+                }
+                if ($mtype =~ "\b(double|long|int|float)\b") {
 						print OUT "\tif (self->".$mname."_size) {\n";
 						print OUT "\tint i=0;\n";
 						print OUT "\tc->$mname=grib_context_alloc_clear(a->parent->h,self->".$mname."_size*sizeof($mtype));";
 						print OUT "\tfor (i=0;i<self->${mname}_size;i++) c->".$mname."[i]=self->".$mname."[i];";
 						print OUT "}\n";
-					}
 				}
 			} else { print OUT "\tc->$mname=self->$mname;\n\n"; }
 		}

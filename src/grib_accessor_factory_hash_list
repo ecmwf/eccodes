@@ -9,6 +9,7 @@ bit, &grib_accessor_class_bit
 bitmap, &grib_accessor_class_bitmap
 bits, &grib_accessor_class_bits
 bits_per_value, &grib_accessor_class_bits_per_value
+blob, &grib_accessor_class_blob
 box, &grib_accessor_class_box
 budgdate, &grib_accessor_class_budgdate
 bufr_data, &grib_accessor_class_bufr_data
@@ -123,6 +124,13 @@ headers_only, &grib_accessor_class_headers_only
 ibmfloat, &grib_accessor_class_ibmfloat
 ieeefloat, &grib_accessor_class_ieeefloat
 ifs_param, &grib_accessor_class_ifs_param
+int16, &grib_accessor_class_int16
+int16_little_endian, &grib_accessor_class_int16_little_endian
+int32, &grib_accessor_class_int32
+int32_little_endian, &grib_accessor_class_int32_little_endian
+int64, &grib_accessor_class_int64
+int64_little_endian, &grib_accessor_class_int64_little_endian
+int8, &grib_accessor_class_int8
 iterator, &grib_accessor_class_iterator
 julian_day, &grib_accessor_class_julian_day
 ksec1expver, &grib_accessor_class_ksec1expver
@@ -191,6 +199,13 @@ to_double, &grib_accessor_class_to_double
 to_integer, &grib_accessor_class_to_integer
 to_string, &grib_accessor_class_to_string
 transient, &grib_accessor_class_transient
+uint16, &grib_accessor_class_uint16
+uint16_little_endian, &grib_accessor_class_uint16_little_endian
+uint32, &grib_accessor_class_uint32
+uint32_little_endian, &grib_accessor_class_uint32_little_endian
+uint64, &grib_accessor_class_uint64
+uint64_little_endian, &grib_accessor_class_uint64_little_endian
+uint8, &grib_accessor_class_uint8
 unexpanded_descriptors, &grib_accessor_class_unexpanded_descriptors
 unpack_bufr_values, &grib_accessor_class_unpack_bufr_values
 unsigned, &grib_accessor_class_unsigned

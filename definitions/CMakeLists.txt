@@ -20,7 +20,7 @@ install(  DIRECTORY budg bufr cdf common grib1 grib2 gts mars metar taf tide
 file(    COPY ${definition_files} ${table_files}
          DESTINATION ${CMAKE_BINARY_DIR}/share/${PROJECT_NAME}/definitions )
 
-file(     COPY budg cdf common grib1 grib2 gts mars metar taf tide
+file(     COPY budg cdf common grib1 grib2 gts mars metar taf tide hdf5 wrap
           DESTINATION ${CMAKE_BINARY_DIR}/share/${PROJECT_NAME}/definitions
           FILES_MATCHING
           PATTERN "*.def"

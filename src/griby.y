@@ -78,6 +78,27 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
 %token WHILE
 %token IBMFLOAT
 %token SIGNED
+
+%token UINT8
+%token INT8
+
+%token UINT16
+%token INT16
+%token UINT16_LITTLE_ENDIAN
+%token INT16_LITTLE_ENDIAN
+
+%token UINT32
+%token INT32
+%token UINT32_LITTLE_ENDIAN
+%token INT32_LITTLE_ENDIAN
+
+%token UINT64
+%token INT64
+%token UINT64_LITTLE_ENDIAN
+%token INT64_LITTLE_ENDIAN
+
+%token BLOB
+
 %token BYTE
 %token CODETABLE
 %token SMART_TABLE
@@ -392,6 +413,53 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
 
     | IBMFLOAT    IDENT      default    flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$2,"ibmfloat",4,NULL,$3,$4,NULL,NULL);free($2);  }
+
+  /*---------*/
+  | INT8    IDENT      default    flags
+  { $$ = grib_action_create_gen(grib_parser_context,$2,"int8",1,NULL,$3,$4,NULL,NULL);free($2);  }
+
+  | UINT8    IDENT      default    flags
+  { $$ = grib_action_create_gen(grib_parser_context,$2,"uint8",1,NULL,$3,$4,NULL,NULL);free($2);  }
+
+  | INT16    IDENT      default    flags
+  { $$ = grib_action_create_gen(grib_parser_context,$2,"int16",2,NULL,$3,$4,NULL,NULL);free($2);  }
+
+  | UINT16    IDENT      default    flags
+  { $$ = grib_action_create_gen(grib_parser_context,$2,"uint16",2,NULL,$3,$4,NULL,NULL);free($2);  }
+
+  | INT16_LITTLE_ENDIAN    IDENT      default    flags
+  { $$ = grib_action_create_gen(grib_parser_context,$2,"int16_little_endian",2,NULL,$3,$4,NULL,NULL);free($2);  }
+
+  | UINT16_LITTLE_ENDIAN    IDENT      default    flags
+  { $$ = grib_action_create_gen(grib_parser_context,$2,"uint16_little_endian",2,NULL,$3,$4,NULL,NULL);free($2);  }
+
+  | INT32    IDENT      default    flags
+  { $$ = grib_action_create_gen(grib_parser_context,$2,"int32",4,NULL,$3,$4,NULL,NULL);free($2);  }
+
+  | UINT32    IDENT      default    flags
+  { $$ = grib_action_create_gen(grib_parser_context,$2,"uint32",4,NULL,$3,$4,NULL,NULL);free($2);  }
+
+  | INT32_LITTLE_ENDIAN    IDENT      default    flags
+  { $$ = grib_action_create_gen(grib_parser_context,$2,"int32_little_endian",4,NULL,$3,$4,NULL,NULL);free($2);  }
+
+  | UINT32_LITTLE_ENDIAN    IDENT      default    flags
+  { $$ = grib_action_create_gen(grib_parser_context,$2,"uint32_little_endian",4,NULL,$3,$4,NULL,NULL);free($2);  }
+
+  | INT64    IDENT      default    flags
+  { $$ = grib_action_create_gen(grib_parser_context,$2,"int64",8,NULL,$3,$4,NULL,NULL);free($2);  }
+
+  | UINT64    IDENT      default    flags
+  { $$ = grib_action_create_gen(grib_parser_context,$2,"uint64",8,NULL,$3,$4,NULL,NULL);free($2);  }
+
+  | INT64_LITTLE_ENDIAN    IDENT      default    flags
+  { $$ = grib_action_create_gen(grib_parser_context,$2,"int64_little_endian",8,NULL,$3,$4,NULL,NULL);free($2);  }
+
+  | UINT64_LITTLE_ENDIAN    IDENT      default    flags
+  { $$ = grib_action_create_gen(grib_parser_context,$2,"uint64_little_endian",8,NULL,$3,$4,NULL,NULL);free($2);  }
+
+    | BLOB  IDENT   '[' argument_list ']'   default  flags
+	{ $$ = grib_action_create_gen(grib_parser_context,$2,"blob",0,$4,$6,$7,NULL,NULL);        free($2);  }
+  /*---------*/
 
     | IBMFLOAT    IDENT '.' IDENT  default    flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$4,"ibmfloat",4,NULL,$5,$6,$2,NULL);free($4); free($2); }

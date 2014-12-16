@@ -106,3 +106,15 @@ if(kindOfProduct == `TAF ` ){
  constant TAFstr="TAF";
  alias ls.identifier=TAFstr;
 }
+
+if(kindOfProduct == 2303214662){
+ template      HDF5 "hdf5/boot.def" ;
+ constant  HDF5str="HDF5";
+ alias ls.identifier=HDF5str;
+}
+
+if(kindOfProduct == `WRAP`){
+ template      WRAP "wrap/boot.def" ;
+ constant  WRAPstr="WRAP";
+ alias ls.identifier=WRAPstr;
+}

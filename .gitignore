@@ -273,3 +273,6 @@ python/gribapi_swig_wrap.c
 data/bufr/*diff
 data/bufr/*decode
 data/bufr/*test
+
+*.sublime-workspace
+*.old

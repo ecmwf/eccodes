@@ -150,7 +150,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
         fprintf(self->dumper.out,"%ld-%ld %s %s = %ld",self->begin,self->theEnd,a->creator->op, a->name,value);
     if(comment) fprintf(self->dumper.out," [%s]",comment);
     if(err)
-        fprintf(self->dumper.out," *** ERR=%d (%s)",err,grib_get_error_message(err));
+        fprintf(self->dumper.out," *** ERR=%d (%s) [grib_dumper_debug::dump_long]",err,grib_get_error_message(err));
 
     aliases(d,a);
 
@@ -189,7 +189,7 @@ static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
         fprintf(self->dumper.out,"]");
 
     if(err)
-        fprintf(self->dumper.out," *** ERR=%d (%s)",err,grib_get_error_message(err));
+        fprintf(self->dumper.out," *** ERR=%d (%s) [grib_dumper_debug::dump_bits]",err,grib_get_error_message(err));
 
     aliases(d,a);
     fprintf(self->dumper.out,"\n");
@@ -216,7 +216,7 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
         fprintf(self->dumper.out,"%ld-%ld %s %s = %g",self->begin,self->theEnd,a->creator->op, a->name,value);
     if(comment) fprintf(self->dumper.out," [%s]",comment);
     if(err)
-        fprintf(self->dumper.out," *** ERR=%d (%s)",err,grib_get_error_message(err));
+        fprintf(self->dumper.out," *** ERR=%d (%s) [grib_dumper_debug::dump_double]",err,grib_get_error_message(err));
     aliases(d,a);
     fprintf(self->dumper.out,"\n");
 }
@@ -256,7 +256,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 
     if(comment) fprintf(self->dumper.out," [%s]",comment);
     if(err)
-        fprintf(self->dumper.out," *** ERR=%d (%s)",err,grib_get_error_message(err));
+        fprintf(self->dumper.out," *** ERR=%d (%s) [grib_dumper_debug::dump_string]",err,grib_get_error_message(err));
     aliases(d,a);
     fprintf(self->dumper.out,"\n");
 
@@ -296,7 +296,7 @@ static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)
     err = grib_unpack_bytes(a,buf,&size);
     if(err){
         grib_context_free(d->handle->context,buf);
-        fprintf(self->dumper.out," *** ERR=%d (%s) \n}",err,grib_get_error_message(err));
+        fprintf(self->dumper.out," *** ERR=%d (%s) [grib_dumper_debug::dump_bytes]\n}",err,grib_get_error_message(err));
         return ;
     }
 
@@ -374,7 +374,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 
     if(err){
         grib_context_free(d->handle->context,buf);
-        fprintf(self->dumper.out," *** ERR=%d (%s) \n}",err,grib_get_error_message(err));
+        fprintf(self->dumper.out," *** ERR=%d (%s) [grib_dumper_debug::dump_values]\n}",err,grib_get_error_message(err));
         return ;
     }
 

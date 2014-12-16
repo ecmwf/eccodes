@@ -172,6 +172,26 @@ FLOAT3    {NSIGNED}+{EXP}?
 "override"      return OVERRIDE;
 "copy_ok"      return COPY_OK;
 
+"uint8"                return UINT8;
+"int"                  return INT8;
+
+"uint16"               return UINT16;
+"int16"                return INT16;
+"uint16_little_endian" return UINT16_LITTLE_ENDIAN;
+"int16_little_endian"  return INT16_LITTLE_ENDIAN;
+
+"uint32"               return UINT32;
+"int32"                return INT32;
+"uint32_little_endian" return UINT32_LITTLE_ENDIAN;
+"int32_little_endian"  return INT32_LITTLE_ENDIAN;
+
+"uint64"               return UINT64;
+"int64"                return INT64;
+"uint64_little_endian" return UINT64_LITTLE_ENDIAN;
+"int64_little_endian"  return INT64_LITTLE_ENDIAN;
+
+"blob"               return BLOB;
+
 "set"         return SET;
 "set_nofail"         return SET_NOFAIL;
 "when"        return WHEN;
