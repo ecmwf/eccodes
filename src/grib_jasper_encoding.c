@@ -96,7 +96,7 @@ int grib_jasper_encode(grib_context *c, j2k_encode_helper *helper) {
     unsigned char *p = NULL;
 
 
-    jas_image_t image = {0,};
+    jas_image_t image = {0};
     jas_stream_t *jpcstream = 0;
     jas_stream_t *istream = 0;
     jas_image_cmpt_t cmpt = {0,};
