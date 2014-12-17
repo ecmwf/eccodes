@@ -18,6 +18,7 @@
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = unpack_long
    IMPLEMENTS = pack_long
+   IMPLEMENTS = get_native_type
    END_CLASS_DEF
 
 */
@@ -32,6 +33,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
+static int  get_native_type(grib_accessor*);
 static int pack_long(grib_accessor*, const long* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
 static void init_class(grib_accessor_class*);
@@ -59,7 +61,7 @@ static grib_accessor_class _grib_accessor_class_uint8 = {
     0,                /* get number of values      */
     0,                 /* get number of bytes      */
     0,                /* get offset to bytes           */
-    0,            /* get native type               */
+    &get_native_type,            /* get native type               */
     0,                /* get sub_section                */
     0,               /* grib_pack procedures long      */
     0,                 /* grib_pack procedures long      */
@@ -98,7 +100,6 @@ static void init_class(grib_accessor_class* c)
 	c->value_count	=	(*(c->super))->value_count;
 	c->byte_count	=	(*(c->super))->byte_count;
 	c->byte_offset	=	(*(c->super))->byte_offset;
-	c->get_native_type	=	(*(c->super))->get_native_type;
 	c->sub_section	=	(*(c->super))->sub_section;
 	c->pack_missing	=	(*(c->super))->pack_missing;
 	c->is_missing	=	(*(c->super))->is_missing;
@@ -150,3 +151,6 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len) {
     return GRIB_NOT_IMPLEMENTED;
 }
 
+static int  get_native_type(grib_accessor* a) {
+    return GRIB_TYPE_LONG;
+}
