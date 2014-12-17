@@ -8861,6 +8861,10 @@ definitionsgtsdir = @GRIB_DEFINITION_PATH@/gts
 dist_definitionsgts_DATA = \
 	gts/boot.def
 
+definitionshdf5dir = @GRIB_DEFINITION_PATH@/hdf5
+dist_definitionshdf5_DATA = \
+	hdf5/boot.def
+
 definitionsmarsdir = @GRIB_DEFINITION_PATH@/mars
 dist_definitionsmars_DATA = \
 	mars/base.def\
@@ -9337,6 +9341,11 @@ dist_definitionstide_DATA = \
 	tide/mars_labeling.def\
 	tide/section.1.def\
 	tide/section.4.def
+
+definitionswrapdir = @GRIB_DEFINITION_PATH@/wrap
+dist_definitionswrap_DATA = \
+	wrap/boot.def\
+	wrap/metadata.0.def
 
 EXTRA_DIST=CMakeLists.txt
 
