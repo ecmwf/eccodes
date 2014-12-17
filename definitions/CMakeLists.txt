@@ -5,7 +5,7 @@ install( FILES ${definition_files} ${table_files}
          DESTINATION share/${PROJECT_NAME}/definitions
          PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ )
 
-install(  DIRECTORY budg bufr cdf common grib1 grib2 gts mars metar taf tide
+install(  DIRECTORY budg bufr cdf common grib1 grib2 gts mars metar taf tide hdf5 wrap
           DESTINATION share/${PROJECT_NAME}/definitions
           FILES_MATCHING 
           PATTERN "*.def"
