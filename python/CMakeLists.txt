@@ -54,7 +54,7 @@ if( HAVE_PYTHON )
 
         swig_link_libraries( gribapi_swig grib_api ${PYTHON_LIBRARIES} )
 
-        set(PYTHON_DEST "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages" )
+        set(PYTHON_DEST "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/grib_api" )
 
         install(TARGETS _gribapi_swig DESTINATION ${PYTHON_DEST} )
 
