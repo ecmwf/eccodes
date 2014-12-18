@@ -73,7 +73,7 @@ module grib_api
   !> The value in the nearest point (or the four nearest points) is returned as well as the
   !> zero based index (which can be used in @ref grib_get_element)
   !> and its distance from the given point using the following
-  !> formula (acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon1-lon2))).
+  !> formula radius * acos( sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon1-lon2) ).
   !>
   !> If the is_lsm flag is .true. the input field gribid is considered as
   !> a land sea mask and the nearest land point is returned.\n
@@ -100,7 +100,7 @@ module grib_api
   !> @param[in] inlon       longitudes of the point in degrees
   !> @param[out] outlat     latitude of the nearest point in degrees
   !> @param[out] outlon     longitude of the nearest point in degrees
-  !> @param[out] distance   distance between the given point and its nearest
+  !> @param[out] distance   distance between the given point and its nearest (in km)
   !> @param[out] index      zero based index
   !> @param[out] value      value of the field in the nearest point
   !> @param[out] status     GRIB_SUCCESS if OK, integer value on error

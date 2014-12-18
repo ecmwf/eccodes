@@ -656,7 +656,8 @@ grib_nearest*      grib_nearest_new      (grib_handle*   h, int* error);
 * The flags are provided to speed up the process of searching. If you are
 * sure that the point you are asking for is not changing from a call
 * to another you can use GRIB_NEAREST_SAME_POINT. The same is valid for
-* the grid. Flags can be used together doing an or.
+* the grid. Flags can be used together doing a bitwise OR.
+* The distances are given in kilometres.
 *
 * @param nearest     : nearest structure
 * @param h           : handle from which geography and data values are taken
@@ -693,6 +694,7 @@ int                 grib_nearest_delete   (grib_nearest *nearest);
 * If the flag is_lsm is 0 the nearest point is returned.
 * values, distances, indexes (in the "values" array) for the nearest points (ilons,ilats)
 * are returned.
+* The distances are given in kilometres.
 *
 * @param h           : handle from which geography and data values are taken
 * @param is_lsm      : lsm flag (1-> nearest land, 0-> nearest)
