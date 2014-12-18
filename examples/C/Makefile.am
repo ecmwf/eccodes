@@ -9,7 +9,7 @@ noinst_PROGRAMS  = nearest set_bitmap iterator get print_data set set_missing ke
                    set_data mars_param values_check box multi multi2 multi_write precision \
                    set_pv list sections_copy large_grib1 get_data iterator_bitmap clone new_sample \
                    check_gaussian_grid ensemble_index
-bin_PROGRAMS            = points
+#bin_PROGRAMS            = points
 
 box_SOURCES             = box.c
 set_data_SOURCES        = set_data.c
