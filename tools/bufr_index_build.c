@@ -76,7 +76,7 @@ int grib_tool_init(grib_runtime_options* options) {
 int grib_tool_new_filename_action(grib_runtime_options* options,const char* file) {
 	int ret=0;
 	printf("--- %s: processing %s\n",grib_tool_name,file);
-	ret=codes_index_add_file(idx,file,CODES_BUFR);
+	ret=_codes_index_add_file(idx,file,CODES_BUFR);
 	if (ret) {printf("error: %s\n",grib_get_error_message(ret)); exit(ret);}
    return 0;
 }

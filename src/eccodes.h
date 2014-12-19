@@ -138,8 +138,8 @@ The grib_index is the structure giving indexed access to messages in a file.
  * @param err         :  0 if OK, integer value on error
  * @return            the newly created index
  */
-grib_index* codes_index_new_from_file(grib_context* c,
-                            char* filename,const char* keys,int *err);
+grib_index* codes_index_new_from_file(grib_context* c, char* filename,const char* keys,int *err);
+
 /**
  *  Create a new index based on a set of keys.
  *
@@ -160,7 +160,6 @@ grib_index* codes_index_new(grib_context* c, const char* keys,int *err);
  * @param filename    : name of the file of messages to be indexed
  * @return            0 if OK, integer value on error
  */
-int codes_index_add_file(grib_index *index, const char *filename);
 int codes_index_write(grib_index *index, const char *filename);
 grib_index* codes_index_read(grib_context* c,const char* filename,int *err);
 
@@ -185,8 +184,7 @@ int codes_index_get_size(grib_index* index,const char* key,size_t* size);
  * @param size        : size of the values array
  * @return            0 if OK, integer value on error
  */
-int codes_index_get_long(grib_index* index,const char* key,
-                        long* values,size_t *size);
+int codes_index_get_long(grib_index* index,const char* key,long* values,size_t *size);
 
 /**
  *  Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as double or when the native type of the key is double.
@@ -198,8 +196,7 @@ int codes_index_get_long(grib_index* index,const char* key,
  * @param size        : size of the values array
  * @return            0 if OK, integer value on error
  */
-int codes_index_get_double(grib_index* index,const char* key,
-                          double* values,size_t *size);
+int codes_index_get_double(grib_index* index,const char* key, double* values,size_t *size);
 
 /**
  *  Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as string or when the native type of the key is string.
@@ -211,8 +208,7 @@ int codes_index_get_double(grib_index* index,const char* key,
  * @param size        : size of the values array
  * @return            0 if OK, integer value on error
  */
-int codes_index_get_string(grib_index* index,const char* key,
-                          char** values,size_t *size);
+int codes_index_get_string(grib_index* index,const char* key,char** values,size_t *size);
 
 
 /**
@@ -712,7 +708,8 @@ int codes_get_double_array(grib_handle* h, const char* key, double* vals, size_t
 * @param vals       : the address of a long array where the data will be retrieved
 * @param length      : the address of a size_t that contains allocated length of the long array on input, and that contains the actual length of the long array on output
 * @return            0 if OK, integer value on error
-*/int codes_get_long_array(grib_handle* h, const char* key, long* vals, size_t *length);
+*/
+int codes_get_long_array(grib_handle* h, const char* key, long* vals, size_t *length);
 
 
 /*   setting      data         */
@@ -818,14 +815,6 @@ int codes_set_long_array(grib_handle* h, const char* key, const long* vals, size
 void codes_dump_content(grib_handle* h,FILE* out,const char* mode, unsigned long option_flags,void* arg);
 
 /**
-*  Gather all names available in a handle to a string, using a space as separator
-*
-* @param h           : the handle used to gather the keys
-* @param names       : the sting to be filled with the names
-*/
-void codes_get_all_names(grib_handle* h,char* names);
-
-/**
 *  Print all keys from the parsed definition files available in a context
 *
 * @param f           : the File used to print the keys on
@@ -839,104 +828,18 @@ void codes_dump_action_tree(grib_context* c, FILE* f) ;
  to set special grib_api behaviours and variables.
  */
 /*! @{ */
-/**
-* Grib free procedure, format of a procedure referenced in the context that is used to free memory
-*
-* @param c           : the context where the memory freeing will apply
-* @param data        : pointer to the data to be freed
-* must match @see grib_malloc_proc
-*/
-typedef void  (*grib_free_proc)(const grib_context* c, void* data);
 
-/**
-* Grib malloc procedure, format of a procedure referenced in the context that is used to allocate memory
-* @param c             : the context where the memory allocation will apply
-* @param length        : length to be allocated in number of bytes
-* @return              a pointer to the allocated memory, NULL if no memory can be allocated
-* must match @see grib_free_proc
+/* TODO: function pointers
+ grib_malloc_proc
+ grib_realloc_proc
+ grib_log_proc
+ grib_print_proc
+ grib_data_read_proc
+ grib_data_write_proc
+ grib_data_tell_proc 
+ grib_data_seek_proc
+ grib_data_eof_proc
 */
-typedef void* (*grib_malloc_proc)(const grib_context* c, size_t length);
-
-/**
-* Grib realloc procedure, format of a procedure referenced in the context that is used to reallocate memory
-* @param c             : the context where the memory allocation will apply
-* @param data          : pointer to the data to be reallocated
-* @param length        : length to be allocated in number of bytes
-* @return              a pointer to the allocated memory
-*/
-typedef void* (*grib_realloc_proc)(const grib_context* c, void* data, size_t length);
-
-/**
-* Grib loc proc, format of a procedure referenced in the context that is used to log internal messages
-*
-* @param c             : the context where the logging will apply
-* @param level         : the log level, as defined in log modes
-* @param mesg          : the message to be logged
-*/
-typedef void  (*grib_log_proc)(const grib_context* c, int level, const char* mesg);
-
-/**
-* Grib print proc, format of a procedure referenced in the context that is used to print external messages
-*
-* @param c             : the context where the logging will apply
-* @param descriptor    : the structure to be printed on, must match the implementation
-* @param mesg          : the message to be printed
-*/
-typedef void  (*grib_print_proc)(const grib_context* c, void* descriptor, const char* mesg);
-
-
-/**
-* Grib data read proc, format of a procedure referenced in the context that is used to read from a stream in a resource
-*
-* @param c             : the context where the read will apply
-* @param *ptr          : the resource
-* @param size          : size to read
-* @param *stream       : the stream
-* @return              size read
-*/
-typedef size_t  (*grib_data_read_proc)(const grib_context* c,void *ptr, size_t size, void *stream);
-
-/**
-* Grib data read write, format of a procedure referenced in the context that is used to write to a stream from a resource
-*
-* @param c             : the context where the write will apply
-* @param *ptr          : the resource
-* @param size          : size to read
-* @param *stream       : the stream
-* @return              size written
-*/
-typedef size_t  (*grib_data_write_proc)(const grib_context* c,const void *ptr, size_t size,  void *stream);
-
-/**
-* Grib data tell, format of a procedure referenced in the context that is used to tell the current position in a stream
-*
-* @param c             : the context where the tell will apply
-* @param *stream       : the stream
-* @return              the position in the stream
-*/
-typedef off_t    (*grib_data_tell_proc) (const grib_context* c, void *stream);
-
-/**
-* Grib data seek, format of a procedure referenced in the context that is used to seek the current position in a stream
-*
-* @param c             : the context where the tell will apply
-* @param offset        : the offset to seek to
-* @param whence        : If whence is set to SEEK_SET, SEEK_CUR, or SEEK_END,
-                         the offset  is  relative  to  the start of the file,
-             the current position indicator, or end-of-file, respectively.
-* @param *stream       : the stream
-* @return            0 if OK, integer value on error
-*/
-typedef off_t    (*grib_data_seek_proc) (const grib_context* c, off_t offset, int whence, void *stream);
-
-/**
-* Grib data eof, format of a procedure referenced in the context that is used to test end of file
-*
-* @param c             : the context where the tell will apply
-* @param *stream       : the stream
-* @return              the position in the stream
-*/
-typedef int    (*grib_data_eof_proc) (const grib_context* c, void *stream);
 
 /**
 *  Get the static default context
@@ -998,70 +901,6 @@ int codes_get_gribex_mode(grib_context* c);
 * @param c           : the context
 */
 void codes_gribex_mode_off(grib_context* c);
-
-/**
-*  Sets user data in a context
-*
-* @param c           : the context to be modified
-* @param udata       : the user data to set
-*/
-void codes_context_set_user_data(grib_context* c, void* udata);
-
-/**
-*  get userData from a context
-*
-* @param c           : the context from which the user data will be retrieved
-* @return            the user data referenced in the context
-*/
-void* codes_context_get_user_data(grib_context* c);
-
-/**
-*  Sets memory procedures of the context
-*
-* @param c           : the context to be modified
-* @param griballoc   : the memory allocation procedure to be set @see grib_malloc_proc
-* @param gribfree    : the memory freeing procedure to be set @see grib_free_proc
-*/
-void codes_context_set_memory_proc(grib_context* c, grib_malloc_proc griballoc,
-       grib_free_proc gribfree,
-       grib_realloc_proc gribrealloc);
-
-/**
-*  Sets memory procedures of the context for persistent data
-*
-* @param c           : the context to be modified
-* @param griballoc   : the memory allocation procedure to be set @see grib_malloc_proc
-* @param gribfree    : the memory freeing procedure to be set @see grib_free_proc
-*/
-void codes_context_set_persistent_memory_proc(grib_context* c, grib_malloc_proc griballoc,
-  grib_free_proc gribfree);
-
-/**
-*  Sets memory procedures of the context for large buffers
-*
-* @param c           : the context to be modified
-* @param griballoc   : the memory allocation procedure to be set @see grib_malloc_proc
-* @param gribfree    : the memory freeing procedure to be set @see grib_free_proc
-*/
-void codes_context_set_buffer_memory_proc(grib_context* c, grib_malloc_proc griballoc,
-       grib_free_proc gribfree,
-       grib_realloc_proc gribrealloc);
-
-/**
-*  Sets the context printing procedure used for user interaction
-*
-* @param c            : the context to be modified
-* @param printp       : the printing procedure to be set @see grib_print_proc
-*/
-void codes_context_set_print_proc(grib_context* c, grib_print_proc printp);
-
-/**
-*  Sets the context logging procedure used for system (warning, errors, infos ...) messages
-*
-* @param c            : the context to be modified
-* @param logp         : the logging procedure to be set @see grib_log_proc
-*/
-void codes_context_set_logging_proc(grib_context* c, grib_log_proc logp);
 
 /**
 *  Turn on support for multiple fields in single grib messages
@@ -1173,6 +1012,9 @@ const char* codes_get_type_name(int type);
 int codes_get_native_type(grib_handle* h, const char* name,int* type);
 
 void codes_check(const char* call,const char*  file,int line,int e,const char* msg);
+#define CODES_CHECK(a,msg)        GRIB_CHECK(a,msg)
+#define CODES_CHECK_NOLINE(a,msg) GRIB_CHECK_NOLINE(a,msg)
+
 
 int codes_set_values(grib_handle* h,grib_values*  grib_values , size_t arg_count);
 grib_handle* codes_handle_new_from_partial_message_copy(grib_context* c, const void* data, size_t size);

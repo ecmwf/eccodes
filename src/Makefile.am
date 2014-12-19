@@ -44,6 +44,7 @@ libgrib_api_la_prototypes= \
 	action_class_close.c \
 	action_class_variable.c \
 	action_class_modify.c \
+	eccodes.c \
 	grib_accessor.c \
 	grib_concept.c \
 	grib_hash_array.c \

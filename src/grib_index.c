@@ -907,10 +907,10 @@ int grib_index_search_same(grib_index* index, grib_handle* h)
 }
 
 int grib_index_add_file(grib_index* index,const char* filename) {
-  return codes_index_add_file(index,filename,CODES_GRIB);
+  return _codes_index_add_file(index,filename,CODES_GRIB);
 }
 
-int codes_index_add_file(grib_index* index,const char* filename,int message_type)
+int _codes_index_add_file(grib_index* index,const char* filename,int message_type)
 {
 	double dval;
 	size_t svallen;

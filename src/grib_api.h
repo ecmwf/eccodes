@@ -826,7 +826,8 @@ int grib_get_double_array (grib_handle* h, const char* key, double* vals,       
 * @param vals       : the address of a long array where the data will be retrieved
 * @param length      : the address of a size_t that contains allocated length of the long array on input, and that contains the actual length of the long array on output
 * @return            0 if OK, integer value on error
-*/int grib_get_long_array   (grib_handle* h, const char* key, long*   vals,           size_t *length  );
+*/
+int grib_get_long_array(grib_handle* h, const char* key, long*   vals, size_t *length);
 
 
 
@@ -931,14 +932,6 @@ int grib_set_long_array   (grib_handle* h, const char*  key , const long*       
 * @param arg          : used to provide a format to output data (experimental)
 */
 void   grib_dump_content(grib_handle* h,FILE* out,const char* mode, unsigned long option_flags,void* arg);
-
-/**
-*  Gather all names available in a handle to a string, using a space as separator
-*
-* @param h           : the handle used to gather the keys
-* @param names       : the sting to be filled with the names
-*/
-void     grib_get_all_names(grib_handle* h,char* names);
 
 /**
 *  Print all keys from the parsed definition files available in a context
@@ -1113,23 +1106,6 @@ int grib_get_gribex_mode ( grib_context* c);
 * @param c           : the context
 */
 void grib_gribex_mode_off(grib_context* c);
-
-
-/**
-*  Sets user data in a context
-*
-* @param c           : the context to be modified
-* @param udata       : the user data to set
-*/
-void             grib_context_set_user_data              (grib_context* c, void* udata);
-
-/**
-*  get userData from a context
-*
-* @param c           : the context from which the user data will be retrieved
-* @return            the user data referenced in the context
-*/
-void*            grib_context_get_user_data              (grib_context* c);
 
 /**
 *  Sets memory procedures of the context
