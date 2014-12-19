@@ -9,7 +9,7 @@
 #
 
 
-set -ex 
+set -e
 
 . ./include.sh
 
