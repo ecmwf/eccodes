@@ -405,19 +405,6 @@ int grib_count_in_file(grib_context* c, FILE* f,int* n);
 grib_handle* grib_handle_new_from_file(grib_context* c, FILE* f, int* error);
 
 /**
-*  Create a handle from a file resource.
-*  The file is supposed to contain a netCDF message. 
-*  Remember always to delete the handle when it is not needed any more to avoid
-*  memory leaks.
-*
-* @param c           : the context from which the handle will be created (NULL for default context)
-* @param file        : the file name
-* @param error       : error code set if the returned handle is NULL and the end of file is not reached
-* @return            the new handle, NULL if the resource is invalid or a problem is encountered
-*/
-grib_handle* grib_handle_new_from_nc_file(grib_context* c,const char* file,int *error);
-
-/**
 *  Write a coded message in a file.     
 *
 * @param h           : grib_handle to be written
@@ -1331,9 +1318,6 @@ int wmo_read_any_from_stream(void *stream_data, long (*stream_proc )(void *, voi
 void *wmo_read_any_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
 void *wmo_read_gts_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
 void *wmo_read_bufr_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
-grib_handle* ecCodes_gts_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error );
-grib_handle* ecCodes_bufr_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error );
-grib_handle* ecCodes_grib_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error );
 int grib_get_message_offset ( grib_handle* h,off_t* offset );
 int grib_get_message_size ( grib_handle* h,size_t* size );
 
