@@ -36,21 +36,21 @@ extern "C" {
 /* LOG MODES
 Log mode for information for processing information
 */
-#define CODES_LOG_INFO    GRIB_LOG_INFO
-#define CODES_LOG_WARNING GRIB_LOG_WARNING
-#define CODES_LOG_ERROR   GRIB_LOG_ERROR
-#define CODES_LOG_FATAL   GRIB_LOG_FATAL
-#define CODES_LOG_DEBUG   GRIB_LOG_DEBUG
+#define CODES_LOG_INFO     GRIB_LOG_INFO
+#define CODES_LOG_WARNING  GRIB_LOG_WARNING
+#define CODES_LOG_ERROR    GRIB_LOG_ERROR
+#define CODES_LOG_FATAL    GRIB_LOG_FATAL
+#define CODES_LOG_DEBUG    GRIB_LOG_DEBUG
 
 /* Types */
-#define CODES_TYPE_UNDEFINED GRIB_TYPE_UNDEFINED
-#define CODES_TYPE_LONG      GRIB_TYPE_LONG
-#define CODES_TYPE_DOUBLE    GRIB_TYPE_DOUBLE
-#define CODES_TYPE_STRING    GRIB_TYPE_STRING
-#define CODES_TYPE_BYTES     GRIB_TYPE_BYTES
-#define CODES_TYPE_SECTION   GRIB_TYPE_SECTION
-#define CODES_TYPE_LABEL     GRIB_TYPE_LABEL
-#define CODES_TYPE_MISSING   GRIB_TYPE_MISSING
+#define CODES_TYPE_UNDEFINED  GRIB_TYPE_UNDEFINED
+#define CODES_TYPE_LONG       GRIB_TYPE_LONG
+#define CODES_TYPE_DOUBLE     GRIB_TYPE_DOUBLE
+#define CODES_TYPE_STRING     GRIB_TYPE_STRING
+#define CODES_TYPE_BYTES      GRIB_TYPE_BYTES
+#define CODES_TYPE_SECTION    GRIB_TYPE_SECTION
+#define CODES_TYPE_LABEL      GRIB_TYPE_LABEL
+#define CODES_TYPE_MISSING    GRIB_TYPE_MISSING
 
 /* Missing values */
 #define CODES_MISSING_LONG   GRIB_MISSING_LONG
@@ -76,15 +76,39 @@ Log mode for information for processing information
 #define CODES_NEAREST_SAME_DATA   GRIB_NEAREST_SAME_DATA  
 #define CODES_NEAREST_SAME_POINT  GRIB_NEAREST_SAME_POINT 
 
-#define CODES_KEYS_ITERATOR_ALL_KEYS        GRIB_KEYS_ITERATOR_ALL_KEYS
-#define CODES_KEYS_ITERATOR_SKIP_READ_ONLY  GRIB_KEYS_ITERATOR_SKIP_READ_ONLY
-#define CODES_KEYS_ITERATOR_SKIP_OPTIONAL   GRIB_KEYS_ITERATOR_SKIP_OPTIONAL
+#define CODES_KEYS_ITERATOR_ALL_KEYS               GRIB_KEYS_ITERATOR_ALL_KEYS
+#define CODES_KEYS_ITERATOR_SKIP_READ_ONLY         GRIB_KEYS_ITERATOR_SKIP_READ_ONLY
+#define CODES_KEYS_ITERATOR_SKIP_OPTIONAL          GRIB_KEYS_ITERATOR_SKIP_OPTIONAL
 #define CODES_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC  GRIB_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC
-#define CODES_KEYS_ITERATOR_SKIP_CODED      GRIB_KEYS_ITERATOR_SKIP_CODED
-#define CODES_KEYS_ITERATOR_SKIP_COMPUTED   GRIB_KEYS_ITERATOR_SKIP_COMPUTED
-#define CODES_KEYS_ITERATOR_SKIP_DUPLICATES GRIB_KEYS_ITERATOR_SKIP_DUPLICATES
-#define CODES_KEYS_ITERATOR_SKIP_FUNCTION   GRIB_KEYS_ITERATOR_SKIP_FUNCTION
+#define CODES_KEYS_ITERATOR_SKIP_CODED             GRIB_KEYS_ITERATOR_SKIP_CODED
+#define CODES_KEYS_ITERATOR_SKIP_COMPUTED          GRIB_KEYS_ITERATOR_SKIP_COMPUTED
+#define CODES_KEYS_ITERATOR_SKIP_DUPLICATES        GRIB_KEYS_ITERATOR_SKIP_DUPLICATES
+#define CODES_KEYS_ITERATOR_SKIP_FUNCTION          GRIB_KEYS_ITERATOR_SKIP_FUNCTION
 
+
+typedef struct grib_values            codes_values;
+typedef struct grib_key_value_list    codes_key_value_list;
+typedef struct grib_handle            codes_handle;
+typedef struct grib_multi_handle      codes_multi_handle;
+typedef struct grib_context           codes_context;
+typedef struct grib_iterator          codes_iterator;
+typedef struct grib_nearest           codes_nearest;
+typedef struct grib_box               codes_box;
+typedef struct grib_points            codes_points;
+typedef struct grib_keys_iterator     codes_keys_iterator;
+typedef struct grib_fieldset          codes_fieldset;
+typedef struct grib_order_by          codes_order_by;
+typedef struct grib_where             codes_where;
+typedef struct grib_sarray            codes_sarray;
+typedef struct grib_darray            codes_darray;
+typedef struct grib_iarray            codes_iarray;
+typedef struct grib_vdarray           codes_vdarray;
+typedef struct grib_vsarray           codes_vsarray;
+typedef struct grib_viarray           codes_viarray;
+typedef struct grib_index             codes_index;
+typedef struct grib_string_list       codes_string_list;
+typedef struct grib_util_packing_spec codes_util_packing_spec;
+typedef struct grib_util_grid_spec    codes_util_grid_spec;
 
 grib_fieldset *codes_fieldset_new_from_files(grib_context *c, char *filenames[], int nfiles, char **keys, int nkeys, char *where_string, char *order_by_string, int *err);
 
