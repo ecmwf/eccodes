@@ -40,13 +40,11 @@ void usage(const char* prog)
 /* Print an error message and die */
 void error(const char* fmt, ...)
 {
-    char msg[1024];
     va_list list;
-    va_start(list,fmt);
-    vsprintf(msg, fmt, list);
+    va_start(list, fmt);
+    vfprintf(stderr, fmt, list);
     va_end(list);
 
-    fprintf(stderr,msg);
     ++error_count;
     if (exit_on_error) {
         exit(1);
