@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "grib_api.h"
+#include "eccodes.h"
 
 int main(int argc, char** argv)
 {
@@ -32,9 +32,9 @@ int main(int argc, char** argv)
     char* infile = "../../data/regular_latlon_surface.grib1";
     FILE* out = NULL;
     char* outfile = "out.grib1";
-    grib_handle *h = NULL;
+    codes_handle *h = NULL;
     const void* buffer = NULL;
-    size_t str_len = 0; /* See the call to grib_set_string later */
+    size_t str_len = 0; /* See the call to codes_set_string later */
 
     in = fopen(infile,"r");
     if(!in) {
@@ -50,29 +50,29 @@ int main(int argc, char** argv)
     }
 
     /* create a new handle from a message in a file */
-    h = grib_handle_new_from_file(0,in,&err);
+    h = codes_handle_new_from_file(0,in,&err);
     if (h == NULL) {
         printf("Error: unable to create handle from file %s\n",infile);
     }
 
     /* set centre as a long */
-    GRIB_CHECK(grib_set_long(h,"centre",centre),0);
+    CODES_CHECK(codes_set_long(h,"centre",centre),0);
 
     /* set paramId and shortName - normally you would do one or the other */
-    GRIB_CHECK(grib_set_long(h,"paramId", 500004),0);
+    CODES_CHECK(codes_set_long(h,"paramId", 500004),0);
     /* the value of str_len is not used, it can be anything! */
-    GRIB_CHECK(grib_set_string(h,"shortName", "fis", &str_len),0);
+    CODES_CHECK(codes_set_string(h,"shortName", "fis", &str_len),0);
 
     /* get centre as a long */
-    GRIB_CHECK(grib_get_long(h,"centre",&long_value),0);
+    CODES_CHECK(codes_get_long(h,"centre",&long_value),0);
     printf("centre long value=%ld\n",long_value);
 
     /* get centre as a string */
-    GRIB_CHECK(grib_get_string(h,"centre",string_value,&len),0);
+    CODES_CHECK(codes_get_string(h,"centre",string_value,&len),0);
     printf("centre string value=%s\n",string_value);
 
     /* get the coded message in a buffer */
-    GRIB_CHECK(grib_get_message(h,&buffer,&size),0);
+    CODES_CHECK(codes_get_message(h,&buffer,&size),0);
 
     /* write the buffer in a file*/
     if(fwrite(buffer,1,size,out) != size)
@@ -81,7 +81,7 @@ int main(int argc, char** argv)
         exit(1);
     }
 
-    grib_handle_delete(h);
+    codes_handle_delete(h);
     fclose(in);
     fclose(out);
 

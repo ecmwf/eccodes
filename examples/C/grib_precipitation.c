@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "grib_api.h"
+#include "eccodes.h"
 
 void usage(const char* prog) {
     printf("usage: %s filename\n",prog);
@@ -39,7 +39,7 @@ int main(int argc, char** argv)
 
     FILE* in = NULL;
     char* filename ;
-    grib_handle *h = NULL;
+    codes_handle *h = NULL;
 
     if (argc<2) usage(argv[0]);
     filename=argv[1];
@@ -51,22 +51,22 @@ int main(int argc, char** argv)
     }
 
     /* create new handle from a message in a file*/
-    while((h = grib_handle_new_from_file(0,f,&err)) != NULL) {
+    while((h = codes_handle_new_from_file(0,f,&err)) != NULL) {
 
         /* get the size of the values array*/
-        GRIB_CHECK(grib_get_size(h,"values",&values_len),0);
+        CODES_CHECK(codes_get_size(h,"values",&values_len),0);
 
         values = malloc(values_len*sizeof(double));
 
         /* get data values*/
-        GRIB_CHECK(grib_get_double_array(h,"values",values,&values_len),0);
+        CODES_CHECK(codes_get_double_array(h,"values",values,&values_len),0);
 
         for(i = 0; i < values_len; i++)
             printf("%d  %.10e\n",i+1,values[i]);
 
         free(values);
 
-        grib_handle_delete(h);
+        codes_handle_delete(h);
     }
 
     fclose(in);

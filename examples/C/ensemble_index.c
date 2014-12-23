@@ -15,7 +15,7 @@
  *
  */
 
-#include "grib_api.h"
+#include "eccodes.h"
 
 int main(int argc, char * argv[])
 {
@@ -28,47 +28,47 @@ int main(int argc, char * argv[])
     double* values;
     double* result=NULL;
     double min=1e13,max=-1e13,avg=0;
-    grib_index* index;
-    grib_handle* h=NULL;
+    codes_index* index;
+    codes_handle* h=NULL;
 
     /* create index of file contents for paramId and number */
-    index = grib_index_new_from_file(0, "eps", "paramId,number",&ret);
-    GRIB_CHECK(ret,0);
+    index = codes_index_new_from_file(0, "eps", "paramId,number",&ret);
+    CODES_CHECK(ret,0);
 
     /* get size of "paramId" list */
-    GRIB_CHECK(grib_index_get_size(index, "paramId", &paramIdSize),0);
+    CODES_CHECK(codes_index_get_size(index, "paramId", &paramIdSize),0);
     printf("grib contains %ld different parameters\n",paramIdSize);
     /* allocate memory for "paramId" list */
     paramId = (char**) malloc(paramIdSize * sizeof(char*));
     /* get list of "paramId" */
-    GRIB_CHECK(grib_index_get_string(index, "paramId", paramId, &paramIdSize),0);
+    CODES_CHECK(codes_index_get_string(index, "paramId", paramId, &paramIdSize),0);
 
     /* get size of ensemble number list */
-    GRIB_CHECK(grib_index_get_size(index, "number", &numberSize),0);
+    CODES_CHECK(codes_index_get_size(index, "number", &numberSize),0);
     printf("GRIB contains %ld different ensemble members\n",numberSize);
     /* allocate memory for ensemble number list */
     number = (long*) malloc(numberSize * sizeof(long));
     /* get list of ensemble numbers */
-    GRIB_CHECK(grib_index_get_long(index, "number", number, &numberSize),0);
+    CODES_CHECK(codes_index_get_long(index, "number", number, &numberSize),0);
 
     /* select T850 with paramId 130 */
-    GRIB_CHECK(grib_index_select_string(index, "paramId", "130"), 0);
+    CODES_CHECK(codes_index_select_string(index, "paramId", "130"), 0);
 
     /* loop over all members */
     for (i = 0; i < numberSize; i++) {
         count++;
         /* select an individual ensemble number */
-        GRIB_CHECK(grib_index_select_long(index, "number", number[i]), 0);
+        CODES_CHECK(codes_index_select_long(index, "number", number[i]), 0);
 
         /* create handle for next GRIB message */
-        h=grib_handle_new_from_index(index, &ret);
+        h=codes_handle_new_from_index(index, &ret);
         if (ret) {
-            printf("Error: %s\n", grib_get_error_message(ret));
+            printf("Error: %s\n", codes_get_error_message(ret));
             exit(ret);
         }
 
         /* get the size of the values array */
-        GRIB_CHECK(grib_get_size(h, "values", &values_len), 0);
+        CODES_CHECK(codes_get_size(h, "values", &values_len), 0);
 
         /* allocate memory for the GRIB message */
         values = (double*)malloc(values_len * sizeof(double));
@@ -79,7 +79,7 @@ int main(int argc, char * argv[])
         }
 
         /* get data values */
-        GRIB_CHECK(grib_get_double_array(h, "values", values, &values_len), 0);
+        CODES_CHECK(codes_get_double_array(h, "values", values, &values_len), 0);
 
         /* add up values */
         for (j = 0; j < values_len; j++)
@@ -87,7 +87,7 @@ int main(int argc, char * argv[])
 
         /* free memory and GRIB message handle */
         free(values);
-        GRIB_CHECK(grib_handle_delete(h), 0);
+        CODES_CHECK(codes_handle_delete(h), 0);
     }
 
     printf("We considered %d ensemble members\n", count);
@@ -117,7 +117,7 @@ int main(int argc, char * argv[])
     free(paramId);
     free(number);
     free(result);
-    grib_index_delete(index);
+    codes_index_delete(index);
 
     return 0;
 }

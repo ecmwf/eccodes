@@ -19,7 +19,7 @@
 #include <math.h>
 #include <assert.h>
 
-#include "grib_api.h"
+#include "eccodes.h"
 
 #define EPSILON  1e-6
 #define EXPECTED_MIN 270.466796875
@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     char* infile = "../../data/regular_latlon_surface.grib1";
     FILE* out = NULL;
     char* outfile = "out.grib1";
-    grib_handle *h = NULL;
+    codes_handle *h = NULL;
     const void* buffer = NULL;
     double* values1=NULL;
     double* values2=NULL;
@@ -59,35 +59,35 @@ int main(int argc, char** argv)
     }
 
     /* create a new handle from a message in a file */
-    h = grib_handle_new_from_file(0,in,&err);
+    h = codes_handle_new_from_file(0,in,&err);
     if (h == NULL) {
         printf("Error: unable to create handle from file %s\n",infile);
     }
 
     /* bitsPerValue before changing the packing parameters */
-    GRIB_CHECK(grib_get_long(h,"bitsPerValue",&bitsPerValue1),0);
+    CODES_CHECK(codes_get_long(h,"bitsPerValue",&bitsPerValue1),0);
     assert(bitsPerValue1 == 16);
 
     /* get the size of the values array*/
-    GRIB_CHECK(grib_get_size(h,"values",&size),0);
+    CODES_CHECK(codes_get_size(h,"values",&size),0);
     assert(size == 496);
 
     values1 = (double*)malloc(size*sizeof(double));
     /* get data values before changing the packing parameters*/
-    GRIB_CHECK(grib_get_double_array(h,"values",values1,&size),0);
+    CODES_CHECK(codes_get_double_array(h,"values",values1,&size),0);
 
     /* changing decimal precision to 2 means that 2 decimal digits
      are preserved when packing.  */
     decimalPrecision=2;
-    GRIB_CHECK(grib_set_long(h,"changeDecimalPrecision",decimalPrecision),0);
+    CODES_CHECK(codes_set_long(h,"changeDecimalPrecision",decimalPrecision),0);
 
     /* bitsPerValue after changing the packing parameters */
-    GRIB_CHECK(grib_get_long(h,"bitsPerValue",&bitsPerValue2),0);
+    CODES_CHECK(codes_get_long(h,"bitsPerValue",&bitsPerValue2),0);
     assert(bitsPerValue2 == 12);
 
     values2 = (double*)malloc(size*sizeof(double));
     /* get data values after changing the packing parameters*/
-    GRIB_CHECK(grib_get_double_array(h,"values",values2,&size),0);
+    CODES_CHECK(codes_get_double_array(h,"values",values2,&size),0);
 
     /* computing error */
     maxa=0;
@@ -110,7 +110,7 @@ int main(int argc, char** argv)
     assert(fabs(maxv - EXPECTED_MAX) < EPSILON);
 
     /* get the coded message in a buffer */
-    GRIB_CHECK(grib_get_message(h,&buffer,&size),0);
+    CODES_CHECK(codes_get_message(h,&buffer,&size),0);
 
     /* write the buffer in a file*/
     if(fwrite(buffer,1,size,out) != size)
@@ -119,7 +119,7 @@ int main(int argc, char** argv)
         exit(1);
     }
 
-    grib_handle_delete(h);
+    codes_handle_delete(h);
 
     fclose(in);
     fclose(out);

@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include "grib_api.h"
+#include "eccodes.h"
 
 void usage(char* prog)
 {
@@ -37,8 +37,8 @@ int main(int argc, char** argv)
     long bitmapPresent = 0;
     long *bitmap = NULL;
     double *values = NULL;
-    grib_handle *h = NULL;
-    grib_iterator* iter=NULL;
+    codes_handle *h = NULL;
+    codes_iterator* iter=NULL;
 
     if (argc != 2) usage(argv[0]);
     filename=argv[1];
@@ -48,33 +48,33 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    while ((h = grib_handle_new_from_file(0,in,&err)) != NULL )
+    while ((h = codes_handle_new_from_file(0,in,&err)) != NULL )
     {
-        if (err != GRIB_SUCCESS) GRIB_CHECK(err,0);
+        if (err != CODES_SUCCESS) CODES_CHECK(err,0);
 
-        GRIB_CHECK(grib_get_long(h,"bitmapPresent",&bitmapPresent),0);
+        CODES_CHECK(codes_get_long(h,"bitmapPresent",&bitmapPresent),0);
         if (bitmapPresent)
         {
-            GRIB_CHECK(grib_get_size(h,"bitmap",&bmp_len),0);
+            CODES_CHECK(codes_get_size(h,"bitmap",&bmp_len),0);
             bitmap = (long*)malloc(bmp_len*sizeof(long));
-            GRIB_CHECK(grib_get_long_array(h,"bitmap",bitmap,&bmp_len),0);
+            CODES_CHECK(codes_get_long_array(h,"bitmap",bitmap,&bmp_len),0);
             printf("Bitmap is present. Num = %ld\n", bmp_len);
         }
         /* Sanity check. Number of values must match number in bitmap */
-        GRIB_CHECK(grib_get_size(h,"values",&values_len),0);
+        CODES_CHECK(codes_get_size(h,"values",&values_len),0);
         values = (double*)malloc(values_len*sizeof(double));
-        GRIB_CHECK(grib_get_double_array(h,"values",values,&values_len),0);
+        CODES_CHECK(codes_get_double_array(h,"values",values,&values_len),0);
         if (bitmapPresent) {
             assert(values_len==bmp_len);
         }
 
         /* A new iterator on lat/lon/values is created from the message handle h */
-        iter=grib_iterator_new(h,0,&err);
-        if (err != GRIB_SUCCESS) GRIB_CHECK(err,0);
+        iter=codes_iterator_new(h,0,&err);
+        if (err != CODES_SUCCESS) CODES_CHECK(err,0);
 
         n = 0;
         /* Loop on all the lat/lon/values. Only print non-missing values */
-        while(grib_iterator_next(iter,&lat,&lon,&value))
+        while(codes_iterator_next(iter,&lat,&lon,&value))
         {
             int is_missing_val = (bitmapPresent && bitmap[n] == 0);
             if (!is_missing_val) {
@@ -85,8 +85,8 @@ int main(int argc, char** argv)
         /* Check number of elements in iterator matches value count */
         assert(n == values_len);
 
-        grib_iterator_delete(iter);
-        grib_handle_delete(h);
+        codes_iterator_delete(iter);
+        codes_handle_delete(h);
     }
 
     fclose(in);

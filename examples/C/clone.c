@@ -16,7 +16,7 @@
  *
  */
 #include <stdio.h>
-#include "grib_api.h"
+#include "eccodes.h"
 
 void usage(char *app)
 {
@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 {
     FILE *in = NULL;
     FILE *out = NULL;
-    grib_handle *source_handle = NULL;
+    codes_handle *source_handle = NULL;
     const void *buffer = NULL;
     size_t size = 0;
     int err = 0;
@@ -48,9 +48,9 @@ int main(int argc, char *argv[])
     }
 
     /* loop over the messages in the source grib and clone them */
-    while ((source_handle = grib_handle_new_from_file(0,in,&err))!=NULL)
+    while ((source_handle = codes_handle_new_from_file(0,in,&err))!=NULL)
     {
-        grib_handle *clone_handle = grib_handle_clone(source_handle);
+        codes_handle *clone_handle = codes_handle_clone(source_handle);
 
         if (clone_handle == NULL) {
             perror("ERROR: could not clone field");
@@ -59,19 +59,19 @@ int main(int argc, char *argv[])
 
         /* This is the place where you may wish to modify the clone */
         /* E.g.
-           GRIB_CHECK(grib_set_long(clone_handle, "centre", 250),0);
+           CODES_CHECK(codes_set_long(clone_handle, "centre", 250),0);
            etc...
          */
 
         /* get the coded message in a buffer */
-        GRIB_CHECK(grib_get_message(clone_handle,&buffer,&size),0);
+        CODES_CHECK(codes_get_message(clone_handle,&buffer,&size),0);
         /* write the buffer to a file */
         if(fwrite(buffer,1,size,out) != size) {
             perror(argv[1]);
             return 1;
         }
-        grib_handle_delete(clone_handle);
-        grib_handle_delete(source_handle);
+        codes_handle_delete(clone_handle);
+        codes_handle_delete(source_handle);
     }
 
     fclose(out);

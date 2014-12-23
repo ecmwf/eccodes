@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "grib_api.h"
+#include "eccodes.h"
 
 void usage(const char* prog) {
     fprintf(stderr, "usage: %s in out\n",prog);
@@ -36,7 +36,7 @@ int main(int argc, char** argv)
     char* infile = NULL;
     FILE* out = NULL;
     char* outfile = NULL;
-    grib_handle *h = NULL;
+    codes_handle *h = NULL;
     const void* buffer = NULL;
 
     if (argc != 3) usage(argv[0]);
@@ -57,21 +57,21 @@ int main(int argc, char** argv)
     }
 
     /* create a new handle from a message in a file */
-    h = grib_handle_new_from_file(0,in,&err);
+    h = codes_handle_new_from_file(0,in,&err);
     if (h == NULL) {
         fprintf(stderr, "Error: unable to create handle from file %s\n",infile);
     }
 
-    GRIB_CHECK(grib_set_long(h,"PVPresent",PVPresent),0);
+    CODES_CHECK(codes_set_long(h,"PVPresent",PVPresent),0);
 
-    GRIB_CHECK(grib_set_double_array(h,"pv",pv,pvsize),0);
+    CODES_CHECK(codes_set_double_array(h,"pv",pv,pvsize),0);
     
     /* Once we set the pv array, the NV key should be also set */
-    GRIB_CHECK(grib_get_long(h,"NV",&NV),0);
+    CODES_CHECK(codes_get_long(h,"NV",&NV),0);
     assert( NV == pvsize );
 
     /* get the coded message in a buffer */
-    GRIB_CHECK(grib_get_message(h,&buffer,&size),0);
+    CODES_CHECK(codes_get_message(h,&buffer,&size),0);
 
     /* write the buffer in a file*/
     if(fwrite(buffer,1,size,out) != size)
@@ -80,7 +80,7 @@ int main(int argc, char** argv)
         exit(1);
     }
 
-    grib_handle_delete(h);
+    codes_handle_delete(h);
     fclose(in);
     fclose(out);
 

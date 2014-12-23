@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "grib_api.h"
+#include "eccodes.h"
 
 void usage(const char* prog) {
     printf("usage: %s in.grib out.grib\n",prog);
@@ -32,8 +32,8 @@ int main(int argc, char** argv)
     long edition, step;
     char* filename=NULL;
     char* ofilename=NULL;
-    grib_handle *h = NULL;
-    grib_multi_handle *mh=NULL;
+    codes_handle *h = NULL;
+    codes_multi_handle *mh=NULL;
     const int start_section = 4; /* Grib2 Product Definition Section */
 
     if (argc < 3) usage(argv[0]);
@@ -48,16 +48,16 @@ int main(int argc, char** argv)
     }
 
     /* new grib handle from input file */
-    h = grib_handle_new_from_file(0,in,&err);
-    GRIB_CHECK(err,0);
-    GRIB_CHECK(grib_get_long(h,"edition",&edition),0);
+    h = codes_handle_new_from_file(0,in,&err);
+    CODES_CHECK(err,0);
+    CODES_CHECK(codes_get_long(h,"edition",&edition),0);
     if (edition != 2) {
         fprintf(stderr, "ERROR: Input grib must be edition 2 for multi fields\n");
         exit(1);
     }
 
     /* create a new empty multi field handle */
-    mh=grib_multi_handle_new(0);
+    mh=codes_multi_handle_new(0);
     if (!mh) {
         fprintf(stderr,"ERROR: Unable to create multi field handle\n");
         exit(1);
@@ -65,10 +65,10 @@ int main(int argc, char** argv)
 
     for (step=12;step<=120;step+=12) {
         /* set step */
-        grib_set_long(h,"step",step);
+        codes_set_long(h,"step",step);
         /* append h to mh repeating from section 4 */
         /* i.e. starting from section 4 all the sections to the end of the message will be copied */
-        grib_multi_handle_append(h, start_section, mh);
+        codes_multi_handle_append(h, start_section, mh);
     }
 
     /* open output file */
@@ -79,12 +79,12 @@ int main(int argc, char** argv)
     }
 
     /* write multi fields handle to output file */
-    grib_multi_handle_write(mh,of);
+    codes_multi_handle_write(mh,of);
     fclose(of);
 
     /* release memory */
-    grib_handle_delete(h);
-    grib_multi_handle_delete(mh);
+    codes_handle_delete(h);
+    codes_multi_handle_delete(mh);
 
     fclose(in);
     return 0;

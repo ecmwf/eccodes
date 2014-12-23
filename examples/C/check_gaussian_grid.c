@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <stdarg.h>
-#include "grib_api.h"
+#include "eccodes.h"
 
 #define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
 
@@ -41,7 +41,7 @@ void usage(const char* prog)
 void error(const char* fmt, ...)
 {
     va_list list;
-    va_start(list, fmt);
+    va_start(list,fmt);
     vfprintf(stderr, fmt, list);
     va_end(list);
 
@@ -62,7 +62,7 @@ double get_precision(long edition)
 int process_file(const char* filename)
 {
     int err = 0, msg_num = 0;
-    grib_handle *h = NULL;
+    codes_handle *h = NULL;
 
     FILE* in = fopen(filename, "r");
     if(!in) {
@@ -71,7 +71,7 @@ int process_file(const char* filename)
     
     printf("Checking file %s\n", filename);
     
-    while ((h = grib_handle_new_from_file(0,in,&err)) != NULL )
+    while ((h = codes_handle_new_from_file(0,in,&err)) != NULL )
     {
         int is_reduced = 0, is_regular = 0, grid_ok = 0;
         long edition = 0, N = 0, Nj = 0, numberOfDataPoints;
@@ -82,31 +82,31 @@ int process_file(const char* filename)
         double angular_tolerance, lat1, lon1, lat2, lon2, expected_lon2;
         double iDirectionIncrementInDegrees;
 
-        if (err != GRIB_SUCCESS) GRIB_CHECK(err,0);
+        if (err != CODES_SUCCESS) CODES_CHECK(err,0);
         ++msg_num;
         printf("\tProcessing GRIB message #%d\n", msg_num);
 
         len = 32;
-        GRIB_CHECK(grib_get_string(h,"gridType",gridType,&len),0);
+        CODES_CHECK(codes_get_string(h,"gridType",gridType,&len),0);
         is_regular = STR_EQUAL(gridType, "regular_gg");
         is_reduced = STR_EQUAL(gridType, "reduced_gg");
         grid_ok = is_regular || is_reduced;
         if( !grid_ok ) {
             /*error("ERROR: gridType should be Reduced or Regular Gaussian Grid!\n");*/
             printf("\tWARNING: gridType should be Reduced or Regular Gaussian Grid! Ignoring\n");
-            grib_handle_delete(h);
+            codes_handle_delete(h);
             continue;
         }
         
-        GRIB_CHECK(grib_get_long(h,"edition",&edition),0);
-        GRIB_CHECK(grib_get_long(h,"N",&N),0);
-        GRIB_CHECK(grib_get_long(h,"Nj",&Nj),0);
-        GRIB_CHECK(grib_get_long(h,"numberOfDataPoints",&numberOfDataPoints),0);
-        GRIB_CHECK(grib_get_double(h,"latitudeOfFirstGridPointInDegrees", &lat1),0);
-        GRIB_CHECK(grib_get_double(h,"longitudeOfFirstGridPointInDegrees",&lon1),0);
-        GRIB_CHECK(grib_get_double(h,"latitudeOfLastGridPointInDegrees",  &lat2),0);
-        GRIB_CHECK(grib_get_double(h,"longitudeOfLastGridPointInDegrees", &lon2),0);
-        GRIB_CHECK(grib_get_double(h,"iDirectionIncrementInDegrees",&iDirectionIncrementInDegrees),0);
+        CODES_CHECK(codes_get_long(h,"edition",&edition),0);
+        CODES_CHECK(codes_get_long(h,"N",&N),0);
+        CODES_CHECK(codes_get_long(h,"Nj",&Nj),0);
+        CODES_CHECK(codes_get_long(h,"numberOfDataPoints",&numberOfDataPoints),0);
+        CODES_CHECK(codes_get_double(h,"latitudeOfFirstGridPointInDegrees", &lat1),0);
+        CODES_CHECK(codes_get_double(h,"longitudeOfFirstGridPointInDegrees",&lon1),0);
+        CODES_CHECK(codes_get_double(h,"latitudeOfLastGridPointInDegrees",  &lat2),0);
+        CODES_CHECK(codes_get_double(h,"longitudeOfLastGridPointInDegrees", &lon2),0);
+        CODES_CHECK(codes_get_double(h,"iDirectionIncrementInDegrees",&iDirectionIncrementInDegrees),0);
 
         angular_tolerance = get_precision(edition);
 
@@ -128,7 +128,7 @@ int process_file(const char* filename)
                     lat1, lat2);
         }
         lats = (double*)malloc(sizeof(double)*Nj);
-        GRIB_CHECK(grib_get_gaussian_latitudes(N,lats), 0);
+        CODES_CHECK(codes_get_gaussian_latitudes(N,lats), 0);
 
         if (!DBL_EQUAL(lats[0], lat1, angular_tolerance)) {
             error("First latitude %f must be %f\n", lat1, lats[0]);
@@ -140,19 +140,19 @@ int process_file(const char* filename)
         if (is_reduced) {
             int pl_sum = 0;
             size_t i = 0, pl_len = 0;
-            int is_missing = grib_is_missing(h, "Ni", &err);
-            assert(err == GRIB_SUCCESS);
+            int is_missing = codes_is_missing(h, "Ni", &err);
+            assert(err == CODES_SUCCESS);
             if (!is_missing) {
                 error("ERROR: Ni should be missing!\n");
             }
 
-            GRIB_CHECK(grib_get_size(h, "pl", &pl_len),0);
+            CODES_CHECK(codes_get_size(h, "pl", &pl_len),0);
             if (pl_len != 2*N) {
                 error("ERROR: Length of pl array is %ld but should be 2*N (%ld)!\n", pl_len, 2*N);
             }
             pl = (long*)malloc(pl_len*sizeof(long));
             assert(pl);
-            GRIB_CHECK(grib_get_long_array(h, "pl", pl, &pl_len),0);
+            CODES_CHECK(codes_get_long_array(h, "pl", pl, &pl_len),0);
 
             /* Check pl is symmetric */
             for(i=0; i<pl_len/2; ++i) {
@@ -174,14 +174,14 @@ int process_file(const char* filename)
             free(pl);
         }
 
-        GRIB_CHECK(grib_get_size(h, "values", &numberOfValues),0);
+        CODES_CHECK(codes_get_size(h, "values", &numberOfValues),0);
         if (numberOfValues != numberOfDataPoints) {
             error("Number of data points %d different from number of values %d\n",
                   numberOfDataPoints, numberOfValues);
         }
 
         free(lats);
-        grib_handle_delete(h);
+        codes_handle_delete(h);
     }
     fclose(in);
     printf("\nFile %s OK\n\n", filename);

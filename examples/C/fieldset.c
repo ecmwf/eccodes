@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "grib_api.h"
+#include "eccodes.h"
 
 void usage(char* prog) {
     printf("Usage: %s order_by grib_file grib_file ...\n",prog);
@@ -34,8 +34,8 @@ int main(int argc, char** argv)
     size_t nkeys,nfiles;
     int i=0;
     char* keys[]={"step","date","param","levelType"};
-    grib_fieldset* set;
-    grib_handle* h;
+    codes_fieldset* set;
+    codes_handle* h;
     char param[20]={0,};
     char date[10]={0,};
     size_t datelen=10;
@@ -52,31 +52,31 @@ int main(int argc, char** argv)
     for (i=0;i<nfiles;i++)
         filenames[i]=(char*)strdup(argv[i+2]);
 
-    set=grib_fieldset_new_from_files(0,filenames,nfiles,keys,nkeys,0,0,&err);
-    GRIB_CHECK(err,0);
+    set=codes_fieldset_new_from_files(0,filenames,nfiles,keys,nkeys,0,0,&err);
+    CODES_CHECK(err,0);
 
     /* not jet implemented */
-    /* err=grib_fieldset_apply_where(set,"(centre=='ecmf') && number==1 || step==6 "); */
-    /* GRIB_CHECK(err,0); */
+    /* err=codes_fieldset_apply_where(set,"(centre=='ecmf') && number==1 || step==6 "); */
+    /* CODES_CHECK(err,0); */
 
-    grib_fieldset_apply_order_by(set,order_by);
-    GRIB_CHECK(err,0);
+    codes_fieldset_apply_order_by(set,order_by);
+    CODES_CHECK(err,0);
 
     printf("\nordering by %s\n",order_by);
-    printf("\n%d fields in the fieldset\n",grib_fieldset_count(set));
+    printf("\n%d fields in the fieldset\n",codes_fieldset_count(set));
     printf("step,date,levelType,levelType\n");
-    while ((h=grib_fieldset_next_handle(set,&err))!=NULL) {
-        GRIB_CHECK(grib_get_long(h,"step",&step),0);
-        GRIB_CHECK(grib_get_string(h,"date",date,&datelen),0);
-        GRIB_CHECK(grib_get_string(h,"param",param,&len),0);
-        GRIB_CHECK(grib_get_long(h,"levelType",&levelType),0);
+    while ((h=codes_fieldset_next_handle(set,&err))!=NULL) {
+        CODES_CHECK(codes_get_long(h,"step",&step),0);
+        CODES_CHECK(codes_get_string(h,"date",date,&datelen),0);
+        CODES_CHECK(codes_get_string(h,"param",param,&len),0);
+        CODES_CHECK(codes_get_long(h,"levelType",&levelType),0);
 
         printf("%ld %s %ld %s\n",step,date,levelType,param);
-        grib_handle_delete(h);
+        codes_handle_delete(h);
     }
 
-    grib_fieldset_delete(set);
-    grib_handle_delete(h);
+    codes_fieldset_delete(set);
+    codes_handle_delete(h);
 
     return 0;
 }

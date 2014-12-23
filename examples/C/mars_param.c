@@ -17,18 +17,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "grib_api.h"
+#include "eccodes.h"
 
 int main(int argc, char** argv)
 {
-    grib_string_list* list;
-    grib_string_list* list2;
+    codes_string_list* list;
+    codes_string_list* list2;
 
-    list=grib_util_get_param_id("11.2");
+    list=codes_util_get_param_id("11.2");
     printf("mars.param=11.2 -> paramId= ");
     while (list) {
         printf("%s ",list->value);
-        list2=grib_util_get_param_id("130.128");
+        list2=codes_util_get_param_id("130.128");
         printf("mars.param=11.2 -> paramId= ");
         while (list2) {
             printf("%s ",list2->value);
@@ -40,7 +40,7 @@ int main(int argc, char** argv)
     printf("\n");
 
     printf("paramId=130 -> mars.param= ");
-    list=grib_util_get_mars_param("130");
+    list=codes_util_get_mars_param("130");
     while (list) {
         printf("%s ",list->value);
         list=list->next;

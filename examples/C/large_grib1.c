@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "grib_api.h"
+#include "eccodes.h"
 
 /* See JIRA issue GRIB-361 */
 int main()
@@ -19,7 +19,7 @@ int main()
   const int nj = 2880;
   double *values;
   int i = 0;
-  grib_handle *h = NULL;
+  codes_handle *h = NULL;
   char* filename = "bigfile.grib";
 
   values = (double*) malloc(ni*nj*sizeof(double));
@@ -33,39 +33,39 @@ int main()
     values[i] = 10*rand;
   }
 
-  h = grib_handle_new_from_samples(0, "GRIB1");
+  h = codes_handle_new_from_samples(0, "GRIB1");
 
-  GRIB_CHECK(grib_set_long(h, "Ni", ni), 0);
-  GRIB_CHECK(grib_set_long(h, "Nj", nj), 0);
-  GRIB_CHECK(grib_set_long(h, "centre", 86), 0);
-  GRIB_CHECK(grib_set_long(h, "process", 100), 0);
-  GRIB_CHECK(grib_set_long(h, "indicatorOfTypeOfLevel", 105), 0);
-  GRIB_CHECK(grib_set_long(h, "level", 2), 0);
-  GRIB_CHECK(grib_set_long(h, "indicatorOfParameter", 1), 0);
-  GRIB_CHECK(grib_set_long(h, "table2Version", 1), 0);
-  GRIB_CHECK(grib_set_long(h, "dataDate", 20130424), 0);
-  GRIB_CHECK(grib_set_long(h, "dataTime", 0), 0);
-  GRIB_CHECK(grib_set_long(h, "startStep", 0), 0);
-  GRIB_CHECK(grib_set_long(h, "endStep", 0), 0);
+  CODES_CHECK(codes_set_long(h, "Ni", ni), 0);
+  CODES_CHECK(codes_set_long(h, "Nj", nj), 0);
+  CODES_CHECK(codes_set_long(h, "centre", 86), 0);
+  CODES_CHECK(codes_set_long(h, "process", 100), 0);
+  CODES_CHECK(codes_set_long(h, "indicatorOfTypeOfLevel", 105), 0);
+  CODES_CHECK(codes_set_long(h, "level", 2), 0);
+  CODES_CHECK(codes_set_long(h, "indicatorOfParameter", 1), 0);
+  CODES_CHECK(codes_set_long(h, "table2Version", 1), 0);
+  CODES_CHECK(codes_set_long(h, "dataDate", 20130424), 0);
+  CODES_CHECK(codes_set_long(h, "dataTime", 0), 0);
+  CODES_CHECK(codes_set_long(h, "startStep", 0), 0);
+  CODES_CHECK(codes_set_long(h, "endStep", 0), 0);
 
-  GRIB_CHECK(grib_set_long(h, "bitmapPresent", 1), 0);
+  CODES_CHECK(codes_set_long(h, "bitmapPresent", 1), 0);
 
-  GRIB_CHECK(grib_set_double(h, "iDirectionIncrementInDegrees", 0.125), 0);
-  GRIB_CHECK(grib_set_double(h, "jDirectionIncrementInDegrees", 0.125), 0);
-  GRIB_CHECK(grib_set_long(h,   "iScansNegatively", 0), 0);
-  GRIB_CHECK(grib_set_long(h,   "jScansPositively", 1), 0);
+  CODES_CHECK(codes_set_double(h, "iDirectionIncrementInDegrees", 0.125), 0);
+  CODES_CHECK(codes_set_double(h, "jDirectionIncrementInDegrees", 0.125), 0);
+  CODES_CHECK(codes_set_long(h,   "iScansNegatively", 0), 0);
+  CODES_CHECK(codes_set_long(h,   "jScansPositively", 1), 0);
 
-  GRIB_CHECK(grib_set_double(h, "latitudeOfFirstGridPointInDegrees", -90), 0);
-  GRIB_CHECK(grib_set_double(h, "latitudeOfLastGridPointInDegrees", 90), 0);
-  GRIB_CHECK(grib_set_double(h, "longitudeOfFirstGridPointInDegrees", -180), 0);
-  GRIB_CHECK(grib_set_double(h, "longitudeOfLastGridPointInDegrees", 180), 0);
+  CODES_CHECK(codes_set_double(h, "latitudeOfFirstGridPointInDegrees", -90), 0);
+  CODES_CHECK(codes_set_double(h, "latitudeOfLastGridPointInDegrees", 90), 0);
+  CODES_CHECK(codes_set_double(h, "longitudeOfFirstGridPointInDegrees", -180), 0);
+  CODES_CHECK(codes_set_double(h, "longitudeOfLastGridPointInDegrees", 180), 0);
 
-  GRIB_CHECK(grib_set_double_array(h, "values", values, ni*nj), 0);
+  CODES_CHECK(codes_set_double_array(h, "values", values, ni*nj), 0);
 
-  grib_write_message(h, filename, "w");
+  codes_write_message(h, filename, "w");
   /*printf("Wrote file %s\n", filename);*/
 
-  grib_handle_delete(h);
+  codes_handle_delete(h);
   free (values);
 
   return 0;

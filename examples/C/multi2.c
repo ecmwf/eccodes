@@ -15,7 +15,7 @@
  *
  */
 
-#include "grib_api.h"
+#include "eccodes.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,7 +32,7 @@ int main(int argc, char** argv)
     int i;
 
     /* turn on support for multi fields messages */
-    grib_multi_support_on(0);
+    codes_multi_support_on(0);
 
     for(i=1; i<COUNT; ++i) {
         printf("Pass %d: \n",i);
@@ -46,7 +46,7 @@ void read_data(int num_msgs)
     int err = 0,i;
     FILE* fp = NULL;
     long stepRange = 0;
-    grib_handle *h = NULL;
+    codes_handle *h = NULL;
 
     fp = fopen(file_path, "r");
     if(!fp) {
@@ -55,12 +55,12 @@ void read_data(int num_msgs)
     }
     printf("Opened GRIB file %s: \n", file_path);
     for(i=0; i<num_msgs; ++i) {
-        h = grib_handle_new_from_file(0, fp, &err);
-        GRIB_CHECK(err, 0);
+        h = codes_handle_new_from_file(0, fp, &err);
+        CODES_CHECK(err, 0);
 
-        GRIB_CHECK( grib_get_long(h, "stepRange", &stepRange), 0);
+        CODES_CHECK( codes_get_long(h, "stepRange", &stepRange), 0);
         printf("%d : stepRange=%ld\n", i, stepRange);
-        grib_handle_delete(h);
+        codes_handle_delete(h);
         /* These tests make sure we always start from 1st field of the grib msg */
         /* and not where we left off last time */
         if (i == 0) assert(stepRange == 0);   /* 1st field */
@@ -69,6 +69,6 @@ void read_data(int num_msgs)
         if (i == 3) assert(stepRange == 36);  /* 4th field */
     }
     /* Must reset this file pointer for the next round */
-    grib_multi_support_reset_file(grib_context_get_default(), fp);
+    codes_multi_support_reset_file(codes_context_get_default(), fp);
     fclose(fp);
 }

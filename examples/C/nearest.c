@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "grib_api.h"
+#include "eccodes.h"
 
 void usage(const char* prog) {
     printf("Usage: %s grib_file grib_file ...\n",prog);
@@ -31,8 +31,8 @@ int main(int argc, char** argv)
     long step=0;
     size_t nfiles;
     int i=0;
-    grib_fieldset* set=NULL;
-    grib_handle* h=NULL;
+    codes_fieldset* set=NULL;
+    codes_handle* h=NULL;
     char param[20]={0,};
     size_t len=20;
     double lats[4]={0,};
@@ -47,7 +47,7 @@ int main(int argc, char** argv)
     int mode=0;
     int count;
     char** filenames;
-    grib_nearest* nearest=NULL;
+    codes_nearest* nearest=NULL;
 
     if (argc < 2) usage(argv[0]);
 
@@ -56,35 +56,35 @@ int main(int argc, char** argv)
     for (i=0;i<nfiles;i++)
         filenames[i]=(char*)strdup(argv[i+1]);
 
-    set=grib_fieldset_new_from_files(0,filenames,nfiles,0,0,0,order_by,&err);
-    GRIB_CHECK(err,0);
+    set=codes_fieldset_new_from_files(0,filenames,nfiles,0,0,0,order_by,&err);
+    CODES_CHECK(err,0);
 
     printf("\nordering by %s\n",order_by);
-    printf("\n%d fields in the fieldset\n",grib_fieldset_count(set));
+    printf("\n%d fields in the fieldset\n",codes_fieldset_count(set));
     printf("n,step,param\n");
 
-    mode=GRIB_NEAREST_SAME_GRID |  GRIB_NEAREST_SAME_POINT;
+    mode=CODES_NEAREST_SAME_GRID | CODES_NEAREST_SAME_POINT;
     count=1;
-    while ((h=grib_fieldset_next_handle(set,&err))!=NULL) {
-        GRIB_CHECK(grib_get_long(h,"step",&step),0);
+    while ((h=codes_fieldset_next_handle(set,&err))!=NULL) {
+        CODES_CHECK(codes_get_long(h,"step",&step),0);
         len=20;
-        GRIB_CHECK(grib_get_string(h,"param",param,&len),0);
+        CODES_CHECK(codes_get_string(h,"param",param,&len),0);
 
         printf("%d %ld %s  ",count,step,param);
-        if (!nearest) nearest=grib_nearest_new(h,&err);
-        GRIB_CHECK(err,0);
-        GRIB_CHECK(grib_nearest_find(nearest,h,lat,lon,mode,lats,lons,values,distances,indexes,&size),0);
+        if (!nearest) nearest=codes_nearest_new(h,&err);
+        CODES_CHECK(err,0);
+        CODES_CHECK(codes_nearest_find(nearest,h,lat,lon,mode,lats,lons,values,distances,indexes,&size),0);
         for (i=0;i<4;i++) printf("%d %.2f %.2f %g %g - ",
                 (int)indexes[i],lats[i],lons[i],distances[i],values[i]);
         printf("\n");
 
-        grib_handle_delete(h);
+        codes_handle_delete(h);
         count++;
     }
 
-    if (nearest) grib_nearest_delete(nearest);
+    if (nearest) codes_nearest_delete(nearest);
 
-    if (set) grib_fieldset_delete(set);
+    if (set) codes_fieldset_delete(set);
 
     return 0;
 }

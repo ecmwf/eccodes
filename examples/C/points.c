@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "grib_api.h"
+#include "eccodes.h"
 
 void usage(const char* prog) {
     printf("Usage: %s latlon_file grib_orography grib_file grib_file ...\n",prog);
@@ -32,7 +32,7 @@ int main(int argc, char** argv)
     float lat,lon;
     double *vlat,*vlon;
     int npoints=0,i=0,n=0;
-    grib_handle* h;
+    codes_handle* h;
     double *outlats,*outlons,*values,*lsm_values,*distances;
     int* indexes;
     long step=0;
@@ -86,13 +86,13 @@ int main(int argc, char** argv)
     fname=argv[2];
     fin=fopen(fname,"r");
     if(!fin) { perror(fname); exit(1); }
-    h=grib_handle_new_from_file(0,fin,&ret);
-    if (!h || ret!=GRIB_SUCCESS) {printf(" unable to create handle\n");exit(1);}
+    h=codes_handle_new_from_file(0,fin,&ret);
+    if (!h || ret!=CODES_SUCCESS) {printf(" unable to create handle\n");exit(1);}
 
-    grib_nearest_find_multiple(h,1,vlat,vlon,npoints,
+    codes_nearest_find_multiple(h,1,vlat,vlon,npoints,
             outlats,outlons,lsm_values,distances,indexes);
 
-    grib_handle_delete(h);
+    codes_handle_delete(h);
 
     fclose(fin);
 
@@ -100,18 +100,18 @@ int main(int argc, char** argv)
         fname=argv[n];
         fin=fopen(fname,"r");
         if(!fin) { perror(fname); exit(1); }
-        while ((h=grib_handle_new_from_file(0,fin,&ret))!=NULL) {
-            grib_get_double_elements(h,"values",indexes,npoints,values);
+        while ((h=codes_handle_new_from_file(0,fin,&ret))!=NULL) {
+            codes_get_double_elements(h,"values",indexes,npoints,values);
 
-            GRIB_CHECK(grib_get_length(h, "date", &len),0);
-            grib_get_string(h,"date",date,&len);
-            GRIB_CHECK(grib_get_length(h, "time", &len),0);
-            grib_get_string(h,"time",time,&len);
-            grib_get_long(h,"step",&step);
-            grib_get_long(h,"parameter",&parameter);
+            CODES_CHECK(codes_get_length(h, "date", &len),0);
+            codes_get_string(h,"date",date,&len);
+            CODES_CHECK(codes_get_length(h, "time", &len),0);
+            codes_get_string(h,"time",time,&len);
+            codes_get_long(h,"step",&step);
+            codes_get_long(h,"parameter",&parameter);
 
             printf("# %s %s %ld %ld\n",date,time,step,parameter);
-            grib_handle_delete(h);
+            codes_handle_delete(h);
             for (i=0;i<npoints;i++)
                 printf("%ld %g %g %g %g\n",
                         id[i],outlats[i],outlons[i],

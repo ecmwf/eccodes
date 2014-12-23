@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "grib_api.h"
+#include "eccodes.h"
 
 int main (int argc, char **argv)
 {
@@ -25,7 +25,7 @@ int main (int argc, char **argv)
     size_t i = 0;
     FILE *in = NULL;
     const char *filename = "../../data/reduced_latlon_surface.grib1";
-    grib_handle *h = NULL;
+    codes_handle *h = NULL;
     long numberOfPoints = 0;
     const double missing = 9999.0;
     double *lats, *lons, *values;       /* arrays */
@@ -37,14 +37,14 @@ int main (int argc, char **argv)
     }
 
     /* create new handle from a message in a file */
-    h = grib_handle_new_from_file (0, in, &err);
+    h = codes_handle_new_from_file (0, in, &err);
     if (h == NULL) {
         printf ("Error: unable to create handle from file %s\n", filename);
         return 1;
     }
 
-    GRIB_CHECK (grib_get_long (h, "numberOfPoints", &numberOfPoints), 0);
-    GRIB_CHECK (grib_set_double (h, "missingValue", missing), 0);
+    CODES_CHECK (codes_get_long (h, "numberOfPoints", &numberOfPoints), 0);
+    CODES_CHECK (codes_set_double (h, "missingValue", missing), 0);
 
     lats = (double *) malloc (numberOfPoints * sizeof (double));
     if (!lats) {
@@ -65,7 +65,7 @@ int main (int argc, char **argv)
         return 1;
     }
 
-    GRIB_CHECK (grib_get_data (h, lats, lons, values, NULL), 0);
+    CODES_CHECK (codes_get_data (h, lats, lons, values, NULL), 0);
 
     for (i = 0; i < numberOfPoints; ++i) {
         if (values[i] != missing) {
@@ -76,7 +76,7 @@ int main (int argc, char **argv)
     free (lats);
     free (lons);
     free (values);
-    grib_handle_delete (h);
+    codes_handle_delete (h);
 
     fclose (in);
     return 0;

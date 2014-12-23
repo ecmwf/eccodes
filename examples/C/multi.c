@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "grib_api.h"
+#include "eccodes.h"
 
 int main(int argc, char** argv)
 {
@@ -29,13 +29,13 @@ int main(int argc, char** argv)
     long parameterCategory=0,parameterNumber=0,discipline=0;
     FILE* in = NULL;
     char* filename = "../../data/multi.grib2";
-    grib_handle *h = NULL;
+    codes_handle *h = NULL;
 
     /* turn on support for multi fields messages */
-    grib_multi_support_on(0);
+    codes_multi_support_on(0);
 
     /* turn off support for multi fields messages */
-    /* grib_multi_support_off(0); */
+    /* codes_multi_support_off(0); */
 
     in = fopen(filename,"r");
     if(!in) {
@@ -43,24 +43,24 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    while ((h = grib_handle_new_from_file(0,in,&err)) != NULL ) {
+    while ((h = codes_handle_new_from_file(0,in,&err)) != NULL ) {
 
-        GRIB_CHECK(err,0);
+        CODES_CHECK(err,0);
 
-        GRIB_CHECK(grib_get_long(h,"discipline",&discipline),0);
+        CODES_CHECK(codes_get_long(h,"discipline",&discipline),0);
         printf("discipline=%ld\n",discipline);
 
-        GRIB_CHECK(grib_get_long(h,"parameterCategory",&parameterCategory),0);
+        CODES_CHECK(codes_get_long(h,"parameterCategory",&parameterCategory),0);
         printf("parameterCategory=%ld\n",parameterCategory);
 
-        GRIB_CHECK(grib_get_long(h,"parameterNumber",&parameterNumber),0);
+        CODES_CHECK(codes_get_long(h,"parameterNumber",&parameterNumber),0);
         printf("parameterNumber=%ld\n",parameterNumber);
 
         if ( discipline == 0 && parameterCategory==2) {
             if (parameterNumber == 2) printf("-------- u -------\n");
             if (parameterNumber == 3) printf("-------- v -------\n");
         }
-        grib_handle_delete(h);
+        codes_handle_delete(h);
     }
 
     fclose(in);

@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "grib_api.h"
+#include "eccodes.h"
 
 int main(int argc, char** argv)
 {
@@ -27,7 +27,7 @@ int main(int argc, char** argv)
     char* infile = "../../data/reduced_gaussian_pressure_level.grib2";
     FILE* out = NULL;
     char* outfile = "out_surface_level.grib2";
-    grib_handle *h = NULL;
+    codes_handle *h = NULL;
     const void* buffer = NULL;
     size_t size=0;
     char str[]="sfc";
@@ -48,24 +48,24 @@ int main(int argc, char** argv)
     }
 
     /* create a new handle from a message in a file */
-    h = grib_handle_new_from_file(0,in,&err);
+    h = codes_handle_new_from_file(0,in,&err);
     if (h == NULL) {
         printf("Error: unable to create handle from file %s\n",infile);
     }
 
-    GRIB_CHECK(grib_set_string(h,"typeOfFirstFixedSurface",str,&str_len),0);
-    GRIB_CHECK(grib_set_missing(h,"scaleFactorOfFirstFixedSurface"),0);
-    GRIB_CHECK(grib_set_missing(h,"scaledValueOfFirstFixedSurface"),0);
+    CODES_CHECK(codes_set_string(h,"typeOfFirstFixedSurface",str,&str_len),0);
+    CODES_CHECK(codes_set_missing(h,"scaleFactorOfFirstFixedSurface"),0);
+    CODES_CHECK(codes_set_missing(h,"scaledValueOfFirstFixedSurface"),0);
 
     /* See GRIB-490 */
-    GRIB_CHECK(grib_get_long(h,"Ni",&Ni),0);
-    is_missing = grib_is_missing(h, "Ni", &err);
-    GRIB_CHECK(err,0);
+    CODES_CHECK(codes_get_long(h,"Ni",&Ni),0);
+    is_missing = codes_is_missing(h, "Ni", &err);
+    CODES_CHECK(err,0);
     assert(is_missing == 1);
-    GRIB_CHECK(grib_set_long(h,"Ni", Ni),0);
+    CODES_CHECK(codes_set_long(h,"Ni", Ni),0);
 
     /* get the coded message in a buffer */
-    GRIB_CHECK(grib_get_message(h,&buffer,&size),0);
+    CODES_CHECK(codes_get_message(h,&buffer,&size),0);
 
     /* write the buffer in a file*/
     if(fwrite(buffer,1,size,out) != size)
@@ -75,7 +75,7 @@ int main(int argc, char** argv)
     }
 
     /* delete handle */
-    grib_handle_delete(h);
+    codes_handle_delete(h);
 
     fclose(in);
     fclose(out);
