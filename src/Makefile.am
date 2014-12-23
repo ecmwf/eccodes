@@ -11,7 +11,7 @@ AM_CPPFLAGS = -DGRIB_TEMPLATES_PATH=\"$(GRIB_TEMPLATES_PATH)\" \
 
 
 lib_LTLIBRARIES = libgrib_api.la
-include_HEADERS = grib_api.h
+include_HEADERS = grib_api.h eccodes.h
 
 libgrib_api_la_prototypes= \
 	action.c \

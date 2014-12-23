@@ -1,5 +1,6 @@
 list( APPEND grib_api_srcs
     grib_api.h
+    eccodes.h
     action.c
     action_class_alias.c
     action_class_gen.c
@@ -329,7 +330,6 @@ list( APPEND grib_api_srcs
     functions.c
     grib_accessor_class.h
     grib_accessor_factory.h
-    grib_api.h
     grib_api_internal.h
     grib_api_prototypes.h
     grib_box_class.h
@@ -396,5 +396,4 @@ ecbuild_add_library(TARGET    grib_api
                     ${CMATH_LIBRARIES}  )
 
 
-# TODO: add support for jpg and png
-install( FILES grib_api.h DESTINATION include )
+install( FILES grib_api.h eccodes.h DESTINATION include )
