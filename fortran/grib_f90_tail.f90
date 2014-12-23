@@ -57,7 +57,7 @@
     if (present(status)) then
     status = iret
     else
-        call grib_check(iret,'grib_create_index','('//filename//')')
+        call grib_check(iret,'grib_index_create','('//filename//')')
     endif
       
   end subroutine grib_index_create
@@ -1266,7 +1266,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_new_from_file','')
+         call grib_check(iret,'grib_headers_only_new_from_file','')
       endif
   end subroutine grib_headers_only_new_from_file
 
@@ -2855,7 +2855,7 @@
     if (present(status)) then
          status = iret
     else
-         call grib_check(iret,'grib_find_nearest','')
+         call grib_check(iret,'grib_find_nearest_multiple','')
     endif
   end subroutine grib_find_nearest_multiple
 
@@ -2899,7 +2899,7 @@
     if (present(status)) then
          status = iret
     else
-         call grib_check(iret,'grib_find_nearest','')
+         call grib_check(iret,'grib_find_nearest_single','')
     endif
   end subroutine grib_find_nearest_single
 
@@ -2943,7 +2943,7 @@
     if (present(status)) then
          status = iret
     else
-         call grib_check(iret,'grib_find_nearest','')
+         call grib_check(iret,'grib_find_nearest_four_single','')
     endif
   end subroutine grib_find_nearest_four_single
 
