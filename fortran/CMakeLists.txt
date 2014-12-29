@@ -50,5 +50,15 @@ if( EC_HAVE_FORTRAN )
 
     install( CODE "EXECUTE_PROCESS (COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR} ${CMAKE_INSTALL_PREFIX}/${INSTALL_INCLUDE_DIR})" )
 
+    # After the installation, make the eccodes module file a symlink to the grib_api one
+    install(CODE
+        "
+        EXECUTE_PROCESS(
+          COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_INSTALL_PREFIX}/${INSTALL_INCLUDE_DIR}
+          ${CMAKE_COMMAND} -E create_symlink grib_api.mod eccodes.mod
+        )
+        "
+    )
+
 endif()
 
