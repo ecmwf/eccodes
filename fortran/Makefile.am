@@ -56,4 +56,9 @@ same_int_long: same_int_long.o grib_fortran_kinds.o
 same_int_size_t: same_int_size_t.o grib_fortran_kinds.o
 	$(FC) $(FCFLAGS) -o same_int_size_t same_int_size_t.o grib_fortran_kinds.o
 
+# After the installation, create the eccodes module file as a symlink
+# Note: hooks are always executed after the main rule's work is done
+install-data-hook:
+	( cd $(DESTDIR)$(includedir) && ln -s $(nodist_include_HEADERS) eccodes.mod )
+
 include extrules.am
