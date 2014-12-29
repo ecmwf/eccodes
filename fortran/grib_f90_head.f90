@@ -17,6 +17,7 @@ module grib_api
   include "grib_api_constants.h"
   include "grib_api_externals.h"
   include "grib_api_visibility.h"
+  include "eccodes_visibility.h"
 
   !> Create a new message in memory from an integer or character array containting the coded message.
   !>
@@ -38,6 +39,10 @@ module grib_api
       module procedure grib_new_from_message_int4
       module procedure grib_new_from_message_char
   end interface grib_new_from_message
+  interface codes_new_from_message
+      module procedure codes_new_from_message_int4
+      module procedure codes_new_from_message_char
+  end interface codes_new_from_message
 
   !> Get a value of specified index from an array key.
   !>
@@ -67,6 +72,12 @@ module grib_api
                      grib_get_real4_elements, &
                      grib_get_real8_elements
   end interface grib_get_element
+  interface codes_get_element
+    module procedure codes_get_real4_element, &
+                     codes_get_real8_element, &
+                     codes_get_real4_elements, &
+                     codes_get_real8_elements
+  end interface codes_get_element
 
   !> Find the nearest point/points of a given latitude/longitude point.
   !>
@@ -110,6 +121,12 @@ module grib_api
                      grib_find_nearest_multiple
   end interface grib_find_nearest
 
+  interface codes_find_nearest
+    module procedure codes_find_nearest_single, &
+                     codes_find_nearest_four_single, &
+                     codes_find_nearest_multiple
+  end interface codes_find_nearest
+
   !> Get latitude/longitude and data values.
   !>
   !> Latitudes, longitudes, data values arrays are returned.
@@ -132,3 +149,8 @@ module grib_api
     module procedure grib_get_data_real4, &
                      grib_get_data_real8
   end interface grib_get_data
+
+  interface codes_get_data
+    module procedure codes_get_data_real4, &
+                     codes_get_data_real8
+  end interface codes_get_data
