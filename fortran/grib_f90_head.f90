@@ -15,6 +15,7 @@ module grib_api
   implicit none
   include "grib_kinds.h"
   include "grib_api_constants.h"
+  include "eccodes_constants.h"
   include "grib_api_externals.h"
   include "grib_api_visibility.h"
   include "eccodes_visibility.h"
