@@ -50,12 +50,22 @@ if( EC_HAVE_FORTRAN )
 
     # Install the generated .mod file
     # install( CODE "EXECUTE_PROCESS (COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR} ${CMAKE_INSTALL_PREFIX}/${INSTALL_INCLUDE_DIR})" )
+
+    # Install the contents of the fortran module directory
     install( DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR}/
                      DESTINATION ${INSTALL_INCLUDE_DIR} )
 
-    # Install also as the eccodes module file
+    # Install the eccodes module file as a copy of the grib api mod file.
+    # Note: the mod filename can be lowercase or uppercase!
+    # First try the lowercase one. Specify OPTIONAL so if it fails it carries on
     install( FILES ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR}/grib_api.mod
                      RENAME eccodes.mod
+                     OPTIONAL
+                     DESTINATION ${INSTALL_INCLUDE_DIR} )
+    # Now try the uppercase mod file
+    install( FILES ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR}/GRIB_API.mod
+                     RENAME ECCODES.mod
+                     OPTIONAL
                      DESTINATION ${INSTALL_INCLUDE_DIR} )
 
     # After the installation, make the eccodes module file a symlink to the grib_api one
