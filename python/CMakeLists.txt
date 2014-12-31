@@ -50,6 +50,11 @@ if( HAVE_PYTHON )
 
         set_source_files_properties( gribapi_swig.i PROPERTIES C ON )
 
+        if( NUMPY_FOUND )
+            set( CMAKE_SWIG_FLAGS "-DNUMPY" )
+            include_directories( ${NUMPY_INCLUDE_DIRS} )
+        endif()
+
         swig_add_module( gribapi_swig python grib_interface.h grib_interface.c gribapi_swig.i )
 
         swig_link_libraries( gribapi_swig grib_api ${PYTHON_LIBRARIES} )
