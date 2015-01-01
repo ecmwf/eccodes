@@ -3301,7 +3301,7 @@ int grib_get_double_ndelements(int* gid, char* key, int* ipin_index, int ipin_in
     if (PyModule_Check(  py_obj)) return "module"      ;
     if (PyInstance_Check(py_obj)) return "instance"    ;
 
-    return "unkown type";
+    return "unknown type";
   }
 
   /* Given a NumPy typecode, return a string describing the type.
