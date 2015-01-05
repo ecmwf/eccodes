@@ -1025,10 +1025,6 @@ int grib_keys_iterator_next(grib_keys_iterator *kiter);
 const char *grib_keys_iterator_get_name(grib_keys_iterator *kiter);
 grib_accessor *grib_keys_iterator_get_accessor(grib_keys_iterator *kiter);
 int grib_keys_iterator_delete(grib_keys_iterator *kiter);
-int grib_keys_iterator_get_long(grib_keys_iterator *kiter, long *v, size_t *len);
-int grib_keys_iterator_get_double(grib_keys_iterator *kiter, double *v, size_t *len);
-int grib_keys_iterator_get_string(grib_keys_iterator *kiter, char *v, size_t *len);
-int grib_keys_iterator_get_bytes(grib_keys_iterator *kiter, unsigned char *v, size_t *len);
 int grib_keys_iterator_get_native_type(grib_keys_iterator *kiter);
 
 /* grib_parse_utils.c */
