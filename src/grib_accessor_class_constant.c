@@ -134,6 +134,16 @@ static void init_class(grib_accessor_class* c)
 /* END_CLASS_IMP */
 
 
+void accessor_constant_set_type(grib_accessor* a,int type) {
+  grib_accessor_constant* self = (grib_accessor_constant*)a;
+  self->type=type;
+}
+
+void accessor_constant_set_dval(grib_accessor* a,double dval) {
+  grib_accessor_constant* self = (grib_accessor_constant*)a;
+  self->dval=dval;
+}
+
 
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {

@@ -232,8 +232,8 @@ static int unpack_string_array (grib_accessor* a, char** val, size_t *len)
   if (*len<count) return GRIB_ARRAY_TOO_SMALL;
 
   if (self->compressedData) {
+    idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
     for (i=0;i<count;i++) {
-      idx=(int)self->numericValues->v[self->index]->v[i]/1000;
       val[i]=grib_context_strdup(c,self->stringValues->v[idx]->v[i]);
     }
   } else {
@@ -262,10 +262,12 @@ static int unpack_long (grib_accessor* a, long* val, size_t *len)
 
   if (self->compressedData) {
     for (i=0;i<count;i++) {
-      val[i]=(long)self->numericValues->v[self->index]->v[i];
+      val[i]= self->numericValues->v[self->index]->v[i] == GRIB_MISSING_DOUBLE ? 
+		GRIB_MISSING_LONG : (long)self->numericValues->v[self->index]->v[i];
     }
   } else {
-    val[0]=(long)self->numericValues->v[self->subsetNumber]->v[self->index];
+    val[0]= self->numericValues->v[self->subsetNumber]->v[self->index] == GRIB_MISSING_DOUBLE ?
+		GRIB_MISSING_LONG : (long)self->numericValues->v[self->subsetNumber]->v[self->index];
   }
 
   return ret;
@@ -294,14 +296,23 @@ static int unpack_double (grib_accessor* a, double* val, size_t *len)
 
 static int value_count(grib_accessor* a,long* count)
 {
-  int ret,size;
+  int ret=0,size,type,idx;
   grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
 
-  if (!self->compressedData) return 1;
+  if (!self->compressedData) {
+     *count=1;
+     return 0;
+  }
+  type=get_native_type(a);
 
-  size=grib_darray_used_size(self->numericValues->v[self->index]);
+  if (type==GRIB_TYPE_STRING) {
+    idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
+    size=grib_sarray_used_size(self->stringValues->v[idx]);
+  } else {
+    size=grib_darray_used_size(self->numericValues->v[self->index]);
+  }
 
-  ret= size == 1 ? 1 : self->numberOfSubsets;
+  *count = size == 1 ? 1 : self->numberOfSubsets;
 
   return ret;
 }

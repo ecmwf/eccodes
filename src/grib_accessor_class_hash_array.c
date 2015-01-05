@@ -141,11 +141,6 @@ static void init_class(grib_accessor_class* c)
 
 #define MAX_HASH_ARRAY_STRING_LENGTH 255
 
-GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
-  if (*a != *b) return 1;
-  while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
-  return (*a==0 && *b==0) ? 0 : 1;
-}
 
 static void init(grib_accessor* a, const long len , grib_arguments* args )
 {

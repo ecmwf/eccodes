@@ -486,6 +486,15 @@ int grib_set_missing(grib_handle* h, const char* name)
     return GRIB_NOT_FOUND;
 }
 
+int grib_is_missing_long(grib_accessor* a,long x) { 
+	int ret = ( a==NULL || (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)) && (x==GRIB_MISSING_LONG) ? 1 : 0;
+	return ret;
+}
+int grib_is_missing_double(grib_accessor* a,double x) { 
+	int ret = ( a==NULL || (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)) && (x==GRIB_MISSING_DOUBLE) ? 1 : 0;
+	return ret;
+}
+
 int grib_is_missing(grib_handle* h, const char* name,int* err)
 {
     grib_accessor* a = grib_find_accessor(h, name);

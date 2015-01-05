@@ -1410,6 +1410,7 @@ typedef struct j2k_encode_helper {
 } j2k_encode_helper;
 
 
+
 #include "grib_api_prototypes.h"
 
 

@@ -430,6 +430,8 @@ int grib_g1_step_apply_units(long *start, long *theEnd, long *step_unit, long *P
 /* grib_accessor_class_ieeefloat.c */
 
 /* grib_accessor_class_constant.c */
+void accessor_constant_set_type(grib_accessor *a, int type);
+void accessor_constant_set_dval(grib_accessor *a, double dval);
 
 /* grib_accessor_class_iterator.c */
 grib_iterator *grib_iterator_new(grib_handle *h, unsigned long flags, int *error);
@@ -1023,6 +1025,10 @@ int grib_keys_iterator_next(grib_keys_iterator *kiter);
 const char *grib_keys_iterator_get_name(grib_keys_iterator *kiter);
 grib_accessor *grib_keys_iterator_get_accessor(grib_keys_iterator *kiter);
 int grib_keys_iterator_delete(grib_keys_iterator *kiter);
+int grib_keys_iterator_get_long(grib_keys_iterator *kiter, long *v, size_t *len);
+int grib_keys_iterator_get_double(grib_keys_iterator *kiter, double *v, size_t *len);
+int grib_keys_iterator_get_string(grib_keys_iterator *kiter, char *v, size_t *len);
+int grib_keys_iterator_get_bytes(grib_keys_iterator *kiter, unsigned char *v, size_t *len);
 int grib_keys_iterator_get_native_type(grib_keys_iterator *kiter);
 
 /* grib_parse_utils.c */
@@ -1081,6 +1087,8 @@ int grib_set_bytes(grib_handle *h, const char *name, const unsigned char *val, s
 int grib_clear(grib_handle *h, const char *name);
 int grib_set_missing_internal(grib_handle *h, const char *name);
 int grib_set_missing(grib_handle *h, const char *name);
+int grib_is_missing_long(grib_accessor *a, long x);
+int grib_is_missing_double(grib_accessor *a, double x);
 int grib_is_missing(grib_handle *h, const char *name, int *err);
 int grib_is_defined(grib_handle *h, const char *name);
 int grib_set_flag(grib_handle *h, const char *name, unsigned long flag);

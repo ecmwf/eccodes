@@ -73,7 +73,7 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
    return 0;
 }
 
-inline int idx(double lat,double lon,double latFirst,double lonFirst,double latLast,double lonLast,
+int idx(double lat,double lon,double latFirst,double lonFirst,double latLast,double lonLast,
                 long Ni,double di,double dj) {
   long ilon,ilat;
   if ((ilon=(lon-lonFirst)/di) < 0 ) return -1;

@@ -53,11 +53,11 @@ static void init()
 int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* uname, char* fname,int fail)
 {
     grib_accessor* a;
-    char loc[1024];
+    char loc[1024]={0,};
     int  i = 0;
     int ret = 0;
     int mode = -1;
-    char val[1024];
+    char val[1024]={0,};
     double dval=0;
     long lval=0;
     int type=GRIB_TYPE_STRING;
@@ -87,7 +87,7 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
                 } else {
                     switch (type) {
                     case GRIB_TYPE_STRING:
-                        replen = sizeof(val)/sizeof(*val);
+                        replen = 1024;
                         ret = grib_unpack_string(a,val,&replen);
                         break;
                     case GRIB_TYPE_DOUBLE:

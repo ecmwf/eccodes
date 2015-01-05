@@ -198,7 +198,7 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
                 change_coding_params* ccp,int* err) {
   int k,j,i;
   grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
-  size_t size;
+  size_t size=0;
   long* v;
   bufr_descriptor* u;
   bufr_descriptor* vv;
