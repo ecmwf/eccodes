@@ -7190,7 +7190,7 @@ grib_keys_hash_get (str, len)
   return 0;
 }
 /*
- * Copyright 2005-2014 ECMWF.
+ * Copyright 2005-2015 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.

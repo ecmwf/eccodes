@@ -1,5 +1,5 @@
 /**
-* Copyright 2005-2014 ECMWF
+* Copyright 2005-2015 ECMWF
 *
 * Licensed under the GNU Lesser General Public License which
 * incorporates the terms and conditions of version 3 of the GNU
