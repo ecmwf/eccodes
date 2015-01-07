@@ -859,12 +859,12 @@ static void free_field(field *g)
 
 static void free_fieldset(fieldset *v)
 {
-    int i;
     if(!v)
         return;
     v->refcnt--;
     if(v->refcnt <= 0)
     {
+        int i;
         grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: free_fieldset (%d fields) : ", v->count);
 
         for(i = 0; i < v->count; i++)
@@ -883,7 +883,6 @@ static field *new_field()
 #define INIT_SIZE 1024
 static void grow_fieldset(fieldset *v, int n)
 {
-    int i;
     int m = v->count;
     int x = v->max;
 
@@ -900,6 +899,7 @@ static void grow_fieldset(fieldset *v, int n)
 
     if(v->max != x)
     {
+        int i;
         if(v->fields == NULL)
         {
             v->fields = (field**) grib_context_malloc(ctx, sizeof(field*) * v->max);
@@ -942,10 +942,9 @@ static field* read_field(grib_file *file, file_offset pos, long length)
 
 static err set_field(fieldset *v, field *g, int pos)
 {
-    field *h;
-
     if(pos >= 0)
     {
+        field *h;
         grow_fieldset(v, pos + 1);
         h = v->fields[pos];
         v->fields[pos] = g;
@@ -2771,12 +2770,11 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
     int n = 0;
     int var_id = 0; /* Variable ID */
     int dims[1024];
-    err e = GRIB_SUCCESS;
 
     /* START DEFINITIONS */
 
     /* Define latitude/longitude dimensions */
-    e = def_latlon(ncid, fs);
+    err e = def_latlon(ncid, fs);
     if (e != GRIB_SUCCESS)
         return e;
 
@@ -3696,6 +3694,43 @@ static boolean check_dimension_name(const char* dim)
     }
     return TRUE;
 }
+
+static int get_creation_mode(int option_kind)
+{
+    /* Return the mode flag for nc_create based   */
+    /* on the kind of netcdf user wants to create */
+    int creation_mode = NC_CLOBBER;
+    switch(option_kind) {
+    case NC_FORMAT_CLASSIC:
+        printf("%s: Creating classic file format.\n", grib_tool_name);
+        break;
+    case NC_FORMAT_64BIT:
+        creation_mode |= NC_64BIT_OFFSET;
+        printf("%s: Creating large (64 bit) file format.\n", grib_tool_name);
+        break;
+#ifdef NC_NETCDF4
+    case NC_FORMAT_NETCDF4:
+        creation_mode |= NC_NETCDF4;
+        printf("%s: Creating netCDF-4/HDF5 format.\n", grib_tool_name);
+        break;
+    case NC_FORMAT_NETCDF4_CLASSIC:
+        creation_mode |= NC_NETCDF4 | NC_CLASSIC_MODEL;
+        printf("%s: Creating netCDF-4 classic model file format.\n", grib_tool_name);
+        break;
+#else
+    case NC_FORMAT_NETCDF4:
+    case NC_FORMAT_NETCDF4_CLASSIC:
+        fprintf(stderr,"%s not built with netcdf4, cannot create netCDF-4 files.\n", grib_tool_name);
+        exit(1);
+        break;
+#endif
+    default:
+        fprintf(stderr, "Bad value (%d) for -k option\n", option_kind);
+        exit(1);
+        break;
+    }
+    return creation_mode;
+}
 /*=====================================================================*/
 
 grib_option grib_options[] = {
@@ -3709,14 +3744,51 @@ grib_option grib_options[] = {
         { "o:", "output file",   "\n\t\tThe name of the netcdf file.\n", 1, 1, 0 },
         { "V", 0, 0, 0, 1, 0 },
         { "M", 0, 0, 0, 1, 0 },
-        { "u:", "dimension",  "\n\t\tSet dimension to be an unlimited dimension", 0, 1, "time" }
+        { "k:", "kind",  "\n\t\tSpecifies the kind of file to be created. Possible values are:"
+                "\n\t\t1 -> netCDF classic file format"
+                "\n\t\t2 -> netCDF 64 bit classic file format (Default)"
+                "\n\t\t3 -> netCDF-4 file format"
+                "\n\t\t4 -> netCDF-4 classic model file format\n"
+                , 0, 1, "2" },
+        { "u:", "dimension",  "\n\t\tSet dimension to be an unlimited dimension.\n", 0, 1, "time" }
 };
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 static fieldset *fs = NULL;
 static request* data_r = NULL;
 request *user_r = NULL;
-static int create_64bit_offset_format = 0; /* by default create classic format */
+static int option_kind = 2; /* By default NetCDF3, 64-bit offset */
+
+/* Table of formats for legal -k values. Inspired by nccopy */
+struct KindValue {
+    char* name;
+    int kind;
+} legalkinds[] = {
+        {"1", NC_FORMAT_CLASSIC},
+        {"classic", NC_FORMAT_CLASSIC},
+
+        /* The 64-bit offset kind */
+        {"2", NC_FORMAT_64BIT},
+        {"64-bit-offset", NC_FORMAT_64BIT},
+        {"64-bit offset", NC_FORMAT_64BIT},
+
+        /* NetCDF-4 HDF5 format */
+        {"3", NC_FORMAT_NETCDF4},
+        {"hdf5", NC_FORMAT_NETCDF4},
+        {"netCDF-4", NC_FORMAT_NETCDF4},
+        {"netCDF4", NC_FORMAT_NETCDF4},
+        {"enhanced", NC_FORMAT_NETCDF4},
+
+        /* NetCDF-4 HDF5 format, but using only nc3 data model */
+        {"4", NC_FORMAT_NETCDF4_CLASSIC},
+        {"hdf5-nc3", NC_FORMAT_NETCDF4_CLASSIC},
+        {"netCDF-4 classic model", NC_FORMAT_NETCDF4_CLASSIC},
+        {"netCDF4_classic", NC_FORMAT_NETCDF4_CLASSIC},
+        {"enhanced-nc3", NC_FORMAT_NETCDF4_CLASSIC},
+
+        /* null terminate*/
+        {NULL,0}
+};
 
 int main(int argc, char *argv[])
 {
@@ -3803,9 +3875,22 @@ int grib_tool_init(grib_runtime_options* options)
     else
         set_value(user_r, "usevalidtime", "true");
 
-    /*if(grib_options_on("L"))
-       create_64bit_offset_format = TRUE;
-    */
+    if (grib_options_on("k:"))
+    {
+        struct KindValue* kvalue = NULL;
+        char* kind_name = grib_options_get_option("k:");
+        for (kvalue=legalkinds; kvalue->name; kvalue++) {
+            if (strcmp(kind_name, kvalue->name) == 0) {
+                option_kind = kvalue->kind;/* Found the right kind */
+                break;
+            }
+        }
+        if (kvalue->name == NULL) {
+            fprintf(stderr, "Invalid format: %s", kind_name);
+            usage();
+            exit(1);
+        }
+    }
 
     if(grib_options_on("R:"))
     {
@@ -4018,8 +4103,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     printf("%s: Creating netcdf file '%s'\n", grib_tool_name, options->outfile->name);
     printf("%s: NetCDF library version: %s\n", grib_tool_name, nc_inq_libvers());
 
-    if (create_64bit_offset_format)
-        creation_mode = NC_CLOBBER | NC_64BIT_OFFSET;
+    creation_mode = get_creation_mode(option_kind);
     stat = nc_create(options->outfile->name, creation_mode, &ncid);
     check_err(stat, __LINE__, __FILE__);
 

@@ -54,9 +54,18 @@ do
       rm -f $tmp_netcdf | true
       if [ -f "${data_dir}/$f" ]; then
         ${tools_dir}grib_to_netcdf -D $dt -o $tmp_netcdf ${data_dir}/$f >/dev/null
-	${tools_dir}grib_to_netcdf -T     -o $tmp_netcdf ${data_dir}/$f >/dev/null
+	${tools_dir}grib_to_netcdf -T -o $tmp_netcdf ${data_dir}/$f >/dev/null
       fi
    done
 done
+
+# Try creating different kinds; netcdf3 classic and large
+# TODO: enable tests for netcdf4 formats too
+input=${data_dir}/regular_latlon_surface.grib2
+${tools_dir}grib_to_netcdf -k 1 -o $tmp_netcdf $input >/dev/null
+${tools_dir}grib_to_netcdf -k 2 -o $tmp_netcdf $input >/dev/null
+#${tools_dir}grib_to_netcdf -k 3 -o $tmp_netcdf $input >/dev/null
+#${tools_dir}grib_to_netcdf -k 4 -o $tmp_netcdf $input >/dev/null
+
 rm -f $tmp_netcdf | true
 
