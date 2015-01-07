@@ -10,7 +10,7 @@
 !
 !
 program set
-  use grib_api
+  use eccodes
   implicit none
   integer              :: err
   integer(kind = 4)    :: centre
@@ -26,36 +26,36 @@ program set
   infile=5
   outfile=6
 
-  call grib_open_file(infile, &
+  call codes_open_file(infile, &
        '../../data/regular_latlon_surface_constant.grib1','r')
 
-  call grib_open_file(outfile, &
+  call codes_open_file(outfile, &
        '../../data/out.grib1','w')
 
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls
-  call grib_new_from_file(infile,igrib)
+  call codes_new_from_file(infile,igrib)
 
   !     set centre as a long */
   centre=80
-  call grib_set(igrib,'centre',centre)
+  call codes_set(igrib,'centre',centre)
 
   !     get centre as a integer*4
-  call grib_get(igrib,'centre',int_value)
+  call codes_get(igrib,'centre',int_value)
   write(*,*) 'centre=',int_value
 
   !     get centre as a string
-  call grib_get(igrib,'centre',string_value)
+  call codes_get(igrib,'centre',string_value)
   string_centre='centre='//string_value
   write(*,*) string_centre
 
   !     write modified message to a file
-  call grib_write(igrib,outfile)
+  call codes_write(igrib,outfile)
 
-  call grib_release(igrib)
+  call codes_release(igrib)
 
-  call grib_close_file(infile)
+  call codes_close_file(infile)
 
-  call grib_close_file(outfile)
+  call codes_close_file(outfile)
 
 end program set

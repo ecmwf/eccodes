@@ -11,7 +11,7 @@
 !
 !
 program get
-  use grib_api
+  use eccodes
   implicit none
   
   integer                            ::  ifile
@@ -28,23 +28,23 @@ program get
   real                               ::  average,min_val, max_val
   integer                            ::  is_missing, is_defined
   
-  call grib_open_file(ifile, &
+  call codes_open_file(ifile, &
        '../../data/reduced_latlon_surface.grib1','r')
   
   ! Loop on all the messages in a file.
   
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls
-  call  grib_new_from_file(ifile,igrib, iret) 
+  call  codes_new_from_file(ifile,igrib, iret) 
   
-  LOOP: DO WHILE (iret /= GRIB_END_OF_FILE)
+  LOOP: DO WHILE (iret /= CODES_END_OF_FILE)
 
      !check if the value of the key is MISSING
      is_missing=0;
-     call grib_is_missing(igrib,'Ni',is_missing);
+     call codes_is_missing(igrib,'Ni',is_missing);
      if ( is_missing /= 1 ) then
         !     get as a integer
-        call grib_get(igrib,'Ni',numberOfPointsAlongAParallel) 
+        call codes_get(igrib,'Ni',numberOfPointsAlongAParallel) 
         write(*,*) 'numberOfPointsAlongAParallel=', &
              numberOfPointsAlongAParallel
      else
@@ -53,57 +53,57 @@ program get
      
      !check for existence of keys
      is_defined=0;
-     call grib_is_defined(igrib,'edition',is_defined);
+     call codes_is_defined(igrib,'edition',is_defined);
      if ( is_defined == 0 ) then
          write(0,*) 'ERROR: An expected key was not defined!!'
          call exit(1)
      endif
-     call grib_is_defined(igrib,'ThisIsNoLoveSong',is_defined);
+     call codes_is_defined(igrib,'ThisIsNoLoveSong',is_defined);
      if ( is_defined == 1 ) then
          write(0,*) 'ERROR: An unexpected key was defined!!'
          call exit(1)
      endif
 
      !     get as a integer
-     call grib_get(igrib,'Nj',numberOfPointsAlongAMeridian) 
+     call codes_get(igrib,'Nj',numberOfPointsAlongAMeridian) 
      write(*,*) 'numberOfPointsAlongAMeridian=', &
           numberOfPointsAlongAMeridian
      
      !     get as a real
-     call grib_get(igrib, 'latitudeOfFirstGridPointInDegrees', &
+     call codes_get(igrib, 'latitudeOfFirstGridPointInDegrees', &
           latitudeOfFirstPointInDegrees) 
      write(*,*) 'latitudeOfFirstGridPointInDegrees=', &
           latitudeOfFirstPointInDegrees
      
      !     get as a real
-     call grib_get(igrib, 'longitudeOfFirstGridPointInDegrees', &
+     call codes_get(igrib, 'longitudeOfFirstGridPointInDegrees', &
           longitudeOfFirstPointInDegrees) 
      write(*,*) 'longitudeOfFirstGridPointInDegrees=', &
           longitudeOfFirstPointInDegrees
      
      !     get as a real
-     call grib_get(igrib, 'latitudeOfLastGridPointInDegrees', &
+     call codes_get(igrib, 'latitudeOfLastGridPointInDegrees', &
           latitudeOfLastPointInDegrees) 
      write(*,*) 'latitudeOfLastGridPointInDegrees=', &
           latitudeOfLastPointInDegrees
      
      !     get as a real
-     call grib_get(igrib, 'longitudeOfLastGridPointInDegrees', &
+     call codes_get(igrib, 'longitudeOfLastGridPointInDegrees', &
           longitudeOfLastPointInDegrees) 
      write(*,*) 'longitudeOfLastGridPointInDegrees=', &
           longitudeOfLastPointInDegrees
      
      
      !     get the size of the values array
-     call grib_get_size(igrib,'values',numberOfValues)
+     call codes_get_size(igrib,'values',numberOfValues)
      write(*,*) 'numberOfValues=',numberOfValues
      
      allocate(values(numberOfValues), stat=iret)
      !     get data values
-     call grib_get(igrib,'values',values)
-     call grib_get(igrib,'min',min_val) ! can also be obtained through minval(values)
-     call grib_get(igrib,'max',max_val) ! can also be obtained through maxval(values)
-     call grib_get(igrib,'average',average) ! can also be obtained through maxval(values)
+     call codes_get(igrib,'values',values)
+     call codes_get(igrib,'min',min_val) ! can also be obtained through minval(values)
+     call codes_get(igrib,'max',max_val) ! can also be obtained through maxval(values)
+     call codes_get(igrib,'average',average) ! can also be obtained through maxval(values)
 
      deallocate(values)
           
@@ -112,12 +112,12 @@ program get
           ' min is ',  min_val, &
           ' max is ',  max_val
      
-     call grib_release(igrib)
+     call codes_release(igrib)
      
-     call grib_new_from_file(ifile,igrib, iret)
+     call codes_new_from_file(ifile,igrib, iret)
      
   end do LOOP
   
-  call grib_close_file(ifile)
+  call codes_close_file(ifile)
   
 end program get

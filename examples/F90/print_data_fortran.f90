@@ -13,7 +13,7 @@
 !
 !
 program print_data_fortran
-use grib_api
+use eccodes
 implicit none
 integer            :: ifile
 integer            :: iret
@@ -26,22 +26,22 @@ real(kind=8)       :: max
 real(kind=8)       :: min
 character(len=256) :: error
 
-call grib_open_file(ifile, &
+call codes_open_file(ifile, &
            '../../data/constant_field.grib1','r')
 
 !     a new grib message is loaded from file
 !     igrib is the grib id to be used in subsequent calls
-      call grib_new_from_file(ifile,igrib)
+      call codes_new_from_file(ifile,igrib)
 
 
 !     get the size of the values array
-      call grib_get(igrib,'numberOfValues',numberOfValues)
+      call codes_get(igrib,'numberOfValues',numberOfValues)
 
 !     get data values
   print*, 'number of values ', numberOfValues
   allocate(values(numberOfValues), stat=iret)
 
-  call grib_get(igrib,'values',values)
+  call codes_get(igrib,'values',values)
 
   do i=1,numberOfValues
     write(*,*)'  ',i,values(i)
@@ -50,16 +50,16 @@ call grib_open_file(ifile, &
 
   write(*,*)numberOfValues,' values found '
 
-  call grib_get(igrib,'max',max)
+  call codes_get(igrib,'max',max)
   write(*,*) 'max=',max
-  call grib_get(igrib,'min',min)
+  call codes_get(igrib,'min',min)
   write(*,*) 'min=',min
-  call grib_get(igrib,'average',average)
+  call codes_get(igrib,'average',average)
   write(*,*) 'average=',average
 
-  call grib_release(igrib)
+  call codes_release(igrib)
 
-  call grib_close_file(ifile)
+  call codes_close_file(ifile)
 
   deallocate(values)
 end program print_data_fortran

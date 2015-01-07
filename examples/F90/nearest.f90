@@ -7,13 +7,13 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!  Description: how to use grib_find_nearest and grib_get_element 
+!  Description: how to use codes_find_nearest and codes_get_element 
 !
 !
 !
 !
 program find
-  use grib_api
+  use eccodes
   implicit none
   integer                                      :: npoints
   integer                                      :: infile
@@ -43,27 +43,27 @@ program find
      end if
   end do
   close(unit=1)
-  call grib_open_file(infile, &
+  call codes_open_file(infile, &
        '../../data/reduced_gaussian_lsm.grib1','r')
   
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls
-  call grib_new_from_file(infile,igrib)
+  call codes_new_from_file(infile,igrib)
   
 
-  call grib_find_nearest(igrib, .true., lats, lons, nearest_lats, nearest_lons,lsm_values, distances, indexes)
-  call grib_release(igrib)
+  call codes_find_nearest(igrib, .true., lats, lons, nearest_lats, nearest_lons,lsm_values, distances, indexes)
+  call codes_release(igrib)
   
-  call grib_close_file(infile)
+  call codes_close_file(infile)
 
 ! will apply it to another GRIB
-  call grib_open_file(infile, &
+  call codes_open_file(infile, &
        '../../data/reduced_gaussian_pressure_level.grib1','r')
-  call grib_new_from_file(infile,igrib)
+  call codes_new_from_file(infile,igrib)
 
-  call grib_get_element(igrib,"values", indexes, values)
-  call grib_release(igrib)
-  call grib_close_file(infile)
+  call codes_get_element(igrib,"values", indexes, values)
+  call codes_release(igrib)
+  call codes_close_file(infile)
 
   do i=1, npoints
      print*,lats(i), lons(i), nearest_lats(i), nearest_lons(i), distances(i), lsm_values(i), values(i)

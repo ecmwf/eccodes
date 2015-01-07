@@ -10,7 +10,7 @@
 !
 !
 program set
-  use grib_api
+  use eccodes
   implicit none
   integer              :: err
   integer              :: len
@@ -22,26 +22,26 @@ program set
   infile=5
   outfile=6
 
-  call grib_open_file(infile, &
+  call codes_open_file(infile, &
        '../../data/reduced_gaussian_pressure_level.grib2','r')
 
-  call grib_open_file(outfile, &
+  call codes_open_file(outfile, &
        'out_surface_level.grib2','w')
 
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls
-  call grib_new_from_file(infile,igrib)
+  call codes_new_from_file(infile,igrib)
 
-  call grib_set(igrib,'typeOfFirstFixedSurface','sfc')
-  call grib_set_missing(igrib,'scaleFactorOfFirstFixedSurface')
-  call grib_set_missing(igrib,'scaledValueOfFirstFixedSurface')
+  call codes_set(igrib,'typeOfFirstFixedSurface','sfc')
+  call codes_set_missing(igrib,'scaleFactorOfFirstFixedSurface')
+  call codes_set_missing(igrib,'scaledValueOfFirstFixedSurface')
 
-  call grib_write(igrib,outfile)
+  call codes_write(igrib,outfile)
 
-  call grib_release(igrib)
+  call codes_release(igrib)
 
-  call grib_close_file(infile)
+  call codes_close_file(infile)
 
-  call grib_close_file(outfile)
+  call codes_close_file(outfile)
 
 end program set

@@ -14,7 +14,7 @@
 !
 !
 program clone
-  use grib_api
+  use eccodes
   implicit none
   integer                                       :: err,i,iret
   integer                                       :: nx, ny
@@ -24,16 +24,16 @@ program clone
   character(len=2)                              :: step
   double precision, dimension(:,:), allocatable :: field2D
   
-  call grib_open_file(infile,'../../data/constant_field.grib1','r')
-  call grib_open_file(outfile,'out.grib1','w')
+  call codes_open_file(infile,'../../data/constant_field.grib1','r')
+  call codes_open_file(outfile,'out.grib1','w')
 
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls
-  call grib_new_from_file(infile,igrib_in)
+  call codes_new_from_file(infile,igrib_in)
 
-  call grib_get(igrib_in,"Ni", nx)
+  call codes_get(igrib_in,"Ni", nx)
   
-  call grib_get(igrib_in,"Nj",ny)
+  call codes_get(igrib_in,"Nj",ny)
 
   allocate(field2D(nx,ny),stat=err)
 
@@ -43,25 +43,25 @@ program clone
   end if
   ! clone the constant field to create 4 new GRIB messages
   do i=0,18,6
-    call grib_clone(igrib_in, igrib_out)
+    call codes_clone(igrib_in, igrib_out)
     write(step,'(i2)') i
     ! Careful: stepRange is a string (could be 0-6, 12-24, etc.)
     ! use adjustl to remove blank from the left.
-    call grib_set(igrib_out,'stepRange',adjustl(step))
+    call codes_set(igrib_out,'stepRange',adjustl(step))
 
     call generate_field(field2D)
 
     ! use pack to create 1D values
-    call grib_set(igrib_out,'values',pack(field2D, mask=.true.))
+    call codes_set(igrib_out,'values',pack(field2D, mask=.true.))
  
     ! write cloned messages to a file
-    call grib_write(igrib_out,outfile)
-    call grib_release(igrib_out)
+    call codes_write(igrib_out,outfile)
+    call codes_release(igrib_out)
   end do
 
-  call grib_release(igrib_in)
-  call grib_close_file(infile)
-  call grib_close_file(outfile)
+  call codes_release(igrib_in)
+  call codes_close_file(infile)
+  call codes_close_file(outfile)
   deallocate(field2D)
 
 contains

@@ -13,7 +13,7 @@
 !
 !
 program set
-  use grib_api
+  use eccodes
   implicit none
   integer              :: infile,outfile
   integer              :: igrib, Ni, is_missing
@@ -21,32 +21,32 @@ program set
   infile=5
   outfile=6
 
-  call grib_open_file(infile, &
+  call codes_open_file(infile, &
        '../../data/reduced_gaussian_pressure_level.grib2','r')
 
-  call grib_open_file(outfile, &
+  call codes_open_file(outfile, &
        'out_surface_level.grib2','w')
 
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls
-  call grib_new_from_file(infile,igrib)
+  call codes_new_from_file(infile,igrib)
 
-  call grib_set(igrib,'typeOfFirstFixedSurface','sfc')
-  call grib_set_missing(igrib,'scaleFactorOfFirstFixedSurface')
-  call grib_set_missing(igrib,'scaledValueOfFirstFixedSurface')
+  call codes_set(igrib,'typeOfFirstFixedSurface','sfc')
+  call codes_set_missing(igrib,'scaleFactorOfFirstFixedSurface')
+  call codes_set_missing(igrib,'scaledValueOfFirstFixedSurface')
   
   ! See GRIB-490
-  call grib_get(igrib, 'Ni', Ni)
-  call grib_is_missing(igrib,'Ni',is_missing)
+  call codes_get(igrib, 'Ni', Ni)
+  call codes_is_missing(igrib,'Ni',is_missing)
   if ( is_missing == 0 ) then
     ! Ni should be missing in gribs with Reduced Gaussian grids
-    call grib_check(-2, 'Ni_should_be_missing', '')
+    call codes_check(-2, 'Ni_should_be_missing', '')
   endif
-  call grib_set(igrib, 'Ni', Ni)
+  call codes_set(igrib, 'Ni', Ni)
 
-  call grib_write(igrib,outfile)
-  call grib_release(igrib)
-  call grib_close_file(infile)
-  call grib_close_file(outfile)
+  call codes_write(igrib,outfile)
+  call codes_release(igrib)
+  call codes_close_file(infile)
+  call codes_close_file(outfile)
 
 end program set

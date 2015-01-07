@@ -14,7 +14,7 @@
 !
 !
 program multi
-  use grib_api
+  use eccodes
   implicit none
   
   integer              :: iret
@@ -22,31 +22,31 @@ program multi
   integer(kind = 4)    ::  parameterCategory,parameterNumber,discipline
   integer              :: ifile,igrib
 
-  call grib_open_file(ifile, &
+  call codes_open_file(ifile, &
        '../../data/multi.grib2','r')
 
   !     turn on support for multi fields messages */
-  call grib_multi_support_on()
+  call codes_multi_support_on()
 
   !     turn off support for multi fields messages */
-  !     call grib_multi_support_off()
+  !     call codes_multi_support_off()
 
-  call grib_new_from_file(ifile,igrib)
+  call codes_new_from_file(ifile,igrib)
   !     Loop on all the messages in a file.
 
   do while (igrib .ne. -1)
 
   !     get as a integer*4
-  call grib_get(igrib,'discipline',discipline)
+  call codes_get(igrib,'discipline',discipline)
   write(*,*) 'discipline=',discipline
 
   !     get as a integer*4
-  call grib_get(igrib,'parameterCategory', &
+  call codes_get(igrib,'parameterCategory', &
        parameterCategory)
   write(*,*) 'parameterCategory=',parameterCategory
 
   !     get as a integer*4
-  call grib_get(igrib,'parameterNumber', &
+  call codes_get(igrib,'parameterNumber', &
        parameterNumber)
   write(*,*) 'parameterNumber=',parameterNumber
 
@@ -59,11 +59,11 @@ program multi
      endif
   endif
 
-  call grib_release(igrib)
-  call grib_new_from_file(ifile,igrib, iret)
+  call codes_release(igrib)
+  call codes_new_from_file(ifile,igrib, iret)
 
   end do
-  call grib_close_file(ifile)
+  call codes_close_file(ifile)
 
 end program multi
 

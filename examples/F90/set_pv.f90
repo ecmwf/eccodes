@@ -13,7 +13,7 @@
 !
 !
 program set_pv
-  use grib_api
+  use eccodes
   implicit none
   integer                         :: numberOfLevels
   integer                         :: numberOfCoefficients
@@ -45,30 +45,30 @@ program set_pv
 
   close(unit=1)
 
-  call grib_open_file(outfile, 'out.grib1','w')
+  call codes_open_file(outfile, 'out.grib1','w')
   
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls
-  call grib_new_from_samples(igrib, "reduced_gg_sfc_grib1")
+  call codes_new_from_samples(igrib, "reduced_gg_sfc_grib1")
 
   !     set levtype to ml (model level)
-  call grib_set(igrib,'typeOfLevel','hybrid')
+  call codes_set(igrib,'typeOfLevel','hybrid')
 
   !     set level 
-  call grib_set(igrib,'level',2)
+  call codes_set(igrib,'level',2)
 
   !     set PVPresent as an integer 
-  call grib_set(igrib,'PVPresent',1)
+  call codes_set(igrib,'PVPresent',1)
   
-  call grib_set(igrib,'pv',pv)
+  call codes_set(igrib,'pv',pv)
   
   !     write modified message to a file
-  call grib_write(igrib,outfile)
+  call codes_write(igrib,outfile)
   
   !  FREE MEMORY
-  call grib_release(igrib)
+  call codes_release(igrib)
   deallocate(pv)
 
-  call grib_close_file(outfile)
+  call codes_close_file(outfile)
   
 end program set_pv
