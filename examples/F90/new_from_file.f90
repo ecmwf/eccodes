@@ -11,7 +11,7 @@
 !
 !
 program new_from_file
-use grib_api
+use eccodes
   implicit none
   integer            :: ifile
   integer            :: iret
@@ -23,23 +23,23 @@ use grib_api
 
   ifile=5
 
-  call grib_open_file(ifile,'../../data/collection.grib1','r')
+  call codes_open_file(ifile,'../../data/collection.grib1','r')
 
 ! Loop on all the messages in a file.
 
-  call grib_new_from_file(ifile,igrib, iret)
+  call codes_new_from_file(ifile,igrib, iret)
 
-  do while (iret==GRIB_SUCCESS)
+  do while (iret==CODES_SUCCESS)
     count1=count1+1
     print *, "===== Message #",count1
-    call grib_new_from_file(ifile,igrib, iret)
+    call codes_new_from_file(ifile,igrib, iret)
 
   end do 
-  if (iret /= GRIB_END_OF_FILE) then
-    call grib_check(iret,'new_from_file','')
+  if (iret /= CODES_END_OF_FILE) then
+    call codes_check(iret,'new_from_file','')
   endif
 
 
-  call grib_close_file(ifile)
+  call codes_close_file(ifile)
 
 end program 

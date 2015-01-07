@@ -14,7 +14,7 @@
 !
 !
 program keys_iterator
-  use grib_api
+  use eccodes
   implicit none
   character(len=20)  :: name_space
   integer            :: kiter,ifile,igrib,iret
@@ -23,14 +23,14 @@ program keys_iterator
   character(len=512) :: all1
   integer            :: grib_count
   
-  call grib_open_file(ifile, &
+  call codes_open_file(ifile, &
        '../../data/regular_latlon_surface.grib1','r')
   
   ! Loop on all the messages in a file.
   
-  call grib_new_from_file(ifile,igrib, iret)
+  call codes_new_from_file(ifile,igrib, iret)
   
-  do while (iret /= GRIB_END_OF_FILE)
+  do while (iret /= CODES_END_OF_FILE)
 
      grib_count=grib_count+1
      write(*,*) '-- GRIB N. ',grib_count,' --'
@@ -38,27 +38,27 @@ program keys_iterator
      ! valid name_spaces are ls and mars
      name_space='ls'
      
-     call grib_keys_iterator_new(igrib,kiter,name_space)
+     call codes_keys_iterator_new(igrib,kiter,name_space)
      
      do
-        call grib_keys_iterator_next(kiter, iret) 
+        call codes_keys_iterator_next(kiter, iret) 
         
         if (iret .ne. 1) exit
         
-        call grib_keys_iterator_get_name(kiter,key)
-        call grib_get(igrib,trim(key),value)
+        call codes_keys_iterator_get_name(kiter,key)
+        call codes_get(igrib,trim(key),value)
         all1=trim(key)// ' = ' // trim(value)
         write(*,*) trim(all1)
         
      end do
      
-     call grib_keys_iterator_delete(kiter)
-     call grib_release(igrib)
-     call grib_new_from_file(ifile,igrib, iret)
+     call codes_keys_iterator_delete(kiter)
+     call codes_release(igrib)
+     call codes_new_from_file(ifile,igrib, iret)
   end do
   
   
-  call grib_close_file(ifile)
+  call codes_close_file(ifile)
   
 end program keys_iterator
 

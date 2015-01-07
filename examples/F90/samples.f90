@@ -11,7 +11,7 @@
 !               
 !
 program sample
-  use grib_api
+  use eccodes
   implicit none  
   integer  :: err
   integer  :: outfile, infile, datafile
@@ -34,45 +34,45 @@ program sample
   !     Samples are searched in a default sample path (use grib_info
   !     to see where that is). The default sample path can be changed by
   !     setting the environment variable GRIB_SAMPLES_PATH
-  call grib_new_from_samples(igribsample, "regular_latlon_surface.grib1")
+  call codes_new_from_samples(igribsample, "regular_latlon_surface.grib1")
 
-  call grib_open_file(outfile, 'out.grib1','w')
-  call grib_open_file(datafile,'../../data/tp_ecmwf.grib','r')
+  call codes_open_file(outfile, 'out.grib1','w')
+  call codes_open_file(datafile,'../../data/tp_ecmwf.grib','r')
 
-  call grib_new_from_file(datafile,igribdata,err)
+  call codes_new_from_file(datafile,igribdata,err)
 
-  call grib_get_size(igribdata,'values',size1)
+  call codes_get_size(igribdata,'values',size1)
   allocate(v(size1))
   allocate(v1(size1))
   allocate(v2(size1))
 
-  call grib_get(igribdata,'values',v)
+  call codes_get(igribdata,'values',v)
 
   v=v*1000.0 ! different units for the output grib
   v1=v
 
-  do while (err/=GRIB_END_OF_FILE) 
+  do while (err/=CODES_END_OF_FILE) 
  
-    call grib_clone(igribsample,igribclone) ! clone sample before modifying it
+    call codes_clone(igribsample,igribclone) ! clone sample before modifying it
 
-    call grib_set(igribclone,'dataDate',date1)
-    call grib_set(igribclone,'table2Version',table2Version)
-    call grib_set(igribclone,'indicatorOfParameter',indicatorOfParameter)
+    call codes_set(igribclone,'dataDate',date1)
+    call codes_set(igribclone,'table2Version',table2Version)
+    call codes_set(igribclone,'indicatorOfParameter',indicatorOfParameter)
 
-    call grib_set(igribclone,'stepType',stepType)
-    call grib_set(igribclone,'startStep',startStep)
-    call grib_set(igribclone,'endStep',endStep)
+    call codes_set(igribclone,'stepType',stepType)
+    call codes_set(igribclone,'startStep',startStep)
+    call codes_set(igribclone,'endStep',endStep)
 
-    call grib_set(igribclone,'decimalPrecision',decimalPrecision)
+    call codes_set(igribclone,'decimalPrecision',decimalPrecision)
 
-    call grib_set(igribclone,'values',v)
+    call codes_set(igribclone,'values',v)
 
-    call grib_write(igribclone,outfile)
+    call codes_write(igribclone,outfile)
     
-    call grib_new_from_file(datafile,igribdata,err)
+    call codes_new_from_file(datafile,igribdata,err)
 
     if (err==0) then
-      call grib_get(igribdata,'values',v2)
+      call codes_get(igribdata,'values',v2)
 
       v2=v2*1000.0 ! different units for the output grib
 
@@ -87,11 +87,11 @@ program sample
 
   enddo
 
-  call grib_release(igribsample)
+  call codes_release(igribsample)
   deallocate(v)
   deallocate(v1)
   deallocate(v2)
 
-  call grib_close_file(outfile)
+  call codes_close_file(outfile)
 
 end program sample

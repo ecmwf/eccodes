@@ -12,7 +12,7 @@
 !
 !
 program print_data
-use grib_api
+use eccodes
 implicit none
 integer            :: ifile
 integer            :: iret
@@ -25,21 +25,21 @@ real(kind=8)       :: the_max
 real(kind=8)       :: the_min
 character(len=256) :: error
 
-call grib_open_file(ifile, &
+call codes_open_file(ifile, &
            '../../data/constant_field.grib1','r')
 
 ! a new grib message is loaded from file
 ! igrib is the grib id to be used in subsequent calls
-  call grib_new_from_file(ifile,igrib)
+  call codes_new_from_file(ifile,igrib)
 
 !  get the size of the values array
-  call grib_get_size(igrib,'values',numPoints)
+  call codes_get_size(igrib,'values',numPoints)
 
 ! get data values
   print*, 'number of points ', numPoints
   allocate(values(numPoints), stat=iret)
 
-  call grib_get(igrib,'values',values)
+  call codes_get(igrib,'values',values)
 
   do i=1,numPoints
     write(*,*)'  ',i,values(i)
@@ -47,15 +47,15 @@ call grib_open_file(ifile, &
 
   write(*,*)numPoints,' values found '
 
-  call grib_get(igrib,'max',the_max)
+  call codes_get(igrib,'max',the_max)
   write(*,*) 'max=',the_max
-  call grib_get(igrib,'min',the_min)
+  call codes_get(igrib,'min',the_min)
   write(*,*) 'min=',the_min
-  call grib_get(igrib,'average',average)
+  call codes_get(igrib,'average',average)
   write(*,*) 'average=',average
 
-  call grib_release(igrib)
-  call grib_close_file(ifile)
+  call codes_release(igrib)
+  call codes_close_file(ifile)
   deallocate(values)
 
 end program print_data

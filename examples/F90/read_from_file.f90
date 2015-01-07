@@ -10,7 +10,7 @@
 ! See GRIB-292
 !
 program read_from_file
-use grib_api
+use eccodes
   implicit none
   character(len=32) :: input_grib_file
   integer,dimension(26) :: message_lengths  ! expected message lengths
@@ -38,25 +38,25 @@ subroutine read_using_size_t
   integer(kind=kindOfSize_t) :: len1 ! For large messages
 
   ifile=5
-  call grib_open_file(ifile, input_grib_file, 'r')
+  call codes_open_file(ifile, input_grib_file, 'r')
 
   len1=size
-  call grib_read_from_file(ifile, buffer, len1, iret)
+  call codes_read_from_file(ifile, buffer, len1, iret)
 
-  do while (iret==GRIB_SUCCESS)
+  do while (iret==CODES_SUCCESS)
     count1=count1+1
     if (len1 /= message_lengths(count1)) then
         write(*,'(a,i3,a,i8,a,i8)') 'Error: Message #',count1,' length=', len1,'. Expected=',message_lengths(count1)
         stop
     end if
     len1=size
-    call grib_read_from_file(ifile, buffer, len1, iret)
+    call codes_read_from_file(ifile, buffer, len1, iret)
   end do 
 
-  if (iret/=GRIB_END_OF_FILE) then
-    call grib_check(iret,'read_from_file','')
+  if (iret/=CODES_END_OF_FILE) then
+    call codes_check(iret,'read_from_file','')
   endif
-  call grib_close_file(ifile)
+  call codes_close_file(ifile)
 
 end subroutine read_using_size_t
 
@@ -72,25 +72,25 @@ subroutine read_using_integer
   integer            :: len1
 
   ifile=5
-  call grib_open_file(ifile, input_grib_file, 'r')
+  call codes_open_file(ifile, input_grib_file, 'r')
 
   len1=size
-  call grib_read_from_file(ifile, buffer, len1, iret)
+  call codes_read_from_file(ifile, buffer, len1, iret)
 
-  do while (iret==GRIB_SUCCESS)
+  do while (iret==CODES_SUCCESS)
     count1=count1+1
     if (len1 /= message_lengths(count1)) then
         write(*,'(a,i3,a,i8,a,i8)') 'Error: Message #',count1,' length=', len1,'. Expected=',message_lengths(count1)
         stop
     end if
     len1=size
-    call grib_read_from_file(ifile, buffer, len1, iret)
+    call codes_read_from_file(ifile, buffer, len1, iret)
   end do
 
-  if (iret/=GRIB_END_OF_FILE) then
-    call grib_check(iret,'read_from_file','')
+  if (iret/=CODES_END_OF_FILE) then
+    call codes_check(iret,'read_from_file','')
   endif
-  call grib_close_file(ifile)
+  call codes_close_file(ifile)
 
 end subroutine read_using_integer
 !======================================

@@ -8,7 +8,7 @@
 !
 !
 program iterator
-use grib_api
+use eccodes
 implicit none
   integer            :: ifile
   integer            :: iret,iter
@@ -22,16 +22,16 @@ implicit none
 
   ifile=5
 
-  call grib_open_file(ifile, &
+  call codes_open_file(ifile, &
        '../../data/regular_latlon_surface_constant.grib1','R')
 
 ! Loop on all the messages in a file.
 
-  call grib_new_from_file(ifile,igrib,iret)
+  call codes_new_from_file(ifile,igrib,iret)
 
-  LOOP: DO WHILE (iret/=GRIB_END_OF_FILE)
+  LOOP: DO WHILE (iret/=CODES_END_OF_FILE)
 ! get as a real8
-      call grib_get(igrib, &
+      call codes_get(igrib, &
            'missingValue',missingValue)
       write(*,*) 'missingValue=',missingValue
 
@@ -59,13 +59,13 @@ implicit none
 
 ! At the end the iterator is deleted to free memory.
   call grib_iterator_delete(iter)
-  call grib_release(igrib)
+  call codes_release(igrib)
 
-  call grib_new_from_file(ifile,igrib, iret)
+  call codes_new_from_file(ifile,igrib, iret)
 
   end do LOOP
 
 
-  call grib_close_file(ifile)
+  call codes_close_file(ifile)
 
   end program iterator

@@ -10,7 +10,7 @@
 ! Description: how to get values using keys.
 !
 program read_message
-use grib_api
+use eccodes
 implicit none
   integer                      ::  ifile,ofile
   integer                      ::  iret,igrib
@@ -18,37 +18,37 @@ implicit none
   integer(kind=kindOfSize_t)   :: len1
   integer                      :: step,level
 
-  call grib_open_file(ifile,'../../data/index.grib','r')
-  call grib_open_file(ofile,'out.grib','w')
+  call codes_open_file(ifile,'../../data/index.grib','r')
+  call codes_open_file(ofile,'out.grib','w')
  
 ! a grib message is read from file into buffer
   len1=size(buffer)*4
-  call  grib_read_from_file(ifile,buffer,len1,iret) 
+  call  codes_read_from_file(ifile,buffer,len1,iret) 
 
-  do while (iret/=GRIB_END_OF_FILE)
+  do while (iret/=CODES_END_OF_FILE)
 
 !   a new grib message is created from buffer
-    call grib_new_from_message(igrib,buffer)
+    call codes_new_from_message(igrib,buffer)
 
 !   get as a integer
-    call grib_get(igrib,'step', step) 
+    call codes_get(igrib,'step', step) 
     write(*,*) 'step=',step
 
-    call grib_get(igrib,'level',level)
+    call codes_get(igrib,'level',level)
     write(*,*) 'level=',level
 
-    call grib_release(igrib)
+    call codes_release(igrib)
 
-    call grib_write_bytes(ofile,buffer,len1)
+    call codes_write_bytes(ofile,buffer,len1)
 
 !   a grib message is read from file into buffer
     len1=size(buffer)*4
-    call  grib_read_from_file(ifile,buffer,len1,iret) 
+    call  codes_read_from_file(ifile,buffer,len1,iret) 
 
   enddo
 
-  call grib_close_file(ifile)
-  call grib_close_file(ofile)
+  call codes_close_file(ifile)
+  call codes_close_file(ofile)
 
 end program read_message
 

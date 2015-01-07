@@ -12,7 +12,7 @@
 !  Original authors: Harald Anlauf, Doerte Liermann (DWD), Luis Kornblueh (MPIfM).
 !
 program get_set_uuid
-  use grib_api
+  use eccodes
   implicit none
   integer              :: infile, outfile
   integer              :: igrib, ogrib
@@ -22,31 +22,31 @@ program get_set_uuid
   character(len=32)    :: uuid_string   ! Human-readable uuid.
   character(len=32)    :: uuid_string_expected   ! Expected UUID of input
 
-  call grib_open_file (infile,  '../../data/test_uuid.grib2','r')
+  call codes_open_file (infile,  '../../data/test_uuid.grib2','r')
 
-  call grib_open_file (outfile, 'out_uuid.grib2','w')
+  call codes_open_file (outfile, 'out_uuid.grib2','w')
 
   ! Load first grib message from file
   ! igrib is the grib id to be used in subsequent calls
-  call grib_new_from_file (infile, igrib, iret)
+  call codes_new_from_file (infile, igrib, iret)
 
   uuid_string_expected = '08b1e836bc6911e1951fb51b5624ad8d'
   count1 = 0
-  do while (iret/=GRIB_END_OF_FILE)
+  do while (iret/=CODES_END_OF_FILE)
      count1 = count1 + 1
      print *, "### Record:", count1
-     call grib_get(igrib,'typeOfFirstFixedSurface',ffs)
+     call codes_get(igrib,'typeOfFirstFixedSurface',ffs)
      print *, 'typeOfFirstFixedSurface =', ffs
      if (ffs /= 150) then
         print *, "Unexpected typeOfFirstFixedSurface (must be 150)."
         stop
      end if
 
-     call grib_get (igrib,'numberOfVGridUsed',nvg)
+     call codes_get (igrib,'numberOfVGridUsed',nvg)
      print *, 'numberOfVGridUsed       =',nvg
 
-!    call grib_get (igrib,'uuidOfVGrid',uuid_in)  ! Assuming length is ok.
-     call grib_get (igrib,'uuidOfVGrid',uuid_in,length=length)
+!    call codes_get (igrib,'uuidOfVGrid',uuid_in)  ! Assuming length is ok.
+     call codes_get (igrib,'uuidOfVGrid',uuid_in,length=length)
      if (length /= 16) then
         print *, "Sorry, bad length of byte_array:", length, ". Expected: 16"
         stop
@@ -62,19 +62,19 @@ program get_set_uuid
         stop
      end if
 
-     call grib_clone (igrib,ogrib)
+     call codes_clone (igrib,ogrib)
      ! On output we write a modified uuid (here the input is simply reversed)
      uuid_out(1:16) = uuid_in(16:1:-1)
-     call grib_set   (ogrib,'uuidOfVGrid',uuid_out)
-     call grib_write (ogrib,outfile)
+     call codes_set   (ogrib,'uuidOfVGrid',uuid_out)
+     call codes_write (ogrib,outfile)
 
-     call grib_release (igrib)
-     call grib_release (ogrib)
-     call grib_new_from_file (infile, igrib, iret)
+     call codes_release (igrib)
+     call codes_release (ogrib)
+     call codes_new_from_file (infile, igrib, iret)
   end do
 
-  call grib_close_file (infile)
-  call grib_close_file (outfile)
+  call codes_close_file (infile)
+  call codes_close_file (outfile)
 
 contains
   ! Convert single byte to 'hexadecimal' string

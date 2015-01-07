@@ -13,7 +13,7 @@
 !
 !
 program set
-  use grib_api
+  use eccodes
   implicit none
   integer(kind = 4)    :: centre, date1
   integer              :: infile,outfile
@@ -22,32 +22,32 @@ program set
 
   centre = 80
   call current_date(date1)
-  call grib_open_file(infile, &
+  call codes_open_file(infile, &
        '../../data/regular_latlon_surface_constant.grib1','r')
 
-  call grib_open_file(outfile, &
+  call codes_open_file(outfile, &
        'out.grib1','w')
 
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls
-  call grib_new_from_file(infile,igrib)
+  call codes_new_from_file(infile,igrib)
 
-  call grib_set(igrib,'dataDate',date1)
+  call codes_set(igrib,'dataDate',date1)
   !     set centre as a integer */
-  call grib_set(igrib,'centre',centre)
+  call codes_set(igrib,'centre',centre)
 
 ! check if it is correct in the actual GRIB message
 
   call check_settings(igrib)
 
   !     write modified message to a file
-  call grib_write(igrib,outfile)
+  call codes_write(igrib,outfile)
 
-  call grib_release(igrib)
+  call codes_release(igrib)
 
-  call grib_close_file(infile)
+  call codes_close_file(infile)
 
-  call grib_close_file(outfile)
+  call codes_close_file(outfile)
 
 contains
 
@@ -69,15 +69,15 @@ subroutine check_settings(gribid)
   character(len = 10)  :: string_value
 
   !     get centre as a integer
-  call grib_get(gribid,'centre',int_value)
+  call codes_get(gribid,'centre',int_value)
   write(*,*) "get centre as a integer - centre = ",int_value
   
   !     get centre as a string
-  call grib_get(gribid,'centre',string_value)
+  call codes_get(gribid,'centre',string_value)
   write(*,*) "get centre as a string  - centre = ",string_value
   
   !     get date as a string
-  call grib_get(gribid,'dataDate',string_value)
+  call codes_get(gribid,'dataDate',string_value)
   write(*,*) "get date as a string    - date = ",string_value
   
 end subroutine check_settings

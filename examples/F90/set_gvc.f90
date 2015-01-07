@@ -13,37 +13,37 @@
 !
 !
 program set
-  use grib_api
+  use eccodes
   implicit none
   integer(kind = 4)    :: NV
   integer              :: infile,outfile
   integer              :: igrib
 
-  call grib_open_file(infile,  '../../data/sample.grib2','r')
+  call codes_open_file(infile,  '../../data/sample.grib2','r')
 
-  call grib_open_file(outfile, 'out_gvc.grib2','w')
+  call codes_open_file(outfile, 'out_gvc.grib2','w')
 
-  call grib_new_from_file(infile,igrib)
+  call codes_new_from_file(infile,igrib)
 
   ! Individual ensemble forecast
-  call grib_set(igrib,'productDefinitionTemplateNumber', 11)
+  call codes_set(igrib,'productDefinitionTemplateNumber', 11)
   
   ! Select level type as Generalized Vertical Height Coordinate
-  call grib_set(igrib,'typeOfLevel', 'generalVertical')
+  call codes_set(igrib,'typeOfLevel', 'generalVertical')
   
   ! Now set keys specific to this level type
-  call grib_set(igrib,'nlev', 12.21)
-  call grib_set(igrib,'numberOfVGridUsed', 13.55)
+  call codes_set(igrib,'nlev', 12.21)
+  call codes_set(igrib,'numberOfVGridUsed', 13.55)
 
   ! check integrity of GRIB message
   call check_settings(igrib)
 
   ! write modified message to a file
-  call grib_write(igrib,outfile)
+  call codes_write(igrib,outfile)
 
-  call grib_release(igrib)
-  call grib_close_file(infile)
-  call grib_close_file(outfile)
+  call codes_release(igrib)
+  call codes_close_file(infile)
+  call codes_close_file(outfile)
 
 contains
 
@@ -54,14 +54,14 @@ subroutine check_settings(gribid)
   
   integer(kind = 4) :: NV,typeOfFirstFixedSurface
 
-  call grib_get(gribid,'NV', NV)
+  call codes_get(gribid,'NV', NV)
   if (NV /= 6) then
-    call grib_check(-2, 'NV_should_be_6', '')
+    call codes_check(-2, 'NV_should_be_6', '')
   end if
 
-  call grib_get(gribid,'typeOfFirstFixedSurface', typeOfFirstFixedSurface)
+  call codes_get(gribid,'typeOfFirstFixedSurface', typeOfFirstFixedSurface)
   if (typeOfFirstFixedSurface /= 150) then
-    call grib_check(-2, 'typeOfFirstFixedSurface_should_be_150', '')
+    call codes_check(-2, 'typeOfFirstFixedSurface_should_be_150', '')
   end if
    
 end subroutine check_settings

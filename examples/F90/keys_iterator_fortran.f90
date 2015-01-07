@@ -9,12 +9,12 @@
 !
 !  Description:
 !  Example on how to use keys_iterator functions and the
-!  grib_keys_iterator structure to get all the available
+!  codes_keys_iterator structure to get all the available
 !  keys in a message.
 !
 !
 program keys_iterator
-  use grib_api
+  use eccodes
   implicit none
   integer            :: kiter,ifile,igrib,iret
   character(len=256) :: key
@@ -26,13 +26,13 @@ program keys_iterator
 
   ifile=5
 
-  call grib_open_file(ifile, &
+  call codes_open_file(ifile, &
        '../../data/regular_latlon_surface.grib1','r')
 
   grib_count=0
   ! Loop on all the messages in a file.
 
-  call grib_new_from_file(ifile,igrib)
+  call codes_new_from_file(ifile,igrib)
 
   do while (igrib .ne. -1)
 
@@ -40,7 +40,7 @@ program keys_iterator
   write(*,'("-- GRIB N.",I4," --")') grib_count
 
   ! valid name_spaces are ls and mars
-  call grib_keys_iterator_new(igrib,kiter,'ls')
+  call codes_keys_iterator_new(igrib,kiter,'ls')
 
   if (kiter .eq. -1) then
     print *, 'invalid key iterator'
@@ -48,25 +48,25 @@ program keys_iterator
 
   do
 
-     call grib_keys_iterator_next(kiter, iret)
+     call codes_keys_iterator_next(kiter, iret)
 
      if (iret .eq. 0) exit
 
-     call grib_keys_iterator_get_name(kiter,key)
+     call codes_keys_iterator_get_name(kiter,key)
 
-     call grib_get(igrib,key,value)
+     call codes_get(igrib,key,value)
      all='|'//trim(key)//'|'//' = '//'|'//trim(value)//'|'
      write(*,*) trim(all)
 
   end do
 
-  call grib_keys_iterator_delete(kiter)
-  call grib_release(igrib)
-  call grib_new_from_file(ifile,igrib, iret)
+  call codes_keys_iterator_delete(kiter)
+  call codes_release(igrib)
+  call codes_new_from_file(ifile,igrib, iret)
   end do
 
 
-  call grib_close_file(ifile)
+  call codes_close_file(ifile)
 
 end program keys_iterator
 

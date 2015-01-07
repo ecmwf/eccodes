@@ -16,7 +16,7 @@
 !
 !
 program multi
-  use grib_api
+  use eccodes
   implicit none
   
   integer              :: iret
@@ -24,27 +24,27 @@ program multi
   integer(kind = 4)    :: step
   integer              :: ifile,igrib
 
-  call grib_open_file(ifile, '../../data/multi_created.grib2','r')
+  call codes_open_file(ifile, '../../data/multi_created.grib2','r')
 
   !     turn on support for multi fields messages */
-  call grib_multi_support_on()
+  call codes_multi_support_on()
 
   !     turn off support for multi fields messages */
-  !call grib_multi_support_off()
+  !call codes_multi_support_off()
 
-  call grib_new_from_file(ifile,igrib, iret)
+  call codes_new_from_file(ifile,igrib, iret)
   !     Loop on all the messages in a file.
 
   write(*,*) 'step'
-  do while (iret /= GRIB_END_OF_FILE)
+  do while (iret /= CODES_END_OF_FILE)
 
-     call grib_get(igrib,'step', step)
+     call codes_get(igrib,'step', step)
      write(*,'(i3)') step
      
-     call grib_new_from_file(ifile,igrib, iret)
+     call codes_new_from_file(ifile,igrib, iret)
   
   end do
-  call grib_close_file(ifile)
+  call codes_close_file(ifile)
 
 end program multi
 
