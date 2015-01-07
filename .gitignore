@@ -88,7 +88,7 @@ examples/C/set_missing
 examples/C/set_pv
 examples/C/values_check
 fortran/.libs/
-fortran/grib_api.mod
+fortran/*.mod
 fortran/grib_f90.f90
 fortran/grib_kinds.h
 fortran/grib_types
