@@ -6,12 +6,12 @@ alias ls.rdbSubtype=rdbSubtype;
 
 byte[13]      keyData : hidden; 
 
-meta localYear   bits(keyData,0,12) ;
-meta localMonth  bits(keyData,12,4) ;
-meta localDay    bits(keyData,16,6) ;
-meta localHour   bits(keyData,22,5) ;
-meta localMinute bits(keyData,27,6) ;
-meta localSecond bits(keyData,33,6) ;
+meta localYear   bits(keyData,0,12) : long_type ;
+meta localMonth  bits(keyData,12,4) : long_type;
+meta localDay    bits(keyData,16,6) : long_type;
+meta localHour   bits(keyData,22,5) : long_type;
+meta localMinute bits(keyData,27,6) : long_type;
+meta localSecond bits(keyData,33,6) : long_type;
 meta spare  bits(keyData,39,1); # 40 bits = 10 bytes
 
 meta ls.typicalDate sprintf("%.4d%.2d%.2d",localYear,localMonth,localDay) : dump;
@@ -26,6 +26,8 @@ unsigned[2] messageLength;
 alias rdb.messageLength=messageLength;
 
 byte[3] rdbtime;
+alias ls.rdbtimeYear = localYear;
+alias ls.rdbtimeMonth = localMonth;
 meta rdbtimeDay     bits(rdbtime,0,6) : dump,long_type;
 meta rdbtimeHour    bits(rdbtime,6,5) : dump,long_type;
 meta rdbtimeMinute  bits(rdbtime,11,6) : dump,long_type;
