@@ -22,6 +22,7 @@
    IMPLEMENTS = init;destroy
    MEMBERS = long section_offset
    MEMBERS = long begin
+   MEMBERS = long empty
    MEMBERS = long end
    END_CLASS_DEF
 
@@ -56,6 +57,7 @@ typedef struct grib_dumper_json {
 /* Members defined in json */
 	long section_offset;
 	long begin;
+	long empty;
 	long end;
 } grib_dumper_json;
 
@@ -99,6 +101,7 @@ static int  init(grib_dumper* d)
 {
     grib_dumper_json *self = (grib_dumper_json*)d;
     self->section_offset=0;
+    self->empty=1;
 
     return GRIB_SUCCESS;
 }
@@ -139,8 +142,10 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         size = 3;
     } else more=0;
 
-    if (!self->begin) fprintf(self->dumper.out,",\n");
+    if (self->begin==0 && self->empty==0 ) fprintf(self->dumper.out,",\n");
     else self->begin=0;
+
+    self->empty=0;
 
     err = grib_set_double(a->parent->h, "missingValue", missing_value);
     if (size>1) {
@@ -209,8 +214,10 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
         size = 3;
     } else more=0;
 
-    if (!self->begin) fprintf(self->dumper.out,",\n");
+    if (self->begin==0 && self->empty==0) fprintf(self->dumper.out,",\n");
     else self->begin=0;
+
+    self->empty=0;
 
     if (size>1) {
         int cols=9;
@@ -260,8 +267,10 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
-    if (!self->begin) fprintf(self->dumper.out,",\n");
+    if (self->begin==0 && self->empty==0) fprintf(self->dumper.out,",\n");
     else self->begin=0;
+
+    self->empty=0;
 
     fprintf(self->dumper.out,"%-*s",mydepth," ");
     if( grib_is_missing_double(a,value) )
@@ -294,8 +303,10 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
     return;
   }
 
-  if (!self->begin) fprintf(self->dumper.out,",\n");
+  if (self->begin==0 && self->empty==0) fprintf(self->dumper.out,",\n");
   else self->begin=0;
+
+  self->empty=0;
 
   values=(char**)grib_context_malloc_clear(c,size*sizeof(char*));
   if (!values) {
@@ -340,8 +351,10 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
         return;
     }
 
-    if (!self->begin) fprintf(self->dumper.out,",\n");
+    if (self->begin==0 && self->empty==0) fprintf(self->dumper.out,",\n");
     else self->begin=0;
+
+    self->empty=0;
 
     err = grib_unpack_string(a,value,&size);
     p=value;
@@ -374,16 +387,18 @@ static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors
      ) {
         fprintf(self->dumper.out,"{\n");
         self->begin=1;
+        self->empty=1;
         grib_dump_accessors_block(d,block);
         fprintf(self->dumper.out,"\n}\n");
   } else if (!grib_inline_strcmp(a->name,"groupNumber")) {
     depth+=2;
-    fprintf(self->dumper.out,",\n");
+    if (!self->empty) fprintf(self->dumper.out,",\n");
     fprintf(self->dumper.out,"%-*s",depth," ");
     fprintf(self->dumper.out,"\"group%d\" : {",(int)a->bufr_group_number);
     fprintf(self->dumper.out,"\n");
     /* fprintf(self->dumper.out,"%-*s",depth," "); */
     self->begin=1;
+    self->empty=1;
     grib_dump_accessors_block(d,block);
     fprintf(self->dumper.out,"\n");
     fprintf(self->dumper.out,"%-*s",depth," ");
