@@ -394,7 +394,7 @@ int grib_count_in_file(grib_context* c, FILE* f,int* n);
 /**
 *  Create a handle from a file resource.
 *  The file is read until a message is found. The message is then copied.
-*  Remember always to delete the handle when it is not needed any more to avoid
+*  Remember always to delete the handle when it is not needed anymore to avoid
 *  memory leaks.
 *
 * @param c           : the context from which the handle will be created (NULL for default context)
@@ -491,7 +491,7 @@ int   grib_handle_delete   (grib_handle* h);
 
 /**
  *  Create an empty multi field handle.
- *  Remember always to delete the multi handle when it is not needed any more to avoid
+ *  Remember always to delete the multi handle when it is not needed anymore to avoid
  *  memory leaks.
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
@@ -501,7 +501,7 @@ grib_multi_handle* grib_multi_handle_new     (grib_context* c);
 /**
  *  Append the sections starting with start_section of the message pointed by h at
  *  the end of the multi field handle mh.
- *  Remember always to delete the multi handle when it is not needed any more to avoid
+ *  Remember always to delete the multi handle when it is not needed anymore to avoid
  *  memory leaks.
  *
  * @param h           : The handle from which the sections are copied.
@@ -521,7 +521,7 @@ int grib_multi_handle_delete(grib_multi_handle* mh);
 
 /**
  *  Write a multi field handle in a file.
- *  Remember always to delete the multi handle when it is not needed any more to avoid
+ *  Remember always to delete the multi handle when it is not needed anymore to avoid
  *  memory leaks.
  *
  * @param mh           : The multi field handle to be written.
