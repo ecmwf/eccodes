@@ -62,3 +62,7 @@ install-data-hook:
 	( cd $(DESTDIR)$(includedir) && ln -s $(nodist_include_HEADERS) eccodes.mod )
 
 include extrules.am
+
+all-local:
+	rm -f eccodes.mod; ln -s $(nodist_include_HEADERS) eccodes.mod
+
