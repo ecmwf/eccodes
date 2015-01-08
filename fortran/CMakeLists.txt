@@ -43,10 +43,13 @@ if( EC_HAVE_FORTRAN )
 
     add_custom_command(
         OUTPUT ${_eccodes_mod}
-        #WORKING_DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}
+        WORKING_DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}
 
         #COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_Fortran_MODULE_DIRECTORY}/grib_api.mod" ${_eccodes_mod}
-        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_Fortran_MODULE_DIRECTORY}/grib_api.mod" ${_eccodes_mod}
+        #COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_Fortran_MODULE_DIRECTORY}/grib_api.mod" ${_eccodes_mod}
+
+        COMMAND "/usr/bin/sh" "-c" "if test -f GRIB_API.mod; then ln -s GRIB_API.mod ECCODES.mod; fi"
+        COMMAND "/usr/bin/sh" "-c" "if test -f grib_api.mod; then ln -s grib_api.mod eccodes.mod; fi"
 
         DEPENDS grib_api_f90
         VERBATIM

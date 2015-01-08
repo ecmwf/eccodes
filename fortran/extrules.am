@@ -1,1 +1,1 @@
-proto:;-p4 edit grib_fortran_prototypes.h;mkptypes -A $(libgrib_api_fortran_prototypes) > grib_fortran_prototypes.h
+proto:;-mkptypes -A $(libgrib_api_fortran_prototypes) > temp && mv temp grib_fortran_prototypes.h; rm -f temp
