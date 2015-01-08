@@ -13,7 +13,7 @@
 !
 !
 program get_pv
-  use eccodes
+  use grib_api
   implicit none
   integer                         :: infile
   integer                         :: igrib

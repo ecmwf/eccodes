@@ -10,7 +10,7 @@
 ! See GRIB-292
 !
 program read_from_file
-use eccodes
+use grib_api
   implicit none
   character(len=32) :: input_grib_file
   integer,dimension(26) :: message_lengths  ! expected message lengths

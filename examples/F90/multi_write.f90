@@ -15,7 +15,7 @@
 !
 !
 program multi_write
-  use eccodes
+  use grib_api
   implicit none
   integer                            :: infile,outfile
   integer                            :: in_gribid,iret

@@ -12,7 +12,7 @@
 !
 !
 program print_data
-use eccodes
+use grib_api
 implicit none
 integer            :: ifile
 integer            :: iret

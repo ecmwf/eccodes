@@ -8,7 +8,7 @@
 !
 !
 program iterator
-use eccodes
+use grib_api
 implicit none
   integer            :: ifile
   integer            :: iret,iter

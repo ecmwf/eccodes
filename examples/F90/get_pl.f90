@@ -12,7 +12,7 @@
 !
 !
 program get_pl
-  use eccodes
+  use grib_api
   implicit none
   integer                         :: infile
   integer                         :: igrib

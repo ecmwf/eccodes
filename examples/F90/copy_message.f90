@@ -13,7 +13,7 @@
 !
 !
 program copy
-  use eccodes
+  use grib_api
   implicit none
   integer                            :: err, centre
   integer(kind=kindOfSize)           :: byte_size

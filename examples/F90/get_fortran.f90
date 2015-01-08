@@ -6,7 +6,7 @@
 !
 !
 program get
-use eccodes
+use grib_api
 implicit none
  
   integer                                         ::  ifile

@@ -13,7 +13,7 @@
 !
 !
 program set_pv
-  use eccodes
+  use grib_api
   implicit none
   integer                         :: numberOfLevels
   integer                         :: numberOfCoefficients

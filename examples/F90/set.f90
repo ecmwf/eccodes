@@ -13,7 +13,7 @@
 !
 !
 program set
-  use eccodes
+  use grib_api
   implicit none
   integer(kind = 4)    :: centre, date1
   integer              :: infile,outfile

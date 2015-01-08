@@ -13,7 +13,7 @@
 !
 !
 program set_bitmap
-  use eccodes
+  use grib_api
   implicit none
   integer                         :: infile,outfile
   integer                         :: igrib, iret

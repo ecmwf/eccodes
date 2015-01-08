@@ -10,7 +10,7 @@
 !
 !
 program set
-  use eccodes
+  use grib_api
   implicit none
   integer              :: err
   integer              :: len

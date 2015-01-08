@@ -12,7 +12,7 @@
 !               
 !
 program copy_namespace
-  use eccodes
+  use grib_api
   implicit none  
   integer  :: file1, file2, file3
   integer  :: igrib1,igrib2,igrib3

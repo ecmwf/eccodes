@@ -13,7 +13,7 @@
 !
 !
 program print_data_fortran
-use eccodes
+use grib_api
 implicit none
 integer            :: ifile
 integer            :: iret
