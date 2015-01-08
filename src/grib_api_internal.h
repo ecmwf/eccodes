@@ -75,8 +75,8 @@ extern "C" {
 double rint(double x);
 
 /* define version numbers here on Windows */
-#define GRIB_API_MAJOR_VERSION    3
-#define GRIB_API_MINOR_VERSION    0
+#define GRIB_API_MAJOR_VERSION    0
+#define GRIB_API_MINOR_VERSION    10
 #define GRIB_API_REVISION_VERSION 0
 
 #ifndef S_ISREG
