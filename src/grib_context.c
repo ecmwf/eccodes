@@ -231,7 +231,7 @@ void grib_print_api_version(FILE* out)
             GRIB_API_MINOR_VERSION,
             GRIB_API_REVISION_VERSION);
     if (GRIB_API_MAJOR_VERSION < 1) {
-        printf(" PRE-RELEASE");
+        fprintf(out, "%s", " PRE-RELEASE");
     }
 }
 
