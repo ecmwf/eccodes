@@ -30,50 +30,49 @@ ecbuild_declare_project()
 # some variables/options of this project
 
 ecbuild_add_option( FEATURE JPG
-	DESCRIPTION "support for JPG decoding/encoding"
-	DEFAULT ON
+    DESCRIPTION "support for JPG decoding/encoding"
+    DEFAULT ON
 )
 
 ecbuild_add_option( FEATURE PNG
-	DESCRIPTION "support for PNG decoding/encoding"
-	DEFAULT OFF
-	REQUIRED_PACKAGES PNG
+    DESCRIPTION "support for PNG decoding/encoding"
+    DEFAULT OFF
+    REQUIRED_PACKAGES PNG
 )
 
 if( HAVE_PNG )
-	set( HAVE_LIBPNG 1 ) # compatibility with autotools
-	add_definitions( ${PNG_DEFINITIONS} )
+    set( HAVE_LIBPNG 1 ) # compatibility with autotools
+    add_definitions( ${PNG_DEFINITIONS} )
 else()
-	set( HAVE_LIBPNG 0 )
+    set( HAVE_LIBPNG 0 )
 endif()
 
 ecbuild_add_option( FEATURE NETCDF
-	DESCRIPTION "support for GRIB to NetCDF conversion"
-	DEFAULT ON
-	REQUIRED_PACKAGES NetCDF
+    DESCRIPTION "support for GRIB to NetCDF conversion"
+    DEFAULT ON
+    REQUIRED_PACKAGES NetCDF
 )
 
 ecbuild_add_option( FEATURE AEC
-	DESCRIPTION "support for Adaptive Entropy Coding"
-	DEFAULT OFF
-	REQUIRED_PACKAGES AEC
+    DESCRIPTION "support for Adaptive Entropy Coding"
+    DEFAULT OFF
+    REQUIRED_PACKAGES AEC
 )
 
 ecbuild_add_option( FEATURE PYTHON
-	DESCRIPTION "build the GRIB_API Python interface"
-	DEFAULT ON
+    DESCRIPTION "build the GRIB_API Python interface"
+    DEFAULT ON
 )
 
 ecbuild_add_option( FEATURE FORTRAN
-	DESCRIPTION "build the GRIB_API Fortran interface"
-	DEFAULT ON
+    DESCRIPTION "build the GRIB_API Fortran interface"
+    DEFAULT ON
 )
-
 
 if( ENABLE_FORTRAN )
     # will set EC_HAVE_FORTRAN with the result
     ecbuild_enable_fortran( MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/fortran/modules )
-	set( HAVE_FORTRAN ${EC_HAVE_FORTRAN} )
+    set( HAVE_FORTRAN ${EC_HAVE_FORTRAN} )
 endif()
 
 # advanced options (not visible in cmake-gui )
@@ -171,16 +170,16 @@ endif()
 # contents
 
 if( NOT ${DEVELOPER_MODE} )
-	set( grib_api_default_data_prefix ${CMAKE_INSTALL_PREFIX} )
+    set( grib_api_default_data_prefix ${CMAKE_INSTALL_PREFIX} )
 else()
-	set( grib_api_default_data_prefix ${CMAKE_BINARY_DIR} )
+    set( grib_api_default_data_prefix ${CMAKE_BINARY_DIR} )
 endif()
 
 if( NOT DEFINED GRIB_API_DEFINITION_PATH )
-	set( GRIB_API_DEFINITION_PATH ${grib_api_default_data_prefix}/share/grib_api/definitions )
+    set( GRIB_API_DEFINITION_PATH ${grib_api_default_data_prefix}/share/grib_api/definitions )
 endif()
 if( NOT DEFINED GRIB_API_SAMPLES_PATH )
-	set( GRIB_API_SAMPLES_PATH ${grib_api_default_data_prefix}/share/grib_api/samples )
+    set( GRIB_API_SAMPLES_PATH ${grib_api_default_data_prefix}/share/grib_api/samples )
 endif()
 
 ### config header
