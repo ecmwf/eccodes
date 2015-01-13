@@ -65,6 +65,7 @@ if( HAVE_PYTHON )
 
         install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gribapi_swig.py  DESTINATION ${PYTHON_DEST})
         install(FILES gribapi.py DESTINATION ${PYTHON_DEST})
+        install(FILES eccodes.py DESTINATION ${PYTHON_DEST})
 
     endif()
 

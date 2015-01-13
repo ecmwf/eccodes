@@ -11,7 +11,7 @@
 import traceback
 import sys
 
-from gribapi import *
+from eccodes import *
 
 VERBOSE=1 # verbose error reporting
 
@@ -20,16 +20,16 @@ def example():
     out = open(sys.argv[2],'w')
 
     while 1:
-        gid = grib_new_from_file(f)
+        gid = codes_new_from_file(f)
         if gid is None: break
 
-        message = grib_get_message(gid)
+        message = codes_get_message(gid)
 
-        newgid = grib_new_from_message(message)
-        grib_write(newgid,out)
-        grib_release(newgid)
+        newgid = codes_new_from_message(message)
+        codes_write(newgid,out)
+        codes_release(newgid)
 
-        grib_release(gid)
+        codes_release(gid)
 
     out.close()
     f.close()
@@ -37,7 +37,7 @@ def example():
 def main():
     try:
         example()
-    except GribInternalError,err:
+    except CodesInternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

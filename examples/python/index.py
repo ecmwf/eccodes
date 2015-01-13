@@ -11,7 +11,7 @@
 import traceback
 import sys,os
 
-from gribapi import *
+from eccodes import *
 
 INPUT='../../data/index.grib'
 VERBOSE=1 # verbose error reporting
@@ -33,45 +33,45 @@ def example():
     iid = None
 
     if (os.path.exists(index_file)):
-        iid = grib_index_read(index_file)
+        iid = codes_index_read(index_file)
     else:
-        iid = grib_index_new_from_file(INPUT,index_keys)
+        iid = codes_index_new_from_file(INPUT,index_keys)
 
         # multiple files can be added to an index:
-        # grib_index_add_file(iid,"grib file to add")
+        # codes_index_add_file(iid,"grib file to add")
 
-        grib_index_write(iid,index_file)
+        codes_index_write(iid,index_file)
 
     index_vals = []
 
     for key in index_keys:
         print "%sSize=%d" % (
             key,
-            grib_index_get_size(iid,key)
+            codes_index_get_size(iid,key)
         )
 
-        key_vals = grib_index_get(iid,key)
+        key_vals = codes_index_get(iid,key)
         print " ".join(key_vals)
 
         index_vals.append(key_vals)
 
     for prod in product(*index_vals):
         for i in range(len(index_keys)):
-            grib_index_select(iid,index_keys[i],prod[i])
+            codes_index_select(iid,index_keys[i],prod[i])
 
         while 1:
-            gid = grib_new_from_index(iid)
+            gid = codes_new_from_index(iid)
             if gid is None: break
-            print " ".join(["%s=%s" % (key,grib_get(gid,key)) for key in index_keys])
-            grib_release(gid)
+            print " ".join(["%s=%s" % (key,codes_get(gid,key)) for key in index_keys])
+            codes_release(gid)
 
-    grib_index_release(iid)
+    codes_index_release(iid)
     
 
 def main():
     try:
         example()
-    except GribInternalError,err:
+    except CodesInternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

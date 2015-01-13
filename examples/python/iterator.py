@@ -11,7 +11,7 @@
 import traceback
 import sys
 
-from gribapi import *
+from eccodes import *
 
 VERBOSE=1 # verbose error reporting
 
@@ -19,16 +19,16 @@ def example(INPUT):
     f = open(INPUT)
 
     while 1:
-        gid = grib_new_from_file(f)
+        gid = codes_new_from_file(f)
         if gid is None: break
 
-        iterid = grib_iterator_new(gid,0)
+        iterid = codes_iterator_new(gid,0)
 
-        missingValue = grib_get_double(gid,"missingValue")
+        missingValue = codes_get_double(gid,"missingValue")
 
         i=0
         while 1:
-            result = grib_iterator_next(iterid)
+            result = codes_iterator_next(iterid)
             if not result: break
 
             [lat,lon,value] = result
@@ -42,15 +42,15 @@ def example(INPUT):
 
             i += 1
             
-        grib_iterator_delete(iterid)
-        grib_release(gid)
+        codes_iterator_delete(iterid)
+        codes_release(gid)
 
     f.close()
 
 def main():
     try:
         example(sys.argv[1])
-    except GribInternalError,err:
+    except CodesInternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

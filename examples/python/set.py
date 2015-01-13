@@ -9,7 +9,7 @@
 import traceback
 import sys
 
-from gribapi import *
+from eccodes import *
 from datetime import date
 
 INPUT='../../data/regular_latlon_surface_constant.grib1'
@@ -19,16 +19,16 @@ VERBOSE=1 # verbose error reporting
 def example():
     fin = open(INPUT)
     fout = open(OUTPUT,'w')
-    gid = grib_new_from_file(fin)
+    gid = codes_new_from_file(fin)
 
     dt = date.today()
     today = "%d%02d%02d" % (dt.year,dt.month,dt.day)
-    grib_set(gid,'dataDate',int(today))
-    grib_set(gid,'centre',80)
+    codes_set(gid,'dataDate',int(today))
+    codes_set(gid,'centre',80)
 
-    centreIntVal = grib_get(gid,'centre',int)
-    centreStrVal = grib_get(gid,'centre',str)
-    dateStrVal   = grib_get(gid,'dataDate',str)
+    centreIntVal = codes_get(gid,'centre',int)
+    centreStrVal = codes_get(gid,'centre',str)
+    dateStrVal   = codes_get(gid,'dataDate',str)
     assert(centreIntVal == 80)
     assert(centreStrVal == 'cnmc')
     assert(dateStrVal   == today)
@@ -37,30 +37,30 @@ def example():
     print 'get date as a string - date = %s' % dateStrVal
     
     # Now do the same but using set_key_vals, setting keys all at once
-    grib_set_key_vals(gid, 'level=1,centre=98')  # with a String
-    assert(grib_get(gid,'centre',str) == 'ecmf')
-    assert(grib_get(gid,'level',int)  == 1)
+    codes_set_key_vals(gid, 'level=1,centre=98')  # with a String
+    assert(codes_get(gid,'centre',str) == 'ecmf')
+    assert(codes_get(gid,'level',int)  == 1)
     
-    grib_set_key_vals(gid, ['level=2', 'centre=kwbc']) # with a Tuple
-    assert(grib_get(gid,'centre',int) == 7)
-    assert(grib_get(gid,'level',int)  == 2)
+    codes_set_key_vals(gid, ['level=2', 'centre=kwbc']) # with a Tuple
+    assert(codes_get(gid,'centre',int) == 7)
+    assert(codes_get(gid,'level',int)  == 2)
     
-    grib_set_key_vals(gid, {'level': 3, 'centre': 84}) # with a Dictionary
-    assert(grib_get(gid,'centre',str) == 'lfpw')
-    assert(grib_get(gid,'level',int)  == 3)
+    codes_set_key_vals(gid, {'level': 3, 'centre': 84}) # with a Dictionary
+    assert(codes_get(gid,'centre',str) == 'lfpw')
+    assert(codes_get(gid,'level',int)  == 3)
     
-    grib_gts_header(True)
-    grib_gts_header(False)
+    codes_gts_header(True)
+    codes_gts_header(False)
 
-    grib_write(gid,fout)
-    grib_release(gid)
+    codes_write(gid,fout)
+    codes_release(gid)
     fin.close()
     fout.close()
 
 def main():
     try:
         example()
-    except GribInternalError,err:
+    except CodesInternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

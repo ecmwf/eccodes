@@ -9,7 +9,7 @@
 import traceback
 import sys
 
-from gribapi import *
+from eccodes import *
 
 INPUT='../../data/reduced_latlon_surface.grib1'
 VERBOSE=1 # verbose error reporting
@@ -27,30 +27,30 @@ def example():
         ]
 
     while 1:
-        gid = grib_new_from_file(f)
+        gid = codes_new_from_file(f)
         if gid is None: break
 
         for key in keys:
-            if not grib_is_defined(gid,key): raise Exception("Key was not defined")
-            print '%s=%s' % (key,grib_get(gid,key))
+            if not codes_is_defined(gid,key): raise Exception("Key was not defined")
+            print '%s=%s' % (key,codes_get(gid,key))
 
-        if grib_is_defined(gid,"A_very_silly_girl"): raise Exception("Key was defined")
+        if codes_is_defined(gid,"A_very_silly_girl"): raise Exception("Key was defined")
         
         print 'There are %d values, average is %f, min is %f, max is %f' % (
-                  grib_get_size(gid,'values'),
-                  grib_get(gid,'average'),
-                  grib_get(gid,'min'),
-                  grib_get(gid,'max')
+                  codes_get_size(gid,'values'),
+                  codes_get(gid,'average'),
+                  codes_get(gid,'min'),
+                  codes_get(gid,'max')
                )
 
-        grib_release(gid)
+        codes_release(gid)
 
     f.close()
 
 def main():
     try:
         example()
-    except GribInternalError,err:
+    except CodesInternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

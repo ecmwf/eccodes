@@ -11,7 +11,7 @@
 import traceback
 import sys
 
-from gribapi import *
+from eccodes import *
 
 VERBOSE=1 # verbose error reporting
 
@@ -29,22 +29,22 @@ def example():
     assert(len(pv) == numberOfCoefficients)
 
     fout = open('out.grib1','w')
-    gid = grib_new_from_samples('reduced_gg_sfc_grib1')
+    gid = codes_new_from_samples('reduced_gg_sfc_grib1')
 
-    grib_set(gid,'typeOfLevel','hybrid')
-    grib_set(gid,'level',2)
-    grib_set(gid,'PVPresent',1)
-    grib_set_array(gid,'pv',pv)
+    codes_set(gid,'typeOfLevel','hybrid')
+    codes_set(gid,'level',2)
+    codes_set(gid,'PVPresent',1)
+    codes_set_array(gid,'pv',pv)
 
-    grib_write(gid,fout)
+    codes_write(gid,fout)
 
-    grib_release(gid)
+    codes_release(gid)
     fout.close()
 
 def main():
     try:
         example()
-    except GribInternalError,err:
+    except CodesInternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

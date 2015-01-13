@@ -8,7 +8,7 @@
 
 import traceback
 import sys
-from gribapi import *
+from eccodes import *
 
 INPUT   = '../../data/regular_latlon_surface.grib1'
 OUTPUT  = 'out.grib'
@@ -18,33 +18,33 @@ VERBOSE = 1 # verbose error reporting
 def example():
     fin = open(INPUT)
     fout = open(OUTPUT,'w')
-    gid = grib_new_from_file(fin)
+    gid = codes_new_from_file(fin)
 
-    grib_set(gid,'missingValue', MISSING)
-    values = grib_get_values(gid)
-    grib_set(gid, 'bitmapPresent', 1)
+    codes_set(gid,'missingValue', MISSING)
+    values = codes_get_values(gid)
+    codes_set(gid, 'bitmapPresent', 1)
     # Change some data values to be missing
     num_missing = 0
     for i in range(100):
         if i % 2 == 0:
             values[i] = MISSING
             num_missing += 1
-    grib_set_values(gid, values)
+    codes_set_values(gid, values)
     
     # Check counts of missing and non-missing values
-    num_data = grib_get(gid,'numberOfDataPoints',int)
-    assert(grib_get(gid,'numberOfCodedValues',int) == num_data-num_missing)
-    assert(grib_get(gid,'numberOfMissing',int)     == num_missing)
+    num_data = codes_get(gid,'numberOfDataPoints',int)
+    assert(codes_get(gid,'numberOfCodedValues',int) == num_data-num_missing)
+    assert(codes_get(gid,'numberOfMissing',int)     == num_missing)
 
-    grib_write(gid,fout)
-    grib_release(gid)
+    codes_write(gid,fout)
+    codes_release(gid)
     fin.close()
     fout.close()
 
 def main():
     try:
         example()
-    except GribInternalError,err:
+    except CodesInternalError,err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
