@@ -23,6 +23,7 @@ EXTRA_DIST = grib_interface.h \
 			grib_interface.c \
 			gribapi_swig.i \
 			gribapi.py \
+			eccodes.py \
 			numpy.i \
 			grib_errors.h \
 			extrules.am \
@@ -36,6 +37,7 @@ EXTRA_DIST = grib_interface.h \
 # What else I want installed
 pkgpyexec_DATA = \
 	gribapi.py \
+	eccodes.py \
 	gribapi_swig.py
 
 CLEANFILES = \
@@ -63,6 +65,7 @@ EXTRA_DIST = setup.py.in \
 			grib_interface.c \
 			gribapi_swig.i \
 			gribapi.py \
+			eccodes.py \
 			numpy.i \
 			grib_errors.h \
 			extrules.am \
@@ -78,6 +81,7 @@ pdir = $(libdir)/python$(PYTHON_VERSION)/site-packages/grib_api
 p_DATA = \
 	_gribapi_swig.so \
 	gribapi.py \
+	eccodes.py \
 	gribapi_swig.py
 
 do_subst = sed -e 's,[@]LIB_JASPER[@],$(LIB_JASPER),g' \
