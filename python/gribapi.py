@@ -1123,7 +1123,7 @@ def grib_get_message_size(gribid):
     return value
 
 @require(gribid=int)
-def get_message_offset(gribid):
+def grib_get_message_offset(gribid):
     """
     @brief Get the offset of a coded message.
     
