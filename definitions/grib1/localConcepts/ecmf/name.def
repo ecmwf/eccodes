@@ -9014,6 +9014,11 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 130 ;
 	}
+#Accumulated freezing rain
+'Accumulated freezing rain' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 216 ;
+	}
 #Instantaneous large-scale surface precipitation fraction
 'Instantaneous large-scale surface precipitation fraction' = {
 	 table2Version = 228 ;
