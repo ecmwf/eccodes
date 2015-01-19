@@ -181,6 +181,9 @@ endif()
 if( NOT DEFINED GRIB_API_SAMPLES_PATH )
     set( GRIB_API_SAMPLES_PATH ${grib_api_default_data_prefix}/share/grib_api/samples )
 endif()
+if( NOT DEFINED GRIB_API_IFS_SAMPLES_PATH )
+    set( GRIB_API_IFS_SAMPLES_PATH ${grib_api_default_data_prefix}/share/grib_api/ifs_samples )
+endif()
 
 ### config header
 
@@ -250,11 +253,19 @@ add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 # temporary -- add support for ecbuild 1.0.x sub-project inclusion
 # to remove once mars server & client use eckit & ecbuild >= 1.1
 
+if( EC_HAVE_FORTRAN )
+    list( APPEND GRIB_API_INCLUDE_DIRS  ${CMAKE_Fortran_MODULE_DIRECTORY} )
+    list( APPEND GRIB_API_LIBRARIES grib_api_f77 grib_api_f90 )
+endif()
+
 if( NOT ${PROJECT_NAME} STREQUAL  ${CMAKE_PROJECT_NAME} )
     set( GRIB_API_DEFINITIONS     ${GRIB_API_DEFINITIONS}  PARENT_SCOPE )# includes already TPL definitions
     set( GRIB_API_INCLUDE_DIRS    ${GRIB_API_INCLUDE_DIRS} ${GRIB_API_EXTRA_INCLUDE_DIRS} PARENT_SCOPE )
     set( GRIB_API_LIBRARIES       ${GRIB_API_LIBRARIES}    ${GRIB_API_EXTRA_LIBRARIES} ${CMATH_LIBRARIES} PARENT_SCOPE )
     set( GRIB_API_FOUND           TRUE PARENT_SCOPE )
+    set( GRIB_API_SAMPLES_PATH     ${GRIB_API_SAMPLES_PATH} PARENT_SCOPE )
+    set( GRIB_API_IFS_SAMPLES_PATH ${GRIB_API_IFS_SAMPLES_PATH} PARENT_SCOPE )
+    set( GRIB_API_DEFINITION_PATH  ${GRIB_API_DEFINITION_PATH} PARENT_SCOPE )
 endif()
 
 ############################################################################################
