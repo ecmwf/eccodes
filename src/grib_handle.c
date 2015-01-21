@@ -859,6 +859,7 @@ grib_handle* codes_new_from_file ( grib_context* c, FILE* f,int headers_only,int
 
 	if ( *error != GRIB_SUCCESS )
 	{
+        if ( data ) grib_context_free ( c,data );
 
 		if ( *error == GRIB_END_OF_FILE ) *error = GRIB_SUCCESS;
 		return NULL;

@@ -404,6 +404,10 @@ int grib_count_in_file(grib_context* c, FILE* f,int* n);
 */
 grib_handle* grib_handle_new_from_file(grib_context* c, FILE* f, int* error);
 
+/* TODO: this is temporary. Need to rationalize the X_new_from_file functions */
+grib_handle* bufr_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
+
+
 /**
 *  Write a coded message in a file.     
 *
