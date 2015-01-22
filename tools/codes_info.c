@@ -19,9 +19,9 @@
 
 void usage( char*);
 
-#define INFO_PRINT_ALL                0
-#define INFO_PRINT_VERSION           (1<<0)
-#define INFO_PRINT_DEFINITION_PATH   (1<<1)
+#define INFO_PRINT_ALL              0
+#define INFO_PRINT_VERSION          (1<<0)
+#define INFO_PRINT_DEFINITION_PATH  (1<<1)
 #define INFO_PRINT_SAMPLES_PATH     (1<<2)
 
 int main( int argc,char* argv[])
@@ -35,8 +35,7 @@ int main( int argc,char* argv[])
     int revision=GRIB_API_REVISION_VERSION;
 
     while (1) {
-
-        c = getopt (argc, argv, "vdt");
+        c = getopt (argc, argv, "vds");
 
         if (c == -1)
             break;
@@ -48,7 +47,7 @@ int main( int argc,char* argv[])
         case 'd':
             print_flags|=INFO_PRINT_DEFINITION_PATH;
             break;
-        case 't':
+        case 's':
             print_flags|=INFO_PRINT_SAMPLES_PATH;
             break;
         default:
@@ -110,9 +109,7 @@ int main( int argc,char* argv[])
     return 0;
 }
 
-
-
 void usage(char* progname) {
-    printf("\nUsage: %s [-v] [-d] [-t]\n",progname);
+    printf("\nUsage: %s [-v] [-d] [-s]\n",progname);
     exit(1);
 }
