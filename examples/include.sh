@@ -31,7 +31,7 @@ then
   GRIB_API_LIB=`pwd`/src
 fi
 
-#${tools_dir}grib_info
+#${tools_dir}codes_info
 
 set -u
 

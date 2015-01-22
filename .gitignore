@@ -47,7 +47,7 @@ tools/grib_get
 tools/grib_get_data
 tools/grib_histogram
 tools/grib_index_build
-tools/grib_info
+tools/codes_info
 tools/grib_keys
 tools/grib_list_keys
 tools/grib_ls

@@ -108,12 +108,12 @@ the environment variable GRIB_DEFINITION_PATH can be used.
 
 To set properly this environment variable we have first to find the definitions
 files directory used by GRIB API. 
-At this aim we can use the tool grib_info which is providing some configuration
+At this aim we can use the tool codes_info which is providing some configuration
 information about the library. 
 
 
 \verbatim
-> grib_info
+> codes_info
 
 grib_api Version 1.8.0
 

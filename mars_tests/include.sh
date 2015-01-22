@@ -44,10 +44,7 @@ then
   GRIB_API_LIB=`pwd`/src
 fi
 
-#${tools_dir}grib_info
-
 # go back to current working dir
 cd $save
 
 set -u
-

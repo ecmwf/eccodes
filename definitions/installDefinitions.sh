@@ -24,7 +24,7 @@ grib_api_bin=$1/bin
 
 definitions=$2
 
-if [ ! -f $grib_api_bin/grib_info ]
+if [ ! -f $grib_api_bin/codes_info ]
 then
 echo "
 Unable to find grib_api tools in $grib_api_bin
@@ -33,8 +33,8 @@ exit 1
 fi
 
 set -e
-version=`$grib_api_bin/grib_info -v`
-defaultDefinitions=`$grib_api_bin/grib_info -d`
+version=`$grib_api_bin/codes_info -v`
+defaultDefinitions=`$grib_api_bin/codes_info -d`
 set +e
 
 if [ $version != $requiredLibVersion ]

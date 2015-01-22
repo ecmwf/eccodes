@@ -49,6 +49,6 @@ else
   # Download the data needed for tests
   ${data_dir}/download.sh "${data_dir}"
 
-  #${tools_dir}grib_info
+  #${tools_dir}codes_info
   set -u
 fi

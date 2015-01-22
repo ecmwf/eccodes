@@ -679,17 +679,17 @@ def grib_set_double(gribid,key,value):
 @require(samplename=str)
 def grib_new_from_samples(samplename):
     """
-    @brief Create a new valid gribid from a sample. 
-    
+    @brief Create a new valid gribid from a sample.
+
     The available samples are picked up from the directory pointed to
     by the environment variable GRIB_SAMPLES_PATH.
-    To know where the samples directory is run the grib_info tool.\n
-    
+    To know where the samples directory is run the codes_info tool.\n
+
     \b Examples: \ref samples.py "samples.py"
-    
+
     @param samplename   name of the sample to be used
     @return id of the grib loaded in memory
-    @exception GribInternalError 
+    @exception GribInternalError
     """
     err,gribid = _internal.grib_c_new_from_samples(0,samplename)
     GRIB_CHECK(err)
@@ -699,7 +699,7 @@ def grib_new_from_samples(samplename):
 def grib_clone(gribid_src):
     """
     @brief Create a copy of a message.
-    
+
     Create a copy of a given message (\em gribid_src) resulting in a new
     message in memory (\em gribid_dest) identical to the original one.
     

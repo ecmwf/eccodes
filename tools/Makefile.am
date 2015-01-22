@@ -14,7 +14,7 @@ libgrib_tools_la_SOURCES = grib_tools.c \
 dist_bin_SCRIPTS = bufr_compare_dir
 
 bin_PROGRAMS = grib_keys grib_histogram grib_error grib_add big2gribex \
-               grib_info grib_filter grib_ls grib_dump grib_merge \
+               codes_info grib_filter grib_ls grib_dump grib_merge \
                grib2ppm grib_set grib_get grib_get_data grib_copy grib_repair \
                grib_packing grib_distance grib_corruption_check\
                grib_compare grib_list_keys parser grib_count grib_index_build grib1to2 \
@@ -40,12 +40,12 @@ grib_count_SOURCES            =  grib_count.c
 grib_packing_SOURCES          =  grib_packing.c
 grib_histogram_SOURCES        =  grib_histogram.c
 grib_distance_SOURCES         =  grib_distance.c
-#grib_debug_SOURCES            =  grib_debug.c
+#grib_debug_SOURCES           =  grib_debug.c
 parser_SOURCES                =  parser.c
 grib_list_keys_SOURCES        =  list_keys.c
 all_keys_SOURCES              =  all_keys.c
 grib2ppm_SOURCES              =  grib2ppm.c
-grib_info_SOURCES             =  grib_info.c
+codes_info_SOURCES            =  codes_info.c
 grib_keys_SOURCES             =  grib_keys.c
 grib_ls_SOURCES               =  grib_ls.c
 grib_copy_SOURCES             =  grib_copy.c

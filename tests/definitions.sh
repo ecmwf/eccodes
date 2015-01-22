@@ -13,7 +13,7 @@
 
 REDIRECT=/dev/null
 
-[ -z "$GRIB_DEFINITION_PATH" ] | GRIB_DEFINITION_PATH=`${tools_dir}grib_info -d`
+[ -z "$GRIB_DEFINITION_PATH" ] | GRIB_DEFINITION_PATH=`${tools_dir}codes_info -d`
 
 for file in `find $GRIB_DEFINITION_PATH -name '*.def' -print`
 do

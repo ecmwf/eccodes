@@ -1360,7 +1360,7 @@
 
   !> Create a new valid gribid from a sample contained in a samples directory pointed
   !> by the environment variable GRIB_SAMPLES_PATH.
-  !> To know where the samples directory is run the grib_info tool.\n
+  !> To know where the samples directory is run the codes_info tool.\n
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
