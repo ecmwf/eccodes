@@ -13,6 +13,7 @@ list( APPEND test_bins
       read_index
       unit_tests
       gauss_sub
+      bufr_read_header
 )
 
 foreach( tool ${test_bins} )
@@ -33,6 +34,8 @@ list( APPEND tests
     bufrdc_desc_ref
     bufrdc_ref
     bufr_json
+    bufr_ls
+    bufr_read_header
     ieee
     grib1to2
     grib2to1
