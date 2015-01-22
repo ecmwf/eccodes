@@ -403,6 +403,7 @@ set(bufr_refs_to_download
    wavb_134.bufr.desc.ref
    
    aaen_55.bufr.ls.ref
+   syno_multi.bufr.header.ref
 )
 
 foreach( f ${bufr_files_to_download} ${bufr_refs_to_download} )
