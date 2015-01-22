@@ -10,19 +10,17 @@
 
 . ./include.sh
 
-set -x
+#set -x
 
-#Remember work dir
-dWork=`pwd`
 
 #Enter data dir
 cd ${data_dir}/bufr
 
-fLog="log"
-rm -f $fLog | true
+fLog="bufr_ls.log"
+rm -f $fLog
 
-fTmp="tmp.txt"
-rm -f $fTmp | true
+fTmp="tmp.bufr_ls.txt"
+rm -f $fTmp
 
 #Create log filemore lev    
 touch $fLog
@@ -30,16 +28,14 @@ touch $fLog
 #----------------------------------------------
 # Test default "ls" on all the bufr data files
 #----------------------------------------------
-
 for f in `ls *.bufr` ; do
-   echo $f >> log
+   echo $f >> $fLog
    ${tools_dir}/bufr_ls $f >> $fLog
 done
 
 #-------------------------------------------
 # Test "-p" switch
 #-------------------------------------------
-
 f="aaen_55.bufr"
 ref_ls=$f".ls.ref"
 res_ls=$f".ls.test"
@@ -47,11 +43,8 @@ REDIRECT=/dev/null
 
 ${tools_dir}/bufr_ls -p totalLength,centre,subCentre,masterTableNumber,masterTablesVersionNumber,localTablesVersionNumber,numberOfSubsets,numberOfObservations $f 2> $REDIRECT > $fTmp
 
-#Write the values into a file and compare to ref
+#Write the values into a file and compare with ref
 awk NR==3 $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_ls
 diff $ref_ls $res_ls >$REDIRECT 2> $REDIRECT
-[ $? -eq 0 ] 
 
-
-#Go back to workdir
-cd $dWork
+rm -f $fLog $res_ls $fTmp

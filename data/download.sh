@@ -493,6 +493,7 @@ files="
     bufr/syno_2.bufr
     bufr/syno_3.bufr
     bufr/syno_4.bufr
+    bufr/syno_multi.bufr
     bufr/temp_101.bufr
     bufr/temp_102.bufr
     bufr/temp_106.bufr
@@ -764,6 +765,8 @@ files="
     bufr/tmr7_129.bufr.desc.ref
     bufr/tros_31.bufr.desc.ref
     bufr/wavb_134.bufr.desc.ref
+    bufr/aaen_55.bufr.ls.ref
+    bufr/syno_multi.bufr.header.ref
   "
 
 [ -d "${DATA_DIR}/tigge" ] || mkdir "${DATA_DIR}/tigge"

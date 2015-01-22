@@ -401,9 +401,9 @@ set(bufr_refs_to_download
    tmr7_129.bufr.desc.ref
    tros_31.bufr.desc.ref
    wavb_134.bufr.desc.ref
-   
    aaen_55.bufr.ls.ref
    syno_multi.bufr.header.ref
+   syno_multi.bufr
 )
 
 foreach( f ${bufr_files_to_download} ${bufr_refs_to_download} )

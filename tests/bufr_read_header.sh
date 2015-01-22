@@ -12,20 +12,13 @@
 
 set -x
 
-#Remember work dir
-dWork=`pwd`
-
 #Enter data dir
 cd ${data_dir}/bufr
 
-fTmp="tmp.txt"
-rm -f $fTmp | true
-
 #-----------------------------------------------------
-# Test reading the header only from a
+# Test reading the header only from a BUFR
 # file with multiple messages
 #----------------------------------------------------
-
 f="syno_multi.bufr"
 fRef=$f".header.ref"
 fRes=$f".header.test"
@@ -33,9 +26,7 @@ REDIRECT=/dev/null
 
 ${test_dir}/bufr_read_header  ${data_dir}/bufr/$f 2> $REDIRECT > $fRes
 
-#Write the values into a file and compare to ref
+#Write the values into a file and compare with reference
 diff $fRef $fRes >$REDIRECT 2> $REDIRECT
-[ $? -eq 0 ] 
 
-#Go back to workdir
-cd $dWork
+rm -f $fRes

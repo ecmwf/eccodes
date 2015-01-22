@@ -11,63 +11,58 @@
 #include "eccodes.h"
 
 void usage(char* prog) {
-  printf("usage: %s infile\n",prog);
-  exit(1);
+    printf("usage: %s infile\n",prog);
+    exit(1);
 }
 
-int main(int argc,char* argv[]) {
+int main(int argc,char* argv[])
+{
+    char* filename;
+    FILE* f;
+    codes_handle* h=NULL;
+    long longVal;
+    int count;
+    int err=0;
+    int header_only=1;
 
- char* filename;
- FILE* f;
- codes_handle* h=NULL;
- long longVal;
- double doubleVal;  
- int count;
- int err=0;
- int header_only=1;
+    if (argc!=2) usage(argv[0]);
+    filename=argv[1];
 
- if (argc!=2) usage(argv[0]);
- filename=argv[1];
+    f=fopen(filename,"r");
+    if (!f) {
+        perror(filename);
+        exit(1);
+    }
 
- f=fopen(filename,"r");
- if (!f) {
-    perror(filename);
-    exit(1);
- }
+    count=1;
+    while((h=bufr_new_from_file(NULL,f,header_only,&err)) != NULL)
+    {
+        /* Check for errors after reading a message. */
+        if (err != CODES_SUCCESS) CODES_CHECK(err,0);
 
- count=1;
- 
- while((h=bufr_new_from_file(NULL,f,header_only,&err)) != NULL) 
- {
-    /* Check of errors after reading a message. */
-    if (err != CODES_SUCCESS) CODES_CHECK(err,0);
-         
-    printf("=======================================\n");
-    printf("message no: %d\n",count);
-    
-    /*From section 0 */
-    CODES_CHECK(codes_get_long(h,"totalLength",&longVal),0);
-    printf("\ttotalLength: %d\n",longVal);
-    
-    /*From section 1 */
-    CODES_CHECK(codes_get_long(h,"centre",&longVal),0);
-    printf("\tcentre: %d\n",longVal);
-    
-    /*From section 2 */
-    CODES_CHECK(codes_get_long(h,"rdbtimeDay",&longVal),0);
-    printf("\trdbtimeDay: %d\n",longVal);
-  
-    /*From section 3 */
-    /*CODES_CHECK(codes_get_long(h,"numberOfSubsets",&longVal),0);
-    printf("\tnumberOfSubsets: %d\n",longVal);*/
-	
-    count++;
-    
-    codes_handle_delete(h);
- }
+        printf("=======================================\n");
+        printf("message no: %d\n",count);
 
- fclose(f);
+        /*From section 0 */
+        CODES_CHECK(codes_get_long(h,"totalLength",&longVal),0);
+        printf("\ttotalLength: %ld\n",longVal);
 
- return 0;
+        /*From section 1 */
+        CODES_CHECK(codes_get_long(h,"centre",&longVal),0);
+        printf("\tcentre: %ld\n",longVal);
 
+        /*From section 2 */
+        CODES_CHECK(codes_get_long(h,"rdbtimeDay",&longVal),0);
+        printf("\trdbtimeDay: %ld\n",longVal);
+
+        /*From section 3 */
+        /*CODES_CHECK(codes_get_long(h,"numberOfSubsets",&longVal),0);
+          printf("\tnumberOfSubsets: %d\n",longVal);*/
+
+        count++;
+        codes_handle_delete(h);
+    }
+
+    fclose(f);
+    return 0;
 }
