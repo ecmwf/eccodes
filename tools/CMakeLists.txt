@@ -9,12 +9,11 @@ ecbuild_add_library( TARGET    grib_tools
 # tools binaries
 
 list( APPEND grib_tools_bins
-             grib_keys grib_histogram grib_error grib_add big2gribex
+             grib_histogram big2gribex
              codes_info grib_filter grib_ls grib_dump grib_merge
              grib2ppm grib_set grib_get grib_get_data grib_copy grib_repair
-             grib_packing grib_distance grib_corruption_check
              grib_compare parser grib_count grib_index_build 
-             gg_sub_area_check grib_moments grib_to_netcdf grib_to_json
+             gg_sub_area_check grib_to_netcdf grib_to_json
              bufr_filter bufr_ls bufr_dump bufr_set bufr_get
              bufr_copy bufr_compare bufr_index_build
              taf_dump taf_ls taf_get taf_filter
