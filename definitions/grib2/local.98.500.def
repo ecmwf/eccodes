@@ -29,9 +29,9 @@ codetable[2] observationType "grib2/tables/local/ecmf/obstat.2.0.table";
 
 codetable[2] codeType "grib2/tables/local/ecmf/obstat.3.0.table";
 
-codetable[2] varno "grib2/tables/local/ecmf/obstat.varno";
+codetable[2] varno "grib2/tables/local/ecmf/obstat.varno.table";
 
-codetable[2] reportType "grib2/tables/local/ecmf/obstat.reporttype";
+codetable[2] reportType "grib2/tables/local/ecmf/obstat.reporttype.table";
 
 unsigned[1] phase;
 

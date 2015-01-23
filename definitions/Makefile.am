@@ -8851,7 +8851,9 @@ dist_definitionsgrib2_tables_local_ecmf_DATA = \
 	grib2/tables/local/ecmf/obstat.6.0.table\
 	grib2/tables/local/ecmf/obstat.7.0.table\
 	grib2/tables/local/ecmf/obstat.8.0.table\
-	grib2/tables/local/ecmf/obstat.9.0.table
+	grib2/tables/local/ecmf/obstat.9.0.table\
+	grib2/tables/local/ecmf/obstat.reporttype.table\
+	grib2/tables/local/ecmf/obstat.varno.table
 
 definitionsgrib2_tables_local_ecmf_4dir = @GRIB_DEFINITION_PATH@/grib2/tables/local/ecmf/4
 dist_definitionsgrib2_tables_local_ecmf_4_DATA = \
