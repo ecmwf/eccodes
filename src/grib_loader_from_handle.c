@@ -142,7 +142,7 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
 
 		if(first)
 		{
-			missing = getenv("GRIB_PRINT_MISSING");
+			missing = getenv("ECCODES_PRINT_MISSING");
 			first = 0;
 		}
 

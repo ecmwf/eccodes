@@ -12,8 +12,8 @@
 #set -x
 
 outfile=out.grib
-sample_g1=$GRIB_SAMPLES_PATH/GRIB1.tmpl
-sample_g2=$GRIB_SAMPLES_PATH/GRIB2.tmpl
+sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 temp=temp.grib
 
 file=${data_dir}/regular_gaussian_pressure_level.grib1

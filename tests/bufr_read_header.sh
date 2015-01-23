@@ -10,7 +10,7 @@
 
 . ./include.sh
 
-set -x
+# set -x
 
 #Enter data dir
 cd ${data_dir}/bufr

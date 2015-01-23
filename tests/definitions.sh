@@ -13,9 +13,9 @@
 
 REDIRECT=/dev/null
 
-[ -z "$GRIB_DEFINITION_PATH" ] | GRIB_DEFINITION_PATH=`${tools_dir}codes_info -d`
+[ -z "$ECCODES_DEFINITION_PATH" ] | ECCODES_DEFINITION_PATH=`${tools_dir}codes_info -d`
 
-for file in `find $GRIB_DEFINITION_PATH -name '*.def' -print`
+for file in `find $ECCODES_DEFINITION_PATH -name '*.def' -print`
 do
   ${tools_dir}parser $file > $REDIRECT
 done

@@ -104,7 +104,7 @@ grib 1 messages encoded in non standard local ways.
 To separete the definition files contained in the installation directory from the
 definition files described in the previous section, in which the user can put
 some extra and local parameter definitions, 
-the environment variable GRIB_DEFINITION_PATH can be used.
+the environment variable ECCODES_DEFINITION_PATH can be used.
 
 To set properly this environment variable we have first to find the definitions
 files directory used by GRIB API. 
@@ -118,10 +118,10 @@ information about the library.
 grib_api Version 1.8.0
 
 Default definition files path is used: /usr/local/lib/grib_api/definitions
-Definition files path can be changed setting GRIB_DEFINITION_PATH environment variable
+Definition files path can be changed setting ECCODES_DEFINITION_PATH environment variable
 
 Default SAMPLES path is used: /usr/local/lib/metaps/lib/grib_api/samples
-SAMPLES path can be changed setting GRIB_SAMPLES_PATH environment variable
+SAMPLES path can be changed setting ECCODES_SAMPLES_PATH environment variable
 \endverbatim
 
 To enable the parameter defintions described in the files contained in our directory
@@ -129,10 +129,10 @@ To enable the parameter defintions described in the files contained in our direc
 /home/u/grib_api/definitions
 \endcode
 
-we have to set the environment variable GRIB_DEFINITION_PATH as
+we have to set the environment variable ECCODES_DEFINITION_PATH as
 
 \verbatim
-export GRIB_DEFINITION_PATH=/home/u/definitions:/usr/local/lib/grib_api/definitions
+export ECCODES_DEFINITION_PATH=/home/u/definitions:/usr/local/lib/grib_api/definitions
 \endverbatim
 
 so that our definition of the parameters will be read by GRIB API during run time.

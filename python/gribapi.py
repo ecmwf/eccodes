@@ -682,7 +682,7 @@ def grib_new_from_samples(samplename):
     @brief Create a new valid gribid from a sample.
 
     The available samples are picked up from the directory pointed to
-    by the environment variable GRIB_SAMPLES_PATH.
+    by the environment variable ECCODES_SAMPLES_PATH.
     To know where the samples directory is run the codes_info tool.\n
 
     \b Examples: \ref samples.py "samples.py"

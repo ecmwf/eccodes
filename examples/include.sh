@@ -7,8 +7,8 @@ if [ -z "${data_dir}" ]
 then
   cd ../
   cpath=`pwd`
-  GRIB_DEFINITION_PATH=$cpath/definitions
-  export GRIB_DEFINITION_PATH
+  ECCODES_DEFINITION_PATH=$cpath/definitions
+  export ECCODES_DEFINITION_PATH
   GRIB_TEMPLATES_PATH=$cpath/templates
   export GRIB_TEMPLATES_PATH
   tools_dir=$cpath/tools/

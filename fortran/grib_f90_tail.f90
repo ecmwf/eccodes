@@ -1359,7 +1359,7 @@
   end subroutine grib_new_from_message_int4
 
   !> Create a new valid gribid from a sample contained in a samples directory pointed
-  !> by the environment variable GRIB_SAMPLES_PATH.
+  !> by the environment variable ECCODES_SAMPLES_PATH.
   !> To know where the samples directory is run the codes_info tool.\n
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will

@@ -21,10 +21,10 @@ else
   then
     cd ../../
     cpath=`pwd`
-    GRIB_DEFINITION_PATH=$cpath/definitions
-    export GRIB_DEFINITION_PATH
-    GRIB_SAMPLES_PATH=$cpath/samples
-    export GRIB_SAMPLES_PATH
+    ECCODES_DEFINITION_PATH=$cpath/definitions
+    export ECCODES_DEFINITION_PATH
+    ECCODES_SAMPLES_PATH=$cpath/samples
+    export ECCODES_SAMPLES_PATH
     tools_dir=$cpath/tools/
     examples_dir=$cpath/examples/F90/
     data_dir=$cpath/data

@@ -57,7 +57,7 @@ cat > ${data_dir}/formatint.rules <<EOF
 print "edition=[edition%.3d], level=[level%5ld]";
 EOF
 
-result=`${tools_dir}/grib_filter  ${data_dir}/formatint.rules  $GRIB_SAMPLES_PATH/GRIB1.tmpl`
+result=`${tools_dir}/grib_filter  ${data_dir}/formatint.rules  $ECCODES_SAMPLES_PATH/GRIB1.tmpl`
 [ "$result" = "edition=001, level=  500" ]
 
 # Convert from grib1 to grib2 "Generalized vertical height coordinates"
@@ -68,7 +68,7 @@ set nlev=41.0;
 write;
 EOF
 
-${tools_dir}/grib_filter -o temp.grib2 temp.filt $GRIB_SAMPLES_PATH/sh_ml_grib1.tmpl
+${tools_dir}/grib_filter -o temp.grib2 temp.filt $ECCODES_SAMPLES_PATH/sh_ml_grib1.tmpl
 result=`${tools_dir}/grib_get -p typeOfFirstFixedSurface,NV,nlev temp.grib2`
 [ "$result" = "150 6 41" ]
 
@@ -100,7 +100,7 @@ else {
   assert(0);
 }
 EOF
-${tools_dir}/grib_filter  ${data_dir}/binop.rules $GRIB_SAMPLES_PATH/gg_sfc_grib1.tmpl >/dev/null
+${tools_dir}/grib_filter  ${data_dir}/binop.rules $ECCODES_SAMPLES_PATH/gg_sfc_grib1.tmpl >/dev/null
 
 
 # GRIB-526 grib_filter very picky about format of floats
@@ -114,7 +114,7 @@ set values = {
   .4,
   45. };
 EOF
-${tools_dir}/grib_filter temp.filt $GRIB_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_filter temp.filt $ECCODES_SAMPLES_PATH/GRIB1.tmpl
 
 
 rm -f temp.grib2 temp.filt

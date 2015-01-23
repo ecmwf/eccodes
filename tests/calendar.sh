@@ -14,7 +14,7 @@ REDIRECT=/dev/null
 
 temp1=temp1.calendar.$$
 temp2=temp2.calendar.$$
-sample=$GRIB_SAMPLES_PATH/GRIB2.tmpl
+sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 ########### Utility function ##############
 check_key_equals()

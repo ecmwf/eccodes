@@ -6,7 +6,7 @@ use strict;
 @ARGV = qw(master.info) unless(@ARGV);
 
 
-my $path = $ENV{ GRIB_DEFINITION_PATH };
+my $path = $ENV{ ECCODES_DEFINITION_PATH };
 $path    = "../definitions" unless( $path );
 $path    = $path . "/grib2";
 

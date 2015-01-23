@@ -12,7 +12,7 @@ diff $TEMP1 $TEMP2
 
 
 # Polar stereographic
-FILE="${GRIB_SAMPLES_PATH}/polar_stereographic_pl_grib2.tmpl"
+FILE="${ECCODES_SAMPLES_PATH}/polar_stereographic_pl_grib2.tmpl"
 $PYTHON iterator.py $FILE 2> $TEMP1 > $TEMP1
 ./p_iterator $FILE        2> $TEMP2 > $TEMP2
 diff $TEMP1 $TEMP2

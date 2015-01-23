@@ -67,21 +67,21 @@ int main( int argc,char* argv[])
         printf("\n");
 
 
-        if ((path=getenv("GRIB_DEFINITION_PATH")) != NULL) {
+        if ((path=getenv("ECCODES_DEFINITION_PATH")) != NULL) {
             printf("Definition files path from environment variable");
-            printf(" GRIB_DEFINITION_PATH=%s\n",path);
+            printf(" ECCODES_DEFINITION_PATH=%s\n",path);
         } else {
             printf("Default definition files path is used: %s\n",GRIB_DEFINITION_PATH);
-            printf("Definition files path can be changed setting GRIB_DEFINITION_PATH environment variable\n");
+            printf("Definition files path can be changed setting ECCODES_DEFINITION_PATH environment variable\n");
         }
         printf("\n");
 
-        if ((path=getenv("GRIB_SAMPLES_PATH")) != NULL) {
+        if ((path=getenv("ECCODES_SAMPLES_PATH")) != NULL) {
             printf("SAMPLES path from environment variable");
-            printf(" GRIB_SAMPLES_PATH=%s\n",path);
+            printf(" ECCODES_SAMPLES_PATH=%s\n",path);
         } else {
             printf("Default SAMPLES path is used: %s\n",GRIB_SAMPLES_PATH);
-            printf("SAMPLES path can be changed setting GRIB_SAMPLES_PATH environment variable\n");
+            printf("SAMPLES path can be changed setting ECCODES_SAMPLES_PATH environment variable\n");
         }
         printf("\n");
         return 0;
@@ -91,7 +91,7 @@ int main( int argc,char* argv[])
         printf("%d.%d.%d ",major,minor,revision);
 
     if (print_flags & INFO_PRINT_DEFINITION_PATH) {
-        if ((path=getenv("GRIB_DEFINITION_PATH")) != NULL) {
+        if ((path=getenv("ECCODES_DEFINITION_PATH")) != NULL) {
             printf("%s",path);
         } else {
             printf("%s",GRIB_DEFINITION_PATH);
@@ -99,7 +99,7 @@ int main( int argc,char* argv[])
     }
 
     if (print_flags & INFO_PRINT_SAMPLES_PATH) {
-        if ((path=getenv("GRIB_SAMPLES_PATH")) != NULL) {
+        if ((path=getenv("ECCODES_SAMPLES_PATH")) != NULL) {
             printf("%s",path);
         } else {
             printf("%s",GRIB_SAMPLES_PATH);

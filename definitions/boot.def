@@ -15,7 +15,7 @@ constant defaultTypeOfLevel="unknown" : hidden;
 
 # GRIBEX special boustrophedonic mode. See GRIB-472
 # If the environment variable is not defined, the key will be 0
-GRIBEX_boustrophedonic = getenv("GRIB_API_GRIBEX_BOUSTROPHEDONIC","0");
+GRIBEX_boustrophedonic = getenv("ECCODES_GRIBEX_BOUSTROPHEDONIC","0");
 
 
 constant zero=0 : hidden;

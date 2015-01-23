@@ -31,7 +31,7 @@ done
 
 # Now test non-TIGGE files too. We now expect tigge_check to fail!
 # All the grib files in the samples are non-TIGGE
-for file in ${GRIB_SAMPLES_PATH}/*.tmpl
+for file in ${ECCODES_SAMPLES_PATH}/*.tmpl
 do
    set +e
    ${tigge_dir}tigge_check ${file} 2> $REDIRECT > $REDIRECT

@@ -12,7 +12,7 @@ tmpfiles="fortran_interface.dat"
 
 trap 'rm -f $tmpfiles' 1 2 3 15
 
-export GRIB_DEFINITION_PATH=`pwd`"/definitions"
+export ECCODES_DEFINITION_PATH=`pwd`"/definitions"
 path=../data
 grib1=latlon.grib
 

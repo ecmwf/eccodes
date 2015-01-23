@@ -188,9 +188,9 @@ static void default_log(const grib_context* c, int level, const char* mess)
 
     if(level == GRIB_LOG_FATAL) { Assert(0);}
 
-    if(getenv("GRIB_API_FAIL_IF_LOG_MESSAGE"))
+    if(getenv("ECCODES_FAIL_IF_LOG_MESSAGE"))
     {
-        long n = atol(getenv("GRIB_API_FAIL_IF_LOG_MESSAGE"));
+        long n = atol(getenv("ECCODES_FAIL_IF_LOG_MESSAGE"));
         if(n >= 1 && level == GRIB_LOG_ERROR) Assert(0);
         if(n >= 2 && level == GRIB_LOG_WARNING) Assert(0);
     }
@@ -339,18 +339,18 @@ grib_context* grib_context_get_default()
 
         GRIB_MUTEX_LOCK(&mutex_c);
 
-        write_on_fail = getenv("GRIB_API_WRITE_ON_FAIL");
-        large_constant_fields = getenv("GRIB_API_LARGE_CONSTANT_FIELDS");
-        no_abort = getenv("GRIB_API_NO_ABORT");
-        debug = getenv("GRIB_API_DEBUG");
-        gribex=getenv("GRIB_GRIBEX_MODE_ON");
-        ieee_packing=getenv("GRIB_IEEE_PACKING");
-        io_buffer_size=getenv("GRIB_API_IO_BUFFER_SIZE");
-        log_stream=getenv("GRIB_API_LOG_STREAM");
-        no_big_group_split=getenv("GRIB_API_NO_BIG_GROUP_SPLIT");
-        no_spd=getenv("GRIB_API_NO_SPD");
-        keep_matrix=getenv("GRIB_API_KEEP_MATRIX");
-        nounpack=getenv("GRIB_API_NO_UNPACK");
+        write_on_fail = getenv("ECCODES_GRIB_WRITE_ON_FAIL");
+        large_constant_fields = getenv("ECCODES_GRIB_LARGE_CONSTANT_FIELDS");
+        no_abort = getenv("ECCODES_NO_ABORT");
+        debug = getenv("ECCODES_DEBUG");
+        gribex=getenv("ECCODES_GRIBEX_MODE_ON");
+        ieee_packing=getenv("ECCODES_GRIB_IEEE_PACKING");
+        io_buffer_size=getenv("ECCODES_IO_BUFFER_SIZE");
+        log_stream=getenv("ECCODES_LOG_STREAM");
+        no_big_group_split=getenv("ECCODES_GRIB_NO_BIG_GROUP_SPLIT");
+        no_spd=getenv("ECCODES_GRIB_NO_SPD");
+        keep_matrix=getenv("ECCODES_GRIB_KEEP_MATRIX");
+        nounpack=getenv("ECCODES_NO_UNPACK");
 
         /* On UNIX, when we read from a file we get exactly what is in the file on disk.
          * But on Windows a file can be opened in binary or text mode. In binary mode the system behaves exactly as in UNIX.
@@ -371,7 +371,7 @@ grib_context* grib_context_get_default()
         default_grib_context.gribex_mode_on=gribex ? atoi(gribex) : 0;
         default_grib_context.large_constant_fields = large_constant_fields ? atoi(large_constant_fields) : 0;
         default_grib_context.ieee_packing=ieee_packing ? atoi(ieee_packing) : 0;
-        default_grib_context.grib_samples_path = getenv("GRIB_SAMPLES_PATH");
+        default_grib_context.grib_samples_path = getenv("ECCODES_SAMPLES_PATH");
         default_grib_context.log_stream=stderr;
         if (!log_stream) {
             default_grib_context.log_stream=stderr;
@@ -382,13 +382,13 @@ grib_context* grib_context_get_default()
         }
 
         if (!default_grib_context.grib_samples_path)
-            default_grib_context.grib_samples_path = getenv("GRIB_TEMPLATES_PATH");
+            default_grib_context.grib_samples_path = getenv("ECCODES_TEMPLATES_PATH");
 #ifdef GRIB_TEMPLATES_PATH
         if(!default_grib_context.grib_samples_path)
             default_grib_context.grib_samples_path = GRIB_TEMPLATES_PATH ;
 #endif
 
-        default_grib_context.grib_definition_files_path = getenv("GRIB_DEFINITION_PATH");
+        default_grib_context.grib_definition_files_path = getenv("ECCODES_DEFINITION_PATH");
 #ifdef GRIB_DEFINITION_PATH
         if(!default_grib_context.grib_definition_files_path) {
             default_grib_context.grib_definition_files_path = GRIB_DEFINITION_PATH ;
@@ -469,7 +469,7 @@ grib_context* grib_context_new(grib_context* parent)
     return c;
 }
 
-/* Hopefully big enough. Note: GRIB_DEFINITION_PATH can contain SEVERAL colon-separated sub-paths */
+/* Hopefully big enough. Note: ECCODES_DEFINITION_PATH can contain SEVERAL colon-separated sub-paths */
 #define DEF_PATH_MAXLEN 8192
 
 /* GRIB-235: Resolve path to expand symbolic links etc */

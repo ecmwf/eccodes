@@ -33,7 +33,7 @@ program sample
   !     A new grib message is loaded from an existing sample.
   !     Samples are searched in a default sample path (use codes_info
   !     to see where that is). The default sample path can be changed by
-  !     setting the environment variable GRIB_SAMPLES_PATH
+  !     setting the environment variable ECCODES_SAMPLES_PATH
   call codes_new_from_samples(igribsample, "regular_latlon_surface.grib1")
 
   call codes_open_file(outfile, 'out.grib1','w')

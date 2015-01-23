@@ -65,7 +65,7 @@ while [ $i -le $COUNT ]; do
 done
 echo "};write;"       >> $filter
 # Apply this filter to a grib2 file from samples.
-${tools_dir}grib_filter -o temp.pv.grib2 $filter $GRIB_SAMPLES_PATH/reduced_gg_ml_grib2.tmpl
+${tools_dir}grib_filter -o temp.pv.grib2 $filter $ECCODES_SAMPLES_PATH/reduced_gg_ml_grib2.tmpl
 # Convert this new grib2 file to grib1. This command SHOULD FAIL
 set +e
 ${tools_dir}grib_set -s edition=1 temp.pv.grib2 temp.bad.grib1 2>$REDIRECT
