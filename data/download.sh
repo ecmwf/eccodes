@@ -632,6 +632,7 @@ files="
     bufr/tmr7_129.bufr.num.ref
     bufr/tros_31.bufr.num.ref
     bufr/wavb_134.bufr.num.ref
+    bufr/syno_multi.bufr.num.ref
     
     bufr/aaen_55.bufr.desc.ref
     bufr/aben_55.bufr.desc.ref
@@ -766,6 +767,8 @@ files="
     bufr/tros_31.bufr.desc.ref
     bufr/wavb_134.bufr.desc.ref
     bufr/aaen_55.bufr.ls.ref
+    bufr/syno_multi.bufr.desc.ref
+
     bufr/syno_multi.bufr.header.ref
   "
 

@@ -268,6 +268,7 @@ set(bufr_refs_to_download
    tmr7_129.bufr.num.ref
    tros_31.bufr.num.ref
    wavb_134.bufr.num.ref
+   syno_multi.bufr.num.ref
    
    aaen_55.bufr.desc.ref
    aben_55.bufr.desc.ref
@@ -401,6 +402,8 @@ set(bufr_refs_to_download
    tmr7_129.bufr.desc.ref
    tros_31.bufr.desc.ref
    wavb_134.bufr.desc.ref
+   syno_multi.bufr.desc.ref
+
    aaen_55.bufr.ls.ref
    syno_multi.bufr.header.ref
    syno_multi.bufr
