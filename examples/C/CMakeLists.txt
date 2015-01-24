@@ -32,6 +32,7 @@ list( APPEND test_bins
       clone
       check_gaussian_grid
       ensemble_index
+      bufr_read_header
 )
 foreach( tool ${test_bins} )
     ecbuild_add_executable( TARGET    ${tool}
@@ -41,7 +42,7 @@ foreach( tool ${test_bins} )
     )
 endforeach()
 
-# Now add each test
+# Now add each test (shell scripts)
 #################################################
 list( APPEND tests
    iterator
@@ -60,6 +61,7 @@ list( APPEND tests
    sections_copy
    set_pv
    check_gaussian_grids
+   bufr_read_header
 )
 foreach( test ${tests} )
     ecbuild_add_test( TARGET c_${test}

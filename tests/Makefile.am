@@ -1,5 +1,5 @@
 TESTS = definitions.sh calendar.sh \
-        bufrdc_desc_ref.sh bufrdc_ref.sh bufr_dump.sh bufr_json.sh bufr_read_header.sh bufr_ls.sh \
+        bufrdc_desc_ref.sh bufrdc_ref.sh bufr_dump.sh bufr_json.sh bufr_ls.sh \
         ieee.sh grib1to2.sh \
         unit_tests.sh \
         grib2to1.sh badgrib.sh ls.sh filter.sh  \
@@ -16,7 +16,7 @@ TESTS = definitions.sh calendar.sh \
 noinst_PROGRAMS = packing_check gauss_sub read_any double_cmp packing pack_unpack \
                   multi_from_message julian read_index index gribex_perf\
                   jpeg_perf ccsds_perf so_perf png_perf bpv_limit laplacian \
-                  unit_tests bufr_read_header
+                  unit_tests
 
 multi_from_message_SOURCES = multi_from_message.c
 laplacian_SOURCES = laplacian.c
@@ -35,7 +35,6 @@ png_perf_SOURCES = png_perf.c
 ccsds_perf_SOURCES  = ccsds_perf.c
 gribex_perf_SOURCES = gribex_perf.c
 gauss_sub_SOURCES = gauss_sub.c
-bufr_read_header_SOURCES = bufr_read_header.c
 
 LDADD = $(top_builddir)/src/libgrib_api.la $(EMOS_LIB)
 
