@@ -71,7 +71,7 @@ int main( int argc,char* argv[])
             printf("Definition files path from environment variable");
             printf(" ECCODES_DEFINITION_PATH=%s\n",path);
         } else {
-            printf("Default definition files path is used: %s\n",GRIB_DEFINITION_PATH);
+            printf("Default definition files path is used: %s\n",ECCODES_DEFINITION_PATH);
             printf("Definition files path can be changed setting ECCODES_DEFINITION_PATH environment variable\n");
         }
         printf("\n");
@@ -80,7 +80,7 @@ int main( int argc,char* argv[])
             printf("SAMPLES path from environment variable");
             printf(" ECCODES_SAMPLES_PATH=%s\n",path);
         } else {
-            printf("Default SAMPLES path is used: %s\n",GRIB_SAMPLES_PATH);
+            printf("Default SAMPLES path is used: %s\n",ECCODES_SAMPLES_PATH);
             printf("SAMPLES path can be changed setting ECCODES_SAMPLES_PATH environment variable\n");
         }
         printf("\n");
@@ -94,7 +94,7 @@ int main( int argc,char* argv[])
         if ((path=getenv("ECCODES_DEFINITION_PATH")) != NULL) {
             printf("%s",path);
         } else {
-            printf("%s",GRIB_DEFINITION_PATH);
+            printf("%s",ECCODES_DEFINITION_PATH);
         }
     }
 
@@ -102,7 +102,7 @@ int main( int argc,char* argv[])
         if ((path=getenv("ECCODES_SAMPLES_PATH")) != NULL) {
             printf("%s",path);
         } else {
-            printf("%s",GRIB_SAMPLES_PATH);
+            printf("%s",ECCODES_SAMPLES_PATH);
         }
     }
 

@@ -9,8 +9,8 @@ then
   cpath=`pwd`
   ECCODES_DEFINITION_PATH=$cpath/definitions
   export ECCODES_DEFINITION_PATH
-  GRIB_TEMPLATES_PATH=$cpath/templates
-  export GRIB_TEMPLATES_PATH
+  ECCODES_SAMPLES_PATH=$cpath/templates
+  export ECCODES_SAMPLES_PATH
   tools_dir=$cpath/tools/
   examples_dir=$cpath/examples/F77/
   data_dir=$cpath/data

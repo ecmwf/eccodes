@@ -1,6 +1,6 @@
 %include <head.h>
 
-export GRIB_DEFINITION_PATH=/home/ma/mab/src/q/definitions
+export ECCODES_DEFINITION_PATH=/home/ma/mab/src/q/definitions
 /home/ma/mab/src/q/gribex data || true
 
 

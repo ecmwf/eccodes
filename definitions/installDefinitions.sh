@@ -109,7 +109,7 @@ if [ ${definitions} != $defaultDefinitions ]
 then
 echo "
 ## Please remember to set
-##    GRIB_DEFINITION_PATH=${definitions}
+##    ECCODES_DEFINITION_PATH=${definitions}
 ## to activate the new definition files.
 "
 

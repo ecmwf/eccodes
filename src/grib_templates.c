@@ -90,7 +90,6 @@ grib_handle* grib_external_template(grib_context* c,const char* name)
 	char buffer[1024];
 	char *p = buffer;
 	grib_handle *g = NULL;
-	/* printf("GRIB_TEMPLATES_PATH=%s\n",base); */
 
 	if(!base) return NULL;
 

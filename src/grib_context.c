@@ -381,17 +381,15 @@ grib_context* grib_context_get_default()
             default_grib_context.log_stream=stdout;
         }
 
-        if (!default_grib_context.grib_samples_path)
-            default_grib_context.grib_samples_path = getenv("ECCODES_TEMPLATES_PATH");
-#ifdef GRIB_TEMPLATES_PATH
+#ifdef ECCODES_SAMPLES_PATH
         if(!default_grib_context.grib_samples_path)
-            default_grib_context.grib_samples_path = GRIB_TEMPLATES_PATH ;
+            default_grib_context.grib_samples_path = ECCODES_SAMPLES_PATH ;
 #endif
 
         default_grib_context.grib_definition_files_path = getenv("ECCODES_DEFINITION_PATH");
-#ifdef GRIB_DEFINITION_PATH
+#ifdef ECCODES_DEFINITION_PATH
         if(!default_grib_context.grib_definition_files_path) {
-            default_grib_context.grib_definition_files_path = GRIB_DEFINITION_PATH ;
+            default_grib_context.grib_definition_files_path = ECCODES_DEFINITION_PATH ;
         }
         else {
             /* Temp bug fix when putenv() is called from program that moves getenv() stuff around */

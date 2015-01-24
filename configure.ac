@@ -207,14 +207,11 @@ AC_ARG_WITH(rpm-release, [  --with-rpm-release=NUMBER       The rpms will use th
                 RPM_RELEASE="$withval", RPM_RELEASE=1)
 AC_SUBST(RPM_RELEASE)
 
+ECCODES_SAMPLES_PATH=$samples_files_path
+ECCODES_DEFINITION_PATH=$definition_files_path
 
-GRIB_SAMPLES_PATH=$samples_files_path
-GRIB_TEMPLATES_PATH=$samples_files_path
-GRIB_DEFINITION_PATH=$definition_files_path
-
-AC_SUBST(GRIB_TEMPLATES_PATH)
-AC_SUBST(GRIB_SAMPLES_PATH)
-AC_SUBST(GRIB_DEFINITION_PATH)
+AC_SUBST(ECCODES_SAMPLES_PATH)
+AC_SUBST(ECCODES_DEFINITION_PATH)
 
 dnl Fortran interface
 AC_ARG_ENABLE([fortran],

@@ -1,5 +1,5 @@
 
-samplesdir = @GRIB_SAMPLES_PATH@
+samplesdir = @ECCODES_SAMPLES_PATH@
 
 dist_samples_DATA = \
     GRIB1.tmpl \

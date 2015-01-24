@@ -8,9 +8,9 @@
 # 
 # the information comes from master.info except for unit   
 # 
-# an evironmental variable GRIB_DEFINITION_PATH must exist 
-# master.info is in GRIB_DEFINITION_PATH/../parameters
-# the units are taken from GRIB_DEFINITION_PATH/definitions/*
+# an evironmental variable ECCODES_DEFINITION_PATH must exist 
+# master.info is in ECCODES_DEFINITION_PATH/../parameters
+# the units are taken from ECCODES_DEFINITION_PATH/definitions/*
 # 
 # a table parameters with the above columns must exist
 #

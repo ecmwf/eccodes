@@ -175,8 +175,8 @@ else()
     set( grib_api_default_data_prefix ${CMAKE_BINARY_DIR} )
 endif()
 
-if( NOT DEFINED GRIB_API_DEFINITION_PATH )
-    set( GRIB_API_DEFINITION_PATH ${grib_api_default_data_prefix}/share/grib_api/definitions )
+if( NOT DEFINED ECCODES_DEFINITION_PATH )
+    set( ECCODES_DEFINITION_PATH ${grib_api_default_data_prefix}/share/grib_api/definitions )
 endif()
 if( NOT DEFINED GRIB_API_SAMPLES_PATH )
     set( GRIB_API_SAMPLES_PATH ${grib_api_default_data_prefix}/share/grib_api/samples )
@@ -258,14 +258,14 @@ if( EC_HAVE_FORTRAN )
     list( APPEND GRIB_API_LIBRARIES grib_api_f77 grib_api_f90 )
 endif()
 
-if( NOT ${PROJECT_NAME} STREQUAL  ${CMAKE_PROJECT_NAME} )
-    set( GRIB_API_DEFINITIONS     ${GRIB_API_DEFINITIONS}  PARENT_SCOPE )# includes already TPL definitions
-    set( GRIB_API_INCLUDE_DIRS    ${GRIB_API_INCLUDE_DIRS} ${GRIB_API_EXTRA_INCLUDE_DIRS} PARENT_SCOPE )
-    set( GRIB_API_LIBRARIES       ${GRIB_API_LIBRARIES}    ${GRIB_API_EXTRA_LIBRARIES} ${CMATH_LIBRARIES} PARENT_SCOPE )
-    set( GRIB_API_FOUND           TRUE PARENT_SCOPE )
+if( NOT ${PROJECT_NAME} STREQUAL   ${CMAKE_PROJECT_NAME} )
+    set( GRIB_API_DEFINITIONS      ${GRIB_API_DEFINITIONS}  PARENT_SCOPE )# includes already TPL definitions
+    set( GRIB_API_INCLUDE_DIRS     ${GRIB_API_INCLUDE_DIRS} ${GRIB_API_EXTRA_INCLUDE_DIRS} PARENT_SCOPE )
+    set( GRIB_API_LIBRARIES        ${GRIB_API_LIBRARIES}    ${GRIB_API_EXTRA_LIBRARIES} ${CMATH_LIBRARIES} PARENT_SCOPE )
+    set( GRIB_API_FOUND            TRUE PARENT_SCOPE )
     set( GRIB_API_SAMPLES_PATH     ${GRIB_API_SAMPLES_PATH} PARENT_SCOPE )
     set( GRIB_API_IFS_SAMPLES_PATH ${GRIB_API_IFS_SAMPLES_PATH} PARENT_SCOPE )
-    set( GRIB_API_DEFINITION_PATH  ${GRIB_API_DEFINITION_PATH} PARENT_SCOPE )
+    set( ECCODES_DEFINITION_PATH   ${ECCODES_DEFINITION_PATH} PARENT_SCOPE )
 endif()
 
 ############################################################################################

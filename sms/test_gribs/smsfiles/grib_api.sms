@@ -3,7 +3,7 @@
 name=%FAMILY1%
 rm -fr /scratch/ma/max/problems/$name
 
-export GRIB_DEFINITION_PATH=/home/ma/mab/src/q/definitions
+export ECCODES_DEFINITION_PATH=/home/ma/mab/src/q/definitions
 here=`pwd`
 cd /home/ma/mab/src/q
 test=$(ls *.test)
