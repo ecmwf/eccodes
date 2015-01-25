@@ -668,6 +668,6 @@ AC_MSG_NOTICE([
 
   Configuration completed.
 
-    You can now say 'make' to compile the grib_api package, 'make check' to
+    You can now say 'make' to compile the eccodes package, 'make check' to
 	  test it  and 'make install' to install it afterwards.
 	  ])
