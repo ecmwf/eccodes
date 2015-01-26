@@ -8,7 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 . ./include.sh
 
 REDIRECT=/dev/null
@@ -21,5 +20,3 @@ if [ $? -eq 0 ]
   then
   exit 1;
 fi
-
-

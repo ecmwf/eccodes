@@ -10,7 +10,6 @@
 
 . ./include.sh
 
-rm -f log | true
 workdir=`pwd`
 REDIRECT=/dev/null
 

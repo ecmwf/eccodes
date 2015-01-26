@@ -8,7 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 . ./include.sh
 
 if [ ! -f ${data_dir}/multi.grib2 ]
@@ -18,8 +17,7 @@ then
 fi
 
 tmpdata=grib_api.$$.grib
-
-rm -f $tmpdata || true
+rm -f $tmpdata
 
 parameterNumber=`${tools_dir}grib_get -p parameterNumber -w parameterCategory=2,parameterNumber=3 ${data_dir}/multi.grib2`
 if [ -z "$parameterNumber"  ] 
@@ -45,4 +43,3 @@ then
 fi
 
 rm -f $tmpdata.1 $tmpdata.rules || true
-

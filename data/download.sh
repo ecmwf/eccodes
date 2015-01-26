@@ -45,6 +45,7 @@ files="
     in_copy.grib
     budg
     constant_field.grib1
+    constant_field.grib2
     constant_width_bitmap.grib
     constant_width_boust_bitmap.grib
     gen.grib
@@ -110,7 +111,9 @@ files="
     spectral_compex.grib1
     spectral_complex.grib1
     spherical_model_level.grib1
+    spherical_model_level.grib2
     spherical_pressure_level.grib1
+    spherical_pressure_level.grib2
     sst_globus0083.grib
     test.grib1
     test_uuid.grib2
@@ -494,6 +497,7 @@ files="
     bufr/syno_3.bufr
     bufr/syno_4.bufr
     bufr/syno_multi.bufr
+    bufr/synop_multi_subset.bufr
     bufr/temp_101.bufr
     bufr/temp_102.bufr
     bufr/temp_106.bufr
@@ -633,6 +637,7 @@ files="
     bufr/tros_31.bufr.num.ref
     bufr/wavb_134.bufr.num.ref
     bufr/syno_multi.bufr.num.ref
+    bufr/synop_multi_subset.bufr.num.ref
     
     bufr/aaen_55.bufr.desc.ref
     bufr/aben_55.bufr.desc.ref
@@ -768,6 +773,7 @@ files="
     bufr/wavb_134.bufr.desc.ref
     bufr/aaen_55.bufr.ls.ref
     bufr/syno_multi.bufr.desc.ref
+    bufr/synop_multi_subset.bufr.desc.ref
 
     bufr/syno_multi.bufr.header.ref
   "

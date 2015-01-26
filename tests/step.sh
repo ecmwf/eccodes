@@ -13,7 +13,7 @@
 REDIRECT=/dev/null
 
 templog=${data_dir}/log.step.$$
-rm -f ${templog} | true
+rm -f ${templog} || true
 for i in 0 10
 do
   for s in 0 1200 600 6000

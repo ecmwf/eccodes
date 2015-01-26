@@ -11,14 +11,13 @@
 . ./include.sh
 #set -x
 
-outfile=out.grib
 sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-temp=temp.grib
+temp=temp.level.grib
 
 file=${data_dir}/regular_gaussian_pressure_level.grib1
 
-cat >good<<EOF
+cat >temp.level.good<<EOF
 grib1: level=850 isobaricInhPa indicatorOfTypeOfLevel=100
 grib2: level=850 isobaricInhPa pl 85000
 grib1: level=850 isobaricInhPa indicatorOfTypeOfLevel=100
@@ -58,7 +57,7 @@ EOF
 
     
 ${tools_dir}grib_filter level.filter $file > test.dump
-diff good test.dump
+diff temp.level.good test.dump
 
 # GRIB-492
 ${tools_dir}grib_set -s indicatorOfTypeOfLevel=110 $sample_g1 $temp
@@ -75,4 +74,4 @@ input=${data_dir}/tigge_pf_ecmwf.grib2
 res=`${tools_dir}grib_get -wcount=7 -F%.20f -p level:d $input`
 [ "$res" = "2.00000000000000000000" ]
 
-rm -f level.filter good test.dump $temp
+rm -f level.filter temp.level.good test.dump $temp

@@ -14,7 +14,7 @@ REDIRECT=/dev/null
 
 if [ -f ${data_dir}/geavg.t12z.pgrbaf108 ]
 then
-	tmpdata=grib_api.grib
+	tmpdata=grib_api.$$.grib
 	rm -f $tmpdata || true
 	${tools_dir}grib_filter ${data_dir}/filter_rules ${data_dir}/geavg.t12z.pgrbaf108 > $REDIRECT
 	rm -f $tmpdata
@@ -68,8 +68,8 @@ set nlev=41.0;
 write;
 EOF
 
-${tools_dir}/grib_filter -o temp.grib2 temp.filt $ECCODES_SAMPLES_PATH/sh_ml_grib1.tmpl
-result=`${tools_dir}/grib_get -p typeOfFirstFixedSurface,NV,nlev temp.grib2`
+${tools_dir}/grib_filter -o temp_filt.grib2 temp.filt $ECCODES_SAMPLES_PATH/sh_ml_grib1.tmpl
+result=`${tools_dir}/grib_get -p typeOfFirstFixedSurface,NV,nlev temp_filt.grib2`
 [ "$result" = "150 6 41" ]
 
 # GRIB-394: grib_filter arithmetic operators not correct for floating point values
@@ -117,5 +117,5 @@ EOF
 ${tools_dir}/grib_filter temp.filt $ECCODES_SAMPLES_PATH/GRIB1.tmpl
 
 
-rm -f temp.grib2 temp.filt
+rm -f temp_filt.grib2 temp.filt
 rm -f ${data_dir}/formatint.rules ${data_dir}/binop.rules

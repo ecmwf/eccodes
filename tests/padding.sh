@@ -11,8 +11,9 @@
 . ./include.sh
 
 REDIRECT=/dev/null
+temp=loc.padding.grib1
 
-${tools_dir}grib_set -s setLocalDefinition=1 ${data_dir}/regular_latlon_surface.grib1 loc.grib1
+${tools_dir}grib_set -s setLocalDefinition=1 ${data_dir}/regular_latlon_surface.grib1 $temp
 cat  > $$_f <<EOF
 	if (GRIBEXSection1Problem ) {
 		print "localDefinitionNumber=[localDefinitionNumber] size(GRIBEX-section1)=[GRIBEXSection1Problem] section1Length=[section1Length]";
@@ -33,7 +34,7 @@ localDefinitions=`find ${def_dir}/grib1/ -name 'local.98.*def' | sed -e 's:.*/::
 
 for l1 in $localDefinitions
 do
-	${tools_dir}grib_set -s localDefinitionNumber=$l1 loc.grib1 locx.grib1
+	${tools_dir}grib_set -s localDefinitionNumber=$l1 $temp locx.grib1
 	${tools_dir}grib_filter $$_f locx.grib1
 	for l2 in $localDefinitions
 	do
@@ -43,4 +44,4 @@ do
 	done
 done
 
-rm -f $$_f locx.grib1 locy.grib1 loc.grib1
+rm -f $$_f locx.grib1 locy.grib1 $temp

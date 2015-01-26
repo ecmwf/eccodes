@@ -20,4 +20,3 @@ status=$?
 set -e
 # Check command did indeed fail
 [ $status != 0 ]
-

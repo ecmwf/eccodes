@@ -8,19 +8,18 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 . ./include.sh
 #set -x
 
 REDIRECT=/dev/null
 
 cd ${data_dir}
-rm -f local.log | true
+rm -f local.log
 
 ${tools_dir}grib_set -s edition=2,setLocalDefinition=1 reduced_gaussian_model_level.grib1 loc.grib2
-${tools_dir}grib_set -s setLocalDefinition=1 reduced_gaussian_model_level.grib1 loc.grib1
+${tools_dir}grib_set -s setLocalDefinition=1           reduced_gaussian_model_level.grib1 loc.grib1
 
-#conversion 1->2
+# conversion 1->2
 for localDefinitionNumber in 1 15 26 30
 do
 	${tools_dir}grib_set -s localDefinitionNumber=$localDefinitionNumber,perturbationNumber=2,numberOfForecastsInEnsemble=50 loc.grib1 eps.grib1

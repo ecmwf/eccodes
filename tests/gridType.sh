@@ -13,9 +13,8 @@
 
 REDIRECT=/dev/null
 
-tmpdata=grib_api.grib
-
-rm -f $tmpdata || true
+tmpdata=grib_api.gridType.grib
+rm -f $tmpdata
 
 ${tools_dir}grib_set -s gridType=regular_gg ${data_dir}/reduced_latlon_surface.grib1 ${tmpdata} > $REDIRECT
 
@@ -40,4 +39,3 @@ then
 fi
 
 rm -f $tmpdata || true
-
