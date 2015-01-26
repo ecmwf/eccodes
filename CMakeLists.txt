@@ -6,9 +6,6 @@
 #
 #       -DCMAKE_MODULE_PATH=/path/to/ecbuild/cmake
 
-# TODO:
-#   * build python bindings
-
 cmake_minimum_required( VERSION 2.8.4 FATAL_ERROR )
 
 project( grib_api C )
@@ -178,11 +175,11 @@ endif()
 if( NOT DEFINED ECCODES_DEFINITION_PATH )
     set( ECCODES_DEFINITION_PATH ${grib_api_default_data_prefix}/share/grib_api/definitions )
 endif()
-if( NOT DEFINED GRIB_API_SAMPLES_PATH )
-    set( GRIB_API_SAMPLES_PATH ${grib_api_default_data_prefix}/share/grib_api/samples )
+if( NOT DEFINED ECCODES_SAMPLES_PATH )
+    set( ECCODES_SAMPLES_PATH ${grib_api_default_data_prefix}/share/grib_api/samples )
 endif()
-if( NOT DEFINED GRIB_API_IFS_SAMPLES_PATH )
-    set( GRIB_API_IFS_SAMPLES_PATH ${grib_api_default_data_prefix}/share/grib_api/ifs_samples )
+if( NOT DEFINED ECCODES_IFS_SAMPLES_PATH )
+    set( ECCODES_IFS_SAMPLES_PATH ${grib_api_default_data_prefix}/share/grib_api/ifs_samples )
 endif()
 
 ### config header
@@ -208,7 +205,7 @@ set( GRIB_API_TPLS            AEC PNG NetCDF Jasper OpenJPEG CMath )
 set( GRIB_API_INCLUDE_DIRS    ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src )
 set( GRIB_API_LIBRARIES       grib_api )
 
-get_directory_property( COMPILE_DEFINITIONS GRIB_API_DEFINITIONS )
+get_directory_property( COMPILE_DEFINITIONS ECCODES_DEFINITIONS )
 
 foreach( _tpl ${GRIB_API_TPLS} )
     string( TOUPPER ${_tpl} TPL )
@@ -259,14 +256,14 @@ if( EC_HAVE_FORTRAN )
 endif()
 
 if( NOT ${PROJECT_NAME} STREQUAL   ${CMAKE_PROJECT_NAME} )
-    set( GRIB_API_DEFINITIONS      ${GRIB_API_DEFINITIONS}  PARENT_SCOPE )# includes already TPL definitions
+    set( ECCODES_DEFINITIONS       ${ECCODES_DEFINITIONS}  PARENT_SCOPE )# includes already TPL definitions
     set( GRIB_API_INCLUDE_DIRS     ${GRIB_API_INCLUDE_DIRS} ${GRIB_API_EXTRA_INCLUDE_DIRS} PARENT_SCOPE )
     set( GRIB_API_LIBRARIES        ${GRIB_API_LIBRARIES}    ${GRIB_API_EXTRA_LIBRARIES} ${CMATH_LIBRARIES} PARENT_SCOPE )
-    set( GRIB_API_FOUND            TRUE PARENT_SCOPE )
-    set( GRIB_API_SAMPLES_PATH     ${GRIB_API_SAMPLES_PATH} PARENT_SCOPE )
-    set( GRIB_API_IFS_SAMPLES_PATH ${GRIB_API_IFS_SAMPLES_PATH} PARENT_SCOPE )
+    set( ECCODES_FOUND             TRUE PARENT_SCOPE )
+    set( ECCODES_SAMPLES_PATH      ${ECCODES_SAMPLES_PATH} PARENT_SCOPE )
+    set( ECCODES_IFS_SAMPLES_PATH  ${ECCODES_IFS_SAMPLES_PATH} PARENT_SCOPE )
     set( ECCODES_DEFINITION_PATH   ${ECCODES_DEFINITION_PATH} PARENT_SCOPE )
-    set( ECCODES_INSTALL_ECMWF_TOOLS   ${ECCODES_INSTALL_ECMWF_TOOLS} PARENT_SCOPE )
+    set( ECCODES_INSTALL_ECMWF_TOOLS  ${ECCODES_INSTALL_ECMWF_TOOLS} PARENT_SCOPE )
 endif()
 
 ############################################################################################
