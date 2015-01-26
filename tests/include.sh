@@ -22,6 +22,12 @@ else
   # save current working dir
   save=`pwd`
 
+  # If this environment variable is set, then become verbose
+  # so one can see why and how a test failed
+  if test "x$ECCODES_TEST_VERBOSE_OUTPUT" != "x"; then
+     set -x
+  fi
+
   if [ -z "${data_dir}" ]
   then
     cd ../

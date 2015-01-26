@@ -1,6 +1,12 @@
 set -ea
 # For CMake
 
+# If this environment variable is set, then become verbose
+# so one can see why and how a test failed
+if test "x$ECCODES_TEST_VERBOSE_OUTPUT" != "x"; then
+   set -x
+fi
+
 proj_dir=@PROJECT_SOURCE_DIR@
 data_dir=@PROJECT_BINARY_DIR@/data
 
@@ -16,8 +22,3 @@ samp_dir="${proj_dir}/samples"
 ECCODES_SAMPLES_PATH=${samp_dir}
 export ECCODES_SAMPLES_PATH
 
-# If this environment variable is set, then become verbose
-# so one can see why and how a test failed
-if test "x$ECCODES_TEST_VERBOSE_OUTPUT" != "x"; then
-   set -x
-fi
