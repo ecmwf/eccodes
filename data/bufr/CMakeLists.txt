@@ -127,6 +127,7 @@ set(bufr_files_to_download
    syno_2.bufr
    syno_3.bufr
    syno_4.bufr
+   synop_multi_subset.bufr
    temp_101.bufr
    temp_102.bufr
    temp_106.bufr
@@ -269,6 +270,7 @@ set(bufr_refs_to_download
    tros_31.bufr.num.ref
    wavb_134.bufr.num.ref
    syno_multi.bufr.num.ref
+   synop_multi_subset.bufr.num.ref
    
    aaen_55.bufr.desc.ref
    aben_55.bufr.desc.ref
@@ -403,6 +405,7 @@ set(bufr_refs_to_download
    tros_31.bufr.desc.ref
    wavb_134.bufr.desc.ref
    syno_multi.bufr.desc.ref
+   synop_multi_subset.bufr.desc.ref
 
    aaen_55.bufr.ls.ref
    syno_multi.bufr.header.ref
