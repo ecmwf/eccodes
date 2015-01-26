@@ -10,19 +10,20 @@
 
 . ./include.sh
 
-rm -f log | true
+tempLog=temp.ls.log
+rm -f $tempLog
 workdir=`pwd`
 
 cd ${data_dir}
 infile=regular_gaussian_model_level.grib1
 
-${tools_dir}grib_ls -P count $infile > log
-${tools_dir}grib_ls -p count,step $infile >> log
-${tools_dir}grib_ls $infile >> log
-${tools_dir}grib_ls -l 0,0,1 $infile >> log
-${tools_dir}grib_get -l 0,0,1 $infile >> log
-${tools_dir}grib_get -p count,step $infile >> log
-${tools_dir}grib_get -P count $infile >> log
+${tools_dir}grib_ls -P count $infile       >  $tempLog
+${tools_dir}grib_ls -p count,step $infile  >> $tempLog
+${tools_dir}grib_ls $infile                >> $tempLog
+${tools_dir}grib_ls -l 0,0,1 $infile       >> $tempLog
+${tools_dir}grib_get -l 0,0,1 $infile      >> $tempLog
+${tools_dir}grib_get -p count,step $infile >> $tempLog
+${tools_dir}grib_get -P count $infile      >> $tempLog
 
 files=" reduced_gaussian_lsm.grib1
 reduced_gaussian_model_level.grib1
@@ -52,12 +53,12 @@ regular_latlon_surface.grib2
 for file in $files
 do
   [ -f "$file" ]
-  echo $file >> log
-  ${tools_dir}grib_ls -l 40,28 $file  | grep index | awk '{print $4;}' >> log
+  echo $file >> $tempLog
+  ${tools_dir}grib_ls -l 40,28 $file  | grep index | awk '{print $4;}' >> $tempLog
 done
 
-diff log ls.log 
-rm -f log
+diff $tempLog ls.log 
+rm -f $tempLog
 
 # Test for bug GRIB-56
 ${tools_dir}grib_set -s typeOfLevel=depthBelowLandLayer,topLevel=missing regular_latlon_surface.grib1 tmp_rlls.grib1

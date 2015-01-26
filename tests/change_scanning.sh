@@ -13,7 +13,6 @@
 
 editions="1 2"
 gridTypes="regular_ll rotated_ll" 
-outfile=out.grib
 Ni_list="5 8"
 Nj_list="7 4"
 

@@ -18,7 +18,7 @@ set satelliteNumber={4,4,4,5};
 set instrumentType={591,591,591,592};
 set scaleFactorOfCentralWaveNumber={3,3,3,4};
 set scaledValueOfCentralWaveNumber={26870,9272,8377,22334};
-write "test.grib";
+write "test.list.grib";
 EOF
 
 file="${data_dir}/reduced_gaussian_model_level.grib2"
@@ -35,7 +35,7 @@ print("x.out") "scaleFactorOfCentralWaveNumber={[scaleFactorOfCentralWaveNumber'
 print("x.out") "scaledValueOfCentralWaveNumber={[scaledValueOfCentralWaveNumber',']}";
 EOF
 
-${tools_dir}grib_filter list.filter test.grib
+${tools_dir}grib_filter list.filter test.list.grib
 
 cat >list.ref<<EOF
 productDefinitionTemplateNumber=31
@@ -49,5 +49,5 @@ EOF
 
 diff x.out list.ref
 
-rm -f x.out list.ref list.filter test.grib
+rm -f x.out list.ref list.filter test.list.grib
 

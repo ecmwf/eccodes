@@ -8,7 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 . ./include.sh
 
 REDIRECT=/dev/null
@@ -37,4 +36,3 @@ ${tools_dir}grib_set -s centre=missing $infile $outfile 2> $REDIRECT > $REDIRECT
 [ $? -ne 0 ]
 
 rm -f $outfile
-

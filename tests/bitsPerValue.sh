@@ -65,7 +65,6 @@ spectral_complex.grib1
 spherical_model_level.grib1
 spherical_pressure_level.grib1
 test.grib1
-with_bitmap.grib1
 gep10.t12z.pgrb2af78.grib2
 gfs.c255.grib2
 jpeg.grib2
@@ -117,4 +116,3 @@ done
 # Extra test for grid_complex_spatial_differencing
 res=`${tools_dir}grib_get -p decimalScaleFactor,bitsPerValue ${data_dir}/gfs.c255.grib2`
 [ "$res" = "1 20" ]
-

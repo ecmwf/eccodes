@@ -31,6 +31,8 @@ levtype=`${tools_dir}grib_get -p levtype:l $outfile`
 centre=`${tools_dir}grib_get -p centre:l $outfile`
 [ $centre -eq 80 ]
 
+rm -f $outfile || true
+
 infile=${data_dir}/regular_gaussian_surface.grib2
 outfile=${data_dir}/set.grib2
 
@@ -56,4 +58,4 @@ ${tools_dir}grib_set -p levtype $infile $outfile 2> $REDIRECT > $REDIRECT
 
 [ $? -ne 0 ]
 
-
+rm -f $outfile || true

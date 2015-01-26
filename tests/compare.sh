@@ -14,7 +14,7 @@
 REDIRECT=/dev/null
 
 infile="${data_dir}/regular_latlon_surface.grib1"
-outfile=${infile}.1
+outfile=${infile}.compare.$$
 
 rm -f $outfile || true
 

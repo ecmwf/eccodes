@@ -7,7 +7,6 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
-
 . ./include.sh
 
 REDIRECT=/dev/null
@@ -29,22 +28,22 @@ files="constant_field\
  spherical_pressure_level \
  spherical_model_level "
 
-for f in `echo $files`
+for f in $files
 do
   file=${data_dir}/$f
-  rm -f ${file}.grib1_ || true
-  ${tools_dir}grib_set -s editionNumber=1 ${file}.grib2 ${file}.grib1_ 2> $REDIRECT > $REDIRECT
+  output=${file}.grib1_
+  rm -f ${output} || true
+  ${tools_dir}grib_set -s editionNumber=1 ${file}.grib2 ${output} 2> $REDIRECT > $REDIRECT
 
-  grib1Statistics=`${tools_dir}grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib1_` 
+  grib1Statistics=`${tools_dir}grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${output}` 
   grib2Statistics=`${tools_dir}grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib2` 
 
-  if [ "$grib1Statistics" != "$grib2Statistics" ]
-  then 
+  if [ "$grib1Statistics" != "$grib2Statistics" ]; then 
     exit 1
   fi
 
-  #${tools_dir}grib_compare -A1.0e-8 -c values ${file}.grib1_ ${file}.grib2 2> /dev/null > /dev/null
-  rm -f ${file}.grib1_ || true
+  #${tools_dir}grib_compare -A1.0e-8 -c values ${output} ${file}.grib2 2> /dev/null > /dev/null
+  rm -f ${output}
 done
 
 # GRIB-262 Conversion works without error for L137 data
