@@ -11,4 +11,4 @@
 
 ${examples_dir}precision > /dev/null
 
-rm -f out.grib1
+rm -f out.precision.grib1

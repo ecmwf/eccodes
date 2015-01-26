@@ -32,7 +32,7 @@ program set_bitmap
     call codes_open_file(infile,'../../data/regular_latlon_surface.grib2','r')
   end if
   
-  call codes_open_file(outfile,'out.grib','w')
+  call codes_open_file(outfile,'out.bmp.grib','w')
   
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls

@@ -33,7 +33,7 @@ int main(int argc, char** argv)
     FILE* in = NULL;
     char* infile = "../../data/regular_latlon_surface.grib1";
     FILE* out = NULL;
-    char* outfile = "out.grib1";
+    char* outfile = "out.precision.grib1";
     codes_handle *h = NULL;
     const void* buffer = NULL;
     double* values1=NULL;

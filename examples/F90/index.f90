@@ -25,7 +25,6 @@ program index
   integer                          :: shortNameSize,numberSize,levelSize,stepSize
   integer              :: i,j,k,l
   integer              :: idx,igrib,count1
-  logical              :: index_exists
   character(len=10)    :: index_file='index.idx'
 
   ! uncomment following line to load index from file

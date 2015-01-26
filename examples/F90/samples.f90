@@ -36,7 +36,7 @@ program sample
   !     setting the environment variable ECCODES_SAMPLES_PATH
   call codes_new_from_samples(igribsample, "regular_latlon_surface.grib1")
 
-  call codes_open_file(outfile, 'out.grib1','w')
+  call codes_open_file(outfile, 'out.samples.grib1','w')
   call codes_open_file(datafile,'../../data/tp_ecmwf.grib','r')
 
   call codes_new_from_file(datafile,igribdata,err)

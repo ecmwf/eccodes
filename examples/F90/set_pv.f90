@@ -45,7 +45,7 @@ program set_pv
 
   close(unit=1)
 
-  call codes_open_file(outfile, 'out.grib1','w')
+  call codes_open_file(outfile, 'out.pv.grib1','w')
   
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls

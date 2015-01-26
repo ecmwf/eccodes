@@ -19,7 +19,7 @@ implicit none
   integer                      :: step,level
 
   call codes_open_file(ifile,'../../data/index.grib','r')
-  call codes_open_file(ofile,'out.grib','w')
+  call codes_open_file(ofile,'out.readmsg.grib','w')
  
 ! a grib message is read from file into buffer
   len1=size(buffer)*4

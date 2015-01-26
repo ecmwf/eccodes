@@ -26,7 +26,7 @@ program set
        '../../data/regular_latlon_surface_constant.grib1','r')
 
   call codes_open_file(outfile, &
-       'out.grib1','w')
+       'out.set.grib1','w')
 
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls

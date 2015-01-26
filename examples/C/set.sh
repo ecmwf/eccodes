@@ -11,6 +11,4 @@
 
 ${examples_dir}set > /dev/null
 
-${examples_dir}set_missing > /dev/null
-
-rm -f out.grib1 out_surface_level.grib2
+rm -f out.set.grib1

@@ -22,7 +22,6 @@ program find
   real(8), dimension(:), allocatable  :: nearest_lats, nearest_lons
   real(8), dimension(:), allocatable  :: distances, values, lsm_values
   integer(kind=kindOfInt), dimension(:), allocatable  :: indexes
-  real(kind=8)                        :: value
 
 ! initialization
   open( unit=1, file="../../data/list_points",form="formatted",action="read")

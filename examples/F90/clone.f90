@@ -25,7 +25,7 @@ program clone
   double precision, dimension(:,:), allocatable :: field2D
   
   call codes_open_file(infile,'../../data/constant_field.grib1','r')
-  call codes_open_file(outfile,'out.grib1','w')
+  call codes_open_file(outfile,'out.clone.grib1','w')
 
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls

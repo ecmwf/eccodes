@@ -10,7 +10,7 @@
 . ./include.sh
 
 in=../../data/index.grib
-out=out.grib
+out=out.readmsg.grib
 
 rm -f $out | true
 

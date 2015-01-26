@@ -77,7 +77,7 @@ endforeach()
 ecbuild_add_test( TARGET    c_new_sample
                   SOURCES   new_sample.c
                   LIBS      grib_api
-                  ARGS      "out.grib"
+                  ARGS      "out.new_sample.grib"
                   ENVIRONMENT "ECCODES_SAMPLES_PATH=${PROJECT_SOURCE_DIR}/samples" "ECCODES_DEFINITION_PATH=${PROJECT_SOURCE_DIR}/definitions"
 )
 

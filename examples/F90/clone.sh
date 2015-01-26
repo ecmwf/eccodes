@@ -10,3 +10,4 @@
 . ./include.sh
 
 ${examples_dir}f_clone > /dev/null
+rm -f out.clone.grib1

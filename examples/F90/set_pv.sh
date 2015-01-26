@@ -10,4 +10,4 @@
 . ./include.sh
 
 ${examples_dir}f_set_pv > /dev/null
-rm -f out.grib1
+rm -f out.pv.grib1

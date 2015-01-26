@@ -23,5 +23,5 @@ ECCODES_SAMPLES_PATH=${samples_dir}:${data_dir}
 export ECCODES_SAMPLES_PATH
 ${examples_dir}f_samples > /dev/null
 
-rm -f out.grib1
+rm -f out.samples.grib1
 rm -f ${data_dir}/regular_latlon_surface.grib1.tmpl

@@ -18,13 +18,13 @@ program copy
   integer                            :: err, centre
   integer(kind=kindOfSize)           :: byte_size
   integer                            :: infile,outfile
-  integer                            :: igrib_in,iret
+  integer                            :: igrib_in
   integer                            :: igrib_out
   character(len=1), dimension(:), allocatable :: message
 
   
   call codes_open_file(infile,'../../data/constant_field.grib1','r')
-  call codes_open_file(outfile,'out.grib1','w')
+  call codes_open_file(outfile,'out.copy.grib1','w')
 
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls
