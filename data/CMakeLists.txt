@@ -9,6 +9,7 @@ set(files_to_download
     bad.grib
     budg
     constant_field.grib1
+    constant_field.grib2
     constant_width_bitmap.grib
     constant_width_boust_bitmap.grib
     gen.grib
@@ -73,7 +74,9 @@ set(files_to_download
     spectral_compex.grib1
     spectral_complex.grib1
     spherical_model_level.grib1
+    spherical_model_level.grib2
     spherical_pressure_level.grib1
+    spherical_pressure_level.grib2
     sst_globus0083.grib
     test.grib1
     test_uuid.grib2
