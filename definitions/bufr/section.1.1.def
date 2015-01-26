@@ -25,3 +25,7 @@ unsigned[1] minute;
 unsigned[1] masterTablesVersionNumber;
 
 alias masterTableNumber = editionNumber; # ?
+
+alias ls.masterTablesVersionNumber=masterTablesVersionNumber;
+alias ls.localTablesVersionNumber=localTablesVersionNumber;
+

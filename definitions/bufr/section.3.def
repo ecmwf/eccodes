@@ -23,6 +23,7 @@ position offsetSection3;
 section_length[3]       section3Length ;
 unsigned[1]     reserved = 0;
 unsigned[2]     numberOfSubsets : dump;
+alias ls.numberOfSubsets=numberOfSubsets;
 
 if (section2Present && centre==98 && section2Length==52) {
 
