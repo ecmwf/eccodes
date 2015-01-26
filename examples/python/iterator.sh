@@ -2,8 +2,8 @@
 
 . ./include.sh
 
-TEMP1=temp1
-TEMP2=temp2
+TEMP1=temp1.$$
+TEMP2=temp2.$$
 
 FILE="${data_dir}/reduced_latlon_surface.grib1"
 $PYTHON iterator.py $FILE 2> $TEMP1 > $TEMP1

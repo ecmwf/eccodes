@@ -2,8 +2,8 @@
 
 . ./include.sh
 
-TEMP1=temp1
-TEMP2=temp2
+TEMP1=temp1.$$
+TEMP2=temp2.$$
 
 $PYTHON keys_iterator.py 2> $TEMP1 > $TEMP1
 ./p_keys_iterator ../../data/reduced_latlon_surface.grib1 2> $TEMP2 > $TEMP2
