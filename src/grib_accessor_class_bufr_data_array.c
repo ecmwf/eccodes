@@ -423,7 +423,7 @@ static double decode_double_value(grib_context* c,unsigned char* data,long* pos,
   return dval;
 }
 
-static void decode_element(grib_context* c,grib_accessor_bufr_data_array* self,
+static void decode_element(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
             unsigned char* data,long *pos,int i,grib_darray* dval,grib_sarray* sval) {
   grib_darray* dar=0;
   grib_sarray* sar=0;
@@ -447,7 +447,7 @@ static void decode_element(grib_context* c,grib_accessor_bufr_data_array* self,
     } else {
       csval=decode_string_value(c,data,pos,i,self);
       grib_sarray_push(c,sval,csval);
-      index=grib_sarray_used_size(sval);
+      index=grib_sarray_used_size(sval)*(subsetIndex+1);
       cdval=index*1000+strlen(csval);
       grib_darray_push(c,dval,cdval);
     }
@@ -787,7 +787,7 @@ static int decode_elements(grib_accessor* a) {
           grib_iarray_push(elementsDescriptorsIndex,i);
           if (descriptors[i]->code==31031 && !is_bitmap_start_defined(self))
             self->bitmapStart=grib_iarray_used_size(elementsDescriptorsIndex)-1;
-          decode_element(c,self,data,&pos,i,dval,sval);
+          decode_element(c,self,iss,data,&pos,i,dval,sval);
           break;
         case 1:
           /* Delayed replication */
@@ -856,7 +856,7 @@ static int decode_elements(grib_accessor* a) {
               /*replaced/retained values marker operator*/
               if (descriptors[i]->Y==255) {
                 index=get_next_bitmap_descriptor_index(self,elementsDescriptorsIndex,dval);
-                decode_element(c,self,data,&pos,index,dval,sval);
+                decode_element(c,self,iss,data,&pos,index,dval,sval);
                 grib_iarray_push(elementsDescriptorsIndex,index);
               } else {
                 grib_iarray_push(elementsDescriptorsIndex,i);
@@ -895,7 +895,7 @@ static int decode_elements(grib_accessor* a) {
           /* associated field */
           if (descriptors[i]->X==99 && descriptors[i]->Y==999) {
             grib_iarray_push(elementsDescriptorsIndex,i);
-            decode_element(c,self,data,&pos,i,dval,sval);
+            decode_element(c,self,iss,data,&pos,i,dval,sval);
           } else {
             return GRIB_INTERNAL_ERROR;
           }
