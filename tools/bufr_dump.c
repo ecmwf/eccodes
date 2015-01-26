@@ -108,6 +108,8 @@ int grib_tool_init(grib_runtime_options* options) {
   if (grib_options_on("d") && !grib_options_on("u"))
       options->dump_flags |= GRIB_DUMP_FLAG_ALL_DATA;
 
+  if (json) fprintf(stdout,"{\n",options->handle_count);
+
   return 0;
 }
 
@@ -140,6 +142,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
 
   if (json) {
     grib_set_long(h,"unpack",1);
+    if (options->handle_count>1) fprintf(stdout,",\n");
+    fprintf(stdout,"\"message%d\" : ",options->handle_count);
   } else {
     sprintf(tmp,"MESSAGE %d ( length=%ld )",options->handle_count,length);
     if (!grib_options_on("C"))
@@ -167,5 +171,6 @@ void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h) {
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options) {
+  if (json) fprintf(stdout,"\n}\n"); 
   return 0;
 }
