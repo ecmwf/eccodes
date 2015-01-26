@@ -108,7 +108,7 @@ int grib_tool_init(grib_runtime_options* options) {
   if (grib_options_on("d") && !grib_options_on("u"))
       options->dump_flags |= GRIB_DUMP_FLAG_ALL_DATA;
 
-  if (json) fprintf(stdout,"{\n",options->handle_count);
+  if (json) fprintf(stdout,"{\n");
 
   return 0;
 }
