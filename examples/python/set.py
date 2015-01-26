@@ -13,7 +13,7 @@ from eccodes import *
 from datetime import date
 
 INPUT='../../data/regular_latlon_surface_constant.grib1'
-OUTPUT='out.grib'
+OUTPUT='out.set.grib'
 VERBOSE=1 # verbose error reporting
 
 def example():

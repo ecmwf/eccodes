@@ -15,7 +15,7 @@ import random
 from eccodes import *
 
 INPUT='../../data/constant_field.grib1'
-OUTPUT='out.grib'
+OUTPUT='out.clone.grib'
 VERBOSE=1 # verbose error reporting
 
 def example():

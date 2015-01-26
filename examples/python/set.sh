@@ -4,4 +4,4 @@
 
 REDIRECT=/dev/null
 $PYTHON set.py 2> $REDIRECT > $REDIRECT
-rm out.grib || true
+rm -f out.set.grib || true

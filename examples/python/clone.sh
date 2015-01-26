@@ -4,4 +4,4 @@
 
 REDIRECT=/dev/null
 $PYTHON clone.py 2> $REDIRECT > $REDIRECT
-rm out.grib || true
+rm -f out.clone.grib || true

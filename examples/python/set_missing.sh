@@ -4,4 +4,4 @@
 
 REDIRECT=/dev/null
 $PYTHON set_missing.py 2> $REDIRECT > $REDIRECT
-rm out.grib || true
+rm -f out.set_missing.grib || true

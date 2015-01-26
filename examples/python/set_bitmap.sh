@@ -4,4 +4,4 @@
 
 REDIRECT=/dev/null
 $PYTHON set_bitmap.py 2> $REDIRECT > $REDIRECT
-rm out.grib || true
+rm out.bmp.grib || true

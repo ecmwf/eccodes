@@ -11,7 +11,7 @@ import sys
 from eccodes import *
 
 INPUT   = '../../data/regular_latlon_surface.grib1'
-OUTPUT  = 'out.grib'
+OUTPUT  = 'out.bmp.grib'
 MISSING = 9999
 VERBOSE = 1 # verbose error reporting
 

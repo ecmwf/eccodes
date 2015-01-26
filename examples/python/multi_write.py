@@ -14,7 +14,7 @@ import sys
 from eccodes import *
 
 INPUT='../../data/sample.grib2'
-OUTPUT='out.grib'
+OUTPUT='out.mw.grib'
 VERBOSE=1 # verbose error reporting
 
 def example():
