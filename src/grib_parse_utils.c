@@ -404,7 +404,7 @@ int grib_yyerror(const char* msg)
 
 void grib_parser_include(const char* fname)
 {
-    FILE *f ;
+    FILE *f = NULL;
     char path[1204];
     char* io_buffer=0;
     /* int i; */
@@ -426,7 +426,11 @@ void grib_parser_include(const char* fname)
             p++;
         }
 
-        Assert(q);
+        if(!q) {
+            grib_context_log(grib_parser_context, GRIB_LOG_FATAL,
+                    "grib_parser_include: path '%s' does not contain a '/'\n",fname);
+            return;
+        }
         q++;
 
         strncpy(path,parse_file,q-parse_file);
