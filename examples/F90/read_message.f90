@@ -10,7 +10,7 @@
 ! Description: how to get values using keys.
 !
 program read_message
-use grib_api
+use eccodes
 implicit none
   integer                      ::  ifile,ofile
   integer                      ::  iret,igrib

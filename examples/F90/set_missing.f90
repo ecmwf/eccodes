@@ -13,7 +13,7 @@
 !
 !
 program set
-  use grib_api
+  use eccodes
   implicit none
   integer              :: infile,outfile
   integer              :: igrib, Ni, is_missing

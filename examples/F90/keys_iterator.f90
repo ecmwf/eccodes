@@ -14,7 +14,7 @@
 !
 !
 program keys_iterator
-  use grib_api
+  use eccodes
   implicit none
   character(len=20)  :: name_space
   integer            :: kiter,ifile,igrib,iret

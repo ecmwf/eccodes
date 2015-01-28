@@ -7,37 +7,36 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!> Module grib_api
+!> Module eccodes
 !>
-!> The grib_api module provides the Fortran 90 interface of the GRIB API.
-module grib_api
+!> The eccodes module provides the Fortran 90 interface.
+module eccodes
 
+  use grib_api
   implicit none
-  include "grib_kinds.h"
-  include "grib_api_constants.h"
-  include "grib_api_externals.h"
-  include "grib_api_visibility.h"
+  include "eccodes_constants.h"
+  include "eccodes_visibility.h"
 
   !> Create a new message in memory from an integer or character array containting the coded message.
   !>
   !> The message can be accessed through its gribid and it will be available\n
-  !> until @ref grib_release is called. A reference to the original coded\n
+  !> until @ref codes_release is called. A reference to the original coded\n
   !> message is kept in the new message structure.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
-  !> gathered with @ref grib_get_error_string.
+  !> gathered with @ref codes_get_error_string.
   !>
   !>
   !> \b Examples: \ref copy_message.f90 "copy_message.f90"
   !>
   !> @param gribid      id of the grib loaded in memory
   !> @param message     array containing the coded message
-  !> @param status      GRIB_SUCCESS if OK, integer value on error
-  interface grib_new_from_message
-      module procedure grib_new_from_message_int4
-      module procedure grib_new_from_message_char
-  end interface grib_new_from_message
+  !> @param status      CODES_SUCCESS if OK, integer value on error
+  interface codes_new_from_message
+      module procedure codes_new_from_message_int4
+      module procedure codes_new_from_message_char
+  end interface codes_new_from_message
 
   !> Get a value of specified index from an array key.
   !>
@@ -50,28 +49,28 @@ module grib_api
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
-  !> gathered with @ref grib_get_error_string.
+  !> gathered with @ref codes_get_error_string.
   !>
   !> \b Examples: \ref nearest.f90 "nearest.f90"
   !>
-  !> @see grib_new_from_file, grib_release, grib_get
+  !> @see codes_new_from_file, codes_release, codes_get
   !>
   !> @param[in] gribid      id of the grib loaded in memory
   !> @param[in] key         key name
   !> @param[in] index       index can be a scalar or array of integer(4)
   !> @param[out] value      value can be a scalar or array of integer(4),real(4),real(8)
-  !> @param[out] status     GRIB_SUCCESS if OK, integer value on error
-  interface grib_get_element
-    module procedure grib_get_real4_element, &
-                     grib_get_real8_element, &
-                     grib_get_real4_elements, &
-                     grib_get_real8_elements
-  end interface grib_get_element
+  !> @param[out] status     CODES_SUCCESS if OK, integer value on error
+  interface codes_get_element
+    module procedure codes_get_real4_element, &
+                     codes_get_real8_element, &
+                     codes_get_real4_elements, &
+                     codes_get_real8_elements
+  end interface codes_get_element
 
   !> Find the nearest point/points of a given latitude/longitude point.
   !>
   !> The value in the nearest point (or the four nearest points) is returned as well as the
-  !> zero based index (which can be used in @ref grib_get_element)
+  !> zero based index (which can be used in @ref codes_get_element)
   !> and its distance from the given point using the following
   !> formula radius * acos( sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon1-lon2) ).
   !>
@@ -90,7 +89,7 @@ module grib_api
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
-  !> gathered with @ref grib_get_error_string.
+  !> gathered with @ref codes_get_error_string.
   !>
   !> \b Examples: \ref nearest.f90 "nearest.f90"
   !>
@@ -103,23 +102,23 @@ module grib_api
   !> @param[out] distance   distance between the given point and its nearest (in km)
   !> @param[out] index      zero based index
   !> @param[out] value      value of the field in the nearest point
-  !> @param[out] status     GRIB_SUCCESS if OK, integer value on error
-  interface grib_find_nearest
-    module procedure grib_find_nearest_single, &
-                     grib_find_nearest_four_single, &
-                     grib_find_nearest_multiple
-  end interface grib_find_nearest
+  !> @param[out] status     CODES_SUCCESS if OK, integer value on error
+  interface codes_find_nearest
+    module procedure codes_find_nearest_single, &
+                     codes_find_nearest_four_single, &
+                     codes_find_nearest_multiple
+  end interface codes_find_nearest
 
   !> Get latitude/longitude and data values.
   !>
   !> Latitudes, longitudes, data values arrays are returned.
   !> They must be properly allocated by the caller and their required
-  !> dimension can be obtained with \ref grib_get_size or by getting (with \ref grib_get)
+  !> dimension can be obtained with \ref codes_get_size or by getting (with \ref codes_get)
   !> the value of the integer key "numberOfPoints".
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
-  !> gathered with @ref grib_get_error_string.
+  !> gathered with @ref codes_get_error_string.
   !>
   !> \b Examples: \ref get_data.f90 "get_data.f90"
   !>
@@ -127,9 +126,7 @@ module grib_api
   !> @param[out] lats        latitudes array with dimension "size"
   !> @param[out] lons        longitudes array with dimension "size"
   !> @param[out] values      data values array with dimension "size"
-  !> @param[out] status      GRIB_SUCCESS if OK, integer value on error
-  interface grib_get_data
-    module procedure grib_get_data_real4, &
-                     grib_get_data_real8
-  end interface grib_get_data
-
+  interface codes_get_data
+    module procedure codes_get_data_real4, &
+                     codes_get_data_real8
+  end interface codes_get_data

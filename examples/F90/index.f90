@@ -13,7 +13,7 @@
 !
 !
 program index
-  use grib_api
+  use eccodes
   implicit none
   
   integer              :: iret

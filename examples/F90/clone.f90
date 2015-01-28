@@ -14,7 +14,7 @@
 !
 !
 program clone
-  use grib_api
+  use eccodes
   implicit none
   integer                                       :: err,i,iret
   integer                                       :: nx, ny

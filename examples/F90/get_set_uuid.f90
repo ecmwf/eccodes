@@ -12,7 +12,7 @@
 !  Original authors: Harald Anlauf, Doerte Liermann (DWD), Luis Kornblueh (MPIfM).
 !
 program get_set_uuid
-  use grib_api
+  use eccodes
   implicit none
   integer              :: infile, outfile
   integer              :: igrib, ogrib

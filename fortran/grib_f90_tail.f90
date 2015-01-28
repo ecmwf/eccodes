@@ -3132,10 +3132,5 @@
       endif
   end subroutine grib_skip_read_only
 
-!>
-!> eccodes wrapper functions
-!>
-include "eccodes_f90_tail.f90"
-
 end module grib_api
 

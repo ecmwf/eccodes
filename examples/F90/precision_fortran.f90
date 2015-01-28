@@ -11,7 +11,7 @@
 !
 !
 program precision
-  use grib_api
+  use eccodes
   implicit none
   integer(kind = 4)                             :: size
   integer                                       :: infile,outfile
