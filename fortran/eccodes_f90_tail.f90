@@ -511,6 +511,17 @@ subroutine codes_new_from_file ( ifile, gribid , status)
     call grib_new_from_file ( ifile, gribid , status)
 end subroutine codes_new_from_file 
 
+!! TODO: temporary fix for BUFR
+subroutine codes_bufr_new_from_file ( ifile, bufrid , status)
+    integer(kind=kindOfInt),intent(in)              :: ifile
+    integer(kind=kindOfInt),intent(out)             :: bufrid
+    integer(kind=kindOfInt),optional,intent(out)    :: status
+    integer(kind=kindOfInt)                         :: iret
+
+    call bufr_new_from_file ( ifile, bufrid, status)
+end subroutine codes_bufr_new_from_file
+
+
 !
 subroutine codes_new_from_message_char( gribid, message, status )
     integer(kind=kindOfInt),intent(out)             :: gribid

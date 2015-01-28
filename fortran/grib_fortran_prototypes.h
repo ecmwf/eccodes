@@ -109,9 +109,15 @@ int grib_f_copy_namespace(int *gidsrc, char *name, int *giddest, int len);
 int grib_f_count_in_file(int *fid, int *n);
 int grib_f_count_in_file_(int *fid, int *n);
 int grib_f_count_in_file__(int *fid, int *n);
+
 int grib_f_new_from_file_(int *fid, int *gid);
 int grib_f_new_from_file__(int *fid, int *gid);
 int grib_f_new_from_file(int *fid, int *gid);
+
+int bufr_f_new_from_file_(int *fid, int *gid);
+int bufr_f_new_from_file__(int *fid, int *gid);
+int bufr_f_new_from_file(int *fid, int *gid);
+
 int grib_f_headers_only_new_from_file_(int *fid, int *gid);
 int grib_f_headers_only_new_from_file__(int *fid, int *gid);
 int grib_f_headers_only_new_from_file(int *fid, int *gid);

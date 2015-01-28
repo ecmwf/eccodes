@@ -1291,6 +1291,22 @@
          call grib_check(iret,'grib_new_from_file','')
       endif
   end subroutine grib_new_from_file
+!! TODO: temporary
+  subroutine bufr_new_from_file ( ifile, bufrid , status)
+      integer(kind=kindOfInt),intent(in)              :: ifile
+      integer(kind=kindOfInt),intent(out)             :: bufrid
+      integer(kind=kindOfInt),optional,intent(out)    :: status
+      integer(kind=kindOfInt)                         :: iret
+
+      iret=bufr_f_new_from_file( ifile, bufrid )
+      if (present(status)) then
+         status = iret
+      else
+         call grib_check(iret,'bufr_new_from_file','')
+      endif
+  end subroutine bufr_new_from_file
+
+
 
   !> Create a new message in memory from a character array containting the coded message.
   !>

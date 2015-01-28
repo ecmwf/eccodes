@@ -17,6 +17,7 @@ integer, external :: grib_f_new_from_message, &
                      grib_f_new_from_samples, &
                      grib_f_read_any_from_file, &
                      grib_f_new_from_file, &
+                     bufr_f_new_from_file, &
                      grib_f_headers_only_new_from_file
 integer, external :: grib_f_release
 integer, external :: grib_f_dump, grib_f_print
