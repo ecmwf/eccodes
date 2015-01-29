@@ -157,6 +157,7 @@ if( HAVE_GRIB_THREADS )
         endif()
     endif()
 endif()
+message(STATUS " GRIB_PTHREADS=${GRIB_PTHREADS}")
 
 set( GRIB_MEM_ALIGN 0 )
 if( ENABLE_ALIGN_MEMORY )
