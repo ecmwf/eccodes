@@ -23,7 +23,6 @@ int main(int argc,char* argv[])
     long longVal;
     int count;
     int err=0;
-    int header_only=1;
 
     if (argc!=2) usage(argv[0]);
     filename=argv[1];
@@ -35,7 +34,7 @@ int main(int argc,char* argv[])
     }
 
     count=1;
-    while((h=bufr_new_from_file(NULL,f,header_only,&err)) != NULL)
+    while((h=bufr_new_from_file(NULL,f,&err)) != NULL)
     {
         /* Check for errors after reading a message. */
         if (err != CODES_SUCCESS) CODES_CHECK(err,0);

@@ -1323,7 +1323,7 @@ int bufr_f_new_from_file_(int* fid, int* gid){
   grib_handle *h = NULL;
 
   if(f){
-    h = bufr_new_from_file(0,f,0,&err);
+    h = bufr_new_from_file(0,f,&err);
     if(h){
       push_handle(h,gid);
       return GRIB_SUCCESS;

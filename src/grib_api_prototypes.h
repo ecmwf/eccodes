@@ -100,6 +100,125 @@ grib_action *grib_action_create_variable(grib_context *context, const char *name
 /* action_class_modify.c */
 grib_action *grib_action_create_modify(grib_context *context, const char *name, long flags);
 
+/* eccodes.c */
+grib_fieldset *codes_fieldset_new_from_files(grib_context *c, char *filenames[], int nfiles, char **keys, int nkeys, char *where_string, char *order_by_string, int *err);
+void codes_fieldset_delete(grib_fieldset *set);
+void codes_fieldset_rewind(grib_fieldset *set);
+int codes_fieldset_apply_order_by(grib_fieldset *set, const char *order_by_string);
+grib_handle *codes_fieldset_next_handle(grib_fieldset *set, int *err);
+int codes_fieldset_count(grib_fieldset *set);
+int codes_values_check(grib_handle *h, grib_values *values, int count);
+grib_index *codes_index_new_from_file(grib_context *c, char *filename, const char *keys, int *err);
+grib_index *codes_index_new(grib_context *c, const char *keys, int *err);
+int codes_index_add_file(grib_index *index, const char *filename);
+int codes_index_write(grib_index *index, const char *filename);
+grib_index *codes_index_read(grib_context *c, const char *filename, int *err);
+int codes_index_get_size(grib_index *index, const char *key, size_t *size);
+int codes_index_get_long(grib_index *index, const char *key, long *values, size_t *size);
+int codes_index_get_double(grib_index *index, const char *key, double *values, size_t *size);
+int codes_index_get_string(grib_index *index, const char *key, char **values, size_t *size);
+int codes_index_select_long(grib_index *index, const char *key, long value);
+int codes_index_select_double(grib_index *index, const char *key, double value);
+int codes_index_select_string(grib_index *index, const char *key, char *value);
+grib_handle *codes_handle_new_from_index(grib_index *index, int *err);
+void codes_index_delete(grib_index *index);
+int codes_count_in_file(grib_context *c, FILE *f, int *n);
+grib_handle *codes_handle_new_from_file(grib_context *c, FILE *f, int *error);
+int codes_write_message(grib_handle *h, const char *file, const char *mode);
+grib_handle *codes_util_sections_copy(grib_handle *hfrom, grib_handle *hto, int what, int *err);
+grib_string_list *codes_util_get_param_id(const char *mars_param);
+grib_string_list *codes_util_get_mars_param(const char *param_id);
+grib_handle *codes_handle_new_from_message(grib_context *c, void *data, size_t data_len);
+grib_handle *codes_handle_new_from_message_copy(grib_context *c, const void *data, size_t data_len);
+grib_handle *codes_handle_new_from_multi_message(grib_context *c, void **data, size_t *data_len, int *error);
+grib_handle *codes_handle_new_from_samples(grib_context *c, const char *res_name);
+grib_handle *codes_handle_clone(grib_handle *h);
+int codes_handle_delete(grib_handle *h);
+grib_multi_handle *codes_multi_handle_new(grib_context *c);
+int codes_multi_handle_append(grib_handle *h, int start_section, grib_multi_handle *mh);
+int codes_multi_handle_delete(grib_multi_handle *mh);
+int codes_multi_handle_write(grib_multi_handle *mh, FILE *f);
+int codes_get_message(grib_handle *h, const void **message, size_t *message_length);
+int codes_get_message_copy(grib_handle *h, void *message, size_t *message_length);
+grib_iterator *codes_iterator_new(grib_handle *h, unsigned long flags, int *error);
+int codes_get_data(grib_handle *h, double *lats, double *lons, double *values, size_t *size);
+int codes_iterator_next(grib_iterator *i, double *lat, double *lon, double *value);
+int codes_iterator_previous(grib_iterator *i, double *lat, double *lon, double *value);
+int codes_iterator_has_next(grib_iterator *i);
+int codes_iterator_reset(grib_iterator *i);
+int codes_iterator_delete(grib_iterator *i);
+grib_nearest *codes_nearest_new(grib_handle *h, int *error);
+int codes_nearest_find(grib_nearest *nearest, grib_handle *h, double inlat, double inlon, unsigned long flags, double *outlats, double *outlons, double *values, double *distances, int *indexes, size_t *len);
+int codes_nearest_find_multiple(grib_handle *h, int is_lsm, double *inlats, double *inlons, long npoints, double *outlats, double *outlons, double *values, double *distances, int *indexes);
+int codes_nearest_delete(grib_nearest *nearest);
+int codes_get_size(grib_handle *h, const char *key, size_t *size);
+int codes_get_length(grib_handle *h, const char *key, size_t *length);
+int codes_get_long(grib_handle *h, const char *key, long *value);
+int codes_get_double(grib_handle *h, const char *key, double *value);
+int codes_get_double_element(grib_handle *h, const char *key, int i, double *value);
+int codes_get_double_elements(grib_handle *h, const char *key, int *i, long size, double *value);
+int codes_get_string(grib_handle *h, const char *key, char *mesg, size_t *length);
+int codes_get_string_array(grib_handle *h, const char *name, char **val, size_t *length);
+int codes_get_bytes(grib_handle *h, const char *key, unsigned char *bytes, size_t *length);
+int codes_get_double_array(grib_handle *h, const char *key, double *vals, size_t *length);
+int codes_get_long_array(grib_handle *h, const char *key, long *vals, size_t *length);
+int codes_copy_namespace(grib_handle *dest, const char *name, grib_handle *src);
+int codes_set_long(grib_handle *h, const char *key, long val);
+int codes_set_double(grib_handle *h, const char *key, double val);
+int codes_set_string(grib_handle *h, const char *key, const char *mesg, size_t *length);
+int codes_set_bytes(grib_handle *h, const char *key, const unsigned char *bytes, size_t *length);
+int codes_set_double_array(grib_handle *h, const char *key, const double *vals, size_t length);
+int codes_set_force_double_array(grib_handle *h, const char *key, const double *vals, size_t length);
+int codes_set_long_array(grib_handle *h, const char *key, const long *vals, size_t length);
+void codes_dump_content(grib_handle *h, FILE *out, const char *mode, unsigned long option_flags, void *arg);
+grib_context *codes_context_get_default(void);
+grib_context *codes_context_new(grib_context *c);
+void codes_context_delete(grib_context *c);
+void codes_gts_header_off(grib_context *c);
+void codes_gribex_mode_on(grib_context *c);
+int codes_get_gribex_mode(grib_context *c);
+void codes_gribex_mode_off(grib_context *c);
+void codes_multi_support_on(grib_context *c);
+void codes_multi_support_off(grib_context *c);
+void codes_multi_support_reset_file(grib_context *c, FILE *f);
+char *codes_samples_path(const grib_context *c);
+long codes_get_api_version(void);
+const char *codes_get_git_sha1(void);
+void codes_print_api_version(FILE *out);
+grib_keys_iterator *codes_keys_iterator_new(grib_handle *h, unsigned long filter_flags, char *name_space);
+int codes_keys_iterator_next(grib_keys_iterator *kiter);
+const char *codes_keys_iterator_get_name(grib_keys_iterator *kiter);
+int codes_keys_iterator_delete(grib_keys_iterator *kiter);
+int codes_keys_iterator_rewind(grib_keys_iterator *kiter);
+int codes_keys_iterator_set_flags(grib_keys_iterator *kiter, unsigned long flags);
+int codes_keys_iterator_get_long(grib_keys_iterator *kiter, long *v, size_t *len);
+int codes_keys_iterator_get_double(grib_keys_iterator *kiter, double *v, size_t *len);
+int codes_keys_iterator_get_string(grib_keys_iterator *kiter, char *v, size_t *len);
+int codes_keys_iterator_get_bytes(grib_keys_iterator *kiter, unsigned char *v, size_t *len);
+void codes_update_sections_lengths(grib_handle *h);
+const char *codes_get_error_message(int code);
+const char *codes_get_type_name(int type);
+int codes_get_native_type(grib_handle *h, const char *name, int *type);
+void codes_check(const char *call, const char *file, int line, int e, const char *msg);
+int codes_set_values(grib_handle *h, grib_values *grib_values, size_t arg_count);
+grib_handle *codes_handle_new_from_partial_message_copy(grib_context *c, const void *data, size_t size);
+grib_handle *codes_handle_new_from_partial_message(grib_context *c, void *data, size_t buflen);
+int codes_is_missing(grib_handle *h, const char *key, int *err);
+int codes_is_defined(grib_handle *h, const char *key);
+int codes_set_missing(grib_handle *h, const char *key);
+int codes_get_gaussian_latitudes(long truncation, double *latitudes);
+int codes_julian_to_datetime(double jd, long *year, long *month, long *day, long *hour, long *minute, long *second);
+int codes_datetime_to_julian(long year, long month, long day, long hour, long minute, long second, double *jd);
+long codes_julian_to_date(long jdate);
+long codes_date_to_julian(long ddate);
+void codes_get_reduced_row(long pl, double lon_first, double lon_last, long *npoints, long *ilon_first, long *ilon_last);
+int codes_get_message_offset(grib_handle *h, off_t *offset);
+int codes_get_message_size(grib_handle *h, size_t *size);
+grib_box *codes_box_new(grib_handle *h, int *error);
+grib_points *codes_box_get_points(grib_box *box, double north, double west, double south, double east, int *err);
+int codes_points_get_values(grib_handle *h, grib_points *points, double *val);
+grib_handle *codes_util_set_spec(grib_handle *h, const grib_util_grid_spec *grid_spec, const grib_util_packing_spec *packing_spec, int flags, const double *data_values, size_t data_values_count, int *err);
+
 /* grib_accessor.c */
 void grib_print_accessor(grib_accessor *a, grib_dumper *f);
 int grib_pack_missing(grib_accessor *a);
@@ -402,6 +521,36 @@ int grib_g1_step_apply_units(long *start, long *theEnd, long *step_unit, long *P
 /* grib_accessor_class_gts_header.c */
 
 /* grib_accessor_class_ifs_param.c */
+
+/* grib_accessor_class_int16.c */
+
+/* grib_accessor_class_int16_little_endian.c */
+
+/* grib_accessor_class_int32.c */
+
+/* grib_accessor_class_int32_little_endian.c */
+
+/* grib_accessor_class_int64.c */
+
+/* grib_accessor_class_int64_little_endian.c */
+
+/* grib_accessor_class_int8.c */
+
+/* grib_accessor_class_uint16.c */
+
+/* grib_accessor_class_uint16_little_endian.c */
+
+/* grib_accessor_class_uint32.c */
+
+/* grib_accessor_class_uint32_little_endian.c */
+
+/* grib_accessor_class_uint64.c */
+
+/* grib_accessor_class_uint64_little_endian.c */
+
+/* grib_accessor_class_uint8.c */
+
+/* grib_accessor_class_blob.c */
 
 /* grib_accessor_class_julian_day.c */
 
@@ -930,12 +1079,12 @@ grib_handle *grib_handle_new_from_message(grib_context *c, void *data, size_t bu
 grib_handle *grib_handle_new_from_multi_message(grib_context *c, void **data, size_t *buflen, int *error);
 grib_handle *grib_handle_new_from_file(grib_context *c, FILE *f, int *error);
 grib_handle *grib_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
-grib_handle *gts_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
-grib_handle *taf_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
-grib_handle *metar_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
-grib_handle *codes_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
-grib_handle *bufr_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
-grib_handle *any_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
+grib_handle *gts_new_from_file(grib_context *c, FILE *f, int *error);
+grib_handle *taf_new_from_file(grib_context *c, FILE *f, int *error);
+grib_handle *metar_new_from_file(grib_context *c, FILE *f, int *error);
+grib_handle *codes_new_from_file(grib_context *c, FILE *f, int *error);
+grib_handle *bufr_new_from_file(grib_context *c, FILE *f, int *error);
+grib_handle *any_new_from_file(grib_context *c, FILE *f, int *error);
 grib_multi_handle *grib_multi_handle_new(grib_context *c);
 int grib_multi_handle_delete(grib_multi_handle *h);
 int grib_multi_handle_append(grib_handle *h, int start_section, grib_multi_handle *mh);
@@ -1025,6 +1174,10 @@ int grib_keys_iterator_next(grib_keys_iterator *kiter);
 const char *grib_keys_iterator_get_name(grib_keys_iterator *kiter);
 grib_accessor *grib_keys_iterator_get_accessor(grib_keys_iterator *kiter);
 int grib_keys_iterator_delete(grib_keys_iterator *kiter);
+int grib_keys_iterator_get_long(grib_keys_iterator *kiter, long *v, size_t *len);
+int grib_keys_iterator_get_double(grib_keys_iterator *kiter, double *v, size_t *len);
+int grib_keys_iterator_get_string(grib_keys_iterator *kiter, char *v, size_t *len);
+int grib_keys_iterator_get_bytes(grib_keys_iterator *kiter, unsigned char *v, size_t *len);
 int grib_keys_iterator_get_native_type(grib_keys_iterator *kiter);
 
 /* grib_parse_utils.c */
@@ -1323,6 +1476,9 @@ const char *grib_binop_long_proc_name(grib_binop_long_proc proc);
 const char *grib_binop_double_proc_name(grib_binop_double_proc proc);
 const char *grib_unop_long_proc_name(grib_unop_long_proc proc);
 const char *grib_unop_double_proc_name(grib_unop_double_proc proc);
+
+/* grib_api_version.c */
+const char *grib_get_git_sha1(void);
 
 /* grib_bits_any_endian.c */
 int grib_is_all_bits_one(long val, long nbits);
