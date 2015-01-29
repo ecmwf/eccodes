@@ -9,7 +9,7 @@ grib_errors.c : grib_errors.txt errors.pl
 	cmp ../python/grib_errors.h grib_errors.h.new || (cp grib_errors.h.new ../python/grib_errors.h)
 
 
-proto:;-chmod +w grib_api_prototypes.h; mkptypes -A $(libgrib_api_a_prototypes) $(libgrib_api_extra_prototypes) > temp && mv temp grib_api_prototypes.h;rm -f temp
+proto:;-chmod +w grib_api_prototypes.h; mkptypes -A $(libgrib_api_la_prototypes) $(libgrib_api_extra_prototypes) > temp && mv temp grib_api_prototypes.h;rm -f temp
 
 test:all;(cd ../tests; make tests)
 
