@@ -137,9 +137,19 @@ endif()
 set( CMAKE_THREAD_PREFER_PTHREAD 1 ) # find thread library, but prefer pthreads
 find_package(Threads REQUIRED)
 
+# debug
+message(STATUS " CMAKE_THREAD_LIBS_INIT=${CMAKE_THREAD_LIBS_INIT}")
+message(STATUS " CMAKE_USE_PTHREADS_INIT=${CMAKE_USE_PTHREADS_INIT}")
+message(STATUS " GRIB_THREADS=${GRIB_THREADS}, HAVE_GRIB_THREADS=${HAVE_GRIB_THREADS}")
+
+if( NOT ${CMAKE_USE_PTHREADS_INIT} )
+    message( FATAL_ERROR "Only pthreads supported - thread library found is [${CMAKE_THREAD_LIBS_INIT}]" )
+endif()
+
 set( GRIB_PTHREADS 0 )
 set( GRIB_LINUX_PTHREADS 0 )
-if( GRIB_THREADS AND CMAKE_THREAD_LIBS_INIT )
+#if( HAVE_GRIB_THREADS AND CMAKE_THREAD_LIBS_INIT )
+if( HAVE_GRIB_THREADS )
     if( CMAKE_USE_PTHREADS_INIT )
         set( GRIB_PTHREADS 1 )
         if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )
