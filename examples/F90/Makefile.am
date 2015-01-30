@@ -36,7 +36,7 @@ f_copy_namespace_SOURCES=copy_namespace.f90
 f_get_set_uuid_SOURCES=get_set_uuid.f90
 f_set_gvc_SOURCES=set_gvc.f90
 f_clone_SOURCES=clone.f90
-f_bufr_read_header=bufr_read_headr.f90
+f_bufr_read_header_SOURCES=bufr_read_header.f90
 
 INCLUDES =  -I$(top_builddir)/src
 

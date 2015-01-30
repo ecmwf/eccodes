@@ -36,9 +36,6 @@ int main(int argc,char* argv[])
     size_t values_len=0;
     int err=0, i;
     
-    /* indicate that only the header will be read. */
-    int header_only=1;
-
     if (argc!=2) usage(argv[0]);
     
     filename=argv[1];
@@ -50,7 +47,7 @@ int main(int argc,char* argv[])
     }
 
     /* create new handle from a message in a file*/
-    h=bufr_new_from_file(NULL,in,header_only,&err);
+    h=bufr_new_from_file(NULL,in,&err);
    
     if (h == NULL) {
         printf("Error: unable to create handle from file %s\n",filename);
@@ -66,11 +63,11 @@ int main(int argc,char* argv[])
     CODES_CHECK(codes_get_long(h,"subCentre",&longVal),0);
     printf("\tsubCentre: %ld\n",longVal);
     
-    CODES_CHECK(codes_get_long(h,"masterTableVersionNumber",&longVal),0);
-    printf("\tmasterTableVersionNumber: %ld\n",longVal);
+    CODES_CHECK(codes_get_long(h,"masterTablesVersionNumber",&longVal),0);
+    printf("\tmasterTablesVersionNumber: %ld\n",longVal);
     
-    CODES_CHECK(codes_get_long(h,"localTableVersionNumber",&longVal),0);
-    printf("\tlocalTableVersionNumber: %ld\n",longVal);
+    CODES_CHECK(codes_get_long(h,"localTablesVersionNumber",&longVal),0);
+    printf("\tlocalTablesVersionNumber: %ld\n",longVal);
     
     CODES_CHECK(codes_get_long(h,"numberOfSubsets",&longVal),0);
     printf("\numberOfSubsets: %ld\n",longVal);
