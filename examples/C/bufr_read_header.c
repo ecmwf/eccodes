@@ -8,6 +8,13 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+/*
+ * C Implementation: bufr_read_header
+ *
+ * Description: how to read the header of BUFR messages.
+ *
+ */
+
 #include "eccodes.h"
 
 void usage(char* prog) {
@@ -17,52 +24,60 @@ void usage(char* prog) {
 
 int main(int argc,char* argv[])
 {
-    char* filename;
-    FILE* f;
+    char* filename = NULL;
+    FILE* in = NULL;
+    
+    /* message handle. Required in all the eccodes calls acting on a message.*/
     codes_handle* h=NULL;
+    
+    double *values = NULL;
+    long *desc = NULL;
     long longVal;
-    int count;
-    int err=0;
+    size_t values_len=0;
+    int err=0, i;
+    
+    /* indicate that only the header will be read. */
     int header_only=1;
 
     if (argc!=2) usage(argv[0]);
+    
     filename=argv[1];
 
-    f=fopen(filename,"r");
-    if (!f) {
-        perror(filename);
-        exit(1);
+    in=fopen(filename,"r");
+    if (!in) {
+        printf("ERROR: unable to open file %s\n", filename);
+        return 1;
     }
 
-    count=1;
-    while((h=bufr_new_from_file(NULL,f,header_only,&err)) != NULL)
-    {
-        /* Check for errors after reading a message. */
-        if (err != CODES_SUCCESS) CODES_CHECK(err,0);
-
-        printf("=======================================\n");
-        printf("message no: %d\n",count);
-
-        /*From section 0 */
-        CODES_CHECK(codes_get_long(h,"totalLength",&longVal),0);
-        printf("\ttotalLength: %ld\n",longVal);
-
-        /*From section 1 */
-        CODES_CHECK(codes_get_long(h,"centre",&longVal),0);
-        printf("\tcentre: %ld\n",longVal);
-
-        /*From section 2 */
-        CODES_CHECK(codes_get_long(h,"rdbtimeDay",&longVal),0);
-        printf("\trdbtimeDay: %ld\n",longVal);
-
-        /*From section 3 */
-        /*CODES_CHECK(codes_get_long(h,"numberOfSubsets",&longVal),0);
-          printf("\tnumberOfSubsets: %d\n",longVal);*/
-
-        count++;
-        codes_handle_delete(h);
+    /* create new handle from a message in a file*/
+    h=bufr_new_from_file(NULL,in,header_only,&err);
+   
+    if (h == NULL) {
+        printf("Error: unable to create handle from file %s\n",filename);
     }
+    
+    /* check for errors after reading a message. */
+    if (err != CODES_SUCCESS) CODES_CHECK(err,0);
+    
+    /* get and print some keys form the BUFR header */ 
+    CODES_CHECK(codes_get_long(h,"centre",&longVal),0);
+    printf("\tcentre: %ld\n",longVal);
+    
+    CODES_CHECK(codes_get_long(h,"subCentre",&longVal),0);
+    printf("\tsubCentre: %ld\n",longVal);
+    
+    CODES_CHECK(codes_get_long(h,"masterTableVersionNumber",&longVal),0);
+    printf("\tmasterTableVersionNumber: %ld\n",longVal);
+    
+    CODES_CHECK(codes_get_long(h,"localTableVersionNumber",&longVal),0);
+    printf("\tlocalTableVersionNumber: %ld\n",longVal);
+    
+    CODES_CHECK(codes_get_long(h,"numberOfSubsets",&longVal),0);
+    printf("\numberOfSubsets: %ld\n",longVal);
+    
+    /* delete hanle */
+    codes_handle_delete(h);
 
-    fclose(f);
+    fclose(in);
     return 0;
 }

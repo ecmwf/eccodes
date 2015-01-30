@@ -29,6 +29,7 @@ list( APPEND tests
       read_from_file
       get_set_uuid
       clone
+      bufr_read_header
 )
 
 # Simplify tests: no need to build executable and then test. All in one

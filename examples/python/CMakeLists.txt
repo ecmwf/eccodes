@@ -40,6 +40,7 @@ list( APPEND tests
    set_missing
    binary_message
    set_bitmap
+   bufr_read_header
 )
 foreach( test ${tests} )
     ecbuild_add_test( TARGET p_${test}_test
