@@ -44,8 +44,8 @@ grib_option grib_options[]={
     {"v",0,0,0,1,0}
 };
 
-char* grib_tool_description="Sets key/value pairs in the input grib file and writes"
-"\n\teach message to the output_grib_file."
+char* grib_tool_description="Sets key/value pairs in the input BUFR file and writes"
+"\n\teach message to the output_bufr_file."
 "\n\tIt fails when an error occurs (e.g. key not found).";
 char* grib_tool_name="bufr_set";
 char* grib_tool_usage="[options] file file ... output_file";

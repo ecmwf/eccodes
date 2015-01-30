@@ -10,9 +10,6 @@
 
 . ./include.sh
 
-#set -x
-
-
 #Enter data dir
 cd ${data_dir}/bufr
 
@@ -42,7 +39,6 @@ for f in `ls *.bufr` ; do
    ${tools_dir}/bufr_filter $fFilter $f >> $fLog
 done
 
-
 #-----------------------------------------------------------
 # SYNOP tests
 #-----------------------------------------------------------
@@ -58,4 +54,4 @@ echo "file: $f" >> $fLog
 ${tools_dir}/bufr_filter $fFilter $f >> $fLog
 
 #Clean up
-rm -f $fLog $res_ls $fTmp $fFilter
+rm -f $fLog $fTmp $fFilter

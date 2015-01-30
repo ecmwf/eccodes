@@ -18,7 +18,7 @@
 
 #include "grib_tools.h"
 
-char* grib_tool_description="Copies the content of grib files printing"
+char* grib_tool_description="Copies the content of BUFR files printing"
                             " values of some keys.";
 char* grib_tool_name="bufr_copy";
 char* grib_tool_usage="[options] file file ... output_file";
@@ -33,8 +33,8 @@ grib_option grib_options[]={
     {"s:",0,0,0,1,0},
     {"P:",0,0,0,1,0},
     {"w:","key[:{s/d/l}]=value,key[:{s/d/l}]=value,...","\n\t\tWhere clause."
-     "\n\t\tOnly grib messages matching the key/value constraints are "
-     "copied to the\n\t\toutput_grib_file.\n\t\tFor each key a string (key:s) or a "
+     "\n\t\tOnly BUFR messages matching the key/value constraints are "
+     "copied to the\n\t\toutput_bufr_file.\n\t\tFor each key a string (key:s) or a "
      "double (key:d) or a long (key:l)\n\t\ttype can be defined. Default type "
      "is string.\n",0,1,0},
     {"B:",0,0,0,1,0},

@@ -35,8 +35,8 @@ grib_option grib_options[]={
     {"7",0,0,0,1,0},
     {"v",0,0,0,1,0}
 };
-char* grib_tool_description="Apply the rules defined in rules_file to each grib "
-   "message\n\tin the grib files provided as arguments.";
+char* grib_tool_description="Apply the rules defined in rules_file to each BUFR "
+   "message\n\tin the BUFR files provided as arguments.";
 char* grib_tool_name="bufr_filter";
 char* grib_tool_usage="[options] rules_file "
                       "file file ...";

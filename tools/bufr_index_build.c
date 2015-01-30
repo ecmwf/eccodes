@@ -18,7 +18,7 @@
 
 #include "grib_tools.h"
 
-char* grib_tool_description="Build an index file for a set of input grib files.";
+char* grib_tool_description="Build an index file for a set of input BUFR files.";
 char* grib_tool_name="bufr_index_build";
 char* grib_tool_usage="[options] file file ... ";
 grib_index* idx=NULL;

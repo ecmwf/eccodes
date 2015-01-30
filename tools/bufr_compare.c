@@ -188,7 +188,7 @@ int start=-1;
 int end=-1;
 
 char* grib_tool_description=
-         "Compare grib messages contained in two files."
+         "Compare BUFR messages contained in two files."
     "\n\tIf some differences are found it fails returning an error code."
     "\n\tFloating point values are compared exactly by default, different tolerance can be defined see -P -A -R."
     "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
