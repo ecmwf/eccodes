@@ -934,7 +934,8 @@ int _codes_index_add_file(grib_index* index,const char* filename,int message_typ
         message_new=grib_new_from_file;
         break;
      case CODES_BUFR:
-        message_new=bufr_new_from_file;
+        Assert(!"_codes_index_add_file for BUFR: not yet implemented");
+        /* message_new=bufr_new_from_file; */
         break;
      default:
         Assert(0);
@@ -1452,7 +1453,8 @@ grib_handle* codes_index_get_handle(grib_field* field,int message_type,int *err)
        message_new=grib_new_from_file;
        break;
      case CODES_BUFR:
-       message_new=bufr_new_from_file;
+       Assert(!"_codes_index_add_file for BUFR: not yet implemented");
+       /* message_new=bufr_new_from_file; */
        break;
      default :
        Assert(0);

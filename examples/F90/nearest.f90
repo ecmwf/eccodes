@@ -13,7 +13,7 @@
 !
 !
 program find
-  use grib_api
+  use eccodes
   implicit none
   integer                                      :: npoints
   integer                                      :: infile

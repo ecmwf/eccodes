@@ -10,7 +10,7 @@
 !
 !
 program set
-  use grib_api
+  use eccodes
   implicit none
   integer              :: err
   integer(kind = 4)    :: centre

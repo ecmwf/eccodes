@@ -65,8 +65,9 @@ int main( int argc,char* argv[])
         if (GRIB_API_MAJOR_VERSION < 1) printf(" PRE-RELEASE");
         printf("\n");
         printf("\n");
-
-
+#if GRIB_PTHREADS
+        grib_context_log(grib_context_get_default(), GRIB_LOG_DEBUG, "PTHREADS enabled");
+#endif
         if ((path=getenv("ECCODES_DEFINITION_PATH")) != NULL) {
             printf("Definition files path from environment variable");
             printf(" ECCODES_DEFINITION_PATH=%s\n",path);

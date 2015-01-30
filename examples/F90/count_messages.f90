@@ -10,7 +10,7 @@
 !
 !
 program get
-  use grib_api
+  use eccodes
   implicit none
 
   integer                            ::  ifile

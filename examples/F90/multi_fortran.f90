@@ -14,7 +14,7 @@
 !
 !
 program multi
-  use grib_api
+  use eccodes
   implicit none
   
   integer              :: iret

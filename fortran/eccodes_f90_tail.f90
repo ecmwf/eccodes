@@ -1,3 +1,6 @@
+
+  contains
+
 !>
 !> Wrapper for eccodes
 !>
@@ -1245,3 +1248,5 @@ subroutine codes_skip_read_only  ( iterid, status )
 
     call grib_skip_read_only  ( iterid, status )
 end subroutine codes_skip_read_only  
+
+end module eccodes

@@ -723,7 +723,7 @@ grib_handle* grib_new_from_file ( grib_context* c, FILE* f,int headers_only,int 
 }
 
 
-grib_handle* gts_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error )
+grib_handle* gts_new_from_file ( grib_context* c, FILE* f,int *error )
 {
 	void *data = NULL;
 	size_t olen = 0;
@@ -732,7 +732,7 @@ grib_handle* gts_new_from_file ( grib_context* c, FILE* f,int headers_only,int *
 
 	if ( c == NULL ) c = grib_context_get_default();
 
-	data = wmo_read_gts_from_file_malloc ( f, headers_only,&olen,&offset,error );
+	data = wmo_read_gts_from_file_malloc ( f, 0,&olen,&offset,error );
 
 	if ( *error != GRIB_SUCCESS )
 	{
@@ -742,11 +742,7 @@ grib_handle* gts_new_from_file ( grib_context* c, FILE* f,int headers_only,int *
 		return NULL;
 	}
 
-	if (headers_only) {
-		gl = grib_handle_new_from_partial_message ( c, data, olen );
-	} else {
-		gl = grib_handle_new_from_message ( c, data, olen );
-	}
+	gl = grib_handle_new_from_message ( c, data, olen );
 
 	if ( !gl )
 	{
@@ -764,7 +760,7 @@ grib_handle* gts_new_from_file ( grib_context* c, FILE* f,int headers_only,int *
 	return gl;
 }
 
-grib_handle* taf_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error )
+grib_handle* taf_new_from_file ( grib_context* c, FILE* f,int *error )
 {
 	void *data = NULL;
 	size_t olen = 0;
@@ -773,7 +769,7 @@ grib_handle* taf_new_from_file ( grib_context* c, FILE* f,int headers_only,int *
 
 	if ( c == NULL ) c = grib_context_get_default();
 
-	data = wmo_read_taf_from_file_malloc ( f, headers_only,&olen,&offset,error );
+	data = wmo_read_taf_from_file_malloc ( f, 0,&olen,&offset,error );
 
 	if ( *error != GRIB_SUCCESS )
 	{
@@ -783,11 +779,7 @@ grib_handle* taf_new_from_file ( grib_context* c, FILE* f,int headers_only,int *
 		return NULL;
 	}
 
-	if (headers_only) {
-		gl = grib_handle_new_from_partial_message ( c, data, olen );
-	} else {
-		gl = grib_handle_new_from_message ( c, data, olen );
-	}
+	gl = grib_handle_new_from_message ( c, data, olen );
 
 	if ( !gl )
 	{
@@ -805,7 +797,7 @@ grib_handle* taf_new_from_file ( grib_context* c, FILE* f,int headers_only,int *
 	return gl;
 }
 
-grib_handle* metar_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error )
+grib_handle* metar_new_from_file ( grib_context* c, FILE* f,int *error )
 {
 	void *data = NULL;
 	size_t olen = 0;
@@ -814,7 +806,7 @@ grib_handle* metar_new_from_file ( grib_context* c, FILE* f,int headers_only,int
 
 	if ( c == NULL ) c = grib_context_get_default();
 
-	data = wmo_read_metar_from_file_malloc ( f, headers_only,&olen,&offset,error );
+	data = wmo_read_metar_from_file_malloc ( f, 0,&olen,&offset,error );
 
 	if ( *error != GRIB_SUCCESS )
 	{
@@ -824,11 +816,7 @@ grib_handle* metar_new_from_file ( grib_context* c, FILE* f,int headers_only,int
 		return NULL;
 	}
 
-	if (headers_only) {
-		gl = grib_handle_new_from_partial_message ( c, data, olen );
-	} else {
-		gl = grib_handle_new_from_message ( c, data, olen );
-	}
+	gl = grib_handle_new_from_message ( c, data, olen );
 
 	if ( !gl )
 	{
@@ -846,7 +834,7 @@ grib_handle* metar_new_from_file ( grib_context* c, FILE* f,int headers_only,int
 	return gl;
 }
 
-grib_handle* codes_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error )
+grib_handle* codes_new_from_file ( grib_context* c, FILE* f,int *error )
 {
 	void *data = NULL;
 	size_t olen = 0;
@@ -855,7 +843,7 @@ grib_handle* codes_new_from_file ( grib_context* c, FILE* f,int headers_only,int
 
 	if ( c == NULL ) c = grib_context_get_default();
 
-	data = wmo_read_any_from_file_malloc ( f, headers_only,&olen,&offset,error );
+	data = wmo_read_any_from_file_malloc ( f, 0,&olen,&offset,error );
 
 	if ( *error != GRIB_SUCCESS )
 	{
@@ -865,11 +853,7 @@ grib_handle* codes_new_from_file ( grib_context* c, FILE* f,int headers_only,int
 		return NULL;
 	}
 
-	if (headers_only) {
-		gl = grib_handle_new_from_partial_message ( c, data, olen );
-	} else {
-		gl = grib_handle_new_from_message ( c, data, olen );
-	}
+	gl = grib_handle_new_from_message ( c, data, olen );
 
 	if ( !gl )
 	{
@@ -888,7 +872,7 @@ grib_handle* codes_new_from_file ( grib_context* c, FILE* f,int headers_only,int
 }
 
 
-grib_handle* bufr_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error )
+grib_handle* bufr_new_from_file ( grib_context* c, FILE* f,int *error )
 {
 	void *data = NULL;
 	size_t olen = 0;
@@ -897,7 +881,7 @@ grib_handle* bufr_new_from_file ( grib_context* c, FILE* f,int headers_only,int 
 
 	if ( c == NULL ) c = grib_context_get_default();
 
-	data = wmo_read_bufr_from_file_malloc ( f, headers_only,&olen,&offset,error );
+	data = wmo_read_bufr_from_file_malloc ( f, 0,&olen,&offset,error );
 
 	if ( *error != GRIB_SUCCESS )
 	{
@@ -907,11 +891,7 @@ grib_handle* bufr_new_from_file ( grib_context* c, FILE* f,int headers_only,int 
 		return NULL;
 	}
 
-	if (headers_only) {
-		gl = grib_handle_new_from_partial_message ( c, data, olen );
-	} else {
-		gl = grib_handle_new_from_message ( c, data, olen );
-	}
+	gl = grib_handle_new_from_message ( c, data, olen );
 
 	if ( !gl )
 	{
@@ -929,7 +909,7 @@ grib_handle* bufr_new_from_file ( grib_context* c, FILE* f,int headers_only,int 
 	return gl;
 }
 
-grib_handle* any_new_from_file ( grib_context* c, FILE* f,int headers_only,int *error )
+grib_handle* any_new_from_file ( grib_context* c, FILE* f,int *error )
 {
     void *data = NULL;
     size_t olen = 0;
@@ -938,7 +918,7 @@ grib_handle* any_new_from_file ( grib_context* c, FILE* f,int headers_only,int *
 
     if ( c == NULL ) c = grib_context_get_default();
 
-    data = wmo_read_any_from_file_malloc ( f, headers_only,&olen,&offset,error );
+    data = wmo_read_any_from_file_malloc ( f, 0,&olen,&offset,error );
 
     if ( *error != GRIB_SUCCESS )
     {
@@ -948,11 +928,7 @@ grib_handle* any_new_from_file ( grib_context* c, FILE* f,int headers_only,int *
         return NULL;
     }
 
-    if (headers_only) {
-        gl = grib_handle_new_from_partial_message ( c, data, olen );
-    } else {
-        gl = grib_handle_new_from_message ( c, data, olen );
-    }
+    gl = grib_handle_new_from_message ( c, data, olen );
 
     if ( !gl )
     {

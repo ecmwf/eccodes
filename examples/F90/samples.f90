@@ -11,7 +11,7 @@
 !               
 !
 program sample
-  use grib_api
+  use eccodes
   implicit none  
   integer  :: err
   integer  :: outfile, infile, datafile

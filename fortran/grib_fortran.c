@@ -706,6 +706,7 @@ static int clear_keys_iterator(int keys_iterator_id){
   return ret;
 }
 
+/*****************************************************************************/
 int grib_f_read_any_headers_only_from_file_(int* fid, char* buffer, size_t* nbytes) {
   grib_context* c;
   int err=0;
@@ -726,6 +727,7 @@ int grib_f_read_any_headers_only_from_file(int* fid, char* buffer, size_t* nbyte
 	return grib_f_read_any_headers_only_from_file_(fid,buffer,nbytes);
 }
 
+/*****************************************************************************/
 int grib_f_read_any_from_file_(int* fid, char* buffer, size_t* nbytes) {
   grib_context* c;
   int err=0;
@@ -746,6 +748,7 @@ int grib_f_read_any_from_file(int* fid, char* buffer, size_t* nbytes) {
 	return grib_f_read_any_from_file_(fid,buffer,nbytes);
 }
 
+/*****************************************************************************/
 int grib_f_write_file_(int* fid, char* buffer, size_t* nbytes) {
   grib_context* c;
   FILE* f=get_file(*fid);
@@ -770,6 +773,7 @@ int grib_f_write_file(int* fid, char* buffer, size_t* nbytes) {
   return grib_f_write_file_(fid,buffer,nbytes);
 }
 
+/*****************************************************************************/
 int grib_f_read_file_(int* fid, char* buffer, size_t* nbytes) {
   grib_context* c;
   FILE* f=get_file(*fid);
@@ -787,7 +791,6 @@ int grib_f_read_file_(int* fid, char* buffer, size_t* nbytes) {
     return GRIB_INVALID_FILE;
   }
 }
-
 int grib_f_read_file__(int* fid, char* buffer, size_t* nbytes) {
   return grib_f_read_file_(fid,buffer,nbytes);
 }
@@ -795,7 +798,8 @@ int grib_f_read_file(int* fid, char* buffer, size_t* nbytes) {
   return grib_f_read_file_(fid,buffer,nbytes);
 }
 
-int grib_f_open_file_(int* fid, char* name , char* op, int lname, int lop){
+/*****************************************************************************/
+int grib_f_open_file_(int* fid, char* name , char* op, int lname, int lop) {
   FILE* f = NULL;
   int ioerr=0;
   char oper[8];
@@ -838,7 +842,6 @@ int grib_f_open_file_(int* fid, char* name , char* op, int lname, int lop){
   }
   return ret;
 }
-
 int grib_f_open_file__(int* fid, char* name , char* op,  int lname, int lop){
   return grib_f_open_file_(       fid,       name ,       op,     lname,      lop);
 }
@@ -846,6 +849,7 @@ int grib_f_open_file(int* fid, char* name , char* op,  int lname, int lop){
   return grib_f_open_file_(       fid,       name ,       op,     lname,      lop);
 }
 
+/*****************************************************************************/
 int grib_f_close_file_(int* fid){
   return clear_file(*fid);
 }
@@ -855,6 +859,8 @@ int grib_f_close_file__(int* fid){
 int grib_f_close_file(int* fid){
   return grib_f_close_file_(fid);
 }
+
+/*****************************************************************************/
 static int file_count=0;
 
 void grib_f_write_on_fail(int* gid) {
@@ -881,6 +887,8 @@ void grib_f_write_on_fail_(int* gid) {
 void grib_f_write_on_fail__(int* gid) {
 	grib_f_write_on_fail(gid);
 }
+
+/*****************************************************************************/
 int grib_f_multi_support_on_(){
   grib_multi_support_on(0);
   return GRIB_SUCCESS;
@@ -903,8 +911,9 @@ int grib_f_multi_support_off(){
   return grib_f_multi_support_off_();
 }
 
+/*****************************************************************************/
 int grib_f_navigate_subgroups_(int* gid){
-		grib_handle* h=get_handle(*gid);
+	grib_handle* h=get_handle(*gid);
     if (!h) return GRIB_NULL_HANDLE;
     return grib_navigate_subgroups(h);
 }
@@ -916,7 +925,7 @@ int grib_f_navigate_subgroups(int* gid){
 }
 
 int grib_f_not_navigate_subgroups_(int* gid){
-		grib_handle* h=get_handle(*gid);
+	grib_handle* h=get_handle(*gid);
     if (!h) return GRIB_NULL_HANDLE;
     return grib_not_navigate_subgroups(h);
 }
@@ -927,6 +936,7 @@ int grib_f_not_navigate_subgroups(int* gid){
   return grib_f_not_navigate_subgroups_(gid);
 }
 
+/*****************************************************************************/
 static int _grib_f_iterator_new_(int* gid,int* iterid,int* mode) {
   int err=0;
   grib_handle* h;
@@ -944,7 +954,6 @@ static int _grib_f_iterator_new_(int* gid,int* iterid,int* mode) {
     *iterid=-1;
   return err;
 }
-
 int grib_f_iterator_new_(int* gid,int* iterid,int* mode) {
   int ret=0;
   GRIB_PTHREAD_ONCE(&once,&init)
@@ -953,7 +962,6 @@ int grib_f_iterator_new_(int* gid,int* iterid,int* mode) {
   GRIB_MUTEX_UNLOCK(&iterator_mutex)
   return ret;
 }
-
 int grib_f_iterator_new__(int* gid,int* iterid,int* mode) {
   return grib_f_iterator_new_(gid,iterid,mode);
 }
@@ -961,6 +969,7 @@ int grib_f_iterator_new(int* gid,int* iterid,int* mode) {
   return grib_f_iterator_new_(gid,iterid,mode);
 }
 
+/*****************************************************************************/
 int grib_f_iterator_next_(int* iterid,double* lat,double* lon,double* value) {
   grib_iterator* iter=get_iterator(*iterid);
   if (!iter) return GRIB_INVALID_ITERATOR;
@@ -974,6 +983,7 @@ int grib_f_iterator_next(int* iterid,double* lat,double* lon,double* value) {
   return grib_f_iterator_next_(iterid,lat,lon,value);
 }
 
+/*****************************************************************************/
 int grib_f_iterator_delete_(int* iterid) {
   return clear_iterator(*iterid);
 }
@@ -985,6 +995,7 @@ int grib_f_iterator_delete(int* iterid) {
   return grib_f_iterator_delete_(iterid);
 }
 
+/*****************************************************************************/
 static int _grib_f_keys_iterator_new_(int* gid,int* iterid,char* name_space,int len) {
   int err=0;
   char buf[1024];
@@ -1003,7 +1014,6 @@ static int _grib_f_keys_iterator_new_(int* gid,int* iterid,char* name_space,int 
     *iterid=-1;
   return err;
 }
-
 int grib_f_keys_iterator_new_(int* gid,int* iterid,char* name_space,int len) {
   int ret=0;
   GRIB_PTHREAD_ONCE(&once,&init)
@@ -1020,6 +1030,7 @@ int grib_f_keys_iterator_new(int* gid,int* iterid,char* name_space,int len) {
   return grib_f_keys_iterator_new_(gid,iterid,name_space,len);
 }
 
+/*****************************************************************************/
 int grib_f_keys_iterator_next_(int* iterid) {
   grib_keys_iterator* iter=get_keys_iterator(*iterid);
   if (!iter) return GRIB_INVALID_KEYS_ITERATOR;
@@ -1044,6 +1055,7 @@ int grib_f_keys_iterator_delete(int* iterid) {
   return grib_f_keys_iterator_delete_(iterid);
 }
 
+/*****************************************************************************/
 int grib_f_gribex_mode_on_() {
    grib_gribex_mode_on(0);
    return GRIB_SUCCESS;
@@ -1070,6 +1082,7 @@ int grib_f_gribex_mode_off() {
    return GRIB_SUCCESS;
 }
 
+/*****************************************************************************/
 int grib_f_skip_computed_(int* iterid) {
   grib_keys_iterator* iter=get_keys_iterator(*iterid);
   if (!iter) return GRIB_INVALID_KEYS_ITERATOR;
@@ -1142,6 +1155,7 @@ int grib_f_skip_function(int* iterid) {
   return grib_f_skip_function_(iterid);
 }
 
+/*****************************************************************************/
 int grib_f_keys_iterator_get_name_(int* iterid,char* name,int len) {
   size_t lsize=len;
   char buf[1024]={0,};
@@ -1169,6 +1183,7 @@ int grib_f_keys_iterator_get_name(int* kiter,char* name,int len) {
   return grib_f_keys_iterator_get_name_(kiter,name,len);
 }
 
+/*****************************************************************************/
 int grib_f_keys_iterator_rewind_(int* kiter) {
   grib_keys_iterator* i=get_keys_iterator(*kiter);
 
@@ -1182,6 +1197,7 @@ int grib_f_keys_iterator_rewind(int* kiter) {
    return grib_f_keys_iterator_rewind_(kiter);
 }
 
+/*****************************************************************************/
 int grib_f_new_from_message_(int* gid, void* buffer , size_t* bufsize){
   grib_handle *h = NULL;
   h = grib_handle_new_from_message_copy(0, buffer, *bufsize);
@@ -1200,6 +1216,7 @@ int grib_f_new_from_message(int* gid, void* buffer , size_t* bufsize){
   return grib_f_new_from_message_(gid,  buffer ,  bufsize);
 }
 
+/*****************************************************************************/
 int grib_f_new_from_message_copy_(int* gid, void* buffer , size_t* bufsize){
   grib_handle *h = NULL;
   h = grib_handle_new_from_message_copy(0, buffer, *bufsize);
@@ -1219,6 +1236,7 @@ int grib_f_new_from_message_copy(int* gid, void* buffer , size_t* bufsize){
   return grib_f_new_from_message_copy_(gid,  buffer ,  bufsize);
 }
 
+/*****************************************************************************/
 int grib_f_new_from_samples_(int* gid, char* name , int lname){
   char fname[1024];
   grib_handle *h = NULL;
@@ -1242,6 +1260,7 @@ int grib_f_new_from_samples(int* gid, char* name , int lname){
   return  grib_f_new_from_samples_( gid,  name ,  lname);
 }
 
+/*****************************************************************************/
 int grib_f_clone_(int* gidsrc,int* giddest){
   grib_handle *src  = get_handle(*gidsrc);
   grib_handle *dest = NULL;
@@ -1257,7 +1276,6 @@ int grib_f_clone_(int* gidsrc,int* giddest){
   *giddest = -1;
   return GRIB_INVALID_GRIB;
 }
-
 int grib_f_clone__(int* gidsrc,int* giddest){
   return grib_f_clone_(gidsrc, giddest);
 }
@@ -1265,6 +1283,7 @@ int grib_f_clone(int* gidsrc,int* giddest){
   return grib_f_clone_(gidsrc, giddest);
 }
 
+/*****************************************************************************/
 int grib_f_util_sections_copy_(int* gidfrom,int* gidto,int* what,int *gidout){
 	int err=0;
 	grib_handle *hfrom  = get_handle(*gidfrom);
@@ -1286,6 +1305,7 @@ int grib_f_util_sections_copy(int* gidfrom,int* gidto,int* what,int *gidout){
 	return grib_f_util_sections_copy_(gidfrom,gidto,what,gidout);
 }
 
+/*****************************************************************************/
 int grib_f_copy_namespace_(int* gidsrc,char* name,int* giddest,int len){
 	char buf[1024]={0,};
 	grib_handle *src  = get_handle(*gidsrc);
@@ -1303,6 +1323,7 @@ int grib_f_copy_namespace(int* gidsrc,char* name,int* giddest,int len){
 	return grib_f_copy_namespace_(gidsrc,name,giddest,len);
 }
 
+/*****************************************************************************/
 int grib_f_count_in_file(int* fid,int* n) {
   int err = 0;
   FILE* f = get_file(*fid);
@@ -1316,6 +1337,7 @@ int grib_f_count_in_file__(int* fid,int* n) {
   return grib_f_count_in_file(fid,n);
 }
 
+/*****************************************************************************/
 int bufr_f_new_from_file_(int* fid, int* gid){
   int err = 0;
   FILE* f = get_file(*fid);
@@ -1323,7 +1345,7 @@ int bufr_f_new_from_file_(int* fid, int* gid){
   grib_handle *h = NULL;
 
   if(f){
-    h = bufr_new_from_file(0,f,0,&err);
+    h = bufr_new_from_file(0,f,&err);
     if(h){
       push_handle(h,gid);
       return GRIB_SUCCESS;
@@ -1344,6 +1366,7 @@ int bufr_f_new_from_file(int* fid, int* gid){
   return bufr_f_new_from_file_( fid, gid);
 }
 
+/*****************************************************************************/
 int grib_f_new_from_file_(int* fid, int* gid){
   int err = 0;
   FILE* f = get_file(*fid);
@@ -1364,7 +1387,6 @@ int grib_f_new_from_file_(int* fid, int* gid){
   *gid=-1;
   return GRIB_INVALID_FILE;
 }
-
 int grib_f_new_from_file__(int* fid, int* gid){
   return grib_f_new_from_file_( fid, gid);
 }
@@ -1372,6 +1394,7 @@ int grib_f_new_from_file(int* fid, int* gid){
   return grib_f_new_from_file_( fid, gid);
 }
 
+/*****************************************************************************/
 int grib_f_headers_only_new_from_file_(int* fid, int* gid){
   int err = 0;
   FILE* f = get_file(*fid);
@@ -1392,7 +1415,6 @@ int grib_f_headers_only_new_from_file_(int* fid, int* gid){
   *gid=-1;
   return GRIB_INVALID_FILE;
 }
-
 int grib_f_headers_only_new_from_file__(int* fid, int* gid){
   return grib_f_headers_only_new_from_file_( fid, gid);
 }
@@ -1400,6 +1422,7 @@ int grib_f_headers_only_new_from_file(int* fid, int* gid){
   return grib_f_headers_only_new_from_file_( fid, gid);
 }
 
+/*****************************************************************************/
 int grib_f_new_from_index_(int* iid, int* gid){
   int err = 0;
   grib_index* i = get_index(*iid);
@@ -1428,6 +1451,7 @@ int grib_f_new_from_index(int* iid, int* gid){
   return grib_f_new_from_index_(iid,gid);
 }
 
+/*****************************************************************************/
 int grib_f_index_new_from_file_(char* file ,char* keys ,int* gid, int lfile, int lkeys){
   int err = 0;
   char fname[1024]={0,};
@@ -1450,15 +1474,14 @@ int grib_f_index_new_from_file_(char* file ,char* keys ,int* gid, int lfile, int
   *gid=-1;
   return GRIB_INVALID_FILE;
 }
-
 int grib_f_index_new_from_file__(char* file, char* keys, int* gid, int lfile, int lkeys){
   return grib_f_index_new_from_file_(file ,keys ,gid, lfile, lkeys);
 }
-
 int grib_f_index_new_from_file(char* file, char* keys, int* gid, int lfile, int lkeys){
   return grib_f_index_new_from_file_(file ,keys ,gid, lfile, lkeys);
 }
 
+/*****************************************************************************/
 int grib_f_index_add_file_(int* iid, char* file, int lfile) {
   grib_index *i = get_index(*iid);
   int err = GRIB_SUCCESS;
@@ -1480,6 +1503,7 @@ int grib_f_index_add_file(int* iid, char* file, int lfile) {
   return grib_f_index_add_file_(iid,file,lfile);
 }
 
+/*****************************************************************************/
 int grib_f_index_read_(char* file, int* gid, int lfile) {
   int err = 0;
   char fname[1024]={0,};
@@ -1507,6 +1531,7 @@ int grib_f_index_read(char* file, int* gid, int lfile) {
   return grib_f_index_read_(file,gid,lfile);
 }
 
+/*****************************************************************************/
 int grib_f_index_write_(int* gid, char* file, int lfile) {
   grib_index *i = get_index(*gid);
   int err = GRIB_SUCCESS;
@@ -1526,6 +1551,7 @@ int grib_f_index_write(int* gid, char* file, int lfile) {
   return grib_f_index_write_(gid,file,lfile);
 }
 
+/*****************************************************************************/
 int grib_f_index_release_(int* hid){
   return clear_index(*hid);
 }
@@ -1550,7 +1576,7 @@ int grib_f_multi_handle_release(int* hid){
   return grib_f_multi_handle_release_(hid);
 }
 
-
+/*****************************************************************************/
 int grib_f_release_(int* hid){
   return clear_handle(*hid);
 }
@@ -1561,6 +1587,7 @@ int grib_f_release(int* hid){
   return grib_f_release_( hid);
 }
 
+/*****************************************************************************/
 int grib_f_dump_(int* gid){
   grib_handle *h = get_handle(*gid);
 
@@ -1578,7 +1605,7 @@ int grib_f_dump(int* gid){
   return grib_f_dump_( gid);
 }
 
-
+/*****************************************************************************/
 int grib_f_print_(int* gid, char* key, int len){
   grib_handle *h = get_handle(*gid);
   int err = GRIB_SUCCESS;
@@ -1601,6 +1628,7 @@ int grib_f_print(int* gid, char* key,  int len){
   return grib_f_print_( gid,  key, len);
 }
 
+/*****************************************************************************/
 int grib_f_get_error_string_(int* err, char* buf,  int len){
   const char* err_msg = grib_get_error_message(*err);
   size_t erlen = strlen(err_msg);
@@ -1615,6 +1643,7 @@ int grib_f_get_error_string(int* err, char* buf,  int len){
   return grib_f_get_error_string_(err,buf,len);
 }
 
+/*****************************************************************************/
 int grib_f_get_size_int_(int* gid, char* key, int* val, int len){
   grib_handle *h = get_handle(*gid);
   int err = GRIB_SUCCESS;
@@ -1731,6 +1760,8 @@ int grib_f_get_long__(int* gid, char* key, long* val,  int len){
 int grib_f_get_long(int* gid, char* key, long* val,  int len){
   return grib_f_get_long_( gid,  key,  val,   len);
 }
+
+/*****************************************************************************/
 int grib_f_get_int_array_(int* gid, char* key, int *val, int* size,  int len){
 
   grib_handle *h = get_handle(*gid);
@@ -1768,6 +1799,7 @@ int grib_f_get_int_array__(int* gid, char* key, int*val, int* size, int len){
 int grib_f_get_int_array(int* gid, char* key, int*val, int* size, int len){
   return grib_f_get_int_array_( gid,  key, val,  size,  len);
 }
+/*****************************************************************************/
 int grib_f_get_long_array_(int* gid, char* key, long *val, int* size,  int len){
 
   grib_handle *h = get_handle(*gid);
@@ -1788,6 +1820,8 @@ int grib_f_get_long_array__(int* gid, char* key, long *val, int* size, int len){
 int grib_f_get_long_array(int* gid, char* key, long *val, int* size, int len){
   return grib_f_get_long_array_( gid,  key, val,  size,  len);
 }
+
+/*****************************************************************************/
 int grib_f_get_byte_array_(int* gid, char* key, unsigned char *val, int* size, int len, int lenv){
 
   grib_handle *h = get_handle(*gid);
@@ -1809,6 +1843,7 @@ int grib_f_get_byte_array(int* gid, char* key,  unsigned char *val, int* size, i
     return grib_f_get_byte_array_( gid, key, val, size, len, lenv);
 }
 
+/*****************************************************************************/
 int grib_f_index_get_string_(int* gid, char* key, char* val, int *eachsize,int* size,  int len){
 
   grib_index *h = get_index(*gid);
@@ -1851,6 +1886,7 @@ int grib_f_index_get_string(int* gid, char* key, char* val, int* eachsize, int* 
   return grib_f_index_get_string_(gid,key,val,eachsize,size,len);
 }
 
+/*****************************************************************************/
 int grib_f_index_get_long_(int* gid, char* key, long *val, int* size,  int len){
 
   grib_index *h = get_index(*gid);
@@ -1870,6 +1906,7 @@ int grib_f_index_get_long(int* gid, char* key, long *val, int* size,  int len){
   return grib_f_index_get_long_(gid,key,val,size,len);
 }
 
+/*****************************************************************************/
 int grib_f_index_get_int_(int* gid, char* key, int *val, int* size,  int len){
 
   grib_index *h = get_index(*gid);
@@ -1897,6 +1934,7 @@ int grib_f_index_get_int(int* gid, char* key, int *val, int* size,  int len){
   return grib_f_index_get_int_(gid,key,val,size,len);
 }
 
+/*****************************************************************************/
 int grib_f_index_get_real8_(int* gid, char* key, double *val, int* size,  int len){
 
   grib_index *h = get_index(*gid);
@@ -1916,6 +1954,7 @@ int grib_f_index_get_real8(int* gid, char* key, double *val, int* size,  int len
   return grib_f_index_get_real8_(gid,key,val,size,len);
 }
 
+/*****************************************************************************/
 int grib_f_set_int_array_(int* gid, char* key, int* val, int* size,  int len){
   grib_handle *h = get_handle(*gid);
   int err = GRIB_SUCCESS;
@@ -1951,6 +1990,8 @@ int grib_f_set_int_array__(int* gid, char* key, int* val, int* size,  int len){
 int grib_f_set_int_array(int* gid, char* key, int* val, int* size,  int len){
   return grib_f_set_int_array_( gid,  key,  val,  size,   len);
 }
+
+/*****************************************************************************/
 int grib_f_set_long_array_(int* gid, char* key, long* val, int* size,  int len){
   grib_handle *h = get_handle(*gid);
   int err = GRIB_SUCCESS;
@@ -1969,6 +2010,8 @@ int grib_f_set_long_array__(int* gid, char* key, long* val, int* size,  int len)
 int grib_f_set_long_array(int* gid, char* key, long* val, int* size,  int len){
   return grib_f_set_long_array_( gid,  key,  val,  size,   len);
 }
+
+/*****************************************************************************/
 int grib_f_set_byte_array_(int* gid, char* key, unsigned char* val, int* size, int len, int lenv){
   grib_handle *h = get_handle(*gid);
   int err = GRIB_SUCCESS;
@@ -1989,6 +2032,7 @@ int grib_f_set_byte_array(int* gid, char* key, unsigned char* val, int* size, in
     return grib_f_set_byte_array_( gid, key, val, size, len, lenv);
 }
 
+/*****************************************************************************/
 int grib_f_set_int_(int* gid, char* key, int* val, int len){
   grib_handle *h = get_handle(*gid);
   char buf[1024];
@@ -2016,6 +2060,7 @@ int grib_f_set_long(int* gid, char* key, long* val, int len){
   return  grib_f_set_long_( gid,  key,  val, len);
 }
 
+/*****************************************************************************/
 int grib_f_set_missing_(int* gid, char* key,int len){
 
   grib_handle *h = get_handle(*gid);
@@ -2047,6 +2092,7 @@ int grib_f_is_missing(int* gid, char* key,int* isMissing,int len){
 	return grib_f_is_missing_(gid,key,isMissing,len);
 }
 
+/*****************************************************************************/
 int grib_f_is_defined_(int* gid, char* key,int* isDefined,int len){
 	grib_handle *h = get_handle(*gid);
 	char buf[1024];
@@ -2062,6 +2108,7 @@ int grib_f_is_defined(int* gid, char* key,int* isDefined,int len){
 	return grib_f_is_defined_(gid,key,isDefined,len);
 }
 
+/*****************************************************************************/
 int grib_f_set_real4_(int* gid, char* key, float* val, int len){
 
   grib_handle *h = get_handle(*gid);
@@ -2188,6 +2235,7 @@ int grib_f_get_real4_array(int* gid, char* key, float* val, int* size, int len){
   return grib_f_get_real4_array_( gid,  key, val,  size,  len);
 }
 
+/*****************************************************************************/
 int grib_f_set_force_real4_array_(int* gid, char* key, float*val, int* size, int len){
 
   grib_handle *h = get_handle(*gid);
@@ -2221,7 +2269,7 @@ int grib_f_set_force_real4_array(int* gid, char* key, float*val, int* size, int 
   return grib_f_set_force_real4_array_( gid,  key, val,  size, len);
 }
 
-
+/*****************************************************************************/
 int grib_f_set_real4_array_(int* gid, char* key, float*val, int* size, int len){
 
   grib_handle *h = get_handle(*gid);
@@ -2255,6 +2303,7 @@ int grib_f_set_real4_array(int* gid, char* key, float*val, int* size, int len){
   return grib_f_set_real4_array_( gid,  key, val,  size, len);
 }
 
+/*****************************************************************************/
 int grib_f_index_select_real8_(int* gid, char* key, double* val, int len){
 
   grib_index *h = get_index(*gid);
@@ -2271,6 +2320,7 @@ int grib_f_index_select_real8(int* gid, char* key, double* val, int len){
   return grib_f_index_select_real8_(gid,key,val,len);
 }
 
+/*****************************************************************************/
 int grib_f_index_select_string_(int* gid, char* key, char* val, int len, int vallen){
 
   grib_index *h = get_index(*gid);
@@ -2288,6 +2338,7 @@ int grib_f_index_select_string(int* gid, char* key, char* val, int len, int vall
   return grib_f_index_select_string_(gid,key,val,len,vallen);
 }
 
+/*****************************************************************************/
 int grib_f_index_select_int_(int* gid, char* key, int* val, int len){
 
   grib_index *h = get_index(*gid);
@@ -2304,6 +2355,7 @@ int grib_f_index_select_int(int* gid, char* key, int* val, int len){
   return grib_f_index_select_int_(gid,key,val,len);
 }
 
+/*****************************************************************************/
 int grib_f_index_select_long_(int* gid, char* key, long* val, int len){
 
   grib_index *h = get_index(*gid);
@@ -2320,6 +2372,7 @@ int grib_f_index_select_long(int* gid, char* key, long* val, int len){
   return grib_f_index_select_long_(gid,key,val,len);
 }
 
+/*****************************************************************************/
 int grib_f_set_real8_(int* gid, char* key, double* val, int len){
 
   grib_handle *h = get_handle(*gid);
@@ -2389,6 +2442,7 @@ int grib_f_get_real8_elements(int* gid, char* key, int* index,double* val, int* 
   return grib_f_get_real8_elements_( gid,  key, index, val,len,size);
 }
 
+/*****************************************************************************/
 int grib_f_find_nearest_four_single_(int* gid,int* is_lsm,
     double* inlat,double* inlon,
     double* outlats,double* outlons,
@@ -2433,6 +2487,7 @@ int grib_f_find_nearest_four_single(int* gid,int* is_lsm,
     distances,indexes);
 }
 
+/*****************************************************************************/
 int grib_f_find_nearest_single_(int* gid,int* is_lsm,
     double* inlats,double* inlons,
     double* outlats,double* outlons,
@@ -2468,6 +2523,7 @@ int grib_f_find_nearest_single(int* gid,int* is_lsm,
     distances,indexes);
 }
 
+/*****************************************************************************/
 int grib_f_find_nearest_multiple_(int* gid,int* is_lsm,
     double* inlats,double* inlons,
     double* outlats,double* outlons,
@@ -2503,7 +2559,7 @@ int grib_f_find_nearest_multiple(int* gid,int* is_lsm,
     distances,indexes,npoints);
 }
 
-
+/*****************************************************************************/
 int grib_f_get_real8_array_(int* gid, char* key, double*val, int* size, int len){
 
   grib_handle *h = get_handle(*gid);
@@ -2545,6 +2601,7 @@ int grib_f_set_force_real8_array_(int* gid, char* key, double*val, int* size, in
 
 }
 
+/*****************************************************************************/
 int grib_f_set_real8_array_(int* gid, char* key, double*val, int* size, int len){
 
   grib_handle *h = get_handle(*gid);
@@ -2554,9 +2611,7 @@ int grib_f_set_real8_array_(int* gid, char* key, double*val, int* size, int len)
   if(!h)   return GRIB_INVALID_GRIB;
 
   return grib_set_double_array(h, cast_char(buf,key,len), val, lsize);
-
 }
-
 int grib_f_set_real8_array__(int* gid, char* key, double *val, int* size, int len){
   return grib_f_set_real8_array_( gid,  key, val,  size, len);
 }
@@ -2564,6 +2619,7 @@ int grib_f_set_real8_array(int* gid, char* key, double *val, int* size, int len)
   return grib_f_set_real8_array_( gid,  key, val,  size, len);
 }
 
+/*****************************************************************************/
 int grib_f_get_string_(int* gid, char* key, char* val,int len, int len2){
 
   grib_handle *h = get_handle(*gid);
@@ -2610,6 +2666,7 @@ int grib_f_set_string(int* gid, char* key, char* val, int len, int len2){
   return  grib_f_set_string_( gid,  key,  val,   len, len2);
 }
 
+/*****************************************************************************/
 int grib_f_get_data_real4_(int* gid,float* lats, float* lons,float* values,size_t* size) {
 
   grib_handle *h = get_handle(*gid);
@@ -2661,6 +2718,7 @@ int grib_f_get_data_real8(int* gid,double* lats, double* lons,double* values,siz
   return grib_f_get_data_real8_(gid,lats,lons,values,size);
 }
 
+/*****************************************************************************/
 int grib_f_get_message_size_(int* gid, size_t *len){
   grib_handle *h = get_handle(*gid);
   if(!h) return GRIB_INVALID_GRIB;
@@ -2676,13 +2734,15 @@ int grib_f_get_message_size(int* gid, size_t *len){
   return  grib_f_get_message_size_( gid, len);
 }
 
+/*****************************************************************************/
 int grib_f_copy_message_(int* gid, void* mess,size_t* len){
   grib_handle *h = get_handle(*gid);
   if(!h)
     return GRIB_INVALID_GRIB;
 
   if(*len < h->buffer->ulength) {
-    grib_context_log(h->context,GRIB_LOG_ERROR,"grib_copy_message: buffer=%ld message size=%ld",*len,h->buffer->ulength);
+    grib_context_log(h->context,GRIB_LOG_ERROR,
+            "grib_copy_message: buffer=%ld message size=%ld",*len,h->buffer->ulength);
     return GRIB_BUFFER_TOO_SMALL;
   }
 
@@ -2700,6 +2760,7 @@ int grib_f_copy_message(int* gid, void* mess,size_t* len){
   return grib_f_copy_message_( gid,  mess, len);
 }
 
+/*****************************************************************************/
 void grib_f_check_(int* err,char* call,char* str,int lencall,int lenstr){
   char bufstr[1024]={0,};
   char bufcall[1024]={0,};
@@ -2719,6 +2780,7 @@ void grib_f_check(int* err,char* call, char* key,  int lencall, int lenkey){
   grib_f_check_(err,call,key,lencall,lenkey);
 }
 
+/*****************************************************************************/
 int grib_f_write_(int* gid, int* fid) {
   grib_handle *h = get_handle(*gid);
   FILE* f = get_file(*fid);
@@ -2736,8 +2798,6 @@ int grib_f_write_(int* gid, int* fid) {
  
   return GRIB_SUCCESS;
 }
-
-
 int grib_f_write__(int* gid, int* fid) {
   return grib_f_write_(gid,fid);
 }
@@ -2746,6 +2806,7 @@ int grib_f_write(int* gid, int* fid) {
   return grib_f_write_(gid,fid);
 }
 
+/*****************************************************************************/
 int grib_f_multi_write_(int* gid, int* fid) {
   grib_multi_handle *h = get_multi_handle(*gid);
   FILE* f = get_file(*fid);

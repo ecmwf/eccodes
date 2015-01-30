@@ -11,12 +11,16 @@ usage ()
 }
 
 VERBOSE=0
+CLEAN=0
 while :
 do
    case "$1" in
       -h) usage ; exit 0;;
       -v) VERBOSE=1
          echo "Running with verbose setting"
+         ;;
+      -c) CLEAN=1
+         echo "Cleaning downloaded files"
          ;;
       --) shift ; break ;;
       -*) usage ; exit 0;;
@@ -30,14 +34,6 @@ if [ -z "$DATA_DIR" ]; then
    echo "Error: No directory specified." 2>&1
    usage
    exit 1
-fi
-
-# Check if all downloads are already done
-if [ -f "${DATA_DIR}/.downloaded" ]; then
-   if [ $VERBOSE -eq 1 ]; then
-      echo "All downloads are already done. Exiting."
-   fi
-   exit 0
 fi
 
 files="
@@ -777,6 +773,22 @@ files="
 
     bufr/syno_multi.bufr.header.ref
   "
+
+if [ $CLEAN -eq 1 ]; then
+   for f in $files; do
+      rm -f $f
+      rm -f ".downloaded"
+   done
+   exit 0
+fi
+
+# Check if all downloads are already done
+if [ -f "${DATA_DIR}/.downloaded" ]; then
+   if [ $VERBOSE -eq 1 ]; then
+      echo "All downloads are already done. Exiting."
+   fi
+   exit 0
+fi
 
 [ -d "${DATA_DIR}/tigge" ] || mkdir "${DATA_DIR}/tigge"
 

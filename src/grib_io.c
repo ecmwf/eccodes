@@ -694,7 +694,10 @@ static int read_BUFR(reader *r)
         /* fprintf(stderr," sec1len=%d sec2len=%d sec3len=%d sec4len=%d\n",sec1len, sec2len,sec3len,sec4len); */
         length = 4 + sec1len + sec2len + sec3len + sec4len + 4;
         /* fprintf(stderr,"length = %d i = %d\n",length,i); */
-    } else if (r->headers_only) {
+    } 
+    #if 0
+    /* reading only headers is disabled for BUFR for the moment */
+    else if (r->headers_only) {
         /* Section 1 */
         for(j=0;j<3;j++)
         {
@@ -731,6 +734,7 @@ static int read_BUFR(reader *r)
         err=r->seek(r->read_data,length-i-1);
         length=i;
     }
+    #endif
 
     /* Assert(i <= sizeof(tmp)); */
     err=read_the_rest(r, length, tmp, i, 1);

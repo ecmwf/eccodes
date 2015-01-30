@@ -26,12 +26,6 @@
                      grib_index_get_string, &
                      grib_index_get_real8
   end interface grib_index_get
-  interface codes_index_get
-    module procedure codes_index_get_int, &
-                     codes_index_get_long, &
-                     codes_index_get_string, &
-                     codes_index_get_real8
-  end interface codes_index_get
 
   !> Get the number of distinct values of the key in argument contained in the index. The key must belong to the index.
   !>
@@ -50,10 +44,6 @@
     module procedure grib_index_get_size_int, &
                      grib_index_get_size_long
   end interface grib_index_get_size
-  interface codes_index_get_size
-    module procedure codes_index_get_size_int, &
-                     codes_index_get_size_long
-  end interface codes_index_get_size
                                  
   !> Select the message subset with key==value. 
   !>
@@ -74,12 +64,6 @@
                      grib_index_select_string, &
                      grib_index_select_real8
   end interface grib_index_select
-  interface codes_index_select
-    module procedure codes_index_select_int, &
-                     codes_index_select_long, &
-                     codes_index_select_string, &
-                     codes_index_select_real8
-  end interface codes_index_select
           
   !> Get the value for a key from a grib message.
   !>
@@ -121,17 +105,6 @@
                      grib_get_real4_array, &
                      grib_get_real8_array
   end interface grib_get
-  interface codes_get
-    module procedure codes_get_int, &
-                     codes_get_long, &
-                     codes_get_real4, &
-                     codes_get_real8, &
-                     codes_get_string, &
-                     codes_get_int_array, &
-                     codes_get_byte_array, &
-                     codes_get_real4_array, &
-                     codes_get_real8_array
-  end interface codes_get
 
   !> Get the size of an array key.
   !>
@@ -149,10 +122,6 @@
       module procedure  grib_get_size_int, &
                         grib_get_size_long 
   end interface grib_get_size
-  interface codes_get_size
-      module procedure  codes_get_size_int, &
-                        codes_get_size_long 
-  end interface codes_get_size
 
   !> Set the value for a key in a grib message.
   !>
@@ -188,25 +157,8 @@
                      grib_set_real4_array, &
                      grib_set_real8_array
   end interface grib_set
-  interface codes_set
-    module procedure codes_set_int, &
-                     codes_set_long, &
-                     codes_set_real4, &
-                     codes_set_real8, &
-                     codes_set_string, &
-                     codes_set_int_array, &
-                     codes_set_long_array, &
-                     codes_set_byte_array, &
-                     codes_set_real4_array, &
-                     codes_set_real8_array
-  end interface codes_set
 
   interface grib_set_force
     module procedure grib_set_force_real4_array, &
                      grib_set_force_real8_array
   end interface grib_set_force
-  interface codes_set_force
-    module procedure codes_set_force_real4_array, &
-                     codes_set_force_real8_array
-  end interface codes_set_force
-

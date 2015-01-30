@@ -81,6 +81,7 @@ examples/C/values_check
 fortran/.libs/
 fortran/*.mod
 fortran/grib_f90.f90
+fortran/eccodes_f90.f90
 fortran/grib_kinds.h
 fortran/grib_types
 fortran/same_int_long

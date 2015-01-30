@@ -11,7 +11,7 @@
 !
 !
 program new_from_file
-use grib_api
+use eccodes
   implicit none
   integer            :: ifile
   integer            :: iret

@@ -14,28 +14,35 @@ if( EC_HAVE_FORTRAN )
                         DEPENDS grib_types )
 
     if( ${EC_SIZEOF_INT} EQUAL ${EC_SIZEOF_LONG} )
-        set( _long_int_interface grib_f90_int.f90 )
+        set( _long_int_interface    grib_f90_int.f90 )
+        set( _long_int_interface_ec eccodes_f90_int.f90 )
     else()
-        set( _long_int_interface grib_f90_long_int.f90 )
+        set( _long_int_interface    grib_f90_long_int.f90 )
+        set( _long_int_interface_ec eccodes_f90_long_int.f90 )
     endif()
 
     if( ${EC_SIZEOF_INT} EQUAL ${EC_SIZEOF_SIZE_T} )
-        set( _sizet_int_interface grib_f90_int_size_t.f90 )
+        set( _sizet_int_interface    grib_f90_int_size_t.f90 )
+        set( _sizet_int_interface_ec eccodes_f90_int_size_t.f90 )
     else()
-        set( _sizet_int_interface grib_f90_long_size_t.f90 )
+        set( _sizet_int_interface    grib_f90_long_size_t.f90 )
+        set( _sizet_int_interface_ec eccodes_f90_long_size_t.f90 )
     endif()
 
     add_custom_command( OUTPUT  grib_f90.f90
                         COMMAND cat ${srcdir}/grib_f90_head.f90 ${srcdir}/${_long_int_interface} ${srcdir}/${_sizet_int_interface} ${srcdir}/grib_f90_tail.f90 > grib_f90.f90
                         DEPENDS grib_f90_head.f90 grib_f90_tail.f90 grib_kinds.h ${_long_int_interface} ${_sizet_int_interface} )
+    add_custom_command( OUTPUT  eccodes_f90.f90
+                        COMMAND cat ${srcdir}/eccodes_f90_head.f90 ${srcdir}/${_long_int_interface_ec} ${srcdir}/${_sizet_int_interface_ec} ${srcdir}/eccodes_f90_tail.f90 > eccodes_f90.f90
+                        DEPENDS eccodes_f90_head.f90 eccodes_f90_tail.f90 grib_kinds.h ${_long_int_interface_ec} ${_sizet_int_interface_ec} )
 
     ecbuild_add_library( TARGET     grib_api_f77
                          SOURCES    grib_fortran.c grib_f77.c
                          LIBS       grib_api )
 
     ecbuild_add_library( TARGET     grib_api_f90
-                         SOURCES    grib_fortran.c grib_f90.f90 grib_kinds.h
-                         GENERATED  grib_f90.f90
+                         SOURCES    grib_fortran.c grib_f90.f90 eccodes_f90.f90 grib_kinds.h
+                         GENERATED  grib_f90.f90 eccodes_f90.f90
                          LIBS       grib_api )
 
     # Add the eccodes module file as well
@@ -59,6 +66,11 @@ if( EC_HAVE_FORTRAN )
                             grib_api_visibility.h grib_types.f90 create_grib_f90.sh
                             grib_f90.f90.head grib_f90.f90.tail grib_f90_int.f90 grib_f90_long_int.f90
                             grib_f90_int_size_t.f90 grib_f90_long_size_t.f90
+
+                            eccodes_visibility.h eccodes_constants.h
+                            eccodes_f90.f90.head eccodes_f90.f90.tail eccodes_f90_int.f90 eccodes_f90_long_int.f90
+                            eccodes_f90_int_size_t.f90 eccodes_f90_long_size_t.f90
+
                             same_int_long.f90 same_int_size_t.f90 grib_fortran_kinds.c )
 
 

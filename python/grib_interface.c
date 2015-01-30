@@ -982,7 +982,8 @@ int grib_c_new_gts_from_file(FILE* f,int headers_only, int* gid){
   int err = 0;
 
   if(f){
-    h = gts_new_from_file(0,f,headers_only,&err);
+    /* h = gts_new_from_file(0,f,headers_only,&err); */
+    h = gts_new_from_file(0,f,&err);
 
     if(h){
       push_handle(h,gid);
@@ -1002,7 +1003,8 @@ int grib_c_new_bufr_from_file(FILE* f,int headers_only,int* gid){
   int err = 0;
 
   if(f){
-    h = bufr_new_from_file(0,f,headers_only,&err);
+    /* h = bufr_new_from_file(0,f,headers_only,&err); */
+    h = bufr_new_from_file(0,f, &err);
 
     if(h){
       push_handle(h,gid);
