@@ -25,12 +25,14 @@ rm -f $fTmp
 #Create log file
 touch $fLog
 
+#Define filter file
+fFilter="bufr_filter.filter"
+
 #-----------------------------------------------------------
 # Filter out only header information the all
 # the bufr files must have. We just check if it works.
 #-----------------------------------------------------------
 
-fFilter="bufr_filter_header.filter"
 cat > $fFilter <<EOF
 print "[centre] [subCentre] [masterTablesVersionNumber] [localTablesVersionNumber] [numberOfSubsets]"; 
 EOF
@@ -41,4 +43,19 @@ for f in `ls *.bufr` ; do
 done
 
 
-rm -f $fLog $res_ls $fTmp
+#-----------------------------------------------------------
+# SYNOP tests
+#-----------------------------------------------------------
+
+cat > $fFilter <<EOF
+set unpack=1;
+transient statid=1000*blockNumber+stationNumber;
+print "statid=[statid] lat=[latitude] lon=[longitude] t2=[airTemperatureAt2M]";
+EOF
+
+f="syno_multi.bufr"
+echo "file: $f" >> $fLog
+${tools_dir}/bufr_filter $fFilter $f >> $fLog
+
+#Clean up
+rm -f $fLog $res_ls $fTmp $fFilter
