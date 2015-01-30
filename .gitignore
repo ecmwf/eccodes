@@ -9,6 +9,10 @@ config.h.in
 lex.yy.c
 stamp-h1
 src/config.h
+src/grib_api.h.new
+src/grib_api_constants.h.new
+src/grib_errors.c.new
+src/grib_errors.h.new
 autom4te.cache/
 config.log
 config.status
@@ -23,6 +27,7 @@ rpms/grib_api_f90.pc
 aclocal.m4
 src/config.h.in~
 python/gribapi.pyc
+python/eccodes.pyc
 python/gribapi_swig.pyc
 
 # Generated stuff from builds
@@ -210,6 +215,7 @@ examples/C/ensemble_index
 examples/C/clone
 examples/C/iterator_bitmap
 examples/C/new_sample
+examples/F90/f_bufr_read_header
 examples/F90/f_clone
 examples/F90/f_copy_message
 examples/F90/f_copy_namespace
