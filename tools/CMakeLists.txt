@@ -7,10 +7,10 @@ ecbuild_add_library( TARGET    grib_tools
 
 # tools binaries
 list( APPEND grib_tools_bins
-             codes_info
+             codes_info codes_count
              grib_histogram grib_filter grib_ls grib_dump grib_merge
              grib2ppm grib_set grib_get grib_get_data grib_copy
-             grib_compare parser grib_count grib_index_build grib_to_netcdf
+             grib_compare parser grib_index_build grib_to_netcdf
              bufr_filter bufr_ls bufr_dump bufr_set bufr_get
              bufr_copy bufr_compare bufr_index_build
              taf_dump taf_ls taf_get taf_filter
@@ -42,6 +42,17 @@ foreach( tool ${grib_tools_bins_ECMWF_ONLY} )
                             LIBS       grib_tools )
 endforeach()
 
+# Count tools. Same source code, different executable names
+ecbuild_add_executable( TARGET     grib_count
+                        SOURCES    codes_count.c
+                        CONDITION  ECCODES_INSTALL_ECMWF_TOOLS
+                        LIBS       grib_tools  )
+ecbuild_add_executable( TARGET     bufr_count
+                        SOURCES    codes_count.c
+                        CONDITION  ECCODES_INSTALL_ECMWF_TOOLS
+                        LIBS       grib_tools  )
+
+# grib_list_keys
 ecbuild_add_executable( TARGET     grib_list_keys
                         SOURCES    list_keys.c
                         CONDITION  ECCODES_INSTALL_ECMWF_TOOLS

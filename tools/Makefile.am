@@ -13,11 +13,11 @@ libgrib_tools_la_SOURCES = grib_tools.c \
 dist_bin_SCRIPTS = bufr_compare_dir
 
 bin_PROGRAMS = grib_histogram big2gribex \
-               codes_info grib_filter grib_ls grib_dump grib_merge \
+               codes_info codes_count grib_filter grib_ls grib_dump grib_merge \
                grib2ppm grib_set grib_get grib_get_data grib_copy grib_repair \
                grib_compare grib_list_keys parser grib_count grib_index_build grib1to2 \
                gg_sub_area_check grib_to_netcdf grib_to_json \
-               bufr_filter bufr_ls bufr_dump bufr_set bufr_get \
+               bufr_count bufr_filter bufr_ls bufr_dump bufr_set bufr_get \
                bufr_copy bufr_compare bufr_index_build \
                taf_dump taf_ls taf_get taf_filter \
                metar_dump metar_ls metar_get metar_filter
@@ -32,7 +32,9 @@ grib_merge_SOURCES            =  grib_merge.c
 grib_to_netcdf_SOURCES        =  grib_to_netcdf.c
 grib_to_json_SOURCES          =  grib_to_json.c
 grib_dump_SOURCES             =  grib_dump.c
-grib_count_SOURCES            =  grib_count.c
+grib_count_SOURCES            =  codes_count.c
+bufr_count_SOURCES            =  codes_count.c
+codes_count_SOURCES           =  codes_count.c
 grib_histogram_SOURCES        =  grib_histogram.c
 parser_SOURCES                =  parser.c
 grib_list_keys_SOURCES        =  list_keys.c
