@@ -41,6 +41,7 @@ else
     data_dir=$cpath/data
     test_dir=$cpath/tests
     def_dir=$cpath/definitions
+    src_dir=$cpath/src
   else
     tools_dir=""
     tigge_dir=""
