@@ -44,7 +44,7 @@ done
 
 
 #-----------------------------------------------------------
-# SYNOP tests
+# SYNOP values tests
 #-----------------------------------------------------------
 
 cat > $fFilter <<EOF
@@ -57,5 +57,37 @@ f="syno_multi.bufr"
 echo "file: $f" >> $fLog
 ${tools_dir}/bufr_filter $fFilter $f >> $fLog
 
+#-----------------------------------------------------------
+# SYNOP message filter tests
+#-----------------------------------------------------------
+
+cat > $fFilter <<EOF
+set unpack=1;
+transient statid=1000*blockNumber+stationNumber;
+
+if (statid == 1003) {
+	write "res_[statid]";
+}		
+EOF
+
+fBufrTmp="res_1003"
+rm -f $fBufrTmp | true
+
+f="syno_multi.bufr"
+echo "file: $f" >> $fLog
+${tools_dir}/bufr_filter $fFilter $f >> $fLog
+
+cat > $fFilter <<EOF
+set unpack=1;
+transient statid=1000*blockNumber+stationNumber;
+print statid
+EOF
+
+[ `${tools_dir}/bufr_filter $fFilter $fBufrTmp` = "1003" ] 
+
+
 #Clean up
-rm -f $fLog $res_ls $fTmp $fFilter
+rm -f $fLog $res_ls $fTmp $fFilter $fBufrTmp
+
+
+
