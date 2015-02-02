@@ -100,7 +100,6 @@ EOF
 
 #TODO: when ECC-32 is fixed we need to remove hack using the transient variables!
 
-
 cat > $fRules <<EOF
 set unpack=1;
 transient centre_tmp=centre;
@@ -124,23 +123,47 @@ done
 # Test: with nonexistent keys.
 #-----------------------------------------------------------
 
-#TODO: when ECC-35 is fixed we need to enable this test again!
-
 #Here "centre" is misspelled!!!
 cat > $fRules <<EOF
-set center="atlantis";
+set center="98";
 EOF
 
 # Invoke without -f i.e. should fail if error encountered
 set +e
 
-f="syno_multi.bufr"
+f="syno_1.bufr"
 echo "Test: nonexistent keys" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}/bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 if [ $? -eq 0 ]; then
    echo "bufr_filter should have failed if key not found" >&2
-   #exit 1
+   exit 1
+fi
+set -e
+
+# Now repeat with -f option (do not exit on error)
+${tools_dir}/bufr_filter -f $fRules $f >> $fLog
+
+
+#-----------------------------------------------------------
+# Test: with not allowed key values
+#-----------------------------------------------------------
+
+#Here 1024 is out of range for centre (it is 8-bit only)
+cat > $fRules <<EOF
+set centre=1024;
+EOF
+
+# Invoke without -f i.e. should fail if error encountered
+set +e
+
+f="syno_1.bufr"
+echo "Test: not allowed key values" >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}/bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+if [ $? -eq 0 ]; then
+   echo "bufr_filter should have failed if key value is not allowed" >&2
+   exit 1
 fi
 set -e
 
