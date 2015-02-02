@@ -27,9 +27,9 @@ rm -f ${outfile}
 
 count=`${tools_dir}/grib_count ${data_dir}/pad.grib`
 
-if [ $count != 6 ]
-then
+if [ $count != 6 ]; then
   echo grib_io problem
   exit 1
 fi
 
+${tools_dir}/grib_count -v ${data_dir}/pad.grib >/dev/null
