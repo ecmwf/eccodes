@@ -14,6 +14,12 @@ TESTS = definitions.sh calendar.sh \
         read_any.sh padding.sh lamb_az_eq_area.sh grib_to_netcdf.sh debug.sh \
         jpeg.sh ccsds.sh
 
+# First download all the necessary data for testing
+# Note: if download fails, no tests will be done
+$(TESTS): download_data
+download_data:
+	@$(top_srcdir)/data/download.sh $(top_srcdir)/data
+
 noinst_PROGRAMS = packing_check gauss_sub read_any double_cmp packing pack_unpack \
                   multi_from_message julian read_index index gribex_perf\
                   jpeg_perf ccsds_perf so_perf png_perf bpv_limit laplacian \
