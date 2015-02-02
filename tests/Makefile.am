@@ -12,7 +12,7 @@ TESTS = definitions.sh calendar.sh \
         multi_from_message.sh change_scanning.sh \
         julian.sh statistics.sh tigge.sh tigge_conversions.sh \
         read_any.sh padding.sh lamb_az_eq_area.sh grib_to_netcdf.sh debug.sh \
-        $(JPEG_TEST) $(CCSDS_TEST)
+        jpeg.sh ccsds.sh
 
 noinst_PROGRAMS = packing_check gauss_sub read_any double_cmp packing pack_unpack \
                   multi_from_message julian read_index index gribex_perf\

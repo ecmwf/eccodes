@@ -910,6 +910,16 @@ int grib_index_add_file(grib_index* index,const char* filename) {
   return _codes_index_add_file(index,filename,CODES_GRIB);
 }
 
+grib_handle* new_message_from_file(int message_type, grib_context *c, FILE *f, int *error)
+{
+    if (message_type == CODES_GRIB)
+        return grib_new_from_file(c, f, 0, error); /* headers_only=0 */
+    if (message_type == CODES_BUFR)
+        return bufr_new_from_file(c, f, error);
+    Assert(0);
+    return NULL;
+}
+
 int _codes_index_add_file(grib_index* index,const char* filename,int message_type)
 {
 	double dval;
@@ -926,22 +936,8 @@ int _codes_index_add_file(grib_index* index,const char* filename,int message_typ
 	grib_field_tree* field_tree;
 	grib_file* file=NULL;
 	grib_context* c;
-    typedef grib_handle* (*message_new_proc) ( grib_context*,FILE*,int,int* );
-    message_new_proc message_new=NULL;
 
-    switch (message_type) {
-     case CODES_GRIB:
-        message_new=grib_new_from_file;
-        break;
-     case CODES_BUFR:
-        Assert(!"_codes_index_add_file for BUFR: not yet implemented");
-        /* message_new=bufr_new_from_file; */
-        break;
-     default:
-        Assert(0);
-    }
-
-	if (!index) return GRIB_NULL_INDEX;
+    if (!index) return GRIB_NULL_INDEX;
 	c=index->context;
 
 	file=grib_file_open(filename,"r",&err);
@@ -971,7 +967,7 @@ int _codes_index_add_file(grib_index* index,const char* filename,int message_typ
 
 	fseeko(file->handle,0,SEEK_SET);
 
-	while ((h=message_new(c,file->handle,0,&err))!=NULL) {
+	while ((h=new_message_from_file(message_type, c, file->handle, &err))!=NULL) {
 		grib_string_list* v=0;
 		index_key=index->keys;
 		field_tree=index->fields;

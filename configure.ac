@@ -434,8 +434,8 @@ then
   jpeg library installation is not working or missing.                                 
 
   To fix this problem you have the following options.                                  
-  1) Install without jpeg support enabled (--disable-jpeg), but you won't be able to 
-     decode grib 2 data encoded in jpeg.                       
+  1) Install without jpeg support enabled (--disable-jpeg), but you will not be able to
+     decode grib2 data encoded in jpeg.
   2) Check if you have a jpeg library installed in a path different from your system path. 
      In this case you can provide your jpeg library installation path to the configure
      through the options:

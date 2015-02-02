@@ -41,6 +41,8 @@ tools/grib2ppm
 tools/grib_compare
 tools/grib_copy
 tools/grib_count
+tools/bufr_count
+tools/codes_count
 tools/grib_diff
 tools/grib_dump
 tools/grib_filter

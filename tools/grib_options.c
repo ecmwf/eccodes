@@ -73,7 +73,7 @@ grib_options_help grib_options_help_list[] ={
   {"t",0,"Print type information.\n"},
   {"w:","key[:{s/d/l}]{=/!=}value,key[:{s/d/l}]{=/!=}value,...",
    "\n\t\tWhere clause."
-   "\n\t\tGrib messages are processed only if they match all the"
+   "\n\t\tMessages are processed only if they match all the"
    " key/value constraints."
    "\n\t\tA valid constraint is of type key=value or key!=value."
    "\n\t\tFor each key a string (key:s) or a double (key:d) or"
@@ -82,7 +82,7 @@ grib_options_help grib_options_help_list[] ={
   {"7",0,"Does not fail when the message has wrong length\n"},
   {"A:","absolute error\n",
   "\tCompare floating point values using the absolute error as tolerance.\n\t\tDefault is absolute error=0\n"},
-  {"C",0,"C code mode. A C code program generating the grib message is dumped.\n"},
+  {"C",0,"C code mode. A C code program generating the message is dumped.\n"},
   {"D",0,"Debug mode.\n"},
   {"H",0,"Print octet content in hexadecimal format.\n"},
   {"M",0,"Multi-field support off. Turn off support for multiple fields in single grib message.\n"},
@@ -185,7 +185,7 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
     char *karg=NULL,*warg=NULL,*sarg=NULL,*barg=NULL;
 
     if (grib_options_on("V")) {
-        printf("\ngrib_api Version ");
+        printf("\neccodes Version ");
         grib_print_api_version(stdout);
         printf("\n\n");
         exit(0);
@@ -309,7 +309,7 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
     else grib_gts_header_off(context);
 
     if (grib_options_on("V")) {
-        printf("\ngrib_api Version ");
+        printf("\neccodes Version ");
         grib_print_api_version(stdout);
         printf("\n\n");
     }

@@ -1,27 +1,27 @@
 regular_gaussian_model_level.grib1
 count        edition      centre       typeOfLevel  level        dataDate     stepRange    dataType     shortName    packingType  gridType     
 1            1            ecmf         hybrid       1            20080206     0            an           t            grid_simple  regular_gg  
-1 of 1 grib messages in regular_gaussian_model_level.grib1
+1 of 1 messages in regular_gaussian_model_level.grib1
 
-1 of 1 total grib messages in 1 files
+1 of 1 total messages in 1 files
 regular_gaussian_model_level.grib1
 count       step        
 1           0          
-1 of 1 grib messages in regular_gaussian_model_level.grib1
+1 of 1 messages in regular_gaussian_model_level.grib1
 
-1 of 1 total grib messages in 1 files
+1 of 1 total messages in 1 files
 regular_gaussian_model_level.grib1
 edition      centre       typeOfLevel  level        dataDate     stepRange    dataType     shortName    packingType  gridType     
 1            ecmf         hybrid       1            20080206     0            an           t            grid_simple  regular_gg  
-1 of 1 grib messages in regular_gaussian_model_level.grib1
+1 of 1 messages in regular_gaussian_model_level.grib1
 
-1 of 1 total grib messages in 1 files
+1 of 1 total messages in 1 files
 regular_gaussian_model_level.grib1
 edition      centre       typeOfLevel  level        dataDate     stepRange    dataType     shortName    packingType  gridType      value 
 1            ecmf         hybrid       1            20080206     0            an           t            grid_simple  regular_gg   198.5        
-1 of 1 grib messages in regular_gaussian_model_level.grib1
+1 of 1 messages in regular_gaussian_model_level.grib1
 
-1 of 1 total grib messages in 1 files
+1 of 1 total messages in 1 files
 Input Point: latitude=0.00  longitude=0.00
 Grid Point chosen #2 index=4096 latitude=-1.40 longitude=0.00 distance=155.07 (Km)
 Other grid Points

@@ -11,6 +11,26 @@
 . ./include.sh
 
 REDIRECT=/dev/null
+
+# First check if jpeg decode/encode feature is enabled
+skip_test=0
+src_config=${src_dir}/config.h
+if [ -f ${src_config} ]; then
+  set +e
+  grep '#undef HAVE_JPEG' ${src_config} >/dev/null
+  status=$?
+  set -e
+  if [ $status -eq 0 ]; then
+    # Found the string so feature is disabled
+    skip_test=1
+  fi
+fi
+if [ $skip_test -eq 1 ]; then
+  echo "JPEG feature was not enabled. Skipping this test."
+  exit 0
+fi
+echo "JPEG feature was enabled."
+
 BLACKLIST="totalLength,section5Length,section7Length,dataRepresentationTemplateNumber,typeOfPacking"
 
 infile=${data_dir}/jpeg.grib2

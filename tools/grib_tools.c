@@ -354,7 +354,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
         if (infile->file) fclose(infile->file);
 
         if (infile->handle_count==0) {
-            fprintf(dump_file,"no grib messages found in %s\n", infile->name);
+            fprintf(dump_file,"no messages found in %s\n", infile->name);
             if (options->fail) exit(1);
         }
 
@@ -911,13 +911,13 @@ void grib_print_file_statistics(grib_runtime_options* options,grib_tools_file* f
 
     if (!options->print_statistics || !options->verbose) return;
 
-    fprintf(dump_file,"%d of %d grib messages in %s\n\n",
+    fprintf(dump_file,"%d of %d messages in %s\n\n",
             file->filter_handle_count,
             file->handle_count,
             file->name);
     if (!failed) return;
     /*
-	   fprintf(dump_file,"Following bad grib messages found in %s\n",
+	   fprintf(dump_file,"Following bad messages found in %s\n",
 	   file->name);
 	   fprintf(dump_file,"N      Error\n");
 	   while (failed){
@@ -933,7 +933,7 @@ void grib_print_file_statistics(grib_runtime_options* options,grib_tools_file* f
 void grib_print_full_statistics(grib_runtime_options* options)
 {
     if (options->print_statistics && options->verbose)
-        fprintf(dump_file,"%d of %d total grib messages in %d files\n",
+        fprintf(dump_file,"%d of %d total messages in %d files\n",
                 options->filter_handle_count,options->handle_count,options->file_count);
 }
 
