@@ -31,7 +31,7 @@ fRules="bufr_filter.filter"
 # the bufr files must have. We just check if it works.
 #-----------------------------------------------------------
 
-echo "Test: dump header"
+echo "Test: dump header" >> $fLog
 
 cat > $fRules <<EOF
 print "[centre] [subCentre] [masterTablesVersionNumber] [localTablesVersionNumber] [numberOfSubsets]"; 
@@ -53,7 +53,7 @@ print "statid=[statid] lat=[latitude] lon=[longitude] t2=[airTemperatureAt2M]";
 EOF
 
 f="syno_multi.bufr"
-echo "Test: dump SYNOP values"
+echo "Test: dump SYNOP values" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}/bufr_filter $fRules $f >> $fLog
 
@@ -75,7 +75,7 @@ fBufrTmp="res_1003"
 rm -f $fBufrTmp | true
 
 f="syno_multi.bufr"
-echo "Test: filter SYNOP message according to conditions"
+echo "Test: filter SYNOP message according to conditions" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}/bufr_filter $fRules $f >> $fLog
 
@@ -94,19 +94,19 @@ EOF
 
 cat > $fRules <<EOF 
 set unpack=1;
-write "split/split_[centre]_[masterTablesVersion]_[localTablesVersion]_[1000*blockNumber+stationNumber].bufr";
+write "split/split_[centre]_[masterTablesVersionNumber]_[localTablesVersionNumber]_[blockNumber]_[stationNumber].bufr";
 EOF
 
 [ -d split ] || mkdir -p split 
 
 f="syno_multi.bufr"
-echo "Test: splitting according to keys"
+echo "Test: splitting according to keys" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}/bufr_filter $fRules $f >> $fLog
 
 #Check if the resulting files exist
-for statid  in 1001 1003 1007 ; do
-    [ -s split/split_98_13_1_${statid}.bufr ]
+for statid  in 1 3 7 ; do
+    [ -s split/split_98_13_1_1_${statid}.bufr ]
 done
 
 #Clean up
