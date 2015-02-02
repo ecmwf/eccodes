@@ -32,6 +32,7 @@ list( APPEND tests
     bufr_dump
     bufrdc_desc_ref
     bufrdc_ref
+    bufr_get
     bufr_filter
     bufr_json
     bufr_ls

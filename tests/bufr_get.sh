@@ -16,7 +16,7 @@
 cd ${data_dir}/bufr
 
 #Define a common label for all the tmp files
-label="bufr_ls_test"
+label="bufr_get_test"
 
 #Create log file
 fLog=${label}".log"
@@ -27,33 +27,28 @@ touch $fLog
 fTmp=${label}".tmp.txt"
 rm -f $fTmp
 
-#----------------------------------------------
-# Test default "ls" on all the bufr data files
-#----------------------------------------------
-for f in `ls *.bufr` ; do
-   echo $f >> $fLog
-   ${tools_dir}/bufr_ls $f >> $fLog
-done
+#Define another tmp file to store the test results
+res_get=${label}".get.test"
+rm -f $res_get
 
 #-------------------------------------------
 # Test "-p" switch
 #-------------------------------------------
 f="aaen_55.bufr"
-ref_ls=$f".ls.ref"
-res_ls=$f".ls.test"
+
+#The reference is the same as for ls
+ref_get=$f".ls.ref"
 REDIRECT=/dev/null
 
-${tools_dir}/bufr_ls -p totalLength,centre,subCentre,masterTableNumber,masterTablesVersionNumber,localTablesVersionNumber,numberOfSubsets,numberOfObservations $f 2> $REDIRECT > $fTmp
+echo "Test: -p switch" >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}/bufr_get -p totalLength,centre,subCentre,masterTableNumber,masterTablesVersionNumber,localTablesVersionNumber,numberOfSubsets,numberOfObservations $f  > $fTmp
 
 #Write the values into a file and compare with ref
-awk NR==3 $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_ls
-diff $ref_ls $res_ls >$REDIRECT 2> $REDIRECT
+cat $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_get
+diff $ref_get $res_get >$REDIRECT 2> $REDIRECT
 
-# counting messages
-count=`${tools_dir}bufr_count syno_multi.bufr`
-[ "$count" = "3" ]
-count=`${tools_dir}codes_count syno_multi.bufr`
-[ "$count" = "3" ]
+rm -f $fLog
+rm -f $fTmp | true
+rm -f $res_get | true
 
-rm -f $fLog $res_ls 
-rm -f $fTmp | more
