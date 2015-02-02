@@ -57,9 +57,6 @@ else
     GRIB_API_LIB=`pwd`/src
   fi
 
-  # Download the data needed for tests
-  ${data_dir}/download.sh "${data_dir}"
-
   # go back to current working dir
   cd $save
   set -u

@@ -826,7 +826,9 @@ for f in $files; do
       fi
       $DNLD_PROG $f ${download_URL}/test-data/grib_api/data/$f
       if [ $? -ne 0 ]; then
-          echo "Failed to download file: $f"
+          echo
+          echo "Failed to download file \"$f\" from \"${download_URL}\"" 2>&1
+          echo "Aborting" 2>&1
           exit 1
       fi
 
