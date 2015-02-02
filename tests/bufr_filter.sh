@@ -57,6 +57,7 @@ ${tools_dir}/bufr_filter $fFilter $f >> $fLog
 # SYNOP message filter tests
 #-----------------------------------------------------------
 
+#Filter out the message with stationid=1003
 cat > $fFilter <<EOF
 set unpack=1;
 transient statid=1000*blockNumber+stationNumber;
@@ -73,6 +74,7 @@ f="syno_multi.bufr"
 echo "file: $f" >> $fLog
 ${tools_dir}/bufr_filter $fFilter $f >> $fLog
 
+#Check if the resulting bufr message is the right one
 cat > $fFilter <<EOF
 set unpack=1;
 transient statid=1000*blockNumber+stationNumber;
@@ -83,7 +85,7 @@ EOF
 
 
 #Clean up
-rm -f $fLog $res_ls $fTmp $fFilter $fBufrTmp
+rm -f $fLog $fTmp $fFilter $fBufrTmp
 
 
 
