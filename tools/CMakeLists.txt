@@ -45,11 +45,9 @@ endforeach()
 # Count tools. Same source code, different executable names
 ecbuild_add_executable( TARGET     grib_count
                         SOURCES    codes_count.c
-                        CONDITION  ECCODES_INSTALL_ECMWF_TOOLS
                         LIBS       grib_tools  )
 ecbuild_add_executable( TARGET     bufr_count
                         SOURCES    codes_count.c
-                        CONDITION  ECCODES_INSTALL_ECMWF_TOOLS
                         LIBS       grib_tools  )
 
 # grib_list_keys
