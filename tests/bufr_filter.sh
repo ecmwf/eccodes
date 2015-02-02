@@ -15,16 +15,23 @@
 #Enter data dir
 cd ${data_dir}/bufr
 
+#Define a common label for all the tmp files
+label="bufr_filter_test"
+
 #Create log file
-fLog="bufr_filter.log"
+fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
 #Create split directory
-[ -d split ] || mkdir -p split 
+dSplit=${label}"_split"
+[ -d $dSplit ] || mkdir -p $dSplit 
 
-#Define filter file
-fRules="bufr_filter.filter"
+#Define tmp bufr file
+fBufrTmp=${label}".bufr.tmp"
+
+#Define filter rules file
+fRules=${label}.filter
 
 #-----------------------------------------------------------
 # Filter out only header information that all
@@ -67,11 +74,10 @@ set unpack=1;
 transient statid=1000*blockNumber+stationNumber;
 
 if (statid == 1003) {
-	write "res_[statid]";
+	write "${fBufrTmp}";
 }		
 EOF
 
-fBufrTmp="res_1003"
 rm -f $fBufrTmp | true
 
 f="syno_multi.bufr"
@@ -92,12 +98,17 @@ EOF
 # Test: splitting according to keys 
 #-----------------------------------------------------------
 
-cat > $fRules <<EOF 
-set unpack=1;
-write "split/split_[centre]_[masterTablesVersionNumber]_[localTablesVersionNumber]_[blockNumber]_[stationNumber].bufr";
-EOF
+#TODO: when ECC-32 is fixed we need to remove hack using the transient variables!
 
-[ -d split ] || mkdir -p split 
+
+cat > $fRules <<EOF
+set unpack=1;
+transient centre_tmp=centre;
+transient block_tmp=blockNumber;
+transient station_tmp=stationNumber;
+#write "$dSplit}/split_[centre]_[masterTablesVersionNumber]_[localTablesVersionNumber]_[blockNumber]_[stationNumber].bufr";
+write "${dSplit}/split_[centre_tmp]_[masterTablesVersionNumber]_[localTablesVersionNumber]_[block_tmp]_[station_tmp].bufr";
+EOF
 
 f="syno_multi.bufr"
 echo "Test: splitting according to keys" >> $fLog
@@ -106,12 +117,90 @@ ${tools_dir}/bufr_filter $fRules $f >> $fLog
 
 #Check if the resulting files exist
 for statid  in 1 3 7 ; do
-    [ -s split/split_98_13_1_1_${statid}.bufr ]
+    [ -s ${dSplit}/split_98_13_1_1_${statid}.bufr ]
 done
 
+#-----------------------------------------------------------
+# Test: with nonexistent keys.
+#-----------------------------------------------------------
+
+#TODO: when ECC-35 is fixed we need to enable this test again!
+
+#Here "centre" is misspelled!!!
+cat > $fRules <<EOF
+set center="atlantis";
+EOF
+
+# Invoke without -f i.e. should fail if error encountered
+set +e
+
+f="syno_multi.bufr"
+echo "Test: nonexistent keys" >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}/bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+if [ $? -eq 0 ]; then
+   echo "bufr_filter should have failed if key not found" >&2
+   #exit 1
+fi
+set -e
+
+# Now repeat with -f option (do not exit on error)
+${tools_dir}/bufr_filter -f $fRules $f >> $fLog
+
+
+#----------------------------------------------------
+# Test: format specifier for integer keys
+#----------------------------------------------------
+
+#TODO: when ECC-36 is fixed we need to enable the output check again.
+
+cat > $fRules <<EOF
+# Pad center with leading zeroes and heightOfStation with blanks
+set unpack=1;
+print "centre=[centre%.3d], height=[heightOfStation%5ld]";
+EOF
+
+f="syno_1.bufr"
+echo "Test: nformat specifier for integer keys" >> $fLog
+echo "file: $f" >> $fLog
+result=`${tools_dir}/bufr_filter  $fRules $f`
+#[ "$result" = "centre=098, height=    3" ]
+
+
+#----------------------------------------------------
+# Test: setting keys 
+#----------------------------------------------------
+
+#TODO: when ECC-37 is fixed we need to enable it.
+
+#Filter out the message with stationid=1003
+cat > $fRules <<EOF
+set unpack=1;
+set typicalDate="20010511";
+set year=2001;
+set airTemperatureAt2M=234.5;
+EOF
+
+rm -f $fBufrTmp | true
+
+f="syno_1.bufr"
+echo "Test: setting keys" >> $fLog
+echo "file: $f" >> $fLog
+#${tools_dir}/bufr_filter $fRules $f -o $fBufrTmp >> $fLog
+
+#Check if the resulting bufr message is the right one
+cat > $fRules <<EOF
+set unpack=1;
+print "[typicalDate] [year] [airTemperatureAt2M%.1f]";
+EOF
+
+#[ `${tools_dir}/bufr_filter $fRules $fBufrTmp` = "20010511 2001 234.5" ]
+
+
 #Clean up
-rm -f split/*
-rm -f $fLog $fRules $fBufrTmp
+rm -f ${dSplit}/*
+rm -f $fLog $fRules 
+rm -f $fBufrTmp | true
 
 
 
