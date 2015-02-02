@@ -10,55 +10,59 @@
 
 . ./include.sh
 
+#set -x
+
 #Enter data dir
 cd ${data_dir}/bufr
 
+#Create log file
 fLog="bufr_filter.log"
 rm -f $fLog
-
-fTmp="tmp.bufr_filter.txt"
-rm -f $fTmp
-
-#Create log file
 touch $fLog
 
+#Create split directory
+[ -d split ] || mkdir -p split 
+
 #Define filter file
-fFilter="bufr_filter.filter"
+fRules="bufr_filter.filter"
 
 #-----------------------------------------------------------
-# Filter out only header information the all
+# Filter out only header information that all
 # the bufr files must have. We just check if it works.
 #-----------------------------------------------------------
 
-cat > $fFilter <<EOF
+echo "Test: dump header"
+
+cat > $fRules <<EOF
 print "[centre] [subCentre] [masterTablesVersionNumber] [localTablesVersionNumber] [numberOfSubsets]"; 
 EOF
 
 for f in `ls *.bufr` ; do
    echo "file: $f" >> $fLog
-   ${tools_dir}/bufr_filter $fFilter $f >> $fLog
+   ${tools_dir}/bufr_filter $fRules $f >> $fLog
 done
 
 #-----------------------------------------------------------
-# SYNOP values tests
+# Test: dump SYNOP values
 #-----------------------------------------------------------
 
-cat > $fFilter <<EOF
+cat > $fRules <<EOF
 set unpack=1;
 transient statid=1000*blockNumber+stationNumber;
 print "statid=[statid] lat=[latitude] lon=[longitude] t2=[airTemperatureAt2M]";
 EOF
 
 f="syno_multi.bufr"
+echo "Test: dump SYNOP values"
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_filter $fFilter $f >> $fLog
+${tools_dir}/bufr_filter $fRules $f >> $fLog
 
 #-----------------------------------------------------------
-# SYNOP message filter tests
+# Test: filter SYNOP message according to conditions
 #-----------------------------------------------------------
 
 #Filter out the message with stationid=1003
-cat > $fFilter <<EOF
+cat > $fRules <<EOF
 set unpack=1;
 transient statid=1000*blockNumber+stationNumber;
 
@@ -71,21 +75,43 @@ fBufrTmp="res_1003"
 rm -f $fBufrTmp | true
 
 f="syno_multi.bufr"
+echo "Test: filter SYNOP message according to conditions"
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_filter $fFilter $f >> $fLog
+${tools_dir}/bufr_filter $fRules $f >> $fLog
 
 #Check if the resulting bufr message is the right one
-cat > $fFilter <<EOF
+cat > $fRules <<EOF
 set unpack=1;
 transient statid=1000*blockNumber+stationNumber;
-print statid
+print "[statid]";
 EOF
 
-[ `${tools_dir}/bufr_filter $fFilter $fBufrTmp` = "1003" ] 
+[ `${tools_dir}/bufr_filter $fRules $fBufrTmp` = "1003" ] 
 
+#-----------------------------------------------------------
+# Test: splitting according to keys 
+#-----------------------------------------------------------
+
+cat > $fRules <<EOF 
+set unpack=1;
+write "split/split_[centre]_[masterTablesVersion]_[localTablesVersion]_[1000*blockNumber+stationNumber].bufr";
+EOF
+
+[ -d split ] || mkdir -p split 
+
+f="syno_multi.bufr"
+echo "Test: splitting according to keys"
+echo "file: $f" >> $fLog
+${tools_dir}/bufr_filter $fRules $f >> $fLog
+
+#Check if the resulting files exist
+for statid  in 1001 1003 1007 ; do
+    [ -s split/split_98_13_1_${statid}.bufr ]
+done
 
 #Clean up
-rm -f $fLog $fTmp $fFilter $fBufrTmp
+rm -f split/*
+rm -f $fLog $fRules $fBufrTmp
 
 
 
