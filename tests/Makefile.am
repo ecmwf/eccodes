@@ -1,6 +1,6 @@
 TESTS = definitions.sh calendar.sh \
         bufrdc_desc_ref.sh bufrdc_ref.sh bufr_dump.sh bufr_filter.sh \
-        bufr_json.sh bufr_copy.sh bufr_count.sh bufr_get.sh bufr_ls.sh bufr_set.sh \
+        bufr_json.sh bufr_compare.sh bufr_copy.sh bufr_count.sh bufr_get.sh bufr_ls.sh bufr_set.sh \
         ieee.sh grib1to2.sh \
         unit_tests.sh \
         grib2to1.sh badgrib.sh ls.sh filter.sh  \
