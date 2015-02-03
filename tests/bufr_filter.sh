@@ -142,7 +142,7 @@ fi
 set -e
 
 # Now repeat with -f option (do not exit on error)
-${tools_dir}/bufr_filter -f $fRules $f >> $fLog
+${tools_dir}/bufr_filter -f $fRules $f 2>>$fLog 1>>$fLog
 
 
 #-----------------------------------------------------------
@@ -168,7 +168,7 @@ fi
 set -e
 
 # Now repeat with -f option (do not exit on error)
-${tools_dir}/bufr_filter -f $fRules $f >> $fLog
+${tools_dir}/bufr_filter -f $fRules $f 2>>$fLog 1>>$fLog
 
 
 #----------------------------------------------------

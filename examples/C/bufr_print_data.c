@@ -31,11 +31,10 @@ int main(int argc,char* argv[])
     codes_handle* h=NULL;
     
     double *values = NULL;
-    long *desc = NULL;
     long longVal;
     double doubleVal;
     size_t values_len=0;
-    int err=0, i;
+    int err=0;
     int cnt=0;
     char* infile = "../../data/bufr/syno_multi.bufr";
 
@@ -49,7 +48,7 @@ int main(int argc,char* argv[])
     while ((h = bufr_new_from_file(NULL,in,&err)) != NULL || err != CODES_SUCCESS)
     {
         if (h == NULL) {
-            printf("Error: unable to create handle for message %s\n",cnt);
+            printf("Error: unable to create handle for message %d\n",cnt);
             cnt++;
             continue;
         }

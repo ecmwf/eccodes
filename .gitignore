@@ -64,6 +64,8 @@ tools/grib1to2
 examples/C/.libs/
 examples/C/box
 examples/C/bufr_read_header
+examples/C/bufr_print_data
+examples/C/bufr_print_header
 examples/C/get
 examples/C/get_data
 examples/C/iterator
