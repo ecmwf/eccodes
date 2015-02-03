@@ -70,8 +70,7 @@ echo "Test: use the square brackets to insert the value of a key " >> $fLog
 #[ -s $fBufrTmp_0.bufr ]
 #[ -s $fBufrTmp_2.bufr ]
 
-rm -f $fBufrTmp_*.bufr | true
-
+rm -f ${fBufrTmp}_*.bufr | true
 
 #Clean up
 rm -f $fLog 
