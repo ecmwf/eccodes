@@ -10,7 +10,7 @@
 
 . ./include.sh
 
-#set -x
+set -x
 
 #Enter data dir
 cd ${data_dir}/bufr
@@ -60,15 +60,14 @@ ${tools_dir}/bufr_copy -w dataCategory!=0 $fBufrInput $fBufrTmp >> $fLog
 # Test: use the square brackets to insert the value of a key
 #-------------------------------------------------------------------
 
-#TODO: figure out if this should work at all
-
-rm -f $fBufrTmp | true
+rm -f ${fBufrTmp} | true
+rm -f ${fBufrTmp}_*.bufr | true
 
 echo "Test: use the square brackets to insert the value of a key " >> $fLog
-#${tools_dir}/bufr_copy $fBufrInput $fBufrTmp_[dataCategory].bufr >> $fLog
+${tools_dir}/bufr_copy $fBufrInput ${fBufrTmp}_[dataCategory].bufr >> $fLog
 
-#[ -s $fBufrTmp_0.bufr ]
-#[ -s $fBufrTmp_2.bufr ]
+[ -s ${fBufrTmp}_0.bufr ]
+[ -s ${fBufrTmp}_2.bufr ]
 
 rm -f ${fBufrTmp}_*.bufr | true
 
