@@ -49,11 +49,5 @@ ${tools_dir}/bufr_ls -p totalLength,centre,subCentre,masterTableNumber,masterTab
 awk NR==3 $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_ls
 diff $ref_ls $res_ls >$REDIRECT 2> $REDIRECT
 
-# counting messages
-count=`${tools_dir}bufr_count syno_multi.bufr`
-[ "$count" = "3" ]
-count=`${tools_dir}codes_count syno_multi.bufr`
-[ "$count" = "3" ]
-
 rm -f $fLog $res_ls 
 rm -f $fTmp | more
