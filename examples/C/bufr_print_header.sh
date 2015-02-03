@@ -23,7 +23,9 @@ fRes=$f".header.test"
 REDIRECT=/dev/null
 
 #Write the values into a file and compare with reference
-${examples_dir}/bufr_read_header  ${data_dir}/bufr/$f 2> $REDIRECT > $fRes
+${examples_dir}/bufr_print_header  ${data_dir}/bufr/$f 2> $REDIRECT > $fRes
 #diff $fRef $fRes >$REDIRECT 2> $REDIRECT
+
+#cat $fRes
 
 rm -f $fRes
