@@ -32,6 +32,7 @@ list( APPEND tests
     bufr_dump
     bufrdc_desc_ref
     bufrdc_ref
+    bufr_copy
     bufr_count
     bufr_get
     bufr_filter
