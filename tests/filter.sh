@@ -116,6 +116,10 @@ set values = {
 EOF
 ${tools_dir}/grib_filter temp.filt $ECCODES_SAMPLES_PATH/GRIB1.tmpl
 
+# Test reading from stdin
+echo 'set centre="kwbc";write;' | ${tools_dir}/grib_filter -o temp_filt.grib2 - $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+result=`${tools_dir}/grib_get -p centre temp_filt.grib2`
+[ "$result" = "kwbc" ]
 
 rm -f temp_filt.grib2 temp.filt
 rm -f ${data_dir}/formatint.rules ${data_dir}/binop.rules

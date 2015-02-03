@@ -442,8 +442,13 @@ void grib_parser_include(const char* fname)
         parse_file = path;
     }
 
-    grib_context_log(grib_parser_context,GRIB_LOG_DEBUG,"parsing include file %s",parse_file);
-    f = fopen(parse_file,"r");
+    if (strcmp(parse_file,"-")==0) {
+        grib_context_log(grib_parser_context,GRIB_LOG_DEBUG,"parsing standard input");
+        f = stdin;   /* read from std input */
+    } else {
+        grib_context_log(grib_parser_context,GRIB_LOG_DEBUG,"parsing include file %s",parse_file);
+        f = fopen(parse_file,"r");
+    }
     /* for(i = 0; i < top ; i++) printf("   "); */
     /* printf("PARSING %s\n",parse_file); */
 
