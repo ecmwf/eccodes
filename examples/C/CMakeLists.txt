@@ -32,7 +32,8 @@ list( APPEND test_bins
       clone
       check_gaussian_grid
       ensemble_index
-      bufr_read_header
+      bufr_print_header
+      bufr_print_data
 )
 foreach( tool ${test_bins} )
     ecbuild_add_executable( TARGET    ${tool}
@@ -61,7 +62,8 @@ list( APPEND tests
    sections_copy
    set_pv
    check_gaussian_grids
-   bufr_read_header
+   bufr_print_header
+   bufr_print_data
 )
 foreach( test ${tests} )
     ecbuild_add_test( TARGET c_${test}
@@ -77,7 +79,7 @@ endforeach()
 ecbuild_add_test( TARGET    c_new_sample
                   SOURCES   new_sample.c
                   LIBS      grib_api
-                  ARGS      "out.new_sample.grib"
+                  ARGS      "out.grib"
                   ENVIRONMENT "ECCODES_SAMPLES_PATH=${PROJECT_SOURCE_DIR}/samples" "ECCODES_DEFINITION_PATH=${PROJECT_SOURCE_DIR}/definitions"
 )
 
