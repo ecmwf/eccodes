@@ -740,7 +740,7 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
         break;
 
     case GRIB_TYPE_DOUBLE:
-        if (verbose) printf(" as double");
+        if (verbose) printf(" as double\n");
         dval1 = (double*)grib_context_malloc(h1->context,len1*sizeof(double));
         dval2 = (double*)grib_context_malloc(h2->context,len2*sizeof(double));
 
@@ -1114,7 +1114,9 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
                         if(compare_values(options,h1,h2,name,GRIB_TYPE_UNDEFINED)) {
                             err++;
                             write_messages(h1,h2);
-                            compare_all_dump_keys(h1,h2,options,&err);
+                            if (compare_all_dump_keys(h1,h2,options,&err)) {
+                                err++;
+                            }
                         }
                     }
                     grib_keys_iterator_delete(iter);
@@ -1122,12 +1124,16 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
                     if( compare_values(options,h1,h2,options->compare[i].name,options->compare[i].type)) {
                         err++;
                         write_messages(h1,h2);
-                        compare_all_dump_keys(h1,h2,options,&err);
+                        if (compare_all_dump_keys(h1,h2,options,&err)) {
+                            err++;
+                        }
                     }
                 }
             }
         } else {
-            compare_all_dump_keys(h1,h2,options,&err);
+            if (compare_all_dump_keys(h1,h2,options,&err)) {
+                err++;
+            }
         }
 
     }
