@@ -27,6 +27,7 @@
    IMPLEMENTS = unpack_double; pack_double
    IMPLEMENTS = unpack_string
    IMPLEMENTS = init
+   IMPLEMENTS = value_count
    MEMBERS=const char*    argument
    MEMBERS=long    start
    MEMBERS=long    len
@@ -52,6 +53,7 @@ static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int pack_long(grib_accessor*, const long* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
+static int value_count(grib_accessor*,long*);
 static int unpack_string (grib_accessor*, char*, size_t *len);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
@@ -82,7 +84,7 @@ static grib_accessor_class _grib_accessor_class_bits = {
     0,                       /* describes himself         */
     0,                /* get length of section     */
     0,              /* get length of string      */
-    0,                /* get number of values      */
+    &value_count,      /* get number of values      */
     0,                 /* get number of bytes      */
     0,                /* get offset to bytes           */
     &get_native_type,            /* get native type               */
@@ -121,7 +123,6 @@ static void init_class(grib_accessor_class* c)
 	c->dump	=	(*(c->super))->dump;
 	c->next_offset	=	(*(c->super))->next_offset;
 	c->string_length	=	(*(c->super))->string_length;
-	c->value_count	=	(*(c->super))->value_count;
 	c->byte_count	=	(*(c->super))->byte_count;
 	c->byte_offset	=	(*(c->super))->byte_offset;
 	c->sub_section	=	(*(c->super))->sub_section;
@@ -149,124 +150,136 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_bits* self = (grib_accessor_bits*)a;
-  grib_expression* e=NULL;
-  int n = 0;
+    grib_accessor_bits* self = (grib_accessor_bits*)a;
+    grib_expression* e=NULL;
+    int n = 0;
 
-  self->argument = grib_arguments_get_name(a->parent->h,c,n++);
-  self->start    = grib_arguments_get_long(a->parent->h,c,n++);
-  self->len    = grib_arguments_get_long(a->parent->h,c,n++);
-  e=grib_arguments_get_expression(a->parent->h,c,n++);
-  if (e) {
-  	grib_expression_evaluate_double(a->parent->h,e,&(self->referenceValue));
-  	self->referenceValuePresent=1;
-  } else {
-  	self->referenceValuePresent=0;
-  }
-  if (self->referenceValuePresent) {
-  	self->scale=grib_arguments_get_double(a->parent->h,c,n++);
-  }
+    self->argument = grib_arguments_get_name(a->parent->h,c,n++);
+    self->start    = grib_arguments_get_long(a->parent->h,c,n++);
+    self->len    = grib_arguments_get_long(a->parent->h,c,n++);
+    e=grib_arguments_get_expression(a->parent->h,c,n++);
+    if (e) {
+        grib_expression_evaluate_double(a->parent->h,e,&(self->referenceValue));
+        self->referenceValuePresent=1;
+    } else {
+        self->referenceValuePresent=0;
+    }
+    if (self->referenceValuePresent) {
+        self->scale=grib_arguments_get_double(a->parent->h,c,n++);
+    }
 
-  assert(self->len <= sizeof(long)*8);
+    assert(self->len <= sizeof(long)*8);
 
-  a->length=0;
+    a->length=0;
 
 }
 
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  grib_accessor_bits* self = (grib_accessor_bits*)a;
-  grib_accessor* x=NULL;
-  unsigned char* p=NULL;
-  grib_handle* h=a->parent->h;
-  long start,length;
-  int ret=0;
+    grib_accessor_bits* self = (grib_accessor_bits*)a;
+    grib_accessor* x=NULL;
+    unsigned char* p=NULL;
+    grib_handle* h=a->parent->h;
+    long start,length;
+    int ret=0;
 
-  if(*len < 1) return GRIB_WRONG_ARRAY_SIZE;
+    if(*len < 1) return GRIB_WRONG_ARRAY_SIZE;
 
-  start=self->start;
-  length=self->len;
-  
-  x=grib_find_accessor(a->parent->h,self->argument);
-  if (!x) return GRIB_NOT_FOUND;
+    start=self->start;
+    length=self->len;
 
-  p  = h->buffer->data + grib_byte_offset(x);
-  *val=grib_decode_unsigned_long(p,&start,length);
+    x=grib_find_accessor(a->parent->h,self->argument);
+    if (!x) return GRIB_NOT_FOUND;
 
-  *len=1;
+    p  = h->buffer->data + grib_byte_offset(x);
+    *val=grib_decode_unsigned_long(p,&start,length);
 
-  return ret;
+    *len=1;
+
+    return ret;
 }
 
-static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-  grib_accessor_bits* self = (grib_accessor_bits*)a;
-  grib_accessor* x=NULL;
-  unsigned char* p=NULL;
-  grib_handle* h=a->parent->h;
-  long start,length;
-  int ret=0;
+    grib_accessor_bits* self = (grib_accessor_bits*)a;
+    grib_accessor* x=NULL;
+    unsigned char* p=NULL;
+    grib_handle* h=a->parent->h;
+    long start,length;
+    int ret=0;
 
-  if(*len < 1) return GRIB_WRONG_ARRAY_SIZE;
+    if(*len < 1) return GRIB_WRONG_ARRAY_SIZE;
 
-  start=self->start;
-  length=self->len;
+    start=self->start;
+    length=self->len;
 
-  x=grib_find_accessor(a->parent->h,self->argument);
-  if (!x) return GRIB_NOT_FOUND;
+    x=grib_find_accessor(a->parent->h,self->argument);
+    if (!x) return GRIB_NOT_FOUND;
 
-  p  = h->buffer->data + grib_byte_offset(x);
-  *val=grib_decode_unsigned_long(p,&start,length);
+    p  = h->buffer->data + grib_byte_offset(x);
+    *val=grib_decode_unsigned_long(p,&start,length);
 
-  *val=(*val+self->referenceValue)/self->scale;
+    *val=(*val+self->referenceValue)/self->scale;
 
-  *len=1;
+    *len=1;
 
-  return ret;
+    return ret;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-  grib_accessor_bits* self = (grib_accessor_bits*)a;
-  grib_accessor* x=NULL;
-  grib_handle* h=a->parent->h;
-  unsigned char* p=NULL;
-  long start,length,lval;
+    grib_accessor_bits* self = (grib_accessor_bits*)a;
+    grib_accessor* x=NULL;
+    grib_handle* h=a->parent->h;
+    unsigned char* p=NULL;
+    long start,length,lval;
 
-  if(*len != 1) return GRIB_WRONG_ARRAY_SIZE;
+    if(*len != 1) return GRIB_WRONG_ARRAY_SIZE;
 
-  start  = self->start;
-  length = self->len;
+    start  = self->start;
+    length = self->len;
 
-  x=grib_find_accessor(a->parent->h,self->argument);
-  if (!x) return GRIB_NOT_FOUND;
+    x=grib_find_accessor(a->parent->h,self->argument);
+    if (!x) return GRIB_NOT_FOUND;
 
-  p=h->buffer->data + grib_byte_offset(x);
+    p=h->buffer->data + grib_byte_offset(x);
 
-  lval= *val *self->scale - self->referenceValue;
-  return grib_encode_unsigned_longb(p,lval,&start,length);
+    lval= *val *self->scale - self->referenceValue;
+    return grib_encode_unsigned_longb(p,lval,&start,length);
 
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  grib_accessor_bits* self = (grib_accessor_bits*)a;
-  grib_accessor* x=NULL;
-  grib_handle* h=a->parent->h;
-  unsigned char* p=NULL;
-  long start,length;
+    grib_accessor_bits* self = (grib_accessor_bits*)a;
+    grib_accessor* x=NULL;
+    grib_handle* h=a->parent->h;
+    unsigned char* p=NULL;
+    long start,length, maxval;
 
-  if(*len != 1) return GRIB_WRONG_ARRAY_SIZE;
+    if(*len != 1) return GRIB_WRONG_ARRAY_SIZE;
 
-  start  = self->start;
-  length = self->len;
-  
-  x=grib_find_accessor(a->parent->h,self->argument);
-  if (!x) return GRIB_NOT_FOUND;
+    start  = self->start;
+    length = self->len;
 
-  p=h->buffer->data + grib_byte_offset(x);
-  return grib_encode_unsigned_longb(p,*val,&start,length);
+    x=grib_find_accessor(a->parent->h,self->argument);
+    if (!x) return GRIB_NOT_FOUND;
 
+    /* Check the input value */
+    if (*val < 0) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "key=%s: value cannot be negative",a->name);
+        return GRIB_ENCODING_ERROR;
+    }
+    maxval = (1 << length) - 1;
+    if (*val > maxval){
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                "key=%s: Trying to encode value of %ld but the maximum allowable value is %ld (number of bits=%ld)",
+                a->name, *val, maxval, length);
+        return GRIB_ENCODING_ERROR;
+    }
+
+    p=h->buffer->data + grib_byte_offset(x);
+    return grib_encode_unsigned_longb(p,*val,&start,length);
 }
 
 static int  get_native_type(grib_accessor* a){
@@ -283,34 +296,37 @@ static int  get_native_type(grib_accessor* a){
         type=GRIB_TYPE_DOUBLE;
 
     return type;
-
-
 }
 
 static int unpack_string(grib_accessor*a , char*  v, size_t *len){
-  int ret=0;
-  double dval=0;
-  long lval=0;
-  size_t llen=1;
+    int ret=0;
+    double dval=0;
+    long lval=0;
+    size_t llen=1;
 
-  switch (get_native_type(a)) {
+    switch (get_native_type(a)) {
     case GRIB_TYPE_LONG:
-      ret=unpack_long(a,&lval,&llen);
-      sprintf(v,"%ld",lval);
-      *len=strlen(v);
-      break;
+        ret=unpack_long(a,&lval,&llen);
+        sprintf(v,"%ld",lval);
+        *len=strlen(v);
+        break;
 
     case GRIB_TYPE_DOUBLE:
-      ret=unpack_double(a,&dval,&llen);
-      sprintf(v,"%g",dval);
-      *len=strlen(v);
-      break;
+        ret=unpack_double(a,&dval,&llen);
+        sprintf(v,"%g",dval);
+        *len=strlen(v);
+        break;
 
     default:
-      Assert(0);
-  }
-  return ret;
+        Assert(0);
+    }
+    return ret;
 }
 
+static int value_count(grib_accessor* a,long* numBits)
+{
+    grib_accessor_bits* self = (grib_accessor_bits*)a;
+    *numBits=self->len;
 
-
+    return GRIB_SUCCESS;
+}

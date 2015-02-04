@@ -137,10 +137,28 @@ set -e
 # Now repeat with -f option (do not exit on error)
 ${tools_dir}/bufr_set -f -s centre=1024 -f $f $fBufrTmp 2>>$fLog 1>>$fLog
 
+#-----------------------------------------------------------
+# Test: key values out of range
+#-----------------------------------------------------------
+f=aaen_55.bufr
+# The correction1 key is of type "bits" and only 6 bits wide
+# So its range is 0 -> 63 inclusive
+${tools_dir}/bufr_set -s correction1=63 $f $fBufrTmp 2>>$fLog 1>>$fLog
+
+set +e
+${tools_dir}/bufr_set -s correction1=65 $f $fBufrTmp 2>>$fLog 1>>$fLog
+if [ $? -eq 0 ]; then
+   echo "bufr_set should have failed if value too large" >&2
+   exit 1
+fi
+${tools_dir}/bufr_set -s correction1=-1 $f $fBufrTmp 2>>$fLog 1>>$fLog
+if [ $? -eq 0 ]; then
+   echo "bufr_set should have failed if value negative" >&2
+   exit 1
+fi
+set -e
+
 
 #Clean up
 rm -f $fLog 
 rm -f $fBufrTmp | true
-
-
-
