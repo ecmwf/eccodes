@@ -27,7 +27,6 @@
    IMPLEMENTS = unpack_double; pack_double
    IMPLEMENTS = unpack_string
    IMPLEMENTS = init
-   IMPLEMENTS = value_count
    MEMBERS=const char*    argument
    MEMBERS=long    start
    MEMBERS=long    len
@@ -53,7 +52,6 @@ static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int pack_long(grib_accessor*, const long* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
-static int value_count(grib_accessor*,long*);
 static int unpack_string (grib_accessor*, char*, size_t *len);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
@@ -84,7 +82,7 @@ static grib_accessor_class _grib_accessor_class_bits = {
     0,                       /* describes himself         */
     0,                /* get length of section     */
     0,              /* get length of string      */
-    &value_count,      /* get number of values      */
+    0,               /* get number of values      */
     0,                 /* get number of bytes      */
     0,                /* get offset to bytes           */
     &get_native_type,            /* get native type               */
@@ -123,6 +121,7 @@ static void init_class(grib_accessor_class* c)
 	c->dump	=	(*(c->super))->dump;
 	c->next_offset	=	(*(c->super))->next_offset;
 	c->string_length	=	(*(c->super))->string_length;
+	c->value_count	=	(*(c->super))->value_count;
 	c->byte_count	=	(*(c->super))->byte_count;
 	c->byte_offset	=	(*(c->super))->byte_offset;
 	c->sub_section	=	(*(c->super))->sub_section;
@@ -321,12 +320,4 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
         Assert(0);
     }
     return ret;
-}
-
-static int value_count(grib_accessor* a,long* numBits)
-{
-    grib_accessor_bits* self = (grib_accessor_bits*)a;
-    *numBits=self->len;
-
-    return GRIB_SUCCESS;
 }
