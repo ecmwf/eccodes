@@ -32,6 +32,7 @@ list( APPEND test_bins
       clone
       check_gaussian_grid
       ensemble_index
+      bufr_clone
       bufr_print_header
       bufr_print_data
 )
@@ -62,6 +63,7 @@ list( APPEND tests
    sections_copy
    set_pv
    check_gaussian_grids
+   bufr_clone
    bufr_print_header
    bufr_print_data
 )
