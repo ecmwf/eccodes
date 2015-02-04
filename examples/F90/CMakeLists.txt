@@ -29,6 +29,7 @@ list( APPEND tests
       read_from_file
       get_set_uuid
       clone
+      bufr_clone
       bufr_print_header
 )
 

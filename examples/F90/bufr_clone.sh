@@ -9,19 +9,19 @@
 
 . ./include.sh
 
-
-f=${data_dir}/bufr/syno_multi.bufr
-fTmp=${f}.c.cloned
+#These files are hardcoded in the f90 example
+f=${data_dir}/bufr/syno_multi.bufr #input
+fTmp=out.clone.f.bufr #output
 
 REDIRECT=/dev/null
 
 #Write the values into a file and compare with reference
-${examples_dir}/bufr_clone $f $fTmp >$REDIRECT 2> $REDIRECT 
+${examples_dir}/f_bufr_clone >$REDIRECT 2> $REDIRECT 
 
+#Check if clone is different
 set +e
 ${tools_dir}/bufr_compare $f $fTmp >$REDIRECT 2> $REDIRECT 
 
-#Check if clone is different
 if [ $? -eq 0 ]; then
    echo "cloning produced identical files " >&2
    exit 1
@@ -31,7 +31,6 @@ set -e
 
 #Check if clone has the same number of messages
 [ `${tools_dir}/bufr_count $f` = `${tools_dir}/bufr_count $fTmp` ]
-
 
 #Clean up
 rm -f $fTmp

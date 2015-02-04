@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
     /* loop over the messages in the source bufr and clone them */
     while ((source_handle = bufr_new_from_file(0,in,&err))!=NULL)
     {
+        /* clone the current handle */
         codes_handle *clone_handle = codes_handle_clone(source_handle);
 
         if (clone_handle == NULL) {
