@@ -3,12 +3,12 @@ AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@
 
 TESTS = iterator.sh get.sh print_data.sh set.sh keys_iterator.sh multi.sh multi_write.sh \
         precision.sh list.sh large_grib1.sh get_data.sh sections_copy.sh set_missing.sh clone.sh set_pv.sh \
-        check_gaussian_grids.sh bufr_print_header.sh bufr_print_data.sh
+        check_gaussian_grids.sh bufr_clone.sh bufr_print_header.sh bufr_print_data.sh
 
 noinst_PROGRAMS  = nearest set_bitmap iterator get print_data set set_missing keys_iterator \
                    set_data mars_param values_check box multi multi2 multi_write precision \
                    set_pv list sections_copy large_grib1 get_data iterator_bitmap clone new_sample \
-                   check_gaussian_grid ensemble_index points bufr_print_header bufr_print_data
+                   check_gaussian_grid ensemble_index points bufr_clone bufr_print_header bufr_print_data
 #bin_PROGRAMS            = points
 
 box_SOURCES             = box.c
@@ -37,6 +37,7 @@ clone_SOURCES           = clone.c
 new_sample_SOURCES      = new_sample.c
 check_gaussian_grid_SOURCES = check_gaussian_grid.c
 ensemble_index_SOURCES = ensemble_index.c
+bufr_clone_SOURCES 		= bufr_clone.c
 bufr_print_header_SOURCES = bufr_print_header.c
 bufr_print_data_SOURCES = bufr_print_data.c
 

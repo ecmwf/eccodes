@@ -60,32 +60,32 @@ int main(int argc,char* argv[])
         /* get and print some keys form the BUFR header */ 
     
         CODES_CHECK(codes_get_long(h,"dataCategory",&longVal),0);
-        printf("\tdataCategory: %ld\n",longVal);
+        printf("  dataCategory: %ld\n",longVal);
     
         CODES_CHECK(codes_get_long(h,"dataSubCategory",&longVal),0);
-        printf("\tdataSubCategory: %ld\n",longVal);
+        printf("  dataSubCategory: %ld\n",longVal);
         
         /* string value */
         CODES_CHECK(codes_get_length(h, "typicalDate", &len), 0);
         typicalDate = (char*)malloc(len*sizeof(char));
         grib_get_string(h, "typicalDate", typicalDate, &len);
-        printf("\ttypicalDate: %s\n", typicalDate);
+        printf("  typicalDate: %s\n", typicalDate);
         free(typicalDate);
     
         CODES_CHECK(codes_get_long(h,"centre",&longVal),0);
-        printf("\tcentre: %ld\n",longVal);
+        printf("  centre: %ld\n",longVal);
     
         CODES_CHECK(codes_get_long(h,"subCentre",&longVal),0);
-        printf("\tsubCentre: %ld\n",longVal);
+        printf("  subCentre: %ld\n",longVal);
     
         CODES_CHECK(codes_get_long(h,"masterTablesVersionNumber",&longVal),0);
-        printf("\tmasterTablesVersionNumber: %ld\n",longVal);
+        printf("  masterTablesVersionNumber: %ld\n",longVal);
     
         CODES_CHECK(codes_get_long(h,"localTablesVersionNumber",&longVal),0);
-        printf("\tlocalTablesVersionNumber: %ld\n",longVal);
+        printf("  localTablesVersionNumber: %ld\n",longVal);
     
         CODES_CHECK(codes_get_long(h,"numberOfSubsets",&longVal),0);
-        printf("\tnumberOfSubsets: %ld\n",longVal);
+        printf("  numberOfSubsets: %ld\n",longVal);
     
         /* delete handle */
         codes_handle_delete(h);

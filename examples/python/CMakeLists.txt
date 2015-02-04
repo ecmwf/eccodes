@@ -22,7 +22,6 @@ foreach( tool ${test_bins} )
    list( APPEND ptools  p_${tool} )
 endforeach()
 
-
 # Now add each test
 #################################################
 list( APPEND tests
@@ -40,7 +39,7 @@ list( APPEND tests
    set_missing
    binary_message
    set_bitmap
-   bufr_read_header
+   bufr_print_header
 )
 foreach( test ${tests} )
     ecbuild_add_test( TARGET p_${test}_test

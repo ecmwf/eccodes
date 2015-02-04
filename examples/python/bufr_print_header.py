@@ -11,26 +11,35 @@ import sys
 
 from eccodes import *
 
-INPUT='../../data/bufr/aaen_55.bufr'
+INPUT='../../data/bufr/syno_multi.bufr'
 VERBOSE=1 # verbose error reporting
     
 def example():
     f = open(INPUT)
 
     keys = [
+        'dataCategory',
+        'dataSubCategory',
+        'typicalDate',
         'centre',
         'subCentre',
-        'masterTableVersionNumber',
+        'masterTablesVersionNumber',
+        'localTablesVersionNumber',
         'numberOfSubsets',
         ]
         
+    cnt=0    
     while 1:
-        gid = codes_new_from_file(f)
+        gid = codes_bufr_new_from_file(f)
         if gid is None: break
+
+        print "message: %s" % cnt
 
         for key in keys:
             if not codes_is_defined(gid,key): raise Exception("Key was not defined")
-            print '%s=%s' % (key,codes_get(gid,key))
+            print '  %s: %s' % (key,codes_get(gid,key))
+
+        cnt+=1
 
         codes_release(gid)
 

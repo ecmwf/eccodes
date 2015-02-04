@@ -2,7 +2,7 @@ if WITH_PYTHON
 AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@
 
 TESTS = clone.sh count_messages.sh get.sh index.sh iterator.sh keys_iterator.sh multi_write.sh nearest.sh print_data.sh \
-        samples.sh set.sh set_missing.sh binary_message.sh set_bitmap.sh bufr_read_header.sh
+        samples.sh set.sh set_missing.sh binary_message.sh set_bitmap.sh bufr_print_header.sh
 TESTS_ENVIRONMENT = TOPBUILDDIR=$(top_builddir) PYTHON=$(PYTHON)
 
 noinst_PROGRAMS = p_keys_iterator p_print_data p_iterator p_count_messages
@@ -16,6 +16,6 @@ DEPENDENCIES = $(LDADD)
 
 EXTRA_DIST = $(TESTS) include.sh clone.py count_messages.py get.py index.py iterator.py keys_iterator.py multi_write.py \
              nearest.py print_data.py samples.py set.py set_missing.py binary_message.py set_pv.py set_bitmap.py \
-             bufr_read_header.py \
+             bufr_print_header.py \
              CMakeLists.txt include.ctest.sh.in 
 endif
