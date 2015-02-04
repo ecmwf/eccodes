@@ -221,6 +221,8 @@ examples/C/clone
 examples/C/iterator_bitmap
 examples/C/new_sample
 examples/F90/f_bufr_read_header
+examples/F90/f_bufr_clone
+examples/F90/f_bufr_print_header
 examples/F90/f_clone
 examples/F90/f_copy_message
 examples/F90/f_copy_namespace
