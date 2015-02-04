@@ -48,6 +48,7 @@ ${tools_dir}/bufr_get -p totalLength,centre,subCentre,masterTableNumber,masterTa
 cat $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_get
 diff $ref_get $res_get >$REDIRECT 2> $REDIRECT
 
+#Clean up
 rm -f $fLog
 rm -f $fTmp | true
 rm -f $res_get | true

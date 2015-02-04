@@ -92,6 +92,51 @@ echo "file: $f" >> $fLog
 #   [ $centre = "234.5" ]
 #done
 
+#-----------------------------------------------------------
+# Test: with nonexistent keys. 
+#-----------------------------------------------------------
+
+#Key "center" does not exist!!
+
+# Invoke without -f i.e. should fail if error encountered
+set +e
+
+f="syno_1.bufr"
+echo "Test: nonexistent keys" >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}/bufr_set -s center=98 $f $fBufrTmp 2>> $fLog 1>> $fLog
+if [ $? -eq 0 ]; then
+   echo "bufr_set should have failed if key not found" >&2
+   exit 1
+fi
+set -e
+
+# Now repeat with -f option (do not exit on error)
+${tools_dir}/bufr_set -f -s center=98 $f $fBufrTmp 2>>$fLog 1>>$fLog
+
+
+#-----------------------------------------------------------
+# Test: with not allowed key values
+#-----------------------------------------------------------
+
+#Here 1024 is out of range for centre (it is 8-bit only for edition=4 files)
+
+# Invoke without -f i.e. should fail if error encountered
+set +e
+
+f="syno_1.bufr"
+echo "Test: nonexistent keys" >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}/bufr_set -s centre=1024 $f $fBufrTmp 2>> $fLog 1>> $fLog
+if [ $? -eq 0 ]; then
+   echo "bufr_set should have failed if key not found" >&2
+   exit 1
+fi
+set -e
+
+# Now repeat with -f option (do not exit on error)
+${tools_dir}/bufr_set -f -s centre=1024 -f $f $fBufrTmp 2>>$fLog 1>>$fLog
+
 
 #Clean up
 rm -f $fLog 

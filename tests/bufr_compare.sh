@@ -41,20 +41,18 @@ ${tools_dir}/bufr_compare $f $f >> $fLog
 # Test: comparing two completely different files
 #----------------------------------------------------
 
-#TODO: enable this test when ECC-42 is fixed
-
 set +e
 
 f1="syno_1.bufr"
 f2="aaen_55.bufr"
 echo "Test: comparing two completely different files" >> $fLog
 echo "file: $f" >> $fLog
-#${tools_dir}/bufr_compare $f1 $f2 >> $fLog
+${tools_dir}/bufr_compare $f1 $f2 >> $fLog
 
-#if [ $? -eq 0 ]; then
-#   echo "bufr_compare should have failed if files are completely different" >&2
-#   exit 1
-#fi
+if [ $? -eq 0 ]; then
+   echo "bufr_compare should have failed if files are completely different" >&2
+   exit 1
+fi
 
 set -e
 
@@ -62,47 +60,41 @@ set -e
 # Test: comparing with and witout the -b switch
 #----------------------------------------------------
 
-#TODO: enable this test when ECC-42 is fixed
-
 f="syno_1.bufr"
 echo "Test: comparing with and witout the -b switch" >> $fLog
 echo "file: $f" >> $fLog
 
 #Alter a key in the file 
-${tools_dir}/bufr_set -s centre=222 $f ${fBufrTmp} >> $fLog
-
-#TODO: enable this test when ECC-42 is fixed
+${tools_dir}/bufr_set -s dataCategory=2 $f ${fBufrTmp} >> $fLog
 
 set +e
-#${tools_dir}/bufr_compare $f ${fBufrTmp}>> $fLog
+${tools_dir}/bufr_compare $f ${fBufrTmp}>> $fLog
 
-#if [ $? -eq 0 ]; then
-#   echo "bufr_compare should have failed if files are different" >&2
-#   exit 1
-#fi
+if [ $? -eq 0 ]; then
+   echo "bufr_compare should have failed if files are different" >&2
+   exit 1
+fi
 
 set -e
 
 #Now compare with -b switch. No difference should be found.
-${tools_dir}/bufr_compare -b centre $f ${fBufrTmp}>> $fLog
+${tools_dir}/bufr_compare -b dataCategory $f ${fBufrTmp}>> $fLog
 
 #----------------------------------------------------
 # Test: comparing with the -r switch
 #----------------------------------------------------
-
-#TODO: enable this test when ECC-42 is fixed
 
 #Create a bufr file with various message types
 cat syno_multi.bufr temp_101.bufr > $fBufrInput1 
 cat temp_101.bufr syno_multi.bufr > $fBufrInput2
 
 set +e
-#${tools_dir}/bufr_compare {fBufrInput1} ${fBufrInput2} >> $fLog
+${tools_dir}/bufr_compare ${fBufrInput1} ${fBufrInput2} >> $fLog
 
-#if [ $? -eq 0 ]; then
-#   echo "bufr_compare should have failed if the message order in the files is different" >&2
-#   exit 1
-#fi
+if [ $? -eq 0 ]; then
+   echo "bufr_compare should have failed if the message order in the files is different" >&2
+   exit 1
+fi
 
 ${tools_dir}/bufr_compare -r ${fBufrInput1} ${fBufrInput2}>> $fLog
 
