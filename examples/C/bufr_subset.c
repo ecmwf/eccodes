@@ -9,9 +9,9 @@
  */
 
 /*
- * C Implementation: bufr_print_data
+ * C Implementation: bufr_subset
  *
- * Description: how to read/print data values from synop BUFR messages.
+ * Description: how to read data values from a given subset of a BUFR message.
  *
  */
 
@@ -31,12 +31,14 @@ int main(int argc,char* argv[])
     codes_handle* h=NULL;
     
     double *values = NULL;
+    long numberOfSubsets=0;
     long longVal;
     double doubleVal;
     size_t values_len=0;
-    int err=0;
+    int i,err=0;
     int cnt=0;
-    char* infile = "../../data/bufr/syno_multi.bufr";
+    char* infile = "../../data/bufr/synop_multi_subset.bufr";
+
 
     in=fopen(infile,"r");
     if (!in) {
@@ -54,22 +56,30 @@ int main(int argc,char* argv[])
         }
     
         printf("message: %d\n",cnt);
-    
-        /* we need to instruct ecCodes to unpack the data values */
+        
+        /* we need to instruct ecCodes to expand all the descriptors i.e. unpack the data values */
         CODES_CHECK(codes_set_long(h,"unpack",1),0);
     
-        /* read and print some data values */ 
+        /* find ou the number of subsets */
+        CODES_CHECK(codes_get_long(h,"numberOfSubsets",&numberOfSubsets),0);
+        printf("  numberOfSubsets: %ld\n",numberOfSubsets);
     
-        CODES_CHECK(codes_get_long(h,"blockNumber",&longVal),0);
-        printf("  blockNumber: %ld\n",longVal);
+        /* loop over the subsets */
+        for(i=0; i < numberOfSubsets; i++)
+        {
+            /* specify the subset number */
+            CODES_CHECK(codes_set_long(h,"subsetNumber",0),0);
+        
+            /* read and print some data values */ 
+            CODES_CHECK(codes_get_long(h,"blockNumber",&longVal),0);
+            printf("  blockNumber: %ld\n",longVal);
     
-        CODES_CHECK(codes_get_long(h,"stationNumber",&longVal),0);
-        printf("  stationNumber: %ld\n",longVal);
+            CODES_CHECK(codes_get_long(h,"stationNumber",&longVal),0);
+            printf("  stationNumber: %ld\n",longVal);
     
-        /* in the current BUFR message this key represents the 2m temperature. 
-           it might not be availabel in other type of SYNOP messages */
-        CODES_CHECK(codes_get_double(h,"airTemperatureAt2M",&doubleVal),0);
-        printf("  airTemperatureAt2M %f\n",doubleVal);
+           /* CODES_CHECK(codes_get_double(h,"airTemperatureAt2M",&doubleVal),0);
+            printf("  airTemperatureAt2M %f\n",doubleVal);*/
+        }
     
         /* delete handle */
         codes_handle_delete(h);

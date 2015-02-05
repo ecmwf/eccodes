@@ -9,9 +9,9 @@
  */
 
 /*
- * C Implementation: bufr_print_data
+ * C Implementation: bufr_expanded
  *
- * Description: how to read/print data values from synop BUFR messages.
+ * Description: how to read all the exapanded data values from BUFR messages.
  *
  */
 
@@ -34,13 +34,16 @@ int main(int argc,char* argv[])
     long longVal;
     double doubleVal;
     size_t values_len=0;
-    int err=0;
+    int i, err=0;
     int cnt=0;
-    char* infile = "../../data/bufr/syno_multi.bufr";
 
-    in=fopen(infile,"r");
+    if (argc!=2) usage(argv[0]);
+    
+    filename=argv[1];
+
+    in=fopen(filename,"r");
     if (!in) {
-        printf("ERROR: unable to open file %s\n", infile);
+        printf("ERROR: unable to open file %s\n", filename);
         return 1;
     }
     
@@ -52,25 +55,26 @@ int main(int argc,char* argv[])
             cnt++;
             continue;
         }
-    
-        printf("message: %d\n",cnt);
-    
+
         /* we need to instruct ecCodes to unpack the data values */
         CODES_CHECK(codes_set_long(h,"unpack",1),0);
     
-        /* read and print some data values */ 
+        /* get the size of the values array*/
+        CODES_CHECK(codes_get_size(h,"numericValues",&values_len),0);
     
-        CODES_CHECK(codes_get_long(h,"blockNumber",&longVal),0);
-        printf("  blockNumber: %ld\n",longVal);
-    
-        CODES_CHECK(codes_get_long(h,"stationNumber",&longVal),0);
-        printf("  stationNumber: %ld\n",longVal);
-    
-        /* in the current BUFR message this key represents the 2m temperature. 
-           it might not be availabel in other type of SYNOP messages */
-        CODES_CHECK(codes_get_double(h,"airTemperatureAt2M",&doubleVal),0);
-        printf("  airTemperatureAt2M %f\n",doubleVal);
-    
+        /* allocate array for data values */
+        values = malloc(values_len*sizeof(double));
+      
+        /* get the exapanded data values*/
+        CODES_CHECK(codes_get_double_array(h,"numericValues",values,&values_len),0);
+ 
+        for(i = 0; i < values_len; i++)
+        {
+            printf("%.10e\n",values[i]);
+        }
+        
+        free(values);
+        
         /* delete handle */
         codes_handle_delete(h);
         

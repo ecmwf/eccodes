@@ -10,8 +10,8 @@
 . ./include.sh
 
 #These files are hardcoded in the f90 example
-f=${data_dir}/bufr/syno_multi.bufr #input
-fTmp=out.clone.f.bufr #output
+f=${data_dir}/bufr/syno_multi.bufr  #input
+fTmp=out.clone.f.bufr               #output
 
 REDIRECT=/dev/null
 

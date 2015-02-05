@@ -119,7 +119,7 @@ ${tools_dir}/bufr_set -f -s center=98 $f $fBufrTmp 2>>$fLog 1>>$fLog
 # Test: with not allowed key values
 #-----------------------------------------------------------
 
-#Here 1024 is out of range for centre (it is 8-bit only for edition=4 files)
+#Here 1024 is out of range for centre (it is 8-bit only for edition=3 files)
 
 # Invoke without -f i.e. should fail if error encountered
 set +e
@@ -140,7 +140,9 @@ ${tools_dir}/bufr_set -f -s centre=1024 -f $f $fBufrTmp 2>>$fLog 1>>$fLog
 #-----------------------------------------------------------
 # Test: key values out of range
 #-----------------------------------------------------------
+
 f=aaen_55.bufr
+
 # The correction1 key is of type "bits" and only 6 bits wide
 # So its range is 0 -> 63 inclusive
 ${tools_dir}/bufr_set -s correction1=63 $f $fBufrTmp 2>>$fLog 1>>$fLog

@@ -33,8 +33,10 @@ list( APPEND test_bins
       check_gaussian_grid
       ensemble_index
       bufr_clone
+      bufr_expanded
       bufr_print_header
       bufr_print_data
+      bufr_subset
 )
 foreach( tool ${test_bins} )
     ecbuild_add_executable( TARGET    ${tool}
@@ -64,8 +66,10 @@ list( APPEND tests
    set_pv
    check_gaussian_grids
    bufr_clone
+   bufr_expanded
    bufr_print_header
    bufr_print_data
+   bufr_subset
 )
 foreach( test ${tests} )
     ecbuild_add_test( TARGET c_${test}
