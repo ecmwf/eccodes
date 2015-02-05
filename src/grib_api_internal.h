@@ -168,6 +168,7 @@ double rint(double x);
 
 #define GRIB_HANDLE_BIG_ECMWF_GRIB1    1
 
+#define MAX_ACCESSOR_ATTRIBUTES 20
 #define MAX_FILE_HANDLES_WITH_MULTI 10
 #define ACCESSORS_ARRAY_SIZE 20000
 #define MAX_NUM_CONCEPTS 2000
@@ -285,7 +286,19 @@ typedef  int   (*accessor_pack_string_proc)              (grib_accessor*, const 
 typedef  int   (*accessor_pack_string_array_proc)        (grib_accessor*, const char**,   size_t *len);
 typedef  int   (*accessor_pack_bytes_proc)               (grib_accessor*, const unsigned char*, size_t *len);
 typedef  int   (*accessor_pack_expression_proc)           (grib_accessor*, grib_expression*);
-typedef  int   (*accessor_clear_proc)           (grib_accessor*);
+typedef  int   (*accessor_clear_proc)                     (grib_accessor*);
+typedef int (*accessor_add_attribute_proc)                (grib_accessor*,grib_accessor*);
+typedef int (*accessor_replace_attribute_proc)            (grib_accessor*,grib_accessor*);
+typedef int (*accessor_delete_attribute_proc)             (grib_accessor*,const char*);
+typedef grib_accessor* (*accessor_get_attribute_proc)     (grib_accessor*,const char*);
+typedef int (*accessor_pack_attribute_bytes_proc)         (grib_accessor*,const char*,const unsigned char*, size_t *len);
+typedef int (*accessor_pack_attribute_double_proc)        (grib_accessor*,const char*, const double* val,size_t *len);
+typedef int (*accessor_pack_attribute_long_proc)          (grib_accessor*,const char*, const long* val,size_t *len);
+typedef int (*accessor_pack_attribute_string_proc)        (grib_accessor*,const char*, const char*, size_t *len);
+typedef int (*accessor_unpack_attribute_bytes_proc)       (grib_accessor*,const char*,unsigned char*, size_t *len);
+typedef int (*accessor_unpack_attribute_double_proc)      (grib_accessor*,const char*, double* val,size_t *len);
+typedef int (*accessor_unpack_attribute_long_proc)        (grib_accessor*,const char*, long* val,size_t *len);
+typedef int (*accessor_unpack_attribute_string_proc)      (grib_accessor*,const char*, char*, size_t *len);
 
 typedef  void  (*accessor_init_class_proc)               (grib_accessor_class*);
 
@@ -505,6 +518,7 @@ struct grib_accessor
   long                   bufr_group_number;     /** < used in bufr */
   grib_virtual_value*    vvalue;    /** < virtual value used when transient flag on **/
   const char*            set;
+  grib_accessor          *attributes[MAX_ACCESSOR_ATTRIBUTES]; /** < attributes are accessors */
 
 };
 
@@ -875,6 +889,18 @@ struct grib_accessor_class
     accessor_unpack_double_element_proc     unpack_double_element;
     accessor_unpack_double_subarray_proc    unpack_double_subarray;
     accessor_clear_proc             clear;
+    accessor_add_attribute_proc     add_attribute;
+    accessor_replace_attribute_proc replace_attribute;
+    accessor_delete_attribute_proc delete_attribute;
+    accessor_get_attribute_proc get_attribute;
+    accessor_pack_attribute_bytes_proc pack_attribute_bytes;
+    accessor_pack_attribute_double_proc pack_attribute_double;
+    accessor_pack_attribute_long_proc pack_attribute_long;
+    accessor_pack_attribute_string_proc pack_attribute_string;
+    accessor_unpack_attribute_bytes_proc unpack_attribute_bytes;
+    accessor_unpack_attribute_double_proc unpack_attribute_double;
+    accessor_unpack_attribute_long_proc unpack_attribute_long;
+    accessor_unpack_attribute_string_proc unpack_attribute_string;
 };
 
 typedef struct grib_multi_support grib_multi_support;
