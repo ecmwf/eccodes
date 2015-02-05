@@ -48,7 +48,7 @@ if (section2Present && centre==98 && section2Length==52) {
 				if (numberOfSubsets>255 || 
 						( rdbSubtype>=121 && rdbSubtype <=130 ) || 
 						rdbSubtype==31) {
-						meta ls.umberOfObservations bits(keySat,0,16) : dump,long_type;
+						meta ls.numberOfObservations bits(keySat,0,16) : dump,long_type;
 						meta ls.satelliteID bits(keySat,16,16) : dump,long_type;
 				} else {
 						meta ls.numberOfObservations bits(keySat,0,8) : dump,long_type;
