@@ -487,12 +487,12 @@ int grib_set_missing(grib_handle* h, const char* name)
 }
 
 int grib_is_missing_long(grib_accessor* a,long x) { 
-	int ret = ( a==NULL || (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)) && (x==GRIB_MISSING_LONG) ? 1 : 0;
-	return ret;
+    int ret = ( a==NULL || (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)) && (x==GRIB_MISSING_LONG) ? 1 : 0;
+    return ret;
 }
 int grib_is_missing_double(grib_accessor* a,double x) { 
-	int ret = ( a==NULL || (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)) && (x==GRIB_MISSING_DOUBLE) ? 1 : 0;
-	return ret;
+    int ret = ( a==NULL || (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)) && (x==GRIB_MISSING_DOUBLE) ? 1 : 0;
+    return ret;
 }
 
 int grib_is_missing(grib_handle* h, const char* name,int* err)
@@ -742,11 +742,11 @@ int grib_get_long_internal(grib_handle* h, const char* name, long* val)
 }
 
 int grib_is_in_dump(grib_handle* h, const char* name) {
-  grib_accessor* a=grib_find_accessor(h, name);
-  if (a!=NULL && (a->flags & GRIB_ACCESSOR_FLAG_DUMP))
-    return 1;
-  else
-    return 0;
+    grib_accessor* a=grib_find_accessor(h, name);
+    if (a!=NULL && (a->flags & GRIB_ACCESSOR_FLAG_DUMP))
+        return 1;
+    else
+        return 0;
 }
 
 int grib_get_long(grib_handle* h, const char* name, long* val)
@@ -921,12 +921,12 @@ const char* grib_get_accessor_class_name(grib_handle* h, const char* name)
 
 int _grib_get_double_array_internal(grib_handle* h,grib_accessor* a,double* val, size_t buffer_len,size_t *decoded_length)
 {
-  int err;
+    int err;
     if(a) {
-    err = _grib_get_double_array_internal(h,a->same,val,buffer_len,decoded_length);
+        err = _grib_get_double_array_internal(h,a->same,val,buffer_len,decoded_length);
 
-    if( err == GRIB_SUCCESS &&
-        (a->bufr_group_number==0 || h->bufr_group_number==0 || h->bufr_group_number==a->bufr_group_number) )
+        if( err == GRIB_SUCCESS &&
+                (a->bufr_group_number==0 || h->bufr_group_number==0 || h->bufr_group_number==a->bufr_group_number) )
         {
             size_t len = buffer_len - *decoded_length;
             err  = grib_unpack_double(a, val + *decoded_length, &len);
@@ -982,15 +982,15 @@ int _grib_get_string_length(grib_accessor* a, size_t* size)
 int grib_get_string_length(grib_handle* h, const char* name,size_t* size)
 {
     grib_accessor* a = grib_find_accessor(h, name);
-  if(!a) return GRIB_NOT_FOUND;
+    if(!a) return GRIB_NOT_FOUND;
 
-  return _grib_get_string_length(a,size);
+    return _grib_get_string_length(a,size);
 }
 
 int grib_get_size(grib_handle* h, const char* name,size_t* size)
 {
-  grib_accessor* a = grib_find_accessor(h, name);
-  return _grib_get_size(h, a,size);
+    grib_accessor* a = grib_find_accessor(h, name);
+    return _grib_get_size(h, a,size);
 }
 
 int grib_get_length(grib_handle* h, const char* name, size_t* length)
@@ -1021,14 +1021,14 @@ int _grib_get_size(grib_handle* h, grib_accessor* a,size_t* size)
 
     *size = 0;
     while(a) {
-    if (err==0 &&
-       (a->bufr_group_number==0 || h->bufr_group_number==0 || h->bufr_group_number==a->bufr_group_number) )
-       {
-          err=grib_value_count(a,&count);
-          if (err) return err;
-          *size += count;
-       }
-       a = a->same;
+        if (err==0 &&
+                (a->bufr_group_number==0 || h->bufr_group_number==0 || h->bufr_group_number==a->bufr_group_number) )
+        {
+            err=grib_value_count(a,&count);
+            if (err) return err;
+            *size += count;
+        }
+        a = a->same;
     }
     return GRIB_SUCCESS;
 }
@@ -1045,32 +1045,32 @@ int grib_get_offset(grib_handle* h, const char* key,size_t* val)
 
 int _grib_get_string_array_internal(grib_handle* h,grib_accessor* a,char** val, size_t buffer_len,size_t *decoded_length)
 {
-  if(a) {
-    int err = _grib_get_string_array_internal(h,a->same,val,buffer_len,decoded_length);
+    if(a) {
+        int err = _grib_get_string_array_internal(h,a->same,val,buffer_len,decoded_length);
 
-    if(err == GRIB_SUCCESS &&
-      (a->bufr_group_number==0 || h->bufr_group_number==0 || h->bufr_group_number==a->bufr_group_number) )
-    {
-      size_t len = buffer_len - *decoded_length;
-      err  = grib_unpack_string_array(a, val + *decoded_length, &len);
-      *decoded_length += len;
+        if(err == GRIB_SUCCESS &&
+                (a->bufr_group_number==0 || h->bufr_group_number==0 || h->bufr_group_number==a->bufr_group_number) )
+        {
+            size_t len = buffer_len - *decoded_length;
+            err  = grib_unpack_string_array(a, val + *decoded_length, &len);
+            *decoded_length += len;
+        }
+
+        return err;
+
+    } else {
+        return GRIB_SUCCESS;
     }
-
-    return err;
-
-  } else {
-    return GRIB_SUCCESS;
-  }
 }
 
 int grib_get_string_array(grib_handle* h, const char* name, char** val, size_t *length)
 {
-  size_t len = *length;
-  grib_accessor* a = grib_find_accessor(h, name);
-  if(!a) return GRIB_NOT_FOUND;
+    size_t len = *length;
+    grib_accessor* a = grib_find_accessor(h, name);
+    if(!a) return GRIB_NOT_FOUND;
 
-  *length = 0;
-  return _grib_get_string_array_internal(h,a,val,len,length);
+    *length = 0;
+    return _grib_get_string_array_internal(h,a,val,len,length);
 }
 
 int _grib_get_long_array_internal(grib_handle* h,grib_accessor* a,long* val, size_t buffer_len,size_t *decoded_length)
@@ -1078,8 +1078,8 @@ int _grib_get_long_array_internal(grib_handle* h,grib_accessor* a,long* val, siz
     if(a) {
         int err = _grib_get_long_array_internal(h,a->same,val,buffer_len,decoded_length);
 
-    if(err == GRIB_SUCCESS &&
-        (a->bufr_group_number==0 || h->bufr_group_number==0 || h->bufr_group_number==a->bufr_group_number) )
+        if(err == GRIB_SUCCESS &&
+                (a->bufr_group_number==0 || h->bufr_group_number==0 || h->bufr_group_number==a->bufr_group_number) )
         {
             size_t len = buffer_len - *decoded_length;
             err  = grib_unpack_long(a, val + *decoded_length, &len);
@@ -1433,7 +1433,6 @@ int grib_values_check(grib_handle* h, grib_values* values, int count) {
     return 0;
 }
 
-
 int grib_key_equal(grib_handle* h1,grib_handle* h2,const char* key,int type,int *err) {
     double d1,d2;
     long l1,l2;
@@ -1441,29 +1440,29 @@ int grib_key_equal(grib_handle* h1,grib_handle* h2,const char* key,int type,int 
     char s2[500]={0,};
     size_t len1,len2;
 
-      if (  type != GRIB_TYPE_DOUBLE &&
+    if (  type != GRIB_TYPE_DOUBLE &&
             type != GRIB_TYPE_LONG   &&
             type != GRIB_TYPE_STRING    ) {
-            *err=grib_get_native_type(h1,key,&type);
-       }
-       switch (type) {
-            case GRIB_TYPE_DOUBLE:
-              *err=grib_get_double( h1,key,&d1);
-              *err=grib_get_double( h2,key,&d2);
-              if (d1 != d2) return 0;
-              break;
-            case GRIB_TYPE_LONG:
-              *err=grib_get_long( h1,key,&l1);
-              *err=grib_get_long( h2,key,&l2);
-              if (l1 != l2) return 0;
-              break;
-            default:
-              len1=sizeof(s1)/sizeof(*s1);
-              len2=sizeof(s2)/sizeof(*s2);
-              *err=grib_get_string( h1,key,s1,&len1);
-              *err=grib_get_string( h2,key,s2,&len2);
-              if (grib_inline_strcmp(s1,s2)) return 0;
-              break;
-       }
-       return 1;
+        *err=grib_get_native_type(h1,key,&type);
+    }
+    switch (type) {
+    case GRIB_TYPE_DOUBLE:
+        *err=grib_get_double( h1,key,&d1);
+        *err=grib_get_double( h2,key,&d2);
+        if (d1 != d2) return 0;
+        break;
+    case GRIB_TYPE_LONG:
+        *err=grib_get_long( h1,key,&l1);
+        *err=grib_get_long( h2,key,&l2);
+        if (l1 != l2) return 0;
+        break;
+    default:
+        len1=sizeof(s1)/sizeof(*s1);
+        len2=sizeof(s2)/sizeof(*s2);
+        *err=grib_get_string( h1,key,s1,&len1);
+        *err=grib_get_string( h2,key,s2,&len2);
+        if (grib_inline_strcmp(s1,s2)) return 0;
+        break;
+    }
+    return 1;
 }
