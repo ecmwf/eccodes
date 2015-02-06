@@ -11,20 +11,21 @@
 /*
  * C Implementation: bufr_compare
  *
- * Author: Enrico Fucile <enrico.fucile@ecmwf.int>
  *
  */
 
 #include "grib_tools.h"
 
 
-GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
+GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
+{
     if (*a != *b) return 1;
     while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
     return (*a==0 && *b==0) ? 0 : 1;
 }
 
-GRIB_INLINE static int grib_inline_rstrcmp(const char* a,const char* b) {
+GRIB_INLINE static int grib_inline_rstrcmp(const char* a,const char* b)
+{
     char* p=(char*)a;
     char* q=(char*)b;
     while (*p != 0) p++;
@@ -68,7 +69,8 @@ int verbose=0;
 int tolerance_factor=1;
 static int write_error=0;
 
-GRIB_INLINE static double compare_double_absolute(double *a,double *b,double *err) {
+GRIB_INLINE static double compare_double_absolute(double *a,double *b,double *err)
+{
     double ret=0;
     double d=fabs(*a-*b);
     if (d > *err) {
@@ -80,8 +82,8 @@ GRIB_INLINE static double compare_double_absolute(double *a,double *b,double *er
 
 static int write_count=0;
 
-static void write_message(grib_handle* h,const char* str) {
-
+static void write_message(grib_handle* h,const char* str)
+{
     const void *m; size_t s;
     char fname[1024]={0,};
     FILE* fh=NULL;
@@ -108,7 +110,8 @@ static void write_message(grib_handle* h,const char* str) {
     fclose(fh);
 }
 
-static void write_messages(grib_handle* h1,grib_handle* h2) {
+static void write_messages(grib_handle* h1,grib_handle* h2)
+{
     if (!write_error) return;
     write_count++;
 
@@ -116,7 +119,8 @@ static void write_messages(grib_handle* h1,grib_handle* h2) {
     write_message(h2,"error2");
 }
 
-static double compare_double_relative(double *a,double *b,double *err) {
+static double compare_double_relative(double *a,double *b,double *err)
+{
     double relativeError;
 
     if(fabs(*a) <= maxAbsoluteError || fabs(*b) <= maxAbsoluteError)
@@ -129,9 +133,11 @@ static double compare_double_relative(double *a,double *b,double *err) {
     return relativeError > *err ? relativeError : 0;
 }
 
-static int blacklisted(const char* name) {
+static int blacklisted(const char* name)
+{
     grib_string_list* b=blacklist;
     while (b) {
+        Assert(b->value);
         if (!strcmp(name,b->value))
             return 1;
         b=b->next;
@@ -139,7 +145,8 @@ static int blacklisted(const char* name) {
     return 0;
 }
 
-static double relative_error(double a,double b,double err) {
+static double relative_error(double a,double b,double err)
+{
     double relativeError;
     double maxAbsoluteError = 1e-19;
 
@@ -152,7 +159,6 @@ static double relative_error(double a,double b,double err) {
 
     return relativeError ;
 }
-
 
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value*/
@@ -198,13 +204,18 @@ char* grib_tool_usage="[options] "
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
-int main(int argc, char *argv[]) { return grib_tool(argc,argv);}
+int main(int argc, char *argv[])
+{
+    return grib_tool(argc,argv);
+}
 
-int grib_tool_before_getopt(grib_runtime_options* options) {
+int grib_tool_before_getopt(grib_runtime_options* options)
+{
     return 0;
 }
 
-int grib_tool_init(grib_runtime_options* options) {
+int grib_tool_init(grib_runtime_options* options)
+{
     int ret=0,i;
     int nfiles=1;
     char orderby[]="md5Headers";
@@ -324,14 +335,16 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
     return 0;
 }
 
-static void printInfo(grib_handle* h) {
+static void printInfo(grib_handle* h)
+{
 
     printf("== %d == DIFFERENCE == ",count);
     lastPrint=count;
 
 }
 
-static void print_index_key_values(grib_index* index,int counter,const char* error_message) {
+static void print_index_key_values(grib_index* index,int counter,const char* error_message)
+{
     grib_index_key* keys=index->keys;
     printf("== %d == ",counter);
     if (error_message) printf("%s == ",error_message);
@@ -343,7 +356,8 @@ static void print_index_key_values(grib_index* index,int counter,const char* err
 }
 
 static grib_handle* grib_handle_new_from_file_x(grib_context* c,FILE* f,int
-        mode,int headers_only,int *err) {
+        mode,int headers_only,int *err)
+{
     return bufr_new_from_file(c,f,err);
 }
 
@@ -414,7 +428,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
     return 0;
 }
 
-int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h) {
+int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
+{
     int err=0;
     if (!options->through_index && !options->random)  {
         h1=grib_handle_new_from_file(h->context,options->infile_extra->file,&err);
@@ -433,11 +448,13 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h) {
     return 0;
 }
 
-void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h) {
+void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
+{
     grib_print_key_values(options,h);
 }
 
-int grib_tool_finalise_action(grib_runtime_options* options) {
+int grib_tool_finalise_action(grib_runtime_options* options)
+{
     grib_error* e=error_summary;
     int err=0;
     grib_context* c=grib_context_get_default();
@@ -483,7 +500,8 @@ int grib_tool_finalise_action(grib_runtime_options* options) {
     return 0;
 }
 
-static void save_error(grib_context* c,const char* key) {
+static void save_error(grib_context* c,const char* key)
+{
     grib_error* e=0;
     grib_error* next=0;
     int saved=0;
@@ -513,11 +531,10 @@ static void save_error(grib_context* c,const char* key) {
         e->next->count=1;
         e->next->key=grib_context_strdup(c,key);
     }
-
-
 }
 
-static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_handle *h2,const char *name,int type) {
+static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_handle *h2,const char *name,int type)
+{
     size_t len1 = 0;
     size_t len2 = 0;
     int err=0,i=0;
@@ -534,10 +551,9 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
     long *lval1 = NULL, *lval2 = NULL;
     int failed=0;
     double maxdiff=0;
-    double packingError1,packingError2;
+    double packingError1=0,packingError2=0;
     double value_tolerance=0;
     grib_context* c=h1->context;
-
 
     type1=type;
     type2=type;
@@ -710,8 +726,13 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
             save_error(c,name);
         }
 
-
-        if(err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS)
+        if(err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1!=len2)
+        {
+            printInfo(h1);
+            printf("Different size for \"%s\"  [%ld]  [%ld]\n",name,(long)len1,(long)len2);
+            save_error(c,name);
+        }
+        if(err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1==len2)
         {
             int i;
             countdiff=0;
@@ -879,8 +900,8 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
     case GRIB_TYPE_BYTES:
         if (verbose) printf(" as bytes\n");
         if (options->mode==MODE_BUFR) return 0;
-        if (len1==0) len1=512;
-        if (len2==0) len2=512;
+        if (len1<2) len1=512;
+        if (len2<2) len2=512;
         uval1 = (unsigned char*)grib_context_malloc(h1->context,len1*sizeof(unsigned char));
         uval2 = (unsigned char*)grib_context_malloc(h2->context,len2*sizeof(unsigned char));
 

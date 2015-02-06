@@ -11,8 +11,6 @@
 /*
  * C Implementation: bufr_dump
  *
- * Author: Enrico Fucile <enrico.fucile@ecmwf.int>
- *
  */
 
 #include "grib_tools.h"
@@ -30,6 +28,7 @@ grib_option grib_options[]={
         {"H",0,0,0,1,0},
         {"a",0,0,0,1,0},
         {"w:",0,0,0,1,0},
+        {"s:",0,0,0,1,0},
         /*     {"M",0,0,0,1,0}, */
         {"T:",0,0,1,0,"B"},
         {"7",0,0,0,1,0},
@@ -50,18 +49,21 @@ int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
  *Dump the content of a BUFR file
  *
  */
-int main(int argc, char *argv[]) { return grib_tool(argc,argv);}
+int main(int argc, char *argv[])
+{
+    return grib_tool(argc,argv);
+}
 
-int grib_tool_before_getopt(grib_runtime_options* options) {
+int grib_tool_before_getopt(grib_runtime_options* options)
+{
     return 0;
 }
 
-int grib_tool_init(grib_runtime_options* options) {
-
+int grib_tool_init(grib_runtime_options* options)
+{
     int opt=grib_options_on("C")+grib_options_on("O")+grib_options_on("D");
 
     options->dump_mode = "default";
-
 
     if (opt > 1) {
         printf("%s: simultaneous j/C/O/D options not allowed\n",grib_tool_name);
@@ -112,11 +114,13 @@ int grib_tool_init(grib_runtime_options* options) {
     return 0;
 }
 
-int grib_tool_new_filename_action(grib_runtime_options* options,const char* file) {
+int grib_tool_new_filename_action(grib_runtime_options* options,const char* file)
+{
     return 0;
 }
 
-int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file) {
+int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
+{
     char tmp[1024];
     if (!options->current_infile->name) return 0;
     if (json) return 0;
@@ -124,17 +128,25 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
     sprintf(tmp,"FILE: %s ",options->current_infile->name);
     if (!grib_options_on("C"))
         fprintf(stdout,"***** %s\n",tmp);
+
     return 0;
 }
 
-int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
+int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
+{
     long length=0;
     char tmp[1024];
     char identifier[100];
     size_t idlen=100;
-    int i;
+    int i,err=0;
     if (grib_get_long(h,"totalLength",&length) != GRIB_SUCCESS)
         length=-9999;
+
+    if (!options->skip) {
+        if (options->set_values_count != 0)
+            err=grib_set_values(h,options->set_values,options->set_values_count);
+        if( err != GRIB_SUCCESS && options->fail) exit(err);
+    }
 
     for (i=0;i<options->print_keys_count;i++)
         grib_set_flag(h,options->print_keys[i].name,GRIB_ACCESSOR_FLAG_DUMP);
@@ -160,16 +172,19 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
     return 0;
 }
 
-int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h) {
+int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
+{
     grib_handle_delete(h);
     return 0;
 }
 
-void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h) {
+void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
+{
     grib_print_key_values(options,h);
 }
 
-int grib_tool_finalise_action(grib_runtime_options* options) {
+int grib_tool_finalise_action(grib_runtime_options* options)
+{
     if (json) fprintf(stdout,"\n}\n");
     return 0;
 }

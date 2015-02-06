@@ -29,11 +29,8 @@ int main(int argc,char* argv[])
     
     /* message handle. Required in all the eccodes calls acting on a message.*/
     codes_handle* h=NULL;
-    
-    long *desc = NULL;
     long longVal;
-    size_t len=0;
-    int err=0, i, cnt=0;
+    int err=0, cnt=0;
     
     if (argc!=2) usage(argv[0]);
     

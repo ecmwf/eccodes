@@ -9,7 +9,7 @@ TESTS = copy_message.sh get.sh get_data.sh get_pl.sh get_pv.sh keys_iterator.sh 
 noinst_PROGRAMS  = f_index f_copy_message f_get f_get_data f_get_pl f_get_pv f_keys_iterator \
                    f_multi_write f_multi f_nearest f_precision f_print_data f_set f_set_bitmap f_set_missing \
                    f_set_pv f_samples f_count_messages f_read_message f_read_from_file f_new_from_file \
-                   f_copy_namespace f_get_set_uuid f_set_gvc f_clone f_bufr_clone _bufr_expanded f_bufr_get_keys  \
+                   f_copy_namespace f_get_set_uuid f_set_gvc f_clone f_bufr_clone f_bufr_expanded f_bufr_get_keys  \
                    f_bufr_print_header f_bufr_print_data f_bufr_set_keys
 
 f_index_SOURCES=index.f90
