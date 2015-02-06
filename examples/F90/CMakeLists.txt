@@ -34,6 +34,7 @@ list( APPEND tests
       bufr_get_keys
       bufr_print_header 
       bufr_print_data
+      bufr_set_keys
 )
 
 # Simplify tests: no need to build executable and then test. All in one
