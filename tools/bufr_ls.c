@@ -11,8 +11,6 @@
 /*
  * C Implementation: bufr_ls
  *
- * Author: Enrico Fucile <enrico.fucile@ecmwf.int>
- *
  */
 #include "grib_tools.h"
 
@@ -52,37 +50,41 @@ int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 double lat=0;
 double lon=0;
 int mode=0;
-static int json=0;
+static int json_latlon=0;
 
 grib_nearest* n=NULL;
-/*double *outlats,*outlons,*values,*lsm_values,*distances;*/
 
-int main(int argc, char *argv[]) { return grib_tool(argc,argv);}
+int main(int argc, char *argv[])
+{
+    return grib_tool(argc,argv);
+}
 
 /*
-This is executed before processing the options with i
-getopt and therfore it is the right place for hacking 
+This is executed before processing the options with
+getopt and therefore it is the right place for hacking
 the arguments if needed
  */
-int grib_tool_before_getopt(grib_runtime_options* options) {
+int grib_tool_before_getopt(grib_runtime_options* options)
+{
     return 0;
 }
 
 /*
 The options have been parsed and the structure 
 grib_runtime_options* options has been loaded. 
-Initialization and startup can be done here
+Initialisation and startup can be done here
  */
-int grib_tool_init(grib_runtime_options* options) {
+int grib_tool_init(grib_runtime_options* options)
+{
     char  *end = NULL, *end1=NULL;
     size_t size=4;
     int ret=0;
     double min=0,max=0;
-    int i=0,idx=0;
+    int i=0;
     char* p=NULL;
-    if (grib_options_on("j")) {
+    if (options->latlon && grib_options_on("j")) {
         options->verbose=0;
-        json=1;
+        json_latlon=1;
     }
 
     if (options->latlon) {
@@ -140,7 +142,7 @@ int grib_tool_init(grib_runtime_options* options) {
         options->latlon_idx=-1;
         max=options->distances[0];
         for (i=0;i<4;i++)
-            if (max<options->distances[i]) {max=options->distances[i];idx=i;}
+            if (max<options->distances[i]) {max=options->distances[i];}
         min=max;
         for (i=0;i<4;i++) {
             if ((min >= options->distances[i]) && (options->mask_values[i] >= 0.5)) {
@@ -159,7 +161,7 @@ int grib_tool_init(grib_runtime_options* options) {
                 }
         }
     }
-    if (json) printf("[\n");
+    if (json_latlon) printf("[\n");
 
     return 0;
 }
@@ -168,16 +170,26 @@ int grib_tool_init(grib_runtime_options* options) {
 A new file is being parsed. The file name is file. This function is called every time
 a new input file name is processed, before opening the file.
  */
-int grib_tool_new_filename_action(grib_runtime_options* options,const char* file) {
+int grib_tool_new_filename_action(grib_runtime_options* options,const char* file)
+{
     return 0;
 }
 
-
-int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file) {
+int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
+{
+    struct stat s;
+    int stat_val = stat(file->name, &s);
+    if ( stat_val == 0 ) {
+        if (S_ISDIR(s.st_mode)) {
+            fprintf(stderr, "ERROR: \"%s\": Is a directory\n", file->name);
+            exit(1);
+        }
+    }
     return 0;
 }
 
-static void print_key_values(grib_runtime_options* options,grib_handle* h) {
+static void print_key_values(grib_runtime_options* options,grib_handle* h)
+{
     int i;
     int ret=0;
     char* s="\"keys\" : {";
@@ -210,6 +222,7 @@ static void print_key_values(grib_runtime_options* options,grib_handle* h) {
                 break;
             default:
                 printf("invalid_type");
+                break;
             }
         }
         if (ret == GRIB_NOT_FOUND) printf("null");
@@ -218,11 +231,13 @@ static void print_key_values(grib_runtime_options* options,grib_handle* h) {
     printf("}");
 }
 
-/* A new handle is available from the current input file and can be processed here.
-The handle available in this function is in the set of messages satisfying the constrant of the
--w option. They are not to be skipped.
+/*
+ A new handle is available from the current input file and can be processed here.
+ The handle available in this function is in the set of messages satisfying the constraint
+ of the -w option. They are not to be skipped.
  */
-int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
+int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
+{
     size_t size=4;
     double v=0;
     int err=0;
@@ -240,6 +255,14 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
         int err=0;
         double min;
         if (!n) n=grib_nearest_new(h,&err);
+        if (err == GRIB_NOT_IMPLEMENTED) {
+            char grid_type[100];
+            size_t grid_type_len=100;
+            int err1=grib_get_string(h, "gridType", grid_type, &grid_type_len);
+            if (err1 == GRIB_SUCCESS) {
+                fprintf(stderr,"Nearest neighbour functionality is not supported for grid type: %s\n", grid_type);
+            }
+        }
         GRIB_CHECK_NOLINE(err,0);
         GRIB_CHECK_NOLINE(grib_nearest_find(n,h,lat,lon,0,
                 options->lats,options->lons,options->values,
@@ -257,7 +280,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
             }
         }
 
-        if (json) {
+        if (json_latlon) {
             char* s="\n[\n";
             double missingValue=9999;
             char value[MAX_STRING_LEN];
@@ -294,26 +317,30 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
             printf("\n]");
             printf("\n}");
         }
-
     }
     new_handle="\n,";
     return 0;
 }
 
-/* A new handle to skip is available. At this point something can be done
-with the message to be skipped before deleting the handle. */
-int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h) {
+/*
+ A new handle to skip is available. At this point something can be done
+ with the message to be skipped before deleting the handle
+*/
+int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
+{
     grib_handle_delete(h);
     return 0;
 }
 
-/* key values can be printed in this function. Headers are already printed if requested.*/
-void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h) {
+/* key values can be printed here. Headers are already printed if requested */
+void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
+{
     grib_print_key_values(options,h);
 }
 
-/* this is executed after the last message in the last file is processed */
-int grib_tool_finalise_action(grib_runtime_options* options) {
+/* This is executed after the last message in the last file is processed */
+int grib_tool_finalise_action(grib_runtime_options* options)
+{
     int i=0;
     if (options->latlon && options->verbose) {
 
@@ -342,7 +369,7 @@ int grib_tool_finalise_action(grib_runtime_options* options) {
     }
 
     if (n) grib_nearest_delete(n);
-    if (json) printf("\n]\n");
+    if (json_latlon) printf("\n]\n");
 
     return 0;
 }
