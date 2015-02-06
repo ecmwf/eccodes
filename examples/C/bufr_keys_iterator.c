@@ -62,6 +62,7 @@ int main(int argc,char* argv[])
     /* loop over the messages in the bufr file */
     while ((h = bufr_new_from_file(NULL,in,&err)) != NULL || err != CODES_SUCCESS)
     {
+        codes_keys_iterator* kiter=NULL;
         if (h == NULL) {
             printf("Error: unable to create handle for message %d\n",cnt);
             cnt++;
@@ -69,10 +70,8 @@ int main(int argc,char* argv[])
         }
         
         printf("message: %d\n",cnt);
-    
-        codes_keys_iterator* kiter=NULL;
-    
-        /* get key oterator */
+
+        /* get key iterator */
         kiter=codes_keys_iterator_new(h,key_iterator_filter_flags,name_space);
         if (!kiter) {
             printf("ERROR: Unable to create keys iterator\n");

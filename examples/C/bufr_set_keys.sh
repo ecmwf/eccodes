@@ -25,7 +25,7 @@ f=${data_dir}/bufr/syno_multi.bufr
 REDIRECT=/dev/null
 
 #
-${examples_dir}/bufr_set_keys $fBufrTmp  2> $REDIRECT > $REDIRECT
+${examples_dir}bufr_set_keys $fBufrTmp  2> $REDIRECT > $REDIRECT
 
 #Compare modified to the original
 set +e
@@ -40,7 +40,7 @@ fi
 set -e
 
 #Check if modified has the same number of messages
-[ `${tools_dir}/bufr_count $f` -eq `${tools_dir}/bufr_count ${fBufrTmp}` ]
+[ `${tools_dir}bufr_count $f` -eq `${tools_dir}/bufr_count ${fBufrTmp}` ]
 
 #Clean up
 rm -f $fBufrTmp | true

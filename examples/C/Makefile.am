@@ -12,7 +12,7 @@ noinst_PROGRAMS  = nearest set_bitmap iterator get print_data set set_missing ke
                    set_pv list sections_copy large_grib1 get_data iterator_bitmap clone new_sample \
                    check_gaussian_grid ensemble_index points \
                    bufr_clone bufr_expanded  bufr_get_keys bufr_print_header bufr_print_data \
-                   bufr_get_keys bufr_subset bufr_keys_iterator
+                   bufr_get_keys bufr_subset bufr_keys_iterator bufr_set_keys
 #bin_PROGRAMS            = points
 
 box_SOURCES             = box.c

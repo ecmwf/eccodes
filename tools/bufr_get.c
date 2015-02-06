@@ -11,8 +11,6 @@
 /*
  * C Implementation: bufr_get
  *
- * Author: Enrico Fucile <enrico.fucile@ecmwf.int>
- *
  */
 
 #include "grib_tools.h"
@@ -51,19 +49,24 @@ double lon=0;
 int mode=0;
 grib_nearest* n=NULL;
 
-int main(int argc, char *argv[]) { return grib_tool(argc,argv);}
+int main(int argc, char *argv[])
+{
+    return grib_tool(argc,argv);
+}
 
-int grib_tool_before_getopt(grib_runtime_options* options) {
+int grib_tool_before_getopt(grib_runtime_options* options)
+{
     options->print_keys_count=-1;
     return 0;
 }
 
-int grib_tool_init(grib_runtime_options* options) {
+int grib_tool_init(grib_runtime_options* options)
+{
     char  *end = NULL, *end1=NULL;
     size_t size=4;
     int ret=0;
     double min=0,max=0;
-    int i=0,idx=0;
+    int i=0;
     char* p=NULL;
 
     options->print_header=0;
@@ -100,8 +103,6 @@ int grib_tool_init(grib_runtime_options* options) {
                 options->latlon_mask=strdup(p);
             }
         }
-
-
     }
 
     if (options->latlon && options->latlon_mask) {
@@ -126,7 +127,7 @@ int grib_tool_init(grib_runtime_options* options) {
         options->latlon_idx=-1;
         max=options->distances[0];
         for (i=0;i<4;i++)
-            if (max<options->distances[i]) {max=options->distances[i];idx=i;}
+            if (max<options->distances[i]) {max=options->distances[i];}
         min=max;
         for (i=0;i<4;i++) {
             if ((min >= options->distances[i]) && (options->mask_values[i] >= 0.5)) {
@@ -148,16 +149,19 @@ int grib_tool_init(grib_runtime_options* options) {
 
     return 0;
 }
-int grib_tool_new_filename_action(grib_runtime_options* options,const char* file) {
+
+int grib_tool_new_filename_action(grib_runtime_options* options,const char* file)
+{
     return 0;
 }
 
-
-int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file) {
+int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
+{
     return 0;
 }
 
-int grib_tool_new_handle_action(grib_runtime_options* options,grib_handle* h) {
+int grib_tool_new_handle_action(grib_runtime_options* options,grib_handle* h)
+{
     size_t size=4;
     int err = 0;
 
@@ -187,23 +191,24 @@ int grib_tool_new_handle_action(grib_runtime_options* options,grib_handle* h) {
                 options->latlon_idx=i;
             }
         }
-
     }
 
     return 0;
 }
 
-int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h) {
+int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
+{
     grib_handle_delete(h);
     return 0;
 }
 
-void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h) {
+void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
+{
     grib_print_key_values(options,h);
 }
 
-int grib_tool_finalise_action(grib_runtime_options* options) {
-
+int grib_tool_finalise_action(grib_runtime_options* options)
+{
     if (n) grib_nearest_delete(n);
 
     return 0;
