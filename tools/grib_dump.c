@@ -61,7 +61,6 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-
     int opt=grib_options_on("C")+grib_options_on("O")+grib_options_on("D")+grib_options_on("j");
 
     options->dump_mode = "default";
@@ -124,6 +123,7 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
     char tmp[1024];
     if (!options->current_infile->name) return 0;
     if (json) return 0;
+
     sprintf(tmp,"FILE: %s ",options->current_infile->name);
     if (!grib_options_on("C"))
         fprintf(stdout,"***** %s\n",tmp);
