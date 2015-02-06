@@ -22,8 +22,8 @@ flags[1]     section1Flags 'bufr/section1_flags.table' = 128 : hidden ; # = sect
 
 unsigned[1] dataCategory : dump;
 unsigned[1] dataSubCategory : dump;
-unsigned[1] masterTablesVersionNumber;
-unsigned[1] localTablesVersionNumber;
+unsigned[1] masterTablesVersionNumber : dump;
+unsigned[1] localTablesVersionNumber : dump;
 
 unsigned[1] typicalYearOfCentury : dump;
 unsigned[1] typicalMonth : dump;
