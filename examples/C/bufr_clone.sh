@@ -13,8 +13,8 @@
 label="bufr_clone_test_c"
 
 #Prepare tmp file
-fTmp=${label}.cloned
-rm -f $fTmp | true
+fBufrTmp=${label}.cloned.bufr
+rm -f $fBufrTmp | true
 
 #We clone a bufr file with multiple messages
 f=${data_dir}/bufr/syno_multi.bufr
@@ -22,11 +22,11 @@ f=${data_dir}/bufr/syno_multi.bufr
 REDIRECT=/dev/null
 
 #Clone the bufr messages
-${examples_dir}/bufr_clone $f $fTmp >$REDIRECT 2> $REDIRECT 
+${examples_dir}/bufr_clone $f $fBufrTmp >$REDIRECT 2> $REDIRECT 
 
 #Compare clone to the original
 set +e
-${tools_dir}/bufr_compare $f $fTmp >$REDIRECT 2> $REDIRECT 
+${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT 
 
 #Check if clone is different
 if [ $? -eq 0 ]; then
@@ -37,8 +37,8 @@ fi
 set -e
 
 #Check if clone has the same number of messages
-[ `${tools_dir}/bufr_count $f` = `${tools_dir}/bufr_count $fTmp` ]
+[ `${tools_dir}/bufr_count $f` = `${tools_dir}/bufr_count $fBufrTmp` ]
 
 
 #Clean up
-rm -f ${fTmp} | true
+rm -f ${fBufrTmp} | true

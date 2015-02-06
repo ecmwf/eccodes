@@ -10,10 +10,10 @@
 . ./include.sh
 
 #Define a common label for all the tmp files
-label="bufr_clone_test_f"
+label="bufr_set_keys_test_f"
 
 #Prepare tmp file
-fBufrTmp=${label}.clone.bufr
+fBufrTmp=${label}.tmp.bufr
 rm -f $fBufrTmp | true
 
 #We clone a bufr file with multiple messages.
@@ -21,14 +21,14 @@ f=${data_dir}/bufr/syno_multi.bufr
 
 REDIRECT=/dev/null
 
-#The input ($f) and output ($fTmp) are hardcoded in the f90 example!!! 
-${examples_dir}/f_bufr_clone >$REDIRECT 2> $REDIRECT 
+#The input ($f) and output ($fBufrTmp) are hardcoded in the f90 example!!! 
+${examples_dir}/f_bufr_set_keys >$REDIRECT 2> $REDIRECT 
 
-#Compare clone to the original
+#Compare modified file  to the original
 set +e
 ${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT 
 
-#Check if clone is different
+#Check if they are different
 if [ $? -eq 0 ]; then
    echo "cloning produced identical files " >&2
    exit 1
@@ -36,8 +36,8 @@ fi
 
 set -e
 
-#Check if clone has the same number of messages
-[ `${tools_dir}/bufr_count $f` = `${tools_dir}/bufr_count $fBufrTmp` ]
+#Check if modified file has the same number of messages
+[ `${tools_dir}/bufr_count $f` = `${tools_dir}/bufr_count ${fBufrTmp}` ]
 
 #Clean up
 rm -f ${fBufrTmp} | true

@@ -23,7 +23,7 @@ rm -f $fTmp | true
 
 REDIRECT=/dev/null
 
-#Write the values into a file and compare with reference
+#Write the key values into a file
 ${examples_dir}/bufr_get_keys 2> $REDIRECT > $fTmp
 
 #TODO: check the results

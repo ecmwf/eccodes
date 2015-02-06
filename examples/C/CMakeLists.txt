@@ -37,6 +37,7 @@ list( APPEND test_bins
       bufr_get_keys
       bufr_print_header
       bufr_print_data
+      bufr_set_keys
       bufr_subset
 )
 foreach( tool ${test_bins} )
@@ -71,6 +72,7 @@ list( APPEND tests
    bufr_get_keys
    bufr_print_header
    bufr_print_data
+   bufr_set_keys
    bufr_subset
 )
 foreach( test ${tests} )
