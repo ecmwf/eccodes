@@ -212,7 +212,7 @@ endif()
 
 ### export package to other ecbuild packages
 
-set( GRIB_API_TPLS            AEC PNG NetCDF Jasper OpenJPEG CMath )
+set( GRIB_API_TPLS            AEC PNG Jasper OpenJPEG CMath )
 set( GRIB_API_INCLUDE_DIRS    ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src )
 set( GRIB_API_LIBRARIES       grib_api )
 
@@ -280,21 +280,31 @@ endif()
 # pkg-config
 ecbuild_pkgconfig(
   NAME                eccodes
-  URL                 "https://software.ecmwf.int/wiki/display/ECC"
+  URL                 "https://software.ecmwf.int/wiki/display/ECC/"
   DESCRIPTION         "The ecCodes library"
-  IGNORE_LIBRARIES    grib_api_f90 grib_api_f77 ${NETCDF_LIBRARIES}
-  IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${CMAKE_CURRENT_BINARY_DIR}/fortran ${NETCDF_INCLUDE_DIRS}
-  VARIABLES           HAVE_JPG HAVE_LIBJASPER GRIB_THREADS HAVE_NETCDF HAVE_PYTHON HAVE_FORTRAN HAVE_PNG HAVE_AEC
+  LIBRARIES           grib_api
+  VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_GRIB_THREADS HAVE_NETCDF
+                      HAVE_PYTHON HAVE_FORTRAN HAVE_PNG HAVE_AEC
 )
 if( EC_HAVE_FORTRAN )
- ecbuild_pkgconfig(
-   NAME                eccodes_f90
-   URL                 "https://software.ecmwf.int/wiki/display/ECC"
-   IGNORE_LIBRARIES    ${NETCDF_LIBRARIES}
-   IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${CMAKE_CURRENT_BINARY_DIR}/fortran ${NETCDF_INCLUDE_DIRS}
-   DESCRIPTION         "The ecCodes library for Fortran 90"
-   VARIABLES           HAVE_JPG HAVE_LIBJASPER GRIB_THREADS HAVE_NETCDF HAVE_PYTHON HAVE_PNG HAVE_AEC
- )
+  ecbuild_pkgconfig(
+    NAME                eccodes_f90
+    URL                 "https://software.ecmwf.int/wiki/display/ECC/"
+    LIBRARIES           grib_api_f90 grib_api
+    DESCRIPTION         "The ecCodes library for Fortran 90"
+    IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
+    VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_GRIB_THREADS HAVE_NETCDF
+                        HAVE_PYTHON HAVE_PNG HAVE_AEC
+  )
+  ecbuild_pkgconfig(
+    NAME                eccodes_f77
+    URL                 "https://software.ecmwf.int/wiki/display/ECC/"
+    LIBRARIES           grib_api_f77 grib_api
+    DESCRIPTION         "The ecCodes library for Fortran 77"
+    IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
+    VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_GRIB_THREADS HAVE_NETCDF
+                        HAVE_PYTHON HAVE_PNG HAVE_AEC
+  )
 endif()
 
 ############################################################################################

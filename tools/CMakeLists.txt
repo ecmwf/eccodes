@@ -10,7 +10,7 @@ list( APPEND grib_tools_bins
              codes_info codes_count
              grib_histogram grib_filter grib_ls grib_dump grib_merge
              grib2ppm grib_set grib_get grib_get_data grib_copy
-             grib_compare parser grib_index_build grib_to_netcdf
+             grib_compare parser grib_index_build
              bufr_filter bufr_ls bufr_dump bufr_set bufr_get
              bufr_copy bufr_compare bufr_index_build
              taf_dump taf_ls taf_get taf_filter
@@ -50,6 +50,12 @@ ecbuild_add_executable( TARGET     bufr_count
                         SOURCES    codes_count.c
                         LIBS       grib_tools  )
 
+# grib to netcdf is optional
+ecbuild_add_executable( TARGET     grib_to_netcdf
+                        SOURCES    grib_to_netcdf.c
+                        INCLUDES   ${NETCDF_INCLUDE_DIRS}
+                        CONDITION  HAVE_NETCDF
+                        LIBS       grib_tools ${NETCDF_LIBRARIES})
 # grib_list_keys
 ecbuild_add_executable( TARGET     grib_list_keys
                         SOURCES    list_keys.c
