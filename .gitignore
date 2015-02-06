@@ -64,6 +64,12 @@ tools/grib1to2
 examples/C/.libs/
 examples/C/box
 examples/C/bufr_clone
+examples/C/bufr_expanded
+examples/C/bufr_get_keys
+examples/C/bufr_subset
+examples/F90/f_bufr_expanded
+examples/F90/f_bufr_get_keys
+examples/F90/f_bufr_print_data
 examples/C/bufr_read_header
 examples/C/bufr_print_data
 examples/C/bufr_print_header
