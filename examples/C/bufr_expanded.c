@@ -31,8 +31,6 @@ int main(int argc,char* argv[])
     codes_handle* h=NULL;
     
     double *values = NULL;
-    long longVal;
-    double doubleVal;
     size_t values_len=0;
     int i, err=0;
     int cnt=0;

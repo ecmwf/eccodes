@@ -24,21 +24,16 @@ void usage(char* prog) {
 
 int main(int argc,char* argv[])
 {
-    char* filename = NULL;
     FILE* in = NULL;
     
     /* message handle. Required in all the eccodes calls acting on a message.*/
     codes_handle* h=NULL;
     
-    double *values = NULL;
     long numberOfSubsets=0;
     long longVal;
-    double doubleVal;
-    size_t values_len=0;
     int i,err=0;
     int cnt=0;
     char* infile = "../../data/bufr/synop_multi_subset.bufr";
-
 
     in=fopen(infile,"r");
     if (!in) {
