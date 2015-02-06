@@ -9,15 +9,22 @@
 
 . ./include.sh
 
+#Define a common label for all the tmp files
+label="bufr_clone_test_c"
 
+#Prepare tmp file
+fTmp=${label}.cloned
+rm -f $fTmp | true
+
+#We clone a bufr file with multiple messages
 f=${data_dir}/bufr/syno_multi.bufr
-fTmp=${f}.c.cloned
 
 REDIRECT=/dev/null
 
-#Write the values into a file and compare with reference
+#Clone the bufr messages
 ${examples_dir}/bufr_clone $f $fTmp >$REDIRECT 2> $REDIRECT 
 
+#Compare clone to the original
 set +e
 ${tools_dir}/bufr_compare $f $fTmp >$REDIRECT 2> $REDIRECT 
 
@@ -34,4 +41,4 @@ set -e
 
 
 #Clean up
-rm -f $fTmp
+rm -f ${fTmp} | true

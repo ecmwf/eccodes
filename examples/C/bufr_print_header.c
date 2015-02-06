@@ -30,7 +30,6 @@ int main(int argc,char* argv[])
     /* message handle. Required in all the eccodes calls acting on a message.*/
     codes_handle* h=NULL;
     
-    char *typicalDate;
     long *desc = NULL;
     long longVal;
     size_t len=0;
@@ -65,12 +64,8 @@ int main(int argc,char* argv[])
         CODES_CHECK(codes_get_long(h,"dataSubCategory",&longVal),0);
         printf("  dataSubCategory: %ld\n",longVal);
         
-        /* string value */
-        CODES_CHECK(codes_get_length(h, "typicalDate", &len), 0);
-        typicalDate = (char*)malloc(len*sizeof(char));
-        grib_get_string(h, "typicalDate", typicalDate, &len);
-        printf("  typicalDate: %s\n", typicalDate);
-        free(typicalDate);
+        CODES_CHECK(codes_get_long(h,"typicalDate",&longVal),0);
+        printf("  typicalDate: %ld\n",longVal);
     
         CODES_CHECK(codes_get_long(h,"centre",&longVal),0);
         printf("  centre: %ld\n",longVal);

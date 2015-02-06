@@ -67,7 +67,7 @@ int main(int argc,char* argv[])
         printf("  stationNumber: %ld\n",longVal);
     
         /* in the current BUFR message this key represents the 2m temperature. 
-           it might not be availabel in other type of SYNOP messages */
+           it might not be available in other type of SYNOP messages */
         CODES_CHECK(codes_get_double(h,"airTemperatureAt2M",&doubleVal),0);
         printf("  airTemperatureAt2M %f\n",doubleVal);
     

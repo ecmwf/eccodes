@@ -10,22 +10,27 @@
 
 . ./include.sh
 
-#-----------------------------------------------------
-# Test reading the header only from a BUFR
-# file with multiple messages
-#----------------------------------------------------
-f=${data_dir}"/bufr/syno_multi.bufr"
-fRef=$f".header.ref"
-fRes=$f".header.test.c"
+#Define a common label for all the tmp files
+label="bufr_subset_test_c"
+
+#Prepare tmp file
+fTmp=${label}.tmp.txt
+rm -f $fTmp | true
+
+#We check "synop_multi_subset.bufr". The path is
+#hardcoded in the example
+
 REDIRECT=/dev/null
 
 #Write the values into a file and compare with reference
-${examples_dir}/bufr_subset #2> $REDIRECT > $fRes
+${examples_dir}/bufr_subset 2> $REDIRECT > $fTmp
+
+#TODO: add a proper check when subsets are properly implemented
 
 #We compare output to the reference by ignoring the whitespaces 
-#diff -w $fRef $fRes >$REDIRECT 2> $REDIRECT
+#diff -w $fRef $fTmp >$REDIRECT 2> $REDIRECT
 
-#cat $fRes
+#cat $fTmp
 
 #Clean up
-rm -f $fRes
+rm -f $fTmp

@@ -12,10 +12,10 @@
 
 
 #Define a common label for all the tmp files
-label="bufr_print_data_test_c"
+label="bufr_key_values_test_c"
 
 #Define tmp file
-fTmp=${label}".tmp.txt"
+fTmp=${label}.tmp.txt
 rm -f $fTmp | true
 
 #We check "syno_multi.bufr". The path is
@@ -24,9 +24,9 @@ rm -f $fTmp | true
 REDIRECT=/dev/null
 
 #Write the values into a file and compare with reference
-${examples_dir}/bufr_print_data 2> $REDIRECT > $fTmp
+${examples_dir}/bufr_key_values 2> $REDIRECT > $fTmp
 
-#TODO: check the output
+#TODO: check the results
 
 #cat  $fTmp
 

@@ -28,7 +28,7 @@ program bufr_clone
   call codes_open_file(infile,'../../data/bufr/syno_multi.bufr','r')
   
   ! open target file
-  call codes_open_file(outfile,'out.clone.f.bufr','w')
+  call codes_open_file(outfile,'bufr_clone_test_f.clone.bufr','w')
   
   ! the first bufr message is loaded from file
   ! ibufr is the bufr id to be used in subsequent calls

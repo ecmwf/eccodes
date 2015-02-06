@@ -10,22 +10,30 @@
 
 . ./include.sh
 
+#Define a common label for all the tmp files
+label="bufr_print_header_test_c"
+
+#Prepare tmp file
+fTmp=${label}.tmp.txt
+rm -f $fTmp | true
+
 #-----------------------------------------------------
-# Test reading the header only from a BUFR
+# Test reading the header from a BUFR
 # file with multiple messages
 #----------------------------------------------------
-f=${data_dir}"/bufr/syno_multi.bufr"
-fRef=$f".header.ref"
-fRes=$f".header.test.c"
+
+f=${data_dir}/bufr/syno_multi.bufr
+fRef=${f}.header.ref
+
 REDIRECT=/dev/null
 
 #Write the values into a file and compare with reference
-${examples_dir}/bufr_print_header  $f 2> $REDIRECT > $fRes
+${examples_dir}/bufr_print_header  $f 2> $REDIRECT > $fTmp
 
 #We compare output to the reference by ignoring the whitespaces 
-diff -w $fRef $fRes >$REDIRECT 2> $REDIRECT
+diff -w $fRef $fTmp >$REDIRECT 2> $REDIRECT
 
 #cat $fRes
 
 #Clean up
-rm -f $fRes
+rm -f ${fTmp} | true

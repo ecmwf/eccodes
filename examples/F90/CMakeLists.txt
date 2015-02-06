@@ -30,7 +30,9 @@ list( APPEND tests
       get_set_uuid
       clone
       bufr_clone
-      bufr_print_header
+      bufr_expanded
+      bufr_print_header 
+      bufr_print_data
 )
 
 # Simplify tests: no need to build executable and then test. All in one

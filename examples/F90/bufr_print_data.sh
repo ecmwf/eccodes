@@ -12,7 +12,7 @@
 
 
 #Define a common label for all the tmp files
-label="bufr_print_data_test_c"
+label="bufr_print_data_test_f"
 
 #Define tmp file
 fTmp=${label}".tmp.txt"
@@ -24,7 +24,7 @@ rm -f $fTmp | true
 REDIRECT=/dev/null
 
 #Write the values into a file and compare with reference
-${examples_dir}/bufr_print_data 2> $REDIRECT > $fTmp
+${examples_dir}/f_bufr_print_data #2> $REDIRECT > $fTmp
 
 #TODO: check the output
 

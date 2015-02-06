@@ -4,12 +4,13 @@ AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@ @FORCE_32_CFLAGS@
 TESTS = copy_message.sh get.sh get_data.sh get_pl.sh get_pv.sh keys_iterator.sh \
         nearest.sh precision.sh multi_write.sh multi.sh print_data.sh set.sh set_bitmap.sh set_missing.sh \
         set_pv.sh samples.sh count_messages.sh read_message.sh read_from_file.sh index.sh get_set_uuid.sh \
-        bufr_clone.sh bufr_print_header.sh
+        bufr_clone.sh bufr_expanded.sh bufr_print_header.sh bufr_print_data.sh
 
 noinst_PROGRAMS  = f_index f_copy_message f_get f_get_data f_get_pl f_get_pv f_keys_iterator \
                    f_multi_write f_multi f_nearest f_precision f_print_data f_set f_set_bitmap f_set_missing \
                    f_set_pv f_samples f_count_messages f_read_message f_read_from_file f_new_from_file \
-                   f_copy_namespace f_get_set_uuid f_set_gvc f_clone f_bufr_clone f_bufr_print_header
+                   f_copy_namespace f_get_set_uuid f_set_gvc f_clone f_bufr_clone _bufr_expanded f_bufr_print_header \
+                   f_bufr_print_data
 
 f_index_SOURCES=index.f90
 f_copy_message_SOURCES=copy_message.f90
@@ -37,7 +38,9 @@ f_get_set_uuid_SOURCES=get_set_uuid.f90
 f_set_gvc_SOURCES=set_gvc.f90
 f_clone_SOURCES=clone.f90
 f_bufr_clone_SOURCES=bufr_clone.f90
+f_bufr_expanded_SOURCES=bufr_expanded.f90
 f_bufr_print_header_SOURCES=bufr_print_header.f90
+f_bufr_print_data_SOURCES=bufr_print_data.f90
 
 INCLUDES =  -I$(top_builddir)/src
 
