@@ -4,7 +4,7 @@ AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@ @FORCE_32_CFLAGS@
 TESTS = copy_message.sh get.sh get_data.sh get_pl.sh get_pv.sh keys_iterator.sh \
         nearest.sh precision.sh multi_write.sh multi.sh print_data.sh set.sh set_bitmap.sh set_missing.sh \
         set_pv.sh samples.sh count_messages.sh read_message.sh read_from_file.sh index.sh get_set_uuid.sh \
-        bufr_clone.sh bufr_expanded.sh bufr_get_keys.sh bufr_print_header.sh bufr_print_data.sh f_bufr_set_keys.sh
+        bufr_clone.sh bufr_expanded.sh bufr_get_keys.sh bufr_print_header.sh bufr_print_data.sh bufr_set_keys.sh
 
 noinst_PROGRAMS  = f_index f_copy_message f_get f_get_data f_get_pl f_get_pv f_keys_iterator \
                    f_multi_write f_multi f_nearest f_precision f_print_data f_set f_set_bitmap f_set_missing \
