@@ -16,49 +16,52 @@
 #include "grib_tools.h"
 
 char* grib_tool_description="Copies the content of grib files printing"
-                            " values of some keys.";
+        " values of some keys.";
 char* grib_tool_name="grib_copy";
 char* grib_tool_usage="[options] grib_file grib_file ... output_grib_file";
 
 grib_option grib_options[]={
-/*  {id, args, help}, on, command_line, value */
-    {"f",0,0,0,1,0},
-    {"c",0,0,1,0,0},
-    {"r",0,0,0,1,0},
-    {"q",0,0,1,0,0},
-    {"p:",0,0,1,1,0},
-    {"P:",0,0,0,1,0},
-    {"w:","key[:{s/d/l}]=value,key[:{s/d/l}]=value,...","\n\t\tWhere clause."
-     "\n\t\tOnly grib messages matching the key/value constraints are "
-     "copied to the\n\t\toutput_grib_file.\n\t\tFor each key a string (key:s) or a "
-     "double (key:d) or a long (key:l)\n\t\ttype can be defined. Default type "
-     "is string.\n",0,1,0},
-    {"B:",0,0,0,1,0},
-    {"V",0,0,0,1,0},
-    {"W:",0,0,0,1,0},
-    {"M",0,0,0,1,0},
-    {"U",0,0,1,0,0},
-    {"H",0,0,1,0,0},
-    {"T:",0,0,0,1,0},
-    {"S",0,0,1,0,0},
-    {"g",0,0,0,1,0},
-    {"G",0,0,0,1,0},
-    {"7",0,0,0,1,0},
-    {"v",0,0,0,1,0}
+        /*  {id, args, help}, on, command_line, value */
+        {"f",0,0,0,1,0},
+        {"c",0,0,1,0,0},
+        {"r",0,0,0,1,0},
+        {"q",0,0,1,0,0},
+        {"p:",0,0,1,1,0},
+        {"P:",0,0,0,1,0},
+        {"w:","key[:{s/d/l}]=value,key[:{s/d/l}]=value,...","\n\t\tWhere clause."
+                "\n\t\tOnly grib messages matching the key/value constraints are "
+                "copied to the\n\t\toutput_grib_file.\n\t\tFor each key a string (key:s) or a "
+                "double (key:d) or a long (key:l)\n\t\ttype can be defined. Default type "
+                "is string.\n",0,1,0},
+                {"B:",0,0,0,1,0},
+                {"V",0,0,0,1,0},
+                {"W:",0,0,0,1,0},
+                {"M",0,0,0,1,0},
+                {"U",0,0,1,0,0},
+                {"H",0,0,1,0,0},
+                {"T:",0,0,0,1,0},
+                {"S",0,0,1,0,0},
+                {"g",0,0,0,1,0},
+                {"G",0,0,0,1,0},
+                {"7",0,0,0,1,0},
+                {"v",0,0,0,1,0}
 };
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     int ret=grib_tool(argc,argv);
     return ret;
 }
 
-int grib_tool_before_getopt(grib_runtime_options* options) {
+int grib_tool_before_getopt(grib_runtime_options* options)
+{
     return 0;
 }
 
-int grib_tool_init(grib_runtime_options* options) {
+int grib_tool_init(grib_runtime_options* options)
+{
 #if 0
     if (options->outfile && options->outfile->name) {
         options->outfile->file = fopen(options->outfile->name,"w");
@@ -71,16 +74,18 @@ int grib_tool_init(grib_runtime_options* options) {
     return 0;
 }
 
-
-int grib_tool_new_filename_action(grib_runtime_options* options,const char* file) {
+int grib_tool_new_filename_action(grib_runtime_options* options,const char* file)
+{
     return 0;
 }
 
-int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file) {
+int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
+{
     return 0;
 }
 
-int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
+int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
+{
     double* v;
     size_t size=0;
     if ( options->repack ) {
@@ -100,12 +105,14 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
     return 0;
 }
 
-int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h) {
+int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
+{
     grib_handle_delete(h);
     return 0;
 }
 
-void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h) {
+void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
+{
     grib_print_key_values(options,h);
 }
 
