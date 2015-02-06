@@ -9,7 +9,7 @@
  */
 
 /*
- * C Implementation: bufr_key_values
+ * C Implementation: bufr_get_keys
  *
  * Description: how to read values of different type of keys from BUFR messages.
  *
@@ -63,7 +63,6 @@ int main(int argc,char* argv[])
     
         /* read and print some data values */ 
         
-    
         /* long value */
         CODES_CHECK(codes_get_long(h,"blockNumber",&longVal),0);
         printf("  blockNumber: %ld\n",longVal);
@@ -113,7 +112,6 @@ int main(int argc,char* argv[])
         /* get the values*/
         grib_get_string(h, "typicalDate", typicalDate, &len);
         printf("  typicalDate: %s\n", typicalDate);
-        
         
         /* free allocated arrays */
         free(descriptors);

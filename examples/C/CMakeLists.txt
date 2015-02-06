@@ -34,7 +34,7 @@ list( APPEND test_bins
       ensemble_index
       bufr_clone
       bufr_expanded
-      bufr_key_values
+      bufr_get_keys
       bufr_print_header
       bufr_print_data
       bufr_subset
@@ -68,7 +68,7 @@ list( APPEND tests
    check_gaussian_grids
    bufr_clone
    bufr_expanded
-   bufr_key_values
+   bufr_get_keys
    bufr_print_header
    bufr_print_data
    bufr_subset

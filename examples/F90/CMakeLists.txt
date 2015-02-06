@@ -31,6 +31,7 @@ list( APPEND tests
       clone
       bufr_clone
       bufr_expanded
+      bufr_get_keys
       bufr_print_header 
       bufr_print_data
 )
