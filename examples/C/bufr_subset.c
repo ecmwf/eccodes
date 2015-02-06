@@ -55,7 +55,7 @@ int main(int argc,char* argv[])
         /* we need to instruct ecCodes to expand all the descriptors i.e. unpack the data values */
         CODES_CHECK(codes_set_long(h,"unpack",1),0);
     
-        /* find ou the number of subsets */
+        /* find out the number of subsets */
         CODES_CHECK(codes_get_long(h,"numberOfSubsets",&numberOfSubsets),0);
         printf("  numberOfSubsets: %ld\n",numberOfSubsets);
     

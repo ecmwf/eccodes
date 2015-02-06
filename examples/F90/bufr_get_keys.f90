@@ -99,7 +99,6 @@ character(len=9)   :: typicalDate
     call grib_get(ibufr,'typicalDate',typicalDate)
     write(*,*) '  typicalDate:',typicalDate
    
-
     ! free arrays 
     deallocate(values)
     deallocate(descriptors)
