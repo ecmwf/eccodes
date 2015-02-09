@@ -11,7 +11,7 @@
 /*
  * C Implementation: bufr_set_keys
  *
- * Description: how to set different type of keys from BUFR messages.
+ * Description: how to set different type of keys in BUFR messages.
  *
  */
 
@@ -31,7 +31,7 @@ int main(int argc,char* argv[])
     codes_handle* h=NULL;
     
     long longVal;
-    double doubleVal;
+    /*double doubleVal;*/
     int i, err=0;
     int cnt=0;
     size_t size = 0;

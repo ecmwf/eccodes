@@ -11,7 +11,7 @@
 /*
  * C Implementation: bufr_print_data
  *
- * Description: how to read/print data values from synop BUFR messages.
+ * Description: how to read data values from BUFR messages.
  *
  */
 
@@ -55,7 +55,8 @@ int main(int argc,char* argv[])
         /* we need to instruct ecCodes to unpack the data values */
         CODES_CHECK(codes_set_long(h,"unpack",1),0);
     
-        /* read and print some data values */ 
+        /* read and print some data values. This example was written for a SYNOP
+           BUFR file!! */ 
     
         CODES_CHECK(codes_get_long(h,"blockNumber",&longVal),0);
         printf("  blockNumber: %ld\n",longVal);

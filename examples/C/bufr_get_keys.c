@@ -73,6 +73,16 @@ int main(int argc,char* argv[])
         /* double value */
         CODES_CHECK(codes_get_double(h,"airTemperatureAt2M",&doubleVal),0);
         printf("  airTemperatureAt2M: %f\n",doubleVal);
+
+        /* ---- string value  -----------------*/
+        
+        /* get the size and allocate memory*/
+        CODES_CHECK(codes_get_length(h, "typicalDate", &len), 0);
+        typicalDate = (char*)malloc(len*sizeof(char));
+        
+        /* get the values*/
+        grib_get_string(h, "typicalDate", typicalDate, &len);
+        printf("  typicalDate: %s\n", typicalDate);
     
          /* ---- array of long ----------------*/
        
@@ -101,16 +111,6 @@ int main(int argc,char* argv[])
         {
             printf("   %.10e\n",values[i]);
         }
-
-        /* ---- string value  -----------------*/
-        
-        /* get the size and allocate memory*/
-        CODES_CHECK(codes_get_length(h, "typicalDate", &len), 0);
-        typicalDate = (char*)malloc(len*sizeof(char));
-        
-        /* get the values*/
-        grib_get_string(h, "typicalDate", typicalDate, &len);
-        printf("  typicalDate: %s\n", typicalDate);
         
         /* free allocated arrays */
         free(descriptors);

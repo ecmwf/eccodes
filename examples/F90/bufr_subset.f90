@@ -8,7 +8,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FOTRAN 90 Implementation: bufr_subset
+! FORTRAN 90 implementation: bufr_subset
 !
 ! Description: how to read data values from a given subset of a BUFR message.
 !

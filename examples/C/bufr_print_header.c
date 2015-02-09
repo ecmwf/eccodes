@@ -11,7 +11,7 @@
 /*
  * C Implementation: bufr_print_header
  *
- * Description: how to read/print the header of BUFR messages.
+ * Description: how to read the header of BUFR messages.
  *
  */
 

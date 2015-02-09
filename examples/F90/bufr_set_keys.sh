@@ -16,7 +16,7 @@ label="bufr_set_keys_test_f"
 fBufrTmp=${label}.tmp.bufr
 rm -f $fBufrTmp | true
 
-#We clone a bufr file with multiple messages.
+#The  bufr file to change
 f=${data_dir}/bufr/syno_multi.bufr
 
 REDIRECT=/dev/null
@@ -30,7 +30,7 @@ ${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT
 
 #Check if they are different
 if [ $? -eq 0 ]; then
-   echo "cloning produced identical files " >&2
+   echo "setting keys produced identical files " >&2
    exit 1
 fi
 

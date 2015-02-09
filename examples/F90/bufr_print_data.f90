@@ -10,7 +10,7 @@
 !
 ! FOTRAN 90 Implementation: bufr_print_data
 !
-! Description: how to read/print data values from synop BUFR messages.
+! Description: how to read data values from BUFR messages.
 !
 !
 program bufr_print_data
@@ -30,14 +30,16 @@ real(kind=8)       :: t2m
   call codes_bufr_new_from_file(ifile,ibufr,iret)
 
   do while (iret/=CODES_END_OF_FILE)
-    
-    ! get and print some keys form the BUFR header 
+
     write(*,*) 'message: ',count
 
     ! we need to instruct ecCodes to expand all the descriptors 
     ! i.e. unpack the data values
     call codes_set(ibufr,"unpack",1);
     
+    !read and print some data values. This example was written 
+    ! for a SYNOP BUFR file! 
+           
     ! get wmo block number
     call codes_get(ibufr,'blockNumber',blockNumber);
     write(*,*) '  blockNumber:',blockNumber

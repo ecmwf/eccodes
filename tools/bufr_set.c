@@ -17,9 +17,9 @@
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value*/
         {"s:",0,0,1,1,0},
-        {"r",0,0,0,1,0},
-        {"d:",0,0,0,1,0},
-        /*{"n:","noise percentage","\n\t\tAdd noise to the data values. The noise added is the given percentage of the data value.\n",0,1,0},*/
+/*     {"r",0,0,0,1,0}, */
+/*     {"d:",0,0,0,1,0},*/
+/*     {"n:","noise percentage","\n\t\tAdd noise to the data values. The noise added is the given percentage of the data value.\n",0,1,0},*/
         {"p:",0,0,1,1,0},
         {"P:",0,0,0,1,0},
         {"w:","key[:{s/d/l}]=value,key[:{s/d/l}]=value,...",
@@ -28,16 +28,16 @@ grib_option grib_options[]={
                 " copied unchanged\n\t\tto the output_grib_file. This behaviour can be changed "
                 "setting the option -S.\n\t\tFor each key a string (key:s) or a double (key:d) or"
                 " a long (key:l)\n\t\ttype can be defined. Default type is string.\n",0,1,0},
-                {"q",0,0,1,0,0},
-                {"7",0,0,0,1,0},
-                {"S",0,0,0,1,0},
-                {"U",0,0,1,0,0},
-                {"V",0,0,0,1,0},
-                {"g",0,0,0,1,0},
-                {"G",0,0,0,1,0},
-                {"T:",0,0,1,0,"B"},
-                {"f",0,0,0,1,0},
-                {"v",0,0,0,1,0}
+        {"q",0,0,1,0,0},
+        {"7",0,0,0,1,0},
+        {"S",0,0,0,1,0},
+        {"U",0,0,1,0,0},
+        {"V",0,0,0,1,0},
+        {"g",0,0,0,1,0},
+/*      {"G",0,0,0,1,0}, */
+        {"T:",0,0,1,0,"B"},
+        {"f",0,0,0,1,0},
+        {"v",0,0,0,1,0}
 };
 
 char* grib_tool_description="Sets key/value pairs in the input BUFR file and writes"

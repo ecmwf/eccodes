@@ -11,7 +11,7 @@
 /*
  * C Implementation: bufr_keys_iterator
  *
- * Description: Example on how to use keys_iterator functions and the
+ * Description: how to use keys_iterator functions and the
  *               codes_keys_iterator structure to get all the available
  *               keys in a BUFR message.
  *
@@ -37,17 +37,24 @@ int main(int argc,char* argv[])
     long longVal;
     int err=0, cnt=0;
     
-    /* To skip read only and not coded keys
-     unsigned long key_iterator_filter_flags=CODES_KEYS_ITERATOR_SKIP_READ_ONLY ||
-     CODES_KEYS_ITERATOR_SKIP_COMPUTED;
-    */
+    /* To skip certain keys use the combination of these flags:
+     
+       unsigned long key_iterator_filter_flags=
+            CODES_KEYS_ITERATOR_SKIP_READ_ONLY ||
+            CODES_KEYS_ITERATOR_SKIP_COMPUTED || 
+            CODES_KEYS_ITERATOR_SKIP_CODED ||
+            CODES_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC ||
+            CODES_KEYS_ITERATOR_SKIP_DUPLICATES ||
+            CODES_KEYS_ITERATOR_SKIP_FUNCTION; */
+    
     unsigned long key_iterator_filter_flags=CODES_KEYS_ITERATOR_ALL_KEYS;
  
-    /* name_space=NULL to get all the keys */
+    /* name_space=NULL to get all the keys. Other namespaces are e.g. "ls" */
     char* name_space=0;
     
     char value[MAX_VAL_LEN];
     size_t vlen=MAX_VAL_LEN;
+    size_t klen=0;
     
     if (argc!=2) usage(argv[0]);
     
@@ -81,8 +88,9 @@ int main(int argc,char* argv[])
         /* loop over the keys */
         while(codes_keys_iterator_next(kiter))
         {
-            /* print key name*/
+            /* get key name*/
             const char* name = codes_keys_iterator_get_name(kiter);
+           
             printf("  %s\n",name);
         }
  

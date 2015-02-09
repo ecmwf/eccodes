@@ -10,25 +10,25 @@
 
 . ./include.sh
 
-
 #Define a common label for all the tmp files
-label="bufr_print_data_test_f"
+label="bufr_subset_test_p"
 
-#Define tmp file
-fTmp=${label}".tmp.txt"
+#Prepare tmp file
+fTmp=${label}.tmp.txt
 rm -f $fTmp | true
 
-#We check "syno_multi.bufr". The path is
+#We check "synop_multi_subset.bufr". The path is
 #hardcoded in the example
 
 REDIRECT=/dev/null
 
-#Write the values into a file and compare with reference
-${examples_dir}/f_bufr_print_data 2> $REDIRECT > $fTmp
+#
+$PYTHON bufr_subset.py 2> $REDIRECT > $fTmp
 
-#TODO: check the output
+#TODO: add a proper check when subsets are properly implemented
 
-#cat  $fTmp
+#cat $fTmp
 
 #Clean up
-rm -f $fTmp | true
+rm -f $fTmp
+

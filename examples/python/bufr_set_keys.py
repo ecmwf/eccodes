@@ -7,9 +7,9 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
 #
-# Python implementation: bufr_print_data
+# Python implementation: bufr_set_keys
 #
-# Description: how to read data values from BUFR messages. 
+# Description: how to set different type of keys in BUFR messages.
 #
 #
 
@@ -19,46 +19,58 @@ import sys
 from eccodes import *
 
 INPUT='../../data/bufr/syno_multi.bufr'
+OUTPUT='bufr_set_keys_test_p.tmp.bufr'
 VERBOSE=1 # verbose error reporting
-    
+  
 def example():
     
     # open bufr file
-    f = open(INPUT)
+    fin = open(INPUT)
 
-    # define the keys to be printed
-    keys = [
-        'blockNumber',
-        'stationNumber',
-        'airTemperatureAt2M',
-        ]
-        
+    # open otput bufr file
+    fout = open(OUTPUT,'w')
+    
     cnt=0    
     
     # loop for the messages in the file
     while 1:
+        
         # get handle for message
-        gid = codes_bufr_new_from_file(f)
+        gid = codes_bufr_new_from_file(fin)
         if gid is None: break
 
         print "message: %s" % cnt
         
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(gid,'unpack',1);
+        #codes_set(gid,'unpack',1);
         
-        # print the values for the selected keys from the message
-        for key in keys:
-            if not codes_is_defined(gid,key): raise Exception("Key: " + key + " was not defined")
-            print '  %s: %s' % (key,codes_get(gid,key))
-
+        # This is the place where you may wish to modify the message
+        # E.g. we change the centre and 2m temperature
+        
+        # set centre
+        val=222
+        print '  set centre to: %d' % val
+        
+        key='centre'
+        if not codes_is_defined(gid,key): 
+            raise Exception("Key: " + key + " was not defined")
+        codes_set(gid,key,val)
+        
+        #check centre's value
+        print '  %s''s new value is: %d' % (key,codes_get(gid,key))
+   
+        # write modified message to output
+        codes_write(gid,fout)
+    
         cnt+=1
 
         # delete handle
         codes_release(gid)
 
-    # close the file
-    f.close()
+    fin.close()
+    fout.close()
+    
 
 def main():
     try:
