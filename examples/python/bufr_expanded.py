@@ -7,9 +7,9 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
 #
-# Python implementation: bufr_print_data
+# Python implementation: bufr_get_keys
 #
-# Description: how to read data values from BUFR messages. 
+# Description: how to read values of different type of keys from BUFR messages.
 #
 #
 
@@ -18,21 +18,14 @@ import sys
 
 from eccodes import *
 
-INPUT='../../data/bufr/syno_multi.bufr'
+INPUT='../../data/bufr/syno_1.bufr'
 VERBOSE=1 # verbose error reporting
-    
+  
 def example():
     
     # open bufr file
     f = open(INPUT)
 
-    # define the keys to be printed
-    keys = [
-        'blockNumber',
-        'stationNumber',
-        'airTemperatureAt2M',
-        ]
-        
     cnt=0    
     
     # loop for the messages in the file
@@ -47,10 +40,19 @@ def example():
         # i.e. unpack the data values
         codes_set(gid,'unpack',1);
         
-        # print the values for the selected keys from the message
-        for key in keys:
-            if not codes_is_defined(gid,key): raise Exception("Key: " + key + " was not defined")
-            print '  %s: %s' % (key,codes_get(gid,key))
+        #-----------------------------------
+        # get all the expanded data values
+        #-----------------------------------
+        key='numericValues'
+        
+        # get size
+        num=codes_get_size(gid,key)
+        print  '  size of %s is: %s' % (key,num)
+        
+        # get values
+        values=codes_get_array(gid,key)
+        for i in xrange(len(values)):
+            print "   %d %.10e" % (i+1,values[i])
 
         cnt+=1
 

@@ -12,35 +12,23 @@
 
 
 #Define a common label for all the tmp files
-label="bufr_set_keys_test_c"
+label="bufr_get_keys_test_p"
 
 #Define tmp file
-fBufrTmp=${label}.tmp.bufr
-rm -f $fBufrTmp | true
+fTmp=${label}.tmp.txt
+rm -f $fTmp | true
 
 #We check "syno_multi.bufr". The path is
 #hardcoded in the example
-f=${data_dir}/bufr/syno_multi.bufr
 
 REDIRECT=/dev/null
 
-#
-${examples_dir}bufr_set_keys $fBufrTmp  2> $REDIRECT > $REDIRECT
+#Write the key values into a file
+$PYTHON bufr_get_keys.py  2> $REDIRECT > $fTmp
 
-#Compare modified to the original
-set +e
-${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT 
+#TODO: check the results
 
-#Check if modified is different
-if [ $? -eq 0 ]; then
-   echo "setting keys produced identical files " >&2
-   exit 1
-fi
-
-set -e
-
-#Check if modified has the same number of messages
-[ `${tools_dir}bufr_count $f` -eq `${tools_dir}/bufr_count ${fBufrTmp}` ]
+#cat  $fTmp
 
 #Clean up
-rm -f $fBufrTmp | true
+rm -f $fTmp | true

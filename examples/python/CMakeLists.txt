@@ -39,8 +39,14 @@ list( APPEND tests
    set_missing
    binary_message
    set_bitmap
+   bufr_clone
+   bufr_expanded
+   bufr_get_keys
+   bufr_keys_iterator
    bufr_print_header
-   bufr_print_data
+   bufr_print_data 
+   bufr_set_keys
+   bufr_subset
 )
 foreach( test ${tests} )
     ecbuild_add_test( TARGET p_${test}_test

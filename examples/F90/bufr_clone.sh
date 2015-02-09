@@ -21,7 +21,7 @@ f=${data_dir}/bufr/syno_multi.bufr
 
 REDIRECT=/dev/null
 
-#The input ($f) and output ($fTmp) are hardcoded in the f90 example!!! 
+#The input ($f) and output ($fBufrTmp) are hardcoded in the f90 example!!! 
 ${examples_dir}/f_bufr_clone >$REDIRECT 2> $REDIRECT 
 
 #Compare clone to the original
@@ -35,9 +35,6 @@ if [ $? -eq 0 ]; then
 fi
 
 set -e
-
-#Check if clone has the same number of messages
-[ `${tools_dir}/bufr_count $f` = `${tools_dir}/bufr_count $fBufrTmp` ]
 
 #Clean up
 rm -f ${fBufrTmp} | true

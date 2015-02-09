@@ -39,6 +39,7 @@ int main(int argc,char* argv[])
     
     filename=argv[1];
 
+    /* open bufr file */
     in=fopen(filename,"r");
     if (!in) {
         printf("ERROR: unable to open file %s\n", filename);
@@ -53,12 +54,10 @@ int main(int argc,char* argv[])
             cnt++;
             continue;
         }
-
-        /* we need to instruct ecCodes to unpack the data values */
-        CODES_CHECK(codes_set_long(h,"unpack",1),0);
-    
+        
         /* get the size of the values array*/
-        CODES_CHECK(codes_get_size(h,"numericValues",&values_len),0);
+        CODES_CHECK(codes_get_size(h,"numericValues",&values_len),0);    
+        printf("  number of expanded values: %ld\n",values_len);    
     
         /* allocate array for data values */
         values = malloc(values_len*sizeof(double));
@@ -68,7 +67,7 @@ int main(int argc,char* argv[])
  
         for(i = 0; i < values_len; i++)
         {
-            printf("%.10e\n",values[i]);
+            printf("  %.10e\n",values[i]);
         }
         
         free(values);

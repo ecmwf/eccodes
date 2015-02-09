@@ -6,7 +6,7 @@
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
-!
+!  FORTRAN 90 implementation: bufr_clone
 !
 !  Description: how to create a new BUFR message by cloning 
 !               an existing message.
@@ -34,29 +34,28 @@ program bufr_clone
   ! ibufr is the bufr id to be used in subsequent calls
   call codes_bufr_new_from_file(infile,ibufr_in,iret)
 
-  do while (iret/=CODES_END_OF_FILE)
+  ! create several clones of this message and alter them
+  ! in different ways
+
+  do i=1,3
     
     ! clone the current handle
     call codes_clone(ibufr_in, ibufr_out)
 
     ! This is the place where you may wish to modify the clone 
     ! E.g. we change the centre 
-    call codes_set(ibufr_out,'centre',250)
+    call codes_set(ibufr_out,'centre',222)
  
     ! write cloned messages to a file
     call codes_write(ibufr_out,outfile)
     
     ! relase the clone's handle
     call codes_release(ibufr_out)
+  end do  
   
-    ! relase the sources 's handle
-    call codes_release(ibufr_in)
-    
-    ! next message from source
-    call codes_bufr_new_from_file(infile,ibufr_in,iret)
-    
-  end do
-    
+! relase the sources 's handle
+  call codes_release(ibufr_in)
+  
   call codes_close_file(infile)
   call codes_close_file(outfile)
 

@@ -10,21 +10,20 @@
 
 . ./include.sh
 
-
 #Define a common label for all the tmp files
-label="bufr_print_data_test_f"
+label="bufr_keys_iterator_test_p"
 
 #Define tmp file
 fTmp=${label}".tmp.txt"
 rm -f $fTmp | true
 
-#We check "syno_multi.bufr". The path is
-#hardcoded in the example
-
 REDIRECT=/dev/null
 
-#Write the values into a file and compare with reference
-${examples_dir}/f_bufr_print_data 2> $REDIRECT > $fTmp
+#The bufr file to use 
+f=${data_dir}/bufr/syno_1.bufr
+
+#The input ($f) is hardcoded in the example!!!
+$PYTHON bufr_keys_iterator.py 2> $REDIRECT > $fTmp
 
 #TODO: check the output
 

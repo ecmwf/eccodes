@@ -12,20 +12,19 @@
 
 
 #Define a common label for all the tmp files
-label="bufr_set_keys_test_c"
+label="bufr_set_keys_test_p"
 
 #Define tmp file
 fBufrTmp=${label}.tmp.bufr
 rm -f $fBufrTmp | true
 
-#We check "syno_multi.bufr". The path is
-#hardcoded in the example
+#The  bufr file to change
 f=${data_dir}/bufr/syno_multi.bufr
 
 REDIRECT=/dev/null
 
-#
-${examples_dir}bufr_set_keys $fBufrTmp  2> $REDIRECT > $REDIRECT
+#The input ($f) and output ($fBufrTmp) are hardcoded in the f90 example!!! 
+$PYTHON bufr_set_keys.py 2> $REDIRECT > $REDIRECT
 
 #Compare modified to the original
 set +e
@@ -44,3 +43,4 @@ set -e
 
 #Clean up
 rm -f $fBufrTmp | true
+

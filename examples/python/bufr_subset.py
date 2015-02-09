@@ -7,9 +7,9 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
 #
-# Python implementation: bufr_print_data
+# Python implementation: bufr_subset
 #
-# Description: how to read data values from BUFR messages. 
+# Description: how to read data values from a given subset of a BUFR message.
 #
 #
 
@@ -18,21 +18,14 @@ import sys
 
 from eccodes import *
 
-INPUT='../../data/bufr/syno_multi.bufr'
+INPUT='../../data/bufr/synop_multi_subset.bufr'
 VERBOSE=1 # verbose error reporting
-    
+  
 def example():
     
     # open bufr file
     f = open(INPUT)
 
-    # define the keys to be printed
-    keys = [
-        'blockNumber',
-        'stationNumber',
-        'airTemperatureAt2M',
-        ]
-        
     cnt=0    
     
     # loop for the messages in the file
@@ -46,12 +39,33 @@ def example():
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
         codes_set(gid,'unpack',1);
-        
-        # print the values for the selected keys from the message
-        for key in keys:
-            if not codes_is_defined(gid,key): raise Exception("Key: " + key + " was not defined")
-            print '  %s: %s' % (key,codes_get(gid,key))
+         
+        # find out the number of subsets
+        key='numberOfSubsets'
+        numberOfSubsets=codes_get(gid,'numberOfSubsets')
+        print ' %s: %d' % (key,numberOfSubsets)
+    
+        # loop over the subsets
+        for i in range(numberOfSubsets) :
 
+            #specify the subset number
+            codes_set(gid,'subsetNumber',0)
+        
+            # read and print some data values 
+            
+            key='blockNumber'
+            val=codes_get(gid,key)
+            print '  %s: %d' % (key,val)
+    
+            key='stationNumber'
+            val=codes_get(gid,key)
+            print '  %s: %d' % (key,val)
+    
+            #key='airTemperatureAt2M'
+            #val=codes_get(gid,key)
+            #print '  %d: %d' % (key,val)
+        
+        
         cnt+=1
 
         # delete handle
