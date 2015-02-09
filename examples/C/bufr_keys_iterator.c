@@ -36,6 +36,7 @@ int main(int argc,char* argv[])
     codes_handle* h=NULL;
     long longVal;
     int err=0, cnt=0;
+    int keyType;
     
     /* To skip certain keys use the combination of these flags:
      
@@ -84,14 +85,34 @@ int main(int argc,char* argv[])
             printf("ERROR: Unable to create keys iterator\n");
             exit(1);
         }
-        
+         
+        /* we need to instruct ecCodes to unpack the data values */
+        /*CODES_CHECK(codes_set_long(h,"unpack",1),0);*/
+   
         /* loop over the keys */
         while(codes_keys_iterator_next(kiter))
         {
             /* get key name*/
             const char* name = codes_keys_iterator_get_name(kiter);
+            printf("  %s=",name);
+              
+            CODES_CHECK(codes_get_native_type(h,name,&keyType),0);
            
-            printf("  %s\n",name);
+            /* get key size to see if it is an array */
+            CODES_CHECK(codes_get_size(h,name,&klen),0);
+           
+            /* not array */
+            if(klen ==1 || keyType == CODES_TYPE_STRING)
+            {    
+                vlen=MAX_VAL_LEN;
+                bzero(value,vlen);
+           
+                codes_get_string(h,name,value,&vlen);
+                printf("%s\n",value);                             
+            }
+            /* for arrays */    
+            else
+                printf("(array of %ld)\n",klen);
         }
  
         /* delete key iterator */
