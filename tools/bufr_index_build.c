@@ -11,9 +11,6 @@
 /*
  * C Implementation: bufr_index_build
  *
- * Author: Enrico Fucile <enrico.fucile@ecmwf.int>
- *
- *
  */
 
 #include "grib_tools.h"
@@ -28,28 +25,35 @@ char* default_keys = "mars";
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value */
         {"f",0,0,0,1,0},
-        {"o:",0,0,1,1,"gribidx"},
+        {"o:","output_index_file",
+              "\n\t\tOutput is written to output_index_file."
+              "\n\t\tIf an output index file is required and -o is not used, the"
+              " output index is written to bufridx\n",
+              1,1,"bufridx"},
         {"k:",0,0,0,1,0},
         {"V",0,0,0,1,0},
         {"T:",0,0,1,0,"B"},
-        {"N",0,0,0,1,0}
+        {"N",0,"Do not compress index."
+             "\n\t\tBy default the index is compressed to remove keys with only one value.\n",0,1,0}
 };
 
 int compress_index;
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     int ret=grib_tool(argc,argv);
     return ret;
 }
 
-int grib_tool_before_getopt(grib_runtime_options* options) {
+int grib_tool_before_getopt(grib_runtime_options* options)
+{
     return 0;
 }
 
-int grib_tool_init(grib_runtime_options* options) {
-
+int grib_tool_init(grib_runtime_options* options)
+{
     int ret=0;
     grib_context* c=grib_context_get_default();
 
@@ -72,7 +76,8 @@ int grib_tool_init(grib_runtime_options* options) {
     return 0;
 }
 
-int grib_tool_new_filename_action(grib_runtime_options* options,const char* file) {
+int grib_tool_new_filename_action(grib_runtime_options* options,const char* file)
+{
     int ret=0;
     printf("--- %s: processing %s\n",grib_tool_name,file);
     ret=_codes_index_add_file(idx,file,CODES_BUFR);
@@ -80,22 +85,27 @@ int grib_tool_new_filename_action(grib_runtime_options* options,const char* file
     return 0;
 }
 
-int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file) {
+int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
+{
     return 0;
 }
 
-int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
+int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
+{
     return 0;
 }
 
-int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h) {
+int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
+{
     return 0;
 }
 
-void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h) {
+void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
+{
 }
 
-int grib_tool_finalise_action(grib_runtime_options* options) {
+int grib_tool_finalise_action(grib_runtime_options* options)
+{
     grib_index_key* keys;
     grib_string_list* values;
     int first;
