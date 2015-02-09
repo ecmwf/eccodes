@@ -10,24 +10,27 @@
 
 . ./include.sh
 
-
 #Define a common label for all the tmp files
-label="bufr_keys_iterator_test_c"
+label="bufr_subset_test_f"
 
-#Define tmp file
-fTmp=${label}".tmp.txt"
+#Prepare tmp file
+fTmp=${label}.tmp.txt
 rm -f $fTmp | true
+
+#We check "synop_multi_subset.bufr". The path is
+#hardcoded in the example
 
 REDIRECT=/dev/null
 
-f=${data_dir}/bufr/syno_1.bufr
+#Write the values into a file and compare with reference
+${examples_dir}/f_bufr_subset 2> $REDIRECT > $fTmp
 
-#Dump the keys
-${examples_dir}/bufr_keys_iterator $f 2> $REDIRECT > $fTmp
+#TODO: add a proper check when subsets are properly implemented
 
-#TODO: check the output
+#We compare output to the reference by ignoring the whitespaces 
+#diff -w $fRef $fTmp >$REDIRECT 2> $REDIRECT
 
-#cat  $fTmp
+#cat $fTmp
 
 #Clean up
-rm -f $fTmp | true
+rm -f $fTmp
