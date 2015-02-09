@@ -260,9 +260,11 @@ static int unpack_string_array (grib_accessor* a, char** val, size_t *len)
     for (i=0;i<count;i++) {
       val[i]=grib_context_strdup(c,self->stringValues->v[idx]->v[i]);
     }
+    *len=count;
   } else {
     idx=(int)self->numericValues->v[self->subsetNumber]->v[self->index]/1000;
     val[0]=grib_context_strdup(c,self->stringValues->v[self->subsetNumber]->v[idx]);
+    *len=1;
   }
 
   return ret;
@@ -289,9 +291,11 @@ static int unpack_long (grib_accessor* a, long* val, size_t *len)
       val[i]= self->numericValues->v[self->index]->v[i] == GRIB_MISSING_DOUBLE ? 
 		GRIB_MISSING_LONG : (long)self->numericValues->v[self->index]->v[i];
     }
+    *len=count;
   } else {
     val[0]= self->numericValues->v[self->subsetNumber]->v[self->index] == GRIB_MISSING_DOUBLE ?
 		GRIB_MISSING_LONG : (long)self->numericValues->v[self->subsetNumber]->v[self->index];
+    *len=1;
   }
 
   return ret;
@@ -311,8 +315,10 @@ static int unpack_double (grib_accessor* a, double* val, size_t *len)
     for (i=0;i<count;i++) {
       val[i]=self->numericValues->v[self->index]->v[i];
     }
+    *len=count;
   } else {
     val[0]=self->numericValues->v[self->subsetNumber]->v[self->index];
+    *len=1;
   }
 
   return ret;
