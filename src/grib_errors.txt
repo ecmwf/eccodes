@@ -66,3 +66,6 @@ GRIB_STRING_TOO_SMALL					String is smaller than requested
 GRIB_WRONG_CONVERSION         Wrong type conversion
 GRIB_MISSING_BUFR_ENTRY       Missing BUFR table entry for descriptor
 GRIB_NULL_POINTER             Null pointer
+GRIB_ATTRIBUTE_CLASH          Attribute is already present, cannot add
+GRIB_TOO_MANY_ATTRIBUTES      Too many attributes. Increase MAX_ACCESSOR_ATTRIBUTES
+GRIB_ATTRIBUTE_NOT_FOUND      Attribute not found.

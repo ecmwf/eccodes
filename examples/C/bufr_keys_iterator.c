@@ -86,6 +86,7 @@ int main(int argc,char* argv[])
             printf("  %s\n",name);
         }
  
+        /* delete key iterator */
         codes_keys_iterator_delete(kiter);
     
         /* delete handle */

@@ -31,6 +31,7 @@ int main(int argc,char* argv[])
     
     long numberOfSubsets=0;
     long longVal;
+    /*double doubleVal;*/
     int i,err=0;
     int cnt=0;
     char* infile = "../../data/bufr/synop_multi_subset.bufr";
@@ -60,7 +61,7 @@ int main(int argc,char* argv[])
         printf("  numberOfSubsets: %ld\n",numberOfSubsets);
     
         /* loop over the subsets */
-        for(i=0; i < numberOfSubsets; i++)
+        for(i=1; i <= numberOfSubsets; i++)
         {
             /* specify the subset number */
             CODES_CHECK(codes_set_long(h,"subsetNumber",0),0);
@@ -72,7 +73,7 @@ int main(int argc,char* argv[])
             CODES_CHECK(codes_get_long(h,"stationNumber",&longVal),0);
             printf("  stationNumber: %ld\n",longVal);
     
-           /* CODES_CHECK(codes_get_double(h,"airTemperatureAt2M",&doubleVal),0);
+            /*CODES_CHECK(codes_get_double(h,"airTemperatureAt2M",&doubleVal),0);
             printf("  airTemperatureAt2M %f\n",doubleVal);*/
         }
     

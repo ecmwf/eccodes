@@ -119,7 +119,7 @@ static void remove_accessor(grib_accessor *a)
 
   a->next->previous = a->previous;
 
-  grib_free_accessor(s->h->context,a);
+  grib_accessor_delete(s->h->context,a);
 
   return;
 }

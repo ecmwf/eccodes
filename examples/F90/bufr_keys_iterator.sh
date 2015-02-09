@@ -10,9 +10,8 @@
 
 . ./include.sh
 
-
 #Define a common label for all the tmp files
-label="bufr_keys_iterator_test_c"
+label="bufr_keys_iterator_test_f"
 
 #Define tmp file
 fTmp=${label}".tmp.txt"
@@ -22,8 +21,8 @@ REDIRECT=/dev/null
 
 f=${data_dir}/bufr/syno_1.bufr
 
-#Dump the keys
-${examples_dir}/bufr_keys_iterator $f 2> $REDIRECT > $fTmp
+#The input ($f) is hardcoded in the f90 example!!!
+${examples_dir}/f_bufr_keys_iterator 2> $REDIRECT > $fTmp
 
 #TODO: check the output
 

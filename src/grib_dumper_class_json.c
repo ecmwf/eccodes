@@ -146,14 +146,16 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     else self->begin=0;
 
     self->empty=0;
+    fprintf(self->dumper.out,"%-*s",mydepth," ");
+    fprintf(self->dumper.out,"{ ");
+    fprintf(self->dumper.out,"\"key\": \"%s\", \"value\": ",a->name);
 
     err = grib_set_double(a->parent->h, "missingValue", missing_value);
     if (size>1) {
         int cols=4;
         int count=0;
         int lens=strlen(a->name);
-        fprintf(self->dumper.out,"%-*s",mydepth," ");
-        fprintf(self->dumper.out,"\"%s\" : [ ",a->name);
+        fprintf(self->dumper.out,"[ ");
         tab=lens+mydepth+7;
 
         for (i=0; i<size-1; ++i) {
@@ -176,12 +178,13 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         fprintf(self->dumper.out,"\n%-*s] ",tab," ");
         grib_context_free(a->parent->h->context,values);
     } else {
-        fprintf(self->dumper.out,"%-*s",mydepth," ");
         if( grib_is_missing_double(a,value) )
-            fprintf(self->dumper.out,"\"%s\" : null",a->name);
+            fprintf(self->dumper.out," null");
         else
-            fprintf(self->dumper.out,"\"%s\" : %g",a->name,value);
+            fprintf(self->dumper.out," %g",value);
     }
+
+    fprintf(self->dumper.out," }");
 
 }
 
@@ -219,12 +222,14 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 
     self->empty=0;
 
+    fprintf(self->dumper.out,"{ ");
+
     if (size>1) {
         int cols=9;
         int count=0;
         int lens=strlen(a->name);
         fprintf(self->dumper.out,"%-*s",mydepth," ");
-        fprintf(self->dumper.out,"\"%s\" : [ ",a->name);
+        fprintf(self->dumper.out,"\"key\" : \"%s\", \"value\": [",a->name);
         tab=lens+mydepth+7;
         for (i=0;i<size-1;i++) {
             if (count>cols || i==0) {fprintf(self->dumper.out,"\n%-*s",tab," ");count=0;}
@@ -245,11 +250,14 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
         grib_context_free(a->parent->h->context,values);
     } else {
         fprintf(self->dumper.out,"%-*s",mydepth," ");
+        fprintf(self->dumper.out,"\"key\": \"%s\", ",a->name);
         if( grib_is_missing_long(a,value) )
-            fprintf(self->dumper.out,"\"%s\" : null",a->name);
+            fprintf(self->dumper.out,"\"value\" : null");
         else
-            fprintf(self->dumper.out,"\"%s\" : %ld",a->name,value);
+            fprintf(self->dumper.out,"\"value\" : %ld",value);
     }
+
+    fprintf(self->dumper.out," }");
 
 }
 
@@ -273,10 +281,15 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
     self->empty=0;
 
     fprintf(self->dumper.out,"%-*s",mydepth," ");
+    fprintf(self->dumper.out,"{ ");
+
+    fprintf(self->dumper.out,"\"key\": \"%s\", ",a->name);
     if( grib_is_missing_double(a,value) )
-        fprintf(self->dumper.out,"\"%s\" : null",a->name);
+        fprintf(self->dumper.out,"\"value\" : null");
     else
-        fprintf(self->dumper.out,"\"%s\" : %g",a->name,value);
+        fprintf(self->dumper.out,"\"value\" : %g",value);
+
+    fprintf(self->dumper.out," }");
 
 }
 
@@ -317,7 +330,8 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
   err = grib_unpack_string_array(a,values,&size);
 
   fprintf(self->dumper.out,"%-*s",mydepth," ");
-  fprintf(self->dumper.out,"\"%s\" : [\n",a->name);
+  fprintf(self->dumper.out,"{ ");
+  fprintf(self->dumper.out,"\"key\": \"%s\", \"value\": [\n",a->name);
   tab=mydepth+1;
   for  (i=0;i<size-1;i++) {
       fprintf(self->dumper.out,"%-*s\"%s\",\n",(int)(tab+strlen(a->name)+4)," ",values[i]);
@@ -325,6 +339,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
   fprintf(self->dumper.out,"%-*s\"%s\"\n",(int)(tab+strlen(a->name)+4)," ",values[i]);
   fprintf(self->dumper.out,"%-*s",mydepth," ");
   fprintf(self->dumper.out,"  ]");
+  fprintf(self->dumper.out,"} ");
 
   grib_context_free(c,values);
 }
@@ -362,10 +377,15 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     while(*p) { if(!isprint(*p)) *p = '.'; p++; }
 
     fprintf(self->dumper.out,"%-*s",mydepth," ");
+    fprintf(self->dumper.out," {");
+
+    fprintf(self->dumper.out,"\"key\": \"%s\",",a->name);
     if( ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && grib_is_missing_internal(a) )
-        fprintf(self->dumper.out,"\"%s\" : null",a->name);
+        fprintf(self->dumper.out,"\"value\" : null");
     else
-        fprintf(self->dumper.out,"\"%s\" : \"%s\"",a->name,value);
+        fprintf(self->dumper.out,"\"value\" : \"%s\"",value);
+
+    fprintf(self->dumper.out,"} ");
 
     grib_context_free(c,value);
 }
@@ -385,16 +405,21 @@ static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors
       !grib_inline_strcmp(a->name,"GRIB") ||
       !grib_inline_strcmp(a->name,"META")
      ) {
-        fprintf(self->dumper.out,"{\n");
+        fprintf(self->dumper.out,"[\n");
         self->begin=1;
         self->empty=1;
         grib_dump_accessors_block(d,block);
-        fprintf(self->dumper.out,"\n}\n");
+        fprintf(self->dumper.out,"\n]\n");
   } else if (!grib_inline_strcmp(a->name,"groupNumber")) {
     depth+=2;
     if (!self->empty) fprintf(self->dumper.out,",\n");
     fprintf(self->dumper.out,"%-*s",depth," ");
-    fprintf(self->dumper.out,"\"group%d\" : {",(int)a->bufr_group_number);
+
+    if (a->bufr_group_number == 1)
+      fprintf(self->dumper.out," { \"data\" : ");
+
+    fprintf(self->dumper.out,"[");
+
     fprintf(self->dumper.out,"\n");
     /* fprintf(self->dumper.out,"%-*s",depth," "); */
     self->begin=1;
@@ -402,10 +427,13 @@ static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors
     grib_dump_accessors_block(d,block);
     fprintf(self->dumper.out,"\n");
     fprintf(self->dumper.out,"%-*s",depth," ");
-    fprintf(self->dumper.out,"}");
+    fprintf(self->dumper.out,"]");
+
+    if (a->bufr_group_number == 1)
+      fprintf(self->dumper.out,"}");
     depth-=2;
   } else {
         grib_dump_accessors_block(d,block);
-    }
+  }
 }
 

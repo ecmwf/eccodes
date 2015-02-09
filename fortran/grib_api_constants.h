@@ -1,3 +1,6 @@
+  integer, parameter,public :: GRIB_ATTRIBUTE_NOT_FOUND                           = -63
+  integer, parameter,public :: GRIB_TOO_MANY_ATTRIBUTES                           = -62
+  integer, parameter,public :: GRIB_ATTRIBUTE_CLASH                               = -61
   integer, parameter,public :: GRIB_NULL_POINTER                                  = -60
   integer, parameter,public :: GRIB_MISSING_BUFR_ENTRY                            = -59
   integer, parameter,public :: GRIB_WRONG_CONVERSION                              = -58

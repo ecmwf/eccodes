@@ -32,9 +32,11 @@ list( APPEND tests
       bufr_clone
       bufr_expanded
       bufr_get_keys
+      bufr_keys_iterator
       bufr_print_header 
       bufr_print_data
       bufr_set_keys
+      bufr_subset
 )
 
 # Simplify tests: no need to build executable and then test. All in one

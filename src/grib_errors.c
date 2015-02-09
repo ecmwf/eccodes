@@ -64,6 +64,9 @@ static const char *errors[] = {
 "Wrong type conversion",		/* -58 GRIB_WRONG_CONVERSION */
 "Missing BUFR table entry for descriptor",		/* -59 GRIB_MISSING_BUFR_ENTRY */
 "Null pointer",		/* -60 GRIB_NULL_POINTER */
+"Attribute is already present, cannot add",		/* -61 GRIB_ATTRIBUTE_CLASH */
+"Too many attributes. Increase MAX_ACCESSOR_ATTRIBUTES",		/* -62 GRIB_TOO_MANY_ATTRIBUTES */
+"Attribute not found.",		/* -63 GRIB_ATTRIBUTE_NOT_FOUND */
 "Value mismatch",		/* 1 GRIB_VALUE_MISMATCH */
 "double values are different",		/* 2 GRIB_DOUBLE_VALUE_MISMATCH */
 "long values are different",		/* 3 GRIB_LONG_VALUE_MISMATCH */

@@ -36,7 +36,7 @@ static int clear(grib_accessor*);
 static int add_attribute(grib_accessor*,grib_accessor*);
 static int replace_attribute(grib_accessor*,grib_accessor*);
 static int delete_attribute(grib_accessor*,const char*);
-static grib_accessor* get_attribute(grib_accessor*,const char*);
+static grib_accessor* get_attribute(grib_accessor*,const char*,int*);
 static int pack_attribute_bytes(grib_accessor*,const char*,const unsigned char*, size_t *len);
 static int pack_attribute_double(grib_accessor*,const char*, const double* val,size_t *len);
 static int pack_attribute_long(grib_accessor*,const char*, const long* val,size_t *len);

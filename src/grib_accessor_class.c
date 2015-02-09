@@ -150,7 +150,7 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
                                 a->offset + a->length,
                                 p->h->buffer->ulength);
 
-            grib_free_accessor(p->h->context,a);
+            grib_accessor_delete(p->h->context,a);
             return NULL;
         } else {
             grib_context_log(p->h->context,GRIB_LOG_DEBUG,
