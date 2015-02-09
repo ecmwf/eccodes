@@ -164,7 +164,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 	if(target) {
 		grib_dump_label(dumper,a,"is:");
 		dumper->depth += 2;
-		grib_print_accessor(target, dumper);
+		grib_accessor_dump(target, dumper);
 		dumper->depth -= 2;
 	}
 	else grib_dump_label(dumper,a," undefined ");

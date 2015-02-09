@@ -16,7 +16,7 @@
 
 #include "grib_api_internal.h"
 
-void  grib_print_accessor(grib_accessor* a, grib_dumper* f)
+void  grib_accessor_dump(grib_accessor* a, grib_dumper* f)
 {
   grib_accessor_class *c = a->cclass;
   while(c)
@@ -417,7 +417,7 @@ static void post_init_accessor(grib_accessor_class* c,grib_accessor* a)
 
 /* For this one, ALL destroy are called */
 
-void grib_free_accessor(grib_context *ct, grib_accessor* a)
+void grib_accessor_delete(grib_context *ct, grib_accessor* a)
 {
   grib_accessor_class *c = a->cclass;
   while(c)

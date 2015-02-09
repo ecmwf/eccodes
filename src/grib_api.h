@@ -1571,5 +1571,11 @@ Error codes returned by the grib_api functions.
 #define GRIB_MISSING_BUFR_ENTRY		-59
 /** Null pointer */
 #define GRIB_NULL_POINTER		-60
+/** Attribute is already present, cannot add */
+#define GRIB_ATTRIBUTE_CLASH		-61
+/** Too many attributes. Increase MAX_ACCESSOR_ATTRIBUTES */
+#define GRIB_TOO_MANY_ATTRIBUTES		-62
+/** Attribute not found. */
+#define GRIB_ATTRIBUTE_NOT_FOUND		-63
 /*! @}*/
 #endif

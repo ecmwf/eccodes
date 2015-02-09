@@ -220,7 +220,7 @@ int codes_points_get_values(grib_handle *h, grib_points *points, double *val);
 grib_handle *codes_util_set_spec(grib_handle *h, const grib_util_grid_spec *grid_spec, const grib_util_packing_spec *packing_spec, int flags, const double *data_values, size_t data_values_count, int *err);
 
 /* grib_accessor.c */
-void grib_print_accessor(grib_accessor *a, grib_dumper *f);
+void grib_accessor_dump(grib_accessor *a, grib_dumper *f);
 int grib_pack_missing(grib_accessor *a);
 int grib_pack_zero(grib_accessor *a);
 int grib_is_missing_internal(grib_accessor *a);
@@ -244,7 +244,7 @@ long grib_byte_count(grib_accessor *a);
 int grib_value_count(grib_accessor *a, long *count);
 int grib_accessor_notify_change(grib_accessor *a, grib_accessor *changed);
 void grib_init_accessor(grib_accessor *a, const long len, grib_arguments *args);
-void grib_free_accessor(grib_context *ct, grib_accessor *a);
+void grib_accessor_delete(grib_context *ct, grib_accessor *a);
 void grib_update_size(grib_accessor *a, size_t len);
 int grib_nearest_smaller_value(grib_accessor *a, double val, double *nearest);
 size_t grib_preferred_size(grib_accessor *a, int from_handle);
@@ -984,8 +984,8 @@ void grib_dump_footer(grib_dumper *d, grib_handle *h);
 
 /* grib_dumper_class.c */
 grib_dumper *grib_dumper_factory(const char *op, grib_handle *h, FILE *out, unsigned long option_flags, void *arg);
-void grib_dump_accessors_block(grib_dumper *dumper, grib_block_of_accessors *block);
 int grib_print(grib_handle *h, const char *name, grib_dumper *d);
+void grib_dump_accessors_block(grib_dumper *dumper, grib_block_of_accessors *block);
 void grib_dump_content(grib_handle *h, FILE *f, const char *mode, unsigned long option_flags, void *data);
 
 /* grib_context.c */

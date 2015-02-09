@@ -56,7 +56,7 @@ void grib_dump_accessors_block(grib_dumper* dumper,grib_block_of_accessors* bloc
   grib_accessor* a = block->first;
   while(a)
   {
-    grib_print_accessor(a,dumper);
+    grib_accessor_dump(a,dumper);
     a = a->next;
   }
 }
@@ -66,11 +66,12 @@ int grib_print       (grib_handle* h, const char* name, grib_dumper *d ){
   grib_accessor* act = grib_find_accessor(h, name);
 
   if(act){
-    grib_print_accessor(act, d );
+    grib_accessor_dump(act, d );
     return  GRIB_SUCCESS;
   }
   return GRIB_NOT_FOUND;
 }
+
 
 void grib_dump_content(grib_handle* h, FILE* f,const char* mode,unsigned long option_flags,void *data)
 {
@@ -80,6 +81,5 @@ void grib_dump_content(grib_handle* h, FILE* f,const char* mode,unsigned long op
   grib_dump_accessors_block(dumper,h->root->block);
   grib_dump_footer(dumper,h);
   grib_dumper_delete(dumper);
-
 }
 
