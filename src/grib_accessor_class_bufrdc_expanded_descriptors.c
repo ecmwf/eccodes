@@ -177,7 +177,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_string(dumper,a,NULL);
+  grib_dump_long(dumper,a,NULL);
 }
 
 static grib_accessor* get_accessor(grib_accessor* a) {

@@ -18,5 +18,6 @@ REDIRECT=/dev/null
 for file in ${data_dir}/bufr/*.bufr
 do
   ${tools_dir}bufr_dump -j $file 2> $REDIRECT > $REDIRECT
+  ${tools_dir}bufr_dump -O $file 2> $REDIRECT > $REDIRECT
 done
 
