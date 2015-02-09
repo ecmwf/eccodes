@@ -33,8 +33,8 @@ grib_option grib_options[]={
         {"T:",0,0,1,0,"B"},
         {"7",0,0,0,1,0},
         {"V",0,0,0,1,0},
-        {"q",0,0,1,0,0},
-        {"x",0,0,0,1,0}
+        {"q",0,0,1,0,0}
+       /* {"x",0,0,0,1,0} */
 };
 
 char* grib_tool_description="Dump the content of a BUFR file in different formats.";

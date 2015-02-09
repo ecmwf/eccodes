@@ -24,7 +24,7 @@ grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value */
         {"f",0,0,0,1,0},
         {"c",0,0,1,0,0},
-        {"r",0,0,0,1,0},
+/*      {"r",0,0,0,1,0}, */
         {"q",0,0,1,0,0},
         {"p:",0,0,1,1,0},
         {"s:",0,0,0,1,0},
@@ -34,17 +34,17 @@ grib_option grib_options[]={
                 "copied to the\n\t\toutput_bufr_file.\n\t\tFor each key a string (key:s) or a "
                 "double (key:d) or a long (key:l)\n\t\ttype can be defined. Default type "
                 "is string.\n",0,1,0},
-                {"B:",0,0,0,1,0},
-                {"V",0,0,0,1,0},
-                {"W:",0,0,0,1,0},
-                {"U",0,0,1,0,0},
-                {"H",0,0,1,0,0},
-                {"T:",0,0,1,0,"B"},
-                {"S",0,0,1,0,0},
-                {"g",0,0,0,1,0},
-                {"G",0,0,0,1,0},
-                {"7",0,0,0,1,0},
-                {"v",0,0,0,1,0}
+        {"B:",0,0,0,1,0},
+        {"V",0,0,0,1,0},
+        {"W:",0,0,0,1,0},
+        {"U",0,0,1,0,0},
+        {"H",0,0,1,0,0},
+        {"T:",0,0,1,0,"B"},
+        {"S",0,0,1,0,0},
+        {"g",0,0,0,1,0},
+/*      {"G",0,0,0,1,0}, */
+        {"7",0,0,0,1,0},
+        {"v",0,0,0,1,0}
 };
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
