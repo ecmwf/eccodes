@@ -179,9 +179,9 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         grib_context_free(a->parent->h->context,values);
     } else {
         if( grib_is_missing_double(a,value) )
-            fprintf(self->dumper.out," null",a->name);
+            fprintf(self->dumper.out," null");
         else
-            fprintf(self->dumper.out," %g",a->name,value);
+            fprintf(self->dumper.out," %g",value);
     }
 
     fprintf(self->dumper.out," }");

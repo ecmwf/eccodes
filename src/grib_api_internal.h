@@ -290,7 +290,7 @@ typedef  int   (*accessor_clear_proc)                     (grib_accessor*);
 typedef int (*accessor_add_attribute_proc)                (grib_accessor*,grib_accessor*);
 typedef int (*accessor_replace_attribute_proc)            (grib_accessor*,grib_accessor*);
 typedef int (*accessor_delete_attribute_proc)             (grib_accessor*,const char*);
-typedef grib_accessor* (*accessor_get_attribute_proc)     (grib_accessor*,const char*);
+typedef grib_accessor* (*accessor_get_attribute_proc)     (grib_accessor*,const char*,int*);
 typedef int (*accessor_pack_attribute_bytes_proc)         (grib_accessor*,const char*,const unsigned char*, size_t *len);
 typedef int (*accessor_pack_attribute_double_proc)        (grib_accessor*,const char*, const double* val,size_t *len);
 typedef int (*accessor_pack_attribute_long_proc)          (grib_accessor*,const char*, const long* val,size_t *len);
