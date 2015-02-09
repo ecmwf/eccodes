@@ -56,6 +56,8 @@ int main(int argc, char *argv[])
 
     if (source_handle == NULL) {
         perror("ERROR: could not create handle for message");
+        fclose(out);
+        fclose(in);
         return 1;
     }
 
