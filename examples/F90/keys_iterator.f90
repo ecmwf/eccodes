@@ -32,29 +32,29 @@ program keys_iterator
   
   do while (iret /= CODES_END_OF_FILE)
 
-     grib_count=grib_count+1
-     write(*,*) '-- GRIB N. ',grib_count,' --'
+    grib_count=grib_count+1
+    write(*,*) '-- GRIB N. ',grib_count,' --'
      
-     ! valid name_spaces are ls and mars
-     name_space='ls'
+    ! valid name_spaces are ls and mars
+    name_space='ls'
      
-     call codes_keys_iterator_new(igrib,kiter,name_space)
+    call codes_keys_iterator_new(igrib,kiter,name_space)
      
-     do
-        call codes_keys_iterator_next(kiter, iret) 
+    do
+      call codes_keys_iterator_next(kiter, iret) 
         
-        if (iret .ne. 1) exit
+      if (iret .ne. CODES_SUCCESS) exit
         
-        call codes_keys_iterator_get_name(kiter,key)
-        call codes_get(igrib,trim(key),value)
-        all1=trim(key)// ' = ' // trim(value)
-        write(*,*) trim(all1)
+      call codes_keys_iterator_get_name(kiter,key)
+      call codes_get(igrib,trim(key),value)
+      all1=trim(key)// ' = ' // trim(value)
+      write(*,*) trim(all1)
         
-     end do
+    end do
      
-     call codes_keys_iterator_delete(kiter)
-     call codes_release(igrib)
-     call codes_new_from_file(ifile,igrib, iret)
+    call codes_keys_iterator_delete(kiter)
+    call codes_release(igrib)
+    call codes_new_from_file(ifile,igrib, iret)
   end do
   
   

@@ -1637,23 +1637,18 @@
 
   !> Advance to the next keys iterator value.
   !>
-  !> In case of error, if the status parameter (optional) is not given, the program will
-  !> exit with an error message.\n Otherwise the error message can be
-  !> gathered with @ref grib_get_error_string.
-  !>
-  !> @param iterid      keys iterator id created with @ref grib_keys_iterator_new
-  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  !> @param iterid   keys iterator id created with @ref grib_keys_iterator_new
+  !> @param status   GRIB_SUCCESS if next iterator exists, integer value if no more elements to iterate on
   subroutine grib_keys_iterator_next ( iterid , status)
       integer(kind=kindOfInt),          intent(in)  :: iterid
-      integer(kind=kindOfInt),optional, intent(out) :: status
-
+      integer(kind=kindOfInt),          intent(out) :: status
       integer(kind=kindOfInt)                       :: iret
 
-      iret  =  grib_f_keys_iterator_next ( iterid )
-      if (present(status)) then
-         status = iret
-      else
-         call grib_check(iret,'grib_keys_iterator_next','')
+      status = GRIB_SUCCESS
+      iret = grib_f_keys_iterator_next ( iterid )
+      if (iret == 0) then
+          ! no more elements
+          status = GRIB_END
       endif
   end subroutine grib_keys_iterator_next
 
@@ -1668,7 +1663,6 @@
   subroutine grib_keys_iterator_delete ( iterid , status)
       integer(kind=kindOfInt),          intent(in)  :: iterid
       integer(kind=kindOfInt),optional, intent(out) :: status
-
       integer(kind=kindOfInt)                       :: iret
 
       iret = grib_f_keys_iterator_delete ( iterid )
@@ -1691,7 +1685,6 @@
       integer(kind=kindOfInt),          intent(in)    :: iterid
       character(LEN=*), intent(out)                   :: name
       integer(kind=kindOfInt),optional, intent(out)   :: status
-
       integer(kind=kindOfInt)                         :: iret
 
       iret = grib_f_keys_iterator_get_name ( iterid, name )
@@ -1713,7 +1706,6 @@
   subroutine grib_keys_iterator_rewind ( iterid, status )
       integer(kind=kindOfInt),          intent(in)    :: iterid
       integer(kind=kindOfInt),optional, intent(out)   :: status
-
       integer(kind=kindOfInt)                         :: iret
 
       iret  =  grib_f_keys_iterator_rewind ( iterid )
@@ -1736,7 +1728,6 @@
       integer(kind=kindOfInt),          intent(in)  :: gribid
       integer(kind=kindOfInt),optional, intent(out) :: status
       integer(kind=kindOfInt)                       :: iret
-
 
       iret=grib_f_dump ( gribid )
       if (present(status)) then
@@ -1871,9 +1862,9 @@
     integer(kind=kindOfInt)                       :: iret
 
     iret=grib_f_get_long ( gribid, key, value )
-	if (iret /= 0) then
-	  call grib_f_write_on_fail(gribid)
-	endif
+	 if (iret /= 0) then
+	   call grib_f_write_on_fail(gribid)
+	 endif
     if (present(status)) then
       status = iret
     else
@@ -1892,22 +1883,22 @@
   !> @param is_missing  0->not missing, 1->missing
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_is_missing(gribid,key,is_missing,status)
-  integer(kind=kindOfInt),          intent(in)  :: gribid
-  character(len=*), intent(in)                  :: key
-  integer(kind = kindOfInt),     intent(out)    :: is_missing
-  integer(kind=kindOfInt),optional, intent(out) :: status
-  integer(kind=kindOfInt)                       :: iret
+    integer(kind=kindOfInt),          intent(in)  :: gribid
+    character(len=*), intent(in)                  :: key
+    integer(kind = kindOfInt),     intent(out)    :: is_missing
+    integer(kind=kindOfInt),optional, intent(out) :: status
+    integer(kind=kindOfInt)                       :: iret
 
     iret=grib_f_is_missing ( gribid, key, is_missing )
-	  if (iret /= 0) then
+	 if (iret /= 0) then
 	    call grib_f_write_on_fail(gribid)
-	  endif
+	 endif
     if (present(status)) then
     status = iret
     else
     call grib_check(iret,'grib_is_missing',key)
     endif
-    end subroutine grib_is_missing
+  end subroutine grib_is_missing
 
   !> Check if a key is DEFINED.
   !>
@@ -1927,15 +1918,15 @@
   integer(kind=kindOfInt)                       :: iret
 
     iret=grib_f_is_defined( gribid, key, is_defined )
-	  if (iret /= 0) then
+	 if (iret /= 0) then
 	    call grib_f_write_on_fail(gribid)
-	  endif
+	 endif
     if (present(status)) then
     status = iret
     else
     call grib_check(iret,'grib_is_defined',key)
     endif
-    end subroutine grib_is_defined
+  end subroutine grib_is_defined
 
   !> Get the real(4) value of a key from a grib message.
   !>

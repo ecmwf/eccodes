@@ -53,7 +53,7 @@ integer            :: kiter
     call codes_keys_iterator_next(kiter, iret)
 
     ! loop over keys
-    do while (iret == 1) 
+    do while (iret == CODES_SUCCESS) 
     
         ! print key name
         call codes_keys_iterator_get_name(kiter,key)
@@ -62,7 +62,7 @@ integer            :: kiter
         ! get next key
         call codes_keys_iterator_next(kiter, iret)
          
-     end do
+    end do
       
     ! delete key iterator 
     call grib_keys_iterator_delete(kiter)
