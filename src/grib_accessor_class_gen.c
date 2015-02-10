@@ -25,12 +25,6 @@
    IMPLEMENTS = unpack_string_array;pack_string_array
    IMPLEMENTS = unpack_bytes;pack_bytes
    IMPLEMENTS = unpack_double_subarray 
-   IMPLEMENTS = add_attribute; replace_attribute
-   IMPLEMENTS = get_attribute; delete_attribute
-   IMPLEMENTS = pack_attribute_bytes; pack_attribute_double
-   IMPLEMENTS = pack_attribute_long; pack_attribute_string
-   IMPLEMENTS = unpack_attribute_bytes; unpack_attribute_double
-   IMPLEMENTS = unpack_attribute_long; unpack_attribute_string
    IMPLEMENTS = init;dump;destroy;string_length
    IMPLEMENTS = get_native_type;sub_section
    IMPLEMENTS = next_offset;value_count;byte_offset;byte_count
@@ -82,18 +76,6 @@ static int compare(grib_accessor*, grib_accessor*);
 static int unpack_double_element(grib_accessor*,size_t i, double* val);
 static int unpack_double_subarray(grib_accessor*, double* val,size_t start,size_t len);
 static int clear(grib_accessor*);
-static int add_attribute(grib_accessor*,grib_accessor*);
-static int replace_attribute(grib_accessor*,grib_accessor*);
-static int delete_attribute(grib_accessor*,const char*);
-static grib_accessor* get_attribute(grib_accessor*,const char*,int*);
-static int pack_attribute_bytes(grib_accessor*,const char*,const unsigned char*, size_t *len);
-static int pack_attribute_double(grib_accessor*,const char*, const double* val,size_t *len);
-static int pack_attribute_long(grib_accessor*,const char*, const long* val,size_t *len);
-static int pack_attribute_string(grib_accessor*,const char*, const char*, size_t *len);
-static int unpack_attribute_bytes (grib_accessor*,const char*,unsigned char*, size_t *len);
-static int unpack_attribute_double(grib_accessor*,const char*, double* val,size_t *len);
-static int unpack_attribute_long(grib_accessor*,const char*, long* val,size_t *len);
-static int unpack_attribute_string (grib_accessor*,const char*, char*, size_t *len);
 
 typedef struct grib_accessor_gen {
     grib_accessor          att;
@@ -140,19 +122,7 @@ static grib_accessor_class _grib_accessor_class_gen = {
     &compare,                    /* compare vs. another accessor   */
     &unpack_double_element,     /* unpack only ith value          */
     &unpack_double_subarray,     /* unpack a subarray         */
-    &clear,             		/* clear          */
-    &add_attribute,
-    &replace_attribute,
-    &delete_attribute,
-    &get_attribute,
-    &pack_attribute_bytes,
-    &pack_attribute_double,
-    &pack_attribute_long,
-    &pack_attribute_string,
-    &unpack_attribute_bytes,
-    &unpack_attribute_double,
-    &unpack_attribute_long,
-    &unpack_attribute_string,
+    &clear,              		/* clear          */
 };
 
 
@@ -590,106 +560,5 @@ static int unpack_double_element(grib_accessor* a, size_t i, double* val)
 static int unpack_double_subarray(grib_accessor* a, double* val,size_t start,size_t len)
 {
     return GRIB_NOT_IMPLEMENTED;
-}
-
-static int add_attribute(grib_accessor* a,grib_accessor* attr) {
-  int id=0;
-  if (get_attribute(a,attr->name,&id)) return GRIB_ATTRIBUTE_CLASH;
-  for (id=0;id<MAX_ACCESSOR_ATTRIBUTES;id++) {
-    if (a->attributes[id] != NULL) {
-      a->attributes[id]=attr;
-      return GRIB_SUCCESS;
-    }
-  }
-  return GRIB_TOO_MANY_ATTRIBUTES;
-}
-
-static int replace_attribute(grib_accessor* a,grib_accessor* attr) {
-  int id=0;
-  if (get_attribute(a,attr->name,&id) != NULL) {
-    grib_accessor_delete(a->parent->h->context,a);
-    a->attributes[id]=attr;
-  } else {
-    add_attribute(a,attr);
-  }
-  return GRIB_SUCCESS;
-}
-
-static int delete_attribute(grib_accessor* a,const char* name) {
-  int id=0;
-  if (get_attribute(a,name,&id) != NULL) {
-    grib_accessor_delete(a->parent->h->context,a->attributes[id]);
-    a->attributes[id]=NULL;
-    return GRIB_SUCCESS;
-  } else {
-    return GRIB_ATTRIBUTE_NOT_FOUND;
-  }
-}
-
-static grib_accessor* get_attribute(grib_accessor* a,const char* name,int* id) {
-  int i=0;
-  for (i=0;i<MAX_ACCESSOR_ATTRIBUTES;i++) {
-    if (!strcmp(a->attributes[i]->name,name)) {
-      *id=i;
-      return a->attributes[i];
-    }
-  }
-  return NULL;
-}
-
-static int pack_attribute_bytes(grib_accessor* a,const char* name,const unsigned char* val, size_t *len) {
-  int id=0;
-  grib_accessor* attr=get_attribute(a,name,&id);
-  if (attr != NULL) return grib_pack_bytes(attr,val,len);
-  else return GRIB_ATTRIBUTE_NOT_FOUND;
-}
-
-static int pack_attribute_double(grib_accessor* a,const char* name, const double* val,size_t *len) {
-  int id=0;
-  grib_accessor* attr=get_attribute(a,name,&id);
-  if (attr != NULL) return grib_pack_double(attr,val,len);
-  else return GRIB_ATTRIBUTE_NOT_FOUND;
-}
-
-static int pack_attribute_long(grib_accessor* a,const char* name, const long* val,size_t *len) {
-  int id=0;
-  grib_accessor* attr=get_attribute(a,name,&id);
-  if (attr != NULL) return grib_pack_long(attr,val,len);
-  else return GRIB_ATTRIBUTE_NOT_FOUND;
-}
-
-static int pack_attribute_string(grib_accessor* a,const char* name, const char* val, size_t *len) {
-  int id=0;
-  grib_accessor* attr=get_attribute(a,name,&id);
-  if (attr != NULL) return grib_pack_string(attr,val,len);
-  else return GRIB_ATTRIBUTE_NOT_FOUND;
-}
-
-static int unpack_attribute_bytes (grib_accessor* a,const char* name,unsigned char* val, size_t *len) {
-  int id=0;
-  grib_accessor* attr=get_attribute(a,name,&id);
-  if (attr != NULL) return grib_unpack_bytes(attr,val,len);
-  else return GRIB_ATTRIBUTE_NOT_FOUND;
-}
-
-static int unpack_attribute_double(grib_accessor* a,const char* name, double* val,size_t *len) {
-  int id=0;
-  grib_accessor* attr=get_attribute(a,name,&id);
-  if (attr != NULL) return grib_unpack_double(attr,val,len);
-  else return GRIB_ATTRIBUTE_NOT_FOUND;
-}
-
-static int unpack_attribute_long(grib_accessor* a,const char* name, long* val,size_t *len) {
-  int id=0;
-  grib_accessor* attr=get_attribute(a,name,&id);
-  if (attr != NULL) return grib_unpack_long(attr,val,len);
-  else return GRIB_ATTRIBUTE_NOT_FOUND;
-}
-
-static int unpack_attribute_string (grib_accessor* a,const char* name, char* val, size_t *len) {
-  int id=0;
-  grib_accessor* attr=get_attribute(a,name,&id);
-  if (attr != NULL) return grib_unpack_string(attr,val,len);
-  else return GRIB_ATTRIBUTE_NOT_FOUND;
 }
 

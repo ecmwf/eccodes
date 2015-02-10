@@ -104,19 +104,7 @@ static grib_accessor_class _grib_accessor_class_variable = {
     &compare,                    /* compare vs. another accessor   */
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
-    0,             		/* clear          */
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    0,              		/* clear          */
 };
 
 
@@ -144,18 +132,6 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
-	c->add_attribute	=	(*(c->super))->add_attribute;
-	c->replace_attribute	=	(*(c->super))->replace_attribute;
-	c->delete_attribute	=	(*(c->super))->delete_attribute;
-	c->get_attribute	=	(*(c->super))->get_attribute;
-	c->pack_attribute_bytes	=	(*(c->super))->pack_attribute_bytes;
-	c->pack_attribute_double	=	(*(c->super))->pack_attribute_double;
-	c->pack_attribute_long	=	(*(c->super))->pack_attribute_long;
-	c->pack_attribute_string	=	(*(c->super))->pack_attribute_string;
-	c->unpack_attribute_bytes	=	(*(c->super))->unpack_attribute_bytes;
-	c->unpack_attribute_double	=	(*(c->super))->unpack_attribute_double;
-	c->unpack_attribute_long	=	(*(c->super))->unpack_attribute_long;
-	c->unpack_attribute_string	=	(*(c->super))->unpack_attribute_string;
 }
 
 /* END_CLASS_IMP */
@@ -201,6 +177,11 @@ static void init(grib_accessor* a, const long length , grib_arguments* args )
         break;
     }
   }
+}
+
+void accessor_variable_set_type(grib_accessor* a,int type) {
+    grib_accessor_variable *self = (grib_accessor_variable*)a;
+	self->type=type;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)

@@ -111,6 +111,35 @@ static int  destroy  (grib_dumper* d)
     return GRIB_SUCCESS;
 }
 
+static void dump_attributes(grib_dumper* d,grib_accessor* a,FILE* out) {
+    int i=0;
+    size_t len=1;
+    long lval;
+    double dval;
+    char* cval=NULL;
+    while (a->attributes[i]) {
+        fprintf(out,",\"%s\":",a->attributes[i]->name);
+        switch (grib_accessor_get_native_type(a->attributes[i])) {
+            case GRIB_TYPE_LONG:
+                grib_unpack_long(a->attributes[i],&lval,&len);
+                fprintf(out,"%ld",lval);
+                break;
+            case GRIB_TYPE_DOUBLE:
+                grib_unpack_double(a->attributes[i],&dval,&len);
+                fprintf(out,"%g",dval);
+                break;
+            case GRIB_TYPE_STRING:
+                len=grib_string_length(a->attributes[i])+1;
+                cval=grib_context_malloc_clear(a->parent->h->context,len);
+                grib_unpack_string(a->attributes[i],cval,&len);
+                fprintf(out,"\"%s\"",cval);
+                grib_context_free(a->parent->h->context,cval);
+                break;
+        }
+        i++;
+    }
+}
+
 static void dump_values(grib_dumper* d,grib_accessor* a)
 {
     grib_dumper_json *self = (grib_dumper_json*)d;
@@ -183,10 +212,12 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         else
             fprintf(self->dumper.out," %g",value);
     }
+    dump_attributes(d,a,self->dumper.out);
 
     fprintf(self->dumper.out," }");
 
 }
+
 
 static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 {
@@ -256,6 +287,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
         else
             fprintf(self->dumper.out,"\"value\" : %ld",value);
     }
+    dump_attributes(d,a,self->dumper.out);
 
     fprintf(self->dumper.out," }");
 
@@ -289,6 +321,7 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
     else
         fprintf(self->dumper.out,"\"value\" : %g",value);
 
+    dump_attributes(d,a,self->dumper.out);
     fprintf(self->dumper.out," }");
 
 }
@@ -339,6 +372,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
   fprintf(self->dumper.out,"%-*s\"%s\"\n",(int)(tab+strlen(a->name)+4)," ",values[i]);
   fprintf(self->dumper.out,"%-*s",mydepth," ");
   fprintf(self->dumper.out,"  ]");
+  dump_attributes(d,a,self->dumper.out);
   fprintf(self->dumper.out,"} ");
 
   grib_context_free(c,values);
@@ -385,6 +419,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     else
         fprintf(self->dumper.out,"\"value\" : \"%s\"",value);
 
+    dump_attributes(d,a,self->dumper.out);
     fprintf(self->dumper.out,"} ");
 
     grib_context_free(c,value);
