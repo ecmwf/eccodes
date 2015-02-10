@@ -47,7 +47,7 @@ grib_keys_iterator*  grib_keys_iterator_new(grib_handle* h,unsigned long filter_
     ki->handle       = h;
     ki->name_space   = NULL;
 
-    if (name_space != NULL)
+    if (name_space != NULL && strlen(name_space) > 0)
         ki->name_space   = grib_context_strdup(h->context,name_space);
 
     ki->at_start     = 1;
