@@ -87,7 +87,7 @@ int main(int argc,char* argv[])
         }
          
         /* we need to instruct ecCodes to unpack the data values */
-        /*CODES_CHECK(codes_set_long(h,"unpack",1),0);*/
+        CODES_CHECK(codes_set_long(h,"unpack",1),0);
    
         /* loop over the keys */
         while(codes_keys_iterator_next(kiter))
