@@ -43,7 +43,7 @@ int main(int argc,char* argv[])
     }
     
     /* loop over the messages in the bufr file */
-    while ((h = bufr_new_from_file(NULL,in,&err)) != NULL || err != CODES_SUCCESS)
+    while ((h = codes_bufr_new_from_file(NULL,in,&err)) != NULL || err != CODES_SUCCESS)
     {
         if (h == NULL) {
             printf("Error: unable to create handle for message %d\n",cnt);

@@ -108,6 +108,11 @@ grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, int* error)
 {
     return grib_handle_new_from_file(c, f, error);
 }
+codes_handle* codes_bufr_new_from_file (codes_context* c, FILE* f, int* error)
+{
+    return bufr_new_from_file(c, f, error);
+}
+
 
 int codes_write_message(grib_handle* h,const char* file,const char* mode)
 {

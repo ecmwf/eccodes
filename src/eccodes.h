@@ -290,6 +290,8 @@ int codes_count_in_file(codes_context* c, FILE* f,int* n);
 */
 codes_handle* codes_handle_new_from_file(codes_context* c, FILE* f, int* error);
 
+codes_handle* codes_bufr_new_from_file  (codes_context* c, FILE* f, int* error);
+
 /**
 *  Write a coded message in a file.     
 *
