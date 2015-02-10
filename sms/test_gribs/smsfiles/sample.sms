@@ -1,7 +1,0 @@
-%include <head.h>
-
-export ECCODES_DEFINITION_PATH=/home/ma/mab/src/q/definitions
-/home/ma/mab/src/q/sample data
-
-
-%include <tail.h>

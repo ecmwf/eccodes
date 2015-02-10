@@ -1,6 +1,0 @@
-%include <head.h>
-
-rm -f dump back
-#rm data
-
-%include <tail.h>
