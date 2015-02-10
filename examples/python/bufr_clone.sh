@@ -13,7 +13,7 @@
 label="bufr_clone_test_p"
 
 #Prepare tmp file
-fBufrTmp=${label}.cloned.bufr
+fBufrTmp=${label}.clone.bufr
 rm -f $fBufrTmp | true
 
 #We clone a bufr file with multiple messages
