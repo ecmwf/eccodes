@@ -17,7 +17,7 @@ fBufrTmp=${label}.cloned.bufr
 rm -f $fBufrTmp | true
 
 #We clone a bufr file with multiple messages
-#f=${data_dir}/bufr/syno_1.bufr
+f=${data_dir}/bufr/syno_1.bufr
 
 REDIRECT=/dev/null
 
