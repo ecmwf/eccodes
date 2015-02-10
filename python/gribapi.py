@@ -530,7 +530,7 @@ def grib_iterator_next(iterid):
 def grib_keys_iterator_new(gribid,namespace=None):
     """
     @brief Create a new iterator on the keys.
-    
+
     The keys iterator can be navigated to give all the key names which
     can then be used to get or set the key values with \ref grib_get or
     \ref grib_set.
@@ -539,13 +539,13 @@ def grib_keys_iterator_new(gribid,namespace=None):
     \ref grib_skip_read_only, \ref grib_skip_duplicates,
     \ref grib_skip_coded,\ref grib_skip_computed.
     If namespace is a non empty string only the keys belonging to
-    that namespace are returned. Available namespaces are "ls" (to get the same
-    default keys as the grib_ls and "mars" to get the keys used by mars.
+    that namespace are returned. Example namespaces are "ls" (to get the same
+    default keys as the grib_ls) and "mars" to get the keys used by mars.
 
     \b Examples: \ref iterator.py "iterator.py"
-    
+
     @param gribid      id of the grib loaded in memory
-    @param namespace   the namespace of the keys to search for (all the keys if empty)
+    @param namespace   the namespace of the keys to search for (all the keys if None)
     @return keys iterator id to be used in the keys iterator functions
     @exception GribInternalError 
     """

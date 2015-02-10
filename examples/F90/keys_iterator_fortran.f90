@@ -36,37 +36,33 @@ program keys_iterator
 
   do while (igrib .ne. -1)
 
-  grib_count=grib_count+1
-  write(*,'("-- GRIB N.",I4," --")') grib_count
+    grib_count=grib_count+1
+    write(*,'("-- GRIB N.",I4," --")') grib_count
 
-  ! valid name_spaces are ls and mars
-  call codes_keys_iterator_new(igrib,kiter,'ls')
+    ! valid name_spaces are ls and mars
+    call codes_keys_iterator_new(igrib,kiter,'ls')
 
-  if (kiter .eq. -1) then
-    print *, 'invalid key iterator'
-  endif
+    if (kiter .eq. -1) then
+      print *, 'invalid key iterator'
+    endif
 
-  do
+    do
+      call codes_keys_iterator_next(kiter, iret)
 
-     call codes_keys_iterator_next(kiter, iret)
+      if (iret .ne. CODES_SUCCESS) exit
 
-     if (iret .eq. 0) exit
+      call codes_keys_iterator_get_name(kiter,key)
 
-     call codes_keys_iterator_get_name(kiter,key)
+      call codes_get(igrib,key,value)
+      all='|'//trim(key)//'|'//' = '//'|'//trim(value)//'|'
+      write(*,*) trim(all)
+   end do
 
-     call codes_get(igrib,key,value)
-     all='|'//trim(key)//'|'//' = '//'|'//trim(value)//'|'
-     write(*,*) trim(all)
-
+   call codes_keys_iterator_delete(kiter)
+   call codes_release(igrib)
+   call codes_new_from_file(ifile,igrib, iret)
   end do
-
-  call codes_keys_iterator_delete(kiter)
-  call codes_release(igrib)
-  call codes_new_from_file(ifile,igrib, iret)
-  end do
-
 
   call codes_close_file(ifile)
 
 end program keys_iterator
-
