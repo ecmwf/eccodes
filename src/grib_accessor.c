@@ -560,3 +560,50 @@ const char* grib_get_type_name(int type)
 
   return "unknown";
 }
+
+int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr) {
+  int id=0;
+  if (grib_accessor_get_attribute(a,attr->name,&id)) return GRIB_ATTRIBUTE_CLASH;
+  for (id=0;id<MAX_ACCESSOR_ATTRIBUTES;id++) {
+    if (a->attributes[id] == NULL) {
+      a->attributes[id]=attr;
+      return GRIB_SUCCESS;
+    }
+  }
+  return GRIB_TOO_MANY_ATTRIBUTES;
+}
+
+int grib_accessor_replace_attribute(grib_accessor* a,grib_accessor* attr) {
+  int id=0;
+  if (grib_accessor_get_attribute(a,attr->name,&id) != NULL) {
+    grib_accessor_delete(a->parent->h->context,a->attributes[id]);
+    a->attributes[id]=attr;
+  } else {
+    grib_accessor_add_attribute(a,attr);
+  }
+  return GRIB_SUCCESS;
+}
+
+int grib_accessor_delete_attribute(grib_accessor* a,const char* name) {
+  int id=0;
+  if (grib_accessor_get_attribute(a,name,&id) != NULL) {
+    grib_accessor_delete(a->parent->h->context,a->attributes[id]);
+    a->attributes[id]=NULL;
+    return GRIB_SUCCESS;
+  } else {
+    return GRIB_ATTRIBUTE_NOT_FOUND;
+  }
+}
+
+grib_accessor* grib_accessor_get_attribute(grib_accessor* a,const char* name,int* id) {
+  int i=0;
+  while (a->attributes[i] && i<MAX_ACCESSOR_ATTRIBUTES) {
+    if (!strcmp(a->attributes[i]->name,name)) {
+      *id=i;
+      return a->attributes[i];
+    }
+    i++;
+  }
+  return NULL;
+}
+

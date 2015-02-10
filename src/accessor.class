@@ -33,18 +33,6 @@ static int compare(grib_accessor*, grib_accessor*);
 static int unpack_double_element(grib_accessor*,size_t i, double* val);
 static int unpack_double_subarray(grib_accessor*, double* val,size_t start,size_t len);
 static int clear(grib_accessor*);
-static int add_attribute(grib_accessor*,grib_accessor*);
-static int replace_attribute(grib_accessor*,grib_accessor*);
-static int delete_attribute(grib_accessor*,const char*);
-static grib_accessor* get_attribute(grib_accessor*,const char*,int*);
-static int pack_attribute_bytes(grib_accessor*,const char*,const unsigned char*, size_t *len);
-static int pack_attribute_double(grib_accessor*,const char*, const double* val,size_t *len);
-static int pack_attribute_long(grib_accessor*,const char*, const long* val,size_t *len);
-static int pack_attribute_string(grib_accessor*,const char*, const char*, size_t *len);
-static int unpack_attribute_bytes (grib_accessor*,const char*,unsigned char*, size_t *len);
-static int unpack_attribute_double(grib_accessor*,const char*, double* val,size_t *len);
-static int unpack_attribute_long(grib_accessor*,const char*, long* val,size_t *len);
-static int unpack_attribute_string (grib_accessor*,const char*, char*, size_t *len);
 
 typedef struct grib_accessor_NAME {
     grib_accessor          att;
@@ -92,19 +80,7 @@ static grib_accessor_class _grib_accessor_class_NAME = {
     &compare,                    /* compare vs. another accessor   */
     &unpack_double_element,     /* unpack only ith value          */
     &unpack_double_subarray,     /* unpack a subarray         */
-    &clear,             		/* clear          */
-    &add_attribute,
-    &replace_attribute,
-    &delete_attribute,
-    &get_attribute,
-    &pack_attribute_bytes,
-    &pack_attribute_double,
-    &pack_attribute_long,
-    &pack_attribute_string,
-    &unpack_attribute_bytes,
-    &unpack_attribute_double,
-    &unpack_attribute_long,
-    &unpack_attribute_string,
+    &clear,              		/* clear          */
 };
 
 

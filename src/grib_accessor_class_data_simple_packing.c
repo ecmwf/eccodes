@@ -119,19 +119,7 @@ static grib_accessor_class _grib_accessor_class_data_simple_packing = {
     0,                    /* compare vs. another accessor   */
     &unpack_double_element,     /* unpack only ith value          */
     &unpack_double_subarray,     /* unpack a subarray         */
-    0,             		/* clear          */
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    0,              		/* clear          */
 };
 
 
@@ -166,18 +154,6 @@ static void init_class(grib_accessor_class* c)
 	c->next	=	(*(c->super))->next;
 	c->compare	=	(*(c->super))->compare;
 	c->clear	=	(*(c->super))->clear;
-	c->add_attribute	=	(*(c->super))->add_attribute;
-	c->replace_attribute	=	(*(c->super))->replace_attribute;
-	c->delete_attribute	=	(*(c->super))->delete_attribute;
-	c->get_attribute	=	(*(c->super))->get_attribute;
-	c->pack_attribute_bytes	=	(*(c->super))->pack_attribute_bytes;
-	c->pack_attribute_double	=	(*(c->super))->pack_attribute_double;
-	c->pack_attribute_long	=	(*(c->super))->pack_attribute_long;
-	c->pack_attribute_string	=	(*(c->super))->pack_attribute_string;
-	c->unpack_attribute_bytes	=	(*(c->super))->unpack_attribute_bytes;
-	c->unpack_attribute_double	=	(*(c->super))->unpack_attribute_double;
-	c->unpack_attribute_long	=	(*(c->super))->unpack_attribute_long;
-	c->unpack_attribute_string	=	(*(c->super))->unpack_attribute_string;
 }
 
 /* END_CLASS_IMP */

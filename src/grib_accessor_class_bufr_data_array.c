@@ -156,19 +156,7 @@ static grib_accessor_class _grib_accessor_class_bufr_data_array = {
     &compare,                    /* compare vs. another accessor   */
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
-    0,             		/* clear          */
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    0,              		/* clear          */
 };
 
 
@@ -197,18 +185,6 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
-	c->add_attribute	=	(*(c->super))->add_attribute;
-	c->replace_attribute	=	(*(c->super))->replace_attribute;
-	c->delete_attribute	=	(*(c->super))->delete_attribute;
-	c->get_attribute	=	(*(c->super))->get_attribute;
-	c->pack_attribute_bytes	=	(*(c->super))->pack_attribute_bytes;
-	c->pack_attribute_double	=	(*(c->super))->pack_attribute_double;
-	c->pack_attribute_long	=	(*(c->super))->pack_attribute_long;
-	c->pack_attribute_string	=	(*(c->super))->pack_attribute_string;
-	c->unpack_attribute_bytes	=	(*(c->super))->unpack_attribute_bytes;
-	c->unpack_attribute_double	=	(*(c->super))->unpack_attribute_double;
-	c->unpack_attribute_long	=	(*(c->super))->unpack_attribute_long;
-	c->unpack_attribute_string	=	(*(c->super))->unpack_attribute_string;
 }
 
 /* END_CLASS_IMP */
@@ -591,10 +567,41 @@ static void push_zero_element(grib_accessor_bufr_data_array* self,grib_darray* d
   }
 }
 
+static grib_accessor* create_attribute(char* name,grib_section* section,int type,char* sval,double dval,long lval) {
+  grib_accessor* a=NULL;
+  grib_action creator = {0, };
+  size_t len;
+  creator.op         = "variable";
+  creator.name_space = "";
+  creator.flags     = GRIB_ACCESSOR_FLAG_READ_ONLY;
+  creator.set        = 0;
+
+  creator.name=name;
+  a=grib_accessor_factory(section, &creator, 0, NULL);
+  accessor_variable_set_type(a,type);
+  len=1;
+  switch (type) {
+  	case GRIB_TYPE_LONG:
+		grib_pack_long(a,&lval,&len);
+		break;
+  	case GRIB_TYPE_DOUBLE:
+		grib_pack_double(a,&dval,&len);
+		break;
+  	case GRIB_TYPE_STRING:
+		len=strlen(sval);
+		grib_pack_string(a,sval,&len);
+		break;
+  }
+
+  return a;
+}
+
 static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_section* section,long ide,long subset) {
   grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
+  char code[7]={0,};
   int idx=0;
   grib_accessor* elementAccessor=NULL;
+  grib_accessor* attribute=NULL;
   grib_action creator = {0, };
   creator.op         = "bufr_data_element";
   creator.name_space = "";
@@ -616,6 +623,22 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
     accessor_bufr_data_element_set_type(elementAccessor,self->expanded->v[idx]->type);
     accessor_bufr_data_element_set_numberOfSubsets(elementAccessor,self->numberOfSubsets);
     accessor_bufr_data_element_set_subsetNumber(elementAccessor,subset);
+
+	sprintf(code,"%06ld",self->expanded->v[idx]->code);
+    attribute=create_attribute("code",section,GRIB_TYPE_STRING,code,0,0);
+    grib_accessor_add_attribute(elementAccessor,attribute);
+
+    attribute=create_attribute("units",section,GRIB_TYPE_STRING,self->expanded->v[idx]->units,0,0);
+    grib_accessor_add_attribute(elementAccessor,attribute);
+
+    attribute=create_attribute("scale",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->scale);
+    grib_accessor_add_attribute(elementAccessor,attribute);
+
+    attribute=create_attribute("reference",section,GRIB_TYPE_DOUBLE,0,self->expanded->v[idx]->reference,0);
+    grib_accessor_add_attribute(elementAccessor,attribute);
+
+    attribute=create_attribute("width",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->width);
+    grib_accessor_add_attribute(elementAccessor,attribute);
   }
 
   return elementAccessor;

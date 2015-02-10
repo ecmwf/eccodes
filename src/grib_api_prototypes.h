@@ -252,6 +252,10 @@ grib_accessor *grib_next_accessor(grib_accessor *a);
 void grib_resize(grib_accessor *a, size_t new_size);
 int grib_compare_accessors(grib_accessor *a1, grib_accessor *a2, int compare_flags);
 const char *grib_get_type_name(int type);
+int grib_accessor_add_attribute(grib_accessor *a, grib_accessor *attr);
+int grib_accessor_replace_attribute(grib_accessor *a, grib_accessor *attr);
+int grib_accessor_delete_attribute(grib_accessor *a, const char *name);
+grib_accessor *grib_accessor_get_attribute(grib_accessor *a, const char *name, int *id);
 
 /* grib_concept.c */
 grib_concept_value *grib_concept_value_new(grib_context *c, const char *name, grib_concept_condition *conditions);
@@ -687,6 +691,7 @@ void grib_free_second_order_groups(grib_context *c, second_order_packed *sp);
 second_order_packed *grib_get_second_order_groups(grib_context *c, const unsigned long *vals, size_t len);
 
 /* grib_accessor_class_variable.c */
+void accessor_variable_set_type(grib_accessor *a, int type);
 
 /* grib_accessor_class_second_order_bits_per_value.c */
 
@@ -984,8 +989,8 @@ void grib_dump_footer(grib_dumper *d, grib_handle *h);
 
 /* grib_dumper_class.c */
 grib_dumper *grib_dumper_factory(const char *op, grib_handle *h, FILE *out, unsigned long option_flags, void *arg);
-int grib_print(grib_handle *h, const char *name, grib_dumper *d);
 void grib_dump_accessors_block(grib_dumper *dumper, grib_block_of_accessors *block);
+int grib_print(grib_handle *h, const char *name, grib_dumper *d);
 void grib_dump_content(grib_handle *h, FILE *f, const char *mode, unsigned long option_flags, void *data);
 
 /* grib_context.c */
@@ -1198,6 +1203,7 @@ int grib_type_to_int(char id);
 /* grib_query.c */
 int grib_navigate_subgroups(grib_handle *h);
 int grib_not_navigate_subgroups(grib_handle *h);
+grib_accessor *grib_find_attribute(grib_handle *h, const char *name, const char *attr_name, int *err);
 grib_accessor *grib_find_accessor(grib_handle *h, const char *name);
 int grib_find_all_accessors(grib_handle *h, const char *name, search_all_callback_proc callback, void *data);
 grib_accessor *grib_find_accessor_fast(grib_handle *h, const char *name);
@@ -1249,17 +1255,21 @@ int grib_set_long_array_internal(grib_handle *h, const char *name, const long *v
 int grib_set_long_array(grib_handle *h, const char *name, const long *val, size_t length);
 int grib_get_long_internal(grib_handle *h, const char *name, long *val);
 int grib_is_in_dump(grib_handle *h, const char *name);
+int grib_get_attribute_long(grib_handle *h, const char *name, const char *attr_name, long *val);
 int grib_get_long(grib_handle *h, const char *name, long *val);
 int grib_get_double_internal(grib_handle *h, const char *name, double *val);
+int grib_get_attribute_double(grib_handle *h, const char *name, const char *attr_name, double *val);
 int grib_get_double(grib_handle *h, const char *name, double *val);
 int grib_get_double_element_internal(grib_handle *h, const char *name, int i, double *val);
 int grib_get_double_element(grib_handle *h, const char *name, int i, double *val);
 int grib_points_get_values(grib_handle *h, grib_points *points, double *val);
 int grib_get_double_elements(grib_handle *h, const char *name, int *i, long len, double *val);
 int grib_get_string_internal(grib_handle *h, const char *name, char *val, size_t *length);
+int grib_get_attribute_string(grib_handle *h, const char *name, const char *attr_name, char *val, size_t *length);
 int grib_get_string(grib_handle *h, const char *name, char *val, size_t *length);
 int grib_get_bytes_internal(grib_handle *h, const char *name, unsigned char *val, size_t *length);
 int grib_get_bytes(grib_handle *h, const char *name, unsigned char *val, size_t *length);
+int grib_get_attribute_native_type(grib_handle *h, const char *name, const char *attr_name, int *type);
 int grib_get_native_type(grib_handle *h, const char *name, int *type);
 const char *grib_get_accessor_class_name(grib_handle *h, const char *name);
 int _grib_get_double_array_internal(grib_handle *h, grib_accessor *a, double *val, size_t buffer_len, size_t *decoded_length);

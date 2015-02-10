@@ -749,6 +749,18 @@ int grib_is_in_dump(grib_handle* h, const char* name) {
         return 0;
 }
 
+int grib_get_attribute_long(grib_handle* h, const char* name,const char* attr_name, long* val)
+{
+    grib_accessor* a = NULL;
+	int err=0;
+    size_t l = 1;
+
+	if ((a = grib_find_attribute(h, name,attr_name,&err))==NULL) return err;
+
+    return grib_unpack_long(a, val, &l);
+	
+}
+
 int grib_get_long(grib_handle* h, const char* name, long* val)
 {
     grib_accessor* act = NULL;
@@ -772,6 +784,18 @@ int grib_get_double_internal(grib_handle* h, const char* name, double* val)
                 name, grib_get_error_message(ret));
 
     return ret;
+}
+
+int grib_get_attribute_double(grib_handle* h, const char* name,const char* attr_name, double* val)
+{
+    grib_accessor* a = NULL;
+	int err=0;
+    size_t l = 1;
+
+	if ((a = grib_find_attribute(h, name,attr_name,&err))==NULL) return err;
+
+    return grib_unpack_double(a, val, &l);
+
 }
 
 int grib_get_double(grib_handle* h, const char* name, double* val)
@@ -870,6 +894,16 @@ int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t
 }
 
 
+int grib_get_attribute_string(grib_handle* h, const char* name, const char* attr_name, char* val, size_t *length)
+{
+	int err=0;
+	grib_accessor* a = NULL;
+
+	if ((a = grib_find_attribute(h, name,attr_name,&err))==NULL) return err;
+
+    return grib_unpack_string(a, val, length);
+}
+
 int grib_get_string(grib_handle* h, const char* name, char* val, size_t *length)
 {
     grib_accessor* act = grib_find_accessor(h, name);
@@ -899,6 +933,19 @@ int grib_get_bytes(grib_handle* h, const char* name, unsigned char* val, size_t 
     if(err) grib_context_log(h->context,GRIB_LOG_ERROR,
             "grib_get_bytes_internal %s failed %s",  name, grib_get_error_message(err));
     return err;
+}
+
+int grib_get_attribute_native_type(grib_handle* h, const char* name,const char* attr_name,int* type)
+{
+    grib_accessor* a = NULL;
+	int err=0;
+    size_t l = 1;
+
+	if ((a = grib_find_attribute(h, name,attr_name,&err))==NULL) return err;
+
+    *type = grib_accessor_get_native_type(a);
+	return GRIB_SUCCESS;
+
 }
 
 int grib_get_native_type(grib_handle* h, const char* name,int* type)
