@@ -543,7 +543,7 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
     int type1,type2;
     int countdiff;
     int isangle=0;
-    int isMissing1,isMissing2;
+    int isMissing1=0,isMissing2=0;
 
     char *sval1 = NULL,*sval2 = NULL;
     unsigned char *uval1 = NULL,*uval2 = NULL;
@@ -633,8 +633,11 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
   }
      */
 
-    isMissing1= ( (grib_is_missing(h1,name,&err1)==1) && (err1 == 0) ) ? 1 : 0;
-    isMissing2= ( (grib_is_missing(h2,name,&err2)==1) && (err2 == 0) ) ? 1 : 0;
+    if (options->mode != MODE_BUFR) {
+        /* TODO: Ignore missing values for keys in BUFR. Not yet implemented */
+        isMissing1= ( (grib_is_missing(h1,name,&err1)==1) && (err1 == 0) ) ? 1 : 0;
+        isMissing2= ( (grib_is_missing(h2,name,&err2)==1) && (err2 == 0) ) ? 1 : 0;
+    }
 
     if ((isMissing1==1) && (isMissing2==1)) {
         if (verbose) printf(" is set to missing in both fields\n");

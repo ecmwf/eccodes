@@ -98,10 +98,20 @@ fi
 
 ${tools_dir}/bufr_compare -r ${fBufrInput1} ${fBufrInput2}>> $fLog
 
+
+#----------------------------------------------------
+# Change subCentre and compare
+#----------------------------------------------------
+${tools_dir}bufr_set -s subCentre=12 aaen_55.bufr $fBufrTmp
+set +e
+${tools_dir}bufr_compare aaen_55.bufr $fBufrTmp >/dev/null
+status=$?
+set -e
+[ $status -eq 1 ]
+
 #Clean up
 rm -f $fLog 
 rm -f $fBufrTmp | true
 rm -f $fBufrInput1 | true
 rm -f $fBufrInput2 | true
-
 
