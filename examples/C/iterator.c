@@ -58,12 +58,12 @@ int main(int argc, char** argv)
         CODES_CHECK(codes_get_double(h,"missingValue",&missingValue),0);
 
         /* A new iterator on lat/lon/values is created from the message handle h. */
-        iter=codes_iterator_new(h,0,&err);
+        iter=codes_grib_iterator_new(h,0,&err);
         if (err != CODES_SUCCESS) CODES_CHECK(err,0);
 
         n = 0;
         /* Loop on all the lat/lon/values. */
-        while(codes_iterator_next(iter,&lat,&lon,&value)) {
+        while(codes_grib_iterator_next(iter,&lat,&lon,&value)) {
             /* You can now print lat and lon,  */
             printf("- %d - lat=%f lon=%f value=",n,lat,lon);
             /* decide what to print if a missing value is found. */
@@ -74,7 +74,7 @@ int main(int argc, char** argv)
         }
 
         /* At the end the iterator is deleted to free memory. */
-        codes_iterator_delete(iter);
+        codes_grib_iterator_delete(iter);
 
         /* At the end the codes_handle is deleted to free memory. */
         codes_handle_delete(h);

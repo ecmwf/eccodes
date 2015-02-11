@@ -69,12 +69,12 @@ int main(int argc, char** argv)
         }
 
         /* A new iterator on lat/lon/values is created from the message handle h */
-        iter=codes_iterator_new(h,0,&err);
+        iter=codes_grib_iterator_new(h,0,&err);
         if (err != CODES_SUCCESS) CODES_CHECK(err,0);
 
         n = 0;
         /* Loop on all the lat/lon/values. Only print non-missing values */
-        while(codes_iterator_next(iter,&lat,&lon,&value))
+        while(codes_grib_iterator_next(iter,&lat,&lon,&value))
         {
             int is_missing_val = (bitmapPresent && bitmap[n] == 0);
             if (!is_missing_val) {
@@ -85,7 +85,7 @@ int main(int argc, char** argv)
         /* Check number of elements in iterator matches value count */
         assert(n == values_len);
 
-        codes_iterator_delete(iter);
+        codes_grib_iterator_delete(iter);
         codes_handle_delete(h);
     }
 

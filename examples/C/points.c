@@ -89,7 +89,7 @@ int main(int argc, char** argv)
     h=codes_handle_new_from_file(0,fin,&ret);
     if (!h || ret!=CODES_SUCCESS) {printf(" unable to create handle\n");exit(1);}
 
-    codes_nearest_find_multiple(h,1,vlat,vlon,npoints,
+    codes_grib_nearest_find_multiple(h,1,vlat,vlon,npoints,
             outlats,outlons,lsm_values,distances,indexes);
 
     codes_handle_delete(h);

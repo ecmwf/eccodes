@@ -10,11 +10,56 @@
 
 #include "eccodes.h"
 
+/* Generic functions */
+/******************************************************************************/
+char* codes_samples_path(const grib_context *c)
+{
+    return grib_samples_path(c);
+}
+long codes_get_api_version(void)
+{
+    return grib_get_api_version();
+}
+const char* codes_get_git_sha1()
+{
+    return grib_get_git_sha1();
+}
+void codes_print_api_version(FILE* out)
+{
+    grib_print_api_version(out);
+}
+int codes_count_in_file(grib_context* c, FILE* f,int* n)
+{
+    return grib_count_in_file(c,f,n);
+}
+grib_context* codes_context_get_default(void)
+{
+    return grib_context_get_default();
+}
+const char* codes_get_error_message(int code)
+{
+    return grib_get_error_message(code);
+}
+const char* codes_get_type_name(int type)
+{
+    return grib_get_type_name(type);
+}
+int codes_get_native_type(grib_handle* h, const char* name,int* type)
+{
+    return grib_get_native_type(h,name,type);
+}
+void codes_check(const char* call,const char*  file,int line,int e,const char* msg)
+{
+    grib_check(call,file,line,e,msg);
+}
+
+
+/* Fieldsets */
+/******************************************************************************/
 grib_fieldset *codes_fieldset_new_from_files(grib_context *c, char *filenames[], int nfiles, char **keys, int nkeys, char *where_string, char *order_by_string, int *err)
 {
     return grib_fieldset_new_from_files(c, filenames, nfiles, keys, nkeys, where_string, order_by_string, err);
 }
-
 void codes_fieldset_delete(grib_fieldset* set)
 {
     grib_fieldset_delete(set);
@@ -35,16 +80,13 @@ int codes_fieldset_count(grib_fieldset *set)
 {
     return grib_fieldset_count(set);
 }
-int codes_values_check(grib_handle* h, grib_values* values, int count)
-{
-    return grib_values_check(h,values,count);
-}
 
+/* Indexing */
+/******************************************************************************/
 grib_index* codes_index_new_from_file(grib_context* c,char* filename,const char* keys,int *err)
 {
     return grib_index_new_from_file(c,filename,keys,err);
 }
-
 grib_index* codes_index_new(grib_context* c, const char* keys,int *err)
 {
     return grib_index_new(c,keys,err);
@@ -77,7 +119,6 @@ int codes_index_get_string(grib_index* index,const char* key,char** values,size_
 {
     return grib_index_get_string(index,key,values,size);
 }
-
 int codes_index_select_long(grib_index* index,const char* key,long value)
 {
     return grib_index_select_long(index,key,value);
@@ -98,12 +139,9 @@ void codes_index_delete(grib_index* index)
 {
     grib_index_delete(index);
 }
-int codes_count_in_file(grib_context* c, FILE* f,int* n)
-{
-    return grib_count_in_file(c,f,n);
-}
 
-
+/* Create handle */
+/******************************************************************************/
 grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, int* error)
 {
     return grib_handle_new_from_file(c, f, error);
@@ -112,23 +150,9 @@ codes_handle* codes_bufr_new_from_file (codes_context* c, FILE* f, int* error)
 {
     return bufr_new_from_file(c, f, error);
 }
-
-
 int codes_write_message(grib_handle* h,const char* file,const char* mode)
 {
     return grib_write_message(h,file,mode);
-}
-grib_handle* codes_util_sections_copy(grib_handle* hfrom,grib_handle* hto,int what,int *err)
-{
-    return grib_util_sections_copy(hfrom,hto,what,err);
-}
-grib_string_list* codes_util_get_param_id(const char* mars_param)
-{
-    return grib_util_get_param_id(mars_param);
-}
-grib_string_list* codes_util_get_mars_param(const char* param_id)
-{
-    return grib_util_get_mars_param(param_id);
 }
 grib_handle* codes_handle_new_from_message(grib_context* c, void* data, size_t data_len)
 {
@@ -137,10 +161,6 @@ grib_handle* codes_handle_new_from_message(grib_context* c, void* data, size_t d
 grib_handle* codes_handle_new_from_message_copy(grib_context* c, const void* data, size_t data_len)
 {
     return grib_handle_new_from_message_copy(c,data,data_len);
-}
-grib_handle* codes_handle_new_from_multi_message(grib_context* c,void** data,size_t *data_len,int* error)
-{
-    return grib_handle_new_from_multi_message(c,data,data_len,error);
 }
 grib_handle* codes_handle_new_from_samples (grib_context* c, const char* res_name)
 {
@@ -154,21 +174,13 @@ int codes_handle_delete(grib_handle* h)
 {
     return grib_handle_delete(h);
 }
-grib_multi_handle* codes_multi_handle_new(grib_context* c)
+grib_handle* codes_handle_new_from_partial_message_copy(grib_context* c, const void* data, size_t size)
 {
-    return grib_multi_handle_new(c);
+    return grib_handle_new_from_partial_message_copy(c,data,size);
 }
-int codes_multi_handle_append(grib_handle* h,int start_section,grib_multi_handle* mh)
+grib_handle* codes_handle_new_from_partial_message(grib_context* c,void* data, size_t buflen)
 {
-    return grib_multi_handle_append(h, start_section, mh);
-}
-int codes_multi_handle_delete(grib_multi_handle* mh)
-{
-    return grib_multi_handle_delete(mh);
-}
-int codes_multi_handle_write(grib_multi_handle* mh,FILE* f)
-{
-    return grib_multi_handle_write(mh,f);
+    return grib_handle_new_from_partial_message(c,data,buflen);
 }
 int codes_get_message(grib_handle* h ,const void** message, size_t *message_length  )
 {
@@ -179,58 +191,131 @@ int codes_get_message_copy(grib_handle* h, void* message,size_t *message_length 
     return grib_get_message_copy(h,message,message_length);
 }
 
-grib_iterator* codes_iterator_new(grib_handle* h, unsigned long flags,int* error)
+/* Specific to GRIB */
+/******************************************************************************/
+grib_handle *codes_grib_util_set_spec(grib_handle *h,
+    const grib_util_grid_spec    *grid_spec,
+    const grib_util_packing_spec *packing_spec,
+    int flags,
+    const double *data_values,
+    size_t data_values_count,
+    int *err)
+{
+    return grib_util_set_spec(h, grid_spec, packing_spec, flags, data_values, data_values_count, err);
+}
+grib_handle* codes_grib_util_sections_copy(grib_handle* hfrom,grib_handle* hto,int what,int *err)
+{
+    return grib_util_sections_copy(hfrom,hto,what,err);
+}
+grib_string_list* codes_grib_util_get_param_id(const char* mars_param)
+{
+    return grib_util_get_param_id(mars_param);
+}
+grib_string_list* codes_grib_util_get_mars_param(const char* param_id)
+{
+    return grib_util_get_mars_param(param_id);
+}
+void codes_grib_multi_support_on(grib_context* c)
+{
+    grib_multi_support_on(c);
+}
+void codes_grib_multi_support_off(grib_context* c)
+{
+    grib_multi_support_off(c);
+}
+void codes_grib_multi_support_reset_file(grib_context* c, FILE* f)
+{
+    grib_multi_support_reset_file(c, f);
+}
+grib_handle* codes_grib_handle_new_from_multi_message(grib_context* c,void** data,size_t *data_len,int* error)
+{
+    return grib_handle_new_from_multi_message(c,data,data_len,error);
+}
+grib_multi_handle* codes_grib_multi_handle_new(grib_context* c)
+{
+    return grib_multi_handle_new(c);
+}
+int codes_grib_multi_handle_append(grib_handle* h,int start_section,grib_multi_handle* mh)
+{
+    return grib_multi_handle_append(h, start_section, mh);
+}
+int codes_grib_multi_handle_delete(grib_multi_handle* mh)
+{
+    return grib_multi_handle_delete(mh);
+}
+int codes_grib_multi_handle_write(grib_multi_handle* mh,FILE* f)
+{
+    return grib_multi_handle_write(mh,f);
+}
+
+/* Lat/Lon iterator and nearest (GRIB specific) */
+/******************************************************************************/
+grib_iterator* codes_grib_iterator_new(grib_handle* h, unsigned long flags,int* error)
 {
     return grib_iterator_new(h,flags,error);
 }
-int codes_get_data(grib_handle *h, double *lats, double *lons, double *values, size_t *size)
+int codes_grib_get_data(grib_handle *h, double *lats, double *lons, double *values, size_t *size)
 {
     return grib_get_data(h,lats,lons,values,size);
 }
-int codes_iterator_next(grib_iterator *i, double* lat,double* lon,double* value)
+int codes_grib_iterator_next(grib_iterator *i, double* lat,double* lon,double* value)
 {
     return grib_iterator_next(i,lat,lon,value);
 }
-int codes_iterator_previous(grib_iterator *i, double* lat,double* lon,double* value)
+int codes_grib_iterator_previous(grib_iterator *i, double* lat,double* lon,double* value)
 {
     return grib_iterator_previous(i,lat,lon,value);
 }
-int codes_iterator_has_next(grib_iterator *i)
+int codes_grib_iterator_has_next(grib_iterator *i)
 {
     return grib_iterator_has_next(i);
 }
-int codes_iterator_reset(grib_iterator *i)
+int codes_grib_iterator_reset(grib_iterator *i)
 {
     return grib_iterator_reset(i);
 }
-int codes_iterator_delete(grib_iterator *i)
+int codes_grib_iterator_delete(grib_iterator *i)
 {
     return grib_iterator_delete(i);
 }
-grib_nearest* codes_nearest_new(grib_handle* h, int* error)
+
+grib_nearest* codes_grib_nearest_new(grib_handle* h, int* error)
 {
     return grib_nearest_new(h,error);
 }
-
-int codes_nearest_find(grib_nearest *nearest,grib_handle* h,double inlat,double inlon,
+int codes_grib_nearest_find(grib_nearest *nearest,grib_handle* h,double inlat,double inlon,
                        unsigned long flags,double* outlats,double* outlons,
                        double* values,double* distances,int* indexes,size_t *len)
 {
     return grib_nearest_find(nearest, h, inlat, inlon, flags, outlats, outlons, values, distances, indexes, len);
 }
-int codes_nearest_find_multiple(grib_handle* h,int is_lsm,
+int codes_grib_nearest_find_multiple(grib_handle* h,int is_lsm,
     double* inlats,double* inlons,long npoints,
     double* outlats,double* outlons,
     double* values,double* distances, int* indexes)
 {
     return grib_nearest_find_multiple(h, is_lsm, inlats, inlons, npoints, outlats, outlons, values, distances, indexes);
 }
-
-int codes_nearest_delete(grib_nearest *nearest)
+int codes_grib_nearest_delete(grib_nearest *nearest)
 {
     return grib_nearest_delete(nearest);
 }
 
+
+/* get/set keys */
+/******************************************************************************/
+int codes_is_missing(grib_handle* h, const char* key, int* err)
+{
+    return grib_is_missing(h,key,err);
+}
+int codes_is_defined(grib_handle* h, const char* key)
+{
+    return grib_is_defined(h,key);
+}
+int codes_set_missing(grib_handle* h, const char* key)
+{
+    return grib_set_missing(h,key);
+}
 int codes_get_size(grib_handle* h, const char* key,size_t *size)
 {
     return grib_get_size(h,key,size);
@@ -239,7 +324,6 @@ int codes_get_length(grib_handle* h, const char* key,size_t *length)
 {
     return grib_get_length(h,key,length);
 }
-    
 int codes_get_long(grib_handle* h, const char* key, long* value)
 {
     return grib_get_long(h,key,value);
@@ -308,24 +392,25 @@ int codes_set_long_array(grib_handle* h, const char* key, const long* vals, size
 {
     return grib_set_long_array(h,key,vals,length);
 }
-
+int codes_set_values(grib_handle* h,grib_values*  grib_values , size_t arg_count)
+{
+    return grib_set_values(h,grib_values,arg_count);
+}
+int codes_get_message_offset ( grib_handle* h,off_t* offset )
+{
+    return grib_get_message_offset (h,offset);
+}
+int codes_get_message_size ( grib_handle* h,size_t* size )
+{
+    return grib_get_message_size (h,size);
+}
 void codes_dump_content(grib_handle* h,FILE* out,const char* mode, unsigned long option_flags,void* arg)
 {
     grib_dump_content(h, out, mode, option_flags, arg);
 }
 
-grib_context* codes_context_get_default(void)
-{
-    return grib_context_get_default();
-}
-grib_context* codes_context_new(grib_context* c)
-{
-    return grib_context_new(c);
-}
-void codes_context_delete(grib_context* c)
-{
-    grib_context_delete(c);
-}
+/* GTS, GRIBEX */
+/******************************************************************************/
 void codes_gts_header_off(grib_context* c)
 {
     grib_gts_header_off(c);
@@ -343,34 +428,8 @@ void codes_gribex_mode_off(grib_context* c)
     grib_gribex_mode_off(c);
 }
 
-void codes_multi_support_on(grib_context* c)
-{
-    grib_multi_support_on(c);
-}
-void codes_multi_support_off(grib_context* c)
-{
-    grib_multi_support_off(c);
-}
-void codes_multi_support_reset_file(grib_context* c, FILE* f)
-{
-    grib_multi_support_reset_file(c, f);
-}
-char* codes_samples_path(const grib_context *c)
-{
-    return grib_samples_path(c);
-}
-long codes_get_api_version(void)
-{
-    return grib_get_api_version();
-}
-const char* codes_get_git_sha1()
-{
-    return grib_get_git_sha1();
-}
-void codes_print_api_version(FILE* out)
-{
-    grib_print_api_version(out);
-}
+/* keys iterator */
+/******************************************************************************/
 grib_keys_iterator* codes_keys_iterator_new(grib_handle* h,unsigned long filter_flags, char* name_space)
 {
     return grib_keys_iterator_new(h,filter_flags,name_space);
@@ -411,51 +470,16 @@ int codes_keys_iterator_get_bytes(grib_keys_iterator *kiter, unsigned char *v, s
 {
     return grib_keys_iterator_get_bytes(kiter,v,len);
 }
+
+/* Utility functions */
+/******************************************************************************/
+int codes_values_check(grib_handle* h, grib_values* values, int count)
+{
+    return grib_values_check(h,values,count);
+}
 void codes_update_sections_lengths(grib_handle* h)
 {
     grib_update_sections_lengths(h);
-}
-const char* codes_get_error_message(int code)
-{
-    return grib_get_error_message(code);
-}
-const char* codes_get_type_name(int type)
-{
-    return grib_get_type_name(type);
-}
-
-
-int codes_get_native_type(grib_handle* h, const char* name,int* type)
-{
-    return grib_get_native_type(h,name,type);
-}
-void codes_check(const char* call,const char*  file,int line,int e,const char* msg)
-{
-    grib_check(call,file,line,e,msg);
-}
-int codes_set_values(grib_handle* h,grib_values*  grib_values , size_t arg_count)
-{
-    return grib_set_values(h,grib_values,arg_count);
-}
-grib_handle* codes_handle_new_from_partial_message_copy(grib_context* c, const void* data, size_t size)
-{
-    return grib_handle_new_from_partial_message_copy(c,data,size);
-}
-grib_handle* codes_handle_new_from_partial_message(grib_context* c,void* data, size_t buflen)
-{
-    return grib_handle_new_from_partial_message(c,data,buflen);
-}
-int codes_is_missing(grib_handle* h, const char* key, int* err)
-{
-    return grib_is_missing(h,key,err);
-}
-int codes_is_defined(grib_handle* h, const char* key)
-{
-    return grib_is_defined(h,key);
-}
-int codes_set_missing(grib_handle* h, const char* key)
-{
-    return grib_set_missing(h,key);
 }
 int codes_get_gaussian_latitudes(long truncation,double* latitudes)
 {
@@ -481,14 +505,6 @@ void codes_get_reduced_row(long pl,double lon_first,double lon_last,long* npoint
 {
     grib_get_reduced_row(pl,lon_first,lon_last,npoints,ilon_first,ilon_last);
 }
-int codes_get_message_offset ( grib_handle* h,off_t* offset )
-{
-    return grib_get_message_offset (h,offset);
-}
-int codes_get_message_size ( grib_handle* h,size_t* size )
-{
-    return grib_get_message_size (h,size);
-}
 grib_box* codes_box_new(grib_handle* h,int* error)
 {
     return grib_box_new(h,error);
@@ -501,15 +517,11 @@ int codes_points_get_values(grib_handle* h, grib_points* points, double* val)
 {
     return grib_points_get_values(h,points,val);
 }
-
-grib_handle *codes_util_set_spec(grib_handle *h, 
-	const grib_util_grid_spec    *grid_spec, 
-	const grib_util_packing_spec *packing_spec,
-	int flags,
-	const double *data_values, 
-	size_t data_values_count, 
-	int *err)
+grib_context* codes_context_new(grib_context* c)
 {
-    return grib_util_set_spec(h, grid_spec, packing_spec, flags,
-                              data_values, data_values_count, err);
+    return grib_context_new(c);
+}
+void codes_context_delete(grib_context* c)
+{
+    grib_context_delete(c);
 }

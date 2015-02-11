@@ -71,9 +71,9 @@ int main(int argc, char** argv)
         CODES_CHECK(codes_get_string(h,"param",param,&len),0);
 
         printf("%d %ld %s  ",count,step,param);
-        if (!nearest) nearest=codes_nearest_new(h,&err);
+        if (!nearest) nearest=codes_grib_nearest_new(h,&err);
         CODES_CHECK(err,0);
-        CODES_CHECK(codes_nearest_find(nearest,h,lat,lon,mode,lats,lons,values,distances,indexes,&size),0);
+        CODES_CHECK(codes_grib_nearest_find(nearest,h,lat,lon,mode,lats,lons,values,distances,indexes,&size),0);
         for (i=0;i<4;i++) printf("%d %.2f %.2f %g %g - ",
                 (int)indexes[i],lats[i],lons[i],distances[i],values[i]);
         printf("\n");
@@ -82,7 +82,7 @@ int main(int argc, char** argv)
         count++;
     }
 
-    if (nearest) codes_nearest_delete(nearest);
+    if (nearest) codes_grib_nearest_delete(nearest);
 
     if (set) codes_fieldset_delete(set);
 

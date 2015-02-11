@@ -32,7 +32,7 @@ int main(int argc, char** argv)
     int i;
 
     /* turn on support for multi fields messages */
-    codes_multi_support_on(0);
+    codes_grib_multi_support_on(0);
 
     for(i=1; i<COUNT; ++i) {
         printf("Pass %d: \n",i);
@@ -69,6 +69,6 @@ void read_data(int num_msgs)
         if (i == 3) assert(stepRange == 36);  /* 4th field */
     }
     /* Must reset this file pointer for the next round */
-    codes_multi_support_reset_file(codes_context_get_default(), fp);
+    codes_grib_multi_support_reset_file(codes_context_get_default(), fp);
     fclose(fp);
 }

@@ -302,9 +302,9 @@ codes_handle* codes_bufr_new_from_file  (codes_context* c, FILE* f, int* error);
 */
 int codes_write_message(codes_handle* h,const char* file,const char* mode);
 
-codes_handle* codes_util_sections_copy(codes_handle* hfrom,codes_handle* hto,int what,int *err);
-codes_string_list* codes_util_get_param_id(const char* mars_param);
-codes_string_list* codes_util_get_mars_param(const char* param_id);
+codes_handle* codes_grib_util_sections_copy(codes_handle* hfrom,codes_handle* hto,int what,int *err);
+codes_string_list* codes_grib_util_get_param_id(const char* mars_param);
+codes_string_list* codes_grib_util_get_mars_param(const char* param_id);
 
 /**
 *  Create a handle from a user message in memory. The message will not be freed at the end.
@@ -328,7 +328,7 @@ codes_handle* codes_handle_new_from_message(codes_context* c, void* data, size_t
 * @param error       : error code
 * @return            the new handle, NULL if the message is invalid or a problem is encountered
 */
-codes_handle* codes_handle_new_from_multi_message(codes_context* c,void** data,
+codes_handle* codes_grib_handle_new_from_multi_message(codes_context* c,void** data,
                                                   size_t *data_len,int* error);
 
 /**
@@ -378,7 +378,7 @@ int codes_handle_delete(codes_handle* h);
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
  */
-codes_multi_handle* codes_multi_handle_new(codes_context* c);
+codes_multi_handle* codes_grib_multi_handle_new(codes_context* c);
 
 /**
  *  Append the sections starting with start_section of the message pointed by h at
@@ -391,7 +391,7 @@ codes_multi_handle* codes_multi_handle_new(codes_context* c);
  * @param mh           : The multi field handle on which the sections are appended.
  * @return            0 if OK, integer value on error
  */
-int codes_multi_handle_append(codes_handle* h,int start_section,codes_multi_handle* mh);
+int codes_grib_multi_handle_append(codes_handle* h,int start_section,codes_multi_handle* mh);
 
 /**
  * Delete multi field handle.
@@ -399,7 +399,7 @@ int codes_multi_handle_append(codes_handle* h,int start_section,codes_multi_hand
  * @param mh           : The multi field handle to be deleted.
  * @return            0 if OK, integer value on error
  */
-int codes_multi_handle_delete(codes_multi_handle* mh);
+int codes_grib_multi_handle_delete(codes_multi_handle* mh);
 
 /**
  *  Write a multi field handle in a file.
@@ -410,7 +410,7 @@ int codes_multi_handle_delete(codes_multi_handle* mh);
  * @param f            : File on which the file handle is written.
  * @return            0 if OK, integer value on error
  */
-int codes_multi_handle_write(codes_multi_handle* mh,FILE* f);
+int codes_grib_multi_handle_write(codes_multi_handle* mh,FILE* f);
 
 /*! @} */
 
@@ -450,7 +450,7 @@ int codes_get_message_copy(codes_handle* h,  void* message,size_t *message_lengt
 * \param error       : error code
 * \return            the new iterator, NULL if no iterator can be created
 */
-codes_iterator* codes_iterator_new(codes_handle* h, unsigned long flags, int* error);
+codes_iterator* codes_grib_iterator_new(codes_handle* h, unsigned long flags, int* error);
 
 /**
 * Get latitude/longitude and data values.
@@ -463,7 +463,7 @@ codes_iterator* codes_iterator_new(codes_handle* h, unsigned long flags, int* er
 * @param values      : returned array of data values
 * @return            0 if OK, integer value on error
 */
-int codes_get_data(codes_handle *h, double *lats, double *lons, double *values, size_t *size);
+int codes_grib_get_data(codes_handle *h, double *lats, double *lons, double *values, size_t *size);
 
 /**
 * Get the next value from an iterator.
@@ -474,7 +474,7 @@ int codes_get_data(codes_handle *h, double *lats, double *lons, double *values, 
 * @param value       : on output value of the point
 * @return            positive value if successful, 0 if no more data are available
 */
-int codes_iterator_next(codes_iterator *i, double* lat,double* lon,double* value);
+int codes_grib_iterator_next(codes_iterator *i, double* lat,double* lon,double* value);
 
 /**
 * Get the previous value from an iterator.
@@ -485,7 +485,7 @@ int codes_iterator_next(codes_iterator *i, double* lat,double* lon,double* value
 * @param value       : on output value of the point*
 * @return            positive value if successful, 0 if no more data are available
 */
-int codes_iterator_previous(codes_iterator *i, double* lat,double* lon,double* value);
+int codes_grib_iterator_previous(codes_iterator *i, double* lat,double* lon,double* value);
 
 /**
 * Test procedure for values in an iterator.
@@ -493,7 +493,7 @@ int codes_iterator_previous(codes_iterator *i, double* lat,double* lon,double* v
 * @param i           : the iterator
 * @return            boolean, 1 if the iterator still nave next values, 0 otherwise
 */
-int codes_iterator_has_next(codes_iterator *i);
+int codes_grib_iterator_has_next(codes_iterator *i);
 
 /**
 * Test procedure for values in an iterator.
@@ -501,7 +501,7 @@ int codes_iterator_has_next(codes_iterator *i);
 * @param i           : the iterator
 * @return            0 if OK, integer value on error
 */
-int codes_iterator_reset(codes_iterator *i);
+int codes_grib_iterator_reset(codes_iterator *i);
 
 /**
 *  Frees an iterator from memory
@@ -509,7 +509,7 @@ int codes_iterator_reset(codes_iterator *i);
 * @param i           : the iterator
 * @return            0 if OK, integer value on error
 */
-int codes_iterator_delete(codes_iterator *i);
+int codes_grib_iterator_delete(codes_iterator *i);
 
 /*!
 * \brief Create a new nearest from a handle, using current geometry .
@@ -518,7 +518,7 @@ int codes_iterator_delete(codes_iterator *i);
 * \param error       : error code
 * \return            the new nearest, NULL if no nearest can be created
 */
-codes_nearest* codes_nearest_new(codes_handle* h, int* error);
+codes_nearest* codes_grib_nearest_new(codes_handle* h, int* error);
 
 /**
 * Find the 4 nearest points of a latitude longitude point.
@@ -541,7 +541,7 @@ codes_nearest* codes_nearest_new(codes_handle* h, int* error);
 * @param len         : size of the arrays
 * @return            0 if OK, integer value on error
 */
-int codes_nearest_find(codes_nearest *nearest,codes_handle* h,double inlat,double inlon,
+int codes_grib_nearest_find(codes_nearest *nearest,codes_handle* h,double inlat,double inlon,
     unsigned long flags,double* outlats,double* outlons,
     double* values,double* distances,int* indexes,size_t *len);
 
@@ -551,7 +551,7 @@ int codes_nearest_find(codes_nearest *nearest,codes_handle* h,double inlat,doubl
 * @param nearest           : the nearest
 * @return            0 if OK, integer value on error
 */
-int codes_nearest_delete(codes_nearest *nearest);
+int codes_grib_nearest_delete(codes_nearest *nearest);
 
 /**
 * Find the nearest point of a set of points whose latitudes and longitudes
@@ -577,7 +577,7 @@ int codes_nearest_delete(codes_nearest *nearest);
 * @param indexes     : returned array of indexes of the nearest points
 * @return            0 if OK, integer value on error
 */
-int codes_nearest_find_multiple(codes_handle* h,int is_lsm,
+int codes_grib_nearest_find_multiple(codes_handle* h,int is_lsm,
     double* inlats,double* inlons,long npoints,
     double* outlats,double* outlons,
     double* values,double* distances, int* indexes);
@@ -908,14 +908,14 @@ void codes_gribex_mode_off(codes_context* c);
 *
 * @param c            : the context to be modified
 */
-void codes_multi_support_on(codes_context* c);
+void codes_grib_multi_support_on(codes_context* c);
 
 /**
 *  Turn off support for multiple fields in single grib messages
 *
 * @param c            : the context to be modified
 */
-void codes_multi_support_off(codes_context* c);
+void codes_grib_multi_support_off(codes_context* c);
 
 /**
 *  Reset file handle in multiple field support mode
@@ -923,7 +923,7 @@ void codes_multi_support_off(codes_context* c);
 * @param c            : the context to be modified
 * @param f            : the file pointer
 */
-void codes_multi_support_reset_file(codes_context* c, FILE* f);
+void codes_grib_multi_support_reset_file(codes_context* c, FILE* f);
 
 char* codes_samples_path(const codes_context *c);
 /*! @} */
@@ -1068,7 +1068,7 @@ int codes_points_get_values(codes_handle* h, codes_points* points, double* val);
 #define CODES_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR  GRIB_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR
 
 
-codes_handle *codes_util_set_spec(codes_handle *h, 
+codes_handle *codes_grib_util_set_spec(codes_handle *h,
     const codes_util_grid_spec    *grid_spec,
     const codes_util_packing_spec *packing_spec,  /* NULL for defaults (same as input) */
     int flags,
@@ -1214,6 +1214,13 @@ Error codes returned by the eccodes functions.
 #define CODES_MISSING_BUFR_ENTRY  GRIB_MISSING_BUFR_ENTRY
 /** Null pointer */
 #define CODES_NULL_POINTER        GRIB_NULL_POINTER
+/** Attribute is already present, cannot add */
+#define CODES_ATTRIBUTE_CLASH     GRIB_ATTRIBUTE_CLASH
+/** Too many attributes. Increase MAX_ACCESSOR_ATTRIBUTES */
+#define CODES_TOO_MANY_ATTRIBUTES GRIB_TOO_MANY_ATTRIBUTES
+/** Attribute not found. */
+#define CODES_ATTRIBUTE_NOT_FOUND GRIB_ATTRIBUTE_NOT_FOUND
+
 
 /*! @}*/
 #endif

@@ -57,7 +57,7 @@ int main(int argc, char** argv)
     }
 
     /* create a new empty multi field handle */
-    mh=codes_multi_handle_new(0);
+    mh=codes_grib_multi_handle_new(0);
     if (!mh) {
         fprintf(stderr,"ERROR: Unable to create multi field handle\n");
         exit(1);
@@ -68,7 +68,7 @@ int main(int argc, char** argv)
         codes_set_long(h,"step",step);
         /* append h to mh repeating from section 4 */
         /* i.e. starting from section 4 all the sections to the end of the message will be copied */
-        codes_multi_handle_append(h, start_section, mh);
+        codes_grib_multi_handle_append(h, start_section, mh);
     }
 
     /* open output file */
@@ -79,12 +79,12 @@ int main(int argc, char** argv)
     }
 
     /* write multi fields handle to output file */
-    codes_multi_handle_write(mh,of);
+    codes_grib_multi_handle_write(mh,of);
     fclose(of);
 
     /* release memory */
     codes_handle_delete(h);
-    codes_multi_handle_delete(mh);
+    codes_grib_multi_handle_delete(mh);
 
     fclose(in);
     return 0;

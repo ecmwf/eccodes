@@ -92,7 +92,7 @@ int main ( int argc, char* argv[])
         }
     }
      
-    h=codes_util_sections_copy(hfrom,hto,what,&err);
+    h=codes_grib_util_sections_copy(hfrom,hto,what,&err);
     CODES_CHECK(err,0);
 
     err=codes_write_message(h,out_name,"w");

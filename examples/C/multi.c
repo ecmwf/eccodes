@@ -32,7 +32,7 @@ int main(int argc, char** argv)
     codes_handle *h = NULL;
 
     /* turn on support for multi fields messages */
-    codes_multi_support_on(0);
+    codes_grib_multi_support_on(0);
 
     /* turn off support for multi fields messages */
     /* codes_multi_support_off(0); */
