@@ -129,7 +129,8 @@ static grib_handle* grib_handle_new_from_file_x(grib_context* c,FILE* f,int mode
 	if (mode==MODE_GRIB)  
 		return grib_new_from_file(c,f,headers_only,err);
 
-	return codes_new_from_file(c,f,err);
+    Assert(!"grib_handle_new_from_file_x: unknown mode");
+	return NULL;
 }
 
 int grib_tool(int argc, char **argv)

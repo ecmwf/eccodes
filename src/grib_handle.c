@@ -834,44 +834,6 @@ grib_handle* metar_new_from_file ( grib_context* c, FILE* f,int *error )
 	return gl;
 }
 
-grib_handle* codes_new_from_file ( grib_context* c, FILE* f,int *error )
-{
-	void *data = NULL;
-	size_t olen = 0;
-	grib_handle  *gl = NULL;
-	off_t offset=0;
-
-	if ( c == NULL ) c = grib_context_get_default();
-
-	data = wmo_read_any_from_file_malloc ( f, 0,&olen,&offset,error );
-
-	if ( *error != GRIB_SUCCESS )
-	{
-        if ( data ) grib_context_free ( c,data );
-
-		if ( *error == GRIB_END_OF_FILE ) *error = GRIB_SUCCESS;
-		return NULL;
-	}
-
-	gl = grib_handle_new_from_message ( c, data, olen );
-
-	if ( !gl )
-	{
-		*error = GRIB_DECODING_ERROR;
-		grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
-		grib_context_free ( c,data );
-		return NULL;
-	}
-
-    gl->offset=offset;
-	gl->buffer->property = GRIB_MY_BUFFER;
-	c->handle_file_count++;
-	c->handle_total_count++;
-
-	return gl;
-}
-
-
 grib_handle* bufr_new_from_file ( grib_context* c, FILE* f,int *error )
 {
 	void *data = NULL;

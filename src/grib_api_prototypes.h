@@ -969,7 +969,6 @@ grib_handle *grib_new_from_file(grib_context *c, FILE *f, int headers_only, int 
 grib_handle *gts_new_from_file(grib_context *c, FILE *f, int *error);
 grib_handle *taf_new_from_file(grib_context *c, FILE *f, int *error);
 grib_handle *metar_new_from_file(grib_context *c, FILE *f, int *error);
-grib_handle *codes_new_from_file(grib_context *c, FILE *f, int *error);
 grib_handle *bufr_new_from_file(grib_context *c, FILE *f, int *error);
 grib_handle *any_new_from_file(grib_context *c, FILE *f, int *error);
 grib_multi_handle *grib_multi_handle_new(grib_context *c);
