@@ -5,16 +5,16 @@ from gribapi import grib_new_from_file as codes_new_from_file
 from gribapi import bufr_new_from_file as codes_bufr_new_from_file
 
 from gribapi import grib_count_in_file as codes_count_in_file
-from gribapi import grib_multi_support_on as codes_multi_support_on
-from gribapi import grib_multi_support_off as codes_multi_support_off
+from gribapi import grib_multi_support_on as codes_grib_multi_support_on
+from gribapi import grib_multi_support_off as codes_grib_multi_support_off
 from gribapi import grib_release as codes_release
 from gribapi import grib_get_string as codes_get_string
 from gribapi import grib_set_string as codes_set_string
 from gribapi import grib_gribex_mode_on as codes_gribex_mode_on
 from gribapi import grib_gribex_mode_off as codes_gribex_mode_off
 from gribapi import grib_write as codes_write
-from gribapi import grib_multi_write as codes_multi_write
-from gribapi import grib_multi_append as codes_multi_append
+from gribapi import grib_multi_write as codes_grib_multi_write
+from gribapi import grib_multi_append as codes_grib_multi_append
 from gribapi import grib_get_size as codes_get_size
 from gribapi import grib_get_string_length as codes_get_string_length
 from gribapi import grib_skip_computed as codes_skip_computed
@@ -23,9 +23,9 @@ from gribapi import grib_skip_edition_specific as codes_skip_edition_specific
 from gribapi import grib_skip_duplicates as codes_skip_duplicates
 from gribapi import grib_skip_read_only as codes_skip_read_only
 from gribapi import grib_skip_function as codes_skip_function
-from gribapi import grib_iterator_new as codes_iterator_new
-from gribapi import grib_iterator_delete as codes_iterator_delete
-from gribapi import grib_iterator_next as codes_iterator_next
+from gribapi import grib_iterator_new as codes_grib_iterator_new
+from gribapi import grib_iterator_delete as codes_grib_iterator_delete
+from gribapi import grib_iterator_next as codes_grib_iterator_next
 from gribapi import grib_keys_iterator_new as codes_keys_iterator_new
 from gribapi import grib_keys_iterator_next as codes_keys_iterator_next
 from gribapi import grib_keys_iterator_delete as codes_keys_iterator_delete
@@ -41,8 +41,8 @@ from gribapi import grib_set_double_array as codes_set_double_array
 from gribapi import grib_get_double_array as codes_get_double_array
 from gribapi import grib_set_long_array as codes_set_long_array
 from gribapi import grib_get_long_array as codes_get_long_array
-from gribapi import grib_multi_new as codes_multi_new
-from gribapi import grib_multi_release as codes_multi_release
+from gribapi import grib_multi_new as codes_grib_multi_new
+from gribapi import grib_multi_release as codes_grib_multi_release
 from gribapi import grib_copy_namespace as codes_copy_namespace
 from gribapi import grib_index_new_from_file as codes_index_new_from_file
 from gribapi import grib_index_add_file as codes_index_add_file
@@ -64,7 +64,7 @@ from gribapi import grib_set_missing as codes_set_missing
 from gribapi import grib_set_key_vals as codes_set_key_vals
 from gribapi import grib_is_missing as codes_is_missing
 from gribapi import grib_is_defined as codes_is_defined
-from gribapi import grib_find_nearest as codes_find_nearest
+from gribapi import grib_find_nearest as codes_grib_find_nearest
 from gribapi import grib_get_native_type as codes_get_native_type
 from gribapi import grib_get as codes_get
 from gribapi import grib_get_array as codes_get_array

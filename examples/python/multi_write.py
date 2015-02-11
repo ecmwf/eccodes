@@ -23,15 +23,15 @@ def example():
 
     gid = codes_new_from_file(fin)
 
-    mgid = codes_multi_new()
+    mgid = codes_grib_multi_new()
 
     for step in range(12,132,12):
         codes_set(gid,"step",step)
-        codes_multi_append(gid,4,mgid)
+        codes_grib_multi_append(gid,4,mgid)
 
-    codes_multi_write(mgid,fout)
+    codes_grib_multi_write(mgid,fout)
 
-    codes_multi_release(mgid)
+    codes_grib_multi_release(mgid)
     codes_release(gid)
     fin.close()
     fout.close() 

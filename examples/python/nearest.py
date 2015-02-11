@@ -23,11 +23,11 @@ def example():
     gid = codes_new_from_file(f)
 
     for lat,lon in points:
-        nearest = codes_find_nearest(gid,lat,lon)[0]
+        nearest = codes_grib_find_nearest(gid,lat,lon)[0]
         print lat,lon
         print nearest.lat,nearest.lon,nearest.value,nearest.distance,nearest.index
 
-        four = codes_find_nearest(gid,lat,lon,is_lsm = False,npoints = 4)
+        four = codes_grib_find_nearest(gid,lat,lon,is_lsm = False,npoints = 4)
         for i in range(len(four)):
             print "- %d -" % i
             print four[i]

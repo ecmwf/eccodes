@@ -22,13 +22,13 @@ def example(INPUT):
         gid = codes_new_from_file(f)
         if gid is None: break
 
-        iterid = codes_iterator_new(gid,0)
+        iterid = codes_grib_iterator_new(gid,0)
 
         missingValue = codes_get_double(gid,"missingValue")
 
         i=0
         while 1:
-            result = codes_iterator_next(iterid)
+            result = codes_grib_iterator_next(iterid)
             if not result: break
 
             [lat,lon,value] = result
@@ -42,7 +42,7 @@ def example(INPUT):
 
             i += 1
             
-        codes_iterator_delete(iterid)
+        codes_grib_iterator_delete(iterid)
         codes_release(gid)
 
     f.close()
