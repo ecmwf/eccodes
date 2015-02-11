@@ -171,7 +171,7 @@ static void destroy(grib_context* context,grib_action* act)
 	while(b)
 	{
 		grib_action *n = b->next;
-		grib_free_action(context,b);
+		grib_action_delete(context,b);
 		b = n;
 	}
 

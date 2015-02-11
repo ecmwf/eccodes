@@ -285,14 +285,14 @@ static void destroy(grib_context* context,grib_action* act)
     while(t)
     {
         grib_action *nt = t->next;
-        grib_free_action(context,t);
+        grib_action_delete(context,t);
         t = nt;
     }
 
     while(f)
     {
         grib_action *nf = f->next;
-        grib_free_action(context,f);
+        grib_action_delete(context,f);
         f = nf;
     }
 

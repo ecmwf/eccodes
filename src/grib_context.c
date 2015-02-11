@@ -636,7 +636,7 @@ void grib_context_reset(grib_context* c)
             while(a)
             {
                 grib_action *na = a->next;
-                grib_free_action(c, a);
+                grib_action_delete(c, a);
                 a = na;
             }
             grib_context_free_persistent(c, fr->filename);

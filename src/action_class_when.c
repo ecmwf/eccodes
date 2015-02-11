@@ -222,11 +222,10 @@ static void destroy(grib_context* context,grib_action* act)
   grib_action_when* self = (grib_action_when*) act;
   grib_action *t = self->block_true;
 
-
   while(t)
   {
     grib_action *nt = t->next;
-    grib_free_action(context,t);
+    grib_action_delete(context,t);
     t = nt;
   }
 
@@ -234,7 +233,7 @@ static void destroy(grib_context* context,grib_action* act)
   while(t)
   {
     grib_action *nt = t->next;
-    grib_free_action(context,t);
+    grib_action_delete(context,t);
     t = nt;
   }
 

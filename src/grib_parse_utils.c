@@ -623,7 +623,7 @@ grib_action* grib_parse_file( grib_context* gc,const char* filename)
         if(error)
         {
 #if 1
-            if (a) grib_free_action(gc,a);
+            if (a) grib_action_delete(gc,a);
             GRIB_MUTEX_UNLOCK(&mutex_file);
             return NULL;
 #endif

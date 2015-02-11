@@ -212,7 +212,6 @@ static int execute(grib_action* act, grib_handle *h) {
 	return GRIB_SUCCESS;
 }
 
-
 static void destroy(grib_context* context,grib_action* act)
 {
   grib_action_switch* a = (grib_action_switch*) act;
@@ -221,14 +220,13 @@ static void destroy(grib_context* context,grib_action* act)
   while(t)
   {
     grib_case *nt = t->next;
-    grib_free_action(context,t->action);
+    grib_action_delete(context,t->action);
     grib_arguments_free(context,t->values);
 	grib_context_free(context,t);
     t = nt;
   }
 
-  grib_free_action(context,a->Default);
-
+  grib_action_delete(context,a->Default);
 
   grib_context_free_persistent(context, act->name);
   grib_context_free_persistent(context, act->op);
