@@ -11,8 +11,6 @@
 /*! \file grib_api.h
   \brief grib_api C header file
 
-  This is the only file that must be included to use the grib_api library
-  from C.
 */
 
 #ifndef grib_api_H
