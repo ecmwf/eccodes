@@ -7,7 +7,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!  Description: how to use codes_find_nearest and codes_get_element 
+!  Description: how to use codes_grib_find_nearest and codes_get_element 
 !
 !
 !
@@ -50,7 +50,7 @@ program find
   call codes_new_from_file(infile,igrib)
   
 
-  call codes_find_nearest(igrib, .true., lats, lons, nearest_lats, nearest_lons,lsm_values, distances, indexes)
+  call codes_grib_find_nearest(igrib, .true., lats, lons, nearest_lats, nearest_lons,lsm_values, distances, indexes)
   call codes_release(igrib)
   
   call codes_close_file(infile)

@@ -103,11 +103,11 @@ module eccodes
   !> @param[out] index      zero based index
   !> @param[out] value      value of the field in the nearest point
   !> @param[out] status     CODES_SUCCESS if OK, integer value on error
-  interface codes_find_nearest
-    module procedure codes_find_nearest_single, &
-                     codes_find_nearest_four_single, &
-                     codes_find_nearest_multiple
-  end interface codes_find_nearest
+  interface codes_grib_find_nearest
+    module procedure codes_grib_find_nearest_single, &
+                     codes_grib_find_nearest_four_single, &
+                     codes_grib_find_nearest_multiple
+  end interface codes_grib_find_nearest
 
   !> Get latitude/longitude and data values.
   !>
@@ -126,7 +126,7 @@ module eccodes
   !> @param[out] lats        latitudes array with dimension "size"
   !> @param[out] lons        longitudes array with dimension "size"
   !> @param[out] values      data values array with dimension "size"
-  interface codes_get_data
-    module procedure codes_get_data_real4, &
-                     codes_get_data_real8
-  end interface codes_get_data
+  interface codes_grib_get_data
+    module procedure codes_grib_get_data_real4, &
+                     codes_grib_get_data_real8
+  end interface codes_grib_get_data

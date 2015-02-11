@@ -44,7 +44,7 @@ implicit none
     allocate(lons(numberOfPoints))
     allocate(values(numberOfPoints))
 
-    call codes_get_data(igrib,lats,lons,values)
+    call codes_grib_get_data(igrib,lats,lons,values)
 
     do i=1,numberOfPoints
       if (values(i) /= missingValue) then

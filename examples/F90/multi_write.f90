@@ -35,12 +35,12 @@ program multi_write
   do step=0,240,12
 
     call codes_set(in_gribid,"step",step)
-    call codes_multi_append(in_gribid,startsection,multi_gribid)
+    call codes_grib_multi_append(in_gribid,startsection,multi_gribid)
 
   enddo
 
 !  write messages to a file
-  call codes_multi_write(multi_gribid,outfile)
+  call codes_grib_multi_write(multi_gribid,outfile)
 
   call codes_release(in_gribid)
   call codes_release(multi_gribid)

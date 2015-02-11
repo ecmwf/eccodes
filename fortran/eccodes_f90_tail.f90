@@ -577,7 +577,7 @@ subroutine codes_clone ( gribid_src, gribid_dest, status )
 end subroutine codes_clone
 
 !
-subroutine codes_util_sections_copy ( gribid_from, gribid_to, what, gribid_out,status )
+subroutine codes_grib_util_sections_copy ( gribid_from, gribid_to, what, gribid_out,status )
     integer(kind=kindOfInt),          intent(in)  :: gribid_from
     integer(kind=kindOfInt),          intent(in) :: gribid_to
     integer(kind=kindOfInt),          intent(out) :: gribid_out
@@ -586,7 +586,7 @@ subroutine codes_util_sections_copy ( gribid_from, gribid_to, what, gribid_out,s
     integer(kind=kindOfInt)                       :: iret
 
     call grib_util_sections_copy ( gribid_from, gribid_to, what, gribid_out,status )
-end subroutine codes_util_sections_copy
+end subroutine codes_grib_util_sections_copy
 
 !
 subroutine codes_copy_namespace ( gribid_src, namespace, gribid_dest, status )
@@ -609,7 +609,7 @@ subroutine codes_check ( status,caller,string )
 end subroutine codes_check
 
 !
-subroutine codes_get_data_real4 ( gribid, lats, lons, values, status )
+subroutine codes_grib_get_data_real4 ( gribid, lats, lons, values, status )
     integer(kind=kindOfInt),                  intent(in)   :: gribid
     real ( kind = kindOfFloat ), dimension(:),intent(out)  :: lats, lons
     real ( kind = kindOfFloat ), dimension(:),intent(out)  :: values
@@ -618,10 +618,10 @@ subroutine codes_get_data_real4 ( gribid, lats, lons, values, status )
     integer(kind=kindOfSize_t)                             :: npoints
 
     call grib_get_data_real4 ( gribid, lats, lons, values, status )
-end subroutine codes_get_data_real4
+end subroutine codes_grib_get_data_real4
 
 !
-subroutine codes_get_data_real8 ( gribid, lats, lons, values, status )
+subroutine codes_grib_get_data_real8 ( gribid, lats, lons, values, status )
     integer(kind=kindOfInt),                   intent(in)   :: gribid
     real ( kind = kindOfDouble ), dimension(:),intent(out)  :: lats, lons
     real ( kind = kindOfDouble ), dimension(:),intent(out)  :: values
@@ -630,7 +630,7 @@ subroutine codes_get_data_real8 ( gribid, lats, lons, values, status )
     integer(kind=kindOfSize_t)                              :: npoints
 
     call grib_get_data_real8 ( gribid, lats, lons, values, status )
-end subroutine codes_get_data_real8
+end subroutine codes_grib_get_data_real8
 
 !
 subroutine codes_keys_iterator_new ( gribid, iterid, namespace, status )
@@ -1094,17 +1094,17 @@ subroutine codes_write ( gribid, ifile  , status)
 end subroutine codes_write
 
 !
-subroutine codes_multi_write ( multigribid, ifile  , status)
+subroutine codes_grib_multi_write ( multigribid, ifile  , status)
     integer(kind=kindOfInt),          intent(in)  :: multigribid
     integer(kind=kindOfInt),          intent(in)  :: ifile
     integer(kind=kindOfInt),optional, intent(out) :: status
     integer(kind=kindOfInt)               :: iret
 
     call grib_multi_write ( multigribid, ifile  , status)
-end subroutine codes_multi_write 
+end subroutine codes_grib_multi_write 
 
 !
-subroutine codes_multi_append ( ingribid, startsection, multigribid  , status)
+subroutine codes_grib_multi_append ( ingribid, startsection, multigribid  , status)
     integer(kind=kindOfInt),          intent(in)  :: ingribid
     integer(kind=kindOfInt),          intent(in)  :: startsection
     integer(kind=kindOfInt),          intent(out) :: multigribid
@@ -1112,10 +1112,10 @@ subroutine codes_multi_append ( ingribid, startsection, multigribid  , status)
     integer(kind=kindOfInt)               :: iret
 
     call grib_multi_append ( ingribid, startsection, multigribid  , status)
-end subroutine codes_multi_append 
+end subroutine codes_grib_multi_append 
 
 !
-subroutine codes_find_nearest_multiple(gribid,is_lsm,  &
+subroutine codes_grib_find_nearest_multiple(gribid,is_lsm,  &
                  inlats,inlons,outlats,outlons,        &
                  values,distances, indexes,status)
     integer(kind=kindOfInt),                 intent(in)    :: gribid
@@ -1135,10 +1135,10 @@ subroutine codes_find_nearest_multiple(gribid,is_lsm,  &
     call grib_find_nearest_multiple(gribid,is_lsm,   &
                  inlats,inlons,outlats,outlons,      &
                  values,distances, indexes,status)
-end subroutine codes_find_nearest_multiple
+end subroutine codes_grib_find_nearest_multiple
 
 !
-subroutine codes_find_nearest_single(gribid,is_lsm,  &
+subroutine codes_grib_find_nearest_single(gribid,is_lsm,  &
                  inlat,inlon,outlat,outlon,          &
                  value,distance, index,status)
     integer(kind=kindOfInt),   intent(in)   :: gribid
@@ -1157,10 +1157,10 @@ subroutine codes_find_nearest_single(gribid,is_lsm,  &
     call grib_find_nearest_single(gribid,is_lsm,  &
                  inlat,inlon,outlat,outlon,       &
                  value,distance, index,status)
-end subroutine codes_find_nearest_single
+end subroutine codes_grib_find_nearest_single
 
 !
-subroutine codes_find_nearest_four_single(gribid,is_lsm, &
+subroutine codes_grib_find_nearest_four_single(gribid,is_lsm, &
                  inlat,inlon,outlat,outlon,              &
                  value,distance, index,status)
     integer(kind=kindOfInt),                  intent(in)    :: gribid
@@ -1179,23 +1179,23 @@ subroutine codes_find_nearest_four_single(gribid,is_lsm, &
     call grib_find_nearest_four_single(gribid,is_lsm, &
                  inlat,inlon,outlat,outlon,           &
                  value,distance, index,status)
-  end subroutine codes_find_nearest_four_single
+  end subroutine codes_grib_find_nearest_four_single
 
 !
-subroutine codes_multi_support_on (status  )
+subroutine codes_grib_multi_support_on (status  )
     integer(kind=kindOfInt),optional, intent(out) :: status
     integer(kind=kindOfInt)               :: iret
 
     call grib_multi_support_on (status  )
-end subroutine codes_multi_support_on 
+end subroutine codes_grib_multi_support_on 
 
 !
-subroutine codes_multi_support_off ( status  )
+subroutine codes_grib_multi_support_off ( status  )
     integer(kind=kindOfInt),optional, intent(out) :: status
     integer(kind=kindOfInt)               :: iret
 
     call grib_multi_support_off ( status  )
-end subroutine codes_multi_support_off 
+end subroutine codes_grib_multi_support_off 
 
 !
 subroutine codes_gribex_mode_on (status )
