@@ -117,10 +117,7 @@ int process_file(const char* filename)
         if (lon1 != 0) {
             error("ERROR: latitudeOfFirstGridPointInDegrees=%f but should be 0!\n", lon1);
         }
-        expected_lon2 = 360.0 - 90.0/N;
-        if (fabs(lon2 - expected_lon2) > angular_tolerance) {
-            error("ERROR: longitudeOfLastGridPointInDegrees=%f but should be %f!\n", lon2, expected_lon2);
-        }
+        expected_lon2 = 360.0 - 360.0/(4*N);
 
         /* Check first and last latitudes */
         if (lat1 != -lat2) {
@@ -138,7 +135,7 @@ int process_file(const char* filename)
         }
 
         if (is_reduced) {
-            int pl_sum = 0;
+            int pl_sum = 0, max_pl = 0;
             size_t i = 0, pl_len = 0;
             int is_missing = codes_is_missing(h, "Ni", &err);
             assert(err == CODES_SUCCESS);
@@ -147,12 +144,14 @@ int process_file(const char* filename)
             }
 
             CODES_CHECK(codes_get_size(h, "pl", &pl_len),0);
+            assert(pl_len>0);
             if (pl_len != 2*N) {
                 error("ERROR: Length of pl array is %ld but should be 2*N (%ld)!\n", pl_len, 2*N);
             }
             pl = (long*)malloc(pl_len*sizeof(long));
             assert(pl);
             CODES_CHECK(codes_get_long_array(h, "pl", pl, &pl_len),0);
+            max_pl = pl[0];
 
             /* Check pl is symmetric */
             for(i=0; i<pl_len/2; ++i) {
@@ -167,11 +166,20 @@ int process_file(const char* filename)
             /* Check sum of pl array and total number of points */
             for(i=0; i<pl_len; ++i) {
                 pl_sum += pl[i];
+                if (pl[i] > max_pl) max_pl = pl[i];
             }
             if (pl_sum != numberOfDataPoints) {
                 error("ERROR: Sum of pl array %ld does not match numberOfDataPoints %ld!\n", pl_sum, numberOfDataPoints);
             }
+            if (max_pl != 4*N) {
+                printf("\tThis is an Octahedral Gaussian grid!\n");
+                expected_lon2 = 360.0 - 360.0/max_pl;
+            }
             free(pl);
+        }
+
+        if (fabs(lon2 - expected_lon2) > angular_tolerance) {
+            error("ERROR: longitudeOfLastGridPointInDegrees=%f but should be %f!\n", lon2, expected_lon2);
         }
 
         CODES_CHECK(codes_get_size(h, "values", &numberOfValues),0);
