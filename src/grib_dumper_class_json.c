@@ -147,7 +147,6 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     double *values=NULL;
     int err = 0;
     int i,tab;
-    long more=0;
     long count=0;
     int mydepth=depth+2;
     double missing_value = GRIB_MISSING_DOUBLE;
@@ -166,18 +165,12 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         err=grib_unpack_double(a,&value,&size);
     }
 
-    if(!(d->option_flags & GRIB_DUMP_FLAG_ALL_DATA) && size > 3) {
-        more = size - 3;
-        size = 3;
-    } else more=0;
-
     if (self->begin==0 && self->empty==0 ) fprintf(self->dumper.out,",\n");
     else self->begin=0;
 
     self->empty=0;
     fprintf(self->dumper.out,"%-*s",mydepth," ");
-    fprintf(self->dumper.out,"{ ");
-    fprintf(self->dumper.out,"\"key\": \"%s\", \"value\": ",a->name);
+    fprintf(self->dumper.out,"{\"key\": \"%s\", \"value\": ",a->name);
 
     err = grib_set_double(a->parent->h, "missingValue", missing_value);
     if (size>1) {
@@ -200,8 +193,6 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
             fprintf(self->dumper.out, "%s ","null");
         else
             fprintf(self->dumper.out, "%g ",values[i]);
-        if (more)
-            fprintf(self->dumper.out, "\n%-*s... %ld more values", tab, " ", more);
 
         tab=lens+mydepth+5;
         fprintf(self->dumper.out,"\n%-*s] ",tab," ");
@@ -227,7 +218,6 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
     int err = 0;
     int i,tab;
     long count=0;
-    long more=0;
     int mydepth=depth+2;
 
     grib_value_count(a,&count);
@@ -243,24 +233,20 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
         err=grib_unpack_long(a,&value,&size);
     }
 
-    if(!(d->option_flags & GRIB_DUMP_FLAG_ALL_DATA) && size > 3) {
-        more = size - 3;
-        size = 3;
-    } else more=0;
-
     if (self->begin==0 && self->empty==0) fprintf(self->dumper.out,",\n");
     else self->begin=0;
 
     self->empty=0;
 
-    fprintf(self->dumper.out,"{ ");
+    fprintf(self->dumper.out,"%-*s",mydepth," ");
+    fprintf(self->dumper.out,"{\"key\": \"%s\", \n",a->name);
 
     if (size>1) {
         int cols=9;
         int count=0;
         int lens=strlen(a->name);
         fprintf(self->dumper.out,"%-*s",mydepth," ");
-        fprintf(self->dumper.out,"\"key\" : \"%s\", \"value\": [",a->name);
+        fprintf(self->dumper.out,"\"value\" : [");
         tab=lens+mydepth+7;
         for (i=0;i<size-1;i++) {
             if (count>cols || i==0) {fprintf(self->dumper.out,"\n%-*s",tab," ");count=0;}
@@ -273,19 +259,17 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
         }
         if (count>cols) fprintf(self->dumper.out,"\n%-*s",tab," ");
         fprintf(self->dumper.out,"%ld ",values[i]);
-        if (more)
-            fprintf(self->dumper.out,"\n%-*s... %ld more values",tab," ",more);
 
         tab=lens+mydepth+5;
         fprintf(self->dumper.out,"\n%-*s] ",tab," ");
         grib_context_free(a->parent->h->context,values);
     } else {
         fprintf(self->dumper.out,"%-*s",mydepth," ");
-        fprintf(self->dumper.out,"\"key\": \"%s\", ",a->name);
+        fprintf(self->dumper.out,"\"value\" : ");
         if( grib_is_missing_long(a,value) )
-            fprintf(self->dumper.out,"\"value\" : null");
+            fprintf(self->dumper.out,"null");
         else
-            fprintf(self->dumper.out,"\"value\" : %ld",value);
+            fprintf(self->dumper.out,"%ld",value);
     }
     dump_attributes(d,a,self->dumper.out);
 
@@ -313,13 +297,12 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
     self->empty=0;
 
     fprintf(self->dumper.out,"%-*s",mydepth," ");
-    fprintf(self->dumper.out,"{ ");
+    fprintf(self->dumper.out,"{\"key\": \"%s\", \"value\": ",a->name);
 
-    fprintf(self->dumper.out,"\"key\": \"%s\", ",a->name);
     if( grib_is_missing_double(a,value) )
-        fprintf(self->dumper.out,"\"value\" : null");
+        fprintf(self->dumper.out,"null");
     else
-        fprintf(self->dumper.out,"\"value\" : %g",value);
+        fprintf(self->dumper.out,"%g",value);
 
     dump_attributes(d,a,self->dumper.out);
     fprintf(self->dumper.out," }");
@@ -363,8 +346,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
   err = grib_unpack_string_array(a,values,&size);
 
   fprintf(self->dumper.out,"%-*s",mydepth," ");
-  fprintf(self->dumper.out,"{ ");
-  fprintf(self->dumper.out,"\"key\": \"%s\", \"value\": [\n",a->name);
+  fprintf(self->dumper.out,"{\"key\": \"%s\", \"value\": [\n",a->name);
   tab=mydepth+1;
   for  (i=0;i<size-1;i++) {
       fprintf(self->dumper.out,"%-*s\"%s\",\n",(int)(tab+strlen(a->name)+4)," ",values[i]);
@@ -411,13 +393,11 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     while(*p) { if(!isprint(*p)) *p = '.'; p++; }
 
     fprintf(self->dumper.out,"%-*s",mydepth," ");
-    fprintf(self->dumper.out," {");
-
-    fprintf(self->dumper.out,"\"key\": \"%s\",",a->name);
+    fprintf(self->dumper.out,"{\"key\": \"%s\", \"value\": ",a->name);
     if( ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && grib_is_missing_internal(a) )
-        fprintf(self->dumper.out,"\"value\" : null");
+        fprintf(self->dumper.out,"null");
     else
-        fprintf(self->dumper.out,"\"value\" : \"%s\"",value);
+        fprintf(self->dumper.out,"\"%s\"",value);
 
     dump_attributes(d,a,self->dumper.out);
     fprintf(self->dumper.out,"} ");
