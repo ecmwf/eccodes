@@ -71,7 +71,7 @@ int process_file(const char* filename)
     
     printf("Checking file %s\n", filename);
     
-    while ((h = codes_handle_new_from_file(0,in,&err)) != NULL )
+    while ((h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err)) != NULL )
     {
         int is_reduced = 0, is_regular = 0, grid_ok = 0;
         long edition = 0, N = 0, Nj = 0, numberOfDataPoints;

@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
-	h=codes_handle_new_from_file(c,f,&err);
+	h=codes_handle_new_from_file(c, f, PRODUCT_GRIB, &err);
 	if (!h) {
 		printf("unable to create handle from file %s\n",infile);
 		exit(err);

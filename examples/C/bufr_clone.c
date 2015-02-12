@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
     }
     
     /* create a handle for the first message */
-    source_handle = codes_bufr_new_from_file(0,in,&err);
+    source_handle = codes_handle_new_from_file(NULL,in,PRODUCT_BUFR,&err);
 
     if (source_handle == NULL) {
         perror("ERROR: could not create handle for message");

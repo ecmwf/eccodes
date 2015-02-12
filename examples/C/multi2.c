@@ -55,7 +55,7 @@ void read_data(int num_msgs)
     }
     printf("Opened GRIB file %s: \n", file_path);
     for(i=0; i<num_msgs; ++i) {
-        h = codes_handle_new_from_file(0, fp, &err);
+        h = codes_handle_new_from_file(0, fp, PRODUCT_GRIB, &err);
         CODES_CHECK(err, 0);
 
         CODES_CHECK( codes_get_long(h, "stepRange", &stepRange), 0);

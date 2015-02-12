@@ -288,7 +288,7 @@ int codes_count_in_file(codes_context* c, FILE* f,int* n);
 * @param error       : error code set if the returned handle is NULL and the end of file is not reached
 * @return            the new handle, NULL if the resource is invalid or a problem is encountered
 */
-codes_handle* codes_handle_new_from_file(codes_context* c, FILE* f, int* error);
+codes_handle* codes_handle_new_from_file(codes_context* c, FILE* f, ProductKind product, int* error);
 
 codes_handle* codes_bufr_new_from_file  (codes_context* c, FILE* f, int* error);
 
