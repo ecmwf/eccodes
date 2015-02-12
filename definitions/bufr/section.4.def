@@ -13,7 +13,6 @@ unsigned[1]     reserved = 0;
 position offsetBeforeData;
 
 #meta subsetNumber bufr_subset_number();
-meta selectGroupNumber bufr_group_number();
 
 transient subsetNumber=0;
 if (compressedData) {

@@ -265,28 +265,20 @@ void accessor_bufr_data_element_set_numericValues(grib_accessor *a, grib_vdarray
 void accessor_bufr_data_element_set_stringValues(grib_accessor *a, grib_vsarray *stringValues);
 void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor *a, grib_viarray *elementsDescriptorsIndex);
 
-/* grib_accessor_class_bufr_group.c */
-
-/* grib_accessor_class_unpack_bufr_values.c */
-
-/* grib_accessor_class_bufr_uncompressed_data.c */
-
-/* grib_accessor_class_bufr_element.c */
-
 /* grib_accessor_class_bufr_elements_table.c */
 char **str_split(char *a_str, const char a_delim);
 bufr_descriptor *accessor_bufr_elements_table_get_descriptor(grib_accessor *a, int code, int *err);
 
+/* grib_accessor_class_bufr_group.c */
+
+/* grib_accessor_class_group.c */
+
+/* grib_accessor_class_unpack_bufr_values.c */
+
 /* grib_accessor_class_bufr_has_delayed_replication.c */
-
-/* grib_accessor_class_bufr_subset_number.c */
-
-/* grib_accessor_class_bufr_group_number.c */
 
 /* grib_accessor_class_apply_operators.c */
 size_t compute_size_AO(long *descriptors, size_t numberOfDescriptors);
-
-/* grib_accessor_class_group.c */
 
 /* grib_accessor_class_non_alpha.c */
 

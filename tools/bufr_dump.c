@@ -17,7 +17,7 @@
 
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value*/
-        {"j",0,0,0,1,0},
+        {"j",0,0,1,1,0},
         {"S",0,0,1,0,0},
         {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
         {"D",0,0,0,1,0},

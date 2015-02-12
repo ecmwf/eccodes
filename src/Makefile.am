@@ -43,7 +43,6 @@ libgrib_api_la_prototypes= \
 	action_class_close.c \
 	action_class_variable.c \
 	action_class_modify.c \
-	eccodes.c \
 	grib_accessor.c \
 	grib_concept.c \
 	grib_hash_array.c \
@@ -65,16 +64,12 @@ libgrib_api_la_prototypes= \
 	grib_accessor_class_bufr_data.c \
 	grib_accessor_class_bufr_data_array.c \
 	grib_accessor_class_bufr_data_element.c \
-	grib_accessor_class_bufr_group.c \
-	grib_accessor_class_unpack_bufr_values.c \
-	grib_accessor_class_bufr_uncompressed_data.c \
-	grib_accessor_class_bufr_element.c \
 	grib_accessor_class_bufr_elements_table.c \
-	grib_accessor_class_bufr_has_delayed_replication.c \
-	grib_accessor_class_bufr_subset_number.c \
-	grib_accessor_class_bufr_group_number.c \
-	grib_accessor_class_apply_operators.c \
+	grib_accessor_class_bufr_group.c \
 	grib_accessor_class_group.c \
+	grib_accessor_class_unpack_bufr_values.c \
+	grib_accessor_class_bufr_has_delayed_replication.c \
+	grib_accessor_class_apply_operators.c \
 	grib_accessor_class_non_alpha.c \
 	grib_accessor_class_g1bitmap.c \
 	grib_accessor_class_g2bitmap.c \
@@ -353,7 +348,7 @@ libgrib_api_la_prototypes= \
 
 libgrib_api_extra_prototypes = grib_bits_any_endian.c grib_bits_any_endian_simple.c
 
-libgrib_api_la_SOURCES = $(libgrib_api_la_prototypes) grib_yacc.c  grib_lex.c md5.c
+libgrib_api_la_SOURCES = $(libgrib_api_la_prototypes) eccodes.c grib_yacc.c  grib_lex.c md5.c
 
 libgrib_api_la_LIBADD = @LIBOBJS@
 libgrib_api_la_DEPENDENCIES = grib_api.h $(libgrib_api_la_LIBADD)
