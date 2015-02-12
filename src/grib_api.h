@@ -24,6 +24,10 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
+
+/* Microsoft Windows Visual Studio support */
+#include "grib_windef.h"
+
 #ifndef GRIB_ON_WINDOWS
 #include <sys/time.h>
 #endif
