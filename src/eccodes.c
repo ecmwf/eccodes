@@ -143,22 +143,6 @@ void codes_index_delete(grib_index* index)
 
 /* Create handle */
 /******************************************************************************/
-grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind product, int* error)
-{
-    if (product == PRODUCT_GRIB)
-        return grib_handle_new_from_file(c, f, error);
-    if (product == PRODUCT_BUFR)
-        return bufr_new_from_file(c, f, error);
-    if (product == PRODUCT_ANY)
-        return any_new_from_file(c, f, error);
-
-    assert(!"Invalid product");
-    return NULL;
-}
-codes_handle* codes_bufr_new_from_file (codes_context* c, FILE* f, int* error)
-{
-    return bufr_new_from_file(c, f, error);
-}
 int codes_write_message(grib_handle* h,const char* file,const char* mode)
 {
     return grib_write_message(h,file,mode);

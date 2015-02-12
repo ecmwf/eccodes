@@ -86,7 +86,7 @@ int main(int argc, char** argv)
     fname=argv[2];
     fin=fopen(fname,"r");
     if(!fin) { perror(fname); exit(1); }
-    h=codes_handle_new_from_file(0,fin,&ret);
+    h=codes_handle_new_from_file(0,fin,PRODUCT_GRIB, &ret);
     if (!h || ret!=CODES_SUCCESS) {printf(" unable to create handle\n");exit(1);}
 
     codes_grib_nearest_find_multiple(h,1,vlat,vlon,npoints,
@@ -100,7 +100,7 @@ int main(int argc, char** argv)
         fname=argv[n];
         fin=fopen(fname,"r");
         if(!fin) { perror(fname); exit(1); }
-        while ((h=codes_handle_new_from_file(0,fin,&ret))!=NULL) {
+        while ((h=codes_handle_new_from_file(0,fin,PRODUCT_GRIB,&ret))!=NULL) {
             codes_get_double_elements(h,"values",indexes,npoints,values);
 
             CODES_CHECK(codes_get_length(h, "date", &len),0);

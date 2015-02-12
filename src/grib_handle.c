@@ -310,6 +310,18 @@ grib_handle* grib_handle_clone ( grib_handle* h )
 	return grib_handle_new_from_message_copy ( h->context, h->buffer->data, h->buffer->ulength );
 }
 
+grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind product, int* error)
+{
+    if (product == PRODUCT_GRIB)
+        return grib_handle_new_from_file(c, f, error);
+    if (product == PRODUCT_BUFR)
+        return bufr_new_from_file(c, f, error);
+    if (product == PRODUCT_ANY)
+        return any_new_from_file(c, f, error);
+
+    Assert(!"codes_handle_new_from_file: Invalid product");
+    return NULL;
+}
 
 grib_handle* grib_handle_new_from_message_copy ( grib_context* c, const void* data, size_t size )
 {
@@ -395,8 +407,6 @@ grib_handle* grib_handle_new_from_multi_message ( grib_context* c,void** data,
 
 	return h;
 }
-
-
 
 grib_handle* grib_handle_new_from_file ( grib_context* c, FILE* f,int *error )
 {

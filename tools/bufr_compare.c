@@ -355,10 +355,10 @@ static void print_index_key_values(grib_index* index,int counter,const char* err
     printf("\n");
 }
 
-static grib_handle* grib_handle_new_from_file_x(grib_context* c,FILE* f,int
-        mode,int headers_only,int *err)
+static grib_handle* grib_handle_new_from_file_x(
+        grib_context* c,FILE* f,int mode,int headers_only,int *err)
 {
-    return bufr_new_from_file(c,f,err);
+    return codes_handle_new_from_file(c,f,PRODUCT_BUFR,err);
 }
 
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
