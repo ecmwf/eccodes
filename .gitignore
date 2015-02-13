@@ -50,6 +50,10 @@ tools/grib_get
 tools/grib_get_data
 tools/grib_histogram
 tools/grib_index_build
+tools/gts_copy
+tools/gts_dump
+tools/gts_filter
+tools/gts_ls
 tools/codes_info
 tools/grib_list_keys
 tools/grib_ls
