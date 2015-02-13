@@ -66,7 +66,7 @@ if( HAVE_PYTHON )
                             TYPE SHARED
                             NOINSTALL
                             SOURCES   grib_interface.h grib_interface.c ${_swig_c_wrapper}
-                            LIBS      grib_api ${PYTHON_LIBRARIES} )
+                            LIBS      eccodes ${PYTHON_LIBRARIES} )
         # Don't use the lib prefix.  This is needed for the python case where a _modulename.so is generated
         set_target_properties(_gribapi_swig PROPERTIES PREFIX "")
 

@@ -36,14 +36,14 @@ if( EC_HAVE_FORTRAN )
                         COMMAND cat ${srcdir}/eccodes_f90_head.f90 ${srcdir}/${_long_int_interface_ec} ${srcdir}/${_sizet_int_interface_ec} ${srcdir}/eccodes_f90_tail.f90 > eccodes_f90.f90
                         DEPENDS eccodes_f90_head.f90 eccodes_f90_tail.f90 grib_kinds.h ${_long_int_interface_ec} ${_sizet_int_interface_ec} )
 
-    ecbuild_add_library( TARGET     grib_api_f77
+    ecbuild_add_library( TARGET     eccodes_f77
                          SOURCES    grib_fortran.c grib_f77.c
-                         LIBS       grib_api )
+                         LIBS       eccodes )
 
-    ecbuild_add_library( TARGET     grib_api_f90
+    ecbuild_add_library( TARGET     eccodes_f90
                          SOURCES    grib_fortran.c grib_f90.f90 eccodes_f90.f90 grib_kinds.h
                          GENERATED  grib_f90.f90 eccodes_f90.f90
-                         LIBS       grib_api )
+                         LIBS       eccodes )
 
     # Add the eccodes module file as well
     #set(_eccodes_mod "${CMAKE_Fortran_MODULE_DIRECTORY}/eccodes.mod" )
@@ -55,7 +55,7 @@ if( EC_HAVE_FORTRAN )
     #    #COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_Fortran_MODULE_DIRECTORY}/grib_api.mod" ${_eccodes_mod}
     #    COMMAND "/usr/bin/sh" "-c" "if test -f GRIB_API.mod; then ln -s GRIB_API.mod ECCODES.mod; fi"
     #    COMMAND "/usr/bin/sh" "-c" "if test -f grib_api.mod; then ln -s grib_api.mod eccodes.mod; fi"
-    #   DEPENDS grib_api_f90
+    #   DEPENDS eccodes_f90
     #    VERBATIM
     #)
     #add_custom_target(add_eccodes_mod ALL DEPENDS ${_eccodes_mod})

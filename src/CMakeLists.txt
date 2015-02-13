@@ -376,7 +376,7 @@ ecbuild_generate_yy(YYPREFIX  grib_yy
                     YACC_FLAGS  "-y"
                     DEPENDANT action.c )
 
-ecbuild_add_library(TARGET    grib_api
+ecbuild_add_library(TARGET    eccodes
                     SOURCES   grib_api_version.c
                               griby.c gribl.c
                              ${grib_api_srcs}

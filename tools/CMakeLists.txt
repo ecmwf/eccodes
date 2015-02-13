@@ -3,7 +3,7 @@ ecbuild_add_library( TARGET    grib_tools
                      TYPE      STATIC
                      NOINSTALL
                      SOURCES   grib_tools.c grib_options.c grib_tools.h
-                     LIBS      grib_api )
+                     LIBS      eccodes )
 
 # tools binaries
 list( APPEND grib_tools_bins

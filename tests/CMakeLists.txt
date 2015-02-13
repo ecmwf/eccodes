@@ -20,7 +20,7 @@ foreach( tool ${test_bins} )
     ecbuild_add_executable( TARGET    ${tool}
                             NOINSTALL
                             SOURCES   ${tool}.c
-                            LIBS      grib_api
+                            LIBS      eccodes
     )
 endforeach()
 

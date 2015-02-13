@@ -17,7 +17,7 @@ foreach( tool ${test_bins} )
                            NOINSTALL
                            SOURCES   ${tool}.c
                            CONDITION HAVE_PYTHON
-                           LIBS      grib_api
+                           LIBS      eccodes
    )
    list( APPEND ptools  p_${tool} )
 endforeach()

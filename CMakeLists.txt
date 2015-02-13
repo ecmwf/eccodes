@@ -214,7 +214,7 @@ endif()
 
 set( GRIB_API_TPLS            AEC PNG Jasper OpenJPEG CMath )
 set( GRIB_API_INCLUDE_DIRS    ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src )
-set( GRIB_API_LIBRARIES       grib_api )
+set( GRIB_API_LIBRARIES       eccodes )
 
 get_directory_property( COMPILE_DEFINITIONS ECCODES_DEFINITIONS )
 
@@ -263,7 +263,7 @@ add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 
 if( EC_HAVE_FORTRAN )
     list( APPEND GRIB_API_INCLUDE_DIRS  ${CMAKE_Fortran_MODULE_DIRECTORY} )
-    list( APPEND GRIB_API_LIBRARIES grib_api_f77 grib_api_f90 )
+    list( APPEND GRIB_API_LIBRARIES eccodes_f77 eccodes_f90 )
 endif()
 
 if( NOT PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME )
@@ -282,7 +282,7 @@ ecbuild_pkgconfig(
   NAME                eccodes
   URL                 "https://software.ecmwf.int/wiki/display/ECC/"
   DESCRIPTION         "The ecCodes library"
-  LIBRARIES           grib_api
+  LIBRARIES           eccodes
   VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_GRIB_THREADS HAVE_NETCDF
                       HAVE_PYTHON HAVE_FORTRAN HAVE_PNG HAVE_AEC
 )
@@ -290,7 +290,7 @@ if( EC_HAVE_FORTRAN )
   ecbuild_pkgconfig(
     NAME                eccodes_f90
     URL                 "https://software.ecmwf.int/wiki/display/ECC/"
-    LIBRARIES           grib_api_f90 grib_api
+    LIBRARIES           eccodes_f90 eccodes
     DESCRIPTION         "The ecCodes library for Fortran 90"
     IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
     VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_GRIB_THREADS HAVE_NETCDF
@@ -299,7 +299,7 @@ if( EC_HAVE_FORTRAN )
   ecbuild_pkgconfig(
     NAME                eccodes_f77
     URL                 "https://software.ecmwf.int/wiki/display/ECC/"
-    LIBRARIES           grib_api_f77 grib_api
+    LIBRARIES           eccodes_f77 eccodes
     DESCRIPTION         "The ecCodes library for Fortran 77"
     IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
     VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_GRIB_THREADS HAVE_NETCDF

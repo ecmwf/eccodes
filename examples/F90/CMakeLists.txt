@@ -44,7 +44,7 @@ list( APPEND tests
 # ecbuild_add_test( TARGET test_f90_samples
 #   LINKER_LANGUAGE Fortran
 #   SOURCES samples.f90
-#   LIBS    grib_api_f90 grib_api
+#   LIBS    eccodes_f90 eccodes
 #   COMMAND  ${CMAKE_CURRENT_SOURCE_DIR}/samples.sh
 #   CONDITION  EC_HAVE_FORTRAN
 # )
@@ -57,7 +57,7 @@ foreach( tool ${tests} )
                             SOURCES   ${tool}.f90
                             CONDITION EC_HAVE_FORTRAN
                             LINKER_LANGUAGE Fortran
-                            LIBS      grib_api_f90 grib_api 
+                            LIBS      eccodes_f90 eccodes
     )
     # Add the test which depends on the above executable
     ecbuild_add_test( TARGET f_${tool}_test
@@ -76,21 +76,21 @@ ecbuild_add_executable( TARGET    f_new_from_file
                         SOURCES   new_from_file.f90
                         CONDITION EC_HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
-                        LIBS      grib_api_f90 grib_api 
+                        LIBS      eccodes_f90 eccodes
 )
 ecbuild_add_executable( TARGET    f_copy_namespace
                         NOINSTALL
                         SOURCES   copy_namespace.f90
                         CONDITION EC_HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
-                        LIBS      grib_api_f90 grib_api 
+                        LIBS      eccodes_f90 eccodes
 )
 ecbuild_add_executable( TARGET    f_set_gvc
                         NOINSTALL
                         SOURCES   set_gvc.f90
                         CONDITION EC_HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
-                        LIBS      grib_api_f90 grib_api 
+                        LIBS      eccodes_f90 eccodes
 )
 
 
