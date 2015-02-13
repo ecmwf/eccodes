@@ -430,9 +430,6 @@ static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors
     if (!self->empty) fprintf(self->dumper.out,",\n");
     fprintf(self->dumper.out,"%-*s",depth," ");
 
-    if (a->bufr_group_number == 1)
-      fprintf(self->dumper.out," { \"data\" : ");
-
     fprintf(self->dumper.out,"[");
 
     fprintf(self->dumper.out,"\n");
@@ -444,8 +441,6 @@ static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors
     fprintf(self->dumper.out,"%-*s",depth," ");
     fprintf(self->dumper.out,"]");
 
-    if (a->bufr_group_number == 1)
-      fprintf(self->dumper.out,"}");
     depth-=2;
   } else {
         grib_dump_accessors_block(d,block);
