@@ -43,7 +43,7 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    while ((h = codes_handle_new_from_file(0,in,&err)) != NULL ) {
+    while ((h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err)) != NULL ) {
 
         CODES_CHECK(err,0);
 

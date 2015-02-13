@@ -59,7 +59,7 @@ int main(int argc, char** argv)
     }
 
     /* create a new handle from a message in a file */
-    h = codes_handle_new_from_file(0,in,&err);
+    h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     if (h == NULL) {
         printf("Error: unable to create handle from file %s\n",infile);
     }

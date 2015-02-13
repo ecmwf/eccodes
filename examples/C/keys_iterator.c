@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    while((h = codes_handle_new_from_file(0,f,&err)) != NULL)
+    while((h = codes_handle_new_from_file(0,f,PRODUCT_GRIB,&err)) != NULL)
     {
         codes_keys_iterator* kiter=NULL;
         msg_count++;

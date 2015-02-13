@@ -10,7 +10,7 @@ AM_CPPFLAGS = -DECCODES_SAMPLES_PATH=\"$(ECCODES_SAMPLES_PATH)\" \
 
 
 lib_LTLIBRARIES = libgrib_api.la
-include_HEADERS = grib_api.h eccodes.h
+include_HEADERS = grib_api.h eccodes.h grib_windef.h
 
 libgrib_api_la_prototypes= \
 	action.c \
@@ -363,7 +363,6 @@ CLEANFILES = libgrib_api.la
 
 noinst_HEADERS = grib_api_internal.h \
                  md5.h \
-                 grib_windef.h \
                  grib_emoslib.h \
                  grib_api_prototypes.h \
                  grib_dumper_class.h \

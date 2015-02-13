@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     }
 
     /* loop over the messages in the source grib and clone them */
-    while ((source_handle = codes_handle_new_from_file(0,in,&err))!=NULL)
+    while ((source_handle = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err))!=NULL)
     {
         codes_handle *clone_handle = codes_handle_clone(source_handle);
 

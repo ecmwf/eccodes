@@ -386,4 +386,4 @@ ecbuild_add_library(TARGET    grib_api
                     ${CMATH_LIBRARIES}  )
 
 
-install( FILES grib_api.h eccodes.h DESTINATION include )
+install( FILES grib_api.h eccodes.h grib_windef.h DESTINATION include )

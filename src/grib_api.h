@@ -24,6 +24,10 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
+
+/* Microsoft Windows Visual Studio support */
+#include "grib_windef.h"
+
 #ifndef GRIB_ON_WINDOWS
 #include <sys/time.h>
 #endif
@@ -34,6 +38,8 @@ extern "C" {
 #else
 #define DEPRECATED
 #endif
+
+typedef enum ProductKind {PRODUCT_GRIB, PRODUCT_BUFR, PRODUCT_ANY} ProductKind;
 
 
 #define GRIB_API_VERSION (GRIB_API_MAJOR_VERSION*10000+GRIB_API_MINOR_VERSION*100+GRIB_API_REVISION_VERSION)
@@ -401,9 +407,7 @@ int grib_count_in_file(grib_context* c, FILE* f,int* n);
 * @return            the new handle, NULL if the resource is invalid or a problem is encountered
 */
 grib_handle* grib_handle_new_from_file(grib_context* c, FILE* f, int* error);
-
-/* TODO: this is temporary. Need to rationalize the X_new_from_file functions */
-grib_handle* bufr_new_from_file(grib_context *c, FILE *f, int *error);
+grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind product, int* error);
 
 
 /**

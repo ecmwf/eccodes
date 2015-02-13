@@ -64,46 +64,46 @@ extern "C" {
 #include "grib_windef.h"
 
 #ifndef GRIB_ON_WINDOWS
-#  include <dirent.h>
-#  include <unistd.h>
-#  include <inttypes.h>
+   #include <dirent.h>
+   #include <unistd.h>
+   #include <inttypes.h>
 #else
-#  include <direct.h>
-#  include <io.h>
+   #include <direct.h>
+   #include <io.h>
 
-/* Replace Unix rint() for Windows */
-double rint(double x);
+   /* Replace Unix rint() for Windows */
+   double rint(double x);
 
-/* define version numbers here on Windows */
-#define GRIB_API_MAJOR_VERSION    0
-#define GRIB_API_MINOR_VERSION    10
-#define GRIB_API_REVISION_VERSION 0
+   /* define version numbers here on Windows */
+   #define GRIB_API_MAJOR_VERSION    0
+   #define GRIB_API_MINOR_VERSION    10
+   #define GRIB_API_REVISION_VERSION 0
 
-#ifndef S_ISREG
-  #define S_ISREG(mode) (mode & S_IFREG)
-#endif
+   #ifndef S_ISREG
+     #define S_ISREG(mode) (mode & S_IFREG)
+   #endif
 
-#ifndef S_ISDIR
-  #define S_ISDIR(mode) (mode & S_IFDIR)
-#endif
+   #ifndef S_ISDIR
+     #define S_ISDIR(mode) (mode & S_IFDIR)
+   #endif
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
+   #ifndef M_PI
+     #define M_PI 3.14159265358979323846
+   #endif
 
-#define R_OK 04			/* Needed for Windows */
+   #define R_OK 04    /* Needed for Windows */
 
-#  ifndef F_OK
-#    define F_OK  0
-#  endif
+   #  ifndef F_OK
+   #    define F_OK  0
+   #  endif
 
-#  define mkdir(dirname,mode)   _mkdir(dirname)
+   #  define mkdir(dirname,mode)   _mkdir(dirname)
 
-#  ifdef _MSC_VER
-#    define access(path,mode)   _access(path,mode)
-#    define chmod(path,mode)    _chmod(path,mode)
-#    define strdup(str)         _strdup(str)
-#  endif
+   #  ifdef _MSC_VER
+   #    define access(path,mode)   _access(path,mode)
+   #    define chmod(path,mode)    _chmod(path,mode)
+   #    define strdup(str)         _strdup(str)
+   #  endif
 
 #endif
 

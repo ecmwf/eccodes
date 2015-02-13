@@ -39,7 +39,7 @@ int main ( int argc, char* argv[])
         exit(1);
     }
 
-    hfrom=codes_handle_new_from_file(0,in,&err);
+    hfrom=codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     CODES_CHECK(err,0);
     fclose(in);
 
@@ -49,7 +49,7 @@ int main ( int argc, char* argv[])
         exit(1);
     }
 
-    hto=codes_handle_new_from_file(0,in,&err);
+    hto=codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     CODES_CHECK(err,0);
     fclose(in);
 

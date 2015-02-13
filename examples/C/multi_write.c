@@ -48,7 +48,7 @@ int main(int argc, char** argv)
     }
 
     /* new grib handle from input file */
-    h = codes_handle_new_from_file(0,in,&err);
+    h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     CODES_CHECK(err,0);
     CODES_CHECK(codes_get_long(h,"edition",&edition),0);
     if (edition != 2) {

@@ -50,7 +50,7 @@ int main(int argc, char** argv)
     }
 
     /* Loop on all the messages in a file.*/
-    while ((h = codes_handle_new_from_file(0,in,&err)) != NULL ) {
+    while ((h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err)) != NULL ) {
         /* Check of errors after reading a message. */
         if (err != CODES_SUCCESS) CODES_CHECK(err,0);
 
