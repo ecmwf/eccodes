@@ -21,7 +21,7 @@ bin_PROGRAMS = grib_histogram big2gribex \
                bufr_copy bufr_compare bufr_index_build \
                taf_dump taf_ls taf_get taf_filter \
                metar_dump metar_ls metar_get metar_filter \
-							 gts_copy gts_dump gts_filter gts_ls
+               gts_copy gts_dump gts_filter gts_ls
 
 noinst_PROGRAMS =  gaussian grib_diff mars_request xref all_keys #compile #dumpload grib_compare_old
 

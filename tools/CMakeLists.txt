@@ -15,6 +15,7 @@ list( APPEND grib_tools_bins
              bufr_copy bufr_compare bufr_index_build
              taf_dump taf_ls taf_get taf_filter
              metar_dump metar_ls metar_get metar_filter
+             gts_copy gts_dump gts_filter gts_ls
              )
 
 list( APPEND grib_tools_bins_ECMWF_ONLY
