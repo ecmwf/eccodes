@@ -129,7 +129,6 @@ void grib_section_delete ( grib_context   *c, grib_section* b )
 	grib_context_free ( c,b );
 }
 
-
 int grib_handle_delete ( grib_handle* h )
 {
 	if ( h != NULL )
@@ -157,7 +156,6 @@ int grib_handle_delete ( grib_handle* h )
 	}
 	return GRIB_SUCCESS;
 }
-
 
 grib_handle* grib_new_handle ( grib_context* c )
 {
@@ -328,7 +326,6 @@ grib_handle* grib_handle_new_from_message_copy ( grib_context* c, const void* da
 	grib_handle *g = NULL;
 	void* copy =NULL;
 	if ( c == NULL ) c = grib_context_get_default();
-
 
 	c->handle_file_count=0;
 	c->handle_total_count=0;
@@ -732,7 +729,6 @@ grib_handle* grib_new_from_file ( grib_context* c, FILE* f,int headers_only,int 
 	return h;
 }
 
-
 grib_handle* gts_new_from_file ( grib_context* c, FILE* f,int *error )
 {
 	void *data = NULL;
@@ -917,7 +913,6 @@ grib_handle* any_new_from_file ( grib_context* c, FILE* f,int *error )
 
     return gl;
 }
-
 
 static grib_handle* grib_handle_new_from_file_no_multi ( grib_context* c,FILE* f,int headers_only,int *error )
 {
@@ -1409,7 +1404,6 @@ void grib_gribex_mode_off ( grib_context* c )
 	if ( !c ) c=grib_context_get_default();
 	c->gribex_mode_on=0;
 }
-
 
 static grib_multi_support* grib_get_multi_support ( grib_context* c, FILE* f )
 {
