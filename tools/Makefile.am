@@ -20,7 +20,8 @@ bin_PROGRAMS = grib_histogram big2gribex \
                bufr_count bufr_filter bufr_ls bufr_dump bufr_set bufr_get \
                bufr_copy bufr_compare bufr_index_build \
                taf_dump taf_ls taf_get taf_filter \
-               metar_dump metar_ls metar_get metar_filter
+               metar_dump metar_ls metar_get metar_filter \
+							 gts_copy gts_dump gts_filter gts_ls
 
 noinst_PROGRAMS =  gaussian grib_diff mars_request xref all_keys #compile #dumpload grib_compare_old
 
@@ -77,6 +78,12 @@ taf_dump_SOURCES   = taf_dump.c
 taf_ls_SOURCES   = taf_ls.c
 taf_get_SOURCES   = taf_get.c
 taf_filter_SOURCES   = taf_filter.c
+
+gts_copy_SOURCES = gts_copy.c
+gts_dump_SOURCES = gts_dump.c
+gts_filter_SOURCES = gts_filter.c
+gts_get_SOURCES = gts_get.c
+gts_ls_SOURCES = gts_ls.c
 
 INCLUDES =  -I$(top_builddir)/src
 
