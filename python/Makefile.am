@@ -7,7 +7,7 @@ if CREATING_SHARED_LIBS
 pkgpyexec_LTLIBRARIES = _gribapi_swig.la
 
 _gribapi_swig_la_SOURCES = gribapi_swig_wrap.c grib_interface.c grib_interface.h
-_gribapi_swig_la_LIBADD = $(top_builddir)/src/libgrib_api.la $(PYTHON_LIBS)
+_gribapi_swig_la_LIBADD = $(top_builddir)/src/libeccodes.la $(PYTHON_LIBS)
 _gribapi_swig_la_LDFLAGS = -module -avoid-version $(PYTHON_LDFLAGS)
 
 INCLUDES = $(PYTHON_INCLUDES) -I$(NUMPY_INCLUDE)

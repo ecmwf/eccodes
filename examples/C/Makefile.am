@@ -52,7 +52,7 @@ bufr_subset_SOURCES 	= bufr_subset.c
 
 INCLUDES =  -I$(top_builddir)/src
 
-LDADD = $(top_builddir)/src/libgrib_api.la
+LDADD = $(top_builddir)/src/libeccodes.la
 DEPENDENCIES = $(LDADD)
 
 EXTRA_DIST =$(TESTS) include.sh CMakeLists.txt include.ctest.sh.in

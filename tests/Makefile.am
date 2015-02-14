@@ -43,7 +43,7 @@ ccsds_perf_SOURCES  = ccsds_perf.c
 gribex_perf_SOURCES = gribex_perf.c
 gauss_sub_SOURCES = gauss_sub.c
 
-LDADD = $(top_builddir)/src/libgrib_api.la $(EMOS_LIB)
+LDADD = $(top_builddir)/src/libeccodes.la $(EMOS_LIB)
 
 INCLUDES   = -I$(top_builddir)/src
 

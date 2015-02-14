@@ -12,6 +12,6 @@ tigge_accumulations_SOURCES      =  tigge_accumulations.c
 
 INCLUDES =  -I$(top_builddir)/src
 
-LDADD = $(top_builddir)/src/libgrib_api.la
+LDADD = $(top_builddir)/src/libeccodes.la
 DEPENDENCIES = $(LDADD)
 EXTRA_DIST = CMakeLists.txt

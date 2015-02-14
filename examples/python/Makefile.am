@@ -12,7 +12,7 @@ p_print_data_SOURCES = print_data.c
 p_iterator_SOURCES = iterator.c
 p_count_messages_SOURCES = count_messages.c
 INCLUDES =  -I$(top_builddir)/src
-LDADD = $(top_builddir)/src/libgrib_api.la
+LDADD = $(top_builddir)/src/libeccodes.la
 DEPENDENCIES = $(LDADD)
 
 EXTRA_DIST = $(TESTS) include.sh clone.py count_messages.py get.py index.py iterator.py keys_iterator.py multi_write.py \

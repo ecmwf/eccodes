@@ -2,18 +2,18 @@
 
 AM_CFLAGS =  @WARN_PEDANTIC@
 
-lib_LTLIBRARIES = libgrib_api_f77.la libgrib_api_f90.la
+lib_LTLIBRARIES = libeccodes_f77.la libeccodes_f90.la
 include_HEADERS = grib_api_f77.h
 
-libgrib_api_f77_la_SOURCES= grib_fortran.c grib_f77.c 
-libgrib_api_f77_la_DEPENDENCIES = $(top_builddir)/src/libgrib_api.la
-libgrib_api_f77_la_LDFLAGS = -version-info $(GRIB_ABI_CURRENT):$(GRIB_ABI_REVISION):$(GRIB_ABI_AGE)
+libeccodes_f77_la_SOURCES= grib_fortran.c grib_f77.c 
+libeccodes_f77_la_DEPENDENCIES = $(top_builddir)/src/libeccodes.la
+libeccodes_f77_la_LDFLAGS = -version-info $(GRIB_ABI_CURRENT):$(GRIB_ABI_REVISION):$(GRIB_ABI_AGE)
 
-libgrib_api_f90_la_SOURCES= grib_fortran.c grib_f90.f90 eccodes_f90.f90
-libgrib_api_f90_la_DEPENDENCIES = $(top_builddir)/src/libgrib_api.la grib_api_externals.h grib_api_visibility.h grib_api_constants.h grib_kinds.h
-libgrib_api_f90_la_LDFLAGS = -version-info $(GRIB_ABI_CURRENT):$(GRIB_ABI_REVISION):$(GRIB_ABI_AGE)
+libeccodes_f90_la_SOURCES= grib_fortran.c grib_f90.f90 eccodes_f90.f90
+libeccodes_f90_la_DEPENDENCIES = $(top_builddir)/src/libeccodes.la grib_api_externals.h grib_api_visibility.h grib_api_constants.h grib_kinds.h
+libeccodes_f90_la_LDFLAGS = -version-info $(GRIB_ABI_CURRENT):$(GRIB_ABI_REVISION):$(GRIB_ABI_AGE)
 
-libgrib_api_fortran_prototypes= grib_fortran.c
+libeccodes_fortran_prototypes= grib_fortran.c
 
 if  UPPER_CASE_MOD_FALSE
 nodist_include_HEADERS = grib_api.mod
@@ -30,7 +30,7 @@ INCLUDES=  -I$(top_builddir)/src
 
 ## Make sure these will be cleaned even when they're not built by
 ## default.
-CLEANFILES = libgrib_api_f77.la libgrib_api_f90.la grib_f90.f90 eccodes_f90.f90 *.mod grib_types grib_kinds.h same_int_long same_int_size_t
+CLEANFILES = libeccodes_f77.la libeccodes_f90.la grib_f90.f90 eccodes_f90.f90 *.mod grib_types grib_kinds.h same_int_long same_int_size_t
 
 #noinst_HEADERS = 
 

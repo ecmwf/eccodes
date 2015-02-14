@@ -19,7 +19,7 @@ add_attribute = lambda **args: [list.append(attdict[key],value) for key,value in
 build_dir = '@BUILD_DIR@'
 add_attribute(
     include_dirs = os.path.join(build_dir,'src'),
-    extra_objects = os.path.join(build_dir, 'src', '.libs', 'libgrib_api.a')
+    extra_objects = os.path.join(build_dir, 'src', '.libs', 'libeccodes.a')
 )
 
 with_jasper = '@LIB_JASPER@'

@@ -71,8 +71,8 @@ make DESTDIR="$RPM_BUILD_ROOT" install
 %doc ChangeLog README AUTHORS NEWS LICENSE
 #%doc doc/*
 %prefix/bin/*
-%prefix/lib*/libgrib_api.so
-%prefix/lib*/libgrib_api.so.*
+%prefix/lib*/libeccodes.so
+%prefix/lib*/libeccodes.so.*
 %prefix/share/grib_api/definitions/*
 
 # If you install a library
@@ -93,8 +93,8 @@ The ECMWF GRIB API is an application program interface accessible from C and FOR
 #%doc doc
 %prefix/include/grib_api.h
 %prefix/include/grib_windef.h
-%prefix/lib*/libgrib_api.a
-%prefix/lib*/libgrib_api.la
+%prefix/lib*/libeccodes.a
+%prefix/lib*/libeccodes.la
 %prefix/lib*/pkgconfig/*
 %prefix/share/grib_api/samples/*
 %prefix/share/grib_api/ifs_samples/*

@@ -82,12 +82,12 @@ taf_filter_SOURCES   = taf_filter.c
 gts_copy_SOURCES = gts_copy.c
 gts_dump_SOURCES = gts_dump.c
 gts_filter_SOURCES = gts_filter.c
-gts_get_SOURCES = gts_get.c
+#gts_get_SOURCES = gts_get.c
 gts_ls_SOURCES = gts_ls.c
 
 INCLUDES =  -I$(top_builddir)/src
 
-LDADD = libgrib_tools.la $(top_builddir)/src/libgrib_api.la
+LDADD = libgrib_tools.la $(top_builddir)/src/libeccodes.la
 DEPENDENCIES = $(LDADD)
 
 grib_to_netcdf_LDADD = $(LDADD) $(NETCDF_LDFLAGS) 

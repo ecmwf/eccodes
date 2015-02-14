@@ -9,10 +9,10 @@ AM_CPPFLAGS = -DECCODES_SAMPLES_PATH=\"$(ECCODES_SAMPLES_PATH)\" \
 #  -DYYDEBUG
 
 
-lib_LTLIBRARIES = libgrib_api.la
+lib_LTLIBRARIES = libeccodes.la
 include_HEADERS = grib_api.h eccodes.h grib_windef.h
 
-libgrib_api_la_prototypes= \
+libeccodes_la_prototypes= \
 	action.c \
 	action_class_alias.c \
 	action_class_gen.c \
@@ -346,20 +346,20 @@ libgrib_api_la_prototypes= \
 	functions.c \
 	grib_api_version.c
 
-libgrib_api_extra_prototypes = grib_bits_any_endian.c grib_bits_any_endian_simple.c
+libeccodes_extra_prototypes = grib_bits_any_endian.c grib_bits_any_endian_simple.c
 
-libgrib_api_la_SOURCES = $(libgrib_api_la_prototypes) eccodes.c grib_yacc.c  grib_lex.c md5.c
+libeccodes_la_SOURCES = $(libeccodes_la_prototypes) eccodes.c grib_yacc.c  grib_lex.c md5.c
 
-libgrib_api_la_LIBADD = @LIBOBJS@
-libgrib_api_la_DEPENDENCIES = grib_api.h $(libgrib_api_la_LIBADD)
-libgrib_api_la_LDFLAGS = -version-info $(GRIB_ABI_CURRENT):$(GRIB_ABI_REVISION):$(GRIB_ABI_AGE)
+libeccodes_la_LIBADD = @LIBOBJS@
+libeccodes_la_DEPENDENCIES = grib_api.h $(libeccodes_la_LIBADD)
+libeccodes_la_LDFLAGS = -version-info $(GRIB_ABI_CURRENT):$(GRIB_ABI_REVISION):$(GRIB_ABI_AGE)
 
 # set the include path
 INCLUDES=  -I.
 
 ## Make sure these will be cleaned even when they're not built by
 ## default.
-CLEANFILES = libgrib_api.la
+CLEANFILES = libeccodes.la
 
 noinst_HEADERS = grib_api_internal.h \
                  md5.h \

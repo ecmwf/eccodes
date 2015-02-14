@@ -4,9 +4,9 @@ bindir=@bindir@
 includedir=@includedir@
 libdir=@libdir@
 
-Name: grib_api
-Description: The grib_api library
+Name: eccodes
+Description: The eccodes library
 Version: @VERSION@
 Cflags: -I${includedir}
-Libs: -L${libdir} -lgrib_api
-Libs.private: -L${libdir} -lgrib_api @LIBS@
+Libs: -L${libdir} -leccodes
+Libs.private: -L${libdir} -leccodes @LIBS@
