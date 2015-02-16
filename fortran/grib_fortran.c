@@ -911,30 +911,6 @@ int grib_f_multi_support_off(){
     return grib_f_multi_support_off_();
 }
 
-/*****************************************************************************/
-int grib_f_navigate_subgroups_(int* gid){
-    grib_handle* h=get_handle(*gid);
-    if (!h) return GRIB_NULL_HANDLE;
-    return grib_navigate_subgroups(h);
-}
-int grib_f_navigate_subgroups__(int* gid){
-    return grib_f_navigate_subgroups_(gid);
-}
-int grib_f_navigate_subgroups(int* gid){
-    return grib_f_navigate_subgroups_(gid);
-}
-
-int grib_f_not_navigate_subgroups_(int* gid){
-    grib_handle* h=get_handle(*gid);
-    if (!h) return GRIB_NULL_HANDLE;
-    return grib_not_navigate_subgroups(h);
-}
-int grib_f_not_navigate_subgroups__(int* gid){
-    return grib_f_not_navigate_subgroups_(gid);
-}
-int grib_f_not_navigate_subgroups(int* gid){
-    return grib_f_not_navigate_subgroups_(gid);
-}
 
 /*****************************************************************************/
 static int _grib_f_iterator_new_(int* gid,int* iterid,int* mode) {

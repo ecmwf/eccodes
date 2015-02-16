@@ -804,10 +804,7 @@ struct grib_handle
     char* section_length[MAX_NUM_SECTIONS];
     int sections_count;
     off_t offset;
-    long bufr_subset_number;   /* bufr subset number */
-    long bufr_group_number;    /* used in bufr */
     grib_accessor* groups[MAX_NUM_GROUPS];
-    int navigate_subgroups;
     int unpacked;
 };
 

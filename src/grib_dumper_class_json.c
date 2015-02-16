@@ -203,7 +203,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         else
             fprintf(self->dumper.out," %g",value);
     }
-    dump_attributes(d,a,self->dumper.out);
+    /* dump_attributes(d,a,self->dumper.out); */
 
     fprintf(self->dumper.out," }");
 
@@ -271,7 +271,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
         else
             fprintf(self->dumper.out,"%ld",value);
     }
-    dump_attributes(d,a,self->dumper.out);
+    /* dump_attributes(d,a,self->dumper.out); */
 
     fprintf(self->dumper.out," }");
 
@@ -304,7 +304,7 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
     else
         fprintf(self->dumper.out,"%g",value);
 
-    dump_attributes(d,a,self->dumper.out);
+    /* dump_attributes(d,a,self->dumper.out); */
     fprintf(self->dumper.out," }");
 
 }
@@ -354,7 +354,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
   fprintf(self->dumper.out,"%-*s\"%s\"\n",(int)(tab+strlen(a->name)+4)," ",values[i]);
   fprintf(self->dumper.out,"%-*s",mydepth," ");
   fprintf(self->dumper.out,"  ]");
-  dump_attributes(d,a,self->dumper.out);
+  /* dump_attributes(d,a,self->dumper.out); */
   fprintf(self->dumper.out,"} ");
 
   grib_context_free(c,values);
@@ -399,7 +399,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     else
         fprintf(self->dumper.out,"\"%s\"",value);
 
-    dump_attributes(d,a,self->dumper.out);
+    /* dump_attributes(d,a,self->dumper.out); */
     fprintf(self->dumper.out,"} ");
 
     grib_context_free(c,value);

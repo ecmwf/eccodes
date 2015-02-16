@@ -563,7 +563,7 @@ const char* grib_get_type_name(int type)
 
 int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr) {
   int id=0;
-  if (grib_accessor_get_attribute(a,attr->name,&id)) return GRIB_ATTRIBUTE_CLASH;
+  if (_grib_accessor_get_attribute(a,attr->name,&id)) return GRIB_ATTRIBUTE_CLASH;
   for (id=0;id<MAX_ACCESSOR_ATTRIBUTES;id++) {
     if (a->attributes[id] == NULL) {
       a->attributes[id]=attr;
@@ -575,7 +575,7 @@ int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr) {
 
 int grib_accessor_replace_attribute(grib_accessor* a,grib_accessor* attr) {
   int id=0;
-  if (grib_accessor_get_attribute(a,attr->name,&id) != NULL) {
+  if (_grib_accessor_get_attribute(a,attr->name,&id) != NULL) {
     grib_accessor_delete(a->parent->h->context,a->attributes[id]);
     a->attributes[id]=attr;
   } else {
@@ -586,24 +586,57 @@ int grib_accessor_replace_attribute(grib_accessor* a,grib_accessor* attr) {
 
 int grib_accessor_delete_attribute(grib_accessor* a,const char* name) {
   int id=0;
-  if (grib_accessor_get_attribute(a,name,&id) != NULL) {
+  if (_grib_accessor_get_attribute(a,name,&id) != NULL) {
     grib_accessor_delete(a->parent->h->context,a->attributes[id]);
     a->attributes[id]=NULL;
     return GRIB_SUCCESS;
   } else {
-    return GRIB_ATTRIBUTE_NOT_FOUND;
+    return GRIB_NOT_FOUND;
   }
 }
 
-grib_accessor* grib_accessor_get_attribute(grib_accessor* a,const char* name,int* id) {
+grib_accessor* grib_accessor_get_attribute_by_index(grib_accessor* a,int index) {
+
+  if (index<MAX_ACCESSOR_ATTRIBUTES) return a->attributes[index];
+
+  return NULL;
+}
+
+const char* grib_accessor_get_name(grib_accessor* a) {
+  return a->name;
+}
+
+grib_accessor* _grib_accessor_get_attribute(grib_accessor* a,const char* name,int* index) {
   int i=0;
   while (a->attributes[i] && i<MAX_ACCESSOR_ATTRIBUTES) {
     if (!strcmp(a->attributes[i]->name,name)) {
-      *id=i;
+      *index=i;
       return a->attributes[i];
     }
     i++;
   }
   return NULL;
+}
+
+grib_accessor* grib_accessor_get_attribute(grib_accessor* a,const char* name) {
+  int i=0,index=0;
+  char* p=0;
+  char* basename=NULL;
+  char* attribute_name=NULL;
+  grib_accessor* acc=NULL;
+  p=(char*)name;
+  while ( *(p+1) != '\0' && ( *p != '-' || *(p+1)!= '>' ) ) p++;
+  if (*(p+1) == '\0') {
+    return _grib_accessor_get_attribute(a,name,&index);
+  } else {
+    size_t size=name-p;
+    attribute_name=p+2;
+    basename=grib_context_malloc_clear(a->parent->h->context,size+1);
+    basename=memcpy(basename,name,size);
+    acc=_grib_accessor_get_attribute(a,basename,&index);
+    grib_context_free(a->parent->h->context,basename);
+    if (acc) return grib_accessor_get_attribute(a,attribute_name);
+    else return NULL;
+  }
 }
 

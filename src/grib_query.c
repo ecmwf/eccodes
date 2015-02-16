@@ -42,16 +42,7 @@ static int matching(grib_accessor* a,const char* name,const char* name_space)
 }
 
 
-static int matching_group_number(grib_accessor* a) {
-  if ( a->bufr_group_number==0 ||
-       a->parent->h->bufr_group_number==0 ||
-       a->bufr_group_number==a->parent->h->bufr_group_number )
-        return 1;
-  else
-        return 0;
-}
-
-static grib_accessor* search(grib_section* s,const char* name,const char* name_space,int no_group_match)
+static grib_accessor* search(grib_section* s,const char* name,const char* name_space)
 {
 
 	grib_accessor* match = NULL;
@@ -66,11 +57,10 @@ static grib_accessor* search(grib_section* s,const char* name,const char* name_s
 	{
 		grib_section* sub = a->sub_section;
 
-		if(matching(a,name,name_space) && (no_group_match || matching_group_number(a)) )
+		if(matching(a,name,name_space)) 
 			match = a;
 
-		if((b = search(sub,name,name_space,no_group_match) ) != NULL 
-        && (no_group_match || matching_group_number(b)) )
+		if((b = search(sub,name,name_space) ) != NULL )
 			match = b;
 
 		a = a->next;
@@ -159,50 +149,22 @@ static grib_accessor* search_and_cache(grib_handle* h, const char* name,const ch
 			id = grib_hash_keys_get_id(h->context->keys,name);
 
 			if ((a=h->accessors[id])!=NULL &&
-                (the_namespace==NULL || matching(a,name,the_namespace) ) &&
-                 matching_group_number(a))
+                (the_namespace==NULL || matching(a,name,the_namespace) ))
 				return a;
 		}
 
-		a = search(h->root,name,the_namespace,0);
+		a = search(h->root,name,the_namespace);
 		h->accessors[id] = a;
 
 		return a;
 	}
 	else {
-		return search(h->root,name,the_namespace,0);
+		return search(h->root,name,the_namespace);
 	}
 
 }
 
-static grib_accessor* _grib_find_accessor_navigate_subgroups(grib_handle* h, const char* name,int recursive)
-{
-	grib_accessor* a = NULL;
-  grib_section* group=h->groups[h->bufr_group_number]->sub_section;
-
-	Assert(name);
-
-	a=search(group,name,NULL,1);
-
-  /*
-  if (recursive && h->unpacked==0 && a==NULL) {
-    char type[6]={0,};
-    size_t ltype=6;
-    int nav=h->navigate_subgroups;
-    h->navigate_subgroups=0;
-    grib_get_string(h,"identifier",type,&ltype);
-    h->navigate_subgroups=nav;
-    if (!strcmp(type,"BUFR") && h->context->unpack) {
-      grib_set_long(h,"unpack",1);
-      a=_grib_find_accessor_navigate_subgroups(h,name,0);
-    }
-  }
-  */
-
-	return a;
-}
-
-static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name,int recursive)
+grib_accessor* grib_find_accessor(grib_handle* h, const char* name)
 {
 	grib_accessor* a = NULL;
 	char* p=NULL;
@@ -232,33 +194,8 @@ static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name,int r
 	if(a == NULL && h->main)
 		a = grib_find_accessor(h->main,name);
 
-  /*
-  if (recursive && h->unpacked==0 && a==NULL) {
-    char type[6]={0,};
-    size_t ltype=6;
-    grib_get_string(h,"identifier",type,&ltype);
-    if (!strcmp(type,"BUFR") && h->context->unpack) {
-      grib_set_long(h,"unpack",1);
-      a=_grib_find_accessor(h,name,0);
-    }
-  }
-  */
-
 	return a;
 }
-
-int grib_navigate_subgroups(grib_handle* h) {
-  if (!h) return GRIB_NULL_HANDLE;
-  h->navigate_subgroups=1;
-  return GRIB_SUCCESS;
-}
-
-int grib_not_navigate_subgroups(grib_handle* h) {
-  if (!h) return GRIB_NULL_HANDLE;
-  h->navigate_subgroups=0;
-  return GRIB_SUCCESS;
-}
-
 
 grib_accessor* grib_find_attribute(grib_handle* h, const char* name,const char* attr_name, int* err)
 {
@@ -271,25 +208,13 @@ grib_accessor* grib_find_attribute(grib_handle* h, const char* name,const char* 
 		return NULL;
 	}
 
-    if((act=grib_accessor_get_attribute(a,attr_name,&id))==NULL) {
+    if((act=grib_accessor_get_attribute(a,attr_name))==NULL) {
 		*err=GRIB_ATTRIBUTE_NOT_FOUND;
 		return NULL;
 	}
 	return act;
 }
 
-grib_accessor* grib_find_accessor(grib_handle* h, const char* name)
-{
-  grib_accessor* a=NULL;
-  if (h->navigate_subgroups) {
-    a=_grib_find_accessor_navigate_subgroups(h,name,1);
-    if(a) h->bufr_group_number=a->bufr_group_number;
-  }
-  else {
-    a=_grib_find_accessor(h,name,1);
-  }
-  return a;
-}
 
 int grib_find_all_accessors(grib_handle* h, const char* name,search_all_callback_proc callback,void *data)
 {

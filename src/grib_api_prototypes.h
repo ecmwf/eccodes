@@ -136,7 +136,10 @@ const char *grib_get_type_name(int type);
 int grib_accessor_add_attribute(grib_accessor *a, grib_accessor *attr);
 int grib_accessor_replace_attribute(grib_accessor *a, grib_accessor *attr);
 int grib_accessor_delete_attribute(grib_accessor *a, const char *name);
-grib_accessor *grib_accessor_get_attribute(grib_accessor *a, const char *name, int *id);
+grib_accessor *grib_accessor_get_attribute_by_index(grib_accessor *a, int index);
+const char *grib_accessor_get_name(grib_accessor *a);
+grib_accessor *_grib_accessor_get_attribute(grib_accessor *a, const char *name, int *index);
+grib_accessor *grib_accessor_get_attribute(grib_accessor *a, const char *name);
 
 /* grib_concept.c */
 grib_concept_value *grib_concept_value_new(grib_context *c, const char *name, grib_concept_condition *conditions);
@@ -951,6 +954,7 @@ grib_handle *grib_new_handle(grib_context *c);
 grib_handle *grib_handle_new_from_samples(grib_context *c, const char *name);
 int grib_write_message(grib_handle *h, const char *file, const char *mode);
 grib_handle *grib_handle_clone(grib_handle *h);
+grib_handle *codes_handle_new_from_file(grib_context *c, FILE *f, ProductKind product, int *error);
 grib_handle *grib_handle_new_from_message_copy(grib_context *c, const void *data, size_t size);
 grib_handle *grib_handle_new_from_partial_message_copy(grib_context *c, const void *data, size_t size);
 grib_handle *grib_handle_new_from_partial_message(grib_context *c, void *data, size_t buflen);
@@ -1073,10 +1077,8 @@ grib_action *grib_parse_file(grib_context *gc, const char *filename);
 int grib_type_to_int(char id);
 
 /* grib_query.c */
-int grib_navigate_subgroups(grib_handle *h);
-int grib_not_navigate_subgroups(grib_handle *h);
-grib_accessor *grib_find_attribute(grib_handle *h, const char *name, const char *attr_name, int *err);
 grib_accessor *grib_find_accessor(grib_handle *h, const char *name);
+grib_accessor *grib_find_attribute(grib_handle *h, const char *name, const char *attr_name, int *err);
 int grib_find_all_accessors(grib_handle *h, const char *name, search_all_callback_proc callback, void *data);
 grib_accessor *grib_find_accessor_fast(grib_handle *h, const char *name);
 
@@ -1127,27 +1129,18 @@ int grib_set_long_array_internal(grib_handle *h, const char *name, const long *v
 int grib_set_long_array(grib_handle *h, const char *name, const long *val, size_t length);
 int grib_get_long_internal(grib_handle *h, const char *name, long *val);
 int grib_is_in_dump(grib_handle *h, const char *name);
-int grib_attributes_count(grib_handle *h, const char *name, size_t *size);
-int grib_attribute_get_long(grib_handle *h, const char *name, const char *attr_name, long *val);
-int grib_attribute_get_long_by_index(grib_handle *h, const char *name, int index, long *val);
+int grib_attributes_count(grib_accessor *a, size_t *size);
 int grib_get_long(grib_handle *h, const char *name, long *val);
 int grib_get_double_internal(grib_handle *h, const char *name, double *val);
-int grib_attribute_get_double(grib_handle *h, const char *name, const char *attr_name, double *val);
-int grib_attribute_get_double_by_index(grib_handle *h, const char *name, int index, double *val);
 int grib_get_double(grib_handle *h, const char *name, double *val);
 int grib_get_double_element_internal(grib_handle *h, const char *name, int i, double *val);
 int grib_get_double_element(grib_handle *h, const char *name, int i, double *val);
 int grib_points_get_values(grib_handle *h, grib_points *points, double *val);
 int grib_get_double_elements(grib_handle *h, const char *name, int *i, long len, double *val);
 int grib_get_string_internal(grib_handle *h, const char *name, char *val, size_t *length);
-const char *grib_attribute_get_name(grib_handle *h, const char *name, int index);
-int grib_attribute_get_string(grib_handle *h, const char *name, const char *attr_name, char *val, size_t *length);
-int grib_attribute_get_string_by_index(grib_handle *h, const char *name, int index, char *val, size_t *length);
 int grib_get_string(grib_handle *h, const char *name, char *val, size_t *length);
 int grib_get_bytes_internal(grib_handle *h, const char *name, unsigned char *val, size_t *length);
 int grib_get_bytes(grib_handle *h, const char *name, unsigned char *val, size_t *length);
-int grib_attribute_get_native_type(grib_handle *h, const char *name, const char *attr_name, int *type);
-int grib_attribute_get_native_type_by_index(grib_handle *h, const char *name, int index, int *type);
 int grib_get_native_type(grib_handle *h, const char *name, int *type);
 const char *grib_get_accessor_class_name(grib_handle *h, const char *name);
 int _grib_get_double_array_internal(grib_handle *h, grib_accessor *a, double *val, size_t buffer_len, size_t *decoded_length);
