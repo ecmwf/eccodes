@@ -164,7 +164,7 @@ static grib_accessor* search_and_cache(grib_handle* h, const char* name,const ch
 
 }
 
-grib_accessor* grib_find_accessor(grib_handle* h, const char* name)
+static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name)
 {
 	grib_accessor* a = NULL;
 	char* p=NULL;
@@ -195,6 +195,46 @@ grib_accessor* grib_find_accessor(grib_handle* h, const char* name)
 		a = grib_find_accessor(h->main,name);
 
 	return a;
+}
+
+char* grib_split_name_attribute(grib_context* c,const char* name,char* attribute_name) {
+  /*returns accessor name and attribute*/
+  char* p=0;
+  size_t size=0;
+  char* accessor_name=NULL;
+  p=(char*)name;
+  while ( *(p+1) != '\0' && ( *p != '-' || *(p+1)!= '>' ) ) p++;
+  if (*(p+1) == '\0') {
+    *attribute_name=0;
+    return (char*)name;
+  }
+  size=name-p ;
+  accessor_name=grib_context_malloc_clear(c,size+1);
+  accessor_name=memcpy(accessor_name,name,size);
+  p+=2;
+  strcpy(attribute_name,p);
+  return accessor_name;
+}
+
+grib_accessor* grib_find_accessor(grib_handle* h, const char* name)
+{
+  char* accessor_name=NULL;
+  char attribute_name[512]={0,};
+  grib_accessor* a=NULL;
+  grib_accessor* aret=NULL;
+
+  accessor_name=grib_split_name_attribute(h->context,name,attribute_name);
+
+  a=_grib_find_accessor(h,accessor_name);
+
+  if (*attribute_name==0) {
+    aret=a;
+  } else {
+    aret=grib_accessor_get_attribute(a,attribute_name);
+    grib_context_free(h->context,accessor_name);
+  }
+
+  return aret;
 }
 
 grib_accessor* grib_find_attribute(grib_handle* h, const char* name,const char* attr_name, int* err)

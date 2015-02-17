@@ -618,6 +618,10 @@ grib_accessor* _grib_accessor_get_attribute(grib_accessor* a,const char* name,in
   return NULL;
 }
 
+int grib_accessor_has_attributes(grib_accessor* a) {
+  return a->attributes[0] ? 1 : 0 ;
+}
+
 grib_accessor* grib_accessor_get_attribute(grib_accessor* a,const char* name) {
   int i=0,index=0;
   char* p=0;

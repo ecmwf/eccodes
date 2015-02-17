@@ -139,6 +139,7 @@ int grib_accessor_delete_attribute(grib_accessor *a, const char *name);
 grib_accessor *grib_accessor_get_attribute_by_index(grib_accessor *a, int index);
 const char *grib_accessor_get_name(grib_accessor *a);
 grib_accessor *_grib_accessor_get_attribute(grib_accessor *a, const char *name, int *index);
+int grib_accessor_has_attributes(grib_accessor *a);
 grib_accessor *grib_accessor_get_attribute(grib_accessor *a, const char *name);
 
 /* grib_concept.c */
@@ -1077,6 +1078,7 @@ grib_action *grib_parse_file(grib_context *gc, const char *filename);
 int grib_type_to_int(char id);
 
 /* grib_query.c */
+char *grib_split_name_attribute(grib_context *c, const char *name, char *attribute_name);
 grib_accessor *grib_find_accessor(grib_handle *h, const char *name);
 grib_accessor *grib_find_attribute(grib_handle *h, const char *name, const char *attr_name, int *err);
 int grib_find_all_accessors(grib_handle *h, const char *name, search_all_callback_proc callback, void *data);
