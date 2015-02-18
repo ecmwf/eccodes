@@ -65,6 +65,10 @@ static int read_the_rest(reader* r,size_t message_length,unsigned char* tmp, int
     buffer = (unsigned char*)r->alloc(r->alloc_data,&buffer_size,&err);
     if(err) return err;
 
+    if (buffer == NULL || (buffer_size < message_length)) {
+        return GRIB_BUFFER_TOO_SMALL;
+    }
+
     memcpy(buffer,tmp,already_read);
 
     if((r->read(r->read_data,buffer+already_read,rest,&err) != rest) || err)
