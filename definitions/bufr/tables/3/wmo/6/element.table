@@ -27,8 +27,8 @@
 001010|stationaryBuoyPlatformIdentifierEGCManBuoys|string|STATIONARY BUOY PLATFORM IDENTIFIER(C-MAN BUOYS)|CCITT IA5|0|0|64|NA|0|0
 001011|shipOrMobileLandStationIdentifier|string|SHIP OR MOBILE LAND STATION IDENTIFIER|CCITT IA5|0|0|72|NA|0|0
 001012|directionOfMotionOfMovingObservingPlatform|long|DIRECTION OF MOTION OF MOVING OBSERVING PLATFORM|deg|0|0|9|NA|0|0
-001013|movingObservingPlatformSpeed|long|SPEED OF MOTION OF MOVING OBSERVING PLATFORM|m s-1|0|0|10|NA|0|0
-001014|platformDriftSpeed|double|PLATFORM DRIFT SPEED(HIGH PRECISION|m s-1|2|0|10|NA|0|0
+001013|movingObservingPlatformSpeed|long|SPEED OF MOTION OF MOVING OBSERVING PLATFORM|m/s|0|0|10|NA|0|0
+001014|platformDriftSpeed|double|PLATFORM DRIFT SPEED(HIGH PRECISION|m/s|2|0|10|NA|0|0
 001015|stationOrSiteName|string|STATION OR SITE NAME|CCITT IA5|0|0|160|NA|0|0
 001018|shortStationName|string|SHORT STATION OR SITE NAME|CCITT IA5|0|0|40|NA|0|0
 001020|wmoRegionSubArea|long|WMO REGION SUB-AREA|Numeric|0|0|4|NA|0|0
@@ -41,9 +41,9 @@
 001032|generatingApplication|table|GENERATING APPLICATION|CODE TABLE|0|0|8|NA|0|0
 001033|centre|table|IDENTIFICATION OF ORIGINATING/GENERATING CENTRE|CODE TABLE|0|0|8|NA|0|0
 001034|subCentre|table|IDENTIFICATION OF ORIGINATING/GENERATING SUB-CENTRE|CODE TABLE|0|0|8|NA|0|0
-001041|absolutePlatformVelocityFirstComponent|double|ABSOLUTE PLATFORM VELOCITY - FIRST COMPONENT|m s-1|5|-1073741824|31|NA|0|0
-001042|absolutePlatformVelocitySecondComponent|double|ABSOLUTE PLATFORM VELOCITY - SECOND COMPONENT|m s-1|5|-1073741824|31|NA|0|0
-001043|absolutePlatformVelocityThirdComponent|double|ABSOLUTE PLATFORM VELOCITY - THIRD COMPONENT|m s-1|5|-1073741824|31|NA|0|0
+001041|absolutePlatformVelocityFirstComponent|double|ABSOLUTE PLATFORM VELOCITY - FIRST COMPONENT|m/s|5|-1073741824|31|NA|0|0
+001042|absolutePlatformVelocitySecondComponent|double|ABSOLUTE PLATFORM VELOCITY - SECOND COMPONENT|m/s|5|-1073741824|31|NA|0|0
+001043|absolutePlatformVelocityThirdComponent|double|ABSOLUTE PLATFORM VELOCITY - THIRD COMPONENT|m/s|5|-1073741824|31|NA|0|0
 001060|aircraftReportingPointBeaconIdentifier|string|AIRCRAFT REPORTING POINT(BEACON IDENTIFIER)|CCITT IA5|0|0|64|NA|0|0
 001063|icaoLocationIndicator|string|ICAO LOCATION INDICATOR|CCITT IA5|0|0|64|NA|0|0
 001064|runwayDesignator|string|RUNWAY DESIGNATOR|CCITT IA5|0|0|32|NA|0|0
@@ -111,8 +111,8 @@
 002106|3DbBeamwidth|double|3-dB BEAMWIDTH|deg|1|0|6|NA|0|0
 002107|sidelobeSuppression|long|SIDELOBE SUPPRESSION|dB|0|0|6|NA|0|0
 002108|crosspolDiscriminationOnAxis|long|CROSSPOL DISCRIMINATION(ON AXIS)|dB|0|0|6|NA|0|0
-002109|antennaSpeedAzimuth|double|ANTENNA SPEED(AZIMUTH)|deg s-1|2|0|12|NA|0|0
-002110|antennaSpeedElevation|double|ANTENNA SPEED(ELEVATION)|deg s-1|2|0|12|NA|0|0
+002109|antennaSpeedAzimuth|double|ANTENNA SPEED(AZIMUTH)|deg/s|2|0|12|NA|0|0
+002110|antennaSpeedElevation|double|ANTENNA SPEED(ELEVATION)|deg/s|2|0|12|NA|0|0
 002111|radarIncidenceAngle|double|RADAR INCIDENCE ANGLE|deg|1|0|10|NA|0|0
 002112|radarLookAngle|double|RADAR LOOK ANGLE|deg|1|0|12|NA|0|0
 002113|numberOfAzimuthLooks|long|NUMBER OF AZIMUTH LOOKS|Numeric|0|0|4|NA|0|0
@@ -201,7 +201,7 @@
 006011|longitudeIncrement|double|LONGITUDE INCREMENT (HIGH ACCURACY)|deg|5|-18000000|26|NA|0|0
 006012|longitudeIncrement|double|LONGITUDE INCREMENT (COARSE ACCURACY)|deg|2|-18000|16|NA|0|0
 006021|distance|long|DISTANCE|m|-1|0|13|NA|0|0
-006030|waveNumberSpectral|double|WAVENUMBER (SPECTRAL)|rad m-1|5|0|13|NA|0|0
+006030|waveNumberSpectral|double|WAVENUMBER (SPECTRAL)|rad/m|5|0|13|NA|0|0
 006031|columnNumber|long|COLUMN NUMBER|Numeric|0|0|12|NA|0|0
 006033|pixelSizeOnHorizontal2|long|PIXEL SIZE ON HORIZONTAL-2|m|-1|0|16|NA|0|0
 006034|crossTrackCellNumber|long|CROSS TRACK CELL NUMBER|Numeric|0|0|7|NA|0|0
@@ -267,38 +267,38 @@
 010063|characteristicOfPressureTendency|table|CHARACTERISTIC OF PRESSURE TENDENCY|CODE TABLE|0|0|4|NA|0|0
 010070|indicatedAircraftAltitude|long|INDICATED AIRCRAFT ALTITUDE|m|0|-400|16|NA|0|0
 011001|windDirection|long|WIND DIRECTION|deg|0|0|9|NA|0|0
-011002|windSpeed|double|WIND SPEED|m s-1|1|0|12|NA|0|0
-011003|u|double|U-COMPONENT|m s-1|1|-4096|13|NA|0|0
-011004|v|double|V-COMPONENT|m s-1|1|-4096|13|NA|0|0
-011005|w|double|W-COMPONENT|Pa s-1|1|-512|10|NA|0|0
-011006|w|double|W-COMPONENT|m s-1|2|-4096|13|NA|0|0
+011002|windSpeed|double|WIND SPEED|m/s|1|0|12|NA|0|0
+011003|u|double|U-COMPONENT|m/s|1|-4096|13|NA|0|0
+011004|v|double|V-COMPONENT|m/s|1|-4096|13|NA|0|0
+011005|w|double|W-COMPONENT|Pa/s|1|-512|10|NA|0|0
+011006|w|double|W-COMPONENT|m/s|2|-4096|13|NA|0|0
 011011|windDirectionAt10M|long|WIND DIRECTION AT 10 M|deg|0|0|9|NA|0|0
-011012|windSpeedAt10M|double|WIND SPEED AT 10 M|m s-1|1|0|12|NA|0|0
+011012|windSpeedAt10M|double|WIND SPEED AT 10 M|m/s|1|0|12|NA|0|0
 011013|windDirectionAt5M|long|WIND DIRECTION AT 5 M|deg|0|0|9|NA|0|0
-011014|windSpeedAt5M|double|WIND SPEED AT 5 M|m s-1|1|0|12|NA|0|0
+011014|windSpeedAt5M|double|WIND SPEED AT 5 M|m/s|1|0|12|NA|0|0
 011016|extremeCounterclockwiseWindDirectionOfAVariableWind|long|EXTREME COUNTERCLOCKWISE WIND DIRECTION OF A VARIABLE WIND|deg|0|0|9|NA|0|0
 011017|extremeClockwiseWindDirectionOfAVariableWind|long|EXTREME CLOCKWISE WIND DIRECTIONOF A VARIABLE WIND|deg|0|0|9|NA|0|0
-011021|relativeVorticity|double|RELATIVE VORTICITY|s-1|9|-65536|17|NA|0|0
-011022|divergence|double|DIVERGENCE|s-1|9|-65536|17|NA|0|0
-011023|velocityPotential|long|VELOCITY POTENTIAL|m2 s-1|-2|-65536|17|NA|0|0
+011021|relativeVorticity|double|RELATIVE VORTICITY|/s|9|-65536|17|NA|0|0
+011022|divergence|double|DIVERGENCE|/s|9|-65536|17|NA|0|0
+011023|velocityPotential|long|VELOCITY POTENTIAL|m2/s|-2|-65536|17|NA|0|0
 011031|degreeOfTurbulence|table|DEGREE OF TURBULENCE|CODE TABLE|0|0|4|NA|0|0
 011032|heightOfBaseOfTurbulence|long|HEIGHT OF BASE OF TURBULENCE|m|-1|-40|16|NA|0|0
 011033|heightOfTopOfTurbulence|long|HEIGHT OF TOP OF TURBULENCE|m|-1|-40|16|NA|0|0
-011034|verticalGustVelocity|double|VERTICAL GUST VELOCITY|m s-1|1|-1024|11|NA|0|0
+011034|verticalGustVelocity|double|VERTICAL GUST VELOCITY|m/s|1|-1024|11|NA|0|0
 011035|verticalGustAcceleration|double|VERTICAL GUST ACCELERATION|m s-2|2|-8192|14|NA|0|0
-011036|maximumDerivedEquivalentVerticalGustSpeed|double|MAXIMUM DERIVED EQUIVALENT VERTICAL GUST SPEED|m s-1|1|0|10|NA|0|0
-011041|maximumWindGustSpeed|double|MAXIMUM WIND SPEED (GUSTS)|m s-1|1|0|12|NA|0|0
-011042|maximumWindSpeed10MinuteMeanWind|double|MAXIMUM WIND SPEED (10 MIN MEAN WIND)|m s-1|1|0|12|NA|0|0
+011036|maximumDerivedEquivalentVerticalGustSpeed|double|MAXIMUM DERIVED EQUIVALENT VERTICAL GUST SPEED|m/s|1|0|10|NA|0|0
+011041|maximumWindGustSpeed|double|MAXIMUM WIND SPEED (GUSTS)|m/s|1|0|12|NA|0|0
+011042|maximumWindSpeed10MinuteMeanWind|double|MAXIMUM WIND SPEED (10 MIN MEAN WIND)|m/s|1|0|12|NA|0|0
 011043|maximumWindGustDirection|long|MAKSIMUM WIND GUST DIRECTION|deg|0|0|9|NA|0|0
 011044|meanWindDirectionForSurfaceTo1500M|long|MEAN WIND DIRECTION FOR SURFACE - 1500 M (5000 FEET)|deg|0|0|9|NA|0|0
-011045|meanWindSpeedForSurfaceTo1500M|double|MEAN WIND SPEED FOR SURFACE - 1500 M (5000 FEET)|m s-1|1|0|12|NA|0|0
+011045|meanWindSpeedForSurfaceTo1500M|double|MEAN WIND SPEED FOR SURFACE - 1500 M (5000 FEET)|m/s|1|0|12|NA|0|0
 011049|windDirectionStandardDeviation|long|STANDARD DEVIATION OF WIND DIRECTION|deg|0|0|9|NA|0|0
-011050|standardDeviationOfHorizontalWindSpeed|double|STANDARD DEVIATION OF HORIZONTALWIND SPEED|m s-1|1|0|12|NA|0|0
-011051|standardDeviationOfVerticalWindSpeed|double|STANDARD DEVIATION OF VERTICAL WIND SPEED|m s-1|1|0|8|NA|0|0
-011052|formalUncertaintyInWindSpeed|double|FORMAL UNCERTAINTY IN WIND SPEED|m s-1|2|0|13|NA|0|0
+011050|standardDeviationOfHorizontalWindSpeed|double|STANDARD DEVIATION OF HORIZONTALWIND SPEED|m/s|1|0|12|NA|0|0
+011051|standardDeviationOfVerticalWindSpeed|double|STANDARD DEVIATION OF VERTICAL WIND SPEED|m/s|1|0|8|NA|0|0
+011052|formalUncertaintyInWindSpeed|double|FORMAL UNCERTAINTY IN WIND SPEED|m/s|2|0|13|NA|0|0
 011053|formalUncertaintyInWindDirection|double|FORMAL UNCERTAINTY IN WIND DIRECTION|deg|2|0|15|NA|0|0
-011061|absoluteWindShearIn1KmLayerBelow|double|ABSOLUTE WIND SHEAR IN 1 KM LAYER BELOW|m s-1|1|0|12|NA|0|0
-011062|absoluteWindShearIn1KmLayerAbove|double|ABSOLUTE WIND SHEAR IN 1 KM LAYER ABOVE|m s-1|1|0|12|NA|0|0
+011061|absoluteWindShearIn1KmLayerBelow|double|ABSOLUTE WIND SHEAR IN 1 KM LAYER BELOW|m/s|1|0|12|NA|0|0
+011062|absoluteWindShearIn1KmLayerAbove|double|ABSOLUTE WIND SHEAR IN 1 KM LAYER ABOVE|m/s|1|0|12|NA|0|0
 011070|designatorOfRunwayAffectedByWindShearIncludingAll|string|RUNWAY DESIGNATOR OF THE RUNWAY AFFECTED BY WIND SHEAR(INCLUING|CCITT IA5|0|0|32|NA|0|0
 011071|turbulentVerticalMomentumFlux|double|TURBULENT VERTICAL MOMENTUM FLUX|m2 s-2|3|-128|14|NA|0|0
 011072|turbulentVerticalBuoyancyFlux|double|TURBULENT VERTICAL BUOYANCY FLUX|K m s-1|3|-128|11|NA|0|0
@@ -307,7 +307,7 @@
 011075|meanTurbulenceIntensityEddyDissipationRate|double|MEAN TURBULENCE INTENSITY (EDDY DISSIPATION RATE)|m2/3 s-1|2|0|8|NA|0|0
 011076|peakTurbulenceIntensityEddyDissipationRate|double|PEAK TURBULENCE INTENSITY (EDDY DISSIPATION RATE)|m2/3 s-1|2|0|8|NA|0|0
 011081|modelWindDirectionAt10M|double|MODEL WIND DIRECTION AT 10 M|deg|2|0|16|NA|0|0
-011082|modelWindSpeedAt10M|double|MODEL WIND SPEED AT 10 M|m s-1|2|0|14|NA|0|0
+011082|modelWindSpeedAt10M|double|MODEL WIND SPEED AT 10 M|m/s|2|0|14|NA|0|0
 012001|airTemperature|double|TEMPERATURE/DRY BULB TEMPERATURE|K|1|0|12|NA|0|0
 012002|wetBulbTemperature|double|WET BULB TEMPERATURE|K|1|0|12|NA|0|0
 012003|dewpointTemperature|double|DEW POINT TEMPERATURE|K|1|0|12|NA|0|0
@@ -333,14 +333,14 @@
 012065|standardDeviationBrightnessTemperature|double|STANDARD DEVIATION BRIGHTNESS TEMPERATURE|K|1|0|12|NA|0|0
 012071|coldestClusterTemperature|double|COLDEST CLUSTER TEMPERATURE|K|1|0|12|NA|0|0
 012073|temperature|double|TEMPERATURE|K|1|0|12|NA|0|0
-012075|spectralRadiance|long|SPECTRAL RADIANCE|W m-2 sr-1 m-1|-3|0|16|NA|0|0
+012075|spectralRadiance|long|SPECTRAL RADIANCE|W m-3 sr-1|-3|0|16|NA|0|0
 012076|radiance|double|RADIANCE|W m-2 sr-1|3|0|16|NA|0|0
 012130|soilTemperature|double|SOIL TEMPERATURE|K|2|0|16|NA|0|0
 012163|brightnessTemperature|double|BRIGHTNESS TEMPERATURE|K|2|0|16|NA|0|0
 012164|instrumentTemperature|double|INSTRUMENT TEMPERATURE|K|2|0|16|NA|0|0
 012171|coldestClusterTemperature|double|COLDEST CLUSTER TEMPERATURE|K|2|0|16|NA|0|0
-013001|specificHumidity|double|SPECIFIC HUMIDITY|kg kg-1|5|0|14|NA|0|0
-013002|mixingRatio|double|MIXING RATIO|kg kg-1|5|0|14|NA|0|0
+013001|specificHumidity|double|SPECIFIC HUMIDITY|kg/kg|5|0|14|NA|0|0
+013002|mixingRatio|double|MIXING RATIO|kg/kg|5|0|14|NA|0|0
 013003|relativeHumidity|long|RELATIVE HUMIDITY|%|0|0|7|NA|0|0
 013004|vapourPressure|long|VAPOUR PRESSURE|Pa|-1|0|10|NA|0|0
 013005|vapourDensity|double|VAPOUR DENSITY|kg m-3|3|0|7|NA|0|0
@@ -349,7 +349,7 @@
 013012|depthOfFreshSnow|double|DEPTH OF FRESH SNOW|m|2|-2|12|NA|0|0
 013013|totalSnowDepth|double|TOTAL SNOW DEPTH|m|2|-2|16|NA|0|0
 013014|rainfallOrWaterEquivalentOfSnowAveragedRate|double|RAINFALL/WATER EQUIVALENT OF SNOW (AVERAGE RATE)|kg m-2 s-1|4|0|12|NA|0|0
-013015|snowfallAveragedRate|double|SNOWFALL (AVERAGE RATE)|m s-1|7|0|12|NA|0|0
+013015|snowfallAveragedRate|double|SNOWFALL (AVERAGE RATE)|m/s|7|0|12|NA|0|0
 013016|precipitableWater|long|PRECIPITABLE WATER|kg m-2|0|0|7|NA|0|0
 013019|totalPrecipitationPast1Hour|double|TOTAL PRECIPITATION PAST 1 HOUR|kg m-2|1|-1|14|NA|0|0
 013020|totalPrecipitationPast3Hours|double|TOTAL PRECIPITATION PAST 3 HOURS|kg m-2|1|-1|14|NA|0|0
@@ -406,10 +406,10 @@
 015020|integratedOzoneDensity|double|INTEGRATED OZONE DENSITY|kg m-2|8|0|21|NA|0|0
 019001|typeOfSynopticFeature|table|TYPE OF SYNOPTIC FEATURE|CODE TABLE|0|0|6|NA|0|0
 019002|effectiveRadiusOfFeature|long|EFFECTIVE RADIUS OF FEATURE|m|-2|0|12|NA|0|0
-019003|windSpeedThreshold|long|WIND SPEED THRESHOLD|m s-1|0|0|8|NA|0|0
+019003|windSpeedThreshold|long|WIND SPEED THRESHOLD|m/s|0|0|8|NA|0|0
 019004|effectiveRadiusWithRespectToWindSpeedsAboveThreshold|long|EFFECTIVE RADIUS WITH RESPECT TO WIND SPEEDS ABOVE THRESHOLD|m|-2|0|12|NA|0|0
 019005|featureDirectionOfMotion|long|DIRECTION OF MOTION OF FEATURE|deg|0|0|9|NA|0|0
-019006|speedOfMotionOfFeature|double|SPEED OF MOTION OF FEATURE|m s-1|2|0|14|NA|0|0
+019006|speedOfMotionOfFeature|double|SPEED OF MOTION OF FEATURE|m/s|2|0|14|NA|0|0
 019007|effectiveRadiusOfFeature|long|EFFECTIVE RADIUS OF FEATURE|m|-3|0|12|NA|0|0
 019008|verticalExtentOfCirculation|table|VERTICAL EXTENT OF CIRCULATION|CODE TABLE|0|0|3|NA|0|0
 019009|effectiveRadiusWithRespectToWindSpeedsAboveThresholdLargeStorms|long|EFFECTIVE RADIUS WITH RESPECT TOWIND SPEEDS ABOVE TRESHOLD|m|-3|0|12|NA|0|0
@@ -454,15 +454,15 @@
 021003|differentialReflectivity|double|DIFFERENTIAL REFLECTIVITY|dB|1|-5|7|NA|0|0
 021005|linearDepolarizationRatio|long|LINEAR DEPOLARISATION RATIO|dB|0|-65|6|NA|0|0
 021006|circularDepolarizationRatio|long|CIRCULAR DEPOLARIZATION RATIO|dB|0|-65|6|NA|0|0
-021011|dopplerMeanVelocityXDirection|long|DOPPLER MEAN VELOCITY IN X-DIRECTION|m s-1|0|-128|8|NA|0|0
-021012|dopplerMeanVelocityYDirection|long|DOPPLER MEAN VELOCITY IN Y-DIRECTION|m s-1|0|-128|8|NA|0|0
-021013|dopplerMeanVelocityZDirection|long|DOPPLER MEAN VELOCITY IN Z-DIRECTION(VZ)|m s-1|0|-128|8|NA|0|0
-021014|dopplerMeanVelocityRadial|double|DOPPLER MEAN VELOCITY RADIAL|m s-1|1|-4096|13|NA|0|0
-021017|dopplerVelocitySpectralWidth|double|DOPPLER VELOCITY SPECTRAL WIDTH|m s-1|1|0|8|NA|0|0
+021011|dopplerMeanVelocityXDirection|long|DOPPLER MEAN VELOCITY IN X-DIRECTION|m/s|0|-128|8|NA|0|0
+021012|dopplerMeanVelocityYDirection|long|DOPPLER MEAN VELOCITY IN Y-DIRECTION|m/s|0|-128|8|NA|0|0
+021013|dopplerMeanVelocityZDirection|long|DOPPLER MEAN VELOCITY IN Z-DIRECTION(VZ)|m/s|0|-128|8|NA|0|0
+021014|dopplerMeanVelocityRadial|double|DOPPLER MEAN VELOCITY RADIAL|m/s|1|-4096|13|NA|0|0
+021017|dopplerVelocitySpectralWidth|double|DOPPLER VELOCITY SPECTRAL WIDTH|m/s|1|0|8|NA|0|0
 021021|echoTops|long|ECHO TOPS|m|-3|0|4|NA|0|0
 021030|signalToNoiseRatio|long|SIGNAL TO NOISE RATIO|dB|0|-32|8|NA|0|0
 021031|verticallyIntegratedLiquidWaterContent|long|VERTICALLY INTEGRATED LIQUID-WATER CONTENT|kg m-2|0|0|7|NA|0|0
-021036|radarRainfallIntensity|double|RADAR RAINFALL INTENSITY|m s-1|7|0|12|NA|0|0
+021036|radarRainfallIntensity|double|RADAR RAINFALL INTENSITY|m/s|7|0|12|NA|0|0
 021041|brightBandHeight|long|BRIGHT-BAND HEIGHT|m|-2|0|8|NA|0|0
 021051|signalPowerAbove1Mw|long|SIGNAL POWER ABOVE 1 mW|dB|0|-256|8|NA|0|0
 021062|backscatter|double|BACKSCATTER|dB|2|-5000|13|NA|0|0
@@ -522,7 +522,7 @@
 022023|heightOfSwellWaves|double|HEIGHT OF SWELL WAVES|m|1|0|10|NA|0|0
 022025|standardDeviationWaveHeight|double|STANDARD DEVIATION WAVE HEIGHT|m|2|0|10|NA|0|0
 022026|standardDeviationOfSignificantWaveHeight|double|STANDARD DEVIATION OF SIGNIFICANT WAVE HEIGHT|m|2|0|10|NA|0|0
-022031|speedOfCurrent|double|SPEED OF CURRENT|m s-1|2|0|13|NA|0|0
+022031|speedOfCurrent|double|SPEED OF CURRENT|m/s|2|0|13|NA|0|0
 022037|tidalElevationWithRespectToNationalLandDatum|double|TIDAL ELEVATION WITH RESPECT TO NATIONAL LAND DATUM|m|3|-10000|15|NA|0|0
 022038|tidalElevationWithRespectToLocalChartDatum|double|TIDAL ELEVATION WITH RESPECT TO LOCAL CHART DATUM|m|3|-10000|15|NA|0|0
 022039|meteorologicalResidualTidalElevationSurgeOrOffset|double|METEOROLOGICAL RESIDUAL TIDAL ELEVATION(SURGE OF OFFSET)|m|3|-5000|12|NA|0|0
@@ -530,7 +530,7 @@
 022041|seaSurfaceTemperature15DayRunningMean|double|SEA-SURFACE TEMPERATURE(15-DAY RUNNING MEAN)|K|1|0|12|NA|0|0
 022042|waterTemperature|double|SEA/WATER TEMPERATURE|K|1|0|12|NA|0|0
 022043|waterTemperature|double|SEA/WATER TEMPERATURE|K|2|0|15|NA|0|0
-022044|soundVelocity|double|SOUND VELOCITY|m s-1|1|0|14|NA|0|0
+022044|soundVelocity|double|SOUND VELOCITY|m/s|1|0|14|NA|0|0
 022050|standardDeviationSeaSurfaceTemperature|double|STANDARD DEVIATION SEA SURFACE TEMPERATURE|K|2|0|8|NA|0|0
 022061|seaState|table|STATE OF THE SEA|CODE TABLE|0|0|4|NA|0|0
 022062|salinity|double|SALINITY|%|2|0|14|NA|0|0
@@ -548,7 +548,7 @@
 022078|durationOfWaveRecord|long|DURATION OF WAVE RECORD|s|0|0|12|NA|0|0
 022079|lengthOfWaveRecord|long|LENGTH OF WAVE RECORD|m|0|0|16|NA|0|0
 022080|wavebandCentralFrequency|double|WAVEBAND CENTRAL FREQUENCY|Hz|3|0|10|NA|0|0
-022081|wavebandCentralWaveNumber|double|WAVEBAND CENTRAL WAVE NUMBER|m-1|5|0|13|NA|0|0
+022081|wavebandCentralWaveNumber|double|WAVEBAND CENTRAL WAVE NUMBER|/m|5|0|13|NA|0|0
 022082|maximumNonDirectionalSpectralWaveDensity|double|MAXIMUM NON-DIRECTIONAL SPECTRALWAVE DENSITY|m2 s|2|0|20|NA|0|0
 022083|maximumNonDirectionalSpectralWaveNumber|double|MAXIMUM NON-DIRECTIONAL SPECTRALWAVE NUMBER|m3|2|0|20|NA|0|0
 022084|bandContainingMaximumNonDirectionalSpectralWaveDensity|long|BAND CONTAINING MAXIMUM NON-DIRECTIONAL SPECTRAL WAVE DENSITY|Numeric|0|0|7|NA|0|0
@@ -563,7 +563,7 @@
 022093|directionalSpectralEstimateByWaveNumber|double|DIRECTIONAL SPECTRAL ESTIMATE BYWAVE NUMBER|m4|2|0|20|NA|0|0
 022094|totalNumberOfWaveBands|long|TOTAL NUMBER OF WAVE BANDS|Numeric|0|0|7|NA|0|0
 022095|directionalSpreadOfIndividualWaves|long|DIRECTIONAL SPREAD OF INDIVIDUALWAVES|deg|0|0|8|NA|0|0
-022096|spectralBandWidth|double|SPECTRAL BAND WIDTH|s-1|3|0|4|NA|0|0
+022096|spectralBandWidth|double|SPECTRAL BAND WIDTH|/s|3|0|4|NA|0|0
 022097|meanWavelength731MOfImageSpectrumAtLowWaveNumbers|long|MEAN WAVELENGTH > 731 M OF IMAGE SPECTRUM AT LOW WAVE NUMBERS|m|0|0|14|NA|0|0
 022098|wavelengthSpreadWavelength731MAtLowWaveNumbers|long|WAVELENGTH SPREAD (WAVELENGTH > 731 M) AT LOW WAVE NUMBERS|m|0|0|14|NA|0|0
 022099|meanDirectionAtLowWaveNumbersWavelength731M|long|MEAN DIRECTION AT LOW WAVE NUMBERS (WAVELENGTH > 731 M)|deg|0|0|9|NA|0|0
@@ -584,14 +584,14 @@
 023008|stateOfCurrentRelease|table|STATE OF CURRENT RELEASE|CODE TABLE|0|0|2|NA|0|0
 023009|stateOfExpectedRelease|table|STATE OF EXPECTED RELEASE|CODE TABLE|0|0|2|NA|0|0
 023016|possibilityOfSignificantChemicalToxicHealthEffect|table|POSSIBILITY OF SIGNIFICANT CHEMICAL TOXIC HEALTH EFFECT|CODE TABLE|0|0|2|NA|0|0
-023017|flowDischargeOfMajorRecipient|double|FLOW DISCHARGE OF MAJOR RECEPIENT|m3 s-1|6|0|20|NA|0|0
+023017|flowDischargeOfMajorRecipient|double|FLOW DISCHARGE OF MAJOR RECEPIENT|m3/s|6|0|20|NA|0|0
 023018|releaseBehaviourOverTime|table|RELEASE BEHAVIOUR OVER TIME|CODE TABLE|0|0|3|NA|0|0
 023019|actualReleaseHeight|long|ACTUAL RELEASE HEIGHT|m|0|-15000|17|NA|0|0
 023021|effectiveReleaseHeight|long|EFFECTIVE RELEASE HEIGHT|m|0|-15000|17|NA|0|0
 023022|distanceOfReleasePointOrSiteOfIncident|long|DISTANCE OF RELEASE POINT OR SITE OF INCIDENT|m|0|0|24|NA|0|0
-023023|mainTransportSpeedInAtmosphere|double|MAIN TRANSPORT SPEED IN THE ATMOSPHERE|m s-1|1|0|12|NA|0|0
-023024|mainTransportSpeedInWater|double|MAIN TRANSPORT SPEED WATER|m s-1|2|0|13|NA|0|0
-023025|mainTransportSpeedInGroundWater|double|MAIN TRANSPORT SPEED IN GROUND WATER|m s-1|2|0|13|NA|0|0
+023023|mainTransportSpeedInAtmosphere|double|MAIN TRANSPORT SPEED IN THE ATMOSPHERE|m/s|1|0|12|NA|0|0
+023024|mainTransportSpeedInWater|double|MAIN TRANSPORT SPEED WATER|m/s|2|0|13|NA|0|0
+023025|mainTransportSpeedInGroundWater|double|MAIN TRANSPORT SPEED IN GROUND WATER|m/s|2|0|13|NA|0|0
 023027|mainTransportDirectionInTheAtmosphere|long|MAIN TRANSPORT DIRECTION IN THE ATMOSPHERE|deg|0|0|9|NA|0|0
 023028|mainTransportDirectionInWater|long|MAIN TRANSPORT DIRECTION IN WATER|deg|0|0|9|NA|0|0
 023029|mainTransportDirectionInGroundWater|long|MAIN TRANSPORT DIRECTION IN GROUND WATER|deg|0|0|9|NA|0|0
@@ -606,7 +606,7 @@
 024012|trajectoryDoseDefinedLocationAndExpectedTimeOfArrival|double|TRAJECTORY DOSE (DEFINED LOCATION AND EXPECTED TIME)|mSv|2|0|32|NA|0|0
 024013|gammaDoseInAirAlongMainTransportPathDefinedLocationAndTimePeriod|double|GAMMA DOSE IN AIR ALONG THE MAINTRANSPORT PATH(DEFINED LOCATION|mSv|2|0|32|NA|0|0
 024021|airConcentrationOfNamedIsotopeTypeIncludingGrossBeta|double|AIR CONCENTRATION(OF NAMED ISOTOPE TYPE INCLUDING GROSS BETA|Bq m-3|2|0|32|NA|0|0
-024022|concentrationInPrecipitationOfNamedIsotopeType|double|CONCENTRATION IN PRECIPITATION ( OF NAMED ISOTOPE TYPE)|Bq l-1|2|0|32|NA|0|0
+024022|concentrationInPrecipitationOfNamedIsotopeType|double|CONCENTRATION IN PRECIPITATION ( OF NAMED ISOTOPE TYPE)|Bq/l|2|0|32|NA|0|0
 025001|rangeGateLength|long|RANGE-GATE LENGTH|m|-1|0|6|NA|0|0
 025002|numberOfGatesAveraged|long|NUMBER OF GATES AVERAGED|Numeric|0|0|4|NA|0|0
 025003|numberOfIntegratedPulses|long|NUMBER OF INTEGRATED PULSES|Numeric|0|0|8|NA|0|0
@@ -622,7 +622,7 @@
 025013|brightBandCorrection|flag|BRIGHT-BAND CORRECTION|FLAG TABLE|0|0|2|NA|0|0
 025014|azimuthClutterCutOff|long|AZIMUTH CLUTTER CUT-OFF|Numeric|0|0|12|NA|0|0
 025015|radomeAttenuationCorrection|flag|RADOM ATTENUATION CORRECTION|FLAG TABLE|0|0|2|NA|0|0
-025016|clearAirAttenuationCorrection|double|CLEAR-AIR ATTENUATION CORRECTION|dB m-1|5|0|6|NA|0|0
+025016|clearAirAttenuationCorrection|double|CLEAR-AIR ATTENUATION CORRECTION|dB/m|5|0|6|NA|0|0
 025017|precipitationAttenuationCorrection|flag|PRECIPITATION ATTENUATION CORRECTION|FLAG TABLE|0|0|2|NA|0|0
 025018|aToZLawForAttenuationFactor|long|A TO Z LAW FOR ATTENUATION FACTOR|Numeric|7|0|6|NA|0|0
 025019|aToZLawForAttenuationExponent|long|A TO Z LAW FOR ATTENUATION EXPONENT|Numeric|2|0|7|NA|0|0
@@ -656,7 +656,7 @@
 025080|albedoRadianceEquivalentFilterWidthForAtovs|double|ALBEDO-RADIANCE EQUIVALENT FILTER WIDTH FOR ATOVS|m|10|0|14|NA|0|0
 025085|fractionOfClearPixelsInHirsFov|long|FRACTION OF CLEAR PIXELS IN HIRS FOV|Numeric|0|0|7|NA|0|0
 025091|structureConstantOfRefractionIndexCn2|double|STRUCTURE CONSTANT OF THE REFRACTION INDEX (CN2)|dB|3|-18192|13|NA|0|0
-025092|acousticPropagationVelocity|double|ACOUSTIC PROPAGATION VELOCITY|m s-1|2|28000|14|NA|0|0
+025092|acousticPropagationVelocity|double|ACOUSTIC PROPAGATION VELOCITY|m/s|2|28000|14|NA|0|0
 026001|principalTimeOfDailyReadingInUtcOfMaximumTemperature|double|PRINCIPAL TIME OF DAILY READING IN UTC OF MAXIMUM TEMPERATURE|h|1|0|12|NA|0|0
 026002|principalTimeOfDailyReadingInUtcOfMinimumTemperature|double|PRINCIPAL TIME OF DAILY READING IN UTC OF MINIMUM TEMPERATURE|h|1|0|12|NA|0|0
 026003|timeDifference|long|TIME DIFFERENCE|min|0|-1440|12|NA|0|0
