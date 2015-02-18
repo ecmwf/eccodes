@@ -1,3 +1,4 @@
+#code|abbreviation|type|name|unit|scale|reference|width|crex_unit|crex_scale|crex_width
 001192|modelVersionNumber|table|MODEL VERSION NUMBER|CODE TABLE|0|0|8|NA|0|0
 001193|sigma0SimulationMethod|table|SIGMA_0 SIMULATION METHOD|CODE TABLE|0|0|4|NA|0|0
 001194|carrierBalloonOrAircraftIdentifier|string|CARRIER BALLOON/AIRCRAFT IDENTIFIER|CCITT IA5|0|0|72|NA|0|0
@@ -8,9 +9,9 @@
 001199|dupDuplicateStatus|table|DUP - DUPLICATE STATUS|CODE TABLE|0|0|4|NA|0|0
 001201|generatingApplication|table|GENERATING APPLICATION|CODE TABLE|0|0|8|NA|0|0
 001205|satelliteIdentifier|table|SATELLITE IDENTIFIER|CODE TABLE|0|0|10|NA|0|0
-001208|velocityOfPlatformX|double|VELOCITY OF PLATFORM, X|m s-1|5|-1073741824|31|NA|0|0
-001209|velocityOfPlatformY|double|VELOCITY OF PLATFORM, Y|m s-1|5|-1073741824|31|NA|0|0
-001210|velocityOfPlatformZ|double|VELOCITY OF PLATFORM, Z|m s-1|5|-1073741824|31|NA|0|0
+001208|velocityOfPlatformX|double|VELOCITY OF PLATFORM, X|m/s|5|-1073741824|31|NA|0|0
+001209|velocityOfPlatformY|double|VELOCITY OF PLATFORM, Y|m/s|5|-1073741824|31|NA|0|0
+001210|velocityOfPlatformZ|double|VELOCITY OF PLATFORM, Z|m/s|5|-1073741824|31|NA|0|0
 001211|originOfSeaSurfaceAnalysis|string|ORIGIN OF SEA SURFACE ANALYSIS|CCITT IA5|0|0|160|Character|0|20
 001220|radarCompositeName|string|RADAR COMPOSITE NAME|CCITT IA5|0|0|160|Character|0|20
 002192|sarAzimuthAngle|long|SAR AZIMUTH ANGLE|deg|0|0|9|NA|0|0
@@ -56,7 +57,7 @@
 006193|crossTrackCellNumberAt50Km|long|CROSS TRACK CELL NUMBER AT 50 KM|Numeric|0|0|6|Numeric|0|2
 006194|crossTrackCellNumberAt25Km|long|CROSS TRACK CELL NUMBER AT 25 KM|Numeric|0|0|7|Numeric|0|3
 006217|locationOfPlatformY|double|LOCATION OF PLATFORM, Y|m|2|-1073741824|31|m|2|10
-006232|waveNumberSpectral|double|WAVENUMBER (SPECTRAL)|rad m-1|5|0|13|ADS m-1|5|4
+006232|waveNumberSpectral|double|WAVENUMBER (SPECTRAL)|rad/m|5|0|13|ADS m-1|5|4
 007217|locationOfPlatformZ|double|LOCATION OF PLATFORM, Z|m|2|-1073741824|31|m|2|10
 008193|timeQualifier|table|TIME QUALIFIER|CODE TABLE|0|0|6|CODE TABLE|0|2
 008194|tovsOrAtovsProductQualifier|table|TOVS/ATOVS PRODUCT QUALIFIER|CODE TABLE|0|0|4|CODE TABLE|0|2
@@ -71,20 +72,20 @@
 010196|solarZenithAngle|double|SOLAR ZENITH ANGLE|deg|2|-9000|15|NA|0|0
 010197|anemometerHeight|long|ANEMOMETER HEIGHT|m|0|0|9|NA|0|0
 010200|surfacePressureSpGrib|long|SURFACE PRESSURE ( SP GRIB )|Pa|-1|0|14|NA|0|0
-011192|uAt10M|double|U - COMPONENT AT 10 M|m s-1|1|-4096|13|m s-1|1|4
-011193|vAt10M|double|V - COMPONENT AT 10 M|m s-1|1|-4096|13|m s-1|1|4
-011194|wAt10M|double|W - COMPONENT AT 10 M|m s-1|1|-4096|13|m s-1|1|4
+011192|uAt10M|double|U - COMPONENT AT 10 M|m/s|1|-4096|13|m/s|1|4
+011193|vAt10M|double|V - COMPONENT AT 10 M|m/s|1|-4096|13|m/s|1|4
+011194|wAt10M|double|W - COMPONENT AT 10 M|m/s|1|-4096|13|m/s|1|4
 011195|steadinessOfWind|long|STEADINESS OF WIND|%|0|0|7|%|0|3
-011196|frictionVelocity|double|FRICTION VELOCITY|m s-1|5|0|19|NA|0|0
-011201|horizontalLineOfSightComponent|double|HORIZONTAL LINE OF SIGHT COMPONENT|m s-1|1|-4096|13|NA|0|0
-011210|1dVarWindSpeedRetreivedError|double|1D VAR WIND SPEED RETREIVED ERRO(S)|m s-1|2|0|12|NA|0|0
-011211|windSpeedIndependentEstimateOfError|double|WIND SPEED INDEPENDENT ESTIMATE OF ERROR(S)|m s-1|2|0|12|NA|0|0
-011220|formalUncertaintyInWindSpeed|double|FORMAL UNCERTAINTY IN WIND SPEED|m s-1|2|0|12|NA|0|0
+011196|frictionVelocity|double|FRICTION VELOCITY|m/s|5|0|19|NA|0|0
+011201|horizontalLineOfSightComponent|double|HORIZONTAL LINE OF SIGHT COMPONENT|m/s|1|-4096|13|NA|0|0
+011210|1dVarWindSpeedRetreivedError|double|1D VAR WIND SPEED RETREIVED ERRO(S)|m/s|2|0|12|NA|0|0
+011211|windSpeedIndependentEstimateOfError|double|WIND SPEED INDEPENDENT ESTIMATE OF ERROR(S)|m/s|2|0|12|NA|0|0
+011220|formalUncertaintyInWindSpeed|double|FORMAL UNCERTAINTY IN WIND SPEED|m/s|2|0|12|NA|0|0
 011221|formalUncertaintyInWindDirection|double|FORMAL UNCERTAINTY IN WIND DIRECTION|deg|2|0|15|NA|0|0
-011230|maximumMeanWindSpeed|double|MAXIMUM MEAN WIND SPEED|m s-1|1|-4096|13|m s-1|1|4
-011231|meanWindSpeed|double|MEAN WIND SPEED|m s-1|1|-4096|13|m s-1|1|4
-011232|minimumMeanWindSpeed|double|MINIMUM MEAN WIND SPEED|m s-1|1|-4096|13|m s-1|1|4
-011233|highestGustDuringThe10MinutePeriodPrecedingObservation|double|HIGHEST GUST DURING THE 10 MINUTE PERIOD PRECEDING OBSERVATION|m s-1|1|-4096|13|m s-1|1|4
+011230|maximumMeanWindSpeed|double|MAXIMUM MEAN WIND SPEED|m/s|1|-4096|13|m/s|1|4
+011231|meanWindSpeed|double|MEAN WIND SPEED|m/s|1|-4096|13|m/s|1|4
+011232|minimumMeanWindSpeed|double|MINIMUM MEAN WIND SPEED|m/s|1|-4096|13|m/s|1|4
+011233|highestGustDuringThe10MinutePeriodPrecedingObservation|double|HIGHEST GUST DURING THE 10 MINUTE PERIOD PRECEDING OBSERVATION|m/s|1|-4096|13|m/s|1|4
 012193|coldestClusterTemperature|double|COLDEST CLUSTER TEMPERATURE|K|1|0|12|NA|0|0
 012194|radiance|double|RADIANCE|W m-2 sr-1 m|6|0|31|NA|0|0
 012195|spectralRadiance|double|SPECTRAL RADIANCE|W m-2 sr-1 m|10|0|31|NA|0|0
@@ -105,8 +106,8 @@
 013196|antecedentPrecipitationIndex|long|ANTECEDENT PRECIPITATION INDEX|kg m-2|0|0|7|NA|0|0
 013197|totalColumnWaterVapour|double|TOTAL COLUMN WATER VAPOUR|kg m-2|1|0|10|NA|0|0
 013198|rainFlag|table|RAIN FLAG|CODE TABLE|0|0|3|NA|0|0
-013199|specificHumidityAt2M|double|SPECIFIC HUMIDITY AT 2 M|kg kg-1|5|0|14|NA|0|0
-013201|cloudLiquidWater|double|CLOUD LIQUID WATER|kg kg-1|7|0|14|NA|0|0
+013199|specificHumidityAt2M|double|SPECIFIC HUMIDITY AT 2 M|kg/kg|5|0|14|NA|0|0
+013201|cloudLiquidWater|double|CLOUD LIQUID WATER|kg/kg|7|0|14|NA|0|0
 013202|typeOfSurface|table|TYPE OF SURFACE|CODE TABLE|0|0|8|NA|0|0
 013203|1dVarEstimateOfRainRate|double|1D VAR ESTIMATE OF RAIN RATE|kg m-2 h-1|2|0|12|NA|0|0
 013204|ssmiIndependentEstimateOfRainRate|double|SSMI INDEPENDENT ESTIMATE OF RAIN RATE|kg m-2 h-1|2|0|12|NA|0|0
@@ -127,7 +128,7 @@
 013233|fractionOfTotalPrecipitationInSolidFormSnow|double|FRACTION OF TOTAL PRECIPITATION IN SOLID FORM (SNOW)|m|4|0|18|NA|0|0
 013234|snowDepthWaterEquivalentSdGrib|double|SNOW DEPTH (WATER EQUIVALENT SD GRIB)|m|4|0|14|NA|0|0
 013240|airDensity|double|AIR DENSITY|kg m-3|3|0|10|NA|0|0
-013241|cape|double|CONVECTIVE AVAILABLE POTENTIAL ENERGY|J kg-1|1|0|17|NA|0|0
+013241|cape|double|CONVECTIVE AVAILABLE POTENTIAL ENERGY|J/kg|1|0|17|NA|0|0
 014200|surfaceSolarRadiationDownwardsSsrdGrib|long|SURFACE SOLAR RADIATION DOWNWARDS (SSRD GRIB)|W m-2 s|-2|0|24|NA|0|0
 015202|integratedElectronDensity|double|INTEGRATED ELECTRON DENSITY|m-2|3|13000|12|NA|0|0
 015231|atmosphericPathDelayInSatelliteSignal|double|ATMOSPHERIC PATH DELAY IN SATELLITE SIGNAL|m|4|0|15|NA|0|0
@@ -185,8 +186,8 @@
 021243|kpVarianceCoefficientGamma|long|Kp VARIANCE COEFFICIENT (GAMMA)|Numeric|6|0|16|NA|0|0
 021244|sigma0QualityFlag|flag|SIGMA-0 QUALITY FLAG|FLAG TABLE|0|0|15|NA|0|0
 022192|spectralPeriod|double|SPECTRAL PERIOD|s|2|0|13|NA|0|0
-022193|meanWavenumber|double|MEAN WAVENUMBER|m-1|5|0|15|NA|0|0
-022194|peakWavenumber|double|PEAK WAVENUMBER|m-1|5|0|15|NA|0|0
+022193|meanWavenumber|double|MEAN WAVENUMBER|/m|5|0|15|NA|0|0
+022194|peakWavenumber|double|PEAK WAVENUMBER|/m|5|0|15|NA|0|0
 022195|meanWavePropagationDirection|double|MEAN WAVE PROPAGATION DIRECTION|deg|1|0|13|NA|0|0
 022196|peakWavePropagationDirection|double|PEAK WAVE PROPAGATION DIRECTION|deg|1|0|13|NA|0|0
 022197|directionSpread|double|DIRECTION SPREAD|deg|1|0|13|NA|0|0
@@ -208,7 +209,7 @@
 025193|attenuationCorrectionOnSigma0|double|ATTENUATION CORRECTION ON SIGMA0|dB|3|0|14|NA|0|0
 025194|majorFrameCount|long|MAJOR FRAME COUNT|Numeric|0|0|4|NA|0|0
 025197|antennaCorrectionsVersionNumber|long|ANTENNA CORRECTIONS VERSION NUMBER|Numeric|0|0|5|NA|0|0
-025198|logTempRadCentralWaveNumber|double|LOG (TEMP-RAD CENTRAL WAVE NUMBER)|m-1|8|0|30|NA|0|0
+025198|logTempRadCentralWaveNumber|double|LOG (TEMP-RAD CENTRAL WAVE NUMBER)|/m|8|0|30|NA|0|0
 025199|bandwidthCorrectionCoefficient1|long|BANDWIDTH CORRECTION COEFFICIENT 1|Numeric|4|-10000|15|NA|0|0
 025200|bandwidthCorrectionCoefficient2|long|BANDWIDTH CORRECTION COEFFICIENT 2|Numeric|5|0|17|NA|0|0
 025201|albedoRadSolarFilteredIrradiance|long|ALBEDO-RAD SOLAR FILTERED IRRADIANCE|Numeric|4|0|24|NA|0|0
