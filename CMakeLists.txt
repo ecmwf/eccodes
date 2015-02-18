@@ -8,11 +8,11 @@
 
 cmake_minimum_required( VERSION 2.8.4 FATAL_ERROR )
 
-project( grib_api C )
+project( eccodes C )
 
 set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild/cmake")
 
-set( GRIB_API_INSTALL_INCLUDE_DIR include CACHE PATH "GRIB_API override installation directory for header files")
+set( ECCODES_INSTALL_INCLUDE_DIR include CACHE PATH "ecCodes override installation directory for header files")
 
 include( ecbuild_system )
 
@@ -57,12 +57,12 @@ ecbuild_add_option( FEATURE AEC
 )
 
 ecbuild_add_option( FEATURE PYTHON
-    DESCRIPTION "build the GRIB_API Python interface"
+    DESCRIPTION "build the ecCodes Python interface"
     DEFAULT ON
 )
 
 ecbuild_add_option( FEATURE FORTRAN
-    DESCRIPTION "build the GRIB_API Fortran interface"
+    DESCRIPTION "build the ecCodes Fortran interface"
     DEFAULT ON
 )
 
@@ -83,9 +83,9 @@ ecbuild_add_option( FEATURE GRIB_THREADS     DESCRIPTION "enable threads" DEFAUL
 ###############################################################################
 # macro processing
 
-set( GRIB_API_EXTRA_LIBRARIES    "" )
-set( GRIB_API_EXTRA_INCLUDE_DIRS "" )
-set( GRIB_API_EXTRA_DEFINITIONS  "" )
+set( ECCODES_EXTRA_LIBRARIES    "" )
+set( ECCODES_EXTRA_INCLUDE_DIRS "" )
+set( ECCODES_EXTRA_DEFINITIONS  "" )
 
 find_package( CMath )
 
@@ -184,13 +184,13 @@ else()
 endif()
 
 if( NOT DEFINED ECCODES_DEFINITION_PATH )
-    set( ECCODES_DEFINITION_PATH ${grib_api_default_data_prefix}/share/grib_api/definitions )
+    set( ECCODES_DEFINITION_PATH ${grib_api_default_data_prefix}/share/eccodes/definitions )
 endif()
 if( NOT DEFINED ECCODES_SAMPLES_PATH )
-    set( ECCODES_SAMPLES_PATH ${grib_api_default_data_prefix}/share/grib_api/samples )
+    set( ECCODES_SAMPLES_PATH ${grib_api_default_data_prefix}/share/eccodes/samples )
 endif()
 if( NOT DEFINED ECCODES_IFS_SAMPLES_PATH )
-    set( ECCODES_IFS_SAMPLES_PATH ${grib_api_default_data_prefix}/share/grib_api/ifs_samples )
+    set( ECCODES_IFS_SAMPLES_PATH ${grib_api_default_data_prefix}/share/eccodes/ifs_samples )
 endif()
 
 ### config header
@@ -212,24 +212,24 @@ endif()
 
 ### export package to other ecbuild packages
 
-set( GRIB_API_TPLS            AEC PNG Jasper OpenJPEG CMath )
-set( GRIB_API_INCLUDE_DIRS    ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src )
-set( GRIB_API_LIBRARIES       eccodes )
+set( ECCODES_TPLS            AEC PNG Jasper OpenJPEG CMath )
+set( ECCODES_INCLUDE_DIRS    ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src )
+set( ECCODES_LIBRARIES       eccodes )
 
 get_directory_property( COMPILE_DEFINITIONS ECCODES_DEFINITIONS )
 
-foreach( _tpl ${GRIB_API_TPLS} )
+foreach( _tpl ${ECCODES_TPLS} )
     string( TOUPPER ${_tpl} TPL )
     if( ${TPL}_FOUND )
-        list( APPEND GRIB_API_EXTRA_DEFINITIONS   ${${TPL}_DEFINITIONS} )
-        list( APPEND GRIB_API_EXTRA_INCLUDE_DIRS  ${${TPL}_INCLUDE_DIRS} ${${TPL}_INCLUDE_DIR} )
-        list( APPEND GRIB_API_EXTRA_LIBRARIES     ${${TPL}_LIBRARIES} )
+        list( APPEND ECCODES_EXTRA_DEFINITIONS   ${${TPL}_DEFINITIONS} )
+        list( APPEND ECCODES_EXTRA_INCLUDE_DIRS  ${${TPL}_INCLUDE_DIRS} ${${TPL}_INCLUDE_DIR} )
+        list( APPEND ECCODES_EXTRA_LIBRARIES     ${${TPL}_LIBRARIES} )
     endif()
 endforeach()
 
 ### include directories
 
-include_directories( ${GRIB_API_INCLUDE_DIRS}  ${GRIB_API_EXTRA_INCLUDE_DIRS} )
+include_directories( ${ECCODES_INCLUDE_DIRS}  ${ECCODES_EXTRA_INCLUDE_DIRS} )
 
 add_subdirectory( src )
 add_subdirectory( tools )
@@ -262,14 +262,14 @@ add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 # to remove once mars server & client use eckit & ecbuild >= 1.1
 
 if( EC_HAVE_FORTRAN )
-    list( APPEND GRIB_API_INCLUDE_DIRS  ${CMAKE_Fortran_MODULE_DIRECTORY} )
-    list( APPEND GRIB_API_LIBRARIES eccodes_f77 eccodes_f90 )
+    list( APPEND ECCODES_INCLUDE_DIRS  ${CMAKE_Fortran_MODULE_DIRECTORY} )
+    list( APPEND ECCODES_LIBRARIES eccodes_f77 eccodes_f90 )
 endif()
 
 if( NOT PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME )
     set( ECCODES_DEFINITIONS       ${ECCODES_DEFINITIONS}  PARENT_SCOPE )# includes already TPL definitions
-    set( GRIB_API_INCLUDE_DIRS     ${GRIB_API_INCLUDE_DIRS} ${GRIB_API_EXTRA_INCLUDE_DIRS} PARENT_SCOPE )
-    set( GRIB_API_LIBRARIES        ${GRIB_API_LIBRARIES}    ${GRIB_API_EXTRA_LIBRARIES} ${CMATH_LIBRARIES} PARENT_SCOPE )
+    set( ECCODES_INCLUDE_DIRS     ${ECCODES_INCLUDE_DIRS} ${ECCODES_EXTRA_INCLUDE_DIRS} PARENT_SCOPE )
+    set( ECCODES_LIBRARIES        ${ECCODES_LIBRARIES}    ${ECCODES_EXTRA_LIBRARIES} ${CMATH_LIBRARIES} PARENT_SCOPE )
     set( ECCODES_FOUND             TRUE PARENT_SCOPE )
     set( ECCODES_SAMPLES_PATH      ${ECCODES_SAMPLES_PATH} PARENT_SCOPE )
     set( ECCODES_IFS_SAMPLES_PATH  ${ECCODES_IFS_SAMPLES_PATH} PARENT_SCOPE )
