@@ -12,7 +12,7 @@
 #define WINGETOPT_H
 
 /* Microsoft Windows Visual Studio support */
-#include "grib_windef.h"
+#include "eccodes_windef.h"
 
 #ifdef GRIB_ON_WINDOWS
 /* Microsoft Windows Visual Studio support */

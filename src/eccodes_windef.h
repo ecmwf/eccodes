@@ -8,8 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef grib_windef_H
-#define grib_windef_H
+#ifndef eccodes_windef_H
+#define eccodes_windef_H
 
 /* Microsoft Windows Visual Studio support */
 #if defined(_WIN32) && defined(_MSC_VER)

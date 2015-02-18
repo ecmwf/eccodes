@@ -61,7 +61,7 @@ extern "C" {
 #include <sys/stat.h>
 
 /* Microsoft Windows Visual Studio support */
-#include "grib_windef.h"
+#include "eccodes_windef.h"
 
 #ifndef GRIB_ON_WINDOWS
    #include <dirent.h>

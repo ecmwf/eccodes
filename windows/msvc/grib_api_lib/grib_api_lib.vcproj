@@ -1727,7 +1727,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\grib_windef.h"
+				RelativePath="..\..\..\src\eccodes_windef.h"
 				>
 			</File>
 			<File

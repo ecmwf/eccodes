@@ -351,7 +351,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_uint64_little_endian.c
     grib_accessor_class_uint8.c
     grib_accessor_class_blob.c
-    grib_windef.h
+    eccodes_windef.h
 )
 
 list( APPEND grib_api_extra_srcs
@@ -386,4 +386,4 @@ ecbuild_add_library(TARGET    eccodes
                     ${CMATH_LIBRARIES}  )
 
 
-install( FILES grib_api.h eccodes.h grib_windef.h DESTINATION include )
+install( FILES grib_api.h eccodes.h eccodes_windef.h DESTINATION include )

@@ -92,7 +92,7 @@ The ECMWF GRIB API is an application program interface accessible from C, FORTRA
 %defattr(-, root, root)
 #%doc doc
 %prefix/include/grib_api.h
-%prefix/include/grib_windef.h
+%prefix/include/eccodes_windef.h
 %prefix/lib*/libeccodes.a
 %prefix/lib*/libeccodes.la
 %prefix/lib*/pkgconfig/*

@@ -12,7 +12,7 @@
  */
 
 #include <stdlib.h>
-#include "grib_windef.h"
+#include "eccodes_windef.h"
 
 #ifdef GRIB_ON_WINDOWS
 	typedef unsigned __int64 UnsignedInt64;
