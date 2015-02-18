@@ -197,11 +197,11 @@ endif()
 
 ecbuild_generate_config_headers()
 
-configure_file( grib_api_config.h.in grib_api_config.h )
+configure_file( eccodes_config.h.in eccodes_config.h )
 
-add_definitions( -DHAVE_GRIB_API_CONFIG_H )
+add_definitions( -DHAVE_ECCODES_CONFIG_H )
 
-install( FILES ${CMAKE_CURRENT_BINARY_DIR}/grib_api_config.h DESTINATION ${INSTALL_INCLUDE_DIR} )
+install( FILES ${CMAKE_CURRENT_BINARY_DIR}/eccodes_config.h DESTINATION ${INSTALL_INCLUDE_DIR} )
 
 if( CMAKE_COMPILER_IS_GNUCC )
     cmake_add_c_flags("-pedantic")

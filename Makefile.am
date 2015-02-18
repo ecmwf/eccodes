@@ -376,7 +376,7 @@ EXTRA_DIST = README AUTHORS NOTICE LICENSE ChangeLog version.sh html \
 		CMakeLists.txt \
 		project_summary.cmake \
 		VERSION.cmake \
-		grib_api_config.h.in \
+		eccodes_config.h.in \
 		examples/CMakeLists.txt \
 		data/CMakeLists.txt \
 		data/tigge/CMakeLists.txt \

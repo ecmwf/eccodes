@@ -7,7 +7,7 @@ list( APPEND ifs_samples_${_basedir}
       sh_sfc.tmpl
 )
 
-install( FILES ${GRIB_API_SAMPLES_FILES} ${ifs_samples_${_basedir}}  
+install( FILES ${ECCODES_SAMPLES_FILES} ${ifs_samples_${_basedir}}  
          DESTINATION ${ECCODES_IFS_SAMPLES_PATH}/${_basedir}
          PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ )
 

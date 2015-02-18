@@ -9,8 +9,8 @@
  */
 
 /* cmake config header */
-#ifdef HAVE_GRIB_API_CONFIG_H
-#include "grib_api_config.h"
+#ifdef HAVE_ECCODES_CONFIG_H
+#include "eccodes_config.h"
 #endif
 
 /* autoconf config header */
