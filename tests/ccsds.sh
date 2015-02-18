@@ -34,14 +34,16 @@ echo "AEC feature was enabled."
 BLACKLIST="totalLength,section5Length,section7Length,dataRepresentationTemplateNumber,typeOfPacking"
 
 infile=${data_dir}/ccsds.grib2
+outfile1=$infile.tmp_ccsds.1
+outfile2=$infile.tmp_ccsds.2
 
-rm -f $infile.1 $infile.2 || true
-${tools_dir}grib_set -f -r -s packingType=grid_simple $infile $infile.1 2> $REDIRECT
-${tools_dir}grib_compare -P -b $BLACKLIST,typeOfCompressionUsed,targetCompressionRatio $infile $infile.1 > $REDIRECT
-${tools_dir}grib_set -r -s packingType=grid_ccsds $infile.1 $infile.2
-${tools_dir}grib_compare -P -b $BLACKLIST $infile.1 $infile.2 > $REDIRECT
+rm -f $outfile1 $outfile2 || true
+${tools_dir}grib_set -f -r -s packingType=grid_simple $infile $outfile1 2> $REDIRECT
+${tools_dir}grib_compare -P -b $BLACKLIST,typeOfCompressionUsed,targetCompressionRatio $infile $outfile1 > $REDIRECT
+${tools_dir}grib_set -r -s packingType=grid_ccsds $outfile1 $outfile2
+${tools_dir}grib_compare -P -b $BLACKLIST $outfile1 $outfile2 > $REDIRECT
 
-templateNumber=`${tools_dir}grib_get -p dataRepresentationTemplateNumber $infile.2`
+templateNumber=`${tools_dir}grib_get -p dataRepresentationTemplateNumber $outfile2`
 
 if [ $templateNumber -ne 42 ]
 then
@@ -49,19 +51,21 @@ then
   exit 1
 fi
 
-rm -f $infile.1 $infile.2 || true
+rm -f $outfile1 $outfile2 || true
 
 infile=${data_dir}/reduced_latlon_surface.grib2
+outfile1=$infile.tmp_ccsds.1
+outfile2=$infile.tmp_ccsds.2
 
-${tools_dir}grib_set -r -s packingType=grid_ccsds $infile $infile.1
-${tools_dir}grib_compare -P -b $BLACKLIST $infile $infile.1 > $REDIRECT
-${tools_dir}grib_set -f -r -s packingType=grid_simple $infile.1 $infile.2 2> $REDIRECT
-${tools_dir}grib_compare -P -b $BLACKLIST,typeOfCompressionUsed,targetCompressionRatio $infile.1 $infile.2  > $REDIRECT
+${tools_dir}grib_set -r -s packingType=grid_ccsds $infile $outfile1
+${tools_dir}grib_compare -P -b $BLACKLIST $infile $outfile1 > $REDIRECT
+${tools_dir}grib_set -f -r -s packingType=grid_simple $outfile1 $outfile2 2> $REDIRECT
+${tools_dir}grib_compare -P -b $BLACKLIST,typeOfCompressionUsed,targetCompressionRatio $outfile1 $outfile2  > $REDIRECT
 
 res1=`${tools_dir}grib_get '-F%1.2f' -p min,max,avg $infile`
-res2=`${tools_dir}grib_get '-F%1.2f' -p min,max,avg $infile.1`
-res3=`${tools_dir}grib_get '-F%1.2f' -p min,max,avg $infile.2`
+res2=`${tools_dir}grib_get '-F%1.2f' -p min,max,avg $outfile1`
+res3=`${tools_dir}grib_get '-F%1.2f' -p min,max,avg $outfile2`
 [ "$res1" = "$res2" ]
 [ "$res1" = "$res3" ]
 
-rm -f $infile.1 $infile.2 || true
+rm -f $outfile1 $outfile2 || true

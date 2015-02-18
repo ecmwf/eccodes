@@ -111,33 +111,47 @@ static int  destroy  (grib_dumper* d)
     return GRIB_SUCCESS;
 }
 
+static void print_accessor(grib_accessor* a,FILE* out) {
+  size_t len=1;
+  long lval;
+  double dval;
+  char* cval=NULL;
+  switch (grib_accessor_get_native_type(a)) {
+    case GRIB_TYPE_LONG:
+      grib_unpack_long(a,&lval,&len);
+      fprintf(out,"%ld",lval);
+      break;
+    case GRIB_TYPE_DOUBLE:
+      grib_unpack_double(a,&dval,&len);
+      fprintf(out,"%g",dval);
+      break;
+    case GRIB_TYPE_STRING:
+      len=grib_string_length(a)+1;
+      cval=grib_context_malloc_clear(a->parent->h->context,len);
+      grib_unpack_string(a,cval,&len);
+      fprintf(out,"\"%s\"",cval);
+      grib_context_free(a->parent->h->context,cval);
+      break;
+  }
+}
+
 static void dump_attributes(grib_dumper* d,grib_accessor* a,FILE* out) {
-    int i=0;
-    size_t len=1;
-    long lval;
-    double dval;
-    char* cval=NULL;
-    while (a->attributes[i]) {
-        fprintf(out,",\"%s\":",a->attributes[i]->name);
-        switch (grib_accessor_get_native_type(a->attributes[i])) {
-            case GRIB_TYPE_LONG:
-                grib_unpack_long(a->attributes[i],&lval,&len);
-                fprintf(out,"%ld",lval);
-                break;
-            case GRIB_TYPE_DOUBLE:
-                grib_unpack_double(a->attributes[i],&dval,&len);
-                fprintf(out,"%g",dval);
-                break;
-            case GRIB_TYPE_STRING:
-                len=grib_string_length(a->attributes[i])+1;
-                cval=grib_context_malloc_clear(a->parent->h->context,len);
-                grib_unpack_string(a->attributes[i],cval,&len);
-                fprintf(out,"\"%s\"",cval);
-                grib_context_free(a->parent->h->context,cval);
-                break;
-        }
-        i++;
+  int i=0;
+  int has_attributes=0;
+  while (a->attributes[i] || i > MAX_ACCESSOR_ATTRIBUTES) {
+    has_attributes=grib_accessor_has_attributes(a->attributes[i]);
+    fprintf(out,",\"%s\":",a->attributes[i]->name);
+    if (has_attributes) {
+      fprintf(out," { \"key\" : \"%s\", \"value\" : ",a->attributes[i]->name);
+      print_accessor(a->attributes[i],out);
+      fprintf(out,", \n");
+      dump_attributes(d,a->attributes[i],out);
+      fprintf(out,"}\n");
+    } else {
+      print_accessor(a->attributes[i],out);
     }
+    i++;
+  }
 }
 
 static void dump_values(grib_dumper* d,grib_accessor* a)

@@ -671,14 +671,16 @@ static int create_keys(grib_accessor* a) {
   grib_accessor* elementAccessor=0;
   long iss,end,elementsInSubset,ide;
   grib_section* section=NULL;
+  grib_section* rootSection=NULL;
   bufr_descriptor* descriptor;
   grib_section* sectionUp=0;
   grib_section* groupSection=0;
   long groupNumber=0;
-  int forceGroupClosure=0,forceOneLevelClosure=0;
   long indexOfGroupNumber=0;
   int depth;
   int idx;
+  int* bitmap=NULL;
+  int bitmap_start=0;
   grib_context* c=a->parent->h->context;
 
   grib_accessor* gaGroup=0;
@@ -694,7 +696,7 @@ static int create_keys(grib_accessor* a) {
   creatorGroup.set        = 0;
 
   groupNumberIndex=grib_iarray_new(c,100,100);
-  
+
 
   end= self->compressedData ? 1 : self->numberOfSubsets;
   groupNumber=1;
@@ -703,12 +705,12 @@ static int create_keys(grib_accessor* a) {
   gaGroup->bufr_group_number=groupNumber;
   gaGroup->sub_section=grib_section_create(a->parent->h,gaGroup);
   section=gaGroup->sub_section;
+  rootSection=section;
   sectionUp=a->sub_section;
   accessor_constant_set_type(gaGroup,GRIB_TYPE_LONG);
   accessor_constant_set_dval(gaGroup,groupNumber);
   grib_push_accessor(gaGroup,a->sub_section->block);
 
-  forceGroupClosure=0;
   indexOfGroupNumber=0;
   depth=0;
 
@@ -728,17 +730,9 @@ static int create_keys(grib_accessor* a) {
           groupSection=significanceQualifierGroup[sidx]->parent;
           depth=significanceQualifierDepth[sidx];
           reset_deeper_qualifiers(significanceQualifierGroup,significanceQualifierDepth,depth);
-          forceGroupClosure=0;
         } else {
-          if (forceGroupClosure) {
-            groupSection=sectionUp;
-            forceGroupClosure=0;
-            forceOneLevelClosure=1;
-            depth=0;
-          } else {
-            groupSection=section;
-            depth++;
-          }
+          groupSection=section;
+          depth++;
         }
 
         gaGroup = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
@@ -754,6 +748,10 @@ static int create_keys(grib_accessor* a) {
 
         significanceQualifierGroup[sidx]=gaGroup;
         significanceQualifierDepth[sidx]=depth;
+      }
+      if (descriptor->code == 31031) {
+        /* bitmap */
+        section=rootSection;
       }
 
       elementAccessor=create_accessor_from_descriptor(a,section,ide,iss);

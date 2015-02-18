@@ -34,15 +34,17 @@ echo "JPEG feature was enabled."
 BLACKLIST="totalLength,section5Length,section7Length,dataRepresentationTemplateNumber,typeOfPacking"
 
 infile=${data_dir}/jpeg.grib2
+outfile1=$infile.tmp_jpeg.1
+outfile2=$infile.tmp_jpeg.2
 
-rm -f $infile.1 $infile.2 || true
+rm -f $outfile1 $outfile2 || true
 
-${tools_dir}grib_set -s packingType=grid_simple $infile $infile.1
-${tools_dir}grib_compare -P -b $BLACKLIST,typeOfCompressionUsed,targetCompressionRatio $infile $infile.1 > $REDIRECT
-${tools_dir}grib_set -s packingType=grid_jpeg $infile.1 $infile.2
-${tools_dir}grib_compare -P -b $BLACKLIST $infile.1 $infile.2 > $REDIRECT
+${tools_dir}grib_set -s packingType=grid_simple $infile $outfile1
+${tools_dir}grib_compare -P -b $BLACKLIST,typeOfCompressionUsed,targetCompressionRatio $infile $outfile1 > $REDIRECT
+${tools_dir}grib_set -s packingType=grid_jpeg $outfile1 $outfile2
+${tools_dir}grib_compare -P -b $BLACKLIST $outfile1 $outfile2 > $REDIRECT
 
-templateNumber=`${tools_dir}grib_get -p dataRepresentationTemplateNumber $infile.2`
+templateNumber=`${tools_dir}grib_get -p dataRepresentationTemplateNumber $outfile2`
 
 if [ $templateNumber -ne 40 ] 
 then 
@@ -50,23 +52,24 @@ then
   exit 1
 fi
 
-rm -f $infile.1 $infile.2 || true
+rm -f $outfile1 $outfile2 || true
 
 infile=${data_dir}/reduced_latlon_surface.grib2
-
-${tools_dir}grib_set -s packingType=grid_jpeg $infile $infile.1
-${tools_dir}grib_compare -P -b $BLACKLIST $infile $infile.1 > $REDIRECT
-${tools_dir}grib_set -s packingType=grid_simple $infile.1 $infile.2
-${tools_dir}grib_compare -P -b $BLACKLIST,typeOfCompressionUsed,targetCompressionRatio $infile.1 $infile.2  > $REDIRECT
+outfile1=$infile.tmp_jpeg.1
+outfile2=$infile.tmp_jpeg.2
+${tools_dir}grib_set -s packingType=grid_jpeg $infile $outfile1
+${tools_dir}grib_compare -P -b $BLACKLIST $infile $outfile1 > $REDIRECT
+${tools_dir}grib_set -s packingType=grid_simple $outfile1 $outfile2
+${tools_dir}grib_compare -P -b $BLACKLIST,typeOfCompressionUsed,targetCompressionRatio $outfile1 $outfile2  > $REDIRECT
 
 res1=`${tools_dir}grib_get '-F%1.2f' -p min,max,avg $infile`
-res2=`${tools_dir}grib_get '-F%1.2f' -p min,max,avg $infile.1`
-res3=`${tools_dir}grib_get '-F%1.2f' -p min,max,avg $infile.2`
+res2=`${tools_dir}grib_get '-F%1.2f' -p min,max,avg $outfile1`
+res3=`${tools_dir}grib_get '-F%1.2f' -p min,max,avg $outfile2`
 [ "$res1" = "$res2" ]
 [ "$res1" = "$res3" ]
 
 # GRIB-564 nearest 4 neighbours with JPEG packing
-res=`${tools_dir}grib_get -l 0,50 $infile.1`
+res=`${tools_dir}grib_get -l 0,50 $outfile1`
 [ "$res" = "2.47244 2.47244 2.5115 2.51931 " ]
 
-rm -f $infile.1 $infile.2 || true
+rm -f $outfile1 $outfile2 || true
