@@ -114,7 +114,6 @@ grib_action* grib_action_create_print( grib_context* context, const char* name,c
 
 static int execute(grib_action* act, grib_handle *h)
 {
-  char fname[2048];
   grib_action_print* self = (grib_action_print*) act;
   int err =0;
   FILE* out=NULL;
@@ -132,7 +131,7 @@ static int execute(grib_action* act, grib_handle *h)
     out=stdout;
   }
 
-  err=grib_recompose_print(h,NULL,self->name,fname,0,out);
+  err=grib_recompose_print(h,NULL,self->name,0,out);
 
   if (self->outname) fclose(out);
 

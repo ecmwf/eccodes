@@ -208,7 +208,7 @@ char* grib_split_name_attribute(grib_context* c,const char* name,char* attribute
     *attribute_name=0;
     return (char*)name;
   }
-  size=name-p ;
+  size=p-name;
   accessor_name=grib_context_malloc_clear(c,size+1);
   accessor_name=memcpy(accessor_name,name,size);
   p+=2;

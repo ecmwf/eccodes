@@ -495,21 +495,27 @@ int grib_is_missing_double(grib_accessor* a,double x) {
     return ret;
 }
 
+int grib_accessor_is_missing(grib_accessor* a,int* err)
+{
+  *err=GRIB_SUCCESS;
+  if(a)
+  {
+    if(a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)
+      return grib_is_missing_internal(a);
+    else
+      return 0;
+  }
+  else
+  {
+    *err=GRIB_NOT_FOUND;
+    return 1;
+  }
+}
+
 int grib_is_missing(grib_handle* h, const char* name,int* err)
 {
     grib_accessor* a = grib_find_accessor(h, name);
-    *err=GRIB_SUCCESS;
-
-    if(a) {
-        if(a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)
-            return grib_is_missing_internal(a);
-        else
-            return 0;
-    }
-    else {
-        *err=GRIB_NOT_FOUND;
-        return 1;
-    }
+    return grib_accessor_is_missing(a,err);
 }
 
 /* Return true if the given key exists (is defined) in our grib message */

@@ -633,7 +633,7 @@ grib_accessor* grib_accessor_get_attribute(grib_accessor* a,const char* name) {
   if (*(p+1) == '\0') {
     return _grib_accessor_get_attribute(a,name,&index);
   } else {
-    size_t size=name-p;
+    size_t size=p-name;
     attribute_name=p+2;
     basename=grib_context_malloc_clear(a->parent->h->context,size+1);
     basename=memcpy(basename,name,size);

@@ -1065,7 +1065,8 @@ int grib_keys_iterator_get_native_type(grib_keys_iterator *kiter);
 
 /* grib_parse_utils.c */
 int grib_recompose_name(grib_handle *h, grib_accessor *observer, const char *uname, char *fname, int fail);
-int grib_recompose_print(grib_handle *h, grib_accessor *observer, const char *uname, char *fname, int fail, FILE *out);
+int grib_accessor_print(grib_accessor *a, int type, const char *format, const char *separator, int maxcols, int *newline, FILE *out);
+int grib_recompose_print(grib_handle *h, grib_accessor *observer, const char *uname, int fail, FILE *out);
 grib_action_file *grib_find_action_file(const char *fname, grib_action_file_list *afl);
 void grib_push_action_file(grib_action_file *af, grib_action_file_list *afl);
 int grib_yywrap(void);
@@ -1121,6 +1122,7 @@ int grib_set_missing_internal(grib_handle *h, const char *name);
 int grib_set_missing(grib_handle *h, const char *name);
 int grib_is_missing_long(grib_accessor *a, long x);
 int grib_is_missing_double(grib_accessor *a, double x);
+int grib_accessor_is_missing(grib_accessor *a, int *err);
 int grib_is_missing(grib_handle *h, const char *name, int *err);
 int grib_is_defined(grib_handle *h, const char *name);
 int grib_set_flag(grib_handle *h, const char *name, unsigned long flag);
