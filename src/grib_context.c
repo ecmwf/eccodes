@@ -11,7 +11,7 @@
 #include "grib_api_internal.h"
 #include <errno.h>
 #include <stdlib.h>
-#ifndef GRIB_ON_WINDOWS
+#ifndef ECCODES_ON_WINDOWS
 #include <unistd.h>
 #else
 #include <fcntl.h> /* Windows: for _O_BINARY */
@@ -355,7 +355,7 @@ grib_context* grib_context_get_default()
         /* On UNIX, when we read from a file we get exactly what is in the file on disk.
          * But on Windows a file can be opened in binary or text mode. In binary mode the system behaves exactly as in UNIX.
          */
-#ifdef GRIB_ON_WINDOWS
+#ifdef ECCODES_ON_WINDOWS
         _set_fmode(_O_BINARY);
 #endif
 
@@ -474,7 +474,7 @@ grib_context* grib_context_new(grib_context* parent)
 static char* resolve_path(grib_context* c, char* path)
 {
     char* result = NULL;
-#ifdef GRIB_ON_WINDOWS
+#ifdef ECCODES_ON_WINDOWS
     result = grib_context_strdup(c, path);
 #else
     char resolved[DEF_PATH_MAXLEN+1];
@@ -489,7 +489,7 @@ static char* resolve_path(grib_context* c, char* path)
 
 /* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
 /* in order to have multiple definitions directories */
-#ifdef GRIB_ON_WINDOWS
+#ifdef ECCODES_ON_WINDOWS
 #   define DEFS_PATH_DELIMITER_CHAR ';'
 #   define DEFS_PATH_DELIMITER_STR  ";"
 #else

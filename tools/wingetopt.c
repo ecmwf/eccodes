@@ -10,7 +10,7 @@
 
 #include "wingetopt.h"
 
-#ifdef GRIB_ON_WINDOWS
+#ifdef ECCODES_ON_WINDOWS
 
 #include "string.h"
 

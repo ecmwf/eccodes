@@ -28,7 +28,7 @@ extern "C" {
 /* Microsoft Windows Visual Studio support */
 #include "eccodes_windef.h"
 
-#ifndef GRIB_ON_WINDOWS
+#ifndef ECCODES_ON_WINDOWS
 #include <sys/time.h>
 #endif
 #include <math.h>

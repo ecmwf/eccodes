@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include "eccodes_windef.h"
 
-#ifdef GRIB_ON_WINDOWS
+#ifdef ECCODES_ON_WINDOWS
 	typedef unsigned __int64 UnsignedInt64;
 #else
 #   include <stdint.h>

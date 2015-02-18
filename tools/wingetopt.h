@@ -14,7 +14,7 @@
 /* Microsoft Windows Visual Studio support */
 #include "eccodes_windef.h"
 
-#ifdef GRIB_ON_WINDOWS
+#ifdef ECCODES_ON_WINDOWS
 /* Microsoft Windows Visual Studio support */
 extern int optind, opterr;
 extern char *optarg;

@@ -14,7 +14,7 @@
  */
 #include "grib_tools.h"
 
-#ifdef GRIB_ON_WINDOWS
+#ifdef ECCODES_ON_WINDOWS
 /* Microsoft Windows Visual Studio support */
 #include "wingetopt.h"
 #endif
@@ -221,7 +221,7 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
     if (grib_options_on("X:"))
         options->infile_offset=atol(grib_options_get_option("X:"));
 
-#ifndef GRIB_ON_WINDOWS
+#ifndef ECCODES_ON_WINDOWS
     /* Check at compile time to ensure our file offset is at least 64 bits */
     COMPILE_TIME_ASSERT( sizeof(options->infile_offset) >= 8 );
 #endif

@@ -13,7 +13,7 @@
 
 /* Microsoft Windows Visual Studio support */
 #if defined(_WIN32) && defined(_MSC_VER)
-# define GRIB_ON_WINDOWS
+# define ECCODES_ON_WINDOWS
 #endif
 
 #endif

@@ -287,7 +287,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
             exit(1);
         }
         if (options->infile_offset) {
-#ifndef GRIB_ON_WINDOWS
+#ifndef ECCODES_ON_WINDOWS
             /* Check at compile time to ensure our file offset is at least 64 bits */
             COMPILE_TIME_ASSERT( sizeof(options->infile_offset) >= 8 );
 #endif
@@ -504,7 +504,7 @@ static int grib_tool_index(grib_runtime_options* options)
     return 0;
 }
 
-#ifndef GRIB_ON_WINDOWS
+#ifndef ECCODES_ON_WINDOWS
 static int scan(grib_context* c,grib_runtime_options* options,const char* dir)
 {
     struct dirent *s;
@@ -566,7 +566,7 @@ static int process(grib_context* c,grib_runtime_options* options,const char* pat
     int stat_val=0;
     int ioerr=0;
 
-#ifndef GRIB_ON_WINDOWS
+#ifndef ECCODES_ON_WINDOWS
     stat_val = lstat(path,&s);
 #else
     stat_val = stat(path,&s);

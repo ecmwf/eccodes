@@ -12,7 +12,7 @@
 
 #if GRIB_TIMER
 
-#ifndef GRIB_ON_WINDOWS
+#ifndef ECCODES_ON_WINDOWS
 # include <sys/time.h>
 # include <time.h>
 # include <sys/resource.h>
