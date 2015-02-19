@@ -52,6 +52,7 @@
    MEMBERS    = int bitmapSize
    MEMBERS    = int bitmapStart
    MEMBERS    = int bitmapCurrent
+   MEMBERS    = grib_accessors_list* dataAccessors
 
    END_CLASS_DEF
 
@@ -113,6 +114,7 @@ typedef struct grib_accessor_bufr_data_array {
 	int bitmapSize;
 	int bitmapStart;
 	int bitmapCurrent;
+	grib_accessors_list* dataAccessors;
 } grib_accessor_bufr_data_array;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -600,6 +602,8 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
   grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
   char code[7]={0,};
   int idx=0;
+  grib_accessor* operatorAccessor=NULL;
+  grib_action operatorCreator = {0, };
   grib_accessor* elementAccessor=NULL;
   grib_accessor* attribute=NULL;
   grib_action creator = {0, };
@@ -608,10 +612,17 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
   creator.flags     = GRIB_ACCESSOR_FLAG_DUMP;
   creator.set        = 0;
 
+  operatorCreator.op         = "variable";
+  operatorCreator.name_space = "";
+  operatorCreator.flags     = GRIB_ACCESSOR_FLAG_READ_ONLY;
+  operatorCreator.set        = 0;
+  operatorCreator.name="operator";
+
   idx = self->compressedData ? self->elementsDescriptorsIndex->v[0]->v[ide] :
-	self->elementsDescriptorsIndex->v[subset]->v[ide] ;
+    self->elementsDescriptorsIndex->v[subset]->v[ide] ;
 
   creator.name=self->expanded->v[idx]->shortName;
+  /* only table B element are created as they only have a shortName*/
   if (creator.name) {
     elementAccessor = grib_accessor_factory(section, &creator, 0, NULL);
     if (self->canBeMissing[idx]) elementAccessor->flags |= GRIB_ACCESSOR_FLAG_CAN_BE_MISSING;
@@ -624,7 +635,9 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
     accessor_bufr_data_element_set_numberOfSubsets(elementAccessor,self->numberOfSubsets);
     accessor_bufr_data_element_set_subsetNumber(elementAccessor,subset);
 
-	sprintf(code,"%06ld",self->expanded->v[idx]->code);
+    self->expanded->v[idx]->a=elementAccessor;
+
+    sprintf(code,"%06ld",self->expanded->v[idx]->code);
     attribute=create_attribute("code",section,GRIB_TYPE_STRING,code,0,0);
     grib_accessor_add_attribute(elementAccessor,attribute);
 
@@ -639,6 +652,9 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
 
     attribute=create_attribute("width",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->width);
     grib_accessor_add_attribute(elementAccessor,attribute);
+  } else {
+    elementAccessor = grib_accessor_factory(section, &operatorCreator, 0, NULL);
+    accessor_variable_set_type(elementAccessor,GRIB_TYPE_LONG);
   }
 
   return elementAccessor;
@@ -647,6 +663,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
 #define IS_QUALIFIER(a) (a==8 || a==1 || a==2)
 #define NUMBER_OF_QUALIFIERS_PER_CATEGORY 256
 #define NUMBER_OF_QUALIFIERS_CATEGORIES 3
+#define MAX_NUMBER_OF_BITMAPS 5
 
 static int number_of_qualifiers=NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES;
 
@@ -665,6 +682,28 @@ static GRIB_INLINE void reset_deeper_qualifiers(grib_accessor* significanceQuali
   }
 }
 
+typedef struct bitmap_s {
+  grib_accessors_list* cursor;
+  grib_accessors_list* referredElement;
+} bitmap_s;
+
+static grib_accessor* get_element_from_bitmap(grib_accessor* a,bitmap_s* bitmap) {
+  int ret,idx;
+  long bitmapVal=1;
+  size_t len;
+  grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
+
+  while (bitmapVal) {
+    len=1;
+    ret=grib_unpack_long(bitmap->cursor->accessor,&bitmapVal,&len);
+    Assert(ret==0);
+    bitmap->cursor=bitmap->cursor->next;
+    bitmap->referredElement=bitmap->referredElement->next;
+  }
+
+  return bitmap->referredElement->prev->accessor;
+}
+
 static int create_keys(grib_accessor* a) {
   grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
   int err=0;
@@ -679,15 +718,25 @@ static int create_keys(grib_accessor* a) {
   long indexOfGroupNumber=0;
   int depth;
   int idx;
-  int* bitmap=NULL;
-  int bitmap_start=0;
   grib_context* c=a->parent->h->context;
+  int qualityPresent=0;
+  bitmap_s bitmap={0,};
 
   grib_accessor* gaGroup=0;
   grib_action creatorGroup = {0, };
   grib_iarray* groupNumberIndex=0;
   grib_accessor* significanceQualifierGroup[NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES]={0,};
   int significanceQualifierDepth[NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES]={0,};
+
+  grib_accessor* bitmapGroup[MAX_NUMBER_OF_BITMAPS]={0,};
+  int bitmapDepth[MAX_NUMBER_OF_BITMAPS]={0,};
+  int bitmapSize[MAX_NUMBER_OF_BITMAPS]={0,};
+  grib_accessors_list* bitmapStart[MAX_NUMBER_OF_BITMAPS]={0,};
+  int bitmapIndex=-1;
+  int incrementBitmapIndex=1;
+  grib_accessor* elementFromBitmap=NULL;
+  int reuseBitmap=0;
+  int i;
 
   creatorGroup.op         = "bufr_group";
   creatorGroup.name="groupNumber";
@@ -697,6 +746,8 @@ static int create_keys(grib_accessor* a) {
 
   groupNumberIndex=grib_iarray_new(c,100,100);
 
+  if (self->dataAccessors) grib_accessors_list_delete(c,self->dataAccessors);
+  self->dataAccessors=grib_accessors_list_create(c);
 
   end= self->compressedData ? 1 : self->numberOfSubsets;
   groupNumber=1;
@@ -715,13 +766,15 @@ static int create_keys(grib_accessor* a) {
   depth=0;
 
   for (iss=0;iss<end;iss++) {
+    qualityPresent=0;
     elementsInSubset= self->compressedData ? grib_iarray_used_size(self->elementsDescriptorsIndex->v[0]) :
-                                             grib_iarray_used_size(self->elementsDescriptorsIndex->v[iss]);
+      grib_iarray_used_size(self->elementsDescriptorsIndex->v[iss]);
     for (ide=0;ide<elementsInSubset;ide++) {
       idx = self->compressedData ? self->elementsDescriptorsIndex->v[0]->v[ide] :
-                            self->elementsDescriptorsIndex->v[iss]->v[ide] ;
+        self->elementsDescriptorsIndex->v[iss]->v[ide] ;
 
       descriptor=self->expanded->v[idx];
+      elementFromBitmap=NULL;
       if (descriptor->F==0 && IS_QUALIFIER(descriptor->X)) {
         int sidx=significanceQualifierIndex(descriptor->X,descriptor->Y);
         groupNumber++;
@@ -748,14 +801,65 @@ static int create_keys(grib_accessor* a) {
 
         significanceQualifierGroup[sidx]=gaGroup;
         significanceQualifierDepth[sidx]=depth;
-      }
-      if (descriptor->code == 31031) {
+        incrementBitmapIndex=1;
+      } else if (descriptor->code == 31031 && incrementBitmapIndex!=0) {
         /* bitmap */
-        section=rootSection;
+        bitmapIndex++;
+        groupNumber++;
+        incrementBitmapIndex=0;
+        bitmapStart[bitmapIndex]=grib_accessors_list_last(self->dataAccessors);
+        bitmapSize[bitmapIndex]=1;
+        if (bitmapGroup[bitmapIndex]) {
+          groupSection=bitmapGroup[bitmapIndex]->parent;
+          depth=bitmapDepth[bitmapIndex];
+          reset_deeper_qualifiers(significanceQualifierGroup,significanceQualifierDepth,depth);
+          reset_deeper_qualifiers(bitmapGroup,bitmapDepth,depth);
+        } else {
+          groupSection=section;
+          depth++;
+        }
+        gaGroup = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
+        a->parent->h->groups[groupNumber]=gaGroup;
+        gaGroup->sub_section=grib_section_create(a->parent->h,gaGroup);
+        gaGroup->bufr_group_number=groupNumber;
+        accessor_constant_set_type(gaGroup,GRIB_TYPE_LONG);
+        accessor_constant_set_dval(gaGroup,groupNumber);
+        grib_push_accessor(gaGroup,groupSection->block);
+
+        section=gaGroup->sub_section;
+        sectionUp=gaGroup->parent;
+        bitmapGroup[bitmapIndex]=gaGroup;
+        bitmapDepth[bitmapIndex]=depth;
+      } else if (descriptor->code == 31031) {
+        bitmapSize[bitmapIndex]++;
+        bitmap.cursor=0;
+      } else if (descriptor->code == 222000 ) {
+        bitmap.referredElement=NULL;
+        qualityPresent=1;
+      } else if (descriptor->code == 236000 || descriptor->code == 237000 ) {
+        bitmap.referredElement=NULL;
+        bitmap.cursor=0;
+        reuseBitmap=1;
+      } else if (descriptor->code == 237255 ) {
+        reuseBitmap=0;
+        bitmap.cursor=0;
+      } else if (descriptor->X==33 && qualityPresent) {
+        if (!bitmap.referredElement) {
+          bitmap.cursor=bitmapStart[bitmapIndex]->next;
+          bitmap.referredElement=bitmap.cursor->prev;
+          for (i=0;i<bitmapSize[bitmapIndex];i++) {
+            bitmap.referredElement=bitmap.referredElement->prev;
+          }
+        }
+        elementFromBitmap=get_element_from_bitmap(a,&bitmap);
       }
 
       elementAccessor=create_accessor_from_descriptor(a,section,ide,iss);
-      if (elementAccessor) grib_push_accessor(elementAccessor,section->block);
+      if (elementFromBitmap) grib_accessor_add_attribute(elementFromBitmap,elementAccessor);
+      else if (elementAccessor) {
+        if (descriptor->F == 0) grib_push_accessor(elementAccessor,section->block);
+        grib_accessors_list_push(self->dataAccessors,elementAccessor);
+      }
     }
   }
 
@@ -1098,6 +1202,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len) {
 static void destroy(grib_context* c,grib_accessor* a) {
   grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
   self_clear(c,self);
+  if (self->dataAccessors) grib_accessors_list_delete(c,self->dataAccessors);
   grib_section_delete(c,a->sub_section);
 }
 
