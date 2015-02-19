@@ -144,7 +144,6 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a,FILE* out) {
     if (has_attributes) {
       fprintf(out," { \"key\" : \"%s\", \"value\" : ",a->attributes[i]->name);
       print_accessor(a->attributes[i],out);
-      fprintf(out,", \n");
       dump_attributes(d,a->attributes[i],out);
       fprintf(out,"}\n");
     } else {

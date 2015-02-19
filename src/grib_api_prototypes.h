@@ -141,6 +141,11 @@ const char *grib_accessor_get_name(grib_accessor *a);
 grib_accessor *_grib_accessor_get_attribute(grib_accessor *a, const char *name, int *index);
 int grib_accessor_has_attributes(grib_accessor *a);
 grib_accessor *grib_accessor_get_attribute(grib_accessor *a, const char *name);
+grib_accessors_list *grib_accessors_list_create(grib_context *c);
+void grib_accessors_list_push(grib_accessors_list *al, grib_accessor *a);
+grib_accessors_list *grib_accessors_list_last(grib_accessors_list *al);
+grib_accessors_list *grib_accessors_list_find(grib_accessors_list *al, grib_accessor *a);
+void grib_accessors_list_delete(grib_context *c, grib_accessors_list *al);
 
 /* grib_concept.c */
 grib_concept_value *grib_concept_value_new(grib_context *c, const char *name, grib_concept_condition *conditions);

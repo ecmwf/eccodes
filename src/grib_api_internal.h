@@ -385,11 +385,12 @@ struct grib_action
     /* If you had something, don't forget to update grib_action_compile */
 };
 
-typedef struct grib_accessor_list grib_accessor_list;
+typedef struct grib_accessors_list grib_accessors_list;
 
-struct grib_accessor_list {
+struct grib_accessors_list {
 	grib_accessor* accessor;
-	grib_accessor_list* next;
+	grib_accessors_list* next;
+	grib_accessors_list* prev;
 };
 
 /* compile */
@@ -764,6 +765,7 @@ struct bufr_descriptor {
   double factor;
   double reference;
   long width;
+  grib_accessor* a;
 } ;
 
 struct bufr_descriptors_array {
