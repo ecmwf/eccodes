@@ -3659,6 +3659,11 @@
 	 table2Version = 174 ;
 	 indicatorOfParameter = 52 ;
 	}
+#Sea-ice Snow Thickness
+'174097' = {
+	 table2Version = 174 ;
+	 indicatorOfParameter = 97 ;
+	}
 #Short wave radiation flux at surface
 '174116' = {
 	 table2Version = 174 ;
