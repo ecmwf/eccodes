@@ -76,7 +76,7 @@ if( EC_HAVE_FORTRAN )
 
 
 ### installation
-    install( FILES grib_api_f77.h DESTINATION ${INSTALL_INCLUDE_DIR} )
+    install( FILES eccodes_f77.h DESTINATION ${INSTALL_INCLUDE_DIR} )
 
     # Install the generated .mod file
     # install( CODE "EXECUTE_PROCESS (COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR} ${CMAKE_INSTALL_PREFIX}/${INSTALL_INCLUDE_DIR})" )

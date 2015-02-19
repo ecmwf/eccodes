@@ -3,7 +3,7 @@
 AM_CFLAGS =  @WARN_PEDANTIC@
 
 lib_LTLIBRARIES = libeccodes_f77.la libeccodes_f90.la
-include_HEADERS = grib_api_f77.h
+include_HEADERS = eccodes_f77.h
 
 libeccodes_f77_la_SOURCES= grib_fortran.c grib_f77.c 
 libeccodes_f77_la_DEPENDENCIES = $(top_builddir)/src/libeccodes.la
