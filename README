@@ -1,25 +1,25 @@
-grib_api is the ECMWF encoding/decoding software for GRIB edition 1 and 2.
+ecCodes is the ECMWF encoding/decoding software for GRIB (edition 1 and 2) and BUFR.
 
-Documentation in html format can be found in the html directory of the 
-distribution directory.
+Documentation can be found here:
+https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home
 
 INSTALLATION 
 
 Standard Installation
-   1. Download grib_api from https://software.ecmwf.int/wiki/display/GRIB/Releases
+   1. Download from https://software.ecmwf.int/wiki/display/ECC/Releases
    2. Unpack distribution:
 
-        > gunzip grib_api-X.tar.gz
-        > tar xf grib_api-X.tar
+        > gunzip eccodes-X.tar.gz
+        > tar xf eccodes-X.tar
 
-   3. Create the directory where to install grib_api say /usr/local/grib_api_dir
+   3. Create the directory where to install eccodes say /usr/local/eccodes_dir
 
-        > mkdir /usr/local/grib_api_dir
+        > mkdir /usr/local/eccodes_dir
 
-   4. Run the configure in the grib_api-X
+   4. Run the configure in the eccodes-X
 
-        > cd grib_api-X
-        > ./configure --prefix=/usr/local/grib_api_dir 
+        > cd eccodes-X
+        > ./configure --prefix=/usr/local/eccodes_dir 
 
       Note that the prefix must be the absolute path of the
 	  directory created.

@@ -2,7 +2,7 @@ if( SWIG_FOUND )
   message( STATUS " SWIG command      : [${SWIG_EXECUTABLE}]" )
 endif()
 
-foreach( _tpl ${GRIB_API_TPLS} )
+foreach( _tpl ${ECCODES_TPLS} )
     string( TOUPPER ${_tpl} TPL )
     if( ${TPL}_FOUND )
         message( STATUS " ${_tpl} ${${_tpl}_VERSION}" )

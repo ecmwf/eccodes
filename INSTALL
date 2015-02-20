@@ -1,5 +1,5 @@
 
-The grib_api installation is based on the standard configure utility. 
+The ecCodes installation is based on the standard configure utility. 
 It is tested on several platforms and with several compilers. However for some platforms 
 modifications to the installation engine may be required. If you encounter any problem 
 during the installation procedure please send an e-mail with your problem to 
@@ -7,27 +7,27 @@ Software.Support@ecmwf.int.
 
 The only required package for a standard installation is jasper which enables the jpeg2000 
 packing/unpacking algorithm. 
-It is possible to build grib_api without jasper, by using the --disable-jpeg configure option, 
+It is possible to build ecCodes without jasper, by using the --disable-jpeg configure option, 
 but to install a fully functional library, its download is recommended.
 
 
 Standard Installation
 =====================
 
-   1. Download grib_api from https://software.ecmwf.int/wiki/display/GRIB/Releases.
+   1. Download eccodes from https://software.ecmwf.int/wiki/display/ECC/Releases.
    2. Unpack distribution:
 
-        > gunzip grib_api-X.tar.gz
-        > tar xf grib_api-X.tar
+        > gunzip eccodes-X.tar.gz
+        > tar xf eccodes-X.tar
 
-   3. Create the directory where to install grib_api say grib_api_dir
+   3. Create the directory where to install eccodes say eccodes_dir
 
-        > mkdir grib_api_dir
+        > mkdir eccodes_dir
 
-   4. Run the configure in the grib_api-X
+   4. Run the configure in the eccodes-X
 
-        > cd grib_api-X
-        > ./configure --prefix=grib_api_dir
+        > cd eccodes-X
+        > ./configure --prefix=eccodes_dir
 
    5. make, check and install
 
