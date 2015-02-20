@@ -120,6 +120,46 @@ for statid  in 1 3 7 ; do
 done
 
 #-----------------------------------------------------------
+# Test:  print attributes
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set unpack=1;
+print "pressure=[pressure] [pressure->units]";
+print "pressure->code=[pressure->code!06d]";
+print "pressure->scale=[pressure->scale]";
+print "pressure->reference=[pressure->reference]";
+print "pressure->width=[pressure->width]";
+print "pressure->perCentConfidence=[pressure->perCentConfidence] [pressure->perCentConfidence->units]";
+print "pressure->perCentConfidence->code=[pressure->perCentConfidence->code!06d]";
+print "pressure->perCentConfidence->scale=[pressure->perCentConfidence->scale]";
+print "pressure->perCentConfidence->reference=[pressure->perCentConfidence->reference]";
+print "pressure->perCentConfidence->width=[pressure->perCentConfidence->width]";
+EOF
+
+f="syno_1.bufr"
+echo "Test: attributes" >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}/bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+
+${tools_dir}/bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+cat > ${f}.ref <<EOF
+pressure=100910 Pa
+pressure->code=010004
+pressure->scale=-1
+pressure->reference=0
+pressure->width=14
+pressure->perCentConfidence=74 %
+pressure->perCentConfidence->code=033007
+pressure->perCentConfidence->scale=0
+pressure->perCentConfidence->reference=0
+pressure->perCentConfidence->width=7
+EOF
+
+diff ${f}.ref ${f}.log 
+
+rm -f ${f}.ref ${f}.log
+
+#-----------------------------------------------------------
 # Test: with nonexistent keys.
 #-----------------------------------------------------------
 

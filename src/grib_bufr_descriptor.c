@@ -63,6 +63,7 @@ int grib_bufr_descriptor_set_code(grib_accessor* tables_accessor,int code,bufr_d
     v->F=code/100000;
     v->X=(code-v->F*100000)/1000;
     v->Y=(code-v->F*100000)%1000;
+    v->isMarker=bufr_is_marker(code);
   } else {
     if (tables_accessor==NULL) return GRIB_NULL_POINTER;
     d=accessor_bufr_elements_table_get_descriptor(tables_accessor,code,&err);

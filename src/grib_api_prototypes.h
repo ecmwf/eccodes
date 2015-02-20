@@ -262,6 +262,7 @@ size_t grib_viarray_used_size(grib_viarray *v);
 /* grib_accessor_class_bufr_data.c */
 
 /* grib_accessor_class_bufr_data_array.c */
+grib_accessors_list *accessor_bufr_data_array_get_dataAccessors(grib_accessor *a);
 
 /* grib_accessor_class_bufr_data_element.c */
 void accessor_bufr_data_element_set_index(grib_accessor *a, long index);
@@ -276,6 +277,7 @@ void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor *a, g
 
 /* grib_accessor_class_bufr_elements_table.c */
 char **str_split(char *a_str, const char a_delim);
+int bufr_is_marker(int code);
 bufr_descriptor *accessor_bufr_elements_table_get_descriptor(grib_accessor *a, int code, int *err);
 
 /* grib_accessor_class_bufr_group.c */
@@ -872,8 +874,10 @@ void grib_dump_footer(grib_dumper *d, grib_handle *h);
 /* grib_dumper_class.c */
 grib_dumper *grib_dumper_factory(const char *op, grib_handle *h, FILE *out, unsigned long option_flags, void *arg);
 void grib_dump_accessors_block(grib_dumper *dumper, grib_block_of_accessors *block);
+void grib_dump_accessors_list(grib_dumper *dumper, grib_accessors_list *al);
 int grib_print(grib_handle *h, const char *name, grib_dumper *d);
 void grib_dump_content(grib_handle *h, FILE *f, const char *mode, unsigned long option_flags, void *data);
+void grib_dump_bufr_flat(grib_accessors_list *al, grib_handle *h, FILE *f, const char *mode, unsigned long option_flags, void *data);
 
 /* grib_context.c */
 size_t grib_context_read(const grib_context *c, void *ptr, size_t size, void *stream);

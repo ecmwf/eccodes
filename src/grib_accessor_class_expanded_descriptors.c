@@ -165,7 +165,6 @@ typedef struct change_coding_params {
 	double referenceFactor;
 } change_coding_params ;
 
-
 static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
   grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;

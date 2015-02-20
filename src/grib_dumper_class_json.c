@@ -440,6 +440,8 @@ static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors
         fprintf(self->dumper.out,"\n]\n");
   } else if (!grib_inline_strcmp(a->name,"groupNumber")) {
     depth+=2;
+    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+            return;
     if (!self->empty) fprintf(self->dumper.out,",\n");
     fprintf(self->dumper.out,"%-*s",depth," ");
 
