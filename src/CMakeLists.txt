@@ -352,6 +352,8 @@ list( APPEND grib_api_srcs
     grib_accessor_class_uint8.c
     grib_accessor_class_blob.c
     eccodes_windef.h
+    # We ship our own generated lex/yacc C files
+    grib_yacc.c  grib_lex.c
 )
 
 list( APPEND grib_api_extra_srcs
@@ -367,18 +369,19 @@ list( APPEND grib_api_extra_srcs
 
 configure_file( grib_api_version.c.in grib_api_version.c @ONLY )
 
-ecbuild_generate_yy(YYPREFIX  grib_yy
-                    YACC      griby
-                    LEX       gribl
-                    FLEX_FLAGS " "
-                    LEX_FLAGS  " "
-                    BISON_FLAGS "-y"
-                    YACC_FLAGS  "-y"
-                    DEPENDANT action.c )
+# We ship our own generated lex/yacc C files
+#ecbuild_generate_yy(YYPREFIX  grib_yy
+#                    YACC      griby
+#                    LEX       gribl
+#                    FLEX_FLAGS " "
+#                    LEX_FLAGS  " "
+#                    BISON_FLAGS "-y"
+#                    YACC_FLAGS  "-y"
+#                    DEPENDANT action.c )
 
 ecbuild_add_library(TARGET    eccodes
                     SOURCES   grib_api_version.c
-                              griby.c gribl.c
+                              # griby.c gribl.c
                              ${grib_api_srcs}
                     GENERATED grib_api_version.c
                     LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}
