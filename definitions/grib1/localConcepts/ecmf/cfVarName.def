@@ -3659,6 +3659,11 @@
 	 table2Version = 174 ;
 	 indicatorOfParameter = 52 ;
 	}
+#Sea-ice Snow Thickness
+'sist' = {
+	 table2Version = 174 ;
+	 indicatorOfParameter = 97 ;
+	}
 #Short wave radiation flux at surface
 'p174116' = {
 	 table2Version = 174 ;
@@ -8938,6 +8943,16 @@
 'swi4' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 43 ;
+	}
+#GPP coefficient from Biogenic Flux Adjustment System
+'gppbfas' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 78 ;
+	}
+#Rec coefficient from Biogenic Flux Adjustment System
+'recbfas' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 79 ;
 	}
 #Accumulated Carbon Dioxide Net Ecosystem Exchange
 'aco2nee' = {

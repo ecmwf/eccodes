@@ -8944,6 +8944,16 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 43 ;
 	}
+#GPP coefficient from Biogenic Flux Adjustment System
+'gppbfas' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 78 ;
+	}
+#Rec coefficient from Biogenic Flux Adjustment System
+'recbfas' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 79 ;
+	}
 #Accumulated Carbon Dioxide Net Ecosystem Exchange
 'aco2nee' = {
 	 table2Version = 228 ;
