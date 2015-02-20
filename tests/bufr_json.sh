@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-set -e
+set -ex
 
 . ./include.sh
 
@@ -28,7 +28,15 @@ do
   ${tools_dir}bufr_dump -j $file 2> $REDIRECT > ${file}.json
 
   if test "x$JSON_CHECK" != "x"; then
-    $JSON_CHECK < ${file}.json >$REDIRECT 2> $REDIRECT
+    json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
+  fi
+
+  rm -f ${file}.json
+
+  ${tools_dir}bufr_dump -jL $file 2> $REDIRECT > ${file}.json
+
+  if test "x$JSON_CHECK" != "x"; then
+    json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
   fi
 
   rm -f ${file}.json
