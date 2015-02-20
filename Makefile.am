@@ -8,7 +8,7 @@ CONFIGURE_DEPENDENCIES = $(top_srcdir)/version.sh
 $(top_srcdir)/configure: $(top_srcdir)/version.sh
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = rpms/grib_api.pc rpms/grib_api_f90.pc
+pkgconfig_DATA = rpms/eccodes.pc rpms/eccodes_f90.pc
 
 if WITH_PERL
   PERL_OPT = @PERLDIR@

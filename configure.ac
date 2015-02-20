@@ -31,7 +31,7 @@ AM_SANITY_CHECK
 
 AC_CONFIG_SRCDIR([src/grib_api.h])
 AC_CONFIG_HEADER([src/config.h])
-AC_CONFIG_FILES([rpms/grib_api.pc rpms/grib_api.spec rpms/grib_api_f90.pc])
+AC_CONFIG_FILES([rpms/eccodes.pc rpms/eccodes.spec rpms/eccodes_f90.pc])
 AM_INIT_AUTOMAKE($PACKAGE_NAME,[${PACKAGE_VERSION}],[http://www.ecmwf.int])
 
 definition_files_path="${datadir}/eccodes/definitions"

@@ -1,5 +1,5 @@
 # -*- Mode:rpm-spec -*-
-Summary: The ECMWF GRIB API is an application program interface accessible from C, FORTRAN and Python programs developed for encoding and decoding WMO FM-92 GRIB edition 1 and edition 2 messages.
+Summary: The ECMWF ecCodes package is an application program interface accessible from C, FORTRAN and Python programs developed for encoding and decoding WMO FM-92 GRIB edition 1 and edition 2 messages.
 %define rel @RPM_RELEASE@
 
 %define version @VERSION@
@@ -41,7 +41,7 @@ BuildArchitectures: %{_target_cpu}
 Packager: Software Support <software.support@ecmwf.int>
 
 %description 
-The ECMWF GRIB API is an application program interface accessible from C, FORTRAN and Python programs developed for encoding and decoding WMO FM-92 GRIB edition 1 and edition 2 messages.
+The ECMWF ecCodes package is an application program interface accessible from C, FORTRAN and Python programs developed for encoding and decoding WMO FM-92 GRIB edition 1 and edition 2 messages.
 
 %changelog
 * Thu Mar 15 2012 - Get the changelog from JIRA
@@ -87,7 +87,7 @@ Group: Scientific/Libraries
 Requires: grib_api
 %description devel
 Development files for %{pkgname}.
-The ECMWF GRIB API is an application program interface accessible from C, FORTRAN and Python programs developed for encoding and decoding WMO FM-92 GRIB edition 1 and edition 2 messages.
+The ECMWF ecCodes package is an application program interface accessible from C, FORTRAN and Python programs developed for encoding and decoding WMO FM-92 GRIB edition 1 and edition 2 messages.
 %files devel
 %defattr(-, root, root)
 #%doc doc
@@ -107,7 +107,7 @@ Group: Scientific/Libraries
 Requires: grib_api
 %description python
 Python interface for %{pkgname}.
-The ECMWF GRIB API is an application program interface accessible from C, FORTRAN and Python programs developed for encoding and decoding WMO FM-92 GRIB edition 1 and edition 2 messages.
+The ECMWF ecCodes package is an application program interface accessible from C, FORTRAN and Python programs developed for encoding and decoding WMO FM-92 GRIB edition 1 and edition 2 messages.
 %files python
 %defattr(-, root, root)
 %prefix/lib*/python*/*
@@ -121,7 +121,7 @@ Group: Scientific/Libraries
 Requires: grib_api
 %description fortran
 Fortran 77 and 90 interface for %{pkgname}.
-The ECMWF GRIB API is an application program interface accessible from C, FORTRAN and Python programs developed for encoding and decoding WMO FM-92 GRIB edition 1
+The ECMWF ecCodes package is an application program interface accessible from C, FORTRAN and Python programs developed for encoding and decoding WMO FM-92 GRIB edition 1
 and edition 2 messages.
 %files fortran
 %defattr(-, root,root)
