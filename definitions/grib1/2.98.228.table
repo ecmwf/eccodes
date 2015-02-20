@@ -32,6 +32,8 @@
 41 41 SWI2 Soil wetness index in layer 2 (dimensionless)
 42 42 SWI3 Soil wetness index in layer 3 (dimensionless)
 43 43 SWI4 Soil wetness index in layer 4 (dimensionless)
+78 78 GPPBFAS GPP coefficient from Biogenic Flux Adjustment System (dimensionless)
+79 79 RECBFAS Rec coefficient from Biogenic Flux Adjustment System (dimensionless)
 80 80 ACO2NEE Accumulated Carbon Dioxide Net Ecosystem Exchange (kg m**-2)
 81 81 ACO2GPP Accumulated Carbon Dioxide Gross Primary Production (kg m**-2)
 82 82 ACO2REC Accumulated Carbon Dioxide Ecosystem Respiration (kg m**-2)
