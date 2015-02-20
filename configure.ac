@@ -3,7 +3,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_DEFUN([_AM_AUTOCONF_VERSION],[])
 
 AC_PREREQ([2.59])
-AC_INIT([grib_api],[ ], [Software.Support@ecmwf.int])
+AC_INIT([eccodes],[ ], [Software.Support@ecmwf.int])
 
 AC_CONFIG_AUX_DIR([config])
 
@@ -34,9 +34,9 @@ AC_CONFIG_HEADER([src/config.h])
 AC_CONFIG_FILES([rpms/grib_api.pc rpms/grib_api.spec rpms/grib_api_f90.pc])
 AM_INIT_AUTOMAKE($PACKAGE_NAME,[${PACKAGE_VERSION}],[http://www.ecmwf.int])
 
-definition_files_path="${datadir}/grib_api/definitions"
-samples_files_path="${datadir}/grib_api/samples"
-ifs_samples_files_path="${datadir}/grib_api/ifs_samples"
+definition_files_path="${datadir}/eccodes/definitions"
+samples_files_path="${datadir}/eccodes/samples"
+ifs_samples_files_path="${datadir}/eccodes/ifs_samples"
 default_perl_install="${prefix}/perl"
 
 AC_DEFINE_UNQUOTED(GRIB_API_MAIN_VERSION,$GRIB_API_MAIN_VERSION,Grib Api version)

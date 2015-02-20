@@ -10,7 +10,7 @@
 #
 #
 # Package base name
-PACKAGE_NAME='grib_api'
+PACKAGE_NAME='eccodes'
 
 # Package version
 GRIB_API_MAJOR_VERSION=0
