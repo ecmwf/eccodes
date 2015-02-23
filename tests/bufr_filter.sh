@@ -129,11 +129,11 @@ print "pressure->code=[pressure->code!06d]";
 print "pressure->scale=[pressure->scale]";
 print "pressure->reference=[pressure->reference]";
 print "pressure->width=[pressure->width]";
-print "pressure->perCentConfidence=[pressure->perCentConfidence] [pressure->perCentConfidence->units]";
-print "pressure->perCentConfidence->code=[pressure->perCentConfidence->code!06d]";
-print "pressure->perCentConfidence->scale=[pressure->perCentConfidence->scale]";
-print "pressure->perCentConfidence->reference=[pressure->perCentConfidence->reference]";
-print "pressure->perCentConfidence->width=[pressure->perCentConfidence->width]";
+print "pressure->percentConfidence=[pressure->percentConfidence] [pressure->percentConfidence->units]";
+print "pressure->percentConfidence->code=[pressure->percentConfidence->code!06d]";
+print "pressure->percentConfidence->scale=[pressure->percentConfidence->scale]";
+print "pressure->percentConfidence->reference=[pressure->percentConfidence->reference]";
+print "pressure->percentConfidence->width=[pressure->percentConfidence->width]";
 EOF
 
 f="syno_1.bufr"
@@ -148,11 +148,11 @@ pressure->code=010004
 pressure->scale=-1
 pressure->reference=0
 pressure->width=14
-pressure->perCentConfidence=74 %
-pressure->perCentConfidence->code=033007
-pressure->perCentConfidence->scale=0
-pressure->perCentConfidence->reference=0
-pressure->perCentConfidence->width=7
+pressure->percentConfidence=74 %
+pressure->percentConfidence->code=033007
+pressure->percentConfidence->scale=0
+pressure->percentConfidence->reference=0
+pressure->percentConfidence->width=7
 EOF
 
 diff ${f}.ref ${f}.log 
