@@ -21,9 +21,9 @@ grib_api.spec
 grib_api.pc
 grib_api_f90.pc
 perl/GRIB-API/Makefile.PL
-rpms/grib_api.pc
-rpms/grib_api.spec
-rpms/grib_api_f90.pc
+rpms/eccodes.pc
+rpms/eccodes.spec
+rpms/eccodes_f90.pc
 aclocal.m4
 src/config.h.in~
 python/gribapi.pyc

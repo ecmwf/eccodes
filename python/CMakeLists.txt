@@ -80,7 +80,7 @@ if( HAVE_PYTHON )
         add_custom_target(copy_swig_py ALL DEPENDS ${_swig_py})
         #######################
 
-        set(PYTHON_DEST "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/grib_api" )
+        set(PYTHON_DEST "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/eccodes" )
 
         install(TARGETS _gribapi_swig DESTINATION ${PYTHON_DEST} )
 

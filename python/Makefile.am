@@ -77,7 +77,7 @@ EXTRA_DIST = setup.py.in \
 			CMakeLists.txt
 
 # What I want installed
-pdir = $(libdir)/python$(PYTHON_VERSION)/site-packages/grib_api
+pdir = $(libdir)/python$(PYTHON_VERSION)/site-packages/eccodes
 p_DATA = \
 	_gribapi_swig.so \
 	gribapi.py \
