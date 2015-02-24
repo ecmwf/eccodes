@@ -18,6 +18,7 @@
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value*/
         {"j",0,0,1,1,0},
+        {"L",0,"Flat list mode",0,1,0},
         {"S",0,0,1,0,0},
         {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
         {"D",0,0,0,1,0},
@@ -139,6 +140,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     char identifier[100];
     size_t idlen=100;
     int i,err=0;
+    grib_accessor* a=NULL;
+    grib_accessors_list* al=NULL;
     if (grib_get_long(h,"totalLength",&length) != GRIB_SUCCESS)
         length=-9999;
 
@@ -165,7 +168,13 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
     }
 
-    grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
+    if (grib_options_on("L")) {
+      a=grib_find_accessor(h,"numericValues");
+      al=accessor_bufr_data_array_get_dataAccessors(a);
+      grib_dump_bufr_flat(al,h,stdout,options->dump_mode,options->dump_flags,0);
+    } else {
+      grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
+    }
 
     if (!strcmp(options->dump_mode,"default"))
         printf("}\n");
