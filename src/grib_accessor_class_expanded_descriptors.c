@@ -238,7 +238,7 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
       *err=grib_get_long_array(a->parent->h,self->sequence,v,&size);
       if (*err) return 0;
       inner_unexpanded=grib_bufr_descriptors_array_new(c,100,100);
-      inner_expanded=grib_bufr_descriptors_array_new(c,100,100);
+      /* inner_expanded=grib_bufr_descriptors_array_new(c,100,100); */
       for (i=0;i<size;i++) {
         vv=grib_bufr_descriptor_new(self->tablesAccessor,v[i],err);
         inner_unexpanded=grib_bufr_descriptors_array_push(inner_unexpanded,vv);
@@ -643,7 +643,7 @@ static int value_count(grib_accessor* a,long* rlen)
 static void destroy(grib_context* c,grib_accessor* a) {
   grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
   if (self->rank==0 && self->expanded) {
-    grib_bufr_descriptors_array_delete(self->expanded);
+    grib_bufr_descriptors_array_delete_array(self->expanded);
   }
 }
 

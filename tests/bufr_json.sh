@@ -25,7 +25,7 @@ for file in ${data_dir}/bufr/*.bufr
 do
   rm -f ${file}.json | true
 
-  ${tools_dir}bufr_dump -j $file 2> $REDIRECT > ${file}.json
+  ${tools_dir}bufr_dump -js $file 2> $REDIRECT > ${file}.json
 
   if test "x$JSON_CHECK" != "x"; then
     json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
@@ -33,7 +33,7 @@ do
 
   rm -f ${file}.json
 
-  ${tools_dir}bufr_dump -jL $file 2> $REDIRECT > ${file}.json
+  ${tools_dir}bufr_dump -jf $file 2> $REDIRECT > ${file}.json
 
   if test "x$JSON_CHECK" != "x"; then
     json_xs < ${file}.json >$REDIRECT 2> $REDIRECT

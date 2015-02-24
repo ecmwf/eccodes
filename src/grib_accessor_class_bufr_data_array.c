@@ -253,9 +253,9 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
 
 static void self_clear(grib_context* c,grib_accessor_bufr_data_array* self) {
   grib_context_free(c,self->canBeMissing);
-	grib_vdarray_delete(c,self->numericValues);
-	grib_vsarray_delete(c,self->stringValues);
-	grib_viarray_delete(c,self->elementsDescriptorsIndex);
+	grib_vdarray_delete_content(c,self->numericValues);
+	grib_vsarray_delete_content(c,self->stringValues);
+	grib_viarray_delete_content(c,self->elementsDescriptorsIndex);
 }
 
 static int  get_native_type(grib_accessor* a){

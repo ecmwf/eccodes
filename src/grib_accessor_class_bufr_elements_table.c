@@ -281,7 +281,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err) {
 
         fclose(f);
     }
-    grib_trie_insert(c->lists,filename,dictionary);
+    grib_trie_insert(c->lists,dictName,dictionary);
     return dictionary;
 }
 
