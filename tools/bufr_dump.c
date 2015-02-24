@@ -17,8 +17,8 @@
 
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value*/
-        {"j",0,0,1,1,0},
-        {"L",0,"Flat list mode",0,1,0},
+        {"j:","s/f","\n\t\tJSON mode (JavaScript Object Notation)."
+                    "\n\t\tOptions: s->structure, f->flat (only data)\n",1,1,"s"},
         {"S",0,0,1,0,0},
         {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
         {"D",0,0,0,1,0},
@@ -42,6 +42,7 @@ char* grib_tool_description="Dump the content of a BUFR file in different format
 char* grib_tool_name="bufr_dump";
 char* grib_tool_usage="[options] file file ...";
 static int json=0;
+static char* json_option=0;
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
@@ -71,8 +72,13 @@ int grib_tool_init(grib_runtime_options* options)
         exit(1);
     }
 
-    if (grib_options_on("j")) {
+    if (grib_options_on("j:")) {
         options->dump_mode = "json";
+        json_option=grib_options_get_option("j:");
+        if (strlen(json_option)>1 || ( json_option[0] != 's' && json_option[0]!= 'f')) {
+          printf("wrong json option %s\n",json_option);
+          exit(1);
+        }
         json=1;
     }
 
@@ -168,12 +174,18 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
     }
 
-    if (grib_options_on("L")) {
-      a=grib_find_accessor(h,"numericValues");
-      al=accessor_bufr_data_array_get_dataAccessors(a);
-      grib_dump_bufr_flat(al,h,stdout,options->dump_mode,options->dump_flags,0);
-    } else {
-      grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
+    switch (json_option[0]) {
+      case 'f':
+        a=grib_find_accessor(h,"numericValues");
+        al=accessor_bufr_data_array_get_dataAccessors(a);
+        grib_dump_bufr_flat(al,h,stdout,options->dump_mode,options->dump_flags,0);
+        break;
+      case 's':
+        grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
+        break;
+      default :
+        printf("unknown json option %s\n",json_option);
+        exit(1);
     }
 
     if (!strcmp(options->dump_mode,"default"))
