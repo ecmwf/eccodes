@@ -1074,7 +1074,7 @@ int grib_keys_iterator_get_native_type(grib_keys_iterator *kiter);
 
 /* grib_parse_utils.c */
 int grib_recompose_name(grib_handle *h, grib_accessor *observer, const char *uname, char *fname, int fail);
-int grib_accessor_print(grib_accessor *a, int type, const char *format, const char *separator, int maxcols, int *newline, FILE *out);
+int grib_accessor_print(grib_accessor *a, int has_rank, int type, const char *format, const char *separator, int maxcols, int *newline, FILE *out);
 int grib_recompose_print(grib_handle *h, grib_accessor *observer, const char *uname, int fail, FILE *out);
 grib_action_file *grib_find_action_file(const char *fname, grib_action_file_list *afl);
 void grib_push_action_file(grib_action_file *af, grib_action_file_list *afl);
@@ -1088,6 +1088,8 @@ grib_action *grib_parse_file(grib_context *gc, const char *filename);
 int grib_type_to_int(char id);
 
 /* grib_query.c */
+char *get_rank(const char *name, long *rank);
+int has_rank(const char *name);
 char *grib_split_name_attribute(grib_context *c, const char *name, char *attribute_name);
 grib_accessor *grib_find_accessor(grib_handle *h, const char *name);
 grib_accessor *grib_find_attribute(grib_handle *h, const char *name, const char *attr_name, int *err);
@@ -1161,10 +1163,10 @@ int grib_get_double_array_internal(grib_handle *h, const char *name, double *val
 int grib_get_double_array(grib_handle *h, const char *name, double *val, size_t *length);
 int _grib_get_string_length(grib_accessor *a, size_t *size);
 int grib_get_string_length(grib_handle *h, const char *name, size_t *size);
+int _grib_get_size(grib_handle *h, grib_accessor *a, size_t *size);
 int grib_get_size(grib_handle *h, const char *name, size_t *size);
 int grib_get_length(grib_handle *h, const char *name, size_t *length);
 int grib_get_count(grib_handle *h, const char *name, size_t *size);
-int _grib_get_size(grib_handle *h, grib_accessor *a, size_t *size);
 int grib_get_offset(grib_handle *h, const char *key, size_t *val);
 int _grib_get_string_array_internal(grib_handle *h, grib_accessor *a, char **val, size_t buffer_len, size_t *decoded_length);
 int grib_get_string_array(grib_handle *h, const char *name, char **val, size_t *length);

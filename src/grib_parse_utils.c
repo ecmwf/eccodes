@@ -141,7 +141,7 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_print(grib_accessor* a,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
+int grib_accessor_print(grib_accessor* a,int has_rank,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
 {
   size_t size=0;
   char val[1024] = {0,};
@@ -169,10 +169,21 @@ int grib_accessor_print(grib_accessor* a,int type,const char* format,const char*
     case GRIB_TYPE_DOUBLE:
       myformat= format ? (char*)format : double_format;
       myseparator= separator ? (char*)separator : default_separator;
-      ret=_grib_get_size(h,a,&size);
+      if (has_rank) {
+        long count;
+        ret=grib_value_count(a,&count);
+        size=count;
+      } else {
+        ret=_grib_get_size(h,a,&size);
+      }
       dval=(double*)grib_context_malloc_clear(h->context,sizeof(double)*size);
-      replen=0;
-      ret=_grib_get_double_array_internal(h,a,dval,size,&replen);
+      if (has_rank) {
+        replen=size;
+        ret=grib_unpack_double(a,dval,&replen);
+      } else {
+        replen=0;
+        ret=_grib_get_double_array_internal(h,a,dval,size,&replen);
+      }
       if (replen==1) fprintf(out,myformat,dval[0]);
       else {
         int i=0;
@@ -194,10 +205,21 @@ int grib_accessor_print(grib_accessor* a,int type,const char* format,const char*
     case GRIB_TYPE_LONG:
       myformat= format ? (char*)format : long_format;
       myseparator= separator ? (char*)separator : default_separator;
-      ret=_grib_get_size(h,a,&size);
+      if (has_rank) {
+        long count;
+        ret=grib_value_count(a,&count);
+        size=count;
+      } else {
+        ret=_grib_get_size(h,a,&size);
+      }
       lval=(long*)grib_context_malloc_clear(h->context,sizeof(long)*size);
-      replen=0;
-      ret=_grib_get_long_array_internal(h,a,lval,size,&replen);
+      if (has_rank) {
+        replen=size;
+        ret=grib_unpack_long(a,lval,&replen);
+      } else {
+        replen=0;
+        ret=_grib_get_long_array_internal(h,a,lval,size,&replen);
+      }
       if (replen==1) fprintf(out, myformat, lval[0]);
       else {
         int i=0;
@@ -294,7 +316,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
               return GRIB_NOT_FOUND;
             }
           } else {
-            ret=grib_accessor_print(a,type,format,separator,maxcols,&newline,out);
+            ret=grib_accessor_print(a,has_rank(loc),type,format,separator,maxcols,&newline,out);
 
             if(ret != GRIB_SUCCESS)
             {
