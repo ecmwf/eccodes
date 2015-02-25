@@ -238,13 +238,13 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
       *err=grib_get_long_array(a->parent->h,self->sequence,v,&size);
       if (*err) return 0;
       inner_unexpanded=grib_bufr_descriptors_array_new(c,100,100);
-      /* inner_expanded=grib_bufr_descriptors_array_new(c,100,100); */
       for (i=0;i<size;i++) {
         vv=grib_bufr_descriptor_new(self->tablesAccessor,v[i],err);
         inner_unexpanded=grib_bufr_descriptors_array_push(inner_unexpanded,vv);
       }
       grib_context_free(c,v);
       inner_expanded=_expand(a,inner_unexpanded,ccp,err);
+      grib_bufr_descriptors_array_delete(inner_unexpanded);
 #if MYDEBUG
       for (i=0;i<inner_expanded->n;i++) {
         for (idepth=0;idepth<depth;idepth++) printf("\t");

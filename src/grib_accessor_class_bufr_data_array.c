@@ -771,6 +771,7 @@ static int create_keys(grib_accessor* a) {
   grib_context* c=a->parent->h->context;
   int qualityPresent=0;
   bitmap_s bitmap={0,};
+  int extraElement=0;
 
   grib_accessor* gaGroup=0;
   grib_action creatorGroup = {0, };
@@ -814,6 +815,7 @@ static int create_keys(grib_accessor* a) {
 
   indexOfGroupNumber=0;
   depth=0;
+  extraElement=0;
 
   for (iss=0;iss<end;iss++) {
     qualityPresent=0;
@@ -889,21 +891,29 @@ static int create_keys(grib_accessor* a) {
       } else if (descriptor->code == 222000 || descriptor->code == 224000) {
         bitmap.referredElement=NULL;
         qualityPresent=1;
+        incrementBitmapIndex=1;
+        dump=1;
+      } else if (descriptor->code == 236000 ) {
+        bitmap.referredElement=NULL;
+        extraElement=1;
+        bitmap.cursor=0;
+        reuseBitmap=1;
         dump=1;
       } else if (descriptor->code == 236000 || descriptor->code == 237000 ) {
         bitmap.referredElement=NULL;
         bitmap.cursor=0;
         reuseBitmap=1;
-        dump=0;
+        dump=1;
       } else if (descriptor->code == 237255 ) {
         reuseBitmap=0;
+        incrementBitmapIndex=1;
         bitmap.cursor=0;
         dump=1;
       } else if ( ( descriptor->X==33 || descriptor->isMarker )  && qualityPresent) {
         if (!bitmap.referredElement) {
           bitmap.cursor=bitmapStart[bitmapIndex]->next;
-          bitmap.referredElement=bitmap.cursor->prev;
-          for (i=0;i<bitmapSize[bitmapIndex];i++) {
+          bitmap.referredElement=bitmapStart[bitmapIndex];
+          for (i=0;i<bitmapSize[bitmapIndex]+extraElement;i++) {
             bitmap.referredElement=bitmap.referredElement->prev;
           }
         }
