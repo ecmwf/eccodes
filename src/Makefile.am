@@ -352,7 +352,7 @@ libeccodes_la_SOURCES = $(libeccodes_la_prototypes) eccodes.c grib_yacc.c  grib_
 
 libeccodes_la_LIBADD = @LIBOBJS@
 libeccodes_la_DEPENDENCIES = grib_api.h $(libeccodes_la_LIBADD)
-libeccodes_la_LDFLAGS = -version-info $(GRIB_ABI_CURRENT):$(GRIB_ABI_REVISION):$(GRIB_ABI_AGE)
+libeccodes_la_LDFLAGS = -version-info $(ECCODES_CURRENT):$(ECCODES_REVISION):$(ECCODES_AGE)
 
 # set the include path
 INCLUDES=  -I.

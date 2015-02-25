@@ -7,11 +7,11 @@ include_HEADERS = eccodes_f77.h
 
 libeccodes_f77_la_SOURCES= grib_fortran.c grib_f77.c 
 libeccodes_f77_la_DEPENDENCIES = $(top_builddir)/src/libeccodes.la
-libeccodes_f77_la_LDFLAGS = -version-info $(GRIB_ABI_CURRENT):$(GRIB_ABI_REVISION):$(GRIB_ABI_AGE)
+libeccodes_f77_la_LDFLAGS = -version-info $(ECCODES_CURRENT):$(ECCODES_REVISION):$(ECCODES_AGE)
 
 libeccodes_f90_la_SOURCES= grib_fortran.c grib_f90.f90 eccodes_f90.f90
 libeccodes_f90_la_DEPENDENCIES = $(top_builddir)/src/libeccodes.la grib_api_externals.h grib_api_visibility.h grib_api_constants.h grib_kinds.h
-libeccodes_f90_la_LDFLAGS = -version-info $(GRIB_ABI_CURRENT):$(GRIB_ABI_REVISION):$(GRIB_ABI_AGE)
+libeccodes_f90_la_LDFLAGS = -version-info $(ECCODES_CURRENT):$(ECCODES_REVISION):$(ECCODES_AGE)
 
 libeccodes_fortran_prototypes= grib_fortran.c
 
