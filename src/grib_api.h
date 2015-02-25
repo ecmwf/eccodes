@@ -41,8 +41,7 @@ extern "C" {
 
 typedef enum ProductKind {PRODUCT_GRIB, PRODUCT_BUFR, PRODUCT_ANY} ProductKind;
 
-
-#define GRIB_API_VERSION (GRIB_API_MAJOR_VERSION*10000+GRIB_API_MINOR_VERSION*100+GRIB_API_REVISION_VERSION)
+#include "eccodes_version.h"
 
 /* sections */
 #define GRIB_SECTION_PRODUCT 	(1<<0)

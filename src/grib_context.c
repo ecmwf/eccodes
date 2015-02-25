@@ -221,16 +221,16 @@ void grib_context_set_logging_proc(grib_context* c, grib_log_proc p)
 
 long grib_get_api_version()
 {
-    return GRIB_API_VERSION;
+    return ECCODES_VERSION;
 }
 
 void grib_print_api_version(FILE* out)
 {
     fprintf(out,"%d.%d.%d",
-            GRIB_API_MAJOR_VERSION,
-            GRIB_API_MINOR_VERSION,
-            GRIB_API_REVISION_VERSION);
-    if (GRIB_API_MAJOR_VERSION < 1) {
+            ECCODES_MAJOR_VERSION,
+            ECCODES_MINOR_VERSION,
+            ECCODES_REVISION_VERSION);
+    if (ECCODES_MAJOR_VERSION < 1) {
         fprintf(out, "%s", " PRE-RELEASE");
     }
 }

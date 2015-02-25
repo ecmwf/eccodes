@@ -30,9 +30,9 @@ int main( int argc,char* argv[])
     int c=0;
     int nfiles=0;
     unsigned long print_flags=0;
-    int major=GRIB_API_MAJOR_VERSION;
-    int minor=GRIB_API_MINOR_VERSION;
-    int revision=GRIB_API_REVISION_VERSION;
+    int major=ECCODES_MAJOR_VERSION;
+    int minor=ECCODES_MINOR_VERSION;
+    int revision=ECCODES_REVISION_VERSION;
 
     while (1) {
         c = getopt (argc, argv, "vds");
@@ -62,7 +62,7 @@ int main( int argc,char* argv[])
         printf("\n");
         printf("eccodes Version %d.%d.%d",
                 major,minor,revision);
-        if (GRIB_API_MAJOR_VERSION < 1) printf(" PRE-RELEASE");
+        if (ECCODES_MAJOR_VERSION < 1) printf(" PRE-RELEASE");
         printf("\n");
         printf("\n");
 #if GRIB_PTHREADS
