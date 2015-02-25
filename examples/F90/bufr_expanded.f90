@@ -48,7 +48,7 @@ real(kind=8), dimension(:), allocatable       :: values
     allocate(values(numberOfValues), stat=iret)
  
     ! get the exapanded data values
-    call grib_get(ibufr,'numericValues',values)
+    call codes_get(ibufr,'numericValues',values)
  
     do i=1,numberOfValues
         write(*,*) '  ',i,values(i)

@@ -65,7 +65,7 @@ integer            :: kiter
     end do
       
     ! delete key iterator 
-    call grib_keys_iterator_delete(kiter)
+    call codes_keys_iterator_delete(kiter)
    
     ! release the bufr message
     call codes_release(ibufr)

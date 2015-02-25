@@ -39,6 +39,7 @@ list( APPEND tests
    set_missing
    binary_message
    set_bitmap
+   bufr_attributes
    bufr_clone
    bufr_expanded
    bufr_get_keys

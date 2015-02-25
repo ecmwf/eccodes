@@ -17,10 +17,6 @@
 
 #include "eccodes.h"
 
-void usage(char* prog) {
-    printf("usage: %s infile\n",prog);
-    exit(1);
-}
 
 int main(int argc,char* argv[])
 {
@@ -81,7 +77,7 @@ int main(int argc,char* argv[])
         typicalDate = (char*)malloc(len*sizeof(char));
         
         /* get the values*/
-        grib_get_string(h, "typicalDate", typicalDate, &len);
+        codes_get_string(h, "typicalDate", typicalDate, &len);
         printf("  typicalDate: %s\n", typicalDate);
     
          /* ---- array of long ----------------*/

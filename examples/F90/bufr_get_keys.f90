@@ -44,7 +44,7 @@ character(len=9)   :: typicalDate
     
     
     ! get as character
-    call grib_get(ibufr,'typicalDate',typicalDate)
+    call codes_get(ibufr,'typicalDate',typicalDate)
     write(*,*) '  typicalDate:',typicalDate
    
     ! get as integer
@@ -71,7 +71,7 @@ character(len=9)   :: typicalDate
     allocate(descriptors(numberOfDesc), stat=iret)
  
     ! get the exapanded data values
-    call grib_get(ibufr,'bufrdcExpandedDescriptors',descriptors)
+    call codes_get(ibufr,'bufrdcExpandedDescriptors',descriptors)
  
     do i=1,numberOfDesc
         write(*,*) '  ',i,descriptors(i)
@@ -89,14 +89,14 @@ character(len=9)   :: typicalDate
     allocate(values(numberOfValues), stat=iret)
  
     ! get the exapanded data values
-    call grib_get(ibufr,'numericValues',values)
+    call codes_get(ibufr,'numericValues',values)
  
     do i=1,numberOfValues
         write(*,*) '  ',i,values(i)
     enddo
    
     ! get as character
-    call grib_get(ibufr,'typicalDate',typicalDate)
+    call codes_get(ibufr,'typicalDate',typicalDate)
     write(*,*) '  typicalDate:',typicalDate
    
     ! free arrays 
