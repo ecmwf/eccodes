@@ -135,9 +135,9 @@ static int    unpack_string(grib_accessor* a, char* val, size_t *len)
 	char result[30]={0,};
 	size_t size;
 
-    int major=GRIB_API_MAJOR_VERSION;
-	int minor=GRIB_API_MINOR_VERSION;
-	int revision=GRIB_API_REVISION_VERSION;
+    int major=ECCODES_MAJOR_VERSION;
+	int minor=ECCODES_MINOR_VERSION;
+	int revision=ECCODES_REVISION_VERSION;
 
     sprintf(result,"%d.%d.%d",major,minor,revision);
 	size=sizeof(result);

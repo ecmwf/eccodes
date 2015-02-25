@@ -10,7 +10,7 @@ AM_CPPFLAGS = -DECCODES_SAMPLES_PATH=\"$(ECCODES_SAMPLES_PATH)\" \
 
 
 lib_LTLIBRARIES = libeccodes.la
-include_HEADERS = grib_api.h eccodes.h eccodes_windef.h
+include_HEADERS = grib_api.h eccodes.h eccodes_windef.h eccodes_version.h
 
 libeccodes_la_prototypes= \
 	action.c \

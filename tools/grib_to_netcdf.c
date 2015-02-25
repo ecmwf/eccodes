@@ -3046,9 +3046,9 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
         }
         else
         {
-            int major = GRIB_API_MAJOR_VERSION;
-            int minor = GRIB_API_MINOR_VERSION;
-            int revision = GRIB_API_REVISION_VERSION;
+            int major = ECCODES_MAJOR_VERSION;
+            int minor = ECCODES_MINOR_VERSION;
+            int revision = ECCODES_REVISION_VERSION;
 
             time(&now);
             strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S GMT", gmtime(&now));

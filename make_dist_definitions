@@ -2,7 +2,7 @@ set -e
 make dist
 
 . ./version.sh
-libraryVersion=$GRIB_API_MAJOR_VERSION.$GRIB_API_MINOR_VERSION.$GRIB_API_REVISION_VERSION
+libraryVersion=$ECCODES_MAJOR_VERSION.$ECCODES_MINOR_VERSION.$ECCODES_REVISION_VERSION
 tar=grib_api-$libraryVersion.tar.gz
 dir=grib_api-$libraryVersion
 

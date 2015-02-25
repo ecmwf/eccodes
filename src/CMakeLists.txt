@@ -368,6 +368,7 @@ list( APPEND grib_api_extra_srcs
 )
 
 configure_file( grib_api_version.c.in grib_api_version.c @ONLY )
+configure_file( eccodes_version.h.in eccodes_version.h @ONLY )
 
 # We ship our own generated lex/yacc C files
 #ecbuild_generate_yy(YYPREFIX  grib_yy
@@ -390,3 +391,5 @@ ecbuild_add_library(TARGET    eccodes
 
 
 install( FILES grib_api.h eccodes.h eccodes_windef.h DESTINATION include )
+install( FILES ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h DESTINATION include )
+

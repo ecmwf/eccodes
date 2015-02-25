@@ -24,7 +24,7 @@ extern "C" {
 
 #include "grib_api.h"
 
-#define CODES_VERSION GRIB_API_VERSION
+#define CODES_VERSION ECCODES_VERSION
 
 /* sections */
 #define CODES_SECTION_PRODUCT   GRIB_SECTION_PRODUCT
