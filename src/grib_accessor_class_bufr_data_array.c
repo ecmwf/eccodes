@@ -931,9 +931,9 @@ static int create_keys(grib_accessor* a) {
       }
 
       elementAccessor=create_accessor_from_descriptor(a,section,ide,iss,dump);
-      if (elementFromBitmap && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE)
+      if (elementFromBitmap && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
         grib_accessor_add_attribute(elementFromBitmap,elementAccessor);
-      else if (elementAccessor) {
+      } else if (elementAccessor) {
         grib_push_accessor(elementAccessor,section->block);
         grib_accessors_list_push(self->dataAccessors,elementAccessor);
       }

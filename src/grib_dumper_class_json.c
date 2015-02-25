@@ -111,19 +111,66 @@ static int  destroy  (grib_dumper* d)
     return GRIB_SUCCESS;
 }
 
+static void print_long(FILE* out,long val,long missing_value) {
+  if (val==missing_value) {
+    fprintf(out,"null");
+  } else {
+    fprintf(out,"%ld",val);
+  }
+}
+
+static void print_double(FILE* out,double val,double missing_value) {
+  if (val==missing_value) {
+    fprintf(out,"null");
+  } else {
+    fprintf(out,"%g",val);
+  }
+}
+
 static void print_accessor(grib_accessor* a,FILE* out) {
   size_t len=1;
-  long lval;
-  double dval;
+  size_t i;
+  long count;
+  long* lval;
+  double* dval;
   char* cval=NULL;
+  double missing_value=GRIB_MISSING_DOUBLE;
+  grib_context* c=a->parent->h->context;
+  grib_value_count(a,&count);
+  len=count;
+  /* grib_set_double(a->parent->h, "missingValue", missing_value); */
   switch (grib_accessor_get_native_type(a)) {
     case GRIB_TYPE_LONG:
-      grib_unpack_long(a,&lval,&len);
-      fprintf(out,"%ld",lval);
+      lval=grib_context_malloc_clear(c,sizeof(long)*len);
+      grib_unpack_long(a,lval,&len);
+      if (len==1) {
+        print_long(out,lval[0],GRIB_MISSING_LONG);
+      } else {
+        fprintf(out,"[");
+        print_long(out,lval[0],GRIB_MISSING_LONG);
+        for (i=1;i<len;i++) {
+          fprintf(out,",");
+          print_long(out,lval[i],GRIB_MISSING_LONG);
+        }
+        fprintf(out,"]\n");
+      }
+      grib_context_free(c,lval);
       break;
     case GRIB_TYPE_DOUBLE:
-      grib_unpack_double(a,&dval,&len);
-      fprintf(out,"%g",dval);
+      dval=grib_context_malloc_clear(c,sizeof(double)*len);
+      grib_unpack_double(a,dval,&len);
+      if (len==1) {
+        print_long(out,dval[0],missing_value);
+      } else {
+        fprintf(out,"[");
+        print_long(out,dval[0],missing_value);
+        for (i=1;i<len;i++) {
+          fprintf(out,",");
+          print_double(out,dval[i],missing_value);
+        }
+        fprintf(out,"]\n");
+      }
+      grib_context_free(c,dval);
       break;
     case GRIB_TYPE_STRING:
       len=grib_string_length(a)+1;
