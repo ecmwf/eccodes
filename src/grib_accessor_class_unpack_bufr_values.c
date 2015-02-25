@@ -136,47 +136,6 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-/*TODO move all those typedef in a unique .h file*/
-typedef struct grib_accessor_bufr_compressed_data {
-    grib_accessor          att;
-/* Members defined in gen */
-/* Members defined in bufr_compressed_data */
-        const char* offsetSection4Name;
-        const char* offsetBeforeDataName;
-        const char* offsetEndSection4Name;
-        const char* section4LengthName;
-        const char* numberOfSubsetsName;
-        const char* subsetNumberName;
-        const char* expandedDescriptorsName;
-        const char* elementsName;
-        const char* abbreviationName;
-        const char* typeName;
-        const char* nameName;
-        const char* unitName;
-        const char* referenceName;
-        const char* scaleName;
-        const char* widthName;
-        const char* codeFlags;
-        long* code;
-        long* expandedDescriptors;
-        char** abbreviation;
-        int* index;
-        grib_trie* abbreviationTrie;
-        char** type;
-        char** names;
-        char** units;
-        long* reference;
-        long* scale;
-        long* width;
-        long numberOfElements;
-        long numberOfSubsets;
-        size_t numberOfDescriptors;
-        double* values;
-        int* is_constant;
-        double* constant;
-        int dirty;
-} grib_accessor_bufr_compressed_data;
-
 static void init(grib_accessor* a, const long len, grib_arguments* params) {
 
   char* key;
@@ -241,8 +200,13 @@ static int  get_native_type(grib_accessor* a){
 
 static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
 {
+  int unpackMode=CODES_BUFR_UNPACK_STRUCTURE;
   grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
   grib_accessor* data=(grib_accessor*)self->data_accessor;
+
+  if (*val==2) unpackMode=CODES_BUFR_UNPACK_FLAT;
+
+  accessor_bufr_data_array_set_unpackMode(data,unpackMode);
 
   return grib_unpack_double(data,0,0);
 }

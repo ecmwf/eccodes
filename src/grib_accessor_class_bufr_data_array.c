@@ -53,6 +53,7 @@
    MEMBERS    = int bitmapStart
    MEMBERS    = int bitmapCurrent
    MEMBERS    = grib_accessors_list* dataAccessors
+   MEMBERS    = int unpackMode
 
    END_CLASS_DEF
 
@@ -115,6 +116,7 @@ typedef struct grib_accessor_bufr_data_array {
 	int bitmapStart;
 	int bitmapCurrent;
 	grib_accessors_list* dataAccessors;
+	int unpackMode;
 } grib_accessor_bufr_data_array;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -246,6 +248,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
   a->parent->h->unpacked=0;
 
   a->length = init_length(a);
+  self->unpackMode=CODES_BUFR_UNPACK_STRUCTURE;
 
   /* Assert(a->length>=0); */
 }
@@ -305,6 +308,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 grib_accessors_list* accessor_bufr_data_array_get_dataAccessors(grib_accessor* a) {
   grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
   return self->dataAccessors;
+}
+
+void accessor_bufr_data_array_set_unpackMode(grib_accessor* a,int unpackMode) {
+  grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
+  self->unpackMode=unpackMode;
 }
 
 static int get_descriptors(grib_accessor* a) {
@@ -827,7 +835,8 @@ static int create_keys(grib_accessor* a) {
 
       descriptor=self->expanded->v[idx];
       elementFromBitmap=NULL;
-      if (descriptor->F==0 && IS_QUALIFIER(descriptor->X)) {
+      if (descriptor->F==0 && IS_QUALIFIER(descriptor->X)
+                          && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
         int sidx=significanceQualifierIndex(descriptor->X,descriptor->Y);
         groupNumber++;
 
@@ -922,7 +931,8 @@ static int create_keys(grib_accessor* a) {
       }
 
       elementAccessor=create_accessor_from_descriptor(a,section,ide,iss,dump);
-      if (elementFromBitmap) grib_accessor_add_attribute(elementFromBitmap,elementAccessor);
+      if (elementFromBitmap && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE)
+        grib_accessor_add_attribute(elementFromBitmap,elementAccessor);
       else if (elementAccessor) {
         grib_push_accessor(elementAccessor,section->block);
         grib_accessors_list_push(self->dataAccessors,elementAccessor);
