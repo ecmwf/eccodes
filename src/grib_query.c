@@ -305,7 +305,7 @@ grib_accessor* grib_find_accessor(grib_handle* h, const char* name)
 
   if (*attribute_name==0) {
     aret=a;
-  } else {
+  } else if (a) {
     aret=grib_accessor_get_attribute(a,attribute_name);
     grib_context_free(h->context,accessor_name);
   }

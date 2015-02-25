@@ -161,9 +161,23 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         grib_set_flag(h,options->print_keys[i].name,GRIB_ACCESSOR_FLAG_DUMP);
 
     if (json) {
-        grib_set_long(h,"unpack",1);
         if (options->handle_count>1) fprintf(stdout,",\n");
         /* fprintf(stdout,"\"message%d\" : ",options->handle_count); */
+        switch (json_option[0]) {
+          case 'f':
+            grib_set_long(h,"unpack",2);
+            a=grib_find_accessor(h,"numericValues");
+            al=accessor_bufr_data_array_get_dataAccessors(a);
+            grib_dump_bufr_flat(al,h,stdout,options->dump_mode,options->dump_flags,0);
+            break;
+          case 's':
+            grib_set_long(h,"unpack",1);
+            grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
+            break;
+          default :
+            printf("unknown json option %s\n",json_option);
+            exit(1);
+        }
     } else {
         sprintf(tmp,"MESSAGE %d ( length=%ld )",options->handle_count,length);
         if (!grib_options_on("C"))
@@ -172,20 +186,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             GRIB_CHECK_NOLINE(grib_get_string(h,"identifier",identifier,&idlen),0);
             printf("%s {\n",identifier);
         }
-    }
-
-    switch (json_option[0]) {
-      case 'f':
-        a=grib_find_accessor(h,"numericValues");
-        al=accessor_bufr_data_array_get_dataAccessors(a);
-        grib_dump_bufr_flat(al,h,stdout,options->dump_mode,options->dump_flags,0);
-        break;
-      case 's':
-        grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
-        break;
-      default :
-        printf("unknown json option %s\n",json_option);
-        exit(1);
     }
 
     if (!strcmp(options->dump_mode,"default"))

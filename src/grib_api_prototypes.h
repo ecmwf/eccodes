@@ -263,6 +263,7 @@ size_t grib_viarray_used_size(grib_viarray *v);
 
 /* grib_accessor_class_bufr_data_array.c */
 grib_accessors_list *accessor_bufr_data_array_get_dataAccessors(grib_accessor *a);
+void accessor_bufr_data_array_set_unpackMode(grib_accessor *a, int unpackMode);
 
 /* grib_accessor_class_bufr_data_element.c */
 void accessor_bufr_data_element_set_index(grib_accessor *a, long index);
