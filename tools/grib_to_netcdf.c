@@ -2050,7 +2050,7 @@ static nc_type translate_nctype(const char *name)
     if(strcmp(name, "NC_DOUBLE") == 0)
         return NC_DOUBLE;
 
-    grib_context_log(ctx, GRIB_LOG_ERROR, "Unknown Netcdf type '%s'. Using NC_SHORT");
+    grib_context_log(ctx, GRIB_LOG_ERROR, "Unknown NetCDF type '%s'. Using NC_SHORT", name);
     return NC_SHORT;
 }
 
