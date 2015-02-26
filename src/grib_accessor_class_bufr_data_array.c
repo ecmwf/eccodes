@@ -588,7 +588,7 @@ static grib_accessor* create_attribute(char* name,grib_section* section,int type
   size_t len;
   creator.op         = "variable";
   creator.name_space = "";
-  creator.flags     = GRIB_ACCESSOR_FLAG_READ_ONLY;
+  creator.flags     = GRIB_ACCESSOR_FLAG_READ_ONLY | GRIB_ACCESSOR_FLAG_DUMP ;
   creator.set        = 0;
 
   creator.name=name;
@@ -652,7 +652,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
 
   if (dump) {
     creator.flags    = GRIB_ACCESSOR_FLAG_DUMP;
-    operatorCreator.flags    = GRIB_ACCESSOR_FLAG_DUMP;
+    operatorCreator.flags  |= GRIB_ACCESSOR_FLAG_DUMP;
   }
 
   idx = self->compressedData ? self->elementsDescriptorsIndex->v[0]->v[ide] :

@@ -212,19 +212,27 @@ static grib_accessor* search_by_rank(grib_handle* h, const char* name,const char
 
 }
 
+static grib_accessor* search_by_condition(grib_handle* h,const char* name) {
+   return NULL;
+}
+
 static grib_accessor* search_and_cache(grib_handle* h, const char* name,const char *the_namespace)
 {
   char* str=0;
   long rank;
 
-  str=get_rank(name,&rank);
-  if (rank>0) {
-    grib_accessor* a=NULL;
-    a=search_by_rank(h,str,the_namespace,rank);
-    grib_context_free(h->context,str);
-    return a;
+  if (name[0] == '/') {
+    return search_by_condition(h,name);
   } else {
-    return _search_and_cache(h,name,the_namespace);
+    str=get_rank(name,&rank);
+    if (rank>0) {
+      grib_accessor* a=NULL;
+      a=search_by_rank(h,str,the_namespace,rank);
+      grib_context_free(h->context,str);
+      return a;
+    } else {
+      return _search_and_cache(h,name,the_namespace);
+    }
   }
 
 }
