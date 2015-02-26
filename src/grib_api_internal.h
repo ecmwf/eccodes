@@ -507,7 +507,7 @@ struct grib_accessor
   grib_virtual_value*    vvalue;    /** < virtual value used when transient flag on **/
   const char*            set;
   grib_accessor          *attributes[MAX_ACCESSOR_ATTRIBUTES]; /** < attributes are accessors */
-
+  grib_accessor*         parent_as_attribute;
 };
 
 #define GRIB_ACCESSOR_FLAG_READ_ONLY        (1<<1)

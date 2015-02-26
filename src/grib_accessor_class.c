@@ -174,6 +174,18 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     return a;
 }
 
+static void link_same_attributes(grib_accessor* a,grib_accessor* b) {
+  int i=0;
+  int idx=0;
+  grib_accessor* bAttribute=NULL;
+  if (a==NULL || b==NULL) return;
+  while (a->attributes[i] && i<MAX_ACCESSOR_ATTRIBUTES) {
+    bAttribute=_grib_accessor_get_attribute(b,a->attributes[i]->name,&idx);
+    if (bAttribute) a->attributes[i]->same=bAttribute;
+    i++;
+  }
+}
+
 void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
 {
     int id;
@@ -192,6 +204,7 @@ void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
 
 
             a->same=a->parent->h->accessors[id];
+            link_same_attributes(a,a->same);
             a->parent->h->accessors[id]=a;
 
             if(a->same == a) {

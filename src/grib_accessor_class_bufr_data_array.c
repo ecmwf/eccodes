@@ -631,7 +631,7 @@ static void set_creator_name(grib_action* creator,int code) {
   }
 }
 
-static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_section* section,long ide,long subset,int dump) {
+static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_section* section,long ide,long subset,int dump,int count) {
   grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
   char code[7]={0,};
   int idx=0;
@@ -660,6 +660,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
 
   switch (self->expanded->v[idx]->F) {
     case 0:
+    case 1:
       creator.name=self->expanded->v[idx]->shortName;
       elementAccessor = grib_accessor_factory(section, &creator, 0, NULL);
       if (self->canBeMissing[idx]) elementAccessor->flags |= GRIB_ACCESSOR_FLAG_CAN_BE_MISSING;
@@ -673,6 +674,8 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
       accessor_bufr_data_element_set_subsetNumber(elementAccessor,subset);
 
       self->expanded->v[idx]->a=elementAccessor;
+      attribute=create_attribute("number",section,GRIB_TYPE_LONG,0,0,count);
+      grib_accessor_add_attribute(elementAccessor,attribute);
 
       sprintf(code,"%06ld",self->expanded->v[idx]->code);
       attribute=create_attribute("code",section,GRIB_TYPE_STRING,code,0,0);
@@ -704,9 +707,15 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
         accessor_bufr_data_element_set_numberOfSubsets(elementAccessor,self->numberOfSubsets);
         accessor_bufr_data_element_set_subsetNumber(elementAccessor,subset);
 
+      attribute=create_attribute("number",section,GRIB_TYPE_LONG,0,0,count);
+      grib_accessor_add_attribute(elementAccessor,attribute);
+
       } else {
         elementAccessor = grib_accessor_factory(section, &operatorCreator, 0, NULL);
         accessor_variable_set_type(elementAccessor,GRIB_TYPE_LONG);
+      attribute=create_attribute("number",section,GRIB_TYPE_LONG,0,0,count);
+      grib_accessor_add_attribute(elementAccessor,attribute);
+
         sprintf(code,"%06ld",self->expanded->v[idx]->code);
         attribute=create_attribute("code",section,GRIB_TYPE_STRING,code,0,0);
         grib_accessor_add_attribute(elementAccessor,attribute);
@@ -795,7 +804,7 @@ static int create_keys(grib_accessor* a) {
   int incrementBitmapIndex=1;
   grib_accessor* elementFromBitmap=NULL;
   int reuseBitmap=0;
-  int i,dump=1;;
+  int i,dump=1,count=0;
 
   creatorGroup.op         = "bufr_group";
   creatorGroup.name="groupNumber";
@@ -871,6 +880,8 @@ static int create_keys(grib_accessor* a) {
         incrementBitmapIndex=0;
         bitmapStart[bitmapIndex]=grib_accessors_list_last(self->dataAccessors);
         bitmapSize[bitmapIndex]=1;
+        if (self->expanded->v[idx-1]->code ==31002 || self->expanded->v[idx-1]->code==31001)
+          extraElement=1;
         if (bitmapGroup[bitmapIndex]) {
           groupSection=bitmapGroup[bitmapIndex]->parent;
           depth=bitmapDepth[bitmapIndex];
@@ -897,16 +908,16 @@ static int create_keys(grib_accessor* a) {
         dump=1;
         bitmapSize[bitmapIndex]++;
         bitmap.cursor=0;
-      } else if (descriptor->code == 222000 || descriptor->code == 224000) {
+      } else if (descriptor->code == 222000 || descriptor->code == 224000 ) {
         bitmap.referredElement=NULL;
         qualityPresent=1;
         incrementBitmapIndex=1;
         dump=1;
       } else if (descriptor->code == 236000 ) {
         bitmap.referredElement=NULL;
-        extraElement=1;
         bitmap.cursor=0;
         reuseBitmap=1;
+        extraElement=1;
         dump=1;
       } else if (descriptor->code == 236000 || descriptor->code == 237000 ) {
         bitmap.referredElement=NULL;
@@ -930,7 +941,8 @@ static int create_keys(grib_accessor* a) {
         dump=1;
       }
 
-      elementAccessor=create_accessor_from_descriptor(a,section,ide,iss,dump);
+      count++;
+      elementAccessor=create_accessor_from_descriptor(a,section,ide,iss,dump,count);
       if (elementFromBitmap && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
         grib_accessor_add_attribute(elementFromBitmap,elementAccessor);
       } else if (elementAccessor) {

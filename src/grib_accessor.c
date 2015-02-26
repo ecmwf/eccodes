@@ -563,10 +563,15 @@ const char* grib_get_type_name(int type)
 
 int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr) {
   int id=0;
+  int idx=0;
   if (_grib_accessor_get_attribute(a,attr->name,&id)) return GRIB_ATTRIBUTE_CLASH;
   for (id=0;id<MAX_ACCESSOR_ATTRIBUTES;id++) {
     if (a->attributes[id] == NULL) {
       a->attributes[id]=attr;
+      attr->parent_as_attribute=a;
+      if (a->same)
+        attr->same=_grib_accessor_get_attribute(a->same,attr->name,&idx);
+
       return GRIB_SUCCESS;
     }
   }
@@ -575,9 +580,13 @@ int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr) {
 
 int grib_accessor_replace_attribute(grib_accessor* a,grib_accessor* attr) {
   int id=0;
+  int idx=0;
   if (_grib_accessor_get_attribute(a,attr->name,&id) != NULL) {
     grib_accessor_delete(a->parent->h->context,a->attributes[id]);
     a->attributes[id]=attr;
+    attr->parent_as_attribute=a;
+    if (a->same)
+      attr->same=_grib_accessor_get_attribute(a->same,attr->name,&idx);
   } else {
     grib_accessor_add_attribute(a,attr);
   }

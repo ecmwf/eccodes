@@ -512,7 +512,7 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a) {
   int i=0;
   grib_dumper_json *self = (grib_dumper_json*)d;
   FILE* out=self->dumper.out;
-  while (a->attributes[i] || i > MAX_ACCESSOR_ATTRIBUTES) {
+  while (a->attributes[i] && i < MAX_ACCESSOR_ATTRIBUTES) {
     self->isAttribute=1;
     self->isLeaf=a->attributes[i]->attributes[0]==NULL ? 1 : 0;
     fprintf(self->dumper.out,"\n%-*s",depth," ");
@@ -529,7 +529,7 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a) {
         break;
     }
     i++;
-    if (a->attributes[i] || i > MAX_ACCESSOR_ATTRIBUTES)
+    if (a->attributes[i] && i < MAX_ACCESSOR_ATTRIBUTES)
       fprintf(self->dumper.out,",");
   }
   self->isLeaf=0;
