@@ -263,7 +263,7 @@ add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 
 if( EC_HAVE_FORTRAN )
     list( APPEND ECCODES_INCLUDE_DIRS  ${CMAKE_Fortran_MODULE_DIRECTORY} )
-    list( APPEND ECCODES_LIBRARIES eccodes_f77 eccodes_f90 )
+    list( APPEND ECCODES_LIBRARIES eccodes_f90 )
 endif()
 
 if( NOT PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME )
@@ -292,15 +292,6 @@ if( EC_HAVE_FORTRAN )
     URL                 "https://software.ecmwf.int/wiki/display/ECC/"
     LIBRARIES           eccodes_f90 eccodes
     DESCRIPTION         "The ecCodes library for Fortran 90"
-    IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
-    VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_GRIB_THREADS HAVE_NETCDF
-                        HAVE_PYTHON HAVE_PNG HAVE_AEC
-  )
-  ecbuild_pkgconfig(
-    NAME                eccodes_f77
-    URL                 "https://software.ecmwf.int/wiki/display/ECC/"
-    LIBRARIES           eccodes_f77 eccodes
-    DESCRIPTION         "The ecCodes library for Fortran 77"
     IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
     VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_GRIB_THREADS HAVE_NETCDF
                         HAVE_PYTHON HAVE_PNG HAVE_AEC

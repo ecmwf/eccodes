@@ -69,6 +69,7 @@ tools/grib1to2
 examples/C/.libs/
 examples/C/box
 examples/C/bufr_clone
+examples/C/bufr_missing
 examples/C/bufr_attributes
 examples/C/bufr_keys_iterator
 examples/C/bufr_set_keys

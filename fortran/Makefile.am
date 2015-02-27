@@ -2,12 +2,7 @@
 
 AM_CFLAGS =  @WARN_PEDANTIC@
 
-lib_LTLIBRARIES = libeccodes_f77.la libeccodes_f90.la
-include_HEADERS = eccodes_f77.h
-
-libeccodes_f77_la_SOURCES= grib_fortran.c grib_f77.c 
-libeccodes_f77_la_DEPENDENCIES = $(top_builddir)/src/libeccodes.la
-libeccodes_f77_la_LDFLAGS = -version-info $(ECCODES_CURRENT):$(ECCODES_REVISION):$(ECCODES_AGE)
+lib_LTLIBRARIES = libeccodes_f90.la
 
 libeccodes_f90_la_SOURCES= grib_fortran.c grib_f90.f90 eccodes_f90.f90
 libeccodes_f90_la_DEPENDENCIES = $(top_builddir)/src/libeccodes.la grib_api_externals.h grib_api_visibility.h grib_api_constants.h grib_kinds.h
@@ -30,7 +25,7 @@ INCLUDES=  -I$(top_builddir)/src
 
 ## Make sure these will be cleaned even when they're not built by
 ## default.
-CLEANFILES = libeccodes_f77.la libeccodes_f90.la grib_f90.f90 eccodes_f90.f90 *.mod grib_types grib_kinds.h same_int_long same_int_size_t
+CLEANFILES = libeccodes_f90.la grib_f90.f90 eccodes_f90.f90 *.mod grib_types grib_kinds.h same_int_long same_int_size_t
 
 #noinst_HEADERS = 
 

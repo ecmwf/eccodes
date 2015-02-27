@@ -120,14 +120,12 @@ Summary: Fortran 90 interface for %{pkgname}
 Group: Scientific/Libraries
 Requires: grib_api
 %description fortran
-Fortran 77 and 90 interface for %{pkgname}.
+Fortran 90 interface for %{pkgname}.
 The ECMWF ecCodes package is an application program interface accessible from C, FORTRAN and Python programs developed for encoding and decoding WMO FM-92 GRIB edition 1
 and edition 2 messages.
 %files fortran
 %defattr(-, root,root)
 %prefix/include/*.mod
-%prefix/include/*f77*
 %prefix/lib*/*f90*
-%prefix/lib*/*f77*
 %endif
 
