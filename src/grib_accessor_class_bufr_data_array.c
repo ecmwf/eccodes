@@ -613,20 +613,65 @@ static grib_accessor* create_attribute(char* name,grib_section* section,int type
 
 static void set_creator_name(grib_action* creator,int code) {
   switch (code) {
+    case 222000:
+      creator->name="qualityInformationFollows";
+      break;
+    case 223000:
+      creator->name="substitutedValuesOperator";
+      break;
     case 223255:
       creator->name="substitutedValue";
+      break;
+    case 224000:
+      creator->name="firstOrderStatiticalValuesFollow";
       break;
     case 224255:
       creator->name="firstOrderStatisticalValue";
       break;
+    case 225000:
+      creator->name="differenceStatisticalValuesFollow";
+      break;
     case 225255:
       creator->name="differenceStatisticalValue";
+      break;
+    case 232000:
+      creator->name="replacedRetainedValuesFollow";
       break;
     case 232255:
       creator->name="replacedRetainedValue";
       break;
+    case 235000:
+      creator->name="cancelBackwardDataReference";
+      break;
+    case 236000:
+      creator->name="defineDataPresentBitmap";
+      break;
+    case 237000:
+      creator->name="useDefinedDataPresentBitmap";
+      break;
+    case 237255:
+      creator->name="cancelUseDefinedDataPresentBitmap";
+      break;
+    case 241000:
+      creator->name="defineEvent";
+      break;
+    case 241255:
+      creator->name="cancelDefineEvent";
+      break;
+    case 242000:
+      creator->name="defineConditioningEvent";
+      break;
+    case 242255:
+      creator->name="canceDefineConditioningEvent";
+      break;
+    case 243000:
+      creator->name="categoricalForecastValuesFollow";
+      break;
+    case 243255:
+      creator->name="cancelCategoricalForecastValuesFollow";
+      break;
     default :
-      creator->name="unknown";
+      creator->name="operator";
       break;
   }
 }
@@ -674,7 +719,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
       accessor_bufr_data_element_set_subsetNumber(elementAccessor,subset);
 
       self->expanded->v[idx]->a=elementAccessor;
-      attribute=create_attribute("number",section,GRIB_TYPE_LONG,0,0,count);
+      attribute=create_attribute("position",section,GRIB_TYPE_LONG,0,0,count);
       grib_accessor_add_attribute(elementAccessor,attribute);
 
       sprintf(code,"%06ld",self->expanded->v[idx]->code);
@@ -694,8 +739,8 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
       grib_accessor_add_attribute(elementAccessor,attribute);
       break;
     case 2:
+      set_creator_name(&creator,self->expanded->v[idx]->code);
       if (self->expanded->v[idx]->isMarker) {
-        set_creator_name(&creator,self->expanded->v[idx]->code);
         elementAccessor = grib_accessor_factory(section, &creator, 0, NULL);
         if (self->canBeMissing[idx]) elementAccessor->flags |= GRIB_ACCESSOR_FLAG_CAN_BE_MISSING;
         accessor_bufr_data_element_set_index(elementAccessor,ide);
@@ -707,14 +752,14 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
         accessor_bufr_data_element_set_numberOfSubsets(elementAccessor,self->numberOfSubsets);
         accessor_bufr_data_element_set_subsetNumber(elementAccessor,subset);
 
-      attribute=create_attribute("number",section,GRIB_TYPE_LONG,0,0,count);
-      grib_accessor_add_attribute(elementAccessor,attribute);
+        attribute=create_attribute("position",section,GRIB_TYPE_LONG,0,0,count);
+        grib_accessor_add_attribute(elementAccessor,attribute);
 
       } else {
         elementAccessor = grib_accessor_factory(section, &operatorCreator, 0, NULL);
         accessor_variable_set_type(elementAccessor,GRIB_TYPE_LONG);
-      attribute=create_attribute("number",section,GRIB_TYPE_LONG,0,0,count);
-      grib_accessor_add_attribute(elementAccessor,attribute);
+        attribute=create_attribute("position",section,GRIB_TYPE_LONG,0,0,count);
+        grib_accessor_add_attribute(elementAccessor,attribute);
 
         sprintf(code,"%06ld",self->expanded->v[idx]->code);
         attribute=create_attribute("code",section,GRIB_TYPE_STRING,code,0,0);

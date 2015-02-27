@@ -186,6 +186,56 @@ char* get_rank(const char* name,long *rank) {
   return ret;
 }
 
+char* get_condition(const char* name,codes_condition* condition) {
+  char* equal=(char*)name;
+  char* endCondition=NULL;
+  char* startLeft=NULL;
+  char* str=NULL;
+  char* end=NULL;
+  size_t len;
+  long lval;
+  double dval;
+  grib_context* c=grib_context_get_default();
+
+  condition->rightType=GRIB_TYPE_UNDEFINED;
+
+  Assert(name[0]=='/');
+
+  while (*equal!=0 && *equal!='=') equal++;
+  if (*equal==0) return NULL;
+
+  endCondition=equal;
+  while (*endCondition!=0 && *endCondition!='/') endCondition++;
+  if (*endCondition==0) return NULL;
+
+  str=grib_context_malloc_clear(c,strlen(name));
+  memcpy(str,equal+1,endCondition-equal-1);
+
+  end=NULL;
+  lval=strtol(str,&end,10);
+  if (*end != '\0') {
+    dval=strtod(str,&end);
+    if (*end != '\0') {
+      condition->rightType=GRIB_TYPE_DOUBLE;
+      condition->rightDouble=dval;
+    }
+  } else {
+    condition->rightType=GRIB_TYPE_LONG;
+    condition->rightLong=lval;
+  }
+
+  if (condition->rightType!=GRIB_TYPE_UNDEFINED) {
+    strcpy(str,endCondition+1);
+    condition->left=grib_context_malloc_clear(c,equal-name);
+    memcpy(condition->left,name+1,equal-name-1);
+  } else {
+    grib_context_free(c,str);
+    str=NULL;
+  }
+
+  return str;
+}
+
 static grib_accessor* _search_by_rank(grib_accessor* a,const char* name,long rank) {
   long r=1;
   grib_accessors_list* al=accessor_bufr_data_array_get_dataAccessors(a);
@@ -209,35 +259,92 @@ static grib_accessor* search_by_rank(grib_handle* h, const char* name,const char
   } else {
     return _search_and_cache(h,name,the_namespace);
   }
-
 }
 
-static grib_accessor* search_by_condition(grib_handle* h,const char* name) {
-   return NULL;
+static int condition_true(grib_accessor* a,codes_condition* condition) {
+  int ret=0;
+  size_t size=1;
+  long lval;
+  double dval;
+  switch (condition->rightType) {
+    case GRIB_TYPE_LONG:
+      grib_unpack_long(a,&lval,&size);
+      ret = lval==condition->rightLong ? 1 : 0;
+      break;
+    case GRIB_TYPE_DOUBLE:
+      grib_unpack_double(a,&dval,&size);
+      ret = dval==condition->rightDouble ? 1 : 0;
+      break;
+    default :
+      ret=0;
+      break;
+  }
+  return ret;
+}
+
+static grib_accessor* search_from_accessors_list(grib_accessors_list* al,const char* name) {
+  while (al && al->accessor) {
+    if (!strcmp(al->accessor->name,name))
+      return al->accessor;
+    al=al->next;
+  }
+  return NULL;
+}
+
+static grib_accessor* _search_by_condition(grib_accessor* a,const char* name,codes_condition* condition) {
+  grib_accessors_list* al=accessor_bufr_data_array_get_dataAccessors(a);
+
+  while (al) {
+    if (condition->left && !strcmp(al->accessor->name,condition->left)) {
+      if (condition_true(al->accessor,condition))
+        return search_from_accessors_list(al->next,name);
+    }
+    al=al->next;
+  }
+
+  return NULL;
+}
+
+static grib_accessor* search_by_condition(grib_handle* h,const char* name,codes_condition* condition) {
+  grib_accessor* data=search_and_cache(h,"numericValues",0);
+  if (data) {
+    return _search_by_condition(data,name,condition);
+  } else {
+    return _search_and_cache(h,name,0);
+  }
+  return NULL;
 }
 
 static grib_accessor* search_and_cache(grib_handle* h, const char* name,const char *the_namespace)
 {
   char* str=0;
+  grib_accessor* a=NULL;
+  codes_condition* condition=NULL;
   long rank;
 
   if (name[0] == '/') {
-    return search_by_condition(h,name);
+    condition=grib_context_malloc_clear(h->context,sizeof(codes_condition));
+    str=get_condition(name,condition);
+    if (str) {
+      a=search_by_condition(h,str,condition);
+      grib_context_free(h->context,str);
+      if (condition->left) grib_context_free(h->context,condition->left);
+      if (condition->rightString) grib_context_free(h->context,condition->rightString);
+    } else {
+      a=_search_and_cache(h,name,the_namespace);
+    }
+    grib_context_free(h->context,condition);
   } else {
     str=get_rank(name,&rank);
     if (rank>0) {
-      grib_accessor* a=NULL;
       a=search_by_rank(h,str,the_namespace,rank);
       grib_context_free(h->context,str);
-      return a;
     } else {
-      return _search_and_cache(h,name,the_namespace);
+      a=_search_and_cache(h,name,the_namespace);
     }
   }
-
+  return a;
 }
-
-
 
 static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name)
 {

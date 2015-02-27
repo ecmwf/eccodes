@@ -228,6 +228,8 @@ typedef               struct     grib_dumper_class       grib_dumper_class;
 typedef               struct     grib_dependency         grib_dependency;
 typedef               struct     string_feed             string_feed;
 
+typedef struct codes_condition codes_condition;
+
 /* typedef void           (*dynamic_key_proc)              (const char*, void*)
 */
 typedef void           (*nearest_init_class_proc)       (grib_nearest_class*);
@@ -776,6 +778,14 @@ struct bufr_descriptors_array {
   size_t number_of_pop_front;
   grib_context* context;
 } ;
+
+struct codes_condition {
+  char* left;
+  int rightType;
+  char* rightString;
+  long rightLong;
+  double rightDouble;
+};
 
 #define MAX_SET_VALUES      10
 #define MAX_ACCESSOR_CACHE  100
