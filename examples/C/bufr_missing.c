@@ -56,12 +56,12 @@ int main(int argc,char* argv[])
         CODES_CHECK(codes_set_long(h,"unpack",1),0);
     
         /* This value is missing */
-        CODES_CHECK(codes_get_double(h,"relativeHumidity",&doubleVal),&err);
-        printf("  relativeHumidity: %.2f %ld\n",doubleVal,err);
+        CODES_CHECK(codes_get_double(h,"relativeHumidity",&doubleVal),0);
+        printf("  relativeHumidity: %.2f %d\n",doubleVal,err);
     
         /* This value exists */
-        CODES_CHECK(codes_get_double(h,"airTemperatureAt2M",&doubleVal),&err);
-        printf("  airTemperatureAt2M: %.2f %ld\n",doubleVal,err);
+        CODES_CHECK(codes_get_double(h,"airTemperatureAt2M",&doubleVal),0);
+        printf("  airTemperatureAt2M: %.2f %d\n",doubleVal,err);
     
         /*longVal=10;
         err=codes_is_missing(h,"relativeHumidity",&longVal);
