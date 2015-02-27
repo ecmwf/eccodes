@@ -1090,6 +1090,7 @@ int grib_type_to_int(char id);
 
 /* grib_query.c */
 char *get_rank(const char *name, long *rank);
+char *get_condition(const char *name, codes_condition *condition);
 int has_rank(const char *name);
 char *grib_split_name_attribute(grib_context *c, const char *name, char *attribute_name);
 grib_accessor *grib_find_accessor(grib_handle *h, const char *name);
