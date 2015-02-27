@@ -141,7 +141,7 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_print(grib_accessor* a,int has_rank,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
+int grib_accessor_print(grib_accessor* a,int has_rank,const char* name,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
 {
   size_t size=0;
   char val[1024] = {0,};
@@ -169,7 +169,7 @@ int grib_accessor_print(grib_accessor* a,int has_rank,int type,const char* forma
     case GRIB_TYPE_DOUBLE:
       myformat= format ? (char*)format : double_format;
       myseparator= separator ? (char*)separator : default_separator;
-      if (has_rank) {
+      if (name[0]=='/' || has_rank!=0) {
         long count;
         ret=grib_value_count(a,&count);
         size=count;
@@ -177,7 +177,7 @@ int grib_accessor_print(grib_accessor* a,int has_rank,int type,const char* forma
         ret=_grib_get_size(h,a,&size);
       }
       dval=(double*)grib_context_malloc_clear(h->context,sizeof(double)*size);
-      if (has_rank) {
+      if (name[0]=='/' || has_rank!=0) {
         replen=size;
         ret=grib_unpack_double(a,dval,&replen);
       } else {
@@ -205,7 +205,7 @@ int grib_accessor_print(grib_accessor* a,int has_rank,int type,const char* forma
     case GRIB_TYPE_LONG:
       myformat= format ? (char*)format : long_format;
       myseparator= separator ? (char*)separator : default_separator;
-      if (has_rank) {
+      if (name[0]=='/' || has_rank!=0) {
         long count;
         ret=grib_value_count(a,&count);
         size=count;
@@ -213,7 +213,7 @@ int grib_accessor_print(grib_accessor* a,int has_rank,int type,const char* forma
         ret=_grib_get_size(h,a,&size);
       }
       lval=(long*)grib_context_malloc_clear(h->context,sizeof(long)*size);
-      if (has_rank) {
+      if (name[0]=='/' || has_rank!=0) {
         replen=size;
         ret=grib_unpack_long(a,lval,&replen);
       } else {
@@ -316,7 +316,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
               return GRIB_NOT_FOUND;
             }
           } else {
-            ret=grib_accessor_print(a,has_rank(loc),type,format,separator,maxcols,&newline,out);
+            ret=grib_accessor_print(a,has_rank(loc),loc,type,format,separator,maxcols,&newline,out);
 
             if(ret != GRIB_SUCCESS)
             {
