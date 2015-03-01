@@ -118,22 +118,6 @@ static int  destroy  (grib_dumper* d)
     return GRIB_SUCCESS;
 }
 
-static void print_long(FILE* out,long val,long missing_value) {
-  if (val==missing_value) {
-    fprintf(out,"null");
-  } else {
-    fprintf(out,"%ld",val);
-  }
-}
-
-static void print_double(FILE* out,double val,double missing_value) {
-  if (val==missing_value) {
-    fprintf(out,"null");
-  } else {
-    fprintf(out,"%g",val);
-  }
-}
-
 static void dump_values(grib_dumper* d,grib_accessor* a)
 {
     grib_dumper_json *self = (grib_dumper_json*)d;

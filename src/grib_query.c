@@ -174,7 +174,7 @@ char* get_rank(const char* name,long *rank) {
 
   if (*p=='#') {
     *rank=strtol(++p,&end,10);
-    if (errno!=0 || end == p) {
+    if ( *end != 0) {
       *rank=-1;
     } else {
       grib_context* c=grib_context_get_default();
@@ -213,9 +213,9 @@ char* get_condition(const char* name,codes_condition* condition) {
 
   end=NULL;
   lval=strtol(str,&end,10);
-  if (*end != '\0') {
+  if (*end != 0) {
     dval=strtod(str,&end);
-    if (*end != '\0') {
+    if (*end != 0) {
       condition->rightType=GRIB_TYPE_DOUBLE;
       condition->rightDouble=dval;
     }
