@@ -256,6 +256,54 @@ int grib_unpack_string_array(grib_accessor* a, char** v, size_t *len )
   return 0;
 }
 
+int grib_accessors_list_unpack_long(grib_accessors_list* al,long* val,size_t* buffer_len) {
+  int err=GRIB_SUCCESS;
+  size_t unpacked_len=0;
+  size_t len=0;
+
+  while (al && err==GRIB_SUCCESS ) {
+    len=*buffer_len-unpacked_len;
+    err=grib_unpack_long(al->accessor, val + unpacked_len, &len);
+    unpacked_len += len;
+    al=al->next;
+  }
+
+  *buffer_len=unpacked_len;
+  return err;
+}
+
+int grib_accessors_list_unpack_double(grib_accessors_list* al,double* val,size_t* buffer_len) {
+  int err=GRIB_SUCCESS;
+  size_t unpacked_len=0;
+  size_t len=0;
+
+  while (al && err==GRIB_SUCCESS ) {
+    len=*buffer_len-unpacked_len;
+    err=grib_unpack_double(al->accessor, val + unpacked_len, &len);
+    unpacked_len += len;
+    al=al->next;
+  }
+
+  *buffer_len=unpacked_len;
+  return err;
+}
+
+int grib_accessors_list_unpack_string(grib_accessors_list* al,char** val,size_t* buffer_len) {
+  int err=GRIB_SUCCESS;
+  size_t unpacked_len=0;
+  size_t len=0;
+
+  while (al && err==GRIB_SUCCESS ) {
+    len=*buffer_len-unpacked_len;
+    err=grib_unpack_string(al->accessor, (*val) + unpacked_len, &len);
+    unpacked_len += len;
+    al=al->next;
+  }
+
+  *buffer_len=unpacked_len;
+  return err;
+}
+
 int grib_unpack_long(grib_accessor* a,long* v, size_t *len )
 {
   grib_accessor_class *c = a->cclass;
@@ -363,6 +411,17 @@ int grib_value_count(grib_accessor* a,long* count)
     c = c->super ? *(c->super) : NULL;
   }
   Assert(0);
+  return 0;
+}
+
+int grib_accessors_list_value_count(grib_accessors_list* al,size_t* count) {
+  long lcount=0;
+  *count=0;
+  while (al) {
+    grib_value_count(al->accessor,&lcount);
+    *count+=lcount;
+    al=al->next;
+  }
   return 0;
 }
 

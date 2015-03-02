@@ -116,6 +116,9 @@ int grib_unpack_double(grib_accessor *a, double *v, size_t *len);
 int grib_unpack_double_element(grib_accessor *a, size_t i, double *v);
 int grib_unpack_string(grib_accessor *a, char *v, size_t *len);
 int grib_unpack_string_array(grib_accessor *a, char **v, size_t *len);
+int grib_accessors_list_unpack_long(grib_accessors_list *al, long *val, size_t *buffer_len);
+int grib_accessors_list_unpack_double(grib_accessors_list *al, double *val, size_t *buffer_len);
+int grib_accessors_list_unpack_string(grib_accessors_list *al, char **val, size_t *buffer_len);
 int grib_unpack_long(grib_accessor *a, long *v, size_t *len);
 long grib_accessor_get_native_type(grib_accessor *a);
 long grib_get_next_position_offset(grib_accessor *a);
@@ -123,6 +126,7 @@ long grib_string_length(grib_accessor *a);
 long grib_byte_offset(grib_accessor *a);
 long grib_byte_count(grib_accessor *a);
 int grib_value_count(grib_accessor *a, long *count);
+int grib_accessors_list_value_count(grib_accessors_list *al, size_t *count);
 int grib_accessor_notify_change(grib_accessor *a, grib_accessor *changed);
 void grib_init_accessor(grib_accessor *a, const long len, grib_arguments *args);
 void grib_accessor_delete(grib_context *ct, grib_accessor *a);
@@ -1076,6 +1080,7 @@ int grib_keys_iterator_get_native_type(grib_keys_iterator *kiter);
 /* grib_parse_utils.c */
 int grib_recompose_name(grib_handle *h, grib_accessor *observer, const char *uname, char *fname, int fail);
 int grib_accessor_print(grib_accessor *a, int has_rank, const char *name, int type, const char *format, const char *separator, int maxcols, int *newline, FILE *out);
+int grib_accessors_list_print(grib_accessors_list *al, const char *name, int type, const char *format, const char *separator, int maxcols, int *newline, FILE *out);
 int grib_recompose_print(grib_handle *h, grib_accessor *observer, const char *uname, int fail, FILE *out);
 grib_action_file *grib_find_action_file(const char *fname, grib_action_file_list *afl);
 void grib_push_action_file(grib_action_file *af, grib_action_file_list *afl);
@@ -1091,11 +1096,11 @@ int grib_type_to_int(char id);
 /* grib_query.c */
 char *get_rank(const char *name, long *rank);
 char *get_condition(const char *name, codes_condition *condition);
+grib_accessors_list *grib_find_accessors_list(grib_handle *h, const char *name);
 int has_rank(const char *name);
 char *grib_split_name_attribute(grib_context *c, const char *name, char *attribute_name);
 grib_accessor *grib_find_accessor(grib_handle *h, const char *name);
 grib_accessor *grib_find_attribute(grib_handle *h, const char *name, const char *attr_name, int *err);
-int grib_find_all_accessors(grib_handle *h, const char *name, search_all_callback_proc callback, void *data);
 grib_accessor *grib_find_accessor_fast(grib_handle *h, const char *name);
 
 /* grib_scaling.c */
