@@ -6241,6 +6241,60 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 179 ;
 	}
+#Aerosol extinction coefficient at 355 nm
+'215180' = {
+	 discipline = 192 ;
+	 parameterCategory = 215 ;
+	 parameterNumber = 180 ;
+	}
+#Aerosol extinction coefficient at 532 nm
+'215181' = {
+	 discipline = 192 ;
+	 parameterCategory = 215 ;
+	 parameterNumber = 181 ;
+	}
+#Aerosol extinction coefficient at 1064 nm
+'215182' = {
+	 discipline = 192 ;
+	 parameterCategory = 215 ;
+	 parameterNumber = 182 ;
+	}
+#Aerosol backscatter coefficient at 355 nm (from top of atmosphere)
+'215183' = {
+	 discipline = 192 ;
+	 parameterCategory = 215 ;
+	 parameterNumber = 183 ;
+	}
+#Aerosol backscatter coefficient at 532 nm (from top of atmosphere)
+'215184' = {
+	 discipline = 192 ;
+	 parameterCategory = 215 ;
+	 parameterNumber = 184 ;
+	}
+#Aerosol backscatter coefficient at 1064 nm (from top of atmosphere)
+'215185' = {
+	 discipline = 192 ;
+	 parameterCategory = 215 ;
+	 parameterNumber = 185 ;
+	}
+#Aerosol backscatter coefficient at 355 nm (from ground)
+'215186' = {
+	 discipline = 192 ;
+	 parameterCategory = 215 ;
+	 parameterNumber = 186 ;
+	}
+#Aerosol backscatter coefficient at 532 nm (from ground)
+'215187' = {
+	 discipline = 192 ;
+	 parameterCategory = 215 ;
+	 parameterNumber = 187 ;
+	}
+#Aerosol backscatter coefficient at 1064 nm (from ground)
+'215188' = {
+	 discipline = 192 ;
+	 parameterCategory = 215 ;
+	 parameterNumber = 188 ;
+	}
 #Experimental product
 '216001' = {
 	 discipline = 192 ;

@@ -6554,6 +6554,51 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 179 ;
 	}
+#Aerosol extinction coefficient at 355 nm
+'Aerosol extinction coefficient at 355 nm' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 180 ;
+	}
+#Aerosol extinction coefficient at 532 nm
+'Aerosol extinction coefficient at 532 nm' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 181 ;
+	}
+#Aerosol extinction coefficient at 1064 nm
+'Aerosol extinction coefficient at 1064 nm' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 182 ;
+	}
+#Aerosol backscatter coefficient at 355 nm (from top of atmosphere)
+'Aerosol backscatter coefficient at 355 nm (from top of atmosphere)' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 183 ;
+	}
+#Aerosol backscatter coefficient at 532 nm (from top of atmosphere)
+'Aerosol backscatter coefficient at 532 nm (from top of atmosphere)' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 184 ;
+	}
+#Aerosol backscatter coefficient at 1064 nm (from top of atmosphere)
+'Aerosol backscatter coefficient at 1064 nm (from top of atmosphere)' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 185 ;
+	}
+#Aerosol backscatter coefficient at 355 nm (from ground)
+'Aerosol backscatter coefficient at 355 nm (from ground)' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 186 ;
+	}
+#Aerosol backscatter coefficient at 532 nm (from ground)
+'Aerosol backscatter coefficient at 532 nm (from ground)' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 187 ;
+	}
+#Aerosol backscatter coefficient at 1064 nm (from ground)
+'Aerosol backscatter coefficient at 1064 nm (from ground)' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 188 ;
+	}
 #Experimental product
 'Experimental product' = {
 	 table2Version = 216 ;
