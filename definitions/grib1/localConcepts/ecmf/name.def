@@ -6119,18 +6119,18 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 92 ;
 	}
-#Profile of total aerosol optical depth at 532 nm
-'Profile of total aerosol optical depth at 532 nm' = {
+#Total aerosol optical thickness at 532 nm
+'Total aerosol optical thickness at 532 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 93 ;
 	}
-#Profile of natural (sea-salt and dust) aerosol optical depth at 532 nm
-'Profile of natural (sea-salt and dust) aerosol optical depth at 532 nm' = {
+#Natural (sea-salt and dust) aerosol optical thickness at 532 nm
+'Natural (sea-salt and dust) aerosol optical thickness at 532 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 94 ;
 	}
-#Profile of antropogenic (black carbon, organic matter, sulphate) aerosol optical depth at 532 nm
-'Profile of antropogenic (black carbon, organic matter, sulphate) aerosol optical depth at 532 nm' = {
+#Antropogenic (black carbon, organic matter, sulphate) aerosol optical thickness at 532 nm
+'Antropogenic (black carbon, organic matter, sulphate) aerosol optical thickness at 532 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 95 ;
 	}
