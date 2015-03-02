@@ -5719,19 +5719,19 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 92 ;
 	}
-#Profile of total aerosol optical depth at 532 nm
+#Total aerosol optical thickness at 532 nm
 '215093' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 93 ;
 	}
-#Profile of natural (sea-salt and dust) aerosol optical depth at 532 nm
+#Natural (sea-salt and dust) aerosol optical thickness at 532 nm
 '215094' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 94 ;
 	}
-#Profile of antropogenic (black carbon, organic matter, sulphate) aerosol optical depth at 532 nm
+#Antropogenic (black carbon, organic matter, sulphate) aerosol optical thickness at 532 nm
 '215095' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
@@ -15893,54 +15893,15 @@
 	}
 #Sea Salt Aerosol (0.03 - 0.5 um) Mixing Ratio
 '210001' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 productDefinitionTemplateNumber = 44 ;
-	 scaleFactorOfSecondSize = 7 ;
-	 scaleFactorOfFirstSize = 8 ;
-	 aerosolType = 62008 ;
-	 scaledValueOfSecondSize = 5 ;
-	 scaledValueOfFirstSize = 3 ;
-	 typeOfSizeInterval = 2 ;
-	}
-#Sea Salt Aerosol (0.03 - 0.5 um) Mixing Ratio
-'210001' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 1 ;
 	}
 #Sea Salt Aerosol (0.5 - 5 um) Mixing Ratio
 '210002' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 productDefinitionTemplateNumber = 44 ;
-	 scaleFactorOfSecondSize = 6 ;
-	 scaleFactorOfFirstSize = 7 ;
-	 aerosolType = 62008 ;
-	 scaledValueOfSecondSize = 5 ;
-	 scaledValueOfFirstSize = 5 ;
-	 typeOfSizeInterval = 2 ;
-}
-#Sea Salt Aerosol (0.5 - 5 um) Mixing Ratio
-'210002' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 2 ;
-	}
-#Sea Salt Aerosol (5 - 20 um) Mixing Ratio
-'210003' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 productDefinitionTemplateNumber = 44 ;
-	 scaleFactorOfSecondSize = 5 ;
-	 scaleFactorOfFirstSize = 6 ;
-	 aerosolType = 62008 ;
-	 scaledValueOfSecondSize = 2 ;
-	 scaledValueOfFirstSize = 5 ;
-	 typeOfSizeInterval = 2 ;
 	}
 #Sea Salt Aerosol (5 - 20 um) Mixing Ratio
 '210003' = {
@@ -15950,54 +15911,15 @@
 	}
 #Dust Aerosol (0.03 - 0.55 um) Mixing Ratio
 '210004' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 scaleFactorOfFirstSize = 8 ;
-	 scaledValueOfFirstSize = 3 ;
-	 scaleFactorOfSecondSize = 8 ;
-	 scaledValueOfSecondSize = 55 ;
-	 productDefinitionTemplateNumber = 44 ;
-	 aerosolType = 62001 ;
-	 typeOfSizeInterval = 2 ;
-	}
-#Dust Aerosol (0.03 - 0.55 um) Mixing Ratio
-'210004' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 4 ;
 	}
 #Dust Aerosol (0.55 - 0.9 um) Mixing Ratio
 '210005' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 productDefinitionTemplateNumber = 44 ;
-	 scaleFactorOfSecondSize = 7 ;
-	 scaleFactorOfFirstSize = 8 ;
-	 aerosolType = 62001 ;
-	 scaledValueOfSecondSize = 9 ;
-	 scaledValueOfFirstSize = 55 ;
-	 typeOfSizeInterval = 2 ;
-	}
-#Dust Aerosol (0.55 - 0.9 um) Mixing Ratio
-'210005' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 5 ;
-	}
-#Dust Aerosol (0.9 - 20 um) Mixing Ratio
-'210006' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 productDefinitionTemplateNumber = 44 ;
-	 scaleFactorOfSecondSize = 5 ;
-	 scaleFactorOfFirstSize = 7 ;
-	 aerosolType = 62001 ;
-	 scaledValueOfSecondSize = 2 ;
-	 scaledValueOfFirstSize = 9 ;
-	 typeOfSizeInterval = 2 ;
 	 }
 #Dust Aerosol (0.9 - 20 um) Mixing Ratio
 '210006' = {
@@ -16007,27 +15929,9 @@
 	}
 #Hydrophobic Organic Matter Aerosol Mixing Ratio
 '210007' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 productDefinitionTemplateNumber = 44 ;
-	 aerosolType = 62016 ;
-	 typeOfSizeInterval = 255 ;
-	}
-#Hydrophobic Organic Matter Aerosol Mixing Ratio
-'210007' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 7 ;
-	}
-#Hydrophilic Organic Matter Aerosol Mixing Ratio
-'210008' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 productDefinitionTemplateNumber = 44 ;
-	 aerosolType = 62015 ;
-	 typeOfSizeInterval = 255 ;
 	}
 #Hydrophilic Organic Matter Aerosol Mixing Ratio
 '210008' = {
@@ -16037,42 +15941,15 @@
 	}
 #Hydrophobic Black Carbon Aerosol Mixing Ratio
 '210009' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 productDefinitionTemplateNumber = 44 ;
-	 aerosolType = 62014 ;
-	 typeOfSizeInterval = 255 ;
-	}
-#Hydrophobic Black Carbon Aerosol Mixing Ratio
-'210009' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 9 ;
 	}
 #Hydrophilic Black Carbon Aerosol Mixing Ratio
 '210010' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 productDefinitionTemplateNumber = 44 ;
-	 aerosolType = 62013 ;
-	 typeOfSizeInterval = 255 ;
-	}
-#Hydrophilic Black Carbon Aerosol Mixing Ratio
-'210010' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 10 ;
-	}
-#Sulphate Aerosol Mixing Ratio
-'210011' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 productDefinitionTemplateNumber = 44 ;
-	 aerosolType = 62006 ;
-	 typeOfSizeInterval = 255 ;
 	}
 #Sulphate Aerosol Mixing Ratio
 '210011' = {
@@ -16286,25 +16163,9 @@
 	}
 #Carbon Dioxide
 '210061' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 productDefinitionTemplateNumber = 40 ;
-	 constituentType = 3 ;
-	}
-#Carbon Dioxide
-'210061' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 61 ;
-	}
-#Methane
-'210062' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 productDefinitionTemplateNumber = 40 ;
-	 constituentType = 2 ;
 	}
 #Methane
 '210062' = {
@@ -16428,39 +16289,15 @@
 	}
 #Sulphur dioxide
 '210122' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 productDefinitionTemplateNumber = 40 ;
-	 constituentType = 8 ;
-	}
-#Sulphur dioxide
-'210122' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 122 ;
 	}
 #Carbon monoxide
 '210123' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 productDefinitionTemplateNumber = 40 ;
-	 constituentType = 4 ;
-	}
-#Carbon monoxide
-'210123' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 123 ;
-	}
-#Formaldehyde
-'210124' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 productDefinitionTemplateNumber = 40 ;
-	 constituentType = 7 ;
 	}
 #Formaldehyde
 '210124' = {
@@ -16491,14 +16328,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 128 ;
-	}
-#Nitrogen Oxides
-'210129' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 productDefinitionTemplateNumber = 40 ;
-	 constituentType = 60017 ;
 	}
 #Nitrogen Oxides
 '210129' = {
@@ -16757,14 +16586,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 185 ;
-	}
-#GEMS Ozone
-'210203' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 productDefinitionTemplateNumber = 40 ;
-	 constituentType = 0 ;
 	}
 #GEMS Ozone
 '210203' = {

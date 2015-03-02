@@ -208,7 +208,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
     long value; size_t size = 1;
     long *values=NULL;
     int err = 0;
-    int i,tab;
+    int i;
     int cols=9;
     long count=0;
 
@@ -330,7 +330,6 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
   size_t size = 0,i=0;
   grib_context* c=NULL;
   int err = 0;
-  int tab=0;
   long count=0;
 
   c=a->parent->h->context;
