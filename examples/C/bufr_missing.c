@@ -35,7 +35,8 @@ int main(int argc,char* argv[])
     char* infile = "../../data/bufr/syno_1.bufr";
 
     in=fopen(infile,"r");
-    if (!in) {
+    if (!in) 
+    {
         printf("ERROR: unable to open file %s\n", infile);
         return 1;
     }
@@ -55,21 +56,32 @@ int main(int argc,char* argv[])
           i.e. unpack the data values */
         CODES_CHECK(codes_set_long(h,"unpack",1),0);
     
-        /* This value is missing */
+        /* This value of this key is missing in the message*/
         CODES_CHECK(codes_get_double(h,"relativeHumidity",&doubleVal),0);
         printf("  relativeHumidity: %.2f %d\n",doubleVal,err);
+        
+        if(grib_is_missing_double(doubleVal) == 1)
+        {
+            printf("   --> value missing\n");
+        }
+        else
+        {   
+            printf("   --> value present\n");
+        }
     
-        /* This value exists */
+        /* This value of this key exists in the message*/
         CODES_CHECK(codes_get_double(h,"airTemperatureAt2M",&doubleVal),0);
         printf("  airTemperatureAt2M: %.2f %d\n",doubleVal,err);
-    
-        /*longVal=10;
-        err=codes_is_missing(h,"relativeHumidity",&longVal);
-        printf(" missing: %ld %ld\n",longVal,err);
         
-        err=codes_is_missing(h,"airTemperatureAt2M",&longVal);
-        printf(" missing: %ld %ld\n",longVal,err);*/
-    
+        if(grib_is_missing_double(doubleVal) == 1)
+        {
+            printf("   --> value missing\n");
+        }
+        else
+        {   
+            printf("   --> value present\n");
+        }
+        
         /* delete handle */
         codes_handle_delete(h);
         
