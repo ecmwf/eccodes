@@ -14,6 +14,7 @@ src/grib_api.h.new
 src/grib_api_constants.h.new
 src/grib_errors.c.new
 src/grib_errors.h.new
+config/test-driver
 autom4te.cache/
 config.log
 config.status
@@ -76,6 +77,8 @@ examples/C/bufr_set_keys
 examples/C/bufr_expanded
 examples/C/bufr_get_keys
 examples/C/bufr_subset
+examples/C/*.sh.log
+examples/C/*.sh.trs
 examples/F90/f_bufr_expanded
 examples/F90/f_bufr_attributes
 examples/F90/f_bufr_set_keys
@@ -119,6 +122,9 @@ python/eccode_swig.py
 python/eccode_swig_wrap.c
 python/setup.py
 tests/.libs/
+tests/*.sh.log
+tests/*.sh.trs
+tests/test-suite.log
 tests/bpv_limit
 tests/double_cmp
 tests/gauss_sub
