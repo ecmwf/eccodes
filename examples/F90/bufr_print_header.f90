@@ -45,11 +45,11 @@ integer(kind=4)    :: numberofsubsets
     call codes_get(ibufr,'typicalDate',typicalDate);
     write(*,*) '  typicalDate:',typicalDate
     
-    call codes_get(ibufr,'centre',centre);
-    write(*,*) '  centre:',centre
+    call codes_get(ibufr,'bufrHeaderCentre',centre);
+    write(*,*) '  bufrHeaderCentre:',centre
   
-    call codes_get(ibufr,'subCentre',subcentre)
-    write(*,*) '  subCentre:',subcentre
+    call codes_get(ibufr,'bufrHeaderSubCentre',subcentre)
+    write(*,*) '  bufrHeaderSubCentre:',subcentre
   
     call codes_get(ibufr,'masterTablesVersionNumber',masterversion)
     write(*,*) '  masterTablesVersionNumber:',masterversion

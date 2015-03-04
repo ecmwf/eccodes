@@ -28,7 +28,7 @@ fRef=${f}.header.ref
 REDIRECT=/dev/null
 
 #Write the values into a file and compare with reference
-${examples_dir}/bufr_print_header  $f 2> $REDIRECT > $fTmp
+${examples_dir}/bufr_print_header $f 2> $REDIRECT > $fTmp
 
 #We compare output to the reference by ignoring the whitespaces 
 diff -w $fRef $fTmp >$REDIRECT 2> $REDIRECT

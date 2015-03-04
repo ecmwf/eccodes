@@ -42,7 +42,7 @@ REDIRECT=/dev/null
 
 echo "Test: -p switch" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_get -p totalLength,centre,subCentre,masterTableNumber,masterTablesVersionNumber,localTablesVersionNumber,numberOfSubsets,numberOfObservations $f  > $fTmp
+${tools_dir}/bufr_get -p totalLength,bufrHeaderCentre,bufrHeaderSubCentre,masterTableNumber,masterTablesVersionNumber,localTablesVersionNumber,numberOfSubsets,numberOfObservations $f  > $fTmp
 
 #Write the values into a file and compare with ref
 cat $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_get

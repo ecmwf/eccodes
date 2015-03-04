@@ -44,7 +44,7 @@ def example():
         clone_id = codes_clone(gid)
         
         # this is the place where you may wish to modify the clone
-        codes_set(clone_id,'centre',centre)
+        codes_set(clone_id,'bufrHeaderCentre',centre)
  
         # write the cloned message to a file
         codes_write(clone_id,fout)

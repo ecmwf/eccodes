@@ -64,11 +64,11 @@ int main(int argc,char* argv[])
         CODES_CHECK(codes_get_long(h,"typicalDate",&longVal),0);
         printf("  typicalDate: %ld\n",longVal);
     
-        CODES_CHECK(codes_get_long(h,"centre",&longVal),0);
-        printf("  centre: %ld\n",longVal);
+        CODES_CHECK(codes_get_long(h,"bufrHeaderCentre",&longVal),0);
+        printf("  bufrHeaderCentre: %ld\n",longVal);
     
-        CODES_CHECK(codes_get_long(h,"subCentre",&longVal),0);
-        printf("  subCentre: %ld\n",longVal);
+        CODES_CHECK(codes_get_long(h,"bufrHeaderSubCentre",&longVal),0);
+        printf("  bufrHeaderSubCentre: %ld\n",longVal);
     
         CODES_CHECK(codes_get_long(h,"masterTablesVersionNumber",&longVal),0);
         printf("  masterTablesVersionNumber: %ld\n",longVal);

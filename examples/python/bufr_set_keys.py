@@ -46,18 +46,18 @@ def example():
         #codes_set(gid,'unpack',1);
         
         # This is the place where you may wish to modify the message
-        # E.g. we change the centre and 2m temperature
+        # E.g. we change the centre
         
         # set centre
         val=222
-        print '  set centre to: %d' % val
+        print '  set bufrHeaderCentre to: %d' % val
         
-        key='centre'
+        key='bufrHeaderCentre'
         if not codes_is_defined(gid,key): 
             raise Exception("Key: " + key + " was not defined")
         codes_set(gid,key,val)
         
-        #check centre's value
+        #check bufrHeaderCentre's value
         print '  %s''s new value is: %d' % (key,codes_get(gid,key))
    
         # write modified message to output

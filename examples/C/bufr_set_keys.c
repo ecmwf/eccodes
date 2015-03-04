@@ -69,20 +69,17 @@ int main(int argc,char* argv[])
         /*CODES_CHECK(codes_set_long(h,"unpack",1),0);*/
     
         /* This is the place where you may wish to modify the message*/
-        /*E.g. we change the centre and 2m temperature */
+        /*E.g. we change the centre  */
            
-        /* set centre */
+        /* set bufrHeaderCentre */
         longVal=222;
-        CODES_CHECK(codes_set_long(h, "centre", longVal),0);
-        printf("  set centre to: %ld\n",longVal);
+        CODES_CHECK(codes_set_long(h, "bufrHeaderCentre", longVal),0);
+        printf("  set bufrHeaderCentre to: %ld\n",longVal);
         
-        /* check centre */
-        CODES_CHECK(codes_get_long(h,"centre",&longVal),0);
-        printf("  centre's new value is: %ld\n",longVal);
+        /* check bufrHeaderCentre */
+        CODES_CHECK(codes_get_long(h,"bufrHeaderCentre",&longVal),0);
+        printf("  bufrHeaderCentre's new value is: %ld\n",longVal);
         
-        /*doubleVal=240.+i*2.;
-        CODES_CHECK(codes_set_double(h,"airTemperatureAt2M",doubleVal),0);
-        printf("  set airTemperatureAt2M to: %f\n",doubleVal);*/
         
         /* get the modified message in a buffer */
         CODES_CHECK(codes_get_message(h,&buffer,&size),0);

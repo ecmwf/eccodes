@@ -9,7 +9,7 @@
 
 constant defaultSequence=0;
 constant tablesMasterDir="bufr/tables/[masterTableNumber]/wmo/[masterTablesVersionNumber]" : hidden;
-constant tablesLocalDir="bufr/tables/[masterTableNumber]/local/[localTablesVersionNumber]/[centre:l]/[subCentre]" : hidden;
+constant tablesLocalDir="bufr/tables/[masterTableNumber]/local/[localTablesVersionNumber]/[bufrHeaderCentre:l]/[bufrHeaderSubCentre]" : hidden;
 constant rootTablesDir="bufr/tables" : hidden;
 
 transient tableNumber=0;
@@ -25,7 +25,7 @@ unsigned[1]     reserved = 0;
 unsigned[2]     numberOfSubsets : dump;
 alias ls.numberOfSubsets=numberOfSubsets;
 
-if (section2Present && centre==98 && section2Length==52) {
+if (section2Present && bufrHeaderCentre==98 && section2Length==52) {
 
 		concept isSatelliteType(zero) {
 			1 = {rdbType = 2;  }
