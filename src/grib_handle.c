@@ -321,6 +321,15 @@ grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind pr
     return NULL;
 }
 
+grib_handle* codes_grib_handle_new_from_file(grib_context* c, FILE* f, int* error)
+{
+    return grib_handle_new_from_file(c, f, error);
+}
+grib_handle* codes_bufr_handle_new_from_file(grib_context* c, FILE* f, int* error)
+{
+    return bufr_new_from_file(c, f, error);
+}
+
 grib_handle* grib_handle_new_from_message_copy ( grib_context* c, const void* data, size_t size )
 {
 	grib_handle *g = NULL;
