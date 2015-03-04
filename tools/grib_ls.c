@@ -311,7 +311,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                     printf(", \"unit\" : \"%s\"",value);
 
                 if (options->latlon_mask)
-                    printf(", \"mask_value\"=%.2f",options->mask_values[i]);
+                    printf(", \"mask_value\" : %.2f",options->mask_values[i]);
                 printf("}");
                 s="\n,";
             }
