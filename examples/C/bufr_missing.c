@@ -25,11 +25,7 @@ int main(int argc,char* argv[])
     /* message handle. Required in all the eccodes calls acting on a message.*/
     codes_handle* h=NULL;
     
-    char* units= NULL;
-    char* unitsPercent= NULL;
-    long longVal;
     double doubleVal;
-    size_t values_len=0, desc_len=0, len=0;
     int i, err=0;
     int cnt=0;
     char* infile = "../../data/bufr/syno_1.bufr";
@@ -56,24 +52,12 @@ int main(int argc,char* argv[])
           i.e. unpack the data values */
         CODES_CHECK(codes_set_long(h,"unpack",1),0);
     
-        /* This value of this key is missing in the message*/
+        /* the value of this key is missing in the message*/
         CODES_CHECK(codes_get_double(h,"relativeHumidity",&doubleVal),0);
-        printf("  relativeHumidity: %.2f %d\n",doubleVal,err);
+        printf("  relativeHumidity: %.2f\n",doubleVal);
         
-        if(grib_is_missing_double(doubleVal) == 1)
-        {
-            printf("   --> value missing\n");
-        }
-        else
-        {   
-            printf("   --> value present\n");
-        }
-    
-        /* This value of this key exists in the message*/
-        CODES_CHECK(codes_get_double(h,"airTemperatureAt2M",&doubleVal),0);
-        printf("  airTemperatureAt2M: %.2f %d\n",doubleVal,err);
-        
-        if(grib_is_missing_double(doubleVal) == 1)
+        /* we will print "value missing" */
+        if(doubleVal == CODES_MISSING_DOUBLE)
         {
             printf("   --> value missing\n");
         }
