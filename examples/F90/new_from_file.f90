@@ -27,12 +27,12 @@ use eccodes
 
 ! Loop on all the messages in a file.
 
-  call codes_new_from_file(ifile,igrib, iret)
+  call codes_grib_new_from_file(ifile,igrib, iret)
 
   do while (iret==CODES_SUCCESS)
     count1=count1+1
     print *, "===== Message #",count1
-    call codes_new_from_file(ifile,igrib, iret)
+    call codes_grib_new_from_file(ifile,igrib, iret)
 
   end do 
   if (iret /= CODES_END_OF_FILE) then

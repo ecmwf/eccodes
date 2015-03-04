@@ -20,7 +20,7 @@ def example():
     points = ((30,-20),(13,234))
 
     f = open(INPUT) 
-    gid = codes_new_from_file(f)
+    gid = codes_grib_new_from_file(f)
 
     for lat,lon in points:
         nearest = codes_grib_find_nearest(gid,lat,lon)[0]

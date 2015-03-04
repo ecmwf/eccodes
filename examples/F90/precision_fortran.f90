@@ -30,7 +30,7 @@ program precision
 
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls
-  call codes_new_from_file(infile,igrib)
+  call codes_grib_new_from_file(infile,igrib)
 
   !     bitsPerValue before changing the packing parameters
   call codes_get(igrib,'bitsPerValue',bitsPerValue1)

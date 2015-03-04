@@ -18,7 +18,7 @@ VERBOSE = 1 # verbose error reporting
 def example():
     fin = open(INPUT)
     fout = open(OUTPUT,'w')
-    gid = codes_new_from_file(fin)
+    gid = codes_grib_new_from_file(fin)
 
     codes_set(gid,'missingValue', MISSING)
     values = codes_get_values(gid)

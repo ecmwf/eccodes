@@ -25,7 +25,7 @@ program get_pl
   
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls
-  call codes_new_from_file(infile,igrib)
+  call codes_grib_new_from_file(infile,igrib)
   
   !     set PVPresent as an integer 
   call codes_get(igrib,'PLPresent',PLPresent)

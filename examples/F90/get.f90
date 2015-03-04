@@ -35,7 +35,7 @@ program get
   
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls
-  call  codes_new_from_file(ifile,igrib, iret) 
+  call  codes_grib_new_from_file(ifile,igrib, iret) 
   
   LOOP: DO WHILE (iret /= CODES_END_OF_FILE)
 
@@ -114,7 +114,7 @@ program get
      
      call codes_release(igrib)
      
-     call codes_new_from_file(ifile,igrib, iret)
+     call codes_grib_new_from_file(ifile,igrib, iret)
      
   end do LOOP
   

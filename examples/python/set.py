@@ -19,7 +19,7 @@ VERBOSE=1 # verbose error reporting
 def example():
     fin = open(INPUT)
     fout = open(OUTPUT,'w')
-    gid = codes_new_from_file(fin)
+    gid = codes_grib_new_from_file(fin)
 
     dt = date.today()
     today = "%d%02d%02d" % (dt.year,dt.month,dt.day)

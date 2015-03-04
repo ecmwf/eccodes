@@ -20,7 +20,7 @@ def example():
     out = open(sys.argv[2],'w')
 
     while 1:
-        gid = codes_new_from_file(f)
+        gid = codes_grib_new_from_file(f)
         if gid is None: break
 
         message = codes_get_message(gid)

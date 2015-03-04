@@ -42,6 +42,13 @@ KEYTYPES = {
     3:str,
 }
 
+CODES_PRODUCT_GRIB=1
+""" GRIB product kind """
+CODES_PRODUCT_BUFR=2
+""" BUFR product kind """
+CODES_PRODUCT_ANY=3
+""" Generic product kind """
+
 # GRIB-51 Skip function arguments type checking if the
 # environment variable is defined
 no_type_checks = os.environ.get('GRIB_API_PYTHON_NO_TYPE_CHECKS') is not None
@@ -172,6 +179,14 @@ def gts_new_from_file(fileobj, headers_only = False):
             GRIB_CHECK(err)
     else:
         return gribid
+
+@require(fileobj=file,product_kind=int)
+def codes_new_from_file(fileobj, product_kind, headers_only = False):
+    if product_kind == CODES_PRODUCT_GRIB:
+        return grib_new_from_file(fileobj, headers_only)
+    if product_kind == CODES_PRODUCT_BUFR:
+        return bufr_new_from_file(fileobj, headers_only)
+    raise Exception("Invalid product kind: " + product_kind)
 
 @require(fileobj=file)
 def bufr_new_from_file(fileobj, headers_only = False):

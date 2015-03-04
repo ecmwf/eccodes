@@ -28,7 +28,7 @@ program get_set_uuid
 
   ! Load first grib message from file
   ! igrib is the grib id to be used in subsequent calls
-  call codes_new_from_file (infile, igrib, iret)
+  call codes_grib_new_from_file (infile, igrib, iret)
 
   uuid_string_expected = '08b1e836bc6911e1951fb51b5624ad8d'
   count1 = 0
@@ -70,7 +70,7 @@ program get_set_uuid
 
      call codes_release (igrib)
      call codes_release (ogrib)
-     call codes_new_from_file (infile, igrib, iret)
+     call codes_grib_new_from_file (infile, igrib, iret)
   end do
 
   call codes_close_file (infile)

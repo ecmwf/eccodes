@@ -21,7 +21,7 @@ def example():
     fin = open(INPUT)
     fout = open(OUTPUT,'w')
 
-    gid = codes_new_from_file(fin)
+    gid = codes_grib_new_from_file(fin)
 
     mgid = codes_grib_multi_new()
 

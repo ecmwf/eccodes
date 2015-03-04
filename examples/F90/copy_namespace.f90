@@ -21,8 +21,8 @@ program copy_namespace
   call codes_open_file(file2,'../../data/regular_latlon_surface.grib1','r')
   call codes_open_file(file3,'out.grib','w')
 
-  call codes_new_from_file(file1,igrib1)
-  call codes_new_from_file(file2,igrib2)
+  call codes_grib_new_from_file(file1,igrib1)
+  call codes_grib_new_from_file(file2,igrib2)
 
   call codes_clone(igrib2,igrib3)
 

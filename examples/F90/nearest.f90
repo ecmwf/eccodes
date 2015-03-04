@@ -47,7 +47,7 @@ program find
   
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls
-  call codes_new_from_file(infile,igrib)
+  call codes_grib_new_from_file(infile,igrib)
   
 
   call codes_grib_find_nearest(igrib, .true., lats, lons, nearest_lats, nearest_lons,lsm_values, distances, indexes)
@@ -58,7 +58,7 @@ program find
 ! will apply it to another GRIB
   call codes_open_file(infile, &
        '../../data/reduced_gaussian_pressure_level.grib1','r')
-  call codes_new_from_file(infile,igrib)
+  call codes_grib_new_from_file(infile,igrib)
 
   call codes_get_element(igrib,"values", indexes, values)
   call codes_release(igrib)

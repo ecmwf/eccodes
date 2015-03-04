@@ -27,7 +27,7 @@ def example():
         ]
 
     while 1:
-        gid = codes_new_from_file(f)
+        gid = codes_grib_new_from_file(f)
         if gid is None: break
 
         for key in keys:

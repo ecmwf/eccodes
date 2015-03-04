@@ -31,7 +31,7 @@ program multi
   !     turn off support for multi fields messages */
   !call codes_grib_multi_support_off()
 
-  call codes_new_from_file(ifile,igrib)
+  call codes_grib_new_from_file(ifile,igrib)
   !     Loop on all the messages in a file.
 
   do while (igrib .ne. -1)
@@ -60,7 +60,7 @@ program multi
   endif
 
   call codes_release(igrib)
-  call codes_new_from_file(ifile,igrib, iret)
+  call codes_grib_new_from_file(ifile,igrib, iret)
 
   end do
   call codes_close_file(ifile)

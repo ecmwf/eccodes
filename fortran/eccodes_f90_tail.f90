@@ -504,17 +504,35 @@ subroutine codes_headers_only_new_from_file ( ifile, gribid , status)
     call grib_headers_only_new_from_file ( ifile, gribid , status)
 end subroutine codes_headers_only_new_from_file 
 
+!------------------
+subroutine codes_new_from_file (ifile, gribid , product_kind, status)
+    integer(kind=kindOfInt),intent(in)              :: ifile
+    integer(kind=kindOfInt),intent(out)             :: gribid
+    integer(kind=kindOfInt),intent(in)              :: product_kind
+    integer(kind=kindOfInt),optional,intent(out)    :: status
+    integer(kind=kindOfInt)                         :: iret
+
+    if (product_kind == CODES_PRODUCT_GRIB) then
+        call codes_grib_new_from_file ( ifile, gribid , status)
+    else if (product_kind == CODES_PRODUCT_BUFR) then
+        call codes_bufr_new_from_file ( ifile, gribid , status)
+    else
+        ! CODES_PRODUCT_ANY - Not yet implemented
+        call grib_check(1,'codes_new_from_file','invalid product_kind')
+    end if
+end subroutine codes_new_from_file 
+
 !
-subroutine codes_new_from_file ( ifile, gribid , status)
+subroutine codes_grib_new_from_file ( ifile, gribid , status)
     integer(kind=kindOfInt),intent(in)              :: ifile
     integer(kind=kindOfInt),intent(out)             :: gribid
     integer(kind=kindOfInt),optional,intent(out)    :: status
     integer(kind=kindOfInt)                         :: iret
 
     call grib_new_from_file ( ifile, gribid , status)
-end subroutine codes_new_from_file 
+end subroutine codes_grib_new_from_file 
 
-!! TODO: temporary fix for BUFR
+!
 subroutine codes_bufr_new_from_file ( ifile, bufrid , status)
     integer(kind=kindOfInt),intent(in)              :: ifile
     integer(kind=kindOfInt),intent(out)             :: bufrid

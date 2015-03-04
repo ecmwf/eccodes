@@ -20,7 +20,7 @@ def example():
     f = open(INPUT)
 
     mcount = codes_count_in_file(f)
-    gid_list = [codes_new_from_file(f) for i in range(mcount)]
+    gid_list = [codes_grib_new_from_file(f) for i in range(mcount)]
 
     f.close()
 

@@ -38,7 +38,7 @@ program get
 
   ! Load the messages from the file.
   DO i=1,n
-     call codes_new_from_file(ifile,igrib(i), iret)
+     call codes_grib_new_from_file(ifile,igrib(i), iret)
   END DO
 
   ! we can close the file

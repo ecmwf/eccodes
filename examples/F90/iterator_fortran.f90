@@ -27,7 +27,7 @@ implicit none
 
 ! Loop on all the messages in a file.
 
-  call codes_new_from_file(ifile,igrib,iret)
+  call codes_grib_new_from_file(ifile,igrib,iret)
 
   LOOP: DO WHILE (iret/=CODES_END_OF_FILE)
 ! get as a real8
@@ -61,7 +61,7 @@ implicit none
   call grib_iterator_delete(iter)
   call codes_release(igrib)
 
-  call codes_new_from_file(ifile,igrib, iret)
+  call codes_grib_new_from_file(ifile,igrib, iret)
 
   end do LOOP
 

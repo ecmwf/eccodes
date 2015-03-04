@@ -36,7 +36,7 @@ program set_bitmap
   
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls
-  call codes_new_from_file(infile,igrib)
+  call codes_grib_new_from_file(infile,igrib)
   
   ! The missingValue is not coded in the message. 
   ! It is a value we define as a placeholder for a missing value

@@ -12,7 +12,8 @@ public :: codes_keys_iterator_get_name, &
           codes_keys_iterator_rewind
 public :: codes_new_from_message, &
           codes_new_from_samples, codes_new_from_file, &
-		  codes_read_from_file,codes_headers_only_new_from_file
+          codes_grib_new_from_file, codes_bufr_new_from_file, &
+          codes_read_from_file,codes_headers_only_new_from_file
 public :: codes_release
 public :: codes_dump
 public :: codes_get_error_string
@@ -23,4 +24,4 @@ public :: codes_check
 public :: codes_clone, codes_copy_namespace
 public :: codes_index_get,codes_index_select,&
           codes_index_create,codes_index_get_size,codes_index_release,&
-		  codes_grib_util_sections_copy
+          codes_grib_util_sections_copy

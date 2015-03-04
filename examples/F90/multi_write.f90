@@ -29,7 +29,7 @@ program multi_write
 
   !     a grib message is loaded from file
   !     in_gribid is the grib id to be used in subsequent calls
-  call codes_new_from_file(infile,in_gribid)
+  call codes_grib_new_from_file(infile,in_gribid)
 
   startsection=4
   do step=0,240,12

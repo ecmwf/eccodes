@@ -20,7 +20,7 @@ def example():
     f = open(INPUT)
 
     while 1:
-        gid = codes_new_from_file(f)
+        gid = codes_grib_new_from_file(f)
         if gid is None: break
 
         iterid = codes_keys_iterator_new(gid,'ls')

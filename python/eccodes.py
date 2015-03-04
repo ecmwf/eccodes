@@ -1,7 +1,5 @@
 from gribapi import GRIB_CHECK as CODES_CHECK
-from gribapi import grib_new_from_file as codes_new_from_file
-
-# TODO: temporary
+from gribapi import grib_new_from_file as codes_grib_new_from_file
 from gribapi import bufr_new_from_file as codes_bufr_new_from_file
 
 from gribapi import grib_count_in_file as codes_count_in_file

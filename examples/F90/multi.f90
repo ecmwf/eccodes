@@ -31,7 +31,7 @@ program multi
   !     turn off support for multi fields messages */
   !call codes_grib_multi_support_off()
 
-  call codes_new_from_file(ifile,igrib, iret)
+  call codes_grib_new_from_file(ifile,igrib, iret)
   !     Loop on all the messages in a file.
 
   write(*,*) 'step'
@@ -40,7 +40,7 @@ program multi
      call codes_get(igrib,'step', step)
      write(*,'(i3)') step
      
-     call codes_new_from_file(ifile,igrib, iret)
+     call codes_grib_new_from_file(ifile,igrib, iret)
   
   end do
   call codes_close_file(ifile)

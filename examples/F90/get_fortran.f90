@@ -31,7 +31,7 @@ implicit none
  
 !     a new grib message is loaded from file
 !     igrib is the grib id to be used in subsequent calls
-  call  codes_new_from_file(ifile,igrib) 
+  call  codes_grib_new_from_file(ifile,igrib) 
 
 !     get as a integer
   call codes_get(igrib,'numberOfPointsAlongAParallel', &

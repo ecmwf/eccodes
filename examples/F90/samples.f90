@@ -39,7 +39,7 @@ program sample
   call codes_open_file(outfile, 'out.samples.grib1','w')
   call codes_open_file(datafile,'../../data/tp_ecmwf.grib','r')
 
-  call codes_new_from_file(datafile,igribdata,err)
+  call codes_grib_new_from_file(datafile,igribdata,err)
 
   call codes_get_size(igribdata,'values',size1)
   allocate(v(size1))
@@ -69,7 +69,7 @@ program sample
 
     call codes_write(igribclone,outfile)
     
-    call codes_new_from_file(datafile,igribdata,err)
+    call codes_grib_new_from_file(datafile,igribdata,err)
 
     if (err==0) then
       call codes_get(igribdata,'values',v2)

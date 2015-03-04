@@ -22,7 +22,7 @@ def example():
     fin = open(INPUT)
     fout = open(OUTPUT,'w')
 
-    gid = codes_new_from_file(fin)
+    gid = codes_grib_new_from_file(fin)
 
     nx = codes_get(gid,'Ni')
     ny = codes_get(gid,'Nj')

@@ -18,7 +18,7 @@ VERBOSE=1 # verbose error reporting
 
 def example():
     f = open(INPUT)
-    gid = codes_new_from_file(f)
+    gid = codes_grib_new_from_file(f)
 
     values = codes_get_values(gid)
     for i in xrange(len(values)):

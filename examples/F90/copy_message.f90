@@ -28,7 +28,7 @@ program copy
 
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls
-  call codes_new_from_file(infile,igrib_in)
+  call codes_grib_new_from_file(infile,igrib_in)
 
   call codes_get_message_size(igrib_in, byte_size)
   allocate(message(byte_size), stat=err)

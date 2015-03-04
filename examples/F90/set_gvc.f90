@@ -23,7 +23,7 @@ program set
 
   call codes_open_file(outfile, 'out_gvc.grib2','w')
 
-  call codes_new_from_file(infile,igrib)
+  call codes_grib_new_from_file(infile,igrib)
 
   ! Individual ensemble forecast
   call codes_set(igrib,'productDefinitionTemplateNumber', 11)

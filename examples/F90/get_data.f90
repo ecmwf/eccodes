@@ -32,7 +32,7 @@ implicit none
 
 ! Loop on all the messages in a file.
 
-  call codes_new_from_file(ifile,igrib,iret)
+  call codes_grib_new_from_file(ifile,igrib,iret)
 
   do while (iret/=CODES_END_OF_FILE)
     count1=count1+1
@@ -57,7 +57,7 @@ implicit none
     deallocate(values)
 
     call codes_release(igrib)
-    call codes_new_from_file(ifile,igrib, iret)
+    call codes_grib_new_from_file(ifile,igrib, iret)
 
   end do 
 

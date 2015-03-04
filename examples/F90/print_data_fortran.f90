@@ -31,7 +31,7 @@ call codes_open_file(ifile, &
 
 !     a new grib message is loaded from file
 !     igrib is the grib id to be used in subsequent calls
-      call codes_new_from_file(ifile,igrib)
+      call codes_grib_new_from_file(ifile,igrib)
 
 
 !     get the size of the values array

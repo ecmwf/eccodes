@@ -34,7 +34,7 @@ def example():
 
     prev_vals = None
     while 1:
-        gid = codes_new_from_file(fin)
+        gid = codes_grib_new_from_file(fin)
         if gid is None: break
 
         curr_vals = codes_get_values(gid)
