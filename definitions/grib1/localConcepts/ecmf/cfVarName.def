@@ -6554,6 +6554,51 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 179 ;
 	}
+#Aerosol extinction coefficient at 355 nm
+'aerext355' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 180 ;
+	}
+#Aerosol extinction coefficient at 532 nm
+'aerext532' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 181 ;
+	}
+#Aerosol extinction coefficient at 1064 nm
+'aerext1064' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 182 ;
+	}
+#Aerosol backscatter coefficient at 355 nm (from top of atmosphere)
+'aerbackscattoa355' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 183 ;
+	}
+#Aerosol backscatter coefficient at 532 nm (from top of atmosphere)
+'aerbackscattoa532' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 184 ;
+	}
+#Aerosol backscatter coefficient at 1064 nm (from top of atmosphere)
+'aerbackscattoa1064' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 185 ;
+	}
+#Aerosol backscatter coefficient at 355 nm (from ground)
+'aerbackscatgnd355' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 186 ;
+	}
+#Aerosol backscatter coefficient at 532 nm (from ground)
+'aerbackscatgnd532' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 187 ;
+	}
+#Aerosol backscatter coefficient at 1064 nm (from ground)
+'aerbackscatgnd1064' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 188 ;
+	}
 #Experimental product
 'p1.216' = {
 	 table2Version = 216 ;
