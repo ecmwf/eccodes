@@ -297,7 +297,7 @@ static void search_accessors_list_by_condition(grib_accessors_list* al,const cha
 
   while (al) {
     if (!strcmp(al->accessor->name,condition->left)) {
-      if (condition_true(al->accessor,condition)) start=al;
+      if (start==NULL && condition_true(al->accessor,condition)) start=al;
       if (start && !condition_true(al->accessor,condition)) end=al;
     }
     al=al->next;
