@@ -68,6 +68,7 @@ tools/parser
 tools/xref
 tools/grib1to2
 examples/C/.libs/
+examples/C/test-suite.log
 examples/C/box
 examples/C/bufr_clone
 examples/C/bufr_missing
@@ -86,6 +87,9 @@ examples/F90/f_bufr_get_keys
 examples/F90/f_bufr_print_data
 examples/F90/f_bufr_keys_iterator
 examples/F90/f_bufr_subset
+examples/F90/*.sh.log
+examples/F90/*.sh.trs
+examples/F90/test-suite.log
 examples/C/bufr_read_header
 examples/C/bufr_print_data
 examples/C/bufr_print_header
@@ -279,6 +283,9 @@ examples/python/p_count_messages
 examples/python/p_iterator
 examples/python/p_keys_iterator
 examples/python/p_print_data
+examples/python/*.sh.log
+examples/python/*.sh.trs
+examples/python/test-suite.log
 tools/bufr_compare
 tools/bufr_copy
 tools/bufr_dump
