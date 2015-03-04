@@ -43,7 +43,7 @@ ref_ls=$f".ls.ref"
 res_ls=$f".ls.test"
 REDIRECT=/dev/null
 
-${tools_dir}/bufr_ls -p totalLength,centre,subCentre,masterTableNumber,masterTablesVersionNumber,localTablesVersionNumber,numberOfSubsets,numberOfObservations $f 2> $REDIRECT > $fTmp
+${tools_dir}/bufr_ls -p totalLength,bufrHeaderCentre,bufrHeaderSubCentre,masterTableNumber,masterTablesVersionNumber,localTablesVersionNumber,numberOfSubsets,numberOfObservations $f 2> $REDIRECT > $fTmp
 
 #Write the values into a file and compare with ref
 awk NR==3 $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_ls

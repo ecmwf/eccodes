@@ -75,9 +75,9 @@ int main(int argc, char *argv[])
         }
 
         /* This is the place where you may wish to modify the clone
-           E.g. we change the centre */
+           E.g. we change the bufrHeaderCentre */
            
-        CODES_CHECK(codes_set_long(clone_handle, "centre", 222),0);
+        CODES_CHECK(codes_set_long(clone_handle, "bufrHeaderCentre", 222),0);
 
         /* get the coded message in a buffer */
         CODES_CHECK(codes_get_message(clone_handle,&buffer,&size),0);

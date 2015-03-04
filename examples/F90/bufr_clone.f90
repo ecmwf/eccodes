@@ -43,8 +43,8 @@ program bufr_clone
     call codes_clone(ibufr_in, ibufr_out)
 
     ! This is the place where you may wish to modify the clone 
-    ! E.g. we change the centre 
-    call codes_set(ibufr_out,'centre',222)
+    ! E.g. we change the bufrHeaderCentre 
+    call codes_set(ibufr_out,'bufrHeaderCentre',222)
  
     ! write cloned messages to a file
     call codes_write(ibufr_out,outfile)

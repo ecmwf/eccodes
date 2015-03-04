@@ -35,9 +35,9 @@ rm -f $fBufrTmp | true
 f="syno_1.bufr"
 echo "Test: setting header for single message file" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_set -v -p centre,centre:l -s centre=222 $f $fBufrTmp >> $fLog
+${tools_dir}/bufr_set -v -p bufrHeaderCentre,bufrHeaderCentre:l -s bufrHeaderCentre=222 $f $fBufrTmp >> $fLog
 
-centre=`${tools_dir}/bufr_get -p centre $fBufrTmp`
+centre=`${tools_dir}/bufr_get -p bufrHeaderCentre $fBufrTmp`
 [ $centre = "222" ]
 
 #----------------------------------------------------
@@ -49,10 +49,10 @@ rm -f $fBufrTmp | true
 f="syno_multi.bufr"
 echo "Test: setting header for multi-message file" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_set -v -p centre,centre:l -s centre=222 $f $fBufrTmp >> $fLog
+${tools_dir}/bufr_set -v -p bufrHeaderCentre,bufrHeaderCentre:l -s bufrHeaderCentre=222 $f $fBufrTmp >> $fLog
 
 for i in 1 2 3 ;do
-    centre=`${tools_dir}/bufr_get -w count=$i -p centre $fBufrTmp`
+    centre=`${tools_dir}/bufr_get -w count=$i -p bufrHeaderCentre $fBufrTmp`
     [ $centre = "222" ]
 done
 
@@ -127,7 +127,7 @@ set +e
 f="syno_1.bufr"
 echo "Test: nonexistent keys" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_set -s centre=1024 $f $fBufrTmp 2>> $fLog 1>> $fLog
+${tools_dir}/bufr_set -s bufrHeaderCentre=1024 $f $fBufrTmp 2>> $fLog 1>> $fLog
 if [ $? -eq 0 ]; then
    echo "bufr_set should have failed if key not found" >&2
    exit 1
@@ -135,7 +135,7 @@ fi
 set -e
 
 # Now repeat with -f option (do not exit on error)
-${tools_dir}/bufr_set -f -s centre=1024 -f $f $fBufrTmp 2>>$fLog 1>>$fLog
+${tools_dir}/bufr_set -f -s bufrHeaderCentre=1024 -f $f $fBufrTmp 2>>$fLog 1>>$fLog
 
 #-----------------------------------------------------------
 # Test: key values out of range

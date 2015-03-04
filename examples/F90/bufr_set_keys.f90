@@ -36,17 +36,17 @@ program bufr_set_keys
     write(*,*) 'message: ',count
     
     ! This is the place where you may wish to modify the message 
-    ! E.g. we change the centre and 2m temperature 
+    ! E.g. we change the centre
     
     ! set centre
     centre=222
-    call codes_set(ibufr,'centre',222)
-    write(*,*) '  set centre to:',centre
+    call codes_set(ibufr,'bufrHeaderCentre',222)
+    write(*,*) '  set bufrHeaderCentre to:',centre
     
     ! check centre's new value
     centreNew=0
-    call codes_get(ibufr,'centre',centreNew)
-    write(*,*) '  centre''s new value:',centreNew
+    call codes_get(ibufr,'bufrHeaderCentre',centreNew)
+    write(*,*) '  bufrHeaderCentre''s new value:',centreNew
  
     ! write modified message to a file
     call codes_write(ibufr,outfile)

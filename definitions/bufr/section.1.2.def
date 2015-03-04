@@ -13,7 +13,7 @@ section_length[3] section1Length ;
 
 unsigned[1]  masterTableNumber;
 
-codetable[2] centre            'grib1/0.table' : dump;
+codetable[2] bufrHeaderCentre            'grib1/0.table' : dump;
 
 unsigned[1]  updateSequenceNumber;
 
