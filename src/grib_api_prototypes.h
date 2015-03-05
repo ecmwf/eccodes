@@ -277,7 +277,7 @@ void accessor_bufr_data_element_set_subsetNumber(grib_accessor *a, long subsetNu
 void accessor_bufr_data_element_set_compressedData(grib_accessor *a, int compressedData);
 void accessor_bufr_data_element_set_descriptors(grib_accessor *a, bufr_descriptors_array *descriptors);
 void accessor_bufr_data_element_set_numericValues(grib_accessor *a, grib_vdarray *numericValues);
-void accessor_bufr_data_element_set_stringValues(grib_accessor *a, grib_vsarray *stringValues);
+void accessor_bufr_data_element_set_stringValues(grib_accessor *a, grib_sarray *stringValues);
 void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor *a, grib_viarray *elementsDescriptorsIndex);
 
 /* grib_accessor_class_bufr_elements_table.c */

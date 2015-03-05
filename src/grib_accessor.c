@@ -295,7 +295,7 @@ int grib_accessors_list_unpack_string(grib_accessors_list* al,char** val,size_t*
 
   while (al && err==GRIB_SUCCESS ) {
     len=*buffer_len-unpacked_len;
-    err=grib_unpack_string(al->accessor, (*val) + unpacked_len, &len);
+    err=grib_unpack_string_array(al->accessor, val + unpacked_len, &len);
     unpacked_len += len;
     al=al->next;
   }

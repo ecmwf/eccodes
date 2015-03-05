@@ -428,10 +428,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
       fprintf(self->dumper.out,"\n%-*s",depth," ");
       fprintf(self->dumper.out,"\"value\" : ");
     }
-    if( ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && grib_is_missing_internal(a) )
-        fprintf(self->dumper.out,"null");
-    else
-        fprintf(self->dumper.out,"\"%s\"",value);
+    fprintf(self->dumper.out,"\"%s\"",value);
 
     if (a->attributes[0]) fprintf(self->dumper.out,",");
 
@@ -500,7 +497,7 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a) {
     self->isLeaf=a->attributes[i]->attributes[0]==NULL ? 1 : 0;
     fprintf(self->dumper.out,"\n%-*s",depth," ");
     fprintf(out,"\"%s\" : ",a->attributes[i]->name);
-    switch (grib_accessor_get_native_type(a)) {
+    switch (grib_accessor_get_native_type(a->attributes[i])) {
       case GRIB_TYPE_LONG:
         dump_long(d,a->attributes[i],0);
         break;

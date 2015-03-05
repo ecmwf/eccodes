@@ -1122,7 +1122,7 @@ int grib_get_string_array(grib_handle* h, const char* name, char** val, size_t *
     a=grib_find_accessor(h, name);
     if(!a) return GRIB_NOT_FOUND;
     if (has_rank(name)) {
-      return grib_unpack_string(a, *val , length);
+      return grib_unpack_string_array(a, val , length);
     } else {
       *length = 0;
       return _grib_get_string_array_internal(h,a,val,len,length);

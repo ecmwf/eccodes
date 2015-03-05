@@ -255,13 +255,14 @@ int grib_accessor_print(grib_accessor* a,int has_rank,const char* name,int type,
 
 int grib_accessors_list_print(grib_accessors_list* al,const char* name,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
 {
-  size_t size=0,replen=0;
+  size_t size=0,len=0,replen=0;
   char val[1024] = {0,};
   char* sval=NULL;
   char* p=NULL;
   double* dval=0;
   long* lval=0;
   char sbuf[1024]={0,};
+  char** cvals;
   int ret=0;
   char* myformat=NULL;
   char* myseparator=NULL;
@@ -275,9 +276,29 @@ int grib_accessors_list_print(grib_accessors_list* al,const char* name,int type,
   grib_accessors_list_value_count(al,&size);
   switch (type) {
     case GRIB_TYPE_STRING:
-      replen=sizeof(sbuf)/sizeof(*sbuf);
-      ret = grib_unpack_string(al->accessor,sbuf,&replen);
-      fprintf(out,"%s",sbuf);
+      myseparator= separator ? (char*)separator : default_separator;
+      if (size==1) {
+        len=1024;
+        grib_unpack_string(al->accessor,sbuf,&len);
+        fprintf(out,"%s",sbuf);
+      } else {
+        int i=0;
+        int cols=0;
+        cvals=grib_context_malloc_clear(h->context,sizeof(char*)*size);
+        grib_accessors_list_unpack_string(al,cvals,&size);
+        for (i=0;i<size;i++) {
+          *newline=1;
+          fprintf(out,"%s",cvals[i]);
+          if (i<size-1) fprintf(out, "%s", myseparator);
+          cols++;
+          if (cols>=maxcols) {
+            fprintf(out,"\n");
+            *newline=1;
+            cols=0;
+          }
+        }
+      }
+      grib_context_free( h->context,cvals);
       break;
     case GRIB_TYPE_DOUBLE:
       myformat= format ? (char*)format : double_format;
