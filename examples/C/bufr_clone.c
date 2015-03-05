@@ -46,8 +46,8 @@ int main(int argc, char *argv[])
     /* open input and output */
     if (!in || !out) {
         perror("ERROR: unable to open files");
-        fclose(out);
-        fclose(in);
+        if (out) fclose(out);
+        if (in) fclose(in);
         return 1;
     }
     
