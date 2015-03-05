@@ -91,6 +91,7 @@ examples/F90/*.sh.log
 examples/F90/*.sh.trs
 examples/F90/test-suite.log
 examples/C/bufr_read_header
+examples/C/bufr_read_temp
 examples/C/bufr_print_data
 examples/C/bufr_print_header
 examples/C/get
