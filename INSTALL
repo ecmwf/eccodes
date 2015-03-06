@@ -17,17 +17,15 @@ Standard Installation
    1. Download eccodes from https://software.ecmwf.int/wiki/display/ECC/Releases.
    2. Unpack distribution:
 
-        > gunzip eccodes-X.tar.gz
-        > tar xf eccodes-X.tar
+        > tar xzf eccodes-X.tar.gz
 
-   3. Create the directory where to install eccodes say eccodes_dir
+   3. Create a separate directory where to build eccodes
 
-        > mkdir eccodes_dir
+        > mkdir build ; cd build
 
-   4. Run the configure in the eccodes-X
+   4. Run cmake
 
-        > cd eccodes-X
-        > ./configure --prefix=eccodes_dir
+        > cmake ../eccodes-X -DCMAKE_INSTALL_PREFIX=/path/to/where/you/install/eccodes
 
    5. make, check and install
 
@@ -38,3 +36,4 @@ Standard Installation
         > make install
         ...
 
+For further details, see: https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation

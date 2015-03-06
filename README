@@ -1,28 +1,22 @@
-ecCodes is the ECMWF encoding/decoding software for GRIB (edition 1 and 2) and BUFR.
+ecCodes is the ECMWF encoding/decoding software for GRIB and BUFR.
 
 Documentation can be found here:
 https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home
 
 INSTALLATION 
 
-Standard Installation
-   1. Download from https://software.ecmwf.int/wiki/display/ECC/Releases
+   1. Download eccodes from https://software.ecmwf.int/wiki/display/ECC/Releases.
    2. Unpack distribution:
 
-        > gunzip eccodes-X.tar.gz
-        > tar xf eccodes-X.tar
+        > tar xzf eccodes-X.tar.gz
 
-   3. Create the directory where to install eccodes say /usr/local/eccodes_dir
+   3. Create a separate directory where to build eccodes
 
-        > mkdir /usr/local/eccodes_dir
+        > mkdir build ; cd build
 
-   4. Run the configure in the eccodes-X
+   4. Run cmake
 
-        > cd eccodes-X
-        > ./configure --prefix=/usr/local/eccodes_dir 
-
-      Note that the prefix must be the absolute path of the
-	  directory created.
+        > cmake ../eccodes-X -DCMAKE_INSTALL_PREFIX=/path/to/where/you/install/eccodes
 
    5. make, check and install
 
@@ -32,6 +26,9 @@ Standard Installation
         ...
         > make install
         ...
+
+For further details, see: https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation
+
 
 COPYRIGHT AND LICENSE
 
