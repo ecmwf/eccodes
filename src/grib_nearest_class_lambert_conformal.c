@@ -169,6 +169,15 @@ static int find(grib_nearest* nearest, grib_handle* h,
         return ret;
     radius=((double)iradius)/1000.0;
 
+    neighbours = (PointStore*)grib_context_malloc( nearest->context, nvalues*sizeof(PointStore) );
+    for(i=0; i<nvalues; ++i) {
+        neighbours[i].m_dist = 1e10; /* set all distances to large number to begin with */
+        neighbours[i].m_lat=0;
+        neighbours[i].m_lon=0;
+        neighbours[i].m_value=0;
+        neighbours[i].m_index=0;
+    }
+
     if (!nearest->h || (flags & GRIB_NEAREST_SAME_GRID)==0) {
         double the_value = 0;
         double min_dist = 1e10;
@@ -198,11 +207,6 @@ static int find(grib_nearest* nearest, grib_handle* h,
         if (self->lons) grib_context_free(nearest->context,self->lons);
         self->lons=(double*)grib_context_malloc( nearest->context, nvalues*sizeof(double));
         if (!self->lons) return GRIB_OUT_OF_MEMORY;
-
-        neighbours = (PointStore*)grib_context_malloc( nearest->context, nvalues*sizeof(PointStore) );
-        for(i=0; i<nvalues; ++i) {
-            neighbours[i].m_dist = 1e10; /* set all distances to large number to begin with */
-        }
 
         iter=grib_iterator_new(h,0,&ret);
         if (ret) return ret;
