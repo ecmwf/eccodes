@@ -16,7 +16,7 @@ set( ECCODES_INSTALL_INCLUDE_DIR include CACHE PATH "ecCodes override installati
 
 include( ecbuild_system )
 
-ecbuild_requires_macro_version( 1.3 )
+ecbuild_requires_macro_version( 1.6 )
 
 ###############################################################################
 # local project
