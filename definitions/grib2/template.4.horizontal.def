@@ -84,8 +84,8 @@ if (typeOfSecondFixedSurface==255) {
     scaleFactorOfFirstFixedSurface,
     scaledValueOfFirstFixedSurface,
     pressureUnits)  :dump;
-  transient bottomLevel=level;
-  transient topLevel=level;
+  alias bottomLevel=level;
+  alias topLevel=level;
 } else {
   meta topLevel g2level(typeOfFirstFixedSurface,
     scaleFactorOfFirstFixedSurface,
@@ -95,7 +95,7 @@ if (typeOfSecondFixedSurface==255) {
     scaleFactorOfSecondFixedSurface,
     scaledValueOfSecondFixedSurface,
     pressureUnits)  :dump;
-    transient level=topLevel;
+    alias level=topLevel;
 }
 alias ls.level=level;
 alias vertical.level=level;
