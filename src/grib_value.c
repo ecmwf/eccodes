@@ -1047,14 +1047,28 @@ int _grib_get_size(grib_handle* h, grib_accessor* a,size_t* size)
 
 int grib_get_size(grib_handle* h, const char* name,size_t* size)
 {
-    grib_accessor* a = grib_find_accessor(h, name);
-    if (name[0] == '/' || has_rank(name)) {
+  grib_accessor* a =NULL;
+  grib_accessors_list* al=NULL;
+  int ret=0;
+  *size=0;
+
+  if (name[0] == '/') {
+    al=grib_find_accessors_list(h,name);
+    if (!al) return GRIB_NOT_FOUND;
+    ret=grib_accessors_list_value_count(al,size);
+    grib_context_free(h->context,al);
+    return ret;
+  } else {
+    a=grib_find_accessor(h, name);
+    if(!a) return GRIB_NOT_FOUND;
+    if (has_rank(name)) {
       int ret;
       long count=*size;
       ret=grib_value_count(a,&count);
       *size=count;
       return ret;
     } else return _grib_get_size(h, a,size);
+  }
 }
 
 int grib_get_length(grib_handle* h, const char* name, size_t* length)
