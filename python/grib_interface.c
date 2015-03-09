@@ -887,6 +887,8 @@ int grib_c_keys_iterator_get_name(int* iterid,char* name,int len) {
     grib_keys_iterator* kiter=get_keys_iterator(*iterid);
 
     if (!kiter) return GRIB_INVALID_KEYS_ITERATOR;
+  if (grib_keys_iterator_get_accessor(kiter)==NULL)
+      return GRIB_INVALID_KEYS_ITERATOR;
 
     sprintf(buf,"%s",grib_keys_iterator_get_name(kiter));
     lsize=strlen(buf);

@@ -176,6 +176,7 @@ int grib_keys_iterator_next(grib_keys_iterator* kiter)
 const char* grib_keys_iterator_get_name(grib_keys_iterator* kiter)
 {
     /* if(kiter->name_space) */
+    Assert(kiter->current);
     return kiter->current->all_names[kiter->match];
 }
 
