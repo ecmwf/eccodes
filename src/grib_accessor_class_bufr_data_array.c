@@ -715,7 +715,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
       accessor_bufr_data_element_set_subsetNumber(elementAccessor,subset);
 
       self->expanded->v[idx]->a=elementAccessor;
-      attribute=create_attribute("position",section,GRIB_TYPE_LONG,0,0,count);
+      attribute=create_attribute("index",section,GRIB_TYPE_LONG,0,0,count);
       grib_accessor_add_attribute(elementAccessor,attribute);
 
       sprintf(code,"%06ld",self->expanded->v[idx]->code);
@@ -748,13 +748,13 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
         accessor_bufr_data_element_set_numberOfSubsets(elementAccessor,self->numberOfSubsets);
         accessor_bufr_data_element_set_subsetNumber(elementAccessor,subset);
 
-        attribute=create_attribute("position",section,GRIB_TYPE_LONG,0,0,count);
+        attribute=create_attribute("index",section,GRIB_TYPE_LONG,0,0,count);
         grib_accessor_add_attribute(elementAccessor,attribute);
 
       } else {
         elementAccessor = grib_accessor_factory(section, &operatorCreator, 0, NULL);
         accessor_variable_set_type(elementAccessor,GRIB_TYPE_LONG);
-        attribute=create_attribute("position",section,GRIB_TYPE_LONG,0,0,count);
+        attribute=create_attribute("index",section,GRIB_TYPE_LONG,0,0,count);
         grib_accessor_add_attribute(elementAccessor,attribute);
 
         sprintf(code,"%06ld",self->expanded->v[idx]->code);
