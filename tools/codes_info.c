@@ -62,7 +62,7 @@ int main( int argc,char* argv[])
         printf("\n");
         printf("eccodes Version %d.%d.%d",
                 major,minor,revision);
-        if (ECCODES_MAJOR_VERSION < 1) printf(" PRE-RELEASE");
+        /* if (ECCODES_MAJOR_VERSION < 1) printf(" PRE-RELEASE"); */
         printf("\n");
         printf("\n");
 #if GRIB_PTHREADS
