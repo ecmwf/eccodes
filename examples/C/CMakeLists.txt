@@ -88,6 +88,7 @@ foreach( test ${tests} )
                   TYPE       SCRIPT
                   COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                   RESOURCES  include.sh
+                  TEST_DEPENDS get_gribs get_bufrs
     )
 endforeach()
 

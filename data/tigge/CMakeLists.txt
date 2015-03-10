@@ -244,17 +244,7 @@ set(tigge_files_to_download
     tiggelam_cnmc_sfc.grib
 )
 
-foreach( f ${tigge_files_to_download} )
-  set(tgt tigge_data_${f})
-  # Download the file and create a dummy target for it
-  ecbuild_get_test_data(TARGET "${tgt}"
-                        NAME   "${f}"
-                        DIRNAME ${PROJECT_NAME}/data/tigge
-                        NOCHECK)
-  
-  # Add to list of targets
-  LIST(APPEND tgts "${tgt}")
-endforeach()
-
-add_custom_target( get_tigge_gribs DEPENDS ${tgts} )
-
+ecbuild_get_test_multidata( TARGET get_tigge_gribs
+                            NOCHECK
+                            NAMES ${tigge_files_to_download}
+)

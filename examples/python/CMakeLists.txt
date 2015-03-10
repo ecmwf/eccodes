@@ -57,5 +57,6 @@ foreach( test ${tests} )
                   CONDITION  HAVE_PYTHON
                   RESOURCES  include.sh ${test}.py
                   ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
+                  TEST_DEPENDS get_gribs get_tigge_gribs get_bufrs
     )
 endforeach()
