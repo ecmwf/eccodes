@@ -95,8 +95,9 @@ if( HAVE_AEC )
     LIST(APPEND files_to_download ccsds.grib2)
 endif()
 
+
+# Download all data files doing md5 check on each
 ecbuild_get_test_multidata( TARGET get_gribs
-                            NOCHECK
                             NAMES ${files_to_download}
 )
 

@@ -244,7 +244,7 @@ set(tigge_files_to_download
     tiggelam_cnmc_sfc.grib
 )
 
+# Download all data files doing md5 check on each
 ecbuild_get_test_multidata( TARGET get_tigge_gribs
-                            NOCHECK
                             NAMES ${tigge_files_to_download}
 )
