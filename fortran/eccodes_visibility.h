@@ -12,6 +12,7 @@ public :: codes_keys_iterator_get_name, &
           codes_keys_iterator_rewind
 public :: codes_new_from_message, &
           codes_new_from_samples, codes_new_from_file, &
+          codes_any_new_from_file, &
           codes_grib_new_from_file, codes_bufr_new_from_file, &
           codes_read_from_file,codes_headers_only_new_from_file
 public :: codes_release

@@ -1314,6 +1314,32 @@ int grib_f_count_in_file__(int* fid,int* n) {
 }
 
 /*****************************************************************************/
+int any_f_new_from_file_(int* fid, int* gid){
+    int err = 0;
+    FILE* f = get_file(*fid);
+    grib_handle *h = NULL;
+
+    if(f){
+        h = codes_handle_new_from_file(0,f,PRODUCT_ANY,&err);
+        if(h){
+            push_handle(h,gid);
+            return GRIB_SUCCESS;
+        } else {
+            *gid=-1;
+            return GRIB_END_OF_FILE;
+        }
+    }
+    *gid=-1;
+    return GRIB_INVALID_FILE;
+}
+int any_f_new_from_file__(int* fid, int* gid){
+    return any_f_new_from_file_( fid, gid);
+}
+int any_f_new_from_file(int* fid, int* gid){
+    return any_f_new_from_file_( fid, gid);
+}
+
+/*****************************************************************************/
 int bufr_f_new_from_file_(int* fid, int* gid){
     int err = 0;
     FILE* f = get_file(*fid);
