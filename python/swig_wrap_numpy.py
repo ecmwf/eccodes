@@ -134,6 +134,10 @@ GRIB_INVALID_KEY_VALUE = _gribapi_swig.GRIB_INVALID_KEY_VALUE
 GRIB_STRING_TOO_SMALL = _gribapi_swig.GRIB_STRING_TOO_SMALL
 GRIB_WRONG_CONVERSION = _gribapi_swig.GRIB_WRONG_CONVERSION
 GRIB_MISSING_BUFR_ENTRY = _gribapi_swig.GRIB_MISSING_BUFR_ENTRY
+GRIB_NULL_POINTER = _gribapi_swig.GRIB_NULL_POINTER
+GRIB_ATTRIBUTE_CLASH = _gribapi_swig.GRIB_ATTRIBUTE_CLASH
+GRIB_TOO_MANY_ATTRIBUTES = _gribapi_swig.GRIB_TOO_MANY_ATTRIBUTES
+GRIB_ATTRIBUTE_NOT_FOUND = _gribapi_swig.GRIB_ATTRIBUTE_NOT_FOUND
 class intp(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, intp, name, value)
@@ -258,6 +262,10 @@ intArray_setitem = _gribapi_swig.intArray_setitem
 def grib_c_new_from_file(*args):
   return _gribapi_swig.grib_c_new_from_file(*args)
 grib_c_new_from_file = _gribapi_swig.grib_c_new_from_file
+
+def grib_c_new_any_from_file(*args):
+  return _gribapi_swig.grib_c_new_any_from_file(*args)
+grib_c_new_any_from_file = _gribapi_swig.grib_c_new_any_from_file
 
 def grib_c_new_bufr_from_file(*args):
   return _gribapi_swig.grib_c_new_bufr_from_file(*args)
