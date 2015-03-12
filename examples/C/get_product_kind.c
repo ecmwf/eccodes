@@ -11,8 +11,8 @@
 /*
  * C Implementation: get_product_kind
  *
- * Description: how to query a mix of messages to see
- *              the kind of product (e.g. GRIB, BUFR etc)
+ * Description: how to process a file containing a mix of messages
+ *              and print the kind of product (e.g. GRIB, BUFR etc)
  */
 #include "eccodes.h"
 void usage(const char *app)
