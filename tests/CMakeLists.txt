@@ -26,9 +26,12 @@ endforeach()
 
 # Now add each test (shell scripts)
 #################################################
-list( APPEND tests
+list( APPEND tests1
     definitions
     calendar
+    unit_tests
+)
+list( APPEND tests2
     bufr_dump
     bufrdc_desc_ref
     bufrdc_ref
@@ -73,13 +76,21 @@ list( APPEND tests
     read_any
     padding
     debug
-    unit_tests
 )
+
+# These tests do not require any data downloads
+foreach( test ${tests1} )
+    ecbuild_add_test( TARGET t_${test}
+                  TYPE SCRIPT
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                  RESOURCES include.sh number_compare.pl
+    )
+endforeach()
 
 # Note: making the test dependent on the grib files (with DEPENDS)
 #       means they will be downloaded at "make" time
 #       rather than when you do "make test". Use TEST_DEPENDS instead
-foreach( test ${tests} )
+foreach( test ${tests2} )
     ecbuild_add_test( TARGET t_${test}
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
