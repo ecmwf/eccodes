@@ -32,6 +32,7 @@ list( APPEND test_bins
       clone
       check_gaussian_grid
       ensemble_index
+      get_product_kind
       bufr_attributes
       bufr_clone
       bufr_expanded
@@ -82,6 +83,7 @@ list( APPEND tests
    bufr_read_temp
    bufr_set_keys
    bufr_subset
+   get_product_kind
 )
 foreach( test ${tests} )
     ecbuild_add_test( TARGET c_${test}

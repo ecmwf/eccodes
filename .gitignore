@@ -96,6 +96,7 @@ examples/C/bufr_print_data
 examples/C/bufr_print_header
 examples/C/get
 examples/C/get_data
+examples/C/get_product_kind
 examples/C/iterator
 examples/C/keys_iterator
 examples/C/large_grib1
