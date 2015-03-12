@@ -1,6 +1,12 @@
 from gribapi import GRIB_CHECK as CODES_CHECK
+from gribapi import CODES_PRODUCT_GRIB
+from gribapi import CODES_PRODUCT_BUFR
+from gribapi import CODES_PRODUCT_ANY
+
 from gribapi import grib_new_from_file as codes_grib_new_from_file
 from gribapi import bufr_new_from_file as codes_bufr_new_from_file
+from gribapi import any_new_from_file as codes_any_new_from_file
+from gribapi import codes_new_from_file
 
 from gribapi import grib_count_in_file as codes_count_in_file
 from gribapi import grib_multi_support_on as codes_grib_multi_support_on

@@ -48,6 +48,7 @@ list( APPEND tests
    bufr_print_data 
    bufr_set_keys
    bufr_subset
+   get_product_kind
 )
 foreach( test ${tests} )
     ecbuild_add_test( TARGET p_${test}_test
