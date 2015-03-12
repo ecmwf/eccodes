@@ -167,7 +167,7 @@ def gts_new_from_file(fileobj, headers_only = False):
     \b Examples: \ref get.py "get.py"
     
     @param fileobj        python file object
-    @param headers_only   whether or not to load the message with the headers only                            
+    @param headers_only   whether or not to load the message with the headers only
     @return id of the GTS loaded in memory
     @exception GribInternalError 
     """
@@ -186,7 +186,33 @@ def codes_new_from_file(fileobj, product_kind, headers_only = False):
         return grib_new_from_file(fileobj, headers_only)
     if product_kind == CODES_PRODUCT_BUFR:
         return bufr_new_from_file(fileobj, headers_only)
+    if product_kind == CODES_PRODUCT_ANY:
+        return any_new_from_file(fileobj, headers_only)
     raise Exception("Invalid product kind: " + product_kind)
+
+@require(fileobj=file)
+def any_new_from_file(fileobj, headers_only = False):
+    """
+    @brief Load in memory a message from a file.
+
+    The message can be accessed through its id and it will be available\n
+    until @ref codes_release is called.\n
+
+    \b Examples: \ref get.py "get.py"
+
+    @param fileobj        python file object
+    @param headers_only   whether or not to load the message with the headers only
+    @return               id of the message loaded in memory
+    @exception GribInternalError
+    """
+    err, gribid = _internal.grib_c_new_any_from_file(fileobj, headers_only, 0)
+    if err:
+        if err == _internal.GRIB_END_OF_FILE:
+            return None
+        else:
+            GRIB_CHECK(err)
+    else:
+        return gribid
 
 @require(fileobj=file)
 def bufr_new_from_file(fileobj, headers_only = False):
@@ -206,7 +232,7 @@ def bufr_new_from_file(fileobj, headers_only = False):
     \b Examples: \ref get.py "get.py"
     
     @param fileobj        python file object
-    @param headers_only   whether or not to load the message with the headers only                            
+    @param headers_only   whether or not to load the message with the headers only
     @return id of the BUFR loaded in memory
     @exception GribInternalError 
     """
@@ -237,7 +263,7 @@ def grib_new_from_file(fileobj, headers_only = False):
     \b Examples: \ref get.py "get.py"
     
     @param fileobj        python file object
-    @param headers_only   whether or not to load the message with the headers only                            
+    @param headers_only   whether or not to load the message with the headers only
     @return id of the grib loaded in memory
     @exception GribInternalError 
     """
