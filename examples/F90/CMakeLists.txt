@@ -38,6 +38,7 @@ list( APPEND tests
       bufr_print_data
       bufr_set_keys
       bufr_subset
+      # get_product_kind
 )
 
 # Simplify tests: no need to build executable and then test. All in one

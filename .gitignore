@@ -260,6 +260,7 @@ examples/F90/f_copy_namespace
 examples/F90/f_count_messages
 examples/F90/f_get
 examples/F90/f_get_data
+examples/F90/f_get_product_kind
 examples/F90/f_get_pl
 examples/F90/f_get_pv
 examples/F90/f_get_set_uuid

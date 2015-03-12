@@ -518,7 +518,7 @@ subroutine codes_new_from_file (ifile, gribid , product_kind, status)
         call codes_bufr_new_from_file ( ifile, gribid , status)
     else
         ! CODES_PRODUCT_ANY - Not yet implemented
-        call grib_check(1,'codes_new_from_file','invalid product_kind')
+        call grib_check(CODES_NOT_IMPLEMENTED,'codes_new_from_file','invalid_product_kind')
     end if
 end subroutine codes_new_from_file 
 
