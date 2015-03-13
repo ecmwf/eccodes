@@ -110,6 +110,10 @@ int grib_f_count_in_file(int *fid, int *n);
 int grib_f_count_in_file_(int *fid, int *n);
 int grib_f_count_in_file__(int *fid, int *n);
 
+int any_f_new_from_file_(int *fid, int *gid);
+int any_f_new_from_file__(int *fid, int *gid);
+int any_f_new_from_file(int *fid, int *gid);
+
 int grib_f_new_from_file_(int *fid, int *gid);
 int grib_f_new_from_file__(int *fid, int *gid);
 int grib_f_new_from_file(int *fid, int *gid);

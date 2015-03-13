@@ -31,6 +31,7 @@ int grib_c_clone(int *gidsrc, int *giddest);
 int grib_c_copy_namespace(int *gidsrc, char *name, int *giddest);
 int grib_c_count_in_file(FILE *f, int *n);
 int grib_c_new_from_file(FILE *f, int *gid, int headers_only);
+int grib_c_new_any_from_file(FILE *f, int headers_only,int *gid);
 int grib_c_new_bufr_from_file(FILE *f, int headers_only,int *gid);
 int grib_c_new_gts_from_file(FILE *f,int headers_only, int *gid);
 int grib_c_new_from_index(int *iid, int *gid);

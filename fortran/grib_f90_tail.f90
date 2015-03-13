@@ -1291,7 +1291,17 @@
          call grib_check(iret,'grib_new_from_file','')
       endif
   end subroutine grib_new_from_file
-!! TODO: temporary
+
+  !> Load in memory a BUFR message from a file.
+  !>
+  !> The message can be accessed through its bufrid and it will be available\n
+  !> until @ref codes_release is called.\n
+  !>
+  !> \b Examples: \ref get.f90 "get.f90"
+  !>
+  !> @param ifile     id of the file opened with @ref codes_open_file
+  !> @param bufrid    id of the BUFR loaded in memory
+  !> @param status    GRIB_SUCCESS if OK, GRIB_END_OF_FILE at the end of file, or error code
   subroutine bufr_new_from_file ( ifile, bufrid , status)
       integer(kind=kindOfInt),intent(in)              :: ifile
       integer(kind=kindOfInt),intent(out)             :: bufrid
@@ -1306,6 +1316,19 @@
       endif
   end subroutine bufr_new_from_file
 
+  subroutine any_new_from_file ( ifile, id , status)
+      integer(kind=kindOfInt),intent(in)              :: ifile
+      integer(kind=kindOfInt),intent(out)             :: id
+      integer(kind=kindOfInt),optional,intent(out)    :: status
+      integer(kind=kindOfInt)                         :: iret
+
+      iret=any_f_new_from_file( ifile, id )
+      if (present(status)) then
+         status = iret
+      else
+         call grib_check(iret,'any_new_from_file','')
+      endif
+  end subroutine any_new_from_file
 
 
   !> Create a new message in memory from a character array containting the coded message.

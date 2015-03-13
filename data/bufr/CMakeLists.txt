@@ -412,17 +412,8 @@ set(bufr_refs_to_download
    syno_multi.bufr
 )
 
-foreach( f ${bufr_files_to_download} ${bufr_refs_to_download} )
-  set(tgt bufr_data_${f})
-  # Download the file and create a dummy target for it
-  ecbuild_get_test_data(TARGET "${tgt}"
-                        NAME   "${f}"
-                        DIRNAME ${PROJECT_NAME}/data/bufr
-                        NOCHECK)
-  
-  # Add to list of targets
-  LIST(APPEND tgts "${tgt}")
-endforeach()
-
-add_custom_target( get_bufrs DEPENDS ${tgts} )
-
+ecbuild_get_test_multidata(
+     TARGET get_bufrs
+     NOCHECK
+     NAMES ${bufr_files_to_download} ${bufr_refs_to_download}
+)

@@ -48,6 +48,7 @@ list( APPEND tests
    bufr_print_data 
    bufr_set_keys
    bufr_subset
+   get_product_kind
 )
 foreach( test ${tests} )
     ecbuild_add_test( TARGET p_${test}_test
@@ -57,5 +58,6 @@ foreach( test ${tests} )
                   CONDITION  HAVE_PYTHON
                   RESOURCES  include.sh ${test}.py
                   ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
+                  TEST_DEPENDS get_gribs get_tigge_gribs get_bufrs
     )
 endforeach()

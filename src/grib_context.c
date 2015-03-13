@@ -230,9 +230,11 @@ void grib_print_api_version(FILE* out)
             ECCODES_MAJOR_VERSION,
             ECCODES_MINOR_VERSION,
             ECCODES_REVISION_VERSION);
-    if (ECCODES_MAJOR_VERSION < 1) {
-        fprintf(out, "%s", " PRE-RELEASE");
-    }
+    /*
+    * if (ECCODES_MAJOR_VERSION < 1) {
+    *    fprintf(out, "%s", " PRE-RELEASE");
+    * }
+    */
 }
 
 static grib_context default_grib_context = {

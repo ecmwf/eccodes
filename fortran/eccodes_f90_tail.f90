@@ -517,10 +517,22 @@ subroutine codes_new_from_file (ifile, gribid , product_kind, status)
     else if (product_kind == CODES_PRODUCT_BUFR) then
         call codes_bufr_new_from_file ( ifile, gribid , status)
     else
-        ! CODES_PRODUCT_ANY - Not yet implemented
-        call grib_check(1,'codes_new_from_file','invalid product_kind')
+        if (product_kind /= CODES_PRODUCT_ANY) then
+            call grib_check(CODES_INTERNAL_ERROR,'codes_new_from_file','invalid_product_kind')
+        end if
+        call codes_any_new_from_file ( ifile, gribid , status)
     end if
 end subroutine codes_new_from_file 
+
+!
+subroutine codes_any_new_from_file ( ifile, id , status)
+    integer(kind=kindOfInt),intent(in)              :: ifile
+    integer(kind=kindOfInt),intent(out)             :: id
+    integer(kind=kindOfInt),optional,intent(out)    :: status
+    integer(kind=kindOfInt)                         :: iret
+
+    call any_new_from_file ( ifile, id , status)
+end subroutine codes_any_new_from_file 
 
 !
 subroutine codes_grib_new_from_file ( ifile, gribid , status)

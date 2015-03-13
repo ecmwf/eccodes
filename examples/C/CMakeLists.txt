@@ -32,6 +32,7 @@ list( APPEND test_bins
       clone
       check_gaussian_grid
       ensemble_index
+      get_product_kind
       bufr_attributes
       bufr_clone
       bufr_expanded
@@ -82,12 +83,14 @@ list( APPEND tests
    bufr_read_temp
    bufr_set_keys
    bufr_subset
+   get_product_kind
 )
 foreach( test ${tests} )
     ecbuild_add_test( TARGET c_${test}
                   TYPE       SCRIPT
                   COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                   RESOURCES  include.sh
+                  TEST_DEPENDS get_gribs get_bufrs
     )
 endforeach()
 

@@ -79,14 +79,16 @@ concept_nofail vertical.typeOfLevel (unknown) {
 
 alias levelType=typeOfFirstFixedSurface;
 
-if (typeOfSecondFixedSurface==255) {
+if (typeOfSecondFixedSurface == 255) {
+  # Only one surface
   meta level g2level(typeOfFirstFixedSurface,
     scaleFactorOfFirstFixedSurface,
     scaledValueOfFirstFixedSurface,
     pressureUnits)  :dump;
-  alias bottomLevel=level;
-  alias topLevel=level;
+  transient bottomLevel=level; # Do not use alias (see GRIB-725)
+  transient topLevel=level;
 } else {
+  # Two surfaces
   meta topLevel g2level(typeOfFirstFixedSurface,
     scaleFactorOfFirstFixedSurface,
     scaledValueOfFirstFixedSurface,
@@ -95,7 +97,7 @@ if (typeOfSecondFixedSurface==255) {
     scaleFactorOfSecondFixedSurface,
     scaledValueOfSecondFixedSurface,
     pressureUnits)  :dump;
-    alias level=topLevel;
+    alias level=topLevel;  # (see GRIB-725)
 }
 alias ls.level=level;
 alias vertical.level=level;

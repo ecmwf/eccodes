@@ -96,14 +96,10 @@ if( HAVE_AEC )
 endif()
 
 
-foreach( f ${files_to_download} )
-  set(tgt data_${f})
-  # Download the file and create a dummy target for it
-  ecbuild_get_test_data(TARGET "${tgt}" NAME "${f}" DIRNAME ${PROJECT_NAME}/data NOCHECK)
-
-  # Add to list of targets
-  LIST(APPEND tgts "${tgt}")
-endforeach()
+# Download all data files doing md5 check on each
+ecbuild_get_test_multidata( TARGET get_gribs
+                            NAMES ${files_to_download}
+)
 
 # Copy other files - e.g. reference data, text files etc from the source data dir
 LIST(APPEND other_files
@@ -151,7 +147,3 @@ foreach( file ${other_files} )
    execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/${file} ${CMAKE_CURRENT_BINARY_DIR} )
 endforeach()
 
-# debug_var(tgts)
-# Another dummy target which depends on all previous targets
-#add_custom_target( get_gribs ALL DEPENDS ${tgts} )
-add_custom_target( get_gribs DEPENDS ${tgts} )

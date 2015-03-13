@@ -38,6 +38,7 @@ list( APPEND tests
       bufr_print_data
       bufr_set_keys
       bufr_subset
+      get_product_kind
 )
 
 # Simplify tests: no need to build executable and then test. All in one
@@ -67,6 +68,7 @@ foreach( tool ${tests} )
                       CONDITION EC_HAVE_FORTRAN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
                       RESOURCES include.sh
+                      TEST_DEPENDS get_gribs get_bufrs
     )
 endforeach()
 

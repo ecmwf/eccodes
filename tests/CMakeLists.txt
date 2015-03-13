@@ -26,9 +26,12 @@ endforeach()
 
 # Now add each test (shell scripts)
 #################################################
-list( APPEND tests
+list( APPEND tests1
     definitions
     calendar
+    unit_tests
+)
+list( APPEND tests2
     bufr_dump
     bufrdc_desc_ref
     bufrdc_ref
@@ -73,18 +76,26 @@ list( APPEND tests
     read_any
     padding
     debug
-    unit_tests
 )
 
-foreach( test ${tests} )
-    # Note: making the test dependent on the grib data files
-    #       means they will be downloaded at "make" time
-    #       rather than when you do "make test"
+# These tests do not require any data downloads
+foreach( test ${tests1} )
     ecbuild_add_test( TARGET t_${test}
                   TYPE SCRIPT
-                  DEPENDS get_gribs get_tigge_gribs get_bufrs
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                   RESOURCES include.sh number_compare.pl
+    )
+endforeach()
+
+# Note: making the test dependent on the grib files (with DEPENDS)
+#       means they will be downloaded at "make" time
+#       rather than when you do "make test". Use TEST_DEPENDS instead
+foreach( test ${tests2} )
+    ecbuild_add_test( TARGET t_${test}
+                  TYPE SCRIPT
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                  RESOURCES include.sh number_compare.pl
+                  TEST_DEPENDS get_gribs get_tigge_gribs get_bufrs
     )
 endforeach()
 
@@ -94,6 +105,7 @@ ecbuild_add_test( TARGET t_lamb_az_eq_area
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/lamb_az_eq_area.sh
                   RESOURCES include.sh lamb_az_eq_area.ref
+                  TEST_DEPENDS get_gribs
 )
 
 # These ones are conditional
@@ -102,6 +114,7 @@ ecbuild_add_test( TARGET t_grib_to_netcdf
                   CONDITION HAVE_NETCDF
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_to_netcdf.sh
                   RESOURCES include.sh
+                  TEST_DEPENDS get_gribs
 )
 
 ecbuild_add_test( TARGET t_jpeg
@@ -109,6 +122,7 @@ ecbuild_add_test( TARGET t_jpeg
                   CONDITION HAVE_JPEG
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/jpeg.sh
                   RESOURCES include.sh
+                  TEST_DEPENDS get_gribs
 )
 
 ecbuild_add_test( TARGET t_ccsds
@@ -116,5 +130,6 @@ ecbuild_add_test( TARGET t_ccsds
                   CONDITION HAVE_AEC
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ccsds.sh
                   RESOURCES include.sh
+                  TEST_DEPENDS get_gribs
 )
 
