@@ -8,7 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-set -e
 . ./include.sh
 
 REDIRECT=/dev/null
@@ -17,8 +16,10 @@ cat > bufrdc_desc_ref.filter<<EOF
 print "[bufrdcExpandedDescriptors!1''%06d]";
 EOF
 
-for file in ${data_dir}/bufr/*.bufr 
+bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
+for bf in ${bufr_files}
 do
+  file=${data_dir}/bufr/$bf
   REDIRECT=/dev/null
 
   # Test descriptors: compare output of filter (res) with reference file (ref)

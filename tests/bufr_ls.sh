@@ -10,8 +10,6 @@
 
 . ./include.sh
 
-#set -x
-
 #Enter data dir
 cd ${data_dir}/bufr
 
@@ -30,7 +28,8 @@ rm -f $fTmp
 #----------------------------------------------
 # Test default "ls" on all the bufr data files
 #----------------------------------------------
-for f in `ls *.bufr` ; do
+bufr_files=`cat bufr_data_files.txt`
+for f in ${bufr_files} ; do
    echo $f >> $fLog
    ${tools_dir}/bufr_ls $f >> $fLog
 done
@@ -50,4 +49,4 @@ awk NR==3 $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $re
 diff $ref_ls $res_ls >$REDIRECT 2> $REDIRECT
 
 rm -f $fLog $res_ls 
-rm -f $fTmp | more
+rm -f $fTmp

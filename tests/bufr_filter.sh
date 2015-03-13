@@ -10,9 +10,6 @@
 
 . ./include.sh
 
-#set -x
-
-#Enter data dir
 cd ${data_dir}/bufr
 
 #Define a common label for all the tmp files
@@ -37,14 +34,14 @@ fRules=${label}.filter
 # Filter out only header information that all
 # the bufr files must have. We just check if it works.
 #-----------------------------------------------------------
-
 echo "Test: dump header" >> $fLog
 
 cat > $fRules <<EOF
 print "[centre] [subCentre] [masterTablesVersionNumber] [localTablesVersionNumber] [numberOfSubsets]"; 
 EOF
 
-for f in `ls *.bufr` ; do
+bufr_files=`cat bufr_data_files.txt`
+for f in ${bufr_files} ; do
    echo "file: $f" >> $fLog
    ${tools_dir}/bufr_filter $fRules $f >> $fLog
 done
@@ -52,7 +49,6 @@ done
 #-----------------------------------------------------------
 # Test: dump SYNOP values
 #-----------------------------------------------------------
-
 cat > $fRules <<EOF
 set unpack=1;
 transient statid=1000*blockNumber+stationNumber;
@@ -806,11 +802,7 @@ EOF
 
 #[ `${tools_dir}/bufr_filter $fRules $fBufrTmp` = "20010511 2001 234.5" ]
 
-
 #Clean up
 rm -f ${dSplit}/*
 rm -f $fLog $fRules 
 rm -f $fBufrTmp | true
-
-
-
