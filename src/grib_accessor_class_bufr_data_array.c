@@ -768,9 +768,9 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
   return elementAccessor;
 }
 
-#define IS_QUALIFIER(a) (a==8 || a==1 || a==2)
+#define IS_QUALIFIER(a) (a==8 || a==1 || a==2 || a==4 || a==5 || a==6 || a==7)
 #define NUMBER_OF_QUALIFIERS_PER_CATEGORY 256
-#define NUMBER_OF_QUALIFIERS_CATEGORIES 3
+#define NUMBER_OF_QUALIFIERS_CATEGORIES 7
 #define MAX_NUMBER_OF_BITMAPS 5
 
 static int number_of_qualifiers=NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES;
