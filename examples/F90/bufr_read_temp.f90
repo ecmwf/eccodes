@@ -10,7 +10,7 @@
 !
 ! FOTRAN 90 Implementation: bufr_read_temp
 !
-! Description: how to read a temperature significant levels from TEMP BUFR messages.
+! Description: how to read temperature significant levels from TEMP BUFR messages.
 !
 !
 program bufr_print_data
@@ -40,7 +40,7 @@ character(len=128)   :: keyName
     call codes_set(ibufr,"unpack",1);
  
     ! In what follows we rely on the fact that for 
-    ! temperature signifcant levels the value of key 
+    ! temperature significant levels the value of key 
     ! verticalSoundingSignificance is 4 (see flag table 8001 for details).
        
     ! We also make use of the fact that in our BUFR message
@@ -50,8 +50,8 @@ character(len=128)   :: keyName
 
     ! ---- Get the number of the temperature significant levels ----
 
-    ! We find out the number of significant temperature levels by 
-    ! counting how many presssure values we have on these levels.
+    ! We find out the number of temperature significant levels by 
+    ! counting how many pressure values we have on these levels.
       
     keyName="/verticalSoundingSignificance=4/pressure"
     
@@ -81,7 +81,7 @@ character(len=128)   :: keyName
     call codes_get_size(ibufr,keyName,num)
     if (num /= numSigT) then
     
-      write(*,*) "incosistent number of geopotential values found!"
+      write(*,*) "inconsistent number of geopotential values found!"
       call exit(1)
     end if   
 
@@ -96,7 +96,7 @@ character(len=128)   :: keyName
     call codes_get_size(ibufr,keyName,num)
     if (num /= numSigT) then
     
-      write(*,*) "incosistent number of temperature values found!"
+      write(*,*) "inconsistent number of temperature values found!"
       call exit(1)
     end if   
 
@@ -111,7 +111,7 @@ character(len=128)   :: keyName
     call codes_get_size(ibufr,keyName,num)
     if (num /= numSigT) then
     
-      write(*,*) "incosistent number of dew point temperature values found!"
+      write(*,*) "inconsistent number of dew point temperature values found!"
       call exit(1)
     end if   
 

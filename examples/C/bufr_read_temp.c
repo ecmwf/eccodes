@@ -11,7 +11,7 @@
 /*
  * C Implementation: bufr_read_temp
  *
- * Description: how to read a temperature significant levels from TEMP BUFR messages.
+ * Description: how to read temperature significant levels from TEMP BUFR messages.
  *
  */
 
@@ -59,7 +59,7 @@ int main(int argc,char* argv[])
     CODES_CHECK(codes_set_long(h,"unpack",1),0);
 
     /* In what follows we rely on the fact that for 
-       temperature signifcant levels the value of key 
+       temperature significant levels the value of key 
        verticalSoundingSignificance is 4 (see flag table 8001 for details).
        
        We also make use of the fact that in our BUFR message
@@ -71,8 +71,8 @@ int main(int argc,char* argv[])
        Get the number of the temperature significant levels.
     ------------------------------------------------------*/
 
-    /* We find out the number of significant temperature levels by 
-       counting how many presssure values we have on these levels. */
+    /* We find out the number of temperature significant levels by 
+       counting how many pressure values we have on these levels. */
          
     sprintf(key_name,"/verticalSoundingSignificance=4/pressure");
     CODES_CHECK(codes_get_size(h,key_name,&sigt_len),0);
@@ -106,7 +106,7 @@ int main(int argc,char* argv[])
     CODES_CHECK(codes_get_size(h,key_name,&len),0);
     if(len != sigt_len)
     {
-      printf("incosistent number of geopotential values found!\n");
+      printf("inconsistent number of geopotential values found!\n");
       return 1;
     }    
 
@@ -122,7 +122,7 @@ int main(int argc,char* argv[])
     /* Check the size*/
     if(len != sigt_len)
     {
-      printf("incosistent number of temperature values found!\n");
+      printf("inconsistent number of temperature values found!\n");
       return 1;
     }    
 
@@ -139,7 +139,7 @@ int main(int argc,char* argv[])
     /* Check the size*/
     if(len != sigt_len)
     {
-      printf("incosistent number of dewpoint temperature values found!\n");
+      printf("inconsistent number of dewpoint temperature values found!\n");
       return 1;
     }    
 

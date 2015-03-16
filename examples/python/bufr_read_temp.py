@@ -9,7 +9,7 @@
 #
 # Python implementation: bufr_read_temp 
 #
-# Description: how to read a temperature significant levels from TEMP BUFR messages.
+# Description: how to read temperature  significant levels from TEMP BUFR messages.
 #
 #
 
@@ -41,7 +41,7 @@ def example():
         codes_set(gid,'unpack',1);
     
         # In what follows we rely on the fact that for 
-        # temperature signifcant levels the value of key 
+        # temperature  significant levels the value of key 
         # verticalSoundingSignificance is 4 (see flag table 8001 for details).
        
         # We also make use of the fact that in our BUFR message
@@ -53,11 +53,11 @@ def example():
         # Get the number of the temperature significant levels.
         #------------------------------------------------------
 
-        # We find out the number of significant temperature levels by 
-        # counting how many presssure values we have on these levels. 
+        # We find out the number of temperature significant levels by 
+        # counting how many pressure values we have on these levels. 
         
         numSigT=codes_get_size(gid,"/verticalSoundingSignificance=4/pressure")
-        print  '  Number of T significant levels %ld' % (numSigT)
+        print  '  Number of temperature significant levels %ld' % (numSigT)
          
         # ----------------------------
         # Get pressure 
@@ -72,17 +72,17 @@ def example():
         sigt_geo=codes_get_array(gid,"/verticalSoundingSignificance=4/geopotential")
 
         if len(sigt_geo) != sigTNum :
-            print "incosistent number of geopotential values found!"
+            print "inconstitent number of geopotential values found!"
             return 1
         
         #--------------------------------
-        # Get temperature
+        # Get temperature 
         #--------------------------------
 
         sigt_t=codes_get_array(gid,"/verticalSoundingSignificance=4/airTemperature")
 
         if len(sigt_t) != sigTNum :
-            print "incosistent number of temeprature values found!"
+            print "inconstitent number of temprature values found!"
             return 1
         
         #--------------------------------
@@ -92,7 +92,7 @@ def example():
         sigt_td=codes_get_array(gid,"/verticalSoundingSignificance=4/dewpointTemperature")
 
         if len(sigt_td) != sigTNum :
-            print "incosistent number of dewpoint temperature values found!"
+            print "inconstitent number of dewpoint temperature  values found!"
             return 1
         
         #------------------------------------
