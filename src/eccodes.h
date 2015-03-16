@@ -277,6 +277,48 @@ The codes_handle is the structure giving access to parsed grib values by keys.
 */
 int codes_count_in_file(codes_context* c, FILE* f,int* n);
 
+
+/**
+*  Create a handle from a file resource.
+*  The file is read until a message is found. The message is then copied.
+*  Remember always to delete the handle when it is not needed anymore to avoid
+*  memory leaks.
+*
+* @param c           : the context from which the handle will be created (NULL for default context)
+* @param f           : the file resource
+* @param product     : the kind of product e.g. PRODUCT_GRIB, PRODUCT_BUFR
+* @param error       : error code set if the returned handle is NULL and the end of file is not reached
+* @return            the new handle, NULL if the resource is invalid or a problem is encountered
+*/
+grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind product, int* error);
+
+/**
+*  Create a GRIB handle from a file resource.
+*  The file is read until a GRIB message is found. The message is then copied.
+*  Remember always to delete the handle when it is not needed anymore to avoid
+*  memory leaks.
+*
+* @param c           : the context from which the handle will be created (NULL for default context)
+* @param f           : the file resource
+* @param error       : error code set if the returned handle is NULL and the end of file is not reached
+* @return            the new handle, NULL if the resource is invalid or a problem is encountered
+*/
+grib_handle* codes_grib_handle_new_from_file(grib_context* c, FILE* f, int* error);
+
+/**
+*  Create a BUFR handle from a file resource.
+*  The file is read until a BUFR message is found. The message is then copied.
+*  Remember always to delete the handle when it is not needed anymore to avoid
+*  memory leaks.
+*
+* @param c           : the context from which the handle will be created (NULL for default context)
+* @param f           : the file resource
+* @param error       : error code set if the returned handle is NULL and the end of file is not reached
+* @return            the new handle, NULL if the resource is invalid or a problem is encountered
+*/
+grib_handle* codes_bufr_handle_new_from_file(grib_context* c, FILE* f, int* error);
+
+
 /**
 *  Write a coded message in a file.     
 *
