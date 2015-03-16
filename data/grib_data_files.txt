@@ -1,4 +1,5 @@
 bad.grib
+in_copy.grib
 budg
 constant_field.grib1
 constant_field.grib2
@@ -18,6 +19,7 @@ gen_ext_spd_3.grib
 gfs.c255.grib2
 gts.grib
 index.grib
+grid_ieee.grib
 jpeg.grib2
 lfpw.grib1
 missing_field.grib1
