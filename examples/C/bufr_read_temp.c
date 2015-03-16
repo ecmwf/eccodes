@@ -58,7 +58,7 @@ int main(int argc,char* argv[])
        i.e. unpack the data values */
     CODES_CHECK(codes_set_long(h,"unpack",1),0);
 
-    /* In what follows: we rely on the fact that for 
+    /* In what follows we rely on the fact that for 
        temperature signifcant levels the value of key 
        verticalSoundingSignificance is 4 (see flag table 8001 for details).
        
