@@ -1,0 +1,11 @@
+NAME    codes_count
+
+DESCRIPTION
+        Print the total number of GRIB or BUFR messages in the given files. 
+
+USAGE 
+        codes_count [options] file file ...
+
+OPTIONS
+        -v  Verbose mode. The number of messages is given for each file.
+         

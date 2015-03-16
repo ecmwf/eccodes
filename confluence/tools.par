@@ -1,0 +1,31 @@
+#examples
+
+GRIB (
+      grib_compare
+      grib_copy
+      grib_count desc
+      grib_dump 
+      grib_filter
+      grib_get
+      grib_get_data
+      grib_index_build
+      grib_ls
+      grib_set
+      grib_to_netcdf
+    )
+BUFR (
+      bufr_compare
+      bufr_copy
+      bufr_count desc
+      bufr_dump
+      bufr_filter
+      bufr_get
+      bufr_index_build
+      bufr_ls
+      bufr_set
+      )
+Generic (
+      codes_count desc
+      codes_info desc
+      )
+
