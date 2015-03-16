@@ -36,6 +36,7 @@ list( APPEND tests
       bufr_keys_iterator
       bufr_print_header 
       bufr_print_data
+      bufr_read_temp
       bufr_set_keys
       bufr_subset
       get_product_kind
