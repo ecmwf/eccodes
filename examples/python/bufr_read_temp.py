@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
 #
-# Python implementation: bufr_read_temp 
+# Python implementation: bufr_read_temp
 #
 # Description: how to read temperature  significant levels from TEMP BUFR messages.
 #
@@ -20,14 +20,14 @@ from eccodes import *
 
 INPUT='../../data/bufr/temp_101.bufr'
 VERBOSE=1 # verbose error reporting
-    
+
 def example():
-    
+
     # open bufr file
     f = open(INPUT)
 
-    cnt=0    
-    
+    cnt=0
+
     # loop for the messages in the file
     while 1:
         # get handle for message
@@ -35,74 +35,68 @@ def example():
         if gid is None: break
 
         print "message: %s" % cnt
-        
+
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(gid,'unpack',1);
-    
-        # In what follows we rely on the fact that for 
-        # temperature  significant levels the value of key 
+        codes_set(gid,'unpack',1)
+
+        # In what follows we rely on the fact that for
+        # temperature  significant levels the value of key
         # verticalSoundingSignificance is 4 (see flag table 8001 for details).
-       
+
         # We also make use of the fact that in our BUFR message
-        # verticalSoundingSignificance is always followed by geopotential, 
+        # verticalSoundingSignificance is always followed by geopotential,
         # airTemperature, dewpointTemperature,
-        # windDirection, windSpeed and pressure. 
-        
+        # windDirection, windSpeed and pressure.
+
         #-------------------------------------------------------
         # Get the number of the temperature significant levels.
         #------------------------------------------------------
 
-        # We find out the number of temperature significant levels by 
-        # counting how many pressure values we have on these levels. 
-        
+        # We find out the number of temperature significant levels by
+        # counting how many pressure values we have on these levels.
         numSigT=codes_get_size(gid,"/verticalSoundingSignificance=4/pressure")
         print  '  Number of temperature significant levels %ld' % (numSigT)
-         
-        # ----------------------------
-        # Get pressure 
-        # ----------------------------
 
-        sigt_pres=codes_get_array(gid,"/verticalSoundingSignificance=4/pressure")
-        
+        # ----------------------------
+        # Get pressure
+        # ----------------------------
+        sigt_pres=codes_get_long_array(gid,"/verticalSoundingSignificance=4/pressure")
+
         #--------------------------------
         # Get gepotential
         #--------------------------------
+        sigt_geo=codes_get_long_array(gid,"/verticalSoundingSignificance=4/geopotential")
 
-        sigt_geo=codes_get_array(gid,"/verticalSoundingSignificance=4/geopotential")
-
-        if len(sigt_geo) != sigTNum :
+        if len(sigt_geo) != numSigT :
             print "inconstitent number of geopotential values found!"
             return 1
-        
-        #--------------------------------
-        # Get temperature 
-        #--------------------------------
 
-        sigt_t=codes_get_array(gid,"/verticalSoundingSignificance=4/airTemperature")
+        #--------------------------------
+        # Get temperature
+        #--------------------------------
+        sigt_t=codes_get_long_array(gid,"/verticalSoundingSignificance=4/airTemperature")
 
-        if len(sigt_t) != sigTNum :
+        if len(sigt_t) != numSigT :
             print "inconstitent number of temprature values found!"
             return 1
-        
+
         #--------------------------------
         # Get dew point
         #--------------------------------
+        sigt_td=codes_get_long_array(gid,"/verticalSoundingSignificance=4/dewpointTemperature")
 
-        sigt_td=codes_get_array(gid,"/verticalSoundingSignificance=4/dewpointTemperature")
-
-        if len(sigt_td) != sigTNum :
+        if len(sigt_td) != numSigT :
             print "inconstitent number of dewpoint temperature  values found!"
             return 1
-        
+
         #------------------------------------
         # Print the values
         # -----------------------------------
-    
         print "lev  pres    geo    t    td"
         print "-------------------------------"
-    
-        for i in xrange(sigTNum):
+
+        for i in xrange(numSigT):
             print "%3d %6.0f %6.0f %.1f %.1f" % (i+1,sigt_pres[i],sigt_geo[i],sigt_t[i],sigt_td[i])
 
         cnt+=1
