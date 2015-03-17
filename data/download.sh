@@ -36,11 +36,12 @@ if [ -z "$DATA_DIR" ]; then
    exit 1
 fi
 
-gfiles=`cat $DATA_DIR/grib_data_files.txt`
-tfiles=`cat $DATA_DIR/tigge/tigge_data_files.txt | sed -e 's:^:tigge/:'`
-bfiles=`cat $DATA_DIR/bufr/bufr_data_files.txt $DATA_DIR/bufr/bufr_ref_files.txt | sed -e 's:^:bufr/:'`
+grib_files=`cat $DATA_DIR/grib_data_files.txt`
+tigge_files=`cat $DATA_DIR/tigge/tigge_data_files.txt | sed -e 's:^:tigge/:'`
+bufr_files=`cat $DATA_DIR/bufr/bufr_data_files.txt $DATA_DIR/bufr/bufr_ref_files.txt | sed -e 's:^:bufr/:'`
+gts_files=`cat $DATA_DIR/gts/gts_data_files.txt $DATA_DIR/gts/gts_ref_files.txt | sed -e 's:^:gts/:'`
 
-files="$gfiles $tfiles $bfiles"
+files="$grib_files $tigge_files $bufr_files $gts_files"
 
 if [ $CLEAN -eq 1 ]; then
    for f in $files; do

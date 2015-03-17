@@ -1,6 +1,7 @@
 # data/CMakeLists.txt
 add_subdirectory(tigge)
 add_subdirectory(bufr)
+add_subdirectory(gts)
 
 
 # Download all the binary GRIB data from website
