@@ -22,7 +22,7 @@ list( APPEND tests
       grib_set_keys
       grib_set_bitmap
       set_missing
-      set_pv
+      grib_set_pv
       samples
       count_messages
       read_message

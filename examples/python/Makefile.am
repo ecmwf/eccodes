@@ -21,7 +21,7 @@ DEPENDENCIES = $(LDADD)
 EXTRA_DIST = $(TESTS) include.sh grib_clone.py count_messages.py grib_get_keys.py index.py \
              grib_iterator.py grib_keys_iterator.py multi_write.py \
              grib_nearest.py grib_print_data.py samples.py grib_set_keys.py \
-             set_missing.py binary_message.py set_pv.py grib_set_bitmap.py \
+             set_missing.py binary_message.py grib_set_pv.py grib_set_bitmap.py \
              bufr_read_header.py  bufr_read_synop.py \
              bufr_clone.py bufr_get_keys.py bufr_set_keys.py \
              bufr_expanded.py  bufr_keys_iterator.py bufr_subset.py bufr_attributes.py \

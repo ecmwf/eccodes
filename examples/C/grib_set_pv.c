@@ -9,7 +9,7 @@
  */
 
 /*
- * C Implementation: set_pv
+ * C Implementation: grib_set_pv
  *
  * Description: how to set pv (vertical coordinate parameters)
  *

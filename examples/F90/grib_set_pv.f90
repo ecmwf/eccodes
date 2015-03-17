@@ -8,11 +8,10 @@
 !
 !
 !
-!  Description: how to set pv values.
+!  Description: how to set pv values in a GRIB message
 !
 !
-!
-program set_pv
+program grib_set_pv
   use eccodes
   implicit none
   integer                         :: numberOfLevels
@@ -71,4 +70,4 @@ program set_pv
 
   call codes_close_file(outfile)
   
-end program set_pv
+end program grib_set_pv

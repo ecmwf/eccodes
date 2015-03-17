@@ -114,7 +114,7 @@ examples/C/grib_set_keys
 examples/C/grib_set_bitmap
 examples/C/grib_set_data
 examples/C/set_missing
-examples/C/set_pv
+examples/C/grib_set_pv
 examples/C/values_check
 fortran/.libs/
 fortran/*.mod
@@ -280,7 +280,7 @@ examples/F90/f_grib_set_keys
 examples/F90/f_grib_set_bitmap
 examples/F90/f_set_gvc
 examples/F90/f_set_missing
-examples/F90/f_set_pv
+examples/F90/f_grib_set_pv
 examples/python/.libs/
 examples/python/my.idx
 examples/python/p_count_messages

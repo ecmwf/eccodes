@@ -16,7 +16,7 @@ that can be taken as a starting point to write more complex programs.\n
 - \ref grib_iterator.py "grib_iterator.py" How to use an iterator on latitude, longitude, values.
 - \ref grib_keys_iterator.py "grib_keys_iterator.py" How to get the names of all the keys.
 - \ref multi_write.py "multi_write.py" How to encode a multi grib message.
-- \ref set_pv.py "set_pv.py" How to encode the pv coefficients.
+- \ref grib_set_pv.py "grib_set_pv.py" How to encode the pv coefficients.
 
 \section fortran90 Fortran 90
 - \ref index.f90 "index.f90" how to access a grib file through an index.
@@ -28,7 +28,7 @@ that can be taken as a starting point to write more complex programs.\n
 - \ref set.f90 "set.f90" how to set values through the key names.
 - \ref grib_set_bitmap.f90 "grib_set_bitmap.f90" how to set and use a bitmap.
 - \ref set_missing.f90 "set_missing.f90" how to set a missing value in the header.
-- \ref set_pv.f90 "set_pv.f90" how to set the list of levels.
+- \ref grib_set_pv.f90 "grib_set_pv.f90" how to set the list of levels.
 - \ref samples.f90 "samples.f90" how to create a new message from a template.
 - \ref grib_clone.f90 "grib_clone.f90" how to clone a message.
 - \ref copy_message.f90 "copy_message.f90" how to copy a message in memory and create a new message.

@@ -23,7 +23,7 @@ list( APPEND test_bins
       multi2
       multi_write
       precision
-      set_pv
+      grib_set_pv
       list
       get_data
       sections_copy
@@ -70,7 +70,7 @@ list( APPEND tests
    set_missing
    grib_clone
    sections_copy
-   set_pv
+   grib_set_pv
    check_gaussian_grids
    bufr_attributes
    bufr_clone
