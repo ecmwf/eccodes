@@ -31,7 +31,7 @@ list( APPEND test_bins
       large_grib1
       grib_clone
       check_gaussian_grid
-      ensemble_index
+      grib_ensemble_index
       get_product_kind
       bufr_attributes
       bufr_clone

@@ -2,7 +2,7 @@
 
 GRIB (
       grib_clone
-      ensemble_index
+      grib_ensemble_index
       grib_get_keys
       index
       grib_iterator_bitmap

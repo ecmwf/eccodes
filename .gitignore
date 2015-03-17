@@ -249,7 +249,7 @@ include
 
 #from make
 examples/C/check_gaussian_grid
-examples/C/ensemble_index
+examples/C/grib_ensemble_index
 examples/C/grib_clone
 examples/C/grib_iterator_bitmap
 examples/C/new_sample
