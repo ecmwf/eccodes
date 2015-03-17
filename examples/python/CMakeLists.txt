@@ -7,7 +7,7 @@ configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 # Build the executables used by test scripts
 ################################################
 list( APPEND test_bins
-   keys_iterator
+   grib_keys_iterator
    print_data
    grib_iterator
    count_messages
@@ -30,7 +30,7 @@ list( APPEND tests
    grib_get_keys
    index
    grib_iterator
-   keys_iterator
+   grib_keys_iterator
    multi_write
    nearest
    print_data

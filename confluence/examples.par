@@ -7,7 +7,7 @@ GRIB (
       index
       grib_iterator_bitmap
       grib_iterator
-      keys_iterator
+      grib_keys_iterator
       multi_write
       multi
       nearest

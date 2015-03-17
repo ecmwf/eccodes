@@ -2,7 +2,7 @@
 
 \example grib_get_keys.c grib_get_keys.c How to get values through the key names.
 \example set.c set.c How to set values through the key names.
-\example keys_iterator.c keys_iterator.c How to get the names of all the keys 
+\example grib_keys_iterator.c grib_keys_iterator.c How to get the names of all the keys 
 defined in a message and how to iterate through them.
 \example grib_iterator.c grib_iterator.c How to use an iterator on latitude, longitude, values.
 \example precision.c precision.c How to control precision when coding a grib field.
@@ -24,7 +24,7 @@ defined in a message and how to iterate through them.
 \example samples.f90 How to create a new message from a samples.
 \example grib_clone.f90 How to clone a message.
 \example copy_message.f90 How to copy a message in memory and create a new message.
-\example keys_iterator.f90 How to get the names of all the keys
+\example grib_keys_iterator.f90 How to get the names of all the keys
 defined in a message and how to iterate through them.
 \example precision.f90 How to control precision when coding a grib field.
 \example multi_write.f90 How to encode a grib message containing many fields.
@@ -51,7 +51,7 @@ defined in a message and how to iterate through them.
 \example samples.py How to create a new message from a sample.
 \example grib_clone.py How to clone a message.
 \example grib_iterator.py How to use an iterator on latitude, longitude, values.
-\example keys_iterator.py How to get the names of all the keys.
+\example grib_keys_iterator.py How to get the names of all the keys.
 \example multi_write.py How to encode a multi grib message.
 \example set_pv.py How to encode the pv coefficients.
 

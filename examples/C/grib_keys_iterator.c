@@ -9,12 +9,12 @@
  */
 
 /*
- * C Implementation: keys_iterator
+ * C Implementation: grib_keys_iterator
  *
  * Description:
  * Example on how to use keys_iterator functions and the
  * codes_keys_iterator structure to get all the available
- * keys in a message.
+ * keys in a GRIB message.
  *
  */
 

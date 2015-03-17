@@ -100,7 +100,7 @@ examples/C/grib_get_keys
 examples/C/get_data
 examples/C/get_product_kind
 examples/C/grib_iterator
-examples/C/keys_iterator
+examples/C/grib_keys_iterator
 examples/C/large_grib1
 examples/C/list
 examples/C/mars_param
@@ -267,7 +267,7 @@ examples/F90/f_get_pl
 examples/F90/f_get_pv
 examples/F90/f_get_set_uuid
 examples/F90/f_index
-examples/F90/f_keys_iterator
+examples/F90/f_grib_keys_iterator
 examples/F90/f_multi
 examples/F90/f_multi_write
 examples/F90/f_nearest

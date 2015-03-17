@@ -14,7 +14,7 @@ list( APPEND test_bins
       print_data
       set
       set_missing
-      keys_iterator
+      grib_keys_iterator
       set_data
       mars_param
       values_check
@@ -60,7 +60,7 @@ list( APPEND tests
    grib_get_keys
    print_data
    set
-   keys_iterator
+   grib_keys_iterator
    multi
    multi_write
    precision

@@ -14,7 +14,7 @@ that can be taken as a starting point to write more complex programs.\n
 - \ref samples.py "samples.py" How to create a new message from a sample.
 - \ref grib_clone.py "grib_clone.py" How to clone a message.
 - \ref grib_iterator.py "grib_iterator.py" How to use an iterator on latitude, longitude, values.
-- \ref keys_iterator.py "keys_iterator.py" How to get the names of all the keys.
+- \ref grib_keys_iterator.py "grib_keys_iterator.py" How to get the names of all the keys.
 - \ref multi_write.py "multi_write.py" How to encode a multi grib message.
 - \ref set_pv.py "set_pv.py" How to encode the pv coefficients.
 
@@ -32,7 +32,7 @@ that can be taken as a starting point to write more complex programs.\n
 - \ref samples.f90 "samples.f90" how to create a new message from a template.
 - \ref grib_clone.f90 "grib_clone.f90" how to clone a message.
 - \ref copy_message.f90 "copy_message.f90" how to copy a message in memory and create a new message.
-- \ref keys_iterator.f90 "keys_iterator.f90" how to get the names of all the keys
+- \ref grib_keys_iterator.f90 "grib_keys_iterator.f90" how to get the names of all the keys
 defined in a message and how to iterate through them.
 - \ref precision.f90 "precision.f90" how to control precision when coding a grib field.
 - \ref multi_write.f90 "multi_write.f90" how to encode a grib message containing many fields.
@@ -43,7 +43,7 @@ defined in a message and how to iterate through them.
 \section C 
 - \ref grib_get_keys.c "grib_get_keys.c"  is an example showing how to get values through the key names.
 - \ref set.c "set.c" is an example illustrating how to set values through the key names.
-- \ref keys_iterator.c "keys_iterator.c" explains how to get the names of all the keys 
+- \ref grib_keys_iterator.c "grib_keys_iterator.c" explains how to get the names of all the keys 
 defined in a message and how to iterate through them.
 - \ref grib_iterator.c "grib_iterator.c" shows how to use an iterator on latitude, longitude, values.
 - \ref precision.c "precision.c" illustrates how to control precision when coding a grib field.

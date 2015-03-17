@@ -13,7 +13,7 @@ list( APPEND tests
       get_data
       get_pl
       get_pv
-      keys_iterator
+      grib_keys_iterator
       multi_write
       multi
       nearest
