@@ -107,7 +107,7 @@ examples/C/mars_param
 examples/C/multi
 examples/C/multi2
 examples/C/multi_write
-examples/C/nearest
+examples/C/grib_nearest
 examples/C/points
 examples/C/precision
 examples/C/grib_print_data
@@ -270,7 +270,7 @@ examples/F90/f_index
 examples/F90/f_grib_keys_iterator
 examples/F90/f_multi
 examples/F90/f_multi_write
-examples/F90/f_nearest
+examples/F90/f_grib_nearest
 examples/F90/f_new_from_file
 examples/F90/f_precision
 examples/F90/f_grib_print_data

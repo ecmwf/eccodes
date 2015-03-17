@@ -32,7 +32,7 @@ list( APPEND tests
    grib_iterator
    grib_keys_iterator
    multi_write
-   nearest
+   grib_nearest
    grib_print_data
    samples
    grib_set_keys

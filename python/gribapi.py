@@ -1345,7 +1345,7 @@ def grib_find_nearest(gribid,inlat,inlon,is_lsm = False,npoints = 1):
 
     The number of nearest points returned can be controled through the npoints function argument.
 
-    \b Examples: \ref nearest.py "nearest.py"
+    \b Examples: \ref grib_nearest.py "grib_nearest.py"
     
     @param gribid     id of the grib loaded in memory
     @param inlat      latitude of the point

@@ -16,7 +16,7 @@ list( APPEND tests
       grib_keys_iterator
       multi_write
       multi
-      nearest
+      grib_nearest
       precision
       grib_print_data
       grib_set_keys

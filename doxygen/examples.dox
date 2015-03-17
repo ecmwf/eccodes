@@ -9,7 +9,7 @@ defined in a message and how to iterate through them.
 \example multi.c multi.c How to decode a grib message containing many fields.
 \example multi_write.c multi_write.c How to encode a grib message containing many fields.
 \example grib_print_data.c grib_print_data.c How to print all the data from a grib message.
-\example nearest.c nearest.c How to find the nearest grid points.
+\example grib_nearest.c grib_nearest.c How to find the nearest grid points.
 
 \example index.f90 How access a grib file through and index. 
 \example grib_get_keys.f90 How to get values through the key names. 
@@ -30,7 +30,7 @@ defined in a message and how to iterate through them.
 \example multi_write.f90 How to encode a grib message containing many fields.
 \example multi.f90 How to decode a grib message containing many fields.
 \example grib_print_data.f90 How to print all the data contained in a grib file.
-\example nearest.f90 How to find the nearest grid points.
+\example grib_nearest.f90 How to find the nearest grid points.
 
 \example get_fortran.F get_fortran.F How to get values through the key names.
 \example set_fortran.F set_fortran.F How to set values through the key names.
@@ -45,7 +45,7 @@ defined in a message and how to iterate through them.
 \example grib_get_keys.py How to get values through the key names. 
 \example grib_print_data.py How to print all the data contained in a grib file.
 \example set.py How to set values through the key names.
-\example nearest.py How to find the nearest grid points.
+\example grib_nearest.py How to find the nearest grid points.
 \example set_missing.py How to set a missing value in the header.
 \example count_messages.py How to count the messages in a file and loop through them. 
 \example samples.py How to create a new message from a sample.

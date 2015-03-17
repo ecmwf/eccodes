@@ -7,7 +7,7 @@ configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 # Build the executables used by test scripts
 ################################################
 list( APPEND test_bins
-      nearest
+      grib_nearest
       set_bitmap
       grib_iterator
       grib_get_keys
