@@ -21,10 +21,10 @@
 int main(int argc,char* argv[])
 {
     FILE* in = NULL;
-    
+
     /* message handle. Required in all the eccodes calls acting on a message.*/
     codes_handle* h=NULL;
-    
+
     long *descriptors=NULL;
     double *values = NULL;
     char* typicalDate= NULL; 
@@ -40,7 +40,7 @@ int main(int argc,char* argv[])
         printf("ERROR: unable to open file %s\n", infile);
         return 1;
     }
-    
+
     /* loop over the messages in the bufr file */
     while ((h = codes_handle_new_from_file(NULL,in,PRODUCT_BUFR,&err)) != NULL || err != CODES_SUCCESS)
     {
@@ -49,43 +49,43 @@ int main(int argc,char* argv[])
             cnt++;
             continue;
         }
-    
+
         printf("message: %d\n",cnt);
-    
+
         /* we need to instruct ecCodes to expand the descriptors 
           i.e. unpack the data values */
         CODES_CHECK(codes_set_long(h,"unpack",1),0);
-    
+
         /* read and print some data values */ 
-        
+
         /* long value */
         CODES_CHECK(codes_get_long(h,"blockNumber",&longVal),0);
         printf("  blockNumber: %ld\n",longVal);
-    
+
         /* long value */
         CODES_CHECK(codes_get_long(h,"stationNumber",&longVal),0);
         printf("  stationNumber: %ld\n",longVal);
-    
+
         /* double value */
         CODES_CHECK(codes_get_double(h,"airTemperatureAt2M",&doubleVal),0);
         printf("  airTemperatureAt2M: %f\n",doubleVal);
 
         /* ---- string value  -----------------*/
-        
+
         /* get the size and allocate memory*/
         CODES_CHECK(codes_get_length(h, "typicalDate", &len), 0);
         typicalDate = (char*)malloc(len*sizeof(char));
-        
+
         /* get the values*/
         codes_get_string(h, "typicalDate", typicalDate, &len);
         printf("  typicalDate: %s\n", typicalDate);
-    
-         /* ---- array of long ----------------*/
-       
+
+        /* ---- array of long ----------------*/
+
         /* get the size and allocate memory*/
         CODES_CHECK(codes_get_size(h,"bufrdcExpandedDescriptors",&desc_len),0);
         descriptors = malloc(desc_len*sizeof(long));
-      
+
         /* get the values */
         CODES_CHECK(codes_get_long_array(h,"bufrdcExpandedDescriptors",descriptors,&desc_len),0);
         printf("  bufrdcExpandedDescriptors:\n");
@@ -93,13 +93,13 @@ int main(int argc,char* argv[])
         {
             printf("   %ld\n",descriptors[i]);
         }
-        
+
         /* ---- array of double ---------------*/
-        
+
         /* get the size and allocate memory*/
         CODES_CHECK(codes_get_size(h,"numericValues",&values_len),0);
         values = malloc(values_len*sizeof(double));
-      
+
         /* get the values*/
         CODES_CHECK(codes_get_double_array(h,"numericValues",values,&values_len),0);
         printf("  numericValues:\n");
@@ -107,18 +107,18 @@ int main(int argc,char* argv[])
         {
             printf("   %.10e\n",values[i]);
         }
-        
+
         /* free allocated arrays */
         free(descriptors);
         free(values);
         free(typicalDate);
-    
+
         /* delete handle */
         codes_handle_delete(h);
-        
+
         cnt++;
     }
-    
+
     fclose(in);
     return 0;
 }

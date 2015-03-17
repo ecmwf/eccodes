@@ -27,10 +27,10 @@ int main(int argc, char *argv[])
 {
     FILE *in = NULL;
     FILE *out = NULL;
-    
+
     /* message handle. Required in all the eccodes calls acting on a message.*/
     codes_handle *source_handle = NULL;
-    
+
     const void *buffer = NULL;
     size_t size = 0;
     int i, err = 0;
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
         if (in) fclose(in);
         return 1;
     }
-    
+
     /* create a handle for the first message */
     source_handle = codes_handle_new_from_file(NULL,in,PRODUCT_BUFR,&err);
 
@@ -76,22 +76,22 @@ int main(int argc, char *argv[])
 
         /* This is the place where you may wish to modify the clone
            E.g. we change the bufrHeaderCentre */
-           
+
         CODES_CHECK(codes_set_long(clone_handle, "bufrHeaderCentre", 222),0);
 
         /* get the coded message in a buffer */
         CODES_CHECK(codes_get_message(clone_handle,&buffer,&size),0);
-       
+
         /* write the buffer to a file */
         if(fwrite(buffer,1,size,out) != size) {
             perror("ERROR: could not write message to file");
             return 1;
         }
-        
+
         /* relase the clone's handle */
         codes_handle_delete(clone_handle);
     }
-        
+
     /* release the source's handle */
     codes_handle_delete(source_handle);
 

@@ -31,15 +31,15 @@ int main(int argc,char* argv[])
 {
     char* filename = NULL;
     FILE* in = NULL;
-    
+
     /* message handle. Required in all the eccodes calls acting on a message.*/
     codes_handle* h=NULL;
     long longVal;
     int err=0, cnt=0;
     int keyType;
-    
+
     /* To skip certain keys use the combination of these flags:
-     
+
        unsigned long key_iterator_filter_flags=
             CODES_KEYS_ITERATOR_SKIP_READ_ONLY ||
             CODES_KEYS_ITERATOR_SKIP_COMPUTED || 
@@ -47,18 +47,18 @@ int main(int argc,char* argv[])
             CODES_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC ||
             CODES_KEYS_ITERATOR_SKIP_DUPLICATES ||
             CODES_KEYS_ITERATOR_SKIP_FUNCTION; */
-    
+
     unsigned long key_iterator_filter_flags=CODES_KEYS_ITERATOR_ALL_KEYS;
- 
+
     /* name_space=NULL to get all the keys. Other namespaces are e.g. "ls" */
     char* name_space=0;
-    
+
     char value[MAX_VAL_LEN];
     size_t vlen=MAX_VAL_LEN;
     size_t klen=0;
-    
+
     if (argc!=2) usage(argv[0]);
-    
+
     filename=argv[1];
 
     in=fopen(filename,"r");
@@ -66,7 +66,7 @@ int main(int argc,char* argv[])
         printf("ERROR: unable to open file %s\n", filename);
         return 1;
     }
-    
+
     /* loop over the messages in the bufr file */
     while ((h = codes_handle_new_from_file(NULL,in,PRODUCT_BUFR,&err)) != NULL || err != CODES_SUCCESS)
     {
@@ -76,7 +76,7 @@ int main(int argc,char* argv[])
             cnt++;
             continue;
         }
-        
+
         printf("message: %d\n",cnt);
 
         /* get key iterator */
@@ -85,28 +85,28 @@ int main(int argc,char* argv[])
             printf("ERROR: Unable to create keys iterator\n");
             exit(1);
         }
-         
+
         /* we need to instruct ecCodes to unpack the data values */
         CODES_CHECK(codes_set_long(h,"unpack",1),0);
-   
+
         /* loop over the keys */
         while(codes_keys_iterator_next(kiter))
         {
             /* get key name*/
             const char* name = codes_keys_iterator_get_name(kiter);
             printf("  %s=",name);
-              
+
             CODES_CHECK(codes_get_native_type(h,name,&keyType),0);
-           
+
             /* get key size to see if it is an array */
             CODES_CHECK(codes_get_size(h,name,&klen),0);
-           
+
             /* not array */
             if(klen ==1 || keyType == CODES_TYPE_STRING)
             {    
                 vlen=MAX_VAL_LEN;
                 bzero(value,vlen);
-           
+
                 codes_get_string(h,name,value,&vlen);
                 printf("%s\n",value);                             
             }
@@ -114,16 +114,16 @@ int main(int argc,char* argv[])
             else
                 printf("(array of %ld)\n",klen);
         }
- 
+
         /* delete key iterator */
         codes_keys_iterator_delete(kiter);
-    
+
         /* delete handle */
         codes_handle_delete(h);
-        
+
         cnt++;
     }
-    
+
     fclose(in);
     return 0;
 }
