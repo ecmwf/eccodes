@@ -1,6 +1,6 @@
 #examples
 
-GRIB (
+!GRIB (
       grib_clone
       grib_ensemble_index
       grib_get_keys
@@ -18,7 +18,7 @@ GRIB (
       set_pv
       grib_set_keys
     )
-!BUFR (
+BUFR (
       bufr_attributes
       bufr_clone
       bufr_expanded
@@ -27,6 +27,7 @@ GRIB (
       bufr_missing
       bufr_print_header
       bufr_print_data
+      bufr_read_temp
       bufr_set_keys
       bufr_subset
       )
