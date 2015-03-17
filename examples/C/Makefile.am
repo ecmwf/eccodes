@@ -10,7 +10,7 @@ TESTS = grib_iterator.sh grib_get_keys.sh print_data.sh set.sh keys_iterator.sh 
 
 noinst_PROGRAMS  = nearest set_bitmap grib_iterator grib_get_keys print_data set set_missing keys_iterator \
                    set_data mars_param values_check box multi multi2 multi_write precision \
-                   set_pv list sections_copy large_grib1 get_data iterator_bitmap grib_clone new_sample \
+                   set_pv list sections_copy large_grib1 get_data grib_iterator_bitmap grib_clone new_sample \
                    check_gaussian_grid ensemble_index points \
                    bufr_attributes bufr_clone bufr_expanded  bufr_get_keys bufr_read_header bufr_read_synop \
                    bufr_get_keys bufr_subset bufr_keys_iterator bufr_set_keys bufr_missing bufr_read_temp \
@@ -33,7 +33,7 @@ multi_SOURCES           = multi.c
 multi2_SOURCES          = multi2.c
 keys_iterator_SOURCES   = keys_iterator.c
 grib_iterator_SOURCES   = grib_iterator.c
-iterator_bitmap_SOURCES = iterator_bitmap.c
+grib_iterator_bitmap_SOURCES = grib_iterator_bitmap.c
 set_pv_SOURCES          = set_pv.c
 points_SOURCES          = points.c
 list_SOURCES            = list.c

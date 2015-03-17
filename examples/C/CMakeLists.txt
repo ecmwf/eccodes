@@ -27,7 +27,7 @@ list( APPEND test_bins
       list
       get_data
       sections_copy
-      iterator_bitmap
+      grib_iterator_bitmap
       large_grib1
       grib_clone
       check_gaussian_grid

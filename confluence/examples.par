@@ -1,12 +1,12 @@
 #examples
 
 GRIB (
-      clone
+      grib_clone
       ensemble_index
-      get
+      grib_get_keys
       index
-      iterator_bitmap
-      iterator
+      grib_iterator_bitmap
+      grib_iterator
       keys_iterator
       multi_write
       multi

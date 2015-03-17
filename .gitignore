@@ -99,7 +99,7 @@ examples/C/bufr_print_header
 examples/C/grib_get_keys
 examples/C/get_data
 examples/C/get_product_kind
-examples/C/iterator
+examples/C/grib_iterator
 examples/C/keys_iterator
 examples/C/large_grib1
 examples/C/list
@@ -250,8 +250,8 @@ include
 #from make
 examples/C/check_gaussian_grid
 examples/C/ensemble_index
-examples/C/clone
-examples/C/iterator_bitmap
+examples/C/grib_clone
+examples/C/grib_iterator_bitmap
 examples/C/new_sample
 examples/F90/f_bufr_read_header
 examples/F90/f_bufr_clone
