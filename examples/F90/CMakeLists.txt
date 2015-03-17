@@ -28,7 +28,7 @@ list( APPEND tests
       read_message
       read_from_file
       get_set_uuid
-      clone
+      grib_clone
       bufr_attributes
       bufr_clone
       bufr_expanded

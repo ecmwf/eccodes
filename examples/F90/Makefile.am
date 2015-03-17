@@ -10,7 +10,7 @@ TESTS = copy_message.sh grib_get_keys.sh get_data.sh get_pl.sh get_pv.sh keys_it
 noinst_PROGRAMS  = f_index f_copy_message f_grib_get_keys f_get_data f_get_pl f_get_pv f_keys_iterator \
                    f_multi_write f_multi f_nearest f_precision f_print_data f_set f_set_bitmap f_set_missing \
                    f_set_pv f_samples f_count_messages f_read_message f_read_from_file f_new_from_file \
-                   f_copy_namespace f_get_set_uuid f_set_gvc f_clone f_bufr_clone f_bufr_expanded f_bufr_get_keys  \
+                   f_copy_namespace f_get_set_uuid f_set_gvc f_grib_clone f_bufr_clone f_bufr_expanded f_bufr_get_keys  \
                    f_bufr_print_header f_bufr_print_data f_bufr_set_keys f_bufr_keys_iterator f_bufr_subset f_bufr_attributes \
                    f_get_product_kind f_bufr_read_temp
 
@@ -38,7 +38,7 @@ f_new_from_file_SOURCES=new_from_file.f90
 f_copy_namespace_SOURCES=copy_namespace.f90
 f_get_set_uuid_SOURCES=get_set_uuid.f90
 f_set_gvc_SOURCES=set_gvc.f90
-f_clone_SOURCES=clone.f90
+f_grib_clone_SOURCES=grib_clone.f90
 f_bufr_attributes_SOURCES=bufr_attributes.f90
 f_bufr_clone_SOURCES=bufr_clone.f90
 f_bufr_expanded_SOURCES=bufr_expanded.f90

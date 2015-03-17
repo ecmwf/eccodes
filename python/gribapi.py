@@ -744,7 +744,7 @@ def grib_clone(gribid_src):
     Create a copy of a given message (\em gribid_src) resulting in a new
     message in memory (\em gribid_dest) identical to the original one.
     
-    \b Examples: \ref clone.py "clone.py"
+    \b Examples: \ref grib_clone.py "grib_clone.py"
     
     @param gribid_src     id of grib to be cloned
     @return id of clone
@@ -1496,7 +1496,7 @@ def grib_set_values(gribid,values):
 
     The elements of the input sequence need to be convertible to a double.
 
-    \b Examples: \ref clone.py "clone.py", \ref samples.py "samples.py"
+    \b Examples: \ref grib_clone.py "grib_clone.py", \ref samples.py "samples.py"
 
     @param gribid   id of the grib loaded in memory
     @param values   array of values to set as tuple, list, array or numpy.ndarray

@@ -29,7 +29,7 @@ list( APPEND test_bins
       sections_copy
       iterator_bitmap
       large_grib1
-      clone
+      grib_clone
       check_gaussian_grid
       ensemble_index
       get_product_kind
@@ -68,7 +68,7 @@ list( APPEND tests
    large_grib1
    get_data
    set_missing
-   clone
+   grib_clone
    sections_copy
    set_pv
    check_gaussian_grids

@@ -1462,7 +1462,7 @@
   !> gathered with @ref grib_get_error_string.
   !>
   !>
-  !> \b Examples: \ref clone.f90 "clone.f90"
+  !> \b Examples: \ref grib_clone.f90 "grib_clone.f90"
   !>
   !> @param gribid_src     grib to be cloned
   !> @param gribid_dest    new grib returned

@@ -7,10 +7,10 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
+!  FOTRAN 90 Implementation: grib_clone
 !
 !  Description: how to create a new GRIB message by cloning 
 !               an existing message.
-!
 !
 !
 program clone

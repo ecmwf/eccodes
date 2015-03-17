@@ -9,7 +9,7 @@
  */
 
 /*
- * C Implementation: clone
+ * C Implementation: grib_clone
  *
  * Description: How to create a new GRIB message by cloning
  *              an existing message.

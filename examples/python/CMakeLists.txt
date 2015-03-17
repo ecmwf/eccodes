@@ -25,7 +25,7 @@ endforeach()
 # Now add each test
 #################################################
 list( APPEND tests
-   clone
+   grib_clone
    count_messages
    grib_get_keys
    index

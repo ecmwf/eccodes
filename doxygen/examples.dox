@@ -22,7 +22,7 @@ defined in a message and how to iterate through them.
 \example set_missing.f90 How to set a missing value in the header.
 \example set_pv.f90 How to set the list of levels.
 \example samples.f90 How to create a new message from a samples.
-\example clone.f90 How to clone a message.
+\example grib_clone.f90 How to clone a message.
 \example copy_message.f90 How to copy a message in memory and create a new message.
 \example keys_iterator.f90 How to get the names of all the keys
 defined in a message and how to iterate through them.
@@ -49,7 +49,7 @@ defined in a message and how to iterate through them.
 \example set_missing.py How to set a missing value in the header.
 \example count_messages.py How to count the messages in a file and loop through them. 
 \example samples.py How to create a new message from a sample.
-\example clone.py How to clone a message.
+\example grib_clone.py How to clone a message.
 \example iterator.py How to use an iterator on latitude, longitude, values.
 \example keys_iterator.py How to get the names of all the keys.
 \example multi_write.py How to encode a multi grib message.
