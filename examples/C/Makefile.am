@@ -4,7 +4,7 @@ AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@
 TESTS = iterator.sh get.sh print_data.sh set.sh keys_iterator.sh multi.sh multi_write.sh \
         precision.sh list.sh large_grib1.sh get_data.sh sections_copy.sh set_missing.sh clone.sh set_pv.sh \
         check_gaussian_grids.sh \
-        bufr_attributes.sh bufr_clone.sh bufr_expanded.sh bufr_get_keys.sh bufr_print_header.sh bufr_print_data.sh \
+        bufr_attributes.sh bufr_clone.sh bufr_expanded.sh bufr_get_keys.sh bufr_read_header.sh bufr_read_synop.sh \
         bufr_set_keys.sh bufr_subset.sh bufr_keys_iterator.sh bufr_missing.sh bufr_read_temp.sh \
         get_product_kind.sh
 
@@ -12,7 +12,7 @@ noinst_PROGRAMS  = nearest set_bitmap iterator get print_data set set_missing ke
                    set_data mars_param values_check box multi multi2 multi_write precision \
                    set_pv list sections_copy large_grib1 get_data iterator_bitmap clone new_sample \
                    check_gaussian_grid ensemble_index points \
-                   bufr_attributes bufr_clone bufr_expanded  bufr_get_keys bufr_print_header bufr_print_data \
+                   bufr_attributes bufr_clone bufr_expanded  bufr_get_keys bufr_read_header bufr_read_synop \
                    bufr_get_keys bufr_subset bufr_keys_iterator bufr_set_keys bufr_missing bufr_read_temp \
                    get_product_kind
 
@@ -50,8 +50,8 @@ bufr_expanded_SOURCES 	= bufr_expanded.c
 bufr_get_keys_SOURCES 	= bufr_get_keys.c
 bufr_keys_iterator		= bufr_keys_iterator.c
 bufr_missing			= bufr_missing.c
-bufr_print_header_SOURCES = bufr_print_header.c
-bufr_print_data_SOURCES = bufr_print_data.c
+bufr_read_header_SOURCES = bufr_read_header.c
+bufr_read_synop_SOURCES = bufr_read_synop.c
 bufr_read_temp_SOURCES  = bufr_read_temp.c
 bufr_set_keys_SOURCES 	= bufr_set_keys.c
 bufr_subset_SOURCES 	= bufr_subset.c

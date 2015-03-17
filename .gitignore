@@ -81,6 +81,7 @@ examples/C/bufr_subset
 examples/C/*.sh.log
 examples/C/*.sh.trs
 examples/F90/f_bufr_expanded
+examples/F90/f_bufr_read_temp
 examples/F90/f_bufr_attributes
 examples/F90/f_bufr_set_keys
 examples/F90/f_bufr_get_keys

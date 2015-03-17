@@ -9,9 +9,9 @@
  */
 
 /*
- * C Implementation: bufr_print_data
+ * C Implementation: bufr_read_synop
  *
- * Description: how to read data values from BUFR messages.
+ * Description: how to read SYNOP BUFR messages.
  *
  */
 

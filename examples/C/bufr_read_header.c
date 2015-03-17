@@ -9,7 +9,7 @@
  */
 
 /*
- * C Implementation: bufr_print_header
+ * C Implementation: bufr_read_header
  *
  * Description: how to read the header of BUFR messages.
  *
