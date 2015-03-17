@@ -9,4 +9,6 @@
 
 . ./include.sh
 
-${examples_dir}f_print_data > /dev/null
+${examples_dir}grib_set_keys > /dev/null
+
+rm -f out.set.grib1

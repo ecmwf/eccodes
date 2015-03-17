@@ -13,13 +13,13 @@ list( APPEND tests
       get_data
       get_pl
       get_pv
-      keys_iterator
+      grib_keys_iterator
       multi_write
       multi
-      nearest
+      grib_nearest
       precision
-      print_data
-      set
+      grib_print_data
+      grib_set_keys
       set_bitmap
       set_missing
       set_pv

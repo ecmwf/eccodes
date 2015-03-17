@@ -42,6 +42,7 @@ list( APPEND tests2
     bufr_filter
     bufr_json
     bufr_ls
+    gts_ls
     bufr_set
     ieee
     grib1to2

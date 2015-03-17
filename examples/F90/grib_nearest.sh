@@ -9,9 +9,4 @@
 
 . ./include.sh
 
-${examples_dir}f_set > /dev/null
-
-${examples_dir}f_set_gvc > /dev/null
-[ -f out_gvc.grib2 ]
-
-rm -f out.set.grib1 out_gvc.grib2
+${examples_dir}f_grib_nearest > /dev/null

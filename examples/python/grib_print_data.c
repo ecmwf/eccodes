@@ -9,10 +9,9 @@
  */
 
 /*
- * C Implementation: print_data
+ * C Implementation: grib_print_data
  *
- * Description: prints all the data contained in a grib file
- *
+ * Description: prints all the data contained in a GRIB file
  *
  *
  */

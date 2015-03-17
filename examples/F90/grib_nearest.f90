@@ -11,7 +11,6 @@
 !
 !
 !
-!
 program find
   use eccodes
   implicit none

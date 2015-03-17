@@ -372,7 +372,7 @@ def grib_write(gribid, fileobj):
     """
     @brief Write a message to a file.
 
-    \b Examples: \ref set.py "set.py"
+    \b Examples: \ref grib_set_keys.py "grib_set_keys.py"
     
     @param gribid     id of the grib loaded in memory
     @param fileobj    python file object
@@ -599,7 +599,7 @@ def grib_keys_iterator_next(iterid):
     """
     @brief Advance to the next keys iterator value.
 
-    \b Examples: \ref keys_iterator.py "keys_iterator.py"
+    \b Examples: \ref grib_keys_iterator.py "grib_keys_iterator.py"
     
     @param iterid      keys iterator id created with @ref grib_keys_iterator_new
     @exception GribInternalError 
@@ -614,7 +614,7 @@ def grib_keys_iterator_delete(iterid):
     """
     @brief Delete a keys iterator and free memory.
 
-    \b Examples: \ref keys_iterator.py "keys_iterator.py"
+    \b Examples: \ref grib_keys_iterator.py "grib_keys_iterator.py"
     
     @param iterid      keys iterator id created with @ref grib_keys_iterator_new
     @exception GribInternalError 
@@ -626,7 +626,7 @@ def grib_keys_iterator_get_name(iterid):
     """
     @brief Get the name of a key from a keys iterator.
 
-    \b Examples: \ref keys_iterator.py "keys_iterator.py"
+    \b Examples: \ref grib_keys_iterator.py "grib_keys_iterator.py"
     
     @param iterid      keys iterator id created with @ref grib_keys_iterator_new
     @return key name to be retrieved
@@ -1345,7 +1345,7 @@ def grib_find_nearest(gribid,inlat,inlon,is_lsm = False,npoints = 1):
 
     The number of nearest points returned can be controled through the npoints function argument.
 
-    \b Examples: \ref nearest.py "nearest.py"
+    \b Examples: \ref grib_nearest.py "grib_nearest.py"
     
     @param gribid     id of the grib loaded in memory
     @param inlat      latitude of the point
@@ -1510,7 +1510,7 @@ def grib_set(gribid,key,value):
 
     The input value can be a python int, float or str.
     
-    \b Examples: \ref set.py "set.py"
+    \b Examples: \ref grib_set_keys.py "grib_set_keys.py"
     
     @see grib_new_from_file, grib_release, grib_get
     

@@ -56,7 +56,7 @@ module eccodes
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref codes_get_error_string.
   !>
-  !> \b Examples: \ref nearest.f90 "nearest.f90"
+  !> \b Examples: \ref grib_nearest.f90 "grib_nearest.f90"
   !>
   !> @see codes_new_from_file, codes_release, codes_get
   !>
@@ -96,7 +96,7 @@ module eccodes
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref codes_get_error_string.
   !>
-  !> \b Examples: \ref nearest.f90 "nearest.f90"
+  !> \b Examples: \ref grib_nearest.f90 "grib_nearest.f90"
   !>
   !> @param[in] gribid     id of the grib loaded in memory
   !> @param[in] is_lsm      .true. if the nearest land point is required otherwise .false.

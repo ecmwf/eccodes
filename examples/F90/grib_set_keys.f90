@@ -7,9 +7,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!
-!  Description: how to set key values.
-!
+!  Description: how to set key values in GRIB messages
 !
 !
 program set
@@ -18,7 +16,6 @@ program set
   integer(kind = 4)    :: centre, date1
   integer              :: infile,outfile
   integer              :: igrib
-
 
   centre = 80
   call current_date(date1)

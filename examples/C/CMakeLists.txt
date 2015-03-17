@@ -7,14 +7,14 @@ configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 # Build the executables used by test scripts
 ################################################
 list( APPEND test_bins
-      nearest
+      grib_nearest
       set_bitmap
       grib_iterator
       grib_get_keys
-      print_data
-      set
+      grib_print_data
+      grib_set_keys
       set_missing
-      keys_iterator
+      grib_keys_iterator
       set_data
       mars_param
       values_check
@@ -27,11 +27,11 @@ list( APPEND test_bins
       list
       get_data
       sections_copy
-      iterator_bitmap
+      grib_iterator_bitmap
       large_grib1
       grib_clone
       check_gaussian_grid
-      ensemble_index
+      grib_ensemble_index
       get_product_kind
       bufr_attributes
       bufr_clone
@@ -58,9 +58,9 @@ endforeach()
 list( APPEND tests
    grib_iterator
    grib_get_keys
-   print_data
-   set
-   keys_iterator
+   grib_print_data
+   grib_set_keys
+   grib_keys_iterator
    multi
    multi_write
    precision

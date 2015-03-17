@@ -1,22 +1,22 @@
 #examples
 
 !GRIB (
-      clone
-      ensemble_index
-      get
+      grib_clone
+      grib_ensemble_index
+      grib_get_keys
       index
-      iterator_bitmap
-      iterator
-      keys_iterator
+      grib_iterator_bitmap
+      grib_iterator
+      grib_keys_iterator
       multi_write
       multi
-      nearest
+      grib_nearest
       precision
-      print_data
+      grib_print_data
       set_bitmap
       set_data
       set_pv
-      set
+      grib_set_keys
     )
 BUFR (
       bufr_attributes
