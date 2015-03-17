@@ -2,14 +2,14 @@
 AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@ @FORCE_32_CFLAGS@
 
 TESTS = copy_message.sh grib_get_keys.sh get_data.sh get_pl.sh get_pv.sh grib_keys_iterator.sh \
-        nearest.sh precision.sh multi_write.sh multi.sh print_data.sh grib_set_keys.sh \
+        nearest.sh precision.sh multi_write.sh multi.sh grib_print_data.sh grib_set_keys.sh \
         set_bitmap.sh set_missing.sh set_pv.sh samples.sh count_messages.sh read_message.sh \
         read_from_file.sh index.sh get_set_uuid.sh bufr_attributes.sh bufr_clone.sh \
         bufr_expanded.sh bufr_get_keys.sh bufr_print_header.sh bufr_print_data.sh \
         bufr_set_keys.sh bufr_keys_iterator.sh bufr_subset.sh get_product_kind.sh bufr_read_temp.sh
 
 noinst_PROGRAMS  = f_index f_copy_message f_grib_get_keys f_get_data f_get_pl f_get_pv f_grib_keys_iterator \
-                   f_multi_write f_multi f_nearest f_precision f_print_data f_grib_set_keys f_set_bitmap f_set_missing \
+                   f_multi_write f_multi f_nearest f_precision f_grib_print_data f_grib_set_keys f_set_bitmap f_set_missing \
                    f_set_pv f_samples f_count_messages f_read_message f_read_from_file f_new_from_file \
                    f_copy_namespace f_get_set_uuid f_set_gvc f_grib_clone f_bufr_clone f_bufr_expanded f_bufr_get_keys  \
                    f_bufr_print_header f_bufr_print_data f_bufr_set_keys f_bufr_keys_iterator f_bufr_subset f_bufr_attributes \
@@ -26,7 +26,7 @@ f_multi_write_SOURCES=multi_write.f90
 f_multi_SOURCES=multi.f90
 f_nearest_SOURCES=nearest.f90
 f_precision_SOURCES=precision.f90
-f_print_data_SOURCES=print_data.f90
+f_grib_print_data_SOURCES=grib_print_data.f90
 f_grib_set_keys_SOURCES=grib_set_keys.f90
 f_set_bitmap_SOURCES=set_bitmap.f90
 f_set_missing_SOURCES=set_missing.f90

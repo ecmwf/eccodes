@@ -1,7 +1,7 @@
 
 AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@
 
-TESTS = grib_iterator.sh grib_get_keys.sh print_data.sh grib_set_keys.sh \
+TESTS = grib_iterator.sh grib_get_keys.sh grib_print_data.sh grib_set_keys.sh \
         grib_keys_iterator.sh multi.sh multi_write.sh precision.sh \
         list.sh large_grib1.sh get_data.sh sections_copy.sh \
         set_missing.sh grib_clone.sh set_pv.sh \
@@ -10,7 +10,7 @@ TESTS = grib_iterator.sh grib_get_keys.sh print_data.sh grib_set_keys.sh \
         bufr_set_keys.sh bufr_subset.sh bufr_keys_iterator.sh bufr_missing.sh \
         bufr_read_temp.sh get_product_kind.sh
 
-noinst_PROGRAMS  = nearest set_bitmap grib_iterator grib_get_keys print_data grib_set_keys set_missing grib_keys_iterator \
+noinst_PROGRAMS  = nearest set_bitmap grib_iterator grib_get_keys grib_print_data grib_set_keys set_missing grib_keys_iterator \
                    set_data mars_param values_check box multi multi2 multi_write precision \
                    set_pv list sections_copy large_grib1 get_data grib_iterator_bitmap grib_clone new_sample \
                    check_gaussian_grid grib_ensemble_index points \
@@ -27,7 +27,7 @@ values_check_SOURCES    = values_check.c
 nearest_SOURCES         = nearest.c
 multi_write_SOURCES     = multi_write.c
 grib_get_keys_SOURCES   = grib_get_keys.c
-print_data_SOURCES      = print_data.c
+grib_print_data_SOURCES = grib_print_data.c
 grib_set_keys_SOURCES   = grib_set_keys.c
 set_missing_SOURCES     = set_missing.c
 set_bitmap_SOURCES      = set_bitmap.c

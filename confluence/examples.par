@@ -12,7 +12,7 @@ GRIB (
       multi
       nearest
       precision
-      print_data
+      grib_print_data
       set_bitmap
       set_data
       set_pv

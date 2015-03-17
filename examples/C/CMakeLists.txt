@@ -11,7 +11,7 @@ list( APPEND test_bins
       set_bitmap
       grib_iterator
       grib_get_keys
-      print_data
+      grib_print_data
       grib_set_keys
       set_missing
       grib_keys_iterator
@@ -58,7 +58,7 @@ endforeach()
 list( APPEND tests
    grib_iterator
    grib_get_keys
-   print_data
+   grib_print_data
    grib_set_keys
    grib_keys_iterator
    multi

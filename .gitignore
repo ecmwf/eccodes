@@ -110,7 +110,7 @@ examples/C/multi_write
 examples/C/nearest
 examples/C/points
 examples/C/precision
-examples/C/print_data
+examples/C/grib_print_data
 examples/C/sections_copy
 examples/C/grib_set_keys
 examples/C/set_bitmap
@@ -256,7 +256,7 @@ examples/C/new_sample
 examples/F90/f_bufr_read_header
 examples/F90/f_bufr_clone
 examples/F90/f_bufr_print_header
-examples/F90/f_clone
+examples/F90/f_grib_clone
 examples/F90/f_copy_message
 examples/F90/f_copy_namespace
 examples/F90/f_count_messages
@@ -273,7 +273,7 @@ examples/F90/f_multi_write
 examples/F90/f_nearest
 examples/F90/f_new_from_file
 examples/F90/f_precision
-examples/F90/f_print_data
+examples/F90/f_grib_print_data
 examples/F90/f_read_from_file
 examples/F90/f_read_message
 examples/F90/f_samples
@@ -285,9 +285,9 @@ examples/F90/f_set_pv
 examples/python/.libs/
 examples/python/my.idx
 examples/python/p_count_messages
-examples/python/p_iterator
-examples/python/p_keys_iterator
-examples/python/p_print_data
+examples/python/p_grib_iterator
+examples/python/p_grib_keys_iterator
+examples/python/p_grib_print_data
 examples/python/*.sh.log
 examples/python/*.sh.trs
 examples/python/test-suite.log

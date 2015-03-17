@@ -8,7 +8,7 @@ configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 ################################################
 list( APPEND test_bins
    grib_keys_iterator
-   print_data
+   grib_print_data
    grib_iterator
    count_messages
 )
@@ -33,7 +33,7 @@ list( APPEND tests
    grib_keys_iterator
    multi_write
    nearest
-   print_data
+   grib_print_data
    samples
    grib_set_keys
    set_missing
