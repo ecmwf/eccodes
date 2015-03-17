@@ -49,60 +49,48 @@ def example():
         # airTemperature, dewpointTemperature,
         # windDirection, windSpeed and pressure. 
         
-        #-------------------------------------------------------
         # Get the number of the temperature significant levels.
-        #------------------------------------------------------
 
         # We find out the number of temperature significant levels by 
         # counting how many pressure values we have on these levels. 
         
         numSigT=codes_get_size(gid,"/verticalSoundingSignificance=4/pressure")
         print  '  Number of temperature significant levels %ld' % (numSigT)
-         
-        # ----------------------------
+       
         # Get pressure 
-        # ----------------------------
-
-        sigt_pres=codes_get_array(gid,"/verticalSoundingSignificance=4/pressure")
+    
+        sigt_pres=codes_get_double_array(gid,"/verticalSoundingSignificance=4/pressure")
         
-        #--------------------------------
         # Get gepotential
-        #--------------------------------
+      
+        sigt_geo=codes_get_double_array(gid,"/verticalSoundingSignificance=4/geopotential")
 
-        sigt_geo=codes_get_array(gid,"/verticalSoundingSignificance=4/geopotential")
-
-        if len(sigt_geo) != sigTNum :
+        if len(sigt_geo) != numSigT :
             print "inconstitent number of geopotential values found!"
             return 1
         
-        #--------------------------------
         # Get temperature 
-        #--------------------------------
+    
+        sigt_t=codes_get_double_array(gid,"/verticalSoundingSignificance=4/airTemperature")
 
-        sigt_t=codes_get_array(gid,"/verticalSoundingSignificance=4/airTemperature")
-
-        if len(sigt_t) != sigTNum :
+        if len(sigt_t) != numSigT :
             print "inconstitent number of temprature values found!"
             return 1
         
-        #--------------------------------
         # Get dew point
-        #--------------------------------
 
-        sigt_td=codes_get_array(gid,"/verticalSoundingSignificance=4/dewpointTemperature")
+        sigt_td=codes_get_double_array(gid,"/verticalSoundingSignificance=4/dewpointTemperature")
 
-        if len(sigt_td) != sigTNum :
+        if len(sigt_td) != numSigT:
             print "inconstitent number of dewpoint temperature  values found!"
             return 1
         
-        #------------------------------------
         # Print the values
-        # -----------------------------------
     
         print "lev  pres    geo    t    td"
         print "-------------------------------"
     
-        for i in xrange(sigTNum):
+        for i in xrange(numSigT):
             print "%3d %6.0f %6.0f %.1f %.1f" % (i+1,sigt_pres[i],sigt_geo[i],sigt_t[i],sigt_td[i])
 
         cnt+=1

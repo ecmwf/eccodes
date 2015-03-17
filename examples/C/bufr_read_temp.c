@@ -55,24 +55,22 @@ int main(int argc,char* argv[])
     printf("message: %d\n",cnt);
 
     /* we need to instruct ecCodes to expand the descriptors 
-       i.e. unpack the data values */
+     i.e. unpack the data values */
     CODES_CHECK(codes_set_long(h,"unpack",1),0);
 
     /* In what follows we rely on the fact that for 
-       temperature significant levels the value of key 
-       verticalSoundingSignificance is 4 (see flag table 8001 for details).
+     temperature significant levels the value of key 
+     verticalSoundingSignificance is 4 (see flag table 8001 for details).
        
-       We also make use of the fact that in our BUFR message
-       verticalSoundingSignificance is always followed by geopotential, 
-       airTemperature, dewpointTemperature,
-       windDirection, windSpeed and pressure. */
+     We also make use of the fact that in our BUFR message
+     verticalSoundingSignificance is always followed by geopotential, 
+     airTemperature, dewpointTemperature,
+     windDirection, windSpeed and pressure. */
 
-    /* -------------------------------------------------------
-       Get the number of the temperature significant levels.
-    ------------------------------------------------------*/
+    /* Get the number of the temperature significant levels.*/
 
     /* We find out the number of temperature significant levels by 
-       counting how many pressure values we have on these levels. */
+     counting how many pressure values we have on these levels. */
          
     sprintf(key_name,"/verticalSoundingSignificance=4/pressure");
     CODES_CHECK(codes_get_size(h,key_name,&sigt_len),0);
@@ -80,15 +78,13 @@ int main(int argc,char* argv[])
     printf("Number of T significant levels: %ld\n",sigt_len);
 
     /* Allocate memory for the values to be read. Each 
-       parameter must have the same number of values. */
+     parameter must have the same number of values. */
     sigt_pres = malloc(sigt_len*sizeof(double));
     sigt_geo = malloc(sigt_len*sizeof(double));
     sigt_t = malloc(sigt_len*sizeof(double));
     sigt_td = malloc(sigt_len*sizeof(double));
    
-    /* --------------------------
-       Get pressure 
-    ----------------------------*/
+    /* Get pressure */
     
     sprintf(key_name,"/verticalSoundingSignificance=4/pressure");
    
@@ -96,13 +92,11 @@ int main(int argc,char* argv[])
     len=sigt_len;
     CODES_CHECK(codes_get_double_array(h,key_name,sigt_pres,&len),0);
 
-    /* --------------------------
-       Get gepotential
-    ----------------------------*/
+    /* Get gepotential */
 
     sprintf(key_name,"/verticalSoundingSignificance=4/geopotential");
 
-    /* Check the size*/
+    /* check the size*/
     CODES_CHECK(codes_get_size(h,key_name,&len),0);
     if(len != sigt_len)
     {
@@ -113,13 +107,11 @@ int main(int argc,char* argv[])
     /* get the values */
     CODES_CHECK(codes_get_double_array(h,key_name,sigt_geo,&len),0);
 
-    /* --------------------------
-       Get temperature
-    ----------------------------*/
+    /* Get temperature */
 
     sprintf(key_name,"/verticalSoundingSignificance=4/airTemperature");
 
-    /* Check the size*/
+    /* check the size*/
     if(len != sigt_len)
     {
       printf("inconsistent number of temperature values found!\n");
@@ -129,14 +121,11 @@ int main(int argc,char* argv[])
     /* get the values */
     CODES_CHECK(codes_get_double_array(h,key_name,sigt_t,&len),0);
 
-
-    /* --------------------------
-       Get dew point
-    ----------------------------*/
+    /* Get dew point */
 
     sprintf(key_name,"/verticalSoundingSignificance=4/dewpointTemperature");
 
-    /* Check the size*/
+    /* check the size*/
     if(len != sigt_len)
     {
       printf("inconsistent number of dewpoint temperature values found!\n");
@@ -146,10 +135,7 @@ int main(int argc,char* argv[])
     /* get the values */
     CODES_CHECK(codes_get_double_array(h,key_name,sigt_td,&len),0);
 
-
-    /*--------------------------------
-      Print the values
-    ---------------------------------*/
+    /* Print the values */
     
     printf("lev  pres    geo    t    td\n");
     printf("-------------------------------\n");
