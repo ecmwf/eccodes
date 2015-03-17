@@ -16,7 +16,7 @@ GRIB (
       set_bitmap
       set_data
       set_pv
-      set
+      grib_set_keys
     )
 !BUFR (
       bufr_attributes

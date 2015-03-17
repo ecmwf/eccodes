@@ -35,7 +35,7 @@ list( APPEND tests
    nearest
    print_data
    samples
-   set
+   grib_set_keys
    set_missing
    binary_message
    set_bitmap

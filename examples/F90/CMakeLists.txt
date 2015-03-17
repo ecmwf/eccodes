@@ -19,7 +19,7 @@ list( APPEND tests
       nearest
       precision
       print_data
-      set
+      grib_set_keys
       set_bitmap
       set_missing
       set_pv

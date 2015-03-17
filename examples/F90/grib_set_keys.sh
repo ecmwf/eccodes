@@ -9,7 +9,7 @@
 
 . ./include.sh
 
-${examples_dir}f_set > /dev/null
+${examples_dir}f_grib_set_keys > /dev/null
 
 ${examples_dir}f_set_gvc > /dev/null
 [ -f out_gvc.grib2 ]

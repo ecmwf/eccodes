@@ -9,9 +9,9 @@
  */
 
 /*
- * C Implementation: set
+ * C Implementation: grib_set_keys
  *
- * Description: how to set key values.
+ * Description: how to set key values in GRIB messages
  *
  */
 #include <stdio.h>

@@ -372,7 +372,7 @@ def grib_write(gribid, fileobj):
     """
     @brief Write a message to a file.
 
-    \b Examples: \ref set.py "set.py"
+    \b Examples: \ref grib_set_keys.py "grib_set_keys.py"
     
     @param gribid     id of the grib loaded in memory
     @param fileobj    python file object
@@ -1510,7 +1510,7 @@ def grib_set(gribid,key,value):
 
     The input value can be a python int, float or str.
     
-    \b Examples: \ref set.py "set.py"
+    \b Examples: \ref grib_set_keys.py "grib_set_keys.py"
     
     @see grib_new_from_file, grib_release, grib_get
     

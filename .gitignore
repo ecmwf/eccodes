@@ -112,7 +112,7 @@ examples/C/points
 examples/C/precision
 examples/C/print_data
 examples/C/sections_copy
-examples/C/set
+examples/C/grib_set_keys
 examples/C/set_bitmap
 examples/C/set_data
 examples/C/set_missing
@@ -277,7 +277,7 @@ examples/F90/f_print_data
 examples/F90/f_read_from_file
 examples/F90/f_read_message
 examples/F90/f_samples
-examples/F90/f_set
+examples/F90/f_grib_set_keys
 examples/F90/f_set_bitmap
 examples/F90/f_set_gvc
 examples/F90/f_set_missing
