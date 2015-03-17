@@ -4,7 +4,7 @@ AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@
 TESTS = grib_clone.sh count_messages.sh grib_get_keys.sh index.sh grib_iterator.sh \
         grib_keys_iterator.sh multi_write.sh grib_nearest.sh grib_print_data.sh \
         samples.sh grib_set_keys.sh set_missing.sh binary_message.sh set_bitmap.sh \
-        bufr_print_header.sh bufr_print_data.sh bufr_clone.sh bufr_get_keys.sh \
+        bufr_read_header.sh bufr_read_synop.sh bufr_clone.sh bufr_get_keys.sh \
         bufr_set_keys.sh bufr_expanded.sh  bufr_keys_iterator.sh bufr_subset.sh \
         bufr_attributes.sh get_product_kind.sh bufr_read_temp.sh
 TESTS_ENVIRONMENT = TOPBUILDDIR=$(top_builddir) PYTHON=$(PYTHON)
@@ -21,7 +21,7 @@ DEPENDENCIES = $(LDADD)
 EXTRA_DIST = $(TESTS) include.sh grib_clone.py count_messages.py grib_get_keys.py index.py grib_iterator.py \
              grib_keys_iterator.py multi_write.py \
              grib_nearest.py grib_print_data.py samples.py grib_set_keys.py set_missing.py binary_message.py set_pv.py set_bitmap.py \
-             bufr_print_header.py  bufr_print_data.py  bufr_clone.py bufr_get_keys.py bufr_set_keys.py \
+             bufr_read_header.py  bufr_read_synop.py  bufr_clone.py bufr_get_keys.py bufr_set_keys.py \
              bufr_expanded.py  bufr_keys_iterator.py bufr_subset.py bufr_attributes.py \
              get_product_kind.py bufr_read_temp.py \
              CMakeLists.txt include.ctest.sh.in 
