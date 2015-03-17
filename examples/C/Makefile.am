@@ -1,14 +1,14 @@
 
 AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@
 
-TESTS = iterator.sh grib_get_keys.sh print_data.sh set.sh keys_iterator.sh multi.sh multi_write.sh \
+TESTS = grib_iterator.sh grib_get_keys.sh print_data.sh set.sh keys_iterator.sh multi.sh multi_write.sh \
         precision.sh list.sh large_grib1.sh get_data.sh sections_copy.sh set_missing.sh grib_clone.sh set_pv.sh \
         check_gaussian_grids.sh \
         bufr_attributes.sh bufr_clone.sh bufr_expanded.sh bufr_get_keys.sh bufr_read_header.sh bufr_read_synop.sh \
         bufr_set_keys.sh bufr_subset.sh bufr_keys_iterator.sh bufr_missing.sh bufr_read_temp.sh \
         get_product_kind.sh
 
-noinst_PROGRAMS  = nearest set_bitmap iterator grib_get_keys print_data set set_missing keys_iterator \
+noinst_PROGRAMS  = nearest set_bitmap grib_iterator grib_get_keys print_data set set_missing keys_iterator \
                    set_data mars_param values_check box multi multi2 multi_write precision \
                    set_pv list sections_copy large_grib1 get_data iterator_bitmap grib_clone new_sample \
                    check_gaussian_grid ensemble_index points \
@@ -32,7 +32,7 @@ set_bitmap_SOURCES      = set_bitmap.c
 multi_SOURCES           = multi.c
 multi2_SOURCES          = multi2.c
 keys_iterator_SOURCES   = keys_iterator.c
-iterator_SOURCES        = iterator.c
+grib_iterator_SOURCES   = grib_iterator.c
 iterator_bitmap_SOURCES = iterator_bitmap.c
 set_pv_SOURCES          = set_pv.c
 points_SOURCES          = points.c

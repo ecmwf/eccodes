@@ -526,7 +526,7 @@ def grib_iterator_new(gribid,mode):
     The geoiterator can be used to go through all the geopoints in a message and
     retrieve the values corresponding to those geopoints.
 
-    \b Examples: \ref iterator.py "iterator.py"
+    \b Examples: \ref grib_iterator.py "grib_iterator.py"
 
     @param gribid  id of the grib loaded in memory
     @param mode    flags for future use
@@ -541,7 +541,7 @@ def grib_iterator_delete(iterid):
     """
     @brief Delete a geoiterator and free memory.
 
-    \b Examples: \ref iterator.py "iterator.py"
+    \b Examples: \ref grib_iterator.py "grib_iterator.py"
 
     @param iterid  geoiterator id
     @exception GribInternalError 
@@ -553,7 +553,7 @@ def grib_iterator_next(iterid):
     """
     @brief Retrieve the next value from a geoiterator.
 
-    \b Examples: \ref iterator.py "iterator.py"
+    \b Examples: \ref grib_iterator.py "grib_iterator.py"
 
     @param iterid geoiterator id
     @return tuple with the latitude, longitude and value
@@ -583,7 +583,7 @@ def grib_keys_iterator_new(gribid,namespace=None):
     that namespace are returned. Example namespaces are "ls" (to get the same
     default keys as the grib_ls) and "mars" to get the keys used by mars.
 
-    \b Examples: \ref iterator.py "iterator.py"
+    \b Examples: \ref grib_iterator.py "grib_iterator.py"
 
     @param gribid      id of the grib loaded in memory
     @param namespace   the namespace of the keys to search for (all the keys if None)

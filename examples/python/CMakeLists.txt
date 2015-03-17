@@ -9,7 +9,7 @@ configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 list( APPEND test_bins
    keys_iterator
    print_data
-   iterator
+   grib_iterator
    count_messages
 )
 foreach( tool ${test_bins} )
@@ -29,7 +29,7 @@ list( APPEND tests
    count_messages
    grib_get_keys
    index
-   iterator
+   grib_iterator
    keys_iterator
    multi_write
    nearest

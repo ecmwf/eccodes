@@ -9,9 +9,9 @@
  */
 
 /*
- * C Implementation: iterator
+ * C Implementation: grib_iterator
  *
- * Description: how to use an iterator on lat/lon/values.
+ * Description: how to use an iterator on lat/lon/values for GRIB messages
  *
  */
 

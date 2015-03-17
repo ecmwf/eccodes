@@ -9,7 +9,7 @@ configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 list( APPEND test_bins
       nearest
       set_bitmap
-      iterator
+      grib_iterator
       grib_get_keys
       print_data
       set
@@ -56,7 +56,7 @@ endforeach()
 # Now add each test (shell scripts)
 #################################################
 list( APPEND tests
-   iterator
+   grib_iterator
    grib_get_keys
    print_data
    set
