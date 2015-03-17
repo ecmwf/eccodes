@@ -7,10 +7,10 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!  Description: how to get values using keys.
+!  Description: how to get values using keys from GRIB messages
 !
 !
-program get
+program grib_get_keys
   use eccodes
   implicit none
   
@@ -120,4 +120,4 @@ program get
   
   call codes_close_file(ifile)
   
-end program get
+end program grib_get_keys

@@ -164,7 +164,7 @@ def gts_new_from_file(fileobj, headers_only = False):
     Any attempt to retrieve data values keys when in the headers only mode will
     result in a key not found error.
     
-    \b Examples: \ref get.py "get.py"
+    \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
     
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
@@ -198,7 +198,7 @@ def any_new_from_file(fileobj, headers_only = False):
     The message can be accessed through its id and it will be available\n
     until @ref codes_release is called.\n
 
-    \b Examples: \ref get.py "get.py"
+    \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
 
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
@@ -229,7 +229,7 @@ def bufr_new_from_file(fileobj, headers_only = False):
     Any attempt to retrieve data values keys when in the headers only mode will
     result in a key not found error.
     
-    \b Examples: \ref get.py "get.py"
+    \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
     
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
@@ -260,7 +260,7 @@ def grib_new_from_file(fileobj, headers_only = False):
     Any attempt to retrieve data values keys when in the headers only mode will
     result in a key not found error.
     
-    \b Examples: \ref get.py "get.py"
+    \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
     
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
@@ -312,7 +312,7 @@ def grib_release(gribid):
     """
     @brief Free the memory for the message referred as gribid.
     
-    \b Examples: \ref get.py "get.py"
+    \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
     
     @param gribid      id of the grib loaded in memory
     @exception GribInternalError 
@@ -416,7 +416,7 @@ def grib_get_size(gribid,key):
     """
     @brief Get the size of an array key.
 
-    \b Examples: \ref get.py "get.py",\ref count_messages.py "count_messages.py"
+    \b Examples: \ref grib_get_keys.py "grib_get_keys.py",\ref count_messages.py "count_messages.py"
     
     @param gribid      id of the grib loaded in memory
     @param key         name of the key
@@ -1418,7 +1418,7 @@ def grib_get(gribid,key, ktype=None):
     
     The \em gribid references a grib message loaded in memory.
     
-    \b Examples: \ref get.py "get.py", \ref print_data.py "print_data.py"
+    \b Examples: \ref grib_get_keys.py "grib_get_keys.py", \ref print_data.py "print_data.py"
     
     @see grib_new_from_file, grib_release, grib_set
     

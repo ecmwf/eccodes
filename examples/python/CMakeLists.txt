@@ -27,7 +27,7 @@ endforeach()
 list( APPEND tests
    clone
    count_messages
-   get
+   grib_get_keys
    index
    iterator
    keys_iterator

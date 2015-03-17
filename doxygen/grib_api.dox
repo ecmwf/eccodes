@@ -24,7 +24,7 @@ giving access to the main features of the C library.
 
 The library is designed to access and modify messages in both editions with the same
 \ref get_set "function calls" using a set of \ref keys to access the coded information 
-( examples: \ref get.f90 "get.f90" \ref set.f90 "set.f90", \ref get.c "get.c", \ref set.c "set.c", \ref grib_get_examples "grib_get", \ref grib_set_examples "grib_set" ). 
+( examples: \ref grib_get_keys.f90 "grib_get_keys.f90" \ref set.f90 "set.f90", \ref grib_get_keys.c "grib_get_keys.c", \ref set.c "set.c", \ref grib_get_examples "grib_get", \ref grib_set_examples "grib_set" ). 
 
 The \ref keys "keys" available for a message are different depending not only on the edition
 but also and mainly on the type of each message and the information it contains. 

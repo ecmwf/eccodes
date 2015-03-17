@@ -1,14 +1,14 @@
 
 AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@
 
-TESTS = iterator.sh get.sh print_data.sh set.sh keys_iterator.sh multi.sh multi_write.sh \
+TESTS = iterator.sh grib_get_keys.sh print_data.sh set.sh keys_iterator.sh multi.sh multi_write.sh \
         precision.sh list.sh large_grib1.sh get_data.sh sections_copy.sh set_missing.sh clone.sh set_pv.sh \
         check_gaussian_grids.sh \
         bufr_attributes.sh bufr_clone.sh bufr_expanded.sh bufr_get_keys.sh bufr_read_header.sh bufr_read_synop.sh \
         bufr_set_keys.sh bufr_subset.sh bufr_keys_iterator.sh bufr_missing.sh bufr_read_temp.sh \
         get_product_kind.sh
 
-noinst_PROGRAMS  = nearest set_bitmap iterator get print_data set set_missing keys_iterator \
+noinst_PROGRAMS  = nearest set_bitmap iterator grib_get_keys print_data set set_missing keys_iterator \
                    set_data mars_param values_check box multi multi2 multi_write precision \
                    set_pv list sections_copy large_grib1 get_data iterator_bitmap clone new_sample \
                    check_gaussian_grid ensemble_index points \
@@ -24,7 +24,7 @@ mars_param_SOURCES      = mars_param.c
 values_check_SOURCES    = values_check.c
 nearest_SOURCES         = nearest.c
 multi_write_SOURCES     = multi_write.c
-get_SOURCES             = get.c
+grib_get_keys_SOURCES   = grib_get_keys.c
 print_data_SOURCES      = print_data.c
 set_SOURCES             = set.c
 set_missing_SOURCES     = set_missing.c

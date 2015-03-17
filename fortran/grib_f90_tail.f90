@@ -488,7 +488,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> \b Examples: \ref get.f90 "get.f90"
+  !> \b Examples: \ref grib_get_keys.f90 "grib_get_keys.f90"
   !>
   !> @param ifile       id of the opened file to be used in all the file functions.
   !> @param filename    name of the file to be open
@@ -1202,7 +1202,7 @@
   !> If the \em fileid does not refer to an opened file an error code
   !> is returned in status.\n
   !>
-  !> \b Examples: \ref get.f90 "get.f90"
+  !> \b Examples: \ref grib_get_keys.f90 "grib_get_keys.f90"
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
@@ -1249,7 +1249,7 @@
   !> The message can be accessed through its gribid and it will be available\n
   !> until @ref grib_release is called.\n
   !>
-  !> \b Examples: \ref get.f90 "get.f90"
+  !> \b Examples: \ref grib_get_keys.f90 "grib_get_keys.f90"
   !>
   !> @param ifile     id of the file opened with @ref grib_open_file
   !> @param gribid    id of the grib loaded in memory
@@ -1273,7 +1273,7 @@
   !> The message can be accessed through its gribid and it will be available\n
   !> until @ref grib_release is called.\n
   !>
-  !> \b Examples: \ref get.f90 "get.f90"
+  !> \b Examples: \ref grib_get_keys.f90 "grib_get_keys.f90"
   !>
   !> @param ifile     id of the file opened with @ref grib_open_file
   !> @param gribid    id of the grib loaded in memory
@@ -1297,7 +1297,7 @@
   !> The message can be accessed through its bufrid and it will be available\n
   !> until @ref codes_release is called.\n
   !>
-  !> \b Examples: \ref get.f90 "get.f90"
+  !> \b Examples: \ref grib_get_keys.f90 "grib_get_keys.f90"
   !>
   !> @param ifile     id of the file opened with @ref codes_open_file
   !> @param bufrid    id of the BUFR loaded in memory
@@ -1432,7 +1432,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> \b Examples: \ref get.f90 "get.f90"
+  !> \b Examples: \ref grib_get_keys.f90 "grib_get_keys.f90"
   !>
   !> @param gribid      id of the grib loaded in memory
   !> @param status      GRIB_SUCCESS if OK, integer value on error

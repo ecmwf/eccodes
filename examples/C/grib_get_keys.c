@@ -9,9 +9,9 @@
  */
 
 /*
- * C Implementation: get
+ * C Implementation: grib_get_keys
  *
- * Description: how to get values using keys.
+ * Description: how to get values using keys from GRIB messages
  *
  */
 #include <stdio.h>

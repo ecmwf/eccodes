@@ -9,7 +9,7 @@ configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 list( APPEND tests
       index
       copy_message
-      get
+      grib_get_keys
       get_data
       get_pl
       get_pv

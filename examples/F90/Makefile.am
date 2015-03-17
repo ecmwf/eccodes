@@ -1,13 +1,13 @@
 
 AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@ @FORCE_32_CFLAGS@
 
-TESTS = copy_message.sh get.sh get_data.sh get_pl.sh get_pv.sh keys_iterator.sh \
+TESTS = copy_message.sh grib_get_keys.sh get_data.sh get_pl.sh get_pv.sh keys_iterator.sh \
         nearest.sh precision.sh multi_write.sh multi.sh print_data.sh set.sh set_bitmap.sh set_missing.sh \
         set_pv.sh samples.sh count_messages.sh read_message.sh read_from_file.sh index.sh get_set_uuid.sh \
         bufr_attributes.sh bufr_clone.sh bufr_expanded.sh bufr_get_keys.sh bufr_print_header.sh bufr_print_data.sh bufr_set_keys.sh \
         bufr_keys_iterator.sh bufr_subset.sh get_product_kind.sh bufr_read_temp.sh
 
-noinst_PROGRAMS  = f_index f_copy_message f_get f_get_data f_get_pl f_get_pv f_keys_iterator \
+noinst_PROGRAMS  = f_index f_copy_message f_grib_get_keys f_get_data f_get_pl f_get_pv f_keys_iterator \
                    f_multi_write f_multi f_nearest f_precision f_print_data f_set f_set_bitmap f_set_missing \
                    f_set_pv f_samples f_count_messages f_read_message f_read_from_file f_new_from_file \
                    f_copy_namespace f_get_set_uuid f_set_gvc f_clone f_bufr_clone f_bufr_expanded f_bufr_get_keys  \
@@ -16,7 +16,7 @@ noinst_PROGRAMS  = f_index f_copy_message f_get f_get_data f_get_pl f_get_pv f_k
 
 f_index_SOURCES=index.f90
 f_copy_message_SOURCES=copy_message.f90
-f_get_SOURCES=get.f90
+f_grib_get_keys_SOURCES=grib_get_keys.f90
 f_get_data_SOURCES=get_data.f90
 f_get_pl_SOURCES=get_pl.f90
 f_get_pv_SOURCES=get_pv.f90

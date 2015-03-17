@@ -10,7 +10,7 @@ list( APPEND test_bins
       nearest
       set_bitmap
       iterator
-      get
+      grib_get_keys
       print_data
       set
       set_missing
@@ -57,7 +57,7 @@ endforeach()
 #################################################
 list( APPEND tests
    iterator
-   get
+   grib_get_keys
    print_data
    set
    keys_iterator

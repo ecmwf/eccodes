@@ -5,7 +5,7 @@ that can be taken as a starting point to write more complex programs.\n
 
 \section python Python
 - \ref index.py "index.py" How access a grib file through and index. 
-- \ref get.py "get.py" How to get values through the key names. 
+- \ref grib_get_keys.py "grib_get_keys.py" How to get values through the key names. 
 - \ref print_data.py "print_data.py" How to print all the data contained in a grib file.
 - \ref set.py "set.py" How to set values through the key names.
 - \ref nearest.py "nearest.py" How to find the nearest grid points.
@@ -20,7 +20,7 @@ that can be taken as a starting point to write more complex programs.\n
 
 \section fortran90 Fortran 90
 - \ref index.f90 "index.f90" how to access a grib file through an index.
-- \ref get.f90 "get.f90" how to get values through the key names.
+- \ref grib_get_keys.f90 "grib_get_keys.f90" how to get values through the key names.
 - \ref count_messages.f90 "count_messages.f90" count the messages in a file and loop through them.
 - \ref get_pl.f90 "get_pl.f90" how to get the list of number of points for each parallel in reduced grids.
 - \ref get_pv.f90 "get_pv.f90" how to get the list of levels.
@@ -41,7 +41,7 @@ defined in a message and how to iterate through them.
 - \ref nearest.f90 "nearest.f90" how to find the nearest grid points.
 
 \section C 
-- \ref get.c "get.c"  is an example showing how to get values through the key names.
+- \ref grib_get_keys.c "grib_get_keys.c"  is an example showing how to get values through the key names.
 - \ref set.c "set.c" is an example illustrating how to set values through the key names.
 - \ref keys_iterator.c "keys_iterator.c" explains how to get the names of all the keys 
 defined in a message and how to iterate through them.

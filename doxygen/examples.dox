@@ -1,6 +1,6 @@
 /*! \page examples Grib API examples
 
-\example get.c get.c How to get values through the key names.
+\example grib_get_keys.c grib_get_keys.c How to get values through the key names.
 \example set.c set.c How to set values through the key names.
 \example keys_iterator.c keys_iterator.c How to get the names of all the keys 
 defined in a message and how to iterate through them.
@@ -12,7 +12,7 @@ defined in a message and how to iterate through them.
 \example nearest.c nearest.c How to find the nearest grid points.
 
 \example index.f90 How access a grib file through and index. 
-\example get.f90 How to get values through the key names. 
+\example grib_get_keys.f90 How to get values through the key names. 
 \example count_messages.f90 count the messages in a file and loop through them. 
 \example get_pl.f90 How to get the list of number of points for each parallel in reduced grids.
 \example get_pv.f90 How to get the list of levels.
@@ -42,7 +42,7 @@ defined in a message and how to iterate through them.
 \example print_data_fortran.F print_data_fortran.F How to print all the data from a grib message.
 
 \example index.py How access a grib file through and index. 
-\example get.py How to get values through the key names. 
+\example grib_get_keys.py How to get values through the key names. 
 \example print_data.py How to print all the data contained in a grib file.
 \example set.py How to set values through the key names.
 \example nearest.py How to find the nearest grid points.
