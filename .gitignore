@@ -221,6 +221,8 @@ data/bufr/*.ref
 data/bufr/*.test
 data/bufr/*.json
 data/bufr/*.no
+data/gts/*.DAT
+data/gts/*.ref
 data/.downloaded
 data/budg
 data/*.grib
