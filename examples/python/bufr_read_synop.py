@@ -7,10 +7,15 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
 #
-# Python implementation: bufr_print_data
+# Python implementation: bufr_read_synop
 #
 # Description: how to read data values from BUFR messages. 
 #
+
+# 
+# Please note that SYNOP reports can be encoded in various ways in BUFR. Therefore the code
+# below might not work directly for other types of SYNOP messages than the one used in the
+# example.
 #
 
 import traceback
@@ -30,7 +35,12 @@ def example():
     keys = [
         'blockNumber',
         'stationNumber',
+        'latitude',
+        'longitude',
         'airTemperatureAt2M',
+        'dewpointTemperatureAt2M',
+        'windSpeedAt10M',
+        'windDirectionAt10M'
         ]
         
     cnt=0    
