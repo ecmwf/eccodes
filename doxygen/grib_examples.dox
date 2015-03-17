@@ -26,7 +26,7 @@ that can be taken as a starting point to write more complex programs.\n
 - \ref get_pv.f90 "get_pv.f90" how to get the list of levels.
 - \ref get_data.f90 "get_data.f90" how to get latitude/longitude/values.
 - \ref set.f90 "set.f90" how to set values through the key names.
-- \ref set_bitmap.f90 "set_bitmap.f90" how to set and use a bitmap.
+- \ref grib_set_bitmap.f90 "grib_set_bitmap.f90" how to set and use a bitmap.
 - \ref set_missing.f90 "set_missing.f90" how to set a missing value in the header.
 - \ref set_pv.f90 "set_pv.f90" how to set the list of levels.
 - \ref samples.f90 "samples.f90" how to create a new message from a template.

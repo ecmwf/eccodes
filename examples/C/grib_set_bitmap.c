@@ -9,9 +9,9 @@
  */
 
 /*
- * C Implementation: set_bitmap
+ * C Implementation: grib_set_bitmap
  *
- * Description: how to set a bitmap in a grib message
+ * Description: how to set a bitmap in a GRIB message
  *
  *
  */

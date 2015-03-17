@@ -13,7 +13,7 @@ GRIB (
       grib_nearest
       precision
       grib_print_data
-      set_bitmap
+      grib_set_bitmap
       set_data
       set_pv
       grib_set_keys
