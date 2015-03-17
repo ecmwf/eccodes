@@ -776,8 +776,10 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
 static int number_of_qualifiers=NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES;
 
 static GRIB_INLINE int significanceQualifierIndex(int X,int Y) {
-  int a[]={-1,0,1,-1,-1,-1,-1,-1,2};
-  return Y+a[X]*NUMBER_OF_QUALIFIERS_PER_CATEGORY;
+  int a[]={-1,0,1,-1,2,3,4,5,6};
+  int ret=Y+a[X]*NUMBER_OF_QUALIFIERS_PER_CATEGORY;
+  Assert(ret>0);
+  return ret;
 }
 
 
