@@ -9,17 +9,17 @@ configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 list( APPEND tests
       index
       copy_message
-      get
+      grib_get_keys
       get_data
       get_pl
       get_pv
-      keys_iterator
+      grib_keys_iterator
       multi_write
       multi
-      nearest
+      grib_nearest
       precision
-      print_data
-      set
+      grib_print_data
+      grib_set_keys
       set_bitmap
       set_missing
       set_pv
@@ -28,7 +28,7 @@ list( APPEND tests
       read_message
       read_from_file
       get_set_uuid
-      clone
+      grib_clone
       bufr_attributes
       bufr_clone
       bufr_expanded

@@ -7,9 +7,9 @@ configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 # Build the executables used by test scripts
 ################################################
 list( APPEND test_bins
-   keys_iterator
-   print_data
-   iterator
+   grib_keys_iterator
+   grib_print_data
+   grib_iterator
    count_messages
 )
 foreach( tool ${test_bins} )
@@ -25,17 +25,17 @@ endforeach()
 # Now add each test
 #################################################
 list( APPEND tests
-   clone
+   grib_clone
    count_messages
-   get
+   grib_get_keys
    index
-   iterator
-   keys_iterator
+   grib_iterator
+   grib_keys_iterator
    multi_write
-   nearest
-   print_data
+   grib_nearest
+   grib_print_data
    samples
-   set
+   grib_set_keys
    set_missing
    binary_message
    set_bitmap

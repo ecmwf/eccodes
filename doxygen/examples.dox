@@ -1,18 +1,18 @@
 /*! \page examples Grib API examples
 
-\example get.c get.c How to get values through the key names.
+\example grib_get_keys.c grib_get_keys.c How to get values through the key names.
 \example set.c set.c How to set values through the key names.
-\example keys_iterator.c keys_iterator.c How to get the names of all the keys 
+\example grib_keys_iterator.c grib_keys_iterator.c How to get the names of all the keys 
 defined in a message and how to iterate through them.
-\example iterator.c iterator.c How to use an iterator on latitude, longitude, values.
+\example grib_iterator.c grib_iterator.c How to use an iterator on latitude, longitude, values.
 \example precision.c precision.c How to control precision when coding a grib field.
 \example multi.c multi.c How to decode a grib message containing many fields.
 \example multi_write.c multi_write.c How to encode a grib message containing many fields.
-\example print_data.c print_data.c How to print all the data from a grib message.
-\example nearest.c nearest.c How to find the nearest grid points.
+\example grib_print_data.c grib_print_data.c How to print all the data from a grib message.
+\example grib_nearest.c grib_nearest.c How to find the nearest grid points.
 
 \example index.f90 How access a grib file through and index. 
-\example get.f90 How to get values through the key names. 
+\example grib_get_keys.f90 How to get values through the key names. 
 \example count_messages.f90 count the messages in a file and loop through them. 
 \example get_pl.f90 How to get the list of number of points for each parallel in reduced grids.
 \example get_pv.f90 How to get the list of levels.
@@ -22,15 +22,15 @@ defined in a message and how to iterate through them.
 \example set_missing.f90 How to set a missing value in the header.
 \example set_pv.f90 How to set the list of levels.
 \example samples.f90 How to create a new message from a samples.
-\example clone.f90 How to clone a message.
+\example grib_clone.f90 How to clone a message.
 \example copy_message.f90 How to copy a message in memory and create a new message.
-\example keys_iterator.f90 How to get the names of all the keys
+\example grib_keys_iterator.f90 How to get the names of all the keys
 defined in a message and how to iterate through them.
 \example precision.f90 How to control precision when coding a grib field.
 \example multi_write.f90 How to encode a grib message containing many fields.
 \example multi.f90 How to decode a grib message containing many fields.
-\example print_data.f90 How to print all the data contained in a grib file.
-\example nearest.f90 How to find the nearest grid points.
+\example grib_print_data.f90 How to print all the data contained in a grib file.
+\example grib_nearest.f90 How to find the nearest grid points.
 
 \example get_fortran.F get_fortran.F How to get values through the key names.
 \example set_fortran.F set_fortran.F How to set values through the key names.
@@ -42,16 +42,16 @@ defined in a message and how to iterate through them.
 \example print_data_fortran.F print_data_fortran.F How to print all the data from a grib message.
 
 \example index.py How access a grib file through and index. 
-\example get.py How to get values through the key names. 
-\example print_data.py How to print all the data contained in a grib file.
+\example grib_get_keys.py How to get values through the key names. 
+\example grib_print_data.py How to print all the data contained in a grib file.
 \example set.py How to set values through the key names.
-\example nearest.py How to find the nearest grid points.
+\example grib_nearest.py How to find the nearest grid points.
 \example set_missing.py How to set a missing value in the header.
 \example count_messages.py How to count the messages in a file and loop through them. 
 \example samples.py How to create a new message from a sample.
-\example clone.py How to clone a message.
-\example iterator.py How to use an iterator on latitude, longitude, values.
-\example keys_iterator.py How to get the names of all the keys.
+\example grib_clone.py How to clone a message.
+\example grib_iterator.py How to use an iterator on latitude, longitude, values.
+\example grib_keys_iterator.py How to get the names of all the keys.
 \example multi_write.py How to encode a multi grib message.
 \example set_pv.py How to encode the pv coefficients.
 

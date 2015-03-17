@@ -9,9 +9,9 @@
  */
 
 /*
- * C implementation: bufr_clone
+ * C Implementation: grib_clone
  *
- * Description: how to create new BUFR messages by cloning
+ * Description: How to create a new GRIB message by cloning
  *              an existing message.
  *
  */
@@ -27,13 +27,10 @@ int main(int argc, char *argv[])
 {
     FILE *in = NULL;
     FILE *out = NULL;
-
-    /* message handle. Required in all the eccodes calls acting on a message.*/
     codes_handle *source_handle = NULL;
-
     const void *buffer = NULL;
     size_t size = 0;
-    int i, err = 0;
+    int err = 0;
 
     if (argc != 3) {
         usage(argv[0]);
@@ -43,30 +40,16 @@ int main(int argc, char *argv[])
     in = fopen(argv[1],"r");
     out = fopen(argv[2],"w");
 
-    /* open input and output */
     if (!in || !out) {
         perror("ERROR: unable to open files");
-        if (out) fclose(out);
-        if (in) fclose(in);
-        return 1;
-    }
-
-    /* create a handle for the first message */
-    source_handle = codes_handle_new_from_file(NULL,in,PRODUCT_BUFR,&err);
-
-    if (source_handle == NULL) {
-        perror("ERROR: could not create handle for message");
         fclose(out);
         fclose(in);
         return 1;
     }
 
-    /* create several clones of this message and alter them
-       in different ways */
-
-    for(i=0; i < 3; i++) {
-
-        /* clone the current handle */
+    /* loop over the messages in the source grib and clone them */
+    while ((source_handle = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err))!=NULL)
+    {
         codes_handle *clone_handle = codes_handle_clone(source_handle);
 
         if (clone_handle == NULL) {
@@ -74,26 +57,22 @@ int main(int argc, char *argv[])
             return 1;
         }
 
-        /* This is the place where you may wish to modify the clone
-           E.g. we change the bufrHeaderCentre */
-
-        CODES_CHECK(codes_set_long(clone_handle, "bufrHeaderCentre", 222),0);
+        /* This is the place where you may wish to modify the clone */
+        /* E.g.
+           CODES_CHECK(codes_set_long(clone_handle, "centre", 250),0);
+           etc...
+         */
 
         /* get the coded message in a buffer */
         CODES_CHECK(codes_get_message(clone_handle,&buffer,&size),0);
-
         /* write the buffer to a file */
         if(fwrite(buffer,1,size,out) != size) {
-            perror("ERROR: could not write message to file");
+            perror(argv[1]);
             return 1;
         }
-
-        /* relase the clone's handle */
         codes_handle_delete(clone_handle);
+        codes_handle_delete(source_handle);
     }
-
-    /* release the source's handle */
-    codes_handle_delete(source_handle);
 
     fclose(out);
     fclose(in);

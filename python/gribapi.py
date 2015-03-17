@@ -164,7 +164,7 @@ def gts_new_from_file(fileobj, headers_only = False):
     Any attempt to retrieve data values keys when in the headers only mode will
     result in a key not found error.
     
-    \b Examples: \ref get.py "get.py"
+    \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
     
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
@@ -198,7 +198,7 @@ def any_new_from_file(fileobj, headers_only = False):
     The message can be accessed through its id and it will be available\n
     until @ref codes_release is called.\n
 
-    \b Examples: \ref get.py "get.py"
+    \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
 
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
@@ -229,7 +229,7 @@ def bufr_new_from_file(fileobj, headers_only = False):
     Any attempt to retrieve data values keys when in the headers only mode will
     result in a key not found error.
     
-    \b Examples: \ref get.py "get.py"
+    \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
     
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
@@ -260,7 +260,7 @@ def grib_new_from_file(fileobj, headers_only = False):
     Any attempt to retrieve data values keys when in the headers only mode will
     result in a key not found error.
     
-    \b Examples: \ref get.py "get.py"
+    \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
     
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
@@ -312,7 +312,7 @@ def grib_release(gribid):
     """
     @brief Free the memory for the message referred as gribid.
     
-    \b Examples: \ref get.py "get.py"
+    \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
     
     @param gribid      id of the grib loaded in memory
     @exception GribInternalError 
@@ -372,7 +372,7 @@ def grib_write(gribid, fileobj):
     """
     @brief Write a message to a file.
 
-    \b Examples: \ref set.py "set.py"
+    \b Examples: \ref grib_set_keys.py "grib_set_keys.py"
     
     @param gribid     id of the grib loaded in memory
     @param fileobj    python file object
@@ -416,7 +416,7 @@ def grib_get_size(gribid,key):
     """
     @brief Get the size of an array key.
 
-    \b Examples: \ref get.py "get.py",\ref count_messages.py "count_messages.py"
+    \b Examples: \ref grib_get_keys.py "grib_get_keys.py",\ref count_messages.py "count_messages.py"
     
     @param gribid      id of the grib loaded in memory
     @param key         name of the key
@@ -526,7 +526,7 @@ def grib_iterator_new(gribid,mode):
     The geoiterator can be used to go through all the geopoints in a message and
     retrieve the values corresponding to those geopoints.
 
-    \b Examples: \ref iterator.py "iterator.py"
+    \b Examples: \ref grib_iterator.py "grib_iterator.py"
 
     @param gribid  id of the grib loaded in memory
     @param mode    flags for future use
@@ -541,7 +541,7 @@ def grib_iterator_delete(iterid):
     """
     @brief Delete a geoiterator and free memory.
 
-    \b Examples: \ref iterator.py "iterator.py"
+    \b Examples: \ref grib_iterator.py "grib_iterator.py"
 
     @param iterid  geoiterator id
     @exception GribInternalError 
@@ -553,7 +553,7 @@ def grib_iterator_next(iterid):
     """
     @brief Retrieve the next value from a geoiterator.
 
-    \b Examples: \ref iterator.py "iterator.py"
+    \b Examples: \ref grib_iterator.py "grib_iterator.py"
 
     @param iterid geoiterator id
     @return tuple with the latitude, longitude and value
@@ -583,7 +583,7 @@ def grib_keys_iterator_new(gribid,namespace=None):
     that namespace are returned. Example namespaces are "ls" (to get the same
     default keys as the grib_ls) and "mars" to get the keys used by mars.
 
-    \b Examples: \ref iterator.py "iterator.py"
+    \b Examples: \ref grib_iterator.py "grib_iterator.py"
 
     @param gribid      id of the grib loaded in memory
     @param namespace   the namespace of the keys to search for (all the keys if None)
@@ -599,7 +599,7 @@ def grib_keys_iterator_next(iterid):
     """
     @brief Advance to the next keys iterator value.
 
-    \b Examples: \ref keys_iterator.py "keys_iterator.py"
+    \b Examples: \ref grib_keys_iterator.py "grib_keys_iterator.py"
     
     @param iterid      keys iterator id created with @ref grib_keys_iterator_new
     @exception GribInternalError 
@@ -614,7 +614,7 @@ def grib_keys_iterator_delete(iterid):
     """
     @brief Delete a keys iterator and free memory.
 
-    \b Examples: \ref keys_iterator.py "keys_iterator.py"
+    \b Examples: \ref grib_keys_iterator.py "grib_keys_iterator.py"
     
     @param iterid      keys iterator id created with @ref grib_keys_iterator_new
     @exception GribInternalError 
@@ -626,7 +626,7 @@ def grib_keys_iterator_get_name(iterid):
     """
     @brief Get the name of a key from a keys iterator.
 
-    \b Examples: \ref keys_iterator.py "keys_iterator.py"
+    \b Examples: \ref grib_keys_iterator.py "grib_keys_iterator.py"
     
     @param iterid      keys iterator id created with @ref grib_keys_iterator_new
     @return key name to be retrieved
@@ -744,7 +744,7 @@ def grib_clone(gribid_src):
     Create a copy of a given message (\em gribid_src) resulting in a new
     message in memory (\em gribid_dest) identical to the original one.
     
-    \b Examples: \ref clone.py "clone.py"
+    \b Examples: \ref grib_clone.py "grib_clone.py"
     
     @param gribid_src     id of grib to be cloned
     @return id of clone
@@ -1345,7 +1345,7 @@ def grib_find_nearest(gribid,inlat,inlon,is_lsm = False,npoints = 1):
 
     The number of nearest points returned can be controled through the npoints function argument.
 
-    \b Examples: \ref nearest.py "nearest.py"
+    \b Examples: \ref grib_nearest.py "grib_nearest.py"
     
     @param gribid     id of the grib loaded in memory
     @param inlat      latitude of the point
@@ -1418,7 +1418,7 @@ def grib_get(gribid,key, ktype=None):
     
     The \em gribid references a grib message loaded in memory.
     
-    \b Examples: \ref get.py "get.py", \ref print_data.py "print_data.py"
+    \b Examples: \ref grib_get_keys.py "grib_get_keys.py", \ref print_data.py "print_data.py"
     
     @see grib_new_from_file, grib_release, grib_set
     
@@ -1496,7 +1496,7 @@ def grib_set_values(gribid,values):
 
     The elements of the input sequence need to be convertible to a double.
 
-    \b Examples: \ref clone.py "clone.py", \ref samples.py "samples.py"
+    \b Examples: \ref grib_clone.py "grib_clone.py", \ref samples.py "samples.py"
 
     @param gribid   id of the grib loaded in memory
     @param values   array of values to set as tuple, list, array or numpy.ndarray
@@ -1510,7 +1510,7 @@ def grib_set(gribid,key,value):
 
     The input value can be a python int, float or str.
     
-    \b Examples: \ref set.py "set.py"
+    \b Examples: \ref grib_set_keys.py "grib_set_keys.py"
     
     @see grib_new_from_file, grib_release, grib_get
     

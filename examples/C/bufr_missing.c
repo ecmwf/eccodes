@@ -21,10 +21,10 @@
 int main(int argc,char* argv[])
 {
     FILE* in = NULL;
-    
+
     /* message handle. Required in all the eccodes calls acting on a message.*/
     codes_handle* h=NULL;
-    
+
     double doubleVal;
     int i, err=0;
     int cnt=0;
@@ -36,7 +36,7 @@ int main(int argc,char* argv[])
         printf("ERROR: unable to open file %s\n", infile);
         return 1;
     }
-    
+
     /* loop over the messages in the bufr file */
     while ((h = codes_handle_new_from_file(NULL,in,PRODUCT_BUFR,&err)) != NULL || err != CODES_SUCCESS)
     {
@@ -45,17 +45,17 @@ int main(int argc,char* argv[])
             cnt++;
             continue;
         }
-    
+
         printf("message: %d\n",cnt);
-    
+
         /* we need to instruct ecCodes to expand the descriptors 
           i.e. unpack the data values */
         CODES_CHECK(codes_set_long(h,"unpack",1),0);
-    
+
         /* the value of this key is missing in the message*/
         CODES_CHECK(codes_get_double(h,"relativeHumidity",&doubleVal),0);
         printf("  relativeHumidity: %.2f\n",doubleVal);
-        
+
         /* we will print "value missing" */
         if(doubleVal == CODES_MISSING_DOUBLE)
         {
@@ -65,13 +65,13 @@ int main(int argc,char* argv[])
         {   
             printf("   --> value present\n");
         }
-        
+
         /* delete handle */
         codes_handle_delete(h);
-        
+
         cnt++;
     }
-    
+
     fclose(in);
     return 0;
 }

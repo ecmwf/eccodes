@@ -26,17 +26,17 @@ int main(int argc,char* argv[])
 {
     char* filename = NULL;
     FILE* in = NULL;
-    
+
     /* message handle. Required in all the eccodes calls acting on a message.*/
     codes_handle* h=NULL;
-    
+
     double *values = NULL;
     size_t values_len=0;
     int i, err=0;
     int cnt=0;
 
     if (argc!=2) usage(argv[0]);
-    
+
     filename=argv[1];
 
     /* open bufr file */
@@ -45,7 +45,7 @@ int main(int argc,char* argv[])
         printf("ERROR: unable to open file %s\n", filename);
         return 1;
     }
-    
+
     /* loop over the messages in the bufr file */
     while ((h = codes_handle_new_from_file(NULL,in,PRODUCT_BUFR,&err)) != NULL || err != CODES_SUCCESS)
     {
@@ -54,30 +54,30 @@ int main(int argc,char* argv[])
             cnt++;
             continue;
         }
-        
+
         /* get the size of the values array*/
         CODES_CHECK(codes_get_size(h,"numericValues",&values_len),0);    
         printf("  number of expanded values: %ld\n",values_len);    
-    
+
         /* allocate array for data values */
         values = malloc(values_len*sizeof(double));
-      
+
         /* get the exapanded data values*/
         CODES_CHECK(codes_get_double_array(h,"numericValues",values,&values_len),0);
- 
+
         for(i = 0; i < values_len; i++)
         {
             printf("  %.10e\n",values[i]);
         }
-        
+
         free(values);
-        
+
         /* delete handle */
         codes_handle_delete(h);
-        
+
         cnt++;
     }
-    
+
     fclose(in);
     return 0;
 }

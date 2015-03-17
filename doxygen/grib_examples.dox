@@ -5,22 +5,22 @@ that can be taken as a starting point to write more complex programs.\n
 
 \section python Python
 - \ref index.py "index.py" How access a grib file through and index. 
-- \ref get.py "get.py" How to get values through the key names. 
-- \ref print_data.py "print_data.py" How to print all the data contained in a grib file.
+- \ref grib_get_keys.py "grib_get_keys.py" How to get values through the key names. 
+- \ref grib_print_data.py "grib_print_data.py" How to print all the data contained in a grib file.
 - \ref set.py "set.py" How to set values through the key names.
-- \ref nearest.py "nearest.py" How to find the nearest grid points.
+- \ref grib_nearest.py "grib_nearest.py" How to find the nearest grid points.
 - \ref set_missing.py "set_missing.py" How to set a missing value in the header.
 - \ref count_messages.py "count_messages.py" How to count the messages in a file and loop through them. 
 - \ref samples.py "samples.py" How to create a new message from a sample.
-- \ref clone.py "clone.py" How to clone a message.
-- \ref iterator.py "iterator.py" How to use an iterator on latitude, longitude, values.
-- \ref keys_iterator.py "keys_iterator.py" How to get the names of all the keys.
+- \ref grib_clone.py "grib_clone.py" How to clone a message.
+- \ref grib_iterator.py "grib_iterator.py" How to use an iterator on latitude, longitude, values.
+- \ref grib_keys_iterator.py "grib_keys_iterator.py" How to get the names of all the keys.
 - \ref multi_write.py "multi_write.py" How to encode a multi grib message.
 - \ref set_pv.py "set_pv.py" How to encode the pv coefficients.
 
 \section fortran90 Fortran 90
 - \ref index.f90 "index.f90" how to access a grib file through an index.
-- \ref get.f90 "get.f90" how to get values through the key names.
+- \ref grib_get_keys.f90 "grib_get_keys.f90" how to get values through the key names.
 - \ref count_messages.f90 "count_messages.f90" count the messages in a file and loop through them.
 - \ref get_pl.f90 "get_pl.f90" how to get the list of number of points for each parallel in reduced grids.
 - \ref get_pv.f90 "get_pv.f90" how to get the list of levels.
@@ -30,26 +30,26 @@ that can be taken as a starting point to write more complex programs.\n
 - \ref set_missing.f90 "set_missing.f90" how to set a missing value in the header.
 - \ref set_pv.f90 "set_pv.f90" how to set the list of levels.
 - \ref samples.f90 "samples.f90" how to create a new message from a template.
-- \ref clone.f90 "clone.f90" how to clone a message.
+- \ref grib_clone.f90 "grib_clone.f90" how to clone a message.
 - \ref copy_message.f90 "copy_message.f90" how to copy a message in memory and create a new message.
-- \ref keys_iterator.f90 "keys_iterator.f90" how to get the names of all the keys
+- \ref grib_keys_iterator.f90 "grib_keys_iterator.f90" how to get the names of all the keys
 defined in a message and how to iterate through them.
 - \ref precision.f90 "precision.f90" how to control precision when coding a grib field.
 - \ref multi_write.f90 "multi_write.f90" how to encode a grib message containing many fields.
 - \ref multi.f90 "multi.f90" how to decode a grib message containing many fields.
-- \ref print_data.f90 "print_data.f90" how to print all the data contained in a grib file.
-- \ref nearest.f90 "nearest.f90" how to find the nearest grid points.
+- \ref grib_print_data.f90 "grib_print_data.f90" how to print all the data contained in a grib file.
+- \ref grib_nearest.f90 "grib_nearest.f90" how to find the nearest grid points.
 
 \section C 
-- \ref get.c "get.c"  is an example showing how to get values through the key names.
+- \ref grib_get_keys.c "grib_get_keys.c"  is an example showing how to get values through the key names.
 - \ref set.c "set.c" is an example illustrating how to set values through the key names.
-- \ref keys_iterator.c "keys_iterator.c" explains how to get the names of all the keys 
+- \ref grib_keys_iterator.c "grib_keys_iterator.c" explains how to get the names of all the keys 
 defined in a message and how to iterate through them.
-- \ref iterator.c "iterator.c" shows how to use an iterator on latitude, longitude, values.
+- \ref grib_iterator.c "grib_iterator.c" shows how to use an iterator on latitude, longitude, values.
 - \ref precision.c "precision.c" illustrates how to control precision when coding a grib field.
 - \ref multi.c "multi.c" is an example describing how to decode a grib message containing many fields.
-- \ref print_data.c "print_data.c" is an example on how to print all the data contained in a grib file.
-- \ref nearest.c "nearest.c" is an example on how to find the nearest grid points.
+- \ref grib_print_data.c "grib_print_data.c" is an example on how to print all the data contained in a grib file.
+- \ref grib_nearest.c "grib_nearest.c" is an example on how to find the nearest grid points.
 - \ref multi_write.c "multi_write.c" how to encode a grib message containing many fields.
 
 \section fortran77 Fortran 77

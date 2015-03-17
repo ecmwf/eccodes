@@ -26,10 +26,10 @@ int main(int argc,char* argv[])
 {
     FILE* in = NULL;
     FILE* out = NULL;
-    
+
     /* message handle. Required in all the eccodes calls acting on a message.*/
     codes_handle* h=NULL;
-    
+
     long longVal;
     /*double doubleVal;*/
     int i, err=0;
@@ -37,7 +37,7 @@ int main(int argc,char* argv[])
     size_t size = 0;
     char* infile = "../../data/bufr/syno_multi.bufr";
     const void *buffer = NULL;
-    
+
     if (argc != 2) {
         usage(argv[0]);
         return 1;
@@ -52,7 +52,7 @@ int main(int argc,char* argv[])
         if (in) fclose(in);
         return 1;
     }
-    
+
     /* loop over the messages in the bufr file */
     while ((h = codes_handle_new_from_file(NULL,in,PRODUCT_BUFR,&err)) != NULL || err != CODES_SUCCESS)
     {
@@ -61,41 +61,41 @@ int main(int argc,char* argv[])
             cnt++;
             continue;
         }
-    
+
         printf("message: %d\n",cnt);
-    
+
         /* we need to instruct ecCodes to expand the descriptors 
           i.e. unpack the data values */
         /*CODES_CHECK(codes_set_long(h,"unpack",1),0);*/
-    
+
         /* This is the place where you may wish to modify the message*/
         /*E.g. we change the centre  */
-           
+
         /* set bufrHeaderCentre */
         longVal=222;
         CODES_CHECK(codes_set_long(h, "bufrHeaderCentre", longVal),0);
         printf("  set bufrHeaderCentre to: %ld\n",longVal);
-        
+
         /* check bufrHeaderCentre */
         CODES_CHECK(codes_get_long(h,"bufrHeaderCentre",&longVal),0);
         printf("  bufrHeaderCentre's new value is: %ld\n",longVal);
-        
-        
+
+
         /* get the modified message in a buffer */
         CODES_CHECK(codes_get_message(h,&buffer,&size),0);
-       
+
         /* write the buffer to a file */
         if(fwrite(buffer,1,size,out) != size) {
             perror(argv[0]);
             return 1;
         }
- 
+
         /* delete handle */
         codes_handle_delete(h);
-        
+
         cnt++;
     }
-    
+
     fclose(in);
     return 0;
 }

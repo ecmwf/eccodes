@@ -82,7 +82,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref codes_get_error_string.
   !>
-  !> \b Examples: \ref get.f90 "get.f90", \ref print_data.f90 "print_data.f90"
+  !> \b Examples: \ref grib_get_keys.f90 "grib_get_keys.f90", \ref print_data.f90 "print_data.f90"
   !>
   !> @see codes_new_from_file, codes_release, codes_set
   !>

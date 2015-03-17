@@ -25,10 +25,10 @@ void usage(char* prog) {
 int main(int argc,char* argv[])
 {
     FILE* in = NULL;
-    
+
     /* message handle. Required in all the eccodes calls acting on a message.*/
     codes_handle* h=NULL;
-    
+
     long numberOfSubsets=0;
     long longVal;
     /*double doubleVal;*/
@@ -41,7 +41,7 @@ int main(int argc,char* argv[])
         printf("ERROR: unable to open file %s\n", infile);
         return 1;
     }
-    
+
     /* loop over the messages in the bufr file */
     while ((h = codes_handle_new_from_file(NULL,in,PRODUCT_BUFR,&err)) != NULL || err != CODES_SUCCESS)
     {
@@ -50,39 +50,39 @@ int main(int argc,char* argv[])
             cnt++;
             continue;
         }
-    
+
         printf("message: %d\n",cnt);
-        
+
         /* we need to instruct ecCodes to expand all the descriptors i.e. unpack the data values */
         CODES_CHECK(codes_set_long(h,"unpack",1),0);
-    
+
         /* find out the number of subsets */
         CODES_CHECK(codes_get_long(h,"numberOfSubsets",&numberOfSubsets),0);
         printf("  numberOfSubsets: %ld\n",numberOfSubsets);
-    
+
         /* loop over the subsets */
         for(i=1; i <= numberOfSubsets; i++)
         {
             /* specify the subset number */
             CODES_CHECK(codes_set_long(h,"subsetNumber",0),0);
-        
+
             /* read and print some data values */ 
             CODES_CHECK(codes_get_long(h,"blockNumber",&longVal),0);
             printf("  blockNumber: %ld\n",longVal);
-    
+
             CODES_CHECK(codes_get_long(h,"stationNumber",&longVal),0);
             printf("  stationNumber: %ld\n",longVal);
-    
+
             /*CODES_CHECK(codes_get_double(h,"airTemperatureAt2M",&doubleVal),0);
             printf("  airTemperatureAt2M %f\n",doubleVal);*/
         }
-    
+
         /* delete handle */
         codes_handle_delete(h);
-        
+
         cnt++;
     }
-    
+
     fclose(in);
     return 0;
 }
