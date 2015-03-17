@@ -1142,7 +1142,7 @@
 022130|numberOfValidPointsForSpecificBand|long|NUMBER OF VALID POINTS FOR SPECIFIC BAND|Numeric|0|0|10|Numeric|0|4
 022131|rmsSpecificBandSignificantWaveHeight|double|RMS SPECIFIC BAND SIGNIFICANT WAVE HEIGHT|m|3|0|16|m|3|5
 022132|numberOfValidPointsForSpecificBandSignificantWaveHeight|long|NUMBER OF VALID POINTS FOR SPECIFIC BAND SIGNIFICANT WAVE HEIGHT|Numeric|0|0|10|Numeric|0|4
-022133|specificBandNetInstrumentCorrectionForSignficantWaveHeight|double|SPECIFIC BAND NET INSTRUMENT CORRECTION FOR SIGNFICANT WAVE HEIGHT|m|3|-1000|11|m|3|4
+022133|specificBandNetInstrumentCorrectionForSignificantWaveHeight|double|SPECIFIC BAND NET INSTRUMENT CORRECTION FOR SIGNFICANT WAVE HEIGHT|m|3|-1000|11|m|3|4
 022134|numberOfValidPointsForSpecificBandBackscatter|long|NUMBER OF VALID POINTS FOR SPECIFIC BAND BACKSCATTER|Numeric|0|0|10|Numeric|0|4
 022141|seaSurfaceTemperature15DayRunningMean|double|SEA-SURFACE TEMPERATURE (15-DAY RUNNING MEAN)|K|2|0|15|K|2|5
 022142|squareOfSignificantWaveHeight|double|SQUARE OF SIGNIFICANT WAVE HEIGHT|m2|3|-33554432|26|m2|3|8
