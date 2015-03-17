@@ -18,7 +18,7 @@ defined in a message and how to iterate through them.
 \example get_pv.f90 How to get the list of levels.
 \example get_data.f90 How to get latitude/longitude/values.
 \example set.f90 How to set values through the key names.
-\example set_bitmap.f90 How to set and use a bitmap.
+\example grib_set_bitmap.f90 How to set and use a bitmap.
 \example set_missing.f90 How to set a missing value in the header.
 \example set_pv.f90 How to set the list of levels.
 \example samples.f90 How to create a new message from a samples.

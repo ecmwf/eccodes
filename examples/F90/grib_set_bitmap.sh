@@ -8,5 +8,5 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
 . ./include.sh
-${examples_dir}f_set_bitmap > /dev/null
+${examples_dir}f_grib_set_bitmap > /dev/null
 rm -f out.bmp.grib

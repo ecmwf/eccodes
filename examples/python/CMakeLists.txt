@@ -38,7 +38,7 @@ list( APPEND tests
    grib_set_keys
    set_missing
    binary_message
-   set_bitmap
+   grib_set_bitmap
    bufr_attributes
    bufr_clone
    bufr_expanded

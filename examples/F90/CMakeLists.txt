@@ -20,7 +20,7 @@ list( APPEND tests
       precision
       grib_print_data
       grib_set_keys
-      set_bitmap
+      grib_set_bitmap
       set_missing
       set_pv
       samples
