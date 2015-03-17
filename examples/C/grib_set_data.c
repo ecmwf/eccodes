@@ -9,7 +9,7 @@
  */
 
 /*
- * C Implementation: set_data
+ * C Implementation: grib_set_data
  *
  * Description: set the data contained in a GRIB file
  *

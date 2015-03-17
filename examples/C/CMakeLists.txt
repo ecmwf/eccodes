@@ -15,7 +15,7 @@ list( APPEND test_bins
       grib_set_keys
       set_missing
       grib_keys_iterator
-      set_data
+      grib_set_data
       mars_param
       values_check
       box

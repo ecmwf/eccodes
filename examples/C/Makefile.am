@@ -11,7 +11,7 @@ TESTS = grib_iterator.sh grib_get_keys.sh grib_print_data.sh grib_set_keys.sh \
         bufr_read_temp.sh get_product_kind.sh
 
 noinst_PROGRAMS  = grib_nearest grib_set_bitmap grib_iterator grib_get_keys grib_print_data grib_set_keys set_missing grib_keys_iterator \
-                   set_data mars_param values_check box multi multi2 multi_write precision \
+                   grib_set_data mars_param values_check box multi multi2 multi_write precision \
                    set_pv list sections_copy large_grib1 get_data grib_iterator_bitmap grib_clone new_sample \
                    check_gaussian_grid grib_ensemble_index points \
                    bufr_attributes bufr_clone bufr_expanded  bufr_get_keys bufr_read_header bufr_read_synop \
@@ -21,7 +21,7 @@ noinst_PROGRAMS  = grib_nearest grib_set_bitmap grib_iterator grib_get_keys grib
 #bin_PROGRAMS            = points
 
 box_SOURCES             = box.c
-set_data_SOURCES        = set_data.c
+grib_set_data_SOURCES   = grib_set_data.c
 mars_param_SOURCES      = mars_param.c
 values_check_SOURCES    = values_check.c
 grib_nearest_SOURCES    = grib_nearest.c

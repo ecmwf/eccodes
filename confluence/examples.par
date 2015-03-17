@@ -14,7 +14,7 @@ GRIB (
       precision
       grib_print_data
       grib_set_bitmap
-      set_data
+      grib_set_data
       set_pv
       grib_set_keys
     )
