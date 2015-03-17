@@ -18,7 +18,6 @@ INCLUDES =  -I$(top_builddir)/src
 LDADD = $(top_builddir)/src/libeccodes.la
 DEPENDENCIES = $(LDADD)
 
-<<<<<<< HEAD
 EXTRA_DIST = $(TESTS) include.sh grib_clone.py count_messages.py grib_get_keys.py index.py \
              grib_iterator.py grib_keys_iterator.py multi_write.py \
              grib_nearest.py grib_print_data.py samples.py grib_set_keys.py \
