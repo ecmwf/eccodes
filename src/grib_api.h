@@ -406,9 +406,6 @@ int grib_count_in_file(grib_context* c, FILE* f,int* n);
 * @return            the new handle, NULL if the resource is invalid or a problem is encountered
 */
 grib_handle* grib_handle_new_from_file(grib_context* c, FILE* f, int* error);
-grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind product, int* error);
-grib_handle* codes_grib_handle_new_from_file(grib_context* c, FILE* f, int* error);
-grib_handle* codes_bufr_handle_new_from_file(grib_context* c, FILE* f, int* error);
 
 
 /**
