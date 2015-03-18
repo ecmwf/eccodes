@@ -19,7 +19,7 @@ list( APPEND test_bins
       mars_param
       values_check
       box
-      multi
+      grib_multi
       multi2
       multi_write
       precision
@@ -61,7 +61,7 @@ list( APPEND tests
    grib_print_data
    grib_set_keys
    grib_keys_iterator
-   multi
+   grib_multi
    multi_write
    precision
    list

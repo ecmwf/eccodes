@@ -9,6 +9,17 @@
 
 . ./include.sh
 
-${examples_dir}f_multi > multi.out
-diff multi.out ${data_dir}/multi.ok
-rm -f multi.out
+if [ ! -f "${data_dir}/multi.grib2" ] 
+then
+  echo "SKIP test 1: $0"
+else
+  ${examples_dir}grib_multi > /dev/null
+fi
+
+if [ ! -f "${data_dir}/multi_created.grib2" ]
+then
+  echo "SKIP test 2: $0"
+else
+  ${examples_dir}multi2 > /dev/null
+fi
+

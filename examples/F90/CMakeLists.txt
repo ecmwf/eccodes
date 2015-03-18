@@ -15,7 +15,7 @@ list( APPEND tests
       get_pv
       grib_keys_iterator
       multi_write
-      multi
+      grib_multi
       grib_nearest
       precision
       grib_print_data

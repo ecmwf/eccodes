@@ -36,7 +36,7 @@ that can be taken as a starting point to write more complex programs.\n
 defined in a message and how to iterate through them.
 - \ref precision.f90 "precision.f90" how to control precision when coding a grib field.
 - \ref multi_write.f90 "multi_write.f90" how to encode a grib message containing many fields.
-- \ref multi.f90 "multi.f90" how to decode a grib message containing many fields.
+- \ref grib_multi.f90 "grib_multi.f90" how to decode a grib message containing many fields.
 - \ref grib_print_data.f90 "grib_print_data.f90" how to print all the data contained in a grib file.
 - \ref grib_nearest.f90 "grib_nearest.f90" how to find the nearest grid points.
 
@@ -47,7 +47,7 @@ defined in a message and how to iterate through them.
 defined in a message and how to iterate through them.
 - \ref grib_iterator.c "grib_iterator.c" shows how to use an iterator on latitude, longitude, values.
 - \ref precision.c "precision.c" illustrates how to control precision when coding a grib field.
-- \ref multi.c "multi.c" is an example describing how to decode a grib message containing many fields.
+- \ref grib_multi.c "grib_multi.c" is an example describing how to decode a grib message containing many fields.
 - \ref grib_print_data.c "grib_print_data.c" is an example on how to print all the data contained in a grib file.
 - \ref grib_nearest.c "grib_nearest.c" is an example on how to find the nearest grid points.
 - \ref multi_write.c "multi_write.c" how to encode a grib message containing many fields.

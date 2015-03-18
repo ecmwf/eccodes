@@ -102,7 +102,7 @@ examples/C/grib_keys_iterator
 examples/C/large_grib1
 examples/C/list
 examples/C/mars_param
-examples/C/multi
+examples/C/grib_multi
 examples/C/multi2
 examples/C/multi_write
 examples/C/grib_nearest

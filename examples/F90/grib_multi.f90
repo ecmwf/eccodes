@@ -13,7 +13,6 @@
 !               For all the tools default is multi support ON.
 !
 !
-!
 program multi
   use eccodes
   implicit none
@@ -46,4 +45,3 @@ program multi
   call codes_close_file(ifile)
 
 end program multi
-

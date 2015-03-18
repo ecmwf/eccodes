@@ -9,13 +9,12 @@
  */
 
 /*
- * C Implementation: multi  
+ * C Implementation: grib_multi  
  *
- * Description: How to decode grib messages containing multiple
+ * Description: How to decode GRIB messages containing multiple
  *              fields. Try to turn on and off multi support to
  *              see the difference. Default is OFF.
  *  			For all the tools defalut is multi support ON.
- *
  *
  */
 #include <stdio.h>
@@ -66,4 +65,3 @@ int main(int argc, char** argv)
     fclose(in);
     return 0;
 }
-
