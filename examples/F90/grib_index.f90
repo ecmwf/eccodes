@@ -7,7 +7,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!  Description: How to create and use and index to access messages from a file.
+!  Description: How to create and use an index to access GRIB messages from a file.
 !               Demo also loading and writing an index from a file.
 !
 !

@@ -11,7 +11,7 @@ defined in a message and how to iterate through them.
 \example grib_print_data.c grib_print_data.c How to print all the data from a grib message.
 \example grib_nearest.c grib_nearest.c How to find the nearest grid points.
 
-\example index.f90 How access a grib file through and index. 
+\example grib_index.f90 How access a grib file through and index. 
 \example grib_get_keys.f90 How to get values through the key names. 
 \example count_messages.f90 count the messages in a file and loop through them. 
 \example get_pl.f90 How to get the list of number of points for each parallel in reduced grids.

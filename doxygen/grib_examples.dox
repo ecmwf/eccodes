@@ -19,7 +19,7 @@ that can be taken as a starting point to write more complex programs.\n
 - \ref grib_set_pv.py "grib_set_pv.py" How to encode the pv coefficients.
 
 \section fortran90 Fortran 90
-- \ref index.f90 "index.f90" how to access a grib file through an index.
+- \ref grib_index.f90 "grib_index.f90" how to access a grib file through an index.
 - \ref grib_get_keys.f90 "grib_get_keys.f90" how to get values through the key names.
 - \ref count_messages.f90 "count_messages.f90" count the messages in a file and loop through them.
 - \ref get_pl.f90 "get_pl.f90" how to get the list of number of points for each parallel in reduced grids.

@@ -7,7 +7,7 @@ configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 # Build the executables used by test scripts
 ################################################
 list( APPEND tests
-      index
+      grib_index
       copy_message
       grib_get_keys
       get_data

@@ -4,7 +4,7 @@ GRIB (
       grib_clone
       grib_ensemble_index
       grib_get_keys
-      index
+      grib_index
       grib_iterator_bitmap
       grib_iterator
       grib_keys_iterator

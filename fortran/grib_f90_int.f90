@@ -14,7 +14,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> \b Examples: \ref index.f90 "index.f90"
+  !> \b Examples: \ref grib_index.f90 "grib_index.f90"
   !>
   !> @param  indexid   id of an index created from a file. The index must have been created with the key in argument.
   !> @param key        key for wich the values are returned
@@ -33,7 +33,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> \b Examples: \ref index.f90 "index.f90"
+  !> \b Examples: \ref grib_index.f90 "grib_index.f90"
   !>
   !> @param  indexid     id of an index created from a file. The index must have been created with the key in argument.
   !> @param key        key for which the number of values is computed
@@ -50,7 +50,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> \b Examples: \ref index.f90 "index.f90"
+  !> \b Examples: \ref grib_index.f90 "grib_index.f90"
   !>
   !> @param  indexid   id of an index created from a file. The index must have been created with the key in argument.
   !> @param key        key to be selected

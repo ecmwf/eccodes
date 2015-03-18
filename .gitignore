@@ -265,7 +265,7 @@ examples/F90/f_get_product_kind
 examples/F90/f_get_pl
 examples/F90/f_get_pv
 examples/F90/f_get_set_uuid
-examples/F90/f_index
+examples/F90/f_grib_index
 examples/F90/f_grib_keys_iterator
 examples/F90/f_grib_multi
 examples/F90/f_grib_multi_write

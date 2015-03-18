@@ -28,7 +28,7 @@ list( APPEND tests
    grib_clone
    count_messages
    grib_get_keys
-   index
+   grib_index
    grib_iterator
    grib_keys_iterator
    grib_multi_write

@@ -929,7 +929,7 @@ def grib_index_new_from_file(filename, keys):
     """
     @brief Create a new index from a file.
 
-    \b Examples: \ref index.py "index.py"
+    \b Examples: \ref grib_index.py "grib_index.py"
 
     @param filename   path of the file to index on
     @param keys       sequence of keys to index on
@@ -946,7 +946,7 @@ def grib_index_add_file(indexid, filename):
     """
     @brief Add a file to an index.
 
-    \b Examples: \ref index.py "index.py"
+    \b Examples: \ref grib_index.py "grib_index.py"
 
     @param indexid    id of the index to add the file to
     @param filename   path of the file to be added to index
@@ -960,7 +960,7 @@ def grib_index_release(indexid):
     """
     @brief Delete an index.
 
-    \b Examples: \ref index.py "index.py"
+    \b Examples: \ref grib_index.py "grib_index.py"
     
     @param indexid   id of an index created from a file.
     @exception GribInternalError 
@@ -972,7 +972,7 @@ def grib_index_get_size(indexid,key):
     """
     @brief Get the number of distinct values for the index key. The key must belong to the index.
     
-    \b Examples: \ref index.py "index.py"
+    \b Examples: \ref grib_index.py "grib_index.py"
     
     @param indexid    id of an index created from a file. The index must have been created on the given key.
     @param key        key for which the number of values is computed
@@ -990,7 +990,7 @@ def grib_index_get_long(indexid,key):
     
     This function is used when the type of the key was explicitly defined as long or when the native type of the key is long.
     
-    \b Examples: \ref index.py "index.py"
+    \b Examples: \ref grib_index.py "grib_index.py"
     
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key for wich the values are returned
@@ -1019,7 +1019,7 @@ def grib_index_get_string(indexid,key):
 
     This function is used when the type of the key was explicitly defined as string or when the native type of the key is string.
     
-    \b Examples: \ref index.py "index.py"
+    \b Examples: \ref grib_index.py "grib_index.py"
     
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key for wich the values are returned
@@ -1050,7 +1050,7 @@ def grib_index_get_double(iid,key):
     
     This function is used when the type of the key was explicitly defined as double or when the native type of the key is double.
     
-    \b Examples: \ref index.py "index.py"
+    \b Examples: \ref grib_index.py "grib_index.py"
     
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key for wich the values are returned
@@ -1080,7 +1080,7 @@ def grib_index_select_long(indexid,key,val):
     
     The key must have been created with integer type or have integer as native type if the type was not explicitly defined in the index creation.
     
-    \b Examples: \ref index.py "index.py"
+    \b Examples: \ref grib_index.py "grib_index.py"
     
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key to be selected
@@ -1096,7 +1096,7 @@ def grib_index_select_double(iid,key,val):
     
     The key must have been created with integer type or have integer as native type if the type was not explicitly defined in the index creation.
     
-    \b Examples: \ref index.py "index.py"
+    \b Examples: \ref grib_index.py "grib_index.py"
     
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key to be selected
@@ -1116,7 +1116,7 @@ def grib_index_select_string(indexid,key,val):
     exit with an error message.\n Otherwise the error message can be
     gathered with @ref grib_get_error_string.
     
-    \b Examples: \ref index.py "index.py"
+    \b Examples: \ref grib_index.py "grib_index.py"
     
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key to be selected
@@ -1134,7 +1134,7 @@ def grib_new_from_index(indexid):
     
     The message can be accessed through its gribid and it will be available until @ref grib_release is called.
     
-    \b Examples: \ref index.py "index.py"
+    \b Examples: \ref grib_index.py "grib_index.py"
     
     @param indexid   id of an index created from a file.
     @return id of the grib loaded in memory or None if end of index
@@ -1567,7 +1567,7 @@ def grib_index_get(indexid,key, ktype=str):
     """
     @brief Get the distinct values of an index key. The key must belong to the index.
     
-    \b Examples: \ref index.py "index.py"
+    \b Examples: \ref grib_index.py "grib_index.py"
     
     @param indexid   id of an index created from a file. The index must have been created on the given key.
     @param key       key for which the values are returned
@@ -1596,7 +1596,7 @@ def grib_index_select(indexid,key,value):
     """
     @brief Select the message subset with key==value. 
     
-    \b Examples: \ref index.py "index.py"
+    \b Examples: \ref grib_index.py "grib_index.py"
     
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key to be selected
@@ -1619,7 +1619,7 @@ def grib_index_write(indexid, filename):
     
     An index can be loaded back from an index file with \ref grib_index_read.
 
-    \b Examples: \ref index.py "index.py"
+    \b Examples: \ref grib_index.py "grib_index.py"
 
     @param indexid    id of the index
     @param filename   path of file to save the index to
@@ -1632,7 +1632,7 @@ def grib_index_read(filename):
     """
     @brief Loads an index previously saved with \ref grib_index_write to a file.
 
-    \b Examples: \ref index.py "index.py"
+    \b Examples: \ref grib_index.py "grib_index.py"
 
     @param filename    path of file to load the index from
     @return id of the loaded index
