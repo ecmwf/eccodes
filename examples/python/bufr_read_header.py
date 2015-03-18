@@ -8,7 +8,7 @@
 
 
 #
-# Python implementation: bufr_print_header
+# Python implementation: bufr_read_header
 #
 # Description: how to read the header from BUFR messages. 
 #

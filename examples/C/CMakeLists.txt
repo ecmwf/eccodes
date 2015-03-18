@@ -8,14 +8,14 @@ configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 ################################################
 list( APPEND test_bins
       grib_nearest
-      set_bitmap
+      grib_set_bitmap
       grib_iterator
       grib_get_keys
       grib_print_data
       grib_set_keys
       set_missing
       grib_keys_iterator
-      set_data
+      grib_set_data
       mars_param
       values_check
       box
@@ -23,7 +23,7 @@ list( APPEND test_bins
       multi2
       multi_write
       precision
-      set_pv
+      grib_set_pv
       list
       get_data
       sections_copy
@@ -70,7 +70,7 @@ list( APPEND tests
    set_missing
    grib_clone
    sections_copy
-   set_pv
+   grib_set_pv
    check_gaussian_grids
    bufr_attributes
    bufr_clone

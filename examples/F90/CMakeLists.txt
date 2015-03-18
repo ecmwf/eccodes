@@ -20,9 +20,9 @@ list( APPEND tests
       precision
       grib_print_data
       grib_set_keys
-      set_bitmap
+      grib_set_bitmap
       set_missing
-      set_pv
+      grib_set_pv
       samples
       count_messages
       read_message
@@ -34,8 +34,8 @@ list( APPEND tests
       bufr_expanded
       bufr_get_keys
       bufr_keys_iterator
-      bufr_print_header 
-      bufr_print_data
+      bufr_read_header 
+      bufr_read_synop
       bufr_read_temp
       bufr_set_keys
       bufr_subset

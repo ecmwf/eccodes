@@ -8,12 +8,12 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FORTRAN 90 implementation: bufr_print_header
+! FORTRAN 90 implementation: bufr_read_header
 !
 ! Description: how to read the header of BUFR messages.
 !
 !
-program bufr_print_header
+program bufr_read_header
 use eccodes
 implicit none
 integer            :: ifile
@@ -74,4 +74,4 @@ integer(kind=4)    :: numberofsubsets
   call codes_close_file(ifile)
  
 
-end program bufr_print_header
+end program bufr_read_header

@@ -15,6 +15,13 @@
  *
  */
 
+/* 
+ * Please note that SYNOP reports can be encoded in various ways in BUFR. Therefore the code
+ * below might not work directly for other types of SYNOP messages than the one used in the
+ * example.
+ */
+
+
 #include "eccodes.h"
 
 void usage(char* prog) {
@@ -55,20 +62,35 @@ int main(int argc,char* argv[])
         /* we need to instruct ecCodes to unpack the data values */
         CODES_CHECK(codes_set_long(h,"unpack",1),0);
     
-        /* read and print some data values. This example was written for a SYNOP
-           BUFR file!! */ 
-    
+        /* station id*/     
         CODES_CHECK(codes_get_long(h,"blockNumber",&longVal),0);
         printf("  blockNumber: %ld\n",longVal);
     
         CODES_CHECK(codes_get_long(h,"stationNumber",&longVal),0);
         printf("  stationNumber: %ld\n",longVal);
     
-        /* in the current BUFR message this key represents the 2m temperature. 
-           it might not be available in other type of SYNOP messages */
+        /* location*/     
+        CODES_CHECK(codes_get_double(h,"latitude",&doubleVal),0);
+        printf("  latitude: %f\n",doubleVal);
+    
+        CODES_CHECK(codes_get_double(h,"longitude",&doubleVal),0);
+        printf("  longitude: %f\n",doubleVal);
+    
+        /* 2m temperature */
         CODES_CHECK(codes_get_double(h,"airTemperatureAt2M",&doubleVal),0);
         printf("  airTemperatureAt2M %f\n",doubleVal);
     
+        /* 2m dewpoint temperature */
+        CODES_CHECK(codes_get_double(h,"dewpointTemperatureAt2M",&doubleVal),0);
+        printf("  dewpointTemperatureAt2M %f\n",doubleVal);
+    
+        /* 10 wind */
+        CODES_CHECK(codes_get_double(h,"windSpeedAt10M",&doubleVal),0);
+        printf("  windSpeedAt10M %f\n",doubleVal);
+        
+        CODES_CHECK(codes_get_double(h,"windDirectionAt10M",&doubleVal),0);
+        printf("  windDirectionAt10M %f\n",doubleVal);
+        
         /* delete handle */
         codes_handle_delete(h);
         

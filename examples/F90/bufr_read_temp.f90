@@ -13,7 +13,7 @@
 ! Description: how to read temperature significant levels from TEMP BUFR messages.
 !
 !
-program bufr_print_data
+program bufr_read_temp
 use eccodes
 implicit none
 integer            :: ifile
@@ -148,4 +148,4 @@ character(len=128)   :: keyName
   call codes_close_file(ifile)
  
 
-end program bufr_print_data
+end program bufr_read_temp
