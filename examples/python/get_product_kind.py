@@ -29,7 +29,7 @@ def example():
     while 1:
         id = codes_new_from_file(f, CODES_PRODUCT_ANY)
         if id is None: break
-        
+
         print 'product: ', codes_get(id, 'kindOfProduct', str)
 
         codes_release(id)

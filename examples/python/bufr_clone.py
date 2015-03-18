@@ -23,9 +23,9 @@ from eccodes import *
 INPUT='../../data/bufr/syno_1.bufr'
 OUTPUT='bufr_clone_test_p.clone.bufr'
 VERBOSE=1 # verbose error reporting
-    
+
 def example():
-    
+
     # open bufr file
     fin = open(INPUT)
 
@@ -39,22 +39,22 @@ def example():
     # in different ways
 
     for centre in range(0,3):
-        
+
         # clone the message
         clone_id = codes_clone(gid)
-        
+
         # this is the place where you may wish to modify the clone
         codes_set(clone_id,'bufrHeaderCentre',centre)
- 
+
         # write the cloned message to a file
         codes_write(clone_id,fout)
-        
+
         # relase the clone's handle
         codes_release(clone_id)
-  
+
     # release the source's handle
     codes_release(gid)
-    
+
     fin.close()
     fout.close()
 

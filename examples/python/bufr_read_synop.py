@@ -9,10 +9,10 @@
 #
 # Python implementation: bufr_read_synop
 #
-# Description: how to read data values from BUFR messages. 
+# Description: how to read data values from BUFR messages.
 #
 
-# 
+#
 # Please note that SYNOP reports can be encoded in various ways in BUFR. Therefore the code
 # below might not work directly for other types of SYNOP messages than the one used in the
 # example.
@@ -25,9 +25,9 @@ from eccodes import *
 
 INPUT='../../data/bufr/syno_multi.bufr'
 VERBOSE=1 # verbose error reporting
-    
+
 def example():
-    
+
     # open bufr file
     f = open(INPUT)
 
@@ -42,9 +42,9 @@ def example():
         'windSpeedAt10M',
         'windDirectionAt10M'
         ]
-        
-    cnt=0    
-    
+
+    cnt=0
+
     # loop for the messages in the file
     while 1:
         # get handle for message
@@ -52,11 +52,11 @@ def example():
         if gid is None: break
 
         print "message: %s" % cnt
-        
+
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(gid,'unpack',1);
-        
+        codes_set(gid,'unpack',1)
+
         # print the values for the selected keys from the message
         for key in keys:
             if not codes_is_defined(gid,key): raise Exception("Key: " + key + " was not defined")

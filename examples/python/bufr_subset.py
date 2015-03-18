@@ -20,14 +20,14 @@ from eccodes import *
 
 INPUT='../../data/bufr/synop_multi_subset.bufr'
 VERBOSE=1 # verbose error reporting
-  
+
 def example():
-    
+
     # open bufr file
     f = open(INPUT)
 
-    cnt=0    
-    
+    cnt=0
+
     # loop for the messages in the file
     while 1:
         # get handle for message
@@ -35,37 +35,36 @@ def example():
         if gid is None: break
 
         print "message: %s" % cnt
-        
+
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(gid,'unpack',1);
-         
+        codes_set(gid,'unpack',1)
+
         # find out the number of subsets
         key='numberOfSubsets'
         numberOfSubsets=codes_get(gid,'numberOfSubsets')
         print ' %s: %d' % (key,numberOfSubsets)
-    
+
         # loop over the subsets
         for i in range(numberOfSubsets) :
 
             #specify the subset number
             codes_set(gid,'subsetNumber',0)
-        
-            # read and print some data values 
-            
+
+            # read and print some data values
+
             key='blockNumber'
             val=codes_get(gid,key)
             print '  %s: %d' % (key,val)
-    
+
             key='stationNumber'
             val=codes_get(gid,key)
             print '  %s: %d' % (key,val)
-    
+
             #key='airTemperatureAt2M'
             #val=codes_get(gid,key)
             #print '  %d: %d' % (key,val)
-        
-        
+
         cnt+=1
 
         # delete handle
