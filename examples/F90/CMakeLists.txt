@@ -17,7 +17,7 @@ list( APPEND tests
       grib_multi_write
       grib_multi
       grib_nearest
-      precision
+      grib_precision
       grib_print_data
       grib_set_keys
       grib_set_bitmap

@@ -9,7 +9,7 @@
  */
 
 /*
- * C Implementation: precision
+ * C Implementation: grib_precision
  *
  * Description: how to control decimal precision when packing fields.
  *

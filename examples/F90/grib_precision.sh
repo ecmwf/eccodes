@@ -9,5 +9,5 @@
 
 . ./include.sh
 
-${examples_dir}f_precision > /dev/null
+${examples_dir}f_grib_precision > /dev/null
 rm -f ${data_dir}/regular_latlon_surface_prec.grib1

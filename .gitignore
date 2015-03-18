@@ -107,7 +107,7 @@ examples/C/multi2
 examples/C/grib_multi_write
 examples/C/grib_nearest
 examples/C/points
-examples/C/precision
+examples/C/grib_precision
 examples/C/grib_print_data
 examples/C/sections_copy
 examples/C/grib_set_keys
@@ -271,7 +271,7 @@ examples/F90/f_grib_multi
 examples/F90/f_grib_multi_write
 examples/F90/f_grib_nearest
 examples/F90/f_new_from_file
-examples/F90/f_precision
+examples/F90/f_grib_precision
 examples/F90/f_grib_print_data
 examples/F90/f_read_from_file
 examples/F90/f_read_message

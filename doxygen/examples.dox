@@ -5,7 +5,7 @@
 \example grib_keys_iterator.c grib_keys_iterator.c How to get the names of all the keys 
 defined in a message and how to iterate through them.
 \example grib_iterator.c grib_iterator.c How to use an iterator on latitude, longitude, values.
-\example precision.c precision.c How to control precision when coding a grib field.
+\example grib_precision.c grib_precision.c How to control precision when coding a grib field.
 \example grib_multi.c grib_multi.c How to decode a grib message containing many fields.
 \example grib_multi_write.c grib_multi_write.c How to encode a grib message containing many fields.
 \example grib_print_data.c grib_print_data.c How to print all the data from a grib message.
@@ -26,7 +26,7 @@ defined in a message and how to iterate through them.
 \example copy_message.f90 How to copy a message in memory and create a new message.
 \example grib_keys_iterator.f90 How to get the names of all the keys
 defined in a message and how to iterate through them.
-\example precision.f90 How to control precision when coding a grib field.
+\example grib_precision.f90 How to control precision when coding a grib field.
 \example grib_multi_write.f90 How to encode a grib message containing many fields.
 \example grib_multi.f90 How to decode a grib message containing many fields.
 \example grib_print_data.f90 How to print all the data contained in a grib file.
