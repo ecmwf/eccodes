@@ -9,7 +9,7 @@ TESTS = copy_message.sh grib_get_keys.sh get_data.sh get_pl.sh get_pv.sh grib_ke
         bufr_set_keys.sh bufr_keys_iterator.sh bufr_subset.sh get_product_kind.sh bufr_read_temp.sh
 
 noinst_PROGRAMS  = f_index f_copy_message f_grib_get_keys f_get_data f_get_pl f_get_pv f_grib_keys_iterator \
-                   f_multi_write f_multi f_grib_nearest f_precision f_grib_print_data f_grib_set_keys \
+                   f_multi_write f_grib_multi f_grib_nearest f_precision f_grib_print_data f_grib_set_keys \
                    f_grib_set_bitmap f_set_missing f_grib_set_pv f_samples f_count_messages f_read_message \
                    f_read_from_file f_new_from_file f_copy_namespace f_get_set_uuid f_set_gvc \
                    f_grib_clone f_bufr_clone f_bufr_expanded f_bufr_get_keys f_bufr_read_header \
