@@ -24,7 +24,7 @@ rm -f $fTmp | true
 REDIRECT=/dev/null
 
 #Write the key values into a file
-${examples_dir}/bufr_get_keys 2> $REDIRECT > $fTmp
+${examples_dir}c_bufr_get_keys 2> $REDIRECT > $fTmp
 
 #TODO: check the results
 

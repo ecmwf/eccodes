@@ -23,7 +23,7 @@ REDIRECT=/dev/null
 f=${data_dir}/bufr/syno_1.bufr
 
 #Dump the keys
-${examples_dir}/bufr_keys_iterator $f 2> $REDIRECT > $fTmp
+${examples_dir}c_bufr_keys_iterator $f 2> $REDIRECT > $fTmp
 
 #TODO: check the output
 

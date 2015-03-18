@@ -25,8 +25,8 @@ list( APPEND test_bins
       grib_multi_write
       grib_precision
       grib_set_pv
-      list
-      get_data
+      grib_list
+      grib_get_data
       sections_copy
       grib_iterator_bitmap
       large_grib1
@@ -47,7 +47,7 @@ list( APPEND test_bins
       bufr_subset
 )
 foreach( tool ${test_bins} )
-    ecbuild_add_executable( TARGET    ${tool}
+    ecbuild_add_executable( TARGET    c_${tool}
                             NOINSTALL
                             SOURCES   ${tool}.c
                             LIBS      eccodes
@@ -65,13 +65,13 @@ list( APPEND tests
    grib_multi
    grib_multi_write
    grib_precision
-   list
-   large_grib1
-   get_data
-   set_missing
    grib_clone
-   sections_copy
    grib_set_pv
+   grib_list
+   grib_get_data
+   large_grib1
+   set_missing
+   sections_copy
    check_gaussian_grids
    bufr_attributes
    bufr_clone

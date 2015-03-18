@@ -10,7 +10,7 @@
 . ./include.sh
 
 # The executable should produce a GRIB1 file
-${examples_dir}large_grib1
+${examples_dir}c_large_grib1
 
 # Make sure it can be listed OK
 output=${examples_dir}bigfile.grib

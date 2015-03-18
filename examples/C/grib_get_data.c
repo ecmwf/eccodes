@@ -9,9 +9,9 @@
  */
 
 /*
- * C Implementation: get_data
+ * C Implementation: grib_get_data
  *
- * Description: how to get lat/lon/values.
+ * Description: how to get lat/lon/values from a GRIB message
  *
  */
 #include <stdio.h>

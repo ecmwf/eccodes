@@ -9,7 +9,7 @@
  */
 
 /*
- * C Implementation: list
+ * C Implementation: grib_list
  *
  * Description: how to get values using keys.
  *

@@ -9,6 +9,6 @@
 
 . ./include.sh
 
-${examples_dir}grib_precision > /dev/null
+${examples_dir}c_grib_precision > /dev/null
 
 rm -f out.precision.grib1
