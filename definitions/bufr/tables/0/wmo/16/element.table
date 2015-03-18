@@ -364,7 +364,7 @@
 007040|impactParameter|double|IMPACT PARAMETER|m|1|62000000|22|m|1|8
 007061|depthBelowLandSurface|double|DEPTH BELOW LAND SURFACE|m|2|0|14|m|2|5
 007062|depthBelowWaterSurface|double|DEPTH BELOW SEA/WATER SURFACE|m|1|0|17|m|1|6
-007063|depthBelowWaterSurfaceCm|double|DEPTH BELOW SEA/WATER SURFACE (CM)|m|2|0|20|m|2|7
+007063|depthBelowWaterSurface|double|DEPTH BELOW SEA/WATER SURFACE (CM)|m|2|0|20|m|2|7
 007064|representativeHeightOfSensorAboveStation|long|REPRESENTATIVE HEIGHT OF SENSOR ABOVE STATION|m|0|0|4|m|0|2
 007065|waterPressure|long|WATER PRESSURE|Pa|-3|0|17|Pa|-3|6
 007070|drogueDepth|long|DROGUE DEPTH|m|0|0|10|m|0|4
