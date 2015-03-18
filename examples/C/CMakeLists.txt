@@ -13,6 +13,7 @@ list( APPEND test_bins
       grib_get_keys
       grib_print_data
       grib_set_keys
+      grib_index
       set_missing
       grib_keys_iterator
       grib_set_data

@@ -1,22 +1,74 @@
 
 AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@
 
-TESTS = grib_iterator.sh grib_get_keys.sh grib_print_data.sh grib_set_keys.sh \
-        grib_keys_iterator.sh grib_multi.sh grib_multi_write.sh grib_precision.sh \
-        list.sh large_grib1.sh get_data.sh sections_copy.sh \
-        set_missing.sh grib_clone.sh grib_set_pv.sh \
-        check_gaussian_grids.sh bufr_attributes.sh bufr_clone.sh bufr_expanded.sh \
-        bufr_get_keys.sh bufr_read_header.sh bufr_read_synop.sh \
-        bufr_set_keys.sh bufr_subset.sh bufr_keys_iterator.sh bufr_missing.sh \
-        bufr_read_temp.sh get_product_kind.sh
+TESTS = grib_iterator.sh \
+        grib_get_keys.sh \
+        grib_print_data.sh \
+        grib_set_keys.sh \
+        grib_keys_iterator.sh \
+        grib_multi.sh \
+        grib_multi_write.sh \
+        grib_precision.sh \
+        list.sh \
+        large_grib1.sh \
+        get_data.sh \
+        sections_copy.sh \
+        set_missing.sh \
+        grib_clone.sh \
+        grib_set_pv.sh \
+        check_gaussian_grids.sh \
+        bufr_attributes.sh \
+        bufr_clone.sh \
+        bufr_expanded.sh \
+        bufr_get_keys.sh \
+        bufr_read_header.sh \
+        bufr_read_synop.sh \
+        bufr_set_keys.sh \
+        bufr_subset.sh \
+        bufr_keys_iterator.sh \
+        bufr_missing.sh \
+        bufr_read_temp.sh \
+        get_product_kind.sh
 
-noinst_PROGRAMS  = grib_nearest grib_set_bitmap grib_iterator grib_get_keys grib_print_data \
-                   grib_set_keys set_missing grib_keys_iterator \
-                   grib_set_data mars_param values_check box grib_multi multi2 grib_multi_write grib_precision \
-                   grib_set_pv list sections_copy large_grib1 get_data grib_iterator_bitmap grib_clone new_sample \
-                   check_gaussian_grid grib_ensemble_index points \
-                   bufr_attributes bufr_clone bufr_expanded  bufr_get_keys bufr_read_header bufr_read_synop \
-                   bufr_get_keys bufr_subset bufr_keys_iterator bufr_set_keys bufr_missing bufr_read_temp \
+noinst_PROGRAMS  = grib_nearest \
+                   grib_set_bitmap \
+                   grib_iterator \
+                   grib_get_keys \
+                   grib_print_data \
+                   grib_set_keys \
+                   set_missing \
+                   grib_keys_iterator \
+                   grib_set_data \
+                   grib_index \
+                   mars_param \
+                   values_check \
+                   box \
+                   grib_multi \
+                   multi2 \
+                   grib_multi_write \
+                   grib_precision \
+                   grib_set_pv \
+                   list \
+                   sections_copy \
+                   large_grib1 \
+                   get_data \
+                   grib_iterator_bitmap \
+                   grib_clone new_sample \
+                   check_gaussian_grid \
+                   grib_ensemble_index \
+                   points \
+                   bufr_attributes \
+                   bufr_clone \
+                   bufr_expanded \
+                   bufr_get_keys \
+                   bufr_read_header \
+                   bufr_read_synop \
+                   bufr_get_keys \
+                   bufr_subset \
+                   bufr_keys_iterator \
+                   bufr_set_keys \
+                   bufr_missing \
+                   bufr_read_temp \
                    get_product_kind
 
 #bin_PROGRAMS            = points
@@ -31,6 +83,7 @@ grib_get_keys_SOURCES        = grib_get_keys.c
 grib_print_data_SOURCES      = grib_print_data.c
 grib_set_keys_SOURCES        = grib_set_keys.c
 set_missing_SOURCES          = set_missing.c
+grib_index_SOURCES           = grib_index.c
 grib_set_bitmap_SOURCES      = grib_set_bitmap.c
 grib_multi_SOURCES           = grib_multi.c
 multi2_SOURCES               = multi2.c
