@@ -456,7 +456,7 @@ static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors
       !grib_inline_strcmp(a->name,"GRIB") ||
       !grib_inline_strcmp(a->name,"META")
      ) {
-    depth+=2;
+    depth=2;
     fprintf(self->dumper.out,"%-*s",depth," ");
     fprintf(self->dumper.out,"[\n");
     self->begin=1;

@@ -257,8 +257,10 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
 static void self_clear(grib_context* c,grib_accessor_bufr_data_array* self) {
   grib_context_free(c,self->canBeMissing);
 	grib_vdarray_delete_content(c,self->numericValues);
+	grib_vdarray_delete(c,self->numericValues);
 	if(self->stringValues) grib_sarray_delete(c,self->stringValues);
 	grib_viarray_delete_content(c,self->elementsDescriptorsIndex);
+	grib_viarray_delete(c,self->elementsDescriptorsIndex);
 }
 
 static int  get_native_type(grib_accessor* a){
@@ -835,7 +837,6 @@ static int create_keys(grib_accessor* a) {
 
   grib_accessor* gaGroup=0;
   grib_action creatorGroup = {0, };
-  grib_iarray* groupNumberIndex=0;
   grib_accessor* significanceQualifierGroup[NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES]={0,};
   int significanceQualifierDepth[NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES]={0,};
 
@@ -855,7 +856,6 @@ static int create_keys(grib_accessor* a) {
   creatorGroup.flags     = GRIB_ACCESSOR_FLAG_DUMP;
   creatorGroup.set        = 0;
 
-  groupNumberIndex=grib_iarray_new(c,100,100);
 
   if (self->dataAccessors) grib_accessors_list_delete(c,self->dataAccessors);
   self->dataAccessors=grib_accessors_list_create(c);
