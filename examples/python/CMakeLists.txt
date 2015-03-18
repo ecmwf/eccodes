@@ -31,7 +31,7 @@ list( APPEND tests
    index
    grib_iterator
    grib_keys_iterator
-   multi_write
+   grib_multi_write
    grib_nearest
    grib_print_data
    samples

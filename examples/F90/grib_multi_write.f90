@@ -10,11 +10,11 @@
 !
 !  Description: how to create a multi field message in memory and write
 !               it in a file. The multi field messages can be created
-!               only in grib edition 2.
+!               only in GRIB edition 2.
 !
 !
 !
-program multi_write
+program grib2_multi_write
   use eccodes
   implicit none
   integer                            :: infile,outfile
@@ -48,4 +48,4 @@ program multi_write
   call codes_close_file(infile)
   call codes_close_file(outfile)
 
-end program multi_write
+end program grib2_multi_write

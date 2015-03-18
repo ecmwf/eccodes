@@ -21,7 +21,7 @@ list( APPEND test_bins
       box
       grib_multi
       multi2
-      multi_write
+      grib_multi_write
       precision
       grib_set_pv
       list
@@ -62,7 +62,7 @@ list( APPEND tests
    grib_set_keys
    grib_keys_iterator
    grib_multi
-   multi_write
+   grib_multi_write
    precision
    list
    large_grib1

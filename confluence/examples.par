@@ -8,7 +8,7 @@ GRIB (
       grib_iterator_bitmap
       grib_iterator
       grib_keys_iterator
-      multi_write
+      grib_multi_write
       grib_multi
       grib_nearest
       precision

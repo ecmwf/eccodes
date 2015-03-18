@@ -385,7 +385,7 @@ def grib_multi_write(multigribid, fileobj):
     """
     @brief Write a multi field message to a file.
 
-    \b Examples: \ref multi_write.py "multi_write.py"
+    \b Examples: \ref grib_multi_write.py "grib_multi_write.py"
     
     @param multigribid      id of the multi field grib loaded in memory
     @param fileobj          python file object
@@ -401,7 +401,7 @@ def grib_multi_append(ingribid, startsection, multigribid):
     Only the sections with section number greather or equal "startsection"
     are copied from the input single message to the multi field output grib.
 
-    \b Examples: \ref multi_write.py "multi_write.py"
+    \b Examples: \ref grib_multi_write.py "grib_multi_write.py"
 
     @param ingribid      id of the input single grib
     @param startsection  starting from startsection (included) all the sections are copied 
@@ -890,7 +890,7 @@ def grib_multi_new():
     """
     @brief Create a new multi field and return its id.
 
-    \b Examples: \ref multi_write.py "multi_write.py"
+    \b Examples: \ref grib_multi_write.py "grib_multi_write.py"
 
     @return id of the multi field
     @exception GribInternalError 
@@ -904,7 +904,7 @@ def grib_multi_release(gribid):
     """
     @brief Release a multi field from memory.
 
-    \b Examples: \ref multi_write.py "multi_write.py"
+    \b Examples: \ref grib_multi_write.py "grib_multi_write.py"
 
     @param gribid    id of the multi field we want to release the memory for
     @exception GribInternalError 

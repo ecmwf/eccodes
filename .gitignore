@@ -104,7 +104,7 @@ examples/C/list
 examples/C/mars_param
 examples/C/grib_multi
 examples/C/multi2
-examples/C/multi_write
+examples/C/grib_multi_write
 examples/C/grib_nearest
 examples/C/points
 examples/C/precision
@@ -268,7 +268,7 @@ examples/F90/f_get_set_uuid
 examples/F90/f_index
 examples/F90/f_grib_keys_iterator
 examples/F90/f_grib_multi
-examples/F90/f_multi_write
+examples/F90/f_grib_multi_write
 examples/F90/f_grib_nearest
 examples/F90/f_new_from_file
 examples/F90/f_precision

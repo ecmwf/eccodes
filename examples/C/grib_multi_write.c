@@ -9,9 +9,9 @@
  */
 
 /*
- * C Implementation: multi_write
+ * C Implementation: grib_multi_write
  *
- * Description: How to encode grib2 messages containing multiple fields
+ * Description: How to encode GRIB2 messages containing multiple fields
  *
  */
 #include <stdio.h>

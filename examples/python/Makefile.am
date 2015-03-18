@@ -2,7 +2,7 @@ if WITH_PYTHON
 AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@
 
 TESTS = grib_clone.sh count_messages.sh grib_get_keys.sh index.sh grib_iterator.sh \
-        grib_keys_iterator.sh multi_write.sh grib_nearest.sh grib_print_data.sh \
+        grib_keys_iterator.sh grib_multi_write.sh grib_nearest.sh grib_print_data.sh \
         samples.sh grib_set_keys.sh set_missing.sh binary_message.sh grib_set_bitmap.sh \
         bufr_read_header.sh bufr_read_synop.sh bufr_clone.sh bufr_get_keys.sh \
         bufr_set_keys.sh bufr_expanded.sh  bufr_keys_iterator.sh bufr_subset.sh \
@@ -19,7 +19,7 @@ LDADD = $(top_builddir)/src/libeccodes.la
 DEPENDENCIES = $(LDADD)
 
 EXTRA_DIST = $(TESTS) include.sh grib_clone.py count_messages.py grib_get_keys.py index.py \
-             grib_iterator.py grib_keys_iterator.py multi_write.py \
+             grib_iterator.py grib_keys_iterator.py grib_multi_write.py \
              grib_nearest.py grib_print_data.py samples.py grib_set_keys.py \
              set_missing.py binary_message.py grib_set_pv.py grib_set_bitmap.py \
              bufr_read_header.py  bufr_read_synop.py \

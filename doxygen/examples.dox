@@ -7,7 +7,7 @@ defined in a message and how to iterate through them.
 \example grib_iterator.c grib_iterator.c How to use an iterator on latitude, longitude, values.
 \example precision.c precision.c How to control precision when coding a grib field.
 \example grib_multi.c grib_multi.c How to decode a grib message containing many fields.
-\example multi_write.c multi_write.c How to encode a grib message containing many fields.
+\example grib_multi_write.c grib_multi_write.c How to encode a grib message containing many fields.
 \example grib_print_data.c grib_print_data.c How to print all the data from a grib message.
 \example grib_nearest.c grib_nearest.c How to find the nearest grid points.
 
@@ -27,7 +27,7 @@ defined in a message and how to iterate through them.
 \example grib_keys_iterator.f90 How to get the names of all the keys
 defined in a message and how to iterate through them.
 \example precision.f90 How to control precision when coding a grib field.
-\example multi_write.f90 How to encode a grib message containing many fields.
+\example grib_multi_write.f90 How to encode a grib message containing many fields.
 \example grib_multi.f90 How to decode a grib message containing many fields.
 \example grib_print_data.f90 How to print all the data contained in a grib file.
 \example grib_nearest.f90 How to find the nearest grid points.
@@ -52,7 +52,7 @@ defined in a message and how to iterate through them.
 \example grib_clone.py How to clone a message.
 \example grib_iterator.py How to use an iterator on latitude, longitude, values.
 \example grib_keys_iterator.py How to get the names of all the keys.
-\example multi_write.py How to encode a multi grib message.
+\example grib_multi_write.py How to encode a multi grib message.
 \example grib_set_pv.py How to encode the pv coefficients.
 
 */
