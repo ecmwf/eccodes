@@ -20,7 +20,7 @@ bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor,int cod
 
 bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d) {
 
-  bufr_descriptor* cd=0;
+  bufr_descriptor* cd;
 
   if (!d) return NULL;
 
@@ -82,7 +82,7 @@ int grib_bufr_descriptor_set_code(grib_accessor* tables_accessor,int code,bufr_d
     v->width=d->width;
     v->reference=d->reference;
     v->type=d->type;
-    grib_bufr_descriptor_delete(c,d);
+    grib_bufr_descriptor_delete(d);
   }
   return err;
 }
@@ -103,9 +103,11 @@ void grib_bufr_descriptor_set_scale(bufr_descriptor* v,long scale) {
   v->factor=grib_power(-scale,10);
 }
 
-void grib_bufr_descriptor_delete(grib_context* c,bufr_descriptor* v) {
+void grib_bufr_descriptor_delete(bufr_descriptor* v) {
 
+  grib_context* c=NULL;
   if (!v) return;
+  c=v->context;
 
   grib_context_free(c,v->name);
   grib_context_free(c,v->shortName);

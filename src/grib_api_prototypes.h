@@ -170,7 +170,7 @@ int grib_bufr_descriptor_set_code(grib_accessor *tables_accessor, int code, bufr
 void grib_bufr_descriptor_set_reference(bufr_descriptor *v, double reference);
 void grib_bufr_descriptor_set_width(bufr_descriptor *v, long width);
 void grib_bufr_descriptor_set_scale(bufr_descriptor *v, long scale);
-void grib_bufr_descriptor_delete(grib_context *c, bufr_descriptor *v);
+void grib_bufr_descriptor_delete(bufr_descriptor *v);
 
 /* grib_bufr_descriptors_array.c */
 bufr_descriptors_array *grib_bufr_descriptors_array_new(grib_context *c, size_t size, size_t incsize);
@@ -970,6 +970,8 @@ grib_handle *grib_handle_new_from_samples(grib_context *c, const char *name);
 int grib_write_message(grib_handle *h, const char *file, const char *mode);
 grib_handle *grib_handle_clone(grib_handle *h);
 grib_handle *codes_handle_new_from_file(grib_context *c, FILE *f, ProductKind product, int *error);
+grib_handle *codes_grib_handle_new_from_file(grib_context *c, FILE *f, int *error);
+grib_handle *codes_bufr_handle_new_from_file(grib_context *c, FILE *f, int *error);
 grib_handle *grib_handle_new_from_message_copy(grib_context *c, const void *data, size_t size);
 grib_handle *grib_handle_new_from_partial_message_copy(grib_context *c, const void *data, size_t size);
 grib_handle *grib_handle_new_from_partial_message(grib_context *c, void *data, size_t buflen);

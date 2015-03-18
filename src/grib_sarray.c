@@ -75,7 +75,7 @@ void grib_sarray_delete_content(grib_context* c,grib_sarray* v) {
   if (!v | !v->v) return;
   if (!c) grib_context_get_default();
   for (i=0;i<v->n;i++) {
-    grib_context_free(c,v->v[i]);
+    if (v->v[i]) grib_context_free(c,v->v[i]);
     v->v[i]=0;
   }
   v->n=0;

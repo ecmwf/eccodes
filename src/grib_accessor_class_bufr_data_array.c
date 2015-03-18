@@ -258,7 +258,10 @@ static void self_clear(grib_context* c,grib_accessor_bufr_data_array* self) {
   grib_context_free(c,self->canBeMissing);
 	grib_vdarray_delete_content(c,self->numericValues);
 	grib_vdarray_delete(c,self->numericValues);
-	if(self->stringValues) grib_sarray_delete(c,self->stringValues);
+	if(self->stringValues) {
+    /* grib_sarray_delete_content(c,self->stringValues); */
+    grib_sarray_delete(c,self->stringValues);
+  }
 	grib_viarray_delete_content(c,self->elementsDescriptorsIndex);
 	grib_viarray_delete(c,self->elementsDescriptorsIndex);
 }
@@ -1058,7 +1061,7 @@ static int decode_elements(grib_accessor* a) {
     elementsDescriptorsIndex=grib_iarray_new(c,100,100);
     if (!self->compressedData) {
       dval=grib_darray_new(c,100,100);
-      sval=grib_sarray_new(c,10,10);
+      /* sval=grib_sarray_new(c,10,10); */
     }
     for (i=0;i<numberOfDescriptors;i++) {
       elementIndex=grib_iarray_used_size(elementsDescriptorsIndex);
