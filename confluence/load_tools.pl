@@ -10,13 +10,14 @@ use strict;
 
 #The root page of examples in confluence!!!
 my $rootPage="Command line tools";
+my $unique;
 
 #---------------------------------
 # Read arguments
 #---------------------------------
 
-#GetOptions("inDir=s" => \$inRootDir)
-# 	or die("Error in command line arguments\n");
+GetOptions("unique=s" => \$unique)
+ 	or die("Error in command line arguments\n");
  
 #----------------------------------
 # Dirs
@@ -63,30 +64,36 @@ foreach my $cType (keys %allTools) {
     print "--> Genarate parent page\n";
 
     my $parentPage=parentPageTitle($cType);
-    makeParentPage($rootPage,$parentPage,$htmlDir,$cType,@tools);
-   
+    
+    unless($unique) {
+    	makeParentPage($rootPage,$parentPage,$htmlDir,$cType,@tools);
+    }
+    	
     #--------------------------------
     # Loop for the tools
     #--------------------------------
     
     foreach my $name (@tools) {
     
-        print "-------------------------------\n--> tool: ".$name."\n";
+        if($unique eq "" or $name eq $unique) {
+		
+	    print "-------------------------------\n--> tool: ".$name."\n";
         
-        my $fOut=$htmlDir."/".$cType."_".$name.".html";
-        open(OUT,">$fOut") or die "$fOut: $!"; 
+            my $fOut=$htmlDir."/".$cType."_".$name.".html";
+            open(OUT,">$fOut") or die "$fOut: $!"; 
         
-        my $str=getDoc($name);
+            my $str=getDoc($name);
         
-        $str=$str.getExample($name);
+            $str=$str.getExample($name);
         
-        print OUT $str;
+            print OUT $str;
         
-        close OUT;
+            close OUT;
         
-        #Upload the file to confluence 
-        my $pageTitle=toolsPageTitle($name);
-        confUtils::loadToConf($fOut,$pageTitle,$parentPage);       
+            #Upload the file to confluence 
+            my $pageTitle=toolsPageTitle($name);
+            confUtils::loadToConf($fOut,$pageTitle,$parentPage); 
+	}          
     }
 }    
 
@@ -125,7 +132,7 @@ sub read_config {
         $line =~ s/\"//g;
     
         my ($a)=($line =~ /(\S+)\s*\(/);
-        if($a and $a !~ /\!/) {
+        if($a and ($a !~ /\!/)) {
             $actType=$a;
             #print "type: ".$a."\n";
             #$res{$actType};
