@@ -8,7 +8,7 @@ install( FILES ${definition_files} ${table_files}
 install( FILES installDefinitions.sh
          DESTINATION share/${PROJECT_NAME}/definitions)
 
-install(  DIRECTORY budg bufr cdf common grib1 grib2 gts mars metar taf tide hdf5 wrap
+install(  DIRECTORY budg bufr cdf common grib1 grib2 gts mars tide hdf5 wrap
           DESTINATION share/${PROJECT_NAME}/definitions
           FILES_MATCHING 
           PATTERN "*.def"
