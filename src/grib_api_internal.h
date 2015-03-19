@@ -1371,8 +1371,8 @@ typedef struct grib_smart_table_entry {
 } grib_smart_table_entry;
 
 struct grib_smart_table {
-  char*            filename[2];
-  char*            recomposed_name[2];
+  char*            filename[3];
+  char*            recomposed_name[3];
   grib_smart_table*  next;
   size_t           numberOfEntries;
   grib_smart_table_entry* entries;

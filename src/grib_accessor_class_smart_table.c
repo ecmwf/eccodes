@@ -257,7 +257,10 @@ static grib_smart_table* load_table(grib_accessor_smart_table* self)
         if((filename && next->filename[0] && strcmp(filename,next->filename[0]) == 0) &&
                 ((localFilename==0 && next->filename[1]==NULL) ||
                  ((localFilename!=0 && next->filename[1]!=NULL)
-                  && strcmp(localFilename,next->filename[1]) ==0)) )
+                  && strcmp(localFilename,next->filename[1]) ==0)) &&
+                ((extraFilename==0 && next->filename[2]==NULL) ||
+                 ((extraFilename!=0 && next->filename[2]!=NULL)
+                  && strcmp(extraFilename,next->filename[2]) ==0)) )
             return next;
         next = next->next;
     }
@@ -307,9 +310,18 @@ static int grib_load_smart_table(grib_context* c,const char* filename,
     GRIB_MUTEX_LOCK(&mutex)
     c->smart_table = t;
     GRIB_MUTEX_UNLOCK(&mutex)
-  } else {
+  } else if (t->filename[1] == NULL ){
     t->filename[1]  = grib_context_strdup_persistent(c,filename);
     t->recomposed_name[1]  = grib_context_strdup_persistent(c,recomposed_name);
+    t->next      = c->smart_table;
+    t->numberOfEntries      = size;
+    GRIB_PTHREAD_ONCE(&once,&thread_init)
+    GRIB_MUTEX_LOCK(&mutex)
+    c->smart_table = t;
+    GRIB_MUTEX_UNLOCK(&mutex)
+  } else {
+    t->filename[2]  = grib_context_strdup_persistent(c,filename);
+    t->recomposed_name[2]  = grib_context_strdup_persistent(c,recomposed_name);
   }
 
   lineNumber = 0;

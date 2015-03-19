@@ -69,31 +69,6 @@ static grib_accessor* search(grib_section* s,const char* name,const char* name_s
 	return match;
 }
 
-static void visit(grib_section* s,const char* name,const char* name_space,
-		search_all_callback_proc callback,void *data,int* count)
-{
-
-	grib_accessor* a = s ? s->block->first : NULL;
-
-	if(!s) return ;
-
-	while(a)
-	{
-		grib_section* sub = a->sub_section;
-
-		if(matching(a,name,name_space))
-		{
-			callback(a,data);
-			(*count)++;
-		}
-
-		visit(sub,name,name_space,callback,data,count);
-
-		a = a->next;
-	}
-
-}
-
 static void rebuild_hash_keys (grib_handle* h,grib_section* s)
 {
 	grib_accessor* a = s ? s->block->first : NULL;
