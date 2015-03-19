@@ -313,12 +313,6 @@ static int grib_load_smart_table(grib_context* c,const char* filename,
   } else if (t->filename[1] == NULL ){
     t->filename[1]  = grib_context_strdup_persistent(c,filename);
     t->recomposed_name[1]  = grib_context_strdup_persistent(c,recomposed_name);
-    t->next      = c->smart_table;
-    t->numberOfEntries      = size;
-    GRIB_PTHREAD_ONCE(&once,&thread_init)
-    GRIB_MUTEX_LOCK(&mutex)
-    c->smart_table = t;
-    GRIB_MUTEX_UNLOCK(&mutex)
   } else {
     t->filename[2]  = grib_context_strdup_persistent(c,filename);
     t->recomposed_name[2]  = grib_context_strdup_persistent(c,recomposed_name);

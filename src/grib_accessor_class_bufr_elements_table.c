@@ -315,6 +315,7 @@ static int bufr_get_from_table(grib_accessor* a,bufr_descriptor* v) {
   char** list=0;
   char code[7]={0};
   grib_context* c;
+  char* str=NULL;
 
   grib_trie* table;
 
@@ -332,10 +333,16 @@ static int bufr_get_from_table(grib_accessor* a,bufr_descriptor* v) {
   v->type=convert_type(list[2]);
   v->name=grib_context_strdup(c,list[3]);
   v->units=grib_context_strdup(c,list[4]);
-  v->scale=atol(grib_context_strdup(c,list[5]));
+  str=grib_context_strdup(c,list[5]);
+  v->scale=atol(str);
+  grib_context_free(c,str);
   v->factor=grib_power(-v->scale,10);
-  v->reference=atol(grib_context_strdup(c,list[6]));
-  v->width=atol(grib_context_strdup(c,list[7]));
+  str=grib_context_strdup(c,list[6]);
+  v->reference=atol(str);
+  grib_context_free(c,str);
+  str=grib_context_strdup(c,list[7]);
+  v->width=atol(str);
+  grib_context_free(c,str);
 
   return ret;
 }
