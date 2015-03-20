@@ -14,6 +14,12 @@
  * Description: how to read temperature significant levels from TEMP BUFR messages.
  *
  */
+ 
+/* 
+ * Please note that TEMP reports can be encoded in various ways in BUFR. Therefore the code
+ * below might not work directly for other types of SYNOP messages than the one used in the
+ * example. It is advised to use bufr_dump to understand the structure of the messages.
+ */
 
 #include "eccodes.h"
 
@@ -21,11 +27,9 @@ int main(int argc,char* argv[])
 {
     FILE* in = NULL;
 
-    /* message handle. Required in all the eccodes calls acting on a message.*/
+    /* Message handle. Required in all the eccodes calls acting on a message.*/
     codes_handle* h=NULL;
 
-    char* units= NULL;
-    char* unitsPercent= NULL;
     double *sigt_pres=NULL, *sigt_geo=NULL, *sigt_t=NULL;
     double *sigt_td=NULL;
     long longVal;
@@ -42,7 +46,7 @@ int main(int argc,char* argv[])
         return 1;
     }
 
-    /* loop over the messages in the bufr file */
+    /* Loop over the messages in the bufr file */
     while ((h = codes_handle_new_from_file(NULL,in,PRODUCT_BUFR,&err)) != NULL || err != CODES_SUCCESS)
     {
         if (h == NULL) {
@@ -53,23 +57,25 @@ int main(int argc,char* argv[])
 
         printf("message: %d\n",cnt);
 
-        /* we need to instruct ecCodes to expand the descriptors
+        /* We need to instruct ecCodes to expand the descriptors
            i.e. unpack the data values */
         CODES_CHECK(codes_set_long(h,"unpack",1),0);
 
         /* In what follows we rely on the fact that for
-           temperature significant levels the value of key
-           verticalSoundingSignificance is 4 (see flag table 8001 for details).
-
-           We also make use of the fact that in our BUFR message
-           verticalSoundingSignificance is always followed by geopotential,
-           airTemperature, dewpointTemperature,
-           windDirection, windSpeed and pressure. */
+         * temperature significant levels the value of key
+         * verticalSoundingSignificance is 4 (see flag table 8001 for details).
+         *
+         * In our BUFR message verticalSoundingSignificance is always followed by
+         *    geopotential, airTemperature, dewpointTemperature,
+         *    windDirection, windSpeed and pressure. 
+         * So in order to access any of these keys we need to use the
+         * condition: verticalSoundingSignificance=4.
+         * 
 
         /* Get the number of the temperature significant levels.*/
 
         /* We find out the number of temperature significant levels by
-           counting how many pressure values we have on these levels. */
+         * counting how many pressure values we have on these levels.*/
 
         sprintf(key_name,"/verticalSoundingSignificance=4/pressure");
         CODES_CHECK(codes_get_size(h,key_name,&sigt_len),0);
@@ -77,7 +83,7 @@ int main(int argc,char* argv[])
         printf("Number of T significant levels: %ld\n",sigt_len);
 
         /* Allocate memory for the values to be read. Each
-           parameter must have the same number of values. */
+         * parameter must have the same number of values. */
         sigt_pres = malloc(sigt_len*sizeof(double));
         sigt_geo = malloc(sigt_len*sizeof(double));
         sigt_t = malloc(sigt_len*sizeof(double));
@@ -86,14 +92,14 @@ int main(int argc,char* argv[])
         /* Get pressure */
         sprintf(key_name,"/verticalSoundingSignificance=4/pressure");
 
-        /* get the values */
+        /* Get the values */
         len=sigt_len;
         CODES_CHECK(codes_get_double_array(h,key_name,sigt_pres,&len),0);
 
         /* Get geopotential */
         sprintf(key_name,"/verticalSoundingSignificance=4/geopotential");
 
-        /* check the size*/
+        /* Check the size*/
         CODES_CHECK(codes_get_size(h,key_name,&len),0);
         if(len != sigt_len)
         {
@@ -101,33 +107,33 @@ int main(int argc,char* argv[])
             return 1;
         }
 
-        /* get the values */
+        /* Get the values */
         CODES_CHECK(codes_get_double_array(h,key_name,sigt_geo,&len),0);
 
         /* Get temperature */
         sprintf(key_name,"/verticalSoundingSignificance=4/airTemperature");
 
-        /* check the size*/
+        /* Check the size*/
         if(len != sigt_len)
         {
             printf("inconsistent number of temperature values found!\n");
             return 1;
         }
 
-        /* get the values */
+        /* Get the values */
         CODES_CHECK(codes_get_double_array(h,key_name,sigt_t,&len),0);
 
         /* Get dew point */
         sprintf(key_name,"/verticalSoundingSignificance=4/dewpointTemperature");
 
-        /* check the size*/
+        /* Check the size*/
         if(len != sigt_len)
         {
             printf("inconsistent number of dewpoint temperature values found!\n");
             return 1;
         }
 
-        /* get the values */
+        /* Get the values */
         CODES_CHECK(codes_get_double_array(h,key_name,sigt_td,&len),0);
 
         /* Print the values */
@@ -140,10 +146,10 @@ int main(int argc,char* argv[])
                     i+1,sigt_pres[i],sigt_geo[i],sigt_t[i],sigt_td[i]);
         }
 
-        /* delete handle */
+        /* Delete handle */
         codes_handle_delete(h);
 
-        /*Release memory*/
+        /* Release memory */
         free(sigt_pres);
         free(sigt_geo);
         free(sigt_t);

@@ -15,7 +15,7 @@
 #
 # Please note that SYNOP reports can be encoded in various ways in BUFR. Therefore the code
 # below might not work directly for other types of SYNOP messages than the one used in the
-# example.
+# example. It is advised to use bufr_dump to understand the structure of the messages.
 #
 
 import traceback
@@ -40,9 +40,22 @@ def example():
         'airTemperatureAt2M',
         'dewpointTemperatureAt2M',
         'windSpeedAt10M',
-        'windDirectionAt10M'
+        'windDirectionAt10M',
+        'cloudAmount#1',  #cloud amount (low and mid level)
+        'heightOfBaseOfCloud#1', 
+        'cloudType#1',   #cloud type (low clouds)
+        'cloudType#2',   #cloud type (middle clouds)
+        'cloudType#3'    #cloud type (highclouds)
         ]
 
+    # The cloud information is stored in several blocks in the
+    # SYNOP message and the same key means a different thing in different
+    # parts of the message. In this example we will read the first
+    # cloud block introduced by the key
+    # verticalSignificanceSurfaceObservations=1. 
+    # We know that this is the first occurrence of the keys we want to
+    # read so in the list above we used the # (occurrence) operator accordingly. 
+        
     cnt=0
 
     # loop for the messages in the file

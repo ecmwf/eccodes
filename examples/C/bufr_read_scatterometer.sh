@@ -12,21 +12,21 @@
 
 
 #Define a common label for all the tmp files
-label="bufr_read_synop_test_c"
+label="bufr_read_scatterometer_c"
 
 #Define tmp file
-fTmp=${label}".tmp.txt"
+fTmp=${label}.tmp.txt
 rm -f $fTmp | true
 
-#We check "syno_multi.bufr". The path is
+#We check "asca_139.bufr". The path is
 #hardcoded in the example
 
 REDIRECT=/dev/null
 
-#Write the values into a file and compare with reference
-${examples_dir}c_bufr_read_synop #2> $REDIRECT > $fTmp
+#Write the key values into a file
+${examples_dir}c_bufr_read_scatterometer #2> $REDIRECT > $fTmp
 
-#TODO: check the output
+#TODO: check the results
 
 #cat  $fTmp
 

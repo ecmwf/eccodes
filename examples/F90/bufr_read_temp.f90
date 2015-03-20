@@ -12,7 +12,10 @@
 !
 ! Description: how to read temperature significant levels from TEMP BUFR messages.
 !
-!
+! Please note that SYNOP reports can be encoded in various ways in BUFR. Therefore the code
+! below might not work directly for other types of SYNOP messages than the one used in the
+! example. It is advised to bufr_dump to understand the structure of the messages.
+
 program bufr_read_temp
 use eccodes
 implicit none
@@ -42,11 +45,13 @@ character(len=128)   :: keyName
     ! In what follows we rely on the fact that for 
     ! temperature significant levels the value of key 
     ! verticalSoundingSignificance is 4 (see flag table 8001 for details).
-       
-    ! We also make use of the fact that in our BUFR message
-    ! verticalSoundingSignificance is always followed by geopotential, 
-    ! airTemperature, dewpointTemperature,
-    ! windDirection, windSpeed and pressure. 
+    !
+    ! In our BUFR message verticalSoundingSignificance is always followed by
+    !      geopotential, airTemperature, dewpointTemperature,
+    !      windDirection, windSpeed and pressure. 
+    ! 
+    ! So in order to access any of these keys we need to use the
+    ! condition: verticalSoundingSignificance=4.
 
     ! ---- Get the number of the temperature significant levels ----
 

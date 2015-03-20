@@ -22,6 +22,7 @@ TESTS = grib_iterator.sh \
         bufr_expanded.sh \
         bufr_get_keys.sh \
         bufr_read_header.sh \
+        bufr_read_scatterometer.sh \
         bufr_read_synop.sh \
         bufr_set_keys.sh \
         bufr_subset.sh \
@@ -63,6 +64,7 @@ noinst_PROGRAMS  = c_grib_nearest \
                    c_bufr_expanded \
                    c_bufr_get_keys \
                    c_bufr_read_header \
+                   c_bufr_read_scatterometer \
                    c_bufr_read_synop \
                    c_bufr_get_keys \
                    c_bufr_subset \
@@ -109,6 +111,7 @@ c_bufr_get_keys_SOURCES        = bufr_get_keys.c
 c_bufr_keys_iterator_SOURCES   = bufr_keys_iterator.c
 c_bufr_missing_SOURCES         = bufr_missing.c
 c_bufr_read_header_SOURCES     = bufr_read_header.c
+c_bufr_read_scatterometer_SOURCES = bufr_read_scatterometer.c
 c_bufr_read_synop_SOURCES      = bufr_read_synop.c
 c_bufr_read_temp_SOURCES       = bufr_read_temp.c
 c_bufr_set_keys_SOURCES        = bufr_set_keys.c

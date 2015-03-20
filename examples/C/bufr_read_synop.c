@@ -18,7 +18,7 @@
 /* 
  * Please note that SYNOP reports can be encoded in various ways in BUFR. Therefore the code
  * below might not work directly for other types of SYNOP messages than the one used in the
- * example.
+ * example. It is advised to use bufr_dump to understand the structure of the messages.
  */
 
 
@@ -78,18 +78,46 @@ int main(int argc,char* argv[])
     
         /* 2m temperature */
         CODES_CHECK(codes_get_double(h,"airTemperatureAt2M",&doubleVal),0);
-        printf("  airTemperatureAt2M %f\n",doubleVal);
+        printf("  airTemperatureAt2M: %f\n",doubleVal);
     
         /* 2m dewpoint temperature */
         CODES_CHECK(codes_get_double(h,"dewpointTemperatureAt2M",&doubleVal),0);
-        printf("  dewpointTemperatureAt2M %f\n",doubleVal);
+        printf("  dewpointTemperatureAt2M: %f\n",doubleVal);
     
         /* 10 wind */
         CODES_CHECK(codes_get_double(h,"windSpeedAt10M",&doubleVal),0);
-        printf("  windSpeedAt10M %f\n",doubleVal);
+        printf("  windSpeedAt10M: %f\n",doubleVal);
         
         CODES_CHECK(codes_get_double(h,"windDirectionAt10M",&doubleVal),0);
-        printf("  windDirectionAt10M %f\n",doubleVal);
+        printf("  windDirectionAt10M: %f\n",doubleVal);
+        
+        /* The cloud information is stored in several blocks in the
+         * SYNOP message and the same key means a different thing in different
+         * parts of the message. In this example we will read the first
+         * cloud block introduced by the key
+         * verticalSignificanceSurfaceObservations=1. 
+         * We know that this is the first occurrence of the keys we want to
+         * read so we will use the # (occurrence) operator accordingly. */
+        
+        /* Cloud amount (low and middleclouds) */
+        CODES_CHECK(codes_get_long(h,"cloudAmount#1",&longVal),0);
+        printf("  cloudAmount (low and middle): %ld\n",longVal);
+        
+        /* Height of cloud base */
+        CODES_CHECK(codes_get_long(h,"heightOfBaseOfCloud#1",&longVal),0);
+        printf("  heightOfBaseOfCloud: %ld\n",longVal);
+        
+        /* Cloud type (low clouds) */
+        CODES_CHECK(codes_get_long(h,"cloudType#1",&longVal),0);
+        printf("  cloudType (low): %ld\n",longVal);
+        
+        /* Cloud type (middle clouds) */
+        CODES_CHECK(codes_get_long(h,"cloudType#2",&longVal),0);
+        printf("  cloudType (middle): %ld\n",longVal);
+        
+        /* Cloud type (high clouds) */
+        CODES_CHECK(codes_get_long(h,"cloudType#3",&longVal),0);
+        printf("  cloudType (high): %ld\n",longVal);
         
         /* delete handle */
         codes_handle_delete(h);

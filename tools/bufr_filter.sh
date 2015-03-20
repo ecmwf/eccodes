@@ -19,6 +19,9 @@ else
     mkdir ../data/split
 fi
 
+cat ../data/bufr/syno_1.bufr ../data/bufr/goes_87.bufr ../data/bufr/gosat.bufr > ../data/split/multitype.bufr
+
+
 cat > rules_file <<EOF
 write "../data/split/[bufrHeaderCentre:l]_[dataCategory].bufr[editionNumber]";
 EOF
@@ -26,7 +29,7 @@ EOF
 echo ">bufr_filter rules_file ../data/bufr/multitype.bufr"
 echo ">ls ../data/split"
 
-./bufr_filter rules_file ../data/bufr/multitype.bufr
+./bufr_filter rules_file ../data/split/multitype.bufr
 ls ../data/split
 
 echo "\\endverbatim\\n"
@@ -231,6 +234,39 @@ echo ">bufr_filter rules_file ../data/bufr/temp_101.bufr"
 ./bufr_filter rules_file ../data/bufr/temp_101.bufr
 
 echo "\\endverbatim\\n"
+
+
+# Access by condition 2
+
+echo "-# Another example for accessing keys by condition is to read scatterometer data."
+echo "File asca_139.bufr contains a single message with 2016 subsets in a compressed form."
+echo "In this case each subset has exactly the same structure: they store one location with"
+echo "several beams and one backscatter value in each beam. To print the backScatter values for beamIdentifier=2 from all the subsets" 
+echo "we can simply define the condition like this: \\n"
+
+echo "\\verbatim"
+echo "set unpack=1;"
+echo "print \"/beamIdentifier=2/backscatter=[/beamIdentifier=2/backscatter]\";"
+echo "\\endverbatim\\n"
+
+echo "The result is:"
+echo "\\verbatim"
+
+cat > rules_file <<EOF
+set unpack=1;
+print "/beamIdentifier=2/backscatter=[/beamIdentifier=2/backscatter]";
+EOF
+
+echo ">bufr_filter rules_file ../data/bufr/asca_139.bufr"
+
+./bufr_filter rules_file ../data/bufr/asca_139.bufr > tmp_file
+head tmp_file
+echo " and many more values ......"
+
+echo "\\endverbatim\\n"
+
+rm -f rules_file || true
+rm -f tmp_file || true
 
 
 

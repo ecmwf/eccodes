@@ -14,8 +14,7 @@
  
 ! Please note that SYNOP reports can be encoded in various ways in BUFR. Therefore the code
 ! below might not work directly for other types of SYNOP messages than the one used in the
-! example. 
-
+! example. It is advised to bufr_dump to understand the structure of the messages.
 
 !
 !
@@ -28,6 +27,7 @@ integer            :: ibufr
 integer            :: count=0
 integer(kind=4)    :: blockNumber,stationNumber 
 real(kind=8)       :: lat,lon,t2m,td2m,ws,wdir
+integer(kind=4)    :: cloudAmount,cloudBaseHeight,lowCloud,midCloud,highCloud 
 
   call codes_open_file(ifile,'../../data/bufr/syno_multi.bufr','r')
 
@@ -74,8 +74,35 @@ real(kind=8)       :: lat,lon,t2m,td2m,ws,wdir
     write(*,*) '  windSpeedAt10M:',ws
    
     call codes_get(ibufr,'windDirectionAt10M',wdir);
-    write(*,*) '  windDirectionAt10M',wdir
+    write(*,*) '  windDirectionAt10M:',wdir
    
+    ! The cloud information is stored in several blocks in the
+    ! SYNOP message and the same key means a different thing in different
+    ! parts of the message. In this example we will read the first
+    ! cloud block introduced by the key
+    ! verticalSignificanceSurfaceObservations=1. 
+    ! We know that this is the first occurrence of the keys we want to
+    ! read so we will use the # (occurrence) operator accordingly. 
+        
+    ! Cloud amount (low and middleclouds)
+    call codes_get(ibufr,'cloudAmount#1',cloudAmount)
+    write(*,*) '  cloudAmount (low and middle):',cloudAmount
+        
+    ! Height of cloud base
+    call codes_get(ibufr,'heightOfBaseOfCloud#1',cloudBaseHeight)
+    write(*,*) '  heightOfBaseOfCloud:',cloudBaseHeight
+        
+    ! Cloud type (low clouds)
+    call codes_get(ibufr,'cloudType#1',lowCloud)
+    write(*,*) '  cloudType (low):',lowCloud 
+        
+    ! Cloud type (middle clouds)
+    call codes_get(ibufr,'cloudType#2',midCloud)
+    write(*,*) '  cloudType (middle):',midCloud 
+    
+    ! Cloud type (high clouds)
+    call codes_get(ibufr,'cloudType#3',highCloud)
+    write(*,*) '  cloudType (high):',highCloud 
    
     ! release the bufr message
     call codes_release(ibufr)
