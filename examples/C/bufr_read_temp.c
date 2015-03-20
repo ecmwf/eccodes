@@ -70,7 +70,7 @@ int main(int argc,char* argv[])
          *    windDirection, windSpeed and pressure. 
          * So in order to access any of these keys we need to use the
          * condition: verticalSoundingSignificance=4.
-         * 
+         */
 
         /* Get the number of the temperature significant levels.*/
 
