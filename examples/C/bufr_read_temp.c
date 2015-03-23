@@ -17,7 +17,7 @@
  
 /* 
  * Please note that TEMP reports can be encoded in various ways in BUFR. Therefore the code
- * below might not work directly for other types of SYNOP messages than the one used in the
+ * below might not work directly for other types of TEMP messages than the one used in the
  * example. It is advised to use bufr_dump to understand the structure of the messages.
  */
 
