@@ -25,15 +25,14 @@ do
   # Test descriptors: compare output of filter (res) with reference file (ref)
   res_desc=$file.desc.test
   ref_desc=$file.desc.ref
-  [ -f "$ref_desc" ]
   diff_desc=$file.desc.diff
 
   rm -f $res_desc
 
   ${tools_dir}bufr_filter bufrdc_desc_ref.filter $file 2> $REDIRECT > $res_desc
-
-  diff $ref_desc $res_desc > $diff_desc 2> $diff_desc
-
+  if [ -f "$ref_desc" ]; then
+    diff $ref_desc $res_desc > $diff_desc 2> $diff_desc
+  fi
   rm -f $res_desc $diff_desc
 done
 

@@ -216,6 +216,26 @@ static void init(grib_accessor* a, const long len, grib_arguments* params) {
 
 }
 
+static int str_eq(const char* a, const char* b)
+{
+    if ( a && b && (strcmp(a,b)==0) )
+        return 1;
+    return 0;
+}
+
+static void dump_codetable(grib_codetable* atable)
+{
+    grib_codetable* next = NULL;
+    int count = 0;
+
+    next=atable;
+    while(next) {
+        printf("[%.2d] CodeTable Dump: f0=%s f1=%s\n", count, next->filename[0], next->filename[1]);
+        count++;
+        next = next->next;
+    }
+}
+
 static grib_codetable* load_table(grib_accessor_codetable* self)
 {
     size_t size = 0;
@@ -256,13 +276,25 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
         localFilename=grib_context_full_defs_path(c,localRecomposed);
     }
 
+    /*printf("%s: Looking in cache: f=%s lf=%s\n", self->att.name, filename, localFilename);*/
     next=c->codetable;
     while(next) {
-        if((filename && next->filename[0] && strcmp(filename,next->filename[0]) == 0) &&
+        if ((filename && next->filename[0] && strcmp(filename,next->filename[0]) == 0) &&
                 ((localFilename==0 && next->filename[1]==NULL) ||
                         ((localFilename!=0 && next->filename[1]!=NULL)
                                 && strcmp(localFilename,next->filename[1]) ==0)) )
+        {
             return next;
+        }
+        /* Special case: see GRIB-735 */
+        if (filename==NULL && localFilename!=NULL)
+        {
+            if ( str_eq(localFilename, next->filename[0]) ||
+                 str_eq(localFilename, next->filename[1]) )
+            {
+                return next;
+            }
+        }
         next = next->next;
     }
 
@@ -277,9 +309,13 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
     t = (grib_codetable*)grib_context_malloc_clear_persistent(c,sizeof(grib_codetable) +
             (size-1)*sizeof(code_table_entry));
 
-    if (filename!=0) grib_load_codetable(c,filename,recomposed,size,t);
+    if (filename!=0)
+        grib_load_codetable(c,filename,recomposed,size,t);
 
-    if (localFilename!=0) grib_load_codetable(c,localFilename,localRecomposed,size,t);
+    if (localFilename!=0)
+        grib_load_codetable(c,localFilename,localRecomposed,size,t);
+
+    /*dump_codetable(c->codetable);*/
 
     if (t->filename[0]==NULL && t->filename[1]==NULL) {
         grib_context_free_persistent(c,t);
@@ -291,11 +327,11 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
 }
 
 static int grib_load_codetable(grib_context* c,const char* filename,
-        const char* recomposed_name,size_t size,grib_codetable* t) {
+        const char* recomposed_name,size_t size,grib_codetable* t)
+{
     char line[1024];
     FILE *f = NULL;
     int lineNumber = 0;
-
     grib_context_log(c,GRIB_LOG_DEBUG,"Loading code table from %s",filename);
 
     f=fopen(filename, "r");
@@ -558,11 +594,12 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t *len)
 
     typedef int (*cmpproc)(const char*, const char*);
 #ifndef ECCODES_ON_WINDOWS
-    cmpproc cmp = a->flags | GRIB_ACCESSOR_FLAG_LOWERCASE ? grib_strcasecmp : strcmp;
+    cmpproc cmp = (a->flags | GRIB_ACCESSOR_FLAG_LOWERCASE) ? grib_strcasecmp : strcmp;
 #else
     /* Microsoft Windows Visual Studio support */
-    cmpproc cmp = a->flags | GRIB_ACCESSOR_FLAG_LOWERCASE ? stricmp : strcmp;
+    cmpproc cmp = (a->flags | GRIB_ACCESSOR_FLAG_LOWERCASE) ? stricmp : strcmp;
 #endif
+
     if(!self->table) self->table = load_table(self);
     table=self->table;
 

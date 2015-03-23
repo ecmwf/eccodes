@@ -16,6 +16,15 @@ if( HAVE_PYTHON )
     #if( HAVE_PYTHON AND SWIG_FOUND AND PYTHONLIBS_FOUND )
     if( HAVE_PYTHON AND PYTHONLIBS_FOUND )
 
+        set(PYTHON_DEST "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/eccodes" )
+
+	    file( RELATIVE_PATH relative_rpath "${CMAKE_INSTALL_PREFIX}/${PYTHON_DEST}" "${${PNAME}_FULL_INSTALL_LIB_DIR}" )
+
+		# debug_var( relative_rpath )
+
+        ecbuild_append_to_rpath( ${relative_rpath} )
+        ecbuild_append_to_rpath( "../../lib" )        # for ctest to find the libs
+
         # preparing for generating setup.py -- this may not be needed as cmake can do the swig + shared libs without libtool
 
         if( NUMPY_FOUND )
@@ -79,8 +88,6 @@ if( HAVE_PYTHON )
         )
         add_custom_target(copy_swig_py ALL DEPENDS ${_swig_py})
         #######################
-
-        set(PYTHON_DEST "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/eccodes" )
 
         install(TARGETS _gribapi_swig DESTINATION ${PYTHON_DEST} )
 

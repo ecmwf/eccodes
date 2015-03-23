@@ -33,7 +33,8 @@ int main(int argc,char* argv[])
     double *lat=NULL, *lon=NULL, *bscatter=NULL;
     long longVal;
     double doubleVal;
-    size_t numObs,len;
+    long numObs=0;
+    size_t len=0;
     int i, err=0;
     int cnt=0;
     char* infile = "../../data/bufr/asca_139.bufr";
