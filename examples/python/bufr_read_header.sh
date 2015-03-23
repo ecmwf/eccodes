@@ -19,7 +19,7 @@ $PYTHON bufr_read_header.py 2> $REDIRECT > $fRes
 #We compare output to the reference by ignoring the whitespaces
 diff -w $fRef $fRes >$REDIRECT 2> $REDIRECT
 
-cat $fRes
+#cat $fRes
 
 #Clean up
 rm -f $fRes

@@ -55,18 +55,20 @@ def example():
         #---------------------------------------------------------------
         #get the value
         key='airTemperatureAt2M'
-        if not codes_is_defined(gid,key):
-            raise Exception("Key: " + key + " was not defined")
-        print '  %s: %s' % (key,codes_get(gid,key))
+        try:
+            print '  %s: %s' % (key,codes_get(gid,key))
+        except CodesInternalError,err:
+            print 'Error with key="%s" : %s' % (key,err.msg) 
 
         # print the values of the attributes of the key. Attributes themselves
         # are keys as well. Their name is constructed like:
         # keyname->attributename
         for attr in attrs:
             key='airTemperatureAt2M' + "->" + attr
-            if not codes_is_defined(gid,key):
-                raise Exception("Key: " + key + " was not defined")
-            print '  %s: %s' % (key,codes_get(gid,key))
+            try:
+                print '  %s: %s' % (key,codes_get(gid,key))
+            except CodesInternalError,err:
+                print 'Error with key="%s" : %s' % (key,err.msg) 
 
         #--------------------------------------------------------------------
         # The 2m temperature data element in this message has an associated
@@ -76,17 +78,18 @@ def example():
 
         #get the value
         key='airTemperatureAt2M->percentConfidence'
-        if not codes_is_defined(gid,key):
-            raise Exception("Key: " + key + " was not defined")
-        print '  %s: %s' % (key,codes_get(gid,key))
-
+        try:
+            print '  %s: %s' % (key,codes_get(gid,key))
+        except CodesInternalError,err:
+            print 'Error with key="%s" : %s' % (key,err.msg) 
+                
         # print the values of the attributes of the key.
         for attr in attrs:
             key='airTemperatureAt2M->percentConfidence' + "->" + attr
-            if not codes_is_defined(gid,key):
-                raise Exception("Key: " + key + " was not defined")
-            print '  %s: %s' % (key,codes_get(gid,key))
-
+            try:
+                print '  %s: %s' % (key,codes_get(gid,key))
+            except CodesInternalError,err:
+                print 'Error with key="%s" : %s' % (key,err.msg) 
 
         cnt+=1
 

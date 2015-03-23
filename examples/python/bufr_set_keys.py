@@ -53,10 +53,11 @@ def example():
         print '  set bufrHeaderCentre to: %d' % val
 
         key='bufrHeaderCentre'
-        if not codes_is_defined(gid,key):
-            raise Exception("Key: " + key + " was not defined")
-        codes_set(gid,key,val)
-
+        try:
+            print '  %s: %s' % (key,codes_set(gid,key,val))
+        except CodesInternalError,err:
+            print 'Error with key="%s" : %s' % (key,err.msg) 
+        
         #check bufrHeaderCentre's value
         print '  %s''s new value is: %d' % (key,codes_get(gid,key))
 
