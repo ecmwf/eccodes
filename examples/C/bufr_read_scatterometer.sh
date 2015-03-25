@@ -12,19 +12,19 @@
 
 
 #Define a common label for all the tmp files
-label="bufr_read_temp_f"
+label="bufr_read_scatterometer_c"
 
 #Define tmp file
 fTmp=${label}.tmp.txt
 rm -f $fTmp | true
 
-#We check "temp_101.bufr". The path is
+#We check "asca_139.bufr". The path is
 #hardcoded in the example
 
 REDIRECT=/dev/null
 
 #Write the key values into a file
-${examples_dir}/f_bufr_read_temp 2> $REDIRECT > $fTmp
+${examples_dir}c_bufr_read_scatterometer #2> $REDIRECT > $fTmp
 
 #TODO: check the results
 
@@ -32,4 +32,3 @@ ${examples_dir}/f_bufr_read_temp 2> $REDIRECT > $fTmp
 
 #Clean up
 rm -f $fTmp | true
-

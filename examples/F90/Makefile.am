@@ -6,7 +6,7 @@ TESTS = copy_message.sh grib_get_keys.sh get_data.sh get_pl.sh get_pv.sh grib_ke
         grib_set_bitmap.sh set_missing.sh grib_set_pv.sh samples.sh count_messages.sh read_message.sh \
         read_from_file.sh grib_index.sh get_set_uuid.sh bufr_attributes.sh bufr_clone.sh \
         bufr_expanded.sh bufr_get_keys.sh bufr_read_header.sh bufr_read_synop.sh \
-        bufr_set_keys.sh bufr_keys_iterator.sh bufr_subset.sh get_product_kind.sh bufr_read_temp.sh
+        bufr_set_keys.sh bufr_keys_iterator.sh bufr_subset.sh get_product_kind.sh bufr_read_temp.sh bufr_read_scatterometer.sh
 
 noinst_PROGRAMS  = f_grib_index f_copy_message f_grib_get_keys f_get_data f_get_pl f_get_pv f_grib_keys_iterator \
                    f_grib_multi_write f_grib_multi f_grib_nearest f_grib_precision f_grib_print_data f_grib_set_keys \
@@ -14,7 +14,7 @@ noinst_PROGRAMS  = f_grib_index f_copy_message f_grib_get_keys f_get_data f_get_
                    f_read_from_file f_new_from_file f_copy_namespace f_get_set_uuid f_set_gvc \
                    f_grib_clone f_bufr_clone f_bufr_expanded f_bufr_get_keys f_bufr_read_header \
                    f_bufr_read_synop f_bufr_set_keys f_bufr_keys_iterator f_bufr_subset f_bufr_attributes \
-                   f_get_product_kind f_bufr_read_temp
+                   f_get_product_kind f_bufr_read_temp bufr_read_scatterometer
 
 f_grib_index_SOURCES=grib_index.f90
 f_copy_message_SOURCES=copy_message.f90
@@ -47,6 +47,7 @@ f_bufr_expanded_SOURCES=bufr_expanded.f90
 f_bufr_get_keys_SOURCES=bufr_get_keys.f90
 f_bufr_keys_iterator_SOURCES=bufr_keys_iterator.f90
 f_bufr_read_header_SOURCES=bufr_read_header.f90
+f_bufr_read_scatterometer_SOURCES=bufr_read_scatterometer.f90
 f_bufr_read_synop_SOURCES=bufr_read_synop.f90
 f_bufr_read_temp_SOURCES=bufr_read_temp.f90
 f_bufr_set_keys_SOURCES=bufr_set_keys.f90

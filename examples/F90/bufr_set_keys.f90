@@ -19,7 +19,6 @@ program bufr_set_keys
   integer                                       :: ibufr
   integer                                       :: count=0
   integer(kind=4)                               :: centre, centreNew
-  double precision, dimension(:,:), allocatable :: field2D
   
   ! open input file 
   call codes_open_file(infile,'../../data/bufr/syno_multi.bufr','r')

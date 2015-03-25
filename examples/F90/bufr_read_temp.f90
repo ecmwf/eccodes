@@ -12,9 +12,9 @@
 !
 ! Description: how to read temperature significant levels from TEMP BUFR messages.
 !
-! Please note that SYNOP reports can be encoded in various ways in BUFR. Therefore the code
+! Please note that TEMP reports can be encoded in various ways in BUFR. Therefore the code
 ! below might not work directly for other types of TEMP messages than the one used in the
-! example. It is advised to bufr_dump to understand the structure of the messages.
+! example. It is advised to use bufr_dump first to understand the structure of these messages.
 
 program bufr_read_temp
 use eccodes
