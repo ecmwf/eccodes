@@ -41,6 +41,7 @@ list( APPEND test_bins
       bufr_keys_iterator
       bufr_missing
       bufr_read_header
+      bufr_read_scatterometer
       bufr_read_synop
       bufr_read_temp
       bufr_set_keys
@@ -80,6 +81,7 @@ list( APPEND tests
    bufr_keys_iterator
    bufr_missing
    bufr_read_header
+   bufr_read_scatterometer
    bufr_read_synop
    bufr_read_temp
    bufr_set_keys

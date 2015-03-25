@@ -45,27 +45,32 @@ def example():
         #----------------------------------------------
         #Native type integer
         key='blockNumber'
-        if not codes_is_defined(gid,key):
-            raise Exception("Key: " + key + " was not defined")
-        print '  %s: %s' % (key,codes_get(gid,key))
+        
+        try:
+            print '  %s: %s' % (key,codes_get(gid,key))
+        except CodesInternalError,err:
+            print 'Error with key="%s" : %s' % (key,err.msg)       
 
         #Native type integer
         key='stationNumber'
-        if not codes_is_defined(gid,key):
-            raise Exception("Key: " + key + " was not defined")
-        print '  %s: %s' % (key,codes_get(gid,key))
+        try:
+            print '  %s: %s' % (key,codes_get(gid,key))
+        except CodesInternalError,err:
+            print 'Error with key="%s" : %s' % (key,err.msg) 
 
         #Native type float
         key='airTemperatureAt2M'
-        if not codes_is_defined(gid,key):
-            raise Exception("Key: " + key + " was not defined")
-        print '  %s: %s' % (key,codes_get(gid,key))
+        try:
+            print '  %s: %s' % (key,codes_get(gid,key))
+        except CodesInternalError,err:
+            print 'Error with key="%s" : %s' % (key,err.msg) 
 
         #Native type string
         key='typicalDate'
-        if not codes_is_defined(gid,key):
-            raise Exception("Key: " + key + " was not defined")
-        print '  %s: %s' % (key,codes_get(gid,key))
+        try:
+            print '  %s: %s' % (key,codes_get(gid,key))
+        except CodesInternalError,err:
+            print 'Error with key="%s" : %s' % (key,err.msg) 
 
         #---------------------------------
         # get values for an array

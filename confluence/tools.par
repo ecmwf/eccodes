@@ -20,11 +20,17 @@ BUFR (
       bufr_dump
       bufr_filter
       bufr_get
-      bufr_index_build
       bufr_ls
       bufr_set
       )
-Generic (
+!GTS (           
+      gts_copy
+      gts_dump
+      gts_filter
+      gts_ls
+    )  
+      
+!Generic (
       codes_count desc
       codes_info desc
       )
