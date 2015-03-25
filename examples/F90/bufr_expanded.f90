@@ -39,16 +39,10 @@ real(kind=8), dimension(:), allocatable       :: values
     ! i.e. unpack the data values
     call codes_set(ibufr,"unpack",1);
     
-    ! get the size of the values array
-    call codes_get_size(ibufr,"numericValues",numberOfValues)
-    
-    print*, '  number of exapanded values:', numberOfValues
-    
-    ! allocate array for data values
-    allocate(values(numberOfValues), stat=iret)
- 
     ! get the exapanded data values
     call codes_get(ibufr,'numericValues',values)
+
+    numberOfValues=size(values)
  
     do i=1,numberOfValues
         write(*,*) '  ',i,values(i)

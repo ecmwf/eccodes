@@ -20,7 +20,6 @@ integer            :: iret
 integer            :: igrib
 integer            :: i
 real(kind=8), dimension(:), allocatable       :: values
-integer(kind=4)    :: numberOfValues
 real(kind=8)       :: average
 real(kind=8)       :: max
 real(kind=8)       :: min
@@ -33,22 +32,13 @@ call codes_open_file(ifile, &
 !     igrib is the grib id to be used in subsequent calls
       call codes_grib_new_from_file(ifile,igrib)
 
-
-!     get the size of the values array
-      call codes_get(igrib,'numberOfValues',numberOfValues)
-
-!     get data values
-  print*, 'number of values ', numberOfValues
-  allocate(values(numberOfValues), stat=iret)
-
   call codes_get(igrib,'values',values)
 
-  do i=1,numberOfValues
+  do i=1,size(values)
     write(*,*)'  ',i,values(i)
   enddo
 
-
-  write(*,*)numberOfValues,' values found '
+  write(*,*)size(values),' values found '
 
   call codes_get(igrib,'max',max)
   write(*,*) 'max=',max

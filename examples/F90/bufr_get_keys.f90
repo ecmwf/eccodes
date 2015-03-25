@@ -22,7 +22,6 @@ integer            :: ibufr
 integer            :: i, count=0
 integer(kind=4)    :: blockNumber,stationNumber 
 real(kind=8)       :: t2m
-integer(kind=4)    :: numberOfValues, numberOfDesc 
 integer(kind=4), dimension(:), allocatable    :: descriptors
 real(kind=8), dimension(:), allocatable       :: values
 character(len=9)   :: typicalDate 
@@ -62,37 +61,19 @@ character(len=9)   :: typicalDate
  
     ! ---- array of integer ----------------
      
-    ! get the size of the values array
-    !call codes_get_size(ibufr,"bufrdcExpandedDescriptors",numberOfDesc)
-    
-    ! allocate array for data values
-    !allocate(descriptors(numberOfDesc), stat=iret)
- 
-    ! get the exapanded data values
+    ! get the exapanded descriptors
     call codes_get(ibufr,'bufrdcExpandedDescriptors',descriptors)
  
-    numberOfDesc=size(descriptors)
-    print*, '  number of descriptors:', numberOfDesc
-
-    do i=1,numberOfDesc
+    do i=1,size(descriptors)
         write(*,*) '  ',i,descriptors(i)
     enddo  
- 
    
     ! ---- array of real ----------------
      
-    ! get the size of the values array
-    call codes_get_size(ibufr,"numericValues",numberOfValues)
-    
-    print*, '  number of exapanded values:', numberOfValues
-    
-    ! allocate array for data values
-    allocate(values(numberOfValues), stat=iret)
- 
     ! get the exapanded data values
     call codes_get(ibufr,'numericValues',values)
  
-    do i=1,numberOfValues
+    do i=1,size(values)
         write(*,*) '  ',i,values(i)
     enddo
    
