@@ -20,7 +20,6 @@ integer            :: ifile
 integer            :: iret
 integer            :: ibufr
 integer            :: i, count=0
-integer(kind=4)    :: numSigT
 integer(kind=4)    :: num
 real(kind=8), dimension(:), allocatable :: presVal,geoVal,tVal ,tdVal
 character(len=128)   :: keyName
@@ -48,82 +47,30 @@ character(len=128)   :: keyName
     ! airTemperature, dewpointTemperature,
     ! windDirection, windSpeed and pressure. 
 
-    ! ---- Get the number of the temperature significant levels ----
-
-    ! We find out the number of temperature significant levels by 
-    ! counting how many pressure values we have on these levels.
-      
-    keyName="/verticalSoundingSignificance=4/pressure"
-    
-    call codes_get_size(ibufr,keyName,numSigT);
-
-    write(*,*) "Number of temperature significant levels:", numSigT
-
-    ! Allocate memory for the values to be read. Each 
-    ! parameter must have the same number of values.
-    allocate(presVal(numSigT), stat=iret);
-    allocate(geoVal(numSigT), stat=iret);
-    allocate(tVal(numSigT), stat=iret);
-    allocate(tdVal(numSigT), stat=iret);
-    
     ! ---- Get pressure ---------------------------
-        
-    keyName="/verticalSoundingSignificance=4/pressure"
-   
-    ! get the value
-    call codes_get(ibufr,keyName,presVal);
+    call codes_get(ibufr,'/verticalSoundingSignificance=4/pressure',presVal);
 
     ! ---- Get gepotential ------------------------
- 
-    keyName="/verticalSoundingSignificance=4/geopotential"
-
-    !Check the size
-    call codes_get_size(ibufr,keyName,num)
-    if (num /= numSigT) then
-    
-      write(*,*) "inconsistent number of geopotential values found!"
-      call exit(1)
-    end if   
-
-    ! get the values
-    call codes_get(ibufr,keyName,geoVal)
+    call codes_get(ibufr,'/verticalSoundingSignificance=4/geopotential',geoVal)
 
     ! ---- Get temperature --------------------------------
- 
-    keyName="/verticalSoundingSignificance=4/airTemperature"
-
-    !Check the size
-    call codes_get_size(ibufr,keyName,num)
-    if (num /= numSigT) then
-    
-      write(*,*) "inconsistent number of temperature values found!"
-      call exit(1)
-    end if   
-
-    ! get the values
-    call codes_get(ibufr,keyName,tVal)    
+    call codes_get(ibufr,'/verticalSoundingSignificance=4/airTemperature',tVal)    
      
     ! ---- Get dew point temperature  -----------------------
-  
-    keyName="/verticalSoundingSignificance=4/dewpointTemperature"
+    call codes_get(ibufr,'/verticalSoundingSignificance=4/dewpointTemperature',tdVal)        
 
-    !Check the size
-    call codes_get_size(ibufr,keyName,num)
-    if (num /= numSigT) then
-    
-      write(*,*) "inconsistent number of dew point temperature values found!"
-      call exit(1)
-    end if   
-
-    ! get the values
-    call codes_get(ibufr,keyName,tdVal)        
+    ! ---- Check that all arrays are same size
+    if (size(presVal)/=size(geoVal) .or. size(tVal)/=size(tdVal) .or. size(tdVal)/=size(presVal)) then
+      print *,'inconsistent array dimension'
+      exit
+    endif
+    num=size(presVal)
      
     ! ---- Print the values --------------------------------
-    
     write(*,*) 'level    pres    geo    t    td'
     write(*,*) "--------------------------------------" 
      
-    do i=1,numSigT 
+    do i=1,num
         write(*,*) i,presVal(i),geoVal(i),tVal(i),tdVal(i)
     end do 
      

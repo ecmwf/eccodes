@@ -63,16 +63,17 @@ character(len=9)   :: typicalDate
     ! ---- array of integer ----------------
      
     ! get the size of the values array
-    call codes_get_size(ibufr,"bufrdcExpandedDescriptors",numberOfDesc)
-    
-    print*, '  number of descriptors:', numberOfDesc
+    !call codes_get_size(ibufr,"bufrdcExpandedDescriptors",numberOfDesc)
     
     ! allocate array for data values
-    allocate(descriptors(numberOfDesc), stat=iret)
+    !allocate(descriptors(numberOfDesc), stat=iret)
  
     ! get the exapanded data values
     call codes_get(ibufr,'bufrdcExpandedDescriptors',descriptors)
  
+    numberOfDesc=size(descriptors)
+    print*, '  number of descriptors:', numberOfDesc
+
     do i=1,numberOfDesc
         write(*,*) '  ',i,descriptors(i)
     enddo  
