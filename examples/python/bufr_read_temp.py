@@ -62,35 +62,23 @@ def example():
         print  '  Number of temperature significant levels %ld' % (numSigT)
 
         # Get pressure
-
         sigt_pres=codes_get_double_array(gid,"/verticalSoundingSignificance=4/pressure")
 
         # Get gepotential
-
         sigt_geo=codes_get_double_array(gid,"/verticalSoundingSignificance=4/geopotential")
 
-        if len(sigt_geo) != numSigT :
-            print "inconstitent number of geopotential values found!"
-            return 1
-
         # Get temperature
-
         sigt_t=codes_get_double_array(gid,"/verticalSoundingSignificance=4/airTemperature")
-
-        if len(sigt_t) != numSigT :
-            print "inconstitent number of temprature values found!"
-            return 1
-
+        
         # Get dew point
-
         sigt_td=codes_get_double_array(gid,"/verticalSoundingSignificance=4/dewpointTemperature")
 
-        if len(sigt_td) != numSigT:
-            print "inconstitent number of dewpoint temperature  values found!"
+        # Check that all arrays are same size
+        if len(sigt_pres) != numSigT or len(sigt_geo) != numSigT or len(sigt_t) != numSigT or len(sigt_td) != numSigT :
+            print 'inconsistent array dimension'       
             return 1
 
         # Print the values
-
         print "lev  pres    geo    t    td"
         print "-------------------------------"
 

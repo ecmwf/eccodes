@@ -31,11 +31,13 @@ def example():
         if gid is None: break
 
         for key in keys:
-            if not codes_is_defined(gid,key): raise Exception("Key was not defined")
-            print '%s=%s' % (key,codes_get(gid,key))
-
-        if codes_is_defined(gid,"A_very_silly_girl"): raise Exception("Key was defined")
-        
+            try:
+                print '  %s: %s' % (key,codes_get(gid,key))
+            except CodesInternalError,err:
+                print 'Error with key="%s" : %s' % (key,err.msg) 
+            
+        if codes_is_defined(gid,"A_very_silly_key"): raise Exception("Key was defined")
+                
         print 'There are %d values, average is %f, min is %f, max is %f' % (
                   codes_get_size(gid,'values'),
                   codes_get(gid,'average'),

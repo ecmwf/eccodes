@@ -41,7 +41,6 @@ character(len=9)   :: typicalDate
     ! i.e. unpack the data values
     call codes_set(ibufr,"unpack",1);
     
-    
     ! get as character
     call codes_get(ibufr,'typicalDate',typicalDate)
     write(*,*) '  typicalDate:',typicalDate
@@ -58,7 +57,6 @@ character(len=9)   :: typicalDate
     call codes_get(ibufr,'airTemperatureAt2M',t2m);
     write(*,*) '  airTemperatureAt2M:',t2m
    
- 
     ! ---- array of integer ----------------
      
     ! get the exapanded descriptors

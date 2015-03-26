@@ -23,7 +23,7 @@ rm -f $fTmp | true
 REDIRECT=/dev/null
 
 #Write the values into a file and compare with reference
-${examples_dir}c_bufr_subset 2> $REDIRECT > $fTmp
+${examples_dir}c_bufr_subset #2> $REDIRECT > $fTmp
 
 #TODO: add a proper check when subsets are properly implemented
 
