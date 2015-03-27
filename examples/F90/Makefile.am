@@ -14,7 +14,7 @@ noinst_PROGRAMS  = f_grib_index f_copy_message f_grib_get_keys f_get_data f_get_
                    f_read_from_file f_new_from_file f_copy_namespace f_get_set_uuid f_set_gvc \
                    f_grib_clone f_bufr_clone f_bufr_expanded f_bufr_get_keys f_bufr_read_header \
                    f_bufr_read_synop f_bufr_set_keys f_bufr_keys_iterator f_bufr_subset f_bufr_attributes \
-                   f_get_product_kind f_bufr_read_temp bufr_read_scatterometer
+                   f_get_product_kind f_bufr_read_temp f_bufr_read_scatterometer
 
 f_grib_index_SOURCES=grib_index.f90
 f_copy_message_SOURCES=copy_message.f90

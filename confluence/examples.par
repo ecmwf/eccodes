@@ -1,6 +1,6 @@
 #examples
 
-!GRIB (
+GRIB (
       grib_clone
       grib_ensemble_index
       grib_get_keys
@@ -24,7 +24,6 @@ BUFR (
       bufr_expanded
       bufr_get_keys
       bufr_keys_iterator
-      bufr_missing
       bufr_read_header
       bufr_read_scatterometer
       bufr_read_synop
