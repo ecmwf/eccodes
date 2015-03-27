@@ -17,9 +17,9 @@ module eccodes
   include "eccodes_constants.h"
   include "eccodes_visibility.h"
 
+  integer, parameter,public :: CODES_PRODUCT_ANY  = 0
   integer, parameter,public :: CODES_PRODUCT_GRIB = 1
   integer, parameter,public :: CODES_PRODUCT_BUFR = 2
-  integer, parameter,public :: CODES_PRODUCT_ANY  = 3
 
 
   !> Create a new message in memory from an integer or character array containting the coded message.

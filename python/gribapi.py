@@ -42,12 +42,12 @@ KEYTYPES = {
     3:str,
 }
 
+CODES_PRODUCT_ANY=0
+""" Generic product kind """
 CODES_PRODUCT_GRIB=1
 """ GRIB product kind """
 CODES_PRODUCT_BUFR=2
 """ BUFR product kind """
-CODES_PRODUCT_ANY=3
-""" Generic product kind """
 
 # GRIB-51 Skip function arguments type checking if the
 # environment variable is defined
