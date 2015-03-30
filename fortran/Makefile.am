@@ -11,11 +11,11 @@ libeccodes_f90_la_LDFLAGS = -version-info $(ECCODES_CURRENT):$(ECCODES_REVISION)
 libeccodes_fortran_prototypes= grib_fortran.c
 
 if  UPPER_CASE_MOD_FALSE
-nodist_include_HEADERS = grib_api.mod
+nodist_include_HEADERS = grib_api.mod eccodes.mod
 grib_api.mod: grib_f90.o
 eccodes.mod: eccodes_f90.o
 else
-nodist_include_HEADERS = GRIB_API.mod
+nodist_include_HEADERS = GRIB_API.mod ECCODES.mod
 GRIB_API.mod: grib_f90.o
 ECCODES.mod: eccodes_f90.o
 endif
