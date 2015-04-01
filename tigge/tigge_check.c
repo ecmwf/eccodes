@@ -260,14 +260,12 @@ void gaussian_grid(grib_handle* h)
     CHECK(ne(h,"Nj",0));
 
     if(get(h,"PLPresent")) {
-        size_t count;
+        size_t count, i, nPl;
         int e = grib_get_size(h,"pl",&count);
         double *pl;
-        int i;
         long total;
         long numberOfValues = get(h,"numberOfValues");
         long numberOfDataPoints = get(h,"numberOfDataPoints");
-        int nPl;
 
         if(e) {
             printf("%s, field %d [%s]: cannot number of pl: %s\n",file,field,param,grib_get_error_message(e));
@@ -291,7 +289,7 @@ void gaussian_grid(grib_handle* h)
             printf("nPl=%ld count=%ld\n",(long)nPl,(long)count);
 
         CHECK(nPl == count);
-        CHECK(nPl == 2*n);
+        CHECK(nPl == (size_t)2*n);
 
         total = 0;
         for(i = 0 ; i < count; i++)
@@ -739,9 +737,10 @@ void latlon_grid(grib_handle* h)
 
 void check_parameter(grib_handle* h,double min,double max)
 {
-    int i, err;
+    int err;
     int best = -1;
     int match = -1;
+    size_t i = 0;
 
     for(i = 0; i < NUMBER(parameters); i++)
     {
@@ -824,7 +823,6 @@ void check_parameter(grib_handle* h,double min,double max)
     }
 }
 
-
 void verify(grib_handle* h)
 {
     double min = 0,max = 0;
@@ -834,11 +832,10 @@ void verify(grib_handle* h)
 
     if (valueflg)
     {
-
         size_t count, n;
         int e = grib_get_size(h,"values",&count);
         double *values;
-        int i;
+        size_t i;
         int bitmap = !eq(h,"bitMapIndicator",255);
 
         if(e) {

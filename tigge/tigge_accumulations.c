@@ -131,14 +131,14 @@ void usage(const char *prog)
 
 void init_checks(grib_handle* h)
 {
-	int i;
+	size_t i;
 	for(i = 0; i < NUMBER(checks); i++)
 		GRIB_CHECK(grib_get_long(h,checks[i],&check_values[i]),checks[i]);
 }
 
 void do_checks(grib_handle* h)
 {
-	int i;
+	size_t i;
 	long val;
 	for(i = 0; i < NUMBER(checks); i++)
 	{
@@ -167,16 +167,15 @@ void output_field(grib_handle* h,FILE* f,long bits,double* values,size_t size,co
 	}
 }
 
-
 int main(int argc, const char *argv[])
 {
-	int i,j;
+	int i;
 	FILE *in,*out;
 	int e;
 	grib_handle *result = NULL,*h;
 	double* values = NULL;
 	double *tmp = NULL;
-	size_t size,count;
+	size_t size,count,j;
 
 	long step      = 0;
 	long startStep = 0;
