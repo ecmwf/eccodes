@@ -10,7 +10,8 @@ include "parameters_version.def";
 constant definitionFilesVersion="2.0.0.0" : hidden;
 constant internalVersion=22 : hidden;
 
-constant UseEcmfConventions = 1: hidden;
+UseEcmfConventions = getenv("ECCODES_USE_ECMF_CONVENTIONS","1");
+
 constant defaultTypeOfLevel="unknown" : hidden;
 
 # GRIBEX special boustrophedonic mode. See GRIB-472
