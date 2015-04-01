@@ -249,6 +249,8 @@ ecbuild_dont_pack( DIRS
      concepts html tests.ecmwf doxygen examples.dev templates parameters java
      perl/GRIB-API/lib perl/GRIB-API/t gaussian_experimental gribex examples/F77
      examples/extra bamboo fortran/fortranCtypes tigge/tools share/eccodes grib_api_for_mars
+     src/.deps tests/.deps tools/.deps tigge/.deps examples/C/.deps examples/python/.deps
+     python/.deps fortran/.deps
 )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
