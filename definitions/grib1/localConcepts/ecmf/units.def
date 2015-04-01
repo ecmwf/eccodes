@@ -13695,22 +13695,22 @@
 	 indicatorOfParameter = 144 ;
 	}
 #Boundary layer dissipation
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 145 ;
 	}
 #Surface sensible heat flux
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 146 ;
 	}
 #Surface latent heat flux
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 147 ;
 	}
 #Surface net radiation
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 149 ;
 	}
@@ -13725,32 +13725,32 @@
 	 indicatorOfParameter = 154 ;
 	}
 #Surface solar radiation downwards
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 169 ;
 	}
 #Surface thermal radiation downwards
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 175 ;
 	}
 #Surface solar radiation
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 176 ;
 	}
 #Surface thermal radiation
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 177 ;
 	}
 #Top solar radiation
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 178 ;
 	}
 #Top thermal radiation
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 179 ;
 	}
@@ -13785,7 +13785,7 @@
 	 indicatorOfParameter = 196 ;
 	}
 #Gravity wave dissipation
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 197 ;
 	}
@@ -13795,27 +13795,27 @@
 	 indicatorOfParameter = 205 ;
 	}
 #Top net solar radiation, clear sky
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 208 ;
 	}
 #Top net thermal radiation, clear sky
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 209 ;
 	}
 #Surface net solar radiation, clear sky
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 210 ;
 	}
 #Surface net thermal radiation, clear sky
-'J m**-2' = {
+'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 211 ;
 	}
 #Solar insolation
-'W m**-2 s**-1' = {
+'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 212 ;
 	}
