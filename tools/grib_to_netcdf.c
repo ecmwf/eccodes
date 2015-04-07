@@ -1767,7 +1767,7 @@ static hypercube *new_simple_hypercube_from_mars_request(const request *r)
 /* Todo:
  - BUILD A TEST SUITE !!
  - Print usage in log file
- - consider FCMONTH and CLimatolofy
+ - consider FCMONTH and Climatology
  - Build logic to create validationtime when only one of DATE or TIME or STEP have multiple values:
  for example: date=-1, time=12, step=24/48
  - parametrise the type of data for each axis (function fill_netcdf_dimensions & define_netcdf_dimensions)
@@ -1940,6 +1940,12 @@ static void validation_time(request *r)
     if(ndate)
     {
         const char* p = get_value(r, "date", 0);
+        const char* marsClass = get_value(r, "class", 0);
+        if (eq_string(marsClass, "s2")) {
+            /* S2S Data */
+            grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: S2S Data");
+            p = get_value(r, "hdate", 0);
+        }
         if(is_number(p))
             date = atol(p);
         else
