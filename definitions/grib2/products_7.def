@@ -11,6 +11,7 @@
 constant marsExpver = 'test';
 constant marsClass  = 's2';
 constant marsModel  = 'glob';
+alias is_s2s = one;
 
 alias parameter.paramId=paramId;
 alias parameter.shortName=shortName;
