@@ -89,28 +89,27 @@ static void init_class(grib_iterator_class* c)
 
 static int next(grib_iterator* i, double *lat, double *lon, double *val)
 {
+    grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)i;
 
-  grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)i;
+    if((long)i->e >= (long)(i->nv-1))
+        return 0;
+    i->e++;
 
-  if((long)i->e >= (long)(i->nv-1))
-    return 0;
-  i->e++;
+    *lat = self->las[i->e];
+    *lon = self->los[i->e];
+    *val = i->data[i->e];
 
-  *lat = self->las[i->e];
-  *lon = self->los[i->e];
-  *val = i->data[i->e];
-
-  return 1;
+    return 1;
 }
 
 static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
 {
-    int ret=GRIB_SUCCESS,j;
+    int ret=GRIB_SUCCESS, j;
     double lat_first=0,lon_first=0,lat_last=0,lon_last=0,d=0;
     double* lats;
     size_t plsize=0;
-    int l=0;
     long* pl;
+    long max_pl=0;
     long nj=0,order=0,ilon_first,ilon_last,i;
     long row_count=0;
     grib_context* c=h->context;
@@ -145,6 +144,7 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     if((ret = grib_get_size(h,spl,&plsize)) != GRIB_SUCCESS)
         return ret;
 
+    Assert(plsize);
     pl=(long*)grib_context_malloc(c,sizeof(long)*plsize);
     if (!pl) return GRIB_OUT_OF_MEMORY;
 
@@ -158,12 +158,20 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     while (lon_last<0) lon_last+=360;
     while (lon_first<0) lon_first+=360;
 
+    /* Find the maximum element of "pl" array, do not assume it's 4*N! */
+    /* This could be an Octahedral Gaussian Grid */
+    max_pl = pl[0];
+    for (j=1; j<plsize; j++) {
+        if (pl[j] > max_pl) max_pl = pl[j];
+    }
+
     d=fabs(lats[0]-lats[1]);
     if ( (fabs(lat_first-lats[0]) >= d ) ||
             (fabs(lat_last+lats[0]) >= d )  ||
             lon_first != 0                 ||
-            fabs(lon_last  - (360.0-90.0/order)) > 90.0/order
+            fabs(lon_last - (360.0-360.0/max_pl)) > 360.0/max_pl
     ) {
+        int l=0;
         /*sub area*/
         /*find starting latitude */
         while (fabs(lat_first-lats[l]) > d ) {l++;}
@@ -215,4 +223,3 @@ static int destroy(grib_iterator* i)
     grib_context_free(c,self->los);
     return 1;
 }
-
