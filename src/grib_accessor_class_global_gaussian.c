@@ -29,6 +29,8 @@
    MEMBERS=const char*                  lonfirst
    MEMBERS=const char*                  latlast
    MEMBERS=const char*                  lonlast
+   MEMBERS=const char*                  plpresent
+   MEMBERS=const char*                  pl
    MEMBERS=const char*                  basic_angle
    MEMBERS=const char*                  subdivision
    END_CLASS_DEF
@@ -62,6 +64,8 @@ typedef struct grib_accessor_global_gaussian {
 	const char*                  lonfirst;
 	const char*                  latlast;
 	const char*                  lonlast;
+	const char*                  plpresent;
+	const char*                  pl;
 	const char*                  basic_angle;
 	const char*                  subdivision;
 } grib_accessor_global_gaussian;
@@ -161,10 +165,11 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
   self->lonfirst     = grib_arguments_get_name(a->parent->h,c,n++);
   self->latlast       = grib_arguments_get_name(a->parent->h,c,n++);
   self->lonlast      = grib_arguments_get_name(a->parent->h,c,n++);
+  self->plpresent    = grib_arguments_get_name(a->parent->h,c,n++);
+  self->pl           = grib_arguments_get_name(a->parent->h,c,n++);
   self->basic_angle         = grib_arguments_get_name(a->parent->h,c,n++);
   self->subdivision         = grib_arguments_get_name(a->parent->h,c,n++);
 }
-
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
@@ -173,7 +178,8 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
   long latfirst,latlast,lonfirst,lonlast,basic_angle,subdivision,N,Ni;
   double dlatfirst,dlatlast,dlonfirst,dlonlast,d;
   double* lats;
-  long factor;
+  long factor, plpresent=0;
+  long max_pl=0; /* max. element of pl array */
   grib_context* c=a->parent->h->context;
 
   if (self->basic_angle && self->subdivision) {
@@ -212,6 +218,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
   if((ret = grib_get_long_internal(a->parent->h, self->lonlast,&lonlast)) != GRIB_SUCCESS)
     return ret;
 
+  if((ret = grib_get_long_internal(a->parent->h, self->plpresent,&plpresent)) != GRIB_SUCCESS)
+    return ret;
+
   dlatfirst=((double)latfirst)/factor;
   dlatlast=((double)latlast)/factor;
   dlonfirst=((double)lonfirst)/factor;
@@ -225,7 +234,26 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
   if((ret = grib_get_gaussian_latitudes(N, lats)) != GRIB_SUCCESS)
       return ret;
 
-  if (Ni == GRIB_MISSING_LONG ) Ni=N*4;
+    /* GRIB-704: Work out the maximum element in pl array, if present */
+    max_pl = 4*N; /* default */
+    if (plpresent) {
+        size_t plsize=0, i=0;
+        long* pl=NULL; /* pl array */
+        if((ret = grib_get_size(a->parent->h,self->pl,&plsize)) != GRIB_SUCCESS)
+            return ret;
+        Assert(plsize);
+        pl=(long*)grib_context_malloc_clear(c,sizeof(long)*plsize);
+        grib_get_long_array_internal(a->parent->h,self->pl,pl, &plsize);
+
+        max_pl = pl[0];
+        for (i=1; i<plsize; i++) {
+            if (pl[i] > max_pl) max_pl = pl[i];
+        }
+        grib_context_free(c, pl);
+    }
+
+    /* If Ni is missing, then this is a reduced gaussian grid */
+    if (Ni == GRIB_MISSING_LONG ) Ni=max_pl;
   d=fabs(lats[0]-lats[1]);
   if ( (fabs(dlatfirst-lats[0]) >= d ) ||
        (fabs(dlatlast+lats[0]) >= d )  ||
@@ -319,6 +347,3 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 
   return GRIB_SUCCESS;
 }
-
-
-

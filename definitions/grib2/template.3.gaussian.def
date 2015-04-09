@@ -44,6 +44,7 @@ meta global global_gaussian(N,Ni,iDirectionIncrement,
                             longitudeOfFirstGridPoint,
                             latitudeOfLastGridPoint,
                             longitudeOfLastGridPoint,
+                            PLPresent, pl,
                             basicAngleOfTheInitialProductionDomain,
                             subdivisionsOfBasicAngle) = 0 : dump;
 
