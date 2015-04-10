@@ -267,6 +267,8 @@ data/bufr/*.json
 data/bufr/*.no
 data/gts/*.DAT
 data/gts/*.ref
+data/metar/*.txt
+data/metar/*.ref
 data/.downloaded
 data/budg
 data/*.grib
