@@ -39,9 +39,10 @@ fi
 grib_files=`cat $DATA_DIR/grib_data_files.txt`
 tigge_files=`cat $DATA_DIR/tigge/tigge_data_files.txt | sed -e 's:^:tigge/:'`
 bufr_files=`cat $DATA_DIR/bufr/bufr_data_files.txt $DATA_DIR/bufr/bufr_ref_files.txt | sed -e 's:^:bufr/:'`
+metar_files=`cat $DATA_DIR/metar/metar_data_files.txt $DATA_DIR/metar/metar_ref_files.txt | sed -e 's:^:metar/:'`
 gts_files=`cat $DATA_DIR/gts/gts_data_files.txt $DATA_DIR/gts/gts_ref_files.txt | sed -e 's:^:gts/:'`
 
-files="$grib_files $tigge_files $bufr_files $gts_files"
+files="$grib_files $tigge_files $bufr_files $metar_files $gts_files"
 
 if [ $CLEAN -eq 1 ]; then
    for f in $files; do

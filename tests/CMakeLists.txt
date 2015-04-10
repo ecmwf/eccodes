@@ -98,7 +98,7 @@ foreach( test ${tests2} )
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                   RESOURCES include.sh number_compare.pl
-                  TEST_DEPENDS get_gribs get_tigge_gribs get_bufrs get_gts
+                  TEST_DEPENDS get_gribs get_tigge_gribs get_bufrs get_metars get_gts
     )
 endforeach()
 
