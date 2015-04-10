@@ -54,6 +54,7 @@ if (length(g) == 4) {
 		}
 }
 
+alias ls.CCCC=CCCC;
 if (substr(g,6,1) is "Z" && is_integer(g,0,6) ) {
 		rename(g,YYGGgg);
 		modify YYGGgg : hidden;
@@ -63,7 +64,10 @@ if (substr(g,6,1) is "Z" && is_integer(g,0,6) ) {
 		day = to_string(YYGGgg,0,2) : dump;
 		hour = to_string(YYGGgg,2,2) : dump;
 		minute = to_string(YYGGgg,4,2) : dump;
+    meta dateTime  sprintf("%s-%s-%s %s:%s",year,month,day,hour,minute);
+    alias ls.dateTime=dateTime;
 }
+
 
 if ( ! isCorrection && g is "COR" ) {
 		rename(g,cor);

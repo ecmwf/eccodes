@@ -291,13 +291,13 @@ static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
     if (err) return err;
 
     if((err=grib_get_string_internal(a->parent->h,self->key,key,&size)) != GRIB_SUCCESS) {
-        grib_trie_delete(dictionary);
+        /* grib_trie_delete(dictionary); */
         return err;
     }
 
     list=(char*)grib_trie_get(dictionary,key);
     if (!list) {
-        grib_trie_delete(dictionary);
+        /* grib_trie_delete(dictionary); */
         return GRIB_NOT_FOUND;
     }
 
@@ -310,7 +310,7 @@ static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
     end--;
     rsize=end-start;
     if (*len < rsize) {
-        grib_trie_delete(dictionary);
+        /* grib_trie_delete(dictionary); */
         return GRIB_ARRAY_TOO_SMALL;
     }
 
@@ -318,7 +318,7 @@ static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
     memcpy(buffer,start,rsize);
     buffer[rsize]=0;
 
-    grib_trie_delete(dictionary);
+    /* grib_trie_delete(dictionary); */
 
     return err;
 }

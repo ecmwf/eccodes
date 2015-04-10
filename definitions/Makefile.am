@@ -9204,6 +9204,73 @@ dist_definitionsmars_eswi_DATA = \
 	mars/eswi/type.table\
 	mars/eswi/wave_domain.def
 
+definitionsmetardir = @ECCODES_DEFINITION_PATH@/metar
+dist_definitionsmetar_DATA = \
+	metar/CCCC.txt\
+	metar/boot.def\
+	metar/boot.flexible.def\
+	metar/cccc.def\
+	metar/clouds.def\
+	metar/clouds.table\
+	metar/clouds_Trend1.def\
+	metar/clouds_Trend2.def\
+	metar/clouds_Trend3.def\
+	metar/clouds_Trend4.def\
+	metar/colour.def\
+	metar/direction.table\
+	metar/horizontalVisibility.def\
+	metar/horizontalVisibility_Trend1.def\
+	metar/horizontalVisibility_Trend2.def\
+	metar/horizontalVisibility_Trend3.def\
+	metar/horizontalVisibility_Trend4.def\
+	metar/missing_field.def\
+	metar/nsd_cccc.txt\
+	metar/present_weather.def\
+	metar/present_weather.list\
+	metar/present_weather_Trend1.def\
+	metar/present_weather_Trend2.def\
+	metar/present_weather_Trend3.def\
+	metar/present_weather_Trend4.def\
+	metar/qnh.def\
+	metar/recent_weather.def\
+	metar/remark.def\
+	metar/runwayDepthOfDeposit.table\
+	metar/runwayFrictionCoefficient.table\
+	metar/runwayState.def\
+	metar/runwayState1.def\
+	metar/runwayState2.def\
+	metar/runwayState3.def\
+	metar/runwayState4.def\
+	metar/runwayStateDeposit.table\
+	metar/runwayStateExtentOfContamination.table\
+	metar/rvr1.def\
+	metar/rvr2.def\
+	metar/rvr3.def\
+	metar/rvr4.def\
+	metar/seaState.table\
+	metar/sea_state.def\
+	metar/temperature.def\
+	metar/temperature.list\
+	metar/trend1.def\
+	metar/trend2.def\
+	metar/trend3.def\
+	metar/trend4.def\
+	metar/weatherCodes-forecasters.txt\
+	metar/weatherCodes-full.txt\
+	metar/weatherCodes-metar-template.txt\
+	metar/weatherCodes-trend-template.txt\
+	metar/wind.def\
+	metar/wind_Trend1.def\
+	metar/wind_Trend2.def\
+	metar/wind_Trend3.def\
+	metar/wind_Trend4.def\
+	metar/wind_shear.def\
+	metar/wrong_delayed.def
+
+definitionsmetar_stationsdir = @ECCODES_DEFINITION_PATH@/metar/stations
+dist_definitionsmetar_stations_DATA = \
+	metar/stations/nsd_cccc.txt
+
 definitionstidedir = @ECCODES_DEFINITION_PATH@/tide
 dist_definitionstide_DATA = \
 	tide/boot.def\

@@ -99,7 +99,7 @@ if(kindOfProduct == 17632522 ){
 if(kindOfProduct == `META` ){
  template      METAR "metar/boot.def" ;
  constant METARstr="METAR";
- alias ls.identifier=METARstr;
+ alias identifier=METARstr;
 }
 
 if(kindOfProduct == `TAF ` ){

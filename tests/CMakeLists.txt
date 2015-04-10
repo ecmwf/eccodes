@@ -43,6 +43,8 @@ list( APPEND tests2
     bufr_json
     bufr_ls
     gts_ls
+    metar_ls
+    metar_dump
     bufr_set
     ieee
     grib1to2

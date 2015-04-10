@@ -396,11 +396,8 @@ static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name)
 
 int has_rank(const char* name) {
   char* p=(char*)name;
-  while (*p!=0) {
-    if (*p == '#') return 1;
-    p++;
-  }
-  return 0;
+  while (*p!=0 && *p!='#') p++;
+  return *p ? 1 : 0 ;
 }
 
 char* grib_split_name_attribute(grib_context* c,const char* name,char* attribute_name) {
