@@ -238,15 +238,14 @@ static int u2s[] =  {
 /* See GRIB-488 */
 static int is_special_expver(grib_handle* h)
 {
-    if (grib_is_defined(h, "experimentVersionNumber")) {
-        int ret = 0;
-        char strExpVer[50]={0,};
-        size_t slen=50;
-        ret = grib_get_string(h, "experimentVersionNumber", strExpVer, &slen);
-        if (ret == GRIB_SUCCESS && !strcmp(strExpVer, "1605")) {
-            return 1; /* Special case of expVer 1605! */
-        }
+    int ret = 0;
+    char strExpVer[50]={0,};
+    size_t slen=50;
+    ret = grib_get_string(h, "experimentVersionNumber", strExpVer, &slen);
+    if (ret == GRIB_SUCCESS && !strcmp(strExpVer, "1605")) {
+        return 1; /* Special case of expVer 1605! */
     }
+
     return 0;
 }
 
