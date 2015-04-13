@@ -9249,6 +9249,11 @@
 	 table2Version = 230 ;
 	 indicatorOfParameter = 213 ;
 	}
+#Accumulated freezing rain (variable resolution)
+'230216' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 216 ;
+	}
 #Total precipitation (variable resolution)
 '230228' = {
 	 table2Version = 230 ;
