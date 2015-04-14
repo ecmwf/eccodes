@@ -29,7 +29,7 @@ program keys_iterator
   ! Loop on all the messages in a file.
   
   call codes_grib_new_from_file(ifile,igrib, iret)
-  
+  grib_count=0
   do while (iret /= CODES_END_OF_FILE)
 
     grib_count=grib_count+1
