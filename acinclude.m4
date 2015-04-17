@@ -125,7 +125,7 @@ AC_DEFUN([AC_GRIB_PTHREADS],
        void* increment(void* arg);
        
        int main(int argc,char** argv){
-         int i;
+         long i;
          void* status=0;
          pthread_attr_t attr;
          pthread_attr_init(&attr);
@@ -141,7 +141,7 @@ AC_DEFUN([AC_GRIB_PTHREADS],
        }
        
        void* increment(void* arg) {
-         int i=(int)arg;
+         int i=(long)arg;
          pthread_once(&once,&init);
          pthread_mutex_lock(&mutex);
          count+=i;
@@ -197,7 +197,7 @@ AC_DEFUN([AC_GRIB_LINUX_PTHREADS],
        void* increment(void* arg);
        
        int main(int argc,char** argv){
-         int i;
+         long i;
          void* status=0;
          pthread_attr_t attr;
          pthread_attr_init(&attr);
@@ -213,7 +213,7 @@ AC_DEFUN([AC_GRIB_LINUX_PTHREADS],
        }
        
        void* increment(void* arg) {
-         int i=(int)arg;
+         int i=(long)arg;
          pthread_once(&once,&init);
          pthread_mutex_lock(&mutex);
          count+=i;
