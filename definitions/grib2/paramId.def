@@ -2065,6 +2065,12 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 1 ;
 	}
+#Geometric vertical velocity
+'260238' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 9 ;
+	}
 #Ice temperature
 '260239' = {
 	 discipline = 10 ;
