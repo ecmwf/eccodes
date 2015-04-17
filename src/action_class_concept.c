@@ -94,6 +94,19 @@ static void init_class(grib_action_class* c)
 }
 /* END_CLASS_IMP */
 
+#if GRIB_PTHREADS
+static pthread_once_t once  = PTHREAD_ONCE_INIT;
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+static void init() {
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&mutex,&attr);
+    pthread_mutexattr_destroy(&attr);
+}
+#endif
+
 static grib_concept_value* get_concept(grib_handle* h,grib_action_concept* self);
 
 grib_action* grib_action_create_concept( grib_context* context,
@@ -179,7 +192,7 @@ static void destroy(grib_context* context,grib_action* act)
     grib_context_free_persistent(context, self->basename);
 }
 
-static grib_concept_value* get_concept(grib_handle* h,grib_action_concept* self)
+static grib_concept_value* get_concept_impl(grib_handle* h,grib_action_concept* self)
 {
     char buf[1024]={0,};
     char master[1024]={0,};
@@ -255,6 +268,17 @@ static grib_concept_value* get_concept(grib_handle* h,grib_action_concept* self)
     }
 
     return h->context->concepts[id];
+}
+static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self)
+{
+    grib_concept_value* result = NULL;
+    GRIB_PTHREAD_ONCE(&once,&init)
+    GRIB_MUTEX_LOCK(&mutex);
+
+    result = get_concept_impl(h, self);
+
+    GRIB_MUTEX_UNLOCK(&mutex);
+    return result;
 }
 
 const char* grib_concept_evaluate(grib_handle* h,grib_action* act)

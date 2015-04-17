@@ -272,6 +272,19 @@ static int mapping[] = {
 
 #define SIZE 38
 
+#if GRIB_PTHREADS
+static pthread_once_t once  = PTHREAD_ONCE_INIT;
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+static void init() {
+  pthread_mutexattr_t attr;
+  pthread_mutexattr_init(&attr);
+  pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+  pthread_mutex_init(&mutex,&attr);
+  pthread_mutexattr_destroy(&attr);
+}
+#endif
+
 struct grib_trie {
   grib_trie* next[SIZE];
   grib_context *context;
@@ -293,6 +306,8 @@ grib_trie *grib_trie_new(grib_context* c) {
 }
 
 void grib_trie_delete(grib_trie *t) {
+  GRIB_PTHREAD_ONCE(&once,&init)
+  GRIB_MUTEX_LOCK(&mutex)
   if(t)  {
     int i;
     for(i = t->first; i <= t->last; i++)
@@ -306,6 +321,7 @@ void grib_trie_delete(grib_trie *t) {
     grib_context_free(t->context,t);
 #endif
   }
+  GRIB_MUTEX_UNLOCK(&mutex)
 }
 
 void grib_trie_clear(grib_trie *t) {
@@ -323,6 +339,9 @@ void* grib_trie_insert(grib_trie* t,const char* key,void* data)
   grib_trie *last = t;
   const char *k = key;
   void* old = NULL;
+
+  GRIB_PTHREAD_ONCE(&once,&init)
+  GRIB_MUTEX_LOCK(&mutex)
 
   while(*k && t) {
     last = t;
@@ -344,6 +363,7 @@ void* grib_trie_insert(grib_trie* t,const char* key,void* data)
 	old = t->data;
     t->data=data;
   }
+  GRIB_MUTEX_UNLOCK(&mutex)
   return data == old ? NULL : old;
 }
 
@@ -376,13 +396,17 @@ void* grib_trie_insert_no_replace(grib_trie* t,const char* key,void* data)
 void *grib_trie_get(grib_trie* t,const char* key)
 {
   const char *k = key;
+  GRIB_PTHREAD_ONCE(&once,&init)
+  GRIB_MUTEX_LOCK(&mutex)
 
   while(*k && t)
     t = t->next[mapping[(int)*k++]];
 
-  if(*k == 0 && t != NULL && t->data!=NULL)
+  if(*k == 0 && t != NULL && t->data!=NULL) {
+    GRIB_MUTEX_UNLOCK(&mutex)
     return t->data;
-
+  }
+  GRIB_MUTEX_UNLOCK(&mutex)
   return NULL;
 }
 

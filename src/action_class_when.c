@@ -84,6 +84,19 @@ static void init_class(grib_action_class* c)
 }
 /* END_CLASS_IMP */
 
+#if GRIB_PTHREADS
+static pthread_once_t once  = PTHREAD_ONCE_INIT;
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+static void init() {
+  pthread_mutexattr_t attr;
+  pthread_mutexattr_init(&attr);
+  pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+  pthread_mutex_init(&mutex,&attr);
+  pthread_mutexattr_destroy(&attr);
+}
+#endif
+
 grib_action* grib_action_create_when( grib_context* context,
     grib_expression* expression,
     grib_action* block_true,grib_action* block_false)
@@ -132,7 +145,6 @@ static void compile(grib_action* act, grib_compiler *compiler)
     fprintf(compiler->out,",%s,%s);\n", t,f);
 }
 
-
 static int create_accessor(grib_section* p, grib_action* act,grib_loader *h)
 {
   grib_action_when* self = (grib_action_when*)act;
@@ -145,7 +157,6 @@ static int create_accessor(grib_section* p, grib_action* act,grib_loader *h)
 
   return GRIB_SUCCESS;
 }
-
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
@@ -177,7 +188,7 @@ static void dump(grib_action* act, FILE* f, int lvl)
   printf("\n");
 }
 
-static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* observed)
+static int notify_change_impl(grib_action* a, grib_accessor* observer,grib_accessor* observed)
 {
   grib_action_when* self = (grib_action_when*) a;
   grib_action *b = NULL;
@@ -215,6 +226,17 @@ static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* 
   self->loop = 0;
 
   return GRIB_SUCCESS;
+}
+static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* observed)
+{
+    int result = 0;
+    GRIB_PTHREAD_ONCE(&once,&init)
+    GRIB_MUTEX_LOCK(&mutex)
+
+    result = notify_change_impl(a, observer, observed);
+
+    GRIB_MUTEX_UNLOCK(&mutex)
+    return result;
 }
 
 static void destroy(grib_context* context,grib_action* act)
