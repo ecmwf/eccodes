@@ -143,6 +143,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_latitudes.c \
 	grib_accessor_class_longitudes.c \
 	grib_accessor_class_missing.c \
+	grib_accessor_class_octahedral_gaussian.c \
 	grib_accessor_class_offset_file.c \
 	grib_accessor_class_scale.c \
 	grib_accessor_class_from_scale_factor_scaled_value.c \

@@ -71,7 +71,7 @@ if(missing(Ni) && PLPresent == 1){
               Ni,Nj,iScansNegatively,
               latitudeFirstInDegrees, latitudeLastInDegrees,
               N,jScansPositively);
-    nearest regular(values,radius,Ni   ,Nj);
+    nearest regular(values,radius,Ni,Nj);
 }
 meta latLonValues latlonvalues(values);
 alias latitudeLongitudeValues=latLonValues;
@@ -79,6 +79,8 @@ meta latitudes latitudes(values,0);
 meta longitudes longitudes(values,0);
 meta distinctLatitudes latitudes(values,1);
 meta distinctLongitudes longitudes(values,1);
+
+meta octahedral octahedral_gaussian(N, Ni, PLPresent, pl) = 0 : no_copy,dump;
 
 # Useful for sub-areas
 # meta numberOfExpectedPoints number_of_points_gaussian(Ni,Nj,PLPresent,pl,
