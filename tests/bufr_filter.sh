@@ -683,18 +683,18 @@ ${tools_dir}/bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
 ${tools_dir}/bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
 cat > ${f}.ref <<EOF
-TROMSO-HOLT          
-PASVIK               
-KVITHAMAR            
-FROSTA               
-FURUNESET            
-LOKEN I VOLBU        
-APELSVOLL            
-KISE                 
-FAVANG               
-SAERHEIM             
-LANDVIK              
-SANDE-GALLEBERG     
+TROMSO-HOLT 
+PASVIK 
+KVITHAMAR 
+FROSTA 
+FURUNESET 
+LOKEN I VOLBU 
+APELSVOLL 
+KISE 
+FAVANG 
+SAERHEIM 
+LANDVIK 
+SANDE-GALLEBERG
 
 EOF
 
@@ -806,3 +806,4 @@ EOF
 rm -f ${dSplit}/*
 rm -f $fLog $fRules 
 rm -f $fBufrTmp | true
+

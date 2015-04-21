@@ -254,6 +254,15 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
 }
 
 
+static void clean_string(char* s,int len) {
+  int i=len-1;
+  while (i) {
+    if (!isalnum(s[i])) s[i]=0;
+    else break;
+    i--;
+  }
+}
+
 static void self_clear(grib_context* c,grib_accessor_bufr_data_array* self) {
   grib_context_free(c,self->canBeMissing);
 	grib_vdarray_delete_content(c,self->numericValues);
@@ -353,12 +362,14 @@ static void decode_string_array(grib_context* c,unsigned char* data,long* pos, i
 
   sval=(char*)grib_context_malloc_clear(c,modifiedWidth/8+1);
   grib_decode_string(data,pos,modifiedWidth/8,sval);
+  clean_string(sval,modifiedWidth/8);
   width=grib_decode_unsigned_long(data,pos,6);
   if (width) {
     grib_context_free(c,sval);
     for (j=0;j<self->numberOfSubsets;j++) {
       sval=(char*)grib_context_malloc_clear(c,width+1);
       grib_decode_string(data,pos,width,sval);
+      clean_string(sval,width);
       grib_sarray_push(c,self->stringValues,sval);
     }
   } else {
@@ -410,14 +421,14 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
 static char* decode_string_value(grib_context* c,unsigned char* data,long* pos, int i,
               grib_accessor_bufr_data_array* self) {
   char* sval=0;
-  int modifiedWidth,modifiedReference;
-  double modifiedFactor;
-  modifiedWidth= self->expanded->v[i]->width;
-  modifiedReference= self->expanded->v[i]->reference;
-  modifiedFactor= self->expanded->v[i]->factor;
+  int len;
 
-  sval=(char*)grib_context_malloc_clear(c,modifiedWidth/8+1);
-  grib_decode_string(data,pos,modifiedWidth/8,sval);
+  len= self->expanded->v[i]->width / 8;
+
+  sval=(char*)grib_context_malloc_clear(c,len+1);
+  grib_decode_string(data,pos,len,sval);
+
+  clean_string(sval,len);
 
   return sval;
 }
@@ -464,7 +475,7 @@ static void decode_element(grib_context* c,grib_accessor_bufr_data_array* self,i
       csval=decode_string_value(c,data,pos,i,self);
       grib_sarray_push(c,self->stringValues,csval);
       index=grib_sarray_used_size(self->stringValues);
-      cdval=index*1000+strlen(csval);
+      cdval=index*1000+self->expanded->v[i]->width / 8;
       grib_darray_push(c,dval,cdval);
     }
   } else {

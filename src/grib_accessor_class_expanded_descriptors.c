@@ -162,6 +162,7 @@ typedef struct change_coding_params {
 	int localDescriptorWidth;
 	int extraWidth;
 	int extraScale;
+  int newStringWidth;
 	double referenceFactor;
 } change_coding_params ;
 
@@ -357,6 +358,8 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
           u->reference *= ccp->referenceFactor;
           grib_bufr_descriptor_set_scale(u,u->scale+ccp->extraScale);
         }
+      } else if (u->type==BUFR_DESCRIPTOR_TYPE_STRING && ccp->newStringWidth!=0) {
+        u->width=ccp->newStringWidth;
       }
 #if MYDEBUG
       printf("->(%ld %g %ld)\n",u->scale,u->reference,u->width);
@@ -417,6 +420,9 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
           }
           size=0;
           grib_bufr_descriptor_delete(u);
+          break;
+        case 8:
+          ccp->newStringWidth = us->Y * 8 ;
           break;
         default:
 #if MYDEBUG
@@ -544,6 +550,7 @@ static int expand(grib_accessor* a)
   ccp.extraScale=0;
   ccp.referenceFactor=1;
   ccp.associatedFieldWidth=0;
+  ccp.newStringWidth=0;
   self->expanded=_expand(a,unexpanded,&ccp,&err);
   grib_bufr_descriptors_array_delete(unexpanded);
 
