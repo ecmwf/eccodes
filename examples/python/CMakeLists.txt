@@ -52,6 +52,7 @@ list( APPEND tests
    bufr_subset
    get_product_kind
    gts_get_keys
+   metar_get_keys
 )
 foreach( test ${tests} )
     ecbuild_add_test( TARGET p_${test}_test
