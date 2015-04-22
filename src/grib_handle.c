@@ -314,6 +314,10 @@ grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind pr
         return grib_handle_new_from_file(c, f, error);
     if (product == PRODUCT_BUFR)
         return bufr_new_from_file(c, f, error);
+    if (product == PRODUCT_METAR)
+        return metar_new_from_file(c, f, error);
+    if (product == PRODUCT_GTS)
+        return gts_new_from_file(c, f, error);
     if (product == PRODUCT_ANY)
         return any_new_from_file(c, f, error);
 
@@ -328,6 +332,14 @@ grib_handle* codes_grib_handle_new_from_file(grib_context* c, FILE* f, int* erro
 grib_handle* codes_bufr_handle_new_from_file(grib_context* c, FILE* f, int* error)
 {
     return bufr_new_from_file(c, f, error);
+}
+grib_handle* codes_metar_handle_new_from_file(grib_context* c, FILE* f, int* error)
+{
+    return metar_new_from_file(c, f, error);
+}
+grib_handle* codes_gts_handle_new_from_file(grib_context* c, FILE* f, int* error)
+{
+    return gts_new_from_file(c, f, error);
 }
 
 grib_handle* grib_handle_new_from_message_copy ( grib_context* c, const void* data, size_t size )

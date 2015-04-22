@@ -193,6 +193,8 @@ extern "C" {
 
 #define CODES_GRIB    1
 #define CODES_BUFR    2
+#define CODES_METAR   3
+#define CODES_GTS     4
 
 #define CODES_BUFR_UNPACK_STRUCTURE 0
 #define CODES_BUFR_UNPACK_FLAT 1

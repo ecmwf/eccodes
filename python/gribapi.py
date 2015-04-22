@@ -48,6 +48,10 @@ CODES_PRODUCT_GRIB=1
 """ GRIB product kind """
 CODES_PRODUCT_BUFR=2
 """ BUFR product kind """
+CODES_PRODUCT_METAR=3
+""" METAR product kind """
+CODES_PRODUCT_GTS=4
+""" GTS product kind """
 
 # GRIB-51 Skip function arguments type checking if the
 # environment variable is defined
@@ -180,12 +184,47 @@ def gts_new_from_file(fileobj, headers_only = False):
     else:
         return gribid
 
+@require(fileobj=file)
+def metar_new_from_file(fileobj, headers_only = False):
+    """
+    @brief Load in memory a METAR message from a file.
+    
+    The message can be accessed through its id and it will be available\n
+    until @ref grib_release is called.\n
+
+    The message can be loaded headers only by using the headers_only argument.
+    Default is to have the headers only option grib_set to off (False). If set to on (True),
+    data values will be skipped. This will result in a significant performance gain
+    if one is only interested in browsing through messages to retrieve metadata.
+    Any attempt to retrieve data values keys when in the headers only mode will
+    result in a key not found error.
+    
+    \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
+    
+    @param fileobj        python file object
+    @param headers_only   whether or not to load the message with the headers only
+    @return id of the METAR loaded in memory
+    @exception GribInternalError 
+    """
+    err, gribid = _internal.grib_c_new_metar_from_file(fileobj, headers_only, 0)
+    if err:
+        if err == _internal.GRIB_END_OF_FILE:
+            return None
+        else:
+            GRIB_CHECK(err)
+    else:
+        return gribid
+
 @require(fileobj=file,product_kind=int)
 def codes_new_from_file(fileobj, product_kind, headers_only = False):
     if product_kind == CODES_PRODUCT_GRIB:
         return grib_new_from_file(fileobj, headers_only)
     if product_kind == CODES_PRODUCT_BUFR:
         return bufr_new_from_file(fileobj, headers_only)
+    if product_kind == CODES_PRODUCT_METAR:
+        return metar_new_from_file(fileobj, headers_only)
+    if product_kind == CODES_PRODUCT_GTS:
+        return gts_new_from_file(fileobj, headers_only)
     if product_kind == CODES_PRODUCT_ANY:
         return any_new_from_file(fileobj, headers_only)
     raise Exception("Invalid product kind: " + product_kind)

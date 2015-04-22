@@ -5,6 +5,8 @@ from gribapi import CODES_PRODUCT_ANY
 
 from gribapi import grib_new_from_file as codes_grib_new_from_file
 from gribapi import bufr_new_from_file as codes_bufr_new_from_file
+from gribapi import metar_new_from_file as codes_metar_new_from_file
+from gribapi import gts_new_from_file as codes_gts_new_from_file
 from gribapi import any_new_from_file as codes_any_new_from_file
 from gribapi import codes_new_from_file
 
