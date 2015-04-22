@@ -4218,6 +4218,58 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_grib_c_new_metar_from_file(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  FILE *arg1 = (FILE *) 0 ;
+  int arg2 ;
+  int *arg3 = (int *) 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int temp3 ;
+  int res3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:grib_c_new_metar_from_file",&obj0,&obj1,&obj2)) SWIG_fail;
+  {
+    if ( PyFile_Check(obj0) ){
+      arg1 = PyFile_AsFile(obj0);
+    } else {
+      PyErr_SetString(PyExc_TypeError, "f must be a file type.");
+      return NULL;
+    }
+  }
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "grib_c_new_metar_from_file" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = (int)(val2);
+  if (!(SWIG_IsOK((res3 = SWIG_ConvertPtr(obj2,SWIG_as_voidptrptr(&arg3),SWIGTYPE_p_int,0))))) {
+    int val; 
+    int ecode = SWIG_AsVal_int(obj2, &val);
+    if (!SWIG_IsOK(ecode)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "grib_c_new_metar_from_file" "', argument " "3"" of type '" "int""'");
+    }
+    temp3 = (int)(val);
+    arg3 = &temp3;
+    res3 = SWIG_AddTmpMask(ecode);
+  }
+  result = (int)grib_c_new_metar_from_file(arg1,arg2,arg3);
+  resultobj = SWIG_From_int((int)(result));
+  if (SWIG_IsTmpObj(res3)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg3)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res3) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_int, new_flags));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_grib_c_iterator_new(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int *arg1 = (int *) 0 ;
@@ -7445,6 +7497,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"grib_c_new_any_from_file", _wrap_grib_c_new_any_from_file, METH_VARARGS, NULL},
 	 { (char *)"grib_c_new_bufr_from_file", _wrap_grib_c_new_bufr_from_file, METH_VARARGS, NULL},
 	 { (char *)"grib_c_new_gts_from_file", _wrap_grib_c_new_gts_from_file, METH_VARARGS, NULL},
+	 { (char *)"grib_c_new_metar_from_file", _wrap_grib_c_new_metar_from_file, METH_VARARGS, NULL},
 	 { (char *)"grib_c_iterator_new", _wrap_grib_c_iterator_new, METH_VARARGS, NULL},
 	 { (char *)"grib_c_keys_iterator_new", _wrap_grib_c_keys_iterator_new, METH_VARARGS, NULL},
 	 { (char *)"grib_c_new_from_samples", _wrap_grib_c_new_from_samples, METH_VARARGS, NULL},

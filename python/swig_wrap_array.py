@@ -275,6 +275,10 @@ def grib_c_new_gts_from_file(*args):
   return _gribapi_swig.grib_c_new_gts_from_file(*args)
 grib_c_new_gts_from_file = _gribapi_swig.grib_c_new_gts_from_file
 
+def grib_c_new_metar_from_file(*args):
+  return _gribapi_swig.grib_c_new_metar_from_file(*args)
+grib_c_new_metar_from_file = _gribapi_swig.grib_c_new_metar_from_file
+
 def grib_c_iterator_new(*args):
   return _gribapi_swig.grib_c_iterator_new(*args)
 grib_c_iterator_new = _gribapi_swig.grib_c_iterator_new

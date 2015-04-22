@@ -34,7 +34,7 @@ export METAR_YEAR=2015
 export METAR_MONTH=4
 
 echo $f >> $fLog
-${tools_dir}/metar_ls $f >> $fLog
+${tools_dir}metar_ls $f >> $fLog
 
 #-------------------------------------------
 # Test "-p" switch
