@@ -2384,29 +2384,33 @@ static int compute_scale(dataset_t *subset)
 static int nc_put_att_type(int ncid, int varid, const char *name, nc_type nctype, int n, double value)
 {
     int r = 0;
-    unsigned char val_uchar = (unsigned char) value;
-    short int val_short = (short int) value;
-    int val_int = (int) value;
-    float val_flt = (float) value;
-    double val_dbl = (double) value;
-
     switch(nctype)
     {
-    case NC_BYTE:
+    case NC_BYTE: {
+        unsigned char val_uchar = (unsigned char) value;
         r = nc_put_att_uchar(ncid, varid, name, nctype, n, &val_uchar);
         break;
-    case NC_SHORT:
+    }
+    case NC_SHORT: {
+        short int val_short = (short int) value;
         r = nc_put_att_short(ncid, varid, name, nctype, n, &val_short);
         break;
-    case NC_INT:
+    }
+    case NC_INT: {
+        int val_int = (int) value;
         r = nc_put_att_int(ncid, varid, name, nctype, n, &val_int);
         break;
-    case NC_FLOAT:
+    }
+    case NC_FLOAT: {
+        float val_flt = (float) value;
         r = nc_put_att_float(ncid, varid, name, nctype, n, &val_flt);
         break;
-    case NC_DOUBLE:
+    }
+    case NC_DOUBLE: {
+        double val_dbl = (double) value;
         r = nc_put_att_double(ncid, varid, name, nctype, n, &val_dbl);
         break;
+    }
     default:
         grib_context_log(ctx, GRIB_LOG_ERROR, "nc_put_att_type(...): Unknown netcdf type '%d'", nctype);
         break;
