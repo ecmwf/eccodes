@@ -84,7 +84,7 @@ class SphericalHarmonics : public Representation {
 
 // -- Members
 
-    size_t truncation_;
+    long truncation_;
 
 // -- Methods
     // None

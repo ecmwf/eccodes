@@ -18,6 +18,7 @@
 
 #include "mir/repres/Gridded.h"
 #include "mir/util/BoundingBox.h"
+#include "mir/util/Increments.h"
 
 
 namespace mir {
@@ -33,10 +34,7 @@ class RegularLL : public Gridded {
     // -- Contructors
 
     RegularLL(const param::MIRParametrisation &);
-
-    RegularLL(const util::BoundingBox& bbox,
-              double north_south_increment,
-              double west_east_increment);
+    RegularLL(const util::BoundingBox& bbox, const util::Increments& increments);
 
 
     // -- Destructor
@@ -96,9 +94,7 @@ class RegularLL : public Gridded {
     // -- Members
 
     util::BoundingBox bbox_;
-
-    double north_south_increment_;
-    double west_east_increment_;
+    util::Increments increments_;
 
     size_t ni_;
     size_t nj_;

@@ -17,17 +17,11 @@
 
 #include <iostream>
 
+#include "atlas/grids/GaussianGrid.h"
+
 #include "eckit/exception/Exceptions.h"
 
 #include "mir/param/MIRParametrisation.h"
-
-
-#include "atlas/Grid.h"
-// #include "atlas/GridSpec.h"
-#include "atlas/grids/ReducedGaussianGrid.h"
-#include <eckit/parser/Tokenizer.h>
-
-#include "atlas/grids/grids.h"
 #include "mir/util/Grib.h"
 
 namespace mir {
@@ -35,12 +29,7 @@ namespace repres {
 
 
 RegularGG::RegularGG(const param::MIRParametrisation &parametrisation) {
-    eckit::Translator<std::string, size_t> s2i;
-    std::string value;
-
-    ASSERT(parametrisation.get("N", value));
-    N_ = s2i(value);
-
+    ASSERT(parametrisation.get("N", N_));
 }
 
 RegularGG::RegularGG(size_t N_):

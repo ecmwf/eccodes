@@ -12,10 +12,10 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
+#include "mir/output/GribOutput.h"
 
 #include <istream>
 
-#include "eckit/utils/Translator.h"
 #include "eckit/io/DataHandle.h"
 
 #include "mir/data/MIRField.h"
@@ -23,8 +23,6 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Representation.h"
 #include "mir/util/Grib.h"
-
-#include "mir/output/GribOutput.h"
 
 
 namespace mir {

@@ -85,7 +85,7 @@ class RegularGG : public Gridded {
 
 // -- Members
 
-    size_t N_;
+    long N_;
     util::BoundingBox bbox_;
 
 // -- Methods

@@ -12,21 +12,15 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
+#include "mir/repres/RegularLL.h"
 
 #include <iostream>
 
-#include "eckit/exception/Exceptions.h"
-#include "eckit/log/Log.h"
-#include "eckit/utils/Translator.h"
-
-#include "atlas/Grid.h"
-#include "atlas/GridSpec.h"
 #include "atlas/grids/LonLatGrid.h"
 
-#include "mir/param/MIRParametrisation.h"
-#include "mir/util/Grib.h"
+#include "eckit/exception/Exceptions.h"
 
-#include "mir/repres/RegularLL.h"
+#include "mir/util/Grib.h"
 
 
 namespace mir {
@@ -34,27 +28,15 @@ namespace repres {
 
 
 RegularLL::RegularLL(const param::MIRParametrisation &parametrisation):
-    bbox_(parametrisation) {
-
-    eckit::Translator<std::string, double> s2d;
-    std::string value;
-
-    ASSERT(parametrisation.get("north_south_increment", value));
-    north_south_increment_ = s2d(value);
-
-    ASSERT(parametrisation.get("west_east_increment", value));
-    west_east_increment_ = s2d(value);
-
+    bbox_(parametrisation), increments_(parametrisation) {
     setNiNj();
 }
 
 
 RegularLL::RegularLL(const util::BoundingBox &bbox,
-                     double north_south_increment,
-                     double west_east_increment):
+                     const util::Increments& increments):
     bbox_(bbox),
-    north_south_increment_(north_south_increment),
-    west_east_increment_(west_east_increment) {
+    increments_(increments) {
     setNiNj();
 }
 
@@ -64,12 +46,12 @@ RegularLL::~RegularLL() {
 
 
 void RegularLL::setNiNj() {
-    double ni = (bbox_.east() - bbox_.west()) / west_east_increment_;
+    double ni = (bbox_.east() - bbox_.west()) / increments_.west_east();
     ASSERT(ni > 0);
     ASSERT(long(ni) == ni);
     ni_ = ni + 1;
 
-    double nj = (bbox_.north() - bbox_.south()) / north_south_increment_;
+    double nj = (bbox_.north() - bbox_.south()) / increments_.north_south();
     ASSERT(nj > 0);
     ASSERT(long(nj) == nj);
     nj_ = nj + 1;
@@ -80,8 +62,7 @@ void RegularLL::print(std::ostream &out) const {
     out << "RegularLL["
 
         << "bbox=" << bbox_
-        << ",north_south_increment=" << north_south_increment_
-        << ",west_east_increment=" << west_east_increment_
+        << ",increments=" << increments_
 
         << ",ni=" << ni_
         << ",nj=" << nj_
@@ -99,9 +80,7 @@ void RegularLL::fill(grib_info &info) const  {
     info.grid.Ni = ni_;
     info.grid.Nj = nj_;
 
-    info.grid.iDirectionIncrementInDegrees = west_east_increment_;
-    info.grid.jDirectionIncrementInDegrees = north_south_increment_;
-
+increments_.fill(info);
     bbox_.fill(info);
 
 }
@@ -120,11 +99,14 @@ Representation *RegularLL::crop(const util::BoundingBox &bbox, const std::vector
     double e = 0;
     double w = 0;
 
+    double ns = increments_.north_south();
+    double we = increments_.west_east();
+
     size_t p = 0;
     double lat = bbox_.north();
-    for (size_t j = 0; j < nj_; j++, lat -= north_south_increment_) {
+    for (size_t j = 0; j < nj_; j++, lat -= ns) {
         double lon = bbox_.west();
-        for (size_t i = 0; i < ni_; i++, lon += west_east_increment_) {
+        for (size_t i = 0; i < ni_; i++, lon += we) {
             if (bbox.contains(lat, lon)) {
 
                 if(out.size() == 0) {
@@ -143,7 +125,7 @@ Representation *RegularLL::crop(const util::BoundingBox &bbox, const std::vector
         }
     }
 
-    RegularLL *cropped = new RegularLL(util::BoundingBox(n, w, s, e), north_south_increment_, west_east_increment_);
+    RegularLL *cropped = new RegularLL(util::BoundingBox(n, w, s, e), increments_);
 
     ASSERT(out.size() > 0);
     ASSERT(cropped->ni() * cropped->nj() == out.size());
@@ -155,8 +137,8 @@ Representation *RegularLL::crop(const util::BoundingBox &bbox, const std::vector
 
 atlas::Grid *RegularLL::atlasGrid() const {
 
-    return new atlas::grids::LonLatGrid(west_east_increment_,
-                                        north_south_increment_,
+    return new atlas::grids::LonLatGrid(increments_.west_east(),
+                                        increments_.north_south(),
                                         atlas::grids::LonLatGrid::INCLUDES_POLES);
 }
 
