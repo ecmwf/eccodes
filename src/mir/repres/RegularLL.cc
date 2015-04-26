@@ -122,10 +122,10 @@ Representation *RegularLL::crop(const util::BoundingBox &bbox, const std::vector
 
     size_t p = 0;
     double lat = bbox_.north();
-    for (size_t i = 0; i < ni_; i++, lat -= north_south_increment_) {
+    for (size_t j = 0; j < nj_; j++, lat -= north_south_increment_) {
         double lon = bbox_.west();
-        for (size_t j = 0; j < nj_; j++, lon += west_east_increment_) {
-            if ( bbox.contains( lat, lon)) {
+        for (size_t i = 0; i < ni_; i++, lon += west_east_increment_) {
+            if (bbox.contains(lat, lon)) {
 
                 if(out.size() == 0) {
                     n = s = lat;
@@ -143,7 +143,7 @@ Representation *RegularLL::crop(const util::BoundingBox &bbox, const std::vector
         }
     }
 
-    RegularLL *cropped = new RegularLL(util::BoundingBox(n, w, s, e), north_south_increment_, north_south_increment_);
+    RegularLL *cropped = new RegularLL(util::BoundingBox(n, w, s, e), north_south_increment_, west_east_increment_);
 
     ASSERT(out.size() > 0);
     ASSERT(cropped->ni() * cropped->nj() == out.size());
