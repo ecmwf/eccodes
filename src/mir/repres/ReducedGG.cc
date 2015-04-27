@@ -92,9 +92,9 @@ atlas::Grid *ReducedGG::atlasGrid() const {
         }
         return new atlas::grids::ReducedGaussianGrid(N_, &pl[0]);
     } else {
-#if 0
+#if 1
         eckit::StrStream os;
-        os << "reduced_gg.N" << N_ << eckit::StrStream::ends;
+        os << "rgg.N" << N_ << eckit::StrStream::ends;
         return atlas::Grid::create(std::string(os));
 #else
 
