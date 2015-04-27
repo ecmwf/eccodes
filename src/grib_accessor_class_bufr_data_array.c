@@ -690,7 +690,7 @@ static void set_creator_name(grib_action* creator,int code) {
 
 static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_section* section,long ide,long subset,int dump,int count) {
   grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
-  char code[7]={0,};
+  char code[10]={0,};
   int idx=0;
   grib_accessor* operatorAccessor=NULL;
   grib_action operatorCreator = {0, };
@@ -896,6 +896,7 @@ static int create_keys(grib_accessor* a) {
     elementsInSubset= self->compressedData ? grib_iarray_used_size(self->elementsDescriptorsIndex->v[0]) :
       grib_iarray_used_size(self->elementsDescriptorsIndex->v[iss]);
     for (ide=0;ide<elementsInSubset;ide++) {
+      /* printf("++++++++++++++%ld\n",ide); */
       idx = self->compressedData ? self->elementsDescriptorsIndex->v[0]->v[ide] :
         self->elementsDescriptorsIndex->v[iss]->v[ide] ;
 
@@ -916,7 +917,7 @@ static int create_keys(grib_accessor* a) {
         }
 
         gaGroup = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
-        a->parent->h->groups[groupNumber]=gaGroup;
+        /* a->parent->h->groups[groupNumber]=gaGroup; */
         gaGroup->sub_section=grib_section_create(a->parent->h,gaGroup);
         gaGroup->bufr_group_number=groupNumber;
         accessor_constant_set_type(gaGroup,GRIB_TYPE_LONG);
@@ -949,7 +950,7 @@ static int create_keys(grib_accessor* a) {
           depth++;
         }
         gaGroup = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
-        a->parent->h->groups[groupNumber]=gaGroup;
+        /* a->parent->h->groups[groupNumber]=gaGroup; */
         gaGroup->sub_section=grib_section_create(a->parent->h,gaGroup);
         gaGroup->bufr_group_number=groupNumber;
         accessor_constant_set_type(gaGroup,GRIB_TYPE_LONG);
@@ -1000,6 +1001,7 @@ static int create_keys(grib_accessor* a) {
 
       count++;
       elementAccessor=create_accessor_from_descriptor(a,section,ide,iss,dump,count);
+      /* printf("++++++count=%d\n",count); */
       if (elementFromBitmap && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
         grib_accessor_add_attribute(elementFromBitmap,elementAccessor);
       } else if (elementAccessor) {
@@ -1127,6 +1129,11 @@ static int decode_elements(grib_accessor* a) {
           associatedFieldWidth=0;
           localDescriptorWidth=0;
           switch(descriptors[i]->X) {
+            case 5:
+              descriptors[i]->width=descriptors[i]->Y*8;
+              grib_iarray_push(elementsDescriptorsIndex,i);
+              decode_element(c,self,iss,data,&pos,i,dval,sval);
+              break;
             case 22:
             case 26:
             case 27:

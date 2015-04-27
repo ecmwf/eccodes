@@ -642,7 +642,6 @@ static int decode_elements(grib_accessor* a) {
           }
 
           gaGroup = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
-          a->parent->h->groups[groupNumber]=gaGroup;
           gaGroup->sub_section=grib_section_create(a->parent->h,gaGroup);
           gaGroup->bufr_group_number=groupNumber;
           ((grib_accessor_constant*)gaGroup)->type=GRIB_TYPE_LONG;

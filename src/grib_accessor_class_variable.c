@@ -317,7 +317,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len)
 
     grib_context_free(c,self->cval);
     self->cval = grib_context_strdup(c,val);
-    self->dval = atof(self->cval);
+    self->dval = atof(val);
     self->type = GRIB_TYPE_STRING;
     return GRIB_SUCCESS;
 }

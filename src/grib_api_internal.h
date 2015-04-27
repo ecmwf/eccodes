@@ -179,7 +179,6 @@ extern "C" {
 #define GRIB_REAL_MODE8    8
 
 #define MAX_NUM_SECTIONS  9
-#define MAX_NUM_GROUPS  10000
 
 #define GRIB_DISPOSABLE_MEMORY      0
 #define GRIB_LONG_LASTING_MEMORY    1
@@ -394,6 +393,7 @@ struct grib_accessors_list {
 	grib_accessor* accessor;
 	grib_accessors_list* next;
 	grib_accessors_list* prev;
+  grib_accessors_list* last;
 };
 
 /* compile */
@@ -820,7 +820,7 @@ struct grib_handle
     off_t offset;
     long bufr_subset_number;   /* bufr subset number */
     long bufr_group_number;    /* used in bufr */
-    grib_accessor* groups[MAX_NUM_GROUPS];
+    /* grib_accessor* groups[MAX_NUM_GROUPS]; */
     int unpacked;
     long missingValueLong;
     double missingValueDouble;
