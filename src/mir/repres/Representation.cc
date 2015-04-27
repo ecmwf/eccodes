@@ -93,6 +93,12 @@ size_t Representation::frame(std::vector<double> &values, size_t size, double mi
     throw eckit::SeriousBug(std::string(os));
 }
 
+Representation *Representation::clone() const {
+    eckit::StrStream os;
+    os << "Representation::clone() not implemented for " << *this << eckit::StrStream::ends;
+    throw eckit::SeriousBug(std::string(os));
+}
+
 
 RepresentationFactory::RepresentationFactory(const std::string &name):
     name_(name) {
