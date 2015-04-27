@@ -62,30 +62,23 @@ size_t SphericalHarmonics::truncation() const {
     return truncation_;
 }
 
-Representation *SphericalHarmonics::truncate(size_t truncation,
-        const std::vector<double> &in, std::vector<double> &out) const {
+void SphericalHarmonics::truncate(size_t truncation_from, size_t truncation_to,
+                                  const std::vector<double>& in, std::vector<double>& out) {
 
-    // WARNING: Untested code!
+    ASSERT(truncation_to != truncation_from);
 
-    if (truncation == truncation_) {
-        return 0;
-
-    }
-
-    size_t insize = (truncation_ + 1) * (truncation_ + 2);
+    size_t insize = number_of_complex_coefficients(truncation_from) * 2;
     ASSERT(in.size() == insize);
 
-    SphericalHarmonics *sh = new SphericalHarmonics(truncation);
+    size_t outsize = number_of_complex_coefficients(truncation_to) * 2;
+    out.resize(outsize);
 
-    size_t outsize = (truncation + 1) * (truncation + 2);
-    out = std::vector<double>(outsize);
-
-    int delta = truncation_ - truncation;
+    int delta = truncation_from - truncation_to;
     size_t i = 0;
     size_t j = 0;
 
     if (delta > 0) {
-        size_t t1 = truncation + 1;
+        size_t t1 = truncation_to + 1;
         for (size_t m = 0; m < t1; m++) {
             for (size_t n = m ; n < t1; n++) {
                 out[i++] = in[j++];
@@ -97,8 +90,8 @@ Representation *SphericalHarmonics::truncate(size_t truncation,
         ASSERT(i == outsize);
     } else {
         // Pad with zeros
-        size_t t1 = truncation + 1;
-        size_t t_ = truncation_ ;
+        size_t t1 = truncation_to + 1;
+        size_t t_ = truncation_from ;
 
         for (size_t m = 0; m < t1; m++) {
             for (size_t n = m ; n < t1; n++) {
@@ -114,7 +107,24 @@ Representation *SphericalHarmonics::truncate(size_t truncation,
         ASSERT(j == insize);
     }
 
-    return sh;
+
+}
+
+
+Representation *SphericalHarmonics::truncate(size_t truncation,
+        const std::vector<double> &in, std::vector<double> &out) const {
+
+
+    if (truncation == truncation_) {
+        return 0;
+    }
+
+
+    SphericalHarmonics *sh = new SphericalHarmonics(truncation);
+
+    truncate(truncation_, truncation, in, out);
+
+    return new SphericalHarmonics(truncation);
 }
 
 

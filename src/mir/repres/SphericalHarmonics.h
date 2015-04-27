@@ -53,7 +53,11 @@ class SphericalHarmonics : public Representation {
     // None
 
 // -- Class methods
-    // None
+
+    static void truncate(size_t truncation_from, size_t truncation_to, const std::vector<double>& in, std::vector<double>& out);
+    static size_t number_of_complex_coefficients(size_t truncation) {
+        return (truncation+1) * (truncation+2) / 2;
+    }
 
   protected:
 
