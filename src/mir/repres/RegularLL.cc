@@ -80,7 +80,7 @@ void RegularLL::fill(grib_info &info) const  {
     info.grid.Ni = ni_;
     info.grid.Nj = nj_;
 
-increments_.fill(info);
+    increments_.fill(info);
     bbox_.fill(info);
 
 }
