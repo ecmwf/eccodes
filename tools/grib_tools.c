@@ -24,6 +24,12 @@
 #include "jasper/jasper.h"
 #endif
 
+#ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
+#define _GNU_SOURCE
+#include <fenv.h>
+int feenableexcept(int excepts);
+#endif
+
 GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
     if (*a != *b) return 1;
     while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
@@ -138,6 +144,10 @@ int grib_tool(int argc, char **argv)
     int ret=0;
     grib_context* c=grib_context_get_default();
     options.context=c;
+
+#ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
+    feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
+#endif
 
     if (getenv("DOXYGEN_USAGE") && argc==1 ) usage_doxygen();
 

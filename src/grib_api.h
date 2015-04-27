@@ -153,7 +153,7 @@ Log mode for information for processing information
 typedef struct grib_key_value_list grib_key_value_list;
 
 typedef struct grib_values grib_values;
-         
+
 struct grib_values {
   const char* name;
   int         type;
@@ -266,7 +266,7 @@ grib_index* grib_index_new_from_file(grib_context* c,
 grib_index* grib_index_new(grib_context* c, const char* keys,int *err);
 
 /**
- *  Indexes the file given in argument in the index given in argument. 
+ *  Indexes the file given in argument in the index given in argument.
  *
  * @param index       : index
  * @param filename    : name of the file of messages to be indexed
@@ -407,13 +407,12 @@ int grib_count_in_file(grib_context* c, FILE* f,int* n);
 */
 grib_handle* grib_handle_new_from_file(grib_context* c, FILE* f, int* error);
 
-
 /**
-*  Write a coded message in a file.     
+*  Write a coded message in a file.
 *
 * @param h           : grib_handle to be written
-* @param file        : name of the file 
-* @param mode        : mode 
+* @param file        : name of the file
+* @param mode        : mode
 * @return            0 if OK, integer value on error
 */
 int grib_write_message(grib_handle* h,const char* file,const char* mode);
@@ -546,7 +545,7 @@ int grib_multi_handle_write(grib_multi_handle* mh,FILE* f);
 * @param message_length : On exit, the message size in number of bytes
 * @return            0 if OK, integer value on error
 */
-int grib_get_message(grib_handle* h ,const void** message, size_t *message_length  );
+int grib_get_message(grib_handle* h ,const void** message, size_t *message_length);
 
 
 /**
@@ -558,7 +557,7 @@ int grib_get_message(grib_handle* h ,const void** message, size_t *message_lengt
 *                         On exit, the actual message length in number of bytes
 * @return            0 if OK, integer value on error
 */
-int grib_get_message_copy(grib_handle* h ,  void* message,size_t *message_length );
+int grib_get_message_copy(grib_handle* h ,  void* message,size_t *message_length);
 /*! @} */
 
 /*! \defgroup iterators Iterating on latitude/longitude/values */
@@ -748,7 +747,7 @@ int         grib_get_length(grib_handle* h, const char* key,size_t *length);
 * @param value       : the address of a long where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
-int          grib_get_long         (grib_handle* h, const char* key, long*   value  );
+int          grib_get_long         (grib_handle* h, const char* key, long*   value);
 
 /**
 *  Get a double value from a key, if several keys of the same name are present, the last one is returned
@@ -759,7 +758,7 @@ int          grib_get_long         (grib_handle* h, const char* key, long*   val
 * @param value       : the address of a double where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
-int grib_get_double       (grib_handle* h, const char* key, double* value                             );
+int grib_get_double       (grib_handle* h, const char* key, double* value);
 
 /**
 *  Get as double the i-th element of the "key" array
@@ -770,7 +769,7 @@ int grib_get_double       (grib_handle* h, const char* key, double* value       
 * @param value       : the address of a double where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
-int grib_get_double_element(grib_handle* h, const char* key, int i, double* value           );
+int grib_get_double_element(grib_handle* h, const char* key, int i, double* value);
 
 /**
 *  Get as double array the elements of the "key" array whose indexes are listed in the input array i
@@ -794,7 +793,7 @@ int grib_get_double_elements(grib_handle* h, const char* key, int* i, long size,
 * @param length      : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
 * @return            0 if OK, integer value on error
 */
-int grib_get_string       (grib_handle* h, const char* key, char*   mesg,             size_t *length  );
+int grib_get_string       (grib_handle* h, const char* key, char*   mesg,             size_t *length);
 
 int grib_get_string_array(grib_handle* h, const char* name, char** val, size_t *length);
 
@@ -808,7 +807,7 @@ int grib_get_string_array(grib_handle* h, const char* name, char** val, size_t *
 * @param length      : the address of a size_t that contains allocated length of the byte array on input, and that contains the actual length of the byte array on output
 * @return            0 if OK, integer value on error
 */
-int grib_get_bytes        (grib_handle* h, const char* key, unsigned char*  bytes,    size_t *length  );
+int grib_get_bytes        (grib_handle* h, const char* key, unsigned char*  bytes, size_t *length);
 /**
 *  Get double array values from a key. If several keys of the same name are present, the last one is returned
 * @see  grib_set_double_array
@@ -819,7 +818,7 @@ int grib_get_bytes        (grib_handle* h, const char* key, unsigned char*  byte
 * @param length      : the address of a size_t that contains allocated length of the double array on input, and that contains the actual length of the double array on output
 * @return            0 if OK, integer value on error
 */
-int grib_get_double_array (grib_handle* h, const char* key, double* vals,           size_t *length  );
+int grib_get_double_array (grib_handle* h, const char* key, double* vals, size_t *length);
 
 /**
 *  Get long array values from a key. If several keys of the same name are present, the last one is returned
@@ -831,7 +830,7 @@ int grib_get_double_array (grib_handle* h, const char* key, double* vals,       
 * @param length      : the address of a size_t that contains allocated length of the long array on input, and that contains the actual length of the long array on output
 * @return            0 if OK, integer value on error
 */
-int grib_get_long_array(grib_handle* h, const char* key, long*   vals, size_t *length);
+int grib_get_long_array(grib_handle* h, const char* key, long* vals, size_t *length);
 
 
 
@@ -846,7 +845,7 @@ int grib_get_long_array(grib_handle* h, const char* key, long*   vals, size_t *l
 * @return          0 if OK, integer value on error
 */
 int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src);
-  
+
 /**
 *  Set a long value from a key. If several keys of the same name are present, the last one is set
 *  @see  grib_get_long
@@ -856,7 +855,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src);
 * @param val         : a long where the data will be read
 * @return            0 if OK, integer value on error
 */
-int grib_set_long         (grib_handle* h, const char*  key , long val     );
+int grib_set_long         (grib_handle* h, const char*  key , long val);
 
 /**
 *  Set a double value from a key. If several keys of the same name are present, the last one is set
@@ -867,7 +866,7 @@ int grib_set_long         (grib_handle* h, const char*  key , long val     );
 * @param val       : a double where the data will be read
 * @return            0 if OK, integer value on error
 */
-int grib_set_double       (grib_handle* h, const char*  key , double   val   );
+int grib_set_double       (grib_handle* h, const char*  key , double   val);
 
 /**
 *  Set a string value from a key. If several keys of the same name are present, the last one is set
@@ -879,7 +878,7 @@ int grib_set_double       (grib_handle* h, const char*  key , double   val   );
 * @param length      : the address of a size_t that contains the length of the string on input, and that contains the actual packed length of the string on output
 * @return            0 if OK, integer value on error
 */
-int grib_set_string       (grib_handle* h, const char*  key , const char* mesg, size_t *length );
+int grib_set_string       (grib_handle* h, const char*  key , const char* mesg, size_t *length);
 
 /**
 *  Set a bytes array from a key. If several keys of the same name are present, the last one is set
@@ -891,7 +890,7 @@ int grib_set_string       (grib_handle* h, const char*  key , const char* mesg, 
 * @param length      : the address of a size_t that contains the length of the byte array on input, and that contains the actual packed length of the byte array  on output
 * @return            0 if OK, integer value on error
 */
-int grib_set_bytes        (grib_handle* h, const char*  key, const unsigned char* bytes, size_t *length  );
+int grib_set_bytes        (grib_handle* h, const char*  key, const unsigned char* bytes, size_t *length);
 
 /**
 *  Set a double array from a key. If several keys of the same name are present, the last one is set
@@ -903,7 +902,7 @@ int grib_set_bytes        (grib_handle* h, const char*  key, const unsigned char
 * @param length      : a size_t that contains the length of the byte array on input
 * @return            0 if OK, integer value on error
 */
-int grib_set_double_array (grib_handle* h, const char*  key , const double*        vals   , size_t length  );
+int grib_set_double_array (grib_handle* h, const char*  key , const double*        vals   , size_t length);
 
 /**
 * Same as grib_set_double_array but allows setting of READ-ONLY keys like codedValues.
@@ -922,7 +921,7 @@ int grib_set_force_double_array(grib_handle* h, const char* key, const double* v
 * @param length      : a size_t that contains the length of the long array on input
 * @return            0 if OK, integer value on error
 */
-int grib_set_long_array   (grib_handle* h, const char*  key , const long*          vals   , size_t length  );
+int grib_set_long_array   (grib_handle* h, const char*  key , const long*          vals   , size_t length);
 /*! @} */
 
 
@@ -1287,7 +1286,7 @@ int grib_datetime_to_julian(long year, long month, long day, long hour, long min
 long grib_julian_to_date(long jdate);
 long grib_date_to_julian(long ddate);
 
-void grib_get_reduced_row(long pl,double lon_first,double lon_last,long* npoints,long* ilon_first, long* ilon_last );
+void grib_get_reduced_row(long pl,double lon_first,double lon_last,long* npoints,long* ilon_first, long* ilon_last);
 
 /* read products */
 int wmo_read_any_from_file(FILE *f, void *buffer, size_t *len);
@@ -1298,8 +1297,8 @@ int wmo_read_any_from_stream(void *stream_data, long (*stream_proc )(void *, voi
 void *wmo_read_any_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
 void *wmo_read_gts_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
 void *wmo_read_bufr_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
-int grib_get_message_offset ( grib_handle* h,off_t* offset );
-int grib_get_message_size ( grib_handle* h,size_t* size );
+int grib_get_message_offset ( grib_handle* h,off_t* offset);
+int grib_get_message_size ( grib_handle* h,size_t* size);
 
 struct grib_points {
     grib_context* context;
@@ -1383,6 +1382,7 @@ typedef struct grib_util_grid_spec {
 } grib_util_grid_spec;
 
 
+#define GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT      0
 #define GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX 1
 #define GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE    2
 #define GRIB_UTIL_PACKING_TYPE_JPEG    3
@@ -1394,7 +1394,7 @@ typedef struct grib_util_grid_spec {
 #define GRIB_UTIL_PACKING_SAME_AS_INPUT    	0
 #define GRIB_UTIL_PACKING_USE_PROVIDED  	1
 
-#define GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT      0 
+#define GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT      0
 #define GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES       1
 #define GRIB_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT 2
 #define GRIB_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR  3
@@ -1403,15 +1403,15 @@ typedef struct grib_util_packing_spec {
 
 	/* Packing options */
 	long packing_type;
-	long packing;      
+	long packing;
 	long boustrophedonic;
 
 	long editionNumber; /* =0 for default value */
 
 	/* Accuracy */
-	long accuracy; 
-	long bitsPerValue;          
-	long decimalScaleFactor;  
+	long accuracy;
+	long bitsPerValue;
+	long decimalScaleFactor;
 
 	long computeLaplacianOperator;
 	int truncateLaplacian;
@@ -1421,17 +1421,17 @@ typedef struct grib_util_packing_spec {
 	long deleteLocalDefinition; /* default(=0) local definition is taken from the input field */
 
 	/* Extra values when packing */
-	grib_values extra_settings[80]; 
+	grib_values extra_settings[80];
 	long        extra_settings_count;
 } grib_util_packing_spec;
 
 
-grib_handle *grib_util_set_spec(grib_handle *h, 
-	const grib_util_grid_spec    *grid_spec, 
+grib_handle *grib_util_set_spec(grib_handle *h,
+	const grib_util_grid_spec    *grid_spec,
 	const grib_util_packing_spec *packing_spec,  /* NULL for defaults (same as input) */
 	int flags,
-	const double *data_values, 
-	size_t data_values_count, 
+	const double *data_values,
+	size_t data_values_count,
 	int *err);
 
 
