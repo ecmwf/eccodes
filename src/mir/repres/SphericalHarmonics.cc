@@ -56,8 +56,8 @@ void SphericalHarmonics::fill(grib_info &info) const  {
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_SH;
     info.grid.truncation = truncation_;
     // This may be usefulle after vod2uv
-    // info.packing.computeLaplacianOperator = 1;
-    // info.packing.truncateLaplacian = 1;
+    info.packing.computeLaplacianOperator = 1;
+    info.packing.truncateLaplacian = 1;
     // info.packing.laplacianOperator = 0;
     info.packing.packing_type = GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX; // Check if this is needed, why does grib_api not copy input?
 }
