@@ -46,6 +46,9 @@ void SphericalHarmonics::print(std::ostream &out) const {
         << "]";
 }
 
+Representation *SphericalHarmonics::clone() const {
+    return new SphericalHarmonics(truncation_);
+}
 
 void SphericalHarmonics::fill(grib_info &info) const  {
     // See copy_spec_from_ksec.c in libemos for info
@@ -64,7 +67,7 @@ size_t SphericalHarmonics::truncation() const {
 }
 
 void SphericalHarmonics::truncate(size_t truncation_from, size_t truncation_to,
-                                  const std::vector<double>& in, std::vector<double>& out) {
+                                  const std::vector<double> &in, std::vector<double> &out) {
 
     ASSERT(truncation_to != truncation_from);
 

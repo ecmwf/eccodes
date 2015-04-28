@@ -92,6 +92,25 @@ void GribOutput::save(const param::MIRParametrisation &param, input::MIRInput &i
 
     field.representation()->fill(info);
 
+    bool u_component = false;
+    param.get("u-component", u_component);
+
+    bool v_component = false;
+    param.get("v-component", v_component);
+
+    if(u_component) {
+        int n = info.packing.extra_settings_count++;
+        info.packing.extra_settings[n].name = "paramId";
+        info.packing.extra_settings[n].type = GRIB_TYPE_LONG;
+        info.packing.extra_settings[n].long_value = 131;
+    }
+
+    if(v_component) {
+        int n = info.packing.extra_settings_count++;
+        info.packing.extra_settings[n].name = "paramId";
+        info.packing.extra_settings[n].type = GRIB_TYPE_LONG;
+        info.packing.extra_settings[n].long_value = 132;
+    }
 
     X(info.grid.grid_type);
     X(info.grid.Ni);

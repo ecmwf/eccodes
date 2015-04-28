@@ -100,7 +100,7 @@ class SphericalHarmonics : public Representation {
     virtual Representation* truncate(size_t truncation,
                                      const std::vector<double>&, std::vector<double>&) const;
     virtual size_t truncation() const;
-
+    virtual Representation* clone() const;
 // -- Class members
     // None
 
