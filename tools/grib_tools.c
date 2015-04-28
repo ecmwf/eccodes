@@ -273,6 +273,7 @@ char iobuf[1024*1024];
 static int grib_tool_without_orderby(grib_runtime_options* options)
 {
     int err=0;
+    int nofail=0;
     grib_failed *failed=NULL,*p=NULL;
     grib_handle* h=NULL;
     grib_context* c=NULL;
@@ -316,10 +317,11 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
         infile->filter_handle_count=0;
 
         grib_tool_new_file_action(options,infile);
+        nofail=grib_options_on("f");
 
         while(!options->skip_all && ((h = grib_handle_new_from_file_x(c,infile->file,options->mode,
                 options->headers_only,&err))
-                != NULL || err != GRIB_SUCCESS ) ) {
+                != NULL || ( err != GRIB_SUCCESS && nofail==0 )) ) {
             infile->handle_count++;
             options->handle_count++;
             options->error=err;

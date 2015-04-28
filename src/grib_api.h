@@ -102,6 +102,7 @@ Log mode for information for processing information
 #define GRIB_DUMP_FLAG_HEXADECIMAL  (1<<7)
 #define GRIB_DUMP_FLAG_NO_DATA      (1<<8)
 #define GRIB_DUMP_FLAG_ALL_DATA      (1<<9)
+#define GRIB_DUMP_FLAG_ALL_ATTRIBUTES      (1<<10)
 
 /* grib_nearest flags */
 #define GRIB_NEAREST_SAME_GRID   (1<<0)

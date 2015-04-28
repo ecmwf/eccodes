@@ -17,8 +17,8 @@
 
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value*/
-        {"j:","s/f","\n\t\tJSON mode (JavaScript Object Notation)."
-                    "\n\t\tOptions: s->structure, f->flat (only data)\n",1,1,"s"},
+        {"j:","s/f/a","\n\t\tJSON mode (JavaScript Object Notation)."
+                    "\n\t\tOptions: s->structure, f->flat (only data), a->all attributes\n",1,1,"s"},
         {"S",0,0,1,0,0},
         {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
         {"D",0,0,0,1,0},
@@ -26,6 +26,7 @@ grib_option grib_options[]={
         {"u",0,"Print only some values.\n",0,1,0},
         /*     {"C",0,0,0,1,0}, */
         {"t",0,0,0,1,0},
+        {"f",0,0,0,1,0},
         {"H",0,0,0,1,0},
         {"a",0,0,0,1,0},
         {"w:",0,0,0,1,0},
@@ -75,7 +76,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("j:")) {
         options->dump_mode = "json";
         json_option=grib_options_get_option("j:");
-        if (strlen(json_option)>1 || ( json_option[0] != 's' && json_option[0]!= 'f')) {
+        if (strlen(json_option)>1 || ( json_option[0] != 's' && json_option[0]!= 'f' && json_option[0]!= 'a')) {
           printf("wrong json option %s\n",json_option);
           exit(1);
         }
@@ -172,6 +173,11 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             break;
           case 's':
             grib_set_long(h,"unpack",1);
+            grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
+            break;
+          case 'a':
+            grib_set_long(h,"unpack",1);
+            options->dump_flags=GRIB_DUMP_FLAG_ALL_ATTRIBUTES;
             grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
             break;
           default :

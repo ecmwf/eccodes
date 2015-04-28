@@ -180,7 +180,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 
         depth-=2;
         fprintf(self->dumper.out,"\n%-*s]",depth," ");
-        if (a->attributes[0]) fprintf(self->dumper.out,",");
+        /* if (a->attributes[0]) fprintf(self->dumper.out,","); */
         grib_context_free(a->parent->h->context,values);
     } else {
         if (self->isLeaf==0) {
@@ -191,7 +191,6 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
             fprintf(self->dumper.out,"null");
         else
             fprintf(self->dumper.out,"%g",value);
-        if (a->attributes[0]) fprintf(self->dumper.out,",");
     }
 
     if (self->isLeaf==0) {
@@ -259,7 +258,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 
         depth-=2;
         fprintf(self->dumper.out,"\n%-*s]",depth," ");
-        if (a->attributes[0]) fprintf(self->dumper.out,",");
+        /* if (a->attributes[0]) fprintf(self->dumper.out,","); */
         grib_context_free(a->parent->h->context,values);
     } else {
         if (self->isLeaf==0) {
@@ -270,7 +269,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
             fprintf(self->dumper.out,"null");
         else
             fprintf(self->dumper.out,"%ld",value);
-        if (a->attributes[0]) fprintf(self->dumper.out,",");
+        /* if (a->attributes[0]) fprintf(self->dumper.out,","); */
     }
 
     if (self->isLeaf==0) {
@@ -314,7 +313,7 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
     else
         fprintf(self->dumper.out,"%g",value);
 
-    if (a->attributes[0]) fprintf(self->dumper.out,",");
+    /* if (a->attributes[0]) fprintf(self->dumper.out,","); */
 
     if (self->isLeaf==0) {
       dump_attributes(d,a);
@@ -378,7 +377,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
   depth-=2;
   fprintf(self->dumper.out,"\n%-*s]",depth," ");
 
-    if (a->attributes[0]) fprintf(self->dumper.out,",");
+    /* if (a->attributes[0]) fprintf(self->dumper.out,","); */
 
   if (self->isLeaf==0) {
     dump_attributes(d,a);
@@ -430,7 +429,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     }
     fprintf(self->dumper.out,"\"%s\"",value);
 
-    if (a->attributes[0]) fprintf(self->dumper.out,",");
+    /* if (a->attributes[0]) fprintf(self->dumper.out,","); */
 
     if (self->isLeaf==0) {
       dump_attributes(d,a);
@@ -494,7 +493,14 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a) {
   FILE* out=self->dumper.out;
   while (a->attributes[i] && i < MAX_ACCESSOR_ATTRIBUTES) {
     self->isAttribute=1;
+    if (  (d->option_flags & GRIB_DUMP_FLAG_ALL_ATTRIBUTES ) == 0
+       && (a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_DUMP)==0) 
+    {
+      i++;
+      continue;
+    }
     self->isLeaf=a->attributes[i]->attributes[0]==NULL ? 1 : 0;
+    fprintf(self->dumper.out,",");
     fprintf(self->dumper.out,"\n%-*s",depth," ");
     fprintf(out,"\"%s\" : ",a->attributes[i]->name);
     switch (grib_accessor_get_native_type(a->attributes[i])) {
@@ -509,8 +515,6 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a) {
         break;
     }
     i++;
-    if (a->attributes[i] && i < MAX_ACCESSOR_ATTRIBUTES)
-      fprintf(self->dumper.out,",");
   }
   self->isLeaf=0;
   self->isAttribute=0;
