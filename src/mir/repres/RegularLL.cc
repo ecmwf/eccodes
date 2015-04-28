@@ -137,7 +137,7 @@ Representation *RegularLL::crop(const util::BoundingBox &bbox, const std::vector
         }
     }
 
-    std::cout << "CROP " << util::BoundingBox(n, w, s, e) << std::endl;
+    std::cout << "CROP resulting bbox is: " << util::BoundingBox(n, w, s, e) << std::endl;
     RegularLL *cropped = new RegularLL(util::BoundingBox(n, w, s, e), increments_);
 
     ASSERT(out.size() > 0);
