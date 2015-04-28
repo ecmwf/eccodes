@@ -13,8 +13,8 @@ constant tablesLocalDir="bufr/tables/[masterTableNumber]/local/[localTablesVersi
 constant rootTablesDir="bufr/tables" : hidden;
 
 transient tableNumber=0;
-codetable[24] codeTablesMaster '[tablesMasterDir]/codetables/[tableNumber].table' : string_type,transient;
-codetable[24] codeTablesLocal '[tablesLocalDir]/codetables/[tableNumber].table' : string_type,transient;
+#codetable[4] codeTablesMaster '[tablesMasterDir]/codetables/[tableNumber].table' : string_type,transient;
+#codetable[4] codeTablesLocal '[tablesLocalDir]/codetables/[tableNumber].table' : string_type,transient;
 
 hash_array sequences (defaultSequence,"sequence.def",tablesMasterDir,tablesLocalDir): long_type;
 #smart_table codeFlags ("codeFlag.def",tablesMasterDir,tablesLocalDir,...);
