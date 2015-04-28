@@ -109,6 +109,8 @@ Representation *RegularLL::crop(const util::BoundingBox &bbox, const std::vector
         for (size_t i = 0; i < ni_; i++, lon += we) {
             if (bbox.contains(lat, lon)) {
 
+                lon = bbox.normalise(lon);
+
                 if(out.size() == 0) {
                     n = s = lat;
                     w = e = lon;
@@ -125,6 +127,7 @@ Representation *RegularLL::crop(const util::BoundingBox &bbox, const std::vector
         }
     }
 
+    std::cout << "CROP " << util::BoundingBox(n, w, s, e) << std::endl;
     RegularLL *cropped = new RegularLL(util::BoundingBox(n, w, s, e), increments_);
 
     ASSERT(out.size() > 0);
