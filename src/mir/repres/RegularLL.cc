@@ -34,7 +34,7 @@ RegularLL::RegularLL(const param::MIRParametrisation &parametrisation):
 
 
 RegularLL::RegularLL(const util::BoundingBox &bbox,
-                     const util::Increments& increments):
+                     const util::Increments &increments):
     bbox_(bbox),
     increments_(increments) {
     setNiNj();
@@ -44,11 +44,14 @@ RegularLL::RegularLL(const util::BoundingBox &bbox,
 RegularLL::~RegularLL() {
 }
 
+Representation *RegularLL::clone() const {
+    return new RegularLL(bbox_, increments_);
+}
 
 void RegularLL::setNiNj() {
     double ni = (bbox_.east() - bbox_.west()) / increments_.west_east();
     ASSERT(ni > 0);
-    if(long(ni) != ni) {
+    if (long(ni) != ni) {
         eckit::StrStream os;
         os << "RegularLL: cannot compute Ni: east=" << bbox_.east() << ", west=" << bbox_.west()
            << ", increment=" << increments_.west_east() << ", ni=" << ni <<  ", diff=" << (ni - long(ni)) << std::endl;
@@ -58,7 +61,7 @@ void RegularLL::setNiNj() {
 
     double nj = (bbox_.north() - bbox_.south()) / increments_.north_south();
     ASSERT(nj > 0);
-    if(long(nj) != nj) {
+    if (long(nj) != nj) {
         eckit::StrStream os;
         os << "RegularLL: cannot compute Nj: north=" << bbox_.north() << ", south=" << bbox_.south()
            << ", increment=" << increments_.north_south() << ", nj=" << nj << ", diff=" << (nj - long(nj)) << std::endl;
@@ -121,7 +124,7 @@ Representation *RegularLL::crop(const util::BoundingBox &bbox, const std::vector
 
                 lon = bbox.normalise(lon);
 
-                if(out.size() == 0) {
+                if (out.size() == 0) {
                     n = s = lat;
                     w = e = lon;
                 } else {

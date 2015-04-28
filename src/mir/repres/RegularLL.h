@@ -110,6 +110,7 @@ class RegularLL : public Gridded {
     virtual Representation *crop(const util::BoundingBox& bbox, const std::vector<double> &, std::vector<double> &) const;
     virtual atlas::Grid* atlasGrid() const;
     virtual size_t frame(std::vector<double> &values, size_t size, double missingValue) const;
+ virtual Representation* clone() const;
 
     // -- Class members
     // None
