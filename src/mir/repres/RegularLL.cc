@@ -48,12 +48,22 @@ RegularLL::~RegularLL() {
 void RegularLL::setNiNj() {
     double ni = (bbox_.east() - bbox_.west()) / increments_.west_east();
     ASSERT(ni > 0);
-    ASSERT(long(ni) == ni);
+    if(long(ni) != ni) {
+        eckit::StrStream os;
+        os << "RegularLL: cannot compute Ni: east=" << bbox_.east() << ", west=" << bbox_.west()
+        << ", increment=" << increments_.west_east() << ", ni=" << ni << std::endl;
+        throw eckit::SeriousBug(std::string(os));
+    }
     ni_ = ni + 1;
 
     double nj = (bbox_.north() - bbox_.south()) / increments_.north_south();
     ASSERT(nj > 0);
-    ASSERT(long(nj) == nj);
+    if(long(nj) != nj) {
+        eckit::StrStream os;
+        os << "RegularLL: cannot compute Nj: north=" << bbox_.north() << ", south=" << bbox_.south()
+        << ", increment=" << increments_.north_south() << ", nj=" << nj << std::endl;
+        throw eckit::SeriousBug(std::string(os));
+    }
     nj_ = nj + 1;
 }
 
