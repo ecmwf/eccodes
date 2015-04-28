@@ -14,20 +14,13 @@
 
 #include "mir/repres/ReducedGG.h"
 
-
 #include <iostream>
 
-#include "eckit/exception/Exceptions.h"
-
-#include "mir/param/MIRParametrisation.h"
-
-
 #include "atlas/Grid.h"
-// #include "atlas/GridSpec.h"
-#include "atlas/grids/ReducedGaussianGrid.h"
-#include <eckit/parser/Tokenizer.h>
-
 #include "atlas/grids/grids.h"
+#include "atlas/grids/ReducedGaussianGrid.h"
+#include "eckit/exception/Exceptions.h"
+#include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
 
 namespace mir {
@@ -87,56 +80,14 @@ atlas::Grid *ReducedGG::atlasGrid() const {
     if (pl_.size() > 0) {
         // FIXME: ask atlas to support long instead of int
         std::vector<int> pl(pl_.size());
-        for(size_t i= 0; i < pl_.size(); i++) {
+        for (size_t i = 0; i < pl_.size(); i++) {
             pl[i] = pl_[i];
         }
         return new atlas::grids::ReducedGaussianGrid(N_, &pl[0]);
     } else {
-#if 1
         eckit::StrStream os;
         os << "rgg.N" << N_ << eckit::StrStream::ends;
         return atlas::Grid::create(std::string(os));
-#else
-
-        switch (N_) {
-        case 32:
-            return new atlas::grids::rgg::N32();
-            break;
-
-        case 48:
-            return new atlas::grids::rgg::N48();
-            break;
-
-        case 80:
-            return new atlas::grids::rgg::N80();
-            break;
-
-        case 128:
-            return new atlas::grids::rgg::N128();
-            break;
-
-        case 256:
-            return new atlas::grids::rgg::N256();
-            break;
-
-        case 640:
-            return new atlas::grids::rgg::N640();
-            break;
-
-        case 2000:
-            return new atlas::grids::rgg::N2000();
-            break;
-
-        case 4000:
-            return new atlas::grids::rgg::N4000();
-            break;
-        }
-
-        eckit::StrStream os;
-        os << "Unsupported reduced Gaussian grid: N" << N_ << eckit::StrStream::ends;
-        throw eckit::SeriousBug(os);
-#endif
-
     }
 }
 
