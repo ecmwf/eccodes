@@ -514,6 +514,7 @@ static double calculate_pfactor(grib_context *ctx,const double* spectralField, l
 
   for( loop = ismin; loop <= ismax; loop++ ) {
     x = log( (double) (loop*(loop+1)) );
+    Assert( norms[loop] > 0 );
     y = log( norms[loop] );
     weightedSumOverX = weightedSumOverX + x * weights[loop];
     weightedSumOverY = weightedSumOverY + y * weights[loop];

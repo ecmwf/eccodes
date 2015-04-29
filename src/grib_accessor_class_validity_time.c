@@ -217,7 +217,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     if (self->stepUnits) {
         if ((ret=grib_get_long_internal(a->parent->h, self->stepUnits,&stepUnits))!=GRIB_SUCCESS) return ret;
         step_mins = convert_to_minutes(step, stepUnits);
-        Assert(step_mins>=0);
     }
 
     minutes = time % 100;
@@ -226,7 +225,14 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     tmp_hrs = tmp/60;          /* how many hours and mins is that? */
     tmp_mins = tmp%60;
     hours += tmp_hrs;          /* increment hours */
-    hours = hours % 24;        /* wrap round if >= 24 */
+    if (hours>0) {
+        hours = hours % 24;        /* wrap round if >= 24 */
+    } else {
+        /* GRIB-29: Negative forecast time */
+        while (hours<0) {
+            hours += 24;
+        }
+    }
     time = hours * 100 + tmp_mins;
 
     if(*len < 1)

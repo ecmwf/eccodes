@@ -70,6 +70,6 @@ if ( new() || (section4Length - 4*NV == 45) )
 else
 {
    # This is for existing gribs which were written with 4 octets
-   unsigned[4] forecastTime  : dump;
+   signed[4] forecastTime  : dump;
 }
 
