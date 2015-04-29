@@ -69,3 +69,4 @@ GRIB_NULL_POINTER             Null pointer
 GRIB_ATTRIBUTE_CLASH          Attribute is already present, cannot add
 GRIB_TOO_MANY_ATTRIBUTES      Too many attributes. Increase MAX_ACCESSOR_ATTRIBUTES
 GRIB_ATTRIBUTE_NOT_FOUND      Attribute not found.
+GRIB_UNSUPPORTED_EDITION      Edition not supported.

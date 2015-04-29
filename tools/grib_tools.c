@@ -321,14 +321,13 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
 
         while(!options->skip_all && ((h = grib_handle_new_from_file_x(c,infile->file,options->mode,
                 options->headers_only,&err))
-                != NULL || ( err != GRIB_SUCCESS && nofail==0 )) ) {
+                != NULL || err != GRIB_SUCCESS ) ) {
             infile->handle_count++;
             options->handle_count++;
             options->error=err;
 
             if (!h) {
-                fprintf(dump_file,"\t\t*** unreadable message ***\n");
-                if (options->fail ) GRIB_CHECK_NOLINE(err,0);
+                fprintf(dump_file,"\t\t\"Error: unreadable message\"\n");
 
                 failed=(grib_failed*)grib_context_malloc_clear(c,sizeof(grib_failed));
                 failed->count=infile->handle_count;

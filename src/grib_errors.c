@@ -67,6 +67,7 @@ static const char *errors[] = {
 "Attribute is already present, cannot add",		/* -61 GRIB_ATTRIBUTE_CLASH */
 "Too many attributes. Increase MAX_ACCESSOR_ATTRIBUTES",		/* -62 GRIB_TOO_MANY_ATTRIBUTES */
 "Attribute not found.",		/* -63 GRIB_ATTRIBUTE_NOT_FOUND */
+"Edition not supported.",		/* -64 GRIB_UNSUPPORTED_EDITION */
 "Value mismatch",		/* 1 GRIB_VALUE_MISMATCH */
 "double values are different",		/* 2 GRIB_DOUBLE_VALUE_MISMATCH */
 "long values are different",		/* 3 GRIB_LONG_VALUE_MISMATCH */

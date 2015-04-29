@@ -133,5 +133,7 @@ Error codes returned by the grib_api functions.
 #define GRIB_TOO_MANY_ATTRIBUTES		-62
 /** Attribute not found. */
 #define GRIB_ATTRIBUTE_NOT_FOUND		-63
+/** Edition not supported. */
+#define GRIB_UNSUPPORTED_EDITION		-64
 /*! @}*/
 #endif

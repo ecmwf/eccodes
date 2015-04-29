@@ -1,3 +1,4 @@
+  integer, parameter,public :: GRIB_UNSUPPORTED_EDITION                           = -64
   integer, parameter,public :: GRIB_ATTRIBUTE_NOT_FOUND                           = -63
   integer, parameter,public :: GRIB_TOO_MANY_ATTRIBUTES                           = -62
   integer, parameter,public :: GRIB_ATTRIBUTE_CLASH                               = -61
