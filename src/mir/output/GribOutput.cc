@@ -102,14 +102,14 @@ void GribOutput::save(const param::MIRParametrisation &param, input::MIRInput &i
         int n = info.packing.extra_settings_count++;
         info.packing.extra_settings[n].name = "paramId";
         info.packing.extra_settings[n].type = GRIB_TYPE_LONG;
-        info.packing.extra_settings[n].long_value = 131;
+        info.packing.extra_settings[n].long_value = 131; // Find something better
     }
 
     if(v_component) {
         int n = info.packing.extra_settings_count++;
         info.packing.extra_settings[n].name = "paramId";
         info.packing.extra_settings[n].type = GRIB_TYPE_LONG;
-        info.packing.extra_settings[n].long_value = 132;
+        info.packing.extra_settings[n].long_value = 132; / Find something better
     }
 
     X(info.grid.grid_type);
