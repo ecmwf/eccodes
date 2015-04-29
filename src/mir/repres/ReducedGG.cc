@@ -37,13 +37,19 @@ ReducedGG::ReducedGG(size_t N_):
 
 }
 
-ReducedGG::ReducedGG() {
-}
-
-
 ReducedGG::~ReducedGG() {
 }
 
+ReducedGG::ReducedGG(long N, const std::vector<long> &pl, const util::BoundingBox &bbox):
+    N_(N),
+    pl_(pl),
+    bbox_(bbox) {
+
+}
+
+Representation *ReducedGG::clone() const {
+    return new ReducedGG(N_, pl_, bbox_);
+}
 
 void ReducedGG::print(std::ostream &out) const {
     out << "ReducedGG[N" << N_ << "]";

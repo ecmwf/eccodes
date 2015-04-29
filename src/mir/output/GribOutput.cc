@@ -168,7 +168,8 @@ void GribOutput::save(const param::MIRParametrisation &param, input::MIRInput &i
     int flags = 0;
     int err = 0;
 
-    const std::vector<double> values = field.values();
+    ASSERT(field.dimensions() == 1);
+    const std::vector<double> values = field.values(0);
 
     grib_handle *result = grib_util_set_spec(h, &info.grid, &info.packing, flags, &values[0], values.size(), &err);
     HandleFree hf(result); // Make sure handle deleted even in case of exception

@@ -27,87 +27,89 @@ namespace repres {
 class ReducedGG : public Gridded {
   public:
 
-// -- Exceptions
+    // -- Exceptions
     // None
 
-// -- Contructors
+    // -- Contructors
 
-    ReducedGG(const param::MIRParametrisation&);
+    ReducedGG(const param::MIRParametrisation &);
     ReducedGG(size_t);
 
-// -- Destructor
+    // -- Destructor
 
     virtual ~ReducedGG(); // Change to virtual if base class
 
-// -- Convertors
+    // -- Convertors
     // None
 
-// -- Operators
+    // -- Operators
     // None
 
-// -- Methods
+    // -- Methods
 
-// -- Overridden methods
+    // -- Overridden methods
     // None
 
-// -- Class members
+    // -- Class members
     // None
 
-// -- Class methods
+    // -- Class methods
     // None
 
   protected:
 
-// -- Members
+    // -- Members
     // None
 
-// -- Methods
+    // -- Methods
 
-    void print(std::ostream&) const; // Change to virtual if base class
+    void print(std::ostream &) const; // Change to virtual if base class
 
-// -- Overridden methods
+    // -- Overridden methods
     // None
 
-// -- Class members
+    // -- Class members
     // None
 
-// -- Class methods
+    // -- Class methods
     // None
 
   private:
 
-    ReducedGG();
+    ReducedGG(long, const std::vector<long> &, const util::BoundingBox &);
 
-// No copy allowed
 
-    ReducedGG(const ReducedGG&);
-    ReducedGG& operator=(const ReducedGG&);
+    // No copy allowed
 
-// -- Members
+    ReducedGG(const ReducedGG &);
+    ReducedGG &operator=(const ReducedGG &);
+
+    // -- Members
 
     long N_;
     std::vector<long> pl_;
     util::BoundingBox bbox_;
 
-// -- Methods
+    // -- Methods
     // None
 
 
-// -- Overridden methods
+    // -- Overridden methods
 
-    virtual void fill(grib_info&) const;
-    atlas::Grid* atlasGrid() const;
+    virtual void fill(grib_info &) const;
+    atlas::Grid *atlasGrid() const;
+    virtual Representation *clone() const;
 
-// -- Class members
+    // -- Class members
     // None
 
-// -- Class methods
+    // -- Class methods
     // None
 
-// -- Friends
+    // -- Friends
 
     //friend ostream& operator<<(ostream& s,const ReducedGG& p)
-    //	{ p.print(s); return s; }
+    //  { p.print(s); return s; }
 
 };
 
