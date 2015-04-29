@@ -1248,6 +1248,8 @@ Error codes returned by the eccodes functions.
 #define CODES_TOO_MANY_ATTRIBUTES GRIB_TOO_MANY_ATTRIBUTES
 /** Attribute not found. */
 #define CODES_ATTRIBUTE_NOT_FOUND GRIB_ATTRIBUTE_NOT_FOUND
+/** Edition not supported. */
+#define CODES_UNSUPPORTED_EDITION GRIB_UNSUPPORTED_EDITION
 
 
 /*! @}*/

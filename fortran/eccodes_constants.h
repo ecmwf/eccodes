@@ -1,3 +1,4 @@
+  integer, parameter,public :: CODES_UNSUPPORTED_EDITION                           = -64
   integer, parameter,public :: CODES_ATTRIBUTE_NOT_FOUND                           = -63
   integer, parameter,public :: CODES_TOO_MANY_ATTRIBUTES                           = -62
   integer, parameter,public :: CODES_ATTRIBUTE_CLASH                               = -61
