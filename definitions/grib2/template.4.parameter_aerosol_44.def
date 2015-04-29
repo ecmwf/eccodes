@@ -21,7 +21,7 @@ meta parameterUnits codetable_units(parameterNumber) : dump;
 meta parameterName  codetable_title(parameterNumber) : dump;
 
 # Atmospheric chemical or physical constitutent type
-codetable[2] aerosolType ('4.230.table',masterDir,localDir) : dump;
+codetable[2] aerosolType ('4.233.table',masterDir,localDir) : dump;
 
 codetable[1] typeOfSizeInterval ('4.91.table',masterDir,localDir) : dump;
 alias typeOfIntervalForFirstAndSecondSize=typeOfSizeInterval;
