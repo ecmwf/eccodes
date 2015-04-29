@@ -391,6 +391,6 @@ ecbuild_add_library(TARGET    eccodes
                     ${CMATH_LIBRARIES}  )
 
 
-install( FILES grib_api.h eccodes.h eccodes_windef.h DESTINATION include )
-install( FILES ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h DESTINATION include )
+install( FILES grib_api.h eccodes.h eccodes_windef.h DESTINATION ${INSTALL_INCLUDE_DIR} )
+install( FILES ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h DESTINATION ${INSTALL_INCLUDE_DIR} )
 

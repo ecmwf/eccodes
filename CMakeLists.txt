@@ -12,7 +12,7 @@ project( eccodes C )
 
 set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild/cmake")
 
-set( ECCODES_INSTALL_INCLUDE_DIR include CACHE PATH "ecCodes override installation directory for header files")
+#set( ECCODES_INSTALL_INCLUDE_DIR include CACHE PATH "ecCodes override installation directory for header files")
 
 include( ecbuild_system )
 
