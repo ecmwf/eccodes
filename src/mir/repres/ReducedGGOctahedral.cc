@@ -53,7 +53,22 @@ void ReducedGGOctahedral::fill(grib_info &info) const  {
 
     // See copy_spec_from_ksec.c in libemos for info
 
+#if 0
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_OCTAHEDRAL_GG;
+#else
+    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
+    atlas::grids::rgg::OctahedralRGG grid(N_);
+
+    const std::vector<int>& v = grid.npts_per_lat();
+    tmp_.resize(v.size());
+    for(size_t i=0; i < v.size(); i++) {
+        tmp_[i] = v[i];
+    }
+    info.grid.pl = &tmp_[0];
+    info.grid.pl_size = tmp_.size();
+
+#endif
+
     info.grid.Nj = N_ * 2; // Should be PL.size()
     info.grid.N = N_;
 

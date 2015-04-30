@@ -87,6 +87,7 @@ class ReducedGGOctahedral : public Gridded {
 
     size_t N_;
     util::BoundingBox bbox_;
+    mutable std::vector<long> tmp_;
 
 
     // -- Methods
