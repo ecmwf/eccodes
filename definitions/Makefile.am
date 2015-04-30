@@ -174,6 +174,15 @@ dist_definitionsbufr_tables_0_local_101_98_0_codetables_DATA = \
 	bufr/tables/0/local/101/98/0/codetables/8193.table\
 	bufr/tables/0/local/101/98/0/codetables/8195.table
 
+definitionsbufr_tables_0_local_2_98_0dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/local/2/98/0
+dist_definitionsbufr_tables_0_local_2_98_0_DATA = \
+	bufr/tables/0/local/2/98/0/element.table\
+	bufr/tables/0/local/2/98/0/sequence.def
+
+definitionsbufr_tables_0_local_2_98_0_codetablesdir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/local/2/98/0/codetables
+dist_definitionsbufr_tables_0_local_2_98_0_codetables_DATA = \
+	bufr/tables/0/local/2/98/0/codetables/8201.table
+
 definitionsbufr_tables_0_wmo_10dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/wmo/10
 dist_definitionsbufr_tables_0_wmo_10_DATA = \
 	bufr/tables/0/wmo/10/element.table\
