@@ -13,8 +13,8 @@
 /// @date Apr 2015
 
 
-#ifndef ReducedGG_H
-#define ReducedGG_H
+#ifndef ReducedGGOctahedral_H
+#define ReducedGGOctahedral_H
 
 #include "mir/repres/Gridded.h"
 #include "mir/util/BoundingBox.h"
@@ -24,7 +24,7 @@ namespace mir {
 namespace repres {
 
 
-class ReducedGG : public Gridded {
+class ReducedGGOctahedral : public Gridded {
   public:
 
     // -- Exceptions
@@ -32,12 +32,11 @@ class ReducedGG : public Gridded {
 
     // -- Contructors
 
-    ReducedGG(const param::MIRParametrisation &);
-    ReducedGG(size_t);
+    ReducedGGOctahedral(size_t);
 
     // -- Destructor
 
-    virtual ~ReducedGG(); // Change to virtual if base class
+    virtual ~ReducedGGOctahedral(); // Change to virtual if base class
 
     // -- Convertors
     // None
@@ -59,9 +58,7 @@ class ReducedGG : public Gridded {
   protected:
 
     // -- Members
-
-    size_t N_;
-    util::BoundingBox bbox_;
+    // None
 
     // -- Methods
 
@@ -78,16 +75,18 @@ class ReducedGG : public Gridded {
 
   private:
 
-    ReducedGG(long, const std::vector<long> &, const util::BoundingBox &);
+    ReducedGGOctahedral(long, const util::BoundingBox &);
 
 
     // No copy allowed
 
-    ReducedGG(const ReducedGG &);
-    ReducedGG &operator=(const ReducedGG &);
+    ReducedGGOctahedral(const ReducedGGOctahedral &);
+    ReducedGGOctahedral &operator=(const ReducedGGOctahedral &);
 
     // -- Members
 
+    size_t N_;
+    util::BoundingBox bbox_;
 
 
     // -- Methods
@@ -108,7 +107,7 @@ class ReducedGG : public Gridded {
 
     // -- Friends
 
-    //friend ostream& operator<<(ostream& s,const ReducedGG& p)
+    //friend ostream& operator<<(ostream& s,const ReducedGGOctahedral& p)
     //  { p.print(s); return s; }
 
 };
