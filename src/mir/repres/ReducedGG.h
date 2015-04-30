@@ -86,7 +86,7 @@ class ReducedGG : public Gridded {
 
     // -- Members
 
-    long N_;
+    size_t N_;
     std::vector<long> pl_;
     util::BoundingBox bbox_;
 
