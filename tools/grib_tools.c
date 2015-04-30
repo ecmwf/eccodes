@@ -327,7 +327,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
             options->error=err;
 
             if (!h) {
-                fprintf(dump_file,"\t\t\"Error: unreadable message\"\n");
+                fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
 
                 failed=(grib_failed*)grib_context_malloc_clear(c,sizeof(grib_failed));
                 failed->count=infile->handle_count;
@@ -378,7 +378,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
 
     grib_tool_finalise_action(options);
 
-    return 0;
+    return options->error;
 }
 
 static int navigate(grib_field_tree* fields,grib_runtime_options* options)

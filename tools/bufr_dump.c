@@ -93,6 +93,7 @@ int grib_tool_init(grib_runtime_options* options)
 
     if  (grib_options_on("O")) {
         options->dump_mode = "wmo";
+        json=0;
         options->dump_flags = GRIB_DUMP_FLAG_CODED
                 | GRIB_DUMP_FLAG_OCTECT
                 | GRIB_DUMP_FLAG_VALUES
@@ -166,17 +167,32 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         /* fprintf(stdout,"\"message%d\" : ",options->handle_count); */
         switch (json_option[0]) {
           case 'f':
-            grib_set_long(h,"unpack",2);
+            err=grib_set_long(h,"unpack",2);
+            if (err) {
+              fprintf(stdout,"\"ERROR: unable to unpack data section\"");
+              options->error=err;
+              return err;
+            }
             a=grib_find_accessor(h,"numericValues");
             al=accessor_bufr_data_array_get_dataAccessors(a);
             grib_dump_bufr_flat(al,h,stdout,options->dump_mode,options->dump_flags,0);
             break;
           case 's':
-            grib_set_long(h,"unpack",1);
+            err=grib_set_long(h,"unpack",1);
+            if (err) {
+              fprintf(stdout,"\"ERROR: unable to unpack data section\"");
+              options->error=err;
+              return err;
+            }
             grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
             break;
           case 'a':
-            grib_set_long(h,"unpack",1);
+            err=grib_set_long(h,"unpack",1);
+            if (err) {
+              fprintf(stdout,"\"ERROR: unable to unpack data section\"");
+              options->error=err;
+              return err;
+            }
             options->dump_flags=GRIB_DUMP_FLAG_ALL_ATTRIBUTES;
             grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
             break;
@@ -188,10 +204,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         sprintf(tmp,"MESSAGE %d ( length=%ld )",options->handle_count,length);
         if (!grib_options_on("C"))
             fprintf(stdout,"#==============   %-38s   ==============\n",tmp);
-        if (!strcmp(options->dump_mode,"default")) {
-            GRIB_CHECK_NOLINE(grib_get_string(h,"identifier",identifier,&idlen),0);
-            printf("%s {\n",identifier);
-        }
+        grib_set_long(h,"unpack",1);
+        grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
     }
 
     if (!strcmp(options->dump_mode,"default"))

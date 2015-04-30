@@ -54,6 +54,7 @@
    MEMBERS    = int bitmapCurrent
    MEMBERS    = grib_accessors_list* dataAccessors
    MEMBERS    = int unpackMode
+   MEMBERS    = int bitsToEndData
 
    END_CLASS_DEF
 
@@ -117,6 +118,7 @@ typedef struct grib_accessor_bufr_data_array {
 	int bitmapCurrent;
 	grib_accessors_list* dataAccessors;
 	int unpackMode;
+	int bitsToEndData;
 } grib_accessor_bufr_data_array;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -248,6 +250,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
   a->parent->h->unpacked=0;
 
   a->length = init_length(a);
+  self->bitsToEndData=a->length*8;
   self->unpackMode=CODES_BUFR_UNPACK_STRUCTURE;
 
   /* Assert(a->length>=0); */
@@ -261,6 +264,14 @@ static void clean_string(char* s,int len) {
     else break;
     i--;
   }
+}
+
+static int check_end_data(grib_context* c,grib_accessor_bufr_data_array* self,int size) {
+  grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tbitsToEndData=%ld elementSize=%ld", self->bitsToEndData,size);
+  self->bitsToEndData-=size;
+  if (self->bitsToEndData<0)
+    return GRIB_DECODING_ERROR;
+  return 0;
 }
 
 static void self_clear(grib_context* c,grib_accessor_bufr_data_array* self) {
@@ -352,20 +363,27 @@ static int get_descriptors(grib_accessor* a) {
 }
 
 static void decode_string_array(grib_context* c,unsigned char* data,long* pos, int i,
-              grib_accessor_bufr_data_array* self) {
+              grib_accessor_bufr_data_array* self,int *err) {
   char* sval=0;
   int j,modifiedWidth,modifiedReference,width;
   double modifiedFactor;
+
   modifiedWidth= self->expanded->v[i]->width;
   modifiedReference= self->expanded->v[i]->reference;
   modifiedFactor= self->expanded->v[i]->factor;
 
   sval=(char*)grib_context_malloc_clear(c,modifiedWidth/8+1);
+  *err=check_end_data(c,self,modifiedWidth);
+  if (*err) return ;
   grib_decode_string(data,pos,modifiedWidth/8,sval);
   clean_string(sval,modifiedWidth/8);
+  *err=check_end_data(c,self,6);
+  if (*err) return ;
   width=grib_decode_unsigned_long(data,pos,6);
   if (width) {
     grib_context_free(c,sval);
+    *err=check_end_data(c,self,width*8*self->numberOfSubsets);
+    if (*err) return ;
     for (j=0;j<self->numberOfSubsets;j++) {
       sval=(char*)grib_context_malloc_clear(c,width+1);
       grib_decode_string(data,pos,width,sval);
@@ -381,22 +399,29 @@ static void decode_string_array(grib_context* c,unsigned char* data,long* pos, i
 }
 
 static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long* pos,int i,
-              grib_accessor_bufr_data_array* self) {
+              grib_accessor_bufr_data_array* self,int *err) {
   grib_darray* ret=NULL;
   int j;
   unsigned long lval;
   int localReference,localWidth,modifiedWidth,modifiedReference;
   double modifiedFactor,dval;
 
+  *err=0;
+
   modifiedReference= self->expanded->v[i]->reference;
   modifiedFactor= self->expanded->v[i]->factor;
   modifiedWidth= self->expanded->v[i]->width;
 
+  *err=check_end_data(c,self,modifiedWidth+6);
+  if (*err) return NULL;
   lval=grib_decode_unsigned_long(data,pos,modifiedWidth);
   localReference=(long)lval+modifiedReference;
   localWidth=grib_decode_unsigned_long(data,pos,6);
+  grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tlocalWidth=%ld",localWidth); 
   ret=grib_darray_new(c,100,100);
   if (localWidth) {
+    *err=check_end_data(c,self,localWidth*self->numberOfSubsets);
+    if (*err) return NULL;
     for (j=0;j<self->numberOfSubsets;j++) {
       lval=grib_decode_unsigned_long(data,pos,localWidth);
       if (grib_is_all_bits_one(lval,localWidth) && self->canBeMissing[i]) {
@@ -419,12 +444,16 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
 }
 
 static char* decode_string_value(grib_context* c,unsigned char* data,long* pos, int i,
-              grib_accessor_bufr_data_array* self) {
+              grib_accessor_bufr_data_array* self,int *err) {
   char* sval=0;
   int len;
 
+  *err=0;
+
   len= self->expanded->v[i]->width / 8;
 
+  *err=check_end_data(c,self,self->expanded->v[i]->width);
+  if (*err) return NULL;
   sval=(char*)grib_context_malloc_clear(c,len+1);
   grib_decode_string(data,pos,len,sval);
 
@@ -434,15 +463,20 @@ static char* decode_string_value(grib_context* c,unsigned char* data,long* pos, 
 }
 
 static double decode_double_value(grib_context* c,unsigned char* data,long* pos,int i,
-              grib_accessor_bufr_data_array* self) {
+              grib_accessor_bufr_data_array* self,int* err) {
   unsigned long lval;
   int modifiedWidth,modifiedReference;
-  double modifiedFactor,dval;
+  double modifiedFactor;
+  double dval=0;
+
+  *err=0;
 
   modifiedReference= self->expanded->v[i]->reference;
   modifiedFactor= self->expanded->v[i]->factor;
   modifiedWidth= self->expanded->v[i]->width;
 
+  *err=check_end_data(c,self,modifiedWidth);
+  if (*err) return dval;
   lval=grib_decode_unsigned_long(data,pos,modifiedWidth);
   if (grib_is_all_bits_one(lval,modifiedWidth) && self->canBeMissing[i]) {
     dval=GRIB_MISSING_DOUBLE;
@@ -452,17 +486,21 @@ static double decode_double_value(grib_context* c,unsigned char* data,long* pos,
   return dval;
 }
 
-static void decode_element(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
+static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
             unsigned char* data,long *pos,int i,grib_darray* dval,grib_sarray* sval) {
   grib_darray* dar=0;
   grib_sarray* sar=0;
   int index=0,ii;
   char* csval=0;
   double cdval=0,x;
+  int err=0;
+
+  grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tcode=%6.6ld width=%ld", 
+    self->expanded->v[i]->code,self->expanded->v[i]->width);
   if (self->expanded->v[i]->type==BUFR_DESCRIPTOR_TYPE_STRING) {
     /* string */
     if (self->compressedData) {
-      decode_string_array(c,data,pos,i,self);
+      decode_string_array(c,data,pos,i,self,&err);
       index=grib_sarray_used_size(self->stringValues)/self->numberOfSubsets;
       dar=grib_darray_new(c,self->numberOfSubsets,10);
       index=self->numberOfSubsets*(index-1);
@@ -472,7 +510,7 @@ static void decode_element(grib_context* c,grib_accessor_bufr_data_array* self,i
       }
       grib_vdarray_push(c,self->numericValues,dar);
     } else {
-      csval=decode_string_value(c,data,pos,i,self);
+      csval=decode_string_value(c,data,pos,i,self,&err);
       grib_sarray_push(c,self->stringValues,csval);
       index=grib_sarray_used_size(self->stringValues);
       cdval=index*1000+self->expanded->v[i]->width / 8;
@@ -481,13 +519,14 @@ static void decode_element(grib_context* c,grib_accessor_bufr_data_array* self,i
   } else {
     /* numeric or codetable or flagtable */
     if (self->compressedData) {
-      dar=decode_double_array(c,data,pos,i,self);
+      dar=decode_double_array(c,data,pos,i,self,&err);
       grib_vdarray_push(c,self->numericValues,dar);
     } else {
-      cdval=decode_double_value(c,data,pos,i,self);
+      cdval=decode_double_value(c,data,pos,i,self,&err);
       grib_darray_push(c,dval,cdval);
     }
   }
+  return err;
 }
 
 static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,long* pos,grib_iarray* elementsDescriptorsIndex,int iBitmapOperator) {
@@ -499,6 +538,7 @@ static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,
   bufr_descriptor** descriptors=self->expanded->v;
   long* edi=elementsDescriptorsIndex->v;
   int iel=grib_iarray_used_size(elementsDescriptorsIndex)-1;
+  int err=0;
 
   switch (descriptors[iBitmapOperator]->code) {
     case 236000:
@@ -513,6 +553,7 @@ static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,
         i=iDelayedReplication;
         if (self->compressedData) {
           ppos=*pos;
+          if (err) return err;
           localReference=grib_decode_unsigned_long(data,pos,descriptors[i]->width)+descriptors[i]->reference;
           width=grib_decode_unsigned_long(data,pos,6);
           *pos=ppos;
@@ -524,6 +565,7 @@ static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,
           }
         } else {
           ppos=*pos;
+          if (err) return err;
           bitmapSize=grib_decode_unsigned_long(data,pos,descriptors[i]->width)+
                       descriptors[i]->reference*descriptors[i]->factor;
           *pos=ppos;
@@ -1047,7 +1089,9 @@ static int decode_elements(grib_accessor* a) {
   long pos=0;
   int iss,end,elementIndex,index;
   long numberOfDescriptors;
+  long totalSize;
   bufr_descriptor** descriptors=0;
+  long icount;
 
   grib_darray* dval = NULL;
   grib_sarray* sval = NULL;
@@ -1055,6 +1099,8 @@ static int decode_elements(grib_accessor* a) {
 
   grib_handle* h=a->parent->h;
   grib_context* c=h->context;
+
+  totalSize=self->bitsToEndData;
 
   if (!self->do_decode) return 0;
   self->do_decode=0;
@@ -1086,11 +1132,14 @@ static int decode_elements(grib_accessor* a) {
 
   for (iss=0;iss<end;iss++) {
     elementsDescriptorsIndex=grib_iarray_new(c,100,100);
+    icount=1;
+    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: subsetNumber=%ld", iss+1);
     if (!self->compressedData) {
       dval=grib_darray_new(c,100,100);
       /* sval=grib_sarray_new(c,10,10); */
     }
     for (i=0;i<numberOfDescriptors;i++) {
+      grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: elementNumber=%ld code=%ld", icount++,descriptors[i]->code);
       elementIndex=grib_iarray_used_size(elementsDescriptorsIndex);
       switch(descriptors[i]->F) {
         case 0:
@@ -1098,7 +1147,8 @@ static int decode_elements(grib_accessor* a) {
           grib_iarray_push(elementsDescriptorsIndex,i);
           if (descriptors[i]->code==31031 && !is_bitmap_start_defined(self))
             self->bitmapStart=grib_iarray_used_size(elementsDescriptorsIndex)-1;
-          decode_element(c,self,iss,data,&pos,i,dval,sval);
+          err=decode_element(c,self,iss,data,&pos,i,dval,sval);
+          if (err) return err;
           break;
         case 1:
           /* Delayed replication */
@@ -1109,16 +1159,23 @@ static int decode_elements(grib_accessor* a) {
           n[inr]=numberOfElementsToRepeat[inr];
           i++;
           if (self->compressedData) {
+            grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication localReference width=%ld", descriptors[i]->width);
+            err=check_end_data(c,self,descriptors[i]->width+6);
+            if (err) return err;
             localReference=grib_decode_unsigned_long(data,&pos,descriptors[i]->width)+descriptors[i]->reference;
+            grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication localWidth width=6");
             width=grib_decode_unsigned_long(data,&pos,6);
             if (width) {
               /* delayed replication number is not constant. NOT IMPLEMENTED */
               Assert(0);
             } else {
               numberOfRepetitions[inr]=localReference*descriptors[i]->factor;
+              grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication value=%ld",numberOfRepetitions[inr]);
               startRepetition[inr]=i;
             }
           } else {
+            err=check_end_data(c,self,descriptors[i]->width);
+            if (err) return err;
             numberOfRepetitions[inr]=grib_decode_unsigned_long(data,&pos,descriptors[i]->width)+
                                       descriptors[i]->reference*descriptors[i]->factor;
             startRepetition[inr]=i;
@@ -1146,7 +1203,8 @@ static int decode_elements(grib_accessor* a) {
             case 5:
               descriptors[i]->width=descriptors[i]->Y*8;
               grib_iarray_push(elementsDescriptorsIndex,i);
-              decode_element(c,self,iss,data,&pos,i,dval,sval);
+              err=decode_element(c,self,iss,data,&pos,i,dval,sval);
+              if (err) return err;
               break;
             case 22:
             case 26:
@@ -1172,7 +1230,8 @@ static int decode_elements(grib_accessor* a) {
               /*replaced/retained values marker operator*/
               if (descriptors[i]->Y==255) {
                 index=get_next_bitmap_descriptor_index(self,elementsDescriptorsIndex,dval);
-                decode_element(c,self,iss,data,&pos,index,dval,sval);
+                err=decode_element(c,self,iss,data,&pos,index,dval,sval);
+                if (err) return err;
                 /* self->expanded->v[index] */
                 grib_iarray_push(elementsDescriptorsIndex,i);
               } else {
@@ -1212,7 +1271,8 @@ static int decode_elements(grib_accessor* a) {
           /* associated field */
           if (descriptors[i]->X==99 && descriptors[i]->Y==999) {
             grib_iarray_push(elementsDescriptorsIndex,i);
-            decode_element(c,self,iss,data,&pos,i,dval,sval);
+            err=decode_element(c,self,iss,data,&pos,i,dval,sval);
+            if (err) return err;
           } else {
             return GRIB_INTERNAL_ERROR;
           }
@@ -1267,7 +1327,7 @@ static int decode_elements(grib_accessor* a) {
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  decode_elements(a);
+  int err=decode_elements(a);
 
   grib_dump_section(dumper,a,a->sub_section->block);
 
