@@ -16,16 +16,6 @@ temp1=temp1.calendar.$$
 temp2=temp2.calendar.$$
 sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
-########### Utility function ##############
-check_key_equals()
-{
-   file=$1
-   key=$2
-   val=$3
-   result=`${tools_dir}grib_get -p $key $file`
-   [ "$result" = "$val" ]
-}
-###########################################
 
 ${tools_dir}grib_set -s tablesVersion=13,setCalendarId=1,typeOfCalendar=0 $sample $temp1
 check_key_equals $temp1 calendarIdPresent 1

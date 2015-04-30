@@ -8,6 +8,8 @@
 #
 set -ea
 
+. ./utils.sh
+
 CMAKE_INCLUDE_FILE=include.ctest.sh
 if [ -f "$CMAKE_INCLUDE_FILE" ]; then
   # This is the config file for Cmake tests

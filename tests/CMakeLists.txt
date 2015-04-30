@@ -79,6 +79,7 @@ list( APPEND tests2
     read_any
     padding
     debug
+    neg_fctime
 )
 
 # These tests do not require any data downloads
@@ -86,7 +87,7 @@ foreach( test ${tests1} )
     ecbuild_add_test( TARGET t_${test}
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                  RESOURCES include.sh number_compare.pl
+                  RESOURCES include.sh utils.sh number_compare.pl
     )
 endforeach()
 
@@ -97,7 +98,7 @@ foreach( test ${tests2} )
     ecbuild_add_test( TARGET t_${test}
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                  RESOURCES include.sh number_compare.pl
+                  RESOURCES include.sh utils.sh number_compare.pl
                   TEST_DEPENDS get_gribs get_tigge_gribs get_bufrs get_metars get_gts
     )
 endforeach()

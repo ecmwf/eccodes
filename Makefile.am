@@ -32,6 +32,7 @@ EXTRA_DIST = README AUTHORS NOTICE LICENSE ChangeLog version.sh html \
 		src/dummy.am \
 		definitions/dummy.am \
 		definitions/make_makefile_am.pl \
+		data/grib_data_files.txt \
 		data/ls.log \
 		data/multi.ok \
 		data/in_copy.grib \
@@ -111,6 +112,7 @@ EXTRA_DIST = README AUTHORS NOTICE LICENSE ChangeLog version.sh html \
 		data/step_grib1.log \
 		data/julian.out.good \
 		data/test_uuid.grib2 \
+		data/tigge/tigge_data_files.txt \
 		data/tigge/tigge_ammc_pl_gh.grib  \
 		data/tigge/tigge_ammc_pl_q.grib  \
 		data/tigge/tigge_ammc_pl_t.grib  \
