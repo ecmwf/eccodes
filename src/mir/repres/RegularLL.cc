@@ -58,17 +58,18 @@ void RegularLL::setNiNj() {
 
         // Check if just precision issue
 
-        if(ni - long(ni) <= epsilon)
-        {
+        if(ni - long(ni) <= epsilon) {
             eckit::Log::info() << "ni_ would be " << long(ni + epsilon) << std::endl;
+            ni_ = ni + 1 + epsilon;
+        } else {
+            eckit::StrStream os;
+            os << "RegularLL: cannot compute Ni: east=" << bbox_.east() << ", west=" << bbox_.west()
+               << ", increment=" << increments_.west_east() << ", ni=" << ni <<  ", diff=" << (ni - long(ni)) << std::endl;
+            throw eckit::SeriousBug(std::string(os));
         }
-
-        eckit::StrStream os;
-        os << "RegularLL: cannot compute Ni: east=" << bbox_.east() << ", west=" << bbox_.west()
-           << ", increment=" << increments_.west_east() << ", ni=" << ni <<  ", diff=" << (ni - long(ni)) << std::endl;
-        throw eckit::SeriousBug(std::string(os));
+    } else {
+        ni_ = ni + 1;
     }
-    ni_ = ni + 1;
 
     double nj = (bbox_.north() - bbox_.south()) / increments_.north_south();
     ASSERT(nj > 0);
