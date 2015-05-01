@@ -58,8 +58,9 @@ void RegularLL::setNiNj() {
 
         // Check if just precision issue
 
-        if(ni - long(ni) < epsilon)
+        if(ni - long(ni) <= epsilon)
         {
+            eckit::Log::info() << "ni_ would be " << long(ni + epsilon) << std::endl;
         }
 
         eckit::StrStream os;
