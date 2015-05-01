@@ -1139,7 +1139,7 @@ static int decode_elements(grib_accessor* a) {
       /* sval=grib_sarray_new(c,10,10); */
     }
     for (i=0;i<numberOfDescriptors;i++) {
-      grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: elementNumber=%ld code=%ld", icount++,descriptors[i]->code);
+      grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: elementNumber=%ld code=%6.6ld", icount++,descriptors[i]->code);
       elementIndex=grib_iarray_used_size(elementsDescriptorsIndex);
       switch(descriptors[i]->F) {
         case 0:

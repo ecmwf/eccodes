@@ -44,6 +44,7 @@ char* grib_tool_name="bufr_dump";
 char* grib_tool_usage="[options] file file ...";
 static int json=0;
 static char* json_option=0;
+static int first_handle=1;
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
@@ -118,7 +119,6 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("d") && !grib_options_on("u"))
         options->dump_flags |= GRIB_DUMP_FLAG_ALL_DATA;
 
-    if (json) fprintf(stdout,"{ \"messages\" : [ \n");
 
     return 0;
 }
@@ -164,7 +164,10 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     if (json) {
         if (options->handle_count>1) fprintf(stdout,",\n");
-        /* fprintf(stdout,"\"message%d\" : ",options->handle_count); */
+        if (json && first_handle) {
+          fprintf(stdout,"{ \"messages\" : [ \n");
+          first_handle=0;
+        }
         switch (json_option[0]) {
           case 'f':
             err=grib_set_long(h,"unpack",2);
@@ -229,3 +232,17 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     if (json) fprintf(stdout,"\n]}\n");
     return 0;
 }
+
+int grib_no_handle_action(int err) {
+  if (json ){
+    if (first_handle) {
+      fprintf(dump_file,"{ \"messages\" : [ \n");
+      first_handle=0;
+    } else {
+      fprintf(dump_file,",\n");
+    }
+  }
+  fprintf(dump_file,"\"ERROR: unreadable message\"\n");
+  return 0;
+}
+

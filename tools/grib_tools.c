@@ -228,8 +228,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
         options->error=err;
 
         if (!h) {
-            fprintf(dump_file,"\t\t*** unable to read message ***\n");
-            if (options->fail || err==GRIB_WRONG_LENGTH) GRIB_CHECK_NOLINE(err,0);
+            grib_no_handle_action(err);
 
             failed=(grib_failed*)grib_context_malloc_clear(c,sizeof(grib_failed));
             failed->count=infile->handle_count;
@@ -327,7 +326,8 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
             options->error=err;
 
             if (!h) {
-                fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
+                /* fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n"); */
+                grib_no_handle_action(err);
 
                 failed=(grib_failed*)grib_context_malloc_clear(c,sizeof(grib_failed));
                 failed->count=infile->handle_count;
@@ -1038,3 +1038,4 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
 #endif
 
 }
+

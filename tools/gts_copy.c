@@ -120,3 +120,9 @@ int grib_tool_finalise_action(grib_runtime_options* options) {
 */
   return 0;
 }
+
+int grib_no_handle_action(int err) {
+  fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
+  return 0;
+}
+

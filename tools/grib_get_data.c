@@ -278,3 +278,9 @@ static grib_values* get_key_values(grib_runtime_options* options,grib_handle* h)
     return options->print_keys;
 
 }
+
+int grib_no_handle_action(int err) {
+  fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
+  return 0;
+}
+

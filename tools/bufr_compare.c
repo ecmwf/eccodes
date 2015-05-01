@@ -1163,3 +1163,9 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
     }
     return err;
 }
+
+int grib_no_handle_action(int err) {
+  fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
+  return 0;
+}
+
