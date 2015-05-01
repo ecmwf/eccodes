@@ -49,9 +49,19 @@ Representation *RegularLL::clone() const {
 }
 
 void RegularLL::setNiNj() {
+
+    const double epsilon = 1e-10;
+
     double ni = (bbox_.east() - bbox_.west()) / increments_.west_east();
     ASSERT(ni > 0);
     if (long(ni) != ni) {
+
+        // Check if just precision issue
+
+        if(ni - long(ni) < epsilon)
+        {
+        }
+
         eckit::StrStream os;
         os << "RegularLL: cannot compute Ni: east=" << bbox_.east() << ", west=" << bbox_.west()
            << ", increment=" << increments_.west_east() << ", ni=" << ni <<  ", diff=" << (ni - long(ni)) << std::endl;
