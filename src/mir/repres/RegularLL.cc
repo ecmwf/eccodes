@@ -58,7 +58,7 @@ void RegularLL::setNiNj() {
 
         // Check if just precision issue
 
-        if(ni - long(ni) <= epsilon) {
+        if (ni - long(ni) <= epsilon) {
             eckit::Log::info() << "ni_ would be " << long(ni + epsilon) << std::endl;
             ni_ = ni + 1 + epsilon;
         } else {
@@ -74,10 +74,17 @@ void RegularLL::setNiNj() {
     double nj = (bbox_.north() - bbox_.south()) / increments_.north_south();
     ASSERT(nj > 0);
     if (long(nj) != nj) {
-        eckit::StrStream os;
-        os << "RegularLL: cannot compute Nj: north=" << bbox_.north() << ", south=" << bbox_.south()
-           << ", increment=" << increments_.north_south() << ", nj=" << nj << ", diff=" << (nj - long(nj)) << std::endl;
-        throw eckit::SeriousBug(std::string(os));
+        // Check if just precision issue
+
+        if (nj - long(nj) <= epsilon) {
+            eckit::Log::info() << "nj_ would be " << long(nj + epsilon) << std::endl;
+            nj_ = nj + 1 + epsilon;
+        } else {
+            eckit::StrStream os;
+            os << "RegularLL: cannot compute Nj: north=" << bbox_.north() << ", south=" << bbox_.south()
+               << ", increment=" << increments_.north_south() << ", nj=" << nj << ", diff=" << (nj - long(nj)) << std::endl;
+            throw eckit::SeriousBug(std::string(os));
+        }
     }
     nj_ = nj + 1;
 }
