@@ -48,45 +48,40 @@ Representation *RegularLL::clone() const {
     return new RegularLL(bbox_, increments_);
 }
 
+
+static size_t compteN(double first, double last, double inc, const char *n_name, const char *first_name, const char *last_name) {
+    size_t n;
+    ASSERT(first < last);
+    size_t p = size_t((first - last) / inc);
+    double d0 = fabs((last + p * inc) - first);
+    double d1 = fabs((last + (p + 1) * inc) - first);
+    ASSERT(d0 != d1);
+
+    if (d0 < d1) {
+        n = p;
+    } else {
+        n = p + 1;
+    }
+
+    if ((p * inc + first) != last) {
+        eckit::Log::info() << "RegularLL: cannot compute accuratly "
+                           << n_name << ", given "
+                           << first_name << "=" << first << ", "
+                           << last_name << "=" << last << " and increment=" << inc << std::endl;
+        eckit::Log::info() << "Last value is computed as " << (p * inc + first)
+                           << ", diff=" << (last - (p * inc + first))
+                           << std::endl;
+    }
+
+    return n + 1;
+
+}
+
 void RegularLL::setNiNj() {
 
-    const double epsilon = 1e-10;
+    ni_ = compteN(bbox_.west(), bbox_.east(), increments_.west_east(), "Ni", "west", "east");
+    nj_ = compteN(bbox_.south(), bbox_.north(), increments_.south_north(), "Nj", "south", "north");
 
-    double ni = (bbox_.east() - bbox_.west()) / increments_.west_east();
-    ASSERT(ni > 0);
-    if (long(ni) != ni) {
-
-        // Check if just precision issue
-
-        if (ni - long(ni) <= epsilon) {
-            eckit::Log::info() << "ni_ would be " << long(ni + epsilon) << std::endl;
-            ni_ = ni + 1 + epsilon;
-        } else {
-            eckit::StrStream os;
-            os << "RegularLL: cannot compute Ni: east=" << bbox_.east() << ", west=" << bbox_.west()
-               << ", increment=" << increments_.west_east() << ", ni=" << ni <<  ", diff=" << (ni - long(ni)) << std::endl;
-            throw eckit::SeriousBug(std::string(os));
-        }
-    } else {
-        ni_ = ni + 1;
-    }
-
-    double nj = (bbox_.north() - bbox_.south()) / increments_.north_south();
-    ASSERT(nj > 0);
-    if (long(nj) != nj) {
-        // Check if just precision issue
-
-        if (nj - long(nj) <= epsilon) {
-            eckit::Log::info() << "nj_ would be " << long(nj + epsilon) << std::endl;
-            nj_ = nj + 1 + epsilon;
-        } else {
-            eckit::StrStream os;
-            os << "RegularLL: cannot compute Nj: north=" << bbox_.north() << ", south=" << bbox_.south()
-               << ", increment=" << increments_.north_south() << ", nj=" << nj << ", diff=" << (nj - long(nj)) << std::endl;
-            throw eckit::SeriousBug(std::string(os));
-        }
-    }
-    nj_ = nj + 1;
 }
 
 
@@ -131,7 +126,7 @@ Representation *RegularLL::crop(const util::BoundingBox &bbox, const std::vector
     double e = 0;
     double w = 0;
 
-    double ns = increments_.north_south();
+    double ns = increments_.south_north();
     double we = increments_.west_east();
 
     size_t p = 0;
@@ -173,7 +168,7 @@ Representation *RegularLL::crop(const util::BoundingBox &bbox, const std::vector
 atlas::Grid *RegularLL::atlasGrid() const {
 
     return new atlas::grids::LonLatGrid(increments_.west_east(),
-                                        increments_.north_south(),
+                                        increments_.south_north(),
                                         atlas::grids::LonLatGrid::INCLUDES_POLES);
 }
 
