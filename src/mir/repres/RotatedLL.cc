@@ -55,6 +55,12 @@ void RotatedLL::print(std::ostream &out) const {
 }
 
 
+// Called by RegularLL::crop()
+RegularLL* RotatedLL::create(const util::BoundingBox &bbox) const{
+    return new RotatedLL(bbox, increments_, rotation_);
+}
+
+
 void RotatedLL::fill(grib_info &info) const  {
     RegularLL::fill(info);
     rotation_.fill(info);

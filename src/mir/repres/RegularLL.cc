@@ -49,6 +49,11 @@ Representation *RegularLL::clone() const {
 }
 
 
+// Called by RegularLL::crop()
+RegularLL* RegularLL::create(const util::BoundingBox &bbox) const{
+    return new RegularLL(bbox, increments_);
+}
+
 static size_t compteN(double first, double last, double inc, const char *n_name, const char *first_name, const char *last_name) {
     size_t n;
     ASSERT(first < last);
@@ -158,7 +163,7 @@ Representation *RegularLL::crop(const util::BoundingBox &bbox, const std::vector
     }
 
     std::cout << "CROP resulting bbox is: " << util::BoundingBox(n, w, s, e) << std::endl;
-    RegularLL *cropped = new RegularLL(util::BoundingBox(n, w, s, e), increments_);
+    RegularLL *cropped =  create(util::BoundingBox(n, w, s, e));
 
     ASSERT(out.size() > 0);
     ASSERT(cropped->ni() * cropped->nj() == out.size());

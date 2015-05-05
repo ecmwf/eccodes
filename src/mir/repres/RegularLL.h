@@ -68,17 +68,16 @@ class RegularLL : public Gridded {
   protected:
 
     // -- Members
-    // None
+
+    util::Increments increments_;
 
     // -- Methods
 
+
+    // -- Overridden methods
     void print(std::ostream &) const; // Change to virtual if base class
     virtual atlas::Grid *atlasGrid() const;
     virtual void fill(grib_info &) const;
-
-
-    // -- Overridden methods
-    // None
 
     // -- Class members
     // None
@@ -97,7 +96,6 @@ class RegularLL : public Gridded {
     // -- Members
 
     util::BoundingBox bbox_;
-    util::Increments increments_;
 
     size_t ni_;
     size_t nj_;
@@ -106,6 +104,10 @@ class RegularLL : public Gridded {
     // None
 
     void setNiNj();
+
+    // Called by crop(), to override in subclasses
+    virtual RegularLL *create(const util::BoundingBox &bbox) const;
+
 
     // -- Overridden methods
 

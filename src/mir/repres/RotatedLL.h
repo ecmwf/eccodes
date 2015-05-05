@@ -98,6 +98,11 @@ class RotatedLL : public RegularLL {
     virtual atlas::Grid *atlasGrid() const;
 
 
+    // From RegularLL
+    virtual RegularLL *create(const util::BoundingBox &bbox) const;
+
+
+
     // -- Class members
     // None
 
