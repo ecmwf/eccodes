@@ -57,7 +57,7 @@ static size_t compteN(double first, double last, double inc, const char *n_name,
     double d0 = fabs((last + p * inc) - first);
     double d1 = fabs((last + (p + 1) * inc) - first);
 
-    eckit::Log::info() << p << " " << d0 << " " << d1 << std::endl;
+    eckit::Log::info() << p << " " << d0 << " " << d1 << " " << inc << " " << first << " " << last << std::endl;
     ASSERT(d0 != d1);
 
     if (d0 < d1) {
