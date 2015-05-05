@@ -170,8 +170,8 @@ Representation *RegularLL::crop(const util::BoundingBox &bbox, const std::vector
 
 atlas::Grid *RegularLL::atlasGrid() const {
 
-    return new atlas::grids::LonLatGrid(increments_.west_east(),
-                                        increments_.south_north(),
+    return new atlas::grids::LonLatGrid(int(ni_),
+                                        int(nj_),
                                         atlas::grids::LonLatGrid::INCLUDES_POLES);
 
 
