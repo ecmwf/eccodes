@@ -79,7 +79,6 @@ list( APPEND tests2
     read_any
     padding
     debug
-    neg_fctime
 )
 
 # These tests do not require any data downloads

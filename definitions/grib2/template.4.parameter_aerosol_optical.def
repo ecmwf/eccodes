@@ -64,5 +64,5 @@ codetable[1] indicatorOfUnitOfTimeRange ('4.4.table',masterDir,localDir)  : dump
 codetable[1] stepUnits 'stepUnits.table' = 1 : transient,dump,no_copy;
 
 #  Forecast time in units defined by octet 18
-signed[4] forecastTime  : dump;
+unsigned[4] forecastTime  : dump;
 

@@ -14,7 +14,7 @@ TESTS = definitions.sh calendar.sh \
         multi_from_message.sh change_scanning.sh \
         julian.sh statistics.sh tigge.sh tigge_conversions.sh \
         read_any.sh padding.sh lamb_az_eq_area.sh grib_to_netcdf.sh debug.sh \
-        jpeg.sh ccsds.sh neg_fctime.sh
+        jpeg.sh ccsds.sh
 
 # First download all the necessary data for testing
 # Note: if download fails, no tests will be done
