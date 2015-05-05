@@ -173,6 +173,11 @@ atlas::Grid *RegularLL::atlasGrid() const {
     return new atlas::grids::LonLatGrid(increments_.west_east(),
                                         increments_.south_north(),
                                         atlas::grids::LonLatGrid::INCLUDES_POLES);
+
+
+    // return new atlas::grids::LonLatGrid(ni_,
+    //                                     nj_,
+    //                                     atlas::grids::LonLatGrid::INCLUDES_POLES, 1, 360);
 }
 
 
