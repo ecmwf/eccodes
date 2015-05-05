@@ -52,9 +52,12 @@ Representation *RegularLL::clone() const {
 static size_t compteN(double first, double last, double inc, const char *n_name, const char *first_name, const char *last_name) {
     size_t n;
     ASSERT(first < last);
+    ASSERT(inc > 0);
     size_t p = size_t((first - last) / inc);
     double d0 = fabs((last + p * inc) - first);
     double d1 = fabs((last + (p + 1) * inc) - first);
+
+    eckit::Log::info() << p << " " << d0 << " " << d1 << std::end;
     ASSERT(d0 != d1);
 
     if (d0 < d1) {
