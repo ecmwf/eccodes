@@ -720,7 +720,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         }
         /* widthOfSPD=(long)ceil(log((double)(maxSPD+1))/log(2.0)); */
         widthOfSPD=number_of_bits(maxSPD);
-        widthOfBias=number_of_bits(abs(bias))+1;
+        widthOfBias=number_of_bits(labs(bias))+1;
 
         if ( widthOfSPD < widthOfBias  ) widthOfSPD=widthOfBias;
 

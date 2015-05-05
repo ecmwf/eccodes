@@ -223,6 +223,7 @@ static int str_eq(const char* a, const char* b)
     return 0;
 }
 
+#ifdef DEBUG
 static void dump_codetable(grib_codetable* atable)
 {
     grib_codetable* next = NULL;
@@ -235,7 +236,7 @@ static void dump_codetable(grib_codetable* atable)
         next = next->next;
     }
 }
-
+#endif
 static grib_codetable* load_table(grib_accessor_codetable* self)
 {
     size_t size = 0;

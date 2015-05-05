@@ -183,7 +183,7 @@ static void grib_invtrans_legendre(int L,double x,
   double f,of,fx,p0;
   double *pP,*oP,*pRI;
 
-  if (abs(x) > 1.0) {
+  if (fabs(x) > 1.0) {
     printf("grib_legendreP: invalid x=%g must be abs(x)>0\n",x);
     exit(1);
   }
