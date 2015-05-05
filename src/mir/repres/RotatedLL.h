@@ -16,92 +16,98 @@
 #ifndef RotatedLL_H
 #define RotatedLL_H
 
-#include "mir/repres/Gridded.h"
+#include "mir/repres/RegularLL.h"
+#include "mir/util/Rotation.h"
 
 
 namespace mir {
 namespace repres {
 
 
-class RotatedLL : public Gridded {
+class RotatedLL : public RegularLL {
   public:
 
-// -- Exceptions
+    // -- Exceptions
     // None
 
-// -- Contructors
+    // -- Contructors
 
-    RotatedLL(const param::MIRParametrisation&);
+    RotatedLL(const param::MIRParametrisation &);
+    RotatedLL(const util::BoundingBox &bbox, const util::Increments &increments, const util::Rotation &rotation);
 
-// -- Destructor
+
+    // -- Destructor
 
     virtual ~RotatedLL(); // Change to virtual if base class
 
-// -- Convertors
+    // -- Convertors
     // None
 
-// -- Operators
+    // -- Operators
     // None
 
-// -- Methods
+    // -- Methods
 
-// -- Overridden methods
+    // -- Overridden methods
     // None
 
-// -- Class members
+    // -- Class members
     // None
 
-// -- Class methods
+    // -- Class methods
     // None
 
   protected:
 
-// -- Members
+    // -- Members
+
+    util::Rotation rotation_;
+
+    // -- Methods
+
+    void print(std::ostream &) const; // Change to virtual if base class
+
+    // -- Overridden methods
     // None
 
-// -- Methods
-
-    void print(std::ostream&) const; // Change to virtual if base class
-
-// -- Overridden methods
+    // -- Class members
     // None
 
-// -- Class members
-    // None
-
-// -- Class methods
+    // -- Class methods
     // None
 
   private:
 
-    RotatedLL();
+    // RotatedLL();
 
-// No copy allowed
+    // No copy allowed
 
-    RotatedLL(const RotatedLL&);
-    RotatedLL& operator=(const RotatedLL&);
+    RotatedLL(const RotatedLL &);
+    RotatedLL &operator=(const RotatedLL &);
 
-// -- Members
+    // -- Members
 
 
-// -- Methods
+    // -- Methods
     // None
 
 
-// -- Overridden methods
+    // -- Overridden methods
 
-    virtual void fill(grib_info&) const;
+    virtual void fill(grib_info &) const;
+    virtual atlas::Grid *atlasGrid() const;
 
-// -- Class members
+
+    // -- Class members
     // None
 
-// -- Class methods
+    // -- Class methods
     // None
 
-// -- Friends
+    // -- Friends
 
     //friend ostream& operator<<(ostream& s,const RotatedLL& p)
-    //	{ p.print(s); return s; }
+    //  { p.print(s); return s; }
 
 };
 

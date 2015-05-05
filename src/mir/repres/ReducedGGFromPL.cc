@@ -83,18 +83,13 @@ void ReducedGGFromPL::fill(grib_info &info) const  {
 }
 
 atlas::Grid *ReducedGGFromPL::atlasGrid() const {
-    if (pl_.size() > 0) {
-        // FIXME: ask atlas to support long instead of int
-        std::vector<int> pl(pl_.size());
-        for (size_t i = 0; i < pl_.size(); i++) {
-            pl[i] = pl_[i];
-        }
-        return new atlas::grids::ReducedGaussianGrid(N_, &pl[0]);
-    } else {
-        eckit::StrStream os;
-        os << "rgg.N" << N_ << eckit::StrStream::ends;
-        return atlas::Grid::create(std::string(os));
+    ASSERT (pl_.size() > 0);
+    // FIXME: ask atlas to support long instead of int
+    std::vector<int> pl(pl_.size());
+    for (size_t i = 0; i < pl_.size(); i++) {
+        pl[i] = pl_[i];
     }
+    return new atlas::grids::ReducedGaussianGrid(N_, &pl[0]);
 }
 
 namespace {
