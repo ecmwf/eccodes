@@ -32,6 +32,14 @@ do
     json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
   fi
 
+  rm -f ${file}.json | true
+
+  ${tools_dir}bufr_dump -ja $file 2> $REDIRECT > ${file}.json
+
+  if test "x$JSON_CHECK" != "x"; then
+    json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
+  fi
+
   rm -f ${file}.json
 
   ${tools_dir}bufr_dump -jf $file 2> $REDIRECT > ${file}.json

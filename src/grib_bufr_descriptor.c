@@ -100,6 +100,7 @@ void grib_bufr_descriptor_set_width(bufr_descriptor* v,long width) {
 void grib_bufr_descriptor_set_scale(bufr_descriptor* v,long scale) {
   if (!v) return;
   v->scale=scale;
+  if (scale!=0) v->type=BUFR_DESCRIPTOR_TYPE_DOUBLE;
   v->factor=grib_power(-scale,10);
 }
 

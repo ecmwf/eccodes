@@ -133,7 +133,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     grib_value_count(a,&count);
     size=count;
 
-    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 )
         return;
 
     if (size>1) {
@@ -214,7 +214,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
     grib_value_count(a,&count);
     size=count;
 
-    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 )
         return;
 
     if (size>1) {
@@ -333,7 +333,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
 
   c=a->parent->h->context;
 
-  if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+  if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 )
     return;
 
   grib_value_count(a,&count);
@@ -491,10 +491,11 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a) {
   int i=0;
   grib_dumper_json *self = (grib_dumper_json*)d;
   FILE* out=self->dumper.out;
+  unsigned long flags;
   while (a->attributes[i] && i < MAX_ACCESSOR_ATTRIBUTES) {
     self->isAttribute=1;
     if (  (d->option_flags & GRIB_DUMP_FLAG_ALL_ATTRIBUTES ) == 0
-       && (a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_DUMP)==0) 
+       && (a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_DUMP)== 0 )
     {
       i++;
       continue;
@@ -503,6 +504,8 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a) {
     fprintf(self->dumper.out,",");
     fprintf(self->dumper.out,"\n%-*s",depth," ");
     fprintf(out,"\"%s\" : ",a->attributes[i]->name);
+    flags=a->attributes[i]->flags;
+    a->attributes[i]->flags |= GRIB_ACCESSOR_FLAG_DUMP;
     switch (grib_accessor_get_native_type(a->attributes[i])) {
       case GRIB_TYPE_LONG:
         dump_long(d,a->attributes[i],0);
@@ -514,6 +517,7 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a) {
         dump_string_array(d,a->attributes[i],0);
         break;
     }
+    a->attributes[i]->flags=flags;
     i++;
   }
   self->isLeaf=0;
