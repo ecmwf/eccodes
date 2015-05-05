@@ -101,6 +101,8 @@ class SphericalHarmonics : public Representation {
                                      const std::vector<double>&, std::vector<double>&) const;
     virtual size_t truncation() const;
     virtual Representation* clone() const;
+    Representation *crop(const util::BoundingBox &bbox, const std::vector<double> &in, std::vector<double> &out) const;
+
 // -- Class members
     // None
 

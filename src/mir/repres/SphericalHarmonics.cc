@@ -129,6 +129,11 @@ Representation *SphericalHarmonics::truncate(size_t truncation,
 }
 
 
+Representation * SphericalHarmonics::crop(const util::BoundingBox &bbox, const std::vector<double> &in, std::vector<double> &out) const {
+    eckit::Log::info() << "WARNING SphericalHarmonics::crop() is ignored" << std::endl;
+    return 0;
+}
+
 namespace {
 static RepresentationBuilder<SphericalHarmonics> sphericalHarmonics("sh"); // Name is what is returned by grib_api
 }
