@@ -47,9 +47,13 @@ RotatedLL::~RotatedLL() {
 }
 
 
+Representation *RotatedLL::clone() const {
+    return new RotatedLL(bbox_, increments_, rotation_);
+}
+
 void RotatedLL::print(std::ostream &out) const {
     out << "RotatedLL[";
-    RegularLL::print(out);
+    LatLon::print(out);
     out  << ",rotation=" << rotation_
          << "]";
 }

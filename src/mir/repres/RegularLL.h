@@ -16,7 +16,7 @@
 #ifndef RegularLL_H
 #define RegularLL_H
 
-#include "mir/repres/Gridded.h"
+#include "mir/repres/LatLon.h"
 #include "mir/util/BoundingBox.h"
 #include "mir/util/Increments.h"
 
@@ -25,7 +25,7 @@ namespace mir {
 namespace repres {
 
 
-class RegularLL : public Gridded {
+class RegularLL : public LatLon {
   public:
 
     // -- Exceptions
@@ -49,13 +49,6 @@ class RegularLL : public Gridded {
 
     // -- Methods
 
-    size_t ni() const {
-        return ni_;
-    }
-    size_t nj() const {
-        return nj_;
-    }
-
     // -- Overridden methods
     // None
 
@@ -68,8 +61,6 @@ class RegularLL : public Gridded {
   protected:
 
     // -- Members
-
-    util::Increments increments_;
 
     // -- Methods
 
@@ -95,15 +86,10 @@ class RegularLL : public Gridded {
 
     // -- Members
 
-    util::BoundingBox bbox_;
-
-    size_t ni_;
-    size_t nj_;
 
     // -- Methods
     // None
 
-    void setNiNj();
 
     // Called by crop(), to override in subclasses
     virtual RegularLL *cropped(const util::BoundingBox &bbox) const;
@@ -111,8 +97,6 @@ class RegularLL : public Gridded {
 
     // -- Overridden methods
 
-    virtual Representation *crop(const util::BoundingBox &bbox, const std::vector<double> &, std::vector<double> &) const;
-    virtual size_t frame(std::vector<double> &values, size_t size, double missingValue) const;
     virtual Representation *clone() const;
 
     // -- Class members
