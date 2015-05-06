@@ -10,6 +10,21 @@
 
 . ./include.sh
 
+#Define a common label for all the tmp files
+label="bufr_dump_test"
+
+#Create log file
+fLog=${label}".log"
+rm -f $fLog | true
+touch $fLog
+
+#Define tmp bufr files
+fJsonTmp=${label}".json.tmp"
+
+#==============================================
+# Testing bufr_dump -O
+#==============================================
+
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 REDIRECT=/dev/null
 
@@ -17,3 +32,23 @@ for file in ${bufr_files}
 do
   ${tools_dir}bufr_dump -O ${data_dir}/bufr/$file 2> $REDIRECT > $REDIRECT
 done
+
+#==============================================
+# Testing a malformed bufr file (see ECC-110)
+#==============================================
+
+echo "Test: malformed bufr file " >> $fLog
+
+rm -f $fJsonTmp | true
+
+fBufr=${data_dir}/bufr/"bad.bufr"
+fJsonRef=${data_dir}/bufr/"bad.bufr.json.ref"
+
+${tools_dir}bufr_dump -js $fBufr > $fJsonTmp
+
+diff $fJsonTmp $fJsonRef >$REDIRECT 2> $REDIRECT
+
+#Clean up
+rm -f $fLog 
+rm -f $fJsonTmp | true
+

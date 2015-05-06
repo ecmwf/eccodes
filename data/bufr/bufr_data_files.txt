@@ -35,6 +35,7 @@ b005_87.bufr
 b005_89.bufr
 b006_96.bufr
 b007_31.bufr
+bad.bufr
 bssh_170.bufr
 bssh_176.bufr
 bssh_178.bufr

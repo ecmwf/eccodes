@@ -269,3 +269,4 @@ synop_multi_subset.bufr.desc.ref
 aaen_55.bufr.ls.ref
 syno_multi.bufr.header.ref
 syno_multi.bufr
+bad.bufr.json.ref
