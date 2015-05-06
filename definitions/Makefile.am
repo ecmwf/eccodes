@@ -7269,6 +7269,14 @@ dist_definitionsgrib1_localConcepts_edzw_DATA = \
 	grib1/localConcepts/edzw/stepType.def\
 	grib1/localConcepts/edzw/units.def
 
+definitionsgrib1_localConcepts_efkldir = @ECCODES_DEFINITION_PATH@/grib1/localConcepts/efkl
+dist_definitionsgrib1_localConcepts_efkl_DATA = \
+	grib1/localConcepts/efkl/cfVarName.def\
+	grib1/localConcepts/efkl/name.def\
+	grib1/localConcepts/efkl/paramId.def\
+	grib1/localConcepts/efkl/shortName.def\
+	grib1/localConcepts/efkl/units.def
+
 definitionsgrib1_localConcepts_eidbdir = @ECCODES_DEFINITION_PATH@/grib1/localConcepts/eidb
 dist_definitionsgrib1_localConcepts_eidb_DATA = \
 	grib1/localConcepts/eidb/cfName.def\
@@ -7602,6 +7610,13 @@ dist_definitionsgrib2_localConcepts_edzw_DATA = \
 	grib2/localConcepts/edzw/paramId.def\
 	grib2/localConcepts/edzw/shortName.def\
 	grib2/localConcepts/edzw/units.def
+
+definitionsgrib2_localConcepts_efkldir = @ECCODES_DEFINITION_PATH@/grib2/localConcepts/efkl
+dist_definitionsgrib2_localConcepts_efkl_DATA = \
+	grib2/localConcepts/efkl/name.def\
+	grib2/localConcepts/efkl/paramId.def\
+	grib2/localConcepts/efkl/shortName.def\
+	grib2/localConcepts/efkl/units.def
 
 definitionsgrib2_localConcepts_egrrdir = @ECCODES_DEFINITION_PATH@/grib2/localConcepts/egrr
 dist_definitionsgrib2_localConcepts_egrr_DATA = \
