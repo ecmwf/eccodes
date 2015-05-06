@@ -282,7 +282,7 @@ void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor *a, g
 
 /* grib_accessor_class_bufr_elements_table.c */
 char **str_split(char *a_str, const char a_delim);
-int bufr_is_marker(int code);
+int bufr_is_marker(int code, int F, int X, int Y);
 bufr_descriptor *accessor_bufr_elements_table_get_descriptor(grib_accessor *a, int code, int *err);
 
 /* grib_accessor_class_bufr_group.c */
@@ -454,6 +454,8 @@ int grib_g1_step_apply_units(long *start, long *theEnd, long *step_unit, long *P
 /* grib_accessor_class_longitudes.c */
 
 /* grib_accessor_class_missing.c */
+
+/* grib_accessor_class_octahedral_gaussian.c */
 
 /* grib_accessor_class_offset_file.c */
 
@@ -972,6 +974,8 @@ grib_handle *grib_handle_clone(grib_handle *h);
 grib_handle *codes_handle_new_from_file(grib_context *c, FILE *f, ProductKind product, int *error);
 grib_handle *codes_grib_handle_new_from_file(grib_context *c, FILE *f, int *error);
 grib_handle *codes_bufr_handle_new_from_file(grib_context *c, FILE *f, int *error);
+grib_handle *codes_metar_handle_new_from_file(grib_context *c, FILE *f, int *error);
+grib_handle *codes_gts_handle_new_from_file(grib_context *c, FILE *f, int *error);
 grib_handle *grib_handle_new_from_message_copy(grib_context *c, const void *data, size_t size);
 grib_handle *grib_handle_new_from_partial_message_copy(grib_context *c, const void *data, size_t size);
 grib_handle *grib_handle_new_from_partial_message(grib_context *c, void *data, size_t buflen);
@@ -1026,6 +1030,7 @@ int grib_hash_keys_get_size(grib_itrie *t);
 /* grib_io.c */
 off_t stdio_tell(void *data);
 int stdio_seek(void *data, off_t len);
+int stdio_seek_from_start(void *data, off_t len);
 size_t stdio_read(void *data, void *buf, size_t len, int *err);
 int wmo_read_any_from_file(FILE *f, void *buffer, size_t *len);
 int wmo_read_grib_from_file(FILE *f, void *buffer, size_t *len);

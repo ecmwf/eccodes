@@ -1202,6 +1202,7 @@ static int decode_elements(grib_accessor* a) {
           switch(descriptors[i]->X) {
             case 5:
               descriptors[i]->width=descriptors[i]->Y*8;
+              descriptors[i]->type=BUFR_DESCRIPTOR_TYPE_STRING;
               grib_iarray_push(elementsDescriptorsIndex,i);
               err=decode_element(c,self,iss,data,&pos,i,dval,sval);
               if (err) return err;
