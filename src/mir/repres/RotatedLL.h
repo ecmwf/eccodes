@@ -99,7 +99,7 @@ class RotatedLL : public RegularLL {
 
 
     // From RegularLL
-    virtual RegularLL *create(const util::BoundingBox &bbox) const;
+    virtual RegularLL *cropped(const util::BoundingBox &bbox) const;
 
 
 

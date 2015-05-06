@@ -106,7 +106,7 @@ class RegularLL : public Gridded {
     void setNiNj();
 
     // Called by crop(), to override in subclasses
-    virtual RegularLL *create(const util::BoundingBox &bbox) const;
+    virtual RegularLL *cropped(const util::BoundingBox &bbox) const;
 
 
     // -- Overridden methods

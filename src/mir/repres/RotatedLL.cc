@@ -56,7 +56,8 @@ void RotatedLL::print(std::ostream &out) const {
 
 
 // Called by RegularLL::crop()
-RegularLL* RotatedLL::create(const util::BoundingBox &bbox) const{
+RegularLL* RotatedLL::cropped(const util::BoundingBox &bbox) const{
+    eckit::Log::info() << "Create cropped copy as RotatedLL bbox=" << bbox << std::endl;
     return new RotatedLL(bbox, increments_, rotation_);
 }
 

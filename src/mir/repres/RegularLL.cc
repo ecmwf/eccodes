@@ -50,13 +50,14 @@ Representation *RegularLL::clone() const {
 
 
 // Called by RegularLL::crop()
-RegularLL* RegularLL::create(const util::BoundingBox &bbox) const{
+RegularLL* RegularLL::cropped(const util::BoundingBox &bbox) const{
+    eckit::Log::info() << "Create cropped copy as RegularLL bbox=" << bbox << std::endl;
     return new RegularLL(bbox, increments_);
 }
 
 static size_t compteN(double first, double last, double inc, const char *n_name, const char *first_name, const char *last_name) {
     size_t n;
-    ASSERT(first < last);
+    ASSERT(first <= last);
     ASSERT(inc > 0);
     size_t p = size_t((last - first) / inc);
     double d0 = fabs((last + p * inc) - first);
@@ -163,7 +164,7 @@ Representation *RegularLL::crop(const util::BoundingBox &bbox, const std::vector
     }
 
     std::cout << "CROP resulting bbox is: " << util::BoundingBox(n, w, s, e) << std::endl;
-    RegularLL *cropped =  create(util::BoundingBox(n, w, s, e));
+    RegularLL *cropped =  this->cropped(util::BoundingBox(n, w, s, e));
 
     ASSERT(out.size() > 0);
     ASSERT(cropped->ni() * cropped->nj() == out.size());
