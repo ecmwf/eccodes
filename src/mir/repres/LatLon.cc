@@ -156,7 +156,7 @@ Representation *LatLon::crop(const util::BoundingBox &bbox, const std::vector<do
         }
     }
 
-    std::cout << "CROP resulting bbox is: " << util::BoundingBox(n, w, s, e) << std::endl;
+    eckit::Log::info() << "CROP resulting bbox is: " << util::BoundingBox(n, w, s, e) << std::endl;
     LatLon *cropped =  this->cropped(util::BoundingBox(n, w, s, e));
 
     ASSERT(out.size() > 0);
