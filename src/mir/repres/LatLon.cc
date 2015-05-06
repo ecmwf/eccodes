@@ -44,6 +44,13 @@ LatLon::LatLon(const util::BoundingBox &bbox,
 LatLon::~LatLon() {
 }
 
+size_t LatLon::ni() const {
+    return ni_;
+}
+
+size_t LatLon::nj() const {
+    return nj_;
+}
 
 static size_t compteN(double first, double last, double inc, const char *n_name, const char *first_name, const char *last_name) {
     size_t n;

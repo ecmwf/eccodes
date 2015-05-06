@@ -49,12 +49,8 @@ class LatLon : public Gridded {
 
     // -- Methods
 
-    size_t ni() const {
-        return ni_;
-    }
-    size_t nj() const {
-        return nj_;
-    }
+    size_t ni() const;
+    size_t nj() const;
 
     // -- Overridden methods
     // None
