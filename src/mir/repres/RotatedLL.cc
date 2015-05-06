@@ -13,6 +13,8 @@
 /// @date Apr 2015
 
 
+#include "RotatedGrid.h"
+
 #include <iostream>
 
 #include "eckit/exception/Exceptions.h"
@@ -20,9 +22,6 @@
 #include "mir/param/MIRParametrisation.h"
 
 #include "mir/repres/RotatedLL.h"
-
-#include "atlas/grids/RotatedGrid.h"
-
 
 namespace mir {
 namespace repres {
@@ -37,11 +36,6 @@ RotatedLL::RotatedLL(const util::BoundingBox &bbox, const util::Increments &incr
     rotation_(rotation) {
 
 }
-
-
-// RotatedLL::RotatedLL() {
-// }
-
 
 RotatedLL::~RotatedLL() {
 }
@@ -60,7 +54,7 @@ void RotatedLL::print(std::ostream &out) const {
 
 
 // Called by RegularLL::crop()
-RegularLL* RotatedLL::cropped(const util::BoundingBox &bbox) const{
+RegularLL* RotatedLL::cropped(const util::BoundingBox &bbox) const {
     eckit::Log::info() << "Create cropped copy as RotatedLL bbox=" << bbox << std::endl;
     return new RotatedLL(bbox, increments_, rotation_);
 }
@@ -79,9 +73,8 @@ atlas::Grid *RotatedLL::atlasGrid() const {
 }
 
 namespace {
-static RepresentationBuilder<RotatedLL> rotatedLL("rotated_ll"); // Name is what is returned by grib_api
+static RepresentationBuilder<RotatedLL> rotatedLL("rotated_ll");  // Name is what is returned by grib_api
 }
-
 
 }  // namespace repres
 }  // namespace mir
