@@ -155,7 +155,7 @@
 021226|backscatterDistance|long|BACKSCATER DISTANCE|Numeric|1|-4096|13|NA|0|0
 021230|numberOfVectorAmbiguities|long|NUMBER OF VECTOR AMBIGUITIES|Numeric|0|0|3|NA|0|0
 021231|indexOfSelectedWindVector|long|INDEX OF SELECTED WIND VECTOR|Numeric|0|0|3|NA|0|0
-021232|totalNmberOfSigma0Measurements|long|TOTAL NMBER OF SIGMA-0 MEASUREMENTS|Numeric|0|0|5|NA|0|0
+021232|totalNumberOfSigma0Measurements|long|TOTAL NMBER OF SIGMA-0 MEASUREMENTS|Numeric|0|0|5|NA|0|0
 021233|numberOfSigma0UsableForWind|long|NUMBER OF SIGMA-0 USABLE FOR WIND|Numeric|0|0|5|NA|0|0
 021234|likelihoodComputedForSolution|long|LIKELIHOOD COMPUTED FOR SOLUTION|Numeric|1|-10000|14|NA|0|0
 021235|windVectorCellQualityFlag|flag|WIND VECTOR CELL QUALITY FLAG|FLAG TABLE|0|0|3|NA|0|0
@@ -165,7 +165,7 @@
 021239|numberOfAftBeamSigma0|long|NUMBER OF AFT-BEAM SIGMA-0|Numeric|1|0|6|NA|0|0
 021240|normalizedRadarCrossSection|long|NORMALIZED RADAR CROSS SECTION|Numeric|2|-10000|14|NA|0|0
 021241|kpVarianceCoefficientAlpha|long|Kp VARIANCE COEFFICIENT (ALPHA)|Numeric|5|0|14|NA|0|0
-021242|kpVarianceCoefficientBetha|long|Kp VARIANCE COEFFICIENT (BETHA)|Numeric|6|0|16|NA|0|0
+021242|kpVarianceCoefficientBeta|long|Kp VARIANCE COEFFICIENT (BETHA)|Numeric|6|0|16|NA|0|0
 021243|kpVarianceCoefficientGamma|long|Kp VARIANCE COEFFICIENT (GAMMA)|Numeric|6|0|16|NA|0|0
 021244|sigma0QualityFlag|flag|SIGMA-0 QUALITY FLAG|FLAG TABLE|0|0|15|NA|0|0
 022192|spectralPeriod|double|SPECTRAL PERIOD|s|2|0|13|NA|0|0
