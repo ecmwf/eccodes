@@ -13,7 +13,6 @@
 /// @date Apr 2015
 
 
-#include "RotatedGrid.h"
 
 #include <iostream>
 
@@ -22,6 +21,8 @@
 #include "mir/param/MIRParametrisation.h"
 
 #include "mir/repres/RotatedLL.h"
+
+#include "atlas/grids/RotatedGrid.h"
 
 namespace mir {
 namespace repres {
