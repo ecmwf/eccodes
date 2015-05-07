@@ -99,6 +99,11 @@ Representation *Representation::clone() const {
     throw eckit::SeriousBug(std::string(os));
 }
 
+void Representation::reorder(long scanningMode, std::vector<double>& values) const {
+    eckit::StrStream os;
+    os << "Representation::reorder() not implemented for " << *this << eckit::StrStream::ends;
+    throw eckit::SeriousBug(std::string(os));
+}
 
 RepresentationFactory::RepresentationFactory(const std::string &name):
     name_(name) {

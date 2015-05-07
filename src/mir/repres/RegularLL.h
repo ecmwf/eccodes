@@ -91,8 +91,9 @@ class RegularLL : public LatLon {
     // None
 
 
-    // Called by crop(), to override in subclasses
+    // Called by crop()
     virtual RegularLL *cropped(const util::BoundingBox &bbox) const;
+
 
 
     // -- Overridden methods
