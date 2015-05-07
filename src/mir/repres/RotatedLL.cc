@@ -68,9 +68,9 @@ void RotatedLL::fill(grib_info &info) const  {
 
 atlas::Grid *RotatedLL::atlasGrid() const {
     return new atlas::grids::RotatedGrid(RegularLL::atlasGrid(),
-            rotation_.south_pole_latitude(),
-            rotation_.south_pole_longitude(),
-            rotation_.south_pole_rotation_angle());
+                                         rotation_.south_pole_latitude(),
+                                         rotation_.south_pole_longitude(),
+                                         rotation_.south_pole_rotation_angle());
 }
 
 namespace {
