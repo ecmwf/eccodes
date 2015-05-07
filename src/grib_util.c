@@ -798,6 +798,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         COPY_SPEC_LONG(uvRelativeToGrid);
         COPY_SPEC_DOUBLE(latitudeOfSouthernPoleInDegrees);
         COPY_SPEC_DOUBLE(longitudeOfSouthernPoleInDegrees);
+        COPY_SPEC_DOUBLE(angleOfRotationInDegrees);
         break;
     }
 
