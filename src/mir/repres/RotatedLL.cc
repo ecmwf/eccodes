@@ -29,7 +29,8 @@ namespace repres {
 
 
 RotatedLL::RotatedLL(const param::MIRParametrisation &parametrisation):
-    RegularLL(parametrisation) {
+    RegularLL(parametrisation),
+    rotation_(parametrisation) {
 }
 
 RotatedLL::RotatedLL(const util::BoundingBox &bbox, const util::Increments &increments, const util::Rotation &rotation):
