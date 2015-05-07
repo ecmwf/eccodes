@@ -48,6 +48,21 @@ ${tools_dir}bufr_dump -js $fBufr > $fJsonTmp
 
 diff $fJsonTmp $fJsonRef >$REDIRECT 2> $REDIRECT
 
+#==============================================
+# Testing a malformed bufr file (see ECC-110)
+#==============================================
+
+echo "Test: operator 207003 " >> $fLog
+
+rm -f $fJsonTmp | true
+
+fBufr=${data_dir}/bufr/"207003.bufr"
+fJsonRef=${data_dir}/bufr/"207003.bufr.json.ref"
+
+${tools_dir}bufr_dump -ja $fBufr > $fJsonTmp
+
+diff $fJsonTmp $fJsonRef >$REDIRECT 2> $REDIRECT
+
 #Clean up
 rm -f $fLog 
 rm -f $fJsonTmp | true
