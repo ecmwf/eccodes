@@ -95,7 +95,8 @@ class RegularGG : public Gridded {
 // -- Overridden methods
 
     virtual void fill(grib_info&) const;
-    atlas::Grid* atlasGrid() const;
+    virtual atlas::Grid* atlasGrid() const;
+    virtual Representation *clone() const;
 
 // -- Class members
     // None

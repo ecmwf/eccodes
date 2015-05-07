@@ -37,6 +37,10 @@ RegularGG::RegularGG(size_t N_):
 
 }
 
+Representation *RegularGG::clone() const {
+    return new RegularGG(N_);
+}
+
 RegularGG::RegularGG() {
 }
 
