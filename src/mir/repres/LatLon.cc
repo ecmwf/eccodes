@@ -94,10 +94,11 @@ void LatLon::setNiNj() {
 }
 
 void LatLon::reorder(long scanningMode, std::vector<double>& values) const {
-    NOTIMP; // Code from ecRegrid, UNTESTED!!!
+    // Code from ecRegrid, UNTESTED!!!
 
+    eckit::Log::info() << "WARNING: UNTESTED!!!" << std::endl;
     eckit::Log::info() << "LatLon::reorder scanning mode " << std::hex << scanningMode << std::endl;
-    std::vector<double> out(values);
+    std::vector<double> out(values.size());
 
     if (scanningMode == jScansPositively) {
         long count = 0;
@@ -106,6 +107,7 @@ void LatLon::reorder(long scanningMode, std::vector<double>& values) const {
                 out[count++] = values[j * ni_ + i];
             }
         }
+        ASSERT(count == out.size());
         std::swap(values, out);
         return;
     }
@@ -117,6 +119,7 @@ void LatLon::reorder(long scanningMode, std::vector<double>& values) const {
                 out[count++] = values[j * ni_ + i];
             }
         }
+        ASSERT(count == out.size());
         std::swap(values, out);
         return;
     }
@@ -128,6 +131,7 @@ void LatLon::reorder(long scanningMode, std::vector<double>& values) const {
                 out[count++] = values[j * ni_ + i];
             }
         }
+        ASSERT(count == out.size());
         std::swap(values, out);
         return;
     }
