@@ -60,10 +60,10 @@ static size_t compteN(double first, double last, double inc, const char *n_name,
     }
     ASSERT(inc > 0);
     size_t p = size_t((last - first) / inc);
-    double d0 = fabs((last + p * inc) - first);
-    double d1 = fabs((last + (p + 1) * inc) - first);
+    double d0 = fabs(last -(first + p * inc));
+    double d1 = fabs(last -(first + (p + 1) * inc));
 
-    eckit::Log::info() << p << " " << d0 << " " << d1 << " " << inc << " " << first << " " << last << std::endl;
+    // eckit::Log::info() << p << " " << d0 << " " << d1 << " " << inc << " " << first << " " << last << std::endl;
     ASSERT(d0 != d1);
 
     if (d0 < d1) {
@@ -72,7 +72,7 @@ static size_t compteN(double first, double last, double inc, const char *n_name,
         n = p + 1;
     }
 
-    if ((p * inc + first) != last) {
+    if ((n * inc + first) != last) {
         eckit::Log::info() << "LatLon: cannot compute accuratly "
                            << n_name << ", given "
                            << first_name << "=" << first << ", "
@@ -96,8 +96,11 @@ void LatLon::setNiNj() {
 void LatLon::reorder(long scanningMode, std::vector<double>& values) const {
     // Code from ecRegrid, UNTESTED!!!
 
-    eckit::Log::info() << "WARNING: UNTESTED!!!" << std::endl;
-    eckit::Log::info() << "LatLon::reorder scanning mode " << std::hex << scanningMode << std::endl;
+    eckit::Log::info() << "WARNING: UNTESTED!!! ";
+    eckit::Log::info() << "LatLon::reorder scanning mode 0x" << std::hex << scanningMode << std::endl;
+
+    ASSERT(values.size() == ni_ * nj_);
+
     std::vector<double> out(values.size());
 
     if (scanningMode == jScansPositively) {
@@ -137,7 +140,7 @@ void LatLon::reorder(long scanningMode, std::vector<double>& values) const {
     }
 
     eckit::StrStream os;
-    os << "LatLon::reorder: unsupported scanning mode " << std::hex << scanningMode << eckit::StrStream::ends;
+    os << "LatLon::reorder: unsupported scanning mode 0x" << std::hex << scanningMode << eckit::StrStream::ends;
     throw eckit::SeriousBug(os);
 }
 
