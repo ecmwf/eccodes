@@ -10,7 +10,18 @@
 
 #include "grib_api_internal.h"
 
-static void init_ibm_table();
+#if GRIB_PTHREADS
+static pthread_once_t once  = PTHREAD_ONCE_INIT;
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+static void init() {
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&mutex,&attr);
+    pthread_mutexattr_destroy(&attr);
+}
+#endif
 
 typedef struct ibm_table_t ibm_table_t;
 
@@ -43,6 +54,16 @@ static void init_ibm_table()
     }
 }
 
+static void init_table_if_needed()
+{
+    GRIB_PTHREAD_ONCE(&once,&init)
+    GRIB_MUTEX_LOCK(&mutex)
+
+    if (!ibm_table.inited) init_ibm_table();
+
+    GRIB_MUTEX_UNLOCK(&mutex)
+}
+
 static void binary_search(double xx[], const unsigned long n, double x, unsigned long *j)
 {
     /*These routine works only on ascending ordered arrays*/
@@ -68,7 +89,7 @@ unsigned long grib_ibm_to_long(double x)
     unsigned long e=0;
     double rmmax=mmax+0.5;
 
-    if (!ibm_table.inited) init_ibm_table();
+    init_table_if_needed();
 
     /* printf("\ngrib_ibm_to_long: x=%.20e\n",x); */
     if (x < 0)  {  s  = 1; x = -x; }
@@ -117,7 +138,7 @@ double grib_ibmfloat_error(double x)
 {
     unsigned long e=0;
 
-    if (!ibm_table.inited) init_ibm_table();
+    init_table_if_needed();
 
     if (x < 0)  x = -x;
 
@@ -144,7 +165,7 @@ double grib_long_to_ibm(unsigned long x)
 
     double val = m;
 
-    if (!ibm_table.inited) init_ibm_table();
+    init_table_if_needed();
 
     /*if(x == 0) return 0;*/
     if (c==0 && m <= 1 ) return 0;
@@ -158,13 +179,13 @@ double grib_long_to_ibm(unsigned long x)
 
 double grib_ibm_table_e(unsigned long e)
 {
-    if (!ibm_table.inited) init_ibm_table();
+    init_table_if_needed();
     return ibm_table.e[e];
 }
 
 double grib_ibm_table_v(unsigned long e)
 {
-    if (!ibm_table.inited) init_ibm_table();
+    init_table_if_needed();
     return ibm_table.v[e];
 }
 
@@ -179,7 +200,7 @@ unsigned long grib_ibm_nearest_smaller_to_long(double x)
 
     if(x == 0) return 0;
 
-    if (!ibm_table.inited) init_ibm_table();
+    init_table_if_needed();
 
     l=grib_ibm_to_long(x);
     y=grib_long_to_ibm(l);
@@ -223,7 +244,7 @@ int grib_nearest_smaller_ibm_float(double a,double* ret)
 {
     unsigned long l=0;
 
-    if (!ibm_table.inited) init_ibm_table();
+    init_table_if_needed();
 
     if (a>ibm_table.vmax) return GRIB_INTERNAL_ERROR;
 

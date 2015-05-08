@@ -14,9 +14,20 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 
-#if 1
+#if GRIB_PTHREADS
+static pthread_once_t once  = PTHREAD_ONCE_INIT;
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static void init_ieee_table();
+static void init() {
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&mutex,&attr);
+    pthread_mutexattr_destroy(&attr);
+}
+#endif
+
+#if 1
 
 typedef struct ieee_table_t ieee_table_t;
 
@@ -57,6 +68,16 @@ static void init_ieee_table()
     }
 }
 
+static void init_table_if_needed()
+{
+    GRIB_PTHREAD_ONCE(&once,&init)
+    GRIB_MUTEX_LOCK(&mutex)
+
+    if (!ieee_table.inited) init_ieee_table();
+
+    GRIB_MUTEX_UNLOCK(&mutex)
+}
+
 static void binary_search(double xx[], const unsigned long n, double x, unsigned long *j)
 {
     /*These routine works only on ascending ordered arrays*/
@@ -75,13 +96,13 @@ static void binary_search(double xx[], const unsigned long n, double x, unsigned
 
 double grib_ieee_table_e(unsigned long e)
 {
-    if (!ieee_table.inited) init_ieee_table();
+    init_table_if_needed();
     return ieee_table.e[e];
 }
 
 double grib_ieee_table_v(unsigned long e)
 {
-    if (!ieee_table.inited) init_ieee_table();
+    init_table_if_needed();
     return ieee_table.v[e];
 }
 
@@ -94,7 +115,7 @@ unsigned long grib_ieee_to_long(double x)
     unsigned long e=0;
     double rmmax=mmax+0.5;
 
-    if (!ieee_table.inited) init_ieee_table();
+    init_table_if_needed();
 
     /* printf("\ngrib_ieee_to_long: x=%.20e\n",x); */
     if (x < 0)  {  s  = 1; x = -x; }
@@ -143,7 +164,7 @@ double grib_ieeefloat_error(double x)
 {
     unsigned long e=0;
 
-    if (!ieee_table.inited) init_ieee_table();
+    init_table_if_needed();
 
     if (x < 0)  x = -x;
 
@@ -170,7 +191,7 @@ double grib_long_to_ieee(unsigned long x)
 
     double val;
 
-    if (!ieee_table.inited) init_ieee_table();
+    init_table_if_needed();
 
     if (c == 0 && m==0) return 0;
 
@@ -196,7 +217,7 @@ unsigned long grib_ieee_nearest_smaller_to_long(double x)
 
     if(x == 0) return 0;
 
-    if (!ieee_table.inited) init_ieee_table();
+    init_table_if_needed();
 
     l=grib_ieee_to_long(x);
     y=grib_long_to_ieee(l);
@@ -237,7 +258,7 @@ int grib_nearest_smaller_ieee_float(double a,double* ret)
 {
     unsigned long l=0;
 
-    if (!ieee_table.inited) init_ieee_table();
+    init_table_if_needed();
 
     if (a>ieee_table.vmax) return GRIB_INTERNAL_ERROR;
 
