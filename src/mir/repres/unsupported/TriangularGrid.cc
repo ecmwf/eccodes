@@ -19,7 +19,7 @@
 
 #include "mir/param/MIRParametrisation.h"
 
-#include "mir/repres/TriangularGrid.h"
+#include "mir/repres/unsupported/TriangularGrid.h"
 
 
 namespace mir {

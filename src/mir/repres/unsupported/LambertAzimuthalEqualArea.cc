@@ -19,7 +19,7 @@
 
 #include "mir/param/MIRParametrisation.h"
 
-#include "mir/repres/LambertAzimuthalEqualArea.h"
+#include "mir/repres/unsupported/LambertAzimuthalEqualArea.h"
 
 
 namespace mir {

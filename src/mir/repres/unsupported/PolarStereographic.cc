@@ -19,7 +19,7 @@
 
 #include "mir/param/MIRParametrisation.h"
 
-#include "mir/repres/PolarStereographic.h"
+#include "mir/repres/unsupported/PolarStereographic.h"
 
 
 namespace mir {

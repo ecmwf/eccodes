@@ -19,7 +19,7 @@
 
 #include "mir/param/MIRParametrisation.h"
 
-#include "mir/repres/UnstructuredGrid.h"
+#include "mir/repres/unsupported/UnstructuredGrid.h"
 
 
 namespace mir {

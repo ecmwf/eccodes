@@ -19,7 +19,7 @@
 
 #include "mir/param/MIRParametrisation.h"
 
-#include "mir/repres/IrregularLatlon.h"
+#include "mir/repres/unsupported/IrregularLatlon.h"
 
 
 namespace mir {

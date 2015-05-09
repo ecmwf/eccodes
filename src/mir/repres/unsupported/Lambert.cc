@@ -19,7 +19,7 @@
 
 #include "mir/param/MIRParametrisation.h"
 
-#include "mir/repres/Lambert.h"
+#include "mir/repres/unsupported/Lambert.h"
 
 
 namespace mir {

@@ -18,7 +18,7 @@
 #include "eckit/exception/Exceptions.h"
 
 #include "mir/param/MIRParametrisation.h"
-#include "mir/repres/SphericalHarmonics.h"
+#include "mir/repres/sh/SphericalHarmonics.h"
 #include "mir/util/Grib.h"
 
 

@@ -59,6 +59,13 @@ atlas::Grid *RotatedFromPL::atlasGrid() const {
                                          rotation_.south_pole_rotation_angle());
 }
 
+
+// TODO: Check if rotated_gg is reduced or regular
+namespace {
+static RepresentationBuilder<RotatedFromPL> rotatedGG("rotated_gg"); // Name is what is returned by grib_api
+}
+
+
 // namespace {
 // static RepresentationBuilder<RotatedFromPL> reducedGGFromPL("reduced_gg"); // Name is what is returned by grib_api
 // }

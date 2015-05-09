@@ -19,7 +19,7 @@
 
 #include "mir/param/MIRParametrisation.h"
 
-#include "mir/repres/SpaceView.h"
+#include "mir/repres/unsupported/SpaceView.h"
 
 
 namespace mir {

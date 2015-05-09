@@ -19,7 +19,7 @@
 
 #include "mir/param/MIRParametrisation.h"
 
-#include "mir/repres/Mercator.h"
+#include "mir/repres/unsupported/Mercator.h"
 
 
 namespace mir {

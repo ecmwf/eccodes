@@ -44,6 +44,7 @@ void ReducedClassic::print(std::ostream &out) const {
 
 
 
+
 } // namespace reduced
 }  // namespace repres
 }  // namespace mir
