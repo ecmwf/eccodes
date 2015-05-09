@@ -46,6 +46,7 @@ void RotatedGG::print(std::ostream &out) const {
 
 void RotatedGG::fill(grib_info &info) const  {
     NOTIMP;
+    // GRIB_UTIL_GRID_SPEC_ROTATED_GG
 }
 
 
