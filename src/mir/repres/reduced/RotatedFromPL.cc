@@ -12,7 +12,7 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
-#include "mir/repres/ReducedGGClassic.h"
+#include "mir/repres/reduced/RotatedFromPL.h"
 
 #include <iostream>
 
@@ -22,34 +22,36 @@
 #include "eckit/exception/Exceptions.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
+#include "atlas/grids/RotatedGrid.h"
 
 namespace mir {
 namespace repres {
+namespace reduced {
 
 
-ReducedGGClassic::ReducedGGClassic(size_t N_):
-    N_(N_) {
-
+RotatedFromPL::RotatedFromPL(const param::MIRParametrisation &parametrisation):
+    FromPL(parametrisation),
+    rotation_(parametrisation) {
 }
 
-ReducedGGClassic::~ReducedGGClassic() {
+
+RotatedFromPL::~RotatedFromPL() {
 }
 
-ReducedGGClassic::ReducedGGClassic(long N, const util::BoundingBox &bbox):
-    N_(N),
-    bbox_(bbox) {
-
+RotatedFromPL::RotatedFromPL(long N, const std::vector<long> &pl, const util::BoundingBox &bbox, const util::Rotation& rotation):
+    FromPL(N, pl, bbox),
+    rotation_(rotation){
 }
 
-Representation *ReducedGGClassic::clone() const {
-    return new ReducedGGClassic(N_, bbox_);
+Representation *RotatedFromPL::clone() const {
+    return new RotatedFromPL(N_, pl_, bbox_, rotation_);
 }
 
-void ReducedGGClassic::print(std::ostream &out) const {
-    out << "ReducedGGClassic[N" << N_ << "]";
+void RotatedFromPL::print(std::ostream &out) const {
+    out << "RotatedGGFromPL[N" << N_ << "]";
 }
 
-void ReducedGGClassic::fill(grib_info &info) const  {
+void RotatedFromPL::fill(grib_info &info) const  {
 
     // See copy_spec_from_ksec.c in libemos for info
 
@@ -76,14 +78,18 @@ void ReducedGGClassic::fill(grib_info &info) const  {
     // FIXME: Where are the PL set? Looks like grib_api has its own list
 }
 
-atlas::Grid *ReducedGGClassic::atlasGrid() const {
-    eckit::StrStream os;
-    os << "rgg.N" << N_ << eckit::StrStream::ends;
-    return atlas::Grid::create(std::string(os));
+atlas::Grid *RotatedFromPL::atlasGrid() const {
+    return new atlas::grids::RotatedGrid(FromPL::atlasGrid(),
+                                         rotation_.south_pole_latitude(),
+                                         rotation_.south_pole_longitude(),
+                                         rotation_.south_pole_rotation_angle());
 }
 
+// namespace {
+// static RepresentationBuilder<RotatedFromPL> reducedGGFromPL("reduced_gg"); // Name is what is returned by grib_api
+// }
 
-
+} // namespace reduced
 }  // namespace repres
 }  // namespace mir
 

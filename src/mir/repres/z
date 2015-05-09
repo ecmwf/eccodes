@@ -1,0 +1,7 @@
+for n in ReducedGG*.h ; do 
+p=$(echo $n| sed 's/\.h//')
+m=$(echo $p | sed 's/Reduced/Rotated/' )
+r=$(echo $p | sed 's/Reduced/R/' )
+newclass $p $m
+newclass $p $r
+done

@@ -13,18 +13,17 @@
 /// @date Apr 2015
 
 
-#ifndef ReducedGGOctahedral_H
-#define ReducedGGOctahedral_H
+#ifndef ReducedOctahedral_H
+#define ReducedOctahedral_H
 
-#include "mir/repres/Gridded.h"
-#include "mir/util/BoundingBox.h"
+#include "mir/repres/reduced/Octahedral.h"
 
 
 namespace mir {
 namespace repres {
+namespace reduced {
 
-
-class ReducedGGOctahedral : public Gridded {
+class ReducedOctahedral : public Octahedral {
   public:
 
     // -- Exceptions
@@ -32,11 +31,11 @@ class ReducedGGOctahedral : public Gridded {
 
     // -- Contructors
 
-    ReducedGGOctahedral(size_t);
+    ReducedOctahedral(size_t);
 
     // -- Destructor
 
-    virtual ~ReducedGGOctahedral(); // Change to virtual if base class
+    virtual ~ReducedOctahedral(); // Change to virtual if base class
 
     // -- Convertors
     // None
@@ -75,19 +74,15 @@ class ReducedGGOctahedral : public Gridded {
 
   private:
 
-    ReducedGGOctahedral(long, const util::BoundingBox &);
+    ReducedOctahedral(long, const util::BoundingBox &);
 
 
     // No copy allowed
 
-    ReducedGGOctahedral(const ReducedGGOctahedral &);
-    ReducedGGOctahedral &operator=(const ReducedGGOctahedral &);
+    ReducedOctahedral(const ReducedOctahedral &);
+    ReducedOctahedral &operator=(const ReducedOctahedral &);
 
     // -- Members
-
-    size_t N_;
-    util::BoundingBox bbox_;
-    mutable std::vector<long> tmp_;
 
 
     // -- Methods
@@ -96,8 +91,7 @@ class ReducedGGOctahedral : public Gridded {
 
     // -- Overridden methods
 
-    virtual void fill(grib_info &) const;
-    atlas::Grid *atlasGrid() const;
+
     virtual Representation *clone() const;
 
     // -- Class members
@@ -108,12 +102,12 @@ class ReducedGGOctahedral : public Gridded {
 
     // -- Friends
 
-    //friend ostream& operator<<(ostream& s,const ReducedGGOctahedral& p)
+    //friend ostream& operator<<(ostream& s,const ReducedOctahedral& p)
     //  { p.print(s); return s; }
 
 };
 
-
+}
 }  // namespace repres
 }  // namespace mir
 #endif

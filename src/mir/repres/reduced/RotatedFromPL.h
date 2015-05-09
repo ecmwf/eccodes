@@ -13,18 +13,19 @@
 /// @date Apr 2015
 
 
-#ifndef ReducedGGFromPL_H
-#define ReducedGGFromPL_H
+#ifndef RotatedFromPL_H
+#define RotatedFromPL_H
 
-#include "mir/repres/Gridded.h"
+#include "mir/repres/reduced/FromPL.h"
 #include "mir/util/BoundingBox.h"
+#include "mir/util/Rotation.h"
 
 
 namespace mir {
 namespace repres {
+namespace reduced {
 
-
-class ReducedGGFromPL : public Gridded {
+class RotatedFromPL : public FromPL {
   public:
 
     // -- Exceptions
@@ -32,12 +33,11 @@ class ReducedGGFromPL : public Gridded {
 
     // -- Contructors
 
-    ReducedGGFromPL(const param::MIRParametrisation &);
-    ReducedGGFromPL(size_t);
+    RotatedFromPL(const param::MIRParametrisation &);
 
     // -- Destructor
 
-    virtual ~ReducedGGFromPL(); // Change to virtual if base class
+    virtual ~RotatedFromPL(); // Change to virtual if base class
 
     // -- Convertors
     // None
@@ -59,7 +59,7 @@ class ReducedGGFromPL : public Gridded {
   protected:
 
     // -- Members
-    // None
+    util::Rotation rotation_;
 
     // -- Methods
 
@@ -76,19 +76,15 @@ class ReducedGGFromPL : public Gridded {
 
   private:
 
-    ReducedGGFromPL(long, const std::vector<long> &, const util::BoundingBox &);
+    RotatedFromPL(long, const std::vector<long> &, const util::BoundingBox &, const util::Rotation&);
 
 
     // No copy allowed
 
-    ReducedGGFromPL(const ReducedGGFromPL &);
-    ReducedGGFromPL &operator=(const ReducedGGFromPL &);
+    RotatedFromPL(const RotatedFromPL &);
+    RotatedFromPL &operator=(const RotatedFromPL &);
 
     // -- Members
-
-    size_t N_;
-    std::vector<long> pl_;
-    util::BoundingBox bbox_;
 
     // -- Methods
     // None
@@ -108,12 +104,12 @@ class ReducedGGFromPL : public Gridded {
 
     // -- Friends
 
-    //friend ostream& operator<<(ostream& s,const ReducedGGFromPL& p)
+    //friend ostream& operator<<(ostream& s,const RotatedFromPL& p)
     //  { p.print(s); return s; }
 
 };
 
-
+}
 }  // namespace repres
 }  // namespace mir
 #endif

@@ -13,18 +13,19 @@
 /// @date Apr 2015
 
 
-#ifndef ReducedGGClassic_H
-#define ReducedGGClassic_H
+#ifndef RotatedClassic_H
+#define RotatedClassic_H
 
-#include "mir/repres/Gridded.h"
+#include "mir/repres/reduced/Classic.h"
 #include "mir/util/BoundingBox.h"
+#include "mir/util/Rotation.h"
 
 
 namespace mir {
 namespace repres {
+namespace reduced {
 
-
-class ReducedGGClassic : public Gridded {
+class RotatedClassic : public Classic {
   public:
 
     // -- Exceptions
@@ -32,11 +33,11 @@ class ReducedGGClassic : public Gridded {
 
     // -- Contructors
 
-    ReducedGGClassic(size_t);
+    RotatedClassic(size_t);
 
     // -- Destructor
 
-    virtual ~ReducedGGClassic(); // Change to virtual if base class
+    virtual ~RotatedClassic(); // Change to virtual if base class
 
     // -- Convertors
     // None
@@ -58,7 +59,7 @@ class ReducedGGClassic : public Gridded {
   protected:
 
     // -- Members
-    // None
+    util::Rotation rotation_;
 
     // -- Methods
 
@@ -75,18 +76,15 @@ class ReducedGGClassic : public Gridded {
 
   private:
 
-    ReducedGGClassic(long, const util::BoundingBox &);
+    RotatedClassic(long, const util::BoundingBox &, const util::Rotation&);
 
 
     // No copy allowed
 
-    ReducedGGClassic(const ReducedGGClassic &);
-    ReducedGGClassic &operator=(const ReducedGGClassic &);
+    RotatedClassic(const RotatedClassic &);
+    RotatedClassic &operator=(const RotatedClassic &);
 
     // -- Members
-
-    size_t N_;
-    util::BoundingBox bbox_;
 
     // -- Methods
     // None
@@ -106,12 +104,12 @@ class ReducedGGClassic : public Gridded {
 
     // -- Friends
 
-    //friend ostream& operator<<(ostream& s,const ReducedGGClassic& p)
+    //friend ostream& operator<<(ostream& s,const RotatedClassic& p)
     //  { p.print(s); return s; }
 
 };
 
-
+}
 }  // namespace repres
 }  // namespace mir
 #endif

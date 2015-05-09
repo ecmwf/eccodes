@@ -12,7 +12,7 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
-#include "mir/repres/ReducedGGFromPL.h"
+#include "mir/repres/reduced/FromPL.h"
 
 #include <iostream>
 
@@ -25,37 +25,25 @@
 
 namespace mir {
 namespace repres {
+namespace reduced {
 
 
-ReducedGGFromPL::ReducedGGFromPL(const param::MIRParametrisation &parametrisation) {
+FromPL::FromPL(const param::MIRParametrisation &parametrisation) {
     ASSERT(parametrisation.get("N", N_));
     ASSERT(parametrisation.get("pl", pl_));
 }
 
-ReducedGGFromPL::ReducedGGFromPL(size_t N_):
-    N_(N_) {
-
+FromPL::~FromPL() {
 }
 
-ReducedGGFromPL::~ReducedGGFromPL() {
-}
-
-ReducedGGFromPL::ReducedGGFromPL(long N, const std::vector<long> &pl, const util::BoundingBox &bbox):
+FromPL::FromPL(long N, const std::vector<long> &pl, const util::BoundingBox &bbox):
     N_(N),
     pl_(pl),
     bbox_(bbox) {
 
 }
 
-Representation *ReducedGGFromPL::clone() const {
-    return new ReducedGGFromPL(N_, pl_, bbox_);
-}
-
-void ReducedGGFromPL::print(std::ostream &out) const {
-    out << "ReducedGGFromPL[N" << N_ << "]";
-}
-
-void ReducedGGFromPL::fill(grib_info &info) const  {
+void FromPL::fill(grib_info &info) const  {
 
     // See copy_spec_from_ksec.c in libemos for info
 
@@ -82,7 +70,7 @@ void ReducedGGFromPL::fill(grib_info &info) const  {
     // FIXME: Where are the PL set? Looks like grib_api has its own list
 }
 
-atlas::Grid *ReducedGGFromPL::atlasGrid() const {
+atlas::Grid *FromPL::atlasGrid() const {
     ASSERT (pl_.size() > 0);
     // FIXME: ask atlas to support long instead of int
     std::vector<int> pl(pl_.size());
@@ -92,11 +80,8 @@ atlas::Grid *ReducedGGFromPL::atlasGrid() const {
     return new atlas::grids::ReducedGaussianGrid(N_, &pl[0]);
 }
 
-namespace {
-static RepresentationBuilder<ReducedGGFromPL> reducedGGFromPL("reduced_gg"); // Name is what is returned by grib_api
-}
 
-
+} // namespace reduced
 }  // namespace repres
 }  // namespace mir
 

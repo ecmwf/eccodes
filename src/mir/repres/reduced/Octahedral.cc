@@ -12,7 +12,7 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
-#include "mir/repres/ReducedGGOctahedral.h"
+#include "mir/repres/reduced/Octahedral.h"
 
 #include <iostream>
 
@@ -25,31 +25,24 @@
 
 namespace mir {
 namespace repres {
+namespace reduced {
 
 
-ReducedGGOctahedral::ReducedGGOctahedral(size_t N_):
-    N_(N_) {
+Octahedral::Octahedral(size_t N):
+    N_(N) {
 
 }
 
-ReducedGGOctahedral::~ReducedGGOctahedral() {
+Octahedral::~Octahedral() {
 }
 
-ReducedGGOctahedral::ReducedGGOctahedral(long N, const util::BoundingBox &bbox):
+Octahedral::Octahedral(long N, const util::BoundingBox &bbox):
     N_(N),
     bbox_(bbox) {
 
 }
 
-Representation *ReducedGGOctahedral::clone() const {
-    return new ReducedGGOctahedral(N_, bbox_);
-}
-
-void ReducedGGOctahedral::print(std::ostream &out) const {
-    out << "ReducedGGOctahedral[N" << N_ << "]";
-}
-
-void ReducedGGOctahedral::fill(grib_info &info) const  {
+void Octahedral::fill(grib_info &info) const  {
 
     // See copy_spec_from_ksec.c in libemos for info
 
@@ -91,12 +84,12 @@ void ReducedGGOctahedral::fill(grib_info &info) const  {
     // FIXME: Where are the PL set? Looks like grib_api has its own list
 }
 
-atlas::Grid *ReducedGGOctahedral::atlasGrid() const {
+atlas::Grid *Octahedral::atlasGrid() const {
     return new atlas::grids::rgg::OctahedralRGG(N_);
 }
 
 
-
+} // namespace reduced
 }  // namespace repres
 }  // namespace mir
 
