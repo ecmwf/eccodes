@@ -16,11 +16,6 @@
 
 #include <iostream>
 
-#include "atlas/Grid.h"
-#include "atlas/grids/grids.h"
-#include "atlas/grids/ReducedGaussianGrid.h"
-#include "eckit/exception/Exceptions.h"
-#include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
 #include "atlas/grids/RotatedGrid.h"
 
@@ -40,7 +35,7 @@ RotatedFromPL::~RotatedFromPL() {
 
 RotatedFromPL::RotatedFromPL(long N, const std::vector<long> &pl, const util::BoundingBox &bbox, const util::Rotation& rotation):
     FromPL(N, pl, bbox),
-    rotation_(rotation){
+    rotation_(rotation) {
 }
 
 Representation *RotatedFromPL::clone() const {
@@ -52,30 +47,9 @@ void RotatedFromPL::print(std::ostream &out) const {
 }
 
 void RotatedFromPL::fill(grib_info &info) const  {
-
-    // See copy_spec_from_ksec.c in libemos for info
-
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
-    info.grid.Nj = N_ * 2; // Should be PL.size()
-    info.grid.N = N_;
-
-    bbox_.fill(info);
-
-    /*
-        Comment in libemos is:
-
-        "grib_api to set global area in full precision for gaussian grid"
-
-        TODO: check and document
-
-    */
-
-    size_t j = info.packing.extra_settings_count++;
-    info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
-    info.packing.extra_settings[j].name = "global";
-    info.packing.extra_settings[j].long_value = bbox_.global() ? 1 : 0;
-
-    // FIXME: Where are the PL set? Looks like grib_api has its own list
+    FromPL::fill(info);
+    rotation_.fill(info);
+    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_GG;
 }
 
 atlas::Grid *RotatedFromPL::atlasGrid() const {

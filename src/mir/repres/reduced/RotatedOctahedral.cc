@@ -16,11 +16,6 @@
 
 #include <iostream>
 
-#include "atlas/Grid.h"
-#include "atlas/grids/grids.h"
-#include "atlas/grids/rgg/OctahedralRGG.h"
-#include "eckit/exception/Exceptions.h"
-#include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
 #include "atlas/grids/RotatedGrid.h"
 
@@ -50,7 +45,12 @@ void RotatedOctahedral::print(std::ostream &out) const {
 void RotatedOctahedral::fill(grib_info &info) const  {
     Octahedral::fill(info);
     rotation_.fill(info);
-    NOTIMP; // Check grib flag
+#if 0
+    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_OCTAHEDRAL_GG
+#else
+        info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_GG;
+
+#endif
 
 }
 

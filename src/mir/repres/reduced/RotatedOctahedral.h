@@ -33,7 +33,7 @@ class RotatedOctahedral : public  Octahedral {
 
     // -- Contructors
 
-    RotatedOctahedral(size_t);
+    RotatedOctahedral(long, const util::BoundingBox &, const util::Rotation&);
 
     // -- Destructor
 
@@ -76,7 +76,6 @@ class RotatedOctahedral : public  Octahedral {
 
   private:
 
-    RotatedOctahedral(long, const util::BoundingBox &, const util::Rotation&);
 
 
     // No copy allowed

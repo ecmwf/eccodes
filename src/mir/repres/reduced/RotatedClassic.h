@@ -33,7 +33,7 @@ class RotatedClassic : public Classic {
 
     // -- Contructors
 
-    RotatedClassic(size_t);
+    RotatedClassic(long, const util::BoundingBox &, const util::Rotation&);
 
     // -- Destructor
 
@@ -76,7 +76,6 @@ class RotatedClassic : public Classic {
 
   private:
 
-    RotatedClassic(long, const util::BoundingBox &, const util::Rotation&);
 
 
     // No copy allowed

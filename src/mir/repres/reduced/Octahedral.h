@@ -65,7 +65,6 @@ class Octahedral : public Gridded {
 
     // -- Methods
 
-    virtual void print(std::ostream &) const; // Change to virtual if base class
 
     // -- Overridden methods
     virtual void fill(grib_info &) const;

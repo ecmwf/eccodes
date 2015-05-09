@@ -16,11 +16,6 @@
 
 #include <iostream>
 
-#include "atlas/Grid.h"
-#include "atlas/grids/grids.h"
-#include "atlas/grids/ReducedGaussianGrid.h"
-#include "eckit/exception/Exceptions.h"
-#include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
 #include "atlas/grids/RotatedGrid.h"
 
@@ -34,8 +29,8 @@ RotatedClassic::~RotatedClassic() {
 }
 
 RotatedClassic::RotatedClassic(long N, const util::BoundingBox &bbox, const util::Rotation& rotation):
-Classic(N, bbox_),
-rotation_(rotation) {
+    Classic(N, bbox_),
+    rotation_(rotation) {
 
 }
 
@@ -44,14 +39,13 @@ Representation *RotatedClassic::clone() const {
 }
 
 void RotatedClassic::print(std::ostream &out) const {
-    out << "RotatedClassic[N" << N_ << ",bbox=" << bbox_ << ",rotation=" << rotation_  << "]";
+    out << "RotatedGGClassic[N" << N_ << ",bbox=" << bbox_ << ",rotation=" << rotation_  << "]";
 }
 
 void RotatedClassic::fill(grib_info &info) const  {
     Classic::fill(info);
     rotation_.fill(info);
-    NOTIMP; // Find grib flag
-
+    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_GG;
 }
 
 atlas::Grid *RotatedClassic::atlasGrid() const {

@@ -16,12 +16,12 @@
 
 #include <iostream>
 
-#include "atlas/Grid.h"
-#include "atlas/grids/grids.h"
-#include "atlas/grids/rgg/OctahedralRGG.h"
-#include "eckit/exception/Exceptions.h"
-#include "mir/param/MIRParametrisation.h"
-#include "mir/util/Grib.h"
+// #include "atlas/Grid.h"
+// #include "atlas/grids/grids.h"
+// #include "atlas/grids/rgg/OctahedralRGG.h"
+// #include "eckit/exception/Exceptions.h"
+// #include "mir/param/MIRParametrisation.h"
+// #include "mir/util/Grib.h"
 
 namespace mir {
 namespace repres {

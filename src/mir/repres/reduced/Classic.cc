@@ -14,13 +14,7 @@
 
 #include "mir/repres/reduced/Classic.h"
 
-#include <iostream>
-
 #include "atlas/Grid.h"
-#include "atlas/grids/grids.h"
-#include "atlas/grids/ReducedGaussianGrid.h"
-#include "eckit/exception/Exceptions.h"
-#include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
 
 namespace mir {
@@ -35,7 +29,7 @@ Classic::Classic(size_t N):
 Classic::~Classic() {
 }
 
-Classic::Classic(long N, const util::BoundingBox &bbox):
+Classic::Classic(size_t N, const util::BoundingBox &bbox):
     N_(N),
     bbox_(bbox) {
 

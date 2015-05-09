@@ -57,7 +57,7 @@ class Classic : public Gridded {
 
   protected:
 
-    Classic(long, const util::BoundingBox &);
+    Classic(size_t, const util::BoundingBox &);
 
     // -- Members
 

@@ -130,6 +130,10 @@ void GribOutput::save(const param::MIRParametrisation &param, input::MIRInput &i
     X(info.grid.bitmapPresent);
     X(info.grid.missingValue);
     X(info.grid.pl_size);
+    for(size_t i = 0; i < info.grid.pl_size; i++) {
+        X(info.grid.pl[i]);
+        if(i>4) break;
+    }
     X(info.grid.truncation);
     X(info.grid.orientationOfTheGridInDegrees);
     X(info.grid.DyInMetres);
