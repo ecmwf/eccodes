@@ -24,7 +24,7 @@
 
 namespace mir {
 namespace repres {
-
+namespace sh {
 
 SphericalHarmonics::SphericalHarmonics(const param::MIRParametrisation &parametrisation) {
     ASSERT(parametrisation.get("truncation", truncation_));
@@ -138,6 +138,7 @@ namespace {
 static RepresentationBuilder<SphericalHarmonics> sphericalHarmonics("sh"); // Name is what is returned by grib_api
 }
 
+} // namespace sh
 
 }  // namespace repres
 }  // namespace mir

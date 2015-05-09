@@ -13,17 +13,18 @@
 /// @date Apr 2015
 
 
-#ifndef SphericalHarmonics_H
-#define SphericalHarmonics_H
+#ifndef RegularGG_H
+#define RegularGG_H
 
-#include "mir/repres/Representation.h"
+#include "mir/repres/Gridded.h"
+#include "mir/util/BoundingBox.h"
 
 
 namespace mir {
 namespace repres {
+namespace regular {
 
-
-class SphericalHarmonics : public Representation {
+class RegularGG : public Gridded {
   public:
 
 // -- Exceptions
@@ -31,11 +32,12 @@ class SphericalHarmonics : public Representation {
 
 // -- Contructors
 
-    SphericalHarmonics(const param::MIRParametrisation&);
+    RegularGG(const param::MIRParametrisation&);
+    RegularGG(size_t);
 
 // -- Destructor
 
-    virtual ~SphericalHarmonics(); // Change to virtual if base class
+    virtual ~RegularGG(); // Change to virtual if base class
 
 // -- Convertors
     // None
@@ -45,7 +47,6 @@ class SphericalHarmonics : public Representation {
 
 // -- Methods
 
-
 // -- Overridden methods
     // None
 
@@ -53,11 +54,7 @@ class SphericalHarmonics : public Representation {
     // None
 
 // -- Class methods
-
-    static void truncate(size_t truncation_from, size_t truncation_to, const std::vector<double>& in, std::vector<double>& out);
-    static size_t number_of_complex_coefficients(size_t truncation) {
-        return (truncation+1) * (truncation+2) / 2;
-    }
+    // None
 
   protected:
 
@@ -79,16 +76,17 @@ class SphericalHarmonics : public Representation {
 
   private:
 
-    SphericalHarmonics(size_t truncation);
+    RegularGG();
 
 // No copy allowed
 
-    SphericalHarmonics(const SphericalHarmonics&);
-    SphericalHarmonics& operator=(const SphericalHarmonics&);
+    RegularGG(const RegularGG&);
+    RegularGG& operator=(const RegularGG&);
 
 // -- Members
 
-    long truncation_;
+    size_t N_;
+    util::BoundingBox bbox_;
 
 // -- Methods
     // None
@@ -97,11 +95,8 @@ class SphericalHarmonics : public Representation {
 // -- Overridden methods
 
     virtual void fill(grib_info&) const;
-    virtual Representation* truncate(size_t truncation,
-                                     const std::vector<double>&, std::vector<double>&) const;
-    virtual size_t truncation() const;
-    virtual Representation* clone() const;
-    Representation *crop(const util::BoundingBox &bbox, const std::vector<double> &in, std::vector<double> &out) const;
+    virtual atlas::Grid* atlasGrid() const;
+    virtual Representation *clone() const;
 
 // -- Class members
     // None
@@ -111,11 +106,12 @@ class SphericalHarmonics : public Representation {
 
 // -- Friends
 
-    //friend ostream& operator<<(ostream& s,const SphericalHarmonics& p)
+    //friend ostream& operator<<(ostream& s,const RegularGG& p)
     //	{ p.print(s); return s; }
 
 };
 
+} // namespace regular
 
 }  // namespace repres
 }  // namespace mir

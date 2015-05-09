@@ -12,7 +12,7 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
-#include "mir/repres/RegularLL.h"
+#include "mir/repres/latlon/RegularLL.h"
 
 #include <iostream>
 
@@ -25,6 +25,7 @@
 
 namespace mir {
 namespace repres {
+namespace latlon {
 
 
 RegularLL::RegularLL(const param::MIRParametrisation &parametrisation):
@@ -82,7 +83,7 @@ namespace {
 static RepresentationBuilder<RegularLL> regularLL("regular_ll"); // Name is what is returned by grib_api
 }
 
-
+} // namespave latlon
 }  // namespace repres
 }  // namespace mir
 

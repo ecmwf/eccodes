@@ -19,7 +19,7 @@
 
 #include "mir/param/MIRParametrisation.h"
 
-#include "mir/repres/ReducedLL.h"
+#include "mir/repres/latlon/ReducedLL.h"
 
 #include <eckit/parser/Tokenizer.h>
 
@@ -30,6 +30,7 @@
 
 namespace mir {
 namespace repres {
+namespace latlon {
 
 
 ReducedLL::ReducedLL(const param::MIRParametrisation &parametrisation) {
@@ -68,7 +69,7 @@ namespace {
 static RepresentationBuilder<ReducedLL> reducedLL("reduced_ll"); // Name is what is returned by grib_api
 }
 
-
+} // namespave latlon
 }  // namespace repres
 }  // namespace mir
 

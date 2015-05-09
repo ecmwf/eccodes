@@ -26,7 +26,7 @@
 
 namespace mir {
 namespace repres {
-
+namespace regular {
 
 RegularGG::RegularGG(const param::MIRParametrisation &parametrisation) {
     ASSERT(parametrisation.get("N", N_));
@@ -95,7 +95,7 @@ namespace {
 static RepresentationBuilder<RegularGG> reducedGG("regular_gg"); // Name is what is returned by grib_api
 }
 
-
+} // namespace regular
 }  // namespace repres
 }  // namespace mir
 

@@ -12,7 +12,7 @@
 /// @LatLon Pedro Maciel
 /// @date Apr 2015
 
-#include "mir/repres/LatLon.h"
+#include "mir/repres/latlon/LatLon.h"
 
 #include <iostream>
 
@@ -25,7 +25,7 @@
 
 namespace mir {
 namespace repres {
-
+namespace latlon {
 
 LatLon::LatLon(const param::MIRParametrisation &parametrisation):
     bbox_(parametrisation), increments_(parametrisation) {
@@ -245,7 +245,7 @@ size_t LatLon::frame(std::vector<double> &values, size_t size, double missingVal
 }
 
 
-
+} // namespave latlon
 }  // namespace repres
 }  // namespace mir
 

@@ -13,6 +13,7 @@
 /// @date Apr 2015
 
 
+#include "mir/repres/latlon/RotatedLL.h"
 
 #include <iostream>
 
@@ -20,12 +21,12 @@
 
 #include "mir/param/MIRParametrisation.h"
 
-#include "mir/repres/RotatedLL.h"
 
 #include "atlas/grids/RotatedGrid.h"
 
 namespace mir {
 namespace repres {
+namespace latlon {
 
 
 RotatedLL::RotatedLL(const param::MIRParametrisation &parametrisation):
@@ -78,6 +79,7 @@ namespace {
 static RepresentationBuilder<RotatedLL> rotatedLL("rotated_ll");  // Name is what is returned by grib_api
 }
 
+} // namespave latlon
 }  // namespace repres
 }  // namespace mir
 
