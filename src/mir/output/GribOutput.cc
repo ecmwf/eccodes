@@ -51,7 +51,7 @@ GribOutput::~GribOutput() {
 }
 
 
-void GribOutput::copy(const param::MIRParametrisation &param, input::MIRInput &input) { // Not iterpolation performed
+void GribOutput::copy(const param::MIRParametrisation &, input::MIRInput &input) { // Not iterpolation performed
 
     grib_handle *h = input.gribHandle(); // Base class will throw an exception is input cannot provide a grib_handle
 
@@ -65,9 +65,7 @@ void GribOutput::copy(const param::MIRParametrisation &param, input::MIRInput &i
 }
 
 
-void GribOutput::save(const param::MIRParametrisation &param, input::MIRInput &input, data::MIRField &field) {
-
-std::cout << param << std::endl;
+void GribOutput::save(const param::MIRParametrisation &parametrisation, input::MIRInput &input, data::MIRField &field) {
 
     field.validate();
 
@@ -88,7 +86,7 @@ std::cout << param << std::endl;
     info.packing.accuracy = GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT;
 
     long bits;
-    if (param.get("user.accuracy", bits)) {
+    if (parametrisation.get("user.accuracy", bits)) {
         info.packing.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
         info.packing.bitsPerValue = bits;
     }
@@ -98,10 +96,10 @@ std::cout << param << std::endl;
     field.representation()->fill(info);
 
     bool u_component = false;
-    param.get("u-component", u_component);
+    parametrisation.get("u-component", u_component);
 
     bool v_component = false;
-    param.get("v-component", v_component);
+    parametrisation.get("v-component", v_component);
 
     if (u_component) {
         int n = info.packing.extra_settings_count++;
@@ -118,7 +116,7 @@ std::cout << param << std::endl;
     }
 
     std::string packing;
-    if(param.get("user.packing", packing)) {
+    if(parametrisation.get("user.packing", packing)) {
         const packing::Packer& packer = packing::Packer::lookup(packing);
         packer.fill(info, *field.representation());
     }
