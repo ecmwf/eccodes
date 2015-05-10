@@ -29,8 +29,8 @@ RotatedOctahedral::~RotatedOctahedral() {
 }
 
 RotatedOctahedral::RotatedOctahedral(long N, const util::BoundingBox &bbox, const util::Rotation& rotation):
-   Octahedral(N, bbox),
-   rotation_(rotation) {
+    Octahedral(N, bbox),
+    rotation_(rotation) {
 
 }
 
@@ -48,7 +48,7 @@ void RotatedOctahedral::fill(grib_info &info) const  {
 #if 0
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_OCTAHEDRAL_GG
 #else
-        info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_GG;
+    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_GG;
 
 #endif
 
