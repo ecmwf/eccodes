@@ -69,6 +69,10 @@ atlas::Grid *Classic::atlasGrid() const {
 }
 
 
+void Classic::validate(const std::vector<double>& values) const {
+    eckit::Log::info() << "Classic::validate() currently ignored" << std::endl;
+}
+
 } // namespace reduced
 }  // namespace repres
 }  // namespace mir

@@ -97,6 +97,7 @@ class FromPL : public Gridded {
 
     // -- Overridden methods
 
+    virtual void validate(const std::vector<double>&) const;
 
 
     // -- Class members

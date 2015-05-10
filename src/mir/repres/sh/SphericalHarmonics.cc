@@ -134,6 +134,11 @@ Representation * SphericalHarmonics::crop(const util::BoundingBox &bbox, const s
     return 0;
 }
 
+void SphericalHarmonics::validate(const std::vector<double>& values) const {
+    ASSERT(values.size() == number_of_complex_coefficients(truncation_) * 2);
+}
+
+
 namespace {
 static RepresentationBuilder<SphericalHarmonics> sphericalHarmonics("sh"); // Name is what is returned by grib_api
 }

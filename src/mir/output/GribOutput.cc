@@ -66,6 +66,8 @@ void GribOutput::copy(const param::MIRParametrisation &param, input::MIRInput &i
 
 void GribOutput::save(const param::MIRParametrisation &param, input::MIRInput &input, data::MIRField &field) {
 
+    field.validate();
+
     grib_handle *h = input.gribHandle(); // Base class will throw an exception is input cannot provide a grib_handle
 
 
@@ -98,14 +100,14 @@ void GribOutput::save(const param::MIRParametrisation &param, input::MIRInput &i
     bool v_component = false;
     param.get("v-component", v_component);
 
-    if(u_component) {
+    if (u_component) {
         int n = info.packing.extra_settings_count++;
         info.packing.extra_settings[n].name = "paramId";
         info.packing.extra_settings[n].type = GRIB_TYPE_LONG;
         info.packing.extra_settings[n].long_value = 131; // Find something better
     }
 
-    if(v_component) {
+    if (v_component) {
         int n = info.packing.extra_settings_count++;
         info.packing.extra_settings[n].name = "paramId";
         info.packing.extra_settings[n].type = GRIB_TYPE_LONG;
@@ -130,9 +132,9 @@ void GribOutput::save(const param::MIRParametrisation &param, input::MIRInput &i
     X(info.grid.bitmapPresent);
     X(info.grid.missingValue);
     X(info.grid.pl_size);
-    for(size_t i = 0; i < info.grid.pl_size; i++) {
+    for (size_t i = 0; i < info.grid.pl_size; i++) {
         X(info.grid.pl[i]);
-        if(i>4) break;
+        if (i > 4) break;
     }
     X(info.grid.truncation);
     X(info.grid.orientationOfTheGridInDegrees);
@@ -151,9 +153,9 @@ void GribOutput::save(const param::MIRParametrisation &param, input::MIRInput &i
     X(info.packing.deleteLocalDefinition);
     // X(info.packing.extra_settings);
     X(info.packing.extra_settings_count);
-    for(size_t i = 0; i < info.packing.extra_settings_count; i++) {
+    for (size_t i = 0; i < info.packing.extra_settings_count; i++) {
         X(info.packing.extra_settings[i].name);
-        switch(info.packing.extra_settings[i].type) {
+        switch (info.packing.extra_settings[i].type) {
         case GRIB_TYPE_LONG:
             X(info.packing.extra_settings[i].long_value);
             break;

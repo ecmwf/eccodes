@@ -51,6 +51,11 @@ Representation::Representation() {
 Representation::~Representation() {
 }
 
+void Representation::validate(const std::vector<double> &) const {
+    eckit::StrStream os;
+    os << "Representation::validate() not implemented for " << *this << eckit::StrStream::ends;
+    throw eckit::SeriousBug(std::string(os));
+}
 
 void Representation::fill(grib_info &) const {
     eckit::StrStream os;

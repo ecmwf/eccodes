@@ -49,6 +49,8 @@ void ReducedFromPL::print(std::ostream &out) const {
     out << "ReducedGGFromPL[N" << N_ << "]";
 }
 
+
+
 namespace {
 static RepresentationBuilder<ReducedFromPL> reducedGGFromPL("reduced_gg"); // Name is what is returned by grib_api
 }

@@ -44,13 +44,13 @@ LatLon::LatLon(const util::BoundingBox &bbox,
 LatLon::~LatLon() {
 }
 
-size_t LatLon::ni() const {
-    return ni_;
-}
+// size_t LatLon::ni() const {
+//     return ni_;
+// }
 
-size_t LatLon::nj() const {
-    return nj_;
-}
+// size_t LatLon::nj() const {
+//     return nj_;
+// }
 
 static size_t compteN(double first, double last, double inc, const char *n_name, const char *first_name, const char *last_name) {
     size_t n;
@@ -60,8 +60,8 @@ static size_t compteN(double first, double last, double inc, const char *n_name,
     }
     ASSERT(inc > 0);
     size_t p = size_t((last - first) / inc);
-    double d0 = fabs(last -(first + p * inc));
-    double d1 = fabs(last -(first + (p + 1) * inc));
+    double d0 = fabs(last - (first + p * inc));
+    double d1 = fabs(last - (first + (p + 1) * inc));
 
     // eckit::Log::info() << p << " " << d0 << " " << d1 << " " << inc << " " << first << " " << last << std::endl;
     ASSERT(d0 != d1);
@@ -175,7 +175,7 @@ Representation *LatLon::crop(const util::BoundingBox &bbox, const std::vector<do
     out.clear();
     out.reserve(in.size()); // Over-estimation
 
-    ASSERT((ni() * nj()) == in.size());
+    validate(in);
 
     double n = 0;
     double s = 0;
@@ -214,7 +214,8 @@ Representation *LatLon::crop(const util::BoundingBox &bbox, const std::vector<do
     LatLon *cropped =  this->cropped(util::BoundingBox(n, w, s, e));
 
     ASSERT(out.size() > 0);
-    ASSERT(cropped->ni() * cropped->nj() == out.size());
+    cropped->validate(out);
+    // ASSERT(cropped->ni() * cropped->nj() == out.size());
     ASSERT(p == in.size());
 
     return cropped;
@@ -225,7 +226,8 @@ Representation *LatLon::crop(const util::BoundingBox &bbox, const std::vector<do
 size_t LatLon::frame(std::vector<double> &values, size_t size, double missingValue) const {
 
     // Could be done better, just a demo
-    ASSERT((ni() * nj()) == values.size());
+    validate(values);
+
     size_t count = 0;
 
     size_t k = 0;
@@ -242,6 +244,10 @@ size_t LatLon::frame(std::vector<double> &values, size_t size, double missingVal
     ASSERT(k == values.size());
     return count;
 
+}
+
+void LatLon::validate(const std::vector<double>& values) const {
+    ASSERT(values.size() == ni_ * nj_);
 }
 
 
