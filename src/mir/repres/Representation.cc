@@ -51,6 +51,25 @@ Representation::Representation() {
 Representation::~Representation() {
 }
 
+
+void Representation::setComplexPacking(grib_info&) const {
+    eckit::StrStream os;
+    os << "Representation::setComplexPacking() not implemented for " << *this << eckit::StrStream::ends;
+    throw eckit::SeriousBug(std::string(os));
+}
+
+void Representation::setSimplePacking(grib_info&) const {
+    eckit::StrStream os;
+    os << "Representation::setSimplePacking() not implemented for " << *this << eckit::StrStream::ends;
+    throw eckit::SeriousBug(std::string(os));
+}
+
+void Representation::setSecondOrderPacking(grib_info&) const {
+    eckit::StrStream os;
+    os << "Representation::setSecondOrderPacking() not implemented for " << *this << eckit::StrStream::ends;
+    throw eckit::SeriousBug(std::string(os));
+}
+
 void Representation::validate(const std::vector<double> &) const {
     eckit::StrStream os;
     os << "Representation::validate() not implemented for " << *this << eckit::StrStream::ends;

@@ -138,6 +138,14 @@ void SphericalHarmonics::validate(const std::vector<double>& values) const {
     ASSERT(values.size() == number_of_complex_coefficients(truncation_) * 2);
 }
 
+void SphericalHarmonics::setComplexPacking(grib_info& info) const {
+    info.packing.packing_type = GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX;
+}
+
+void SphericalHarmonics::setSimplePacking(grib_info& info) const {
+    info.packing.packing_type = GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE;
+}
+
 
 namespace {
 static RepresentationBuilder<SphericalHarmonics> sphericalHarmonics("sh"); // Name is what is returned by grib_api

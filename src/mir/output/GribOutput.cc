@@ -23,6 +23,7 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Representation.h"
 #include "mir/util/Grib.h"
+#include "mir/packing/Packer.h"
 
 
 namespace mir {
@@ -66,6 +67,8 @@ void GribOutput::copy(const param::MIRParametrisation &param, input::MIRInput &i
 
 void GribOutput::save(const param::MIRParametrisation &param, input::MIRInput &input, data::MIRField &field) {
 
+std::cout << param << std::endl;
+
     field.validate();
 
     grib_handle *h = input.gribHandle(); // Base class will throw an exception is input cannot provide a grib_handle
@@ -85,7 +88,7 @@ void GribOutput::save(const param::MIRParametrisation &param, input::MIRInput &i
     info.packing.accuracy = GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT;
 
     long bits;
-    if (param.get("accuracy", bits)) {
+    if (param.get("user.accuracy", bits)) {
         info.packing.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
         info.packing.bitsPerValue = bits;
     }
@@ -112,6 +115,12 @@ void GribOutput::save(const param::MIRParametrisation &param, input::MIRInput &i
         info.packing.extra_settings[n].name = "paramId";
         info.packing.extra_settings[n].type = GRIB_TYPE_LONG;
         info.packing.extra_settings[n].long_value = 132;// Find something better
+    }
+
+    std::string packing;
+    if(param.get("user.packing", packing)) {
+        const packing::Packer& packer = packing::Packer::lookup(packing);
+        packer.fill(info, *field.representation());
     }
 
     X(info.grid.grid_type);
