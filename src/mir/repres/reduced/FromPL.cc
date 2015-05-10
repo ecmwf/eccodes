@@ -77,7 +77,6 @@ atlas::Grid *FromPL::atlasGrid() const {
 }
 
 
-
 void FromPL::validate(const std::vector<double>& values) const {
     size_t count = 0;
     for(size_t i = 0; i < pl_.size(); i++) {

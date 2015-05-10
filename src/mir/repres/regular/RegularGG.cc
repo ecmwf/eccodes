@@ -91,6 +91,12 @@ atlas::Grid *RegularGG::atlasGrid() const {
 }
 
 
+void RegularGG::validate(const std::vector<double>& values) const {
+    size_t nj = N_ * 2;
+    size_t ni = (bbox_.east() - bbox_.west()) / (90.0 / N_);
+    ASSERT(values.size() == ni * nj);
+}
+
 namespace {
 static RepresentationBuilder<RegularGG> reducedGG("regular_gg"); // Name is what is returned by grib_api
 }

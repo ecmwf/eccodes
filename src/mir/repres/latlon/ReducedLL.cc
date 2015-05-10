@@ -65,6 +65,15 @@ atlas::Grid* ReducedLL::atlasGrid() const {
     return new atlas::grids::ReducedLonLatGrid(pl.size(), &pl[0], atlas::grids::ReducedLonLatGrid::INCLUDES_POLES);
 }
 
+
+void ReducedLL::validate(const std::vector<double>& values) const {
+    size_t count = 0;
+    for(size_t i = 0; i < pl_.size(); i++) {
+        count += pl_[i];
+    }
+    ASSERT(values.size() == count);
+}
+
 namespace {
 static RepresentationBuilder<ReducedLL> reducedLL("reduced_ll"); // Name is what is returned by grib_api
 }

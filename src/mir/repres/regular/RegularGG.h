@@ -97,6 +97,8 @@ class RegularGG : public Gridded {
     virtual void fill(grib_info&) const;
     virtual atlas::Grid* atlasGrid() const;
     virtual Representation *clone() const;
+    virtual void validate(const std::vector<double>&) const;
+
 
 // -- Class members
     // None
