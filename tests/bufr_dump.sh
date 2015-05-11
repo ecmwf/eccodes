@@ -49,7 +49,7 @@ ${tools_dir}bufr_dump -js $fBufr > $fJsonTmp
 diff $fJsonTmp $fJsonRef >$REDIRECT 2> $REDIRECT
 
 #==============================================
-# Testing a malformed bufr file (see ECC-110)
+# Testing change of scale (see ECC-111)
 #==============================================
 
 echo "Test: operator 207003 " >> $fLog

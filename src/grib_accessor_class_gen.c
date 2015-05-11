@@ -355,7 +355,16 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
 }
 
 static int unpack_string_array(grib_accessor*a , char**  v, size_t *len){
-  return GRIB_NOT_IMPLEMENTED;
+  int err=0;
+  size_t length=0;
+
+  err= _grib_get_string_length(a,&length);
+  if (err) return err;
+  v[0]=grib_context_malloc_clear(a->parent->h->context,length);
+  grib_unpack_string(a,v[0],&length);
+  *len=1;
+
+  return err;
 }
 
 static int pack_expression(grib_accessor* a, grib_expression *e){

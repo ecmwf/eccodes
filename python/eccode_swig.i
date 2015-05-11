@@ -32,6 +32,7 @@ import_array();
 }
 
 %pointer_class(int, intp);
+%pointer_class(size_t, sizetp);
 %pointer_class(long, longp);
 %pointer_class(double, doublep);
 %array_functions(double, doubleArray);

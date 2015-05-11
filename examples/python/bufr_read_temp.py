@@ -62,16 +62,16 @@ def example():
         print  '  Number of temperature significant levels %ld' % (numSigT)
 
         # Get pressure
-        sigt_pres=codes_get_double_array(gid,"/verticalSoundingSignificance=4/pressure")
+        sigt_pres=codes_get_array(gid,"/verticalSoundingSignificance=4/pressure")
 
         # Get gepotential
-        sigt_geo=codes_get_double_array(gid,"/verticalSoundingSignificance=4/geopotential")
+        sigt_geo=codes_get_array(gid,"/verticalSoundingSignificance=4/geopotential")
 
         # Get temperature
-        sigt_t=codes_get_double_array(gid,"/verticalSoundingSignificance=4/airTemperature")
+        sigt_t=codes_get_array(gid,"/verticalSoundingSignificance=4/airTemperature")
         
         # Get dew point
-        sigt_td=codes_get_double_array(gid,"/verticalSoundingSignificance=4/dewpointTemperature")
+        sigt_td=codes_get_array(gid,"/verticalSoundingSignificance=4/dewpointTemperature")
 
         # Check that all arrays are same size
         if len(sigt_pres) != numSigT or len(sigt_geo) != numSigT or len(sigt_t) != numSigT or len(sigt_td) != numSigT :

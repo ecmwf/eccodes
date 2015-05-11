@@ -926,14 +926,23 @@ int grib_get_bytes(grib_handle* h, const char* name, unsigned char* val, size_t 
 
 int grib_get_native_type(grib_handle* h, const char* name,int* type)
 {
-    grib_accessor* act = grib_find_accessor(h, name);
-    *type = GRIB_TYPE_UNDEFINED;
+  grib_accessors_list* al=NULL;
+  grib_accessor* a =NULL;
+  *type = GRIB_TYPE_UNDEFINED;
 
-    if(act) {
-        *type = grib_accessor_get_native_type(act);
-        return GRIB_SUCCESS;
-    }
-    return GRIB_NOT_FOUND;
+  if (name[0] == '/' ) {
+    al=grib_find_accessors_list(h,name);
+    if (!al) return GRIB_NOT_FOUND;
+    *type = grib_accessor_get_native_type(al->accessor);
+    grib_context_free(h->context,al);
+  } else  {
+    a=grib_find_accessor(h, name);
+    if(!a) return GRIB_NOT_FOUND;
+    *type = grib_accessor_get_native_type(a);
+  }
+
+  return GRIB_SUCCESS;
+
 }
 
 const char* grib_get_accessor_class_name(grib_handle* h, const char* name)

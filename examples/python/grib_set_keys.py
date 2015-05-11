@@ -26,15 +26,15 @@ def example():
     codes_set(gid,'dataDate',int(today))
     codes_set(gid,'centre',80)
 
-    centreIntVal = codes_get(gid,'centre',int)
-    centreStrVal = codes_get(gid,'centre',str)
-    dateStrVal   = codes_get(gid,'dataDate',str)
-    assert(centreIntVal == 80)
-    assert(centreStrVal == 'cnmc')
-    assert(dateStrVal   == today)
-    print 'get centre as an integer - centre = %d' % centreIntVal
-    print 'get centre as a string - centre = %s' % centreStrVal
-    print 'get date as a string - date = %s' % dateStrVal
+    centreIntVal = codes_get_array(gid,'centre',int)
+    centreStrVal = codes_get_array(gid,'centre',str)
+    dateStrVal   = codes_get_array(gid,'dataDate',str)
+    assert(centreIntVal[0] == 80)
+    assert(centreStrVal[0] == 'cnmc')
+    assert(dateStrVal[0]   == today)
+    print 'get centre as an integer - centre = %d' % centreIntVal[0]
+    print 'get centre as a string - centre = %s' % centreStrVal[0]
+    print 'get date as a string - date = %s' % dateStrVal[0]
     
     # Now do the same but using set_key_vals, setting keys all at once
     codes_set_key_vals(gid, 'level=1,centre=98')  # with a String

@@ -32,11 +32,13 @@ import_array();
 }
 
 %pointer_class(int, intp);
+%pointer_class(size_t, sizetp);
 %pointer_class(long, longp);
 %pointer_class(double, doublep);
 %array_functions(double, doubleArray);
 %array_functions(long, longArray);
 %array_functions(int, intArray);
+%array_functions(char*, stringArray);
 
 // creation
 int grib_c_new_from_file(FILE* f, int* INOUT, int headers_only);
@@ -125,6 +127,7 @@ int grib_c_iterator_next(int* iterid, double* OUTPUT, double* OUTPUT, double* OU
 // getting/setting key values
 %cstring_output_withsize(char* string_val, size_t* string_size)
 int grib_c_get_string(int* gid, char* key, char* string_val, size_t* string_size);
+int grib_c_get_string_array(int* gid, char* key, char** array_string_val, size_t* size);
 int grib_c_set_string(int* gid, char* key, char* sval, int len2);
 int grib_c_get_long(int* gid, char* key, long* OUTPUT);
 int grib_c_set_long(int* gid, char* key, long* INPUT);

@@ -861,6 +861,31 @@ def grib_get_double_array(gribid,key):
         return result
 
 @require(gribid=int,key=str)
+def grib_get_string_array(gribid,key):
+    """
+    @brief Get the value of the key as an array of strings. 
+    
+    @param gribid   id of the grib loaded in memory
+    @param key      key name
+    @return numpy.ndarray or array
+    @exception GribInternalError 
+    """
+    nval = grib_get_size(gribid,key)
+    a = _internal.new_stringArray(nval)
+    s = _internal.sizetp()
+    s.assign(nval)
+
+    GRIB_CHECK(_internal.grib_c_get_string_array(gribid,key,a,s))
+
+    result = list()
+    for i in range(nval):
+      result.append(_internal.stringArray_getitem(a,i))
+
+    _internal.delete_stringArray(a)
+
+    return result
+
+@require(gribid=int,key=str)
 def grib_set_long_array(gribid, key, inarray):
     """
     @brief Set the value of the key to an integer array.
@@ -1504,6 +1529,8 @@ def grib_get_array(gribid,key, ktype=None):
         result = grib_get_long_array(gribid, key)
     elif ktype is float:
         result = grib_get_double_array(gribid, key)
+    elif ktype is str:
+        result = grib_get_string_array(gribid, key)
 
     return result
 

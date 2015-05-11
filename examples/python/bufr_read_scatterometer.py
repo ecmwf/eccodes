@@ -57,14 +57,14 @@ def example():
         print '  Number of values: %ld'  % (numObs)
         
         #Get latitude (for all the subsets)
-        lat=codes_get_double_array(gid,"latitude")
+        lat=codes_get_array(gid,"latitude")
         
         #Get longitude (for all the subsets)
-        lon=codes_get_double_array(gid,"longitude")
+        lon=codes_get_array(gid,"longitude")
         
         #Get backScatter for beam two. We use an access by condition for this key. 
         #(for all the subsets)
-        bscat=codes_get_double_array(gid,"/beamIdentifier=2/backscatter")
+        bscat=codes_get_array(gid,"/beamIdentifier=2/backscatter")
 
         # Check that all arrays are same size
         if len(lat) != numObs or len(lon) != numObs or len(bscat) != numObs :

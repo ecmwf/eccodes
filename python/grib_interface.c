@@ -1820,6 +1820,18 @@ int grib_c_get_string(int* gid, char* key, char* val, size_t *lsize){
     return  err;
 }
 
+int grib_c_get_string_array(int* gid, char* key, char** val, size_t *lsize){
+
+    grib_handle *h = get_handle(*gid);
+    int err = GRIB_SUCCESS;
+
+    if(!h) return  GRIB_INVALID_GRIB;
+
+    err = grib_get_string_array(h, key, val, lsize);
+
+    return  err;
+}
+
 int grib_c_set_string(int* gid, char* key, char* val, int len2){
 
     grib_handle *h = get_handle(*gid);
