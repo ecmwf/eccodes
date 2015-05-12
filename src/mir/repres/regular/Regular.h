@@ -13,17 +13,18 @@
 /// @date Apr 2015
 
 
-#ifndef RegularGG_H
-#define RegularGG_H
+#ifndef Regular_H
+#define Regular_H
 
-#include "mir/repres/regular/Regular.h"
+#include "mir/repres/Gridded.h"
+#include "mir/util/BoundingBox.h"
 
 
 namespace mir {
 namespace repres {
 namespace regular {
 
-class RegularGG : public Regular {
+class Regular : public Gridded {
   public:
 
 // -- Exceptions
@@ -31,13 +32,13 @@ class RegularGG : public Regular {
 
 // -- Contructors
 
-    RegularGG(const param::MIRParametrisation&);
-    RegularGG(size_t);
-    RegularGG(size_t, const util::BoundingBox&);
+    Regular(const param::MIRParametrisation&);
+    Regular(size_t);
+    Regular(size_t, const util::BoundingBox& bbox);
 
 // -- Destructor
 
-    virtual ~RegularGG(); // Change to virtual if base class
+    virtual ~Regular(); // Change to virtual if base class
 
 // -- Convertors
     // None
@@ -59,11 +60,14 @@ class RegularGG : public Regular {
   protected:
 
 // -- Members
-    // None
+    size_t N_;
+    util::BoundingBox bbox_;
+
 
 // -- Methods
 
-    void print(std::ostream&) const; // Change to virtual if base class
+    virtual void fill(grib_info&) const;
+    virtual atlas::Grid* atlasGrid() const;
 
 // -- Overridden methods
     // None
@@ -76,14 +80,15 @@ class RegularGG : public Regular {
 
   private:
 
-    RegularGG();
+    Regular();
 
 // No copy allowed
 
-    RegularGG(const RegularGG&);
-    RegularGG& operator=(const RegularGG&);
+    Regular(const Regular&);
+    Regular& operator=(const Regular&);
 
 // -- Members
+
 
 
 // -- Methods
@@ -92,10 +97,7 @@ class RegularGG : public Regular {
 
 // -- Overridden methods
 
-    //virtual void fill(grib_info&) const;
-    //virtual atlas::Grid* atlasGrid() const;
-    virtual Representation *clone() const;
-    //virtual void validate(const std::vector<double>&) const;
+    virtual void validate(const std::vector<double>&) const;
 
 
 // -- Class members
@@ -106,8 +108,8 @@ class RegularGG : public Regular {
 
 // -- Friends
 
-    //friend ostream& operator<<(ostream& s,const RegularGG& p)
-    //	{ p.print(s); return s; }
+    //friend ostream& operator<<(ostream& s,const Regular& p)
+    //  { p.print(s); return s; }
 
 };
 

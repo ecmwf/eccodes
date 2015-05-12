@@ -12,40 +12,56 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
-#include "mir/repres/reduced/FromPL.h"
+#include "mir/repres/regular/Regular.h"
 
-#include "atlas/grids/ReducedGaussianGrid.h"
+
+#include <iostream>
+
+#include "atlas/grids/GaussianGrid.h"
+
 #include "eckit/exception/Exceptions.h"
+
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
 
 namespace mir {
 namespace repres {
-namespace reduced {
+namespace regular {
 
-
-FromPL::FromPL(const param::MIRParametrisation &parametrisation) {
+Regular::Regular(const param::MIRParametrisation &parametrisation) {
     ASSERT(parametrisation.get("N", N_));
-    ASSERT(parametrisation.get("pl", pl_));
 }
 
-FromPL::~FromPL() {
+Regular::Regular(size_t N):
+    N_(N) {
+
 }
 
-FromPL::FromPL(size_t N, const std::vector<long> &pl, const util::BoundingBox &bbox):
+
+Regular::Regular(size_t N, const util::BoundingBox& bbox):
     N_(N),
-    pl_(pl),
     bbox_(bbox) {
 
 }
 
-void FromPL::fill(grib_info &info) const  {
+Regular::~Regular() {
+}
+
+
+void Regular::fill(grib_info &info) const  {
 
     // See copy_spec_from_ksec.c in libemos for info
 
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
-    info.grid.Nj = N_ * 2; // Should be PL.size()
+    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_GG;
+    info.grid.Nj = N_ * 2;
+
+    double we = 90.0 / N_; // FIXME: Just a guess
+    double ni = (bbox_.east() - bbox_.west()) / we;
+
+    ASSERT(long(ni) == ni);
+    info.grid.Ni = ni;
     info.grid.N = N_;
+    info.grid.iDirectionIncrementInDegrees = we;
 
     bbox_.fill(info);
 
@@ -63,29 +79,21 @@ void FromPL::fill(grib_info &info) const  {
     info.packing.extra_settings[j].name = "global";
     info.packing.extra_settings[j].long_value = bbox_.global() ? 1 : 0;
 
-    // FIXME: Where are the PL set? Looks like grib_api has its own list
 }
 
-atlas::Grid *FromPL::atlasGrid() const {
-    ASSERT (pl_.size() > 0);
-    // FIXME: ask atlas to support long instead of int
-    std::vector<int> pl(pl_.size());
-    for (size_t i = 0; i < pl_.size(); i++) {
-        pl[i] = pl_[i];
-    }
-    return new atlas::grids::ReducedGaussianGrid(N_, &pl[0]);
+atlas::Grid *Regular::atlasGrid() const {
+    return new atlas::grids::GaussianGrid(N_);
 }
 
 
-void FromPL::validate(const std::vector<double>& values) const {
-    size_t count = 0;
-    for(size_t i = 0; i < pl_.size(); i++) {
-        count += pl_[i];
-    }
-    ASSERT(values.size() == count);
+void Regular::validate(const std::vector<double>& values) const {
+    size_t nj = N_ * 2;
+    size_t ni = (bbox_.east() - bbox_.west()) / (90.0 / N_);
+    ASSERT(values.size() == ni * nj);
 }
 
-} // namespace reduced
+
+} // namespace regular
 }  // namespace repres
 }  // namespace mir
 

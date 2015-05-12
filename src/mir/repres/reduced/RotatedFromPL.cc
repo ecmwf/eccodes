@@ -47,9 +47,13 @@ void RotatedFromPL::print(std::ostream &out) const {
 }
 
 void RotatedFromPL::fill(grib_info &info) const  {
+#ifdef GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG
     FromPL::fill(info);
     rotation_.fill(info);
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_GG;
+    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG;
+#else
+    NOTIMP;
+#endif
 }
 
 atlas::Grid *RotatedFromPL::atlasGrid() const {
@@ -60,9 +64,8 @@ atlas::Grid *RotatedFromPL::atlasGrid() const {
 }
 
 
-// TODO: Check if rotated_gg is reduced or regular
 namespace {
-static RepresentationBuilder<RotatedFromPL> rotatedGG("rotated_gg"); // Name is what is returned by grib_api
+static RepresentationBuilder<RotatedFromPL> rotatedGG("reduced_rotated_gg"); // Name is what is returned by grib_api
 }
 
 

@@ -13,18 +13,19 @@
 /// @date Apr 2015
 
 
-#ifndef FromPL_H
-#define FromPL_H
+#ifndef RotatedGG_H
+#define RotatedGG_H
 
-#include "mir/repres/Gridded.h"
+#include "mir/repres/regular/Regular.h"
 #include "mir/util/BoundingBox.h"
+#include "mir/util/Rotation.h"
 
 
 namespace mir {
 namespace repres {
-namespace reduced {
+namespace regular {
 
-class FromPL : public Gridded {
+class RotatedGG : public Regular {
   public:
 
     // -- Exceptions
@@ -32,11 +33,11 @@ class FromPL : public Gridded {
 
     // -- Contructors
 
-    FromPL(const param::MIRParametrisation &);
+    RotatedGG(const param::MIRParametrisation &);
 
     // -- Destructor
 
-    virtual ~FromPL(); // Change to virtual if base class
+    virtual ~RotatedGG(); // Change to virtual if base class
 
     // -- Convertors
     // None
@@ -57,20 +58,15 @@ class FromPL : public Gridded {
 
   protected:
 
-    FromPL(size_t, const std::vector<long> &, const util::BoundingBox &);
-
     // -- Members
-    size_t N_;
-    std::vector<long> pl_;
-    util::BoundingBox bbox_;
+    util::Rotation rotation_;
 
     // -- Methods
 
-    // void print(std::ostream &) const; // Change to virtual if base class
+    void print(std::ostream &) const; // Change to virtual if base class
 
     // -- Overridden methods
-    virtual void fill(grib_info &) const;
-    virtual atlas::Grid *atlasGrid() const;
+    // None
 
     // -- Class members
     // None
@@ -80,16 +76,15 @@ class FromPL : public Gridded {
 
   private:
 
+    RotatedGG(size_t, const util::BoundingBox &, const util::Rotation&);
 
 
     // No copy allowed
 
-    FromPL(const FromPL &);
-    FromPL &operator=(const FromPL &);
+    RotatedGG(const RotatedGG &);
+    RotatedGG &operator=(const RotatedGG &);
 
     // -- Members
-
-
 
     // -- Methods
     // None
@@ -97,8 +92,9 @@ class FromPL : public Gridded {
 
     // -- Overridden methods
 
-    virtual void validate(const std::vector<double>&) const;
-
+    virtual void fill(grib_info &) const;
+    atlas::Grid *atlasGrid() const;
+    virtual Representation *clone() const;
 
     // -- Class members
     // None
@@ -108,7 +104,7 @@ class FromPL : public Gridded {
 
     // -- Friends
 
-    //friend ostream& operator<<(ostream& s,const FromPL& p)
+    //friend ostream& operator<<(ostream& s,const RotatedGG& p)
     //  { p.print(s); return s; }
 
 };
