@@ -122,8 +122,8 @@ void PolarStereographic::fill(grib_info &info) const  {
     NOTIMP;
 }
 
-void PolarStereographic::validate(const std::vector<double> &) const {
-    eckit::Log::info() << "PolarStereographic::validate() not implemented, ignoring" << std::endl;
+void PolarStereographic::validate(const std::vector<double> & values) const {
+    ASSERT(values.size() == Nx_ * Ny_);
 }
 
 
