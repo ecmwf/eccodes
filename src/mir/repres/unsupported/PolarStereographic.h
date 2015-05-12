@@ -26,82 +26,105 @@ namespace repres {
 class PolarStereographic : public Gridded {
   public:
 
-// -- Exceptions
+    // -- Exceptions
     // None
 
-// -- Contructors
+    // -- Contructors
 
-    PolarStereographic(const param::MIRParametrisation&);
+    PolarStereographic(const param::MIRParametrisation &);
 
-// -- Destructor
+    // -- Destructor
 
     virtual ~PolarStereographic(); // Change to virtual if base class
 
-// -- Convertors
+    // -- Convertors
     // None
 
-// -- Operators
+    // -- Operators
     // None
 
-// -- Methods
+    // -- Methods
 
-// -- Overridden methods
+    // -- Overridden methods
     // None
 
-// -- Class members
+    // -- Class members
     // None
 
-// -- Class methods
+    // -- Class methods
     // None
 
   protected:
 
-// -- Members
+    // -- Members
     // None
 
-// -- Methods
+    // -- Methods
 
-    void print(std::ostream&) const; // Change to virtual if base class
+    void print(std::ostream &) const; // Change to virtual if base class
 
-// -- Overridden methods
+    // -- Overridden methods
     // None
 
-// -- Class members
+    // -- Class members
     // None
 
-// -- Class methods
+    // -- Class methods
     // None
 
   private:
 
     PolarStereographic();
+    PolarStereographic(size_t Nx,
+                       size_t Ny,
+                       size_t Dx,
+                       size_t Dy,
+                       double longitudeOfFirstGridPoint,
+                       double latitudeOfFirstGridPoint,
+                       double orientationOfTheGrid,
+                       bool southPoleOnProjectionPlane,
+                       double radiusOfTheEarth);
 
-// No copy allowed
+    // No copy allowed
 
-    PolarStereographic(const PolarStereographic&);
-    PolarStereographic& operator=(const PolarStereographic&);
+    PolarStereographic(const PolarStereographic &);
+    PolarStereographic &operator=(const PolarStereographic &);
 
-// -- Members
+    // -- Members
+
+    size_t Nx_;
+    size_t Ny_;
+    size_t Dx_;
+    size_t Dy_;
+    double longitudeOfFirstGridPoint_;
+    double latitudeOfFirstGridPoint_;
+    double orientationOfTheGrid_;
+    bool southPoleOnProjectionPlane_;
+    double radiusOfTheEarth_;
 
 
-// -- Methods
+    // -- Methods
     // None
 
 
-// -- Overridden methods
+    // -- Overridden methods
 
-    virtual void fill(grib_info&) const;
+    virtual void fill(grib_info &) const;
+    virtual void validate(const std::vector<double> &) const;
+    virtual atlas::Grid *atlasGrid() const;
+    virtual Representation *clone() const;
 
-// -- Class members
+
+    // -- Class members
     // None
 
-// -- Class methods
+    // -- Class methods
     // None
 
-// -- Friends
+    // -- Friends
 
     //friend ostream& operator<<(ostream& s,const PolarStereographic& p)
-    //	{ p.print(s); return s; }
+    //  { p.print(s); return s; }
 
 };
 
