@@ -177,18 +177,15 @@ grib_handle* grib_new_handle ( grib_context* c )
 
 static void check_definitions_version(grib_handle* h)
 {
-	/* Check version of definition files is compatible with the engine */
-	int ret = 0;
-	long defs_file_version = 0;
-	if (grib_is_defined(h, "internalVersion")) {
-		ret = grib_get_long_internal(h, "internalVersion", &defs_file_version);
-		if (ret == GRIB_SUCCESS && (defs_file_version > LATEST_VERSION)) {
-			grib_context_log(h->context, GRIB_LOG_FATAL,
-					"Definition files version (%d) is greater than engine version (%d)!\n"
-					"These definition files are for a later version of the grib api engine.\n",
-					defs_file_version, LATEST_VERSION);
+    /* Check version of definition files is compatible with the engine */
+    long defs_file_version = 0;
+    int ret = grib_get_long(h, "internalVersion", &defs_file_version);
 
-		}
+	if (ret == GRIB_SUCCESS && (defs_file_version > LATEST_VERSION)) {
+		grib_context_log(h->context, GRIB_LOG_FATAL,
+				"Definition files version (%d) is greater than engine version (%d)!\n"
+				"These definition files are for a later version of the grib api engine.\n",
+				defs_file_version, LATEST_VERSION);
 	}
 }
 

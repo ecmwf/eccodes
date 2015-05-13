@@ -67,8 +67,6 @@
       external grib_get_string
       integer grib_is_missing
       external grib_is_missing
-      integer grib_is_defined
-      external grib_is_defined
       integer grib_set_string
       external grib_copy_namespace
       integer grib_copy_namespace

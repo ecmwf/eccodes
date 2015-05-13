@@ -136,11 +136,6 @@ def test():
             new_Ni = grib_get(gid,"Ni")
             print "Set Ni back to its original value --> ",new_Ni
             assert Ni == new_Ni
-            
-            print "Check some keys to see if they are defined"
-            assert grib_is_defined(gid,"Ni")
-            assert grib_is_defined(gid,"edition")
-            assert not grib_is_defined(gid,"DarkThrone")
 
             #grib_multi_write(gid,multi)
 
