@@ -142,13 +142,13 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_octahedral_gaussian* self = (grib_accessor_octahedral_gaussian*)a;
-  int n = 0;
+    grib_accessor_octahedral_gaussian* self = (grib_accessor_octahedral_gaussian*)a;
+    int n = 0;
 
-  self->N            = grib_arguments_get_name(a->parent->h,c,n++);
-  self->Ni           = grib_arguments_get_name(a->parent->h,c,n++);
-  self->plpresent    = grib_arguments_get_name(a->parent->h,c,n++);
-  self->pl           = grib_arguments_get_name(a->parent->h,c,n++);
+    self->N            = grib_arguments_get_name(a->parent->h,c,n++);
+    self->Ni           = grib_arguments_get_name(a->parent->h,c,n++);
+    self->plpresent    = grib_arguments_get_name(a->parent->h,c,n++);
+    self->pl           = grib_arguments_get_name(a->parent->h,c,n++);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
@@ -157,7 +157,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     int ret = GRIB_SUCCESS;
     long N,Ni;
     long plpresent=0;
-    long max_pl=0; /* max. element of pl array */
+    long* pl=NULL; /* pl array */
+    size_t plsize=0, i=0, mid=0;
+
     grib_context* c=a->parent->h->context;
 
     if((ret = grib_get_long_internal(a->parent->h, self->N,&N)) != GRIB_SUCCESS)
@@ -165,7 +167,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
     if((ret = grib_get_long_internal(a->parent->h, self->Ni,&Ni)) != GRIB_SUCCESS)
         return ret;
-    
+
     /* If Ni is not missing, then this is a plain gaussian grid and not reduced. */
     /* So it cannot be an octahedral grid */
     if (Ni != GRIB_MISSING_LONG) {
@@ -175,37 +177,34 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
     if((ret = grib_get_long_internal(a->parent->h, self->plpresent,&plpresent)) != GRIB_SUCCESS)
         return ret;
+    if (!plpresent) {
+        *val = 0; /* Not octahedral */
+        return GRIB_SUCCESS;
+    }
 
-    /* GRIB-704: Work out the maximum element in pl array, if present */
-    if (plpresent) {
-        size_t plsize=0, i=0;
-        long* pl=NULL; /* pl array */
-        if((ret = grib_get_size(a->parent->h,self->pl,&plsize)) != GRIB_SUCCESS)
-            return ret;
-        Assert(plsize);
-        pl=(long*)grib_context_malloc_clear(c,sizeof(long)*plsize);
-        grib_get_long_array_internal(a->parent->h,self->pl,pl, &plsize);
-
-        max_pl = pl[0];
-        for (i=1; i<plsize; i++) {
-            if (pl[i] > max_pl) max_pl = pl[i];
+    if((ret = grib_get_size(a->parent->h,self->pl,&plsize)) != GRIB_SUCCESS)
+        return ret;
+    Assert(plsize);
+    pl=(long*)grib_context_malloc_clear(c,sizeof(long)*plsize);
+    grib_get_long_array_internal(a->parent->h,self->pl,pl, &plsize);
+    mid = plsize/2;
+    /* Check pl values from pole to equator */
+    for(i=0; i<mid; ++i) {
+        const long expected = 4*(i+1) + 16; /* Octahedral rule */
+        if (pl[i] != expected) {
+            *val = 0; /* Not octahedral */
+            grib_context_free(c, pl);
+            return GRIB_SUCCESS;
         }
-        grib_context_free(c, pl);
     }
+    grib_context_free(c, pl);
 
-    /* An octahedral gaussian grid is a reduced gaussian grid with max_pl not equal to 4*N */
-    if ( plpresent && (max_pl != 4*N) )
-    {
-        /* octahedral grid */
-        *val=1;
-    } else {
-        /* plain reduced gaussian */
-        *val=0;
-    }
+    /* It is Octahedral */
+    *val=1;
     return ret;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  return GRIB_NOT_IMPLEMENTED;
+    return GRIB_NOT_IMPLEMENTED;
 }

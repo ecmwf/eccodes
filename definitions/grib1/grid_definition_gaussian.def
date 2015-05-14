@@ -89,4 +89,4 @@ meta longitudes longitudes(values,0);
 meta distinctLatitudes latitudes(values,1);
 meta distinctLongitudes longitudes(values,1);
 
-meta octahedral octahedral_gaussian(N, Ni, PLPresent, pl) = 0 : no_copy,dump;
+meta isOctahedral octahedral_gaussian(N, Ni, PLPresent, pl) = 0 : no_copy,dump;
