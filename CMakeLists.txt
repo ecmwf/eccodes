@@ -78,7 +78,7 @@ ecbuild_add_option( FEATURE MEMORY_MANAGEMENT DESCRIPTION "enable memory managem
 ecbuild_add_option( FEATURE ALIGN_MEMORY      DESCRIPTION "enable memory alignment"  DEFAULT OFF ADVANCED )
 
 ecbuild_add_option( FEATURE GRIB_TIMER       DESCRIPTION "enable timer"   DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE GRIB_THREADS     DESCRIPTION "enable threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_THREADS  DESCRIPTION "enable threads" DEFAULT OFF ADVANCED )
 
 ###############################################################################
 # macro processing
@@ -140,7 +140,7 @@ find_package(Threads REQUIRED)
 # debug
 message(STATUS " CMAKE_THREAD_LIBS_INIT=${CMAKE_THREAD_LIBS_INIT}")
 message(STATUS " CMAKE_USE_PTHREADS_INIT=${CMAKE_USE_PTHREADS_INIT}")
-message(STATUS " GRIB_THREADS=${GRIB_THREADS}, HAVE_GRIB_THREADS=${HAVE_GRIB_THREADS}")
+message(STATUS " ECCODES_THREADS=${ECCODES_THREADS}, HAVE_ECCODES_THREADS=${HAVE_ECCODES_THREADS}")
 
 if( NOT ${CMAKE_USE_PTHREADS_INIT} )
     message( FATAL_ERROR "Only pthreads supported - thread library found is [${CMAKE_THREAD_LIBS_INIT}]" )
@@ -148,8 +148,8 @@ endif()
 
 set( GRIB_PTHREADS 0 )
 set( GRIB_LINUX_PTHREADS 0 )
-#if( HAVE_GRIB_THREADS AND CMAKE_THREAD_LIBS_INIT )
-if( HAVE_GRIB_THREADS )
+#if( HAVE_ECCODES_THREADS AND CMAKE_THREAD_LIBS_INIT )
+if( HAVE_ECCODES_THREADS )
     if( CMAKE_USE_PTHREADS_INIT )
         set( GRIB_PTHREADS 1 )
         if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )
@@ -285,7 +285,7 @@ ecbuild_pkgconfig(
   URL                 "https://software.ecmwf.int/wiki/display/ECC/"
   DESCRIPTION         "The ecCodes library"
   LIBRARIES           eccodes
-  VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_GRIB_THREADS HAVE_NETCDF
+  VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_ECCODES_THREADS HAVE_NETCDF
                       HAVE_PYTHON HAVE_FORTRAN HAVE_PNG HAVE_AEC
 )
 if( EC_HAVE_FORTRAN )
@@ -295,7 +295,7 @@ if( EC_HAVE_FORTRAN )
     LIBRARIES           eccodes_f90 eccodes
     DESCRIPTION         "The ecCodes library for Fortran 90"
     IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
-    VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_GRIB_THREADS HAVE_NETCDF
+    VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_ECCODES_THREADS HAVE_NETCDF
                         HAVE_PYTHON HAVE_PNG HAVE_AEC
   )
 endif()
