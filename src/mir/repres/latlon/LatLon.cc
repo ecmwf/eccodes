@@ -19,6 +19,7 @@
 #include "atlas/grids/LonLatGrid.h"
 
 #include "eckit/exception/Exceptions.h"
+#include "eckit/log/Timer.h"
 
 #include "mir/util/Grib.h"
 
@@ -171,9 +172,24 @@ void LatLon::fill(grib_info &info) const  {
 
 Representation *LatLon::crop(const util::BoundingBox &bbox, const std::vector<double> &in, std::vector<double> &out) const {
 
+    eckit::Timer timer("crop");
 
-    out.clear();
-    out.reserve(in.size()); // Over-estimation
+    struct LL {
+        double lat_;
+        double lon_;
+        LL(double lat, double lon): lat_(lat), lon_(lon) {}
+        bool operator<(const LL& other) const {
+            // Order must be like natural scanning mode
+            if(lat_ == other.lat_) {
+                return lon_ < other.lon_;
+            }
+
+            return lat_ > other.lat_;
+        }
+    };
+
+    // TODO: Consider caching these maps (e.g. cache map LL -> index instead)
+    std::map<LL, double> m;
 
     validate(in);
 
@@ -186,6 +202,7 @@ Representation *LatLon::crop(const util::BoundingBox &bbox, const std::vector<do
     double we = increments_.west_east();
 
     size_t p = 0;
+    bool first = true;
     double lat = bbox_.north();
     for (size_t j = 0; j < nj_; j++, lat -= ns) {
         double lon = bbox_.west();
@@ -194,9 +211,10 @@ Representation *LatLon::crop(const util::BoundingBox &bbox, const std::vector<do
 
                 lon = bbox.normalise(lon);
 
-                if (out.size() == 0) {
+                if (first) {
                     n = s = lat;
                     w = e = lon;
+                    first = false;
                 } else {
                     n = std::max(n, lat);
                     s = std::min(s, lat);
@@ -204,14 +222,25 @@ Representation *LatLon::crop(const util::BoundingBox &bbox, const std::vector<do
                     w = std::min(w, lon);
                 }
 
-                out.push_back(in[p]);
+                m.insert(std::make_pair(LL(lat, lon), in[p]));
+
             }
             p++;
         }
     }
 
-    eckit::Log::info() << "CROP resulting bbox is: " << util::BoundingBox(n, w, s, e) << std::endl;
+
+    out.clear();
+    out.reserve(m.size());
+
+    for(std::map<LL, double>::const_iterator j = m.begin(); j != m.end(); ++j) {
+        out.push_back((*j).second);
+    }
+
+    eckit::Log::info() << "CROP resulting bbox is: " << util::BoundingBox(n, w, s, e) <<
+", size=" << out.size() << std::endl;
     LatLon *cropped =  this->cropped(util::BoundingBox(n, w, s, e));
+    eckit::Log::info() << *cropped << std::endl;
 
     ASSERT(out.size() > 0);
     cropped->validate(out);
