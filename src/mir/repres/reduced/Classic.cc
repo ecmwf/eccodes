@@ -25,7 +25,7 @@ namespace repres {
 namespace reduced {
 
 Classic::Classic(size_t N):
-    N_(N) {
+    Gaussian(N) {
 
 }
 
@@ -33,7 +33,7 @@ Classic::~Classic() {
 }
 
 Classic::Classic(size_t N, const util::BoundingBox &bbox):
-    N_(N),
+    Gaussian(N),
     bbox_(bbox) {
 
 }
@@ -72,14 +72,9 @@ atlas::Grid *Classic::atlasGrid() const {
 }
 
 
-void Classic::validate(const std::vector<double>& values) const {
-    eckit::StrStream os;
-    os << "rgg.N" << N_ << eckit::StrStream::ends;
-    std::auto_ptr<atlas::grids::ReducedGrid> grid(dynamic_cast<atlas::grids::ReducedGrid*>(atlas::Grid::create(std::string(os))));
+void Classic::validate(const std::vector<double> &values) const {
 
-    ASSERT(grid.get());
-
-    const std::vector<int>& v = grid->npts_per_lat();
+    const std::vector<long> &v = pls();
     size_t count = 0;
     for (size_t i = 0; i < v.size(); i++) {
         count += v[i];
@@ -88,6 +83,23 @@ void Classic::validate(const std::vector<double>& values) const {
     ASSERT(values.size() == count);
 }
 
+
+const std::vector<long> &Classic::pls() const {
+    if (pl_.size() == 0) {
+        eckit::StrStream os;
+        os << "rgg.N" << N_ << eckit::StrStream::ends;
+        std::auto_ptr<atlas::grids::ReducedGrid> grid(dynamic_cast<atlas::grids::ReducedGrid *>(atlas::Grid::create(std::string(os))));
+
+        ASSERT(grid.get());
+
+        const std::vector<int> &v = grid->npts_per_lat();
+        pl_.resize(v.size());
+        for (size_t i = 0; i < v.size(); i++) {
+            pl_[i] = v[i];
+        }
+    }
+    return pl_;
+}
 
 } // namespace reduced
 }  // namespace repres

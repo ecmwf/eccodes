@@ -16,7 +16,7 @@
 #ifndef Octahedral_H
 #define Octahedral_H
 
-#include "mir/repres/Gridded.h"
+#include "mir/repres/reduced/Gaussian.h"
 #include "mir/util/BoundingBox.h"
 
 
@@ -24,7 +24,7 @@ namespace mir {
 namespace repres {
 namespace reduced {
 
-class Octahedral : public Gridded {
+class Octahedral : public Gaussian {
   public:
 
     // -- Exceptions
@@ -59,9 +59,9 @@ class Octahedral : public Gridded {
     Octahedral(long, const util::BoundingBox &);
 
     // -- Members
-    size_t N_;
+
     util::BoundingBox bbox_;
-    mutable std::vector<long> tmp_;
+    mutable std::vector<long> pl_;
 
     // -- Methods
 
@@ -94,7 +94,8 @@ class Octahedral : public Gridded {
     // None
 
 
-    void getPLs() const;
+    virtual const std::vector<long>& pls() const;
+
 
     // -- Overridden methods
 

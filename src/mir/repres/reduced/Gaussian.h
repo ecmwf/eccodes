@@ -13,10 +13,10 @@
 /// @date Apr 2015
 
 
-#ifndef FromPL_H
-#define FromPL_H
+#ifndef Gaussian_H
+#define Gaussian_H
 
-#include "mir/repres/reduced/Gaussian.h"
+#include "mir/repres/Gridded.h"
 #include "mir/util/BoundingBox.h"
 
 
@@ -24,7 +24,7 @@ namespace mir {
 namespace repres {
 namespace reduced {
 
-class FromPL : public Gaussian {
+class Gaussian : public Gridded {
   public:
 
     // -- Exceptions
@@ -32,11 +32,12 @@ class FromPL : public Gaussian {
 
     // -- Contructors
 
-    FromPL(const param::MIRParametrisation &);
+    Gaussian(const param::MIRParametrisation &parametrisation);
+    Gaussian(size_t N);
 
     // -- Destructor
 
-    virtual ~FromPL(); // Change to virtual if base class
+    virtual ~Gaussian(); // Change to virtual if base class
 
     // -- Convertors
     // None
@@ -57,21 +58,16 @@ class FromPL : public Gaussian {
 
   protected:
 
-    FromPL(size_t, const std::vector<long> &, const util::BoundingBox &);
-
     // -- Members
 
-    std::vector<long> pl_;
-    util::BoundingBox bbox_;
+    size_t N_;
 
     // -- Methods
+
 
     // void print(std::ostream &) const; // Change to virtual if base class
 
     // -- Overridden methods
-    virtual void fill(grib_info &) const;
-    virtual atlas::Grid *atlasGrid() const;
-    virtual const std::vector<long>& pls() const;
 
 
     // -- Class members
@@ -86,20 +82,22 @@ class FromPL : public Gaussian {
 
     // No copy allowed
 
-    FromPL(const FromPL &);
-    FromPL &operator=(const FromPL &);
+    Gaussian(const Gaussian &);
+    Gaussian &operator=(const Gaussian &);
 
     // -- Members
-
 
 
     // -- Methods
     // None
 
+    virtual const std::vector<long> &pls() const = 0;
+    virtual Iterator *iterator() const;
+
 
     // -- Overridden methods
 
-    virtual void validate(const std::vector<double> &) const;
+    // Representation *crop(const util::BoundingBox &bbox, const std::vector<double> &in, std::vector<double> &out) const;
 
 
     // -- Class members
@@ -110,12 +108,12 @@ class FromPL : public Gaussian {
 
     // -- Friends
 
-    //friend ostream& operator<<(ostream& s,const FromPL& p)
+    //friend ostream& operator<<(ostream& s,const Gaussian& p)
     //  { p.print(s); return s; }
 
 };
 
-}
+} // namespace
 }  // namespace repres
 }  // namespace mir
 #endif

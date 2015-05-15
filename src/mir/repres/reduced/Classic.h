@@ -16,7 +16,7 @@
 #ifndef Classic_H
 #define Classic_H
 
-#include "mir/repres/Gridded.h"
+#include "mir/repres/reduced/Gaussian.h"
 #include "mir/util/BoundingBox.h"
 
 
@@ -24,7 +24,7 @@ namespace mir {
 namespace repres {
 namespace reduced {
 
-class Classic : public Gridded {
+class Classic : public Gaussian {
   public:
 
     // -- Exceptions
@@ -61,8 +61,9 @@ class Classic : public Gridded {
 
     // -- Members
 
-    size_t N_;
     util::BoundingBox bbox_;
+    mutable std::vector<long> pl_;
+
 
     // -- Methods
 
@@ -71,7 +72,8 @@ class Classic : public Gridded {
     // -- Overridden methods
     virtual void fill(grib_info &) const;
     virtual atlas::Grid *atlasGrid() const;
-    virtual void validate(const std::vector<double>&) const;
+    virtual void validate(const std::vector<double> &) const;
+    virtual const std::vector<long> &pls() const;
 
     // -- Class members
     // None

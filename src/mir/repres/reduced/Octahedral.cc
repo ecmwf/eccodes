@@ -23,7 +23,7 @@ namespace reduced {
 
 
 Octahedral::Octahedral(size_t N):
-    N_(N) {
+    Gaussian(N) {
 
 }
 
@@ -31,21 +31,22 @@ Octahedral::~Octahedral() {
 }
 
 Octahedral::Octahedral(long N, const util::BoundingBox &bbox):
-    N_(N),
+    Gaussian(N),
     bbox_(bbox) {
 
 }
 
-void Octahedral::getPLs() const {
-    if (tmp_.size() == 0) {
+const std::vector<long>& Octahedral::pls() const {
+    if (pl_.size() == 0) {
         atlas::grids::rgg::OctahedralRGG grid(N_);
 
         const std::vector<int>& v = grid.npts_per_lat();
-        tmp_.resize(v.size());
+        pl_.resize(v.size());
         for (size_t i = 0; i < v.size(); i++) {
-            tmp_[i] = v[i];
+            pl_[i] = v[i];
         }
     }
+    return pl_;
 }
 
 void Octahedral::fill(grib_info &info) const  {
@@ -57,9 +58,11 @@ void Octahedral::fill(grib_info &info) const  {
 #else
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
     atlas::grids::rgg::OctahedralRGG grid(N_);
-    getPLs();
-    info.grid.pl = &tmp_[0];
-    info.grid.pl_size = tmp_.size();
+
+    const std::vector<long>& pl = pls();
+
+    info.grid.pl = &pl[0];
+    info.grid.pl_size = pl.size();
 
 #endif
 
@@ -90,11 +93,12 @@ atlas::Grid *Octahedral::atlasGrid() const {
 }
 
 void Octahedral::validate(const std::vector<double>& values) const {
-    getPLs();
+
+    const std::vector<long>& pl = pls();
 
     size_t count = 0;
-    for (size_t i = 0; i < tmp_.size(); i++) {
-        count += tmp_[i];
+    for (size_t i = 0; i < pl.size(); i++) {
+        count += pl[i];
     }
     ASSERT(values.size() == count);
 }

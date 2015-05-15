@@ -92,6 +92,8 @@ class ReducedFromPL : public FromPL {
     // -- Overridden methods
 
     virtual Representation *clone() const;
+    virtual Gridded *cropped(const util::BoundingBox &bbox) const;
+
 
     // -- Class members
     // None

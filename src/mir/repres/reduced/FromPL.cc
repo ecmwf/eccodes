@@ -24,8 +24,7 @@ namespace repres {
 namespace reduced {
 
 
-FromPL::FromPL(const param::MIRParametrisation &parametrisation) {
-    ASSERT(parametrisation.get("N", N_));
+FromPL::FromPL(const param::MIRParametrisation &parametrisation): Gaussian(parametrisation) {
     ASSERT(parametrisation.get("pl", pl_));
 }
 
@@ -33,7 +32,7 @@ FromPL::~FromPL() {
 }
 
 FromPL::FromPL(size_t N, const std::vector<long> &pl, const util::BoundingBox &bbox):
-    N_(N),
+    Gaussian(N),
     pl_(pl),
     bbox_(bbox) {
 
@@ -77,12 +76,20 @@ atlas::Grid *FromPL::atlasGrid() const {
 }
 
 
-void FromPL::validate(const std::vector<double>& values) const {
+const std::vector<long> &FromPL::pls() const {
+    return pl_;
+}
+
+
+void FromPL::validate(const std::vector<double> &values) const {
+    // TODO: check with area
+#if 1
     size_t count = 0;
-    for(size_t i = 0; i < pl_.size(); i++) {
+    for (size_t i = 0; i < pl_.size(); i++) {
         count += pl_[i];
     }
     ASSERT(values.size() == count);
+#endif
 }
 
 } // namespace reduced
