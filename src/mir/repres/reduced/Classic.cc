@@ -16,7 +16,9 @@
 
 #include "atlas/Grid.h"
 #include "atlas/grids/grids.h"
+#include "atlas/grids/GaussianLatitudes.h"
 #include "mir/util/Grib.h"
+#include "eckit/log/Timer.h"
 
 namespace mir {
 namespace repres {
@@ -85,6 +87,7 @@ void Classic::validate(const std::vector<double>& values) const {
 
     ASSERT(values.size() == count);
 }
+
 
 } // namespace reduced
 }  // namespace repres

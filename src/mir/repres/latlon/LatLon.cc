@@ -13,6 +13,7 @@
 /// @date Apr 2015
 
 #include "mir/repres/latlon/LatLon.h"
+#include "mir/repres/Iterator.h"
 
 #include <iostream>
 
@@ -94,7 +95,7 @@ void LatLon::setNiNj() {
 
 }
 
-void LatLon::reorder(long scanningMode, std::vector<double>& values) const {
+void LatLon::reorder(long scanningMode, std::vector<double> &values) const {
     // Code from ecRegrid, UNTESTED!!!
 
     eckit::Log::info() << "WARNING: UNTESTED!!! ";
@@ -169,87 +170,68 @@ void LatLon::fill(grib_info &info) const  {
 
 }
 
+class LatLonIterator: public Iterator {
+    size_t ni_;
+    size_t nj_;
+    double north_;
+    double west_;
+    double we_;
+    double ns_;
 
-Representation *LatLon::crop(const util::BoundingBox &bbox, const std::vector<double> &in, std::vector<double> &out) const {
+    size_t i_;
+    size_t j_;
+    double lat_;
+    double lon_;
 
-    eckit::Timer timer("crop");
+    size_t count_;
 
-    struct LL {
-        double lat_;
-        double lon_;
-        LL(double lat, double lon): lat_(lat), lon_(lon) {}
-        bool operator<(const LL& other) const {
-            // Order must be like natural scanning mode
-            if(lat_ == other.lat_) {
-                return lon_ < other.lon_;
-            }
 
-            return lat_ > other.lat_;
-        }
-    };
 
-    // TODO: Consider caching these maps (e.g. cache map LL -> index instead)
-    std::map<LL, double> m;
+    virtual void print(std::ostream &out) const {
+        out << "LatLonIterator[]";
+    }
 
-    validate(in);
+    virtual bool next(double &lat, double &lon) {
+        if (j_ < nj_) {
+            if (i_ < ni_) {
+                lat = lat_;
+                lon = lon_;
+                lon_ += we_;
+                i_++;
+                if (i_ == ni_) {
+                    lon_ = west_;
+                    lat_ -= ns_;
+                    j_++;
+                    i_ = 0;
 
-    double n = 0;
-    double s = 0;
-    double e = 0;
-    double w = 0;
-
-    double ns = increments_.south_north();
-    double we = increments_.west_east();
-
-    size_t p = 0;
-    bool first = true;
-    double lat = bbox_.north();
-    for (size_t j = 0; j < nj_; j++, lat -= ns) {
-        double lon = bbox_.west();
-        for (size_t i = 0; i < ni_; i++, lon += we) {
-            if (bbox.contains(lat, lon)) {
-
-                lon = bbox.normalise(lon);
-
-                if (first) {
-                    n = s = lat;
-                    w = e = lon;
-                    first = false;
-                } else {
-                    n = std::max(n, lat);
-                    s = std::min(s, lat);
-                    e = std::max(e, lon);
-                    w = std::min(w, lon);
                 }
-
-                m.insert(std::make_pair(LL(lat, lon), in[p]));
-
+                count_++;
+                return true;
             }
-            p++;
         }
+        return false;
     }
 
-
-    out.clear();
-    out.reserve(m.size());
-
-    for(std::map<LL, double>::const_iterator j = m.begin(); j != m.end(); ++j) {
-        out.push_back((*j).second);
+  public:
+    LatLonIterator(size_t ni, size_t nj,
+                   double north,
+                   double west,
+                   double we,
+                   double ns):
+        ni_(ni), nj_(nj), north_(north), west_(west), we_(we), ns_(ns), i_(0), j_(0), count_(0) {
+        lat_ = north_;
+        lon_ = west_;
     }
 
-    eckit::Log::info() << "CROP resulting bbox is: " << util::BoundingBox(n, w, s, e) <<
-", size=" << out.size() << std::endl;
-    LatLon *cropped =  this->cropped(util::BoundingBox(n, w, s, e));
-    eckit::Log::info() << *cropped << std::endl;
+    ~LatLonIterator() {
+        ASSERT(count_ == ni_ * nj_);
+    }
 
-    ASSERT(out.size() > 0);
-    cropped->validate(out);
-    // ASSERT(cropped->ni() * cropped->nj() == out.size());
-    ASSERT(p == in.size());
+};
 
-    return cropped;
+Iterator *LatLon::iterator() const {
+    return new LatLonIterator(ni_, nj_, bbox_.north(), bbox_.west(), increments_.west_east(), increments_.south_north());
 }
-
 
 
 size_t LatLon::frame(std::vector<double> &values, size_t size, double missingValue) const {
@@ -275,7 +257,7 @@ size_t LatLon::frame(std::vector<double> &values, size_t size, double missingVal
 
 }
 
-void LatLon::validate(const std::vector<double>& values) const {
+void LatLon::validate(const std::vector<double> &values) const {
     ASSERT(values.size() == ni_ * nj_);
 }
 
