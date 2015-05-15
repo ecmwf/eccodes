@@ -52,7 +52,7 @@ LatLon::~LatLon() {
 //     return nj_;
 // }
 
-static size_t compteN(double first, double last, double inc, const char *n_name, const char *first_name, const char *last_name) {
+static size_t computeN(double first, double last, double inc, const char *n_name, const char *first_name, const char *last_name) {
     size_t n;
     if (!(first <= last)) {
         eckit::Log::info() << first_name << " (first):" << first << ", " << last_name << " (last)" << last << std::endl;
@@ -88,8 +88,8 @@ static size_t compteN(double first, double last, double inc, const char *n_name,
 
 void LatLon::setNiNj() {
 
-    ni_ = compteN(bbox_.west(), bbox_.east(), increments_.west_east(), "Ni", "west", "east");
-    nj_ = compteN(bbox_.south(), bbox_.north(), increments_.south_north(), "Nj", "south", "north");
+    ni_ = computeN(bbox_.west(), bbox_.east(), increments_.west_east(), "Ni", "west", "east");
+    nj_ = computeN(bbox_.south(), bbox_.north(), increments_.south_north(), "Nj", "south", "north");
 
 }
 
