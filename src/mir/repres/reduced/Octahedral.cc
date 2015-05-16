@@ -50,9 +50,7 @@ const std::vector<long>& Octahedral::pls() const {
 
 void Octahedral::fill(grib_info &info) const  {
     Gaussian::fill(info);
-    const std::vector<long>& pl = pls();
-    info.grid.pl = &pl[0];
-    info.grid.pl_size = pl.size();
+
 }
 
 atlas::Grid *Octahedral::atlasGrid() const {

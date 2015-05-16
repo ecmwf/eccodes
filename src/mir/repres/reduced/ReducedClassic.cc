@@ -16,6 +16,8 @@
 
 #include <iostream>
 
+#include "mir/repres/reduced/ReducedFromPL.h"
+
 namespace mir {
 namespace repres {
 namespace reduced {
@@ -43,6 +45,10 @@ void ReducedClassic::print(std::ostream &out) const {
 }
 
 
+Gaussian *ReducedClassic::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
+    // We lose the ReducedClassic nature of the grid
+    return new ReducedFromPL(N_, pl, bbox);
+}
 
 
 } // namespace reduced

@@ -90,16 +90,23 @@ class Gaussian : public Gridded {
 
     // -- Members
 
+    mutable std::vector<double> latitudes_;
 
     // -- Methods
-    // None
+
+    const std::vector<double>& latitudes() const;
+    virtual Gaussian *cropped(const util::BoundingBox &bbox, const std::vector<long> &) const ;
+
 
     virtual const std::vector<long> &pls() const = 0;
     virtual Iterator *iterator() const;
-    void validate(const std::vector<double> &values) const;
 
 
     // -- Overridden methods
+
+    Gridded *cropped(const util::BoundingBox &bbox) const ;
+    void validate(const std::vector<double> &values) const;
+
 
     // Representation *crop(const util::BoundingBox &bbox, const std::vector<double> &in, std::vector<double> &out) const;
 

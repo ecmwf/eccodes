@@ -45,13 +45,12 @@ Representation *ReducedFromPL::clone() const {
     return new ReducedFromPL(N_, pl_, bbox_);
 }
 
-Gridded *ReducedFromPL::cropped(const util::BoundingBox &bbox) const {
-    return new ReducedFromPL(N_, pl_, bbox);
-}
-
-
 void ReducedFromPL::print(std::ostream &out) const {
     out << "ReducedGGFromPL[N" << N_ << "]";
+}
+
+Gaussian *ReducedFromPL::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
+    return new ReducedFromPL(N_, pl, bbox);
 }
 
 

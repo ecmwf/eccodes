@@ -52,29 +52,16 @@ void Gaussian::fill(grib_info &info) const  {
 
     // See copy_spec_from_ksec.c in libemos for info
 
+    const std::vector<long>& pl = pls();
+
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
-    info.grid.Nj = N_ * 2; // Should be PL.size()
+    info.grid.Nj = pl.size() * 2;
     info.grid.N = N_;
 
+    info.grid.pl = &pl[0];
+    info.grid.pl_size = pl.size();
+
     bbox_.fill(info);
-
-    bool global = bbox_.global();
-
-    if(!global) {
-        // Adjust Nj
-        std::vector<double> latitudes(2* N_);
-        atlas::grids::gaussian_latitudes_npole_spole(N_, &latitudes[0]);
-        double north = bbox_.north();
-        double south = bbox_.south();
-
-        info.grid.Nj = 0;
-        for(size_t i = 0; i < latitudes.size(); i++) {
-            if((latitudes[i] <= north) && (latitudes[i] >= south)) {
-                info.grid.Nj++;
-            }
-        }
-        ASSERT(info.grid.Nj > 0);
-    }
 
     /*
         Comment in libemos is:
@@ -88,9 +75,8 @@ void Gaussian::fill(grib_info &info) const  {
     size_t j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
     info.packing.extra_settings[j].name = "global";
-    info.packing.extra_settings[j].long_value = global ? 1 : 0;
+    info.packing.extra_settings[j].long_value = bbox_.global() ? 1 : 0;
 
-    // FIXME: Where are the PL set? Looks like grib_api has its own list
 }
 
 class GaussianIterator: public Iterator {
@@ -147,11 +133,18 @@ class GaussianIterator: public Iterator {
     }
 
   public:
-    GaussianIterator(size_t N, const std::vector<long> &pl):
-        N_(N),  latitudes_(2 * N), pl_(pl),  west_(0),  i_(0), j_(0),  count_(0), total_(0) {
+    GaussianIterator(size_t N, const std::vector <double>& latitudes, const std::vector<long> &pl):
+        N_(N),
+        latitudes_(latitudes),
+        pl_(pl),
+        west_(0),
+        i_(0),
+        j_(0),
+        count_(0),
+        total_(0) {
 
         ASSERT(pl_.size());
-        atlas::grids::gaussian_latitudes_npole_spole(N_, &latitudes_[0]);
+        ASSERT(latitudes_.size() == pl_.size());
 
         lat_ = latitudes_[0];
         lon_ = west_;
@@ -173,7 +166,31 @@ class GaussianIterator: public Iterator {
 };
 
 Iterator *Gaussian::iterator() const {
-    return new GaussianIterator(N_, pls());
+    return new GaussianIterator(N_, latitudes(), pls());
+}
+
+
+const std::vector <double>& Gaussian::latitudes() const {
+    if (latitudes_.size() == 0) {
+        if (bbox_.global()) {
+            ASSERT(pls().size() == N_ * 2);
+            latitudes_.resize(N_ * 2);
+            atlas::grids::gaussian_latitudes_npole_spole(N_, &latitudes_[0]);
+        } else {
+            std::vector<double> latitudes(N_ * 2);
+            atlas::grids::gaussian_latitudes_npole_spole(N_, &latitudes[0]);
+
+            double north = bbox_.north();
+            double south = bbox_.south();
+
+            for (size_t i = 0; i < latitudes.size(); i++) {
+                if ((latitudes[i] >= south) && (latitudes[i] <= north)) {
+                    latitudes_.push_back(latitudes[i]);
+                }
+            }
+        }
+    }
+    return latitudes_;
 }
 
 
@@ -202,6 +219,35 @@ void Gaussian::validate(const std::vector<double> &values) const {
         eckit::Log::info() << values.size() << " c=" << count << std::endl;
         ASSERT(values.size() == count);
     }
+}
+
+// Once cropped, we will lose the type of Gaussian (e.g. Classic, FromPL, Octahedral)
+// This assumes non-rotated
+Gridded *Gaussian::cropped(const util::BoundingBox &bbox) const  {
+    const std::vector<long> &pl = pls();
+    std::vector<long> newpl;
+    newpl.reserve(pl.size());
+
+    const std::vector<double> &lats = latitudes();
+    double north = bbox.north();
+    double south = bbox.south();
+
+    ASSERT(lats.size() == pl.size());
+
+    for (size_t i = 0; i < lats.size(); i++) {
+        if ((lats[i] >= south) && (lats[i] <= north)) {
+            newpl.push_back(pl[i]);
+        }
+    }
+
+    return cropped(bbox, newpl);
+}
+
+// Don't implement this for rotated, see comment above
+Gaussian *Gaussian::cropped(const util::BoundingBox &bbox, const std::vector<long> &) const {
+    eckit::StrStream os;
+    os << "Gaussian::cropped() not implemented for " << *this << eckit::StrStream::ends;
+    throw eckit::SeriousBug(std::string(os));
 }
 
 } // namespace reduced

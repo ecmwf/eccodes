@@ -95,6 +95,7 @@ class RotatedOctahedral : public  Octahedral {
     virtual void fill(grib_info &) const;
     atlas::Grid *atlasGrid() const;
     virtual Representation *clone() const;
+    virtual Gaussian *cropped(const util::BoundingBox &bbox, const std::vector<long> &) const ;
 
     // -- Class members
     // None

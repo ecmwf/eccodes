@@ -32,6 +32,8 @@ class ReducedFromPL : public FromPL {
     // -- Contructors
 
     ReducedFromPL(const param::MIRParametrisation &);
+    ReducedFromPL(long, const std::vector<long> &, const util::BoundingBox &);
+
 
     // -- Destructor
 
@@ -74,7 +76,6 @@ class ReducedFromPL : public FromPL {
 
   private:
 
-    ReducedFromPL(long, const std::vector<long> &, const util::BoundingBox &);
 
 
     // No copy allowed
@@ -92,8 +93,7 @@ class ReducedFromPL : public FromPL {
     // -- Overridden methods
 
     virtual Representation *clone() const;
-    virtual Gridded *cropped(const util::BoundingBox &bbox) const;
-
+    virtual Gaussian *cropped(const util::BoundingBox &bbox, const std::vector<long> &) const ;
 
     // -- Class members
     // None

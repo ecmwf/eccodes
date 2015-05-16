@@ -18,6 +18,7 @@
 
 #include "mir/util/Grib.h"
 #include "atlas/grids/RotatedGrid.h"
+#include "mir/repres/reduced/RotatedFromPL.h"
 
 namespace mir {
 namespace repres {
@@ -55,6 +56,10 @@ atlas::Grid *RotatedClassic::atlasGrid() const {
                                          rotation_.south_pole_rotation_angle());
 }
 
+Gaussian *RotatedClassic::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
+    // We lose the RotatedClassic nature of the grid
+    return new RotatedFromPL(N_, pl, bbox, rotation_);
+}
 
 } // namespace reduced
 }  // namespace repres

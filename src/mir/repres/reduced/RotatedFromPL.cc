@@ -64,6 +64,11 @@ atlas::Grid *RotatedFromPL::atlasGrid() const {
 }
 
 
+Gaussian *RotatedFromPL::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
+    return new RotatedFromPL(N_, pl, bbox, rotation_);
+}
+
+
 namespace {
 static RepresentationBuilder<RotatedFromPL> rotatedGG("reduced_rotated_gg"); // Name is what is returned by grib_api
 }

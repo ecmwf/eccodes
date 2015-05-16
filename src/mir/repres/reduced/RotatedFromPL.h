@@ -34,6 +34,7 @@ class RotatedFromPL : public FromPL {
     // -- Contructors
 
     RotatedFromPL(const param::MIRParametrisation &);
+    RotatedFromPL(long, const std::vector<long> &, const util::BoundingBox &, const util::Rotation&);
 
     // -- Destructor
 
@@ -76,7 +77,6 @@ class RotatedFromPL : public FromPL {
 
   private:
 
-    RotatedFromPL(long, const std::vector<long> &, const util::BoundingBox &, const util::Rotation&);
 
 
     // No copy allowed
@@ -95,6 +95,7 @@ class RotatedFromPL : public FromPL {
     virtual void fill(grib_info &) const;
     atlas::Grid *atlasGrid() const;
     virtual Representation *clone() const;
+    virtual Gaussian *cropped(const util::BoundingBox &bbox, const std::vector<long> &) const ;
 
     // -- Class members
     // None

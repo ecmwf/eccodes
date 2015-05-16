@@ -93,6 +93,7 @@ class ReducedOctahedral : public Octahedral {
 
 
     virtual Representation *clone() const;
+    virtual Gaussian *cropped(const util::BoundingBox &bbox, const std::vector<long> &) const ;
 
     // -- Class members
     // None
