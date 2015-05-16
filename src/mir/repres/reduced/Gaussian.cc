@@ -77,6 +77,15 @@ void Gaussian::fill(grib_info &info) const  {
     info.packing.extra_settings[j].name = "global";
     info.packing.extra_settings[j].long_value = bbox_.global() ? 1 : 0;
 
+    // if (!bbox_.global()) {
+    //     // It looks like dissemination files have longitudes between 0 and 360
+    //     // See if that logic needs to be moved to BoundingBox
+
+    //     info.grid.longitudeOfFirstGridPointInDegrees = util::BoundingBox::normalise(info.grid.longitudeOfFirstGridPointInDegrees);
+    //     info.grid.longitudeOfLastGridPointInDegrees = util::BoundingBox::normalise(info.grid.longitudeOfLastGridPointInDegrees);
+
+    // }
+
 }
 
 class GaussianIterator: public Iterator {
@@ -222,7 +231,6 @@ void Gaussian::validate(const std::vector<double> &values) const {
 
 
 Gridded *Gaussian::cropped(const util::BoundingBox &bbox) const  {
-    NOTIMP;
     const std::vector<long> &pl = pls();
     std::vector<long> newpl;
     newpl.reserve(pl.size());
