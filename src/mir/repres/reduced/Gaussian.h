@@ -71,6 +71,7 @@ class Gaussian : public Gridded {
 
     // -- Overridden methods
 
+    virtual void fill(grib_info &) const;
 
     // -- Class members
     // None

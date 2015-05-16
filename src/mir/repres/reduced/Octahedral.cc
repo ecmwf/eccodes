@@ -49,42 +49,10 @@ const std::vector<long>& Octahedral::pls() const {
 }
 
 void Octahedral::fill(grib_info &info) const  {
-
-    // See copy_spec_from_ksec.c in libemos for info
-
-#if 0
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_OCTAHEDRAL_GG;
-#else
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
-    atlas::grids::rgg::OctahedralRGG grid(N_);
-
+    Gaussian::fill(info);
     const std::vector<long>& pl = pls();
-
     info.grid.pl = &pl[0];
     info.grid.pl_size = pl.size();
-
-#endif
-
-    info.grid.Nj = N_ * 2; // Should be PL.size()
-    info.grid.N = N_;
-
-    bbox_.fill(info);
-
-    /*
-        Comment in libemos is:
-
-        "grib_api to set global area in full precision for gaussian grid"
-
-        TODO: check and document
-
-    */
-
-    size_t j = info.packing.extra_settings_count++;
-    info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
-    info.packing.extra_settings[j].name = "global";
-    info.packing.extra_settings[j].long_value = bbox_.global() ? 1 : 0;
-
-    // FIXME: Where are the PL set? Looks like grib_api has its own list
 }
 
 atlas::Grid *Octahedral::atlasGrid() const {

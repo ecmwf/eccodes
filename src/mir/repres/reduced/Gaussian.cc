@@ -25,6 +25,7 @@
 
 
 #include "atlas/grids/GaussianLatitudes.h"
+#include "mir/util/Grib.h"
 
 
 namespace mir {
@@ -46,6 +47,51 @@ Gaussian::Gaussian(const param::MIRParametrisation &parametrisation) {
 Gaussian::~Gaussian() {
 }
 
+
+void Gaussian::fill(grib_info &info) const  {
+
+    // See copy_spec_from_ksec.c in libemos for info
+
+    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
+    info.grid.Nj = N_ * 2; // Should be PL.size()
+    info.grid.N = N_;
+
+    bbox_.fill(info);
+
+    bool global = bbox_.global();
+
+    if(!global) {
+        // Adjust Nj
+        std::vector<double> latitudes(2* N_);
+        atlas::grids::gaussian_latitudes_npole_spole(N_, &latitudes[0]);
+        double north = bbox_.north();
+        double south = bbox_.south();
+
+        info.grid.Nj = 0;
+        for(size_t i = 0; i < latitudes.size(); i++) {
+            if((latitudes[i] <= north) && (latitudes[i] >= south)) {
+                info.grid.Nj++;
+            }
+        }
+        ASSERT(info.grid.Nj > 0);
+    }
+
+    /*
+        Comment in libemos is:
+
+        "grib_api to set global area in full precision for gaussian grid"
+
+        TODO: check and document
+
+    */
+
+    size_t j = info.packing.extra_settings_count++;
+    info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
+    info.packing.extra_settings[j].name = "global";
+    info.packing.extra_settings[j].long_value = global ? 1 : 0;
+
+    // FIXME: Where are the PL set? Looks like grib_api has its own list
+}
 
 class GaussianIterator: public Iterator {
     size_t N_;
