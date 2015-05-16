@@ -42,6 +42,18 @@ Gaussian::Gaussian(size_t N, const util::BoundingBox &bbox):
 
 Gaussian::Gaussian(const param::MIRParametrisation &parametrisation): bbox_(parametrisation) {
     ASSERT(parametrisation.get("N", N_));
+
+    bool global = false;
+    parametrisation.get("global", global);  // Grib_api will work out if a gaussian is global
+
+    if (global) {
+        bbox_ = util::BoundingBox();
+    } else {
+        // Adding support for non-global gaussian grids requires atlas support
+        eckit::StrStream os;
+        os << "Non-global gaussian grid not yet supported (N=" << N_ << ", bbox=" << bbox_ << ")" << eckit::StrStream::ends;
+        throw eckit::SeriousBug(os);
+    }
 }
 
 Gaussian::~Gaussian() {
@@ -52,7 +64,7 @@ void Gaussian::fill(grib_info &info) const  {
 
     // See copy_spec_from_ksec.c in libemos for info
 
-    const std::vector<long>& pl = pls();
+    const std::vector<long> &pl = pls();
 
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
     info.grid.Nj = pl.size() * 2;
@@ -115,7 +127,7 @@ class GaussianIterator: public Iterator {
         if (j_ < nj_) {
             if (i_ < ni_) {
                 lat = latitudes_[j_];
-                lon = west_ + (i_ * 360.0)/ni_;
+                lon = west_ + (i_ * 360.0) / ni_;
                 i_++;
                 if (i_ == ni_) {
 
@@ -135,7 +147,7 @@ class GaussianIterator: public Iterator {
     }
 
   public:
-    GaussianIterator(size_t N, const std::vector <double>& latitudes, const std::vector<long> &pl):
+    GaussianIterator(size_t N, const std::vector <double> &latitudes, const std::vector<long> &pl):
         N_(N),
         latitudes_(latitudes),
         pl_(pl),
@@ -167,7 +179,7 @@ Iterator *Gaussian::iterator() const {
 }
 
 
-const std::vector <double>& Gaussian::latitudes() const {
+const std::vector <double> &Gaussian::latitudes() const {
     if (latitudes_.size() == 0) {
         if (bbox_.global()) {
             ASSERT(pls().size() == N_ * 2);
@@ -208,13 +220,12 @@ void Gaussian::validate(const std::vector<double> &values) const {
 
         size_t count = 0;
         while (it->next(lat, lon)) {
-            if (bbox_.contains(lat, lon))
-            {
+            if (bbox_.contains(lat, lon)) {
                 count++;
             }
         }
 
-        eckit::Log::info() << "Gaussian::validate " << values.size() << " " <<count <<std::endl;
+        eckit::Log::info() << "Gaussian::validate " << values.size() << " " << count << std::endl;
 
         ASSERT(values.size() == count);
     }
