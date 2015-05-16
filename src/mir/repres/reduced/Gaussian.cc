@@ -94,7 +94,6 @@ class GaussianIterator: public Iterator {
     const std::vector<long> &pl_;
     // double north_;
     double west_;
-    double we_;
     // double ns_;
 
     size_t ni_;
@@ -102,8 +101,6 @@ class GaussianIterator: public Iterator {
 
     size_t i_;
     size_t j_;
-    double lat_;
-    double lon_;
 
     size_t count_;
     size_t total_;
@@ -117,20 +114,16 @@ class GaussianIterator: public Iterator {
     virtual bool next(double &lat, double &lon) {
         if (j_ < nj_) {
             if (i_ < ni_) {
-                lat = lat_;
-                lon = lon_;
-                lon_ += we_;
+                lat = latitudes_[j_];
+                lon = west_ + (i_ * 360.0)/ni_;
                 i_++;
                 if (i_ == ni_) {
-                    lon_ = west_;
 
                     j_++;
                     i_ = 0;
 
                     if (j_ < nj_) {
                         ni_ = pl_[j_];
-                        lat_ = latitudes_[j_];
-                        we_ = 360.0 / ni_;
                     }
 
                 }
@@ -155,12 +148,7 @@ class GaussianIterator: public Iterator {
         ASSERT(pl_.size());
         ASSERT(latitudes_.size() == pl_.size());
 
-        lat_ = latitudes_[0];
-        lon_ = west_;
-
         ni_ = pl_[0];
-        we_ = 360.0 / ni_;
-
         nj_ = pl_.size();
 
         for (size_t i = 0; i < pl_.size(); i++) {

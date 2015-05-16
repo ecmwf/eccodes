@@ -173,15 +173,15 @@ void LatLon::fill(grib_info &info) const  {
 class LatLonIterator: public Iterator {
     size_t ni_;
     size_t nj_;
+
     double north_;
     double west_;
+
     double we_;
     double ns_;
 
     size_t i_;
     size_t j_;
-    double lat_;
-    double lon_;
 
     size_t count_;
 
@@ -194,13 +194,10 @@ class LatLonIterator: public Iterator {
     virtual bool next(double &lat, double &lon) {
         if (j_ < nj_) {
             if (i_ < ni_) {
-                lat = lat_;
-                lon = lon_;
-                lon_ += we_;
+                lat = north_ - j_ * ns_; // This is slower, but looks more precise
+                lon = west_ + i_ * we_; // This is slower, but looks more precise
                 i_++;
                 if (i_ == ni_) {
-                    lon_ = west_;
-                    lat_ -= ns_;
                     j_++;
                     i_ = 0;
 
@@ -213,14 +210,22 @@ class LatLonIterator: public Iterator {
     }
 
   public:
-    LatLonIterator(size_t ni, size_t nj,
+    LatLonIterator(size_t ni,
+                   size_t nj,
                    double north,
                    double west,
                    double we,
                    double ns):
-        ni_(ni), nj_(nj), north_(north), west_(west), we_(we), ns_(ns), i_(0), j_(0), count_(0) {
-        lat_ = north_;
-        lon_ = west_;
+        ni_(ni),
+        nj_(nj),
+        north_(north),
+        west_(west),
+        we_(we),
+        ns_(ns),
+        i_(0),
+        j_(0),
+        count_(0) {
+
     }
 
     ~LatLonIterator() {
