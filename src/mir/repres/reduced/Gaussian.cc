@@ -216,13 +216,11 @@ void Gaussian::validate(const std::vector<double> &values) const {
             }
         }
 
-        eckit::Log::info() << values.size() << " c=" << count << std::endl;
         ASSERT(values.size() == count);
     }
 }
 
-// Once cropped, we will lose the type of Gaussian (e.g. Classic, FromPL, Octahedral)
-// This assumes non-rotated
+
 Gridded *Gaussian::cropped(const util::BoundingBox &bbox) const  {
     const std::vector<long> &pl = pls();
     std::vector<long> newpl;
@@ -243,7 +241,6 @@ Gridded *Gaussian::cropped(const util::BoundingBox &bbox) const  {
     return cropped(bbox, newpl);
 }
 
-// Don't implement this for rotated, see comment above
 Gaussian *Gaussian::cropped(const util::BoundingBox &bbox, const std::vector<long> &) const {
     eckit::StrStream os;
     os << "Gaussian::cropped() not implemented for " << *this << eckit::StrStream::ends;
