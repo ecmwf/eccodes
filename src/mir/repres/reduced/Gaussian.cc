@@ -40,7 +40,7 @@ Gaussian::Gaussian(size_t N, const util::BoundingBox &bbox):
     N_(N), bbox_(bbox) {
 }
 
-Gaussian::Gaussian(const param::MIRParametrisation &parametrisation) {
+Gaussian::Gaussian(const param::MIRParametrisation &parametrisation): bbox_(parametrisation) {
     ASSERT(parametrisation.get("N", N_));
 }
 
@@ -220,10 +220,13 @@ void Gaussian::validate(const std::vector<double> &values) const {
 
         size_t count = 0;
         while (it->next(lat, lon)) {
-            if (bbox_.contains(lat, lon)) {
+            if (bbox_.contains(lat, lon))
+            {
                 count++;
             }
         }
+
+        eckit::Log::info() << "Gaussian::validate " << values.size() << " " <<count <<std::endl;
 
         ASSERT(values.size() == count);
     }
