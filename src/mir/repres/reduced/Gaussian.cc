@@ -40,7 +40,8 @@ Gaussian::Gaussian(size_t N, const util::BoundingBox &bbox):
     N_(N), bbox_(bbox) {
 }
 
-Gaussian::Gaussian(const param::MIRParametrisation &parametrisation): bbox_(parametrisation) {
+Gaussian::Gaussian(const param::MIRParametrisation &parametrisation):
+    bbox_(parametrisation) {
     ASSERT(parametrisation.get("N", N_));
 
     bool global = false;
@@ -59,6 +60,14 @@ Gaussian::Gaussian(const param::MIRParametrisation &parametrisation): bbox_(para
 Gaussian::~Gaussian() {
 }
 
+inline void between_0_and_360(double &x) {
+    while (x >= 360) {
+        x -= 360;
+    }
+    while (x < 0 ) {
+        x += 360;
+    }
+}
 
 void Gaussian::fill(grib_info &info) const  {
 
@@ -89,14 +98,14 @@ void Gaussian::fill(grib_info &info) const  {
     info.packing.extra_settings[j].name = "global";
     info.packing.extra_settings[j].long_value = bbox_.global() ? 1 : 0;
 
-    // if (!bbox_.global()) {
-    //     // It looks like dissemination files have longitudes between 0 and 360
-    //     // See if that logic needs to be moved to BoundingBox
+    if (!bbox_.global()) {
+        // It looks like dissemination files have longitudes between 0 and 360
+        // See if that logic needs to be moved to BoundingBox
 
-    //     info.grid.longitudeOfFirstGridPointInDegrees = util::BoundingBox::normalise(info.grid.longitudeOfFirstGridPointInDegrees);
-    //     info.grid.longitudeOfLastGridPointInDegrees = util::BoundingBox::normalise(info.grid.longitudeOfLastGridPointInDegrees);
+        between_0_and_360(info.grid.longitudeOfFirstGridPointInDegrees);
+        between_0_and_360(info.grid.longitudeOfLastGridPointInDegrees);
 
-    // }
+    }
 
 }
 
