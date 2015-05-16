@@ -222,6 +222,7 @@ void Gaussian::validate(const std::vector<double> &values) const {
 
 
 Gridded *Gaussian::cropped(const util::BoundingBox &bbox) const  {
+    NOTIMP;
     const std::vector<long> &pl = pls();
     std::vector<long> newpl;
     newpl.reserve(pl.size());
