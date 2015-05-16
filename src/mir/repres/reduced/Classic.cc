@@ -33,8 +33,7 @@ Classic::~Classic() {
 }
 
 Classic::Classic(size_t N, const util::BoundingBox &bbox):
-    Gaussian(N),
-    bbox_(bbox) {
+    Gaussian(N, bbox) {
 
 }
 
@@ -70,19 +69,6 @@ atlas::Grid *Classic::atlasGrid() const {
     os << "rgg.N" << N_ << eckit::StrStream::ends;
     return atlas::Grid::create(std::string(os));
 }
-
-
-void Classic::validate(const std::vector<double> &values) const {
-
-    const std::vector<long> &v = pls();
-    size_t count = 0;
-    for (size_t i = 0; i < v.size(); i++) {
-        count += v[i];
-    }
-
-    ASSERT(values.size() == count);
-}
-
 
 const std::vector<long> &Classic::pls() const {
     if (pl_.size() == 0) {

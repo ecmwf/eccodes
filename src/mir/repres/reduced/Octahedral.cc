@@ -31,8 +31,7 @@ Octahedral::~Octahedral() {
 }
 
 Octahedral::Octahedral(long N, const util::BoundingBox &bbox):
-    Gaussian(N),
-    bbox_(bbox) {
+    Gaussian(N, bbox) {
 
 }
 
@@ -90,17 +89,6 @@ void Octahedral::fill(grib_info &info) const  {
 
 atlas::Grid *Octahedral::atlasGrid() const {
     return new atlas::grids::rgg::OctahedralRGG(N_);
-}
-
-void Octahedral::validate(const std::vector<double>& values) const {
-
-    const std::vector<long>& pl = pls();
-
-    size_t count = 0;
-    for (size_t i = 0; i < pl.size(); i++) {
-        count += pl[i];
-    }
-    ASSERT(values.size() == count);
 }
 
 } // namespace reduced

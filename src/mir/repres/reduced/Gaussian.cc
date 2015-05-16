@@ -33,14 +33,14 @@ namespace reduced {
 
 Gaussian::Gaussian(size_t N):
     N_(N) {
-    ASSERT(N_);
-
 }
 
+Gaussian::Gaussian(size_t N, const util::BoundingBox &bbox):
+    N_(N), bbox_(bbox) {
+}
 
 Gaussian::Gaussian(const param::MIRParametrisation &parametrisation) {
     ASSERT(parametrisation.get("N", N_));
-    ASSERT(N_);
 }
 
 Gaussian::~Gaussian() {
@@ -130,6 +130,33 @@ Iterator *Gaussian::iterator() const {
     return new GaussianIterator(N_, pls());
 }
 
+
+
+void Gaussian::validate(const std::vector<double> &values) const {
+
+    if (bbox_.global()) {
+        const std::vector<long> &pl = pls();
+        size_t count = 0;
+        for (size_t i = 0; i < pl.size(); i++) {
+            count += pl[i];
+        }
+        ASSERT(values.size() == count);
+    } else {
+        std::auto_ptr<Iterator> it(iterator());
+        double lat;
+        double lon;
+
+        size_t count = 0;
+        while (it->next(lat, lon)) {
+            if (bbox_.contains(lat, lon)) {
+                count++;
+            }
+        }
+
+        eckit::Log::info() << values.size() << " c=" << count << std::endl;
+        ASSERT(values.size() == count);
+    }
+}
 
 } // namespace reduced
 }  // namespace repres

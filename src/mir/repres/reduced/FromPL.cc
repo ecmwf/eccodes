@@ -32,9 +32,8 @@ FromPL::~FromPL() {
 }
 
 FromPL::FromPL(size_t N, const std::vector<long> &pl, const util::BoundingBox &bbox):
-    Gaussian(N),
-    pl_(pl),
-    bbox_(bbox) {
+    Gaussian(N, bbox),
+    pl_(pl) {
 
 }
 
@@ -78,18 +77,6 @@ atlas::Grid *FromPL::atlasGrid() const {
 
 const std::vector<long> &FromPL::pls() const {
     return pl_;
-}
-
-
-void FromPL::validate(const std::vector<double> &values) const {
-    // TODO: check with area
-#if 1
-    size_t count = 0;
-    for (size_t i = 0; i < pl_.size(); i++) {
-        count += pl_[i];
-    }
-    ASSERT(values.size() == count);
-#endif
 }
 
 } // namespace reduced

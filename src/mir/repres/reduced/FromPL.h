@@ -62,7 +62,6 @@ class FromPL : public Gaussian {
     // -- Members
 
     std::vector<long> pl_;
-    util::BoundingBox bbox_;
 
     // -- Methods
 
@@ -99,7 +98,6 @@ class FromPL : public Gaussian {
 
     // -- Overridden methods
 
-    virtual void validate(const std::vector<double> &) const;
 
 
     // -- Class members

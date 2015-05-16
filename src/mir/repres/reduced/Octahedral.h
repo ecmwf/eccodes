@@ -60,7 +60,6 @@ class Octahedral : public Gaussian {
 
     // -- Members
 
-    util::BoundingBox bbox_;
     mutable std::vector<long> pl_;
 
     // -- Methods
@@ -69,7 +68,6 @@ class Octahedral : public Gaussian {
     // -- Overridden methods
     virtual void fill(grib_info &) const;
     virtual atlas::Grid *atlasGrid() const;
-    virtual void validate(const std::vector<double>&) const;
 
     // -- Class members
     // None
