@@ -124,7 +124,7 @@ class Gaussian : public Gridded {
 
 };
 
-} // namespace
+}  // namespace
 }  // namespace repres
 }  // namespace mir
 #endif

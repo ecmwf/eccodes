@@ -113,7 +113,7 @@ class Regular : public Gridded {
 
 };
 
-} // namespace regular
+}  // namespace regular
 
 }  // namespace repres
 }  // namespace mir

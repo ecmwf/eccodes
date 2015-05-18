@@ -55,7 +55,7 @@ namespace {
 static RepresentationBuilder<RegularGG> reducedGG("regular_gg"); // Name is what is returned by grib_api
 }
 
-} // namespace regular
+}  // namespace regular
 }  // namespace repres
 }  // namespace mir
 

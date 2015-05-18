@@ -93,7 +93,7 @@ void Regular::validate(const std::vector<double>& values) const {
 }
 
 
-} // namespace regular
+}  // namespace regular
 }  // namespace repres
 }  // namespace mir
 

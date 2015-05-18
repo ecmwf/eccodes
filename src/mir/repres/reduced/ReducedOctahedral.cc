@@ -47,7 +47,7 @@ Gaussian *ReducedOctahedral::cropped(const util::BoundingBox &bbox, const std::v
     return new ReducedFromPL(N_, pl, bbox);
 }
 
-} // namespace reduced
+}  // namespace reduced
 }  // namespace repres
 }  // namespace mir
 

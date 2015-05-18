@@ -151,7 +151,7 @@ namespace {
 static RepresentationBuilder<SphericalHarmonics> sphericalHarmonics("sh"); // Name is what is returned by grib_api
 }
 
-} // namespace sh
+}  // namespace sh
 
 }  // namespace repres
 }  // namespace mir

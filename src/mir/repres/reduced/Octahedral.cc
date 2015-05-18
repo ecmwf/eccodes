@@ -57,7 +57,7 @@ atlas::Grid *Octahedral::atlasGrid() const {
     return new atlas::grids::rgg::OctahedralRGG(N_);
 }
 
-} // namespace reduced
+}  // namespace reduced
 }  // namespace repres
 }  // namespace mir
 

@@ -78,7 +78,7 @@ namespace {
 static RepresentationBuilder<ReducedLL> reducedLL("reduced_ll"); // Name is what is returned by grib_api
 }
 
-} // namespave latlon
+}  // namespace latlon
 }  // namespace repres
 }  // namespace mir
 

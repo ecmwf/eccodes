@@ -116,7 +116,7 @@ class Classic : public Gaussian {
 
 };
 
-} // namespace
+}  // namespace
 }  // namespace repres
 }  // namespace mir
 #endif

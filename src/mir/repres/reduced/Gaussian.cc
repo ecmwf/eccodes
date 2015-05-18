@@ -269,7 +269,7 @@ Gaussian *Gaussian::cropped(const util::BoundingBox &bbox, const std::vector<lon
     throw eckit::SeriousBug(std::string(os));
 }
 
-} // namespace reduced
+}  // namespace reduced
 }  // namespace repres
 }  // namespace mir
 

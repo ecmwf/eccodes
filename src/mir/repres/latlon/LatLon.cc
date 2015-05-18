@@ -267,7 +267,7 @@ void LatLon::validate(const std::vector<double> &values) const {
 }
 
 
-} // namespave latlon
+}  // namespace latlon
 }  // namespace repres
 }  // namespace mir
 

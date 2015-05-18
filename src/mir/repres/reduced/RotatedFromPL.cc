@@ -78,7 +78,7 @@ static RepresentationBuilder<RotatedFromPL> rotatedGG("reduced_rotated_gg"); // 
 // static RepresentationBuilder<RotatedFromPL> reducedGGFromPL("reduced_gg"); // Name is what is returned by grib_api
 // }
 
-} // namespace reduced
+}  // namespace reduced
 }  // namespace repres
 }  // namespace mir
 

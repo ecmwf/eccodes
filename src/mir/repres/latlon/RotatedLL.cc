@@ -79,7 +79,7 @@ namespace {
 static RepresentationBuilder<RotatedLL> rotatedLL("rotated_ll");  // Name is what is returned by grib_api
 }
 
-} // namespave latlon
+}  // namespace latlon
 }  // namespace repres
 }  // namespace mir
 

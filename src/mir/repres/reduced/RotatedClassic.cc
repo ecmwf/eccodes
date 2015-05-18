@@ -61,7 +61,7 @@ Gaussian *RotatedClassic::cropped(const util::BoundingBox &bbox, const std::vect
     return new RotatedFromPL(N_, pl, bbox, rotation_);
 }
 
-} // namespace reduced
+}  // namespace reduced
 }  // namespace repres
 }  // namespace mir
 

@@ -51,7 +51,7 @@ Gaussian *ReducedClassic::cropped(const util::BoundingBox &bbox, const std::vect
 }
 
 
-} // namespace reduced
+}  // namespace reduced
 }  // namespace repres
 }  // namespace mir
 

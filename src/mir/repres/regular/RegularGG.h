@@ -23,6 +23,7 @@ namespace mir {
 namespace repres {
 namespace regular {
 
+
 class RegularGG : public Regular {
   public:
 
@@ -107,12 +108,12 @@ class RegularGG : public Regular {
 // -- Friends
 
     //friend ostream& operator<<(ostream& s,const RegularGG& p)
-    //	{ p.print(s); return s; }
+    // { p.print(s); return s; }
 
 };
 
-} // namespace regular
 
+}  // namespace regular
 }  // namespace repres
 }  // namespace mir
 #endif

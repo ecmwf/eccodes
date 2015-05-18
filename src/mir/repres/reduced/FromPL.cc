@@ -61,7 +61,7 @@ const std::vector<long> &FromPL::pls() const {
     return pl_;
 }
 
-} // namespace reduced
+}  // namespace reduced
 }  // namespace repres
 }  // namespace mir
 
