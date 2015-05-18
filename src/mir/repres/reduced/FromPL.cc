@@ -40,7 +40,9 @@ FromPL::FromPL(size_t N, const std::vector<long> &pl, const util::BoundingBox &b
 void FromPL::fill(grib_info &info) const  {
     Gaussian::fill(info);
 
-    info.grid.pl = &pl_[0];
+    // FIXME C-style cast should be removed in a const-correct version of grib_api
+    // (currently unstable)
+    info.grid.pl = (long int*) &pl_[0];
     info.grid.pl_size = pl_.size();
 }
 
