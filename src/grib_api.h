@@ -1372,7 +1372,7 @@ typedef struct grib_util_grid_spec {
 	double missingValue;
 
 	/* pl list for reduced */
-	long *pl;
+	const long *pl;
 	long pl_size;
 
 	/* Spherical harmonics */
