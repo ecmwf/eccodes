@@ -26,85 +26,88 @@ namespace repres {
 class UnstructuredGrid : public Gridded {
   public:
 
-// -- Exceptions
+    // -- Exceptions
     // None
 
-// -- Contructors
+    // -- Contructors
 
-    UnstructuredGrid(const param::MIRParametrisation&);
+    UnstructuredGrid(const param::MIRParametrisation &);
 
-// -- Destructor
+    // -- Destructor
 
     virtual ~UnstructuredGrid(); // Change to virtual if base class
 
-// -- Convertors
+    // -- Convertors
     // None
 
-// -- Operators
+    // -- Operators
     // None
 
-// -- Methods
+    // -- Methods
 
-// -- Overridden methods
+    // -- Overridden methods
     // None
 
-// -- Class members
+    // -- Class members
     // None
 
-// -- Class methods
+    // -- Class methods
     // None
 
   protected:
 
-// -- Members
+    // -- Members
     // None
 
-// -- Methods
+    // -- Methods
 
-    void print(std::ostream&) const; // Change to virtual if base class
+    void print(std::ostream &) const; // Change to virtual if base class
 
-// -- Overridden methods
+    // -- Overridden methods
     // None
 
-// -- Class members
+    // -- Class members
     // None
 
-// -- Class methods
+    // -- Class methods
     // None
 
   private:
 
     UnstructuredGrid();
 
-// No copy allowed
+    // No copy allowed
 
-    UnstructuredGrid(const UnstructuredGrid&);
-    UnstructuredGrid& operator=(const UnstructuredGrid&);
+    UnstructuredGrid(const UnstructuredGrid &);
+    UnstructuredGrid &operator=(const UnstructuredGrid &);
 
-// -- Members
+    // -- Members
 
     std::vector<double> latitudes_;
     std::vector<double> longitudes_;
 
-// -- Methods
+    // -- Methods
     // None
 
 
-// -- Overridden methods
+    // -- Overridden methods
 
-    virtual void fill(grib_info&) const;
-    virtual atlas::Grid* atlasGrid() const;
+    virtual void fill(grib_info &) const;
+    virtual atlas::Grid *atlasGrid() const;
+    void validate(const std::vector<double> &values) const;
 
-// -- Class members
+
+
+    // -- Class members
     // None
 
-// -- Class methods
+    // -- Class methods
     // None
 
-// -- Friends
+    // -- Friends
 
     //friend ostream& operator<<(ostream& s,const UnstructuredGrid& p)
-    //	{ p.print(s); return s; }
+    //  { p.print(s); return s; }
 
 };
 

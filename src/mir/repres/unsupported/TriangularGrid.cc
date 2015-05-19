@@ -58,6 +58,9 @@ atlas::Grid *TriangularGrid::atlasGrid() const {
 
     for (size_t i = 0; i < latitudes_.size(); i++) {
         pts->push_back(atlas::Grid::Point(longitudes_[i], latitudes_[i]));
+        if(i < 10) {
+            eckit::Log::info() << "TriangularGrid::atlasGrid lon=" << longitudes_[i] << ", lat=" << latitudes_[i] << std::endl;
+        }
     }
 
     return new atlas::grids::Unstructured(pts);

@@ -42,8 +42,7 @@ UnstructuredGrid::~UnstructuredGrid() {
 
 
 void UnstructuredGrid::print(std::ostream &out) const {
-    out << "UnstructuredGrid[points="
-        << latitudes_.size()
+    out << "UnstructuredGrid["
         << "]";
 }
 
@@ -59,6 +58,9 @@ atlas::Grid *UnstructuredGrid::atlasGrid() const {
 
     for (size_t i = 0; i < latitudes_.size(); i++) {
         pts->push_back(atlas::Grid::Point(longitudes_[i], latitudes_[i]));
+        if(i < 10) {
+            eckit::Log::info() << "UnstructuredGrid::atlasGrid lon=" << longitudes_[i] << ", lat=" << latitudes_[i] << std::endl;
+        }
     }
 
     return new atlas::grids::Unstructured(pts);
@@ -66,8 +68,14 @@ atlas::Grid *UnstructuredGrid::atlasGrid() const {
     // so constructor takes a vector<Point> (where point is LLPoint2)
 }
 
+void UnstructuredGrid::validate(const std::vector<double> &values) const {
+    ASSERT(values.size() == latitudes_.size());
+    ASSERT(values.size() == longitudes_.size());
+}
+
+
 namespace {
-static RepresentationBuilder<UnstructuredGrid> unstructuredGrid("unstructured_grid"); // Name is what is returned by grib_api
+static RepresentationBuilder<UnstructuredGrid> __grid("unstructured_grid"); // Name is what is returned by grib_api
 }
 
 
