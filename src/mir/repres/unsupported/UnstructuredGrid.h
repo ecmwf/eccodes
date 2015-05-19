@@ -83,6 +83,8 @@ class UnstructuredGrid : public Gridded {
 
 // -- Members
 
+    std::vector<double> latitudes_;
+    std::vector<double> longitudes_;
 
 // -- Methods
     // None
@@ -91,6 +93,7 @@ class UnstructuredGrid : public Gridded {
 // -- Overridden methods
 
     virtual void fill(grib_info&) const;
+    virtual atlas::Grid* atlasGrid() const;
 
 // -- Class members
     // None

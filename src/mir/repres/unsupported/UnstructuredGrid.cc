@@ -21,6 +21,7 @@
 
 #include "mir/repres/unsupported/UnstructuredGrid.h"
 
+#include "atlas/grids/Unstructured.h"
 
 namespace mir {
 namespace repres {
@@ -48,6 +49,19 @@ void UnstructuredGrid::fill(grib_info &info) const  {
     NOTIMP;
 }
 
+atlas::Grid* UnstructuredGrid::atlasGrid() const {
+    std::vector<atlas::Grid::Point>* pts = new std::vector<atlas::Grid::Point>();
+    ASSERT(latitudes_.size() == longitudes_.size());
+    pts->reserve(latitudes_.size());
+
+    for(size_t i = 0; i < latitudes_.size(); i++) {
+        pts->push_back(atlas::Grid::Point(longitudes_[i], latitudes_[i]));
+    }
+
+    return new atlas::grids::Unstructured(pts);
+
+// so constructor takes a vector<Point> (where point is LLPoint2)
+}
 
 namespace {
 static RepresentationBuilder<UnstructuredGrid> unstructuredGrid("unstructured_grid"); // Name is what is returned by grib_api
