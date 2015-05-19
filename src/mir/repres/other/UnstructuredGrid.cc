@@ -19,12 +19,13 @@
 
 #include "mir/param/MIRParametrisation.h"
 
-#include "mir/repres/unsupported/UnstructuredGrid.h"
+#include "mir/repres/other/UnstructuredGrid.h"
 
 #include "atlas/grids/Unstructured.h"
 
 namespace mir {
 namespace repres {
+namespace other {
 
 
 UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation &parametrisation) {
@@ -58,7 +59,7 @@ atlas::Grid *UnstructuredGrid::atlasGrid() const {
 
     for (size_t i = 0; i < latitudes_.size(); i++) {
         pts->push_back(atlas::Grid::Point(longitudes_[i], latitudes_[i]));
-        if(i < 10) {
+        if (i < 10) {
             eckit::Log::info() << "UnstructuredGrid::atlasGrid lon=" << longitudes_[i] << ", lat=" << latitudes_[i] << std::endl;
         }
     }
@@ -75,10 +76,12 @@ void UnstructuredGrid::validate(const std::vector<double> &values) const {
 
 
 namespace {
-static RepresentationBuilder<UnstructuredGrid> __grid("unstructured_grid"); // Name is what is returned by grib_api
+static RepresentationBuilder<UnstructuredGrid> triangular_grid("triangular_grid"); // Name is what is returned by grib_api
+static RepresentationBuilder<UnstructuredGrid> unstructured_grid("unstructured_grid"); // Name is what is returned by grib_api
 }
 
 
+}  // namespace other
 }  // namespace repres
 }  // namespace mir
 
