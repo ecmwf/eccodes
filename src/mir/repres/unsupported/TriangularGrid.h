@@ -26,82 +26,88 @@ namespace repres {
 class TriangularGrid : public Gridded {
   public:
 
-// -- Exceptions
+    // -- Exceptions
     // None
 
-// -- Contructors
+    // -- Contructors
 
-    TriangularGrid(const param::MIRParametrisation&);
+    TriangularGrid(const param::MIRParametrisation &);
 
-// -- Destructor
+    // -- Destructor
 
     virtual ~TriangularGrid(); // Change to virtual if base class
 
-// -- Convertors
+    // -- Convertors
     // None
 
-// -- Operators
+    // -- Operators
     // None
 
-// -- Methods
+    // -- Methods
 
-// -- Overridden methods
+    // -- Overridden methods
     // None
 
-// -- Class members
+    // -- Class members
     // None
 
-// -- Class methods
+    // -- Class methods
     // None
 
   protected:
 
-// -- Members
+    // -- Members
     // None
 
-// -- Methods
+    // -- Methods
 
-    void print(std::ostream&) const; // Change to virtual if base class
+    void print(std::ostream &) const; // Change to virtual if base class
 
-// -- Overridden methods
+    // -- Overridden methods
     // None
 
-// -- Class members
+    // -- Class members
     // None
 
-// -- Class methods
+    // -- Class methods
     // None
 
   private:
 
     TriangularGrid();
 
-// No copy allowed
+    // No copy allowed
 
-    TriangularGrid(const TriangularGrid&);
-    TriangularGrid& operator=(const TriangularGrid&);
+    TriangularGrid(const TriangularGrid &);
+    TriangularGrid &operator=(const TriangularGrid &);
 
-// -- Members
+    // -- Members
 
+    std::vector<double> latitudes_;
+    std::vector<double> longitudes_;
 
-// -- Methods
+    // -- Methods
     // None
 
 
-// -- Overridden methods
+    // -- Overridden methods
 
-    virtual void fill(grib_info&) const;
+    virtual void fill(grib_info &) const;
+    virtual atlas::Grid *atlasGrid() const;
+    void validate(const std::vector<double> &values) const;
 
-// -- Class members
+
+
+    // -- Class members
     // None
 
-// -- Class methods
+    // -- Class methods
     // None
 
-// -- Friends
+    // -- Friends
 
     //friend ostream& operator<<(ostream& s,const TriangularGrid& p)
-    //	{ p.print(s); return s; }
+    //  { p.print(s); return s; }
 
 };
 

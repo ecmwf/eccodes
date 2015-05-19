@@ -21,12 +21,15 @@
 
 #include "mir/repres/unsupported/TriangularGrid.h"
 
+#include "atlas/grids/Unstructured.h"
 
 namespace mir {
 namespace repres {
 
 
 TriangularGrid::TriangularGrid(const param::MIRParametrisation &parametrisation) {
+    ASSERT(parametrisation.get("latitudes", latitudes_));
+    ASSERT(parametrisation.get("longitudes", longitudes_));
 }
 
 
@@ -46,6 +49,25 @@ void TriangularGrid::print(std::ostream &out) const {
 
 void TriangularGrid::fill(grib_info &info) const  {
     NOTIMP;
+}
+
+atlas::Grid *TriangularGrid::atlasGrid() const {
+    std::vector<atlas::Grid::Point> *pts = new std::vector<atlas::Grid::Point>();
+    ASSERT(latitudes_.size() == longitudes_.size());
+    pts->reserve(latitudes_.size());
+
+    for (size_t i = 0; i < latitudes_.size(); i++) {
+        pts->push_back(atlas::Grid::Point(longitudes_[i], latitudes_[i]));
+    }
+
+    return new atlas::grids::Unstructured(pts);
+
+    // so constructor takes a vector<Point> (where point is LLPoint2)
+}
+
+void TriangularGrid::validate(const std::vector<double> &values) const {
+    ASSERT(values.size() == latitudes_.size());
+    ASSERT(values.size() == longitudes_.size());
 }
 
 
