@@ -33,28 +33,15 @@ namespace repres {
 namespace reduced {
 
 Reduced::Reduced(size_t N):
-    N_(N) {
+    Gaussian(N) {
 }
 
 Reduced::Reduced(size_t N, const util::BoundingBox &bbox):
-    N_(N), bbox_(bbox) {
+    Gaussian(N, bbox) {
 }
 
 Reduced::Reduced(const param::MIRParametrisation &parametrisation):
-    bbox_(parametrisation) {
-    ASSERT(parametrisation.get("N", N_));
-
-    bool global = false;
-    parametrisation.get("global", global);  // Grib_api will work out if a gaussian is global
-
-    if (global) {
-        bbox_ = util::BoundingBox();
-    } else {
-        // Adding support for non-global gaussian grids requires atlas support
-        eckit::StrStream os;
-        os << "Non-global gaussian grid not yet supported (N=" << N_ << ", bbox=" << bbox_ << ")" << eckit::StrStream::ends;
-        throw eckit::SeriousBug(os);
-    }
+    Gaussian(parametrisation) {
 }
 
 Reduced::~Reduced() {
@@ -186,31 +173,6 @@ class GaussianIterator: public Iterator {
 Iterator *Reduced::iterator() const {
     return new GaussianIterator(latitudes(), pls());
 }
-
-
-const std::vector <double> &Reduced::latitudes() const {
-    if (latitudes_.size() == 0) {
-        if (bbox_.global()) {
-            ASSERT(pls().size() == N_ * 2);
-            latitudes_.resize(N_ * 2);
-            atlas::grids::gaussian_latitudes_npole_spole(N_, &latitudes_[0]);
-        } else {
-            std::vector<double> latitudes(N_ * 2);
-            atlas::grids::gaussian_latitudes_npole_spole(N_, &latitudes[0]);
-
-            double north = bbox_.north();
-            double south = bbox_.south();
-
-            for (size_t i = 0; i < latitudes.size(); i++) {
-                if ((latitudes[i] >= south) && (latitudes[i] <= north)) {
-                    latitudes_.push_back(latitudes[i]);
-                }
-            }
-        }
-    }
-    return latitudes_;
-}
-
 
 
 void Reduced::validate(const std::vector<double> &values) const {

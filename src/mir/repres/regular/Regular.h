@@ -16,7 +16,7 @@
 #ifndef Regular_H
 #define Regular_H
 
-#include "mir/repres/Gridded.h"
+#include "mir/repres/Gaussian.h"
 #include "mir/util/BoundingBox.h"
 
 
@@ -24,7 +24,7 @@ namespace mir {
 namespace repres {
 namespace regular {
 
-class Regular : public Gridded {
+class Regular : public Gaussian {
   public:
 
 // -- Exceptions
@@ -60,8 +60,6 @@ class Regular : public Gridded {
   protected:
 
 // -- Members
-    size_t N_;
-    util::BoundingBox bbox_;
 
 // -- Methods
 
@@ -88,12 +86,8 @@ class Regular : public Gridded {
 
 // -- Members
 
-    mutable std::vector<double> latitudes_;
-
 
 // -- Methods
-
-    const std::vector <double> &latitudes() const;
 
 
 // -- Overridden methods

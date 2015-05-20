@@ -30,8 +30,8 @@ namespace mir {
 namespace repres {
 namespace regular {
 
-Regular::Regular(const param::MIRParametrisation &parametrisation) {
-    ASSERT(parametrisation.get("N", N_));
+Regular::Regular(const param::MIRParametrisation &parametrisation):
+    Gaussian(parametrisation) {
 
     // Only global input supported...
 
@@ -45,14 +45,13 @@ Regular::Regular(const param::MIRParametrisation &parametrisation) {
 }
 
 Regular::Regular(size_t N):
-    N_(N) {
+    Gaussian(N) {
 
 }
 
 
 Regular::Regular(size_t N, const util::BoundingBox &bbox):
-    N_(N),
-    bbox_(bbox) {
+    Gaussian(N, bbox) {
 
 }
 
@@ -168,32 +167,6 @@ class RegularIterator: public Iterator {
 Iterator *Regular::iterator() const {
     return new RegularIterator(latitudes(), N_);
 }
-
-
-
-// Same code as Gaussian.cc, TODO: factorise
-const std::vector <double> &Regular::latitudes() const {
-    if (latitudes_.size() == 0) {
-        if (bbox_.global()) {
-            latitudes_.resize(N_ * 2);
-            atlas::grids::gaussian_latitudes_npole_spole(N_, &latitudes_[0]);
-        } else {
-            std::vector<double> latitudes(N_ * 2);
-            atlas::grids::gaussian_latitudes_npole_spole(N_, &latitudes[0]);
-
-            double north = bbox_.north();
-            double south = bbox_.south();
-
-            for (size_t i = 0; i < latitudes.size(); i++) {
-                if ((latitudes[i] >= south) && (latitudes[i] <= north)) {
-                    latitudes_.push_back(latitudes[i]);
-                }
-            }
-        }
-    }
-    return latitudes_;
-}
-
 
 
 }  // namespace regular

@@ -13,18 +13,18 @@
 /// @date Apr 2015
 
 
-#ifndef Reduced_H
-#define Reduced_H
+#ifndef Gaussian_H
+#define Gaussian_H
 
-#include "mir/repres/Gaussian.h"
+#include "mir/repres/Gridded.h"
 #include "mir/util/BoundingBox.h"
 
 
 namespace mir {
 namespace repres {
-namespace reduced {
 
-class Reduced : public Gaussian {
+
+class Gaussian : public Gridded {
   public:
 
     // -- Exceptions
@@ -32,13 +32,13 @@ class Reduced : public Gaussian {
 
     // -- Contructors
 
-    Reduced(const param::MIRParametrisation &parametrisation);
-    Reduced(size_t N);
-    Reduced(size_t N, const util::BoundingBox &);
+    Gaussian(size_t N);
+    Gaussian(size_t N, const util::BoundingBox &);
+    Gaussian(const param::MIRParametrisation &);
 
     // -- Destructor
 
-    virtual ~Reduced(); // Change to virtual if base class
+    virtual ~Gaussian(); // Change to virtual if base class
 
     // -- Convertors
     // None
@@ -61,14 +61,15 @@ class Reduced : public Gaussian {
 
     // -- Members
 
+    size_t N_;
+    util::BoundingBox bbox_;
+
     // -- Methods
 
-
-    // void print(std::ostream &) const; // Change to virtual if base class
+    const std::vector<double> &latitudes() const;
 
     // -- Overridden methods
-
-    virtual void fill(grib_info &) const;
+    // None
 
     // -- Class members
     // None
@@ -78,31 +79,17 @@ class Reduced : public Gaussian {
 
   private:
 
-
-
     // No copy allowed
 
-    Reduced(const Reduced &);
-    Reduced &operator=(const Reduced &);
+    Gaussian(const Gaussian &);
+    Gaussian &operator=(const Gaussian &);
 
     // -- Members
 
+    mutable std::vector<double> latitudes_;
+
     // -- Methods
 
-    virtual Reduced *cropped(const util::BoundingBox &bbox, const std::vector<long> &) const ;
-
-
-    virtual const std::vector<long> &pls() const = 0;
-    virtual Iterator *iterator() const;
-
-
-    // -- Overridden methods
-
-    Gridded *cropped(const util::BoundingBox &bbox) const ;
-    void validate(const std::vector<double> &values) const;
-
-
-    // Representation *crop(const util::BoundingBox &bbox, const std::vector<double> &in, std::vector<double> &out) const;
 
 
     // -- Class members
@@ -113,12 +100,12 @@ class Reduced : public Gaussian {
 
     // -- Friends
 
-    //friend ostream& operator<<(ostream& s,const Reduced& p)
+    //friend ostream& operator<<(ostream& s,const Gaussian& p)
     //  { p.print(s); return s; }
 
 };
 
-}  // namespace
+
 }  // namespace repres
 }  // namespace mir
 #endif
