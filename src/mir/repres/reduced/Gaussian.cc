@@ -112,7 +112,6 @@ void Gaussian::fill(grib_info &info) const  {
 }
 
 class GaussianIterator: public Iterator {
-    size_t N_;
     std::vector<double> latitudes_;
     const std::vector<long> &pl_;
     // double north_;
@@ -158,8 +157,7 @@ class GaussianIterator: public Iterator {
     }
 
   public:
-    GaussianIterator(size_t N, const std::vector <double> &latitudes, const std::vector<long> &pl):
-        N_(N),
+    GaussianIterator(const std::vector <double> &latitudes, const std::vector<long> &pl):
         latitudes_(latitudes),
         pl_(pl),
         west_(0),
@@ -186,7 +184,7 @@ class GaussianIterator: public Iterator {
 };
 
 Iterator *Gaussian::iterator() const {
-    return new GaussianIterator(N_, latitudes(), pls());
+    return new GaussianIterator(latitudes(), pls());
 }
 
 
