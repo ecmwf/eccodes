@@ -16,7 +16,7 @@
 #ifndef Classic_H
 #define Classic_H
 
-#include "mir/repres/reduced/Gaussian.h"
+#include "mir/repres/reduced/Reduced.h"
 #include "mir/util/BoundingBox.h"
 
 
@@ -24,7 +24,7 @@ namespace mir {
 namespace repres {
 namespace reduced {
 
-class Classic : public Gaussian {
+class Classic : public Reduced {
   public:
 
     // -- Exceptions

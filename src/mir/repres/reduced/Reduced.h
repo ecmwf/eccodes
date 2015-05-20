@@ -13,8 +13,8 @@
 /// @date Apr 2015
 
 
-#ifndef Gaussian_H
-#define Gaussian_H
+#ifndef Reduced_H
+#define Reduced_H
 
 #include "mir/repres/Gridded.h"
 #include "mir/util/BoundingBox.h"
@@ -24,7 +24,7 @@ namespace mir {
 namespace repres {
 namespace reduced {
 
-class Gaussian : public Gridded {
+class Reduced : public Gridded {
   public:
 
     // -- Exceptions
@@ -32,13 +32,13 @@ class Gaussian : public Gridded {
 
     // -- Contructors
 
-    Gaussian(const param::MIRParametrisation &parametrisation);
-    Gaussian(size_t N);
-    Gaussian(size_t N, const util::BoundingBox &);
+    Reduced(const param::MIRParametrisation &parametrisation);
+    Reduced(size_t N);
+    Reduced(size_t N, const util::BoundingBox &);
 
     // -- Destructor
 
-    virtual ~Gaussian(); // Change to virtual if base class
+    virtual ~Reduced(); // Change to virtual if base class
 
     // -- Convertors
     // None
@@ -85,8 +85,8 @@ class Gaussian : public Gridded {
 
     // No copy allowed
 
-    Gaussian(const Gaussian &);
-    Gaussian &operator=(const Gaussian &);
+    Reduced(const Reduced &);
+    Reduced &operator=(const Reduced &);
 
     // -- Members
 
@@ -95,7 +95,7 @@ class Gaussian : public Gridded {
     // -- Methods
 
     const std::vector<double>& latitudes() const;
-    virtual Gaussian *cropped(const util::BoundingBox &bbox, const std::vector<long> &) const ;
+    virtual Reduced *cropped(const util::BoundingBox &bbox, const std::vector<long> &) const ;
 
 
     virtual const std::vector<long> &pls() const = 0;
@@ -119,7 +119,7 @@ class Gaussian : public Gridded {
 
     // -- Friends
 
-    //friend ostream& operator<<(ostream& s,const Gaussian& p)
+    //friend ostream& operator<<(ostream& s,const Reduced& p)
     //  { p.print(s); return s; }
 
 };

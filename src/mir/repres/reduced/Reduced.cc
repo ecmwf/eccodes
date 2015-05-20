@@ -12,7 +12,7 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
-#include "mir/repres/reduced/Gaussian.h"
+#include "mir/repres/reduced/Reduced.h"
 
 // #include "atlas/Grid.h"
 // #include "atlas/grids/grids.h"
@@ -32,15 +32,15 @@ namespace mir {
 namespace repres {
 namespace reduced {
 
-Gaussian::Gaussian(size_t N):
+Reduced::Reduced(size_t N):
     N_(N) {
 }
 
-Gaussian::Gaussian(size_t N, const util::BoundingBox &bbox):
+Reduced::Reduced(size_t N, const util::BoundingBox &bbox):
     N_(N), bbox_(bbox) {
 }
 
-Gaussian::Gaussian(const param::MIRParametrisation &parametrisation):
+Reduced::Reduced(const param::MIRParametrisation &parametrisation):
     bbox_(parametrisation) {
     ASSERT(parametrisation.get("N", N_));
 
@@ -57,7 +57,7 @@ Gaussian::Gaussian(const param::MIRParametrisation &parametrisation):
     }
 }
 
-Gaussian::~Gaussian() {
+Reduced::~Reduced() {
 }
 
 inline void between_0_and_360(double &x) {
@@ -69,7 +69,7 @@ inline void between_0_and_360(double &x) {
     }
 }
 
-void Gaussian::fill(grib_info &info) const  {
+void Reduced::fill(grib_info &info) const  {
 
     // See copy_spec_from_ksec.c in libemos for info
 
@@ -183,12 +183,12 @@ class GaussianIterator: public Iterator {
 
 };
 
-Iterator *Gaussian::iterator() const {
+Iterator *Reduced::iterator() const {
     return new GaussianIterator(latitudes(), pls());
 }
 
 
-const std::vector <double> &Gaussian::latitudes() const {
+const std::vector <double> &Reduced::latitudes() const {
     if (latitudes_.size() == 0) {
         if (bbox_.global()) {
             ASSERT(pls().size() == N_ * 2);
@@ -213,7 +213,7 @@ const std::vector <double> &Gaussian::latitudes() const {
 
 
 
-void Gaussian::validate(const std::vector<double> &values) const {
+void Reduced::validate(const std::vector<double> &values) const {
 
     if (bbox_.global()) {
         const std::vector<long> &pl = pls();
@@ -234,14 +234,14 @@ void Gaussian::validate(const std::vector<double> &values) const {
             }
         }
 
-        eckit::Log::info() << "Gaussian::validate " << values.size() << " " << count << std::endl;
+        eckit::Log::info() << "Reduced::validate " << values.size() << " " << count << std::endl;
 
         ASSERT(values.size() == count);
     }
 }
 
 
-Gridded *Gaussian::cropped(const util::BoundingBox &bbox) const  {
+Gridded *Reduced::cropped(const util::BoundingBox &bbox) const  {
     const std::vector<long> &pl = pls();
     std::vector<long> newpl;
     newpl.reserve(pl.size());
@@ -261,9 +261,9 @@ Gridded *Gaussian::cropped(const util::BoundingBox &bbox) const  {
     return cropped(bbox, newpl);
 }
 
-Gaussian *Gaussian::cropped(const util::BoundingBox &bbox, const std::vector<long> &) const {
+Reduced *Reduced::cropped(const util::BoundingBox &bbox, const std::vector<long> &) const {
     eckit::StrStream os;
-    os << "Gaussian::cropped() not implemented for " << *this << eckit::StrStream::ends;
+    os << "Reduced::cropped() not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
 }
 

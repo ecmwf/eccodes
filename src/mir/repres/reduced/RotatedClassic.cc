@@ -56,7 +56,7 @@ atlas::Grid *RotatedClassic::atlasGrid() const {
                                          rotation_.south_pole_rotation_angle());
 }
 
-Gaussian *RotatedClassic::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
+Reduced *RotatedClassic::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
     // We lose the RotatedClassic nature of the grid
     return new RotatedFromPL(N_, pl, bbox, rotation_);
 }

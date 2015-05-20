@@ -16,7 +16,7 @@
 #ifndef FromPL_H
 #define FromPL_H
 
-#include "mir/repres/reduced/Gaussian.h"
+#include "mir/repres/reduced/Reduced.h"
 #include "mir/util/BoundingBox.h"
 
 
@@ -24,7 +24,7 @@ namespace mir {
 namespace repres {
 namespace reduced {
 
-class FromPL : public Gaussian {
+class FromPL : public Reduced {
   public:
 
     // -- Exceptions

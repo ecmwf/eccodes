@@ -93,7 +93,7 @@ class ReducedFromPL : public FromPL {
     // -- Overridden methods
 
     virtual Representation *clone() const;
-    virtual Gaussian *cropped(const util::BoundingBox &bbox, const std::vector<long> &) const ;
+    virtual Reduced *cropped(const util::BoundingBox &bbox, const std::vector<long> &) const ;
 
     // -- Class members
     // None

@@ -64,7 +64,7 @@ atlas::Grid *RotatedFromPL::atlasGrid() const {
 }
 
 
-Gaussian *RotatedFromPL::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
+Reduced *RotatedFromPL::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
     return new RotatedFromPL(N_, pl, bbox, rotation_);
 }
 

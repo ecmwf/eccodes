@@ -24,7 +24,7 @@ namespace repres {
 namespace reduced {
 
 
-FromPL::FromPL(const param::MIRParametrisation &parametrisation): Gaussian(parametrisation) {
+FromPL::FromPL(const param::MIRParametrisation &parametrisation): Reduced(parametrisation) {
     ASSERT(parametrisation.get("pl", pl_));
 }
 
@@ -32,13 +32,13 @@ FromPL::~FromPL() {
 }
 
 FromPL::FromPL(size_t N, const std::vector<long> &pl, const util::BoundingBox &bbox):
-    Gaussian(N, bbox),
+    Reduced(N, bbox),
     pl_(pl) {
 
 }
 
 void FromPL::fill(grib_info &info) const  {
-    Gaussian::fill(info);
+    Reduced::fill(info);
 }
 
 atlas::Grid *FromPL::atlasGrid() const {

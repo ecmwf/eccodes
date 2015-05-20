@@ -16,7 +16,7 @@
 #ifndef Octahedral_H
 #define Octahedral_H
 
-#include "mir/repres/reduced/Gaussian.h"
+#include "mir/repres/reduced/Reduced.h"
 #include "mir/util/BoundingBox.h"
 
 
@@ -24,7 +24,7 @@ namespace mir {
 namespace repres {
 namespace reduced {
 
-class Octahedral : public Gaussian {
+class Octahedral : public Reduced {
   public:
 
     // -- Exceptions

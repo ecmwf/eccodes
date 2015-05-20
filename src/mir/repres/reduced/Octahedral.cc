@@ -23,7 +23,7 @@ namespace reduced {
 
 
 Octahedral::Octahedral(size_t N):
-    Gaussian(N) {
+    Reduced(N) {
 
 }
 
@@ -31,7 +31,7 @@ Octahedral::~Octahedral() {
 }
 
 Octahedral::Octahedral(long N, const util::BoundingBox &bbox):
-    Gaussian(N, bbox) {
+    Reduced(N, bbox) {
 
 }
 
@@ -49,7 +49,7 @@ const std::vector<long>& Octahedral::pls() const {
 }
 
 void Octahedral::fill(grib_info &info) const  {
-    Gaussian::fill(info);
+    Reduced::fill(info);
 
 }
 

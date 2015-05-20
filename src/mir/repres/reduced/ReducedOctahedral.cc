@@ -42,7 +42,7 @@ void ReducedOctahedral::print(std::ostream &out) const {
     out << "ReducedGGOctahedral[N" << N_ << ",bbox=" << bbox_ << "]";
 }
 
-Gaussian *ReducedOctahedral::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
+Reduced *ReducedOctahedral::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
     // We lose the ReducedOctahedral nature of the grid
     return new ReducedFromPL(N_, pl, bbox);
 }

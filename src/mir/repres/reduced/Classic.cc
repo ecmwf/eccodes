@@ -25,7 +25,7 @@ namespace repres {
 namespace reduced {
 
 Classic::Classic(size_t N):
-    Gaussian(N) {
+    Reduced(N) {
 
 }
 
@@ -33,12 +33,12 @@ Classic::~Classic() {
 }
 
 Classic::Classic(size_t N, const util::BoundingBox &bbox):
-    Gaussian(N, bbox) {
+    Reduced(N, bbox) {
 
 }
 
 void Classic::fill(grib_info &info) const  {
-    Gaussian::fill(info);
+    Reduced::fill(info);
 // NOTE: We assume that grib_api will put the proper PL
 }
 

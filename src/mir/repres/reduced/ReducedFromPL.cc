@@ -49,7 +49,7 @@ void ReducedFromPL::print(std::ostream &out) const {
     out << "ReducedGGFromPL[N" << N_ << "]";
 }
 
-Gaussian *ReducedFromPL::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
+Reduced *ReducedFromPL::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
     return new ReducedFromPL(N_, pl, bbox);
 }
 
