@@ -34,7 +34,7 @@ RegularGG::RegularGG(size_t N):
 }
 
 
-RegularGG::RegularGG(size_t N, const util::BoundingBox& bbox):
+RegularGG::RegularGG(size_t N, const util::BoundingBox &bbox):
     Regular(N, bbox) {
 }
 
@@ -48,6 +48,10 @@ RegularGG::~RegularGG() {
 
 void RegularGG::print(std::ostream &out) const {
     out << "RegularGG[N" << N_ << ",bbox=" << bbox_ << "]";
+}
+
+Gridded *RegularGG::cropped(const util::BoundingBox &bbox) const {
+    return new RegularGG(N_, bbox);
 }
 
 

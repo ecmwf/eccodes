@@ -33,8 +33,8 @@ class RegularGG : public Regular {
 // -- Contructors
 
     RegularGG(const param::MIRParametrisation&);
-    RegularGG(size_t);
-    RegularGG(size_t, const util::BoundingBox&);
+    RegularGG(size_t N);
+    RegularGG(size_t N, const util::BoundingBox&);
 
 // -- Destructor
 
@@ -96,6 +96,8 @@ class RegularGG : public Regular {
     //virtual void fill(grib_info&) const;
     //virtual atlas::Grid* atlasGrid() const;
     virtual Representation *clone() const;
+    virtual Gridded* cropped(const util::BoundingBox &bbox) const;
+
     //virtual void validate(const std::vector<double>&) const;
 
 

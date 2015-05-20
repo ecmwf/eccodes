@@ -33,8 +33,8 @@ class Regular : public Gridded {
 // -- Contructors
 
     Regular(const param::MIRParametrisation&);
-    Regular(size_t);
-    Regular(size_t, const util::BoundingBox& bbox);
+    Regular(size_t N);
+    Regular(size_t N, const util::BoundingBox& bbox);
 
 // -- Destructor
 
@@ -63,7 +63,6 @@ class Regular : public Gridded {
     size_t N_;
     util::BoundingBox bbox_;
 
-
 // -- Methods
 
     virtual void fill(grib_info&) const;
@@ -89,15 +88,18 @@ class Regular : public Gridded {
 
 // -- Members
 
+    mutable std::vector<double> latitudes_;
 
 
 // -- Methods
-    // None
+
+    const std::vector <double> &latitudes() const;
 
 
 // -- Overridden methods
 
     virtual void validate(const std::vector<double>&) const;
+    virtual Iterator *iterator() const;
 
 
 // -- Class members
