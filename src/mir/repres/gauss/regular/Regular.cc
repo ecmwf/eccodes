@@ -98,18 +98,31 @@ atlas::Grid *Regular::atlasGrid() const {
 
 
 void Regular::validate(const std::vector<double> &values) const {
-    // FIXME: This does not work for non-global bbox
-    size_t nj = N_ * 2;
-    size_t ni = (bbox_.east() - bbox_.west()) / (90.0 / N_);
-    ASSERT(values.size() == ni * nj);
+    if (bbox_.global()) {
+        ASSERT(values.size() == (N_ * 2) * (N_ * 4));
+    } else {
+        std::auto_ptr<Iterator> it(iterator());
+        double lat;
+        double lon;
+
+        size_t count = 0;
+        while (it->next(lat, lon)) {
+            if (bbox_.contains(lat, lon)) {
+                count++;
+            }
+        }
+
+        eckit::Log::info() << "Reduced::validate " << values.size() << " " << count << std::endl;
+
+        ASSERT(values.size() == count);
+    }
 }
 
 
 class RegularIterator: public Iterator {
+
     std::vector<double> latitudes_;
-    // double north_;
-    double west_;
-    // double ns_;
+    util::BoundingBox bbox_;
 
     size_t ni_;
     size_t nj_;
@@ -126,16 +139,17 @@ class RegularIterator: public Iterator {
     }
 
     virtual bool next(double &lat, double &lon) {
-        if (j_ < nj_) {
-            if (i_ < ni_) {
-                lat = latitudes_[j_];
-                lon = west_ + (i_ * 360.0) / ni_;
-                i_++;
-                if (i_ == ni_) {
+        while (j_ < nj_ && i_ < ni_) {
+            lat = latitudes_[j_];
+            lon = (i_ * 360.0) / ni_;
+            i_++;
+            if (i_ == ni_) {
 
-                    j_++;
-                    i_ = 0;
-                }
+                j_++;
+                i_ = 0;
+            }
+
+            if (bbox_.contains(lat, lon)) {
                 count_++;
                 return true;
             }
@@ -144,28 +158,31 @@ class RegularIterator: public Iterator {
     }
 
   public:
-    RegularIterator(const std::vector <double> &latitudes, size_t N):
+
+    // TODO: Consider keeping a reference on the latitudes and bbox, to avoid copying
+
+    RegularIterator(const std::vector <double> &latitudes, size_t N, const util::BoundingBox &bbox):
         latitudes_(latitudes),
-        west_(0),
         i_(0),
         j_(0),
         ni_(N * 4),
         nj_(N * 2),
         count_(0),
-        total_(0) {
-
+        total_(0),
+        bbox_(bbox) {
+        std::cout << latitudes_.size() << " nj " << nj_ << std::endl;
         ASSERT(latitudes_.size() == nj_);
 
     }
 
     ~RegularIterator() {
-        ASSERT(count_ == ni_ * nj_);
+        // ASSERT(count_ == ni_ * nj_);
     }
 
 };
 
 Iterator *Regular::iterator() const {
-    return new RegularIterator(latitudes(), N_);
+    return new RegularIterator(latitudes(), N_, bbox_);
 }
 
 

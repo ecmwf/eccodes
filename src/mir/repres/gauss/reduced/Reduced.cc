@@ -68,7 +68,7 @@ void Reduced::fill(grib_info &info) const  {
 
     // FIXME C-style cast should be removed in a const-correct version of grib_api
     // (currently unstable)
-    info.grid.pl = (long int*) &pl[0];
+    info.grid.pl = (long int *) &pl[0];
     info.grid.pl_size = pl.size();
 
     bbox_.fill(info);
@@ -101,9 +101,7 @@ void Reduced::fill(grib_info &info) const  {
 class GaussianIterator: public Iterator {
     std::vector<double> latitudes_;
     const std::vector<long> &pl_;
-    // double north_;
-    double west_;
-    // double ns_;
+    util::BoundingBox bbox_;
 
     size_t ni_;
     size_t nj_;
@@ -112,8 +110,6 @@ class GaussianIterator: public Iterator {
     size_t j_;
 
     size_t count_;
-    size_t total_;
-
 
 
     virtual void print(std::ostream &out) const {
@@ -121,57 +117,62 @@ class GaussianIterator: public Iterator {
     }
 
     virtual bool next(double &lat, double &lon) {
-        if (j_ < nj_) {
-            if (i_ < ni_) {
-                lat = latitudes_[j_];
-                lon = west_ + (i_ * 360.0) / ni_;
-                i_++;
-                if (i_ == ni_) {
+        if (j_ < nj_ && i_ < ni_) {
+            lat = latitudes_[j_];
+            lon = (i_ * 360.0) / ni_;
+            i_++;
+            if (i_ == ni_) {
 
-                    j_++;
-                    i_ = 0;
+                j_++;
+                i_ = 0;
 
-                    if (j_ < nj_) {
-                        ni_ = pl_[j_];
-                    }
-
+                if (j_ < nj_) {
+                    ni_ = pl_[j_];
                 }
-                count_++;
-                return true;
+
             }
+            count_++;
+            return bbox_.contains(lat, lon);
         }
         return false;
     }
 
   public:
-    GaussianIterator(const std::vector <double> &latitudes, const std::vector<long> &pl):
+
+    // TODO: Consider keeping a reference on the latitudes and bbox, to avoid copying
+
+    GaussianIterator(const std::vector <double> &latitudes, const std::vector<long> &pl, const util::BoundingBox &bbox):
         latitudes_(latitudes),
         pl_(pl),
-        west_(0),
+        bbox_(bbox),
         i_(0),
         j_(0),
-        count_(0),
-        total_(0) {
+        count_(0) {
 
-        ASSERT(pl_.size());
-        ASSERT(latitudes_.size() == pl_.size());
+        // lattitude_ covers the whole globe, while pl_ covers only the current bbox_
+        ASSERT(pl_.size() <= latitudes_.size());
+
+        // Position to first latitude
+        while (j_ < latitudes_.size() && bbox_.north() < latitudes_[j_]) {
+            j_++;
+        }
+        ASSERT(j_ < latitudes_.size());
 
         ni_ = pl_[0];
         nj_ = pl_.size();
 
-        for (size_t i = 0; i < pl_.size(); i++) {
-            total_ += pl_[i];
-        }
+
     }
 
     ~GaussianIterator() {
+        std::cout << "~GaussianIterator " << count_ << std::endl;
         // ASSERT(count_ == ni_ * nj_);
     }
 
 };
 
 Iterator *Reduced::iterator() const {
-    return new GaussianIterator(latitudes(), pls());
+    return new GaussianIterator(latitudes(), pls(), bbox_);
 }
 
 
@@ -185,20 +186,20 @@ void Reduced::validate(const std::vector<double> &values) const {
         }
         ASSERT(values.size() == count);
     } else {
-        std::auto_ptr<Iterator> it(iterator());
-        double lat;
-        double lon;
+        // std::auto_ptr<Iterator> it(iterator());
+        // double lat;
+        // double lon;
 
-        size_t count = 0;
-        while (it->next(lat, lon)) {
-            if (bbox_.contains(lat, lon)) {
-                count++;
-            }
-        }
+        // size_t count = 0;
+        // while (it->next(lat, lon)) {
+        //     if (bbox_.contains(lat, lon)) {
+        //         count++;
+        //     }
+        // }
 
-        eckit::Log::info() << "Reduced::validate " << values.size() << " " << count << std::endl;
+        // eckit::Log::info() << "Reduced::validate " << values.size() << " " << count << std::endl;
 
-        ASSERT(values.size() == count);
+        // ASSERT(values.size() == count);
     }
 }
 
