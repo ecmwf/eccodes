@@ -12,7 +12,7 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
-#include "mir/repres/regular/Regular.h"
+#include "mir/repres/gauss/regular/Regular.h"
 
 
 #include <iostream>
@@ -98,6 +98,7 @@ atlas::Grid *Regular::atlasGrid() const {
 
 
 void Regular::validate(const std::vector<double> &values) const {
+    // FIXME: This does not work for non-global bbox
     size_t nj = N_ * 2;
     size_t ni = (bbox_.east() - bbox_.west()) / (90.0 / N_);
     ASSERT(values.size() == ni * nj);
@@ -118,7 +119,6 @@ class RegularIterator: public Iterator {
 
     size_t count_;
     size_t total_;
-
 
 
     virtual void print(std::ostream &out) const {

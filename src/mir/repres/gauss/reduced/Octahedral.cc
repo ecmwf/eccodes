@@ -12,7 +12,7 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
-#include "mir/repres/reduced/Octahedral.h"
+#include "mir/repres/gauss/reduced/Octahedral.h"
 
 #include "atlas/grids/rgg/OctahedralRGG.h"
 #include "mir/util/Grib.h"

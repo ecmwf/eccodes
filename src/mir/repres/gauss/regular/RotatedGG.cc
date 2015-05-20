@@ -12,54 +12,62 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
-#include "mir/repres/reduced/RotatedClassic.h"
+#include "mir/repres/gauss/regular/RotatedGG.h"
 
 #include <iostream>
 
 #include "mir/util/Grib.h"
 #include "atlas/grids/RotatedGrid.h"
-#include "mir/repres/reduced/RotatedFromPL.h"
 
 namespace mir {
 namespace repres {
-namespace reduced {
+namespace regular {
 
 
-
-RotatedClassic::~RotatedClassic() {
+RotatedGG::RotatedGG(const param::MIRParametrisation &parametrisation):
+    Regular(parametrisation),
+    rotation_(parametrisation) {
 }
 
-RotatedClassic::RotatedClassic(long N, const util::BoundingBox &bbox, const util::Rotation& rotation):
-    Classic(N, bbox_),
+
+RotatedGG::~RotatedGG() {
+}
+
+RotatedGG::RotatedGG(size_t N, const util::BoundingBox &bbox, const util::Rotation& rotation):
+    Regular(N, bbox),
     rotation_(rotation) {
-
 }
 
-Representation *RotatedClassic::clone() const {
-    return new RotatedClassic(N_, bbox_, rotation_);
+Representation *RotatedGG::clone() const {
+    return new RotatedGG(N_, bbox_, rotation_);
 }
 
-void RotatedClassic::print(std::ostream &out) const {
-    out << "RotatedGGClassic[N" << N_ << ",bbox=" << bbox_ << ",rotation=" << rotation_  << "]";
+void RotatedGG::print(std::ostream &out) const {
+    out << "RotatedGG[N" << N_ << ",bbox=" << bbox_ << ",rotation" << rotation_ << "]";
 }
 
-void RotatedClassic::fill(grib_info &info) const  {
-    Classic::fill(info);
+void RotatedGG::fill(grib_info &info) const  {
+    Regular::fill(info);
     rotation_.fill(info);
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_GG;
 }
 
-atlas::Grid *RotatedClassic::atlasGrid() const {
-    return new atlas::grids::RotatedGrid(Classic::atlasGrid(),
+atlas::Grid *RotatedGG::atlasGrid() const {
+    return new atlas::grids::RotatedGrid(Regular::atlasGrid(),
                                          rotation_.south_pole_latitude(),
                                          rotation_.south_pole_longitude(),
                                          rotation_.south_pole_rotation_angle());
 }
 
-Reduced *RotatedClassic::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
-    // We lose the RotatedClassic nature of the grid
-    return new RotatedFromPL(N_, pl, bbox, rotation_);
+
+namespace {
+static RepresentationBuilder<RotatedGG> rotatedGG("rotated_gg"); // Name is what is returned by grib_api
 }
+
+
+// namespace {
+// static RepresentationBuilder<RotatedGG> reducedGGFromPL("reduced_gg"); // Name is what is returned by grib_api
+// }
 
 }  // namespace reduced
 }  // namespace repres

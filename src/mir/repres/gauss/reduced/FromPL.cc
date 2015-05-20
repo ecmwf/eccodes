@@ -12,7 +12,7 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
-#include "mir/repres/reduced/FromPL.h"
+#include "mir/repres/gauss/reduced/FromPL.h"
 
 #include "atlas/grids/ReducedGaussianGrid.h"
 #include "eckit/exception/Exceptions.h"

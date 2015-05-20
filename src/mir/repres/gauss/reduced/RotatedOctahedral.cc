@@ -12,13 +12,13 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
-#include "mir/repres/reduced/RotatedOctahedral.h"
+#include "mir/repres/gauss/reduced/RotatedOctahedral.h"
 
 #include <iostream>
 
 #include "mir/util/Grib.h"
 #include "atlas/grids/RotatedGrid.h"
-#include "mir/repres/reduced/RotatedFromPL.h"
+#include "mir/repres/gauss/reduced/RotatedFromPL.h"
 
 namespace mir {
 namespace repres {

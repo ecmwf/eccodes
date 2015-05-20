@@ -12,7 +12,7 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
-#include "mir/repres/reduced/Reduced.h"
+#include "mir/repres/gauss/reduced/Reduced.h"
 
 // #include "atlas/Grid.h"
 // #include "atlas/grids/grids.h"

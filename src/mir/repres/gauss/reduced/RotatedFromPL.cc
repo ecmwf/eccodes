@@ -12,7 +12,7 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
-#include "mir/repres/reduced/RotatedFromPL.h"
+#include "mir/repres/gauss/reduced/RotatedFromPL.h"
 
 #include <iostream>
 
