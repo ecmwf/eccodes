@@ -68,7 +68,7 @@ void Regular::fill(grib_info &info) const  {
 
     double we = 90.0 / N_; // FIXME: Just a guess
 
-    info.grid.Ni = computeN(bbox_.west(), bbox_.east(), we, "ni", "west", "east");
+    info.grid.Ni = computeN(bbox_.west(), bbox_.east(), we, "Ni", "west", "east");
     info.grid.N = N_;
     info.grid.iDirectionIncrementInDegrees = we;
 
