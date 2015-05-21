@@ -172,7 +172,7 @@ class GaussianIterator: public Iterator {
         ni_ = pl_[p_++];
         nj_ = pl_.size();
 
-        eckit::Log::info() << "GaussianIterator ni=" << ni_ << " nj=" << nj_ << " j=" << j_ << " " << bbox_ << std::endl;
+        // eckit::Log::info() << "GaussianIterator ni=" << ni_ << " nj=" << nj_ << " j=" << j_ << " " << bbox_ << std::endl;
 
 
     }

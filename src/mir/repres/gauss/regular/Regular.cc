@@ -67,10 +67,8 @@ void Regular::fill(grib_info &info) const  {
     info.grid.Nj = N_ * 2;
 
     double we = 90.0 / N_; // FIXME: Just a guess
-    double ni = (bbox_.east() - bbox_.west()) / we;
 
-    ASSERT(long(ni) == ni);
-    info.grid.Ni = ni;
+    info.grid.Ni = computeN(bbox_.west(), bbox_.east(), we, "ni", "west", "east");
     info.grid.N = N_;
     info.grid.iDirectionIncrementInDegrees = we;
 
@@ -167,7 +165,6 @@ class RegularIterator: public Iterator {
         nj_(N * 2),
         count_(0),
         bbox_(bbox) {
-        std::cout << latitudes_.size() << " nj " << nj_ << std::endl;
         ASSERT(latitudes_.size() == nj_);
 
     }
