@@ -108,6 +108,7 @@ class GaussianIterator: public Iterator {
 
     size_t i_;
     size_t j_;
+    size_t p_;
 
     size_t count_;
 
@@ -117,7 +118,7 @@ class GaussianIterator: public Iterator {
     }
 
     virtual bool next(double &lat, double &lon) {
-        if (j_ < nj_ && i_ < ni_) {
+        while (j_ < nj_ && i_ < ni_) {
             lat = latitudes_[j_];
             lon = (i_ * 360.0) / ni_;
             i_++;
@@ -126,13 +127,18 @@ class GaussianIterator: public Iterator {
                 j_++;
                 i_ = 0;
 
-                if (j_ < nj_) {
-                    ni_ = pl_[j_];
+                if (j_ < nj_)
+                {
+                    ASSERT(p_ < pl_.size());
+                    ni_ = pl_[p_++];
                 }
 
             }
-            count_++;
-            return bbox_.contains(lat, lon);
+
+            if(bbox_.contains(lat, lon)) {
+                count_++;
+                return true;
+            }
         }
         return false;
     }
@@ -147,6 +153,7 @@ class GaussianIterator: public Iterator {
         bbox_(bbox),
         i_(0),
         j_(0),
+        p_(0),
         count_(0) {
 
         // lattitude_ covers the whole globe, while pl_ covers only the current bbox_
@@ -158,14 +165,16 @@ class GaussianIterator: public Iterator {
         }
         ASSERT(j_ < latitudes_.size());
 
-        ni_ = pl_[0];
+        ni_ = pl_[p_++];
         nj_ = pl_.size();
+
+        // eckit::Log::info() << "GaussianIterator ni=" << ni_ << " nj=" << nj_ << " j=" << j_ << " " << bbox_ << std::endl;
 
 
     }
 
     ~GaussianIterator() {
-        std::cout << "~GaussianIterator " << count_ << std::endl;
+        // std::cout << "~GaussianIterator " << count_ << std::endl;
         // ASSERT(count_ == ni_ * nj_);
     }
 
@@ -186,20 +195,20 @@ void Reduced::validate(const std::vector<double> &values) const {
         }
         ASSERT(values.size() == count);
     } else {
-        // std::auto_ptr<Iterator> it(iterator());
-        // double lat;
-        // double lon;
+        std::auto_ptr<Iterator> it(iterator());
+        double lat;
+        double lon;
 
-        // size_t count = 0;
-        // while (it->next(lat, lon)) {
-        //     if (bbox_.contains(lat, lon)) {
-        //         count++;
-        //     }
-        // }
+        size_t count = 0;
+        while (it->next(lat, lon)) {
+            if (bbox_.contains(lat, lon)) {
+                count++;
+            }
+        }
 
-        // eckit::Log::info() << "Reduced::validate " << values.size() << " " << count << std::endl;
+        eckit::Log::info() << "Reduced::validate " << values.size() << " count=" << count << std::endl;
 
-        // ASSERT(values.size() == count);
+        ASSERT(values.size() == count);
     }
 }
 

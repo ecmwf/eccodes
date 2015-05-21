@@ -131,8 +131,6 @@ class RegularIterator: public Iterator {
     size_t j_;
 
     size_t count_;
-    size_t total_;
-
 
     virtual void print(std::ostream &out) const {
         out << "RegularIterator[]";
@@ -168,7 +166,6 @@ class RegularIterator: public Iterator {
         ni_(N * 4),
         nj_(N * 2),
         count_(0),
-        total_(0),
         bbox_(bbox) {
         std::cout << latitudes_.size() << " nj " << nj_ << std::endl;
         ASSERT(latitudes_.size() == nj_);
