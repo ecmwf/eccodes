@@ -108,6 +108,7 @@ class GaussianIterator: public Iterator {
 
     size_t i_;
     size_t j_;
+    size_t k_;
     size_t p_;
 
     size_t count_;
@@ -119,7 +120,7 @@ class GaussianIterator: public Iterator {
 
     virtual bool next(double &lat, double &lon) {
         while (j_ < nj_ && i_ < ni_) {
-            lat = latitudes_[j_];
+            lat = latitudes_[j_ + k_];
             lon = (i_ * 360.0) / ni_;
             i_++;
             if (i_ == ni_) {
@@ -134,6 +135,8 @@ class GaussianIterator: public Iterator {
                 }
 
             }
+
+            // eckit::Log::info() << "++++++ " << lat << " " << lon << " - " << bbox_ << " -> " << bbox_.contains(lat, lon) << std::endl;
 
             if(bbox_.contains(lat, lon)) {
                 count_++;
@@ -153,6 +156,7 @@ class GaussianIterator: public Iterator {
         bbox_(bbox),
         i_(0),
         j_(0),
+        k_(0),
         p_(0),
         count_(0) {
 
@@ -160,15 +164,15 @@ class GaussianIterator: public Iterator {
         ASSERT(pl_.size() <= latitudes_.size());
 
         // Position to first latitude
-        while (j_ < latitudes_.size() && bbox_.north() < latitudes_[j_]) {
-            j_++;
+        while (k_ < latitudes_.size() && bbox_.north() < latitudes_[k_]) {
+            k_++;
         }
         ASSERT(j_ < latitudes_.size());
 
         ni_ = pl_[p_++];
         nj_ = pl_.size();
 
-        // eckit::Log::info() << "GaussianIterator ni=" << ni_ << " nj=" << nj_ << " j=" << j_ << " " << bbox_ << std::endl;
+        eckit::Log::info() << "GaussianIterator ni=" << ni_ << " nj=" << nj_ << " j=" << j_ << " " << bbox_ << std::endl;
 
 
     }
@@ -201,6 +205,7 @@ void Reduced::validate(const std::vector<double> &values) const {
 
         size_t count = 0;
         while (it->next(lat, lon)) {
+            std::cout << "===> " << lat << " - " << lon << std::endl;
             if (bbox_.contains(lat, lon)) {
                 count++;
             }
