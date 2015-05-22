@@ -64,13 +64,23 @@ void Regular::fill(grib_info &info) const  {
     // See copy_spec_from_ksec.c in libemos for info
 
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_GG;
-    info.grid.Nj = N_ * 2;
 
-    double we = 90.0 / N_; // FIXME: Just a guess
-
-    info.grid.Ni = computeN(bbox_.west(), bbox_.east(), we, "Ni", "west", "east");
     info.grid.N = N_;
-    info.grid.iDirectionIncrementInDegrees = we;
+    info.grid.iDirectionIncrementInDegrees = 90.0 / N_;
+
+    if (bbox_.global()) {
+        info.grid.Nj = N_ * 2;
+        info.grid.Ni = N_ * 4;
+    } else {
+        info.grid.Ni = computeN(bbox_.west(), bbox_.east(), info.grid.iDirectionIncrementInDegrees, "Ni", "west", "east");
+        const std::vector<double> &lats = latitudes();
+        info.grid.Nj = 0;
+        for (size_t i = 0; i < lats.size(); i++) {
+            if ( util::BoundingBox::greater_equal(bbox_.north(), lats[i]) && util::BoundingBox::greater_equal(lats[i], bbox_.south())) {
+                info.grid.Nj++;
+            }
+        }
+    }
 
     bbox_.fill(info);
 
