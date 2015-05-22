@@ -205,7 +205,6 @@ void Reduced::validate(const std::vector<double> &values) const {
 
         size_t count = 0;
         while (it->next(lat, lon)) {
-            std::cout << "===> " << lat << " - " << lon << std::endl;
             if (bbox_.contains(lat, lon)) {
                 count++;
             }
