@@ -119,9 +119,6 @@ void Regular::validate(const std::vector<double> &values) const {
 
 class RegularIterator: public Iterator {
 
-    std::vector<double> latitudes_;
-    util::BoundingBox bbox_;
-
     size_t ni_;
     size_t nj_;
 
@@ -129,6 +126,9 @@ class RegularIterator: public Iterator {
     size_t j_;
 
     size_t count_;
+
+    util::BoundingBox bbox_;
+    std::vector<double> latitudes_;
 
     virtual void print(std::ostream &out) const {
         out << "RegularIterator[]";
@@ -158,13 +158,13 @@ class RegularIterator: public Iterator {
     // TODO: Consider keeping a reference on the latitudes and bbox, to avoid copying
 
     RegularIterator(const std::vector <double> &latitudes, size_t N, const util::BoundingBox &bbox):
-        latitudes_(latitudes),
-        i_(0),
-        j_(0),
         ni_(N * 4),
         nj_(N * 2),
+        i_(0),
+        j_(0),
         count_(0),
-        bbox_(bbox) {
+        bbox_(bbox),
+        latitudes_(latitudes) {
         ASSERT(latitudes_.size() == nj_);
 
     }
