@@ -230,6 +230,7 @@ size_t LatLon::frame(std::vector<double> &values, size_t size, double missingVal
 }
 
 void LatLon::validate(const std::vector<double> &values) const {
+    eckit::Log::info() << "LatLon::validate " << values.size() << " ni*nj " << ni_ * nj_ << std::endl;
     ASSERT(values.size() == ni_ * nj_);
 }
 
