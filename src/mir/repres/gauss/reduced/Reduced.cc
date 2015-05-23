@@ -128,8 +128,7 @@ class GaussianIterator: public Iterator {
                 j_++;
                 i_ = 0;
 
-                if (j_ < nj_)
-                {
+                if (j_ < nj_) {
                     ASSERT(p_ < pl_.size());
                     ni_ = pl_[p_++];
                 }
