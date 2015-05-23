@@ -95,24 +95,21 @@ void GribOutput::save(const param::MIRParametrisation &parametrisation, input::M
 
     field.representation()->fill(info);
 
-    bool u_component = false;
-    parametrisation.get("u-component", u_component);
+    long u_component = 0;
 
-    bool v_component = false;
-    parametrisation.get("v-component", v_component);
-
-    if (u_component) {
+    if (parametrisation.get("u-component", u_component)) {
         int n = info.packing.extra_settings_count++;
         info.packing.extra_settings[n].name = "paramId";
         info.packing.extra_settings[n].type = GRIB_TYPE_LONG;
-        info.packing.extra_settings[n].long_value = 131; // Find something better
+        info.packing.extra_settings[n].long_value = u_component;
     }
 
-    if (v_component) {
+    long v_component = 0;
+    if (parametrisation.get("v-component", v_component)) {
         int n = info.packing.extra_settings_count++;
         info.packing.extra_settings[n].name = "paramId";
         info.packing.extra_settings[n].type = GRIB_TYPE_LONG;
-        info.packing.extra_settings[n].long_value = 132;// Find something better
+        info.packing.extra_settings[n].long_value = v_component;
     }
 
     std::string packing;
