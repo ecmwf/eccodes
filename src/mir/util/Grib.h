@@ -19,8 +19,7 @@
 
 #include <grib_api.h>
 
-
-static bool grib_call(int e, const char *call, bool missingOK = false) {
+inline bool grib_call(int e, const char *call, bool missingOK = false) {
     if (e) {
         if(missingOK && (e == GRIB_NOT_FOUND)) {
             return false;
