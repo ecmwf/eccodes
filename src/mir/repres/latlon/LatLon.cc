@@ -66,7 +66,7 @@ void LatLon::reorder(long scanningMode, std::vector<double> &values) const {
     // Code from ecRegrid, UNTESTED!!!
 
     eckit::Log::info() << "WARNING: UNTESTED!!! ";
-    eckit::Log::info() << "LatLon::reorder scanning mode 0x" << std::hex << scanningMode << std::endl;
+    eckit::Log::info() << "LatLon::reorder scanning mode 0x" << std::hex << scanningMode << std::dec << std::endl;
 
     ASSERT(values.size() == ni_ * nj_);
 
