@@ -110,6 +110,9 @@ int process_file(const char* filename)
 
         angular_tolerance = get_precision(edition);
 
+        if (N <= 0) {
+            error("ERROR: N should be > 0!\n", N);
+        }
         if ( Nj != 2*N ) {
             error("ERROR: Nj is %ld but should be 2*N (%ld)!\n", Nj, 2*N);
         }
@@ -137,6 +140,7 @@ int process_file(const char* filename)
         if (is_reduced) {
             int pl_sum = 0, max_pl = 0;
             size_t i = 0, pl_len = 0;
+            long is_octahedral = 0;
             int is_missing = codes_is_missing(h, "Ni", &err);
             assert(err == CODES_SUCCESS);
             if (!is_missing) {
@@ -171,7 +175,8 @@ int process_file(const char* filename)
             if (pl_sum != numberOfDataPoints) {
                 error("ERROR: Sum of pl array %ld does not match numberOfDataPoints %ld!\n", pl_sum, numberOfDataPoints);
             }
-            if (max_pl != 4*N) {
+            CODES_CHECK(codes_get_long(h,"isOctahedral",&is_octahedral),0);
+            if (is_octahedral) {
                 printf("\tThis is an Octahedral Gaussian grid!\n");
                 expected_lon2 = 360.0 - 360.0/max_pl;
             }
