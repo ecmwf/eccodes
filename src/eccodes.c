@@ -423,7 +423,7 @@ void codes_gribex_mode_off(grib_context* c)
 
 /* keys iterator */
 /******************************************************************************/
-grib_keys_iterator* codes_keys_iterator_new(grib_handle* h,unsigned long filter_flags, char* name_space)
+grib_keys_iterator* codes_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space)
 {
     return grib_keys_iterator_new(h,filter_flags,name_space);
 }

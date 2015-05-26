@@ -991,7 +991,7 @@ attributes or by the namespace they belong to.
 *  @return              keys iterator ready to iterate through keys according to filter_flags
 *                         and namespace
 */
-codes_keys_iterator* codes_keys_iterator_new(codes_handle* h,unsigned long filter_flags, char* name_space);
+codes_keys_iterator* codes_keys_iterator_new(codes_handle* h,unsigned long filter_flags, const char* name_space);
 
 /*! Step to the next iterator.
 *  @param kiter         : valid codes_keys_iterator

@@ -1071,7 +1071,7 @@ grib_rule_entry *grib_new_rule_entry(grib_context *c, const char *name, grib_exp
 grib_rule *grib_new_rule(grib_context *c, grib_expression *condition, grib_rule_entry *entries);
 
 /* grib_keys_iterator.c */
-grib_keys_iterator *grib_keys_iterator_new(grib_handle *h, unsigned long filter_flags, char *name_space);
+grib_keys_iterator *grib_keys_iterator_new(grib_handle *h, unsigned long filter_flags, const char *name_space);
 int grib_keys_iterator_set_flags(grib_keys_iterator *ki, unsigned long flags);
 int grib_keys_iterator_rewind(grib_keys_iterator *ki);
 int grib_keys_iterator_next(grib_keys_iterator *kiter);

@@ -1219,7 +1219,7 @@ attributes or by the namespace they belong to.
 *  @return              keys iterator ready to iterate through keys according to filter_flags
 *                         and namespace
 */
-grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, char* name_space);
+grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space);
 
 /*! Step to the next iterator.
 *  @param kiter         : valid grib_keys_iterator

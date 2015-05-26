@@ -33,7 +33,7 @@ struct grib_keys_iterator{
     grib_trie     *seen;
 };
 
-grib_keys_iterator*  grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, char* name_space)
+grib_keys_iterator*  grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space)
 {
     grib_keys_iterator* ki=NULL;
 
