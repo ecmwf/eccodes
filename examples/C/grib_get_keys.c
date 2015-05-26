@@ -50,11 +50,13 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    /* create new handle from a message in a file*/
+    /* create new handle from the first message in the file*/
     h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     if (h == NULL) {
         printf("Error: unable to create handle from file %s\n",filename);
+        return 1;
     }
+    fclose(in);
 
     /* Store the filename in the key "file" for this handle */
     len = strlen(filename);
@@ -129,6 +131,6 @@ int main(int argc, char** argv)
     }
 
     codes_handle_delete(h);
-    fclose(in);
+
     return 0;
 }
