@@ -22,6 +22,7 @@
 #include "eckit/exception/Exceptions.h"
 #include "atlas/grids/GaussianLatitudes.h"
 #include "mir/repres/Iterator.h"
+#include "mir/util/Compare.h"
 
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
@@ -76,7 +77,8 @@ void Regular::fill(grib_info &info) const  {
         const std::vector<double> &lats = latitudes();
         info.grid.Nj = 0;
         for (size_t i = 0; i < lats.size(); i++) {
-            if ( util::BoundingBox::greater_equal(bbox_.north(), lats[i]) && util::BoundingBox::greater_equal(lats[i], bbox_.south())) {
+            if ( util::compare::is_approx_greater_equal(bbox_.north(), lats[i]) &&
+                util::compare::is_approx_greater_equal(lats[i], bbox_.south())) {
                 info.grid.Nj++;
             }
         }
