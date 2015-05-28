@@ -63,7 +63,7 @@ real(kind=8), dimension(:), allocatable :: year
     allocate(year(numObs))
     call codes_get(ibufr,'year',year);
     do ii= 1, size(year)
-      write(*,*) 'year(',ii,')=',year(ii)
+      write(*,'(A,I4,A,F8.1)') 'year(',ii,')=',year(ii)
     enddo
 
     !Get backScatter for beam two. We use an access by condition for this key.
