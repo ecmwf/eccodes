@@ -36,7 +36,7 @@ real(kind=8), dimension(:), allocatable :: year
 
   do while (iret/=CODES_END_OF_FILE)
 
-    write(*,*) 'message: ',count
+    write(*,'(A,I3)') 'message: ',count
 
     ! we need to instruct ecCodes to expand all the descriptors 
     ! i.e. unpack the data values
@@ -52,7 +52,7 @@ real(kind=8), dimension(:), allocatable :: year
     ! Read the total number of subsets.
     call codes_get(ibufr,'numberOfSubsets',numObs)
 
-    write(*,*) "Number of values:",numObs
+    write(*,'(A,I5)') "Number of values:",numObs
  
     !Get latitude (for all the subsets)
     call codes_get(ibufr,'latitude',latVal);

@@ -30,8 +30,8 @@ ${examples_dir}/f_bufr_read_scatterometer 2> $REDIRECT > $fTmp
 # check the results
 
 cat > $ref <<EOF 
- message:            0
- Number of values:        2016
+message:   0
+Number of values: 2016
 year(   1)=  2012.0
 year(   2)=  2012.0
 year(   3)=  2012.0
