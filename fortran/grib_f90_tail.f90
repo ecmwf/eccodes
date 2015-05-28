@@ -2232,7 +2232,7 @@
   subroutine grib_get_real8_array ( gribid, key, value, status )
       integer(kind=kindOfInt),                   intent(in)  :: gribid
       character(len=*),                          intent(in)  :: key
-      real(kind = kindOfDouble),dimension(:),allocatable,intent(out) :: value
+      real(kind = kindOfDouble),dimension(:),allocatable,intent(inout) :: value
       integer(kind=kindOfInt),optional,          intent(out) :: status
       integer(kind=kindOfInt)                                :: iret
       integer(kind=kindOfInt)                                :: nb_values
@@ -2249,7 +2249,9 @@
         endif
         return
       endif
-      if (.not.allocated(value)) allocate(value(nb_values))
+      if (allocated(value) .eqv. .false.) then
+        allocate(value(nb_values))
+      end if
       size_value=size(value)
       iret=grib_f_get_real8_array ( gribid, key, value, nb_values )
       if (iret==0 .and. nb_values==1 .and. size_value/=1) then

@@ -24,8 +24,9 @@ integer            :: ifile
 integer            :: iret
 integer            :: ibufr
 integer            :: i, count=0
-integer(kind=4)    :: numObs
+integer(kind=4)    :: numObs,ii
 real(kind=8), dimension(:), allocatable :: latVal,lonVal,bscatterVal
+real(kind=8), dimension(:), allocatable :: year
 
   call codes_open_file(ifile,'../../data/bufr/asca_139.bufr','r')
 
@@ -59,6 +60,12 @@ real(kind=8), dimension(:), allocatable :: latVal,lonVal,bscatterVal
     !Get longitude (for all the subsets)
     call codes_get(ibufr,'latitude',lonVal);
      
+    allocate(year(numObs))
+    call codes_get(ibufr,'year',year);
+    do ii= 1, size(year)
+      write(*,*) 'year(',ii,')=',year(ii)
+    enddo
+
     !Get backScatter for beam two. We use an access by condition for this key.
     !(for all the subsets)
     call codes_get(ibufr,'/beamIdentifier=2/backscatter',bscatterVal);
