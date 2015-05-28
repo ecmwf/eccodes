@@ -22,7 +22,15 @@ alias mars.expver = marsExpver;
 alias mars.class  = marsClass;
 alias mars.param = paramId;
 alias mars.model = marsModel;
+
+# See GRIB-761. For Italy, subCentre 102 is ISAC-CNR
+if (centre is "cnmc" && subCentre == 102) {
+    constant cnmc_isac = 'isac';
+    alias mars.origin = cnmc_isac;
+} else {
 alias mars.origin = centre;
+}
+
 unalias mars.domain;
 
 concept marsType {
