@@ -647,6 +647,49 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 
 #-----------------------------------------------------------
+# Test: set unexpandedDescriptors 
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+print "== unexpandedDescriptors ==";
+print "[unexpandedDescriptors!16]";
+print "== setting unexpandedDescriptors ==";
+print "309007 104000 31001 7004 8001 11061 11062 222000 101000 31002 31031 1031 1032 101000 31002 33007";
+set unexpandedDescriptors={309007, 104000, 31001, 7004, 8001, 11061, 11062, 222000, 101000, 31002, 31031, 1031, 1032, 101000, 31002, 33007 };
+write "mytemp.bufr";
+print "== unexpandedDescriptors ==";
+print "[unexpandedDescriptors!16]";
+print "== expandedDescriptors ==";
+print "[expandedDescriptors]";
+EOF
+
+f="syno_1.bufr"
+echo "Test: set unexpandedDescriptors" >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}/bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+
+${tools_dir}/bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
+cat > ${f}.ref <<EOF
+== unexpandedDescriptors ==
+307005 13023 13013 222000 101049 31031 1031 1032 101049 33007
+== setting unexpandedDescriptors ==
+309007 104000 31001 7004 8001 11061 11062 222000 101000 31002 31031 1031 1032 101000 31002 33007
+== unexpandedDescriptors ==
+309007 104000 31001 7004 8001 11061 11062 222000 101000 31002 31031 1031 1032 101000 31002 33007
+
+== expandedDescriptors ==
+1001 1002 2011 2012 4001 4002 4003 4004 
+4005 5001 6001 7001 20010 8002 20011 20013 
+20012 20012 20012 107000 31001 7004 8001 10003 
+12001 12003 11001 11002 104000 31001 7004 8001 
+11061 11062 222000 101000 31002 31031 1031 1032 
+101000 31002 33007
+EOF
+
+diff ${f}.ref ${f}.log 
+
+rm -f ${f}.ref ${f}.log
+
+#-----------------------------------------------------------
 # Test:  get string
 #-----------------------------------------------------------
 cat > $fRules <<EOF
