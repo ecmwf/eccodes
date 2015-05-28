@@ -209,21 +209,28 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 
 static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
 {
-	int ret=0,i;
-	long pos = a->offset*8;
-	unsigned long f,x,y;
+  int ret=0,i;
+  long pos = 0;
+  unsigned long f,x,y;
+  unsigned char* buf        = NULL;
+  size_t buflen=*len*2;
 
-        for (i=0;i<*len;i++) {
-	    f=val[i]/100000;
-	    x=(val[i]%100000)/1000;
-	    y=(val[i]%100000)%1000;
-            printf("f=%ld x=%ld y=%ld new=%ld\n",f,x,y,*val);
-            grib_encode_unsigned_longb(a->parent->h->buffer->data,f,&pos,2);
-            grib_encode_unsigned_longb(a->parent->h->buffer->data,x,&pos,6);
-            grib_encode_unsigned_longb(a->parent->h->buffer->data,y,&pos,8);
-        }
+  buf=grib_context_malloc_clear(a->parent->h->context,buflen);
 
-	return ret;
+
+  for (i=0;i<*len;i++) {
+    f=val[i]/100000;
+    x=(val[i]%100000)/1000;
+    y=(val[i]%100000)%1000;
+    grib_encode_unsigned_longb(buf,f,&pos,2);
+    grib_encode_unsigned_longb(buf,x,&pos,6);
+    grib_encode_unsigned_longb(buf,y,&pos,8);
+  }
+  grib_buffer_replace(a,buf,buflen,1,1);
+
+  /* update_size(a,buflen); */
+
+  return ret;
 
 }
 
