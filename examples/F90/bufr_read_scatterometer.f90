@@ -81,7 +81,7 @@ real(kind=8), dimension(:), allocatable :: year
     write(*,*) "--------------------------------------" 
      
     do i=1,numObs
-        write(*,*) i,latVal(i),lonVal(i),bscatterVal(i)
+        write(*,'(I4,3F10.5)') i,latVal(i),lonVal(i),bscatterVal(i)
     end do 
      
     ! free arrays 
