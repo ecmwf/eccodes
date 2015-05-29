@@ -1291,12 +1291,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 254 ;
 	}
-#Indicates a missing value
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 255 ;
-	}
 #Stream function difference
 'm**2 s**-1' = {
 	 discipline = 192 ;
@@ -2706,12 +2700,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 255 ;
-	}
-#Maximum of significant wave height index
-'(-1 to 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 132 ;
-	 parameterNumber = 216 ;
 	}
 #Reserved
 '~' = {
@@ -11240,48 +11228,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 131 ;
 	 parameterNumber = 255 ;
-	}
-#10 metre wind gust index
-'(-1 to 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 132 ;
-	 parameterNumber = 49 ;
-	}
-#Snowfall index
-'(-1 to 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 132 ;
-	 parameterNumber = 144 ;
-	}
-#10 metre speed index
-'(-1 to 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 132 ;
-	 parameterNumber = 165 ;
-	}
-#2 metre temperature index
-'(-1 to 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 132 ;
-	 parameterNumber = 167 ;
-	}
-#Maximum temperature at 2 metres index
-'(-1 to 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 132 ;
-	 parameterNumber = 201 ;
-	}
-#Minimum temperature at 2 metres index
-'(-1 to 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 132 ;
-	 parameterNumber = 202 ;
-	}
-#Total precipitation index
-'(-1 to 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 132 ;
-	 parameterNumber = 228 ;
 	}
 #2m temperature probability less than -10 C
 '%' = {
