@@ -42,6 +42,10 @@ Representation *RotatedGG::clone() const {
     return new RotatedGG(N_, bbox_, rotation_);
 }
 
+Gridded *RotatedGG::cropped(const util::BoundingBox &bbox) const {
+    return new RotatedGG(N_, bbox, rotation_);
+}
+
 void RotatedGG::print(std::ostream &out) const {
     out << "RotatedGG[N" << N_ << ",bbox=" << bbox_ << ",rotation" << rotation_ << "]";
 }
