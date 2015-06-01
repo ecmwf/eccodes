@@ -13,9 +13,8 @@
  *
  * Description:
  * Example on how to use keys_iterator functions and the
- * grib_keys_iterator structure to get all the available
+ * codes_keys_iterator structure to get all the available
  * keys in a GRIB message.
- *
  *
  */
 
@@ -25,7 +24,7 @@
 #include <unistd.h>
 #include <string.h>
 
-#include "grib_api.h"
+#include "eccodes.h"
 
 #define MAX_KEY_LEN  255
 #define MAX_VAL_LEN  1024
@@ -35,22 +34,22 @@ static void usage(char* progname);
 int main(int argc, char *argv[])
 {
   /* To skip read only and not coded keys
-     unsigned long key_iterator_filter_flags=GRIB_KEYS_ITERATOR_SKIP_READ_ONLY ||
-     GRIB_KEYS_ITERATOR_SKIP_COMPUTED;
+     unsigned long key_iterator_filter_flags=CODES_KEYS_ITERATOR_SKIP_READ_ONLY ||
+     CODES_KEYS_ITERATOR_SKIP_COMPUTED;
   */
-  unsigned long key_iterator_filter_flags=GRIB_KEYS_ITERATOR_ALL_KEYS;
+    unsigned long key_iterator_filter_flags=CODES_KEYS_ITERATOR_ALL_KEYS;
 
-  /* valid name_spaces are ls and mars */
+  /* Choose a namespace. E.g. "ls", "time", "parameter", "geography", "statistics" */
   char* name_space="ls";
 
   /* name_space=NULL to get all the keys */
   /* char* name_space=0; */
 
-  FILE* f;
-  grib_handle* h=NULL;
-  grib_keys_iterator* kiter=NULL;
+  FILE* f = NULL;
+  codes_handle* h=NULL;
+  
   int err=0;
-  int grib_count=0;
+  int msg_count=0;
 
   char value[MAX_VAL_LEN];
   size_t vlen=MAX_VAL_LEN;
@@ -63,40 +62,40 @@ int main(int argc, char *argv[])
     exit(1);
   }
 
-  while((h = grib_handle_new_from_file(0,f,&err)) != NULL) {
-
-    grib_count++;
-    /*printf("-- GRIB N. %d --\n",grib_count);*/
+  while((h = grib_handle_new_from_file(0,f,&err)) != NULL)
+  {
+    codes_keys_iterator* kiter=NULL;
+    msg_count++;
+    /*printf("-- GRIB N. %d --\n",msg_count);*/
     if(!h) {
       printf("ERROR: Unable to create grib handle\n");
       exit(1);
     }
 
-    kiter=grib_keys_iterator_new(h,key_iterator_filter_flags,name_space);
+        kiter=codes_keys_iterator_new(h,key_iterator_filter_flags,name_space);
     if (!kiter) {
       printf("ERROR: Unable to create keys iterator\n");
       exit(1);
     }
 
-    while(grib_keys_iterator_next(kiter))
+    while(codes_keys_iterator_next(kiter))
     {
-      const char* name = grib_keys_iterator_get_name(kiter);
+      const char* name = codes_keys_iterator_get_name(kiter);
       vlen=MAX_VAL_LEN;
       bzero(value,vlen);
-      GRIB_CHECK(grib_get_string(h,name,value,&vlen),name);
+      CODES_CHECK(codes_get_string(h,name,value,&vlen),name);
       printf("%s = %s\n",name,value);
     }
 
-    grib_keys_iterator_delete(kiter);
-
+    codes_keys_iterator_delete(kiter);
+    codes_handle_delete(h);
   }
-
+  fclose(f);
   return 0;
-
 }
 
-static void usage(char* progname) {
+static void usage(char* progname)
+{
   printf("\nUsage: %s grib_file\n",progname);
   exit(1);
 }
-
