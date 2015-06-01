@@ -37,7 +37,7 @@ int main(int argc,char* argv[])
     size_t len=0;
     int i, err=0;
     int cnt=0;
-    char* infile = "../../data/bufr/asca_139.bufr";
+    const char* infile = "../../data/bufr/asca_139.bufr";
     char key_name[128];
 
     in=fopen(infile,"r");
@@ -75,9 +75,9 @@ int main(int argc,char* argv[])
         
         /* Allocate memory for the values to be read. Each
          * parameter must have the same number of values. */
-        lat = malloc(numObs*sizeof(double));
-        lon = malloc(numObs*sizeof(double));
-        bscatter = malloc(numObs*sizeof(double));
+        lat = (double*)malloc(numObs*sizeof(double));
+        lon = (double*)malloc(numObs*sizeof(double));
+        bscatter = (double*)malloc(numObs*sizeof(double));
 
         /* Get latitude */
         sprintf(key_name,"latitude");

@@ -60,7 +60,7 @@ int main(int argc,char* argv[])
         printf("  number of expanded values: %ld\n",values_len);    
 
         /* allocate array for data values */
-        values = malloc(values_len*sizeof(double));
+        values = (double*)malloc(values_len*sizeof(double));
 
         /* get the exapanded data values*/
         CODES_CHECK(codes_get_double_array(h,"numericValues",values,&values_len),0);

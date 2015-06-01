@@ -37,7 +37,7 @@ int main(int argc,char* argv[])
     size_t sigt_len=0, desc_len=0, len=0;
     int i, err=0;
     int cnt=0;
-    char* infile = "../../data/bufr/temp_101.bufr";
+    const char* infile = "../../data/bufr/temp_101.bufr";
     char key_name[128];
 
     in=fopen(infile,"r");
@@ -84,10 +84,10 @@ int main(int argc,char* argv[])
 
         /* Allocate memory for the values to be read. Each
          * parameter must have the same number of values. */
-        sigt_pres = malloc(sigt_len*sizeof(double));
-        sigt_geo = malloc(sigt_len*sizeof(double));
-        sigt_t = malloc(sigt_len*sizeof(double));
-        sigt_td = malloc(sigt_len*sizeof(double));
+        sigt_pres = (double*)malloc(sigt_len*sizeof(double));
+        sigt_geo = (double*)malloc(sigt_len*sizeof(double));
+        sigt_t = (double*)malloc(sigt_len*sizeof(double));
+        sigt_td = (double*)malloc(sigt_len*sizeof(double));
 
         /* Get pressure */
         sprintf(key_name,"/verticalSoundingSignificance=4/pressure");

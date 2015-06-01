@@ -17,7 +17,6 @@
 
 #include "eccodes.h"
 
-
 int main(int argc,char* argv[])
 {
     FILE* in = NULL;
@@ -33,7 +32,7 @@ int main(int argc,char* argv[])
     size_t values_len=0, desc_len=0, len=0;
     int i, err=0;
     int cnt=0;
-    char* infile = "../../data/bufr/syno_multi.bufr";
+    const char* infile = "../../data/bufr/syno_multi.bufr";
 
     in=fopen(infile,"r");
     if (!in) {
@@ -84,7 +83,7 @@ int main(int argc,char* argv[])
 
         /* get the size and allocate memory*/
         CODES_CHECK(codes_get_size(h,"bufrdcExpandedDescriptors",&desc_len),0);
-        descriptors = malloc(desc_len*sizeof(long));
+        descriptors = (long*)malloc(desc_len*sizeof(long));
 
         /* get the values */
         CODES_CHECK(codes_get_long_array(h,"bufrdcExpandedDescriptors",descriptors,&desc_len),0);
@@ -98,7 +97,7 @@ int main(int argc,char* argv[])
 
         /* get the size and allocate memory*/
         CODES_CHECK(codes_get_size(h,"numericValues",&values_len),0);
-        values = malloc(values_len*sizeof(double));
+        values = (double*)malloc(values_len*sizeof(double));
 
         /* get the values*/
         CODES_CHECK(codes_get_double_array(h,"numericValues",values,&values_len),0);
