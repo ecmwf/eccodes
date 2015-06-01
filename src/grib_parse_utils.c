@@ -284,7 +284,7 @@ int grib_accessors_list_print(grib_accessors_list* al,const char* name,int type,
         } else {
             int i=0;
             int cols=0;
-            cvals=grib_context_malloc_clear(h->context,sizeof(char*)*size);
+            cvals=(char**)grib_context_malloc_clear(h->context,sizeof(char*)*size);
             grib_accessors_list_unpack_string(al,cvals,&size);
             for (i=0;i<size;i++) {
                 *newline=1;

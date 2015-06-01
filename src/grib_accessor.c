@@ -691,7 +691,7 @@ int grib_accessor_has_attributes(grib_accessor* a) {
 }
 
 grib_accessor* grib_accessor_get_attribute(grib_accessor* a,const char* name) {
-  int i=0,index=0;
+  int index=0;
   char* p=0;
   char* basename=NULL;
   char* attribute_name=NULL;
@@ -703,8 +703,8 @@ grib_accessor* grib_accessor_get_attribute(grib_accessor* a,const char* name) {
   } else {
     size_t size=p-name;
     attribute_name=p+2;
-    basename=grib_context_malloc_clear(a->parent->h->context,size+1);
-    basename=memcpy(basename,name,size);
+    basename=(char*)grib_context_malloc_clear(a->parent->h->context,size+1);
+    basename=(char*)memcpy(basename,name,size);
     acc=_grib_accessor_get_attribute(a,basename,&index);
     grib_context_free(a->parent->h->context,basename);
     if (acc) return grib_accessor_get_attribute(acc,attribute_name);
@@ -712,11 +712,13 @@ grib_accessor* grib_accessor_get_attribute(grib_accessor* a,const char* name) {
   }
 }
 
-grib_accessors_list* grib_accessors_list_create(grib_context* c) {
-  return grib_context_malloc_clear(c,sizeof(grib_accessors_list));
+grib_accessors_list* grib_accessors_list_create(grib_context* c)
+{
+  return (grib_accessors_list*)grib_context_malloc_clear(c,sizeof(grib_accessors_list));
 }
 
-void grib_accessors_list_push(grib_accessors_list* al,grib_accessor* a) {
+void grib_accessors_list_push(grib_accessors_list* al,grib_accessor* a)
+{
   grib_accessors_list* last;
   grib_context* c=a->parent->h->context;
 
@@ -732,8 +734,9 @@ void grib_accessors_list_push(grib_accessors_list* al,grib_accessor* a) {
   }
 }
 
-grib_accessors_list* grib_accessors_list_last(grib_accessors_list* al) {
-  grib_accessors_list* last=al;
+grib_accessors_list* grib_accessors_list_last(grib_accessors_list* al)
+{
+  /*grib_accessors_list* last=al;*/
   grib_accessors_list* next=al->next;
 
   /*

@@ -24,7 +24,7 @@ bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d) {
 
   if (!d) return NULL;
 
-  cd=grib_context_malloc_clear(d->context,sizeof(bufr_descriptor));
+  cd=(bufr_descriptor*)grib_context_malloc_clear(d->context,sizeof(bufr_descriptor));
 
   cd->code=d->code;
   cd->F=d->F;
