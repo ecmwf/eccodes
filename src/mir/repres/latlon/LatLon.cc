@@ -14,6 +14,7 @@
 
 #include "mir/repres/latlon/LatLon.h"
 #include "mir/repres/Iterator.h"
+#include "mir/param/MIRParametrisation.h"
 
 #include <iostream>
 
@@ -31,7 +32,8 @@ namespace latlon {
 
 LatLon::LatLon(const param::MIRParametrisation &parametrisation):
     bbox_(parametrisation), increments_(parametrisation) {
-    setNiNj();
+    ASSERT(parametrisation.get("Ni", ni_));
+    ASSERT(parametrisation.get("Nj", nj_));
 }
 
 
