@@ -1250,6 +1250,8 @@ Error codes returned by the eccodes functions.
 #define CODES_ATTRIBUTE_NOT_FOUND GRIB_ATTRIBUTE_NOT_FOUND
 /** Edition not supported. */
 #define CODES_UNSUPPORTED_EDITION GRIB_UNSUPPORTED_EDITION
+/** Value out of coding range */
+#define CODES_OUT_OF_RANGE        GRIB_OUT_OF_RANGE
 
 
 /*! @}*/
