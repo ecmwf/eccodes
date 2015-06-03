@@ -769,6 +769,7 @@ int grib_init_accessor_from_handle(grib_loader *loader, grib_accessor *ga, grib_
 unsigned long grib_decode_unsigned_byte_long(const unsigned char *p, long o, int l);
 long grib_decode_signed_long(const unsigned char *p, long o, int l);
 int grib_encode_signed_long(unsigned char *p, long val, long o, int l);
+void grib_set_bits_on(unsigned char *p, long *bitp, long nbits);
 int grib_get_bit(const unsigned char *p, long bitp);
 void grib_set_bit(unsigned char *p, long bitp, int val);
 long grib_decode_signed_longb(const unsigned char *p, long *bitp, long nbits);
@@ -1393,6 +1394,7 @@ const char *grib_get_git_sha1(void);
 
 /* grib_bits_any_endian.c */
 int grib_is_all_bits_one(long val, long nbits);
+int grib_encode_string(const unsigned char *bitStream, long *bitOffset, size_t numberOfCharacters, char *string);
 char *grib_decode_string(const unsigned char *bitStream, long *bitOffset, size_t numberOfCharacters, char *string);
 unsigned long grib_decode_unsigned_long(const unsigned char *p, long *bitp, long nbits);
 int grib_encode_unsigned_long(unsigned char *p, unsigned long val, long *bitp, long nbits);

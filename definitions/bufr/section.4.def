@@ -27,6 +27,11 @@ if (compressedData) {
 
 meta unpack unpack_bufr_values(numericValues) ;
 
+when (changed(unexpandedDescriptors)) {
+  # resize data section and unpack
+  set unpack=3;
+}
+
 section_padding section4Padding;
 position offsetEndSection4;
 meta md5Data md5(offsetSection4,section4Length);

@@ -135,5 +135,7 @@ Error codes returned by the grib_api functions.
 #define GRIB_ATTRIBUTE_NOT_FOUND		-63
 /** Edition not supported. */
 #define GRIB_UNSUPPORTED_EDITION		-64
+/** Value out of coding range */
+#define GRIB_OUT_OF_RANGE		-65
 /*! @}*/
 #endif

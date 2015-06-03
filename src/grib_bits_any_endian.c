@@ -40,6 +40,38 @@ int grib_is_all_bits_one(long val, long nbits) {
 
 }
 
+int grib_encode_string(const unsigned char* bitStream, long *bitOffset, size_t numberOfCharacters,char* string)
+{
+  size_t i;
+  int err=0;
+  long byteOffset = *bitOffset / 8;
+  int remainder = *bitOffset % 8;
+  unsigned char c;
+  unsigned char* p;
+  char* s=string;
+  unsigned char mask[] ={ 0, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE };
+  int remainderComplement=8-remainder;
+
+  if (numberOfCharacters==0) return err;
+
+  p=(unsigned char*)bitStream+byteOffset;
+
+  if ( remainder == 0 )  {
+    memcpy(p,string,numberOfCharacters);
+    *bitOffset+=numberOfCharacters*8;
+    return err;
+  }
+
+  for (i=0;i<numberOfCharacters;i++) {
+    c=(*s)>>remainderComplement;
+    *p |= c;
+    p++;
+    *p = (*s) & mask[remainder];
+    s++;
+  }
+  *bitOffset+=numberOfCharacters*8;
+  return err;
+}
 
 char* grib_decode_string(const unsigned char* bitStream, long *bitOffset, size_t numberOfCharacters,char* string)
 {

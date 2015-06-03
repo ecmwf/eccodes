@@ -205,6 +205,7 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
   grib_accessor* data=(grib_accessor*)self->data_accessor;
 
   if (*val==2) unpackMode=CODES_BUFR_UNPACK_FLAT;
+  if (*val==3) unpackMode=CODES_BUFR_NEW_DATA;
 
   accessor_bufr_data_array_set_unpackMode(data,unpackMode);
 
