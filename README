@@ -1,4 +1,5 @@
 ecCodes is the ECMWF encoding/decoding software for GRIB and BUFR.
+--
 
 Documentation can be found here:
 https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home
