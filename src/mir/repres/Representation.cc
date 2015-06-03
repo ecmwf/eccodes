@@ -18,7 +18,6 @@
 #include "eckit/thread/Mutex.h"
 #include "eckit/thread/Once.h"
 
-#include "atlas/GridSpec.h"
 
 #include "mir/param/MIRParametrisation.h"
 
