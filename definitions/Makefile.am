@@ -7050,6 +7050,7 @@ dist_definitionsgrib1_DATA = \
 	grib1/2.98.220.table\
 	grib1/2.98.228.table\
 	grib1/2.98.230.table\
+	grib1/2.98.235.table\
 	grib1/2.table\
 	grib1/3.233.table\
 	grib1/3.82.table\
