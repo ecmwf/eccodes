@@ -51,19 +51,19 @@ Representation::~Representation() {
 }
 
 
-void Representation::setComplexPacking(grib_info&) const {
+void Representation::setComplexPacking(grib_info &) const {
     eckit::StrStream os;
     os << "Representation::setComplexPacking() not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
 }
 
-void Representation::setSimplePacking(grib_info&) const {
+void Representation::setSimplePacking(grib_info &) const {
     eckit::StrStream os;
     os << "Representation::setSimplePacking() not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
 }
 
-void Representation::setSecondOrderPacking(grib_info&) const {
+void Representation::setSecondOrderPacking(grib_info &) const {
     eckit::StrStream os;
     os << "Representation::setSecondOrderPacking() not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
@@ -82,11 +82,17 @@ void Representation::fill(grib_info &) const {
 }
 
 
-Representation *Representation::crop(const util::BoundingBox& bbox,
+Representation *Representation::crop(const util::BoundingBox &bbox,
                                      const std::vector<double> &, std::vector<double> &) const {
+    // FIXME: This is temporary, so that we can test existing mars/prodgen requeste
+#if 0
     eckit::StrStream os;
     os << "Representation::crop() not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
+#else
+    eckit::Log::info() << "Representation::crop() not implemented for " << *this << std::endl;
+    return 0;
+#endif
 }
 
 
@@ -98,7 +104,7 @@ Representation *Representation::truncate(size_t truncation,
 }
 
 
-atlas::Grid* Representation::atlasGrid() const {
+atlas::Grid *Representation::atlasGrid() const {
     eckit::StrStream os;
     os << "Representation::atlasGrid() not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
@@ -122,7 +128,7 @@ Representation *Representation::clone() const {
     throw eckit::SeriousBug(std::string(os));
 }
 
-void Representation::reorder(long scanningMode, std::vector<double>& values) const {
+void Representation::reorder(long scanningMode, std::vector<double> &values) const {
     eckit::StrStream os;
     os << "Representation::reorder() not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
