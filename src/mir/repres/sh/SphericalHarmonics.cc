@@ -128,12 +128,6 @@ Representation *SphericalHarmonics::truncate(size_t truncation,
     return new SphericalHarmonics(truncation);
 }
 
-
-Representation * SphericalHarmonics::crop(const util::BoundingBox &bbox, const std::vector<double> &in, std::vector<double> &out) const {
-    eckit::Log::info() << "WARNING SphericalHarmonics::crop() is ignored" << std::endl;
-    return 0;
-}
-
 void SphericalHarmonics::validate(const std::vector<double>& values) const {
     ASSERT(values.size() == number_of_complex_coefficients(truncation_) * 2);
 }

@@ -14,18 +14,15 @@
 
 #include "mir/repres/gauss/reduced/Reduced.h"
 
-// #include "atlas/Grid.h"
-// #include "atlas/grids/grids.h"
-// #include "atlas/grids/GaussianLatitudes.h"
-// #include "mir/util/Grib.h"
-// #include "eckit/log/Timer.h"
+#include <limits>
+
 #include "mir/param/MIRParametrisation.h"
 #include "eckit/exception/Exceptions.h"
 #include "mir/repres/Iterator.h"
 
-
 #include "atlas/grids/GaussianLatitudes.h"
 #include "mir/util/Grib.h"
+
 
 
 namespace mir {
@@ -98,6 +95,9 @@ void Reduced::fill(grib_info &info) const  {
 
 }
 
+
+
+
 class GaussianIterator: public Iterator {
     std::vector<double> latitudes_;
     const std::vector<long> &pl_;
@@ -137,7 +137,7 @@ class GaussianIterator: public Iterator {
 
             // eckit::Log::info() << "++++++ " << lat << " " << lon << " - " << bbox_ << " -> " << bbox_.contains(lat, lon) << std::endl;
 
-            if(bbox_.contains(lat, lon)) {
+            if (bbox_.contains(lat, lon)) {
                 count_++;
                 return true;
             }
@@ -185,6 +185,67 @@ class GaussianIterator: public Iterator {
 
 Iterator *Reduced::iterator() const {
     return new GaussianIterator(latitudes(), pls(), bbox_);
+}
+
+
+
+size_t Reduced::frame(std::vector<double> &values, size_t size, double missingValue) const {
+
+    validate(values);
+
+    size_t count = 0;
+
+    // TODO: Check if that logic cannot also be used for other grid, and therefor move it to a higher class
+
+    std::map<size_t, size_t> shape;
+
+    std::auto_ptr<Iterator> iter(iterator());
+
+    double prev_lat = std::numeric_limits<double>::max();
+    double prev_lon = -std::numeric_limits<double>::max();
+
+    double lat;
+    double lon;
+
+    size_t rows = 0;
+    size_t *col = 0;
+
+    // Collect the 'shape' of the gaussian field
+    // This could be done with the latitudes() and pls(), maybe more efficeintly
+    // but this code could also be used for all grids
+    // and even be cached (md5 of iterators)
+
+    while (iter->next(lat, lon)) {
+
+        if (lat != prev_lat ) {
+            ASSERT(lat < prev_lat); // Assumes scanning mode
+            prev_lat = lat;
+            prev_lon = -std::numeric_limits<double>::max();
+
+            col = &shape[rows++];
+            (*col) = 0;
+        }
+
+        ASSERT(lon > prev_lon); // Assumes scanning mode
+        prev_lon = lon;
+        (*col) ++;
+    }
+
+    size_t k = 0;
+    for (size_t j = 0; j < rows; j++) {
+        size_t cols = shape[j];
+        for (size_t i = 0; i < cols; i++) {
+            if ( !((i < size) || (j < size) || (i >= cols - size) || (j >= rows - size))) {
+                values[k] = missingValue;
+                count++;
+            }
+            k++;
+        }
+    }
+
+    ASSERT(k == values.size());
+    return count;
+
 }
 
 
