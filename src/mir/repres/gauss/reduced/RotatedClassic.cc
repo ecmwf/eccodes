@@ -30,7 +30,7 @@ RotatedClassic::~RotatedClassic() {
 }
 
 RotatedClassic::RotatedClassic(long N, const util::BoundingBox &bbox, const util::Rotation& rotation):
-    Classic(N, bbox_),
+    Classic(N, bbox),
     rotation_(rotation) {
 
 }
@@ -44,9 +44,13 @@ void RotatedClassic::print(std::ostream &out) const {
 }
 
 void RotatedClassic::fill(grib_info &info) const  {
+#ifdef GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG
     Classic::fill(info);
     rotation_.fill(info);
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_GG;
+    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG;
+#else
+    NOTIMP;
+#endif
 }
 
 atlas::Grid *RotatedClassic::atlasGrid() const {

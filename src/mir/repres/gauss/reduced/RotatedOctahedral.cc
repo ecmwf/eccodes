@@ -44,15 +44,13 @@ void RotatedOctahedral::print(std::ostream &out) const {
 }
 
 void RotatedOctahedral::fill(grib_info &info) const  {
+#ifdef GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG
     Octahedral::fill(info);
     rotation_.fill(info);
-#if 0
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_OCTAHEDRAL_GG
+    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG;
 #else
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_GG;
-
+    NOTIMP;
 #endif
-
 }
 
 atlas::Grid *RotatedOctahedral::atlasGrid() const {

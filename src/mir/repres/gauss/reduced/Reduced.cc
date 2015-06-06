@@ -120,6 +120,7 @@ class GaussianIterator: public Iterator {
 
     virtual bool next(double &lat, double &lon) {
         while (j_ < nj_ && i_ < ni_) {
+            ASSERT(j_ + k_ < latitudes_.size());
             lat = latitudes_[j_ + k_];
             lon = (i_ * 360.0) / ni_;
             i_++;
@@ -166,7 +167,7 @@ class GaussianIterator: public Iterator {
         while (k_ < latitudes_.size() && bbox_.north() < latitudes_[k_]) {
             k_++;
         }
-        ASSERT(j_ < latitudes_.size());
+        ASSERT(k_ < latitudes_.size());
 
         ni_ = pl_[p_++];
         nj_ = pl_.size();

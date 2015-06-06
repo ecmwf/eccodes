@@ -50,7 +50,6 @@ const std::vector<long>& Octahedral::pls() const {
 
 void Octahedral::fill(grib_info &info) const  {
     Reduced::fill(info);
-
 }
 
 atlas::Grid *Octahedral::atlasGrid() const {
