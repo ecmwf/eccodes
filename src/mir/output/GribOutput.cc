@@ -24,6 +24,7 @@
 #include "mir/repres/Representation.h"
 #include "mir/util/Grib.h"
 #include "mir/packing/Packer.h"
+#include "eckit/log/Plural.h"
 
 
 namespace mir {
@@ -104,9 +105,27 @@ void GribOutput::save(const param::MIRParametrisation &parametrisation, input::M
     }
 
     std::string packing;
-    if(parametrisation.get("user.packing", packing)) {
-        const packing::Packer& packer = packing::Packer::lookup(packing);
+    if (parametrisation.get("user.packing", packing)) {
+        const packing::Packer &packer = packing::Packer::lookup(packing);
+#if 0
         packer.fill(info, *field.representation());
+#else
+        if (field.values(0).size() < 4) {
+
+            // There is a bug in grib_api if the user ask 1 value and select second-order
+            // Once this fixed, remove this code
+            eckit::Log::info() << "Field has "
+                               << eckit::Plural(field.values(0).size(), "value")
+                               << ", ignoring packer "
+                               << packer
+                               << std::endl;
+
+
+        } else {
+            packer.fill(info, *field.representation());
+        }
+
+#endif
     }
 
     X(info.grid.grid_type);
