@@ -72,7 +72,7 @@ void GribOutput::save(const param::MIRParametrisation &parametrisation, input::M
 
     grib_handle *h = input.gribHandle(); // Base class will throw an exception is input cannot provide a grib_handle
 
-#if 1
+#if 0
 
     static const char* dump = getenv("MIR_DUMP_GRIB_HANDLES");
     if (dump) {
