@@ -72,6 +72,22 @@ void GribOutput::save(const param::MIRParametrisation &parametrisation, input::M
 
     grib_handle *h = input.gribHandle(); // Base class will throw an exception is input cannot provide a grib_handle
 
+#if 1
+
+    static const char* dump = getenv("MIR_DUMP_GRIB_HANDLES");
+    if (dump) {
+
+        static int n = 0;
+        char fname[1024];
+        sprintf(fname, "grib-dump-%04d.txt", n++);
+        FILE *f = fopen(fname, "w");
+        if (f) {
+            grib_dump_content(h, f, NULL, 0, NULL);
+            fclose(f);
+        }
+    }
+
+#endif
 
     grib_info info = {{0},};
 
