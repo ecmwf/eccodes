@@ -3314,6 +3314,16 @@
 	 table2Version = 131 ;
 	 indicatorOfParameter = 97 ;
 	}
+#Convective available potential energy shear index
+'Convective available potential energy shear index' = {
+	 table2Version = 132 ;
+	 indicatorOfParameter = 44 ;
+	}
+#Convective available potential energy index
+'Convective available potential energy index' = {
+	 table2Version = 132 ;
+	 indicatorOfParameter = 59 ;
+	}
 #Maximum of significant wave height index
 'Maximum of significant wave height index' = {
 	 table2Version = 132 ;
@@ -8988,6 +8998,11 @@
 'Soil wetness index in layer 4' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 43 ;
+	}
+#Convective available potential energy shear
+'Convective available potential energy shear' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 44 ;
 	}
 #GPP coefficient from Biogenic Flux Adjustment System
 'GPP coefficient from Biogenic Flux Adjustment System' = {

@@ -3314,6 +3314,16 @@
 	 table2Version = 131 ;
 	 indicatorOfParameter = 97 ;
 	}
+#Convective available potential energy shear index
+'capesi' = {
+	 table2Version = 132 ;
+	 indicatorOfParameter = 44 ;
+	}
+#Convective available potential energy index
+'capei' = {
+	 table2Version = 132 ;
+	 indicatorOfParameter = 59 ;
+	}
 #Maximum of significant wave height index
 'maxswhi' = {
 	 table2Version = 132 ;
@@ -8988,6 +8998,11 @@
 'swi4' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 43 ;
+	}
+#Convective available potential energy shear
+'capes' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 44 ;
 	}
 #GPP coefficient from Biogenic Flux Adjustment System
 'gppbfas' = {
