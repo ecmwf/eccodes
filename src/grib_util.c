@@ -622,6 +622,10 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         grid_type = "sh";
         break;
 
+    case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
+        grid_type = "reduced_rotated_gg";
+        break;
+
     default:
         *err = GRIB_NOT_IMPLEMENTED;
         return NULL;
@@ -638,6 +642,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         Assert(grib_get_string(h,"levelType",levtype,&n) == 0);
         switch (spec->grid_type) {
         case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
+        case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
             sprintf(name, "%s_pl_%ld_grib%ld", grid_type,spec->N, editionNumber);
             break;
         default :
@@ -739,6 +744,8 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         break;
 
     case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
+    case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
+
         COPY_SPEC_LONG  (bitmapPresent);
         if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
         SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
@@ -791,10 +798,12 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 
 
     /* Set rotation */
+    /* FIXME: Missing angleOfRotationInDegrees */
 
     switch(spec->grid_type) {
     case GRIB_UTIL_GRID_SPEC_ROTATED_LL:
     case GRIB_UTIL_GRID_SPEC_ROTATED_GG:
+    case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
         COPY_SPEC_LONG(uvRelativeToGrid);
         COPY_SPEC_DOUBLE(latitudeOfSouthernPoleInDegrees);
         COPY_SPEC_DOUBLE(longitudeOfSouthernPoleInDegrees);
@@ -921,7 +930,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
                 fprintf(stderr," %s %s\n",values[i].name,grib_get_error_message(values[i].error));
         goto cleanup;
     }
-    if (spec->pl_size!=0 && spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_GG) {
+    if (spec->pl_size!=0 && (spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG)) {
         *err=grib_set_long_array(outh,"pl",spec->pl,spec->pl_size);
         if (*err) {
             fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot set pl  %s\n",grib_get_error_message(*err));

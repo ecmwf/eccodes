@@ -1334,8 +1334,8 @@ int grib_points_get_values(grib_handle* h, grib_points* points, double* val);
 #define GRIB_UTIL_GRID_SPEC_REDUCED_LL 7
 #define GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC 8
 
-#define GRIB_UTIL_GRID_SPEC_OCTAHEDRAL_GG 9
-#define GRIB_UTIL_GRID_SPEC_ROTATED_OCTAHEDRAL_GG 10
+#define GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG 9
+
 
 typedef struct grib_util_grid_spec {
 
