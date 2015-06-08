@@ -320,6 +320,9 @@ static grib_context default_grib_context = {
 #endif
 };
 
+/* Hopefully big enough. Note: GRIB_DEFINITION_PATH can contain SEVERAL colon-separated sub-paths */
+#define DEF_PATH_MAXLEN 8192
+
 grib_context* grib_context_get_default()
 {
     GRIB_PTHREAD_ONCE(&once,&init);
@@ -399,6 +402,27 @@ grib_context* grib_context_get_default()
         }
 #endif
 
+        /* GRIB-779: Special case for ECMWF testing. Not for external use! */
+        /* Append the new path to our existing path */
+        {
+            const char* test_defs = getenv("_ECCODES_ECMWF_TEST_DEFINITION_PATH");
+            const char* test_samp = getenv("_ECCODES_ECMWF_TEST_SAMPLES_PATH");
+            if (test_defs) {
+                char buffer[DEF_PATH_MAXLEN];
+                strcpy(buffer, default_grib_context.grib_definition_files_path);
+                strcat(buffer, ":");
+                strcat(buffer, strdup(test_defs));
+                default_grib_context.grib_definition_files_path = strdup(buffer);
+            }
+            if (test_samp) {
+                char buffer[DEF_PATH_MAXLEN];
+                strcpy(buffer, default_grib_context.grib_samples_path);
+                strcat(buffer, ":");
+                strcat(buffer, strdup(test_samp));
+                default_grib_context.grib_samples_path = strdup(buffer);
+            }
+        }
+
         grib_context_log(&default_grib_context, GRIB_LOG_DEBUG, "Definitions path: %s",
                 default_grib_context.grib_definition_files_path);
         grib_context_log(&default_grib_context, GRIB_LOG_DEBUG, "Samples path:     %s",
@@ -468,9 +492,6 @@ grib_context* grib_context_new(grib_context* parent)
     GRIB_MUTEX_UNLOCK(&(parent->mutex));
     return c;
 }
-
-/* Hopefully big enough. Note: ECCODES_DEFINITION_PATH can contain SEVERAL colon-separated sub-paths */
-#define DEF_PATH_MAXLEN 8192
 
 /* GRIB-235: Resolve path to expand symbolic links etc */
 static char* resolve_path(grib_context* c, char* path)
