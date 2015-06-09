@@ -13,5 +13,5 @@ set( ECCODES_SAMPLES_FILES ${ECCODES_SAMPLES_FILES}    PARENT_SCOPE )
 
 # copy the samples to the build directory
 
-file(    COPY ${samples_files}
-		 DESTINATION ${CMAKE_BINARY_DIR}/share/${PROJECT_NAME}/samples )
+file( COPY ${samples_files}
+      DESTINATION ${CMAKE_BINARY_DIR}/share/${PROJECT_NAME}/samples )

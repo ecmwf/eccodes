@@ -18,9 +18,9 @@ if( HAVE_PYTHON )
 
         set(PYTHON_DEST "${INSTALL_LIB_DIR}/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/eccodes" )
 
-	    file( RELATIVE_PATH relative_rpath "${CMAKE_INSTALL_PREFIX}/${PYTHON_DEST}" "${${PNAME}_FULL_INSTALL_LIB_DIR}" )
+        file( RELATIVE_PATH relative_rpath "${CMAKE_INSTALL_PREFIX}/${PYTHON_DEST}" "${${PNAME}_FULL_INSTALL_LIB_DIR}" )
 
-		# debug_var( relative_rpath )
+        # debug_var( relative_rpath )
 
         ecbuild_append_to_rpath( ${relative_rpath} )
         ecbuild_append_to_rpath( "../../lib" )        # for ctest to find the libs

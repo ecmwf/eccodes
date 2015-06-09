@@ -50,7 +50,7 @@ list( APPEND tests
 #   SOURCES samples.f90
 #   LIBS    eccodes_f90 eccodes
 #   COMMAND  ${CMAKE_CURRENT_SOURCE_DIR}/samples.sh
-#   CONDITION  EC_HAVE_FORTRAN
+#   CONDITION  HAVE_FORTRAN
 # )
 
 foreach( tool ${tests} )
@@ -59,7 +59,7 @@ foreach( tool ${tests} )
     ecbuild_add_executable( TARGET    f_${tool}
                             NOINSTALL
                             SOURCES   ${tool}.f90
-                            CONDITION EC_HAVE_FORTRAN
+                            CONDITION HAVE_FORTRAN
                             LINKER_LANGUAGE Fortran
                             LIBS      eccodes_f90 eccodes
     )
@@ -67,7 +67,7 @@ foreach( tool ${tests} )
     ecbuild_add_test( TARGET f_${tool}_test
                       TYPE SCRIPT
                       DEPENDS f_${tool}
-                      CONDITION EC_HAVE_FORTRAN
+                      CONDITION HAVE_FORTRAN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
                       RESOURCES include.sh
                       TEST_DEPENDS get_gribs get_bufrs
@@ -79,21 +79,21 @@ endforeach()
 ecbuild_add_executable( TARGET    f_new_from_file
                         NOINSTALL
                         SOURCES   new_from_file.f90
-                        CONDITION EC_HAVE_FORTRAN
+                        CONDITION HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
                         LIBS      eccodes_f90 eccodes
 )
 ecbuild_add_executable( TARGET    f_copy_namespace
                         NOINSTALL
                         SOURCES   copy_namespace.f90
-                        CONDITION EC_HAVE_FORTRAN
+                        CONDITION HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
                         LIBS      eccodes_f90 eccodes
 )
 ecbuild_add_executable( TARGET    f_set_gvc
                         NOINSTALL
                         SOURCES   set_gvc.f90
-                        CONDITION EC_HAVE_FORTRAN
+                        CONDITION HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
                         LIBS      eccodes_f90 eccodes
 )
