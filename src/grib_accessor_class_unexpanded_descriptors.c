@@ -210,6 +210,7 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
     unsigned long f,x,y;
     unsigned char* buf        = NULL;
     size_t buflen=*len*2;
+    long section3Length,totalLength;
 
     buf=(unsigned char*)grib_context_malloc_clear(a->parent->h->context,buflen);
 
@@ -221,9 +222,16 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
         grib_encode_unsigned_longb(buf,x,&pos,6);
         grib_encode_unsigned_longb(buf,y,&pos,8);
     }
+
+    grib_get_long(a->parent->h,"section3Length",&section3Length);
+    section3Length+=buflen-a->length;
+    grib_get_long(a->parent->h,"totalLength",&totalLength);
+    totalLength+=buflen-a->length;
+
     grib_buffer_replace(a,buf,buflen,1,1);
 
-    /* update_size(a,buflen); */
+    grib_set_long(a->parent->h,"totalLength",totalLength);
+    grib_set_long(a->parent->h,"section3Length",section3Length);
 
     return ret;
 }

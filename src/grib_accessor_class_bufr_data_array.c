@@ -463,15 +463,15 @@ static int encode_string_array(grib_context* c,grib_buffer* buff,long* pos, int 
   modifiedReference= self->expanded->v[i]->reference;
   modifiedFactor= self->expanded->v[i]->factor;
 
-  grib_buffer_set_ulength(c,buff,modifiedWidth);
+  grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
   grib_encode_string(buff->data,pos,modifiedWidth/8,stringValues->v[0]);
   width= stringValues->n > 1 ? modifiedWidth : 0;
 
-  grib_buffer_set_ulength(c,buff,6);
-  grib_encode_unsigned_long(buff->data,width/8,pos,6);
+  grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
+  grib_encode_unsigned_longb(buff->data,width/8,pos,6);
   if (width) {
-    grib_buffer_set_ulength(c,buff,6);
-    grib_buffer_set_ulength(c,buff,width*stringValues->n);
+    grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
+    grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+width*stringValues->n);
     for (j=0;j<stringValues->n;j++) {
       grib_encode_string(buff->data,pos,width,stringValues->v[j]);
     }
@@ -526,19 +526,19 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos,int i
     localWidth=0;
   }
 
-  grib_buffer_set_ulength(c,buff,modifiedWidth);
-  grib_encode_unsigned_long(buff->data,localReference,pos,modifiedWidth);
-  grib_buffer_set_ulength(c,buff,6);
-  grib_encode_unsigned_long(buff->data,localWidth,pos,6);
+  grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
+  grib_encode_unsigned_longb(buff->data,localReference,pos,modifiedWidth);
+  grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
+  grib_encode_unsigned_longb(buff->data,localWidth,pos,6);
 
   if (localWidth) {
-    grib_buffer_set_ulength(c,buff,self->numberOfSubsets*localWidth);
+    grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+self->numberOfSubsets*localWidth);
     for (j=0;j<self->numberOfSubsets;j++) {
       if (dvalues->v[j]==GRIB_MISSING_DOUBLE) {
         grib_set_bits_on(buff->data,pos,localWidth);
       } else {
         lval=(long)((dvalues->v[j]-min)/modifiedFactor);
-        grib_encode_unsigned_long(buff->data,lval,pos,localWidth);
+        grib_encode_unsigned_longb(buff->data,lval,pos,localWidth);
       }
     }
   }
@@ -559,14 +559,14 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,int i
   modifiedFactor= self->expanded->v[i]->factor;
   modifiedWidth= self->expanded->v[i]->width;
 
-  grib_buffer_set_ulength(c,buff,modifiedWidth);
+  grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
   if (value==GRIB_MISSING_DOUBLE) {
     grib_set_bits_on(buff->data,pos,modifiedWidth);
   } else {
     maxAllowed=(grib_power(modifiedWidth,2)+modifiedReference)*modifiedFactor;
     if (value>maxAllowed) return GRIB_OUT_OF_RANGE;
     lval=(long)(value/modifiedFactor-modifiedReference);
-    grib_encode_unsigned_long(buff->data,lval,pos,modifiedWidth);
+    grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
   }
 
   return err;
@@ -578,7 +578,7 @@ static int encode_string_value(grib_context* c,grib_buffer* buff,long* pos, int 
   int len;
 
   len= self->expanded->v[i]->width / 8;
-  grib_buffer_set_ulength(c,buff,self->expanded->v[i]->width);
+  grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+self->expanded->v[i]->width);
 
   grib_encode_string(buff->data,pos,len,sval);
 
@@ -630,6 +630,7 @@ static double decode_double_value(grib_context* c,unsigned char* data,long* pos,
 
 static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
             grib_buffer* b,unsigned char* data,long *pos,int i,grib_darray* dval,grib_sarray* sval) {
+  grib_accessor* a=(grib_accessor*)self;
   grib_darray* dar=0;
   grib_sarray* sar=0;
   int index=0,ii;
@@ -637,8 +638,8 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
   double cdval=0,x;
   int err=0;
 
-  grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tcode=%6.6ld width=%ld", 
-    self->expanded->v[i]->code,self->expanded->v[i]->width);
+  grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tcode=%6.6ld width=%ld pos=%ld -> %ld", 
+    self->expanded->v[i]->code,self->expanded->v[i]->width,(long)*pos,(long)(*pos-a->offset*8));
   if (self->expanded->v[i]->type==BUFR_DESCRIPTOR_TYPE_STRING) {
     /* string */
     if (self->compressedData) {
@@ -653,6 +654,8 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
       grib_vdarray_push(c,self->numericValues,dar);
     } else {
       csval=decode_string_value(c,data,pos,i,self,&err);
+    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \t %s = %s",
+                        self->expanded->v[i]->shortName,csval);
       grib_sarray_push(c,self->stringValues,csval);
       index=grib_sarray_used_size(self->stringValues);
       cdval=index*1000+self->expanded->v[i]->width / 8;
@@ -665,6 +668,8 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
       grib_vdarray_push(c,self->numericValues,dar);
     } else {
       cdval=decode_double_value(c,data,pos,i,self,&err);
+      grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \t %s = %g",
+                        self->expanded->v[i]->shortName,cdval);
       grib_darray_push(c,dval,cdval);
     }
   }
@@ -680,13 +685,15 @@ static int encode_new_element(grib_context* c,grib_accessor_bufr_data_array* sel
   int err=0;
   size_t slen;
 
-  grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding: \tcode=%6.6ld width=%ld", 
-    self->expanded->v[i]->code,self->expanded->v[i]->width);
+  grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding: \tcode=%6.6ld width=%ld pos=%ld ulength=%ld ulength_bits=%ld", 
+    self->expanded->v[i]->code,self->expanded->v[i]->width,(long)*pos,buff->ulength,buff->ulength_bits);
   if (self->expanded->v[i]->type==BUFR_DESCRIPTOR_TYPE_STRING) {
     /* string */
     slen=self->expanded->v[i]->width/8;
     csval=grib_context_malloc_clear(c,slen);
     for (ii=0;ii<slen;ii++) csval[ii]=missingChar;
+    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding: \t %s = %s",
+                        self->expanded->v[i]->shortName,csval);
     if (self->compressedData) {
       grib_sarray* stringValues=grib_sarray_new(c,1,1);
       grib_sarray_push(c,stringValues,csval);
@@ -698,6 +705,9 @@ static int encode_new_element(grib_context* c,grib_accessor_bufr_data_array* sel
     }
   } else {
     /* numeric or codetable or flagtable */
+    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding: \t %s = %ld",
+                        self->expanded->v[i]->shortName,(long)cdval);
+    if (self->expanded->v[i]->code==31031) cdval=0;
     if (self->compressedData) {
       grib_darray* doubleValues=grib_darray_new(c,1,1);
       grib_darray_push(c,doubleValues,cdval);
@@ -753,12 +763,14 @@ static int encode_new_replication(grib_context* c,grib_accessor_bufr_data_array*
 
   *numberOfRepetitions=1;
 
-  grib_buffer_set_ulength(c,buff,descriptors[i]->width);
-  grib_encode_unsigned_long(data,repetitions,pos,descriptors[i]->width);
+  grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding replication: \twidth=%ld pos=%ld ulength=%ld ulength_bits=%ld",
+                      (long)descriptors[i]->width,(long)*pos,(long)buff->ulength,(long)buff->ulength_bits);
+  grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+descriptors[i]->width);
+  grib_encode_unsigned_longb(data,repetitions,pos,descriptors[i]->width);
 
   if (self->compressedData) {
-    grib_buffer_set_ulength(c,buff,6);
-    grib_encode_unsigned_long(buff->data,0,pos,descriptors[i]->width);
+    grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
+    grib_encode_unsigned_longb(buff->data,0,pos,descriptors[i]->width);
   };
 
   return err;
@@ -1396,13 +1408,13 @@ static int process_elements(grib_accessor* a,int flag) {
   for (iss=0;iss<end;iss++) {
     elementsDescriptorsIndex=grib_iarray_new(c,100,100);
     icount=1;
-    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: subsetNumber=%ld", iss+1);
+    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data processing: subsetNumber=%ld", iss+1);
     if (decoding==1 && !self->compressedData) {
       dval=grib_darray_new(c,100,100);
       /* sval=grib_sarray_new(c,10,10); */
     }
     for (i=0;i<numberOfDescriptors;i++) {
-      grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: elementNumber=%ld code=%6.6ld", icount++,descriptors[i]->code);
+      grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data processing: elementNumber=%ld code=%6.6ld", icount++,descriptors[i]->code);
       elementIndex=grib_iarray_used_size(elementsDescriptorsIndex);
       switch(descriptors[i]->F) {
         case 0:
@@ -1564,8 +1576,19 @@ static int process_elements(grib_accessor* a,int flag) {
     err=create_keys(a);
     self->bitsToEndData=totalSize;
   } else {
+    long totalLength;
+    long section4Length;
+
+    grib_get_long(a->parent->h,"totalLength",&totalLength);
+    totalLength+=buffer->ulength-a->length;
+    grib_get_long(a->parent->h,"section4Length",&section4Length);
+    section4Length+=buffer->ulength-a->length;
+
     grib_buffer_replace(a,buffer->data,buffer->ulength,1,1);
     grib_buffer_delete(c,buffer);
+
+    grib_set_long(a->parent->h,"totalLength",totalLength);
+    grib_set_long(a->parent->h,"section4Length",section4Length);
   }
 
   return err;

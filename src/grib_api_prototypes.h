@@ -843,6 +843,7 @@ grib_buffer *grib_create_growable_buffer(const grib_context *c);
 grib_buffer *grib_new_buffer(const grib_context *c, unsigned char *data, size_t buflen);
 void grib_buffer_delete(const grib_context *c, grib_buffer *b);
 void grib_grow_buffer(const grib_context *c, grib_buffer *b, size_t new_size);
+void grib_buffer_set_ulength_bits(const grib_context *c, grib_buffer *b, size_t length_bits);
 void grib_buffer_set_ulength(const grib_context *c, grib_buffer *b, size_t length);
 void grib_recompute_sections_lengths(grib_section *s);
 void grib_buffer_replace(grib_accessor *a, const unsigned char *data, size_t newsize, int update_lengths, int update_paddings);

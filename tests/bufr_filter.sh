@@ -660,12 +660,14 @@ print "== unexpandedDescriptors ==";
 print "[unexpandedDescriptors!16]";
 print "== expandedDescriptors ==";
 print "[expandedDescriptors]";
+write;
 EOF
 
 f="syno_1.bufr"
+fref="new.bufr"
 echo "Test: set unexpandedDescriptors" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}/bufr_filter -o ${f}.out $fRules $f 2>> $fLog 1>> $fLog
 
 ${tools_dir}/bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
 cat > ${f}.ref <<EOF
@@ -688,6 +690,10 @@ EOF
 diff ${f}.ref ${f}.log 
 
 rm -f ${f}.ref ${f}.log
+
+cmp $fref ${f}.out
+
+rm -f ${f}.out
 
 #-----------------------------------------------------------
 # Test:  get string

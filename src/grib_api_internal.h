@@ -465,6 +465,7 @@ struct grib_buffer
     int              growable;   /** < buffer can be grown         */
     size_t           length;     /** < Buffer length                        */
     size_t           ulength;    /** < length used of the buffer            */
+    size_t           ulength_bits;    /** < length used of the buffer in bits */
     unsigned char*   data;       /** < the data byte array                  */
 };
 

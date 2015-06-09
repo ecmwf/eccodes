@@ -22,10 +22,10 @@ meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSect
 
 meta unpack unpack_bufr_values(numericValues) ;
 
-#when (changed(unexpandedDescriptors)) {
+when (changed(unexpandedDescriptors)) {
   # resize data section and unpack
-#  set unpack=3;
-#}
+  set unpack=3;
+}
 
 section_padding section4Padding;
 position offsetEndSection4;

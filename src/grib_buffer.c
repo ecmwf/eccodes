@@ -65,6 +65,7 @@ grib_buffer* grib_new_buffer(const grib_context* c,unsigned char* data,size_t bu
   b->property = GRIB_USER_BUFFER;
   b->length   = buflen;
   b->ulength  = buflen;
+  b->ulength_bits  = buflen*8;
   b->data     = data;
 
   return b;
@@ -100,10 +101,20 @@ void grib_grow_buffer(const grib_context *c, grib_buffer *b, size_t new_size)
   grib_grow_buffer_to(c,b,len);
 }
 
+void grib_buffer_set_ulength_bits(const grib_context *c, grib_buffer *b, size_t length_bits)
+{
+  size_t length=length_bits/8;
+  if (length_bits%8) length++;
+  grib_grow_buffer_to(c,b,length);
+  b->ulength_bits = length_bits;
+  b->ulength = length;
+}
+
 void grib_buffer_set_ulength(const grib_context *c, grib_buffer *b, size_t length)
 {
   grib_grow_buffer_to(c,b,length);
   b->ulength = length;
+  b->ulength_bits = length*8;
 }
 
 static void update_offsets(grib_accessor* a,long len)
