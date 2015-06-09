@@ -1,4 +1,4 @@
-if( EC_HAVE_FORTRAN )
+if( HAVE_FORTRAN )
 
     set( srcdir ${CMAKE_CURRENT_SOURCE_DIR} )
     set( bindir ${CMAKE_CURRENT_BINARY_DIR} )

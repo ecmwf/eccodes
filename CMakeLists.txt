@@ -12,7 +12,6 @@ project( eccodes C )
 
 set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild/cmake")
 
-#set( ECCODES_INSTALL_INCLUDE_DIR include CACHE PATH "ecCodes override installation directory for header files")
 
 include( ecbuild_system )
 
@@ -25,6 +24,11 @@ ecbuild_declare_project()
 
 ###############################################################################
 # some variables/options of this project
+
+ecbuild_add_option( FEATURE EXAMPLES
+    DESCRIPTION "Build the examples"
+    DEFAULT ON
+)
 
 ecbuild_add_option( FEATURE JPG
     DESCRIPTION "support for JPG decoding/encoding"
@@ -59,17 +63,22 @@ ecbuild_add_option( FEATURE AEC
 ecbuild_add_option( FEATURE PYTHON
     DESCRIPTION "build the ecCodes Python interface"
     DEFAULT ON
+    # REQUIRED_LANGUAGES Python # TODO
 )
 
 ecbuild_add_option( FEATURE FORTRAN
     DESCRIPTION "build the ecCodes Fortran interface"
     DEFAULT ON
+    # REQUIRED_LANGUAGES Fortran # TODO
 )
 
+# TODO Remove this after REQUIRED_LANGUAGES
 if( ENABLE_FORTRAN )
     # will set EC_HAVE_FORTRAN with the result
     ecbuild_enable_fortran( MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/fortran/modules )
     set( HAVE_FORTRAN ${EC_HAVE_FORTRAN} )
+else()
+    set( HAVE_FORTRAN 0 )
 endif()
 
 # advanced options (not visible in cmake-gui )
