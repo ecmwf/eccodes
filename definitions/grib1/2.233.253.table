@@ -168,8 +168,8 @@
 200 tke TKE TKE m**2 s**-2
 201 grpl GRPL Graupel kg m**-2
 204 hail HAIL Hail kg m**-2
-209 lgt LGT Lightning -
 210 refl REFL Simulated reflectivity dBz
+211 lgt LGT Lightning -
 212 pdep PDEP Pressure departure Pa
 213 vdiv VDIV Vertical Divergence s**-1
 214 upom UPOM Updraft omega ms*-1

@@ -1618,15 +1618,15 @@
           table2Version = 253 ;
           indicatorOfParameter = 204 ;
           }
-#Lightning
-'233253209' = {
-          table2Version = 253 ;
-          indicatorOfParameter = 209 ;
-          }
 #Simulated reflectivity
 '233253210' = {
           table2Version = 253 ;
           indicatorOfParameter = 210 ;
+          }
+#Lightning
+'233253211' = {
+          table2Version = 253 ;
+          indicatorOfParameter = 211 ;
           }
 #Pressure departure
 '233253212' = {
