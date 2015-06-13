@@ -24,7 +24,9 @@ namespace repres {
 namespace latlon {
 
 
-ReducedLL::ReducedLL(const param::MIRParametrisation &parametrisation) {
+ReducedLL::ReducedLL(const param::MIRParametrisation &parametrisation):
+    bbox_(parametrisation) {
+    // FIXME: where are north_south_increment and Nj?
     ASSERT(parametrisation.get("pl", pl_));
 }
 
@@ -38,8 +40,7 @@ ReducedLL::~ReducedLL() {
 
 
 void ReducedLL::print(std::ostream &out) const {
-    out << "ReducedLL["
-        << "]";
+    out << "ReducedLL[bbox=" << bbox_ << "]";
 }
 
 
@@ -51,16 +52,17 @@ atlas::Grid* ReducedLL::atlasGrid() const {
     ASSERT(bbox_.global()); // Atlas support needed for non global grids
     // FIXME: ask atlas to support long instead of int
     std::vector<int> pl(pl_.size());
-    for(size_t i= 0; i < pl_.size(); i++) {
+    for (size_t i = 0; i < pl_.size(); i++) {
         pl[i] = pl_[i];
     }
+    // FIXME: we are missing the distrubution of latitudes
     return new atlas::grids::ReducedLonLatGrid(pl.size(), &pl[0], atlas::grids::ReducedLonLatGrid::INCLUDES_POLES);
 }
 
 
 void ReducedLL::validate(const std::vector<double>& values) const {
     size_t count = 0;
-    for(size_t i = 0; i < pl_.size(); i++) {
+    for (size_t i = 0; i < pl_.size(); i++) {
         count += pl_[i];
     }
     ASSERT(values.size() == count);
