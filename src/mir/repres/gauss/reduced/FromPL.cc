@@ -42,6 +42,7 @@ void FromPL::fill(grib_info &info) const  {
 }
 
 atlas::Grid *FromPL::atlasGrid() const {
+    ASSERT(bbox_.global()); // Atlas support needed for non global grids
     ASSERT (pl_.size() > 0);
     // FIXME: ask atlas to support long instead of int
     std::vector<int> pl(pl_.size());

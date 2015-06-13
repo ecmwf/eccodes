@@ -71,7 +71,7 @@ void RegularLL::fill(grib_info &info) const  {
 }
 
 atlas::Grid *RegularLL::atlasGrid() const {
-
+    ASSERT(bbox_.global()); // Atlas support needed for non global grids
     return new atlas::grids::LonLatGrid(int(ni_),
                                         int(nj_),
                                         atlas::grids::LonLatGrid::INCLUDES_POLES);

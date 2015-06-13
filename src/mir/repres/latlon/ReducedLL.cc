@@ -48,6 +48,7 @@ void ReducedLL::fill(grib_info &info) const  {
 }
 
 atlas::Grid* ReducedLL::atlasGrid() const {
+    ASSERT(bbox_.global()); // Atlas support needed for non global grids
     // FIXME: ask atlas to support long instead of int
     std::vector<int> pl(pl_.size());
     for(size_t i= 0; i < pl_.size(); i++) {

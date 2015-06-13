@@ -103,6 +103,7 @@ void Regular::fill(grib_info &info) const  {
 }
 
 atlas::Grid *Regular::atlasGrid() const {
+    ASSERT(bbox_.global()); // Atlas support needed for non global grids
     return new atlas::grids::GaussianGrid(N_);
 }
 

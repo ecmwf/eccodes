@@ -93,6 +93,7 @@ void PolarStereographic::print(std::ostream &out) const {
 }
 
 atlas::Grid *PolarStereographic::atlasGrid() const {
+    NOTIMP;
     return new atlas::grids::PolarStereoGraphic(Nx_,
             Ny_,
             Dx_,

@@ -53,6 +53,7 @@ void Octahedral::fill(grib_info &info) const  {
 }
 
 atlas::Grid *Octahedral::atlasGrid() const {
+    ASSERT(bbox_.global()); // Atlas support needed for non global grids
     return new atlas::grids::rgg::OctahedralRGG(N_);
 }
 

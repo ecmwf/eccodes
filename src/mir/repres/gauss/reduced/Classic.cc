@@ -43,6 +43,7 @@ void Classic::fill(grib_info &info) const  {
 }
 
 atlas::Grid *Classic::atlasGrid() const {
+    ASSERT(bbox_.global()); // Atlas support needed for non global grids
     eckit::StrStream os;
     os << "rgg.N" << N_ << eckit::StrStream::ends;
     return atlas::Grid::create(std::string(os));
