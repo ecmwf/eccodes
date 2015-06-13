@@ -49,11 +49,10 @@ ReducedLL::ReducedLL(const param::MIRParametrisation &parametrisation):
                                        << "(this may mean that grib_api does not set 'global' key for reduced lat-lon grids)"
                                        << std::endl;
 
-                    bbox_ = util::BoundingBox(bbox_.north(),
+                    bbox_ = util::BoundingBox::Global(bbox_.north(),
                                         bbox_.west(),
                                         bbox_.south(),
-                                        bbox_.east(),
-                                        true);
+                                        bbox_.east());
                 }
             }
         }
