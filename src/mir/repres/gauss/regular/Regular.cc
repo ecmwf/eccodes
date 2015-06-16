@@ -77,8 +77,8 @@ void Regular::fill(grib_info &info) const  {
         const std::vector<double> &lats = latitudes();
         info.grid.Nj = 0;
         for (size_t i = 0; i < lats.size(); i++) {
-            if ( util::compare::is_approx_greater_equal(bbox_.north(), lats[i]) &&
-                util::compare::is_approx_greater_equal(lats[i], bbox_.south())) {
+            if(eckit::FloatCompare<double>::isGreaterApproxEqual(bbox_.north(), lats[i]) &&
+               eckit::FloatCompare<double>::isGreaterApproxEqual(lats[i], bbox_.south())) {
                 info.grid.Nj++;
             }
         }
