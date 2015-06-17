@@ -16,6 +16,7 @@
 
 #include <iostream>
 
+#include "atlas/grids/LocalGrid.h"
 #include "atlas/grids/LonLatGrid.h"
 
 #include "eckit/exception/Exceptions.h"
@@ -70,11 +71,19 @@ void RegularLL::fill(grib_info &info) const  {
 
 }
 
-atlas::Grid *RegularLL::atlasGrid() const {
-    ASSERT(bbox_.global()); // Atlas support needed for non global grids
-    return new atlas::grids::LonLatGrid(int(ni_),
-                                        int(nj_),
-                                        atlas::grids::LonLatGrid::INCLUDES_POLES);
+atlas::Grid* RegularLL::atlasGrid() const {
+
+    atlas::Grid* grid = new atlas::grids::LonLatGrid(int(ni_),
+                                                     int(nj_),
+                                                     atlas::grids::LonLatGrid::INCLUDES_POLES);
+
+    if(bbox_.global())
+        return grid;
+    else
+    {
+        atlas::Domain domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east() );
+        return new atlas::grids::LocalGrid(grid,domain);
+    }
 }
 
 
