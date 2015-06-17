@@ -16,7 +16,9 @@
 
 #include <iostream>
 
+#include "atlas/grids/LocalGrid.h"
 #include "atlas/grids/ReducedLonLatGrid.h"
+
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Compare.h"
 
@@ -91,14 +93,15 @@ atlas::Grid* ReducedLL::atlasGrid() const {
   }
   else
   {
-    atlas::Domain domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east(), 0);
+    atlas::Domain domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east() );
     // FIXME: ask atlas to support long instead of int
     std::vector<int> pl(pl_.size());
     for (size_t i = 0; i < pl_.size(); i++) {
       pl[i] = pl_[i];
     }
     // FIXME: we are missing the distrubution of latitudes
-    return new atlas::grids::ReducedLonLatGrid(pl.size(), &pl[0], domain );
+    atlas::Grid* rll =  new atlas::grids::ReducedLonLatGrid(pl.size(), &pl[0], atlas::grids::ReducedLonLatGrid::INCLUDES_POLES);
+    return new atlas::grids::LocalGrid(rll,domain);
   }
 }
 
