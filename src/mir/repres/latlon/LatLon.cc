@@ -24,6 +24,7 @@
 #include "eckit/log/Timer.h"
 
 #include "mir/util/Grib.h"
+#include "mir/util/Compare.h"
 
 
 namespace mir {
@@ -34,6 +35,22 @@ LatLon::LatLon(const param::MIRParametrisation &parametrisation):
     bbox_(parametrisation), increments_(parametrisation) {
     ASSERT(parametrisation.get("Ni", ni_));
     ASSERT(parametrisation.get("Nj", nj_));
+
+    // Special case for shifted grids
+    if (!bbox_.global()) {
+        double ns = bbox_.north() - bbox_.south() ;
+        double ew = bbox_.east() - bbox_.west() ;
+
+        bool all_lons = eckit::FloatCompare<double>::isApproxEqual(ew + increments_.west_east() , 360);
+        bool all_lats = eckit::FloatCompare<double>::isApproxEqual(ns, 180) || eckit::FloatCompare<double>::isApproxEqual(ns + increments_.south_north(), 180);
+
+        if (all_lats && all_lons)  {
+            eckit::Log::info() << "WARNING: global shifted grid (before): " << bbox_ << " ===== " << increments_ << std::endl;
+            bbox_ = util::BoundingBox::Global(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
+            eckit::Log::info() << "WARNING: global shifted grid (after): " << bbox_ << " ===== " << increments_ << std::endl;
+        }
+
+    }
 }
 
 

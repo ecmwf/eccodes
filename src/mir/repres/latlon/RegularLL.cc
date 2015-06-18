@@ -74,15 +74,20 @@ void RegularLL::fill(grib_info &info) const  {
 atlas::Grid* RegularLL::atlasGrid() const {
 
     atlas::Grid* grid = new atlas::grids::LonLatGrid(int(ni_),
-                                                     int(nj_),
-                                                     atlas::grids::LonLatGrid::INCLUDES_POLES);
+            int(nj_),
+            atlas::grids::LonLatGrid::INCLUDES_POLES);
 
-    if(bbox_.global())
+    if (bbox_.global()) {
+        // FIXME: an assertion for shift global grids
+        ASSERT(bbox_.north() == 90);
+        ASSERT(bbox_.south() == -90);
+        ASSERT(bbox_.east() == 360);
+        ASSERT(bbox_.west() == 360);
+
         return grid;
-    else
-    {
-        atlas::Domain domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east() );
-        return new atlas::grids::LocalGrid(grid,domain);
+    } else {
+        atlas::Domain domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
+        return new atlas::grids::LocalGrid(grid, domain);
     }
 }
 
