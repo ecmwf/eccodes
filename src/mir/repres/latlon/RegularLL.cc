@@ -22,6 +22,7 @@
 #include "eckit/exception/Exceptions.h"
 
 #include "mir/util/Grib.h"
+#include "mir/util/Compare.h"
 
 
 namespace mir {
@@ -49,7 +50,7 @@ Representation *RegularLL::clone() const {
 
 
 // Called by RegularLL::crop()
-RegularLL* RegularLL::cropped(const util::BoundingBox &bbox) const {
+RegularLL *RegularLL::cropped(const util::BoundingBox &bbox) const {
     eckit::Log::info() << "Create cropped copy as RegularLL bbox=" << bbox << std::endl;
     return new RegularLL(bbox, increments_);
 }
@@ -71,9 +72,16 @@ void RegularLL::fill(grib_info &info) const  {
 
 }
 
-atlas::Grid* RegularLL::atlasGrid() const {
+static bool check(double x, double dx) {
+    double a = (x > 0 ? x : -x) / dx;
+    return eckit::FloatCompare<double>::isApproxEqual(size_t(a), a);
+}
 
-    atlas::Grid* grid = new atlas::grids::LonLatGrid(int(ni_),
+atlas::Grid *RegularLL::atlasGrid() const {
+
+    eckit::Log::info() << "RegularLL::atlasGrid " << bbox_ << std::endl;
+
+    atlas::Grid *grid = new atlas::grids::LonLatGrid(int(ni_),
             int(nj_),
             atlas::grids::LonLatGrid::INCLUDES_POLES);
 
@@ -81,11 +89,17 @@ atlas::Grid* RegularLL::atlasGrid() const {
         // FIXME: an assertion for shift global grids
         ASSERT(bbox_.north() == 90);
         ASSERT(bbox_.south() == -90);
-        ASSERT(bbox_.east() == 360);
-        ASSERT(bbox_.west() == 360);
+        ASSERT(bbox_.east() == 360 - increments_.west_east());
+        ASSERT(bbox_.west() == 0);
 
         return grid;
     } else {
+        // FIXME: assert if non-global shifted grid
+        ASSERT(check(bbox_.north(), increments_.south_north()));
+        ASSERT(check(bbox_.south(), increments_.south_north()));
+        ASSERT(check(bbox_.west(), increments_.west_east()));
+        ASSERT(check(bbox_.east(), increments_.west_east()));
+
         atlas::Domain domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
         return new atlas::grids::LocalGrid(grid, domain);
     }
