@@ -53,7 +53,7 @@ const std::vector<long> &Classic::pls() const {
     if (pl_.size() == 0) {
         eckit::StrStream os;
         os << "rgg.N" << N_ << eckit::StrStream::ends;
-        std::auto_ptr<atlas::grids::ReducedGrid> grid(dynamic_cast<atlas::grids::ReducedGrid *>(atlas::Grid::create(std::string(os))));
+        eckit::ScopedPtr<atlas::grids::ReducedGrid> grid(dynamic_cast<atlas::grids::ReducedGrid *>(atlas::Grid::create(std::string(os))));
 
         ASSERT(grid.get());
 

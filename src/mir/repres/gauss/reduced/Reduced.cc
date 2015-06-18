@@ -16,11 +16,13 @@
 
 #include <limits>
 
-#include "mir/param/MIRParametrisation.h"
 #include "eckit/exception/Exceptions.h"
-#include "mir/repres/Iterator.h"
+#include "eckit/memory/ScopedPtr.h"
 
 #include "atlas/grids/GaussianLatitudes.h"
+
+#include "mir/param/MIRParametrisation.h"
+#include "mir/repres/Iterator.h"
 #include "mir/util/Grib.h"
 
 
@@ -200,7 +202,7 @@ size_t Reduced::frame(std::vector<double> &values, size_t size, double missingVa
 
     std::map<size_t, size_t> shape;
 
-    std::auto_ptr<Iterator> iter(iterator());
+    eckit::ScopedPtr<Iterator> iter(iterator());
 
     double prev_lat = std::numeric_limits<double>::max();
     double prev_lon = -std::numeric_limits<double>::max();
@@ -260,7 +262,7 @@ void Reduced::validate(const std::vector<double> &values) const {
         }
         ASSERT(values.size() == count);
     } else {
-        std::auto_ptr<Iterator> it(iterator());
+        eckit::ScopedPtr<Iterator> it(iterator());
         double lat;
         double lon;
 

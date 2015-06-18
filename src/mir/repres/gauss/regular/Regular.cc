@@ -14,16 +14,16 @@
 
 #include "mir/repres/gauss/regular/Regular.h"
 
-
 #include <iostream>
 
+#include "eckit/exception/Exceptions.h"
+#include "eckit/memory/ScopedPtr.h"
+
+#include "atlas/grids/GaussianLatitudes.h"
 #include "atlas/grids/GaussianGrid.h"
 
-#include "eckit/exception/Exceptions.h"
-#include "atlas/grids/GaussianLatitudes.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Compare.h"
-
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
 
@@ -112,7 +112,7 @@ void Regular::validate(const std::vector<double> &values) const {
     if (bbox_.global()) {
         ASSERT(values.size() == (N_ * 2) * (N_ * 4));
     } else {
-        std::auto_ptr<Iterator> it(iterator());
+        eckit::ScopedPtr<Iterator> it(iterator());
         double lat;
         double lon;
 
