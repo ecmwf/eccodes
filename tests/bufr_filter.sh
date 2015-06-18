@@ -8,6 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
+set -x
 . ./include.sh
 
 cd ${data_dir}/bufr
@@ -696,7 +697,7 @@ rm -f ${f}.out
 #-----------------------------------------------------------
 # Test: set unexpandedDescriptors big test
 #-----------------------------------------------------------
-fRulesReady="${test_dir}/set_unexpandedDescriptors.filter"
+fRulesReady="set_unexpandedDescriptors.filter"
 f="syno_1.bufr"
 testScript="set_unexpandedDescriptors_test.sh"
 echo "Test: set unexpandedDescriptors big test" >> $fLog
