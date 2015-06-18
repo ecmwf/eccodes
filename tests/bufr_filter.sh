@@ -667,9 +667,7 @@ f="syno_1.bufr"
 fref="new.bufr"
 echo "Test: set unexpandedDescriptors" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_filter -o ${f}.out $fRules $f 2>> $fLog 1>> $fLog
-
-${tools_dir}/bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
+${tools_dir}/bufr_filter -o ${f}.out $fRules $f 2> ${f}.log 1> ${f}.log
 cat > ${f}.ref <<EOF
 == unexpandedDescriptors ==
 307005 13023 13013 222000 101049 31031 1031 1032 101049 33007
@@ -694,6 +692,27 @@ rm -f ${f}.ref ${f}.log
 cmp $fref ${f}.out
 
 rm -f ${f}.out
+
+#-----------------------------------------------------------
+# Test: set unexpandedDescriptors big test
+#-----------------------------------------------------------
+fRulesReady="${test_dir}/set_unexpandedDescriptors.filter"
+f="syno_1.bufr"
+testScript="set_unexpandedDescriptors_test.sh"
+echo "Test: set unexpandedDescriptors big test" >> $fLog
+echo "file: $f" >> $fLog
+
+cat >$testScript <<EOF
+set -e
+
+EOF
+chmod +x $testScript
+
+${tools_dir}/bufr_filter $fRulesReady $f 2>> $fLog 1> $testScript
+
+./$testScript
+
+rm -f new_*bufr 
 
 #-----------------------------------------------------------
 # Test:  get string

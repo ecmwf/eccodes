@@ -52,6 +52,8 @@ int grib_encode_string(const unsigned char* bitStream, long *bitOffset, size_t n
   unsigned char mask[] ={ 0, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE };
   int remainderComplement=8-remainder;
 
+  if (remainder) byteOffset++;
+
   if (numberOfCharacters==0) return err;
 
   p=(unsigned char*)bitStream+byteOffset;

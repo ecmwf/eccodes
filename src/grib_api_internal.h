@@ -823,7 +823,6 @@ struct grib_handle
     long bufr_subset_number;   /* bufr subset number */
     long bufr_group_number;    /* used in bufr */
     /* grib_accessor* groups[MAX_NUM_GROUPS]; */
-    int unpacked;
     long missingValueLong;
     double missingValueDouble;
 };

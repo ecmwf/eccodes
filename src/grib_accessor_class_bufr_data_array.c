@@ -256,7 +256,6 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
   cancel_bitmap(self);
   self->expanded=0;
   self->expandedAccessor=0;
-  a->parent->h->unpacked=0;
 
   a->length = init_length(a);
   self->bitsToEndData=a->length*8;
@@ -326,7 +325,6 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
   grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
   self->do_decode=1;
-  a->parent->h->unpacked=0;
 
   return GRIB_NOT_IMPLEMENTED;
 }
@@ -335,7 +333,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
   grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
   self->do_decode=1;
-  a->parent->h->unpacked=0;
   return GRIB_NOT_IMPLEMENTED;
 }
 
@@ -513,8 +510,8 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos,int i
     ii++;
     v++;
   }
-  if (max>maxAllowed) return GRIB_OUT_OF_RANGE;
-  if (min<0) return GRIB_OUT_OF_RANGE;
+  if (max>maxAllowed && max!=GRIB_MISSING_DOUBLE) return GRIB_OUT_OF_RANGE;
+  if (min<0 && min!=GRIB_MISSING_DOUBLE) return GRIB_OUT_OF_RANGE;
 
   reference=min/modifiedFactor;
   localReference=reference-modifiedReference;
@@ -527,7 +524,11 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos,int i
   }
 
   grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
-  grib_encode_unsigned_longb(buff->data,localReference,pos,modifiedWidth);
+  if (localWidth) {
+    grib_encode_unsigned_longb(buff->data,localReference,pos,modifiedWidth);
+  } else {
+    grib_set_bits_on(buff->data,pos,modifiedWidth);
+  }
   grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
   grib_encode_unsigned_longb(buff->data,localWidth,pos,6);
 
@@ -770,7 +771,7 @@ static int encode_new_replication(grib_context* c,grib_accessor_bufr_data_array*
 
   if (self->compressedData) {
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
-    grib_encode_unsigned_longb(buff->data,0,pos,descriptors[i]->width);
+    grib_encode_unsigned_longb(buff->data,0,pos,6);
   };
 
   return err;
@@ -1111,13 +1112,17 @@ static grib_accessor* get_element_from_bitmap(grib_accessor* a,bitmap_s* bitmap)
 
   while (bitmapVal) {
     len=1;
-    ret=grib_unpack_long(bitmap->cursor->accessor,&bitmapVal,&len);
-    Assert(ret==0);
+    if (bitmap->cursor && bitmap->cursor->accessor) {
+      ret=grib_unpack_long(bitmap->cursor->accessor,&bitmapVal,&len);
+    } else {
+      return NULL;
+    }
+    if (ret!=0) return NULL;
     bitmap->cursor=bitmap->cursor->next;
-    bitmap->referredElement=bitmap->referredElement->next;
+    if(bitmap->referredElement) bitmap->referredElement=bitmap->referredElement->next;
   }
 
-  return bitmap->referredElement->prev->accessor;
+  return bitmap->referredElement ? bitmap->referredElement->prev->accessor : NULL ;
 }
 
 static GRIB_INLINE void reset_qualifiers(grib_accessor* significanceQualifierGroup[]) {
@@ -1292,8 +1297,8 @@ static int create_keys(grib_accessor* a) {
         if (!bitmap.referredElement) {
           bitmap.cursor=bitmapStart[bitmapIndex]->next;
           bitmap.referredElement=bitmapStart[bitmapIndex];
-          for (i=0;i<bitmapSize[bitmapIndex]+extraElement;i++) {
-            bitmap.referredElement=bitmap.referredElement->prev;
+          for (i=0;i<bitmapSize[bitmapIndex]+extraElement && bitmap.referredElement!=NULL ;i++) {
+              bitmap.referredElement=bitmap.referredElement->prev;
           }
         }
         elementFromBitmap=get_element_from_bitmap(a,&bitmap);
@@ -1343,7 +1348,7 @@ static int process_elements(grib_accessor* a,int flag) {
   long totalSize;
   bufr_descriptor** descriptors=0;
   long icount;
-  int decoding=0;
+  int decoding=0,do_clean=1;
   grib_buffer* buffer=NULL;
   codec_element_proc codec_element;
   codec_replication_proc codec_replication;
@@ -1357,14 +1362,13 @@ static int process_elements(grib_accessor* a,int flag) {
 
   totalSize=self->bitsToEndData;
 
-  if (!self->do_decode) return 0;
-  self->do_decode=0;
-  a->parent->h->unpacked=1;
-
   switch (flag) {
     case PROCESS_DECODE:
+      if (!self->do_decode) return 0;
+      self->do_decode=0;
       buffer=h->buffer;
       decoding=1;
+      do_clean=1;
       pos=a->offset*8;
       codec_element=&decode_element;
       codec_replication=&decode_replication;
@@ -1372,6 +1376,9 @@ static int process_elements(grib_accessor* a,int flag) {
     case PROCESS_NEW_DATA:
       buffer=grib_create_growable_buffer(c);
       decoding=0;
+      self->do_decode=1;
+      do_clean=1;
+      self->do_decode=1;
       pos=0;
       codec_element=&encode_new_element;
       codec_replication=&encode_new_replication;
@@ -1389,7 +1396,7 @@ static int process_elements(grib_accessor* a,int flag) {
 
   descriptors=self->expanded->v;
 
-  if (decoding==1 && self->numericValues) {
+  if (do_clean==1 && self->numericValues) {
     grib_vdarray_delete_content(c,self->numericValues);
     grib_vdarray_delete(c,self->numericValues);
     grib_sarray_delete_content(c,self->stringValues);

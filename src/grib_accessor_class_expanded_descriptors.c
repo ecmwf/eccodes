@@ -33,7 +33,7 @@ MEMBERS    = const char* tablesAccessorName
 MEMBERS    = bufr_descriptors_array* expanded
 MEMBERS    = int rank
 MEMBERS    = grib_accessor* expandedAccessor
-MEMBERS    = int dirty
+MEMBERS    = int do_expand
 MEMBERS    = grib_accessor* tablesAccessor
 
 END_CLASS_DEF
@@ -72,7 +72,7 @@ typedef struct grib_accessor_expanded_descriptors {
 	bufr_descriptors_array* expanded;
 	int rank;
 	grib_accessor* expandedAccessor;
-	int dirty;
+	int do_expand;
 	grib_accessor* tablesAccessor;
 } grib_accessor_expanded_descriptors;
 
@@ -180,7 +180,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
   }
   self->unexpandedDescriptors=grib_arguments_get_name(a->parent->h,args,n++);
   self->sequence=grib_arguments_get_name(a->parent->h,args,n++);
-  self->dirty=1;
+  self->do_expand=1;
   self->expanded=0;
   a->length = 0;
 }
@@ -515,10 +515,10 @@ static int expand(grib_accessor* a)
   bufr_descriptors_array* unexpanded=NULL;
   grib_context* c=a->parent->h->context;
 
-  if (!self->dirty) {
+  if (!self->do_expand) {
     return err;
   }
-  self->dirty=0;
+  self->do_expand=0;
   if (!self->tablesAccessor) {
     self->tablesAccessor=grib_find_accessor(a->parent->h,self->tablesAccessorName);
     Assert(self->tablesAccessor);
@@ -556,6 +556,12 @@ static int expand(grib_accessor* a)
 
   return err;
 
+}
+
+int grib_accessor_class_expanded_descriptors_set_do_expand(grib_accessor* a,long do_expand) {
+  grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
+  self->do_expand=do_expand;
+  return 0;
 }
 
 bufr_descriptors_array* grib_accessor_class_expanded_descriptors_get_expanded(grib_accessor* a,int* err) {
@@ -638,7 +644,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
 {
   grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
-  self->dirty=1;
+  self->do_expand=1;
   return GRIB_NOT_IMPLEMENTED;
 }
 

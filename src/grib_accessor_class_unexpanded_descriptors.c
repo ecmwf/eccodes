@@ -209,6 +209,7 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
     long pos = 0;
     unsigned long f,x,y;
     unsigned char* buf        = NULL;
+    grib_accessor* expanded=NULL;
     size_t buflen=*len*2;
     long section3Length,totalLength;
 
@@ -232,6 +233,10 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
 
     grib_set_long(a->parent->h,"totalLength",totalLength);
     grib_set_long(a->parent->h,"section3Length",section3Length);
+    expanded=grib_find_accessor(a->parent->h,"expandedCodes");
+    Assert(expanded!=NULL);
+    grib_accessor_class_expanded_descriptors_set_do_expand(expanded,1);
+    grib_set_long(a->parent->h,"unpack",3);
 
     return ret;
 }

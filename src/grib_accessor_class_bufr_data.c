@@ -854,7 +854,6 @@ static int decode_elements(grib_accessor* a) {
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
   get_elements_and_decode(a);
-  a->parent->h->unpacked=1;
 
   grib_dump_section(dumper,a,a->sub_section->block);
 
@@ -881,7 +880,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len) {
 
     err=get_elements_and_decode(a);
     if (err) return err;
-    a->parent->h->unpacked=1;
 
     if (!val) return GRIB_SUCCESS;
     else return GRIB_NOT_IMPLEMENTED;
