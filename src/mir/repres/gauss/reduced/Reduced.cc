@@ -77,19 +77,15 @@ bool Reduced::globalDomain() const {
         double last = 360.0 - 360.0 / most_points ;
         double ew = bbox_.east() - bbox_.west();
 
-        eckit::Log::info() << "+++++++++ " << bbox_ << std::endl;
-        eckit::Log::info() << "+++++++++ last= " << last << std::endl;
-        eckit::Log::info() << "+++++++++ bbox= " << ew << std::endl;
-        eckit::Log::info() << "+++++++++ diff= " << fabs(ew-last) << std::endl;
-
         // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree
         // Use the precision given by GRIB in this check
-        bool global = fabs(ew-last) < 1.0/1000.0;
-        eckit::Log::info() << "+++++++++ "  << global << std::endl;
+
+        const double epsilon = 1.0 / 1000.0;
+
+        bool global = fabs(ew-last) < epsilon;
         return global;
     }
 
-    eckit::Log::info() << "+++++++++ " << N_ << " " << pl.size() << std::endl;
     return false;
 
 }

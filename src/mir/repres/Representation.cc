@@ -110,13 +110,6 @@ atlas::Grid *Representation::atlasGrid() const {
     throw eckit::SeriousBug(std::string(os));
 }
 
-
-bool Representation::globalDomain() const {
-    eckit::StrStream os;
-    os << "Representation::globalDomain() not implemented for " << *this << eckit::StrStream::ends;
-    throw eckit::SeriousBug(std::string(os));
-}
-
 size_t Representation::truncation() const {
     eckit::StrStream os;
     os << "Representation::truncation() not implemented for " << *this << eckit::StrStream::ends;

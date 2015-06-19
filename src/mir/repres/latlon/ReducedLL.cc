@@ -52,35 +52,25 @@ void ReducedLL::fill(grib_info &info) const  {
 }
 
 bool ReducedLL::globalDomain() const {
-#if 0
-    // Check for global, this belongs to grib_api
-    // FIXME: Remove when supported by grib_api
-    if (!bbox_.global())
-        if (bbox_.north() == 90 && bbox_.south() == -90) {
-            if (Nj_ == pl_.size()) {
-                ASSERT(pl_.size());
-                long maxpl = pl_[0];
-                for (size_t i = 1; i < pl_.size(); i++) {
-                    maxpl = std::max(maxpl, pl_[i]);
-                }
 
-                double ew = 360.0 / maxpl;
+    // FIXME: cache
+    if (bbox_.north() == 90 && bbox_.south() == -90) {
+        if (Nj_ == pl_.size()) {
+            ASSERT(pl_.size());
+            long maxpl = pl_[0];
+            for (size_t i = 1; i < pl_.size(); i++) {
+                maxpl = std::max(maxpl, pl_[i]);
+            }
 
-                if (eckit::FloatCompare<double>::isApproxEqual(bbox_.east() - bbox_.west() + ew, 360.)) {
-                    eckit::Log::info() << bbox_
-                                       << " considered global "
-                                       << "(this may mean that grib_api does not set 'global' key for reduced lat-lon grids)"
-                                       << std::endl;
+            double ew = 360.0 / maxpl;
 
-                    bbox_ = util::BoundingBox::Global(bbox_.north(),
-                                                      bbox_.west(),
-                                                      bbox_.south(),
-                                                      bbox_.east());
-                }
+            if (eckit::FloatCompare<double>::isApproxEqual(bbox_.east() - bbox_.west() + ew, 360.)) {
+                return true;
             }
         }
-#endif
-    NOTIMP;
+
+    }
+    return false;
 }
 
 atlas::Grid *ReducedLL::atlasGrid() const {

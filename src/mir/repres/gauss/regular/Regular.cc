@@ -60,6 +60,38 @@ Regular::~Regular() {
 }
 
 
+bool Regular::globalDomain() const {
+
+    if (bbox_.west() == 0 && bbox_.east() == 360 && bbox_.north() == 90 && bbox_.south() == -90) {
+        return true;
+    }
+
+    size_t Nj = N_ * 2;
+    size_t Ni = N_ * 4;
+
+
+    double last = 360.0 - 360.0 / Ni ;
+    double ew = bbox_.east() - bbox_.west();
+
+    // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree
+    // Use the precision given by GRIB in this check
+
+    const double epsilon = 1.0 / 1000.0;
+
+    bool full = fabs(ew - last) < epsilon;
+
+    if (full) {
+        const std::vector<double> &lats = latitudes();
+        ASSERT(lats.size());
+        bool npole = fabs(bbox_.north() - lats[0]) < epsilon;
+        bool spole = fabs(bbox_.south() - lats[lats.size() - 1]) < epsilon;
+        return npole && spole;
+    }
+    return false;
+
+
+}
+
 void Regular::fill(grib_info &info) const  {
 
     // See copy_spec_from_ksec.c in libemos for info
@@ -77,8 +109,8 @@ void Regular::fill(grib_info &info) const  {
         const std::vector<double> &lats = latitudes();
         info.grid.Nj = 0;
         for (size_t i = 0; i < lats.size(); i++) {
-            if(eckit::FloatCompare<double>::isGreaterApproxEqual(bbox_.north(), lats[i]) &&
-               eckit::FloatCompare<double>::isGreaterApproxEqual(lats[i], bbox_.south())) {
+            if (eckit::FloatCompare<double>::isGreaterApproxEqual(bbox_.north(), lats[i]) &&
+                    eckit::FloatCompare<double>::isGreaterApproxEqual(lats[i], bbox_.south())) {
                 info.grid.Nj++;
             }
         }
