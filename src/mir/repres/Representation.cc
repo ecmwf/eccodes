@@ -17,7 +17,7 @@
 #include "eckit/thread/AutoLock.h"
 #include "eckit/thread/Mutex.h"
 #include "eckit/thread/Once.h"
-
+#include "eckit/thread/Once.h"
 
 #include "mir/param/MIRParametrisation.h"
 
@@ -107,6 +107,13 @@ Representation *Representation::truncate(size_t truncation,
 atlas::Grid *Representation::atlasGrid() const {
     eckit::StrStream os;
     os << "Representation::atlasGrid() not implemented for " << *this << eckit::StrStream::ends;
+    throw eckit::SeriousBug(std::string(os));
+}
+
+
+bool Representation::globalDomain() const {
+    eckit::StrStream os;
+    os << "Representation::globalDomain() not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
 }
 

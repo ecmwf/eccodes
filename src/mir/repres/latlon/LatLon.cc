@@ -26,7 +26,6 @@
 #include "mir/util/Grib.h"
 #include "mir/util/Compare.h"
 
-
 namespace mir {
 namespace repres {
 namespace latlon {
@@ -36,21 +35,6 @@ LatLon::LatLon(const param::MIRParametrisation &parametrisation):
     ASSERT(parametrisation.get("Ni", ni_));
     ASSERT(parametrisation.get("Nj", nj_));
 
-    // Special case for shifted grids
-    if (!bbox_.global()) {
-        double ns = bbox_.north() - bbox_.south() ;
-        double ew = bbox_.east() - bbox_.west() ;
-
-        bool all_lons = eckit::FloatCompare<double>::isApproxEqual(ew + increments_.west_east() , 360);
-        bool all_lats = eckit::FloatCompare<double>::isApproxEqual(ns, 180) || eckit::FloatCompare<double>::isApproxEqual(ns + increments_.south_north(), 180);
-
-        if (all_lats && all_lons)  {
-            eckit::Log::info() << "WARNING: global shifted grid (before): " << bbox_ << " ===== " << increments_ << std::endl;
-            bbox_ = util::BoundingBox::Global(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
-            eckit::Log::info() << "WARNING: global shifted grid (after): " << bbox_ << " ===== " << increments_ << std::endl;
-        }
-
-    }
 }
 
 
@@ -63,6 +47,25 @@ LatLon::LatLon(const util::BoundingBox &bbox,
 
 
 LatLon::~LatLon() {
+}
+
+bool LatLon::globalDomain() const {
+
+    // Special case for shifted grids
+    double ns = bbox_.north() - bbox_.south() ;
+    double ew = bbox_.east() - bbox_.west() ;
+
+    bool all_lons = eckit::FloatCompare<double>::isApproxEqual(ew + increments_.west_east() , 360);
+    bool all_lats = eckit::FloatCompare<double>::isApproxEqual(ns, 180) || eckit::FloatCompare<double>::isApproxEqual(ns + increments_.south_north(), 180);
+
+    return all_lats && all_lons;
+    //     if (all_lats && all_lons)  {
+    //         eckit::Log::info() << "WARNING: global shifted grid (before): " << bbox_ << " ===== " << increments_ << std::endl;
+    //         bbox_ = util::BoundingBox::Global(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
+    //         eckit::Log::info() << "WARNING: global shifted grid (after): " << bbox_ << " ===== " << increments_ << std::endl;
+    //     }
+
+    // }
 }
 
 // size_t LatLon::ni() const {

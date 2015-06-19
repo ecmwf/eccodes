@@ -31,34 +31,6 @@ ReducedLL::ReducedLL(const param::MIRParametrisation &parametrisation):
     bbox_(parametrisation) {
     ASSERT(parametrisation.get("pl", pl_));
     ASSERT(parametrisation.get("Nj", Nj_));
-
-    // Check for global, this belongs to grib_api
-    // FIXME: Remove when supported by grib_api
-    if (!bbox_.global())
-        if (bbox_.north() == 90 && bbox_.south() == -90) {
-            if (Nj_ == pl_.size()) {
-                ASSERT(pl_.size());
-                long maxpl = pl_[0];
-                for (size_t i = 1; i < pl_.size(); i++) {
-                    maxpl = std::max(maxpl, pl_[i]);
-                }
-
-                double ew = 360.0 / maxpl;
-
-                if (eckit::FloatCompare<double>::isApproxEqual(bbox_.east() - bbox_.west() + ew, 360.)) {
-                    eckit::Log::info() << bbox_
-                                       << " considered global "
-                                       << "(this may mean that grib_api does not set 'global' key for reduced lat-lon grids)"
-                                       << std::endl;
-
-                    bbox_ = util::BoundingBox::Global(bbox_.north(),
-                                        bbox_.west(),
-                                        bbox_.south(),
-                                        bbox_.east());
-                }
-            }
-        }
-
 }
 
 
@@ -79,34 +51,64 @@ void ReducedLL::fill(grib_info &info) const  {
     NOTIMP;
 }
 
-atlas::Grid* ReducedLL::atlasGrid() const {
+bool ReducedLL::globalDomain() const {
+#if 0
+    // Check for global, this belongs to grib_api
+    // FIXME: Remove when supported by grib_api
+    if (!bbox_.global())
+        if (bbox_.north() == 90 && bbox_.south() == -90) {
+            if (Nj_ == pl_.size()) {
+                ASSERT(pl_.size());
+                long maxpl = pl_[0];
+                for (size_t i = 1; i < pl_.size(); i++) {
+                    maxpl = std::max(maxpl, pl_[i]);
+                }
 
-  if( bbox_.global() )
-  {// Atlas support needed for non global grids
-    // FIXME: ask atlas to support long instead of int
-    std::vector<int> pl(pl_.size());
-    for (size_t i = 0; i < pl_.size(); i++) {
-      pl[i] = pl_[i];
+                double ew = 360.0 / maxpl;
+
+                if (eckit::FloatCompare<double>::isApproxEqual(bbox_.east() - bbox_.west() + ew, 360.)) {
+                    eckit::Log::info() << bbox_
+                                       << " considered global "
+                                       << "(this may mean that grib_api does not set 'global' key for reduced lat-lon grids)"
+                                       << std::endl;
+
+                    bbox_ = util::BoundingBox::Global(bbox_.north(),
+                                                      bbox_.west(),
+                                                      bbox_.south(),
+                                                      bbox_.east());
+                }
+            }
+        }
+#endif
+    NOTIMP;
+}
+
+atlas::Grid *ReducedLL::atlasGrid() const {
+
+    if ( globalDomain() ) {
+        // Atlas support needed for non global grids
+        // FIXME: ask atlas to support long instead of int
+        std::vector<int> pl(pl_.size());
+        for (size_t i = 0; i < pl_.size(); i++) {
+            pl[i] = pl_[i];
+        }
+        // FIXME: we are missing the distrubution of latitudes
+        return new atlas::grids::ReducedLonLatGrid(pl.size(), &pl[0], atlas::grids::ReducedLonLatGrid::INCLUDES_POLES);
+    } else {
+        atlas::Domain domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east() );
+        // FIXME: ask atlas to support long instead of int
+        std::vector<int> pl(pl_.size());
+        for (size_t i = 0; i < pl_.size(); i++) {
+            pl[i] = pl_[i];
+        }
+        // FIXME: we are missing the distrubution of latitudes
+        atlas::Grid *rll =  new atlas::grids::ReducedLonLatGrid(pl.size(), &pl[0], atlas::grids::ReducedLonLatGrid::INCLUDES_POLES);
+        return new atlas::grids::LocalGrid(rll, domain);
     }
-    // FIXME: we are missing the distrubution of latitudes
-    return new atlas::grids::ReducedLonLatGrid(pl.size(), &pl[0], atlas::grids::ReducedLonLatGrid::INCLUDES_POLES);
-  }
-  else
-  {
-    atlas::Domain domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east() );
-    // FIXME: ask atlas to support long instead of int
-    std::vector<int> pl(pl_.size());
-    for (size_t i = 0; i < pl_.size(); i++) {
-      pl[i] = pl_[i];
-    }
-    // FIXME: we are missing the distrubution of latitudes
-    atlas::Grid* rll =  new atlas::grids::ReducedLonLatGrid(pl.size(), &pl[0], atlas::grids::ReducedLonLatGrid::INCLUDES_POLES);
-    return new atlas::grids::LocalGrid(rll,domain);
-  }
 }
 
 
-void ReducedLL::validate(const std::vector<double>& values) const {
+void ReducedLL::validate(const std::vector<double> &values) const {
     size_t count = 0;
     for (size_t i = 0; i < pl_.size(); i++) {
         count += pl_[i];

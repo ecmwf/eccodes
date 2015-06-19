@@ -77,24 +77,23 @@ static bool check(double x, double dx) {
     return eckit::FloatCompare<double>::isApproxEqual(size_t(a), a);
 }
 
-atlas::Grid* RegularLL::atlasGrid() const {
+
+atlas::Grid *RegularLL::atlasGrid() const {
 
     eckit::Log::info() << "RegularLL::atlasGrid BBox is " << bbox_ << std::endl;
 
-    atlas::Grid* grid = new atlas::grids::LonLatGrid(int(ni_),
+    atlas::Grid *grid = new atlas::grids::LonLatGrid(int(ni_),
             int(nj_),
             atlas::grids::LonLatGrid::INCLUDES_POLES);
 
-    if (bbox_.global()) {
+    if (globalDomain()) {
 
         // FIXME: an assertion for shift global grids
         ASSERT(bbox_.north() == 90);
         ASSERT(bbox_.south() == -90);
         ASSERT(bbox_.east() == 360 - increments_.west_east());
         ASSERT(bbox_.west() == 0);
-    }
-    else
-    {
+    } else {
         // FIXME: assert if non-global shifted grid
         ASSERT(check(bbox_.north(), increments_.south_north()));
         ASSERT(check(bbox_.south(), increments_.south_north()));
@@ -108,6 +107,7 @@ atlas::Grid* RegularLL::atlasGrid() const {
     eckit::Log::info() << "RegularLL::atlasGrid is " << *grid << " BoundBox " << bbox_ << std::endl;
 
     return grid;
+
 }
 
 

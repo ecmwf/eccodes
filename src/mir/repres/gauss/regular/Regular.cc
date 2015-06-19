@@ -69,7 +69,7 @@ void Regular::fill(grib_info &info) const  {
     info.grid.N = N_;
     info.grid.iDirectionIncrementInDegrees = 90.0 / N_;
 
-    if (bbox_.global()) {
+    if (globalDomain()) {
         info.grid.Nj = N_ * 2;
         info.grid.Ni = N_ * 4;
     } else {
@@ -98,18 +98,18 @@ void Regular::fill(grib_info &info) const  {
     size_t j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
     info.packing.extra_settings[j].name = "global";
-    info.packing.extra_settings[j].long_value = bbox_.global() ? 1 : 0;
+    info.packing.extra_settings[j].long_value = globalDomain() ? 1 : 0;
 
 }
 
 atlas::Grid *Regular::atlasGrid() const {
-    ASSERT(bbox_.global()); // Atlas support needed for non global grids
+    ASSERT(globalDomain()); // Atlas support needed for non global grids
     return new atlas::grids::GaussianGrid(N_);
 }
 
 
 void Regular::validate(const std::vector<double> &values) const {
-    if (bbox_.global()) {
+    if (globalDomain()) {
         ASSERT(values.size() == (N_ * 2) * (N_ * 4));
     } else {
         eckit::ScopedPtr<Iterator> it(iterator());

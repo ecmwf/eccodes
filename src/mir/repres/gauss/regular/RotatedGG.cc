@@ -57,7 +57,7 @@ void RotatedGG::fill(grib_info &info) const  {
 }
 
 atlas::Grid *RotatedGG::atlasGrid() const {
-    ASSERT(bbox_.global()); // Atlas support needed for non global grids
+    ASSERT(globalDomain()); // Atlas support needed for non global grids
     return new atlas::grids::RotatedGrid(Regular::atlasGrid(),
                                          rotation_.south_pole_latitude(),
                                          rotation_.south_pole_longitude(),

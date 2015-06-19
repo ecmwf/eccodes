@@ -15,6 +15,7 @@
 #include "mir/repres/gauss/reduced/Reduced.h"
 
 #include <limits>
+#include <cmath>
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/memory/ScopedPtr.h"
@@ -55,6 +56,44 @@ inline void between_0_and_360(double &x) {
     }
 }
 
+bool Reduced::globalDomain() const {
+
+    // TODO: cache me
+
+    if (bbox_.west() == 0 && bbox_.east() == 360 && bbox_.north() == 90 && bbox_.south() == -90) {
+        return true;
+    }
+
+    const std::vector<long> &pl = pls();
+    ASSERT(pl.size());
+
+    if (N_ * 2 == pl.size()) {
+
+        long most_points = pl[0];
+        for (size_t i = 1; i < pl.size(); i++) {
+            most_points = std::max(most_points, pl[i]);
+        }
+
+        double last = 360.0 - 360.0 / most_points ;
+        double ew = bbox_.east() - bbox_.west();
+
+        eckit::Log::info() << "+++++++++ " << bbox_ << std::endl;
+        eckit::Log::info() << "+++++++++ last= " << last << std::endl;
+        eckit::Log::info() << "+++++++++ bbox= " << ew << std::endl;
+        eckit::Log::info() << "+++++++++ diff= " << fabs(ew-last) << std::endl;
+
+        // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree
+        // Use the precision given by GRIB in this check
+        bool global = fabs(ew-last) < 1.0/1000.0;
+        eckit::Log::info() << "+++++++++ "  << global << std::endl;
+        return global;
+    }
+
+    eckit::Log::info() << "+++++++++ " << N_ << " " << pl.size() << std::endl;
+    return false;
+
+}
+
 void Reduced::fill(grib_info &info) const  {
 
     // See copy_spec_from_ksec.c in libemos for info
@@ -81,12 +120,14 @@ void Reduced::fill(grib_info &info) const  {
 
     */
 
+    bool global = globalDomain();
+
     size_t j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
     info.packing.extra_settings[j].name = "global";
-    info.packing.extra_settings[j].long_value = bbox_.global() ? 1 : 0;
+    info.packing.extra_settings[j].long_value = global ? 1 : 0;
 
-    if (!bbox_.global()) {
+    if (!global) {
         // It looks like dissemination files have longitudes between 0 and 360
         // See if that logic needs to be moved to BoundingBox
 
@@ -187,7 +228,9 @@ class GaussianIterator: public Iterator {
 };
 
 Iterator *Reduced::iterator() const {
-    return new GaussianIterator(latitudes(), pls(), bbox_);
+    // Use a global bounding box if global domain, to avoid rounding issues
+    // due to GRIB (in)accuracies
+    return new GaussianIterator(latitudes(), pls(), globalDomain() ? util::BoundingBox() : bbox_);
 }
 
 
@@ -254,7 +297,7 @@ size_t Reduced::frame(std::vector<double> &values, size_t size, double missingVa
 
 void Reduced::validate(const std::vector<double> &values) const {
 
-    if (bbox_.global()) {
+    if (globalDomain()) {
         const std::vector<long> &pl = pls();
         size_t count = 0;
         for (size_t i = 0; i < pl.size(); i++) {
