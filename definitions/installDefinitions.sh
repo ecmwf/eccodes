@@ -53,7 +53,7 @@ fi
 echo checking definition files compatibility...
 for file in `find . -name '*.def' -print`
 do
-  ${grib_api_bin}/parser $file 
+  ${grib_api_bin}/codes_parser $file 
 done
 if [ $? != 0 ]
 then

@@ -17,6 +17,6 @@ REDIRECT=/dev/null
 
 for file in `find $ECCODES_DEFINITION_PATH -name '*.def' -print`
 do
-  ${tools_dir}parser $file > $REDIRECT
+  ${tools_dir}codes_parser $file > $REDIRECT
 done
 

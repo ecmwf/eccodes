@@ -10,7 +10,7 @@ list( APPEND grib_tools_bins
              codes_info codes_count
              grib_histogram grib_filter grib_ls grib_dump grib_merge
              grib2ppm grib_set grib_get grib_get_data grib_copy
-             grib_compare parser grib_index_build
+             grib_compare codes_parser grib_index_build
              bufr_filter bufr_ls bufr_dump bufr_set bufr_get
              bufr_copy bufr_compare bufr_index_build
              gts_copy gts_dump gts_filter gts_ls

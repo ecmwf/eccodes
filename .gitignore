@@ -64,7 +64,7 @@ tools/grib_repair
 tools/grib_set
 tools/grib_to_netcdf
 tools/mars_request
-tools/parser
+tools/codes_parser
 tools/xref
 tools/grib1to2
 tools/bufr_compare
