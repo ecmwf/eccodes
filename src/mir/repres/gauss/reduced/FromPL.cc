@@ -44,12 +44,7 @@ void FromPL::fill(grib_info &info) const  {
 atlas::Grid *FromPL::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
     ASSERT (pl_.size() > 0);
-    // FIXME: ask atlas to support long instead of int
-    std::vector<int> pl(pl_.size());
-    for (size_t i = 0; i < pl_.size(); i++) {
-        pl[i] = pl_[i];
-    }
-    return new atlas::grids::ReducedGaussianGrid(N_, &pl[0]);
+    return new atlas::grids::ReducedGaussianGrid(N_, &pl_[0]);
 }
 
 
