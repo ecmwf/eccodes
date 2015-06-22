@@ -95,9 +95,9 @@ void LatLon::reorder(long scanningMode, std::vector<double> &values) const {
     std::vector<double> out(values.size());
 
     if (scanningMode == jScansPositively) {
-        long count = 0;
+        size_t count = 0;
         for (int j = nj_ - 1 ; j >= 0; --j) {
-            for (int i = 0 ; i <  ni_; ++i) {
+            for (size_t i = 0 ; i <  ni_; ++i) {
                 out[count++] = values[j * ni_ + i];
             }
         }
@@ -107,8 +107,8 @@ void LatLon::reorder(long scanningMode, std::vector<double> &values) const {
     }
 
     if (scanningMode == iScansNegatively) {
-        long count = 0;
-        for (int j = 0  ; j < nj_; ++j) {
+        size_t count = 0;
+        for (size_t j = 0  ; j < nj_; ++j) {
             for (int i = ni_ - 1 ; i >= 0; --i) {
                 out[count++] = values[j * ni_ + i];
             }
@@ -119,7 +119,7 @@ void LatLon::reorder(long scanningMode, std::vector<double> &values) const {
     }
 
     if (scanningMode == (iScansNegatively | jScansPositively)) {
-        long count = 0;
+        size_t count = 0;
         for (int j = nj_ - 1  ; j >= 0; --j) {
             for (int i = ni_ - 1 ; i >= 0; --i) {
                 out[count++] = values[j * ni_ + i];
