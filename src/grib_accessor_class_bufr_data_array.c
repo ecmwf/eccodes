@@ -706,8 +706,8 @@ static int encode_new_element(grib_context* c,grib_accessor_bufr_data_array* sel
     }
   } else {
     /* numeric or codetable or flagtable */
-    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding: \t %s = %ld",
-                        self->expanded->v[i]->shortName,(long)cdval);
+    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding: \t %s = %g",
+                        self->expanded->v[i]->shortName,cdval);
     if (self->expanded->v[i]->code==31031) cdval=0;
     if (self->compressedData) {
       grib_darray* doubleValues=grib_darray_new(c,1,1);
