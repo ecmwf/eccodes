@@ -714,6 +714,7 @@ ${tools_dir}/bufr_filter $fRulesReady $f 2>> $fLog 1> $testScript
 ./$testScript
 
 rm -f new_*bufr 
+rm -f $testScript
 
 #-----------------------------------------------------------
 # Test:  get string
