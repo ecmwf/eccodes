@@ -82,8 +82,7 @@ atlas::Grid *RegularLL::atlasGrid() const {
 
     eckit::Log::info() << "RegularLL::atlasGrid BBox is " << bbox_ << std::endl;
 
-    atlas::Grid *grid = new atlas::grids::LonLatGrid(int(ni_),
-            int(nj_),
+    atlas::Grid* grid = new atlas::grids::LonLatGrid(ni_,nj_,
             atlas::grids::LonLatGrid::INCLUDES_POLES);
 
     if (globalDomain()) {
