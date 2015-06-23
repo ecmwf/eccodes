@@ -73,5 +73,27 @@ hourEnd=$1; dayEnd=$2
 [ "$hourEnd" = "0" ]
 [ "$dayEnd"  = "6" ]
 
+
+# ECC-134 case-sensitivity
+grib1_sample=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+grib2_sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+temp=temp.step.$$.grib
+# M is for Month (code 3)
+${tools_dir}grib_set -s indicatorOfUnitOfTimeRange=M $grib1_sample $temp
+unit=`${tools_dir}grib_get -p unitOfTimeRange $temp`
+[ "$unit" = "3" ]
+${tools_dir}grib_set -s indicatorOfUnitOfTimeRange=M $grib2_sample $temp
+unit=`${tools_dir}grib_get -p indicatorOfUnitOfTimeRange $temp`
+[ "$unit" = "3" ]
+
+# m is for Minute (code 0)
+${tools_dir}grib_set -s indicatorOfUnitOfTimeRange=m $grib1_sample $temp
+unit=`${tools_dir}grib_get -p unitOfTimeRange $temp`
+[ "$unit" = "0" ]
+${tools_dir}grib_set -s indicatorOfUnitOfTimeRange=m $grib2_sample $temp
+unit=`${tools_dir}grib_get -p indicatorOfUnitOfTimeRange $temp`
+[ "$unit" = "0" ]
+
+rm -f $temp
 rm -f $grib2File.p8tmp ${grib2File}.tmp | true
 rm -f x.grib

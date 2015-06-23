@@ -595,10 +595,10 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t *len)
 
     typedef int (*cmpproc)(const char*, const char*);
 #ifndef ECCODES_ON_WINDOWS
-    cmpproc cmp = (a->flags | GRIB_ACCESSOR_FLAG_LOWERCASE) ? grib_strcasecmp : strcmp;
+    cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? grib_strcasecmp : strcmp;
 #else
     /* Microsoft Windows Visual Studio support */
-    cmpproc cmp = (a->flags | GRIB_ACCESSOR_FLAG_LOWERCASE) ? stricmp : strcmp;
+    cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? stricmp : strcmp;
 #endif
 
     if(!self->table) self->table = load_table(self);
