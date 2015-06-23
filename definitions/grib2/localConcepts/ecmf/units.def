@@ -9323,20 +9323,6 @@
 	 parameterNumber = 12 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean total precipitation rate
-'kg m**-2 s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 235 ;
-	 parameterNumber = 13 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
-#Mean turbulent diffusion coefficient for heat
-'m**2 s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 235 ;
-	 parameterNumber = 14 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
 #Flood alert levels
 'Integer' = {
 	 discipline = 192 ;

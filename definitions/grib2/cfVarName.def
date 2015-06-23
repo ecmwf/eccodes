@@ -202,6 +202,20 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
 	}
+#Mean total precipitation rate
+'tprm' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean turbulent diffusion coefficient for heat
+'tdchm' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Cloudy brightness temperature
 'p260510' = {
          discipline = 3 ;

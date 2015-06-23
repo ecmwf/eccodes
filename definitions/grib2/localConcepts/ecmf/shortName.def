@@ -9323,20 +9323,6 @@
 	 parameterNumber = 12 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean total precipitation rate
-'tprm' = {
-	 discipline = 192 ;
-	 parameterCategory = 235 ;
-	 parameterNumber = 13 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
-#Mean turbulent diffusion coefficient for heat
-'tdchm' = {
-	 discipline = 192 ;
-	 parameterCategory = 235 ;
-	 parameterNumber = 14 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
 #Flood alert levels
 'flal' = {
 	 discipline = 192 ;
