@@ -1,8 +1,8 @@
 TESTS = definitions.sh calendar.sh \
         bufrdc_desc_ref.sh bufrdc_ref.sh bufr_dump.sh bufr_filter.sh \
         bufr_json.sh bufr_compare.sh bufr_copy.sh bufr_count.sh bufr_get.sh bufr_ls.sh bufr_set.sh \
-				gts_ls.sh \
-				metar_ls.sh metar_dump.sh \
+        gts_ls.sh \
+        metar_ls.sh metar_dump.sh \
         ieee.sh grib1to2.sh \
         unit_tests.sh \
         grib2to1.sh badgrib.sh ls.sh filter.sh  \
@@ -14,7 +14,7 @@ TESTS = definitions.sh calendar.sh \
         multi_from_message.sh change_scanning.sh \
         julian.sh statistics.sh tigge.sh tigge_conversions.sh \
         read_any.sh padding.sh lamb_az_eq_area.sh grib_to_netcdf.sh debug.sh \
-        jpeg.sh ccsds.sh
+        jpeg.sh ccsds.sh md5.sh
 
 # First download all the necessary data for testing
 # Note: if download fails, no tests will be done

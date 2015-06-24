@@ -79,6 +79,7 @@ list( APPEND tests2
     read_any
     padding
     debug
+    md5
 )
 
 # These tests do not require any data downloads
