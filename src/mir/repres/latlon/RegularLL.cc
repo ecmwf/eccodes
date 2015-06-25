@@ -20,6 +20,7 @@
 #include "atlas/grids/LonLatGrid.h"
 
 #include "eckit/exception/Exceptions.h"
+#include "eckit/types/Types.h"
 
 #include "mir/util/Grib.h"
 #include "mir/util/Compare.h"
@@ -104,6 +105,13 @@ atlas::Grid *RegularLL::atlasGrid() const {
     }
 
     eckit::Log::info() << "RegularLL::atlasGrid is " << *grid << " BoundBox " << bbox_ << std::endl;
+
+    std::vector<atlas::Grid::Point> pts;
+    grid->lonlat(pts);
+
+
+    for( size_t i = 0; i < pts.size(); ++i)
+        eckit::Log::info() << pts[i] << std::endl;
 
     return grid;
 
