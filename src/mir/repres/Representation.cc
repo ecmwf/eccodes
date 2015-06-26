@@ -134,6 +134,12 @@ void Representation::reorder(long scanningMode, std::vector<double> &values) con
     throw eckit::SeriousBug(std::string(os));
 }
 
+void Representation::cropToDomain(const param::MIRParametrisation &parametrisation, data::MIRField&) const {
+    eckit::StrStream os;
+    os << "Representation::cropToDomain() not implemented for " << *this << eckit::StrStream::ends;
+    throw eckit::SeriousBug(std::string(os));
+}
+
 RepresentationFactory::RepresentationFactory(const std::string &name):
     name_(name) {
 

@@ -25,6 +25,7 @@
 
 #include "mir/util/Grib.h"
 #include "mir/util/Compare.h"
+#include "mir/action/misc/AreaCropper.h"
 
 namespace mir {
 namespace repres {
@@ -68,6 +69,13 @@ bool LatLon::globalDomain() const {
     // }
 }
 
+
+void LatLon::cropToDomain(const param::MIRParametrisation &parametrisation, data::MIRField& field) const {
+    if(!globalDomain()) {
+        action::AreaCropper::AreaCropper cropper(parametrisation, bbox_);
+        cropper.execute(field);
+    }
+}
 // size_t LatLon::ni() const {
 //     return ni_;
 // }
