@@ -83,17 +83,34 @@ atlas::Grid *RegularLL::atlasGrid() const {
 
     eckit::Log::info() << "RegularLL::atlasGrid BBox is " << bbox_ << std::endl;
 
-    atlas::Grid *grid = new atlas::grids::LonLatGrid(ni_, nj_,
-            atlas::grids::LonLatGrid::INCLUDES_POLES);
+    atlas::Grid* grid = 0;
 
     if (globalDomain()) {
+
+        grid = new atlas::grids::LonLatGrid(ni_,nj_,
+                atlas::grids::LonLatGrid::INCLUDES_POLES);
 
         // FIXME: an assertion for shift global grids
         ASSERT(bbox_.north() == 90);
         ASSERT(bbox_.south() == -90);
         ASSERT(bbox_.east() == 360 - increments_.west_east());
         ASSERT(bbox_.west() == 0);
+
+        return grid;
+
     } else {
+
+        size_t global_ni = 0;
+        size_t global_nj = 0;
+
+        computeNiNj(global_ni, global_nj, util::BoundingBox(), increments_ );
+
+        grid = new atlas::grids::LonLatGrid(
+                                global_ni,
+                                global_nj,
+                                atlas::grids::LonLatGrid::INCLUDES_POLES);
+
+
         // FIXME: assert if non-global shifted grid
         ASSERT(check(bbox_.north(), increments_.south_north()));
         ASSERT(check(bbox_.south(), increments_.south_north()));

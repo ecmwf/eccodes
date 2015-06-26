@@ -66,7 +66,7 @@ bool Regular::globalDomain() const {
         return true;
     }
 
-    size_t Nj = N_ * 2;
+// unused //  size_t Nj = N_ * 2;
     size_t Ni = N_ * 4;
 
 

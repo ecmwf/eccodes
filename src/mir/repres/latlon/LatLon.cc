@@ -79,8 +79,16 @@ bool LatLon::globalDomain() const {
 
 void LatLon::setNiNj() {
 
-    ni_ = computeN(bbox_.west(), bbox_.east(), increments_.west_east(), "Ni", "west", "east");
-    nj_ = computeN(bbox_.south(), bbox_.north(), increments_.south_north(), "Nj", "south", "north");
+    computeNiNj(ni_, nj_, bbox_, increments_);
+}
+
+void LatLon::computeNiNj(size_t& ni,
+                         size_t& nj,
+                         const util::BoundingBox& bbox,
+                         const util::Increments& increments) {
+
+    ni = computeN(bbox.west(), bbox.east(), increments.west_east(), "Ni", "west", "east");
+    nj = computeN(bbox.south(), bbox.north(), increments.south_north(), "Nj", "south", "north");
 
 }
 
