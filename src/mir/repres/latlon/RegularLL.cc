@@ -96,14 +96,15 @@ atlas::Grid *RegularLL::atlasGrid() const {
         ASSERT(bbox_.east() == 360 - increments_.west_east());
         ASSERT(bbox_.west() == 0);
 
-        return grid;
-
     } else {
 
         size_t global_ni = 0;
         size_t global_nj = 0;
 
-        computeNiNj(global_ni, global_nj, util::BoundingBox(), increments_ );
+        computeNiNj(global_ni,
+                    global_nj,
+                    util::BoundingBox(90, bbox_.west(), -90, bbox_.west() + 360. - increments_.west_east()),
+                    increments_ );
 
         grid = new atlas::grids::LonLatGrid(
                                 global_ni,
@@ -123,12 +124,14 @@ atlas::Grid *RegularLL::atlasGrid() const {
 
     eckit::Log::info() << "RegularLL::atlasGrid is " << *grid << " BoundBox " << bbox_ << std::endl;
 
-    std::vector<atlas::Grid::Point> pts;
-    grid->lonlat(pts);
 
-
-    for( size_t i = 0; i < pts.size(); ++i)
-        eckit::Log::info() << pts[i] << std::endl;
+    if(!globalDomain()) {
+        std::vector<atlas::Grid::Point> pts;
+        grid->lonlat(pts);
+        for( size_t i = 0; i < pts.size(); ++i)
+            eckit::Log::info() << pts[i] << " ";
+        eckit::Log::info() << std::endl;
+    }
 
     return grid;
 

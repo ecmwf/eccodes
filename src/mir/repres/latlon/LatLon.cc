@@ -89,7 +89,6 @@ void LatLon::computeNiNj(size_t& ni,
 
     ni = computeN(bbox.west(), bbox.east(), increments.west_east(), "Ni", "west", "east");
     nj = computeN(bbox.south(), bbox.north(), increments.south_north(), "Nj", "south", "north");
-
 }
 
 void LatLon::reorder(long scanningMode, std::vector<double> &values) const {
