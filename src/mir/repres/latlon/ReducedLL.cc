@@ -81,8 +81,7 @@ atlas::Grid *ReducedLL::atlasGrid() const {
     } else {
         atlas::Domain domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east() );
         // FIXME: we are missing the distrubution of latitudes
-        atlas::Grid *rll =  new atlas::grids::ReducedLonLatGrid(pl_.size(), &pl_[0], atlas::grids::ReducedLonLatGrid::INCLUDES_POLES);
-        return new atlas::grids::LocalGrid(rll, domain);
+        return new atlas::grids::ReducedLonLatGrid(pl_.size(), &pl_[0], atlas::grids::ReducedLonLatGrid::INCLUDES_POLES, domain);
     }
 }
 
