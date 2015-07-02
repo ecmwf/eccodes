@@ -6,18 +6,17 @@ add_subdirectory(gts)
 
 
 # Download all the binary GRIB data from website
-#
-FILE(READ "grib_data_files.txt" files_to_download)
-STRING(REGEX REPLACE "\n" ";" files_to_download "${files_to_download}")
+
+file(READ "grib_data_files.txt" files_to_download)
+string(REGEX REPLACE "\n" ";" files_to_download "${files_to_download}")
 if( HAVE_AEC )
-    LIST(APPEND files_to_download ccsds.grib2)
+    list(APPEND files_to_download ccsds.grib2)
 endif()
 
 
 # Download all data files doing md5 check on each
 ecbuild_get_test_multidata( TARGET get_gribs
-                            NAMES ${files_to_download}
-)
+                            NAMES ${files_to_download} )
 
 # Copy other files - e.g. reference data, text files etc from the source data dir
 LIST(APPEND other_files

@@ -3,6 +3,10 @@
 # Configure the file which all CMake tests will include
 configure_file( include.ctest.sh.in  include.ctest.sh @ONLY )
 
+execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/include.sh ${CMAKE_CURRENT_BINARY_DIR} )
+execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/utils.sh   ${CMAKE_CURRENT_BINARY_DIR} )
+execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/number_compare.pl ${CMAKE_CURRENT_BINARY_DIR} )
+
 # Build the executables used by test scripts
 ################################################
 list( APPEND test_bins
@@ -87,7 +91,6 @@ foreach( test ${tests1} )
     ecbuild_add_test( TARGET t_${test}
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                  RESOURCES include.sh utils.sh number_compare.pl
     )
 endforeach()
 
@@ -98,7 +101,6 @@ foreach( test ${tests2} )
     ecbuild_add_test( TARGET t_${test}
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                  RESOURCES include.sh utils.sh number_compare.pl
                   TEST_DEPENDS get_gribs get_tigge_gribs get_bufrs get_metars get_gts
     )
 endforeach()
@@ -108,7 +110,7 @@ endforeach()
 ecbuild_add_test( TARGET t_lamb_az_eq_area
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/lamb_az_eq_area.sh
-                  RESOURCES include.sh lamb_az_eq_area.ref
+                  RESOURCES lamb_az_eq_area.ref
                   TEST_DEPENDS get_gribs
 )
 
@@ -117,7 +119,6 @@ ecbuild_add_test( TARGET t_grib_to_netcdf
                   TYPE SCRIPT
                   CONDITION HAVE_NETCDF
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_to_netcdf.sh
-                  RESOURCES include.sh
                   TEST_DEPENDS get_gribs
 )
 
@@ -125,7 +126,6 @@ ecbuild_add_test( TARGET t_jpeg
                   TYPE SCRIPT
                   CONDITION HAVE_JPEG
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/jpeg.sh
-                  RESOURCES include.sh
                   TEST_DEPENDS get_gribs
 )
 
@@ -133,7 +133,5 @@ ecbuild_add_test( TARGET t_ccsds
                   TYPE SCRIPT
                   CONDITION HAVE_AEC
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ccsds.sh
-                  RESOURCES include.sh
                   TEST_DEPENDS get_gribs
 )
-

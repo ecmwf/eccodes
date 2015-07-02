@@ -3,6 +3,7 @@
 # Configure the file which all CMake tests will include
 configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 
+execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/include.sh ${CMAKE_CURRENT_BINARY_DIR} )
 
 # Build the executables used by test scripts
 ################################################
@@ -43,33 +44,14 @@ list( APPEND tests
       get_product_kind
 )
 
-# Simplify tests: no need to build executable and then test. All in one
-# TODO
-# ecbuild_add_test( TARGET test_f90_samples
-#   LINKER_LANGUAGE Fortran
-#   SOURCES samples.f90
-#   LIBS    eccodes_f90 eccodes
-#   COMMAND  ${CMAKE_CURRENT_SOURCE_DIR}/samples.sh
-#   CONDITION  HAVE_FORTRAN
-# )
-
 foreach( tool ${tests} )
 
-    # Build the Fortran executable
-    ecbuild_add_executable( TARGET    f_${tool}
-                            NOINSTALL
-                            SOURCES   ${tool}.f90
-                            CONDITION HAVE_FORTRAN
-                            LINKER_LANGUAGE Fortran
-                            LIBS      eccodes_f90 eccodes
-    )
-    # Add the test which depends on the above executable
-    ecbuild_add_test( TARGET f_${tool}_test
-                      TYPE SCRIPT
-                      DEPENDS f_${tool}
+    ecbuild_add_test( TARGET f_${tool}
+                      SOURCES   ${tool}.f90
+                      LINKER_LANGUAGE Fortran
+                      LIBS      eccodes_f90 eccodes
                       CONDITION HAVE_FORTRAN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
-                      RESOURCES include.sh
                       TEST_DEPENDS get_gribs get_bufrs
     )
 endforeach()
@@ -104,6 +86,4 @@ ecbuild_add_executable( TARGET    f_set_gvc
 #                   TYPE SCRIPT
 #                   DEPENDS set_gvc set
 #                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/set.sh
-#                   RESOURCES include.sh
 # )
-# 
