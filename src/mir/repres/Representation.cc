@@ -81,6 +81,11 @@ void Representation::fill(grib_info &) const {
     throw eckit::SeriousBug(std::string(os));
 }
 
+void Representation::shape(size_t& ni, size_t& nj) const {
+    eckit::StrStream os;
+    os << "Representation::shape() not implemented for " << *this << eckit::StrStream::ends;
+    throw eckit::SeriousBug(std::string(os));
+}
 
 Representation *Representation::crop(const util::BoundingBox &bbox,
                                      const std::vector<double> &, std::vector<double> &) const {

@@ -70,8 +70,8 @@ bool LatLon::globalDomain() const {
 }
 
 
-void LatLon::cropToDomain(const param::MIRParametrisation &parametrisation, data::MIRField& field) const {
-    if(!globalDomain()) {
+void LatLon::cropToDomain(const param::MIRParametrisation &parametrisation, data::MIRField &field) const {
+    if (!globalDomain()) {
         action::AreaCropper cropper(parametrisation, bbox_);
         cropper.execute(field);
     }
@@ -90,10 +90,10 @@ void LatLon::setNiNj() {
     computeNiNj(ni_, nj_, bbox_, increments_);
 }
 
-void LatLon::computeNiNj(size_t& ni,
-                         size_t& nj,
-                         const util::BoundingBox& bbox,
-                         const util::Increments& increments) {
+void LatLon::computeNiNj(size_t &ni,
+                         size_t &nj,
+                         const util::BoundingBox &bbox,
+                         const util::Increments &increments) {
 
     ni = computeN(bbox.west(), bbox.east(), increments.west_east(), "Ni", "west", "east");
     nj = computeN(bbox.south(), bbox.north(), increments.south_north(), "Nj", "south", "north");
@@ -269,6 +269,11 @@ size_t LatLon::frame(std::vector<double> &values, size_t size, double missingVal
 void LatLon::validate(const std::vector<double> &values) const {
     eckit::Log::info() << "LatLon::validate " << values.size() << " ni*nj " << ni_ * nj_ << std::endl;
     ASSERT(values.size() == ni_ * nj_);
+}
+
+void LatLon::shape(size_t &ni, size_t &nj) const {
+    ni = ni_;
+    nj = nj_;
 }
 
 
