@@ -50,6 +50,11 @@ Regular::Regular(size_t N):
 
 }
 
+void Regular::shape(size_t &ni, size_t &nj) const {
+    ASSERT(globalDomain());
+    ni = N_ * 4;
+    nj = N_ * 2;
+}
 
 Regular::Regular(size_t N, const util::BoundingBox &bbox):
     Gaussian(N, bbox) {
