@@ -260,8 +260,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 
     buf += grib_byte_offset(a);
 
-    Assert(((bits_per_value*n_vals)/8) < (1<<29));
-    /*ensure that the bit pointer is not overflown*/
+    /*Assert(((bits_per_value*n_vals)/8) < (1<<29));*/   /* See GRIB-787 */
 
     if(bits_per_value%8)
     {
@@ -378,8 +377,7 @@ static int  _unpack_double(grib_accessor* a, double* val, size_t *len,unsigned c
 
     buf += grib_byte_offset(a);
 
-    Assert(((bits_per_value*n_vals)/8) < (1<<29));
-    /*ensure that the bit pointer is not overflown*/
+    /*Assert(((bits_per_value*n_vals)/8) < (1<<29));*/    /* See GRIB-787 */
 
     grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
             "unpack_double : calling outline function : bpv %d, rv : %g, sf : %d, dsf : %d ",
