@@ -21,6 +21,7 @@
 
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Compare.h"
+#include "mir/action/misc/AreaCropper.h"
 
 namespace mir {
 namespace repres {
@@ -33,14 +34,19 @@ ReducedLL::ReducedLL(const param::MIRParametrisation &parametrisation):
     ASSERT(parametrisation.get("Nj", Nj_));
 }
 
+ReducedLL::ReducedLL(size_t Nj, const std::vector<long> &pl, const util::BoundingBox &bbox):
+    bbox_(bbox),
+    Nj_(Nj),
+    pl_(pl) {
 
-ReducedLL::ReducedLL() {
 }
-
 
 ReducedLL::~ReducedLL() {
 }
 
+Representation *ReducedLL::clone() const {
+    return new ReducedLL(Nj_, pl_, bbox_);
+}
 
 void ReducedLL::print(std::ostream &out) const {
     out << "ReducedLL[bbox=" << bbox_ << "]";
@@ -49,6 +55,14 @@ void ReducedLL::print(std::ostream &out) const {
 
 void ReducedLL::fill(grib_info &info) const  {
     NOTIMP;
+}
+
+
+void ReducedLL::cropToDomain(const param::MIRParametrisation &parametrisation, data::MIRField &field) const {
+    if (!globalDomain()) {
+        action::AreaCropper cropper(parametrisation, bbox_);
+        cropper.execute(field);
+    }
 }
 
 bool ReducedLL::globalDomain() const {
