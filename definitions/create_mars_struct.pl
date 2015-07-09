@@ -7,8 +7,8 @@ use Data::Dumper;
 
 my $db="param";
 my $host="grib-param-db-prod.ecmwf.int";
-my $user="ecmwf";
-my $pass="";
+my $user="ecmwf_ro";
+my $pass="ecmwf_ro";
 my $filename; my $filebase; my $out; my $conceptDir;
 my $query; my $q; my $qh;
 
@@ -64,7 +64,6 @@ while (my ($paramId,$shortName)=$qh->fetchrow_array )
 	}
 }
 
-system("p4 edit mars_param.table");
 open(my $mars_param_out,"> mars_param.table")
                 or die "unable to open mars_param.table: $!";
 
@@ -76,7 +75,6 @@ foreach my $k ( sort keys %values ) {
 
 close $mars_param_out or die " mars_param.table: $!";
  
-system("p4 edit param_id.table");
 open(my $param_id_out,"> param_id.table")
                 or die "unable to open param_id.table: $!";
 
