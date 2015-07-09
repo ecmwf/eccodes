@@ -4,7 +4,7 @@ AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@ @FORCE_32_CFLAGS@
 TESTS = copy_message.sh grib_get_keys.sh get_data.sh get_pl.sh get_pv.sh grib_keys_iterator.sh \
         grib_nearest.sh grib_precision.sh grib_multi_write.sh grib_multi.sh grib_print_data.sh grib_set_keys.sh \
         grib_set_bitmap.sh set_missing.sh grib_set_pv.sh samples.sh count_messages.sh read_message.sh \
-        read_from_file.sh grib_index.sh get_set_uuid.sh bufr_attributes.sh bufr_clone.sh \
+        read_from_file.sh grib_index.sh get_set_uuid.sh bufr_attributes.sh grib_clone.sh bufr_clone.sh \
         bufr_expanded.sh bufr_get_keys.sh bufr_read_header.sh bufr_read_synop.sh \
         bufr_set_keys.sh bufr_keys_iterator.sh bufr_subset.sh get_product_kind.sh bufr_read_temp.sh bufr_read_scatterometer.sh
 
