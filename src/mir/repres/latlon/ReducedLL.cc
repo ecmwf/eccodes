@@ -78,7 +78,7 @@ bool ReducedLL::globalDomain() const {
 
             double ew = 360.0 / maxpl;
 
-            if (eckit::FloatCompare<double>::isApproxEqual(bbox_.east() - bbox_.west() + ew, 360.)) {
+            if (eckit::FloatCompare<double>::isApproximatelyEqual(bbox_.east() - bbox_.west() + ew, 360.)) {
                 return true;
             }
         }

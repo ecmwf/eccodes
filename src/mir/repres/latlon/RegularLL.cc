@@ -75,7 +75,7 @@ void RegularLL::fill(grib_info &info) const  {
 
 static bool check(double x, double dx) {
     double a = (x > 0 ? x : -x) / dx;
-    return eckit::FloatCompare<double>::isApproxEqual(size_t(a), a);
+    return eckit::FloatCompare<double>::isApproximatelyEqual(size_t(a), a);
 }
 
 

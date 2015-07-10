@@ -56,8 +56,8 @@ bool LatLon::globalDomain() const {
     double ns = bbox_.north() - bbox_.south() ;
     double ew = bbox_.east() - bbox_.west() ;
 
-    bool all_lons = eckit::FloatCompare<double>::isApproxEqual(ew + increments_.west_east() , 360);
-    bool all_lats = eckit::FloatCompare<double>::isApproxEqual(ns, 180) || eckit::FloatCompare<double>::isApproxEqual(ns + increments_.south_north(), 180);
+    bool all_lons = eckit::FloatCompare<double>::isApproximatelyEqual(ew + increments_.west_east() , 360);
+    bool all_lats = eckit::FloatCompare<double>::isApproximatelyEqual(ns, 180) || eckit::FloatCompare<double>::isApproximatelyEqual(ns + increments_.south_north(), 180);
 
     return all_lats && all_lons;
     //     if (all_lats && all_lons)  {
