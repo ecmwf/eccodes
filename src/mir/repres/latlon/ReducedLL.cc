@@ -36,9 +36,8 @@ ReducedLL::ReducedLL(const param::MIRParametrisation &parametrisation):
 
 ReducedLL::ReducedLL(size_t Nj, const std::vector<long> &pl, const util::BoundingBox &bbox):
     bbox_(bbox),
-    Nj_(Nj),
-    pl_(pl) {
-
+    pl_(pl),
+    Nj_(Nj){
 }
 
 ReducedLL::~ReducedLL() {
