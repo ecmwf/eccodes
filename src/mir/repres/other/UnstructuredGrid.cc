@@ -34,10 +34,6 @@ UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation &parametrisat
 }
 
 
-UnstructuredGrid::UnstructuredGrid() {
-}
-
-
 UnstructuredGrid::~UnstructuredGrid() {
 }
 
