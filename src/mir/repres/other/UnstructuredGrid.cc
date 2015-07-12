@@ -52,6 +52,12 @@ void UnstructuredGrid::fill(grib_info &info) const  {
     NOTIMP;
 }
 
+bool UnstructuredGrid::globalDomain() const {
+    eckit::Log::warning() << "UnstructuredGrid::globalDomain: assuming grid is global" << std::endl;
+    return true;
+}
+
+
 atlas::Grid *UnstructuredGrid::atlasGrid() const {
     std::vector<atlas::Grid::Point> *pts = new std::vector<atlas::Grid::Point>();
     ASSERT(latitudes_.size() == longitudes_.size());

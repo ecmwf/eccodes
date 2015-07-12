@@ -43,9 +43,6 @@ ReducedLL::ReducedLL(size_t Nj, const std::vector<long> &pl, const util::Boundin
 ReducedLL::~ReducedLL() {
 }
 
-Representation *ReducedLL::clone() const {
-    return new ReducedLL(Nj_, pl_, bbox_);
-}
 
 void ReducedLL::print(std::ostream &out) const {
     out << "ReducedLL[bbox=" << bbox_ << "]";

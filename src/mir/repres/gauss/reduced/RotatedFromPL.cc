@@ -38,10 +38,6 @@ RotatedFromPL::RotatedFromPL(long N, const std::vector<long> &pl, const util::Bo
     rotation_(rotation) {
 }
 
-Representation *RotatedFromPL::clone() const {
-    return new RotatedFromPL(N_, pl_, bbox_, rotation_);
-}
-
 void RotatedFromPL::print(std::ostream &out) const {
     out << "RotatedGGFromPL[N" << N_ << "]";
 }

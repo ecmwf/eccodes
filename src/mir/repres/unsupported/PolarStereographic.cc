@@ -48,27 +48,6 @@ PolarStereographic::PolarStereographic(const param::MIRParametrisation &parametr
 
 }
 
-PolarStereographic::PolarStereographic(size_t Nx,
-                                       size_t Ny,
-                                       size_t Dx,
-                                       size_t Dy,
-                                       double longitudeOfFirstGridPoint,
-                                       double latitudeOfFirstGridPoint,
-                                       double orientationOfTheGrid,
-                                       bool southPoleOnProjectionPlane,
-                                       double radiusOfTheEarth):
-    Nx_(Nx),
-    Ny_(Ny),
-    Dx_(Dx),
-    Dy_(Dy),
-    longitudeOfFirstGridPoint_(longitudeOfFirstGridPoint),
-    latitudeOfFirstGridPoint_(latitudeOfFirstGridPoint),
-    orientationOfTheGrid_(orientationOfTheGrid),
-    southPoleOnProjectionPlane_(southPoleOnProjectionPlane),
-    radiusOfTheEarth_(radiusOfTheEarth) {
-
-}
-
 PolarStereographic::PolarStereographic() {
 }
 
@@ -104,20 +83,6 @@ atlas::Grid *PolarStereographic::atlasGrid() const {
             southPoleOnProjectionPlane_,
             radiusOfTheEarth_);
 }
-
-Representation *PolarStereographic::clone() const {
-    return new PolarStereographic(Nx_,
-                                  Ny_,
-                                  Dx_,
-                                  Dy_,
-                                  longitudeOfFirstGridPoint_,
-                                  latitudeOfFirstGridPoint_,
-                                  orientationOfTheGrid_,
-                                  southPoleOnProjectionPlane_,
-                                  radiusOfTheEarth_);
-}
-
-
 
 void PolarStereographic::fill(grib_info &info) const  {
     NOTIMP;

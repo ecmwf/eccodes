@@ -43,13 +43,35 @@ static void init() {
 }  // (anonymous namespace)
 
 
-Representation::Representation() {
+Representation::Representation(): count_(0) {
 }
 
 
 Representation::~Representation() {
 }
 
+void Representation::attach() const {
+    count_++;
+}
+
+void Representation::detach() const {
+    if (--count_ == 0) {
+        delete this;
+    }
+}
+
+RepresentationHandle::RepresentationHandle(const Representation* representation):
+    representation_(representation) {
+    if (representation_) {
+        representation_->attach();
+    }
+}
+
+RepresentationHandle::~RepresentationHandle() {
+    if (representation_) {
+        representation_->detach();
+    }
+}
 
 void Representation::setComplexPacking(grib_info &) const {
     eckit::StrStream os;
@@ -87,8 +109,8 @@ void Representation::shape(size_t& ni, size_t& nj) const {
     throw eckit::SeriousBug(std::string(os));
 }
 
-Representation *Representation::crop(const util::BoundingBox &bbox,
-                                     const std::vector<double> &, std::vector<double> &) const {
+const Representation *Representation::crop(const util::BoundingBox &bbox,
+        const std::vector<double> &, std::vector<double> &) const {
     // FIXME: This is temporary, so that we can test existing mars/prodgen requeste
 #if 0
     eckit::StrStream os;
@@ -101,7 +123,7 @@ Representation *Representation::crop(const util::BoundingBox &bbox,
 }
 
 
-Representation *Representation::truncate(size_t truncation,
+const Representation *Representation::truncate(size_t truncation,
         const std::vector<double> &, std::vector<double> &) const {
     eckit::StrStream os;
     os << "Representation::truncate() not implemented for " << *this << eckit::StrStream::ends;
@@ -124,12 +146,6 @@ size_t Representation::truncation() const {
 size_t Representation::frame(std::vector<double> &values, size_t size, double missingValue) const {
     eckit::StrStream os;
     os << "Representation::frame() not implemented for " << *this << eckit::StrStream::ends;
-    throw eckit::SeriousBug(std::string(os));
-}
-
-Representation *Representation::clone() const {
-    eckit::StrStream os;
-    os << "Representation::clone() not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
 }
 
@@ -164,7 +180,7 @@ RepresentationFactory::~RepresentationFactory() {
 }
 
 
-Representation *RepresentationFactory::build(const param::MIRParametrisation &params) {
+const Representation *RepresentationFactory::build(const param::MIRParametrisation &params) {
 
     pthread_once(&once, init);
 

@@ -43,11 +43,6 @@ RotatedLL::RotatedLL(const util::BoundingBox &bbox, const util::Increments &incr
 RotatedLL::~RotatedLL() {
 }
 
-
-Representation *RotatedLL::clone() const {
-    return new RotatedLL(bbox_, increments_, rotation_);
-}
-
 void RotatedLL::print(std::ostream &out) const {
     out << "RotatedLL[";
     LatLon::print(out);
@@ -57,7 +52,7 @@ void RotatedLL::print(std::ostream &out) const {
 
 
 // Called by RegularLL::crop()
-RegularLL* RotatedLL::cropped(const util::BoundingBox &bbox) const {
+const RotatedLL* RotatedLL::cropped(const util::BoundingBox &bbox) const {
     eckit::Log::info() << "Create cropped copy as RotatedLL bbox=" << bbox << std::endl;
     return new RotatedLL(bbox, increments_, rotation_);
 }

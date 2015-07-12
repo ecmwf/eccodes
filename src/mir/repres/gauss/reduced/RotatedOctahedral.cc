@@ -35,10 +35,6 @@ RotatedOctahedral::RotatedOctahedral(long N, const util::BoundingBox &bbox, cons
 
 }
 
-Representation *RotatedOctahedral::clone() const {
-    return new RotatedOctahedral(N_, bbox_, rotation_);
-}
-
 void RotatedOctahedral::print(std::ostream &out) const {
     out << "RotatedGGOctahedral[N" << N_ << ",bbox=" << bbox_ << ",rotation=" << rotation_ << "]";
 }
@@ -62,7 +58,7 @@ atlas::Grid *RotatedOctahedral::atlasGrid() const {
 }
 
 
-Reduced *RotatedOctahedral::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
+const Reduced *RotatedOctahedral::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
     // We lose the RotatedOctahedral nature of the grid
     return new RotatedFromPL(N_, pl, bbox, rotation_);
 }

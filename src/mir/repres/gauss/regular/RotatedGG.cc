@@ -38,11 +38,7 @@ RotatedGG::RotatedGG(size_t N, const util::BoundingBox &bbox, const util::Rotati
     rotation_(rotation) {
 }
 
-Representation *RotatedGG::clone() const {
-    return new RotatedGG(N_, bbox_, rotation_);
-}
-
-Gridded *RotatedGG::cropped(const util::BoundingBox &bbox) const {
+const Gridded *RotatedGG::cropped(const util::BoundingBox &bbox) const {
     return new RotatedGG(N_, bbox, rotation_);
 }
 

@@ -75,15 +75,6 @@ class PolarStereographic : public Gridded {
   private:
 
     PolarStereographic();
-    PolarStereographic(size_t Nx,
-                       size_t Ny,
-                       size_t Dx,
-                       size_t Dy,
-                       double longitudeOfFirstGridPoint,
-                       double latitudeOfFirstGridPoint,
-                       double orientationOfTheGrid,
-                       bool southPoleOnProjectionPlane,
-                       double radiusOfTheEarth);
 
     // No copy allowed
 
@@ -112,7 +103,7 @@ class PolarStereographic : public Gridded {
     virtual void fill(grib_info &) const;
     virtual void validate(const std::vector<double> &) const;
     virtual atlas::Grid *atlasGrid() const;
-    virtual Representation *clone() const;
+
 
 
     // -- Class members

@@ -45,13 +45,8 @@ RegularLL::RegularLL(const util::BoundingBox &bbox,
 RegularLL::~RegularLL() {
 }
 
-Representation *RegularLL::clone() const {
-    return new RegularLL(bbox_, increments_);
-}
-
-
 // Called by RegularLL::crop()
-RegularLL *RegularLL::cropped(const util::BoundingBox &bbox) const {
+const RegularLL *RegularLL::cropped(const util::BoundingBox &bbox) const {
     eckit::Log::info() << "Create cropped copy as RegularLL bbox=" << bbox << std::endl;
     return new RegularLL(bbox, increments_);
 }

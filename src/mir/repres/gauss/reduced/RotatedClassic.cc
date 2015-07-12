@@ -35,10 +35,6 @@ RotatedClassic::RotatedClassic(long N, const util::BoundingBox &bbox, const util
 
 }
 
-Representation *RotatedClassic::clone() const {
-    return new RotatedClassic(N_, bbox_, rotation_);
-}
-
 void RotatedClassic::print(std::ostream &out) const {
     out << "RotatedGGClassic[N" << N_ << ",bbox=" << bbox_ << ",rotation=" << rotation_  << "]";
 }
@@ -61,7 +57,7 @@ atlas::Grid *RotatedClassic::atlasGrid() const {
                                          rotation_.south_pole_rotation_angle());
 }
 
-Reduced *RotatedClassic::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
+const Reduced *RotatedClassic::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
     // We lose the RotatedClassic nature of the grid
     return new RotatedFromPL(N_, pl, bbox, rotation_);
 }

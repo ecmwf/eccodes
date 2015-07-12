@@ -319,7 +319,7 @@ void Reduced::validate(const std::vector<double> &values) const {
 }
 
 
-Gridded *Reduced::cropped(const util::BoundingBox &bbox) const  {
+const Reduced *Reduced::cropped(const util::BoundingBox &bbox) const  {
     const std::vector<long> &pl = pls();
     std::vector<long> newpl;
     newpl.reserve(pl.size());
@@ -339,7 +339,7 @@ Gridded *Reduced::cropped(const util::BoundingBox &bbox) const  {
     return cropped(bbox, newpl);
 }
 
-Reduced *Reduced::cropped(const util::BoundingBox &bbox, const std::vector<long> &) const {
+const Reduced *Reduced::cropped(const util::BoundingBox &bbox, const std::vector<long> &) const {
     eckit::StrStream os;
     os << "Reduced::cropped() not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
