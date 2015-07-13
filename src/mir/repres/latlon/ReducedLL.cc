@@ -22,6 +22,7 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Compare.h"
 #include "mir/action/misc/AreaCropper.h"
+#include "mir/repres/Iterator.h"
 
 namespace mir {
 namespace repres {
@@ -97,6 +98,108 @@ void ReducedLL::validate(const std::vector<double> &values) const {
     }
     ASSERT(values.size() == count);
 }
+
+
+class ReducedLLIterator: public Iterator {
+
+    const std::vector<long> &pl_;
+    util::BoundingBox bbox_;
+
+    size_t ni_;
+    size_t nj_;
+
+    size_t i_;
+    size_t j_;
+    size_t k_;
+    size_t p_;
+
+    size_t count_;
+    double north_;
+    double west_;
+    double east_;
+    double ns_;
+
+
+    virtual void print(std::ostream &out) const {
+        out << "ReducedLLIterator[]";
+    }
+
+    virtual bool next(double &lat, double &lon) {
+        while (j_ < nj_ && i_ < ni_) {
+            lat = north_ - j_ * ns_;
+            lon = west_ + (i_ * (east_ - west_)) / ni_;
+            i_++;
+            if (i_ == ni_) {
+
+                j_++;
+                i_ = 0;
+
+                if (j_ < nj_) {
+                    ASSERT(p_ < pl_.size());
+                    ni_ = pl_[p_++];
+                    // eckit::Log::info() << "ni = " << ni_ << std::endl;
+                }
+
+            }
+
+            // eckit::Log::info() << "++++++ " << lat << " " << lon << " - " << bbox_ << " -> " << bbox_.contains(lat, lon) << std::endl;
+
+            if (bbox_.contains(lat, lon)) {
+                count_++;
+                return true;
+            }
+        }
+        return false;
+    }
+
+  public:
+
+    // TODO: Consider keeping a reference on the latitudes and bbox, to avoid copying
+
+    ReducedLLIterator(size_t nj, const std::vector<long> &pl, const util::BoundingBox &bbox):
+        nj_(nj),
+        pl_(pl),
+        bbox_(bbox),
+        i_(0),
+        j_(0),
+        k_(0),
+        p_(0),
+        count_(0) {
+
+        // lattitude_ covers the whole globe, while pl_ covers only the current bbox_
+        // ASSERT(pl_.size() <= latitudes_.size());
+
+        // // Position to first latitude
+        // while (k_ < latitudes_.size() && bbox_.north() < latitudes_[k_]) {
+        //     k_++;
+        // }
+        // ASSERT(k_ < latitudes_.size());
+
+        north_ = bbox_.north();
+        west_ = bbox_.west();
+        east_ = bbox_.east();
+        ns_ = (bbox_.north() - bbox_.south()) / (nj_ - 1);
+        ni_ = pl_[p_++];
+
+        // eckit::Log::info() << "ReducedLLIterator ni=" << ni_ << " nj=" << nj_
+        // << " j=" << j_ << " " << bbox_ << " ns=" << ns_ << std::endl;
+
+
+    }
+
+    ~ReducedLLIterator() {
+        std::cout << "~ReducedLLIterator " << count_ << std::endl;
+        // ASSERT(count_ == ni_ * nj_);
+    }
+
+};
+
+Iterator *ReducedLL::iterator() const {
+    // Use a global bounding box if global domain, to avoid rounding issues
+    // due to GRIB (in)accuracies
+    return new ReducedLLIterator(Nj_, pl_, globalDomain() ? util::BoundingBox() : bbox_);
+}
+
 
 namespace {
 static RepresentationBuilder<ReducedLL> reducedLL("reduced_ll"); // Name is what is returned by grib_api
