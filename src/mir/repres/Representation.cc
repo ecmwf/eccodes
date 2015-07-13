@@ -60,7 +60,7 @@ void Representation::detach() const {
     }
 }
 
-RepresentationHandle::RepresentationHandle(const Representation* representation):
+RepresentationHandle::RepresentationHandle(const Representation *representation):
     representation_(representation) {
     if (representation_) {
         representation_->attach();
@@ -103,7 +103,7 @@ void Representation::fill(grib_info &) const {
     throw eckit::SeriousBug(std::string(os));
 }
 
-void Representation::shape(size_t& ni, size_t& nj) const {
+void Representation::shape(size_t &ni, size_t &nj) const {
     eckit::StrStream os;
     os << "Representation::shape() not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
@@ -155,9 +155,15 @@ void Representation::reorder(long scanningMode, std::vector<double> &values) con
     throw eckit::SeriousBug(std::string(os));
 }
 
-void Representation::cropToDomain(const param::MIRParametrisation &parametrisation, data::MIRField&) const {
+void Representation::cropToDomain(const param::MIRParametrisation &parametrisation, data::MIRField &) const {
     eckit::StrStream os;
     os << "Representation::cropToDomain() not implemented for " << *this << eckit::StrStream::ends;
+    throw eckit::SeriousBug(std::string(os));
+}
+
+void Representation::checkerboard(std::vector<double> &,bool hasMissing, double missingValue) const {
+    eckit::StrStream os;
+    os << "Representation::checkerboard() not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
 }
 
