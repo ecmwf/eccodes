@@ -25,7 +25,7 @@ rm -f $fTmp | true
 REDIRECT=/dev/null
 
 #Write the key values into a file
-${examples_dir}/f_bufr_read_scatterometer 2> $REDIRECT > $fTmp
+${examples_dir}/eccodes_f_bufr_read_scatterometer 2> $REDIRECT > $fTmp
 
 # check the results
 

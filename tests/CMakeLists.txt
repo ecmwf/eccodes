@@ -88,7 +88,7 @@ list( APPEND tests2
 
 # These tests do not require any data downloads
 foreach( test ${tests1} )
-    ecbuild_add_test( TARGET t_${test}
+    ecbuild_add_test( TARGET eccodes_t_${test}
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
     )
@@ -98,40 +98,40 @@ endforeach()
 #       means they will be downloaded at "make" time
 #       rather than when you do "make test". Use TEST_DEPENDS instead
 foreach( test ${tests2} )
-    ecbuild_add_test( TARGET t_${test}
+    ecbuild_add_test( TARGET eccodes_t_${test}
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                  TEST_DEPENDS get_gribs get_tigge_gribs get_bufrs get_metars get_gts
+                  TEST_DEPENDS eccodes_get_gribs eccodes_get_tigge_gribs eccodes_get_bufrs eccodes_get_metars eccodes_get_gts
     )
 endforeach()
 
 ###########################################
 # Note: the reference file is in the tests dir not data dir!
-ecbuild_add_test( TARGET t_lamb_az_eq_area
+ecbuild_add_test( TARGET eccodes_t_lamb_az_eq_area
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/lamb_az_eq_area.sh
                   RESOURCES lamb_az_eq_area.ref
-                  TEST_DEPENDS get_gribs
+                  TEST_DEPENDS eccodes_get_gribs
 )
 
 # These ones are conditional
-ecbuild_add_test( TARGET t_grib_to_netcdf
+ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
                   TYPE SCRIPT
                   CONDITION HAVE_NETCDF
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_to_netcdf.sh
-                  TEST_DEPENDS get_gribs
+                  TEST_DEPENDS eccodes_get_gribs
 )
 
-ecbuild_add_test( TARGET t_jpeg
+ecbuild_add_test( TARGET eccodes_t_jpeg
                   TYPE SCRIPT
                   CONDITION HAVE_JPEG
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/jpeg.sh
-                  TEST_DEPENDS get_gribs
+                  TEST_DEPENDS eccodes_get_gribs
 )
 
-ecbuild_add_test( TARGET t_ccsds
+ecbuild_add_test( TARGET eccodes_t_ccsds
                   TYPE SCRIPT
                   CONDITION HAVE_AEC
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ccsds.sh
-                  TEST_DEPENDS get_gribs
+                  TEST_DEPENDS eccodes_get_gribs
 )

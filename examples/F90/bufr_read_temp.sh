@@ -24,7 +24,7 @@ rm -f $fTmp | true
 REDIRECT=/dev/null
 
 #Write the key values into a file
-${examples_dir}/f_bufr_read_temp 2> $REDIRECT > $fTmp
+${examples_dir}/eccodes_f_bufr_read_temp 2> $REDIRECT > $fTmp
 
 #TODO: check the results
 

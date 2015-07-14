@@ -90,17 +90,17 @@ list( APPEND tests
    get_product_kind
 )
 foreach( test ${tests} )
-    ecbuild_add_test( TARGET c_${test}
+    ecbuild_add_test( TARGET eccodes_c_${test}
                   TYPE       SCRIPT
                   COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                  TEST_DEPENDS get_gribs get_bufrs
+                  TEST_DEPENDS eccodes_get_gribs eccodes_get_bufrs
     )
 endforeach()
 
 
 #############################################
 # Tests with no script
-ecbuild_add_test( TARGET    c_new_sample
+ecbuild_add_test( TARGET    eccodes_c_new_sample
                   SOURCES   new_sample.c
                   LIBS      eccodes
                   ARGS      "out.grib"

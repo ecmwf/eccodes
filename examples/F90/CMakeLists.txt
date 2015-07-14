@@ -46,13 +46,13 @@ list( APPEND tests
 
 foreach( tool ${tests} )
 
-    ecbuild_add_test( TARGET f_${tool}
+    ecbuild_add_test( TARGET eccodes_f_${tool}
                       SOURCES   ${tool}.f90
                       LINKER_LANGUAGE Fortran
                       LIBS      eccodes_f90 eccodes
                       CONDITION HAVE_FORTRAN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
-                      TEST_DEPENDS get_gribs get_bufrs
+                      TEST_DEPENDS eccodes_get_gribs eccodes_get_bufrs
     )
 endforeach()
 
@@ -82,7 +82,7 @@ ecbuild_add_executable( TARGET    f_set_gvc
 
 
 # # Note extra dependency
-# ecbuild_add_test( TARGET f_set_test
+# ecbuild_add_test( TARGET eccodes_f_set_test
 #                   TYPE SCRIPT
 #                   DEPENDS set_gvc set
 #                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/set.sh

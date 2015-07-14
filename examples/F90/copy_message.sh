@@ -9,5 +9,5 @@
 
 . ./include.sh
 
-${examples_dir}f_copy_message > /dev/null
+${examples_dir}eccodes_f_copy_message > /dev/null
 rm -f out.copy.grib1
