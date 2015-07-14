@@ -110,7 +110,6 @@ class ReducedLLIterator: public Iterator {
 
     size_t i_;
     size_t j_;
-    size_t k_;
     size_t p_;
 
     size_t count_;
@@ -162,18 +161,9 @@ class ReducedLLIterator: public Iterator {
         bbox_(bbox),
         i_(0),
         j_(0),
-        k_(0),
         p_(0),
         count_(0) {
 
-        // lattitude_ covers the whole globe, while pl_ covers only the current bbox_
-        // ASSERT(pl_.size() <= latitudes_.size());
-
-        // // Position to first latitude
-        // while (k_ < latitudes_.size() && bbox_.north() < latitudes_[k_]) {
-        //     k_++;
-        // }
-        // ASSERT(k_ < latitudes_.size());
 
         north_ = bbox_.north();
         west_ = bbox_.west();
