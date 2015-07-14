@@ -72,7 +72,7 @@ ecbuild_add_executable( TARGET    f_copy_namespace
                         LINKER_LANGUAGE Fortran
                         LIBS      eccodes_f90 eccodes
 )
-ecbuild_add_executable( TARGET    f_set_gvc
+ecbuild_add_executable( TARGET    eccodes_f_set_gvc
                         NOINSTALL
                         SOURCES   set_gvc.f90
                         CONDITION HAVE_FORTRAN
