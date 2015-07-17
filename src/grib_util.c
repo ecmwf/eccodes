@@ -8,31 +8,28 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************************************************************
- *   Enrico Fucile
- *                                                                         *
- ***************************************************************************/
 #include "grib_api_internal.h"
 
 #ifdef ECCODES_ON_WINDOWS
-/* Microsoft Windows Visual Studio support. Implementation of Unix rint() */
-double rint(double x)
-{
-    char * buf = 0;
-    int decimal=0, sign=0, err = 0;
-    double result = 0;
-    buf = (char*) malloc(_CVTBUFSIZE);
-    err = _fcvt_s(buf, _CVTBUFSIZE, x, 0, &decimal, &sign);
-    Assert(err == 0);
-    result = atof(buf);
-    if(sign == 1) {
-        result = result * -1;
-    }
-    free(buf);
-    return result;
-}
+ /* Replace C99/Unix rint() for Windows Visual C++ (only before VC++ 2013 versions) */
+ #if defined _MSC_VER && _MSC_VER < 1800
+ double rint(double x)
+ {
+     char * buf = 0;
+     int decimal=0, sign=0, err = 0;
+     double result = 0;
+     buf = (char*) malloc(_CVTBUFSIZE);
+     err = _fcvt_s(buf, _CVTBUFSIZE, x, 0, &decimal, &sign);
+     Assert(err == 0);
+     result = atof(buf);
+     if(sign == 1) {
+         result = result * -1;
+     }
+     free(buf);
+     return result;
+ }
+ #endif
 #endif
-
 
 static void set_total_length(unsigned char* buffer,long *section_length,long *section_offset,int edition,size_t totalLength) {
     long off;
