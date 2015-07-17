@@ -109,9 +109,19 @@ status=$?
 set -e
 [ $status -eq 1 ]
 
+#----------------------------------------------------
+# Compare file with directory
+#----------------------------------------------------
+temp_dir=tempdir.bufr_compare
+mkdir -p $temp_dir
+infile=aaen_55.bufr
+cp $infile $temp_dir
+${tools_dir}bufr_compare $infile $temp_dir
+
+
 #Clean up
 rm -f $fLog 
 rm -f $fBufrTmp | true
 rm -f $fBufrInput1 | true
 rm -f $fBufrInput2 | true
-
+rm -rf $temp_dir

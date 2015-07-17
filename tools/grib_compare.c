@@ -10,6 +10,13 @@
 
 #include "grib_tools.h"
 
+static const char* basename(const char* path)
+{
+    char* s = strrchr(path, '/');
+    if (!s) return path;
+    else    return s + 1;
+}
+
 GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
 {
     if (*a != *b) return 1;
@@ -280,6 +287,23 @@ int grib_tool_init(grib_runtime_options* options)
         if (ret == GRIB_INVALID_ARGUMENT) {
             usage();
             exit(1);
+        }
+    }
+
+    {
+        /* Check for 2nd file being a directory. If so, we assume user is comparing to a file */
+        /* with the same name as first file in that directory */
+        struct stat s;
+        grib_tools_file* infile = options->infile; /* the 2nd file in comparison */
+        if (infile) {
+            int stat_val = stat(infile->name, &s);
+            if ( stat_val == 0 && S_ISDIR(s.st_mode)) {
+                /* Take the filename of the 1st file and append to dir */
+                char bufr[2048] = {0,};
+                /* options->infile_extra->name is the 1st file */
+                sprintf(bufr, "%s/%s", infile->name, basename(options->infile_extra->name));
+                infile->name = strdup(bufr);
+            }
         }
     }
 
