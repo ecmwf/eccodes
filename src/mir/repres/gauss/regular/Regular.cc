@@ -226,7 +226,9 @@ class RegularIterator: public Iterator {
 };
 
 Iterator *Regular::iterator() const {
-    return new RegularIterator(latitudes(), N_, bbox_);
+    // Use a global bounding box if global domain, to avoid rounding issues
+    // due to GRIB (in)accuracies
+    return new RegularIterator(latitudes(), N_, globalDomain() ? util::BoundingBox() : bbox_);
 }
 
 
