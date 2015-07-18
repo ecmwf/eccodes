@@ -167,6 +167,12 @@ void Representation::checkerboard(std::vector<double> &,bool hasMissing, double 
     throw eckit::SeriousBug(std::string(os));
 }
 
+void Representation::pattern(std::vector<double> &,bool hasMissing, double missingValue) const {
+    eckit::StrStream os;
+    os << "Representation::pattern() not implemented for " << *this << eckit::StrStream::ends;
+    throw eckit::SeriousBug(std::string(os));
+}
+
 RepresentationFactory::RepresentationFactory(const std::string &name):
     name_(name) {
 
