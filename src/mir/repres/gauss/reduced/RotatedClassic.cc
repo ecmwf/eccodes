@@ -19,6 +19,7 @@
 #include "mir/util/Grib.h"
 #include "atlas/grids/RotatedGrid.h"
 #include "mir/repres/gauss/reduced/RotatedFromPL.h"
+#include "mir/util/RotatedIterator.h"
 
 namespace mir {
 namespace repres {
@@ -51,8 +52,11 @@ void RotatedClassic::fill(grib_info &info) const  {
 
 
 Iterator* RotatedClassic::iterator(bool unrotated) const {
-    ASSERT(unrotated);
-    return Classic::iterator(unrotated);
+    if (unrotated) {
+        return Classic::iterator(unrotated);
+    } else {
+        return new util::RotatedIterator(Classic::iterator(unrotated), rotation_);
+    }
 }
 
 atlas::Grid *RotatedClassic::atlasGrid() const {
