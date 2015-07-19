@@ -20,6 +20,7 @@
 #include "eckit/exception/Exceptions.h"
 
 #include "mir/param/MIRParametrisation.h"
+#include "mir/util/RotatedIterator.h"
 
 
 #include "atlas/grids/RotatedGrid.h"
@@ -52,11 +53,18 @@ void RotatedLL::print(std::ostream &out) const {
 
 
 // Called by RegularLL::crop()
-const RotatedLL* RotatedLL::cropped(const util::BoundingBox &bbox) const {
+const RotatedLL *RotatedLL::cropped(const util::BoundingBox &bbox) const {
     eckit::Log::info() << "Create cropped copy as RotatedLL bbox=" << bbox << std::endl;
     return new RotatedLL(bbox, increments_, rotation_);
 }
 
+Iterator *RotatedLL::iterator(bool unrotated) const {
+    if (unrotated) {
+        return RegularLL::iterator(unrotated);
+    } else {
+        return new util::RotatedIterator(RegularLL::iterator(unrotated), rotation_);
+    }
+}
 
 void RotatedLL::fill(grib_info &info) const  {
     RegularLL::fill(info);

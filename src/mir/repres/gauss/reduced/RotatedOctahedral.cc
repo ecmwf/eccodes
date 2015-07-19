@@ -49,6 +49,11 @@ void RotatedOctahedral::fill(grib_info &info) const  {
 #endif
 }
 
+Iterator* RotatedOctahedral::iterator(bool unrotated) const {
+    ASSERT(unrotated);
+    return Octahedral::iterator(unrotated);
+}
+
 atlas::Grid *RotatedOctahedral::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
     return new atlas::grids::RotatedGrid(Octahedral::atlasGrid(),

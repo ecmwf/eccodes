@@ -49,6 +49,12 @@ void RotatedClassic::fill(grib_info &info) const  {
 #endif
 }
 
+
+Iterator* RotatedClassic::iterator(bool unrotated) const {
+    ASSERT(unrotated);
+    return Classic::iterator(unrotated);
+}
+
 atlas::Grid *RotatedClassic::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
     return new atlas::grids::RotatedGrid(Classic::atlasGrid(),

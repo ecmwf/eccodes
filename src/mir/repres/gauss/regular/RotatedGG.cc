@@ -52,6 +52,11 @@ void RotatedGG::fill(grib_info &info) const  {
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_GG;
 }
 
+Iterator* RotatedGG::iterator(bool unrotated) const {
+    ASSERT(unrotated);
+    return Regular::iterator(unrotated);
+}
+
 atlas::Grid *RotatedGG::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
     return new atlas::grids::RotatedGrid(Regular::atlasGrid(),

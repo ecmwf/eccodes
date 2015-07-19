@@ -239,7 +239,7 @@ class LatLonIterator: public Iterator {
 
 };
 
-Iterator *LatLon::iterator() const {
+Iterator *LatLon::iterator(bool unrotated) const {
     return new LatLonIterator(ni_, nj_, bbox_.north(), bbox_.west(), increments_.west_east(), increments_.south_north());
 }
 
