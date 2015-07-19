@@ -66,6 +66,11 @@ Reduced *RotatedFromPL::cropped(const util::BoundingBox &bbox, const std::vector
 }
 
 
+Iterator* RotatedFromPL::iterator(bool unrotated) const {
+    ASSERT(unrotated);
+    return FromPL::iterator(unrotated);
+}
+
 namespace {
 static RepresentationBuilder<RotatedFromPL> rotatedGG("reduced_rotated_gg"); // Name is what is returned by grib_api
 }

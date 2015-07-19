@@ -184,7 +184,7 @@ class ReducedLLIterator: public Iterator {
 
 };
 
-Iterator *ReducedLL::iterator() const {
+Iterator *ReducedLL::iterator(bool unrotated) const {
     // Use a global bounding box if global domain, to avoid rounding issues
     // due to GRIB (in)accuracies
     return new ReducedLLIterator(Nj_, pl_, globalDomain() ? util::BoundingBox() : bbox_);

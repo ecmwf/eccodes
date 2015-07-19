@@ -223,7 +223,7 @@ class GaussianIterator: public Iterator {
 
 };
 
-Iterator *Reduced::iterator() const {
+Iterator *Reduced::iterator(bool unrotated) const {
     // Use a global bounding box if global domain, to avoid rounding issues
     // due to GRIB (in)accuracies
     return new GaussianIterator(latitudes(), pls(), globalDomain() ? util::BoundingBox() : bbox_);
@@ -241,7 +241,8 @@ size_t Reduced::frame(std::vector<double> &values, size_t size, double missingVa
 
     std::map<size_t, size_t> shape;
 
-    eckit::ScopedPtr<Iterator> iter(iterator());
+    // Iterator is 'unrotated'
+    eckit::ScopedPtr<Iterator> iter(iterator(true));
 
     double prev_lat = std::numeric_limits<double>::max();
     double prev_lon = -std::numeric_limits<double>::max();
@@ -301,7 +302,7 @@ void Reduced::validate(const std::vector<double> &values) const {
         }
         ASSERT(values.size() == count);
     } else {
-        eckit::ScopedPtr<Iterator> it(iterator());
+        eckit::ScopedPtr<Iterator> it(iterator(true));
         double lat;
         double lon;
 
