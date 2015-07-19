@@ -156,9 +156,9 @@ class ReducedLLIterator: public Iterator {
     // TODO: Consider keeping a reference on the latitudes and bbox, to avoid copying
 
     ReducedLLIterator(size_t nj, const std::vector<long> &pl, const util::BoundingBox &bbox):
-        nj_(nj),
         pl_(pl),
         bbox_(bbox),
+        nj_(nj),
         i_(0),
         j_(0),
         p_(0),
