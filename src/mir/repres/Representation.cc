@@ -161,13 +161,13 @@ void Representation::cropToDomain(const param::MIRParametrisation &parametrisati
     throw eckit::SeriousBug(std::string(os));
 }
 
-void Representation::checkerboard(std::vector<double> &,bool hasMissing, double missingValue) const {
+void Representation::checkerboard(std::vector<double> &,bool hasMissing, double missingValue, bool normalize) const {
     eckit::StrStream os;
     os << "Representation::checkerboard() not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
 }
 
-void Representation::pattern(std::vector<double> &,bool hasMissing, double missingValue) const {
+void Representation::pattern(std::vector<double> &,bool hasMissing, double missingValue, bool normalize) const {
     eckit::StrStream os;
     os << "Representation::pattern() not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
