@@ -17,6 +17,7 @@ list( APPEND test_bins
       read_index
       unit_tests
       gauss_sub
+      grib_util_set_spec
 )
 
 foreach( tool ${test_bins} )
@@ -84,6 +85,7 @@ list( APPEND tests2
     padding
     debug
     md5
+    grib_util_set_spec
 )
 
 # These tests do not require any data downloads
