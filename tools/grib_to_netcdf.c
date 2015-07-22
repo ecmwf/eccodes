@@ -1565,7 +1565,10 @@ static int _cube_position(const hypercube *h, const request *r, boolean remove_h
     return (ok == c) ? index : -1;
 }
 
-static void cube_indexes(const hypercube *h, request *r, int *indexes, int size)
+static void cube_indexes(
+        const hypercube *h, request *r,
+        char** times_array, size_t times_array_size,
+        int *indexes, int size)
 {
     request *cube = h->cube;
     int c = count_axis(h);
@@ -1592,11 +1595,28 @@ static void cube_indexes(const hypercube *h, request *r, int *indexes, int size)
         int k = 0;
         int count = count_values(cube, axis);
         int last = h->index_cache[i];
+        const boolean is_time_axis = (strcmp(axis, "time")==0);
+        if (is_time_axis) {
+            Assert(times_array);
+            Assert(times_array_size == count);
+        }
 
         for(k = 0; k < count; k++)
         {
             j = (k + last) % count;
-            w = get_value(cube, axis, j);
+            if (is_time_axis) {
+                /* GRIB-792: use fast lookup */
+                Assert( j >=0 && j < times_array_size );
+                w = times_array[j];
+                /* For testing:
+                 * Assert( strcmp(w, get_value(cube, axis, j))==0 );
+                 * */
+            }
+            else {
+                /* slow access method */
+                w = get_value(cube, axis, j);
+            }
+
             if(h->compare ? h->compare[i](w, v) : (w == v))
             {
                 index += j * n;
@@ -2615,6 +2635,38 @@ static void scale(double *vals, long n, void *data, dataset_t *g)
     }
 }
 
+/* Return array of strings which are the "time" values */
+static char** create_times_array(const request* cube, size_t* size)
+{
+    char** result = NULL;
+    const char *time_axis ="time"; /* special case */
+    parameter *the_param = find_parameter(cube, time_axis);
+    *size = 0;
+    if (the_param) {
+        size_t i=0, num_values=0;
+        value* va = NULL;
+
+        if(!the_param->count)
+            count_values(cube, time_axis);
+
+        /* Go thru all values to count how many there are */
+        va = the_param->values;
+        while(va) {
+            ++num_values;
+            va = va->next;
+        }
+        /* Create and populate array */
+        result = (char**) grib_context_malloc(ctx, sizeof(char*) * num_values);
+        va = the_param->values;
+        while(va) {
+            result[i++] = va->name;
+            va = va->next;
+        }
+        *size = num_values;
+    }
+    return result;
+}
+
 static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
 {
     int i = 0;
@@ -2623,6 +2675,8 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
     int naxis = count_axis(h);
     size_t start[NC_MAX_DIMS];
     size_t count[NC_MAX_DIMS];
+    char** times_array = NULL;
+    size_t times_array_size = 0;
     fieldset *fs = subset->fset;
     field *f = get_field(fs, 0, expand_mem);
 
@@ -2662,6 +2716,10 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
 
     stat = nc_inq_varid(ncid, name, &dataid);
     check_err(stat, __LINE__, __FILE__);
+
+    /* GRIB-792: Build fast array storing values for the "time" axis. */
+    /* This is for performance reasons */
+    times_array = create_times_array(h->cube, &times_array_size);
 
     for(i = 0; i < fs->count; i++)
     {
@@ -2735,7 +2793,7 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
                 exit(1);
             }
 
-            cube_indexes(h, r, idx, idxsize);
+            cube_indexes(h, r, times_array, times_array_size, idx, idxsize);
             for(j = 0; j < naxis; ++j)
                 start[naxis - j - 1] = idx[j];
 
@@ -2748,7 +2806,9 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
         /* g->purge_header = TRUE; */
         release_field(g);
     }
+
     grib_context_free(ctx, vscaled);
+    grib_context_free(ctx, times_array);
     return 0;
 }
 
@@ -3806,13 +3866,14 @@ struct KindValue {
 int main(int argc, char *argv[])
 {
     int i, ret = 0;
+
     /* GRIB-413: Collect all program arguments into a string */
     for (i=0; i<argc; ++i) {
         strcat(argvString, argv[i]);
         if (i != argc-1) strcat(argvString, " ");
     }
-
     ret = grib_tool(argc, argv);
+
     return ret;
 }
 
@@ -4106,6 +4167,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     remove_param(data_r, (void *) user_r, "ignore");
     remove_param(data_r, (void *) user_r, "split");
     print_ignored_keys(stdout, user_r);
+
     dims = new_simple_hypercube_from_mars_request(data_r);
 
     /* In case there is only 1 DATE+TIME+STEP, set at least 1 time as axis */
