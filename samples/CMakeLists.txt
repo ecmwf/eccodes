@@ -13,7 +13,8 @@ set( ECCODES_SAMPLES_FILES ${ECCODES_SAMPLES_FILES}    PARENT_SCOPE )
 
 # link to the samples in the build directory. See GRIB-786
 file( MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/share/${PROJECT_NAME} )
-execute_process( COMMAND "${CMAKE_COMMAND}" "-E" "create_symlink"
-  "${CMAKE_CURRENT_SOURCE_DIR}"
-  "${CMAKE_BINARY_DIR}/share/${PROJECT_NAME}/samples" )
-
+if( NOT EXISTS "${CMAKE_BINARY_DIR}/share/${PROJECT_NAME}/samples" )
+  execute_process( COMMAND "${CMAKE_COMMAND}" "-E" "create_symlink"
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_BINARY_DIR}/share/${PROJECT_NAME}/samples" )
+endif()

@@ -21,9 +21,11 @@ install(  DIRECTORY budg bufr cdf common grib1 grib2 gts mars metar tide hdf5 wr
 
 # link to the definitions. See GRIB-786
 file( MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/share/${PROJECT_NAME} )
-execute_process( COMMAND "${CMAKE_COMMAND}" "-E" "create_symlink"
-  "${CMAKE_CURRENT_SOURCE_DIR}"
-  "${CMAKE_BINARY_DIR}/share/${PROJECT_NAME}/definitions" )
+if( NOT EXISTS "${CMAKE_BINARY_DIR}/share/${PROJECT_NAME}/definitions" )
+  execute_process( COMMAND "${CMAKE_COMMAND}" "-E" "create_symlink"
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_BINARY_DIR}/share/${PROJECT_NAME}/definitions" )
+endif()
 
 # copy the definitions to the build directory
 #file(    COPY ${definition_files} ${table_files} ${text_files}
