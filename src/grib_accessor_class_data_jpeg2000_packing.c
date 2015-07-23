@@ -173,6 +173,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
     const char * user_lib=NULL;
     grib_accessor_data_jpeg2000_packing *self =(grib_accessor_data_jpeg2000_packing*)a;
 
+    self->jpeg_lib = 0;
     self->type_of_compression_used  = grib_arguments_get_name(a->parent->h,args,self->carg++);
     self->target_compression_ratio = grib_arguments_get_name(a->parent->h,args,self->carg++);
     self->ni                     = grib_arguments_get_name(a->parent->h,args,self->carg++);
@@ -216,7 +217,7 @@ static int value_count(grib_accessor* a,long* n_vals)
 
 #define EXTRA_BUFFER_SIZE 10240
 
-#ifdef HAVE_JPEG
+#if HAVE_JPEG
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
     grib_accessor_data_jpeg2000_packing *self =(grib_accessor_data_jpeg2000_packing*)a;
@@ -290,6 +291,9 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
         if ((err = grib_jasper_decode(a->parent->h->context,buf,&buflen,val,&n_vals)) != GRIB_SUCCESS)
             return err;
         break;
+    default:
+        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"Unable to unpack. Invalid JPEG library.\n");
+        return GRIB_DECODING_ERROR;
     }
 
     *len = n_vals;
