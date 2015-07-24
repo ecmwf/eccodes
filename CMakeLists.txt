@@ -12,7 +12,6 @@ project( eccodes C )
 
 set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild/cmake")
 
-
 include( ecbuild_system )
 
 ecbuild_requires_macro_version( 1.7 )
@@ -116,7 +115,7 @@ if( ENABLE_JPG )
         set( HAVE_LIBJASPER 1 )
     endif()
 
-    if( OpenJPEG_FOUND )
+    if( OPENJPEG_FOUND )
         set( HAVE_JPEG 1 )
         set( HAVE_LIBOPENJPEG 1 )
     endif()
