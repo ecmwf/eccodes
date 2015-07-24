@@ -8,17 +8,17 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: bufr_compare
- *
- *
- */
-
 #include "grib_tools.h"
+
+#ifdef ECCODES_ON_WINDOWS
+#   define DIR_SEPARATOR_CHAR '\\'
+#else
+#   define DIR_SEPARATOR_CHAR '/'
+#endif
 
 static const char* basename(const char* path)
 {
-    char* s = strrchr(path, '/');
+    char* s = strrchr(path, DIR_SEPARATOR_CHAR);
     if (!s) return path;
     else    return s + 1;
 }
@@ -341,7 +341,8 @@ int grib_tool_init(grib_runtime_options* options)
                 /* Take the filename of the 1st file and append to dir */
                 char bufr[2048] = {0,};
                 /* options->infile_extra->name is the 1st file */
-                sprintf(bufr, "%s/%s", infile->name, basename(options->infile_extra->name));
+                sprintf(bufr, "%s%c%s",
+                        infile->name, DIR_SEPARATOR_CHAR, basename(options->infile_extra->name));
                 infile->name = strdup(bufr);
             }
         }
