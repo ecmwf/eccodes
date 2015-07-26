@@ -173,7 +173,7 @@ void Representation::pattern(std::vector<double> &,bool hasMissing, double missi
     throw eckit::SeriousBug(std::string(os));
 }
 
-void Representation::windDirections(std::vector<double> &) const {
+void Representation::windDirections(const util::Rotation&, std::vector<double> &) const {
     eckit::StrStream os;
     os << "Representation::windDirections() not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
