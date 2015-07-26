@@ -161,23 +161,13 @@ void Representation::cropToDomain(const param::MIRParametrisation &parametrisati
     throw eckit::SeriousBug(std::string(os));
 }
 
-void Representation::checkerboard(std::vector<double> &,bool hasMissing, double missingValue, bool normalize) const {
+Iterator *Representation::iterator(bool unrotated) const {
     eckit::StrStream os;
-    os << "Representation::checkerboard() not implemented for " << *this << eckit::StrStream::ends;
+    os << "Representation::iterator(bool unrotated) not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
 }
 
-void Representation::pattern(std::vector<double> &,bool hasMissing, double missingValue, bool normalize) const {
-    eckit::StrStream os;
-    os << "Representation::pattern() not implemented for " << *this << eckit::StrStream::ends;
-    throw eckit::SeriousBug(std::string(os));
-}
 
-void Representation::windDirections(const util::Rotation&, std::vector<double> &) const {
-    eckit::StrStream os;
-    os << "Representation::windDirections() not implemented for " << *this << eckit::StrStream::ends;
-    throw eckit::SeriousBug(std::string(os));
-}
 
 RepresentationFactory::RepresentationFactory(const std::string &name):
     name_(name) {
@@ -196,7 +186,6 @@ RepresentationFactory::~RepresentationFactory() {
     m->erase(name_);
 
 }
-
 
 const Representation *RepresentationFactory::build(const param::MIRParametrisation &params) {
 
