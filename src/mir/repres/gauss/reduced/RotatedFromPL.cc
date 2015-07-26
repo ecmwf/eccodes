@@ -67,12 +67,8 @@ Reduced *RotatedFromPL::cropped(const util::BoundingBox &bbox, const std::vector
 }
 
 
-Iterator* RotatedFromPL::iterator(bool unrotated) const {
-    if (unrotated) {
-        return FromPL::iterator(unrotated);
-    } else {
-        return new util::RotatedIterator(FromPL::iterator(unrotated), rotation_);
-    }
+Iterator* RotatedFromPL::rotatedIterator() const {
+    return new util::RotatedIterator(FromPL::unrotatedIterator(), rotation_);
 }
 
 namespace {

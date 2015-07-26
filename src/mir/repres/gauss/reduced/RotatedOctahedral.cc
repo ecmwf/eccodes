@@ -50,12 +50,8 @@ void RotatedOctahedral::fill(grib_info &info) const  {
 #endif
 }
 
-Iterator* RotatedOctahedral::iterator(bool unrotated) const {
-    if (unrotated) {
-        return Octahedral::iterator(unrotated);
-    } else {
-        return new util::RotatedIterator(Octahedral::iterator(unrotated), rotation_);
-    }
+Iterator* RotatedOctahedral::rotatedIterator() const {
+    return new util::RotatedIterator(Octahedral::unrotatedIterator(), rotation_);
 }
 
 atlas::Grid *RotatedOctahedral::atlasGrid() const {

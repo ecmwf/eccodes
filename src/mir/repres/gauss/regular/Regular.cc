@@ -149,7 +149,7 @@ void Regular::validate(const std::vector<double> &values) const {
     if (globalDomain()) {
         ASSERT(values.size() == (N_ * 2) * (N_ * 4));
     } else {
-        eckit::ScopedPtr<Iterator> it(iterator(true));
+        eckit::ScopedPtr<Iterator> it(unrotatedIterator());
         double lat;
         double lon;
 
@@ -225,7 +225,7 @@ class RegularIterator: public Iterator {
 
 };
 
-Iterator *Regular::iterator(bool unrotated) const {
+Iterator *Regular::unrotatedIterator() const {
     // Use a global bounding box if global domain, to avoid rounding issues
     // due to GRIB (in)accuracies
     return new RegularIterator(latitudes(), N_, globalDomain() ? util::BoundingBox() : bbox_);

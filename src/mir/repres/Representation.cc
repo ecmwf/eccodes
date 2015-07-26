@@ -161,13 +161,17 @@ void Representation::cropToDomain(const param::MIRParametrisation &parametrisati
     throw eckit::SeriousBug(std::string(os));
 }
 
-Iterator *Representation::iterator(bool unrotated) const {
+Iterator *Representation::unrotatedIterator() const {
     eckit::StrStream os;
-    os << "Representation::iterator(bool unrotated) not implemented for " << *this << eckit::StrStream::ends;
+    os << "Representation::unrotatedIterator() not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
 }
 
-
+Iterator *Representation::rotatedIterator() const {
+    eckit::StrStream os;
+    os << "Representation::rotatedIterator() not implemented for " << *this << eckit::StrStream::ends;
+    throw eckit::SeriousBug(std::string(os));
+}
 
 RepresentationFactory::RepresentationFactory(const std::string &name):
     name_(name) {

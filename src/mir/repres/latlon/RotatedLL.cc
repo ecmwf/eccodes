@@ -58,12 +58,8 @@ const RotatedLL *RotatedLL::cropped(const util::BoundingBox &bbox) const {
     return new RotatedLL(bbox, increments_, rotation_);
 }
 
-Iterator *RotatedLL::iterator(bool unrotated) const {
-    if (unrotated) {
-        return RegularLL::iterator(unrotated);
-    } else {
-        return new util::RotatedIterator(RegularLL::iterator(unrotated), rotation_);
-    }
+Iterator *RotatedLL::rotatedIterator() const {
+    return new util::RotatedIterator(RegularLL::unrotatedIterator(), rotation_);
 }
 
 void RotatedLL::fill(grib_info &info) const  {

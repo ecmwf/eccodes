@@ -53,12 +53,8 @@ void RotatedGG::fill(grib_info &info) const  {
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_GG;
 }
 
-Iterator* RotatedGG::iterator(bool unrotated) const {
-    if (unrotated) {
-        return Regular::iterator(unrotated);
-    } else {
-        return new util::RotatedIterator(Regular::iterator(unrotated), rotation_);
-    }
+Iterator* RotatedGG::rotatedIterator() const {
+    return new util::RotatedIterator(Regular::unrotatedIterator(), rotation_);
 }
 
 atlas::Grid *RotatedGG::atlasGrid() const {

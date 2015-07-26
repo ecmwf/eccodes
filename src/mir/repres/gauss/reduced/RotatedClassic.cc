@@ -51,12 +51,8 @@ void RotatedClassic::fill(grib_info &info) const  {
 }
 
 
-Iterator* RotatedClassic::iterator(bool unrotated) const {
-    if (unrotated) {
-        return Classic::iterator(unrotated);
-    } else {
-        return new util::RotatedIterator(Classic::iterator(unrotated), rotation_);
-    }
+Iterator* RotatedClassic::rotatedIterator() const {
+    return new util::RotatedIterator(Classic::unrotatedIterator(), rotation_);
 }
 
 atlas::Grid *RotatedClassic::atlasGrid() const {
