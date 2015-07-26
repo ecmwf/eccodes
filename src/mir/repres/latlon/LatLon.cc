@@ -244,6 +244,10 @@ Iterator *LatLon::unrotatedIterator() const {
 }
 
 
+Iterator* LatLon::rotatedIterator() const {
+    return unrotatedIterator();
+}
+
 size_t LatLon::frame(std::vector<double> &values, size_t size, double missingValue) const {
 
     // Could be done better, just a demo

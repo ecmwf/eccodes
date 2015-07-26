@@ -231,6 +231,9 @@ Iterator *Regular::unrotatedIterator() const {
     return new RegularIterator(latitudes(), N_, globalDomain() ? util::BoundingBox() : bbox_);
 }
 
+Iterator* Regular::rotatedIterator() const {
+    return unrotatedIterator();
+}
 
 }  // namespace regular
 }  // namespace repres

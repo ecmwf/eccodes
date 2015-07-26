@@ -229,6 +229,9 @@ Iterator *Reduced::unrotatedIterator() const {
     return new GaussianIterator(latitudes(), pls(), globalDomain() ? util::BoundingBox() : bbox_);
 }
 
+Iterator* Reduced::rotatedIterator() const {
+    return unrotatedIterator();
+}
 
 
 size_t Reduced::frame(std::vector<double> &values, size_t size, double missingValue) const {

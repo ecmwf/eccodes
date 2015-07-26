@@ -190,6 +190,9 @@ Iterator *ReducedLL::unrotatedIterator() const {
     return new ReducedLLIterator(Nj_, pl_, globalDomain() ? util::BoundingBox() : bbox_);
 }
 
+Iterator* ReducedLL::rotatedIterator() const {
+    return unrotatedIterator();
+}
 
 namespace {
 static RepresentationBuilder<ReducedLL> reducedLL("reduced_ll"); // Name is what is returned by grib_api
