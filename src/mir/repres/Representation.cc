@@ -109,17 +109,10 @@ void Representation::shape(size_t &ni, size_t &nj) const {
     throw eckit::SeriousBug(std::string(os));
 }
 
-const Representation *Representation::crop(const util::BoundingBox &bbox,
-        const std::vector<double> &, std::vector<double> &) const {
-    // FIXME: This is temporary, so that we can test existing mars/prodgen requeste
-#if 0
+const Representation *Representation::cropped(const util::BoundingBox &bbox) const {
     eckit::StrStream os;
-    os << "Representation::crop() not implemented for " << *this << eckit::StrStream::ends;
+    os << "Representation::cropped() not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
-#else
-    eckit::Log::info() << "Representation::crop() not implemented for " << *this << std::endl;
-    return 0;
-#endif
 }
 
 
