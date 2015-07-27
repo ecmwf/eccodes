@@ -330,7 +330,8 @@ static grib_trie* init_list(const char* name) {
     return 0;
 }
 
-static void print_values(grib_context* c,const grib_util_grid_spec* spec,const double* data_values,size_t data_values_count,const grib_values *values,int count) {
+static void print_values(grib_context* c,const grib_util_grid_spec* spec, const double* data_values,size_t data_values_count,const grib_values *values,int count)
+{
     int i;
     printf("GRIB_API DEBUG grib_util grib_set_values: setting %d values \n",count);
 
@@ -364,9 +365,6 @@ static void print_values(grib_context* c,const grib_util_grid_spec* spec,const d
         }
     }
 }
-
-#define     ISECTION_2  3000
-#define     ISECTION_4  512
 
 grib_handle* grib_util_set_spec(grib_handle* h,
         const grib_util_grid_spec    *spec,
@@ -1033,7 +1031,6 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     return NULL;
 }
 
-
 int grib_moments(grib_handle* h,double east,double north,double west,double south,int order,double* moments,long *count) {
     grib_iterator* iter=NULL;
     int ret=0,i,j,l;
@@ -1316,4 +1313,24 @@ int is_index_file(const char* filename)
     fclose(fh);
 
     return ret;
+}
+
+char get_dir_separator_char()
+{
+#ifdef ECCODES_ON_WINDOWS
+#   define DIR_SEPARATOR_CHAR '\\'
+#else
+#   define DIR_SEPARATOR_CHAR '/'
+#endif
+    return DIR_SEPARATOR_CHAR;
+}
+
+/* Return the component after final slash */
+/*  "/tmp/x"  -> "x"  */
+/*  "/tmp/"   -> ""   */
+const char* extract_filename(const char* filepath)
+{
+    char* s = strrchr(filepath, get_dir_separator_char());
+    if (!s) return filepath;
+    else    return s + 1;
 }

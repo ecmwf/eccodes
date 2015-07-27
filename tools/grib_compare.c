@@ -10,19 +10,6 @@
 
 #include "grib_tools.h"
 
-#ifdef ECCODES_ON_WINDOWS
-#   define DIR_SEPARATOR_CHAR '\\'
-#else
-#   define DIR_SEPARATOR_CHAR '/'
-#endif
-
-static const char* basename(const char* path)
-{
-    char* s = strrchr(path, DIR_SEPARATOR_CHAR);
-    if (!s) return path;
-    else    return s + 1;
-}
-
 GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
 {
     if (*a != *b) return 1;
@@ -308,7 +295,9 @@ int grib_tool_init(grib_runtime_options* options)
                 char bufr[2048] = {0,};
                 /* options->infile_extra->name is the 1st file */
                 sprintf(bufr, "%s%c%s",
-                        infile->name, DIR_SEPARATOR_CHAR, basename(options->infile_extra->name));
+                        infile->name, 
+                        get_dir_separator_char(),
+                        extract_filename(options->infile_extra->name));
                 infile->name = strdup(bufr);
             }
         }
