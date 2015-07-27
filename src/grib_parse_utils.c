@@ -533,22 +533,24 @@ int grib_yyerror(const char* msg)
     return 1;
 }
 
-void grib_parser_include(const char* fname)
+void grib_parser_include(const char* included_fname)
 {
     FILE *f = NULL;
     char path[1204];
     char* io_buffer=0;
     /* int i; */
     Assert(top < MAXINCLUDE);
-    Assert(fname);
+    Assert(included_fname);
 
     if(parse_file == 0)
     {
-        parse_file = fname;
+        parse_file = included_fname;
         Assert(top == 0);
     }
     else
     {
+        /* When parse_file is not NULL, it's the path of the parent file (includer) */
+        /* and 'included_fname' is the name of the file being included (includee) */
         const char *p = parse_file;
         const char *q = NULL;
 
@@ -559,16 +561,16 @@ void grib_parser_include(const char* fname)
 
         if(!q) {
             grib_context_log(grib_parser_context, GRIB_LOG_FATAL,
-                    "grib_parser_include: path '%s' does not contain a '/'\n",fname);
+                    "grib_parser_include: path '%s' does not contain a '/'\n",included_fname);
             return;
         }
         q++;
 
         strncpy(path,parse_file,q-parse_file);
         path[q-parse_file] = 0;
-        strcat(path,fname);
+        strcat(path,included_fname);
 
-        Assert(*fname != '/');
+        Assert(*included_fname != '/');
 
         parse_file = path;
     }
