@@ -8,7 +8,7 @@
 #
 
 # TEMPLATE 3.31, Albers equal area
-include "template.3.shape_of_the_earth.def";
+include "grib2/template.3.shape_of_the_earth.def";
 
 #  Nx - number of points along the X-axis
 unsigned[4] Nx  : dump;
@@ -28,7 +28,7 @@ alias La1  = latitudeOfFirstGridPoint;
 unsigned[4] longitudeOfFirstGridPoint : edition_specific,dump;
 alias Lo1  = longitudeOfFirstGridPoint;
 
-include "template.3.resolution_flags.def";
+include "grib2/template.3.resolution_flags.def";
 
 #  LaD - Latitude where Dx and Dy are specified
 signed[4] LaD  : dump;
@@ -49,7 +49,7 @@ alias Dy =  yDirectionGridLength;
 
 #  Projection centre flag
 flags[1] projectionCentreFlag 'grib2/tables/[tablesVersion]/3.5.table' : dump;
-include "template.3.scanning_mode.def";
+include "grib2/template.3.scanning_mode.def";
 
 #  Latin 1 - first latitude from the pole at which the secant cone cuts the sphere
 signed[4] Latin1 :edition_specific;

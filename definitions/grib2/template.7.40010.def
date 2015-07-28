@@ -7,4 +7,5 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-include "template.7.41.def"
+include "grib2/template.7.41.def"
+

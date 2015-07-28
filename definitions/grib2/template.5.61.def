@@ -12,7 +12,7 @@ label "grib 2 Section 5 template 5.61";
 # Grid point data - Simple packing with logarithmic preprocessing
 constant typeOfPreProcessing=1;
 
-include "template.5.packing.def";
+include "grib2/template.5.packing.def";
 
 ieeefloat   preProcessingParameter  : read_only;
 

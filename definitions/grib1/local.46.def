@@ -9,5 +9,5 @@
 
 label "CPTEC local definition";
 # Same as NCEP
-include "local.7.def";
+include "grib1/local.7.def";
 section_padding local_padding;

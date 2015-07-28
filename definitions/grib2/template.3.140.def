@@ -10,7 +10,7 @@
 
 # START 2/template.3.140 ----------------------------------------------------------------------
 # TEMPLATE 3.140, Lambert azimuthal equal area projection
-include "template.3.shape_of_the_earth.def";
+include "grib2/template.3.shape_of_the_earth.def";
 
 #  Nx - number of points along X-axis
 unsigned[4] numberOfPointsAlongXAxis : dump  ;
@@ -51,7 +51,7 @@ alias Dx  = xDirectionGridLengthInMillimetres ;
 unsigned[4] yDirectionGridLengthInMillimetres  : dump ;
 alias Dy  = yDirectionGridLengthInMillimetres ;
 
-include "template.3.scanning_mode.def";
+include "grib2/template.3.scanning_mode.def";
 
 iterator lambert_azimuthal_equal_area(numberOfPoints,missingValue,values,
           radius,Nx,Ny,

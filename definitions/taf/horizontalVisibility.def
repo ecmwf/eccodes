@@ -61,8 +61,8 @@ if ( g is "CAVOK") {
 				variationOfVisibilityDirection=dict_search("metar/direction.table",directionOfVariation,1) : string_type;
 				variationOfVisibilityDirectionAngle=dict_search("metar/direction.table",directionOfVariation,2) ;
 		}
-		include "rvr1.def";
-		include "rvr2.def";
-		include "rvr3.def";
-		include "rvr4.def";
+		include "taf/rvr1.def";
+		include "taf/rvr2.def";
+		include "taf/rvr3.def";
+		include "taf/rvr4.def";
 } 

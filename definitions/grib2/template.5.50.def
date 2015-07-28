@@ -8,7 +8,7 @@
 #
 
 # TEMPLATE 5.50, Spectral data - simple packing
-include "template.5.packing.def";
+include "grib2/template.5.packing.def";
 
 #  Real part of (0,0)                                                                
 ieeefloat realPartOf00 ;

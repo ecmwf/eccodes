@@ -14,4 +14,4 @@ constant gridDefinitionTemplateNumber     = 42;
 template commonBlock "grib1/grid_definition_gaussian.def";
 
 # Stretching parameters
-include  "grid_stretching.def"
+include "grib1/grid_stretching.def"

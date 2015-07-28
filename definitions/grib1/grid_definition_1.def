@@ -21,7 +21,7 @@ alias numberOfPointsAlongAMeridian=Nj;
 alias Nx=Nj;
 alias geography.Nj=Nj;
 
-include "grid_first_last_resandcomp.def";
+include "grib1/grid_first_last_resandcomp.def";
 
 signed[3] Latin : edition_specific,no_copy;
 meta geography.LaDInDegrees scale(Latin,oneConstant,grib1divider,truncateDegrees) : dump;
@@ -34,7 +34,7 @@ alias yLast=latitudeOfLastGridPointInDegrees;
 alias xFirst=longitudeOfFirstGridPointInDegrees;
 alias xLast=longitudeOfLastGridPointInDegrees;
 
-include "scanning_mode.def";
+include "grib1/scanning_mode.def";
 
 signed[3] DiInMetres   : dump;
 alias longitudinalDirectionGridLength=DiInMetres;

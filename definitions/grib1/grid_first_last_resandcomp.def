@@ -17,7 +17,7 @@ signed[3] longitudeOfFirstGridPoint  : edition_specific;
 meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
 alias Lo1 = longitudeOfFirstGridPoint;
 
-include "resolution_flags.def";
+include "grib1/resolution_flags.def";
 
 #  La2 - latitude of last grid point
 signed[3] latitudeOfLastGridPoint :  edition_specific;

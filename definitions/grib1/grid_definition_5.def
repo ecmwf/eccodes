@@ -29,7 +29,7 @@ signed[3] longitudeOfFirstGridPoint : edition_specific;
 meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
 alias Lo1 = longitudeOfFirstGridPoint;
 
-include "resolution_flags.def";
+include "grib1/resolution_flags.def";
 
 #  LoV - orientation of the grid; i.e.  the longitude value of the meridian which is parallel to the Y-axis
 signed[3] orientationOfTheGrid  ;
@@ -67,7 +67,7 @@ flagbit southPoleOnProjectionPlane(projectionCentreFlag,7) : dump; # WMO bit 1
 alias yFirst=latitudeOfFirstGridPointInDegrees;
 alias xFirst=longitudeOfFirstGridPointInDegrees;
 
-include "scanning_mode.def";
+include "grib1/scanning_mode.def";
 
 pad padding_grid5_1(4);
 

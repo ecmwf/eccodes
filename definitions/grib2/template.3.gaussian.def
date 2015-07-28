@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-include "template.3.grid.def";
+include "grib2/template.3.grid.def";
 
 #  Di - i direction increment
 unsigned[4] iDirectionIncrement : can_be_missing;
@@ -18,7 +18,7 @@ unsigned[4] N  : dump;
 alias numberOfParallelsBetweenAPoleAndTheEquator=N ;
 alias geography.N=N;
 
-include "template.3.scanning_mode.def";
+include "grib2/template.3.scanning_mode.def";
 
 modify Ni : can_be_missing,dump;
 

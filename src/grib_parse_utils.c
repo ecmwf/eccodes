@@ -551,28 +551,17 @@ void grib_parser_include(const char* included_fname)
     {
         /* When parse_file is not NULL, it's the path of the parent file (includer) */
         /* and 'included_fname' is the name of the file being included (includee) */
-        const char *p = parse_file;
-        const char *q = NULL;
 
-        while(*p) {
-            if(*p == '/') q = p;
-            p++;
-        }
-
-        if(!q) {
+        /* GRIB-796: Search for the included file in ECCODES_DEFINITION_PATH */
+        char* new_path = NULL;
+        Assert(*included_fname != '/');
+        new_path = grib_context_full_defs_path(grib_parser_context, included_fname);
+        if (!new_path) {
             grib_context_log(grib_parser_context, GRIB_LOG_FATAL,
-                    "grib_parser_include: path '%s' does not contain a '/'\n",included_fname);
+                    "grib_parser_include: Could not resolve '%s' (included in %s)", included_fname, parse_file);
             return;
         }
-        q++;
-
-        strncpy(path,parse_file,q-parse_file);
-        path[q-parse_file] = 0;
-        strcat(path,included_fname);
-
-        Assert(*included_fname != '/');
-
-        parse_file = path;
+        parse_file = new_path;
     }
 
     if (strcmp(parse_file,"-")==0) {
@@ -603,7 +592,6 @@ void grib_parser_include(const char* included_fname)
             setvbuf(f,io_buffer,_IOFBF,c->io_buffer_size);
         }
          */
-
         grib_yyin            = f;
         stack[top].file = f;
         stack[top].io_buffer = io_buffer;

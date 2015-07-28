@@ -18,7 +18,7 @@ alias Nj  = numberOfPointsAlongAMeridian;
 
 # Latitudes and Longitudes of the first and the last points
 # Resolution and component flags
-include "grid_first_last_resandcomp.def";
+include "grib1/grid_first_last_resandcomp.def";
 
 unsigned[2] iDirectionIncrement : can_be_missing;
 unsigned[2] jDirectionIncrement : can_be_missing;
@@ -31,7 +31,7 @@ alias yLast=latitudeOfLastGridPointInDegrees;
 alias xFirst=longitudeOfFirstGridPointInDegrees;
 alias xLast=longitudeOfLastGridPointInDegrees;
 
-include "scanning_mode.def";
+include "grib1/scanning_mode.def";
 
 #  Lar1 - latitude of first grid point of reference domain
 signed[3] Lar1 :  edition_specific;

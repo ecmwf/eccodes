@@ -16,5 +16,5 @@ template commonBlock "grib1/grid_definition_latlon.def";
 ascii[4] zero : read_only;
 
 # Stretching parameters
-include  "grid_stretching.def"
+include "grib1/grid_stretching.def"
 
