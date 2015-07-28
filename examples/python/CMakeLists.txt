@@ -3,6 +3,7 @@
 # Configure the file which all CMake tests will include
 configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 
+execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/include.sh ${CMAKE_CURRENT_BINARY_DIR} )
 
 # Build the executables used by test scripts
 ################################################
@@ -12,6 +13,7 @@ list( APPEND test_bins
    grib_iterator
    count_messages
 )
+
 foreach( tool ${test_bins} )
    ecbuild_add_executable( TARGET    p_${tool}
                            NOINSTALL
@@ -21,6 +23,7 @@ foreach( tool ${test_bins} )
    )
    list( APPEND ptools  p_${tool} )
 endforeach()
+
 
 # Now add each test
 #################################################
@@ -55,13 +58,13 @@ list( APPEND tests
    metar_get_keys
 )
 foreach( test ${tests} )
-    ecbuild_add_test( TARGET p_${test}_test
+    ecbuild_add_test( TARGET eccodes_p_${test}_test
                   TYPE       SCRIPT
                   DEPENDS    ${ptools}
                   COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                   CONDITION  HAVE_PYTHON
-                  RESOURCES  include.sh ${test}.py
+                  RESOURCES  ${test}.py
                   ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
-                  TEST_DEPENDS get_gribs get_tigge_gribs get_bufrs
+                  TEST_DEPENDS eccodes_get_gribs eccodes_get_tigge_gribs eccodes_get_bufrs
     )
 endforeach()

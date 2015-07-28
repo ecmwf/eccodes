@@ -71,8 +71,10 @@ extern "C" {
    #include <direct.h>
    #include <io.h>
 
-   /* Replace Unix rint() for Windows */
-   double rint(double x);
+   /* Replace C99/Unix rint() for Windows Visual C++ (only before VC++ 2013 versions) */
+   #if defined _MSC_VER && _MSC_VER < 1800
+      double rint(double x);
+   #endif
 
    #ifndef S_ISREG
      #define S_ISREG(mode) (mode & S_IFREG)
@@ -1426,7 +1428,6 @@ typedef struct j2k_encode_helper {
   unsigned char*  jpeg_buffer;
 
 } j2k_encode_helper;
-
 
 
 #include "grib_api_prototypes.h"

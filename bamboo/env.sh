@@ -1,4 +1,4 @@
 #!/bin/bash
 
-ctest_parallel="no"
+# ctest_parallel="no"
 

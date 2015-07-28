@@ -36,13 +36,13 @@ if (! nosigPresent) {
 						endHourTrend2=to_string(untilTrend2,2,2) ;
 						endMinuteTrend2=to_string(untilTrend2,4,2);
 				}
-				include "wind_Trend2.def";
+				include "taf/wind_Trend2.def";
 
-				include "horizontalVisibility_Trend2.def";
+				include "taf/horizontalVisibility_Trend2.def";
 
 				if ( ! isCavokTrend2) { 
-						include "present_weather_Trend2.def";
-						include "clouds_Trend2.def"; 
+						include "taf/present_weather_Trend2.def";
+						include "taf/clouds_Trend2.def"; 
 				}
 		} else {
 				if (substr(g,0,2) is "FM") {
@@ -52,13 +52,13 @@ if (! nosigPresent) {
 						group g : dump; non_alpha na;
 						beginHourTrend2=to_string(fromTrend2,2,2);
 						beginMinuteTrend2=to_string(fromTrend2,4,2);
-						include "wind_Trend2.def";
+						include "taf/wind_Trend2.def";
 
-						include "horizontalVisibility_Trend2.def";
+						include "taf/horizontalVisibility_Trend2.def";
 
 						if ( ! isCavokTrend2) { 
-								include "present_weather_Trend2.def";
-								include "clouds_Trend2.def"; 
+								include "taf/present_weather_Trend2.def";
+								include "taf/clouds_Trend2.def"; 
 						}
 				}
 		}

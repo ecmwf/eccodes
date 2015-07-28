@@ -17,6 +17,12 @@
 #include <fcntl.h> /* Windows: for _O_BINARY */
 #endif
 
+#ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
+#define _GNU_SOURCE
+#include <fenv.h>
+int feenableexcept(int excepts);
+#endif
+
 grib_string_list grib_file_not_found;
 
 #if GRIB_PTHREADS
@@ -326,6 +332,11 @@ static grib_context default_grib_context = {
 grib_context* grib_context_get_default()
 {
     GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex_c);
+
+#ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
+    feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
+#endif
 
     if(!default_grib_context.inited)
     {
@@ -342,7 +353,6 @@ grib_context* grib_context_get_default()
         const char *keep_matrix=NULL;
         const char *nounpack=NULL;
 
-        GRIB_MUTEX_LOCK(&mutex_c);
 
         write_on_fail = getenv("ECCODES_GRIB_WRITE_ON_FAIL");
         large_constant_fields = getenv("ECCODES_GRIB_LARGE_CONSTANT_FIELDS");
@@ -439,10 +449,9 @@ grib_context* grib_context_get_default()
         default_grib_context.def_files=grib_trie_new(&(default_grib_context));
         default_grib_context.lists=grib_trie_new(&(default_grib_context));
         default_grib_context.classes=grib_trie_new(&(default_grib_context));
-
-        GRIB_MUTEX_UNLOCK(&mutex_c);
     }
 
+    GRIB_MUTEX_UNLOCK(&mutex_c);
     return &default_grib_context;
 }
 
@@ -525,7 +534,6 @@ static int init_definition_files_dir(grib_context* c)
     int err=0;
     char path[DEF_PATH_MAXLEN];
     char* p=NULL;
-    char* dir=NULL;
     grib_string_list* next=NULL;
 
     if (!c) c=grib_context_get_default();
@@ -549,6 +557,7 @@ static int init_definition_files_dir(grib_context* c)
         c->grib_definition_files_dir->value = resolve_path(c, path);
     } else {
         /* Definitions path contains multiple directories */
+        char* dir=NULL;
         dir=strtok(path, DEFS_PATH_DELIMITER_STR);
 
         while (dir != NULL) {

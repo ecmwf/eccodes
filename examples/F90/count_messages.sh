@@ -9,4 +9,4 @@
 
 . ./include.sh
 
-${examples_dir}f_count_messages > /dev/null
+${examples_dir}eccodes_f_count_messages > /dev/null

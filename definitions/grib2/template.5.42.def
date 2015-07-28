@@ -9,8 +9,8 @@
 
 # TEMPLATE 5.42, Grid point and spectral data - CCSDS
 
-include "template.5.packing.def";
-include "template.5.original_values.def";
+include "grib2/template.5.packing.def";
+include "grib2/template.5.original_values.def";
 
 unsigned[1] ccsdsFlags : dump;
 

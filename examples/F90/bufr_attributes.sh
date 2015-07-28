@@ -24,7 +24,7 @@ rm -f ${fTmp} | true
 REDIRECT=/dev/null
 
 #Write the values into a file and compare with reference
-${examples_dir}/f_bufr_attributes #2> $REDIRECT > $fTmp
+${examples_dir}/eccodes_f_bufr_attributes #2> $REDIRECT > $fTmp
 
 #TODO: check the results
 

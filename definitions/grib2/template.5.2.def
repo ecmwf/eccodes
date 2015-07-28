@@ -11,8 +11,8 @@
 # START 2/template.5.2 ----------------------------------------------------------------------
 # TEMPLATE 5.2, Grid point data - complex packing
 
-include "template.5.packing.def";
-include "template.5.original_values.def";
+include "grib2/template.5.packing.def";
+include "grib2/template.5.original_values.def";
 
 #  Group splitting method used
 codetable[1] groupSplittingMethodUsed ('5.4.table',masterDir,localDir);

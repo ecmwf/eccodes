@@ -11,7 +11,7 @@
 # START 2/template.5.1 ----------------------------------------------------------------------
 # TEMPLATE 5.1, Matrix values at grid point -simple packing
 
-include "template.5.packing.def";
+include "grib2/template.5.packing.def";
 
 
 unsigned[1] matrixBitmapsPresent ;

@@ -8,14 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: bufr_compare
- *
- *
- */
-
 #include "grib_tools.h"
-
 
 GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
 {
@@ -324,6 +317,25 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("t:"))
         tolerance_factor=atof(grib_options_get_option("t:"));
 
+    {
+        /* Check for 2nd file being a directory. If so, we assume user is comparing to a file */
+        /* with the same name as first file in that directory */
+        struct stat s;
+        grib_tools_file* infile = options->infile; /* the 2nd file in comparison */
+        if (infile) {
+            int stat_val = stat(infile->name, &s);
+            if ( stat_val == 0 && S_ISDIR(s.st_mode)) {
+                /* Take the filename of the 1st file and append to dir */
+                char bufr[2048] = {0,};
+                /* options->infile_extra->name is the 1st file */
+                sprintf(bufr, "%s%c%s",
+                        infile->name,
+                        get_dir_separator_char(),
+                        extract_filename(options->infile_extra->name));
+                infile->name = strdup(bufr);
+            }
+        }
+    }
 
     return 0;
 }

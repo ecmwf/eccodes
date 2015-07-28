@@ -425,8 +425,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 6 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Potential vorticity
 '60' = {
@@ -502,8 +502,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 51 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Vorticity (relative)
 '138' = {
@@ -2570,16 +2570,16 @@
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Field capacity
 '228170' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 12 ;
-	 typeOfFirstFixedSurface = 106 ;
 	 typeOfSecondFixedSurface = 106 ;
+	 typeOfFirstFixedSurface = 106 ;
 	 scaledValueOfSecondFixedSurface = 2 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfSecondFixedSurface = 1 ;

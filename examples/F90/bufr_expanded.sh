@@ -27,7 +27,7 @@ REDIRECT=/dev/null
 #hardcoded in the example
 
 #Write the values into a file
-${examples_dir}/f_bufr_expanded > $fTmp 2> $REDIRECT 
+${examples_dir}/eccodes_f_bufr_expanded > $fTmp 2> $REDIRECT
 
 #TODO: add a better check. It could be compared against the bufrdc
 # references.

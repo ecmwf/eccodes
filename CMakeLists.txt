@@ -12,7 +12,6 @@ project( eccodes C )
 
 set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild/cmake")
 
-
 include( ecbuild_system )
 
 ecbuild_requires_macro_version( 1.7 )
@@ -116,7 +115,7 @@ if( ENABLE_JPG )
         set( HAVE_LIBJASPER 1 )
     endif()
 
-    if( OpenJPEG_FOUND )
+    if( OPENJPEG_FOUND )
         set( HAVE_JPEG 1 )
         set( HAVE_LIBOPENJPEG 1 )
     endif()
@@ -249,14 +248,13 @@ add_subdirectory( tests )
 add_subdirectory( tigge )
 add_subdirectory( examples )
 add_subdirectory( data )
-
 add_subdirectory( samples )
 add_subdirectory( ifs_samples ) # must come after samples
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
 ecbuild_dont_pack( DIRS
-     concepts html tests.ecmwf doxygen examples.dev templates parameters java
-     perl/GRIB-API/lib perl/GRIB-API/t gaussian_experimental gribex examples/F77
+     concepts tests.ecmwf doxygen examples.dev templates parameters java
+     gaussian_experimental gribex examples/F77
      examples/extra bamboo fortran/fortranCtypes tigge/tools share/eccodes grib_api_for_mars
      src/.deps tests/.deps tools/.deps tigge/.deps examples/C/.deps examples/python/.deps
      python/.deps fortran/.deps

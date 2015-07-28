@@ -34,9 +34,9 @@ extern "C" {
 #include <math.h>
 
 #if defined( __GNUC__) || defined(__clang__)
-#define DEPRECATED __attribute__((deprecated))
+#define ECCODES_DEPRECATED __attribute__((deprecated))
 #else
-#define DEPRECATED
+#define ECCODES_DEPRECATED
 #endif
 
 typedef enum ProductKind {PRODUCT_ANY, PRODUCT_GRIB, PRODUCT_BUFR, PRODUCT_METAR, PRODUCT_GTS} ProductKind;

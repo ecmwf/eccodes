@@ -9,6 +9,6 @@
 
 . ./include.sh
 
-${examples_dir}f_grib_multi > multi.out
+${examples_dir}eccodes_f_grib_multi > multi.out
 diff multi.out ${data_dir}/multi.ok
 rm -f multi.out

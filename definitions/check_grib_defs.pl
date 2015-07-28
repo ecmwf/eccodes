@@ -176,11 +176,11 @@ sub process {
                 # So make sure it comes BEFORE the scale keys! i.e. if we find a scale key then our map should have
                 # the typeOf key since it came before
                 if ($key =~ /scale.*OfSecondFixedSurface/ && !exists($map2{'typeOfSecondFixedSurface'})) {
-                    print "File: $filename, line: $lineNum: 'Type of Surface' problem: Please check: $desc\n";
+                    print "File: $filename, line: $lineNum: TypeOfSurface problem (GRIB-229): Please check: $desc\n";
                     #$error = 1;
                 }
                 if ($key =~ /typeOfSecondFixedSurface/ && exists($map2{'typeOfFirstFixedSurface'})) {
-                    print "File: $filename, line: $lineNum: TypeOf1 before TypeOf2 problem: Please check: $desc\n";
+                    print "File: $filename, line: $lineNum: Potential TypeOfSurface problem (GRIB-229): Please check: $desc\n";
                 }
             }
             $map2{$key} = $val;
@@ -188,7 +188,9 @@ sub process {
         elsif ($this =~ /'(.*)'.*=/) {
             $concept = $1;
             if ($filename eq 'cfVarName.def') {
-               if ($concept =~ /^[0-9]/) {
+               #if ($concept =~ /^[0-9]/) {
+               # Check CF naming convention. Do not allow numeric initial char or ~
+               if ($concept !~ /^[A-z]/) {
                   $error = 1;
                   die "File: $filename, line: $lineNum: Invalid netcdf variable name: $concept";
                }

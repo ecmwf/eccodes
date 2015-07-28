@@ -29,7 +29,7 @@ signed[3] longitudeOfSubSatellitePoint ;
 meta geography.longitudeOfSubSatellitePointInDegrees  scale(longitudeOfSubSatellitePoint,oneConstant,grib1divider,truncateDegrees) : dump;
 alias Lap=longitudeOfSubSatellitePoint;
 
-include "resolution_flags.def";
+include "grib1/resolution_flags.def";
 
 unsigned[3] dx  : dump;
 alias geography.dx=dx;
@@ -44,7 +44,7 @@ alias geography.XpInGridLengths=XpInGridLengths;
 unsigned[2] YpInGridLengths  : dump;
 alias geography.YpInGridLengths=YpInGridLengths;
 
-include "scanning_mode.def";
+include "grib1/scanning_mode.def";
 
 unsigned[3] orientationOfTheGrid : edition_specific ;
 meta geography.orientationOfTheGridInDegrees  scale(orientationOfTheGrid,oneConstant,grib1divider,truncateDegrees) : dump;

@@ -75,7 +75,7 @@ int process_file(const char* filename)
     {
         int is_reduced = 0, is_regular = 0, grid_ok = 0;
         long edition = 0, N = 0, Nj = 0, numberOfDataPoints;
-        size_t len = 0, numberOfValues = 0;
+        size_t len = 0, sizeOfValuesArray = 0;
         double *lats = NULL;
         long *pl = NULL;
         char gridType[32] = {0,};
@@ -187,10 +187,10 @@ int process_file(const char* filename)
             error("ERROR: longitudeOfLastGridPointInDegrees=%f but should be %f!\n", lon2, expected_lon2);
         }
 
-        CODES_CHECK(codes_get_size(h, "values", &numberOfValues),0);
-        if (numberOfValues != numberOfDataPoints) {
-            error("Number of data points %d different from number of values %d\n",
-                  numberOfDataPoints, numberOfValues);
+        CODES_CHECK(codes_get_size(h, "values", &sizeOfValuesArray),0);
+        if (sizeOfValuesArray != numberOfDataPoints) {
+            error("Number of data points %d different from size of values array %d\n",
+                  numberOfDataPoints, sizeOfValuesArray);
         }
 
         free(lats);

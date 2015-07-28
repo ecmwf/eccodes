@@ -207,6 +207,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
 
     if (!directionIncrementGiven && numberOfPoints != GRIB_MISSING_LONG)
     {
+        Assert(numberOfPoints>1);
         if (!scansPositively) { /* scans negatively */
             if (first > last){
                 *val=(first-last)/(numberOfPoints-1);

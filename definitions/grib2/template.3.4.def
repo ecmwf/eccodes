@@ -9,5 +9,5 @@
 
 # TEMPLATE 3.4, variable resolution latitude/longitude
             
-include "template.3.shape_of_the_earth.def";
-include "template.3.latlon_vares.def";
+include "grib2/template.3.shape_of_the_earth.def";
+include "grib2/template.3.latlon_vares.def";

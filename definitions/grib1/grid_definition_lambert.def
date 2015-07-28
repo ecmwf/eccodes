@@ -35,7 +35,7 @@ alias Lo1InDegrees = longitudeOfFirstGridPointInDegrees;
 #meta longitudeOfFirstGridPointInMicrodegrees times(longitudeOfFirstGridPoint,thousand);
 
 #  Resolution and component flags
-include "resolution_flags.def";
+include "grib1/resolution_flags.def";
 
 #  LoV - orientation of the grid; i.e.  the east longitude value of the meridian which is parallel to the Y-axis
 signed[3] LoV : edition_specific  ;
@@ -68,7 +68,7 @@ alias projectionCenterFlag=projectionCentreFlag;
 alias yFirst=latitudeOfFirstGridPointInDegrees;
 alias xFirst=longitudeOfFirstGridPointInDegrees;
 
-include "scanning_mode.def";
+include "grib1/scanning_mode.def";
 
 #  Latin 1 - first latitude from the pole at which the secant cone cuts the sphere
 signed[3] Latin1 : edition_specific;

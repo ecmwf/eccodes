@@ -9,7 +9,7 @@
 
 # TEMPLATE 3.10, Mercator
 
-include "template.3.shape_of_the_earth.def";
+include "grib2/template.3.shape_of_the_earth.def";
 
 unsigned[4] Ni : dump;
 alias numberOfPointsAlongAParallel=Ni;
@@ -31,7 +31,7 @@ signed[4] longitudeOfFirstGridPoint : edition_specific,no_copy;
 alias Lo1 =  longitudeOfFirstGridPoint;
 meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;
 
-include "template.3.resolution_flags.def";
+include "grib2/template.3.resolution_flags.def";
 
 # LaD - Latitude(s) at which the Mercator projection intersects the Earth
 # (Latitude(s) where Di and Dj are specified)
@@ -48,7 +48,7 @@ signed[4] longitudeOfLastGridPoint: edition_specific,no_copy ;
 alias Lo2 =  longitudeOfLastGridPoint;
 meta geography.longitudeOfLastGridPointInDegrees scale(longitudeOfLastGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;
 
-include "template.3.scanning_mode.def";
+include "grib2/template.3.scanning_mode.def";
 
 # Orientation of the grid, angle between i direction on the map and the equator
 # NOTE 1: Limited to the range of 0 to 90 degrees; if the angle of orientation of the grid is neither 0 nor 90 degrees,

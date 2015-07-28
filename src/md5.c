@@ -14,6 +14,11 @@
 #include <string.h>
 #include <assert.h>
 
+/* On CRAY, disable all automatic optimisations for this module */
+#if _CRAYC
+    #pragma _CRI noopt
+#endif
+
 static unsigned long r[] = {
     7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
     5,  9, 14, 20, 5,  9, 14, 20, 5,  9, 14, 20, 5,  9, 14, 20,

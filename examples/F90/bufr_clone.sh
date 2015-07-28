@@ -22,11 +22,11 @@ f=${data_dir}/bufr/syno_multi.bufr
 REDIRECT=/dev/null
 
 #The input ($f) and output ($fBufrTmp) are hardcoded in the f90 example!!! 
-${examples_dir}/f_bufr_clone >$REDIRECT 2> $REDIRECT 
+${examples_dir}/eccodes_f_bufr_clone >$REDIRECT 2> $REDIRECT
 
 #Compare clone to the original
 set +e
-${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT 
+${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT
 
 #Check if clone is different
 if [ $? -eq 0 ]; then

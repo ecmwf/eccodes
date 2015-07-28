@@ -22,7 +22,7 @@ signed[3] latitudeOfFirstGridPoint :  no_copy;
 meta geography.latitudeOfFirstGridPointInDegrees scale(latitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump,no_copy;
 alias La1 = latitudeOfFirstGridPoint :  no_copy;
 
-include "scanning_mode.def";
+include "grib1/scanning_mode.def";
 
 meta numberOfDataPoints number_of_points(Ni,Nj,PLPresent,pl) : dump;
 alias numberOfPoints=numberOfDataPoints;

@@ -38,12 +38,12 @@ if ( g is "COR" ) {
 		group g : dump; non_alpha na;
 }  
 if (length(g) == 4) {
-		include "cccc.def";
+		include "taf/cccc.def";
 } else {
 		if (g is "METAR") {
 				rename(g,metarTwice);
 				group g : dump; non_alpha na;
-				if (length(g) == 4) { include  "cccc.def"; }
+				if (length(g) == 4) { include "taf/cccc.def"; }
 				else { 
 						constant CCCC = "unknown"; 
 						constant coordinatesPresent = 0; 
@@ -72,7 +72,7 @@ if ( ! isCorrection && g is "COR" ) {
 		group g : dump; non_alpha na;
 }  
 
-include "wrong_delayed.def";
+include "taf/wrong_delayed.def";
 
 if ( g is "NIL" ) { 
 		rename(g,nil); group g : dump;
@@ -83,30 +83,30 @@ if ( g is "NIL" ) {
 				group g : dump; non_alpha na; 
 		}
 
-		include "wind.def";
-		include "horizontalVisibility.def";
+		include "taf/wind.def";
+		include "taf/horizontalVisibility.def";
 
 		if ( ! isCavok ) { 
-				include "present_weather.def"; 
-				include "clouds.def"; 
+				include "taf/present_weather.def";
+				include "taf/clouds.def";
 		}
 
-		include "missing_field.def";
-		include "temperature.def";
-		include "qnh.def";
-		include "colour.def";
-		include "recent_weather.def";
-		include "wind_shear.def";
-		include "sea_state.def";
+		include "taf/missing_field.def";
+		include "taf/temperature.def";
+		include "taf/qnh.def";
+		include "taf/colour.def";
+		include "taf/recent_weather.def";
+		include "taf/wind_shear.def";
+		include "taf/sea_state.def";
 		template runwayState "metar/runwayState.def";
-		include "trend1.def";
-		include "trend2.def";
-		include "trend3.def";
-		include "trend4.def";
+		include "taf/trend1.def";
+		include "taf/trend2.def";
+		include "taf/trend3.def";
+		include "taf/trend4.def";
 
 }
 
-include "remark.def";
+include "taf/remark.def";
 
 if (length(g) == 0) { 
 		modify g : hidden;
@@ -114,21 +114,21 @@ if (length(g) == 0) {
 		if ( ! remarkPresent) { 
 				rename(g,skippedGroup);
 				group g : dump; non_alpha na;
-				include "colour.def";
-				include "recent_weather.def";
-				include "wind_shear.def";
-				include "sea_state.def";
+				include "taf/colour.def";
+				include "taf/recent_weather.def";
+				include "taf/wind_shear.def";
+				include "taf/sea_state.def";
 				template runwayState "metar/runwayState.def";
-				include "temperature.def";
-				include "qnh.def";
+				include "taf/temperature.def";
+				include "taf/qnh.def";
 				if (!presentTrend1) {
-						include "trend1.def";
-						include "trend2.def";
-						include "trend3.def";
-						include "trend4.def";
+						include "taf/trend1.def";
+						include "taf/trend2.def";
+						include "taf/trend3.def";
+						include "taf/trend4.def";
 				}
 		}
-		include "remark.def";
+		include "taf/remark.def";
 		if ( ! remarkPresent) { 
 				if ( length(g) == 0) {
 						modify g : hidden;

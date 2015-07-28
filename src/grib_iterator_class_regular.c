@@ -126,8 +126,8 @@ static int init(grib_iterator* i,grib_handle* h,grib_arguments* args)
     grib_iterator_regular* self = (grib_iterator_regular*)i;
     int ret = GRIB_SUCCESS;
 
-    long nap; /* Ni */
-    long nam; /* Nj */
+    long nap; /* Number of points along a parallel = Ni */
+    long nam; /* Number of points along a meridian = Nj */
     double idir, lof,lol;
     long loi;
 
@@ -145,24 +145,26 @@ static int init(grib_iterator* i,grib_handle* h,grib_arguments* args)
     if((ret = grib_get_long_internal(h,iScansNegatively,&self->iScansNegatively)))
         return ret;
 
-    /* Note: If first and last longitudes are equal I assume you wanna go round the globe */
-    if (self->iScansNegatively) {
-        if (lof > lol){
-            idir=(lof-lol)/(nap-1);
+    /* GRIB-801: Careful of case with a single point! nap==1 */
+    if (nap > 1) {
+        /* Note: If first and last longitudes are equal I assume you wanna go round the globe */
+        if (self->iScansNegatively) {
+            if (lof > lol){
+                idir=(lof-lol)/(nap-1);
+            }
+            else {
+                idir=(lof+360.0-lol)/(nap-1);
+            }
         }
         else {
-            idir=(lof+360.0-lol)/(nap-1);
+            if (lol > lof){
+                idir=(lol-lof)/(nap-1);
+            }
+            else {
+                idir=(lol+360.0-lof)/(nap-1);
+            }
         }
     }
-    else {
-        if (lol > lof){
-            idir=(lol-lof)/(nap-1);
-        }
-        else {
-            idir=(lol+360.0-lof)/(nap-1);
-        }
-    }
-
     if (self->iScansNegatively) {
         idir=-idir;
     } else {

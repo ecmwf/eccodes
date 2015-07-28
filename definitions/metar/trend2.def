@@ -10,7 +10,7 @@ if (! nosigPresent) {
 				rename(g,changeIndicatorCodedTrend2);
 				constant changeIndicatorTrend2="BECOMING";
 				group g : dump; non_alpha na;
-		} 
+		}
 		if (!defined(changeIndicatorTrend2) && g is "TEMPO" ) {
 				alias presentTrend2=one;
 				rename(g,changeIndicatorCodedTrend2);
@@ -36,13 +36,13 @@ if (! nosigPresent) {
 						endHourTrend2=to_string(untilTrend2,2,2) ;
 						endMinuteTrend2=to_string(untilTrend2,4,2);
 				}
-				include "wind_Trend2.def";
+				include "metar/wind_Trend2.def";
 
-				include "horizontalVisibility_Trend2.def";
+				include "metar/horizontalVisibility_Trend2.def";
 
-				if ( ! isCavokTrend2) { 
-						include "present_weather_Trend2.def";
-						include "clouds_Trend2.def"; 
+				if ( ! isCavokTrend2) {
+						include "metar/present_weather_Trend2.def";
+						include "metar/clouds_Trend2.def";
 				}
 		} else {
 				if (substr(g,0,2) is "FM") {
@@ -52,13 +52,13 @@ if (! nosigPresent) {
 						group g : dump; non_alpha na;
 						beginHourTrend2=to_string(fromTrend2,2,2);
 						beginMinuteTrend2=to_string(fromTrend2,4,2);
-						include "wind_Trend2.def";
+						include "metar/wind_Trend2.def";
 
-						include "horizontalVisibility_Trend2.def";
+						include "metar/horizontalVisibility_Trend2.def";
 
-						if ( ! isCavokTrend2) { 
-								include "present_weather_Trend2.def";
-								include "clouds_Trend2.def"; 
+						if ( ! isCavokTrend2) {
+								include "metar/present_weather_Trend2.def";
+								include "metar/clouds_Trend2.def";
 						}
 				}
 		}

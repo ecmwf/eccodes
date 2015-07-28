@@ -10,7 +10,7 @@
 
 # TEMPLATE 3.1000, Cross-section grid, with points equally spaced on the horizontal
 
-include "template.3.shape_of_the_earth.def";
+include "grib2/template.3.shape_of_the_earth.def";
 
 
 #  Number of horizontal points
@@ -35,7 +35,7 @@ unsigned[4] longitudeOfFirstGridPoint : edition_specific;
 
 alias Lo1 =  longitudeOfFirstGridPoint;
 
-include "template.3.scanning_mode.def";
+include "grib2/template.3.scanning_mode.def";
 
 #  La2 - latitude of last grid point
 # NOTE 1 NOT FOUND

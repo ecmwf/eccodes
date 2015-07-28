@@ -22,7 +22,7 @@ REDIRECT=/dev/null
 f=${data_dir}/bufr/syno_1.bufr
 
 #The input ($f) is hardcoded in the f90 example!!!
-${examples_dir}/f_bufr_keys_iterator 2> $REDIRECT > $fTmp
+${examples_dir}/eccodes_f_bufr_keys_iterator 2> $REDIRECT > $fTmp
 
 #TODO: check the output
 

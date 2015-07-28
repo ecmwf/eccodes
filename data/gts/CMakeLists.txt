@@ -10,7 +10,7 @@ STRING(REGEX REPLACE "\n" ";" gts_refs_to_download "${gts_refs_to_download}")
 
 
 ecbuild_get_test_multidata(
-     TARGET get_gts
+     TARGET eccodes_get_gts
      NOCHECK
      NAMES ${gts_files_to_download} ${gts_refs_to_download}
 )
