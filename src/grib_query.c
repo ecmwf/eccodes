@@ -272,13 +272,14 @@ static void search_accessors_list_by_condition(grib_accessors_list* al,const cha
             if (start==NULL && condition_true(al->accessor,condition)) start=al;
             if (start && !condition_true(al->accessor,condition)) end=al;
         }
-        al=al->next;
-        if (start && end) {
+        if (start!=NULL && ( end!=NULL || al->next==NULL) ) {
+            if (end==NULL) end=al;
             search_from_accessors_list(start,end,name,result);
             al=end;
             start=NULL;
             end=NULL;
         }
+        al=al->next;
     }
 
 }
