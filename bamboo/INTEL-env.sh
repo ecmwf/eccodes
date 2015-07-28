@@ -2,6 +2,6 @@
 if [[ ! $(command -v module > /dev/null 2>&1) ]]; then
   . /usr/local/apps/module/init/bash
 fi
-# eccodes module conflicts with intel module
-module unload eccodes
+# grib_api module conflicts with intel module
+module unload grib_api
 module switch gnu intel/15.0.2
