@@ -266,6 +266,7 @@ data/bufr/*.ref
 data/bufr/*.test
 data/bufr/*.json
 data/bufr/*.no
+data/bufr/*.bufr
 data/gts/*.DAT
 data/gts/*.ref
 data/metar/*.txt
@@ -276,7 +277,6 @@ data/*.grib
 data/*.grib2
 data/*.grib1
 data/tigge/tigge*.grib
-data/bufr/*.bufr
 data/exp/
 
 CMakeLists.txt.user*
@@ -297,6 +297,7 @@ include
 data/bufr/*diff
 data/bufr/*decode
 data/bufr/*test
+data/bufr/set_unexpandedDescriptors.filter
 
 *.sublime-workspace
 *.old
