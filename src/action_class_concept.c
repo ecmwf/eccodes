@@ -402,13 +402,18 @@ int grib_concept_apply(grib_handle* h,grib_action* act,const char* name)
                 pCon = pCon->next;
             }
             count = i;
-            /* Printing out all values for concepts like paramId will be silly! */
+            /* Only print out all concepts if fewer than MAX_NUM_CONCEPT_VALUES.
+             * Printing out all values for concepts like paramId would be silly! */
             if (count < MAX_NUM_CONCEPT_VALUES) {
                 fprintf(stderr, "Here are the possible values for concept %s:\n", act->name);
                 qsort(&all_concept_vals, count, sizeof(char*), cmpstringp);
                 for(i=0; i<count; ++i) {
                     if (all_concept_vals[i]) {
-                        fprintf(stderr, "\t%s\n", all_concept_vals[i]);
+                        int print_it = 1;
+                        if (i>0 && strcmp(all_concept_vals[i], all_concept_vals[i-1]) == 0) {
+                            print_it = 0;  /* skip duplicate entries */
+                        }
+                        if (print_it) fprintf(stderr, "\t%s\n", all_concept_vals[i]);
                     }
                 }
             }
