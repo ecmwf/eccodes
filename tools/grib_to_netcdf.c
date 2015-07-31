@@ -4245,9 +4245,7 @@ int main(int argc, char** argv)
     printf("\n");
     printf("grib_to_netcdf:\n");
     printf("\n");
-    printf(" GRIB API was not compiled with NETCDF enabled\n");
-    printf(" Please rerun configure with --with-netcdf=PATH_TO_NETCDF_INSTALLATION\n");
-    printf(" and re-install the software.\n");
+    printf(" ecCodes was not compiled with NETCDF enabled\n");
     printf("\n");
     exit(1);
 }
