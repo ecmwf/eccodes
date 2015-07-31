@@ -15,10 +15,6 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 
-/* This is the internal version number of our definition files. We need to change it whenever an older engine */
-/* will not be able to work with the current definitions. See the key "internalVersion" in boot,def  */
-#define LATEST_VERSION  22
-
 /* #if GRIB_PTHREADS */
 #if 0
 static pthread_once_t once  = PTHREAD_ONCE_INIT;
@@ -175,20 +171,6 @@ grib_handle* grib_new_handle ( grib_context* c )
 	return g;
 }
 
-static void check_definitions_version(grib_handle* h)
-{
-    /* Check version of definition files is compatible with the engine */
-    long defs_file_version = 0;
-    int ret = grib_get_long(h, "internalVersion", &defs_file_version);
-
-	if (ret == GRIB_SUCCESS && (defs_file_version > LATEST_VERSION)) {
-		grib_context_log(h->context, GRIB_LOG_FATAL,
-				"Definition files version (%d) is greater than engine version (%d)!\n"
-				"These definition files are for a later version of the grib api engine.\n",
-				defs_file_version, LATEST_VERSION);
-	}
-}
-
 static grib_handle* grib_handle_create ( grib_handle  *gl, grib_context* c,void* data, size_t buflen )
 {
 	grib_action* next = NULL;
@@ -241,8 +223,6 @@ static grib_handle* grib_handle_create ( grib_handle  *gl, grib_context* c,void*
 	}
 
 	grib_section_post_init ( gl->root );
-
-	check_definitions_version(gl);
 
 	return gl;
 
@@ -1237,8 +1217,6 @@ grib_handle *grib_handle_new ( grib_context* c )
 	h->buffer->property = GRIB_USER_BUFFER;
 
 	h->header_mode=1;
-
-	check_definitions_version(h);
 
 	return h;
 }

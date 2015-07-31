@@ -21,6 +21,7 @@ extern grib_accessor_class* grib_accessor_class_bufr_has_delayed_replication;
 extern grib_accessor_class* grib_accessor_class_bufrdc_expanded_descriptors;
 extern grib_accessor_class* grib_accessor_class_bytes;
 extern grib_accessor_class* grib_accessor_class_change_scanning_direction;
+extern grib_accessor_class* grib_accessor_class_check_internal_version;
 extern grib_accessor_class* grib_accessor_class_codeflag;
 extern grib_accessor_class* grib_accessor_class_codetable;
 extern grib_accessor_class* grib_accessor_class_codetable_title;

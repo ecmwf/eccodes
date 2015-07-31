@@ -72,6 +72,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_bytes.c
     grib_accessor_class.c
     grib_accessor_class_change_scanning_direction.c
+    grib_accessor_class_check_internal_version.c
     grib_accessor_class_codeflag.c
     grib_accessor_class_smart_table.c
     grib_accessor_class_smart_table_column.c
