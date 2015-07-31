@@ -535,14 +535,14 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
     grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
-            "jpeg support not enabled. Please rerun configure with the --with-jasper or --with-openjpeg option.");
+            "JPEG support not enabled.");
     return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
     grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
-            "jpeg support not enabled. Please rerun configure with the --with-jasper or --with-openjpeg option.");
+            "JPEG support not enabled.");
     return GRIB_NOT_IMPLEMENTED;
 }
 
