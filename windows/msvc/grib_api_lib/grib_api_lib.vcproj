@@ -525,6 +525,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_accessor_class_check_internal_version.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_codeflag.c"
 				>
 			</File>
