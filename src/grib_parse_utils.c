@@ -557,8 +557,13 @@ void grib_parser_include(const char* included_fname)
         Assert(*included_fname != '/');
         new_path = grib_context_full_defs_path(grib_parser_context, included_fname);
         if (!new_path) {
+            fprintf(stderr, "ecCodes Version:       %s\nDefinition files path: %s\n",
+                    ECCODES_VERSION_STR,
+                    grib_parser_context->grib_definition_files_path);
+
             grib_context_log(grib_parser_context, GRIB_LOG_FATAL,
                     "grib_parser_include: Could not resolve '%s' (included in %s)", included_fname, parse_file);
+
             return;
         }
         parse_file = new_path;
