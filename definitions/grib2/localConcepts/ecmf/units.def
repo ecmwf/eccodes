@@ -11902,7 +11902,7 @@
 	 parameterNumber = 221 ;
 	}
 #Wave spectral directional width
-'~' = {
+'dimensionless' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 222 ;
@@ -11920,7 +11920,7 @@
 	 parameterNumber = 224 ;
 	}
 #Wave spectral directional width for wind waves
-'~' = {
+'dimensionless' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 225 ;
@@ -11938,7 +11938,7 @@
 	 parameterNumber = 227 ;
 	}
 #Wave spectral directional width for swell
-'~' = {
+'dimensionless' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 228 ;
@@ -11950,7 +11950,7 @@
 	 parameterNumber = 231 ;
 	}
 #Coefficient of drag with waves
-'~' = {
+'dimensionless' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 233 ;
@@ -12064,13 +12064,13 @@
 	 parameterNumber = 251 ;
 	}
 #Wave spectral kurtosis
-'~' = {
+'dimensionless' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 252 ;
 	}
 #Benjamin-Feir index
-'~' = {
+'dimensionless' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 253 ;

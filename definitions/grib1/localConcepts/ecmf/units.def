@@ -3420,12 +3420,12 @@
 	 indicatorOfParameter = 210 ;
 	}
 #Normalized energy flux into waves
-'~' = {
+'dimensionless' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 211 ;
 	}
 #Normalized energy flux into ocean
-'~' = {
+'dimensionless' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 212 ;
 	}
@@ -3435,7 +3435,7 @@
 	 indicatorOfParameter = 213 ;
 	}
 #Normalized stress into ocean
-'~' = {
+'dimensionless' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 214 ;
 	}
@@ -11625,7 +11625,7 @@
 	 indicatorOfParameter = 221 ;
 	}
 #Wave spectral directional width
-'~' = {
+'dimensionless' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 222 ;
 	}
@@ -11640,7 +11640,7 @@
 	 indicatorOfParameter = 224 ;
 	}
 #Wave spectral directional width for wind waves
-'~' = {
+'dimensionless' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 225 ;
 	}
@@ -11655,7 +11655,7 @@
 	 indicatorOfParameter = 227 ;
 	}
 #Wave spectral directional width for swell
-'~' = {
+'dimensionless' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 228 ;
 	}
@@ -11680,7 +11680,7 @@
 	 indicatorOfParameter = 232 ;
 	}
 #Coefficient of drag with waves
-'~' = {
+'dimensionless' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 233 ;
 	}
@@ -11775,12 +11775,12 @@
 	 indicatorOfParameter = 251 ;
 	}
 #Wave spectral kurtosis
-'~' = {
+'dimensionless' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 252 ;
 	}
 #Benjamin-Feir index
-'~' = {
+'dimensionless' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 253 ;
 	}
