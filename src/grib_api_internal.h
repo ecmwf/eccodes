@@ -1292,7 +1292,7 @@ struct grib_math{
   int         arity;
 };
 
-typedef double (*mathproc)();
+typedef double (*mathproc)(void);
 typedef int    (*funcproc)(grib_math*,mathproc);
 
 typedef struct func {

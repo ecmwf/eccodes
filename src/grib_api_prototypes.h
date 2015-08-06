@@ -1349,7 +1349,7 @@ int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber)
 int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNumber);
 int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber);
 int is_index_file(const char *filename);
-char get_dir_separator_char();
+char get_dir_separator_char(void);
 const char* extract_filename(const char* filepath);
 
 /* compile.c */
