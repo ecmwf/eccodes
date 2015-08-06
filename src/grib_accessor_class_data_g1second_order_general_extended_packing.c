@@ -214,9 +214,12 @@ static long number_of_bits(unsigned long x) {
     const int count = sizeof(nbits)/sizeof(nbits[0]);
     long i=0;
     while (x>=*n) {
-      n++;
-      i++;
-      Assert(i<count);
+        n++;
+        i++;
+        if (i>=count) {
+            fprintf(stderr, "Number too large: x=%ld (Hint: Try reducing number of bits per value)\n",x);
+            Assert(0);
+        }
     }
     return i;
 }
@@ -293,7 +296,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     size_t size;
     double* values;
     int err=0;
-    
+
     /* GRIB-564: The index idx relates to codedValues NOT values! */
 
     err=grib_get_size(a->parent->h,"codedValues",&size);
@@ -393,7 +396,14 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
     n=orderOfSPD;
     for (i=0;i<numberOfGroups;i++) {
         if (groupWidths[i]>0) {
-
+            grib_decode_long_array(buf, &pos, groupWidths[i], groupLengths[i],
+                    &X[n]);
+            for (j=0;j<groupLengths[i];j++) {
+                X[n]+=firstOrderValues[i];
+                count++;
+                n++;
+            }
+#if 0
             for (j=0;j<groupLengths[i];j++) {
                 X[n]=grib_decode_unsigned_long(buf,&pos,groupWidths[i]);
 #if EFDEBUG
@@ -403,6 +413,7 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
                 count++;
                 n++;
             }
+#endif
         } else {
             for (j=0;j<groupLengths[i];j++) {
                 X[n]=firstOrderValues[i];

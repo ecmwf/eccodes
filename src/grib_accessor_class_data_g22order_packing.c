@@ -505,8 +505,11 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
         if (i == numberOfGroupsOfDataValues-1) nvals_per_group = trueLengthOfLastGroup;
         Assert (n_vals >= vcount+nvals_per_group);
 
+        /*grib_decode_long_array(buf_vals, &vals_p, nbits_per_group_val, nvals_per_group,
+                               &sec_val[vcount]); */
         for(j=0; j < nvals_per_group;j++){
             sec_val[vcount+j] = group_ref_val + grib_decode_unsigned_long(buf_vals,  &vals_p, nbits_per_group_val);
+            /* sec_val[vcount+j] += group_ref_val; */
         }
 
         vcount += nvals_per_group;
