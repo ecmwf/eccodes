@@ -11785,7 +11785,7 @@
 	 indicatorOfParameter = 253 ;
 	}
 #Wave spectral peakedness
-'s**-1' = {
+'dimensionless' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 254 ;
 	}

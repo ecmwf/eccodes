@@ -12076,7 +12076,7 @@
 	 parameterNumber = 253 ;
 	}
 #Wave spectral peakedness
-'s**-1' = {
+'dimensionless' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 254 ;
