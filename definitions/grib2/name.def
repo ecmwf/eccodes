@@ -216,6 +216,18 @@
 	 parameterNumber = 20 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Apparent temperature
+'Apparent temperature' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 21 ;
+	}
+#Haines Index
+'Haines Index' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 2 ;
+	}
 #Cloudy brightness temperature
 'Cloudy brightness temperature' = {
          discipline = 3 ;

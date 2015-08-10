@@ -216,6 +216,18 @@
 	 parameterNumber = 20 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Apparent temperature
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 21 ;
+	}
+#Haines Index
+'Numeric' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 2 ;
+	}
 #Cloudy brightness temperature
 'K' = {
 	 discipline = 3 ;

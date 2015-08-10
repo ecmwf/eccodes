@@ -216,6 +216,18 @@
 	 parameterNumber = 20 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Apparent temperature
+'aptmp' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 21 ;
+	}
+#Haines Index
+'hindex' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 2 ;
+	}
 #Cloudy brightness temperature
 'clbt' = {
 	 discipline = 3 ;
@@ -425,8 +437,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 6 ;
-	 typeOfSecondFixedSurface = 8 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Potential vorticity
 'pv' = {
@@ -502,8 +514,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 51 ;
-	 typeOfSecondFixedSurface = 8 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Vorticity (relative)
 'vo' = {
@@ -2578,8 +2590,8 @@
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 12 ;
-	 typeOfSecondFixedSurface = 106 ;
 	 typeOfFirstFixedSurface = 106 ;
+	 typeOfSecondFixedSurface = 106 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = 2 ;
 	 scaledValueOfFirstFixedSurface = 0 ;

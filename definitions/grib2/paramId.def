@@ -216,6 +216,18 @@
 	 parameterNumber = 20 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Apparent temperature
+'260255' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 21 ;
+	}
+#Haines Index
+'260256' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 2 ;
+	}
 #Cloudy brightness temperature
 '260510' = {
          discipline = 3 ;
@@ -425,8 +437,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 6 ;
-	 typeOfSecondFixedSurface = 8 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Potential vorticity
 '60' = {
@@ -502,8 +514,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 51 ;
-	 typeOfSecondFixedSurface = 8 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Vorticity (relative)
 '138' = {
@@ -2570,16 +2582,16 @@
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Field capacity
 '228170' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 12 ;
-	 typeOfSecondFixedSurface = 106 ;
 	 typeOfFirstFixedSurface = 106 ;
+	 typeOfSecondFixedSurface = 106 ;
 	 scaledValueOfSecondFixedSurface = 2 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfSecondFixedSurface = 1 ;
