@@ -186,7 +186,8 @@ static int find(grib_nearest* nearest, grib_handle* h,
         int ilat=0, ilon=0;
         int idx_upper=0, idx_lower=0;
         double lat1=0, lat2=0; /* inlat will be between these */
-        double dist=0, lat_delta=0.1;
+        double dist=0;
+        const double LAT_DELTA = 10.0; /* in degrees */
 
         if (grib_is_missing(h,self->Ni,&ret)) {
             grib_context_log(h->context, GRIB_LOG_DEBUG,"Key '%s' is missing", self->Ni);
@@ -234,7 +235,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         i = 0;
         while(grib_iterator_next(iter,&lat,&lon,&the_value))
         {
-            if (lat > lat2+lat_delta || lat < lat1-lat_delta) {
+            if (lat > lat2+LAT_DELTA || lat < lat1-LAT_DELTA) {
                 /* Ignore latitudes too far from our point */
             }
             else {
