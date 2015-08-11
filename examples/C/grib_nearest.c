@@ -65,16 +65,18 @@ int main(int argc, char** argv)
 
     mode=CODES_NEAREST_SAME_GRID | CODES_NEAREST_SAME_POINT;
     count=1;
+
     while ((h=codes_fieldset_next_handle(set,&err))!=NULL) {
         CODES_CHECK(codes_get_long(h,"step",&step),0);
         len=20;
-        CODES_CHECK(codes_get_string(h,"param",param,&len),0);
+        CODES_CHECK(codes_get_string(h,"shortName",param,&len),0);
 
         printf("%d %ld %s  ",count,step,param);
         if (!nearest) nearest=codes_grib_nearest_new(h,&err);
         CODES_CHECK(err,0);
         CODES_CHECK(codes_grib_nearest_find(nearest,h,lat,lon,mode,lats,lons,values,distances,indexes,&size),0);
-        for (i=0;i<4;i++) printf("%d %.2f %.2f %g %g - ",
+        printf("\nIdx\tlat\tlon\tdist\tval\n");
+        for (i=0;i<4;i++) printf("%d\t%.2f\t%.2f\t%g\t%g\n",
                 (int)indexes[i],lats[i],lons[i],distances[i],values[i]);
         printf("\n");
 
