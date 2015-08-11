@@ -25,9 +25,9 @@ inline bool grib_call(int e, const char *call, bool missingOK = false) {
             return false;
         }
 
-        eckit::StrStream os;
-        os << call << ": " << grib_get_error_message(e) << eckit::StrStream::ends;
-        throw eckit::SeriousBug(std::string(os));
+        std::ostringstream os;
+        os << call << ": " << grib_get_error_message(e);
+        throw eckit::SeriousBug(os.str());
     }
     return true;
 }
