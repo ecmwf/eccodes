@@ -78,7 +78,7 @@ int process_file(const char* filename)
         size_t len = 0, sizeOfValuesArray = 0;
         double *lats = NULL;
         long *pl = NULL;
-        char gridType[32] = {0,};
+        char gridType[128] = {0,};
         double angular_tolerance, lat1, lon1, lat2, lon2, expected_lon2;
         double iDirectionIncrementInDegrees;
 
