@@ -220,11 +220,12 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     double s = 0;
     double d = 0;
     long pos = 0;
-    size_t o = 0;
 
     n_vals = 0;
     err=grib_value_count(a,&n_vals);
     if (err) return err;
+
+    Assert(idx < n_vals);
 
     if((err = grib_get_long_internal(a->parent->h,self->bits_per_value,&bits_per_value)) !=
             GRIB_SUCCESS)
@@ -255,8 +256,8 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     d = grib_power(-decimal_scale_factor,10) ;
 
     grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
-            "grib_accessor_data_simple_packing : unpack_double : creating %s, %d values",
-            a->name, n_vals);
+            "grib_accessor_data_simple_packing: unpack_double_element: creating %s, %d values (idx=%ld)",
+            a->name, n_vals, idx);
 
     buf += grib_byte_offset(a);
 
@@ -265,7 +266,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     if(bits_per_value%8)
     {
         grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
-                "unpack_double : calling outline function : bpv %d, rv : %g, sf : %d, dsf : %d ",
+                "unpack_double_element: calling outline function : bpv %d, rv : %g, sf : %d, dsf : %d ",
                 bits_per_value,reference_value,binary_scale_factor, decimal_scale_factor);
         pos=idx*bits_per_value;
         *val= (double) (((
@@ -275,7 +276,8 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     }
     else
     {
-        int bc;
+        int bc = 0;
+        size_t octet = 0;
         long lvalue = 0;
         int l = bits_per_value/8;
 
@@ -283,11 +285,11 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
         buf+=pos;
         lvalue  = 0;
         lvalue  <<= 8;
-        lvalue |= buf[o++] ;
+        lvalue |= buf[octet++] ;
 
         for ( bc=1; bc<l; bc++ ) {
             lvalue <<= 8;
-            lvalue |= buf[o++] ;
+            lvalue |= buf[octet++] ;
         }
         *val = (double) (((lvalue*s)+reference_value)*d);
     }
@@ -372,7 +374,7 @@ static int  _unpack_double(grib_accessor* a, double* val, size_t *len,unsigned c
     d = grib_power(-decimal_scale_factor,10) ;
 
     grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
-            "grib_accessor_data_simple_packing : unpack_double : creating %s, %d values",
+            "grib_accessor_data_simple_packing: unpack_double : creating %s, %d values",
             a->name, n_vals);
 
     buf += grib_byte_offset(a);
@@ -380,7 +382,7 @@ static int  _unpack_double(grib_accessor* a, double* val, size_t *len,unsigned c
     /*Assert(((bits_per_value*n_vals)/8) < (1<<29));*/    /* See GRIB-787 */
 
     grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
-            "unpack_double : calling outline function : bpv %d, rv : %g, sf : %d, dsf : %d ",
+            "unpack_double: calling outline function : bpv %d, rv : %g, sf : %d, dsf : %d ",
             bits_per_value,reference_value,binary_scale_factor, decimal_scale_factor);
     grib_decode_double_array(buf,&pos,bits_per_value,reference_value,s,d,n_vals,val);
 
@@ -397,7 +399,7 @@ static int  _unpack_double(grib_accessor* a, double* val, size_t *len,unsigned c
     return err;
 }
 
-static int  unpack_double_subarray(grib_accessor* a, double* val, size_t start, size_t len)
+static int unpack_double_subarray(grib_accessor* a, double* val, size_t start, size_t len)
 {
     grib_accessor_data_simple_packing* self =  (grib_accessor_data_simple_packing*)a;
     unsigned char* buf = (unsigned char*)a->parent->h->buffer->data;
@@ -416,7 +418,7 @@ static int  unpack_double_subarray(grib_accessor* a, double* val, size_t start, 
     return _unpack_double(a,val,plen,buf,pos,nvals);
 }
 
-static int  unpack_double(grib_accessor* a, double* val, size_t *len) {
+static int unpack_double(grib_accessor* a, double* val, size_t *len) {
     unsigned char* buf = (unsigned char*)a->parent->h->buffer->data;
     size_t nvals=0;
     long pos=0;
@@ -575,7 +577,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         return err;
 
     /* the packing parameters are not properly defined
-  this is a safe way of fixing the problem */
+       this is a safe way of fixing the problem */
     if ( changing_precision==0 && bits_per_value==0  && decimal_scale_factor_get==0) {
 
         grib_context_log(a->parent->h->context,GRIB_LOG_WARNING,
@@ -592,7 +594,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     if ( bits_per_value == 0 || (binary_scale_factor==0 && decimal_scale_factor_get!=0) ) {
         /* decimal_scale_factor is given, binary_scale_factor=0
-       and bits_per_value is computed */
+           and bits_per_value is computed */
         binary_scale_factor=0;
         decimal_scale_factor=decimal_scale_factor_get;
         decimal = grib_power(decimal_scale_factor,10) ;
@@ -623,7 +625,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         last=127;
         if (c->gribex_mode_on && self->edition==1) last=99;
         /* bits_per_value is given and decimal_scale_factor
-       and binary_scale_factor are calcualated
+           and binary_scale_factor are calcualated
          */
         if (max == min) {
             binary_scale_factor=0;
@@ -636,7 +638,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
             }
         } else {
             /* printf("max=%g reference_value=%g grib_power(-last,2)=%g decimal_scale_factor=%ld bits_per_value=%ld\n",
-            max,reference_value,grib_power(-last,2),decimal_scale_factor,bits_per_value);*/
+               max,reference_value,grib_power(-last,2),decimal_scale_factor,bits_per_value);*/
             /* last must be a parameter coming from the def file*/
             range=(max-min);
             unscaled_min=min;
