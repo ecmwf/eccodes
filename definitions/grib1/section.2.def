@@ -45,11 +45,11 @@ meta gridDefinitionDescription codetable_title(dataRepresentationType);
 
 if (dataRepresentationType < 192)
 {
- template dataRepresentation "grib1/grid_definition_[dataRepresentationType:l].def";
+  template dataRepresentation "grib1/grid_definition_[dataRepresentationType:l].def";
 }
 else
 {
- template dataRepresentation "grib1/grid_definition_[dataRepresentationType:l].[centre:l].def";
+  template dataRepresentation "grib1/grid_definition_[dataRepresentationType:l].[centre:l].def";
 }
 position endGridDefinition;
 
@@ -58,9 +58,9 @@ transient PVPresent = ( NV > 0);
 
 if (pvlLocation != neitherPresent)
 {
- padto padding_sec2_2(offsetSection2 + pvlLocation - 1);
+  padto padding_sec2_2(offsetSection2 + pvlLocation - 1);
 } else {
- padto padding_sec2_2(offsetSection2 + 32 );
+  padto padding_sec2_2(offsetSection2 + 32 );
 }
 
 if(PVPresent )
@@ -77,8 +77,8 @@ transient PLPresent = (section2Length > (offsetBeforePL - offsetSection2))
 if(PLPresent)
 {
   # For grib 1 -> 2
-    constant numberOfOctectsForNumberOfPoints = 2;
-    constant interpretationOfNumberOfPoints = 1;
+  constant numberOfOctectsForNumberOfPoints = 2;
+  constant interpretationOfNumberOfPoints = 1;
 
   unsigned[2] pl[Nj] : dump;
   alias geography.pl=pl;
@@ -104,9 +104,7 @@ concept_nofail deletePV(unknown) {
    "1" = { PVPresent=0; NV=0; }
 }
 
-
 padtoeven padding_sec2_3(offsetSection2,section2Length);
 
 meta md5Section2 md5(offsetSection2,section2Length);
 alias md5GridSection = md5Section2;
-

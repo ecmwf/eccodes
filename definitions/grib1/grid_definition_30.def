@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# GRID DEFINITION stretched and rotated latitude/longitude grid (or equidistant cylindrical)
+# GRID DEFINITION stretched and rotated latitude/longitude grids
 # grib 1 -> 2
 constant gridDefinitionTemplateNumber     = 3;
 

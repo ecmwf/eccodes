@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# GRID DEFINITION Space view perspective or orthographic
+# GRID DEFINITION Space view, perspective or orthographic
 # grib 1 -> 2
 constant gridDefinitionTemplateNumber     = 90;
 

@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# GRID DEFINITION latitude/longitude grid (or equidistant cylindrical)
+# GRID DEFINITION latitude/longitude grid - equidistant cylindrical or Plate Carree projection
 
 # grib 1 -> 2
 constant gridDefinitionTemplateNumber     = 0;

@@ -7,6 +7,8 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
+# GRID DEFINITION Stretched and rotated spherical harmonic coefficients
+
 # grib 1 -> 2
 constant gridDefinitionTemplateNumber     = 53;
 
