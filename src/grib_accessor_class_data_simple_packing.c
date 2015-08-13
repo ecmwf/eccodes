@@ -225,8 +225,6 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     err=grib_value_count(a,&n_vals);
     if (err) return err;
 
-    Assert(idx < n_vals);
-
     if((err = grib_get_long_internal(a->parent->h,self->bits_per_value,&bits_per_value)) !=
             GRIB_SUCCESS)
         return err;
@@ -252,6 +250,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
         return GRIB_SUCCESS;
     }
 
+    Assert(idx < n_vals);
     s = grib_power(binary_scale_factor,2);
     d = grib_power(-decimal_scale_factor,10) ;
 
