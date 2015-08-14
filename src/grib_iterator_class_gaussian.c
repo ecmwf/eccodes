@@ -53,6 +53,10 @@ typedef struct grib_iterator_gaussian{
 	long      nap;
 	long      nam;
 	long iScansNegatively;
+	long isRotated;
+	double angleOfRotation;
+	double southPoleLat;
+	double southPoleLon;
 /* Members defined in gaussian */
 } grib_iterator_gaussian;
 

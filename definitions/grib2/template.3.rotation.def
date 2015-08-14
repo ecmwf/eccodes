@@ -25,3 +25,4 @@ alias geography.angleOfRotationInDegrees=angleOfRotation;
 
 alias angleOfRotationOfProjection=angleOfRotation;
 
+alias is_rotated_grid=one;

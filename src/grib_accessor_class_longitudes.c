@@ -165,7 +165,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
     grib_accessor_longitudes* self = (grib_accessor_longitudes*)a;
     int ret = 0;
     double* v=val;
-    double dummy=0;
+    double dummyLat=0, dummyVal=0;
     size_t size=0;
     long count=0;
     grib_iterator* iter=NULL;
@@ -204,7 +204,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
         return ret;
     }
 
-    while(grib_iterator_next(iter,&dummy,v++,&dummy)) {}
+    while(grib_iterator_next(iter,&dummyLat,v++,&dummyVal)) {}
     grib_iterator_delete(iter);
 
     *len=size;
@@ -246,7 +246,7 @@ static int get_distinct(grib_accessor* a,double** val,long* len) {
     double prev;
     double *v=NULL;
     double *v1=NULL;
-    double dummy;
+    double dummyLat=0, dummyVal=0;
     int ret=0;
     int i;
     size_t size=*len;
@@ -265,7 +265,7 @@ static int get_distinct(grib_accessor* a,double** val,long* len) {
     }
     *val=v;
 
-    while(grib_iterator_next(iter,&dummy,v++,&dummy)) {}
+    while(grib_iterator_next(iter,&dummyLat,v++,&dummyVal)) {}
     grib_iterator_delete(iter);
     v=*val;
 

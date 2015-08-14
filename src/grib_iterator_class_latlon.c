@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
 #include "grib_api_internal.h"
 
 /*
@@ -20,7 +16,7 @@
    START_CLASS_DEF
    CLASS      = iterator
    SUPER      = grib_iterator_class_regular
-   IMPLEMENTS = init
+   IMPLEMENTS = init;next
    END_CLASS_DEF
 
  */
@@ -39,6 +35,7 @@ or edit "iterator.class" and rerun ./make_class.pl
 static void init_class              (grib_iterator_class*);
 
 static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
+static int next               (grib_iterator* i, double *lat, double *lon, double *val);
 
 
 typedef struct grib_iterator_latlon{
@@ -52,6 +49,10 @@ typedef struct grib_iterator_latlon{
 	long      nap;
 	long      nam;
 	long iScansNegatively;
+	long isRotated;
+	double angleOfRotation;
+	double southPoleLat;
+	double southPoleLon;
 /* Members defined in latlon */
 } grib_iterator_latlon;
 
@@ -65,7 +66,7 @@ static grib_iterator_class _grib_iterator_class_latlon = {
     &init_class,                 /* init_class */
     &init,                     /* constructor               */
     0,                  /* destructor                */
-    0,                     /* Next Value                */
+    &next,                     /* Next Value                */
     0,                 /*  Previous Value           */
     0,                    /* Reset the counter         */
     0,                 /* has next values           */
@@ -76,13 +77,98 @@ grib_iterator_class* grib_iterator_class_latlon = &_grib_iterator_class_latlon;
 
 static void init_class(grib_iterator_class* c)
 {
-	c->next	=	(*(c->super))->next;
 	c->previous	=	(*(c->super))->previous;
 	c->reset	=	(*(c->super))->reset;
 	c->has_next	=	(*(c->super))->has_next;
 }
 /* END_CLASS_IMP */
 
+static const double degree_to_radian = M_PI/180.0;
+static const double radian_to_degree = 180.0 * M_1_PI;
+
+void unrotate(grib_handle* h,
+        const double inlat, const double inlon,
+        const double angleOfRot, const double southPoleLat, const double southPoleLon,
+        double* outlat, double* outlon)
+{
+    /* Algorithm taken from ecKit */
+    const double lon_x = inlon;
+    const double lat_y = inlat;
+    /* First convert the data point from spherical lat lon to (x',y',z') */
+    double latr = lat_y * degree_to_radian;
+    double lonr = lon_x * degree_to_radian;
+    double xd = cos(lonr)*cos(latr);
+    double yd = sin(lonr)*cos(latr);
+    double zd = sin(latr);
+
+    double t = -(90.0 + southPoleLat);
+    double o = -southPoleLon;
+
+    double sin_t = sin(degree_to_radian * t);
+    double cos_t = cos(degree_to_radian * t);
+    double sin_o = sin(degree_to_radian * o);
+    double cos_o = cos(degree_to_radian * o);
+
+    double x = cos_t*cos_o*xd + sin_o*yd + sin_t*cos_o*zd;
+    double y = -cos_t*sin_o*xd + cos_o*yd - sin_t*sin_o*zd;
+    double z = -sin_t*xd + cos_t*zd;
+
+    double ret_lat=0, ret_lon=0;
+
+    /* Then convert back to 'normal' (lat,lon)
+     * Uses arcsin, to convert back to degrees, put in range -1 to 1 in case of slight rounding error
+     * avoid error on calculating e.g. asin(1.00000001) */
+    if (z > 1.0)  z = 1.0;
+    if (z < -1.0) z = -1.0;
+
+    ret_lat = asin(z) * radian_to_degree;
+    ret_lon = atan2(y, x) * radian_to_degree;
+
+    /* Still get a very small rounding error, round to 6 decimal places */
+    ret_lat = roundf( ret_lat * 1000000.0 )/1000000.0;
+    ret_lon = roundf( ret_lon * 1000000.0 )/1000000.0;
+
+    ret_lon -= angleOfRot;
+
+    /* Make sure ret_lon is in range*/
+    /*
+    while (ret_lon < lonmin_) ret_lon += 360.0;
+    while (ret_lon >= lonmax_) ret_lon -= 360.0;
+     */
+    *outlat = ret_lat;
+    *outlon = ret_lon;
+}
+
+static int next(grib_iterator* i, double *lat, double *lon, double *val)
+{
+    /* GRIB-238: Support rotated lat/lon grids */
+
+    double ret_lat, ret_lon, ret_val;
+    grib_iterator_latlon* self = (grib_iterator_latlon*)i;
+
+    if((long)i->e >= (long)(i->nv-1))  return 0;
+
+    i->e++;
+
+    ret_lat = self->las[(long)floor(i->e/self->nap)];
+    ret_lon = self->los[(long)i->e%self->nap];
+    ret_val = i->data[i->e];
+
+    if (self->isRotated)
+    {
+        double new_lat = 0, new_lon = 0;
+        unrotate(i->h, ret_lat, ret_lon,
+                self->angleOfRotation, self->southPoleLat, self->southPoleLon,
+                &new_lat, &new_lon);
+        ret_lat = new_lat;
+        ret_lon = new_lon;
+    }
+
+    *lat = ret_lat;
+    *lon = ret_lon;
+    *val = ret_val;
+    return 1;
+}
 
 static int init(grib_iterator* i,grib_handle* h,grib_arguments* args)
 {
@@ -91,12 +177,22 @@ static int init(grib_iterator* i,grib_handle* h,grib_arguments* args)
   double jdir;
   double laf;
   long jScansPositively;
-
   long lai;
 
   const char* latofirst   = grib_arguments_get_name(h,args,self->carg++);
   const char* jdirec      = grib_arguments_get_name(h,args,self->carg++);
   const char* s_jScansPositively   = grib_arguments_get_name(h,args,self->carg++);
+    self->angleOfRotation = 0;
+    self->isRotated = 0;
+    self->southPoleLat = 0;
+    self->southPoleLon = 0;
+
+    if ((ret = grib_get_long(h, "is_rotated_grid", &self->isRotated))) return ret;
+    if (self->isRotated) {
+        if ((ret = grib_get_double_internal(h,"angleOfRotation",                  &self->angleOfRotation))) return ret;
+        if ((ret = grib_get_double_internal(h,"latitudeOfSouthernPoleInDegrees",  &self->southPoleLat))) return ret;
+        if ((ret = grib_get_double_internal(h,"longitudeOfSouthernPoleInDegrees", &self->southPoleLon))) return ret;
+    }
 
   if((ret = grib_get_double_internal(h,latofirst,     &laf))) return ret;
   if((ret = grib_get_double_internal(h,jdirec,        &jdir))) return ret;
