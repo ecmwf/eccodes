@@ -83,8 +83,8 @@ static void init_class(grib_iterator_class* c)
 }
 /* END_CLASS_IMP */
 
-static const double degree_to_radian = M_PI/180.0;
-static const double radian_to_degree = 180.0 * M_1_PI;
+#define RAD2DEG   57.29577951308232087684  /* 180 over pi */
+#define DEG2RAD    0.01745329251994329576  /* pi over 180 */
 
 void unrotate(grib_handle* h,
         const double inlat, const double inlon,
@@ -95,8 +95,8 @@ void unrotate(grib_handle* h,
     const double lon_x = inlon;
     const double lat_y = inlat;
     /* First convert the data point from spherical lat lon to (x',y',z') */
-    double latr = lat_y * degree_to_radian;
-    double lonr = lon_x * degree_to_radian;
+    double latr = lat_y * DEG2RAD;
+    double lonr = lon_x * DEG2RAD;
     double xd = cos(lonr)*cos(latr);
     double yd = sin(lonr)*cos(latr);
     double zd = sin(latr);
@@ -104,10 +104,10 @@ void unrotate(grib_handle* h,
     double t = -(90.0 + southPoleLat);
     double o = -southPoleLon;
 
-    double sin_t = sin(degree_to_radian * t);
-    double cos_t = cos(degree_to_radian * t);
-    double sin_o = sin(degree_to_radian * o);
-    double cos_o = cos(degree_to_radian * o);
+    double sin_t = sin(DEG2RAD * t);
+    double cos_t = cos(DEG2RAD * t);
+    double sin_o = sin(DEG2RAD * o);
+    double cos_o = cos(DEG2RAD * o);
 
     double x = cos_t*cos_o*xd + sin_o*yd + sin_t*cos_o*zd;
     double y = -cos_t*sin_o*xd + cos_o*yd - sin_t*sin_o*zd;
@@ -121,8 +121,8 @@ void unrotate(grib_handle* h,
     if (z > 1.0)  z = 1.0;
     if (z < -1.0) z = -1.0;
 
-    ret_lat = asin(z) * radian_to_degree;
-    ret_lon = atan2(y, x) * radian_to_degree;
+    ret_lat = asin(z) * RAD2DEG;
+    ret_lon = atan2(y, x) * RAD2DEG;
 
     /* Still get a very small rounding error, round to 6 decimal places */
     ret_lat = roundf( ret_lat * 1000000.0 )/1000000.0;
@@ -172,16 +172,16 @@ static int next(grib_iterator* i, double *lat, double *lon, double *val)
 
 static int init(grib_iterator* i,grib_handle* h,grib_arguments* args)
 {
-  grib_iterator_latlon* self = (grib_iterator_latlon*)i;
-  int ret = GRIB_SUCCESS;
-  double jdir;
-  double laf;
-  long jScansPositively;
-  long lai;
+    grib_iterator_latlon* self = (grib_iterator_latlon*)i;
+    int ret = GRIB_SUCCESS;
+    double jdir;
+    double laf;
+    long jScansPositively;
+    long lai;
 
-  const char* latofirst   = grib_arguments_get_name(h,args,self->carg++);
-  const char* jdirec      = grib_arguments_get_name(h,args,self->carg++);
-  const char* s_jScansPositively   = grib_arguments_get_name(h,args,self->carg++);
+    const char* latofirst   = grib_arguments_get_name(h,args,self->carg++);
+    const char* jdirec      = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_jScansPositively   = grib_arguments_get_name(h,args,self->carg++);
     self->angleOfRotation = 0;
     self->isRotated = 0;
     self->southPoleLat = 0;
@@ -194,18 +194,18 @@ static int init(grib_iterator* i,grib_handle* h,grib_arguments* args)
         if ((ret = grib_get_double_internal(h,"longitudeOfSouthernPoleInDegrees", &self->southPoleLon))) return ret;
     }
 
-  if((ret = grib_get_double_internal(h,latofirst,     &laf))) return ret;
-  if((ret = grib_get_double_internal(h,jdirec,        &jdir))) return ret;
-  if((ret = grib_get_long_internal(h,s_jScansPositively,&jScansPositively)))
-      return ret;
+    if((ret = grib_get_double_internal(h,latofirst,     &laf))) return ret;
+    if((ret = grib_get_double_internal(h,jdirec,        &jdir))) return ret;
+    if((ret = grib_get_long_internal(h,s_jScansPositively,&jScansPositively)))
+        return ret;
 
-  if (jScansPositively) jdir=-jdir;
+    if (jScansPositively) jdir=-jdir;
 
-  for( lai = 0; lai <  self->nam; lai++ )  {
-    self->las[lai] = laf;
-    laf -= jdir ;
-  }
+    for( lai = 0; lai <  self->nam; lai++ )  {
+        self->las[lai] = laf;
+        laf -= jdir ;
+    }
 
-  i->e = -1;
-  return ret;
+    i->e = -1;
+    return ret;
 }
