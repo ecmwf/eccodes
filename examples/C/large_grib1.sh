@@ -12,8 +12,7 @@
 # The executable should produce a GRIB1 file
 ${examples_dir}c_large_grib1
 
-# Make sure it can be listed OK
-output=${examples_dir}bigfile.grib
+# Make sure the newly created file can be listed OK
+output=bigfile.grib
 ${tools_dir}grib_ls $output > /dev/null
 rm -f $output
-
