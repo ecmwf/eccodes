@@ -336,21 +336,22 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
     } else sprintf(stepType,"unknown");
 
     /* Patch for olf forecast probabilities */
-    if(self->patch_fp_precip)
+    if (self->patch_fp_precip)
     {
         start += 24;
     }
 
-    if(strcmp(stepType,"instant") == 0) {
+    if (strcmp(stepType,"instant") == 0) {
         sprintf(buf,"%ld",start);
     }
-    else if( (strcmp(stepType,"avgfc") == 0) ||
-            (strcmp(stepType,"avgua") == 0) ||
-            (strcmp(stepType,"avgia") == 0) )
+    else if ( (strcmp(stepType,"avgfc") == 0)  ||
+              (strcmp(stepType,"avgua") == 0)  ||
+              (strcmp(stepType,"avgia") == 0)  ||
+              (strcmp(stepType,"varins") == 0) )
     {
         sprintf(buf,"%ld",start);
     }
-    else if(
+    else if (
             (strcmp(stepType,"accum") == 0) ||
             (strcmp(stepType,"avg") == 0)   ||
             (strcmp(stepType,"min") == 0)   ||
@@ -361,10 +362,9 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
             (strcmp(stepType,"avgad") == 0) ||
             (strcmp(stepType,"avgid") == 0) ||
             (strcmp(stepType,"varas") == 0) ||
-            (strcmp(stepType,"varad") == 0) ||
-            (strcmp(stepType,"vari") == 0) )
+            (strcmp(stepType,"varad") == 0) )
     {
-        if(start == theEnd) {
+        if (start == theEnd) {
             sprintf(buf,"%ld",theEnd);
         }
         else
