@@ -375,7 +375,7 @@ static void point_in_time(grib_handle* h,const parameter* p,double min,double ma
         else if (is_s2s)
             CHECK(eq(h,"productDefinitionTemplateNumber",60)||eq(h,"productDefinitionTemplateNumber",11)||eq(h,"productDefinitionTemplateNumber",1));
         else
-        CHECK(eq(h,"productDefinitionTemplateNumber",1));
+            CHECK(eq(h,"productDefinitionTemplateNumber",1));
         if (is_lam) {
             CHECK(le(h,"perturbationNumber",get(h,"numberOfForecastsInEnsemble")));
         } else {
@@ -393,14 +393,14 @@ static void point_in_time(grib_handle* h,const parameter* p,double min,double ma
     if (!is_lam)
     {
         if(get(h,"indicatorOfUnitOfTimeRange") == 11) /*  six hours */
-    {
-        /* Six hourly is OK */
-        ;
-    }
-    else
-    {
-        CHECK(eq(h,"indicatorOfUnitOfTimeRange",1));/* Hours */
-        CHECK((get(h,"forecastTime") % 6) == 0);  /* Every six hours */
+        {
+            /* Six hourly is OK */
+            ;
+        }
+        else
+        {
+            CHECK(eq(h,"indicatorOfUnitOfTimeRange",1));/* Hours */
+            CHECK((get(h,"forecastTime") % 6) == 0);  /* Every six hours */
         }
     }
     else
@@ -425,24 +425,24 @@ static void pressure_level(grib_handle* h,const parameter* p,double min,double m
     long level = get(h,"level");
 
     if (!is_s2s){
-    switch(level)
-    {
-    case 1000:
-    case  200:
-    case  250:
-    case  300:
-    case  500:
-    case  700:
-    case  850:
-    case  925:
-    case  50:
-        break;
-    default:
-        printf("%s, field %d [%s]: invalid pressure level %ld\n",file,field,param,level);
-        error++;
-        break;
+        switch(level)
+        {
+        case 1000:
+        case  200:
+        case  250:
+        case  300:
+        case  500:
+        case  700:
+        case  850:
+        case  925:
+        case  50:
+            break;
+        default:
+            printf("%s, field %d [%s]: invalid pressure level %ld\n",file,field,param,level);
+            error++;
+            break;
+        }
     }
-}
     else
     {
         switch(level)
@@ -506,14 +506,14 @@ static void statistical_process(grib_handle* h,const parameter* p,double min,dou
 
     case 3: /* Control forecast products */
         if (!is_s2s_refcst)
-        CHECK(eq(h,"productDefinitionTemplateNumber",11));
+            CHECK(eq(h,"productDefinitionTemplateNumber",11));
         else
             CHECK(eq(h,"productDefinitionTemplateNumber",61));
         break;
 
     case 4: /* Perturbed forecast products */
         if (!is_s2s_refcst)
-        CHECK(eq(h,"productDefinitionTemplateNumber",11));
+            CHECK(eq(h,"productDefinitionTemplateNumber",11));
         else
             CHECK(eq(h,"productDefinitionTemplateNumber",61));
         break;
@@ -563,7 +563,7 @@ static void statistical_process(grib_handle* h,const parameter* p,double min,dou
         else
             CHECK(eq(h,"timeIncrementBetweenSuccessiveFields",0));
     else
-    CHECK(eq(h,"timeIncrementBetweenSuccessiveFields",0));
+        CHECK(eq(h,"timeIncrementBetweenSuccessiveFields",0));
 
     {
         CHECK(eq(h,"minuteOfEndOfOverallTimeInterval",0));
@@ -992,15 +992,15 @@ void verify(grib_handle* h)
 
     if (!is_s2s){
         /* todo check for how many years back the reforecast is done? Is it coded in the grib??? */
-    /* Check if the date is OK */
-    {
-        long date = get(h,"date");
-        /* CHECK(date > 20060101); */
+        /* Check if the date is OK */
+        {
+            long date = get(h,"date");
+            /* CHECK(date > 20060101); */
 
-        CHECK( (date / 10000)         == get(h,"year"));
-        CHECK( ((date % 10000) / 100) == get(h,"month"));
-        CHECK( ((date % 100))         == get(h,"day"));
-    }
+            CHECK( (date / 10000)         == get(h,"year"));
+            CHECK( ((date % 10000) / 100) == get(h,"month"));
+            CHECK( ((date % 100))         == get(h,"day"));
+        }
     }
 
     /* Only 00, 06 12 and 18 Cycle OK */
@@ -1154,10 +1154,10 @@ void scan(const char* name)
 
 void usage()
 {
-    printf("tigge_check [-w] [-v] [-z] [-g good] [-b bad] files ....\n");
+    printf("tigge_check [options] grib_file grib_file ...\n");
     printf("   -l: check local area model fields\n");
     printf("   -v: check value ranges\n");
-    printf("   -w: warning are treated as errors\n");
+    printf("   -w: warnings are treated as errors\n");
     printf("   -g: write good gribs\n");
     printf("   -b: write bad  gribs\n");
     printf("   -z: return 0 to calling shell\n");
