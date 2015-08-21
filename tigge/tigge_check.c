@@ -58,6 +58,7 @@ static void statistical_process(grib_handle*,const parameter*,double,double);
 static void six_hourly(grib_handle*,const parameter*,double,double);
 static void three_hourly(grib_handle* h,const parameter* p,double min,double max);
 static void from_start(grib_handle*,const parameter*,double,double);
+static void daily_average(grib_handle*,const parameter*,double,double);
 static void given_level(grib_handle*,const parameter*,double,double);
 static void predefined_level(grib_handle*,const parameter*,double,double);
 static void predefined_thickness(grib_handle*,const parameter*,double,double);
@@ -86,6 +87,8 @@ const char* param = "unknown";
 int warnflg = 0;
 int zeroflg = 0;
 int is_lam =0;
+int is_s2s =0;
+int is_s2s_refcst =0;
 
 const char* good = NULL;
 const char* bad = NULL;
@@ -226,7 +229,8 @@ void gaussian_grid(grib_handle* h)
     values[0] = rint(values[0]*1e6)/1e6;
 
     if ( !DBL_EQUAL(north, values[0], tolerance) || !DBL_EQUAL(south, -values[0], tolerance) )
-        printf("N=%ld n=%f s=%f v=%f n-v=%0.30f s-v=%0.30f\n",n,north,south,values[0],north-values[0],south+values[0]);
+        printf("N=%ld north=%f south=%f v(=gauss_lat[0])=%f north-v=%0.30f south-v=%0.30f\n",
+                n,north,south,values[0],north-values[0],south+values[0]);
 
     CHECK(DBL_EQUAL(north, values[0], tolerance));
     CHECK(DBL_EQUAL(south, -values[0], tolerance));
@@ -353,14 +357,24 @@ static void point_in_time(grib_handle* h,const parameter* p,double min,double ma
         break;
 
     case 3: /* Control forecast products */
-        CHECK(eq(h,"productDefinitionTemplateNumber",1));
         CHECK(eq(h,"perturbationNumber",0));
         CHECK(ne(h,"numberOfForecastsInEnsemble",0));
+        if (is_s2s_refcst)
+            CHECK(eq(h,"productDefinitionTemplateNumber",60));
+        else if (is_s2s)
+            CHECK(eq(h,"productDefinitionTemplateNumber",60)||eq(h,"productDefinitionTemplateNumber",11)||eq(h,"productDefinitionTemplateNumber",1));
+        else
+            CHECK(eq(h,"productDefinitionTemplateNumber",1));
         break;
 
     case 4: /* Perturbed forecast products */
         CHECK(ne(h,"perturbationNumber",0));
         CHECK(ne(h,"numberOfForecastsInEnsemble",0));
+        if (is_s2s_refcst)
+            CHECK(eq(h,"productDefinitionTemplateNumber",60));
+        else if (is_s2s)
+            CHECK(eq(h,"productDefinitionTemplateNumber",60)||eq(h,"productDefinitionTemplateNumber",11)||eq(h,"productDefinitionTemplateNumber",1));
+        else
         CHECK(eq(h,"productDefinitionTemplateNumber",1));
         if (is_lam) {
             CHECK(le(h,"perturbationNumber",get(h,"numberOfForecastsInEnsemble")));
@@ -376,7 +390,9 @@ static void point_in_time(grib_handle* h,const parameter* p,double min,double ma
         break;
     }
 
-    if(get(h,"indicatorOfUnitOfTimeRange") == 11 || is_lam ) /*  six hours */
+    if (!is_lam)
+    {
+        if(get(h,"indicatorOfUnitOfTimeRange") == 11) /*  six hours */
     {
         /* Six hourly is OK */
         ;
@@ -385,6 +401,20 @@ static void point_in_time(grib_handle* h,const parameter* p,double min,double ma
     {
         CHECK(eq(h,"indicatorOfUnitOfTimeRange",1));/* Hours */
         CHECK((get(h,"forecastTime") % 6) == 0);  /* Every six hours */
+        }
+    }
+    else
+    {
+        if(get(h,"indicatorOfUnitOfTimeRange") == 10 ) /*  three hours */
+        {
+            /* Three hourly is OK */
+            ;
+        }
+        else
+        {
+            CHECK(eq(h,"indicatorOfUnitOfTimeRange",1));/* Hours */
+            CHECK((get(h,"forecastTime") % 3) == 0);  /* Every three hours */
+        }
     }
 
     check_range(h,p,min,max);
@@ -394,6 +424,7 @@ static void pressure_level(grib_handle* h,const parameter* p,double min,double m
 {
     long level = get(h,"level");
 
+    if (!is_s2s){
     switch(level)
     {
     case 1000:
@@ -410,6 +441,28 @@ static void pressure_level(grib_handle* h,const parameter* p,double min,double m
         printf("%s, field %d [%s]: invalid pressure level %ld\n",file,field,param,level);
         error++;
         break;
+    }
+}
+    else
+    {
+        switch(level)
+        {
+        case 1000:
+        case  925:
+        case  850:
+        case  700:
+        case  500:
+        case  300:
+        case  200:
+        case  100:
+        case  50:
+        case  10:
+            break;
+        default:
+            printf("%s, field %d [%s]: invalid pressure level %ld\n",file,field,param,level);
+            error++;
+            break;
+        }
     }
 }
 
@@ -452,11 +505,17 @@ static void statistical_process(grib_handle* h,const parameter* p,double min,dou
         break;
 
     case 3: /* Control forecast products */
+        if (!is_s2s_refcst)
         CHECK(eq(h,"productDefinitionTemplateNumber",11));
+        else
+            CHECK(eq(h,"productDefinitionTemplateNumber",61));
         break;
 
     case 4: /* Perturbed forecast products */
+        if (!is_s2s_refcst)
         CHECK(eq(h,"productDefinitionTemplateNumber",11));
+        else
+            CHECK(eq(h,"productDefinitionTemplateNumber",61));
         break;
 
     default:
@@ -498,6 +557,12 @@ static void statistical_process(grib_handle* h,const parameter* p,double min,dou
     CHECK(eq(h,"typeOfTimeIncrement",2));
     /*CHECK(eq(h,"indicatorOfUnitOfTimeForTheIncrementBetweenTheSuccessiveFieldsUsed",255));*/
 
+    if (is_s2s)
+        if(get(h,"typeOfStatisticalProcessing") == 0)
+            CHECK(eq(h,"timeIncrementBetweenSuccessiveFields",1)||eq(h,"timeIncrementBetweenSuccessiveFields",4));
+        else
+            CHECK(eq(h,"timeIncrementBetweenSuccessiveFields",0));
+    else
     CHECK(eq(h,"timeIncrementBetweenSuccessiveFields",0));
 
     {
@@ -512,7 +577,6 @@ static void statistical_process(grib_handle* h,const parameter* p,double min,dou
         {
             CHECK((get(h,"endStep") % 3) == 0);  /* Every three hours */
         }
-        CHECK(get(h,"endStep") <= 24*30);
     }
 
     if(get(h,"indicatorOfUnitForTimeRange") == 11)
@@ -575,6 +639,20 @@ static void from_start(grib_handle* h,const parameter* p,double min,double max)
     else
     {
         check_range(h,p,min/step,max/step);
+    }
+}
+
+static void daily_average(grib_handle* h,const parameter* p,double min,double max)
+{
+    long step = get(h,"endStep");
+    CHECK(get(h,"startStep") == get(h,"endStep") - 24);
+    statistical_process(h,p,min,max);
+
+    if(step == 0)
+        CHECK(min == 0 && max == 0);
+    else
+    {
+        check_range(h,p,min,max);
     }
 }
 
@@ -776,7 +854,15 @@ void check_parameter(grib_handle* h,double min,double max)
                 assert(!"Unknown key type");
             }
             j++;
-            /* printf("%s %ld val -> %d %d %ld %d\n",parameters[i].pairs[j].key,parameters[i].pairs[j].value,val,matches,j,best); */
+#if 0
+            printf("%s %s %ld val -> %d %d %d\n",
+                    parameters[i].pairs[j].key,
+                    parameters[i].pairs[j].value_string,
+                    val,
+                    matches,
+                    j,
+                    best);
+#endif
         }
 
         if(matches == j && matches > best)
@@ -904,6 +990,8 @@ void verify(grib_handle* h)
 
     CHECK(eq(h,"significanceOfReferenceTime",1)); /* Start of forecast */
 
+    if (!is_s2s){
+        /* todo check for how many years back the reforecast is done? Is it coded in the grib??? */
     /* Check if the date is OK */
     {
         long date = get(h,"date");
@@ -912,6 +1000,7 @@ void verify(grib_handle* h)
         CHECK( (date / 10000)         == get(h,"year"));
         CHECK( ((date % 10000) / 100) == get(h,"month"));
         CHECK( ((date % 100))         == get(h,"day"));
+    }
     }
 
     /* Only 00, 06 12 and 18 Cycle OK */
@@ -924,8 +1013,17 @@ void verify(grib_handle* h)
     }
     CHECK(eq(h,"minute",0));
     CHECK(eq(h,"second",0));
+    CHECK(ge(h,"startStep",0));
 
-    CHECK(eq(h,"productionStatusOfProcessedData",4)||eq(h,"productionStatusOfProcessedData",5)); /*  TIGGE Operational */
+    if (!is_s2s){
+        CHECK(eq(h,"productionStatusOfProcessedData",4)||eq(h,"productionStatusOfProcessedData",5)); /*  TIGGE prod||test */
+        CHECK(le(h,"endStep",30*24));
+    }
+    else
+    {
+        CHECK(eq(h,"productionStatusOfProcessedData",6)||eq(h,"productionStatusOfProcessedData",7)); /*  S2S prod||test */
+        CHECK(le(h,"endStep",100*24));
+    }
 
     if (!is_lam){
         CHECK((get(h,"step") % 6) == 0);
@@ -934,8 +1032,6 @@ void verify(grib_handle* h)
     {
         CHECK((get(h,"step") % 3) == 0);
     }
-    CHECK(ge(h,"startStep",0));
-    CHECK(le(h,"endStep",30*24));
 
     /* 2 = analysis or forecast , 3 = control forecast, 4 = perturbed forecast */
     CHECK(eq(h,"typeOfProcessedData",2)||eq(h,"typeOfProcessedData",3)||eq(h,"typeOfProcessedData",4));
@@ -978,6 +1074,13 @@ void verify(grib_handle* h)
 
     /* Check values */
     CHECK(eq(h,"typeOfOriginalFieldValues",0)); /* Floating point */
+
+    /* do not store empty values e.g. fluxes at step 0
+        todo ?? now it's allowed in the code here!
+        if(!missing(h,"typeOfStatisticalProcessing"))
+          CHECK(ne(h,"stepRange",0));*/
+
+
 }
 
 void validate(const char* path)
@@ -1058,6 +1161,8 @@ void usage()
     printf("   -g: write good gribs\n");
     printf("   -b: write bad  gribs\n");
     printf("   -z: return 0 to calling shell\n");
+    printf("   -s: check s2s fields\n");
+    printf("   -r: check s2s reforecast fields\n");
     exit(1);
 }
 
@@ -1100,6 +1205,14 @@ int main(int argc,const char** argv)
 
             case 'l':
                 is_lam=1;
+                break;
+
+            case 's':
+                is_s2s=1;
+                break;
+
+            case 'r':
+                is_s2s_refcst=1;
                 break;
 
             default:
