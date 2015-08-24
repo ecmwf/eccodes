@@ -218,6 +218,7 @@ grib_file* grib_file_open(const char* filename, const char* mode,int* err)
         if (!file->handle) {
             grib_context_log(file->context,GRIB_LOG_PERROR,"grib_file_open: cannot open file %s",file->name);
             *err=GRIB_IO_PROBLEM;
+            GRIB_MUTEX_UNLOCK(&mutex1);
             return NULL;
         }
         if (file_pool.context->io_buffer_size) {
@@ -235,10 +236,9 @@ grib_file* grib_file_open(const char* filename, const char* mode,int* err)
         }
 
         file_pool.number_of_opened_files++;
-
-        GRIB_MUTEX_UNLOCK(&mutex1);
-
     }
+
+    GRIB_MUTEX_UNLOCK(&mutex1);
     return file;
 }
 
@@ -404,14 +404,20 @@ grib_file* grib_file_new(grib_context* c, const char* name, int* err)
 
 void grib_file_delete(grib_file* file)
 {
+    {
+        if (!file) return;
+    }
     GRIB_PTHREAD_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex1);
-    if (!file) return;
+    /* GRIB-803: cannot call fclose yet! Causes crash */
+    /* TODO: Set handle to NULL in filepool too */
+#if 0
     if (file->handle) {
         if (fclose(file->handle) != 0) {
             perror(file->name);
         }
     }
+#endif
     if (file->name) free(file->name);
     if (file->mode) free(file->mode);
 
