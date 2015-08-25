@@ -60,12 +60,12 @@ list( APPEND tests
 )
 foreach( test ${tests} )
     ecbuild_add_test( TARGET eccodes_p_${test}_test
-                  TYPE       SCRIPT
-                  DEPENDS    ${ptools}
-                  COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                  CONDITION  HAVE_PYTHON
-                  RESOURCES  ${test}.py
-                  ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
-                  TEST_DEPENDS eccodes_get_gribs eccodes_get_tigge_gribs eccodes_get_bufrs
+                      TYPE       SCRIPT
+                      DEPENDS    ${ptools}
+                      COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                      CONDITION  HAVE_PYTHON
+                      RESOURCES  ${test}.py
+                      ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
+                      TEST_DEPENDS eccodes_get_gribs eccodes_get_tigge_gribs eccodes_get_bufrs
     )
 endforeach()
