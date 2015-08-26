@@ -330,7 +330,7 @@ static grib_trie* init_list(const char* name) {
     return 0;
 }
 
-static void print_values(grib_context* c,const grib_util_grid_spec* spec, const double* data_values,size_t data_values_count,const grib_values *values,int count)
+static void print_values(grib_context* c, const grib_util_grid_spec* spec, const double* data_values,size_t data_values_count,const grib_values *values,int count)
 {
     int i;
     printf("GRIB_API DEBUG grib_util grib_set_values: setting %d values \n",count);
@@ -582,7 +582,6 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         return h;
     }
 
-
     switch(spec->grid_type) {
 
     case GRIB_UTIL_GRID_SPEC_REGULAR_LL:
@@ -791,7 +790,6 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         break;
     }
 
-
     /* Set rotation */
     /* FIXME: Missing angleOfRotationInDegrees */
 
@@ -925,6 +923,17 @@ grib_handle* grib_util_set_spec(grib_handle* h,
                 fprintf(stderr," %s %s\n",values[i].name,grib_get_error_message(values[i].error));
         goto cleanup;
     }
+
+    Assert(spec->pl_size >= 0);
+    if (spec->pl && spec->pl_size == 0) {
+        fprintf(stderr, "pl array not NULL but pl_size == 0!\n");
+        goto cleanup;
+    }
+    if (spec->pl_size > 0 && spec->pl == NULL) {
+        fprintf(stderr, "pl_size not zero but pl array == NULL!\n");
+        goto cleanup;
+    }
+
     if (spec->pl_size!=0 && (spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG)) {
         *err=grib_set_long_array(outh,"pl",spec->pl,spec->pl_size);
         if (*err) {
@@ -1315,7 +1324,7 @@ int is_index_file(const char* filename)
     return ret;
 }
 
-char get_dir_separator_char()
+char get_dir_separator_char(void)
 {
 #ifdef ECCODES_ON_WINDOWS
 #   define DIR_SEPARATOR_CHAR '\\'

@@ -834,7 +834,6 @@ int grib_get_double_array (grib_handle* h, const char* key, double* vals, size_t
 int grib_get_long_array(grib_handle* h, const char* key, long* vals, size_t *length);
 
 
-
 /*   setting      data         */
 /**
 *  Copy the keys belonging to a given namespace from a source handle to a destination handle
