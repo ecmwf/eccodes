@@ -1,0 +1,7 @@
+#code|abbreviation|type|name|unit|scale|reference|width|crex_unit|crex_scale|crex_width
+033192|scanLineQualityFlagForSaphirOrMadras|table|SCAN LINE QUALITY FLAG FOR SAPHIR/MADRAS|FLAG TABLE|0|0|10|FLAG TABLE|0|4
+033193|payloadModeForSaphir|table|PAYLOAD MODE FOR SAPHIR|CODE TABLE|0|0|3|CODE TABLE|0|1
+033194|payloadModeForMadras|table|PAYLOAD MODE FOR MADRAS|CODE TABLE|0|0|3|CODE TABLE|0|1
+033195|satelliteModeForSaphirOrMadras|table|SATELLITE MODE FOR SAPHIR/MADRAS|CODE TABLE|0|0|4|CODE TABLE|0|2
+033196|channelQualityFlagForSaphirOrMadras|table|CHANNEL QUALITY FLAG FOR SAPHIR/MADRAS|FLAG TABLE|0|0|11|FLAG TABLE|0|4
+033197|calibrationFlagsForSaphirOrMadras|table|CALIBRATION FLAGS FOR SAPHIR/MADRAS|CODE TABLE|0|0|3|CODE TABLE|0|1
