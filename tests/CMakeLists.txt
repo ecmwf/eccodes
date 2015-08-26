@@ -86,6 +86,7 @@ list( APPEND tests2
     debug
     md5
     grib_util_set_spec
+	neg_fctime
 )
 
 # These tests do not require any data downloads
