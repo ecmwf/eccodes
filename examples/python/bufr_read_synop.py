@@ -41,11 +41,11 @@ def example():
         'dewpointTemperatureAt2M',
         'windSpeedAt10M',
         'windDirectionAt10M',
-        'cloudAmount#1',  #cloud amount (low and mid level)
-        'heightOfBaseOfCloud#1', 
-        'cloudType#1',   #cloud type (low clouds)
-        'cloudType#2',   #cloud type (middle clouds)
-        'cloudType#3'    #cloud type (highclouds)
+        '#1#cloudAmount',  #cloud amount (low and mid level)
+        '#1#heightOfBaseOfCloud', 
+        '#1#cloudType',   #cloud type (low clouds)
+        '#2#cloudType',   #cloud type (middle clouds)
+        '#3#cloudType'    #cloud type (highclouds)
         ]
 
     # The cloud information is stored in several blocks in the

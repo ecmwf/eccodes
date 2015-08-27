@@ -161,7 +161,7 @@ rm -f ${f}.ref ${f}.log
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
-print "pressure=[pressure#4] [pressure#4->units]";
+print "pressure=[#4#pressure] [#4#pressure->units]";
 print "pressure=[pressure]";
 EOF
 
@@ -194,9 +194,9 @@ rm -f ${f}.ref ${f}.log
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
-print "brightnessTemperature={[brightnessTemperature#2!',']}";
-print "brightnessTemperature->percentConfidence={[brightnessTemperature#2->percentConfidence!',']}";
-print "brightnessTemperature->firstOrderStatisticalValue={[brightnessTemperature#2->firstOrderStatisticalValue!',']}";
+print "brightnessTemperature={[#2#brightnessTemperature!',']}";
+print "brightnessTemperature->percentConfidence={[#2#brightnessTemperature->percentConfidence!',']}";
+print "brightnessTemperature->firstOrderStatisticalValue={[#2#brightnessTemperature->firstOrderStatisticalValue!',']}";
 EOF
 
 f="b005_89.bufr"

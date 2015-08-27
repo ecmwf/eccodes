@@ -1092,7 +1092,7 @@ int grib_keys_iterator_get_native_type(grib_keys_iterator *kiter);
 
 /* grib_parse_utils.c */
 int grib_recompose_name(grib_handle *h, grib_accessor *observer, const char *uname, char *fname, int fail);
-int grib_accessor_print(grib_accessor *a, int has_rank, const char *name, int type, const char *format, const char *separator, int maxcols, int *newline, FILE *out);
+int grib_accessor_print(grib_accessor *a, const char *name, int type, const char *format, const char *separator, int maxcols, int *newline, FILE *out);
 int grib_accessors_list_print(grib_accessors_list *al, const char *name, int type, const char *format, const char *separator, int maxcols, int *newline, FILE *out);
 int grib_recompose_print(grib_handle *h, grib_accessor *observer, const char *uname, int fail, FILE *out);
 grib_action_file *grib_find_action_file(const char *fname, grib_action_file_list *afl);
@@ -1110,7 +1110,6 @@ int grib_type_to_int(char id);
 char *get_rank(const char *name, long *rank);
 char *get_condition(const char *name, codes_condition *condition);
 grib_accessors_list *grib_find_accessors_list(grib_handle *h, const char *name);
-int has_rank(const char *name);
 char *grib_split_name_attribute(grib_context *c, const char *name, char *attribute_name);
 grib_accessor *grib_find_accessor(grib_handle *h, const char *name);
 grib_accessor *grib_find_attribute(grib_handle *h, const char *name, const char *attr_name, int *err);
