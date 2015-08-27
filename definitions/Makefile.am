@@ -7844,6 +7844,7 @@ dist_definitionsgrib2_DATA = \
 	grib2/mars_labeling.82.def\
 	grib2/mars_labeling.def\
 	grib2/meta.def\
+	grib2/modelName.def\
 	grib2/name.def\
 	grib2/paramId.def\
 	grib2/parameters.def\
@@ -8036,6 +8037,7 @@ dist_definitionsgrib2_local_1098_DATA = \
 
 definitionsgrib2_localConcepts_cnmcdir = @ECCODES_DEFINITION_PATH@/grib2/localConcepts/cnmc
 dist_definitionsgrib2_localConcepts_cnmc_DATA = \
+	grib2/localConcepts/cnmc/modelName.def\
 	grib2/localConcepts/cnmc/name.def\
 	grib2/localConcepts/cnmc/paramId.def\
 	grib2/localConcepts/cnmc/shortName.def\
@@ -8052,6 +8054,7 @@ dist_definitionsgrib2_localConcepts_ecmf_DATA = \
 
 definitionsgrib2_localConcepts_edzwdir = @ECCODES_DEFINITION_PATH@/grib2/localConcepts/edzw
 dist_definitionsgrib2_localConcepts_edzw_DATA = \
+	grib2/localConcepts/edzw/modelName.def\
 	grib2/localConcepts/edzw/name.def\
 	grib2/localConcepts/edzw/paramId.def\
 	grib2/localConcepts/edzw/shortName.def\
@@ -8105,6 +8108,10 @@ dist_definitionsgrib2_localConcepts_lfpw1_DATA = \
 	grib2/localConcepts/lfpw1/paramId.def\
 	grib2/localConcepts/lfpw1/shortName.def\
 	grib2/localConcepts/lfpw1/units.def
+
+definitionsgrib2_localConcepts_lsswdir = @ECCODES_DEFINITION_PATH@/grib2/localConcepts/lssw
+dist_definitionsgrib2_localConcepts_lssw_DATA = \
+	grib2/localConcepts/lssw/modelName.def
 
 definitionsgrib2_tablesdir = @ECCODES_DEFINITION_PATH@/grib2/tables
 dist_definitionsgrib2_tables_DATA = \
