@@ -266,6 +266,7 @@ size_t grib_viarray_used_size(grib_viarray *v);
 /* grib_accessor_class_bufr_data.c */
 
 /* grib_accessor_class_bufr_data_array.c */
+grib_sarray *accessor_bufr_data_array_get_stringValues(grib_accessor *a);
 grib_accessors_list *accessor_bufr_data_array_get_dataAccessors(grib_accessor *a);
 void accessor_bufr_data_array_set_unpackMode(grib_accessor *a, int unpackMode);
 
@@ -329,6 +330,8 @@ grib_accessor *find_paddings(grib_section *s);
 void grib_update_paddings(grib_section *s);
 
 /* grib_accessor_class_change_scanning_direction.c */
+
+/* grib_accessor_class_check_internal_version.c */
 
 /* grib_accessor_class_codeflag.c */
 
@@ -1096,7 +1099,7 @@ grib_action_file *grib_find_action_file(const char *fname, grib_action_file_list
 void grib_push_action_file(grib_action_file *af, grib_action_file_list *afl);
 int grib_yywrap(void);
 int grib_yyerror(const char *msg);
-void grib_parser_include(const char *fname);
+void grib_parser_include(const char *included_fname);
 grib_concept_value *grib_parse_concept_file(grib_context *gc, const char *filename);
 grib_hash_array_value *grib_parse_hash_array_file(grib_context *gc, const char *filename);
 grib_rule *grib_parse_rules_file(grib_context *gc, const char *filename);
@@ -1314,6 +1317,7 @@ grib_iterator *grib_iterator_factory(grib_handle *h, grib_arguments *args, unsig
 /* grib_iterator_class_gen.c */
 
 /* grib_iterator_class_latlon.c */
+void unrotate(grib_handle *h, const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double *outlat, double *outlon);
 
 /* grib_iterator_class_regular.c */
 
@@ -1338,7 +1342,6 @@ double grib_arguments_get_double(grib_handle *h, grib_arguments *args, int n);
 grib_expression *grib_arguments_get_expression(grib_handle *h, grib_arguments *args, int n);
 
 /* grib_util.c */
-double rint(double x);
 grib_handle *grib_util_sections_copy(grib_handle *hfrom, grib_handle *hto, int what, int *err);
 grib_string_list *grib_util_get_param_id(const char *mars_param);
 grib_string_list *grib_util_get_mars_param(const char *param_id);
@@ -1350,7 +1353,7 @@ int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNu
 int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber);
 int is_index_file(const char *filename);
 char get_dir_separator_char(void);
-const char* extract_filename(const char* filepath);
+const char *extract_filename(const char *filepath);
 
 /* compile.c */
 void grib_compile_flags(grib_compiler *c, long flags);

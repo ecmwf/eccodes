@@ -34,7 +34,6 @@
    MEMBERS    = const char* expandedDescriptorsName
    MEMBERS    = const char* flagsName
    MEMBERS    = const char* unitsName
-   MEMBERS    = const char* stringValuesName
    MEMBERS    = const char* elementsDescriptorsIndexName
    MEMBERS    = const char* compressedDataName
    MEMBERS    = bufr_descriptors_array* expanded
@@ -99,7 +98,6 @@ typedef struct grib_accessor_bufr_data_array {
 	const char* expandedDescriptorsName;
 	const char* flagsName;
 	const char* unitsName;
-	const char* stringValuesName;
 	const char* elementsDescriptorsIndexName;
 	const char* compressedDataName;
 	bufr_descriptors_array* expanded;
@@ -120,7 +118,7 @@ typedef struct grib_accessor_bufr_data_array {
 	grib_accessors_list* dataAccessors;
 	int unpackMode;
 	int bitsToEndData;
-  grib_section* dataKeys;
+	grib_section* dataKeys;
 } grib_accessor_bufr_data_array;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -197,6 +195,14 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
+#define MAX_NESTED_REPLICATIONS 8
+
+#define PROCESS_DECODE     0
+#define PROCESS_NEW_DATA   1
+#define PROCESS_ENCODE     2
+
+static int process_elements(grib_accessor* a,int flag);
+
 typedef int (*codec_element_proc) (grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex, grib_buffer* b,unsigned char* data,long *pos,int i,grib_darray* dval,grib_sarray* sval); 
 typedef int (*codec_replication_proc) (grib_context* c,grib_accessor_bufr_data_array* self,grib_buffer* buff,unsigned char* data,long *pos,int i,grib_darray* dval,long* numberOfRepetitions);
 
@@ -244,7 +250,6 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
     self->subsetNumberName    = grib_arguments_get_name(a->parent->h,params,n++);
     self->expandedDescriptorsName = grib_arguments_get_name(a->parent->h,params,n++);
     self->flagsName = grib_arguments_get_name(a->parent->h,params,n++);
-    self->stringValuesName = grib_arguments_get_name(a->parent->h,params,n++);
     self->elementsDescriptorsIndexName = grib_arguments_get_name(a->parent->h,params,n++);
     self->compressedDataName = grib_arguments_get_name(a->parent->h,params,n++);
     dataKeysName = grib_arguments_get_name(a->parent->h,params,n++);
@@ -343,6 +348,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     self->do_decode=1;
     return GRIB_NOT_IMPLEMENTED;
+}
+
+grib_sarray* accessor_bufr_data_array_get_stringValues(grib_accessor* a)
+{
+  grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
+  process_elements(a,PROCESS_DECODE);
+
+  return self->stringValues;
 }
 
 grib_accessors_list* accessor_bufr_data_array_get_dataAccessors(grib_accessor* a)
@@ -1353,12 +1366,6 @@ static int create_keys(grib_accessor* a)
 
     return err;
 }
-
-#define MAX_NESTED_REPLICATIONS 8
-
-#define PROCESS_DECODE     0
-#define PROCESS_NEW_DATA   1
-#define PROCESS_ENCODE     2
 
 static int process_elements(grib_accessor* a,int flag)
 {

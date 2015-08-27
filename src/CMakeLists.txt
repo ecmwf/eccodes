@@ -55,6 +55,8 @@ list( APPEND grib_api_srcs
     grib_accessor_class_bufr_data_array.c
     grib_accessor_class_bufr_data_element.c
     grib_accessor_class_bufr_group.c
+    grib_accessor_class_bufr_string_values.c
+    grib_accessor_class_pack_bufr_values.c
     grib_accessor_class_unpack_bufr_values.c
     grib_accessor_class_bufr_has_delayed_replication.c
     grib_accessor_class_apply_operators.c

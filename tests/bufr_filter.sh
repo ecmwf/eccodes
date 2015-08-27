@@ -739,15 +739,15 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 
 #-----------------------------------------------------------
-# Test:  get string array
+# Test:  get string array and stringValues
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
-print "[stationOrSiteName!1]";
+print "[stringValues!1]";
 EOF
 
 f="synop_multi_subset.bufr"
-echo "Test: get string array" >> $fLog
+echo "Test: get string array and stringValues" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}/bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 

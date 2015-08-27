@@ -18,7 +18,8 @@ transient subsetNumber=0;
 
 template dataKeys "bufr/dataKeys.def";
 
-meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length, numberOfSubsets,subsetNumber,expandedCodes,expandedFlags, stringValues,elementsDescriptorsIndex,compressedData,dataKeys);
+meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length, numberOfSubsets,subsetNumber,expandedCodes,expandedFlags, elementsDescriptorsIndex,compressedData,dataKeys);
+meta stringValues bufr_string_values(numericValues);
 
 meta unpack unpack_bufr_values(numericValues) ;
 

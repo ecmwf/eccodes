@@ -581,6 +581,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
   c=a->parent->h->context;
 
   grib_value_count(a,&count);
+  if (count==0) return;
   size=count;
   if (size==1) {
     dump_string(d,a,comment);
