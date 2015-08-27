@@ -140,20 +140,17 @@ char* get_rank(const char* name,long *rank) {
     char* p=(char*)name;
     char* end=p;
     char* ret=NULL;
-    size_t len;
 
     *rank=-1;
-    while (*p!=0 && *p!='#') p++;
 
     if (*p=='#') {
         *rank=strtol(++p,&end,10);
-        if ( *end != 0) {
+        if ( *end != '#') {
             *rank=-1;
         } else {
             grib_context* c=grib_context_get_default();
-            len=p-name;
-            ret=(char*)grib_context_malloc_clear(c,len);
-            memcpy(ret,name,len-1);
+            end++;
+            ret=grib_context_strdup(c,end);
         }
     }
     return ret;
@@ -324,7 +321,7 @@ grib_accessors_list* grib_find_accessors_list(grib_handle* h,const char* name) {
             if (condition->rightString) grib_context_free(h->context,condition->rightString);
         }
         grib_context_free(h->context,condition);
-    } else if (has_rank(name)) {
+    } else if (name[0]=='#') {
         a=grib_find_accessor(h, name);
         if (a) {
             al=(grib_accessors_list*)grib_context_malloc_clear(h->context,sizeof(grib_accessors_list));
@@ -347,10 +344,10 @@ static grib_accessor* search_and_cache(grib_handle* h, const char* name,const ch
     grib_accessor* a=NULL;
     long rank;
 
-    str=get_rank(name,&rank);
-    if (rank>0) {
-        a=search_by_rank(h,str,the_namespace,rank);
-        grib_context_free(h->context,str);
+    if (name[0]=='#') {
+      str=get_rank(name,&rank);
+      a=search_by_rank(h,str,the_namespace,rank);
+      grib_context_free(h->context,str);
     } else {
         a=_search_and_cache(h,name,the_namespace);
     }
@@ -389,12 +386,6 @@ static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name)
         a = grib_find_accessor(h->main,name);
 
     return a;
-}
-
-int has_rank(const char* name) {
-    char* p=(char*)name;
-    while (*p!=0 && *p!='#') p++;
-    return *p ? 1 : 0 ;
 }
 
 char* grib_split_name_attribute(grib_context* c,const char* name,char* attribute_name) {

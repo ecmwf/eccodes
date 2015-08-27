@@ -85,23 +85,23 @@ integer(kind=4)    :: cloudAmount,cloudBaseHeight,lowCloud,midCloud,highCloud
     ! read so we will use the # (occurrence) operator accordingly. 
         
     ! Cloud amount (low and middleclouds)
-    call codes_get(ibufr,'cloudAmount#1',cloudAmount)
+    call codes_get(ibufr,'#1#cloudAmount',cloudAmount)
     write(*,*) '  cloudAmount (low and middle):',cloudAmount
         
     ! Height of cloud base
-    call codes_get(ibufr,'heightOfBaseOfCloud#1',cloudBaseHeight)
+    call codes_get(ibufr,'#1#heightOfBaseOfCloud',cloudBaseHeight)
     write(*,*) '  heightOfBaseOfCloud:',cloudBaseHeight
         
     ! Cloud type (low clouds)
-    call codes_get(ibufr,'cloudType#1',lowCloud)
+    call codes_get(ibufr,'#1#cloudType',lowCloud)
     write(*,*) '  cloudType (low):',lowCloud 
         
     ! Cloud type (middle clouds)
-    call codes_get(ibufr,'cloudType#2',midCloud)
+    call codes_get(ibufr,'#2#cloudType',midCloud)
     write(*,*) '  cloudType (middle):',midCloud 
     
     ! Cloud type (high clouds)
-    call codes_get(ibufr,'cloudType#3',highCloud)
+    call codes_get(ibufr,'#3#cloudType',highCloud)
     write(*,*) '  cloudType (high):',highCloud 
    
     ! release the bufr message
