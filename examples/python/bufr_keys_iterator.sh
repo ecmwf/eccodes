@@ -30,4 +30,5 @@ $PYTHON bufr_keys_iterator.py 2> $REDIRECT > $fTmp
 #cat  $fTmp
 
 #Clean up
-rm -f $fTmp | true
+rm -f $fTmp
+

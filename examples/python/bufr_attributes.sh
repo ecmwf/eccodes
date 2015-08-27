@@ -31,4 +31,5 @@ $PYTHON bufr_attributes.py  2> $REDIRECT > $fTmp
 #cat  $fTmp
 
 #Clean up
-rm -f $fTmp | true
+rm -f $fTmp
+

@@ -20,7 +20,6 @@ bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 for bf in ${bufr_files}
 do
   file=${data_dir}/bufr/$bf
-  REDIRECT=/dev/null
 
   # Test descriptors: compare output of filter (res) with reference file (ref)
   res_desc=$file.desc.test

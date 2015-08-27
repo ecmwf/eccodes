@@ -39,6 +39,5 @@ fi
 set -e
 
 #Clean up
-rm -f ${fBufrTmp} | true
-
+rm -f ${fBufrTmp}
 

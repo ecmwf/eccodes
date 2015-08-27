@@ -46,7 +46,7 @@ ${tools_dir}/bufr_ls -p totalLength,bufrHeaderCentre,bufrHeaderSubCentre,masterT
 
 #Write the values into a file and compare with ref
 awk NR==3 $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_ls
-diff $ref_ls $res_ls >$REDIRECT 2> $REDIRECT
+diff $ref_ls $res_ls
 
 rm -f $fLog $res_ls 
 rm -f $fTmp

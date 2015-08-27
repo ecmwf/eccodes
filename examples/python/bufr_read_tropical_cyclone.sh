@@ -32,4 +32,5 @@ $PYTHON bufr_read_tropical_cyclone.py
 #cat  $fTmp
 
 #Clean up
-rm -f $fTmp | true
+rm -f $fTmp
+

@@ -30,7 +30,7 @@ REDIRECT=/dev/null
 
 for file in ${bufr_files}
 do
-  ${tools_dir}bufr_dump -O ${data_dir}/bufr/$file 2> $REDIRECT > $REDIRECT
+  ${tools_dir}bufr_dump -O ${data_dir}/bufr/$file
 done
 
 #==============================================
@@ -46,7 +46,7 @@ fJsonRef=${data_dir}/bufr/"bad.bufr.json.ref"
 
 ${tools_dir}bufr_dump -js $fBufr > $fJsonTmp
 
-diff $fJsonTmp $fJsonRef >$REDIRECT 2> $REDIRECT
+diff $fJsonTmp $fJsonRef
 
 #==============================================
 # Testing change of scale (see ECC-111)
@@ -61,7 +61,7 @@ fJsonRef=${data_dir}/bufr/"207003.bufr.json.ref"
 
 ${tools_dir}bufr_dump -ja $fBufr > $fJsonTmp
 
-diff $fJsonTmp $fJsonRef >$REDIRECT 2> $REDIRECT
+diff $fJsonTmp $fJsonRef
 
 #Clean up
 rm -f $fLog 

@@ -28,7 +28,7 @@ $PYTHON bufr_set_keys.py 2> $REDIRECT > $REDIRECT
 
 #Compare modified to the original
 set +e
-${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT 
+${tools_dir}/bufr_compare $f $fBufrTmp
 
 #Check if modified is different
 if [ $? -eq 0 ]; then
@@ -42,5 +42,5 @@ set -e
 [ `${tools_dir}bufr_count $f` -eq `${tools_dir}/bufr_count ${fBufrTmp}` ]
 
 #Clean up
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 

@@ -38,7 +38,6 @@ f="aaen_55.bufr"
 
 #The reference is the same as for ls
 ref_get=$f".ls.ref"
-REDIRECT=/dev/null
 
 echo "Test: -p switch" >> $fLog
 echo "file: $f" >> $fLog
@@ -46,7 +45,7 @@ ${tools_dir}/bufr_get -p totalLength,bufrHeaderCentre,bufrHeaderSubCentre,master
 
 #Write the values into a file and compare with ref
 cat $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_get
-diff $ref_get $res_get >$REDIRECT 2> $REDIRECT
+diff $ref_get $res_get
 
 #Clean up
 rm -f $fLog

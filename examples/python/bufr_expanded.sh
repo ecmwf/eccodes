@@ -39,3 +39,4 @@ $PYTHON bufr_expanded.py  >$fTmp 2> $REDIRECT
 
 #Clean up
 rm -f ${fTmp}
+
