@@ -85,8 +85,8 @@ endif()
 ecbuild_add_option( FEATURE MEMORY_MANAGEMENT DESCRIPTION "enable memory management" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ALIGN_MEMORY      DESCRIPTION "enable memory alignment"  DEFAULT OFF ADVANCED )
 
-ecbuild_add_option( FEATURE GRIB_TIMER       DESCRIPTION "enable timer"   DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ECCODES_THREADS  DESCRIPTION "enable threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE GRIB_TIMER        DESCRIPTION "enable timer"   DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_THREADS   DESCRIPTION "enable threads" DEFAULT OFF ADVANCED )
 
 ###############################################################################
 # macro processing
@@ -186,19 +186,23 @@ endif()
 # contents
 
 if( NOT ${DEVELOPER_MODE} )
-    set( grib_api_default_data_prefix ${CMAKE_INSTALL_PREFIX} )
+    set( the_default_data_prefix ${CMAKE_INSTALL_PREFIX} )
 else()
-    set( grib_api_default_data_prefix ${CMAKE_BINARY_DIR} )
+    set( the_default_data_prefix ${CMAKE_BINARY_DIR} )
 endif()
 
+set( ECCODES_DEFINITION_SUFF  share/eccodes/definitions )
+set( ECCODES_SAMPLES_SUFF     share/eccodes/samples )
+set( ECCODES_IFS_SAMPLES_SUFF share/eccodes/ifs_samples )
+
 if( NOT DEFINED ECCODES_DEFINITION_PATH )
-    set( ECCODES_DEFINITION_PATH ${grib_api_default_data_prefix}/share/eccodes/definitions )
+    set( ECCODES_DEFINITION_PATH ${the_default_data_prefix}/${ECCODES_DEFINITION_SUFF} )
 endif()
 if( NOT DEFINED ECCODES_SAMPLES_PATH )
-    set( ECCODES_SAMPLES_PATH ${grib_api_default_data_prefix}/share/eccodes/samples )
+    set( ECCODES_SAMPLES_PATH ${the_default_data_prefix}/${ECCODES_SAMPLES_SUFF} )
 endif()
 if( NOT DEFINED ECCODES_IFS_SAMPLES_PATH )
-    set( ECCODES_IFS_SAMPLES_PATH ${grib_api_default_data_prefix}/share/eccodes/ifs_samples )
+    set( ECCODES_IFS_SAMPLES_PATH ${the_default_data_prefix}/${ECCODES_IFS_SAMPLES_SUFF} )
 endif()
 
 ### config header
@@ -276,13 +280,13 @@ if( EC_HAVE_FORTRAN )
 endif()
 
 if( NOT PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME )
-    set( ECCODES_DEFINITIONS       ${ECCODES_DEFINITIONS}  PARENT_SCOPE )# includes already TPL definitions
+    set( ECCODES_DEFINITIONS      ${ECCODES_DEFINITIONS}  PARENT_SCOPE )# includes already TPL definitions
     set( ECCODES_INCLUDE_DIRS     ${ECCODES_INCLUDE_DIRS} ${ECCODES_EXTRA_INCLUDE_DIRS} PARENT_SCOPE )
     set( ECCODES_LIBRARIES        ${ECCODES_LIBRARIES}    ${ECCODES_EXTRA_LIBRARIES} ${CMATH_LIBRARIES} PARENT_SCOPE )
-    set( ECCODES_FOUND             TRUE PARENT_SCOPE )
-    set( ECCODES_SAMPLES_PATH      ${ECCODES_SAMPLES_PATH} PARENT_SCOPE )
-    set( ECCODES_IFS_SAMPLES_PATH  ${ECCODES_IFS_SAMPLES_PATH} PARENT_SCOPE )
-    set( ECCODES_DEFINITION_PATH   ${ECCODES_DEFINITION_PATH} PARENT_SCOPE )
+    set( ECCODES_FOUND            TRUE PARENT_SCOPE )
+    set( ECCODES_SAMPLES_PATH     ${ECCODES_SAMPLES_PATH} PARENT_SCOPE )
+    set( ECCODES_IFS_SAMPLES_PATH ${ECCODES_IFS_SAMPLES_PATH} PARENT_SCOPE )
+    set( ECCODES_DEFINITION_PATH  ${ECCODES_DEFINITION_PATH} PARENT_SCOPE )
     set( ECCODES_INSTALL_ECMWF_TOOLS  ${ECCODES_INSTALL_ECMWF_TOOLS} PARENT_SCOPE )
 endif()
 
