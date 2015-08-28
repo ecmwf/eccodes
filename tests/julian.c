@@ -59,12 +59,41 @@ void TestDateTime(const long year, const long month, const long day, const long 
     }
 }
 
+void Test0()
+{
+    long year, month, day, hour, min, sec;
+    double jd;
+
+    printf("Test0...\n");
+    /* Test a specific date */
+    year  = 1801;
+    month = 1;
+    day   = 30;
+    hour  = 18;
+    min   = 26;
+    sec   = 24;
+
+    grib_datetime_to_julian(year, month, day, hour,min, sec, &jd);
+    assert( DBL_EQUAL(jd, 2378891.268333) );
+    printf("%ld %ld %ld %ld:%ld:%ld -> %f\n",year,month,day,hour,min,sec,jd);
+
+    grib_julian_to_datetime(jd, &year, &month, &day, &hour,&min, &sec);
+    assert( year  == 1801 );
+    assert( month == 1 );
+    assert( day   == 30 );
+    assert( hour  == 18 );
+    assert( min   == 26 );
+    assert( sec   == 24 );
+    printf("%ld %ld %ld %ld:%ld:%ld -> %f\n",year,month,day,hour,min,sec,jd);
+}
+
 void Test1()
 {
     long year, month, day, hour, min, sec;
     double jd;
 
     /* Test a specific date */
+    printf("Test1...\n");
     year = 1957;
     month = 10;
     day = 4;
@@ -109,6 +138,7 @@ void Test2()
     last=sizeof(jds)/sizeof(double);
 
     printf("\n");
+    printf("Test2...\n");
     for (i=0;i<last;i++) {
         jd=jds[i];
         grib_julian_to_datetime(jd,&year,&month,&day,&hour,&minute,&second);
@@ -133,6 +163,7 @@ void Test2()
 void Test3()
 {
     long iyear, imnth, iday, ihr, imin, isec;
+    printf("Test3...\n");
     for (iyear=1950; iyear<=2015; iyear+=5) {
         for (imnth=1; imnth<=12; imnth+=1) {
             for (iday=1; iday<=28; iday+=1) {
@@ -150,8 +181,10 @@ void Test3()
 
 int main(int argc,char* argv[])
 {
+    Test0();
     Test1();
     Test2();
     Test3();
+    printf("All OK\n");
     return 0;
 }

@@ -14,4 +14,5 @@ ${test_dir}/julian > ${data_dir}/julian.out
 
 diff ${data_dir}/julian.out ${data_dir}/julian.out.good
 
-rm -f ${data_dir}/julian.out | true
+rm -f ${data_dir}/julian.out
+
