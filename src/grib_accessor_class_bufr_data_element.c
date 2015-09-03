@@ -22,6 +22,7 @@
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = init;dump
    IMPLEMENTS = unpack_string;unpack_string_array;unpack_long; unpack_double
+   IMPLEMENTS = pack_long; pack_double
    IMPLEMENTS = value_count; destroy; get_native_type;
    MEMBERS    = long index
    MEMBERS    = int type
@@ -48,6 +49,8 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int  get_native_type(grib_accessor*);
+static int pack_double(grib_accessor*, const double* val,size_t *len);
+static int pack_long(grib_accessor*, const long* val,size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
 static int unpack_string (grib_accessor*, char*, size_t *len);
@@ -94,9 +97,9 @@ static grib_accessor_class _grib_accessor_class_bufr_data_element = {
     0,                /* get sub_section                */
     0,               /* grib_pack procedures long      */
     0,                 /* grib_pack procedures long      */
-    0,                  /* grib_pack procedures long      */
+    &pack_long,                  /* grib_pack procedures long      */
     &unpack_long,                /* grib_unpack procedures long    */
-    0,                /* grib_pack procedures double    */
+    &pack_double,                /* grib_pack procedures double    */
     &unpack_double,              /* grib_unpack procedures double  */
     0,                /* grib_pack procedures string    */
     &unpack_string,              /* grib_unpack procedures string  */
@@ -130,8 +133,6 @@ static void init_class(grib_accessor_class* c)
 	c->sub_section	=	(*(c->super))->sub_section;
 	c->pack_missing	=	(*(c->super))->pack_missing;
 	c->is_missing	=	(*(c->super))->is_missing;
-	c->pack_long	=	(*(c->super))->pack_long;
-	c->pack_double	=	(*(c->super))->pack_double;
 	c->pack_string	=	(*(c->super))->pack_string;
 	c->pack_string_array	=	(*(c->super))->pack_string_array;
 	c->pack_bytes	=	(*(c->super))->pack_bytes;
@@ -199,7 +200,7 @@ void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor* a,gr
 static void init(grib_accessor* a, const long len, grib_arguments* params) {
 
   a->length = 0;
-  a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+  /* a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -252,9 +253,21 @@ static int unpack_string (grib_accessor* a, char* val, size_t *len)
   char* str=NULL;
   char* p=0;
   size_t slen=0;
+  const char* sval[100]={0,};
+  double dval=0;
+  size_t dlen=1;
 
   int ret=0,i,idx;
   grib_context* c=a->parent->h->context;
+
+  if (self->type != BUFR_DESCRIPTOR_TYPE_STRING) {
+    unpack_double(a,&dval,&dlen);
+    sprintf(sval,"%g",dval);
+    slen=strlen(sval);
+    if (len < slen) return GRIB_ARRAY_TOO_SMALL;
+    strcpy(val,sval);
+    return GRIB_SUCCESS;
+  }
 
   if (self->compressedData) {
     idx=(int)self->numericValues->v[self->index]->v[0]/1000-1;
@@ -330,6 +343,52 @@ static int unpack_double (grib_accessor* a, double* val, size_t *len)
     *len=count;
   } else {
     val[0]=self->numericValues->v[self->subsetNumber]->v[self->index];
+    *len=1;
+  }
+
+  return ret;
+}
+
+static int pack_double(grib_accessor* a, const double* val, size_t *len)
+{
+  grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
+  int ret=0,i;
+  long count=0;
+
+  value_count(a,&count);
+
+  if (*len<count) return GRIB_ARRAY_TOO_SMALL;
+
+  if (self->compressedData) {
+    for (i=0;i<count;i++) {
+      self->numericValues->v[self->index]->v[i]=val[i];
+    }
+    *len=count;
+  } else {
+    self->numericValues->v[self->subsetNumber]->v[self->index]=val[0];
+    *len=1;
+  }
+
+  return ret;
+}
+
+static int pack_long(grib_accessor* a, const long* val, size_t *len)
+{
+  grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
+  int ret=0,i;
+  long count=0;
+
+  value_count(a,&count);
+
+  if (*len<count) return GRIB_ARRAY_TOO_SMALL;
+
+  if (self->compressedData) {
+    for (i=0;i<count;i++) {
+      self->numericValues->v[self->index]->v[i] = val[i] ==  GRIB_MISSING_LONG ? GRIB_MISSING_DOUBLE : val[i];
+    }
+    *len=count;
+  } else {
+    self->numericValues->v[self->subsetNumber]->v[self->index] = val[0] ==  GRIB_MISSING_LONG ? GRIB_MISSING_DOUBLE : val[0];
     *len=1;
   }
 

@@ -1001,7 +1001,7 @@ static int compare_all_dump_keys(grib_handle* h1,grib_handle* h2,grib_runtime_op
     {
         grib_accessor* xa=grib_keys_iterator_get_accessor(iter);
         name=grib_keys_iterator_get_name(iter);
-        /*printf("----- comparing %s\n",name);*/
+        printf("----- comparing %s\n",name);
 
         if (blacklisted(name)) continue;
         if (xa==NULL || ( xa->flags & GRIB_ACCESSOR_FLAG_DUMP )==0 ) continue;
@@ -1108,10 +1108,10 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
         GRIB_CHECK_NOLINE(grib_get_message(h2,&msg2,&size2),0);
         if (size1==size2 && !(memcmp_ret=memcmp(msg1,msg2,size1))) {
             return 0;
-        }
+        } 
 #if 0
-        else if (options->mode == MODE_BUFR ) {
-            int lcount=count;
+        else {
+            int lcount=count,ii;
             if (options->current_infile) lcount=options->current_infile->filter_handle_count;
             if (size1 != size2) {
                 printf("#%d different size: %d!=%d\n",lcount,(int)size1,(int)size2);

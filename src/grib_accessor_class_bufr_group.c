@@ -16,7 +16,7 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_variable
-   IMPLEMENTS = init;dump
+   IMPLEMENTS = init;dump;next
    END_CLASS_DEF
 
  */
@@ -34,6 +34,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
+static grib_accessor* next(grib_accessor*, int);
 
 typedef struct grib_accessor_bufr_group {
     grib_accessor          att;
@@ -82,7 +83,7 @@ static grib_accessor_class _grib_accessor_class_bufr_group = {
     0,            /* preferred_size   */
     0,                    /* resize   */
     0,      /* nearest_smaller_value */
-    0,                       /* next accessor    */
+    &next,                       /* next accessor    */
     0,                    /* compare vs. another accessor   */
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
@@ -120,7 +121,6 @@ static void init_class(grib_accessor_class* c)
 	c->preferred_size	=	(*(c->super))->preferred_size;
 	c->resize	=	(*(c->super))->resize;
 	c->nearest_smaller_value	=	(*(c->super))->nearest_smaller_value;
-	c->next	=	(*(c->super))->next;
 	c->compare	=	(*(c->super))->compare;
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
@@ -138,5 +138,20 @@ static void init(grib_accessor* a, const long length , grib_arguments* args )
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
   grib_dump_section(dumper,a,a->sub_section->block);
+}
+
+static grib_accessor* next(grib_accessor* a,int explore) {
+  grib_accessor* next=NULL;
+  if (explore) {
+    next=a->sub_section->block->first;
+    if (!next) next=a->next;
+  } else {
+      next=a->next;
+  }
+  if (!next) {
+    if (a->parent->owner)
+      next=a->parent->owner->cclass->next(a->parent->owner,0);
+  }
+  return next;
 }
 

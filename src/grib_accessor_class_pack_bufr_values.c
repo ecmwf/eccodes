@@ -197,6 +197,9 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
 
 static int    pack_double   (grib_accessor* a, const double* val, size_t *len)
 {
-  return GRIB_NOT_IMPLEMENTED;
+  grib_accessor_pack_bufr_values* self = (grib_accessor_pack_bufr_values*)a;
+  grib_accessor* data=(grib_accessor*)self->data_accessor;
+
+  return grib_pack_double(data,0,0);
 }
 

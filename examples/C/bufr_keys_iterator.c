@@ -102,7 +102,7 @@ int main(int argc,char* argv[])
             CODES_CHECK(codes_get_size(h,name,&klen),0);
 
             /* not array */
-            if(klen ==1 || keyType == CODES_TYPE_STRING)
+            if(klen ==1)
             {    
                 vlen=MAX_VAL_LEN;
                 bzero(value,vlen);

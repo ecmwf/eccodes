@@ -22,6 +22,7 @@ meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSect
 meta stringValues bufr_string_values(numericValues);
 
 meta unpack unpack_bufr_values(numericValues) ;
+meta pack pack_bufr_values(numericValues) ;
 
 #when (changed(unexpandedDescriptors)) {
   # resize data section and unpack
