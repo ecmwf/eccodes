@@ -1001,7 +1001,7 @@ static int compare_all_dump_keys(grib_handle* h1,grib_handle* h2,grib_runtime_op
     {
         grib_accessor* xa=grib_keys_iterator_get_accessor(iter);
         name=grib_keys_iterator_get_name(iter);
-        printf("----- comparing %s\n",name);
+        /* printf("----- comparing %s\n",name); */
 
         if (blacklisted(name)) continue;
         if (xa==NULL || ( xa->flags & GRIB_ACCESSOR_FLAG_DUMP )==0 ) continue;

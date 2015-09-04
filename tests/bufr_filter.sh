@@ -713,8 +713,26 @@ ${tools_dir}/bufr_filter $fRulesReady $f 2>> $fLog 1>> $testScript
 
 ./$testScript
 
-#rm -f new_*bufr 
-#rm -f $testScript
+rm -f new_*bufr 
+rm -f $testScript
+
+#-----------------------------------------------------------
+# Test:  packing   
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set unpack=1;
+set pack=1;
+write;
+EOF
+
+f="syno_1.bufr"
+echo "Test: packing " >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}/bufr_filter -o ${f}.out $fRules $f 2>> $fLog 1>> $fLog
+
+${tools_dir}/bufr_compare ${f}.out $f
+
+rm -f ${f}.out
 
 #-----------------------------------------------------------
 # Test:  get string
