@@ -725,14 +725,25 @@ set pack=1;
 write;
 EOF
 
-f="syno_1.bufr"
-echo "Test: packing " >> $fLog
-echo "file: $f" >> $fLog
-${tools_dir}/bufr_filter -o ${f}.out $fRules $f 2>> $fLog 1>> $fLog
+files="207003.bufr airc_142.bufr airc_144.bufr amda_144.bufr atms_201.bufr avhr_58.bufr b002_95.bufr 
+b002_96.bufr b004_145.bufr b006_96.bufr b007_31.bufr bssh_178.bufr btem_109.bufr cnow_28.bufr 
+crit_202.bufr meta_140.bufr ocea_131.bufr ocea_21.bufr rada_250.bufr rado_250.bufr 
+ship_11.bufr ship_12.bufr ship_13.bufr ship_14.bufr ship_19.bufr ship_9.bufr soil_7.bufr stuk_7.bufr 
+syno_1.bufr syno_2.bufr syno_3.bufr syno_4.bufr syno_multi.bufr tros_31.bufr wavb_134.bufr"
 
-${tools_dir}/bufr_compare ${f}.out $f
+for f in $files
+do
+  echo "Test: packing " >> $fLog
+  echo "file: $f" >> $fLog
+  ${tools_dir}/bufr_filter -o ${f}.out $fRules $f 2>> $fLog 1>> $fLog
 
-rm -f ${f}.out
+  ${tools_dir}/bufr_compare ${f}.out $f
+
+  rm -f ${f}.out
+done
+
+
+rm -f $fRules
 
 #-----------------------------------------------------------
 # Test:  get string
