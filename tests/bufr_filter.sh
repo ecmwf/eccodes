@@ -686,7 +686,7 @@ b004_145.bufr b005_87.bufr b006_96.bufr b007_31.bufr bssh_178.bufr btem_109.bufr
 cmwn_87.bufr cnow_28.bufr cori_156.bufr crit_202.bufr emsg_87.bufr euwv_87.bufr fy3a_154.bufr fy3b_154.bufr
 go15_87.bufr goee_87.bufr goes_87.bufr goga_89.bufr hirb_55.bufr hirs_55.bufr ias1_240.bufr jaso_214.bufr
 meta_140.bufr mhen_55.bufr mhsa_55.bufr mhsb_55.bufr mhse_55.bufr modi_87.bufr modw_87.bufr monw_87.bufr
-mytemp.bufr ocea_131.bufr ocea_21.bufr out.bufr s4kn_165.bufr ship_11.bufr ship_12.bufr ship_13.bufr ship_14.bufr
+ocea_131.bufr ocea_21.bufr s4kn_165.bufr ship_11.bufr ship_12.bufr ship_13.bufr ship_14.bufr
 ship_19.bufr ship_9.bufr smin_49.bufr smis_49.bufr smiu_49.bufr smos_203.bufr sn4k_165.bufr soil_7.bufr
 ssbt_127.bufr stuk_7.bufr syno_1.bufr syno_2.bufr syno_3.bufr syno_4.bufr syno_multi.bufr tmr7_129.bufr
 tros_31.bufr wavb_134.bufr
