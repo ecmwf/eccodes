@@ -516,65 +516,97 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos,int i
     int err=0;
     int j;
     unsigned long lval;
-    int localReference=0,localWidth=0,modifiedWidth,modifiedReference;
-    int localRange;
-    double modifiedFactor;
+    long localReference=0,localWidth=0,modifiedWidth,modifiedReference;
+    long reference,allone;
+    double localRange,modifiedFactor,inverseFactor;
     size_t nvals,ii;
-    double min,max,maxAllowed;
+    double min,max,maxAllowed,minAllowed;
     double* v=NULL;
+    int thereIsAMissing=0;
 
     modifiedReference= self->expanded->v[i]->reference;
     modifiedFactor= self->expanded->v[i]->factor;
+    inverseFactor= grib_power(self->expanded->v[i]->scale,10);
     modifiedWidth= self->expanded->v[i]->width;
 
     maxAllowed=(grib_power(modifiedWidth,2)+modifiedReference)*modifiedFactor;
+    minAllowed=modifiedReference*modifiedFactor;
 
     nvals=grib_darray_used_size(dvalues);
     v=dvalues->v;
+
+    if (nvals==1) {
+      localWidth=0;
+      grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
+      if (*v == GRIB_MISSING_DOUBLE) {
+        grib_set_bits_on(buff->data,pos,modifiedWidth);
+      } else {
+        lval=round(*v * inverseFactor)-modifiedReference;
+        grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
+      }
+      grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
+      grib_encode_unsigned_longb(buff->data,localWidth,pos,6);
+      return err;
+    }
+
     ii=0;
-    do {
-        min=*v;
-        max=*v;
-        v++;
-        ii++;
-    } while (*v==GRIB_MISSING_DOUBLE && ii<nvals);
+    while (*v==GRIB_MISSING_DOUBLE && ii<nvals) {
+      thereIsAMissing=1;
+      v++;
+      ii++;
+    }
+    min=*v;
+    max=*v;
     while (ii<nvals) {
-        if (*v<min && *v!=GRIB_MISSING_DOUBLE) min=*v;
-        if (*v>max && *v!=GRIB_MISSING_DOUBLE) max=*v;
-        ii++;
-        v++;
+      if (*v<min && *v!=GRIB_MISSING_DOUBLE) min=*v;
+      if (*v>max && *v!=GRIB_MISSING_DOUBLE) max=*v;
+      if (*v == GRIB_MISSING_DOUBLE) thereIsAMissing=1;
+      ii++;
+      v++;
     }
     if (max>maxAllowed && max!=GRIB_MISSING_DOUBLE) return GRIB_OUT_OF_RANGE;
-    if (min<0 && min!=GRIB_MISSING_DOUBLE) return GRIB_OUT_OF_RANGE;
+    if (min<minAllowed && min!=GRIB_MISSING_DOUBLE) return GRIB_OUT_OF_RANGE;
 
     if (max!=min) {
-        int reference=min/modifiedFactor;
-        localReference=reference-modifiedReference;
-        localRange = (max/modifiedFactor-localReference-modifiedReference);
-        localWidth=ceil(log((double)localRange)/log(2.0));
+      reference=round(min*inverseFactor);
+      localReference=reference-modifiedReference;
+      localRange = (max-min)*inverseFactor+1;
+      localWidth=ceil(log(localRange)/log(2.0));
+      lval=round((max-min)*inverseFactor);
+      allone=grib_power(localWidth,2)-1;
+      if (allone == lval || localWidth == 1 ) localWidth++;
     } else {
-        localWidth=0;
+      if (thereIsAMissing==1) {
+        localWidth=1;
+        localReference=round(min*inverseFactor)-modifiedReference;
+        }
+      else localWidth=0;
     }
 
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
     if (localWidth) {
-        grib_encode_unsigned_longb(buff->data,localReference,pos,modifiedWidth);
+      grib_encode_unsigned_longb(buff->data,localReference,pos,modifiedWidth);
     } else {
+      if (min==GRIB_MISSING_DOUBLE) {
         grib_set_bits_on(buff->data,pos,modifiedWidth);
+      } else {
+        lval=round(min*inverseFactor)-modifiedReference;
+        grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
+      }
     }
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
     grib_encode_unsigned_longb(buff->data,localWidth,pos,6);
 
     if (localWidth) {
-        grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+self->numberOfSubsets*localWidth);
-        for (j=0;j<self->numberOfSubsets;j++) {
-            if (dvalues->v[j]==GRIB_MISSING_DOUBLE) {
-                grib_set_bits_on(buff->data,pos,localWidth);
-            } else {
-                lval=round((dvalues->v[j]-min)/modifiedFactor);
-                grib_encode_unsigned_longb(buff->data,lval,pos,localWidth);
-            }
+      grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+self->numberOfSubsets*localWidth);
+      for (j=0;j<self->numberOfSubsets;j++) {
+        if (dvalues->v[j]==GRIB_MISSING_DOUBLE) {
+          grib_set_bits_on(buff->data,pos,localWidth);
+        } else {
+          lval=round((dvalues->v[j]-min)*inverseFactor);
+          grib_encode_unsigned_longb(buff->data,lval,pos,localWidth);
         }
+      }
     }
 
     return err;
@@ -584,7 +616,7 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,int i
         grib_accessor_bufr_data_array* self,double value)
 {
     unsigned long lval;
-    double maxAllowed;
+    double maxAllowed,minAllowed;
     int err=0;
     int modifiedWidth,modifiedReference;
     double modifiedFactor;
@@ -599,7 +631,8 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,int i
         grib_set_bits_on(buff->data,pos,modifiedWidth);
     } else {
         maxAllowed=(grib_power(modifiedWidth,2)+modifiedReference)*modifiedFactor;
-        if (value>maxAllowed) return GRIB_OUT_OF_RANGE;
+        minAllowed=modifiedReference*modifiedFactor;
+        if (value>maxAllowed || value<minAllowed) return GRIB_OUT_OF_RANGE;
         lval=round(value/modifiedFactor)-modifiedReference;
         grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
     }
@@ -823,10 +856,8 @@ static int encode_new_replication(grib_context* c,grib_accessor_bufr_data_array*
 static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
         grib_buffer* buff,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,grib_sarray* sval)
 {
-    int index=0,ii,idx;
+    int index=0,ii,idx,j;
     char* csval=0;
-    unsigned char missingChar=0xFF;
-    double cdval=GRIB_MISSING_DOUBLE;
     int err=0;
     size_t slen;
 
@@ -845,12 +876,20 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         }
     } else {
         /* numeric or codetable or flagtable */
-        /* grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding: \t %s = %g", 
-                 self->expanded->v[i]->shortName,cdval); */
         if (self->compressedData) {
             err=encode_double_array(c,buff,pos,i,self,self->numericValues->v[elementIndex]);
+            if (err) {
+              grib_context_log(c,GRIB_LOG_ERROR,"encoding %s ( code=%6.6ld width=%ld scale=%g reference=%d )",
+                self->expanded->v[i]->shortName, self->expanded->v[i]->code, self->expanded->v[i]->width,
+                self->expanded->v[i]->scale, self->expanded->v[i]->reference);
+              for (j=0;j<grib_darray_used_size(self->numericValues->v[elementIndex]);j++)
+                grib_context_log(c,GRIB_LOG_ERROR,"%g ",self->numericValues->v[elementIndex]->v[i]);
+            }
         } else {
             err=encode_double_value(c,buff,pos,i,self,self->numericValues->v[subsetIndex]->v[elementIndex]);
+            if (err) {
+              grib_context_log(c,GRIB_LOG_ERROR,"encoding %s=%g",self->expanded->v[i]->name,self->numericValues->v[subsetIndex]->v[elementIndex]);
+            }
         }
     }
     return err;
@@ -1621,24 +1660,31 @@ static int process_elements(grib_accessor* a,int flag)
                 break;
               case 35:
                 /* cancel bitmap */
-                if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
-                if (decoding) push_zero_element(self,dval);
-                if (descriptors[i]->Y==0) cancel_bitmap(self);
+                if (flag!=PROCESS_ENCODE) {
+                  grib_iarray_push(elementsDescriptorsIndex,i);
+                  if (decoding) push_zero_element(self,dval);
+                  if (descriptors[i]->Y==0) cancel_bitmap(self);
+                }
 				        elementIndex++;
                 break;
               case 36:
                 /* bitmap */
-                grib_iarray_push(elementsDescriptorsIndex,i);
-                if (decoding) push_zero_element(self,dval);
-                build_bitmap(self,data,&pos,elementsDescriptorsIndex,i);
+                if (flag!=PROCESS_ENCODE) {
+                  grib_iarray_push(elementsDescriptorsIndex,i);
+                  if (decoding) push_zero_element(self,dval);
+                  build_bitmap(self,data,&pos,elementsDescriptorsIndex,i);
+                }
+				        elementIndex++;
                 break;
               case 37:
                 /* reuse defined bitmap */
-                if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
-                if (decoding) push_zero_element(self,dval);
-                if (descriptors[i]->Y==0) restart_bitmap(self);
-                /* cancel reuse */
-                else cancel_bitmap(self);
+                if (flag!=PROCESS_ENCODE) {
+                  grib_iarray_push(elementsDescriptorsIndex,i);
+                  if (decoding) push_zero_element(self,dval);
+                  if (descriptors[i]->Y==0) restart_bitmap(self);
+                  /* cancel reuse */
+                  else cancel_bitmap(self);
+                }
 				        elementIndex++;
                 break;
               default :

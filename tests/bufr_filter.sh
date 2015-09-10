@@ -648,53 +648,6 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 
 #-----------------------------------------------------------
-# Test: set unexpandedDescriptors 
-#-----------------------------------------------------------
-cat > $fRules <<EOF
-print "== unexpandedDescriptors ==";
-print "[unexpandedDescriptors!16]";
-print "== setting unexpandedDescriptors ==";
-print "309007 104000 31001 7004 8001 11061 11062 222000 101000 31002 31031 1031 1032 101000 31002 33007";
-set unexpandedDescriptors={309007, 104000, 31001, 7004, 8001, 11061, 11062, 222000, 101000, 31002, 31031, 1031, 1032, 101000, 31002, 33007 };
-write "mytemp.bufr";
-print "== unexpandedDescriptors ==";
-print "[unexpandedDescriptors!16]";
-print "== expandedDescriptors ==";
-print "[expandedDescriptors]";
-write;
-EOF
-
-f="syno_1.bufr"
-fref="new.bufr"
-echo "Test: set unexpandedDescriptors" >> $fLog
-echo "file: $f" >> $fLog
-${tools_dir}/bufr_filter -o ${f}.out $fRules $f 2> ${f}.log 1> ${f}.log
-cat > ${f}.ref <<EOF
-== unexpandedDescriptors ==
-307005 13023 13013 222000 101049 31031 1031 1032 101049 33007
-== setting unexpandedDescriptors ==
-309007 104000 31001 7004 8001 11061 11062 222000 101000 31002 31031 1031 1032 101000 31002 33007
-== unexpandedDescriptors ==
-309007 104000 31001 7004 8001 11061 11062 222000 101000 31002 31031 1031 1032 101000 31002 33007
-
-== expandedDescriptors ==
-1001 1002 2011 2012 4001 4002 4003 4004 
-4005 5001 6001 7001 20010 8002 20011 20013 
-20012 20012 20012 107000 31001 7004 8001 10003 
-12001 12003 11001 11002 104000 31001 7004 8001 
-11061 11062 222000 101000 31002 31031 1031 1032 
-101000 31002 33007
-EOF
-
-diff ${f}.ref ${f}.log 
-
-rm -f ${f}.ref ${f}.log
-
-cmp $fref ${f}.out
-
-rm -f ${f}.out
-
-#-----------------------------------------------------------
 # Test: set unexpandedDescriptors big test
 #-----------------------------------------------------------
 fRulesReady="set_unexpandedDescriptors.filter"
@@ -725,11 +678,19 @@ set pack=1;
 write;
 EOF
 
-files="207003.bufr airc_142.bufr airc_144.bufr amda_144.bufr atms_201.bufr avhr_58.bufr b002_95.bufr 
-b002_96.bufr b004_145.bufr b006_96.bufr b007_31.bufr bssh_178.bufr btem_109.bufr cnow_28.bufr 
-crit_202.bufr meta_140.bufr ocea_131.bufr ocea_21.bufr rada_250.bufr rado_250.bufr 
-ship_11.bufr ship_12.bufr ship_13.bufr ship_14.bufr ship_19.bufr ship_9.bufr soil_7.bufr stuk_7.bufr 
-syno_1.bufr syno_2.bufr syno_3.bufr syno_4.bufr syno_multi.bufr tros_31.bufr wavb_134.bufr"
+files=" 207003.bufr aaen_55.bufr aben_55.bufr ahws_139.bufr airc_142.bufr airc_144.bufr alws_139.bufr amda_144.bufr
+amsa_55.bufr amsb_55.bufr amse_55.bufr amsu_55.bufr amv2_87.bufr amv3_87.bufr asbh_139.bufr asbl_139.bufr
+asca_139.bufr asch_139.bufr ascs_139.bufr aseh_139.bufr asel_139.bufr ashs_139.bufr atap_55.bufr ateu_155.bufr
+atms_201.bufr atov_55.bufr avhm_87.bufr avhn_87.bufr avhr_58.bufr b002_95.bufr b002_96.bufr b003_56.bufr
+b004_145.bufr b005_87.bufr b006_96.bufr b007_31.bufr bssh_178.bufr btem_109.bufr buoy_27.bufr cmwi_87.bufr
+cmwn_87.bufr cnow_28.bufr cori_156.bufr crit_202.bufr emsg_87.bufr euwv_87.bufr fy3a_154.bufr fy3b_154.bufr
+go15_87.bufr goee_87.bufr goes_87.bufr goga_89.bufr hirb_55.bufr hirs_55.bufr ias1_240.bufr jaso_214.bufr
+meta_140.bufr mhen_55.bufr mhsa_55.bufr mhsb_55.bufr mhse_55.bufr modi_87.bufr modw_87.bufr monw_87.bufr
+mytemp.bufr ocea_131.bufr ocea_21.bufr out.bufr s4kn_165.bufr ship_11.bufr ship_12.bufr ship_13.bufr ship_14.bufr
+ship_19.bufr ship_9.bufr smin_49.bufr smis_49.bufr smiu_49.bufr smos_203.bufr sn4k_165.bufr soil_7.bufr
+ssbt_127.bufr stuk_7.bufr syno_1.bufr syno_2.bufr syno_3.bufr syno_4.bufr syno_multi.bufr tmr7_129.bufr
+tros_31.bufr wavb_134.bufr
+"
 
 for f in $files
 do
