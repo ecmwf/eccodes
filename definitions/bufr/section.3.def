@@ -65,8 +65,9 @@ flags[1]        section3Flags 'bufr/section3_flags.table';
 flagbit observedData(section3Flags,7) : dump;
 flagbit compressedData(section3Flags,6) : dump;
 position offsetDescriptors;
+transient createNewData=1;
 meta numberOfUnexpandedDescriptors   evaluate( (section3Length - 7) / 2 ) ;
-meta unexpandedDescriptors unexpanded_descriptors(numberOfUnexpandedDescriptors) :dump;
+meta unexpandedDescriptors unexpanded_descriptors(numberOfUnexpandedDescriptors,createNewData) :dump;
 
 meta elementsTable bufr_elements_table("element.table",tablesMasterDir,tablesLocalDir) : hidden; 
 

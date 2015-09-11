@@ -23,6 +23,7 @@
    IMPLEMENTS = byte_offset
    IMPLEMENTS = update_size
    MEMBERS    = const char* numberOfUnexpandedDescriptors
+   MEMBERS    = const char* createNewData
 
    END_CLASS_DEF
 
@@ -55,6 +56,7 @@ typedef struct grib_accessor_unexpanded_descriptors {
 /* Members defined in long */
 /* Members defined in unexpanded_descriptors */
 	const char* numberOfUnexpandedDescriptors;
+  const char* createNewData;
 } grib_accessor_unexpanded_descriptors;
 
 extern grib_accessor_class* grib_accessor_class_long;
@@ -154,6 +156,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
     grib_accessor_unexpanded_descriptors* self = (grib_accessor_unexpanded_descriptors*)a;
     int n=0;
     self->numberOfUnexpandedDescriptors=grib_arguments_get_name(a->parent->h,args,n++);
+    self->createNewData=grib_arguments_get_name(a->parent->h,args,n++);
     a->length = compute_byte_count(a);
 }
 
@@ -205,6 +208,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 
 static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
 {
+    grib_accessor_unexpanded_descriptors* self = (grib_accessor_unexpanded_descriptors*)a;
     int ret=0,i;
     long pos = 0;
     unsigned long f,x,y;
@@ -212,6 +216,9 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
     grib_accessor* expanded=NULL;
     size_t buflen=*len*2;
     long section3Length,totalLength;
+    long createNewData=1;
+
+    grib_get_long(a->parent->h,self->createNewData,&createNewData);
 
     buf=(unsigned char*)grib_context_malloc_clear(a->parent->h->context,buflen);
 
@@ -233,6 +240,8 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
 
     grib_set_long(a->parent->h,"totalLength",totalLength);
     grib_set_long(a->parent->h,"section3Length",section3Length);
+    if (createNewData==0) return ret;
+
     expanded=grib_find_accessor(a->parent->h,"expandedCodes");
     Assert(expanded!=NULL);
     grib_accessor_class_expanded_descriptors_set_do_expand(expanded,1);

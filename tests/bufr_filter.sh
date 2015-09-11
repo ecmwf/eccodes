@@ -867,3 +867,24 @@ rm -f ${dSplit}/*
 rm -f $fLog $fRules 
 rm -f $fBufrTmp | true
 
+#-----------------------------------------------------------
+# Test: set unexpandedDescriptors no create new data
+#-----------------------------------------------------------
+f="syno_1.bufr"
+testScript="set_unexpandedDescriptors_test.sh"
+echo "Test: set unexpandedDescriptors no create new data" >> $fLog
+echo "file: $f" >> $fLog
+
+cat >$fRules <<EOF
+set unpack=1;
+set createNewData=0;
+set unexpandedDescriptors={307005,13023,13013,222000,101049,31031,1031,1032,101049,33007};
+write;
+
+EOF
+
+${tools_dir}/bufr_filter $fRules -o ${f}.out $f 2>> $fLog 1>> $fLog
+${tools_dir}/bufr_compare ${f}.out $f 2>> $fLog 1>> $fLog
+
+rm -f  ${f}.out 
+
