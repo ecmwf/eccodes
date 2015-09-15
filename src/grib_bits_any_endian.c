@@ -65,7 +65,7 @@ int grib_encode_string(const unsigned char* bitStream, long *bitOffset, size_t n
     }
 
     for (i=0;i<numberOfCharacters;i++) {
-        c=(*s)>>remainder;
+        c=((*s)>>remainder) & ~mask[remainder];
         *p |= c;
         p++;
         *p = ((*s)<<remainderComplement) & mask[remainder];

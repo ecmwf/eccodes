@@ -56,7 +56,7 @@ typedef struct grib_accessor_unexpanded_descriptors {
 /* Members defined in long */
 /* Members defined in unexpanded_descriptors */
 	const char* numberOfUnexpandedDescriptors;
-  const char* createNewData;
+	const char* createNewData;
 } grib_accessor_unexpanded_descriptors;
 
 extern grib_accessor_class* grib_accessor_class_long;
@@ -246,6 +246,7 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
     Assert(expanded!=NULL);
     grib_accessor_class_expanded_descriptors_set_do_expand(expanded,1);
     grib_set_long(a->parent->h,"unpack",3);
+    grib_set_long(a->parent->h,"unpack",1);
 
     return ret;
 }

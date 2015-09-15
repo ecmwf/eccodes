@@ -408,7 +408,7 @@ static void decode_string_array(grib_context* c,unsigned char* data,long* pos, i
     *err=check_end_data(c,self,modifiedWidth);
     if (*err) return ;
     grib_decode_string(data,pos,modifiedWidth/8,sval);
-    clean_string(sval,modifiedWidth/8);
+    /* clean_string(sval,modifiedWidth/8); */
     *err=check_end_data(c,self,6);
     if (*err) return ;
     width=grib_decode_unsigned_long(data,pos,6);
@@ -419,7 +419,7 @@ static void decode_string_array(grib_context* c,unsigned char* data,long* pos, i
         for (j=0;j<self->numberOfSubsets;j++) {
             sval=(char*)grib_context_malloc_clear(c,width+1);
             grib_decode_string(data,pos,width,sval);
-            clean_string(sval,width);
+            /* clean_string(sval,width); */
             grib_sarray_push(c,self->stringValues,sval);
         }
     } else {
@@ -487,7 +487,7 @@ static int encode_string_array(grib_context* c,grib_buffer* buff,long* pos, int 
       n=stringValues->n;
       end=n+1;
     } else  {
-      end=start+n+1;
+      end=start+n;
     }
 
     modifiedWidth= self->expanded->v[i]->width;
@@ -504,7 +504,7 @@ static int encode_string_array(grib_context* c,grib_buffer* buff,long* pos, int 
         grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
         grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+width*n);
         for (j=start;j<end;j++) {
-            grib_encode_string(buff->data,pos,width,stringValues->v[j]);
+            grib_encode_string(buff->data,pos,width/8,stringValues->v[j]);
         }
     }
     return err;
@@ -669,7 +669,7 @@ static char* decode_string_value(grib_context* c,unsigned char* data,long* pos, 
     sval=(char*)grib_context_malloc_clear(c,len+1);
     grib_decode_string(data,pos,len,sval);
 
-    clean_string(sval,len);
+    /* clean_string(sval,len); */
 
     return sval;
 }

@@ -734,6 +734,8 @@ rm -f ${f}.ref ${f}.log
 cat > $fRules <<EOF
 set unpack=1;
 print "[stringValues!1]";
+print "====";
+print "[stationOrSiteName!1]";
 EOF
 
 f="synop_multi_subset.bufr"
@@ -743,18 +745,32 @@ ${tools_dir}/bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
 ${tools_dir}/bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
 cat > ${f}.ref <<EOF
-TROMSO-HOLT 
-PASVIK 
-KVITHAMAR 
-FROSTA 
-FURUNESET 
-LOKEN I VOLBU 
-APELSVOLL 
-KISE 
-FAVANG 
-SAERHEIM 
-LANDVIK 
-SANDE-GALLEBERG
+TROMSO-HOLT          
+PASVIK               
+KVITHAMAR            
+FROSTA               
+FURUNESET            
+LOKEN I VOLBU        
+APELSVOLL            
+KISE                 
+FAVANG               
+SAERHEIM             
+LANDVIK              
+SANDE-GALLEBERG     
+
+====
+TROMSO-HOLT          
+PASVIK               
+KVITHAMAR            
+FROSTA               
+FURUNESET            
+LOKEN I VOLBU        
+APELSVOLL            
+KISE                 
+FAVANG               
+SAERHEIM             
+LANDVIK              
+SANDE-GALLEBERG     
 
 EOF
 
@@ -887,4 +903,33 @@ ${tools_dir}/bufr_filter $fRules -o ${f}.out $f 2>> $fLog 1>> $fLog
 ${tools_dir}/bufr_compare ${f}.out $f 2>> $fLog 1>> $fLog
 
 rm -f  ${f}.out 
+
+#-----------------------------------------------------------
+# Test: set keys in data section
+#-----------------------------------------------------------
+f="syno_1.bufr"
+fout="311001.bufr"
+echo "Test: set keys in data section" >> $fLog
+echo "file: $f" >> $fLog
+
+cat >$fRules <<EOF
+set masterTablesVersionNumber=20;
+set localTablesVersionNumber=0;
+set compressedData=1;
+set numberOfSubsets=10;
+set unexpandedDescriptors={311001};
+
+set windSpeed={1,2,3,4,5,6,7,8,9,10};
+set windDirection={3,4,5,6,7,8,9,10,11};
+set aircraftFlightNumber="1234";
+
+set pack=1;
+write;
+
+EOF
+
+${tools_dir}/bufr_filter $fRules -o ${fout} $f 2>> $fLog 1>> $fLog
+${tools_dir}/bufr_compare $fout ${fout}.ref 2>> $fLog 1>> $fLog
+
+rm -f $fRules  ${fout} 
 

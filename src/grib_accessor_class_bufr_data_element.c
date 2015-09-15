@@ -22,7 +22,7 @@
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = init;dump
    IMPLEMENTS = unpack_string;unpack_string_array;unpack_long; unpack_double
-   IMPLEMENTS = pack_long; pack_double
+   IMPLEMENTS = pack_long; pack_double ; pack_string_array; pack_string
    IMPLEMENTS = value_count; destroy; get_native_type;
    MEMBERS    = long index
    MEMBERS    = int type
@@ -51,6 +51,8 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int  get_native_type(grib_accessor*);
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int pack_long(grib_accessor*, const long* val,size_t *len);
+static int pack_string(grib_accessor*, const char*, size_t *len);
+static int pack_string_array(grib_accessor*, const char**, size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
 static int unpack_string (grib_accessor*, char*, size_t *len);
@@ -101,9 +103,9 @@ static grib_accessor_class _grib_accessor_class_bufr_data_element = {
     &unpack_long,                /* grib_unpack procedures long    */
     &pack_double,                /* grib_pack procedures double    */
     &unpack_double,              /* grib_unpack procedures double  */
-    0,                /* grib_pack procedures string    */
+    &pack_string,                /* grib_pack procedures string    */
     &unpack_string,              /* grib_unpack procedures string  */
-    0,          /* grib_pack array procedures string    */
+    &pack_string_array,          /* grib_pack array procedures string    */
     &unpack_string_array,        /* grib_unpack array procedures string  */
     0,                 /* grib_pack procedures bytes     */
     0,               /* grib_unpack procedures bytes   */
@@ -133,8 +135,6 @@ static void init_class(grib_accessor_class* c)
 	c->sub_section	=	(*(c->super))->sub_section;
 	c->pack_missing	=	(*(c->super))->pack_missing;
 	c->is_missing	=	(*(c->super))->is_missing;
-	c->pack_string	=	(*(c->super))->pack_string;
-	c->pack_string_array	=	(*(c->super))->pack_string_array;
 	c->pack_bytes	=	(*(c->super))->pack_bytes;
 	c->unpack_bytes	=	(*(c->super))->unpack_bytes;
 	c->pack_expression	=	(*(c->super))->pack_expression;
@@ -247,13 +247,18 @@ static int unpack_string_array (grib_accessor* a, char** val, size_t *len)
   return ret;
 }
 
+
+static int pack_string_array(grib_accessor*a , const char**  v, size_t *len){
+  return GRIB_NOT_IMPLEMENTED;
+}
+
 static int unpack_string (grib_accessor* a, char* val, size_t *len)
 {
   grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
   char* str=NULL;
   char* p=0;
   size_t slen=0;
-  const char* sval[100]={0,};
+  char sval[100]={0,};
   double dval=0;
   size_t dlen=1;
 
@@ -264,7 +269,7 @@ static int unpack_string (grib_accessor* a, char* val, size_t *len)
     unpack_double(a,&dval,&dlen);
     sprintf(sval,"%g",dval);
     slen=strlen(sval);
-    if (len < slen) return GRIB_ARRAY_TOO_SMALL;
+    if (*len < slen) return GRIB_ARRAY_TOO_SMALL;
     strcpy(val,sval);
     return GRIB_SUCCESS;
   }
@@ -297,6 +302,33 @@ static int unpack_string (grib_accessor* a, char* val, size_t *len)
   strcpy(val,str);
   grib_context_free(c,str);
   *len=slen;
+
+  return ret;
+}
+
+static int pack_string(grib_accessor* a, const char* val, size_t *len)
+{
+  grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
+
+  int ret=0,i,idx;
+  long count=0;
+  grib_context* c=a->parent->h->context;
+
+  if (self->compressedData) {
+    count=self->numberOfSubsets;
+    idx=(int)self->numericValues->v[self->index]->v[0]/1000-1;
+    for (i=0;i<count;i++) {
+      grib_context_free(c,self->stringValues->v[idx]);
+      self->stringValues->v[idx]=grib_context_strdup(c,val);
+      idx++;
+    }
+    *len=count;
+  } else {
+    idx=(int)self->numericValues->v[self->subsetNumber]->v[self->index]/1000-1;
+    grib_context_free(c,self->stringValues->v[idx]);
+    self->stringValues->v[idx]=grib_context_strdup(c,val);
+    *len=1;
+  }
 
   return ret;
 }
@@ -353,16 +385,16 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
   grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
   int ret=0,i;
-  long count=0;
-
-  value_count(a,&count);
-
-  if (*len<count) return GRIB_ARRAY_TOO_SMALL;
+  long count=1,n;
 
   if (self->compressedData) {
-    for (i=0;i<count;i++) {
-      self->numericValues->v[self->index]->v[i]=val[i];
-    }
+    count=self->numberOfSubsets;
+    grib_darray_delete(a->parent->h->context,self->numericValues->v[self->index]);
+    self->numericValues->v[self->index]=grib_darray_new(a->parent->h->context,count,1);
+
+    for (i=0;i<count;i++)
+      grib_darray_push(a->parent->h->context,self->numericValues->v[self->index],val[i]);
+
     *len=count;
   } else {
     self->numericValues->v[self->subsetNumber]->v[self->index]=val[0];
@@ -376,15 +408,14 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
   grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
   int ret=0,i;
-  long count=0;
-
-  value_count(a,&count);
-
-  if (*len<count) return GRIB_ARRAY_TOO_SMALL;
+  long count=1;
 
   if (self->compressedData) {
+    count=self->numberOfSubsets;
+    grib_darray_delete(a->parent->h->context,self->numericValues->v[self->index]);
+
     for (i=0;i<count;i++) {
-      self->numericValues->v[self->index]->v[i] = val[i] ==  GRIB_MISSING_LONG ? GRIB_MISSING_DOUBLE : val[i];
+      grib_darray_push(a->parent->h->context,self->numericValues->v[self->index], val[i] ==  GRIB_MISSING_LONG ? GRIB_MISSING_DOUBLE : val[i]);
     }
     *len=count;
   } else {
