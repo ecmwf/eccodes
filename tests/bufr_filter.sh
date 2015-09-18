@@ -899,7 +899,7 @@ write;
 
 EOF
 
-${tools_dir}/bufr_filter $fRules -o ${f}.out $f 2>> $fLog 1>> $fLog
+${tools_dir}/bufr_filter -o ${f}.out $fRules $f 2>> $fLog 1>> $fLog
 ${tools_dir}/bufr_compare ${f}.out $f 2>> $fLog 1>> $fLog
 
 rm -f  ${f}.out 
@@ -928,7 +928,7 @@ write;
 
 EOF
 
-${tools_dir}/bufr_filter $fRules -o ${fout} $f 2>> $fLog 1>> $fLog
+${tools_dir}/bufr_filter -o ${fout} $fRules $f 2>> $fLog 1>> $fLog
 ${tools_dir}/bufr_compare $fout ${fout}.ref 2>> $fLog 1>> $fLog
 
 rm -f $fRules  ${fout} 
