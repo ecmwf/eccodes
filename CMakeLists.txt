@@ -14,7 +14,7 @@ set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} 
 
 include( ecbuild_system NO_POLICY_SCOPE )
 
-ecbuild_requires_macro_version( 1.7 )
+ecbuild_requires_macro_version( 1.9 )
 
 ###############################################################################
 # local project
@@ -62,7 +62,7 @@ ecbuild_add_option( FEATURE AEC
 ecbuild_add_option( FEATURE PYTHON
     DESCRIPTION "build the ecCodes Python interface"
     DEFAULT ON
-    # REQUIRED_LANGUAGES Python # TODO
+    REQUIRED_PACKAGES Python
 )
 
 ecbuild_add_option( FEATURE FORTRAN
@@ -96,6 +96,7 @@ set( ECCODES_EXTRA_INCLUDE_DIRS "" )
 set( ECCODES_EXTRA_DEFINITIONS  "" )
 
 find_package( CMath )
+list( APPEND ECCODES_TPLS CMath )
 
 ### JPG support
 
@@ -111,11 +112,13 @@ if( ENABLE_JPG )
     find_package( OpenJPEG )
 
     if( JASPER_FOUND )
+        list( APPEND ECCODES_TPLS Jasper )
         set( HAVE_JPEG 1 )
         set( HAVE_LIBJASPER 1 )
     endif()
 
     if( OPENJPEG_FOUND )
+        list( APPEND ECCODES_TPLS OpenJPEG )
         set( HAVE_JPEG 1 )
         set( HAVE_LIBOPENJPEG 1 )
     endif()
@@ -224,7 +227,6 @@ endif()
 
 ### export package to other ecbuild packages
 
-set( ECCODES_TPLS            AEC PNG Jasper OpenJPEG CMath )
 set( ECCODES_INCLUDE_DIRS    ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src )
 set( ECCODES_LIBRARIES       eccodes )
 
