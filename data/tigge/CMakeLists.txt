@@ -6,4 +6,5 @@ string(REGEX REPLACE "\n" ";" tigge_files_to_download "${tigge_files_to_download
 
 # Download all data files doing md5 check on each
 ecbuild_get_test_multidata( TARGET eccodes_get_tigge_gribs
+                            NOCHECK
                             NAMES ${tigge_files_to_download} )
