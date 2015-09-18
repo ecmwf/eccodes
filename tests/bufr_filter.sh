@@ -868,7 +868,7 @@ rm -f $fBufrTmp | true
 f="syno_1.bufr"
 echo "Test: setting keys" >> $fLog
 echo "file: $f" >> $fLog
-#${tools_dir}/bufr_filter $fRules $f -o $fBufrTmp >> $fLog
+#${tools_dir}/bufr_filter -o $fBufrTmp $fRules $f >> $fLog
 
 #Check if the resulting bufr message is the right one
 cat > $fRules <<EOF
