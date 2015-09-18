@@ -932,4 +932,4 @@ ${tools_dir}/bufr_filter $fRules -o ${fout} $f 2>> $fLog 1>> $fLog
 ${tools_dir}/bufr_compare $fout ${fout}.ref 2>> $fLog 1>> $fLog
 
 rm -f $fRules  ${fout} 
-
+rm -f $fLog
