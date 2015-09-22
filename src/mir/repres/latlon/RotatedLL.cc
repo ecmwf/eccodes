@@ -67,6 +67,11 @@ void RotatedLL::fill(grib_info &info) const  {
     rotation_.fill(info);
 }
 
+void RotatedLL::fill(api::MIRJob &job) const  {
+    RegularLL::fill(job);
+    rotation_.fill(job);
+}
+
 atlas::Grid *RotatedLL::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
     return new atlas::grids::RotatedGrid(RegularLL::atlasGrid(),

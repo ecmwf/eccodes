@@ -175,6 +175,11 @@ void LatLon::fill(grib_info &info) const  {
 
 }
 
+void LatLon::fill(api::MIRJob &job) const  {
+    increments_.fill(job);
+    bbox_.fill(job);
+}
+
 class LatLonIterator: public Iterator {
     size_t ni_;
     size_t nj_;

@@ -16,6 +16,7 @@
 
 #include "atlas/grids/rgg/OctahedralRGG.h"
 #include "mir/util/Grib.h"
+#include "mir/api/MIRJob.h"
 
 namespace mir {
 namespace repres {
@@ -50,6 +51,13 @@ const std::vector<long>& Octahedral::pls() const {
 
 void Octahedral::fill(grib_info &info) const  {
     Reduced::fill(info);
+}
+
+void Octahedral::fill(api::MIRJob &job) const  {
+    Reduced::fill(job);
+    std::stringstream os;
+    os << "O" << N_;
+    job.set("gridname", os.str());
 }
 
 atlas::Grid *Octahedral::atlasGrid() const {

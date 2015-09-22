@@ -34,11 +34,19 @@ FromPL::~FromPL() {
 FromPL::FromPL(size_t N, const std::vector<long> &pl, const util::BoundingBox &bbox):
     Reduced(N, bbox),
     pl_(pl) {
+}
 
+FromPL::FromPL(const std::vector<long> &pl):
+    Reduced(pl.size()/2),
+    pl_(pl) {
 }
 
 void FromPL::fill(grib_info &info) const  {
     Reduced::fill(info);
+}
+
+void FromPL::fill(api::MIRJob &job) const  {
+    Reduced::fill(job);
 }
 
 atlas::Grid *FromPL::atlasGrid() const {

@@ -53,6 +53,11 @@ void RotatedGG::fill(grib_info &info) const  {
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_GG;
 }
 
+void RotatedGG::fill(api::MIRJob &job) const  {
+    Regular::fill(job);
+    rotation_.fill(job);
+}
+
 Iterator* RotatedGG::rotatedIterator() const {
     return new util::RotatedIterator(Regular::unrotatedIterator(), rotation_);
 }

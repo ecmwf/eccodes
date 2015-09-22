@@ -68,6 +68,10 @@ void RegularLL::fill(grib_info &info) const  {
 
 }
 
+void RegularLL::fill(api::MIRJob &job) const  {
+    LatLon::fill(job);
+}
+
 static bool check(double x, double dx) {
     double a = (x > 0 ? x : -x) / dx;
     return eckit::FloatCompare<double>::isApproximatelyEqual(size_t(a), a);

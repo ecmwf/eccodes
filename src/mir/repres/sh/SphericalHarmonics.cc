@@ -20,6 +20,7 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/sh/SphericalHarmonics.h"
 #include "mir/util/Grib.h"
+#include "mir/api/MIRJob.h"
 
 
 namespace mir {
@@ -56,6 +57,10 @@ void SphericalHarmonics::fill(grib_info &info) const  {
     info.packing.truncateLaplacian = 1;
     // info.packing.laplacianOperator = 0;
     info.packing.packing_type = GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX; // Check if this is needed, why does grib_api not copy input?
+}
+
+void SphericalHarmonics::fill(api::MIRJob& job) const {
+    job.set("resol", truncation_);
 }
 
 size_t SphericalHarmonics::truncation() const {

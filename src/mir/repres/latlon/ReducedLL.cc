@@ -23,6 +23,7 @@
 #include "mir/util/Compare.h"
 #include "mir/action/misc/AreaCropper.h"
 #include "mir/repres/Iterator.h"
+#include "mir/api/MIRJob.h"
 
 namespace mir {
 namespace repres {
@@ -48,6 +49,12 @@ void ReducedLL::fill(grib_info &info) const  {
     NOTIMP;
 }
 
+void ReducedLL::fill(api::MIRJob &job) const  {
+    bbox_.fill(job);
+    job.set("pl", pl_);
+    job.set("Nj", Nj_);
+    NOTIMP;
+}
 
 void ReducedLL::cropToDomain(const param::MIRParametrisation &parametrisation, data::MIRField &field) const {
     if (!globalDomain()) {

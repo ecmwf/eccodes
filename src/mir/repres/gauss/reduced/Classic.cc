@@ -19,6 +19,7 @@
 #include "atlas/grids/GaussianLatitudes.h"
 #include "mir/util/Grib.h"
 #include "eckit/log/Timer.h"
+#include "mir/api/MIRJob.h"
 
 namespace mir {
 namespace repres {
@@ -40,6 +41,13 @@ Classic::Classic(size_t N, const util::BoundingBox &bbox):
 void Classic::fill(grib_info &info) const  {
     Reduced::fill(info);
 // NOTE: We assume that grib_api will put the proper PL
+}
+
+void Classic::fill(api::MIRJob &job) const  {
+    Reduced::fill(job);
+    std::stringstream os;
+    os << "N" << N_;
+    job.set("gridname", os.str());
 }
 
 atlas::Grid *Classic::atlasGrid() const {

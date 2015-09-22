@@ -50,6 +50,10 @@ void RotatedOctahedral::fill(grib_info &info) const  {
 #endif
 }
 
+void RotatedOctahedral::fill(api::MIRJob &job) const  {
+    NOTIMP;
+}
+
 Iterator* RotatedOctahedral::rotatedIterator() const {
     return new util::RotatedIterator(Octahedral::unrotatedIterator(), rotation_);
 }

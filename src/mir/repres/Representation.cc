@@ -99,7 +99,13 @@ void Representation::validate(const std::vector<double> &) const {
 
 void Representation::fill(grib_info &) const {
     eckit::StrStream os;
-    os << "Representation::fill() not implemented for " << *this << eckit::StrStream::ends;
+    os << "Representation::fill(grib_info &) not implemented for " << *this << eckit::StrStream::ends;
+    throw eckit::SeriousBug(std::string(os));
+}
+
+void Representation::fill(api::MIRJob &) const {
+    eckit::StrStream os;
+    os << "Representation::fill(api::MIRJob &) not implemented for " << *this << eckit::StrStream::ends;
     throw eckit::SeriousBug(std::string(os));
 }
 

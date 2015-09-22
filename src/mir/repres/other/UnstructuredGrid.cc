@@ -48,6 +48,10 @@ void UnstructuredGrid::fill(grib_info &info) const  {
     NOTIMP;
 }
 
+void UnstructuredGrid::fill(api::MIRJob &job) const  {
+    NOTIMP;
+}
+
 bool UnstructuredGrid::globalDomain() const {
     eckit::Log::warning() << "UnstructuredGrid::globalDomain: assuming grid is global" << std::endl;
     return true;

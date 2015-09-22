@@ -50,6 +50,9 @@ void RotatedClassic::fill(grib_info &info) const  {
 #endif
 }
 
+void RotatedClassic::fill(api::MIRJob &job) const  {
+    NOTIMP;
+}
 
 Iterator* RotatedClassic::rotatedIterator() const {
     return new util::RotatedIterator(Classic::unrotatedIterator(), rotation_);

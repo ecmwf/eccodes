@@ -53,6 +53,10 @@ void RotatedFromPL::fill(grib_info &info) const  {
 #endif
 }
 
+void RotatedFromPL::fill(api::MIRJob &job) const  {
+    NOTIMP;
+}
+
 atlas::Grid *RotatedFromPL::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
     return new atlas::grids::RotatedGrid(FromPL::atlasGrid(),

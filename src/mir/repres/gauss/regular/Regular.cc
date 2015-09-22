@@ -26,6 +26,7 @@
 #include "mir/util/Compare.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
+#include "mir/api/MIRJob.h"
 
 namespace mir {
 namespace repres {
@@ -137,6 +138,13 @@ void Regular::fill(grib_info &info) const  {
     info.packing.extra_settings[j].name = "global";
     info.packing.extra_settings[j].long_value = globalDomain() ? 1 : 0;
 
+}
+
+void Regular::fill(api::MIRJob &job) const  {
+    ASSERT(globalDomain());
+    std::stringstream os;
+    os << "F" << N_;
+    job.set("gridname", os.str());
 }
 
 atlas::Grid *Regular::atlasGrid() const {

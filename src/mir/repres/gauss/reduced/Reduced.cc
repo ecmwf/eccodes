@@ -25,7 +25,7 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Grib.h"
-
+#include "mir/api/MIRJob.h"
 
 
 namespace mir {
@@ -134,8 +134,10 @@ void Reduced::fill(grib_info &info) const  {
 
 }
 
-
-
+void Reduced::fill(api::MIRJob &job) const  {
+    ASSERT(globalDomain());
+    job.set("pl", pls());
+}
 
 class GaussianIterator: public Iterator {
     std::vector<double> latitudes_;
