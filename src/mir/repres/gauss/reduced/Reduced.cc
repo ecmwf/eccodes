@@ -346,9 +346,9 @@ const Reduced *Reduced::cropped(const util::BoundingBox &bbox) const  {
 }
 
 const Reduced *Reduced::cropped(const util::BoundingBox &bbox, const std::vector<long> &) const {
-    eckit::StrStream os;
-    os << "Reduced::cropped() not implemented for " << *this << eckit::StrStream::ends;
-    throw eckit::SeriousBug(std::string(os));
+    std::stringstream os;
+    os << "Reduced::cropped() not implemented for " << *this ;
+    throw eckit::SeriousBug(os.str());
 }
 
 }  // namespace reduced

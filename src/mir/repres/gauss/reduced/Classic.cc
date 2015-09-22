@@ -52,16 +52,16 @@ void Classic::fill(api::MIRJob &job) const  {
 
 atlas::Grid *Classic::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
-    eckit::StrStream os;
-    os << "rgg.N" << N_ << eckit::StrStream::ends;
-    return atlas::Grid::create(std::string(os));
+    std::stringstream os;
+    os << "rgg.N" << N_ ;
+    return atlas::Grid::create(os.str());
 }
 
 const std::vector<long> &Classic::pls() const {
     if (pl_.size() == 0) {
-        eckit::StrStream os;
-        os << "rgg.N" << N_ << eckit::StrStream::ends;
-        eckit::ScopedPtr<atlas::grids::ReducedGrid> grid(dynamic_cast<atlas::grids::ReducedGrid *>(atlas::Grid::create(std::string(os))));
+        std::stringstream os;
+        os << "rgg.N" << N_ ;
+        eckit::ScopedPtr<atlas::grids::ReducedGrid> grid(dynamic_cast<atlas::grids::ReducedGrid *>(atlas::Grid::create(os.str())));
 
         ASSERT(grid.get());
 
