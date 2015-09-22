@@ -13,26 +13,6 @@
 	 subCentre = 102 ;
 	 is_s2s = 1 ;
 	}
-#2 metre temperature
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
-#2 metre temperature
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 subCentre = 102 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 is_s2s = 1 ;
-	}
 #2 metre dewpoint temperature
 'K' = {
 	 discipline = 0 ;
@@ -129,16 +109,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
-	}
-#2m Temperature (AV)
-'~' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #Climat. temperature, 2m Temperature
 'K' = {
