@@ -8,8 +8,8 @@ list( APPEND ifs_samples_${_basedir}
 )
 
 install( FILES ${ECCODES_SAMPLES_FILES} ${ifs_samples_${_basedir}}  
-         DESTINATION ${ECCODES_IFS_SAMPLES_PATH}/${_basedir}
+         DESTINATION ${CMAKE_INSTALL_PREFIX}/${ECCODES_IFS_SAMPLES_SUFF}/${_basedir}
          PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ )
 
 file( COPY ${ifs_samples_${_basedir}}
-      DESTINATION ${CMAKE_BINARY_DIR}/share/${PROJECT_NAME}/ifs_samples/${_basedir} )
+      DESTINATION ${CMAKE_BINARY_DIR}/${ECCODES_IFS_SAMPLES_SUFF}/${_basedir} )
