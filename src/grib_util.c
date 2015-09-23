@@ -638,6 +638,10 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
         case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
             sprintf(name, "%s_pl_%ld_grib%ld", grid_type,spec->N, editionNumber);
+            if (spec->pl && spec->pl_size) {
+                /* GRIB-834: pl is given so can use any of the reduced_gg_pl samples */
+                sprintf(name, "%s_pl_grib%ld", grid_type, editionNumber);
+            }
             break;
         default :
             sprintf(name, "%s_pl_grib%ld", grid_type, editionNumber);
@@ -784,7 +788,6 @@ grib_handle* grib_util_set_spec(grib_handle* h,
                     SET_DOUBLE_VALUE("laplacianOperator", laplacianOperator);
                 }
             }
-
         }
 
         break;
@@ -934,7 +937,8 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         goto cleanup;
     }
 
-    if (spec->pl_size!=0 && (spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG)) {
+    if (spec->pl_size!=0 && (spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG))
+    {
         *err=grib_set_long_array(outh,"pl",spec->pl,spec->pl_size);
         if (*err) {
             fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot set pl  %s\n",grib_get_error_message(*err));
