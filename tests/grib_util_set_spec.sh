@@ -10,8 +10,11 @@
 
 . ./include.sh
 
+### Regular Lat/Lon Grid
+###########################################
 infile=../data/latlon.grib
 outfile=out.grib_util_set_spec.grib
+rm -f $outfile
 
 ${test_dir}/grib_util_set_spec $infile $outfile > /dev/null
 
@@ -20,4 +23,16 @@ res=`${tools_dir}grib_get -p Ni,Nj,numberOfValues,bitsPerValue $outfile`
 
 ${tools_dir}grib_get_data $outfile > /dev/null
 
+### Reduced Gaussian Grid
+###########################################
+infile=$ECCODES_SAMPLES_PATH/reduced_gg_pl_320_grib2.tmpl
+outfile=out.grib_util_set_spec.grib
+rm -f $outfile
+
+${test_dir}/grib_util_set_spec $infile $outfile
+
+${tools_dir}grib_get_data $outfile > /dev/null
+
+
+### Clean up
 rm -f $outfile

@@ -138,13 +138,18 @@ int process_file(const char* filename)
         }
 
         if (is_reduced) {
-            int pl_sum = 0, max_pl = 0;
+            int pl_sum = 0, max_pl = 0, is_missing_Ni = 0, is_missing_Di = 0;
             size_t i = 0, pl_len = 0;
             long is_octahedral = 0;
-            int is_missing = codes_is_missing(h, "Ni", &err);
+            is_missing_Ni = codes_is_missing(h, "Ni", &err);
             assert(err == CODES_SUCCESS);
-            if (!is_missing) {
-                error("ERROR: Ni should be missing!\n");
+            is_missing_Di = grib_is_missing(h, "iDirectionIncrement", &err);
+            assert(err == GRIB_SUCCESS);
+            if (!is_missing_Ni) {
+                error("ERROR: For a reduced gaussian grid Ni should be missing!\n");
+            }
+            if (!is_missing_Di) {
+                error("ERROR: For a reduced gaussian grid iDirectionIncrement should be missing!\n");
             }
 
             CODES_CHECK(codes_get_size(h, "pl", &pl_len),0);
