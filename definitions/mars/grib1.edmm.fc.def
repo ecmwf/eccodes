@@ -8,8 +8,9 @@ alias mars.date             = monthlyVerificationDate;
 
 # There was some forecast data produced incorrectly for stream=edmm with class=em
 # An exception is required for backward compatibility for the wrongly encoded data
-# See GRIB-422, GRIB-497
-if (class is "em" || class is "e2" || class is "ea")
+# See GRIB-422, GRIB-497, GRIB-833
+#
+if (class is "em" || class is "e2" || class is "ea" || class is "ep")
 {
    alias mars.step = endStep;
 }
@@ -19,4 +20,3 @@ else
 }
 
 alias mars.number=perturbationNumber;
-
