@@ -7,9 +7,13 @@ list( APPEND ifs_samples_${_basedir}
       sh_sfc.tmpl
 )
 
-install( FILES ${ECCODES_SAMPLES_FILES} ${ifs_samples_${_basedir}}  
+install( FILES ${ECCODES_SAMPLES_FILES} ${ifs_samples_${_basedir}}
          DESTINATION ${ECCODES_IFS_SAMPLES_PATH}/${_basedir}
          PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ )
 
 file( COPY ${ifs_samples_${_basedir}}
       DESTINATION ${CMAKE_BINARY_DIR}/share/${PROJECT_NAME}/ifs_samples/${_basedir} )
+
+# Also copy the ifs sample files to the build dir (for developer mode)
+file( COPY ${ECCODES_SAMPLES_FILES} ${ifs_samples_${_basedir}}
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )

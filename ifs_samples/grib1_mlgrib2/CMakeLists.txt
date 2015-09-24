@@ -13,3 +13,7 @@ install( FILES ${ECCODES_SAMPLES_FILES} ${ifs_samples_${_basedir}}
 
 file( COPY ${ifs_samples_${_basedir}}
       DESTINATION ${CMAKE_BINARY_DIR}/${ECCODES_IFS_SAMPLES_SUFF}/${_basedir} )
+
+# Also copy the ifs sample files to the build dir (for developer mode)
+file( COPY ${ECCODES_SAMPLES_FILES} ${ifs_samples_${_basedir}}
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
