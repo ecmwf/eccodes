@@ -99,7 +99,6 @@ examples/C/c_bufr_read_synop
 examples/C/c_bufr_get_keys
 examples/C/c_bufr_read_scatterometer
 examples/C/c_bufr_subset
-examples/C/c_check_gaussian_grid
 examples/C/c_grib_ensemble_index
 examples/C/c_grib_clone
 examples/C/c_grib_iterator_bitmap

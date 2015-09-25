@@ -32,7 +32,6 @@ list( APPEND test_bins
       grib_iterator_bitmap
       large_grib1
       grib_clone
-      check_gaussian_grid
       grib_ensemble_index
       get_product_kind
       bufr_attributes
@@ -74,7 +73,6 @@ list( APPEND tests
    large_grib1
    set_missing
    sections_copy
-   check_gaussian_grids
    bufr_attributes
    bufr_clone
    bufr_expanded

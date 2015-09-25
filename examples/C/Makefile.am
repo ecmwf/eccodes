@@ -16,7 +16,6 @@ TESTS = grib_iterator.sh \
         set_missing.sh \
         grib_clone.sh \
         grib_set_pv.sh \
-        check_gaussian_grids.sh \
         bufr_attributes.sh \
         bufr_clone.sh \
         bufr_expanded.sh \
@@ -56,7 +55,6 @@ noinst_PROGRAMS  = c_grib_nearest \
                    c_grib_iterator_bitmap \
                    c_grib_clone \
                    c_new_sample \
-                   c_check_gaussian_grid \
                    c_grib_ensemble_index \
                    c_points \
                    c_bufr_attributes \
@@ -102,7 +100,6 @@ c_grib_precision_SOURCES       = grib_precision.c
 c_grib_get_data_SOURCES        = grib_get_data.c
 c_grib_clone_SOURCES           = grib_clone.c
 c_new_sample_SOURCES           = new_sample.c
-c_check_gaussian_grid_SOURCES  = check_gaussian_grid.c
 c_grib_ensemble_index_SOURCES  = grib_ensemble_index.c
 c_bufr_attributes_SOURCES      = bufr_attributes.c
 c_bufr_clone_SOURCES           = bufr_clone.c

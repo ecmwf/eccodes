@@ -10,7 +10,7 @@
 . ./include.sh
 
 # Check all sample GRIBs with a Gaussian grid
-samples_dir=${proj_dir}/samples
+samples_dir=$ECCODES_SAMPLES_PATH
 for gg in ${samples_dir}/reduced_gg_* ${samples_dir}/regular_gg_*; do
-   ${examples_dir}c_check_gaussian_grid $gg >/dev/null
+   ${tools_dir}check_gaussian_grid $gg >/dev/null
 done

@@ -96,6 +96,12 @@ foreach( test ${tests1} )
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
     )
 endforeach()
+ecbuild_add_test( TARGET eccodes_t_check_gaussian_grids
+                  TYPE SCRIPT
+                  CONDITION  ECCODES_INSTALL_ECMWF_TOOLS
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/check_gaussian_grids.sh
+)
+
 
 # Note: making the test dependent on the grib files (with DEPENDS)
 #       means they will be downloaded at "make" time
