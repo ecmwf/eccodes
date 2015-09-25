@@ -208,7 +208,7 @@ static void destroy(grib_context* c,grib_accessor* a)
 }
 
 static int compare(grib_accessor* a, grib_accessor* b) {
-  int retval=0;
+  int retval = GRIB_SUCCESS;
   double *aval=0;
   double *bval=0;
 
@@ -236,7 +236,6 @@ static int compare(grib_accessor* a, grib_accessor* b) {
   grib_unpack_double(a,aval,&alen);
   grib_unpack_double(b,bval,&blen);
 
-  retval = GRIB_SUCCESS;
   while (alen != 0) {
     if (*bval != *aval) retval = GRIB_DOUBLE_VALUE_MISMATCH;
     alen--;
@@ -245,7 +244,7 @@ static int compare(grib_accessor* a, grib_accessor* b) {
   grib_context_free(a->parent->h->context,aval);
   grib_context_free(b->parent->h->context,bval);
 
-  return GRIB_SUCCESS;
+  return retval;
 }
 
 
