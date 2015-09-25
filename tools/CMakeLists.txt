@@ -22,7 +22,7 @@ list( APPEND grib_tools_bins_ECMWF_ONLY
              gg_sub_area_check
              grib_repair
              grib_to_json
-             check_gaussian_grid
+             grib_check_gaussian_grid
              )
 
 # Install generic tools

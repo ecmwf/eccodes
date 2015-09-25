@@ -12,5 +12,5 @@
 # Check all sample GRIBs with a Gaussian grid
 samples_dir=$ECCODES_SAMPLES_PATH
 for gg in ${samples_dir}/reduced_gg_* ${samples_dir}/regular_gg_*; do
-   ${tools_dir}check_gaussian_grid $gg >/dev/null
+   ${tools_dir}grib_check_gaussian_grid $gg >/dev/null
 done
