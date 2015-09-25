@@ -11,7 +11,7 @@
 /*
  *
  * Description: Check the geometry of a global GRIB field
- *              with a Gaussian Grid (reduced or regular)
+ *              which has a Gaussian Grid (reduced or regular)
  *
  */
 #include <stdio.h>
@@ -68,9 +68,9 @@ int process_file(const char* filename)
     if(!in) {
         error("ERROR: unable to open input file %s\n",filename);
     }
-    
+
     printf("Checking file %s\n", filename);
-    
+
     while ((h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err)) != NULL )
     {
         int is_reduced = 0, is_regular = 0, grid_ok = 0;
@@ -97,7 +97,7 @@ int process_file(const char* filename)
             codes_handle_delete(h);
             continue;
         }
-        
+
         CODES_CHECK(codes_get_long(h,"edition",&edition),0);
         CODES_CHECK(codes_get_long(h,"N",&N),0);
         CODES_CHECK(codes_get_long(h,"Nj",&Nj),0);
@@ -215,7 +215,7 @@ int main(int argc, char** argv)
         usage(argv[0]);
         return 1;
     }
-    
+
     for(i=1; i<argc; ++i)
     {
         const char* arg = argv[i];
@@ -244,6 +244,6 @@ int main(int argc, char** argv)
     {
         printf("Error count: %d\n", error_count);
     }
-    
+
     return 0;
 }
