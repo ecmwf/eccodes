@@ -536,7 +536,6 @@ int grib_yyerror(const char* msg)
 void grib_parser_include(const char* included_fname)
 {
     FILE *f = NULL;
-    char path[1204];
     char* io_buffer=0;
     /* int i; */
     Assert(top < MAXINCLUDE);
@@ -596,14 +595,14 @@ void grib_parser_include(const char* included_fname)
             }
             setvbuf(f,io_buffer,_IOFBF,c->io_buffer_size);
         }
-         */
-        grib_yyin            = f;
+        */
+        grib_yyin       = f;
         stack[top].file = f;
         stack[top].io_buffer = io_buffer;
         stack[top].name = grib_context_strdup(grib_parser_context,parse_file);
         parse_file      = stack[top].name;
         stack[top].line = grib_yylineno;
-        grib_yylineno = 0;
+        grib_yylineno   = 0;
         top++;
         /* grib_yyrestart(f); */
     }
@@ -655,7 +654,7 @@ static grib_action* grib_parse_stream(grib_context* gc, const char* filename)
     if (parse(gc,filename) == 0) {
         if (grib_parser_all_actions) {
             GRIB_MUTEX_UNLOCK(&mutex_stream)
-                    return grib_parser_all_actions;
+            return grib_parser_all_actions;
         } else {
             grib_action* ret=grib_action_create_noop(gc,filename);
             GRIB_MUTEX_UNLOCK(&mutex_stream)
