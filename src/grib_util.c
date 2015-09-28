@@ -402,6 +402,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     size_t slen=17;
 
     static grib_util_packing_spec default_packing_spec = {0, };
+    Assert(h);
 
     if(!packing_spec) {
         packing_spec = &default_packing_spec;
