@@ -292,7 +292,7 @@ static int compare(grib_accessor* a, grib_accessor* b) {
   grib_context_free(a->parent->h->context,aval);
   grib_context_free(b->parent->h->context,bval);
 
-  return GRIB_SUCCESS;
+  return retval;
 }
 
 

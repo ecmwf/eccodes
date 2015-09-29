@@ -246,5 +246,3 @@ static int compare(grib_accessor* a, grib_accessor* b) {
 
   return retval;
 }
-
-

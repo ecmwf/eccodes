@@ -273,7 +273,7 @@ static int compare(grib_accessor* a,grib_accessor* b) {
   retval = GRIB_SUCCESS;
   while (alen != 0) {
     if (*bval != *aval) retval = GRIB_LONG_VALUE_MISMATCH;
-  alen--;
+    alen--;
   }
 
   grib_context_free(a->parent->h->context,aval);

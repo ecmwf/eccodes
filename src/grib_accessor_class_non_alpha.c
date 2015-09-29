@@ -250,7 +250,8 @@ static int unpack_double (grib_accessor* a, double*v, size_t *len){
 }
 
 
-static int compare(grib_accessor* a,grib_accessor* b) {
+static int compare(grib_accessor* a,grib_accessor* b)
+{
   int retval=0;
   char *aval=0;
   char *bval=0;

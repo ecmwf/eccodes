@@ -139,11 +139,11 @@ static void init(grib_accessor* a, const long len, grib_arguments*arg )
   a->length=a->parent->h->buffer->ulength-len-a->offset;
 }
 
-static int compare(grib_accessor* a, grib_accessor* b) {
-  if (a->length != b->length) return GRIB_COUNT_MISMATCH;
-  return GRIB_SUCCESS;
+static int compare(grib_accessor* a, grib_accessor* b)
+{
+    if (a->length != b->length) return GRIB_COUNT_MISMATCH;
+    return GRIB_SUCCESS;
 }
-
 
 static void update_size(grib_accessor* a,size_t new_size)
 {
@@ -183,8 +183,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
   return GRIB_SUCCESS;
 }
 
-static size_t string_length(grib_accessor* a){
+static size_t string_length(grib_accessor* a)
+{
   return a->length;
 }
-
-
