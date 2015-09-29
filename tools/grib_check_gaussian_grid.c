@@ -202,7 +202,7 @@ int process_file(const char* filename)
         codes_handle_delete(h);
     }
     fclose(in);
-    printf("\nFile %s OK\n\n", filename);
+    printf("\n");
     return 0;
 }
 
