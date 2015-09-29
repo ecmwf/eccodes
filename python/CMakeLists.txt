@@ -13,8 +13,8 @@ if( HAVE_PYTHON )
     ###############################################################################
     # swig python interface
 
-    #if( HAVE_PYTHON AND SWIG_FOUND AND PYTHONLIBS_FOUND )
-    if( HAVE_PYTHON AND PYTHONLIBS_FOUND )
+    #if( SWIG_FOUND AND PYTHONLIBS_FOUND )
+    if( PYTHONLIBS_FOUND )
 
         set(PYTHON_DEST "${INSTALL_LIB_DIR}/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/eccodes" )
 
