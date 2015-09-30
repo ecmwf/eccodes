@@ -151,6 +151,9 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     self->pl           = grib_arguments_get_name(a->parent->h,c,n++);
 }
 
+/* For an Octahedral grid, this is the number of points on the top-most latitude (near pole) */
+#define NUM_POINTS_ON_LAT_NEAR_POLE 20
+
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_octahedral_gaussian* self = (grib_accessor_octahedral_gaussian*)a;
@@ -185,13 +188,26 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     if((ret = grib_get_size(a->parent->h,self->pl,&plsize)) != GRIB_SUCCESS)
         return ret;
     Assert(plsize);
+    if (plsize != 2*N) {
+        *val=0; /* Not octahedral */
+        return GRIB_SUCCESS;
+    }
     pl=(long*)grib_context_malloc_clear(c,sizeof(long)*plsize);
-    grib_get_long_array_internal(a->parent->h,self->pl,pl, &plsize);
+    if (!pl) {
+        return GRIB_OUT_OF_MEMORY;
+    }
+    if ((ret = grib_get_long_array_internal(a->parent->h,self->pl,pl, &plsize)) != GRIB_SUCCESS)
+        return ret;
+    if (pl[0] != NUM_POINTS_ON_LAT_NEAR_POLE) {
+        *val=0; /* Not octahedral */
+        grib_context_free(c, pl);
+        return GRIB_SUCCESS;
+    }
     mid = plsize/2;
-    /* Check pl values from pole to equator */
+    /* Check pl values and symmetry */
     for(i=0; i<mid; ++i) {
         const long expected = 4*(i+1) + 16; /* Octahedral rule */
-        if (pl[i] != expected) {
+        if ( pl[i] != expected || (pl[i] != pl[plsize-1-i]) ) {
             *val = 0; /* Not octahedral */
             grib_context_free(c, pl);
             return GRIB_SUCCESS;
@@ -199,8 +215,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     }
     grib_context_free(c, pl);
 
-    /* It is Octahedral */
-    *val=1;
+    *val=1;  /* It is Octahedral */
     return ret;
 }
 
