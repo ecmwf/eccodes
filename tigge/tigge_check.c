@@ -191,7 +191,7 @@ static int DBL_EQUAL(double d1, double d2, double tolerance)
 void gaussian_grid(grib_handle* h)
 {
     const double tolerance = 1.0/1000000.0; /* angular tolerance for grib2: micro degrees */
-    long n = get(h,"numberOfParallelsBetweenAPoleAndTheEquator");
+    long n = get(h,"numberOfParallelsBetweenAPoleAndTheEquator"); /* This is the key N */
     static double* values = NULL;
     static long last_n = 0;
     double north = dget(h,"latitudeOfFirstGridPointInDegrees");
@@ -235,18 +235,20 @@ void gaussian_grid(grib_handle* h)
     CHECK(DBL_EQUAL(north, values[0], tolerance));
     CHECK(DBL_EQUAL(south, -values[0], tolerance));
 
-    if(missing(h,"numberOfPointsAlongAParallel"))
+    if(missing(h,"numberOfPointsAlongAParallel"))   /* same as key Ni */
     {
-        double ee = 360.0 - 360.0/(4.0*n);
+        /* If missing, this is a REDUCED gaussian grid */
+        const long MAXIMUM_RESOLUTION = 320;
+        CHECK(get(h,"PLPresent"));
         CHECK(DBL_EQUAL(west, 0.0, tolerance));
-
-        if (!DBL_EQUAL(ee, east, tolerance))
-            printf("east %g %g %g\n",east,ee,ee-east);
-
-        CHECK(DBL_EQUAL(ee, east, tolerance));
+        if (n > MAXIMUM_RESOLUTION) {
+            printf("Gaussian number N (=%ld) cannot exceed %ld\n", n, MAXIMUM_RESOLUTION);
+            CHECK(n <= MAXIMUM_RESOLUTION);
+        }
     }
     else
     {
+        /* REGULAR gaussian grid */
         long west = get(h,"longitudeOfFirstGridPoint");
         long east = get(h,"longitudeOfLastGridPoint");
         long parallel = get(h,"numberOfPointsAlongAParallel");
@@ -267,7 +269,8 @@ void gaussian_grid(grib_handle* h)
         size_t count, i, nPl;
         int e = grib_get_size(h,"pl",&count);
         double *pl;
-        long total;
+        double expected_lon2 = 0;
+        long total, max_pl = 0;
         long numberOfValues = get(h,"numberOfValues");
         long numberOfDataPoints = get(h,"numberOfDataPoints");
 
@@ -287,7 +290,6 @@ void gaussian_grid(grib_handle* h)
             free(pl);
             error++;
             return;
-
         }
         if(nPl != count)
             printf("nPl=%ld count=%ld\n",(long)nPl,(long)count);
@@ -296,10 +298,19 @@ void gaussian_grid(grib_handle* h)
         CHECK(nPl == (size_t)2*n);
 
         total = 0;
-        for(i = 0 ; i < count; i++)
+        max_pl = pl[0]; /* max elem of pl array = num points at equator */
+        for(i = 0 ; i < count; i++) {
             total += pl[i];
+            if (pl[i] > max_pl) max_pl = pl[i];
+        }
 
         free(pl);
+
+        /* Do not assume maximum of pl array is 4N! not true for octahedral */
+        expected_lon2 = 360.0 - 360.0/max_pl;
+        if (!DBL_EQUAL(expected_lon2, east, tolerance))
+            printf("east actual=%g expected=%g diff=%g\n",east, expected_lon2, expected_lon2-east);
+        CHECK(DBL_EQUAL(expected_lon2, east, tolerance));
 
         if(numberOfDataPoints != total)
             printf("GAUSS numberOfValues=%ld numberOfDataPoints=%ld sum(pl)=%ld\n",
@@ -1050,10 +1061,9 @@ void verify(grib_handle* h)
         latlon_grid(h);
         break;
 
-    case 40:
+    case 40: /* gaussian grid (regular or reduced) */
         gaussian_grid(h);
         break;
-
 
     default:
         printf("%s, field %d [%s]: Unsupported gridDefinitionTemplateNumber %ld\n",
