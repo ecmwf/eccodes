@@ -319,3 +319,13 @@ endif()
 ecbuild_install_project( NAME ${CMAKE_PROJECT_NAME} )
 
 ecbuild_print_summary()
+
+message("")
+message("")
+message("   +---------------------------+")
+message("   |  Configuration completed  |")
+message("   +---------------------------+")
+message("")
+message("   You can now do 'make' to compile the package, 'make check' to test it and 'make install' to install it afterwards.")
+message("")
+message("")
