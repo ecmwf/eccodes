@@ -1596,7 +1596,7 @@ int grib_f_dump_(int* gid){
     if(!h)
         return GRIB_INVALID_GRIB;
     else
-        grib_dump_content(h,stdout,NULL,0,NULL);
+        grib_dump_content(h,stdout,"wmo",0,NULL);
 
     return GRIB_SUCCESS;
 }
