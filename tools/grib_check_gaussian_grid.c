@@ -33,7 +33,11 @@ int DBL_EQUAL(double d1, double d2, double tolerance)
 void usage(const char* prog)
 {
     printf("usage: %s [-f] grib_file grib_file ...\n\n",prog);
+    printf("Check geometry of GRIB fields with a Gaussian Grid.\n");
+    printf("(The grid is assumed to be global)\n\n");
+    printf("Options:\n");
     printf("-f  Do not exit on first error\n");
+    printf("\n");
     exit(1);
 }
 
@@ -143,8 +147,8 @@ int process_file(const char* filename)
             long is_octahedral = 0;
             is_missing_Ni = codes_is_missing(h, "Ni", &err);
             assert(err == CODES_SUCCESS);
-            is_missing_Di = grib_is_missing(h, "iDirectionIncrement", &err);
-            assert(err == GRIB_SUCCESS);
+            is_missing_Di = codes_is_missing(h, "iDirectionIncrement", &err);
+            assert(err == CODES_SUCCESS);
             if (!is_missing_Ni) {
                 error("ERROR: For a reduced gaussian grid Ni should be missing!\n");
             }
