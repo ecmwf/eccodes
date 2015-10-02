@@ -36,6 +36,7 @@ character(len=9)   :: typicalDate
     
     ! get and print some keys form the BUFR header 
     write(*,*) 'message: ',count
+	call codes_dump(ibufr)
 
     ! we need to instruct ecCodes to expand all the descriptors 
     ! i.e. unpack the data values
