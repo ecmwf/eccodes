@@ -168,24 +168,32 @@ static int unpack_string_array (grib_accessor* a, char** buffer, size_t *len)
 {
   grib_accessor* data=0;
   grib_context* c=a->parent->h->context;
-  grib_sarray* stringValues=NULL;
-  long l=0;
-  size_t size,i;
+  grib_vsarray* stringValues=NULL;
+  long l=0,n=0,tl;
+  size_t size,i,j;
   char buf[25]={0,};
   long* v=0;
+  char** b=buffer;
 
   data=get_accessor(a);
   if (!data) return GRIB_NOT_FOUND;
 
   stringValues=accessor_bufr_data_array_get_stringValues(data);
 
-  l=grib_sarray_used_size(stringValues);
-  if (l>*len) return GRIB_ARRAY_TOO_SMALL;
+  n=grib_vsarray_used_size(stringValues);
 
-  for (i=0;i<l;i++) {
-    buffer[i]=grib_context_strdup(c,stringValues->v[i]);
+  tl=0;
+  for (j=0;j<n;j++) {
+    l=grib_sarray_used_size(stringValues->v[j]);
+    tl+=l;
+
+    if (tl>*len) return GRIB_ARRAY_TOO_SMALL;
+
+    for (i=0;i<l;i++) {
+      *(b++)=grib_context_strdup(c,stringValues->v[j]->v[i]);
+    }
   }
-  *len=l;
+  *len=tl;
 
   return GRIB_SUCCESS;
 }

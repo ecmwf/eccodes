@@ -31,7 +31,7 @@
    MEMBERS    = long numberOfSubsets
    MEMBERS    = bufr_descriptors_array* descriptors
    MEMBERS    = grib_vdarray* numericValues
-   MEMBERS    = grib_sarray* stringValues
+   MEMBERS    = grib_vsarray* stringValues
    MEMBERS    = grib_viarray* elementsDescriptorsIndex
 
    END_CLASS_DEF
@@ -74,7 +74,7 @@ typedef struct grib_accessor_bufr_data_element {
 	long numberOfSubsets;
 	bufr_descriptors_array* descriptors;
 	grib_vdarray* numericValues;
-	grib_sarray* stringValues;
+	grib_vsarray* stringValues;
 	grib_viarray* elementsDescriptorsIndex;
 } grib_accessor_bufr_data_element;
 
@@ -187,7 +187,7 @@ void accessor_bufr_data_element_set_numericValues(grib_accessor* a,grib_vdarray*
   self->numericValues=numericValues;
 }
 
-void accessor_bufr_data_element_set_stringValues(grib_accessor* a,grib_sarray* stringValues) {
+void accessor_bufr_data_element_set_stringValues(grib_accessor* a,grib_vsarray* stringValues) {
   grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
   self->stringValues=stringValues;
 }
@@ -228,19 +228,18 @@ static int unpack_string_array (grib_accessor* a, char** val, size_t *len)
   long count=0;
   grib_context* c=a->parent->h->context;
 
-  value_count(a,&count);
-
   if (*len<count) return GRIB_ARRAY_TOO_SMALL;
 
   if (self->compressedData) {
-    idx=(int)self->numericValues->v[self->index]->v[0]/1000-1;
+    idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
+    count=grib_sarray_used_size(self->stringValues->v[idx]);
     for (i=0;i<count;i++) {
-      val[i]=grib_context_strdup(c,self->stringValues->v[idx++]);
+      val[i]=grib_context_strdup(c,self->stringValues->v[idx]->v[i]);
     }
     *len=count;
   } else {
     idx=(int)self->numericValues->v[self->subsetNumber]->v[self->index]/1000-1;
-    val[0]=grib_context_strdup(c,self->stringValues->v[idx]);
+    val[0]=grib_context_strdup(c,self->stringValues->v[idx]->v[0]);
     *len=1;
   }
 
@@ -249,7 +248,23 @@ static int unpack_string_array (grib_accessor* a, char** val, size_t *len)
 
 
 static int pack_string_array(grib_accessor*a , const char**  v, size_t *len){
-  return GRIB_NOT_IMPLEMENTED;
+  grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
+
+  int ret=0,i,idx;
+  long count=0;
+  char* s=NULL;
+  grib_context* c=a->parent->h->context;
+
+  count=self->numberOfSubsets;
+  idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
+  grib_sarray_delete(c,self->stringValues->v[idx]);
+  self->stringValues->v[idx]=grib_sarray_new(c,self->numberOfSubsets,1);
+  for (i=0;i<self->numberOfSubsets;i++) {
+    s=grib_context_strdup(c,v[i]);
+    grib_sarray_push(c,self->stringValues->v[idx],s);
+  }
+
+  return ret;
 }
 
 static int unpack_string (grib_accessor* a, char* val, size_t *len)
@@ -275,11 +290,11 @@ static int unpack_string (grib_accessor* a, char* val, size_t *len)
   }
 
   if (self->compressedData) {
-    idx=(int)self->numericValues->v[self->index]->v[0]/1000-1;
-    str=grib_context_strdup(c,self->stringValues->v[idx]);
+    idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
+    str=grib_context_strdup(c,self->stringValues->v[idx]->v[0]);
   } else {
-    idx=(int)self->numericValues->v[self->subsetNumber]->v[self->index]/1000-1;
-    str=grib_context_strdup(c,self->stringValues->v[idx]);
+    idx=((int)self->numericValues->v[self->subsetNumber]->v[self->index]/1000-1)/self->numberOfSubsets;
+    str=grib_context_strdup(c,self->stringValues->v[idx]->v[0]);
   }
 
   if (str==0 || strlen(str)==0) {
@@ -312,23 +327,15 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len)
 
   int ret=0,i,idx;
   long count=0;
+  char* s=NULL;
   grib_context* c=a->parent->h->context;
 
-  if (self->compressedData) {
-    count=self->numberOfSubsets;
-    idx=(int)self->numericValues->v[self->index]->v[0]/1000-1;
-    for (i=0;i<count;i++) {
-      grib_context_free(c,self->stringValues->v[idx]);
-      self->stringValues->v[idx]=grib_context_strdup(c,val);
-      idx++;
-    }
-    *len=count;
-  } else {
-    idx=(int)self->numericValues->v[self->subsetNumber]->v[self->index]/1000-1;
-    grib_context_free(c,self->stringValues->v[idx]);
-    self->stringValues->v[idx]=grib_context_strdup(c,val);
-    *len=1;
-  }
+  count=self->numberOfSubsets;
+  idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
+  grib_sarray_delete(c,self->stringValues->v[idx]);
+  self->stringValues->v[idx]=grib_sarray_new(c,1,1);
+  s=grib_context_strdup(c,val);
+  grib_sarray_push(c,self->stringValues->v[idx],s);
 
   return ret;
 }
