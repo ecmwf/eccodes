@@ -377,6 +377,29 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t *l
     return GRIB_NOT_FOUND;
 }
 
+int grib_set_string_array(grib_handle* h, const char* name, const char** val, size_t length)
+{
+    int ret=0;
+    grib_accessor* a;
+
+    a = grib_find_accessor(h, name);
+
+    grib_context_log(h->context,GRIB_LOG_DEBUG,"grib_set_string %s=%s\n",name,val);
+
+    if(a)
+    {
+        if(a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
+            return GRIB_READ_ONLY;
+
+        ret=grib_pack_string_array(a, val, length);
+        if(ret == GRIB_SUCCESS){
+            return grib_dependency_notify_change(a);
+        }
+        return ret;
+    }
+    return GRIB_NOT_FOUND;
+}
+
 int grib_set_bytes_internal(grib_handle* h, const char* name, const unsigned char* val, size_t *length)
 {
     int ret = GRIB_SUCCESS;

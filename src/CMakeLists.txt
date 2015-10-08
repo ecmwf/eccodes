@@ -23,6 +23,7 @@ list( APPEND grib_api_srcs
     action_class_concept.c
     action_class_hash_array.c
     action_class_set.c
+    action_class_set_sarray.c
     action_class_set_darray.c
     action_class_set_iarray.c
     action_class_noop.c

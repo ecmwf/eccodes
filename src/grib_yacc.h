@@ -1,10 +1,8 @@
+/* A Bison parser, made by GNU Bison 2.7.  */
 
-/* A Bison parser, made by GNU Bison 2.4.1.  */
-
-/* Skeleton interface for Bison's Yacc-like parsers in C
+/* Bison interface for Yacc-like parsers in C
    
-      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+      Copyright (C) 1984, 1989-1990, 2000-2012 Free Software Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -32,6 +30,15 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+#ifndef YY_YY_Y_TAB_H_INCLUDED
+# define YY_YY_Y_TAB_H_INCLUDED
+/* Enabling traces.  */
+#ifndef YYDEBUG
+# define YYDEBUG 0
+#endif
+#if YYDEBUG
+extern int grib_yydebug;
+#endif
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -293,18 +300,17 @@
 
 
 
-
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
 {
-
-/* Line 1676 of yacc.c  */
+/* Line 2058 of yacc.c  */
 #line 37 "griby.y"
 
     char                    *str;
     long                    lval;
     double                  dval;
     grib_darray             *dvalue;
+    grib_sarray             *svalue;
     grib_iarray             *ivalue;
     grib_action             *act;
     grib_arguments          *explist;
@@ -317,9 +323,8 @@ typedef union YYSTYPE
   grib_rule_entry         *rule_entry;
 
 
-
-/* Line 1676 of yacc.c  */
-#line 323 "y.tab.h"
+/* Line 2058 of yacc.c  */
+#line 328 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define grib_yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -328,4 +333,18 @@ typedef union YYSTYPE
 
 extern YYSTYPE grib_yylval;
 
+#ifdef YYPARSE_PARAM
+#if defined __STDC__ || defined __cplusplus
+int grib_yyparse (void *YYPARSE_PARAM);
+#else
+int grib_yyparse ();
+#endif
+#else /* ! YYPARSE_PARAM */
+#if defined __STDC__ || defined __cplusplus
+int grib_yyparse (void);
+#else
+int grib_yyparse ();
+#endif
+#endif /* ! YYPARSE_PARAM */
 
+#endif /* !YY_YY_Y_TAB_H_INCLUDED  */

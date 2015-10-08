@@ -132,6 +132,23 @@ int grib_pack_string(grib_accessor* a, const char* v, size_t *len )
   return 0;
 }
 
+int grib_pack_string_array(grib_accessor* a, const char** v, size_t *len )
+{
+  grib_accessor_class *c = a->cclass;
+  /*grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is packing (string) %s",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?v:"(null)");*/
+  while(c)
+  {
+
+    if(c->pack_string_array)
+    {
+      return c->pack_string_array(a,v,len);
+    }
+    c = c->super ? *(c->super) : NULL;
+  }
+  Assert(0);
+  return 0;
+}
+
 int grib_pack_long(grib_accessor* a,const long* v, size_t *len )
 {
   grib_accessor_class *c = a->cclass;

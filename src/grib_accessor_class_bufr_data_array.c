@@ -499,7 +499,6 @@ static int encode_string_array(grib_context* c,grib_buffer* buff,long* pos, int 
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
     grib_encode_unsigned_longb(buff->data,width/8,pos,6);
     if (width) {
-        grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
         grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+width*end);
         for (j=start;j<end;j++) {
             grib_encode_string(buff->data,pos,width/8,stringValues->v[j]);

@@ -39,6 +39,7 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
     long                    lval;
     double                  dval;
     grib_darray             *dvalue;
+    grib_sarray             *svalue;
     grib_iarray             *ivalue;
     grib_action             *act;
     grib_arguments          *explist;
@@ -196,6 +197,7 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
 %token <dval>FLOAT
 
 %type <dvalue> dvalues
+%type <svalue> svalues
 %type <ivalue> integer_array
 
 %type <act>  instructions
@@ -274,6 +276,11 @@ dvalues :  FLOAT  { $$=grib_darray_push(0,0,$1);}
     |  INTEGER { $$=grib_darray_push(0,0,$1);}
     |  dvalues ',' INTEGER { $$=grib_darray_push(0,$1,$3);}
    ;
+
+svalues : STRING { $$=grib_sarray_push(0,0,$1);}
+    |  svalues ',' STRING { $$=grib_sarray_push(0,$1,$3);}
+    ;
+
 
 integer_array :  INTEGER  { $$=grib_iarray_push(0,$1);}
     |  integer_array ',' INTEGER { $$=grib_iarray_push($1,$3);}
@@ -598,6 +605,7 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
   | SET IDENT '=' MISSING { $$ = grib_action_create_set_missing(grib_parser_context,$2); free($2); }
   | SET IDENT '=' expression { $$ = grib_action_create_set(grib_parser_context,$2,$4,0); free($2); }
   | SET IDENT '=' '{' dvalues '}' { $$ = grib_action_create_set_darray(grib_parser_context,$2,$5); free($2); }
+  | SET IDENT '=' '{' svalues '}' { $$ = grib_action_create_set_sarray(grib_parser_context,$2,$5); free($2); }
 
   | SET_NOFAIL IDENT '=' expression { $$ = grib_action_create_set(grib_parser_context,$2,$4,1); free($2); }
 

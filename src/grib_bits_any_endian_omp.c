@@ -96,6 +96,8 @@ int grib_decode_double_array(const unsigned char* p, long *bitp, long bitsPerVal
   return 0;
 }
 
+
+
 int grib_decode_double_array_complex(const unsigned char* p, long *bitp, long nbits,double reference_value,double s,double* d,size_t size,double* val) {
   return GRIB_NOT_IMPLEMENTED;
 }

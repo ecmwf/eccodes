@@ -108,6 +108,7 @@ int grib_is_missing_internal(grib_accessor *a);
 int grib_pack_double(grib_accessor *a, const double *v, size_t *len);
 int grib_pack_expression(grib_accessor *a, grib_expression *e);
 int grib_pack_string(grib_accessor *a, const char *v, size_t *len);
+int grib_pack_string_array(grib_accessor *a, const char **v, size_t *len);
 int grib_pack_long(grib_accessor *a, const long *v, size_t *len);
 int grib_pack_bytes(grib_accessor *a, const unsigned char *v, size_t *len);
 int grib_unpack_bytes(grib_accessor *a, unsigned char *v, size_t *len);
@@ -287,6 +288,10 @@ int bufr_is_marker(int code, int F, int X, int Y);
 bufr_descriptor *accessor_bufr_elements_table_get_descriptor(grib_accessor *a, int code, int *err);
 
 /* grib_accessor_class_bufr_group.c */
+
+/* grib_accessor_class_bufr_string_values.c */
+
+/* grib_accessor_class_pack_bufr_values.c */
 
 /* grib_accessor_class_group.c */
 
@@ -1145,6 +1150,7 @@ int grib_copy_namespace(grib_handle *dest, const char *name, grib_handle *src);
 int grib_set_double(grib_handle *h, const char *name, double val);
 int grib_set_string_internal(grib_handle *h, const char *name, const char *val, size_t *length);
 int grib_set_string(grib_handle *h, const char *name, const char *val, size_t *length);
+int grib_set_string_array(grib_handle *h, const char *name, const char **val, size_t length);
 int grib_set_bytes_internal(grib_handle *h, const char *name, const unsigned char *val, size_t *length);
 int grib_set_bytes(grib_handle *h, const char *name, const unsigned char *val, size_t *length);
 int grib_clear(grib_handle *h, const char *name);

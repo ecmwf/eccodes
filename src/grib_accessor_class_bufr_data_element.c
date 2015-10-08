@@ -228,8 +228,6 @@ static int unpack_string_array (grib_accessor* a, char** val, size_t *len)
   long count=0;
   grib_context* c=a->parent->h->context;
 
-  if (*len<count) return GRIB_ARRAY_TOO_SMALL;
-
   if (self->compressedData) {
     idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
     count=grib_sarray_used_size(self->stringValues->v[idx]);
@@ -445,7 +443,8 @@ static int value_count(grib_accessor* a,long* count)
   type=get_native_type(a);
 
   if (type==GRIB_TYPE_STRING) {
-    size=grib_sarray_used_size(self->stringValues);
+    idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
+    size=grib_sarray_used_size(self->stringValues->v[idx]);
   } else {
     size=grib_darray_used_size(self->numericValues->v[self->index]);
   }
