@@ -23,12 +23,12 @@ However it requires that cmake be installed on your system.
    > mkdir build
    > cd build
 
-4. Run cmake pointing to the installation location:
+4. Run cmake pointing to the source and specify the installation location:
    > cmake  ../eccodes-x.y.z-Source -DCMAKE_INSTALL_PREFIX=/path/to/where/you/install/eccodes
 
-5. make, check and install:
+5. Compile, test and install:
    > make
-   > make check
+   > ctest
    > make install
 
 
