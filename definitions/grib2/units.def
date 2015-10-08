@@ -109,6 +109,7 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
+	 lengthOfTimeRange = 3 ;
 	}
 #Relative humidity with respect to water
 '%' = {

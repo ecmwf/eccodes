@@ -109,6 +109,7 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
+	 lengthOfTimeRange = 3 ;
 	}
 #Relative humidity with respect to water
 'rhw' = {
