@@ -82,6 +82,9 @@ grib_action *grib_action_create_set_darray(grib_context *context, const char *na
 /* action_class_set_iarray.c */
 grib_action *grib_action_create_set_iarray(grib_context *context, const char *name, grib_iarray *iarray);
 
+/* action_class_set_sarray.c */
+grib_action* grib_action_create_set_sarray(grib_context* context, const char* name, grib_sarray* sarray);
+
 /* action_class_noop.c */
 grib_action *grib_action_create_noop(grib_context *context, const char *fname);
 

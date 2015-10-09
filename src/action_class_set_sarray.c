@@ -107,7 +107,7 @@ static int execute(grib_action* a, grib_handle *h)
 {
   grib_action_set_sarray* self = (grib_action_set_sarray*) a;
 
-  return grib_set_string_array(h,self->name,self->sarray->v,self->sarray->n);
+  return grib_set_string_array(h, self->name, (const char**)self->sarray->v, self->sarray->n);
 }
 
 

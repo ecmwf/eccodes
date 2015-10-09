@@ -391,7 +391,7 @@ int grib_set_string_array(grib_handle* h, const char* name, const char** val, si
         if(a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
             return GRIB_READ_ONLY;
 
-        ret=grib_pack_string_array(a, val, length);
+        ret=grib_pack_string_array(a, val, &length);
         if(ret == GRIB_SUCCESS){
             return grib_dependency_notify_change(a);
         }

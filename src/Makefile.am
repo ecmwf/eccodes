@@ -37,6 +37,7 @@ libeccodes_la_prototypes= \
 	action_class_set.c \
 	action_class_set_darray.c \
 	action_class_set_iarray.c \
+	action_class_set_sarray.c \
 	action_class_noop.c \
 	action_class_write.c \
 	action_class_print.c \
