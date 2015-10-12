@@ -249,17 +249,24 @@ static int pack_string_array(grib_accessor*a , const char**  v, size_t *len){
   grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
 
   int ret=0,i,idx;
-  long count=0;
   char* s=NULL;
   grib_context* c=a->parent->h->context;
 
-  count=self->numberOfSubsets;
-  idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
-  grib_sarray_delete(c,self->stringValues->v[idx]);
-  self->stringValues->v[idx]=grib_sarray_new(c,self->numberOfSubsets,1);
-  for (i=0;i<self->numberOfSubsets;i++) {
-    s=grib_context_strdup(c,v[i]);
-    grib_sarray_push(c,self->stringValues->v[idx],s);
+  if (self->compressedData) {
+    idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
+    if (*len!=1 && *len!=self->numberOfSubsets) {
+      grib_context_log(c,GRIB_LOG_ERROR,"Number of values mismatch for %s: are %ld should be %ld",
+        self->descriptors->v[self->elementsDescriptorsIndex->v[0]->v[idx]]->shortName,*len,self->numberOfSubsets);
+      return GRIB_ARRAY_TOO_SMALL;
+    }
+    grib_sarray_delete(c,self->stringValues->v[idx]);
+    self->stringValues->v[idx]=grib_sarray_new(c,*len,1);
+    for (i=0;i<*len;i++) {
+      s=grib_context_strdup(c,v[i]);
+      grib_sarray_push(c,self->stringValues->v[idx],s);
+    }
+  } else {
+    ret=GRIB_NOT_IMPLEMENTED;
   }
 
   return ret;
@@ -391,9 +398,15 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
   grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
   int ret=0,i;
   long count=1,n;
+  grib_context* c=a->parent->h->context;
 
   if (self->compressedData) {
-    count=self->numberOfSubsets;
+    count=*len;
+    if (count!=1 && count!=self->numberOfSubsets) {
+      grib_context_log(c,GRIB_LOG_ERROR,"Number of values mismatch for %s: are %ld should be %ld",
+        self->descriptors->v[self->elementsDescriptorsIndex->v[0]->v[self->index]]->shortName,count,self->numberOfSubsets);
+      return GRIB_ARRAY_TOO_SMALL;
+    }
     grib_darray_delete(a->parent->h->context,self->numericValues->v[self->index]);
     self->numericValues->v[self->index]=grib_darray_new(a->parent->h->context,count,1);
 
@@ -414,9 +427,15 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
   grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
   int ret=0,i;
   long count=1;
+  grib_context* c=a->parent->h->context;
 
   if (self->compressedData) {
-    count=self->numberOfSubsets;
+    count=*len;
+    if (count!=1 && count!=self->numberOfSubsets) {
+      grib_context_log(c,GRIB_LOG_ERROR,"Number of values mismatch for %s: are %ld should be %ld",
+        self->descriptors->v[self->elementsDescriptorsIndex->v[0]->v[self->index]]->shortName,count,self->numberOfSubsets);
+      return GRIB_ARRAY_TOO_SMALL;
+    }
     grib_darray_delete(a->parent->h->context,self->numericValues->v[self->index]);
 
     for (i=0;i<count;i++) {

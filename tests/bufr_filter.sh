@@ -920,8 +920,8 @@ set numberOfSubsets=10;
 set unexpandedDescriptors={311001};
 
 set windSpeed={1,2,3,4,5,6,7,8,9,10};
-set windDirection={3,4,5,6,7,8,9,10,11};
-set aircraftFlightNumber="1234";
+set windDirection={5,3,4,5,6,7,8,9,10,11};
+set aircraftFlightNumber={"ABCD","dfasd","qwerqwe","3241234","ywer","ABCD","dfasd","qwerqwe","3241234","erwe"};
 
 set pack=1;
 write;

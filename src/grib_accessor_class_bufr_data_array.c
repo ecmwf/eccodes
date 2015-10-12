@@ -564,19 +564,20 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos,int i
     if (max>maxAllowed && max!=GRIB_MISSING_DOUBLE) return GRIB_OUT_OF_RANGE;
     if (min<minAllowed && min!=GRIB_MISSING_DOUBLE) return GRIB_OUT_OF_RANGE;
 
+    reference=round(min*inverseFactor);
+    localReference=reference-modifiedReference;
     if (max!=min) {
-      reference=round(min*inverseFactor);
-      localReference=reference-modifiedReference;
       localRange = (max-min)*inverseFactor+1;
       localWidth=ceil(log(localRange)/log(2.0));
-      lval=round((max-min)*inverseFactor);
+      lval=round(max*inverseFactor)-reference;
       allone=grib_power(localWidth,2)-1;
-      if (allone == lval || localWidth == 1 ) localWidth++;
+      while (allone <= lval) {
+        localWidth++;
+        allone=grib_power(localWidth,2)-1;
+      }
+      if (localWidth == 1 ) localWidth++;
     } else {
-      if (thereIsAMissing==1) {
-        localWidth=1;
-        localReference=round(min*inverseFactor)-modifiedReference;
-        }
+      if (thereIsAMissing==1) localWidth=1;
       else localWidth=0;
     }
 
@@ -587,7 +588,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos,int i
       if (min==GRIB_MISSING_DOUBLE) {
         grib_set_bits_on(buff->data,pos,modifiedWidth);
       } else {
-        lval=round(min*inverseFactor)-modifiedReference;
+        lval=localReference-modifiedReference;
         grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
       }
     }
@@ -600,7 +601,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos,int i
         if (dvalues->v[j]==GRIB_MISSING_DOUBLE) {
           grib_set_bits_on(buff->data,pos,localWidth);
         } else {
-          lval=round((dvalues->v[j]-min)*inverseFactor);
+          lval=round(dvalues->v[j]*inverseFactor)-reference;
           grib_encode_unsigned_longb(buff->data,lval,pos,localWidth);
         }
       }
@@ -1152,6 +1153,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
         if (self->canBeMissing[idx]) elementAccessor->flags |= GRIB_ACCESSOR_FLAG_CAN_BE_MISSING;
         accessor_bufr_data_element_set_index(elementAccessor,ide);
         accessor_bufr_data_element_set_descriptors(elementAccessor,self->expanded);
+        accessor_bufr_data_element_set_elementsDescriptorsIndex(elementAccessor,self->elementsDescriptorsIndex);
         accessor_bufr_data_element_set_numericValues(elementAccessor,self->numericValues);
         accessor_bufr_data_element_set_stringValues(elementAccessor,self->stringValues);
         accessor_bufr_data_element_set_compressedData(elementAccessor,self->compressedData);
@@ -1186,6 +1188,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
             if (self->canBeMissing[idx]) elementAccessor->flags |= GRIB_ACCESSOR_FLAG_CAN_BE_MISSING;
             accessor_bufr_data_element_set_index(elementAccessor,ide);
             accessor_bufr_data_element_set_descriptors(elementAccessor,self->expanded);
+            accessor_bufr_data_element_set_elementsDescriptorsIndex(elementAccessor,self->elementsDescriptorsIndex);
             accessor_bufr_data_element_set_numericValues(elementAccessor,self->numericValues);
             accessor_bufr_data_element_set_stringValues(elementAccessor,self->stringValues);
             accessor_bufr_data_element_set_compressedData(elementAccessor,self->compressedData);
