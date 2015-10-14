@@ -305,6 +305,9 @@ static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
     for (i=0;i<=self->column;i++) {
         start=end;
         while (*end != '|' && *end!=0) end++;
+        if (! *end ) {
+            break;
+        }
         end++;
     }
     end--;
