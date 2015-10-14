@@ -93,7 +93,7 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
                     case GRIB_TYPE_DOUBLE:
                         replen=1;
                         ret = grib_unpack_double(a,&dval,&replen);
-                        sprintf(val,"%g",dval);
+                        sprintf(val,"%.12g",dval);
                         break;
                     case GRIB_TYPE_LONG:
                         replen=1;
@@ -154,7 +154,7 @@ int grib_accessor_print(grib_accessor* a,const char* name,int type,const char* f
     int ret=0;
     char* myformat=NULL;
     char* myseparator=NULL;
-    char double_format[]="%g"; /* default format for printing double keys */
+    char double_format[]="%.12g"; /* default format for printing double keys */
     char long_format[]="%ld";  /* default format for printing integer keys */
     char default_separator[]=" ";
     grib_handle* h=a->parent->h;
@@ -266,7 +266,7 @@ int grib_accessors_list_print(grib_accessors_list* al,const char* name,int type,
     int ret=0;
     char* myformat=NULL;
     char* myseparator=NULL;
-    char double_format[]="%g"; /* default format for printing double keys */
+    char double_format[]="%.12g"; /* default format for printing double keys */
     char long_format[]="%ld";  /* default format for printing integer keys */
     char default_separator[]=" ";
     grib_handle* h=al->accessor->parent->h;

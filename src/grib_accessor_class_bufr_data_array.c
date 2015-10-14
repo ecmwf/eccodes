@@ -777,6 +777,7 @@ static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
         if (err) return err;
         *numberOfRepetitions=grib_decode_unsigned_long(data,pos,descriptors[i]->width)+
                 descriptors[i]->reference*descriptors[i]->factor;
+        grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication value=%ld",*numberOfRepetitions);
     }
     if (self->compressedData) {
         dval=grib_darray_new(c,1,100);
@@ -1110,22 +1111,25 @@ static void set_creator_name(grib_action* creator,int code)
     case 243255:
         creator->name="cancelCategoricalForecastValuesFollow";
         break;
+    case 999999:
+        creator->name="associatedField";
+        break;
     default :
         creator->name="operator";
         break;
     }
 }
 
-static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_section* section,long ide,long subset,int dump,int count)
+static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_accessor* attribute,grib_section* section,long ide,long subset,int dump,int count)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     char code[10]={0,};
     int idx=0;
+    int i;
     unsigned long flags=0;
     grib_accessor* operatorAccessor=NULL;
     grib_action operatorCreator = {0, };
     grib_accessor* elementAccessor=NULL;
-    grib_accessor* attribute=NULL;
     grib_action creator = {0, };
     creator.op         = "bufr_data_element";
     creator.name_space = "";
@@ -1148,7 +1152,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
     switch (self->expanded->v[idx]->F) {
     case 0:
     case 1:
-        creator.name=self->expanded->v[idx]->shortName;
+        creator.name=grib_context_strdup(a->parent->h->context,self->expanded->v[idx]->shortName);
         elementAccessor = grib_accessor_factory(section, &creator, 0, NULL);
         if (self->canBeMissing[idx]) elementAccessor->flags |= GRIB_ACCESSOR_FLAG_CAN_BE_MISSING;
         accessor_bufr_data_element_set_index(elementAccessor,ide);
@@ -1162,6 +1166,15 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
         accessor_bufr_data_element_set_subsetNumber(elementAccessor,subset);
 
         self->expanded->v[idx]->a=elementAccessor;
+
+        if (attribute) {
+          attribute->parent=elementAccessor->parent;
+          for (i=0;i<MAX_ACCESSOR_ATTRIBUTES;i++) {
+            if (attribute->attributes[i]) attribute->attributes[i]->parent=elementAccessor->parent;
+          }
+          grib_accessor_add_attribute(elementAccessor,attribute);
+        }
+
         attribute=create_attribute("index",section,GRIB_TYPE_LONG,0,0,count,flags);
         grib_accessor_add_attribute(elementAccessor,attribute);
 
@@ -1202,6 +1215,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
         } else {
             elementAccessor = grib_accessor_factory(section, &operatorCreator, 0, NULL);
             accessor_variable_set_type(elementAccessor,GRIB_TYPE_LONG);
+
             attribute=create_attribute("index",section,GRIB_TYPE_LONG,0,0,count,flags);
             grib_accessor_add_attribute(elementAccessor,attribute);
 
@@ -1210,6 +1224,38 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_sect
             grib_accessor_add_attribute(elementAccessor,attribute);
         }
         self->expanded->v[idx]->a=elementAccessor;
+        break;
+    case 9:
+        set_creator_name(&creator,self->expanded->v[idx]->code);
+        elementAccessor = grib_accessor_factory(section, &creator, 0, NULL);
+        accessor_bufr_data_element_set_index(elementAccessor,ide);
+        accessor_bufr_data_element_set_descriptors(elementAccessor,self->expanded);
+        accessor_bufr_data_element_set_elementsDescriptorsIndex(elementAccessor,self->elementsDescriptorsIndex);
+        accessor_bufr_data_element_set_numericValues(elementAccessor,self->numericValues);
+        accessor_bufr_data_element_set_stringValues(elementAccessor,self->stringValues);
+        accessor_bufr_data_element_set_compressedData(elementAccessor,self->compressedData);
+        accessor_bufr_data_element_set_type(elementAccessor,self->expanded->v[idx]->type);
+        accessor_bufr_data_element_set_numberOfSubsets(elementAccessor,self->numberOfSubsets);
+        accessor_bufr_data_element_set_subsetNumber(elementAccessor,subset);
+
+        attribute=create_attribute("index",section,GRIB_TYPE_LONG,0,0,count,flags);
+        grib_accessor_add_attribute(elementAccessor,attribute);
+
+        sprintf(code,"%06ld",self->expanded->v[idx]->code);
+        attribute=create_attribute("code",section,GRIB_TYPE_STRING,code,0,0,flags);
+        grib_accessor_add_attribute(elementAccessor,attribute);
+
+        attribute=create_attribute("units",section,GRIB_TYPE_STRING,self->expanded->v[idx]->units,0,0,GRIB_ACCESSOR_FLAG_DUMP);
+        grib_accessor_add_attribute(elementAccessor,attribute);
+
+        attribute=create_attribute("scale",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->scale,flags);
+        grib_accessor_add_attribute(elementAccessor,attribute);
+
+        attribute=create_attribute("reference",section,GRIB_TYPE_DOUBLE,0,self->expanded->v[idx]->reference,0,flags);
+        grib_accessor_add_attribute(elementAccessor,attribute);
+
+        attribute=create_attribute("width",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->width,flags);
+        grib_accessor_add_attribute(elementAccessor,attribute);
         break;
     }
 
@@ -1280,6 +1326,7 @@ static int create_keys(grib_accessor* a)
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     int err=0;
     grib_accessor* elementAccessor=0;
+    grib_accessor* associatedFieldAccessor=0;
     long iss,end,elementsInSubset,ide;
     grib_section* section=NULL;
     grib_section* rootSection=NULL;
@@ -1345,6 +1392,7 @@ static int create_keys(grib_accessor* a)
       forceGroupClosure=0;
       elementsInSubset= self->compressedData ? grib_iarray_used_size(self->elementsDescriptorsIndex->v[0]) :
         grib_iarray_used_size(self->elementsDescriptorsIndex->v[iss]);
+      associatedFieldAccessor=NULL;
       for (ide=0;ide<elementsInSubset;ide++) {
         idx = self->compressedData ? self->elementsDescriptorsIndex->v[0]->v[ide] :
           self->elementsDescriptorsIndex->v[iss]->v[ide] ;
@@ -1456,12 +1504,18 @@ static int create_keys(grib_accessor* a)
       }
 
       count++;
-      elementAccessor=create_accessor_from_descriptor(a,section,ide,iss,dump,count);
+      elementAccessor=create_accessor_from_descriptor(a,associatedFieldAccessor,section,ide,iss,dump,count);
+      associatedFieldAccessor=NULL;
       if (elementFromBitmap && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
         grib_accessor_add_attribute(elementFromBitmap,elementAccessor);
       } else if (elementAccessor) {
-        grib_push_accessor(elementAccessor,section->block);
-        grib_accessors_list_push(self->dataAccessors,elementAccessor);
+
+        if (descriptor->code == 999999) {
+          associatedFieldAccessor=elementAccessor;
+        } else {
+          grib_push_accessor(elementAccessor,section->block);
+          grib_accessors_list_push(self->dataAccessors,elementAccessor);
+        }
       }
       }
     }

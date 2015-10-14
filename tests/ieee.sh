@@ -31,7 +31,7 @@ cat > w.filter <<EOF
 EOF
 
 cat > r.filter <<EOF
-print "[values]";
+print "[values%g]";
 EOF
 
 ${tools_dir}grib_filter -o $outsimple w.filter $infile 

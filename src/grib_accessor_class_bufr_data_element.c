@@ -23,7 +23,7 @@
    IMPLEMENTS = init;dump
    IMPLEMENTS = unpack_string;unpack_string_array;unpack_long; unpack_double
    IMPLEMENTS = pack_long; pack_double ; pack_string_array; pack_string
-   IMPLEMENTS = value_count; destroy; get_native_type;
+   IMPLEMENTS = value_count; get_native_type;
    MEMBERS    = long index
    MEMBERS    = int type
    MEMBERS    = long compressedData
@@ -58,7 +58,6 @@ static int unpack_long(grib_accessor*, long* val,size_t *len);
 static int unpack_string (grib_accessor*, char*, size_t *len);
 static int unpack_string_array (grib_accessor*, char**, size_t *len);
 static int value_count(grib_accessor*,long*);
-static void destroy(grib_context*,grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
@@ -88,7 +87,7 @@ static grib_accessor_class _grib_accessor_class_bufr_data_element = {
     &init_class,                 /* init_class */
     &init,                       /* init                      */
     0,                  /* post_init                      */
-    &destroy,                    /* free mem                       */
+    0,                    /* free mem                       */
     &dump,                       /* describes himself         */
     0,                /* get length of section     */
     0,              /* get length of string      */
@@ -471,10 +470,6 @@ static int value_count(grib_accessor* a,long* count)
   *count = size == 1 ? 1 : self->numberOfSubsets;
 
   return ret;
-}
-
-static void destroy(grib_context* context,grib_accessor* a)
-{
 }
 
 static int  get_native_type(grib_accessor* a){

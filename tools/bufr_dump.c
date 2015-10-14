@@ -178,6 +178,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             }
             a=grib_find_accessor(h,"numericValues");
             al=accessor_bufr_data_array_get_dataAccessors(a);
+            options->dump_flags=GRIB_DUMP_FLAG_ALL_ATTRIBUTES;
             grib_dump_bufr_flat(al,h,stdout,options->dump_mode,options->dump_flags,0);
             break;
           case 's':

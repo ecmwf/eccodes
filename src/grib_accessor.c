@@ -499,7 +499,10 @@ void grib_accessor_delete(grib_context *ct, grib_accessor* a)
   while(c)
   {
     grib_accessor_class *s = c->super ? *(c->super) : NULL;
-    if(c->destroy) c->destroy(ct,a);
+    grib_context_log(ct,GRIB_LOG_DEBUG,"destroy %s ==> %s",c->name,a->name);
+    if(c->destroy) {
+      c->destroy(ct,a);
+    }
     c = s;
   }
   grib_context_free(ct,a);
@@ -637,6 +640,14 @@ const char* grib_get_type_name(int type)
   return "unknown";
 }
 
+int grib_accessor_clear_attributes(grib_accessor* a) {
+  int id;
+  for (id=0;id<MAX_ACCESSOR_ATTRIBUTES;id++) {
+    a->attributes[id]=NULL;
+  }
+  return 0;
+}
+
 int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr) {
   int id=0;
   int idx=0;
@@ -648,6 +659,7 @@ int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr) {
       if (a->same)
         attr->same=_grib_accessor_get_attribute(a->same,attr->name,&idx);
 
+      grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,"added attribute %s->%s",a->name,attr->name);
       return GRIB_SUCCESS;
     }
   }

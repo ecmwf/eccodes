@@ -338,6 +338,20 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
 
     case 0:
       u=grib_bufr_descriptors_array_pop_front(unexpanded);
+      size=1;
+      if (ccp->associatedFieldWidth && u->X!=31) {
+        bufr_descriptor* au=grib_bufr_descriptor_new(self->tablesAccessor,999999,err);
+        au->width=ccp->associatedFieldWidth;
+        au->shortName=grib_context_strdup(c,"associatedField");
+        au->name=grib_context_strdup(c,"associated field");
+        au->units=grib_context_strdup(c,"associated units");
+#if MYDEBUG
+      for (idepth=0;idepth<depth;idepth++) printf("\t");
+      printf("+++ push %06ld (%ld %g %ld)",au->code,au->scale,au->reference,au->width);
+#endif
+        grib_bufr_descriptors_array_push(expanded,au);
+        size++;
+      }
 #if MYDEBUG
       for (idepth=0;idepth<depth;idepth++) printf("\t");
       printf("+++ pop  %06ld\n",u->code);
@@ -365,19 +379,6 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
       printf("->(%ld %g %ld)\n",u->scale,u->reference,u->width);
 #endif
       grib_bufr_descriptors_array_push(expanded,u);
-      size=1;
-      if (ccp->associatedFieldWidth) {
-        bufr_descriptor* au=grib_bufr_descriptor_new(self->tablesAccessor,999999,err);
-        au->width=ccp->associatedFieldWidth;
-#if MYDEBUG
-      for (idepth=0;idepth<depth;idepth++) printf("\t");
-      printf("+++ push %06ld (%ld %g %ld)",au->code,au->scale,au->reference,au->width);
-#endif
-        grib_bufr_descriptors_array_push(expanded,au);
-        size++;
-        /* bufrdc bug!!*/
-        ccp->associatedFieldWidth=0;
-      }
       break;
 
     case 2:
