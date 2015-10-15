@@ -184,13 +184,13 @@ static void default_log(const grib_context* c, int level, const char* mess)
 {
     if (!c) c=grib_context_get_default();
     if(level == GRIB_LOG_ERROR)   {
-        fprintf(c->log_stream, "GRIB_API ERROR   :  %s\n", mess);
+        fprintf(c->log_stream, "ECCODES ERROR   :  %s\n", mess);
         /*Assert(1==0);*/
     }
-    if(level == GRIB_LOG_FATAL)   fprintf(c->log_stream, "GRIB_API ERROR   :  %s\n", mess);
-    if(level == GRIB_LOG_DEBUG && c->debug>0)   fprintf(c->log_stream, "GRIB_API DEBUG   :  %s\n", mess);
-    if(level == GRIB_LOG_WARNING) fprintf(c->log_stream, "GRIB_API WARNING :  %s\n", mess);
-    if(level == GRIB_LOG_INFO)    fprintf(c->log_stream, "GRIB_API INFO    :  %s\n", mess);
+    if(level == GRIB_LOG_FATAL)   fprintf(c->log_stream, "ECCODES ERROR   :  %s\n", mess);
+    if(level == GRIB_LOG_DEBUG && c->debug>0)   fprintf(c->log_stream, "ECCODES DEBUG   :  %s\n", mess);
+    if(level == GRIB_LOG_WARNING) fprintf(c->log_stream, "ECCODES WARNING :  %s\n", mess);
+    if(level == GRIB_LOG_INFO)    fprintf(c->log_stream, "ECCODES INFO    :  %s\n", mess);
 
     if(level == GRIB_LOG_FATAL) { Assert(0);}
 

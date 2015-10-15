@@ -252,7 +252,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     buflen = 32*(sub_k+1)*(sub_k+2)+(*len-(sub_k+1)*(sub_k+2))*bits_per_value+18*8;
     half_byte = seclen*8-buflen;
 	if (a->parent->h->context->debug==-1) {
-		printf("GRIB_API DEBUG: half_byte=%ld\n",half_byte);
+		printf("ECCODES DEBUG: half_byte=%ld\n",half_byte);
 	}
 
     ret = grib_set_long_internal(a->parent->h,self->half_byte, half_byte);
