@@ -62,7 +62,7 @@ int grib_set_long_internal(grib_handle* h, const char* name, long val) {
     a = grib_find_accessor(h, name);
 
     if (h->context->debug==-1)
-        printf("GRIB_API DEBUG grib_set_long_internal %s=%ld\n",name,(long)val);
+        printf("ECCODES DEBUG grib_set_long_internal %s=%ld\n",name,(long)val);
 
     if(a){
         ret = grib_pack_long(a, &val, &l);
@@ -87,7 +87,7 @@ int grib_set_long(grib_handle* h, const char* name, long val) {
     a = grib_find_accessor(h, name);
 
     if (h->context->debug==-1)
-        printf("GRIB_API DEBUG grib_set_long %s=%ld\n",name,(long)val);
+        printf("ECCODES DEBUG grib_set_long %s=%ld\n",name,(long)val);
 
     if(a){
         if(a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
@@ -110,7 +110,7 @@ int grib_set_double_internal(grib_handle* h, const char* name, double val) {
     a = grib_find_accessor(h, name);
 
     if (h->context->debug==-1)
-        printf("GRIB_API DEBUG grib_set_double_internal %s=%g\n",name,val);
+        printf("ECCODES DEBUG grib_set_double_internal %s=%g\n",name,val);
 
     if(a){
         ret = grib_pack_double(a, &val, &l);
@@ -300,7 +300,7 @@ int grib_set_double(grib_handle* h, const char* name, double val) {
     a = grib_find_accessor(h, name);
 
     if (h->context->debug==-1)
-        printf("GRIB_API DEBUG grib_set_double %s=%g\n",name,val);
+        printf("ECCODES DEBUG grib_set_double %s=%g\n",name,val);
 
     if(a){
 
@@ -325,7 +325,7 @@ int grib_set_string_internal(grib_handle* h, const char* name,
     a = grib_find_accessor(h, name);
 
     if (h->context->debug==-1)
-        printf("GRIB_API DEBUG grib_set_string_internal %s=%s\n",name,val);
+        printf("ECCODES DEBUG grib_set_string_internal %s=%s\n",name,val);
 
     if(a){
         ret = grib_pack_string(a, val, length);
@@ -361,7 +361,7 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t *l
     a = grib_find_accessor(h, name);
 
     if (h->context->debug==-1)
-        printf("GRIB_API DEBUG grib_set_string %s=%s\n",name,val);
+        printf("ECCODES DEBUG grib_set_string %s=%s\n",name,val);
 
     if(a)
     {
@@ -619,7 +619,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
     int ret=0;
 
     if (h->context->debug==-1)
-        printf("GRIB_API DEBUG grib_set_double_array_internal key=%s %ld values\n",name, (long)length);
+        printf("ECCODES DEBUG grib_set_double_array_internal key=%s %ld values\n",name, (long)length);
 
     if (length==0) {
         grib_accessor* a = grib_find_accessor(h, name);
@@ -631,7 +631,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
     if (ret!=GRIB_SUCCESS)
         grib_context_log(h->context,GRIB_LOG_ERROR,"unable to set double array %s (%s)",
                 name,grib_get_error_message(ret));
-    /*if (h->context->debug==-1) printf("GRIB_API DEBUG grib_set_double_array_internal key=%s --DONE\n",name);*/
+    /*if (h->context->debug==-1) printf("ECCODES DEBUG grib_set_double_array_internal key=%s --DONE\n",name);*/
     return ret;
 }
 
@@ -641,7 +641,7 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
     int constant,i;
 
     if (h->context->debug==-1)
-        printf("GRIB_API DEBUG grib_set_double_array key=%s %ld values\n",name,(long)length);
+        printf("ECCODES DEBUG grib_set_double_array key=%s %ld values\n",name,(long)length);
 
     if (length==0) {
         grib_accessor* a = grib_find_accessor(h, name);
@@ -683,7 +683,7 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
             ) {
                 slen=11; /*length of 'grid_simple' */
                 if (h->context->debug == -1)
-                    printf("GRIB_API DEBUG grib_set_double_array forcing grid_simple\n");
+                    printf("ECCODES DEBUG grib_set_double_array forcing grid_simple\n");
                 grib_set_string(h,"packingType","grid_simple",&slen);
             }
         }

@@ -239,7 +239,7 @@ grib_handle* grib_handle_new_from_samples ( grib_context* c, const char* name )
 	   if(g) return g;
      */
     if (c->debug) {
-        printf("GRIB_API DEBUG: grib_handle_new_from_samples '%s'\n", name);
+        printf("ECCODES DEBUG: grib_handle_new_from_samples '%s'\n", name);
     }
 
     g=grib_external_template ( c,name );

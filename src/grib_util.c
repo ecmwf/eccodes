@@ -333,17 +333,17 @@ static grib_trie* init_list(const char* name) {
 static void print_values(grib_context* c, const grib_util_grid_spec* spec, const double* data_values,size_t data_values_count,const grib_values *values,int count)
 {
     int i;
-    printf("GRIB_API DEBUG grib_util grib_set_values: setting %d values \n",count);
+    printf("ECCODES DEBUG grib_util grib_set_values: setting %d values \n",count);
 
     for(i = 0; i < count ; i++)
     {
         switch(values[i].type)
         {
-        case GRIB_TYPE_LONG: printf("GRIB_API DEBUG grib_util: => %s =  %ld;\n"
+        case GRIB_TYPE_LONG: printf("ECCODES DEBUG grib_util: => %s =  %ld;\n"
                 ,values[i].name,(long)values[i].long_value); break;
-        case GRIB_TYPE_DOUBLE: printf("GRIB_API DEBUG grib_util: => %s = %.16e;\n"
+        case GRIB_TYPE_DOUBLE: printf("ECCODES DEBUG grib_util: => %s = %.16e;\n"
                 ,values[i].name,values[i].double_value); break;
-        case GRIB_TYPE_STRING: printf("GRIB_API DEBUG grib_util: => %s = \"%s\";\n"
+        case GRIB_TYPE_STRING: printf("ECCODES DEBUG grib_util: => %s = \"%s\";\n"
                 ,values[i].name,values[i].string_value); break;
         }
     }
@@ -427,9 +427,9 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     grib_get_long(h,"bitsPerValue",&input_bits_per_value);
     grib_get_long(h,"decimalScaleFactor",&input_decimal_scale_factor);
     if (h->context->debug==-1) {
-        printf("GRIB_API DEBUG grib_util: input_packing_type = %s\n",input_packing_type);
-        printf("GRIB_API DEBUG grib_util: input_bits_per_value = %ld\n",input_bits_per_value);
-        printf("GRIB_API DEBUG grib_util: input_decimal_scale_factor = %ld\n",input_decimal_scale_factor);
+        printf("ECCODES DEBUG grib_util: input_packing_type = %s\n",input_packing_type);
+        printf("ECCODES DEBUG grib_util: input_bits_per_value = %ld\n",input_bits_per_value);
+        printf("ECCODES DEBUG grib_util: input_decimal_scale_factor = %ld\n",input_decimal_scale_factor);
     }
 
     if (flags & GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING) {
@@ -515,9 +515,9 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         }
         if (h->context->debug==-1) {
             int j=0;
-            printf("GRIB_API DEBUG grib_util: grib_set_double_array\n");
-            for (j=0;j<20;j++) printf("GRIB_API DEBUG grib_util %g\n",data_values[j]);
-            printf("GRIB_API DEBUG grib_util: data_values_count=%d \n",(int)data_values_count);
+            printf("ECCODES DEBUG grib_util: grib_set_double_array\n");
+            for (j=0;j<20;j++) printf("ECCODES DEBUG grib_util %g\n",data_values[j]);
+            printf("ECCODES DEBUG grib_util: data_values_count=%d \n",(int)data_values_count);
         }
 
         if((*err = grib_set_double_array(h,"values",data_values,data_values_count)) != 0)
@@ -525,7 +525,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
             goto cleanup;
         }
         if (h->context->debug==-1)
-            printf("GRIB_API DEBUG grib_util: done grib_set_double_array \n");
+            printf("ECCODES DEBUG grib_util: done grib_set_double_array \n");
 
 
         /* convert to second_order if not constant field */
@@ -1036,7 +1036,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         grib_set_long(outh,"edition", packing_spec->editionNumber);
 
     if (h->context->debug==-1)
-        printf("GRIB_API DEBUG: grib_util_set_spec end\n");
+        printf("ECCODES DEBUG: grib_util_set_spec end\n");
 
     return outh;
 

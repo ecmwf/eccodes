@@ -49,7 +49,7 @@ static grib_handle* try_template(grib_context* c,const char* dir,const char* nam
   sprintf(path,"%s/%s.tmpl",dir,name);
 
   if (c->debug==-1) {
-    printf("GRIB_API DEBUG: try_template path='%s'\n", path);
+    printf("ECCODES DEBUG: try_template path='%s'\n", path);
   }
 
   if(access(path,F_OK) == 0)
