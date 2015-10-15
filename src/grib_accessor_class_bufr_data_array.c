@@ -892,7 +892,7 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         } else {
             err=encode_double_value(c,buff,pos,i,self,self->numericValues->v[subsetIndex]->v[elementIndex]);
             if (err) {
-              grib_context_log(c,GRIB_LOG_ERROR,"encoding %s=%g",self->expanded->v[i]->name,self->numericValues->v[subsetIndex]->v[elementIndex]);
+              grib_context_log(c,GRIB_LOG_ERROR,"encoding %s=%g",self->expanded->v[i]->shortName,self->numericValues->v[subsetIndex]->v[elementIndex]);
             }
         }
     }
@@ -904,8 +904,13 @@ grib_buffer* buff,unsigned char* data,long *pos,int i,long elementIndex,grib_dar
 {
     bufr_descriptor** descriptors=0;
 
-    if (self->compressedData)
+    if (self->compressedData) {
       Assert(grib_darray_used_size(self->numericValues->v[elementIndex])==1);
+      *numberOfRepetitions=self->numericValues->v[elementIndex]->v[0];
+    } else {
+      *numberOfRepetitions=self->numericValues->v[subsetIndex]->v[elementIndex];
+    }
+
 
     return encode_element(c,self,subsetIndex,buff,data,pos,i,elementIndex,dval,0);
 
