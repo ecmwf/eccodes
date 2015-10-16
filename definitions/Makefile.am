@@ -7680,7 +7680,6 @@ dist_definitionsgrib1_local_ecmf_DATA = \
 
 definitionsgrib1_local_edzwdir = @ECCODES_DEFINITION_PATH@/grib1/local/edzw
 dist_definitionsgrib1_local_edzw_DATA = \
-	grib1/local/edzw/3.table\
 	grib1/local/edzw/5.table
 
 definitionsgrib1_local_rjtddir = @ECCODES_DEFINITION_PATH@/grib1/local/rjtd
