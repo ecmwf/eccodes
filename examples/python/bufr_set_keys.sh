@@ -24,7 +24,7 @@ f=${data_dir}/bufr/syno_multi.bufr
 REDIRECT=/dev/null
 
 #The input ($f) and output ($fBufrTmp) are hardcoded in the f90 example!!! 
-$PYTHON bufr_set_keys.py 2> $REDIRECT > $REDIRECT
+$PYTHON $examples_src/bufr_set_keys.py 2> $REDIRECT > $REDIRECT
 
 #Compare modified to the original
 set +e

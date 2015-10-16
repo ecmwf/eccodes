@@ -16,6 +16,6 @@ fTmp=${label}.tmp
 # Create a file containing both GRIB and BUFR messages
 cat ${data_dir}/sample.grib2 ${data_dir}/bufr/syno_multi.bufr >$fTmp
 
-$PYTHON  get_product_kind.py $fTmp >/dev/null 2>&1
+$PYTHON $examples_src/get_product_kind.py $fTmp >/dev/null 2>&1
 
 rm -f ${fTmp}

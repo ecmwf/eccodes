@@ -24,7 +24,7 @@ rm -f $fTmp | true
 REDIRECT=/dev/null
 
 #Write the key values into a file
-$PYTHON bufr_read_temp.py 2> $REDIRECT > $fTmp
+$PYTHON $examples_src/bufr_read_temp.py 2> $REDIRECT > $fTmp
 
 #TODO: check the results
 

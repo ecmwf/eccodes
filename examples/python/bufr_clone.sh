@@ -22,7 +22,7 @@ f=${data_dir}/bufr/syno_1.bufr
 REDIRECT=/dev/null
 
 #The input ($f) and output ($fBufrTmp) are hardcoded in the example!!!  
-$PYTHON bufr_clone.py >$REDIRECT 2> $REDIRECT 
+$PYTHON $examples_src/bufr_clone.py >$REDIRECT 2> $REDIRECT 
 
 #TODO: add more checks
 

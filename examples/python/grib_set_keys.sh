@@ -3,5 +3,5 @@
 . ./include.sh
 
 REDIRECT=/dev/null
-$PYTHON grib_set_keys.py 2> $REDIRECT > $REDIRECT
+$PYTHON $examples_src/grib_set_keys.py 2> $REDIRECT > $REDIRECT
 rm -f out.set.grib || true

@@ -21,7 +21,7 @@ rm -f $fTmp | true
 REDIRECT=/dev/null
 
 #Write the key values into a file
-$PYTHON metar_get_keys.py  2> $REDIRECT > $fTmp
+$PYTHON $examples_src/metar_get_keys.py  2> $REDIRECT > $fTmp
 
 #TODO: check the results
 

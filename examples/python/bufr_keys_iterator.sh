@@ -23,7 +23,7 @@ REDIRECT=/dev/null
 f=${data_dir}/bufr/syno_1.bufr
 
 #The input ($f) is hardcoded in the example!!!
-$PYTHON bufr_keys_iterator.py 2> $REDIRECT > $fTmp
+$PYTHON $examples_src/bufr_keys_iterator.py 2> $REDIRECT > $fTmp
 
 #TODO: check the output
 

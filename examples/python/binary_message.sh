@@ -5,7 +5,7 @@
 INPUT=${data_dir}/tigge_pf_ecmwf.grib2
 OUTPUT=out.grib
 
-$PYTHON binary_message.py $INPUT $OUTPUT
+$PYTHON $examples_src/binary_message.py $INPUT $OUTPUT
 ${tools_dir}/grib_compare $INPUT $OUTPUT
 rm $OUTPUT || true
 
@@ -13,7 +13,7 @@ rm $OUTPUT || true
 # We are expecting the command to fail so must turn off "set -e"
 INPUT=${data_dir}/bad.grib
 set +e
-$PYTHON binary_message.py $INPUT $OUTPUT
+$PYTHON $examples_src/binary_message.py $INPUT $OUTPUT
 status=$?
 set -e
 # Check command did indeed fail
