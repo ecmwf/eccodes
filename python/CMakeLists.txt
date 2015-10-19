@@ -1,7 +1,5 @@
 if( HAVE_PYTHON )
 
-    ecbuild_find_python( VERSION 2.5)
-
     #find_package( SWIG )
     #if( SWIG_FOUND )
     #    include( ${SWIG_USE_FILE} )
