@@ -289,7 +289,7 @@ if( NOT PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME )
   set( ECCODES_SAMPLES_PATH     ${ECCODES_SAMPLES_PATH} PARENT_SCOPE )
   set( ECCODES_IFS_SAMPLES_PATH ${ECCODES_IFS_SAMPLES_PATH} PARENT_SCOPE )
   set( ECCODES_DEFINITION_PATH  ${ECCODES_DEFINITION_PATH} PARENT_SCOPE )
-  set( ECCODES_INSTALL_ECMWF_TOOLS  ${ECCODES_INSTALL_ECMWF_TOOLS} PARENT_SCOPE )
+  set( ECCODES_INSTALL_EXTRA_TOOLS  ${ECCODES_INSTALL_EXTRA_TOOLS} PARENT_SCOPE )
 endif()
 
 # pkg-config
@@ -320,7 +320,6 @@ ecbuild_install_project( NAME ${CMAKE_PROJECT_NAME} )
 
 ecbuild_print_summary()
 
-message("")
 message("")
 message("   +---------------------------+")
 message("   |  Configuration completed  |")
