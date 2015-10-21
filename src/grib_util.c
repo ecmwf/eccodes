@@ -638,6 +638,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         switch (spec->grid_type) {
         case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
         case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
+            /* Choose a sample with the right Gaussian number and edition */
             sprintf(name, "%s_pl_%ld_grib%ld", grid_type,spec->N, editionNumber);
             if (spec->pl && spec->pl_size) {
                 /* GRIB-834: pl is given so can use any of the reduced_gg_pl samples */
@@ -866,9 +867,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         }
     }
 
-
     switch(packing_spec->accuracy) {
-
     case GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT:
     {
         long bitsPerValue = 0;
