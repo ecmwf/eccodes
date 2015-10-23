@@ -333,6 +333,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 
         max_pl = pl[0];
         for (i=1; i<plsize; i++) {
+            Assert( pl[i] > 0 );
             if (pl[i] > max_pl) max_pl = pl[i];
         }
         grib_context_free(c, pl);

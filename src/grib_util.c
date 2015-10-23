@@ -330,7 +330,7 @@ static grib_trie* init_list(const char* name) {
     return 0;
 }
 
-static void print_values(grib_context* c, const grib_util_grid_spec* spec, const double* data_values,size_t data_values_count,const grib_values *values,int count)
+static void print_values(grib_context* c, const grib_util_grid_spec2* spec, const double* data_values,size_t data_values_count,const grib_values *values,int count)
 {
     int i;
     printf("ECCODES DEBUG grib_util grib_set_values: setting %d values \n",count);
@@ -368,6 +368,56 @@ static void print_values(grib_context* c, const grib_util_grid_spec* spec, const
 
 grib_handle* grib_util_set_spec(grib_handle* h,
         const grib_util_grid_spec    *spec,
+        const grib_util_packing_spec *packing_spec,
+        int                           flags,
+        const double*                 data_values,
+        size_t                        data_values_count,
+        int*                          err)
+{
+    /* Create a spec v2 from spec v1 */
+    grib_util_grid_spec2 spec2;
+    Assert(h);
+
+    spec2.grid_type=spec->grid_type;
+    spec2.Ni=spec->Ni;
+    spec2.Nj=spec->Nj;
+    spec2.iDirectionIncrementInDegrees=spec->iDirectionIncrementInDegrees;
+    spec2.jDirectionIncrementInDegrees=spec->jDirectionIncrementInDegrees;
+    spec2.longitudeOfFirstGridPointInDegrees=spec->longitudeOfFirstGridPointInDegrees;
+    spec2.longitudeOfLastGridPointInDegrees=spec->longitudeOfLastGridPointInDegrees;
+    spec2.latitudeOfFirstGridPointInDegrees=spec->latitudeOfFirstGridPointInDegrees;
+    spec2.latitudeOfLastGridPointInDegrees=spec->latitudeOfLastGridPointInDegrees;
+    spec2.uvRelativeToGrid=spec->uvRelativeToGrid;
+    spec2.latitudeOfSouthernPoleInDegrees=spec->latitudeOfSouthernPoleInDegrees;
+    spec2.longitudeOfSouthernPoleInDegrees=spec->longitudeOfSouthernPoleInDegrees;
+    spec2.iScansNegatively=spec->iScansNegatively;
+    spec2.jScansPositively=spec->jScansPositively;
+    spec2.N=spec->N;
+    spec2.bitmapPresent=spec->bitmapPresent;
+    spec2.missingValue=spec->missingValue;
+    spec2.pl=spec->pl;
+    spec2.pl_size=spec->pl_size;
+    spec2.truncation=spec->truncation;
+    spec2.orientationOfTheGridInDegrees=spec->orientationOfTheGridInDegrees;
+    spec2.DyInMetres=spec->DyInMetres;
+    spec2.DxInMetres=spec->DxInMetres;
+
+    /* New data members of spec2 take default values */
+    spec2.angleOfRotationInDegrees = 0;
+    spec2.grid_name= NULL;
+
+    return grib_util_set_spec2(
+            h,
+            &spec2,
+            packing_spec,
+            flags,
+            data_values,
+            data_values_count,
+            err);
+}
+
+grib_handle* grib_util_set_spec2(grib_handle* h,
+        const grib_util_grid_spec2   *spec,
         const grib_util_packing_spec *packing_spec,
         int                           flags,
         const double*                 data_values,
@@ -638,6 +688,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         switch (spec->grid_type) {
         case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
         case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
+            /* Choose a sample with the right Gaussian number and edition */
             sprintf(name, "%s_pl_%ld_grib%ld", grid_type,spec->N, editionNumber);
             if (spec->pl && spec->pl_size) {
                 /* GRIB-834: pl is given so can use any of the reduced_gg_pl samples */
@@ -646,6 +697,15 @@ grib_handle* grib_util_set_spec(grib_handle* h,
             break;
         default :
             sprintf(name, "%s_pl_grib%ld", grid_type, editionNumber);
+        }
+
+        if (spec->pl && spec->grid_name) {
+            /* Cannot have BOTH pl and grid name specified */
+            fprintf(stderr,"GRIB_UTIL_SET_SPEC: Cannot set BOTH pl and grid_name.\n");
+            goto cleanup;
+        }
+        if (spec->grid_name) {
+            sprintf(name, "%s_grib%ld", spec->grid_name, editionNumber);
         }
     }
 
@@ -795,8 +855,6 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     }
 
     /* Set rotation */
-    /* FIXME: Missing angleOfRotationInDegrees */
-
     switch(spec->grid_type) {
     case GRIB_UTIL_GRID_SPEC_ROTATED_LL:
     case GRIB_UTIL_GRID_SPEC_ROTATED_GG:
@@ -866,9 +924,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         }
     }
 
-
     switch(packing_spec->accuracy) {
-
     case GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT:
     {
         long bitsPerValue = 0;
@@ -915,19 +971,8 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     grib_handle_delete(tmp);
     Assert(*err == 0);
 
-    if (h->context->debug==-1)
-        print_values(h->context,spec,data_values,data_values_count,values,count);
-
-    if((*err = grib_set_values(outh,values,count)) != 0)
-    {
-        fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot set values  %s\n",grib_get_error_message(*err));
-
-        for(i = 0; i < count; i++)
-            if(values[i].error)
-                fprintf(stderr," %s %s\n",values[i].name,grib_get_error_message(values[i].error));
-        goto cleanup;
-    }
-
+    /* Set "pl" array if provided (For reduced Gaussian grids) */
+    /* See GRIB-857 */
     Assert(spec->pl_size >= 0);
     if (spec->pl && spec->pl_size == 0) {
         fprintf(stderr, "pl array not NULL but pl_size == 0!\n");
@@ -940,11 +985,25 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 
     if (spec->pl_size!=0 && (spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG))
     {
+        Assert( spec->pl_size == 2 * spec->N );
         *err=grib_set_long_array(outh,"pl",spec->pl,spec->pl_size);
         if (*err) {
             fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot set pl  %s\n",grib_get_error_message(*err));
             goto cleanup;
         }
+    }
+
+    if (h->context->debug==-1)
+        print_values(h->context,spec,data_values,data_values_count,values,count);
+
+    if((*err = grib_set_values(outh,values,count)) != 0)
+    {
+        fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot set values  %s\n",grib_get_error_message(*err));
+
+        for(i = 0; i < count; i++)
+            if(values[i].error)
+                fprintf(stderr," %s %s\n",values[i].name,grib_get_error_message(values[i].error));
+        goto cleanup;
     }
 
     if((*err = grib_set_double_array(outh,"values",data_values,data_values_count)) != 0)

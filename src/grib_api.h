@@ -1357,7 +1357,6 @@ typedef struct grib_util_grid_spec {
 	long uvRelativeToGrid;
 	double latitudeOfSouthernPoleInDegrees;
 	double longitudeOfSouthernPoleInDegrees;
-	double angleOfRotationInDegrees;
 
 	/* Scanning mode */
 	long iScansNegatively;
@@ -1384,6 +1383,54 @@ typedef struct grib_util_grid_spec {
 
 } grib_util_grid_spec;
 
+typedef struct grib_util_grid_spec2 {
+
+    int grid_type;
+    const char* grid_name; /* e.g. N320 */
+
+    /* Grid */
+    long   Ni;
+    long   Nj;
+
+    double iDirectionIncrementInDegrees;
+    double jDirectionIncrementInDegrees;
+
+    double longitudeOfFirstGridPointInDegrees;
+    double longitudeOfLastGridPointInDegrees;
+
+    double latitudeOfFirstGridPointInDegrees;
+    double latitudeOfLastGridPointInDegrees;
+
+    /* Rotation */
+    long uvRelativeToGrid;
+    double latitudeOfSouthernPoleInDegrees;
+    double longitudeOfSouthernPoleInDegrees;
+    double angleOfRotationInDegrees;
+
+    /* Scanning mode */
+    long iScansNegatively;
+    long jScansPositively;
+
+    /* Gaussian number */
+    long N;
+
+    /* bitmap */
+    long bitmapPresent;
+    double missingValue;
+
+    /* pl list for reduced */
+    const long *pl;
+    long pl_size;
+
+    /* Spherical harmonics */
+    long truncation;
+
+    /* polar stereographic */
+    double orientationOfTheGridInDegrees;
+    long DyInMetres;
+    long DxInMetres;
+
+} grib_util_grid_spec2;
 
 #define GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT      0
 #define GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX 1
@@ -1437,6 +1484,13 @@ grib_handle *grib_util_set_spec(grib_handle *h,
 	size_t data_values_count,
 	int *err);
 
+grib_handle *grib_util_set_spec2(grib_handle *h,
+    const grib_util_grid_spec2   *grid_spec,
+    const grib_util_packing_spec *packing_spec,  /* NULL for defaults (same as input) */
+    int flags,
+    const double *data_values,
+    size_t data_values_count,
+    int *err);
 
 /* --------------------------------------- */
 

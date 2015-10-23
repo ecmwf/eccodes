@@ -21,7 +21,7 @@ rm -f $fTmp | true
 REDIRECT=/dev/null
 
 #Write the key values into a file
-$PYTHON gts_get_keys.py  2> $REDIRECT > $fTmp
+$PYTHON $examples_src/gts_get_keys.py  2> $REDIRECT > $fTmp
 
 #TODO: check the results
 

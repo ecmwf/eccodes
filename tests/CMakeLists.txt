@@ -98,7 +98,7 @@ foreach( test ${tests1} )
 endforeach()
 ecbuild_add_test( TARGET eccodes_t_check_gaussian_grids
                   TYPE SCRIPT
-                  CONDITION  ECCODES_INSTALL_ECMWF_TOOLS
+                  CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/check_gaussian_grids.sh
 )
 

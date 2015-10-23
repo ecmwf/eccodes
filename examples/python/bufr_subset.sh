@@ -23,7 +23,7 @@ rm -f $fTmp | true
 REDIRECT=/dev/null
 
 #
-$PYTHON bufr_subset.py 2> $REDIRECT > $fTmp
+$PYTHON $examples_src/bufr_subset.py 2> $REDIRECT > $fTmp
 
 #TODO: add a proper check when subsets are properly implemented
 

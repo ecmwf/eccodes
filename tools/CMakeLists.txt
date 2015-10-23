@@ -34,11 +34,11 @@ foreach( tool ${grib_tools_bins} )
 endforeach()
 
 # Install tools specific to ECMWF
-# User must run cmake with -DECCODES_INSTALL_ECMWF_TOOLS
+# User must run cmake with -DECCODES_INSTALL_EXTRA_TOOLS
 foreach( tool ${grib_tools_bins_ECMWF_ONLY} )
     ecbuild_add_executable( TARGET     ${tool}
                             SOURCES    ${tool}.c
-                            CONDITION  ECCODES_INSTALL_ECMWF_TOOLS
+                            CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
                             LIBS       grib_tools )
 endforeach()
 
@@ -59,11 +59,11 @@ ecbuild_add_executable( TARGET     grib_to_netcdf
 # grib_list_keys
 ecbuild_add_executable( TARGET     grib_list_keys
                         SOURCES    list_keys.c
-                        CONDITION  ECCODES_INSTALL_ECMWF_TOOLS
+                        CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
                         LIBS       grib_tools  )
 
 # grib1to2 script needs to be generated before installation
-if (ECCODES_INSTALL_ECMWF_TOOLS)
+if (ECCODES_INSTALL_EXTRA_TOOLS)
     configure_file( grib1to2.in  grib1to2 )
     install( FILES ${CMAKE_CURRENT_BINARY_DIR}/grib1to2
              DESTINATION ${INSTALL_BIN_DIR}

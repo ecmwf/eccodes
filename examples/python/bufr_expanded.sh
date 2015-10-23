@@ -27,7 +27,7 @@ REDIRECT=/dev/null
 #hardcoded in the example
 
 #Write the values into a file
-$PYTHON bufr_expanded.py  >$fTmp 2> $REDIRECT 
+$PYTHON $examples_src/bufr_expanded.py  >$fTmp 2> $REDIRECT 
 
 #TODO: add a better check. It could be compared against the bufrdc
 # references.
