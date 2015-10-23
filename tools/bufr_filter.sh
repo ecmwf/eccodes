@@ -1,0 +1,271 @@
+#!/bin/sh
+set -e 
+
+echo "-# The bufr_filter processes sequentially all bufr messages contained in the input files and applies the rules to each of them. \\n"
+echo " Input messages can be written to the output by using the \"write\" statement. The write statement can be parameterised so that output "
+echo " is sent to multiple files depending on key values used in the output file name. \\n"
+echo " If we write a rules_file containing the only statement:\\n \\n"
+echo "\\verbatim"
+echo "write \"../data/split/[bufrHeaderCentre:l]_[dataCategory].bufr[editionNumber]\";"
+echo "\\endverbatim\\n"
+echo "Applying this rules_file to the \"../data/bufr/mutitype.bufr\" bufr file we obtain several files in the ../data/split directory containing "
+echo " messages split according to their key values\\n "
+echo "\\verbatim"
+
+if [[ -d ../data/split ]] 
+then
+    rm -f ../data/split/* 
+else
+    mkdir ../data/split
+fi
+
+cat ../data/bufr/syno_1.bufr ../data/bufr/goes_87.bufr ../data/bufr/gosat.bufr > ../data/split/multitype.bufr
+
+
+cat > rules_file <<EOF
+write "../data/split/[bufrHeaderCentre:l]_[dataCategory].bufr[editionNumber]";
+EOF
+
+echo ">bufr_filter rules_file ../data/bufr/multitype.bufr"
+echo ">ls ../data/split"
+
+./bufr_filter rules_file ../data/split/multitype.bufr
+ls ../data/split
+
+echo "\\endverbatim\\n"
+
+
+echo "-# The bufr <b>header</b> information can be accessed without unpacking the data. This rules_file: \\n"
+echo "\\verbatim"
+echo "print \"[bufrHeaderCentre] [bufrHeaderSubCentre] [masterTablesVersionNumber] [localTablesVersionNumber] [numberOfSubsets]\";"
+echo "\\endverbatim\\n"
+echo "will result in the following output: \\n"
+
+echo "\\verbatim"
+cat > rules_file <<EOF
+print "[bufrHeaderCentre] [bufrHeaderSubCentre] [masterTablesVersionNumber] [localTablesVersionNumber] [numberOfSubsets]";
+EOF
+
+echo ">bufr_filter rules_file ../data/bufr/syno_multi.bufr"
+
+./bufr_filter rules_file ../data/bufr/syno_multi.bufr
+
+echo "\\endverbatim\\n"
+
+# Unpack 
+
+echo "-# To print values from the data section the messages have to be <b>unpacked</b>. To do that we need to set key <i>unapack</i> to 1. This rules_file: \\n"
+
+echo "\\verbatim"
+echo "set unpack=1;"
+echo "print \"block=[blockNumber] station=[stationNumber] lat=[latitude] lon=[longitude] t2=[airTemperatureAt2M]\";"
+echo "\\endverbatim\\n"
+
+echo "will print out some data values from the specified SYNOP bufr messages."
+
+echo "\\verbatim"
+cat > rules_file <<EOF
+set unpack=1;
+print "block=[blockNumber] station=[stationNumber] lat=[latitude] lon=[longitude] t2=[airTemperatureAt2M]";
+EOF
+
+echo ">bufr_filter rules_file ../data/bufr/syno_multi.bufr"
+
+./bufr_filter rules_file ../data/bufr/syno_multi.bufr
+
+echo "\\endverbatim\\n"
+
+# Tranzient keys
+
+echo "-# bufr_filter allows defining new keys with the <b>transient</b> keyword. \\n"
+echo " We will further develop the previous example by creating a new key to combine the block number "
+echo " and the station number into the full WMO station id: \\n"
+
+echo "\\verbatim"
+echo "set unpack=1;"
+echo "transient statid=1000*blockNumber+stationNumber;"
+echo "print \"statid=[statid] lat=[latitude] lon=[longitude] t2=[airTemperatureAt2M]\";"
+echo "\\endverbatim\\n"
+
+echo "The result is:"
+
+echo "\\verbatim"
+cat > rules_file <<EOF
+set unpack=1;
+transient statid=1000*blockNumber+stationNumber;
+print "statid=[statid] lat=[latitude] lon=[longitude] t2=[airTemperatureAt2M]";
+EOF
+
+echo ">bufr_filter rules_file ../data/bufr/syno_multi.bufr"
+
+./bufr_filter rules_file ../data/bufr/syno_multi.bufr
+
+echo "\\endverbatim\\n"
+ 
+#Conditional statements
+
+echo "-# We can use <b>conditional statements</b> in bufr_filter. The syntax is: \\n"
+echo "\\verbatim"
+echo "if ( condition ) { block of rules } else { block of rules }"
+echo "\\endverbatim\\n"
+echo "The condition can be made using ==,!= and joining single block conditions with || and &&. \\n"
+echo "The statement can be any valid statement also another nested condition\\n"
+echo "The rules_file below shows how to filter only SYNOP messages with a specific station id:"
+
+echo "\\verbatim"
+echo "set unpack=1;"
+echo "transient statid=1000*blockNumber+stationNumber;"
+echo ""
+echo "if (dataCategory ==0 && statid == 1003) {"
+echo "  write out.bufr;"
+echo "}"        
+echo "\\endverbatim\\n"
+
+#Switch
+
+echo "-# The <b>switch</b> statement is an enhanced version of the if statement. Its syntax is the following:"
+echo "\\verbatim"
+echo "switch (key1,key2,...,keyn) {"
+echo "    case val11,val12,...,val1n:"
+echo "        # block of rules;"
+echo "    case val21,val22,...,val2n:"
+echo "        # block of rules;"
+echo "    default:"
+echo "        # [ block of rules ]"
+echo "}"
+echo "\\endverbatim\\n"
+echo "Each value of each key given as argument to the switch statement is matched against the values specified in the case statements.\\n"
+echo "If there is a match, then the block or rules corresponding to the matching case statement is executed.\\n"
+echo "Otherwise, the default case is executed. The default case is mandatory, even if empty.\\n"
+echo "The \"~\" operator can be used to match \"anything\".\\n\\n"
+
+
+# Attributes 
+ 
+echo "-# To access the keys' <b>attributes</b> use the -> operator. \\n"
+echo " The example below prints the attributes of key <i>pressure</i> from a SYNOP bufr message. \\n"
+
+echo "\\verbatim"
+echo "print \"pressure=[pressure] [pressure->units]\";"
+echo "print \"pressure->code=[pressure->code!06d]\";"
+echo "print \"pressure->scale=[pressure->scale]\";"
+echo "print \"pressure->reference=[pressure->reference]\";"
+echo "print \"pressure->width=[pressure->width]\";"
+echo "print \"pressure->percentConfidence=[pressure->percentConfidence] [pressure->percentConfidence->units]\";"
+echo "print \"pressure->percentConfidence->code=[pressure->percentConfidence->code!06d]\";"
+echo "print \"pressure->percentConfidence->scale=[pressure->percentConfidence->scale]\";"
+echo "print \"pressure->percentConfidence->reference=[pressure->percentConfidence->reference]\";"
+echo "print \"pressure->percentConfidence->width=[pressure->percentConfidence->width]\";"
+echo "\\endverbatim\\n"
+
+echo "The result is:"
+
+echo "\\verbatim"
+cat > rules_file <<EOF
+set unpack=1;
+print "pressure=[pressure] [pressure->units]";
+print "pressure->code=[pressure->code!06d]";
+print "pressure->scale=[pressure->scale]";
+print "pressure->reference=[pressure->reference]";
+print "pressure->width=[pressure->width]";
+print "pressure->percentConfidence=[pressure->percentConfidence] [pressure->percentConfidence->units]";
+print "pressure->percentConfidence->code=[pressure->percentConfidence->code!06d]";
+print "pressure->percentConfidence->scale=[pressure->percentConfidence->scale]";
+print "pressure->percentConfidence->reference=[pressure->percentConfidence->reference]";
+print "pressure->percentConfidence->width=[pressure->percentConfidence->width]";
+EOF
+
+echo ">bufr_filter rules_file ../data/bufr/syno_1.bufr"
+
+./bufr_filter rules_file ../data/bufr/syno_1.bufr
+
+echo "\\endverbatim\\n"
+
+# Access by rank
+
+echo "-# To <u>access keys by <b>rank</b></u> (i.e. by their occurrence in the message) use the # operator. \\n"
+echo " The example below prints the value from the 4th occurrence of key <i>pressure</i> from a TEMP bufr message. "
+echo " As a reference, we also print all the pressure values found in the message.\\n"
+
+echo "\\verbatim"
+echo "set unpack=1;"
+echo "print \"pressure=[#4#pressure] [#4#pressure->units]\";"
+echo "print \"pressure=[pressure]\";"
+echo "\\endverbatim\\n"
+
+echo "The result is:"
+
+echo "\\verbatim"
+cat > rules_file <<EOF
+set unpack=1;
+print "pressure=[#4#pressure] [#4#pressure->units]";
+print "pressure=[pressure]";
+EOF
+
+echo ">bufr_filter rules_file ../data/bufr/temp_101.bufr"
+
+./bufr_filter rules_file ../data/bufr/temp_101.bufr
+
+echo "\\endverbatim\\n"
+
+# Access by condition
+
+echo "-# It is possible to <u>access elements by <b>conditions</b></u> imposed on coordinate descriptors. \\n"
+echo " The example below prints the temperature values on temperature significant levels from a TEMP bufr message."
+echo " For temperature significant levels the key <i>verticalSoundingSignificance</i>=4 and this"
+echo " is what we use in the condition:  \\n"
+
+echo "\\verbatim"
+echo "set unpack=1;"
+echo "print \"[/verticalSoundingSignificance=4/airTemperature]\";"
+echo "\\endverbatim\\n"
+
+echo "The result is:"
+
+echo "\\verbatim"
+
+cat > rules_file <<EOF
+set unpack=1;
+print "[/verticalSoundingSignificance=4/airTemperature]";
+EOF
+
+echo ">bufr_filter rules_file ../data/bufr/temp_101.bufr"
+
+./bufr_filter rules_file ../data/bufr/temp_101.bufr
+
+echo "\\endverbatim\\n"
+
+
+# Access by condition 2
+
+echo "-# Another example for accessing keys by condition is to read scatterometer data."
+echo "File asca_139.bufr contains a single message with 2016 subsets in a compressed form."
+echo "In this case each subset has exactly the same structure: they store one location with"
+echo "several beams and one backscatter value in each beam. To print the backScatter values for beamIdentifier=2 from all the subsets" 
+echo "we can simply define the condition like this: \\n"
+
+echo "\\verbatim"
+echo "set unpack=1;"
+echo "print \"/beamIdentifier=2/backscatter=[/beamIdentifier=2/backscatter]\";"
+echo "\\endverbatim\\n"
+
+echo "The result is:"
+echo "\\verbatim"
+
+cat > rules_file <<EOF
+set unpack=1;
+print "/beamIdentifier=2/backscatter=[/beamIdentifier=2/backscatter]";
+EOF
+
+echo ">bufr_filter rules_file ../data/bufr/asca_139.bufr"
+
+./bufr_filter rules_file ../data/bufr/asca_139.bufr > tmp_file
+head tmp_file
+echo " and many more values ......"
+
+echo "\\endverbatim\\n"
+
+rm -f rules_file || true
+rm -f tmp_file || true
+
+
