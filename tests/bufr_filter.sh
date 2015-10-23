@@ -691,7 +691,7 @@ modw_87.bufr monw_87.bufr new.bufr nomi_206.bufr ocea_131.bufr ocea_132.bufr oce
 pilo_91.bufr s4kn_165.bufr ship_11.bufr ship_12.bufr ship_13.bufr ship_14.bufr ship_19.bufr ship_9.bufr smin_49.bufr
 smis_49.bufr smiu_49.bufr smos_203.bufr sn4k_165.bufr soil_7.bufr ssbt_127.bufr stuk_7.bufr syno_1.bufr syno_2.bufr
 syno_3.bufr syno_4.bufr syno_multi.bufr synop_multi_subset.bufr temp_101.bufr temp_102.bufr temp_106.bufr
-tmr7_129.bufr tropical_cyclone.bufr tros_31.bufr wavb_134.bufr"
+tmr7_129.bufr tropical_cyclone.bufr tros_31.bufr uegabe.bufr wavb_134.bufr"
 
 for f in $files
 do
