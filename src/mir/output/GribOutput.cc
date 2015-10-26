@@ -55,6 +55,7 @@ GribOutput::~GribOutput() {
 void GribOutput::copy(const param::MIRParametrisation &, input::MIRInput &input) { // Not iterpolation performed
 
     grib_handle *h = input.gribHandle(); // Base class will throw an exception is input cannot provide a grib_handle
+    ASSERT(h);
 
     const void *message;
     size_t size;
