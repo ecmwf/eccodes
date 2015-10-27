@@ -1,3 +1,5 @@
+from gribapi import __version__
+
 from gribapi import GRIB_CHECK as CODES_CHECK
 from gribapi import CODES_PRODUCT_GRIB
 from gribapi import CODES_PRODUCT_BUFR
