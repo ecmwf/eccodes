@@ -29,6 +29,7 @@ NumPy support can be disabled by using the '--disable-numpy' flag.
 
 """
 import gribapi_swig as _internal
+#from gribapi import gribapi_swig as _internal
 import types
 import sys
 import os
