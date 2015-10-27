@@ -366,6 +366,87 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec, cons
     }
 }
 
+static int DBL_EQUAL(double d1, double d2, double tolerance)
+{
+    return fabs(d1-d2) <= tolerance;
+}
+
+/* Check what is coded in the handle is what is requested by the spec. */
+/* Return GRIB_SUCCESS if the geometry matches, otherwise the error code */
+static int check_grib_against_spec(grib_handle* handle, const grib_util_grid_spec2* spec)
+{
+    int err = 0;
+    long edition = 0;
+    const double tolerance = 1e-4;
+    int check_latitudes = 1;
+    int check_longitudes = 1;
+
+    grib_get_long(handle, "edition", &edition);
+
+    /* Cannot check latitudes of Gaussian grids because are always sub-milli-degree */
+    /* and for GRIB1 will differ from the encoded values. We accept this discrepancy! */
+    if (spec->grid_type == GRIB_UTIL_GRID_SPEC_REGULAR_GG ||
+        spec->grid_type == GRIB_UTIL_GRID_SPEC_ROTATED_GG ||
+        spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_GG ||
+        spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG)
+    {
+        if (edition == 1) {
+            check_latitudes = 0;
+            check_longitudes = 1;
+        }
+    }
+
+    if (check_latitudes) {
+        double lat1, lat2;
+        if ((err = grib_get_double(handle, "latitudeOfFirstGridPointInDegrees", &lat1))!=0)  return err;
+        if ((err = grib_get_double(handle, "latitudeOfLastGridPointInDegrees", &lat2))!=0)   return err;
+
+        if (!DBL_EQUAL(spec->latitudeOfFirstGridPointInDegrees, lat1, tolerance)) {
+            fprintf(stderr, "Failed to encode latitudeOfFirstGridPointInDegrees\n");
+            return GRIB_WRONG_GRID;
+        }
+        if (!DBL_EQUAL(spec->latitudeOfLastGridPointInDegrees, lat2, tolerance)) {
+            fprintf(stderr, "Failed to encode latitudeOfLastGridPointInDegrees\n");
+            return GRIB_WRONG_GRID;
+        }
+    }
+
+    if (check_longitudes) {
+        double lon1, lon2;
+        if ((err = grib_get_double(handle, "longitudeOfFirstGridPointInDegrees", &lon1))!=0) return err;
+        if ((err = grib_get_double(handle, "longitudeOfLastGridPointInDegrees", &lon2))!=0)  return err;
+
+        if (!DBL_EQUAL(spec->longitudeOfFirstGridPointInDegrees, lon1, tolerance)) {
+            fprintf(stderr, "Failed to encode longitudeOfFirstGridPointInDegrees\n");
+            return GRIB_WRONG_GRID;
+        }
+        if (!DBL_EQUAL(spec->longitudeOfLastGridPointInDegrees, lon2, tolerance)){
+            fprintf(stderr, "Failed to encode longitudeOfLastGridPointInDegrees: spec=%.10e val=%.10e\n",
+                    spec->longitudeOfLastGridPointInDegrees, lon2);
+            return GRIB_WRONG_GRID;
+        }
+    }
+
+    if (spec->grid_type == GRIB_UTIL_GRID_SPEC_ROTATED_LL ||
+        spec->grid_type == GRIB_UTIL_GRID_SPEC_ROTATED_GG ||
+        spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG)
+    {
+        double latp, lonp;
+        if ((err = grib_get_double(handle, "latitudeOfSouthernPoleInDegrees", &latp))!=0)  return err;
+        if ((err = grib_get_double(handle, "longitudeOfSouthernPoleInDegrees", &lonp))!=0)  return err;
+
+        if (!DBL_EQUAL(spec->latitudeOfSouthernPoleInDegrees, latp, tolerance)) {
+            fprintf(stderr, "Failed to encode latitudeOfSouthernPoleInDegrees\n");
+            return GRIB_WRONG_GRID;
+        }
+        if (!DBL_EQUAL(spec->longitudeOfSouthernPoleInDegrees, lonp, tolerance)) {
+            fprintf(stderr, "Failed to encode longitudeOfSouthernPoleInDegrees\n");
+            return GRIB_WRONG_GRID;
+        }
+    }
+    return GRIB_SUCCESS;
+}
+
 grib_handle* grib_util_set_spec(grib_handle* h,
         const grib_util_grid_spec    *spec,
         const grib_util_packing_spec *packing_spec,
@@ -1054,6 +1135,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 	}
      */
 
+    /* grib_dump_content(outh, stdout,"debug", ~0, NULL); */
+
     if (grib1_high_resolution) {
         /* GRIB-863: must set increments to MISSING */
         /* increments are not coded in message but computed */
@@ -1121,6 +1204,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     if(packing_spec->editionNumber && packing_spec->editionNumber!=editionNumber)
         grib_set_long(outh,"edition", packing_spec->editionNumber);
 
+    if (check_grib_against_spec(outh, spec) != GRIB_SUCCESS) {
+        fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed!\n");
+        goto cleanup;
+    }
     if (h->context->debug==-1)
         printf("ECCODES DEBUG: grib_util_set_spec end\n");
 
