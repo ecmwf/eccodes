@@ -450,6 +450,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     int packingTypeIsSet=0;
     int setSecondOrder=0;
     size_t slen=17;
+    int grib1_high_resolution = 0; /* boolean: See GRIB-863 */
 
     static grib_util_packing_spec default_packing_spec = {0, };
     Assert(h);
@@ -725,6 +726,20 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
 
         SET_LONG_VALUE  ("ijDirectionIncrementGiven",    1);
+        if (editionNumber == 1) {
+            /* GRIB-863: GRIB1 cannot represent increments less than a millidegree */
+            double DiInMilliDegrees = spec->iDirectionIncrementInDegrees * 1000.0;
+            double DjInMilliDegrees = spec->jDirectionIncrementInDegrees * 1000.0;
+            double DiInMilliDegreesRounded = (int)DiInMilliDegrees;
+            double DjInMilliDegreesRounded = (int)DjInMilliDegrees;
+            if (DiInMilliDegrees != DiInMilliDegreesRounded ||
+                DjInMilliDegrees != DjInMilliDegreesRounded)
+            {
+                grib1_high_resolution = 1;
+                /* Set flag to compute the increments */
+                SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
+            }
+        }
 
         /* default iScansNegatively=0 jScansPositively=0 is ok */
         COPY_SPEC_LONG(iScansNegatively);
@@ -985,7 +1000,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     if (spec->pl_size!=0 && (spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG))
     {
-        Assert( spec->pl_size == 2 * spec->N );
         *err=grib_set_long_array(outh,"pl",spec->pl,spec->pl_size);
         if (*err) {
             fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot set pl  %s\n",grib_get_error_message(*err));
@@ -1039,6 +1053,19 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 		}
 	}
      */
+
+    if (grib1_high_resolution) {
+        /* GRIB-863: must set increments to MISSING */
+        /* increments are not coded in message but computed */
+        if ( (*err = grib_set_missing(outh, "iDirectionIncrement"))!=0 ) {
+            fprintf(stderr,"GRIB_UTIL_SET_SPEC: Cannot set Di to missing: %s\n",grib_get_error_message(*err));
+            goto cleanup;
+        }
+        if ( (*err = grib_set_missing(outh, "jDirectionIncrement"))!=0 ){
+            fprintf(stderr,"GRIB_UTIL_SET_SPEC: Cannot set Dj to missing: %s\n",grib_get_error_message(*err));
+            goto cleanup;
+        }
+    }
 
     /* convert to second_order if not constant field */
     if (setSecondOrder ) {
