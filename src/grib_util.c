@@ -1000,7 +1000,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     if (spec->pl_size!=0 && (spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG))
     {
-        Assert( spec->pl_size == 2 * spec->N );
         *err=grib_set_long_array(outh,"pl",spec->pl,spec->pl_size);
         if (*err) {
             fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot set pl  %s\n",grib_get_error_message(*err));
