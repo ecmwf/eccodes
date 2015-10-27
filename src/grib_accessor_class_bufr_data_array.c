@@ -1332,6 +1332,7 @@ static int create_keys(grib_accessor* a)
     int err=0;
     grib_accessor* elementAccessor=0;
     grib_accessor* associatedFieldAccessor=0;
+    grib_accessor* associatedFieldSignificanceAccessor=0;
     long iss,end,elementsInSubset,ide;
     grib_section* section=NULL;
     grib_section* rootSection=NULL;
@@ -1398,6 +1399,7 @@ static int create_keys(grib_accessor* a)
       elementsInSubset= self->compressedData ? grib_iarray_used_size(self->elementsDescriptorsIndex->v[0]) :
         grib_iarray_used_size(self->elementsDescriptorsIndex->v[iss]);
       associatedFieldAccessor=NULL;
+      associatedFieldSignificanceAccessor=NULL;
       for (ide=0;ide<elementsInSubset;ide++) {
         idx = self->compressedData ? self->elementsDescriptorsIndex->v[0]->v[ide] :
           self->elementsDescriptorsIndex->v[iss]->v[ide] ;
@@ -1515,11 +1517,19 @@ static int create_keys(grib_accessor* a)
         grib_accessor_add_attribute(elementFromBitmap,elementAccessor);
       } else if (elementAccessor) {
 
-        if (descriptor->code == 999999) {
-          associatedFieldAccessor=elementAccessor;
-        } else {
-          grib_push_accessor(elementAccessor,section->block);
-          grib_accessors_list_push(self->dataAccessors,elementAccessor);
+        switch (descriptor->code) {
+          case 999999:
+            associatedFieldAccessor=elementAccessor;
+            if (associatedFieldSignificanceAccessor) {
+              grib_accessor* newAccessor=accessor_bufr_data_element_clone(associatedFieldSignificanceAccessor,associatedFieldAccessor->parent);
+              grib_accessor_add_attribute(associatedFieldAccessor,newAccessor);
+            }
+            break;
+          case 31021:
+            associatedFieldSignificanceAccessor=elementAccessor;
+          default:
+            grib_push_accessor(elementAccessor,section->block);
+            grib_accessors_list_push(self->dataAccessors,elementAccessor);
         }
       }
       }

@@ -151,6 +151,43 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
+grib_accessor* accessor_bufr_data_element_clone(grib_accessor* a,grib_section* s) {
+  grib_accessor* operatorAccessor=NULL;
+  grib_action operatorCreator = {0, };
+  grib_accessor* clone=NULL;
+  grib_accessor_bufr_data_element* elementAccessor;
+  grib_accessor_bufr_data_element* self;
+  int i;
+  grib_action creator = {0, };
+  creator.op         = "bufr_data_element";
+  creator.name_space = "";
+  creator.set        = 0;
+
+  creator.name=grib_context_strdup(a->parent->h->context,a->name);
+  clone = grib_accessor_factory(s, &creator, 0, NULL);
+  elementAccessor=(grib_accessor_bufr_data_element*)clone;
+  self=(grib_accessor_bufr_data_element*)a;
+  clone->flags=a->flags;
+  elementAccessor->index=self->index;
+  elementAccessor->type=self->type;
+  elementAccessor->numberOfSubsets=self->numberOfSubsets;
+  elementAccessor->subsetNumber=self->subsetNumber;
+  elementAccessor->compressedData=self->compressedData;
+  elementAccessor->descriptors=self->descriptors;
+  elementAccessor->numericValues=self->numericValues;
+  elementAccessor->stringValues=self->stringValues;
+  elementAccessor->elementsDescriptorsIndex=self->elementsDescriptorsIndex;
+
+  i=0;
+  while (a->attributes[i]) {
+    accessor_bufr_data_element_clone(a->attributes[i],s);
+    i++;
+  }
+
+  return clone;
+
+}
+
 void accessor_bufr_data_element_set_index(grib_accessor* a,long index) {
   grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
   self->index=index;
