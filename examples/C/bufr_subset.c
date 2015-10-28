@@ -66,7 +66,7 @@ int main(int argc,char* argv[])
         {
             sprintf(key,"/subsetNumber=%d/blockNumber",i);
 
-            printf("  subsetNumber=%ld",i);
+            printf("  subsetNumber=%d",i);
             /* read and print some data values */ 
             CODES_CHECK(codes_get_long(h,key,&longVal),0);
             printf("  blockNumber=%ld",longVal);
