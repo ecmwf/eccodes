@@ -828,13 +828,22 @@ int grib_get_double_internal(grib_handle* h, const char* name, double* val)
 
 int grib_get_double(grib_handle* h, const char* name, double* val)
 {
-    grib_accessor* act = grib_find_accessor(h, name);
-    size_t l = 1;
+  size_t length = 1;
+  grib_accessor* a = NULL;
+  grib_accessors_list* al=NULL;
+  int ret=0;
 
-    if(act)
-        return grib_unpack_double(act, val, &l);
-
-    return GRIB_NOT_FOUND;
+  if (name[0] == '/' ) {
+    al=grib_find_accessors_list(h,name);
+    if (!al) return GRIB_NOT_FOUND;
+    ret=grib_unpack_double(al->accessor, val , &length);
+    grib_context_free(h->context,al);
+  } else  {
+    a=grib_find_accessor(h, name);
+    if(!a) return GRIB_NOT_FOUND;
+    ret=grib_unpack_double(a, val , &length);
+  }
+  return ret;
 }
 
 int grib_get_double_element_internal(grib_handle* h, const char* name, int i,double* val)
@@ -924,10 +933,22 @@ int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t
 
 int grib_get_string(grib_handle* h, const char* name, char* val, size_t *length)
 {
-    grib_accessor* act = grib_find_accessor(h, name);
-    if(act)
-        return grib_unpack_string(act, val, length);
-    return GRIB_NOT_FOUND;
+  size_t len = 1;
+  grib_accessor* a = NULL;
+  grib_accessors_list* al=NULL;
+  int ret=0;
+
+  if (name[0] == '/' ) {
+    al=grib_find_accessors_list(h,name);
+    if (!al) return GRIB_NOT_FOUND;
+    ret=grib_unpack_string(al->accessor, val, length);
+    grib_context_free(h->context,al);
+    return ret;
+  } else  {
+    a=grib_find_accessor(h, name);
+    if(!a) return GRIB_NOT_FOUND;
+    return grib_unpack_string(a, val , length);
+  }
 }
 
 

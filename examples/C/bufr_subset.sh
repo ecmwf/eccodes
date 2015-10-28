@@ -22,18 +22,18 @@ fRef=${label}.ref
 cat > $fRef <<EOF
 message: 0
   numberOfSubsets: 12
-  subsetNumber=1  blockNumber=1  stationNumber=27
-  subsetNumber=2  blockNumber=1  stationNumber=84
-  subsetNumber=3  blockNumber=1  stationNumber=270
-  subsetNumber=4  blockNumber=1  stationNumber=272
-  subsetNumber=5  blockNumber=1  stationNumber=308
-  subsetNumber=6  blockNumber=1  stationNumber=371
-  subsetNumber=7  blockNumber=1  stationNumber=381
-  subsetNumber=8  blockNumber=1  stationNumber=382
-  subsetNumber=9  blockNumber=1  stationNumber=387
-  subsetNumber=10  blockNumber=1  stationNumber=413
-  subsetNumber=11  blockNumber=1  stationNumber=464
-  subsetNumber=12  blockNumber=1  stationNumber=485
+  subsetNumber=1  blockNumber=1  stationNumber=27  stationOrSiteName="TROMSO-HOLT"  airTemperature=276.45
+  subsetNumber=2  blockNumber=1  stationNumber=84  stationOrSiteName="PASVIK"  airTemperature=266.55
+  subsetNumber=3  blockNumber=1  stationNumber=270  stationOrSiteName="KVITHAMAR"  airTemperature=275.25
+  subsetNumber=4  blockNumber=1  stationNumber=272  stationOrSiteName="FROSTA"  airTemperature=276.25
+  subsetNumber=5  blockNumber=1  stationNumber=308  stationOrSiteName="FURUNESET"  airTemperature=276.85
+  subsetNumber=6  blockNumber=1  stationNumber=371  stationOrSiteName="LOKEN I VOLBU"  airTemperature=265.35
+  subsetNumber=7  blockNumber=1  stationNumber=381  stationOrSiteName="APELSVOLL"  airTemperature=270.15
+  subsetNumber=8  blockNumber=1  stationNumber=382  stationOrSiteName="KISE"  airTemperature=270.45
+  subsetNumber=9  blockNumber=1  stationNumber=387  stationOrSiteName="FAVANG"  airTemperature=267.55
+  subsetNumber=10  blockNumber=1  stationNumber=413  stationOrSiteName="SAERHEIM"  airTemperature=277.45
+  subsetNumber=11  blockNumber=1  stationNumber=464  stationOrSiteName="LANDVIK"  airTemperature=275.95
+  subsetNumber=12  blockNumber=1  stationNumber=485  stationOrSiteName="SANDE-GALLEBERG"  airTemperature=275.45
 EOF
 
 #We check "synop_multi_subset.bufr". The path is

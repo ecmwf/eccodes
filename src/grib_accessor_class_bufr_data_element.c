@@ -335,7 +335,7 @@ static int unpack_string (grib_accessor* a, char* val, size_t *len)
     str=grib_context_strdup(c,self->stringValues->v[idx]->v[0]);
   } else {
     idx=((int)self->numericValues->v[self->subsetNumber]->v[self->index]/1000-1)/self->numberOfSubsets;
-    str=grib_context_strdup(c,self->stringValues->v[idx]->v[0]);
+    str=grib_context_strdup(c,self->stringValues->v[self->subsetNumber]->v[idx]);
   }
 
   if (str==0 || strlen(str)==0) {
