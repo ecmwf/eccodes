@@ -287,6 +287,7 @@ static grib_accessors_list* search_by_condition(grib_handle* h,const char* name,
     grib_accessor* data=search_and_cache(h,"dataAccessors",0);
     if (data && condition->left) {
         al=accessor_bufr_data_array_get_dataAccessors(data);
+        if (!al) return NULL;
         result=(grib_accessors_list*)grib_context_malloc_clear(al->accessor->parent->h->context,sizeof(grib_accessors_list));
         search_accessors_list_by_condition(al,name,condition,result);
         if (!result->accessor) {

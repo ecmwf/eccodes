@@ -24,6 +24,7 @@ void usage(char* prog) {
 
 int main(int argc,char* argv[])
 {
+    char key[200]={0,};
     FILE* in = NULL;
 
     /* message handle. Required in all the eccodes calls acting on a message.*/
@@ -63,18 +64,17 @@ int main(int argc,char* argv[])
         /* loop over the subsets */
         for(i=1; i <= numberOfSubsets; i++)
         {
-            /* specify the subset number */
-            CODES_CHECK(codes_set_long(h,"subsetNumber",0),0);
+            sprintf(key,"/subsetNumber=%d/blockNumber",i);
 
+            printf("  subsetNumber=%ld",i);
             /* read and print some data values */ 
-            CODES_CHECK(codes_get_long(h,"blockNumber",&longVal),0);
-            printf("  blockNumber: %ld\n",longVal);
+            CODES_CHECK(codes_get_long(h,key,&longVal),0);
+            printf("  blockNumber=%ld",longVal);
 
-            CODES_CHECK(codes_get_long(h,"stationNumber",&longVal),0);
-            printf("  stationNumber: %ld\n",longVal);
+            sprintf(key,"/subsetNumber=%d/stationNumber",i);
+            CODES_CHECK(codes_get_long(h,key,&longVal),0);
+            printf("  stationNumber=%ld\n",longVal);
 
-            /*CODES_CHECK(codes_get_double(h,"airTemperatureAt2M",&doubleVal),0);
-            printf("  airTemperatureAt2M %f\n",doubleVal);*/
         }
 
         /* delete handle */

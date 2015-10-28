@@ -46,24 +46,18 @@ def example():
         print ' %s: %d' % (key,numberOfSubsets)
 
         # loop over the subsets
-        for i in range(numberOfSubsets) :
-
-            #specify the subset number
-            codes_set(gid,'subsetNumber',0)
+        for i in range(1,numberOfSubsets+1) :
 
             # read and print some data values
 
-            key='blockNumber'
-            val=codes_get(gid,key)
-            print '  %s: %d' % (key,val)
+            key='/subsetNumber=%d/blockNumber' % i
+            print key;
+            val=codes_get_long(gid,key)
+            print '  %s= %d' % (key,val)
 
-            key='stationNumber'
-            val=codes_get(gid,key)
+            key='/subsetNumber=%d/stationNumber' % i
+            val=codes_get_long(gid,key)
             print '  %s: %d' % (key,val)
-
-            #key='airTemperatureAt2M'
-            #val=codes_get(gid,key)
-            #print '  %d: %d' % (key,val)
 
         cnt+=1
 

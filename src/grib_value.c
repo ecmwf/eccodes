@@ -796,16 +796,22 @@ int grib_attributes_count(grib_accessor* a, size_t* size) {
 
 int grib_get_long(grib_handle* h, const char* name, long* val)
 {
-    grib_accessor* act = NULL;
-    size_t l = 1;
-    int ret=0;
-    char* attribute_name=NULL;
+  size_t length = 1;
+  grib_accessor* a = NULL;
+  grib_accessors_list* al=NULL;
+  int ret=0;
 
-    act = grib_find_accessor(h, name);
-
-    ret = act ? grib_unpack_long(act, val, &l) : GRIB_NOT_FOUND;
-
-    return ret;
+  if (name[0] == '/' ) {
+    al=grib_find_accessors_list(h,name);
+    if (!al) return GRIB_NOT_FOUND;
+    ret=grib_unpack_long(al->accessor, val , &length);
+    grib_context_free(h->context,al);
+  } else  {
+    a=grib_find_accessor(h, name);
+    if(!a) return GRIB_NOT_FOUND;
+    ret=grib_unpack_long(a, val , &length);
+  }
+  return ret;
 }
 
 int grib_get_double_internal(grib_handle* h, const char* name, double* val)

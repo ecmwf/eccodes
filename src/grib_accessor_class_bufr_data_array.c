@@ -30,7 +30,6 @@
    MEMBERS    = const char* offsetEndSection4Name
    MEMBERS    = const char* section4LengthName
    MEMBERS    = const char* numberOfSubsetsName
-   MEMBERS    = const char* subsetNumberName
    MEMBERS    = const char* expandedDescriptorsName
    MEMBERS    = const char* flagsName
    MEMBERS    = const char* unitsName
@@ -39,7 +38,6 @@
    MEMBERS    = bufr_descriptors_array* expanded
    MEMBERS    = grib_accessor* expandedAccessor
    MEMBERS    = int* canBeMissing
-   MEMBERS    = long subsetNumber
    MEMBERS    = long numberOfSubsets
    MEMBERS    = long compressedData
    MEMBERS    = grib_vdarray* numericValues
@@ -94,7 +92,6 @@ typedef struct grib_accessor_bufr_data_array {
 	const char* offsetEndSection4Name;
 	const char* section4LengthName;
 	const char* numberOfSubsetsName;
-	const char* subsetNumberName;
 	const char* expandedDescriptorsName;
 	const char* flagsName;
 	const char* unitsName;
@@ -103,7 +100,6 @@ typedef struct grib_accessor_bufr_data_array {
 	bufr_descriptors_array* expanded;
 	grib_accessor* expandedAccessor;
 	int* canBeMissing;
-	long subsetNumber;
 	long numberOfSubsets;
 	long compressedData;
 	grib_vdarray* numericValues;
@@ -247,7 +243,6 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
     self->offsetEndSection4Name = grib_arguments_get_name(a->parent->h,params,n++);
     self->section4LengthName = grib_arguments_get_name(a->parent->h,params,n++);
     self->numberOfSubsetsName = grib_arguments_get_name(a->parent->h,params,n++);
-    self->subsetNumberName    = grib_arguments_get_name(a->parent->h,params,n++);
     self->expandedDescriptorsName = grib_arguments_get_name(a->parent->h,params,n++);
     self->flagsName = grib_arguments_get_name(a->parent->h,params,n++);
     self->elementsDescriptorsIndexName = grib_arguments_get_name(a->parent->h,params,n++);
@@ -388,7 +383,6 @@ static int get_descriptors(grib_accessor* a)
 
     ret=grib_get_long(h,self->numberOfSubsetsName,&(self->numberOfSubsets));
     ret=grib_get_long(h,self->compressedDataName,&(self->compressedData));
-    ret=grib_get_long(h,self->subsetNumberName,&(self->subsetNumber));
 
     return ret;
 }
@@ -804,7 +798,7 @@ static int encode_new_element(grib_context* c,grib_accessor_bufr_data_array* sel
     if (self->expanded->v[i]->type==BUFR_DESCRIPTOR_TYPE_STRING) {
         /* string */
         slen=self->expanded->v[i]->width/8;
-        csval=grib_context_malloc_clear(c,slen);
+        csval=grib_context_malloc_clear(c,slen+1);
         for (ii=0;ii<slen;ii++) csval[ii]=missingChar;
         grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding: \t %s = %s",
                 self->expanded->v[i]->shortName,csval);
@@ -876,7 +870,7 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
             err=encode_string_array(c,buff,pos,i,self,self->stringValues->v[idx]);
         } else {
             idx=((int)self->numericValues->v[0]->v[elementIndex]/1000-1)/self->numberOfSubsets;
-            err=encode_string_value(c,buff,pos,i,self,self->stringValues->v[idx]->v[self->subsetNumber]);
+            err=encode_string_value(c,buff,pos,i,self,self->stringValues->v[idx]->v[subsetIndex]);
         }
     } else {
         /* numeric or codetable or flagtable */
@@ -1510,6 +1504,24 @@ static int create_keys(grib_accessor* a)
           /* reset_qualifiers(significanceQualifierGroup); */
       }
 
+      if (ide==0 && !self->compressedData) {
+        grib_accessor* asn=NULL;
+        long subsetNumber=iss+1;
+        size_t len=1;
+        grib_action creatorsn = {0, };
+        creatorsn.op         = "variable";
+        creatorsn.name_space = "";
+        creatorsn.flags     = GRIB_ACCESSOR_FLAG_READ_ONLY | GRIB_ACCESSOR_FLAG_DUMP ;
+        creatorsn.set        = 0;
+
+        creatorsn.name="subsetNumber";
+        asn=grib_accessor_factory(section, &creatorsn, 0, NULL);
+        accessor_variable_set_type(asn,GRIB_TYPE_LONG);
+        grib_pack_long(asn,&subsetNumber,&len);
+
+        grib_push_accessor(asn,section->block);
+        grib_accessors_list_push(self->dataAccessors,asn);
+      }
       count++;
       elementAccessor=create_accessor_from_descriptor(a,associatedFieldAccessor,section,ide,iss,dump,count);
       associatedFieldAccessor=NULL;
@@ -1854,46 +1866,30 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 static int value_count(grib_accessor* a,long* count)
 {
-    int err=0,l;
-    long i,subsetNumber=0;
-    grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
-    grib_context* c=a->parent->h->context;
+  int err=0,l;
+  long i,subsetNumber=0;
+  grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
+  grib_context* c=a->parent->h->context;
 
-    err=process_elements(a,PROCESS_DECODE);
-    if (err) return err;
+  err=process_elements(a,PROCESS_DECODE);
+  if (err) return err;
 
-    err=grib_get_long(a->parent->h,self->subsetNumberName,&subsetNumber);
-    if (err) return err;
-    if (subsetNumber>self->numberOfSubsets) {
-        err=GRIB_INVALID_KEY_VALUE;
-        grib_context_log(c,GRIB_LOG_ERROR,"%s=%ld is too big, %s=%ld",self->subsetNumberName,self->numberOfSubsetsName);
-        return err;
-    }
+  if (self->compressedData) {
+    l=grib_vdarray_used_size(self->numericValues);
 
-    if (self->compressedData) {
-        l=grib_vdarray_used_size(self->numericValues);
+    *count=l*self->numberOfSubsets;
+  } else {
+    *count=0;
+    for (i=0;i<self->numberOfSubsets;i++)
+      *count+=grib_iarray_used_size(self->elementsDescriptorsIndex->v[i]);
+  }
 
-        *count=l;
-        if (subsetNumber<=0) {
-            *count *= self->numberOfSubsets;
-        }
-    } else {
-        if (subsetNumber>0) {
-            *count=grib_iarray_used_size(self->elementsDescriptorsIndex->v[subsetNumber-1]);
-        } else {
-            *count=0;
-            for (i=0;i<self->numberOfSubsets;i++)
-                *count+=grib_iarray_used_size(self->elementsDescriptorsIndex->v[i]);
-        }
-    }
-
-    return err;
+  return err;
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
     int err=0,i,k,ii;
-    long n=0;
     int proc_flag=PROCESS_DECODE;
     size_t l=0,elementsInSubset;
     long numberOfSubsets=0;
@@ -1907,42 +1903,24 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     if (!val) return err;
 
     l=grib_vdarray_used_size(self->numericValues);
-    err=grib_get_long(a->parent->h,self->subsetNumberName,&n);
-    if (err) return err;
     err=grib_get_long(a->parent->h,self->numberOfSubsetsName,&numberOfSubsets);
     if (err) return err;
-    if (n>numberOfSubsets) {
-        err=GRIB_INVALID_KEY_VALUE;
-        grib_context_log(c,GRIB_LOG_ERROR,"%s=%ld is too big, %s=%ld",self->subsetNumberName,self->numberOfSubsetsName);
-        return err;
-    }
 
     if (self->compressedData) {
-        if (n>0) {
-            for (i=0;i<l;i++) {
-                val[i]=self->numericValues->v[i]->n > 1 ? self->numericValues->v[i]->v[n-1] : self->numericValues->v[i]->v[0];
-            }
-        } else {
-            ii=0;
-            for (k=0;k<numberOfSubsets;k++) {
-                for (i=0;i<l;i++) {
-                    val[ii++]=self->numericValues->v[i]->n > 1 ? self->numericValues->v[i]->v[k] : self->numericValues->v[i]->v[0];
-                }
-            }
+      ii=0;
+      for (k=0;k<numberOfSubsets;k++) {
+        for (i=0;i<l;i++) {
+          val[ii++]=self->numericValues->v[i]->n > 1 ? self->numericValues->v[i]->v[k] : self->numericValues->v[i]->v[0];
         }
+      }
     } else {
-        if (n>0) {
-            elementsInSubset=grib_iarray_used_size(self->elementsDescriptorsIndex->v[n]);
-            for (i=0;i<elementsInSubset;i++) val[i]=self->numericValues->v[n-1]->v[i];
-        } else {
-            ii=0;
-            for (k=0;k<numberOfSubsets;k++) {
-                elementsInSubset=grib_iarray_used_size(self->elementsDescriptorsIndex->v[k]);
-                for (i=0;i<elementsInSubset;i++) {
-                    val[ii++]=self->numericValues->v[k]->v[i];
-                }
-            }
+      ii=0;
+      for (k=0;k<numberOfSubsets;k++) {
+        elementsInSubset=grib_iarray_used_size(self->elementsDescriptorsIndex->v[k]);
+        for (i=0;i<elementsInSubset;i++) {
+          val[ii++]=self->numericValues->v[k]->v[i];
         }
+      }
     }
 
     return GRIB_SUCCESS;

@@ -960,3 +960,41 @@ ${tools_dir}bufr_compare -b relativeHumidity,horizontalVisibility ${f}.out $f
 rm -f ${f}.out 
 
 rm -f $fRules ${fout} $fLog
+#-----------------------------------------------------------
+# Test:  access subsets by condition 
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set unpack=1;
+print "stationId=[/subsetNumber=6/blockNumber!%.2d][/subsetNumber=6/stationNumber!%.3d]";
+print "latitude=[/subsetNumber=6/latitude]";
+print "longitude=[/subsetNumber=6/longitude]";
+print "airTemperature=[/subsetNumber=6/airTemperature]";
+print "--------";
+print "stationId=[/subsetNumber=9/blockNumber!%.2d][/subsetNumber=9/stationNumber!%.3d]";
+print "latitude=[/subsetNumber=9/latitude]";
+print "longitude=[/subsetNumber=9/longitude]";
+print "airTemperature=[/subsetNumber=9/airTemperature]";
+EOF
+
+f="synop_multi_subset.bufr"
+echo "Test: access subsets by condition" >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+
+${tools_dir}bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+cat > ${f}.ref <<EOF
+stationId=01371
+latitude=61.122
+longitude=9.063
+airTemperature=265.35
+--------
+stationId=01387
+latitude=61.455
+longitude=10.1857
+airTemperature=267.55
+EOF
+
+diff ${f}.ref ${f}.log 
+
+rm -f ${f}.ref ${f}.log
+

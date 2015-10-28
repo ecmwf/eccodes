@@ -14,7 +14,6 @@ set -x
 REDIRECT=/dev/null
 
 cat > bufrdc_num_ref.filter<<EOF
-set subsetNumber=0;
 print "[numericValues!1%23.14e]";
 EOF
 
