@@ -389,6 +389,13 @@ static int angle_too_small(const double angle, const double angular_precision)
     return 0;
 }
 
+static double normalise_angle(double angle)
+{
+    while (angle<0)   angle += 360;
+    while (angle>360) angle -= 360;
+    return angle;
+}
+
 /* Check what is coded in the handle is what is requested by the spec. */
 /* Return GRIB_SUCCESS if the geometry matches, otherwise the error code */
 static int check_handle_against_spec(grib_handle* handle, const long edition, const grib_util_grid_spec2* spec)
@@ -418,10 +425,13 @@ static int check_handle_against_spec(grib_handle* handle, const long edition, co
 
     if (check_latitudes) {
         double lat1, lat2;
-        const double lat1spec = spec->latitudeOfFirstGridPointInDegrees;
-        const double lat2spec = spec->latitudeOfLastGridPointInDegrees;
+        const double lat1spec = normalise_angle(spec->latitudeOfFirstGridPointInDegrees);
+        const double lat2spec = normalise_angle(spec->latitudeOfLastGridPointInDegrees);
         if ((err = grib_get_double(handle, "latitudeOfFirstGridPointInDegrees", &lat1))!=0)  return err;
         if ((err = grib_get_double(handle, "latitudeOfLastGridPointInDegrees", &lat2))!=0)   return err;
+
+        lat1 = normalise_angle(lat1);
+        lat2 = normalise_angle(lat2);
 
         if (angle_too_small(lat1spec, angular_precision)) {
             fprintf(stderr, "Failed to encode latitudeOfFirstGridPointInDegrees %g: less than angular precision\n",lat1spec);
@@ -444,10 +454,13 @@ static int check_handle_against_spec(grib_handle* handle, const long edition, co
 
     if (check_longitudes) {
         double lon1, lon2;
-        const double lon1spec = spec->longitudeOfFirstGridPointInDegrees;
-        const double lon2spec = spec->longitudeOfLastGridPointInDegrees;
+        const double lon1spec = normalise_angle(spec->longitudeOfFirstGridPointInDegrees);
+        const double lon2spec = normalise_angle(spec->longitudeOfLastGridPointInDegrees);
         if ((err = grib_get_double(handle, "longitudeOfFirstGridPointInDegrees", &lon1))!=0) return err;
         if ((err = grib_get_double(handle, "longitudeOfLastGridPointInDegrees", &lon2))!=0)  return err;
+
+        lon1 = normalise_angle(lon1);
+        lon2 = normalise_angle(lon2);
 
         if (angle_too_small(lon1spec, angular_precision)) {
             fprintf(stderr, "Failed to encode longitudeOfFirstGridPointInDegrees %g: less than angular precision\n", lon1spec);
@@ -473,17 +486,19 @@ static int check_handle_against_spec(grib_handle* handle, const long edition, co
         spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG)
     {
         double latp, lonp;
+        const double latspec = normalise_angle(spec->latitudeOfSouthernPoleInDegrees);
+        const double lonspec = normalise_angle(spec->longitudeOfSouthernPoleInDegrees);
         if ((err = grib_get_double(handle, "latitudeOfSouthernPoleInDegrees", &latp))!=0)  return err;
         if ((err = grib_get_double(handle, "longitudeOfSouthernPoleInDegrees", &lonp))!=0)  return err;
+        latp = normalise_angle(latp);
+        lonp = normalise_angle(lonp);
 
-        if (!DBL_EQUAL(spec->latitudeOfSouthernPoleInDegrees, latp, tolerance)) {
-            fprintf(stderr, "Failed to encode latitudeOfSouthernPoleInDegrees: spec=%g val=%g\n",
-                    spec->latitudeOfSouthernPoleInDegrees, latp);
+        if (!DBL_EQUAL(latspec, latp, tolerance)) {
+            fprintf(stderr, "Failed to encode latitudeOfSouthernPoleInDegrees: spec=%g val=%g\n",latspec,latp);
             return GRIB_WRONG_GRID;
         }
-        if (!DBL_EQUAL(spec->longitudeOfSouthernPoleInDegrees, lonp, tolerance)) {
-            fprintf(stderr, "Failed to encode longitudeOfSouthernPoleInDegrees: spec=%g val=%g\n",
-                    spec->longitudeOfSouthernPoleInDegrees, lonp);
+        if (!DBL_EQUAL(lonspec, lonp, tolerance)) {
+            fprintf(stderr, "Failed to encode longitudeOfSouthernPoleInDegrees: spec=%g val=%g\n",lonspec,lonp);
             return GRIB_WRONG_GRID;
         }
     }
