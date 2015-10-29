@@ -371,6 +371,7 @@ static int DBL_EQUAL(double d1, double d2, double tolerance)
     return fabs(d1-d2) < tolerance;
 }
 
+/* Returns a boolean: 1 if angle can be encoded, 0 otherwise */
 static int grib1_angle_can_be_encoded(const double angle)
 {
     const double angle_milliDegrees = angle * 1000;
@@ -382,6 +383,7 @@ static int grib1_angle_can_be_encoded(const double angle)
     return 0; /* sub millidegree. Cannot be encoded in grib1 */
 }
 
+/* Returns a boolean: 1 if angle is too small, 0 otherwise */
 static int angle_too_small(const double angle, const double angular_precision)
 {
     const double a = fabs(angle);
@@ -409,6 +411,12 @@ static int check_handle_against_spec(grib_handle* handle, const long edition, co
     if (edition == 2) {
         angular_precision = 1.0/1000000.0; /* microdegree */
         tolerance = angular_precision/2.0;
+    }
+
+    if (spec->grid_type == GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC ||
+        spec->grid_type == GRIB_UTIL_GRID_SPEC_SH)
+    {
+        return GRIB_SUCCESS;
     }
 
     /* Cannot check latitudes of Gaussian grids because are always sub-millidegree */
@@ -1258,13 +1266,15 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     if(packing_spec->editionNumber && packing_spec->editionNumber!=editionNumber)
         grib_set_long(outh,"edition", packing_spec->editionNumber);
 
-    if (check_handle_against_spec(outh, editionNumber, spec) != GRIB_SUCCESS) {
+    if ( (*err = check_handle_against_spec(outh, editionNumber, spec)) != GRIB_SUCCESS)
+    {
         grib_context* c=grib_context_get_default();
-        fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed!\n");
+        fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed! %s\n", grib_get_error_message(*err));
         if (c->write_on_fail)
             grib_write_message(outh,"error.grib","w");
         goto cleanup;
     }
+
     if (h->context->debug==-1)
         printf("ECCODES DEBUG: grib_util_set_spec end\n");
 
