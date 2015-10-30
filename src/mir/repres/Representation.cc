@@ -97,9 +97,15 @@ void Representation::validate(const std::vector<double> &) const {
     throw eckit::SeriousBug(os.str());
 }
 
-void Representation::fill(grib_info &) const {
+void Representation::fill(grib_info&) const {
     std::ostringstream os;
-    os << "Representation::fill() not implemented for " << *this;
+    os << "Representation::fill(grib_info&) not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+void Representation::fill(api::MIRJob&) const {
+    std::ostringstream os;
+    os << "Representation::fill(api::MIRJob&) not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
