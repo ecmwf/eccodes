@@ -413,6 +413,10 @@ static int check_handle_against_spec(grib_handle* handle, const long edition, co
         tolerance = angular_precision/2.0;
     }
 
+    if (edition == 2) {
+        return GRIB_SUCCESS;  /* For now only do checks on edition 1 */
+    }
+
     if (spec->grid_type == GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC ||
         spec->grid_type == GRIB_UTIL_GRID_SPEC_SH)
     {
@@ -511,6 +515,38 @@ static int check_handle_against_spec(grib_handle* handle, const long edition, co
         }
     }
     return GRIB_SUCCESS;
+}
+
+static char* get_grid_type_name(const int spec_grid_type)
+{
+    if (spec_grid_type == GRIB_UTIL_GRID_SPEC_REGULAR_LL)
+        return "regular_ll";
+
+    if (spec_grid_type == GRIB_UTIL_GRID_SPEC_ROTATED_LL)
+        return "rotated_ll";
+
+    if (spec_grid_type == GRIB_UTIL_GRID_SPEC_REGULAR_GG)
+        return "regular_gg";
+
+    if (spec_grid_type == GRIB_UTIL_GRID_SPEC_ROTATED_GG)
+        return "rotated_gg";
+
+    if (spec_grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_LL)
+        return "reduced_ll";
+
+    if (spec_grid_type == GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC)
+        return "polar_stereographic";
+
+    if (spec_grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_GG)
+        return "reduced_gg";
+
+    if (spec_grid_type == GRIB_UTIL_GRID_SPEC_SH)
+        return "sh";
+
+    if (spec_grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG)
+        return "reduced_rotated_gg";
+
+    return NULL;
 }
 
 grib_handle* grib_util_set_spec(grib_handle* h,
@@ -781,48 +817,11 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         return h;
     }
 
-    switch(spec->grid_type) {
-
-    case GRIB_UTIL_GRID_SPEC_REGULAR_LL:
-        grid_type = "regular_ll";
-        break;
-
-    case GRIB_UTIL_GRID_SPEC_ROTATED_LL:
-        grid_type = "rotated_ll";
-        break;
-
-    case GRIB_UTIL_GRID_SPEC_REGULAR_GG:
-        grid_type = "regular_gg";
-        break;
-
-    case GRIB_UTIL_GRID_SPEC_ROTATED_GG:
-        grid_type = "rotated_gg";
-        break;
-
-    case GRIB_UTIL_GRID_SPEC_REDUCED_LL:
-        grid_type = "reduced_ll";
-        break;
-
-    case GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC:
-        grid_type = "polar_stereographic";
-        break;
-
-    case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
-        grid_type = "reduced_gg";
-        break;
-
-    case GRIB_UTIL_GRID_SPEC_SH:
-        grid_type = "sh";
-        break;
-
-    case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
-        grid_type = "reduced_rotated_gg";
-        break;
-
-    default:
+    grid_type = get_grid_type_name(spec->grid_type);
+    if (grid_type == NULL) {
+        fprintf(stderr,"GRIB_UTIL_SET_SPEC: Unknown grid type: %d\n", spec->grid_type);
         *err = GRIB_NOT_IMPLEMENTED;
         return NULL;
-
     }
 
     SET_STRING_VALUE("gridType", grid_type);
