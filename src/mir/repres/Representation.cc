@@ -74,101 +74,95 @@ RepresentationHandle::~RepresentationHandle() {
 }
 
 void Representation::setComplexPacking(grib_info &) const {
-    std::stringstream os;
-    os << "Representation::setComplexPacking() not implemented for " << *this ;
+    std::ostringstream os;
+    os << "Representation::setComplexPacking() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 void Representation::setSimplePacking(grib_info &) const {
-    std::stringstream os;
-    os << "Representation::setSimplePacking() not implemented for " << *this ;
+    std::ostringstream os;
+    os << "Representation::setSimplePacking() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 void Representation::setSecondOrderPacking(grib_info &) const {
-    std::stringstream os;
-    os << "Representation::setSecondOrderPacking() not implemented for " << *this ;
+    std::ostringstream os;
+    os << "Representation::setSecondOrderPacking() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 void Representation::validate(const std::vector<double> &) const {
-    std::stringstream os;
-    os << "Representation::validate() not implemented for " << *this ;
+    std::ostringstream os;
+    os << "Representation::validate() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 void Representation::fill(grib_info &) const {
-    std::stringstream os;
-    os << "Representation::fill(grib_info &) not implemented for " << *this ;
-    throw eckit::SeriousBug(os.str());
-}
-
-void Representation::fill(api::MIRJob &) const {
-    std::stringstream os;
-    os << "Representation::fill(api::MIRJob &) not implemented for " << *this ;
+    std::ostringstream os;
+    os << "Representation::fill() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 void Representation::shape(size_t &ni, size_t &nj) const {
-    std::stringstream os;
-    os << "Representation::shape() not implemented for " << *this ;
+    std::ostringstream os;
+    os << "Representation::shape() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 const Representation *Representation::cropped(const util::BoundingBox &bbox) const {
-    std::stringstream os;
-    os << "Representation::cropped() not implemented for " << *this ;
+    std::ostringstream os;
+    os << "Representation::cropped() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 
 const Representation *Representation::truncate(size_t truncation,
         const std::vector<double> &, std::vector<double> &) const {
-    std::stringstream os;
-    os << "Representation::truncate() not implemented for " << *this ;
+    std::ostringstream os;
+    os << "Representation::truncate() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 
 atlas::Grid *Representation::atlasGrid() const {
-    std::stringstream os;
-    os << "Representation::atlasGrid() not implemented for " << *this ;
+    std::ostringstream os;
+    os << "Representation::atlasGrid() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 size_t Representation::truncation() const {
-    std::stringstream os;
-    os << "Representation::truncation() not implemented for " << *this ;
+    std::ostringstream os;
+    os << "Representation::truncation() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 size_t Representation::frame(std::vector<double> &values, size_t size, double missingValue) const {
-    std::stringstream os;
-    os << "Representation::frame() not implemented for " << *this ;
+    std::ostringstream os;
+    os << "Representation::frame() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 void Representation::reorder(long scanningMode, std::vector<double> &values) const {
-    std::stringstream os;
-    os << "Representation::reorder() not implemented for " << *this ;
+    std::ostringstream os;
+    os << "Representation::reorder() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 void Representation::cropToDomain(const param::MIRParametrisation &parametrisation, data::MIRField &) const {
-    std::stringstream os;
-    os << "Representation::cropToDomain() not implemented for " << *this ;
+    std::ostringstream os;
+    os << "Representation::cropToDomain() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 Iterator *Representation::unrotatedIterator() const {
-    std::stringstream os;
-    os << "Representation::unrotatedIterator() not implemented for " << *this ;
+    std::ostringstream os;
+    os << "Representation::unrotatedIterator() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 Iterator *Representation::rotatedIterator() const {
-    std::stringstream os;
-    os << "Representation::rotatedIterator() not implemented for " << *this ;
+    std::ostringstream os;
+    os << "Representation::rotatedIterator() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 

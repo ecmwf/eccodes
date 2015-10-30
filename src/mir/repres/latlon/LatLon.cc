@@ -146,8 +146,8 @@ void LatLon::reorder(long scanningMode, std::vector<double> &values) const {
         return;
     }
 
-    std::stringstream os;
-    os << "LatLon::reorder: unsupported scanning mode 0x" << std::hex << scanningMode ;
+    std::ostringstream os;
+    os << "LatLon::reorder: unsupported scanning mode 0x" << std::hex << scanningMode;
     throw eckit::SeriousBug(os.str());
 }
 
