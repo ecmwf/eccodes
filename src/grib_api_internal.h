@@ -153,7 +153,13 @@ extern "C" {
 #define Assert(a) {if(!(a)) grib_fail(#a,__FILE__,__LINE__,0);}
 #define AssertSilent(a) {if(!(a)) grib_fail(#a,__FILE__,__LINE__,1);}
 
- /* Compile time assertion - Thanks to Ralf Holly */
+#ifndef NDEBUG
+ #define DebugAssert(a) Assert(a)
+#else
+ #define DebugAssert(a)
+#endif
+
+/* Compile time assertion - Thanks to Ralf Holly */
 #define COMPILE_TIME_ASSERT(e) \
    do { \
        enum { assert_static__ = 1/(e) }; \

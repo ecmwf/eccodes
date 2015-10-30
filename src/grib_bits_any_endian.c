@@ -175,7 +175,7 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long *bitp, long
     while (bitsToRead > 0) {
         ret  <<= 8;
         /*   ret += p[pi];     */
-        /*   Assert( (ret & p[pi]) == 0 ); */
+        DebugAssert( (ret & p[pi]) == 0 );
         ret = ret | p[pi];
         pi++;
         bitsToRead -= usefulBitsInByte;
