@@ -360,15 +360,15 @@ static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name)
 {
     grib_accessor* a = NULL;
     char* p=NULL;
-    char* basename=NULL;
-    char name_space[1024];
-    int i=0,len=0;
 
     p=(char*)name;
-    Assert(name);
+    DebugAssert(name);
 
     while ( *p != '.' && *p != '\0' ) p++;
     if ( *p == '.' ) {
+        int i=0,len=0;
+        char name_space[1024];
+        char* basename=NULL;
         basename=p+1;
         p--;
         i=0;
