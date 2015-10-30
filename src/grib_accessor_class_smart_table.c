@@ -120,6 +120,7 @@ static grib_accessor_class _grib_accessor_class_smart_table = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -154,6 +155,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->clone	=	(*(c->super))->clone;
 }
 
 /* END_CLASS_IMP */

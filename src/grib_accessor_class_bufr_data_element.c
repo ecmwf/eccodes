@@ -23,7 +23,7 @@
    IMPLEMENTS = init;dump
    IMPLEMENTS = unpack_string;unpack_string_array;unpack_long; unpack_double
    IMPLEMENTS = pack_long; pack_double ; pack_string_array; pack_string
-   IMPLEMENTS = value_count; get_native_type;
+   IMPLEMENTS = value_count; get_native_type; clone
    MEMBERS    = long index
    MEMBERS    = int type
    MEMBERS    = long compressedData
@@ -61,6 +61,7 @@ static int value_count(grib_accessor*,long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
+static grib_accessor* clone(grib_accessor*,grib_section*,int*);
 
 typedef struct grib_accessor_bufr_data_element {
     grib_accessor          att;
@@ -119,6 +120,7 @@ static grib_accessor_class _grib_accessor_class_bufr_data_element = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    &clone,               		/* clone accessor          */
 };
 
 
@@ -151,10 +153,11 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-grib_accessor* accessor_bufr_data_element_clone(grib_accessor* a,grib_section* s) {
+static grib_accessor* clone(grib_accessor* a,grib_section* s,int* err) {
   grib_accessor* operatorAccessor=NULL;
   grib_action operatorCreator = {0, };
   grib_accessor* clone=NULL;
+  grib_accessor* attribute=NULL;
   grib_accessor_bufr_data_element* elementAccessor;
   grib_accessor_bufr_data_element* self;
   int i;
@@ -162,6 +165,10 @@ grib_accessor* accessor_bufr_data_element_clone(grib_accessor* a,grib_section* s
   creator.op         = "bufr_data_element";
   creator.name_space = "";
   creator.set        = 0;
+  if (strcmp(a->cclass->name,"bufr_data_element")) {
+    grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,"wrong accessor type: '%s' should be '%s'",a->cclass->name,"bufr_data_element");
+  }
+  *err=0;
 
   creator.name=grib_context_strdup(a->parent->h->context,a->name);
   clone = grib_accessor_factory(s, &creator, 0, NULL);
@@ -180,7 +187,8 @@ grib_accessor* accessor_bufr_data_element_clone(grib_accessor* a,grib_section* s
 
   i=0;
   while (a->attributes[i]) {
-    accessor_bufr_data_element_clone(a->attributes[i],s);
+    attribute=grib_accessor_clone(a->attributes[i],s,err);
+    grib_accessor_add_attribute(clone,attribute);
     i++;
   }
 
@@ -533,5 +541,6 @@ static int  get_native_type(grib_accessor* a){
 
   return ret;
 }
+
 
 

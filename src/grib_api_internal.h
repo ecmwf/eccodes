@@ -292,6 +292,7 @@ typedef  int   (*accessor_pack_string_array_proc)        (grib_accessor*, const 
 typedef  int   (*accessor_pack_bytes_proc)               (grib_accessor*, const unsigned char*, size_t *len);
 typedef  int   (*accessor_pack_expression_proc)           (grib_accessor*, grib_expression*);
 typedef  int   (*accessor_clear_proc)                     (grib_accessor*);
+typedef  grib_accessor*   (*accessor_clone_proc)         (grib_accessor*,grib_section*,int*);
 
 typedef  void  (*accessor_init_class_proc)               (grib_accessor_class*);
 
@@ -895,6 +896,7 @@ struct grib_accessor_class
     accessor_unpack_double_element_proc     unpack_double_element;
     accessor_unpack_double_subarray_proc    unpack_double_subarray;
     accessor_clear_proc             clear;
+    accessor_clone_proc             clone;
 };
 
 typedef struct grib_multi_support grib_multi_support;

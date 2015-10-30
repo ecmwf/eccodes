@@ -120,6 +120,7 @@ static grib_accessor_class _grib_accessor_class_data_simple_packing = {
     &unpack_double_element,     /* unpack only ith value          */
     &unpack_double_subarray,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -154,6 +155,7 @@ static void init_class(grib_accessor_class* c)
 	c->next	=	(*(c->super))->next;
 	c->compare	=	(*(c->super))->compare;
 	c->clear	=	(*(c->super))->clear;
+	c->clone	=	(*(c->super))->clone;
 }
 
 /* END_CLASS_IMP */

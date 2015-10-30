@@ -509,6 +509,21 @@ void grib_accessor_delete(grib_context *ct, grib_accessor* a)
 }
 
 
+grib_accessor* grib_accessor_clone(grib_accessor* a,grib_section* s,int* err)
+{
+  grib_accessor_class *c = a->cclass;
+  grib_context* ct=a->parent->h->context;
+  while(c)
+  {
+    grib_accessor_class *super = c->super ? *(c->super) : NULL;
+    grib_context_log(ct,GRIB_LOG_DEBUG,"clone %s ==> %s",c->name,a->name);
+    if(c->clone) {
+      return c->clone(a,s,err);
+    }
+    c = super;
+  }
+}
+
 void grib_update_size(grib_accessor* a, size_t len )
 {
   grib_accessor_class *c = a->cclass;

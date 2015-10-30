@@ -276,6 +276,7 @@ grib_accessors_list *accessor_bufr_data_array_get_dataAccessors(grib_accessor *a
 void accessor_bufr_data_array_set_unpackMode(grib_accessor *a, int unpackMode);
 
 /* grib_accessor_class_bufr_data_element.c */
+grib_accessor* grib_accessor_clone(grib_accessor* a,grib_section* s,int* err);
 void accessor_bufr_data_element_set_index(grib_accessor *a, long index);
 void accessor_bufr_data_element_set_type(grib_accessor *a, int type);
 void accessor_bufr_data_element_set_numberOfSubsets(grib_accessor *a, long numberOfSubsets);
