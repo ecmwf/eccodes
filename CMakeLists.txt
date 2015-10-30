@@ -322,6 +322,7 @@ ecbuild_print_summary()
 
 message("")
 message("   +---------------------------+")
+message("   |  ecCodes version ${ECCODES_VERSION}   |")
 message("   |  Configuration completed  |")
 message("   +---------------------------+")
 message("")
