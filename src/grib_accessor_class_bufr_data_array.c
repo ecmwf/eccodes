@@ -159,6 +159,7 @@ static grib_accessor_class _grib_accessor_class_bufr_data_array = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -187,6 +188,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->clone	=	(*(c->super))->clone;
 }
 
 /* END_CLASS_IMP */
@@ -1533,7 +1535,11 @@ static int create_keys(grib_accessor* a)
           case 999999:
             associatedFieldAccessor=elementAccessor;
             if (associatedFieldSignificanceAccessor) {
-              grib_accessor* newAccessor=accessor_bufr_data_element_clone(associatedFieldSignificanceAccessor,associatedFieldAccessor->parent);
+              grib_accessor* newAccessor=grib_accessor_clone(associatedFieldSignificanceAccessor,associatedFieldAccessor->parent,&err);
+              if (err) {
+                grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"unable to clone accessor '%s'\n",associatedFieldSignificanceAccessor->name);
+                return err;
+              }
               grib_accessor_add_attribute(associatedFieldAccessor,newAccessor);
             }
             break;

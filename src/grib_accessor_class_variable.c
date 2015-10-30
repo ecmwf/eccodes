@@ -20,7 +20,7 @@
    IMPLEMENTS = unpack_string;pack_string;string_length
    IMPLEMENTS = unpack_long;pack_long;destroy;byte_count
    IMPLEMENTS = init;dump;value_count;get_native_type
-   IMPLEMENTS = compare
+   IMPLEMENTS = compare; clone
    MEMBERS=double dval
    MEMBERS=char*  cval
    MEMBERS=int    type
@@ -53,6 +53,7 @@ static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
+static grib_accessor* clone(grib_accessor*,grib_section*,int*);
 
 typedef struct grib_accessor_variable {
     grib_accessor          att;
@@ -105,6 +106,7 @@ static grib_accessor_class _grib_accessor_class_variable = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    &clone,               		/* clone accessor          */
 };
 
 
@@ -283,7 +285,7 @@ static void destroy(grib_context* c,grib_accessor* a)
     grib_context_free(c,self->cval);
 }
 
-static int unpack_string (grib_accessor* a, char* val, size_t *len){
+static int unpack_string(grib_accessor* a, char* val, size_t *len){
     grib_accessor_variable *self = (grib_accessor_variable*)a;
 
     char buf[80];
@@ -392,5 +394,29 @@ static int compare(grib_accessor* a, grib_accessor* b) {
     grib_context_free(b->parent->h->context,bval);
 
     return retval;
+}
+
+static grib_accessor* clone(grib_accessor* a,grib_section* s,int* err) {
+  grib_accessor* clone=NULL;
+  grib_accessor_variable *self = (grib_accessor_variable*)a;
+  grib_accessor_variable* variableAccessor=NULL;
+  grib_action creator = {0, };
+  creator.op         = "variable";
+  creator.name_space = "";
+  creator.set        = 0;
+
+  creator.name=grib_context_strdup(a->parent->h->context,a->name);
+  clone=grib_accessor_factory(s, &creator, 0, NULL);
+  variableAccessor=(grib_accessor_variable*)clone;
+
+  *err=0;
+  variableAccessor->type=self->type;
+  if(self->type == GRIB_TYPE_STRING && self->cval!=NULL) {
+    variableAccessor->cval=grib_context_strdup(a->parent->h->context,self->cval);
+  } else {
+    variableAccessor->dval=self->dval;
+  }
+
+  return clone;
 }
 
