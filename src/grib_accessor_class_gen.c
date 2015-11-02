@@ -484,20 +484,13 @@ static int pack_bytes(grib_accessor* a, const unsigned char* val, size_t *len)
 
 static void destroy(grib_context* ct, grib_accessor* a)
 {
-    int i=0;
     grib_dependency_remove_observed(a);
     grib_dependency_remove_observer(a);
     if (a->vvalue!=NULL) {
         grib_context_free(ct,a->vvalue);
         a->vvalue=NULL;
     }
-    grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,"address=%p",a);
-    while (i<MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
-      grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,"deleting attribute %s->%s",a->name,a->attributes[i]->name);
-      grib_accessor_delete(a->parent->h->context,a->attributes[i]);
-      a->attributes[i]=NULL;
-      i++;
-    }
+    grib_context_log(ct,GRIB_LOG_DEBUG,"address=%p",a);
 }
 
 static grib_section* sub_section(grib_accessor* a)

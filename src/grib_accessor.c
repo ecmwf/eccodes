@@ -669,6 +669,7 @@ int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr)
     if (_grib_accessor_get_attribute(a,attr->name,&id)) return GRIB_ATTRIBUTE_CLASH;
     for (id=0;id<MAX_ACCESSOR_ATTRIBUTES;id++) {
         if (a->attributes[id] == NULL) {
+            attr->parent=a->parent;
             a->attributes[id]=attr;
             attr->parent_as_attribute=a;
             if (a->same)

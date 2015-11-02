@@ -1180,7 +1180,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
         grib_accessor_add_attribute(elementAccessor,attribute);
 
         sprintf(code,"%06ld",self->expanded->v[idx]->code);
-        attribute=create_attribute("code",section,GRIB_TYPE_STRING,code,0,0,flags);
+        attribute=create_attribute("code",section,GRIB_TYPE_STRING,grib_context_strdup(a->parent->h->context,code),0,0,flags);
         grib_accessor_add_attribute(elementAccessor,attribute);
 
         attribute=create_attribute("units",section,GRIB_TYPE_STRING,self->expanded->v[idx]->units,0,0,GRIB_ACCESSOR_FLAG_DUMP);

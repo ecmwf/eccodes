@@ -23,7 +23,7 @@
    IMPLEMENTS = init;dump
    IMPLEMENTS = unpack_string;unpack_string_array;unpack_long; unpack_double
    IMPLEMENTS = pack_long; pack_double ; pack_string_array; pack_string
-   IMPLEMENTS = value_count; get_native_type; clone
+   IMPLEMENTS = value_count; get_native_type; clone; destroy
    MEMBERS    = long index
    MEMBERS    = int type
    MEMBERS    = long compressedData
@@ -62,6 +62,8 @@ static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 static grib_accessor* clone(grib_accessor*,grib_section*,int*);
+static void destroy(grib_context*,grib_accessor*);
+
 
 typedef struct grib_accessor_bufr_data_element {
     grib_accessor          att;
@@ -88,7 +90,7 @@ static grib_accessor_class _grib_accessor_class_bufr_data_element = {
     &init_class,                 /* init_class */
     &init,                       /* init                      */
     0,                  /* post_init                      */
-    0,                    /* free mem                       */
+    &destroy,                    /* free mem                       */
     &dump,                       /* describes himself         */
     0,                /* get length of section     */
     0,              /* get length of string      */
@@ -543,4 +545,13 @@ static int  get_native_type(grib_accessor* a){
 }
 
 
-
+static void destroy(grib_context* ct, grib_accessor* a)
+{
+  int i=0;
+  while (i<MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
+    grib_context_log(ct,GRIB_LOG_DEBUG,"deleting attribute %s->%s",a->name,a->attributes[i]->name);
+    grib_accessor_delete(ct,a->attributes[i]);
+    a->attributes[i]=NULL;
+    i++;
+  }
+}
