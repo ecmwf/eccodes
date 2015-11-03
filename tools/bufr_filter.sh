@@ -265,6 +265,37 @@ echo " and many more values ......"
 
 echo "\\endverbatim\\n"
 
+# Accessing subsets
+
+echo "-# Accessing keys by condition provides the means to read individual <b>subsets</b> from uncompressed data."
+echo "File synop_multi_subset.bufr contains a single message with several subsets in an uncompressed form."
+echo "To access a given subset we can simply use key <b>subsetNumber</b> in the filter condition. The example below shows" 
+echo "how to read the blockNumber, stationNumber and airTemperaturefor the first 3 subsets in the message: \\n"
+
+echo "\\verbatim"
+echo "set unpack=1;"
+echo "print \"subsetNumber=1 blockNumber=[/subsetNumber=1/blockNumber] stationNumber=[/subsetNumber=1/stationNumber] airTempearture=[/subsetNumber=1/airTemperature]\";"
+echo "print \"subsetNumber=2 blockNumber=[/subsetNumber=2/blockNumber] stationNumber=[/subsetNumber=2/stationNumber] airTempearture=[/subsetNumber=2/airTemperature]\";"
+echo "print \"subsetNumber=3 blockNumber=[/subsetNumber=3/blockNumber] stationNumber=[/subsetNumber=3/stationNumber] airTempearture=[/subsetNumber=3/airTemperature]\";"
+echo "\\endverbatim\\n"
+
+echo "The result is:"
+echo "\\verbatim"
+
+cat > rules_file <<EOF
+set unpack=1;
+print "subsetNumber=1 blockNumber=[/subsetNumber=1/blockNumber] stationNumber=[/subsetNumber=1/stationNumber] airTempearture=[/subsetNumber=1/airTemperature]";
+print "subsetNumber=2 blockNumber=[/subsetNumber=2/blockNumber] stationNumber=[/subsetNumber=2/stationNumber] airTempearture=[/subsetNumber=2/airTemperature]";
+print "subsetNumber=3 blockNumber=[/subsetNumber=3/blockNumber] stationNumber=[/subsetNumber=3/stationNumber] airTempearture=[/subsetNumber=3/airTemperature]";
+EOF
+
+echo ">bufr_filter rules_file ../data/bufr/synop_multi_subset.bufr"
+
+./bufr_filter rules_file ../data/bufr/synop_multi_subset.bufr > tmp_file
+head tmp_file
+
+echo "\\endverbatim\\n"
+
 rm -f rules_file || true
 rm -f tmp_file || true
 
