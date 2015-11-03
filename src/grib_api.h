@@ -85,7 +85,8 @@ Log mode for information for processing information
 
 /* Missing values */
 /* #define GRIB_MISSING_LONG   0x80000001*/
-#define GRIB_MISSING_LONG 0xffffffff
+/* #define GRIB_MISSING_LONG 0xffffffff */
+#define GRIB_MISSING_LONG 2147483647
 #define GRIB_MISSING_DOUBLE -1e+100
 
 /*set spec flags*/

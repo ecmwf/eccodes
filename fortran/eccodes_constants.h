@@ -65,3 +65,5 @@
   integer, parameter,public :: CODES_END_OF_FILE                                   = -1
   integer, parameter,public :: CODES_SUCCESS                                       = 0
   integer, parameter,public :: CODES_NULL                                          = -1
+  real(8),    parameter,public :: CODES_MISSING_DOUBLE                              = -1.D+100
+  integer(4), parameter,public :: CODES_MISSING_LONG                                = 2147483647
