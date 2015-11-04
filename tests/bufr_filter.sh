@@ -998,3 +998,25 @@ diff ${f}.ref ${f}.log
 
 rm -f ${f}.ref ${f}.log
 
+#-----------------------------------------------------------
+# Test:  access subsets and attribute by condition 
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set unpack=1;
+print "/subsetNumber=1/airTemperature->percentConfidence=[/subsetNumber=1/airTemperature->percentConfidence] [/subsetNumber=1/airTemperature->percentConfidence->units]";
+EOF
+
+f="amda_144.bufr"
+echo "Test: access subsets and attribute by condition" >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+
+${tools_dir}bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+cat > ${f}.ref <<EOF
+/subsetNumber=1/airTemperature->percentConfidence=70 %
+EOF
+
+diff ${f}.ref ${f}.log 
+
+rm -f ${f}.ref ${f}.log
+

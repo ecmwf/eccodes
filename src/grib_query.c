@@ -252,9 +252,23 @@ static int condition_true(grib_accessor* a,codes_condition* condition) {
 }
 
 static void search_from_accessors_list(grib_accessors_list* al,grib_accessors_list* end,const char* name,grib_accessors_list* result) {
+    char* accessor_name=NULL;
+    char attribute_name[200]={0,};
+    grib_accessor* accessor_result=0;
+
+    accessor_name=grib_split_name_attribute(al->accessor->parent->h->context,name,attribute_name);
+
     while (al && al!=end && al->accessor) {
-        if (!strcmp(al->accessor->name,name))
-            grib_accessors_list_push(result,al->accessor);
+        if (!strcmp(al->accessor->name,accessor_name)) {
+            if (attribute_name[0]) {
+              accessor_result=grib_accessor_get_attribute(al->accessor,attribute_name);
+              grib_context_free(al->accessor->parent->h->context,accessor_name);
+            } else {
+              accessor_result=al->accessor;
+            }
+            if (accessor_result)
+              grib_accessors_list_push(result,accessor_result);
+        }
         al=al->next;
     }
 }
