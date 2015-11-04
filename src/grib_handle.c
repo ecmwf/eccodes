@@ -159,11 +159,11 @@ grib_handle* grib_new_handle ( grib_context* c )
     if ( c == NULL ) c = grib_context_get_default();
     g = ( grib_handle* ) grib_context_malloc_clear ( c,sizeof ( grib_handle ) );
 
-
     if ( g == NULL ) {
         grib_context_log ( c,GRIB_LOG_ERROR,"grib_new_handle: cannot allocate handle" );
     } else {
         g->context = c;
+        g->product_kind = PRODUCT_ANY; /* Default. Will later be set to a specific product */
     }
 
     grib_context_log ( c,GRIB_LOG_DEBUG,"grib_new_handle: allocated handle %p",g );
@@ -717,6 +717,10 @@ grib_handle* grib_new_from_file ( grib_context* c, FILE* f,int headers_only,int 
 
     if ( h && h->offset == 0 ) c->handle_file_count=1;
 
+    if (h) {
+        h->product_kind = PRODUCT_GRIB;
+    }
+
     if ( !c->no_fail_on_wrong_length && *error == GRIB_WRONG_LENGTH )
     {
         grib_handle_delete ( h );
@@ -757,6 +761,7 @@ grib_handle* gts_new_from_file ( grib_context* c, FILE* f,int *error )
 
     gl->offset=offset;
     gl->buffer->property = GRIB_MY_BUFFER;
+    gl->product_kind = PRODUCT_GTS;
     c->handle_file_count++;
     c->handle_total_count++;
 
@@ -794,6 +799,7 @@ grib_handle* taf_new_from_file ( grib_context* c, FILE* f,int *error )
 
     gl->offset=offset;
     gl->buffer->property = GRIB_MY_BUFFER;
+    gl->product_kind = PRODUCT_TAF;
     c->handle_file_count++;
     c->handle_total_count++;
 
@@ -831,6 +837,7 @@ grib_handle* metar_new_from_file ( grib_context* c, FILE* f,int *error )
 
     gl->offset=offset;
     gl->buffer->property = GRIB_MY_BUFFER;
+    gl->product_kind = PRODUCT_METAR;
     c->handle_file_count++;
     c->handle_total_count++;
 
@@ -868,6 +875,7 @@ grib_handle* bufr_new_from_file ( grib_context* c, FILE* f,int *error )
 
     gl->offset=offset;
     gl->buffer->property = GRIB_MY_BUFFER;
+    gl->product_kind = PRODUCT_BUFR;
     c->handle_file_count++;
     c->handle_total_count++;
 
@@ -905,6 +913,7 @@ grib_handle* any_new_from_file ( grib_context* c, FILE* f,int *error )
 
     gl->offset=offset;
     gl->buffer->property = GRIB_MY_BUFFER;
+    gl->product_kind = PRODUCT_ANY;
     c->handle_file_count++;
     c->handle_total_count++;
 

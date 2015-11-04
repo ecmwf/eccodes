@@ -39,7 +39,7 @@ extern "C" {
 #define ECCODES_DEPRECATED
 #endif
 
-typedef enum ProductKind {PRODUCT_ANY, PRODUCT_GRIB, PRODUCT_BUFR, PRODUCT_METAR, PRODUCT_GTS} ProductKind;
+typedef enum ProductKind {PRODUCT_ANY, PRODUCT_GRIB, PRODUCT_BUFR, PRODUCT_METAR, PRODUCT_GTS, PRODUCT_TAF} ProductKind;
 
 #include "eccodes_version.h"
 

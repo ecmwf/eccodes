@@ -53,6 +53,9 @@ CODES_PRODUCT_METAR=3
 """ METAR product kind """
 CODES_PRODUCT_GTS=4
 """ GTS product kind """
+CODES_PRODUCT_TAF=5
+""" TAF product kind """
+
 
 # GRIB-51 Skip function arguments type checking if the
 # environment variable is defined

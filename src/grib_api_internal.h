@@ -834,6 +834,7 @@ struct grib_handle
     /* grib_accessor* groups[MAX_NUM_GROUPS]; */
     long missingValueLong;
     double missingValueDouble;
+    ProductKind product_kind;
 };
 
 struct grib_multi_handle {
