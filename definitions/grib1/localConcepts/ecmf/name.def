@@ -3354,8 +3354,8 @@
 	 table2Version = 140 ;
 	 indicatorOfParameter = 84 ;
 	}
-#Significant wave height of all waves with period lower than 10s
-'Significant wave height of all waves with period lower than 10s' = {
+#Significant wave height of all waves with period larger than 10s
+'Significant wave height of all waves with period larger than 10s' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 120 ;
 	}
