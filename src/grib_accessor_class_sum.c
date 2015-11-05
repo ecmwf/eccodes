@@ -164,7 +164,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
   	*val=0;
 	return ret;
   }
-  values=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*size);
+  values=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
   if (!values) return GRIB_OUT_OF_MEMORY;
 
   grib_get_long_array(a->parent->h,self->values,values,&size);
@@ -173,7 +173,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
   for (i=0;i<size;i++) 
   	*val+=values[i];
 
-  grib_context_free(a->parent->h->context,values);
+  grib_context_free(a->context,values);
 
   return ret;
 }
@@ -195,7 +195,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
   	*val=0;
 	return ret;
   }
-  values=(double*)grib_context_malloc_clear(a->parent->h->context,sizeof(double)*size);
+  values=(double*)grib_context_malloc_clear(a->context,sizeof(double)*size);
   if (!values) return GRIB_OUT_OF_MEMORY;
 
   grib_get_double_array(a->parent->h,self->values,values,&size);
@@ -204,7 +204,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
   for (i=0;i<size;i++) 
   	*val+=values[i];
 
-  grib_context_free(a->parent->h->context,values);
+  grib_context_free(a->context,values);
 
   return ret;
 }
@@ -220,7 +220,7 @@ static int value_count(grib_accessor* a,long* count)
 	*count=n;
 
 	if (ret) 
-		grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+		grib_context_log(a->context,GRIB_LOG_ERROR,
 				"%s is unable to get size of %s",a->name,self->values);
 
 	return ret;

@@ -148,7 +148,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 
 static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
 {
-    grib_context* c=a->parent->h->context;
+    grib_context* c=a->context;
     int ret = 0;
     double* v=val;
     double lat,lon,value;

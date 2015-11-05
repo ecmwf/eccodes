@@ -164,8 +164,8 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
 
     grib_recompose_name(a->parent->h,NULL, self->tablename, fname,1);
 
-    if ((filename=grib_context_full_defs_path(a->parent->h->context,fname))==NULL) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_WARNING,"Cannot open flag table %s",filename);
+    if ((filename=grib_context_full_defs_path(a->context,fname))==NULL) {
+        grib_context_log(a->context,GRIB_LOG_WARNING,"Cannot open flag table %s",filename);
         strcpy(codename, "Cannot open flag table");
         return GRIB_FILE_NOT_FOUND;
     }
@@ -174,7 +174,7 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
 
     if (!f)
     {
-        grib_context_log(a->parent->h->context,(GRIB_LOG_WARNING)|(GRIB_LOG_PERROR),"Cannot open flag table %s",filename);
+        grib_context_log(a->context,(GRIB_LOG_WARNING)|(GRIB_LOG_PERROR),"Cannot open flag table %s",filename);
         strcpy(codename, "Cannot open flag table");
         return GRIB_FILE_NOT_FOUND;
     }

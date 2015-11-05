@@ -149,7 +149,7 @@ static size_t preferred_size(grib_accessor* a,int from_handle)
 
   if((length%2) && from_handle) {
 #if 0
-    grib_context_log(a->parent->h->context,
+    grib_context_log(a->context,
       GRIB_LOG_ERROR,"GRIB message has an odd length section (%ld, %s)",
         (long)length,a->name);
 #endif

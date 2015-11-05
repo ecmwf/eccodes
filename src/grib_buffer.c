@@ -123,7 +123,7 @@ static void update_offsets(grib_accessor* a,long len)
   {
     grib_section* s = a->sub_section;
     a->offset += len;
-    grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, "::::: grib_buffer : accessor %s is moving by %d bytes to %ld",a->name ,len, a->offset);
+    grib_context_log(a->context,GRIB_LOG_DEBUG, "::::: grib_buffer : accessor %s is moving by %d bytes to %ld",a->name ,len, a->offset);
     if(s) update_offsets(s->block->first,len);
     a = a->next;
   }
@@ -230,11 +230,11 @@ void grib_buffer_replace( grib_accessor *a, const unsigned char* data,
   grib_buffer *buffer     = a->parent->h->buffer;
   size_t message_length   = buffer->ulength;
 
-  grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,
+  grib_context_log(a->context,GRIB_LOG_DEBUG,
      "grib_buffer_replace %s offset=%ld oldsize=%ld newsize=%ld message_length=%ld update_paddings=%d\n",
       a->name,(long)offset,oldsize,(long)newsize,(long)message_length,update_paddings);
 
-    grib_buffer_set_ulength(a->parent->h->context,
+    grib_buffer_set_ulength(a->context,
         buffer,
         buffer->ulength+increase);
 

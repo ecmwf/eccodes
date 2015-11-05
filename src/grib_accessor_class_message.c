@@ -155,11 +155,11 @@ static void update_size(grib_accessor* a,size_t new_size)
 
 static void resize(grib_accessor* a,size_t new_size)
 {
-  void* zero = grib_context_malloc_clear(a->parent->h->context,new_size);
+  void* zero = grib_context_malloc_clear(a->context,new_size);
 
   grib_buffer_replace(a,(const unsigned char*)zero,new_size,1,0);
-  grib_context_free(a->parent->h->context,zero);
-  grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,"resize: grib_accessor_class_message.c %ld %ld %s %s\n",(long)new_size,(long)a->length,a->cclass->name,a->name);
+  grib_context_free(a->context,zero);
+  grib_context_log(a->context,GRIB_LOG_DEBUG,"resize: grib_accessor_class_message.c %ld %ld %s %s\n",(long)new_size,(long)a->length,a->cclass->name,a->name);
   Assert(new_size == a->length);
 
 }
@@ -173,7 +173,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
 
   if(len[0] < (a->length+1))
   {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%d) for %s it contains %d values ", len[0], a->name , a->length+1 );
+    grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%d) for %s it contains %d values ", len[0], a->name , a->length+1 );
     len[0] = 0;
     return GRIB_ARRAY_TOO_SMALL;
   }

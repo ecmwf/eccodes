@@ -289,7 +289,7 @@ static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
     size_t rsize=0;
     int i=0;
 
-    grib_trie* dictionary=load_dictionary(a->parent->h->context,a,&err);
+    grib_trie* dictionary=load_dictionary(a->context,a,&err);
     if (err) return err;
 
     if((err=grib_get_string_internal(a->parent->h,self->key,key,&size)) != GRIB_SUCCESS) {

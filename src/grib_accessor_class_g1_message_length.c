@@ -195,7 +195,7 @@ static int pack_long(grib_accessor* a, const long* val,size_t *len)
   int ret;
 
   tlen = *val;
-  if((tlen < 0x800000 || !a->parent->h->context->gribex_mode_on) && tlen < 0xFFFFFF  )
+  if((tlen < 0x800000 || !a->context->gribex_mode_on) && tlen < 0xFFFFFF  )
   {
     /* printf("ENCODING small grib total = %ld\n",tlen); */
     /*return super->pack_long(a,val,len);*/

@@ -220,7 +220,7 @@ static int    unpack_string(grib_accessor* a, char* val, size_t *len)
   if(ret) return ret;
 	if(*len < 60)
 	{
-		grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, " Buffer too smalle for %s (%d) ", a->name ,*len);
+		grib_context_log(a->context, GRIB_LOG_ERROR, " Buffer too smalle for %s (%d) ", a->name ,*len);
 		len = 0;
 		return GRIB_BUFFER_TOO_SMALL;
 	}

@@ -219,7 +219,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err) {
     grib_trie* dictionary=NULL;
     FILE* f=NULL;
     grib_handle* h=a->parent->h;
-    grib_context* c=a->parent->h->context;
+    grib_context* c=a->context;
 
     *err=GRIB_SUCCESS;
 
@@ -324,7 +324,7 @@ static int bufr_get_from_table(grib_accessor* a,bufr_descriptor* v) {
   table=load_bufr_elements_table(a,&ret);
   if (ret) return ret;
 
-  c=a->parent->h->context;
+  c=a->context;
 
   sprintf(code,"%06ld",v->code);
 
@@ -368,7 +368,7 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a,in
 
   if (!a) return NULL;
 
-  c=a->parent->h->context;
+  c=a->context;
 
   v=(bufr_descriptor*)grib_context_malloc_clear(c,sizeof(bufr_descriptor));
   if (!v) {

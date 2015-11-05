@@ -191,28 +191,28 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   if((err = grib_get_size(a->parent->h,self->secondary_bitmap,&secondary_len)) != GRIB_SUCCESS)
     return err;
 
-  primary_vals = (double*)grib_context_malloc(a->parent->h->context,primary_len*sizeof(double));
+  primary_vals = (double*)grib_context_malloc(a->context,primary_len*sizeof(double));
   if(!primary_vals)
     return GRIB_OUT_OF_MEMORY;
 
-  secondary_vals = (double*)grib_context_malloc(a->parent->h->context,secondary_len*sizeof(double));
+  secondary_vals = (double*)grib_context_malloc(a->context,secondary_len*sizeof(double));
   if(!secondary_vals)
   {
-    grib_context_free(a->parent->h->context,primary_vals);
+    grib_context_free(a->context,primary_vals);
     return GRIB_OUT_OF_MEMORY;
   }
 
   if((err = grib_get_double_array_internal(a->parent->h,self->primary_bitmap,primary_vals,&primary_len)) != GRIB_SUCCESS)
   {
-    grib_context_free(a->parent->h->context,secondary_vals);
-    grib_context_free(a->parent->h->context,primary_vals);
+    grib_context_free(a->context,secondary_vals);
+    grib_context_free(a->context,primary_vals);
     return err;
   }
 
   if((err = grib_get_double_array_internal(a->parent->h,self->secondary_bitmap,secondary_vals,&secondary_len)) != GRIB_SUCCESS)
   {
-    grib_context_free(a->parent->h->context,secondary_vals);
-    grib_context_free(a->parent->h->context,primary_vals);
+    grib_context_free(a->context,secondary_vals);
+    grib_context_free(a->context,primary_vals);
     return err;
   }
 
@@ -240,8 +240,8 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 
   *len =  n_vals;
 
-  grib_context_free(a->parent->h->context,primary_vals);
-  grib_context_free(a->parent->h->context,secondary_vals);
+  grib_context_free(a->context,primary_vals);
+  grib_context_free(a->context,secondary_vals);
   return err;
 }
 

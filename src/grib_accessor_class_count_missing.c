@@ -208,7 +208,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 
   if (grib_get_long(h,self->unusedBitsInBitmap,&unusedBitsInBitmap) != GRIB_SUCCESS) { 
     if (grib_get_long(h,self->numberOfDataPoints,&numberOfDataPoints) != GRIB_SUCCESS) {
-		grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"unable to count missing values");
+		grib_context_log(a->context,GRIB_LOG_ERROR,"unable to count missing values");
 		return GRIB_INTERNAL_ERROR;
 	} 
 	unusedBitsInBitmap=size*8-numberOfDataPoints;

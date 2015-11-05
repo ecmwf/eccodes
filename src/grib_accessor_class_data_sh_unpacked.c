@@ -206,7 +206,7 @@ static int value_count(grib_accessor* a,long* count)
   	return ret;
 
   if (sub_j != sub_k || sub_j!=sub_m ) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"sub_j=%ld, sub_k=%ld, sub_m=%ld\n",sub_j,sub_k,sub_m);
+    grib_context_log(a->context,GRIB_LOG_ERROR,"sub_j=%ld, sub_k=%ld, sub_m=%ld\n",sub_j,sub_k,sub_m);
   	Assert ((sub_j ==  sub_k) && (sub_j == sub_m));
   }
   *count=(sub_j+1)*(sub_j+2);
@@ -330,7 +330,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   s = grib_power(binary_scale_factor,2);
   d = grib_power(-decimal_scale_factor,10) ;
 
-  scals   = (double*)grib_context_malloc(a->parent->h->context,maxv*sizeof(double));
+  scals   = (double*)grib_context_malloc(a->context,maxv*sizeof(double));
   Assert(scals);
   if((ret = grib_get_double_internal(a->parent->h,self->laplacianOperator,&laplacianOperator))
       != GRIB_SUCCESS)
@@ -392,7 +392,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
       val[i++] *= d;
   }
 
-  grib_context_free(a->parent->h->context,scals);
+  grib_context_free(a->context,scals);
 
   return ret;
 

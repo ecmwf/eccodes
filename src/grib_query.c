@@ -79,7 +79,7 @@ static void rebuild_hash_keys (grib_handle* h,grib_section* s)
 
         while(i<MAX_ACCESSOR_NAMES && ((p = a->all_names[i]) != NULL)) {
             if(*p != '_')   {
-                id=grib_hash_keys_get_id(a->parent->h->context->keys,p);
+                id=grib_hash_keys_get_id(a->context->keys,p);
 
                 if (a->same != a && i==0) {
                     a->same=a->parent->h->accessors[id];

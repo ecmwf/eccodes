@@ -271,15 +271,15 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
   if((ret=grib_get_long_internal(a->parent->h,self->groupWidth, &groupWidth)) != GRIB_SUCCESS)
          return ret;
 
-	secondaryBitmap=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfSecondOrderPackedValues);
+	secondaryBitmap=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfSecondOrderPackedValues);
 	grib_decode_long_array(buf,&pos,1,numberOfSecondOrderPackedValues,secondaryBitmap);
 	pos = 8 * ( (pos + 7 ) / 8);
 
-	firstOrderValues=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
+	firstOrderValues=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfGroups);
 	grib_decode_long_array(buf,&pos,widthOfFirstOrderValues,numberOfGroups,firstOrderValues);
 	pos = 8 * ( (pos + 7 ) / 8);
 
-	X=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfSecondOrderPackedValues);
+	X=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfSecondOrderPackedValues);
 
 	if (groupWidth>0) {
 		grib_decode_long_array(buf,&pos,groupWidth,numberOfSecondOrderPackedValues,X);
@@ -315,16 +315,16 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
 	}
 
 	*len=numberOfSecondOrderPackedValues;
-	grib_context_free(a->parent->h->context,secondaryBitmap);
-	grib_context_free(a->parent->h->context,firstOrderValues);
-	grib_context_free(a->parent->h->context,X);
+	grib_context_free(a->context,secondaryBitmap);
+	grib_context_free(a->context,firstOrderValues);
+	grib_context_free(a->context,X);
   
   return ret;
 }
 
 static int pack_double(grib_accessor* a, const double* cval, size_t *len)
 {
-  grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"constant width packing not implemented");
+  grib_context_log(a->context,GRIB_LOG_ERROR,"constant width packing not implemented");
   return GRIB_NOT_IMPLEMENTED;
 
 }

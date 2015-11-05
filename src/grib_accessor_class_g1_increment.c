@@ -222,18 +222,18 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 	
 	ret = grib_get_double_internal(a->parent->h, self->first,&first);
 	if(ret != GRIB_SUCCESS) {
-		grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->first, ret);   
+		grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->first, ret);   
 		return ret;
 	}	
 	ret = grib_get_double_internal(a->parent->h, self->last,&last);
 	if(ret != GRIB_SUCCESS){
-		grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->last, ret);   
+		grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->last, ret);   
 		return ret;
 	}
 
 	if((ret = grib_get_long_internal(a->parent->h, self->directionIncrementGiven,&directionIncrementGiven)) 
 					!= GRIB_SUCCESS){
-		grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->directionIncrementGiven, ret);   
+		grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->directionIncrementGiven, ret);   
 		return ret;
 	}	
 	
@@ -249,7 +249,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
 	ret = grib_set_long_internal(a->parent->h, self->numberOfPoints,numberOfPoints);
 	if(ret )
-		grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Accessor %s cannont pack value for %s error %d \n", a->name, self->numberOfPoints, ret);
+		grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont pack value for %s error %d \n", a->name, self->numberOfPoints, ret);
 	
 
 	grib_get_long_internal(a->parent->h, self->numberOfPoints,&codedNumberOfPoints);
@@ -257,11 +257,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 	
 		ret = grib_set_long_internal(a->parent->h, self->directionIncrement,directionIncrement);
 	if(ret )
-		grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Accessor %s cannont pack value for %s error %d \n", a->name, self->directionIncrement, ret);
+		grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont pack value for %s error %d \n", a->name, self->directionIncrement, ret);
 	
 		ret = grib_set_long_internal(a->parent->h, self->directionIncrementGiven,directionIncrementGiven);
 	if(ret )
-		grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Accessor %s cannont pack value for %s error %d \n", a->name, self->directionIncrementGiven, ret);
+		grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont pack value for %s error %d \n", a->name, self->directionIncrementGiven, ret);
 
 #if 0
 	printf("pack -- %s=%ld %s=%ld %s=%f %s=%f %s=%ld codedNumberOfPoints=%ld %s=%f\n",

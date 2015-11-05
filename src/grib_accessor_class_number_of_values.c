@@ -181,17 +181,17 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
   if (bitmap_present) {
       double* bitmap;
       size=npoints;
-      bitmap=(double*)grib_context_malloc(a->parent->h->context,sizeof(double)*size);
+      bitmap=(double*)grib_context_malloc(a->context,sizeof(double)*size);
       if((ret = grib_get_double_array_internal(a->parent->h,self->bitmap,bitmap,&size))
                   != GRIB_SUCCESS) {
-			  grib_context_free(a->parent->h->context,bitmap);
+			  grib_context_free(a->context,bitmap);
 			  return ret;
 	  }
       *val=0;
       for (i=0;i<size;i++)
         if (bitmap[i]!=0) (*val)++;
 
-      grib_context_free(a->parent->h->context,bitmap);
+      grib_context_free(a->context,bitmap);
   } else {
       *val=npoints;
   }
@@ -201,7 +201,7 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
     if((ret = grib_get_long_internal(a->parent->h, self->numberOfCodedValues,&numberOfCodedValues)) != GRIB_SUCCESS)
       return ret;
      if (*val != numberOfCodedValues) {
-       grib_context_log(a->parent->h->context,GRIB_LOG_WARNING,
+       grib_context_log(a->context,GRIB_LOG_WARNING,
        "number of values from data section (%ld) doesn't match geography (%ld)",numberOfCodedValues,*val);
        /* *val=numberOfCodedValues; */
   	}

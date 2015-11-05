@@ -199,7 +199,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
     double divisor = 1;
     int i;
     long off = 0;
-    grib_context* c=a->parent->h->context;
+    grib_context* c=a->context;
     grib_handle* h=a->parent->h;
     char* ieee_packing_s=NULL;
     char* packingType_s=NULL;
@@ -277,12 +277,12 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
         return GRIB_SUCCESS;
         break;
     case GRIB_INVALID_BPV:
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"unable to compute packing parameters\n");
+        grib_context_log(a->context,GRIB_LOG_ERROR,"unable to compute packing parameters\n");
         return ret;
     case GRIB_SUCCESS:
         break;
     default:
-        grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,"unable to compute packing parameters\n");
+        grib_context_log(a->context,GRIB_LOG_FATAL,"unable to compute packing parameters\n");
         return ret;
     }
 
@@ -320,7 +320,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
          */
     }
     half_byte = (buflen*8)-((*len)*bits_per_value);
-    grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,
+    grib_context_log(a->context,GRIB_LOG_DEBUG,
             "HALF byte: buflen=%d bits_per_value=%ld len=%d half_byte=%ld\n",
             buflen,bits_per_value,*len,half_byte);
 
@@ -330,17 +330,17 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
             != GRIB_SUCCESS)
         return ret;
 
-    buf = (unsigned char*)grib_context_buffer_malloc_clear(a->parent->h->context,buflen);
+    buf = (unsigned char*)grib_context_buffer_malloc_clear(a->context,buflen);
     encoded = buf;
 
     grib_encode_double_array(n_vals,val,bits_per_value,reference_value,decimal,divisor,encoded,&off);
 
-    grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
+    grib_context_log(a->context, GRIB_LOG_DEBUG,
             "grib_accessor_data_g1simple_packing : pack_double : packing %s, %d values", a->name, n_vals);
 
     grib_buffer_replace(a, buf, buflen,1,1);
 
-    grib_context_buffer_free(a->parent->h->context,buf);
+    grib_context_buffer_free(a->context,buf);
 
     return GRIB_SUCCESS;
 }

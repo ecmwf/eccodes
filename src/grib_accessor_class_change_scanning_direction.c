@@ -177,7 +177,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     size_t size=0;
     double* values=NULL;
     grib_accessor_change_scanning_direction* self= (grib_accessor_change_scanning_direction*)a;
-    grib_context* c=a->parent->h->context;
+    grib_context* c=a->context;
     grib_handle* h=a->parent->h;
 
     if (*val==0) return 0;

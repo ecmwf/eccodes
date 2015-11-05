@@ -145,7 +145,7 @@ static long compute_byte_count(grib_accessor* a){
 
     ret=grib_get_long(a->parent->h,self->numberOfUnexpandedDescriptors,&numberOfUnexpandedDescriptors);
     if (ret) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+        grib_context_log(a->context,GRIB_LOG_ERROR,
                 "%s unable to get %s to compute size",a->name,self->numberOfUnexpandedDescriptors);
         return 0;
     }
@@ -182,14 +182,14 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
     if (ret) return ret;
 
     if (rlen==0) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,
+        grib_context_log(a->context,GRIB_LOG_FATAL,
                 "No descriptors in section 3. Malformed message.");
         return GRIB_MESSAGE_MALFORMED;
     }
 
     if(*len < rlen)
     {
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+        grib_context_log(a->context, GRIB_LOG_ERROR,
                 " wrong size (%ld) for %s it contains %d values ",*len, a->name , rlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
@@ -222,7 +222,7 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
 
     grib_get_long(a->parent->h,self->createNewData,&createNewData);
 
-    buf=(unsigned char*)grib_context_malloc_clear(a->parent->h->context,buflen);
+    buf=(unsigned char*)grib_context_malloc_clear(a->context,buflen);
 
     for (i=0;i<*len;i++) {
         f=val[i]/100000;

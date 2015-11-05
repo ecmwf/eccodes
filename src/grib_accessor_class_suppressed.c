@@ -146,12 +146,12 @@ static void log_message(grib_accessor* a) {
   grib_accessor_suppressed* self = (grib_accessor_suppressed*)a;
   int i=0;
   
-  grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+  grib_context_log(a->context,GRIB_LOG_ERROR,
                    "key %s is unvailable in this version.",a->name);
-  grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+  grib_context_log(a->context,GRIB_LOG_ERROR,
                    "Please use the following keys:");
   while (grib_arguments_get_name(a->parent->h,self->args,i)) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+    grib_context_log(a->context,GRIB_LOG_ERROR,
                      "\t- %s",
                      grib_arguments_get_name(a->parent->h,self->args,i));
     i++;

@@ -339,7 +339,7 @@ static long next_offset(grib_accessor* a){
 
 static void update_size(grib_accessor* a,size_t s)
 {
-    grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,"updating size of %s old %ld new %ld",a->name,a->length,s);
+    grib_context_log(a->context,GRIB_LOG_DEBUG,"updating size of %s old %ld new %ld",a->name,a->length,s);
   a->length = s;
   Assert(a->length>=0);
 }
@@ -372,11 +372,11 @@ static int get_descriptors(grib_accessor* a) {
     grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
     grib_accessor* expandedDescriptors=0;
     grib_handle* h=a->parent->h;
-    grib_context* c=a->parent->h->context;
+    grib_context* c=a->context;
 
     expandedDescriptors=grib_find_accessor(a->parent->h,self->expandedDescriptorsName);
     if (!expandedDescriptors) {
-          grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+          grib_context_log(a->context,GRIB_LOG_ERROR,
               "unable to find accessor %s",self->expandedDescriptorsName);
           return GRIB_NOT_FOUND;
     }
@@ -385,9 +385,9 @@ static int get_descriptors(grib_accessor* a) {
     err=_grib_get_size(a->parent->h,expandedDescriptors,&(self->numberOfDescriptors));
     if (err) return err;
 
-    self->expandedDescriptors=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*self->numberOfDescriptors);
+    self->expandedDescriptors=(long*)grib_context_malloc_clear(a->context,sizeof(long)*self->numberOfDescriptors);
     if (!self->expandedDescriptors) {
-      grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,
+      grib_context_log(a->context,GRIB_LOG_FATAL,
           "unable to allocate %ld bytes",(long)(self->numberOfDescriptors));
       return GRIB_OUT_OF_MEMORY;
     }
@@ -451,7 +451,7 @@ static void push_units_accessor(grib_section* section,grib_accessor* a,long grou
   grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
   grib_accessor* gaUnits=0;
   grib_action creatorUnits = {0, };
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   if (self->units[i][0]=='C' && ( !strcmp(self->units[i],"CCITTIA5") ||
                                   !strncmp(self->units[i],"COMMON",6)) )

@@ -160,7 +160,7 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
   long* pl;
   int i;
   grib_accessor_number_of_points* self = (grib_accessor_number_of_points*)a;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   if((ret = grib_get_long_internal(a->parent->h, self->ni,&ni)) != GRIB_SUCCESS)
     return ret;

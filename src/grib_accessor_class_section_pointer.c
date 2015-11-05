@@ -195,7 +195,7 @@ static long byte_count(grib_accessor* a){
   
   ret=grib_get_long(a->parent->h,self->sectionLength,&sectionLength);
   if (ret) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+    grib_context_log(a->context,GRIB_LOG_ERROR,
                      "unable to get %s %s",
                      self->sectionLength,grib_get_error_message(ret));
     return -1;
@@ -211,7 +211,7 @@ static long byte_offset(grib_accessor* a){
   
   ret=grib_get_long(a->parent->h,self->sectionOffset,&sectionOffset);
   if (ret) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+    grib_context_log(a->context,GRIB_LOG_ERROR,
                      "unable to get %s %s",
                      self->sectionOffset,grib_get_error_message(ret));
     return -1;

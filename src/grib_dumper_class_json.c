@@ -128,7 +128,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     int cols=9;
     long count=0;
     double missing_value = GRIB_MISSING_DOUBLE;
-
+    grib_handle* h=grib_handle_of(a);
 
     grib_value_count(a,&count);
     size=count;
@@ -137,7 +137,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         return;
 
     if (size>1) {
-        values=(double*)grib_context_malloc_clear(a->parent->h->context,sizeof(double)*size);
+        values=(double*)grib_context_malloc_clear(a->context,sizeof(double)*size);
         err=grib_unpack_double(a,values,&size);
     } else {
         err=grib_unpack_double(a,&value,&size);
@@ -155,7 +155,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
       fprintf(self->dumper.out,"\"key\" : \"%s\",\n",a->name);
     }
 
-    err = grib_set_double(a->parent->h, "missingValue", missing_value);
+    err = grib_set_double(h, "missingValue", missing_value);
     if (size>1) {
         int count=0;
         if (self->isLeaf==0) {
@@ -181,7 +181,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         depth-=2;
         fprintf(self->dumper.out,"\n%-*s]",depth," ");
         /* if (a->attributes[0]) fprintf(self->dumper.out,","); */
-        grib_context_free(a->parent->h->context,values);
+        grib_context_free(a->context,values);
     } else {
         if (self->isLeaf==0) {
           fprintf(self->dumper.out,"%-*s",depth," ");
@@ -218,7 +218,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
         return;
 
     if (size>1) {
-        values=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*size);
+        values=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
         err=grib_unpack_long(a,values,&size);
     } else {
         err=grib_unpack_long(a,&value,&size);
@@ -259,7 +259,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
         depth-=2;
         fprintf(self->dumper.out,"\n%-*s]",depth," ");
         /* if (a->attributes[0]) fprintf(self->dumper.out,","); */
-        grib_context_free(a->parent->h->context,values);
+        grib_context_free(a->context,values);
     } else {
         if (self->isLeaf==0) {
           fprintf(self->dumper.out,"%-*s",depth," ");
@@ -331,7 +331,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
   int err = 0;
   long count=0;
 
-  c=a->parent->h->context;
+  c=a->context;
 
   if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 )
     return;
@@ -397,7 +397,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     grib_context* c=NULL;
     int err = _grib_get_string_length(a,&size);
 
-    c=a->parent->h->context;
+    c=a->context;
     if (size==0) return;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)

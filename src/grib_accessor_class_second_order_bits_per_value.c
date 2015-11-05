@@ -208,9 +208,9 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
     if((ret = grib_get_long_internal(a->parent->h, self->decimalScaleFactor,&decimalScaleFactor)) != GRIB_SUCCESS)
         return ret;
 
-    values=(double*)grib_context_malloc_clear(a->parent->h->context,sizeof(double)*size);
+    values=(double*)grib_context_malloc_clear(a->context,sizeof(double)*size);
     if (!values) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,"%s unable to allocate %ld bytes",
+        grib_context_log(a->context,GRIB_LOG_FATAL,"%s unable to allocate %ld bytes",
                 a->name,(long)size);
         return GRIB_OUT_OF_MEMORY;
     }
@@ -232,7 +232,7 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
     self->bitsPerValue=number_of_bits( (unsigned long)ceil((fabs(max-min)*b*d)) );
     *val=self->bitsPerValue;
 
-    grib_context_free(a->parent->h->context,values);
+    grib_context_free(a->context,values);
 
     return ret;
 }

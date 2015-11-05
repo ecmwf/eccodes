@@ -182,9 +182,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len) {
 
   /*TODO implement the dirty mechanism to avoid to unpack every time */
   grib_get_size(a->parent->h,self->vector,&size);
-  vector=(long*)grib_context_malloc(a->parent->h->context,sizeof(long)*size);
+  vector=(long*)grib_context_malloc(a->context,sizeof(long)*size);
   grib_unpack_long(va,vector,&size);
-  grib_context_free(a->parent->h->context,vector);
+  grib_context_free(a->context,vector);
   
 
   *val = v->v[self->index];

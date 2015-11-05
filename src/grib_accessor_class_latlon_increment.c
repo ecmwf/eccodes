@@ -311,7 +311,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
   /*ret = grib_set_long_internal(a->parent->h, self->numberOfPoints,numberOfPoints);
   if(ret )
-     grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Accessor %s cannot pack value for %s error %d \n", a->name, self->numberOfPoints, ret);
+     grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannot pack value for %s error %d \n", a->name, self->numberOfPoints, ret);
     */
 
   grib_get_long_internal(a->parent->h, self->numberOfPoints,&codedNumberOfPoints);

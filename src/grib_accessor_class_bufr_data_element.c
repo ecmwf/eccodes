@@ -167,16 +167,19 @@ static grib_accessor* clone(grib_accessor* a,grib_section* s,int* err) {
   creator.op         = "bufr_data_element";
   creator.name_space = "";
   creator.set        = 0;
+  creator.name="unknown";
   if (strcmp(a->cclass->name,"bufr_data_element")) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,"wrong accessor type: '%s' should be '%s'",a->cclass->name,"bufr_data_element");
+    grib_context_log(a->context,GRIB_LOG_FATAL,"wrong accessor type: '%s' should be '%s'",a->cclass->name,"bufr_data_element");
   }
   *err=0;
 
-  creator.name=grib_context_strdup(a->parent->h->context,a->name);
   clone = grib_accessor_factory(s, &creator, 0, NULL);
+  clone->name=grib_context_strdup(a->context,a->name);
   elementAccessor=(grib_accessor_bufr_data_element*)clone;
   self=(grib_accessor_bufr_data_element*)a;
   clone->flags=a->flags;
+  clone->parent=NULL;
+  clone->h=s->h;
   elementAccessor->index=self->index;
   elementAccessor->type=self->type;
   elementAccessor->numberOfSubsets=self->numberOfSubsets;
@@ -190,6 +193,7 @@ static grib_accessor* clone(grib_accessor* a,grib_section* s,int* err) {
   i=0;
   while (a->attributes[i]) {
     attribute=grib_accessor_clone(a->attributes[i],s,err);
+    /* attribute->parent=a->parent; */
     grib_accessor_add_attribute(clone,attribute);
     i++;
   }
@@ -272,7 +276,7 @@ static int unpack_string_array (grib_accessor* a, char** val, size_t *len)
 
   int ret=0,i,idx;
   long count=0;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   if (self->compressedData) {
     idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
@@ -296,7 +300,7 @@ static int pack_string_array(grib_accessor*a , const char**  v, size_t *len){
 
   int ret=0,i,idx;
   char* s=NULL;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   if (self->compressedData) {
     idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
@@ -329,7 +333,7 @@ static int unpack_string (grib_accessor* a, char* val, size_t *len)
   size_t dlen=1;
 
   int ret=0,i,idx;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   if (self->type != BUFR_DESCRIPTOR_TYPE_STRING) {
     unpack_double(a,&dval,&dlen);
@@ -379,7 +383,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len)
   int ret=0,i,idx;
   long count=0;
   char* s=NULL;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   count=self->numberOfSubsets;
   idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
@@ -444,7 +448,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
   grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
   int ret=0,i;
   long count=1,n;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   if (self->compressedData) {
     count=*len;
@@ -453,11 +457,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         self->descriptors->v[self->elementsDescriptorsIndex->v[0]->v[self->index]]->shortName,count,self->numberOfSubsets);
       return GRIB_ARRAY_TOO_SMALL;
     }
-    grib_darray_delete(a->parent->h->context,self->numericValues->v[self->index]);
-    self->numericValues->v[self->index]=grib_darray_new(a->parent->h->context,count,1);
+    grib_darray_delete(a->context,self->numericValues->v[self->index]);
+    self->numericValues->v[self->index]=grib_darray_new(a->context,count,1);
 
     for (i=0;i<count;i++)
-      grib_darray_push(a->parent->h->context,self->numericValues->v[self->index],val[i]);
+      grib_darray_push(a->context,self->numericValues->v[self->index],val[i]);
 
     *len=count;
   } else {
@@ -473,7 +477,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
   grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
   int ret=0,i;
   long count=1;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   if (self->compressedData) {
     count=*len;
@@ -482,10 +486,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
         self->descriptors->v[self->elementsDescriptorsIndex->v[0]->v[self->index]]->shortName,count,self->numberOfSubsets);
       return GRIB_ARRAY_TOO_SMALL;
     }
-    grib_darray_delete(a->parent->h->context,self->numericValues->v[self->index]);
+    grib_darray_delete(a->context,self->numericValues->v[self->index]);
 
     for (i=0;i<count;i++) {
-      grib_darray_push(a->parent->h->context,self->numericValues->v[self->index], val[i] ==  GRIB_MISSING_LONG ? GRIB_MISSING_DOUBLE : val[i]);
+      grib_darray_push(a->context,self->numericValues->v[self->index], val[i] ==  GRIB_MISSING_LONG ? GRIB_MISSING_DOUBLE : val[i]);
     }
     *len=count;
   } else {
@@ -550,6 +554,7 @@ static void destroy(grib_context* ct, grib_accessor* a)
   int i=0;
   while (i<MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
     grib_context_log(ct,GRIB_LOG_DEBUG,"deleting attribute %s->%s",a->name,a->attributes[i]->name);
+    /* printf("+++++ %s\n",a->attributes[i]->name); */
     grib_accessor_delete(ct,a->attributes[i]);
     a->attributes[i]=NULL;
     i++;

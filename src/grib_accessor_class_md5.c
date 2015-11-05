@@ -140,7 +140,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
   char* b=0;
     int n=0;
   grib_string_list* current=0;
-  grib_context* context=a->parent->h->context;
+  grib_context* context=a->context;
 
     self->offset = grib_arguments_get_name(a->parent->h,arg,n++);
   self->length = grib_arguments_get_expression(a->parent->h,arg,n++);
@@ -201,7 +201,7 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
     struct grib_md5_state md5c;
 
     if (*len <32 ) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"md5: array too small");
+        grib_context_log(a->context,GRIB_LOG_ERROR,"md5: array too small");
         return GRIB_ARRAY_TOO_SMALL;
     }
 
@@ -212,11 +212,11 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
             != GRIB_SUCCESS)
         return ret;
 
-    mess=(unsigned char*)grib_context_malloc(a->parent->h->context,length);
+    mess=(unsigned char*)grib_context_malloc(a->context,length);
     memcpy(mess,a->parent->h->buffer->data+offset,length);
     mess_len=length;
 
-    blacklist=a->parent->h->context->blacklist;
+    blacklist=a->context->blacklist;
   /* passed blacklist overrides context blacklist. 
      Consider to modify following line to extend context blacklist.
   */
@@ -224,7 +224,7 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
     while (blacklist && blacklist->value) {
         b=grib_find_accessor(a->parent->h,blacklist->value);
         if (!b) {
-            grib_context_free(a->parent->h->context,mess);
+            grib_context_free(a->context,mess);
             return GRIB_NOT_FOUND;
         }
 
@@ -237,7 +237,7 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
     grib_md5_init(&md5c);
     grib_md5_add(&md5c,mess,mess_len);
     grib_md5_end(&md5c,v);
-    grib_context_free(a->parent->h->context,mess);
+    grib_context_free(a->context,mess);
 
     return ret;
 }

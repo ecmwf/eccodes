@@ -169,7 +169,7 @@ static grib_accessor* get_accessor(grib_accessor* a) {
 static int unpack_string_array (grib_accessor* a, char** buffer, size_t *len)
 {
   grib_accessor* data=0;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
   grib_vsarray* stringValues=NULL;
   long l=0,n=0,tl;
   size_t size,i,j;

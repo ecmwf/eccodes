@@ -15,9 +15,26 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 
+grib_handle* grib_handle_of(grib_accessor* a)
+{
+  if (a->parent==NULL) {
+    return a->h;
+  } else {
+    return a->parent->h;
+  }
+}
+
 static grib_handle* handle_of(grib_accessor* observed)
 {
-	grib_handle *h = observed->parent->h;
+	grib_handle *h=NULL ;
+  /* printf("+++++ %s->parent = %p\n",observed->name,observed->parent); */
+  /* printf("+++++ %s = %p\n",observed->name,observed); */
+  /* printf("+++++       h=%p\n",observed->h); */
+  /* special case for BUFR attributes parentless */
+  if (observed->parent==NULL) {
+    return observed->h;
+  }
+	h = observed->parent->h;
 	while(h->main) h = h->main;
 	return h;
 }

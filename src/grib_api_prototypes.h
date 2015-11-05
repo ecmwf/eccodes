@@ -1103,7 +1103,7 @@ int grib_keys_iterator_get_native_type(grib_keys_iterator *kiter);
 /* grib_parse_utils.c */
 int grib_recompose_name(grib_handle *h, grib_accessor *observer, const char *uname, char *fname, int fail);
 int grib_accessor_print(grib_accessor *a, const char *name, int type, const char *format, const char *separator, int maxcols, int *newline, FILE *out);
-int grib_accessors_list_print(grib_accessors_list *al, const char *name, int type, const char *format, const char *separator, int maxcols, int *newline, FILE *out);
+int grib_accessors_list_print(grib_handle *h,grib_accessors_list *al, const char *name, int type, const char *format, const char *separator, int maxcols, int *newline, FILE *out);
 int grib_recompose_print(grib_handle *h, grib_accessor *observer, const char *uname, int fail, FILE *out);
 grib_action_file *grib_find_action_file(const char *fname, grib_action_file_list *afl);
 void grib_push_action_file(grib_action_file *af, grib_action_file_list *afl);
@@ -1138,6 +1138,7 @@ grib_handle *grib_external_template(grib_context *c, const char *name);
 char *grib_external_template_path(grib_context *c, const char *name);
 
 /* grib_dependency.c */
+grib_handle* grib_handle_of(grib_accessor* a);
 void grib_dependency_add(grib_accessor *observer, grib_accessor *observed);
 void grib_dependency_remove_observed(grib_accessor *observed);
 int grib_dependency_notify_change(grib_accessor *observed);

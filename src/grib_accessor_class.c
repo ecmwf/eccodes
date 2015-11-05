@@ -113,6 +113,8 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     a->all_name_spaces[0]  = creator->name_space;
 
     a->creator             = creator;
+    a->context             = p->h->context;
+    a->h                   = NULL;
     a->next                = NULL;
     a->previous            = NULL;
     a->parent              = p;
@@ -200,7 +202,7 @@ void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
 
     if (a->parent->h->use_trie) {
         if (*(a->all_names[0]) != '_') {
-            id=grib_hash_keys_get_id(a->parent->h->context->keys,a->all_names[0]);
+            id=grib_hash_keys_get_id(a->context->keys,a->all_names[0]);
 
 
             a->same=a->parent->h->accessors[id];
@@ -241,12 +243,12 @@ int grib_section_adjust_sizes(grib_section* s,int update,int depth)
         /* grib_section_adjust_sizes(grib_get_sub_section(a),update,depth+1); */
         err = grib_section_adjust_sizes(a->sub_section,update,depth+1);
         if (err) return err;
-        grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,"grib_section_adjust_sizes: %s %ld [len=%ld] (depth=%d)\n",a->name,(long)a->offset,(long)a->length,depth);
+        grib_context_log(a->context,GRIB_LOG_DEBUG,"grib_section_adjust_sizes: %s %ld [len=%ld] (depth=%d)\n",a->name,(long)a->offset,(long)a->length,depth);
 
         l = a->length;
 
         if(offset != a->offset)    {
-            grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+            grib_context_log(a->context,GRIB_LOG_ERROR,
                     "Offset mismatch %s A->offset %ld offset %ld\n",a->name,(long)a->offset, (long)offset);
             a->offset = offset;
             return GRIB_DECODING_ERROR;

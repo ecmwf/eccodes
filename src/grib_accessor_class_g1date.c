@@ -212,7 +212,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
         long d = grib_julian_to_date((long)grib_date_to_julian(v));
         if(v != d)
         {
-            grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"grib_accessor_g1date: pack_long invalid date %ld, changed to %ld",v,d);
+            grib_context_log(a->context,GRIB_LOG_ERROR,"grib_accessor_g1date: pack_long invalid date %ld, changed to %ld",v,d);
             return GRIB_ENCODING_ERROR;
         }
     }

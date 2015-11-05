@@ -286,15 +286,15 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 
     switch (self->jpeg_lib) {
     case OPENJPEG_LIB:
-        if ((err = grib_openjpeg_decode(a->parent->h->context,buf,&buflen,val,&n_vals)) != GRIB_SUCCESS)
+        if ((err = grib_openjpeg_decode(a->context,buf,&buflen,val,&n_vals)) != GRIB_SUCCESS)
             return err;
         break;
     case JASPER_LIB:
-        if ((err = grib_jasper_decode(a->parent->h->context,buf,&buflen,val,&n_vals)) != GRIB_SUCCESS)
+        if ((err = grib_jasper_decode(a->context,buf,&buflen,val,&n_vals)) != GRIB_SUCCESS)
             return err;
         break;
     default:
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"Unable to unpack. Invalid JPEG library.\n");
+        grib_context_log(a->context,GRIB_LOG_ERROR,"Unable to unpack. Invalid JPEG library.\n");
         return GRIB_DECODING_ERROR;
     }
 
@@ -378,7 +378,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
     case GRIB_SUCCESS:
         break;
     default:
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"unable to compute packing parameters\n");
+        grib_context_log(a->context,GRIB_LOG_ERROR,"unable to compute packing parameters\n");
         return ret;
     }
 
@@ -402,7 +402,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
     divisor = grib_power(-binary_scale_factor,2);
 
     simple_packing_size = (((bits_per_value*n_vals)+7)/8)*sizeof(unsigned char);
-    buf  = (unsigned char*)grib_context_malloc_clear(a->parent->h->context,simple_packing_size+EXTRA_BUFFER_SIZE);
+    buf  = (unsigned char*)grib_context_malloc_clear(a->context,simple_packing_size+EXTRA_BUFFER_SIZE);
     if(!buf) {
         err = GRIB_OUT_OF_MEMORY;
         goto cleanup;
@@ -478,7 +478,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
     /* See GRIB-438 */
     if (bits_per_value == 0) {
         const long bits_per_value_adjusted = 1;
-        grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
+        grib_context_log(a->context, GRIB_LOG_DEBUG,
                 "grib_accessor_class_data_jpeg2000_packing(%s) : bits per value was zero, changed to %d",
                 self->jpeg_lib==OPENJPEG_LIB ? "openjpeg" : "jasper", bits_per_value_adjusted);
         bits_per_value = bits_per_value_adjusted;
@@ -495,15 +495,15 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
 
     switch (self->jpeg_lib) {
     case OPENJPEG_LIB:
-        if ( (err = grib_openjpeg_encode(a->parent->h->context,&helper)) != GRIB_SUCCESS ) goto cleanup;
+        if ( (err = grib_openjpeg_encode(a->context,&helper)) != GRIB_SUCCESS ) goto cleanup;
         break;
     case JASPER_LIB:
-        if ( (err = grib_jasper_encode(a->parent->h->context,&helper)) != GRIB_SUCCESS ) goto cleanup;
+        if ( (err = grib_jasper_encode(a->context,&helper)) != GRIB_SUCCESS ) goto cleanup;
         break;
     }
 
     if(helper.jpeg_length > simple_packing_size)
-        grib_context_log(a->parent->h->context, GRIB_LOG_WARNING,
+        grib_context_log(a->context, GRIB_LOG_WARNING,
                 "grib_accessor_data_jpeg2000_packing(%s) : jpeg data (%ld) larger than input data (%ld)",
                 self->jpeg_lib==OPENJPEG_LIB ? "openjpeg" : "jasper",
                         helper.jpeg_length, simple_packing_size);
@@ -525,7 +525,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
 
     cleanup:
 
-    grib_context_free(a->parent->h->context,buf);
+    grib_context_free(a->context,buf);
 
     if(err == GRIB_SUCCESS)
         err = grib_set_long_internal(a->parent->h,self->number_of_values, *len);
@@ -536,14 +536,14 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
 
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_ERROR,
             "JPEG support not enabled.");
     return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_ERROR,
             "JPEG support not enabled.");
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -562,10 +562,10 @@ static int  unpack_double_element(grib_accessor* a, size_t idx, double* val)
     if (err) return err;
     if (idx > size) return GRIB_INVALID_NEAREST;
 
-    values=(double*)grib_context_malloc_clear(a->parent->h->context,size*sizeof(double));
+    values=(double*)grib_context_malloc_clear(a->context,size*sizeof(double));
     err=grib_get_double_array(a->parent->h,"codedValues",values,&size);
     if (err) return err;
     *val=values[idx];
-    grib_context_free(a->parent->h->context,values);
+    grib_context_free(a->context,values);
     return err;
 }

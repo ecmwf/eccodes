@@ -172,15 +172,15 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
   Assert(self->index>=0);
 
   if (self->index>=v->number_of_elements) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,"index=%d number_of_elements=%d for %s",self->index,v->number_of_elements,a->name);
+    grib_context_log(a->context,GRIB_LOG_FATAL,"index=%d number_of_elements=%d for %s",self->index,v->number_of_elements,a->name);
     Assert(self->index < v->number_of_elements);
   }
 
   if (va->dirty) {
     grib_get_size(a->parent->h,self->vector,&size);
-    stat=(double*)grib_context_malloc_clear(a->parent->h->context,sizeof(double)*size);
+    stat=(double*)grib_context_malloc_clear(a->context,sizeof(double)*size);
     grib_unpack_double(va,stat,&size);
-    grib_context_free(a->parent->h->context,stat);
+    grib_context_free(a->context,stat);
   }
 
   

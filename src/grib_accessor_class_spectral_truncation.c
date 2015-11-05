@@ -195,7 +195,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
           != GRIB_SUCCESS) {
 
     if (Tc == -1)
-      grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+      grib_context_log(a->context, GRIB_LOG_ERROR,
         "%s. Spectral Truncation Type Unknown: %s=%d %s=%d %s=%d \n",
         a->name, self->J,J, self->K,K, self->M,M);
 

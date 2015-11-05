@@ -208,7 +208,7 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
   bufr_descriptor* urc=NULL;
   int idx;
   bufr_descriptor* u0=NULL;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
   bufr_descriptor* us=NULL;
   bufr_descriptors_array* inner_expanded=NULL;
   bufr_descriptors_array* inner_unexpanded=NULL;
@@ -460,7 +460,7 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
 static bufr_descriptors_array* _expand(grib_accessor* a,bufr_descriptors_array* unexpanded,change_coding_params* ccp,int *err)
 {
   bufr_descriptors_array* expanded=NULL;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 #if MYDEBUG
   int idepth;
 #endif
@@ -517,7 +517,7 @@ static int expand(grib_accessor* a)
   long* u=0;
   change_coding_params ccp;
   bufr_descriptors_array* unexpanded=NULL;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   if (!self->do_expand) {
     return err;
@@ -581,11 +581,11 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len) {
   size_t expandedSize;
 
   if (self->rank!=2) {
-    long* lval=(long*)grib_context_malloc_clear(a->parent->h->context,*len*sizeof(long));
+    long* lval=(long*)grib_context_malloc_clear(a->context,*len*sizeof(long));
     ret=unpack_long(a,lval,len);
     if (ret) return ret;
     for (i=0;i<*len;i++) val[i]=(double)lval[i];
-    grib_context_free(a->parent->h->context,lval);
+    grib_context_free(a->context,lval);
   } else {
     ret=expand(a);
     if (ret) return ret;
@@ -593,7 +593,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len) {
     expandedSize=grib_bufr_descriptors_array_used_size(self->expanded);
     if(*len < expandedSize)
     {
-      grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+      grib_context_log(a->context, GRIB_LOG_ERROR,
           " wrong size (%ld) for %s it contains %d values ",*len, a->name , expandedSize);
       *len = 0;
       return GRIB_ARRAY_TOO_SMALL;
@@ -617,7 +617,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 
   if(*len < rlen)
   {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_ERROR,
 		    " wrong size (%ld) for %s it contains %d values ",*len, a->name , rlen);
     *len = 0;
     return GRIB_ARRAY_TOO_SMALL;
@@ -657,7 +657,7 @@ static int value_count(grib_accessor* a,long* rlen)
 {
   grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
   int ret=0;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
   *rlen=0;
 
   ret=expand(a);

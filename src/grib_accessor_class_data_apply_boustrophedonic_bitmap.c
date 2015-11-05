@@ -230,17 +230,17 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
             != GRIB_SUCCESS)
         return err;
 
-    coded_vals = (double*)grib_context_malloc(a->parent->h->context,coded_n_vals*sizeof(double));
+    coded_vals = (double*)grib_context_malloc(a->context,coded_n_vals*sizeof(double));
     if(coded_vals == NULL) return GRIB_OUT_OF_MEMORY;
 
     if((err = grib_get_double_array_internal(a->parent->h,self->coded_values,coded_vals,&coded_n_vals))
             != GRIB_SUCCESS)
     {
-        grib_context_free(a->parent->h->context,coded_vals);
+        grib_context_free(a->context,coded_vals);
         return err;
     }
 
-    grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
+    grib_context_log(a->context, GRIB_LOG_DEBUG,
             "grib_accessor_class_data_apply_boustrophedonic_bitmap: unpack_double : creating %s, %d values",
             a->name, n_vals);
 
@@ -276,8 +276,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
             val[i] = coded_vals[j++];
             if(j>coded_n_vals)
             {
-                grib_context_free(a->parent->h->context,coded_vals);
-                grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+                grib_context_free(a->context,coded_vals);
+                grib_context_log(a->context, GRIB_LOG_ERROR,
                         "grib_accessor_class_data_apply_boustrophedonic_bitmap [%s]:"
                         " unpack_double :  number of coded values does not match bitmap %ld %ld",
                         a->name,coded_n_vals,n_vals);
@@ -289,7 +289,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
     *len =  n_vals;
 
-    grib_context_free(a->parent->h->context,coded_vals);
+    grib_context_free(a->context,coded_vals);
     return err;
 }
 
@@ -318,7 +318,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx,double* val)
 
     if (*val == 0) {*val=missing_value;return GRIB_SUCCESS;}
 
-    bvals = (double*)grib_context_malloc(a->parent->h->context,n_vals*sizeof(double));
+    bvals = (double*)grib_context_malloc(a->context,n_vals*sizeof(double));
     if(bvals == NULL) return GRIB_OUT_OF_MEMORY;
 
     if((err = grib_get_double_array_internal(a->parent->h,self->bitmap,bvals,&n_vals)) != GRIB_SUCCESS)
@@ -327,7 +327,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx,double* val)
     cidx=0;
     for (i=0;i<idx;i++) {cidx+=bvals[i];}
 
-    grib_context_free(a->parent->h->context,bvals);
+    grib_context_free(a->context,bvals);
 
     return grib_get_double_element_internal(a->parent->h,self->coded_values,cidx,val);
 }
@@ -368,7 +368,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     Assert(numberOfPoints == bmaplen);
 
     /* Create a copy of the incoming 'val' array because we're going to change it */
-    values = (double*)grib_context_malloc_clear(a->parent->h->context, sizeof(double)*numberOfPoints);
+    values = (double*)grib_context_malloc_clear(a->context, sizeof(double)*numberOfPoints);
     if (!values) return GRIB_OUT_OF_MEMORY;
     for(i=0; i<numberOfPoints; ++i) {
         values[i] = val[i];
@@ -395,7 +395,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     if((err = grib_set_double_array_internal(a->parent->h,self->bitmap,values,bmaplen)) != GRIB_SUCCESS)
         return err;
 
-    grib_context_free(a->parent->h->context,values);
+    grib_context_free(a->context,values);
 
     coded_n_vals = *len;
 
@@ -404,7 +404,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         return err;
     }
 
-    coded_vals = (double*)grib_context_malloc_clear(a->parent->h->context,coded_n_vals*sizeof(double));
+    coded_vals = (double*)grib_context_malloc_clear(a->context,coded_n_vals*sizeof(double));
     if(!coded_vals) return GRIB_OUT_OF_MEMORY;
 
     for(i=0; i<*len ; i++)
@@ -424,7 +424,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
             err=grib_set_long_internal(a->parent->h,self->binary_scale_factor,0);
     }
 
-    grib_context_free(a->parent->h->context,coded_vals);
+    grib_context_free(a->context,coded_vals);
 
     return err;
 }

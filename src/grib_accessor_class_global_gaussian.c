@@ -182,7 +182,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
   double* lats;
   long factor, plpresent=0;
   long max_pl=0; /* max. element of pl array */
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   if (self->basic_angle && self->subdivision) {
 
@@ -285,7 +285,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
   double ddi,dlonlast;
   double dfactor,dNi;
     long plpresent=0;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   if (*val == 0) return ret;
 

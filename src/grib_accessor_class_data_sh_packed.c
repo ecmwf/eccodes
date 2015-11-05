@@ -215,7 +215,7 @@ static int value_count(grib_accessor* a,long* count)
         return ret;
 
     if (pen_j != pen_k || pen_j!=pen_m ) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"pen_j=%ld, pen_k=%ld, pen_m=%ld\n",pen_j,pen_k,pen_m);
+        grib_context_log(a->context,GRIB_LOG_ERROR,"pen_j=%ld, pen_k=%ld, pen_m=%ld\n",pen_j,pen_k,pen_m);
         Assert ((pen_j ==  pen_k) && (pen_j == pen_m));
     }
     *count=(pen_j+1)*(pen_j+2)-(sub_j+1)*(sub_j+2);
@@ -350,7 +350,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     s = grib_power(binary_scale_factor,2);
     d = grib_power(-decimal_scale_factor,10) ;
 
-    scals   = (double*)grib_context_malloc(a->parent->h->context,maxv*sizeof(double));
+    scals   = (double*)grib_context_malloc(a->context,maxv*sizeof(double));
     Assert(scals);
 
     scals[0] = 0;
@@ -403,7 +403,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
             val[i++] *= d;
     }
 
-    grib_context_free(a->parent->h->context,scals);
+    grib_context_free(a->context,scals);
 
     return ret;
 }

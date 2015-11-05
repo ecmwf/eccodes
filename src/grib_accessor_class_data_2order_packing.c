@@ -533,9 +533,9 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 
     if ((abitmap=grib_find_accessor(a->parent->h,self->bitmap))!=NULL) {
         bitmap_len=grib_byte_count(abitmap);
-        bitmap=(unsigned char*)grib_context_malloc_clear(a->parent->h->context,sizeof(char)*bitmap_len);
+        bitmap=(unsigned char*)grib_context_malloc_clear(a->context,sizeof(char)*bitmap_len);
         err=grib_unpack_bytes(abitmap,bitmap,&bitmap_len);
-        if (err) {grib_context_free(a->parent->h->context,bitmap); return err;}
+        if (err) {grib_context_free(a->context,bitmap); return err;}
     }
 
     if(bits_per_value == 0)
@@ -577,9 +577,9 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     if(snd_bitmap || matrix_values)
         return GRIB_NOT_IMPLEMENTED;
 
-    sec_val  = (unsigned long*)grib_context_malloc(a->parent->h->context,(n_vals)*sizeof(unsigned long));
-    grib_context_free(a->parent->h->context,sec_val);
-    sec_val  = (unsigned long*)grib_context_malloc(a->parent->h->context,(n_vals)*sizeof(unsigned long));
+    sec_val  = (unsigned long*)grib_context_malloc(a->context,(n_vals)*sizeof(unsigned long));
+    grib_context_free(a->context,sec_val);
+    sec_val  = (unsigned long*)grib_context_malloc(a->context,(n_vals)*sizeof(unsigned long));
 
     buf_width_of_group  +=  a->offset;
     buf_size_of_groups +=  offsetsection+(octet_start_group-1); /* -1 because of documented starting at 1(and not 0)*/
@@ -603,14 +603,14 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
         pointer_of_group_width = 8+(pointer_of_group_width-(pointer_of_group_width%8));
 #if KEEP_OLD == 1
     if(sd == NULL){
-        sd = grib_context_malloc_clear(a->parent->h->context,sizeof(second_order_packed));
+        sd = grib_context_malloc_clear(a->context,sizeof(second_order_packed));
         sd->packed_byte_count      = 0;
         sd->nbits_per_group_size   = nbits_per_group_size;
         sd->nbits_per_widths       = nbits_per_width;
         sd->size_of_group_array    = p1;
-        sd->array_of_group_size    = grib_context_malloc_clear(a->parent->h->context,sizeof(unsigned long)*sd->size_of_group_array);
-        sd->array_of_group_width   = grib_context_malloc_clear(a->parent->h->context,sizeof(unsigned long)*sd->size_of_group_array);
-        sd->array_of_group_refs    = grib_context_malloc_clear(a->parent->h->context,sizeof( long)*sd->size_of_group_array);
+        sd->array_of_group_size    = grib_context_malloc_clear(a->context,sizeof(unsigned long)*sd->size_of_group_array);
+        sd->array_of_group_width   = grib_context_malloc_clear(a->context,sizeof(unsigned long)*sd->size_of_group_array);
+        sd->array_of_group_refs    = grib_context_malloc_clear(a->context,sizeof( long)*sd->size_of_group_array);
     }
 #endif
     for(i=0;i < p1;i++){
@@ -639,7 +639,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     printf("readvalue [%d] %ld     %ld bias %ld <<\n", i,sec_val[i],binary_scale_factor,bias );*/
 
     if(snd_ordr_wdiff)
-        de_spatial_difference(a->parent->h->context,sec_val, n_vals, n_sp_diff, bias);
+        de_spatial_difference(a->context,sec_val, n_vals, n_sp_diff, bias);
 
     if(boustrophedonic)
         reverse_rows(sec_val,n_vals,nap,bitmap,bitmap_len);
@@ -662,8 +662,8 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     min *= d;
     max *= d;
 
-    grib_context_free(a->parent->h->context,sec_val);
-    if (bitmap!=NULL) grib_context_free(a->parent->h->context,bitmap);
+    grib_context_free(a->context,sec_val);
+    if (bitmap!=NULL) grib_context_free(a->context,bitmap);
 
     return err;
 }
@@ -757,9 +757,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     if ((abitmap=grib_find_accessor(a->parent->h,self->bitmap))!=NULL) {
         bitmap_len=grib_byte_count(abitmap);
-        bitmap=(unsigned char*)grib_context_malloc_clear(a->parent->h->context,sizeof(char)*bitmap_len);
+        bitmap=(unsigned char*)grib_context_malloc_clear(a->context,sizeof(char)*bitmap_len);
         err=grib_unpack_bytes(abitmap,bitmap,&bitmap_len);
-        if (err) {grib_context_free(a->parent->h->context,bitmap); return err;}
+        if (err) {grib_context_free(a->context,bitmap); return err;}
     }
 
     two_ordr_spd = 1;
@@ -771,7 +771,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     n_sp_diff = two_ordr_spd*2+plus1_spd;
     /*     calculation of integer array   */
 
-    sec_val  = (unsigned long*)grib_context_malloc(a->parent->h->context,(n_vals)*sizeof(long));
+    sec_val  = (unsigned long*)grib_context_malloc(a->context,(n_vals)*sizeof(long));
     d = grib_power(decimal_scale_factor,10) ;
     max = val[0];
     min = max;
@@ -786,7 +786,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     bit_per_val_rectified_for_gribex = bits_per_value+8-bits_per_value%8;
     if (grib_get_nearest_smaller_value(a->parent->h,self->reference_value,min,&reference_value)
             !=GRIB_SUCCESS) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+        grib_context_log(a->context,GRIB_LOG_ERROR,
                 "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
         exit(GRIB_INTERNAL_ERROR);
     }
@@ -806,8 +806,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
 
     if(snd_ordr_wdiff)
-        if((err =  spatial_difference(a->parent->h->context,sec_val, n_vals, n_sp_diff, &bias))){
-            grib_context_free(a->parent->h->context,sec_val);
+        if((err =  spatial_difference(a->context,sec_val, n_vals, n_sp_diff, &bias))){
+            grib_context_free(a->context,sec_val);
             return err;
         }
 
@@ -822,7 +822,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 #if KEEP_OLD == 1
 
 #else
-    sd = grib_get_second_order_groups(a->parent->h->context, group_val, nv);
+    sd = grib_get_second_order_groups(a->context, group_val, nv);
 #endif
 
     bitp   = 0;
@@ -847,7 +847,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     if((a->offset+buff_len)%2) buff_len++;
 
     buf = NULL;
-    buf = (unsigned char*)grib_context_malloc_clear(a->parent->h->context,buff_len);
+    buf = (unsigned char*)grib_context_malloc_clear(a->context,buff_len);
 
     buf_width_of_group    =  buf;
     buf_size_of_groups    =  buf+octet_start_group;
@@ -935,13 +935,13 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
 #else
 
-    grib_free_second_order_groups(a->parent->h->context,sd);
+    grib_free_second_order_groups(a->context,sd);
 #endif
     ;
 
-    grib_context_free(a->parent->h->context,buf);
-    grib_context_free(a->parent->h->context,sec_val);
-    if (bitmap!=NULL) grib_context_free(a->parent->h->context,bitmap);
+    grib_context_free(a->context,buf);
+    grib_context_free(a->context,sec_val);
+    if (bitmap!=NULL) grib_context_free(a->context,bitmap);
 
     return GRIB_SUCCESS;
 }

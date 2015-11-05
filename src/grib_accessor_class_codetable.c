@@ -178,7 +178,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* params) {
     if (a->flags & GRIB_ACCESSOR_FLAG_TRANSIENT) {
         a->length = 0;
         if (!a->vvalue)
-            a->vvalue = (grib_virtual_value*)grib_context_malloc_clear(a->parent->h->context,sizeof(grib_virtual_value));
+            a->vvalue = (grib_virtual_value*)grib_context_malloc_clear(a->context,sizeof(grib_virtual_value));
         a->vvalue->type=grib_accessor_get_native_type(a);
         a->vvalue->length=len;
         if (act->default_value!=NULL) {
@@ -205,7 +205,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* params) {
                 len = sizeof(tmp);
                 p = grib_expression_evaluate_string(a->parent->h,expression,tmp,&len,&ret);
                 if (ret != GRIB_SUCCESS) {
-                    grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,
+                    grib_context_log(a->context,GRIB_LOG_FATAL,
                             "unable to evaluate %s as string",a->name);
                 }
                 len = strlen(p)+1;
@@ -645,7 +645,7 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t *len)
                 len = sizeof(tmp);
                 p = grib_expression_evaluate_string(a->parent->h,expression,tmp,&len,&ret);
                 if (ret != GRIB_SUCCESS) {
-                    grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,
+                    grib_context_log(a->context,GRIB_LOG_FATAL,
                             "unable to evaluate %s as string",a->name);
                     return ret;
                 }
@@ -674,7 +674,7 @@ static int pack_expression(grib_accessor* a, grib_expression *e){
         len = sizeof(tmp);
         cval = grib_expression_evaluate_string(a->parent->h,e,tmp,&len,&ret);
         if (ret!=GRIB_SUCCESS) {
-            grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"grib_accessor_codetable.pack_expression: unable to evaluate string %s to be set in %s\n",grib_expression_get_name(e),a->name);
+            grib_context_log(a->context,GRIB_LOG_ERROR,"grib_accessor_codetable.pack_expression: unable to evaluate string %s to be set in %s\n",grib_expression_get_name(e),a->name);
             return ret;
         }
         len = strlen(cval) + 1;
@@ -715,7 +715,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 
     if(*len < rlen)
     {
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, " wrong size (%ld) for %s it contains %d values ",*len, a->name , rlen);
+        grib_context_log(a->context, GRIB_LOG_ERROR, " wrong size (%ld) for %s it contains %d values ",*len, a->name , rlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }

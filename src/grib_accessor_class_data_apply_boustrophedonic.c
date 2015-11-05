@@ -197,12 +197,12 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     if (valuesSize==0) return 0;
 
     if (valuesSize!=numberOfPoints) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"boustrophedonic ordering error: ( %s=%ld ) != (sizeOf(%s)=%ld)",
+        grib_context_log(a->context,GRIB_LOG_ERROR,"boustrophedonic ordering error: ( %s=%ld ) != (sizeOf(%s)=%ld)",
                 self->numberOfPoints,numberOfPoints,self->values,(long)valuesSize);
         return GRIB_DECODING_ERROR;
     }
 
-    values=(double*)grib_context_malloc_clear(a->parent->h->context,sizeof(double)*numberOfPoints);
+    values=(double*)grib_context_malloc_clear(a->context,sizeof(double)*numberOfPoints);
     ret=grib_get_double_array_internal(a->parent->h,self->values,values,&valuesSize);
     if (ret) return ret;
 
@@ -217,7 +217,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
     if (grib_get_size(a->parent->h,self->pl,&plSize) == GRIB_SUCCESS) {
         Assert(plSize==numberOfRows);
-        pl=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*plSize);
+        pl=(long*)grib_context_malloc_clear(a->context,sizeof(long)*plSize);
         ret=grib_get_long_array_internal(a->parent->h,self->pl,pl,&plSize);
         if (ret) return ret;
 
@@ -231,7 +231,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
             }
         }
 
-        grib_context_free(a->parent->h->context,pl);
+        grib_context_free(a->context,pl);
 
     } else {
 
@@ -247,7 +247,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
     }
 
-    grib_context_free(a->parent->h->context,values);
+    grib_context_free(a->context,values);
 
     return GRIB_SUCCESS;
 }
@@ -280,7 +280,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     valuesSize=numberOfPoints;
 
-    values=(double*)grib_context_malloc_clear(a->parent->h->context,sizeof(double)*numberOfPoints);
+    values=(double*)grib_context_malloc_clear(a->context,sizeof(double)*numberOfPoints);
 
     pvalues=values;
     pval=(double*)val;
@@ -293,7 +293,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     if (grib_get_size(a->parent->h,self->pl,&plSize) == GRIB_SUCCESS) {
         Assert(plSize==numberOfRows);
-        pl=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*plSize);
+        pl=(long*)grib_context_malloc_clear(a->context,sizeof(long)*plSize);
         ret=grib_get_long_array_internal(a->parent->h,self->pl,pl,&plSize);
         if (ret) return ret;
 
@@ -307,7 +307,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
             }
         }
 
-        grib_context_free(a->parent->h->context,pl);
+        grib_context_free(a->context,pl);
 
     } else {
 
@@ -325,7 +325,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     ret=grib_set_double_array_internal(a->parent->h,self->values,values,valuesSize);
     if (ret) return ret;
 
-    grib_context_free(a->parent->h->context,values);
+    grib_context_free(a->context,values);
 
     return ret;
 }

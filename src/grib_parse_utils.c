@@ -253,7 +253,7 @@ int grib_accessor_print(grib_accessor* a,const char* name,int type,const char* f
     return ret;
 }
 
-int grib_accessors_list_print(grib_accessors_list* al,const char* name,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
+int grib_accessors_list_print(grib_handle* h,grib_accessors_list* al,const char* name,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
 {
     size_t size=0,len=0,replen=0;
     char val[1024] = {0,};
@@ -269,7 +269,6 @@ int grib_accessors_list_print(grib_accessors_list* al,const char* name,int type,
     char double_format[]="%.12g"; /* default format for printing double keys */
     char long_format[]="%ld";  /* default format for printing integer keys */
     char default_separator[]=" ";
-    grib_handle* h=al->accessor->parent->h;
     grib_accessor* a=al->accessor;
 
     if (type==-1) type=grib_accessor_get_native_type(al->accessor);
@@ -424,7 +423,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
                         return GRIB_NOT_FOUND;
                     }
                 } else {
-                    ret=grib_accessors_list_print(al,loc,type,format,separator,maxcols,&newline,out);
+                    ret=grib_accessors_list_print(h,al,loc,type,format,separator,maxcols,&newline,out);
 
                     if(ret != GRIB_SUCCESS)
                     {

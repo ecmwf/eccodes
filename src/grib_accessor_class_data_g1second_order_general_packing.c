@@ -257,21 +257,21 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
   					&numberOfSecondOrderPackedValues)) != GRIB_SUCCESS)
          return ret;
 
-  groupWidths=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
+  groupWidths=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfGroups);
   groupWidthsSize=numberOfGroups;
   if((ret=grib_get_long_array_internal(a->parent->h,self->groupWidths, groupWidths,&groupWidthsSize)) != GRIB_SUCCESS)
          return ret;
 
-	secondaryBitmap=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*(numberOfSecondOrderPackedValues+1));
+	secondaryBitmap=(long*)grib_context_malloc_clear(a->context,sizeof(long)*(numberOfSecondOrderPackedValues+1));
 	secondaryBitmap[numberOfSecondOrderPackedValues]=1;
 	grib_decode_long_array(buf,&pos,1,numberOfSecondOrderPackedValues,secondaryBitmap);
 	pos = 8 * ( (pos + 7 ) / 8);
 
-	firstOrderValues=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
+	firstOrderValues=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfGroups);
 	grib_decode_long_array(buf,&pos,widthOfFirstOrderValues,numberOfGroups,firstOrderValues);
 	pos = 8 * ( (pos + 7 ) / 8);
 
-	X=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfSecondOrderPackedValues);
+	X=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfSecondOrderPackedValues);
 
 	n=0;
 	i=-1;
@@ -304,10 +304,10 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
 	}
 
 	*len=numberOfSecondOrderPackedValues;
-	grib_context_free(a->parent->h->context,secondaryBitmap);
-	grib_context_free(a->parent->h->context,firstOrderValues);
-	grib_context_free(a->parent->h->context,X);
-	grib_context_free(a->parent->h->context,groupWidths);
+	grib_context_free(a->context,secondaryBitmap);
+	grib_context_free(a->context,firstOrderValues);
+	grib_context_free(a->context,X);
+	grib_context_free(a->context,groupWidths);
   
   return ret;
 }

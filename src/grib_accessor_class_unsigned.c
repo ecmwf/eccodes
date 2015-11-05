@@ -148,7 +148,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
     if (a->flags & GRIB_ACCESSOR_FLAG_TRANSIENT) {
         a->length=0;
         if (!a->vvalue)
-            a->vvalue=(grib_virtual_value*)grib_context_malloc_clear(a->parent->h->context,sizeof(grib_virtual_value));
+            a->vvalue=(grib_virtual_value*)grib_context_malloc_clear(a->context,sizeof(grib_virtual_value));
         a->vvalue->type=GRIB_TYPE_LONG;
         a->vvalue->length=len;
     } else {
@@ -220,7 +220,7 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t *len, in
 
     if(*len < 1)
     {
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name , 1 );
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name , 1 );
         len[0] = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -238,14 +238,14 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t *len, in
             /* See GRIB-23 and GRIB-262 */
             if (! value_is_missing(v) ) {
                 if (v < 0) {
-                    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+                    grib_context_log(a->context, GRIB_LOG_ERROR,
                             "Key \"%s\": Trying to encode a negative value of %ld for key of type unsigned\n", a->name, v);
                     return GRIB_ENCODING_ERROR;
                 }
                 if (nbits < 32) {
                     unsigned long maxval = (1 << nbits)-1;
                     if (v > maxval) {
-                        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+                        grib_context_log(a->context, GRIB_LOG_ERROR,
                                 "Key \"%s\": Trying to encode value of %ld but the maximum allowable value is %ld (number of bits=%ld)\n",
                                 a->name, v, maxval, nbits);
                         return GRIB_ENCODING_ERROR;
@@ -257,7 +257,7 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t *len, in
         off = a->offset*8;
         ret = grib_encode_unsigned_long(a->parent->h->buffer->data, v, &off, self->nbytes*8);
         if (ret == GRIB_SUCCESS) len[0] = 1;
-        if (*len > 1)  grib_context_log(a->parent->h->context, GRIB_LOG_WARNING, "grib_accessor_unsigned : Trying to pack %d values in a scalar %s, packing first value",  *len, a->name  );
+        if (*len > 1)  grib_context_log(a->context, GRIB_LOG_WARNING, "grib_accessor_unsigned : Trying to pack %d values in a scalar %s, packing first value",  *len, a->name  );
         len[0] = 1;
         return ret;
     }
@@ -265,7 +265,7 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t *len, in
     /* TODO: We assume that there are no missing values if there are more that 1 value */
     buflen = *len*self->nbytes;
 
-    buf = (unsigned char*)grib_context_malloc(a->parent->h->context,buflen);
+    buf = (unsigned char*)grib_context_malloc(a->context,buflen);
 
     for(i=0; i < *len;i++)
         grib_encode_unsigned_long(buf, val[i] ,  &off,  self->nbytes*8);
@@ -277,7 +277,7 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t *len, in
     else
         *len = 0;
 
-    grib_context_free(a->parent->h->context,buf);
+    grib_context_free(a->context,buf);
     return ret;
 }
 
@@ -297,7 +297,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
     if(*len < rlen)
     {
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, " wrong size (%ld) for %s it contains %d values ",*len, a->name , rlen);
+        grib_context_log(a->context, GRIB_LOG_ERROR, " wrong size (%ld) for %s it contains %d values ",*len, a->name , rlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }

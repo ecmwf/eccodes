@@ -348,7 +348,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     sub_division = 1000000;
 
     if(!is_ok(val,v,basic_angle,sub_division))
-      grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,"Grid cannot be coded with any loss of precision");
+      grib_context_log(a->context,GRIB_LOG_DEBUG,"Grid cannot be coded with any loss of precision");
   }
 
   if(basic_angle == 1 && sub_division == 1000000)

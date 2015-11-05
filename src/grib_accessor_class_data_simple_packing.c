@@ -256,7 +256,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     s = grib_power(binary_scale_factor,2);
     d = grib_power(-decimal_scale_factor,10) ;
 
-    grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
+    grib_context_log(a->context, GRIB_LOG_DEBUG,
             "grib_accessor_data_simple_packing: unpack_double_element: creating %s, %d values (idx=%ld)",
             a->name, n_vals, idx);
 
@@ -266,7 +266,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 
     if(bits_per_value%8)
     {
-        grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
+        grib_context_log(a->context, GRIB_LOG_DEBUG,
                 "unpack_double_element: calling outline function : bpv %d, rv : %g, sf : %d, dsf : %d ",
                 bits_per_value,reference_value,binary_scale_factor, decimal_scale_factor);
         pos=idx*bits_per_value;
@@ -374,7 +374,7 @@ static int  _unpack_double(grib_accessor* a, double* val, size_t *len,unsigned c
     s = grib_power(binary_scale_factor,2);
     d = grib_power(-decimal_scale_factor,10) ;
 
-    grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
+    grib_context_log(a->context, GRIB_LOG_DEBUG,
             "grib_accessor_data_simple_packing: unpack_double : creating %s, %d values",
             a->name, n_vals);
 
@@ -382,7 +382,7 @@ static int  _unpack_double(grib_accessor* a, double* val, size_t *len,unsigned c
 
     /*Assert(((bits_per_value*n_vals)/8) < (1<<29));*/    /* See GRIB-787 */
 
-    grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
+    grib_context_log(a->context, GRIB_LOG_DEBUG,
             "unpack_double: calling outline function : bpv %d, rv : %g, sf : %d, dsf : %d ",
             bits_per_value,reference_value,binary_scale_factor, decimal_scale_factor);
     grib_decode_double_array(buf,&pos,bits_per_value,reference_value,s,d,n_vals,val);
@@ -482,7 +482,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     double range=0;
     double minrange=0,maxrange=0;
     long changing_precision=0;
-    grib_context* c=a->parent->h->context;
+    grib_context* c=a->context;
 
     decimal_scale_factor=0;
 
@@ -525,7 +525,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         int large_constant_fields = 0;
         if (grib_get_nearest_smaller_value(a->parent->h,self->reference_value,val[0],&reference_value)
                 !=GRIB_SUCCESS) {
-            grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+            grib_context_log(a->context,GRIB_LOG_ERROR,
                     "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
@@ -581,7 +581,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
        this is a safe way of fixing the problem */
     if ( changing_precision==0 && bits_per_value==0  && decimal_scale_factor_get==0) {
 
-        grib_context_log(a->parent->h->context,GRIB_LOG_WARNING,
+        grib_context_log(a->context,GRIB_LOG_WARNING,
                 "%s==0 and %s==0 (setting %s=24)",
                 self->bits_per_value,
                 self->decimal_scale_factor,
@@ -606,7 +606,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         /* See GRIB-540 for why we use ceil */
         err = number_of_bits( (unsigned long)ceil(fabs(max-min)), &bits_per_value );
         if (err) {
-            grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+            grib_context_log(a->context,GRIB_LOG_ERROR,
                     "Range of values too large. Try a smaller value for decimal precision (less than %d)",
                     decimal_scale_factor);
             return err;
@@ -617,7 +617,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
             return err;
         if (grib_get_nearest_smaller_value(a->parent->h,self->reference_value,min,&reference_value)
                 !=GRIB_SUCCESS) {
-            grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+            grib_context_log(a->context,GRIB_LOG_ERROR,
                     "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
@@ -633,7 +633,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
             /* divisor=1; */
             if (grib_get_nearest_smaller_value(a->parent->h,self->reference_value,min,&reference_value)
                     !=GRIB_SUCCESS) {
-                grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+                grib_context_log(a->context,GRIB_LOG_ERROR,
                         "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
                 return GRIB_INTERNAL_ERROR;
             }
@@ -665,7 +665,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
             if (grib_get_nearest_smaller_value(a->parent->h,self->reference_value,
                     min,&reference_value)!=GRIB_SUCCESS) {
-                grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+                grib_context_log(a->context,GRIB_LOG_ERROR,
                         "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
                 return GRIB_INTERNAL_ERROR;
             }

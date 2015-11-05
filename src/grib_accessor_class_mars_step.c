@@ -152,7 +152,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len)
     grib_accessor* stepRangeAcc=grib_find_accessor(a->parent->h,self->stepRange);
 
     if (!stepRangeAcc) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"%s not found",self->stepRange);
+        grib_context_log(a->context,GRIB_LOG_ERROR,"%s not found",self->stepRange);
         return GRIB_NOT_FOUND;
     }
 
@@ -176,7 +176,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
     grib_accessor* stepRangeAcc=grib_find_accessor(a->parent->h,self->stepRange);
 
     if (!stepRangeAcc) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"%s not found",self->stepRange);
+        grib_context_log(a->context,GRIB_LOG_ERROR,"%s not found",self->stepRange);
         return GRIB_NOT_FOUND;
     }
 
@@ -184,7 +184,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
         return ret;
 
     if (*len < buflen) {
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+        grib_context_log(a->context, GRIB_LOG_ERROR,
                 "grib_accessor_class_mars_step: Buffer too small for %s. It is %ld bytes long (len=%ld)\n",
                 a->name, buflen, *len);
         *len = buflen;

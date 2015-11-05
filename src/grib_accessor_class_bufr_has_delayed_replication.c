@@ -153,7 +153,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
   long* descriptors=0;
   int err=0;
   long F;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   err=grib_get_size(a->parent->h,self->expandedDescriptors,&size);
   if (err) return err;

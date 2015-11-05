@@ -34,7 +34,7 @@ void  grib_accessor_dump(grib_accessor* a, grib_dumper* f)
 int grib_pack_missing(grib_accessor* a)
 {
     grib_accessor_class *c = a->cclass;
-    /*grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
+    /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while(c)
     {
         if(c->pack_missing)
@@ -50,7 +50,7 @@ int grib_pack_missing(grib_accessor* a)
 int grib_pack_zero(grib_accessor* a)
 {
     grib_accessor_class *c = a->cclass;
-    /*grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
+    /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while(c)
     {
         if(c->clear)
@@ -66,7 +66,7 @@ int grib_pack_zero(grib_accessor* a)
 int grib_is_missing_internal(grib_accessor* a)
 {
     grib_accessor_class *c = a->cclass;
-    /*grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
+    /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while(c)
     {
         if(c->is_missing)
@@ -81,7 +81,7 @@ int grib_is_missing_internal(grib_accessor* a)
 int grib_pack_double(grib_accessor* a, const double* v, size_t *len )
 {
     grib_accessor_class *c = a->cclass;
-    /*grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
+    /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while(c)
     {
         if(c->pack_double)
@@ -97,7 +97,7 @@ int grib_pack_double(grib_accessor* a, const double* v, size_t *len )
 int grib_pack_expression(grib_accessor* a, grib_expression *e )
 {
     grib_accessor_class *c = a->cclass;
-    /*grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
+    /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while(c)
     {
         if(c->pack_expression)
@@ -113,7 +113,7 @@ int grib_pack_expression(grib_accessor* a, grib_expression *e )
 int grib_pack_string(grib_accessor* a, const char* v, size_t *len )
 {
     grib_accessor_class *c = a->cclass;
-    /*grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is packing (string) %s",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?v:"(null)");*/
+    /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (string) %s",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?v:"(null)");*/
     while(c)
     {
 
@@ -130,7 +130,7 @@ int grib_pack_string(grib_accessor* a, const char* v, size_t *len )
 int grib_pack_string_array(grib_accessor* a, const char** v, size_t *len )
 {
     grib_accessor_class *c = a->cclass;
-    /*grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is packing (string) %s",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?v:"(null)");*/
+    /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (string) %s",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?v:"(null)");*/
     while(c)
     {
         if(c->pack_string_array)
@@ -146,7 +146,7 @@ int grib_pack_string_array(grib_accessor* a, const char** v, size_t *len )
 int grib_pack_long(grib_accessor* a,const long* v, size_t *len )
 {
     grib_accessor_class *c = a->cclass;
-    /*grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is packing (long) %d",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
+    /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (long) %d",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while(c)
     {
         if(c->pack_long)
@@ -162,7 +162,7 @@ int grib_pack_long(grib_accessor* a,const long* v, size_t *len )
 int grib_pack_bytes(grib_accessor* a, const unsigned char* v, size_t *len )
 {
     grib_accessor_class *c = a->cclass;
-    /*grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is packing (bytes) %d",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
+    /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (bytes) %d",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while(c)
     {
         if(c->pack_bytes)
@@ -178,7 +178,7 @@ int grib_pack_bytes(grib_accessor* a, const unsigned char* v, size_t *len )
 int grib_unpack_bytes(grib_accessor* a, unsigned char* v, size_t *len )
 {
     grib_accessor_class *c = a->cclass;
-    /*grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is unpacking (bytes)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
+    /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is unpacking (bytes)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
     while(c)
     {
         if(c->unpack_bytes)
@@ -209,7 +209,7 @@ int grib_unpack_double_subarray(grib_accessor* a, double* v, size_t start, size_
 int grib_unpack_double(grib_accessor* a, double* v, size_t *len )
 {
     grib_accessor_class *c = a->cclass;
-    /*grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is unpacking (double)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
+    /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is unpacking (double)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
     while(c)
     {
         if(c->unpack_double)
@@ -239,7 +239,7 @@ int grib_unpack_double_element(grib_accessor* a, size_t i ,double* v )
 int grib_unpack_string(grib_accessor* a, char* v, size_t *len )
 {
     grib_accessor_class *c = a->cclass;
-    /* grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is unpacking (string)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
+    /* grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is unpacking (string)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
     while(c)
     {
         if(c->unpack_string)
@@ -321,7 +321,7 @@ int grib_accessors_list_unpack_string(grib_accessors_list* al,char** val,size_t*
 int grib_unpack_long(grib_accessor* a,long* v, size_t *len )
 {
     grib_accessor_class *c = a->cclass;
-    /*grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is unpacking (long)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
+    /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is unpacking (long)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
     while(c)
     {
         if(c->unpack_long)
@@ -352,7 +352,7 @@ long grib_accessor_get_native_type(grib_accessor* a)
 long grib_get_next_position_offset(grib_accessor* a)
 {
     grib_accessor_class *c = NULL;
-    /*grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is checking next (long)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
+    /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is checking next (long)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
     if (a)  c = a->cclass;
 
     while(c)
@@ -508,7 +508,7 @@ void grib_accessor_delete(grib_context *ct, grib_accessor* a)
 grib_accessor* grib_accessor_clone(grib_accessor* a,grib_section* s,int* err)
 {
     grib_accessor_class *c = a->cclass;
-    grib_context* ct=a->parent->h->context;
+    grib_context* ct=a->context;
     while(c)
     {
         grib_accessor_class *super = c->super ? *(c->super) : NULL;
@@ -524,7 +524,7 @@ grib_accessor* grib_accessor_clone(grib_accessor* a,grib_section* s,int* err)
 void grib_update_size(grib_accessor* a, size_t len )
 {
     grib_accessor_class *c = a->cclass;
-    /*grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
+    /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while(c)
     {
         if(c->update_size)
@@ -556,7 +556,7 @@ int grib_nearest_smaller_value(grib_accessor* a,double val,double* nearest)
 size_t grib_preferred_size(grib_accessor* a,int from_handle)
 {
     grib_accessor_class *c = a->cclass;
-    /*grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is packing (long) %d",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
+    /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (long) %d",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while(c)
     {
         if(c->preferred_size)
@@ -587,7 +587,7 @@ grib_accessor* grib_next_accessor(grib_accessor* a)
 void grib_resize(grib_accessor* a,size_t new_size)
 {
     grib_accessor_class *c = a->cclass;
-    /*grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG, "(%s)%s is packing (long) %d",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
+    /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (long) %d",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while(c)
     {
         if(c->resize)
@@ -669,13 +669,13 @@ int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr)
     if (_grib_accessor_get_attribute(a,attr->name,&id)) return GRIB_ATTRIBUTE_CLASH;
     for (id=0;id<MAX_ACCESSOR_ATTRIBUTES;id++) {
         if (a->attributes[id] == NULL) {
-            attr->parent=a->parent;
+            /* attr->parent=a->parent; */
             a->attributes[id]=attr;
             attr->parent_as_attribute=a;
             if (a->same)
                 attr->same=_grib_accessor_get_attribute(a->same,attr->name,&idx);
 
-            grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,"added attribute %s->%s",a->name,attr->name);
+            grib_context_log(a->context,GRIB_LOG_DEBUG,"added attribute %s->%s",a->name,attr->name);
             return GRIB_SUCCESS;
         }
     }
@@ -687,7 +687,7 @@ int grib_accessor_replace_attribute(grib_accessor* a,grib_accessor* attr)
     int id=0;
     int idx=0;
     if (_grib_accessor_get_attribute(a,attr->name,&id) != NULL) {
-        grib_accessor_delete(a->parent->h->context,a->attributes[id]);
+        grib_accessor_delete(a->context,a->attributes[id]);
         a->attributes[id]=attr;
         attr->parent_as_attribute=a;
         if (a->same)
@@ -702,7 +702,7 @@ int grib_accessor_delete_attribute(grib_accessor* a,const char* name)
 {
     int id=0;
     if (_grib_accessor_get_attribute(a,name,&id) != NULL) {
-        grib_accessor_delete(a->parent->h->context,a->attributes[id]);
+        grib_accessor_delete(a->context,a->attributes[id]);
         a->attributes[id]=NULL;
         return GRIB_SUCCESS;
     } else {
@@ -753,10 +753,10 @@ grib_accessor* grib_accessor_get_attribute(grib_accessor* a,const char* name)
     } else {
         size_t size=p-name;
         attribute_name=p+2;
-        basename=(char*)grib_context_malloc_clear(a->parent->h->context,size+1);
+        basename=(char*)grib_context_malloc_clear(a->context,size+1);
         basename=(char*)memcpy(basename,name,size);
         acc=_grib_accessor_get_attribute(a,basename,&index);
-        grib_context_free(a->parent->h->context,basename);
+        grib_context_free(a->context,basename);
         if (acc) return grib_accessor_get_attribute(acc,attribute_name);
         else return NULL;
     }
@@ -770,7 +770,7 @@ grib_accessors_list* grib_accessors_list_create(grib_context* c)
 void grib_accessors_list_push(grib_accessors_list* al,grib_accessor* a)
 {
     grib_accessors_list* last;
-    grib_context* c=a->parent->h->context;
+    grib_context* c=a->context;
 
     last=grib_accessors_list_last(al);
     if (last && last->accessor) {

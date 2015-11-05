@@ -199,7 +199,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     fcmonth++;
 
   if(gribForecastMonth != 0 && gribForecastMonth!=fcmonth) {
-	  grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,"%s=%ld (%s-%s)=%ld",self->fcmonth,
+	  grib_context_log(a->context,GRIB_LOG_FATAL,"%s=%ld (%s-%s)=%ld",self->fcmonth,
 					   gribForecastMonth,self->base_date,self->verification_yearmonth,fcmonth);
 	  Assert(gribForecastMonth == fcmonth);
   }

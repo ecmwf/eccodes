@@ -173,7 +173,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
   long lenall=0;
   size_t i;
   long* v=0;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   descriptors=get_accessor(a);
   if (!descriptors) return GRIB_NOT_FOUND;
@@ -196,7 +196,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 static int unpack_string_array (grib_accessor* a, char** buffer, size_t *len)
 {
   grib_accessor* descriptors=0;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
   long l=0;
   size_t size,i;
   char buf[25]={0,};

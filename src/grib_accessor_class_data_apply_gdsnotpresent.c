@@ -182,7 +182,7 @@ static int value_count(grib_accessor* a,long* number_of_points)
   *number_of_points=0;
   if((ret = grib_get_long(a->parent->h,self->number_of_points,number_of_points))
        !=  GRIB_SUCCESS) {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_ERROR,
       "grib_accessor_data_apply_gdsnotpresent: value_count: unable to get number of points");
   }
 
@@ -231,7 +231,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   }
 
   if(number_of_values > 0){
-    coded_vals = (double*)grib_context_malloc(a->parent->h->context,number_of_values*sizeof(double));
+    coded_vals = (double*)grib_context_malloc(a->context,number_of_values*sizeof(double));
 
     if(coded_vals == NULL)
       return GRIB_OUT_OF_MEMORY;
@@ -240,16 +240,16 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   size=number_of_values;
   if((err=grib_get_double_array_internal(a->parent->h,self->coded_values,coded_vals,&size))
     != GRIB_SUCCESS)  {
-    grib_context_free(a->parent->h->context,coded_vals);
+    grib_context_free(a->context,coded_vals);
     return err;
   }
   if (number_of_values!=size) {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_ERROR,
       "grib_accessor_data_apply_gdsnotpresent : wrong numberOfValues %ld != %ld",
       number_of_values,size);
   }
 
-  grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
+  grib_context_log(a->context, GRIB_LOG_DEBUG,
       "grib_accessor_data_apply_gdsnotpresent : unpack_double : creating %s, %d values",
       a->name, number_of_points);
 
@@ -264,7 +264,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 
   *len =  number_of_points;
 
-  grib_context_free(a->parent->h->context,coded_vals);
+  grib_context_free(a->context,coded_vals);
   return err;
 }
 
@@ -280,14 +280,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
   ret=grib_set_long(a->parent->h,self->bitmap_present,bitmap_present);
   if(ret) {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_ERROR,
        "Accessor %s cannont pack value for %s error %d \n", a->name, self->bitmap_present, ret);
     return ret;
   }
 
 #if 0
   if(!grib_find_accessor(a->parent->h,self->bitmap)){
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_ERROR,
        "Accessor %s cannont access bitmap \n", a->name, self->bitmap_present, ret);
     return ret;
   }
@@ -296,7 +296,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
   ret = grib_set_double_array_internal(a->parent->h,self->coded_values,val,*len);
   if(ret) {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_ERROR,
        "Accessor %s cannont pack value for %s error %d \n", a->name, self->coded_values, ret);
     return ret;
   }

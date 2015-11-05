@@ -199,7 +199,7 @@ static int unpack_string_array (grib_accessor* a, char** buffer, size_t *len)
 
   tableAccessor=(grib_accessor_smart_table*)grib_find_accessor(a->parent->h,self->smartTable);
   if (!tableAccessor) {
-  	grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+  	grib_context_log(a->context,GRIB_LOG_ERROR,
 		"unable to find accessor %s",self->smartTable);
 	return GRIB_NOT_FOUND;
   }
@@ -210,9 +210,9 @@ static int unpack_string_array (grib_accessor* a, char** buffer, size_t *len)
     return GRIB_BUFFER_TOO_SMALL;
   }
 
-  code=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*size);
+  code=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
   if (!code) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,
+    grib_context_log(a->context,GRIB_LOG_FATAL,
         "unable to allocate %ld bytes",(long)size);
     return GRIB_OUT_OF_MEMORY;
   }
@@ -235,11 +235,11 @@ static int unpack_string_array (grib_accessor* a, char** buffer, size_t *len)
         sprintf(tmp,"%d",(int)code[i]);
       }
 
-      buffer[i]=grib_context_strdup(a->parent->h->context,tmp);
+      buffer[i]=grib_context_strdup(a->context,tmp);
 
   }
   *len = size;
-  grib_context_free(a->parent->h->context,code);
+  grib_context_free(a->context,code);
 
   return GRIB_SUCCESS;
 }
@@ -259,7 +259,7 @@ static int unpack_long (grib_accessor* a, long* val, size_t *len)
 
   tableAccessor=(grib_accessor_smart_table*)grib_find_accessor(a->parent->h,self->smartTable);
   if (!tableAccessor) {
-  	grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+  	grib_context_log(a->context,GRIB_LOG_ERROR,
 		"unable to find accessor %s",self->smartTable);
 	return GRIB_NOT_FOUND;
   }
@@ -270,9 +270,9 @@ static int unpack_long (grib_accessor* a, long* val, size_t *len)
     return GRIB_BUFFER_TOO_SMALL;
   }
 
-  code=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*size);
+  code=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
   if (!code) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,
+    grib_context_log(a->context,GRIB_LOG_FATAL,
         "unable to allocate %ld bytes",(long)size);
     return GRIB_OUT_OF_MEMORY;
   }
@@ -291,7 +291,7 @@ static int unpack_long (grib_accessor* a, long* val, size_t *len)
       }
   }
   *len = size;
-  grib_context_free(a->parent->h->context,code);
+  grib_context_free(a->context,code);
 
   return GRIB_SUCCESS;
 }

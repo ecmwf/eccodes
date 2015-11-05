@@ -167,7 +167,7 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
             != GRIB_SUCCESS)
         return err;
 
-    buf = (unsigned char*)grib_context_malloc_clear(a->parent->h->context,tlen);
+    buf = (unsigned char*)grib_context_malloc_clear(a->context,tlen);
     if(!buf) return GRIB_OUT_OF_MEMORY;
     pos=0;
     for(i=0;i<*len;i++)
@@ -186,7 +186,7 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
 
     grib_buffer_replace(a, buf, tlen,1,1);
 
-    grib_context_free(a->parent->h->context,buf);
+    grib_context_free(a->context,buf);
 
     return GRIB_SUCCESS;
 }
@@ -199,7 +199,7 @@ static int value_count(grib_accessor* a,long* count)
     int err;
 
     if ((err=grib_get_long_internal(a->parent->h, self->unusedBits, &tlen)) != GRIB_SUCCESS)
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_class_bitmap.value_count : cannot get %s err=%d",self->unusedBits,err);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_class_bitmap.value_count : cannot get %s err=%d",self->unusedBits,err);
 
   *count = (a->length*8)-tlen;
   return err;
@@ -216,13 +216,13 @@ static int unpack_bytes(grib_accessor* a, unsigned char* val, size_t *len)
 
     if(*len < (size_t)length )
     {
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Wrong size for %s it is %d bytes long\n", a->name ,length );
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it is %d bytes long\n", a->name ,length );
         *len = length;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
     if ((err=grib_get_long_internal(a->parent->h, self->unusedBits, &tlen)) != GRIB_SUCCESS)
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+        grib_context_log(a->context, GRIB_LOG_ERROR,
                 "grib_accessor_class_bitmap.unpack_bytes : cannot get %s err=%d",self->unusedBits,err);
 
     length-= tlen/8;

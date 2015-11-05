@@ -171,7 +171,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     if((err = grib_get_double_array_internal(a->parent->h,self->coded_values,val,&coded_n_vals)) != GRIB_SUCCESS)
         return err;
 
-    grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
+    grib_context_log(a->context, GRIB_LOG_DEBUG,
             "grib_accessor_data_g1shsimple_packing_bitmap : unpack_double : creating %s, %d values",
             a->name, n_vals);
 

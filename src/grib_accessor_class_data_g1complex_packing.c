@@ -192,7 +192,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
   long   half_byte= 0;
   long  bits_per_value =0;
   size_t  buflen =0;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
   grib_handle* h=a->parent->h;
   char* ieee_packing_s=NULL;
   char* packingType_s=NULL;
@@ -253,7 +253,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     buflen = 32*(sub_k+1)*(sub_k+2)+(*len-(sub_k+1)*(sub_k+2))*bits_per_value+18*8;
     half_byte = seclen*8-buflen;
-	if (a->parent->h->context->debug==-1) {
+	if (a->context->debug==-1) {
 		printf("ECCODES DEBUG: half_byte=%ld\n",half_byte);
 	}
 

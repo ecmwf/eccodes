@@ -175,7 +175,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 
 static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-    grib_context* c=a->parent->h->context;
+    grib_context* c=a->context;
     grib_accessor_latitudes* self = (grib_accessor_latitudes*)a;
     int ret = 0;
     double* v=val;
@@ -229,7 +229,7 @@ static int value_count(grib_accessor* a,long* len)
 {
     grib_accessor_latitudes* self = (grib_accessor_latitudes*)a;
     grib_handle* h=a->parent->h;
-    grib_context* c=a->parent->h->context;
+    grib_context* c=a->context;
     double* val=NULL;
     int ret;
     size_t size;
@@ -265,7 +265,7 @@ static int get_distinct(grib_accessor* a,double** val,long* len) {
     int i;
     long jScansPositively=0; /*default: north to south*/
     size_t size=*len;
-    grib_context* c=a->parent->h->context;
+    grib_context* c=a->context;
     grib_iterator* iter=grib_iterator_new(a->parent->h,0,&ret);
     if (ret!=GRIB_SUCCESS) {
         if (iter) grib_iterator_delete(iter);

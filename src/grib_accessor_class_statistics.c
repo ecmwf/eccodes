@@ -155,7 +155,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
 
     self->number_of_elements=8;
-    self->v=(double*)grib_context_malloc(a->parent->h->context,
+    self->v=(double*)grib_context_malloc(a->context,
             sizeof(double)*self->number_of_elements);
 
     a->length=0;
@@ -171,14 +171,14 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     double max,min,avg,sd,value,skew,kurt, m2=0,m3=0,m4=0;
     double missing=0;
     size_t number_of_missing=0;
-    grib_context* c=a->parent->h->context;
+    grib_context* c=a->context;
     grib_handle* h=a->parent->h;
 
     if (!a->dirty) return GRIB_SUCCESS;
 
     if ( (ret=grib_get_size(h,self->values,&size)) != GRIB_SUCCESS) return ret;
 
-    grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,
+    grib_context_log(a->context,GRIB_LOG_DEBUG,
             "grib_accessor_statistics: computing statistics for %d values",size);
 
     if((ret=grib_get_double(a->parent->h,self->missing_value,&missing))
@@ -286,7 +286,7 @@ static int compare(grib_accessor* a, grib_accessor* b)
 
     if (alen != blen) return GRIB_COUNT_MISMATCH;
 
-    aval=(double*)grib_context_malloc(a->parent->h->context,alen*sizeof(double));
+    aval=(double*)grib_context_malloc(a->context,alen*sizeof(double));
     bval=(double*)grib_context_malloc(b->parent->h->context,blen*sizeof(double));
 
     b->dirty=1;
@@ -300,7 +300,7 @@ static int compare(grib_accessor* a, grib_accessor* b)
         alen--;
     }
 
-    grib_context_free(a->parent->h->context,aval);
+    grib_context_free(a->context,aval);
     grib_context_free(b->parent->h->context,bval);
 
     return retval;

@@ -206,7 +206,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     } else {
         value = v > 0 ? ((double)v)/factor+0.5 :
                 ((double)v)/factor-0.5;
-        /* grib_context_log(a->parent->h->context,GRIB_LOG_WARNING,"%s/%ld = %ld/%ld = %ld. Rounding to convert key.",a->name,self->factor,*val,self->factor,value); */
+        /* grib_context_log(a->context,GRIB_LOG_WARNING,"%s/%ld = %ld/%ld = %ld. Rounding to convert key.",a->name,self->factor,*val,self->factor,value); */
     }
 
     ret = grib_set_long_internal(a->parent->h, self->value,value);

@@ -155,12 +155,12 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
   l = strlen(repres)+1;
 
   if(l >*len ){
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_long : unpack_string : Buffer too small for %s ", a->name );
+    grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_long : unpack_string : Buffer too small for %s ", a->name );
 
     *len = l;
     return GRIB_BUFFER_TOO_SMALL;
   }
-  grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, "grib_accessor_long: Casting double %s to string  ", a->name);
+  grib_context_log(a->context,GRIB_LOG_DEBUG, "grib_accessor_long: Casting double %s to string  ", a->name);
 
   *len = l;
 
@@ -194,7 +194,7 @@ static int compare(grib_accessor* a, grib_accessor* b) {
 
   if (alen != blen) return GRIB_COUNT_MISMATCH;
 
-  aval=(double*)grib_context_malloc(a->parent->h->context,alen*sizeof(double));
+  aval=(double*)grib_context_malloc(a->context,alen*sizeof(double));
   bval=(double*)grib_context_malloc(b->parent->h->context,blen*sizeof(double));
 
   grib_unpack_double(a,aval,&alen);
@@ -206,7 +206,7 @@ static int compare(grib_accessor* a, grib_accessor* b) {
     alen--;
   }
 
-  grib_context_free(a->parent->h->context,aval);
+  grib_context_free(a->context,aval);
   grib_context_free(b->parent->h->context,bval);
 
   return retval;

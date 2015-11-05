@@ -277,14 +277,14 @@ static int value_count(grib_accessor* a,long* count)
     if (err) return err;
     if (numberOfGroups==0) return 0;
 
-    groupLengths=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
+    groupLengths=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfGroups);
     ngroups=numberOfGroups;
     err=grib_get_long_array(a->parent->h,self->groupLengths,groupLengths,&ngroups);
     if (err) return err;
 
     for (i=0;i<numberOfGroups;i++) numberOfCodedValues+=groupLengths[i];
 
-    grib_context_free(a->parent->h->context,groupLengths);
+    grib_context_free(a->context,groupLengths);
 
     err=grib_get_long(a->parent->h,self->orderOfSPD,&orderOfSPD);
 
@@ -305,11 +305,11 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     if (err) return err;
     if (idx >= size) return GRIB_INVALID_NEAREST;
 
-    values=(double*)grib_context_malloc_clear(a->parent->h->context,size*sizeof(double));
+    values=(double*)grib_context_malloc_clear(a->context,size*sizeof(double));
     err=grib_get_double_array(a->parent->h,"codedValues",values,&size);
     if (err) return err;
     *val=values[idx];
-    grib_context_free(a->parent->h->context,values);
+    grib_context_free(a->context,values);
     return err;
 }
 
@@ -360,15 +360,15 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
         return ret;
 
     ngroups=numberOfGroups;
-    groupWidths=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
+    groupWidths=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfGroups);
     ret=grib_get_long_array(a->parent->h,self->groupWidths,groupWidths,&ngroups);
     if(ret != GRIB_SUCCESS) return ret;
 
-    groupLengths=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
+    groupLengths=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfGroups);
     ret=grib_get_long_array(a->parent->h,self->groupLengths,groupLengths,&ngroups);
     if(ret != GRIB_SUCCESS) return ret;
 
-    firstOrderValues=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
+    firstOrderValues=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfGroups);
     ret=grib_get_long_array(a->parent->h,self->firstOrderValues,firstOrderValues,&ngroups);
     if(ret != GRIB_SUCCESS) return ret;
 
@@ -387,13 +387,13 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
 
     if (orderOfSPD) {
         size_t nSPD=orderOfSPD+1;
-        SPD=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*nSPD);
+        SPD=(long*)grib_context_malloc_clear(a->context,sizeof(long)*nSPD);
         ret=grib_get_long_array(a->parent->h,self->SPD,SPD,&nSPD);
         bias=SPD[orderOfSPD];
         if(ret != GRIB_SUCCESS) return ret;
     }
 
-    X=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfValues);
+    X=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfValues);
 
     n=orderOfSPD;
     for (i=0;i<numberOfGroups;i++) {
@@ -462,11 +462,11 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
 
     if (self->values) {
         if (numberOfValues!=self->size) {
-            grib_context_free(a->parent->h->context,self->values);
-            self->values=(double*)grib_context_malloc_clear(a->parent->h->context,sizeof(double)*numberOfValues);
+            grib_context_free(a->context,self->values);
+            self->values=(double*)grib_context_malloc_clear(a->context,sizeof(double)*numberOfValues);
         }
     } else {
-        self->values=(double*)grib_context_malloc_clear(a->parent->h->context,sizeof(double)*numberOfValues);
+        self->values=(double*)grib_context_malloc_clear(a->context,sizeof(double)*numberOfValues);
     }
 
     s = grib_power(binary_scale_factor,2);
@@ -479,12 +479,12 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
     *len=numberOfValues;
     self->size=numberOfValues;
 
-    grib_context_free(a->parent->h->context,X);
-    grib_context_free(a->parent->h->context,groupWidths);
-    grib_context_free(a->parent->h->context,groupLengths);
-    grib_context_free(a->parent->h->context,firstOrderValues);
+    grib_context_free(a->context,X);
+    grib_context_free(a->context,groupWidths);
+    grib_context_free(a->context,groupLengths);
+    grib_context_free(a->context,firstOrderValues);
     if (orderOfSPD)
-        grib_context_free(a->parent->h->context,SPD);
+        grib_context_free(a->context,SPD);
 
     return ret;
 }
@@ -665,7 +665,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     if (grib_get_nearest_smaller_value(a->parent->h,self->reference_value,min,&reference_value)
             !=GRIB_SUCCESS) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+        grib_context_log(a->context,GRIB_LOG_ERROR,
                 "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
         exit(GRIB_INTERNAL_ERROR);
     }
@@ -692,14 +692,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         return ret;
 
     divisor = grib_power(-binary_scale_factor,2);
-    X=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfValues);
+    X=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfValues);
     for(i=0;i< numberOfValues;i++){
         X[i] = (((val[i]*decimal)-reference_value)*divisor)+0.5;
     }
 
-    groupLengths=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfValues);
-    groupWidths=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfValues);
-    firstOrderValues=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfValues);
+    groupLengths=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfValues);
+    groupWidths=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfValues);
+    firstOrderValues=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfValues);
 
     /* spatial differencing */
     switch (orderOfSPD) {
@@ -963,7 +963,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
            Focus on groups which have been shrank as left groups of an A group taking
            some of their elements.
          */
-        offsets=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*numberOfGroups);
+        offsets=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfGroups);
         offsets[0]=orderOfSPD;
         for (i=1;i<numberOfGroups;i++) offsets[i]=offsets[i-1]+groupLengths[i-1];
         for (i=numberOfGroups-2;i>=0;i--) {
@@ -1019,7 +1019,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
             }
 
         }
-        grib_context_free(a->parent->h->context,offsets);
+        grib_context_free(a->context,offsets);
     }
 
     maxWidth=groupWidths[0];
@@ -1036,8 +1036,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         lengthOfSecondOrderValues+=groupLengths[i]*groupWidths[i];
     }
 
-    if (!a->parent->h->context->no_big_group_split) {
-        grib_split_long_groups(a->parent->h->context,&numberOfGroups,&lengthOfSecondOrderValues,
+    if (!a->context->no_big_group_split) {
+        grib_split_long_groups(a->context,&numberOfGroups,&lengthOfSecondOrderValues,
                 groupLengths,&widthOfLengths,groupWidths,widthOfWidths,
                 firstOrderValues,widthOfFirstOrderValues);
     }
@@ -1137,7 +1137,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     if((ret = grib_set_long_internal(a->parent->h,self->half_byte, half_byte)) != GRIB_SUCCESS)
         return ret;
 
-    buffer=(unsigned char*)grib_context_malloc_clear(a->parent->h->context,size);
+    buffer=(unsigned char*)grib_context_malloc_clear(a->context,size);
 
     pos=0;
     if (orderOfSPD) {
@@ -1181,11 +1181,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     grib_buffer_replace(a, buffer, size,1,1);
 
-    grib_context_free(a->parent->h->context,buffer);
-    grib_context_free(a->parent->h->context,X);
-    grib_context_free(a->parent->h->context,groupLengths);
-    grib_context_free(a->parent->h->context,groupWidths);
-    grib_context_free(a->parent->h->context,firstOrderValues);
+    grib_context_free(a->context,buffer);
+    grib_context_free(a->context,X);
+    grib_context_free(a->context,groupLengths);
+    grib_context_free(a->context,groupWidths);
+    grib_context_free(a->context,firstOrderValues);
 
     return ret;
 }

@@ -150,7 +150,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 
   
   if (size>1) {
-  	values=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*size);
+  	values=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
 	err=grib_unpack_long(a,values,&size);
   } else {
 	err=grib_unpack_long(a,&value,&size);
@@ -182,7 +182,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 		count++;
 	}
 	fprintf(self->dumper.out,"}\n");
-	grib_context_free(a->parent->h->context,values);
+	grib_context_free(a->context,values);
   } else {
 	  if( ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && grib_is_missing_internal(a) )
 		fprintf(self->dumper.out,"%s = MISSING",a->name);
@@ -287,9 +287,9 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
   char *p=NULL;
   int err = _grib_get_string_length(a,&size);
 
-  value=(char*)grib_context_malloc_clear(a->parent->h->context,size);
+  value=(char*)grib_context_malloc_clear(a->context,size);
   if (!value) {
-  	grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,"unable to allocate %d bytes",(int)size);
+  	grib_context_log(a->context,GRIB_LOG_FATAL,"unable to allocate %d bytes",(int)size);
 	return;
   }
   err=grib_unpack_string(a,value,&size);
@@ -297,7 +297,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 
   if( a->length == 0  &&
       (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0) {
-	grib_context_free(a->parent->h->context,value);
+	grib_context_free(a->context,value);
     return;
   }
 
@@ -319,7 +319,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     fprintf(self->dumper.out," *** ERR=%d (%s) [grib_dumper_wmo::dump_string]",err,grib_get_error_message(err));
   aliases(d,a);
   fprintf(self->dumper.out,"\n");
-  if (value) grib_context_free(a->parent->h->context,value);
+  if (value) grib_context_free(a->context,value);
 }
 
 static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)
@@ -556,11 +556,12 @@ static void print_offset(FILE* out,long begin,long theEnd) {
 static void print_hexadecimal(FILE* out,unsigned long flags,grib_accessor* a) {
   int i=0;
   unsigned long offset=0;
+  grib_handle* h=grib_handle_of(a);
   if ((flags & GRIB_DUMP_FLAG_HEXADECIMAL) != 0 && a->length != 0) {
     fprintf(out," (");
     offset=a->offset;
     for (i=0;i<a->length;i++) {
-      fprintf(out," 0x%.2X",a->parent->h->buffer->data[offset]);
+      fprintf(out," 0x%.2X",h->buffer->data[offset]);
       offset++;
     }
     fprintf(out," )");
@@ -578,7 +579,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
   int tab=0;
   long count=0;
 
-  c=a->parent->h->context;
+  c=a->context;
 
   grib_value_count(a,&count);
   if (count==0) return;

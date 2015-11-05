@@ -202,12 +202,12 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 
 
   if((err = grib_get_long_internal(a->parent->h,self->pre_processing, &pre_processing)) != GRIB_SUCCESS){
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->pre_processing, err);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->pre_processing, err);
     return err;
   }
 
   if((err = grib_get_double_internal(a->parent->h,self->pre_processing_parameter, &pre_processing_parameter)) != GRIB_SUCCESS){
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->pre_processing_parameter, err);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->pre_processing_parameter, err);
     return err;
   }
 

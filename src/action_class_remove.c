@@ -110,7 +110,7 @@ static void remove_accessor(grib_accessor *a)
   s = a->parent;
 
   if (a->parent->h->use_trie && *(a->all_names[0]) != '_') {
-      id=grib_hash_keys_get_id(a->parent->h->context->keys,a->all_names[0]);
+      id=grib_hash_keys_get_id(a->context->keys,a->all_names[0]);
       a->parent->h->accessors[id]=NULL;
   }
 

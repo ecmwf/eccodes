@@ -276,7 +276,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 
     bits8 = ((bits_per_value + 7)/8)*8;
     size = n_vals * (bits_per_value + 7)/8;
-    decoded = grib_context_buffer_malloc_clear(a->parent->h->context,size);
+    decoded = grib_context_buffer_malloc_clear(a->context,size);
     if(!decoded) {
         err = GRIB_OUT_OF_MEMORY;
         goto cleanup;
@@ -305,7 +305,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 
 
 cleanup:
-    grib_context_buffer_free(a->parent->h->context,decoded);
+    grib_context_buffer_free(a->context,decoded);
     return err;
 
 }
@@ -422,7 +422,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     if (grib_get_nearest_smaller_value(a->parent->h,self->reference_value,min,&reference_value)
             !=GRIB_SUCCESS) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+        grib_context_log(a->context,GRIB_LOG_ERROR,
                          "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
         exit(GRIB_INTERNAL_ERROR);
     }
@@ -437,7 +437,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     divisor = grib_power(-binary_scale_factor,2);
 
     bits8 = (bits_per_value+7)/8*8;
-    encoded = grib_context_buffer_malloc_clear(a->parent->h->context,bits8/8*n_vals);
+    encoded = grib_context_buffer_malloc_clear(a->context,bits8/8*n_vals);
 
     if(!encoded) {
         err = GRIB_OUT_OF_MEMORY;
@@ -459,11 +459,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     }
     /*       buflen = n_vals*(bits_per_value/8);*/
 
-    grib_context_log(a->parent->h->context, GRIB_LOG_DEBUG,
+    grib_context_log(a->context, GRIB_LOG_DEBUG,
                      "grib_accessor_data_ccsds_packing : pack_double : packing %s, %d values", a->name, n_vals);
 
     buflen += 10240;
-    buf = grib_context_buffer_malloc_clear(a->parent->h->context,buflen);
+    buf = grib_context_buffer_malloc_clear(a->context,buflen);
 
     if(!buf) {
         err = GRIB_OUT_OF_MEMORY;
@@ -526,8 +526,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     grib_buffer_replace(a, buf, buflen ,1,1);
 
 cleanup:
-    grib_context_buffer_free(a->parent->h->context,buf);
-    grib_context_buffer_free(a->parent->h->context,encoded);
+    grib_context_buffer_free(a->context,buf);
+    grib_context_buffer_free(a->context,encoded);
 
     if(err == GRIB_SUCCESS)
         err = grib_set_long_internal(a->parent->h,self->number_of_values, *len);
@@ -541,14 +541,14 @@ cleanup:
 
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_ERROR,
                      "grib_accessor_data_ccsds_packing: ccsds support not enabled.");
     return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_ERROR,
                      "grib_accessor_data_ccsds_packing: ccsds support not enabled.");
     return GRIB_NOT_IMPLEMENTED;
 }

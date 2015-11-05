@@ -188,7 +188,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
     if(*len < rlen)
     {
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, " wrong size for %s it contains %d values ", a->name , rlen);
+        grib_context_log(a->context, GRIB_LOG_ERROR, " wrong size for %s it contains %d values ", a->name , rlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -231,7 +231,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 
     if(*len < 1)
     {
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name , 1 );
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name , 1 );
         len[0] = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -251,7 +251,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
         off = a->offset;
         ret = grib_encode_signed_long(a->parent->h->buffer->data, v ,  off,  a->length);
         if (ret == GRIB_SUCCESS) len[0] = 1;
-        if (*len > 1)  grib_context_log(a->parent->h->context, GRIB_LOG_WARNING, "grib_accessor_signed : Trying to pack %d values in a scalar %s, packing first value",  *len, a->name  );
+        if (*len > 1)  grib_context_log(a->context, GRIB_LOG_WARNING, "grib_accessor_signed : Trying to pack %d values in a scalar %s, packing first value",  *len, a->name  );
         len[0] = 1;
         return ret;
     }
@@ -260,7 +260,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 
     buflen = *len*a->length;
 
-    buf = (unsigned char*)grib_context_malloc(a->parent->h->context,buflen);
+    buf = (unsigned char*)grib_context_malloc(a->context,buflen);
 
     for(i=0; i < *len;i++){
         grib_encode_signed_long(buf, val[i] ,  off,  a->length);
@@ -273,7 +273,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     else
         *len = 0;
 
-    grib_context_free(a->parent->h->context,buf);
+    grib_context_free(a->context,buf);
     return ret;
 }
 

@@ -241,7 +241,7 @@ static int unpack_string (grib_accessor* a, char* val, size_t *len)
     slen = strlen(p) +1;
     if(*len < slen)
     {
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Variable unpack_string Wrong size for %s it is %d bytes big (len=%d)", a->name , slen ,*len);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Variable unpack_string Wrong size for %s it is %d bytes big (len=%d)", a->name , slen ,*len);
         *len = slen;
         return GRIB_BUFFER_TOO_SMALL;
     }
@@ -287,7 +287,7 @@ static int compare(grib_accessor* a,grib_accessor* b)
 
     if (alen != blen) return GRIB_COUNT_MISMATCH;
 
-    aval=(char*)grib_context_malloc(a->parent->h->context,alen*sizeof(char));
+    aval=(char*)grib_context_malloc(a->context,alen*sizeof(char));
     bval=(char*)grib_context_malloc(b->parent->h->context,blen*sizeof(char));
 
     grib_unpack_string(a,aval,&alen);
@@ -296,7 +296,7 @@ static int compare(grib_accessor* a,grib_accessor* b)
     retval = GRIB_SUCCESS;
     if (!aval || !bval || grib_inline_strcmp(aval,bval)) retval = GRIB_STRING_VALUE_MISMATCH;
 
-    grib_context_free(a->parent->h->context,aval);
+    grib_context_free(a->context,aval);
     grib_context_free(b->parent->h->context,bval);
 
     return retval;

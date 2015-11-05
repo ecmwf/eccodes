@@ -122,6 +122,7 @@ void grib_section_delete ( grib_context   *c, grib_section* b )
 
     grib_empty_section ( c,b );
     grib_context_free ( c,b->block );
+    /* printf("++++ deleted %p\n",b); */
     grib_context_free ( c,b );
 }
 

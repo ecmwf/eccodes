@@ -209,7 +209,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   }
 
   if(number_of_values > 0){
-    coded_vals = (double*)grib_context_malloc(a->parent->h->context,number_of_values*sizeof(double));
+    coded_vals = (double*)grib_context_malloc(a->context,number_of_values*sizeof(double));
 
     if(coded_vals == NULL)
       return GRIB_OUT_OF_MEMORY;
@@ -226,7 +226,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 
   *len =  number_of_points;
 
-  grib_context_free(a->parent->h->context,coded_vals);
+  grib_context_free(a->context,coded_vals);
   return err;
 }
 
@@ -256,11 +256,11 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
 
   if((err = grib_get_double_internal(a->parent->h, self->missing_value, &miss_values)) != GRIB_SUCCESS)
   {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_class_bitmap : pack_double : Cannot unpack %s err=%d ",self->missing_value,err);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_class_bitmap : pack_double : Cannot unpack %s err=%d ",self->missing_value,err);
     return err;
   }
 
-  buf = grib_context_malloc_clear(a->parent->h->context,tlen);
+  buf = grib_context_malloc_clear(a->context,tlen);
   if(!buf) return GRIB_OUT_OF_MEMORY;
   pos=0;
   for(i=0;i<*len;i++)
@@ -274,15 +274,15 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
   }
 
   if((err = grib_set_long_internal(a->parent->h, self->unusedBits,tlen*8 - *len )) != GRIB_SUCCESS) {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_class_bitmap : pack_double : Cannot pack %s err=%d ",self->unusedBits,err);
-    grib_context_free(a->parent->h->context,buf);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_class_bitmap : pack_double : Cannot pack %s err=%d ",self->unusedBits,err);
+    grib_context_free(a->context,buf);
     return err;
   }
 
 
   grib_buffer_replace(a, buf, tlen,1,1);
 
-  grib_context_free(a->parent->h->context,buf);
+  grib_context_free(a->context,buf);
 
   return GRIB_SUCCESS;
 }

@@ -160,7 +160,7 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
   int ret=0;
   size_t size=0;
   double* values;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
   grib_handle* h=a->parent->h;
   grib_accessor_gds_is_present* self = (grib_accessor_gds_is_present*)a;
 

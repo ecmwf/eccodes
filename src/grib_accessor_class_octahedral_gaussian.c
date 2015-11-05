@@ -165,7 +165,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     long* pl=NULL; /* pl array */
     size_t plsize=0, i=0, mid=0;
 
-    grib_context* c=a->parent->h->context;
+    grib_context* c=a->context;
 
     if((ret = grib_get_long_internal(a->parent->h, self->N,&N)) != GRIB_SUCCESS)
         return ret;

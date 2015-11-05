@@ -155,7 +155,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 
 	if(*len < 1)
 	{
-		grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_bit : unpack_long : Wrong size for %s it contains %d values ", a->name , 1 );
+		grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit : unpack_long : Wrong size for %s it contains %d values ", a->name , 1 );
 		*len = 0;
 		return GRIB_ARRAY_TOO_SMALL;
 	}
@@ -181,7 +181,7 @@ static int    pack_long   (grib_accessor* a, const long *val, size_t *len)
 	unsigned char *mdata = 0;
 	if(*len < 1)
 	{
-		grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_bit : pack_long : At least one value to pack for %s", a->name );
+		grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit : pack_long : At least one value to pack for %s", a->name );
 		*len = 0;
 		return GRIB_ARRAY_TOO_SMALL;
 	}
@@ -189,7 +189,7 @@ static int    pack_long   (grib_accessor* a, const long *val, size_t *len)
 	owner = grib_find_accessor(a->parent->h,ac->owner);
 
 	if(!owner){
-		grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_bit : Cannot get the owner %s for computing the bit value of %s ",ac->owner, a->name);
+		grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit : Cannot get the owner %s for computing the bit value of %s ",ac->owner, a->name);
 		*len = 0;
 		return GRIB_NOT_FOUND;
 	}

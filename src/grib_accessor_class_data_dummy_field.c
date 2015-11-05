@@ -220,18 +220,18 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     buflen = (1+((bits_per_value*n_vals)/8))*sizeof(unsigned char);
 
-    buf = (unsigned char*)grib_context_malloc_clear(a->parent->h->context,buflen);
+    buf = (unsigned char*)grib_context_malloc_clear(a->context,buflen);
     if (!buf) return GRIB_OUT_OF_MEMORY;
 
     half_byte = (buflen*8)-((*len)*bits_per_value);
 
     if((err = grib_set_long_internal(a->parent->h,self->half_byte, half_byte)) != GRIB_SUCCESS){
-        grib_context_free(a->parent->h->context,buf);
+        grib_context_free(a->context,buf);
         return err;
     }
     grib_buffer_replace(a, buf, buflen,1,1);
 
-    grib_context_free(a->parent->h->context,buf);
+    grib_context_free(a->context,buf);
 
     return GRIB_SUCCESS;
 
@@ -245,7 +245,7 @@ static int value_count(grib_accessor* a,long* numberOfPoints)
 
     if((err = grib_get_long_internal(a->parent->h,self->numberOfPoints, numberOfPoints))
             != GRIB_SUCCESS) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"unable to get count of %s (%s)",a->name,grib_get_error_message(err));
+        grib_context_log(a->context,GRIB_LOG_ERROR,"unable to get count of %s (%s)",a->name,grib_get_error_message(err));
     }
 
     return err;

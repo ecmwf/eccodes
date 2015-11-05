@@ -164,7 +164,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
   size_t size=0;
   int ret=0;
   grib_accessor_bits_per_value* self= (grib_accessor_bits_per_value*)a;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
   grib_handle* h=a->parent->h;
 
   if ( (ret=grib_get_size(h,self->values,&size)) != GRIB_SUCCESS) return ret;

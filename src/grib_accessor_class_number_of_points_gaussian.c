@@ -184,7 +184,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     long ilon_first=0,ilon_last=0;
 
     grib_accessor_number_of_points_gaussian* self = (grib_accessor_number_of_points_gaussian*)a;
-    grib_context* c=a->parent->h->context;
+    grib_context* c=a->context;
 
     if((ret = grib_get_long_internal(a->parent->h, self->ni,&ni)) != GRIB_SUCCESS)
         return ret;
@@ -215,7 +215,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
         if((ret = grib_get_double_internal(a->parent->h, self->lon_last,&lon_last)) != GRIB_SUCCESS)
             return ret;
 
-        lats=(double*)grib_context_malloc(a->parent->h->context,sizeof(double)*order*2);
+        lats=(double*)grib_context_malloc(a->context,sizeof(double)*order*2);
         if((ret = grib_get_gaussian_latitudes(order, lats)) != GRIB_SUCCESS)
             return ret;
 

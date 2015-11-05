@@ -203,7 +203,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   if(*len < nvals)
     return GRIB_ARRAY_TOO_SMALL;
 
-  code=grib_ieee_decode_array(a->parent->h->context,buf,nvals,bytes,val);
+  code=grib_ieee_decode_array(a->context,buf,nvals,bytes,val);
 
   *len = nvals;
 
@@ -255,7 +255,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
   bufsize = bytes*inlen;
 
-  buffer = (unsigned char*)grib_context_malloc(a->parent->h->context, bufsize);
+  buffer = (unsigned char*)grib_context_malloc(a->context, bufsize);
 
   if(!buffer)
   {
@@ -263,7 +263,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     goto clean_up;
   }
 
-  code=grib_ieee_encode_array(a->parent->h->context,values,inlen,bytes,buffer);
+  code=grib_ieee_encode_array(a->context,values,inlen,bytes,buffer);
 
 clean_up:
   if(free_buffer) free(buffer);
@@ -271,7 +271,7 @@ clean_up:
 
   grib_buffer_replace(a, buffer, bufsize,1,1);
 
-  grib_context_buffer_free(a->parent->h->context,buffer);
+  grib_context_buffer_free(a->context,buffer);
 
   code = grib_set_long(a->parent->h,self->number_of_values, inlen);
   if(code==GRIB_READ_ONLY) code=0;
@@ -322,7 +322,7 @@ static int  unpack_double_element(grib_accessor* a, size_t idx, double* val) {
   nvals = 1;
   buf+=pos;
   
-  ret=grib_ieee_decode_array(a->parent->h->context,buf,nvals,bytes,val);
+  ret=grib_ieee_decode_array(a->context,buf,nvals,bytes,val);
 
   return ret;
 }

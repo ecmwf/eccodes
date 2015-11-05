@@ -146,7 +146,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
   a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
 
   self->number_of_elements=6;
-  self->v=(double*)grib_context_malloc(a->parent->h->context,
+  self->v=(double*)grib_context_malloc(a->context,
                   sizeof(double)*self->number_of_elements);
 
   a->length=0;
@@ -229,7 +229,7 @@ static int compare(grib_accessor* a, grib_accessor* b) {
 
   if (alen != blen) return GRIB_COUNT_MISMATCH;
 
-  aval=(double*)grib_context_malloc(a->parent->h->context,alen*sizeof(double));
+  aval=(double*)grib_context_malloc(a->context,alen*sizeof(double));
   bval=(double*)grib_context_malloc(b->parent->h->context,blen*sizeof(double));
 
   b->dirty=1;
@@ -243,7 +243,7 @@ static int compare(grib_accessor* a, grib_accessor* b) {
     alen--;
   }
 
-  grib_context_free(a->parent->h->context,aval);
+  grib_context_free(a->context,aval);
   grib_context_free(b->parent->h->context,bval);
 
   return retval;

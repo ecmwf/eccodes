@@ -301,7 +301,7 @@ static void computeDelayedReplication(grib_accessor_apply_operators* self,
 
 static int apply_operators(grib_accessor* a) {
 	grib_accessor_apply_operators* self = (grib_accessor_apply_operators*)a;
-	grib_context* c=a->parent->h->context;
+	grib_context* c=a->context;
 	grib_handle* h=a->parent->h;
   int useDefinedBitmap;
 	long* descriptors=0;
@@ -617,14 +617,14 @@ static int unpack_string_array (grib_accessor* a, char** val, size_t *len)
   grib_accessor_apply_operators* self = (grib_accessor_apply_operators*)a;
   int ret=0;
   int i=0;
-  grib_context* c=a->parent->h->context; 
+  grib_context* c=a->context; 
 
   ret=apply_operators(a);
   if (ret) return ret;
 
   if(*len < self->expandedAOSize)
   {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_ERROR,
 		    " wrong size (%ld) for %s it contains %d values ",*len, a->name , self->expandedAOSize);
     *len = 0;
     return GRIB_ARRAY_TOO_SMALL;
@@ -633,25 +633,25 @@ static int unpack_string_array (grib_accessor* a, char** val, size_t *len)
   *len = self->expandedAOSize;
   switch (self->index) {
     case 0:
-            long_to_string(a->parent->h->context,self->expandedAO,self->expandedAOSize,val);
+            long_to_string(a->context,self->expandedAO,self->expandedAOSize,val);
             break;
     case 1:
-            long_to_string(a->parent->h->context,self->scaleAO,self->expandedAOSize,val);
+            long_to_string(a->context,self->scaleAO,self->expandedAOSize,val);
             break;
     case 2:
-            double_to_string(a->parent->h->context,self->referenceAO,self->expandedAOSize,val);
+            double_to_string(a->context,self->referenceAO,self->expandedAOSize,val);
             break;
     case 3:
-            long_to_string(a->parent->h->context,self->widthAO,self->expandedAOSize,val);
+            long_to_string(a->context,self->widthAO,self->expandedAOSize,val);
             break;
     case 4:
-            long_to_string(a->parent->h->context,self->bitmapNumber,self->expandedAOSize,val);
+            long_to_string(a->context,self->bitmapNumber,self->expandedAOSize,val);
             break;
     case 5:
-            long_to_string(a->parent->h->context,self->associatedBitmapNumber,self->expandedAOSize,val);
+            long_to_string(a->context,self->associatedBitmapNumber,self->expandedAOSize,val);
             break;
     case 6:
-            long_to_string(a->parent->h->context,self->associatedBitmapIndex,self->expandedAOSize,val);
+            long_to_string(a->context,self->associatedBitmapIndex,self->expandedAOSize,val);
             break;
     case 7:
           for (i=0;i<self->expandedAOSize;i++)
@@ -670,7 +670,7 @@ static int unpack_string_array (grib_accessor* a, char** val, size_t *len)
             val[i]=grib_context_strdup(c,self->units[i]);
           break;
     case 11:
-            long_to_string(a->parent->h->context,self->associatedInfoNumber,self->expandedAOSize,val);
+            long_to_string(a->context,self->associatedInfoNumber,self->expandedAOSize,val);
             break;
 	default:
           Assert(0);
@@ -690,7 +690,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 
   if(*len < self->expandedAOSize)
   {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_ERROR,
 		    " wrong size (%ld) for %s it contains %d values ",*len, a->name , self->expandedAOSize);
     *len = 0;
     return GRIB_ARRAY_TOO_SMALL;
@@ -740,7 +740,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
 
   if(*len < self->expandedAOSize)
   {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_ERROR,
 		    " wrong size (%ld) for %s it contains %d values ",*len, a->name , self->expandedAOSize);
     *len = 0;
     return GRIB_ARRAY_TOO_SMALL;
@@ -799,7 +799,7 @@ static int value_count(grib_accessor* a,long* rlen)
   ret=apply_operators(a);
 
   if (ret) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+    grib_context_log(a->context,GRIB_LOG_ERROR,
 		    "%s unable to compute size",a->name);
 		    return ret;
   }

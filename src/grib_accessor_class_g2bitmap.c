@@ -172,7 +172,7 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
        != GRIB_SUCCESS)
 		return err;
 
-	buf = (unsigned char*)grib_context_malloc_clear(a->parent->h->context,tlen);
+	buf = (unsigned char*)grib_context_malloc_clear(a->context,tlen);
 	if(!buf) return GRIB_OUT_OF_MEMORY;
 	pos=0;
 	for(i=0;i<*len;i++)
@@ -186,13 +186,13 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
 	}
 
 	if((err = grib_set_long_internal(a->parent->h, self->numberOfValues,*len )) != GRIB_SUCCESS) {
-		grib_context_free(a->parent->h->context,buf);
+		grib_context_free(a->context,buf);
 		return err;
 	}
 
 	grib_buffer_replace(a, buf, tlen,1,1); 
 
-	grib_context_free(a->parent->h->context,buf);
+	grib_context_free(a->context,buf);
 
 	return GRIB_SUCCESS;
 }

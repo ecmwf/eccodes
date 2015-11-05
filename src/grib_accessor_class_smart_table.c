@@ -469,12 +469,12 @@ static int get_table_codes(grib_accessor* a)
 
   err=grib_get_size(a->parent->h,self->values,&size);
   if (err) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+    grib_context_log(a->context,GRIB_LOG_ERROR,
         "unable to get size of %s",a->name);
     return err;
   }
 
-  v=(long*)grib_context_malloc_clear(a->parent->h->context,size*sizeof(long));
+  v=(long*)grib_context_malloc_clear(a->context,size*sizeof(long));
 
   grib_get_long_array(a->parent->h,self->values,v,&size);
 
@@ -482,14 +482,14 @@ static int get_table_codes(grib_accessor* a)
   for (i=0;i<size;i++) {
     if (v[i] < table_size) count++;
   }
-  if (self->tableCodes) grib_context_free(a->parent->h->context,self->tableCodes);
-  self->tableCodes=(long*)grib_context_malloc_clear(a->parent->h->context,count*sizeof(long));
+  if (self->tableCodes) grib_context_free(a->context,self->tableCodes);
+  self->tableCodes=(long*)grib_context_malloc_clear(a->context,count*sizeof(long));
   j=0;
   for (i=0;i<size;i++) {
     if (v[i] < table_size) self->tableCodes[j++]=v[i];
   }
 
-  grib_context_free(a->parent->h->context,v);
+  grib_context_free(a->context,v);
 
   self->tableCodesSize=count;
   self->dirty=0;
@@ -518,7 +518,7 @@ static void destroy(grib_context* context,grib_accessor* a)
 	grib_context_free(context, a->vvalue);
 	a->vvalue=NULL;
     }
-    if (self->tableCodes) grib_context_free(a->parent->h->context,self->tableCodes);
+    if (self->tableCodes) grib_context_free(a->context,self->tableCodes);
 
 }
 

@@ -165,7 +165,7 @@ static int pack_double   (grib_accessor* a, const double* val, size_t *len)
 
     if(*len < 1)
     {
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, " wrong size for %s it pack at least 1 values ", a->name , rlen );
+        grib_context_log(a->context, GRIB_LOG_ERROR, " wrong size for %s it pack at least 1 values ", a->name , rlen );
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -173,14 +173,14 @@ static int pack_double   (grib_accessor* a, const double* val, size_t *len)
     if (rlen == 1){
         off = a->offset*8;
         ret =  grib_encode_unsigned_long(a->parent->h->buffer->data,grib_ieee_to_long(val[0]), &off,  32);
-        if (*len > 1)  grib_context_log(a->parent->h->context, GRIB_LOG_WARNING, "grib_accessor_unsigned : Trying to pack %d values in a scalar %s, packing first value",  *len, a->name  );
+        if (*len > 1)  grib_context_log(a->context, GRIB_LOG_WARNING, "grib_accessor_unsigned : Trying to pack %d values in a scalar %s, packing first value",  *len, a->name  );
         if (ret == GRIB_SUCCESS) len[0] = 1;
         return ret;
     }
 
     buflen = rlen*4;
 
-    buf = (unsigned char*)grib_context_malloc(a->parent->h->context,buflen);
+    buf = (unsigned char*)grib_context_malloc(a->context,buflen);
 
     for(i=0; i < rlen;i++){
         grib_encode_unsigned_longb(buf,grib_ieee_to_long(val[i]), &off,  32);
@@ -192,7 +192,7 @@ static int pack_double   (grib_accessor* a, const double* val, size_t *len)
     else
         *len = 0;
 
-    grib_context_free(a->parent->h->context,buf);
+    grib_context_free(a->context,buf);
 
     return ret;
 }
@@ -209,7 +209,7 @@ static int unpack_double   (grib_accessor* a, double* val, size_t *len)
 
     if(*len < rlen)
     {
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, " wrong size (%ld) for %s it contains %d values ", *len,a->name , rlen);
+        grib_context_log(a->context, GRIB_LOG_ERROR, " wrong size (%ld) for %s it contains %d values ", *len,a->name , rlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }

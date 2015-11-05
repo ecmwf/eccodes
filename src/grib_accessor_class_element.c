@@ -153,7 +153,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
   int ret = 0;
   size_t size=0;
   long* ar=NULL;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   if(*len < 1){
     ret = GRIB_ARRAY_TOO_SMALL;
@@ -186,7 +186,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
   int ret = 0;
   size_t size=0;
   long* ar=NULL;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   if(*len < 1){
     ret = GRIB_ARRAY_TOO_SMALL;

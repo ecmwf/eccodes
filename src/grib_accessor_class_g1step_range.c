@@ -322,7 +322,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
         if (error_on_units) {
             grib_get_long_internal(a->parent->h,self->unit,&unit);
             grib_set_long_internal(a->parent->h,self->step_unit,unit);
-            grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+            grib_context_log(a->context,GRIB_LOG_ERROR,
                     "unable to represent the step in %s\n                    Hint: try changing the step units",
                     step_unit_string);
         }
@@ -375,7 +375,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
         }
     }
     else {
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR, "Unknown stepType=[%s] timeRangeIndicator=[%ld]",stepType,timeRangeIndicator);
+        grib_context_log(a->context,GRIB_LOG_ERROR, "Unknown stepType=[%s] timeRangeIndicator=[%ld]",stepType,timeRangeIndicator);
         return GRIB_NOT_IMPLEMENTED;
     }
 

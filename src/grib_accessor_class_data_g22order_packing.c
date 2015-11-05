@@ -472,7 +472,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
      fprintf(stdout," orderOfSpatialDifferencing = %d\n", orderOfSpatialDifferencing);
      fprintf(stdout,"\n****************************************\n");
      */
-    sec_val     =   (unsigned long*)grib_context_malloc(a->parent->h->context,(n_vals)*sizeof(unsigned long));
+    sec_val     =   (unsigned long*)grib_context_malloc(a->context,(n_vals)*sizeof(unsigned long));
     if (sec_val) memset(sec_val, 0, (n_vals)*sizeof(unsigned long)); /* See SUP-718 */
 
     buf_ref     =   buf + a->offset ;
@@ -526,7 +526,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
         bias  =  grib_decode_signed_longb(buf_ref, &ref_p, numberOfOctetsExtraDescriptors*8);
 
-        de_spatial_difference (a->parent->h->context, sec_val, n_vals, orderOfSpatialDifferencing, bias);
+        de_spatial_difference (a->context, sec_val, n_vals, orderOfSpatialDifferencing, bias);
     }
 
     binary_s  = grib_power(binary_scale_factor,2);
@@ -535,7 +535,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     for(i=0;i < n_vals;i++)
         val[i] = (double) ((((double)sec_val[i])*binary_s)+reference_value)*decimal_s;
 
-    grib_context_free(a->parent->h->context,sec_val);
+    grib_context_free(a->context,sec_val);
     return err;
 }
 
@@ -622,7 +622,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     /*     calculation of integer array   */
     sec_val  = NULL;
-    sec_val  = (unsigned long*)grib_context_malloc(a->parent->h->context,(n_vals)*sizeof(long));
+    sec_val  = (unsigned long*)grib_context_malloc(a->context,(n_vals)*sizeof(long));
     if(!sec_val) return GRIB_OUT_OF_MEMORY;
 
     d = grib_power(decimal_scale_factor,10) ;
@@ -641,7 +641,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     if (grib_get_nearest_smaller_value(a->parent->h,self->reference_value,min,&reference_value)
             !=GRIB_SUCCESS) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+        grib_context_log(a->context,GRIB_LOG_ERROR,
                 "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
         exit(GRIB_INTERNAL_ERROR);
     }
@@ -679,7 +679,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     buf_size  +=  (vals_p/8)  + (vals_p%8?1:0);
 
-    buf = (unsigned char*)grib_context_malloc_clear(a->parent->h->context,buf_size);
+    buf = (unsigned char*)grib_context_malloc_clear(a->context,buf_size);
 
     buf_ref    = buf;
     buf_width  = buf_ref + (7+(numberOfGroupsOfDataValues*bits_per_value))/8;
@@ -709,8 +709,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
      */
 
     grib_buffer_replace(a, buf,buf_size,1,1);
-    grib_context_free  (a->parent->h->context,buf);
-    grib_context_free  (a->parent->h->context,sec_val);
+    grib_context_free  (a->context,buf);
+    grib_context_free  (a->context,sec_val);
 
     if((err = grib_set_long_internal(a->parent->h,self->bits_per_value,bits_per_value )) != GRIB_SUCCESS)  return err;
     if((err = grib_set_double_internal(a->parent->h,self->reference_value,reference_value )) != GRIB_SUCCESS)  return err;
@@ -749,11 +749,11 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     if (err) return err;
     if (idx > size) return GRIB_INVALID_NEAREST;
 
-    values=(double*)grib_context_malloc_clear(a->parent->h->context,size*sizeof(double));
+    values=(double*)grib_context_malloc_clear(a->context,size*sizeof(double));
     err=grib_get_double_array(a->parent->h,"codedValues",values,&size);
     if (err) return err;
     *val=values[idx];
-    grib_context_free(a->parent->h->context,values);
+    grib_context_free(a->context,values);
     return err;
 }
 
