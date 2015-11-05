@@ -160,7 +160,6 @@ char* get_condition(const char* name,codes_condition* condition)
     char* str=NULL;
     char* end=NULL;
     long lval;
-    double dval;
     grib_context* c=grib_context_get_default();
 
     condition->rightType=GRIB_TYPE_UNDEFINED;
@@ -180,6 +179,7 @@ char* get_condition(const char* name,codes_condition* condition)
     end=NULL;
     lval=strtol(str,&end,10);
     if (*end != 0) {
+        double dval;
         dval=strtod(str,&end);
         if (*end != 0) {
             condition->rightType=GRIB_TYPE_DOUBLE;
@@ -258,13 +258,13 @@ static void search_from_accessors_list(grib_accessors_list* al,grib_accessors_li
     while (al && al!=end && al->accessor) {
         if (!strcmp(al->accessor->name,accessor_name)) {
             if (attribute_name[0]) {
-              accessor_result=grib_accessor_get_attribute(al->accessor,attribute_name);
-              grib_context_free(al->accessor->context,accessor_name);
+                accessor_result=grib_accessor_get_attribute(al->accessor,attribute_name);
+                grib_context_free(al->accessor->context,accessor_name);
             } else {
-              accessor_result=al->accessor;
+                accessor_result=al->accessor;
             }
             if (accessor_result)
-              grib_accessors_list_push(result,accessor_result);
+                grib_accessors_list_push(result,accessor_result);
         }
         al=al->next;
     }
@@ -289,16 +289,14 @@ static void search_accessors_list_by_condition(grib_accessors_list* al,const cha
         }
         al=al->next;
     }
-
 }
 
 static grib_accessors_list* search_by_condition(grib_handle* h,const char* name,codes_condition* condition)
 {
-    grib_accessors_list* al;
     grib_accessors_list* result=NULL;
     grib_accessor* data=search_and_cache(h,"dataAccessors",0);
     if (data && condition->left) {
-        al=accessor_bufr_data_array_get_dataAccessors(data);
+        grib_accessors_list* al=accessor_bufr_data_array_get_dataAccessors(data);
         if (!al) return NULL;
         result=(grib_accessors_list*)grib_context_malloc_clear(al->accessor->context,sizeof(grib_accessors_list));
         search_accessors_list_by_condition(al,name,condition,result);
@@ -321,12 +319,12 @@ static void grib_find_same_and_push(grib_accessors_list* al,grib_accessor* a)
 
 grib_accessors_list* grib_find_accessors_list(grib_handle* h,const char* name)
 {
-    char* str=NULL;
     grib_accessors_list* al=NULL;
-    codes_condition* condition=NULL;
     grib_accessor* a=NULL;
 
     if (name[0]=='/') {
+        char* str=NULL;
+        codes_condition* condition=NULL;
         condition=(codes_condition*)grib_context_malloc_clear(h->context,sizeof(codes_condition));
         str=get_condition(name,condition);
         if (str) {
@@ -355,14 +353,13 @@ grib_accessors_list* grib_find_accessors_list(grib_handle* h,const char* name)
 
 static grib_accessor* search_and_cache(grib_handle* h, const char* name,const char *the_namespace)
 {
-    char* str=0;
     grib_accessor* a=NULL;
-    long rank;
 
     if (name[0]=='#') {
-      str=get_rank(name,&rank);
-      a=search_by_rank(h,str,the_namespace,rank);
-      grib_context_free(h->context,str);
+        long rank=0;
+        char* str = get_rank(name,&rank);
+        a=search_by_rank(h,str,the_namespace,rank);
+        grib_context_free(h->context,str);
     } else {
         a=_search_and_cache(h,name,the_namespace);
     }
@@ -451,7 +448,6 @@ grib_accessor* grib_find_attribute(grib_handle* h, const char* name,const char* 
 {
     grib_accessor* a = NULL;
     grib_accessor* act = NULL;
-    int id=0;
 
     if ((a = grib_find_accessor(h, name))==NULL) {
         *err=GRIB_NOT_FOUND;
@@ -469,15 +465,13 @@ grib_accessor* grib_find_attribute(grib_handle* h, const char* name,const char* 
 grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name)
 {
     grib_accessor* a = NULL;
-    char* p=NULL;
-    char* basename=NULL;
-    char name_space[1024];
-    int i=0,len=0;
-
-    p=(char*)name;
+    char* p = (char*)name;
 
     while ( *p != '.' && *p != '\0' ) p++;
     if ( *p == '.' ) {
+        int i=0,len=0;
+        char* basename=NULL;
+        char name_space[1024];
         basename=p+1;
         p--;
         i=0;
