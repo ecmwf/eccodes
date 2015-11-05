@@ -451,7 +451,7 @@ int grib_accessor_notify_change(grib_accessor* a,grib_accessor* changed)
             return c->notify_change(a,changed);
         c = c->super ? *(c->super) : NULL;
     }
-    printf("notify_change not implemented for %s %s\n",a->cclass->name,a->name);
+    if (a) printf("notify_change not implemented for %s %s\n",a->cclass->name, a->name);
     Assert(0);
     return 0;
 }

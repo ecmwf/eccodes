@@ -40,8 +40,7 @@ static int grib2_has_next_section ( unsigned char* msgbegin,size_t msglen,unsign
 static void grib2_build_message ( grib_context* context,unsigned char* sections[],size_t sections_len[],void** data,size_t* msglen );
 static grib_multi_support* grib_get_multi_support ( grib_context* c, FILE* f );
 static grib_multi_support* grib_multi_support_new ( grib_context* c );
-static grib_handle* grib_handle_new_multi ( grib_context* c,unsigned char** idata,
-		size_t *buflen,int* error );
+static grib_handle* grib_handle_new_multi ( grib_context* c,unsigned char** idata, size_t *buflen,int* error );
 
 grib_section* grib_section_create ( grib_handle* h,grib_accessor* owner )
 {
@@ -236,8 +235,8 @@ grib_handle* grib_handle_new_from_samples ( grib_context* c, const char* name )
     c->handle_total_count=0;
 
     /*
-	   g = grib_internal_template(c,name);
-	   if(g) return g;
+       g = grib_internal_template(c,name);
+       if(g) return g;
      */
     if (c->debug) {
         printf("ECCODES DEBUG: grib_handle_new_from_samples '%s'\n", name);
@@ -470,7 +469,7 @@ static grib_handle* grib_handle_new_multi ( grib_context* c,unsigned char** data
                 {
                     if ( !gm->bitmap_section )
                     {
-                        grib_context_log ( gl->context, GRIB_LOG_ERROR,
+                        grib_context_log ( c, GRIB_LOG_ERROR,
                                 "grib_handle_new_from_file : cannot create handle, missing bitmap\n" );
                         return NULL;
                     }
@@ -628,7 +627,7 @@ static grib_handle* grib_handle_new_from_file_multi ( grib_context* c, FILE* f,i
                 {
                     if ( !gm->bitmap_section )
                     {
-                        grib_context_log ( gl->context, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle, missing bitmap\n" );
+                        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle, missing bitmap\n" );
                         grib_context_free ( c,data );
                         return NULL;
                     }
