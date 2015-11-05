@@ -34,13 +34,17 @@ else
     export ECCODES_SAMPLES_PATH
     tools_dir=$cpath/tools/
     examples_dir=$cpath/examples/C/
+
+#tools_dir="valgrind --error-exitcode=1 -q $cpath/tools/"
+#examples_dir="valgrind --error-exitcode=1 -q $cpath/examples/C/"
+
     data_dir=$cpath/data
   else
     echo "Skipping test $0"
     exit
   fi
 
-  cd ${examples_dir}
+  cd "$cpath/examples/C"
 
   if [ -z "${GRIB_API_INCLUDE}" ]
   then 

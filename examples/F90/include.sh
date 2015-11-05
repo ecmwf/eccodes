@@ -35,12 +35,16 @@ else
     examples_dir=$cpath/examples/F90/
     data_dir=$cpath/data
     samples_dir=$cpath/samples
+
+#tools_dir="valgrind --error-exitcode=1 -q $cpath/tools/"
+#examples_dir="valgrind --error-exitcode=1 -q $cpath/examples/F90/"
+
   else
     echo "Skipping test $0"
     exit
   fi
 
-  cd ${examples_dir}
+  cd "$cpath/examples/F90"
 
   if [ -z "${GRIB_API_INCLUDE}" ]
   then 
