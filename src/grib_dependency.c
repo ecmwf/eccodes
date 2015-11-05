@@ -15,7 +15,7 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 
-grib_handle* grib_handle_of(grib_accessor* a)
+grib_handle* grib_handle_of_accessor(grib_accessor* a)
 {
   if (a->parent==NULL) {
     return a->h;

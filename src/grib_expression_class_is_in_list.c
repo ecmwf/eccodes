@@ -230,7 +230,7 @@ static void  add_dependency(grib_expression* g, grib_accessor* observer){
 
   if(!observed)
   {
-    /* grib_context_log(observer->parent->h->context, GRIB_LOG_ERROR, */
+    /* grib_context_log(observer->context, GRIB_LOG_ERROR, */
          /* "Error in accessor_add_dependency: cannot find [%s]", e->name); */
        /* Assert(observed); */
     return;

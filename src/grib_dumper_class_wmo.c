@@ -556,7 +556,7 @@ static void print_offset(FILE* out,long begin,long theEnd) {
 static void print_hexadecimal(FILE* out,unsigned long flags,grib_accessor* a) {
   int i=0;
   unsigned long offset=0;
-  grib_handle* h=grib_handle_of(a);
+  grib_handle* h=grib_handle_of_accessor(a);
   if ((flags & GRIB_DUMP_FLAG_HEXADECIMAL) != 0 && a->length != 0) {
     fprintf(out," (");
     offset=a->offset;

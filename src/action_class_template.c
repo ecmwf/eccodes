@@ -211,16 +211,16 @@ static grib_action* reparse(grib_action* a,grib_accessor* acc,int *doit)
         char fname[1024];
         grib_recompose_name(acc->parent->h,NULL,self->arg,fname,1);
 
-        if ((fpath=grib_context_full_defs_path(acc->parent->h->context,fname))==NULL) {
+        if ((fpath=grib_context_full_defs_path(acc->context,fname))==NULL) {
             if (!self->nofail) {
-                grib_context_log(acc->parent->h->context,GRIB_LOG_ERROR,
+                grib_context_log(acc->context,GRIB_LOG_ERROR,
                         "Unable to find template %s from %s ",a->name,fname);
                 return NULL;
             } return a;
         }
 
         /* printf("REPARSE %s\n",fpath); */
-        return grib_parse_file(acc->parent->h->context, fpath);
+        return grib_parse_file(acc->context, fpath);
     }
 
     return NULL;

@@ -265,7 +265,7 @@ static grib_action* reparse(grib_action* a,grib_accessor* acc,int* doit)
     /* printf("reparse %s %s\n",a->name,acc->name); */
 
     if((ret=grib_expression_evaluate_long(acc->parent->h,self->expression,&lres)) != GRIB_SUCCESS)
-        grib_context_log(acc->parent->h->context,
+        grib_context_log(acc->context,
                 GRIB_LOG_ERROR,"if reparse  grib_expression_evaluate_long %s",
                 grib_get_error_message(ret));
 

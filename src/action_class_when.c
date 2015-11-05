@@ -202,7 +202,7 @@ static int notify_change_impl(grib_action* a, grib_accessor* observer,grib_acces
   {
     printf("LOOP detected...\n");
     printf("WHEN triggered by %s %ld\n",observed->name,lres);
-    grib_expression_print(observed->parent->h->context,self->expression,0);
+    grib_expression_print(observed->context,self->expression,0);
     printf("\n");
     return ret;
   }

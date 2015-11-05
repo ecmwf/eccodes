@@ -184,7 +184,7 @@ static grib_action* reparse(grib_action* a,grib_accessor* acc,int *doit)
 	long val = 0;
 
 	if ((ret=grib_expression_evaluate_long(acc->parent->h,self->expression,&val)) != GRIB_SUCCESS){
-		grib_context_log(acc->parent->h->context, GRIB_LOG_ERROR, " List %s creating %d values unable to evaluate long \n", acc->name, val );
+		grib_context_log(acc->context, GRIB_LOG_ERROR, " List %s creating %d values unable to evaluate long \n", acc->name, val );
 	}
 
 	*doit = (val != acc->loop);

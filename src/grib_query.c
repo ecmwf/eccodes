@@ -253,13 +253,13 @@ static void search_from_accessors_list(grib_accessors_list* al,grib_accessors_li
     char attribute_name[200]={0,};
     grib_accessor* accessor_result=0;
 
-    accessor_name=grib_split_name_attribute(al->accessor->parent->h->context,name,attribute_name);
+    accessor_name=grib_split_name_attribute(al->accessor->context,name,attribute_name);
 
     while (al && al!=end && al->accessor) {
         if (!strcmp(al->accessor->name,accessor_name)) {
             if (attribute_name[0]) {
               accessor_result=grib_accessor_get_attribute(al->accessor,attribute_name);
-              grib_context_free(al->accessor->parent->h->context,accessor_name);
+              grib_context_free(al->accessor->context,accessor_name);
             } else {
               accessor_result=al->accessor;
             }
@@ -300,7 +300,7 @@ static grib_accessors_list* search_by_condition(grib_handle* h,const char* name,
     if (data && condition->left) {
         al=accessor_bufr_data_array_get_dataAccessors(data);
         if (!al) return NULL;
-        result=(grib_accessors_list*)grib_context_malloc_clear(al->accessor->parent->h->context,sizeof(grib_accessors_list));
+        result=(grib_accessors_list*)grib_context_malloc_clear(al->accessor->context,sizeof(grib_accessors_list));
         search_accessors_list_by_condition(al,name,condition,result);
         if (!result->accessor) {
             grib_accessors_list_delete(h->context,result);

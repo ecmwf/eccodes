@@ -231,7 +231,7 @@ static int create_accessor( grib_section* p, grib_action* act,grib_loader *h)
     }
 
     if (x->parent->h->use_trie) {
-        id=grib_hash_keys_get_id(x->parent->h->context->keys,act->name);
+        id=grib_hash_keys_get_id(x->context->keys,act->name);
 
         if (x->parent->h->accessors[id] != x) {
             /*x->same=x->parent->h->accessors[id];*/

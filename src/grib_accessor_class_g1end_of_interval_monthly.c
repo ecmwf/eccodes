@@ -230,7 +230,7 @@ static int compare(grib_accessor* a, grib_accessor* b) {
   if (alen != blen) return GRIB_COUNT_MISMATCH;
 
   aval=(double*)grib_context_malloc(a->context,alen*sizeof(double));
-  bval=(double*)grib_context_malloc(b->parent->h->context,blen*sizeof(double));
+  bval=(double*)grib_context_malloc(b->context,blen*sizeof(double));
 
   b->dirty=1;
   a->dirty=1;
@@ -244,7 +244,7 @@ static int compare(grib_accessor* a, grib_accessor* b) {
   }
 
   grib_context_free(a->context,aval);
-  grib_context_free(b->parent->h->context,bval);
+  grib_context_free(b->context,bval);
 
   return retval;
 }

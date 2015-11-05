@@ -128,7 +128,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     int cols=9;
     long count=0;
     double missing_value = GRIB_MISSING_DOUBLE;
-    grib_handle* h=grib_handle_of(a);
+    grib_handle* h=grib_handle_of_accessor(a);
 
     grib_value_count(a,&count);
     size=count;
