@@ -141,9 +141,9 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
   grib_accessor_time* self = (grib_accessor_time*)a;
   int n = 0;
 
-  self->hour = grib_arguments_get_name(a->parent->h,c,n++);
-  self->minute    = grib_arguments_get_name(a->parent->h,c,n++);
-  self->second   = grib_arguments_get_name(a->parent->h,c,n++);
+  self->hour = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->minute    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->second   = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -160,11 +160,11 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
   long minute = 0;
   long second = 0;
 
-  if ((ret=grib_get_long_internal(a->parent->h, self->hour,&hour))!=GRIB_SUCCESS)
+  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->hour,&hour))!=GRIB_SUCCESS)
     return ret;
-  if ((ret=grib_get_long_internal(a->parent->h, self->minute,&minute))!=GRIB_SUCCESS)
+  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->minute,&minute))!=GRIB_SUCCESS)
     return ret;
-  if ((ret=grib_get_long_internal(a->parent->h, self->second,&second))!=GRIB_SUCCESS)
+  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->second,&second))!=GRIB_SUCCESS)
     return ret;
 
   /* We ignore the 'seconds' in our time calculation! */
@@ -206,11 +206,11 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
   minute  =  v % 100;
   second  =  0; /* We ignore the 'seconds' in our time calculation! */
 
-  if ((ret=grib_set_long_internal(a->parent->h,self->hour,hour))!=GRIB_SUCCESS)
+  if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->hour,hour))!=GRIB_SUCCESS)
     return ret;
-  if ((ret=grib_set_long_internal(a->parent->h,self->minute,minute))!=GRIB_SUCCESS)
+  if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->minute,minute))!=GRIB_SUCCESS)
     return ret;
-  if ((ret=grib_set_long_internal(a->parent->h,self->second,second))!=GRIB_SUCCESS)
+  if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->second,second))!=GRIB_SUCCESS)
     return ret;
 
   return GRIB_SUCCESS;

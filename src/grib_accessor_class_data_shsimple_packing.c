@@ -138,8 +138,8 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
   grib_accessor_data_shsimple_packing *self =(grib_accessor_data_shsimple_packing*)a;
 
-  self->coded_values  = grib_arguments_get_name(a->parent->h,args,0);
-  self->real_part        = grib_arguments_get_name(a->parent->h,args,1);
+  self->coded_values  = grib_arguments_get_name(grib_handle_of_accessor(a),args,0);
+  self->real_part        = grib_arguments_get_name(grib_handle_of_accessor(a),args,1);
   a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 
   a->length = 0;
@@ -163,13 +163,13 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
   if (*len ==0) return GRIB_NO_VALUES;
 
-  if((err = grib_set_double_internal(a->parent->h,self->real_part,*val)) != GRIB_SUCCESS)
+  if((err = grib_set_double_internal(grib_handle_of_accessor(a),self->real_part,*val)) != GRIB_SUCCESS)
     return err;
 
 
   val++;
 
-  if((err = grib_set_double_array_internal(a->parent->h,self->coded_values,val,coded_n_vals)) != GRIB_SUCCESS)
+  if((err = grib_set_double_array_internal(grib_handle_of_accessor(a),self->coded_values,val,coded_n_vals)) != GRIB_SUCCESS)
   return err;
 
 

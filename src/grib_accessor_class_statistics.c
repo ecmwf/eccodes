@@ -148,8 +148,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     grib_accessor_statistics* self = (grib_accessor_statistics*)a;
     int n = 0;
 
-    self->missing_value = grib_arguments_get_name(a->parent->h,c,n++);
-    self->values = grib_arguments_get_name(a->parent->h,c,n++);
+    self->missing_value = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->values = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
     a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
     a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
@@ -172,7 +172,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     double missing=0;
     size_t number_of_missing=0;
     grib_context* c=a->context;
-    grib_handle* h=a->parent->h;
+    grib_handle* h=grib_handle_of_accessor(a);
 
     if (!a->dirty) return GRIB_SUCCESS;
 
@@ -181,7 +181,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     grib_context_log(a->context,GRIB_LOG_DEBUG,
             "grib_accessor_statistics: computing statistics for %d values",size);
 
-    if((ret=grib_get_double(a->parent->h,self->missing_value,&missing))
+    if((ret=grib_get_double(grib_handle_of_accessor(a),self->missing_value,&missing))
             != GRIB_SUCCESS) return ret;
 
     values=(double*)grib_context_malloc_clear(c,size*sizeof(double));

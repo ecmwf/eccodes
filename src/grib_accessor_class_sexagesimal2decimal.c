@@ -163,7 +163,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
   double dd,mm=0,ss=0;
   int dd_sign=1;
 
-  err=grib_get_string(a->parent->h,self->key,buff,&size);
+  err=grib_get_string(grib_handle_of_accessor(a),self->key,buff,&size);
   if (err) return err;
   q=buff+self->start;
   if (self->length) q[length]=0;

@@ -141,8 +141,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 	grib_accessor_divdouble* self = (grib_accessor_divdouble*)a; 
 	int n = 0;
 
-	self->val = grib_arguments_get_name(a->parent->h,c,n++);
-	self->divisor = grib_arguments_get_double(a->parent->h,c,n++);
+	self->val = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+	self->divisor = grib_arguments_get_double(grib_handle_of_accessor(a),c,n++);
 }
 
 static int unpack_double   (grib_accessor* a, double* val, size_t *len)
@@ -159,7 +159,7 @@ static int unpack_double   (grib_accessor* a, double* val, size_t *len)
 	}
 
 
-	ret = grib_get_long_internal(a->parent->h, self->val, &ivalue);
+	ret = grib_get_long_internal(grib_handle_of_accessor(a), self->val, &ivalue);
 
 	value = ivalue;
 

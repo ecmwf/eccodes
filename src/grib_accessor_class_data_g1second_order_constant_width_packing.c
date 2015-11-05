@@ -183,22 +183,22 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
   grib_accessor_data_g1second_order_constant_width_packing *self =(grib_accessor_data_g1second_order_constant_width_packing*)a;
 
-  self->half_byte    = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->packingType    = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->ieee_packing    = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->precision    = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->widthOfFirstOrderValues    = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->N1 = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->N2 = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->numberOfGroups = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->numberOfSecondOrderPackedValues = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->extraValues = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->Ni = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->Nj = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->pl = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->jPointsAreConsecutive = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->bitmap = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->groupWidth = grib_arguments_get_name(a->parent->h,args,self->carg++);
+  self->half_byte    = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->packingType    = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->ieee_packing    = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->precision    = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->widthOfFirstOrderValues    = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->N1 = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->N2 = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->numberOfGroups = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->numberOfSecondOrderPackedValues = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->extraValues = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->Ni = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->Nj = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->pl = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->jPointsAreConsecutive = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->bitmap = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->groupWidth = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
   self->edition=1;
   a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 
@@ -210,7 +210,7 @@ static int value_count(grib_accessor* a,long* numberOfSecondOrderPackedValues)
   grib_accessor_data_g1second_order_constant_width_packing *self =(grib_accessor_data_g1second_order_constant_width_packing*)a;
   *numberOfSecondOrderPackedValues=0;
 
-  err=grib_get_long_internal(a->parent->h,self->numberOfSecondOrderPackedValues,numberOfSecondOrderPackedValues);
+  err=grib_get_long_internal(grib_handle_of_accessor(a),self->numberOfSecondOrderPackedValues,numberOfSecondOrderPackedValues);
 
   return err;
 
@@ -228,7 +228,7 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
   long pos=0;
   long widthOfFirstOrderValues=0;
   long jPointsAreConsecutive;
-  unsigned char* buf = (unsigned char*)a->parent->h->buffer->data;
+  unsigned char* buf = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
   long i,n;
   double reference_value;
   long binary_scale_factor;
@@ -238,37 +238,37 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
 
   buf += grib_byte_offset(a);
 
-  if((ret=grib_get_long_internal(a->parent->h,self->numberOfGroups,&numberOfGroups)) != GRIB_SUCCESS)
+  if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->numberOfGroups,&numberOfGroups)) != GRIB_SUCCESS)
          return ret;
 
-  if((ret=grib_get_long_internal(a->parent->h,self->jPointsAreConsecutive,&jPointsAreConsecutive)) != GRIB_SUCCESS)
+  if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->jPointsAreConsecutive,&jPointsAreConsecutive)) != GRIB_SUCCESS)
          return ret;
 
 	if (jPointsAreConsecutive) {
-	  if((ret=grib_get_long_internal(a->parent->h,self->Ni,&numberPerRow)) != GRIB_SUCCESS)
+	  if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->Ni,&numberPerRow)) != GRIB_SUCCESS)
          return ret;
 	} else {
-	  if((ret=grib_get_long_internal(a->parent->h,self->Nj,&numberPerRow)) != GRIB_SUCCESS)
+	  if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->Nj,&numberPerRow)) != GRIB_SUCCESS)
          return ret;
 	}
 
-  if((ret=grib_get_long_internal(a->parent->h,self->widthOfFirstOrderValues,&widthOfFirstOrderValues)) != GRIB_SUCCESS)
+  if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->widthOfFirstOrderValues,&widthOfFirstOrderValues)) != GRIB_SUCCESS)
          return ret;
 
-  if((ret=grib_get_long_internal(a->parent->h,self->binary_scale_factor,&binary_scale_factor)) != GRIB_SUCCESS)
+  if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->binary_scale_factor,&binary_scale_factor)) != GRIB_SUCCESS)
          return ret;
 
-  if((ret=grib_get_long_internal(a->parent->h,self->decimal_scale_factor,&decimal_scale_factor)) != GRIB_SUCCESS)
+  if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->decimal_scale_factor,&decimal_scale_factor)) != GRIB_SUCCESS)
          return ret;
 
-  if((ret=grib_get_double_internal(a->parent->h,self->reference_value,&reference_value)) != GRIB_SUCCESS)
+  if((ret=grib_get_double_internal(grib_handle_of_accessor(a),self->reference_value,&reference_value)) != GRIB_SUCCESS)
          return ret;
 
-  if((ret=grib_get_long_internal(a->parent->h,self->numberOfSecondOrderPackedValues,
+  if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->numberOfSecondOrderPackedValues,
   					&numberOfSecondOrderPackedValues)) != GRIB_SUCCESS)
          return ret;
 
-  if((ret=grib_get_long_internal(a->parent->h,self->groupWidth, &groupWidth)) != GRIB_SUCCESS)
+  if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->groupWidth, &groupWidth)) != GRIB_SUCCESS)
          return ret;
 
 	secondaryBitmap=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfSecondOrderPackedValues);

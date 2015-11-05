@@ -75,15 +75,15 @@ static void rebuild_hash_keys (grib_handle* h,grib_section* s)
         int i=0;
         int id=-1;
         const char *p;
-        Assert(h == a->parent->h);
+        Assert(h == grib_handle_of_accessor(a));
 
         while(i<MAX_ACCESSOR_NAMES && ((p = a->all_names[i]) != NULL)) {
             if(*p != '_')   {
                 id=grib_hash_keys_get_id(a->context->keys,p);
 
                 if (a->same != a && i==0) {
-                    a->same=a->parent->h->accessors[id];
-                    a->parent->h->accessors[id]=a;
+                    a->same=grib_handle_of_accessor(a)->accessors[id];
+                    grib_handle_of_accessor(a)->accessors[id]=a;
                     Assert(a->same != a);
                 }
 

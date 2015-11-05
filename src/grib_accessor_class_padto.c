@@ -142,7 +142,7 @@ static size_t preferred_size(grib_accessor* a,int from_handle)
 	long length=0;
 	long theEnd;
 
-	grib_expression_evaluate_long(a->parent->h,self->expression,&theEnd);
+	grib_expression_evaluate_long(grib_handle_of_accessor(a),self->expression,&theEnd);
 
 	length  = theEnd - a->offset;
 
@@ -156,7 +156,7 @@ static void init(grib_accessor* a, const long len, grib_arguments*arg )
 {
 	grib_accessor_padto* self = (grib_accessor_padto*)a;
 
-	self->expression  = grib_arguments_get_expression(a->parent->h, arg,0);
+	self->expression  = grib_arguments_get_expression(grib_handle_of_accessor(a), arg,0);
 	a->length         = preferred_size(a,1);
 }
 

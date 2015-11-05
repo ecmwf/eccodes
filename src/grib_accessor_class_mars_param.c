@@ -138,9 +138,9 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
 	int n=0;
 	grib_accessor_mars_param* self = (grib_accessor_mars_param*)a;
-	self->paramId= grib_arguments_get_name(a->parent->h,c,n++);
-	self->table= grib_arguments_get_name(a->parent->h,c,n++);
-	self->param= grib_arguments_get_name(a->parent->h,c,n++);
+	self->paramId= grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+	self->table= grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+	self->param= grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
 static int pack_string(grib_accessor* a, const char* val, size_t *len){
@@ -160,7 +160,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len){
 
 	paramId=table*1000+param;
 
-	return grib_set_long_internal(a->parent->h,self->paramId,paramId);
+	return grib_set_long_internal(grib_handle_of_accessor(a),self->paramId,paramId);
 #endif		
 }
 
@@ -173,17 +173,17 @@ static int    unpack_string(grib_accessor* a, char* val, size_t *len)
 	int ret=0;
 
 #if 1
-	if(self->table!=NULL && (ret = grib_get_long_internal(a->parent->h,self->table,&table)) != GRIB_SUCCESS) return ret;
-	if(self->param!=NULL && (ret = grib_get_long_internal(a->parent->h,self->param,&param)) != GRIB_SUCCESS) return ret;
+	if(self->table!=NULL && (ret = grib_get_long_internal(grib_handle_of_accessor(a),self->table,&table)) != GRIB_SUCCESS) return ret;
+	if(self->param!=NULL && (ret = grib_get_long_internal(grib_handle_of_accessor(a),self->param,&param)) != GRIB_SUCCESS) return ret;
 #else
 	{
 	long paramId=0;
-	grib_get_long(a->parent->h,self->paramId,&paramId);
+	grib_get_long(grib_handle_of_accessor(a),self->paramId,&paramId);
 
 	if (paramId==0 || (paramId < 4000 && paramId > 1000 )) {
-		if(self->table!=NULL && (ret = grib_get_long_internal(a->parent->h,self->table,&table))
+		if(self->table!=NULL && (ret = grib_get_long_internal(grib_handle_of_accessor(a),self->table,&table))
 				  != GRIB_SUCCESS) return ret;
-		if(self->param!=NULL && (ret = grib_get_long_internal(a->parent->h,self->param,&param))
+		if(self->param!=NULL && (ret = grib_get_long_internal(grib_handle_of_accessor(a),self->param,&param))
 				 != GRIB_SUCCESS) return ret;
 	} else if (paramId<1000) {
 		table=128;

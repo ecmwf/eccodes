@@ -197,7 +197,7 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
 			grib_context_log(h->context,GRIB_LOG_DEBUG, "Copying %d long(s) %d to %s",  len, lval[0], name);
 			if(ga->same)
 			{
-				ret = grib_set_long_array(ga->parent->h,ga->name,lval,len);
+				ret = grib_set_long_array(grib_handle_of_accessor(ga),ga->name,lval,len);
 
 				/* Allow for lists to be resized */
 				if((ret == GRIB_WRONG_ARRAY_SIZE || ret == GRIB_ARRAY_TOO_SMALL) && loader->list_is_resized)
@@ -235,7 +235,7 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
 			grib_context_log(h->context,GRIB_LOG_DEBUG, "Copying %d double(s) %g to %s",  len, dval[0], name);
 			if(ga->same)
 			{
-				ret = grib_set_double_array(ga->parent->h,ga->name,dval,len);
+				ret = grib_set_double_array(grib_handle_of_accessor(ga),ga->name,dval,len);
 
 				/* Allow for lists to be resized */
 				if((ret == GRIB_WRONG_ARRAY_SIZE || ret == GRIB_ARRAY_TOO_SMALL) && loader->list_is_resized)

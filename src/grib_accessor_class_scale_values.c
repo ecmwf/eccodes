@@ -139,8 +139,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* args)
 {
   int n=0;
   grib_accessor_scale_values* self= (grib_accessor_scale_values*)a;
-  self->values=grib_arguments_get_name(a->parent->h,args,n++);
-  self->missingValue=grib_arguments_get_name(a->parent->h,args,n++);
+  self->values=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->missingValue=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
   a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
   a->length=0;
 }
@@ -161,7 +161,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
   int ret=0,i=0;
   grib_accessor_scale_values* self= (grib_accessor_scale_values*)a;
   grib_context* c=a->context;
-  grib_handle* h=a->parent->h;
+  grib_handle* h=grib_handle_of_accessor(a);
 
   if (*val==1) return GRIB_SUCCESS;
 

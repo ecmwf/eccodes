@@ -137,7 +137,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
   grib_accessor_bufr_has_delayed_replication* self = (grib_accessor_bufr_has_delayed_replication*)a;
   int n=0;
-  self->expandedDescriptors=grib_arguments_get_name(a->parent->h,args,n++);
+  self->expandedDescriptors=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
   a->length = 0;
   a->flags=GRIB_ACCESSOR_FLAG_HIDDEN;
 }
@@ -155,12 +155,12 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
   long F;
   grib_context* c=a->context;
 
-  err=grib_get_size(a->parent->h,self->expandedDescriptors,&size);
+  err=grib_get_size(grib_handle_of_accessor(a),self->expandedDescriptors,&size);
   if (err) return err;
 
   descriptors=(long*)grib_context_malloc_clear(c,sizeof(long)*size);
 
-  err=grib_get_long_array(a->parent->h,self->expandedDescriptors,descriptors,&size);
+  err=grib_get_long_array(grib_handle_of_accessor(a),self->expandedDescriptors,descriptors,&size);
   if (err) return err;
 
   *val=0;

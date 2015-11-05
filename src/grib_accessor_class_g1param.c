@@ -136,8 +136,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
 	grib_accessor_g1param* self = (grib_accessor_g1param*)a; 
 	int n = 0;
-	self->parameter = grib_arguments_get_name(a->parent->h,c,n++);
-	self->table     = grib_arguments_get_name(a->parent->h,c,n++);
+	self->parameter = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+	self->table     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
@@ -149,10 +149,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 
 	if(table == 0) table = 128;
 
-	err = grib_set_long_internal(a->parent->h,self->parameter,parameter);
+	err = grib_set_long_internal(grib_handle_of_accessor(a),self->parameter,parameter);
 	if(err) return err;
 
-	err = grib_set_long_internal(a->parent->h,self->table,table);
+	err = grib_set_long_internal(grib_handle_of_accessor(a),self->table,table);
 	return err;
 }
 
@@ -164,10 +164,10 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 	long parameter = 0;
 	long table = 0;
 
-	err = grib_get_long_internal(a->parent->h,self->parameter,&parameter);
+	err = grib_get_long_internal(grib_handle_of_accessor(a),self->parameter,&parameter);
 	if(err) return err;
 
-	err = grib_get_long_internal(a->parent->h,self->table,&table);
+	err = grib_get_long_internal(grib_handle_of_accessor(a),self->table,&table);
 	if(err) return err;
 
 	if(*len < 1)

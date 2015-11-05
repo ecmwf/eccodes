@@ -153,7 +153,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     *len = 0;
     return GRIB_ARRAY_TOO_SMALL;
   }
-  value = grib_decode_unsigned_long(a->parent->h->buffer->data , &pos, a->length*8);
+  value = grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data , &pos, a->length*8);
 
   grib_unpack_string(a, refexpver , &llen);
 
@@ -194,7 +194,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len)
   }
 
   for ( i = 0; i < a->length; i++)
-        a->parent->h->buffer->data[a->offset+i] = val[i];
+        grib_handle_of_accessor(a)->buffer->data[a->offset+i] = val[i];
 
   return GRIB_SUCCESS;
 }

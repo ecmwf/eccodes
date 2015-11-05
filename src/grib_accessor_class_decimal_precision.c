@@ -144,10 +144,10 @@ static void init(grib_accessor* a,const long l, grib_arguments* args)
   int n=0;
   grib_accessor_decimal_precision* self= (grib_accessor_decimal_precision*)a;
   
-  self->bits_per_value=grib_arguments_get_name(a->parent->h,args,n++);
-  self->decimal_scale_factor=grib_arguments_get_name(a->parent->h,args,n++);
-  self->changing_precision=grib_arguments_get_name(a->parent->h,args,n++);
-  self->values=grib_arguments_get_name(a->parent->h,args,n++);
+  self->bits_per_value=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->decimal_scale_factor=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->changing_precision=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->values=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
   
   a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
   a->length=0;
@@ -157,7 +157,7 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
 {
   int ret=0;
   grib_accessor_decimal_precision* self= (grib_accessor_decimal_precision*)a;
-  grib_handle* h=a->parent->h;
+  grib_handle* h=grib_handle_of_accessor(a);
 
   if((ret = grib_get_long_internal(h,self->decimal_scale_factor,val))
        != GRIB_SUCCESS) return ret;
@@ -174,7 +174,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
   int ret=0;
   grib_accessor_decimal_precision* self= (grib_accessor_decimal_precision*)a;
   grib_context* c=a->context;
-  grib_handle* h=a->parent->h;
+  grib_handle* h=grib_handle_of_accessor(a);
 
   if (!self->values) {
     if((ret = grib_set_long_internal(h, self->bits_per_value,0))

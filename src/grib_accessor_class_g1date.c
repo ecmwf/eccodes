@@ -146,10 +146,10 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     grib_accessor_g1date* self = (grib_accessor_g1date*)a;
     int n = 0;
 
-    self->century = grib_arguments_get_name(a->parent->h,c,n++);
-    self->year    = grib_arguments_get_name(a->parent->h,c,n++);
-    self->month   = grib_arguments_get_name(a->parent->h,c,n++);
-    self->day     = grib_arguments_get_name(a->parent->h,c,n++);
+    self->century = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->year    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->month   = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->day     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -167,13 +167,13 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     long month = 0;
     long day = 0;
 
-    if ((ret=grib_get_long_internal(a->parent->h, self->century,&century))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->century,&century))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_get_long_internal(a->parent->h, self->day,&day))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->day,&day))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_get_long_internal(a->parent->h, self->month,&month))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->month,&month))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_get_long_internal(a->parent->h, self->year,&year))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->year,&year))!=GRIB_SUCCESS)
         return ret;
 
     if(*len < 1)
@@ -227,13 +227,13 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     else
         century++;
 
-    if ((ret=grib_set_long_internal(a->parent->h,self->century,century))!=GRIB_SUCCESS)
+    if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->century,century))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_set_long_internal(a->parent->h,self->day,day))!=GRIB_SUCCESS)
+    if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->day,day))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_set_long_internal(a->parent->h,self->month,month))!=GRIB_SUCCESS)
+    if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->month,month))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_set_long_internal(a->parent->h,self->year,year))!=GRIB_SUCCESS)
+    if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->year,year))!=GRIB_SUCCESS)
         return ret;
 
     return GRIB_SUCCESS;
@@ -256,13 +256,13 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
     long day = 0;
     size_t l;
 
-    if ((ret=grib_get_long_internal(a->parent->h, self->century,&century))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->century,&century))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_get_long_internal(a->parent->h, self->day,&day))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->day,&day))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_get_long_internal(a->parent->h, self->month,&month))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->month,&month))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_get_long_internal(a->parent->h, self->year,&year))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->year,&year))!=GRIB_SUCCESS)
         return ret;
 
     if(*len < 1)

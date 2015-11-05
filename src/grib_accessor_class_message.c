@@ -138,7 +138,7 @@ static void init(grib_accessor* a, const long len, grib_arguments*arg )
 {
   a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  a->length=a->parent->h->buffer->ulength-len-a->offset;
+  a->length=grib_handle_of_accessor(a)->buffer->ulength-len-a->offset;
 }
 
 static int compare(grib_accessor* a, grib_accessor* b)
@@ -179,7 +179,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
   }
 
   for ( i = 0; i < a->length; i++)
-    val[i] = a->parent->h->buffer->data[a->offset+i];
+    val[i] = grib_handle_of_accessor(a)->buffer->data[a->offset+i];
   val[i] = 0;
   len[0] = i;
   return GRIB_SUCCESS;

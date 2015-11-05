@@ -143,8 +143,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 
   int n = 0;
 
-  self->startStep   = grib_arguments_get_name(a->parent->h,c,n++);
-  self->endStep     = grib_arguments_get_name(a->parent->h,c,n++);
+  self->startStep   = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->endStep     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
   
   a->length=0;
 }
@@ -157,7 +157,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 static int unpack_string(grib_accessor* a, char* val, size_t *len) {
   grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
-  grib_handle* h=a->parent->h;
+  grib_handle* h=grib_handle_of_accessor(a);
   char buf[100];
   int ret=0;
   size_t size=0;
@@ -195,7 +195,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len) {
 
 static int pack_string(grib_accessor* a, const char* val, size_t *len){
   grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
-  grib_handle* h=a->parent->h;
+  grib_handle* h=grib_handle_of_accessor(a);
 
   long start=0,theEnd=-1;
   int ret=0;

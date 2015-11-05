@@ -180,9 +180,9 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
   grib_accessor_count_missing* self = (grib_accessor_count_missing*)a;
   a->length=0;
   a->flags|=GRIB_ACCESSOR_FLAG_READ_ONLY;
-  self->bitmap = grib_arguments_get_name(a->parent->h,arg,n++);
-  self->unusedBitsInBitmap = grib_arguments_get_name(a->parent->h,arg,n++);
-  self->numberOfDataPoints = grib_arguments_get_name(a->parent->h,arg,n++);
+  self->bitmap = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+  self->unusedBitsInBitmap = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+  self->numberOfDataPoints = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
 }
 
 static int used[] ={ 0,1,3,7,15,31,63,127,255};
@@ -196,8 +196,8 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
   long offset=0;
   long unusedBitsInBitmap=0;
   long numberOfDataPoints=0;
-  grib_handle* h=a->parent->h;
-  grib_accessor* bitmap=grib_find_accessor(a->parent->h,self->bitmap);
+  grib_handle* h=grib_handle_of_accessor(a);
+  grib_accessor* bitmap=grib_find_accessor(grib_handle_of_accessor(a),self->bitmap);
 
   *val=0;
   *len=1;
@@ -214,7 +214,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 	unusedBitsInBitmap=size*8-numberOfDataPoints;
   }
 
-  p=a->parent->h->buffer->data+offset;
+  p=grib_handle_of_accessor(a)->buffer->data+offset;
 
   size-=unusedBitsInBitmap/8;
   unusedBitsInBitmap= unusedBitsInBitmap % 8;

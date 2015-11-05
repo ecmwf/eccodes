@@ -230,12 +230,12 @@ static int create_accessor( grib_section* p, grib_action* act,grib_loader *h)
         return GRIB_SUCCESS;
     }
 
-    if (x->parent->h->use_trie) {
+    if (grib_handle_of_accessor(x)->use_trie) {
         id=grib_hash_keys_get_id(x->context->keys,act->name);
 
-        if (x->parent->h->accessors[id] != x) {
-            /*x->same=x->parent->h->accessors[id];*/
-            x->parent->h->accessors[id]=x;
+        if (grib_handle_of_accessor(x)->accessors[id] != x) {
+            /*x->same=grib_handle_of_accessor(x)->accessors[id];*/
+            grib_handle_of_accessor(x)->accessors[id]=x;
         }
     }
 

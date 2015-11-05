@@ -200,14 +200,14 @@ void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
     l->last = a;
 
 
-    if (a->parent->h->use_trie) {
+    if (grib_handle_of_accessor(a)->use_trie) {
         if (*(a->all_names[0]) != '_') {
             id=grib_hash_keys_get_id(a->context->keys,a->all_names[0]);
 
 
-            a->same=a->parent->h->accessors[id];
+            a->same=grib_handle_of_accessor(a)->accessors[id];
             link_same_attributes(a,a->same);
-            a->parent->h->accessors[id]=a;
+            grib_handle_of_accessor(a)->accessors[id]=a;
 
             if(a->same == a) {
                 fprintf(stderr,"---> %s\n",a->name);

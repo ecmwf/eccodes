@@ -138,20 +138,20 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg)
   int n=0;
   grib_accessor_section_pointer* self=(grib_accessor_section_pointer*)a;
   
-  self->sectionOffset = grib_arguments_get_name(a->parent->h,arg,n++);
-  self->sectionLength = grib_arguments_get_name(a->parent->h,arg,n++);
-  self->sectionNumber = grib_arguments_get_long(a->parent->h,arg,n++);
+  self->sectionOffset = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+  self->sectionLength = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+  self->sectionNumber = grib_arguments_get_long(grib_handle_of_accessor(a),arg,n++);
 
   Assert (self->sectionNumber < MAX_NUM_SECTIONS );
   
-  a->parent->h->section_offset[self->sectionNumber]=(char*)self->sectionOffset;
-  a->parent->h->section_length[self->sectionNumber]=(char*)self->sectionLength;
+  grib_handle_of_accessor(a)->section_offset[self->sectionNumber]=(char*)self->sectionOffset;
+  grib_handle_of_accessor(a)->section_length[self->sectionNumber]=(char*)self->sectionLength;
 
   /* printf("++++++++++++++ GRIB_API:  creating section_pointer%d %s %s\n", */
 	  /* self->sectionNumber,self->sectionLength,self->sectionLength); */
 
-  if( a->parent->h->sections_count < self->sectionNumber)
-  	a->parent->h->sections_count=self->sectionNumber;
+  if( grib_handle_of_accessor(a)->sections_count < self->sectionNumber)
+  	grib_handle_of_accessor(a)->sections_count=self->sectionNumber;
   
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
   a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
@@ -175,7 +175,7 @@ static int unpack_string(grib_accessor *a , char*  v, size_t *len){
 
   if (*len < length) return GRIB_ARRAY_TOO_SMALL;
   
-  p  = a->parent->h->buffer->data + grib_byte_offset(a);
+  p  = grib_handle_of_accessor(a)->buffer->data + grib_byte_offset(a);
   
   for (i = 0; i < length; i++)  {
     sprintf (s,"%02x", *(p++));
@@ -193,7 +193,7 @@ static long byte_count(grib_accessor* a){
   long sectionLength=0;
   int ret=0;
   
-  ret=grib_get_long(a->parent->h,self->sectionLength,&sectionLength);
+  ret=grib_get_long(grib_handle_of_accessor(a),self->sectionLength,&sectionLength);
   if (ret) {
     grib_context_log(a->context,GRIB_LOG_ERROR,
                      "unable to get %s %s",
@@ -209,7 +209,7 @@ static long byte_offset(grib_accessor* a){
   long sectionOffset=0;
   int ret=0;
   
-  ret=grib_get_long(a->parent->h,self->sectionOffset,&sectionOffset);
+  ret=grib_get_long(grib_handle_of_accessor(a),self->sectionOffset,&sectionOffset);
   if (ret) {
     grib_context_log(a->context,GRIB_LOG_ERROR,
                      "unable to get %s %s",

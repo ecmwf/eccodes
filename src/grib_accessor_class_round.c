@@ -143,12 +143,12 @@ static int    unpack_double(grib_accessor* a, double* val, size_t *len)
   double toround = 0;
 
   const char* oval = NULL;
-  oval     = grib_arguments_get_name(a->parent->h,self->arg,0);
+  oval     = grib_arguments_get_name(grib_handle_of_accessor(a),self->arg,0);
 
-  if( (ret = grib_get_double_internal(a->parent->h, oval, &toround)) != 0)
+  if( (ret = grib_get_double_internal(grib_handle_of_accessor(a), oval, &toround)) != 0)
     return ret;
 
-  rounding_precision = grib_arguments_get_long(a->parent->h,self->arg,1);
+  rounding_precision = grib_arguments_get_long(grib_handle_of_accessor(a),self->arg,1);
 
   rounded = floor(rounding_precision * toround + 0.5) / rounding_precision;
 

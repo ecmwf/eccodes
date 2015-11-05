@@ -140,7 +140,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
   grib_accessor_g1end_of_interval_monthly* self = (grib_accessor_g1end_of_interval_monthly*)a;
   int n = 0;
 
-  self->verifyingMonth = grib_arguments_get_name(a->parent->h,c,n++);
+  self->verifyingMonth = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
   a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
   a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
   a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
@@ -165,7 +165,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
 
   if (!a->dirty) return GRIB_SUCCESS;
 
-  if((ret=grib_get_string(a->parent->h,self->verifyingMonth,verifyingMonth,&slen))
+  if((ret=grib_get_string(grib_handle_of_accessor(a),self->verifyingMonth,verifyingMonth,&slen))
        != GRIB_SUCCESS) return ret;
 
   date=atoi(verifyingMonth);

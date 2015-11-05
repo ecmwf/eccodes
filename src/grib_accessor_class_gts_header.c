@@ -137,8 +137,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 	grib_accessor_gts_header* self = (grib_accessor_gts_header*)a; 
     self->gts_offset = -1;
 	self->gts_length = -1;
-	self->gts_offset = grib_arguments_get_long(a->parent->h,c,0);
-	self->gts_length = grib_arguments_get_long(a->parent->h,c,1);
+	self->gts_offset = grib_arguments_get_long(grib_handle_of_accessor(a),c,0);
+	self->gts_length = grib_arguments_get_long(grib_handle_of_accessor(a),c,1);
 }
 
 static int pack_string(grib_accessor* a, const char* val, size_t *len){
@@ -151,7 +151,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len){
 static int    unpack_string(grib_accessor* a, char* val, size_t *len)
 {   
 	grib_accessor_gts_header* self=(grib_accessor_gts_header*)a;
-	grib_handle* h=a->parent->h;
+	grib_handle* h=grib_handle_of_accessor(a);
 	int offset=0;
 	int length=0;
 
@@ -180,6 +180,6 @@ static int value_count(grib_accessor* a,long* count)
 
 static size_t string_length(grib_accessor* a)
 {
-	grib_handle* h=a->parent->h;
+	grib_handle* h=grib_handle_of_accessor(a);
 	return h->gts_header_len;
 }

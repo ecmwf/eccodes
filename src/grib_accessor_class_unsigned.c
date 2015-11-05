@@ -255,7 +255,7 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t *len, in
         }
 
         off = a->offset*8;
-        ret = grib_encode_unsigned_long(a->parent->h->buffer->data, v, &off, self->nbytes*8);
+        ret = grib_encode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, v, &off, self->nbytes*8);
         if (ret == GRIB_SUCCESS) len[0] = 1;
         if (*len > 1)  grib_context_log(a->context, GRIB_LOG_WARNING, "grib_accessor_unsigned : Trying to pack %d values in a scalar %s, packing first value",  *len, a->name  );
         len[0] = 1;
@@ -270,7 +270,7 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t *len, in
     for(i=0; i < *len;i++)
         grib_encode_unsigned_long(buf, val[i] ,  &off,  self->nbytes*8);
 
-    ret = grib_set_long_internal(a->parent->h,grib_arguments_get_name(a->parent->h,self->arg,0),*len);
+    ret = grib_set_long_internal(grib_handle_of_accessor(a),grib_arguments_get_name(a->parent->h,self->arg,0),*len);
 
     if(ret == GRIB_SUCCESS)
         grib_buffer_replace(a, buf, buflen,1,1);
@@ -315,7 +315,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     }
 
     for(i=0; i< rlen;i++){
-        val[i] = (long)grib_decode_unsigned_long(a->parent->h->buffer->data , &pos, self->nbytes*8);
+        val[i] = (long)grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data , &pos, self->nbytes*8);
         if(missing)
             if(val[i] == missing)
                 val[i] = GRIB_MISSING_LONG;
@@ -340,7 +340,7 @@ static int value_count(grib_accessor* a,long* len)
 {
     grib_accessor_unsigned* self = (grib_accessor_unsigned*)a;
     if(!self->arg) {*len=1;return 0;}
-    return grib_get_long_internal(a->parent->h,grib_arguments_get_name(a->parent->h,self->arg,0),len);
+    return grib_get_long_internal(grib_handle_of_accessor(a),grib_arguments_get_name(a->parent->h,self->arg,0),len);
 }
 
 static long byte_offset(grib_accessor* a)
@@ -370,7 +370,7 @@ static int is_missing(grib_accessor* a)
     }
 
     for (i=0;i<a->length;i++) {
-        if (a->parent->h->buffer->data[offset] != ff) {
+        if (grib_handle_of_accessor(a)->buffer->data[offset] != ff) {
             return 0;
         }
         offset++;

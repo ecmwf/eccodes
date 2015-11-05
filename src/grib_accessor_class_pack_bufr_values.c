@@ -142,8 +142,8 @@ static void init(grib_accessor* a, const long len, grib_arguments* params) {
 
   char* key;
   grib_accessor_pack_bufr_values* self = (grib_accessor_pack_bufr_values*)a;
-  key = (char*)grib_arguments_get_name(a->parent->h,params,0);
-  self->data_accessor=grib_find_accessor(a->parent->h,key);
+  key = (char*)grib_arguments_get_name(grib_handle_of_accessor(a),params,0);
+  self->data_accessor=grib_find_accessor(grib_handle_of_accessor(a),key);
 
   a->length = 0;
 }

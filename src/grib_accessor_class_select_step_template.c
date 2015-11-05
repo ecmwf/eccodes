@@ -145,8 +145,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     grib_accessor_select_step_template* self = (grib_accessor_select_step_template*)a;
     int n = 0;
 
-    self->productDefinitionTemplateNumber = grib_arguments_get_name(a->parent->h,c,n++);
-    self->instant = grib_arguments_get_long(a->parent->h,c,n++);
+    self->productDefinitionTemplateNumber = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->instant = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
@@ -161,7 +161,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     long productDefinitionTemplateNumber=0;
     long productDefinitionTemplateNumberNew=0;
 /*TODO chemicals*/
-    grib_get_long(a->parent->h, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber);
+    grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber);
 
     if (self->instant) {
         /* Going from continuous or non-continuous interval to a point-in-time (instantaneous) */
@@ -267,7 +267,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     }
 
     if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew)
-        grib_set_long(a->parent->h, self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
+        grib_set_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
 
     return 0;
 }

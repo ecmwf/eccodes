@@ -172,16 +172,16 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
   grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
   int n=0;
-  self->tablesAccessorName=grib_arguments_get_name(a->parent->h,args,n++);
-  self->expandedName=grib_arguments_get_name(a->parent->h,args,n++);
-  self->rank=grib_arguments_get_long(a->parent->h,args,n++);
+  self->tablesAccessorName=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->expandedName=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->rank=grib_arguments_get_long(grib_handle_of_accessor(a),args,n++);
   if (self->rank!=0) {
-    self->expandedAccessor=grib_find_accessor(a->parent->h,self->expandedName);
+    self->expandedAccessor=grib_find_accessor(grib_handle_of_accessor(a),self->expandedName);
   } else {
     self->expandedAccessor=0;
   }
-  self->unexpandedDescriptors=grib_arguments_get_name(a->parent->h,args,n++);
-  self->sequence=grib_arguments_get_name(a->parent->h,args,n++);
+  self->unexpandedDescriptors=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->sequence=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
   self->do_expand=1;
   self->expanded=0;
   a->length = 0;
@@ -235,12 +235,12 @@ static size_t __expand(grib_accessor* a,bufr_descriptors_array* unexpanded,bufr_
       printf("+++ pop  %06ld\n",u->code);
 #endif
       /*this is to get the sequence elements of the sequence unexpanded[i] */
-      *err=grib_set_long(a->parent->h,self->sequence,u->code);
-      *err=grib_get_size(a->parent->h,self->sequence,&size);
+      *err=grib_set_long(grib_handle_of_accessor(a),self->sequence,u->code);
+      *err=grib_get_size(grib_handle_of_accessor(a),self->sequence,&size);
       grib_bufr_descriptor_delete(u);
       if (*err) return 0;
       v=(long*)grib_context_malloc_clear(c,sizeof(long)*size);
-      *err=grib_get_long_array(a->parent->h,self->sequence,v,&size);
+      *err=grib_get_long_array(grib_handle_of_accessor(a),self->sequence,v,&size);
       if (*err) return 0;
       inner_unexpanded=grib_bufr_descriptors_array_new(c,100,100);
       for (i=0;i<size;i++) {
@@ -524,7 +524,7 @@ static int expand(grib_accessor* a)
   }
   self->do_expand=0;
   if (!self->tablesAccessor) {
-    self->tablesAccessor=grib_find_accessor(a->parent->h,self->tablesAccessorName);
+    self->tablesAccessor=grib_find_accessor(grib_handle_of_accessor(a),self->tablesAccessorName);
     Assert(self->tablesAccessor);
   }
 
@@ -535,11 +535,11 @@ static int expand(grib_accessor* a)
   }
 
   grib_bufr_descriptors_array_delete(self->expanded);
-  err=grib_get_size(a->parent->h,self->unexpandedDescriptors,&unexpandedSize);
+  err=grib_get_size(grib_handle_of_accessor(a),self->unexpandedDescriptors,&unexpandedSize);
   if (err) return err;
   u=(long*)grib_context_malloc_clear(c,sizeof(long)*unexpandedSize);
   if (!u) {err=GRIB_OUT_OF_MEMORY; return err;}
-  err=grib_get_long_array(a->parent->h,self->unexpandedDescriptors,u,&unexpandedSize);
+  err=grib_get_long_array(grib_handle_of_accessor(a),self->unexpandedDescriptors,u,&unexpandedSize);
   if (err) return err;
 
   unexpanded=grib_bufr_descriptors_array_new(c,unexpandedSize,100);

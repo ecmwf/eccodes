@@ -164,8 +164,8 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
   grib_accessor_data_g2simple_packing_with_preprocessing *self =(grib_accessor_data_g2simple_packing_with_preprocessing*)a;
-  self->pre_processing = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->pre_processing_parameter = grib_arguments_get_name(a->parent->h,args,self->carg++);
+  self->pre_processing = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->pre_processing_parameter = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
   a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
@@ -174,7 +174,7 @@ static int value_count(grib_accessor* a,long* n_vals)
   grib_accessor_data_g2simple_packing_with_preprocessing *self =(grib_accessor_data_g2simple_packing_with_preprocessing*)a;
   *n_vals= 0;
 
-  return grib_get_long_internal(a->parent->h,self->number_of_values,n_vals);
+  return grib_get_long_internal(grib_handle_of_accessor(a),self->number_of_values,n_vals);
 }
 
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
@@ -201,12 +201,12 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   self->dirty=0;
 
 
-  if((err = grib_get_long_internal(a->parent->h,self->pre_processing, &pre_processing)) != GRIB_SUCCESS){
+  if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->pre_processing, &pre_processing)) != GRIB_SUCCESS){
     grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->pre_processing, err);
     return err;
   }
 
-  if((err = grib_get_double_internal(a->parent->h,self->pre_processing_parameter, &pre_processing_parameter)) != GRIB_SUCCESS){
+  if((err = grib_get_double_internal(grib_handle_of_accessor(a),self->pre_processing_parameter, &pre_processing_parameter)) != GRIB_SUCCESS){
     grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->pre_processing_parameter, err);
     return err;
   }
@@ -235,7 +235,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
   self->dirty=1;
 
-  if((err = grib_get_long_internal(a->parent->h,self->pre_processing, &pre_processing)) != GRIB_SUCCESS)
+  if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->pre_processing, &pre_processing)) != GRIB_SUCCESS)
     return err;
 
   err=pre_processing_func((double*)val,n_vals,pre_processing,&pre_processing_parameter,DIRECT);
@@ -244,11 +244,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
   err =   super->pack_double(a,val,len);
   if (err!=GRIB_SUCCESS) return err;
 
-  if((err = grib_set_double_internal(a->parent->h,self->pre_processing_parameter, pre_processing_parameter)) != GRIB_SUCCESS)
+  if((err = grib_set_double_internal(grib_handle_of_accessor(a),self->pre_processing_parameter, pre_processing_parameter)) != GRIB_SUCCESS)
     return err;
 
 
-  if((err = grib_set_long_internal(a->parent->h,self->number_of_values, n_vals)) != GRIB_SUCCESS)
+  if((err = grib_set_long_internal(grib_handle_of_accessor(a),self->number_of_values, n_vals)) != GRIB_SUCCESS)
     return err;
 
 

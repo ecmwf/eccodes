@@ -145,14 +145,14 @@ static long compute_byte_count(grib_accessor* a){
     long numberOfElements;
     int ret=0;
 
-    ret=grib_get_long(a->parent->h,self->numberOfBits,&numberOfBits);
+    ret=grib_get_long(grib_handle_of_accessor(a),self->numberOfBits,&numberOfBits);
     if (ret) {
         grib_context_log(a->context,GRIB_LOG_ERROR,
                 "%s unable to get %s to compute size",a->name,self->numberOfBits);
         return 0;
     }
 
-    ret=grib_get_long(a->parent->h,self->numberOfElements,&numberOfElements);
+    ret=grib_get_long(grib_handle_of_accessor(a),self->numberOfElements,&numberOfElements);
     if (ret) {
         grib_context_log(a->context,GRIB_LOG_ERROR,
                 "%s unable to get %s to compute size",a->name,self->numberOfElements);
@@ -167,8 +167,8 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
     grib_accessor_unsigned_bits* self = (grib_accessor_unsigned_bits*)a;
     int n=0;
-    self->numberOfBits=grib_arguments_get_name(a->parent->h,args,n++);
-    self->numberOfElements=grib_arguments_get_name(a->parent->h,args,n++);
+    self->numberOfBits=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->numberOfElements=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
     a->length = compute_byte_count(a);
 }
 
@@ -196,7 +196,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    ret=grib_get_long(a->parent->h,self->numberOfBits,&numberOfBits);
+    ret=grib_get_long(grib_handle_of_accessor(a),self->numberOfBits,&numberOfBits);
     if (ret) return ret;
     if (numberOfBits==0) {
         int i;
@@ -204,7 +204,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
         return GRIB_SUCCESS;
     }
 
-    grib_decode_long_array(a->parent->h->buffer->data,&pos,numberOfBits,rlen,val);
+    grib_decode_long_array(grib_handle_of_accessor(a)->buffer->data,&pos,numberOfBits,rlen,val);
 
     *len = rlen;
 
@@ -233,9 +233,9 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
 	}
      */
     if (*len!=rlen)
-        ret=grib_set_long(a->parent->h,self->numberOfElements,*len);
+        ret=grib_set_long(grib_handle_of_accessor(a),self->numberOfElements,*len);
 
-    ret=grib_get_long(a->parent->h,self->numberOfBits,&numberOfBits);
+    ret=grib_get_long(grib_handle_of_accessor(a),self->numberOfBits,&numberOfBits);
     if (ret) return ret;
     if (numberOfBits==0) {
         grib_buffer_replace(a, NULL, 0,1,1);
@@ -266,7 +266,7 @@ static int value_count(grib_accessor* a,long* numberOfElements)
     int ret;
     *numberOfElements=0;
 
-    ret=grib_get_long(a->parent->h,self->numberOfElements,numberOfElements);
+    ret=grib_get_long(grib_handle_of_accessor(a),self->numberOfElements,numberOfElements);
     if (ret) {
         grib_context_log(a->context,GRIB_LOG_ERROR,
                 "%s unable to get %s to compute size",a->name,self->numberOfElements);

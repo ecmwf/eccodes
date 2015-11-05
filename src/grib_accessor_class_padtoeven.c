@@ -144,8 +144,8 @@ static size_t preferred_size(grib_accessor* a,int from_handle)
   long length = 0;
   long seclen;
 
-  grib_get_long_internal(a->parent->h,self->section_offset,&offset);
-  grib_get_long_internal(a->parent->h,self->section_length,&length);
+  grib_get_long_internal(grib_handle_of_accessor(a),self->section_offset,&offset);
+  grib_get_long_internal(grib_handle_of_accessor(a),self->section_length,&length);
 
   if((length%2) && from_handle) {
 #if 0
@@ -168,8 +168,8 @@ static void init(grib_accessor* a, const long len, grib_arguments* args)
 {
   grib_accessor_padtoeven* self = (grib_accessor_padtoeven*)a;
 
-  self->section_offset = grib_arguments_get_name(a->parent->h,args,0);
-  self->section_length = grib_arguments_get_name(a->parent->h,args,1);
+  self->section_offset = grib_arguments_get_name(grib_handle_of_accessor(a),args,0);
+  self->section_length = grib_arguments_get_name(grib_handle_of_accessor(a),args,1);
 
   a->length = preferred_size(a,1);
 

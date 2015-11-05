@@ -144,9 +144,9 @@ static void init(grib_accessor* a, const long len, grib_arguments *arg )
   grib_accessor_lookup* self = (grib_accessor_lookup*)a;
   a->length = 0;
   self->llength = len;
-  self->loffset = grib_arguments_get_long(a->parent->h,arg,0);
+  self->loffset = grib_arguments_get_long(grib_handle_of_accessor(a),arg,0);
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  self->real_name = grib_arguments_get_expression(a->parent->h,arg,1);
+  self->real_name = grib_arguments_get_expression(grib_handle_of_accessor(a),arg,1);
 }
 
 static void post_init(grib_accessor* a)
@@ -210,7 +210,7 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
   grib_accessor_lookup* al = (grib_accessor_lookup*)a;
-  grib_handle *h = a->parent->h;
+  grib_handle *h = grib_handle_of_accessor(a);
 
 
   long pos = (a->offset+al->loffset)*8;

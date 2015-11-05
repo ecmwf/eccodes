@@ -147,7 +147,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
   grib_accessor_bufr_string_values* self = (grib_accessor_bufr_string_values*)a;
   int n=0;
-  self->dataAccessorName=grib_arguments_get_name(a->parent->h,args,n++);
+  self->dataAccessorName=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
   self->dataAccessor=NULL;
   a->length = 0;
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -161,7 +161,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 static grib_accessor* get_accessor(grib_accessor* a) {
   grib_accessor_bufr_string_values* self = (grib_accessor_bufr_string_values*)a;
   if (!self->dataAccessor) {
-    self->dataAccessor=grib_find_accessor(a->parent->h,self->dataAccessorName);
+    self->dataAccessor=grib_find_accessor(grib_handle_of_accessor(a),self->dataAccessorName);
   }
   return self->dataAccessor;
 }

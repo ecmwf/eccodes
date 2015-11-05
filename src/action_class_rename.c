@@ -105,11 +105,11 @@ static void rename_accessor(grib_accessor *a,char* name){
   int id;
   char* the_old=(char*)a->all_names[0];
 
-  if (a->parent->h->use_trie && *(a->all_names[0]) != '_') {
+  if (grib_handle_of_accessor(a)->use_trie && *(a->all_names[0]) != '_') {
       id=grib_hash_keys_get_id(a->context->keys,a->all_names[0]);
-      a->parent->h->accessors[id]=NULL;
+      grib_handle_of_accessor(a)->accessors[id]=NULL;
       id=grib_hash_keys_get_id(a->context->keys,name);
-      a->parent->h->accessors[id]=a;
+      grib_handle_of_accessor(a)->accessors[id]=a;
   }
   a->all_names[0]=grib_context_strdup_persistent(a->context,name);
   a->name=a->all_names[0];

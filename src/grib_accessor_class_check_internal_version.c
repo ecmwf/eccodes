@@ -138,7 +138,7 @@ static void init(grib_accessor* a, const long l, grib_arguments* args)
     /* Check version of definition files is compatible with the engine */
     int err = 0;
     long defs_file_version = 0;
-    grib_handle* h = a->parent->h;
+    grib_handle* h = grib_handle_of_accessor(a);
     const char* s_defn_version = grib_arguments_get_name(h, args, 0);
     Assert(s_defn_version);
 

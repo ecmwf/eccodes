@@ -153,11 +153,11 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
   grib_accessor_statistics_spectral* self = (grib_accessor_statistics_spectral*)a;
   int n = 0;
 
-  self->values = grib_arguments_get_name(a->parent->h,c,n++);
-  self->J = grib_arguments_get_name(a->parent->h,c,n++);
-  self->K = grib_arguments_get_name(a->parent->h,c,n++);
-  self->M = grib_arguments_get_name(a->parent->h,c,n++);
-  self->JS = grib_arguments_get_name(a->parent->h,c,n++);
+  self->values = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->J = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->K = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->M = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->JS = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
   
   a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
   a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
@@ -180,19 +180,19 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
   long J,K,M,N;
   double avg,enorm,sd;
   grib_context* c=a->context;
-  grib_handle* h=a->parent->h;
+  grib_handle* h=grib_handle_of_accessor(a);
 
   if (!a->dirty) return GRIB_SUCCESS;
 
   if ( (ret=grib_get_size(h,self->values,&size)) != GRIB_SUCCESS) return ret;
 
-  if((ret=grib_get_long(a->parent->h,self->J,&J))
+  if((ret=grib_get_long(grib_handle_of_accessor(a),self->J,&J))
        != GRIB_SUCCESS) return ret;
 
-  if((ret=grib_get_long(a->parent->h,self->K,&K))
+  if((ret=grib_get_long(grib_handle_of_accessor(a),self->K,&K))
       != GRIB_SUCCESS) return ret;
 
-  if((ret=grib_get_long(a->parent->h,self->M,&M))
+  if((ret=grib_get_long(grib_handle_of_accessor(a),self->M,&M))
       != GRIB_SUCCESS) return ret;
 
   if (J != M || M != K) return GRIB_NOT_IMPLEMENTED;

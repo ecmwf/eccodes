@@ -212,15 +212,15 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
   grib_accessor_apply_operators* self = (grib_accessor_apply_operators*)a;
   int n=0;
-  self->expandedDescriptors=grib_arguments_get_name(a->parent->h,args,n++);
-  self->abbreviation=grib_arguments_get_name(a->parent->h,args,n++);
-  self->type=grib_arguments_get_name(a->parent->h,args,n++);
-  self->name=grib_arguments_get_name(a->parent->h,args,n++);
-  self->unit=grib_arguments_get_name(a->parent->h,args,n++);
-  self->expandedScale=grib_arguments_get_name(a->parent->h,args,n++);
-  self->expandedReference=grib_arguments_get_name(a->parent->h,args,n++);
-  self->expandedWidth=grib_arguments_get_name(a->parent->h,args,n++);
-  self->index=grib_arguments_get_long(a->parent->h,args,n++);
+  self->expandedDescriptors=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->abbreviation=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->type=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->name=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->unit=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->expandedScale=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->expandedReference=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->expandedWidth=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->index=grib_arguments_get_long(grib_handle_of_accessor(a),args,n++);
   self->do_compute=1;
   a->length = 0;
   self->scaleAO=0;
@@ -302,7 +302,7 @@ static void computeDelayedReplication(grib_accessor_apply_operators* self,
 static int apply_operators(grib_accessor* a) {
 	grib_accessor_apply_operators* self = (grib_accessor_apply_operators*)a;
 	grib_context* c=a->context;
-	grib_handle* h=a->parent->h;
+	grib_handle* h=grib_handle_of_accessor(a);
   int useDefinedBitmap;
 	long* descriptors=0;
 	long* scale=0;
@@ -339,7 +339,7 @@ static int apply_operators(grib_accessor* a) {
   if (!self->do_compute) return GRIB_SUCCESS;
   self_clear(c,self);
 
-	err=grib_get_size(a->parent->h,self->expandedDescriptors,&size);
+	err=grib_get_size(grib_handle_of_accessor(a),self->expandedDescriptors,&size);
 	if (err) return err;
   numberOfDescriptors=size;
 

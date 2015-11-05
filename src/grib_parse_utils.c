@@ -157,7 +157,7 @@ int grib_accessor_print(grib_accessor* a,const char* name,int type,const char* f
     char double_format[]="%.12g"; /* default format for printing double keys */
     char long_format[]="%ld";  /* default format for printing integer keys */
     char default_separator[]=" ";
-    grib_handle* h=a->parent->h;
+    grib_handle* h=grib_handle_of_accessor(a);
 
     if (type==-1) type=grib_accessor_get_native_type(a);
     switch (type) {

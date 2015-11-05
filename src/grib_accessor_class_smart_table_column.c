@@ -163,8 +163,8 @@ static void init(grib_accessor* a, const long len, grib_arguments* params) {
   int n=0;
   grib_accessor_smart_table_column* self  = (grib_accessor_smart_table_column*)a;
 
-  self->smartTable = grib_arguments_get_name(a->parent->h,params,n++);
-  self->index = grib_arguments_get_long(a->parent->h,params,n++);
+  self->smartTable = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->index = grib_arguments_get_long(grib_handle_of_accessor(a),params,n++);
 
   a->length = 0;
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -197,14 +197,14 @@ static int unpack_string_array (grib_accessor* a, char** buffer, size_t *len)
   char tmp[1024]={0,};
   int i=0;
 
-  tableAccessor=(grib_accessor_smart_table*)grib_find_accessor(a->parent->h,self->smartTable);
+  tableAccessor=(grib_accessor_smart_table*)grib_find_accessor(grib_handle_of_accessor(a),self->smartTable);
   if (!tableAccessor) {
   	grib_context_log(a->context,GRIB_LOG_ERROR,
 		"unable to find accessor %s",self->smartTable);
 	return GRIB_NOT_FOUND;
   }
 
-  err=_grib_get_size(a->parent->h,(grib_accessor*)tableAccessor,&size);
+  err=_grib_get_size(grib_handle_of_accessor(a),(grib_accessor*)tableAccessor,&size);
   if (err) return err;
   if (*len<size) {
     return GRIB_BUFFER_TOO_SMALL;
@@ -257,14 +257,14 @@ static int unpack_long (grib_accessor* a, long* val, size_t *len)
 
   for (i=0;i<*len;i++) val[i]=GRIB_MISSING_LONG;
 
-  tableAccessor=(grib_accessor_smart_table*)grib_find_accessor(a->parent->h,self->smartTable);
+  tableAccessor=(grib_accessor_smart_table*)grib_find_accessor(grib_handle_of_accessor(a),self->smartTable);
   if (!tableAccessor) {
   	grib_context_log(a->context,GRIB_LOG_ERROR,
 		"unable to find accessor %s",self->smartTable);
 	return GRIB_NOT_FOUND;
   }
 
-  err=_grib_get_size(a->parent->h,(grib_accessor*)tableAccessor,&size);
+  err=_grib_get_size(grib_handle_of_accessor(a),(grib_accessor*)tableAccessor,&size);
   if (err) return err;
   if (*len<size) {
     return GRIB_BUFFER_TOO_SMALL;
@@ -305,7 +305,7 @@ static int value_count(grib_accessor* a,long* count)
 
   if (!self->smartTable) return 0; 
 
-  err=grib_get_size(a->parent->h,self->smartTable,&size);
+  err=grib_get_size(grib_handle_of_accessor(a),self->smartTable,&size);
   *count=size;
   return err;
 }

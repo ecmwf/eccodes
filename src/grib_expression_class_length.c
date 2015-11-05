@@ -162,7 +162,7 @@ static void destroy(grib_context* c,grib_expression* g)
 
 static void  add_dependency(grib_expression* g, grib_accessor* observer){
   grib_expression_length* e = (grib_expression_length*)g;
-  grib_accessor *observed = grib_find_accessor(observer->parent->h,e->name);
+  grib_accessor *observed = grib_find_accessor(grib_handle_of_accessor(observer),e->name);
 
   if(!observed)
   {

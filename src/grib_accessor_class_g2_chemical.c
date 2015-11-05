@@ -140,15 +140,15 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     grib_accessor_g2_chemical* self = (grib_accessor_g2_chemical*)a;
     int n = 0;
 
-    self->productDefinitionTemplateNumber = grib_arguments_get_name(a->parent->h,c,n++);
-    self->stepType = grib_arguments_get_name(a->parent->h,c,n++);
+    self->productDefinitionTemplateNumber = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->stepType = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_g2_chemical* self = (grib_accessor_g2_chemical*)a;
     long productDefinitionTemplateNumber=0;
-    grib_get_long(a->parent->h, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber);
+    grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber);
 
     *val=is_productDefinitionTemplateNumber_Chemical(productDefinitionTemplateNumber);
 
@@ -170,14 +170,14 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     /*long derivedForecast=-1;*/
     int ret = 0;
 
-    if (grib_get_long(a->parent->h, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
+    if (grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
         return GRIB_SUCCESS;
 
     /*
-     grib_get_long(a->parent->h, self->type,&type);
-     grib_get_long(a->parent->h, self->stream,&stream);
+     grib_get_long(grib_handle_of_accessor(a), self->type,&type);
+     grib_get_long(grib_handle_of_accessor(a), self->stream,&stream);
      */
-    ret = grib_get_string(a->parent->h, self->stepType, stepType, &slen);
+    ret = grib_get_string(grib_handle_of_accessor(a), self->stepType, stepType, &slen);
     Assert(ret == GRIB_SUCCESS);
 
     eps = is_productDefinitionTemplateNumber_EPS(productDefinitionTemplateNumber);
@@ -199,8 +199,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     }
 
     if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
-        grib_set_long(a->parent->h, self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
-        /*if (derivedForecast>=0) grib_set_long(a->parent->h, self->derivedForecast,derivedForecast);*/
+        grib_set_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
+        /*if (derivedForecast>=0) grib_set_long(grib_handle_of_accessor(a), self->derivedForecast,derivedForecast);*/
     }
 
     return 0;

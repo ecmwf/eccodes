@@ -153,8 +153,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     grib_accessor_longitudes* self = (grib_accessor_longitudes*)a;
     int n = 0;
 
-    self->values = grib_arguments_get_name(a->parent->h,c,n++);
-    self->distinct = grib_arguments_get_long(a->parent->h,c,n++);
+    self->values = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->distinct = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
     self->save=0;
     self->lons=0;
 
@@ -199,7 +199,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
         return GRIB_SUCCESS;
     }
 
-    iter=grib_iterator_new(a->parent->h,0,&ret);
+    iter=grib_iterator_new(grib_handle_of_accessor(a),0,&ret);
     if (ret!=GRIB_SUCCESS) {
         if (iter) grib_iterator_delete(iter);
         grib_context_log(c,GRIB_LOG_ERROR,"unable to create iterator");
@@ -217,7 +217,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
 static int value_count(grib_accessor* a,long* len)
 {
     grib_accessor_longitudes* self = (grib_accessor_longitudes*)a;
-    grib_handle* h=a->parent->h;
+    grib_handle* h=grib_handle_of_accessor(a);
     grib_context* c=a->context;
     double* val=NULL;
     int ret;
@@ -253,7 +253,7 @@ static int get_distinct(grib_accessor* a,double** val,long* len) {
     int i;
     size_t size=*len;
     grib_context* c=a->context;
-    grib_iterator* iter=grib_iterator_new(a->parent->h,0,&ret);
+    grib_iterator* iter=grib_iterator_new(grib_handle_of_accessor(a),0,&ret);
     if (ret!=GRIB_SUCCESS) {
         if (iter) grib_iterator_delete(iter);
         grib_context_log(c,GRIB_LOG_ERROR,"unable to create iterator");

@@ -138,7 +138,7 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
-  grib_buffer* buffer=a->parent->h->buffer;
+  grib_buffer* buffer=grib_handle_of_accessor(a)->buffer;
   size_t i=0;
   unsigned char* v;
 
@@ -185,7 +185,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
   }
 
   for ( i = 0; i < a->length; i++)
-    val[i] = a->parent->h->buffer->data[a->offset+i];
+    val[i] = grib_handle_of_accessor(a)->buffer->data[a->offset+i];
   val[i] = 0;
   len[0] = i;
   return GRIB_SUCCESS;

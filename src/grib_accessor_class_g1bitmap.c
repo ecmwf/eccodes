@@ -144,7 +144,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
 
     grib_accessor_g1bitmap* self = (grib_accessor_g1bitmap*)a;
 
-    self->unusedBits     = grib_arguments_get_name(a->parent->h,arg,4);
+    self->unusedBits     = grib_arguments_get_name(grib_handle_of_accessor(a),arg,4);
 
 }
 
@@ -163,7 +163,7 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
     double miss_values = 0;
     tlen = ((*len+bit_padding-1)/bit_padding*bit_padding)/8;
 
-    if((err = grib_get_double_internal(a->parent->h, self->missing_value, &miss_values))
+    if((err = grib_get_double_internal(grib_handle_of_accessor(a), self->missing_value, &miss_values))
             != GRIB_SUCCESS)
         return err;
 
@@ -180,7 +180,7 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
         }
     }
 
-    if((err = grib_set_long_internal(a->parent->h, self->unusedBits,tlen*8 - *len ))
+    if((err = grib_set_long_internal(grib_handle_of_accessor(a), self->unusedBits,tlen*8 - *len ))
             != GRIB_SUCCESS)
         return err;
 
@@ -198,7 +198,7 @@ static int value_count(grib_accessor* a,long* count)
     long tlen;
     int err;
 
-    if ((err=grib_get_long_internal(a->parent->h, self->unusedBits, &tlen)) != GRIB_SUCCESS)
+    if ((err=grib_get_long_internal(grib_handle_of_accessor(a), self->unusedBits, &tlen)) != GRIB_SUCCESS)
         grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_class_bitmap.value_count : cannot get %s err=%d",self->unusedBits,err);
 
   *count = (a->length*8)-tlen;
@@ -207,7 +207,7 @@ static int value_count(grib_accessor* a,long* count)
 
 static int unpack_bytes(grib_accessor* a, unsigned char* val, size_t *len)
 {
-    unsigned char* buf = a->parent->h->buffer->data;
+    unsigned char* buf = grib_handle_of_accessor(a)->buffer->data;
     grib_accessor_g1bitmap* self = (grib_accessor_g1bitmap*)a;
     long tlen;
     int err;
@@ -221,7 +221,7 @@ static int unpack_bytes(grib_accessor* a, unsigned char* val, size_t *len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    if ((err=grib_get_long_internal(a->parent->h, self->unusedBits, &tlen)) != GRIB_SUCCESS)
+    if ((err=grib_get_long_internal(grib_handle_of_accessor(a), self->unusedBits, &tlen)) != GRIB_SUCCESS)
         grib_context_log(a->context, GRIB_LOG_ERROR,
                 "grib_accessor_class_bitmap.unpack_bytes : cannot get %s err=%d",self->unusedBits,err);
 

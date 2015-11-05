@@ -143,7 +143,7 @@ static long compute_byte_count(grib_accessor* a){
     long numberOfUnexpandedDescriptors;
     int ret=0;
 
-    ret=grib_get_long(a->parent->h,self->numberOfUnexpandedDescriptors,&numberOfUnexpandedDescriptors);
+    ret=grib_get_long(grib_handle_of_accessor(a),self->numberOfUnexpandedDescriptors,&numberOfUnexpandedDescriptors);
     if (ret) {
         grib_context_log(a->context,GRIB_LOG_ERROR,
                 "%s unable to get %s to compute size",a->name,self->numberOfUnexpandedDescriptors);
@@ -157,8 +157,8 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
     grib_accessor_unexpanded_descriptors* self = (grib_accessor_unexpanded_descriptors*)a;
     int n=0;
-    self->numberOfUnexpandedDescriptors=grib_arguments_get_name(a->parent->h,args,n++);
-    self->createNewData=grib_arguments_get_name(a->parent->h,args,n++);
+    self->numberOfUnexpandedDescriptors=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->createNewData=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
     a->length = compute_byte_count(a);
 }
 
@@ -195,13 +195,13 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    ret=grib_get_long(a->parent->h,self->numberOfUnexpandedDescriptors,&numberOfUnexpandedDescriptors);
+    ret=grib_get_long(grib_handle_of_accessor(a),self->numberOfUnexpandedDescriptors,&numberOfUnexpandedDescriptors);
     if (ret) return ret;
 
     for (i=0;i<rlen;i++) {
-        f=grib_decode_unsigned_long(a->parent->h->buffer->data,&pos,2);
-        x=grib_decode_unsigned_long(a->parent->h->buffer->data,&pos,6);
-        y=grib_decode_unsigned_long(a->parent->h->buffer->data,&pos,8);
+        f=grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data,&pos,2);
+        x=grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data,&pos,6);
+        y=grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data,&pos,8);
         *v++=f*100000+x*1000+y;
     }
     *len = rlen;
@@ -220,7 +220,7 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
     long section3Length,totalLength;
     long createNewData=1;
 
-    grib_get_long(a->parent->h,self->createNewData,&createNewData);
+    grib_get_long(grib_handle_of_accessor(a),self->createNewData,&createNewData);
 
     buf=(unsigned char*)grib_context_malloc_clear(a->context,buflen);
 
@@ -233,22 +233,22 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
         grib_encode_unsigned_longb(buf,y,&pos,8);
     }
 
-    grib_get_long(a->parent->h,"section3Length",&section3Length);
+    grib_get_long(grib_handle_of_accessor(a),"section3Length",&section3Length);
     section3Length+=buflen-a->length;
-    grib_get_long(a->parent->h,"totalLength",&totalLength);
+    grib_get_long(grib_handle_of_accessor(a),"totalLength",&totalLength);
     totalLength+=buflen-a->length;
 
     grib_buffer_replace(a,buf,buflen,1,1);
 
-    grib_set_long(a->parent->h,"totalLength",totalLength);
-    grib_set_long(a->parent->h,"section3Length",section3Length);
+    grib_set_long(grib_handle_of_accessor(a),"totalLength",totalLength);
+    grib_set_long(grib_handle_of_accessor(a),"section3Length",section3Length);
     if (createNewData==0) return ret;
 
-    expanded=grib_find_accessor(a->parent->h,"expandedCodes");
+    expanded=grib_find_accessor(grib_handle_of_accessor(a),"expandedCodes");
     Assert(expanded!=NULL);
     grib_accessor_class_expanded_descriptors_set_do_expand(expanded,1);
-    grib_set_long(a->parent->h,"unpack",3);
-    grib_set_long(a->parent->h,"unpack",1);
+    grib_set_long(grib_handle_of_accessor(a),"unpack",3);
+    grib_set_long(grib_handle_of_accessor(a),"unpack",1);
 
     return ret;
 }
@@ -262,7 +262,7 @@ static int value_count(grib_accessor* a,long* numberOfUnexpandedDescriptors)
     grib_accessor_unexpanded_descriptors* self = (grib_accessor_unexpanded_descriptors*)a;
     *numberOfUnexpandedDescriptors=0;
 
-    return grib_get_long(a->parent->h,self->numberOfUnexpandedDescriptors,numberOfUnexpandedDescriptors);
+    return grib_get_long(grib_handle_of_accessor(a),self->numberOfUnexpandedDescriptors,numberOfUnexpandedDescriptors);
 }
 
 static long byte_offset(grib_accessor* a){

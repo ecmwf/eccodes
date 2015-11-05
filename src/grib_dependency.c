@@ -34,7 +34,7 @@ static grib_handle* handle_of(grib_accessor* observed)
   if (observed->parent==NULL) {
     return observed->h;
   }
-	h = observed->parent->h;
+	h = grib_handle_of_accessor(observed);
 	while(h->main) h = h->main;
 	return h;
 }

@@ -147,11 +147,11 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 	grib_accessor_g1_increment* self = (grib_accessor_g1_increment*)a; 
 	int n = 0;
 	
-	self->directionIncrementGiven = grib_arguments_get_name(a->parent->h,c,n++);
-	self->directionIncrement    = grib_arguments_get_name(a->parent->h,c,n++);
-	self->first = grib_arguments_get_name(a->parent->h,c,n++);
-	self->last    = grib_arguments_get_name(a->parent->h,c,n++);
-	self->numberOfPoints    = grib_arguments_get_name(a->parent->h,c,n++);
+	self->directionIncrementGiven = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+	self->directionIncrement    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+	self->first = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+	self->last    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+	self->numberOfPoints    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
 static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
@@ -168,21 +168,21 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
 	if(*len < 1)
 		ret = GRIB_ARRAY_TOO_SMALL;
 
-	if((ret = grib_get_long_internal(a->parent->h, self->directionIncrementGiven,&directionIncrementGiven)) 
+	if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->directionIncrementGiven,&directionIncrementGiven)) 
 					!= GRIB_SUCCESS)
 		return ret;
 	
-	if((ret = grib_get_long_internal(a->parent->h, self->directionIncrement,&directionIncrement)) 
+	if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->directionIncrement,&directionIncrement)) 
 				!= GRIB_SUCCESS)
 		return ret;
 	
-	if((ret = grib_get_double_internal(a->parent->h, self->first,&first)) != GRIB_SUCCESS)
+	if((ret = grib_get_double_internal(grib_handle_of_accessor(a), self->first,&first)) != GRIB_SUCCESS)
 		return ret;
 	
-	if((ret = grib_get_double_internal(a->parent->h, self->last,&last)) != GRIB_SUCCESS)
+	if((ret = grib_get_double_internal(grib_handle_of_accessor(a), self->last,&last)) != GRIB_SUCCESS)
 		return ret;
 
-	if((ret = grib_get_long_internal(a->parent->h, self->numberOfPoints,&numberOfPoints))
+	if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfPoints,&numberOfPoints))
        != GRIB_SUCCESS)
 		return ret;
 	
@@ -220,18 +220,18 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 	long numberOfPoints = 0;
 	double incrementInMillidegrees;
 	
-	ret = grib_get_double_internal(a->parent->h, self->first,&first);
+	ret = grib_get_double_internal(grib_handle_of_accessor(a), self->first,&first);
 	if(ret != GRIB_SUCCESS) {
 		grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->first, ret);   
 		return ret;
 	}	
-	ret = grib_get_double_internal(a->parent->h, self->last,&last);
+	ret = grib_get_double_internal(grib_handle_of_accessor(a), self->last,&last);
 	if(ret != GRIB_SUCCESS){
 		grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->last, ret);   
 		return ret;
 	}
 
-	if((ret = grib_get_long_internal(a->parent->h, self->directionIncrementGiven,&directionIncrementGiven)) 
+	if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->directionIncrementGiven,&directionIncrementGiven)) 
 					!= GRIB_SUCCESS){
 		grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->directionIncrementGiven, ret);   
 		return ret;
@@ -247,19 +247,19 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 		directionIncrementGiven=0;
 	} 
 
-	ret = grib_set_long_internal(a->parent->h, self->numberOfPoints,numberOfPoints);
+	ret = grib_set_long_internal(grib_handle_of_accessor(a), self->numberOfPoints,numberOfPoints);
 	if(ret )
 		grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont pack value for %s error %d \n", a->name, self->numberOfPoints, ret);
 	
 
-	grib_get_long_internal(a->parent->h, self->numberOfPoints,&codedNumberOfPoints);
+	grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfPoints,&codedNumberOfPoints);
 	
 	
-		ret = grib_set_long_internal(a->parent->h, self->directionIncrement,directionIncrement);
+		ret = grib_set_long_internal(grib_handle_of_accessor(a), self->directionIncrement,directionIncrement);
 	if(ret )
 		grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont pack value for %s error %d \n", a->name, self->directionIncrement, ret);
 	
-		ret = grib_set_long_internal(a->parent->h, self->directionIncrementGiven,directionIncrementGiven);
+		ret = grib_set_long_internal(grib_handle_of_accessor(a), self->directionIncrementGiven,directionIncrementGiven);
 	if(ret )
 		grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont pack value for %s error %d \n", a->name, self->directionIncrementGiven, ret);
 

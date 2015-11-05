@@ -147,7 +147,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
   grib_accessor_bufrdc_expanded_descriptors* self = (grib_accessor_bufrdc_expanded_descriptors*)a;
   int n=0;
-  self->expandedDescriptors=grib_arguments_get_name(a->parent->h,args,n++);
+  self->expandedDescriptors=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
   self->expandedDescriptorsAccessor=0;
   a->length = 0;
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -161,7 +161,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 static grib_accessor* get_accessor(grib_accessor* a) {
   grib_accessor_bufrdc_expanded_descriptors* self = (grib_accessor_bufrdc_expanded_descriptors*)a;
   if (!self->expandedDescriptorsAccessor) {
-    self->expandedDescriptorsAccessor=grib_find_accessor(a->parent->h,self->expandedDescriptors);
+    self->expandedDescriptorsAccessor=grib_find_accessor(grib_handle_of_accessor(a),self->expandedDescriptors);
   }
   return self->expandedDescriptorsAccessor;
 }

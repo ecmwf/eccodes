@@ -138,7 +138,7 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
     grib_accessor_data_g1secondary_bitmap *self =(grib_accessor_data_g1secondary_bitmap*)a;
-    self->number_of_ones   = grib_arguments_get_name(a->parent->h,args,4);
+    self->number_of_ones   = grib_arguments_get_name(grib_handle_of_accessor(a),args,4);
 }
 
 static int value_count(grib_accessor* a,long* count)
@@ -149,10 +149,10 @@ static int value_count(grib_accessor* a,long* count)
     long expand_by;
     *count = 0;
 
-    err = grib_get_long_internal(a->parent->h,self->expand_by,&expand_by);
+    err = grib_get_long_internal(grib_handle_of_accessor(a),self->expand_by,&expand_by);
     if (err) return err;
 
-    err = grib_get_size(a->parent->h,self->primary_bitmap,&len);
+    err = grib_get_size(grib_handle_of_accessor(a),self->primary_bitmap,&len);
     if (err) return err;
 
     *count=expand_by*len;
@@ -180,10 +180,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     if (*len ==0) return GRIB_NO_VALUES;
 
-    if((err = grib_get_long(a->parent->h,self->expand_by,&expand_by)) != GRIB_SUCCESS)
+    if((err = grib_get_long(grib_handle_of_accessor(a),self->expand_by,&expand_by)) != GRIB_SUCCESS)
         return err;
 
-    if((err = grib_get_double_internal(a->parent->h,self->missing_value,&missing_value)) != GRIB_SUCCESS)
+    if((err = grib_get_double_internal(grib_handle_of_accessor(a),self->missing_value,&missing_value)) != GRIB_SUCCESS)
         return err;
 
     Assert(expand_by);
@@ -234,15 +234,15 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     /*printf("QQQQQQQ %ld %ld second=%ld\n",primary_len,on,m);*/
     Assert(k == primary_len);
 
-    err = grib_set_double_array_internal(a->parent->h,self->primary_bitmap,primary_bitmap,k);
+    err = grib_set_double_array_internal(grib_handle_of_accessor(a),self->primary_bitmap,primary_bitmap,k);
     if(err == GRIB_SUCCESS)
-        err = grib_set_double_array_internal(a->parent->h,self->secondary_bitmap,secondary_bitmap,m);
+        err = grib_set_double_array_internal(grib_handle_of_accessor(a),self->secondary_bitmap,secondary_bitmap,m);
 
     grib_context_free(a->context,primary_bitmap);
     grib_context_free(a->context,secondary_bitmap);
 
     if(err == GRIB_SUCCESS)
-        err = grib_set_long_internal(a->parent->h,self->number_of_ones,on);
+        err = grib_set_long_internal(grib_handle_of_accessor(a),self->number_of_ones,on);
 
     return err;
 }

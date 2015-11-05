@@ -150,8 +150,8 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
   grib_accessor_data_raw_packing *self =(grib_accessor_data_raw_packing*)a;
 
-  self->number_of_values      = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->precision       = grib_arguments_get_name(a->parent->h,args,self->carg++);
+  self->number_of_values      = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->precision       = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
   a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
@@ -159,7 +159,7 @@ static int value_count(grib_accessor* a,long* n_vals)
 {
   grib_accessor_data_raw_packing *self =(grib_accessor_data_raw_packing*)a;
   *n_vals= 0;
-  return grib_get_long_internal(a->parent->h,self->number_of_values,n_vals);
+  return grib_get_long_internal(grib_handle_of_accessor(a),self->number_of_values,n_vals);
 }
 
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
@@ -174,13 +174,13 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 
   int code = GRIB_SUCCESS;
 
-  if((code = grib_get_long_internal(a->parent->h,self->precision,&precision))
+  if((code = grib_get_long_internal(grib_handle_of_accessor(a),self->precision,&precision))
       != GRIB_SUCCESS)
     return code;
 
   self->dirty=0;
 
-  buf =  (unsigned char*)a->parent->h->buffer->data;
+  buf =  (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
   buf += grib_byte_offset(a);
 
   switch(precision)
@@ -231,7 +231,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
   if (*len ==0) return GRIB_NO_VALUES;
 
-  if((code = grib_get_long_internal(a->parent->h,self->precision,&precision))
+  if((code = grib_get_long_internal(grib_handle_of_accessor(a),self->precision,&precision))
       != GRIB_SUCCESS)
     return code;
 
@@ -273,7 +273,7 @@ clean_up:
 
   grib_context_buffer_free(a->context,buffer);
 
-  code = grib_set_long(a->parent->h,self->number_of_values, inlen);
+  code = grib_set_long(grib_handle_of_accessor(a),self->number_of_values, inlen);
   if(code==GRIB_READ_ONLY) code=0;
 
   return code;
@@ -291,13 +291,13 @@ static int  unpack_double_element(grib_accessor* a, size_t idx, double* val) {
 
   long precision = 0;
 
-  if((ret = grib_get_long_internal(a->parent->h,self->precision,&precision))
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->precision,&precision))
       != GRIB_SUCCESS)
     return ret;
 
   self->dirty=0;
 
-  buf =  (unsigned char*)a->parent->h->buffer->data;
+  buf =  (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
   buf += grib_byte_offset(a);
 
   switch(precision)

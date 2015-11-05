@@ -142,9 +142,9 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 	grib_accessor_g2date* self = (grib_accessor_g2date*)a; 
 	int n = 0;
 
-	self->year  = grib_arguments_get_name(a->parent->h,c,n++);
-	self->month = grib_arguments_get_name(a->parent->h,c,n++);
-	self->day   = grib_arguments_get_name(a->parent->h,c,n++);
+	self->year  = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+	self->month = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+	self->day   = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 
 }
 
@@ -163,9 +163,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 	long month = 0;
 	long day = 0;
 
-	if ((ret=grib_get_long_internal(a->parent->h, self->day,&day))!=GRIB_SUCCESS) return ret;
-  if ((ret=grib_get_long_internal(a->parent->h, self->month,&month))!=GRIB_SUCCESS) return ret;
-  if ((ret=grib_get_long_internal(a->parent->h, self->year,&year))!=GRIB_SUCCESS) return ret;
+	if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->day,&day))!=GRIB_SUCCESS) return ret;
+  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->month,&month))!=GRIB_SUCCESS) return ret;
+  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->year,&year))!=GRIB_SUCCESS) return ret;
 
 	if(*len < 1)
 		return GRIB_WRONG_ARRAY_SIZE;
@@ -195,9 +195,9 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 	month   =  v / 100;     v %= 100;
 	day     =  v;
 
-  if ((ret=grib_set_long_internal(a->parent->h,self->day,day))!=GRIB_SUCCESS) return ret;
-  if ((ret=grib_set_long_internal(a->parent->h,self->month,month))!=GRIB_SUCCESS) return ret;
-  if ((ret=grib_set_long_internal(a->parent->h,self->year,year))!=GRIB_SUCCESS) return ret;
+  if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->day,day))!=GRIB_SUCCESS) return ret;
+  if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->month,month))!=GRIB_SUCCESS) return ret;
+  if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->year,year))!=GRIB_SUCCESS) return ret;
 
 	return GRIB_SUCCESS;
 }

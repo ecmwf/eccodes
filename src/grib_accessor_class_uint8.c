@@ -132,7 +132,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     long value = 0;
     long pos = a->offset;
-    unsigned char* data = a->parent->h->buffer->data;
+    unsigned char* data = grib_handle_of_accessor(a)->buffer->data;
 
     if(*len < 1)
     {

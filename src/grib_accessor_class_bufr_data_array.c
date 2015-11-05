@@ -226,7 +226,7 @@ static long init_length(grib_accessor* a)
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     long section4Length=0;
 
-    grib_handle* h=a->parent->h;
+    grib_handle* h=grib_handle_of_accessor(a);
 
     grib_get_long(h,self->section4LengthName,&section4Length);
 
@@ -240,18 +240,18 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
     const char* dataKeysName=NULL;
     grib_accessor* dataKeysAcc=NULL;
 
-    self->offsetSection4Name = grib_arguments_get_name(a->parent->h,params,n++);
-    self->offsetBeforeDataName = grib_arguments_get_name(a->parent->h,params,n++);
-    self->offsetEndSection4Name = grib_arguments_get_name(a->parent->h,params,n++);
-    self->section4LengthName = grib_arguments_get_name(a->parent->h,params,n++);
-    self->numberOfSubsetsName = grib_arguments_get_name(a->parent->h,params,n++);
-    self->expandedDescriptorsName = grib_arguments_get_name(a->parent->h,params,n++);
-    self->flagsName = grib_arguments_get_name(a->parent->h,params,n++);
-    self->elementsDescriptorsIndexName = grib_arguments_get_name(a->parent->h,params,n++);
-    self->compressedDataName = grib_arguments_get_name(a->parent->h,params,n++);
-    dataKeysName = grib_arguments_get_name(a->parent->h,params,n++);
+    self->offsetSection4Name = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->offsetBeforeDataName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->offsetEndSection4Name = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->section4LengthName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->numberOfSubsetsName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->expandedDescriptorsName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->flagsName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->elementsDescriptorsIndexName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->compressedDataName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    dataKeysName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
 
-    dataKeysAcc=grib_find_accessor(a->parent->h,dataKeysName);
+    dataKeysAcc=grib_find_accessor(grib_handle_of_accessor(a),dataKeysName);
     self->dataKeys=dataKeysAcc->parent;
     self->do_decode=1;
     self->elementsDescriptorsIndex=0;
@@ -371,11 +371,11 @@ static int get_descriptors(grib_accessor* a)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     int ret=0,i,numberOfDescriptors;
-    grib_handle* h=a->parent->h;
+    grib_handle* h=grib_handle_of_accessor(a);
     grib_context* c=a->context;
 
     if (!self->expandedAccessor)
-        self->expandedAccessor=grib_find_accessor(a->parent->h,self->expandedDescriptorsName);
+        self->expandedAccessor=grib_find_accessor(grib_handle_of_accessor(a),self->expandedDescriptorsName);
     self->expanded=grib_accessor_class_expanded_descriptors_get_expanded(self->expandedAccessor,&ret);
 
     numberOfDescriptors=grib_bufr_descriptors_array_used_size(self->expanded);
@@ -1330,7 +1330,7 @@ static GRIB_INLINE void reset_qualifiers(grib_accessor* significanceQualifierGro
 
 static void grib_convert_to_attribute(grib_accessor* a) {
   if (a->h==NULL && a->parent!=NULL) {
-    a->h=a->parent->h;
+    a->h=grib_handle_of_accessor(a);
     a->parent=NULL;
   }
 }
@@ -1388,7 +1388,7 @@ static int create_keys(grib_accessor* a)
 
     gaGroup = grib_accessor_factory(self->dataKeys, &creatorGroup, 0, NULL);
     gaGroup->bufr_group_number=groupNumber;
-    gaGroup->sub_section=grib_section_create(a->parent->h,gaGroup);
+    gaGroup->sub_section=grib_section_create(grib_handle_of_accessor(a),gaGroup);
     section=gaGroup->sub_section;
     rootSection=section;
     sectionUp=self->dataKeys;
@@ -1436,7 +1436,7 @@ static int create_keys(grib_accessor* a)
           }
 
           gaGroup = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
-          gaGroup->sub_section=grib_section_create(a->parent->h,gaGroup);
+          gaGroup->sub_section=grib_section_create(grib_handle_of_accessor(a),gaGroup);
           gaGroup->bufr_group_number=groupNumber;
           accessor_constant_set_type(gaGroup,GRIB_TYPE_LONG);
           accessor_constant_set_dval(gaGroup,groupNumber);
@@ -1468,7 +1468,7 @@ static int create_keys(grib_accessor* a)
             depth++;
           }
           gaGroup = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
-          gaGroup->sub_section=grib_section_create(a->parent->h,gaGroup);
+          gaGroup->sub_section=grib_section_create(grib_handle_of_accessor(a),gaGroup);
           gaGroup->bufr_group_number=groupNumber;
           accessor_constant_set_type(gaGroup,GRIB_TYPE_LONG);
           accessor_constant_set_dval(gaGroup,groupNumber);
@@ -1600,7 +1600,7 @@ static int process_elements(grib_accessor* a,int flag)
     grib_sarray* sval = NULL;
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
 
-    grib_handle* h=a->parent->h;
+    grib_handle* h=grib_handle_of_accessor(a);
     grib_context* c=h->context;
 
     totalSize=self->bitsToEndData;
@@ -1859,16 +1859,16 @@ static int process_elements(grib_accessor* a,int flag)
         long totalLength;
         long section4Length;
 
-        grib_get_long(a->parent->h,"totalLength",&totalLength);
+        grib_get_long(grib_handle_of_accessor(a),"totalLength",&totalLength);
         totalLength+=buffer->ulength-a->length;
-        grib_get_long(a->parent->h,"section4Length",&section4Length);
+        grib_get_long(grib_handle_of_accessor(a),"section4Length",&section4Length);
         section4Length+=buffer->ulength-a->length;
 
         grib_buffer_replace(a,buffer->data,buffer->ulength,1,1);
         grib_buffer_delete(c,buffer);
 
-        grib_set_long(a->parent->h,"totalLength",totalLength);
-        grib_set_long(a->parent->h,"section4Length",section4Length);
+        grib_set_long(grib_handle_of_accessor(a),"totalLength",totalLength);
+        grib_set_long(grib_handle_of_accessor(a),"section4Length",section4Length);
     }
 
     return err;
@@ -1923,7 +1923,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     if (!val) return err;
 
     l=grib_vdarray_used_size(self->numericValues);
-    err=grib_get_long(a->parent->h,self->numberOfSubsetsName,&numberOfSubsets);
+    err=grib_get_long(grib_handle_of_accessor(a),self->numberOfSubsetsName,&numberOfSubsets);
     if (err) return err;
 
     if (self->compressedData) {

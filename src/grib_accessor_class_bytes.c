@@ -162,7 +162,7 @@ static int unpack_string(grib_accessor *a , char*  v, size_t *len){
 	  return GRIB_ARRAY_TOO_SMALL;
   }
   
-  p  = a->parent->h->buffer->data + grib_byte_offset(a);
+  p  = grib_handle_of_accessor(a)->buffer->data + grib_byte_offset(a);
   
   for (i = 0; i < length; i++)  {
     sprintf (s,"%02x", *(p++));

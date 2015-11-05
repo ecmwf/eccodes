@@ -152,7 +152,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
-    dat = a->parent->h->buffer->data[a->offset] & 0x0f;
+    dat = grib_handle_of_accessor(a)->buffer->data[a->offset] & 0x0f;
 
 
     *val = dat;
@@ -169,9 +169,9 @@ static int    pack_long   (grib_accessor* a, const long *val, size_t *len)
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
-    /*  printf("HALF BYTE pack long %ld %02x\n",*val,a->parent->h->buffer->data[a->offset]);*/
-    a->parent->h->buffer->data[a->offset] = (a->parent->h->buffer->data[a->offset] & 0xf0) | (*val & 0x0f);
-    /*  printf("HALF BYTE pack long %ld %02x\n",*val,a->parent->h->buffer->data[a->offset]);*/
+    /*  printf("HALF BYTE pack long %ld %02x\n",*val,grib_handle_of_accessor(a)->buffer->data[a->offset]);*/
+    grib_handle_of_accessor(a)->buffer->data[a->offset] = (a->parent->h->buffer->data[a->offset] & 0xf0) | (*val & 0x0f);
+    /*  printf("HALF BYTE pack long %ld %02x\n",*val,grib_handle_of_accessor(a)->buffer->data[a->offset]);*/
 
     *len = 1;
     return ret;

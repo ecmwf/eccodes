@@ -165,9 +165,9 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
     int n=0;
     grib_accessor_second_order_bits_per_value* self = (grib_accessor_second_order_bits_per_value*)a;
-    self->values = grib_arguments_get_name(a->parent->h,c,n++);
-    self->binaryScaleFactor = grib_arguments_get_name(a->parent->h,c,n++);
-    self->decimalScaleFactor = grib_arguments_get_name(a->parent->h,c,n++);
+    self->values = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->binaryScaleFactor = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->decimalScaleFactor = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
     self->bitsPerValue=0;
 
     a->length=0;
@@ -197,15 +197,15 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
         return GRIB_SUCCESS;
     }
 
-    if((ret = grib_get_size(a->parent->h, self->values,&size)) != GRIB_SUCCESS) {
+    if((ret = grib_get_size(grib_handle_of_accessor(a), self->values,&size)) != GRIB_SUCCESS) {
         *val=self->bitsPerValue;
         return GRIB_SUCCESS;
     }
 
-    if((ret = grib_get_long(a->parent->h, self->binaryScaleFactor,&binaryScaleFactor)) != GRIB_SUCCESS)
+    if((ret = grib_get_long(grib_handle_of_accessor(a), self->binaryScaleFactor,&binaryScaleFactor)) != GRIB_SUCCESS)
         return ret;
 
-    if((ret = grib_get_long_internal(a->parent->h, self->decimalScaleFactor,&decimalScaleFactor)) != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->decimalScaleFactor,&decimalScaleFactor)) != GRIB_SUCCESS)
         return ret;
 
     values=(double*)grib_context_malloc_clear(a->context,sizeof(double)*size);
@@ -214,7 +214,7 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
                 a->name,(long)size);
         return GRIB_OUT_OF_MEMORY;
     }
-    if((ret = grib_get_double_array_internal(a->parent->h, self->values,values,&size)) != GRIB_SUCCESS)
+    if((ret = grib_get_double_array_internal(grib_handle_of_accessor(a), self->values,values,&size)) != GRIB_SUCCESS)
         return ret;
 
     max=values[0];

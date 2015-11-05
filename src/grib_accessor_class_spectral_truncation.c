@@ -146,10 +146,10 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
   grib_accessor_spectral_truncation* self = (grib_accessor_spectral_truncation*)a;
   int n = 0;
 
-  self->J = grib_arguments_get_name(a->parent->h,c,n++);
-  self->K    = grib_arguments_get_name(a->parent->h,c,n++);
-  self->M = grib_arguments_get_name(a->parent->h,c,n++);
-  self->T    = grib_arguments_get_name(a->parent->h,c,n++);
+  self->J = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->K    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->M = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->T    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
@@ -163,15 +163,15 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 
   if(*len < 1) return GRIB_ARRAY_TOO_SMALL;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->J,&J))
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->J,&J))
           != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->K,&K))
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->K,&K))
           != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->M,&M))
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->M,&M))
           != GRIB_SUCCESS)
     return ret;
 
@@ -191,7 +191,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 
   *val=Tc;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->T,&T))
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->T,&T))
           != GRIB_SUCCESS) {
 
     if (Tc == -1)
@@ -200,11 +200,11 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
         a->name, self->J,J, self->K,K, self->M,M);
 
     Tc=0;
-    grib_set_long(a->parent->h, self->T,Tc);
+    grib_set_long(grib_handle_of_accessor(a), self->T,Tc);
 
   } else {
 
-    if (Tc != -1 && Tc != T ) grib_set_long(a->parent->h, self->T,Tc);
+    if (Tc != -1 && Tc != T ) grib_set_long(grib_handle_of_accessor(a), self->T,Tc);
 
   }
 

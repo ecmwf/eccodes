@@ -129,7 +129,7 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
-  grib_get_long_internal(a->parent->h, grib_arguments_get_name(a->parent->h, arg, 0), &a->length);
+  grib_get_long_internal(grib_handle_of_accessor(a), grib_arguments_get_name(a->parent->h, arg, 0), &a->length);
   Assert(a->length>=0);
 
 }
@@ -145,7 +145,7 @@ static int unpack_bytes (grib_accessor* a,unsigned char* buffer, size_t *len) {
   }
   *len = a->length;
 
-  memcpy(buffer, a->parent->h->buffer->data + a->offset, *len);
+  memcpy(buffer, grib_handle_of_accessor(a)->buffer->data + a->offset, *len);
 
   return GRIB_SUCCESS;
 }

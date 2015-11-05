@@ -140,7 +140,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-  *val = (double)a->parent->h->offset;
+  *val = (double)grib_handle_of_accessor(a)->offset;
   *len =1;
   return 0;
 }

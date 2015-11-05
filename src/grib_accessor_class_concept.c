@@ -194,11 +194,11 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     /* TODO properly calling grib_concept_evaluate_long ! */
-    const char *p = grib_concept_evaluate(a->parent->h,a->creator);
+    const char *p = grib_concept_evaluate(grib_handle_of_accessor(a),a->creator);
 
     if(!p) {
         if (a->creator->defaultkey)
-            return grib_get_long_internal(a->parent->h,a->creator->defaultkey,val);
+            return grib_get_long_internal(grib_handle_of_accessor(a),a->creator->defaultkey,val);
 
         return GRIB_NOT_FOUND;
     }
@@ -229,11 +229,11 @@ static void destroy(grib_context* c,grib_accessor* a)
 static int unpack_string (grib_accessor* a, char* val, size_t *len)
 {
     size_t slen ;
-    const char *p = grib_concept_evaluate(a->parent->h,a->creator);
+    const char *p = grib_concept_evaluate(grib_handle_of_accessor(a),a->creator);
 
     if(!p) {
         if (a->creator->defaultkey)
-            return grib_get_string_internal(a->parent->h,a->creator->defaultkey,val,len);
+            return grib_get_string_internal(grib_handle_of_accessor(a),a->creator->defaultkey,val,len);
 
         return GRIB_NOT_FOUND;
     }
@@ -252,7 +252,7 @@ static int unpack_string (grib_accessor* a, char* val, size_t *len)
 
 static int pack_string(grib_accessor* a, const char* val, size_t *len)
 {
-    return  grib_concept_apply(a->parent->h,a->creator,val);
+    return  grib_concept_apply(grib_handle_of_accessor(a),a->creator,val);
 }
 
 static size_t string_length(grib_accessor* a)

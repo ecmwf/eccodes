@@ -166,10 +166,10 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
 
 	size_t l;
 
-	grib_get_long_internal(a->parent->h, self->century,&century);
-	grib_get_long_internal(a->parent->h, self->day,&day);
-	grib_get_long_internal(a->parent->h, self->month,&month);
-	grib_get_long_internal(a->parent->h, self->year,&year);
+	grib_get_long_internal(grib_handle_of_accessor(a), self->century,&century);
+	grib_get_long_internal(grib_handle_of_accessor(a), self->day,&day);
+	grib_get_long_internal(grib_handle_of_accessor(a), self->month,&month);
+	grib_get_long_internal(grib_handle_of_accessor(a), self->year,&year);
 
 	if(*len < 1)
 		return GRIB_BUFFER_TOO_SMALL;

@@ -148,10 +148,10 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
   int ret=0;
   grib_accessor_evaluate* self = (grib_accessor_evaluate*)a;
-  grib_expression* e = grib_arguments_get_expression(a->parent->h,self->arg,0);
+  grib_expression* e = grib_arguments_get_expression(grib_handle_of_accessor(a),self->arg,0);
 
 
-  ret = grib_expression_evaluate_long(a->parent->h,e,val);
+  ret = grib_expression_evaluate_long(grib_handle_of_accessor(a),e,val);
   *len = 1;
 
   return ret;

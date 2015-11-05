@@ -144,11 +144,11 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
   grib_accessor_g1forecastmonth* self = (grib_accessor_g1forecastmonth*)a;
   int n = 0;
 
-  self->verification_yearmonth   = grib_arguments_get_name(a->parent->h,c,n++);
-  self->base_date                = grib_arguments_get_name(a->parent->h,c,n++);
-  self->day                      = grib_arguments_get_name(a->parent->h,c,n++);
-  self->hour                     = grib_arguments_get_name(a->parent->h,c,n++);
-  self->fcmonth                  = grib_arguments_get_name(a->parent->h,c,n++);
+  self->verification_yearmonth   = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->base_date                = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->day                      = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->hour                     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->fcmonth                  = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -175,16 +175,16 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
   long fcmonth = 0;
   long gribForecastMonth = 0;
 
-  if ((ret=grib_get_long_internal(a->parent->h,
+  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a),
        self->verification_yearmonth,&verification_yearmonth))!=GRIB_SUCCESS)
     return ret;
-  if ((ret=grib_get_long_internal(a->parent->h, self->base_date,&base_date))!=GRIB_SUCCESS)
+  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->base_date,&base_date))!=GRIB_SUCCESS)
     return ret;
-  if ((ret=grib_get_long_internal(a->parent->h, self->day,&day))!=GRIB_SUCCESS)
+  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->day,&day))!=GRIB_SUCCESS)
     return ret;
-  if ((ret=grib_get_long_internal(a->parent->h, self->hour,&hour))!=GRIB_SUCCESS)
+  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->hour,&hour))!=GRIB_SUCCESS)
     return ret;
-  if ((ret=grib_get_long_internal(a->parent->h, self->fcmonth,&gribForecastMonth))!=GRIB_SUCCESS)
+  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->fcmonth,&gribForecastMonth))!=GRIB_SUCCESS)
     return ret;
 
   base_yearmonth = base_date / 100;
@@ -214,6 +214,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
   grib_accessor_g1forecastmonth* self = (grib_accessor_g1forecastmonth*)a;
-  return grib_set_long_internal(a->parent->h,self->fcmonth, *val);
+  return grib_set_long_internal(grib_handle_of_accessor(a),self->fcmonth, *val);
 
 }

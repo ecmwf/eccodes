@@ -139,8 +139,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* args)
     grib_accessor_getenv* self = (grib_accessor_getenv*)a;
     static char undefined[]="undefined";
 
-    self->name=grib_arguments_get_string(a->parent->h,args,0);
-    self->default_value=grib_arguments_get_string(a->parent->h,args,1);
+    self->name=grib_arguments_get_string(grib_handle_of_accessor(a),args,0);
+    self->default_value=grib_arguments_get_string(grib_handle_of_accessor(a),args,1);
     if (!self->default_value) self->default_value=undefined;
     self->value=0;
 }

@@ -145,11 +145,11 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
     int n=0;
     grib_accessor_data_apply_boustrophedonic *self =(grib_accessor_data_apply_boustrophedonic*)a;
 
-    self->values  = grib_arguments_get_name(a->parent->h,args,n++);
-    self->numberOfRows = grib_arguments_get_name(a->parent->h,args,n++);
-    self->numberOfColumns = grib_arguments_get_name(a->parent->h,args,n++);
-    self->numberOfPoints = grib_arguments_get_name(a->parent->h,args,n++);
-    self->pl        = grib_arguments_get_name(a->parent->h,args,n++);
+    self->values  = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->numberOfRows = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->numberOfColumns = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->numberOfPoints = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->pl        = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
 
     a->length = 0;
 }
@@ -164,7 +164,7 @@ static int value_count(grib_accessor* a, long* numberOfPoints)
     int ret=0;
 
     *numberOfPoints=0;
-    ret=grib_get_long_internal(a->parent->h,self->numberOfPoints,numberOfPoints);
+    ret=grib_get_long_internal(grib_handle_of_accessor(a),self->numberOfPoints,numberOfPoints);
 
     return ret;
 }
@@ -182,7 +182,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     int ret;
     long numberOfPoints,numberOfRows,numberOfColumns;
 
-    ret=grib_get_long_internal(a->parent->h,self->numberOfPoints,&numberOfPoints);
+    ret=grib_get_long_internal(grib_handle_of_accessor(a),self->numberOfPoints,&numberOfPoints);
     if (ret) return ret;
 
     if(*len < numberOfPoints) {
@@ -190,7 +190,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    ret=grib_get_size(a->parent->h,self->values,&valuesSize);
+    ret=grib_get_size(grib_handle_of_accessor(a),self->values,&valuesSize);
     if (ret) return ret;
 
     /* constant field */
@@ -203,22 +203,22 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     }
 
     values=(double*)grib_context_malloc_clear(a->context,sizeof(double)*numberOfPoints);
-    ret=grib_get_double_array_internal(a->parent->h,self->values,values,&valuesSize);
+    ret=grib_get_double_array_internal(grib_handle_of_accessor(a),self->values,values,&valuesSize);
     if (ret) return ret;
 
     pvalues=values;
     pval=val;
 
-    ret=grib_get_long_internal(a->parent->h,self->numberOfRows,&numberOfRows);
+    ret=grib_get_long_internal(grib_handle_of_accessor(a),self->numberOfRows,&numberOfRows);
     if (ret) return ret;
 
-    ret=grib_get_long_internal(a->parent->h,self->numberOfColumns,&numberOfColumns);
+    ret=grib_get_long_internal(grib_handle_of_accessor(a),self->numberOfColumns,&numberOfColumns);
     if (ret) return ret;
 
-    if (grib_get_size(a->parent->h,self->pl,&plSize) == GRIB_SUCCESS) {
+    if (grib_get_size(grib_handle_of_accessor(a),self->pl,&plSize) == GRIB_SUCCESS) {
         Assert(plSize==numberOfRows);
         pl=(long*)grib_context_malloc_clear(a->context,sizeof(long)*plSize);
-        ret=grib_get_long_array_internal(a->parent->h,self->pl,pl,&plSize);
+        ret=grib_get_long_array_internal(grib_handle_of_accessor(a),self->pl,pl,&plSize);
         if (ret) return ret;
 
         for (j=0;j<numberOfRows;j++) {
@@ -270,7 +270,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     int ret;
     long numberOfPoints,numberOfRows,numberOfColumns;
 
-    ret=grib_get_long_internal(a->parent->h,self->numberOfPoints,&numberOfPoints);
+    ret=grib_get_long_internal(grib_handle_of_accessor(a),self->numberOfPoints,&numberOfPoints);
     if (ret) return ret;
 
     if(*len < numberOfPoints) {
@@ -285,16 +285,16 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     pvalues=values;
     pval=(double*)val;
 
-    ret=grib_get_long_internal(a->parent->h,self->numberOfRows,&numberOfRows);
+    ret=grib_get_long_internal(grib_handle_of_accessor(a),self->numberOfRows,&numberOfRows);
     if (ret) return ret;
 
-    ret=grib_get_long_internal(a->parent->h,self->numberOfColumns,&numberOfColumns);
+    ret=grib_get_long_internal(grib_handle_of_accessor(a),self->numberOfColumns,&numberOfColumns);
     if (ret) return ret;
 
-    if (grib_get_size(a->parent->h,self->pl,&plSize) == GRIB_SUCCESS) {
+    if (grib_get_size(grib_handle_of_accessor(a),self->pl,&plSize) == GRIB_SUCCESS) {
         Assert(plSize==numberOfRows);
         pl=(long*)grib_context_malloc_clear(a->context,sizeof(long)*plSize);
-        ret=grib_get_long_array_internal(a->parent->h,self->pl,pl,&plSize);
+        ret=grib_get_long_array_internal(grib_handle_of_accessor(a),self->pl,pl,&plSize);
         if (ret) return ret;
 
         for (j=0;j<numberOfRows;j++) {
@@ -322,7 +322,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         }
 
     }
-    ret=grib_set_double_array_internal(a->parent->h,self->values,values,valuesSize);
+    ret=grib_set_double_array_internal(grib_handle_of_accessor(a),self->values,values,valuesSize);
     if (ret) return ret;
 
     grib_context_free(a->context,values);

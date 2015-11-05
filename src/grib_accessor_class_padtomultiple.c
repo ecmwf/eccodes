@@ -144,8 +144,8 @@ static size_t preferred_size(grib_accessor* a,int from_handle)
 	long begin = 0;
 	long multiple = 0;
 
-	grib_expression_evaluate_long(a->parent->h,self->begin,&begin);
-	grib_expression_evaluate_long(a->parent->h,self->multiple,&multiple);
+	grib_expression_evaluate_long(grib_handle_of_accessor(a),self->begin,&begin);
+	grib_expression_evaluate_long(grib_handle_of_accessor(a),self->multiple,&multiple);
 
 	padding = a->offset - begin;
 	padding = ((padding + multiple - 1)/multiple)*multiple - padding;
@@ -158,7 +158,7 @@ static void init(grib_accessor* a, const long len, grib_arguments *arg )
 {
 	grib_accessor_padtomultiple* self = (grib_accessor_padtomultiple*)a;
 
-	self->begin    =  grib_arguments_get_expression(a->parent->h, arg,0);
-	self->multiple = grib_arguments_get_expression(a->parent->h, arg,1);
+	self->begin    =  grib_arguments_get_expression(grib_handle_of_accessor(a), arg,0);
+	self->multiple = grib_arguments_get_expression(grib_handle_of_accessor(a), arg,1);
 	a->length         = preferred_size(a,1);
 }

@@ -195,7 +195,7 @@ static grib_hash_array_value* find_hash_value(grib_accessor* a,int *err) {
   grib_hash_array_value* ha_ret=0;
   grib_hash_array_value* ha=NULL;
 
-  ha=get_hash_array(a->parent->h,a->creator);
+  ha=get_hash_array(grib_handle_of_accessor(a),a->creator);
 
   *err=GRIB_SUCCESS;
 

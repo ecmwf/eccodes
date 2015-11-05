@@ -147,9 +147,9 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
   grib_accessor_to_integer* self=(grib_accessor_to_integer*)a;
 
-  self->key=grib_arguments_get_name(a->parent->h,arg,0);
-  self->start=grib_arguments_get_long(a->parent->h,arg,1);
-  self->length=grib_arguments_get_long(a->parent->h,arg,2);
+  self->key=grib_arguments_get_name(grib_handle_of_accessor(a),arg,0);
+  self->start=grib_arguments_get_long(grib_handle_of_accessor(a),arg,1);
+  self->length=grib_arguments_get_long(grib_handle_of_accessor(a),arg,2);
 
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
   a->length=0;
@@ -164,7 +164,7 @@ static int value_count(grib_accessor* a,long* count){
   grib_accessor_to_integer* self=(grib_accessor_to_integer*)a;
   size_t size=0;
 
-  int err=grib_get_size(a->parent->h, self->key,&size);
+  int err=grib_get_size(grib_handle_of_accessor(a), self->key,&size);
   *count=size;
 
   return err;
@@ -176,7 +176,7 @@ static size_t string_length(grib_accessor* a){
 
   if (self->length) return self->length;
 
-  grib_get_string_length(a->parent->h,self->key,&size);
+  grib_get_string_length(grib_handle_of_accessor(a),self->key,&size);
   return size;
 }
 
@@ -206,7 +206,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
     return GRIB_ARRAY_TOO_SMALL;
   }
 
-  err=grib_get_string(a->parent->h,self->key,buff,&size);
+  err=grib_get_string(grib_handle_of_accessor(a),self->key,buff,&size);
   if (err) return err;
   if (length > size) {
   	err=GRIB_STRING_TOO_SMALL;

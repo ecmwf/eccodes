@@ -152,7 +152,7 @@ typedef struct grib_accessor_codetable {
 static void init(grib_accessor* a, const long len, grib_arguments* params) {
 	grib_accessor_codetable_units* self = (grib_accessor_codetable_units*)a;
 	int n=0;
-	self->codetable = grib_arguments_get_name(a->parent->h,params,n++);
+	self->codetable = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
 	a->length=0;
 	a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
@@ -172,7 +172,7 @@ static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
   int err = GRIB_SUCCESS;
   char tmp[1024];
   size_t l = 1024;
-  grib_accessor_codetable* ca=(grib_accessor_codetable*)grib_find_accessor(a->parent->h,self->codetable);
+  grib_accessor_codetable* ca=(grib_accessor_codetable*)grib_find_accessor(grib_handle_of_accessor(a),self->codetable);
 
   if( (err = grib_unpack_long((grib_accessor*)ca,&value,&size)) != GRIB_SUCCESS)
     return err;

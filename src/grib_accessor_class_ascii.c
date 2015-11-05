@@ -172,7 +172,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
   }
 
   for ( i = 0; i < a->length; i++)
-    val[i] = a->parent->h->buffer->data[a->offset+i];
+    val[i] = grib_handle_of_accessor(a)->buffer->data[a->offset+i];
   val[i] = 0;
   len[0] = i;
   return GRIB_SUCCESS;
@@ -192,9 +192,9 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len)
   for ( i = 0; i < a->length; i++)
   {
     if( i < len[0] )
-      a->parent->h->buffer->data[a->offset+i] = val[i];
+      grib_handle_of_accessor(a)->buffer->data[a->offset+i] = val[i];
     else
-      a->parent->h->buffer->data[a->offset+i] = 0;
+      grib_handle_of_accessor(a)->buffer->data[a->offset+i] = 0;
   }
 
   return GRIB_SUCCESS;

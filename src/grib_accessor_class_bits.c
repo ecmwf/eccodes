@@ -155,18 +155,18 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     grib_expression* e=NULL;
     int n = 0;
 
-    self->argument = grib_arguments_get_name(a->parent->h,c,n++);
-    self->start    = grib_arguments_get_long(a->parent->h,c,n++);
-    self->len    = grib_arguments_get_long(a->parent->h,c,n++);
-    e=grib_arguments_get_expression(a->parent->h,c,n++);
+    self->argument = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->start    = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
+    self->len    = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
+    e=grib_arguments_get_expression(grib_handle_of_accessor(a),c,n++);
     if (e) {
-        grib_expression_evaluate_double(a->parent->h,e,&(self->referenceValue));
+        grib_expression_evaluate_double(grib_handle_of_accessor(a),e,&(self->referenceValue));
         self->referenceValuePresent=1;
     } else {
         self->referenceValuePresent=0;
     }
     if (self->referenceValuePresent) {
-        self->scale=grib_arguments_get_double(a->parent->h,c,n++);
+        self->scale=grib_arguments_get_double(grib_handle_of_accessor(a),c,n++);
     }
 
     assert(self->len <= sizeof(long)*8);
@@ -180,7 +180,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     grib_accessor_bits* self = (grib_accessor_bits*)a;
     grib_accessor* x=NULL;
     unsigned char* p=NULL;
-    grib_handle* h=a->parent->h;
+    grib_handle* h=grib_handle_of_accessor(a);
     long start,length;
     int ret=0;
 
@@ -189,7 +189,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     start=self->start;
     length=self->len;
 
-    x=grib_find_accessor(a->parent->h,self->argument);
+    x=grib_find_accessor(grib_handle_of_accessor(a),self->argument);
     if (!x) return GRIB_NOT_FOUND;
 
     p  = h->buffer->data + grib_byte_offset(x);
@@ -205,7 +205,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     grib_accessor_bits* self = (grib_accessor_bits*)a;
     grib_accessor* x=NULL;
     unsigned char* p=NULL;
-    grib_handle* h=a->parent->h;
+    grib_handle* h=grib_handle_of_accessor(a);
     long start,length;
     int ret=0;
 
@@ -214,7 +214,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     start=self->start;
     length=self->len;
 
-    x=grib_find_accessor(a->parent->h,self->argument);
+    x=grib_find_accessor(grib_handle_of_accessor(a),self->argument);
     if (!x) return GRIB_NOT_FOUND;
 
     p  = h->buffer->data + grib_byte_offset(x);
@@ -231,7 +231,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
     grib_accessor_bits* self = (grib_accessor_bits*)a;
     grib_accessor* x=NULL;
-    grib_handle* h=a->parent->h;
+    grib_handle* h=grib_handle_of_accessor(a);
     unsigned char* p=NULL;
     long start,length,lval;
 
@@ -240,7 +240,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     start  = self->start;
     length = self->len;
 
-    x=grib_find_accessor(a->parent->h,self->argument);
+    x=grib_find_accessor(grib_handle_of_accessor(a),self->argument);
     if (!x) return GRIB_NOT_FOUND;
 
     p=h->buffer->data + grib_byte_offset(x);
@@ -254,7 +254,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
     grib_accessor_bits* self = (grib_accessor_bits*)a;
     grib_accessor* x=NULL;
-    grib_handle* h=a->parent->h;
+    grib_handle* h=grib_handle_of_accessor(a);
     unsigned char* p=NULL;
     long start,length, maxval;
 
@@ -263,7 +263,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     start  = self->start;
     length = self->len;
 
-    x=grib_find_accessor(a->parent->h,self->argument);
+    x=grib_find_accessor(grib_handle_of_accessor(a),self->argument);
     if (!x) return GRIB_NOT_FOUND;
 
     /* Check the input value */

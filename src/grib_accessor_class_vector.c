@@ -154,8 +154,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
   grib_accessor_vector* self = (grib_accessor_vector*)a;
   int n = 0;
 
-  self->vector = grib_arguments_get_name(a->parent->h,c,n++);
-  self->index = grib_arguments_get_long(a->parent->h,c,n++);
+  self->vector = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->index = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
   a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
   a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
   a->length=0;
@@ -166,7 +166,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
   size_t size=0;
   double* stat;
   grib_accessor_vector* self = (grib_accessor_vector*)a;
-  grib_accessor* va=(grib_accessor*)grib_find_accessor(a->parent->h,self->vector);
+  grib_accessor* va=(grib_accessor*)grib_find_accessor(grib_handle_of_accessor(a),self->vector);
   grib_accessor_abstract_vector* v = (grib_accessor_abstract_vector*)va;
 
   Assert(self->index>=0);
@@ -177,7 +177,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
   }
 
   if (va->dirty) {
-    grib_get_size(a->parent->h,self->vector,&size);
+    grib_get_size(grib_handle_of_accessor(a),self->vector,&size);
     stat=(double*)grib_context_malloc_clear(a->context,sizeof(double)*size);
     grib_unpack_double(va,stat,&size);
     grib_context_free(a->context,stat);

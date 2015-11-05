@@ -154,22 +154,22 @@ static void init(grib_accessor* a,const long len, grib_arguments* param)
             int ret=0;
             double d;
             char tmp[1024];
-            grib_expression* expression=grib_arguments_get_expression(a->parent->h,act->default_value,0);
-            int type = grib_expression_native_type(a->parent->h,expression);
+            grib_expression* expression=grib_arguments_get_expression(grib_handle_of_accessor(a),act->default_value,0);
+            int type = grib_expression_native_type(grib_handle_of_accessor(a),expression);
             switch(type) {
             case GRIB_TYPE_DOUBLE:
-                grib_expression_evaluate_double(a->parent->h,expression,&d);
+                grib_expression_evaluate_double(grib_handle_of_accessor(a),expression,&d);
                 grib_pack_double(a,&d,&len);
                 break;
 
             case GRIB_TYPE_LONG:
-                grib_expression_evaluate_long(a->parent->h,expression,&l);
+                grib_expression_evaluate_long(grib_handle_of_accessor(a),expression,&l);
                 grib_pack_long(a,&l,&len);
                 break;
 
             default:
                 len = sizeof(tmp);
-                p = grib_expression_evaluate_string(a->parent->h,expression,tmp,&len,&ret);
+                p = grib_expression_evaluate_string(grib_handle_of_accessor(a),expression,tmp,&len,&ret);
                 if (ret != GRIB_SUCCESS) {
                     grib_context_log(a->context,GRIB_LOG_ERROR,"unable to evaluate %s as string",a->name);
                     Assert(0);
@@ -237,7 +237,7 @@ static long byte_offset(grib_accessor* a)
 
 static int unpack_bytes(grib_accessor* a, unsigned char* val, size_t *len)
 {
-    unsigned char* buf = a->parent->h->buffer->data;
+    unsigned char* buf = grib_handle_of_accessor(a)->buffer->data;
     long length = grib_byte_count(a);
     long offset = grib_byte_offset(a);
 
@@ -258,7 +258,7 @@ static int unpack_bytes(grib_accessor* a, unsigned char* val, size_t *len)
 
 static int clear(grib_accessor* a)
 {
-    unsigned char* buf = a->parent->h->buffer->data;
+    unsigned char* buf = grib_handle_of_accessor(a)->buffer->data;
     long length = grib_byte_count(a);
     long offset = grib_byte_offset(a);
 
@@ -381,7 +381,7 @@ static int pack_expression(grib_accessor* a, grib_expression *e){
     {
     case GRIB_TYPE_LONG:
         len = 1;
-        ret = grib_expression_evaluate_long(a->parent->h,e,&lval);
+        ret = grib_expression_evaluate_long(grib_handle_of_accessor(a),e,&lval);
         if (ret != GRIB_SUCCESS) {
             grib_context_log(a->context,GRIB_LOG_ERROR,"unable to set %s as long",a->name);
             return ret;
@@ -391,13 +391,13 @@ static int pack_expression(grib_accessor* a, grib_expression *e){
 
     case GRIB_TYPE_DOUBLE:
         len = 1;
-        ret = grib_expression_evaluate_double(a->parent->h,e,&dval);
+        ret = grib_expression_evaluate_double(grib_handle_of_accessor(a),e,&dval);
         return grib_pack_double(a,&dval,&len);
         break;
 
     case GRIB_TYPE_STRING:
         len = sizeof(tmp);
-        cval = grib_expression_evaluate_string(a->parent->h,e,tmp,&len,&ret);
+        cval = grib_expression_evaluate_string(grib_handle_of_accessor(a),e,tmp,&len,&ret);
         if (ret != GRIB_SUCCESS) {
             grib_context_log(a->context,GRIB_LOG_ERROR,"unable to set %s as string",a->name);
             return ret;
@@ -551,7 +551,7 @@ static int is_missing(grib_accessor* a)
     }
     Assert(a->length>=0);
 
-    v=a->parent->h->buffer->data+a->offset;
+    v=grib_handle_of_accessor(a)->buffer->data+a->offset;
 
     for (i=0; i < a->length; i++) {
         if (*v != ones) {

@@ -161,7 +161,7 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
     grib_accessor_data_g2complex_packing *self =(grib_accessor_data_g2complex_packing*)a;
-    self->numberOfValues    = grib_arguments_get_name(a->parent->h,args,self->carg++);
+    self->numberOfValues    = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
     self->edition=2;
 
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
@@ -172,7 +172,7 @@ static int value_count(grib_accessor* a,long* numberOfValues)
     grib_accessor_data_g2complex_packing* self =  (grib_accessor_data_g2complex_packing*)a;
     *numberOfValues = 0;
 
-    return grib_get_long(a->parent->h,self->numberOfValues,numberOfValues);
+    return grib_get_long(grib_handle_of_accessor(a),self->numberOfValues,numberOfValues);
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
@@ -186,7 +186,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     ret = super->pack_double(a,val,len);
 
     if(ret == GRIB_SUCCESS)
-        ret = grib_set_long_internal(a->parent->h,self->numberOfValues,*len) ;
+        ret = grib_set_long_internal(grib_handle_of_accessor(a),self->numberOfValues,*len) ;
 
     return ret;
 }

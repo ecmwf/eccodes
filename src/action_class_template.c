@@ -209,7 +209,7 @@ static grib_action* reparse(grib_action* a,grib_accessor* acc,int *doit)
 
     if(self->arg){
         char fname[1024];
-        grib_recompose_name(acc->parent->h,NULL,self->arg,fname,1);
+        grib_recompose_name(grib_handle_of_accessor(acc),NULL,self->arg,fname,1);
 
         if ((fpath=grib_context_full_defs_path(acc->context,fname))==NULL) {
             if (!self->nofail) {

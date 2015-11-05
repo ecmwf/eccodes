@@ -138,8 +138,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
     int n=0;
     grib_accessor_mars_step* self = (grib_accessor_mars_step*)a;
-    self->stepRange = grib_arguments_get_name(a->parent->h,c,n++);
-    self->stepType = grib_arguments_get_name(a->parent->h,c,n++);
+    self->stepRange = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->stepType = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
 static int pack_string(grib_accessor* a, const char* val, size_t *len)
@@ -149,14 +149,14 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len)
     char buf[100]={0,};
     int ret;
     grib_accessor_mars_step* self = (grib_accessor_mars_step*)a;
-    grib_accessor* stepRangeAcc=grib_find_accessor(a->parent->h,self->stepRange);
+    grib_accessor* stepRangeAcc=grib_find_accessor(grib_handle_of_accessor(a),self->stepRange);
 
     if (!stepRangeAcc) {
         grib_context_log(a->context,GRIB_LOG_ERROR,"%s not found",self->stepRange);
         return GRIB_NOT_FOUND;
     }
 
-    if ((ret=grib_get_string(a->parent->h,self->stepType,stepType,&stepTypeLen))!=GRIB_SUCCESS)
+    if ((ret=grib_get_string(grib_handle_of_accessor(a),self->stepType,stepType,&stepTypeLen))!=GRIB_SUCCESS)
         return ret;
 
     if (!strcmp(stepType,"instant")) sprintf(buf,"%s",val) ;
@@ -173,7 +173,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
     char* p=NULL;
     size_t buflen=100;
     long step;
-    grib_accessor* stepRangeAcc=grib_find_accessor(a->parent->h,self->stepRange);
+    grib_accessor* stepRangeAcc=grib_find_accessor(grib_handle_of_accessor(a),self->stepRange);
 
     if (!stepRangeAcc) {
         grib_context_log(a->context,GRIB_LOG_ERROR,"%s not found",self->stepRange);
@@ -214,7 +214,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_mars_step* self = (grib_accessor_mars_step*)a;
-    grib_accessor* stepRangeAcc=grib_find_accessor(a->parent->h,self->stepRange);
+    grib_accessor* stepRangeAcc=grib_find_accessor(grib_handle_of_accessor(a),self->stepRange);
 
     if (!stepRangeAcc) return GRIB_NOT_FOUND;
 

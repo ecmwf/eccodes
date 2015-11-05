@@ -151,14 +151,14 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
   int n=0;
   grib_accessor_g1number_of_coded_values_sh_complex* self = (grib_accessor_g1number_of_coded_values_sh_complex*)a;
-  self->bitsPerValue = grib_arguments_get_name(a->parent->h,c,n++);
-  self->offsetBeforeData = grib_arguments_get_name(a->parent->h,c,n++);
-  self->offsetAfterData = grib_arguments_get_name(a->parent->h,c,n++);
-  self->unusedBits = grib_arguments_get_name(a->parent->h,c,n++);
-  self->numberOfValues = grib_arguments_get_name(a->parent->h,c,n++);
-  self->JS = grib_arguments_get_name(a->parent->h,c,n++);
-  self->KS = grib_arguments_get_name(a->parent->h,c,n++);
-  self->MS = grib_arguments_get_name(a->parent->h,c,n++);
+  self->bitsPerValue = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->offsetBeforeData = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->offsetAfterData = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->unusedBits = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->numberOfValues = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->JS = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->KS = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->MS = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
   a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
   a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
   a->length=0;
@@ -173,25 +173,25 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
 
   grib_accessor_g1number_of_coded_values_sh_complex* self = (grib_accessor_g1number_of_coded_values_sh_complex*)a;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->bitsPerValue,&bpv)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->bitsPerValue,&bpv)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->offsetBeforeData,&offsetBeforeData)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetBeforeData,&offsetBeforeData)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->offsetAfterData,&offsetAfterData)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetAfterData,&offsetAfterData)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->unusedBits,&unusedBits)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->unusedBits,&unusedBits)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->JS,&JS)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->JS,&JS)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->KS,&KS)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->KS,&KS)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->MS,&MS)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->MS,&MS)) != GRIB_SUCCESS)
     return ret;
 
   if (JS != KS || KS != MS) return GRIB_NOT_IMPLEMENTED;
@@ -201,7 +201,7 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
   if ( bpv != 0 ) {
 	*val =((offsetAfterData-offsetBeforeData)*8-unusedBits+NS*(bpv-32))/bpv; 
   } else {
-    if((ret = grib_get_long_internal(a->parent->h, self->numberOfValues,&numberOfValues)) != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfValues,&numberOfValues)) != GRIB_SUCCESS)
       return ret;
 
     *val=numberOfValues;

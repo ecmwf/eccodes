@@ -143,7 +143,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
 
 	grib_accessor_g2bitmap* self = (grib_accessor_g2bitmap*)a;
   
-	self->numberOfValues     = grib_arguments_get_name(a->parent->h,arg,4);
+	self->numberOfValues     = grib_arguments_get_name(grib_handle_of_accessor(a),arg,4);
 }
 
 
@@ -168,7 +168,7 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
 	double miss_values = 0;
 	tlen = (*len+7)/8;
 
-	if((err = grib_get_double_internal(a->parent->h, self->missing_value, &miss_values))
+	if((err = grib_get_double_internal(grib_handle_of_accessor(a), self->missing_value, &miss_values))
        != GRIB_SUCCESS)
 		return err;
 
@@ -185,7 +185,7 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
 		}
 	}
 
-	if((err = grib_set_long_internal(a->parent->h, self->numberOfValues,*len )) != GRIB_SUCCESS) {
+	if((err = grib_set_long_internal(grib_handle_of_accessor(a), self->numberOfValues,*len )) != GRIB_SUCCESS) {
 		grib_context_free(a->context,buf);
 		return err;
 	}
@@ -204,7 +204,7 @@ static int value_count(grib_accessor* a,long* tlen)
 	int err;
 	*tlen=0;
 	
-	err=grib_get_long_internal(a->parent->h, self->numberOfValues, tlen);
+	err=grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfValues, tlen);
 	return err;
 }
 

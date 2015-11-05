@@ -142,8 +142,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 	grib_accessor_from_scale_factor_scaled_value* self = (grib_accessor_from_scale_factor_scaled_value*)a;
 	int n = 0;
 
-	self->scaleFactor = grib_arguments_get_name(a->parent->h,c,n++);
-	self->scaledValue = grib_arguments_get_name(a->parent->h,c,n++);
+	self->scaleFactor = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+	self->scaledValue = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 
 	a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
@@ -155,10 +155,10 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 	long scaleFactor=0;
 	long scaledValue=0;
 
-	if((ret = grib_get_long_internal(a->parent->h, self->scaleFactor,&scaleFactor)) != GRIB_SUCCESS)
+	if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->scaleFactor,&scaleFactor)) != GRIB_SUCCESS)
 		return ret;
 
-	if((ret = grib_get_long_internal(a->parent->h, self->scaledValue,&scaledValue)) != GRIB_SUCCESS)
+	if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->scaledValue,&scaledValue)) != GRIB_SUCCESS)
 		return ret;
 
 	*val=scaledValue;
@@ -181,11 +181,11 @@ static int is_missing(grib_accessor* a)
 	long scaleFactor=0;
 	long scaledValue=0;
 
-	if((ret = grib_get_long_internal(a->parent->h, self->scaleFactor,&scaleFactor))
+	if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->scaleFactor,&scaleFactor))
 			!= GRIB_SUCCESS)
 		return ret;
 
-	if((ret = grib_get_long_internal(a->parent->h, self->scaledValue,&scaledValue))
+	if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->scaledValue,&scaledValue))
 			!= GRIB_SUCCESS)
 		return ret;
 

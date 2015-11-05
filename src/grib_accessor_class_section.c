@@ -137,7 +137,7 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
-  a->sub_section           = grib_section_create(a->parent->h,a);
+  a->sub_section           = grib_section_create(grib_handle_of_accessor(a),a);
   a->length                   = 0;
   a->flags                   |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
@@ -150,12 +150,12 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 static long byte_count(grib_accessor* a)
 {
 
- if( !a->length || a->parent->h->loader ) 
+ if( !a->length || grib_handle_of_accessor(a)->loader ) 
  {
 	if(a->name[1]=='_') return 0;
 
 	/* printf("adjusting sizes SECTION %s is %ld %ld\n",a->name,(long)a->offset,(long)a->length); */
-	grib_section_adjust_sizes(a->sub_section,a->parent->h->loader != NULL,0);
+	grib_section_adjust_sizes(a->sub_section,grib_handle_of_accessor(a)->loader != NULL,0);
 	/* printf("                SECTION %s is %ld %ld\n",a->name,(long)a->offset,(long)a->length);  */
  }
 

@@ -137,7 +137,7 @@ static int value_count(grib_accessor* a,long* count)
     size_t len = 0;
     int err=0;
 
-    err=grib_get_size(a->parent->h,self->coded_values,&len);
+    err=grib_get_size(grib_handle_of_accessor(a),self->coded_values,&len);
     len += 1;
 
     *count=len;
@@ -152,7 +152,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     size_t coded_n_vals = 0;
     size_t n_vals = 0;
 
-    if((err = grib_get_size(a->parent->h,self->coded_values,&coded_n_vals)) != GRIB_SUCCESS)
+    if((err = grib_get_size(grib_handle_of_accessor(a),self->coded_values,&coded_n_vals)) != GRIB_SUCCESS)
         return err;
 
     n_vals = coded_n_vals + 1;
@@ -163,12 +163,12 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    if((err = grib_get_double_internal(a->parent->h,self->real_part,val)) != GRIB_SUCCESS)
+    if((err = grib_get_double_internal(grib_handle_of_accessor(a),self->real_part,val)) != GRIB_SUCCESS)
         return err;
 
     val++;
 
-    if((err = grib_get_double_array_internal(a->parent->h,self->coded_values,val,&coded_n_vals)) != GRIB_SUCCESS)
+    if((err = grib_get_double_array_internal(grib_handle_of_accessor(a),self->coded_values,val,&coded_n_vals)) != GRIB_SUCCESS)
         return err;
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,
