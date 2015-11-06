@@ -53,7 +53,7 @@ static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
-static grib_accessor* make_clone(grib_accessor*,grib_section*,int*);
+static grib_accessor* clone(grib_accessor*,grib_section*,int*);
 
 typedef struct grib_accessor_variable {
     grib_accessor          att;
@@ -106,7 +106,7 @@ static grib_accessor_class _grib_accessor_class_variable = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
-    &make_clone,               		/* clone accessor          */
+    &clone,               		/* clone accessor          */
 };
 
 
@@ -396,7 +396,7 @@ static int compare(grib_accessor* a, grib_accessor* b) {
     return retval;
 }
 
-static grib_accessor* make_clone(grib_accessor* a,grib_section* s,int* err) {
+static grib_accessor* clone(grib_accessor* a,grib_section* s,int* err) {
   grib_accessor* clone=NULL;
   grib_accessor_variable *self = (grib_accessor_variable*)a;
   grib_accessor_variable* variableAccessor=NULL;

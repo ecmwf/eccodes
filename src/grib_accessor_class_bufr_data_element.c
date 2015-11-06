@@ -61,7 +61,7 @@ static int value_count(grib_accessor*,long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
-static grib_accessor* make_clone(grib_accessor*,grib_section*,int*);
+static grib_accessor* clone(grib_accessor*,grib_section*,int*);
 static void destroy(grib_context*,grib_accessor*);
 
 
@@ -122,7 +122,7 @@ static grib_accessor_class _grib_accessor_class_bufr_data_element = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
-    &make_clone,               		/* clone accessor          */
+    &clone,               		/* clone accessor          */
 };
 
 
@@ -155,7 +155,7 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-static grib_accessor* make_clone(grib_accessor* a,grib_section* s,int* err) {
+static grib_accessor* clone(grib_accessor* a,grib_section* s,int* err) {
   grib_accessor* operatorAccessor=NULL;
   grib_action operatorCreator = {0, };
   grib_accessor* clone=NULL;
