@@ -76,7 +76,7 @@ static int compare(grib_accessor*, grib_accessor*);
 static int unpack_double_element(grib_accessor*,size_t i, double* val);
 static int unpack_double_subarray(grib_accessor*, double* val,size_t start,size_t len);
 static int clear(grib_accessor*);
-static grib_accessor* clone(grib_accessor*,grib_section*,int*);
+static grib_accessor* make_clone(grib_accessor*,grib_section*,int*);
 
 typedef struct grib_accessor_gen {
     grib_accessor          att;
@@ -124,7 +124,7 @@ static grib_accessor_class _grib_accessor_class_gen = {
     &unpack_double_element,     /* unpack only ith value          */
     &unpack_double_subarray,     /* unpack a subarray         */
     &clear,              		/* clear          */
-    &clone,               		/* clone accessor          */
+    &make_clone,               		/* clone accessor          */
 };
 
 
@@ -574,7 +574,7 @@ static int unpack_double_subarray(grib_accessor* a, double* val,size_t start,siz
     return GRIB_NOT_IMPLEMENTED;
 }
 
-static grib_accessor* clone(grib_accessor* a,grib_section* s,int* err) {
+static grib_accessor* make_clone(grib_accessor* a,grib_section* s,int* err) {
   *err=GRIB_NOT_IMPLEMENTED;
   return NULL;
 }
