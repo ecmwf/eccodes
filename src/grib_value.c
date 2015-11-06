@@ -1338,15 +1338,15 @@ static int grib_get_key_value(grib_handle* h,grib_key_value_list* kv) {
 
 grib_key_value_list* grib_key_value_list_clone(grib_context* c,grib_key_value_list* list) {
     grib_key_value_list* next=list;
-    grib_key_value_list* clone=(grib_key_value_list*)grib_context_malloc_clear(c,sizeof(grib_key_value_list));
-    grib_key_value_list* p=clone;
+    grib_key_value_list* the_clone=(grib_key_value_list*)grib_context_malloc_clear(c,sizeof(grib_key_value_list));
+    grib_key_value_list* p=the_clone;
 
     while (next && next->name) {
         p->name=grib_context_strdup(c,next->name);
         p->type=next->type;
         next=next->next;
     }
-    return clone;
+    return the_clone;
 }
 
 void grib_key_value_list_delete(grib_context* c,grib_key_value_list* kvl) {

@@ -20,7 +20,7 @@
    IMPLEMENTS = unpack_string;pack_string;string_length
    IMPLEMENTS = unpack_long;pack_long;destroy;byte_count
    IMPLEMENTS = init;dump;value_count;get_native_type
-   IMPLEMENTS = compare; clone
+   IMPLEMENTS = compare; make_clone
    MEMBERS=double dval
    MEMBERS=char*  cval
    MEMBERS=int    type
@@ -53,7 +53,7 @@ static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
-static grib_accessor* clone(grib_accessor*,grib_section*,int*);
+static grib_accessor* make_clone(grib_accessor*,grib_section*,int*);
 
 typedef struct grib_accessor_variable {
     grib_accessor          att;
@@ -106,7 +106,7 @@ static grib_accessor_class _grib_accessor_class_variable = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
-    &clone,               		/* clone accessor          */
+    &make_clone,            /* clone accessor          */
 };
 
 
@@ -396,8 +396,9 @@ static int compare(grib_accessor* a, grib_accessor* b) {
     return retval;
 }
 
-static grib_accessor* clone(grib_accessor* a,grib_section* s,int* err) {
-  grib_accessor* clone=NULL;
+static grib_accessor* make_clone(grib_accessor* a,grib_section* s,int* err)
+{
+  grib_accessor* the_clone=NULL;
   grib_accessor_variable *self = (grib_accessor_variable*)a;
   grib_accessor_variable* variableAccessor=NULL;
   grib_action creator = {0, };
@@ -406,10 +407,10 @@ static grib_accessor* clone(grib_accessor* a,grib_section* s,int* err) {
   creator.set        = 0;
 
   creator.name=grib_context_strdup(a->context,a->name);
-  clone=grib_accessor_factory(s, &creator, 0, NULL);
-  clone->parent=NULL;
-  clone->h=s->h;
-  variableAccessor=(grib_accessor_variable*)clone;
+  the_clone=grib_accessor_factory(s, &creator, 0, NULL);
+  the_clone->parent=NULL;
+  the_clone->h=s->h;
+  variableAccessor=(grib_accessor_variable*)the_clone;
 
   *err=0;
   variableAccessor->type=self->type;
@@ -419,6 +420,6 @@ static grib_accessor* clone(grib_accessor* a,grib_section* s,int* err) {
     variableAccessor->dval=self->dval;
   }
 
-  return clone;
+  return the_clone;
 }
 

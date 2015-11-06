@@ -905,7 +905,7 @@ struct grib_accessor_class
     accessor_unpack_double_element_proc     unpack_double_element;
     accessor_unpack_double_subarray_proc    unpack_double_subarray;
     accessor_clear_proc             clear;
-    accessor_clone_proc             clone;
+    accessor_clone_proc             make_clone;
 };
 
 typedef struct grib_multi_support grib_multi_support;

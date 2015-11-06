@@ -155,7 +155,7 @@ static void init_class(grib_accessor_class* c)
 	c->next	=	(*(c->super))->next;
 	c->compare	=	(*(c->super))->compare;
 	c->clear	=	(*(c->super))->clear;
-	c->clone	=	(*(c->super))->clone;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */

@@ -23,7 +23,7 @@
    IMPLEMENTS = init;dump
    IMPLEMENTS = unpack_string;unpack_string_array;unpack_long; unpack_double
    IMPLEMENTS = pack_long; pack_double ; pack_string_array; pack_string
-   IMPLEMENTS = value_count; get_native_type; clone; destroy
+   IMPLEMENTS = value_count; get_native_type; make_clone; destroy
    MEMBERS    = long index
    MEMBERS    = int type
    MEMBERS    = long compressedData
@@ -58,12 +58,11 @@ static int unpack_long(grib_accessor*, long* val,size_t *len);
 static int unpack_string (grib_accessor*, char*, size_t *len);
 static int unpack_string_array (grib_accessor*, char**, size_t *len);
 static int value_count(grib_accessor*,long*);
+static void destroy(grib_context*,grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
-static grib_accessor* clone(grib_accessor*,grib_section*,int*);
-static void destroy(grib_context*,grib_accessor*);
-
+static grib_accessor* make_clone(grib_accessor*,grib_section*,int*);
 
 typedef struct grib_accessor_bufr_data_element {
     grib_accessor          att;
@@ -122,7 +121,7 @@ static grib_accessor_class _grib_accessor_class_bufr_data_element = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
-    &clone,               		/* clone accessor          */
+    &make_clone,            /* clone accessor          */
 };
 
 
@@ -155,10 +154,11 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-static grib_accessor* clone(grib_accessor* a,grib_section* s,int* err) {
+static grib_accessor* make_clone(grib_accessor* a,grib_section* s,int* err)
+{
   grib_accessor* operatorAccessor=NULL;
   grib_action operatorCreator = {0, };
-  grib_accessor* clone=NULL;
+  grib_accessor* the_clone=NULL;
   grib_accessor* attribute=NULL;
   grib_accessor_bufr_data_element* elementAccessor;
   grib_accessor_bufr_data_element* self;
@@ -173,13 +173,13 @@ static grib_accessor* clone(grib_accessor* a,grib_section* s,int* err) {
   }
   *err=0;
 
-  clone = grib_accessor_factory(s, &creator, 0, NULL);
-  clone->name=grib_context_strdup(a->context,a->name);
-  elementAccessor=(grib_accessor_bufr_data_element*)clone;
+  the_clone = grib_accessor_factory(s, &creator, 0, NULL);
+  the_clone->name=grib_context_strdup(a->context,a->name);
+  elementAccessor=(grib_accessor_bufr_data_element*)the_clone;
   self=(grib_accessor_bufr_data_element*)a;
-  clone->flags=a->flags;
-  clone->parent=NULL;
-  clone->h=s->h;
+  the_clone->flags=a->flags;
+  the_clone->parent=NULL;
+  the_clone->h=s->h;
   elementAccessor->index=self->index;
   elementAccessor->type=self->type;
   elementAccessor->numberOfSubsets=self->numberOfSubsets;
@@ -194,11 +194,11 @@ static grib_accessor* clone(grib_accessor* a,grib_section* s,int* err) {
   while (a->attributes[i]) {
     attribute=grib_accessor_clone(a->attributes[i],s,err);
     /* attribute->parent=a->parent; */
-    grib_accessor_add_attribute(clone,attribute);
+    grib_accessor_add_attribute(the_clone,attribute);
     i++;
   }
 
-  return clone;
+  return the_clone;
 
 }
 

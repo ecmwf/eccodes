@@ -123,7 +123,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
-	c->clone	=	(*(c->super))->clone;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
