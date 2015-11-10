@@ -918,7 +918,7 @@ echo "Test: set BUFRTemplate" >> $fLog
 echo "file: $f" >> $fLog
 
 cat >$fRules <<EOF
-set BUFRTemplate="synopLand";
+set BufrTemplate="synopLand";
 write;
 EOF
 
