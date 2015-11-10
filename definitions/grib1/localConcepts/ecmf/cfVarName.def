@@ -9009,6 +9009,26 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 44 ;
 	}
+#Cloud base height aviation
+'cbha' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 45 ;
+	}
+#Cloud top height convective
+'cthc' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 46 ;
+	}
+#Height of Zero Deg Wet Bulb Temperature
+'hwbt0' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 47 ;
+	}
+#Height of One Deg Wet Bulb Temperature
+'hwbt1' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 48 ;
+	}
 #GPP coefficient from Biogenic Flux Adjustment System
 'gppbfas' = {
 	 table2Version = 228 ;
