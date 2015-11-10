@@ -909,6 +909,25 @@ ${tools_dir}bufr_compare ${f}.out $f 2>> $fLog 1>> $fLog
 rm -f  ${f}.out 
 
 #-----------------------------------------------------------
+# Test: set BUFRTemplate
+#-----------------------------------------------------------
+f="temp_101.bufr"
+fOut="syno.bufr.out"
+fRef="syno.bufr.out.ref"
+echo "Test: set BUFRTemplate" >> $fLog
+echo "file: $f" >> $fLog
+
+cat >$fRules <<EOF
+set BUFRTemplate="synopLand";
+write;
+EOF
+
+${tools_dir}bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}bufr_compare $fOut $fRef 2>> $fLog 1>> $fLog
+
+rm -f $fOut 
+
+#-----------------------------------------------------------
 # Test: set keys in data section
 #-----------------------------------------------------------
 f="syno_1.bufr"
