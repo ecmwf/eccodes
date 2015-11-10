@@ -68,3 +68,14 @@ foreach( test ${tests} )
                       TEST_DEPENDS eccodes_get_gribs eccodes_get_tigge_gribs eccodes_get_bufrs
     )
 endforeach()
+
+
+ecbuild_add_test( TARGET eccodes_p_make_flight_bufr_test
+                  TYPE       SCRIPT
+                  DEPENDS    ${ptools}
+                  COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/make_flight_bufr.sh
+                  CONDITION  HAVE_PYTHON
+                  ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
+                  RESOURCES   flight_data.csv
+                  TEST_DEPENDS eccodes_get_bufrs
+)
