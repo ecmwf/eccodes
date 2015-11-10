@@ -34,9 +34,11 @@ character(len=9)   :: typicalDate
 
   do while (iret/=CODES_END_OF_FILE)
     
+    ! For debugging
+    call codes_dump(ibufr)
+
     ! get and print some keys form the BUFR header 
     write(*,*) 'message: ',count
-	call codes_dump(ibufr)
 
     ! we need to instruct ecCodes to expand all the descriptors 
     ! i.e. unpack the data values
