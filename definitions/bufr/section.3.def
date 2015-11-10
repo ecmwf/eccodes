@@ -76,7 +76,7 @@ transient createNewData=1;
 meta numberOfUnexpandedDescriptors   evaluate( (section3Length - 7) / 2 ) ;
 meta unexpandedDescriptors unexpanded_descriptors(numberOfUnexpandedDescriptors,createNewData) :dump;
 
-concept_nofail BUFRTemplate (unknown,"BUFRTemplate.def",templatesMasterDir,templatesLocalDir) : no_copy;
+concept BufrTemplate (unknown,"BUFRTemplate.def",templatesMasterDir,templatesLocalDir) : no_copy;
 
 meta elementsTable bufr_elements_table("element.table",tablesMasterDir,tablesLocalDir) : hidden; 
 
