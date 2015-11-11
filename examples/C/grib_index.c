@@ -7,6 +7,14 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
+
+/*
+ * C Implementation: grib_index
+ *
+ * Description: How to create and use an index to access GRIB messages from a file
+ *
+ */
+
 #include "grib_api.h"
 
 void usage(char* prog) {

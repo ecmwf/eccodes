@@ -8,6 +8,8 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
+# Description: How to create and use an index to access GRIB messages from a file
+
 import traceback
 import sys,os
 
