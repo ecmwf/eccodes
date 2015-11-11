@@ -14,7 +14,7 @@ fBufrTmp=${label}.tmp.bufr
 
 REDIRECT=/dev/null
 
-$PYTHON $examples_src/make_flight_bufr.py $csv_in $bufr_in $fBufrTmp
+$PYTHON $examples_src/bufr_encode_flight.py $csv_in $bufr_in $fBufrTmp
 
 # Make sure output is OK
 ${tools_dir}bufr_dump $fBufrTmp > $REDIRECT
