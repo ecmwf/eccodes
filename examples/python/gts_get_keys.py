@@ -18,36 +18,38 @@ import sys
 
 from eccodes import *
 
-INPUT='../../data/gts/EGRR20150317121020_00493212.DAT'
-VERBOSE=1 # verbose error reporting
+INPUT = '../../data/gts/EGRR20150317121020_00493212.DAT'
+VERBOSE = 1  # verbose error reporting
+
 
 def example():
 
     # open bufr file
     f = open(INPUT)
 
-    cnt=0
+    cnt = 0
 
     # loop for the messages in the file
     while 1:
         # get handle for message
         gid = codes_gts_new_from_file(f)
-        if gid is None: break
+        if gid is None:
+            break
 
         print "message: %s" % cnt
 
         #----------------------------------------------
         # get values for keys holding a single value
         #----------------------------------------------
-        keys=[ 'TT', 'AA', 'II', 'CCCC', 'YY', 'GG', 'gg', 'BBB' ]
+        keys = ['TT', 'AA', 'II', 'CCCC', 'YY', 'GG', 'gg', 'BBB']
 
         for key in keys:
-          try:
-            print '  %s: %s' % (key,codes_get(gid,key))
-          except CodesInternalError,err:
-            print 'Error with key="%s" : %s' % (key,err.msg)
+            try:
+                print '  %s: %s' % (key, codes_get(gid, key))
+            except CodesInternalError, err:
+                print 'Error with key="%s" : %s' % (key, err.msg)
 
-        cnt+=1
+        cnt += 1
 
         # delete handle
         codes_release(gid)
@@ -55,14 +57,15 @@ def example():
     # close the file
     f.close()
 
+
 def main():
     try:
         example()
-    except CodesInternalError,err:
+    except CodesInternalError, err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr,err.msg
+            print >>sys.stderr, err.msg
 
         return 1
 

@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
 #
-# Python implementation:  bufr_read_scatterometer 
+# Python implementation:  bufr_read_scatterometer
 #
 # Description: how to read data for a given beam from scatterometer BUFR messages.
 #
@@ -22,53 +22,55 @@ import sys
 
 from eccodes import *
 
-INPUT='../../data/bufr/asca_139.bufr'
-VERBOSE=1 # verbose error reporting
+INPUT = '../../data/bufr/asca_139.bufr'
+VERBOSE = 1  # verbose error reporting
+
 
 def example():
 
     # open bufr file
     f = open(INPUT)
 
-    cnt=0
+    cnt = 0
 
     # loop for the messages in the file
     while 1:
         # get handle for message
         gid = codes_bufr_new_from_file(f)
-        if gid is None: break
+        if gid is None:
+            break
 
         print "message: %s" % cnt
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(gid,'unpack',1)
+        codes_set(gid, 'unpack', 1)
 
         # The BUFR file contains a single message with 2016 subsets in a compressed form.
         # It means each subset has exactly the same structure: they store one location with
-        # several beams and one backscatter value in each beam. 
+        # several beams and one backscatter value in each beam.
         #
-        # To print the backScatter values for beamIdentifier=2 from all the subsets 
+        # To print the backScatter values for beamIdentifier=2 from all the subsets
         # we will simply access the key by condition (see below)
-        
+
         # Get the total number of subsets.
-        numObs=codes_get(gid,"numberOfSubsets")
-        
-        print '  Number of values: %ld'  % (numObs)
-        
-        #Get latitude (for all the subsets)
-        lat=codes_get_array(gid,"latitude")
-        
-        #Get longitude (for all the subsets)
-        lon=codes_get_array(gid,"longitude")
-        
-        #Get backScatter for beam two. We use an access by condition for this key. 
+        numObs = codes_get(gid, "numberOfSubsets")
+
+        print '  Number of values: %ld' % (numObs)
+
+        # Get latitude (for all the subsets)
+        lat = codes_get_array(gid, "latitude")
+
+        # Get longitude (for all the subsets)
+        lon = codes_get_array(gid, "longitude")
+
+        # Get backScatter for beam two. We use an access by condition for this key.
         #(for all the subsets)
-        bscat=codes_get_array(gid,"/beamIdentifier=2/backscatter")
+        bscat = codes_get_array(gid, "/beamIdentifier=2/backscatter")
 
         # Check that all arrays are same size
-        if len(lat) != numObs or len(lon) != numObs or len(bscat) != numObs :
-            print 'inconsistent array dimension'       
+        if len(lat) != numObs or len(lon) != numObs or len(bscat) != numObs:
+            print 'inconsistent array dimension'
             return 1
 
         # Print the values
@@ -76,9 +78,9 @@ def example():
         print "-------------------------------"
 
         for i in xrange(numObs):
-            print "%3d %.2f %.2f %.2f" % (i+1,lat[i],lon[i],bscat[i])
+            print "%3d %.2f %.2f %.2f" % (i + 1, lat[i], lon[i], bscat[i])
 
-        cnt+=1
+        cnt += 1
 
         # delete handle
         codes_release(gid)
@@ -86,14 +88,15 @@ def example():
     # close the file
     f.close()
 
+
 def main():
     try:
         example()
-    except CodesInternalError,err:
+    except CodesInternalError, err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr,err.msg
+            print >>sys.stderr, err.msg
 
         return 1
 

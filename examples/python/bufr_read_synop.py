@@ -23,8 +23,9 @@ import sys
 
 from eccodes import *
 
-INPUT='../../data/bufr/syno_multi.bufr'
-VERBOSE=1 # verbose error reporting
+INPUT = '../../data/bufr/syno_multi.bufr'
+VERBOSE = 1  # verbose error reporting
+
 
 def example():
 
@@ -41,43 +42,44 @@ def example():
         'dewpointTemperatureAt2M',
         'windSpeedAt10M',
         'windDirectionAt10M',
-        '#1#cloudAmount',  #cloud amount (low and mid level)
-        '#1#heightOfBaseOfCloud', 
-        '#1#cloudType',   #cloud type (low clouds)
-        '#2#cloudType',   #cloud type (middle clouds)
-        '#3#cloudType'    #cloud type (highclouds)
-        ]
+        '#1#cloudAmount',  # cloud amount (low and mid level)
+        '#1#heightOfBaseOfCloud',
+        '#1#cloudType',  # cloud type (low clouds)
+        '#2#cloudType',  # cloud type (middle clouds)
+        '#3#cloudType'  # cloud type (highclouds)
+    ]
 
     # The cloud information is stored in several blocks in the
     # SYNOP message and the same key means a different thing in different
     # parts of the message. In this example we will read the first
     # cloud block introduced by the key
-    # verticalSignificanceSurfaceObservations=1. 
+    # verticalSignificanceSurfaceObservations=1.
     # We know that this is the first occurrence of the keys we want to
-    # read so in the list above we used the # (occurrence) operator accordingly. 
-        
-    cnt=0
+    # read so in the list above we used the # (occurrence) operator accordingly.
+
+    cnt = 0
 
     # loop for the messages in the file
     while 1:
         # get handle for message
         gid = codes_bufr_new_from_file(f)
-        if gid is None: break
+        if gid is None:
+            break
 
         print "message: %s" % cnt
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(gid,'unpack',1)
+        codes_set(gid, 'unpack', 1)
 
         # print the values for the selected keys from the message
         for key in keys:
             try:
-                print '  %s: %s' % (key,codes_get(gid,key))
-            except CodesInternalError,err:
-                print 'Error with key="%s" : %s' % (key,err.msg) 
+                print '  %s: %s' % (key, codes_get(gid, key))
+            except CodesInternalError, err:
+                print 'Error with key="%s" : %s' % (key, err.msg)
 
-        cnt+=1
+        cnt += 1
 
         # delete handle
         codes_release(gid)
@@ -85,14 +87,15 @@ def example():
     # close the file
     f.close()
 
+
 def main():
     try:
         example()
-    except CodesInternalError,err:
+    except CodesInternalError, err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr,err.msg
+            print >>sys.stderr, err.msg
 
         return 1
 
