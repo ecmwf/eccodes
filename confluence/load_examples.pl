@@ -10,7 +10,7 @@ use strict;
 #The root page of examples in confluence!!!
 my $rootPage="API examples";
 
-my @langKeys=("c","f","p");
+my @langKeys=("f","p","c");
 
 my %langName = ("f" => "Fortran 90",
              "c"  => "C",
@@ -30,6 +30,8 @@ my %langDir = ("f" => "F90",
 
 
 my $CONF=$ENV{CONF}; 
+die "Env var CONF should point to confluence.sh script" if ( $CONF == "" || ! -f "$CONF" );
+
 my $inRootDir;
 
 #---------------------------------
