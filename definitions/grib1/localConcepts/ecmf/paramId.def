@@ -9029,6 +9029,26 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 48 ;
 	}
+#Instantaneous total lightning density
+'228050' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 50 ;
+	}
+#Averaged total lightning density
+'228051' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 51 ;
+	}
+#Instantaneous cloud-to-ground lightning density
+'228052' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 52 ;
+	}
+#Averaged cloud-to-ground lightning density
+'228053' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 53 ;
+	}
 #GPP coefficient from Biogenic Flux Adjustment System
 '228078' = {
 	 table2Version = 228 ;

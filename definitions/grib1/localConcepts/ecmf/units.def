@@ -9029,6 +9029,26 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 48 ;
 	}
+#Instantaneous total lightning density
+'flashes/km2/day' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 50 ;
+	}
+#Averaged total lightning density
+'flashes/km2/day' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 51 ;
+	}
+#Instantaneous cloud-to-ground lightning density
+'flashes/km2/day' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 52 ;
+	}
+#Averaged cloud-to-ground lightning density
+'flashes/km2/day' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 53 ;
+	}
 #GPP coefficient from Biogenic Flux Adjustment System
 'dimensionless' = {
 	 table2Version = 228 ;
