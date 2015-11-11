@@ -19,7 +19,8 @@ sub loadToConf {
     my ($fHtml,$title,$parentPage) = @_;
     
     my $cmd="$CONF -a addPage --noConvert --replace --space \"ECC\" --title \"$title\" --parent \"$parentPage\" --file $fHtml";
- 
+    #my $cmd="$CONF -a addPage --noConvert --replace --space \"~cgr\" --title \"$title\" --parent \"$parentPage\" --file $fHtml";
+    
     print "\t\tUpload to conflunce with command:\n\t$cmd\n";   
     system($cmd);
 }    
