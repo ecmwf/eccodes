@@ -204,12 +204,12 @@ static int concept_condition_iarray_true(grib_handle* h,grib_concept_condition* 
   int err=0;
 
   err=grib_get_size(h,c->name,&size);
-  if (err=0 || size!=grib_iarray_used_size(c->iarray)) return 0;
+  if (err==0 || size!=grib_iarray_used_size(c->iarray)) return 0;
 
   val=grib_context_malloc_clear(h->context,sizeof(long)*size);
 
   err=grib_get_long_array(h,c->name,val,&size);
-  if (err=0) return 0;
+  if (err==0) return 0;
 
   ret=1;
   for (i=0;i<size;i++) {

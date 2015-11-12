@@ -931,7 +931,7 @@ fOut="airep.bufr.out"
 fRef="airep.bufr.out.ref"
 
 cat >$fRules <<EOF
-set BufrTemplate="airepWithSecondsAndPressure";
+set BufrTemplate="aircraftReportWithSecondsAndPressure";
 write;
 EOF
 
