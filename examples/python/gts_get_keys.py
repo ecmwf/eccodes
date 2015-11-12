@@ -3,8 +3,9 @@
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
 #
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation
+# nor does it submit to any jurisdiction.
 
 #
 # Python implementation: bufr_get_keys
@@ -38,9 +39,9 @@ def example():
 
         print "message: %s" % cnt
 
-        #----------------------------------------------
+        # ---------------------------------------------
         # get values for keys holding a single value
-        #----------------------------------------------
+        # ---------------------------------------------
         keys = ['TT', 'AA', 'II', 'CCCC', 'YY', 'GG', 'gg', 'BBB']
 
         for key in keys:

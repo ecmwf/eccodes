@@ -4,11 +4,13 @@
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
 #
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation
+# nor does it submit to any jurisdiction.
 #
 
-# Description: How to create and use an index to access GRIB messages from a file
+# Description: How to create and use an index to access GRIB messages from
+# a file
 
 import traceback
 import sys
@@ -68,7 +70,8 @@ def example():
             gid = codes_new_from_index(iid)
             if gid is None:
                 break
-            print " ".join(["%s=%s" % (key, codes_get(gid, key)) for key in index_keys])
+            print " ".join(["%s=%s" % (key, codes_get(gid, key))
+                            for key in index_keys])
             codes_release(gid)
 
     codes_index_release(iid)

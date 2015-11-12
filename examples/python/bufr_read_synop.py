@@ -3,8 +3,9 @@
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
 #
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation
+# nor does it submit to any jurisdiction.
 
 #
 # Python implementation: bufr_read_synop
@@ -12,11 +13,10 @@
 # Description: how to read data values from BUFR messages.
 #
 
-#
-# Please note that SYNOP reports can be encoded in various ways in BUFR. Therefore the code
-# below might not work directly for other types of SYNOP messages than the one used in the
-# example. It is advised to use bufr_dump to understand the structure of the messages.
-#
+# Please note that SYNOP reports can be encoded in various ways in BUFR.
+# Therefore the code below might not work directly for other types of SYNOP
+# messages than the one used in the example. It is advised to use bufr_dump to
+# understand the structure of the messages.
 
 import traceback
 import sys
@@ -55,7 +55,8 @@ def example():
     # cloud block introduced by the key
     # verticalSignificanceSurfaceObservations=1.
     # We know that this is the first occurrence of the keys we want to
-    # read so in the list above we used the # (occurrence) operator accordingly.
+    # read so in the list above we used the # (occurrence) operator
+    # accordingly.
 
     cnt = 0
 

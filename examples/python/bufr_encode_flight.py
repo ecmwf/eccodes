@@ -18,7 +18,7 @@ from eccodes import *
 
 def example(csvfile, input_filename, output_filename):
 
-    fbufrin = open(input_filename,  'rb')
+    fbufrin = open(input_filename, 'rb')
     fbufrout = open(output_filename, 'wb')
 
     print 'Using ecCodes version: ', codes_get_api_version()
