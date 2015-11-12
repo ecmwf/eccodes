@@ -3,17 +3,20 @@
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
 #
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation
+# nor does it submit to any jurisdiction.
 
 #
 # Python implementation:  bufr_read_scatterometer
 #
-# Description: how to read data for a given beam from scatterometer BUFR messages.
+# Description: how to read data for a given beam from scatterometer BUFR
+# messages.
 #
-# Please note that scatterometer data can be encoded in various ways in BUFR. Therefore the code
-# below might not work directly for other types of messages than the one used in the
-# example. It is advised to use bufr_dump first to understand the structure of these messages.
+# Please note that scatterometer data can be encoded in various ways in BUFR.
+# Therefore the code below might not work directly for other types of messages
+# than the one used in the example. It is advised to use bufr_dump first to
+# understand the structure of these messages.
 #
 
 
@@ -46,12 +49,13 @@ def example():
         # i.e. unpack the data values
         codes_set(gid, 'unpack', 1)
 
-        # The BUFR file contains a single message with 2016 subsets in a compressed form.
-        # It means each subset has exactly the same structure: they store one location with
-        # several beams and one backscatter value in each beam.
+        # The BUFR file contains a single message with 2016 subsets in a
+        # compressed form. It means each subset has exactly the same structure:
+        # they store one location with several beams and one backscatter value
+        # in each beam.
         #
-        # To print the backScatter values for beamIdentifier=2 from all the subsets
-        # we will simply access the key by condition (see below)
+        # To print the backScatter values for beamIdentifier=2 from all the
+        # subsets we will simply access the key by condition (see below)
 
         # Get the total number of subsets.
         numObs = codes_get(gid, "numberOfSubsets")
@@ -64,8 +68,8 @@ def example():
         # Get longitude (for all the subsets)
         lon = codes_get_array(gid, "longitude")
 
-        # Get backScatter for beam two. We use an access by condition for this key.
-        #(for all the subsets)
+        # Get backScatter for beam two. We use an access by condition for this
+        # key (for all the subsets).
         bscat = codes_get_array(gid, "/beamIdentifier=2/backscatter")
 
         # Check that all arrays are same size

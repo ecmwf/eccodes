@@ -3,8 +3,9 @@
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
 #
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation
+# nor does it submit to any jurisdiction.
 
 #
 # Python implementation: bufr_keys_iterator
@@ -59,8 +60,6 @@ def example():
 
             # print key name
             keyname = codes_keys_iterator_get_name(iterid)
-            #keyval = codes_get_string(iterid,keyname)
-            # print "%s = %s" % (keyname,keyval)
             print "  %s" % keyname
 
         # delete the key iterator
