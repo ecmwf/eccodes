@@ -145,7 +145,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     long length=0;
     char tmp[1024];
-    char identifier[100];
     size_t idlen=100;
     int i,err=0;
     grib_accessor* a=NULL;
