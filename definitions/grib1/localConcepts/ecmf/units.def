@@ -9009,11 +9009,6 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Cloud base height aviation
-'m' = {
-	 table2Version = 228 ;
-	 indicatorOfParameter = 45 ;
-	}
 #Cloud top height convective
 'm' = {
 	 table2Version = 228 ;
