@@ -29,5 +29,6 @@ BUFR (
       bufr_read_synop
       bufr_read_temp
       bufr_set_keys
+      bufr_subset
       )
 

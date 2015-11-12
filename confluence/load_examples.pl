@@ -30,17 +30,21 @@ my %langDir = ("f" => "F90",
 
 
 my $CONF=$ENV{CONF}; 
-die "Env var CONF should point to confluence.sh script" if ( $CONF == "" || ! -f "$CONF" );
+die "Env var CONF should point to confluence.sh script" if ( $CONF eq "" || ! -f "$CONF" );
 
 my $inRootDir;
+my $confSpace="ECC";
 
 #---------------------------------
 # Read arguments
 #---------------------------------
 
-GetOptions("inDir=s" => \$inRootDir)
+GetOptions("inDir=s" => \$inRootDir,
+           "confSpace=s" => \$confSpace)
  	or die("Error in command line arguments\n");
  
+print "confluence space=".$confSpace."\n";
+
 #----------------------------------
 # Dirs
 #----------------------------------
@@ -360,7 +364,7 @@ sub loadToConf {
     
     my ($fHtml,$title,$parentPage) = @_;
    
-    system("$CONF -a addPage --noConvert --replace --space \"ECC\" --title \"$title\" --parent \"$parentPage\" --file $fHtml");
+    system("$CONF -a addPage --noConvert --replace --space \"$confSpace\" --title \"$title\" --parent \"$parentPage\" --file $fHtml");
 }    
 
 #---------------------------------------
