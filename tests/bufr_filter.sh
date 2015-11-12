@@ -927,6 +927,19 @@ ${tools_dir}bufr_compare $fOut $fRef 2>> $fLog 1>> $fLog
 
 rm -f $fOut 
 
+fOut="airep.bufr.out"
+fRef="airep.bufr.out.ref"
+
+cat >$fRules <<EOF
+set BufrTemplate="airepWithSecondsAndPressure";
+write;
+EOF
+
+${tools_dir}bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}bufr_compare $fOut $fRef 2>> $fLog 1>> $fLog
+
+rm -f $fOut 
+
 #-----------------------------------------------------------
 # Test: set keys in data section
 #-----------------------------------------------------------

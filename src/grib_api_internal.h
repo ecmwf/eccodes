@@ -943,6 +943,7 @@ struct grib_concept_condition {
   grib_concept_condition* next;
   char*               name;
   grib_expression*    expression;
+  grib_iarray*    iarray;
 };
 
 typedef struct grib_concept_value_name grib_concept_value_name;

@@ -747,7 +747,8 @@ concept_conditions : concept_condition
                 | concept_condition concept_conditions { $1->next = $2; $$ = $1; }
         ;
 
-concept_condition   : IDENT '=' expression ';' { $$ = grib_concept_condition_new(grib_parser_context,$1,$3); free($1); }
+concept_condition   : IDENT '=' expression ';' { $$ = grib_concept_condition_new(grib_parser_context,$1,$3,0); free($1); }
+         | IDENT '=' '[' integer_array ']' ';' { $$ = grib_concept_condition_new(grib_parser_context,$1,0,$4); free($1); }
         ;
 
 

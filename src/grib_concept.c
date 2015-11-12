@@ -33,11 +33,12 @@ void grib_concept_value_delete(grib_context* c,grib_concept_value* v)
 	grib_context_free_persistent(c,v);
 }
 
-grib_concept_condition* grib_concept_condition_new(grib_context* c,const char* name,grib_expression* expression)
+grib_concept_condition* grib_concept_condition_new(grib_context* c,const char* name,grib_expression* expression, grib_iarray* iarray)
 {
 	grib_concept_condition* v = (grib_concept_condition*)grib_context_malloc_clear_persistent(c,sizeof(grib_concept_condition));
 	v->name = grib_context_strdup_persistent(c,name);
 	v->expression = expression;
+  v->iarray=iarray;
 	return v;
 }
 

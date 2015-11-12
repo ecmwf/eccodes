@@ -65,9 +65,9 @@ grib_action *grib_action_create_trigger(grib_context *context, grib_arguments *a
 grib_action *grib_action_create_when(grib_context *context, grib_expression *expression, grib_action *block_true, grib_action *block_false);
 
 /* action_class_concept.c */
+grib_concept_value* action_concept_get_concept(grib_accessor* a);
+int action_concept_get_nofail(grib_accessor* a) ;
 grib_action *grib_action_create_concept(grib_context *context, const char *name, grib_concept_value *concept, const char *basename, const char *name_space, const char *defaultkey, const char *masterDir, const char *localDir, const char *ecmfDir, int flags, int nofail);
-const char *grib_concept_evaluate(grib_handle *h, grib_action *act);
-int grib_concept_apply(grib_handle *h, grib_action *act, const char *name);
 
 /* action_class_hash_array.c */
 grib_action *grib_action_create_hash_array(grib_context *context, const char *name, grib_hash_array_value *hash_array, const char *basename, const char *name_space, const char *defaultkey, const char *masterDir, const char *localDir, const char *ecmfDir, int flags, int nofail);
@@ -158,7 +158,7 @@ void grib_accessors_list_delete(grib_context *c, grib_accessors_list *al);
 /* grib_concept.c */
 grib_concept_value *grib_concept_value_new(grib_context *c, const char *name, grib_concept_condition *conditions);
 void grib_concept_value_delete(grib_context *c, grib_concept_value *v);
-grib_concept_condition *grib_concept_condition_new(grib_context *c, const char *name, grib_expression *expression);
+grib_concept_condition *grib_concept_condition_new(grib_context *c, const char *name, grib_expression *expression, grib_iarray* iarray);
 void grib_concept_condition_delete(grib_context *c, grib_concept_condition *v);
 
 /* grib_hash_array.c */
