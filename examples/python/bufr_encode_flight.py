@@ -8,8 +8,9 @@
 # nor does it submit to any jurisdiction.
 #
 
+from datetime import datetime
 import traceback
-import numpy
+import numpy as np
 import sys
 
 from eccodes import *
@@ -24,17 +25,20 @@ def example(csvfile, input_filename, output_filename):
 
     # The first line in the CSV has the column names
     print 'Reading input CSV file: ', csvfile
-    data = numpy.genfromtxt(csvfile, delimiter=',', dtype=None, names=True)
+    parse_date = lambda x: datetime.strptime(x, '%Y%m%d')
+    parse_time = lambda x: datetime.strptime(x, '%H:%M:%S')
+    data = np.genfromtxt(csvfile, delimiter=',', dtype=None, names=True,
+                         converters={0: parse_date, 1: parse_time})
 
     ymd_column = data['ymd']
-    years = map(lambda x: int(str(x)[0:4]), ymd_column)
-    months = map(lambda x: int(str(x)[4:6]), ymd_column)
-    days = map(lambda x: int(str(x)[6:8]), ymd_column)
+    years = np.array([x.year for x in ymd_column])
+    months = np.array([x.month for x in ymd_column])
+    days = np.array([x.day for x in ymd_column])
 
     time_column = data['time']
-    hours = map(lambda x: int(str(x)[0:2]), time_column)
-    minutes = map(lambda x: int(str(x)[3:5]), time_column)
-    seconds = map(lambda x: int(str(x)[6:8]), time_column)
+    hours = np.array([x.hour for x in time_column])
+    minutes = np.array([x.minute for x in time_column])
+    seconds = np.array([x.second for x in time_column])
 
     latitudes = data['latitude']
     longitudes = data['longitude']
