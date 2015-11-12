@@ -9,23 +9,47 @@ use strict;
 #--------------------------------------------------
 
 #The root page of examples in confluence!!! The root page must exit!!!!
-my $rootPage="Command line tools";
 my $unique;
+my $binDir;
+my $resMode="doc"; #can be: doc, example, both
+
+my $preview=1;
+my $previewStr=" - preview";
 
 #---------------------------------
 # Read arguments
 #---------------------------------
 
-GetOptions("unique=s" => \$unique)
+GetOptions("unique=s" => \$unique,
+           "binDir=s" => \$binDir,
+           "confSpace=s" => \$confUtils::confSpace,
+           "mode=s" => \$resMode)
  	or die("Error in command line arguments\n");
  
+print "confluence space=".$confUtils::confSpace."\n";
+
+#Check resmode
+die("Mode (-m switch) must be \"doc\", \"example\" or \"both\"") if($resMode ne "both" && $resMode ne "doc" && $resMode ne "example"); 
+
 #----------------------------------
 # Dirs
 #----------------------------------
 
-#The tools executales and shell scripts 
+#The tools shell scripts are located here
 my $toolsSrcDir="../tools"; 
-my $toolsBinDir="/var/tmp/cgr/build/eccodes/develop/bin"; #"../tools";/var/tmp/cgr/build/eccodes/develop
+
+#The tools executables are located here. The shell scripts will be copied into
+#this directory. The shell scipts are required to be in the directory of the executables.
+my $toolsBinDir;
+if ($binDir && -d $binDir) {
+    $toolsBinDir=$binDir;
+} else {
+    die("Tools bin dir is not defined. Please use the -b switch to specify it!");
+}
+
+#Check definition path
+my $defPath=$ENV{ECCODES_DEFINITION_PATH}; 
+die "Env var ECCODES_DEFINITION_PATH should point to a valid directory" if ( $defPath eq "" || ! -d "$defPath" );
 
 #The genareted html files are stored here
 my $htmlDir=$ENV{TMPDIR}."/res_tools_html";
@@ -39,6 +63,19 @@ my %allTools=read_config();
 
 unless ( -d  $htmlDir ) {
     mkdir $htmlDir	
+}
+
+if($resMode eq "both" || $resMode eq "doc") {
+
+#==========================================================
+#
+# Documentation (including examples)
+#
+#==========================================================
+
+my $rootPage="Command line tools";
+if ($preview == 1) {
+  $rootPage=$rootPage.$previewStr;
 }
 
 #---------------------------------------------------
@@ -77,16 +114,16 @@ foreach my $cType (keys %allTools) {
     foreach my $name (@tools) {
     
         if($unique eq "" or $name eq $unique) {
-		
-	    print "-------------------------------\n--> tool: ".$name."\n";
+        
+        print "-------------------------------\n--> tool: ".$name."\n";
         
             my $fOut=$htmlDir."/".$cType."_".$name.".html";
             open(OUT,">$fOut") or die "$fOut: $!"; 
         
             my $str=getDoc($name);
         
-            #$str=$str.getExample($name);
-        
+            $str=$str.getExample($name);
+
             print OUT $str;
         
             close OUT;
@@ -94,9 +131,80 @@ foreach my $cType (keys %allTools) {
             #Upload the file to confluence 
             my $pageTitle=toolsPageTitle($name);
             confUtils::loadToConf($fOut,$pageTitle,$parentPage); 
-	}          
+        }          
     }
+}
+
+} 
+
+if($resMode eq "both" || $resMode eq "example")  {
+
+#==========================================================
+#
+# Examples only
+#
+#==========================================================
+
+my $rootPage="Command line tools examples";
+if ($preview == 1) {
+  $rootPage=$rootPage.$previewStr;
+}
+  
+#---------------------------------------------------
+# Loop for the code types (e.g. grib, bufr, etc.)
+#---------------------------------------------------
+
+foreach my $cType (keys %allTools) {
+
+    if($cType eq "Generic") {continue;}
+
+    print "----------------------------------------\n";
+    print "  Processing tools for: $cType\n";
+    print "----------------------------------------\n";
+    
+    #Get the examples
+    my @tools=@{$allTools{$cType}};  
+    
+    if($#tools+1 == 0) {
+        die "No tools are defined!\n";
+    }
+
+    #---------------------------------------------------
+    # Create a parent page for the tools of this type
+    #---------------------------------------------------
+
+    #print "--> Genarate parent page\n";
+
+    my $pageTitle=parentPageTitle($cType." examples");
+    my $parentPage=$rootPage;
+
+    #unless($unique) {
+    #    makeParentPage($rootPage,$parentPage,$htmlDir,$cType,@tools);
+    #}
+     
+    #--------------------------------
+    # Loop for the tools
+    #--------------------------------
+    
+    my $fOut=$htmlDir."/".$cType."_all.html";
+    open(OUT,">$fOut") or die "$fOut: $!"; 
+
+    foreach my $name (@tools) {
+    
+        if($unique eq "" or $name eq $unique) {
+        
+            print "-------------------------------\n--> tool: ".$name."\n";
+        
+            my $str=getExample($name);
+
+            print OUT $str;
+        }          
+    }
+    confUtils::loadToConf($fOut,$pageTitle,$parentPage); 
+    close OUT;
 }    
+
+}
 
 #===========================================================
 #===========================================================
@@ -185,7 +293,9 @@ sub parentPageTitle {
    
    my ($codeType) = @_;
    
-   return $codeType." tools";  
+   my $str=$codeType." tools";
+   if($preview == 1) { $str=$str.$previewStr;}
+   return $str;
 }   
 
 #--------------------------------------------------------
@@ -203,7 +313,7 @@ sub makeParentPage {
     $str=$str."<tr><th>Name</th><th>Description</th></tr>";
     
     foreach my $xm (@xmp) {
-        $str=$str."<tr><td>".confUtils::linkToPage($xm,toolsPageTitle($xm))."</td><td>".getDescription($xm)."</td></tr>";
+        $str=$str."<tr><td>".confUtils::linkToPage(toolsPageTitle($xm),toolsPageTitle($xm))."</td><td>".getDescription($xm)."</td></tr>";
     }        
     $str=$str."</tbody></table>";                   
     
@@ -223,7 +333,9 @@ sub toolsPageTitle {
    
    my ($exName) = @_;
    
-   return $exName; 
+   my $str=$exName;
+   if($preview == 1) { $str=$str.$previewStr;}
+   return $str;
 }    
   
 #-----------------------------------------------------------
@@ -295,18 +407,25 @@ sub examplePath {
     
     my $script=$name.".sh";
     my $exe=$toolsBinDir."/".$script;
+    
+    #The shell script has to be in the bin dir. If it is not there we 
+    #copy it into it.
+    unless( -e $exe) {
+        my $cmd="cp ".$toolsSrcDir."/".$script." ".$toolsBinDir;
+        system($cmd);
+    }
 
-    if( -e $exe) {
-        
-        my $cmd="cd ".$toolsBinDir.";./".$script."  > ".$fTmp;
+    if( -e $exe) {        
+        my $cmd="cd ".$toolsBinDir.";./".$script."  > ".$fTmp."; cd -";
         print "\tGenerate examples text with command:\n\t\t".$cmd."\n";        
         system($cmd);
         return $fTmp;
-    } 
+    } else {
+        print "\tShell script was not found for tool ".$name." as ".$exe." .Could not generate examples\n";
+    }
     
     return "";    
 }    
-
 
 #------------------------------------------------------------
 # Generate confluence formatted html string form a source file

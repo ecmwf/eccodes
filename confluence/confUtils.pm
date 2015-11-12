@@ -2,7 +2,13 @@ package confUtils;
 
 use strict;
 
+#The confluence space. Can be overridden with the -c switch!! See the main script.
+our $confSpace="ECC";
+
 my $CONF=$ENV{CONF}; 
+die "Env var CONF should point to confluence.sh script" if ( $CONF eq "" || ! -f "$CONF" );
+
+our $confSpace="ECC";
 
 #====================================================
 #
@@ -18,8 +24,7 @@ sub loadToConf {
     
     my ($fHtml,$title,$parentPage) = @_;
     
-    my $cmd="$CONF -a addPage --noConvert --replace --space \"ECC\" --title \"$title\" --parent \"$parentPage\" --file $fHtml";
-    #my $cmd="$CONF -a addPage --noConvert --replace --space \"~cgr\" --title \"$title\" --parent \"$parentPage\" --file $fHtml";
+    my $cmd="$CONF -a addPage --noConvert --replace --space \"$confSpace\" --title \"$title\" --parent \"$parentPage\" --file $fHtml";
     
     print "\t\tUpload to conflunce with command:\n\t$cmd\n";   
     system($cmd);
