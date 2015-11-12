@@ -69,11 +69,11 @@ foreach( test ${tests} )
     )
 endforeach()
 
-
-ecbuild_add_test( TARGET eccodes_p_make_flight_bufr_test
+# Add test which requires input CSV file
+ecbuild_add_test( TARGET eccodes_p_bufr_encode_flight_test
                   TYPE       SCRIPT
                   DEPENDS    ${ptools}
-                  COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/make_flight_bufr.sh
+                  COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/bufr_encode_flight.sh
                   CONDITION  HAVE_PYTHON
                   ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
                   RESOURCES   flight_data.csv

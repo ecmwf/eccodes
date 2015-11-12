@@ -19,30 +19,32 @@ import sys
 
 from eccodes import *
 
-INPUT='../../data/bufr/syno_1.bufr'
-VERBOSE=1 # verbose error reporting
+INPUT = '../../data/bufr/syno_1.bufr'
+VERBOSE = 1  # verbose error reporting
+
 
 def example():
 
     # open bufr file
     f = open(INPUT)
 
-    cnt=0
+    cnt = 0
 
     # loop for the messages in the file
     while 1:
         # get handle for message
         gid = codes_bufr_new_from_file(f)
-        if gid is None: break
+        if gid is None:
+            break
 
         print "message: %s" % cnt
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        #codes_set(gid,'unpack',1)
+        # codes_set(gid,'unpack',1)
 
         # get key iterator for a given namespace
-        iterid = codes_keys_iterator_new(gid,'ls')
+        iterid = codes_keys_iterator_new(gid, 'ls')
 
         # Different types of keys can be skipped
         # codes_skip_computed(iterid)
@@ -52,19 +54,19 @@ def example():
         # codes_skip_read_only(iterid)
         # codes_skip_function(iterid)
 
-        #loop over the keys
+        # loop over the keys
         while codes_keys_iterator_next(iterid):
 
             # print key name
             keyname = codes_keys_iterator_get_name(iterid)
             #keyval = codes_get_string(iterid,keyname)
-            #print "%s = %s" % (keyname,keyval)
+            # print "%s = %s" % (keyname,keyval)
             print "  %s" % keyname
 
         # delete the key iterator
         codes_keys_iterator_delete(iterid)
 
-        cnt+=1
+        cnt += 1
 
         # delete handle
         codes_release(gid)
@@ -72,14 +74,15 @@ def example():
     # close the file
     f.close()
 
+
 def main():
     try:
         example()
-    except CodesInternalError,err:
+    except CodesInternalError, err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr,err.msg
+            print >>sys.stderr, err.msg
 
         return 1
 

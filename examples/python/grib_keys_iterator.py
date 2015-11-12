@@ -13,17 +13,19 @@ import sys
 
 from eccodes import *
 
-INPUT='../../data/reduced_latlon_surface.grib1'
-VERBOSE=1 # verbose error reporting
+INPUT = '../../data/reduced_latlon_surface.grib1'
+VERBOSE = 1  # verbose error reporting
+
 
 def example():
     f = open(INPUT)
 
     while 1:
         gid = codes_grib_new_from_file(f)
-        if gid is None: break
+        if gid is None:
+            break
 
-        iterid = codes_keys_iterator_new(gid,'ls')
+        iterid = codes_keys_iterator_new(gid, 'ls')
 
         # Different types of keys can be skipped
         # codes_skip_computed(iterid)
@@ -35,22 +37,23 @@ def example():
 
         while codes_keys_iterator_next(iterid):
             keyname = codes_keys_iterator_get_name(iterid)
-            keyval = codes_get_string(iterid,keyname)
-            print "%s = %s" % (keyname,keyval)
+            keyval = codes_get_string(iterid, keyname)
+            print "%s = %s" % (keyname, keyval)
 
         codes_keys_iterator_delete(iterid)
         codes_release(gid)
 
     f.close()
 
+
 def main():
     try:
         example()
-    except CodesInternalError,err:
+    except CodesInternalError, err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr,err.msg
+            print >>sys.stderr, err.msg
 
         return 1
 

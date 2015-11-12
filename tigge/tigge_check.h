@@ -1474,13 +1474,14 @@ warning: s2s.z_tigge_c_kwbc_20020817000000_ncep_prod_pf_pl_0000_003_0010_u.grib2
 /*
    s2s_devel, ecmf, 20150101, 00UTC, test, enfh, warning: s2s.2015010100.test.768.10.pf.20020101.pl.0.grib2, field 372 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -5.02998 is not in [-5,0] 
 warning: s2s.z_tigge_c_kwbc_20150817000000_ncep_prod_pf_pl_0000_015_0500_w.grib2, field 3 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -7.25731 is not in [-6,0]
+  s2s/kwbc/enfo: warning: s2s.z_tigge_c_kwbc_20151106000000_ncep_prod_pf_pl_0000_012_0500_w.grib2, field 19 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -9.229 is not in [-8,0]
 */
    {
       "w_vertical_velocity_pl",
-      -8,
+      -10,
       0,
       0,
-      8,
+      10,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
 

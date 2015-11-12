@@ -256,16 +256,15 @@ static void search_from_accessors_list(grib_accessors_list* al,grib_accessors_li
     accessor_name=grib_split_name_attribute(al->accessor->context,name,attribute_name);
 
     while (al && al!=end && al->accessor) {
-        if (!strcmp(al->accessor->name,accessor_name)) {
+        if (strcmp(al->accessor->name,accessor_name)==0) {
             if (attribute_name[0]) {
                 accessor_result=grib_accessor_get_attribute(al->accessor,attribute_name);
-                /* TODO: ECC-177 */
-                /*grib_context_free(al->accessor->context,accessor_name);*/
             } else {
                 accessor_result=al->accessor;
             }
-            if (accessor_result)
+            if (accessor_result) {
                 grib_accessors_list_push(result,accessor_result);
+            }
         }
         al=al->next;
     }

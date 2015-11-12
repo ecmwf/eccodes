@@ -18,15 +18,16 @@ import sys
 
 from eccodes import *
 
-INPUT='../../data/bufr/syno_multi.bufr'
-VERBOSE=1 # verbose error reporting
+INPUT = '../../data/bufr/syno_multi.bufr'
+VERBOSE = 1  # verbose error reporting
+
 
 def example():
 
     # open bufr file
     f = open(INPUT)
 
-    cnt=0
+    cnt = 0
 
     # define the attributes to be printed (see BUFR code table B)
     attrs = [
@@ -35,40 +36,41 @@ def example():
         'scale',
         'reference',
         'width'
-        ]
+    ]
 
     # loop for the messages in the file
     while 1:
         # get handle for message
         gid = codes_bufr_new_from_file(f)
-        if gid is None: break
+        if gid is None:
+            break
 
         print "message: %s" % cnt
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(gid,'unpack',1)
+        codes_set(gid, 'unpack', 1)
 
         #---------------------------------------------------------------
         # We will read the value and all the attributes available for
         # the 2m temperature.
         #---------------------------------------------------------------
-        #get the value
-        key='airTemperatureAt2M'
+        # get the value
+        key = 'airTemperatureAt2M'
         try:
-            print '  %s: %s' % (key,codes_get(gid,key))
-        except CodesInternalError,err:
-            print 'Error with key="%s" : %s' % (key,err.msg) 
+            print '  %s: %s' % (key, codes_get(gid, key))
+        except CodesInternalError, err:
+            print 'Error with key="%s" : %s' % (key, err.msg)
 
         # print the values of the attributes of the key. Attributes themselves
         # are keys as well. Their name is constructed like:
         # keyname->attributename
         for attr in attrs:
-            key='airTemperatureAt2M' + "->" + attr
+            key = 'airTemperatureAt2M' + "->" + attr
             try:
-                print '  %s: %s' % (key,codes_get(gid,key))
-            except CodesInternalError,err:
-                print 'Error with key="%s" : %s' % (key,err.msg) 
+                print '  %s: %s' % (key, codes_get(gid, key))
+            except CodesInternalError, err:
+                print 'Error with key="%s" : %s' % (key, err.msg)
 
         #--------------------------------------------------------------------
         # The 2m temperature data element in this message has an associated
@@ -76,22 +78,22 @@ def example():
         # in a similar manner as was shown above for 2m temperature.
         #-------------------------------------------------------------------
 
-        #get the value
-        key='airTemperatureAt2M->percentConfidence'
+        # get the value
+        key = 'airTemperatureAt2M->percentConfidence'
         try:
-            print '  %s: %s' % (key,codes_get(gid,key))
-        except CodesInternalError,err:
-            print 'Error with key="%s" : %s' % (key,err.msg) 
-                
+            print '  %s: %s' % (key, codes_get(gid, key))
+        except CodesInternalError, err:
+            print 'Error with key="%s" : %s' % (key, err.msg)
+
         # print the values of the attributes of the key.
         for attr in attrs:
-            key='airTemperatureAt2M->percentConfidence' + "->" + attr
+            key = 'airTemperatureAt2M->percentConfidence' + "->" + attr
             try:
-                print '  %s: %s' % (key,codes_get(gid,key))
-            except CodesInternalError,err:
-                print 'Error with key="%s" : %s' % (key,err.msg) 
+                print '  %s: %s' % (key, codes_get(gid, key))
+            except CodesInternalError, err:
+                print 'Error with key="%s" : %s' % (key, err.msg)
 
-        cnt+=1
+        cnt += 1
 
         # delete handle
         codes_release(gid)
@@ -99,14 +101,15 @@ def example():
     # close the file
     f.close()
 
+
 def main():
     try:
         example()
-    except CodesInternalError,err:
+    except CodesInternalError, err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr,err.msg
+            print >>sys.stderr, err.msg
 
         return 1
 

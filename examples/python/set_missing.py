@@ -13,40 +13,42 @@ import sys
 
 from eccodes import *
 
-INPUT='../../data/tigge/tigge_ecmf_pl_t.grib'
-OUTPUT='out.set_missing.grib'
-VERBOSE=1 # verbose error reporting
+INPUT = '../../data/tigge/tigge_ecmf_pl_t.grib'
+OUTPUT = 'out.set_missing.grib'
+VERBOSE = 1  # verbose error reporting
+
 
 def example():
     fin = open(INPUT)
-    fout = open(OUTPUT,'w')
+    fout = open(OUTPUT, 'w')
 
     gid = codes_grib_new_from_file(fin)
 
-    codes_set_long(gid, "scaledValueOfFirstFixedSurface", 15);
+    codes_set_long(gid, "scaledValueOfFirstFixedSurface", 15)
     codes_set_long(gid, "scaleFactorOfFirstFixedSurface", 1)
-    level=codes_get_double(gid, "level")
-    assert( level == 1.5 )
+    level = codes_get_double(gid, "level")
+    assert(level == 1.5)
 
     # set type of level to surface
-    codes_set(gid,'typeOfFirstFixedSurface','sfc')
-    codes_set_missing(gid,'scaleFactorOfFirstFixedSurface')
-    codes_set_missing(gid,'scaledValueOfFirstFixedSurface')
+    codes_set(gid, 'typeOfFirstFixedSurface', 'sfc')
+    codes_set_missing(gid, 'scaleFactorOfFirstFixedSurface')
+    codes_set_missing(gid, 'scaledValueOfFirstFixedSurface')
 
-    codes_write(gid,fout)
+    codes_write(gid, fout)
 
     codes_release(gid)
     fin.close()
     fout.close()
 
+
 def main():
     try:
         example()
-    except CodesInternalError,err:
+    except CodesInternalError, err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr,err.msg
+            print >>sys.stderr, err.msg
 
         return 1
 

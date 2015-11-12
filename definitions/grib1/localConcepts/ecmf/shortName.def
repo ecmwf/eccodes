@@ -9029,6 +9029,26 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 48 ;
 	}
+#Instantaneous total lightning density
+'litoti' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 50 ;
+	}
+#Averaged total lightning density
+'litota' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 51 ;
+	}
+#Instantaneous cloud-to-ground lightning density
+'licgi' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 52 ;
+	}
+#Averaged cloud-to-ground lightning density
+'licga' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 53 ;
+	}
 #GPP coefficient from Biogenic Flux Adjustment System
 'gppbfas' = {
 	 table2Version = 228 ;

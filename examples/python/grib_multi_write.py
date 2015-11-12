@@ -13,37 +13,39 @@ import sys
 
 from eccodes import *
 
-INPUT='../../data/sample.grib2'
-OUTPUT='out.mw.grib'
-VERBOSE=1 # verbose error reporting
+INPUT = '../../data/sample.grib2'
+OUTPUT = 'out.mw.grib'
+VERBOSE = 1  # verbose error reporting
+
 
 def example():
     fin = open(INPUT)
-    fout = open(OUTPUT,'w')
+    fout = open(OUTPUT, 'w')
 
     gid = codes_grib_new_from_file(fin)
 
     mgid = codes_grib_multi_new()
 
-    for step in range(12,132,12):
-        codes_set(gid,"step",step)
-        codes_grib_multi_append(gid,4,mgid)
+    for step in range(12, 132, 12):
+        codes_set(gid, "step", step)
+        codes_grib_multi_append(gid, 4, mgid)
 
-    codes_grib_multi_write(mgid,fout)
+    codes_grib_multi_write(mgid, fout)
 
     codes_grib_multi_release(mgid)
     codes_release(gid)
     fin.close()
-    fout.close() 
+    fout.close()
+
 
 def main():
     try:
         example()
-    except CodesInternalError,err:
+    except CodesInternalError, err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr,err.msg
+            print >>sys.stderr, err.msg
 
         return 1
 

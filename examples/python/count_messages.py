@@ -13,8 +13,9 @@ import sys
 
 from eccodes import *
 
-INPUT='../../data/tigge_pf_ecmwf.grib2'
-VERBOSE=1 # verbose error reporting
+INPUT = '../../data/tigge_pf_ecmwf.grib2'
+VERBOSE = 1  # verbose error reporting
+
 
 def example():
     f = open(INPUT)
@@ -33,24 +34,24 @@ def example():
         'longitudeOfLastGridPointInDegrees',
         'jDirectionIncrementInDegrees',
         'iDirectionIncrementInDegrees',
-        ]
+    ]
 
     for i in range(mcount):
         gid = gid_list[i]
 
-        print "processing message number",i+1
+        print "processing message number", i + 1
 
         for key in keys:
-            print '%s=%g' % (key,codes_get(gid,key))
+            print '%s=%g' % (key, codes_get(gid, key))
 
         print 'There are %d, average is %g, min is %g, max is %g' % (
-                  codes_get_size(gid,'values'),
-                  codes_get(gid,'average'),
-                  codes_get(gid,'min'),
-                  codes_get(gid,'max')
-               )
+            codes_get_size(gid, 'values'),
+            codes_get(gid, 'average'),
+            codes_get(gid, 'min'),
+            codes_get(gid, 'max')
+        )
 
-        print '-'*100
+        print '-' * 100
 
         codes_release(gid)
 
@@ -58,11 +59,11 @@ def example():
 def main():
     try:
         example()
-    except CodesInternalError,err:
+    except CodesInternalError, err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr,err.msg
+            print >>sys.stderr, err.msg
 
         return 1
 

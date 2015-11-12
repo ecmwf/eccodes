@@ -11,8 +11,9 @@ import sys
 
 from eccodes import *
 
-INPUT='../../data/reduced_latlon_surface.grib1'
-VERBOSE=1 # verbose error reporting
+INPUT = '../../data/reduced_latlon_surface.grib1'
+VERBOSE = 1  # verbose error reporting
+
 
 def example():
     f = open(INPUT)
@@ -24,37 +25,39 @@ def example():
         'longitudeOfFirstGridPointInDegrees',
         'latitudeOfLastGridPointInDegrees',
         'longitudeOfLastGridPointInDegrees',
-        ]
+    ]
 
     while 1:
         gid = codes_grib_new_from_file(f)
-        if gid is None: break
+        if gid is None:
+            break
 
         for key in keys:
             try:
-                print '  %s: %s' % (key,codes_get(gid,key))
-            except CodesInternalError,err:
-                print 'Error with key="%s" : %s' % (key,err.msg)
+                print '  %s: %s' % (key, codes_get(gid, key))
+            except CodesInternalError, err:
+                print 'Error with key="%s" : %s' % (key, err.msg)
 
         print 'There are %d values, average is %f, min is %f, max is %f' % (
-            codes_get_size(gid,'values'),
-            codes_get(gid,'average'),
-            codes_get(gid,'min'),
-            codes_get(gid,'max')
+            codes_get_size(gid, 'values'),
+            codes_get(gid, 'average'),
+            codes_get(gid, 'min'),
+            codes_get(gid, 'max')
         )
 
         codes_release(gid)
 
     f.close()
 
+
 def main():
     try:
         example()
-    except CodesInternalError,err:
+    except CodesInternalError, err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr,err.msg
+            print >>sys.stderr, err.msg
 
         return 1
 

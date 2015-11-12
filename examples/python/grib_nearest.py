@@ -13,38 +13,40 @@ import sys
 
 from eccodes import *
 
-INPUT='../../data/reduced_gaussian_lsm.grib1'
-VERBOSE=1 # verbose error reporting
+INPUT = '../../data/reduced_gaussian_lsm.grib1'
+VERBOSE = 1  # verbose error reporting
+
 
 def example():
-    points = ((30,-20),(13,234))
+    points = ((30, -20), (13, 234))
 
-    f = open(INPUT) 
+    f = open(INPUT)
     gid = codes_grib_new_from_file(f)
 
-    for lat,lon in points:
-        nearest = codes_grib_find_nearest(gid,lat,lon)[0]
-        print lat,lon
-        print nearest.lat,nearest.lon,nearest.value,nearest.distance,nearest.index
+    for lat, lon in points:
+        nearest = codes_grib_find_nearest(gid, lat, lon)[0]
+        print lat, lon
+        print nearest.lat, nearest.lon, nearest.value, nearest.distance, nearest.index
 
-        four = codes_grib_find_nearest(gid,lat,lon,is_lsm = False,npoints = 4)
+        four = codes_grib_find_nearest(gid, lat, lon, is_lsm=False, npoints=4)
         for i in range(len(four)):
             print "- %d -" % i
             print four[i]
 
-        print "-"*100
+        print "-" * 100
 
     codes_release(gid)
     f.close()
 
+
 def main():
     try:
         example()
-    except CodesInternalError,err:
+    except CodesInternalError, err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr,err.msg
+            print >>sys.stderr, err.msg
 
         return 1
 

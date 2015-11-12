@@ -10,17 +10,18 @@ import traceback
 import sys
 from eccodes import *
 
-INPUT   = '../../data/regular_latlon_surface.grib1'
-OUTPUT  = 'out.bmp.grib'
+INPUT = '../../data/regular_latlon_surface.grib1'
+OUTPUT = 'out.bmp.grib'
 MISSING = 9999
-VERBOSE = 1 # verbose error reporting
+VERBOSE = 1  # verbose error reporting
+
 
 def example():
     fin = open(INPUT)
-    fout = open(OUTPUT,'w')
+    fout = open(OUTPUT, 'w')
     gid = codes_grib_new_from_file(fin)
 
-    codes_set(gid,'missingValue', MISSING)
+    codes_set(gid, 'missingValue', MISSING)
     values = codes_get_values(gid)
     codes_set(gid, 'bitmapPresent', 1)
     # Change some data values to be missing
@@ -30,28 +31,28 @@ def example():
             values[i] = MISSING
             num_missing += 1
     codes_set_values(gid, values)
-    
-    # Check counts of missing and non-missing values
-    num_data = codes_get(gid,'numberOfDataPoints',int)
-    assert(codes_get(gid,'numberOfCodedValues',int) == num_data-num_missing)
-    assert(codes_get(gid,'numberOfMissing',int)     == num_missing)
 
-    codes_write(gid,fout)
+    # Check counts of missing and non-missing values
+    num_data = codes_get(gid, 'numberOfDataPoints', int)
+    assert(codes_get(gid, 'numberOfCodedValues', int) == num_data - num_missing)
+    assert(codes_get(gid, 'numberOfMissing', int) == num_missing)
+
+    codes_write(gid, fout)
     codes_release(gid)
     fin.close()
     fout.close()
 
+
 def main():
     try:
         example()
-    except CodesInternalError,err:
+    except CodesInternalError, err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >> sys.stderr,err.msg
+            print >> sys.stderr, err.msg
 
         return 1
 
 if __name__ == "__main__":
     sys.exit(main())
-
