@@ -141,6 +141,12 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 37 ;
 	}
+#Height of convective cloud top
+'228046' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 27 ;
+	}
 #Soil moisture top 20 cm
 '228086' = {
 	 discipline = 2 ;

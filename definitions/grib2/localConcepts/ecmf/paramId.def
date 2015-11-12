@@ -9155,6 +9155,18 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 43 ;
 	}
+#Height of Zero Deg Wet Bulb Temperature
+'228047' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 47 ;
+	}
+#Height of One Deg Wet Bulb Temperature
+'228048' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 48 ;
+	}
 #Total column rain water
 '228089' = {
 	 discipline = 192 ;

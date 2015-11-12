@@ -9009,8 +9009,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Cloud top height convective
-'cthc' = {
+#Height of convective cloud top
+'hcct' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 46 ;
 	}
@@ -9568,6 +9568,11 @@
 '~' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 67 ;
+	}
+#Ceiling
+'ceil' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 109 ;
 	}
 #K index
 'kx' = {

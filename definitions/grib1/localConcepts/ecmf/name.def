@@ -9009,8 +9009,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Cloud top height convective
-'Cloud top height convective' = {
+#Height of convective cloud top
+'Height of convective cloud top' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 46 ;
 	}
@@ -9568,6 +9568,11 @@
 'Mean large-scale rain rate' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 67 ;
+	}
+#Ceiling
+'Ceiling' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 109 ;
 	}
 #K index
 'K index' = {
