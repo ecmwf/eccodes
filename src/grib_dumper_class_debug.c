@@ -128,7 +128,7 @@ static void aliases(grib_dumper* d,grib_accessor* a)
 static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_debug *self = (grib_dumper_debug*)d;
-    long value; size_t size = 1;
+    long value=0; size_t size = 1;
     int err = grib_unpack_long(a,&value,&size);
     int i;
 
