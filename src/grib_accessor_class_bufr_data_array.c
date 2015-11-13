@@ -199,6 +199,10 @@ static void init_class(grib_accessor_class* c)
 #define PROCESS_NEW_DATA   1
 #define PROCESS_ENCODE     2
 
+#ifdef ECCODES_ON_WINDOWS
+#define round(a) ( (a) >=0 ? ((a)+0.5) : ((a)-0.5) )
+#endif
+
 static int process_elements(grib_accessor* a,int flag);
 
 typedef int (*codec_element_proc) (grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex, grib_buffer* b,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,grib_sarray* sval); 
