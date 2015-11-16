@@ -56,6 +56,10 @@ CODES_PRODUCT_GTS=4
 CODES_PRODUCT_TAF=5
 """ TAF product kind """
 
+# Constants for 'missing'
+GRIB_MISSING_DOUBLE = -1e+100
+GRIB_MISSING_LONG = 2147483647
+
 
 # GRIB-51 Skip function arguments type checking if the
 # environment variable is defined
