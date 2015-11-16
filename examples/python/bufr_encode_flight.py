@@ -65,19 +65,19 @@ def example(csvfile, input_filename, output_filename):
 
     codes_set(bufr,'BufrTemplate','aircraftReportWithSecondsAndPressure');
 
-    codes_set_double_array(bufr, 'year', years)
-    codes_set_double_array(bufr, 'month', months)
-    codes_set_double_array(bufr, 'day', days)
-    codes_set_double_array(bufr, 'hour', hours)
-    codes_set_double_array(bufr, 'minute', minutes)
-    codes_set_double_array(bufr, 'second', seconds)
-    codes_set_double_array(bufr, 'latitude', latitudes)
-    codes_set_double_array(bufr, 'longitude', longitudes)
-    codes_set_double_array(bufr, 'height', altitudes)
-    codes_set_double_array(bufr, 'pressure', pressures)
-    codes_set_double_array(bufr, 'windSpeed', windSpeeds)
-    codes_set_double_array(bufr, 'windDirection', windDirections)
-    codes_set_double_array(bufr, 'airTemperature', temperatures)
+    codes_set_array(bufr, 'year', years)
+    codes_set_array(bufr, 'month', months)
+    codes_set_array(bufr, 'day', days)
+    codes_set_array(bufr, 'hour', hours)
+    codes_set_array(bufr, 'minute', minutes)
+    codes_set_array(bufr, 'second', seconds)
+    codes_set_array(bufr, 'latitude', latitudes)
+    codes_set_array(bufr, 'longitude', longitudes)
+    codes_set_array(bufr, 'height', altitudes)
+    codes_set_array(bufr, 'pressure', pressures)
+    codes_set_array(bufr, 'windSpeed', windSpeeds)
+    codes_set_array(bufr, 'windDirection', windDirections)
+    codes_set_array(bufr, 'airTemperature', temperatures)
 
     codes_set(bufr, 'pack', 1)
 
