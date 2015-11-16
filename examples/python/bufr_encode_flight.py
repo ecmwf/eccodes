@@ -15,6 +15,7 @@ import sys
 
 from eccodes import *
 
+VERBOSE = 1  # verbose error reporting
 
 def example(csvfile, input_filename, output_filename):
 
