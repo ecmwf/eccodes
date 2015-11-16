@@ -63,7 +63,7 @@ def example(csvfile, input_filename, output_filename):
     #unexpandedDescriptors = [301051,4006,7002,10004,12001,11001,11002,11031,11032,11033,20041]
     #codes_set_array(bufr, 'unexpandedDescriptors', unexpandedDescriptors)
 
-    codes_set(bufr,'BufrTemplate','aircraftReportWithSecondsAndPressure');
+    codes_set(bufr,'BufrTemplate','aircraftReportWithSecondsAndPressure')
 
     codes_set_array(bufr, 'year', years)
     codes_set_array(bufr, 'month', months)

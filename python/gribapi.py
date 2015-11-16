@@ -98,7 +98,7 @@ class GribInternalError(Exception):
         Exception.__init__(self, value)
         if type(value) is int:
             err, self.msg = _internal.grib_c_get_error_string(value, 1024)
-            assert(err == 0)
+            assert err == 0
         else:
             self.msg = value
 
@@ -634,9 +634,9 @@ def grib_iterator_next(iterid):
     @exception GribInternalError
     """
     err, lat, lon, value = _internal.grib_c_iterator_next(iterid)
-    if (err == 0):
+    if err == 0:
         return []
-    elif (err < 0):
+    elif err < 0:
         GRIB_CHECK(err)
     else:
         return (lat, lon, value)
@@ -774,7 +774,7 @@ def grib_set_long(gribid, key, value):
     except (ValueError, TypeError):
         raise TypeError("Invalid type")
 
-    if (value > sys.maxint):
+    if value > sys.maxint:
         raise TypeError("Invalid type")
 
     GRIB_CHECK(_internal.grib_c_set_long(gribid, key, value))
@@ -911,7 +911,7 @@ def grib_get_double_array(gribid, key):
 @require(gribid=int, key=str)
 def grib_get_string_array(gribid, key):
     """
-    @brief Get the value of the key as an array of strings. 
+    @brief Get the value of the key as an array of strings.
 
     @param gribid   id of the grib loaded in memory
     @param key      key name
@@ -927,7 +927,7 @@ def grib_get_string_array(gribid, key):
 
     result = list()
     for i in range(nval):
-      result.append(_internal.stringArray_getitem(a,i))
+        result.append(_internal.stringArray_getitem(a,i))
 
     _internal.delete_stringArray(a)
 
@@ -1413,7 +1413,7 @@ def grib_set_key_vals(gribid, key_vals):
                        If a list, it must contain strings of the form "key1=val1"
     @exception         GribInternalError
     """
-    if (len(key_vals) == 0):
+    if len(key_vals) == 0:
         raise GribInternalError("Empty key/values argument")
     key_vals_str = ""
     if isinstance(key_vals, str):
@@ -1699,10 +1699,10 @@ def grib_set_array(gribid, key, value):
     except TypeError:
         pass
 
-    if isinstance(val0, int):
-        grib_set_long_array(gribid, key, value)
-    elif isinstance(val0, float):
+    if isinstance(val0, float):
         grib_set_double_array(gribid, key, value)
+    elif isinstance(val0, int):
+        grib_set_long_array(gribid, key, value)
     else:
         raise GribInternalError("Invalid type of value when setting key '%s'." % key)
 
