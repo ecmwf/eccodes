@@ -8,8 +8,6 @@ our $confSpace="ECC";
 my $CONF=$ENV{CONF}; 
 die "Env var CONF should point to confluence.sh script" if ( $CONF eq "" || ! -f "$CONF" );
 
-our $confSpace="ECC";
-
 #====================================================
 #
 # Generic functions related to confluence 
