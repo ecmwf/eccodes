@@ -13,7 +13,7 @@ my $unique;
 my $binDir;
 my $resMode="doc"; #can be: doc, example, both
 
-my $preview=1;
+my $preview=0;
 my $previewStr=" - preview";
 
 #---------------------------------
