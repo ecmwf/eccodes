@@ -49,9 +49,10 @@ def example():
 # for one particular ensemble member over forecast period from 0h to 240h by 6h step.          
 # To print values of latitude, longitude, pressure, wind at 10m for particular ensemble member from all the subsets         
 # we will simply access the key by condition (see below)        
-  
-# The key “latitude” will give back the array of all the values corresponding to all the instances of the key in the tree. 
-# The key “#2#latitude” will return only the values of the second instance in the tree.        
+#  
+# The key latitude will give back the array of all the values corresponding 
+#to all the instances of the key in the tree. 
+# The key #2#latitude will return only the values of the second instance in the tree.        
 
         # Get the total number of subsets.
         numObs=codes_get(gid,"numberOfSubsets")
