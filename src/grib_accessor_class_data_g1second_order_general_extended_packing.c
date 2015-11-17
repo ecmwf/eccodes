@@ -220,10 +220,9 @@ static long number_of_bits(grib_handle*h, unsigned long x)
         n++;
         i++;
         if (i>=count) {
-            grib_dump_content(h, stdout,"debug", ~0, NULL);
+            /*grib_dump_content(h, stdout,"debug", ~0, NULL);*/
             grib_context_log(h->context, GRIB_LOG_FATAL,
                     "grib_accessor_class_data_g1second_order_general_extended_packing: Number out of range: %ld", x);
-
         }
     }
     return i;
@@ -1030,6 +1029,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     for (i=1;i<numberOfGroups;i++) {
         if (maxWidth<groupWidths[i]) maxWidth=groupWidths[i];
         if (maxLength<groupLengths[i]) maxLength=groupLengths[i];
+    }
+
+    if (maxWidth < 0 || maxLength < 0) {
+        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Cannot compute parameters for second order packing.");
+        return GRIB_ENCODING_ERROR;
     }
     widthOfWidths=number_of_bits(handle, maxWidth);
     widthOfLengths=number_of_bits(handle, maxLength);
