@@ -149,16 +149,19 @@ static unsigned long nbits[32]={
         0x40000000, 0x80000000
 };
 
-static long number_of_bits(unsigned long x) {
+static int number_of_bits(unsigned long x, long* result)
+{
     unsigned long *n=nbits;
     const int count = sizeof(nbits)/sizeof(nbits[0]);
-    long i=0;
+    *result=0;
     while (x>=*n) {
         n++;
-        i++;
-        Assert(i<count);
+        (*result)++;
+        if (*result >= count) {
+            return GRIB_ENCODING_ERROR;
     }
-    return i;
+    }
+    return GRIB_SUCCESS;
 }
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
@@ -229,7 +232,9 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
 
     /* self->bitsPerValue=(long)ceil(log((double)((max-min)*d+1))/log(2.0))-binaryScaleFactor; */
     /* See GRIB-540 for why we use ceil */
-    self->bitsPerValue=number_of_bits( (unsigned long)ceil((fabs(max-min)*b*d)) );
+    ret = number_of_bits( (unsigned long)ceil((fabs(max-min)*b*d)), &(self->bitsPerValue) );
+    if (ret != GRIB_SUCCESS)
+        return ret;
     *val=self->bitsPerValue;
 
     grib_context_free(a->context,values);

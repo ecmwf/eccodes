@@ -211,7 +211,8 @@ static unsigned long nbits[32]={
         0x40000000, 0x80000000
 };
 
-static long number_of_bits(unsigned long x) {
+static long number_of_bits(grib_handle*h, unsigned long x)
+{
     unsigned long *n=nbits;
     const int count = sizeof(nbits)/sizeof(nbits[0]);
     long i=0;
@@ -219,8 +220,10 @@ static long number_of_bits(unsigned long x) {
         n++;
         i++;
         if (i>=count) {
-            fprintf(stderr, "Number too large: x=%ld (Hint: Try reducing number of bits per value)\n",x);
-            Assert(0);
+            grib_dump_content(h, stdout,"debug", ~0, NULL);
+            grib_context_log(h->context, GRIB_LOG_FATAL,
+                    "grib_accessor_class_data_g1second_order_general_extended_packing: Number out of range: %ld", x);
+
         }
     }
     return i;
@@ -229,29 +232,30 @@ static long number_of_bits(unsigned long x) {
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
     grib_accessor_data_g1second_order_general_extended_packing *self =(grib_accessor_data_g1second_order_general_extended_packing*)a;
+    grib_handle* handle = grib_handle_of_accessor(a);
 
-    self->half_byte    = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->packingType    = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->ieee_packing    = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->precision    = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->widthOfFirstOrderValues    = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->firstOrderValues    = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->N1 = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->N2 = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->numberOfGroups = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->codedNumberOfGroups = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->numberOfSecondOrderPackedValues = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->extraValues = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->groupWidths = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->widthOfWidths = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->groupLengths = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->widthOfLengths = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->NL = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->SPD = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->widthOfSPD = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->orderOfSPD = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->numberOfPoints = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->dataFlag = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+    self->half_byte    = grib_arguments_get_name(handle,args,self->carg++);
+    self->packingType    = grib_arguments_get_name(handle,args,self->carg++);
+    self->ieee_packing    = grib_arguments_get_name(handle,args,self->carg++);
+    self->precision    = grib_arguments_get_name(handle,args,self->carg++);
+    self->widthOfFirstOrderValues    = grib_arguments_get_name(handle,args,self->carg++);
+    self->firstOrderValues    = grib_arguments_get_name(handle,args,self->carg++);
+    self->N1 = grib_arguments_get_name(handle,args,self->carg++);
+    self->N2 = grib_arguments_get_name(handle,args,self->carg++);
+    self->numberOfGroups = grib_arguments_get_name(handle,args,self->carg++);
+    self->codedNumberOfGroups = grib_arguments_get_name(handle,args,self->carg++);
+    self->numberOfSecondOrderPackedValues = grib_arguments_get_name(handle,args,self->carg++);
+    self->extraValues = grib_arguments_get_name(handle,args,self->carg++);
+    self->groupWidths = grib_arguments_get_name(handle,args,self->carg++);
+    self->widthOfWidths = grib_arguments_get_name(handle,args,self->carg++);
+    self->groupLengths = grib_arguments_get_name(handle,args,self->carg++);
+    self->widthOfLengths = grib_arguments_get_name(handle,args,self->carg++);
+    self->NL = grib_arguments_get_name(handle,args,self->carg++);
+    self->SPD = grib_arguments_get_name(handle,args,self->carg++);
+    self->widthOfSPD = grib_arguments_get_name(handle,args,self->carg++);
+    self->orderOfSPD = grib_arguments_get_name(handle,args,self->carg++);
+    self->numberOfPoints = grib_arguments_get_name(handle,args,self->carg++);
+    self->dataFlag = grib_arguments_get_name(handle,args,self->carg++);
     self->edition=1;
     self->dirty=1;
     self->values=NULL;
@@ -321,7 +325,8 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
     long* firstOrderValues=0;
     long* X=0;
     long pos=0;
-    unsigned char* buf = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
+    grib_handle* handle = grib_handle_of_accessor(a);
+    unsigned char* buf = (unsigned char*)handle->buffer->data;
     long i,n;
     double reference_value;
     long binary_scale_factor;
@@ -353,42 +358,42 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
     ret=value_count(a,&numberOfValues);
     if (ret) return ret;
 
-    if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->numberOfGroups,&numberOfGroups)) != GRIB_SUCCESS)
+    if((ret=grib_get_long_internal(handle,self->numberOfGroups,&numberOfGroups)) != GRIB_SUCCESS)
         return ret;
 
-    if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->binary_scale_factor,&binary_scale_factor)) != GRIB_SUCCESS)
+    if((ret=grib_get_long_internal(handle,self->binary_scale_factor,&binary_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
     ngroups=numberOfGroups;
     groupWidths=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfGroups);
-    ret=grib_get_long_array(grib_handle_of_accessor(a),self->groupWidths,groupWidths,&ngroups);
+    ret=grib_get_long_array(handle,self->groupWidths,groupWidths,&ngroups);
     if(ret != GRIB_SUCCESS) return ret;
 
     groupLengths=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfGroups);
-    ret=grib_get_long_array(grib_handle_of_accessor(a),self->groupLengths,groupLengths,&ngroups);
+    ret=grib_get_long_array(handle,self->groupLengths,groupLengths,&ngroups);
     if(ret != GRIB_SUCCESS) return ret;
 
     firstOrderValues=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfGroups);
-    ret=grib_get_long_array(grib_handle_of_accessor(a),self->firstOrderValues,firstOrderValues,&ngroups);
+    ret=grib_get_long_array(handle,self->firstOrderValues,firstOrderValues,&ngroups);
     if(ret != GRIB_SUCCESS) return ret;
 
-    if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->decimal_scale_factor,&decimal_scale_factor)) != GRIB_SUCCESS)
+    if((ret=grib_get_long_internal(handle,self->decimal_scale_factor,&decimal_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if((ret=grib_get_double_internal(grib_handle_of_accessor(a),self->reference_value,&reference_value)) != GRIB_SUCCESS)
+    if((ret=grib_get_double_internal(handle,self->reference_value,&reference_value)) != GRIB_SUCCESS)
         return ret;
 
-    if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->numberOfSecondOrderPackedValues,
+    if((ret=grib_get_long_internal(handle,self->numberOfSecondOrderPackedValues,
             &numberOfSecondOrderPackedValues)) != GRIB_SUCCESS)
         return ret;
 
-    if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->orderOfSPD,&orderOfSPD)) != GRIB_SUCCESS)
+    if((ret=grib_get_long_internal(handle,self->orderOfSPD,&orderOfSPD)) != GRIB_SUCCESS)
         return ret;
 
     if (orderOfSPD) {
         size_t nSPD=orderOfSPD+1;
         SPD=(long*)grib_context_malloc_clear(a->context,sizeof(long)*nSPD);
-        ret=grib_get_long_array(grib_handle_of_accessor(a),self->SPD,SPD,&nSPD);
+        ret=grib_get_long_array(handle,self->SPD,SPD,&nSPD);
         bias=SPD[orderOfSPD];
         if(ret != GRIB_SUCCESS) return ret;
     }
@@ -489,7 +494,7 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
     return ret;
 }
 
-static void grib_split_long_groups(grib_context* c,long* numberOfGroups,long* lengthOfSecondOrderValues,
+static void grib_split_long_groups(grib_handle* hand, grib_context* c,long* numberOfGroups,long* lengthOfSecondOrderValues,
         long* groupLengths,long* widthOfLengths,
         long* groupWidths, long widthOfWidths,
         long* firstOrderValues,long widthOfFirstOrderValues) {
@@ -514,7 +519,7 @@ static void grib_split_long_groups(grib_context* c,long* numberOfGroups,long* le
     j=0;
     /* compute the widthOfLengths and the number of big groups */
     for (i=0;i<*numberOfGroups;i++) {
-        widthsOfLengths[i]=number_of_bits(groupLengths[i]);
+        widthsOfLengths[i]=number_of_bits(hand, groupLengths[i]);
         if (*widthOfLengths==widthsOfLengths[i]) {
             j++;
         }
@@ -541,12 +546,12 @@ static void grib_split_long_groups(grib_context* c,long* numberOfGroups,long* le
         for (i=0;i<*numberOfGroups;i++) {
             if (newWidth<widthsOfLengths[i]) {
                 localLengths[j]=groupLengths[i]/2;
-                localWidthsOfLengths[j]=number_of_bits(localLengths[j]);
+                localWidthsOfLengths[j]=number_of_bits(hand, localLengths[j]);
                 localWidths[j]=groupWidths[i];
                 localFirstOrderValues[j]=firstOrderValues[i];
                 j++;
                 localLengths[j]=groupLengths[i]-localLengths[j-1];
-                localWidthsOfLengths[j]=number_of_bits(localLengths[j]);
+                localWidthsOfLengths[j]=number_of_bits(hand, localLengths[j]);
                 localWidths[j]=groupWidths[i];
                 localFirstOrderValues[j]=firstOrderValues[i];
                 if (localWidthsOfLengths[j]>newWidth) {
@@ -617,7 +622,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     long maxWidth,maxLength,widthOfWidths,NL,widthOfLengths,N1,N2,extraValues,codedNumberOfGroups,numberOfSecondOrderPackedValues;
     long pos;
 
-
     long numberOfGroups;
     long groupLengthC,groupLengthA,remainingValues,count;
     long maxA=0,minA=0;
@@ -638,6 +642,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     int computeGroupA=1;
     long dataHeadersLength,widthsLength,lengthsLength,firstOrderValuesLength;
     long decimal_scale_factor;
+    grib_handle* handle = grib_handle_of_accessor(a);
 
     self->dirty=1;
 
@@ -652,10 +657,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     /* For constant fields set decimal scale factor to 0 (See GRIB-165) */
     if (min==max) {
-        grib_set_long_internal(grib_handle_of_accessor(a),self->decimal_scale_factor, 0);
+        grib_set_long_internal(handle,self->decimal_scale_factor, 0);
     }
 
-    if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->decimal_scale_factor, &decimal_scale_factor))
+    if((ret = grib_get_long_internal(handle,self->decimal_scale_factor, &decimal_scale_factor))
             != GRIB_SUCCESS)
         return ret;
     decimal = grib_power(decimal_scale_factor,10);
@@ -663,31 +668,31 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     max*=decimal;
     min*=decimal;
 
-    if (grib_get_nearest_smaller_value(grib_handle_of_accessor(a),self->reference_value,min,&reference_value)
+    if (grib_get_nearest_smaller_value(handle,self->reference_value,min,&reference_value)
             !=GRIB_SUCCESS) {
         grib_context_log(a->context,GRIB_LOG_ERROR,
                 "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
         exit(GRIB_INTERNAL_ERROR);
     }
-    if((ret = grib_set_double_internal(grib_handle_of_accessor(a),self->reference_value, reference_value)) !=
+    if((ret = grib_set_double_internal(handle,self->reference_value, reference_value)) !=
             GRIB_SUCCESS)
         return ret;
 
-    if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->bits_per_value,&bits_per_value)) != GRIB_SUCCESS)
+    if((ret=grib_get_long_internal(handle,self->bits_per_value,&bits_per_value)) != GRIB_SUCCESS)
         return ret;
 
-    if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->offsetdata,&offsetBeforeData)) != GRIB_SUCCESS)
+    if((ret=grib_get_long_internal(handle,self->offsetdata,&offsetBeforeData)) != GRIB_SUCCESS)
         return ret;
 
-    if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->offsetsection,&offsetSection4)) != GRIB_SUCCESS)
+    if((ret=grib_get_long_internal(handle,self->offsetsection,&offsetSection4)) != GRIB_SUCCESS)
         return ret;
 
-    if((ret=grib_get_long_internal(grib_handle_of_accessor(a),self->orderOfSPD,&orderOfSPD)) != GRIB_SUCCESS)
+    if((ret=grib_get_long_internal(handle,self->orderOfSPD,&orderOfSPD)) != GRIB_SUCCESS)
         return ret;
 
     binary_scale_factor = grib_get_binary_scale_fact(max,reference_value,bits_per_value,&ret);
 
-    if((ret = grib_set_long_internal(grib_handle_of_accessor(a),self->binary_scale_factor, binary_scale_factor)) !=
+    if((ret = grib_set_long_internal(handle,self->binary_scale_factor, binary_scale_factor)) !=
             GRIB_SUCCESS)
         return ret;
 
@@ -732,8 +737,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
             if ( maxSPD < X[i] ) maxSPD=X[i];
         }
         /* widthOfSPD=(long)ceil(log((double)(maxSPD+1))/log(2.0)); */
-        widthOfSPD=number_of_bits(maxSPD);
-        widthOfBias=number_of_bits(labs(bias))+1;
+        widthOfSPD=number_of_bits(handle, maxSPD);
+        widthOfBias=number_of_bits(handle, labs(bias))+1;
 
         if ( widthOfSPD < widthOfBias  ) widthOfSPD=widthOfBias;
 
@@ -744,7 +749,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     remainingValues=numberOfValues-count;
     numberOfGroups=0;
     incrementGroupLengthA=startGroupLength;
-
 
     computeGroupA=1;
     while (remainingValues) {
@@ -759,9 +763,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
                 if (maxA<X[count+i]) maxA=X[count+i];
                 if (minA>X[count+i]) minA=X[count+i];
             }
-
         }
-        groupWidthA=number_of_bits(maxA-minA);
+        groupWidthA=number_of_bits(handle, maxA-minA);
         range=(long)grib_power(groupWidthA,2)-1;
 
         offsetC=count+groupLengthA;
@@ -954,7 +957,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         if (max<firstOrderValues[i]) max=firstOrderValues[i];
         if (min>firstOrderValues[i]) min=firstOrderValues[i];
     }
-    widthOfFirstOrderValues=number_of_bits(max-min);
+    widthOfFirstOrderValues=number_of_bits(handle, max-min);
     firstOrderValuesMax=(long)grib_power(widthOfFirstOrderValues,2)-1;
 
     if (numberOfGroups>2) {
@@ -978,7 +981,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
                 if (max<X[offset+j]) max=X[offset+j];
                 if (min>X[offset+j]) min=X[offset+j];
             }
-            groupWidth=number_of_bits(max-min);
+            groupWidth=number_of_bits(handle, max-min);
             range=(long)grib_power(groupWidth,2)-1;
 
             /* width of first order values has to be unchanged.*/
@@ -1028,8 +1031,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         if (maxWidth<groupWidths[i]) maxWidth=groupWidths[i];
         if (maxLength<groupLengths[i]) maxLength=groupLengths[i];
     }
-    widthOfWidths=number_of_bits(maxWidth);
-    widthOfLengths=number_of_bits(maxLength);
+    widthOfWidths=number_of_bits(handle, maxWidth);
+    widthOfLengths=number_of_bits(handle, maxLength);
 
     lengthOfSecondOrderValues=0;
     for ( i=0; i<numberOfGroups;i++) {
@@ -1037,7 +1040,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     }
 
     if (!a->context->no_big_group_split) {
-        grib_split_long_groups(a->context,&numberOfGroups,&lengthOfSecondOrderValues,
+        grib_split_long_groups(handle, a->context,&numberOfGroups,&lengthOfSecondOrderValues,
                 groupLengths,&widthOfLengths,groupWidths,widthOfWidths,
                 firstOrderValues,widthOfFirstOrderValues);
     }
@@ -1053,15 +1056,13 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     /* writing SPD */
     if (orderOfSPD) {
-        if((ret = grib_set_long_internal(grib_handle_of_accessor(a),self->widthOfSPD, widthOfSPD))
+        if((ret = grib_set_long_internal(handle,self->widthOfSPD, widthOfSPD))
                 != GRIB_SUCCESS)
             return ret;
-
     }
 
     /* end writing SPD */
-
-    if((ret = grib_set_long_internal(grib_handle_of_accessor(a),self->widthOfFirstOrderValues, widthOfFirstOrderValues))
+    if((ret = grib_set_long_internal(handle,self->widthOfFirstOrderValues, widthOfFirstOrderValues))
             != GRIB_SUCCESS)
         return ret;
 
@@ -1079,9 +1080,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     N2= N2 > 65535 ? 65535 : N2;
     N1= N1 > 65535 ? 65535 : N1;
 
-    grib_set_long(grib_handle_of_accessor(a),self->NL, NL);
-    grib_set_long(grib_handle_of_accessor(a),self->N1, N1);
-    grib_set_long(grib_handle_of_accessor(a),self->N2, N2);
+    grib_set_long(handle,self->NL, NL);
+    grib_set_long(handle,self->N1, N1);
+    grib_set_long(handle,self->N2, N2);
 
     if (numberOfGroups > 65535 ) {
         extraValues=numberOfGroups/65536;
@@ -1093,34 +1094,34 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     /* if no extraValues key present it is a GRIB2*/
     grib2=0;
-    if((ret = grib_set_long(grib_handle_of_accessor(a),self->extraValues, extraValues)) != GRIB_SUCCESS) {
+    if((ret = grib_set_long(handle,self->extraValues, extraValues)) != GRIB_SUCCESS) {
         codedNumberOfGroups=numberOfGroups;
         grib2=1;
     }
 
-    if((ret = grib_set_long_internal(grib_handle_of_accessor(a),self->codedNumberOfGroups, codedNumberOfGroups)) != GRIB_SUCCESS)
+    if((ret = grib_set_long_internal(handle,self->codedNumberOfGroups, codedNumberOfGroups)) != GRIB_SUCCESS)
         return ret;
 
     numberOfSecondOrderPackedValues=numberOfValues-orderOfSPD;
     if (!grib2 && numberOfSecondOrderPackedValues > 65535 )
         numberOfSecondOrderPackedValues= 65535;
 
-    if((ret = grib_set_long_internal(grib_handle_of_accessor(a),self->numberOfSecondOrderPackedValues, numberOfSecondOrderPackedValues))
+    if((ret = grib_set_long_internal(handle,self->numberOfSecondOrderPackedValues, numberOfSecondOrderPackedValues))
             != GRIB_SUCCESS)
         return ret;
 
     if (grib2) {
-        if((ret = grib_set_long_internal(grib_handle_of_accessor(a),self->bits_per_value, bits_per_value)) != GRIB_SUCCESS)
+        if((ret = grib_set_long_internal(handle,self->bits_per_value, bits_per_value)) != GRIB_SUCCESS)
             return ret;
     } else {
-        if((ret = grib_set_long_internal(grib_handle_of_accessor(a),self->bits_per_value, 0)) != GRIB_SUCCESS)
+        if((ret = grib_set_long_internal(handle,self->bits_per_value, 0)) != GRIB_SUCCESS)
             return ret;
     }
 
-    if((ret = grib_set_long_internal(grib_handle_of_accessor(a),self->widthOfWidths, widthOfWidths)) != GRIB_SUCCESS)
+    if((ret = grib_set_long_internal(handle,self->widthOfWidths, widthOfWidths)) != GRIB_SUCCESS)
         return ret;
 
-    if((ret = grib_set_long_internal(grib_handle_of_accessor(a),self->widthOfLengths, widthOfLengths)) != GRIB_SUCCESS)
+    if((ret = grib_set_long_internal(handle,self->widthOfLengths, widthOfLengths)) != GRIB_SUCCESS)
         return ret;
 
     lengthOfSecondOrderValues=0;
@@ -1134,7 +1135,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     /* padding section 4 to an even number of octets*/
     size = (size+offsetBeforeData-offsetSection4) % 2 ? size+1 : size;
     half_byte=8*size-sizebits;
-    if((ret = grib_set_long_internal(grib_handle_of_accessor(a),self->half_byte, half_byte)) != GRIB_SUCCESS)
+    if((ret = grib_set_long_internal(handle,self->half_byte, half_byte)) != GRIB_SUCCESS)
         return ret;
 
     buffer=(unsigned char*)grib_context_malloc_clear(a->context,size);
@@ -1146,17 +1147,17 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         Assert(orderOfSPD<=3);
         for (i=0;i<orderOfSPD;i++) SPD[i]=X[i];
         SPD[orderOfSPD]=bias;
-        ret=grib_set_long_array_internal(grib_handle_of_accessor(a),self->SPD,SPD,nSPD);
+        ret=grib_set_long_array_internal(handle,self->SPD,SPD,nSPD);
         if(ret) return ret;
     }
 
-    ret=grib_set_long_array_internal(grib_handle_of_accessor(a),self->groupWidths,groupWidths,(size_t)numberOfGroups);
+    ret=grib_set_long_array_internal(handle,self->groupWidths,groupWidths,(size_t)numberOfGroups);
     if(ret) return ret;
 
-    ret=grib_set_long_array_internal(grib_handle_of_accessor(a),self->groupLengths,groupLengths,(size_t)numberOfGroups);
+    ret=grib_set_long_array_internal(handle,self->groupLengths,groupLengths,(size_t)numberOfGroups);
     if(ret) return ret;
 
-    ret=grib_set_long_array_internal(grib_handle_of_accessor(a),self->firstOrderValues,firstOrderValues,(size_t)numberOfGroups);
+    ret=grib_set_long_array_internal(handle,self->firstOrderValues,firstOrderValues,(size_t)numberOfGroups);
     if(ret) return ret;
 
     Xp=X+orderOfSPD;
