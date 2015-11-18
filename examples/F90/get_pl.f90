@@ -31,14 +31,14 @@ program get_pl
   call codes_get(igrib,'PLPresent',PLPresent)
   print*, "PLPresent= ", PLPresent
   if (PLPresent == 1) then
-     call codes_get_size(igrib,'pl',nb_pl)
-     print*, "there are ", nb_pl, " PL values"
-     allocate(pl(nb_pl))
-     call codes_get(igrib,'pl',pl)
-     print*, "pl = ", pl
-     deallocate(pl)
+    call codes_get_size(igrib,'pl',nb_pl)
+    print*, "there are ", nb_pl, " PL values"
+    allocate(pl(nb_pl))
+    call codes_get(igrib,'pl',pl)
+    print*, "pl = ", pl
+    deallocate(pl)
   else
-     print*, "There is no PL values in your GRIB message!"
+    print*, "There is no PL values in your GRIB message!"
   end if
   call codes_release(igrib)
      

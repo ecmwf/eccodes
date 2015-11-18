@@ -53,7 +53,6 @@ list( APPEND tests
    bufr_read_temp
    bufr_set_keys
    bufr_subset
-   bufr_read_tropical_cyclone
    get_product_kind
    gts_get_keys
    metar_get_keys
