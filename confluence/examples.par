@@ -31,5 +31,6 @@ BUFR (
       bufr_read_temp
       bufr_set_keys
       bufr_subset
+      bufr_read_tropical_cyclone
       )
 
