@@ -28,8 +28,7 @@ TESTS = grib_clone.sh \
         bufr_read_temp.sh \
         bufr_read_scatterometer.sh \
         gts_get_keys.sh \
-        metar_get_keys.sh \
-        bufr_read_tropical_cyclone.sh
+        metar_get_keys.sh
 
 TESTS_ENVIRONMENT = TOPBUILDDIR=$(top_builddir) PYTHON=$(PYTHON)
 
@@ -71,7 +70,7 @@ EXTRA_DIST = $(TESTS) include.sh CMakeLists.txt include.ctest.sh.in \
              bufr_read_temp.py \
              bufr_read_scatterometer.py \
              gts_get_keys.py \
-             metar_get_keys.py \
-             bufr_read_tropical_cyclone.py
+             metar_get_keys.py
 
 endif
+
