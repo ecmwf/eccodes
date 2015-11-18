@@ -18,7 +18,7 @@ label="bufr_read_tropical_cyclone_f"
 fTmp=${label}".tmp.txt"
 rm -f $fTmp | true
 
-#We check "syno_multi.bufr". The path is
+#We check "tropical_cyclone.bufr". The path is
 #hardcoded in the example
 
 REDIRECT=/dev/null

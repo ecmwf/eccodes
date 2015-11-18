@@ -6,7 +6,8 @@ TESTS = copy_message.sh grib_get_keys.sh get_data.sh get_pl.sh get_pv.sh grib_ke
         grib_set_bitmap.sh set_missing.sh grib_set_pv.sh samples.sh count_messages.sh read_message.sh \
         read_from_file.sh grib_index.sh get_set_uuid.sh bufr_attributes.sh grib_clone.sh bufr_clone.sh \
         bufr_expanded.sh bufr_get_keys.sh bufr_read_header.sh bufr_read_synop.sh \
-        bufr_set_keys.sh bufr_keys_iterator.sh bufr_subset.sh get_product_kind.sh bufr_read_temp.sh bufr_read_scatterometer.sh
+        bufr_set_keys.sh bufr_keys_iterator.sh bufr_subset.sh get_product_kind.sh bufr_read_temp.sh \
+				bufr_tropical_cyclone.sh bufr_read_scatterometer.sh
 
 noinst_PROGRAMS  = eccodes_f_grib_index \
                    eccodes_f_copy_message \
@@ -44,6 +45,7 @@ noinst_PROGRAMS  = eccodes_f_grib_index \
                    eccodes_f_bufr_attributes \
                    eccodes_f_get_product_kind \
                    eccodes_f_bufr_read_temp \
+                   eccodes_f_bufr_tropical_cyclone \
                    eccodes_f_bufr_read_scatterometer
 
 eccodes_f_grib_index_SOURCES=grib_index.f90
@@ -83,6 +85,7 @@ eccodes_f_bufr_read_temp_SOURCES=bufr_read_temp.f90
 eccodes_f_bufr_set_keys_SOURCES=bufr_set_keys.f90
 eccodes_f_bufr_subset_SOURCES=bufr_subset.f90
 eccodes_f_get_product_kind_SOURCES=get_product_kind.f90
+eccodes_f_bufr_tropical_cyclone_SOURCES=bufr_tropical_cyclone.f90
 
 INCLUDES =  -I$(top_builddir)/src
 
