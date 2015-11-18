@@ -8,14 +8,10 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FOTRAN 90 Implementation: bufr_read_scatterometer
+! FOTRAN 90 Implementation: bufr_read_tropical_cyclone
 !
-! Description: how to read data for a given beam from scatterometer BUFR messages.
+! Description: how to read data for a tropical cyclone BUFR messages.
 ! 
-! Please note that scatterometer data can be encoded in various ways in BUFR. Therefore the code
-! below might not work directly for other types of messages than the one used in the
-! example. It is advised to use bufr_dump first to understand the structure of these messages.
-
 
 program bufr_read_tropical_cyclone
   use eccodes
