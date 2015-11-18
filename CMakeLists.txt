@@ -259,7 +259,7 @@ add_subdirectory( ifs_samples ) # must come after samples
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
 ecbuild_dont_pack( DIRS
-     concepts tests.ecmwf doxygen examples.dev templates parameters java
+     concepts tests.ecmwf doxygen confluence examples.dev templates parameters java
      gaussian_experimental gribex examples/F77
      examples/extra bamboo fortran/fortranCtypes tigge/tools share/eccodes grib_api_for_mars
      src/.deps tests/.deps tools/.deps tigge/.deps examples/C/.deps examples/python/.deps
