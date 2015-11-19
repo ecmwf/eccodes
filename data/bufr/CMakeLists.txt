@@ -13,7 +13,7 @@ STRING(REGEX REPLACE "\n" ";" bufr_refs_to_download "${bufr_refs_to_download}")
 
 
 ecbuild_get_test_multidata(
-     TARGET get_bufrs
+     TARGET eccodes_get_bufrs
      NOCHECK
      NAMES ${bufr_files_to_download} ${bufr_refs_to_download}
 )

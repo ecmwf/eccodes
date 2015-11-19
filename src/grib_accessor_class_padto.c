@@ -91,6 +91,7 @@ static grib_accessor_class _grib_accessor_class_padto = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -128,6 +129,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -140,7 +142,7 @@ static size_t preferred_size(grib_accessor* a,int from_handle)
 	long length=0;
 	long theEnd;
 
-	grib_expression_evaluate_long(a->parent->h,self->expression,&theEnd);
+	grib_expression_evaluate_long(grib_handle_of_accessor(a),self->expression,&theEnd);
 
 	length  = theEnd - a->offset;
 
@@ -154,7 +156,7 @@ static void init(grib_accessor* a, const long len, grib_arguments*arg )
 {
 	grib_accessor_padto* self = (grib_accessor_padto*)a;
 
-	self->expression  = grib_arguments_get_expression(a->parent->h, arg,0);
+	self->expression  = grib_arguments_get_expression(grib_handle_of_accessor(a), arg,0);
 	a->length         = preferred_size(a,1);
 }
 

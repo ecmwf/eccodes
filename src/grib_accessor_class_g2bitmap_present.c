@@ -91,6 +91,7 @@ static grib_accessor_class _grib_accessor_class_g2bitmap_present = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -128,6 +129,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -136,7 +138,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
   int n=0;
   grib_accessor_g2bitmap_present* self = (grib_accessor_g2bitmap_present*)a;
-  self->bitmapIndicator = grib_arguments_get_name(a->parent->h,c,n++);
+  self->bitmapIndicator = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 
   a->length=0;
 }
@@ -148,7 +150,7 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
 
   grib_accessor_g2bitmap_present* self = (grib_accessor_g2bitmap_present*)a;
 
-  ret = grib_get_long_internal(a->parent->h, self->bitmapIndicator,&bitmapIndicator);
+  ret = grib_get_long_internal(grib_handle_of_accessor(a), self->bitmapIndicator,&bitmapIndicator);
   if (ret) {
   	if (ret==GRIB_NOT_FOUND) {
 		*val=0;
@@ -171,5 +173,5 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
   if (*val==0) bitmapIndicator=255;
    
   
-  return grib_set_long(a->parent->h,self->bitmapIndicator,bitmapIndicator);
+  return grib_set_long(grib_handle_of_accessor(a),self->bitmapIndicator,bitmapIndicator);
 }

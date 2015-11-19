@@ -100,23 +100,23 @@ int main(int argc,char* argv[])
          * read so we will use the # (occurrence) operator accordingly. */
         
         /* Cloud amount (low and middleclouds) */
-        CODES_CHECK(codes_get_long(h,"cloudAmount#1",&longVal),0);
+        CODES_CHECK(codes_get_long(h,"#1#cloudAmount",&longVal),0);
         printf("  cloudAmount (low and middle): %ld\n",longVal);
         
         /* Height of cloud base */
-        CODES_CHECK(codes_get_long(h,"heightOfBaseOfCloud#1",&longVal),0);
+        CODES_CHECK(codes_get_long(h,"#1#heightOfBaseOfCloud",&longVal),0);
         printf("  heightOfBaseOfCloud: %ld\n",longVal);
         
         /* Cloud type (low clouds) */
-        CODES_CHECK(codes_get_long(h,"cloudType#1",&longVal),0);
+        CODES_CHECK(codes_get_long(h,"#1#cloudType",&longVal),0);
         printf("  cloudType (low): %ld\n",longVal);
         
         /* Cloud type (middle clouds) */
-        CODES_CHECK(codes_get_long(h,"cloudType#2",&longVal),0);
+        CODES_CHECK(codes_get_long(h,"#2#cloudType",&longVal),0);
         printf("  cloudType (middle): %ld\n",longVal);
         
         /* Cloud type (high clouds) */
-        CODES_CHECK(codes_get_long(h,"cloudType#3",&longVal),0);
+        CODES_CHECK(codes_get_long(h,"#3#cloudType",&longVal),0);
         printf("  cloudType (high): %ld\n",longVal);
         
         /* delete handle */

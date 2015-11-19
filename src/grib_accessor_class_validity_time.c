@@ -99,6 +99,7 @@ static grib_accessor_class _grib_accessor_class_validity_time = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -136,6 +137,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -177,12 +179,12 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     grib_accessor_validity_time* self = (grib_accessor_validity_time*)a;
     int n = 0;
 
-    self->date = grib_arguments_get_name(a->parent->h,c,n++);
-    self->time = grib_arguments_get_name(a->parent->h,c,n++);
-    self->step = grib_arguments_get_name(a->parent->h,c,n++);
-    self->stepUnits = grib_arguments_get_name(a->parent->h,c,n++);
-    self->hours = grib_arguments_get_name(a->parent->h,c,n++);
-    self->minutes = grib_arguments_get_name(a->parent->h,c,n++);
+    self->date = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->time = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->step = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->stepUnits = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->hours = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->minutes = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
@@ -204,18 +206,18 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
     if (self->hours) {
         long hours,minutes;
-        if ((ret=grib_get_long_internal(a->parent->h, self->hours,&hours))!=GRIB_SUCCESS) return ret;
-        if ((ret=grib_get_long_internal(a->parent->h, self->minutes,&minutes))!=GRIB_SUCCESS) return ret;
+        if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->hours,&hours))!=GRIB_SUCCESS) return ret;
+        if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->minutes,&minutes))!=GRIB_SUCCESS) return ret;
         *val=hours*100+minutes;
         return GRIB_SUCCESS;
     }
-    if ((ret=grib_get_long_internal(a->parent->h, self->date,&date))!=GRIB_SUCCESS) return ret;
-    if ((ret=grib_get_long_internal(a->parent->h, self->time,&time))!=GRIB_SUCCESS) return ret;
-    if ((ret=grib_get_long_internal(a->parent->h, self->step,&step))!=GRIB_SUCCESS) return ret;
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->date,&date))!=GRIB_SUCCESS) return ret;
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->time,&time))!=GRIB_SUCCESS) return ret;
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->step,&step))!=GRIB_SUCCESS) return ret;
 
     /* Seconds will always be zero. So convert to minutes */
     if (self->stepUnits) {
-        if ((ret=grib_get_long_internal(a->parent->h, self->stepUnits,&stepUnits))!=GRIB_SUCCESS) return ret;
+        if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->stepUnits,&stepUnits))!=GRIB_SUCCESS) return ret;
         step_mins = convert_to_minutes(step, stepUnits);
     }
 

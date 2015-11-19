@@ -173,6 +173,7 @@ static grib_accessor_class _grib_accessor_class_bufr_data = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -201,6 +202,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -243,7 +245,7 @@ static long init_length(grib_accessor* a)
   grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
   long section4Length=0;
 
-  grib_handle* h=a->parent->h;
+  grib_handle* h=grib_handle_of_accessor(a);
 
   grib_get_long(h,self->section4LengthName,&section4Length);
 
@@ -257,27 +259,27 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
   grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
   int n = 0;
 
-  a->sub_section           = grib_section_create(a->parent->h,a);
+  a->sub_section           = grib_section_create(grib_handle_of_accessor(a),a);
 
-  self->offsetSection4Name = grib_arguments_get_name(a->parent->h,params,n++);
-  self->offsetBeforeDataName = grib_arguments_get_name(a->parent->h,params,n++);
-  self->offsetEndSection4Name = grib_arguments_get_name(a->parent->h,params,n++);
-  self->section4LengthName = grib_arguments_get_name(a->parent->h,params,n++);
-  self->numberOfDataSubsetsName = grib_arguments_get_name(a->parent->h,params,n++);
-  self->subsetNumberName    = grib_arguments_get_name(a->parent->h,params,n++);
-  self->expandedDescriptorsName = grib_arguments_get_name(a->parent->h,params,n++);
-  self->abbreviationName = grib_arguments_get_name(a->parent->h,params,n++);
-  self->typeName = grib_arguments_get_name(a->parent->h,params,n++);
-  self->nameName = grib_arguments_get_name(a->parent->h,params,n++);
-  self->unitName = grib_arguments_get_name(a->parent->h,params,n++);
-  self->referenceName = grib_arguments_get_name(a->parent->h,params,n++);
-  self->scaleName = grib_arguments_get_name(a->parent->h,params,n++);
-  self->widthName = grib_arguments_get_name(a->parent->h,params,n++);
-  self->codeFlags = grib_arguments_get_name(a->parent->h,params,n++);
-  self->bitmapNumberName = grib_arguments_get_name(a->parent->h,params,n++);
-  self->associatedBitmapNumberName = grib_arguments_get_name(a->parent->h,params,n++);
-  self->associatedBitmapIndexName = grib_arguments_get_name(a->parent->h,params,n++);
-  self->associatedInfoNumberName = grib_arguments_get_name(a->parent->h,params,n++);
+  self->offsetSection4Name = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->offsetBeforeDataName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->offsetEndSection4Name = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->section4LengthName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->numberOfDataSubsetsName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->subsetNumberName    = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->expandedDescriptorsName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->abbreviationName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->typeName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->nameName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->unitName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->referenceName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->scaleName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->widthName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->codeFlags = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->bitmapNumberName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->associatedBitmapNumberName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->associatedBitmapIndexName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->associatedInfoNumberName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
   self->expandedDescriptors=0;
   self->numberOfDescriptors=0;
   self->numberOfElements=0;
@@ -337,7 +339,7 @@ static long next_offset(grib_accessor* a){
 
 static void update_size(grib_accessor* a,size_t s)
 {
-    grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,"updating size of %s old %ld new %ld",a->name,a->length,s);
+    grib_context_log(a->context,GRIB_LOG_DEBUG,"updating size of %s old %ld new %ld",a->name,a->length,s);
   a->length = s;
   Assert(a->length>=0);
 }
@@ -369,23 +371,23 @@ static int get_descriptors(grib_accessor* a) {
     int i=0;
     grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
     grib_accessor* expandedDescriptors=0;
-    grib_handle* h=a->parent->h;
-    grib_context* c=a->parent->h->context;
+    grib_handle* h=grib_handle_of_accessor(a);
+    grib_context* c=a->context;
 
-    expandedDescriptors=grib_find_accessor(a->parent->h,self->expandedDescriptorsName);
+    expandedDescriptors=grib_find_accessor(grib_handle_of_accessor(a),self->expandedDescriptorsName);
     if (!expandedDescriptors) {
-          grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+          grib_context_log(a->context,GRIB_LOG_ERROR,
               "unable to find accessor %s",self->expandedDescriptorsName);
           return GRIB_NOT_FOUND;
     }
 
     if (self->numberOfDescriptors) self_clear(c,self);
-    err=_grib_get_size(a->parent->h,expandedDescriptors,&(self->numberOfDescriptors));
+    err=_grib_get_size(grib_handle_of_accessor(a),expandedDescriptors,&(self->numberOfDescriptors));
     if (err) return err;
 
-    self->expandedDescriptors=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*self->numberOfDescriptors);
+    self->expandedDescriptors=(long*)grib_context_malloc_clear(a->context,sizeof(long)*self->numberOfDescriptors);
     if (!self->expandedDescriptors) {
-      grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,
+      grib_context_log(a->context,GRIB_LOG_FATAL,
           "unable to allocate %ld bytes",(long)(self->numberOfDescriptors));
       return GRIB_OUT_OF_MEMORY;
     }
@@ -449,7 +451,7 @@ static void push_units_accessor(grib_section* section,grib_accessor* a,long grou
   grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
   grib_accessor* gaUnits=0;
   grib_action creatorUnits = {0, };
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   if (self->units[i][0]=='C' && ( !strcmp(self->units[i],"CCITTIA5") ||
                                   !strncmp(self->units[i],"COMMON",6)) )
@@ -560,7 +562,7 @@ static int decode_elements(grib_accessor* a) {
     grib_accessor* significanceQualifierGroup[NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES]={0,};
     int significanceQualifierDepth[NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES]={0,};
 
-    grib_handle* h=a->parent->h;
+    grib_handle* h=grib_handle_of_accessor(a);
     grib_context* c=h->context;
 
     grib_accessor* ga=0;
@@ -606,7 +608,7 @@ static int decode_elements(grib_accessor* a) {
 
     gaGroup = grib_accessor_factory(a->sub_section, &creatorGroup, 0, NULL);
     gaGroup->bufr_group_number=groupNumber;
-    gaGroup->sub_section=grib_section_create(a->parent->h,gaGroup);
+    gaGroup->sub_section=grib_section_create(grib_handle_of_accessor(a),gaGroup);
     section=gaGroup->sub_section;
     sectionUp=a->sub_section;
     ((grib_accessor_constant*)gaGroup)->type=GRIB_TYPE_LONG;
@@ -642,7 +644,7 @@ static int decode_elements(grib_accessor* a) {
           }
 
           gaGroup = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
-          gaGroup->sub_section=grib_section_create(a->parent->h,gaGroup);
+          gaGroup->sub_section=grib_section_create(grib_handle_of_accessor(a),gaGroup);
           gaGroup->bufr_group_number=groupNumber;
           ((grib_accessor_constant*)gaGroup)->type=GRIB_TYPE_LONG;
           ((grib_accessor_constant*)gaGroup)->dval=groupNumber;
@@ -854,7 +856,6 @@ static int decode_elements(grib_accessor* a) {
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
   get_elements_and_decode(a);
-  a->parent->h->unpacked=1;
 
   grib_dump_section(dumper,a,a->sub_section->block);
 
@@ -865,7 +866,7 @@ static int value_count(grib_accessor* a,long* count)
 {
 	int err=0;
 	grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
-        grib_handle* h=a->parent->h;
+        grib_handle* h=grib_handle_of_accessor(a);
 
 	err=get_descriptors(a);
 	if (err) return err;
@@ -881,7 +882,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len) {
 
     err=get_elements_and_decode(a);
     if (err) return err;
-    a->parent->h->unpacked=1;
 
     if (!val) return GRIB_SUCCESS;
     else return GRIB_NOT_IMPLEMENTED;

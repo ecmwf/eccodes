@@ -85,6 +85,7 @@ static grib_accessor_class _grib_accessor_class_bytes = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -121,6 +122,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -160,7 +162,7 @@ static int unpack_string(grib_accessor *a , char*  v, size_t *len){
 	  return GRIB_ARRAY_TOO_SMALL;
   }
   
-  p  = a->parent->h->buffer->data + grib_byte_offset(a);
+  p  = grib_handle_of_accessor(a)->buffer->data + grib_byte_offset(a);
   
   for (i = 0; i < length; i++)  {
     sprintf (s,"%02x", *(p++));

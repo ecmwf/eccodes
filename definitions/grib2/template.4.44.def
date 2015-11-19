@@ -10,7 +10,7 @@
 # TEMPLATE 4.44, Analysis or forecast at a horizontal level or in a horizontal layer at a point in time
 
 # GRIB-530: Special case for aerosol thanks to WMO error
-include "template.4.parameter_aerosol_44.def";
+include "grib2/template.4.parameter_aerosol_44.def";
 
-include "template.4.point_in_time.def";
-include "template.4.horizontal.def";
+include "grib2/template.4.point_in_time.def";
+include "grib2/template.4.horizontal.def";

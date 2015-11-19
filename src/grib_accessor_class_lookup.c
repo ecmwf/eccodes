@@ -101,6 +101,7 @@ static grib_accessor_class _grib_accessor_class_lookup = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -133,6 +134,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -142,9 +144,9 @@ static void init(grib_accessor* a, const long len, grib_arguments *arg )
   grib_accessor_lookup* self = (grib_accessor_lookup*)a;
   a->length = 0;
   self->llength = len;
-  self->loffset = grib_arguments_get_long(a->parent->h,arg,0);
+  self->loffset = grib_arguments_get_long(grib_handle_of_accessor(a),arg,0);
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  self->real_name = grib_arguments_get_expression(a->parent->h,arg,1);
+  self->real_name = grib_arguments_get_expression(grib_handle_of_accessor(a),arg,1);
 }
 
 static void post_init(grib_accessor* a)
@@ -208,7 +210,7 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
   grib_accessor_lookup* al = (grib_accessor_lookup*)a;
-  grib_handle *h = a->parent->h;
+  grib_handle *h = grib_handle_of_accessor(a);
 
 
   long pos = (a->offset+al->loffset)*8;
@@ -216,7 +218,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
   if(len[0] < 1)
   {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name , 1 );
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name , 1 );
     len[0] = 0;
     return GRIB_ARRAY_TOO_SMALL;
   }

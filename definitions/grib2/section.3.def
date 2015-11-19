@@ -45,6 +45,7 @@ if(numberOfOctectsForNumberOfPoints  == 0){
 codetable[2] gridDefinitionTemplateNumber ('3.1.table',masterDir,localDir) =0 : dump,edition_specific;
 meta gridDefinitionDescription codetable_title(gridDefinitionTemplateNumber);
 
+alias is_rotated_grid=zero;
 
 template gridDefinitionSection "grib2/template.3.[gridDefinitionTemplateNumber:l].def";
 
@@ -79,11 +80,24 @@ concept gridType {
  "polar_stereographic"   = { gridDefinitionTemplateNumber=20; PLPresent=0;  }
  "lambert"               = { gridDefinitionTemplateNumber=30; PLPresent=0;  }
  "albers"                = { gridDefinitionTemplateNumber=31; PLPresent=0;  }
+
  "regular_gg"            = { gridDefinitionTemplateNumber=40; PLPresent=0;  }
  "reduced_gg"            = { gridDefinitionTemplateNumber=40; PLPresent=1; numberOfOctectsForNumberOfPoints=2;iDirectionIncrementGiven=0;numberOfPointsAlongAParallel = missing(); }
+
  "rotated_gg"            = { gridDefinitionTemplateNumber=41; PLPresent=0;  }
+ "reduced_rotated_gg"    = { gridDefinitionTemplateNumber=41; PLPresent=1; numberOfOctectsForNumberOfPoints=2;iDirectionIncrementGiven=0;numberOfPointsAlongAParallel = missing(); }
+
  "stretched_gg"          = { gridDefinitionTemplateNumber=42; PLPresent=0;  }
+ "reduced_stretched_gg"  = { gridDefinitionTemplateNumber=42; PLPresent=1; numberOfOctectsForNumberOfPoints=2;iDirectionIncrementGiven=0;numberOfPointsAlongAParallel = missing(); }
+
  "stretched_rotated_gg"  = { gridDefinitionTemplateNumber=43; PLPresent=0;  }
+ "reduced_stretched_rotated_gg" = { gridDefinitionTemplateNumber=43; PLPresent=1; numberOfOctectsForNumberOfPoints=2;iDirectionIncrementGiven=0;numberOfPointsAlongAParallel = missing(); }
+
+# For consistency add the prefix regular_
+"regular_rotated_gg"           = { gridDefinitionTemplateNumber=41; PLPresent=0; } # = rotated_gg
+"regular_stretched_gg"         = { gridDefinitionTemplateNumber=42; PLPresent=0; } # = stretched_gg
+"regular_stretched_rotated_gg" = { gridDefinitionTemplateNumber=43; PLPresent=0; } # = stretched_rotated_gg
+
  "sh"                    = { gridDefinitionTemplateNumber=50; PLPresent=0;}
  "rotated_sh"            = { gridDefinitionTemplateNumber=51; PLPresent=0;}
  "stretched_sh"          = { gridDefinitionTemplateNumber=52; PLPresent=0;}

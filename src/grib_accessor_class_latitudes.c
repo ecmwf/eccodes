@@ -96,6 +96,7 @@ static grib_accessor_class _grib_accessor_class_latitudes = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -133,6 +134,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -164,8 +166,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     grib_accessor_latitudes* self = (grib_accessor_latitudes*)a;
     int n = 0;
 
-    self->values = grib_arguments_get_name(a->parent->h,c,n++);
-    self->distinct = grib_arguments_get_long(a->parent->h,c,n++);
+    self->values = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->distinct = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
     self->save=0;
 
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -173,11 +175,11 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 
 static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-    grib_context* c=a->parent->h->context;
+    grib_context* c=a->context;
     grib_accessor_latitudes* self = (grib_accessor_latitudes*)a;
     int ret = 0;
     double* v=val;
-    double dummy=0;
+    double dummyLon=0, dummyVal=0;
     size_t size=0;
     long count=0;
     grib_iterator* iter=NULL;
@@ -208,14 +210,14 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
         return GRIB_SUCCESS;
     }
 
-    iter=grib_iterator_new(a->parent->h,0,&ret);
+    iter=grib_iterator_new(grib_handle_of_accessor(a),0,&ret);
     if (ret!=GRIB_SUCCESS) {
         if (iter) grib_iterator_delete(iter);
         grib_context_log(c,GRIB_LOG_ERROR,"unable to create iterator");
         return ret;
     }
 
-    while(grib_iterator_next(iter,v++,&dummy,&dummy)) {}
+    while(grib_iterator_next(iter,v++,&dummyLon,&dummyVal)) {}
     grib_iterator_delete(iter);
 
     *len=size;
@@ -226,8 +228,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 static int value_count(grib_accessor* a,long* len)
 {
     grib_accessor_latitudes* self = (grib_accessor_latitudes*)a;
-    grib_handle* h=a->parent->h;
-    grib_context* c=a->parent->h->context;
+    grib_handle* h=grib_handle_of_accessor(a);
+    grib_context* c=a->context;
     double* val=NULL;
     int ret;
     size_t size;
@@ -258,13 +260,13 @@ static int get_distinct(grib_accessor* a,double** val,long* len) {
     double prev;
     double *v=NULL;
     double *v1=NULL;
-    double dummy;
+    double dummyLon=0, dummyVal=0;
     int ret=0;
     int i;
     long jScansPositively=0; /*default: north to south*/
     size_t size=*len;
-    grib_context* c=a->parent->h->context;
-    grib_iterator* iter=grib_iterator_new(a->parent->h,0,&ret);
+    grib_context* c=a->context;
+    grib_iterator* iter=grib_iterator_new(grib_handle_of_accessor(a),0,&ret);
     if (ret!=GRIB_SUCCESS) {
         if (iter) grib_iterator_delete(iter);
         grib_context_log(c,GRIB_LOG_ERROR,"unable to create iterator");
@@ -278,12 +280,12 @@ static int get_distinct(grib_accessor* a,double** val,long* len) {
     }
     *val=v;
 
-    while(grib_iterator_next(iter,v++,&dummy,&dummy)) {}
+    while(grib_iterator_next(iter,v++,&dummyLon,&dummyVal)) {}
     grib_iterator_delete(iter);
     v=*val;
 
     /* See which direction the latitudes are to be scanned */
-    if((ret = grib_get_long_internal(a->parent->h, "jScansPositively", &jScansPositively))) return ret;
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), "jScansPositively", &jScansPositively))) return ret;
     if (jScansPositively) {
         qsort(v,*len,sizeof(double),&compare_doubles_ascending);		/*South to North*/
     } else {

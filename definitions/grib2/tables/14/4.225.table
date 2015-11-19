@@ -1,4 +1,4 @@
-# Code table 4.225 - Weather (see FM 94 BUFR/FM 95 CREX Code table  0 20 003 - Present weather)
+# Code table 4.225 - Weather (see FM 94 BUFR/FM 95 CREX Code table 0 20 003 - Present weather)
 00 00 Cloud development not observed or not observable
 01 01 Clouds generally dissolving or becoming less developed
 02 02 State of sky on the whole unchanged
@@ -105,13 +105,13 @@
 103 103 Clouds generally forming or developing during the past hour
 104 104 Haze or smoke, or dust in suspension in the air, visibility equal to, or greater than, 1 km
 105 105 Haze or smoke, or dust in suspension in the air, visibility less than 1 km
-# 106-109 Reserved
+#106-109 Reserved
 110 110 Mist
 111 111 Diamond dust
 112 112 Distant lightning
 #113-117 Reserved
 118 118 Squalls
-# 119 Reserved
+#119 Reserved
 120 120 Fog
 121 121 PRECIPITATION
 122 122 Drizzle (not freezing) or snow grains
@@ -138,7 +138,7 @@
 146 146 Solid precipitation, heavy
 147 147 Freezing precipitation, slight or moderate
 148 148 Freezing precipitation, heavy
-# 149 Reserved
+#149 Reserved
 150 150 DRIZZLE
 151 151 Drizzle, not freezing, slight
 152 152 Drizzle, not freezing, moderate
@@ -148,7 +148,7 @@
 156 156 Drizzle, freezing, heavy
 157 157 Drizzle and rain, slight
 158 158 Drizzle and rain, moderate or heavy
-# 159 Reserved
+#159 Reserved
 160 160 RAIN
 161 161 Rain, not freezing, slight
 162 162 Rain, not freezing, moderate
@@ -196,6 +196,7 @@
 210 210 Snow haze
 211 211 Whiteout
 213 213 Lightning, cloud to surface
+#214-216 Not used
 217 217 Dry thunderstorm
 219 219 Tornado cloud (destructive) at or within sight of the station during preceding hour or at the time of observation
 220 220 Deposition of volcanic ash
@@ -259,7 +260,7 @@
 291 291 Precipitation of hail, with snow
 292 292 Shower(s) or thunderstorm over sea
 293 293 Shower(s) or thunderstorm over mountains
-# 300-507 Reserved
+#300-507 Reserved
 508 508 No significant phenomenon to report, present and past weather omitted
 509 509 No observation, data not available, present and past weather omitted
 510 510 Present and past weather missing, but expected

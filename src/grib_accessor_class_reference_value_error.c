@@ -93,6 +93,7 @@ static grib_accessor_class _grib_accessor_class_reference_value_error = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -131,6 +132,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -140,8 +142,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
   grib_accessor_reference_value_error* self = (grib_accessor_reference_value_error*)a;
   int n = 0;
 
-  self->referenceValue = grib_arguments_get_name(a->parent->h,c,n++);
-  self->floatType = grib_arguments_get_name(a->parent->h,c,n++);
+  self->referenceValue = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->floatType = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
   a->length=0;
@@ -153,7 +155,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len) {
   int ret = 0;
   double referenceValue=0;
  
-  if((ret = grib_get_double_internal(a->parent->h,
+  if((ret = grib_get_double_internal(grib_handle_of_accessor(a),
       self->referenceValue,&referenceValue)) != GRIB_SUCCESS)
     return ret;
 

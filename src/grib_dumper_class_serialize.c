@@ -99,7 +99,7 @@ static int  destroy  (grib_dumper* d){
 static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 {
   grib_dumper_serialize *self = (grib_dumper_serialize*)d;
-  long value; size_t size = 1;
+  long value=0; size_t size = 1;
   int err = grib_unpack_long(a,&value,&size);
 
   if(  (a->flags & GRIB_ACCESSOR_FLAG_HIDDEN) != 0 )
@@ -203,7 +203,7 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 {
   grib_dumper_serialize *self = (grib_dumper_serialize*)d;
-  char value[1024]; size_t size = sizeof(value);
+  char value[1024]={0,}; size_t size = sizeof(value);
   int err = grib_unpack_string(a,value,&size);
   int i;
 

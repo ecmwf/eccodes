@@ -94,6 +94,7 @@ static grib_accessor_class _grib_accessor_class_codeflag = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -131,6 +132,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -139,7 +141,7 @@ static void init  (grib_accessor* a,const long len, grib_arguments* param)
 {
     grib_accessor_codeflag* self = (grib_accessor_codeflag*)a;
     a->length = len;
-    self->tablename = grib_arguments_get_string(a->parent->h,param,0);
+    self->tablename = grib_arguments_get_string(grib_handle_of_accessor(a),param,0);
     Assert(a->length>=0);
 }
 
@@ -160,10 +162,10 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
     size_t i =0;
     int j =0;
 
-    grib_recompose_name(a->parent->h,NULL, self->tablename, fname,1);
+    grib_recompose_name(grib_handle_of_accessor(a),NULL, self->tablename, fname,1);
 
-    if ((filename=grib_context_full_defs_path(a->parent->h->context,fname))==NULL) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_WARNING,"Cannot open flag table %s",filename);
+    if ((filename=grib_context_full_defs_path(a->context,fname))==NULL) {
+        grib_context_log(a->context,GRIB_LOG_WARNING,"Cannot open flag table %s",filename);
         strcpy(codename, "Cannot open flag table");
         return GRIB_FILE_NOT_FOUND;
     }
@@ -172,7 +174,7 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
 
     if (!f)
     {
-        grib_context_log(a->parent->h->context,(GRIB_LOG_WARNING)|(GRIB_LOG_PERROR),"Cannot open flag table %s",filename);
+        grib_context_log(a->context,(GRIB_LOG_WARNING)|(GRIB_LOG_PERROR),"Cannot open flag table %s",filename);
         strcpy(codename, "Cannot open flag table");
         return GRIB_FILE_NOT_FOUND;
     }
@@ -235,7 +237,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
     size_t llen = 1;
 
-    grib_recompose_name(a->parent->h,NULL, self->tablename, fname,1);
+    grib_recompose_name(grib_handle_of_accessor(a),NULL, self->tablename, fname,1);
     grib_unpack_long(a, &v, &llen);
 
     grib_get_codeflag(a, v, flagname);

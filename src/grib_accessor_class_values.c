@@ -108,6 +108,7 @@ static grib_accessor_class _grib_accessor_class_values = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -139,6 +140,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -151,7 +153,7 @@ static long init_length(grib_accessor* a)
   long offsetsection = 0;
   long offsetdata    = 0;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->seclen,&seclen)))
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->seclen,&seclen)))
     return ret;
 
   if(seclen == 0)
@@ -160,17 +162,17 @@ static long init_length(grib_accessor* a)
     return 0;
   }
 
-  if((ret = grib_get_long_internal(a->parent->h, self->offsetsection,&offsetsection)))
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetsection,&offsetsection)))
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->offsetdata,&offsetdata)))
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetdata,&offsetdata)))
     return ret;
 
   /* When reparsing */
   if(offsetdata < offsetsection)
   {
     /* printf("init_length offsetdata < offsetsection=0\n"); */
-    Assert(a->parent->h->loader);
+    Assert(grib_handle_of_accessor(a)->loader);
     return 0;
   }
   
@@ -182,9 +184,9 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
   grib_accessor_values *self =(grib_accessor_values*)a;
   self->carg = 0;
 
-  self->seclen        = grib_arguments_get_name(a->parent->h,params,self->carg++);
-  self->offsetdata    = grib_arguments_get_name(a->parent->h,params,self->carg++);
-  self->offsetsection = grib_arguments_get_name(a->parent->h,params,self->carg++);
+  self->seclen        = grib_arguments_get_name(grib_handle_of_accessor(a),params,self->carg++);
+  self->offsetdata    = grib_arguments_get_name(grib_handle_of_accessor(a),params,self->carg++);
+  self->offsetsection = grib_arguments_get_name(grib_handle_of_accessor(a),params,self->carg++);
   self->dirty =1;
 
   a->length = init_length(a);
@@ -203,7 +205,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 
 static long byte_count(grib_accessor* a){
-    grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,"byte_count of %s = %ld",a->name,a->length);
+    grib_context_log(a->context,GRIB_LOG_DEBUG,"byte_count of %s = %ld",a->name,a->length);
   return a->length;
 
 }
@@ -218,7 +220,7 @@ static long next_offset(grib_accessor* a){
 
 static void update_size(grib_accessor* a,size_t s)
 {
-    grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,"updating size of %s old %ld new %ld",a->name,a->length,s);
+    grib_context_log(a->context,GRIB_LOG_DEBUG,"updating size of %s old %ld new %ld",a->name,a->length,s);
   a->length = s;
   Assert(a->length>=0);
 }
@@ -243,8 +245,8 @@ static int compare(grib_accessor* a, grib_accessor* b) {
 
   if (alen != blen) return GRIB_COUNT_MISMATCH;
 
-  aval=(double*)grib_context_malloc(a->parent->h->context,alen*sizeof(double));
-  bval=(double*)grib_context_malloc(b->parent->h->context,blen*sizeof(double));
+  aval=(double*)grib_context_malloc(a->context,alen*sizeof(double));
+  bval=(double*)grib_context_malloc(b->context,blen*sizeof(double));
 
   grib_unpack_double(a,aval,&alen);
   grib_unpack_double(b,bval,&blen);
@@ -255,8 +257,8 @@ static int compare(grib_accessor* a, grib_accessor* b) {
     alen--;
   }
 
-  grib_context_free(a->parent->h->context,aval);
-  grib_context_free(b->parent->h->context,bval);
+  grib_context_free(a->context,aval);
+  grib_context_free(b->context,bval);
 
   return retval;
 }
@@ -266,13 +268,13 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
   int ret=0;
   grib_accessor_values *self =(grib_accessor_values*)a;
   int i;
-  double* dval=(double*)grib_context_malloc(a->parent->h->context,*len*sizeof(double));
+  double* dval=(double*)grib_context_malloc(a->context,*len*sizeof(double));
 
   for (i=0;i<*len;i++) dval[i]=(double)val[i];
 
   ret=grib_pack_double(a,dval,len);
 
-  grib_context_free(a->parent->h->context,dval);
+  grib_context_free(a->context,dval);
 
   self->dirty=1;
 

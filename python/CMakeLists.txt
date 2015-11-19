@@ -1,7 +1,5 @@
 if( HAVE_PYTHON )
 
-    ecbuild_find_python( VERSION 2.5)
-
     #find_package( SWIG )
     #if( SWIG_FOUND )
     #    include( ${SWIG_USE_FILE} )
@@ -13,14 +11,15 @@ if( HAVE_PYTHON )
     ###############################################################################
     # swig python interface
 
-    #if( HAVE_PYTHON AND SWIG_FOUND AND PYTHONLIBS_FOUND )
-    if( HAVE_PYTHON AND PYTHONLIBS_FOUND )
+    #if( SWIG_FOUND AND PYTHONLIBS_FOUND )
+    if( PYTHONLIBS_FOUND )
 
-        set(PYTHON_DEST "${INSTALL_LIB_DIR}/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/eccodes" )
+        set(PYTHON_DEST_ECCODES "${INSTALL_LIB_DIR}/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/eccodes" )
+        set(PYTHON_DEST_GRIBAPI "${INSTALL_LIB_DIR}/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/gribapi" )
 
-	    file( RELATIVE_PATH relative_rpath "${CMAKE_INSTALL_PREFIX}/${PYTHON_DEST}" "${${PNAME}_FULL_INSTALL_LIB_DIR}" )
+        file( RELATIVE_PATH relative_rpath "${CMAKE_INSTALL_PREFIX}/${PYTHON_DEST_ECCODES}" "${${PNAME}_FULL_INSTALL_LIB_DIR}" )
 
-		# debug_var( relative_rpath )
+        # debug_var( relative_rpath )
 
         ecbuild_append_to_rpath( ${relative_rpath} )
         ecbuild_append_to_rpath( "../../lib" )        # for ctest to find the libs
@@ -89,11 +88,14 @@ if( HAVE_PYTHON )
         add_custom_target(copy_swig_py ALL DEPENDS ${_swig_py})
         #######################
 
-        install(TARGETS _gribapi_swig DESTINATION ${PYTHON_DEST} )
+        install(TARGETS _gribapi_swig DESTINATION ${PYTHON_DEST_GRIBAPI} )
 
-        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gribapi_swig.py  DESTINATION ${PYTHON_DEST})
-        install(FILES gribapi.py DESTINATION ${PYTHON_DEST})
-        install(FILES eccodes.py DESTINATION ${PYTHON_DEST})
+        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gribapi_swig.py  DESTINATION ${PYTHON_DEST_GRIBAPI})
+        install(FILES gribapi.py DESTINATION ${PYTHON_DEST_GRIBAPI})
+        install(FILES eccodes.py DESTINATION ${PYTHON_DEST_ECCODES})
+        
+        install(FILES init_gribapi.py DESTINATION ${PYTHON_DEST_GRIBAPI} RENAME __init__.py)
+        install(FILES init_eccodes.py DESTINATION ${PYTHON_DEST_ECCODES} RENAME __init__.py)
 
     endif()
 

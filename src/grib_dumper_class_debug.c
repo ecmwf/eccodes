@@ -128,7 +128,7 @@ static void aliases(grib_dumper* d,grib_accessor* a)
 static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_debug *self = (grib_dumper_debug*)d;
-    long value; size_t size = 1;
+    long value=0; size_t size = 1;
     int err = grib_unpack_long(a,&value,&size);
     int i;
 
@@ -236,7 +236,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
         size = 10; /* big enough to hold the string "missing" */
     }
 
-    value=(char*)grib_context_malloc_clear(a->parent->h->context,size);
+    value=(char*)grib_context_malloc_clear(a->context,size);
     if (!value) return;
     err=grib_unpack_string(a,value,&size);
 
@@ -260,7 +260,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     aliases(d,a);
     fprintf(self->dumper.out,"\n");
 
-    if (value) grib_context_free(a->parent->h->context,value);
+    if (value) grib_context_free(a->context,value);
 }
 
 static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)

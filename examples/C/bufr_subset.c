@@ -24,6 +24,7 @@ void usage(char* prog) {
 
 int main(int argc,char* argv[])
 {
+    char key[200]={0,};
     FILE* in = NULL;
 
     /* message handle. Required in all the eccodes calls acting on a message.*/
@@ -31,7 +32,9 @@ int main(int argc,char* argv[])
 
     long numberOfSubsets=0;
     long longVal;
-    /*double doubleVal;*/
+    double doubleVal;
+    size_t stringLen;
+    char stringVal[100]={0,};
     int i,err=0;
     int cnt=0;
     char* infile = "../../data/bufr/synop_multi_subset.bufr";
@@ -63,18 +66,26 @@ int main(int argc,char* argv[])
         /* loop over the subsets */
         for(i=1; i <= numberOfSubsets; i++)
         {
-            /* specify the subset number */
-            CODES_CHECK(codes_set_long(h,"subsetNumber",0),0);
+            sprintf(key,"/subsetNumber=%d/blockNumber",i);
 
-            /* read and print some data values */ 
-            CODES_CHECK(codes_get_long(h,"blockNumber",&longVal),0);
-            printf("  blockNumber: %ld\n",longVal);
+            printf("  subsetNumber=%d",i);
+            /* read and print some data values */
+            CODES_CHECK(codes_get_long(h,key,&longVal),0);
+            printf("  blockNumber=%ld",longVal);
 
-            CODES_CHECK(codes_get_long(h,"stationNumber",&longVal),0);
-            printf("  stationNumber: %ld\n",longVal);
+            sprintf(key,"/subsetNumber=%d/stationNumber",i);
+            CODES_CHECK(codes_get_long(h,key,&longVal),0);
+            printf("  stationNumber=%ld",longVal);
 
-            /*CODES_CHECK(codes_get_double(h,"airTemperatureAt2M",&doubleVal),0);
-            printf("  airTemperatureAt2M %f\n",doubleVal);*/
+            sprintf(key,"/subsetNumber=%d/stationOrSiteName",i);
+            stringLen=100;
+            CODES_CHECK(codes_get_string(h,key,stringVal,&stringLen),0);
+            printf("  stationOrSiteName=\"%s\"",stringVal);
+
+            sprintf(key,"/subsetNumber=%d/airTemperature",i);
+            CODES_CHECK(codes_get_double(h,key,&doubleVal),0);
+            printf("  airTemperature=%g\n",doubleVal);
+
         }
 
         /* delete handle */

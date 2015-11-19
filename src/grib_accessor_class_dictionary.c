@@ -104,6 +104,7 @@ static grib_accessor_class _grib_accessor_class_dictionary = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -137,6 +138,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -145,11 +147,11 @@ static void init(grib_accessor* a, const long len, grib_arguments* params) {
   int n=0;
   grib_accessor_dictionary* self  = (grib_accessor_dictionary*)a;
 
-  self->dictionary = grib_arguments_get_string(a->parent->h,params,n++);
-  self->key = grib_arguments_get_name(a->parent->h,params,n++);
-  self->column = grib_arguments_get_long(a->parent->h,params,n++);
-  self->masterDir = grib_arguments_get_name(a->parent->h,params,n++);
-  self->localDir = grib_arguments_get_name(a->parent->h,params,n++);
+  self->dictionary = grib_arguments_get_string(grib_handle_of_accessor(a),params,n++);
+  self->key = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->column = grib_arguments_get_long(grib_handle_of_accessor(a),params,n++);
+  self->masterDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->localDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
 
   a->length = 0;
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -176,7 +178,7 @@ static grib_trie* load_dictionary(grib_context* c,grib_accessor* a, int* err) {
     grib_trie* dictionary=NULL;
     FILE* f=NULL;
     int i=0;
-    grib_handle* h=a->parent->h;
+    grib_handle* h=grib_handle_of_accessor(a);
 
     *err=GRIB_SUCCESS;
 
@@ -287,10 +289,10 @@ static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
     size_t rsize=0;
     int i=0;
 
-    grib_trie* dictionary=load_dictionary(a->parent->h->context,a,&err);
+    grib_trie* dictionary=load_dictionary(a->context,a,&err);
     if (err) return err;
 
-    if((err=grib_get_string_internal(a->parent->h,self->key,key,&size)) != GRIB_SUCCESS) {
+    if((err=grib_get_string_internal(grib_handle_of_accessor(a),self->key,key,&size)) != GRIB_SUCCESS) {
         /* grib_trie_delete(dictionary); */
         return err;
     }
@@ -305,6 +307,9 @@ static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
     for (i=0;i<=self->column;i++) {
         start=end;
         while (*end != '|' && *end!=0) end++;
+        if (! *end ) {
+            break;
+        }
         end++;
     }
     end--;

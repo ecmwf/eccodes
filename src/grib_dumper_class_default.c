@@ -159,7 +159,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
   }
 
   if (size>1) {
-    values=(long *)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*size);
+    values=(long *)grib_context_malloc_clear(a->context,sizeof(long)*size);
     err=grib_unpack_long(a,values,&size);
   } else {
     err=grib_unpack_long(a,&value,&size);
@@ -187,7 +187,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
         count++;
     }
     fprintf(self->dumper.out,"}\n");
-    grib_context_free(a->parent->h->context,values);
+    grib_context_free(a->context,values);
   } else {
 	  if( ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && grib_is_missing_internal(a) )
 		fprintf(self->dumper.out,"%s = MISSING;",a->name);
@@ -331,7 +331,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
   int tab=0;
   long count=0;
 
-  c=a->parent->h->context;
+  c=a->context;
 
   grib_value_count(a,&count);
   size=count;
@@ -397,7 +397,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
   grib_context* c=NULL;
   int err = _grib_get_string_length(a,&size);
 
-  c=a->parent->h->context;
+  c=a->context;
   if (size==0) return;
 
   value=(char*)grib_context_malloc_clear(c,size);
@@ -668,6 +668,7 @@ static void print_offset(FILE* out,grib_dumper* d,grib_accessor* a) {
   long theBegin=0,theEnd=0;
   size_t size=0,more=0;
   grib_dumper_default *self = (grib_dumper_default*)d;
+  grib_handle* h=grib_handle_of_accessor(a);
 
   theBegin=a->offset-self->section_offset+1;;
   theEnd =grib_get_next_position_offset(a)-self->section_offset;
@@ -695,7 +696,7 @@ static void print_offset(FILE* out,grib_dumper* d,grib_accessor* a) {
     while(k < size)  {
       offset=a->offset;
       for (i=0;i<14 && k<size;i++,k++) {
-        fprintf(out," 0x%.2X",a->parent->h->buffer->data[offset]);
+        fprintf(out," 0x%.2X",h->buffer->data[offset]);
         offset++;
       }
       if (k<size) fprintf(self->dumper.out,"\n  #");

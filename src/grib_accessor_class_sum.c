@@ -95,6 +95,7 @@ static grib_accessor_class _grib_accessor_class_sum = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -131,6 +132,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -139,7 +141,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
   grib_accessor_sum* self = (grib_accessor_sum*)a;
   int n = 0;
-  self->values = grib_arguments_get_name(a->parent->h,c,n++);
+  self->values = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
   a->length=0;
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 
@@ -162,16 +164,16 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
   	*val=0;
 	return ret;
   }
-  values=(long*)grib_context_malloc_clear(a->parent->h->context,sizeof(long)*size);
+  values=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
   if (!values) return GRIB_OUT_OF_MEMORY;
 
-  grib_get_long_array(a->parent->h,self->values,values,&size);
+  grib_get_long_array(grib_handle_of_accessor(a),self->values,values,&size);
 
   *val=0;
   for (i=0;i<size;i++) 
   	*val+=values[i];
 
-  grib_context_free(a->parent->h->context,values);
+  grib_context_free(a->context,values);
 
   return ret;
 }
@@ -193,16 +195,16 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
   	*val=0;
 	return ret;
   }
-  values=(double*)grib_context_malloc_clear(a->parent->h->context,sizeof(double)*size);
+  values=(double*)grib_context_malloc_clear(a->context,sizeof(double)*size);
   if (!values) return GRIB_OUT_OF_MEMORY;
 
-  grib_get_double_array(a->parent->h,self->values,values,&size);
+  grib_get_double_array(grib_handle_of_accessor(a),self->values,values,&size);
 
   *val=0;
   for (i=0;i<size;i++) 
   	*val+=values[i];
 
-  grib_context_free(a->parent->h->context,values);
+  grib_context_free(a->context,values);
 
   return ret;
 }
@@ -214,11 +216,11 @@ static int value_count(grib_accessor* a,long* count)
 	size_t n=0;
 	int ret=0;
 
-    ret = grib_get_size(a->parent->h, self->values,&n);
+    ret = grib_get_size(grib_handle_of_accessor(a), self->values,&n);
 	*count=n;
 
 	if (ret) 
-		grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+		grib_context_log(a->context,GRIB_LOG_ERROR,
 				"%s is unable to get size of %s",a->name,self->values);
 
 	return ret;

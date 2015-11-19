@@ -11,8 +11,8 @@
 # START 2/template.5.3 ----------------------------------------------------------------------
 # TEMPLATE 5.3, Grid point data - complex packing and spatial differencing
 
-include "template.5.packing.def";
-include "template.5.original_values.def";
+include "grib2/template.5.packing.def";
+include "grib2/template.5.original_values.def";
 
 
 #  Group splitting method used

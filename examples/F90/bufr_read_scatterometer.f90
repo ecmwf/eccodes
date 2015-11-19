@@ -24,8 +24,9 @@ integer            :: ifile
 integer            :: iret
 integer            :: ibufr
 integer            :: i, count=0
-integer(kind=4)    :: numObs
+integer(kind=4)    :: numObs,ii
 real(kind=8), dimension(:), allocatable :: latVal,lonVal,bscatterVal
+real(kind=8), dimension(:), allocatable :: year
 
   call codes_open_file(ifile,'../../data/bufr/asca_139.bufr','r')
 
@@ -35,7 +36,7 @@ real(kind=8), dimension(:), allocatable :: latVal,lonVal,bscatterVal
 
   do while (iret/=CODES_END_OF_FILE)
 
-    write(*,*) 'message: ',count
+    write(*,'(A,I3)') 'message: ',count
 
     ! we need to instruct ecCodes to expand all the descriptors 
     ! i.e. unpack the data values
@@ -51,7 +52,7 @@ real(kind=8), dimension(:), allocatable :: latVal,lonVal,bscatterVal
     ! Read the total number of subsets.
     call codes_get(ibufr,'numberOfSubsets',numObs)
 
-    write(*,*) "Number of values:",numObs
+    write(*,'(A,I5)') "Number of values:",numObs
  
     !Get latitude (for all the subsets)
     call codes_get(ibufr,'latitude',latVal);
@@ -59,6 +60,12 @@ real(kind=8), dimension(:), allocatable :: latVal,lonVal,bscatterVal
     !Get longitude (for all the subsets)
     call codes_get(ibufr,'latitude',lonVal);
      
+    allocate(year(numObs))
+    call codes_get(ibufr,'year',year);
+    do ii= 1, size(year)
+      write(*,'(A,I4,A,F8.1)') 'year(',ii,')=',year(ii)
+    enddo
+
     !Get backScatter for beam two. We use an access by condition for this key.
     !(for all the subsets)
     call codes_get(ibufr,'/beamIdentifier=2/backscatter',bscatterVal);
@@ -74,7 +81,7 @@ real(kind=8), dimension(:), allocatable :: latVal,lonVal,bscatterVal
     write(*,*) "--------------------------------------" 
      
     do i=1,numObs
-        write(*,*) i,latVal(i),lonVal(i),bscatterVal(i)
+        write(*,'(I4,3F10.5)') i,latVal(i),lonVal(i),bscatterVal(i)
     end do 
      
     ! free arrays 

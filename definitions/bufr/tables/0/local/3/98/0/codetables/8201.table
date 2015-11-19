@@ -1,0 +1,16 @@
+0 0 Satellite coordinates
+1 1 Observations coordinates
+2 2 Start of observation
+3 3 End of observation
+4 4 Horizontal centre of gravity of the observation
+5 5 Vertical centre of gravity of the observatio
+6 6 Top of the observation
+7 7 Bottom of the observation
+8 8 RESERVED
+9 9 RESERVED
+10 10 RESERVED
+11 11 RESERVED
+12 12 RESERVED
+13 13 RESERVED
+14 14 RESERVED
+255 255 MISSING VALUE

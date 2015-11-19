@@ -213,6 +213,23 @@ concept gridType {
   "reduced_gg"           = {dataRepresentationType = 4;  sphericalHarmonics = 0;
                             PLPresent=1; numberOfPointsAlongAParallel = missing();
                             iDirectionIncrement = missing(); ijDirectionIncrementGiven=0;}
+
+  "reduced_rotated_gg"   = {dataRepresentationType = 14;  sphericalHarmonics = 0;
+                            PLPresent=1; numberOfPointsAlongAParallel = missing();
+                            iDirectionIncrement = missing(); ijDirectionIncrementGiven=0;}
+  "reduced_stretched_gg" = {dataRepresentationType = 24;  sphericalHarmonics = 0;
+                            PLPresent=1; numberOfPointsAlongAParallel = missing();
+                            iDirectionIncrement = missing(); ijDirectionIncrementGiven=0;}
+  "reduced_stretched_rotated_gg" = {dataRepresentationType = 34;  sphericalHarmonics = 0;
+                            PLPresent=1; numberOfPointsAlongAParallel = missing();
+                            iDirectionIncrement = missing(); ijDirectionIncrementGiven=0;}
+
+# For consistency add the prefix regular_
+"regular_rotated_gg"           = { dataRepresentationType = 14; sphericalHarmonics = 0; PLPresent=0; } # = rotated_gg
+"regular_stretched_gg"         = { dataRepresentationType = 24; sphericalHarmonics = 0; PLPresent=0; } # = stretched_gg
+"regular_stretched_rotated_gg" = { dataRepresentationType = 34; sphericalHarmonics = 0; PLPresent=0; } # = stretched_rotated_gg
+
+
   "sh"                   = {dataRepresentationType = 50; sphericalHarmonics = 1; PLPresent=0; }
   "rotated_sh"           = {dataRepresentationType = 60; sphericalHarmonics = 1; PLPresent=0; }
   "stretched_sh"         = {dataRepresentationType = 70; sphericalHarmonics = 1; PLPresent=0; }

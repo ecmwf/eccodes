@@ -86,6 +86,7 @@ static grib_accessor_class _grib_accessor_class_round = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -123,6 +124,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -133,7 +135,6 @@ static int    unpack_double(grib_accessor* a, double* val, size_t *len)
 {
   grib_accessor_round* self = (grib_accessor_round*)a;
 
-
   int ret = GRIB_SUCCESS;
 
   size_t replen = 0;
@@ -142,17 +143,14 @@ static int    unpack_double(grib_accessor* a, double* val, size_t *len)
   double toround = 0;
 
   const char* oval = NULL;
-  oval     = grib_arguments_get_name(a->parent->h,self->arg,0);
+  oval     = grib_arguments_get_name(grib_handle_of_accessor(a),self->arg,0);
 
-
-  if( (ret = grib_get_double_internal(a->parent->h, oval, &toround)) != 0)
+  if( (ret = grib_get_double_internal(grib_handle_of_accessor(a), oval, &toround)) != 0)
     return ret;
 
-  rounding_precision = grib_arguments_get_long(a->parent->h,self->arg,1);
+  rounding_precision = grib_arguments_get_long(grib_handle_of_accessor(a),self->arg,1);
 
   rounded = floor(rounding_precision * toround + 0.5) / rounding_precision;
-
-
 
   *len = replen;
 
@@ -163,9 +161,7 @@ static int    unpack_double(grib_accessor* a, double* val, size_t *len)
 
 static int    unpack_string(grib_accessor* a, char* val, size_t *len)
 {
-
-
-  char result[1024]  ;
+  char result[1024];
   int ret = GRIB_SUCCESS;
   size_t replen = 1;
 
@@ -186,5 +182,5 @@ static int    unpack_string(grib_accessor* a, char* val, size_t *len)
 
   sprintf(val,"%s",result);
 
-  return GRIB_SUCCESS;
+  return ret;
 }

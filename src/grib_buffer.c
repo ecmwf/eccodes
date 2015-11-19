@@ -65,6 +65,7 @@ grib_buffer* grib_new_buffer(const grib_context* c,unsigned char* data,size_t bu
   b->property = GRIB_USER_BUFFER;
   b->length   = buflen;
   b->ulength  = buflen;
+  b->ulength_bits  = buflen*8;
   b->data     = data;
 
   return b;
@@ -100,10 +101,20 @@ void grib_grow_buffer(const grib_context *c, grib_buffer *b, size_t new_size)
   grib_grow_buffer_to(c,b,len);
 }
 
+void grib_buffer_set_ulength_bits(const grib_context *c, grib_buffer *b, size_t length_bits)
+{
+  size_t length=length_bits/8;
+  if (length_bits%8) length++;
+  grib_grow_buffer_to(c,b,length);
+  b->ulength_bits = length_bits;
+  b->ulength = length;
+}
+
 void grib_buffer_set_ulength(const grib_context *c, grib_buffer *b, size_t length)
 {
   grib_grow_buffer_to(c,b,length);
   b->ulength = length;
+  b->ulength_bits = length*8;
 }
 
 static void update_offsets(grib_accessor* a,long len)
@@ -112,7 +123,7 @@ static void update_offsets(grib_accessor* a,long len)
   {
     grib_section* s = a->sub_section;
     a->offset += len;
-    grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, "::::: grib_buffer : accessor %s is moving by %d bytes to %ld",a->name ,len, a->offset);
+    grib_context_log(a->context,GRIB_LOG_DEBUG, "::::: grib_buffer : accessor %s is moving by %d bytes to %ld",a->name ,len, a->offset);
     if(s) update_offsets(s->block->first,len);
     a = a->next;
   }
@@ -216,14 +227,14 @@ void grib_buffer_replace( grib_accessor *a, const unsigned char* data,
   long   oldsize  = grib_get_next_position_offset(a)-offset;
   long   increase = (long)newsize - (long)oldsize;
 
-  grib_buffer *buffer     = a->parent->h->buffer;
+  grib_buffer *buffer     = grib_handle_of_accessor(a)->buffer;
   size_t message_length   = buffer->ulength;
 
-  grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,
+  grib_context_log(a->context,GRIB_LOG_DEBUG,
      "grib_buffer_replace %s offset=%ld oldsize=%ld newsize=%ld message_length=%ld update_paddings=%d\n",
       a->name,(long)offset,oldsize,(long)newsize,(long)message_length,update_paddings);
 
-    grib_buffer_set_ulength(a->parent->h->context,
+    grib_buffer_set_ulength(a->context,
         buffer,
         buffer->ulength+increase);
 
@@ -244,9 +255,9 @@ void grib_buffer_replace( grib_accessor *a, const unsigned char* data,
     if(update_lengths)
     {
       grib_update_size(a,newsize);
-      grib_section_adjust_sizes(a->parent->h->root,1,0);
+      grib_section_adjust_sizes(grib_handle_of_accessor(a)->root,1,0);
       if(update_paddings)
-        grib_update_paddings(a->parent->h->root);
+        grib_update_paddings(grib_handle_of_accessor(a)->root);
     }
   }
 

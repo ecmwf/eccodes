@@ -102,6 +102,7 @@ static grib_accessor_class _grib_accessor_class_bufrdc_expanded_descriptors = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -137,6 +138,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -145,7 +147,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
   grib_accessor_bufrdc_expanded_descriptors* self = (grib_accessor_bufrdc_expanded_descriptors*)a;
   int n=0;
-  self->expandedDescriptors=grib_arguments_get_name(a->parent->h,args,n++);
+  self->expandedDescriptors=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
   self->expandedDescriptorsAccessor=0;
   a->length = 0;
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -159,7 +161,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 static grib_accessor* get_accessor(grib_accessor* a) {
   grib_accessor_bufrdc_expanded_descriptors* self = (grib_accessor_bufrdc_expanded_descriptors*)a;
   if (!self->expandedDescriptorsAccessor) {
-    self->expandedDescriptorsAccessor=grib_find_accessor(a->parent->h,self->expandedDescriptors);
+    self->expandedDescriptorsAccessor=grib_find_accessor(grib_handle_of_accessor(a),self->expandedDescriptors);
   }
   return self->expandedDescriptorsAccessor;
 }
@@ -171,7 +173,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
   long lenall=0;
   size_t i;
   long* v=0;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   descriptors=get_accessor(a);
   if (!descriptors) return GRIB_NOT_FOUND;
@@ -194,7 +196,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 static int unpack_string_array (grib_accessor* a, char** buffer, size_t *len)
 {
   grib_accessor* descriptors=0;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
   long l=0;
   size_t size,i;
   char buf[25]={0,};

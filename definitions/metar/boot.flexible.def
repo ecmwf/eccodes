@@ -1,4 +1,4 @@
-# Copyright 2005-2012 ECMWF.
+# Copyright 2005-2015 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -36,21 +36,21 @@ if ( g is "COR" ) {
 		alias isCorrection=one;
 		alias status=correction;
 		group g : dump; non_alpha na;
-}  
+}
 if (length(g) == 4) {
-		include "cccc.def";
+		include "metar/cccc.def";
 } else {
 		if (g is "METAR") {
 				rename(g,metarTwice);
 				group g : dump; non_alpha na;
-				if (length(g) == 4) { include  "cccc.def"; }
-				else { 
-						constant CCCC = "unknown"; 
-						constant coordinatesPresent = 0; 
+				if (length(g) == 4) { include "metar/cccc.def"; }
+				else {
+						constant CCCC = "unknown";
+						constant coordinatesPresent = 0;
 				}
 		} else {
-				constant CCCC = "unknown"; 
-				constant coordinatesPresent = 0; 
+				constant CCCC = "unknown";
+				constant coordinatesPresent = 0;
 		}
 }
 
@@ -70,80 +70,80 @@ if ( ! isCorrection && g is "COR" ) {
 		alias status=correction;
 		alias isCorrection=one;
 		group g : dump; non_alpha na;
-}  
+}
 
-include "wrong_delayed.def";
+include "metar/wrong_delayed.def";
 
-if ( g is "NIL" ) { 
+if ( g is "NIL" ) {
 		rename(g,nil); group g : dump;
 } else {
-		if (g is "AUTO") { 
-				rename(g,auto); 
-				alias isAuto=true; 
-				group g : dump; non_alpha na; 
+		if (g is "AUTO") {
+				rename(g,auto);
+				alias isAuto=true;
+				group g : dump; non_alpha na;
 		}
 
-		include "wind.def";
-		include "horizontalVisibility.def";
+		include "metar/wind.def";
+		include "metar/horizontalVisibility.def";
 
-		if ( ! isCavok ) { 
-				include "present_weather.def"; 
-				include "clouds.def"; 
+		if ( ! isCavok ) {
+				include "metar/present_weather.def";
+				include "metar/clouds.def";
 		}
 
-		include "missing_field.def";
-		include "temperature.def";
-		include "qnh.def";
-		include "colour.def";
-		include "recent_weather.def";
-		include "wind_shear.def";
-		include "sea_state.def";
+		include "metar/missing_field.def";
+		include "metar/temperature.def";
+		include "metar/qnh.def";
+		include "metar/colour.def";
+		include "metar/recent_weather.def";
+		include "metar/wind_shear.def";
+		include "metar/sea_state.def";
 		template runwayState "metar/runwayState.def";
-		include "trend1.def";
-		include "trend2.def";
-		include "trend3.def";
-		include "trend4.def";
+		include "metar/trend1.def";
+		include "metar/trend2.def";
+		include "metar/trend3.def";
+		include "metar/trend4.def";
 
 }
 
-include "remark.def";
+include "metar/remark.def";
 
-if (length(g) == 0) { 
+if (length(g) == 0) {
 		modify g : hidden;
 } else {
-		if ( ! remarkPresent) { 
+		if ( ! remarkPresent) {
 				rename(g,skippedGroup);
 				group g : dump; non_alpha na;
-				include "colour.def";
-				include "recent_weather.def";
-				include "wind_shear.def";
-				include "sea_state.def";
+				include "metar/colour.def";
+				include "metar/recent_weather.def";
+				include "metar/wind_shear.def";
+				include "metar/sea_state.def";
 				template runwayState "metar/runwayState.def";
-				include "temperature.def";
-				include "qnh.def";
+				include "metar/temperature.def";
+				include "metar/qnh.def";
 				if (!presentTrend1) {
-						include "trend1.def";
-						include "trend2.def";
-						include "trend3.def";
-						include "trend4.def";
+						include "metar/trend1.def";
+						include "metar/trend2.def";
+						include "metar/trend3.def";
+						include "metar/trend4.def";
 				}
 		}
-		include "remark.def";
-		if ( ! remarkPresent) { 
+		include "metar/remark.def";
+		if ( ! remarkPresent) {
 				if ( length(g) == 0) {
 						modify g : hidden;
 				} else {
-						rename(g,unknownGroup) ; 
+						rename(g,unknownGroup) ;
 				}
 		}
 		group notDecoded("=") : dump;
-		if (remarkPresent) { 
-				rename(notDecoded,remark); 
+		if (remarkPresent) {
+				rename(notDecoded,remark);
 		}
 }
 ascii[1] endMark :read_only ;
 
-position totalLength; 
+position totalLength;
 position endOfMessage;
 
 meta lengthOfMessage evaluate( endOfMessage-startOfMessage);

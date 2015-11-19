@@ -31,7 +31,7 @@ int grib_decode_long_array(const unsigned char* p, long *bitp, long nbits,size_t
   if (size*nbits%max_nbits) sizel++;
 
   x=malloc(sizel*sizeof(unsigned long));
-  memcpy(x,p+bitpv/8,sizel*sizeof(x));
+  memcpy(x,p+bitpv/8,sizel*sizeof(*x));
 /* (void) ftrace_region_end  ("gdda-1"); */
 
   if ( (max_nbits%nbits == 0) && (bitpv%nbits == 0) ) {
@@ -129,7 +129,7 @@ int grib_decode_double_array(const unsigned char* p, long *bitp, long nbits,doub
   if (size*nbits%max_nbits) sizel++;
 
   x=malloc(sizel*sizeof(unsigned long));
-  memcpy(x,p+bitpv/8,sizel*sizeof(x));
+  memcpy(x,p+bitpv/8,sizel*sizeof(*x));
 /* (void) ftrace_region_end  ("gdda-1"); */
 
   if ( (max_nbits%nbits == 0) && (bitpv%nbits == 0) ) {
@@ -220,7 +220,7 @@ int grib_decode_double_array_complex(const unsigned char* p, long *bitp, long nb
   if (size*nbits%max_nbits) sizel++;
 
   x=malloc(sizel*sizeof(unsigned long));
-  memcpy(x,p+bitpv/8,sizel*sizeof(x));
+  memcpy(x,p+bitpv/8,sizel*sizeof(*x));
 
   if ( (max_nbits%nbits == 0) && (bitpv%nbits == 0) ) {
 

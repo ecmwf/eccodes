@@ -99,6 +99,7 @@ static grib_accessor_class _grib_accessor_class_number_of_values = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -137,6 +138,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -145,12 +147,12 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
   int n=0;
   grib_accessor_number_of_values* self = (grib_accessor_number_of_values*)a;
-  self->values = grib_arguments_get_name(a->parent->h,c,n++);
-  self->bitsPerValue = grib_arguments_get_name(a->parent->h,c,n++);
-  self->numberOfPoints = grib_arguments_get_name(a->parent->h,c,n++);
-  self->bitmapPresent = grib_arguments_get_name(a->parent->h,c,n++);
-  self->bitmap = grib_arguments_get_name(a->parent->h,c,n++);
-  self->numberOfCodedValues = grib_arguments_get_name(a->parent->h,c,n++);
+  self->values = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->bitsPerValue = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->numberOfPoints = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->bitmapPresent = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->bitmap = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->numberOfCodedValues = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
   a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
   
   a->length=0;
@@ -166,40 +168,40 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
 #if GRIB_WARNING
   long numberOfCodedValues=0;
   long bpv=0;
-  if((ret = grib_get_long_internal(a->parent->h, self->bitsPerValue,&bpv)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->bitsPerValue,&bpv)) != GRIB_SUCCESS)
     return ret;
 #endif
 
-  if((ret = grib_get_long_internal(a->parent->h, self->numberOfPoints,&npoints)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfPoints,&npoints)) != GRIB_SUCCESS)
       return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->bitmapPresent,&bitmap_present)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->bitmapPresent,&bitmap_present)) != GRIB_SUCCESS)
       return ret;
 
   if (bitmap_present) {
       double* bitmap;
       size=npoints;
-      bitmap=(double*)grib_context_malloc(a->parent->h->context,sizeof(double)*size);
-      if((ret = grib_get_double_array_internal(a->parent->h,self->bitmap,bitmap,&size))
+      bitmap=(double*)grib_context_malloc(a->context,sizeof(double)*size);
+      if((ret = grib_get_double_array_internal(grib_handle_of_accessor(a),self->bitmap,bitmap,&size))
                   != GRIB_SUCCESS) {
-			  grib_context_free(a->parent->h->context,bitmap);
+			  grib_context_free(a->context,bitmap);
 			  return ret;
 	  }
       *val=0;
       for (i=0;i<size;i++)
         if (bitmap[i]!=0) (*val)++;
 
-      grib_context_free(a->parent->h->context,bitmap);
+      grib_context_free(a->context,bitmap);
   } else {
       *val=npoints;
   }
 
 #if GRIB_WARNING
   if ( bpv != 0 ) {
-    if((ret = grib_get_long_internal(a->parent->h, self->numberOfCodedValues,&numberOfCodedValues)) != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfCodedValues,&numberOfCodedValues)) != GRIB_SUCCESS)
       return ret;
      if (*val != numberOfCodedValues) {
-       grib_context_log(a->parent->h->context,GRIB_LOG_WARNING,
+       grib_context_log(a->context,GRIB_LOG_WARNING,
        "number of values from data section (%ld) doesn't match geography (%ld)",numberOfCodedValues,*val);
        /* *val=numberOfCodedValues; */
   	}

@@ -96,6 +96,7 @@ static grib_accessor_class _grib_accessor_class_suppressed = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -127,6 +128,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -144,14 +146,14 @@ static void log_message(grib_accessor* a) {
   grib_accessor_suppressed* self = (grib_accessor_suppressed*)a;
   int i=0;
   
-  grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+  grib_context_log(a->context,GRIB_LOG_ERROR,
                    "key %s is unvailable in this version.",a->name);
-  grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+  grib_context_log(a->context,GRIB_LOG_ERROR,
                    "Please use the following keys:");
-  while (grib_arguments_get_name(a->parent->h,self->args,i)) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+  while (grib_arguments_get_name(grib_handle_of_accessor(a),self->args,i)) {
+    grib_context_log(a->context,GRIB_LOG_ERROR,
                      "\t- %s",
-                     grib_arguments_get_name(a->parent->h,self->args,i));
+                     grib_arguments_get_name(grib_handle_of_accessor(a),self->args,i));
     i++;
   }
 }

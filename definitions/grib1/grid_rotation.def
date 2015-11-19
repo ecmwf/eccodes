@@ -7,7 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 signed[3] latitudeOfSouthernPole : edition_specific;
 meta  geography.latitudeOfSouthernPoleInDegrees   scale(latitudeOfSouthernPole ,oneConstant,grib1divider,truncateDegrees) : dump;
 
@@ -17,3 +16,4 @@ meta  geography.longitudeOfSouthernPoleInDegrees   scale(longitudeOfSouthernPole
 ibmfloat geography.angleOfRotationInDegrees : dump;
 
 alias angleOfRotation =angleOfRotationInDegrees;
+alias is_rotated_grid = one;

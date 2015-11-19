@@ -1630,4 +1630,16 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 8 ;
-}
+	}
+#Sunshine Duration
+'7001292' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 201 ;
+	}
+#Ventilation Rate
+'7001353' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 224 ;
+	}

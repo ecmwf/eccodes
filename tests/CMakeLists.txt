@@ -3,6 +3,10 @@
 # Configure the file which all CMake tests will include
 configure_file( include.ctest.sh.in  include.ctest.sh @ONLY )
 
+execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/include.sh ${CMAKE_CURRENT_BINARY_DIR} )
+execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/utils.sh   ${CMAKE_CURRENT_BINARY_DIR} )
+execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/number_compare.pl ${CMAKE_CURRENT_BINARY_DIR} )
+
 # Build the executables used by test scripts
 ################################################
 list( APPEND test_bins
@@ -13,6 +17,7 @@ list( APPEND test_bins
       read_index
       unit_tests
       gauss_sub
+      grib_util_set_spec
 )
 
 foreach( tool ${test_bins} )
@@ -79,60 +84,63 @@ list( APPEND tests2
     read_any
     padding
     debug
+    md5
+    grib_util_set_spec
+	neg_fctime
 )
 
 # These tests do not require any data downloads
 foreach( test ${tests1} )
-    ecbuild_add_test( TARGET t_${test}
+    ecbuild_add_test( TARGET eccodes_t_${test}
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                  RESOURCES include.sh utils.sh number_compare.pl
     )
 endforeach()
+ecbuild_add_test( TARGET eccodes_t_check_gaussian_grids
+                  TYPE SCRIPT
+                  CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/check_gaussian_grids.sh
+)
+
 
 # Note: making the test dependent on the grib files (with DEPENDS)
 #       means they will be downloaded at "make" time
 #       rather than when you do "make test". Use TEST_DEPENDS instead
 foreach( test ${tests2} )
-    ecbuild_add_test( TARGET t_${test}
+    ecbuild_add_test( TARGET eccodes_t_${test}
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                  RESOURCES include.sh utils.sh number_compare.pl
-                  TEST_DEPENDS get_gribs get_tigge_gribs get_bufrs get_metars get_gts
+                  TEST_DEPENDS eccodes_get_gribs eccodes_get_tigge_gribs eccodes_get_bufrs eccodes_get_metars eccodes_get_gts
     )
 endforeach()
 
 ###########################################
 # Note: the reference file is in the tests dir not data dir!
-ecbuild_add_test( TARGET t_lamb_az_eq_area
+ecbuild_add_test( TARGET eccodes_t_lamb_az_eq_area
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/lamb_az_eq_area.sh
-                  RESOURCES include.sh lamb_az_eq_area.ref
-                  TEST_DEPENDS get_gribs
+                  RESOURCES lamb_az_eq_area.ref
+                  TEST_DEPENDS eccodes_get_gribs
 )
 
 # These ones are conditional
-ecbuild_add_test( TARGET t_grib_to_netcdf
+ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
                   TYPE SCRIPT
                   CONDITION HAVE_NETCDF
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_to_netcdf.sh
-                  RESOURCES include.sh
-                  TEST_DEPENDS get_gribs
+                  TEST_DEPENDS eccodes_get_gribs
 )
 
-ecbuild_add_test( TARGET t_jpeg
+ecbuild_add_test( TARGET eccodes_t_jpeg
                   TYPE SCRIPT
                   CONDITION HAVE_JPEG
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/jpeg.sh
-                  RESOURCES include.sh
-                  TEST_DEPENDS get_gribs
+                  TEST_DEPENDS eccodes_get_gribs
 )
 
-ecbuild_add_test( TARGET t_ccsds
+ecbuild_add_test( TARGET eccodes_t_ccsds
                   TYPE SCRIPT
                   CONDITION HAVE_AEC
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ccsds.sh
-                  RESOURCES include.sh
-                  TEST_DEPENDS get_gribs
+                  TEST_DEPENDS eccodes_get_gribs
 )
-

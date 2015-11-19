@@ -24,11 +24,12 @@ rm -f $fTmp | true
 REDIRECT=/dev/null
 
 #Write the key values into a file
-$PYTHON bufr_attributes.py  2> $REDIRECT > $fTmp
+$PYTHON $examples_src/bufr_attributes.py  2> $REDIRECT > $fTmp
 
 #TODO: check the results
 
 #cat  $fTmp
 
 #Clean up
-rm -f $fTmp | true
+rm -f $fTmp
+

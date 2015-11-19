@@ -3,6 +3,7 @@
 # Configure the file which all CMake tests will include
 configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 
+execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/include.sh ${CMAKE_CURRENT_BINARY_DIR} )
 
 # Build the executables used by test scripts
 ################################################
@@ -38,39 +39,21 @@ list( APPEND tests
       bufr_read_scatterometer
       bufr_read_synop
       bufr_read_temp
+      bufr_read_tropical_cyclone
       bufr_set_keys
       bufr_subset
       get_product_kind
 )
 
-# Simplify tests: no need to build executable and then test. All in one
-# TODO
-# ecbuild_add_test( TARGET test_f90_samples
-#   LINKER_LANGUAGE Fortran
-#   SOURCES samples.f90
-#   LIBS    eccodes_f90 eccodes
-#   COMMAND  ${CMAKE_CURRENT_SOURCE_DIR}/samples.sh
-#   CONDITION  EC_HAVE_FORTRAN
-# )
-
 foreach( tool ${tests} )
 
-    # Build the Fortran executable
-    ecbuild_add_executable( TARGET    f_${tool}
-                            NOINSTALL
-                            SOURCES   ${tool}.f90
-                            CONDITION EC_HAVE_FORTRAN
-                            LINKER_LANGUAGE Fortran
-                            LIBS      eccodes_f90 eccodes
-    )
-    # Add the test which depends on the above executable
-    ecbuild_add_test( TARGET f_${tool}_test
-                      TYPE SCRIPT
-                      DEPENDS f_${tool}
-                      CONDITION EC_HAVE_FORTRAN
+    ecbuild_add_test( TARGET eccodes_f_${tool}
+                      SOURCES   ${tool}.f90
+                      LINKER_LANGUAGE Fortran
+                      LIBS      eccodes_f90 eccodes
+                      CONDITION HAVE_FORTRAN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
-                      RESOURCES include.sh
-                      TEST_DEPENDS get_gribs get_bufrs
+                      TEST_DEPENDS eccodes_get_gribs eccodes_get_bufrs
     )
 endforeach()
 
@@ -79,31 +62,29 @@ endforeach()
 ecbuild_add_executable( TARGET    f_new_from_file
                         NOINSTALL
                         SOURCES   new_from_file.f90
-                        CONDITION EC_HAVE_FORTRAN
+                        CONDITION HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
                         LIBS      eccodes_f90 eccodes
 )
 ecbuild_add_executable( TARGET    f_copy_namespace
                         NOINSTALL
                         SOURCES   copy_namespace.f90
-                        CONDITION EC_HAVE_FORTRAN
+                        CONDITION HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
                         LIBS      eccodes_f90 eccodes
 )
-ecbuild_add_executable( TARGET    f_set_gvc
+ecbuild_add_executable( TARGET    eccodes_f_set_gvc
                         NOINSTALL
                         SOURCES   set_gvc.f90
-                        CONDITION EC_HAVE_FORTRAN
+                        CONDITION HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
                         LIBS      eccodes_f90 eccodes
 )
 
 
 # # Note extra dependency
-# ecbuild_add_test( TARGET f_set_test
+# ecbuild_add_test( TARGET eccodes_f_set_test
 #                   TYPE SCRIPT
 #                   DEPENDS set_gvc set
 #                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/set.sh
-#                   RESOURCES include.sh
 # )
-# 

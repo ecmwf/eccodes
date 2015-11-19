@@ -22,6 +22,7 @@ integer            :: ibufr
 integer            :: i, count=0
 integer(kind=4)    :: numberOfSubsets
 integer(kind=4)    :: blockNumber,stationNumber 
+character(100)     :: key
 !real(kind=8)       :: t2m
 
   call codes_open_file(ifile,'../../data/bufr/synop_multi_subset.bufr','r')
@@ -46,20 +47,20 @@ integer(kind=4)    :: blockNumber,stationNumber
     ! loop over the subsets
     do i=1,numberOfSubsets
             
-        ! specify the subset number
-        call codes_set(ibufr,'subsetNumber',0)
+ 100    format('/subsetNumber=',I5.5,'/blockNumber')       
+        write(key,100) I       
+        write(*,*) key
                 
+        write(*,*) ' subsetNumber:',i
         ! read and print some data values
          
-        call codes_get(ibufr,'blockNumber',blockNumber);
+        call codes_get(ibufr,key,blockNumber);
         write(*,*) '  blockNumber:',blockNumber
         
+        write(key,*) '/subsetNumber=',I,'/stationNumber'       
         call codes_get(ibufr,'stationNumber',stationNumber);
         write(*,*) '  stationNumber:',stationNumber
     
-        !call codes_get(ibufr,'airTemperatureAt2M',t2m);
-        !write(*,*) '  airTemperatureAt2M:',t2m
-        
     end do
     
     ! release the bufr message

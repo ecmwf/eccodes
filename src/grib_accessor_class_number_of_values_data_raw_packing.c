@@ -99,6 +99,7 @@ static grib_accessor_class _grib_accessor_class_number_of_values_data_raw_packin
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -137,6 +138,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -146,8 +148,8 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
   int n=0;
   grib_accessor_number_of_values_data_raw_packing *self =(grib_accessor_number_of_values_data_raw_packing*)a;
   
-  self->values       = grib_arguments_get_name(a->parent->h,args,n++);
-  self->precision       = grib_arguments_get_name(a->parent->h,args,n++);
+  self->values       = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->precision       = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
   a->length=0;
 }
@@ -161,11 +163,11 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
   int bytes=0;
   long byte_count =0;
 
-  adata=grib_find_accessor(a->parent->h,self->values);
+  adata=grib_find_accessor(grib_handle_of_accessor(a),self->values);
   Assert(adata!=NULL);
   byte_count=grib_byte_count(adata);
 
-  if((err = grib_get_long_internal(a->parent->h,self->precision,&precision))
+  if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->precision,&precision))
       != GRIB_SUCCESS)
     return err;
 

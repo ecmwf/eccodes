@@ -92,6 +92,7 @@ static grib_accessor_class _grib_accessor_class_double = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -126,6 +127,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -153,12 +155,12 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
   l = strlen(repres)+1;
 
   if(l >*len ){
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_long : unpack_string : Buffer too small for %s ", a->name );
+    grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_long : unpack_string : Buffer too small for %s ", a->name );
 
     *len = l;
     return GRIB_BUFFER_TOO_SMALL;
   }
-  grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG, "grib_accessor_long: Casting double %s to string  ", a->name);
+  grib_context_log(a->context,GRIB_LOG_DEBUG, "grib_accessor_long: Casting double %s to string  ", a->name);
 
   *len = l;
 
@@ -192,8 +194,8 @@ static int compare(grib_accessor* a, grib_accessor* b) {
 
   if (alen != blen) return GRIB_COUNT_MISMATCH;
 
-  aval=(double*)grib_context_malloc(a->parent->h->context,alen*sizeof(double));
-  bval=(double*)grib_context_malloc(b->parent->h->context,blen*sizeof(double));
+  aval=(double*)grib_context_malloc(a->context,alen*sizeof(double));
+  bval=(double*)grib_context_malloc(b->context,blen*sizeof(double));
 
   grib_unpack_double(a,aval,&alen);
   grib_unpack_double(b,bval,&blen);
@@ -204,8 +206,8 @@ static int compare(grib_accessor* a, grib_accessor* b) {
     alen--;
   }
 
-  grib_context_free(a->parent->h->context,aval);
-  grib_context_free(b->parent->h->context,bval);
+  grib_context_free(a->context,aval);
+  grib_context_free(b->context,bval);
 
   return retval;
 

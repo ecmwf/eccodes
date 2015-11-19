@@ -69,7 +69,7 @@ if ( new() || (section4Length - 4*NV == 45) )
 }
 else
 {
-   # This is for existing gribs which were written with 4 octets
-   unsigned[4] forecastTime  : dump;
+   # This is for existing gribs which were written with 4 octets (GRIB-29: supports negative forecast time)
+   signed[4] forecastTime  : dump;
 }
 

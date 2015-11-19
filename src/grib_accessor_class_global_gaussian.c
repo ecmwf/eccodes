@@ -112,6 +112,7 @@ static grib_accessor_class _grib_accessor_class_global_gaussian = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -149,6 +150,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -158,17 +160,17 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
   grib_accessor_global_gaussian* self = (grib_accessor_global_gaussian*)a;
   int n = 0;
 
-  self->N        = grib_arguments_get_name(a->parent->h,c,n++);
-  self->Ni        = grib_arguments_get_name(a->parent->h,c,n++);
-  self->di         = grib_arguments_get_name(a->parent->h,c,n++);
-  self->latfirst      = grib_arguments_get_name(a->parent->h,c,n++);
-  self->lonfirst     = grib_arguments_get_name(a->parent->h,c,n++);
-  self->latlast       = grib_arguments_get_name(a->parent->h,c,n++);
-  self->lonlast      = grib_arguments_get_name(a->parent->h,c,n++);
-  self->plpresent    = grib_arguments_get_name(a->parent->h,c,n++);
-  self->pl           = grib_arguments_get_name(a->parent->h,c,n++);
-  self->basic_angle         = grib_arguments_get_name(a->parent->h,c,n++);
-  self->subdivision         = grib_arguments_get_name(a->parent->h,c,n++);
+  self->N        = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->Ni        = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->di         = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->latfirst      = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->lonfirst     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->latlast       = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->lonlast      = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->plpresent    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->pl           = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->basic_angle         = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->subdivision         = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
@@ -180,15 +182,15 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
   double* lats;
   long factor, plpresent=0;
   long max_pl=0; /* max. element of pl array */
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   if (self->basic_angle && self->subdivision) {
 
 	factor=1000000;
-	if((ret = grib_get_long_internal(a->parent->h, self->basic_angle,&basic_angle)) != GRIB_SUCCESS)
+	if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->basic_angle,&basic_angle)) != GRIB_SUCCESS)
 		return ret;
 
-	if((ret = grib_get_long_internal(a->parent->h, self->subdivision,&subdivision)) != GRIB_SUCCESS)
+	if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->subdivision,&subdivision)) != GRIB_SUCCESS)
 		return ret;
 
 	if ( (basic_angle !=0 && basic_angle != GRIB_MISSING_LONG) || 
@@ -200,25 +202,25 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 	factor=1000;
   }
 
-  if((ret = grib_get_long_internal(a->parent->h, self->N,&N)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->N,&N)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->Ni,&Ni)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->Ni,&Ni)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->latfirst,&latfirst)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->latfirst,&latfirst)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->lonfirst,&lonfirst)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->lonfirst,&lonfirst)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->latlast,&latlast)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->latlast,&latlast)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->lonlast,&lonlast)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->lonlast,&lonlast)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->plpresent,&plpresent)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->plpresent,&plpresent)) != GRIB_SUCCESS)
     return ret;
 
   dlatfirst=((double)latfirst)/factor;
@@ -239,11 +241,11 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     if (plpresent) {
         size_t plsize=0, i=0;
         long* pl=NULL; /* pl array */
-        if((ret = grib_get_size(a->parent->h,self->pl,&plsize)) != GRIB_SUCCESS)
+        if((ret = grib_get_size(grib_handle_of_accessor(a),self->pl,&plsize)) != GRIB_SUCCESS)
             return ret;
         Assert(plsize);
         pl=(long*)grib_context_malloc_clear(c,sizeof(long)*plsize);
-        grib_get_long_array_internal(a->parent->h,self->pl,pl, &plsize);
+        grib_get_long_array_internal(grib_handle_of_accessor(a),self->pl,pl, &plsize);
 
         max_pl = pl[0];
         for (i=1; i<plsize; i++) {
@@ -282,29 +284,30 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
   double* lats;
   double ddi,dlonlast;
   double dfactor,dNi;
-  grib_context* c=a->parent->h->context;
+    long plpresent=0;
+  grib_context* c=a->context;
 
   if (*val == 0) return ret;
 
   if (self->basic_angle)  {
 	  factor=1000000;
-	  if((ret = grib_set_missing(a->parent->h, self->subdivision)) != GRIB_SUCCESS)
+	  if((ret = grib_set_missing(grib_handle_of_accessor(a), self->subdivision)) != GRIB_SUCCESS)
 		return ret;
 
-	  if((ret = grib_set_long_internal(a->parent->h, self->basic_angle,basic_angle)) != GRIB_SUCCESS)
+	  if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->basic_angle,basic_angle)) != GRIB_SUCCESS)
 		return ret;
   } else factor=1000;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->N,&N)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->N,&N)) != GRIB_SUCCESS)
     return ret;
   if (N==0) return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->Ni,&Ni)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->Ni,&Ni)) != GRIB_SUCCESS)
     return ret;
   if (Ni == GRIB_MISSING_LONG ) Ni=N*4;
   if (Ni==0) return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->di,&diold)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->di,&diold)) != GRIB_SUCCESS)
     return ret;
 
   lats=(double*)grib_context_malloc(c,sizeof(double)*N*2);
@@ -314,6 +317,30 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
   }
   if((ret = grib_get_gaussian_latitudes(N, lats)) != GRIB_SUCCESS)
       return ret;
+
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->plpresent,&plpresent)) != GRIB_SUCCESS)
+        return ret;
+
+    /* GRIB-854: For octahedral grids, get max of pl array */
+    if (plpresent) {
+        size_t plsize=0, i=0;
+        long* pl=NULL; /* pl array */
+        long max_pl=0; /* max. element of pl array */
+
+        if((ret = grib_get_size(grib_handle_of_accessor(a),self->pl,&plsize)) != GRIB_SUCCESS)
+            return ret;
+        Assert(plsize);
+        pl=(long*)grib_context_malloc_clear(c,sizeof(long)*plsize);
+        grib_get_long_array_internal(grib_handle_of_accessor(a),self->pl,pl, &plsize);
+
+        max_pl = pl[0];
+        for (i=1; i<plsize; i++) {
+            Assert( pl[i] > 0 );
+            if (pl[i] > max_pl) max_pl = pl[i];
+        }
+        grib_context_free(c, pl);
+        Ni = max_pl;
+    }
 
   /* rounding */
   latfirst=(long)(lats[0]*factor+0.5);
@@ -329,20 +356,20 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 
   grib_context_free(c,lats);
 
-  if((ret = grib_set_long_internal(a->parent->h, self->latfirst,latfirst)) != GRIB_SUCCESS)
+  if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->latfirst,latfirst)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_set_long_internal(a->parent->h, self->lonfirst,lonfirst)) != GRIB_SUCCESS)
+  if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->lonfirst,lonfirst)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_set_long_internal(a->parent->h, self->latlast,latlast)) != GRIB_SUCCESS)
+  if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->latlast,latlast)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_set_long_internal(a->parent->h, self->lonlast,lonlast)) != GRIB_SUCCESS)
+  if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->lonlast,lonlast)) != GRIB_SUCCESS)
     return ret;
 
   if (diold != GRIB_MISSING_LONG)
-  	if((ret = grib_set_long_internal(a->parent->h, self->di,di)) != GRIB_SUCCESS)
+  	if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->di,di)) != GRIB_SUCCESS)
 		return ret;
 
   return GRIB_SUCCESS;

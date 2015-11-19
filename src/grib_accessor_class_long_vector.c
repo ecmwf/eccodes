@@ -100,6 +100,7 @@ static grib_accessor_class _grib_accessor_class_long_vector = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -135,6 +136,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -155,12 +157,12 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
   grib_accessor_abstract_long_vector* v =NULL;
   int n = 0;
 
-  self->vector = grib_arguments_get_name(a->parent->h,c,n++);
+  self->vector = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 
-  va=(grib_accessor*)grib_find_accessor(a->parent->h,self->vector);
+  va=(grib_accessor*)grib_find_accessor(grib_handle_of_accessor(a),self->vector);
   v=(grib_accessor_abstract_long_vector*)va;
 
-  self->index = grib_arguments_get_long(a->parent->h,c,n++);
+  self->index = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
 
   /* check self->index on init and never change it */
   Assert(self->index < v->number_of_elements && self->index>=0);
@@ -175,14 +177,14 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len) {
   grib_accessor* va=NULL;
   grib_accessor_abstract_long_vector* v =NULL;
   
-  va=(grib_accessor*)grib_find_accessor(a->parent->h,self->vector);
+  va=(grib_accessor*)grib_find_accessor(grib_handle_of_accessor(a),self->vector);
   v=(grib_accessor_abstract_long_vector*)va;
 
   /*TODO implement the dirty mechanism to avoid to unpack every time */
-  grib_get_size(a->parent->h,self->vector,&size);
-  vector=(long*)grib_context_malloc(a->parent->h->context,sizeof(long)*size);
+  grib_get_size(grib_handle_of_accessor(a),self->vector,&size);
+  vector=(long*)grib_context_malloc(a->context,sizeof(long)*size);
   grib_unpack_long(va,vector,&size);
-  grib_context_free(a->parent->h->context,vector);
+  grib_context_free(a->context,vector);
   
 
   *val = v->v[self->index];
@@ -196,7 +198,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len) {
   grib_accessor_long_vector* self = (grib_accessor_long_vector*)a;
   grib_accessor* va=NULL;
   grib_accessor_abstract_long_vector* v =NULL;
-  va=(grib_accessor*)grib_find_accessor(a->parent->h,self->vector);
+  va=(grib_accessor*)grib_find_accessor(grib_handle_of_accessor(a),self->vector);
   v=(grib_accessor_abstract_long_vector*)va;
   
   err=unpack_long(a,&lval,len);
@@ -212,7 +214,7 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len) {
   grib_accessor* va=NULL;
   grib_accessor_abstract_long_vector* v =NULL;
   
-  va=(grib_accessor*)grib_find_accessor(a->parent->h,self->vector);
+  va=(grib_accessor*)grib_find_accessor(grib_handle_of_accessor(a),self->vector);
   v=(grib_accessor_abstract_long_vector*)va;
 
   v->pack_index=self->index;

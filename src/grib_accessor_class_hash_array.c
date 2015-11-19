@@ -107,6 +107,7 @@ static grib_accessor_class _grib_accessor_class_hash_array = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -135,6 +136,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -160,7 +162,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
    grib_accessor_hash_array* self=(grib_accessor_hash_array*)a;
    char s[200]={0,};
    sprintf(s,"%g",*val);
-   self->key=grib_context_strdup(a->parent->h->context,s);
+   self->key=grib_context_strdup(a->context,s);
    self->ha=0;
   return GRIB_SUCCESS;
 }
@@ -170,15 +172,15 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
    grib_accessor_hash_array* self=(grib_accessor_hash_array*)a;
    char s[200]={0,};
    sprintf(s,"%ld",*val);
-   if (self->key) grib_context_free(a->parent->h->context,self->key);
-   self->key=grib_context_strdup(a->parent->h->context,s);
+   if (self->key) grib_context_free(a->context,self->key);
+   self->key=grib_context_strdup(a->context,s);
    self->ha=0;
    return GRIB_SUCCESS;
 }
 
 static int pack_string(grib_accessor*a , const char*  v, size_t *len){
    grib_accessor_hash_array* self=(grib_accessor_hash_array*)a;
-   self->key=grib_context_strdup(a->parent->h->context,v);
+   self->key=grib_context_strdup(a->context,v);
    self->ha=0;
    return GRIB_SUCCESS;
 }
@@ -193,13 +195,13 @@ static grib_hash_array_value* find_hash_value(grib_accessor* a,int *err) {
   grib_hash_array_value* ha_ret=0;
   grib_hash_array_value* ha=NULL;
 
-  ha=get_hash_array(a->parent->h,a->creator);
+  ha=get_hash_array(grib_handle_of_accessor(a),a->creator);
 
   *err=GRIB_SUCCESS;
 
   Assert(ha!=NULL);
   if (!self->key) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+    grib_context_log(a->context,GRIB_LOG_ERROR,
     "unable to get hash value for %s, set before getting",a->creator->name);
     *err=GRIB_HASH_ARRAY_NO_MATCH;
     return NULL;
@@ -210,7 +212,7 @@ static grib_hash_array_value* find_hash_value(grib_accessor* a,int *err) {
 
   if (!ha_ret)  {
       *err=GRIB_HASH_ARRAY_NO_MATCH;
-      grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+      grib_context_log(a->context,GRIB_LOG_ERROR,
                           "hash_array: no match for %s=%s",
                             a->creator->name,self->key);
       return NULL;

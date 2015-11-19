@@ -92,6 +92,7 @@ static grib_accessor_class _grib_accessor_class_bits_per_value = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -129,6 +130,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -137,8 +139,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* args)
 {
   int n=0;
   grib_accessor_bits_per_value* self= (grib_accessor_bits_per_value*)a;
-  self->values=grib_arguments_get_name(a->parent->h,args,n++);
-  self->bits_per_value=grib_arguments_get_name(a->parent->h,args,n++);
+  self->values=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->bits_per_value=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
   a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
   a->length=0;
 }
@@ -147,7 +149,7 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
 {
   int ret=0;
   grib_accessor_bits_per_value* self= (grib_accessor_bits_per_value*)a;
-  grib_handle* h=a->parent->h;
+  grib_handle* h=grib_handle_of_accessor(a);
 
   if((ret = grib_get_long_internal(h,self->bits_per_value,val))
        != GRIB_SUCCESS) return ret;
@@ -162,8 +164,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
   size_t size=0;
   int ret=0;
   grib_accessor_bits_per_value* self= (grib_accessor_bits_per_value*)a;
-  grib_context* c=a->parent->h->context;
-  grib_handle* h=a->parent->h;
+  grib_context* c=a->context;
+  grib_handle* h=grib_handle_of_accessor(a);
 
   if ( (ret=grib_get_size(h,self->values,&size)) != GRIB_SUCCESS) return ret;
 

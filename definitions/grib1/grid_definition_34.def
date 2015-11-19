@@ -7,14 +7,14 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# GRID DEFINITION stretched Rotated Gaussian latitude/longitude grid
+# GRID DEFINITION Stretched and rotated Gaussian latitude/longitude grids
 # grib 1 -> 2
 constant gridDefinitionTemplateNumber     = 43;
 
 template commonBlock "grib1/grid_definition_gaussian.def";
 
 # Rotation parameters
-include  "grid_rotation.def"
+include "grib1/grid_rotation.def"
 
 # Stretching parameters
-include  "grid_stretching.def"
+include "grib1/grid_stretching.def"

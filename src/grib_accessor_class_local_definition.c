@@ -111,6 +111,7 @@ static grib_accessor_class _grib_accessor_class_local_definition = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -147,6 +148,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -156,22 +158,22 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     grib_accessor_local_definition* self = (grib_accessor_local_definition*)a;
     int n = 0;
 
-    self->grib2LocalSectionNumber = grib_arguments_get_name(a->parent->h,c,n++);
-    self->productDefinitionTemplateNumber = grib_arguments_get_name(a->parent->h,c,n++);
-    self->productDefinitionTemplateNumberInternal = grib_arguments_get_name(a->parent->h,c,n++);
-    self->type = grib_arguments_get_name(a->parent->h,c,n++);
-    self->stream = grib_arguments_get_name(a->parent->h,c,n++);
-    self->the_class = grib_arguments_get_name(a->parent->h,c,n++);
-    self->eps = grib_arguments_get_name(a->parent->h,c,n++);
-    self->stepType = grib_arguments_get_name(a->parent->h,c,n++);
-    self->derivedForecast = grib_arguments_get_name(a->parent->h,c,n++);
+    self->grib2LocalSectionNumber = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->productDefinitionTemplateNumber = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->productDefinitionTemplateNumberInternal = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->type = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->stream = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->the_class = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->eps = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->stepType = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->derivedForecast = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_local_definition* self = (grib_accessor_local_definition*)a;
 
-    return grib_get_long(a->parent->h, self->grib2LocalSectionNumber,val);
+    return grib_get_long(grib_handle_of_accessor(a), self->grib2LocalSectionNumber,val);
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
@@ -193,20 +195,20 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     long derivedForecast=-1;
     long editionNumber = 0;
 
-    if (grib_get_long(a->parent->h, "editionNumber", &editionNumber)==GRIB_SUCCESS) {
+    if (grib_get_long(grib_handle_of_accessor(a), "editionNumber", &editionNumber)==GRIB_SUCCESS) {
         Assert(editionNumber == 2);
     }
 
-    if (grib_get_long(a->parent->h, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
+    if (grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
         tooEarly=1;
-    grib_get_long(a->parent->h, self->productDefinitionTemplateNumberInternal,&productDefinitionTemplateNumberInternal);
-    grib_get_long(a->parent->h, self->type,&type);
-    grib_get_long(a->parent->h, self->stream,&stream);
-    grib_get_long(a->parent->h, self->the_class,&the_class);
-    grib_get_long(a->parent->h, self->eps,&eps);
-    grib_get_string(a->parent->h, self->stepType,stepType,&slen);
+    grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumberInternal,&productDefinitionTemplateNumberInternal);
+    grib_get_long(grib_handle_of_accessor(a), self->type,&type);
+    grib_get_long(grib_handle_of_accessor(a), self->stream,&stream);
+    grib_get_long(grib_handle_of_accessor(a), self->the_class,&the_class);
+    grib_get_long(grib_handle_of_accessor(a), self->eps,&eps);
+    grib_get_string(grib_handle_of_accessor(a), self->stepType,stepType,&slen);
     if (!strcmp(stepType,"instant")) isInstant=1;
-    grib_get_long(a->parent->h, self->grib2LocalSectionNumber,&grib2LocalSectionNumber);
+    grib_get_long(grib_handle_of_accessor(a), self->grib2LocalSectionNumber,&grib2LocalSectionNumber);
 
     if (is_productDefinitionTemplateNumber_EPS(productDefinitionTemplateNumber))
         eps=1;
@@ -287,21 +289,21 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
         break;
 
     default:
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,"Invalid localDefinitionNumber %d",localDefinitionNumber);
+        grib_context_log(a->context,GRIB_LOG_ERROR,"Invalid localDefinitionNumber %d",localDefinitionNumber);
         return GRIB_ENCODING_ERROR;
         break;
     }
 
     if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
         if (tooEarly)
-            grib_set_long(a->parent->h, self->productDefinitionTemplateNumberInternal,productDefinitionTemplateNumberNew);
+            grib_set_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumberInternal,productDefinitionTemplateNumberNew);
         else
-            grib_set_long(a->parent->h, self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
+            grib_set_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
     }
     if (derivedForecast>=0)
-        grib_set_long(a->parent->h, self->derivedForecast,derivedForecast);
+        grib_set_long(grib_handle_of_accessor(a), self->derivedForecast,derivedForecast);
 
-    grib_set_long(a->parent->h, self->grib2LocalSectionNumber,*val);
+    grib_set_long(grib_handle_of_accessor(a), self->grib2LocalSectionNumber,*val);
 
   return 0;
 }

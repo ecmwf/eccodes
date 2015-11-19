@@ -15,7 +15,7 @@ dist_bin_SCRIPTS = bufr_compare_dir
 bin_PROGRAMS = grib_histogram big2gribex \
                codes_info codes_count grib_filter grib_ls grib_dump grib_merge \
                grib2ppm grib_set grib_get grib_get_data grib_copy grib_repair \
-               grib_compare grib_list_keys parser grib_count grib_index_build grib1to2 \
+               grib_compare grib_list_keys codes_parser grib_count grib_index_build grib1to2 \
                gg_sub_area_check grib_to_netcdf grib_to_json \
                bufr_count bufr_filter bufr_ls bufr_dump bufr_set bufr_get \
                bufr_copy bufr_compare bufr_index_build \
@@ -36,7 +36,7 @@ grib_count_SOURCES            =  codes_count.c
 bufr_count_SOURCES            =  codes_count.c
 codes_count_SOURCES           =  codes_count.c
 grib_histogram_SOURCES        =  grib_histogram.c
-parser_SOURCES                =  parser.c
+codes_parser_SOURCES          =  codes_parser.c
 grib_list_keys_SOURCES        =  list_keys.c
 all_keys_SOURCES              =  all_keys.c
 grib2ppm_SOURCES              =  grib2ppm.c

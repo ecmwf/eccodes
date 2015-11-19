@@ -253,11 +253,11 @@ static int native_type(grib_expression* g,grib_handle *h)
 
 static void  add_dependency(grib_expression* g, grib_accessor* observer){
   grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
-  grib_accessor *observed = grib_find_accessor(observer->parent->h,e->key);
+  grib_accessor *observed = grib_find_accessor(grib_handle_of_accessor(observer),e->key);
 
   if(!observed)
   {
-    /* grib_context_log(observer->parent->h->context, GRIB_LOG_ERROR, */
+    /* grib_context_log(observer->context, GRIB_LOG_ERROR, */
          /* "Error in accessor_add_dependency: cannot find [%s]", e->name); */
        /* Assert(observed); */
     return;

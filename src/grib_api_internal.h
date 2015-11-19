@@ -71,8 +71,10 @@ extern "C" {
    #include <direct.h>
    #include <io.h>
 
-   /* Replace Unix rint() for Windows */
-   double rint(double x);
+   /* Replace C99/Unix rint() for Windows Visual C++ (only before VC++ 2013 versions) */
+   #if defined _MSC_VER && _MSC_VER < 1800
+      double rint(double x);
+   #endif
 
    #ifndef S_ISREG
      #define S_ISREG(mode) (mode & S_IFREG)
@@ -151,7 +153,13 @@ extern "C" {
 #define Assert(a) {if(!(a)) grib_fail(#a,__FILE__,__LINE__,0);}
 #define AssertSilent(a) {if(!(a)) grib_fail(#a,__FILE__,__LINE__,1);}
 
- /* Compile time assertion - Thanks to Ralf Holly */
+#ifndef NDEBUG
+ #define DebugAssert(a) Assert(a)
+#else
+ #define DebugAssert(a)
+#endif
+
+/* Compile time assertion - Thanks to Ralf Holly */
 #define COMPILE_TIME_ASSERT(e) \
    do { \
        enum { assert_static__ = 1/(e) }; \
@@ -196,7 +204,8 @@ extern "C" {
 #define CODES_GTS     4
 
 #define CODES_BUFR_UNPACK_STRUCTURE 0
-#define CODES_BUFR_UNPACK_FLAT 1
+#define CODES_BUFR_UNPACK_FLAT      1
+#define CODES_BUFR_NEW_DATA         2
 
 #define MAX_SMART_TABLE_COLUMNS 20
 #define MAX_CODETABLE_ENTRIES 65536
@@ -289,6 +298,7 @@ typedef  int   (*accessor_pack_string_array_proc)        (grib_accessor*, const 
 typedef  int   (*accessor_pack_bytes_proc)               (grib_accessor*, const unsigned char*, size_t *len);
 typedef  int   (*accessor_pack_expression_proc)           (grib_accessor*, grib_expression*);
 typedef  int   (*accessor_clear_proc)                     (grib_accessor*);
+typedef  grib_accessor*   (*accessor_clone_proc)         (grib_accessor*,grib_section*,int*);
 
 typedef  void  (*accessor_init_class_proc)               (grib_accessor_class*);
 
@@ -464,6 +474,7 @@ struct grib_buffer
     int              growable;   /** < buffer can be grown         */
     size_t           length;     /** < Buffer length                        */
     size_t           ulength;    /** < length used of the buffer            */
+    size_t           ulength_bits;    /** < length used of the buffer in bits */
     unsigned char*   data;       /** < the data byte array                  */
 };
 
@@ -490,6 +501,8 @@ struct grib_accessor
 {
   const char             *name  ;     /** < name of the accessor                       */
   const char*             name_space;  /** < namespace to which the accessor belongs    */
+  grib_context*          context;
+  grib_handle*           h;
   grib_action            *creator  ;  /** < action that created the accessor           */
   long                   length ;     /** < byte length of the accessor                */
   long                   offset ;     /** < offset of the data in the buffer           */
@@ -821,9 +834,9 @@ struct grib_handle
     long bufr_subset_number;   /* bufr subset number */
     long bufr_group_number;    /* used in bufr */
     /* grib_accessor* groups[MAX_NUM_GROUPS]; */
-    int unpacked;
     long missingValueLong;
     double missingValueDouble;
+    ProductKind product_kind;
 };
 
 struct grib_multi_handle {
@@ -892,6 +905,7 @@ struct grib_accessor_class
     accessor_unpack_double_element_proc     unpack_double_element;
     accessor_unpack_double_subarray_proc    unpack_double_subarray;
     accessor_clear_proc             clear;
+    accessor_clone_proc             make_clone;
 };
 
 typedef struct grib_multi_support grib_multi_support;
@@ -929,6 +943,7 @@ struct grib_concept_condition {
   grib_concept_condition* next;
   char*               name;
   grib_expression*    expression;
+  grib_iarray*    iarray;
 };
 
 typedef struct grib_concept_value_name grib_concept_value_name;
@@ -1289,7 +1304,7 @@ struct grib_math{
   int         arity;
 };
 
-typedef double (*mathproc)();
+typedef double (*mathproc)(void);
 typedef int    (*funcproc)(grib_math*,mathproc);
 
 typedef struct func {
@@ -1425,7 +1440,6 @@ typedef struct j2k_encode_helper {
   unsigned char*  jpeg_buffer;
 
 } j2k_encode_helper;
-
 
 
 #include "grib_api_prototypes.h"

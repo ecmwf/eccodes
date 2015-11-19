@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2012 ECMWF.
+ * Copyright 2005-2015 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -243,30 +243,30 @@ grib_handle* merge(grib_handle* h1,grib_handle* h2) {
 
     grib_get_long(h,"numberOfPoints",&n);
     grib_get_double(h,"missingValue",&missingValue);
-    v=grib_context_malloc_clear(h->context,sizeof(double)*n);
+    v=(double*)grib_context_malloc_clear(h->context,sizeof(double)*n);
     for (i=0;i<n;i++) v[i]=1.0;
     sn=n;
     grib_set_double_array(h,"values",v,sn);
     for (i=0;i<n;i++) v[i]=missingValue;
-    lat=grib_context_malloc_clear(h->context,sizeof(double)*n);
-    lon=grib_context_malloc_clear(h->context,sizeof(double)*n);
+    lat=(double*)grib_context_malloc_clear(h->context,sizeof(double)*n);
+    lon=(double*)grib_context_malloc_clear(h->context,sizeof(double)*n);
     sn=n;
     grib_get_double_array(h,"latitudes",lat,&sn);
     grib_get_double_array(h,"longitudes",lon,&sn);
 
     grib_get_long(h1,"numberOfPoints",&n1);
-    v1=grib_context_malloc_clear(h->context,sizeof(double)*n1);
-    lat1=grib_context_malloc_clear(h->context,sizeof(double)*n1);
-    lon1=grib_context_malloc_clear(h->context,sizeof(double)*n1);
+    v1=(double*)grib_context_malloc_clear(h->context,sizeof(double)*n1);
+    lat1=(double*)grib_context_malloc_clear(h->context,sizeof(double)*n1);
+    lon1=(double*)grib_context_malloc_clear(h->context,sizeof(double)*n1);
     sn=n1;
     grib_get_double_array(h1,"latitudes",lat1,&sn);
     grib_get_double_array(h1,"longitudes",lon1,&sn);
     grib_get_double_array(h1,"values",v1,&sn);
 
     grib_get_long(h2,"numberOfPoints",&n2);
-    v2=grib_context_malloc_clear(h->context,sizeof(double)*n2);
-    lat2=grib_context_malloc_clear(h->context,sizeof(double)*n2);
-    lon2=grib_context_malloc_clear(h->context,sizeof(double)*n2);
+    v2=(double*)grib_context_malloc_clear(h->context,sizeof(double)*n2);
+    lat2=(double*)grib_context_malloc_clear(h->context,sizeof(double)*n2);
+    lon2=(double*)grib_context_malloc_clear(h->context,sizeof(double)*n2);
     sn=n2;
     grib_get_double_array(h2,"latitudes",lat2,&sn);
     grib_get_double_array(h2,"longitudes",lon2,&sn);

@@ -1,3 +1,4 @@
+  integer, parameter,public :: CODES_OUT_OF_RANGE                                  = -65
   integer, parameter,public :: CODES_UNSUPPORTED_EDITION                           = -64
   integer, parameter,public :: CODES_ATTRIBUTE_NOT_FOUND                           = -63
   integer, parameter,public :: CODES_TOO_MANY_ATTRIBUTES                           = -62
@@ -64,3 +65,5 @@
   integer, parameter,public :: CODES_END_OF_FILE                                   = -1
   integer, parameter,public :: CODES_SUCCESS                                       = 0
   integer, parameter,public :: CODES_NULL                                          = -1
+  real(8),    parameter,public :: CODES_MISSING_DOUBLE                              = -1.D+100
+  integer(4), parameter,public :: CODES_MISSING_LONG                                = 2147483647

@@ -84,7 +84,7 @@ static void check_sections(grib_section *s,grib_handle* h)
   if(s) Assert(s->h == h);
   while(a)
   {
-    Assert(a->parent->h == h);
+    Assert(grib_handle_of_accessor(a) == h);
     check_sections(a->sub_section,h);
     a = a->next;
   }
@@ -97,7 +97,7 @@ static int notify_change(grib_action* act, grib_accessor * notified,
     grib_loader loader = { 0,0,0,0,0 };
 
     grib_section *old_section = NULL;
-    grib_handle *h = notified->parent->h;
+    grib_handle *h = grib_handle_of_accessor(notified);
     size_t len = 0;
     size_t size = 0;
     int err=0;

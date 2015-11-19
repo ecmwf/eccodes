@@ -23,10 +23,8 @@ int grib_get_data(grib_handle* h,double* lats, double* lons,double* values,size_
   iter=grib_iterator_new(h,0,&err);
   if (!iter || err!=GRIB_SUCCESS) return err;
 
-  if (iter) {
-    lat=lats; lon=lons; val=values;
-    while(grib_iterator_next(iter,lat++,lon++,val++)) {}
-  }
+  lat=lats; lon=lons; val=values;
+  while(grib_iterator_next(iter,lat++,lon++,val++)) {}
 
   grib_iterator_delete( iter);
 

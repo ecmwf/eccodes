@@ -12,9 +12,20 @@
 
 REDIRECT=/dev/null
 
-
 temp=neg_fctime.temp.grib
 input=${data_dir}/sample.grib2
+
+
+############################
+# Check various grib2 PDTs
+sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+PDTs="0 1 2 3 8 9 10 11 12 13 14 45 46 47 48 53"
+for p in $PDTs; do
+  ${tools_dir}grib_set -s productDefinitionTemplateNumber=$p,forecastTime=-2 $sample2 $temp
+done
+
+
+############################
 
 # check input time and date
 check_key_equals $input 'dataDate,dataTime' '20080206 1200'

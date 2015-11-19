@@ -195,14 +195,14 @@ static int notify_change_impl(grib_action* a, grib_accessor* observer,grib_acces
   int ret = GRIB_SUCCESS;
   long lres;
 
-  if ((ret = grib_expression_evaluate_long(observed->parent->h, self->expression,&lres))
+  if ((ret = grib_expression_evaluate_long(grib_handle_of_accessor(observed), self->expression,&lres))
     != GRIB_SUCCESS) return ret;
 
   if(0 && self->loop)
   {
     printf("LOOP detected...\n");
     printf("WHEN triggered by %s %ld\n",observed->name,lres);
-    grib_expression_print(observed->parent->h->context,self->expression,0);
+    grib_expression_print(observed->context,self->expression,0);
     printf("\n");
     return ret;
   }
@@ -215,7 +215,7 @@ static int notify_change_impl(grib_action* a, grib_accessor* observer,grib_acces
     b=self->block_false;
 
   while(b) {
-    ret = grib_action_execute(b,observed->parent->h);
+    ret = grib_action_execute(b,grib_handle_of_accessor(observed));
     if(ret != GRIB_SUCCESS) {
       self->loop = 0;
       return ret;

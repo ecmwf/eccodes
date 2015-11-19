@@ -99,6 +99,7 @@ static grib_accessor_class _grib_accessor_class_bufr_elements_table = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -133,6 +134,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -141,9 +143,9 @@ static void init(grib_accessor* a, const long len, grib_arguments* params) {
   int n=0;
   grib_accessor_bufr_elements_table* self  = (grib_accessor_bufr_elements_table*)a;
 
-  self->dictionary = grib_arguments_get_string(a->parent->h,params,n++);
-  self->masterDir = grib_arguments_get_name(a->parent->h,params,n++);
-  self->localDir = grib_arguments_get_name(a->parent->h,params,n++);
+  self->dictionary = grib_arguments_get_string(grib_handle_of_accessor(a),params,n++);
+  self->masterDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->localDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
 
   a->length = 0;
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -178,7 +180,7 @@ char** str_split(char* a_str, const char a_delim)
        knows where the list of returned strings ends. */
     count++;
 
-    result = malloc(sizeof(char*) * count);
+    result = (char**)malloc(sizeof(char*) * count);
 
     if (result)
     {
@@ -216,8 +218,8 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err) {
     size_t len=1024;
     grib_trie* dictionary=NULL;
     FILE* f=NULL;
-    grib_handle* h=a->parent->h;
-    grib_context* c=a->parent->h->context;
+    grib_handle* h=grib_handle_of_accessor(a);
+    grib_context* c=a->context;
 
     *err=GRIB_SUCCESS;
 
@@ -322,7 +324,7 @@ static int bufr_get_from_table(grib_accessor* a,bufr_descriptor* v) {
   table=load_bufr_elements_table(a,&ret);
   if (ret) return ret;
 
-  c=a->parent->h->context;
+  c=a->context;
 
   sprintf(code,"%06ld",v->code);
 
@@ -366,7 +368,7 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a,in
 
   if (!a) return NULL;
 
-  c=a->parent->h->context;
+  c=a->context;
 
   v=(bufr_descriptor*)grib_context_malloc_clear(c,sizeof(bufr_descriptor));
   if (!v) {

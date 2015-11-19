@@ -20,7 +20,7 @@ rm -f $tmp_out | true
 # we get a usage message otherwise we get a specific message. Note: In both cases
 # the command fails.
 ${tools_dir}grib_to_netcdf > $tmp_out
-grep 'GRIB API was not compiled with NETCDF enabled' $tmp_out > /dev/null
+grep 'ecCodes was not compiled with NETCDF enabled' $tmp_out > /dev/null
 if [ $? -eq 0 ]; then
   # Message was found
   skip_test=1

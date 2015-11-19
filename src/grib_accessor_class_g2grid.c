@@ -107,6 +107,7 @@ static grib_accessor_class _grib_accessor_class_g2grid = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -143,6 +144,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -152,14 +154,14 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
   grib_accessor_g2grid* self = (grib_accessor_g2grid*)a;
   int n = 0;
 
-  self->latitude_first      = grib_arguments_get_name(a->parent->h,c,n++);
-  self->longitude_first     = grib_arguments_get_name(a->parent->h,c,n++);
-  self->latitude_last       = grib_arguments_get_name(a->parent->h,c,n++);
-  self->longitude_last      = grib_arguments_get_name(a->parent->h,c,n++);
-  self->i_increment         = grib_arguments_get_name(a->parent->h,c,n++);
-  self->j_increment         = grib_arguments_get_name(a->parent->h,c,n++);
-  self->basic_angle         = grib_arguments_get_name(a->parent->h,c,n++);
-  self->sub_division        = grib_arguments_get_name(a->parent->h,c,n++);
+  self->latitude_first      = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->longitude_first     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->latitude_last       = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->longitude_last      = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->i_increment         = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->j_increment         = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->basic_angle         = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->sub_division        = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 
   a->flags |=
     GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC |
@@ -190,10 +192,10 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     return ret;
   }
 
-  if((ret = grib_get_long_internal(a->parent->h, self->basic_angle,&basic_angle)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->basic_angle,&basic_angle)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->sub_division,&sub_division)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->sub_division,&sub_division)) != GRIB_SUCCESS)
     return ret;
 
 
@@ -206,27 +208,27 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     basic_angle = 1;
 
   n = 0;
-  if((ret = grib_get_long_internal(a->parent->h, self->latitude_first,&v[n++])) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->latitude_first,&v[n++])) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->longitude_first,&v[n++])) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->longitude_first,&v[n++])) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->latitude_last,&v[n++])) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->latitude_last,&v[n++])) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->longitude_last,&v[n++])) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->longitude_last,&v[n++])) != GRIB_SUCCESS)
     return ret;
 
   if(!self->i_increment)  v[n++] = GRIB_MISSING_LONG;
   else
-    if((ret = grib_get_long_internal(a->parent->h, self->i_increment,&v[n++])) != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->i_increment,&v[n++])) != GRIB_SUCCESS)
       return ret;
 
   if(!self->j_increment)  v[n++] = GRIB_MISSING_LONG;
   else
     if(self->j_increment)
-      if((ret = grib_get_long_internal(a->parent->h, self->j_increment,&v[n++])) != GRIB_SUCCESS)
+      if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->j_increment,&v[n++])) != GRIB_SUCCESS)
         return ret;
 
   for(i = 0 ; i < n ; i++)
@@ -346,7 +348,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     sub_division = 1000000;
 
     if(!is_ok(val,v,basic_angle,sub_division))
-      grib_context_log(a->parent->h->context,GRIB_LOG_DEBUG,"Grid cannot be coded with any loss of precision");
+      grib_context_log(a->context,GRIB_LOG_DEBUG,"Grid cannot be coded with any loss of precision");
   }
 
   if(basic_angle == 1 && sub_division == 1000000)
@@ -355,33 +357,33 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     sub_division = GRIB_MISSING_LONG;
   }
 
-  if((ret = grib_set_long_internal(a->parent->h, self->basic_angle,basic_angle)) != GRIB_SUCCESS)
+  if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->basic_angle,basic_angle)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_set_long_internal(a->parent->h, self->sub_division,sub_division)) != GRIB_SUCCESS)
+  if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->sub_division,sub_division)) != GRIB_SUCCESS)
     return ret;
 
   n = 0;
-  if((ret = grib_set_long_internal(a->parent->h, self->latitude_first,v[n++])) != GRIB_SUCCESS)
+  if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->latitude_first,v[n++])) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_set_long_internal(a->parent->h, self->longitude_first,v[n++])) != GRIB_SUCCESS)
+  if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->longitude_first,v[n++])) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_set_long_internal(a->parent->h, self->latitude_last,v[n++])) != GRIB_SUCCESS)
+  if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->latitude_last,v[n++])) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_set_long_internal(a->parent->h, self->longitude_last,v[n++])) != GRIB_SUCCESS)
+  if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->longitude_last,v[n++])) != GRIB_SUCCESS)
     return ret;
 
   if(!self->i_increment) n++;
   else
-    if((ret = grib_set_long_internal(a->parent->h, self->i_increment,v[n++])) != GRIB_SUCCESS)
+    if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->i_increment,v[n++])) != GRIB_SUCCESS)
       return ret;
 
   if(!self->j_increment) n++;
   else
-    if((ret = grib_set_long_internal(a->parent->h, self->j_increment,v[n++])) != GRIB_SUCCESS)
+    if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->j_increment,v[n++])) != GRIB_SUCCESS)
       return ret;
 
 

@@ -68,6 +68,7 @@ static const char *errors[] = {
 "Too many attributes. Increase MAX_ACCESSOR_ATTRIBUTES",		/* -62 GRIB_TOO_MANY_ATTRIBUTES */
 "Attribute not found.",		/* -63 GRIB_ATTRIBUTE_NOT_FOUND */
 "Edition not supported.",		/* -64 GRIB_UNSUPPORTED_EDITION */
+"Value out of coding range",		/* -65 GRIB_OUT_OF_RANGE */
 "Value mismatch",		/* 1 GRIB_VALUE_MISMATCH */
 "double values are different",		/* 2 GRIB_DOUBLE_VALUE_MISMATCH */
 "long values are different",		/* 3 GRIB_LONG_VALUE_MISMATCH */
@@ -87,35 +88,33 @@ static const char *errors[] = {
 
 const char* grib_get_error_message(int code)
 {
-  code = -code;
-  if(code <0 || code >= NUMBER(errors)) {
-    static char mess[80];
-    sprintf(mess,"Unknown error %d",code);
-    return mess;
+    code = -code;
+    if(code <0 || code >= NUMBER(errors)) {
+        static char mess[80];
+        sprintf(mess,"Unknown error %d",code);
+        return mess;
     }
-  return errors[code];
+    return errors[code];
 }
 
 void grib_check(const char* call,const char*  file,int line,int e,const char* msg)
 {
-	grib_context* c=grib_context_get_default();
+    grib_context* c=grib_context_get_default();
     if(e) {
-		if (file) {
-			fprintf(stderr,"%s at line %d: %s failed: %s",
-				file,line, call,grib_get_error_message(e));
-			if (msg) fprintf(stderr," (%s)",msg);
-			printf("\n");
-		} else {
-			grib_context_log(c,GRIB_LOG_ERROR,"%s",grib_get_error_message(e));
-		}
+        if (file) {
+            fprintf(stderr,"%s at line %d: %s failed: %s",
+                    file,line, call,grib_get_error_message(e));
+            if (msg) fprintf(stderr," (%s)",msg);
+            printf("\n");
+        } else {
+            grib_context_log(c,GRIB_LOG_ERROR,"%s",grib_get_error_message(e));
+        }
         exit(e);
     }
 }
 
-
 void grib_fail(const char* expr,const char* file,int line,int silent) {
-	 if (!silent)
-   fprintf(stderr,"%s at line %d: assertion failure Assert(%s)\n",file,line,expr);
-   abort();
+    if (!silent)
+        fprintf(stderr,"%s at line %d: assertion failure Assert(%s)\n",file,line,expr);
+    abort();
 }
-

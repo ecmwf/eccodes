@@ -87,6 +87,7 @@ static grib_accessor_class _grib_accessor_class_evaluate = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -124,6 +125,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -146,10 +148,10 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
   int ret=0;
   grib_accessor_evaluate* self = (grib_accessor_evaluate*)a;
-  grib_expression* e = grib_arguments_get_expression(a->parent->h,self->arg,0);
+  grib_expression* e = grib_arguments_get_expression(grib_handle_of_accessor(a),self->arg,0);
 
 
-  ret = grib_expression_evaluate_long(a->parent->h,e,val);
+  ret = grib_expression_evaluate_long(grib_handle_of_accessor(a),e,val);
   *len = 1;
 
   return ret;

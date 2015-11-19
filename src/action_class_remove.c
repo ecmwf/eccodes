@@ -109,9 +109,9 @@ static void remove_accessor(grib_accessor *a)
   if (!a || !a->previous) return;
   s = a->parent;
 
-  if (a->parent->h->use_trie && *(a->all_names[0]) != '_') {
-      id=grib_hash_keys_get_id(a->parent->h->context->keys,a->all_names[0]);
-      a->parent->h->accessors[id]=NULL;
+  if (grib_handle_of_accessor(a)->use_trie && *(a->all_names[0]) != '_') {
+      id=grib_hash_keys_get_id(a->context->keys,a->all_names[0]);
+      grib_handle_of_accessor(a)->accessors[id]=NULL;
   }
 
   if (a->next) a->previous->next = a->next;

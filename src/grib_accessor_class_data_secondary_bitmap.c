@@ -94,6 +94,7 @@ static grib_accessor_class _grib_accessor_class_data_secondary_bitmap = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -130,6 +131,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -139,10 +141,10 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
   grib_accessor_data_secondary_bitmap *self =(grib_accessor_data_secondary_bitmap*)a;
 
 
-  self->primary_bitmap   = grib_arguments_get_name(a->parent->h,args,0);
-  self->secondary_bitmap = grib_arguments_get_name(a->parent->h,args,1);
-  self->missing_value    = grib_arguments_get_name(a->parent->h,args,2);
-  self->expand_by        = grib_arguments_get_name(a->parent->h,args,3);
+  self->primary_bitmap   = grib_arguments_get_name(grib_handle_of_accessor(a),args,0);
+  self->secondary_bitmap = grib_arguments_get_name(grib_handle_of_accessor(a),args,1);
+  self->missing_value    = grib_arguments_get_name(grib_handle_of_accessor(a),args,2);
+  self->expand_by        = grib_arguments_get_name(grib_handle_of_accessor(a),args,3);
 
   a->length              = 0;
 }
@@ -180,37 +182,37 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     return GRIB_ARRAY_TOO_SMALL;
   }
 
-  if((err = grib_get_long(a->parent->h,self->expand_by,&expand_by)) != GRIB_SUCCESS)
+  if((err = grib_get_long(grib_handle_of_accessor(a),self->expand_by,&expand_by)) != GRIB_SUCCESS)
     return err;
 
-  if((err = grib_get_size(a->parent->h,self->primary_bitmap,&primary_len)) != GRIB_SUCCESS)
+  if((err = grib_get_size(grib_handle_of_accessor(a),self->primary_bitmap,&primary_len)) != GRIB_SUCCESS)
     return err;
 
-  if((err = grib_get_size(a->parent->h,self->secondary_bitmap,&secondary_len)) != GRIB_SUCCESS)
+  if((err = grib_get_size(grib_handle_of_accessor(a),self->secondary_bitmap,&secondary_len)) != GRIB_SUCCESS)
     return err;
 
-  primary_vals = (double*)grib_context_malloc(a->parent->h->context,primary_len*sizeof(double));
+  primary_vals = (double*)grib_context_malloc(a->context,primary_len*sizeof(double));
   if(!primary_vals)
     return GRIB_OUT_OF_MEMORY;
 
-  secondary_vals = (double*)grib_context_malloc(a->parent->h->context,secondary_len*sizeof(double));
+  secondary_vals = (double*)grib_context_malloc(a->context,secondary_len*sizeof(double));
   if(!secondary_vals)
   {
-    grib_context_free(a->parent->h->context,primary_vals);
+    grib_context_free(a->context,primary_vals);
     return GRIB_OUT_OF_MEMORY;
   }
 
-  if((err = grib_get_double_array_internal(a->parent->h,self->primary_bitmap,primary_vals,&primary_len)) != GRIB_SUCCESS)
+  if((err = grib_get_double_array_internal(grib_handle_of_accessor(a),self->primary_bitmap,primary_vals,&primary_len)) != GRIB_SUCCESS)
   {
-    grib_context_free(a->parent->h->context,secondary_vals);
-    grib_context_free(a->parent->h->context,primary_vals);
+    grib_context_free(a->context,secondary_vals);
+    grib_context_free(a->context,primary_vals);
     return err;
   }
 
-  if((err = grib_get_double_array_internal(a->parent->h,self->secondary_bitmap,secondary_vals,&secondary_len)) != GRIB_SUCCESS)
+  if((err = grib_get_double_array_internal(grib_handle_of_accessor(a),self->secondary_bitmap,secondary_vals,&secondary_len)) != GRIB_SUCCESS)
   {
-    grib_context_free(a->parent->h->context,secondary_vals);
-    grib_context_free(a->parent->h->context,primary_vals);
+    grib_context_free(a->context,secondary_vals);
+    grib_context_free(a->context,primary_vals);
     return err;
   }
 
@@ -238,8 +240,8 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 
   *len =  n_vals;
 
-  grib_context_free(a->parent->h->context,primary_vals);
-  grib_context_free(a->parent->h->context,secondary_vals);
+  grib_context_free(a->context,primary_vals);
+  grib_context_free(a->context,secondary_vals);
   return err;
 }
 
@@ -247,7 +249,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 static int  get_native_type(grib_accessor* a)
 {
   /*  grib_accessor_data_secondary_bitmap* self =  (grib_accessor_data_secondary_bitmap*)a;
-    return grib_accessor_get_native_type(grib_find_accessor(a->parent->h,self->coded_values));*/
+    return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));*/
 
   return GRIB_TYPE_DOUBLE;
 }

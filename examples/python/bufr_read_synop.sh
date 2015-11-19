@@ -24,11 +24,12 @@ rm -f $fTmp | true
 REDIRECT=/dev/null
 
 #Write the values into a file and compare with reference
-$PYTHON bufr_read_synop.py 2> $REDIRECT > $fTmp
+$PYTHON $examples_src/bufr_read_synop.py 2> $REDIRECT > $fTmp
 
 #TODO: check the output
 
 #cat  $fTmp
 
 #Clean up
-rm -f $fTmp | true
+rm -f $fTmp
+

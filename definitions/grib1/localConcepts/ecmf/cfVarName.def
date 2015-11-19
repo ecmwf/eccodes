@@ -3314,6 +3314,16 @@
 	 table2Version = 131 ;
 	 indicatorOfParameter = 97 ;
 	}
+#Convective available potential energy shear index
+'capesi' = {
+	 table2Version = 132 ;
+	 indicatorOfParameter = 44 ;
+	}
+#Convective available potential energy index
+'capei' = {
+	 table2Version = 132 ;
+	 indicatorOfParameter = 59 ;
+	}
 #Maximum of significant wave height index
 'maxswhi' = {
 	 table2Version = 132 ;
@@ -3343,6 +3353,11 @@
 'p140084' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 84 ;
+	}
+#Significant wave height of all waves with period larger than 10s
+'sh10' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 120 ;
 	}
 #Significant wave height of first swell partition
 'p140121' = {
@@ -8989,6 +9004,46 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 43 ;
 	}
+#Convective available potential energy shear
+'capes' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 44 ;
+	}
+#Height of convective cloud top
+'hcct' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 46 ;
+	}
+#Height of Zero Deg Wet Bulb Temperature
+'hwbt0' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 47 ;
+	}
+#Height of One Deg Wet Bulb Temperature
+'hwbt1' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 48 ;
+	}
+#Instantaneous total lightning density
+'litoti' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 50 ;
+	}
+#Averaged total lightning density
+'litota' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 51 ;
+	}
+#Instantaneous cloud-to-ground lightning density
+'licgi' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 52 ;
+	}
+#Averaged cloud-to-ground lightning density
+'licga' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 53 ;
+	}
 #GPP coefficient from Biogenic Flux Adjustment System
 'gppbfas' = {
 	 table2Version = 228 ;
@@ -9273,6 +9328,251 @@
 'pevvar' = {
 	 table2Version = 230 ;
 	 indicatorOfParameter = 251 ;
+	}
+#Mean surface runoff rate
+'p235020' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 20 ;
+	}
+#Mean sub-surface runoff rate
+'p235021' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 21 ;
+	}
+#Mean surface photosynthetically active radiation flux, clear sky
+'p235022' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 22 ;
+	}
+#Mean snow evaporation rate
+'p235023' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 23 ;
+	}
+#Mean snowmelt rate
+'p235024' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 24 ;
+	}
+#Mean magnitude of surface stress
+'p235025' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 25 ;
+	}
+#Mean large-scale precipitation fraction
+'p235026' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 26 ;
+	}
+#Mean surface downward UV radiation flux
+'p235027' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 27 ;
+	}
+#Mean surface photosynthetically active radiation flux
+'p235028' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 28 ;
+	}
+#Mean large-scale precipitation rate
+'p235029' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 29 ;
+	}
+#Mean convective precipitation rate
+'p235030' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 30 ;
+	}
+#Mean snowfall rate
+'p235031' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 31 ;
+	}
+#Mean boundary layer dissipation
+'p235032' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 32 ;
+	}
+#Mean surface sensible heat flux
+'p235033' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 33 ;
+	}
+#Mean surface latent heat flux
+'p235034' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 34 ;
+	}
+#Mean surface downward short-wave radiation flux
+'p235035' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 35 ;
+	}
+#Mean surface downward long-wave radiation flux
+'p235036' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 36 ;
+	}
+#Mean surface net short-wave radiation flux
+'p235037' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 37 ;
+	}
+#Mean surface net long-wave radiation flux
+'p235038' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 38 ;
+	}
+#Mean top net short-wave radiation flux
+'p235039' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 39 ;
+	}
+#Mean top net long-wave radiation flux
+'p235040' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 40 ;
+	}
+#Mean eastward turbulent surface stress
+'p235041' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 41 ;
+	}
+#Mean northward turbulent surface stress
+'p235042' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 42 ;
+	}
+#Mean evaporation rate
+'p235043' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 43 ;
+	}
+#Sunshine duration fraction
+'p235044' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 44 ;
+	}
+#Mean eastward gravity wave surface stress
+'p235045' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 45 ;
+	}
+#Mean northward gravity wave surface stress
+'p235046' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 46 ;
+	}
+#Mean gravity wave dissipation
+'p235047' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 47 ;
+	}
+#Mean runoff rate
+'p235048' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 48 ;
+	}
+#Mean top net short-wave radiation flux, clear sky
+'p235049' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 49 ;
+	}
+#Mean top net long-wave radiation flux, clear sky
+'p235050' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 50 ;
+	}
+#Mean surface net short-wave radiation flux, clear sky
+'p235051' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 51 ;
+	}
+#Mean surface net long-wave radiation flux, clear sky
+'p235052' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 52 ;
+	}
+#Mean top downward short-wave radiation flux
+'p235053' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 53 ;
+	}
+#Mean vertically integrated moisture divergence
+'p235054' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 54 ;
+	}
+#Mean total precipitation rate
+'p235055' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 55 ;
+	}
+#Mean convective snowfall rate
+'p235056' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 56 ;
+	}
+#Mean large-scale snowfall rate
+'p235057' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 57 ;
+	}
+#Mean surface direct short-wave radiation flux
+'p235058' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 58 ;
+	}
+#Mean surface direct short-wave radiation flux, clear sky
+'p235059' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 59 ;
+	}
+#Mean surface diffuse short-wave radiation flux
+'p235060' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 60 ;
+	}
+#Mean surface diffuse short-wave radiation flux, clear sky
+'p235061' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 61 ;
+	}
+#Mean carbon dioxide net ecosystem exchange flux
+'p235062' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 62 ;
+	}
+#Mean carbon dioxide gross primary production flux
+'p235063' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 63 ;
+	}
+#Mean carbon dioxide ecosystem respiration flux
+'p235064' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 64 ;
+	}
+#Mean rain rate
+'p235065' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 65 ;
+	}
+#Mean convective rain rate
+'p235066' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 66 ;
+	}
+#Mean large-scale rain rate
+'p235067' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 67 ;
+	}
+#Ceiling
+'ceil' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 109 ;
 	}
 #K index
 'kx' = {

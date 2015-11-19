@@ -89,6 +89,7 @@ static grib_accessor_class _grib_accessor_class_sprintf = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -124,6 +125,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -162,7 +164,7 @@ static int    unpack_string(grib_accessor* a, char* val, size_t *len)
 	const char* tempname = NULL;
 
 
-	uname = grib_arguments_get_string(a->parent->h,self->args,carg++);
+	uname = grib_arguments_get_string(grib_handle_of_accessor(a),self->args,carg++);
 	sprintf(result,"%s",""); 
 
 	for(i=0;i<strlen(uname);i++)
@@ -181,12 +183,12 @@ static int    unpack_string(grib_accessor* a, char* val, size_t *len)
 			switch(uname[i]){
 
 				case 'd':
-					tempname = grib_arguments_get_name(a->parent->h,self->args,carg++);
+					tempname = grib_arguments_get_name(grib_handle_of_accessor(a),self->args,carg++);
 
-					if((ret = grib_get_long_internal(a->parent->h,tempname,&ires)) != GRIB_SUCCESS)
+					if((ret = grib_get_long_internal(grib_handle_of_accessor(a),tempname,&ires)) != GRIB_SUCCESS)
 						return ret;
 					/* Bug GRIB-56: Check to see if the key is missing */
-					is_missing = grib_is_missing(a->parent->h,tempname,&ret);
+					is_missing = grib_is_missing(grib_handle_of_accessor(a),tempname,&ret);
 					if (ret != GRIB_SUCCESS)
 						return ret;
 					if (is_missing) {
@@ -203,8 +205,8 @@ static int    unpack_string(grib_accessor* a, char* val, size_t *len)
 					break;
 
 				case 'g':
-					tempname = grib_arguments_get_name(a->parent->h,self->args,carg++);
-					if((ret = grib_get_double_internal(a->parent->h,tempname,&dres)) != GRIB_SUCCESS) 
+					tempname = grib_arguments_get_name(grib_handle_of_accessor(a),self->args,carg++);
+					if((ret = grib_get_double_internal(grib_handle_of_accessor(a),tempname,&dres)) != GRIB_SUCCESS) 
 						return ret;
 					sprintf(result,"%s%g",result, dres); 
 
@@ -212,8 +214,8 @@ static int    unpack_string(grib_accessor* a, char* val, size_t *len)
 					break;
 
 				case 's':
-					tempname = grib_arguments_get_name(a->parent->h,self->args,carg++);
-					if((ret = grib_get_string_internal(a->parent->h,tempname,sres, &replen )) != GRIB_SUCCESS)
+					tempname = grib_arguments_get_name(grib_handle_of_accessor(a),self->args,carg++);
+					if((ret = grib_get_string_internal(grib_handle_of_accessor(a),tempname,sres, &replen )) != GRIB_SUCCESS)
 						return ret;
 					sprintf(result,"%s%s",result, sres); 
 					replen = 1024;

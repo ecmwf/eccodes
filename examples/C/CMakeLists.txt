@@ -3,6 +3,7 @@
 # Configure the file which all CMake tests will include
 configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 
+execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/include.sh ${CMAKE_CURRENT_BINARY_DIR} )
 
 # Build the executables used by test scripts
 ################################################
@@ -31,7 +32,6 @@ list( APPEND test_bins
       grib_iterator_bitmap
       large_grib1
       grib_clone
-      check_gaussian_grid
       grib_ensemble_index
       get_product_kind
       bufr_attributes
@@ -73,7 +73,6 @@ list( APPEND tests
    large_grib1
    set_missing
    sections_copy
-   check_gaussian_grids
    bufr_attributes
    bufr_clone
    bufr_expanded
@@ -89,18 +88,17 @@ list( APPEND tests
    get_product_kind
 )
 foreach( test ${tests} )
-    ecbuild_add_test( TARGET c_${test}
+    ecbuild_add_test( TARGET eccodes_c_${test}
                   TYPE       SCRIPT
                   COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                  RESOURCES  include.sh
-                  TEST_DEPENDS get_gribs get_bufrs
+                  TEST_DEPENDS eccodes_get_gribs eccodes_get_bufrs
     )
 endforeach()
 
 
 #############################################
 # Tests with no script
-ecbuild_add_test( TARGET    c_new_sample
+ecbuild_add_test( TARGET    eccodes_c_new_sample
                   SOURCES   new_sample.c
                   LIBS      eccodes
                   ARGS      "out.grib"

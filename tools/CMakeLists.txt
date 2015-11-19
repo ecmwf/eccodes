@@ -10,7 +10,7 @@ list( APPEND grib_tools_bins
              codes_info codes_count
              grib_histogram grib_filter grib_ls grib_dump grib_merge
              grib2ppm grib_set grib_get grib_get_data grib_copy
-             grib_compare parser grib_index_build
+             grib_compare codes_parser grib_index_build
              bufr_filter bufr_ls bufr_dump bufr_set bufr_get
              bufr_copy bufr_compare bufr_index_build
              gts_copy gts_dump gts_filter gts_ls
@@ -22,6 +22,7 @@ list( APPEND grib_tools_bins_ECMWF_ONLY
              gg_sub_area_check
              grib_repair
              grib_to_json
+             grib_check_gaussian_grid
              )
 
 # Install generic tools
@@ -33,12 +34,11 @@ foreach( tool ${grib_tools_bins} )
 endforeach()
 
 # Install tools specific to ECMWF
-# User must run cmake with -DECCODES_INSTALL_ECMWF_TOOLS
-########################################
+# User must run cmake with -DECCODES_INSTALL_EXTRA_TOOLS
 foreach( tool ${grib_tools_bins_ECMWF_ONLY} )
     ecbuild_add_executable( TARGET     ${tool}
                             SOURCES    ${tool}.c
-                            CONDITION  ECCODES_INSTALL_ECMWF_TOOLS
+                            CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
                             LIBS       grib_tools )
 endforeach()
 
@@ -59,11 +59,11 @@ ecbuild_add_executable( TARGET     grib_to_netcdf
 # grib_list_keys
 ecbuild_add_executable( TARGET     grib_list_keys
                         SOURCES    list_keys.c
-                        CONDITION  ECCODES_INSTALL_ECMWF_TOOLS
+                        CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
                         LIBS       grib_tools  )
 
 # grib1to2 script needs to be generated before installation
-if (ECCODES_INSTALL_ECMWF_TOOLS)
+if (ECCODES_INSTALL_EXTRA_TOOLS)
     configure_file( grib1to2.in  grib1to2 )
     install( FILES ${CMAKE_CURRENT_BINARY_DIR}/grib1to2
              DESTINATION ${INSTALL_BIN_DIR}

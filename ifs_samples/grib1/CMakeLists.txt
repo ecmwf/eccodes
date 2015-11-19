@@ -1,15 +1,13 @@
 set( _basedir grib1 )
+set( _destination_install ${CMAKE_INSTALL_PREFIX}/${ECCODES_IFS_SAMPLES_SUFF}/${_basedir} )
+set( _destination_build   ${CMAKE_BINARY_DIR}/${ECCODES_IFS_SAMPLES_SUFF}/${_basedir} )
 
 list( APPEND ifs_samples_${_basedir}
-      gg_ml.tmpl
-      gg_sfc.tmpl
-      sh_ml.tmpl
-      sh_sfc.tmpl
+      ${CMAKE_CURRENT_SOURCE_DIR}/gg_ml.tmpl
+      ${CMAKE_CURRENT_SOURCE_DIR}/gg_sfc.tmpl
+      ${CMAKE_CURRENT_SOURCE_DIR}/sh_ml.tmpl
+      ${CMAKE_CURRENT_SOURCE_DIR}/sh_sfc.tmpl
+      ${ECCODES_SAMPLES_FILES}
 )
 
-install( FILES ${ECCODES_SAMPLES_FILES} ${ifs_samples_${_basedir}}  
-         DESTINATION ${ECCODES_IFS_SAMPLES_PATH}/${_basedir}
-         PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ )
-
-file( COPY ${ifs_samples_${_basedir}}
-      DESTINATION ${CMAKE_BINARY_DIR}/share/${PROJECT_NAME}/ifs_samples/${_basedir} )
+install_samples( ifs_samples_${_basedir} ${_destination_install} ${_destination_build} )

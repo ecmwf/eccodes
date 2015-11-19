@@ -12,6 +12,13 @@ constant tablesMasterDir="bufr/tables/[masterTableNumber]/wmo/[masterTablesVersi
 constant tablesLocalDir="bufr/tables/[masterTableNumber]/local/[localTablesVersionNumber]/[bufrHeaderCentre:l]/[bufrHeaderSubCentre]" : hidden;
 constant rootTablesDir="bufr/tables" : hidden;
 
+# we should implement some table version dependency
+#constant templatesMasterDir="bufr/templates/[masterTableNumber]/[masterTablesVersionNumber]";
+#constant templatesLocalDir="bufr/templates/local/[masterTableNumber]/[bufrHeaderCentre:l]/[localTablesVersionNumber]";
+
+constant templatesMasterDir="bufr/templates/";
+constant templatesLocalDir="bufr/templates/local";
+
 transient tableNumber=0;
 #codetable[4] codeTablesMaster '[tablesMasterDir]/codetables/[tableNumber].table' : string_type,transient;
 #codetable[4] codeTablesLocal '[tablesLocalDir]/codetables/[tableNumber].table' : string_type,transient;
@@ -65,22 +72,17 @@ flags[1]        section3Flags 'bufr/section3_flags.table';
 flagbit observedData(section3Flags,7) : dump;
 flagbit compressedData(section3Flags,6) : dump;
 position offsetDescriptors;
+transient createNewData=1;
 meta numberOfUnexpandedDescriptors   evaluate( (section3Length - 7) / 2 ) ;
-meta unexpandedDescriptors unexpanded_descriptors(numberOfUnexpandedDescriptors) :dump;
+meta unexpandedDescriptors unexpanded_descriptors(numberOfUnexpandedDescriptors,createNewData) :dump;
+
+concept BufrTemplate (unknown,"BufrTemplate.def",templatesMasterDir,templatesLocalDir) : no_copy;
 
 meta elementsTable bufr_elements_table("element.table",tablesMasterDir,tablesLocalDir) : hidden; 
 
-#transient elementCode="000000";
-#elementAbbreviation=dict_search("element.table",elementCode,1,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
-#elementType=dict_search("element.table",elementCode,2,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
-#elementName=dict_search("element.table",elementCode,3,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
-#elementUnit=dict_search("element.table",elementCode,4,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
-#elementScale=dict_search("element.table",elementCode,5,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
-#elementReference=dict_search("element.table",elementCode,6,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
-#elementWidth=dict_search("element.table",elementCode,7,tablesMasterDir,tablesLocalDir) : string_type,hidden ;
 
 meta expandedCodes      expanded_descriptors(elementsTable,expandedCodes,0,unexpandedDescriptors,sequences); 
-#meta expandedScales     expanded_descriptors(elemetsTable,expandedCodes,1);
+alias expandedDescriptors=expandedCodes;
 #meta expandedReferences expanded_descriptors(elemetsTable,expandedCodes,2);
 #meta expandedWidths     expanded_descriptors(elemetsTable,expandedCodes,3);
 #meta expandedType       expanded_descriptors(elemetsTable,expandedCodes,4);

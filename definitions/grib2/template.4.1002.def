@@ -9,7 +9,7 @@
 
 # TEMPLATE 4.1002, Cross-section of analysis and forecast, averaged or otherwise statistically processed over latitude or longitude
 
-include "template.4.parameter.def"
+include "grib2/template.4.parameter.def"
 
 
 #  Horizontal dimension processed

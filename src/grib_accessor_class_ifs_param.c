@@ -94,6 +94,7 @@ static grib_accessor_class _grib_accessor_class_ifs_param = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -130,6 +131,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -139,8 +141,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
   grib_accessor_ifs_param* self = (grib_accessor_ifs_param*)a;
   int n = 0;
 
-  self->paramId = grib_arguments_get_name(a->parent->h,c,n++);
-  self->type = grib_arguments_get_name(a->parent->h,c,n++);
+  self->paramId = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->type = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 
 }
 
@@ -150,7 +152,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
   int ret = 0;
   long paramId = 0;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->paramId,&paramId)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->paramId,&paramId)) != GRIB_SUCCESS)
     return ret;
 
   if (paramId > 129000 && paramId < 129999 ) 
@@ -174,7 +176,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
   long paramId = *val;
   long param;
 
-  grib_get_long(a->parent->h, self->type,&type);
+  grib_get_long(grib_handle_of_accessor(a), self->type,&type);
 
   if (type==33 || type==35) {
 	if (paramId>1000) {
@@ -208,7 +210,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 	}
   }
 
-  return grib_set_long_internal(a->parent->h,self->paramId,paramId);
+  return grib_set_long_internal(grib_handle_of_accessor(a),self->paramId,paramId);
 }
 
 static int  get_native_type(grib_accessor* a){

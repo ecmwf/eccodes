@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     /* name_space=NULL to get all the keys */
     /* char* name_space=0; */
 
-    FILE* f;
+    FILE* f = NULL;
     codes_handle* h=NULL;
 
     int err=0;
@@ -93,9 +93,8 @@ int main(int argc, char *argv[])
         codes_keys_iterator_delete(kiter);
         codes_handle_delete(h);
     }
-
+    fclose(f);
     return 0;
-
 }
 
 static void usage(char* progname)

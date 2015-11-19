@@ -1291,12 +1291,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 254 ;
 	}
-#Indicates a missing value
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 255 ;
-	}
 #Stream function difference
 'm**2 s**-1' = {
 	 discipline = 192 ;
@@ -2706,12 +2700,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 255 ;
-	}
-#Maximum of significant wave height index
-'(-1 to 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 132 ;
-	 parameterNumber = 216 ;
 	}
 #Reserved
 '~' = {
@@ -9167,6 +9155,18 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 43 ;
 	}
+#Height of Zero Deg Wet Bulb Temperature
+'m' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 47 ;
+	}
+#Height of One Deg Wet Bulb Temperature
+'m' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 48 ;
+	}
 #Total column rain water
 'kg m**-2' = {
 	 discipline = 192 ;
@@ -9250,6 +9250,90 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 255 ;
+	}
+#Mean temperature tendency due to parametrized short-wave radiation
+'K s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 235 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean temperature tendency due to parametrized long-wave radiation
+'K s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 235 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean temperature tendency due to parametrized short-wave radiation, clear sky
+'K s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 235 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean temperature tendency due to parametrized long-wave radiation, clear sky
+'K s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 235 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean temperature tendency due to parametrizations
+'K s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 235 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean specific humidity tendency due to parametrizations
+'kg kg**-1 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 235 ;
+	 parameterNumber = 6 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean eastward wind tendency due to parametrizations
+'m s**-2' = {
+	 discipline = 192 ;
+	 parameterCategory = 235 ;
+	 parameterNumber = 7 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean northward wind tendency due to parametrizations
+'m s**-2' = {
+	 discipline = 192 ;
+	 parameterCategory = 235 ;
+	 parameterNumber = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean updraught mass flux due to parametrized convection
+'kg m**-2 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 235 ;
+	 parameterNumber = 9 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean downdraught mass flux due to parametrized convection
+'kg m**-2 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 235 ;
+	 parameterNumber = 10 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean updraught detrainment rate due to parametrized convection
+'kg m**-3 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 235 ;
+	 parameterNumber = 11 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean downdraught detrainment rate due to parametrized convection
+'kg m**-3 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 235 ;
+	 parameterNumber = 12 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Flood alert levels
 'Integer' = {
@@ -11241,48 +11325,6 @@
 	 parameterCategory = 131 ;
 	 parameterNumber = 255 ;
 	}
-#10 metre wind gust index
-'(-1 to 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 132 ;
-	 parameterNumber = 49 ;
-	}
-#Snowfall index
-'(-1 to 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 132 ;
-	 parameterNumber = 144 ;
-	}
-#10 metre speed index
-'(-1 to 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 132 ;
-	 parameterNumber = 165 ;
-	}
-#2 metre temperature index
-'(-1 to 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 132 ;
-	 parameterNumber = 167 ;
-	}
-#Maximum temperature at 2 metres index
-'(-1 to 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 132 ;
-	 parameterNumber = 201 ;
-	}
-#Minimum temperature at 2 metres index
-'(-1 to 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 132 ;
-	 parameterNumber = 202 ;
-	}
-#Total precipitation index
-'(-1 to 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 132 ;
-	 parameterNumber = 228 ;
-	}
 #2m temperature probability less than -10 C
 '%' = {
 	 discipline = 192 ;
@@ -11872,7 +11914,7 @@
 	 parameterNumber = 221 ;
 	}
 #Wave spectral directional width
-'~' = {
+'dimensionless' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 222 ;
@@ -11890,7 +11932,7 @@
 	 parameterNumber = 224 ;
 	}
 #Wave spectral directional width for wind waves
-'~' = {
+'dimensionless' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 225 ;
@@ -11908,7 +11950,7 @@
 	 parameterNumber = 227 ;
 	}
 #Wave spectral directional width for swell
-'~' = {
+'dimensionless' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 228 ;
@@ -11920,7 +11962,7 @@
 	 parameterNumber = 231 ;
 	}
 #Coefficient of drag with waves
-'~' = {
+'dimensionless' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 233 ;
@@ -12034,19 +12076,19 @@
 	 parameterNumber = 251 ;
 	}
 #Wave spectral kurtosis
-'~' = {
+'dimensionless' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 252 ;
 	}
 #Benjamin-Feir index
-'~' = {
+'dimensionless' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 253 ;
 	}
 #Wave spectral peakedness
-'s**-1' = {
+'dimensionless' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 254 ;

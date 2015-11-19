@@ -1590,13 +1590,28 @@ int grib_f_release(int* hid){
 }
 
 /*****************************************************************************/
+static void do_the_dump(grib_handle* h)
+{
+    if (h->product_kind == PRODUCT_GRIB)
+    {
+        const int dump_flags = GRIB_DUMP_FLAG_VALUES
+                |  GRIB_DUMP_FLAG_READ_ONLY
+                |  GRIB_DUMP_FLAG_ALIASES
+                |  GRIB_DUMP_FLAG_TYPE;
+        grib_dump_content(h,stdout,"debug", dump_flags, NULL);
+    }
+    else
+    {
+        grib_dump_content(h,stdout,"wmo",0,NULL);
+    }
+}
 int grib_f_dump_(int* gid){
     grib_handle *h = get_handle(*gid);
 
     if(!h)
         return GRIB_INVALID_GRIB;
     else
-        grib_dump_content(h,stdout,NULL,0,NULL);
+        do_the_dump(h);
 
     return GRIB_SUCCESS;
 }

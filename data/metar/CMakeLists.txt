@@ -13,7 +13,7 @@ STRING(REGEX REPLACE "\n" ";" metar_refs_to_download "${metar_refs_to_download}"
 
 
 ecbuild_get_test_multidata(
-     TARGET get_metars
+     TARGET eccodes_get_metars
      NOCHECK
      NAMES ${metar_files_to_download} ${metar_refs_to_download}
 )

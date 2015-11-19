@@ -143,6 +143,7 @@ static grib_accessor_class _grib_accessor_class_apply_operators = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -174,6 +175,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -210,15 +212,15 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
   grib_accessor_apply_operators* self = (grib_accessor_apply_operators*)a;
   int n=0;
-  self->expandedDescriptors=grib_arguments_get_name(a->parent->h,args,n++);
-  self->abbreviation=grib_arguments_get_name(a->parent->h,args,n++);
-  self->type=grib_arguments_get_name(a->parent->h,args,n++);
-  self->name=grib_arguments_get_name(a->parent->h,args,n++);
-  self->unit=grib_arguments_get_name(a->parent->h,args,n++);
-  self->expandedScale=grib_arguments_get_name(a->parent->h,args,n++);
-  self->expandedReference=grib_arguments_get_name(a->parent->h,args,n++);
-  self->expandedWidth=grib_arguments_get_name(a->parent->h,args,n++);
-  self->index=grib_arguments_get_long(a->parent->h,args,n++);
+  self->expandedDescriptors=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->abbreviation=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->type=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->name=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->unit=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->expandedScale=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->expandedReference=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->expandedWidth=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->index=grib_arguments_get_long(grib_handle_of_accessor(a),args,n++);
   self->do_compute=1;
   a->length = 0;
   self->scaleAO=0;
@@ -299,8 +301,8 @@ static void computeDelayedReplication(grib_accessor_apply_operators* self,
 
 static int apply_operators(grib_accessor* a) {
 	grib_accessor_apply_operators* self = (grib_accessor_apply_operators*)a;
-	grib_context* c=a->parent->h->context;
-	grib_handle* h=a->parent->h;
+	grib_context* c=a->context;
+	grib_handle* h=grib_handle_of_accessor(a);
   int useDefinedBitmap;
 	long* descriptors=0;
 	long* scale=0;
@@ -337,7 +339,7 @@ static int apply_operators(grib_accessor* a) {
   if (!self->do_compute) return GRIB_SUCCESS;
   self_clear(c,self);
 
-	err=grib_get_size(a->parent->h,self->expandedDescriptors,&size);
+	err=grib_get_size(grib_handle_of_accessor(a),self->expandedDescriptors,&size);
 	if (err) return err;
   numberOfDescriptors=size;
 
@@ -615,14 +617,14 @@ static int unpack_string_array (grib_accessor* a, char** val, size_t *len)
   grib_accessor_apply_operators* self = (grib_accessor_apply_operators*)a;
   int ret=0;
   int i=0;
-  grib_context* c=a->parent->h->context; 
+  grib_context* c=a->context; 
 
   ret=apply_operators(a);
   if (ret) return ret;
 
   if(*len < self->expandedAOSize)
   {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_ERROR,
 		    " wrong size (%ld) for %s it contains %d values ",*len, a->name , self->expandedAOSize);
     *len = 0;
     return GRIB_ARRAY_TOO_SMALL;
@@ -631,25 +633,25 @@ static int unpack_string_array (grib_accessor* a, char** val, size_t *len)
   *len = self->expandedAOSize;
   switch (self->index) {
     case 0:
-            long_to_string(a->parent->h->context,self->expandedAO,self->expandedAOSize,val);
+            long_to_string(a->context,self->expandedAO,self->expandedAOSize,val);
             break;
     case 1:
-            long_to_string(a->parent->h->context,self->scaleAO,self->expandedAOSize,val);
+            long_to_string(a->context,self->scaleAO,self->expandedAOSize,val);
             break;
     case 2:
-            double_to_string(a->parent->h->context,self->referenceAO,self->expandedAOSize,val);
+            double_to_string(a->context,self->referenceAO,self->expandedAOSize,val);
             break;
     case 3:
-            long_to_string(a->parent->h->context,self->widthAO,self->expandedAOSize,val);
+            long_to_string(a->context,self->widthAO,self->expandedAOSize,val);
             break;
     case 4:
-            long_to_string(a->parent->h->context,self->bitmapNumber,self->expandedAOSize,val);
+            long_to_string(a->context,self->bitmapNumber,self->expandedAOSize,val);
             break;
     case 5:
-            long_to_string(a->parent->h->context,self->associatedBitmapNumber,self->expandedAOSize,val);
+            long_to_string(a->context,self->associatedBitmapNumber,self->expandedAOSize,val);
             break;
     case 6:
-            long_to_string(a->parent->h->context,self->associatedBitmapIndex,self->expandedAOSize,val);
+            long_to_string(a->context,self->associatedBitmapIndex,self->expandedAOSize,val);
             break;
     case 7:
           for (i=0;i<self->expandedAOSize;i++)
@@ -668,7 +670,7 @@ static int unpack_string_array (grib_accessor* a, char** val, size_t *len)
             val[i]=grib_context_strdup(c,self->units[i]);
           break;
     case 11:
-            long_to_string(a->parent->h->context,self->associatedInfoNumber,self->expandedAOSize,val);
+            long_to_string(a->context,self->associatedInfoNumber,self->expandedAOSize,val);
             break;
 	default:
           Assert(0);
@@ -688,7 +690,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 
   if(*len < self->expandedAOSize)
   {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_ERROR,
 		    " wrong size (%ld) for %s it contains %d values ",*len, a->name , self->expandedAOSize);
     *len = 0;
     return GRIB_ARRAY_TOO_SMALL;
@@ -738,7 +740,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
 
   if(*len < self->expandedAOSize)
   {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_ERROR,
 		    " wrong size (%ld) for %s it contains %d values ",*len, a->name , self->expandedAOSize);
     *len = 0;
     return GRIB_ARRAY_TOO_SMALL;
@@ -797,7 +799,7 @@ static int value_count(grib_accessor* a,long* rlen)
   ret=apply_operators(a);
 
   if (ret) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+    grib_context_log(a->context,GRIB_LOG_ERROR,
 		    "%s unable to compute size",a->name);
 		    return ret;
   }

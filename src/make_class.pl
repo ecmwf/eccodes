@@ -249,6 +249,9 @@ EOF
         print OUT $_;
     }
 
+  # disabled for the moment
+  # the problem with this is that for pointers we need proper clone, not an assignement
+  if (0) {
 	foreach my $proc ( grep { /clone/ } @procs ) { 
 		my $done=0;
 		print OUT "static grib_$class* clone(grib_$class* s) {\n";
@@ -279,6 +282,7 @@ EOF
 		}
 		print OUT "\treturn (grib_$class*)c;\n}\n\n"
 	}
+  }
 
 	delete $delegates{init};
 	delete $delegates{post_init};

@@ -1,39 +1,37 @@
+How to build and install ecCodes library/tools
+================================================
 
-The ecCodes installation is based on the standard configure utility. 
-It is tested on several platforms and with several compilers. However for some platforms 
-modifications to the installation engine may be required. If you encounter any problem 
-during the installation procedure please send an e-mail with your problem to 
-Software.Support@ecmwf.int.
+Building and installation has been tested on several platforms and with several compilers.
+However for some platforms modifications to the installation engine may be required.
+If you encounter any problems during the installation procedure please send an e-mail
+with your problem to:
 
-The only required package for a standard installation is jasper which enables the jpeg2000 
-packing/unpacking algorithm. 
-It is possible to build ecCodes without jasper, by using the --disable-jpeg configure option, 
-but to install a fully functional library, its download is recommended.
+    Software.Support@ecmwf.int
 
 
-Standard Installation
-=====================
+Installation using CMake
+------------------------
+This is the recommended method of installation.
+However it requires that cmake be installed on your system.
 
-   1. Download eccodes from https://software.ecmwf.int/wiki/display/ECC/Releases.
-   2. Unpack distribution:
+1. Download ecCodes from https://software.ecmwf.int/wiki/display/ECC/Releases
 
-        > tar xzf eccodes-X.tar.gz
+2. Unpack distribution:
+   > tar -xzf eccodes-x.y.z-Source.tar.gz
 
-   3. Create a separate directory where to build eccodes
+3. Create a separate directory where to build ecCodes:
+   > mkdir build
+   > cd build
 
-        > mkdir build ; cd build
+4. Run cmake pointing to the source and specify the installation location:
+   > cmake  ../eccodes-x.y.z-Source -DCMAKE_INSTALL_PREFIX=/path/to/where/you/install/eccodes
 
-   4. Run cmake
+5. Compile, test and install:
+   > make
+   > ctest
+   > make install
 
-        > cmake ../eccodes-X -DCMAKE_INSTALL_PREFIX=/path/to/where/you/install/eccodes
 
-   5. make, check and install
+For more details, please see:
+https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation
 
-        > make
-        ...
-        > make check
-        ...
-        > make install
-        ...
-
-For further details, see: https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation

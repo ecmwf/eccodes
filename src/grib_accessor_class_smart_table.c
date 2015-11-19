@@ -120,6 +120,7 @@ static grib_accessor_class _grib_accessor_class_smart_table = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -154,6 +155,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -180,13 +182,13 @@ static void init(grib_accessor* a, const long len, grib_arguments* params) {
   int n=0;
   grib_accessor_smart_table* self  = (grib_accessor_smart_table*)a;
 
-  self->values = grib_arguments_get_name(a->parent->h,params,n++);
-  self->tablename = grib_arguments_get_string(a->parent->h,params,n++);
-  self->masterDir = grib_arguments_get_name(a->parent->h,params,n++);
-  self->localDir = grib_arguments_get_name(a->parent->h,params,n++);
-  self->widthOfCode = grib_arguments_get_long(a->parent->h,params,n++);
-  self->extraDir = grib_arguments_get_name(a->parent->h,params,n++);
-  self->extraTable = grib_arguments_get_string(a->parent->h,params,n++);
+  self->values = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->tablename = grib_arguments_get_string(grib_handle_of_accessor(a),params,n++);
+  self->masterDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->localDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->widthOfCode = grib_arguments_get_long(grib_handle_of_accessor(a),params,n++);
+  self->extraDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+  self->extraTable = grib_arguments_get_string(grib_handle_of_accessor(a),params,n++);
 
   a->length = 0;
   a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -465,29 +467,29 @@ static int get_table_codes(grib_accessor* a)
   if(!self->table)
     self->table = load_table(self);
 
-  err=grib_get_size(a->parent->h,self->values,&size);
+  err=grib_get_size(grib_handle_of_accessor(a),self->values,&size);
   if (err) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+    grib_context_log(a->context,GRIB_LOG_ERROR,
         "unable to get size of %s",a->name);
     return err;
   }
 
-  v=(long*)grib_context_malloc_clear(a->parent->h->context,size*sizeof(long));
+  v=(long*)grib_context_malloc_clear(a->context,size*sizeof(long));
 
-  grib_get_long_array(a->parent->h,self->values,v,&size);
+  grib_get_long_array(grib_handle_of_accessor(a),self->values,v,&size);
 
   count=0;
   for (i=0;i<size;i++) {
     if (v[i] < table_size) count++;
   }
-  if (self->tableCodes) grib_context_free(a->parent->h->context,self->tableCodes);
-  self->tableCodes=(long*)grib_context_malloc_clear(a->parent->h->context,count*sizeof(long));
+  if (self->tableCodes) grib_context_free(a->context,self->tableCodes);
+  self->tableCodes=(long*)grib_context_malloc_clear(a->context,count*sizeof(long));
   j=0;
   for (i=0;i<size;i++) {
     if (v[i] < table_size) self->tableCodes[j++]=v[i];
   }
 
-  grib_context_free(a->parent->h->context,v);
+  grib_context_free(a->context,v);
 
   self->tableCodesSize=count;
   self->dirty=0;
@@ -516,7 +518,7 @@ static void destroy(grib_context* context,grib_accessor* a)
 	grib_context_free(context, a->vvalue);
 	a->vvalue=NULL;
     }
-    if (self->tableCodes) grib_context_free(a->parent->h->context,self->tableCodes);
+    if (self->tableCodes) grib_context_free(a->context,self->tableCodes);
 
 }
 

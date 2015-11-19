@@ -92,6 +92,7 @@ static grib_accessor_class _grib_accessor_class_divdouble = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -130,6 +131,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -139,8 +141,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 	grib_accessor_divdouble* self = (grib_accessor_divdouble*)a; 
 	int n = 0;
 
-	self->val = grib_arguments_get_name(a->parent->h,c,n++);
-	self->divisor = grib_arguments_get_double(a->parent->h,c,n++);
+	self->val = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+	self->divisor = grib_arguments_get_double(grib_handle_of_accessor(a),c,n++);
 }
 
 static int unpack_double   (grib_accessor* a, double* val, size_t *len)
@@ -157,7 +159,7 @@ static int unpack_double   (grib_accessor* a, double* val, size_t *len)
 	}
 
 
-	ret = grib_get_long_internal(a->parent->h, self->val, &ivalue);
+	ret = grib_get_long_internal(grib_handle_of_accessor(a), self->val, &ivalue);
 
 	value = ivalue;
 

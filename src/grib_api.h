@@ -34,12 +34,12 @@ extern "C" {
 #include <math.h>
 
 #if defined( __GNUC__) || defined(__clang__)
-#define DEPRECATED __attribute__((deprecated))
+#define ECCODES_DEPRECATED __attribute__((deprecated))
 #else
-#define DEPRECATED
+#define ECCODES_DEPRECATED
 #endif
 
-typedef enum ProductKind {PRODUCT_ANY, PRODUCT_GRIB, PRODUCT_BUFR, PRODUCT_METAR, PRODUCT_GTS} ProductKind;
+typedef enum ProductKind {PRODUCT_ANY, PRODUCT_GRIB, PRODUCT_BUFR, PRODUCT_METAR, PRODUCT_GTS, PRODUCT_TAF} ProductKind;
 
 #include "eccodes_version.h"
 
@@ -85,7 +85,8 @@ Log mode for information for processing information
 
 /* Missing values */
 /* #define GRIB_MISSING_LONG   0x80000001*/
-#define GRIB_MISSING_LONG 0xffffffff
+/* #define GRIB_MISSING_LONG 0xffffffff */
+#define GRIB_MISSING_LONG 2147483647
 #define GRIB_MISSING_DOUBLE -1e+100
 
 /*set spec flags*/
@@ -834,7 +835,6 @@ int grib_get_double_array (grib_handle* h, const char* key, double* vals, size_t
 int grib_get_long_array(grib_handle* h, const char* key, long* vals, size_t *length);
 
 
-
 /*   setting      data         */
 /**
 *  Copy the keys belonging to a given namespace from a source handle to a destination handle
@@ -1219,7 +1219,7 @@ attributes or by the namespace they belong to.
 *  @return              keys iterator ready to iterate through keys according to filter_flags
 *                         and namespace
 */
-grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, char* name_space);
+grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space);
 
 /*! Step to the next iterator.
 *  @param kiter         : valid grib_keys_iterator
@@ -1334,8 +1334,8 @@ int grib_points_get_values(grib_handle* h, grib_points* points, double* val);
 #define GRIB_UTIL_GRID_SPEC_REDUCED_LL 7
 #define GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC 8
 
-#define GRIB_UTIL_GRID_SPEC_OCTAHEDRAL_GG 9
-#define GRIB_UTIL_GRID_SPEC_ROTATED_OCTAHEDRAL_GG 10
+#define GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG 9
+
 
 typedef struct grib_util_grid_spec {
 
@@ -1358,7 +1358,6 @@ typedef struct grib_util_grid_spec {
 	long uvRelativeToGrid;
 	double latitudeOfSouthernPoleInDegrees;
 	double longitudeOfSouthernPoleInDegrees;
-	double angleOfRotationInDegrees;
 
 	/* Scanning mode */
 	long iScansNegatively;
@@ -1385,6 +1384,54 @@ typedef struct grib_util_grid_spec {
 
 } grib_util_grid_spec;
 
+typedef struct grib_util_grid_spec2 {
+
+    int grid_type;
+    const char* grid_name; /* e.g. N320 */
+
+    /* Grid */
+    long   Ni;
+    long   Nj;
+
+    double iDirectionIncrementInDegrees;
+    double jDirectionIncrementInDegrees;
+
+    double longitudeOfFirstGridPointInDegrees;
+    double longitudeOfLastGridPointInDegrees;
+
+    double latitudeOfFirstGridPointInDegrees;
+    double latitudeOfLastGridPointInDegrees;
+
+    /* Rotation */
+    long uvRelativeToGrid;
+    double latitudeOfSouthernPoleInDegrees;
+    double longitudeOfSouthernPoleInDegrees;
+    double angleOfRotationInDegrees;
+
+    /* Scanning mode */
+    long iScansNegatively;
+    long jScansPositively;
+
+    /* Gaussian number */
+    long N;
+
+    /* bitmap */
+    long bitmapPresent;
+    double missingValue;
+
+    /* pl list for reduced */
+    const long *pl;
+    long pl_size;
+
+    /* Spherical harmonics */
+    long truncation;
+
+    /* polar stereographic */
+    double orientationOfTheGridInDegrees;
+    long DyInMetres;
+    long DxInMetres;
+
+} grib_util_grid_spec2;
 
 #define GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT      0
 #define GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX 1
@@ -1438,6 +1485,13 @@ grib_handle *grib_util_set_spec(grib_handle *h,
 	size_t data_values_count,
 	int *err);
 
+grib_handle *grib_util_set_spec2(grib_handle *h,
+    const grib_util_grid_spec2   *grid_spec,
+    const grib_util_packing_spec *packing_spec,  /* NULL for defaults (same as input) */
+    int flags,
+    const double *data_values,
+    size_t data_values_count,
+    int *err);
 
 /* --------------------------------------- */
 
@@ -1583,5 +1637,7 @@ Error codes returned by the grib_api functions.
 #define GRIB_ATTRIBUTE_NOT_FOUND		-63
 /** Edition not supported. */
 #define GRIB_UNSUPPORTED_EDITION		-64
+/** Value out of coding range */
+#define GRIB_OUT_OF_RANGE		-65
 /*! @}*/
 #endif

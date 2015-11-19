@@ -92,6 +92,7 @@ static grib_accessor_class _grib_accessor_class_scale_values = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -129,6 +130,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -137,8 +139,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* args)
 {
   int n=0;
   grib_accessor_scale_values* self= (grib_accessor_scale_values*)a;
-  self->values=grib_arguments_get_name(a->parent->h,args,n++);
-  self->missingValue=grib_arguments_get_name(a->parent->h,args,n++);
+  self->values=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->missingValue=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
   a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
   a->length=0;
 }
@@ -158,8 +160,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
   size_t size=0;
   int ret=0,i=0;
   grib_accessor_scale_values* self= (grib_accessor_scale_values*)a;
-  grib_context* c=a->parent->h->context;
-  grib_handle* h=a->parent->h;
+  grib_context* c=a->context;
+  grib_handle* h=grib_handle_of_accessor(a);
 
   if (*val==1) return GRIB_SUCCESS;
 

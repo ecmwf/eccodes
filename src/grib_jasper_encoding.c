@@ -209,13 +209,13 @@ cleanup:
 
 int grib_jasper_decode(grib_context *c, unsigned char *buf, size_t *buflen, double *val, size_t *n_vals) {
     grib_context_log(c, GRIB_LOG_ERROR,
-            "grib_accessor_data_jpeg2000_packing: jasper jpeg support not enabled. Please rerun configure with --with-jasper");
+            "grib_accessor_data_jpeg2000_packing: Jasper JPEG support not enabled.");
     return GRIB_NOT_IMPLEMENTED;
 }
 
 int grib_jasper_encode(grib_context *c, j2k_encode_helper *helper) {
     grib_context_log(c, GRIB_LOG_ERROR,
-            "grib_accessor_data_jpeg2000_packing: jasper jpeg support not enabled. Please rerun configure with --with-jasper");
+            "grib_accessor_data_jpeg2000_packing: Jasper JPEG support not enabled.");
     return GRIB_NOT_IMPLEMENTED;
 }
 

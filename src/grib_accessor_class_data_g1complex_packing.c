@@ -122,6 +122,7 @@ static grib_accessor_class _grib_accessor_class_data_g1complex_packing = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -160,6 +161,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -167,11 +169,11 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
   grib_accessor_data_g1complex_packing *self =(grib_accessor_data_g1complex_packing*)a;
-  self->half_byte    = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->N            = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->packingType  = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->ieee_packing = grib_arguments_get_name(a->parent->h,args,self->carg++);
-  self->precision = grib_arguments_get_name(a->parent->h,args,self->carg++);
+  self->half_byte    = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->N            = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->packingType  = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->ieee_packing = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+  self->precision = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
   self->edition=1;
   a->flags |= GRIB_ACCESSOR_FLAG_DATA;
   }
@@ -190,8 +192,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
   long   half_byte= 0;
   long  bits_per_value =0;
   size_t  buflen =0;
-  grib_context* c=a->parent->h->context;
-  grib_handle* h=a->parent->h;
+  grib_context* c=a->context;
+  grib_handle* h=grib_handle_of_accessor(a);
   char* ieee_packing_s=NULL;
   char* packingType_s=NULL;
   char* precision_s=NULL;
@@ -218,11 +220,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     return grib_set_double_array(h,"values",val,*len);
   }
 
-  if((ret = grib_get_long_internal(a->parent->h,self->sub_j,&sub_j)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->sub_j,&sub_j)) != GRIB_SUCCESS)
     return ret;
-  if((ret = grib_get_long_internal(a->parent->h,self->sub_k,&sub_k)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->sub_k,&sub_k)) != GRIB_SUCCESS)
     return ret;
-  if((ret = grib_get_long_internal(a->parent->h,self->sub_m,&sub_m)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->sub_m,&sub_m)) != GRIB_SUCCESS)
     return ret;
 
   self->dirty=1;
@@ -235,27 +237,27 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         n = a->offset + 4*((sub_k+1)*(sub_k+2));
 #if 1
      /*     Octet number starts from beginning of message but shouldn't     */
-    if((ret = grib_set_long_internal(a->parent->h,self->N,n)) != GRIB_SUCCESS)
+    if((ret = grib_set_long_internal(grib_handle_of_accessor(a),self->N,n)) != GRIB_SUCCESS)
       return ret;
 #else
-    ret = grib_get_long_internal(a->parent->h,self->offsetsection,&offsetsection);
+    ret = grib_get_long_internal(grib_handle_of_accessor(a),self->offsetsection,&offsetsection);
     if(ret != GRIB_SUCCESS) return ret;
-    if((ret = grib_set_long_internal(a->parent->h,self->N,n-offsetsection))
+    if((ret = grib_set_long_internal(grib_handle_of_accessor(a),self->N,n-offsetsection))
         != GRIB_SUCCESS) return ret;
 #endif
-    ret = grib_get_long_internal(a->parent->h,self->bits_per_value,&bits_per_value);
+    ret = grib_get_long_internal(grib_handle_of_accessor(a),self->bits_per_value,&bits_per_value);
     if(ret != GRIB_SUCCESS) return ret;
 
-    ret = grib_get_long_internal(a->parent->h,self->seclen,&seclen);
+    ret = grib_get_long_internal(grib_handle_of_accessor(a),self->seclen,&seclen);
     if(ret != GRIB_SUCCESS) return ret;
 
     buflen = 32*(sub_k+1)*(sub_k+2)+(*len-(sub_k+1)*(sub_k+2))*bits_per_value+18*8;
     half_byte = seclen*8-buflen;
-	if (a->parent->h->context->debug==-1) {
-		printf("GRIB_API DEBUG: half_byte=%ld\n",half_byte);
+	if (a->context->debug==-1) {
+		printf("ECCODES DEBUG: half_byte=%ld\n",half_byte);
 	}
 
-    ret = grib_set_long_internal(a->parent->h,self->half_byte, half_byte);
+    ret = grib_set_long_internal(grib_handle_of_accessor(a),self->half_byte, half_byte);
     if(ret != GRIB_SUCCESS) return ret;
   }
   return ret;

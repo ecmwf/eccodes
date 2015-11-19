@@ -141,11 +141,12 @@ int grib_tool_init(grib_runtime_options* options)
         if (options->latlon_idx<0){
             min=0;
             options->latlon_idx=0;
-            for (i=1;i<4;i++)
+            for (i=1;i<4;i++) {
                 if (min>options->distances[i]) {
                     min = options->distances[i];
                     options->latlon_idx=i;
                 }
+            }
         }
     }
 
@@ -181,7 +182,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options,grib_handle* h)
         int i;
         if (!n) n=grib_nearest_new(h,&err);
         GRIB_CHECK_NOLINE(err,0);
-        GRIB_CHECK_NOLINE(grib_nearest_find(n,h,lat,lon,mode,
+        GRIB_CHECK_NOLINE(grib_nearest_find(n,h,lat,lon,0,
                 options->lats,options->lons,options->values,
                 options->distances,options->indexes,&size),0);
         min=options->distances[0];

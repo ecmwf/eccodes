@@ -95,6 +95,7 @@ static grib_accessor_class _grib_accessor_class_number_of_points = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -133,6 +134,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -141,10 +143,10 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
   int n=0;
   grib_accessor_number_of_points* self = (grib_accessor_number_of_points*)a;
-  self->ni = grib_arguments_get_name(a->parent->h,c,n++);
-  self->nj = grib_arguments_get_name(a->parent->h,c,n++);
-  self->plpresent = grib_arguments_get_name(a->parent->h,c,n++);
-  self->pl = grib_arguments_get_name(a->parent->h,c,n++);
+  self->ni = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->nj = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->plpresent = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->pl = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
   a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
   a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
   a->length=0;
@@ -158,16 +160,16 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
   long* pl;
   int i;
   grib_accessor_number_of_points* self = (grib_accessor_number_of_points*)a;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->ni,&ni)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->ni,&ni)) != GRIB_SUCCESS)
     return ret;
 
-  if((ret = grib_get_long_internal(a->parent->h, self->nj,&nj)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->nj,&nj)) != GRIB_SUCCESS)
     return ret;
 
   if(self->plpresent &&
-     ((ret = grib_get_long_internal(a->parent->h, self->plpresent,&plpresent)) != GRIB_SUCCESS) )
+     ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->plpresent,&plpresent)) != GRIB_SUCCESS) )
     return ret;
 
   if (nj == 0) return GRIB_GEOCALCULUS_PROBLEM;
@@ -176,7 +178,7 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
     /*reduced*/
     plsize=nj;
     pl=(long*)grib_context_malloc(c,sizeof(long)*plsize);
-    grib_get_long_array_internal(a->parent->h,self->pl,pl, &plsize);
+    grib_get_long_array_internal(grib_handle_of_accessor(a),self->pl,pl, &plsize);
     *val=0;
     for (i=0;i<plsize;i++) *val+=pl[i];
 	grib_context_free(c,pl);

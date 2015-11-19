@@ -91,6 +91,7 @@ static grib_accessor_class _grib_accessor_class_bufr_has_delayed_replication = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -127,6 +128,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -135,7 +137,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
   grib_accessor_bufr_has_delayed_replication* self = (grib_accessor_bufr_has_delayed_replication*)a;
   int n=0;
-  self->expandedDescriptors=grib_arguments_get_name(a->parent->h,args,n++);
+  self->expandedDescriptors=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
   a->length = 0;
   a->flags=GRIB_ACCESSOR_FLAG_HIDDEN;
 }
@@ -151,14 +153,14 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
   long* descriptors=0;
   int err=0;
   long F;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
-  err=grib_get_size(a->parent->h,self->expandedDescriptors,&size);
+  err=grib_get_size(grib_handle_of_accessor(a),self->expandedDescriptors,&size);
   if (err) return err;
 
   descriptors=(long*)grib_context_malloc_clear(c,sizeof(long)*size);
 
-  err=grib_get_long_array(a->parent->h,self->expandedDescriptors,descriptors,&size);
+  err=grib_get_long_array(grib_handle_of_accessor(a),self->expandedDescriptors,descriptors,&size);
   if (err) return err;
 
   *val=0;

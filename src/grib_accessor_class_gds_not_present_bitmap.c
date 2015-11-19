@@ -102,6 +102,7 @@ static grib_accessor_class _grib_accessor_class_gds_not_present_bitmap = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -138,6 +139,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -147,11 +149,11 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
   int n=0;
   grib_accessor_gds_not_present_bitmap *self =(grib_accessor_gds_not_present_bitmap*)a;
 
-  self->missing_value = grib_arguments_get_name(a->parent->h,args,n++);
-  self->number_of_values        = grib_arguments_get_name(a->parent->h,args,n++);
-  self->number_of_points = grib_arguments_get_name(a->parent->h,args,n++);
-  self->latitude_of_first_point = grib_arguments_get_name(a->parent->h,args,n++);
-  self->ni = grib_arguments_get_name(a->parent->h,args,n++);
+  self->missing_value = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->number_of_values        = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->number_of_points = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->latitude_of_first_point = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+  self->ni = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
 
 
   a->length = 0;
@@ -163,7 +165,7 @@ static int value_count(grib_accessor* a,long* number_of_points)
   grib_accessor_gds_not_present_bitmap* self = (grib_accessor_gds_not_present_bitmap*)a;
 
   *number_of_points=0;
-  return grib_get_long_internal(a->parent->h, self->number_of_points, number_of_points);
+  return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_points, number_of_points);
 }
 
 
@@ -185,19 +187,19 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   n_vals=nn;
   if (err) return err;
 
-  if((err = grib_get_long(a->parent->h,self->number_of_points,&number_of_points))
+  if((err = grib_get_long(grib_handle_of_accessor(a),self->number_of_points,&number_of_points))
        !=  GRIB_SUCCESS) return err;
 
-  if((err = grib_get_long(a->parent->h,self->number_of_values,&number_of_values))
+  if((err = grib_get_long(grib_handle_of_accessor(a),self->number_of_values,&number_of_values))
        !=  GRIB_SUCCESS) return err;
 
-  if((err = grib_get_long(a->parent->h,self->latitude_of_first_point,&latitude_of_first_point))
+  if((err = grib_get_long(grib_handle_of_accessor(a),self->latitude_of_first_point,&latitude_of_first_point))
        !=  GRIB_SUCCESS) return err;
 
-  if((err = grib_get_long(a->parent->h,self->missing_value,&missing_value))
+  if((err = grib_get_long(grib_handle_of_accessor(a),self->missing_value,&missing_value))
        !=  GRIB_SUCCESS) return err;
 
-  if((err = grib_get_long(a->parent->h,self->ni,&ni))
+  if((err = grib_get_long(grib_handle_of_accessor(a),self->ni,&ni))
        !=  GRIB_SUCCESS) return err;
 
   if(*len < number_of_points)
@@ -207,7 +209,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   }
 
   if(number_of_values > 0){
-    coded_vals = (double*)grib_context_malloc(a->parent->h->context,number_of_values*sizeof(double));
+    coded_vals = (double*)grib_context_malloc(a->context,number_of_values*sizeof(double));
 
     if(coded_vals == NULL)
       return GRIB_OUT_OF_MEMORY;
@@ -224,7 +226,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 
   *len =  number_of_points;
 
-  grib_context_free(a->parent->h->context,coded_vals);
+  grib_context_free(a->context,coded_vals);
   return err;
 }
 
@@ -252,13 +254,13 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
   double miss_values = 0;
   tlen = ((*len+bit_padding-1)/bit_padding*bit_padding)/8;
 
-  if((err = grib_get_double_internal(a->parent->h, self->missing_value, &miss_values)) != GRIB_SUCCESS)
+  if((err = grib_get_double_internal(grib_handle_of_accessor(a), self->missing_value, &miss_values)) != GRIB_SUCCESS)
   {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_class_bitmap : pack_double : Cannot unpack %s err=%d ",self->missing_value,err);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_class_bitmap : pack_double : Cannot unpack %s err=%d ",self->missing_value,err);
     return err;
   }
 
-  buf = grib_context_malloc_clear(a->parent->h->context,tlen);
+  buf = grib_context_malloc_clear(a->context,tlen);
   if(!buf) return GRIB_OUT_OF_MEMORY;
   pos=0;
   for(i=0;i<*len;i++)
@@ -271,16 +273,16 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
     }
   }
 
-  if((err = grib_set_long_internal(a->parent->h, self->unusedBits,tlen*8 - *len )) != GRIB_SUCCESS) {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_class_bitmap : pack_double : Cannot pack %s err=%d ",self->unusedBits,err);
-    grib_context_free(a->parent->h->context,buf);
+  if((err = grib_set_long_internal(grib_handle_of_accessor(a), self->unusedBits,tlen*8 - *len )) != GRIB_SUCCESS) {
+    grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_class_bitmap : pack_double : Cannot pack %s err=%d ",self->unusedBits,err);
+    grib_context_free(a->context,buf);
     return err;
   }
 
 
   grib_buffer_replace(a, buf, tlen,1,1);
 
-  grib_context_free(a->parent->h->context,buf);
+  grib_context_free(a->context,buf);
 
   return GRIB_SUCCESS;
 }

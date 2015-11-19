@@ -90,6 +90,7 @@ static grib_accessor_class _grib_accessor_class_g1_half_byte_codeflag = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -124,6 +125,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -146,11 +148,11 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
     unsigned char dat = 0;
     if(*len < 1)
     {
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name , 1 );
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name , 1 );
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
-    dat = a->parent->h->buffer->data[a->offset] & 0x0f;
+    dat = grib_handle_of_accessor(a)->buffer->data[a->offset] & 0x0f;
 
 
     *val = dat;
@@ -163,13 +165,13 @@ static int    pack_long   (grib_accessor* a, const long *val, size_t *len)
     int ret = 0;
     if(*len < 1)
     {
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name , 1 );
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name , 1 );
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
-    /*  printf("HALF BYTE pack long %ld %02x\n",*val,a->parent->h->buffer->data[a->offset]);*/
-    a->parent->h->buffer->data[a->offset] = (a->parent->h->buffer->data[a->offset] & 0xf0) | (*val & 0x0f);
-    /*  printf("HALF BYTE pack long %ld %02x\n",*val,a->parent->h->buffer->data[a->offset]);*/
+    /*  printf("HALF BYTE pack long %ld %02x\n",*val,grib_handle_of_accessor(a)->buffer->data[a->offset]);*/
+    grib_handle_of_accessor(a)->buffer->data[a->offset] = (a->parent->h->buffer->data[a->offset] & 0xf0) | (*val & 0x0f);
+    /*  printf("HALF BYTE pack long %ld %02x\n",*val,grib_handle_of_accessor(a)->buffer->data[a->offset]);*/
 
     *len = 1;
     return ret;

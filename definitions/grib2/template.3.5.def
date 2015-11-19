@@ -9,6 +9,6 @@
 
 # TEMPLATE 3.5, variable resolution rotated latitude/longitude
             
-include "template.3.shape_of_the_earth.def";
-include "template.3.latlon_vares.def";
-include "template.3.rotation.def";
+include "grib2/template.3.shape_of_the_earth.def";
+include "grib2/template.3.latlon_vares.def";
+include "grib2/template.3.rotation.def";

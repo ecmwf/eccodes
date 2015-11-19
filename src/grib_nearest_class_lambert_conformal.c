@@ -178,14 +178,16 @@ static int find(grib_nearest* nearest, grib_handle* h,
         neighbours[i].m_index=0;
     }
 
-    if (!nearest->h || (flags & GRIB_NEAREST_SAME_GRID)==0) {
+    /* GRIB_NEAREST_SAME_GRID not yet implemented */
+    {
         double the_value = 0;
         double min_dist = 1e10;
         size_t the_index = 0;
         int ilat=0, ilon=0;
         int idx_upper=0, idx_lower=0;
         double lat1=0, lat2=0; /* inlat will be between these */
-        double dist=0, lat_delta=0.1;
+        double dist=0;
+        const double LAT_DELTA = 10.0; /* in degrees */
 
         if (grib_is_missing(h,self->Ni,&ret)) {
             grib_context_log(h->context, GRIB_LOG_DEBUG,"Key '%s' is missing", self->Ni);
@@ -219,7 +221,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
             self->lats[ilat++]=lat;
             self->lons[ilon++]=lon;
         }
-        
+
         /* See between which 2 latitudes our point lies */
         qsort(self->lats, nvalues, sizeof(double), &compare_doubles_ascending);
         grib_binary_search(self->lats, self->lats_count-1, inlat, &idx_upper, &idx_lower);
@@ -233,7 +235,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         i = 0;
         while(grib_iterator_next(iter,&lat,&lon,&the_value))
         {
-            if (lat > lat2+lat_delta || lat < lat1-lat_delta) {
+            if (lat > lat2+LAT_DELTA || lat < lat1-LAT_DELTA) {
                 /* Ignore latitudes too far from our point */
             }
             else {
@@ -253,7 +255,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         /* Sort the candidate neighbours in ascending order of distance */
         /* The first 4 entries will now be the closest 4 neighbours */
         qsort(neighbours, nvalues, sizeof(PointStore), &compare_points);
-        
+
         grib_iterator_delete(iter);
     }
     nearest->h=h;
@@ -265,17 +267,14 @@ static int find(grib_nearest* nearest, grib_handle* h,
     }
 #endif
 
-    if (!self->distances || (flags & GRIB_NEAREST_SAME_POINT)==0
-                         || (flags & GRIB_NEAREST_SAME_GRID)==0) {
-
-        if (!self->distances) {
-            self->distances=(double*)grib_context_malloc( nearest->context,4*sizeof(double));
-        }
-        self->distances[0] = neighbours[0].m_dist;
-        self->distances[1] = neighbours[1].m_dist;
-        self->distances[2] = neighbours[2].m_dist;
-        self->distances[3] = neighbours[3].m_dist;
+    /* GRIB_NEAREST_SAME_XXX not yet implemented */
+    if (!self->distances) {
+        self->distances=(double*)grib_context_malloc( nearest->context,4*sizeof(double));
     }
+    self->distances[0] = neighbours[0].m_dist;
+    self->distances[1] = neighbours[1].m_dist;
+    self->distances[2] = neighbours[2].m_dist;
+    self->distances[3] = neighbours[3].m_dist;
 
     for(i=0; i <4; ++i)
     {

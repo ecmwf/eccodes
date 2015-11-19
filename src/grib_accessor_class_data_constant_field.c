@@ -100,6 +100,7 @@ static grib_accessor_class _grib_accessor_class_data_constant_field = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -136,6 +137,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -144,9 +146,9 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
 	grib_accessor_data_constant_field* self =  (grib_accessor_data_constant_field*)a;
 
-	self->ni = grib_arguments_get_name(a->parent->h,args,self->carg++);
-	self->nj = grib_arguments_get_name(a->parent->h,args,self->carg++);
-	self->reference_value = grib_arguments_get_name(a->parent->h,args,self->carg++);
+	self->ni = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+	self->nj = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+	self->reference_value = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
 
 }
 static int value_count(grib_accessor* a,long* count){
@@ -154,9 +156,9 @@ static int value_count(grib_accessor* a,long* count){
 	long ni;
 	long nj;
 	int err = 0;
-	if((err = grib_get_long_internal(a->parent->h,self->ni,&ni)) != GRIB_SUCCESS)
+	if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->ni,&ni)) != GRIB_SUCCESS)
 		return err;
-	if((err = grib_get_long_internal(a->parent->h,self->nj, &nj)) != GRIB_SUCCESS)
+	if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->nj, &nj)) != GRIB_SUCCESS)
 		return err;
 	*count=ni*nj;
 
@@ -179,7 +181,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 		return GRIB_ARRAY_TOO_SMALL;
 	}
 
-	if((err = grib_get_double_internal(a->parent->h,self->reference_value, &reference_value)) != GRIB_SUCCESS)
+	if((err = grib_get_double_internal(grib_handle_of_accessor(a),self->reference_value, &reference_value)) != GRIB_SUCCESS)
 		return err;
 
 	for(i=0;i < n_vals;i++)

@@ -37,6 +37,7 @@ libeccodes_la_prototypes= \
 	action_class_set.c \
 	action_class_set_darray.c \
 	action_class_set_iarray.c \
+	action_class_set_sarray.c \
 	action_class_noop.c \
 	action_class_write.c \
 	action_class_print.c \
@@ -66,6 +67,8 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_bufr_data_element.c \
 	grib_accessor_class_bufr_elements_table.c \
 	grib_accessor_class_bufr_group.c \
+	grib_accessor_class_bufr_string_values.c \
+	grib_accessor_class_pack_bufr_values.c \
 	grib_accessor_class_group.c \
 	grib_accessor_class_unpack_bufr_values.c \
 	grib_accessor_class_bufr_has_delayed_replication.c \
@@ -83,6 +86,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_bytes.c \
 	grib_accessor_class.c \
 	grib_accessor_class_change_scanning_direction.c \
+	grib_accessor_class_check_internal_version.c \
 	grib_accessor_class_codeflag.c \
 	grib_accessor_class_smart_table.c \
 	grib_accessor_class_smart_table_column.c \

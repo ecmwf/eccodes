@@ -34,6 +34,9 @@ character(len=9)   :: typicalDate
 
   do while (iret/=CODES_END_OF_FILE)
     
+    ! For debugging
+    call codes_dump(ibufr)
+
     ! get and print some keys form the BUFR header 
     write(*,*) 'message: ',count
 

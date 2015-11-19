@@ -18,7 +18,7 @@ alias Ny = Nj;
 
 # Latitudes and Longitudes of the first and the last points
 # Resolution and component flags
-include "grid_first_last_resandcomp.def";
+include "grib1/grid_first_last_resandcomp.def";
 
 unsigned[2] iDirectionIncrement : can_be_missing, edition_specific;
 unsigned[2] jDirectionIncrement : can_be_missing, edition_specific;
@@ -27,7 +27,7 @@ alias Dy = jDirectionIncrement;
 alias Di = iDirectionIncrement;
 alias Dx = iDirectionIncrement;
 
-include "scanning_mode.def";
+include "grib1/scanning_mode.def";
 
 meta  geography.jDirectionIncrementInDegrees latlon_increment(ijDirectionIncrementGiven,jDirectionIncrement,
   jScansPositively,

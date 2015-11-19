@@ -106,6 +106,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
 	 typeOfStatisticalProcessing = 2 ;
+	 lengthOfTimeRange = 3 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
@@ -139,6 +140,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 37 ;
+	}
+#Height of convective cloud top
+'228046' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 27 ;
 	}
 #Soil moisture top 20 cm
 '228086' = {
@@ -201,6 +208,32 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
+	}
+#Mean total precipitation rate
+'235013' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean turbulent diffusion coefficient for heat
+'235014' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Apparent temperature
+'260255' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 21 ;
+	}
+#Haines Index
+'260256' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 2 ;
 	}
 #Cloudy brightness temperature
 '260510' = {

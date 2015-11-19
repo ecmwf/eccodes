@@ -60,7 +60,7 @@ int grib_lookup_long_from_array(grib_context* gc,grib_loader* loader,const char*
 
 int grib_init_accessor_from_array(grib_loader* loader,grib_accessor* ga,grib_arguments* default_value)
 {
-  grib_handle* h = ga->parent->h;
+  grib_handle* h = grib_handle_of_accessor(ga);
   int retval =GRIB_SUCCESS;
   char* strvalue;
   size_t len=0;

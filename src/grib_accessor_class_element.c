@@ -94,6 +94,7 @@ static grib_accessor_class _grib_accessor_class_element = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -131,6 +132,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -140,8 +142,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
   grib_accessor_element* self = (grib_accessor_element*)a;
   int n = 0;
 
-  self->array = grib_arguments_get_name(a->parent->h,c,n++);
-  self->element    = grib_arguments_get_long(a->parent->h,c,n++);
+  self->array = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->element    = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
 
 }
 
@@ -151,14 +153,14 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
   int ret = 0;
   size_t size=0;
   long* ar=NULL;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   if(*len < 1){
     ret = GRIB_ARRAY_TOO_SMALL;
     return ret;
   }
 
-  if((ret = grib_get_size(a->parent->h, self->array,&size)) != GRIB_SUCCESS)
+  if((ret = grib_get_size(grib_handle_of_accessor(a), self->array,&size)) != GRIB_SUCCESS)
     return ret;
 
   ar=(long*)grib_context_malloc_clear(c,size*sizeof(long));
@@ -167,7 +169,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
     return GRIB_OUT_OF_MEMORY;
   }
   
-  if((ret = grib_get_long_array_internal(a->parent->h, self->array,ar,&size)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_array_internal(grib_handle_of_accessor(a), self->array,ar,&size)) != GRIB_SUCCESS)
     return ret;
 
   if (self->element>=size) return GRIB_INTERNAL_ERROR;
@@ -184,14 +186,14 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
   int ret = 0;
   size_t size=0;
   long* ar=NULL;
-  grib_context* c=a->parent->h->context;
+  grib_context* c=a->context;
 
   if(*len < 1){
     ret = GRIB_ARRAY_TOO_SMALL;
     return ret;
   }
 
-  if((ret = grib_get_size(a->parent->h, self->array,&size)) != GRIB_SUCCESS)
+  if((ret = grib_get_size(grib_handle_of_accessor(a), self->array,&size)) != GRIB_SUCCESS)
     return ret;
 
   ar=(long*)grib_context_malloc_clear(c,size*sizeof(long));
@@ -200,13 +202,13 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     return GRIB_OUT_OF_MEMORY;
   }
   
-  if((ret = grib_get_long_array_internal(a->parent->h, self->array,ar,&size)) != GRIB_SUCCESS)
+  if((ret = grib_get_long_array_internal(grib_handle_of_accessor(a), self->array,ar,&size)) != GRIB_SUCCESS)
     return ret;
 
   
   ar[self->element]=*val;
 
-  if((ret = grib_set_long_array_internal(a->parent->h, self->array,ar,size)) != GRIB_SUCCESS)
+  if((ret = grib_set_long_array_internal(grib_handle_of_accessor(a), self->array,ar,size)) != GRIB_SUCCESS)
     return ret;
 
   grib_context_free(c,ar);

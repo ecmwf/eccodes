@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-include "template.3.grid.def";
+include "grib2/template.3.grid.def";
 
 #  Di - i direction increment
 
@@ -21,7 +21,7 @@ unsigned[4] jDirectionIncrement : can_be_missing,edition_specific;
 alias Dj =  jDirectionIncrement;
 alias Dy =  jDirectionIncrement;
 
-include "template.3.scanning_mode.def";
+include "grib2/template.3.scanning_mode.def";
 
 meta g2grid g2grid(
   latitudeOfFirstGridPoint,

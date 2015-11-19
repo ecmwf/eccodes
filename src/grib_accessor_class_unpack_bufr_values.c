@@ -102,6 +102,7 @@ static grib_accessor_class _grib_accessor_class_unpack_bufr_values = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -132,6 +133,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -140,8 +142,8 @@ static void init(grib_accessor* a, const long len, grib_arguments* params) {
 
   char* key;
   grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
-  key = (char*)grib_arguments_get_name(a->parent->h,params,0);
-  self->data_accessor=grib_find_accessor(a->parent->h,key);
+  key = (char*)grib_arguments_get_name(grib_handle_of_accessor(a),params,0);
+  self->data_accessor=grib_find_accessor(grib_handle_of_accessor(a),key);
 
   a->length = 0;
 }
@@ -205,6 +207,7 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
   grib_accessor* data=(grib_accessor*)self->data_accessor;
 
   if (*val==2) unpackMode=CODES_BUFR_UNPACK_FLAT;
+  if (*val==3) unpackMode=CODES_BUFR_NEW_DATA;
 
   accessor_bufr_data_array_set_unpackMode(data,unpackMode);
 

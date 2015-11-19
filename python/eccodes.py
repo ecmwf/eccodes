@@ -1,7 +1,12 @@
+from gribapi import __version__
+
 from gribapi import GRIB_CHECK as CODES_CHECK
 from gribapi import CODES_PRODUCT_GRIB
 from gribapi import CODES_PRODUCT_BUFR
 from gribapi import CODES_PRODUCT_ANY
+
+from gribapi import GRIB_MISSING_DOUBLE as CODES_MISSING_DOUBLE
+from gribapi import GRIB_MISSING_LONG as CODES_MISSING_LONG
 
 from gribapi import grib_new_from_file as codes_grib_new_from_file
 from gribapi import bufr_new_from_file as codes_bufr_new_from_file

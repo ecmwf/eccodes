@@ -108,6 +108,13 @@ static void grib_set_bit_on( unsigned char* p, long* bitp){
     (*bitp)++;
 }
 
+void grib_set_bits_on( unsigned char* p, long* bitp,long nbits){
+    int i;
+    for (i=0;i<nbits;i++) {
+      grib_set_bit_on(p,bitp);
+    }
+}
+
 static void grib_set_bit_off( unsigned char* p, long* bitp){
 
     p +=  *bitp/8;

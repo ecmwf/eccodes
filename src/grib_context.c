@@ -17,6 +17,12 @@
 #include <fcntl.h> /* Windows: for _O_BINARY */
 #endif
 
+#ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
+#define _GNU_SOURCE
+#include <fenv.h>
+int feenableexcept(int excepts);
+#endif
+
 grib_string_list grib_file_not_found;
 
 #if GRIB_PTHREADS
@@ -178,13 +184,13 @@ static void default_log(const grib_context* c, int level, const char* mess)
 {
     if (!c) c=grib_context_get_default();
     if(level == GRIB_LOG_ERROR)   {
-        fprintf(c->log_stream, "GRIB_API ERROR   :  %s\n", mess);
+        fprintf(c->log_stream, "ECCODES ERROR   :  %s\n", mess);
         /*Assert(1==0);*/
     }
-    if(level == GRIB_LOG_FATAL)   fprintf(c->log_stream, "GRIB_API ERROR   :  %s\n", mess);
-    if(level == GRIB_LOG_DEBUG && c->debug>0)   fprintf(c->log_stream, "GRIB_API DEBUG   :  %s\n", mess);
-    if(level == GRIB_LOG_WARNING) fprintf(c->log_stream, "GRIB_API WARNING :  %s\n", mess);
-    if(level == GRIB_LOG_INFO)    fprintf(c->log_stream, "GRIB_API INFO    :  %s\n", mess);
+    if(level == GRIB_LOG_FATAL)   fprintf(c->log_stream, "ECCODES ERROR   :  %s\n", mess);
+    if(level == GRIB_LOG_DEBUG && c->debug>0)   fprintf(c->log_stream, "ECCODES DEBUG   :  %s\n", mess);
+    if(level == GRIB_LOG_WARNING) fprintf(c->log_stream, "ECCODES WARNING :  %s\n", mess);
+    if(level == GRIB_LOG_INFO)    fprintf(c->log_stream, "ECCODES INFO    :  %s\n", mess);
 
     if(level == GRIB_LOG_FATAL) { Assert(0);}
 
@@ -320,9 +326,17 @@ static grib_context default_grib_context = {
 #endif
 };
 
+/* Hopefully big enough. Note: GRIB_DEFINITION_PATH can contain SEVERAL colon-separated sub-paths */
+#define DEF_PATH_MAXLEN 8192
+
 grib_context* grib_context_get_default()
 {
     GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex_c);
+
+#ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
+    feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
+#endif
 
     if(!default_grib_context.inited)
     {
@@ -339,7 +353,6 @@ grib_context* grib_context_get_default()
         const char *keep_matrix=NULL;
         const char *nounpack=NULL;
 
-        GRIB_MUTEX_LOCK(&mutex_c);
 
         write_on_fail = getenv("ECCODES_GRIB_WRITE_ON_FAIL");
         large_constant_fields = getenv("ECCODES_GRIB_LARGE_CONSTANT_FIELDS");
@@ -399,6 +412,27 @@ grib_context* grib_context_get_default()
         }
 #endif
 
+        /* GRIB-779: Special case for ECMWF testing. Not for external use! */
+        /* Append the new path to our existing path */
+        {
+            const char* test_defs = getenv("_ECCODES_ECMWF_TEST_DEFINITION_PATH");
+            const char* test_samp = getenv("_ECCODES_ECMWF_TEST_SAMPLES_PATH");
+            if (test_defs) {
+                char buffer[DEF_PATH_MAXLEN];
+                strcpy(buffer, default_grib_context.grib_definition_files_path);
+                strcat(buffer, ":");
+                strcat(buffer, strdup(test_defs));
+                default_grib_context.grib_definition_files_path = strdup(buffer);
+            }
+            if (test_samp) {
+                char buffer[DEF_PATH_MAXLEN];
+                strcpy(buffer, default_grib_context.grib_samples_path);
+                strcat(buffer, ":");
+                strcat(buffer, strdup(test_samp));
+                default_grib_context.grib_samples_path = strdup(buffer);
+            }
+        }
+
         grib_context_log(&default_grib_context, GRIB_LOG_DEBUG, "Definitions path: %s",
                 default_grib_context.grib_definition_files_path);
         grib_context_log(&default_grib_context, GRIB_LOG_DEBUG, "Samples path:     %s",
@@ -415,10 +449,9 @@ grib_context* grib_context_get_default()
         default_grib_context.def_files=grib_trie_new(&(default_grib_context));
         default_grib_context.lists=grib_trie_new(&(default_grib_context));
         default_grib_context.classes=grib_trie_new(&(default_grib_context));
-
-        GRIB_MUTEX_UNLOCK(&mutex_c);
     }
 
+    GRIB_MUTEX_UNLOCK(&mutex_c);
     return &default_grib_context;
 }
 
@@ -469,9 +502,6 @@ grib_context* grib_context_new(grib_context* parent)
     return c;
 }
 
-/* Hopefully big enough. Note: ECCODES_DEFINITION_PATH can contain SEVERAL colon-separated sub-paths */
-#define DEF_PATH_MAXLEN 8192
-
 /* GRIB-235: Resolve path to expand symbolic links etc */
 static char* resolve_path(grib_context* c, char* path)
 {
@@ -504,7 +534,6 @@ static int init_definition_files_dir(grib_context* c)
     int err=0;
     char path[DEF_PATH_MAXLEN];
     char* p=NULL;
-    char* dir=NULL;
     grib_string_list* next=NULL;
 
     if (!c) c=grib_context_get_default();
@@ -528,6 +557,7 @@ static int init_definition_files_dir(grib_context* c)
         c->grib_definition_files_dir->value = resolve_path(c, path);
     } else {
         /* Definitions path contains multiple directories */
+        char* dir=NULL;
         dir=strtok(path, DEFS_PATH_DELIMITER_STR);
 
         while (dir != NULL) {

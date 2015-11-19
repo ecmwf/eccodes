@@ -95,6 +95,7 @@ static grib_accessor_class _grib_accessor_class_time = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -130,6 +131,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -139,9 +141,9 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
   grib_accessor_time* self = (grib_accessor_time*)a;
   int n = 0;
 
-  self->hour = grib_arguments_get_name(a->parent->h,c,n++);
-  self->minute    = grib_arguments_get_name(a->parent->h,c,n++);
-  self->second   = grib_arguments_get_name(a->parent->h,c,n++);
+  self->hour = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->minute    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->second   = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -158,16 +160,16 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
   long minute = 0;
   long second = 0;
 
-  if ((ret=grib_get_long_internal(a->parent->h, self->hour,&hour))!=GRIB_SUCCESS)
+  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->hour,&hour))!=GRIB_SUCCESS)
     return ret;
-  if ((ret=grib_get_long_internal(a->parent->h, self->minute,&minute))!=GRIB_SUCCESS)
+  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->minute,&minute))!=GRIB_SUCCESS)
     return ret;
-  if ((ret=grib_get_long_internal(a->parent->h, self->second,&second))!=GRIB_SUCCESS)
+  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->second,&second))!=GRIB_SUCCESS)
     return ret;
 
   /* We ignore the 'seconds' in our time calculation! */
   if (second != 0) {
-     grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+     grib_context_log(a->context, GRIB_LOG_ERROR,
                   "Truncating time: non-zero seconds(%d) ignored", second);
   }
 
@@ -204,11 +206,11 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
   minute  =  v % 100;
   second  =  0; /* We ignore the 'seconds' in our time calculation! */
 
-  if ((ret=grib_set_long_internal(a->parent->h,self->hour,hour))!=GRIB_SUCCESS)
+  if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->hour,hour))!=GRIB_SUCCESS)
     return ret;
-  if ((ret=grib_set_long_internal(a->parent->h,self->minute,minute))!=GRIB_SUCCESS)
+  if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->minute,minute))!=GRIB_SUCCESS)
     return ret;
-  if ((ret=grib_set_long_internal(a->parent->h,self->second,second))!=GRIB_SUCCESS)
+  if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->second,second))!=GRIB_SUCCESS)
     return ret;
 
   return GRIB_SUCCESS;
@@ -223,7 +225,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
 
   if(*len < 5)
   {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_time : unpack_string : Buffer too small for %s ", a->name );
+    grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_time : unpack_string : Buffer too small for %s ", a->name );
 
     *len = 5;
     return GRIB_BUFFER_TOO_SMALL;

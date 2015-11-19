@@ -93,7 +93,7 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
                     case GRIB_TYPE_DOUBLE:
                         replen=1;
                         ret = grib_unpack_double(a,&dval,&replen);
-                        sprintf(val,"%g",dval);
+                        sprintf(val,"%.12g",dval);
                         break;
                     case GRIB_TYPE_LONG:
                         replen=1;
@@ -141,7 +141,7 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_print(grib_accessor* a,int has_rank,const char* name,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
+int grib_accessor_print(grib_accessor* a,const char* name,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
 {
     size_t size=0;
     char val[1024] = {0,};
@@ -154,10 +154,10 @@ int grib_accessor_print(grib_accessor* a,int has_rank,const char* name,int type,
     int ret=0;
     char* myformat=NULL;
     char* myseparator=NULL;
-    char double_format[]="%g"; /* default format for printing double keys */
+    char double_format[]="%.12g"; /* default format for printing double keys */
     char long_format[]="%ld";  /* default format for printing integer keys */
     char default_separator[]=" ";
-    grib_handle* h=a->parent->h;
+    grib_handle* h=grib_handle_of_accessor(a);
 
     if (type==-1) type=grib_accessor_get_native_type(a);
     switch (type) {
@@ -169,7 +169,7 @@ int grib_accessor_print(grib_accessor* a,int has_rank,const char* name,int type,
     case GRIB_TYPE_DOUBLE:
         myformat= format ? (char*)format : double_format;
         myseparator= separator ? (char*)separator : default_separator;
-        if (name[0]=='/' || has_rank!=0) {
+        if (name[0]=='/' || name[0]=='#') {
             long count;
             ret=grib_value_count(a,&count);
             size=count;
@@ -177,7 +177,7 @@ int grib_accessor_print(grib_accessor* a,int has_rank,const char* name,int type,
             ret=_grib_get_size(h,a,&size);
         }
         dval=(double*)grib_context_malloc_clear(h->context,sizeof(double)*size);
-        if (name[0]=='/' || has_rank!=0) {
+        if (name[0]=='/' || name[0]=='#') {
             replen=size;
             ret=grib_unpack_double(a,dval,&replen);
         } else {
@@ -205,7 +205,7 @@ int grib_accessor_print(grib_accessor* a,int has_rank,const char* name,int type,
     case GRIB_TYPE_LONG:
         myformat= format ? (char*)format : long_format;
         myseparator= separator ? (char*)separator : default_separator;
-        if (name[0]=='/' || has_rank!=0) {
+        if (name[0]=='/' || name[0]=='#') {
             long count;
             ret=grib_value_count(a,&count);
             size=count;
@@ -213,7 +213,7 @@ int grib_accessor_print(grib_accessor* a,int has_rank,const char* name,int type,
             ret=_grib_get_size(h,a,&size);
         }
         lval=(long*)grib_context_malloc_clear(h->context,sizeof(long)*size);
-        if (name[0]=='/' || has_rank!=0) {
+        if (name[0]=='/' || name[0]=='#') {
             replen=size;
             ret=grib_unpack_long(a,lval,&replen);
         } else {
@@ -253,7 +253,7 @@ int grib_accessor_print(grib_accessor* a,int has_rank,const char* name,int type,
     return ret;
 }
 
-int grib_accessors_list_print(grib_accessors_list* al,const char* name,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
+int grib_accessors_list_print(grib_handle* h,grib_accessors_list* al,const char* name,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
 {
     size_t size=0,len=0,replen=0;
     char val[1024] = {0,};
@@ -266,10 +266,9 @@ int grib_accessors_list_print(grib_accessors_list* al,const char* name,int type,
     int ret=0;
     char* myformat=NULL;
     char* myseparator=NULL;
-    char double_format[]="%g"; /* default format for printing double keys */
+    char double_format[]="%.12g"; /* default format for printing double keys */
     char long_format[]="%ld";  /* default format for printing integer keys */
     char default_separator[]=" ";
-    grib_handle* h=al->accessor->parent->h;
     grib_accessor* a=al->accessor;
 
     if (type==-1) type=grib_accessor_get_native_type(al->accessor);
@@ -284,7 +283,7 @@ int grib_accessors_list_print(grib_accessors_list* al,const char* name,int type,
         } else {
             int i=0;
             int cols=0;
-            cvals=grib_context_malloc_clear(h->context,sizeof(char*)*size);
+            cvals=(char**)grib_context_malloc_clear(h->context,sizeof(char*)*size);
             grib_accessors_list_unpack_string(al,cvals,&size);
             for (i=0;i<size;i++) {
                 *newline=1;
@@ -424,7 +423,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
                         return GRIB_NOT_FOUND;
                     }
                 } else {
-                    ret=grib_accessors_list_print(al,loc,type,format,separator,maxcols,&newline,out);
+                    ret=grib_accessors_list_print(h,al,loc,type,format,separator,maxcols,&newline,out);
 
                     if(ret != GRIB_SUCCESS)
                     {
@@ -533,44 +532,39 @@ int grib_yyerror(const char* msg)
     return 1;
 }
 
-void grib_parser_include(const char* fname)
+void grib_parser_include(const char* included_fname)
 {
     FILE *f = NULL;
-    char path[1204];
     char* io_buffer=0;
     /* int i; */
     Assert(top < MAXINCLUDE);
-    Assert(fname);
+    Assert(included_fname);
 
     if(parse_file == 0)
     {
-        parse_file = fname;
+        parse_file = included_fname;
         Assert(top == 0);
     }
     else
     {
-        const char *p = parse_file;
-        const char *q = NULL;
+        /* When parse_file is not NULL, it's the path of the parent file (includer) */
+        /* and 'included_fname' is the name of the file being included (includee) */
 
-        while(*p) {
-            if(*p == '/') q = p;
-            p++;
-        }
+        /* GRIB-796: Search for the included file in ECCODES_DEFINITION_PATH */
+        char* new_path = NULL;
+        Assert(*included_fname != '/');
+        new_path = grib_context_full_defs_path(grib_parser_context, included_fname);
+        if (!new_path) {
+            fprintf(stderr, "ecCodes Version:       %s\nDefinition files path: %s\n",
+                    ECCODES_VERSION_STR,
+                    grib_parser_context->grib_definition_files_path);
 
-        if(!q) {
             grib_context_log(grib_parser_context, GRIB_LOG_FATAL,
-                    "grib_parser_include: path '%s' does not contain a '/'\n",fname);
+                    "grib_parser_include: Could not resolve '%s' (included in %s)", included_fname, parse_file);
+
             return;
         }
-        q++;
-
-        strncpy(path,parse_file,q-parse_file);
-        path[q-parse_file] = 0;
-        strcat(path,fname);
-
-        Assert(*fname != '/');
-
-        parse_file = path;
+        parse_file = new_path;
     }
 
     if (strcmp(parse_file,"-")==0) {
@@ -600,15 +594,14 @@ void grib_parser_include(const char* fname)
             }
             setvbuf(f,io_buffer,_IOFBF,c->io_buffer_size);
         }
-         */
-
-        grib_yyin            = f;
+        */
+        grib_yyin       = f;
         stack[top].file = f;
         stack[top].io_buffer = io_buffer;
         stack[top].name = grib_context_strdup(grib_parser_context,parse_file);
         parse_file      = stack[top].name;
         stack[top].line = grib_yylineno;
-        grib_yylineno = 0;
+        grib_yylineno   = 0;
         top++;
         /* grib_yyrestart(f); */
     }
@@ -660,7 +653,7 @@ static grib_action* grib_parse_stream(grib_context* gc, const char* filename)
     if (parse(gc,filename) == 0) {
         if (grib_parser_all_actions) {
             GRIB_MUTEX_UNLOCK(&mutex_stream)
-                    return grib_parser_all_actions;
+            return grib_parser_all_actions;
         } else {
             grib_action* ret=grib_action_create_noop(gc,filename);
             GRIB_MUTEX_UNLOCK(&mutex_stream)

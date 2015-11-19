@@ -93,6 +93,7 @@ static grib_accessor_class _grib_accessor_class_g2bitmap = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -130,6 +131,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -141,7 +143,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
 
 	grib_accessor_g2bitmap* self = (grib_accessor_g2bitmap*)a;
   
-	self->numberOfValues     = grib_arguments_get_name(a->parent->h,arg,4);
+	self->numberOfValues     = grib_arguments_get_name(grib_handle_of_accessor(a),arg,4);
 }
 
 
@@ -166,11 +168,11 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
 	double miss_values = 0;
 	tlen = (*len+7)/8;
 
-	if((err = grib_get_double_internal(a->parent->h, self->missing_value, &miss_values))
+	if((err = grib_get_double_internal(grib_handle_of_accessor(a), self->missing_value, &miss_values))
        != GRIB_SUCCESS)
 		return err;
 
-	buf = (unsigned char*)grib_context_malloc_clear(a->parent->h->context,tlen);
+	buf = (unsigned char*)grib_context_malloc_clear(a->context,tlen);
 	if(!buf) return GRIB_OUT_OF_MEMORY;
 	pos=0;
 	for(i=0;i<*len;i++)
@@ -183,14 +185,14 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
 		}
 	}
 
-	if((err = grib_set_long_internal(a->parent->h, self->numberOfValues,*len )) != GRIB_SUCCESS) {
-		grib_context_free(a->parent->h->context,buf);
+	if((err = grib_set_long_internal(grib_handle_of_accessor(a), self->numberOfValues,*len )) != GRIB_SUCCESS) {
+		grib_context_free(a->context,buf);
 		return err;
 	}
 
 	grib_buffer_replace(a, buf, tlen,1,1); 
 
-	grib_context_free(a->parent->h->context,buf);
+	grib_context_free(a->context,buf);
 
 	return GRIB_SUCCESS;
 }
@@ -202,7 +204,7 @@ static int value_count(grib_accessor* a,long* tlen)
 	int err;
 	*tlen=0;
 	
-	err=grib_get_long_internal(a->parent->h, self->numberOfValues, tlen);
+	err=grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfValues, tlen);
 	return err;
 }
 

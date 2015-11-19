@@ -106,6 +106,7 @@ static grib_accessor_class _grib_accessor_class_statistics_spectral = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -142,6 +143,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -151,17 +153,17 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
   grib_accessor_statistics_spectral* self = (grib_accessor_statistics_spectral*)a;
   int n = 0;
 
-  self->values = grib_arguments_get_name(a->parent->h,c,n++);
-  self->J = grib_arguments_get_name(a->parent->h,c,n++);
-  self->K = grib_arguments_get_name(a->parent->h,c,n++);
-  self->M = grib_arguments_get_name(a->parent->h,c,n++);
-  self->JS = grib_arguments_get_name(a->parent->h,c,n++);
+  self->values = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->J = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->K = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->M = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+  self->JS = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
   
   a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
   a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
 
   self->number_of_elements=4;
-  self->v=(double*)grib_context_malloc(a->parent->h->context,
+  self->v=(double*)grib_context_malloc(a->context,
                 sizeof(double)*self->number_of_elements);
 
   a->length=0;
@@ -177,20 +179,20 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
   size_t size=0;
   long J,K,M,N;
   double avg,enorm,sd;
-  grib_context* c=a->parent->h->context;
-  grib_handle* h=a->parent->h;
+  grib_context* c=a->context;
+  grib_handle* h=grib_handle_of_accessor(a);
 
   if (!a->dirty) return GRIB_SUCCESS;
 
   if ( (ret=grib_get_size(h,self->values,&size)) != GRIB_SUCCESS) return ret;
 
-  if((ret=grib_get_long(a->parent->h,self->J,&J))
+  if((ret=grib_get_long(grib_handle_of_accessor(a),self->J,&J))
        != GRIB_SUCCESS) return ret;
 
-  if((ret=grib_get_long(a->parent->h,self->K,&K))
+  if((ret=grib_get_long(grib_handle_of_accessor(a),self->K,&K))
       != GRIB_SUCCESS) return ret;
 
-  if((ret=grib_get_long(a->parent->h,self->M,&M))
+  if((ret=grib_get_long(grib_handle_of_accessor(a),self->M,&M))
       != GRIB_SUCCESS) return ret;
 
   if (J != M || M != K) return GRIB_NOT_IMPLEMENTED;
@@ -198,7 +200,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
   N=(M+1)*(M+2)/2;
 
   if (2*N != size) {
-    grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+    grib_context_log(a->context,GRIB_LOG_ERROR,
                      "wrong number of components for spherical harmonics %ld != %ld",2*N,size);
     return GRIB_WRONG_ARRAY_SIZE;
   }
@@ -274,8 +276,8 @@ static int compare(grib_accessor* a, grib_accessor* b) {
 
   if (alen != blen) return GRIB_COUNT_MISMATCH;
 
-  aval=(double*)grib_context_malloc(a->parent->h->context,alen*sizeof(double));
-  bval=(double*)grib_context_malloc(b->parent->h->context,blen*sizeof(double));
+  aval=(double*)grib_context_malloc(a->context,alen*sizeof(double));
+  bval=(double*)grib_context_malloc(b->context,blen*sizeof(double));
 
   b->dirty=1;
   a->dirty=1;
@@ -289,10 +291,10 @@ static int compare(grib_accessor* a, grib_accessor* b) {
     alen--;
   }
 
-  grib_context_free(a->parent->h->context,aval);
-  grib_context_free(b->parent->h->context,bval);
+  grib_context_free(a->context,aval);
+  grib_context_free(b->context,bval);
 
-  return GRIB_SUCCESS;
+  return retval;
 }
 
 

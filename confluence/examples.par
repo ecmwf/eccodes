@@ -21,6 +21,7 @@ GRIB (
 BUFR (
       bufr_attributes
       bufr_clone
+      bufr_encode_flight
       bufr_expanded
       bufr_get_keys
       bufr_keys_iterator
@@ -29,5 +30,7 @@ BUFR (
       bufr_read_synop
       bufr_read_temp
       bufr_set_keys
+      bufr_subset
+      bufr_read_tropical_cyclone
       )
 

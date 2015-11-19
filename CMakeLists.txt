@@ -12,11 +12,9 @@ project( eccodes C )
 
 set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild/cmake")
 
-#set( ECCODES_INSTALL_INCLUDE_DIR include CACHE PATH "ecCodes override installation directory for header files")
+include( ecbuild_system NO_POLICY_SCOPE )
 
-include( ecbuild_system )
-
-ecbuild_requires_macro_version( 1.7 )
+ecbuild_requires_macro_version( 1.9 )
 
 ###############################################################################
 # local project
@@ -25,6 +23,11 @@ ecbuild_declare_project()
 
 ###############################################################################
 # some variables/options of this project
+
+ecbuild_add_option( FEATURE EXAMPLES
+    DESCRIPTION "Build the examples"
+    DEFAULT ON
+)
 
 ecbuild_add_option( FEATURE JPG
     DESCRIPTION "support for JPG decoding/encoding"
@@ -59,17 +62,22 @@ ecbuild_add_option( FEATURE AEC
 ecbuild_add_option( FEATURE PYTHON
     DESCRIPTION "build the ecCodes Python interface"
     DEFAULT ON
+    REQUIRED_PACKAGES "Python VERSION 2.5"
 )
 
 ecbuild_add_option( FEATURE FORTRAN
     DESCRIPTION "build the ecCodes Fortran interface"
     DEFAULT ON
+    # REQUIRED_LANGUAGES Fortran # TODO
 )
 
+# TODO Remove this after REQUIRED_LANGUAGES
 if( ENABLE_FORTRAN )
     # will set EC_HAVE_FORTRAN with the result
     ecbuild_enable_fortran( MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/fortran/modules )
     set( HAVE_FORTRAN ${EC_HAVE_FORTRAN} )
+else()
+    set( HAVE_FORTRAN 0 )
 endif()
 
 # advanced options (not visible in cmake-gui )
@@ -77,8 +85,8 @@ endif()
 ecbuild_add_option( FEATURE MEMORY_MANAGEMENT DESCRIPTION "enable memory management" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ALIGN_MEMORY      DESCRIPTION "enable memory alignment"  DEFAULT OFF ADVANCED )
 
-ecbuild_add_option( FEATURE GRIB_TIMER       DESCRIPTION "enable timer"   DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ECCODES_THREADS  DESCRIPTION "enable threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE GRIB_TIMER        DESCRIPTION "enable timer"   DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_THREADS   DESCRIPTION "enable threads" DEFAULT OFF ADVANCED )
 
 ###############################################################################
 # macro processing
@@ -88,6 +96,7 @@ set( ECCODES_EXTRA_INCLUDE_DIRS "" )
 set( ECCODES_EXTRA_DEFINITIONS  "" )
 
 find_package( CMath )
+list( APPEND ECCODES_TPLS CMath )
 
 ### JPG support
 
@@ -103,11 +112,13 @@ if( ENABLE_JPG )
     find_package( OpenJPEG )
 
     if( JASPER_FOUND )
+        list( APPEND ECCODES_TPLS Jasper )
         set( HAVE_JPEG 1 )
         set( HAVE_LIBJASPER 1 )
     endif()
 
-    if( OpenJPEG_FOUND )
+    if( OPENJPEG_FOUND )
+        list( APPEND ECCODES_TPLS OpenJPEG )
         set( HAVE_JPEG 1 )
         set( HAVE_LIBOPENJPEG 1 )
     endif()
@@ -178,20 +189,24 @@ endif()
 # contents
 
 if( NOT ${DEVELOPER_MODE} )
-    set( grib_api_default_data_prefix ${CMAKE_INSTALL_PREFIX} )
+    set( the_default_data_prefix ${CMAKE_INSTALL_PREFIX} )
 else()
-    set( grib_api_default_data_prefix ${CMAKE_BINARY_DIR} )
+    set( the_default_data_prefix ${CMAKE_BINARY_DIR} )
 endif()
 
-if( NOT DEFINED ECCODES_DEFINITION_PATH )
-    set( ECCODES_DEFINITION_PATH ${grib_api_default_data_prefix}/share/eccodes/definitions )
+if( NOT DEFINED ECCODES_DEFINITION_SUFF )
+  set( ECCODES_DEFINITION_SUFF  share/eccodes/definitions )
 endif()
-if( NOT DEFINED ECCODES_SAMPLES_PATH )
-    set( ECCODES_SAMPLES_PATH ${grib_api_default_data_prefix}/share/eccodes/samples )
+if( NOT DEFINED ECCODES_SAMPLES_SUFF )
+  set( ECCODES_SAMPLES_SUFF     share/eccodes/samples )
 endif()
-if( NOT DEFINED ECCODES_IFS_SAMPLES_PATH )
-    set( ECCODES_IFS_SAMPLES_PATH ${grib_api_default_data_prefix}/share/eccodes/ifs_samples )
+if( NOT DEFINED ECCODES_IFS_SAMPLES_SUFF )
+  set( ECCODES_IFS_SAMPLES_SUFF ifs_samples )
 endif()
+
+set( ECCODES_DEFINITION_PATH  ${the_default_data_prefix}/${ECCODES_DEFINITION_SUFF} )
+set( ECCODES_SAMPLES_PATH     ${the_default_data_prefix}/${ECCODES_SAMPLES_SUFF} )
+set( ECCODES_IFS_SAMPLES_PATH ${the_default_data_prefix}/${ECCODES_IFS_SAMPLES_SUFF} )
 
 ### config header
 
@@ -204,7 +219,7 @@ add_definitions( -DHAVE_ECCODES_CONFIG_H )
 install( FILES ${CMAKE_CURRENT_BINARY_DIR}/eccodes_config.h DESTINATION ${INSTALL_INCLUDE_DIR} )
 
 if( CMAKE_COMPILER_IS_GNUCC )
-    cmake_add_c_flags("-pedantic")
+    ecbuild_add_c_flags("-pedantic")
 endif()
 
 ############################################################################################
@@ -212,7 +227,6 @@ endif()
 
 ### export package to other ecbuild packages
 
-set( ECCODES_TPLS            AEC PNG Jasper OpenJPEG CMath )
 set( ECCODES_INCLUDE_DIRS    ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src )
 set( ECCODES_LIBRARIES       eccodes )
 
@@ -240,14 +254,13 @@ add_subdirectory( tests )
 add_subdirectory( tigge )
 add_subdirectory( examples )
 add_subdirectory( data )
-
 add_subdirectory( samples )
 add_subdirectory( ifs_samples ) # must come after samples
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
 ecbuild_dont_pack( DIRS
-     concepts html tests.ecmwf doxygen examples.dev templates parameters java
-     perl/GRIB-API/lib perl/GRIB-API/t gaussian_experimental gribex examples/F77
+     concepts tests.ecmwf doxygen confluence examples.dev templates parameters java
+     gaussian_experimental gribex examples/F77
      examples/extra bamboo fortran/fortranCtypes tigge/tools share/eccodes grib_api_for_mars
      src/.deps tests/.deps tools/.deps tigge/.deps examples/C/.deps examples/python/.deps
      python/.deps fortran/.deps
@@ -269,14 +282,14 @@ if( EC_HAVE_FORTRAN )
 endif()
 
 if( NOT PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME )
-    set( ECCODES_DEFINITIONS       ${ECCODES_DEFINITIONS}  PARENT_SCOPE )# includes already TPL definitions
-    set( ECCODES_INCLUDE_DIRS     ${ECCODES_INCLUDE_DIRS} ${ECCODES_EXTRA_INCLUDE_DIRS} PARENT_SCOPE )
-    set( ECCODES_LIBRARIES        ${ECCODES_LIBRARIES}    ${ECCODES_EXTRA_LIBRARIES} ${CMATH_LIBRARIES} PARENT_SCOPE )
-    set( ECCODES_FOUND             TRUE PARENT_SCOPE )
-    set( ECCODES_SAMPLES_PATH      ${ECCODES_SAMPLES_PATH} PARENT_SCOPE )
-    set( ECCODES_IFS_SAMPLES_PATH  ${ECCODES_IFS_SAMPLES_PATH} PARENT_SCOPE )
-    set( ECCODES_DEFINITION_PATH   ${ECCODES_DEFINITION_PATH} PARENT_SCOPE )
-    set( ECCODES_INSTALL_ECMWF_TOOLS  ${ECCODES_INSTALL_ECMWF_TOOLS} PARENT_SCOPE )
+  set( ECCODES_FOUND            TRUE PARENT_SCOPE )
+  set( ECCODES_DEFINITIONS      ${ECCODES_DEFINITIONS}  PARENT_SCOPE )# includes already TPL definitions
+  set( ECCODES_INCLUDE_DIRS     ${ECCODES_INCLUDE_DIRS} ${ECCODES_EXTRA_INCLUDE_DIRS} PARENT_SCOPE )
+  set( ECCODES_LIBRARIES        ${ECCODES_LIBRARIES}    ${ECCODES_EXTRA_LIBRARIES} ${CMATH_LIBRARIES} PARENT_SCOPE )
+  set( ECCODES_SAMPLES_PATH     ${ECCODES_SAMPLES_PATH} PARENT_SCOPE )
+  set( ECCODES_IFS_SAMPLES_PATH ${ECCODES_IFS_SAMPLES_PATH} PARENT_SCOPE )
+  set( ECCODES_DEFINITION_PATH  ${ECCODES_DEFINITION_PATH} PARENT_SCOPE )
+  set( ECCODES_INSTALL_EXTRA_TOOLS  ${ECCODES_INSTALL_EXTRA_TOOLS} PARENT_SCOPE )
 endif()
 
 # pkg-config
@@ -306,3 +319,13 @@ endif()
 ecbuild_install_project( NAME ${CMAKE_PROJECT_NAME} )
 
 ecbuild_print_summary()
+
+message("")
+message("   +---------------------------+")
+message("   |  ecCodes version ${ECCODES_VERSION}   |")
+message("   |  Configuration completed  |")
+message("   +---------------------------+")
+message("")
+message("   You can now do 'make' to compile the package, 'ctest' to test it and 'make install' to install it afterwards.")
+message("")
+message("")

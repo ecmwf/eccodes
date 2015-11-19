@@ -97,6 +97,7 @@ static grib_accessor_class _grib_accessor_class_second_order_bits_per_value = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -134,6 +135,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -147,25 +149,28 @@ static unsigned long nbits[32]={
         0x40000000, 0x80000000
 };
 
-static long number_of_bits(unsigned long x) {
+static int number_of_bits(unsigned long x, long* result)
+{
     unsigned long *n=nbits;
     const int count = sizeof(nbits)/sizeof(nbits[0]);
-    long i=0;
+    *result=0;
     while (x>=*n) {
         n++;
-        i++;
-        Assert(i<count);
+        (*result)++;
+        if (*result >= count) {
+            return GRIB_ENCODING_ERROR;
     }
-    return i;
+    }
+    return GRIB_SUCCESS;
 }
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
     int n=0;
     grib_accessor_second_order_bits_per_value* self = (grib_accessor_second_order_bits_per_value*)a;
-    self->values = grib_arguments_get_name(a->parent->h,c,n++);
-    self->binaryScaleFactor = grib_arguments_get_name(a->parent->h,c,n++);
-    self->decimalScaleFactor = grib_arguments_get_name(a->parent->h,c,n++);
+    self->values = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->binaryScaleFactor = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->decimalScaleFactor = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
     self->bitsPerValue=0;
 
     a->length=0;
@@ -195,24 +200,24 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
         return GRIB_SUCCESS;
     }
 
-    if((ret = grib_get_size(a->parent->h, self->values,&size)) != GRIB_SUCCESS) {
+    if((ret = grib_get_size(grib_handle_of_accessor(a), self->values,&size)) != GRIB_SUCCESS) {
         *val=self->bitsPerValue;
         return GRIB_SUCCESS;
     }
 
-    if((ret = grib_get_long(a->parent->h, self->binaryScaleFactor,&binaryScaleFactor)) != GRIB_SUCCESS)
+    if((ret = grib_get_long(grib_handle_of_accessor(a), self->binaryScaleFactor,&binaryScaleFactor)) != GRIB_SUCCESS)
         return ret;
 
-    if((ret = grib_get_long_internal(a->parent->h, self->decimalScaleFactor,&decimalScaleFactor)) != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->decimalScaleFactor,&decimalScaleFactor)) != GRIB_SUCCESS)
         return ret;
 
-    values=(double*)grib_context_malloc_clear(a->parent->h->context,sizeof(double)*size);
+    values=(double*)grib_context_malloc_clear(a->context,sizeof(double)*size);
     if (!values) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_FATAL,"%s unable to allocate %ld bytes",
+        grib_context_log(a->context,GRIB_LOG_FATAL,"%s unable to allocate %ld bytes",
                 a->name,(long)size);
         return GRIB_OUT_OF_MEMORY;
     }
-    if((ret = grib_get_double_array_internal(a->parent->h, self->values,values,&size)) != GRIB_SUCCESS)
+    if((ret = grib_get_double_array_internal(grib_handle_of_accessor(a), self->values,values,&size)) != GRIB_SUCCESS)
         return ret;
 
     max=values[0];
@@ -227,10 +232,12 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
 
     /* self->bitsPerValue=(long)ceil(log((double)((max-min)*d+1))/log(2.0))-binaryScaleFactor; */
     /* See GRIB-540 for why we use ceil */
-    self->bitsPerValue=number_of_bits( (unsigned long)ceil((fabs(max-min)*b*d)) );
+    ret = number_of_bits( (unsigned long)ceil((fabs(max-min)*b*d)), &(self->bitsPerValue) );
+    if (ret != GRIB_SUCCESS)
+        return ret;
     *val=self->bitsPerValue;
 
-    grib_context_free(a->parent->h->context,values);
+    grib_context_free(a->context,values);
 
     return ret;
 }

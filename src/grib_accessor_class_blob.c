@@ -85,6 +85,7 @@ static grib_accessor_class _grib_accessor_class_blob = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -121,13 +122,14 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
-  grib_get_long_internal(a->parent->h, grib_arguments_get_name(a->parent->h, arg, 0), &a->length);
+  grib_get_long_internal(grib_handle_of_accessor(a), grib_arguments_get_name(a->parent->h, arg, 0), &a->length);
   Assert(a->length>=0);
 
 }
@@ -143,7 +145,7 @@ static int unpack_bytes (grib_accessor* a,unsigned char* buffer, size_t *len) {
   }
   *len = a->length;
 
-  memcpy(buffer, a->parent->h->buffer->data + a->offset, *len);
+  memcpy(buffer, grib_handle_of_accessor(a)->buffer->data + a->offset, *len);
 
   return GRIB_SUCCESS;
 }

@@ -22,6 +22,7 @@ else
   tools_dir=$cpath/tools/
   examples_dir=$cpath/examples/python
   data_dir=$cpath/data
+  examples_src=$examples_dir
 
   PYTHONPATH=$cpath/python:$cpath/python/.libs:$PYTHONPATH
   export PYTHONPATH

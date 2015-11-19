@@ -91,6 +91,7 @@ static grib_accessor_class _grib_accessor_class_dirty = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -128,6 +129,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -135,7 +137,7 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
   grib_accessor_dirty* self = (grib_accessor_dirty*)a;
-  self->accessor = grib_arguments_get_name(a->parent->h,c,0);
+  self->accessor = grib_arguments_get_name(grib_handle_of_accessor(a),c,0);
   a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
    a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
   a->length=0;
@@ -144,7 +146,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
 {
   grib_accessor_dirty* self = (grib_accessor_dirty*)a;
-  grib_accessor* x=grib_find_accessor(a->parent->h,self->accessor);
+  grib_accessor* x=grib_find_accessor(grib_handle_of_accessor(a),self->accessor);
 
   if (x) x->dirty=*val;
 
@@ -154,7 +156,7 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
 static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 {
   grib_accessor_dirty* self = (grib_accessor_dirty*)a;
-  grib_accessor* x=grib_find_accessor(a->parent->h,self->accessor);
+  grib_accessor* x=grib_find_accessor(grib_handle_of_accessor(a),self->accessor);
 
   if (x) x->dirty=1;
 

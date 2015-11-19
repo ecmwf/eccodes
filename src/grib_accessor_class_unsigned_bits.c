@@ -101,6 +101,7 @@ static grib_accessor_class _grib_accessor_class_unsigned_bits = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -132,6 +133,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -143,16 +145,16 @@ static long compute_byte_count(grib_accessor* a){
     long numberOfElements;
     int ret=0;
 
-    ret=grib_get_long(a->parent->h,self->numberOfBits,&numberOfBits);
+    ret=grib_get_long(grib_handle_of_accessor(a),self->numberOfBits,&numberOfBits);
     if (ret) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+        grib_context_log(a->context,GRIB_LOG_ERROR,
                 "%s unable to get %s to compute size",a->name,self->numberOfBits);
         return 0;
     }
 
-    ret=grib_get_long(a->parent->h,self->numberOfElements,&numberOfElements);
+    ret=grib_get_long(grib_handle_of_accessor(a),self->numberOfElements,&numberOfElements);
     if (ret) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+        grib_context_log(a->context,GRIB_LOG_ERROR,
                 "%s unable to get %s to compute size",a->name,self->numberOfElements);
         return 0;
     }
@@ -165,8 +167,8 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
     grib_accessor_unsigned_bits* self = (grib_accessor_unsigned_bits*)a;
     int n=0;
-    self->numberOfBits=grib_arguments_get_name(a->parent->h,args,n++);
-    self->numberOfElements=grib_arguments_get_name(a->parent->h,args,n++);
+    self->numberOfBits=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->numberOfElements=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
     a->length = compute_byte_count(a);
 }
 
@@ -188,13 +190,13 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 
     if(*len < rlen)
     {
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+        grib_context_log(a->context, GRIB_LOG_ERROR,
                 " wrong size (%ld) for %s it contains %d values ",*len, a->name , rlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    ret=grib_get_long(a->parent->h,self->numberOfBits,&numberOfBits);
+    ret=grib_get_long(grib_handle_of_accessor(a),self->numberOfBits,&numberOfBits);
     if (ret) return ret;
     if (numberOfBits==0) {
         int i;
@@ -202,7 +204,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
         return GRIB_SUCCESS;
     }
 
-    grib_decode_long_array(a->parent->h->buffer->data,&pos,numberOfBits,rlen,val);
+    grib_decode_long_array(grib_handle_of_accessor(a)->buffer->data,&pos,numberOfBits,rlen,val);
 
     *len = rlen;
 
@@ -225,15 +227,15 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
     /*
 	if(*len < rlen)
 	{
-		grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, 
+		grib_context_log(a->context, GRIB_LOG_ERROR, 
 			"Wrong size for %s it contains %d values ", a->name , rlen );
 		return GRIB_ARRAY_TOO_SMALL;
 	}
      */
     if (*len!=rlen)
-        ret=grib_set_long(a->parent->h,self->numberOfElements,*len);
+        ret=grib_set_long(grib_handle_of_accessor(a),self->numberOfElements,*len);
 
-    ret=grib_get_long(a->parent->h,self->numberOfBits,&numberOfBits);
+    ret=grib_get_long(grib_handle_of_accessor(a),self->numberOfBits,&numberOfBits);
     if (ret) return ret;
     if (numberOfBits==0) {
         grib_buffer_replace(a, NULL, 0,1,1);
@@ -241,14 +243,14 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
     }
 
     buflen = compute_byte_count(a);
-    buf = (unsigned char*)grib_context_malloc_clear(a->parent->h->context,buflen+sizeof(long));
+    buf = (unsigned char*)grib_context_malloc_clear(a->context,buflen+sizeof(long));
 
     for(i=0; i < *len;i++)
         grib_encode_unsigned_longb(buf, val[i] ,  &off,  numberOfBits);
 
     grib_buffer_replace(a, buf, buflen,1,1);
 
-    grib_context_free(a->parent->h->context,buf);
+    grib_context_free(a->context,buf);
 
     return ret;
 
@@ -264,9 +266,9 @@ static int value_count(grib_accessor* a,long* numberOfElements)
     int ret;
     *numberOfElements=0;
 
-    ret=grib_get_long(a->parent->h,self->numberOfElements,numberOfElements);
+    ret=grib_get_long(grib_handle_of_accessor(a),self->numberOfElements,numberOfElements);
     if (ret) {
-        grib_context_log(a->parent->h->context,GRIB_LOG_ERROR,
+        grib_context_log(a->context,GRIB_LOG_ERROR,
                 "%s unable to get %s to compute size",a->name,self->numberOfElements);
     }
 

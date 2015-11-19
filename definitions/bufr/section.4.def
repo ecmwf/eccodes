@@ -12,20 +12,18 @@ section_length[3]       section4Length ;
 unsigned[1]     reserved = 0;
 position offsetBeforeData;
 
-#meta subsetNumber bufr_subset_number();
+template dataKeys "bufr/dataKeys.def";
 
-transient subsetNumber=0;
-if (compressedData) {
-  meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length,
-                        numberOfSubsets,subsetNumber,expandedCodes,expandedFlags,
-                        stringValues,elementsDescriptorsIndex,compressedData) : dump;
-} else {
-  meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length,
-                        numberOfSubsets,subsetNumber,expandedCodes,expandedFlags,
-                        stringValues,elementsDescriptorsIndex,compressedData) : dump;
-}
+meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length, numberOfSubsets,expandedCodes,expandedFlags, elementsDescriptorsIndex,compressedData,dataKeys);
+meta stringValues bufr_string_values(numericValues);
 
 meta unpack unpack_bufr_values(numericValues) ;
+meta pack pack_bufr_values(numericValues) ;
+
+#when (changed(unexpandedDescriptors)) {
+  # resize data section and unpack
+#  set unpack=3;
+#}
 
 section_padding section4Padding;
 position offsetEndSection4;

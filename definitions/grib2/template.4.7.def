@@ -10,4 +10,5 @@
 # TEMPLATE 4.7, Analysis or forecast error at a horizontal level or in a horizontal layer at a point in time
 # Same as 4.0 Should not be used
 
-include "template.4.0.def" 
+include "grib2/template.4.0.def" 
+

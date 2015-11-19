@@ -104,6 +104,7 @@ static grib_accessor_class _grib_accessor_class_change_scanning_direction = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -141,6 +142,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -150,14 +152,14 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
     int n=0;
     grib_accessor_change_scanning_direction* self= (grib_accessor_change_scanning_direction*)a;
 
-    self->values=grib_arguments_get_name(a->parent->h,args,n++);
-    self->Ni=grib_arguments_get_name(a->parent->h,args,n++);
-    self->Nj=grib_arguments_get_name(a->parent->h,args,n++);
-    self->i_scans_negatively=grib_arguments_get_name(a->parent->h,args,n++);
-    self->j_scans_positively=grib_arguments_get_name(a->parent->h,args,n++);
-    self->first=grib_arguments_get_name(a->parent->h,args,n++);
-    self->last=grib_arguments_get_name(a->parent->h,args,n++);
-    self->axis=grib_arguments_get_name(a->parent->h,args,n++);
+    self->values=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->Ni=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->Nj=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->i_scans_negatively=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->j_scans_positively=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->first=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->last=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->axis=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
 
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
     a->length = 0;
@@ -175,8 +177,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     size_t size=0;
     double* values=NULL;
     grib_accessor_change_scanning_direction* self= (grib_accessor_change_scanning_direction*)a;
-    grib_context* c=a->parent->h->context;
-    grib_handle* h=a->parent->h;
+    grib_context* c=a->context;
+    grib_handle* h=grib_handle_of_accessor(a);
 
     if (*val==0) return 0;
 

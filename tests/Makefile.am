@@ -1,20 +1,60 @@
-TESTS = definitions.sh calendar.sh \
-        bufrdc_desc_ref.sh bufrdc_ref.sh bufr_dump.sh bufr_filter.sh \
-        bufr_json.sh bufr_compare.sh bufr_copy.sh bufr_count.sh bufr_get.sh bufr_ls.sh bufr_set.sh \
-				gts_ls.sh \
-				metar_ls.sh metar_dump.sh \
-        ieee.sh grib1to2.sh \
+TESTS = definitions.sh \
+        calendar.sh \
+        bufrdc_desc_ref.sh \
+        bufrdc_ref.sh \
+        bufr_dump.sh \
+        bufr_filter.sh \
+        bufr_json.sh \
+        bufr_compare.sh \
+        bufr_copy.sh \
+        bufr_count.sh \
+        bufr_get.sh \
+        bufr_ls.sh \
+        bufr_set.sh \
+        gts_ls.sh \
+        metar_ls.sh \
+        metar_dump.sh \
+        ieee.sh \
+        grib1to2.sh \
         unit_tests.sh \
-        grib2to1.sh badgrib.sh ls.sh filter.sh  \
-        multi.sh budg.sh gridType.sh concept.sh decimalPrecision.sh \
-        bitsPerValue.sh get_fail.sh missing.sh \
-        local.sh step.sh set.sh iterator.sh \
-        compare.sh level.sh index.sh \
-        bitmap.sh list.sh second_order.sh \
-        multi_from_message.sh change_scanning.sh \
-        julian.sh statistics.sh tigge.sh tigge_conversions.sh \
-        read_any.sh padding.sh lamb_az_eq_area.sh grib_to_netcdf.sh debug.sh \
-        jpeg.sh ccsds.sh
+        grib2to1.sh \
+        badgrib.sh \
+        ls.sh \
+        filter.sh  \
+        multi.sh \
+        budg.sh \
+        gridType.sh \
+        concept.sh \
+        decimalPrecision.sh \
+        bitsPerValue.sh \
+        get_fail.sh \
+        missing.sh \
+        local.sh \
+        step.sh \
+        set.sh \
+        iterator.sh \
+        compare.sh \
+        level.sh \
+        index.sh \
+        bitmap.sh \
+        list.sh \
+        second_order.sh \
+        multi_from_message.sh \
+        change_scanning.sh \
+        julian.sh \
+        statistics.sh \
+        tigge.sh \
+        tigge_conversions.sh \
+        read_any.sh \
+        padding.sh \
+        lamb_az_eq_area.sh \
+        grib_to_netcdf.sh \
+        debug.sh \
+        jpeg.sh \
+        ccsds.sh \
+        md5.sh \
+        grib_util_set_spec.sh \
+        neg_fctime.sh
 
 # First download all the necessary data for testing
 # Note: if download fails, no tests will be done
@@ -25,7 +65,7 @@ download_data:
 noinst_PROGRAMS = packing_check gauss_sub read_any double_cmp packing pack_unpack \
                   multi_from_message julian read_index index gribex_perf\
                   jpeg_perf ccsds_perf so_perf png_perf bpv_limit laplacian \
-                  unit_tests
+                  unit_tests grib_util_set_spec
 
 multi_from_message_SOURCES = multi_from_message.c
 laplacian_SOURCES = laplacian.c
@@ -44,11 +84,12 @@ png_perf_SOURCES = png_perf.c
 ccsds_perf_SOURCES  = ccsds_perf.c
 gribex_perf_SOURCES = gribex_perf.c
 gauss_sub_SOURCES = gauss_sub.c
+grib_util_set_spec_SOURCES = grib_util_set_spec.c
 
 LDADD = $(top_builddir)/src/libeccodes.la $(EMOS_LIB)
 
 INCLUDES   = -I$(top_builddir)/src
 
-EXTRA_DIST = $(TESTS) mf.rules filter_rules include.sh include.ctest.sh.in \
+EXTRA_DIST = $(TESTS) mf.rules filter_rules include.sh include.ctest.sh.in utils.sh \
              lamb_az_eq_area.ref CMakeLists.txt number_compare.pl
 

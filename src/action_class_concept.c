@@ -109,6 +109,15 @@ static void init() {
 
 static grib_concept_value* get_concept(grib_handle* h,grib_action_concept* self);
 
+grib_concept_value* action_concept_get_concept(grib_accessor* a) {
+    return get_concept(grib_handle_of_accessor(a),(grib_action_concept*)a->creator);
+}
+
+int action_concept_get_nofail(grib_accessor* a) {
+  grib_action_concept* self = (grib_action_concept*)a->creator ;
+  return self->nofail;
+}
+
 grib_action* grib_action_create_concept( grib_context* context,
         const char* name,
         grib_concept_value* concept,
@@ -269,6 +278,7 @@ static grib_concept_value* get_concept_impl(grib_handle* h,grib_action_concept* 
 
     return h->context->concepts[id];
 }
+
 static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self)
 {
     grib_concept_value* result = NULL;
@@ -281,170 +291,4 @@ static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self
     return result;
 }
 
-const char* grib_concept_evaluate(grib_handle* h,grib_action* act)
-{
-    grib_action_concept* self = (grib_action_concept*) act;
-    grib_concept_value*  c = get_concept(h,self);
-    int match = 0;
-    const char* best = 0;
-    const char* prev = 0;
 
-    while(c)
-    {
-        grib_concept_condition* e = c->conditions;
-        int cnt = 0;
-        while(e)
-        {
-            long lval;
-            double dval;
-            long lres=0;
-            double dres=0.0;
-            const char *cval;
-            char buf[80];
-            char tmp[80];
-            size_t len = sizeof(buf);
-            size_t size=sizeof(tmp);
-            int err=0;
-            int ok = 0;
-            int type       = grib_expression_native_type(h,e->expression);
-
-            switch(type)
-            {
-            case GRIB_TYPE_LONG:
-                grib_expression_evaluate_long(h,e->expression,&lres);
-                ok =  (grib_get_long(h,e->name,&lval) == GRIB_SUCCESS) &&
-                        (lval == lres);
-                break;
-
-            case GRIB_TYPE_DOUBLE:
-                grib_expression_evaluate_double(h,e->expression,&dres);
-                ok = (grib_get_double(h,e->name,&dval) == GRIB_SUCCESS) &&
-                        (dval == dres);
-                break;
-
-            case GRIB_TYPE_STRING:
-                ok = (grib_get_string(h,e->name,buf,&len) == GRIB_SUCCESS) &&
-                ((cval = grib_expression_evaluate_string(h,e->expression,tmp,&size,&err)) != NULL) &&
-                (err==0) && (strcmp(buf,cval) == 0);
-                break;
-
-            default:
-                /* TODO: */
-                break;
-            }
-
-            if(!ok)
-                break;
-
-            e = e->next;
-            cnt++;
-        }
-
-        if(e == NULL)
-        {
-            if(cnt >= match) {
-                prev  = (cnt > match) ? NULL : best;
-                match = cnt;
-                best  = c->name;
-            }
-        }
-
-        c = c->next;
-    }
-
-    return best;
-}
-
-static int
-cmpstringp(const void *p1, const void *p2)
-{
-    /* The actual arguments to this function are "pointers to
-       pointers to char", but strcmp(3) arguments are "pointers
-       to char", hence the following cast plus dereference */
-    return strcmp(* (char * const *) p1, * (char * const *) p2);
-}
-
-#define MAX_NUM_CONCEPT_VALUES 40
-int grib_concept_apply(grib_handle* h,grib_action* act,const char* name)
-{
-    long lres=0;
-    double dres=0.0;
-    int err=0;
-    size_t count = 0;
-    size_t size;
-    grib_concept_condition* e=NULL;
-    grib_values values[1024];
-    char tmp[80][1024];
-    grib_action_concept* self = (grib_action_concept*) act;
-    grib_concept_value*  concepts = get_concept(h,self);
-    grib_concept_value* c=NULL;
-
-    Assert(concepts!=NULL);
-
-    c=(grib_concept_value*)grib_trie_get(concepts->index,name);
-
-    if (!c) c=(grib_concept_value*)grib_trie_get(concepts->index,"default");
-
-    if (!c){
-        err= self->nofail ? GRIB_SUCCESS : GRIB_CONCEPT_NO_MATCH;
-        if (err) {
-            size_t i = 0, count = 0;
-            char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {NULL,}; /* sorted array containing concept values */
-            grib_concept_value* pCon = concepts;
-
-            grib_context_log(h->context,GRIB_LOG_ERROR, "concept: no match for %s=%s", act->name,name);
-
-            /* Create a list of all possible values for this concept and sort it */
-            while (pCon) {
-                if (i >= MAX_NUM_CONCEPT_VALUES)
-                    break;
-                all_concept_vals[i++] = pCon->name;
-                pCon = pCon->next;
-            }
-            count = i;
-            /* Printing out all values for concepts like paramId will be silly! */
-            if (count < MAX_NUM_CONCEPT_VALUES) {
-                fprintf(stderr, "Here are the possible values for concept %s:\n", act->name);
-                qsort(&all_concept_vals, count, sizeof(char*), cmpstringp);
-                for(i=0; i<count; ++i) {
-                    if (all_concept_vals[i]) {
-                        fprintf(stderr, "\t%s\n", all_concept_vals[i]);
-                    }
-                }
-            }
-        }
-        return err;
-    }
-
-    e = c->conditions;
-    while(e)
-    {
-        Assert(count<1024);
-        values[count].name = e->name;
-
-        values[count].type = grib_expression_native_type(h,e->expression);
-        switch(values[count].type)
-        {
-        case GRIB_TYPE_LONG:
-            grib_expression_evaluate_long(h,e->expression,&lres);
-            values[count].long_value = lres;
-            break;
-        case GRIB_TYPE_DOUBLE:
-            grib_expression_evaluate_double(h,e->expression,&dres);
-            values[count].double_value = dres;
-            break;
-        case GRIB_TYPE_STRING:
-            size = sizeof(tmp[count]);
-            values[count].string_value = grib_expression_evaluate_string(h,e->expression,tmp[count],&size,&err);
-            break;
-        default:
-            return GRIB_NOT_IMPLEMENTED;
-            break;
-        }
-
-        count++;
-        e = e->next;
-    }
-
-    return grib_set_values(h,values,count);
-}

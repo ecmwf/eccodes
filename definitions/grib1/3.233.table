@@ -7,7 +7,7 @@
 5 lcl Adiabatic condensation level (parcel lifted from surface)
 6 umx Maximum wind speed level
 7 trp Tropopause level
-8 sfc Nominal top of atmosphere
+8 toa Nominal top of atmosphere
 9 9 Sea bottom
 # 10-19 Reserved
 20 tl Isothermal level Temperature in 1/100 K
@@ -51,7 +51,7 @@
 196 dsw South-western facing surface (HIRLAM Extension)
 197 dw  Western facing surface (HIRLAM Extension)
 198 dw  North-western facing surface (HIRLAM Extension)
-200 sfc Entire atmosphere considered as a single layer 0 (2 octets)
+200 atm Entire atmosphere considered as a single layer 0 (2 octets)
 201 201 Entire ocean considered as a single layer 0 (2 octets)
 # 202-209 Reserved
 210 pl Isobaric surface (Pa) (ECMWF extension)

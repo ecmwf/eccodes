@@ -93,6 +93,7 @@ static grib_accessor_class _grib_accessor_class_ieeefloat = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -127,6 +128,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -148,7 +150,7 @@ static int value_count(grib_accessor* a,long* len)
     *len = 0;
 
     if(!self->arg) {*len=1;return 0;}
-    return grib_get_long_internal(a->parent->h,grib_arguments_get_name(a->parent->h,self->arg,0),len);
+    return grib_get_long_internal(grib_handle_of_accessor(a),grib_arguments_get_name(a->parent->h,self->arg,0),len);
 }
 
 static int pack_double   (grib_accessor* a, const double* val, size_t *len)
@@ -163,34 +165,34 @@ static int pack_double   (grib_accessor* a, const double* val, size_t *len)
 
     if(*len < 1)
     {
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, " wrong size for %s it pack at least 1 values ", a->name , rlen );
+        grib_context_log(a->context, GRIB_LOG_ERROR, " wrong size for %s it pack at least 1 values ", a->name , rlen );
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
     if (rlen == 1){
         off = a->offset*8;
-        ret =  grib_encode_unsigned_long(a->parent->h->buffer->data,grib_ieee_to_long(val[0]), &off,  32);
-        if (*len > 1)  grib_context_log(a->parent->h->context, GRIB_LOG_WARNING, "grib_accessor_unsigned : Trying to pack %d values in a scalar %s, packing first value",  *len, a->name  );
+        ret =  grib_encode_unsigned_long(grib_handle_of_accessor(a)->buffer->data,grib_ieee_to_long(val[0]), &off,  32);
+        if (*len > 1)  grib_context_log(a->context, GRIB_LOG_WARNING, "grib_accessor_unsigned : Trying to pack %d values in a scalar %s, packing first value",  *len, a->name  );
         if (ret == GRIB_SUCCESS) len[0] = 1;
         return ret;
     }
 
     buflen = rlen*4;
 
-    buf = (unsigned char*)grib_context_malloc(a->parent->h->context,buflen);
+    buf = (unsigned char*)grib_context_malloc(a->context,buflen);
 
     for(i=0; i < rlen;i++){
         grib_encode_unsigned_longb(buf,grib_ieee_to_long(val[i]), &off,  32);
     }
-    ret = grib_set_long_internal(a->parent->h,grib_arguments_get_name(a->parent->h,self->arg,0),rlen);
+    ret = grib_set_long_internal(grib_handle_of_accessor(a),grib_arguments_get_name(a->parent->h,self->arg,0),rlen);
 
     if(ret == GRIB_SUCCESS)
         grib_buffer_replace(a, buf, buflen,1,1);
     else
         *len = 0;
 
-    grib_context_free(a->parent->h->context,buf);
+    grib_context_free(a->context,buf);
 
     return ret;
 }
@@ -207,12 +209,12 @@ static int unpack_double   (grib_accessor* a, double* val, size_t *len)
 
     if(*len < rlen)
     {
-        grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, " wrong size (%ld) for %s it contains %d values ", *len,a->name , rlen);
+        grib_context_log(a->context, GRIB_LOG_ERROR, " wrong size (%ld) for %s it contains %d values ", *len,a->name , rlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
     for(i=0; i< rlen; i++)
-        val[i] = grib_long_to_ieee(grib_decode_unsigned_long(a->parent->h->buffer->data,&bitp,32));
+        val[i] = grib_long_to_ieee(grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data,&bitp,32));
 
     *len = rlen;
     return GRIB_SUCCESS;

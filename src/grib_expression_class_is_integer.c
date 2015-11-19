@@ -170,11 +170,11 @@ static void destroy(grib_context* c,grib_expression* g)
 
 static void  add_dependency(grib_expression* g, grib_accessor* observer){
   grib_expression_is_integer* e = (grib_expression_is_integer*)g;
-  grib_accessor *observed = grib_find_accessor(observer->parent->h,e->name);
+  grib_accessor *observed = grib_find_accessor(grib_handle_of_accessor(observer),e->name);
 
   if(!observed)
   {
-    /* grib_context_log(observer->parent->h->context, GRIB_LOG_ERROR, */
+    /* grib_context_log(observer->context, GRIB_LOG_ERROR, */
          /* "Error in accessor_add_dependency: cannot find [%s]", e->name); */
        /* Assert(observed); */
     return;

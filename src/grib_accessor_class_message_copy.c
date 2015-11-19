@@ -89,6 +89,7 @@ static grib_accessor_class _grib_accessor_class_message_copy = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -123,6 +124,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -144,15 +146,15 @@ static int get_native_type(grib_accessor* a)
 }
 
 static int unpack_string (grib_accessor* a, char* val, size_t *len){
-  size_t slen=a->parent->h->buffer->ulength ;
+  size_t slen=grib_handle_of_accessor(a)->buffer->ulength ;
   size_t i;
   unsigned char* v=0;
 
   if (*len < slen) { return GRIB_ARRAY_TOO_SMALL; }
-  v=a->parent->h->buffer->data;
+  v=grib_handle_of_accessor(a)->buffer->data;
   /* replace unprintable characters with space */
   for (i=0;i<slen;i++) if (v[i]>126) v[i]=32;
-  memcpy(val,a->parent->h->buffer->data,slen);
+  memcpy(val,grib_handle_of_accessor(a)->buffer->data,slen);
 
   *len=slen;
 
@@ -161,7 +163,7 @@ static int unpack_string (grib_accessor* a, char* val, size_t *len){
 
 static size_t string_length(grib_accessor* a)
 {
-  return a->parent->h->buffer->ulength;
+  return grib_handle_of_accessor(a)->buffer->ulength;
 }
 
 static long byte_count(grib_accessor* a) {

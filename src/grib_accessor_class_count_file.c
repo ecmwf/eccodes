@@ -87,6 +87,7 @@ static grib_accessor_class _grib_accessor_class_count_file = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -125,6 +126,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -137,7 +139,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 
 static int  unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  *val = a->parent->h->context->handle_file_count;
+  *val = a->context->handle_file_count;
   *len =1;
   return 0;
 }

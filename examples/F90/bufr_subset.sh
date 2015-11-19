@@ -15,22 +15,77 @@ label="bufr_subset_test_f"
 
 #Prepare tmp file
 fTmp=${label}.tmp.txt
-rm -f $fTmp | true
+fTmp2=${label}.tmp2.txt
+rm -f $fTmp
+
+#Prepare ref file
+fRef=${label}.ref
+cat > $fRef <<EOF
+ message:            0
+   numberOfSubsets:          12
+ /subsetNumber=00001/blockNumber                                                                     
+  subsetNumber:           1
+   blockNumber:           1
+   stationNumber:         485
+ /subsetNumber=00002/blockNumber                                                                     
+  subsetNumber:           2
+   blockNumber:           1
+   stationNumber:         485
+ /subsetNumber=00003/blockNumber                                                                     
+  subsetNumber:           3
+   blockNumber:           1
+   stationNumber:         485
+ /subsetNumber=00004/blockNumber                                                                     
+  subsetNumber:           4
+   blockNumber:           1
+   stationNumber:         485
+ /subsetNumber=00005/blockNumber                                                                     
+  subsetNumber:           5
+   blockNumber:           1
+   stationNumber:         485
+ /subsetNumber=00006/blockNumber                                                                     
+  subsetNumber:           6
+   blockNumber:           1
+   stationNumber:         485
+ /subsetNumber=00007/blockNumber                                                                     
+  subsetNumber:           7
+   blockNumber:           1
+   stationNumber:         485
+ /subsetNumber=00008/blockNumber                                                                     
+  subsetNumber:           8
+   blockNumber:           1
+   stationNumber:         485
+ /subsetNumber=00009/blockNumber                                                                     
+  subsetNumber:           9
+   blockNumber:           1
+   stationNumber:         485
+ /subsetNumber=00010/blockNumber                                                                     
+  subsetNumber:          10
+   blockNumber:           1
+   stationNumber:         485
+ /subsetNumber=00011/blockNumber                                                                     
+  subsetNumber:          11
+   blockNumber:           1
+   stationNumber:         485
+ /subsetNumber=00012/blockNumber                                                                     
+  subsetNumber:          12
+   blockNumber:           1
+   stationNumber:         485
+EOF
 
 #We check "synop_multi_subset.bufr". The path is
 #hardcoded in the example
 
-REDIRECT=/dev/null
+REDIRECT=/dev/stdout
 
 #Write the values into a file and compare with reference
-${examples_dir}/f_bufr_subset 2> $REDIRECT > $fTmp
+${examples_dir}/eccodes_f_bufr_subset 2> $REDIRECT > $fTmp
 
-#TODO: add a proper check when subsets are properly implemented
+# Remove blank lines
+sed '/^\s*$/d' < $fTmp > $fTmp2
 
 #We compare output to the reference by ignoring the whitespaces 
-#diff -w $fRef $fTmp >$REDIRECT 2> $REDIRECT
-
-#cat $fTmp
+diff -w $fRef $fTmp2 >$REDIRECT 2> $REDIRECT
 
 #Clean up
-rm -f $fTmp
+rm -f $fTmp $fTmp2 $fRef

@@ -109,6 +109,7 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
+	 lengthOfTimeRange = 3 ;
 	}
 #Relative humidity with respect to water
 '%' = {
@@ -139,6 +140,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 37 ;
+	}
+#Height of convective cloud top
+'m' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 27 ;
 	}
 #Soil moisture top 20 cm
 'kg m**-3' = {
@@ -201,6 +208,32 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
+	}
+#Mean total precipitation rate
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean turbulent diffusion coefficient for heat
+'m**2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Apparent temperature
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 21 ;
+	}
+#Haines Index
+'Numeric' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 2 ;
 	}
 #Cloudy brightness temperature
 'K' = {

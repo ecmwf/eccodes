@@ -832,7 +832,7 @@ end subroutine codes_get_string
 subroutine codes_get_int_array ( gribid, key, value, status )
     integer(kind=kindOfInt),               intent(in)  :: gribid
     character(len=*),      intent(in)  :: key
-    integer(kind=kindOfInt), dimension(:),allocatable,intent(out) :: value
+    integer(kind=kindOfInt), dimension(:),allocatable,intent(inout) :: value
     integer(kind=kindOfInt),optional, intent(out)      :: status
     integer(kind=kindOfInt)                            :: iret
     integer(kind=kindOfInt)                            :: nb_values
@@ -844,7 +844,7 @@ end subroutine codes_get_int_array
 subroutine codes_get_long_array ( gribid, key, value, status )
     integer(kind=kindOfInt),               intent(in)  :: gribid
     character(len=*),      intent(in)  :: key
-    integer(kind=kindOfLong), dimension(:),allocatable,intent(out) :: value
+    integer(kind=kindOfLong), dimension(:),allocatable,intent(inout) :: value
     integer(kind=kindOfInt),optional, intent(out)      :: status
     integer(kind=kindOfInt)                            :: iret
     integer(kind=kindOfInt)                            :: nb_values
@@ -856,7 +856,7 @@ end subroutine codes_get_long_array
 subroutine codes_get_byte_array ( gribid, key, value, length, status )
     integer(kind=kindOfInt),               intent(in)  :: gribid
     character(len=*),                      intent(in)  :: key
-    character(len=1),        dimension(:), intent(out) :: value
+    character(len=1),        dimension(:), intent(inout) :: value
     integer(kind=kindOfInt), optional,     intent(out) :: length
     integer(kind=kindOfInt), optional,     intent(out) :: status
     integer(kind=kindOfInt)                            :: iret
@@ -870,7 +870,7 @@ end subroutine codes_get_byte_array
 subroutine codes_get_real4_array ( gribid, key, value, status)
     integer(kind=kindOfInt),                 intent(in)  :: gribid
     character(len=*),                        intent(in)  :: key
-    real(kind = kindOfFloat), dimension(:),allocatable, intent(out) :: value
+    real(kind = kindOfFloat), dimension(:),allocatable, intent(inout) :: value
     integer(kind=kindOfInt),optional,        intent(out) :: status
     integer(kind=kindOfInt)                              :: iret
     integer(kind=kindOfInt)                              :: nb_values
@@ -882,7 +882,7 @@ end subroutine codes_get_real4_array
 subroutine codes_get_real8_array ( gribid, key, value, status )
     integer(kind=kindOfInt),                   intent(in)  :: gribid
     character(len=*),                          intent(in)  :: key
-    real(kind = kindOfDouble), dimension(:),allocatable,  intent(out) :: value
+    real(kind = kindOfDouble), dimension(:),allocatable, intent(inout) :: value
     integer(kind=kindOfInt),optional,          intent(out) :: status
     integer(kind=kindOfInt)                                :: iret
     integer(kind=kindOfInt)                                :: nb_values

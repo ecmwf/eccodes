@@ -94,6 +94,7 @@ static grib_accessor_class _grib_accessor_class_sexagesimal2decimal = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -130,6 +131,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -161,7 +163,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
   double dd,mm=0,ss=0;
   int dd_sign=1;
 
-  err=grib_get_string(a->parent->h,self->key,buff,&size);
+  err=grib_get_string(grib_handle_of_accessor(a),self->key,buff,&size);
   if (err) return err;
   q=buff+self->start;
   if (self->length) q[length]=0;
@@ -244,7 +246,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
 
   if( len[0] < length+1 )
   {
-    grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%d) for %s it contains %d values ", len[0], a->name , a->length+1 );
+    grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%d) for %s it contains %d values ", len[0], a->name , a->length+1 );
     len[0] = 0;
     return GRIB_ARRAY_TOO_SMALL;
   }

@@ -91,6 +91,7 @@ static grib_accessor_class _grib_accessor_class_bit = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -127,6 +128,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -135,8 +137,8 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
 	grib_accessor_bit *ac = (grib_accessor_bit*) a;
 	a->length = 0;
-	ac->owner      = grib_arguments_get_name(a->parent->h,arg,0);
-	ac->bit_index = grib_arguments_get_long(a->parent->h,arg,1);
+	ac->owner      = grib_arguments_get_name(grib_handle_of_accessor(a),arg,0);
+	ac->bit_index = grib_arguments_get_long(grib_handle_of_accessor(a),arg,1);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -153,12 +155,12 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 
 	if(*len < 1)
 	{
-		grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_bit : unpack_long : Wrong size for %s it contains %d values ", a->name , 1 );
+		grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit : unpack_long : Wrong size for %s it contains %d values ", a->name , 1 );
 		*len = 0;
 		return GRIB_ARRAY_TOO_SMALL;
 	}
 	
-	if((ret = grib_get_long_internal(a->parent->h,ac->owner,&data)) != GRIB_SUCCESS){
+	if((ret = grib_get_long_internal(grib_handle_of_accessor(a),ac->owner,&data)) != GRIB_SUCCESS){
 		*len = 0;
 		return ret;
 	}
@@ -179,20 +181,20 @@ static int    pack_long   (grib_accessor* a, const long *val, size_t *len)
 	unsigned char *mdata = 0;
 	if(*len < 1)
 	{
-		grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_bit : pack_long : At least one value to pack for %s", a->name );
+		grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit : pack_long : At least one value to pack for %s", a->name );
 		*len = 0;
 		return GRIB_ARRAY_TOO_SMALL;
 	}
 
-	owner = grib_find_accessor(a->parent->h,ac->owner);
+	owner = grib_find_accessor(grib_handle_of_accessor(a),ac->owner);
 
 	if(!owner){
-		grib_context_log(a->parent->h->context, GRIB_LOG_ERROR, "grib_accessor_bit : Cannot get the owner %s for computing the bit value of %s ",ac->owner, a->name);
+		grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit : Cannot get the owner %s for computing the bit value of %s ",ac->owner, a->name);
 		*len = 0;
 		return GRIB_NOT_FOUND;
 	}
 
-	mdata = a->parent->h->buffer->data;
+	mdata = grib_handle_of_accessor(a)->buffer->data;
 	mdata += grib_byte_offset(owner);
 
 	grib_set_bit( mdata,7-ac->bit_index , *val>0);
