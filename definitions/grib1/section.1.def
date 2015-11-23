@@ -262,8 +262,8 @@ if(((section1Length > 40) or new() or setLocalDefinition> 0) and deleteLocalDefi
       }
     }
 
-	template_nofail marsKeywords "mars/grib1.[stream:s].[type:s].def";
-	#template marsKeywords "mars/grib1.[stream:s].[type:s].def";
+	template_nofail marsKeywords "mars/grib.[stream:s].[type:s].def";
+	#template marsKeywords "mars/grib.[stream:s].[type:s].def";
 
   }
   else

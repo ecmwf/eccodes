@@ -96,4 +96,3 @@ unit=`${tools_dir}grib_get -p indicatorOfUnitOfTimeRange $temp`
 
 rm -f $temp
 rm -f $grib2File.p8tmp ${grib2File}.tmp | true
-rm -f x.grib
