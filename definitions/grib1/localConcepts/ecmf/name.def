@@ -289,8 +289,8 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 47 ;
 	}
-#Magnitude of surface stress
-'Magnitude of surface stress' = {
+#Magnitude of turbulent surface stress
+'Magnitude of turbulent surface stress' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 48 ;
 	}

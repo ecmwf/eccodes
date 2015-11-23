@@ -287,7 +287,7 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 47 ;
 	}
-#Magnitude of surface stress
+#Magnitude of turbulent surface stress
 'N m**-2 s' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
