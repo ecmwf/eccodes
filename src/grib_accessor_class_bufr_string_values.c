@@ -9,10 +9,10 @@
 */
 
 /* Sequences and replication (not delayed) are resolved in this class.
-Number of elements to which a delayed replication applies are recomputed to
-take account of the expansion. 
-expanded descriptors cannot contain sequences and only delayed replication
-can appear
+   Number of elements to which a delayed replication applies are recomputed to
+   take account of the expansion.
+   Expanded descriptors cannot contain sequences and only delayed replication
+   can appear
 */
 
 #include "grib_api_internal.h"
@@ -145,81 +145,84 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
-  grib_accessor_bufr_string_values* self = (grib_accessor_bufr_string_values*)a;
-  int n=0;
-  self->dataAccessorName=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-  self->dataAccessor=NULL;
-  a->length = 0;
-  a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    grib_accessor_bufr_string_values* self = (grib_accessor_bufr_string_values*)a;
+    int n=0;
+    self->dataAccessorName=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->dataAccessor=NULL;
+    a->length = 0;
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_string_array(dumper,a,NULL);
+    grib_dump_string_array(dumper,a,NULL);
 }
 
-static grib_accessor* get_accessor(grib_accessor* a) {
-  grib_accessor_bufr_string_values* self = (grib_accessor_bufr_string_values*)a;
-  if (!self->dataAccessor) {
-    self->dataAccessor=grib_find_accessor(grib_handle_of_accessor(a),self->dataAccessorName);
-  }
-  return self->dataAccessor;
+static grib_accessor* get_accessor(grib_accessor* a)
+{
+    grib_accessor_bufr_string_values* self = (grib_accessor_bufr_string_values*)a;
+    if (!self->dataAccessor) {
+        self->dataAccessor=grib_find_accessor(grib_handle_of_accessor(a),self->dataAccessorName);
+    }
+    return self->dataAccessor;
 }
 
 static int unpack_string_array (grib_accessor* a, char** buffer, size_t *len)
 {
-  grib_accessor* data=0;
-  grib_context* c=a->context;
-  grib_vsarray* stringValues=NULL;
-  long l=0,n=0,tl;
-  size_t size,i,j;
-  char buf[25]={0,};
-  long* v=0;
-  char** b=buffer;
+    grib_accessor* data=0;
+    grib_context* c=a->context;
+    grib_vsarray* stringValues=NULL;
+    long l=0,n=0,tl;
+    size_t size,i,j;
+    char buf[25]={0,};
+    long* v=0;
+    char** b=buffer;
 
-  data=get_accessor(a);
-  if (!data) return GRIB_NOT_FOUND;
+    data=get_accessor(a);
+    if (!data) return GRIB_NOT_FOUND;
 
-  stringValues=accessor_bufr_data_array_get_stringValues(data);
+    stringValues=accessor_bufr_data_array_get_stringValues(data);
 
-  n=grib_vsarray_used_size(stringValues);
+    n=grib_vsarray_used_size(stringValues);
 
-  tl=0;
-  for (j=0;j<n;j++) {
-    l=grib_sarray_used_size(stringValues->v[j]);
-    tl+=l;
+    tl=0;
+    for (j=0;j<n;j++) {
+        l=grib_sarray_used_size(stringValues->v[j]);
+        tl+=l;
 
-    if (tl>*len) return GRIB_ARRAY_TOO_SMALL;
+        if (tl>*len) return GRIB_ARRAY_TOO_SMALL;
 
-    for (i=0;i<l;i++) {
-      *(b++)=grib_context_strdup(c,stringValues->v[j]->v[i]);
+        for (i=0;i<l;i++) {
+            *(b++)=grib_context_strdup(c,stringValues->v[j]->v[i]);
+        }
     }
-  }
-  *len=tl;
+    *len=tl;
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
-static int pack_string_array(grib_accessor*a , const char**  v, size_t *len){
-  return GRIB_NOT_IMPLEMENTED;
+static int pack_string_array(grib_accessor*a , const char**  v, size_t *len)
+{
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int unpack_string(grib_accessor* a, char* val, size_t *len)
 {
-  return GRIB_NOT_IMPLEMENTED;
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_string(grib_accessor* a, const char* val, size_t *len)
 {
-  return GRIB_NOT_IMPLEMENTED;
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int value_count(grib_accessor* a,long* rlen)
 {
-  grib_accessor* descriptors=get_accessor(a);
+    grib_accessor* descriptors=get_accessor(a);
 
-  return grib_value_count(descriptors,rlen);
+    return grib_value_count(descriptors,rlen);
 }
 
-static void destroy(grib_context* c,grib_accessor* a) {
+static void destroy(grib_context* c,grib_accessor* a)
+{
 }
