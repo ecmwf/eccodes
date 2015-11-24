@@ -229,15 +229,12 @@ alias mars.time    = dataTime;
 meta marsParam mars_param(paramId,gribTablesVersionNo,indicatorOfParameter): read_only,dump;
 alias mars.param  = marsParam;
 
-# JRA55 stepTypes
-#if (stepType is "avgas" ||
-#    stepType is "avgad" ||
-#    stepType is "varas" ||
-#    stepType is "varad")
-#{
-#   alias mars.step = stepRange;
-#}
-
+# GRIB-860: JRA55 rule for MARS.
+# subCentre of 241 means Japanese Reanalysis Project
+if (centre == 34 && subCentre == 241)
+{
+   alias mars.param = paramId;
+}
 
 meta time.validityDate validity_date(dataDate,dataTime,step,stepUnits);
 meta time.validityTime validity_time(dataDate,dataTime,step,stepUnits);
