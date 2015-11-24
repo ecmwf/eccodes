@@ -110,6 +110,7 @@ foreach( test ${tests2} )
     ecbuild_add_test( TARGET eccodes_t_${test}
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                  RESOURCES asca_139.t1.ref
                   TEST_DEPENDS eccodes_get_gribs eccodes_get_tigge_gribs eccodes_get_bufrs eccodes_get_metars eccodes_get_gts
     )
 endforeach()
