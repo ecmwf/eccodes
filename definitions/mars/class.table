@@ -20,9 +20,9 @@
 19 mc MACC
 20 pe Permanent experiments
 21 em ERA-CLIM model integration for the 20th-century
-22 e2 ERA-CLIM pilot reanalysis of the 20th-century using surface observations only
+22 e2 ERA-CLIM reanalysis of the 20th-century using surface observations only
 23 ea ERA5
-24 ep CERA-20C: ERA-CLIM2 pilot coupled reanalysis of the 20th-century
+24 ep CERA-20C: ERA-CLIM2 coupled reanalysis of the 20th-century
 25 rm EURO4M
 26 nr NOAA/CIRES 20th Century Reanalysis version II
 27 s2 Sub-seasonal to seasonal prediction project (S2S)
