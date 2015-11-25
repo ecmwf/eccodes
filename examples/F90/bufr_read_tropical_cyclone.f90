@@ -93,7 +93,7 @@ program bufr_read_tropical_cyclone
       stop 1
     endif
     if (latitudeCentre==CODES_MISSING_DOUBLE .and. longitudeCentre==CODES_MISSING_DOUBLE) then
-      write(*,'(a)'),'Observed storm centre position missing'
+      write(*,'(a)')'Observed storm centre position missing'
     else
       write(*,'(A,F8.2,A,F8.2)')'Observed storm centre: latitude=',latitudeCentre,' longitude=',longitudeCentre
     endif 
