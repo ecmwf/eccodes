@@ -90,3 +90,7 @@ meta distinctLatitudes latitudes(values,1);
 meta distinctLongitudes longitudes(values,1);
 
 meta isOctahedral octahedral_gaussian(N, Ni, PLPresent, pl) = 0 : no_copy,dump;
+
+meta gaussianGridName gaussian_grid_name(N, Ni, isOctahedral);
+alias gridName=gaussianGridName;
+

@@ -106,7 +106,7 @@ static grib_accessor_class _grib_accessor_class_variable = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
-    &make_clone,            /* clone accessor          */
+    &make_clone,               		/* clone accessor          */
 };
 
 

@@ -8,7 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 . ./include.sh
 
 REDIRECT=/dev/null
@@ -23,10 +22,10 @@ if [ $gridType != "regular_gg" ]
 then
     echo "Unable to change from reduced_latlon to regular_gg"
     echo $gridType
-	exit 1
+    exit 1
 fi
 
-rm -f $tmpdata || true
+rm -f $tmpdata
 
 ${tools_dir}grib_set -s gridType=reduced_gg ${data_dir}/regular_gaussian_pressure_level.grib1 ${tmpdata} > $REDIRECT
 
@@ -35,7 +34,20 @@ if [ $gridType != "reduced_gg" ]
 then
     echo "Unable to change from regular_gg to reduced_gg"
     echo $gridType
-	exit 1
+    exit 1
 fi
 
-rm -f $tmpdata || true
+rm -f $tmpdata
+
+###########
+# gridName
+###########
+for f in $ECCODES_SAMPLES_PATH/regular_gg_ml_grib*tmpl; do
+    gname=`${tools_dir}grib_get -p gridName $f`
+    [ "$gname" = "F32" ]
+done
+for f in $ECCODES_SAMPLES_PATH/reduced_gg_pl_512_grib*.tmpl; do
+    gname=`${tools_dir}grib_get -p gridName $f`
+    [ "$gname" = "N512" ]
+done
+

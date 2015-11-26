@@ -124,6 +124,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_g2latlon.c \
 	grib_accessor_class_g2lon.c \
 	grib_accessor_class_global_gaussian.c \
+	grib_accessor_class_gaussian_grid_name.c \
 	grib_accessor_class_gen.c \
 	grib_accessor_class_gts_header.c \
 	grib_accessor_class_ifs_param.c \
