@@ -175,7 +175,7 @@ foreach my $cType (keys %allTools) {
 
     #print "--> Genarate parent page\n";
 
-    my $pageTitle=parentPageTitle($cType." examples");
+    my $pageTitle=parentPageTitle($cType). " examples";
     my $parentPage=$rootPage;
 
     #unless($unique) {

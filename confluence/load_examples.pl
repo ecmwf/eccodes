@@ -28,6 +28,10 @@ my %langDir = ("f" => "F90",
              "c"  => "C",
              "p"  => "python");
 
+my %langComment = ("f" => "!",
+             "c"  => "*",
+             "p"  => "#");
+
 
 my $CONF=$ENV{CONF};
 die "Env var CONF should point to confluence.sh script" if ( $CONF eq "" || ! -f "$CONF" );
@@ -308,34 +312,48 @@ sub getSourceCode {
 sub getDescription {
 
     my ($name) = @_;
-    my $lang="c";
-    my $res;
+    my $res;  
 
-    if(hasExample($name,$lang)== 1) {
-        my $f=examplePath($name,$lang);
+    foreach my $lang (@langKeys) {
+            
+        if(hasExample($name,$lang) == 1 ) { 
 
-        my $found=0;
-        open (IN,"<$f") or return "";
-        while (defined (my $line = <IN>)) {
-            #First row
-            if($found==0) {
-                if($line =~ /\*\s*Description:/) {
-                    $found=1;
-                    my ($r)=($line =~ /\*\s*Description:\s*(.+)/);
+            my $f=examplePath($name,$lang);
+
+            my $found=0;
+            open (IN,"<$f") or return "";
+            while (defined (my $line = <IN>)) {
+                my $comment=$langComment{$lang};
+
+                if($comment ne "*") {
+                    $line =~ s/\Q${comment}/\*/g;
+                }
+         
+                #First row
+                if($found==0) {
+                    if($line =~ /\*\s*Description:/) {
+                        $found=1;
+                        my ($r)=($line =~ /\*\s*Description:\s*(.+)/);
+                        if(length($r) > 2) {
+                            $res=$r;
+                        }
+                    }
+                } else {
+                    my ($r)=($line =~ /\*\s+(.+)/);
                     if(length($r) > 2) {
-                        $res=$r;
+                        $res=$res." ".$r;
+                    } else {
+                        last;
                     }
                 }
-            } else {
-                my ($r)=($line =~ /\*\s+(.+)/);
-                if(length($r) > 2) {
-                    $res=$res." ".$r;
-                } else {
-                    last;
-                }
             }
-        }
 
+            if($res) {
+                return $res;
+            }
+
+        }
+        
         #print $f."\n";
         #print "descr: ".$res."\n";
     }

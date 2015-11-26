@@ -34,7 +34,7 @@ my $htmlDir=$ENV{TMPDIR}."/res_html";
 
 #The root page of templates in confluence!!!
 my $pageTitle="BUFR templates";
-my $parentPage="Internal";
+my $parentPage="";
 
 #----------------------------------------
 # Preparations
@@ -57,10 +57,14 @@ read_templates();
 my $fOut=$htmlDir."/bufr_templates.html";
 open(OUT,">$fOut") or die "$fOut: $!";
 
+print OUT "<p>ecCodes provides a simple way to define the structure of a BUFR message using the key \"BufrTemplate\".<br />
+Here are all the available values for this key:</p><br />";
+
+
 my $header="Teplate name</th><th>Unexpanded descriptors</th>";
       
 print OUT "<table><tbody>"."\n";
-print OUT "<tr><th>Teplate name</th><th>Unexpanded descriptors</th></tr>\n";
+print OUT "<tr><th>Template name</th><th>Unexpanded descriptors</th></tr>\n";
 
 foreach my $name (sort {$a cmp $b} keys %res) {
 

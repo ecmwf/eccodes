@@ -8,6 +8,8 @@
 # nor does it submit to any jurisdiction.
 #
 
+# Description: how to encode flight dataset into BUFR
+
 from datetime import datetime
 import traceback
 import numpy as np
