@@ -24,9 +24,9 @@ int main(int argc,char* argv[])
     char** shortName=NULL;
     int i,j,k,l;
     size_t stepSize,levelSize,shortNameSize,numberSize;
-    long ostep,olevel,onumber;
-    char oshortName[200];
-    size_t lenshortName=200;
+    long oStep,oLevel,oNumber;
+    char oShortName[200];
+    size_t lenShortName=200;
     int ret=0,count=0;
 
     if (argc != 2) usage(argv[0]);
@@ -111,15 +111,15 @@ int main(int argc,char* argv[])
                     while ((h=grib_handle_new_from_index(index,&ret))!=NULL){
                         count++;
                         if (ret) {printf("error: %d\n",ret); exit(ret);}
-                        lenshortName=200;
-                        grib_get_string(h,"shortName",oshortName,&lenshortName);
-                        grib_get_long(h,"level",&olevel);
-                        grib_get_long(h,"number",&onumber);
-                        grib_get_long(h,"step",&ostep);
-                        printf("shortName=%s ",oshortName);
-                        printf("level=%ld ",olevel);
-                        printf("number=%ld ",onumber);
-                        printf("step=%ld \n",ostep);
+                        lenShortName=200;
+                        grib_get_string(h,"shortName",oShortName,&lenShortName);
+                        grib_get_long(h,"level",&oLevel);
+                        grib_get_long(h,"number",&oNumber);
+                        grib_get_long(h,"step",&oStep);
+                        printf("shortName=%s ",oShortName);
+                        printf("level=%ld ",oLevel);
+                        printf("number=%ld ",oNumber);
+                        printf("step=%ld \n",oStep);
                         grib_handle_delete(h);
                     }
                     if (ret && ret!=GRIB_END_OF_INDEX ) {printf("error: %s\n",grib_get_error_message(ret)); exit(ret);}
