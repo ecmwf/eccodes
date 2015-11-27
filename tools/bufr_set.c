@@ -22,12 +22,12 @@ grib_option grib_options[]={
 /*     {"n:","noise percentage","\n\t\tAdd noise to the data values. The noise added is the given percentage of the data value.\n",0,1,0},*/
         {"p:",0,0,1,1,0},
         {"P:",0,0,0,1,0},
-        {"w:","key[:{s/d/l}]=value,key[:{s/d/l}]=value,...",
+        {"w:","key[:{s/d/i}]=value,key[:{s/d/i}]=value,...",
                 "\n\t\tWhere clause.\n\t\tSet is only executed for grib messages matching all the "
                 "key/value constraints.\n\t\tIf a grib message does not match the constraints it is"
                 " copied unchanged\n\t\tto the output_grib_file. This behaviour can be changed "
-                "setting the option -S.\n\t\tFor each key a string (key:s) or a double (key:d) or"
-                " a long (key:l)\n\t\ttype can be defined. Default type is string.\n",0,1,0},
+                "setting the option -S.\n\t\tFor each key a string (key:s), a double (key:d) or"
+                " an integer (key:i)\n\t\ttype can be defined. Default type is string.\n",0,1,0},
         {"q",0,0,1,0,0},
         {"7",0,0,0,1,0},
         {"S",0,0,0,1,0},
