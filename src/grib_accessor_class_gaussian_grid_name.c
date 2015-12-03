@@ -16,7 +16,7 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_gen
-   IMPLEMENTS = init;unpack_string; get_native_type
+   IMPLEMENTS = init;unpack_string; get_native_type;string_length
    MEMBERS = const char* N
    MEMBERS = const char* Ni
    MEMBERS = const char* isOctahedral
@@ -36,6 +36,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int  get_native_type(grib_accessor*);
 static int unpack_string (grib_accessor*, char*, size_t *len);
+static size_t string_length(grib_accessor*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -61,7 +62,7 @@ static grib_accessor_class _grib_accessor_class_gaussian_grid_name = {
     0,                    /* free mem                       */
     0,                       /* describes himself         */
     0,                /* get length of section     */
-    0,              /* get length of string      */
+    &string_length,              /* get length of string      */
     0,                /* get number of values      */
     0,                 /* get number of bytes      */
     0,                /* get offset to bytes           */
@@ -101,7 +102,6 @@ static void init_class(grib_accessor_class* c)
 {
 	c->dump	=	(*(c->super))->dump;
 	c->next_offset	=	(*(c->super))->next_offset;
-	c->string_length	=	(*(c->super))->string_length;
 	c->value_count	=	(*(c->super))->value_count;
 	c->byte_count	=	(*(c->super))->byte_count;
 	c->byte_offset	=	(*(c->super))->byte_offset;
@@ -151,12 +151,14 @@ static int get_native_type(grib_accessor* a)
     return GRIB_TYPE_STRING;
 }
 
+#define MAX_GRIDNAME_LEN 16
+
 static int unpack_string(grib_accessor*a , char* v, size_t *len)
 {
     grib_accessor_gaussian_grid_name* self = (grib_accessor_gaussian_grid_name*)a;
 
     long N=0, Ni=0, isOctahedral=0;
-    char tmp[16] = {0,};
+    char tmp[MAX_GRIDNAME_LEN] = {0,};
     size_t length = sizeof(tmp);
     int ret = GRIB_SUCCESS;
 
@@ -188,4 +190,9 @@ static int unpack_string(grib_accessor*a , char* v, size_t *len)
     strcpy(v, tmp);
     *len = length;
     return GRIB_SUCCESS;
+}
+
+static size_t string_length(grib_accessor* a)
+{
+    return MAX_GRIDNAME_LEN;
 }
