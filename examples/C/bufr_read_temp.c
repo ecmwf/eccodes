@@ -32,10 +32,8 @@ int main(int argc,char* argv[])
 
     double *sigt_pres=NULL, *sigt_geo=NULL, *sigt_t=NULL;
     double *sigt_td=NULL;
-    long longVal;
-    double doubleVal;
-    size_t sigt_len=0, desc_len=0, len=0;
-    int i, err=0;
+    size_t sigt_len=0, len=0, i=0;
+    int err=0;
     int cnt=0;
     const char* infile = "../../data/bufr/temp_101.bufr";
     char key_name[128];
@@ -142,7 +140,7 @@ int main(int argc,char* argv[])
 
         for(i=0; i < sigt_len; i++)
         {
-            printf("%3d %6.0f %6.0f %.1f %.1f\n",
+            printf("%3ld %6.0f %6.0f %.1f %.1f\n",
                     i+1,sigt_pres[i],sigt_geo[i],sigt_t[i],sigt_td[i]);
         }
 

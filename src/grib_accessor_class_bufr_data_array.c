@@ -397,13 +397,12 @@ static void decode_string_array(grib_context* c,unsigned char* data,long* pos, i
         grib_accessor_bufr_data_array* self,int *err)
 {
     char* sval=0;
-    int j,modifiedWidth,modifiedReference,width;
-    double modifiedFactor;
+    int j,modifiedWidth,width;
     grib_sarray* sa=grib_sarray_new(c,self->numberOfSubsets,10);
 
     modifiedWidth= self->expanded->v[i]->width;
-    modifiedReference= self->expanded->v[i]->reference;
-    modifiedFactor= self->expanded->v[i]->factor;
+    /* modifiedReference= self->expanded->v[i]->reference; */
+    /*modifiedFactor= self->expanded->v[i]->factor;*/
 
     sval=(char*)grib_context_malloc_clear(c,modifiedWidth/8+1);
     *err=check_end_data(c,self,modifiedWidth);
@@ -480,7 +479,6 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
 static int encode_string_array(grib_context* c,grib_buffer* buff,long* pos, int i,
         grib_accessor_bufr_data_array* self,grib_sarray* stringValues)
 {
-    char* sval=0;
     int err=0,end,start;
     int j,modifiedWidth,modifiedReference,width;
     double modifiedFactor;
@@ -620,7 +618,6 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,int i
     int err=0;
     int modifiedWidth,modifiedReference;
     double modifiedFactor;
-    double dval=0;
 
     modifiedReference= self->expanded->v[i]->reference;
     modifiedFactor= self->expanded->v[i]->factor;
@@ -806,7 +803,7 @@ static int encode_new_element(grib_context* c,grib_accessor_bufr_data_array* sel
     if (self->expanded->v[i]->type==BUFR_DESCRIPTOR_TYPE_STRING) {
         /* string */
         slen=self->expanded->v[i]->width/8;
-        csval=grib_context_malloc_clear(c,slen+1);
+        csval=(char*)grib_context_malloc_clear(c,slen+1);
         for (ii=0;ii<slen;ii++) csval[ii]=missingChar;
         grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding: \t %s = %s",
                 self->expanded->v[i]->shortName,csval);
@@ -1066,67 +1063,67 @@ static void set_creator_name(grib_action* creator,int code)
 {
     switch (code) {
     case 222000:
-        creator->name="qualityInformationFollows";
+        creator->name = (char*)"qualityInformationFollows";
         break;
     case 223000:
-        creator->name="substitutedValuesOperator";
+        creator->name = (char*)"substitutedValuesOperator";
         break;
     case 223255:
-        creator->name="substitutedValue";
+        creator->name = (char*)"substitutedValue";
         break;
     case 224000:
-        creator->name="firstOrderStatiticalValuesFollow";
+        creator->name = (char*)"firstOrderStatiticalValuesFollow";
         break;
     case 224255:
-        creator->name="firstOrderStatisticalValue";
+        creator->name = (char*)"firstOrderStatisticalValue";
         break;
     case 225000:
-        creator->name="differenceStatisticalValuesFollow";
+        creator->name = (char*)"differenceStatisticalValuesFollow";
         break;
     case 225255:
-        creator->name="differenceStatisticalValue";
+        creator->name = (char*)"differenceStatisticalValue";
         break;
     case 232000:
-        creator->name="replacedRetainedValuesFollow";
+        creator->name = (char*)"replacedRetainedValuesFollow";
         break;
     case 232255:
-        creator->name="replacedRetainedValue";
+        creator->name = (char*)"replacedRetainedValue";
         break;
     case 235000:
-        creator->name="cancelBackwardDataReference";
+        creator->name = (char*)"cancelBackwardDataReference";
         break;
     case 236000:
-        creator->name="defineDataPresentBitmap";
+        creator->name = (char*)"defineDataPresentBitmap";
         break;
     case 237000:
-        creator->name="useDefinedDataPresentBitmap";
+        creator->name = (char*)"useDefinedDataPresentBitmap";
         break;
     case 237255:
-        creator->name="cancelUseDefinedDataPresentBitmap";
+        creator->name = (char*)"cancelUseDefinedDataPresentBitmap";
         break;
     case 241000:
-        creator->name="defineEvent";
+        creator->name = (char*)"defineEvent";
         break;
     case 241255:
-        creator->name="cancelDefineEvent";
+        creator->name = (char*)"cancelDefineEvent";
         break;
     case 242000:
-        creator->name="defineConditioningEvent";
+        creator->name = (char*)"defineConditioningEvent";
         break;
     case 242255:
-        creator->name="canceDefineConditioningEvent";
+        creator->name = (char*)"canceDefineConditioningEvent";
         break;
     case 243000:
-        creator->name="categoricalForecastValuesFollow";
+        creator->name = (char*)"categoricalForecastValuesFollow";
         break;
     case 243255:
-        creator->name="cancelCategoricalForecastValuesFollow";
+        creator->name = (char*)"cancelCategoricalForecastValuesFollow";
         break;
     case 999999:
-        creator->name="associatedField";
+        creator->name = (char*)"associatedField";
         break;
     default :
-        creator->name="operator";
+        creator->name = (char*)"operator";
         break;
     }
 }

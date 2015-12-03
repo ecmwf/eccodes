@@ -350,17 +350,18 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec, cons
 
     if(spec->bitmapPresent) {
         int missing = 0;
+        size_t j = 0;
         double min = 1e100;
-        for(i = 0; i < data_values_count ; i++)
+        for(j = 0; j < data_values_count ; j++)
         {
-            double d = data_values[i] - spec->missingValue;
+            double d = data_values[j] - spec->missingValue;
             if(d < 0) d = -d;
 
             if(d < min) {
                 min = d;
             }
 
-            if(data_values[i] == spec->missingValue)
+            if(data_values[j] == spec->missingValue)
                 missing++;
         }
     }
@@ -517,7 +518,7 @@ static int check_handle_against_spec(grib_handle* handle, const long edition, co
     return GRIB_SUCCESS;
 }
 
-static char* get_grid_type_name(const int spec_grid_type)
+static const char* get_grid_type_name(const int spec_grid_type)
 {
     if (spec_grid_type == GRIB_UTIL_GRID_SPEC_REGULAR_LL)
         return "regular_ll";
@@ -1552,7 +1553,7 @@ int is_index_file(const char* filename)
 {
     FILE* fh;
     char buf[8]={0,};
-    char* str="GRBIDX";
+    const char* str="GRBIDX";
     int ret=0;
 
     fh=fopen(filename,"r");
@@ -1583,7 +1584,7 @@ char get_dir_separator_char(void)
 /*  "/tmp/"   -> ""   */
 const char* extract_filename(const char* filepath)
 {
-    char* s = strrchr(filepath, get_dir_separator_char());
+    const char* s = strrchr(filepath, get_dir_separator_char());
     if (!s) return filepath;
     else    return s + 1;
 }

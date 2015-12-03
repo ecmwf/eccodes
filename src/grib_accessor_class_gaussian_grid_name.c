@@ -146,7 +146,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
     a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
 
-static int  get_native_type(grib_accessor* a)
+static int get_native_type(grib_accessor* a)
 {
     return GRIB_TYPE_STRING;
 }
@@ -188,10 +188,4 @@ static int unpack_string(grib_accessor*a , char* v, size_t *len)
     strcpy(v, tmp);
     *len = length;
     return GRIB_SUCCESS;
-}
-
-static int value_count(grib_accessor* a,long* count)
-{
-    *count=16;
-    return 0;
 }

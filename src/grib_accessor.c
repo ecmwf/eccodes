@@ -787,15 +787,14 @@ void grib_accessors_list_push(grib_accessors_list* al,grib_accessor* a)
 grib_accessors_list* grib_accessors_list_last(grib_accessors_list* al)
 {
     /*grib_accessors_list* last=al;*/
-    grib_accessors_list* next=al->next;
+    /*grib_accessors_list* next=al->next;*/
 
     /*
-  while(next) {
-    last=next;
-    next=last->next;
-  }
-     */
-
+    while(next) {
+      last=next;
+      next=last->next;
+    }
+    */
     return al->last;
 }
 

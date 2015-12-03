@@ -173,9 +173,8 @@ static int unpack_string_array (grib_accessor* a, char** buffer, size_t *len)
     grib_context* c=a->context;
     grib_vsarray* stringValues=NULL;
     long l=0,n=0,tl;
-    size_t size,i,j;
-    char buf[25]={0,};
-    long* v=0;
+    size_t i,j;
+    /*char buf[25]={0,};*/
     char** b=buffer;
 
     data=get_accessor(a);
