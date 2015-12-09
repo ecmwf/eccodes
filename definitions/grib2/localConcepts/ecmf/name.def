@@ -1507,8 +1507,8 @@
 	 parameterCategory = 200 ;
 	 parameterNumber = 47 ;
 	}
-#Magnitude of surface stress difference
-'Magnitude of surface stress difference' = {
+#Magnitude of turbulent surface stress difference
+'Magnitude of turbulent surface stress difference' = {
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 48 ;
@@ -9653,8 +9653,8 @@
 	 parameterCategory = 129 ;
 	 parameterNumber = 47 ;
 	}
-#Magnitude of surface stress gradient
-'Magnitude of surface stress gradient' = {
+#Magnitude of turbulent surface stress gradient
+'Magnitude of turbulent surface stress gradient' = {
 	 discipline = 192 ;
 	 parameterCategory = 129 ;
 	 parameterNumber = 48 ;
@@ -13755,8 +13755,8 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 47 ;
 	}
-#Magnitude of surface stress anomaly
-'Magnitude of surface stress anomaly' = {
+#Magnitude of turbulent surface stress anomaly
+'Magnitude of turbulent surface stress anomaly' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 48 ;
@@ -14661,8 +14661,8 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 45 ;
 	}
-#Magnitude of surface stress
-'Magnitude of surface stress' = {
+#Magnitude of turbulent surface stress
+'Magnitude of turbulent surface stress' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 48 ;
@@ -14877,8 +14877,8 @@
 	 parameterCategory = 173 ;
 	 parameterNumber = 45 ;
 	}
-#Magnitude of surface stress anomaly
-'Magnitude of surface stress anomaly' = {
+#Magnitude of turbulent surface stress anomaly
+'Magnitude of turbulent surface stress anomaly' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 48 ;

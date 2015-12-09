@@ -2274,7 +2274,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 47 ;
 	}
-#Magnitude of surface stress difference
+#Magnitude of turbulent surface stress difference
 'N m**-2 s' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 48 ;
@@ -9764,7 +9764,7 @@
 	 table2Version = 129 ;
 	 indicatorOfParameter = 47 ;
 	}
-#Magnitude of surface stress gradient
+#Magnitude of turbulent surface stress gradient
 'N m**-2 s' = {
 	 table2Version = 129 ;
 	 indicatorOfParameter = 48 ;
@@ -13219,7 +13219,7 @@
 	 table2Version = 171 ;
 	 indicatorOfParameter = 47 ;
 	}
-#Magnitude of surface stress anomaly
+#Magnitude of turbulent surface stress anomaly
 'N m**-2 s' = {
 	 table2Version = 171 ;
 	 indicatorOfParameter = 48 ;
@@ -13974,7 +13974,7 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 45 ;
 	}
-#Magnitude of surface stress
+#Magnitude of turbulent surface stress
 'N m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 48 ;
@@ -14154,7 +14154,7 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 45 ;
 	}
-#Magnitude of surface stress anomaly
+#Magnitude of turbulent surface stress anomaly
 'N m**-2' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 48 ;
