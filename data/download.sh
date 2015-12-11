@@ -3,9 +3,10 @@
 usage ()
 {
    prog=`basename $0`
-   echo "Usage: $prog [-v] data_dir"
+   echo "Usage: $prog [-v] [-c] data_dir"
    echo
    echo "-v  verbose"
+   echo "-c  clean downloaded files"
    echo "-h  prints this help message"
    echo
 }
@@ -62,21 +63,23 @@ fi
 
 [ -d "${DATA_DIR}/tigge" ] || mkdir "${DATA_DIR}/tigge"
 
+TIMEOUT_SECS=15
+
 # Decide what tool to use to download data
 DNLD_PROG=""
 if command -v wget >/dev/null 2>&1; then
    PROG=wget
-   OPTIONS="--tries=1 --timeout=3 -nv -q -O"
+   OPTIONS="--tries=1 --timeout=$TIMEOUT_SECS -nv -q -O"
    if [ $VERBOSE -eq 1 ]; then
-      OPTIONS="--tries=1 --timeout=3 -nv -O"
+      OPTIONS="--tries=1 --timeout=$TIMEOUT_SECS -nv -O"
    fi
    DNLD_PROG="$PROG $OPTIONS"
 fi
 if command -v curl >/dev/null 2>&1; then
    PROG=curl
-   OPTIONS="--silent --show-error --fail --output"
+   OPTIONS="--connect-timeout $TIMEOUT_SECS --silent --show-error --fail --output"
    if [ $VERBOSE -eq 1 ]; then
-      OPTIONS="--show-error --fail --output"
+      OPTIONS="--connect-timeout $TIMEOUT_SECS --show-error --fail --output"
    fi
    DNLD_PROG="$PROG $OPTIONS"
 fi
@@ -87,12 +90,17 @@ fi
 
 download_URL="http://download.ecmwf.org"
 cd ${DATA_DIR}
-echo "Downloading data files for testing..."
+echo "Checking data files for testing..."
+downloading=0
 for f in $files; do
    # If we haven't already got the file, download it
    if [ ! -f "$f" ]; then
       if [ $VERBOSE -eq 1 ]; then
          echo "$DNLD_PROG $f ${download_URL}/test-data/grib_api/data/$f"
+      fi
+      if [ $downloading = 0 ]; then
+        echo "Downloading..."
+        downloading=1
       fi
       $DNLD_PROG $f ${download_URL}/test-data/grib_api/data/$f
       if [ $? -ne 0 ]; then
@@ -110,4 +118,4 @@ done
 
 # Add a file to indicate we've done the download
 touch .downloaded
-echo "Downloads completed."
+echo "Completed."
