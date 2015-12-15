@@ -9555,19 +9555,34 @@
 	 indicatorOfParameter = 64 ;
 	}
 #Mean rain rate
-'~' = {
+'mrr' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 65 ;
 	}
 #Mean convective rain rate
-'~' = {
+'mcrr' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 66 ;
 	}
 #Mean large-scale rain rate
-'~' = {
+'mlsrr' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 67 ;
+	}
+#Mean surface downward short-wave radiation flux, clear sky
+'msdwswrfcs' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 68 ;
+	}
+#Mean surface downward long-wave radiation flux, clear sky
+'msdwlwrfcs' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 69 ;
+	}
+#Mean potential evaporation rate
+'mper' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 70 ;
 	}
 #Ceiling
 'ceil' = {

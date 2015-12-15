@@ -9569,6 +9569,21 @@
 	 table2Version = 235 ;
 	 indicatorOfParameter = 67 ;
 	}
+#Mean surface downward short-wave radiation flux, clear sky
+'Mean surface downward short-wave radiation flux, clear sky' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 68 ;
+	}
+#Mean surface downward long-wave radiation flux, clear sky
+'Mean surface downward long-wave radiation flux, clear sky' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 69 ;
+	}
+#Mean potential evaporation rate
+'Mean potential evaporation rate' = {
+	 table2Version = 235 ;
+	 indicatorOfParameter = 70 ;
+	}
 #Ceiling
 'Ceiling' = {
 	 table2Version = 228 ;
