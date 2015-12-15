@@ -210,98 +210,98 @@
 	 parameterNumber = 33 ;
 	}
 #Mean temperature tendency due to parametrized short-wave radiation
-'ttsrm' = {
+'mttsr' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 22 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean temperature tendency due to parametrized long-wave radiation
-'tttrm' = {
+'mtttr' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 23 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean temperature tendency due to parametrized short-wave radiation, clear sky
-'ttsrcm' = {
+'mttsrc' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 24 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean temperature tendency due to parametrized long-wave radiation, clear sky
-'tttrcm' = {
+'mtttrc' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 25 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean temperature tendency due to parametrizations
-'ttpmm' = {
+'mttpm' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 26 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean specific humidity tendency due to parametrizations
-'qtpmm' = {
+'mqtpm' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 108 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean eastward wind tendency due to parametrizations
-'utpmm' = {
+'mutpm' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 39 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean northward wind tendency due to parametrizations
-'vtpmm' = {
+'mvtpm' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 40 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean updraught mass flux due to parametrized convection
-'umfm' = {
+'mumf' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 27 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean downdraught mass flux due to parametrized convection
-'dmfm' = {
+'mdmf' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 28 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean updraught detrainment rate due to parametrized convection
-'udrm' = {
+'mudr' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 29 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean downdraught detrainment rate due to parametrized convection
-'ddrm' = {
+'mddr' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 30 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean total precipitation rate
-'tprm' = {
+#Mean total precipitation flux
+'mtpf' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean turbulent diffusion coefficient for heat
-'tdchm' = {
+'mtdch' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;

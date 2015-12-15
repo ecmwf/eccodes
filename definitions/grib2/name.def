@@ -293,8 +293,8 @@
 	 parameterNumber = 30 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean total precipitation rate
-'Mean total precipitation rate' = {
+#Mean total precipitation flux
+'Mean total precipitation flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
