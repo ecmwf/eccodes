@@ -2621,7 +2621,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 22 ;
 	}
-#Soil Moisture for TIGGE
+#Soil Moisture
 '228039' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -2640,7 +2640,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
 	}
-#Soil temperature for TIGGE
+#Soil Temperature
 '228139' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
