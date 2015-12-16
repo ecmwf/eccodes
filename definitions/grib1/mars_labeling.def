@@ -20,5 +20,5 @@ alias mars.type   = marsType;
 alias mars.stream = marsStream;
 alias mars.expver = experimentVersionNumber;
 
-alias    mars.domain  =  globalDomain; # For now...
+alias mars.domain  =  globalDomain; # For now...
 

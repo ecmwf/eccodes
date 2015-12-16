@@ -757,6 +757,8 @@ static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
     int localReference,width;
     bufr_descriptor** descriptors=0;
     descriptors=self->expanded->v;
+    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -%ld- \tcode=%6.6ld width=%ld ",
+            i,self->expanded->v[i]->code,self->expanded->v[i]->width);
     if (self->compressedData) {
         grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication localReference width=%ld", descriptors[i]->width);
         err=check_end_data(c,self,descriptors[i]->width+6);
@@ -1716,7 +1718,15 @@ static int process_elements(grib_accessor* a,int flag)
             elementIndex++;
             if (numberOfRepetitions[inr]==0) {
               i+=numberOfElementsToRepeat[inr];
-              if (inr>0) n[inr-1]-=numberOfElementsToRepeat[inr]+2;
+              if (inr>0) {
+                n[inr-1]-=numberOfElementsToRepeat[inr]+2;
+              /* if the empty nested repetion is at the end of the nesting repetition
+              we need to repoint to the start of the nesting repetition */
+                if (n[inr-1]==0) {
+                  nn[inr-1]--;
+                  if (nn[inr-1]<=0) numberOfNestedRepetitions--;
+                }
+              }
               numberOfNestedRepetitions--;
             }
             continue;

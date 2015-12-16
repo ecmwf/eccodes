@@ -606,7 +606,8 @@ static int grib_write_index_keys(FILE* fh,grib_index_key* keys)
     err=grib_write_uchar(fh,(unsigned char)keys->type);
     if (err) return err;
 
-    grib_write_key_values(fh,keys->values);
+    err=grib_write_key_values(fh,keys->values);
+    if (err) return err;
 
     err=grib_write_index_keys(fh,keys->next);
     if (err) return err;
@@ -628,7 +629,6 @@ static void grib_field_delete(grib_context* c,grib_field* field)
     }
 
     grib_context_free(c,field);
-
 }
 
 static void grib_field_tree_delete(grib_context* c,grib_field_tree* tree)
@@ -1435,7 +1435,8 @@ int grib_index_select_string(grib_index* index,const char* skey,char* value)
     return 0;
 }
 
-grib_handle* grib_index_get_handle(grib_field* field,int *err) {
+grib_handle* grib_index_get_handle(grib_field* field,int *err)
+{
     return codes_index_get_handle(field,CODES_GRIB,err);
 }
 

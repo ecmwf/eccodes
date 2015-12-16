@@ -1,103 +1,81 @@
-!
-!Copyright 2005-2015 ECMWF.
+! Copyright 2005-2015 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
-!which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
 !
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FOTRAN 90 Implementation: bufr_read_temp
+! FORTRAN 90 Implementation: bufr_read_temp
 !
-! Description: how to read temperature significant levels from TEMP BUFR messages.
+! Description: how to read levels from TEMP BUFR messages.
 !
 ! Please note that TEMP reports can be encoded in various ways in BUFR. Therefore the code
 ! below might not work directly for other types of TEMP messages than the one used in the
 ! example. It is advised to use bufr_dump first to understand the structure of these messages.
-
+!
 program bufr_read_temp
-use eccodes
-implicit none
-integer            :: ifile
-integer            :: iret
-integer            :: ibufr
-integer            :: i, count=0
-integer(kind=4)    :: num
-real(kind=8), dimension(:), allocatable :: presVal,geoVal,tVal ,tdVal
-character(len=128)   :: keyName
+  use eccodes
+  implicit none
+  integer            :: ifile
+  integer            :: iret,ierr
+  integer            :: ibufr
+  integer            :: i, count=0
+  integer(kind=4),dimension(:), allocatable  :: timePeriod,extendedVerticalSoundingSignificance
+  integer(kind=4)  :: blockNumber,stationNumber,numberOfLevels
+  character(len=30) :: str
+  real(kind=8),dimension(:), allocatable :: pressure,airTemperature,dewpointTemperature
+  real(kind=8),dimension(:), allocatable :: geopotentialHeight,latitudeDisplacement,longitudeDisplacement
+  real(kind=8),dimension(:), allocatable :: windDirection,windSpeed
+  character(len=128)   :: keyName
 
-  call codes_open_file(ifile,'../../data/bufr/temp_101.bufr','r')
+  call codes_open_file(ifile,'../../data/bufr/PraticaTemp.bufr','r')
 
-! the first bufr message is loaded from file
-! ibufr is the bufr id to be used in subsequent calls
+  ! the first bufr message is loaded from file
+  ! ibufr is the bufr id to be used in subsequent calls
   call codes_bufr_new_from_file(ifile,ibufr,iret)
-
   do while (iret/=CODES_END_OF_FILE)
-
     write(*,*) 'message: ',count
-
-    ! we need to instruct ecCodes to expand all the descriptors 
-    ! i.e. unpack the data values
-    call codes_set(ibufr,"unpack",1);
- 
-    ! In what follows we rely on the fact that for 
-    ! temperature significant levels the value of key 
-    ! verticalSoundingSignificance is 4 (see flag table 8001 for details).
-    !
-    ! In our BUFR message verticalSoundingSignificance is always followed by
-    !      geopotential, airTemperature, dewpointTemperature,
-    !      windDirection, windSpeed and pressure. 
-    ! 
-    ! So in order to access any of these keys we need to use the
-    ! condition: verticalSoundingSignificance=4.
-
-    ! ---- Get pressure ---------------------------
-    call codes_get(ibufr,'/verticalSoundingSignificance=4/pressure',presVal);
-
-    ! ---- Get gepotential ------------------------
-    call codes_get(ibufr,'/verticalSoundingSignificance=4/geopotential',geoVal)
-
-    ! ---- Get temperature --------------------------------
-    call codes_get(ibufr,'/verticalSoundingSignificance=4/airTemperature',tVal)    
-     
-    ! ---- Get dew point temperature  -----------------------
-    call codes_get(ibufr,'/verticalSoundingSignificance=4/dewpointTemperature',tdVal)        
-
-    ! ---- Check that all arrays are same size
-    if (size(presVal)/=size(geoVal) .or. size(tVal)/=size(tdVal) .or. size(tdVal)/=size(presVal)) then
-      print *,'inconsistent array dimension'
-      exit
-    endif
-    num=size(presVal)
-     
-    ! ---- Print the values --------------------------------
-    write(*,*) 'level    pres    geo    t    td'
-    write(*,*) "--------------------------------------" 
-     
-    do i=1,num
-        write(*,*) i,presVal(i),geoVal(i),tVal(i),tdVal(i)
-    end do 
-     
-    
-    ! free arrays 
-    deallocate(presVal)
-    deallocate(geoVal)
-    deallocate(tVal)
-    deallocate(tdVal) 
-
+    call codes_set(ibufr,'unpack',1)
+    call codes_get(ibufr,'timePeriod',timePeriod)
+    call codes_get(ibufr,'pressure',pressure)
+    call codes_get(ibufr,'extendedVerticalSoundingSignificance',extendedVerticalSoundingSignificance)
+    call codes_get(ibufr,'geopotentialHeight',geopotentialHeight)
+    call codes_get(ibufr,'latitudeDisplacement',latitudeDisplacement)
+    call codes_get(ibufr,'longitudeDisplacement',longitudeDisplacement)
+    call codes_get(ibufr,'airTemperature',airTemperature)
+    call codes_get(ibufr,'dewpointTemperature',dewpointTemperature)
+    call codes_get(ibufr,'windDirection',windDirection)
+    call codes_get(ibufr,'windSpeed',windSpeed)
+    call codes_get(ibufr,'blockNumber',blockNumber)
+    call codes_get(ibufr,'stationNumber',stationNumber)
+    print *,'station',blockNumber,stationNumber
+    print *,'timePeriod pressure geopotentialHeight latitudeDisplacement &
+          &longitudeDisplacement airTemperature windDirection windSpeed significance'
+    do i=1,size(windSpeed)
+      write(*,'(I5,6X,F9.1,2X,F9.2,10X,F8.2,14X,F8.2,16X,F8.2,6X,F8.2,4X,F8.2,4X,I0)') timePeriod(i),pressure(i),&
+          &geopotentialHeight(i),latitudeDisplacement(i),&
+          &longitudeDisplacement(i),airTemperature(i),windDirection(i),windSpeed(i),extendedVerticalSoundingSignificance(i)
+    enddo
+    ! free arrays
+    deallocate(timePeriod)
+    deallocate(pressure)
+    deallocate(geopotentialHeight)
+    deallocate(latitudeDisplacement)
+    deallocate(longitudeDisplacement)
+    deallocate(airTemperature)
+    deallocate(dewpointTemperature)
+    deallocate(windDirection)
+    deallocate(windSpeed)
+    deallocate(extendedVerticalSoundingSignificance)
     ! release the bufr message
     call codes_release(ibufr)
-
     ! load the next bufr message
     call codes_bufr_new_from_file(ifile,ibufr,iret)
-    
     count=count+1
-    
-  end do  
-
-! close file  
+  end do
+  ! close file
   call codes_close_file(ifile)
- 
 
 end program bufr_read_temp

@@ -7836,6 +7836,7 @@ dist_definitionsgrib2_DATA = \
 	grib2/local.98.15.def\
 	grib2/local.98.16.def\
 	grib2/local.98.18.def\
+	grib2/local.98.192.def\
 	grib2/local.98.20.def\
 	grib2/local.98.21.def\
 	grib2/local.98.24.def\

@@ -18,18 +18,15 @@ label="bufr_read_temp_f"
 fTmp=${label}.tmp.txt
 rm -f $fTmp | true
 
-#We check "temp_101.bufr". The path is
-#hardcoded in the example
+# The path to the BUFR file is hardcoded in the example
 
 REDIRECT=/dev/null
 
-#Write the key values into a file
+# Run the example
 ${examples_dir}/eccodes_f_bufr_read_temp 2> $REDIRECT > $fTmp
 
 #TODO: check the results
 
-#cat  $fTmp
-
 #Clean up
-rm -f $fTmp | true
+rm -f $fTmp
 
