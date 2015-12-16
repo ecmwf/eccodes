@@ -106,7 +106,7 @@ set( HAVE_LIBOPENJPEG 0 )
 
 if( ENABLE_JPG )
 
-    ecbuild_add_extra_search_paths( jasper ) # help standard cmake macro with ecmwf paths
+    #ecbuild_add_extra_search_paths( jasper ) # help standard cmake macro with ecmwf paths
     find_package( Jasper )
 
     find_package( OpenJPEG )
