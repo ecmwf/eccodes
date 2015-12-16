@@ -302,5 +302,3 @@ data/bufr/set_unexpandedDescriptors.filter
 *.sublime-workspace
 *.old
 
-examples/python/1
-examples/python/Testing/
