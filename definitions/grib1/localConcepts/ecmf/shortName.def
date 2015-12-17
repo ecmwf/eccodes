@@ -9330,12 +9330,12 @@
 	 indicatorOfParameter = 251 ;
 	}
 #Mean surface runoff rate
-'msrr' = {
+'msror' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 20 ;
 	}
 #Mean sub-surface runoff rate
-'mssrr' = {
+'mssror' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 21 ;
 	}
