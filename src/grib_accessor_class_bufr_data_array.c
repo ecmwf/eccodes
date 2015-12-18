@@ -876,8 +876,8 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
             idx=((int)self->numericValues->v[elementIndex]->v[0]/1000-1)/self->numberOfSubsets;
             err=encode_string_array(c,buff,pos,i,self,self->stringValues->v[idx]);
         } else {
-            idx=((int)self->numericValues->v[0]->v[elementIndex]/1000-1)/self->numberOfSubsets;
-            err=encode_string_value(c,buff,pos,i,self,self->stringValues->v[subsetIndex]->v[idx]);
+            idx=(int)self->numericValues->v[subsetIndex]->v[elementIndex]/1000-1;
+            err=encode_string_value(c,buff,pos,i,self,self->stringValues->v[idx]->v[0]);
         }
     } else {
         /* numeric or codetable or flagtable */
