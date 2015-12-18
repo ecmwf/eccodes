@@ -61,7 +61,7 @@ int grib_set_long_internal(grib_handle* h, const char* name, long val) {
 
     a = grib_find_accessor(h, name);
 
-    if (h->context->debug==-1)
+    if (h->context->debug)
         printf("ECCODES DEBUG grib_set_long_internal %s=%ld\n",name,(long)val);
 
     if(a){
@@ -86,7 +86,7 @@ int grib_set_long(grib_handle* h, const char* name, long val) {
 
     a = grib_find_accessor(h, name);
 
-    if (h->context->debug==-1)
+    if (h->context->debug)
         printf("ECCODES DEBUG grib_set_long %s=%ld\n",name,(long)val);
 
     if(a){
@@ -109,7 +109,7 @@ int grib_set_double_internal(grib_handle* h, const char* name, double val) {
 
     a = grib_find_accessor(h, name);
 
-    if (h->context->debug==-1)
+    if (h->context->debug)
         printf("ECCODES DEBUG grib_set_double_internal %s=%g\n",name,val);
 
     if(a){
@@ -299,7 +299,7 @@ int grib_set_double(grib_handle* h, const char* name, double val) {
 
     a = grib_find_accessor(h, name);
 
-    if (h->context->debug==-1)
+    if (h->context->debug)
         printf("ECCODES DEBUG grib_set_double %s=%g\n",name,val);
 
     if(a){
@@ -324,7 +324,7 @@ int grib_set_string_internal(grib_handle* h, const char* name,
 
     a = grib_find_accessor(h, name);
 
-    if (h->context->debug==-1)
+    if (h->context->debug)
         printf("ECCODES DEBUG grib_set_string_internal %s=%s\n",name,val);
 
     if(a){
@@ -347,27 +347,33 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t *l
     int ret=0;
     grib_accessor* a;
 
-#if 1
-    /* Second order doesn't have a proper representation for constant fields
-       the best is not to do the change of packing type if bitsPerValue=0
+    /* Second order doesn't have a proper representation for constant fields.
+       So best not to do the change of packing type
      */
     if (!grib_inline_strcmp(name,"packingType") && !grib_inline_strcmp(val,"grid_second_order")) {
         long bitsPerValue=0;
         size_t numCodedVals = 0;
         grib_get_long(h,"bitsPerValue",&bitsPerValue);
-        if (bitsPerValue==0) return 0;
+        if (bitsPerValue==0) {
+            if (h->context->debug) {
+                printf("ECCODES DEBUG grib_set_string packingType: Constant field cannot be encoded in second order. Packing not changed\n");
+            }
+            return 0;
+        }
 
         /* GRIB-883: check if there are enough coded values */
         ret = grib_get_size(h, "codedValues", &numCodedVals);
         if (ret == GRIB_SUCCESS && numCodedVals < 3) {
+            if (h->context->debug) {
+                printf("ECCODES DEBUG grib_set_string packingType: not enough coded values for second order. Packing not changed\n");
+            }
             return 0;
         }
     }
-#endif
 
     a = grib_find_accessor(h, name);
 
-    if (h->context->debug==-1)
+    if (h->context->debug)
         printf("ECCODES DEBUG grib_set_string %s=%s\n",name,val);
 
     if(a)
@@ -625,7 +631,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
 {
     int ret=0;
 
-    if (h->context->debug==-1)
+    if (h->context->debug)
         printf("ECCODES DEBUG grib_set_double_array_internal key=%s %ld values\n",name, (long)length);
 
     if (length==0) {
@@ -638,7 +644,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
     if (ret!=GRIB_SUCCESS)
         grib_context_log(h->context,GRIB_LOG_ERROR,"unable to set double array %s (%s)",
                 name,grib_get_error_message(ret));
-    /*if (h->context->debug==-1) printf("ECCODES DEBUG grib_set_double_array_internal key=%s --DONE\n",name);*/
+    /*if (h->context->debug) printf("ECCODES DEBUG grib_set_double_array_internal key=%s --DONE\n",name);*/
     return ret;
 }
 
@@ -647,7 +653,7 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
     double v=val[0];
     int constant,i;
 
-    if (h->context->debug==-1)
+    if (h->context->debug)
         printf("ECCODES DEBUG grib_set_double_array key=%s %ld values\n",name,(long)length);
 
     if (length==0) {
@@ -688,10 +694,17 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
                     !strcmp(packingType,"grid_second_order_SPD2") ||
                     !strcmp(packingType,"grid_second_order_SPD3")
             ) {
+                int ret = 0;
                 slen=11; /*length of 'grid_simple' */
-                if (h->context->debug == -1)
-                    printf("ECCODES DEBUG grib_set_double_array forcing grid_simple\n");
-                grib_set_string(h,"packingType","grid_simple",&slen);
+                if (h->context->debug) {
+                    printf("ECCODES DEBUG __grib_set_double_array: Cannot use second order packing for constant fields. Using simple packing\n");
+                }
+                ret = grib_set_string(h,"packingType","grid_simple",&slen);
+                if (ret != GRIB_SUCCESS) {
+                    if (h->context->debug) {
+                        printf("ECCODES DEBUG __grib_set_double_array: could not switch to simple packing!\n");
+                    }
+                }
             }
         }
     }
@@ -999,7 +1012,6 @@ int grib_get_native_type(grib_handle* h, const char* name,int* type)
     }
 
     return GRIB_SUCCESS;
-
 }
 
 const char* grib_get_accessor_class_name(grib_handle* h, const char* name)
@@ -1010,9 +1022,8 @@ const char* grib_get_accessor_class_name(grib_handle* h, const char* name)
 
 int _grib_get_double_array_internal(grib_handle* h,grib_accessor* a,double* val, size_t buffer_len,size_t *decoded_length)
 {
-    int err;
     if(a) {
-        err = _grib_get_double_array_internal(h,a->same,val,buffer_len,decoded_length);
+        int err = _grib_get_double_array_internal(h,a->same,val,buffer_len,decoded_length);
 
         if ( err == GRIB_SUCCESS )
         {
@@ -1041,7 +1052,6 @@ int grib_get_double_array_internal(grib_handle* h, const char* name, double* val
     return ret;
 }
 
-
 int grib_get_double_array(grib_handle* h, const char* name, double* val, size_t *length)
 {
     size_t len = *length;
@@ -1066,7 +1076,6 @@ int grib_get_double_array(grib_handle* h, const char* name, double* val, size_t 
         }
     }
 }
-
 
 int _grib_get_string_length(grib_accessor* a, size_t* size)
 {

@@ -801,4 +801,4 @@ EOF
 diff ${f}.ref ${f}.log 
 
 rm -f ${f}.ref ${f}.log
-
+rm -f $fLog $fRules

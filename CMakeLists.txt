@@ -106,8 +106,16 @@ set( HAVE_LIBOPENJPEG 0 )
 
 if( ENABLE_JPG )
 
-    ecbuild_add_extra_search_paths( jasper ) # help standard cmake macro with ecmwf paths
+    # Note: This is a deprecated feature but we need it to find Jasper at ECMWF.
+    #       ecbuild_add_extra_search_paths modifies CMAKE_PREFIX_PATH
+    #       which can affect future package discovery if not undone by the caller.
+    #       The current CMAKE_PREFIX_PATH is backed up as _CMAKE_PREFIX_PATH
+    #
+    set(ECBUILD_NO_DEPRECATIONS ON)  # Suppress deprecation message
+    ecbuild_add_extra_search_paths( jasper )
     find_package( Jasper )
+    set(CMAKE_PREFIX_PATH ${_CMAKE_PREFIX_PATH})    # Restore CMAKE_PREFIX_PATH
+    set(ECBUILD_NO_DEPRECATIONS OFF) # Remove suppression
 
     find_package( OpenJPEG )
 

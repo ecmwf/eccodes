@@ -96,6 +96,9 @@ res=`${tools_dir}grib_get -l 33,88.5 $sec_ord_bmp`
 res=`${tools_dir}/grib_get -l 28.5,90 $sec_ord_bmp`
 [ "$res" = "3.51552 9999 5.26552 9999 " ]
 
+# GRIB-203 nearest on M-F second order boustrophedonic
+res=`${tools_dir}grib_get -w count=1 -l 0,0 lfpw.grib1`
+[ "$res" = "20560.7 20563.4 20554.7 20559.5 " ]
 
 rm -f $sec_ord_bmp
 rm -f test.filter

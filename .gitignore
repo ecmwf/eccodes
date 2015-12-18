@@ -139,6 +139,7 @@ examples/F90/eccodes_f_bufr_subset
 examples/F90/eccodes_f_bufr_clone
 examples/F90/eccodes_f_bufr_read_header
 examples/F90/eccodes_f_bufr_read_scatterometer
+examples/F90/eccodes_f_bufr_read_tropical_cyclone
 examples/F90/eccodes_f_grib_clone
 examples/F90/eccodes_f_copy_message
 examples/F90/eccodes_f_copy_namespace
@@ -300,3 +301,4 @@ data/bufr/set_unexpandedDescriptors.filter
 
 *.sublime-workspace
 *.old
+

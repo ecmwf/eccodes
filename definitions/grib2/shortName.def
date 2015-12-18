@@ -209,84 +209,84 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
 	}
-#Mean temperature tendency due to parametrized short-wave radiation
+#Mean temperature tendency due to short-wave radiation
 'mttsr' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 22 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean temperature tendency due to parametrized long-wave radiation
+#Mean temperature tendency due to long-wave radiation
 'mtttr' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 23 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean temperature tendency due to parametrized short-wave radiation, clear sky
+#Mean temperature tendency due to short-wave radiation, clear sky
 'mttsrc' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 24 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean temperature tendency due to parametrized long-wave radiation, clear sky
+#Mean temperature tendency due to long-wave radiation, clear sky
 'mtttrc' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 25 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean temperature tendency due to parametrizations
+#Mean temperature tendency due to parametrisations
 'mttpm' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 26 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean specific humidity tendency due to parametrizations
+#Mean specific humidity tendency due to parametrisations
 'mqtpm' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 108 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean eastward wind tendency due to parametrizations
+#Mean eastward wind tendency due to parametrisations
 'mutpm' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 39 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean northward wind tendency due to parametrizations
+#Mean northward wind tendency due to parametrisations
 'mvtpm' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 40 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean updraught mass flux due to parametrized convection
+#Mean updraught mass flux
 'mumf' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 27 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean downdraught mass flux due to parametrized convection
+#Mean downdraught mass flux
 'mdmf' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 28 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean updraught detrainment rate due to parametrized convection
+#Mean updraught detrainment rate
 'mudr' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 29 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean downdraught detrainment rate due to parametrized convection
+#Mean downdraught detrainment rate
 'mddr' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
@@ -2621,7 +2621,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 22 ;
 	}
-#Soil Moisture for TIGGE
+#Soil Moisture
 'sm' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -2640,7 +2640,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
 	}
-#Soil temperature for TIGGE
+#Soil Temperature
 'st' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
