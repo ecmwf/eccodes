@@ -210,28 +210,28 @@
 	 parameterNumber = 33 ;
 	}
 #Mean temperature tendency due to short-wave radiation
-'mttsr' = {
+'mttswr' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 22 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean temperature tendency due to long-wave radiation
-'mtttr' = {
+'mttlwr' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 23 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean temperature tendency due to short-wave radiation, clear sky
-'mttsrc' = {
+'mttswrcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 24 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean temperature tendency due to long-wave radiation, clear sky
-'mtttrc' = {
+'mttlwrcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 25 ;
