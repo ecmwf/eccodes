@@ -622,14 +622,12 @@ static void grib_print_header(grib_runtime_options* options,grib_handle* h)
     size_t strlenkey=0;
     int width;
     int written_to_dump = 0; /* boolean */
-    if (!options->print_keys || options->handle_count!=1)
+    if (options->handle_count!=1)
         return;
 
     grib_tools_set_print_keys(options,h,options->name_space);
 
-    if (options->print_keys
-            && options->verbose
-            && options->print_header) {
+    if (options->verbose && options->print_header) {
         int j=0;
         for (j=0;j<options->print_keys_count;j++) {
             strlenkey=strlen(options->print_keys[j].name);

@@ -323,7 +323,6 @@ int grib_concept_apply(grib_accessor* a, const char* name)
     grib_values values[1024];
     grib_sarray* sa=NULL;
     grib_concept_value* c=NULL;
-    grib_accessor_concept* self=(grib_accessor_concept*)a;
     grib_concept_value*  concepts = action_concept_get_concept(a);
     grib_handle* h=grib_handle_of_accessor(a);
     grib_action* act=a->creator;

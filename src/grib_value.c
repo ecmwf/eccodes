@@ -13,7 +13,8 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 
-GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
+GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
+{
     if (*a != *b) return 1;
     while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
     return (*a==0 && *b==0) ? 0 : 1;
@@ -21,7 +22,8 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
 
 #define SWAP(a,b) temp=(a);(a)=(b);(b)=temp;
 
-int grib_set_expression(grib_handle* h, const char* name,grib_expression* e) {
+int grib_set_expression(grib_handle* h, const char* name,grib_expression* e)
+{
     grib_accessor* a = grib_find_accessor(h, name);
     int ret = GRIB_SUCCESS;
 
@@ -39,7 +41,8 @@ int grib_set_expression(grib_handle* h, const char* name,grib_expression* e) {
     return GRIB_NOT_FOUND;
 }
 
-int grib_set_expression_internal(grib_handle* h, const char* name,grib_expression* e) {
+int grib_set_expression_internal(grib_handle* h, const char* name,grib_expression* e)
+{
     grib_accessor* a = grib_find_accessor(h, name);
 
     int ret = GRIB_SUCCESS;
@@ -53,7 +56,8 @@ int grib_set_expression_internal(grib_handle* h, const char* name,grib_expressio
     return GRIB_NOT_FOUND;
 }
 
-int grib_set_long_internal(grib_handle* h, const char* name, long val) {
+int grib_set_long_internal(grib_handle* h, const char* name, long val)
+{
     grib_context* c=h->context;
     int ret = GRIB_SUCCESS;
     grib_accessor* a =NULL;
@@ -79,7 +83,8 @@ int grib_set_long_internal(grib_handle* h, const char* name, long val) {
     return GRIB_NOT_FOUND;
 }
 
-int grib_set_long(grib_handle* h, const char* name, long val) {
+int grib_set_long(grib_handle* h, const char* name, long val)
+{
     int ret = GRIB_SUCCESS;
     grib_accessor* a =NULL;
     size_t l = 1;
@@ -102,7 +107,8 @@ int grib_set_long(grib_handle* h, const char* name, long val) {
     return GRIB_NOT_FOUND;
 }
 
-int grib_set_double_internal(grib_handle* h, const char* name, double val) {
+int grib_set_double_internal(grib_handle* h, const char* name, double val)
+{
     int ret = GRIB_SUCCESS;
     grib_accessor* a =NULL;
     size_t l = 1;
@@ -134,7 +140,8 @@ struct grib_key_err {
     grib_key_err* next;
 };
 
-int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src) {
+int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
+{
     int *err=0;
     int type;
     size_t len;
@@ -291,8 +298,8 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src) {
     return *err;
 }
 
-
-int grib_set_double(grib_handle* h, const char* name, double val) {
+int grib_set_double(grib_handle* h, const char* name, double val)
+{
     int ret = GRIB_SUCCESS;
     grib_accessor* a =NULL;
     size_t l = 1;
@@ -522,11 +529,13 @@ int grib_set_missing(grib_handle* h, const char* name)
     return GRIB_NOT_FOUND;
 }
 
-int grib_is_missing_long(grib_accessor* a,long x) { 
+int grib_is_missing_long(grib_accessor* a,long x)
+{
     int ret = ( a==NULL || (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)) && (x==GRIB_MISSING_LONG) ? 1 : 0;
     return ret;
 }
-int grib_is_missing_double(grib_accessor* a,double x) { 
+int grib_is_missing_double(grib_accessor* a,double x)
+{
     int ret = ( a==NULL || (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)) && (x==GRIB_MISSING_DOUBLE) ? 1 : 0;
     return ret;
 }
@@ -561,7 +570,8 @@ int grib_is_defined(grib_handle* h, const char* name)
     return (a ? 1 : 0);
 }
 
-int grib_set_flag(grib_handle *h,const char* name,unsigned long flag) {
+int grib_set_flag(grib_handle *h,const char* name,unsigned long flag)
+{
     grib_accessor* a=grib_find_accessor(h,name);
 
     if (!a) return GRIB_NOT_FOUND;
@@ -795,7 +805,8 @@ int grib_get_long_internal(grib_handle* h, const char* name, long* val)
     return ret;
 }
 
-int grib_is_in_dump(grib_handle* h, const char* name) {
+int grib_is_in_dump(grib_handle* h, const char* name)
+{
     grib_accessor* a=grib_find_accessor(h, name);
     if (a!=NULL && (a->flags & GRIB_ACCESSOR_FLAG_DUMP))
         return 1;
@@ -953,7 +964,6 @@ int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t
 
 int grib_get_string(grib_handle* h, const char* name, char* val, size_t *length)
 {
-    size_t len = 1;
     grib_accessor* a = NULL;
     grib_accessors_list* al=NULL;
     int ret=0;
@@ -1033,7 +1043,6 @@ int _grib_get_double_array_internal(grib_handle* h,grib_accessor* a,double* val,
         }
 
         return err;
-
     }
     else {
         return GRIB_SUCCESS;
@@ -1534,7 +1543,8 @@ void grib_print_values(grib_values* values,int count)
     }
 }
 
-int grib_values_check(grib_handle* h, grib_values* values, int count) {
+int grib_values_check(grib_handle* h, grib_values* values, int count)
+{
     int i=0;
     long long_value;
     double double_value;
@@ -1595,7 +1605,8 @@ int grib_values_check(grib_handle* h, grib_values* values, int count) {
     return 0;
 }
 
-int grib_key_equal(grib_handle* h1,grib_handle* h2,const char* key,int type,int *err) {
+int grib_key_equal(grib_handle* h1,grib_handle* h2,const char* key,int type,int *err)
+{
     double d1,d2;
     long l1,l2;
     char s1[500]={0,};

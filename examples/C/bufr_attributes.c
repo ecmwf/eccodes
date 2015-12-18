@@ -29,8 +29,8 @@ int main(int argc,char* argv[])
     char* unitsPercent= NULL;
     long longVal;
     double doubleVal;
-    size_t values_len=0, desc_len=0, len=0;
-    int i, err=0;
+    size_t len=0;
+    int err=0;
     int cnt=0;
     char* infile = "../../data/bufr/syno_multi.bufr";
 

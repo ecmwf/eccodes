@@ -272,6 +272,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
     /* Assert(a->length>=0); */
 }
 
+/*
 static void clean_string(char* s,int len)
 {
     int i=len-1;
@@ -281,6 +282,7 @@ static void clean_string(char* s,int len)
         i--;
     }
 }
+*/
 
 static int check_end_data(grib_context* c,grib_accessor_bufr_data_array* self,int size)
 {
@@ -353,10 +355,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
 grib_vsarray* accessor_bufr_data_array_get_stringValues(grib_accessor* a)
 {
-  grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
-  process_elements(a,PROCESS_DECODE);
+    grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
+    process_elements(a,PROCESS_DECODE);
 
-  return self->stringValues;
+    return self->stringValues;
 }
 
 grib_accessors_list* accessor_bufr_data_array_get_dataAccessors(grib_accessor* a)
@@ -424,7 +426,7 @@ static void decode_string_array(grib_context* c,unsigned char* data,long* pos, i
         }
     } else {
         /* for (j=0;j<self->numberOfSubsets;j++) { */
-            grib_sarray_push(c,sa,sval);
+        grib_sarray_push(c,sa,sval);
         /* } */
     }
     grib_vsarray_push(c,self->stringValues,sa);
@@ -531,80 +533,80 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos,int i
     v=dvalues->v;
 
     if (nvals==1) {
-      localWidth=0;
-      grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
-      if (*v == GRIB_MISSING_DOUBLE) {
-        grib_set_bits_on(buff->data,pos,modifiedWidth);
-      } else {
-        lval=round(*v * inverseFactor)-modifiedReference;
-        grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
-      }
-      grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
-      grib_encode_unsigned_longb(buff->data,localWidth,pos,6);
-      return err;
+        localWidth=0;
+        grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
+        if (*v == GRIB_MISSING_DOUBLE) {
+            grib_set_bits_on(buff->data,pos,modifiedWidth);
+        } else {
+            lval=round(*v * inverseFactor)-modifiedReference;
+            grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
+        }
+        grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
+        grib_encode_unsigned_longb(buff->data,localWidth,pos,6);
+        return err;
     }
 
     ii=0;
     while (*v==GRIB_MISSING_DOUBLE && ii<nvals) {
-      thereIsAMissing=1;
-      v++;
-      ii++;
+        thereIsAMissing=1;
+        v++;
+        ii++;
     }
     min=*v;
     max=*v;
     while (ii<nvals) {
-      if (*v<min && *v!=GRIB_MISSING_DOUBLE) min=*v;
-      if (*v>max && *v!=GRIB_MISSING_DOUBLE) max=*v;
-      if (*v == GRIB_MISSING_DOUBLE) thereIsAMissing=1;
-      ii++;
-      v++;
+        if (*v<min && *v!=GRIB_MISSING_DOUBLE) min=*v;
+        if (*v>max && *v!=GRIB_MISSING_DOUBLE) max=*v;
+        if (*v == GRIB_MISSING_DOUBLE) thereIsAMissing=1;
+        ii++;
+        v++;
     }
     if (max>maxAllowed && max!=GRIB_MISSING_DOUBLE) 
-      return GRIB_OUT_OF_RANGE;
+        return GRIB_OUT_OF_RANGE;
     if (min<minAllowed && min!=GRIB_MISSING_DOUBLE) 
-      return GRIB_OUT_OF_RANGE;
+        return GRIB_OUT_OF_RANGE;
 
     reference=round(min*inverseFactor);
     localReference=reference-modifiedReference;
     if (max!=min) {
-      localRange = (max-min)*inverseFactor+1;
-      localWidth=ceil(log(localRange)/log(2.0));
-      lval=round(max*inverseFactor)-reference;
-      allone=grib_power(localWidth,2)-1;
-      while (allone <= lval) {
-        localWidth++;
+        localRange = (max-min)*inverseFactor+1;
+        localWidth=ceil(log(localRange)/log(2.0));
+        lval=round(max*inverseFactor)-reference;
         allone=grib_power(localWidth,2)-1;
-      }
-      if (localWidth == 1 ) localWidth++;
+        while (allone <= lval) {
+            localWidth++;
+            allone=grib_power(localWidth,2)-1;
+        }
+        if (localWidth == 1 ) localWidth++;
     } else {
-      if (thereIsAMissing==1) localWidth=1;
-      else localWidth=0;
+        if (thereIsAMissing==1) localWidth=1;
+        else localWidth=0;
     }
 
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
     if (localWidth) {
-      grib_encode_unsigned_longb(buff->data,localReference,pos,modifiedWidth);
+        grib_encode_unsigned_longb(buff->data,localReference,pos,modifiedWidth);
     } else {
-      if (min==GRIB_MISSING_DOUBLE) {
-        grib_set_bits_on(buff->data,pos,modifiedWidth);
-      } else {
-        lval=localReference-modifiedReference;
-        grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
-      }
+        if (min==GRIB_MISSING_DOUBLE) {
+            grib_set_bits_on(buff->data,pos,modifiedWidth);
+        } else {
+            lval=localReference-modifiedReference;
+            grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
+        }
     }
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
     grib_encode_unsigned_longb(buff->data,localWidth,pos,6);
 
     if (localWidth) {
-      grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+self->numberOfSubsets*localWidth);
-      for (j=0;j<self->numberOfSubsets;j++) {
-        if (dvalues->v[j]==GRIB_MISSING_DOUBLE) {
-          grib_set_bits_on(buff->data,pos,localWidth);
-        } else {
-          lval=round(dvalues->v[j]*inverseFactor)-reference;
-          grib_encode_unsigned_longb(buff->data,lval,pos,localWidth);
+        grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+self->numberOfSubsets*localWidth);
+        for (j=0;j<self->numberOfSubsets;j++) {
+            if (dvalues->v[j]==GRIB_MISSING_DOUBLE) {
+                grib_set_bits_on(buff->data,pos,localWidth);
+            } else {
+                lval=round(dvalues->v[j]*inverseFactor)-reference;
+                grib_encode_unsigned_longb(buff->data,lval,pos,localWidth);
+            }
         }
-      }
     }
 
     return err;
@@ -730,7 +732,7 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
             stringValuesLen=grib_vsarray_used_size(self->stringValues);
             index=0;
             for (ii=0;ii<stringValuesLen;ii++) {
-              index+=grib_sarray_used_size(self->stringValues->v[ii]);
+                index+=grib_sarray_used_size(self->stringValues->v[ii]);
             }
             cdval=index*1000+self->expanded->v[i]->width / 8;
             grib_darray_push(c,dval,cdval);
@@ -751,7 +753,7 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
 }
 
 static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
-            grib_buffer* buff,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,long* numberOfRepetitions)
+        grib_buffer* buff,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,long* numberOfRepetitions)
 {
     int err=0;
     int localReference,width;
@@ -793,7 +795,7 @@ static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
 static int encode_new_element(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
         grib_buffer* buff,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,grib_sarray* sval)
 {
-    int index=0,ii;
+    int ii;
     char* csval=0;
     unsigned char missingChar=0xFF;
     double cdval=GRIB_MISSING_DOUBLE;
@@ -836,7 +838,7 @@ static int encode_new_element(grib_context* c,grib_accessor_bufr_data_array* sel
 }
 
 static int encode_new_replication(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
-            grib_buffer* buff,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,long* numberOfRepetitions)
+        grib_buffer* buff,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,long* numberOfRepetitions)
 {
     int err=0;
     /*new data -> only 1 repetition*/
@@ -861,10 +863,8 @@ static int encode_new_replication(grib_context* c,grib_accessor_bufr_data_array*
 static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
         grib_buffer* buff,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,grib_sarray* sval)
 {
-    int index=0,ii,idx,j;
-    char* csval=0;
+    int idx,j;
     int err=0;
-    size_t slen;
 
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding: -%ld- \tcode=%6.6ld width=%ld pos=%ld ulength=%ld ulength_bits=%ld",
             i,self->expanded->v[i]->code,self->expanded->v[i]->width,(long)*pos,buff->ulength,buff->ulength_bits);
@@ -884,16 +884,16 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         if (self->compressedData) {
             err=encode_double_array(c,buff,pos,i,self,self->numericValues->v[elementIndex]);
             if (err) {
-              grib_context_log(c,GRIB_LOG_ERROR,"encoding %s ( code=%6.6ld width=%ld scale=%g reference=%d )",
-                self->expanded->v[i]->shortName, self->expanded->v[i]->code, self->expanded->v[i]->width,
-                self->expanded->v[i]->scale, self->expanded->v[i]->reference);
-              for (j=0;j<grib_darray_used_size(self->numericValues->v[elementIndex]);j++)
-                grib_context_log(c,GRIB_LOG_ERROR,"%g ",self->numericValues->v[elementIndex]->v[i]);
+                grib_context_log(c,GRIB_LOG_ERROR,"encoding %s ( code=%6.6ld width=%ld scale=%g reference=%d )",
+                        self->expanded->v[i]->shortName, self->expanded->v[i]->code, self->expanded->v[i]->width,
+                        self->expanded->v[i]->scale, self->expanded->v[i]->reference);
+                for (j=0;j<grib_darray_used_size(self->numericValues->v[elementIndex]);j++)
+                    grib_context_log(c,GRIB_LOG_ERROR,"%g ",self->numericValues->v[elementIndex]->v[i]);
             }
         } else {
             err=encode_double_value(c,buff,pos,i,self,self->numericValues->v[subsetIndex]->v[elementIndex]);
             if (err) {
-              grib_context_log(c,GRIB_LOG_ERROR,"encoding %s=%g",self->expanded->v[i]->shortName,self->numericValues->v[subsetIndex]->v[elementIndex]);
+                grib_context_log(c,GRIB_LOG_ERROR,"encoding %s=%g",self->expanded->v[i]->shortName,self->numericValues->v[subsetIndex]->v[elementIndex]);
             }
         }
     }
@@ -901,20 +901,16 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
 }
 
 static int encode_replication(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
-grib_buffer* buff,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,long* numberOfRepetitions)
+        grib_buffer* buff,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,long* numberOfRepetitions)
 {
-    bufr_descriptor** descriptors=0;
-
     if (self->compressedData) {
-      Assert(grib_darray_used_size(self->numericValues->v[elementIndex])==1);
-      *numberOfRepetitions=self->numericValues->v[elementIndex]->v[0];
+        Assert(grib_darray_used_size(self->numericValues->v[elementIndex])==1);
+        *numberOfRepetitions=self->numericValues->v[elementIndex]->v[0];
     } else {
-      *numberOfRepetitions=self->numericValues->v[subsetIndex]->v[elementIndex];
+        *numberOfRepetitions=self->numericValues->v[subsetIndex]->v[elementIndex];
     }
 
-
     return encode_element(c,self,subsetIndex,buff,data,pos,i,elementIndex,dval,0);
-
 }
 
 static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,long* pos,int iel,grib_iarray* elementsDescriptorsIndex,int iBitmapOperator)
@@ -1135,9 +1131,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     char code[10]={0,};
     int idx=0;
-    int i;
     unsigned long flags=0;
-    grib_accessor* operatorAccessor=NULL;
     grib_action operatorCreator = {0, };
     grib_accessor* elementAccessor=NULL;
     grib_action creator = {0, };
@@ -1180,13 +1174,13 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
         self->expanded->v[idx]->a=elementAccessor;
 
         if (attribute) {
-          /* attribute->parent=elementAccessor->parent; */
-          /*
+            /* attribute->parent=elementAccessor->parent; */
+            /*
           for (i=0;i<MAX_ACCESSOR_ATTRIBUTES;i++) {
             if (attribute->attributes[i]) attribute->attributes[i]->parent=elementAccessor->parent;
           }
-          */
-          grib_accessor_add_attribute(elementAccessor,attribute);
+             */
+            grib_accessor_add_attribute(elementAccessor,attribute);
         }
 
         attribute=create_attribute_variable("index",section,GRIB_TYPE_LONG,0,0,count,flags);
@@ -1311,7 +1305,6 @@ static grib_accessor* get_element_from_bitmap(grib_accessor* a,bitmap_s* bitmap)
     int ret;
     long bitmapVal=1;
     size_t len;
-    grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
 
     while (bitmapVal) {
         len=1;
@@ -1328,18 +1321,21 @@ static grib_accessor* get_element_from_bitmap(grib_accessor* a,bitmap_s* bitmap)
     return bitmap->referredElement ? bitmap->referredElement->prev->accessor : NULL ;
 }
 
+/*
 static GRIB_INLINE void reset_qualifiers(grib_accessor* significanceQualifierGroup[])
 {
     int i;
     for (i=0;i<number_of_qualifiers;i++)
         significanceQualifierGroup[i]=0;
 }
+*/
 
-static void grib_convert_to_attribute(grib_accessor* a) {
-  if (a->h==NULL && a->parent!=NULL) {
-    a->h=grib_handle_of_accessor(a);
-    a->parent=NULL;
-  }
+static void grib_convert_to_attribute(grib_accessor* a)
+{
+    if (a->h==NULL && a->parent!=NULL) {
+        a->h=grib_handle_of_accessor(a);
+        a->parent=NULL;
+    }
 }
 
 static int create_keys(grib_accessor* a)
@@ -1410,168 +1406,168 @@ static int create_keys(grib_accessor* a)
     extraElement=0;
 
     for (iss=0;iss<end;iss++) {
-      qualityPresent=0;
-      forceGroupClosure=0;
-      elementsInSubset= self->compressedData ? grib_iarray_used_size(self->elementsDescriptorsIndex->v[0]) :
-        grib_iarray_used_size(self->elementsDescriptorsIndex->v[iss]);
-      associatedFieldAccessor=NULL;
-      associatedFieldSignificanceAccessor=NULL;
-      for (ide=0;ide<elementsInSubset;ide++) {
-        idx = self->compressedData ? self->elementsDescriptorsIndex->v[0]->v[ide] :
-          self->elementsDescriptorsIndex->v[iss]->v[ide] ;
+        qualityPresent=0;
+        forceGroupClosure=0;
+        elementsInSubset= self->compressedData ? grib_iarray_used_size(self->elementsDescriptorsIndex->v[0]) :
+                grib_iarray_used_size(self->elementsDescriptorsIndex->v[iss]);
+        associatedFieldAccessor=NULL;
+        associatedFieldSignificanceAccessor=NULL;
+        for (ide=0;ide<elementsInSubset;ide++) {
+            idx = self->compressedData ? self->elementsDescriptorsIndex->v[0]->v[ide] :
+                    self->elementsDescriptorsIndex->v[iss]->v[ide] ;
 
-        descriptor=self->expanded->v[idx];
-        elementFromBitmap=NULL;
-        if (descriptor->F==0 && IS_QUALIFIER(descriptor->X)
+            descriptor=self->expanded->v[idx];
+            elementFromBitmap=NULL;
+            if (descriptor->F==0 && IS_QUALIFIER(descriptor->X)
             && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
-          int sidx=significanceQualifierIndex(descriptor->X,descriptor->Y);
-          groupNumber++;
+                int sidx=significanceQualifierIndex(descriptor->X,descriptor->Y);
+                groupNumber++;
 
-          if (significanceQualifierGroup[sidx]) {
-            groupSection=significanceQualifierGroup[sidx]->parent;
-            depth=significanceQualifierDepth[sidx];
-            reset_deeper_qualifiers(significanceQualifierGroup,significanceQualifierDepth,depth);
-          } else {
-            /* if (forceGroupClosure) { */
-            /* groupSection=sectionUp; */
-            /* forceGroupClosure=0; */
-            /* depth=0; */
-            /* } else { */
-            groupSection=section;
-            depth++;
-            /* } */
-          }
+                if (significanceQualifierGroup[sidx]) {
+                    groupSection=significanceQualifierGroup[sidx]->parent;
+                    depth=significanceQualifierDepth[sidx];
+                    reset_deeper_qualifiers(significanceQualifierGroup,significanceQualifierDepth,depth);
+                } else {
+                    /* if (forceGroupClosure) { */
+                    /* groupSection=sectionUp; */
+                    /* forceGroupClosure=0; */
+                    /* depth=0; */
+                    /* } else { */
+                    groupSection=section;
+                    depth++;
+                    /* } */
+                }
 
-          gaGroup = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
-          gaGroup->sub_section=grib_section_create(grib_handle_of_accessor(a),gaGroup);
-          gaGroup->bufr_group_number=groupNumber;
-          accessor_constant_set_type(gaGroup,GRIB_TYPE_LONG);
-          accessor_constant_set_dval(gaGroup,groupNumber);
-          grib_push_accessor(gaGroup,groupSection->block);
+                gaGroup = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
+                gaGroup->sub_section=grib_section_create(grib_handle_of_accessor(a),gaGroup);
+                gaGroup->bufr_group_number=groupNumber;
+                accessor_constant_set_type(gaGroup,GRIB_TYPE_LONG);
+                accessor_constant_set_dval(gaGroup,groupNumber);
+                grib_push_accessor(gaGroup,groupSection->block);
 
-          section=gaGroup->sub_section;
-          sectionUp=gaGroup->parent;
+                section=gaGroup->sub_section;
+                sectionUp=gaGroup->parent;
 
-          significanceQualifierGroup[sidx]=gaGroup;
-          significanceQualifierDepth[sidx]=depth;
-          incrementBitmapIndex=1;
-          dump=1;
-        } else if (descriptor->code == 31031 && incrementBitmapIndex!=0) {
-          /* bitmap */
-          bitmapIndex++;
-          groupNumber++;
-          incrementBitmapIndex=0;
-          bitmapStart[bitmapIndex]=grib_accessors_list_last(self->dataAccessors);
-          bitmapSize[bitmapIndex]=1;
-          if (self->expanded->v[idx-1]->code ==31002 || self->expanded->v[idx-1]->code==31001)
-            extraElement=1;
-          if (bitmapGroup[bitmapIndex]) {
-            groupSection=bitmapGroup[bitmapIndex]->parent;
-            depth=bitmapDepth[bitmapIndex];
-            reset_deeper_qualifiers(significanceQualifierGroup,significanceQualifierDepth,depth);
-            reset_deeper_qualifiers(bitmapGroup,bitmapDepth,depth);
-          } else {
-            groupSection=section;
-            depth++;
-          }
-          gaGroup = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
-          gaGroup->sub_section=grib_section_create(grib_handle_of_accessor(a),gaGroup);
-          gaGroup->bufr_group_number=groupNumber;
-          accessor_constant_set_type(gaGroup,GRIB_TYPE_LONG);
-          accessor_constant_set_dval(gaGroup,groupNumber);
-          grib_push_accessor(gaGroup,groupSection->block);
+                significanceQualifierGroup[sidx]=gaGroup;
+                significanceQualifierDepth[sidx]=depth;
+                incrementBitmapIndex=1;
+                dump=1;
+            } else if (descriptor->code == 31031 && incrementBitmapIndex!=0) {
+                /* bitmap */
+                bitmapIndex++;
+                groupNumber++;
+                incrementBitmapIndex=0;
+                bitmapStart[bitmapIndex]=grib_accessors_list_last(self->dataAccessors);
+                bitmapSize[bitmapIndex]=1;
+                if (self->expanded->v[idx-1]->code ==31002 || self->expanded->v[idx-1]->code==31001)
+                    extraElement=1;
+                if (bitmapGroup[bitmapIndex]) {
+                    groupSection=bitmapGroup[bitmapIndex]->parent;
+                    depth=bitmapDepth[bitmapIndex];
+                    reset_deeper_qualifiers(significanceQualifierGroup,significanceQualifierDepth,depth);
+                    reset_deeper_qualifiers(bitmapGroup,bitmapDepth,depth);
+                } else {
+                    groupSection=section;
+                    depth++;
+                }
+                gaGroup = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
+                gaGroup->sub_section=grib_section_create(grib_handle_of_accessor(a),gaGroup);
+                gaGroup->bufr_group_number=groupNumber;
+                accessor_constant_set_type(gaGroup,GRIB_TYPE_LONG);
+                accessor_constant_set_dval(gaGroup,groupNumber);
+                grib_push_accessor(gaGroup,groupSection->block);
 
-          section=gaGroup->sub_section;
-          sectionUp=gaGroup->parent;
-          bitmapGroup[bitmapIndex]=gaGroup;
-          bitmapDepth[bitmapIndex]=depth;
-          dump=1;
-        } else if (descriptor->code == 31031) {
-          dump=1;
-          bitmapSize[bitmapIndex]++;
-          bitmap.cursor=0;
-        } else if (descriptor->code == 222000 || descriptor->code == 224000 ) {
-          bitmap.referredElement=NULL;
-          qualityPresent=1;
-          incrementBitmapIndex=1;
-          dump=1;
-        } else if (descriptor->code == 236000 ) {
-          bitmap.referredElement=NULL;
-          bitmap.cursor=0;
-          reuseBitmap=1;
-          extraElement=1;
-          dump=1;
-        } else if (descriptor->code == 236000 || descriptor->code == 237000 ) {
-          bitmap.referredElement=NULL;
-          bitmap.cursor=0;
-          reuseBitmap=1;
-          dump=1;
-        } else if (descriptor->code == 237255 ) {
-          reuseBitmap=0;
-          incrementBitmapIndex=1;
-          bitmap.cursor=0;
-          dump=1;
-        } else if ( ( descriptor->X==33 || descriptor->isMarker )  && qualityPresent) {
-          if (!bitmap.referredElement) {
-            bitmap.cursor=bitmapStart[bitmapIndex]->next;
-            bitmap.referredElement=bitmapStart[bitmapIndex];
-            for (i=0;i<bitmapSize[bitmapIndex]+extraElement && bitmap.referredElement!=NULL ;i++) {
-              bitmap.referredElement=bitmap.referredElement->prev;
+                section=gaGroup->sub_section;
+                sectionUp=gaGroup->parent;
+                bitmapGroup[bitmapIndex]=gaGroup;
+                bitmapDepth[bitmapIndex]=depth;
+                dump=1;
+            } else if (descriptor->code == 31031) {
+                dump=1;
+                bitmapSize[bitmapIndex]++;
+                bitmap.cursor=0;
+            } else if (descriptor->code == 222000 || descriptor->code == 224000 ) {
+                bitmap.referredElement=NULL;
+                qualityPresent=1;
+                incrementBitmapIndex=1;
+                dump=1;
+            } else if (descriptor->code == 236000 ) {
+                bitmap.referredElement=NULL;
+                bitmap.cursor=0;
+                reuseBitmap=1;
+                extraElement=1;
+                dump=1;
+            } else if (descriptor->code == 236000 || descriptor->code == 237000 ) {
+                bitmap.referredElement=NULL;
+                bitmap.cursor=0;
+                reuseBitmap=1;
+                dump=1;
+            } else if (descriptor->code == 237255 ) {
+                reuseBitmap=0;
+                incrementBitmapIndex=1;
+                bitmap.cursor=0;
+                dump=1;
+            } else if ( ( descriptor->X==33 || descriptor->isMarker )  && qualityPresent) {
+                if (!bitmap.referredElement) {
+                    bitmap.cursor=bitmapStart[bitmapIndex]->next;
+                    bitmap.referredElement=bitmapStart[bitmapIndex];
+                    for (i=0;i<bitmapSize[bitmapIndex]+extraElement && bitmap.referredElement!=NULL ;i++) {
+                        bitmap.referredElement=bitmap.referredElement->prev;
+                    }
+                }
+                elementFromBitmap=get_element_from_bitmap(a,&bitmap);
+                dump=1;
+                /* } else if ( descriptor->Y==1 && IS_QUALIFIER(self->expanded->v[idx-1]->X)==0) { */
+                /* forceGroupClosure=1; */
+                /* reset_qualifiers(significanceQualifierGroup); */
             }
-          }
-          elementFromBitmap=get_element_from_bitmap(a,&bitmap);
-          dump=1;
-          /* } else if ( descriptor->Y==1 && IS_QUALIFIER(self->expanded->v[idx-1]->X)==0) { */
-          /* forceGroupClosure=1; */
-          /* reset_qualifiers(significanceQualifierGroup); */
-      }
 
-      if (ide==0 && !self->compressedData) {
-        grib_accessor* asn=NULL;
-        long subsetNumber=iss+1;
-        size_t len=1;
-        grib_action creatorsn = {0, };
-        creatorsn.op         = "variable";
-        creatorsn.name_space = "";
-        creatorsn.flags     = GRIB_ACCESSOR_FLAG_READ_ONLY | GRIB_ACCESSOR_FLAG_DUMP ;
-        creatorsn.set        = 0;
+            if (ide==0 && !self->compressedData) {
+                grib_accessor* asn=NULL;
+                long subsetNumber=iss+1;
+                size_t len=1;
+                grib_action creatorsn = {0, };
+                creatorsn.op         = "variable";
+                creatorsn.name_space = "";
+                creatorsn.flags     = GRIB_ACCESSOR_FLAG_READ_ONLY | GRIB_ACCESSOR_FLAG_DUMP ;
+                creatorsn.set        = 0;
 
-        creatorsn.name="subsetNumber";
-        asn=grib_accessor_factory(section, &creatorsn, 0, NULL);
-        accessor_variable_set_type(asn,GRIB_TYPE_LONG);
-        grib_pack_long(asn,&subsetNumber,&len);
+                creatorsn.name="subsetNumber";
+                asn=grib_accessor_factory(section, &creatorsn, 0, NULL);
+                accessor_variable_set_type(asn,GRIB_TYPE_LONG);
+                grib_pack_long(asn,&subsetNumber,&len);
 
-        grib_push_accessor(asn,section->block);
-        grib_accessors_list_push(self->dataAccessors,asn);
-      }
-      count++;
-      elementAccessor=create_accessor_from_descriptor(a,associatedFieldAccessor,section,ide,iss,dump,count);
-      associatedFieldAccessor=NULL;
-      if (elementFromBitmap && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
-        grib_accessor_add_attribute(elementFromBitmap,elementAccessor);
-      } else if (elementAccessor) {
-
-        switch (descriptor->code) {
-          case 999999:
-            associatedFieldAccessor=elementAccessor;
-            grib_convert_to_attribute(associatedFieldAccessor);
-            if (associatedFieldSignificanceAccessor) {
-              grib_accessor* newAccessor=grib_accessor_clone(associatedFieldSignificanceAccessor,section,&err);
-              if (err) {
-                grib_context_log(a->context,GRIB_LOG_ERROR,"unable to clone accessor '%s'\n",associatedFieldSignificanceAccessor->name);
-                return err;
-              }
-              grib_accessor_add_attribute(associatedFieldAccessor,newAccessor);
+                grib_push_accessor(asn,section->block);
+                grib_accessors_list_push(self->dataAccessors,asn);
             }
-            break;
-          case 31021:
-            associatedFieldSignificanceAccessor=elementAccessor;
-          default:
-            grib_push_accessor(elementAccessor,section->block);
-            grib_accessors_list_push(self->dataAccessors,elementAccessor);
+            count++;
+            elementAccessor=create_accessor_from_descriptor(a,associatedFieldAccessor,section,ide,iss,dump,count);
+            associatedFieldAccessor=NULL;
+            if (elementFromBitmap && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
+                grib_accessor_add_attribute(elementFromBitmap,elementAccessor);
+            } else if (elementAccessor) {
+
+                switch (descriptor->code) {
+                case 999999:
+                    associatedFieldAccessor=elementAccessor;
+                    grib_convert_to_attribute(associatedFieldAccessor);
+                    if (associatedFieldSignificanceAccessor) {
+                        grib_accessor* newAccessor=grib_accessor_clone(associatedFieldSignificanceAccessor,section,&err);
+                        if (err) {
+                            grib_context_log(a->context,GRIB_LOG_ERROR,"unable to clone accessor '%s'\n",associatedFieldSignificanceAccessor->name);
+                            return err;
+                        }
+                        grib_accessor_add_attribute(associatedFieldAccessor,newAccessor);
+                    }
+                    break;
+                case 31021:
+                    associatedFieldSignificanceAccessor=elementAccessor;
+                default:
+                    grib_push_accessor(elementAccessor,section->block);
+                    grib_accessors_list_push(self->dataAccessors,elementAccessor);
+                }
+            }
         }
-      }
-      }
     }
 
     return err;
@@ -1591,7 +1587,7 @@ static int process_elements(grib_accessor* a,int flag)
     unsigned char* data=0;
     int i;
     grib_iarray* elementsDescriptorsIndex=0;
-    long localReference=0,width=0;
+
     long pos=0;
     int iss,end,elementIndex,index;
     long numberOfDescriptors;
@@ -1613,7 +1609,7 @@ static int process_elements(grib_accessor* a,int flag)
     totalSize=self->bitsToEndData;
 
     switch (flag) {
-      case PROCESS_DECODE:
+    case PROCESS_DECODE:
         if (!self->do_decode) return 0;
         self->do_decode=0;
         buffer=h->buffer;
@@ -1623,7 +1619,7 @@ static int process_elements(grib_accessor* a,int flag)
         codec_element=&decode_element;
         codec_replication=&decode_replication;
         break;
-      case PROCESS_NEW_DATA:
+    case PROCESS_NEW_DATA:
         buffer=grib_create_growable_buffer(c);
         decoding=0;
         do_clean=1;
@@ -1632,7 +1628,7 @@ static int process_elements(grib_accessor* a,int flag)
         codec_element=&encode_new_element;
         codec_replication=&encode_new_replication;
         break;
-      case PROCESS_ENCODE:
+    case PROCESS_ENCODE:
         buffer=grib_create_growable_buffer(c);
         decoding=0;
         do_clean=0;
@@ -1641,7 +1637,7 @@ static int process_elements(grib_accessor* a,int flag)
         codec_element=&encode_element;
         codec_replication=&encode_replication;
         break;
-      default :
+    default :
         return GRIB_NOT_IMPLEMENTED;
     }
     data=(unsigned char*)buffer->data;
@@ -1652,18 +1648,18 @@ static int process_elements(grib_accessor* a,int flag)
     descriptors=self->expanded->v;
 
     if (do_clean==1 && self->numericValues) {
-      grib_vdarray_delete_content(c,self->numericValues);
-      grib_vdarray_delete(c,self->numericValues);
-      grib_vsarray_delete_content(c,self->stringValues);
-      grib_vsarray_delete(c,self->stringValues);
+        grib_vdarray_delete_content(c,self->numericValues);
+        grib_vdarray_delete(c,self->numericValues);
+        grib_vsarray_delete_content(c,self->stringValues);
+        grib_vsarray_delete(c,self->stringValues);
     }
 
     if (flag!=PROCESS_ENCODE) {
-      self->numericValues=grib_vdarray_new(c,100,100);
-      self->stringValues=grib_vsarray_new(c,10,10);
+        self->numericValues=grib_vdarray_new(c,100,100);
+        self->stringValues=grib_vsarray_new(c,10,10);
 
-      if (self->elementsDescriptorsIndex) grib_viarray_delete(c,self->elementsDescriptorsIndex);
-      self->elementsDescriptorsIndex=grib_viarray_new(c,100,100);
+        if (self->elementsDescriptorsIndex) grib_viarray_delete(c,self->elementsDescriptorsIndex);
+        self->elementsDescriptorsIndex=grib_viarray_new(c,100,100);
     }
 
     end= self->compressedData ? 1 : self->numberOfSubsets;
@@ -1671,201 +1667,201 @@ static int process_elements(grib_accessor* a,int flag)
     numberOfDescriptors=grib_bufr_descriptors_array_used_size(self->expanded);
 
     for (iss=0;iss<end;iss++) {
-      icount=1;
-      grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data processing: subsetNumber=%ld", iss+1);
+        icount=1;
+        grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data processing: subsetNumber=%ld", iss+1);
 
-      if (flag!=PROCESS_ENCODE) {
-        elementsDescriptorsIndex=grib_iarray_new(c,100,100);
-        if (!self->compressedData) {
-          dval=grib_darray_new(c,100,100);
-          /* sval=grib_sarray_new(c,10,10); */
+        if (flag!=PROCESS_ENCODE) {
+            elementsDescriptorsIndex=grib_iarray_new(c,100,100);
+            if (!self->compressedData) {
+                dval=grib_darray_new(c,100,100);
+                /* sval=grib_sarray_new(c,10,10); */
+            }
+        } else {
+            elementsDescriptorsIndex=self->elementsDescriptorsIndex->v[iss];
+            dval=self->numericValues->v[iss];
         }
-      } else {
-        elementsDescriptorsIndex=self->elementsDescriptorsIndex->v[iss];
-        dval=self->numericValues->v[iss];
-      }
-      elementIndex=0;
+        elementIndex=0;
 
-      for (i=0;i<numberOfDescriptors;i++) {
-        grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data processing: elementNumber=%ld code=%6.6ld", icount++,descriptors[i]->code);
-        switch(descriptors[i]->F) {
-          case 0:
-            /* Table B element */
-            if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
-            if (descriptors[i]->code==31031 && !is_bitmap_start_defined(self)) {
-              /* self->bitmapStart=grib_iarray_used_size(elementsDescriptorsIndex)-1; */
-              self->bitmapStart=elementIndex;
-            }
-            err=codec_element(c,self,iss,buffer,data,&pos,i,elementIndex,dval,sval);
-            if (err) return err;
-            elementIndex++;
-            break;
-          case 1:
-            /* Delayed replication */
-            inr=numberOfNestedRepetitions;
-            numberOfNestedRepetitions++;
-            Assert(numberOfNestedRepetitions<=MAX_NESTED_REPLICATIONS);
-            numberOfElementsToRepeat[inr]=descriptors[i]->X;
-            n[inr]=numberOfElementsToRepeat[inr];
-            i++;
-
-            err=codec_replication(c,self,iss,buffer,data,&pos,i,elementIndex,dval,&(numberOfRepetitions[inr]));
-            if (err) return err;
-
-            startRepetition[inr]=i;
-            nn[inr]=numberOfRepetitions[inr];
-            if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
-            elementIndex++;
-            if (numberOfRepetitions[inr]==0) {
-              i+=numberOfElementsToRepeat[inr];
-              if (inr>0) {
-                n[inr-1]-=numberOfElementsToRepeat[inr]+2;
-              /* if the empty nested repetion is at the end of the nesting repetition
-              we need to repoint to the start of the nesting repetition */
-                if (n[inr-1]==0) {
-                  nn[inr-1]--;
-                  if (nn[inr-1]<=0) numberOfNestedRepetitions--;
+        for (i=0;i<numberOfDescriptors;i++) {
+            grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data processing: elementNumber=%ld code=%6.6ld", icount++,descriptors[i]->code);
+            switch(descriptors[i]->F) {
+            case 0:
+                /* Table B element */
+                if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
+                if (descriptors[i]->code==31031 && !is_bitmap_start_defined(self)) {
+                    /* self->bitmapStart=grib_iarray_used_size(elementsDescriptorsIndex)-1; */
+                    self->bitmapStart=elementIndex;
                 }
-              }
-              numberOfNestedRepetitions--;
-            }
-            continue;
-          case 2:
-            /* Operator */
-            associatedFieldWidth=0;
-            localDescriptorWidth=0;
-            switch(descriptors[i]->X) {
-              case 5:
-                descriptors[i]->width=descriptors[i]->Y*8;
-                descriptors[i]->type=BUFR_DESCRIPTOR_TYPE_STRING; 
                 err=codec_element(c,self,iss,buffer,data,&pos,i,elementIndex,dval,sval);
                 if (err) return err;
-                if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
                 elementIndex++;
                 break;
-              case 22:
-              case 26:
-              case 27:
-              case 29:
-              case 30:
-              case 31:
-              case 33:
-              case 34:
-              case 38:
-              case 39:
-              case 40:
-              case 41:
-              case 42:
+            case 1:
+                /* Delayed replication */
+                inr=numberOfNestedRepetitions;
+                numberOfNestedRepetitions++;
+                Assert(numberOfNestedRepetitions<=MAX_NESTED_REPLICATIONS);
+                numberOfElementsToRepeat[inr]=descriptors[i]->X;
+                n[inr]=numberOfElementsToRepeat[inr];
+                i++;
+
+                err=codec_replication(c,self,iss,buffer,data,&pos,i,elementIndex,dval,&(numberOfRepetitions[inr]));
+                if (err) return err;
+
+                startRepetition[inr]=i;
+                nn[inr]=numberOfRepetitions[inr];
                 if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
-                if (decoding) push_zero_element(self,dval);
                 elementIndex++;
-                break;
-              case 23:
-                /* substituted values marker operator */
-              case 24:
-                /*first-order statistical values marker operator*/
-              case 32:
-                /*replaced/retained values marker operator*/
-                if (descriptors[i]->Y==255) {
-                  index=get_next_bitmap_descriptor_index(self,elementsDescriptorsIndex,dval);
-                  err=codec_element(c,self,iss,buffer,data,&pos,index,elementIndex,dval,sval);
-                  if (err) return err;
-                  /* self->expanded->v[index] */
-                  if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
-                  elementIndex++;
-                } else {
-                  if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
-                  if (decoding) push_zero_element(self,dval);
-					        elementIndex++;
+                if (numberOfRepetitions[inr]==0) {
+                    i+=numberOfElementsToRepeat[inr];
+                    if (inr>0) {
+                        n[inr-1]-=numberOfElementsToRepeat[inr]+2;
+                        /* if the empty nested repetion is at the end of the nesting repetition
+              we need to repoint to the start of the nesting repetition */
+                        if (n[inr-1]==0) {
+                            nn[inr-1]--;
+                            if (nn[inr-1]<=0) numberOfNestedRepetitions--;
+                        }
+                    }
+                    numberOfNestedRepetitions--;
+                }
+                continue;
+            case 2:
+                /* Operator */
+                associatedFieldWidth=0;
+                localDescriptorWidth=0;
+                switch(descriptors[i]->X) {
+                case 5:
+                    descriptors[i]->width=descriptors[i]->Y*8;
+                    descriptors[i]->type=BUFR_DESCRIPTOR_TYPE_STRING;
+                    err=codec_element(c,self,iss,buffer,data,&pos,i,elementIndex,dval,sval);
+                    if (err) return err;
+                    if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
+                    elementIndex++;
+                    break;
+                case 22:
+                case 26:
+                case 27:
+                case 29:
+                case 30:
+                case 31:
+                case 33:
+                case 34:
+                case 38:
+                case 39:
+                case 40:
+                case 41:
+                case 42:
+                    if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
+                    if (decoding) push_zero_element(self,dval);
+                    elementIndex++;
+                    break;
+                case 23:
+                    /* substituted values marker operator */
+                case 24:
+                    /*first-order statistical values marker operator*/
+                case 32:
+                    /*replaced/retained values marker operator*/
+                    if (descriptors[i]->Y==255) {
+                        index=get_next_bitmap_descriptor_index(self,elementsDescriptorsIndex,dval);
+                        err=codec_element(c,self,iss,buffer,data,&pos,index,elementIndex,dval,sval);
+                        if (err) return err;
+                        /* self->expanded->v[index] */
+                        if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
+                        elementIndex++;
+                    } else {
+                        if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
+                        if (decoding) push_zero_element(self,dval);
+                        elementIndex++;
+                    }
+                    break;
+                case 25:
+                    /*difference statistical values marker operator*/
+                    break;
+                case 35:
+                    /* cancel bitmap */
+                    if (flag!=PROCESS_ENCODE) {
+                        grib_iarray_push(elementsDescriptorsIndex,i);
+                        if (decoding) push_zero_element(self,dval);
+                        if (descriptors[i]->Y==0) cancel_bitmap(self);
+                    }
+                    elementIndex++;
+                    break;
+                case 36:
+                    /* bitmap */
+                    if (flag!=PROCESS_ENCODE) {
+                        grib_iarray_push(elementsDescriptorsIndex,i);
+                        if (decoding) push_zero_element(self,dval);
+                        build_bitmap(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                    } else {
+                        restart_bitmap(self);
+                    }
+                    elementIndex++;
+                    break;
+                case 37:
+                    /* reuse defined bitmap */
+                    if (flag!=PROCESS_ENCODE) {
+                        grib_iarray_push(elementsDescriptorsIndex,i);
+                        if (decoding) push_zero_element(self,dval);
+                    }
+                    if (descriptors[i]->Y==0) restart_bitmap(self);
+                    /* cancel reuse */
+                    else cancel_bitmap(self);
+                    elementIndex++;
+                    break;
+                default :
+                    grib_context_log(c,GRIB_LOG_ERROR,"unsupported operator %d\n",descriptors[i]->X);
+                    return GRIB_INTERNAL_ERROR;
                 }
                 break;
-              case 25:
-                /*difference statistical values marker operator*/
-                break;
-              case 35:
-                /* cancel bitmap */
-                if (flag!=PROCESS_ENCODE) {
-                  grib_iarray_push(elementsDescriptorsIndex,i);
-                  if (decoding) push_zero_element(self,dval);
-                  if (descriptors[i]->Y==0) cancel_bitmap(self);
-                }
-				        elementIndex++;
-                break;
-              case 36:
-                /* bitmap */
-                if (flag!=PROCESS_ENCODE) {
-                  grib_iarray_push(elementsDescriptorsIndex,i);
-                  if (decoding) push_zero_element(self,dval);
-                  build_bitmap(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
-                } else {
-                  restart_bitmap(self);
-                }
-				        elementIndex++;
-                break;
-              case 37:
-                /* reuse defined bitmap */
-                if (flag!=PROCESS_ENCODE) {
-                  grib_iarray_push(elementsDescriptorsIndex,i);
-                  if (decoding) push_zero_element(self,dval);
-                }
-                  if (descriptors[i]->Y==0) restart_bitmap(self);
-                  /* cancel reuse */
-                  else cancel_bitmap(self);
-				        elementIndex++;
-                break;
-              default :
-                grib_context_log(c,GRIB_LOG_ERROR,"unsupported operator %d\n",descriptors[i]->X);
-                return GRIB_INTERNAL_ERROR;
+                case 9:
+                    /* associated field */
+                    if (descriptors[i]->X==99 && descriptors[i]->Y==999) {
+                        err=codec_element(c,self,iss,buffer,data,&pos,i,elementIndex,dval,sval);
+                        if (err) return err;
+                        if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
+                        elementIndex++;
+                    } else {
+                        return GRIB_INTERNAL_ERROR;
+                    }
+                    break;
+                default:
+                    err=GRIB_INTERNAL_ERROR;
+                    return err;
             }
-            break;
-          case 9:
-            /* associated field */
-            if (descriptors[i]->X==99 && descriptors[i]->Y==999) {
-              err=codec_element(c,self,iss,buffer,data,&pos,i,elementIndex,dval,sval);
-              if (err) return err;
-              if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
-              elementIndex++;
-            } else {
-              return GRIB_INTERNAL_ERROR;
-            }
-            break;
-          default:
-            err=GRIB_INTERNAL_ERROR;
-            return err;
-        }
 
-        /* delayed repetition check */
-        innr=numberOfNestedRepetitions-1;
-        for (ir=innr;ir>=0;ir--) {
-          if (nn[ir])  {
-            if (n[ir]>1) {
-              n[ir]--;
-              break;
-            } else {
-              n[ir]=numberOfElementsToRepeat[ir];
-              nn[ir]--;
-              if (nn[ir]) {
-                i=startRepetition[ir];
-                break;
-              } else {
-                if (ir>0)  {
-                  n[ir-1]-=numberOfElementsToRepeat[ir]+2;
+            /* delayed repetition check */
+            innr=numberOfNestedRepetitions-1;
+            for (ir=innr;ir>=0;ir--) {
+                if (nn[ir])  {
+                    if (n[ir]>1) {
+                        n[ir]--;
+                        break;
+                    } else {
+                        n[ir]=numberOfElementsToRepeat[ir];
+                        nn[ir]--;
+                        if (nn[ir]) {
+                            i=startRepetition[ir];
+                            break;
+                        } else {
+                            if (ir>0)  {
+                                n[ir-1]-=numberOfElementsToRepeat[ir]+2;
+                            }
+                            i=startRepetition[ir]+numberOfElementsToRepeat[ir];
+                            numberOfNestedRepetitions--;
+                        }
+                    }
+                } else {
+                    if (ir==0) {
+                        i=startRepetition[ir]+numberOfElementsToRepeat[ir]+1;
+                        numberOfNestedRepetitions=0;
+                    } else {
+                        numberOfNestedRepetitions--;
+                    }
                 }
-                i=startRepetition[ir]+numberOfElementsToRepeat[ir];
-                numberOfNestedRepetitions--;
-              }
             }
-          } else {
-            if (ir==0) {
-              i=startRepetition[ir]+numberOfElementsToRepeat[ir]+1;
-              numberOfNestedRepetitions=0;
-            } else {
-              numberOfNestedRepetitions--;
-            }
-          }
-        }
 
-      }
+        }
         if (flag!=PROCESS_ENCODE) grib_viarray_push(c,self->elementsDescriptorsIndex,elementsDescriptorsIndex);
         if (decoding && !self->compressedData) {
             grib_vdarray_push(c,self->numericValues,dval);
@@ -1906,25 +1902,24 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 static int value_count(grib_accessor* a,long* count)
 {
-  int err=0,l;
-  long i,subsetNumber=0;
-  grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
-  grib_context* c=a->context;
+    int err=0,l;
+    long i;
+    grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
 
-  err=process_elements(a,PROCESS_DECODE);
-  if (err) return err;
+    err=process_elements(a,PROCESS_DECODE);
+    if (err) return err;
 
-  if (self->compressedData) {
-    l=grib_vdarray_used_size(self->numericValues);
+    if (self->compressedData) {
+        l=grib_vdarray_used_size(self->numericValues);
 
-    *count=l*self->numberOfSubsets;
-  } else {
-    *count=0;
-    for (i=0;i<self->numberOfSubsets;i++)
-      *count+=grib_iarray_used_size(self->elementsDescriptorsIndex->v[i]);
-  }
+        *count=l*self->numberOfSubsets;
+    } else {
+        *count=0;
+        for (i=0;i<self->numberOfSubsets;i++)
+            *count+=grib_iarray_used_size(self->elementsDescriptorsIndex->v[i]);
+    }
 
-  return err;
+    return err;
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t *len)
@@ -1934,7 +1929,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     size_t l=0,elementsInSubset;
     long numberOfSubsets=0;
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
-    grib_context* c=a->context;
 
     if (self->unpackMode == CODES_BUFR_NEW_DATA) proc_flag=PROCESS_NEW_DATA;
 
@@ -1947,20 +1941,20 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     if (err) return err;
 
     if (self->compressedData) {
-      ii=0;
-      for (k=0;k<numberOfSubsets;k++) {
-        for (i=0;i<l;i++) {
-          val[ii++]=self->numericValues->v[i]->n > 1 ? self->numericValues->v[i]->v[k] : self->numericValues->v[i]->v[0];
+        ii=0;
+        for (k=0;k<numberOfSubsets;k++) {
+            for (i=0;i<l;i++) {
+                val[ii++]=self->numericValues->v[i]->n > 1 ? self->numericValues->v[i]->v[k] : self->numericValues->v[i]->v[0];
+            }
         }
-      }
     } else {
-      ii=0;
-      for (k=0;k<numberOfSubsets;k++) {
-        elementsInSubset=grib_iarray_used_size(self->elementsDescriptorsIndex->v[k]);
-        for (i=0;i<elementsInSubset;i++) {
-          val[ii++]=self->numericValues->v[k]->v[i];
+        ii=0;
+        for (k=0;k<numberOfSubsets;k++) {
+            elementsInSubset=grib_iarray_used_size(self->elementsDescriptorsIndex->v[k]);
+            for (i=0;i<elementsInSubset;i++) {
+                val[ii++]=self->numericValues->v[k]->v[i];
+            }
         }
-      }
     }
 
     return GRIB_SUCCESS;
