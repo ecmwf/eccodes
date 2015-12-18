@@ -135,73 +135,73 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-	grib_accessor_suppressed* self = (grib_accessor_suppressed*)a; 
-	self->args = c;
-  a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
-  a->length=0;
+    grib_accessor_suppressed* self = (grib_accessor_suppressed*)a;
+    self->args = c;
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    a->length=0;
 }
 
-static void log_message(grib_accessor* a) {
-  grib_accessor_suppressed* self = (grib_accessor_suppressed*)a;
-  int i=0;
-  
-  grib_context_log(a->context,GRIB_LOG_ERROR,
-                   "key %s is unvailable in this version.",a->name);
-  grib_context_log(a->context,GRIB_LOG_ERROR,
-                   "Please use the following keys:");
-  while (grib_arguments_get_name(grib_handle_of_accessor(a),self->args,i)) {
+static void log_message(grib_accessor* a)
+{
+    grib_accessor_suppressed* self = (grib_accessor_suppressed*)a;
+    int i=0;
+
     grib_context_log(a->context,GRIB_LOG_ERROR,
-                     "\t- %s",
-                     grib_arguments_get_name(grib_handle_of_accessor(a),self->args,i));
-    i++;
-  }
+            "key %s is unavailable in this version.",a->name);
+    grib_context_log(a->context,GRIB_LOG_ERROR,
+            "Please use the following keys:");
+    while (grib_arguments_get_name(grib_handle_of_accessor(a),self->args,i)) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,
+                "\t- %s",
+                grib_arguments_get_name(grib_handle_of_accessor(a),self->args,i));
+        i++;
+    }
 }
 
-static int pack_string(grib_accessor* a, const char* val, size_t *len){
-
-  log_message(a);
-	return GRIB_NOT_IMPLEMENTED;
-
+static int pack_string(grib_accessor* a, const char* val, size_t *len)
+{
+    log_message(a);
+    return GRIB_NOT_IMPLEMENTED;
 }
 
-static int pack_long(grib_accessor* a, const long* val, size_t *len){
-
-  log_message(a);
-  return GRIB_NOT_IMPLEMENTED;
-
+static int pack_long(grib_accessor* a, const long* val, size_t *len)
+{
+    log_message(a);
+    return GRIB_NOT_IMPLEMENTED;
 }
 
-static int pack_double(grib_accessor* a, const double* val, size_t *len){
-
-  log_message(a);
-  return GRIB_NOT_IMPLEMENTED;
-
+static int pack_double(grib_accessor* a, const double* val, size_t *len)
+{
+    log_message(a);
+    return GRIB_NOT_IMPLEMENTED;
 }
 
-
-static int    unpack_string(grib_accessor* a, char* val, size_t *len)
+static int unpack_string(grib_accessor* a, char* val, size_t *len)
 {   
-  /*log_message(a);*/
-	return GRIB_NOT_IMPLEMENTED;
+    /*log_message(a);*/
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {   
-  log_message(a);
-  return GRIB_NOT_IMPLEMENTED;
+    log_message(a);
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-  log_message(a);
-  return GRIB_NOT_IMPLEMENTED;
+    log_message(a);
+    return GRIB_NOT_IMPLEMENTED;
 }
 
-
-static int value_count(grib_accessor* a,long* count) { *count=1;return 0; }
-
-static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_STRING;
+static int value_count(grib_accessor* a,long* count)
+{
+    *count=1;
+    return 0;
 }
 
+static int get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_STRING;
+}
