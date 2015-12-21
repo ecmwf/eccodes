@@ -447,6 +447,12 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 1 ;
 	}
+#Virtual potential temperature
+'vptmp' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 15 ;
+	}
 #Pseudo-adiabatic potential temperature
 'p3014' = {
 	 discipline = 0 ;
@@ -2235,12 +2241,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 7 ;
-	}
-#Virtual potential temperature
-'p3012' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 15 ;
 	}
 #Maximum temperature
 'p3015' = {
