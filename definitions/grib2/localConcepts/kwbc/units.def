@@ -1630,7 +1630,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 8 ;
-	}
+}
 #Sunshine Duration
 's' = {
 	 discipline = 0 ;
@@ -1638,7 +1638,7 @@
 	 parameterNumber = 201 ;
 	}
 #Ventilation Rate
-'m**2 s-1' = {
+'m**2 s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 224 ;
