@@ -94,6 +94,14 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 32 ;
 	}
+#large scale precipitation
+'3062' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 54 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Snow depth
 '3066' = {
 	 discipline = 0 ;
@@ -763,14 +771,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 17 ;
 	 typeOfFirstFixedSurface = 1 ;
-	}
-#large scale precipitation
-'3062' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 54 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
 	}
 #Latent heat net flux
 '260002' = {
