@@ -47,6 +47,7 @@ list( APPEND tests2
     bufr_filter
     bufr_json
     bufr_ls
+    ecc-197
     gts_ls
     metar_ls
     metar_dump
