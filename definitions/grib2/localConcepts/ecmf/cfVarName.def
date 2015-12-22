@@ -314,6 +314,7 @@
 	 typeOfStatisticalProcessing = 2 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfFirstFixedSurface = 103 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 lengthOfTimeRange = 24 ;
 	}
 #Minimum temperature at 2 metres in the last 24 hours
@@ -325,6 +326,7 @@
 	 typeOfStatisticalProcessing = 3 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfFirstFixedSurface = 103 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 lengthOfTimeRange = 24 ;
 	}
 #Montgomery potential
@@ -9090,6 +9092,7 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 2 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 lengthOfTimeRange = 3 ;
 	}
 #Minimum temperature at 2 metres in the last 3 hours
@@ -9101,6 +9104,7 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 3 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 lengthOfTimeRange = 3 ;
 	}
 #10 metre wind gust in the last 3 hours

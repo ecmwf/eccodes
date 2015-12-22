@@ -314,6 +314,7 @@
 	 typeOfStatisticalProcessing = 2 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfFirstFixedSurface = 103 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 lengthOfTimeRange = 24 ;
 	}
 #Minimum temperature at 2 metres in the last 24 hours
@@ -326,6 +327,7 @@
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 lengthOfTimeRange = 24 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	}
 #Montgomery potential
 '53' = {
@@ -9088,6 +9090,7 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 lengthOfTimeRange = 3 ;
@@ -9099,6 +9102,7 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 3 ;

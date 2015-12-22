@@ -115,6 +115,7 @@
 	 parameterNumber = 22 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 lengthOfTimeRange = 3 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
@@ -560,6 +561,7 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 lengthOfTimeRange = 6 ;
 	}
 #Minimum temperature at 2 metres in the last 6 hours
@@ -571,6 +573,7 @@
 	 typeOfStatisticalProcessing = 3 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 lengthOfTimeRange = 6 ;
 	}
 #Geopotential

@@ -315,6 +315,7 @@
 	 lengthOfTimeRange = 24 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	}
 #Minimum temperature at 2 metres in the last 24 hours
 'mn2t24' = {
@@ -324,6 +325,7 @@
 	 lengthOfTimeRange = 24 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 3 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfFirstFixedSurface = 103 ;
 	}
@@ -9088,6 +9090,7 @@
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 lengthOfTimeRange = 3 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
@@ -9097,6 +9100,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
