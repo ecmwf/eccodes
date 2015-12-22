@@ -693,28 +693,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 120 ;
 	}
-#Maximum temperature at 2 metres in the last 6 hours
-'Maximum temperature at 2 metres in the last 6 hours' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 lengthOfTimeRange = 6 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
-#Minimum temperature at 2 metres in the last 6 hours
-'Minimum temperature at 2 metres in the last 6 hours' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 lengthOfTimeRange = 6 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 typeOfFirstFixedSurface = 103 ;
-	}
 #10 metre wind gust in the last 6 hours
 '10 metre wind gust in the last 6 hours' = {
 	 discipline = 192 ;

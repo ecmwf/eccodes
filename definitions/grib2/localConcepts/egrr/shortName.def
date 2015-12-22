@@ -8,6 +8,7 @@
 	 typeOfStatisticalProcessing = 2 ;
 	 scaleFactorOfFirstFixedSurface = 1 ;
 	 scaledValueOfFirstFixedSurface = 15 ;
+	 lengthOfTimeRange = 6 ;
 	}
 #Minimum temperature at 2 metres in the last 6 hours
 'mn2t6' = {
@@ -18,6 +19,7 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 1 ;
 	 scaledValueOfFirstFixedSurface = 15 ;
+	 lengthOfTimeRange = 6 ;
 	}
 #2 metre temperature
 '2t' = {

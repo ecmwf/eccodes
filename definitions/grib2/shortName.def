@@ -560,6 +560,7 @@
 	 typeOfStatisticalProcessing = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
+	 lengthOfTimeRange = 6 ;
 	}
 #Minimum temperature at 2 metres in the last 6 hours
 'mn2t6' = {
@@ -570,6 +571,7 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
+	 lengthOfTimeRange = 6 ;
 	}
 #Geopotential
 'z' = {
