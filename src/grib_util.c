@@ -447,20 +447,20 @@ static int check_handle_against_spec(grib_handle* handle, const long edition, co
         lat2 = normalise_angle(lat2);
 
         if (angle_too_small(lat1spec, angular_precision)) {
-            fprintf(stderr, "Failed to encode latitudeOfFirstGridPointInDegrees %.10e: less than angular precision\n",lat1spec);
+            fprintf(stderr, "Failed to encode latitude of first grid point %.10e: less than angular precision\n",lat1spec);
             return GRIB_WRONG_GRID;
         }
         if (angle_too_small(lat2spec, angular_precision)) {
-            fprintf(stderr, "Failed to encode latitudeOfLastGridPointInDegrees %.10e: less than angular precision\n", lat2spec);
+            fprintf(stderr, "Failed to encode latitude of last grid point %.10e: less than angular precision\n", lat2spec);
             return GRIB_WRONG_GRID;
         }
 
         if (!DBL_EQUAL(lat1spec, lat1, tolerance)) {
-            fprintf(stderr, "Failed to encode latitudeOfFirstGridPointInDegrees: spec=%.10e val=%.10e\n", lat1spec, lat1);
+            fprintf(stderr, "Failed to encode latitude of first grid point: spec=%.10e val=%.10e\n", lat1spec, lat1);
             return GRIB_WRONG_GRID;
         }
         if (!DBL_EQUAL(lat2spec, lat2, tolerance)) {
-            fprintf(stderr, "Failed to encode latitudeOfLastGridPointInDegrees: spec=%.10e val=%.10e\n", lat2spec, lat2);
+            fprintf(stderr, "Failed to encode latitude of last grid point: spec=%.10e val=%.10e\n", lat2spec, lat2);
             return GRIB_WRONG_GRID;
         }
     }
@@ -476,20 +476,20 @@ static int check_handle_against_spec(grib_handle* handle, const long edition, co
         lon2 = normalise_angle(lon2);
 
         if (angle_too_small(lon1spec, angular_precision)) {
-            fprintf(stderr, "Failed to encode longitudeOfFirstGridPointInDegrees %.10e: less than angular precision\n", lon1spec);
+            fprintf(stderr, "Failed to encode longitude of first grid point %.10e: less than angular precision\n", lon1spec);
             return GRIB_WRONG_GRID;
         }
         if (angle_too_small(lon2spec, angular_precision)) {
-            fprintf(stderr, "Failed to encode longitudeOfLastGridPointInDegrees %.10e: less than angular precision\n", lon2spec);
+            fprintf(stderr, "Failed to encode longitude of last grid point %.10e: less than angular precision\n", lon2spec);
             return GRIB_WRONG_GRID;
         }
 
         if (!DBL_EQUAL(lon1spec, lon1, tolerance)) {
-            fprintf(stderr, "Failed to encode longitudeOfFirstGridPointInDegrees: spec=%.10e val=%.10e\n", lon1spec, lon1);
+            fprintf(stderr, "Failed to encode longitude of first grid point: spec=%.10e val=%.10e\n", lon1spec, lon1);
             return GRIB_WRONG_GRID;
         }
         if (!DBL_EQUAL(lon2spec, lon2, tolerance)){
-            fprintf(stderr, "Failed to encode longitudeOfLastGridPointInDegrees: spec=%.10e val=%.10e\n",  lon2spec, lon2);
+            fprintf(stderr, "Failed to encode longitude of last grid point: spec=%.10e val=%.10e\n",  lon2spec, lon2);
             return GRIB_WRONG_GRID;
         }
     }
@@ -507,11 +507,11 @@ static int check_handle_against_spec(grib_handle* handle, const long edition, co
         lonp = normalise_angle(lonp);
 
         if (!DBL_EQUAL(latspec, latp, tolerance)) {
-            fprintf(stderr, "Failed to encode latitudeOfSouthernPoleInDegrees: spec=%.10e val=%.10e\n",latspec,latp);
+            fprintf(stderr, "Failed to encode latitude of southern pole: spec=%.10e val=%.10e\n",latspec,latp);
             return GRIB_WRONG_GRID;
         }
         if (!DBL_EQUAL(lonspec, lonp, tolerance)) {
-            fprintf(stderr, "Failed to encode longitudeOfSouthernPoleInDegrees: spec=%.10e val=%.10e\n",lonspec,lonp);
+            fprintf(stderr, "Failed to encode longitude of southern pole: spec=%.10e val=%.10e\n",lonspec,lonp);
             return GRIB_WRONG_GRID;
         }
     }
@@ -1270,6 +1270,9 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     {
         grib_context* c=grib_context_get_default();
         fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed! %s\n", grib_get_error_message(*err));
+        if (editionNumber == 1) {
+            fprintf(stderr,"Note: in GRIB edition 1 latitude and longitude values cannot be represented with sub-millidegree precision.\n");
+        }
         if (c->write_on_fail)
             grib_write_message(outh,"error.grib","w");
         goto cleanup;

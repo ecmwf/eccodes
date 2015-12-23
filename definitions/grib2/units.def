@@ -94,6 +94,14 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 32 ;
 	}
+#large scale precipitation
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 54 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Snow depth
 'm' = {
 	 discipline = 0 ;
@@ -109,6 +117,7 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 lengthOfTimeRange = 3 ;
 	}
 #Relative humidity with respect to water
@@ -439,6 +448,12 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 1 ;
 	}
+#Virtual potential temperature
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 15 ;
+	}
 #Pseudo-adiabatic potential temperature
 'K' = {
 	 discipline = 0 ;
@@ -546,6 +561,8 @@
 	 typeOfStatisticalProcessing = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 lengthOfTimeRange = 6 ;
 	}
 #Minimum temperature at 2 metres in the last 6 hours
 'K' = {
@@ -556,6 +573,8 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 lengthOfTimeRange = 6 ;
 	}
 #Geopotential
 'm**2 s**-2' = {
@@ -763,14 +782,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 17 ;
 	 typeOfFirstFixedSurface = 1 ;
-	}
-#large scale precipitation
-'kg m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 54 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
 	}
 #Latent heat net flux
 'W m**-2' = {
@@ -2235,12 +2246,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 7 ;
-	}
-#Virtual potential temperature
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 15 ;
 	}
 #Maximum temperature
 'K' = {

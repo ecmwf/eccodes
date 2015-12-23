@@ -27,7 +27,7 @@ void usage(const char* prog) {
 int main(int argc, char** argv)
 {
     int err = 0;
-    long PVPresent=1, NV = 0;
+    long NV = 0;
     size_t size=0;
     double pv[4]={1,2,3,4};
     size_t pvsize=4;
@@ -42,14 +42,14 @@ int main(int argc, char** argv)
     if (argc != 3) usage(argv[0]);
     infile = argv[1];
     outfile= argv[2];
-    
-    in = fopen(infile,"r");
+
+    in = fopen(infile, "r");
     if(!in) {
         fprintf(stderr, "ERROR: unable to open input file %s\n",infile);
         return 1;
     }
 
-    out = fopen(outfile,"w");
+    out = fopen(outfile, "w");
     if(!out) {
         fprintf(stderr, "ERROR: unable to open output file %s\n",outfile);
         fclose(in);
@@ -62,19 +62,19 @@ int main(int argc, char** argv)
         fprintf(stderr, "Error: unable to create handle from file %s\n",infile);
     }
 
-    CODES_CHECK(codes_set_long(h,"PVPresent",PVPresent),0);
+    CODES_CHECK(codes_set_long(h,"PVPresent", 1),0);
 
-    CODES_CHECK(codes_set_double_array(h,"pv",pv,pvsize),0);
-    
+    CODES_CHECK(codes_set_double_array(h, "pv", pv, pvsize),0);
+
     /* Once we set the pv array, the NV key should be also set */
-    CODES_CHECK(codes_get_long(h,"NV",&NV),0);
+    CODES_CHECK(codes_get_long(h, "NV", &NV),0);
     assert( NV == pvsize );
 
     /* get the coded message in a buffer */
-    CODES_CHECK(codes_get_message(h,&buffer,&size),0);
+    CODES_CHECK(codes_get_message(h, &buffer, &size),0);
 
     /* write the buffer in a file*/
-    if(fwrite(buffer,1,size,out) != size)
+    if(fwrite(buffer, 1, size, out) != size)
     {
         perror(argv[1]);
         exit(1);

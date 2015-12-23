@@ -32,7 +32,7 @@ double proc_cpu()
     if(getrusage(RUSAGE_SELF,&rup) != -1)
     {
         return (rup.ru_utime.tv_sec + rup.ru_utime.tv_usec / 1000000.0 +
-               rup.ru_stime.tv_sec + rup.ru_stime.tv_usec / 1000000.0);
+                rup.ru_stime.tv_sec + rup.ru_stime.tv_usec / 1000000.0);
     }
     return clock()/(double)CLOCKS_PER_SEC;
 }
@@ -74,91 +74,91 @@ char *timename(double t)
 
 grib_timer *grib_get_timer(grib_context* c,const char* name, const char *statname, int elapsed)
 {
-  grib_timer *t = timers;
-  if (!c) c=grib_context_get_default( );
+    grib_timer *t = timers;
+    if (!c) c=grib_context_get_default( );
 
-  while(t)
-  {
-    if(strcmp(name,t->name_) == 0)
-      return t;
-    t = t->next_;
-  }
+    while(t)
+    {
+        if(strcmp(name,t->name_) == 0)
+            return t;
+        t = t->next_;
+    }
 
-  t = (grib_timer*)grib_context_malloc_clear(c,sizeof(grib_timer));
-  t->name_  = (char*) name;
-  t->context =c;
-  t->active_  = value_false;
-  t->count_   = 0;
-  t->timer_   = 0;
-  t->total_   = 0;
+    t = (grib_timer*)grib_context_malloc_clear(c,sizeof(grib_timer));
+    t->name_  = (char*) name;
+    t->context =c;
+    t->active_  = value_false;
+    t->count_   = 0;
+    t->timer_   = 0;
+    t->total_   = 0;
 
-  t->elapsed_    = elapsed; /* Whether to print CPU usage */
-  t->cpu_        = 0;
-  t->total_cpu_  = 0;
+    t->elapsed_    = elapsed; /* Whether to print CPU usage */
+    t->cpu_        = 0;
+    t->total_cpu_  = 0;
 
-  t->statname_ = 0;
-  if(statname)
-    t->statname_ = (char*)statname;
+    t->statname_ = 0;
+    if(statname)
+        t->statname_ = (char*)statname;
 
-  t->next_    = timers;
-  timers      = t;
+    t->next_    = timers;
+    timers      = t;
 
-  return t;
+    return t;
 }
 
 int grib_timer_start(grib_timer* t)
 {
-  int e = gettimeofday(&t->start_,NULL);
-  if(e != 0)
-    grib_context_log(t->context,GRIB_LOG_WARNING|GRIB_LOG_PERROR,"Error starting timer '%s'",t->name_?t->name_:"unnamed");
-  t->active_ = value_true;
-  t->cpu_    = proc_cpu();
-  return e;
+    int e = gettimeofday(&t->start_,NULL);
+    if(e != 0)
+        grib_context_log(t->context,GRIB_LOG_WARNING|GRIB_LOG_PERROR,"Error starting timer '%s'",t->name_?t->name_:"unnamed");
+    t->active_ = value_true;
+    t->cpu_    = proc_cpu();
+    return e;
 }
 
 int grib_timer_stop(grib_timer* t, long total)
 {
 
-  struct timeval stop, diff;
-  int e = gettimeofday(&stop,NULL);
-  double c = proc_cpu();
+    struct timeval stop, diff;
+    int e = gettimeofday(&stop,NULL);
+    double c = proc_cpu();
 
-  if(e != 0)
-    grib_context_log(t->context,GRIB_LOG_WARNING|GRIB_LOG_PERROR,"Error stopping timer '%s'",t->name_?t->name_:"unnamed");
+    if(e != 0)
+        grib_context_log(t->context,GRIB_LOG_WARNING|GRIB_LOG_PERROR,"Error stopping timer '%s'",t->name_?t->name_:"unnamed");
 
-  if(!t->active_)
-  {
-    grib_context_log(t->context,GRIB_LOG_WARNING,"Stopping non-started timer '%s'",t->name_?t->name_:"unnamed");
-    return 1;
-  }
+    if(!t->active_)
+    {
+        grib_context_log(t->context,GRIB_LOG_WARNING,"Stopping non-started timer '%s'",t->name_?t->name_:"unnamed");
+        return 1;
+    }
 
-  diff.tv_sec  = stop.tv_sec  - t->start_.tv_sec;
-  diff.tv_usec = stop.tv_usec - t->start_.tv_usec;
-  if (diff.tv_usec < 0)
-  {
-    diff.tv_sec--;
-    diff.tv_usec += 1000000;
-  }
+    diff.tv_sec  = stop.tv_sec  - t->start_.tv_sec;
+    diff.tv_usec = stop.tv_usec - t->start_.tv_usec;
+    if (diff.tv_usec < 0)
+    {
+        diff.tv_sec--;
+        diff.tv_usec += 1000000;
+    }
 
-  t->timer_ += (double)diff.tv_sec + ((double)diff.tv_usec / 1000000.);
-  t->total_ += total;
-  t->total_cpu_ += (c - t->cpu_);
+    t->timer_ += (double)diff.tv_sec + ((double)diff.tv_usec / 1000000.);
+    t->total_ += total;
+    t->total_cpu_ += (c - t->cpu_);
 
-  t->active_=value_false;
-  t->count_++;
+    t->active_=value_false;
+    t->count_++;
 
-  return e;
+    return e;
 }
 
 double grib_timer_value(grib_timer *t)
 {
-  return t->timer_;
+    return t->timer_;
 }
 
 const char *bytename(double bytes)
 {
     static char *names[] = {
-        "","K","M","G","T"                                      };
+            "","K","M","G","T"                                      };
     double x = bytes;
     int    n = 0;
     static char buf[20];
@@ -176,74 +176,74 @@ const char *bytename(double bytes)
 
 void grib_timer_print(grib_timer* t)
 {
-  char cpu[1024] = "";
-  const char *name = t->name_ ? t->name_ : "";
-  if(t->timer_>=1)  {
-    if(! t->elapsed_ && t->total_cpu_ >= 1.0)
-      sprintf(cpu,"cpu: %s",timename(t->total_cpu_));
+    char cpu[1024] = "";
+    const char *name = t->name_ ? t->name_ : "";
+    if(t->timer_>=1)  {
+        if(! t->elapsed_ && t->total_cpu_ >= 1.0)
+            sprintf(cpu,"cpu: %s",timename(t->total_cpu_));
 
-    if(t->total_ != 0)
-    {
-      double rate = (double)t->total_/t->timer_;
-      char bytes[80];
-      sprintf(bytes,"%sbyte(s)",bytename(t->total_));
-      grib_context_print(t->context,stdout,"  %s: %s in %s [%sbyte/sec] %s\n",
-               name,bytes,timename(t->timer_),bytename(rate),cpu);
-    }
-    else {
-      char* ctimename=timename(t->timer_);
-      grib_context_print(t->context,stdout,"  %s: wall: %s%s\n",name,ctimename,cpu);
-    }
-/*
+        if(t->total_ != 0)
+        {
+            double rate = (double)t->total_/t->timer_;
+            char bytes[80];
+            sprintf(bytes,"%sbyte(s)",bytename(t->total_));
+            grib_context_print(t->context,stdout,"  %s: %s in %s [%sbyte/sec] %s\n",
+                    name,bytes,timename(t->timer_),bytename(rate),cpu);
+        }
+        else {
+            char* ctimename=timename(t->timer_);
+            grib_context_print(t->context,stdout,"  %s: wall: %s%s\n",name,ctimename,cpu);
+        }
+        /*
     if(t->statname_)
       log_statistics(t->statname_,"%ld",(long)t->timer_);
-    */
-  }
+         */
+    }
 }
 
 void grib_timer_partial_rate(grib_timer *t, double start, long total)
 {
-  double ptime = t->timer_ - start;
-  long ptotal = total;
-  const char *name = t->name_?t->name_:"";
-  if(ptime>=1)
-  {
-    double rate = (double)ptotal/ptime;
-    char bytes[80];
-    sprintf(bytes,"%sbyte(s)",bytename(ptotal));
-    grib_context_log(t->context,GRIB_LOG_INFO,"  %s: %s in %s [%sbyte/sec]",
-            name,bytes,timename(ptime),bytename(rate));
-  }
+    double ptime = t->timer_ - start;
+    long ptotal = total;
+    const char *name = t->name_?t->name_:"";
+    if(ptime>=1)
+    {
+        double rate = (double)ptotal/ptime;
+        char bytes[80];
+        sprintf(bytes,"%sbyte(s)",bytename(ptotal));
+        grib_context_log(t->context,GRIB_LOG_INFO,"  %s: %s in %s [%sbyte/sec]",
+                name,bytes,timename(ptime),bytename(rate));
+    }
 }
 
 void grib_print_all_timers()
 {
-  grib_timer *t = timers;
-  while(t)
-  {
-    grib_timer_print(t);
-    t = t->next_;
-  }
+    grib_timer *t = timers;
+    while(t)
+    {
+        grib_timer_print(t);
+        t = t->next_;
+    }
 }
 
 void grib_reset_all_timers()
 {
-  grib_timer *t = timers;
-  while(t)
-  {
-    t->count_  = 0;
-    t->timer_  = 0;
-    t->active_ = 0;
-    t->total_  = 0;
-    t->total_cpu_  = 0;
-    t = t->next_;
-  }
+    grib_timer *t = timers;
+    while(t)
+    {
+        t->count_  = 0;
+        t->timer_  = 0;
+        t->active_ = 0;
+        t->total_  = 0;
+        t->total_cpu_  = 0;
+        t = t->next_;
+    }
 }
 
 
 /*************************************************
-* Timed functions
-**************************************************/
+ * Timed functions
+ **************************************************/
 /*
 int timed_fread(char *buffer, int n, int length, FILE *f, grib_timer *t)
 {
@@ -337,20 +337,20 @@ int timed_readany(FILE *f, char *buffer, long *length, grib_timer *t)
 
   return e;
 }
-*/
+ */
 
 #else
 
 grib_timer *grib_get_timer(grib_context* c,const char* name, const char *statname, int elapsed)
 {
-if (!c) c=grib_context_get_default();
-grib_context_log(c,GRIB_LOG_FATAL,"grib_get_timer function not available");
-return NULL;
+    if (!c) c=grib_context_get_default();
+    grib_context_log(c,GRIB_LOG_FATAL,"grib_get_timer function not available");
+    return NULL;
 } 
 
 int grib_timer_start(grib_timer* t)
 {
-return 0;
+    return 0;
 }
 
 int grib_timer_stop(grib_timer* t, long total)
@@ -358,7 +358,7 @@ int grib_timer_stop(grib_timer* t, long total)
 
 double grib_timer_value(grib_timer *t)
 {
-return 0;
+    return 0;
 }
 
 void grib_timer_print(grib_timer* t)

@@ -34,6 +34,7 @@ else
   then
     cd ../
     cpath=`pwd`
+    proj_dir=$cpath
     ECCODES_DEFINITION_PATH=$cpath/definitions
     export ECCODES_DEFINITION_PATH
     ECCODES_SAMPLES_PATH=$cpath/samples

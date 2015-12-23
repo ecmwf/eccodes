@@ -11,6 +11,8 @@ STRING(REGEX REPLACE "\n" ";" bufr_files_to_download "${bufr_files_to_download}"
 FILE(READ "bufr_ref_files.txt" bufr_refs_to_download)
 STRING(REGEX REPLACE "\n" ";" bufr_refs_to_download "${bufr_refs_to_download}")
 
+# Exceptional case: download bufr files which have to be treated specially
+LIST(APPEND bufr_refs_to_download "vos308014_v3_26.bufr")  # See test ecc-197
 
 ecbuild_get_test_multidata(
      TARGET eccodes_get_bufrs

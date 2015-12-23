@@ -119,11 +119,9 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
     g = h;
     while(g)
     {
-        if(g->values) {
-            if(copy_values(g,ga) == GRIB_SUCCESS) {
-                grib_context_log(h->context,GRIB_LOG_DEBUG, "Copying: setting %s to multi-set-value",   ga->name);
-                return GRIB_SUCCESS;
-            }
+        if(copy_values(g,ga) == GRIB_SUCCESS) {
+            grib_context_log(h->context,GRIB_LOG_DEBUG, "Copying: setting %s to multi-set-value",   ga->name);
+            return GRIB_SUCCESS;
         }
         g = g->main;
     }

@@ -156,8 +156,6 @@ static void init_class(grib_accessor_class* c)
 
 static grib_accessor* make_clone(grib_accessor* a,grib_section* s,int* err)
 {
-    grib_accessor* operatorAccessor=NULL;
-    grib_action operatorCreator = {0, };
     grib_accessor* the_clone=NULL;
     grib_accessor* attribute=NULL;
     grib_accessor_bufr_data_element* elementAccessor;

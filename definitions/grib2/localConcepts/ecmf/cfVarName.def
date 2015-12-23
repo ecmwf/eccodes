@@ -314,6 +314,7 @@
 	 typeOfStatisticalProcessing = 2 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfFirstFixedSurface = 103 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 lengthOfTimeRange = 24 ;
 	}
 #Minimum temperature at 2 metres in the last 24 hours
@@ -325,6 +326,7 @@
 	 typeOfStatisticalProcessing = 3 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfFirstFixedSurface = 103 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 lengthOfTimeRange = 24 ;
 	}
 #Montgomery potential
@@ -692,28 +694,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 120 ;
-	}
-#Maximum temperature at 2 metres in the last 6 hours
-'mx2t6' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 lengthOfTimeRange = 6 ;
-	}
-#Minimum temperature at 2 metres in the last 6 hours
-'mn2t6' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 lengthOfTimeRange = 6 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #10 metre wind gust in the last 6 hours
 'p10fg6' = {
@@ -9112,6 +9092,7 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 2 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 lengthOfTimeRange = 3 ;
 	}
 #Minimum temperature at 2 metres in the last 3 hours
@@ -9123,6 +9104,7 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 3 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 lengthOfTimeRange = 3 ;
 	}
 #10 metre wind gust in the last 3 hours

@@ -91,7 +91,7 @@ int main ( int argc, char* argv[])
                     what_str[i]);
         }
     }
-     
+
     h=codes_grib_util_sections_copy(hfrom,hto,what,&err);
     CODES_CHECK(err,0);
 

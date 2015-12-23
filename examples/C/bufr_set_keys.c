@@ -32,7 +32,7 @@ int main(int argc,char* argv[])
 
     long longVal;
     /*double doubleVal;*/
-    int i, err=0;
+    int err=0;
     int cnt=0;
     size_t size = 0;
     char* infile = "../../data/bufr/syno_multi.bufr";

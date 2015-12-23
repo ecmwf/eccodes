@@ -144,7 +144,6 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
 int grib_accessor_print(grib_accessor* a,const char* name,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
 {
     size_t size=0;
-    char val[1024] = {0,};
     char* sval=NULL;
     char* p=NULL;
     double* dval=0;
@@ -256,7 +255,6 @@ int grib_accessor_print(grib_accessor* a,const char* name,int type,const char* f
 int grib_accessors_list_print(grib_handle* h,grib_accessors_list* al,const char* name,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
 {
     size_t size=0,len=0,replen=0;
-    char val[1024] = {0,};
     char* sval=NULL;
     char* p=NULL;
     double* dval=0;
