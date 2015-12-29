@@ -23,6 +23,7 @@ VERBOSE = 1  # verbose error reporting
 
 data=collections.defaultdict(dict)
 
+
 def example():
 
     # open bufr file
@@ -43,19 +44,17 @@ def example():
         # i.e. unpack the data values
         codes_set(gid, 'unpack', 1)
 
-
         numObs= codes_get(gid,"numberOfSubsets")
         year  = codes_get(gid, "year")
         month = codes_get(gid, "month")
         day   = codes_get(gid, "day")
         hour  = codes_get(gid, "hour")
         minute= codes_get(gid, "minute")
-      
-        print 'Date and time: ',  day,'.',month,'.',year,'  ',hour,':',minute  
+
+        print 'Date and time: ',  day,'.',month,'.',year,'  ',hour,':',minute
 
         stormIdentifier =  codes_get(gid,"stormIdentifier")
         print  'Storm identifier: ', stormIdentifier
-   
 
         #How many different timePeriod in the data structure?
         numberOfPeriods=0
@@ -67,30 +66,28 @@ def example():
                 break
             #the numberOfPeriods includes the analysis (period=0)
 
-
         # Get ensembleMemberNumber
         memberNumber = codes_get_array(gid, "ensembleMemberNumber")
         memberNumberLen=len(memberNumber)
-   
- 
+
         # Observed Storm Centre
         significance    = codes_get(gid,'#1#meteorologicalAttributeSignificance')
         latitudeCentre  = codes_get(gid,'#1#latitude')
         longitudeCentre = codes_get(gid,'#1#longitude')
 
-        if (significance!=1):
+        if significance!=1:
             print 'ERROR: unexpected #1#meteorologicalAttributeSignificance'
             return 1
 
         if (latitudeCentre==CODES_MISSING_DOUBLE) and (longitudeCentre==CODES_MISSING_DOUBLE):
-           print 'Observed storm centre position missing'
+            print 'Observed storm centre position missing'
         else:
-           print 'Observed storm centre: latitude=',latitudeCentre,' longitude=',longitudeCentre
+            print 'Observed storm centre: latitude=',latitudeCentre,' longitude=',longitudeCentre
 
         # Location of storm in perturbed analysis
         significance = codes_get(gid,'#2#meteorologicalAttributeSignificance')
 
-        if (significance!=4):
+        if significance!=4:
             print 'ERROR: unexpected #2#meteorologicalAttributeSignificance'
             return 1
 
@@ -101,7 +98,7 @@ def example():
         # Location of Maximum Wind
         significance=codes_get(gid,'#3#meteorologicalAttributeSignificance')
 
-        if (significance!=3):
+        if significance!=3:
             print 'ERROR: unexpected #3#meteorologicalAttributeSignificance=', significance
             return 1
 
@@ -109,7 +106,7 @@ def example():
         longitudeMaxWind0= codes_get_array(gid,'#3#longitude')
         windMaxWind0= codes_get_array(gid,'#1#windSpeedAt10M')
 
-        if (len(latitudeAnalysis)==len(memberNumber) and len(latitudeMaxWind0)==len(memberNumber)):
+        if len(latitudeAnalysis)==len(memberNumber) and len(latitudeMaxWind0)==len(memberNumber):
             for k in range(len(memberNumber)):
                 data[k][0]=[latitudeAnalysis[k],longitudeAnalysis[k],pressureAnalysis[k],latitudeMaxWind0[k],longitudeMaxWind0[k],windMaxWind0[k]]
 
@@ -117,7 +114,7 @@ def example():
             for k in range(len(memberNumber)):
                 data[k][0]=[latitudeAnalysis[0],longitudeAnalysis[0],pressureAnalysis[k],latitudeMaxWind0[0],longitudeMaxWind0[0],windMaxWind0[k]]
 
- 
+
         timePeriod=[0 for x in range(numberOfPeriods)]
         for i in range(1,numberOfPeriods):
             rank1 = i * 2 + 2
@@ -125,54 +122,53 @@ def example():
 
             ivalues= codes_get_array(gid,"#%d#timePeriod" %(i))
 
-            if (len(ivalues)==1):
-                timePeriod[i]=ivalues[0] 
+            if len(ivalues)==1:
+                timePeriod[i]=ivalues[0]
             else:
-               for j in range(len (ivalues)): 
-                   if (ivalues[j]!=CODES_MISSING_LONG):
-                       timePeriod[i]=ivalues[j]
-                       break 
+                for j in range(len (ivalues)):
+                    if ivalues[j]!=CODES_MISSING_LONG:
+                        timePeriod[i]=ivalues[j]
+                        break
 
-            #Location of the storm  
+            #Location of the storm
             values = codes_get_array(gid, "#%d#meteorologicalAttributeSignificance" % rank1)
-            if (len(values)==1):
-                significance=values[0] 
+            if len(values)==1:
+                significance=values[0]
             else:
-               for j in range(len (values)): 
-                   if (values[j]!=CODES_MISSING_LONG):
-                       significance=values[j]
-                       break 
-            
-            if(significance==1):
+                for j in range(len (values)):
+                    if values[j]!=CODES_MISSING_LONG:
+                        significance=values[j]
+                        break
+
+            if significance==1:
                 lat = codes_get_array(gid, "#%d#latitude" % rank1)
                 lon = codes_get_array(gid, "#%d#longitude" % rank1)
                 press = codes_get_array(gid, "#%d#pressureReducedToMeanSeaLevel" % (i + 1))
             else:
                 print 'ERROR: unexpected meteorologicalAttributeSignificance=',significance
 
-            #Location of maximum wind 
+            #Location of maximum wind
             values = codes_get_array(gid, "#%d#meteorologicalAttributeSignificance" % rank3)
-            if (len(values)==1):
-                significanceWind=values[0] 
+            if len(values)==1:
+                significanceWind=values[0]
             else:
-               for j in range(len (values)): 
-                   if (values[j]!=CODES_MISSING_LONG):
-                       significanceWind=values[j]
-                       break 
+                for j in range(len (values)):
+                    if values[j]!=CODES_MISSING_LONG:
+                        significanceWind=values[j]
+                        break
 
-            if(significanceWind==3):
+            if significanceWind==3:
                 latWind = codes_get_array(gid, "#%d#latitude" % rank3)
                 lonWind = codes_get_array(gid, "#%d#longitude" % rank3)
                 wind10m = codes_get_array(gid, "#%d#windSpeedAt10M" % (i + 1))
             else:
                 print 'ERROR: unexpected meteorologicalAttributeSignificance=',significanceWind
-     
 
             for k in range(len(memberNumber)):
                 data[k][i]=[lat[k],lon[k],press[k],latWind[k],lonWind[k],wind10m[k]]
-            
 
-# ---------------------------------------- Print the values -----------------------------------------------
+
+# ---------------------------------------- Print the values -------------
 
         for m in range(len(memberNumber)):
             print "== Member  %d" %memberNumber[m]
@@ -183,7 +179,7 @@ def example():
                           timePeriod[s],'  ',data[m][s][0],'     ',data[m][s][1],'     ',data[m][s][2],'  ',
                           data[m][s][3],'     ',data[m][s][4],'     ',data[m][s][5])
 
-# ---------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------
         cnt += 1
 
         # release the BUFR message
