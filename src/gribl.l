@@ -57,10 +57,13 @@ DIGIT     [0-9]
 NSIGNED   {SIGN}?{DIGIT}+
 NUMB      {DIGIT}+
 EXP       {E}{NSIGNED}
-IDENT     [_A-Za-z]+[_0-9A-Za-z]*
 FLOAT1    {NSIGNED}+"."{DIGIT}*{EXP}?
 FLOAT2    {NSIGNED}*"."{DIGIT}+{EXP}?
 FLOAT3    {NSIGNED}+{EXP}?
+IDENT1     [_A-Za-z]+[_0-9A-Za-z]*
+IDENT2     "\/"{IDENT1}"\="({NSIGNED}|{FLOAT1}|{FLOAT2}|{FLOAT3})"\/"{IDENT1}
+IDENT3     "\#"{NUMB}"\#"{IDENT1}
+IDENT     {IDENT1}|{IDENT2}|{IDENT3}
 
 %%
 

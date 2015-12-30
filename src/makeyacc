@@ -1,0 +1,8 @@
+set -x
+export LEX=flex
+export LEX_OUT=gribl.c
+$LEX -o gribl.c gribl.l
+sed 's/yy/grib_yy/g' < $LEX_OUT | sed 's/static void grib_yyunput/void grib_yyunput/' > grib_lex1.c
+sed 's/fgetc/getc/g' < grib_lex1.c > grib_lex.c
+rm -f grib_lex1.c
+rm -f $LEX_OUT

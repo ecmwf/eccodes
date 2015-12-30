@@ -802,3 +802,26 @@ diff ${f}.ref ${f}.log
 
 rm -f ${f}.ref ${f}.log
 rm -f $fLog $fRules
+#-----------------------------------------------------------
+# Test:  set key by rank                           
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set unpack=1;
+set #4#airTemperature = 300.1;
+print "#4#airTemperature=[#4#airTemperature]";
+EOF
+
+f="temp_101.bufr"
+echo "Test: set key by rank" >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+
+${tools_dir}bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+cat > ${f}.ref <<EOF
+#4#airTemperature=300.1
+EOF
+
+diff ${f}.ref ${f}.log 
+
+rm -f ${f}.ref ${f}.log
+rm -f $fLog $fRules
