@@ -18,8 +18,8 @@ implicit none
   real(kind=8),dimension(:),allocatable     :: lats,lons,values
   integer,dimension(:),allocatable          :: bitmap
   integer(4)        :: numberOfPoints
-  integer            :: is_missing_value=0
-  integer            :: count1=0, bitmapPresent=0, bmp_len=0
+  logical            :: is_missing_value
+  integer            :: count1=0, count2=0, bitmapPresent=0, bmp_len=0
   character(len=256) :: filename
 
 !     Message identifier.
@@ -53,15 +53,20 @@ implicit none
 
     do i=1,numberOfPoints
       ! Consult bitmap to see if the i'th value is missing
-      is_missing_value=0
+      is_missing_value=.false.
       if (bitmapPresent == 1 .and. bitmap(i) == 0) then
-        is_missing_value=1
+        is_missing_value=.true.
       end if
       ! Only print non-missing values
-      if (is_missing_value == 0) then
+      if (.not. is_missing_value) then
         print *, lats(i),lons(i),values(i)
+        count2=count2+1
       end if
     enddo
+    print *, 'count of non-missing values=',count2
+    if (count2 /= 214661) then
+      call codes_check(-2, 'incorrect number of missing', '')
+    end if
 
     deallocate(lats)
     deallocate(lons)

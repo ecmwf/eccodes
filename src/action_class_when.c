@@ -230,7 +230,7 @@ static int notify_change_impl(grib_action* a, grib_accessor* observer,grib_acces
 static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* observed)
 {
     int result = 0;
-    GRIB_PTHREAD_ONCE(&once,&init)
+    GRIB_MUTEX_INIT_ONCE(&once,&init)
     GRIB_MUTEX_LOCK(&mutex)
 
     result = notify_change_impl(a, observer, observed);

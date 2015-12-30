@@ -70,7 +70,7 @@ static void init_ieee_table()
 
 static void init_table_if_needed()
 {
-    GRIB_PTHREAD_ONCE(&once,&init)
+    GRIB_MUTEX_INIT_ONCE(&once,&init)
     GRIB_MUTEX_LOCK(&mutex)
 
     if (!ieee_table.inited) init_ieee_table();

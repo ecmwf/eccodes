@@ -308,7 +308,7 @@ static int grib_load_smart_table(grib_context* c,const char* filename,
     t->recomposed_name[0]  = grib_context_strdup_persistent(c,recomposed_name);
     t->next      = c->smart_table;
     t->numberOfEntries      = size;
-    GRIB_PTHREAD_ONCE(&once,&thread_init)
+    GRIB_MUTEX_INIT_ONCE(&once,&thread_init)
     GRIB_MUTEX_LOCK(&mutex)
     c->smart_table = t;
     GRIB_MUTEX_UNLOCK(&mutex)

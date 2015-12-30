@@ -124,7 +124,7 @@ extern "C" {
 
 #if GRIB_PTHREADS
  #include <pthread.h>
- #define GRIB_PTHREAD_ONCE(a,b) pthread_once(a,b);
+ #define GRIB_MUTEX_INIT_ONCE(a,b) pthread_once(a,b);
  #define GRIB_MUTEX_LOCK(a) pthread_mutex_lock(a); 
  #define GRIB_MUTEX_UNLOCK(a) pthread_mutex_unlock(a);
 /*
@@ -132,7 +132,7 @@ extern "C" {
 #define GRIB_MUTEX_UNLOCK(a) {pthread_mutex_unlock(a);printf("MUTEX UNLOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);} 
 */
 #else
- #define GRIB_PTHREAD_ONCE(a,b)
+ #define GRIB_MUTEX_INIT_ONCE(a,b)
  #define GRIB_MUTEX_LOCK(a)
  #define GRIB_MUTEX_UNLOCK(a)
 #endif
