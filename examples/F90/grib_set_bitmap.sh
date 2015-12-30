@@ -8,5 +8,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
 . ./include.sh
+
+OUT_TMP=out.bmp.grib
+
+# Example writes its output to the file $OUT_TMP
 ${examples_dir}eccodes_f_grib_set_bitmap > /dev/null
-rm -f out.bmp.grib
+
+x=`${tools_dir}/grib_get -p numberOfDataPoints,numberOfCodedValues,numberOfMissing $OUT_TMP`
+[ "$x" = "496 486 10" ]
+
+rm -f $OUT_TMP
