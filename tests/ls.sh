@@ -82,4 +82,9 @@ type=`${tools_dir}grib_get -wcount=1 -p typeOfLevel test_uuid.grib2`
 temp_ls=test.grib-213.temp
 ${tools_dir}grib_ls -l 85,13,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$temp_ls
 grep -q 'Point chosen #3 index=21 .* distance=11\.' $temp_ls
+
+${tools_dir}grib_ls -l 53,2,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$temp_ls
+grep -q 'Point chosen #2 index=749 .* distance=204\.' $temp_ls
+
 rm -f $temp_ls
+
