@@ -30,7 +30,7 @@ contains
 subroutine read_using_size_t
   implicit none
   integer :: size,intsize
-  parameter (intsize=5000000,size=intsize*4)
+  parameter (intsize=100000,size=intsize*4)
   integer            :: ifile
   integer            :: iret
   integer            :: count1=0
@@ -64,7 +64,7 @@ end subroutine read_using_size_t
 subroutine read_using_integer
   implicit none
   integer :: size,intsize
-  parameter (intsize=5000000,size=intsize*4)
+  parameter (intsize=100000,size=intsize*4)
   integer            :: ifile
   integer            :: iret
   integer            :: count1=0
