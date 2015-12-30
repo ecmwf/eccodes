@@ -18,6 +18,10 @@ module grib_api
   include "grib_api_externals.h"
   include "grib_api_visibility.h"
 
+  real(8),    parameter,public :: GRIB_MISSING_DOUBLE = -1.D+100
+  integer(4), parameter,public :: GRIB_MISSING_LONG   = 2147483647
+
+
   !> Create a new message in memory from an integer or character array containting the coded message.
   !>
   !> The message can be accessed through its gribid and it will be available\n
