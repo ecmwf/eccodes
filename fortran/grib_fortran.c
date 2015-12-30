@@ -32,28 +32,48 @@
 #define MIN_FILE_ID 50000
 
 #if GRIB_PTHREADS
-static pthread_once_t once  = PTHREAD_ONCE_INIT;
-static pthread_mutex_t handle_mutex = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t index_mutex = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t multi_handle_mutex = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t keys_iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
+ static pthread_once_t once  = PTHREAD_ONCE_INIT;
+ static pthread_mutex_t handle_mutex = PTHREAD_MUTEX_INITIALIZER;
+ static pthread_mutex_t index_mutex = PTHREAD_MUTEX_INITIALIZER;
+ static pthread_mutex_t multi_handle_mutex = PTHREAD_MUTEX_INITIALIZER;
+ static pthread_mutex_t iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
+ static pthread_mutex_t keys_iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
 
+ static void init() {
+   pthread_mutexattr_t attr;
 
-static void init() {
-  pthread_mutexattr_t attr;
+   pthread_mutexattr_init(&attr);
+   pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+   pthread_mutex_init(&handle_mutex,&attr);
+   pthread_mutex_init(&index_mutex,&attr);
+   pthread_mutex_init(&multi_handle_mutex,&attr);
+   pthread_mutex_init(&iterator_mutex,&attr);
+   pthread_mutex_init(&keys_iterator_mutex,&attr);
+   pthread_mutexattr_destroy(&attr);
+ }
+#elif GRIB_OMP_THREADS
+ static int once = 0;
+ static omp_nest_lock_t handle_mutex;
+ static omp_nest_lock_t index_mutex;
+ static omp_nest_lock_t multi_handle_mutex;
+ static omp_nest_lock_t iterator_mutex;
+ static omp_nest_lock_t keys_iterator_mutex;
 
-  pthread_mutexattr_init(&attr);
-  pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
-  pthread_mutex_init(&handle_mutex,&attr);
-  pthread_mutex_init(&index_mutex,&attr);
-  pthread_mutex_init(&multi_handle_mutex,&attr);
-  pthread_mutex_init(&iterator_mutex,&attr);
-  pthread_mutex_init(&keys_iterator_mutex,&attr);
-  pthread_mutexattr_destroy(&attr);
-
-}
-
+ static void init()
+ {
+    GRIB_OMP_CRITICAL(lock_fortran)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&handle_mutex);
+            omp_init_nest_lock(&index_mutex);
+            omp_init_nest_lock(&multi_handle_mutex);
+            omp_init_nest_lock(&iterator_mutex);
+            omp_init_nest_lock(&keys_iterator_mutex);
+            once = 1;
+        }
+    }
+ }
 #endif
 
 int GRIB_NULL=-1;

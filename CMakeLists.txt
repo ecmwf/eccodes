@@ -82,11 +82,11 @@ endif()
 
 # advanced options (not visible in cmake-gui )
 
-ecbuild_add_option( FEATURE MEMORY_MANAGEMENT DESCRIPTION "enable memory management" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ALIGN_MEMORY      DESCRIPTION "enable memory alignment"  DEFAULT OFF ADVANCED )
-
-ecbuild_add_option( FEATURE GRIB_TIMER        DESCRIPTION "enable timer"   DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ECCODES_THREADS   DESCRIPTION "enable threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "enable memory management" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "enable memory alignment"  DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE GRIB_TIMER          DESCRIPTION "enable timer" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "enable POSIX threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "enable OMP threads" DEFAULT OFF ADVANCED )
 
 ###############################################################################
 # macro processing
@@ -166,6 +166,7 @@ if( NOT ${CMAKE_USE_PTHREADS_INIT} )
 endif()
 
 set( GRIB_PTHREADS 0 )
+set( GRIB_OMP_THREADS 0 )
 set( GRIB_LINUX_PTHREADS 0 )
 #if( HAVE_ECCODES_THREADS AND CMAKE_THREAD_LIBS_INIT )
 if( HAVE_ECCODES_THREADS )
@@ -175,8 +176,12 @@ if( HAVE_ECCODES_THREADS )
             set( GRIB_LINUX_PTHREADS 1 )
         endif()
     endif()
+elseif(HAVE_ECCODES_OMP_THREADS)
+    ecbuild_enable_omp()
+    set( GRIB_OMP_THREADS 1 )
 endif()
 message(STATUS " GRIB_PTHREADS=${GRIB_PTHREADS}")
+message(STATUS " GRIB_OMP_THREADS=${GRIB_OMP_THREADS}")
 
 set( GRIB_MEM_ALIGN 0 )
 if( ENABLE_ALIGN_MEMORY )

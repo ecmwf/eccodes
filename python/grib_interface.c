@@ -26,28 +26,49 @@
 #include <ctype.h>
 
 #if GRIB_PTHREADS
-static pthread_once_t once  = PTHREAD_ONCE_INIT;
-static pthread_mutex_t handle_mutex = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t index_mutex = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t multi_handle_mutex = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t keys_iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
+ static pthread_once_t once  = PTHREAD_ONCE_INIT;
+ static pthread_mutex_t handle_mutex = PTHREAD_MUTEX_INITIALIZER;
+ static pthread_mutex_t index_mutex = PTHREAD_MUTEX_INITIALIZER;
+ static pthread_mutex_t multi_handle_mutex = PTHREAD_MUTEX_INITIALIZER;
+ static pthread_mutex_t iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
+ static pthread_mutex_t keys_iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
 
+ static void init() {
+   pthread_mutexattr_t attr;
 
-static void init() {
-  pthread_mutexattr_t attr;
+   pthread_mutexattr_init(&attr);
+   pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+   pthread_mutex_init(&handle_mutex,&attr);
+   pthread_mutex_init(&index_mutex,&attr);
+   pthread_mutex_init(&multi_handle_mutex,&attr);
+   pthread_mutex_init(&iterator_mutex,&attr);
+   pthread_mutex_init(&keys_iterator_mutex,&attr);
+   pthread_mutexattr_destroy(&attr);
 
-  pthread_mutexattr_init(&attr);
-  pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
-  pthread_mutex_init(&handle_mutex,&attr);
-  pthread_mutex_init(&index_mutex,&attr);
-  pthread_mutex_init(&multi_handle_mutex,&attr);
-  pthread_mutex_init(&iterator_mutex,&attr);
-  pthread_mutex_init(&keys_iterator_mutex,&attr);
-  pthread_mutexattr_destroy(&attr);
+ }
+#elif GRIB_OMP_THREADS
+ static int once = 0;
+ static omp_nest_lock_t handle_mutex;
+ static omp_nest_lock_t index_mutex;
+ static omp_nest_lock_t multi_handle_mutex;
+ static omp_nest_lock_t iterator_mutex;
+ static omp_nest_lock_t keys_iterator_mutex;
 
-}
-
+ static void init()
+ {
+    GRIB_OMP_CRITICAL(lock_fortran)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&handle_mutex);
+            omp_init_nest_lock(&index_mutex);
+            omp_init_nest_lock(&multi_handle_mutex);
+            omp_init_nest_lock(&iterator_mutex);
+            omp_init_nest_lock(&keys_iterator_mutex);
+            once = 1;
+        }
+    }
+ }
 #endif
 
 int GRIB_NULL=-1;
@@ -1855,7 +1876,6 @@ int grib_c_set_real8_array(int* gid, char* key, double*val, int* size)
     if(!h)   return GRIB_INVALID_GRIB;
 
     return grib_set_double_array(h, key, val, lsize);
-
 }
 
 int grib_c_set_double_array(int* gid, char* key, double*val, int* size)
@@ -1867,7 +1887,6 @@ int grib_c_set_double_array(int* gid, char* key, double*val, int* size)
     if(!h)   return GRIB_INVALID_GRIB;
 
     return grib_set_double_array(h, key, val, lsize);
-
 }
 
 int grib_c_get_string(int* gid, char* key, char* val, size_t *lsize)
@@ -1955,11 +1974,9 @@ int grib_c_copy_message(int* gid, void* mess,size_t* len)
         return GRIB_BUFFER_TOO_SMALL;
     }
 
-
     memcpy(mess,h->buffer->data,h->buffer->ulength);
     *len=h->buffer->ulength;
     return GRIB_SUCCESS;
-
 }
 
 void grib_c_check(int* err,char* call,char* str)

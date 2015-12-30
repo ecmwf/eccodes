@@ -28,6 +28,21 @@ static void init() {
     pthread_mutexattr_destroy(&attr);
 
 }
+#elif GRIB_OMP_THREADS
+static int once = 0;
+static omp_nest_lock_t mutex1;
+
+static void init()
+{
+    GRIB_OMP_CRITICAL(lock_grib_accessor_class_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex1);
+            once = 1;
+        }
+    }
+}
 #endif
 
 struct table_entry
@@ -176,7 +191,8 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     return a;
 }
 
-static void link_same_attributes(grib_accessor* a,grib_accessor* b) {
+static void link_same_attributes(grib_accessor* a,grib_accessor* b)
+{
   int i=0;
   int idx=0;
   grib_accessor* bAttribute=NULL;

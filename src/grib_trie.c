@@ -283,6 +283,21 @@ static void init() {
   pthread_mutex_init(&mutex,&attr);
   pthread_mutexattr_destroy(&attr);
 }
+#elif GRIB_OMP_THREADS
+static int once = 0;
+static omp_nest_lock_t mutex;
+
+static void init()
+{
+    GRIB_OMP_CRITICAL(lock_grib_trie_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex);
+            once = 1;
+        }
+    }
+}
 #endif
 
 struct grib_trie {

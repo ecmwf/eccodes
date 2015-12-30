@@ -173,6 +173,21 @@ static void thread_init() {
   pthread_mutexattr_destroy(&attr);
 
 }
+#elif GRIB_OMP_THREADS
+static int once = 0;
+static omp_nest_lock_t mutex;
+
+static void thread_init()
+{
+    GRIB_OMP_CRITICAL(lock_grib_accessor_class_smart_table_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex);
+            once = 1;
+        }
+    }
+}
 #endif
 
 static int grib_load_smart_table(grib_context* c,const char* filename,
