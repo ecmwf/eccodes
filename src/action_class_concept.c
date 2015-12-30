@@ -282,7 +282,7 @@ static grib_concept_value* get_concept_impl(grib_handle* h,grib_action_concept* 
 static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self)
 {
     grib_concept_value* result = NULL;
-    GRIB_PTHREAD_ONCE(&once,&init)
+    GRIB_MUTEX_INIT_ONCE(&once,&init)
     GRIB_MUTEX_LOCK(&mutex);
 
     result = get_concept_impl(h, self);

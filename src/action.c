@@ -97,7 +97,7 @@ int grib_create_accessor(grib_section* p, grib_action* a,  grib_loader* h)
     {
         if(c->create_accessor) {
 			int ret;
-			GRIB_PTHREAD_ONCE(&once,&init_mutex);
+			GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
 			GRIB_MUTEX_LOCK(&mutex1);
             ret=c->create_accessor(p, a, h);
 			GRIB_MUTEX_UNLOCK(&mutex1);

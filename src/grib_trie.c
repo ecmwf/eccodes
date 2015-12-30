@@ -306,7 +306,7 @@ grib_trie *grib_trie_new(grib_context* c) {
 }
 
 void grib_trie_delete(grib_trie *t) {
-  GRIB_PTHREAD_ONCE(&once,&init)
+  GRIB_MUTEX_INIT_ONCE(&once,&init)
   GRIB_MUTEX_LOCK(&mutex)
   if(t)  {
     int i;
@@ -340,7 +340,7 @@ void* grib_trie_insert(grib_trie* t,const char* key,void* data)
   const char *k = key;
   void* old = NULL;
 
-  GRIB_PTHREAD_ONCE(&once,&init)
+  GRIB_MUTEX_INIT_ONCE(&once,&init)
   GRIB_MUTEX_LOCK(&mutex)
 
   while(*k && t) {
@@ -396,7 +396,7 @@ void* grib_trie_insert_no_replace(grib_trie* t,const char* key,void* data)
 void *grib_trie_get(grib_trie* t,const char* key)
 {
   const char *k = key;
-  GRIB_PTHREAD_ONCE(&once,&init)
+  GRIB_MUTEX_INIT_ONCE(&once,&init)
   GRIB_MUTEX_LOCK(&mutex)
 
   while(*k && t)

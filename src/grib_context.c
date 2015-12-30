@@ -52,7 +52,7 @@ static long cntp = 0;
 
 static void default_long_lasting_free(const grib_context* c, void* p)
 {
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     free(p);
     GRIB_MUTEX_LOCK(&mutex_mem);
     cntp--;
@@ -62,7 +62,7 @@ static void default_long_lasting_free(const grib_context* c, void* p)
 static void* default_long_lasting_malloc(const grib_context* c, size_t size)
 {
     void* ret;
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex_mem);
     cntp++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
@@ -72,7 +72,7 @@ static void* default_long_lasting_malloc(const grib_context* c, size_t size)
 
 static void default_buffer_free(const grib_context* c, void* p)
 {
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     free(p);
     GRIB_MUTEX_LOCK(&mutex_mem);
     cntp--;
@@ -82,7 +82,7 @@ static void default_buffer_free(const grib_context* c, void* p)
 static void* default_buffer_malloc(const grib_context* c, size_t size)
 {
     void* ret;
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex_mem);
     cntp++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
@@ -99,7 +99,7 @@ static void* default_buffer_realloc(const grib_context* c, void* p, size_t size)
 
 static void default_free(const grib_context* c, void* p)
 {
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     free(p);
     GRIB_MUTEX_LOCK(&mutex_mem);
     cnt--;
@@ -109,7 +109,7 @@ static void default_free(const grib_context* c, void* p)
 static void* default_malloc(const grib_context* c, size_t size)
 {
     void* ret;
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex_mem);
     cnt++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
@@ -331,7 +331,7 @@ static grib_context default_grib_context = {
 
 grib_context* grib_context_get_default()
 {
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex_c);
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
@@ -466,7 +466,7 @@ grib_context* grib_context_new(grib_context* parent)
 
     if (!parent) parent=grib_context_get_default();
 
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&(parent->mutex));
 
     c = (grib_context*)grib_context_malloc_clear_persistent(&default_grib_context,sizeof(grib_context));
@@ -544,7 +544,7 @@ static int init_definition_files_dir(grib_context* c)
     /* Note: strtok modifies its first argument so we copy */
     strncpy(path, c->grib_definition_files_path, DEF_PATH_MAXLEN);
 
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex_c);
 
     p=path;
@@ -586,7 +586,7 @@ char *grib_context_full_defs_path(grib_context* c,const char* basename)
     grib_string_list* fullpath=0;
     if (!c) c=grib_context_get_default();
 
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
 
     if(*basename == '/' || *basename ==  '.') {
         return (char*)basename;
