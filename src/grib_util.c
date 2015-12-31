@@ -31,7 +31,8 @@
  #endif
 #endif
 
-static void set_total_length(unsigned char* buffer,long *section_length,long *section_offset,int edition,size_t totalLength) {
+static void set_total_length(unsigned char* buffer,long *section_length,long *section_offset,int edition,size_t totalLength)
+{
     long off;
     switch (edition) {
     case 1:
@@ -55,10 +56,10 @@ static void set_total_length(unsigned char* buffer,long *section_length,long *se
         grib_encode_unsigned_long(buffer, (unsigned long)totalLength ,  &off, 64);
         break;
     }
-
 }
 
-static grib_handle* grib_sections_copy_internal(grib_handle* hfrom,grib_handle* hto,int sections[],int *err) {
+static grib_handle* grib_sections_copy_internal(grib_handle* hfrom,grib_handle* hto,int sections[],int *err)
+{
     int i;
     size_t totalLength=0;
     unsigned char* buffer;
@@ -180,7 +181,8 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom,grib_handle* 
     return h;
 }
 
-grib_handle* grib_util_sections_copy(grib_handle* hfrom,grib_handle* hto,int what,int *err) {
+grib_handle* grib_util_sections_copy(grib_handle* hfrom,grib_handle* hto,int what,int *err)
+{
     long edition_from=0;
     long edition_to=0;
     long localDefinitionNumber=-1;
@@ -265,24 +267,26 @@ grib_handle* grib_util_sections_copy(grib_handle* hfrom,grib_handle* hto,int wha
     }
 
     return grib_sections_copy_internal(hfrom,hto,sections_to_copy,err);
-
 }
 
 static grib_trie* init_list(const char* name);
 static grib_trie* param_id_list = NULL;
 static grib_trie* mars_param_list = NULL;
 /* TODO thread safe */
-grib_string_list* grib_util_get_param_id(const char* mars_param) {
+grib_string_list* grib_util_get_param_id(const char* mars_param)
+{
     if (!mars_param_list && (mars_param_list=init_list("mars_param.table"))==NULL) return NULL;
     return (grib_string_list*)grib_trie_get(mars_param_list,mars_param);
 }
 
-grib_string_list* grib_util_get_mars_param(const char* param_id) {
+grib_string_list* grib_util_get_mars_param(const char* param_id)
+{
     if (!param_id_list && (param_id_list=init_list("param_id.table"))==NULL) return NULL;
     return (grib_string_list*)grib_trie_get(param_id_list,param_id);
 }
 
-static grib_trie* init_list(const char* name) {
+static grib_trie* init_list(const char* name)
+{
     char *full_path=0;
     FILE* fh;
     char s[101];
@@ -1288,7 +1292,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     return NULL;
 }
 
-int grib_moments(grib_handle* h,double east,double north,double west,double south,int order,double* moments,long *count) {
+int grib_moments(grib_handle* h,double east,double north,double west,double south,int order,double* moments,long *count)
+{
     grib_iterator* iter=NULL;
     int ret=0,i,j,l;
     size_t n=0,numberOfPoints=0;

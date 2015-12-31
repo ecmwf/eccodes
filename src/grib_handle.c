@@ -15,28 +15,25 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 
-/* #if GRIB_PTHREADS */
 #if 0
-static pthread_once_t once  = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
-
-static void init() {
+ /* #if GRIB_PTHREADS */
+ static pthread_once_t once  = PTHREAD_ONCE_INIT;
+ static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+ static pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
+ static void init() {
 	pthread_mutexattr_t attr;
 	pthread_mutexattr_init(&attr);
 	pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
 	pthread_mutex_init(&mutex1,&attr);
 	pthread_mutex_init(&mutex2,&attr);
 	pthread_mutexattr_destroy(&attr);
-
-}
-/* #elif GRIB_OMP_THREADS */
-static int once = 0;
-static omp_nest_lock_t mutex1;
-static omp_nest_lock_t mutex2;
-
-static void init()
-{
+ }
+ /* #elif GRIB_OMP_THREADS */
+ static int once = 0;
+ static omp_nest_lock_t mutex1;
+ static omp_nest_lock_t mutex2;
+ static void init()
+ {
     GRIB_OMP_CRITICAL(lock_grib_handle_c)
     {
         if (once == 0)
@@ -46,9 +43,8 @@ static void init()
             once = 1;
         }
     }
-}
+ }
 #endif
-
 
 static grib_handle* grib_handle_new_from_file_no_multi ( grib_context* c, FILE* f,int headers_only,int *error );
 static grib_handle* grib_handle_new_from_file_multi ( grib_context* c, FILE* f,int *error );
@@ -129,7 +125,6 @@ void grib_empty_section ( grib_context   *c,grib_section* b )
         current = next;
     }
     b->block->first = b->block->last = 0;
-
 }
 
 void grib_section_delete ( grib_context   *c, grib_section* b )
@@ -395,8 +390,6 @@ grib_handle* grib_handle_new_from_message ( grib_context* c,void* data, size_t b
     h=grib_handle_create ( gl,  c, data,  buflen );
     return h;
 }
-
-
 
 grib_handle* grib_handle_new_from_multi_message ( grib_context* c,void** data,
         size_t *buflen,int* error )
@@ -1157,15 +1150,16 @@ int grib_get_message_copy ( grib_handle* h ,  void* message,size_t *len )
     return GRIB_SUCCESS;
 }
 
-int grib_get_message_offset ( grib_handle* h,off_t* offset ) {
-
+int grib_get_message_offset ( grib_handle* h,off_t* offset )
+{
     if (h) *offset=h->offset;
     else return GRIB_INTERNAL_ERROR;
 
     return 0;
 }
 
-int grib_get_message_size ( grib_handle* h,size_t* size ) {
+int grib_get_message_size ( grib_handle* h,size_t* size )
+{
     long totalLength=0;
     int ret=0;
     *size =  h->buffer->ulength;
@@ -1297,7 +1291,6 @@ int grib_handle_prepare_action ( grib_handle* h,grib_action* a )
 
 static int grib2_get_next_section ( unsigned char* msgbegin,size_t msglen,unsigned char** secbegin,size_t* seclen,int* secnum,int* err )
 {
-
     if ( !grib2_has_next_section ( msgbegin,msglen,*secbegin,*seclen,err ) )
         return 0;
 

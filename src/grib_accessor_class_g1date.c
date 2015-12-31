@@ -239,7 +239,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     return GRIB_SUCCESS;
 }
 
-static char* months[] = {
+static const char* months[] = {
         "jan","feb","mar","apr",
         "may","jun","jul","aug",
         "sep","oct","nov","dec",

@@ -153,7 +153,6 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
     grib_key_err* first=NULL;
     int todo=1,count=0;
 
-
     grib_keys_iterator* iter=NULL;
 
     if (!dest || !src) return GRIB_NULL_HANDLE;
@@ -480,7 +479,8 @@ int grib_clear(grib_handle* h, const char* name)
     return GRIB_NOT_FOUND;
 }
 
-int grib_set_missing_internal(grib_handle* h, const char* name) {
+int grib_set_missing_internal(grib_handle* h, const char* name)
+{
     int ret=0;
     grib_accessor* a =NULL;
 
@@ -814,7 +814,8 @@ int grib_is_in_dump(grib_handle* h, const char* name)
         return 0;
 }
 
-int grib_attributes_count(grib_accessor* a, size_t* size) {
+int grib_attributes_count(grib_accessor* a, size_t* size)
+{
     if (a) {
         *size=0;
         while (a->attributes[*size]!=NULL) {(*size)++;}
@@ -823,7 +824,6 @@ int grib_attributes_count(grib_accessor* a, size_t* size) {
 
     return GRIB_NOT_FOUND;
 }
-
 
 int grib_get_long(grib_handle* h, const char* name, long* val)
 {
@@ -922,7 +922,6 @@ int grib_get_double_elements(grib_handle* h, const char* name, int* i, long len,
     int j=0;
     grib_accessor* act =NULL;
 
-
     act= grib_find_accessor(h, name);
 
     ret=_grib_get_size(h,act,&size);
@@ -961,7 +960,6 @@ int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t
     return ret;
 }
 
-
 int grib_get_string(grib_handle* h, const char* name, char* val, size_t *length)
 {
     grib_accessor* a = NULL;
@@ -980,7 +978,6 @@ int grib_get_string(grib_handle* h, const char* name, char* val, size_t *length)
         return grib_unpack_string(a, val , length);
     }
 }
-
 
 int grib_get_bytes_internal(grib_handle* h, const char* name, unsigned char* val, size_t *length)
 {
@@ -1173,7 +1170,6 @@ int grib_get_count(grib_handle* h, const char* name,size_t* size)
     return GRIB_SUCCESS;
 }
 
-
 int grib_get_offset(grib_handle* h, const char* key,size_t* val)
 {
     grib_accessor* act = grib_find_accessor(h, key);
@@ -1285,8 +1281,8 @@ int grib_get_long_array(grib_handle* h, const char* name, long* val, size_t *len
     return ret;
 }
 
-
-static void grib_clean_key_value(grib_context* c,grib_key_value_list* kv) {
+static void grib_clean_key_value(grib_context* c,grib_key_value_list* kv)
+{
     if (kv->long_value) grib_context_free(c,kv->long_value);
     kv->long_value=NULL;
     if (kv->double_value) grib_context_free(c,kv->double_value);
@@ -1300,7 +1296,8 @@ static void grib_clean_key_value(grib_context* c,grib_key_value_list* kv) {
     kv->size=0;
 }
 
-static int grib_get_key_value(grib_handle* h,grib_key_value_list* kv) {
+static int grib_get_key_value(grib_handle* h,grib_key_value_list* kv)
+{
     int ret=0;
     size_t size=0;
     grib_keys_iterator* iter=NULL;
@@ -1361,7 +1358,8 @@ static int grib_get_key_value(grib_handle* h,grib_key_value_list* kv) {
     return ret;
 }
 
-grib_key_value_list* grib_key_value_list_clone(grib_context* c,grib_key_value_list* list) {
+grib_key_value_list* grib_key_value_list_clone(grib_context* c,grib_key_value_list* list)
+{
     grib_key_value_list* next=list;
     grib_key_value_list* the_clone=(grib_key_value_list*)grib_context_malloc_clear(c,sizeof(grib_key_value_list));
     grib_key_value_list* p=the_clone;
@@ -1374,7 +1372,8 @@ grib_key_value_list* grib_key_value_list_clone(grib_context* c,grib_key_value_li
     return the_clone;
 }
 
-void grib_key_value_list_delete(grib_context* c,grib_key_value_list* kvl) {
+void grib_key_value_list_delete(grib_context* c,grib_key_value_list* kvl)
+{
     grib_key_value_list* next=kvl;
     grib_key_value_list* p=NULL;
     while (next) {
@@ -1388,7 +1387,8 @@ void grib_key_value_list_delete(grib_context* c,grib_key_value_list* kvl) {
     }
 }
 
-int grib_get_key_value_list(grib_handle* h,grib_key_value_list* list) {
+int grib_get_key_value_list(grib_handle* h,grib_key_value_list* list)
+{
     int ret=0;
     grib_key_value_list* kvl=list;
     while (kvl) {
@@ -1398,7 +1398,8 @@ int grib_get_key_value_list(grib_handle* h,grib_key_value_list* list) {
     return ret;
 }
 
-int grib_get_values(grib_handle* h,grib_values* args,size_t count) {
+int grib_get_values(grib_handle* h,grib_values* args,size_t count)
+{
     int ret=0;
     int i=0;
 
@@ -1499,7 +1500,6 @@ int grib_set_values(grib_handle* h,grib_values* args,size_t count)
                           args[i].name,grib_get_error_message(args[i].error)); */
         }
     }
-
 
     h->values[stack]       = NULL;
     h->values_count[stack] = 0;
