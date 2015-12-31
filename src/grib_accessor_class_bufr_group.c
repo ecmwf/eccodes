@@ -131,29 +131,27 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-#define MAX_bufr_group_STRING_LENGTH 255
-
 static void init(grib_accessor* a, const long length , grib_arguments* args )
 {
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_section(dumper,a,a->sub_section->block);
+    grib_dump_section(dumper,a,a->sub_section->block);
 }
 
-static grib_accessor* next(grib_accessor* a,int explore) {
-  grib_accessor* next=NULL;
-  if (explore) {
-    next=a->sub_section->block->first;
-    if (!next) next=a->next;
-  } else {
-      next=a->next;
-  }
-  if (!next) {
-    if (a->parent->owner)
-      next=a->parent->owner->cclass->next(a->parent->owner,0);
-  }
-  return next;
+static grib_accessor* next(grib_accessor* a,int explore)
+{
+    grib_accessor* next=NULL;
+    if (explore) {
+        next=a->sub_section->block->first;
+        if (!next) next=a->next;
+    } else {
+        next=a->next;
+    }
+    if (!next) {
+        if (a->parent->owner)
+            next=a->parent->owner->cclass->next(a->parent->owner,0);
+    }
+    return next;
 }
-

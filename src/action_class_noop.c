@@ -76,22 +76,22 @@ static void init_class(grib_action_class* c)
 
 grib_action* grib_action_create_noop( grib_context* context,const char* fname)
 {
-  char buf[1024];
+    char buf[1024];
 
-  grib_action_noop* a ;
-  grib_action_class* c   = grib_action_class_noop;
-  grib_action* act       = (grib_action*)grib_context_malloc_clear_persistent(context,c->size);
-  act->op                = grib_context_strdup_persistent(context,"section");
+    grib_action_noop* a ;
+    grib_action_class* c   = grib_action_class_noop;
+    grib_action* act       = (grib_action*)grib_context_malloc_clear_persistent(context,c->size);
+    act->op                = grib_context_strdup_persistent(context,"section");
 
-  act->cclass       = c;
-  a                 = (grib_action_noop*)act;
-  act->context      = context;
+    act->cclass       = c;
+    a                 = (grib_action_noop*)act;
+    act->context      = context;
 
-  sprintf(buf,"_noop%p",(void*)a);
+    sprintf(buf,"_noop%p",(void*)a);
 
-  act->name      = grib_context_strdup_persistent(context,buf);
+    act->name      = grib_context_strdup_persistent(context,buf);
 
-  return act;
+    return act;
 }
 
 static void compile(grib_action* act, grib_compiler *compiler)
@@ -106,11 +106,10 @@ static void dump(grib_action* act, FILE* f, int lvl)
 {
 }
 
-
 static void destroy(grib_context* context,grib_action* act)
 {
-  grib_context_free_persistent(context, act->name);
-  grib_context_free_persistent(context, act->op);
+    grib_context_free_persistent(context, act->name);
+    grib_context_free_persistent(context, act->op);
 }
 
 static void xref(grib_action* d, FILE* f,const char* path)

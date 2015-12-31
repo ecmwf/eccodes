@@ -79,77 +79,74 @@ static void init_class(grib_action_class* c)
 
 grib_action* grib_action_create_print( grib_context* context, const char* name,char* outname)
 {
-  char buf[1024];
+    char buf[1024];
 
-  grib_action_print* a ;
-  grib_action_class* c   = grib_action_class_print;
-  grib_action* act       = (grib_action*)grib_context_malloc_clear_persistent(context,c->size);
-  act->op              =  grib_context_strdup_persistent(context,"section");
+    grib_action_print* a ;
+    grib_action_class* c   = grib_action_class_print;
+    grib_action* act       = (grib_action*)grib_context_malloc_clear_persistent(context,c->size);
+    act->op              =  grib_context_strdup_persistent(context,"section");
 
-  act->cclass            = c;
-  a                      = (grib_action_print*)act;
-  act->context           = context;
+    act->cclass            = c;
+    a                      = (grib_action_print*)act;
+    act->context           = context;
 
-  a->name            = grib_context_strdup_persistent(context,name);
+    a->name            = grib_context_strdup_persistent(context,name);
 
-  if (outname) {
-    FILE* out=NULL;
-    int ioerr=0;
-    a->outname      = grib_context_strdup_persistent(context,outname);
-    out=fopen(outname,"w");
-    ioerr=errno;
-    if (!out)   {
-      grib_context_log(act->context,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),
-        "IO ERROR: %s: %s",strerror(ioerr),outname);
+    if (outname) {
+        FILE* out=NULL;
+        int ioerr=0;
+        a->outname      = grib_context_strdup_persistent(context,outname);
+        out=fopen(outname,"w");
+        ioerr=errno;
+        if (!out)   {
+            grib_context_log(act->context,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),
+                    "IO ERROR: %s: %s",strerror(ioerr),outname);
+        }
+        if (out) fclose(out);
     }
-    if (out) fclose(out);
-  }
 
-  sprintf(buf,"print%p",(void*)a->name);
+    sprintf(buf,"print%p",(void*)a->name);
 
-  act->name      = grib_context_strdup_persistent(context,buf);
+    act->name      = grib_context_strdup_persistent(context,buf);
 
-  return act;
+    return act;
 }
 
 static int execute(grib_action* act, grib_handle *h)
 {
-  grib_action_print* self = (grib_action_print*) act;
-  int err =0;
-  FILE* out=NULL;
-  int ioerr=0;
+    grib_action_print* self = (grib_action_print*) act;
+    int err =0;
+    FILE* out=NULL;
+    int ioerr=0;
 
-  if (self->outname) {
-    out=fopen(self->outname,"a");
-    ioerr=errno;
-    if (!out)   {
-      grib_context_log(act->context,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),
-        "IO ERROR: %s: %s",strerror(ioerr),self->outname);
-        return GRIB_IO_PROBLEM;
+    if (self->outname) {
+        out=fopen(self->outname,"a");
+        ioerr=errno;
+        if (!out)   {
+            grib_context_log(act->context,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),
+                    "IO ERROR: %s: %s",strerror(ioerr),self->outname);
+            return GRIB_IO_PROBLEM;
+        }
+    } else {
+        out=stdout;
     }
-  } else {
-    out=stdout;
-  }
 
-  err=grib_recompose_print(h,NULL,self->name,0,out);
+    err=grib_recompose_print(h,NULL,self->name,0,out);
 
-  if (self->outname) fclose(out);
+    if (self->outname) fclose(out);
 
-  return err;
+    return err;
 }
-
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
 }
 
-
 static void destroy(grib_context* context,grib_action* act)
 {
-  grib_action_print* a = (grib_action_print*) act;
+    grib_action_print* a = (grib_action_print*) act;
 
-  grib_context_free_persistent(context, a->name);
-  grib_context_free_persistent(context, act->name);
-  grib_context_free_persistent(context, act->op);
-
+    grib_context_free_persistent(context, a->name);
+    grib_context_free_persistent(context, act->name);
+    grib_context_free_persistent(context, act->op);
 }

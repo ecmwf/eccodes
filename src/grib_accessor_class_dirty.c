@@ -136,32 +136,31 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_dirty* self = (grib_accessor_dirty*)a;
-  self->accessor = grib_arguments_get_name(grib_handle_of_accessor(a),c,0);
-  a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
-   a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
-  a->length=0;
+    grib_accessor_dirty* self = (grib_accessor_dirty*)a;
+    self->accessor = grib_arguments_get_name(grib_handle_of_accessor(a),c,0);
+    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
+    a->length=0;
 }
 
-static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
+static int pack_long   (grib_accessor* a, const long* val, size_t *len)
 {
-  grib_accessor_dirty* self = (grib_accessor_dirty*)a;
-  grib_accessor* x=grib_find_accessor(grib_handle_of_accessor(a),self->accessor);
+    grib_accessor_dirty* self = (grib_accessor_dirty*)a;
+    grib_accessor* x=grib_find_accessor(grib_handle_of_accessor(a),self->accessor);
 
-  if (x) x->dirty=*val;
+    if (x) x->dirty=*val;
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int unpack_long   (grib_accessor* a, long* val, size_t *len)
 {
-  grib_accessor_dirty* self = (grib_accessor_dirty*)a;
-  grib_accessor* x=grib_find_accessor(grib_handle_of_accessor(a),self->accessor);
+    grib_accessor_dirty* self = (grib_accessor_dirty*)a;
+    grib_accessor* x=grib_find_accessor(grib_handle_of_accessor(a),self->accessor);
 
-  if (x) x->dirty=1;
+    if (x) x->dirty=1;
 
-  *val=1;
+    *val=1;
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
-

@@ -531,7 +531,8 @@ static GRIB_INLINE void reset_deeper_qualifiers(grib_accessor* significanceQuali
     }
 }
 
-static int decode_elements(grib_accessor* a) {
+static int decode_elements(grib_accessor* a)
+{
     int err=0;
     grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
     unsigned char* data =NULL;
@@ -911,4 +912,3 @@ static void destroy(grib_context* c,grib_accessor* a)
     self_clear(c,self);
     grib_section_delete(c,a->sub_section);
 }
-

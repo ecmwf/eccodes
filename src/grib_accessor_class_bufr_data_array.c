@@ -1716,8 +1716,8 @@ static int process_elements(grib_accessor* a,int flag)
                     i+=numberOfElementsToRepeat[inr];
                     if (inr>0) {
                         n[inr-1]-=numberOfElementsToRepeat[inr]+2;
-                        /* if the empty nested repetion is at the end of the nesting repetition
-              we need to repoint to the start of the nesting repetition */
+                        /* if the empty nested repetition is at the end of the nesting repetition
+                           we need to re-point to the start of the nesting repetition */
                         if (n[inr-1]==0) {
                             nn[inr-1]--;
                             if (nn[inr-1]<=0) numberOfNestedRepetitions--;

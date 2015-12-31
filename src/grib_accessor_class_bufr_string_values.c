@@ -218,7 +218,6 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len)
 static int value_count(grib_accessor* a,long* rlen)
 {
     grib_accessor* descriptors=get_accessor(a);
-
     return grib_value_count(descriptors,rlen);
 }
 

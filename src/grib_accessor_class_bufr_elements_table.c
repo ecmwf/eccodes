@@ -139,17 +139,17 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-static void init(grib_accessor* a, const long len, grib_arguments* params) {
-  int n=0;
-  grib_accessor_bufr_elements_table* self  = (grib_accessor_bufr_elements_table*)a;
+static void init(grib_accessor* a, const long len, grib_arguments* params)
+{
+    int n=0;
+    grib_accessor_bufr_elements_table* self  = (grib_accessor_bufr_elements_table*)a;
 
-  self->dictionary = grib_arguments_get_string(grib_handle_of_accessor(a),params,n++);
-  self->masterDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
-  self->localDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->dictionary = grib_arguments_get_string(grib_handle_of_accessor(a),params,n++);
+    self->masterDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->localDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
 
-  a->length = 0;
-  a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-
+    a->length = 0;
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
 char** str_split(char* a_str, const char a_delim)
@@ -200,8 +200,8 @@ char** str_split(char* a_str, const char a_delim)
     return result;
 }
 
-static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err) {
-
+static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
+{
     grib_accessor_bufr_elements_table* self = (grib_accessor_bufr_elements_table*)a;
 
     char* filename=NULL;
@@ -277,8 +277,8 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err) {
         if (!f) {*err=GRIB_IO_PROBLEM; return NULL;}
 
         while(fgets(line,sizeof(line)-1,f)) {
-          list=str_split(line,'|');
-          grib_trie_insert(dictionary,list[0],list);
+            list=str_split(line,'|');
+            grib_trie_insert(dictionary,list[0],list);
         }
 
         fclose(f);
@@ -287,121 +287,124 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err) {
     return dictionary;
 }
 
-static int convert_type(char* stype) {
-  int ret=BUFR_DESCRIPTOR_TYPE_UNKNOWN;
-  switch (stype[0]) {
+static int convert_type(char* stype)
+{
+    int ret=BUFR_DESCRIPTOR_TYPE_UNKNOWN;
+    switch (stype[0]) {
     case 's':
-      if (!strcmp(stype,"string") ) ret=BUFR_DESCRIPTOR_TYPE_STRING;
-      break;
+        if (!strcmp(stype,"string") ) ret=BUFR_DESCRIPTOR_TYPE_STRING;
+        break;
     case 'l':
-      if (!strcmp(stype,"long") ) ret=BUFR_DESCRIPTOR_TYPE_LONG;
-      break;
+        if (!strcmp(stype,"long") ) ret=BUFR_DESCRIPTOR_TYPE_LONG;
+        break;
     case 'd':
-      if (!strcmp(stype,"double") ) ret=BUFR_DESCRIPTOR_TYPE_DOUBLE;
-      break;
+        if (!strcmp(stype,"double") ) ret=BUFR_DESCRIPTOR_TYPE_DOUBLE;
+        break;
     case 't':
-      if (!strcmp(stype,"table") ) ret=BUFR_DESCRIPTOR_TYPE_TABLE;
-      break;
+        if (!strcmp(stype,"table") ) ret=BUFR_DESCRIPTOR_TYPE_TABLE;
+        break;
     case 'f':
-      if (!strcmp(stype,"flag") ) ret=BUFR_DESCRIPTOR_TYPE_FLAG;
-      break;
+        if (!strcmp(stype,"flag") ) ret=BUFR_DESCRIPTOR_TYPE_FLAG;
+        break;
     default:
-      ret=BUFR_DESCRIPTOR_TYPE_UNKNOWN;
-  }
+        ret=BUFR_DESCRIPTOR_TYPE_UNKNOWN;
+    }
 
-  return ret;
+    return ret;
 }
 
-static int bufr_get_from_table(grib_accessor* a,bufr_descriptor* v) {
-  int ret=0;
-  char** list=0;
-  char code[7]={0};
-  grib_context* c;
-  char* str=NULL;
+static int bufr_get_from_table(grib_accessor* a,bufr_descriptor* v)
+{
+    int ret=0;
+    char** list=0;
+    char code[7]={0};
+    grib_context* c;
+    char* str=NULL;
 
-  grib_trie* table;
+    grib_trie* table;
 
-  table=load_bufr_elements_table(a,&ret);
-  if (ret) return ret;
+    table=load_bufr_elements_table(a,&ret);
+    if (ret) return ret;
 
-  c=a->context;
+    c=a->context;
 
-  sprintf(code,"%06ld",v->code);
+    sprintf(code,"%06ld",v->code);
 
-  list=(char**)grib_trie_get(table,code);
-  if (!list) return GRIB_NOT_FOUND;
+    list=(char**)grib_trie_get(table,code);
+    if (!list) return GRIB_NOT_FOUND;
 
-  v->shortName=grib_context_strdup(c,list[1]);
-  v->type=convert_type(list[2]);
-  v->name=grib_context_strdup(c,list[3]);
-  v->units=grib_context_strdup(c,list[4]);
-  str=grib_context_strdup(c,list[5]);
-  v->scale=atol(str);
-  grib_context_free(c,str);
-  v->factor=grib_power(-v->scale,10);
-  str=grib_context_strdup(c,list[6]);
-  v->reference=atol(str);
-  grib_context_free(c,str);
-  str=grib_context_strdup(c,list[7]);
-  v->width=atol(str);
-  grib_context_free(c,str);
+    v->shortName=grib_context_strdup(c,list[1]);
+    v->type=convert_type(list[2]);
+    v->name=grib_context_strdup(c,list[3]);
+    v->units=grib_context_strdup(c,list[4]);
+    str=grib_context_strdup(c,list[5]);
+    v->scale=atol(str);
+    grib_context_free(c,str);
+    v->factor=grib_power(-v->scale,10);
+    str=grib_context_strdup(c,list[6]);
+    v->reference=atol(str);
+    grib_context_free(c,str);
+    str=grib_context_strdup(c,list[7]);
+    v->width=atol(str);
+    grib_context_free(c,str);
 
-  return ret;
+    return ret;
 }
 
-int bufr_is_marker(int code,int F,int X,int Y) {
-  int isMarker=0;
-  switch (code) {
+int bufr_is_marker(int code,int F,int X,int Y)
+{
+    int isMarker=0;
+    switch (code) {
     case 223255:
     case 224255:
     case 225255:
     case 232255:
-      return 1;
-  }
-  if (F==2 && X==5) isMarker=1;
-  return isMarker;
+        return 1;
+    }
+    if (F==2 && X==5) isMarker=1;
+    return isMarker;
 }
 
-bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a,int code,int *err) {
-  grib_context* c;
-  bufr_descriptor* v=NULL;
+bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a,int code,int *err)
+{
+    grib_context* c;
+    bufr_descriptor* v=NULL;
 
-  if (!a) return NULL;
+    if (!a) return NULL;
 
-  c=a->context;
+    c=a->context;
 
-  v=(bufr_descriptor*)grib_context_malloc_clear(c,sizeof(bufr_descriptor));
-  if (!v) {
-    grib_context_log(c,GRIB_LOG_ERROR,
-          "grib_bufr_descriptor_new unable to allocate %d bytes\n",sizeof(bufr_descriptor));
-    *err=GRIB_OUT_OF_MEMORY;
-    return NULL;
-  }
-  v->context=c;
-  v->code=code;
-  v->F=code/100000;
-  v->X=(code-v->F*100000)/1000;
-  v->Y=(code-v->F*100000)%1000;
-  v->isMarker=bufr_is_marker(code,v->F,v->X,v->Y);
+    v=(bufr_descriptor*)grib_context_malloc_clear(c,sizeof(bufr_descriptor));
+    if (!v) {
+        grib_context_log(c,GRIB_LOG_ERROR,
+                "grib_bufr_descriptor_new unable to allocate %d bytes\n",sizeof(bufr_descriptor));
+        *err=GRIB_OUT_OF_MEMORY;
+        return NULL;
+    }
+    v->context=c;
+    v->code=code;
+    v->F=code/100000;
+    v->X=(code-v->F*100000)/1000;
+    v->Y=(code-v->F*100000)%1000;
+    v->isMarker=bufr_is_marker(code,v->F,v->X,v->Y);
 
-  switch (v->F) {
+    switch (v->F) {
     case 0:
-      *err=bufr_get_from_table(a,v);
-      break;
+        *err=bufr_get_from_table(a,v);
+        break;
     case 1:
-      v->type=BUFR_DESCRIPTOR_TYPE_REPLICATION;
-      break;
+        v->type=BUFR_DESCRIPTOR_TYPE_REPLICATION;
+        break;
     case 2:
-      v->type=BUFR_DESCRIPTOR_TYPE_OPERATOR;
-      break;
+        v->type=BUFR_DESCRIPTOR_TYPE_OPERATOR;
+        break;
     case 3:
-      v->type=BUFR_DESCRIPTOR_TYPE_SEQUENCE;
-      break;
-  }
+        v->type=BUFR_DESCRIPTOR_TYPE_SEQUENCE;
+        break;
+    }
 
-  return v;
+    return v;
 }
-
 
 static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
 {
@@ -414,18 +417,17 @@ static int value_count(grib_accessor* a,long* count)
     return 0;
 }
 
-static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_STRING;
+static int get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_STRING;
 }
 
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int unpack_long   (grib_accessor* a, long* val, size_t *len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
+static int unpack_double   (grib_accessor* a, double* val, size_t *len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
-
-

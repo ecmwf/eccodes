@@ -143,23 +143,24 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-static void init(grib_accessor* a, const long len, grib_arguments* params) {
-  int n=0;
-  grib_accessor_dictionary* self  = (grib_accessor_dictionary*)a;
+static void init(grib_accessor* a, const long len, grib_arguments* params)
+{
+    int n=0;
+    grib_accessor_dictionary* self  = (grib_accessor_dictionary*)a;
 
-  self->dictionary = grib_arguments_get_string(grib_handle_of_accessor(a),params,n++);
-  self->key = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
-  self->column = grib_arguments_get_long(grib_handle_of_accessor(a),params,n++);
-  self->masterDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
-  self->localDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->dictionary = grib_arguments_get_string(grib_handle_of_accessor(a),params,n++);
+    self->key = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->column = grib_arguments_get_long(grib_handle_of_accessor(a),params,n++);
+    self->masterDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->localDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
 
-  a->length = 0;
-  a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->length = 0;
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 
 }
 
-static grib_trie* load_dictionary(grib_context* c,grib_accessor* a, int* err) {
-
+static grib_trie* load_dictionary(grib_context* c,grib_accessor* a, int* err)
+{
     grib_accessor_dictionary* self = (grib_accessor_dictionary*)a;
 
     char* filename=NULL;
@@ -261,20 +262,19 @@ static grib_trie* load_dictionary(grib_context* c,grib_accessor* a, int* err) {
     return dictionary;
 }
 
-
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  switch (get_native_type(a)) {
+    switch (get_native_type(a)) {
     case GRIB_TYPE_STRING:
-      grib_dump_string(dumper,a,NULL);
-      break;
+        grib_dump_string(dumper,a,NULL);
+        break;
     case GRIB_TYPE_LONG:
-      grib_dump_long(dumper,a,NULL);
-      break;
+        grib_dump_long(dumper,a,NULL);
+        break;
     case GRIB_TYPE_DOUBLE:
-      grib_dump_double(dumper,a,NULL);
-      break;
-  }
+        grib_dump_double(dumper,a,NULL);
+        break;
+    }
 }
 
 static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
@@ -334,16 +334,17 @@ static int value_count(grib_accessor* a,long* count)
     return 0;
 }
 
-static int  get_native_type(grib_accessor* a){
-  int type=GRIB_TYPE_DOUBLE;
-  if (a->flags & GRIB_ACCESSOR_FLAG_LONG_TYPE)
-    type=GRIB_TYPE_LONG;
-  if (a->flags & GRIB_ACCESSOR_FLAG_STRING_TYPE)
-    type=GRIB_TYPE_STRING;
-  return type;
+static int get_native_type(grib_accessor* a)
+{
+    int type=GRIB_TYPE_DOUBLE;
+    if (a->flags & GRIB_ACCESSOR_FLAG_LONG_TYPE)
+        type=GRIB_TYPE_LONG;
+    if (a->flags & GRIB_ACCESSOR_FLAG_STRING_TYPE)
+        type=GRIB_TYPE_STRING;
+    return type;
 }
 
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int unpack_long   (grib_accessor* a, long* val, size_t *len)
 {
     int err=0;
     char buffer[1024]={0,};
@@ -358,7 +359,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
     return err;
 }
 
-static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
+static int unpack_double   (grib_accessor* a, double* val, size_t *len)
 {
     int err=0;
     char buffer[1024]={0,};
@@ -372,5 +373,3 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
 
     return err;
 }
-
-

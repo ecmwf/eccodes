@@ -78,59 +78,56 @@ static void init_class(grib_action_class* c)
 /* END_CLASS_IMP */
 
 grib_action* grib_action_create_set_darray( grib_context* context,
-  const char* name,
-    grib_darray* darray)
+        const char* name,
+        grib_darray* darray)
 {
-  char buf[1024];
+    char buf[1024];
 
-  grib_action_set_darray* a ;
-  grib_action_class* c   = grib_action_class_set_darray;
-  grib_action* act       = (grib_action*)grib_context_malloc_clear_persistent(context,c->size);
-  act->op              = grib_context_strdup_persistent(context,"section");
+    grib_action_set_darray* a ;
+    grib_action_class* c   = grib_action_class_set_darray;
+    grib_action* act       = (grib_action*)grib_context_malloc_clear_persistent(context,c->size);
+    act->op              = grib_context_strdup_persistent(context,"section");
 
-  act->cclass       = c;
-  a                 = (grib_action_set_darray*)act;
-  act->context      = context;
+    act->cclass       = c;
+    a                 = (grib_action_set_darray*)act;
+    act->context      = context;
 
-  a->darray  = darray;
-  a->name        = grib_context_strdup_persistent(context,name);
+    a->darray  = darray;
+    a->name        = grib_context_strdup_persistent(context,name);
 
 
-  sprintf(buf,"set_darray%p",(void*)darray);
+    sprintf(buf,"set_darray%p",(void*)darray);
 
-  act->name      = grib_context_strdup_persistent(context,buf);
+    act->name      = grib_context_strdup_persistent(context,buf);
 
-  return act;
+    return act;
 }
 
 static int execute(grib_action* a, grib_handle *h)
 {
-  grib_action_set_darray* self = (grib_action_set_darray*) a;
+    grib_action_set_darray* self = (grib_action_set_darray*) a;
 
-  return grib_set_double_array(h,self->name,self->darray->v,self->darray->n);
+    return grib_set_double_array(h,self->name,self->darray->v,self->darray->n);
 }
-
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-  int i =0;
-  grib_action_set_darray* self=(grib_action_set_darray*)act;
-  for (i=0;i<lvl;i++)
-    grib_context_print(act->context,f,"     ");
-  grib_context_print(act->context,f,self->name);
-  printf("\n");
+    int i =0;
+    grib_action_set_darray* self=(grib_action_set_darray*)act;
+    for (i=0;i<lvl;i++)
+        grib_context_print(act->context,f,"     ");
+    grib_context_print(act->context,f,self->name);
+    printf("\n");
 }
-
 
 static void destroy(grib_context* context,grib_action* act)
 {
-  grib_action_set_darray* a = (grib_action_set_darray*) act;
+    grib_action_set_darray* a = (grib_action_set_darray*) act;
 
-  grib_context_free_persistent(context, a->name);
-  grib_darray_delete(context,a->darray);
-  grib_context_free_persistent(context, act->name);
-  grib_context_free_persistent(context, act->op);
-
+    grib_context_free_persistent(context, a->name);
+    grib_darray_delete(context,a->darray);
+    grib_context_free_persistent(context, act->name);
+    grib_context_free_persistent(context, act->op);
 }
 
 static void xref(grib_action* d, FILE* f,const char *path)

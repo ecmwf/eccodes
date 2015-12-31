@@ -141,95 +141,93 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* args)
 {
-  int n=0;
-  grib_accessor_decimal_precision* self= (grib_accessor_decimal_precision*)a;
-  
-  self->bits_per_value=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-  self->decimal_scale_factor=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-  self->changing_precision=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-  self->values=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-  
-  a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
-  a->length=0;
+    int n=0;
+    grib_accessor_decimal_precision* self= (grib_accessor_decimal_precision*)a;
+
+    self->bits_per_value=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->decimal_scale_factor=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->changing_precision=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->values=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+
+    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    a->length=0;
 }
 
 static int  unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  int ret=0;
-  grib_accessor_decimal_precision* self= (grib_accessor_decimal_precision*)a;
-  grib_handle* h=grib_handle_of_accessor(a);
+    int ret=0;
+    grib_accessor_decimal_precision* self= (grib_accessor_decimal_precision*)a;
+    grib_handle* h=grib_handle_of_accessor(a);
 
-  if((ret = grib_get_long_internal(h,self->decimal_scale_factor,val))
-       != GRIB_SUCCESS) return ret;
+    if((ret = grib_get_long_internal(h,self->decimal_scale_factor,val))
+            != GRIB_SUCCESS) return ret;
 
-  *len =1;
-  return ret;
+    *len =1;
+    return ret;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  long bitsPerValue=0;
-  double* values=NULL;
-  size_t size=0;
-  int ret=0;
-  grib_accessor_decimal_precision* self= (grib_accessor_decimal_precision*)a;
-  grib_context* c=a->context;
-  grib_handle* h=grib_handle_of_accessor(a);
+    long bitsPerValue=0;
+    double* values=NULL;
+    size_t size=0;
+    int ret=0;
+    grib_accessor_decimal_precision* self= (grib_accessor_decimal_precision*)a;
+    grib_context* c=a->context;
+    grib_handle* h=grib_handle_of_accessor(a);
 
-  if (!self->values) {
-    if((ret = grib_set_long_internal(h, self->bits_per_value,0))
-        != GRIB_SUCCESS) return ret;
-        
-    if((ret = grib_set_long_internal(h, self->decimal_scale_factor,*val))
-        != GRIB_SUCCESS) return ret;
+    if (!self->values) {
+        if((ret = grib_set_long_internal(h, self->bits_per_value,0))
+                != GRIB_SUCCESS) return ret;
 
-    if((ret = grib_set_long_internal(h, self->changing_precision,1))
-        != GRIB_SUCCESS) {
-      grib_context_free(c,values);
-      return ret;
+        if((ret = grib_set_long_internal(h, self->decimal_scale_factor,*val))
+                != GRIB_SUCCESS) return ret;
+
+        if((ret = grib_set_long_internal(h, self->changing_precision,1))
+                != GRIB_SUCCESS) {
+            grib_context_free(c,values);
+            return ret;
         }
 
-    return GRIB_SUCCESS;
-  }
+        return GRIB_SUCCESS;
+    }
 
-  if ( (ret=grib_get_size(h,self->values,&size)) != GRIB_SUCCESS) return ret;
+    if ( (ret=grib_get_size(h,self->values,&size)) != GRIB_SUCCESS) return ret;
 
-  values=(double*)grib_context_malloc(c,size*sizeof(double));
-  if (!values) return GRIB_OUT_OF_MEMORY;
+    values=(double*)grib_context_malloc(c,size*sizeof(double));
+    if (!values) return GRIB_OUT_OF_MEMORY;
 
-  if((ret = grib_get_double_array_internal(h,self->values,values,&size))
-       != GRIB_SUCCESS) {
+    if((ret = grib_get_double_array_internal(h,self->values,values,&size))
+            != GRIB_SUCCESS) {
         grib_context_buffer_free(c,values);
         return ret;
-  }
+    }
 
-  if((ret = grib_set_long_internal(h, self->decimal_scale_factor,*val))
-      != GRIB_SUCCESS) { 
+    if((ret = grib_set_long_internal(h, self->decimal_scale_factor,*val))
+            != GRIB_SUCCESS) {
         grib_context_buffer_free(c,values);
-	  return ret;
-	  }
+        return ret;
+    }
 
-  if((ret = grib_set_long_internal(h, self->bits_per_value,bitsPerValue))
-      != GRIB_SUCCESS) {
+    if((ret = grib_set_long_internal(h, self->bits_per_value,bitsPerValue))
+            != GRIB_SUCCESS) {
         grib_context_free(c,values);
-	  return ret;
-	 }
+        return ret;
+    }
 
-     if((ret = grib_set_long_internal(h, self->changing_precision,1))
-         != GRIB_SUCCESS) {
-       grib_context_free(c,values);
-       return ret;
-         }
+    if((ret = grib_set_long_internal(h, self->changing_precision,1))
+            != GRIB_SUCCESS) {
+        grib_context_free(c,values);
+        return ret;
+    }
 
-  if((ret = grib_set_double_array_internal(h, self->values,values,size))
-      != GRIB_SUCCESS) {
+    if((ret = grib_set_double_array_internal(h, self->values,values,size))
+            != GRIB_SUCCESS) {
         grib_context_buffer_free(c,values);
-	  return ret;
-	 }
+        return ret;
+    }
 
-  grib_context_free(c,values);
+    grib_context_free(c,values);
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
-
-

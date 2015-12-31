@@ -119,8 +119,6 @@ static void dump(grib_action* act, FILE* f, int lvl)
 static int create_accessor(grib_section* p, grib_action* act,grib_loader *h)
 {
 	grib_action_modify* a = ( grib_action_modify*)act;
-
-
 	grib_accessor* ga = NULL;
 
 	ga = grib_find_accessor(p->h, a->name);
@@ -132,10 +130,7 @@ static int create_accessor(grib_section* p, grib_action* act,grib_loader *h)
 		grib_context_log(act->context, GRIB_LOG_DEBUG, "action_class_modify: create_accessor_buffer : No accessor named %s to modify.", a->name);
 	}
 	return GRIB_SUCCESS;
-
-
 }
-
 
 static void destroy(grib_context* context,grib_action* act)
 {
@@ -144,7 +139,6 @@ static void destroy(grib_context* context,grib_action* act)
 	grib_context_free_persistent(context, a->name);
 	grib_context_free_persistent(context, act->name);
 	grib_context_free_persistent(context, act->op);
-
 }
 
 static void xref(grib_action* d, FILE* f,const char* path)
