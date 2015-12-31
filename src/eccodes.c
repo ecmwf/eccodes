@@ -510,10 +510,6 @@ int codes_points_get_values(grib_handle* h, grib_points* points, double* val)
 {
     return grib_points_get_values(h,points,val);
 }
-grib_context* codes_context_new(grib_context* c)
-{
-    return grib_context_new(c);
-}
 void codes_context_delete(grib_context* c)
 {
     grib_context_delete(c);

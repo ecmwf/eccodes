@@ -471,8 +471,7 @@ grib_context* grib_context_get_default()
     return &default_grib_context;
 }
 
-/* TODO: use parent */
-
+#if 0  /* function removed */
 grib_context* grib_context_new(grib_context* parent)
 {
     grib_context* c;
@@ -517,6 +516,7 @@ grib_context* grib_context_new(grib_context* parent)
     GRIB_MUTEX_UNLOCK(&(parent->mutex));
     return c;
 }
+#endif /* function removed */
 
 /* GRIB-235: Resolve path to expand symbolic links etc */
 static char* resolve_path(grib_context* c, char* path)

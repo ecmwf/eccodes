@@ -914,7 +914,6 @@ void grib_context_set_logging_proc(grib_context *c, grib_log_proc p);
 long grib_get_api_version(void);
 void grib_print_api_version(FILE *out);
 grib_context *grib_context_get_default(void);
-grib_context *grib_context_new(grib_context *parent);
 char *grib_context_full_defs_path(grib_context *c, const char *basename);
 char *grib_samples_path(const grib_context *c);
 void grib_context_free(const grib_context *c, void *p);

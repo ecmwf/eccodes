@@ -1058,14 +1058,6 @@ typedef int    (*grib_data_eof_proc) (const grib_context* c, void *stream);
 grib_context*    grib_context_get_default(void);
 
 /**
-*  Create and allocate a new context from a parent context.
-*
-* @param c           : the context to be cloned, NULL for default context
-* @return            the new and empty context, NULL if error
-*/
-grib_context*    grib_context_new                        (grib_context* c);
-
-/**
 *  Frees the cached definition files of the context
 *
 * @param c           : the context to be deleted
