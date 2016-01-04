@@ -9239,77 +9239,11 @@
 	 parameterCategory = 240 ;
 	 parameterNumber = 10 ;
 	}
-#Cross sectional area of flow in channel
-'Cross sectional area of flow in channel' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 11 ;
-	}
-#Sideflow into river channel
-'Sideflow into river channel' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 12 ;
-	}
-#Discharge
-'Discharge' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 13 ;
-	}
-#River storage of water
-'River storage of water' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 14 ;
-	}
-#Floodplain storage of water
-'Floodplain storage of water' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 15 ;
-	}
-#Flooded area fraction
-'Flooded area fraction' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 16 ;
-	}
-#Days since last rain
-'Days since last rain' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 17 ;
-	}
-#Molnau-Bissell frost index
-'Molnau-Bissell frost index' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 18 ;
-	}
 #Maximum discharge in 15 day forecast
 'Maximum discharge in 15 day forecast' = {
 	 discipline = 192 ;
 	 parameterCategory = 240 ;
 	 parameterNumber = 19 ;
-	}
-#Depth of water on soil surface
-'Depth of water on soil surface' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 20 ;
-	}
-#Upstreams accumulated precipitation
-'Upstreams accumulated precipitation' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 21 ;
-	}
-#Upstreams accumulated snow melt
-'Upstreams accumulated snow melt' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 22 ;
 	}
 #Maximum rain in 24 hours over the 15 day forecast
 'Maximum rain in 24 hours over the 15 day forecast' = {
@@ -9322,12 +9256,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 240 ;
 	 parameterNumber = 25 ;
-	}
-#Snow depth at elevation bands
-'Snow depth at elevation bands' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 26 ;
 	}
 #Accumulated precipitation over the 15 day forecast
 'Accumulated precipitation over the 15 day forecast' = {

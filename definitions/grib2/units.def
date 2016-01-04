@@ -316,6 +316,78 @@
 	 parameterNumber = 20 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Cross sectional area of flow in channel
+'m**2' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 13 ;
+	}
+#Side flow into river channel
+'m**3 s**-1 m**-1' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 10 ;
+	}
+#Discharge from rivers or streams
+'m**3 s**-1' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 7 ;
+	}
+#River storage of water
+'m**3' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 11 ;
+	}
+#Floodplain storage of water
+'m**3' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 12 ;
+	}
+#Water fraction
+'(0 - 1)' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	}
+#Days since last observation
+'Integer' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 3 ;
+	}
+#Frost index
+'K' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 24 ;
+	}
+#Depth of water on soil surface
+'kg m**-2' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 13 ;
+	}
+#Upstream accumulated precipitation
+'kg m**-2' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 14 ;
+	}
+#Upstream accumulated snow melt
+'kg m**-2' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 15 ;
+	}
+#Snow depth at elevation bands
+'kg m**-2' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	}
 #Apparent temperature
 'K' = {
 	 discipline = 0 ;

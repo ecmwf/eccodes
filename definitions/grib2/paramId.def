@@ -316,6 +316,78 @@
 	 parameterNumber = 20 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Cross sectional area of flow in channel
+'240011' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 13 ;
+	}
+#Side flow into river channel
+'240012' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 10 ;
+	}
+#Discharge from rivers or streams
+'240013' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 7 ;
+	}
+#River storage of water
+'240014' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 11 ;
+	}
+#Floodplain storage of water
+'240015' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 12 ;
+	}
+#Water fraction
+'240016' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	}
+#Days since last observation
+'240017' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 3 ;
+	}
+#Frost index
+'240018' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 24 ;
+	}
+#Depth of water on soil surface
+'240020' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 13 ;
+	}
+#Upstream accumulated precipitation
+'240021' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 14 ;
+	}
+#Upstream accumulated snow melt
+'240022' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 15 ;
+	}
+#Snow depth at elevation bands
+'240026' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	}
 #Apparent temperature
 '260255' = {
 	 discipline = 0 ;

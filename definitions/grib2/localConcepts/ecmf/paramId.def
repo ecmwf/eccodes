@@ -9239,77 +9239,11 @@
 	 parameterCategory = 240 ;
 	 parameterNumber = 10 ;
 	}
-#Cross sectional area of flow in channel
-'240011' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 11 ;
-	}
-#Sideflow into river channel
-'240012' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 12 ;
-	}
-#Discharge
-'240013' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 13 ;
-	}
-#River storage of water
-'240014' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 14 ;
-	}
-#Floodplain storage of water
-'240015' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 15 ;
-	}
-#Flooded area fraction
-'240016' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 16 ;
-	}
-#Days since last rain
-'240017' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 17 ;
-	}
-#Molnau-Bissell frost index
-'240018' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 18 ;
-	}
 #Maximum discharge in 15 day forecast
 '240019' = {
 	 discipline = 192 ;
 	 parameterCategory = 240 ;
 	 parameterNumber = 19 ;
-	}
-#Depth of water on soil surface
-'240020' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 20 ;
-	}
-#Upstreams accumulated precipitation
-'240021' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 21 ;
-	}
-#Upstreams accumulated snow melt
-'240022' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 22 ;
 	}
 #Maximum rain in 24 hours over the 15 day forecast
 '240023' = {
@@ -9322,12 +9256,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 240 ;
 	 parameterNumber = 25 ;
-	}
-#Snow depth at elevation bands
-'240026' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 26 ;
 	}
 #Accumulated precipitation over the 15 day forecast
 '240027' = {
