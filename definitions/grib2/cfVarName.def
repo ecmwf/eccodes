@@ -113,10 +113,10 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
-	 typeOfStatisticalProcessing = 2 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
+	 typeOfStatisticalProcessing = 2 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 lengthOfTimeRange = 3 ;
 	}
@@ -219,28 +219,28 @@
 	 parameterNumber = 33 ;
 	}
 #Mean temperature tendency due to short-wave radiation
-'mttsr' = {
+'mttswr' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 22 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean temperature tendency due to long-wave radiation
-'mtttr' = {
+'mttlwr' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 23 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean temperature tendency due to short-wave radiation, clear sky
-'mttsrc' = {
+'mttswrcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 24 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean temperature tendency due to long-wave radiation, clear sky
-'mtttrc' = {
+'mttlwrcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 25 ;
@@ -388,6 +388,18 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 25 ;
 	}
+#Groundwater upper storage
+'gwus' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 8 ;
+	}
+#Groundwater lower storage
+'gwls' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 9 ;
+	}
 #Apparent temperature
 'aptmp' = {
 	 discipline = 0 ;
@@ -401,13 +413,13 @@
 	 parameterNumber = 2 ;
 	}
 #Cloudy brightness temperature
-'p260510' = {
+'clbt' = {
          discipline = 3 ;
          parameterCategory = 1 ;
          parameterNumber = 14 ;
         }
 #Clear-sky brightness temperature
-'p260511' = {
+'csbt' = {
          discipline = 3 ;
          parameterCategory = 1 ;
          parameterNumber = 15 ;
@@ -515,7 +527,7 @@
 	 parameterNumber = 23 ;
 	}
 #Virtual temperature
-'p300012' = {
+'vtmp' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 1 ;
@@ -527,7 +539,7 @@
 	 parameterNumber = 15 ;
 	}
 #Pseudo-adiabatic potential temperature
-'p3014' = {
+'papt' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;

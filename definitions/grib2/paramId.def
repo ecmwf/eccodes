@@ -388,6 +388,18 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 25 ;
 	}
+#Groundwater upper storage
+'240028' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 8 ;
+	}
+#Groundwater lower storage
+'240029' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 9 ;
+	}
 #Apparent temperature
 '260255' = {
 	 discipline = 0 ;

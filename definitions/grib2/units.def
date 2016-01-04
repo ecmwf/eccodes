@@ -388,6 +388,18 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 25 ;
 	}
+#Groundwater upper storage
+'kg m**-2' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 8 ;
+	}
+#Groundwater lower storage
+'kg m**-2' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 9 ;
+	}
 #Apparent temperature
 'K' = {
 	 discipline = 0 ;

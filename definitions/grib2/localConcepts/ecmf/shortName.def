@@ -9251,12 +9251,6 @@
 	 parameterCategory = 240 ;
 	 parameterNumber = 23 ;
 	}
-#Groundwater
-'gz' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 25 ;
-	}
 #Accumulated precipitation over the 15 day forecast
 'acctp15d' = {
 	 discipline = 192 ;
