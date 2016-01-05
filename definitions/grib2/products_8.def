@@ -66,6 +66,13 @@ concept marsType {
      typeOfProcessedData = 4;
    }
 
+   an = {
+     typeOfProcessedData = 0;
+   }
+   "2" = {
+     typeOfProcessedData = 0;
+   }
+
    "default" = {
      dummyc = 0;
    }
