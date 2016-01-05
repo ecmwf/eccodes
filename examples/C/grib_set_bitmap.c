@@ -29,7 +29,7 @@ int main(int argc, char** argv)
     FILE* in = NULL;
     char* infile = "../../data/regular_latlon_surface.grib1";
     FILE* out = NULL;
-    char* outfile = "out.grib1";
+    char* outfile = "out.set_bitmap_c.grib";
     codes_handle *h = NULL;
     const void* buffer = NULL;
     size_t values_len;
@@ -67,8 +67,9 @@ int main(int argc, char** argv)
 
     CODES_CHECK(codes_set_long(h, "bitmapPresent", 1),0);
 
-    for(i = 0; i < 10; i++)
+    for(i = 0; i < 10; i++) {
         values[i]=missing;
+    }
 
     CODES_CHECK(codes_set_double_array(h, "values", values, values_len),0);
 
@@ -76,13 +77,11 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_get_message(h, &buffer, &size),0);
 
     /* write the buffer in a file*/
-    if(fwrite(buffer, 1, size, out) != size)
-    {
+    if(fwrite(buffer, 1, size, out) != size) {
         perror(outfile);
         exit(1);
     }
 
-    /* delete handle */
     codes_handle_delete(h);
 
     fclose(in);

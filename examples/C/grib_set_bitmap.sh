@@ -9,10 +9,10 @@
 
 . ./include.sh
 
-OUT_TMP=out.set_bitmap_f.grib
+OUT_TMP=out.set_bitmap_c.grib
 
 # The input and output files are hardcoded in the example
-${examples_dir}eccodes_f_grib_set_bitmap
+${examples_dir}c_grib_set_bitmap
 
 x=`${tools_dir}/grib_get -p numberOfDataPoints,numberOfCodedValues,numberOfMissing $OUT_TMP`
 [ "$x" = "496 486 10" ]

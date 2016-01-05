@@ -16,6 +16,7 @@ TESTS = grib_iterator.sh \
         set_missing.sh \
         grib_clone.sh \
         grib_set_pv.sh \
+        grib_set_bitmap.sh \
         bufr_attributes.sh \
         bufr_clone.sh \
         bufr_expanded.sh \
