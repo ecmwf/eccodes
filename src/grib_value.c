@@ -515,6 +515,8 @@ int grib_set_missing(grib_handle* h, const char* name)
             return GRIB_READ_ONLY;
 
         if(a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
+            if (h->context->debug) printf("ECCODES DEBUG grib_set_missing %s\n",name);
+
             ret=grib_pack_missing(a);
             if(ret == GRIB_SUCCESS)
                 return grib_dependency_notify_change(a);
