@@ -10,7 +10,6 @@
 # Uncertainties in ensembles of regional re-analysis project test (UERRA)
 constant marsExpver = 'test';
 constant marsClass = 'ur';
-constant marsModel = 'glob';
 #alias is_tigge = one;
 
 alias tigge_short_name=shortName;
@@ -31,7 +30,6 @@ if(levtype is "sfc")
 alias mars.expver = marsExpver;
 alias mars.class  = marsClass;
 alias mars.param = paramId;
-alias mars.model = marsModel;
 alias mars.origin = centre;
 
 # Tigge-LAM rules
