@@ -1,13 +1,10 @@
 """
 @package gribapi
-@brief This package is a low level Python interface to GRIB API. It offers almost one to one bindings to the C API functions.
+@brief This package is a low level Python interface to ecCodes. It offers almost one to one bindings to the C API functions.
 
-The Python interface to GRIB API uses by default the <a href="http://numpy.scipy.org/"><b>NumPy</b></a> package
+The Python interface to GRIB API uses the <a href="http://numpy.scipy.org/"><b>NumPy</b></a> package
 as the container of choice for the possible arrays of values that can be encoded/decoded in and from a grib message.
 Numpy is a package used for scientific computing in Python and an efficient container for generic data.
-
-Alternatively, the Python interface can be built without Numpy support, in which case, the data container used
-will be Python's native 'array' object.
 
 The Python interface and its support for NumPy can be enabled/disabled from the configure by using the following configure flags:\n
 
@@ -15,7 +12,6 @@ The Python interface and its support for NumPy can be enabled/disabled from the 
 --enable-python
 --disable-numpy
 
-Ex. ./configure --enable-python --disable-numpy
 @endcode
 
 When the '--enable-python' flag is used, then the system Python will be used to build the interface.
@@ -25,7 +21,7 @@ NumPy support can be disabled by using the '--disable-numpy' flag.
 @em Requirements:
 
     - Python 2.5 or higher
-    - NumPy (optional)
+    - NumPy
 
 """
 import gribapi_swig as _internal
