@@ -17,7 +17,7 @@ list( APPEND grib_tools_bins
              metar_dump metar_ls
              )
 
-list( APPEND grib_tools_bins_ECMWF_ONLY
+list( APPEND grib_tools_bins_EXTRA
              big2gribex
              gg_sub_area_check
              grib_repair
@@ -33,16 +33,16 @@ foreach( tool ${grib_tools_bins} )
                             LIBS       grib_tools )
 endforeach()
 
-# Install tools specific to ECMWF
-# User must run cmake with -DECCODES_INSTALL_EXTRA_TOOLS
-foreach( tool ${grib_tools_bins_ECMWF_ONLY} )
+# Install extra tools
+# User must run cmake with -DECCODES_INSTALL_EXTRA_TOOLS=ON
+foreach( tool ${grib_tools_bins_EXTRA} )
     ecbuild_add_executable( TARGET     ${tool}
                             SOURCES    ${tool}.c
                             CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
                             LIBS       grib_tools )
 endforeach()
 
-# Count tools. Same source code, different executable names
+# grib_count/bufr_count tools. Same source code, different executable names
 ecbuild_add_executable( TARGET     grib_count
                         SOURCES    codes_count.c
                         LIBS       grib_tools  )
