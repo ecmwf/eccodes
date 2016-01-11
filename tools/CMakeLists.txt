@@ -56,7 +56,8 @@ ecbuild_add_executable( TARGET     grib_to_netcdf
                         INCLUDES   ${NETCDF_INCLUDE_DIRS}
                         CONDITION  HAVE_NETCDF
                         LIBS       grib_tools ${NETCDF_LIBRARIES})
-# grib_list_keys
+
+
 ecbuild_add_executable( TARGET     grib_list_keys
                         SOURCES    list_keys.c
                         CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
