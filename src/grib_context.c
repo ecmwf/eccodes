@@ -369,19 +369,18 @@ grib_context* grib_context_get_default()
         const char *keep_matrix=NULL;
         const char *nounpack=NULL;
 
-
-        write_on_fail = getenv("ECCODES_GRIB_WRITE_ON_FAIL");
-        large_constant_fields = getenv("ECCODES_GRIB_LARGE_CONSTANT_FIELDS");
-        no_abort = getenv("ECCODES_NO_ABORT");
-        debug = getenv("ECCODES_DEBUG");
-        gribex=getenv("ECCODES_GRIBEX_MODE_ON");
-        ieee_packing=getenv("ECCODES_GRIB_IEEE_PACKING");
-        io_buffer_size=getenv("ECCODES_IO_BUFFER_SIZE");
-        log_stream=getenv("ECCODES_LOG_STREAM");
-        no_big_group_split=getenv("ECCODES_GRIB_NO_BIG_GROUP_SPLIT");
-        no_spd=getenv("ECCODES_GRIB_NO_SPD");
-        keep_matrix=getenv("ECCODES_GRIB_KEEP_MATRIX");
-        nounpack=getenv("ECCODES_NO_UNPACK");
+        write_on_fail = codes_getenv("ECCODES_GRIB_WRITE_ON_FAIL");
+        large_constant_fields = codes_getenv("ECCODES_GRIB_LARGE_CONSTANT_FIELDS");
+        no_abort = codes_getenv("ECCODES_NO_ABORT");
+        debug = codes_getenv("ECCODES_DEBUG");
+        gribex = codes_getenv("ECCODES_GRIBEX_MODE_ON");
+        ieee_packing = codes_getenv("ECCODES_GRIB_IEEE_PACKING");
+        io_buffer_size = codes_getenv("ECCODES_IO_BUFFER_SIZE");
+        log_stream = codes_getenv("ECCODES_LOG_STREAM");
+        no_big_group_split = codes_getenv("ECCODES_GRIB_NO_BIG_GROUP_SPLIT");
+        no_spd = codes_getenv("ECCODES_GRIB_NO_SPD");
+        keep_matrix = codes_getenv("ECCODES_GRIB_KEEP_MATRIX");
+        nounpack = codes_getenv("ECCODES_NO_UNPACK");
 
         /* On UNIX, when we read from a file we get exactly what is in the file on disk.
          * But on Windows a file can be opened in binary or text mode. In binary mode the system behaves exactly as in UNIX.
@@ -402,7 +401,7 @@ grib_context* grib_context_get_default()
         default_grib_context.gribex_mode_on=gribex ? atoi(gribex) : 0;
         default_grib_context.large_constant_fields = large_constant_fields ? atoi(large_constant_fields) : 0;
         default_grib_context.ieee_packing=ieee_packing ? atoi(ieee_packing) : 0;
-        default_grib_context.grib_samples_path = getenv("ECCODES_SAMPLES_PATH");
+        default_grib_context.grib_samples_path = codes_getenv("ECCODES_SAMPLES_PATH");
         default_grib_context.log_stream=stderr;
         if (!log_stream) {
             default_grib_context.log_stream=stderr;
@@ -417,7 +416,7 @@ grib_context* grib_context_get_default()
             default_grib_context.grib_samples_path = ECCODES_SAMPLES_PATH ;
 #endif
 
-        default_grib_context.grib_definition_files_path = getenv("ECCODES_DEFINITION_PATH");
+        default_grib_context.grib_definition_files_path = codes_getenv("ECCODES_DEFINITION_PATH");
 #ifdef ECCODES_DEFINITION_PATH
         if(!default_grib_context.grib_definition_files_path) {
             default_grib_context.grib_definition_files_path = ECCODES_DEFINITION_PATH ;
@@ -431,8 +430,8 @@ grib_context* grib_context_get_default()
         /* GRIB-779: Special case for ECMWF testing. Not for external use! */
         /* Append the new path to our existing path */
         {
-            const char* test_defs = getenv("_ECCODES_ECMWF_TEST_DEFINITION_PATH");
-            const char* test_samp = getenv("_ECCODES_ECMWF_TEST_SAMPLES_PATH");
+            const char* test_defs = codes_getenv("_ECCODES_ECMWF_TEST_DEFINITION_PATH");
+            const char* test_samp = codes_getenv("_ECCODES_ECMWF_TEST_SAMPLES_PATH");
             if (test_defs) {
                 char buffer[DEF_PATH_MAXLEN];
                 strcpy(buffer, default_grib_context.grib_definition_files_path);

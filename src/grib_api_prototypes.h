@@ -1364,6 +1364,7 @@ int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNum
 int is_index_file(const char *filename);
 char get_dir_separator_char(void);
 const char *extract_filename(const char *filepath);
+char *codes_getenv(const char *name);
 
 /* compile.c */
 void grib_compile_flags(grib_compiler *c, long flags);
