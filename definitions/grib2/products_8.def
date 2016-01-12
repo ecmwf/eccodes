@@ -27,13 +27,24 @@ if(levtype is "sfc")
     unalias mars.levelist;
 }
 
+# Special UERRA rule for level type 103 'Specified height level above ground (m)'
+if(typeOfFirstFixedSurface == 103) {
+    # Exclude the parameters: 10u, 10v and 2t
+    if (paramId != 165 &&
+        paramId != 166 &&
+        paramId != 167)
+    {
+        constant heightLevelName = 'hl';
+        alias mars.levtype = heightLevelName;
+    }
+}
+
 alias mars.expver = marsExpver;
 alias mars.class  = marsClass;
 alias mars.param = paramId;
 alias mars.origin = centre;
 
 # Tigge-LAM rules
-# productionStatusOfProcessedData == 8
 if (section2Used == 1) {
     constant marsLamModel = 'lam';
     alias mars.model = marsLamModel;    # model redefined. It is not 'glob'
