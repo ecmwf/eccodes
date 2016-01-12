@@ -45,19 +45,27 @@ alias totalNumber=ensembleSize;
 
 meta quantile sprintf("%s:%s",number,ensembleSize);
 
-unsigned[1] powerOfTenUsedToScaleClimateWeight  : dump;
+# See GRIB-862 for the reason behind the aliases
 
-unsigned[4] weightAppliedToClimateMonth1  : dump;
+unsigned[1] versionNumberOfExperimentalSuite : dump;
+alias powerOfTenUsedToScaleClimateWeight=versionNumberOfExperimentalSuite;
 
-unsigned[3] firstMonthUsedToBuildClimateMonth1  : dump;
+unsigned[4] implementationDateOfModelCycle : dump;
+alias weightAppliedToClimateMonth1=implementationDateOfModelCycle;
 
-unsigned[3] lastMonthUsedToBuildClimateMonth1  : dump;
+unsigned[3] numberOfReforecastYearsInModelClimate : dump;
+alias firstMonthUsedToBuildClimateMonth1=numberOfReforecastYearsInModelClimate;
 
-unsigned[3] firstMonthUsedToBuildClimateMonth2  : dump;
+unsigned[3] numberOfDaysInClimateSamplingWindow : dump;
+alias lastMonthUsedToBuildClimateMonth1=numberOfDaysInClimateSamplingWindow;
 
-unsigned[3] lastMonthUsedToBuildClimateMonth2  : dump;
+unsigned[3] sampleSizeOfModelClimate : dump;
+alias firstMonthUsedToBuildClimateMonth2=sampleSizeOfModelClimate;
 
-unsigned[1] efiOrder  : dump;
+unsigned[3] versionOfModelClimate : dump;
+alias lastMonthUsedToBuildClimateMonth2=versionOfModelClimate;
+
+unsigned[1] efiOrder : dump;
 
 # spareSetToZero
 pad padding_loc19_2(11);
