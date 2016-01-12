@@ -35,6 +35,7 @@ list( APPEND tests1
     definitions
     calendar
     unit_tests
+    md5
 )
 list( APPEND tests2
     bufr_dump
@@ -85,7 +86,6 @@ list( APPEND tests2
     read_any
     padding
     debug
-    md5
     grib_util_set_spec
 	neg_fctime
 )
@@ -93,8 +93,8 @@ list( APPEND tests2
 # These tests do not require any data downloads
 foreach( test ${tests1} )
     ecbuild_add_test( TARGET eccodes_t_${test}
-                  TYPE SCRIPT
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                      TYPE SCRIPT
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
     )
 endforeach()
 ecbuild_add_test( TARGET eccodes_t_check_gaussian_grids
