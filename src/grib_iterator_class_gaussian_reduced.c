@@ -106,12 +106,15 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
 {
     int ret=GRIB_SUCCESS, j;
     double lat_first=0,lon_first=0,lat_last=0,lon_last=0,d=0;
+    double lon2_diff=0, dlonlast_global=0;
+    double angular_precision = 1.0/1000000.0;
     double* lats;
     size_t plsize=0;
     long* pl;
     long max_pl=0;
     long nj=0,order=0,ilon_first,ilon_last,i;
     long row_count=0;
+    long editionNumber = 0;
     grib_context* c=h->context;
     grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
     const char* slat_first   = grib_arguments_get_name(h,args,self->carg++);
@@ -135,6 +138,10 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
         return ret;
     if((ret = grib_get_long_internal(h, snj,&nj)) != GRIB_SUCCESS)
         return ret;
+
+    if (grib_get_long(h, "editionNumber", &editionNumber)==GRIB_SUCCESS) {
+        if (editionNumber == 1) angular_precision = 1.0/1000;
+    }
 
     lats=(double*)grib_context_malloc(h->context,sizeof(double)*order*2);
     if (!lats) return GRIB_OUT_OF_MEMORY;
@@ -166,10 +173,12 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     }
 
     d=fabs(lats[0]-lats[1]);
+    dlonlast_global = 360.0 - 360.0/max_pl; /* last longitude in global case */
+    lon2_diff = fabs( lon_last  - dlonlast_global ) - 360.0/max_pl;
     if ( (fabs(lat_first-lats[0]) >= d ) ||
             (fabs(lat_last+lats[0]) >= d )  ||
             lon_first != 0                 ||
-            fabs(lon_last - (360.0-360.0/max_pl)) > 360.0/max_pl
+            lon2_diff > angular_precision
     ) {
         int l=0;
         /*sub area*/

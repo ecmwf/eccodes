@@ -178,10 +178,13 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     size_t plsize=0;
     double* lats={0,};
     double lat_first,lat_last,lon_first,lon_last;
+    double lon2_diff=0, dlonlast_global=0;
     long* pl=NULL;
     long* plsave=NULL;
     long row_count;
     long ilon_first=0,ilon_last=0;
+    double angular_precision = 1.0/1000000.0;
+    long editionNumber = 0;
 
     grib_accessor_number_of_points_gaussian* self = (grib_accessor_number_of_points_gaussian*)a;
     grib_context* c=a->context;
@@ -196,6 +199,10 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
         return ret;
 
     if (nj == 0) return GRIB_GEOCALCULUS_PROBLEM;
+
+    if (grib_get_long(grib_handle_of_accessor(a), "editionNumber", &editionNumber)==GRIB_SUCCESS) {
+        if (editionNumber == 1) angular_precision = 1.0/1000;
+    }
 
     if (plpresent) {
         long max_pl=0;
@@ -237,10 +244,12 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
         }
 
         d=fabs(lats[0]-lats[1]);
+        dlonlast_global = 360.0 - 360.0/max_pl; /* last longitude in global case */
+        lon2_diff = fabs( lon_last  - dlonlast_global ) - 360.0/max_pl;
         if ( (fabs(lat_first-lats[0]) >= d ) ||
                 (fabs(lat_last+lats[0]) >= d )  ||
                 lon_first != 0                 ||
-                fabs(lon_last  - (360.0-360.0/max_pl)) > 360.0/max_pl
+                lon2_diff > angular_precision
         ) {
             /*sub area*/
 #if EFDEBUG
