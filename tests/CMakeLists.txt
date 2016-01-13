@@ -62,6 +62,7 @@ list( APPEND tests2
     multi
     budg
     gridType
+    global
     concept
     decimalPrecision
     bitsPerValue

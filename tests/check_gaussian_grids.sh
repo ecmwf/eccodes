@@ -13,4 +13,5 @@
 samples_dir=$ECCODES_SAMPLES_PATH
 for gg in ${samples_dir}/reduced_gg_* ${samples_dir}/regular_gg_*; do
    ${tools_dir}grib_check_gaussian_grid $gg >/dev/null
+   check_key_equals $gg "global" 1
 done
