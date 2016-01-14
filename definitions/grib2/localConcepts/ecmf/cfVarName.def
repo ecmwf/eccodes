@@ -9149,6 +9149,24 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 48 ;
 	}
+#Unbalanced component of specific humidity
+'ucq' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 54 ;
+	}
+#Unbalanced component of specific cloud liquid water content
+'ucclwc' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 55 ;
+	}
+#Unbalanced component of specific cloud ice water content
+'ucciwc' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 56 ;
+	}
 #Total column rain water
 'tcrw' = {
 	 discipline = 192 ;
