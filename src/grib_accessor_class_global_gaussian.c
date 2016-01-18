@@ -179,9 +179,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     grib_accessor_global_gaussian* self = (grib_accessor_global_gaussian*)a;
     int ret = GRIB_SUCCESS;
     long latfirst,latlast,lonfirst,lonlast,basic_angle,subdivision,N,Ni;
-    double dlatfirst,dlatlast,dlonfirst,dlonlast,d,lon2_diff=0,dlonlast_global=0;
+    double dlatfirst,dlatlast,dlonfirst,dlonlast;
     double angular_precision = 0;
-    double* lats;
+    double* lats = NULL;
     long factor=1000, plpresent=0;
     long max_pl=0; /* max. element of pl array */
     grib_context* c=a->context;
@@ -259,21 +259,11 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
     /* If Ni is missing, then this is a reduced gaussian grid */
     if (Ni == GRIB_MISSING_LONG ) Ni=max_pl;
-    d=fabs(lats[0]-lats[1]);
-    dlonlast_global = 360.0 - 360.0/Ni; /* last longitude in global case */
-    lon2_diff = fabs( dlonlast  - dlonlast_global ) - 360.0/Ni;
 
-    if ( (fabs(dlatfirst-lats[0]) >= d ) ||
-            (fabs(dlatlast+lats[0]) >= d )  ||
-            dlonfirst != 0                 ||
-            lon2_diff > angular_precision
-    )
-    {
-        /* not global */
-        *val=0;
+    if (is_gaussian_global(dlatfirst,dlatlast,dlonfirst,dlonlast,Ni,lats,angular_precision)) {
+        *val=1;  /* global */
     } else {
-        /* global */
-        *val=1;
+        *val=0;  /* not global */
     }
 
     grib_context_free(c,lats);

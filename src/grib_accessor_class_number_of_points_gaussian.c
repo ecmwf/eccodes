@@ -174,11 +174,11 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     int ret=GRIB_SUCCESS;
+    int is_global = 0;
     long ni=0,nj=0,plpresent=0,order=0;
     size_t plsize=0;
     double* lats={0,};
     double lat_first,lat_last,lon_first,lon_last;
-    double lon2_diff=0, dlonlast_global=0;
     long* pl=NULL;
     long* plsave=NULL;
     long row_count;
@@ -243,14 +243,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
             if (pl[j] > max_pl) max_pl = pl[j];
         }
 
+        is_global=is_gaussian_global(lat_first,lat_last,lon_first,lon_last,max_pl,lats,angular_precision);
         d=fabs(lats[0]-lats[1]);
-        dlonlast_global = 360.0 - 360.0/max_pl; /* last longitude in global case */
-        lon2_diff = fabs( lon_last  - dlonlast_global ) - 360.0/max_pl;
-        if ( (fabs(lat_first-lats[0]) >= d ) ||
-                (fabs(lat_last+lats[0]) >= d )  ||
-                lon_first != 0                 ||
-                lon2_diff > angular_precision
-        ) {
+        if ( !is_global ) {
             /*sub area*/
 #if EFDEBUG
             printf("-------- subarea fabs(lat_first-lats[0])=%g d=%g\n",fabs(lat_first-lats[0]),d);
@@ -275,7 +270,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
                         ilon_first,lon_first_row,ilon_last,lon_last_row,*val,row_count);
 #endif
             }
-
         } else {
             int i = 0;
             *val=0;

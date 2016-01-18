@@ -104,9 +104,8 @@ static int next(grib_iterator* i, double *lat, double *lon, double *val)
 
 static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
 {
-    int ret=GRIB_SUCCESS, j;
-    double lat_first=0,lon_first=0,lat_last=0,lon_last=0,d=0;
-    double lon2_diff=0, dlonlast_global=0;
+    int ret=GRIB_SUCCESS, j, is_global=0;
+    double lat_first=0,lon_first=0,lat_last=0,lon_last=0;
     double angular_precision = 1.0/1000000.0;
     double* lats;
     size_t plsize=0;
@@ -172,17 +171,12 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
         if (pl[j] > max_pl) max_pl = pl[j];
     }
 
-    d=fabs(lats[0]-lats[1]);
-    dlonlast_global = 360.0 - 360.0/max_pl; /* last longitude in global case */
-    lon2_diff = fabs( lon_last  - dlonlast_global ) - 360.0/max_pl;
-    if ( (fabs(lat_first-lats[0]) >= d ) ||
-            (fabs(lat_last+lats[0]) >= d )  ||
-            lon_first != 0                 ||
-            lon2_diff > angular_precision
-    ) {
+    is_global = is_gaussian_global(lat_first, lat_last, lon_first, lon_last, max_pl, lats, angular_precision);
+    if ( !is_global ) {
         int l=0;
         /*sub area*/
         /*find starting latitude */
+        const double d = fabs(lats[0] - lats[1]);
         while (fabs(lat_first-lats[l]) > d ) {l++;}
         iter->e=0;
         for (j=0;j<plsize;j++) {

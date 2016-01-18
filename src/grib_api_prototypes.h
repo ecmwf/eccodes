@@ -1364,6 +1364,12 @@ int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNum
 int is_index_file(const char *filename);
 char get_dir_separator_char(void);
 const char *extract_filename(const char *filepath);
+int is_gaussian_global(
+        double lat1, double lat2, double lon1, double lon2,/* bounding box*/
+        long num_points_equator, /* num points on latitude at equator */
+        const double* latitudes, /* array of Gaussian latitudes (size 2*N) */
+        double angular_precision /* tolerance for angle comparison */
+);
 char *codes_getenv(const char *name);
 
 /* compile.c */
