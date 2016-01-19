@@ -198,6 +198,8 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
       depth-=2;
       fprintf(self->dumper.out,"\n%-*s}",depth," ");
     }
+    
+    (void)err; /* TODO */
 }
 
 
@@ -277,7 +279,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
       depth-=2;
       fprintf(self->dumper.out,"\n%-*s}",depth," ");
     }
-
+    (void)err; /* TODO */
 }
 
 static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
@@ -386,6 +388,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
   }
 
   grib_context_free(c,values);
+  (void)err; /* TODO */
 }
 
 static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
@@ -438,6 +441,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     }
 
     grib_context_free(c,value);
+    (void)err; /* TODO */
 }
 
 static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)

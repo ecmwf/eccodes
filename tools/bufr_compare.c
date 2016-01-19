@@ -80,21 +80,18 @@ static void write_message(grib_handle* h,const char* str)
     const void *m; size_t s;
     char fname[1024]={0,};
     FILE* fh=NULL;
-    int ioerr=0;
 
     grib_get_message(h,&m,&s);
     sprintf(fname,"%s_%d.bufr",str,write_count);
 
     fh= fopen(fname,"w");
     if(!fh) {
-        ioerr=errno;
         grib_context_log(h->context,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),
                 "Error opening %s",fname);
         exit(GRIB_IO_PROBLEM);
     }
 
     if(fwrite(m,1,s,fh) != s) {
-        ioerr=errno;
         grib_context_log(h->context,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),
                 "Error writing to %s",fname);
         exit(GRIB_IO_PROBLEM);

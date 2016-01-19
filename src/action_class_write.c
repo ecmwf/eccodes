@@ -106,7 +106,6 @@ grib_action* grib_action_create_write( grib_context* context, const char* name,i
 
 static int execute(grib_action* act, grib_handle *h)
 {
-    int ioerr = 0;
     grib_action_write* a = (grib_action_write*) act;
     int err = GRIB_SUCCESS;
     size_t size;
@@ -138,7 +137,6 @@ static int execute(grib_action* act, grib_handle *h)
 
     if (h->gts_header) {
         if (fwrite(h->gts_header, 1, h->gts_header_len, of->handle) != h->gts_header_len) {
-            ioerr = errno;
             grib_context_log(act->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
                     "Error writing GTS header to %s", filename);
             return GRIB_IO_PROBLEM;
@@ -146,7 +144,6 @@ static int execute(grib_action* act, grib_handle *h)
     }
 
     if (fwrite(buffer, 1, size, of->handle) != size) {
-        ioerr = errno;
         grib_context_log(act->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
                 "Error writing to %s", filename);
         return GRIB_IO_PROBLEM;
@@ -158,7 +155,6 @@ static int execute(grib_action* act, grib_handle *h)
         /* printf("XXX padding=%d size=%d padtomultiple=%d\n",padding,size,a->padtomultiple); */
         zeros = (char*)calloc(padding, 1);
         if (fwrite(zeros, 1, padding, of->handle) != padding) {
-            ioerr = errno;
             grib_context_log(act->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
                     "Error writing to %s", filename);
             free(zeros);
@@ -170,7 +166,6 @@ static int execute(grib_action* act, grib_handle *h)
     if (h->gts_header) {
         char gts_trailer[4] = { '\x0D', '\x0D', '\x0A', '\x03' };
         if (fwrite(gts_trailer, 1, 4, of->handle) != 4) {
-            ioerr = errno;
             grib_context_log(act->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
                     "Error writing GTS trailer to %s", filename);
             return GRIB_IO_PROBLEM;

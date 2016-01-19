@@ -237,7 +237,8 @@ static const unsigned char left_mask[8]={0,0x80,0xc0, 0xe0, 0xf0, 0xf8, 0xfc, 0x
 static const unsigned char right_mask[8]={0,0x80,0xc0, 0xe0, 0xf0, 0xf8, 0xfc, 0xfe };
 
 static unsigned char* bitmap_pop_line(unsigned char* bitmap,long* bitmap_len,int *bit_offset,
-        long points_in_line,int *values_in_line) {
+        long points_in_line,int *values_in_line)
+{
     unsigned char* p=bitmap;
     int m=0,bits=0;
     int bytes=0;
@@ -270,7 +271,8 @@ static unsigned char* bitmap_pop_line(unsigned char* bitmap,long* bitmap_len,int
 }
 
 static int reverse_rows (unsigned long* data, long  len, long number_along_parallel,
-        unsigned char* bitmap,long bitmap_len){
+        unsigned char* bitmap,long bitmap_len)
+{
     long count = 0;
     long i = 0;
     long left = 0;
@@ -341,18 +343,15 @@ static int reverse_rows (unsigned long* data, long  len, long number_along_paral
     return 0;
 }
 
-
-static int      spatial_difference (grib_context *c, unsigned long* vals, long  len, long order, long* bias){
-
+static int spatial_difference (grib_context *c, unsigned long* vals, long  len, long order, long* bias)
+{
     long j = 3;
-
     long *v = (long*)grib_context_malloc(c,(len)*sizeof(long));
 
     for(j = 0; j< len;j++)
         v[j] = vals[j];
 
     Assert(order == 2);
-
 
     *bias=v[order];
 
@@ -372,10 +371,9 @@ static int      spatial_difference (grib_context *c, unsigned long* vals, long  
     return 0;
 }
 
-static int      de_spatial_difference (grib_context *c, unsigned long* vals, long  len, long order, long bias){
-
+static int de_spatial_difference (grib_context *c, unsigned long* vals, long  len, long order, long bias)
+{
     long j = 0;
-
     long i_origin = 0;
     long i_first_diff = 0;
     long i_second_diff = 0;
@@ -544,42 +542,37 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 
     /* I have everything now start decoding       */
     /*
-  fprintf(stdout,"\n****************************************\n");
-  fprintf(stdout," bits_per_value = %ld\n", bits_per_value);
-  fprintf(stdout," reference_value = %g\n", reference_value);
-  fprintf(stdout," binary_scale_factor = %ld\n", binary_scale_factor);
-  fprintf(stdout," decimal_scale_factor = %ld\n", decimal_scale_factor);
-  fprintf(stdout," n1 = %ld\n", n1);
-  fprintf(stdout," n2 = %ld\n", n2);
-  fprintf(stdout," p1 = %ld\n", p1);
-  fprintf(stdout," p2 = %ld\n", p2);
-  fprintf(stdout," matrix_values = %ld\n", matrix_values);
-  fprintf(stdout," snd_bitmap = %ld\n", snd_bitmap);
-  fprintf(stdout," snd_ordr_wdiff = %ld\n", snd_ordr_wdiff);
-  fprintf(stdout," general_ext = %ld\n", general_ext);
-  fprintf(stdout," boustrophedonic = %ld\n", boustrophedonic);
-  fprintf(stdout," two_ordr_spd = %ld \n", two_ordr_spd);
+    fprintf(stdout,"\n****************************************\n");
+    fprintf(stdout," bits_per_value = %ld\n", bits_per_value);
+    fprintf(stdout," reference_value = %g\n", reference_value);
+    fprintf(stdout," binary_scale_factor = %ld\n", binary_scale_factor);
+    fprintf(stdout," decimal_scale_factor = %ld\n", decimal_scale_factor);
+    fprintf(stdout," n1 = %ld\n", n1);
+    fprintf(stdout," n2 = %ld\n", n2);
+    fprintf(stdout," p1 = %ld\n", p1);
+    fprintf(stdout," p2 = %ld\n", p2);
+    fprintf(stdout," matrix_values = %ld\n", matrix_values);
+    fprintf(stdout," snd_bitmap = %ld\n", snd_bitmap);
+    fprintf(stdout," snd_ordr_wdiff = %ld\n", snd_ordr_wdiff);
+    fprintf(stdout," general_ext = %ld\n", general_ext);
+    fprintf(stdout," boustrophedonic = %ld\n", boustrophedonic);
+    fprintf(stdout," two_ordr_spd = %ld \n", two_ordr_spd);
 
-  fprintf(stdout," plus1_spd = %ld\n", plus1_spd);
+    fprintf(stdout," plus1_spd = %ld\n", plus1_spd);
 
-  fprintf(stdout," n_sp_diff = %d\n", n_sp_diff);
-  fprintf(stdout," width_widths = %ld\n", nbits_per_group_size);
-  fprintf(stdout," width_lengths = %ld\n", nbits_per_width);
-  fprintf(stdout," octet_start_group = %ld\n", octet_start_group);
-  fprintf(stdout," width_spd_sp_desc = %ld\n", width_spd_sp_desc);
+    fprintf(stdout," n_sp_diff = %d\n", n_sp_diff);
+    fprintf(stdout," width_widths = %ld\n", nbits_per_group_size);
+    fprintf(stdout," width_lengths = %ld\n", nbits_per_width);
+    fprintf(stdout," octet_start_group = %ld\n", octet_start_group);
+    fprintf(stdout," width_spd_sp_desc = %ld\n", width_spd_sp_desc);
 
-
-  fprintf(stdout," offsetsection = %ld\n", offsetsection);
-
-  fprintf(stdout," offset w = %ld\n", octet_start_group + offsetsection);
-
-  fprintf(stdout,"\n****************************************\n");
-     */
+    fprintf(stdout," offsetsection = %ld\n", offsetsection);
+    fprintf(stdout," offset w = %ld\n", octet_start_group + offsetsection);
+    fprintf(stdout,"\n****************************************\n");
+    */
     if(snd_bitmap || matrix_values)
         return GRIB_NOT_IMPLEMENTED;
 
-    sec_val  = (unsigned long*)grib_context_malloc(a->context,(n_vals)*sizeof(unsigned long));
-    grib_context_free(a->context,sec_val);
     sec_val  = (unsigned long*)grib_context_malloc(a->context,(n_vals)*sizeof(unsigned long));
 
     buf_width_of_group  +=  a->offset;
@@ -685,7 +678,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     double   reference_value;
     long     binary_scale_factor;
     long     bits_per_value;
-    long     bit_per_val_rectified_for_gribex;
+    /*long     bit_per_val_rectified_for_gribex;*/
     long     decimal_scale_factor;
     long     n1 = 0;
     long     n2 = 0;
@@ -784,7 +777,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     min *= d;
     max *= d;
 
-    bit_per_val_rectified_for_gribex = bits_per_value+8-bits_per_value%8;
+    /*bit_per_val_rectified_for_gribex = bits_per_value+8-bits_per_value%8;*/
     if (grib_get_nearest_smaller_value(gh,self->reference_value,min,&reference_value)
             !=GRIB_SUCCESS) {
         grib_context_log(a->context,GRIB_LOG_ERROR,

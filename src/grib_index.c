@@ -1658,7 +1658,7 @@ grib_handle* grib_handle_new_from_index(grib_index* index,int *err)
 
 grib_handle* codes_new_from_index(grib_index* index,int message_type,int *err)
 {
-    grib_index_key* keys;
+    /*grib_index_key* keys;*/
     grib_field_list *fieldset,*next;
     grib_handle* h=NULL;
     grib_context* c=NULL;
@@ -1706,7 +1706,7 @@ grib_handle* codes_new_from_index(grib_index* index,int message_type,int *err)
 
     *err=GRIB_END_OF_INDEX;
     h=NULL;
-    keys=index->keys;
+    /*keys=index->keys;*/
 
     if ((*err=grib_index_execute(index))==GRIB_SUCCESS) {
 

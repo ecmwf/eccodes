@@ -421,12 +421,11 @@ static int grib_fieldset_compare(grib_fieldset* set,int* i,int* j)
     int idkey=0;
     grib_order_by* ob=0;
     int ii=0,jj=0;
-    int *order=0,*filter=0;
+    int *order=0;
 
     if (!set || !set->order_by) return GRIB_INVALID_ARGUMENT;
     ob=set->order_by;
     order=set->order->el;
-    filter=set->filter->el;
 
     ii=*(set->filter->el+*(order+*i));
     jj=*(set->filter->el+*(order+*j));
@@ -514,7 +513,7 @@ static grib_order_by* grib_fieldset_new_order_by(grib_context* c,char* obstr)
 {
     char *t1=0,*t2=0,*p=0;
     int id=0;
-    char *z=0,*zs=0;
+    char *z=0;
     int mode,mode_default=GRIB_ORDER_BY_ASC;
     grib_order_by *ob,*sob;
 
@@ -522,7 +521,6 @@ static grib_order_by* grib_fieldset_new_order_by(grib_context* c,char* obstr)
 
     z=grib_context_strdup(c,obstr);
     if(!z) return 0;
-    zs=z;
     grib_trim(&z);
 
     if (strlen(z)==0) {return 0;}
@@ -592,7 +590,7 @@ int grib_fieldset_add(grib_fieldset* set,char* filename)
     int err=0;
     int i=0;
     grib_handle* h=0;
-    int nkeys;
+   /* int nkeys; */
     grib_file* file;
     double offset=0;
     long length=0;
@@ -601,7 +599,7 @@ int grib_fieldset_add(grib_fieldset* set,char* filename)
     if (!set || !filename ) return GRIB_INVALID_ARGUMENT;
     c=set->context;
 
-    nkeys=set->columns_size;
+   /* nkeys=set->columns_size; */
 
     file=grib_file_open(filename,"r",&err);
     if (!file || !file->handle) return err;

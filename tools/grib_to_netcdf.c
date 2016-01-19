@@ -2099,7 +2099,6 @@ static void check_err(const int stat, const int line, const char *file)
 #define DIM_ID 1
 static int set_dimension(int ncid, const char *name, int n, int xtype, const char *units, const char *long_name)
 {
-
     int var_id = 0;
     int stat = 0;
     int dim_id = DIM_ID;
@@ -2174,6 +2173,8 @@ static int def_latlon(int ncid, fieldset *fs)
 
     /* g->purge_header = TRUE; */
     release_field(g);
+
+    (void)var_id; /* suppress gcc warning */
 
     return e;
 }

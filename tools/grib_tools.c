@@ -272,7 +272,7 @@ char iobuf[1024*1024];
 static int grib_tool_without_orderby(grib_runtime_options* options)
 {
     int err=0;
-    int nofail=0;
+    /*int nofail=0;*/
     grib_failed *failed=NULL,*p=NULL;
     grib_handle* h=NULL;
     grib_context* c=NULL;
@@ -316,7 +316,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
         infile->filter_handle_count=0;
 
         grib_tool_new_file_action(options,infile);
-        nofail=grib_options_on("f");
+        /*nofail=grib_options_on("f");*/
 
         while(!options->skip_all && ((h = grib_handle_new_from_file_x(c,infile->file,options->mode,
                 options->headers_only,&err))
@@ -575,7 +575,6 @@ static int scan(grib_context* c,grib_runtime_options* options,const char* dir) {
 static int process(grib_context* c,grib_runtime_options* options,const char* path) {
     struct stat s;
     int stat_val=0;
-    int ioerr=0;
 
 #ifndef ECCODES_ON_WINDOWS
     stat_val = lstat(path,&s);
@@ -584,7 +583,6 @@ static int process(grib_context* c,grib_runtime_options* options,const char* pat
 #endif
 
     if ( stat_val != 0 ) {
-        ioerr=errno;
         grib_context_log(c,(GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),"Cannot stat %s",path);
         return GRIB_IO_PROBLEM;
     }
@@ -953,7 +951,6 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     size_t size;
     grib_file* of = NULL;
     int err = 0;
-    int ioerr = 0;
     char filename[1024] = { 0, };
     Assert(options->outfile!=NULL && options->outfile->name!=NULL);
 
@@ -970,7 +967,6 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     of = grib_file_open(filename, "w", &err);
 
     if (!of || !of->handle) {
-        ioerr = errno;
         grib_context_log(h->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
                 "unable to open file %s\n", filename);
         exit(GRIB_IO_PROBLEM);
@@ -978,7 +974,6 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
 
     if (options->gts && h->gts_header) {
         if (fwrite(h->gts_header, 1, h->gts_header_len, of->handle) != h->gts_header_len) {
-            ioerr = errno;
             grib_context_log(h->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
                     "Error writing GTS header to %s", filename);
             exit(GRIB_IO_PROBLEM);
@@ -986,7 +981,6 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     }
 
     if (fwrite(buffer, 1, size, of->handle) != size) {
-        ioerr = errno;
         grib_context_log(h->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
                 "Error writing to %s", filename);
         exit(GRIB_IO_PROBLEM);
@@ -995,7 +989,6 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     if (options->gts && h->gts_header) {
         char gts_trailer[4] = { '\x0D', '\x0D', '\x0A', '\x03' };
         if (fwrite(gts_trailer, 1, 4, of->handle) != 4) {
-            ioerr = errno;
             grib_context_log(h->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
                     "Error writing GTS trailer to %s", filename);
             exit(GRIB_IO_PROBLEM);

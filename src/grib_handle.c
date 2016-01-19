@@ -1330,7 +1330,6 @@ static void grib2_build_message ( grib_context* context,unsigned char* sections[
 {
     int i=0;
     char* theEnd="7777";
-    unsigned char* sec0;
     unsigned char* p=0;
     size_t msglen=0;
     long bitp=64;
@@ -1339,7 +1338,7 @@ static void grib2_build_message ( grib_context* context,unsigned char* sections[
         *data=NULL;
         return;
     }
-    sec0=sections[0];
+
     for ( i=0;i<8;i++ ) msglen+= sections_len[i];
     msglen+=4;
     if ( *len<msglen ) msglen=*len;

@@ -21,7 +21,7 @@ char buffer[SIZE];
 int main(int argc,char **argv)
 {
     FILE* in, *out, *bad;
-    char *cin, *cout, *cbad;
+    char *cout, *cbad;
 
     size_t data_len = SIZE;
     long count = 0;
@@ -29,7 +29,6 @@ int main(int argc,char **argv)
 
     if(argc != 3 && argc != 4) usage(argv[0]);
 
-    cin = argv[1];
     in  = fopen(argv[1],"r");
     if(!in) {
         perror(argv[1]);

@@ -231,7 +231,7 @@ static const char* concept_evaluate(grib_accessor* a)
 {
     int match = 0;
     const char* best = 0;
-    const char* prev = 0;
+    /* const char* prev = 0; */
     grib_concept_value*  c = action_concept_get_concept(a);
     grib_handle* h=grib_handle_of_accessor(a);
 
@@ -249,7 +249,7 @@ static const char* concept_evaluate(grib_accessor* a)
         if(e == NULL)
         {
             if(cnt >= match) {
-                prev  = (cnt > match) ? NULL : best;
+                /* prev  = (cnt > match) ? NULL : best; */
                 match = cnt;
                 best  = c->name;
             }

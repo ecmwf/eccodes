@@ -247,6 +247,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
         d=fabs(lats[0]-lats[1]);
         if ( !is_global ) {
             /*sub area*/
+            (void)d;
 #if EFDEBUG
             printf("-------- subarea fabs(lat_first-lats[0])=%g d=%g\n",fabs(lat_first-lats[0]),d);
             printf("-------- subarea fabs(lat_last+lats[0])=%g d=%g\n",fabs(lat_last+lats[0]),d);
@@ -265,6 +266,8 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
                 lon_first_row=((ilon_first)*360.0)/pl[j];
                 lon_last_row=((ilon_last)*360.0)/pl[j];
                 *val+=row_count;
+                (void)lon_last_row;
+                (void)lon_first_row;
 #if EFDEBUG
                 printf("        ilon_first=%ld lon_first=%.10e ilon_last=%ld lon_last=%.10e count=%ld row_count=%ld\n",
                         ilon_first,lon_first_row,ilon_last,lon_last_row,*val,row_count);

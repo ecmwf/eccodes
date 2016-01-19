@@ -414,6 +414,8 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
                 reference_value,s,pscals,(maxv-hcount)*2,pval);
         i+=(maxv-hcount)*2;
 #else
+        (void)pscals; /* suppress gcc warning */
+        (void)pval;   /* suppress gcc warning */
         for(lcount=hcount; lcount < maxv ; lcount++)
         {
             val[i++] =  (double) ((grib_decode_unsigned_long(lres, &lpos,
@@ -440,9 +442,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     grib_context_free(a->context,scals);
 
     return ret;
-
 }
-
 
 
 #define MAXVAL(a,b) a>b?a:b

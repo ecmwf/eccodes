@@ -126,6 +126,7 @@ static int evaluate_long(grib_expression* g,grib_handle *h,long* result)
    else
       *result=1;
 
+  (void)val;
   return err;
 }
 

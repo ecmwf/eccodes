@@ -227,7 +227,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   long   mmax = 0;
   long   n_vals = 0;
   double *scals  = NULL;
-  double *pscals=NULL;
+  /* double *pscals=NULL; */
   double dummy=0;
 
   double s = 0;
@@ -369,7 +369,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
       sub_k--;
     }
 
-    pscals=scals+lup;
+    /* pscals=scals+lup; */
     for(lcount=hcount; lcount < maxv ; lcount++)
     {
       dummy =  (double) ((grib_decode_unsigned_long(lres, &lpos,
@@ -392,6 +392,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
       val[i++] *= d;
   }
 
+  (void)dummy; /* suppress gcc warning */
   grib_context_free(a->context,scals);
 
   return ret;

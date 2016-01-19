@@ -109,7 +109,6 @@ grib_handle* merge(grib_handle* h1,grib_handle* h2) {
     long i,j,iscan,jscan,Ni,Nj,idj,idi;
     long Ni1,Nj1,Ni2,Nj2;
     grib_handle* h=NULL;
-    grib_context* c;
     int err=0;
     /*
     int dump_flags=   GRIB_DUMP_FLAG_CODED 
@@ -118,7 +117,7 @@ grib_handle* merge(grib_handle* h1,grib_handle* h2) {
                     | GRIB_DUMP_FLAG_READ_ONLY;
 
     */
-    c=grib_context_get_default();
+
     /* same products? */
     if (grib_key_equal(h1,h2,"md5Product",GRIB_TYPE_STRING,&err)==0 && err==0) {
       return NULL;
