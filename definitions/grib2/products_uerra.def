@@ -96,15 +96,15 @@ concept marsStream {
       typeOfProcessedData = 2;
     }
 
-    enfo = {
+    enda = {
       typeOfProcessedData = 3;
     }
 
-    enfo = {
+    enda = {
       typeOfProcessedData = 4;
     }
 
-    enfo = {
+    enda = {
       typeOfProcessedData = 8;
     }
 
