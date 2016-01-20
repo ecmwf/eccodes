@@ -11099,8 +11099,8 @@
 	 table2Version = 131 ;
 	 indicatorOfParameter = 130 ;
 	}
-#2 metre temperature probability
-'2 metre temperature probability' = {
+#Soil temperature level 1 probability
+'Soil temperature level 1 probability' = {
 	 table2Version = 131 ;
 	 indicatorOfParameter = 139 ;
 	}
@@ -11109,8 +11109,8 @@
 	 table2Version = 131 ;
 	 indicatorOfParameter = 144 ;
 	}
-#Total precipitation probability
-'Total precipitation probability' = {
+#Mean sea level pressure probability
+'Mean sea level pressure probability' = {
 	 table2Version = 131 ;
 	 indicatorOfParameter = 151 ;
 	}

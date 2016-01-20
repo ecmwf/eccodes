@@ -11091,8 +11091,8 @@
 	 parameterCategory = 131 ;
 	 parameterNumber = 130 ;
 	}
-#2 metre temperature probability
-'2 metre temperature probability' = {
+#Soil temperature level 1 probability
+'Soil temperature level 1 probability' = {
 	 discipline = 192 ;
 	 parameterCategory = 131 ;
 	 parameterNumber = 139 ;
@@ -11103,8 +11103,8 @@
 	 parameterCategory = 131 ;
 	 parameterNumber = 144 ;
 	}
-#Total precipitation probability
-'Total precipitation probability' = {
+#Mean sea level pressure probability
+'Mean sea level pressure probability' = {
 	 discipline = 192 ;
 	 parameterCategory = 131 ;
 	 parameterNumber = 151 ;
