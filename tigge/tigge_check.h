@@ -777,10 +777,11 @@ mogreps in the past -> min <180, 290>
 s2s/kwbc/enfh: warning: s2s.z_s2s_c_rhmc_20150819000000_glob_prod_0006_000.sl.grib2, field 2 [surface_air_maximum_temperature_sfc]: surface_air_maximum_temperature_sfc minimum value 179.427 is not in [190,240]
 s2s/kwbc/enfh: warning: s2s.z_tigge_c_kwbc_20071002000000_ncep_prod_pf_sl_0006_001_0000_mx2t6.grib2, field 146 [surface_air_maximum_temperature_sfc]: surface_air_maximum_temperature_sfc minimum value 240.208 is not in [175,240]
 s2s/isac/enfo: warning: z_s2s_c_isac_201510190000_glob_prod_pf_0744_05.sl.grib2, field 513 [surface_air_maximum_temperature_sfc]: surface_air_maximum_temperature_sfc minimum value 245.143 is not in [175,245]
+s2s/lfpw/enfo: s2s.lfpw_mx2t6_2.grib2, field 3 [surface_air_maximum_temperature_sfc]: surface_air_maximum_temperature_sfc minimum value 167.434 is not in [175,250]
 */
    {
       "surface_air_maximum_temperature_sfc",
-      175,
+      160,
       250,
       300,
       380,
@@ -824,13 +825,14 @@ s2s/isac/enfo: warning: z_s2s_c_isac_201510190000_glob_prod_pf_0744_24.sl.grib2,
 
 /*
 s2s/ammc: warning: s2s.mx2t6_20150910_4.grib2, field 200 [surface_air_maximum_temperature_sfc.ammc]: surface_air_maximum_temperature_sfc.ammc maximum value 1516.03 is not in [300,1500]
+s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_temperature_sfc.ammc]: surface_air_maximum_temperature_sfc.ammc maximum value 6963.63 is not in [300,5000]
 */
    {
       "surface_air_maximum_temperature_sfc.ammc",
       175,
       240,
       300,
-      5000,
+      10000,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"centre", GRIB_TYPE_STRING, 1, "ammc"},
@@ -1313,11 +1315,12 @@ s2s/lfpw: warning: s2s.lfpw_msl_0.grib2, field 1 [mean_sea_level_pressure_sfc]: 
 s2s_devel, ecmf, 20141229, 00UTC, test, enfh, real:    s2s.2014122900.test.768.10.pf.20131229.pl.720.grib2, field 450 [geopotential_height_pl]: geopotential_height_pl minimum value 30321.6 is not in [-850,30000]
 warning: s2s.2015082000.prod.1104.50.pf.pl.648.grib2, field 2241 [geopotential_height_pl]: geopotential_height_pl minimum value -876.714 is not in [-850,30500]
 s2s/lfpw: warning: s2s.lfpw_gh_1000.grib2, field 1 [geopotential_height_pl]: geopotential_height_pl minimum value -1199.08 is not in [-1000,30500]
+s2s/egrr: s2s.z_s2s_c_ukmo_20160102000000_glob_prod_pf_1440_002.rt.pl.grib2, field 1211 [geopotential_height_pl]: geopotential_height_pl minimum value 30506.8 is not in [-1300,30500]
 */
    {
       "geopotential_height_pl",
       -1300,
-      30500,
+      30600,
       200,
       35000,
       {
@@ -1474,14 +1477,15 @@ warning: s2s.z_tigge_c_kwbc_20020817000000_ncep_prod_pf_pl_0000_003_0010_u.grib2
 /*
    s2s_devel, ecmf, 20150101, 00UTC, test, enfh, warning: s2s.2015010100.test.768.10.pf.20020101.pl.0.grib2, field 372 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -5.02998 is not in [-5,0] 
 warning: s2s.z_tigge_c_kwbc_20150817000000_ncep_prod_pf_pl_0000_015_0500_w.grib2, field 3 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -7.25731 is not in [-6,0]
-  s2s/kwbc/enfo: warning: s2s.z_tigge_c_kwbc_20151106000000_ncep_prod_pf_pl_0000_012_0500_w.grib2, field 19 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -9.229 is not in [-8,0]
+  s2s/kwbc/enfo: warning: s2s.z_tigge_c_kwbc_20151114000000_ncep_prod_pf_pl_0000_011_0500_w.grib2, field 7 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -10.202 is not in [-10,0]
+
 */
    {
       "w_vertical_velocity_pl",
-      -10,
+      -12,
       0,
       0,
-      10,
+      12,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
 
@@ -1758,6 +1762,7 @@ warning: s2s.z_tigge_c_kwbc_20090829000000_ncep_prod_pf_sl_0024_003_0000_tcw.gri
 
 /*
    s2s/rums warning: s2s.z_s2s_c_rhmc_20150819000000_glob_prod_0336_017.sl.grib2, field 4 [surface_air_temperature_sfc.glob]: surface_air_temperature_sfc.glob minimum value 177.17 is not in [180,290]
+s2s/ammc: warning: s2s.2t_20151224_26.grib2, field 12 [surface_air_temperature_sfc.glob.s2]: surface_air_temperature_sfc.glob.s2 maximum value 353.017 is not in [270,350]
 */
 
    {
@@ -1765,7 +1770,7 @@ warning: s2s.z_tigge_c_kwbc_20090829000000_ncep_prod_pf_sl_0024_003_0000_tcw.gri
       170,
       290,
       270,
-      350,
+      360,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"class", GRIB_TYPE_STRING, 0, "s2"},
@@ -1967,11 +1972,12 @@ s2s_prod/ammc/enfo:warning: s2s.st20_20151004_4.grib2, field 61 [soil_temperatur
 
 /*
    s2s/rums warning: s2s.z_s2s_c_rhmc_20150819000000_glob_prod_0024_000.sl.grib2, field 26 [soil_temperature_top_20_cm_sfc.glob]: soil_temperature_top_20_cm_sfc.glob minimum value 0 is not in [180,230] xxx must be fiexed!!!
+   s2s/rums warning: warning: s2s.z_s2s_c_rhmc_20151021000000_glob_prod_0336_019.sl.grib2, field 24 [soil_temperature_top_20_cm_sfc.glob]: soil_temperature_top_20_cm_sfc.glob minimum value 238.514 is not in [0,230]
 */
    {
-      "soil_temperature_top_20_cm_sfc.glob",
+      "soil_temperature_top_20_cm_sfc.glob.rums",
       0,
-      230,
+      250,
       300,
       350,
       {
@@ -2033,11 +2039,12 @@ s2s_prod/ammc/enfo:warning: s2s.st20_20151004_4.grib2, field 61 [soil_temperatur
 
 /* 
    S2S/rums: warning: s2s.z_s2s_c_rhmc_20150819000000_glob_prod_0024_000.sl.grib2, field 25 [soil_temperature_top_100_cm_sfc.glob]: soil_temperature_top_100_cm_sfc.glob minimum value 0 is not in [200,240]  xxx must be fixed!!!
+   S2S/rums: warning: s2s.z_s2s_c_rhmc_20151021000000_glob_prod_0360_019.sl.grib2, field 23 [soil_temperature_top_100_cm_sfc.glob.s2.rums]: soil_temperature_top_100_cm_sfc.glob.s2.rums minimum value 240.084 is not in [0,240]
 */
    {
       "soil_temperature_top_100_cm_sfc.glob.s2.rums",
       0,
-      240,
+      250,
       300,
       350,
       {
