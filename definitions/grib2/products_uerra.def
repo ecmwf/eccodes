@@ -59,20 +59,6 @@ concept marsType {
      typeOfProcessedData = 2;
    }
 
-   cf = {
-     typeOfProcessedData = 3;
-   }
-   "10" = {
-     typeOfProcessedData = 3;
-   }
-
-   pf = {
-     typeOfProcessedData = 4;
-   }
-   "11" = {
-     typeOfProcessedData = 4;
-   }
-
    an = {
      typeOfProcessedData = 0;
    }
@@ -86,26 +72,23 @@ concept marsType {
 }
 
 # See GRIB-205 re no_copy
+# Cannot use typeOfProcessedData for stream. See GRIB-911
 concept marsStream {
 
     oper = {
-      typeOfProcessedData = 0;
+      productDefinitionTemplateNumber = 8;
     }
 
     oper = {
-      typeOfProcessedData = 2;
+      productDefinitionTemplateNumber = 0;
     }
 
     enda = {
-      typeOfProcessedData = 3;
+      productDefinitionTemplateNumber = 11;
     }
 
     enda = {
-      typeOfProcessedData = 4;
-    }
-
-    enda = {
-      typeOfProcessedData = 8;
+      productDefinitionTemplateNumber = 1;
     }
 
     "default" = {
