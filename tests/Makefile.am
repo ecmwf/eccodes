@@ -24,6 +24,7 @@ TESTS = definitions.sh \
         multi.sh \
         budg.sh \
         gridType.sh \
+        octahedral.sh \
         global.sh \
         concept.sh \
         decimalPrecision.sh \

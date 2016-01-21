@@ -63,6 +63,7 @@ list( APPEND tests2
     multi
     budg
     gridType
+    octahedral
     global
     concept
     decimalPrecision
