@@ -36,6 +36,7 @@ list( APPEND tests1
     calendar
     unit_tests
     md5
+    uerra
 )
 list( APPEND tests2
     bufr_dump

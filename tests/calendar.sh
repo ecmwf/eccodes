@@ -18,27 +18,27 @@ sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 
 ${tools_dir}grib_set -s tablesVersion=13,setCalendarId=1,typeOfCalendar=0 $sample $temp1
-check_key_equals $temp1 calendarIdPresent 1
-check_key_equals $temp1 section1Length    24
-check_key_equals $temp1 calendarIdentificationTemplateNumber 0
-check_key_equals $temp1 typeOfCalendar    0
+grib_check_key_equals $temp1 calendarIdPresent 1
+grib_check_key_equals $temp1 section1Length    24
+grib_check_key_equals $temp1 calendarIdentificationTemplateNumber 0
+grib_check_key_equals $temp1 typeOfCalendar    0
 
 ${tools_dir}grib_set -s tablesVersion=13,setCalendarId=1,calendarIdentificationTemplateNumber=1 $sample $temp1
-check_key_equals $temp1 calendarIdPresent 1
-check_key_equals $temp1 section1Length    25
-check_key_equals $temp1 calendarIdentificationTemplateNumber 1
-check_key_equals $temp1 numberOfTensOfThousandsOfYearsOfOffset MISSING
+grib_check_key_equals $temp1 calendarIdPresent 1
+grib_check_key_equals $temp1 section1Length    25
+grib_check_key_equals $temp1 calendarIdentificationTemplateNumber 1
+grib_check_key_equals $temp1 numberOfTensOfThousandsOfYearsOfOffset MISSING
 
 ${tools_dir}grib_set -s tablesVersion=13,setCalendarId=1,calendarIdentificationTemplateNumber=2 $sample $temp1
-check_key_equals $temp1 calendarIdPresent 1
-check_key_equals $temp1 section1Length    26
-check_key_equals $temp1 calendarIdentificationTemplateNumber 2
-check_key_equals $temp1 typeOfCalendar    255
-check_key_equals $temp1 numberOfTensOfThousandsOfYearsOfOffset MISSING
+grib_check_key_equals $temp1 calendarIdPresent 1
+grib_check_key_equals $temp1 section1Length    26
+grib_check_key_equals $temp1 calendarIdentificationTemplateNumber 2
+grib_check_key_equals $temp1 typeOfCalendar    255
+grib_check_key_equals $temp1 numberOfTensOfThousandsOfYearsOfOffset MISSING
 
 # Remove the calendar section
 ${tools_dir}grib_set -s deleteCalendarId=1 $temp1 $temp2
-check_key_equals $temp2 section1Length    21
-check_key_equals $temp2 calendarIdPresent 0
+grib_check_key_equals $temp2 section1Length    21
+grib_check_key_equals $temp2 calendarIdPresent 0
 
 rm -f $temp1 $temp2

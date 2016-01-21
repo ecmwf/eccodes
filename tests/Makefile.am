@@ -45,6 +45,7 @@ TESTS = definitions.sh \
         julian.sh \
         statistics.sh \
         tigge.sh \
+        uerra.sh \
         tigge_conversions.sh \
         read_any.sh \
         padding.sh \
