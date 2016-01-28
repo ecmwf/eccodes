@@ -558,7 +558,6 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
     unsigned char *uval1 = NULL,*uval2 = NULL;
     double *dval1 = NULL, *dval2 = NULL;
     long *lval1 = NULL, *lval2 = NULL;
-    int failed=0;
     double maxdiff=0;
     double packingError1=0,packingError2=0;
     double value_tolerance=0;
@@ -861,7 +860,6 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
             if (verbose) printf("  (%d values) tolerance=%g\n",(int)len1,value_tolerance);
             for(i = 0; i < len1; i++) {
                 if((diff=compare_double(pv1++,pv2++,&value_tolerance))!=0) {
-                    failed=1;
                     countdiff++;
                     if (maxdiff < diff) {maxdiff=diff;imaxdiff=i;}
                     err1 = GRIB_VALUE_MISMATCH;

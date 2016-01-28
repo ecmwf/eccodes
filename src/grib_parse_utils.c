@@ -551,6 +551,8 @@ int grib_yyerror(const char* msg)
 {
     grib_context_log(grib_parser_context, GRIB_LOG_ERROR,
             "grib_parser: %s at line %d of %s", msg, grib_yylineno + 1,parse_file);
+    grib_context_log(grib_parser_context, GRIB_LOG_ERROR,
+            "ecCodes Version: %s", ECCODES_VERSION_STR);
     error = 1;
     return 1;
 }

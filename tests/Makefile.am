@@ -24,6 +24,7 @@ TESTS = definitions.sh \
         multi.sh \
         budg.sh \
         gridType.sh \
+        octahedral.sh \
         global.sh \
         concept.sh \
         decimalPrecision.sh \
@@ -45,6 +46,7 @@ TESTS = definitions.sh \
         julian.sh \
         statistics.sh \
         tigge.sh \
+        uerra.sh \
         tigge_conversions.sh \
         read_any.sh \
         padding.sh \

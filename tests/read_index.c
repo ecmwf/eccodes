@@ -15,12 +15,10 @@ void usage(char* prog) {
   exit(1);
 }
 
-int main(int argc,char* argv[]) {
-  
+int main(int argc,char* argv[])
+{
   grib_index* index=NULL;
   grib_handle* h=NULL;
-  char* infile=NULL;
-  char* outfile=NULL;
   long *step,*level,*number;
   char** shortName=NULL;
   int i,j,k,l;
@@ -31,8 +29,6 @@ int main(int argc,char* argv[]) {
   int ret=0,count=0;
 
   if (argc != 2) usage(argv[0]);
-  infile=argv[1];
-  outfile=argv[2];
 
   printf("indexing...\n");
 

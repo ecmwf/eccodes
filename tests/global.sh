@@ -42,10 +42,10 @@ files_subarea="
 
 for gg in $files_global; do
     filepath=${data_dir}/$gg
-    check_key_equals $filepath "global" 1
+    grib_check_key_equals $filepath "global" 1
 done
 
 for gg in $files_subarea; do
     filepath=${data_dir}/$gg
-    check_key_equals $filepath "global" 0
+    grib_check_key_equals $filepath "global" 0
 done
