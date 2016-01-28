@@ -865,7 +865,7 @@ extendedDelayedDescriptorReplicationFactor=3
 EOF
 
 diff ${fOut}.log.ref ${fOut}.log 
-bufr_compare ${fOut} ${fOut}.ref
+${tools_dir}bufr_compare ${fOut} ${fOut}.ref
 
 rm -f ${fOut}.log
 rm -f $fLog $fRules ${fOut}
