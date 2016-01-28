@@ -825,3 +825,47 @@ diff ${f}.ref ${f}.log
 
 rm -f ${f}.ref ${f}.log
 rm -f $fLog $fRules
+#-----------------------------------------------------------
+# Test:  initialise with given values of delayed replications
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set localTablesVersionNumber=0;
+set masterTablesVersionNumber=23;
+
+set inputDelayedDescriptorReplicationFactor = 3;
+set inputExtendedDelayedDescriptorReplicationFactor = 3;
+
+set unexpandedDescriptors={309052};
+
+set pressure={102400,50000,40000,30000,20000,15000};
+
+print "pressure=[pressure]";
+print "geopotentialHeight=[geopotentialHeight]";
+print "delayedDescriptorReplicationFactor=[delayedDescriptorReplicationFactor]";
+print "extendedDelayedDescriptorReplicationFactor=[extendedDelayedDescriptorReplicationFactor]";
+
+set pack=1;
+
+write;
+EOF
+
+f="syno_1.bufr"
+fOut="new_replication.bufr"
+echo "Test: initialise with given values of delayed replications" >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}bufr_filter -o ${fOut} $fRules $f 2>> $fLog 1>> $fLog
+
+${tools_dir}bufr_filter -o ${fOut} $fRules $f > ${fOut}.log
+
+cat > ${fOut}.log.ref <<EOF
+pressure=102400 50000 40000 30000 20000 15000
+geopotentialHeight=2147483647 2147483647 2147483647
+delayedDescriptorReplicationFactor=3
+extendedDelayedDescriptorReplicationFactor=3
+EOF
+
+diff ${fOut}.log.ref ${fOut}.log 
+bufr_compare ${fOut} ${fOut}.ref
+
+rm -f ${fOut}.log
+rm -f $fLog $fRules ${fOut}

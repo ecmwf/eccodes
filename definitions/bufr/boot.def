@@ -10,5 +10,12 @@
 lookup[1] ed       (7,editionNumber);
 transient missingValue=999999;
 
+#negative value=not used
+transient inputDelayedDescriptorReplicationFactor=-1;
+#negative value=not used
+transient inputExtendedDelayedDescriptorReplicationFactor=-1;
+#negative value=not used
+transient inputShortDelayedDescriptorReplicationFactor=-1;
+
 template boot_edition "bufr/boot_edition_[ed:l].def";
 
