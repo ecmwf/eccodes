@@ -177,6 +177,17 @@ extern "C" {
        enum { assert_static__ = 1/(e) }; \
       } while (0)
 
+
+#ifndef NDEBUG
+ #define DebugAssertAccess(array, index, size) \
+   do { \
+    if (!((index) >= 0 && (index) < (size)) ) {printf("ARRAY ACCESS ERROR: array=%s idx=%ld size=%ld @ %s +%d \n", #array, index, size, __FILE__, __LINE__); abort();} \
+   } while(0)
+#else
+ #define DebugAssertAccess(array, index, size)
+#endif
+
+
 #include "grib_api.h"
 
 #define GRIB_UNKNOWN_VALUE   -9999.999
