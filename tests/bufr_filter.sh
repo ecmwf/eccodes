@@ -832,19 +832,25 @@ cat > $fRules <<EOF
 set localTablesVersionNumber=0;
 set masterTablesVersionNumber=23;
 
-set inputDelayedDescriptorReplicationFactor = 3;
-set inputExtendedDelayedDescriptorReplicationFactor = 3;
+set inputDelayedDescriptorReplicationFactor = {2,3};
+print "inputDelayedDescriptorReplicationFactor=[inputDelayedDescriptorReplicationFactor]";
+set inputExtendedDelayedDescriptorReplicationFactor = {3,4};
+print "inputExtendedDelayedDescriptorReplicationFactor=[inputExtendedDelayedDescriptorReplicationFactor]";
+
+set numberOfSubsets=2;
 
 set unexpandedDescriptors={309052};
 
-set pressure={102400,50000,40000,30000,20000,15000};
+print "/subsetNumber=1/delayedDescriptorReplicationFactor=[/subsetNumber=1/delayedDescriptorReplicationFactor]";
+print "/subsetNumber=1/extendedDelayedDescriptorReplicationFactor=[/subsetNumber=1/extendedDelayedDescriptorReplicationFactor]";
 
-print "pressure=[pressure]";
-print "geopotentialHeight=[geopotentialHeight]";
-print "delayedDescriptorReplicationFactor=[delayedDescriptorReplicationFactor]";
-print "extendedDelayedDescriptorReplicationFactor=[extendedDelayedDescriptorReplicationFactor]";
+print "/subsetNumber=2/delayedDescriptorReplicationFactor=[/subsetNumber=2/delayedDescriptorReplicationFactor]";
+print "/subsetNumber=2/extendedDelayedDescriptorReplicationFactor=[/subsetNumber=2/extendedDelayedDescriptorReplicationFactor]";
 
+set pressure={102400,50000,40000,30000,20000,15000,102400,50000,40000,30000,20000,15000};
 set pack=1;
+
+print "pressure={[pressure!12',']}";
 
 write;
 EOF
@@ -858,10 +864,14 @@ ${tools_dir}bufr_filter -o ${fOut} $fRules $f 2>> $fLog 1>> $fLog
 ${tools_dir}bufr_filter -o ${fOut} $fRules $f > ${fOut}.log
 
 cat > ${fOut}.log.ref <<EOF
-pressure=102400 50000 40000 30000 20000 15000
-geopotentialHeight=2147483647 2147483647 2147483647
-delayedDescriptorReplicationFactor=3
-extendedDelayedDescriptorReplicationFactor=3
+inputDelayedDescriptorReplicationFactor=2 3
+inputExtendedDelayedDescriptorReplicationFactor=3 4
+/subsetNumber=1/delayedDescriptorReplicationFactor=2
+/subsetNumber=1/extendedDelayedDescriptorReplicationFactor=3
+/subsetNumber=2/delayedDescriptorReplicationFactor=3
+/subsetNumber=2/extendedDelayedDescriptorReplicationFactor=4
+pressure={102400,50000,40000,30000,20000,15000,102400,50000,40000,30000,20000,15000
+}
 EOF
 
 diff ${fOut}.log.ref ${fOut}.log 

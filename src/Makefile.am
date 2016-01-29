@@ -44,6 +44,7 @@ libeccodes_la_prototypes= \
 	action_class_close.c \
 	action_class_variable.c \
 	action_class_modify.c \
+	action_class_transient_darray.c \
 	grib_accessor.c \
 	grib_concept.c \
 	grib_hash_array.c \
@@ -242,6 +243,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_g2_eps.c \
 	grib_accessor_class_g2_chemical.c \
 	grib_accessor_class_g2_mars_labeling.c \
+	grib_accessor_class_transient_darray.c \
 	grib_accessor_class_md5.c \
 	grib_jasper_encoding.c \
 	grib_openjpeg_encoding.c \

@@ -53,13 +53,13 @@
    MEMBERS    = int unpackMode
    MEMBERS    = int bitsToEndData
    MEMBERS    = grib_section* dataKeys
-   MEMBERS    = int* inputReplications
+   MEMBERS    = long* inputReplications
    MEMBERS    = int nInputReplications
    MEMBERS    = int iInputReplications
-   MEMBERS    = int* inputExtendedReplications
+   MEMBERS    = long* inputExtendedReplications
    MEMBERS    = int nInputExtendedReplications
    MEMBERS    = int iInputExtendedReplications
-   MEMBERS    = int* inputShortReplications
+   MEMBERS    = long* inputShortReplications
    MEMBERS    = int nInputShortReplications
    MEMBERS    = int iInputShortReplications
 
@@ -124,13 +124,13 @@ typedef struct grib_accessor_bufr_data_array {
 	int unpackMode;
 	int bitsToEndData;
 	grib_section* dataKeys;
-	int* inputReplications;
+	long* inputReplications;
 	int nInputReplications;
 	int iInputReplications;
-	int* inputExtendedReplications;
+	long* inputExtendedReplications;
 	int nInputExtendedReplications;
 	int iInputExtendedReplications;
-	int* inputShortReplications;
+	long* inputShortReplications;
 	int nInputShortReplications;
 	int iInputShortReplications;
 } grib_accessor_bufr_data_array;
@@ -1629,32 +1629,38 @@ static int create_keys(grib_accessor* a)
 }
 
 static int set_input_replications(grib_handle* h,grib_accessor_bufr_data_array *self) {
+  size_t nInputReplications;
+  size_t nInputExtendedReplications;
+  size_t nInputShortReplications;
   self->nInputReplications=-1;
   self->nInputExtendedReplications=-1;
   self->nInputShortReplications=-1;
   self->iInputReplications=0;
   self->iInputExtendedReplications=0;
   self->iInputShortReplications=0;
-  if (grib_get_size(h,"inputDelayedDescriptorReplicationFactor",&(self->nInputReplications))==0) {
+  if (grib_get_size(h,"inputDelayedDescriptorReplicationFactor",&nInputReplications)==0 && nInputReplications!=0) {
     if (self->inputReplications) grib_context_free(h->context,self->inputReplications);
-    self->inputReplications=grib_context_malloc_clear(h->context,sizeof(long)*self->nInputReplications);
-    grib_get_long_array(h,"inputDelayedDescriptorReplicationFactor",self->inputReplications,&(self->nInputReplications));
+    self->inputReplications=grib_context_malloc_clear(h->context,sizeof(long)*nInputReplications);
+    grib_get_long_array(h,"inputDelayedDescriptorReplicationFactor",self->inputReplications,&nInputReplications);
     /* default-> no input replications*/
     if (self->inputReplications[0]<0) self->nInputReplications=-1;
+    else self->nInputReplications=nInputReplications;
   }
-  if (grib_get_size(h,"inputExtendedDelayedDescriptorReplicationFactor",&(self->nInputExtendedReplications))==0) {
+  if (grib_get_size(h,"inputExtendedDelayedDescriptorReplicationFactor",&nInputExtendedReplications)==0 && nInputExtendedReplications!=0) {
     if (self->inputExtendedReplications) grib_context_free(h->context,self->inputExtendedReplications);
-    self->inputExtendedReplications=grib_context_malloc_clear(h->context,sizeof(long)*self->nInputExtendedReplications);
-    grib_get_long_array(h,"inputExtendedDelayedDescriptorReplicationFactor",self->inputExtendedReplications,&(self->nInputExtendedReplications));
+    self->inputExtendedReplications=grib_context_malloc_clear(h->context,sizeof(long)*nInputExtendedReplications);
+    grib_get_long_array(h,"inputExtendedDelayedDescriptorReplicationFactor",self->inputExtendedReplications,&nInputExtendedReplications);
     /* default-> no input replications*/
     if (self->inputExtendedReplications[0]<0) self->nInputExtendedReplications=-1;
+    else self->nInputExtendedReplications=nInputExtendedReplications;
   }
-  if (grib_get_size(h,"inputShortDelayedDescriptorReplicationFactor",&(self->nInputShortReplications))==0) {
+  if (grib_get_size(h,"inputShortDelayedDescriptorReplicationFactor",&nInputShortReplications)==0 && nInputShortReplications!=0) {
     if (self->inputShortReplications) grib_context_free(h->context,self->inputShortReplications);
-    self->inputShortReplications=grib_context_malloc_clear(h->context,sizeof(long)*self->nInputShortReplications);
-    grib_get_long_array(h,"inputShortDelayedDescriptorReplicationFactor",self->inputShortReplications,&(self->nInputShortReplications));
+    self->inputShortReplications=grib_context_malloc_clear(h->context,sizeof(long)*nInputShortReplications);
+    grib_get_long_array(h,"inputShortDelayedDescriptorReplicationFactor",self->inputShortReplications,&nInputShortReplications);
     /* default-> no input replications*/
     if (self->inputShortReplications[0]<0) self->nInputShortReplications=-1;
+    else self->nInputShortReplications=nInputShortReplications;
   }
 }
 

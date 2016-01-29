@@ -1,5 +1,6 @@
+#line 2 "gribl.c"
 
-#line 3 "lex.grib_yy.c"
+#line 4 "gribl.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -1148,7 +1149,7 @@ void _grib_ignore_grib_yyunput_unused_error() { grib_yyunput(0,0); }
  #define GET_INPUT input
 #endif
 
-#line 1152 "lex.grib_yy.c"
+#line 1153 "gribl.c"
 
 #define INITIAL 0
 
@@ -1334,7 +1335,7 @@ YY_DECL
 
 
 
-#line 1338 "lex.grib_yy.c"
+#line 1339 "gribl.c"
 
 	if ( !(grib_yy_init) )
 		{
@@ -2166,7 +2167,7 @@ YY_RULE_SETUP
 #line 283 "gribl.l"
 ECHO;
 	YY_BREAK
-#line 2170 "lex.grib_yy.c"
+#line 2171 "gribl.c"
 case YY_STATE_EOF(INITIAL):
 	grib_yyterminate();
 

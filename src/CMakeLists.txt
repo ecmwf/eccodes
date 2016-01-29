@@ -32,6 +32,7 @@ list( APPEND grib_api_srcs
     action_class_close.c
     action_class_variable.c
     action_class_modify.c
+    action_class_transient_darray.c
     eccodes.c
     grib_accessor.c
     grib_concept.c
@@ -167,6 +168,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_spectral_truncation.c
     grib_accessor_class_time.c
     grib_accessor_class_transient.c
+    grib_accessor_class_transient_darray.c
     grib_accessor_class_values.c
     grib_accessor_class_simple_packing_error.c
     grib_accessor_class_data_simple_packing.c
