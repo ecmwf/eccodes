@@ -10,7 +10,7 @@
 ascii[4] identifier  = "BUFR" : read_only,hidden;
 alias identifier=identifier;
 
-unsigned[3]   totalLength ;
+section_length[3]   totalLength ;
 
 unsigned[1] editionNumber = 4;
 

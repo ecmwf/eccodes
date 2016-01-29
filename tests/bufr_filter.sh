@@ -879,3 +879,34 @@ ${tools_dir}bufr_compare ${fOut} ${fOut}.ref
 
 rm -f ${fOut}.log
 rm -f $fLog $fRules ${fOut}
+#-----------------------------------------------------------
+# Test:  add section 2
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set bufrHeaderCentre=98;
+set section2Present=1;
+
+write;
+EOF
+
+f="vos308014_v3_26.bufr"
+fOut="vos308014_v3_26_sec_2.bufr"
+echo "Test: initialise with given values of delayed replications" >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}bufr_filter -o ${fOut} $fRules $f 2>> $fLog 1>> $fLog
+
+${tools_dir}bufr_ls ${fOut} > ${fOut}.log
+
+cat > ${fOut}.log.ref <<EOF
+vos308014_v3_26_sec_2.bufr
+centre                     masterTablesVersionNumber  localTablesVersionNumber   rdbType                    rdbSubtype                 rdbtimeYear                rdbtimeMonth               typicalDate                typicalTime                numberOfSubsets            numberOfObservations       satelliteID                
+ecmf                       26                         0                          0                          0                          0                          0                          00000000                   000000                     40                         0                          0                         
+1 of 1 messages in vos308014_v3_26_sec_2.bufr
+
+1 of 1 total messages in 1 files
+EOF
+
+diff ${fOut}.log.ref ${fOut}.log 
+
+rm -f ${fOut}.log
+rm -f $fLog $fRules ${fOut}
