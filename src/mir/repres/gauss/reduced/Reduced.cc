@@ -82,6 +82,14 @@ bool Reduced::globalDomain() const {
 
         const double epsilon = 1.0 / 1000.0;
 
+        
+        if(ew > last) {
+            // The dissemination will put in the GRIB header what is sepecified by the user
+            // so, for example if the user specify 359.999999 as the eastern longitude, this
+            // value will end up in the header
+            return true;
+        }
+        
         bool global = fabs(ew-last) < epsilon;
         return global;
     }
@@ -178,6 +186,8 @@ class GaussianIterator: public Iterator {
             }
 
             // eckit::Log::info() << "++++++ " << lat << " " << lon << " - " << bbox_ << " -> " << bbox_.contains(lat, lon) << std::endl;
+            
+            // eckit::Log::info() << "++++++ " << j_ << " " << nj_ << " - " << i_ << " " << ni_ << std::endl;
 
             if (bbox_.contains(lat, lon)) {
                 count_++;
