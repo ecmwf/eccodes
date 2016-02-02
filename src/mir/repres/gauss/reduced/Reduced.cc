@@ -264,9 +264,11 @@ size_t Reduced::frame(std::vector<double> &values, size_t size, double missingVa
 
     double lat;
     double lon;
-
+    
     size_t rows = 0;
-    size_t *col = 0;
+
+    size_t dummy = 0; // Used to keep static analyser quiet
+    size_t *col = &dummy;
 
     // Collect the 'shape' of the gaussian field
     // This could be done with the latitudes() and pls(), maybe more efficeintly
