@@ -163,6 +163,7 @@
 { "padtoeven", &grib_accessor_class_padtoeven, },
 { "padtomultiple", &grib_accessor_class_padtomultiple, },
 { "position", &grib_accessor_class_position, },
+{ "raw", &grib_accessor_class_raw, },
 { "reference_value_error", &grib_accessor_class_reference_value_error, },
 { "round", &grib_accessor_class_round, },
 { "scale", &grib_accessor_class_scale, },

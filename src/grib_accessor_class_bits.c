@@ -24,6 +24,7 @@
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = get_native_type
    IMPLEMENTS = unpack_long; pack_long
+   IMPLEMENTS = unpack_bytes; byte_count
    IMPLEMENTS = unpack_double; pack_double
    IMPLEMENTS = unpack_string
    IMPLEMENTS = init
@@ -50,9 +51,11 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int  get_native_type(grib_accessor*);
 static int pack_double(grib_accessor*, const double* val,size_t *len);
 static int pack_long(grib_accessor*, const long* val,size_t *len);
+static int unpack_bytes (grib_accessor*,unsigned char*, size_t *len);
 static int unpack_double(grib_accessor*, double* val,size_t *len);
 static int unpack_long(grib_accessor*, long* val,size_t *len);
 static int unpack_string (grib_accessor*, char*, size_t *len);
+static long byte_count(grib_accessor*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -83,7 +86,7 @@ static grib_accessor_class _grib_accessor_class_bits = {
     0,                /* get length of section     */
     0,              /* get length of string      */
     0,                /* get number of values      */
-    0,                 /* get number of bytes      */
+    &byte_count,                 /* get number of bytes      */
     0,                /* get offset to bytes           */
     &get_native_type,            /* get native type               */
     0,                /* get sub_section                */
@@ -98,7 +101,7 @@ static grib_accessor_class _grib_accessor_class_bits = {
     0,          /* grib_pack array procedures string    */
     0,        /* grib_unpack array procedures string  */
     0,                 /* grib_pack procedures bytes     */
-    0,               /* grib_unpack procedures bytes   */
+    &unpack_bytes,               /* grib_unpack procedures bytes   */
     0,            /* pack_expression */
     0,              /* notify_change   */
     0,                /* update_size   */
@@ -123,7 +126,6 @@ static void init_class(grib_accessor_class* c)
 	c->next_offset	=	(*(c->super))->next_offset;
 	c->string_length	=	(*(c->super))->string_length;
 	c->value_count	=	(*(c->super))->value_count;
-	c->byte_count	=	(*(c->super))->byte_count;
 	c->byte_offset	=	(*(c->super))->byte_offset;
 	c->sub_section	=	(*(c->super))->sub_section;
 	c->pack_missing	=	(*(c->super))->pack_missing;
@@ -132,7 +134,6 @@ static void init_class(grib_accessor_class* c)
 	c->pack_string_array	=	(*(c->super))->pack_string_array;
 	c->unpack_string_array	=	(*(c->super))->unpack_string_array;
 	c->pack_bytes	=	(*(c->super))->pack_bytes;
-	c->unpack_bytes	=	(*(c->super))->unpack_bytes;
 	c->pack_expression	=	(*(c->super))->pack_expression;
 	c->notify_change	=	(*(c->super))->notify_change;
 	c->update_size	=	(*(c->super))->update_size;
@@ -323,3 +324,22 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
     }
     return ret;
 }
+
+static long byte_count(grib_accessor* a){
+  grib_context_log(a->context,GRIB_LOG_DEBUG,"byte_count of %s = %ld",a->name,a->length);
+  return a->length;
+
+}
+
+static int unpack_bytes (grib_accessor* a,unsigned char* buffer, size_t *len) {
+  if (*len < a->length) {
+    *len = a->length;
+    return GRIB_ARRAY_TOO_SMALL;
+  }
+  *len = a->length;
+
+  memcpy(buffer, grib_handle_of_accessor(a)->buffer->data + a->offset, *len);
+
+  return GRIB_SUCCESS;
+}
+

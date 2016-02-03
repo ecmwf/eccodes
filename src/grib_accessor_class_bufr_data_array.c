@@ -22,13 +22,9 @@
    IMPLEMENTS = byte_count; value_count
    IMPLEMENTS = byte_offset; unpack_double
    IMPLEMENTS = get_native_type
-   IMPLEMENTS = update_size
    IMPLEMENTS = compare
    IMPLEMENTS = pack_long; unpack_double; pack_double
-   MEMBERS    = const char* offsetSection4Name
-   MEMBERS    = const char* offsetBeforeDataName
-   MEMBERS    = const char* offsetEndSection4Name
-   MEMBERS    = const char* section4LengthName
+   MEMBERS    = const char* bufrDataEncodedName
    MEMBERS    = const char* numberOfSubsetsName
    MEMBERS    = const char* expandedDescriptorsName
    MEMBERS    = const char* flagsName
@@ -89,17 +85,13 @@ static void destroy(grib_context*,grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
-static void update_size(grib_accessor*,size_t);
 static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_bufr_data_array {
     grib_accessor          att;
 /* Members defined in gen */
 /* Members defined in bufr_data_array */
-	const char* offsetSection4Name;
-	const char* offsetBeforeDataName;
-	const char* offsetEndSection4Name;
-	const char* section4LengthName;
+	const char* bufrDataEncodedName;
 	const char* numberOfSubsetsName;
 	const char* expandedDescriptorsName;
 	const char* flagsName;
@@ -168,7 +160,7 @@ static grib_accessor_class _grib_accessor_class_bufr_data_array = {
     0,               /* grib_unpack procedures bytes   */
     0,            /* pack_expression */
     0,              /* notify_change   */
-    &update_size,                /* update_size   */
+    0,                /* update_size   */
     0,            /* preferred_size   */
     0,                    /* resize   */
     0,      /* nearest_smaller_value */
@@ -199,6 +191,7 @@ static void init_class(grib_accessor_class* c)
 	c->unpack_bytes	=	(*(c->super))->unpack_bytes;
 	c->pack_expression	=	(*(c->super))->pack_expression;
 	c->notify_change	=	(*(c->super))->notify_change;
+	c->update_size	=	(*(c->super))->update_size;
 	c->preferred_size	=	(*(c->super))->preferred_size;
 	c->resize	=	(*(c->super))->resize;
 	c->nearest_smaller_value	=	(*(c->super))->nearest_smaller_value;
@@ -243,16 +236,16 @@ static void cancel_bitmap(grib_accessor_bufr_data_array *self) { self->bitmapCur
 
 static int is_bitmap_start_defined(grib_accessor_bufr_data_array *self) { return self->bitmapStart==-1 ? 0 : 1; }
 
-static long init_length(grib_accessor* a)
+static size_t get_length(grib_accessor* a)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
-    long section4Length=0;
+    size_t len=0;
 
     grib_handle* h=grib_handle_of_accessor(a);
 
-    grib_get_long(h,self->section4LengthName,&section4Length);
+    grib_get_size(h,self->bufrDataEncodedName,&len);
 
-    return section4Length-4;
+    return len;
 }
 
 static void init(grib_accessor* a,const long v, grib_arguments* params)
@@ -262,10 +255,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
     const char* dataKeysName=NULL;
     grib_accessor* dataKeysAcc=NULL;
 
-    self->offsetSection4Name = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
-    self->offsetBeforeDataName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
-    self->offsetEndSection4Name = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
-    self->section4LengthName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->bufrDataEncodedName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
     self->numberOfSubsetsName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
     self->expandedDescriptorsName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
     self->flagsName = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
@@ -283,8 +273,8 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
     self->expanded=0;
     self->expandedAccessor=0;
 
-    a->length = init_length(a);
-    self->bitsToEndData=a->length*8;
+    a->length=0;
+    self->bitsToEndData=get_length(a)*8;
     self->unpackMode=CODES_BUFR_UNPACK_STRUCTURE;
 
     /* Assert(a->length>=0); */
@@ -334,7 +324,7 @@ static int  get_native_type(grib_accessor* a)
 
 static long byte_count(grib_accessor* a)
 {
-    return a->length;
+    return 0;
 }
 
 static long byte_offset(grib_accessor* a)
@@ -344,15 +334,9 @@ static long byte_offset(grib_accessor* a)
 
 static long next_offset(grib_accessor* a)
 {
-    return a->offset+a->length;
+    return a->offset;
 }
 
-static void update_size(grib_accessor* a,size_t s)
-{
-    grib_context_log(a->context,GRIB_LOG_DEBUG,"updating size of %s old %ld new %ld",a->name,a->length,s);
-    a->length = s;
-    Assert(a->length>=0);
-}
 
 static int compare(grib_accessor* a, grib_accessor* b)
 {
@@ -1679,7 +1663,7 @@ static int process_elements(grib_accessor* a,int flag)
     int i;
     grib_iarray* elementsDescriptorsIndex=0;
 
-    long pos=0;
+    long pos=0,dataOffset=0;
     int iss,end,elementIndex,index;
     long numberOfDescriptors;
     long totalSize;
@@ -1689,6 +1673,7 @@ static int process_elements(grib_accessor* a,int flag)
     grib_buffer* buffer=NULL;
     codec_element_proc codec_element;
     codec_replication_proc codec_replication;
+    grib_accessor* dataAccessor=NULL;
 
     grib_darray* dval = NULL;
     grib_sarray* sval = NULL;
@@ -1706,7 +1691,10 @@ static int process_elements(grib_accessor* a,int flag)
         buffer=h->buffer;
         decoding=1;
         do_clean=1;
-        pos=a->offset*8;
+        dataAccessor=grib_find_accessor(grib_handle_of_accessor(a),self->bufrDataEncodedName);
+        Assert(dataAccessor);
+        dataOffset=accessor_raw_get_offset(dataAccessor);
+        pos=dataOffset*8;
         codec_element=&decode_element;
         codec_replication=&decode_replication;
         break;
@@ -1966,6 +1954,7 @@ static int process_elements(grib_accessor* a,int flag)
         err=create_keys(a);
         self->bitsToEndData=totalSize;
     } else {
+        /*
         long totalLength;
         long section4Length;
 
@@ -1974,13 +1963,18 @@ static int process_elements(grib_accessor* a,int flag)
         grib_get_long(grib_handle_of_accessor(a),"section4Length",&section4Length);
         section4Length+=buffer->ulength-a->length;
 
-        grib_buffer_replace(a,buffer->data,buffer->ulength,1,1);
+        grib_set_bytes(grib_handle_of_accessor(a),self->bufrDataEncodedName,buffer->data,&(buffer->ulength));
         grib_buffer_delete(c,buffer);
 
         grib_set_long(grib_handle_of_accessor(a),"totalLength",totalLength);
         grib_set_long(grib_handle_of_accessor(a),"section4Length",section4Length);
         a->length = section4Length-4;
         self->bitsToEndData=a->length*8;
+        */
+
+        self->bitsToEndData=buffer->ulength*8;
+        grib_set_bytes(grib_handle_of_accessor(a),self->bufrDataEncodedName,buffer->data,&(buffer->ulength));
+        grib_buffer_delete(c,buffer);
 
     }
 

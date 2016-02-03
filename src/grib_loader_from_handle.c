@@ -246,6 +246,7 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
 
     case GRIB_TYPE_BYTES:
 
+        len=grib_byte_count(ga);
         uval = (unsigned char*)grib_context_malloc(h->context,len*sizeof(char));
         ret = grib_get_bytes_internal(h,name,uval,&len);
         if(ret == GRIB_SUCCESS)

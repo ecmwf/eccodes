@@ -9,21 +9,18 @@
 
 position offsetSection4;
 section_length[3]       section4Length ;
-unsigned[1]     reserved = 0;
+unsigned[1]     reservedSection4 = 0;
 position offsetBeforeData;
+
+meta bufrDataEncoded raw(section4Length - 4,totalLength,section4Length) : hidden;
 
 template dataKeys "bufr/dataKeys.def";
 
-meta numericValues bufr_data_array(offsetSection4,offsetBeforeData,offsetEndSection4,section4Length, numberOfSubsets,expandedCodes,expandedFlags, elementsDescriptorsIndex,compressedData,dataKeys);
-meta stringValues bufr_string_values(numericValues);
+meta numericValues bufr_data_array(bufrDataEncoded, numberOfSubsets,expandedCodes,expandedFlags, elementsDescriptorsIndex,compressedData,dataKeys) : no_copy;
+meta stringValues bufr_string_values(numericValues) : no_copy;
 
-meta unpack unpack_bufr_values(numericValues) ;
-meta pack pack_bufr_values(numericValues) ;
-
-#when (changed(unexpandedDescriptors)) {
-  # resize data section and unpack
-#  set unpack=3;
-#}
+meta unpack unpack_bufr_values(numericValues)  : no_copy;
+meta pack pack_bufr_values(numericValues)  : no_copy;
 
 section_padding section4Padding;
 position offsetEndSection4;
