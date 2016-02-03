@@ -202,8 +202,7 @@ static int pack_bytes(grib_accessor* a, const unsigned char* val, size_t *len)
   size_t length = *len;
   long totalLength;
   long section4Length;
-  grib_handle* h=grib_handle_of_accessor(a);
-  grib_context* c=h->context;
+  /* grib_handle* h=grib_handle_of_accessor(a); */
   grib_accessor_raw *self =(grib_accessor_raw*)a;
 
   grib_get_long(grib_handle_of_accessor(a),self->totalLength,&totalLength);
