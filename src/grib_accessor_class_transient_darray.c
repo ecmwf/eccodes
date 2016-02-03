@@ -147,9 +147,8 @@ static void init(grib_accessor* a, const long length , grib_arguments* args )
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-    grib_accessor_transient_darray *self = (grib_accessor_transient_darray*)a;
+    /* grib_accessor_transient_darray *self = (grib_accessor_transient_darray*)a; */
     grib_dump_double(dumper,a,NULL);
-
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
