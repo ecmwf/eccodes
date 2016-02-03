@@ -58,6 +58,9 @@ grib_action *grib_action_create_assert(grib_context *context, grib_expression *e
 grib_action *grib_action_create_template(grib_context *context, int nofail, const char *name, const char *arg1);
 grib_action *get_empty_template(grib_context *c, int *err);
 
+/* action_class_transient_darray.c */
+grib_action* grib_action_create_transient_darray(grib_context* context, const char* name, grib_darray* darray);
+
 /* action_class_trigger.c */
 grib_action *grib_action_create_trigger(grib_context *context, grib_arguments *args, grib_action *block);
 
