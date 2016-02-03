@@ -1612,7 +1612,7 @@ static int create_keys(grib_accessor* a)
     return err;
 }
 
-static int set_input_replications(grib_handle* h,grib_accessor_bufr_data_array *self) {
+static void set_input_replications(grib_handle* h,grib_accessor_bufr_data_array *self) {
   size_t nInputReplications;
   size_t nInputExtendedReplications;
   size_t nInputShortReplications;
