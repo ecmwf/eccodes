@@ -110,8 +110,17 @@ grib_action* grib_action_create_transient_darray( grib_context* context, const c
 static int execute(grib_action* act, grib_handle *h)
 {
     grib_action_transient_darray* self = (grib_action_transient_darray*) act;
-    grib_accessor* a=grib_create_accessor(h->root, act, NULL );
     size_t len=grib_darray_used_size(self->darray);
+    grib_accessor* a=NULL;
+    grib_section* p=h->root;
+
+    a = grib_accessor_factory( p, act,self->len,self->params);
+    if(!a) return GRIB_INTERNAL_ERROR;
+
+    grib_push_accessor(a,p->block);
+
+    if(a->flags & GRIB_ACCESSOR_FLAG_CONSTRAINT)
+      grib_dependency_observe_arguments(a,act->default_value);
 
     return grib_pack_double(a,self->darray->v,&len);
 }
