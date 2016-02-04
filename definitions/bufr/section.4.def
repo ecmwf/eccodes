@@ -12,7 +12,7 @@ section_length[3]       section4Length ;
 unsigned[1]     reservedSection4 = 0;
 position offsetBeforeData;
 
-meta bufrDataEncoded raw(section4Length - 4,totalLength,section4Length) : hidden;
+meta bufrDataEncoded raw(totalLength,section4Length,4) : hidden;
 
 template dataKeys "bufr/dataKeys.def";
 

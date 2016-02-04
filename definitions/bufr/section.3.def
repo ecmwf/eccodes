@@ -27,7 +27,7 @@ hash_array sequences (defaultSequence,"sequence.def",tablesMasterDir,tablesLocal
 #smart_table codeFlags ("codeFlag.def",tablesMasterDir,tablesLocalDir,...);
 
 position offsetSection3;
-section_length[3]       section3Length ;
+section_length[3]       section3Length = 9 ;
 unsigned[1]     reservedSection3 = 0;
 unsigned[2]     numberOfSubsets : dump;
 alias ls.numberOfSubsets=numberOfSubsets;
@@ -72,12 +72,12 @@ flagbit observedData(section3Flags,7) : dump,no_copy;
 flagbit compressedData(section3Flags,6) : dump,no_copy;
 position offsetDescriptors;
 
-#meta unexpandedDescriptorsEncoded raw(section3Length - 7,totalLength,section3Length) : hidden;
 
 transient createNewData=1;
 meta numberOfUnexpandedDescriptors   evaluate( (section3Length - 7) / 2 ) : no_copy;
-#meta unexpandedDescriptors unexpanded_descriptors(unexpandedDescriptorsEncoded,createNewData) :dump,no_copy;
-meta unexpandedDescriptors unexpanded_descriptors(numberOfUnexpandedDescriptors,createNewData) :dump,no_copy;
+
+meta unexpandedDescriptorsEncoded raw(totalLength,section3Length,7) : hidden;
+meta unexpandedDescriptors unexpanded_descriptors(unexpandedDescriptorsEncoded,createNewData) :dump,no_copy;
 
 concept BufrTemplate (unknown,"BufrTemplate.def",templatesMasterDir,templatesLocalDir) : no_copy;
 

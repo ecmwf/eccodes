@@ -500,6 +500,9 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
     | SECTION_LENGTH  '[' INTEGER ']'   IDENT
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"section_length",$3,NULL,NULL,0,NULL,NULL);free($5);  }
 
+    | SECTION_LENGTH  '[' INTEGER ']'   IDENT default
+	{ $$ = grib_action_create_gen(grib_parser_context,$5,"section_length",$3,NULL,$6,0,NULL,NULL);free($5);  }
+
    | G1_MESSAGE_LENGTH  '[' INTEGER ']'   IDENT '(' argument_list ')'
    { $$ = grib_action_create_gen(grib_parser_context,$5,"g1_message_length",$3,$7,NULL,0,NULL,NULL);free($5);  }
 
