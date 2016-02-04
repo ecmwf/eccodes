@@ -88,8 +88,6 @@ static void init_class(grib_action_class* c)
 
 grib_action* grib_action_create_transient_darray( grib_context* context, const char* name, grib_darray* darray)
 {
-    char buf[1024];
-
     grib_action_transient_darray* a = NULL;
     grib_action_class* c   = grib_action_class_transient_darray;
     grib_action* act       = (grib_action*)grib_context_malloc_clear_persistent(context,c->size);
@@ -120,7 +118,7 @@ static int execute(grib_action* act, grib_handle *h)
     grib_push_accessor(a,p->block);
 
     if(a->flags & GRIB_ACCESSOR_FLAG_CONSTRAINT)
-      grib_dependency_observe_arguments(a,act->default_value);
+        grib_dependency_observe_arguments(a,act->default_value);
 
     return grib_pack_double(a,self->darray->v,&len);
 }

@@ -133,89 +133,88 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
-  int n=0;
-  grib_accessor_raw *self =(grib_accessor_raw*)a;
-  grib_expression* e=grib_arguments_get_expression(grib_handle_of_accessor(a), arg,n++);
+    int n=0;
+    grib_accessor_raw *self =(grib_accessor_raw*)a;
+    grib_expression* e=grib_arguments_get_expression(grib_handle_of_accessor(a), arg,n++);
 
-  a->length=0;
-  grib_expression_evaluate_long(grib_handle_of_accessor(a),e,&(a->length));
-  self->totalLength = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-  self->sectionLength = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    a->length=0;
+    grib_expression_evaluate_long(grib_handle_of_accessor(a),e,&(a->length));
+    self->totalLength = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    self->sectionLength = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
 
-  Assert(a->length>=0);
+    Assert(a->length>=0);
 }
 
 static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_BYTES;
+    return GRIB_TYPE_BYTES;
 }
 
 
 static int compare(grib_accessor* a, grib_accessor* b) {
-  int retval=GRIB_SUCCESS;
+    int retval=GRIB_SUCCESS;
 
-  size_t alen = (size_t)grib_byte_count(a);
-  size_t blen = (size_t)grib_byte_count(b);
+    size_t alen = (size_t)grib_byte_count(a);
+    size_t blen = (size_t)grib_byte_count(b);
 
-  if (alen != blen) return GRIB_COUNT_MISMATCH;
+    if (alen != blen) return GRIB_COUNT_MISMATCH;
 
-  return retval;
+    return retval;
 }
 
 static long byte_count(grib_accessor* a){
-  return a->length;
+    return a->length;
 }
 
 static int value_count(grib_accessor* a,long* len){
-  *len=a->length;
-  return 0;
+    *len=a->length;
+    return 0;
 }
 
 static int unpack_bytes (grib_accessor* a,unsigned char* buffer, size_t *len) {
-  if (*len < a->length) {
+    if (*len < a->length) {
+        *len = a->length;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
     *len = a->length;
-    return GRIB_ARRAY_TOO_SMALL;
-  }
-  *len = a->length;
 
-  memcpy(buffer, grib_handle_of_accessor(a)->buffer->data + a->offset, *len);
+    memcpy(buffer, grib_handle_of_accessor(a)->buffer->data + a->offset, *len);
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
 static void update_size(grib_accessor* a,size_t s)
 {
-  grib_context_log(a->context,GRIB_LOG_DEBUG,"updating size of %s old %ld new %ld",a->name,a->length,s);
-  a->length = s;
-  Assert(a->length>=0);
+    grib_context_log(a->context,GRIB_LOG_DEBUG,"updating size of %s old %ld new %ld",a->name,a->length,s);
+    a->length = s;
+    Assert(a->length>=0);
 }
 
 void accessor_raw_set_length(grib_accessor* a,size_t len) {
-  a->length=len;
+    a->length=len;
 }
 
 long accessor_raw_get_offset(grib_accessor* a) {
-  return a->offset;
+    return a->offset;
 }
 
 static int pack_bytes(grib_accessor* a, const unsigned char* val, size_t *len)
 {
-  size_t length = *len;
-  long totalLength;
-  long section4Length;
-  /* grib_handle* h=grib_handle_of_accessor(a); */
-  grib_accessor_raw *self =(grib_accessor_raw*)a;
+    size_t length = *len;
+    long totalLength;
+    long section4Length;
+    /* grib_handle* h=grib_handle_of_accessor(a); */
+    grib_accessor_raw *self =(grib_accessor_raw*)a;
 
-  grib_get_long(grib_handle_of_accessor(a),self->totalLength,&totalLength);
-  totalLength+=length-a->length;
-  grib_get_long(grib_handle_of_accessor(a),self->sectionLength,&section4Length);
-  section4Length+=length-a->length;
+    grib_get_long(grib_handle_of_accessor(a),self->totalLength,&totalLength);
+    totalLength+=length-a->length;
+    grib_get_long(grib_handle_of_accessor(a),self->sectionLength,&section4Length);
+    section4Length+=length-a->length;
 
-  grib_buffer_replace(a, val, length,1,1);
+    grib_buffer_replace(a, val, length,1,1);
 
-  grib_set_long(grib_handle_of_accessor(a),self->totalLength,totalLength);
-  grib_set_long(grib_handle_of_accessor(a),self->sectionLength,section4Length);
-  a->length = section4Length-4;
+    grib_set_long(grib_handle_of_accessor(a),self->totalLength,totalLength);
+    grib_set_long(grib_handle_of_accessor(a),self->sectionLength,section4Length);
+    a->length = section4Length-4;
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
-
