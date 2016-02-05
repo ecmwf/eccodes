@@ -241,7 +241,7 @@ static int is_bitmap_start_defined(grib_accessor_bufr_data_array *self) { return
 int accessor_bufr_data_array_create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset) { return create_keys(a,onlySubset,startSubset,endSubset); }
 
 int accessor_bufr_data_array_process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset) {
-  return process_elements(a,flag,onlySubset,startSubset,endSubset);
+    return process_elements(a,flag,onlySubset,startSubset,endSubset);
 }
 
 static size_t get_length(grib_accessor* a)
@@ -298,7 +298,7 @@ static void clean_string(char* s,int len)
         i--;
     }
 }
-*/
+ */
 
 static int check_end_data(grib_context* c,grib_accessor_bufr_data_array* self,int size)
 {
@@ -856,37 +856,37 @@ static int encode_new_replication(grib_context* c,grib_accessor_bufr_data_array*
 
     /* compressed to be implemented*/
     if (self->compressedData==0) {
-    switch(descriptors[i]->code) {
-      case 31000:
-        if (self->nInputShortReplications>=0) {
-          if (self->iInputShortReplications>=self->nInputShortReplications) {
-            grib_context_log(c,GRIB_LOG_FATAL,"array inputShortDelayedDescriptorReplicationFactor dimension too small");
-          }
-          repetitions=self->inputShortReplications[self->iInputShortReplications];
-          self->iInputShortReplications++;
+        switch(descriptors[i]->code) {
+        case 31000:
+            if (self->nInputShortReplications>=0) {
+                if (self->iInputShortReplications>=self->nInputShortReplications) {
+                    grib_context_log(c,GRIB_LOG_FATAL,"array inputShortDelayedDescriptorReplicationFactor dimension too small");
+                }
+                repetitions=self->inputShortReplications[self->iInputShortReplications];
+                self->iInputShortReplications++;
+            }
+            break;
+        case 31001:
+            if (self->nInputReplications>=0) {
+                if (self->iInputReplications>=self->nInputReplications) {
+                    grib_context_log(c,GRIB_LOG_FATAL,"array inputDelayedDescriptorReplicationFactor dimension too small");
+                }
+                repetitions=self->inputReplications[self->iInputReplications];
+                self->iInputReplications++;
+            }
+            break;
+        case 31002:
+            if (self->nInputExtendedReplications>=0) {
+                if (self->iInputExtendedReplications>=self->nInputExtendedReplications) {
+                    grib_context_log(c,GRIB_LOG_FATAL,"array inputExtendedDelayedDescriptorReplicationFactor dimension too small");
+                }
+                repetitions=self->inputExtendedReplications[self->iInputExtendedReplications];
+                self->iInputExtendedReplications++;
+            }
+            break;
+        default:
+            Assert(0);
         }
-        break;
-      case 31001:
-        if (self->nInputReplications>=0) {
-          if (self->iInputReplications>=self->nInputReplications) {
-            grib_context_log(c,GRIB_LOG_FATAL,"array inputDelayedDescriptorReplicationFactor dimension too small");
-          }
-          repetitions=self->inputReplications[self->iInputReplications];
-          self->iInputReplications++;
-        }
-        break;
-      case 31002:
-        if (self->nInputExtendedReplications>=0) {
-          if (self->iInputExtendedReplications>=self->nInputExtendedReplications) {
-            grib_context_log(c,GRIB_LOG_FATAL,"array inputExtendedDelayedDescriptorReplicationFactor dimension too small");
-          }
-          repetitions=self->inputExtendedReplications[self->iInputExtendedReplications];
-          self->iInputExtendedReplications++;
-        }
-        break;
-      default:
-        Assert(0);
-    }
     }
 
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding replication: \twidth=%ld pos=%ld ulength=%ld ulength_bits=%ld",
@@ -1372,7 +1372,7 @@ static GRIB_INLINE void reset_qualifiers(grib_accessor* significanceQualifierGro
     for (i=0;i<number_of_qualifiers;i++)
         significanceQualifierGroup[i]=0;
 }
-*/
+ */
 
 static void grib_convert_to_attribute(grib_accessor* a)
 {
@@ -1382,21 +1382,22 @@ static void grib_convert_to_attribute(grib_accessor* a)
     }
 }
 
-static void set_subset_start_end(grib_accessor_bufr_data_array *self,long *onlySubset,long *startSubset,long *endSubset,long *ret_start,long *ret_end) {
+static void set_subset_start_end(grib_accessor_bufr_data_array *self,long *onlySubset,long *startSubset,long *endSubset,long *ret_start,long *ret_end)
+{
     if (self->compressedData == 1 ) {
-      *ret_start=0;
-      *ret_end=1 ;
-    } else {
-      if (*startSubset>0 && *endSubset>=*startSubset) {
-        *ret_start=*startSubset-1;
-        *ret_end= *endSubset;
-      } else if (*onlySubset>0) {
-        *ret_start=*onlySubset-1;
-        *ret_end= *onlySubset;
-      } else {
         *ret_start=0;
-        *ret_end= self->numberOfSubsets;
-      }
+        *ret_end=1 ;
+    } else {
+        if (*startSubset>0 && *endSubset>=*startSubset) {
+            *ret_start=*startSubset-1;
+            *ret_end= *endSubset;
+        } else if (*onlySubset>0) {
+            *ret_start=*onlySubset-1;
+            *ret_end= *onlySubset;
+        } else {
+            *ret_start=0;
+            *ret_end= self->numberOfSubsets;
+        }
     }
 }
 
@@ -1407,7 +1408,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
     grib_accessor* elementAccessor=0;
     grib_accessor* associatedFieldAccessor=0;
     grib_accessor* associatedFieldSignificanceAccessor=0;
-    long iss,end,start,elementsInSubset,ide;
+    long iss,end,elementsInSubset,ide;
     grib_section* section=NULL;
     /*grib_section* rootSection=NULL;*/
     bufr_descriptor* descriptor;
@@ -1446,9 +1447,9 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
 
 
     if (self->dataAccessors) {
-      grib_accessors_list_delete(c,self->dataAccessors);
-      /* grib_empty_section ( c,self->dataKeys ); */
-      /* grib_context_free ( c,self->dataKeys->block ); */
+        grib_accessors_list_delete(c,self->dataAccessors);
+        /* grib_empty_section ( c,self->dataKeys ); */
+        /* grib_context_free ( c,self->dataKeys->block ); */
     }
     self->dataAccessors=grib_accessors_list_create(c);
 
@@ -1470,7 +1471,6 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
     /*indexOfGroupNumber=0;*/
     depth=0;
     extraElement=0;
-
 
     for (iss=0;iss<end;iss++) {
         qualityPresent=0;
@@ -1629,6 +1629,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                     break;
                 case 31021:
                     associatedFieldSignificanceAccessor=elementAccessor;
+                    break;
                 default:
                     grib_push_accessor(elementAccessor,section->block);
                     grib_accessors_list_push(self->dataAccessors,elementAccessor);
@@ -1641,41 +1642,40 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
 }
 
 static void set_input_replications(grib_handle* h,grib_accessor_bufr_data_array *self) {
-  size_t nInputReplications;
-  size_t nInputExtendedReplications;
-  size_t nInputShortReplications;
-  self->nInputReplications=-1;
-  self->nInputExtendedReplications=-1;
-  self->nInputShortReplications=-1;
-  self->iInputReplications=0;
-  self->iInputExtendedReplications=0;
-  self->iInputShortReplications=0;
-  if (grib_get_size(h,"inputDelayedDescriptorReplicationFactor",&nInputReplications)==0 && nInputReplications!=0) {
-    if (self->inputReplications) grib_context_free(h->context,self->inputReplications);
-    self->inputReplications=grib_context_malloc_clear(h->context,sizeof(long)*nInputReplications);
-    grib_get_long_array(h,"inputDelayedDescriptorReplicationFactor",self->inputReplications,&nInputReplications);
-    /* default-> no input replications*/
-    if (self->inputReplications[0]<0) self->nInputReplications=-1;
-    else self->nInputReplications=nInputReplications;
-  }
-  if (grib_get_size(h,"inputExtendedDelayedDescriptorReplicationFactor",&nInputExtendedReplications)==0 && nInputExtendedReplications!=0) {
-    if (self->inputExtendedReplications) grib_context_free(h->context,self->inputExtendedReplications);
-    self->inputExtendedReplications=grib_context_malloc_clear(h->context,sizeof(long)*nInputExtendedReplications);
-    grib_get_long_array(h,"inputExtendedDelayedDescriptorReplicationFactor",self->inputExtendedReplications,&nInputExtendedReplications);
-    /* default-> no input replications*/
-    if (self->inputExtendedReplications[0]<0) self->nInputExtendedReplications=-1;
-    else self->nInputExtendedReplications=nInputExtendedReplications;
-  }
-  if (grib_get_size(h,"inputShortDelayedDescriptorReplicationFactor",&nInputShortReplications)==0 && nInputShortReplications!=0) {
-    if (self->inputShortReplications) grib_context_free(h->context,self->inputShortReplications);
-    self->inputShortReplications=grib_context_malloc_clear(h->context,sizeof(long)*nInputShortReplications);
-    grib_get_long_array(h,"inputShortDelayedDescriptorReplicationFactor",self->inputShortReplications,&nInputShortReplications);
-    /* default-> no input replications*/
-    if (self->inputShortReplications[0]<0) self->nInputShortReplications=-1;
-    else self->nInputShortReplications=nInputShortReplications;
-  }
+    size_t nInputReplications;
+    size_t nInputExtendedReplications;
+    size_t nInputShortReplications;
+    self->nInputReplications=-1;
+    self->nInputExtendedReplications=-1;
+    self->nInputShortReplications=-1;
+    self->iInputReplications=0;
+    self->iInputExtendedReplications=0;
+    self->iInputShortReplications=0;
+    if (grib_get_size(h,"inputDelayedDescriptorReplicationFactor",&nInputReplications)==0 && nInputReplications!=0) {
+        if (self->inputReplications) grib_context_free(h->context,self->inputReplications);
+        self->inputReplications=grib_context_malloc_clear(h->context,sizeof(long)*nInputReplications);
+        grib_get_long_array(h,"inputDelayedDescriptorReplicationFactor",self->inputReplications,&nInputReplications);
+        /* default-> no input replications*/
+        if (self->inputReplications[0]<0) self->nInputReplications=-1;
+        else self->nInputReplications=nInputReplications;
+    }
+    if (grib_get_size(h,"inputExtendedDelayedDescriptorReplicationFactor",&nInputExtendedReplications)==0 && nInputExtendedReplications!=0) {
+        if (self->inputExtendedReplications) grib_context_free(h->context,self->inputExtendedReplications);
+        self->inputExtendedReplications=grib_context_malloc_clear(h->context,sizeof(long)*nInputExtendedReplications);
+        grib_get_long_array(h,"inputExtendedDelayedDescriptorReplicationFactor",self->inputExtendedReplications,&nInputExtendedReplications);
+        /* default-> no input replications*/
+        if (self->inputExtendedReplications[0]<0) self->nInputExtendedReplications=-1;
+        else self->nInputExtendedReplications=nInputExtendedReplications;
+    }
+    if (grib_get_size(h,"inputShortDelayedDescriptorReplicationFactor",&nInputShortReplications)==0 && nInputShortReplications!=0) {
+        if (self->inputShortReplications) grib_context_free(h->context,self->inputShortReplications);
+        self->inputShortReplications=grib_context_malloc_clear(h->context,sizeof(long)*nInputShortReplications);
+        grib_get_long_array(h,"inputShortDelayedDescriptorReplicationFactor",self->inputShortReplications,&nInputShortReplications);
+        /* default-> no input replications*/
+        if (self->inputShortReplications[0]<0) self->nInputShortReplications=-1;
+        else self->nInputShortReplications=nInputShortReplications;
+    }
 }
-
 
 static int process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset)
 {
@@ -1988,7 +1988,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
         grib_set_bytes(grib_handle_of_accessor(a),self->bufrDataEncodedName,buffer->data,&(buffer->ulength));
         grib_buffer_delete(c,buffer);
         if (self->compressedData==0 && self->numberOfSubsets != (end-start) ) {
-          grib_set_long(h,self->numberOfSubsetsName,end-start);
+            grib_set_long(h,self->numberOfSubsetsName,end-start);
         }
     }
 

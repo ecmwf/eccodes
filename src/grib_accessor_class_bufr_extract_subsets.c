@@ -143,7 +143,8 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-static void get_accessors(grib_accessor* a) {
+static void get_accessors(grib_accessor* a)
+{
     grib_accessor_bufr_extract_subsets *self =(grib_accessor_bufr_extract_subsets*)a;
     grib_handle* h=grib_handle_of_accessor(a);
 
@@ -157,8 +158,6 @@ static void get_accessors(grib_accessor* a) {
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
     int n=0;
-    int err=0;
-    long sectionlength;
     grib_accessor_bufr_extract_subsets *self =(grib_accessor_bufr_extract_subsets*)a;
 
     a->length=0;
@@ -167,10 +166,10 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
     self->numberOfSubsets = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
     self->subset = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
-
 }
 
-static int  get_native_type(grib_accessor* a){
+static int get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_LONG;
 }
 
@@ -178,28 +177,26 @@ static int  get_native_type(grib_accessor* a){
 #define PROCESS_NEW_DATA   1
 #define PROCESS_ENCODE     2
 
-
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  int err=0;
-  grib_accessor_bufr_extract_subsets *self =(grib_accessor_bufr_extract_subsets*)a;
-  size_t l=1;
-  long v[1];
-  long extractSubset=-1;
+    int err=0;
+    grib_accessor_bufr_extract_subsets *self =(grib_accessor_bufr_extract_subsets*)a;
+    size_t l=1;
+    long v[1];
 
-  get_accessors(a);
+    get_accessors(a);
 
-  v[0]=1;
-  err=grib_pack_long(self->packAccessor,v,&l);
-  if (err) return err;
-  err=grib_unpack_long(self->subsetAccessor,v,&l);
-  if (err) return err;
-  extractSubset=v[0];
-  /* this does not work at the moment, we need to fix it */
-  /* err=accessor_bufr_data_array_process_elements(self->numericValuesAccessor,PROCESS_ENCODE,v[0],0,0); */
-  /* v[0]=1; */
-  /* err=grib_pack_long(self->numberOfSubsetsAccessor,v,&l); */
-  /* if (err) return err; */
-  /* err=accessor_bufr_data_array_create_keys(self->numericValuesAccessor,extractSubset,0,0); */
-  return err;
+    v[0]=1;
+    err=grib_pack_long(self->packAccessor,v,&l);
+    if (err) return err;
+    err=grib_unpack_long(self->subsetAccessor,v,&l);
+    if (err) return err;
+
+    /* this does not work at the moment, we need to fix it */
+    /* err=accessor_bufr_data_array_process_elements(self->numericValuesAccessor,PROCESS_ENCODE,v[0],0,0); */
+    /* v[0]=1; */
+    /* err=grib_pack_long(self->numberOfSubsetsAccessor,v,&l); */
+    /* if (err) return err; */
+    /* err=accessor_bufr_data_array_create_keys(self->numericValuesAccessor,extractSubset,0,0); */
+    return err;
 }
