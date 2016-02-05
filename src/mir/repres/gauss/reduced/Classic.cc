@@ -66,8 +66,12 @@ const std::vector<long> &Classic::pls() const {
         ASSERT(grid.get());
 
         const std::vector<int> &v = grid->npts_per_lat();
+
+        ASSERT(v.size() == N_ * 2);
+
         pl_.resize(v.size());
         for (size_t i = 0; i < v.size(); i++) {
+            ASSERT(v[i] > 0);
             pl_[i] = v[i];
         }
     }

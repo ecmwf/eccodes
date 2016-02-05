@@ -167,6 +167,7 @@ void GribOutput::save(const param::MIRParametrisation &parametrisation, input::M
         X(info.grid.pl[i]);
         if (i > 4) break;
     }
+
     X(info.grid.truncation);
     X(info.grid.orientationOfTheGridInDegrees);
     X(info.grid.DyInMetres);

@@ -82,14 +82,14 @@ bool Reduced::globalDomain() const {
 
         const double epsilon = 1.0 / 1000.0;
 
-        
+
         if(ew > last) {
             // The dissemination will put in the GRIB header what is sepecified by the user
             // so, for example if the user specify 359.999999 as the eastern longitude, this
             // value will end up in the header
             return true;
         }
-        
+
         bool global = fabs(ew-last) < epsilon;
         return global;
     }
@@ -105,13 +105,16 @@ void Reduced::fill(grib_info &info) const  {
     const std::vector<long> &pl = pls();
 
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
-    info.grid.Nj = pl.size() * 2;
+    info.grid.Nj = pl.size();
     info.grid.N = N_;
 
-    // FIXME C-style cast should be removed in a const-correct version of grib_api
-    // (currently unstable)
-    info.grid.pl = (long int *) &pl[0];
+    info.grid.pl = &pl[0];
     info.grid.pl_size = pl.size();
+
+
+    for (size_t i = 0; i < info.grid.pl_size; i++) {
+        ASSERT(info.grid.pl[i] > 0);
+    }
 
     bbox_.fill(info);
 
@@ -186,7 +189,7 @@ class GaussianIterator: public Iterator {
             }
 
             // eckit::Log::info() << "++++++ " << lat << " " << lon << " - " << bbox_ << " -> " << bbox_.contains(lat, lon) << std::endl;
-            
+
             // eckit::Log::info() << "++++++ " << j_ << " " << nj_ << " - " << i_ << " " << ni_ << std::endl;
 
             if (bbox_.contains(lat, lon)) {
@@ -264,7 +267,7 @@ size_t Reduced::frame(std::vector<double> &values, size_t size, double missingVa
 
     double lat;
     double lon;
-    
+
     size_t rows = 0;
 
     size_t dummy = 0; // Used to keep static analyser quiet
