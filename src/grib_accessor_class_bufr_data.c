@@ -536,11 +536,11 @@ static int decode_elements(grib_accessor* a)
     int err=0;
     grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
     unsigned char* data =NULL;
-    int forceGroupClosure=0,forceOneLevelClosure=0;
+    int forceGroupClosure=0;
     long i=0,k=0,jj=0;
     long pos=0;
     long localReference=0,width,j;
-    long totalNumberOfValues,numberOfValuesPerElement;
+    long numberOfValuesPerElement;
     double* dvalues;
     grib_sarray* svalues = NULL;
     size_t n,nn;
@@ -552,7 +552,7 @@ static int decode_elements(grib_accessor* a)
     int startRepetition=0;
     int depth;
     int bitmapIndex[10];
-    long bitmapLength[10]={0,};
+    /*long bitmapLength[10]={0,};*/
     long bitmapStartElement[10]={0,};
     grib_section* section=0;
     grib_section* sectionUp=0;
@@ -597,7 +597,7 @@ static int decode_elements(grib_accessor* a)
     groupNumberIndex=grib_iarray_new(c,self->numberOfDescriptors,100);
     bitmap=grib_iarray_new(c,self->numberOfDescriptors,100);
 
-    totalNumberOfValues=self->numberOfDescriptors*self->numberOfDataSubsets;
+    /*totalNumberOfValues=self->numberOfDescriptors*self->numberOfDataSubsets;*/
     numberOfValuesPerElement=self->numberOfDataSubsets;
 
     F=(int*)grib_context_malloc_clear(c,sizeof(int)*self->numberOfDescriptors);
@@ -642,7 +642,6 @@ static int decode_elements(grib_accessor* a)
                 if (forceGroupClosure) {
                     groupSection=sectionUp;
                     forceGroupClosure=0;
-                    forceOneLevelClosure=1;
                     depth=0;
                 } else {
                     groupSection=section;
@@ -683,7 +682,7 @@ static int decode_elements(grib_accessor* a)
                 startRepetition=i;
             }
             if (self->bitmapNumber[i+1]) {
-                bitmapLength[self->bitmapNumber[i+1]]=numberOfRepetitions;
+                /*bitmapLength[self->bitmapNumber[i+1]]=numberOfRepetitions;*/
                 bitmapStartElement[self->bitmapNumber[i+1]]=computeBitmapStartElement(self,numberOfRepetitions,index);
             }
             grib_iarray_push(index,i);

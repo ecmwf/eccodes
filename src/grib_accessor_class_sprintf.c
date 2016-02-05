@@ -132,124 +132,116 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-	grib_accessor_sprintf* self = (grib_accessor_sprintf*)a; 
-	self->args = c;
-
+    grib_accessor_sprintf* self = (grib_accessor_sprintf*)a;
+    self->args = c;
 }
 
-static int pack_string(grib_accessor* a, const char* val, size_t *len){
-
-	return GRIB_NOT_IMPLEMENTED;
-
-}
-
-
-static int    unpack_string(grib_accessor* a, char* val, size_t *len)
+static int pack_string(grib_accessor* a, const char* val, size_t *len)
 {
-	grib_accessor_sprintf* self = (grib_accessor_sprintf*)a;
+    return GRIB_NOT_IMPLEMENTED;
+}
 
-	char result[1024]  ;
-	char sres[1024]  ;
-	long ires = 0;
-	double dres= 0;
+static int unpack_string(grib_accessor* a, char* val, size_t *len)
+{
+    grib_accessor_sprintf* self = (grib_accessor_sprintf*)a;
+    char result[1024]  ;
+    char tempBuffer[1024];
+    char sres[1024]  ;
+    long ires = 0;
+    double dres= 0;
+    int  i = 0;
+    size_t replen = 1024;
+    int ret = GRIB_SUCCESS;
+    int carg= 0;
+    int is_missing = 0;
+    const char* uname = NULL;
+    const char* tempname = NULL;
 
-	int  i = 0;
-	size_t replen = 1024;
+    uname = grib_arguments_get_string(grib_handle_of_accessor(a),self->args,carg++);
+    sprintf(result,"%s","");
 
-	int ret = GRIB_SUCCESS;
+    for(i=0;i<strlen(uname);i++)
+    {
+        if(uname[i]=='%'){
+            int precision=999;
+            i++;
+            if (uname[i]=='.') {
+                char *theEnd=NULL,*start;
+                start=(char*)&(uname[++i]);
+                precision=strtol(start,&theEnd,10);
+                Assert(*theEnd!=0);
+                while (uname[i] != *theEnd) i++;
+            }
+            switch(uname[i]){
+            case 'd':
+                tempname = grib_arguments_get_name(grib_handle_of_accessor(a),self->args,carg++);
 
-	int carg= 0;
-	int is_missing = 0;
-	const char* uname = NULL;
-	const char* tempname = NULL;
+                if((ret = grib_get_long_internal(grib_handle_of_accessor(a),tempname,&ires)) != GRIB_SUCCESS)
+                    return ret;
+                /* Bug GRIB-56: Check to see if the key is missing */
+                is_missing = grib_is_missing(grib_handle_of_accessor(a),tempname,&ret);
+                if (ret != GRIB_SUCCESS)
+                    return ret;
+                if (is_missing) {
+                    sprintf(tempBuffer,"%sMISSING",result);
+                    strcpy(result, tempBuffer);
+                }
+                else {
+                    /* Not missing so print it */
+                    if (precision!=999) {
+                        sprintf(tempBuffer,"%s%.*ld",result, precision, ires);
+                        strcpy(result, tempBuffer);
+                    } else {
+                        sprintf(tempBuffer,"%s%ld",result, ires);
+                        strcpy(result, tempBuffer);
+                    }
+                }
+                break;
 
+            case 'g':
+                tempname = grib_arguments_get_name(grib_handle_of_accessor(a),self->args,carg++);
+                if((ret = grib_get_double_internal(grib_handle_of_accessor(a),tempname,&dres)) != GRIB_SUCCESS)
+                    return ret;
+                sprintf(tempBuffer,"%s%g",result, dres);
+                strcpy(result, tempBuffer);
 
-	uname = grib_arguments_get_string(grib_handle_of_accessor(a),self->args,carg++);
-	sprintf(result,"%s",""); 
+                break;
 
-	for(i=0;i<strlen(uname);i++)
-	{
+            case 's':
+                tempname = grib_arguments_get_name(grib_handle_of_accessor(a),self->args,carg++);
+                if((ret = grib_get_string_internal(grib_handle_of_accessor(a),tempname,sres, &replen )) != GRIB_SUCCESS)
+                    return ret;
+                sprintf(tempBuffer, "%s%s",result, sres);
+                strcpy(result, tempBuffer);
+                replen = 1024;
+            }
+        }
+        else {
+            sprintf(tempBuffer,"%s%c",result, uname[i]);
+            strcpy(result, tempBuffer);
+        }
+    }
 
-		if(uname[i]=='%'){
-			int precision=999;
-			i++;
-			if (uname[i]=='.') {
-				char *theEnd=NULL,*start;
-				start=(char*)&(uname[++i]);
-				precision=strtol(start,&theEnd,10);
-				Assert(*theEnd!=0);
-				while (uname[i] != *theEnd) i++;
-			} 
-			switch(uname[i]){
+    replen = strlen(result)+1;
 
-				case 'd':
-					tempname = grib_arguments_get_name(grib_handle_of_accessor(a),self->args,carg++);
+    if(*len < replen){
+        *len = replen;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
+    *len = replen;
 
-					if((ret = grib_get_long_internal(grib_handle_of_accessor(a),tempname,&ires)) != GRIB_SUCCESS)
-						return ret;
-					/* Bug GRIB-56: Check to see if the key is missing */
-					is_missing = grib_is_missing(grib_handle_of_accessor(a),tempname,&ret);
-					if (ret != GRIB_SUCCESS)
-						return ret;
-					if (is_missing) {
-						sprintf(result, "%sMISSING",result);
-					}
-					else {
-						/* Not missing so print it */
-						if (precision!=999) {
-							sprintf(result,"%s%.*ld",result,precision, ires); 
-						} else {
-							sprintf(result,"%s%ld",result, ires); 
-						}
-					}
-					break;
+    sprintf(val,"%s",result);
 
-				case 'g':
-					tempname = grib_arguments_get_name(grib_handle_of_accessor(a),self->args,carg++);
-					if((ret = grib_get_double_internal(grib_handle_of_accessor(a),tempname,&dres)) != GRIB_SUCCESS) 
-						return ret;
-					sprintf(result,"%s%g",result, dres); 
-
-
-					break;
-
-				case 's':
-					tempname = grib_arguments_get_name(grib_handle_of_accessor(a),self->args,carg++);
-					if((ret = grib_get_string_internal(grib_handle_of_accessor(a),tempname,sres, &replen )) != GRIB_SUCCESS)
-						return ret;
-					sprintf(result,"%s%s",result, sres); 
-					replen = 1024;
-
-
-			}
-		}
-		else
-			sprintf(result,"%s%c",result, uname[i]);
-
-
-	}
-
-	replen = strlen(result)+1;
-
-	if(*len < replen){
-		*len = replen;
-		return GRIB_ARRAY_TOO_SMALL;
-	}
-	*len = replen;
-
-	sprintf(val,"%s",result);
-
-	return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
 static int value_count(grib_accessor* a,long* count)
 {
-	*count=1;
-	return 0;
+    *count=1;
+    return 0;
 }
 
 static size_t string_length(grib_accessor* a)
 {
     return 1024;
 }
-

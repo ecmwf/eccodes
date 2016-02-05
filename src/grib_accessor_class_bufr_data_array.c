@@ -495,15 +495,12 @@ static int encode_string_array(grib_context* c,grib_buffer* buff,long* pos, int 
         grib_accessor_bufr_data_array* self,grib_sarray* stringValues)
 {
     int err=0,end,start;
-    int j,modifiedWidth,modifiedReference,width;
-    double modifiedFactor;
+    int j,modifiedWidth,width;
 
     start=0;
     end=grib_sarray_used_size(stringValues);
 
     modifiedWidth= self->expanded->v[i]->width;
-    modifiedReference= self->expanded->v[i]->reference;
-    modifiedFactor= self->expanded->v[i]->factor;
 
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
     grib_encode_string(buff->data,pos,modifiedWidth/8,stringValues->v[0]);
@@ -1412,12 +1409,12 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
     grib_accessor* associatedFieldSignificanceAccessor=0;
     long iss,end,start,elementsInSubset,ide;
     grib_section* section=NULL;
-    grib_section* rootSection=NULL;
+    /*grib_section* rootSection=NULL;*/
     bufr_descriptor* descriptor;
-    grib_section* sectionUp=0;
+    /*grib_section* sectionUp=0;*/
     grib_section* groupSection=0;
     long groupNumber=0;
-    long indexOfGroupNumber=0;
+    /*long indexOfGroupNumber=0;*/
     int depth;
     int idx;
     grib_context* c=a->context;
@@ -1437,9 +1434,9 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
     int bitmapIndex=-1;
     int incrementBitmapIndex=1;
     grib_accessor* elementFromBitmap=NULL;
-    int reuseBitmap=0;
+    /*int reuseBitmap=0;*/
     int i,dump=1,count=0;
-    int forceGroupClosure=0;
+    /*int forceGroupClosure=0;*/
 
     creatorGroup.op         = "bufr_group";
     creatorGroup.name="groupNumber";
@@ -1462,22 +1459,22 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
     gaGroup->bufr_group_number=groupNumber;
     gaGroup->sub_section=grib_section_create(grib_handle_of_accessor(a),gaGroup);
     section=gaGroup->sub_section;
-    rootSection=section;
-    sectionUp=self->dataKeys;
+    /*rootSection=section;*/
+    /*sectionUp=self->dataKeys;*/
     accessor_constant_set_type(gaGroup,GRIB_TYPE_LONG);
     accessor_constant_set_dval(gaGroup,groupNumber);
     self->dataKeys->block->first=0;
     self->dataKeys->block->last=0;
     grib_push_accessor(gaGroup,self->dataKeys->block);
 
-    indexOfGroupNumber=0;
+    /*indexOfGroupNumber=0;*/
     depth=0;
     extraElement=0;
 
 
     for (iss=0;iss<end;iss++) {
         qualityPresent=0;
-        forceGroupClosure=0;
+        /*forceGroupClosure=0;*/
         elementsInSubset= self->compressedData ? grib_iarray_used_size(self->elementsDescriptorsIndex->v[0]) :
                 grib_iarray_used_size(self->elementsDescriptorsIndex->v[iss]);
         associatedFieldAccessor=NULL;
@@ -1516,7 +1513,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 grib_push_accessor(gaGroup,groupSection->block);
 
                 section=gaGroup->sub_section;
-                sectionUp=gaGroup->parent;
+                /*sectionUp=gaGroup->parent;*/
 
                 significanceQualifierGroup[sidx]=gaGroup;
                 significanceQualifierDepth[sidx]=depth;
@@ -1548,7 +1545,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 grib_push_accessor(gaGroup,groupSection->block);
 
                 section=gaGroup->sub_section;
-                sectionUp=gaGroup->parent;
+                /*sectionUp=gaGroup->parent;*/
                 bitmapGroup[bitmapIndex]=gaGroup;
                 bitmapDepth[bitmapIndex]=depth;
                 dump=1;
@@ -1564,16 +1561,16 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
             } else if (descriptor->code == 236000 ) {
                 bitmap.referredElement=NULL;
                 bitmap.cursor=0;
-                reuseBitmap=1;
+                /*reuseBitmap=1;*/
                 extraElement=1;
                 dump=1;
             } else if (descriptor->code == 236000 || descriptor->code == 237000 ) {
                 bitmap.referredElement=NULL;
                 bitmap.cursor=0;
-                reuseBitmap=1;
+                /*reuseBitmap=1;*/
                 dump=1;
             } else if (descriptor->code == 237255 ) {
-                reuseBitmap=0;
+                /*reuseBitmap=0;*/
                 incrementBitmapIndex=1;
                 bitmap.cursor=0;
                 dump=1;
@@ -1683,7 +1680,6 @@ static void set_input_replications(grib_handle* h,grib_accessor_bufr_data_array 
 static int process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset)
 {
     int err=0;
-    int associatedFieldWidth=0,localDescriptorWidth=0;
     long  inr,innr,ir;
     long n[MAX_NESTED_REPLICATIONS]={0,};
     long nn[MAX_NESTED_REPLICATIONS]={0,};
@@ -1846,8 +1842,6 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                 continue;
             case 2:
                 /* Operator */
-                associatedFieldWidth=0;
-                localDescriptorWidth=0;
                 switch(descriptors[i]->X) {
                 case 5:
                     descriptors[i]->width=descriptors[i]->Y*8;

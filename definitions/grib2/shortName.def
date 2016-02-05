@@ -1060,7 +1060,7 @@
 	 parameterNumber = 37 ;
 	}
 #Horizontal moisture divergence
-'mconv' = {
+'mdiv' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 38 ;

@@ -66,6 +66,7 @@ diff $shdata.txt $shdata.good
 ${tools_dir}grib_set -r -s packingType=grid_ieee $shdata ${shdata}_ieee
 ${tools_dir}grib_filter r.filter ${shdata}_ieee > $shdata.txt
 diff $shdata.txt $shdata.good
+rm -f ${shdata}_ieee
 
 ##########################
 #GRIB_IEEE_PACKING=32
