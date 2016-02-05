@@ -1664,7 +1664,7 @@ static int process_elements(grib_accessor* a,int flag)
     grib_iarray* elementsDescriptorsIndex=0;
 
     long pos=0,dataOffset=0;
-    int iss,end,elementIndex,index;
+    int iss,end,start,elementIndex,index;
     long numberOfDescriptors;
     long totalSize;
     bufr_descriptor** descriptors=0;
@@ -1674,6 +1674,7 @@ static int process_elements(grib_accessor* a,int flag)
     codec_element_proc codec_element;
     codec_replication_proc codec_replication;
     grib_accessor* dataAccessor=NULL;
+    long extractSubset=-1;
 
     grib_darray* dval = NULL;
     grib_sarray* sval = NULL;
@@ -1718,6 +1719,7 @@ static int process_elements(grib_accessor* a,int flag)
         pos=0;
         codec_element=&encode_element;
         codec_replication=&encode_replication;
+        grib_get_long(grib_handle_of_accessor(a),"extractSubset",&extractSubset);
         break;
     default :
         return GRIB_NOT_IMPLEMENTED;
@@ -1744,11 +1746,22 @@ static int process_elements(grib_accessor* a,int flag)
         self->elementsDescriptorsIndex=grib_viarray_new(c,100,100);
     }
 
-    end= self->compressedData ? 1 : self->numberOfSubsets;
+    if (self->compressedData == 1 ) {
+      start=0;
+      end=1 ;
+    } else {
+      if (extractSubset<=0) {
+        start=0;
+        end= self->numberOfSubsets;
+      } else {
+        start=extractSubset-1;
+        end= extractSubset;
+      }
+    }
 
     numberOfDescriptors=grib_bufr_descriptors_array_used_size(self->expanded);
 
-    for (iss=0;iss<end;iss++) {
+    for (iss=start;iss<end;iss++) {
         icount=1;
         grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data processing: subsetNumber=%ld", iss+1);
 

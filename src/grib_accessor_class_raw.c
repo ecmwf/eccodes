@@ -19,6 +19,7 @@
    IMPLEMENTS = compare;unpack_bytes;byte_count;value_count
    MEMBERS    = const char* totalLength
    MEMBERS    = const char* sectionLength
+   MEMBERS    = long relativeOffset
    END_CLASS_DEF
 
  */
@@ -49,6 +50,7 @@ typedef struct grib_accessor_raw {
 /* Members defined in raw */
 	const char* totalLength;
 	const char* sectionLength;
+	long relativeOffset;
 } grib_accessor_raw;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -134,15 +136,25 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
     int n=0;
+    int err=0;
+    long sectionLength;
     grib_accessor_raw *self =(grib_accessor_raw*)a;
-    grib_expression* e=grib_arguments_get_expression(grib_handle_of_accessor(a), arg,n++);
+    grib_expression* e;
 
     a->length=0;
-    grib_expression_evaluate_long(grib_handle_of_accessor(a),e,&(a->length));
     self->totalLength = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
     self->sectionLength = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
 
-    Assert(a->length>=0);
+    e=grib_arguments_get_expression(grib_handle_of_accessor(a), arg,n++);
+    grib_expression_evaluate_long(grib_handle_of_accessor(a),e,&(self->relativeOffset));
+    if (err) grib_context_log(grib_handle_of_accessor(a)->context,GRIB_LOG_FATAL,"unable to evaluate relativeOffset");
+
+    grib_get_long(grib_handle_of_accessor(a),self->sectionLength,&sectionLength);
+
+    a->length=sectionLength-self->relativeOffset;
+    if (a->length<0) a->length=0;
+
+    /* Assert(a->length>=0); */
 }
 
 static int  get_native_type(grib_accessor* a){
@@ -201,20 +213,21 @@ static int pack_bytes(grib_accessor* a, const unsigned char* val, size_t *len)
 {
     size_t length = *len;
     long totalLength;
-    long section4Length;
-    /* grib_handle* h=grib_handle_of_accessor(a); */
+    long sectionLength;
+    grib_handle* h=grib_handle_of_accessor(a);
     grib_accessor_raw *self =(grib_accessor_raw*)a;
+    long dlen=length-a->length;
 
-    grib_get_long(grib_handle_of_accessor(a),self->totalLength,&totalLength);
-    totalLength+=length-a->length;
-    grib_get_long(grib_handle_of_accessor(a),self->sectionLength,&section4Length);
-    section4Length+=length-a->length;
+    grib_get_long(h,self->totalLength,&totalLength);
+    totalLength+=dlen;
+    grib_get_long(h,self->sectionLength,&sectionLength);
+    sectionLength+=dlen;
 
     grib_buffer_replace(a, val, length,1,1);
 
-    grib_set_long(grib_handle_of_accessor(a),self->totalLength,totalLength);
-    grib_set_long(grib_handle_of_accessor(a),self->sectionLength,section4Length);
-    a->length = section4Length-4;
+    grib_set_long(h,self->totalLength,totalLength);
+    grib_set_long(h,self->sectionLength,sectionLength);
+    a->length = length;
 
     return GRIB_SUCCESS;
 }

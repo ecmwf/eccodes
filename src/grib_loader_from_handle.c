@@ -78,6 +78,7 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
     const char* name = NULL;
     int k = 0;
     grib_handle *g;
+    grib_accessor* ao=NULL;
     int e, pack_missing = 0;
     grib_context_log(h->context,GRIB_LOG_DEBUG, "XXXXX Copying  %s",   ga->name);
 
@@ -246,9 +247,11 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
 
     case GRIB_TYPE_BYTES:
 
-        len=grib_byte_count(ga);
+        ao=grib_find_accessor(h,name);
+        len=grib_byte_count(ao);
         uval = (unsigned char*)grib_context_malloc(h->context,len*sizeof(char));
-        ret = grib_get_bytes_internal(h,name,uval,&len);
+        ret=grib_unpack_bytes(ao,uval,&len);
+        /* ret = grib_get_bytes_internal(h,name,uval,&len); */
         if(ret == GRIB_SUCCESS)
         {
             grib_context_log(h->context,GRIB_LOG_DEBUG, "Copying %d byte(s) to %s",  len, name);

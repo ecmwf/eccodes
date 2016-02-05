@@ -1437,3 +1437,4 @@ int grib_encode_double_array_complex(size_t n_vals, double *val, long nbits, dou
 
 
 long accessor_raw_get_offset(grib_accessor* a);
+void accessor_raw_set_length(grib_accessor* a,size_t len);
