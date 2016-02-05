@@ -388,11 +388,11 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len)
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
 
     int ret=0,idx;
-    long count=0;
+    /*long count=0;*/
     char* s=NULL;
     grib_context* c=a->context;
 
-    count=self->numberOfSubsets;
+    /*count=self->numberOfSubsets;*/
     idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
     grib_sarray_delete(c,self->stringValues->v[idx]);
     self->stringValues->v[idx]=grib_sarray_new(c,1,1);

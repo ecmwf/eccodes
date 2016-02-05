@@ -157,7 +157,6 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
     int ret=0;
     long pos = 0;
     long rlen =0;
-    long numberOfUnexpandedDescriptors = 0;
     long f,x,y;
     long *v=val;
     int i;
@@ -200,7 +199,6 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
     unsigned char* buf        = NULL;
     grib_accessor* expanded=NULL;
     size_t buflen=*len*2;
-    long section3Length,totalLength;
     long createNewData=1;
 
     grib_get_long(grib_handle_of_accessor(a),self->createNewData,&createNewData);
