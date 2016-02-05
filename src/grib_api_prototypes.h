@@ -1438,3 +1438,5 @@ int grib_encode_double_array_complex(size_t n_vals, double *val, long nbits, dou
 
 long accessor_raw_get_offset(grib_accessor* a);
 void accessor_raw_set_length(grib_accessor* a,size_t len);
+int accessor_bufr_data_array_create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset);
+int accessor_bufr_data_array_process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset);

@@ -262,6 +262,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_unsigned.c  \
 	grib_accessor_class_unsigned_bits.c \
 	grib_accessor_class_raw.c \
+	grib_accessor_class_bufr_extract_subsets.c \
 	grib_accessor_class_spd.c \
 	grib_accessor_class_sum.c \
 	grib_accessor_class_to_integer.c \

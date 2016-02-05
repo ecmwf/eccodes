@@ -18,6 +18,13 @@ transient inputExtendedDelayedDescriptorReplicationFactor={-1};
 transient inputShortDelayedDescriptorReplicationFactor={-1};
 
 transient extractSubset=-1;
+transient extractSubset=-1;
+transient extractSubset=-1;
+transient extractSubsetIntervalStart=-1;
+transient extractSubsetIntervalEnd=-1;
+
+
+meta doExtractSubsets bufr_extract_subsets(numericValues,pack,numberOfSubsets,extractSubset,extractSubsetIntervalStart,extractSubsetIntervalEnd);
 
 template boot_edition "bufr/boot_edition_[ed:l].def";
 

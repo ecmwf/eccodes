@@ -214,10 +214,12 @@ static void init_class(grib_accessor_class* c)
 #define round(a) ( (a) >=0 ? ((a)+0.5) : ((a)-0.5) )
 #endif
 
-static int process_elements(grib_accessor* a,int flag);
+static int process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset);
 
 typedef int (*codec_element_proc) (grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex, grib_buffer* b,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,grib_sarray* sval); 
 typedef int (*codec_replication_proc) (grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,grib_buffer* buff,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,long* numberOfRepetitions);
+
+static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset);
 
 static int can_be_missing(int descriptor)
 {
@@ -235,6 +237,12 @@ static void restart_bitmap(grib_accessor_bufr_data_array *self)
 static void cancel_bitmap(grib_accessor_bufr_data_array *self) { self->bitmapCurrent=-1;self->bitmapStart=-1; }
 
 static int is_bitmap_start_defined(grib_accessor_bufr_data_array *self) { return self->bitmapStart==-1 ? 0 : 1; }
+
+int accessor_bufr_data_array_create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset) { return create_keys(a,onlySubset,startSubset,endSubset); }
+
+int accessor_bufr_data_array_process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset) {
+  return process_elements(a,flag,onlySubset,startSubset,endSubset);
+}
 
 static size_t get_length(grib_accessor* a)
 {
@@ -355,13 +363,13 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     self->do_decode=1;
-    return process_elements(a,PROCESS_ENCODE);
+    return process_elements(a,PROCESS_ENCODE,0,0,0);
 }
 
 grib_vsarray* accessor_bufr_data_array_get_stringValues(grib_accessor* a)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
-    process_elements(a,PROCESS_DECODE);
+    process_elements(a,PROCESS_DECODE,0,0,0);
 
     return self->stringValues;
 }
@@ -1377,14 +1385,32 @@ static void grib_convert_to_attribute(grib_accessor* a)
     }
 }
 
-static int create_keys(grib_accessor* a)
+static void set_subset_start_end(grib_accessor_bufr_data_array *self,long *onlySubset,long *startSubset,long *endSubset,long *ret_start,long *ret_end) {
+    if (self->compressedData == 1 ) {
+      *ret_start=0;
+      *ret_end=1 ;
+    } else {
+      if (*startSubset>0 && *endSubset>=*startSubset) {
+        *ret_start=*startSubset-1;
+        *ret_end= *endSubset;
+      } else if (*onlySubset>0) {
+        *ret_start=*onlySubset-1;
+        *ret_end= *onlySubset;
+      } else {
+        *ret_start=0;
+        *ret_end= self->numberOfSubsets;
+      }
+    }
+}
+
+static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     int err=0;
     grib_accessor* elementAccessor=0;
     grib_accessor* associatedFieldAccessor=0;
     grib_accessor* associatedFieldSignificanceAccessor=0;
-    long iss,end,elementsInSubset,ide;
+    long iss,end,start,elementsInSubset,ide;
     grib_section* section=NULL;
     grib_section* rootSection=NULL;
     bufr_descriptor* descriptor;
@@ -1422,7 +1448,11 @@ static int create_keys(grib_accessor* a)
     creatorGroup.set        = 0;
 
 
-    if (self->dataAccessors) grib_accessors_list_delete(c,self->dataAccessors);
+    if (self->dataAccessors) {
+      grib_accessors_list_delete(c,self->dataAccessors);
+      /* grib_empty_section ( c,self->dataKeys ); */
+      /* grib_context_free ( c,self->dataKeys->block ); */
+    }
     self->dataAccessors=grib_accessors_list_create(c);
 
     end= self->compressedData ? 1 : self->numberOfSubsets;
@@ -1443,6 +1473,7 @@ static int create_keys(grib_accessor* a)
     indexOfGroupNumber=0;
     depth=0;
     extraElement=0;
+
 
     for (iss=0;iss<end;iss++) {
         qualityPresent=0;
@@ -1648,7 +1679,8 @@ static void set_input_replications(grib_handle* h,grib_accessor_bufr_data_array 
   }
 }
 
-static int process_elements(grib_accessor* a,int flag)
+
+static int process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset)
 {
     int err=0;
     int associatedFieldWidth=0,localDescriptorWidth=0;
@@ -1664,7 +1696,7 @@ static int process_elements(grib_accessor* a,int flag)
     grib_iarray* elementsDescriptorsIndex=0;
 
     long pos=0,dataOffset=0;
-    int iss,end,start,elementIndex,index;
+    long iss,end,start,elementIndex,index;
     long numberOfDescriptors;
     long totalSize;
     bufr_descriptor** descriptors=0;
@@ -1674,7 +1706,6 @@ static int process_elements(grib_accessor* a,int flag)
     codec_element_proc codec_element;
     codec_replication_proc codec_replication;
     grib_accessor* dataAccessor=NULL;
-    long extractSubset=-1;
 
     grib_darray* dval = NULL;
     grib_sarray* sval = NULL;
@@ -1718,8 +1749,10 @@ static int process_elements(grib_accessor* a,int flag)
         self->do_decode=0;
         pos=0;
         codec_element=&encode_element;
+        grib_get_long(grib_handle_of_accessor(a),"extractSubset",&onlySubset);
+        grib_get_long(grib_handle_of_accessor(a),"extractSubsetIntervalStart",&startSubset);
+        grib_get_long(grib_handle_of_accessor(a),"extractSubsetIntervalEnd",&endSubset);
         codec_replication=&encode_replication;
-        grib_get_long(grib_handle_of_accessor(a),"extractSubset",&extractSubset);
         break;
     default :
         return GRIB_NOT_IMPLEMENTED;
@@ -1746,20 +1779,10 @@ static int process_elements(grib_accessor* a,int flag)
         self->elementsDescriptorsIndex=grib_viarray_new(c,100,100);
     }
 
-    if (self->compressedData == 1 ) {
-      start=0;
-      end=1 ;
-    } else {
-      if (extractSubset<=0) {
-        start=0;
-        end= self->numberOfSubsets;
-      } else {
-        start=extractSubset-1;
-        end= extractSubset;
-      }
-    }
 
     numberOfDescriptors=grib_bufr_descriptors_array_used_size(self->expanded);
+
+    set_subset_start_end(self,&onlySubset,&startSubset,&endSubset,&start,&end);
 
     for (iss=start;iss<end;iss++) {
         icount=1;
@@ -1964,31 +1987,15 @@ static int process_elements(grib_accessor* a,int flag)
     }
 
     if(decoding) {
-        err=create_keys(a);
+        err=create_keys(a,0,0,0);
         self->bitsToEndData=totalSize;
     } else {
-        /*
-        long totalLength;
-        long section4Length;
-
-        grib_get_long(grib_handle_of_accessor(a),"totalLength",&totalLength);
-        totalLength+=buffer->ulength-a->length;
-        grib_get_long(grib_handle_of_accessor(a),"section4Length",&section4Length);
-        section4Length+=buffer->ulength-a->length;
-
-        grib_set_bytes(grib_handle_of_accessor(a),self->bufrDataEncodedName,buffer->data,&(buffer->ulength));
-        grib_buffer_delete(c,buffer);
-
-        grib_set_long(grib_handle_of_accessor(a),"totalLength",totalLength);
-        grib_set_long(grib_handle_of_accessor(a),"section4Length",section4Length);
-        a->length = section4Length-4;
-        self->bitsToEndData=a->length*8;
-        */
-
         self->bitsToEndData=buffer->ulength*8;
         grib_set_bytes(grib_handle_of_accessor(a),self->bufrDataEncodedName,buffer->data,&(buffer->ulength));
         grib_buffer_delete(c,buffer);
-
+        if (self->compressedData==0 && self->numberOfSubsets != (end-start) ) {
+          grib_set_long(h,self->numberOfSubsetsName,end-start);
+        }
     }
 
     return err;
@@ -2010,7 +2017,7 @@ static int value_count(grib_accessor* a,long* count)
     long i;
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
 
-    err=process_elements(a,PROCESS_DECODE);
+    err=process_elements(a,PROCESS_DECODE,0,0,0);
     if (err) return err;
 
     if (self->compressedData) {
@@ -2036,7 +2043,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
     if (self->unpackMode == CODES_BUFR_NEW_DATA) proc_flag=PROCESS_NEW_DATA;
 
-    err=process_elements(a,proc_flag);
+    err=process_elements(a,proc_flag,0,0,0);
     if (err) return err;
     if (!val) return err;
 
