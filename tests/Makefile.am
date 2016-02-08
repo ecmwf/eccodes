@@ -11,6 +11,7 @@ TESTS = definitions.sh \
         bufr_get.sh \
         bufr_ls.sh \
         bufr_set.sh \
+        bufr_change_edition.sh \
         gts_ls.sh \
         metar_ls.sh \
         metar_dump.sh \
