@@ -1418,13 +1418,14 @@ warning: s2s.z_tigge_c_kwbc_20020817000000_ncep_prod_pf_pl_0000_003_0010_u.grib2
 /* 
    S2S/CAWCR: v_velocity_pl maximum value 8.54936 is not in [10,150]
    S2S/CAWCR: v_velocity_pl minimum value -128.209 is not in [-120,-10]
+   ammc-s2s-enfo: warning: s2s.v_20160131_0.grib2, field 430 [v_velocity_pl]: v_velocity_pl minimum value -4.84592 is not in [-190,-5]
 */
 
    {
       "v_velocity_pl",
       -190,
-      -5,
-      5,
+      -4,
+      4,
       190,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
