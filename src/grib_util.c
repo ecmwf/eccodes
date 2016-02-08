@@ -405,7 +405,8 @@ static double normalise_angle(double angle)
 
 /* Check what is coded in the handle is what is requested by the spec. */
 /* Return GRIB_SUCCESS if the geometry matches, otherwise the error code */
-static int check_handle_against_spec(grib_handle* handle, const long edition, const grib_util_grid_spec2* spec)
+static int check_handle_against_spec(grib_handle* handle, const long edition,
+        const grib_util_grid_spec2* spec, int global_grid)
 {
     int err = 0;
     int check_latitudes = 1;
@@ -440,13 +441,20 @@ static int check_handle_against_spec(grib_handle* handle, const long edition, co
         }
     }
 
+    /* GRIB-922 */
+    /* Specification was to make the resulting grid global so no point checking for */
+    /* input lat/lon values as they would be reset by setting the "global" key to 1 */
+    if (global_grid)
+    {
+        check_latitudes = check_longitudes = 0;
+    }
+
     if (check_latitudes) {
         double lat1, lat2;
         const double lat1spec = normalise_angle(spec->latitudeOfFirstGridPointInDegrees);
         const double lat2spec = normalise_angle(spec->latitudeOfLastGridPointInDegrees);
         if ((err = grib_get_double(handle, "latitudeOfFirstGridPointInDegrees", &lat1))!=0)  return err;
         if ((err = grib_get_double(handle, "latitudeOfLastGridPointInDegrees", &lat2))!=0)   return err;
-
         lat1 = normalise_angle(lat1);
         lat2 = normalise_angle(lat2);
 
@@ -475,7 +483,6 @@ static int check_handle_against_spec(grib_handle* handle, const long edition, co
         const double lon2spec = normalise_angle(spec->longitudeOfLastGridPointInDegrees);
         if ((err = grib_get_double(handle, "longitudeOfFirstGridPointInDegrees", &lon1))!=0) return err;
         if ((err = grib_get_double(handle, "longitudeOfLastGridPointInDegrees", &lon2))!=0)  return err;
-
         lon1 = normalise_angle(lon1);
         lon2 = normalise_angle(lon2);
 
@@ -639,6 +646,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     int setSecondOrder=0;
     size_t slen=17;
     int grib1_high_resolution_fix = 0; /* boolean: See GRIB-863 */
+    int global_grid = 0; /* boolean */
 
     static grib_util_packing_spec default_packing_spec = {0, };
     Assert(h);
@@ -1121,10 +1129,18 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         for(i = 0; i < packing_spec->extra_settings_count; i++) {
             Assert(count < 1024);
             values[count++] = packing_spec->extra_settings[i];
+            if (strcmp(packing_spec->extra_settings[i].name, "global")==0 &&
+                packing_spec->extra_settings[i].long_value == 1)
+            {
+                /* GRIB-922: Request is for a global grid. Setting this key will
+                 * calculate the lat/lon values. So the spec's lat/lon can be ignored */
+                global_grid = 1;
+            }
         }
     }
     /* grib_write_message(h,"input.grib","w"); */
     /* grib_write_message(tmp,"geo.grib","w"); */
+    /* copy product and local sections from h to tmp handle and store in outh */
     if((outh = grib_util_sections_copy(h, tmp, GRIB_SECTION_PRODUCT | GRIB_SECTION_LOCAL,err)) == NULL)
     {
         goto cleanup;
@@ -1270,7 +1286,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     if(packing_spec->editionNumber && packing_spec->editionNumber!=editionNumber)
         grib_set_long(outh,"edition", packing_spec->editionNumber);
 
-    if ( (*err = check_handle_against_spec(outh, editionNumber, spec)) != GRIB_SUCCESS)
+    if ( (*err = check_handle_against_spec(outh, editionNumber, spec, global_grid)) != GRIB_SUCCESS)
     {
         grib_context* c=grib_context_get_default();
         fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed! %s\n", grib_get_error_message(*err));
