@@ -22,6 +22,7 @@
 #include "mir/repres/other/UnstructuredGrid.h"
 
 #include "atlas/grids/Unstructured.h"
+#include "mir/log/MIR.h"
 
 namespace mir {
 namespace repres {
@@ -66,7 +67,7 @@ atlas::Grid *UnstructuredGrid::atlasGrid() const {
     for (size_t i = 0; i < latitudes_.size(); i++) {
         pts->push_back(atlas::Grid::Point(longitudes_[i], latitudes_[i]));
         if (i < 10) {
-            eckit::Log::info() << "UnstructuredGrid::atlasGrid lon=" << longitudes_[i] << ", lat=" << latitudes_[i] << std::endl;
+            eckit::Log::trace<MIR>() << "UnstructuredGrid::atlasGrid lon=" << longitudes_[i] << ", lat=" << latitudes_[i] << std::endl;
         }
     }
 

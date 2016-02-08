@@ -26,6 +26,7 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Grib.h"
 #include "mir/api/MIRJob.h"
+#include "mir/log/MIR.h"
 
 
 namespace mir {
@@ -188,9 +189,9 @@ class GaussianIterator: public Iterator {
 
             }
 
-            // eckit::Log::info() << "++++++ " << lat << " " << lon << " - " << bbox_ << " -> " << bbox_.contains(lat, lon) << std::endl;
+            // eckit::Log::trace<MIR>() << "++++++ " << lat << " " << lon << " - " << bbox_ << " -> " << bbox_.contains(lat, lon) << std::endl;
 
-            // eckit::Log::info() << "++++++ " << j_ << " " << nj_ << " - " << i_ << " " << ni_ << std::endl;
+            // eckit::Log::trace<MIR>() << "++++++ " << j_ << " " << nj_ << " - " << i_ << " " << ni_ << std::endl;
 
             if (bbox_.contains(lat, lon)) {
                 count_++;
@@ -226,7 +227,7 @@ class GaussianIterator: public Iterator {
         ni_ = pl_[p_++];
         nj_ = pl_.size();
 
-        // eckit::Log::info() << "GaussianIterator ni=" << ni_ << " nj=" << nj_ << " j=" << j_ << " " << bbox_ << std::endl;
+        // eckit::Log::trace<MIR>() << "GaussianIterator ni=" << ni_ << " nj=" << nj_ << " j=" << j_ << " " << bbox_ << std::endl;
 
 
     }
@@ -333,7 +334,7 @@ void Reduced::validate(const std::vector<double> &values) const {
             }
         }
 
-        eckit::Log::info() << "Reduced::validate " << values.size() << " count=" << count << std::endl;
+        eckit::Log::trace<MIR>() << "Reduced::validate " << values.size() << " count=" << count << std::endl;
 
         ASSERT(values.size() == count);
     }

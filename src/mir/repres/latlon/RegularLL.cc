@@ -24,6 +24,7 @@
 
 #include "mir/util/Grib.h"
 #include "mir/util/Compare.h"
+#include "mir/log/MIR.h"
 
 
 namespace mir {
@@ -47,7 +48,7 @@ RegularLL::~RegularLL() {
 
 // Called by RegularLL::crop()
 const RegularLL *RegularLL::cropped(const util::BoundingBox &bbox) const {
-    eckit::Log::info() << "Create cropped copy as RegularLL bbox=" << bbox << std::endl;
+    eckit::Log::trace<MIR>() << "Create cropped copy as RegularLL bbox=" << bbox << std::endl;
     return new RegularLL(bbox, increments_);
 }
 
@@ -80,7 +81,7 @@ static bool check(double x, double dx) {
 
 atlas::Grid *RegularLL::atlasGrid() const {
 
-    eckit::Log::info() << "RegularLL::atlasGrid BBox is " << bbox_ << std::endl;
+    eckit::Log::trace<MIR>() << "RegularLL::atlasGrid BBox is " << bbox_ << std::endl;
 
     atlas::Grid* grid = 0;
 
@@ -121,15 +122,15 @@ atlas::Grid *RegularLL::atlasGrid() const {
         grid = new atlas::grids::LocalGrid(grid, domain);
     }
 
-    eckit::Log::info() << "RegularLL::atlasGrid is " << *grid << " BoundBox " << bbox_ << std::endl;
+    eckit::Log::trace<MIR>() << "RegularLL::atlasGrid is " << *grid << " BoundBox " << bbox_ << std::endl;
 
 
     if(!globalDomain()) {
         std::vector<atlas::Grid::Point> pts;
         grid->lonlat(pts);
         for( size_t i = 0; i < pts.size(); ++i)
-            eckit::Log::info() << pts[i] << " ";
-        eckit::Log::info() << std::endl;
+            eckit::Log::trace<MIR>() << pts[i] << " ";
+        eckit::Log::trace<MIR>() << std::endl;
     }
 
     return grid;

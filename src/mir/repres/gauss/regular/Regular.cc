@@ -27,6 +27,7 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
 #include "mir/api/MIRJob.h"
+#include "mir/log/MIR.h"
 
 namespace mir {
 namespace repres {
@@ -168,7 +169,7 @@ void Regular::validate(const std::vector<double> &values) const {
             }
         }
 
-        eckit::Log::info() << "Reduced::validate " << values.size() << " " << count << std::endl;
+        eckit::Log::trace<MIR>() << "Reduced::validate " << values.size() << " " << count << std::endl;
 
         ASSERT(values.size() == count);
     }

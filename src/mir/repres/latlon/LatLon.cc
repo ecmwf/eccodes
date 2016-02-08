@@ -26,6 +26,7 @@
 #include "mir/util/Grib.h"
 #include "mir/util/Compare.h"
 #include "mir/action/misc/AreaCropper.h"
+#include "mir/log/MIR.h"
 
 namespace mir {
 namespace repres {
@@ -62,9 +63,9 @@ bool LatLon::globalDomain() const {
 
     return all_lats && all_lons;
     //     if (all_lats && all_lons)  {
-    //         eckit::Log::info() << "WARNING: global shifted grid (before): " << bbox_ << " ===== " << increments_ << std::endl;
+    //         eckit::Log::trace<MIR>() << "WARNING: global shifted grid (before): " << bbox_ << " ===== " << increments_ << std::endl;
     //         bbox_ = util::BoundingBox::Global(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
-    //         eckit::Log::info() << "WARNING: global shifted grid (after): " << bbox_ << " ===== " << increments_ << std::endl;
+    //         eckit::Log::trace<MIR>() << "WARNING: global shifted grid (after): " << bbox_ << " ===== " << increments_ << std::endl;
     //     }
 
     // }
@@ -103,8 +104,8 @@ void LatLon::computeNiNj(size_t &ni,
 void LatLon::reorder(long scanningMode, std::vector<double> &values) const {
     // Code from ecRegrid, UNTESTED!!!
 
-    eckit::Log::info() << "WARNING: UNTESTED!!! ";
-    eckit::Log::info() << "LatLon::reorder scanning mode 0x" << std::hex << scanningMode << std::dec << std::endl;
+    eckit::Log::trace<MIR>() << "WARNING: UNTESTED!!! ";
+    eckit::Log::trace<MIR>() << "LatLon::reorder scanning mode 0x" << std::hex << scanningMode << std::dec << std::endl;
 
     ASSERT(values.size() == ni_ * nj_);
 
@@ -277,7 +278,7 @@ size_t LatLon::frame(std::vector<double> &values, size_t size, double missingVal
 }
 
 void LatLon::validate(const std::vector<double> &values) const {
-    eckit::Log::info() << "LatLon::validate " << values.size() << " ni*nj " << ni_ * nj_ << std::endl;
+    eckit::Log::trace<MIR>() << "LatLon::validate " << values.size() << " ni*nj " << ni_ * nj_ << std::endl;
     ASSERT(values.size() == ni_ * nj_);
 }
 

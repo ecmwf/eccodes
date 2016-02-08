@@ -25,6 +25,7 @@
 #include "mir/util/Grib.h"
 #include "mir/packing/Packer.h"
 #include "eckit/log/Plural.h"
+#include "mir/log/MIR.h"
 
 
 namespace mir {
@@ -131,7 +132,7 @@ void GribOutput::save(const param::MIRParametrisation &parametrisation, input::M
 
             // There is a bug in grib_api if the user ask 1 value and select second-order
             // Once this fixed, remove this code
-            eckit::Log::info() << "Field has "
+            eckit::Log::trace<MIR>() << "Field has "
                                << eckit::Plural(field.values(0).size(), "value")
                                << ", ignoring packer "
                                << packer
