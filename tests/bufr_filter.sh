@@ -917,3 +917,49 @@ fi
 rm -f ${fOut}.log
 rm -f $fLog $fRules ${fOut}
 
+#-----------------------------------------------------------
+# Test:  extract subsets
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set unpack=1;
+
+set extractSubset=4;
+set doExtractSubsets=1;
+write;
+
+set extractSubset=2;
+set doExtractSubsets=1;
+write;
+
+set extractSubsetIntervalStart=3;
+set extractSubsetIntervalEnd=8;
+set doExtractSubsets=1;
+write;
+EOF
+
+f="synop_multi_subset.bufr"
+fOut="extract.bufr"
+
+echo "Test: extract subsets" >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}bufr_filter -o ${fOut} $fRules $f 2>> $fLog 1>> $fLog
+
+cat > ${fRules} <<EOF
+set unpack=1;
+print "stationNumber=[stationNumber!13]";
+EOF
+
+${tools_dir}bufr_filter $fRules $f $fOut > ${fOut}.log
+
+cat > ${fOut}.log.ref <<EOF
+stationNumber=27 84 270 272 308 371 381 382 387 413 464 485
+stationNumber=272
+stationNumber=84
+stationNumber=270 272 308 371 381 382
+EOF
+
+diff ${fOut}.log.ref ${fOut}.log 
+
+rm -f ${fOut}.log ${fOut}.log.ref
+rm -f $fLog $fRules ${fOut}
+
