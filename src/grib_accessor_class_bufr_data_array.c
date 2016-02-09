@@ -221,10 +221,11 @@ typedef int (*codec_replication_proc) (grib_context* c,grib_accessor_bufr_data_a
 
 static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset);
 
-static int can_be_missing(int descriptor)
+static int can_be_missing(int descriptor,int width)
 {
     int ret=1;
-    if (descriptor==31031) ret=0;
+    if (descriptor==31031 || descriptor==999999 ) ret=0;
+    if (width == 1) ret=0;
     return ret;
 }
 
@@ -400,7 +401,7 @@ static int get_descriptors(grib_accessor* a)
     numberOfDescriptors=grib_bufr_descriptors_array_used_size(self->expanded);
     self->canBeMissing=(int*)grib_context_malloc_clear(c,numberOfDescriptors*sizeof(int));
     for (i=0;i<numberOfDescriptors;i++)
-        self->canBeMissing[i]=can_be_missing(self->expanded->v[i]->code);
+        self->canBeMissing[i]=can_be_missing(self->expanded->v[i]->code,self->expanded->v[i]->width);
 
     ret=grib_get_long(h,self->numberOfSubsetsName,&(self->numberOfSubsets));
     ret=grib_get_long(h,self->compressedDataName,&(self->compressedData));

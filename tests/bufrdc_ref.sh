@@ -17,7 +17,7 @@ cat > bufrdc_num_ref.filter<<EOF
 print "[numericValues!1%23.14e]";
 EOF
 
-bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
+bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt | sed -e 's:uegabe.bufr::' `
 for bf in ${bufr_files}
 do
   file=${data_dir}/bufr/$bf
