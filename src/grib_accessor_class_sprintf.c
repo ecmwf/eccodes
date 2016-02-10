@@ -156,11 +156,13 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
     int is_missing = 0;
     const char* uname = NULL;
     const char* tempname = NULL;
+    size_t uname_len = 0;
 
     uname = grib_arguments_get_string(grib_handle_of_accessor(a),self->args,carg++);
     sprintf(result,"%s","");
+    uname_len = strlen(uname);
 
-    for(i=0;i<strlen(uname);i++)
+    for(i=0; i<uname_len; i++)
     {
         if(uname[i]=='%'){
             int precision=999;
