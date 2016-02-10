@@ -397,6 +397,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\action_class_transient_darray.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\action_class_trigger.c"
 				>
 			</File>
@@ -506,6 +510,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_accessor_class_bufr_elements_table.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_accessor_class_bufr_extract_subsets.c"
 				>
 			</File>
 			<File
@@ -865,6 +873,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_accessor_class_gaussian_grid_name.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_gds_is_present.c"
 				>
 			</File>
@@ -1093,6 +1105,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_accessor_class_raw.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_reference_value_error.c"
 				>
 			</File>
@@ -1214,6 +1230,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_accessor_class_transient.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_accessor_class_transient_darray.c"
 				>
 			</File>
 			<File
