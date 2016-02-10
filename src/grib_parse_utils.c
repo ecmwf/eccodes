@@ -75,7 +75,7 @@ static void init()
 }
 #endif
 
-int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* uname, char* fname,int fail)
+int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* uname, char* fname, int fail)
 {
     grib_accessor* a;
     char loc[1024]={0,};
@@ -87,10 +87,11 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
     long lval=0;
     int type=GRIB_TYPE_STRING;
     size_t replen = 0;
+    const size_t uname_len = strlen(uname);
 
     loc[0] = 0 ;
     fname[0] = 0 ;
-    for(i=0;i<strlen(uname);i++)
+    for(i=0; i<uname_len; i++)
     {
         if(mode > -1)
         {
@@ -400,10 +401,11 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
     int maxcolsd=8;
     int maxcols;
     int newline=1;
+    const size_t uname_len = strlen(uname);
 
     maxcols=maxcolsd;
     loc[0] = 0 ;
-    for(i=0;i<strlen(uname);i++)
+    for(i=0; i<uname_len; i++)
     {
         if(mode > -1)
         {
@@ -792,7 +794,8 @@ grib_action* grib_parse_file( grib_context* gc,const char* filename)
     return af->root;
 }
 
-int grib_type_to_int(char id) {
+int grib_type_to_int(char id)
+{
     switch (id) {
     case 'd':
         return GRIB_TYPE_DOUBLE;

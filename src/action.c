@@ -47,12 +47,15 @@ static void init_mutex()
 
 static void init(grib_action_class *c)
 {
+    GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
+    GRIB_MUTEX_LOCK(&mutex1);
     if(c && !c->inited)
     {
         init(c->super ? *(c->super) : NULL);
         c->init_class(c);
         c->inited = 1;
     }
+    GRIB_MUTEX_UNLOCK(&mutex1);
 }
 
 void grib_dump(grib_action* a, FILE* f, int l)
@@ -128,13 +131,21 @@ int grib_create_accessor(grib_section* p, grib_action* a,  grib_loader* h)
 int grib_action_notify_change( grib_action* a, grib_accessor *observer, grib_accessor *observed)
 {
     grib_action_class *c = a->cclass;
+
+    GRIB_MUTEX_INIT_ONCE(&once,&init_mutex)
+    GRIB_MUTEX_LOCK(&mutex1)
+
     init(c);
     while(c)
     {
-        if(c->notify_change)
-            return c->notify_change(a,observer,observed);
+        if(c->notify_change) {
+            int result = c->notify_change(a,observer,observed);
+            GRIB_MUTEX_UNLOCK(&mutex1);
+            return result;
+        }
         c = c->super ? *(c->super) : NULL;
     }
+    GRIB_MUTEX_UNLOCK(&mutex1);
     Assert(0);
     return 0;
 }

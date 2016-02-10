@@ -124,13 +124,15 @@ static void init()
 
 static grib_concept_value* get_concept(grib_handle* h,grib_action_concept* self);
 
-grib_concept_value* action_concept_get_concept(grib_accessor* a) {
+grib_concept_value* action_concept_get_concept(grib_accessor* a)
+{
     return get_concept(grib_handle_of_accessor(a),(grib_action_concept*)a->creator);
 }
 
-int action_concept_get_nofail(grib_accessor* a) {
-  grib_action_concept* self = (grib_action_concept*)a->creator ;
-  return self->nofail;
+int action_concept_get_nofail(grib_accessor* a)
+{
+    grib_action_concept* self = (grib_action_concept*)a->creator ;
+    return self->nofail;
 }
 
 grib_action* grib_action_create_concept( grib_context* context,
@@ -305,5 +307,3 @@ static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self
     GRIB_MUTEX_UNLOCK(&mutex);
     return result;
 }
-
-
