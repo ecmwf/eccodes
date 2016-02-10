@@ -1646,6 +1646,12 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
             elementAccessor=create_accessor_from_descriptor(a,associatedFieldAccessor,section,ide,iss,dump,count);
             associatedFieldAccessor=NULL;
             if (elementFromBitmap && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
+                grib_accessor* newAccessor=grib_accessor_clone(elementAccessor,section,&err);
+                newAccessor->parent=groupSection;
+                newAccessor->name=grib_context_strdup(c,elementFromBitmap->name);
+                grib_push_accessor(newAccessor,groupSection->block);
+                grib_accessors_list_push(self->dataAccessors,newAccessor);
+
                 err=grib_accessor_add_attribute(elementFromBitmap,elementAccessor,1);
             } else if (elementAccessor) {
 
