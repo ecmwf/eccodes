@@ -144,7 +144,7 @@ grib_accessor *grib_next_accessor(grib_accessor *a);
 void grib_resize(grib_accessor *a, size_t new_size);
 int grib_compare_accessors(grib_accessor *a1, grib_accessor *a2, int compare_flags);
 const char *grib_get_type_name(int type);
-int grib_accessor_add_attribute(grib_accessor *a, grib_accessor *attr);
+int grib_accessor_add_attribute(grib_accessor *a, grib_accessor *attr,int nest_if_clash);
 int grib_accessor_replace_attribute(grib_accessor *a, grib_accessor *attr);
 int grib_accessor_delete_attribute(grib_accessor *a, const char *name);
 grib_accessor *grib_accessor_get_attribute_by_index(grib_accessor *a, int index);
@@ -292,7 +292,7 @@ void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor *a, g
 
 /* grib_accessor_class_bufr_elements_table.c */
 char **str_split(char *a_str, const char a_delim);
-int bufr_is_marker(int code, int F, int X, int Y);
+int bufr_descriptor_is_marker(bufr_descriptor* d);
 bufr_descriptor *accessor_bufr_elements_table_get_descriptor(grib_accessor *a, int code, int *err);
 
 /* grib_accessor_class_bufr_group.c */

@@ -662,18 +662,27 @@ int grib_accessor_clear_attributes(grib_accessor* a)
     return 0;
 }
 
-int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr)
+int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr,int nest_if_clash)
 {
     int id=0;
     int idx=0;
-    if (_grib_accessor_get_attribute(a,attr->name,&id)) return GRIB_ATTRIBUTE_CLASH;
+    grib_accessor* same=NULL;
+    grib_accessor* aloc=a;
+
+    same=_grib_accessor_get_attribute(a,attr->name,&id);
+
+    if (same) {
+      if (nest_if_clash==0) return GRIB_ATTRIBUTE_CLASH;
+      aloc=same;
+    }
+
     for (id=0;id<MAX_ACCESSOR_ATTRIBUTES;id++) {
-        if (a->attributes[id] == NULL) {
+        if (aloc->attributes[id] == NULL) {
             /* attr->parent=a->parent; */
-            a->attributes[id]=attr;
-            attr->parent_as_attribute=a;
-            if (a->same)
-                attr->same=_grib_accessor_get_attribute(a->same,attr->name,&idx);
+            aloc->attributes[id]=attr;
+            attr->parent_as_attribute=aloc;
+            if (aloc->same)
+                attr->same=_grib_accessor_get_attribute(aloc->same,attr->name,&idx);
 
             grib_context_log(a->context,GRIB_LOG_DEBUG,"added attribute %s->%s",a->name,attr->name);
             return GRIB_SUCCESS;
@@ -693,7 +702,7 @@ int grib_accessor_replace_attribute(grib_accessor* a,grib_accessor* attr)
         if (a->same)
             attr->same=_grib_accessor_get_attribute(a->same,attr->name,&idx);
     } else {
-        grib_accessor_add_attribute(a,attr);
+        grib_accessor_add_attribute(a,attr,0);
     }
     return GRIB_SUCCESS;
 }

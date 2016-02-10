@@ -351,17 +351,17 @@ static int bufr_get_from_table(grib_accessor* a,bufr_descriptor* v)
     return ret;
 }
 
-int bufr_is_marker(int code,int F,int X,int Y)
+int bufr_descriptor_is_marker(bufr_descriptor* d)
 {
     int isMarker=0;
-    switch (code) {
+    switch (d->code) {
     case 223255:
     case 224255:
     case 225255:
     case 232255:
         return 1;
     }
-    if (F==2 && X==5) isMarker=1;
+    if (d->F==2 && d->X==5) isMarker=1;
     return isMarker;
 }
 
@@ -386,7 +386,6 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a,in
     v->F=code/100000;
     v->X=(code-v->F*100000)/1000;
     v->Y=(code-v->F*100000)%1000;
-    v->isMarker=bufr_is_marker(code,v->F,v->X,v->Y);
 
     switch (v->F) {
     case 0:

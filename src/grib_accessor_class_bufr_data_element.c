@@ -192,7 +192,7 @@ static grib_accessor* make_clone(grib_accessor* a,grib_section* s,int* err)
     while (a->attributes[i]) {
         attribute=grib_accessor_clone(a->attributes[i],s,err);
         /* attribute->parent=a->parent; */
-        grib_accessor_add_attribute(the_clone,attribute);
+        grib_accessor_add_attribute(the_clone,attribute,0);
         i++;
     }
 

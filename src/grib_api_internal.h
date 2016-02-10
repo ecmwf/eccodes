@@ -804,7 +804,6 @@ struct bufr_descriptor {
   double factor;
   double reference;
   long width;
-  int isMarker;
   grib_accessor* a;
 } ;
 
