@@ -1481,7 +1481,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
     int incrementBitmapIndex=1;
     grib_accessor* elementFromBitmap=NULL;
     /*int reuseBitmap=0;*/
-    int i,dump=1,count=0;
+    int dump=1,count=0;
     /*int forceGroupClosure=0;*/
 
     creatorGroup.op         = "bufr_group";
