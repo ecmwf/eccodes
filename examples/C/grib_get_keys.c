@@ -127,7 +127,7 @@ int main(int argc, char** argv)
         assert(len == 1+strlen(filename));
         codes_get_string(h, "file", file, &len);
         eq = strcmp(file, filename);
-        assert( eq == 0 );
+        if (eq != 0) assert(!"file and filename not equal");
     }
 
     codes_handle_delete(h);

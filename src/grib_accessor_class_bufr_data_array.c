@@ -1190,7 +1190,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
     operatorCreator.set        = 0;
     operatorCreator.name="operator";
 
-    if(attribute) DebugAssert(attribute->parent==NULL);
+    if(attribute) { DebugAssert(attribute->parent==NULL); }
 
     if (dump) {
         creator.flags    = GRIB_ACCESSOR_FLAG_DUMP;

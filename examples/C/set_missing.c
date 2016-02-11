@@ -61,7 +61,7 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_get_long(h,"Ni",&Ni),0);
     is_missing = codes_is_missing(h, "Ni", &err);
     CODES_CHECK(err,0);
-    assert(is_missing == 1);
+    if (is_missing != 1) assert(!"Ni should be missing");
     CODES_CHECK(codes_set_long(h,"Ni", Ni),0);
 
     /* get the coded message in a buffer */
