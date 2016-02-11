@@ -44,7 +44,7 @@ EOF
 bufr_files=`cat bufr_data_files.txt`
 for f in ${bufr_files} ; do
    echo "file: $f" >> $fLog
-   ${tools_dir}bufr_filter $fRules $f >> $fLog
+   ${tools_dir}codes_bufr_filter $fRules $f >> $fLog
 done
 
 #-----------------------------------------------------------
@@ -59,7 +59,7 @@ EOF
 f="syno_multi.bufr"
 echo "Test: dump SYNOP values" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter $fRules $f >> $fLog
+${tools_dir}codes_bufr_filter $fRules $f >> $fLog
 
 #-----------------------------------------------------------
 # Test: filter SYNOP message according to conditions
@@ -80,7 +80,7 @@ rm -f $fBufrTmp | true
 f="syno_multi.bufr"
 echo "Test: filter SYNOP message according to conditions" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter $fRules $f >> $fLog
+${tools_dir}codes_bufr_filter $fRules $f >> $fLog
 
 #Check if the resulting bufr message is the right one
 cat > $fRules <<EOF
@@ -89,7 +89,7 @@ transient statid=1000*blockNumber+stationNumber;
 print "[statid]";
 EOF
 
-[ `${tools_dir}bufr_filter $fRules $fBufrTmp` = "1003" ] 
+[ `${tools_dir}codes_bufr_filter $fRules $fBufrTmp` = "1003" ] 
 
 #-----------------------------------------------------------
 # Test: splitting according to keys 
@@ -109,7 +109,7 @@ EOF
 f="syno_multi.bufr"
 echo "Test: splitting according to keys" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter $fRules $f >> $fLog
+${tools_dir}codes_bufr_filter $fRules $f >> $fLog
 
 #Check if the resulting files exist
 for statid  in 1 3 7 ; do
@@ -136,9 +136,9 @@ EOF
 f="syno_1.bufr"
 echo "Test: attributes" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
 cat > ${f}.ref <<EOF
 pressure=100910 Pa
 pressure->code=010004
@@ -168,9 +168,9 @@ EOF
 f="temp_101.bufr"
 echo "Test: access element by rank" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
 cat > ${f}.ref <<EOF
 pressure=98500 Pa
 pressure=102000 101800 100000 98500 96400 92500 92100 89700 
@@ -202,9 +202,9 @@ EOF
 f="b005_89.bufr"
 echo "Test: access marker operators" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
 cat > ${f}.ref <<EOF
 brightnessTemperature={-1e+100,290.8,-1e+100,289.7,289.5,289.5,289.4,287.5,
 287.4,288.3,288.2,-1e+100,-1e+100,-1e+100,-1e+100,-1e+100,
@@ -276,9 +276,9 @@ EOF
 f="temp_101.bufr"
 echo "Test: access marker operators 2" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
 cat > ${f}.ref <<EOF
 pressure=102000 101800 100000 98500 96400 92500 92100 89700 
 88100 86100 85000 84400 79400 79000 78300 77300 
@@ -327,10 +327,10 @@ EOF
 f="asca_139.bufr"
 echo "Test: access by condition" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
 rm -f ${f}.log
-${tools_dir}bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
 
 REFERENCE_FILE="../../tests/asca_139.t1.ref"
 diff $REFERENCE_FILE ${f}.log
@@ -353,9 +353,9 @@ EOF
 f="temp_101.bufr"
 echo "Test: access by condition 2" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
 cat > ${f}.ref <<EOF
 ----- /verticalSoundingSignificance=4/airTemperature -----
 272.1 269.5 268.1 267.9 266.7 266.1 264.9 264.9 
@@ -411,7 +411,7 @@ EOF
 echo "set -x" > $testScript1
 chmod +x $testScript1
 
-${tools_dir}bufr_filter $fRulesReady $f 2>> $fLog 1>> $testScript
+${tools_dir}codes_bufr_filter $fRulesReady $f 2>> $fLog 1>> $testScript
 
 sed -e "s:diff:${tools_dir}bufr_compare:" < $testScript >> $testScript1
 
@@ -451,7 +451,7 @@ for f in $files
 do
   echo "Test: packing " >> $fLog
   echo "file: $f" >> $fLog
-  ${tools_dir}bufr_filter -o ${f}.out $fRules $f 2>> $fLog 1>> $fLog
+  ${tools_dir}codes_bufr_filter -o ${f}.out $fRules $f 2>> $fLog 1>> $fLog
 
   ${tools_dir}bufr_compare ${f}.out $f
 
@@ -472,9 +472,9 @@ EOF
 f="ship_11.bufr"
 echo "Test: get string" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
 cat > ${f}.ref <<EOF
 WYM9567
 EOF
@@ -496,9 +496,9 @@ EOF
 f="synop_multi_subset.bufr"
 echo "Test: get string array and stringValues" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
 cat > ${f}.ref <<EOF
 TROMSO-HOLT          
 PASVIK               
@@ -548,7 +548,7 @@ set +e
 f="syno_1.bufr"
 echo "Test: nonexistent keys" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 if [ $? -eq 0 ]; then
    echo "bufr_filter should have failed if key not found" >&2
    exit 1
@@ -556,7 +556,7 @@ fi
 set -e
 
 # Now repeat with -f option (do not exit on error)
-${tools_dir}bufr_filter -f $fRules $f 2>>$fLog 1>>$fLog
+${tools_dir}codes_bufr_filter -f $fRules $f 2>>$fLog 1>>$fLog
 
 
 #-----------------------------------------------------------
@@ -574,7 +574,7 @@ set +e
 f="syno_1.bufr"
 echo "Test: not allowed key values" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 if [ $? -eq 0 ]; then
    echo "bufr_filter should have failed if key value is not allowed" >&2
    exit 1
@@ -582,7 +582,7 @@ fi
 set -e
 
 # Now repeat with -f option (do not exit on error)
-${tools_dir}bufr_filter -f $fRules $f 2>>$fLog 1>>$fLog
+${tools_dir}codes_bufr_filter -f $fRules $f 2>>$fLog 1>>$fLog
 
 
 #----------------------------------------------------
@@ -600,7 +600,7 @@ EOF
 f="syno_1.bufr"
 echo "Test: nformat specifier for integer keys" >> $fLog
 echo "file: $f" >> $fLog
-result=`${tools_dir}bufr_filter  $fRules $f`
+result=`${tools_dir}codes_bufr_filter  $fRules $f`
 #[ "$result" = "centre=098, height=    3" ]
 
 
@@ -623,7 +623,7 @@ rm -f $fBufrTmp | true
 f="syno_1.bufr"
 echo "Test: setting keys" >> $fLog
 echo "file: $f" >> $fLog
-#${tools_dir}bufr_filter -o $fBufrTmp $fRules $f >> $fLog
+#${tools_dir}codes_bufr_filter -o $fBufrTmp $fRules $f >> $fLog
 
 #Check if the resulting bufr message is the right one
 cat > $fRules <<EOF
@@ -631,7 +631,7 @@ set unpack=1;
 print "[typicalDate] [year] [airTemperatureAt2M%.1f]";
 EOF
 
-#[ `${tools_dir}bufr_filter $fRules $fBufrTmp` = "20010511 2001 234.5" ]
+#[ `${tools_dir}codes_bufr_filter $fRules $fBufrTmp` = "20010511 2001 234.5" ]
 
 #Clean up
 rm -f ${dSplit}/*
@@ -654,7 +654,7 @@ write;
 
 EOF
 
-${tools_dir}bufr_filter -o ${f}.out $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter -o ${f}.out $fRules $f 2>> $fLog 1>> $fLog
 ${tools_dir}bufr_compare ${f}.out $f 2>> $fLog 1>> $fLog
 
 rm -f  ${f}.out 
@@ -673,7 +673,7 @@ set BufrTemplate="synopLand";
 write;
 EOF
 
-${tools_dir}bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
 ${tools_dir}bufr_compare $fOut $fRef 2>> $fLog 1>> $fLog
 
 rm -f $fOut 
@@ -686,7 +686,7 @@ set BufrTemplate="aircraftReportWithSecondsAndPressure";
 write;
 EOF
 
-${tools_dir}bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
 ${tools_dir}bufr_compare $fOut $fRef 2>> $fLog 1>> $fLog
 
 rm -f $fOut 
@@ -715,7 +715,7 @@ write;
 
 EOF
 
-${tools_dir}bufr_filter -o ${fout} $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter -o ${fout} $fRules $f 2>> $fLog 1>> $fLog
 ${tools_dir}bufr_compare $fout ${fout}.ref 2>> $fLog 1>> $fLog
 
 #-----------------------------------------------------------
@@ -730,7 +730,7 @@ write;
 EOF
 
 f="syno_1.bufr"
-${tools_dir}bufr_filter -o ${f}.out $fRules $f
+${tools_dir}codes_bufr_filter -o ${f}.out $fRules $f
 # This part of the test is meant to fail
 set +e
 ${tools_dir}bufr_compare ${f}.out $f
@@ -765,9 +765,9 @@ EOF
 f="synop_multi_subset.bufr"
 echo "Test: access subsets by condition" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
 cat > ${f}.ref <<EOF
 stationId=01371
 latitude=61.122
@@ -795,9 +795,9 @@ EOF
 f="amda_144.bufr"
 echo "Test: access subsets and attribute by condition" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
 cat > ${f}.ref <<EOF
 /subsetNumber=1/airTemperature->percentConfidence=70 %
 EOF
@@ -818,9 +818,9 @@ EOF
 f="temp_101.bufr"
 echo "Test: set key by rank" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
 cat > ${f}.ref <<EOF
 #4#airTemperature=300.1
 EOF
@@ -863,9 +863,9 @@ f="syno_1.bufr"
 fOut="new_replication.bufr"
 echo "Test: initialise with given values of delayed replications" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter -o ${fOut} $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter -o ${fOut} $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}bufr_filter -o ${fOut} $fRules $f > ${fOut}.log
+${tools_dir}codes_bufr_filter -o ${fOut} $fRules $f > ${fOut}.log
 
 cat > ${fOut}.log.ref <<EOF
 inputDelayedDescriptorReplicationFactor=2 3
@@ -898,7 +898,7 @@ if [ -f "$f" ]; then
   fOut="vos308014_v3_26_sec_2.bufr"
   echo "Test: initialise with given values of delayed replications" >> $fLog
   echo "file: $f" >> $fLog
-  ${tools_dir}bufr_filter -o ${fOut} $fRules $f 2>> $fLog 1>> $fLog
+  ${tools_dir}codes_bufr_filter -o ${fOut} $fRules $f 2>> $fLog 1>> $fLog
 
   ${tools_dir}bufr_ls ${fOut} > ${fOut}.log
 
@@ -942,14 +942,14 @@ fOut="extract.bufr"
 
 echo "Test: extract subsets" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter -o ${fOut} $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}codes_bufr_filter -o ${fOut} $fRules $f 2>> $fLog 1>> $fLog
 
 cat > ${fRules} <<EOF
 set unpack=1;
 print "stationNumber=[stationNumber!13]";
 EOF
 
-${tools_dir}bufr_filter $fRules $f $fOut > ${fOut}.log
+${tools_dir}codes_bufr_filter $fRules $f $fOut > ${fOut}.log
 
 cat > ${fOut}.log.ref <<EOF
 stationNumber=27 84 270 272 308 371 381 382 387 413 464 485
@@ -977,7 +977,7 @@ f="profiler_european.bufr"
 
 echo "Test: associatedField" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}bufr_filter $fRules $f  > ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 /height=918/windDirection->associatedField=1

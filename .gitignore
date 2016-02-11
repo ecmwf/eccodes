@@ -70,7 +70,6 @@ tools/grib1to2
 tools/bufr_compare
 tools/bufr_copy
 tools/bufr_dump
-tools/bufr_filter
 tools/bufr_get
 tools/bufr_index_build
 tools/bufr_ls
