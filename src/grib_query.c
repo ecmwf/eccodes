@@ -229,8 +229,8 @@ static grib_accessor* search_by_rank(grib_handle* h, const char* name,const char
 static int condition_true(grib_accessor* a,codes_condition* condition) {
     int ret=0;
     size_t size=1;
-    long lval;
-    double dval;
+    long lval=0;
+    double dval=0;
     switch (condition->rightType) {
     case GRIB_TYPE_LONG:
         grib_unpack_long(a,&lval,&size);
