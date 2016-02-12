@@ -628,6 +628,7 @@ static int _grib_set_double_array(grib_handle* h, const char* name,
         if(check && (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY))
             return GRIB_READ_ONLY;
         err=grib_pack_double(a, val, &length);
+        encoded=length;
     } else err=_grib_set_double_array_internal(h,a,val,length,&encoded,check);
 
     if(err == GRIB_SUCCESS && length > encoded)

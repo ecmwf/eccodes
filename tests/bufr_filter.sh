@@ -1079,3 +1079,55 @@ diff ${f}.log.ref ${f}.log
 rm -f ${f}.log ${f}.log.ref
 rm -f $fLog $fRules 
 
+#-----------------------------------------------------------
+# Test:  delayed replication compressed data
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set localTablesVersionNumber=1;
+set masterTablesVersionNumber=13;
+
+
+set inputDelayedDescriptorReplicationFactor = {5};
+set compressedData=1;
+set numberOfSubsets=2;
+
+set unexpandedDescriptors={312061};
+
+set #1#windSpeedAt10M={10,20};
+set #3#windSpeedAt10M={30,40};
+
+set pack=1;
+
+write;
+EOF
+
+f="asel_139.bufr"
+fOut="asel_139.bufr.out"
+
+echo "Test: delayed replication compressed data" >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
+
+cat > ${fRules} <<EOF
+set unpack=1;
+
+print "delayedDescriptorReplicationFactor=[delayedDescriptorReplicationFactor]";
+print "#1#windSpeedAt10M=[#1#windSpeedAt10M]";
+print "#3#windSpeedAt10M=[#3#windSpeedAt10M]";
+print "#5#windSpeedAt10M=[#5#windSpeedAt10M]";
+EOF
+
+${tools_dir}bufr_filter $fRules $fOut  > ${f}.log
+
+cat > ${f}.log.ref <<EOF
+delayedDescriptorReplicationFactor=5
+#1#windSpeedAt10M=10 20
+#3#windSpeedAt10M=30 40
+#5#windSpeedAt10M=-1e+100
+EOF
+
+diff ${f}.log.ref ${f}.log 
+
+rm -f ${f}.log ${f}.log.ref
+rm -f $fLog $fOut $fRules 
+
