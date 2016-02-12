@@ -1044,3 +1044,38 @@ diff ${f}.log.ref ${f}.log
 rm -f ${f}.log ${f}.log.ref
 rm -f $fLog $fOut $fRules 
 
+#-----------------------------------------------------------
+# Test:  firstOrderStatistics
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set unpack=1;
+print "decimalScaleOfFollowingSignificands->firstOrderStatisticalValue=[/pressure=101325/decimalScaleOfFollowingSignificands->firstOrderStatisticalValue!10]";
+print "decimalScaleOfFollowingSignificands->firstOrderStatisticalValue->firstOrderStatisticalValue=[/pressure=101325/decimalScaleOfFollowingSignificands->firstOrderStatisticalValue->firstOrderStatisticalValue!10]";
+print "/firstOrderStatistics=9/decimalScaleOfFollowingSignificands=[/firstOrderStatistics=9/decimalScaleOfFollowingSignificands!10]";
+print "/firstOrderStatistics=14/decimalScaleOfFollowingSignificands=[/firstOrderStatistics=14/decimalScaleOfFollowingSignificands!10]";
+EOF
+
+f="gosat.bufr"
+
+echo "Test: firstOrderStatistics" >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}bufr_filter $fRules $f  > ${f}.log
+
+cat > ${f}.log.ref <<EOF
+decimalScaleOfFollowingSignificands->firstOrderStatisticalValue=-15 -15 -15 -15 -15 -15 -15 -15 -15 -15 
+-15 -15 -14 -14 -14 -15 -15 -15 -15 -15 
+-15 -15 -15 -15 -15 -15 -15 -15 -15 -15 
+-15 -15 -15 -15 -15 -15 -15
+decimalScaleOfFollowingSignificands->firstOrderStatisticalValue->firstOrderStatisticalValue=0
+/firstOrderStatistics=9/decimalScaleOfFollowingSignificands=-15 -15 -15 -15 -15 -15 -15 -15 -15 -15 
+-15 -15 -14 -14 -14 -15 -15 -15 -15 -15 
+-15 -15 -15 -15 -15 -15 -15 -15 -15 -15 
+-15 -15 -15 -15 -15 -15 -15
+/firstOrderStatistics=14/decimalScaleOfFollowingSignificands=0
+EOF
+
+diff ${f}.log.ref ${f}.log 
+
+rm -f ${f}.log ${f}.log.ref
+rm -f $fLog $fRules 
+
