@@ -227,18 +227,20 @@ static grib_accessor* search_by_rank(grib_handle* h, const char* name,const char
 }
 
 static int condition_true(grib_accessor* a,codes_condition* condition) {
-    int ret=0;
+    int ret=0, err=0;
     size_t size=1;
     long lval=0;
     double dval=0;
     switch (condition->rightType) {
     case GRIB_TYPE_LONG:
-        grib_unpack_long(a,&lval,&size);
-        ret = lval==condition->rightLong ? 1 : 0;
+        err = grib_unpack_long(a,&lval,&size);
+        if (err) ret = 0;
+        else     ret = lval==condition->rightLong ? 1 : 0;
         break;
     case GRIB_TYPE_DOUBLE:
-        grib_unpack_double(a,&dval,&size);
-        ret = dval==condition->rightDouble ? 1 : 0;
+        err = grib_unpack_double(a,&dval,&size);
+        if (err) ret = 0;
+        else     ret = dval==condition->rightDouble ? 1 : 0;
         break;
     default :
         ret=0;
