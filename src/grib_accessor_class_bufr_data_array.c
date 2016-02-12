@@ -889,39 +889,36 @@ static int encode_new_replication(grib_context* c,grib_accessor_bufr_data_array*
     unsigned long repetitions=1;
     bufr_descriptor** descriptors=self->expanded->v;
 
-    /* compressed to be implemented*/
-    if (self->compressedData==0) {
-        switch(descriptors[i]->code) {
-        case 31000:
-            if (self->nInputShortReplications>=0) {
-                if (self->iInputShortReplications>=self->nInputShortReplications) {
-                    grib_context_log(c,GRIB_LOG_FATAL,"array inputShortDelayedDescriptorReplicationFactor dimension too small");
-                }
-                repetitions=self->inputShortReplications[self->iInputShortReplications];
-                self->iInputShortReplications++;
-            }
-            break;
-        case 31001:
-            if (self->nInputReplications>=0) {
-                if (self->iInputReplications>=self->nInputReplications) {
-                    grib_context_log(c,GRIB_LOG_FATAL,"array inputDelayedDescriptorReplicationFactor dimension too small");
-                }
-                repetitions=self->inputReplications[self->iInputReplications];
-                self->iInputReplications++;
-            }
-            break;
-        case 31002:
-            if (self->nInputExtendedReplications>=0) {
-                if (self->iInputExtendedReplications>=self->nInputExtendedReplications) {
-                    grib_context_log(c,GRIB_LOG_FATAL,"array inputExtendedDelayedDescriptorReplicationFactor dimension too small");
-                }
-                repetitions=self->inputExtendedReplications[self->iInputExtendedReplications];
-                self->iInputExtendedReplications++;
-            }
-            break;
-        default:
-            Assert(0);
+    switch(descriptors[i]->code) {
+      case 31000:
+        if (self->nInputShortReplications>=0) {
+          if (self->iInputShortReplications>=self->nInputShortReplications) {
+            grib_context_log(c,GRIB_LOG_FATAL,"array inputShortDelayedDescriptorReplicationFactor dimension too small");
+          }
+          repetitions=self->inputShortReplications[self->iInputShortReplications];
+          self->iInputShortReplications++;
         }
+        break;
+      case 31001:
+        if (self->nInputReplications>=0) {
+          if (self->iInputReplications>=self->nInputReplications) {
+            grib_context_log(c,GRIB_LOG_FATAL,"array inputDelayedDescriptorReplicationFactor dimension too small");
+          }
+          repetitions=self->inputReplications[self->iInputReplications];
+          self->iInputReplications++;
+        }
+        break;
+      case 31002:
+        if (self->nInputExtendedReplications>=0) {
+          if (self->iInputExtendedReplications>=self->nInputExtendedReplications) {
+            grib_context_log(c,GRIB_LOG_FATAL,"array inputExtendedDelayedDescriptorReplicationFactor dimension too small");
+          }
+          repetitions=self->inputExtendedReplications[self->iInputExtendedReplications];
+          self->iInputExtendedReplications++;
+        }
+        break;
+      default:
+        Assert(0);
     }
 
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding replication: \twidth=%ld pos=%ld ulength=%ld ulength_bits=%ld",
