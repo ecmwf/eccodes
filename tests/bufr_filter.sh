@@ -918,7 +918,7 @@ rm -f ${fOut}.log
 rm -f $fLog $fRules ${fOut}
 
 #-----------------------------------------------------------
-# Test:  extract subsets
+# Test:  extract subsets uncompressed data
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -940,7 +940,7 @@ EOF
 f="synop_multi_subset.bufr"
 fOut="extract.bufr"
 
-echo "Test: extract subsets" >> $fLog
+echo "Test: extract subsets uncompressed data" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}bufr_filter -o ${fOut} $fRules $f 2>> $fLog 1>> $fLog
 
@@ -988,4 +988,59 @@ diff ${f}.log.ref ${f}.log
 
 rm -f ${f}.log ${f}.log.ref
 rm -f $fLog $fRules 
+
+#-----------------------------------------------------------
+# Test:  extract subsets compressed data
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set unpack=1;
+
+set extractSubset=10;
+set doExtractSubsets=1;
+write;
+
+set extractSubsetIntervalStart=3;
+set extractSubsetIntervalEnd=8;
+set doExtractSubsets=1;
+write;
+EOF
+
+f="g2nd_208.bufr"
+fOut="g2nd_208.bufr.out"
+
+echo "Test: extract subsets compressed data" >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
+
+cat > ${fRules} <<EOF
+set unpack=1;
+print "=== message number [count]";
+print "numberOfSubsets=[numberOfSubsets]";
+print "solarElevation=[solarElevation!10]";
+print "fieldOfViewNumber=[fieldOfViewNumber!10]";
+print "orbitNumber=[orbitNumber!10]";
+print "casRegistryNumber=[casRegistryNumber!10]";
+EOF
+
+${tools_dir}bufr_filter $fRules $fOut  > ${f}.log
+
+cat > ${f}.log.ref <<EOF
+=== message number 1
+numberOfSubsets=1
+solarElevation=33.2
+fieldOfViewNumber=1
+orbitNumber=2147483647
+casRegistryNumber=10102-44-0
+=== message number 2
+numberOfSubsets=6
+solarElevation=29.71 29.23 37.21 36.78 36.34 35.46
+fieldOfViewNumber=2 2 0 0 0 1
+orbitNumber=2147483647
+casRegistryNumber=10102-44-0
+EOF
+
+diff ${f}.log.ref ${f}.log 
+
+rm -f ${f}.log ${f}.log.ref
+rm -f $fLog $fOut $fRules 
 

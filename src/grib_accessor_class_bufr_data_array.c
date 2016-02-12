@@ -58,6 +58,8 @@
    MEMBERS    = long* inputShortReplications
    MEMBERS    = int nInputShortReplications
    MEMBERS    = int iInputShortReplications
+   MEMBERS    = int start
+   MEMBERS    = int end
 
    END_CLASS_DEF
 
@@ -125,6 +127,8 @@ typedef struct grib_accessor_bufr_data_array {
 	long* inputShortReplications;
 	int nInputShortReplications;
 	int iInputShortReplications;
+	int start;
+	int end;
 } grib_accessor_bufr_data_array;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -495,22 +499,29 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
 static int encode_string_array(grib_context* c,grib_buffer* buff,long* pos, int i,
         grib_accessor_bufr_data_array* self,grib_sarray* stringValues)
 {
-    int err=0,end,start;
+    int err=0,end,start,n;
     int j,modifiedWidth,width;
 
-    start=0;
-    end=grib_sarray_used_size(stringValues);
+    start=self->start;
+    end=self->end;
+    n=end-start;
+    if (n<=0) return GRIB_NO_VALUES;
+
+    if (grib_sarray_used_size(stringValues)==1) n=1;
+
+    if (n>grib_sarray_used_size(stringValues))
+        return GRIB_ARRAY_TOO_SMALL;
 
     modifiedWidth= self->expanded->v[i]->width;
 
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
     grib_encode_string(buff->data,pos,modifiedWidth/8,stringValues->v[0]);
-    width= end > 1 ? modifiedWidth : 0;
+    width= n > 1 ? modifiedWidth : 0;
 
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
     grib_encode_unsigned_longb(buff->data,width/8,pos,6);
     if (width) {
-        grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+width*end);
+        grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+width*n);
         for (j=start;j<end;j++) {
             grib_encode_string(buff->data,pos,width/8,stringValues->v[j]);
         }
@@ -527,7 +538,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos,int i
     long localReference=0,localWidth=0,modifiedWidth,modifiedReference;
     long reference,allone;
     double localRange,modifiedFactor,inverseFactor;
-    size_t nvals,ii;
+    size_t nvals,start,ii;
     double min,max,maxAllowed,minAllowed;
     double* v=NULL;
     int thereIsAMissing=0;
@@ -540,9 +551,32 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos,int i
     maxAllowed=(grib_power(modifiedWidth,2)+modifiedReference)*modifiedFactor;
     minAllowed=modifiedReference*modifiedFactor;
 
-    nvals=grib_darray_used_size(dvalues);
+
+    start=self->start;
+    nvals=self->end-self->start;
+    if (nvals<=0) return GRIB_NO_VALUES;
+
     v=dvalues->v;
 
+    /* is constant */
+    if (grib_darray_used_size(dvalues)==1) {
+        localWidth=0;
+        grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
+        if (*v == GRIB_MISSING_DOUBLE) {
+            grib_set_bits_on(buff->data,pos,modifiedWidth);
+        } else {
+            lval=round(*v * inverseFactor)-modifiedReference;
+            grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
+        }
+        grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
+        grib_encode_unsigned_longb(buff->data,localWidth,pos,6);
+        return err;
+    }
+
+    if (nvals>grib_darray_used_size(dvalues)) return GRIB_ARRAY_TOO_SMALL;
+    v=dvalues->v+start;
+
+    /* encoding only one value out of many*/
     if (nvals==1) {
         localWidth=0;
         grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
@@ -609,8 +643,8 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos,int i
     grib_encode_unsigned_longb(buff->data,localWidth,pos,6);
 
     if (localWidth) {
-        grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+self->numberOfSubsets*localWidth);
-        for (j=0;j<self->numberOfSubsets;j++) {
+        grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+nvals*localWidth);
+        for (j=self->start;j<self->end;j++) {
             if (dvalues->v[j]==GRIB_MISSING_DOUBLE) {
                 grib_set_bits_on(buff->data,pos,localWidth);
             } else {
@@ -1387,21 +1421,22 @@ static void grib_convert_to_attribute(grib_accessor* a)
 
 static void set_subset_start_end(grib_accessor_bufr_data_array *self,long *onlySubset,long *startSubset,long *endSubset,long *ret_start,long *ret_end)
 {
-    if (self->compressedData == 1 ) {
-        *ret_start=0;
-        *ret_end=1 ;
-    } else {
-        if (*startSubset>0 && *endSubset>=*startSubset) {
-            *ret_start=*startSubset-1;
-            *ret_end= *endSubset;
-        } else if (*onlySubset>0) {
-            *ret_start=*onlySubset-1;
-            *ret_end= *onlySubset;
-        } else {
-            *ret_start=0;
-            *ret_end= self->numberOfSubsets;
-        }
-    }
+  if (*startSubset>0 && *endSubset>=*startSubset) {
+    *ret_start=*startSubset-1;
+    *ret_end= *endSubset;
+  } else if (*onlySubset>0) {
+    *ret_start=*onlySubset-1;
+    *ret_end= *onlySubset;
+  } else {
+    *ret_start=0;
+    *ret_end= self->numberOfSubsets;
+  }
+  self->start=*ret_start;
+  self->end=*ret_end;
+  if (self->compressedData==1) {
+    *ret_start=0;
+    *ret_end=1;
+  }
 }
 
 
@@ -2029,8 +2064,8 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
         self->bitsToEndData=buffer->ulength*8;
         grib_set_bytes(grib_handle_of_accessor(a),self->bufrDataEncodedName,buffer->data,&(buffer->ulength));
         grib_buffer_delete(c,buffer);
-        if (self->compressedData==0 && self->numberOfSubsets != (end-start) ) {
-            grib_set_long(h,self->numberOfSubsetsName,end-start);
+        if (self->numberOfSubsets != (self->end-self->start) ) {
+            grib_set_long(h,self->numberOfSubsetsName,self->end-self->start);
         }
     }
 
