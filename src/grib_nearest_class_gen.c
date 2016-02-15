@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -72,31 +72,31 @@ static void init_class(grib_nearest_class* c)
 
 static int init(grib_nearest* nearest,grib_handle* h,grib_arguments* args)
 {
-  grib_nearest_gen* self = (grib_nearest_gen*) nearest;
-  int ret = GRIB_SUCCESS;
+    grib_nearest_gen* self = (grib_nearest_gen*) nearest;
+    int ret = GRIB_SUCCESS;
 
-  self->cargs = 1;
+    self->cargs = 1;
 
-  self->values_key  = grib_arguments_get_name(h,args,self->cargs++);
-  self->radius  = grib_arguments_get_name(h,args,self->cargs++);
-  nearest->values=NULL;
+    self->values_key  = grib_arguments_get_name(h,args,self->cargs++);
+    self->radius  = grib_arguments_get_name(h,args,self->cargs++);
+    nearest->values=NULL;
 
-  nearest->context=h->context;
+    nearest->context=h->context;
 
-  return ret;
+    return ret;
 }
 
-static int destroy(grib_nearest* nearest) {
-  if (nearest->values) grib_context_free(nearest->context,nearest->values);
-  grib_context_free(nearest->context,nearest);
-  return GRIB_SUCCESS;
+static int destroy(grib_nearest* nearest)
+{
+    if (nearest->values) grib_context_free(nearest->context,nearest->values);
+    grib_context_free(nearest->context,nearest);
+    return GRIB_SUCCESS;
 }
 
 static int find(grib_nearest* nearest, grib_handle* h,
-                double inlat, double inlon,unsigned long flags,
-                double* outlats,double* outlons, double *values,
-                double *distances,int *indexes, size_t *len) {
-
-  return GRIB_NOT_IMPLEMENTED;
+        double inlat, double inlon,unsigned long flags,
+        double* outlats,double* outlons, double *values,
+        double *distances,int *indexes, size_t *len)
+{
+    return GRIB_NOT_IMPLEMENTED;
 }
-

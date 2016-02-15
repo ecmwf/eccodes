@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -31,7 +31,8 @@
  #endif
 #endif
 
-static void set_total_length(unsigned char* buffer,long *section_length,long *section_offset,int edition,size_t totalLength) {
+static void set_total_length(unsigned char* buffer,long *section_length,long *section_offset,int edition,size_t totalLength)
+{
     long off;
     switch (edition) {
     case 1:
@@ -55,10 +56,10 @@ static void set_total_length(unsigned char* buffer,long *section_length,long *se
         grib_encode_unsigned_long(buffer, (unsigned long)totalLength ,  &off, 64);
         break;
     }
-
 }
 
-static grib_handle* grib_sections_copy_internal(grib_handle* hfrom,grib_handle* hto,int sections[],int *err) {
+static grib_handle* grib_sections_copy_internal(grib_handle* hfrom,grib_handle* hto,int sections[],int *err)
+{
     int i;
     size_t totalLength=0;
     unsigned char* buffer;
@@ -180,7 +181,8 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom,grib_handle* 
     return h;
 }
 
-grib_handle* grib_util_sections_copy(grib_handle* hfrom,grib_handle* hto,int what,int *err) {
+grib_handle* grib_util_sections_copy(grib_handle* hfrom,grib_handle* hto,int what,int *err)
+{
     long edition_from=0;
     long edition_to=0;
     long localDefinitionNumber=-1;
@@ -265,24 +267,26 @@ grib_handle* grib_util_sections_copy(grib_handle* hfrom,grib_handle* hto,int wha
     }
 
     return grib_sections_copy_internal(hfrom,hto,sections_to_copy,err);
-
 }
 
 static grib_trie* init_list(const char* name);
 static grib_trie* param_id_list = NULL;
 static grib_trie* mars_param_list = NULL;
 /* TODO thread safe */
-grib_string_list* grib_util_get_param_id(const char* mars_param) {
+grib_string_list* grib_util_get_param_id(const char* mars_param)
+{
     if (!mars_param_list && (mars_param_list=init_list("mars_param.table"))==NULL) return NULL;
     return (grib_string_list*)grib_trie_get(mars_param_list,mars_param);
 }
 
-grib_string_list* grib_util_get_mars_param(const char* param_id) {
+grib_string_list* grib_util_get_mars_param(const char* param_id)
+{
     if (!param_id_list && (param_id_list=init_list("param_id.table"))==NULL) return NULL;
     return (grib_string_list*)grib_trie_get(param_id_list,param_id);
 }
 
-static grib_trie* init_list(const char* name) {
+static grib_trie* init_list(const char* name)
+{
     char *full_path=0;
     FILE* fh;
     char s[101];
@@ -350,17 +354,18 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec, cons
 
     if(spec->bitmapPresent) {
         int missing = 0;
+        size_t j = 0;
         double min = 1e100;
-        for(i = 0; i < data_values_count ; i++)
+        for(j = 0; j < data_values_count ; j++)
         {
-            double d = data_values[i] - spec->missingValue;
+            double d = data_values[j] - spec->missingValue;
             if(d < 0) d = -d;
 
             if(d < min) {
                 min = d;
             }
 
-            if(data_values[i] == spec->missingValue)
+            if(data_values[j] == spec->missingValue)
                 missing++;
         }
     }
@@ -400,7 +405,8 @@ static double normalise_angle(double angle)
 
 /* Check what is coded in the handle is what is requested by the spec. */
 /* Return GRIB_SUCCESS if the geometry matches, otherwise the error code */
-static int check_handle_against_spec(grib_handle* handle, const long edition, const grib_util_grid_spec2* spec)
+static int check_handle_against_spec(grib_handle* handle, const long edition,
+        const grib_util_grid_spec2* spec, int global_grid)
 {
     int err = 0;
     int check_latitudes = 1;
@@ -435,31 +441,38 @@ static int check_handle_against_spec(grib_handle* handle, const long edition, co
         }
     }
 
+    /* GRIB-922 */
+    /* Specification was to make the resulting grid global so no point checking for */
+    /* input lat/lon values as they would be reset by setting the "global" key to 1 */
+    if (global_grid)
+    {
+        check_latitudes = check_longitudes = 0;
+    }
+
     if (check_latitudes) {
         double lat1, lat2;
         const double lat1spec = normalise_angle(spec->latitudeOfFirstGridPointInDegrees);
         const double lat2spec = normalise_angle(spec->latitudeOfLastGridPointInDegrees);
         if ((err = grib_get_double(handle, "latitudeOfFirstGridPointInDegrees", &lat1))!=0)  return err;
         if ((err = grib_get_double(handle, "latitudeOfLastGridPointInDegrees", &lat2))!=0)   return err;
-
         lat1 = normalise_angle(lat1);
         lat2 = normalise_angle(lat2);
 
         if (angle_too_small(lat1spec, angular_precision)) {
-            fprintf(stderr, "Failed to encode latitudeOfFirstGridPointInDegrees %.10e: less than angular precision\n",lat1spec);
+            fprintf(stderr, "Failed to encode latitude of first grid point %.10e: less than angular precision\n",lat1spec);
             return GRIB_WRONG_GRID;
         }
         if (angle_too_small(lat2spec, angular_precision)) {
-            fprintf(stderr, "Failed to encode latitudeOfLastGridPointInDegrees %.10e: less than angular precision\n", lat2spec);
+            fprintf(stderr, "Failed to encode latitude of last grid point %.10e: less than angular precision\n", lat2spec);
             return GRIB_WRONG_GRID;
         }
 
         if (!DBL_EQUAL(lat1spec, lat1, tolerance)) {
-            fprintf(stderr, "Failed to encode latitudeOfFirstGridPointInDegrees: spec=%.10e val=%.10e\n", lat1spec, lat1);
+            fprintf(stderr, "Failed to encode latitude of first grid point: spec=%.10e val=%.10e\n", lat1spec, lat1);
             return GRIB_WRONG_GRID;
         }
         if (!DBL_EQUAL(lat2spec, lat2, tolerance)) {
-            fprintf(stderr, "Failed to encode latitudeOfLastGridPointInDegrees: spec=%.10e val=%.10e\n", lat2spec, lat2);
+            fprintf(stderr, "Failed to encode latitude of last grid point: spec=%.10e val=%.10e\n", lat2spec, lat2);
             return GRIB_WRONG_GRID;
         }
     }
@@ -470,25 +483,24 @@ static int check_handle_against_spec(grib_handle* handle, const long edition, co
         const double lon2spec = normalise_angle(spec->longitudeOfLastGridPointInDegrees);
         if ((err = grib_get_double(handle, "longitudeOfFirstGridPointInDegrees", &lon1))!=0) return err;
         if ((err = grib_get_double(handle, "longitudeOfLastGridPointInDegrees", &lon2))!=0)  return err;
-
         lon1 = normalise_angle(lon1);
         lon2 = normalise_angle(lon2);
 
         if (angle_too_small(lon1spec, angular_precision)) {
-            fprintf(stderr, "Failed to encode longitudeOfFirstGridPointInDegrees %.10e: less than angular precision\n", lon1spec);
+            fprintf(stderr, "Failed to encode longitude of first grid point %.10e: less than angular precision\n", lon1spec);
             return GRIB_WRONG_GRID;
         }
         if (angle_too_small(lon2spec, angular_precision)) {
-            fprintf(stderr, "Failed to encode longitudeOfLastGridPointInDegrees %.10e: less than angular precision\n", lon2spec);
+            fprintf(stderr, "Failed to encode longitude of last grid point %.10e: less than angular precision\n", lon2spec);
             return GRIB_WRONG_GRID;
         }
 
         if (!DBL_EQUAL(lon1spec, lon1, tolerance)) {
-            fprintf(stderr, "Failed to encode longitudeOfFirstGridPointInDegrees: spec=%.10e val=%.10e\n", lon1spec, lon1);
+            fprintf(stderr, "Failed to encode longitude of first grid point: spec=%.10e val=%.10e\n", lon1spec, lon1);
             return GRIB_WRONG_GRID;
         }
         if (!DBL_EQUAL(lon2spec, lon2, tolerance)){
-            fprintf(stderr, "Failed to encode longitudeOfLastGridPointInDegrees: spec=%.10e val=%.10e\n",  lon2spec, lon2);
+            fprintf(stderr, "Failed to encode longitude of last grid point: spec=%.10e val=%.10e\n",  lon2spec, lon2);
             return GRIB_WRONG_GRID;
         }
     }
@@ -506,18 +518,18 @@ static int check_handle_against_spec(grib_handle* handle, const long edition, co
         lonp = normalise_angle(lonp);
 
         if (!DBL_EQUAL(latspec, latp, tolerance)) {
-            fprintf(stderr, "Failed to encode latitudeOfSouthernPoleInDegrees: spec=%.10e val=%.10e\n",latspec,latp);
+            fprintf(stderr, "Failed to encode latitude of southern pole: spec=%.10e val=%.10e\n",latspec,latp);
             return GRIB_WRONG_GRID;
         }
         if (!DBL_EQUAL(lonspec, lonp, tolerance)) {
-            fprintf(stderr, "Failed to encode longitudeOfSouthernPoleInDegrees: spec=%.10e val=%.10e\n",lonspec,lonp);
+            fprintf(stderr, "Failed to encode longitude of southern pole: spec=%.10e val=%.10e\n",lonspec,lonp);
             return GRIB_WRONG_GRID;
         }
     }
     return GRIB_SUCCESS;
 }
 
-static char* get_grid_type_name(const int spec_grid_type)
+static const char* get_grid_type_name(const int spec_grid_type)
 {
     if (spec_grid_type == GRIB_UTIL_GRID_SPEC_REGULAR_LL)
         return "regular_ll";
@@ -634,6 +646,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     int setSecondOrder=0;
     size_t slen=17;
     int grib1_high_resolution_fix = 0; /* boolean: See GRIB-863 */
+    int global_grid = 0; /* boolean */
 
     static grib_util_packing_spec default_packing_spec = {0, };
     Assert(h);
@@ -1116,10 +1129,18 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         for(i = 0; i < packing_spec->extra_settings_count; i++) {
             Assert(count < 1024);
             values[count++] = packing_spec->extra_settings[i];
+            if (strcmp(packing_spec->extra_settings[i].name, "global")==0 &&
+                packing_spec->extra_settings[i].long_value == 1)
+            {
+                /* GRIB-922: Request is for a global grid. Setting this key will
+                 * calculate the lat/lon values. So the spec's lat/lon can be ignored */
+                global_grid = 1;
+            }
         }
     }
     /* grib_write_message(h,"input.grib","w"); */
     /* grib_write_message(tmp,"geo.grib","w"); */
+    /* copy product and local sections from h to tmp handle and store in outh */
     if((outh = grib_util_sections_copy(h, tmp, GRIB_SECTION_PRODUCT | GRIB_SECTION_LOCAL,err)) == NULL)
     {
         goto cleanup;
@@ -1265,10 +1286,13 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     if(packing_spec->editionNumber && packing_spec->editionNumber!=editionNumber)
         grib_set_long(outh,"edition", packing_spec->editionNumber);
 
-    if ( (*err = check_handle_against_spec(outh, editionNumber, spec)) != GRIB_SUCCESS)
+    if ( (*err = check_handle_against_spec(outh, editionNumber, spec, global_grid)) != GRIB_SUCCESS)
     {
         grib_context* c=grib_context_get_default();
         fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed! %s\n", grib_get_error_message(*err));
+        if (editionNumber == 1) {
+            fprintf(stderr,"Note: in GRIB edition 1 latitude and longitude values cannot be represented with sub-millidegree precision.\n");
+        }
         if (c->write_on_fail)
             grib_write_message(outh,"error.grib","w");
         goto cleanup;
@@ -1284,7 +1308,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     return NULL;
 }
 
-int grib_moments(grib_handle* h,double east,double north,double west,double south,int order,double* moments,long *count) {
+int grib_moments(grib_handle* h,double east,double north,double west,double south,int order,double* moments,long *count)
+{
     grib_iterator* iter=NULL;
     int ret=0,i,j,l;
     size_t n=0,numberOfPoints=0;
@@ -1552,7 +1577,7 @@ int is_index_file(const char* filename)
 {
     FILE* fh;
     char buf[8]={0,};
-    char* str="GRBIDX";
+    const char* str="GRBIDX";
     int ret=0;
 
     fh=fopen(filename,"r");
@@ -1583,7 +1608,71 @@ char get_dir_separator_char(void)
 /*  "/tmp/"   -> ""   */
 const char* extract_filename(const char* filepath)
 {
-    char* s = strrchr(filepath, get_dir_separator_char());
+    const char* s = strrchr(filepath, get_dir_separator_char());
     if (!s) return filepath;
     else    return s + 1;
+}
+
+/* Boolean return type: 1 if the reduced gaussian field is global, 0 for sub area */
+int is_gaussian_global(
+        double lat1, double lat2, double lon1, double lon2,/* bounding box*/
+        long num_points_equator, /* num points on latitude at equator */
+        const double* latitudes, /* array of Gaussian latitudes (size 2*N) */
+        double angular_precision /* tolerance for angle comparison */
+)
+{
+    int global = 1;
+    const double d = fabs(latitudes[0] - latitudes[1]);
+    /* Compute the expected last longitude for a global field */
+    const double lon2_global = 360.0 - 360.0/num_points_equator;
+    /* Compute difference between expected longitude and actual one */
+    const double lon2_diff = fabs( lon2  - lon2_global ) - 360.0/num_points_equator;
+
+    /* Note: final gaussian latitude = -first latitude */
+    if ( (fabs(lat1 - latitudes[0]) >= d ) ||
+         (fabs(lat2 + latitudes[0]) >= d ) ||
+         lon1 != 0                         ||
+         lon2_diff > angular_precision
+    )
+    {
+        global = 0; /* sub area */
+    }
+    return global;
+}
+
+#define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
+char* codes_getenv(const char* name)
+{
+    /* Look for the new ecCodes environment variable names */
+    /* if not found, then look for old grib_api ones for backward compatibility */
+    const char* old_name = name;
+    char* result = NULL;
+
+    /* Test the most commonly used variables first */
+    if      (STR_EQUAL(name, "ECCODES_SAMPLES_PATH")) old_name="GRIB_SAMPLES_PATH";
+    else if (STR_EQUAL(name, "ECCODES_DEFINITION_PATH")) old_name="GRIB_DEFINITION_PATH";
+    else if (STR_EQUAL(name, "ECCODES_DEBUG")) old_name="GRIB_API_DEBUG";
+
+    else if (STR_EQUAL(name, "ECCODES_FAIL_IF_LOG_MESSAGE")) old_name="GRIB_API_FAIL_IF_LOG_MESSAGE";
+    else if (STR_EQUAL(name, "ECCODES_GRIB_WRITE_ON_FAIL")) old_name="GRIB_API_WRITE_ON_FAIL";
+    else if (STR_EQUAL(name, "ECCODES_GRIB_LARGE_CONSTANT_FIELDS")) old_name="GRIB_API_LARGE_CONSTANT_FIELDS";
+    else if (STR_EQUAL(name, "ECCODES_NO_ABORT")) old_name="GRIB_API_NO_ABORT";
+    else if (STR_EQUAL(name, "ECCODES_GRIBEX_MODE_ON")) old_name="GRIB_GRIBEX_MODE_ON";
+    else if (STR_EQUAL(name, "ECCODES_GRIB_IEEE_PACKING")) old_name="GRIB_IEEE_PACKING";
+    else if (STR_EQUAL(name, "ECCODES_IO_BUFFER_SIZE")) old_name="GRIB_API_IO_BUFFER_SIZE";
+    else if (STR_EQUAL(name, "ECCODES_LOG_STREAM")) old_name="GRIB_API_LOG_STREAM";
+    else if (STR_EQUAL(name, "ECCODES_GRIB_NO_BIG_GROUP_SPLIT")) old_name="GRIB_API_NO_BIG_GROUP_SPLIT";
+    else if (STR_EQUAL(name, "ECCODES_GRIB_NO_SPD")) old_name="GRIB_API_NO_SPD";
+    else if (STR_EQUAL(name, "ECCODES_GRIB_KEEP_MATRIX")) old_name="GRIB_API_KEEP_MATRIX";
+    else if (STR_EQUAL(name, "_ECCODES_ECMWF_TEST_DEFINITION_PATH")) old_name="_GRIB_API_ECMWF_TEST_DEFINITION_PATH";
+    else if (STR_EQUAL(name, "_ECCODES_ECMWF_TEST_SAMPLES_PATH")) old_name="_GRIB_API_ECMWF_TEST_SAMPLES_PATH";
+    else if (STR_EQUAL(name, "ECCODES_GRIB_JPEG")) old_name="GRIB_JPEG";
+    else if (STR_EQUAL(name, "ECCODES_GRIB_DUMP_JPG_FILE")) old_name="GRIB_DUMP_JPG_FILE";
+    else if (STR_EQUAL(name, "ECCODES_PRINT_MISSING")) old_name="GRIB_PRINT_MISSING";
+
+    result = getenv(name);
+    if (result == NULL) {
+        result = getenv(old_name);
+    }
+    return result;
 }

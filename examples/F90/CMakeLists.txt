@@ -52,6 +52,7 @@ foreach( tool ${tests} )
                       LINKER_LANGUAGE Fortran
                       LIBS      eccodes_f90 eccodes
                       CONDITION HAVE_FORTRAN
+                      RESOURCES bufr_read_scatterometer_f.ref
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
                       TEST_DEPENDS eccodes_get_gribs eccodes_get_bufrs
     )

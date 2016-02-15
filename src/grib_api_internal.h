@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -124,15 +124,27 @@ extern "C" {
 
 #if GRIB_PTHREADS
  #include <pthread.h>
- #define GRIB_PTHREAD_ONCE(a,b) pthread_once(a,b);
+ #define GRIB_MUTEX_INIT_ONCE(a,b) pthread_once(a,b);
  #define GRIB_MUTEX_LOCK(a) pthread_mutex_lock(a); 
  #define GRIB_MUTEX_UNLOCK(a) pthread_mutex_unlock(a);
-/*
-#define GRIB_MUTEX_LOCK(a) {pthread_mutex_lock(a); printf("MUTEX LOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);}
-#define GRIB_MUTEX_UNLOCK(a) {pthread_mutex_unlock(a);printf("MUTEX UNLOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);} 
-*/
+ /*
+ #define GRIB_MUTEX_LOCK(a) {pthread_mutex_lock(a); printf("MUTEX LOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);}
+ #define GRIB_MUTEX_UNLOCK(a) {pthread_mutex_unlock(a);printf("MUTEX UNLOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);} 
+ */
+#elif GRIB_OMP_THREADS
+ #include <omp.h>
+ #ifdef _MSC_VER
+  #define GRIB_OMP_CRITICAL(a) __pragma(omp critical (a))
+ #else
+  #define GRIB_OMP_STR(a) #a
+  #define GRIB_OMP_XSTR(a) GRIB_OMP_STR(a)
+  #define GRIB_OMP_CRITICAL(a) _Pragma( GRIB_OMP_XSTR(omp critical (a) ) )
+ #endif
+ #define GRIB_MUTEX_INIT_ONCE(a,b) (*(b))();
+ #define GRIB_MUTEX_LOCK(a)  omp_set_nest_lock(a);
+ #define GRIB_MUTEX_UNLOCK(a)  omp_unset_nest_lock(a);
 #else
- #define GRIB_PTHREAD_ONCE(a,b)
+ #define GRIB_MUTEX_INIT_ONCE(a,b)
  #define GRIB_MUTEX_LOCK(a)
  #define GRIB_MUTEX_UNLOCK(a)
 #endif
@@ -164,6 +176,17 @@ extern "C" {
    do { \
        enum { assert_static__ = 1/(e) }; \
       } while (0)
+
+
+#ifndef NDEBUG
+ #define DebugAssertAccess(array, index, size) \
+   do { \
+    if (!((index) >= 0 && (index) < (size)) ) {printf("ARRAY ACCESS ERROR: array=%s idx=%ld size=%ld @ %s +%d \n", #array, index, size, __FILE__, __LINE__); abort();} \
+   } while(0)
+#else
+ #define DebugAssertAccess(array, index, size)
+#endif
+
 
 #include "grib_api.h"
 
@@ -781,7 +804,6 @@ struct bufr_descriptor {
   double factor;
   double reference;
   long width;
-  int isMarker;
   grib_accessor* a;
 } ;
 
@@ -1031,6 +1053,8 @@ struct grib_context
 	grib_trie*                      lists;
 #if GRIB_PTHREADS
     pthread_mutex_t                 mutex;
+#elif GRIB_OMP_THREADS
+    omp_nest_lock_t                 mutex;
 #endif
 
 };

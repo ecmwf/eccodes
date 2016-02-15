@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -80,7 +80,7 @@ int grib_tool_init(grib_runtime_options* options) {
   size_t size=4;
   int ret=0;
   double min=0,max=0;
-  int i=0,idx=0;
+  int i=0;
   char* p=NULL;
   if (grib_options_on("j")) {
 	options->verbose=0;
@@ -142,7 +142,7 @@ int grib_tool_init(grib_runtime_options* options) {
     options->latlon_idx=-1;
     max=options->distances[0];
     for (i=0;i<4;i++)
-      if (max<options->distances[i]) {max=options->distances[i];idx=i;}
+      if (max<options->distances[i]) {max=options->distances[i];}
     min=max;
     for (i=0;i<4;i++) {
       if ((min >= options->distances[i]) && (options->mask_values[i] >= 0.5)) {

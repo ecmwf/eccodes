@@ -62,7 +62,7 @@ ecbuild_add_option( FEATURE AEC
 ecbuild_add_option( FEATURE PYTHON
     DESCRIPTION "build the ecCodes Python interface"
     DEFAULT ON
-    REQUIRED_PACKAGES "Python VERSION 2.5"
+    REQUIRED_PACKAGES "Python VERSION 2.5" NumPy
 )
 
 ecbuild_add_option( FEATURE FORTRAN
@@ -82,11 +82,11 @@ endif()
 
 # advanced options (not visible in cmake-gui )
 
-ecbuild_add_option( FEATURE MEMORY_MANAGEMENT DESCRIPTION "enable memory management" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ALIGN_MEMORY      DESCRIPTION "enable memory alignment"  DEFAULT OFF ADVANCED )
-
-ecbuild_add_option( FEATURE GRIB_TIMER        DESCRIPTION "enable timer"   DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ECCODES_THREADS   DESCRIPTION "enable threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "enable memory management" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "enable memory alignment"  DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE GRIB_TIMER          DESCRIPTION "enable timer" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "enable POSIX threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "enable OMP threads" DEFAULT OFF ADVANCED )
 
 ###############################################################################
 # macro processing
@@ -106,8 +106,16 @@ set( HAVE_LIBOPENJPEG 0 )
 
 if( ENABLE_JPG )
 
-    ecbuild_add_extra_search_paths( jasper ) # help standard cmake macro with ecmwf paths
+    # Note: This is a deprecated feature but we need it to find Jasper at ECMWF.
+    #       ecbuild_add_extra_search_paths modifies CMAKE_PREFIX_PATH
+    #       which can affect future package discovery if not undone by the caller.
+    #       The current CMAKE_PREFIX_PATH is backed up as _CMAKE_PREFIX_PATH
+    #
+    set(ECBUILD_NO_DEPRECATIONS ON)  # Suppress deprecation message
+    ecbuild_add_extra_search_paths( jasper )
     find_package( Jasper )
+    set(CMAKE_PREFIX_PATH ${_CMAKE_PREFIX_PATH})    # Restore CMAKE_PREFIX_PATH
+    set(ECBUILD_NO_DEPRECATIONS OFF) # Remove suppression
 
     find_package( OpenJPEG )
 
@@ -151,24 +159,32 @@ find_package(Threads REQUIRED)
 # debug
 message(STATUS " CMAKE_THREAD_LIBS_INIT=${CMAKE_THREAD_LIBS_INIT}")
 message(STATUS " CMAKE_USE_PTHREADS_INIT=${CMAKE_USE_PTHREADS_INIT}")
-message(STATUS " ECCODES_THREADS=${ECCODES_THREADS}, HAVE_ECCODES_THREADS=${HAVE_ECCODES_THREADS}")
-
-if( NOT ${CMAKE_USE_PTHREADS_INIT} )
-    message( FATAL_ERROR "Only pthreads supported - thread library found is [${CMAKE_THREAD_LIBS_INIT}]" )
-endif()
+message(STATUS " HAVE_ECCODES_THREADS=${HAVE_ECCODES_THREADS}")
 
 set( GRIB_PTHREADS 0 )
+set( GRIB_OMP_THREADS 0 )
 set( GRIB_LINUX_PTHREADS 0 )
 #if( HAVE_ECCODES_THREADS AND CMAKE_THREAD_LIBS_INIT )
 if( HAVE_ECCODES_THREADS )
-    if( CMAKE_USE_PTHREADS_INIT )
-        set( GRIB_PTHREADS 1 )
-        if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )
-            set( GRIB_LINUX_PTHREADS 1 )
-        endif()
+    if( NOT ${CMAKE_USE_PTHREADS_INIT} )
+        message( FATAL_ERROR "Pthreads is not supported on your system: thread library found=[${CMAKE_THREAD_LIBS_INIT}]" )
     endif()
+    set( GRIB_PTHREADS 1 )
+    if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )
+        set( GRIB_LINUX_PTHREADS 1 )
+    endif()
+elseif(HAVE_ECCODES_OMP_THREADS)
+    ecbuild_enable_omp()
+    set( GRIB_OMP_THREADS 1 )
 endif()
+
+# Cannot have both options
+if( HAVE_ECCODES_THREADS AND HAVE_ECCODES_OMP_THREADS )
+    message( FATAL_ERROR "Cannot enable both POSIX threads and OMP! Please specify just one option" )
+endif()
+
 message(STATUS " GRIB_PTHREADS=${GRIB_PTHREADS}")
+message(STATUS " GRIB_OMP_THREADS=${GRIB_OMP_THREADS}")
 
 set( GRIB_MEM_ALIGN 0 )
 if( ENABLE_ALIGN_MEMORY )
@@ -320,12 +336,12 @@ ecbuild_install_project( NAME ${CMAKE_PROJECT_NAME} )
 
 ecbuild_print_summary()
 
-message("")
-message("   +---------------------------+")
-message("   |  ecCodes version ${ECCODES_VERSION}   |")
-message("   |  Configuration completed  |")
-message("   +---------------------------+")
-message("")
-message("   You can now do 'make' to compile the package, 'ctest' to test it and 'make install' to install it afterwards.")
-message("")
-message("")
+message(STATUS "")
+message(STATUS "   +---------------------------+")
+message(STATUS "   |  ecCodes version ${ECCODES_VERSION}   |")
+message(STATUS "   |  Configuration completed  |")
+message(STATUS "   +---------------------------+")
+message(STATUS "")
+message(STATUS "   You can now do 'make' to compile the package, 'ctest' to test it and 'make install' to install it afterwards.")
+message(STATUS "")
+message(STATUS "")

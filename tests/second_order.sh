@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2015 ECMWF.
+# Copyright 2005-2016 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -96,6 +96,9 @@ res=`${tools_dir}grib_get -l 33,88.5 $sec_ord_bmp`
 res=`${tools_dir}/grib_get -l 28.5,90 $sec_ord_bmp`
 [ "$res" = "3.51552 9999 5.26552 9999 " ]
 
+# GRIB-203 nearest on M-F second order boustrophedonic
+res=`${tools_dir}grib_get -w count=1 -l 0,0 lfpw.grib1`
+[ "$res" = "20560.7 20563.4 20554.7 20559.5 " ]
 
 rm -f $sec_ord_bmp
 rm -f test.filter

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -31,8 +31,6 @@ int main(int argc,char* argv[])
     codes_handle* h=NULL;
 
     double *lat=NULL, *lon=NULL, *bscatter=NULL;
-    long longVal;
-    double doubleVal;
     long numObs=0;
     size_t len=0;
     int i, err=0;

@@ -1,5 +1,5 @@
 
-!Copyright 2005-2015 ECMWF.
+!Copyright 2005-2016 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 !which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,7 +10,7 @@
 !
 ! FOTRAN 90 Implementation: bufr_read_tropical_cyclone
 !
-! Description: how to read data for a tropical cyclone BUFR messages.
+! Description: how to read data for a tropical cyclone BUFR message.
 ! 
 
 program bufr_read_tropical_cyclone
@@ -39,8 +39,8 @@ program bufr_read_tropical_cyclone
 
   call codes_open_file(ifile,'../../data/bufr/tropical_cyclone.bufr','r')
 
-  ! the first bufr message is loaded from file
-  ! ibufr is the bufr id to be used in subsequent calls
+  ! the first BUFR message is loaded from file.
+  ! ibufr is the BUFR id to be used in subsequent calls
   call codes_bufr_new_from_file(ifile,ibufr,iret)
 
   do while (iret/=CODES_END_OF_FILE)
@@ -239,8 +239,8 @@ program bufr_read_tropical_cyclone
       endif
     enddo
 
-    ! free arrays is very important
-    ! because the behaviour of the codes_get functions is as follows
+    ! deallocating the arrays is very important
+    ! because the behaviour of the codes_get functions is as follows:
     ! if the array is not allocated then allocate
     ! if the array is already allocated only copy the values
     deallocate(values)
@@ -259,10 +259,10 @@ program bufr_read_tropical_cyclone
     deallocate(longitudeMaxWind0)
     deallocate(windMaxWind0)
 
-    ! release the bufr message
+    ! release the BUFR message
     call codes_release(ibufr)
 
-    ! load the next bufr message
+    ! load the next BUFR message
     call codes_bufr_new_from_file(ifile,ibufr,iret)
 
     count=count+1

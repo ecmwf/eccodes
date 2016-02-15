@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,9 +15,9 @@
 #endif
 
 typedef struct grib_templates {
-  const char*           name;
-  const unsigned char* data;
-  size_t               size;
+    const char*           name;
+    const unsigned char* data;
+    size_t               size;
 } grib_templates;
 
 #if 1
@@ -27,111 +27,111 @@ typedef struct grib_templates {
 
 grib_handle* grib_internal_template(grib_context* c,const char* name)
 {
-  int i;
-  for(i = 0; i < NUMBER(templates); i++)
-    if(strcmp(name,templates[i].name) == 0)
-      return grib_handle_new_from_message_copy(c,templates[i].data,templates[i].size);
-  return NULL;
+    int i;
+    for(i = 0; i < NUMBER(templates); i++)
+        if(strcmp(name,templates[i].name) == 0)
+            return grib_handle_new_from_message_copy(c,templates[i].data,templates[i].size);
+    return NULL;
 }
 #else
 grib_handle* grib_internal_template(grib_context* c,const char* name)
 {
-      return NULL;
+    return NULL;
 }
 #endif
 
 static grib_handle* try_template(grib_context* c,const char* dir,const char* name)
 {
-  char path[1024];
-  grib_handle *g = NULL;
-  int err = 0;
+    char path[1024];
+    grib_handle *g = NULL;
+    int err = 0;
 
-  sprintf(path,"%s/%s.tmpl",dir,name);
+    sprintf(path,"%s/%s.tmpl",dir,name);
 
-  if (c->debug==-1) {
-    printf("ECCODES DEBUG: try_template path='%s'\n", path);
-  }
+    if (c->debug==-1) {
+        printf("ECCODES DEBUG: try_template path='%s'\n", path);
+    }
 
-  if(access(path,F_OK) == 0)
-  {
-    FILE* f = fopen(path,"r");
-    if(!f)
+    if(access(path,F_OK) == 0)
     {
-      grib_context_log(c,GRIB_LOG_PERROR,"cannot open %s",path);
-      return NULL;
+        FILE* f = fopen(path,"r");
+        if(!f)
+        {
+            grib_context_log(c,GRIB_LOG_PERROR,"cannot open %s",path);
+            return NULL;
+        }
+        g = grib_handle_new_from_file(c,f,&err);
+        if (!g) {
+            grib_context_log(c,GRIB_LOG_ERROR,"cannot create GRIB handle from %s",path);
+        }
+        fclose(f);
     }
-    g = grib_handle_new_from_file(c,f,&err);
-    if (!g) {
-       grib_context_log(c,GRIB_LOG_ERROR,"cannot create GRIB handle from %s",path);
-    }
-    fclose(f);
-  }
 
-  return g;
+    return g;
 }
 
 static char* try_template_path(grib_context* c,const char* dir,const char* name)
 {
-  char path[1024];
+    char path[1024];
 
-  sprintf(path,"%s/%s.tmpl",dir,name);
+    sprintf(path,"%s/%s.tmpl",dir,name);
 
-  if(access(path,R_OK) == 0)
-  {
-    return grib_context_strdup(c,path);
-  }
+    if(access(path,R_OK) == 0)
+    {
+        return grib_context_strdup(c,path);
+    }
 
-  return NULL;
+    return NULL;
 }
 
 grib_handle* grib_external_template(grib_context* c,const char* name)
 {
-	const char *base = c->grib_samples_path;
-	char buffer[1024];
-	char *p = buffer;
-	grib_handle *g = NULL;
+    const char *base = c->grib_samples_path;
+    char buffer[1024];
+    char *p = buffer;
+    grib_handle *g = NULL;
 
-	if(!base) return NULL;
+    if(!base) return NULL;
 
-	while(*base)
-	{
-		if(*base == ':')
-		{
-			*p = 0;
-			g = try_template(c,buffer,name);
-			if(g) return g;
-			p = buffer;
-			base++; /*advance past delimiter*/
-		}
-		*p++ = *base++;
-	}
+    while(*base)
+    {
+        if(*base == ':')
+        {
+            *p = 0;
+            g = try_template(c,buffer,name);
+            if(g) return g;
+            p = buffer;
+            base++; /*advance past delimiter*/
+        }
+        *p++ = *base++;
+    }
 
-	*p = 0;
-	return g = try_template(c,buffer,name);
+    *p = 0;
+    return g = try_template(c,buffer,name);
 }
 
 char* grib_external_template_path(grib_context* c,const char* name)
 {
-	const char *base = c->grib_samples_path;
-	char buffer[1024];
-	char *p = buffer;
-	char *g = NULL;
+    const char *base = c->grib_samples_path;
+    char buffer[1024];
+    char *p = buffer;
+    char *g = NULL;
 
-	if(!base) return NULL;
+    if(!base) return NULL;
 
-	while(*base)
-	{
-		if(*base == ':')
-		{
-			*p = 0;
-			g = try_template_path(c,buffer,name);
-			if(g) return g;
-			p = buffer;
-			base++;
-		}
-		*p++ = *base++;
-	}
+    while(*base)
+    {
+        if(*base == ':')
+        {
+            *p = 0;
+            g = try_template_path(c,buffer,name);
+            if(g) return g;
+            p = buffer;
+            base++;
+        }
+        *p++ = *base++;
+    }
 
-	*p = 0;
-	return g = try_template_path(c,buffer,name);
+    *p = 0;
+    return g = try_template_path(c,buffer,name);
 }

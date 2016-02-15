@@ -1,4 +1,4 @@
-! Copyright 2005-2015 ECMWF.
+! Copyright 2005-2016 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -17,6 +17,10 @@ module grib_api
   include "grib_api_constants.h"
   include "grib_api_externals.h"
   include "grib_api_visibility.h"
+
+  real(8),    parameter,public :: GRIB_MISSING_DOUBLE = -1.D+100
+  integer(4), parameter,public :: GRIB_MISSING_LONG   = 2147483647
+
 
   !> Create a new message in memory from an integer or character array containting the coded message.
   !>

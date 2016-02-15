@@ -1,4 +1,4 @@
-# Copyright 2005-2015 ECMWF.
+# Copyright 2005-2016 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -7,10 +7,12 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# TEMPLATE 4.44, Analysis or forecast at a horizontal level or in a horizontal layer at a point in time
+# TEMPLATE 4.44, Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for aerosol
+# It is recommended not to use this template. PDT 4.48 should be used instead with optical wave length range set to missing
 
 # GRIB-530: Special case for aerosol thanks to WMO error
 include "grib2/template.4.parameter_aerosol_44.def";
 
 include "grib2/template.4.point_in_time.def";
 include "grib2/template.4.horizontal.def";
+

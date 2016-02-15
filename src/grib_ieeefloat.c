@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -24,6 +24,21 @@ static void init() {
     pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
     pthread_mutex_init(&mutex,&attr);
     pthread_mutexattr_destroy(&attr);
+}
+#elif GRIB_OMP_THREADS
+static int once = 0;
+static omp_nest_lock_t mutex;
+
+static void init()
+{
+    GRIB_OMP_CRITICAL(lock_grib_ieeefloat_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex);
+            once = 1;
+        }
+    }
 }
 #endif
 
@@ -70,7 +85,7 @@ static void init_ieee_table()
 
 static void init_table_if_needed()
 {
-    GRIB_PTHREAD_ONCE(&once,&init)
+    GRIB_MUTEX_INIT_ONCE(&once,&init)
     GRIB_MUTEX_LOCK(&mutex)
 
     if (!ieee_table.inited) init_ieee_table();

@@ -26,11 +26,20 @@ However it requires that cmake be installed on your system.
 4. Run cmake pointing to the source and specify the installation location:
    > cmake  ../eccodes-x.y.z-Source -DCMAKE_INSTALL_PREFIX=/path/to/where/you/install/eccodes
 
+   It is recommended that you install into a clean directory
+
 5. Compile, test and install:
    > make
    > ctest
    > make install
 
+You can also pass options to the cmake command above. Some typical examples are:
+
+ -DBUILD_SHARED_LIBS=OFF         Install static libraries, not shared
+ -DENABLE_JPG=ON                 Enable JPEG encoding/decoding (for GRIB packing)
+ -DCMAKE_Fortran_COMPILER=pgf90  Set Fortran compiler to Portland Group F90 compiler
+ -DCMAKE_C_FLAGS="-O2 -Wall"     Prepend the specified flags at the front
+                                 of the compilation command for C source files
 
 For more details, please see:
 https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation

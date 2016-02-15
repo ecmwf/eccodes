@@ -1,4 +1,4 @@
-! Copyright 2005-2015 ECMWF.
+! Copyright 2005-2016 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -8,8 +8,7 @@
 !
 !
 !
-!  Description: how to set a bitmap in a grib message 
-!
+!  Description: how to set a bitmap in a GRIB message
 !
 !
 program set_bitmap
@@ -32,16 +31,16 @@ program set_bitmap
     call codes_open_file(infile,'../../data/regular_latlon_surface.grib2','r')
   end if
   
-  call codes_open_file(outfile,'out.bmp.grib','w')
+  call codes_open_file(outfile,'out.set_bitmap_f.grib','w')
   
-  !     a new grib message is loaded from file
-  !     igrib is the grib id to be used in subsequent calls
+  ! A new grib message is loaded from file
+  ! igrib is the grib id to be used in subsequent calls
   call codes_grib_new_from_file(infile,igrib)
   
   ! The missingValue is not coded in the message. 
   ! It is a value we define as a placeholder for a missing value
-  ! in a point of the grid.
-  ! It should be choosen in a way that it cannot be confused 
+  ! at a point in the grid.
+  ! It should be chosen so that it cannot be confused 
   ! with a valid field value
   missingValue=9999
   call codes_set(igrib, 'missingValue',missingValue)
@@ -57,9 +56,9 @@ program set_bitmap
   call codes_get(igrib,'values',values)
   
   ! enable bitmap 
-  call codes_set(igrib,"bitmapPresent",1)
+  call codes_set(igrib, 'bitmapPresent', 1)
 
-  ! some values are missing
+  ! set some values to be missing
   values(1:10) = missingValue
 
   ! set the values (the bitmap will be automatically built)
@@ -68,11 +67,10 @@ program set_bitmap
   !  write modified message to a file
   call codes_write(igrib,outfile)
   
-  ! FREE MEMORY
+  ! free memory
   call codes_release(igrib)
   
   call codes_close_file(infile)
-
   call codes_close_file(outfile)
 
   deallocate(values)

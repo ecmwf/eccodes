@@ -1,4 +1,4 @@
-# Copyright 2005-2015 ECMWF.
+# Copyright 2005-2016 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,6 +9,22 @@
 
 lookup[1] ed       (7,editionNumber);
 transient missingValue=999999;
+
+#negative value=not used
+transient inputDelayedDescriptorReplicationFactor={-1};
+#negative value=not used
+transient inputExtendedDelayedDescriptorReplicationFactor={-1};
+#negative value=not used
+transient inputShortDelayedDescriptorReplicationFactor={-1};
+
+transient extractSubset=-1;
+transient extractSubset=-1;
+transient extractSubset=-1;
+transient extractSubsetIntervalStart=-1;
+transient extractSubsetIntervalEnd=-1;
+
+
+meta doExtractSubsets bufr_extract_subsets(numericValues,pack,numberOfSubsets,extractSubset,extractSubsetIntervalStart,extractSubsetIntervalEnd);
 
 template boot_edition "bufr/boot_edition_[ed:l].def";
 

@@ -68,6 +68,7 @@ list( APPEND tests
    grib_precision
    grib_clone
    grib_set_pv
+   grib_set_bitmap
    grib_list
    grib_get_data
    large_grib1

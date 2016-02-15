@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -578,8 +578,6 @@ static int read_BUFR(reader *r)
     /* unsigned char tmp[65536];*/ /* Should be enough */
     size_t length = 0;
     long edition = 0;
-    size_t sec1len = 0;
-    size_t sec2len = 0;
     int  err = 0;
     int i = 0 ,j;
     size_t buflen=2048;
@@ -1513,5 +1511,4 @@ int grib_count_in_file(grib_context* c, FILE* f,int* n)
     rewind(f);
 
     return err==GRIB_END_OF_FILE ? 0 : err;
-
 }

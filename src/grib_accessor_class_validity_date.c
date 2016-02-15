@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -205,7 +205,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     long time = 0;
     long step = 0;
     long stepUnits = 0;
-    long hours = 0, minutes=0, step_mins=0, tmp, tmp_hrs, tmp_mins;
+    long hours = 0, minutes=0, step_mins=0, tmp, tmp_hrs;
 
     if (self->year) {
         long year,month,day;
@@ -228,7 +228,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     hours = time / 100;
     tmp = minutes + step_mins; /* add the step to our minutes */
     tmp_hrs = tmp/60;          /* how many hours and mins is that? */
-    tmp_mins = tmp%60;
     hours += tmp_hrs;          /* increment hours */
 
     date = grib_date_to_julian (date);

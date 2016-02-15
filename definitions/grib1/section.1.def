@@ -1,4 +1,4 @@
-# Copyright 2005-2015 ECMWF.
+# Copyright 2005-2016 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -229,15 +229,12 @@ alias mars.time    = dataTime;
 meta marsParam mars_param(paramId,gribTablesVersionNo,indicatorOfParameter): read_only,dump;
 alias mars.param  = marsParam;
 
-# JRA55 stepTypes
-#if (stepType is "avgas" ||
-#    stepType is "avgad" ||
-#    stepType is "varas" ||
-#    stepType is "varad")
-#{
-#   alias mars.step = stepRange;
-#}
-
+# GRIB-860: JRA55 rule for MARS.
+# subCentre of 241 means Japanese Reanalysis Project
+if (centre == 34 && subCentre == 241)
+{
+   alias mars.param = paramId;
+}
 
 meta time.validityDate validity_date(dataDate,dataTime,step,stepUnits);
 meta time.validityTime validity_time(dataDate,dataTime,step,stepUnits);
@@ -262,8 +259,8 @@ if(((section1Length > 40) or new() or setLocalDefinition> 0) and deleteLocalDefi
       }
     }
 
-	template_nofail marsKeywords "mars/grib1.[stream:s].[type:s].def";
-	#template marsKeywords "mars/grib1.[stream:s].[type:s].def";
+	template_nofail marsKeywords "mars/grib.[stream:s].[type:s].def";
+	#template marsKeywords "mars/grib.[stream:s].[type:s].def";
 
   }
   else

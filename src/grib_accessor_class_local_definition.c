@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -281,6 +281,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     case 28: /* COSMO local area EPS */
     case 38: /* 4D variational increments for long window 4Dvar system */
     case 39: /* 4DVar model errors for long window 4Dvar system */
+    case 192: /* Multiple ECMWF local definitions */
         if (isInstant) {
             productDefinitionTemplateNumberNew=0;
         } else {

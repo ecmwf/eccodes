@@ -13,7 +13,7 @@ rm $OUTPUT || true
 # We are expecting the command to fail so must turn off "set -e"
 INPUT=${data_dir}/bad.grib
 set +e
-$PYTHON $examples_src/binary_message.py $INPUT $OUTPUT
+$PYTHON $examples_src/binary_message.py $INPUT $OUTPUT 2>/dev/null
 status=$?
 set -e
 # Check command did indeed fail

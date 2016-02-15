@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -173,6 +173,21 @@ static void thread_init() {
   pthread_mutexattr_destroy(&attr);
 
 }
+#elif GRIB_OMP_THREADS
+static int once = 0;
+static omp_nest_lock_t mutex;
+
+static void thread_init()
+{
+    GRIB_OMP_CRITICAL(lock_grib_accessor_class_smart_table_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex);
+            once = 1;
+        }
+    }
+}
 #endif
 
 static int grib_load_smart_table(grib_context* c,const char* filename,
@@ -308,7 +323,7 @@ static int grib_load_smart_table(grib_context* c,const char* filename,
     t->recomposed_name[0]  = grib_context_strdup_persistent(c,recomposed_name);
     t->next      = c->smart_table;
     t->numberOfEntries      = size;
-    GRIB_PTHREAD_ONCE(&once,&thread_init)
+    GRIB_MUTEX_INIT_ONCE(&once,&thread_init)
     GRIB_MUTEX_LOCK(&mutex)
     c->smart_table = t;
     GRIB_MUTEX_UNLOCK(&mutex)

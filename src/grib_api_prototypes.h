@@ -58,6 +58,9 @@ grib_action *grib_action_create_assert(grib_context *context, grib_expression *e
 grib_action *grib_action_create_template(grib_context *context, int nofail, const char *name, const char *arg1);
 grib_action *get_empty_template(grib_context *c, int *err);
 
+/* action_class_transient_darray.c */
+grib_action* grib_action_create_transient_darray(grib_context* context, const char* name, grib_darray* darray);
+
 /* action_class_trigger.c */
 grib_action *grib_action_create_trigger(grib_context *context, grib_arguments *args, grib_action *block);
 
@@ -141,7 +144,7 @@ grib_accessor *grib_next_accessor(grib_accessor *a);
 void grib_resize(grib_accessor *a, size_t new_size);
 int grib_compare_accessors(grib_accessor *a1, grib_accessor *a2, int compare_flags);
 const char *grib_get_type_name(int type);
-int grib_accessor_add_attribute(grib_accessor *a, grib_accessor *attr);
+int grib_accessor_add_attribute(grib_accessor *a, grib_accessor *attr,int nest_if_clash);
 int grib_accessor_replace_attribute(grib_accessor *a, grib_accessor *attr);
 int grib_accessor_delete_attribute(grib_accessor *a, const char *name);
 grib_accessor *grib_accessor_get_attribute_by_index(grib_accessor *a, int index);
@@ -289,7 +292,7 @@ void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor *a, g
 
 /* grib_accessor_class_bufr_elements_table.c */
 char **str_split(char *a_str, const char a_delim);
-int bufr_is_marker(int code, int F, int X, int Y);
+int bufr_descriptor_is_marker(bufr_descriptor* d);
 bufr_descriptor *accessor_bufr_elements_table_get_descriptor(grib_accessor *a, int code, int *err);
 
 /* grib_accessor_class_bufr_group.c */
@@ -914,7 +917,6 @@ void grib_context_set_logging_proc(grib_context *c, grib_log_proc p);
 long grib_get_api_version(void);
 void grib_print_api_version(FILE *out);
 grib_context *grib_context_get_default(void);
-grib_context *grib_context_new(grib_context *parent);
 char *grib_context_full_defs_path(grib_context *c, const char *basename);
 char *grib_samples_path(const grib_context *c);
 void grib_context_free(const grib_context *c, void *p);
@@ -1365,6 +1367,13 @@ int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNum
 int is_index_file(const char *filename);
 char get_dir_separator_char(void);
 const char *extract_filename(const char *filepath);
+int is_gaussian_global(
+        double lat1, double lat2, double lon1, double lon2,/* bounding box*/
+        long num_points_equator, /* num points on latitude at equator */
+        const double* latitudes, /* array of Gaussian latitudes (size 2*N) */
+        double angular_precision /* tolerance for angle comparison */
+);
+char *codes_getenv(const char *name);
 
 /* compile.c */
 void grib_compile_flags(grib_compiler *c, long flags);
@@ -1425,3 +1434,9 @@ int grib_decode_double_array_complex(const unsigned char *p, long *bitp, long nb
 int grib_encode_long_array(size_t n_vals, const long *val, long bits_per_value, unsigned char *p, long *off);
 int grib_encode_double_array(size_t n_vals, const double *val, long bits_per_value, double reference_value, double d, double divisor, unsigned char *p, long *off);
 int grib_encode_double_array_complex(size_t n_vals, double *val, long nbits, double reference_value, double *scal, double d, double divisor, unsigned char *p, long *bitp);
+
+
+long accessor_raw_get_offset(grib_accessor* a);
+void accessor_raw_set_length(grib_accessor* a,size_t len);
+int accessor_bufr_data_array_create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset);
+int accessor_bufr_data_array_process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset);

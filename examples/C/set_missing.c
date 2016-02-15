@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -61,7 +61,7 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_get_long(h,"Ni",&Ni),0);
     is_missing = codes_is_missing(h, "Ni", &err);
     CODES_CHECK(err,0);
-    assert(is_missing == 1);
+    if (is_missing != 1) assert(!"Ni should be missing");
     CODES_CHECK(codes_set_long(h,"Ni", Ni),0);
 
     /* get the coded message in a buffer */

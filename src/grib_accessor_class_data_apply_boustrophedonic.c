@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -254,7 +254,22 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
 static int unpack_double_element(grib_accessor* a, size_t idx,double* val)
 {
-    return GRIB_NOT_IMPLEMENTED;
+    size_t size;
+    double* values;
+    int err = 0;
+    
+    /* GRIB-564: The index idx relates to codedValues NOT values! */
+
+    err=grib_get_size(a->parent->h,"codedValues",&size);
+    if (err) return err;
+    if (idx > size) return GRIB_INVALID_NEAREST;
+
+    values=(double*)grib_context_malloc_clear(a->parent->h->context,size*sizeof(double));
+    err=grib_get_double_array(a->parent->h,"codedValues",values,&size);
+    if (err) return err;
+    *val=values[idx];
+    grib_context_free(a->parent->h->context,values);
+    return err;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)

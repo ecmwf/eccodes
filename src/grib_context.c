@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -40,7 +40,23 @@ static void init()
     pthread_mutex_init(&mutex_mem,&attr);
     pthread_mutexattr_destroy(&attr);
 }
+#elif GRIB_OMP_THREADS
+static int once = 0;
+static omp_nest_lock_t mutex_mem;
+static omp_nest_lock_t mutex_c;
 
+static void init()
+{
+    GRIB_OMP_CRITICAL(lock_grib_context_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex_mem);
+            omp_init_nest_lock(&mutex_c);
+            once = 1;
+        }
+    }
+}
 #endif
 
 
@@ -52,7 +68,7 @@ static long cntp = 0;
 
 static void default_long_lasting_free(const grib_context* c, void* p)
 {
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     free(p);
     GRIB_MUTEX_LOCK(&mutex_mem);
     cntp--;
@@ -62,7 +78,7 @@ static void default_long_lasting_free(const grib_context* c, void* p)
 static void* default_long_lasting_malloc(const grib_context* c, size_t size)
 {
     void* ret;
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex_mem);
     cntp++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
@@ -72,7 +88,7 @@ static void* default_long_lasting_malloc(const grib_context* c, size_t size)
 
 static void default_buffer_free(const grib_context* c, void* p)
 {
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     free(p);
     GRIB_MUTEX_LOCK(&mutex_mem);
     cntp--;
@@ -82,7 +98,7 @@ static void default_buffer_free(const grib_context* c, void* p)
 static void* default_buffer_malloc(const grib_context* c, size_t size)
 {
     void* ret;
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex_mem);
     cntp++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
@@ -99,7 +115,7 @@ static void* default_buffer_realloc(const grib_context* c, void* p, size_t size)
 
 static void default_free(const grib_context* c, void* p)
 {
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     free(p);
     GRIB_MUTEX_LOCK(&mutex_mem);
     cnt--;
@@ -109,7 +125,7 @@ static void default_free(const grib_context* c, void* p)
 static void* default_malloc(const grib_context* c, size_t size)
 {
     void* ret;
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex_mem);
     cnt++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
@@ -331,7 +347,7 @@ static grib_context default_grib_context = {
 
 grib_context* grib_context_get_default()
 {
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex_c);
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
@@ -353,19 +369,18 @@ grib_context* grib_context_get_default()
         const char *keep_matrix=NULL;
         const char *nounpack=NULL;
 
-
-        write_on_fail = getenv("ECCODES_GRIB_WRITE_ON_FAIL");
-        large_constant_fields = getenv("ECCODES_GRIB_LARGE_CONSTANT_FIELDS");
-        no_abort = getenv("ECCODES_NO_ABORT");
-        debug = getenv("ECCODES_DEBUG");
-        gribex=getenv("ECCODES_GRIBEX_MODE_ON");
-        ieee_packing=getenv("ECCODES_GRIB_IEEE_PACKING");
-        io_buffer_size=getenv("ECCODES_IO_BUFFER_SIZE");
-        log_stream=getenv("ECCODES_LOG_STREAM");
-        no_big_group_split=getenv("ECCODES_GRIB_NO_BIG_GROUP_SPLIT");
-        no_spd=getenv("ECCODES_GRIB_NO_SPD");
-        keep_matrix=getenv("ECCODES_GRIB_KEEP_MATRIX");
-        nounpack=getenv("ECCODES_NO_UNPACK");
+        write_on_fail = codes_getenv("ECCODES_GRIB_WRITE_ON_FAIL");
+        large_constant_fields = codes_getenv("ECCODES_GRIB_LARGE_CONSTANT_FIELDS");
+        no_abort = codes_getenv("ECCODES_NO_ABORT");
+        debug = codes_getenv("ECCODES_DEBUG");
+        gribex = codes_getenv("ECCODES_GRIBEX_MODE_ON");
+        ieee_packing = codes_getenv("ECCODES_GRIB_IEEE_PACKING");
+        io_buffer_size = codes_getenv("ECCODES_IO_BUFFER_SIZE");
+        log_stream = codes_getenv("ECCODES_LOG_STREAM");
+        no_big_group_split = codes_getenv("ECCODES_GRIB_NO_BIG_GROUP_SPLIT");
+        no_spd = codes_getenv("ECCODES_GRIB_NO_SPD");
+        keep_matrix = codes_getenv("ECCODES_GRIB_KEEP_MATRIX");
+        nounpack = codes_getenv("ECCODES_NO_UNPACK");
 
         /* On UNIX, when we read from a file we get exactly what is in the file on disk.
          * But on Windows a file can be opened in binary or text mode. In binary mode the system behaves exactly as in UNIX.
@@ -386,7 +401,7 @@ grib_context* grib_context_get_default()
         default_grib_context.gribex_mode_on=gribex ? atoi(gribex) : 0;
         default_grib_context.large_constant_fields = large_constant_fields ? atoi(large_constant_fields) : 0;
         default_grib_context.ieee_packing=ieee_packing ? atoi(ieee_packing) : 0;
-        default_grib_context.grib_samples_path = getenv("ECCODES_SAMPLES_PATH");
+        default_grib_context.grib_samples_path = codes_getenv("ECCODES_SAMPLES_PATH");
         default_grib_context.log_stream=stderr;
         if (!log_stream) {
             default_grib_context.log_stream=stderr;
@@ -401,7 +416,7 @@ grib_context* grib_context_get_default()
             default_grib_context.grib_samples_path = ECCODES_SAMPLES_PATH ;
 #endif
 
-        default_grib_context.grib_definition_files_path = getenv("ECCODES_DEFINITION_PATH");
+        default_grib_context.grib_definition_files_path = codes_getenv("ECCODES_DEFINITION_PATH");
 #ifdef ECCODES_DEFINITION_PATH
         if(!default_grib_context.grib_definition_files_path) {
             default_grib_context.grib_definition_files_path = ECCODES_DEFINITION_PATH ;
@@ -415,8 +430,8 @@ grib_context* grib_context_get_default()
         /* GRIB-779: Special case for ECMWF testing. Not for external use! */
         /* Append the new path to our existing path */
         {
-            const char* test_defs = getenv("_ECCODES_ECMWF_TEST_DEFINITION_PATH");
-            const char* test_samp = getenv("_ECCODES_ECMWF_TEST_SAMPLES_PATH");
+            const char* test_defs = codes_getenv("_ECCODES_ECMWF_TEST_DEFINITION_PATH");
+            const char* test_samp = codes_getenv("_ECCODES_ECMWF_TEST_SAMPLES_PATH");
             if (test_defs) {
                 char buffer[DEF_PATH_MAXLEN];
                 strcpy(buffer, default_grib_context.grib_definition_files_path);
@@ -455,8 +470,7 @@ grib_context* grib_context_get_default()
     return &default_grib_context;
 }
 
-/* TODO: use parent */
-
+#if 0  /* function removed */
 grib_context* grib_context_new(grib_context* parent)
 {
     grib_context* c;
@@ -466,7 +480,7 @@ grib_context* grib_context_new(grib_context* parent)
 
     if (!parent) parent=grib_context_get_default();
 
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&(parent->mutex));
 
     c = (grib_context*)grib_context_malloc_clear_persistent(&default_grib_context,sizeof(grib_context));
@@ -501,6 +515,7 @@ grib_context* grib_context_new(grib_context* parent)
     GRIB_MUTEX_UNLOCK(&(parent->mutex));
     return c;
 }
+#endif /* function removed */
 
 /* GRIB-235: Resolve path to expand symbolic links etc */
 static char* resolve_path(grib_context* c, char* path)
@@ -544,7 +559,7 @@ static int init_definition_files_dir(grib_context* c)
     /* Note: strtok modifies its first argument so we copy */
     strncpy(path, c->grib_definition_files_path, DEF_PATH_MAXLEN);
 
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex_c);
 
     p=path;
@@ -586,7 +601,7 @@ char *grib_context_full_defs_path(grib_context* c,const char* basename)
     grib_string_list* fullpath=0;
     if (!c) c=grib_context_get_default();
 
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
 
     if(*basename == '/' || *basename ==  '.') {
         return (char*)basename;

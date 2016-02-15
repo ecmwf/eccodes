@@ -1,4 +1,4 @@
-# Copyright 2005-2015 ECMWF.
+# Copyright 2005-2016 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,7 +10,7 @@
 ascii[4] identifier  = "BUFR" : read_only,hidden;
 alias identifier=identifier;
 
-unsigned[3]   totalLength ;
+section_length[3]   totalLength ;
 
 unsigned[1] editionNumber = 4;
 

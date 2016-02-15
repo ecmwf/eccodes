@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -105,17 +105,34 @@ static void init() {
     pthread_mutex_init(&mutex,&attr);
     pthread_mutexattr_destroy(&attr);
 }
+#elif GRIB_OMP_THREADS
+static int once = 0;
+static omp_nest_lock_t mutex;
+
+static void init()
+{
+    GRIB_OMP_CRITICAL(lock_action_class_concept_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex);
+            once = 1;
+        }
+    }
+}
 #endif
 
 static grib_concept_value* get_concept(grib_handle* h,grib_action_concept* self);
 
-grib_concept_value* action_concept_get_concept(grib_accessor* a) {
+grib_concept_value* action_concept_get_concept(grib_accessor* a)
+{
     return get_concept(grib_handle_of_accessor(a),(grib_action_concept*)a->creator);
 }
 
-int action_concept_get_nofail(grib_accessor* a) {
-  grib_action_concept* self = (grib_action_concept*)a->creator ;
-  return self->nofail;
+int action_concept_get_nofail(grib_accessor* a)
+{
+    grib_action_concept* self = (grib_action_concept*)a->creator ;
+    return self->nofail;
 }
 
 grib_action* grib_action_create_concept( grib_context* context,
@@ -282,7 +299,7 @@ static grib_concept_value* get_concept_impl(grib_handle* h,grib_action_concept* 
 static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self)
 {
     grib_concept_value* result = NULL;
-    GRIB_PTHREAD_ONCE(&once,&init)
+    GRIB_MUTEX_INIT_ONCE(&once,&init)
     GRIB_MUTEX_LOCK(&mutex);
 
     result = get_concept_impl(h, self);
@@ -290,5 +307,3 @@ static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self
     GRIB_MUTEX_UNLOCK(&mutex);
     return result;
 }
-
-

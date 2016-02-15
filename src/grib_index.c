@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -37,6 +37,23 @@ static void init() {
     pthread_mutex_init(&mutex2,&attr);
     pthread_mutexattr_destroy(&attr);
 
+}
+/* #elif GRIB_OMP_THREADS */
+static int once = 0;
+static omp_nest_lock_t mutex1;
+static omp_nest_lock_t mutex2;
+
+static void init()
+{
+    GRIB_OMP_CRITICAL(lock_grib_index_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex1);
+            omp_init_nest_lock(&mutex2);
+            once = 1;
+        }
+    }
 }
 #endif
 
@@ -606,7 +623,8 @@ static int grib_write_index_keys(FILE* fh,grib_index_key* keys)
     err=grib_write_uchar(fh,(unsigned char)keys->type);
     if (err) return err;
 
-    grib_write_key_values(fh,keys->values);
+    err=grib_write_key_values(fh,keys->values);
+    if (err) return err;
 
     err=grib_write_index_keys(fh,keys->next);
     if (err) return err;
@@ -628,7 +646,6 @@ static void grib_field_delete(grib_context* c,grib_field* field)
     }
 
     grib_context_free(c,field);
-
 }
 
 static void grib_field_tree_delete(grib_context* c,grib_field_tree* tree)
@@ -1435,7 +1452,8 @@ int grib_index_select_string(grib_index* index,const char* skey,char* value)
     return 0;
 }
 
-grib_handle* grib_index_get_handle(grib_field* field,int *err) {
+grib_handle* grib_index_get_handle(grib_field* field,int *err)
+{
     return codes_index_get_handle(field,CODES_GRIB,err);
 }
 
@@ -1640,7 +1658,7 @@ grib_handle* grib_handle_new_from_index(grib_index* index,int *err)
 
 grib_handle* codes_new_from_index(grib_index* index,int message_type,int *err)
 {
-    grib_index_key* keys;
+    /*grib_index_key* keys;*/
     grib_field_list *fieldset,*next;
     grib_handle* h=NULL;
     grib_context* c=NULL;
@@ -1688,7 +1706,7 @@ grib_handle* codes_new_from_index(grib_index* index,int message_type,int *err)
 
     *err=GRIB_END_OF_INDEX;
     h=NULL;
-    keys=index->keys;
+    /*keys=index->keys;*/
 
     if ((*err=grib_index_execute(index))==GRIB_SUCCESS) {
 

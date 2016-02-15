@@ -1,5 +1,5 @@
 /*
-* Copyright 2005-2015 ECMWF.
+* Copyright 2005-2016 ECMWF.
 *
 * This software is licensed under the terms of the Apache Licence Version 2.0
 * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -135,51 +135,50 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
-  grib_accessor_bufr_has_delayed_replication* self = (grib_accessor_bufr_has_delayed_replication*)a;
-  int n=0;
-  self->expandedDescriptors=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-  a->length = 0;
-  a->flags=GRIB_ACCESSOR_FLAG_HIDDEN;
+    grib_accessor_bufr_has_delayed_replication* self = (grib_accessor_bufr_has_delayed_replication*)a;
+    int n=0;
+    self->expandedDescriptors=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    a->length = 0;
+    a->flags=GRIB_ACCESSOR_FLAG_HIDDEN;
 }
 
-static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_LONG;
-}
-
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int  get_native_type(grib_accessor* a)
 {
-  grib_accessor_bufr_has_delayed_replication* self = (grib_accessor_bufr_has_delayed_replication*)a;
-  size_t size=0,i=0;
-  long* descriptors=0;
-  int err=0;
-  long F;
-  grib_context* c=a->context;
-
-  err=grib_get_size(grib_handle_of_accessor(a),self->expandedDescriptors,&size);
-  if (err) return err;
-
-  descriptors=(long*)grib_context_malloc_clear(c,sizeof(long)*size);
-
-  err=grib_get_long_array(grib_handle_of_accessor(a),self->expandedDescriptors,descriptors,&size);
-  if (err) return err;
-
-  *val=0;
-  for (i=0;i<size;i++) {
-    F=descriptors[i]/100000;
-    if (F==1) {
-      *val=1;
-      break;
-    }
-  }
-  grib_context_free(c,descriptors);
-
-  return GRIB_SUCCESS;
+    return GRIB_TYPE_LONG;
 }
 
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
+{
+    grib_accessor_bufr_has_delayed_replication* self = (grib_accessor_bufr_has_delayed_replication*)a;
+    size_t size=0,i=0;
+    long* descriptors=0;
+    int err=0;
+    long F;
+    grib_context* c=a->context;
+
+    err=grib_get_size(grib_handle_of_accessor(a),self->expandedDescriptors,&size);
+    if (err) return err;
+
+    descriptors=(long*)grib_context_malloc_clear(c,sizeof(long)*size);
+
+    err=grib_get_long_array(grib_handle_of_accessor(a),self->expandedDescriptors,descriptors,&size);
+    if (err) return err;
+
+    *val=0;
+    for (i=0;i<size;i++) {
+        F=descriptors[i]/100000;
+        if (F==1) {
+            *val=1;
+            break;
+        }
+    }
+    grib_context_free(c,descriptors);
+
+    return GRIB_SUCCESS;
+}
 
 static int value_count(grib_accessor* a,long* rlen)
 {
-  *rlen=1;
-  return 0;
+    *rlen=1;
+    return 0;
 }
-

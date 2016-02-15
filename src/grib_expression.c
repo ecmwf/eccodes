@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -24,7 +24,6 @@ int grib_expression_native_type(grib_handle* h,grib_expression* g)
     Assert(1==0);
     return 0;
 }
-
 
 int grib_expression_evaluate_long(grib_handle* h,grib_expression* g,long* result)
 {
@@ -127,7 +126,6 @@ void grib_expression_free(grib_context* ctx,grib_expression* g)
     grib_context_free_persistent(ctx,g);
 }
 
-
 void grib_expression_add_dependency(grib_expression* e, grib_accessor* observer)
 {
     grib_expression_class *c = e->cclass;
@@ -144,7 +142,6 @@ void grib_expression_add_dependency(grib_expression* e, grib_accessor* observer)
 }
 
 /*----------------------------------------*/
-
 int grib_expression_set_value(grib_handle* h,grib_expression* g,grib_values* v)
 {
     char buffer[1024];
@@ -181,7 +178,6 @@ int grib_expression_set_value(grib_handle* h,grib_expression* g,grib_values* v)
 }
 
 /*----------------------------------------*/
-
 grib_arguments *grib_arguments_new(grib_context* c,grib_expression* g, grib_arguments* n)
 {
     grib_arguments* l = (grib_arguments*)grib_context_malloc_clear_persistent(c,sizeof(grib_arguments));
@@ -246,6 +242,7 @@ long grib_arguments_get_long(grib_handle* h,grib_arguments* args,int n)
 
     e = args->expression;
     ret = grib_expression_evaluate_long(h,e,&lres);
+    (void)ret;
     return lres;
 }
 
@@ -261,8 +258,8 @@ double grib_arguments_get_double(grib_handle* h,grib_arguments* args,int n)
 
     e = args->expression;
     ret = grib_expression_evaluate_double(h,e,&dres);
+    (void)ret;
     return dres;
-
 }
 
 grib_expression* grib_arguments_get_expression(grib_handle* h,grib_arguments* args,int n)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -131,7 +131,9 @@ int process_file(const char* filename)
             error("First latitude must be = last latitude but opposite in sign: lat1=%f, lat2=%f\n",
                     lat1, lat2);
         }
-        lats = (double*)malloc(sizeof(double)*Nj);
+        /* Note: grib_get_gaussian_latitudes() assumes the 'lats' array has 2N elements! */
+        /*       So do not allocate Nj */
+        lats = (double*)malloc(sizeof(double)* 2*N);
         CODES_CHECK(codes_get_gaussian_latitudes(N,lats), 0);
 
         if (!DBL_EQUAL(lats[0], lat1, angular_tolerance)) {

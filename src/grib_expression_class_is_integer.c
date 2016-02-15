@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -126,6 +126,7 @@ static int evaluate_long(grib_expression* g,grib_handle *h,long* result)
    else
       *result=1;
 
+  (void)val;
   return err;
 }
 

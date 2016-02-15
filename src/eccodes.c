@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -509,10 +509,6 @@ grib_points* codes_box_get_points(grib_box *box,double north, double west,double
 int codes_points_get_values(grib_handle* h, grib_points* points, double* val)
 {
     return grib_points_get_values(h,points,val);
-}
-grib_context* codes_context_new(grib_context* c)
-{
-    return grib_context_new(c);
 }
 void codes_context_delete(grib_context* c)
 {

@@ -30,6 +30,8 @@ INSTALLATION
 
 4. Run cmake pointing to the source and specify the installation location:
    > cmake  ../eccodes-x.y.z-Source -DCMAKE_INSTALL_PREFIX=/path/to/where/you/install/eccodes
+   
+   It is recommended that you install into a clean directory
 
 5. Compile, test and install:
    > make
@@ -45,7 +47,7 @@ https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation
 COPYRIGHT AND LICENSE
 ----------------------
 
-Copyright 2005-2015 ECMWF.
+Copyright 2005-2016 ECMWF.
 
 This software is licensed under the terms of the Apache Licence Version 2.0
 which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.

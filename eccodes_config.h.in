@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -32,6 +32,7 @@
 #define GRIB_MEM_ALIGN      @GRIB_MEM_ALIGN@
 
 #define GRIB_PTHREADS       @GRIB_PTHREADS@
+#define GRIB_OMP_THREADS    @GRIB_OMP_THREADS@
 
 #define ECCODES_SAMPLES_PATH    "@ECCODES_SAMPLES_PATH@"
 

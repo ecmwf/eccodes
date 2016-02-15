@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -174,6 +174,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     int ret=GRIB_SUCCESS;
+    int is_global = 0;
     long ni=0,nj=0,plpresent=0,order=0;
     size_t plsize=0;
     double* lats={0,};
@@ -182,6 +183,8 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     long* plsave=NULL;
     long row_count;
     long ilon_first=0,ilon_last=0;
+    double angular_precision = 1.0/1000000.0;
+    long editionNumber = 0;
 
     grib_accessor_number_of_points_gaussian* self = (grib_accessor_number_of_points_gaussian*)a;
     grib_context* c=a->context;
@@ -196,6 +199,10 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
         return ret;
 
     if (nj == 0) return GRIB_GEOCALCULUS_PROBLEM;
+
+    if (grib_get_long(grib_handle_of_accessor(a), "editionNumber", &editionNumber)==GRIB_SUCCESS) {
+        if (editionNumber == 1) angular_precision = 1.0/1000;
+    }
 
     if (plpresent) {
         long max_pl=0;
@@ -236,13 +243,11 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
             if (pl[j] > max_pl) max_pl = pl[j];
         }
 
+        is_global=is_gaussian_global(lat_first,lat_last,lon_first,lon_last,max_pl,lats,angular_precision);
         d=fabs(lats[0]-lats[1]);
-        if ( (fabs(lat_first-lats[0]) >= d ) ||
-                (fabs(lat_last+lats[0]) >= d )  ||
-                lon_first != 0                 ||
-                fabs(lon_last  - (360.0-360.0/max_pl)) > 360.0/max_pl
-        ) {
+        if ( !is_global ) {
             /*sub area*/
+            (void)d;
 #if EFDEBUG
             printf("-------- subarea fabs(lat_first-lats[0])=%g d=%g\n",fabs(lat_first-lats[0]),d);
             printf("-------- subarea fabs(lat_last+lats[0])=%g d=%g\n",fabs(lat_last+lats[0]),d);
@@ -261,12 +266,13 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
                 lon_first_row=((ilon_first)*360.0)/pl[j];
                 lon_last_row=((ilon_last)*360.0)/pl[j];
                 *val+=row_count;
+                (void)lon_last_row;
+                (void)lon_first_row;
 #if EFDEBUG
                 printf("        ilon_first=%ld lon_first=%.10e ilon_last=%ld lon_last=%.10e count=%ld row_count=%ld\n",
                         ilon_first,lon_first_row,ilon_last,lon_last_row,*val,row_count);
 #endif
             }
-
         } else {
             int i = 0;
             *val=0;

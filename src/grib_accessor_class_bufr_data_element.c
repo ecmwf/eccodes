@@ -1,5 +1,5 @@
 /**
-* Copyright 2005-2015 ECMWF
+* Copyright 2005-2016 ECMWF
 *
 * Licensed under the GNU Lesser General Public License which
 * incorporates the terms and conditions of version 3 of the GNU
@@ -121,7 +121,7 @@ static grib_accessor_class _grib_accessor_class_bufr_data_element = {
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
-    &make_clone,            /* clone accessor          */
+    &make_clone,               		/* clone accessor          */
 };
 
 
@@ -156,8 +156,6 @@ static void init_class(grib_accessor_class* c)
 
 static grib_accessor* make_clone(grib_accessor* a,grib_section* s,int* err)
 {
-    grib_accessor* operatorAccessor=NULL;
-    grib_action operatorCreator = {0, };
     grib_accessor* the_clone=NULL;
     grib_accessor* attribute=NULL;
     grib_accessor_bufr_data_element* elementAccessor;
@@ -194,59 +192,69 @@ static grib_accessor* make_clone(grib_accessor* a,grib_section* s,int* err)
     while (a->attributes[i]) {
         attribute=grib_accessor_clone(a->attributes[i],s,err);
         /* attribute->parent=a->parent; */
-        grib_accessor_add_attribute(the_clone,attribute);
+        grib_accessor_add_attribute(the_clone,attribute,0);
         i++;
     }
 
     return the_clone;
 }
 
-void accessor_bufr_data_element_set_index(grib_accessor* a,long index) {
+void accessor_bufr_data_element_set_index(grib_accessor* a,long index)
+{
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
     self->index=index;
 }
 
-void accessor_bufr_data_element_set_type(grib_accessor* a,int type) {
+void accessor_bufr_data_element_set_type(grib_accessor* a,int type)
+{
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
     self->type=type;
 }
 
-void accessor_bufr_data_element_set_numberOfSubsets(grib_accessor* a,long numberOfSubsets) {
+void accessor_bufr_data_element_set_numberOfSubsets(grib_accessor* a,long numberOfSubsets)
+{
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
     self->numberOfSubsets=numberOfSubsets;
 }
 
-void accessor_bufr_data_element_set_subsetNumber(grib_accessor* a,long subsetNumber) {
+void accessor_bufr_data_element_set_subsetNumber(grib_accessor* a,long subsetNumber)
+{
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
     self->subsetNumber=subsetNumber;
 }
 
-void accessor_bufr_data_element_set_compressedData(grib_accessor* a,int compressedData) {
+void accessor_bufr_data_element_set_compressedData(grib_accessor* a,int compressedData)
+{
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
     self->compressedData=compressedData;
 }
 
-void accessor_bufr_data_element_set_descriptors(grib_accessor* a,bufr_descriptors_array* descriptors) {
+void accessor_bufr_data_element_set_descriptors(grib_accessor* a,bufr_descriptors_array* descriptors)
+{
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
     self->descriptors=descriptors;
 }
 
-void accessor_bufr_data_element_set_numericValues(grib_accessor* a,grib_vdarray* numericValues) {
+void accessor_bufr_data_element_set_numericValues(grib_accessor* a,grib_vdarray* numericValues)
+{
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
     self->numericValues=numericValues;
 }
 
-void accessor_bufr_data_element_set_stringValues(grib_accessor* a,grib_vsarray* stringValues) {
+void accessor_bufr_data_element_set_stringValues(grib_accessor* a,grib_vsarray* stringValues)
+{
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
     self->stringValues=stringValues;
 }
 
-void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor* a,grib_viarray* elementsDescriptorsIndex) {
+void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor* a,grib_viarray* elementsDescriptorsIndex)
+{
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
     self->elementsDescriptorsIndex=elementsDescriptorsIndex;
 }
 
-static void init(grib_accessor* a, const long len, grib_arguments* params) {
+static void init(grib_accessor* a, const long len, grib_arguments* params)
+{
 
     a->length = 0;
     /* a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
@@ -347,8 +355,8 @@ static int unpack_string (grib_accessor* a, char* val, size_t *len)
         idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
         str=grib_context_strdup(c,self->stringValues->v[idx]->v[0]);
     } else {
-        idx=((int)self->numericValues->v[self->subsetNumber]->v[self->index]/1000-1)/self->numberOfSubsets;
-        str=grib_context_strdup(c,self->stringValues->v[self->subsetNumber]->v[idx]);
+        idx=(int)self->numericValues->v[self->subsetNumber]->v[self->index]/1000-1;
+        str=grib_context_strdup(c,self->stringValues->v[idx]->v[0]);
     }
 
     if (str==0 || strlen(str)==0) {
@@ -380,11 +388,11 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len)
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
 
     int ret=0,idx;
-    long count=0;
+    /*long count=0;*/
     char* s=NULL;
     grib_context* c=a->context;
 
-    count=self->numberOfSubsets;
+    /*count=self->numberOfSubsets;*/
     idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
     grib_sarray_delete(c,self->stringValues->v[idx]);
     self->stringValues->v[idx]=grib_sarray_new(c,1,1);

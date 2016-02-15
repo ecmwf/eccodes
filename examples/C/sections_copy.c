@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -91,7 +91,7 @@ int main ( int argc, char* argv[])
                     what_str[i]);
         }
     }
-     
+
     h=codes_grib_util_sections_copy(hfrom,hto,what,&err);
     CODES_CHECK(err,0);
 

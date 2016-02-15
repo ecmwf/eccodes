@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -22,14 +22,14 @@ grib_option grib_options[]={
         /*{"n:","noise percentage","\n\t\tAdd noise to the data values. The noise added is the given percentage of the data value.\n",0,1,0},*/
         {"p:",0,0,1,1,0},
         {"P:",0,0,0,1,0},
-        {"w:","key[:{s/d/l}]{=/!=}value,key[:{s/d/l}]=value,...",
+        {"w:","key[:{s/d/i}]{=/!=}value,key[:{s/d/i}]=value,...",
                 "\n\t\tWhere clause.\n\t\tSet is only executed for grib messages matching all the "
                 "key/value constraints.\n\t\tIf a grib message does not match the constraints it is"
                 " copied unchanged\n\t\tto the output_grib_file. This behaviour can be changed "
                 "setting the option -S."
                 "\n\t\tA valid constraint is of type key=value or key!=value."
-                "\n\t\tFor each key a string (key:s) or a double (key:d) or"
-                " a long (key:l)\n\t\ttype can be defined. Default type is string.\n",0,1,0},
+                "\n\t\tFor each key a string (key:s), a double (key:d) or"
+                " an integer (key:i)\n\t\ttype can be defined. Default type is string.\n",0,1,0},
         {"q",0,0,1,0,0},
         {"7",0,0,0,1,0},
         {"S",0,0,0,1,0},
@@ -102,7 +102,7 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
 
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
-    int i=0;
+	size_t i=0;
     int err=0;
 
     if (!options->skip) {

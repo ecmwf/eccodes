@@ -11,6 +11,7 @@ TESTS = definitions.sh \
         bufr_get.sh \
         bufr_ls.sh \
         bufr_set.sh \
+        bufr_change_edition.sh \
         gts_ls.sh \
         metar_ls.sh \
         metar_dump.sh \
@@ -24,6 +25,8 @@ TESTS = definitions.sh \
         multi.sh \
         budg.sh \
         gridType.sh \
+        octahedral.sh \
+        global.sh \
         concept.sh \
         decimalPrecision.sh \
         bitsPerValue.sh \
@@ -44,6 +47,7 @@ TESTS = definitions.sh \
         julian.sh \
         statistics.sh \
         tigge.sh \
+        uerra.sh \
         tigge_conversions.sh \
         read_any.sh \
         padding.sh \

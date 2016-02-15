@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -81,29 +81,29 @@ static void init_class(grib_action_class* c)
 /* END_CLASS_IMP */
 
 grib_action* grib_action_create_set( grib_context* context,
-  const char* name,    grib_expression* expression,int nofail)
+        const char* name,    grib_expression* expression,int nofail)
 {
-  char buf[1024];
+    char buf[1024];
 
-  grib_action_set* a ;
-  grib_action_class* c   = grib_action_class_set;
-  grib_action* act       = (grib_action*)grib_context_malloc_clear_persistent(context,c->size);
-  act->op              = grib_context_strdup_persistent(context,"section");
+    grib_action_set* a ;
+    grib_action_class* c   = grib_action_class_set;
+    grib_action* act       = (grib_action*)grib_context_malloc_clear_persistent(context,c->size);
+    act->op              = grib_context_strdup_persistent(context,"section");
 
-  act->cclass       = c;
-  a                 = (grib_action_set*)act;
-  act->context      = context;
+    act->cclass       = c;
+    a                 = (grib_action_set*)act;
+    act->context      = context;
 
-  a->expression  = expression;
-  a->name        = grib_context_strdup_persistent(context,name);
-  a->nofail      = nofail;
+    a->expression  = expression;
+    a->name        = grib_context_strdup_persistent(context,name);
+    a->nofail      = nofail;
 
 
-  sprintf(buf,"set%p",(void*)expression);
+    sprintf(buf,"set%p",(void*)expression);
 
-  act->name      = grib_context_strdup_persistent(context,buf);
+    act->name      = grib_context_strdup_persistent(context,buf);
 
-  return act;
+    return act;
 }
 
 static void compile(grib_action* act, grib_compiler *compiler)
@@ -118,38 +118,35 @@ static void compile(grib_action* act, grib_compiler *compiler)
 
 static int execute(grib_action* a, grib_handle *h)
 {
-  int ret=0;
-  grib_action_set* self = (grib_action_set*) a;
-  ret=grib_set_expression(h,self->name,self->expression);
-  if (self->nofail) return 0;
-  if (ret != GRIB_SUCCESS) {
-    grib_context_log(h->context,GRIB_LOG_ERROR,"Error while setting key %s (%s)",
-                     self->name,grib_get_error_message(ret));
-  }
-  return ret;
+    int ret=0;
+    grib_action_set* self = (grib_action_set*) a;
+    ret=grib_set_expression(h,self->name,self->expression);
+    if (self->nofail) return 0;
+    if (ret != GRIB_SUCCESS) {
+        grib_context_log(h->context,GRIB_LOG_ERROR,"Error while setting key %s (%s)",
+                self->name,grib_get_error_message(ret));
+    }
+    return ret;
 }
-
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-  int i =0;
-  grib_action_set* self=(grib_action_set*)act;
-  for (i=0;i<lvl;i++)
-    grib_context_print(act->context,f,"     ");
-  grib_context_print(act->context,f,self->name);
-  printf("\n");
+    int i =0;
+    grib_action_set* self=(grib_action_set*)act;
+    for (i=0;i<lvl;i++)
+        grib_context_print(act->context,f,"     ");
+    grib_context_print(act->context,f,self->name);
+    printf("\n");
 }
-
 
 static void destroy(grib_context* context,grib_action* act)
 {
-  grib_action_set* a = (grib_action_set*) act;
+    grib_action_set* a = (grib_action_set*) act;
 
-  grib_context_free_persistent(context, a->name);
-  grib_expression_free(context,a->expression);
-  grib_context_free_persistent(context, act->name);
-  grib_context_free_persistent(context, act->op);
-
+    grib_context_free_persistent(context, a->name);
+    grib_expression_free(context,a->expression);
+    grib_context_free_persistent(context, act->name);
+    grib_context_free_persistent(context, act->op);
 }
 
 static void xref(grib_action* d, FILE* f,const char *path)

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2015 ECMWF.
+# Copyright 2005-2016 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -95,5 +95,5 @@ unit=`${tools_dir}grib_get -p indicatorOfUnitOfTimeRange $temp`
 [ "$unit" = "0" ]
 
 rm -f $temp
-rm -f $grib2File.p8tmp ${grib2File}.tmp | true
-rm -f x.grib
+rm -f $grib2File.p8tmp ${grib2File}.tmp x.grib
+

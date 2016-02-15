@@ -1,4 +1,4 @@
-! Copyright 2005-2015 ECMWF.
+! Copyright 2005-2016 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -30,7 +30,7 @@ contains
 subroutine read_using_size_t
   implicit none
   integer :: size,intsize
-  parameter (intsize=5000000,size=intsize*4)
+  parameter (intsize=100000,size=intsize*4)
   integer            :: ifile
   integer            :: iret
   integer            :: count1=0
@@ -64,7 +64,7 @@ end subroutine read_using_size_t
 subroutine read_using_integer
   implicit none
   integer :: size,intsize
-  parameter (intsize=5000000,size=intsize*4)
+  parameter (intsize=100000,size=intsize*4)
   integer            :: ifile
   integer            :: iret
   integer            :: count1=0

@@ -1,18 +1,17 @@
-# Copyright 2005-2015 ECMWF.
+# Copyright 2005-2016 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
 #
-# In applying this licence, ECMWF does not waive the privileges and immunities
-# granted to it by virtue of its status as an intergovernmental organisation
-# nor does it submit to any jurisdiction.
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
 import traceback
 import sys
 from eccodes import *
 
 INPUT = '../../data/regular_latlon_surface.grib1'
-OUTPUT = 'out.bmp.grib'
+OUTPUT = 'out.set_bitmap_p.grib'
 MISSING = 9999
 VERBOSE = 1  # verbose error reporting
 
@@ -35,8 +34,7 @@ def example():
 
     # Check counts of missing and non-missing values
     num_data = codes_get(gid, 'numberOfDataPoints', int)
-    assert(codes_get(gid, 'numberOfCodedValues', int)
-           == num_data - num_missing)
+    assert(codes_get(gid, 'numberOfCodedValues', int) == num_data - num_missing)
     assert(codes_get(gid, 'numberOfMissing', int) == num_missing)
 
     codes_write(gid, fout)

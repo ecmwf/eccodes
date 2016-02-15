@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -124,7 +124,7 @@ static grib_accessor_class _grib_accessor_class_gen = {
     &unpack_double_element,     /* unpack only ith value          */
     &unpack_double_subarray,     /* unpack a subarray         */
     &clear,              		/* clear          */
-    &make_clone,               	/* clone accessor          */
+    &make_clone,               		/* clone accessor          */
 };
 
 

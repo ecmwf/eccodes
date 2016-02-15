@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -76,6 +76,7 @@ int main(int argc, char** argv)
         /* Loop on all the lat/lon/values. Only print non-missing values */
         while(codes_grib_iterator_next(iter,&lat,&lon,&value))
         {
+            /* Consult bitmap to see if the n'th value is missing */
             int is_missing_val = (bitmapPresent && bitmap[n] == 0);
             if (!is_missing_val) {
                 printf("- %d - lat=%f lon=%f value=%f\n",n,lat,lon,value);

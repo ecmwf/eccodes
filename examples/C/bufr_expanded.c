@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -27,7 +27,7 @@ int main(int argc,char* argv[])
     char* filename = NULL;
     FILE* in = NULL;
 
-    /* message handle. Required in all the eccodes calls acting on a message.*/
+    /* message handle. Required in all the ecCodes calls acting on a message.*/
     codes_handle* h=NULL;
 
     double *values = NULL;
@@ -47,7 +47,7 @@ int main(int argc,char* argv[])
     }
 
     /* loop over the messages in the bufr file */
-    while ((h = codes_handle_new_from_file(NULL,in,PRODUCT_BUFR,&err)) != NULL || err != CODES_SUCCESS)
+    while ((h = codes_handle_new_from_file(NULL, in, PRODUCT_BUFR, &err)) != NULL || err != CODES_SUCCESS)
     {
         if (h == NULL) {
             printf("Error: unable to create handle for message %d\n",cnt);
@@ -56,14 +56,14 @@ int main(int argc,char* argv[])
         }
 
         /* get the size of the values array*/
-        CODES_CHECK(codes_get_size(h,"numericValues",&values_len),0);    
-        printf("  number of expanded values: %ld\n",values_len);    
+        CODES_CHECK(codes_get_size(h, "numericValues", &values_len),0);
+        printf("  number of expanded values: %ld\n", values_len);
 
         /* allocate array for data values */
         values = (double*)malloc(values_len*sizeof(double));
 
         /* get the exapanded data values*/
-        CODES_CHECK(codes_get_double_array(h,"numericValues",values,&values_len),0);
+        CODES_CHECK(codes_get_double_array(h, "numericValues", values, &values_len),0);
 
         for(i = 0; i < values_len; i++)
         {

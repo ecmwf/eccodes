@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -260,7 +260,6 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
     self->values=NULL;
     self->size=0;
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
-
 }
 
 static int value_count(grib_accessor* a,long* count)
@@ -759,6 +758,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
             maxA=X[count];
             minA=X[count];
             for (i=1;i<groupLengthA;i++) {
+                DebugAssertAccess(X, count+i, numberOfValues);
                 if (maxA<X[count+i]) maxA=X[count+i];
                 if (minA>X[count+i]) minA=X[count+i];
             }
@@ -788,6 +788,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         maxC=X[offsetC];
         minC=X[offsetC];
         for (i=1;i<groupLengthC;i++) {
+            DebugAssertAccess(X, offsetC+i, numberOfValues);
             if (maxC<X[offsetC+i]) maxC=X[offsetC+i];
             if (minC>X[offsetC+i]) minC=X[offsetC+i];
         }

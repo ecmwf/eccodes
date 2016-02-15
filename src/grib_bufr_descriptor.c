@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -63,7 +63,6 @@ int grib_bufr_descriptor_set_code(grib_accessor* tables_accessor,int code,bufr_d
     v->F=code/100000;
     v->X=(code-v->F*100000)/1000;
     v->Y=(code-v->F*100000)%1000;
-    v->isMarker=bufr_is_marker(code,v->F,v->X,v->Y);
   } else {
     if (tables_accessor==NULL) return GRIB_NULL_POINTER;
     d=accessor_bufr_elements_table_get_descriptor(tables_accessor,code,&err);

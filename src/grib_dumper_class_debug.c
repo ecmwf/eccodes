@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -163,7 +163,7 @@ static int test_bit(long a, long b) {return a&(1<<b);}
 static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_debug *self = (grib_dumper_debug*)d;
-    long value; size_t size = 1;
+    long value=0; size_t size = 1;
     int err = grib_unpack_long(a,&value,&size);
     int i;
 
@@ -198,7 +198,7 @@ static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
 static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_debug *self = (grib_dumper_debug*)d;
-    double value; size_t size = 1;
+    double value=0; size_t size = 1;
     int err = grib_unpack_double(a,&value,&size);
     int i;
 
@@ -244,7 +244,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 
     p=value;
 
-    if( a->length == 0  && (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0)
+    if( a->length == 0 && (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0)
         return;
 
     set_begin_end(d,a);

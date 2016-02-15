@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2015 ECMWF.
+# Copyright 2005-2016 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -28,7 +28,7 @@ $PYTHON $examples_src/bufr_set_keys.py 2> $REDIRECT > $REDIRECT
 
 #Compare modified to the original
 set +e
-${tools_dir}/bufr_compare $f $fBufrTmp
+${tools_dir}/bufr_compare $f $fBufrTmp 1>$REDIRECT 2> $REDIRECT
 
 #Check if modified is different
 if [ $? -eq 0 ]; then

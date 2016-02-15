@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -48,9 +48,34 @@ static void init()
     pthread_mutex_init(&mutex_parse,&attr);
     pthread_mutexattr_destroy(&attr);
 }
+#elif GRIB_OMP_THREADS
+static int once = 0;
+static omp_nest_lock_t mutex_file;
+static omp_nest_lock_t mutex_rules;
+static omp_nest_lock_t mutex_concept;
+static omp_nest_lock_t mutex_hash_array;
+static omp_nest_lock_t mutex_stream;
+static omp_nest_lock_t mutex_parse;
+
+static void init()
+{
+    GRIB_OMP_CRITICAL(lock_grib_parse_utils_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex_file);
+            omp_init_nest_lock(&mutex_rules);
+            omp_init_nest_lock(&mutex_concept);
+            omp_init_nest_lock(&mutex_hash_array);
+            omp_init_nest_lock(&mutex_stream);
+            omp_init_nest_lock(&mutex_parse);
+            once = 1;
+        }
+    }
+}
 #endif
 
-int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* uname, char* fname,int fail)
+int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* uname, char* fname, int fail)
 {
     grib_accessor* a;
     char loc[1024]={0,};
@@ -62,10 +87,11 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
     long lval=0;
     int type=GRIB_TYPE_STRING;
     size_t replen = 0;
+    const size_t uname_len = strlen(uname);
 
     loc[0] = 0 ;
     fname[0] = 0 ;
-    for(i=0;i<strlen(uname);i++)
+    for(i=0; i<uname_len; i++)
     {
         if(mode > -1)
         {
@@ -144,7 +170,6 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
 int grib_accessor_print(grib_accessor* a,const char* name,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
 {
     size_t size=0;
-    char val[1024] = {0,};
     char* sval=NULL;
     char* p=NULL;
     double* dval=0;
@@ -256,7 +281,6 @@ int grib_accessor_print(grib_accessor* a,const char* name,int type,const char* f
 int grib_accessors_list_print(grib_handle* h,grib_accessors_list* al,const char* name,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
 {
     size_t size=0,len=0,replen=0;
-    char val[1024] = {0,};
     char* sval=NULL;
     char* p=NULL;
     double* dval=0;
@@ -377,10 +401,11 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
     int maxcolsd=8;
     int maxcols;
     int newline=1;
+    const size_t uname_len = strlen(uname);
 
     maxcols=maxcolsd;
     loc[0] = 0 ;
-    for(i=0;i<strlen(uname);i++)
+    for(i=0; i<uname_len; i++)
     {
         if(mode > -1)
         {
@@ -528,6 +553,8 @@ int grib_yyerror(const char* msg)
 {
     grib_context_log(grib_parser_context, GRIB_LOG_ERROR,
             "grib_parser: %s at line %d of %s", msg, grib_yylineno + 1,parse_file);
+    grib_context_log(grib_parser_context, GRIB_LOG_ERROR,
+            "ecCodes Version: %s", ECCODES_VERSION_STR);
     error = 1;
     return 1;
 }
@@ -612,7 +639,7 @@ extern int grib_yyparse(void);
 static int parse(grib_context* gc, const char* filename)
 {
     int err = 0;
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex_parse);
 
 #ifdef YYDEBUG
@@ -645,7 +672,7 @@ static int parse(grib_context* gc, const char* filename)
 
 static grib_action* grib_parse_stream(grib_context* gc, const char* filename)
 {
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex_stream);
 
     grib_parser_all_actions = 0;
@@ -667,7 +694,7 @@ static grib_action* grib_parse_stream(grib_context* gc, const char* filename)
 
 grib_concept_value* grib_parse_concept_file( grib_context* gc,const char* filename)
 {
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex_concept);
 
     gc = gc ? gc : grib_context_get_default();
@@ -684,7 +711,7 @@ grib_concept_value* grib_parse_concept_file( grib_context* gc,const char* filena
 
 grib_hash_array_value* grib_parse_hash_array_file( grib_context* gc,const char* filename)
 {
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex_hash_array);
 
     gc = gc ? gc : grib_context_get_default();
@@ -703,7 +730,7 @@ grib_rule* grib_parse_rules_file( grib_context* gc,const char* filename)
 {
     if (!gc) gc=grib_context_get_default();
 
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex_rules);
 
     gc = gc ? gc : grib_context_get_default();
@@ -722,7 +749,7 @@ grib_action* grib_parse_file( grib_context* gc,const char* filename)
 {
     grib_action_file* af;
 
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex_file);
 
     af =0;
@@ -767,7 +794,8 @@ grib_action* grib_parse_file( grib_context* gc,const char* filename)
     return af->root;
 }
 
-int grib_type_to_int(char id) {
+int grib_type_to_int(char id)
+{
     switch (id) {
     case 'd':
         return GRIB_TYPE_DOUBLE;

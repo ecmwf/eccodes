@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -876,14 +876,6 @@ void codes_dump_action_tree(codes_context* c, FILE* f) ;
 * @return            the default context, NULL it the context is not available
 */
 codes_context* codes_context_get_default(void);
-
-/**
-*  Create and allocate a new context from a parent context.
-*
-* @param c           : the context to be cloned, NULL for default context
-* @return            the new and empty context, NULL if error
-*/
-codes_context* codes_context_new(codes_context* c);
 
 /**
 *  Frees the cached definition files of the context

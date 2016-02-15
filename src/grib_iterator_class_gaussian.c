@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -127,13 +127,13 @@ static int init(grib_iterator* i,grib_handle* h,grib_arguments *args){
         grib_context_log(h->context, GRIB_LOG_ERROR,"error %d calculating gaussian points",ret);
         return ret;
     }
-/*
+    /*
   for(loi=(trunc*2)-1;loi>=0;loi--)
     if(fabs(lats[loi] - lal) < glatPrecision) break;
   for(j=(trunc*2)-1;j>0;j--) {
     if(fabs(lats[j] - laf) < glatPrecision) break;
   }
-*/
+     */
 
     binary_search(lats,size-1,start,&istart);
     Assert(istart < size);

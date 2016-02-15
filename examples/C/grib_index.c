@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -27,7 +27,6 @@ int main(int argc,char* argv[])
     grib_index* index=NULL;
     grib_handle* h=NULL;
     char* infile=NULL;
-    char* outfile=NULL;
     long *steps,*levels,*numbers; /* arrays */
     char** shortName=NULL;
     int i,j,k,l;
@@ -39,7 +38,6 @@ int main(int argc,char* argv[])
 
     if (argc != 2) usage(argv[0]);
     infile=argv[1];
-    outfile=argv[2];
 
     printf("indexing...\n");
 

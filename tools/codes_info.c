@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -68,7 +68,7 @@ int main( int argc,char* argv[])
 #if GRIB_PTHREADS
         grib_context_log(grib_context_get_default(), GRIB_LOG_DEBUG, "PTHREADS enabled");
 #endif
-        if ((path=getenv("ECCODES_DEFINITION_PATH")) != NULL) {
+        if ((path=codes_getenv("ECCODES_DEFINITION_PATH")) != NULL) {
             printf("Definition files path from environment variable");
             printf(" ECCODES_DEFINITION_PATH=%s\n",path);
         } else {
@@ -77,7 +77,7 @@ int main( int argc,char* argv[])
         }
         printf("\n");
 
-        if ((path=getenv("ECCODES_SAMPLES_PATH")) != NULL) {
+        if ((path=codes_getenv("ECCODES_SAMPLES_PATH")) != NULL) {
             printf("SAMPLES path from environment variable");
             printf(" ECCODES_SAMPLES_PATH=%s\n",path);
         } else {
@@ -92,7 +92,7 @@ int main( int argc,char* argv[])
         printf("%d.%d.%d ",major,minor,revision);
 
     if (print_flags & INFO_PRINT_DEFINITION_PATH) {
-        if ((path=getenv("ECCODES_DEFINITION_PATH")) != NULL) {
+        if ((path=codes_getenv("ECCODES_DEFINITION_PATH")) != NULL) {
             printf("%s",path);
         } else {
             printf("%s",ECCODES_DEFINITION_PATH);
@@ -100,7 +100,7 @@ int main( int argc,char* argv[])
     }
 
     if (print_flags & INFO_PRINT_SAMPLES_PATH) {
-        if ((path=getenv("ECCODES_SAMPLES_PATH")) != NULL) {
+        if ((path=codes_getenv("ECCODES_SAMPLES_PATH")) != NULL) {
             printf("%s",path);
         } else {
             printf("%s",ECCODES_SAMPLES_PATH);

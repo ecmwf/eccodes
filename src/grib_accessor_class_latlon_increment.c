@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -266,7 +266,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
   double first = 0;
   double last = 0;
   long numberOfPoints = 0;
-  long numberOfPointsInternal = 0;
+  /* long numberOfPointsInternal = 0; */
   long scansPositively = 0;
   double directionIncrementDouble=0;
 
@@ -298,7 +298,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     directionIncrementGiven=1;
     numberOfPoints=GRIB_MISSING_LONG;
   } else {
-    numberOfPointsInternal = 1+rint(fabs((last-first) / *val));
+    /* numberOfPointsInternal = 1+rint(fabs((last-first) / *val)); */
 
     directionIncrementDouble = rint (*val * (double)angleDivisor / (double)angleMultiplier);
 

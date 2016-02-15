@@ -1,4 +1,4 @@
-# Copyright 2005-2015 ECMWF.
+# Copyright 2005-2016 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,7 +15,7 @@ set -ea
 # Check the key(s) in the given grib file have the expected value(s)
 # Assumes the file has only ONE message otherwise output goes on to
 # several lines
-check_key_equals()
+grib_check_key_equals()
 {
    file=$1
    key=$2
@@ -24,3 +24,10 @@ check_key_equals()
    [ "$result" = "$val" ]
 }
 
+grib_check_key_exists()
+{
+   file=$1
+   key=$2
+   # grib_get will fail if the key is not found
+   $tools_dir/grib_get -p $key $file >/dev/null
+}

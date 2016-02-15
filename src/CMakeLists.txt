@@ -32,6 +32,7 @@ list( APPEND grib_api_srcs
     action_class_close.c
     action_class_variable.c
     action_class_modify.c
+    action_class_transient_darray.c
     eccodes.c
     grib_accessor.c
     grib_concept.c
@@ -113,6 +114,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_g2latlon.c
     grib_accessor_class_g2lon.c
     grib_accessor_class_global_gaussian.c
+    grib_accessor_class_gaussian_grid_name.c
     grib_accessor_class_gen.c
     grib_accessor_class_getenv.c
     grib_accessor_class_gts_header.c
@@ -166,6 +168,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_spectral_truncation.c
     grib_accessor_class_time.c
     grib_accessor_class_transient.c
+    grib_accessor_class_transient_darray.c
     grib_accessor_class_values.c
     grib_accessor_class_simple_packing_error.c
     grib_accessor_class_data_simple_packing.c
@@ -232,6 +235,8 @@ list( APPEND grib_api_srcs
     grib_accessor_class_statistics_spectral.c
     grib_accessor_class_unsigned.c
     grib_accessor_class_unsigned_bits.c
+    grib_accessor_class_raw.c
+    grib_accessor_class_bufr_extract_subsets.c
     grib_accessor_class_spd.c
     grib_accessor_class_sum.c
     grib_accessor_class_to_integer.c

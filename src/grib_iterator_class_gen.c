@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -76,55 +76,57 @@ static void init_class(grib_iterator_class* c)
 
 static int init(grib_iterator* i,grib_handle *h, grib_arguments* args)
 {
-  grib_iterator_gen* self = (grib_iterator_gen*) i;
-  size_t dli=0;
-  int ret = GRIB_SUCCESS;
-  const char* rawdat  = NULL;
-  const char* snumberOfPoints=NULL;
-  long numberOfPoints=0;
-  self->carg = 1;
-  
-  snumberOfPoints = grib_arguments_get_name(h,args,self->carg++);
-  self->missingValue  = grib_arguments_get_name(h,args,self->carg++);
-  rawdat      = grib_arguments_get_name(h,args,self->carg++);
+    grib_iterator_gen* self = (grib_iterator_gen*) i;
+    size_t dli=0;
+    int ret = GRIB_SUCCESS;
+    const char* rawdat  = NULL;
+    const char* snumberOfPoints=NULL;
+    long numberOfPoints=0;
+    self->carg = 1;
 
-  i->h    = h; /* We may not need to keep them */
-  i->args = args;
-  if( (ret =  grib_get_size(h,rawdat,&dli))!= GRIB_SUCCESS) return ret;
+    snumberOfPoints = grib_arguments_get_name(h,args,self->carg++);
+    self->missingValue  = grib_arguments_get_name(h,args,self->carg++);
+    rawdat      = grib_arguments_get_name(h,args,self->carg++);
 
-  if( (ret =  grib_get_long_internal(h,snumberOfPoints,&numberOfPoints))
-       != GRIB_SUCCESS)
+    i->h    = h; /* We may not need to keep them */
+    i->args = args;
+    if( (ret =  grib_get_size(h,rawdat,&dli))!= GRIB_SUCCESS) return ret;
+
+    if( (ret =  grib_get_long_internal(h,snumberOfPoints,&numberOfPoints))
+            != GRIB_SUCCESS)
+        return ret;
+
+    if (numberOfPoints!=dli) {
+        grib_context_log(h->context,GRIB_LOG_ERROR,"%s != size(%s) (%ld!=%ld)",
+                snumberOfPoints,rawdat,numberOfPoints,dli);
+        return GRIB_WRONG_GRID;
+    }
+    i->nv = dli;
+    i->data = (double*)grib_context_malloc(h->context,(i->nv)*sizeof(double));
+
+    if( (ret = grib_get_double_array_internal(h,rawdat,i->data ,&(i->nv))))
+        return ret;
+
+    i->e = -1;
+
     return ret;
-
-  if (numberOfPoints!=dli) {
-    grib_context_log(h->context,GRIB_LOG_ERROR,"%s != size(%s) (%ld!=%ld)",
-                     snumberOfPoints,rawdat,numberOfPoints,dli);
-    return GRIB_WRONG_GRID;
-  }
-  i->nv = dli;
-  i->data = (double*)grib_context_malloc(h->context,(i->nv)*sizeof(double));
-
-  if( (ret = grib_get_double_array_internal(h,rawdat,i->data ,&(i->nv))))
-    return ret;
-
-  i->e = -1;
-
-  return ret;
 }
 
-static int reset(grib_iterator* i){
-  i->e = -1;
-  return 0;
+static int reset(grib_iterator* i)
+{
+    i->e = -1;
+    return 0;
 }
 
-static int destroy(grib_iterator* ei){
-  const grib_context *c = ei->h->context;
-  grib_context_free(c,ei->data);
-  return 1;
+static int destroy(grib_iterator* ei)
+{
+    const grib_context *c = ei->h->context;
+    grib_context_free(c,ei->data);
+    return 1;
 }
 
-
-static long has_next(grib_iterator* i){
-  if(i->data == NULL) return 0;
-  return   i->nv - i->e;
+static long has_next(grib_iterator* i)
+{
+    if(i->data == NULL) return 0;
+    return   i->nv - i->e;
 }

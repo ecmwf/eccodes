@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,12 +9,12 @@
  */
 
 /*
- * C Implementation: grib_multi  
+ * C Implementation: grib_multi
  *
  * Description: How to decode GRIB messages containing multiple
  *              fields. Try to turn on and off multi support to
  *              see the difference. Default is OFF.
- *  			For all the tools defalut is multi support ON.
+ *              For all the tools defalut is multi support ON.
  *
  */
 #include <stdio.h>

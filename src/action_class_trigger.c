@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -91,91 +91,86 @@ static void init_class(grib_action_class* c)
 
 grib_action *grib_action_create_trigger(grib_context *context, grib_arguments *args, grib_action *block)
 {
-	char name[1024];
+    char name[1024];
 
-	grib_action_trigger* a = 0;
-	grib_action_class* c   =  grib_action_class_trigger;
-	grib_action* act       =  (grib_action*)grib_context_malloc_clear_persistent(context,c->size);
+    grib_action_trigger* a = 0;
+    grib_action_class* c   =  grib_action_class_trigger;
+    grib_action* act       =  (grib_action*)grib_context_malloc_clear_persistent(context,c->size);
 
-	sprintf(name,"_trigger%p",(void*)act);
+    sprintf(name,"_trigger%p",(void*)act);
 
-	act-> name             =  grib_context_strdup_persistent(context,name);
-	act-> op               =  grib_context_strdup_persistent(context,"section");
-	act-> cclass           =  c;
-	act-> next             =  NULL;
-	act->context           =  context;
+    act-> name             =  grib_context_strdup_persistent(context,name);
+    act-> op               =  grib_context_strdup_persistent(context,"section");
+    act-> cclass           =  c;
+    act-> next             =  NULL;
+    act->context           =  context;
 
-	a = ( grib_action_trigger*)act;
-	a->trigger_on        = args;
-	a->block             = block;
+    a = ( grib_action_trigger*)act;
+    a->trigger_on        = args;
+    a->block             = block;
 
-	return act;
+    return act;
 }
 
 static void dump( grib_action* act, FILE* f, int lvl)
 {
-	/* grib_action_trigger* a = ( grib_action_trigger*)act; */
-	int i = 0;
-	for (i=0;i<lvl;i++) grib_context_print(act->context,f,"     ");
-	grib_context_print(act->context,f,"Trigger\n");  
-
+    /* grib_action_trigger* a = ( grib_action_trigger*)act; */
+    int i = 0;
+    for (i=0;i<lvl;i++) grib_context_print(act->context,f,"     ");
+    grib_context_print(act->context,f,"Trigger\n");
 }
-
 
 static int  create_accessor(grib_section* p, grib_action* act, grib_loader *h )
 {
-	int ret = GRIB_SUCCESS;
-	grib_action_trigger* a = ( grib_action_trigger*)act;
-	grib_action* next = NULL;
-	grib_accessor* as = NULL;
-	grib_section*         gs = NULL;
+    int ret = GRIB_SUCCESS;
+    grib_action_trigger* a = ( grib_action_trigger*)act;
+    grib_action* next = NULL;
+    grib_accessor* as = NULL;
+    grib_section*         gs = NULL;
 
 
-	as = grib_accessor_factory(p, act,0,NULL);  
+    as = grib_accessor_factory(p, act,0,NULL);
 
-	if(!as) return GRIB_INTERNAL_ERROR;
+    if(!as) return GRIB_INTERNAL_ERROR;
 
-	gs = as->sub_section;
-	gs->branch = 0; /* Force a reparse each time */
+    gs = as->sub_section;
+    gs->branch = 0; /* Force a reparse each time */
 
-	grib_push_accessor(as,p->block);
-	grib_dependency_observe_arguments(as,a->trigger_on);
+    grib_push_accessor(as,p->block);
+    grib_dependency_observe_arguments(as,a->trigger_on);
 
-	next = a->block;
+    next = a->block;
 
-	while(next){
-		ret = grib_create_accessor(gs, next,h);
-		if(ret != GRIB_SUCCESS) return ret;
-		next= next->next;
-	}
+    while(next){
+        ret = grib_create_accessor(gs, next,h);
+        if(ret != GRIB_SUCCESS) return ret;
+        next= next->next;
+    }
 
-	return GRIB_SUCCESS;
-
+    return GRIB_SUCCESS;
 }
-
 
 static grib_action* reparse(grib_action* a,grib_accessor* acc,int* doit)
 {
-	grib_action_trigger* self = (grib_action_trigger*)a;
-	return self->block;
+    grib_action_trigger* self = (grib_action_trigger*)a;
+    return self->block;
 }
-
 
 /* COMEBACK */
 static void destroy(grib_context* context,grib_action* act)
 {
-	grib_action_trigger* a = (grib_action_trigger*)act;
+    grib_action_trigger* a = (grib_action_trigger*)act;
 
-	grib_action *b = a->block;
+    grib_action *b = a->block;
 
-	while(b)
-	{
-		grib_action *n = b->next;
-		grib_action_delete(context,b);
-		b = n;
-	}
+    while(b)
+    {
+        grib_action *n = b->next;
+        grib_action_delete(context,b);
+        b = n;
+    }
 
-	grib_arguments_free(context, a->trigger_on);
-	grib_context_free_persistent(context, act->name);
-	grib_context_free_persistent(context, act->op);
+    grib_arguments_free(context, a->trigger_on);
+    grib_context_free_persistent(context, act->name);
+    grib_context_free_persistent(context, act->op);
 }

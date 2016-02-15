@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -26,9 +26,9 @@ int main(int argc,char* argv[])
     codes_handle* h=NULL;
 
     double doubleVal;
-    int i, err=0;
+    int err=0;
     int cnt=0;
-    char* infile = "../../data/bufr/syno_1.bufr";
+    const char* infile = "../../data/bufr/syno_1.bufr";
 
     in=fopen(infile,"r");
     if (!in) 

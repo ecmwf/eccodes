@@ -1,0 +1,26 @@
+# Copyright 2005-2016 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+# 
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+# TEMPLATE 4.56, individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for spatio-temporal changing tile parameters
+
+include "grib2/template.4.parameter_tile.def"
+include "grib2/template.4.horizontal.def"
+
+# Note: This template is missing the entry:
+#  Type of ensemble forecast
+# which is present in all other templates with EPS info! Mistake by WMO?
+
+# So we cannot include the eps template due to this missing entry!
+# include "grib2/template.4.eps.def"
+# Have to manually define the keys
+unsigned[1] perturbationNumber  : dump;
+alias number=perturbationNumber;
+
+unsigned[1] numberOfForecastsInEnsemble  : dump;
+alias totalNumber=numberOfForecastsInEnsemble;
+

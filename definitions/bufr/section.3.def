@@ -1,4 +1,4 @@
-# Copyright 2005-2015 ECMWF.
+# Copyright 2005-2016 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -23,23 +23,22 @@ transient tableNumber=0;
 #codetable[4] codeTablesMaster '[tablesMasterDir]/codetables/[tableNumber].table' : string_type,transient;
 #codetable[4] codeTablesLocal '[tablesLocalDir]/codetables/[tableNumber].table' : string_type,transient;
 
-hash_array sequences (defaultSequence,"sequence.def",tablesMasterDir,tablesLocalDir): long_type;
+hash_array sequences (defaultSequence,"sequence.def",tablesMasterDir,tablesLocalDir): long_type,no_copy;
 #smart_table codeFlags ("codeFlag.def",tablesMasterDir,tablesLocalDir,...);
 
 position offsetSection3;
-section_length[3]       section3Length ;
-unsigned[1]     reserved = 0;
+section_length[3]       section3Length = 9 ;
+unsigned[1]     reservedSection3 = 0;
 unsigned[2]     numberOfSubsets : dump;
 alias ls.numberOfSubsets=numberOfSubsets;
 
 if (section2Present && bufrHeaderCentre==98 && section2Length==52) {
 
-		concept isSatelliteType(zero) {
-			1 = {rdbType = 2;  }
-			1 = {rdbType = 3;  }
-			1 = {rdbType = 8;  }
-			1 = {rdbType = 12; }
-		}
+    if ( rdbType == 2 || rdbType == 3 || rdbType == 8 || rdbType == 12 ) {
+      transient isSatelliteType=1;
+    } else {
+      transient isSatelliteType=0;
+    }
 		if (isSatelliteType || numberOfSubsets>1) {
 				constant isSatellite=1;
 		} else {
@@ -47,60 +46,64 @@ if (section2Present && bufrHeaderCentre==98 && section2Length==52) {
 		}
     alias rdb.isSatellite=isSatellite;
 		if (isSatellite) {
-        meta localLongitude1 bits(keyData,40,26,-18000000,100000) : dump;
-        meta localLatitude1 bits(keyData,72,25,-9000000,100000) : dump;
-        meta localLongitude2 bits(keyMore,0,26,-18000000,100000) : dump;
-        meta localLatitude2 bits(keyMore,32,25,-9000000,100000) : dump;
+        meta localLongitude1 bits(keyData,40,26,-18000000,100000) : dump,no_copy;
+        meta localLatitude1 bits(keyData,72,25,-9000000,100000) : dump,no_copy;
+        meta localLongitude2 bits(keyMore,0,26,-18000000,100000) : dump,no_copy;
+        meta localLatitude2 bits(keyMore,32,25,-9000000,100000) : dump,no_copy;
 
 				if (numberOfSubsets>255 || 
 						( rdbSubtype>=121 && rdbSubtype <=130 ) || 
 						rdbSubtype==31) {
-						meta ls.numberOfObservations bits(keySat,0,16) : dump,long_type;
-						meta ls.satelliteID bits(keySat,16,16) : dump,long_type;
+						meta ls.numberOfObservations bits(keySat,0,16) : dump,long_type,no_copy;
+						meta ls.satelliteID bits(keySat,16,16) : dump,long_type,no_copy;
 				} else {
-						meta ls.numberOfObservations bits(keySat,0,8) : dump,long_type;
-						meta ls.satelliteID bits(keySat,8,16) : dump,long_type;
+						meta ls.numberOfObservations bits(keySat,0,8) : dump,long_type,no_copy;
+						meta ls.satelliteID bits(keySat,8,16) : dump,long_type,no_copy;
 				}
 		} else {
-        meta ls.localLatitude bits(keyData,72,25,-9000000,100000) : dump;
-        meta ls.localLongitude bits(keyData,40,26,-18000000,100000) : dump;
-        alias ls.ident=keyMore : dump,string_type;
+        meta ls.localLatitude bits(keyData,72,25,-9000000,100000) : dump,no_copy;
+        meta ls.localLongitude bits(keyData,40,26,-18000000,100000) : dump,no_copy;
+        alias ls.ident=keyMore : dump,string_type,no_copy;
     }
 }
 
 flags[1]        section3Flags 'bufr/section3_flags.table';
-flagbit observedData(section3Flags,7) : dump;
-flagbit compressedData(section3Flags,6) : dump;
+flagbit observedData(section3Flags,7) : dump,no_copy;
+flagbit compressedData(section3Flags,6) : dump,no_copy;
 position offsetDescriptors;
+
+
 transient createNewData=1;
-meta numberOfUnexpandedDescriptors   evaluate( (section3Length - 7) / 2 ) ;
-meta unexpandedDescriptors unexpanded_descriptors(numberOfUnexpandedDescriptors,createNewData) :dump;
+meta numberOfUnexpandedDescriptors   evaluate( (section3Length - 7) / 2 ) : no_copy;
+
+meta unexpandedDescriptorsEncoded raw(totalLength,section3Length,7) : hidden;
+meta unexpandedDescriptors unexpanded_descriptors(unexpandedDescriptorsEncoded,createNewData) :dump,no_copy;
 
 concept BufrTemplate (unknown,"BufrTemplate.def",templatesMasterDir,templatesLocalDir) : no_copy;
 
-meta elementsTable bufr_elements_table("element.table",tablesMasterDir,tablesLocalDir) : hidden; 
+meta elementsTable bufr_elements_table("element.table",tablesMasterDir,tablesLocalDir) : hidden,no_copy; 
 
 
-meta expandedCodes      expanded_descriptors(elementsTable,expandedCodes,0,unexpandedDescriptors,sequences); 
+meta expandedCodes      expanded_descriptors(elementsTable,expandedCodes,0,unexpandedDescriptors,sequences) : no_copy; 
 alias expandedDescriptors=expandedCodes;
 #meta expandedReferences expanded_descriptors(elemetsTable,expandedCodes,2);
 #meta expandedWidths     expanded_descriptors(elemetsTable,expandedCodes,3);
 #meta expandedType       expanded_descriptors(elemetsTable,expandedCodes,4);
 
-meta bufrdcExpandedDescriptors bufrdc_expanded_descriptors(expandedCodes);
+meta bufrdcExpandedDescriptors bufrdc_expanded_descriptors(expandedCodes) : no_copy;
 
 #smart_table NAME (VALUES,FILE_NAME,MASTER_DIRECTORY,LOCAL_DIRECTORY,WIDTH_OF_CODE_IN_BITS,EXTRA_DIRECTORY,EXTRA_FILE_NAME);
-smart_table expandedOriginalCodes (expandedCodes,"element.table",tablesMasterDir,tablesLocalDir,18,rootTablesDir,"operators.table") ;
-meta expandedAbbreviations 	      smart_table_column(expandedOriginalCodes,0,1) : string_type;
-meta expandedTypes 					      smart_table_column(expandedOriginalCodes,1,0) : string_type;
-meta expandedNames 					      smart_table_column(expandedOriginalCodes,2,0)	:	string_type;
-meta expandedUnits 					      smart_table_column(expandedOriginalCodes,3,0)	:	string_type;
-meta expandedOriginalScales 	    smart_table_column(expandedOriginalCodes,4,0)	:	long_type;
-meta expandedOriginalReferences 	smart_table_column(expandedOriginalCodes,5,0)	:	long_type;
-meta expandedOriginalWidths 			smart_table_column(expandedOriginalCodes,6,0)	:	long_type;
-meta expandedCrex_units 			    smart_table_column(expandedOriginalCodes,7,0)	:	long_type;
-meta expandedCrex_scales 		      smart_table_column(expandedOriginalCodes,8,0)	:	long_type;
-meta expandedCrex_widths 		      smart_table_column(expandedOriginalCodes,9,0)	:	long_type;
+smart_table expandedOriginalCodes (expandedCodes,"element.table",tablesMasterDir,tablesLocalDir,18,rootTablesDir,"operators.table") :no_copy;
+meta expandedAbbreviations 	      smart_table_column(expandedOriginalCodes,0,1) : string_type,no_copy;
+meta expandedTypes 					      smart_table_column(expandedOriginalCodes,1,0) : string_type,no_copy;
+meta expandedNames 					      smart_table_column(expandedOriginalCodes,2,0)	:	string_type,no_copy;
+meta expandedUnits 					      smart_table_column(expandedOriginalCodes,3,0)	:	string_type,no_copy;
+meta expandedOriginalScales 	    smart_table_column(expandedOriginalCodes,4,0)	:	long_type,no_copy;
+meta expandedOriginalReferences 	smart_table_column(expandedOriginalCodes,5,0)	:	long_type,no_copy;
+meta expandedOriginalWidths 			smart_table_column(expandedOriginalCodes,6,0)	:	long_type,no_copy;
+meta expandedCrex_units 			    smart_table_column(expandedOriginalCodes,7,0)	:	long_type,no_copy;
+meta expandedCrex_scales 		      smart_table_column(expandedOriginalCodes,8,0)	:	long_type,no_copy;
+meta expandedCrex_widths 		      smart_table_column(expandedOriginalCodes,9,0)	:	long_type,no_copy;
 
 position endDescriptors;
 section_padding section3Padding;

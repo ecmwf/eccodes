@@ -6,16 +6,16 @@ alias ls.rdbSubtype=rdbSubtype;
 
 byte[13]      keyData : hidden; 
 
-meta localYear   bits(keyData,0,12) : long_type ;
-meta localMonth  bits(keyData,12,4) : long_type;
-meta localDay    bits(keyData,16,6) : long_type;
-meta localHour   bits(keyData,22,5) : long_type;
-meta localMinute bits(keyData,27,6) : long_type;
-meta localSecond bits(keyData,33,6) : long_type;
-meta spare  bits(keyData,39,1); # 40 bits = 10 bytes
+meta localYear   bits(keyData,0,12) : long_type,no_copy ;
+meta localMonth  bits(keyData,12,4) : long_type,no_copy;
+meta localDay    bits(keyData,16,6) : long_type,no_copy;
+meta localHour   bits(keyData,22,5) : long_type,no_copy;
+meta localMinute bits(keyData,27,6) : long_type,no_copy;
+meta localSecond bits(keyData,33,6) : long_type,no_copy;
+meta spare  bits(keyData,39,1) : no_copy; # 40 bits = 10 bytes
 
-meta ls.typicalDate sprintf("%.4d%.2d%.2d",localYear,localMonth,localDay) : dump;
-meta ls.typicalTime sprintf("%.2d%.2d%.2d",localHour,localMinute,localSecond) :dump;
+meta ls.typicalDate sprintf("%.4d%.2d%.2d",localYear,localMonth,localDay) : dump,no_copy;
+meta ls.typicalTime sprintf("%.2d%.2d%.2d",localHour,localMinute,localSecond) :dump,no_copy;
 
 # isSatellite and other stuff moved to section 3
 ascii[8]    keyMore : hidden; 
@@ -28,33 +28,33 @@ alias rdb.messageLength=messageLength;
 byte[3] rdbtime;
 alias ls.rdbtimeYear = localYear;
 alias ls.rdbtimeMonth = localMonth;
-meta rdbtimeDay     bits(rdbtime,0,6) : dump,long_type;
-meta rdbtimeHour    bits(rdbtime,6,5) : dump,long_type;
-meta rdbtimeMinute  bits(rdbtime,11,6) : dump,long_type;
-meta rdbtimeSecond  bits(rdbtime,17,6) : dump,long_type;
+meta rdbtimeDay     bits(rdbtime,0,6) : dump,long_type,no_copy;
+meta rdbtimeHour    bits(rdbtime,6,5) : dump,long_type,no_copy;
+meta rdbtimeMinute  bits(rdbtime,11,6) : dump,long_type,no_copy;
+meta rdbtimeSecond  bits(rdbtime,17,6) : dump,long_type,no_copy;
 
 byte[3] rectime;
-meta rectimeDay     bits(rectime,0,6) : dump,long_type;
-meta rectimeHour    bits(rectime,6,5) : dump,long_type;
-meta rectimeMinute  bits(rectime,11,6) : dump,long_type;
-meta rectimeSecond  bits(rectime,17,6) : dump,long_type;
+meta rectimeDay     bits(rectime,0,6) : dump,long_type,no_copy;
+meta rectimeHour    bits(rectime,6,5) : dump,long_type,no_copy;
+meta rectimeMinute  bits(rectime,11,6) : dump,long_type,no_copy;
+meta rectimeSecond  bits(rectime,17,6) : dump,long_type,no_copy;
 
 byte[1] corr1Data;
-meta correction1     bits(corr1Data,0,6) : dump,long_type;
-meta correction1Part bits(corr1Data,6,1) : dump,long_type;
+meta correction1     bits(corr1Data,0,6) : dump,long_type,no_copy;
+meta correction1Part bits(corr1Data,6,1) : dump,long_type,no_copy;
 
 byte[1] corr2Data;
-meta correction2     bits(corr2Data,0,6) : dump,long_type;
-meta correction2Part bits(corr2Data,6,1) : dump,long_type;
+meta correction2     bits(corr2Data,0,6) : dump,long_type,no_copy;
+meta correction2Part bits(corr2Data,6,1) : dump,long_type,no_copy;
 
 byte[1] corr3Data;
-meta correction3     bits(corr3Data,0,6) : dump,long_type;
-meta correction3Part bits(corr3Data,6,1) : dump,long_type;
+meta correction3     bits(corr3Data,0,6) : dump,long_type,no_copy;
+meta correction3Part bits(corr3Data,6,1) : dump,long_type,no_copy;
 
 byte[1] corr4Data;
-meta correction4     bits(corr4Data,0,6) : dump,long_type;
-meta correction4Part bits(corr4Data,6,1) : dump,long_type;
+meta correction4     bits(corr4Data,0,6) : dump,long_type,no_copy;
+meta correction4Part bits(corr4Data,6,1) : dump,long_type,no_copy;
 
 unsigned[1] qualityControl : dump,long_type;
 alias qualityControl=qualityControl;
-unsigned[3] spare;
+unsigned[3] spare1;

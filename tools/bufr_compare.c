@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -80,21 +80,18 @@ static void write_message(grib_handle* h,const char* str)
     const void *m; size_t s;
     char fname[1024]={0,};
     FILE* fh=NULL;
-    int ioerr=0;
 
     grib_get_message(h,&m,&s);
     sprintf(fname,"%s_%d.bufr",str,write_count);
 
     fh= fopen(fname,"w");
     if(!fh) {
-        ioerr=errno;
         grib_context_log(h->context,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),
                 "Error opening %s",fname);
         exit(GRIB_IO_PROBLEM);
     }
 
     if(fwrite(m,1,s,fh) != s) {
-        ioerr=errno;
         grib_context_log(h->context,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),
                 "Error writing to %s",fname);
         exit(GRIB_IO_PROBLEM);
@@ -561,7 +558,6 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
     unsigned char *uval1 = NULL,*uval2 = NULL;
     double *dval1 = NULL, *dval2 = NULL;
     long *lval1 = NULL, *lval2 = NULL;
-    int failed=0;
     double maxdiff=0;
     double packingError1=0,packingError2=0;
     double value_tolerance=0;
@@ -864,7 +860,6 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
             if (verbose) printf("  (%d values) tolerance=%g\n",(int)len1,value_tolerance);
             for(i = 0; i < len1; i++) {
                 if((diff=compare_double(pv1++,pv2++,&value_tolerance))!=0) {
-                    failed=1;
                     countdiff++;
                     if (maxdiff < diff) {maxdiff=diff;imaxdiff=i;}
                     err1 = GRIB_VALUE_MISMATCH;

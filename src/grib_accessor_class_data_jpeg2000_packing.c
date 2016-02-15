@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -192,7 +192,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
     self->jpeg_lib=OPENJPEG_LIB;
 #endif
 
-    if ((user_lib=getenv("ECCODES_GRIB_JPEG"))!=NULL ) {
+    if ((user_lib=codes_getenv("ECCODES_GRIB_JPEG"))!=NULL ) {
         if (!strcmp(user_lib,"jasper")) {
             self->jpeg_lib=JASPER_LIB;
         } else if (!strcmp(user_lib,"openjpeg")) {
@@ -200,7 +200,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
         }
     }
 
-    self->dump_jpg  = getenv("ECCODES_GRIB_DUMP_JPG_FILE");
+    self->dump_jpg = codes_getenv("ECCODES_GRIB_DUMP_JPG_FILE");
 
     if(first) {
         if(self->dump_jpg)

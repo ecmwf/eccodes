@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2015 ECMWF.
+# Copyright 2005-2016 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,7 +12,6 @@
 
 tempLog=temp.ls.log
 rm -f $tempLog
-workdir=`pwd`
 
 cd ${data_dir}
 infile=regular_gaussian_model_level.grib1
@@ -79,5 +78,13 @@ ${tools_dir}grib_ls -p uuidOfVGrid test_uuid.grib2 > /dev/null
 type=`${tools_dir}grib_get -wcount=1 -p typeOfLevel test_uuid.grib2`
 [ "$type" = "generalVertical" ]
 
-cd $workdir
+# GRIB-213 nearest with land-sea mask
+temp_ls=test.grib-213.temp
+${tools_dir}grib_ls -l 85,13,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$temp_ls
+grep -q 'Point chosen #3 index=21 .* distance=11\.' $temp_ls
+
+${tools_dir}grib_ls -l 53,2,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$temp_ls
+grep -q 'Point chosen #2 index=749 .* distance=204\.' $temp_ls
+
+rm -f $temp_ls
 

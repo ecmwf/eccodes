@@ -35,6 +35,8 @@ list( APPEND tests1
     definitions
     calendar
     unit_tests
+    md5
+    uerra
 )
 list( APPEND tests2
     bufr_dump
@@ -47,6 +49,8 @@ list( APPEND tests2
     bufr_filter
     bufr_json
     bufr_ls
+    bufr_change_edition
+    ecc-197
     gts_ls
     metar_ls
     metar_dump
@@ -60,6 +64,8 @@ list( APPEND tests2
     multi
     budg
     gridType
+    octahedral
+    global
     concept
     decimalPrecision
     bitsPerValue
@@ -84,7 +90,6 @@ list( APPEND tests2
     read_any
     padding
     debug
-    md5
     grib_util_set_spec
 	neg_fctime
 )
@@ -92,8 +97,8 @@ list( APPEND tests2
 # These tests do not require any data downloads
 foreach( test ${tests1} )
     ecbuild_add_test( TARGET eccodes_t_${test}
-                  TYPE SCRIPT
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                      TYPE SCRIPT
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
     )
 endforeach()
 ecbuild_add_test( TARGET eccodes_t_check_gaussian_grids
@@ -110,6 +115,7 @@ foreach( test ${tests2} )
     ecbuild_add_test( TARGET eccodes_t_${test}
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                  RESOURCES asca_139.t1.ref
                   TEST_DEPENDS eccodes_get_gribs eccodes_get_tigge_gribs eccodes_get_bufrs eccodes_get_metars eccodes_get_gts
     )
 endforeach()

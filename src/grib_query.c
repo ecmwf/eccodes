@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -227,18 +227,20 @@ static grib_accessor* search_by_rank(grib_handle* h, const char* name,const char
 }
 
 static int condition_true(grib_accessor* a,codes_condition* condition) {
-    int ret=0;
+    int ret=0, err=0;
     size_t size=1;
-    long lval;
-    double dval;
+    long lval=0;
+    double dval=0;
     switch (condition->rightType) {
     case GRIB_TYPE_LONG:
-        grib_unpack_long(a,&lval,&size);
-        ret = lval==condition->rightLong ? 1 : 0;
+        err = grib_unpack_long(a,&lval,&size);
+        if (err) ret = 0;
+        else     ret = lval==condition->rightLong ? 1 : 0;
         break;
     case GRIB_TYPE_DOUBLE:
-        grib_unpack_double(a,&dval,&size);
-        ret = dval==condition->rightDouble ? 1 : 0;
+        err = grib_unpack_double(a,&dval,&size);
+        if (err) ret = 0;
+        else     ret = dval==condition->rightDouble ? 1 : 0;
         break;
     default :
         ret=0;
@@ -472,9 +474,7 @@ grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name)
     while ( *p != '.' && *p != '\0' ) p++;
     if ( *p == '.' ) {
         int i=0,len=0;
-        char* basename=NULL;
         char name_space[1024];
-        basename=p+1;
         p--;
         i=0;
         len=p-name+1;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -206,7 +206,7 @@ static int concept_condition_iarray_true(grib_handle* h,grib_concept_condition* 
   err=grib_get_size(h,c->name,&size);
   if (err==0 || size!=grib_iarray_used_size(c->iarray)) return 0;
 
-  val=grib_context_malloc_clear(h->context,sizeof(long)*size);
+  val=(long*)grib_context_malloc_clear(h->context,sizeof(long)*size);
 
   err=grib_get_long_array(h,c->name,val,&size);
   if (err==0) return 0;
@@ -231,7 +231,7 @@ static const char* concept_evaluate(grib_accessor* a)
 {
     int match = 0;
     const char* best = 0;
-    const char* prev = 0;
+    /* const char* prev = 0; */
     grib_concept_value*  c = action_concept_get_concept(a);
     grib_handle* h=grib_handle_of_accessor(a);
 
@@ -249,7 +249,7 @@ static const char* concept_evaluate(grib_accessor* a)
         if(e == NULL)
         {
             if(cnt >= match) {
-                prev  = (cnt > match) ? NULL : best;
+                /* prev  = (cnt > match) ? NULL : best; */
                 match = cnt;
                 best  = c->name;
             }
@@ -323,7 +323,6 @@ int grib_concept_apply(grib_accessor* a, const char* name)
     grib_values values[1024];
     grib_sarray* sa=NULL;
     grib_concept_value* c=NULL;
-    grib_accessor_concept* self=(grib_accessor_concept*)a;
     grib_concept_value*  concepts = action_concept_get_concept(a);
     grib_handle* h=grib_handle_of_accessor(a);
     grib_action* act=a->creator;

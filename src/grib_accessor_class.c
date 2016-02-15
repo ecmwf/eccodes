@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -28,6 +28,21 @@ static void init() {
     pthread_mutexattr_destroy(&attr);
 
 }
+#elif GRIB_OMP_THREADS
+static int once = 0;
+static omp_nest_lock_t mutex1;
+
+static void init()
+{
+    GRIB_OMP_CRITICAL(lock_grib_accessor_class_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex1);
+            once = 1;
+        }
+    }
+}
 #endif
 
 struct table_entry
@@ -55,7 +70,7 @@ grib_section*  grib_create_root_section(const grib_context *context, grib_handle
     char* fpath=0;
     grib_section*   s   = (grib_section*) grib_context_malloc_clear(context,sizeof(grib_section));
 
-    GRIB_PTHREAD_ONCE(&once,&init);
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex1);
     if(h->context->grib_reader == NULL) {
         if ((fpath=grib_context_full_defs_path(h->context,"boot.def"))==NULL) {
@@ -176,7 +191,8 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     return a;
 }
 
-static void link_same_attributes(grib_accessor* a,grib_accessor* b) {
+static void link_same_attributes(grib_accessor* a,grib_accessor* b)
+{
   int i=0;
   int idx=0;
   grib_accessor* bAttribute=NULL;

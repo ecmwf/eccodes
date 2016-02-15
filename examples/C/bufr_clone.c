@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     FILE *in = NULL;
     FILE *out = NULL;
 
-    /* message handle. Required in all the eccodes calls acting on a message.*/
+    /* message handle. Required in all the ecCodes calls acting on a message.*/
     codes_handle *source_handle = NULL;
 
     const void *buffer = NULL;
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
     }
 
     /* create a handle for the first message */
-    source_handle = codes_handle_new_from_file(NULL,in,PRODUCT_BUFR,&err);
+    source_handle = codes_handle_new_from_file(NULL, in, PRODUCT_BUFR, &err);
 
     if (source_handle == NULL) {
         perror("ERROR: could not create handle for message");
@@ -80,10 +80,10 @@ int main(int argc, char *argv[])
         CODES_CHECK(codes_set_long(clone_handle, "bufrHeaderCentre", 222),0);
 
         /* get the coded message in a buffer */
-        CODES_CHECK(codes_get_message(clone_handle,&buffer,&size),0);
+        CODES_CHECK(codes_get_message(clone_handle, &buffer, &size),0);
 
         /* write the buffer to a file */
-        if(fwrite(buffer,1,size,out) != size) {
+        if(fwrite(buffer, 1, size, out) != size) {
             perror("ERROR: could not write message to file");
             return 1;
         }

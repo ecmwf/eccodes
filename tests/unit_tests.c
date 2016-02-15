@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -61,7 +61,7 @@ void test_gaussian_latitudes(int order)
     double* lats = (double*)malloc( sizeof(double)*num );
 
     ret = grib_get_gaussian_latitudes(order, lats);
-    assert(ret == GRIB_SUCCESS);
+    Assert(ret == GRIB_SUCCESS);
 
     lat1 = lats[0];
     lat2 = lats[num-1];
@@ -80,7 +80,7 @@ void test_gaussian_latitude_640()
 	const double tolerance = 1e-6;
 	double* lats = (double*)malloc( sizeof(double)*num );
 	ret = grib_get_gaussian_latitudes(order, lats);
-	assert(ret == GRIB_SUCCESS);
+	Assert(ret == GRIB_SUCCESS);
 
 	compare_doubles(lats[0], 89.892396, tolerance);
 	compare_doubles(lats[1], 89.753005, tolerance);

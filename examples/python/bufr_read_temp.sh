@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2015 ECMWF.
+# Copyright 2005-2016 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,20 +16,14 @@ label="bufr_read_temp_p"
 
 #Define tmp file
 fTmp=${label}.tmp.txt
-rm -f $fTmp | true
-
-#We check "temp_101.bufr". The path is
-#hardcoded in the example
+rm -f $fTmp
 
 REDIRECT=/dev/null
 
-#Write the key values into a file
+# Run it. The path to the BUFR file is hardcoded in the example
 $PYTHON $examples_src/bufr_read_temp.py 2> $REDIRECT > $fTmp
 
 #TODO: check the results
 
-#cat  $fTmp
-
 #Clean up
 rm -f $fTmp
-

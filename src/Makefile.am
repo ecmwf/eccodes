@@ -44,6 +44,7 @@ libeccodes_la_prototypes= \
 	action_class_close.c \
 	action_class_variable.c \
 	action_class_modify.c \
+	action_class_transient_darray.c \
 	grib_accessor.c \
 	grib_concept.c \
 	grib_hash_array.c \
@@ -124,6 +125,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_g2latlon.c \
 	grib_accessor_class_g2lon.c \
 	grib_accessor_class_global_gaussian.c \
+	grib_accessor_class_gaussian_grid_name.c \
 	grib_accessor_class_gen.c \
 	grib_accessor_class_gts_header.c \
 	grib_accessor_class_ifs_param.c \
@@ -241,6 +243,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_g2_eps.c \
 	grib_accessor_class_g2_chemical.c \
 	grib_accessor_class_g2_mars_labeling.c \
+	grib_accessor_class_transient_darray.c \
 	grib_accessor_class_md5.c \
 	grib_jasper_encoding.c \
 	grib_openjpeg_encoding.c \
@@ -258,6 +261,8 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_statistics_spectral.c \
 	grib_accessor_class_unsigned.c  \
 	grib_accessor_class_unsigned_bits.c \
+	grib_accessor_class_raw.c \
+	grib_accessor_class_bufr_extract_subsets.c \
 	grib_accessor_class_spd.c \
 	grib_accessor_class_sum.c \
 	grib_accessor_class_to_integer.c \
