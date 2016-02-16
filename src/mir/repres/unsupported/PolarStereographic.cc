@@ -21,9 +21,6 @@
 
 #include "mir/repres/unsupported/PolarStereographic.h"
 
-#include "atlas/grids/PolarStereoGraphic.h"
-
-
 namespace mir {
 namespace repres {
 
@@ -57,6 +54,7 @@ PolarStereographic::~PolarStereographic() {
 
 
 void PolarStereographic::print(std::ostream &out) const {
+
     out << "PolarStereographic["
         << "Nx=" << Nx_
         << ",Ny=" << Ny_
@@ -71,17 +69,9 @@ void PolarStereographic::print(std::ostream &out) const {
         << "]";
 }
 
-atlas::Grid *PolarStereographic::atlasGrid() const {
+atlas::Grid* PolarStereographic::atlasGrid() const {
     NOTIMP;
-    return new atlas::grids::PolarStereoGraphic(Nx_,
-            Ny_,
-            Dx_,
-            Dy_,
-            longitudeOfFirstGridPoint_,
-            latitudeOfFirstGridPoint_,
-            orientationOfTheGrid_,
-            southPoleOnProjectionPlane_,
-            radiusOfTheEarth_);
+    return NULL;
 }
 
 void PolarStereographic::fill(grib_info &info) const  {
@@ -96,7 +86,6 @@ void PolarStereographic::validate(const std::vector<double> & values) const {
 namespace {
 static RepresentationBuilder<PolarStereographic> polarStereographic("polar_stereographic"); // Name is what is returned by grib_api
 }
-
 
 }  // namespace repres
 }  // namespace mir
