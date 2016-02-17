@@ -12,7 +12,8 @@ alias identifier=identifier;
 
 unsigned[3] section1Length;
 
-unsigned[1] editionNumber = 2;
+unsigned[1] edition = 2;
+alias editionNumber=edition;
 
 template    section_1 "bufr/section.1.1.def"   ;
 
