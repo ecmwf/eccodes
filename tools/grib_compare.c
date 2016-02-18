@@ -936,7 +936,7 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
                             printf("[%s] byte values are different: [%02x] and [%02x]\n",
                                     name,uval1[i],uval2[i]);
                         else
-                            printf("[%s] byte value %d of %ld are different: [%02x] and [%02x]\n",
+                            printf("[%s] byte value %d of %ld is different: [%02x] and [%02x]\n",
                                     name,i,(long)len1,uval1[i],uval2[i]);
 
                         err1 = GRIB_VALUE_MISMATCH;
