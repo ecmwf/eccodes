@@ -338,7 +338,7 @@ ecbuild_print_summary()
 
 message(STATUS "")
 message(STATUS "   +---------------------------+")
-message(STATUS "   |  ecCodes version ${ECCODES_VERSION}   |")
+message(STATUS "   |  ecCodes version ${ECCODES_VERSION}    |")
 message(STATUS "   |  Configuration completed  |")
 message(STATUS "   +---------------------------+")
 message(STATUS "")
