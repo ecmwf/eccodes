@@ -87,8 +87,11 @@ install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/bufr_compare_dir
                      WORLD_EXECUTE WORLD_READ )
 
 
-
 # bufr_filter script (See ECC-205)
+execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${PROJECT_SOURCE_DIR}/tools/bufr_filter
+    ${CMAKE_BINARY_DIR}/bin/ )
+
 install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/bufr_filter
          DESTINATION ${INSTALL_BIN_DIR}
          PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
