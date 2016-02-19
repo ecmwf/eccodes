@@ -557,10 +557,9 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos,int i
     maxAllowed=(grib_power(modifiedWidth,2)+modifiedReference)*modifiedFactor;
     minAllowed=modifiedReference*modifiedFactor;
 
-
     start=self->start;
     nvals=self->end-self->start;
-    if (nvals<=0) return GRIB_NO_VALUES;
+    if (nvals==0) return GRIB_NO_VALUES;
 
     v=dvalues->v;
 
@@ -843,10 +842,10 @@ static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
     return err;
 }
 
-static int encode_new_bitmap(grib_context* c,grib_buffer* buff,long *pos,int idx,grib_accessor_bufr_data_array* self) {
+static int encode_new_bitmap(grib_context* c,grib_buffer* buff,long *pos,int idx,grib_accessor_bufr_data_array* self)
+{
   grib_darray* doubleValues=NULL;
   int err=0;
-  int i;
   double cdval=0;
   if (self->nInputBitmap>0) {
     if (self->nInputBitmap < self->iInputBitmap)
@@ -1083,14 +1082,13 @@ static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,
 static int build_bitmap_new_data(grib_accessor_bufr_data_array *self,unsigned char* data,long* pos,int iel,grib_iarray* elementsDescriptorsIndex,int iBitmapOperator)
 {
     int bitmapSize=0,iDelayedReplication=0;
-    int i,localReference,width,bitmapEndElementsDescriptorsIndex;
-    long ppos,n;
+    int i,bitmapEndElementsDescriptorsIndex;
+    long n;
     grib_accessor* a=(grib_accessor*)self;
     grib_context* c=a->context;
     bufr_descriptor** descriptors=self->expanded->v;
     long* edi=elementsDescriptorsIndex->v;
     /* int iel=grib_iarray_used_size(elementsDescriptorsIndex)-1; */
-    int err=0;
 
     switch (descriptors[iBitmapOperator]->code) {
     case 236000:
