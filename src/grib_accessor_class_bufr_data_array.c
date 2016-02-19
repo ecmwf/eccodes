@@ -251,7 +251,8 @@ static int is_bitmap_start_defined(grib_accessor_bufr_data_array *self) { return
 
 int accessor_bufr_data_array_create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset) { return create_keys(a,onlySubset,startSubset,endSubset); }
 
-int accessor_bufr_data_array_process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset) {
+int accessor_bufr_data_array_process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset)
+{
     return process_elements(a,flag,onlySubset,startSubset,endSubset);
 }
 
@@ -355,7 +356,6 @@ static long next_offset(grib_accessor* a)
 {
     return a->offset;
 }
-
 
 static int compare(grib_accessor* a, grib_accessor* b)
 {
@@ -544,7 +544,8 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos,int i
     long localReference=0,localWidth=0,modifiedWidth,modifiedReference;
     long reference,allone;
     double localRange,modifiedFactor,inverseFactor;
-    size_t nvals,start,ii;
+    size_t start,ii;
+    int nvals = 0;
     double min,max,maxAllowed,minAllowed;
     double* v=NULL;
     int thereIsAMissing=0;
@@ -558,8 +559,8 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos,int i
     minAllowed=modifiedReference*modifiedFactor;
 
     start=self->start;
-    nvals=self->end-self->start;
-    if (nvals==0) return GRIB_NO_VALUES;
+    nvals=self->end - self->start;
+    if (nvals<=0) return GRIB_NO_VALUES;
 
     v=dvalues->v;
 
@@ -844,23 +845,23 @@ static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
 
 static int encode_new_bitmap(grib_context* c,grib_buffer* buff,long *pos,int idx,grib_accessor_bufr_data_array* self)
 {
-  grib_darray* doubleValues=NULL;
-  int err=0;
-  double cdval=0;
-  if (self->nInputBitmap>0) {
-    if (self->nInputBitmap < self->iInputBitmap)
-      return GRIB_ARRAY_TOO_SMALL;
-    cdval=self->inputBitmap[self->iInputBitmap++];
-  }
-  if (self->compressedData) {
-    doubleValues=grib_darray_new(c,1,1);
-    grib_darray_push(c,doubleValues,cdval);
-    err=encode_double_array(c,buff,pos,idx,self,doubleValues);
-    grib_darray_delete(c,doubleValues);
-  } else {
-    err=encode_double_value(c,buff,pos,idx,self,cdval);
-  }
-  return err;
+    grib_darray* doubleValues=NULL;
+    int err=0;
+    double cdval=0;
+    if (self->nInputBitmap>0) {
+        if (self->nInputBitmap < self->iInputBitmap)
+            return GRIB_ARRAY_TOO_SMALL;
+        cdval=self->inputBitmap[self->iInputBitmap++];
+    }
+    if (self->compressedData) {
+        doubleValues=grib_darray_new(c,1,1);
+        grib_darray_push(c,doubleValues,cdval);
+        err=encode_double_array(c,buff,pos,idx,self,doubleValues);
+        grib_darray_delete(c,doubleValues);
+    } else {
+        err=encode_double_value(c,buff,pos,idx,self,cdval);
+    }
+    return err;
 }
 
 static int encode_new_element(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
@@ -896,7 +897,7 @@ static int encode_new_element(grib_context* c,grib_accessor_bufr_data_array* sel
         grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding: \t %s = %g",
                 self->expanded->v[i]->shortName,cdval);
         if (self->expanded->v[i]->code==31031)
-          return encode_new_bitmap(c,buff,pos,i,self);
+            return encode_new_bitmap(c,buff,pos,i,self);
         if (self->compressedData) {
             grib_darray* doubleValues=grib_darray_new(c,1,1);
             grib_darray_push(c,doubleValues,cdval);
@@ -917,34 +918,34 @@ static int encode_new_replication(grib_context* c,grib_accessor_bufr_data_array*
     bufr_descriptor** descriptors=self->expanded->v;
 
     switch(descriptors[i]->code) {
-      case 31000:
+    case 31000:
         if (self->nInputShortReplications>=0) {
-          if (self->iInputShortReplications>=self->nInputShortReplications) {
-            grib_context_log(c,GRIB_LOG_FATAL,"array inputShortDelayedDescriptorReplicationFactor dimension too small");
-          }
-          repetitions=self->inputShortReplications[self->iInputShortReplications];
-          self->iInputShortReplications++;
+            if (self->iInputShortReplications>=self->nInputShortReplications) {
+                grib_context_log(c,GRIB_LOG_FATAL,"array inputShortDelayedDescriptorReplicationFactor dimension too small");
+            }
+            repetitions=self->inputShortReplications[self->iInputShortReplications];
+            self->iInputShortReplications++;
         }
         break;
-      case 31001:
+    case 31001:
         if (self->nInputReplications>=0) {
-          if (self->iInputReplications>=self->nInputReplications) {
-            grib_context_log(c,GRIB_LOG_FATAL,"array inputDelayedDescriptorReplicationFactor dimension too small");
-          }
-          repetitions=self->inputReplications[self->iInputReplications];
-          self->iInputReplications++;
+            if (self->iInputReplications>=self->nInputReplications) {
+                grib_context_log(c,GRIB_LOG_FATAL,"array inputDelayedDescriptorReplicationFactor dimension too small");
+            }
+            repetitions=self->inputReplications[self->iInputReplications];
+            self->iInputReplications++;
         }
         break;
-      case 31002:
+    case 31002:
         if (self->nInputExtendedReplications>=0) {
-          if (self->iInputExtendedReplications>=self->nInputExtendedReplications) {
-            grib_context_log(c,GRIB_LOG_FATAL,"array inputExtendedDelayedDescriptorReplicationFactor dimension too small");
-          }
-          repetitions=self->inputExtendedReplications[self->iInputExtendedReplications];
-          self->iInputExtendedReplications++;
+            if (self->iInputExtendedReplications>=self->nInputExtendedReplications) {
+                grib_context_log(c,GRIB_LOG_FATAL,"array inputExtendedDelayedDescriptorReplicationFactor dimension too small");
+            }
+            repetitions=self->inputExtendedReplications[self->iInputExtendedReplications];
+            self->iInputExtendedReplications++;
         }
         break;
-      default:
+    default:
         Assert(0);
     }
 
@@ -1099,13 +1100,13 @@ static int build_bitmap_new_data(grib_accessor_bufr_data_array *self,unsigned ch
         if (descriptors[i]->code==101000)  {
             iDelayedReplication=iBitmapOperator+2;
             switch (descriptors[iDelayedReplication]->code) {
-              case 31001:
+            case 31001:
                 bitmapSize=self->inputReplications[self->iInputReplications];
                 break;
-              case 31002:
+            case 31002:
                 bitmapSize=self->inputExtendedReplications[self->iInputExtendedReplications];
                 break;
-              default :
+            default :
                 Assert(0);
             }
         } else if (descriptors[i]->code==31031){
@@ -1173,7 +1174,7 @@ static int get_next_bitmap_descriptor_index(grib_accessor_bufr_data_array *self,
 
     if (self->compressedData) {
         if (self->numericValues->n==0)
-          return get_next_bitmap_descriptor_index_new_bitmap(self,elementsDescriptorsIndex,1);
+            return get_next_bitmap_descriptor_index_new_bitmap(self,elementsDescriptorsIndex,1);
 
         self->bitmapCurrent++;
         self->bitmapCurrentElementsDescriptorsIndex++;
@@ -1189,7 +1190,7 @@ static int get_next_bitmap_descriptor_index(grib_accessor_bufr_data_array *self,
         }
     } else {
         if (numericValues->n==0)
-          return get_next_bitmap_descriptor_index_new_bitmap(self,elementsDescriptorsIndex,0);
+            return get_next_bitmap_descriptor_index_new_bitmap(self,elementsDescriptorsIndex,0);
 
         self->bitmapCurrent++;
         self->bitmapCurrentElementsDescriptorsIndex++;
@@ -1361,7 +1362,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
         elementAccessor = grib_accessor_factory(section, &creator, 0, NULL);
         if (self->canBeMissing[idx]) elementAccessor->flags |= GRIB_ACCESSOR_FLAG_CAN_BE_MISSING;
         if (self->expanded->v[idx]->code == 31000 || self->expanded->v[idx]->code == 31001 || self->expanded->v[idx]->code == 31002)
-          elementAccessor->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+            elementAccessor->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
         accessor_bufr_data_element_set_index(elementAccessor,ide);
         accessor_bufr_data_element_set_descriptors(elementAccessor,self->expanded);
         accessor_bufr_data_element_set_elementsDescriptorsIndex(elementAccessor,self->elementsDescriptorsIndex);
@@ -1529,7 +1530,7 @@ static GRIB_INLINE void reset_qualifiers(grib_accessor* significanceQualifierGro
     for (i=0;i<number_of_qualifiers;i++)
         significanceQualifierGroup[i]=0;
 }
- */
+*/
 
 static void grib_convert_to_attribute(grib_accessor* a)
 {
@@ -1541,38 +1542,38 @@ static void grib_convert_to_attribute(grib_accessor* a)
 
 static void set_subset_start_end(grib_accessor_bufr_data_array *self,long *onlySubset,long *startSubset,long *endSubset,long *ret_start,long *ret_end)
 {
-  if (*startSubset>0 && *endSubset>=*startSubset) {
-    *ret_start=*startSubset-1;
-    *ret_end= *endSubset;
-  } else if (*onlySubset>0) {
-    *ret_start=*onlySubset-1;
-    *ret_end= *onlySubset;
-  } else {
-    *ret_start=0;
-    *ret_end= self->numberOfSubsets;
-  }
-  self->start=*ret_start;
-  self->end=*ret_end;
-  if (self->compressedData==1) {
-    *ret_start=0;
-    *ret_end=1;
-  }
+    if (*startSubset>0 && *endSubset>=*startSubset) {
+        *ret_start=*startSubset-1;
+        *ret_end= *endSubset;
+    } else if (*onlySubset>0) {
+        *ret_start=*onlySubset-1;
+        *ret_end= *onlySubset;
+    } else {
+        *ret_start=0;
+        *ret_end= self->numberOfSubsets;
+    }
+    self->start=*ret_start;
+    self->end=*ret_end;
+    if (self->compressedData==1) {
+        *ret_start=0;
+        *ret_end=1;
+    }
 }
 
+static int bitmap_ref_skip(grib_accessors_list* al,int* err)
+{
+    grib_accessor* acode=NULL;
+    long code[1];
+    size_t l=1;
 
-static int bitmap_ref_skip(grib_accessors_list* al,int* err) {
-  grib_accessor* acode=NULL;
-  long code[1];
-  size_t l=1;
+    if (!al || !al->accessor) return 0;
 
-  if (!al || !al->accessor) return 0;
+    acode=grib_accessor_get_attribute(al->accessor,"code");
 
-  acode=grib_accessor_get_attribute(al->accessor,"code");
+    if (acode) *err=grib_unpack_long(acode,code,&l);
+    else return 1;
 
-  if (acode) *err=grib_unpack_long(acode,code,&l);
-  else return 1;
-
-  switch (code[0]) {
+    switch (code[0]) {
     case 222000:
     case 224000:
     case 225000:
@@ -1583,21 +1584,22 @@ static int bitmap_ref_skip(grib_accessors_list* al,int* err) {
     case 31000:
     case 31001:
     case 31002:
-      return 1;
-  }
-  return 0;
+        return 1;
+    }
+    return 0;
 }
 
-static int bitmap_init(bitmap_s* bitmap,grib_accessors_list* bitmapStart,int bitmapSize,grib_accessors_list* lastAccessorInList) {
-  int ret=0,i;
-  bitmap->cursor=bitmapStart->next;
-  bitmap->referredElement=bitmapStart;
-  while (bitmap_ref_skip(bitmap->referredElement,&ret)) bitmap->referredElement=bitmap->referredElement->prev;
-  for (i=1;i<bitmapSize;i++) {
-    if (bitmap->referredElement==NULL) return GRIB_INTERNAL_ERROR;
-    bitmap->referredElement=bitmap->referredElement->prev;
-  }
-  return ret;
+static int bitmap_init(bitmap_s* bitmap,grib_accessors_list* bitmapStart,int bitmapSize,grib_accessors_list* lastAccessorInList)
+{
+    int ret=0,i;
+    bitmap->cursor=bitmapStart->next;
+    bitmap->referredElement=bitmapStart;
+    while (bitmap_ref_skip(bitmap->referredElement,&ret)) bitmap->referredElement=bitmap->referredElement->prev;
+    for (i=1;i<bitmapSize;i++) {
+        if (bitmap->referredElement==NULL) return GRIB_INTERNAL_ERROR;
+        bitmap->referredElement=bitmap->referredElement->prev;
+    }
+    return ret;
 }
 
 static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset)
@@ -1838,7 +1840,8 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
     return err;
 }
 
-static void set_input_replications(grib_handle* h,grib_accessor_bufr_data_array *self) {
+static void set_input_replications(grib_handle* h,grib_accessor_bufr_data_array *self)
+{
     size_t nInputReplications;
     size_t nInputExtendedReplications;
     size_t nInputShortReplications;
@@ -1874,7 +1877,8 @@ static void set_input_replications(grib_handle* h,grib_accessor_bufr_data_array 
     }
 }
 
-static void set_input_bitmap(grib_handle* h,grib_accessor_bufr_data_array *self) {
+static void set_input_bitmap(grib_handle* h,grib_accessor_bufr_data_array *self)
+{
     size_t nInputBitmap;
     self->nInputBitmap=-1;
     self->iInputBitmap=0;
