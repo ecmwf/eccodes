@@ -45,6 +45,7 @@ tools/grib_copy
 tools/grib_count
 tools/bufr_count
 tools/codes_count
+tools/codes_bufr_filter
 tools/grib_diff
 tools/grib_dump
 tools/grib_filter
@@ -70,7 +71,6 @@ tools/grib1to2
 tools/bufr_compare
 tools/bufr_copy
 tools/bufr_dump
-tools/bufr_filter
 tools/bufr_get
 tools/bufr_index_build
 tools/bufr_ls

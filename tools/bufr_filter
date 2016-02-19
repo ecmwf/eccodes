@@ -1,0 +1,72 @@
+#!/bin/sh
+
+script_dir=`dirname $0`
+EMOSLIB_TOOL=emoslib_bufr_filter
+ECCODES_TOOL=codes_bufr_filter
+result=0 # return code from function
+ERR_TOOL_NOT_FOUND=666
+
+is_emoslib=0
+
+#########################################################
+# Arguments:
+#  the executable name
+# Return Value:
+#  sets the global variable 'result'
+try_tool()
+{
+    the_tool=$1
+    the_args=$args
+
+    if [ -f "${script_dir}/$the_tool" ]; then
+        ${script_dir}/$the_tool $the_args
+        result=$?
+    else
+        if command -v $the_tool >/dev/null 2>&1; then
+            $the_tool $the_args
+            result=$?
+        else
+            #echo "Could not find $the_tool. Return error"
+            result=$ERR_TOOL_NOT_FOUND
+        fi
+    fi
+}
+
+#########################################################
+# Deal with case where no arguments are provided e.g. usage
+if [ $# -eq 0 ]; then
+    # Give priority to ecCodes over emoslib
+    try_tool $ECCODES_TOOL
+    if [ $result -eq $ERR_TOOL_NOT_FOUND ]; then
+        try_tool $EMOSLIB_TOOL
+    fi
+    exit 0
+fi
+
+# Now process arguments. The "-i" switch is specific to emoslib
+args="$@"
+for i in "$@" ; do
+   case $i in
+     -i) is_emoslib=1; shift ;;
+     *)  shift ;;
+   esac
+done
+
+#########################################################
+# set -x
+if [ $is_emoslib -eq 1 ]; then
+    pkg=emoslib
+    tool=$EMOSLIB_TOOL
+    try_tool $tool
+else
+    pkg=ecCodes
+    tool=$ECCODES_TOOL
+    try_tool $tool
+fi
+if [ $result -eq $ERR_TOOL_NOT_FOUND ]; then
+    echo "ERROR: Could not find the executable: $tool. Aborting!"  2>&1
+    echo "       The arguments you passed in are relevant to $pkg" 2>&1
+    echo "       Please make sure you have $pkg installed in your path"  2>&1
+    exit 1
+fi
+exit $result

@@ -28,7 +28,7 @@ do
   rm -f $res_num | true
 
   set +e
-  ${tools_dir}bufr_filter bufrdc_num_ref.filter $file 2> $REDIRECT > $res_num
+  ${tools_dir}codes_bufr_filter bufrdc_num_ref.filter $file 2> $REDIRECT > $res_num
   if [ $? != 0 ]
   then
     mv $file $file.no

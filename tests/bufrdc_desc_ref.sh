@@ -28,7 +28,7 @@ do
 
   rm -f $res_desc
 
-  ${tools_dir}bufr_filter bufrdc_desc_ref.filter $file 2> $REDIRECT > $res_desc
+  ${tools_dir}codes_bufr_filter bufrdc_desc_ref.filter $file 2> $REDIRECT > $res_desc
   if [ -f "$ref_desc" ]; then
     diff $ref_desc $res_desc > $diff_desc 2> $diff_desc
   fi

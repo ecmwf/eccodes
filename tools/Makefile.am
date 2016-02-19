@@ -17,7 +17,7 @@ bin_PROGRAMS = grib_histogram big2gribex \
                grib2ppm grib_set grib_get grib_get_data grib_copy grib_repair \
                grib_compare grib_list_keys codes_parser grib_count grib_index_build grib1to2 \
                gg_sub_area_check grib_to_netcdf grib_to_json \
-               bufr_count bufr_filter bufr_ls bufr_dump bufr_set bufr_get \
+               bufr_count codes_bufr_filter bufr_ls bufr_dump bufr_set bufr_get \
                bufr_copy bufr_compare bufr_index_build \
                gts_copy gts_dump gts_filter gts_ls \
 							 metar_dump metar_ls
@@ -57,9 +57,9 @@ xref_SOURCES                  =  xref.c
 #compile_SOURCES              =  compile.c
 gaussian_SOURCES              =  gaussian.c
 gg_sub_area_check_SOURCES     =  gg_sub_area_check.c
-grib1to2_SOURCES              = grib1to2.in
+grib1to2_SOURCES              =  grib1to2.in
 
-bufr_filter_SOURCES   = bufr_filter.c
+codes_bufr_filter_SOURCES   = bufr_filter.c
 bufr_ls_SOURCES   = bufr_ls.c
 bufr_dump_SOURCES   = bufr_dump.c
 bufr_set_SOURCES   = bufr_set.c
