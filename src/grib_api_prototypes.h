@@ -196,6 +196,7 @@ bufr_descriptor **grib_bufr_descriptors_array_get_array(bufr_descriptors_array *
 size_t grib_bufr_descriptors_array_used_size(bufr_descriptors_array *v);
 
 /* grib_darray.c */
+grib_darray* grib_darray_new_from_array(grib_context* c,double* a,size_t size);
 grib_darray *grib_darray_new(grib_context *c, size_t size, size_t incsize);
 grib_darray *grib_darray_resize(grib_context *c, grib_darray *v);
 grib_darray *grib_darray_push(grib_context *c, grib_darray *v, double val);

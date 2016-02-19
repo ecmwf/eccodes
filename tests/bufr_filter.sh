@@ -1131,3 +1131,51 @@ diff ${f}.log.ref ${f}.log
 rm -f ${f}.log ${f}.log.ref
 rm -f $fLog $fOut $fRules 
 
+#-----------------------------------------------------------
+# Test:  create new BUFR with bitmap
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set compressedData=1;
+set localTablesVersionNumber=101;
+set masterTablesVersionNumber=13;
+set inputDelayedDescriptorReplicationFactor={4,1,4,15,2,2};
+set inputDataPresentIndicator={1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+set numberOfSubsets=5;
+
+set unexpandedDescriptors={1211, 310022, 301011, 301013, 301021, 102004, 27001, 28001, 7022, 5040,
+  5043, 20010, 20016, 13040, 10001, 8043, 8044, 8023, 106000, 31001,
+  207002, 10004, 207000, 8090, 15008, 8090, 8023, 33054, 10040, 114000,
+  31001, 207002, 7004, 7004, 207000, 8090, 15008, 8090, 15043, 104000,
+  31001, 207002, 10004, 207000, 15044, 224000, 236000, 101000, 31001, 31031,
+  1033, 1032, 8023, 101000, 31001, 224255, 224000, 237000, 1033, 1032,
+  8023, 101000, 31001, 224255};
+
+write;
+EOF
+
+f="syno_1.bufr"
+fOut="out.bufr"
+
+echo "Test: create new BUFR with bitmap" >> $fLog
+echo "file: $f" >> $fLog
+${tools_dir}bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
+
+cat > ${fRules} <<EOF
+set unpack=1;
+
+print "delayedDescriptorReplicationFactor=[delayedDescriptorReplicationFactor!20]";
+print "dataPresentIndicator=[dataPresentIndicator!20]";
+EOF
+
+${tools_dir}bufr_filter $fRules $fOut  > ${f}.log
+
+cat > ${f}.log.ref <<EOF
+delayedDescriptorReplicationFactor=4 1 4 15 2 2
+dataPresentIndicator=1 1 0 0 1 1 1 1 1 1 1 1 1 1 1
+EOF
+
+diff ${f}.log.ref ${f}.log 
+
+rm -f ${f}.log ${f}.log.ref
+rm -f $fLog $fOut $fRules 
+
