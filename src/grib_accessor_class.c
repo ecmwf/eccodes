@@ -65,7 +65,7 @@ static struct table_entry table[] =
 
 #define NUMBER(x) (sizeof(x)/sizeof(x[0]))
 
-grib_section*  grib_create_root_section(const grib_context *context, grib_handle *h)
+grib_section* grib_create_root_section(const grib_context *context, grib_handle *h)
 {
     char* fpath=0;
     grib_section*   s   = (grib_section*) grib_context_malloc_clear(context,sizeof(grib_section));
@@ -75,7 +75,11 @@ grib_section*  grib_create_root_section(const grib_context *context, grib_handle
     if(h->context->grib_reader == NULL) {
         if ((fpath=grib_context_full_defs_path(h->context,"boot.def"))==NULL) {
             grib_context_log(h->context,GRIB_LOG_FATAL,
-                    "Unable to find boot.def. Context path=%s", context->grib_definition_files_path);
+                    "Unable to find boot.def. Context path=%s\n"
+                    "\nPossible causes:\n"
+                    "- The software is not correctly installed\n"
+                    "- The environment variable ECCODES_DEFINITION_PATH is defined but incorrect\n",
+                    context->grib_definition_files_path);
         }
         grib_parse_file(h->context,fpath);
     }
@@ -83,15 +87,15 @@ grib_section*  grib_create_root_section(const grib_context *context, grib_handle
 
     s->h = h;
     s->aclength = NULL;
-    s->owner     = NULL;
+    s->owner    = NULL;
     s->block    = (grib_block_of_accessors*)
             grib_context_malloc_clear(context, sizeof(grib_block_of_accessors));
     grib_context_log(context, GRIB_LOG_DEBUG, "Creating root section");
     return s;
 }
 
-
-static GRIB_INLINE grib_accessor_class* get_class(grib_context* c,char* type) {
+static GRIB_INLINE grib_accessor_class* get_class(grib_context* c,char* type)
+{
     int i;
     grib_accessor_class** the_class=NULL;
 
