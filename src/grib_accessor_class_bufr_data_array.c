@@ -821,7 +821,7 @@ static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
         width=grib_decode_unsigned_long(data,pos,6);
         if (width) {
             /* delayed replication number is not constant. NOT IMPLEMENTED */
-            Assert(0);
+            return GRIB_NOT_IMPLEMENTED;
         } else {
             *numberOfRepetitions=localReference*descriptors[i]->factor;
             grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication value=%ld",*numberOfRepetitions);
