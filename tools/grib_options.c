@@ -187,7 +187,7 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
     char *karg=NULL,*warg=NULL,*sarg=NULL,*barg=NULL;
 
     if (grib_options_on("V")) {
-        printf("\neccodes Version ");
+        printf("\necCodes Version ");
         grib_print_api_version(stdout);
         printf("\n\n");
         exit(0);
@@ -312,7 +312,7 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
     else grib_gts_header_off(context);
 
     if (grib_options_on("V")) {
-        printf("\neccodes Version ");
+        printf("\necCodes Version ");
         grib_print_api_version(stdout);
         printf("\n\n");
     }
