@@ -33,9 +33,9 @@ static void usage(char* progname);
 
 int main(int argc, char *argv[])
 {
-    /* To skip read only and not coded keys
-     unsigned long key_iterator_filter_flags=CODES_KEYS_ITERATOR_SKIP_READ_ONLY ||
-     CODES_KEYS_ITERATOR_SKIP_COMPUTED;
+    /* To skip read only and computed keys
+     unsigned long key_iterator_filter_flags=CODES_KEYS_ITERATOR_SKIP_READ_ONLY |
+                                             CODES_KEYS_ITERATOR_SKIP_COMPUTED;
      */
     unsigned long key_iterator_filter_flags=CODES_KEYS_ITERATOR_ALL_KEYS;
 

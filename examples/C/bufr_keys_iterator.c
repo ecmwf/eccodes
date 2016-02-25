@@ -40,11 +40,11 @@ int main(int argc,char* argv[])
     /* To skip certain keys use the combination of these flags:
 
        unsigned long key_iterator_filter_flags=
-            CODES_KEYS_ITERATOR_SKIP_READ_ONLY ||
-            CODES_KEYS_ITERATOR_SKIP_COMPUTED || 
-            CODES_KEYS_ITERATOR_SKIP_CODED ||
-            CODES_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC ||
-            CODES_KEYS_ITERATOR_SKIP_DUPLICATES ||
+            CODES_KEYS_ITERATOR_SKIP_READ_ONLY |
+            CODES_KEYS_ITERATOR_SKIP_COMPUTED |
+            CODES_KEYS_ITERATOR_SKIP_CODED |
+            CODES_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC |
+            CODES_KEYS_ITERATOR_SKIP_DUPLICATES |
             CODES_KEYS_ITERATOR_SKIP_FUNCTION; */
 
     unsigned long key_iterator_filter_flags=CODES_KEYS_ITERATOR_ALL_KEYS;
