@@ -22,7 +22,7 @@ grib_option grib_options[]={
     {"D",0,0,0,1,0},
     {"d",0,"Print all data values.\n",0,1,0},
     {"j",0,0,0,1,0},
-    {"C",0,0,0,1,0},
+    /*  {"C",0,0,0,1,0}, */   /* See ECC-234 */
     {"t",0,0,0,1,0},
     {"H",0,0,0,1,0},
     {"a",0,0,0,1,0},
@@ -66,7 +66,7 @@ int grib_tool_init(grib_runtime_options* options)
     options->dump_mode = "default";
 
     if (opt > 1) {
-        printf("%s: simultaneous j/C/O/D options not allowed\n",grib_tool_name);
+        printf("%s: simultaneous j/O/D options not allowed\n",grib_tool_name);
         exit(1);
     }
 
@@ -75,6 +75,7 @@ int grib_tool_init(grib_runtime_options* options)
         json=1;
     }
 
+    /* See ECC-234
     if (grib_options_on("C")) {
         options->dump_mode = "c_code";
         if (grib_options_on("d"))
@@ -82,6 +83,7 @@ int grib_tool_init(grib_runtime_options* options)
         else
             options->dump_flags = GRIB_DUMP_FLAG_NO_DATA;
     }
+    */
 
     if  (grib_options_on("O")) {
         options->dump_mode = "wmo";
