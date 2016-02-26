@@ -37,7 +37,8 @@ int main(int argc, char *argv[])
      unsigned long key_iterator_filter_flags=CODES_KEYS_ITERATOR_SKIP_READ_ONLY |
                                              CODES_KEYS_ITERATOR_SKIP_COMPUTED;
      */
-    unsigned long key_iterator_filter_flags=CODES_KEYS_ITERATOR_ALL_KEYS;
+    unsigned long key_iterator_filter_flags = CODES_KEYS_ITERATOR_ALL_KEYS |
+                                              CODES_KEYS_ITERATOR_SKIP_DUPLICATES;
 
     /* Choose a namespace. E.g. "ls", "time", "parameter", "geography", "statistics" */
     char* name_space="ls";

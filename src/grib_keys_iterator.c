@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: grib_keys_iterator
- *
- */
-
 #include "grib_api_internal.h"
 
 GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
@@ -33,7 +28,7 @@ struct grib_keys_iterator{
     grib_trie     *seen;
 };
 
-grib_keys_iterator*  grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space)
+grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space)
 {
     grib_keys_iterator* ki=NULL;
 
@@ -88,7 +83,11 @@ int grib_keys_iterator_set_flags(grib_keys_iterator* ki,unsigned long flags)
 
 static void mark_seen(grib_keys_iterator* ki,const char* name)
 {
-    grib_trie_insert(ki->seen,name,(void*)name);
+    /* See GRIB-932 */
+    char* tmp = grib_context_strdup(ki->handle->context, name);
+    grib_trie_insert(ki->seen, tmp,(void*)tmp);
+
+    /* grib_trie_insert(ki->seen,name,(void*)name); */
 }
 
 static int was_seen(grib_keys_iterator* ki,const char* name)
