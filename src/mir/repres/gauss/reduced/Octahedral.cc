@@ -14,7 +14,7 @@
 
 #include "mir/repres/gauss/reduced/Octahedral.h"
 
-#include "atlas/grid/OctahedralRGG.h"
+#include "atlas/grid/OctahedralReducedGaussianGrid.h"
 #include "mir/util/Grib.h"
 #include "mir/api/MIRJob.h"
 
@@ -38,7 +38,7 @@ Octahedral::Octahedral(long N, const util::BoundingBox &bbox):
 
 const std::vector<long>& Octahedral::pls() const {
     if (pl_.size() == 0) {
-        atlas::grid::OctahedralRGG grid(N_);
+        atlas::grid::OctahedralReducedGaussianGrid grid(N_);
 
         const std::vector<int>& v = grid.npts_per_lat();
         pl_.resize(v.size());
@@ -62,7 +62,7 @@ void Octahedral::fill(api::MIRJob &job) const  {
 
 atlas::grid::Grid *Octahedral::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
-    return new atlas::grid::OctahedralRGG(N_);
+    return new atlas::grid::OctahedralReducedGaussianGrid(N_);
 }
 
 }  // namespace reduced
