@@ -11,7 +11,7 @@
 /*
  * C Implementation: grib_dump
  *
- * Author: Enrico Fucile <enrico.fucile@ecmwf.int>
+ * Author: Enrico Fucile
  *
  *
  */
@@ -24,13 +24,11 @@ grib_option grib_options[]={
     {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
     {"D",0,0,0,1,0},
     {"d",0,"Print all data values.\n",0,1,0},
-    {"C",0,0,0,1,0},
     {"t",0,0,0,1,0},
     {"j",0,0,0,1,0},
     {"H",0,0,0,1,0},
     {"a",0,0,0,1,0},
     {"w:",0,0,0,1,0},
-    {"M",0,0,0,1,0},
     {"T:",0,0,1,0,"M"},
     {"7",0,0,0,1,0},
     {"V",0,0,0,1,0},
@@ -38,16 +36,14 @@ grib_option grib_options[]={
     {"x",0,0,0,1,0}
 };
 
-char* grib_tool_description="Dump the content of a grib file in different formats.";
+char* grib_tool_description="Dump the content of a METAR file in different formats.";
 char* grib_tool_name="metar_dump";
 char* grib_tool_usage="[options] file file ...";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
 /**
-*grib_dump
-*Dump the content of a grib file
-*
+* metar_dump
 */
 int main(int argc, char *argv[]) { return grib_tool(argc,argv);}
 
@@ -63,16 +59,8 @@ int grib_tool_init(grib_runtime_options* options) {
 
 
   if (opt > 1) {
-    printf("%s: simultaneous C/O/D options not allowed\n",grib_tool_name);
+    printf("%s: simultaneous O/D options not allowed\n",grib_tool_name);
     exit(1);
-  }
-
-  if (grib_options_on("C")) {
-    options->dump_mode = "c_code";
-    if (grib_options_on("d"))
-      options->dump_flags = 0;
-    else
-      options->dump_flags = GRIB_DUMP_FLAG_NO_DATA;
   }
 
   if  (grib_options_on("O")) {
