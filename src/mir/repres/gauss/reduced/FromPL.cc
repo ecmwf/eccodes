@@ -14,7 +14,7 @@
 
 #include "mir/repres/gauss/reduced/FromPL.h"
 
-#include "atlas/grids/ReducedGaussianGrid.h"
+#include "atlas/grid/ReducedGaussianGrid.h"
 #include "eckit/exception/Exceptions.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
@@ -49,10 +49,10 @@ void FromPL::fill(api::MIRJob &job) const  {
     Reduced::fill(job);
 }
 
-atlas::Grid *FromPL::atlasGrid() const {
+atlas::grid::Grid *FromPL::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
     ASSERT (pl_.size() > 0);
-    return new atlas::grids::ReducedGaussianGrid(N_, &pl_[0]);
+    return new atlas::grid::ReducedGaussianGrid(N_, &pl_[0]);
 }
 
 

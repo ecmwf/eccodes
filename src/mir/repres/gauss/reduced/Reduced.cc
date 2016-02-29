@@ -20,7 +20,7 @@
 #include "eckit/exception/Exceptions.h"
 #include "eckit/memory/ScopedPtr.h"
 
-#include "atlas/grids/GaussianLatitudes.h"
+#include "atlas/grid/GaussianLatitudes.h"
 
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"

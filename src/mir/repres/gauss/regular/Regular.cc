@@ -19,8 +19,8 @@
 #include "eckit/exception/Exceptions.h"
 #include "eckit/memory/ScopedPtr.h"
 
-#include "atlas/grids/GaussianLatitudes.h"
-#include "atlas/grids/GaussianGrid.h"
+#include "atlas/grid/GaussianLatitudes.h"
+#include "atlas/grid/GaussianGrid.h"
 
 #include "mir/repres/Iterator.h"
 #include "mir/util/Compare.h"
@@ -148,9 +148,9 @@ void Regular::fill(api::MIRJob &job) const  {
     job.set("gridname", os.str());
 }
 
-atlas::Grid *Regular::atlasGrid() const {
+atlas::grid::Grid *Regular::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
-    return new atlas::grids::GaussianGrid(N_);
+    return new atlas::grid::GaussianGrid(N_);
 }
 
 

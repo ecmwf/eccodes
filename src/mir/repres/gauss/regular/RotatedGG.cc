@@ -17,7 +17,7 @@
 #include <iostream>
 
 #include "mir/util/Grib.h"
-#include "atlas/grids/RotatedGrid.h"
+#include "atlas/grid/RotatedGrid.h"
 #include "mir/util/RotatedIterator.h"
 
 namespace mir {
@@ -62,9 +62,9 @@ Iterator* RotatedGG::rotatedIterator() const {
     return new util::RotatedIterator(Regular::unrotatedIterator(), rotation_);
 }
 
-atlas::Grid *RotatedGG::atlasGrid() const {
+atlas::grid::Grid *RotatedGG::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
-    return new atlas::grids::RotatedGrid(Regular::atlasGrid(),
+    return new atlas::grid::RotatedGrid(Regular::atlasGrid(),
                                          rotation_.south_pole_latitude(),
                                          rotation_.south_pole_longitude(),
                                          rotation_.south_pole_rotation_angle());

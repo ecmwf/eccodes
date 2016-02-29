@@ -21,7 +21,7 @@
 
 #include "mir/repres/other/UnstructuredGrid.h"
 
-#include "atlas/grids/Unstructured.h"
+#include "atlas/grid/Unstructured.h"
 #include "mir/log/MIR.h"
 
 namespace mir {
@@ -59,19 +59,19 @@ bool UnstructuredGrid::globalDomain() const {
 }
 
 
-atlas::Grid *UnstructuredGrid::atlasGrid() const {
-    std::vector<atlas::Grid::Point> *pts = new std::vector<atlas::Grid::Point>();
+atlas::grid::Grid *UnstructuredGrid::atlasGrid() const {
+    std::vector<atlas::grid::Grid::Point> *pts = new std::vector<atlas::grid::Grid::Point>();
     ASSERT(latitudes_.size() == longitudes_.size());
     pts->reserve(latitudes_.size());
 
     for (size_t i = 0; i < latitudes_.size(); i++) {
-        pts->push_back(atlas::Grid::Point(longitudes_[i], latitudes_[i]));
+        pts->push_back(atlas::grid::Grid::Point(longitudes_[i], latitudes_[i]));
         if (i < 10) {
             eckit::Log::trace<MIR>() << "UnstructuredGrid::atlasGrid lon=" << longitudes_[i] << ", lat=" << latitudes_[i] << std::endl;
         }
     }
 
-    return new atlas::grids::Unstructured(pts);
+    return new atlas::grid::Unstructured(pts);
 
     // so constructor takes a vector<Point> (where point is LLPoint2)
 }

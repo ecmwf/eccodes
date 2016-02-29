@@ -102,7 +102,7 @@ class PolarStereographic : public Gridded {
 
     virtual void fill(grib_info &) const;
     virtual void validate(const std::vector<double> &) const;
-    virtual atlas::Grid *atlasGrid() const;
+    virtual atlas::grid::Grid *atlasGrid() const;
 
 
 

@@ -131,7 +131,7 @@ const Representation *Representation::truncate(size_t truncation,
 }
 
 
-atlas::Grid *Representation::atlasGrid() const {
+atlas::grid::Grid *Representation::atlasGrid() const {
     std::ostringstream os;
     os << "Representation::atlasGrid() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());

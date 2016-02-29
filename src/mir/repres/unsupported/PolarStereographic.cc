@@ -69,7 +69,7 @@ void PolarStereographic::print(std::ostream &out) const {
         << "]";
 }
 
-atlas::Grid* PolarStereographic::atlasGrid() const {
+atlas::grid::Grid* PolarStereographic::atlasGrid() const {
     NOTIMP;
     return NULL;
 }

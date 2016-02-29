@@ -18,7 +18,7 @@
 
 #include <iostream>
 
-#include "atlas/grids/LonLatGrid.h"
+#include "atlas/grid/LonLatGrid.h"
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Timer.h"

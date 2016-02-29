@@ -14,9 +14,9 @@
 
 #include "mir/repres/gauss/reduced/Classic.h"
 
-#include "atlas/Grid.h"
-#include "atlas/grids/grids.h"
-#include "atlas/grids/GaussianLatitudes.h"
+#include "atlas/grid/Grid.h"
+#include "atlas/grid/grids.h"
+#include "atlas/grid/GaussianLatitudes.h"
 #include "mir/util/Grib.h"
 #include "eckit/log/Timer.h"
 #include "mir/api/MIRJob.h"
@@ -50,18 +50,18 @@ void Classic::fill(api::MIRJob &job) const  {
     job.set("gridname", os.str());
 }
 
-atlas::Grid *Classic::atlasGrid() const {
+atlas::grid::Grid *Classic::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
     std::ostringstream os;
     os << "rgg.N" << N_;
-    return atlas::Grid::create(os.str());
+    return atlas::grid::Grid::create(os.str());
 }
 
 const std::vector<long> &Classic::pls() const {
     if (pl_.size() == 0) {
         std::ostringstream os;
         os << "rgg.N" << N_;
-        eckit::ScopedPtr<atlas::grids::ReducedGrid> grid(dynamic_cast<atlas::grids::ReducedGrid *>(atlas::Grid::create(os.str())));
+        eckit::ScopedPtr<atlas::grid::ReducedGrid> grid(dynamic_cast<atlas::grid::ReducedGrid *>(atlas::grid::Grid::create(os.str())));
 
         ASSERT(grid.get());
 

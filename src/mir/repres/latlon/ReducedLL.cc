@@ -16,8 +16,8 @@
 
 #include <iostream>
 
-#include "atlas/grids/LocalGrid.h"
-#include "atlas/grids/ReducedLonLatGrid.h"
+#include "atlas/grid/LocalGrid.h"
+#include "atlas/grid/ReducedLonLatGrid.h"
 
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Compare.h"
@@ -85,15 +85,15 @@ bool ReducedLL::globalDomain() const {
     return false;
 }
 
-atlas::Grid *ReducedLL::atlasGrid() const {
+atlas::grid::Grid *ReducedLL::atlasGrid() const {
 
     if ( globalDomain() ) {
         // FIXME: we are missing the distrubution of latitudes
-        return new atlas::grids::ReducedLonLatGrid(pl_.size(), &pl_[0], atlas::grids::ReducedLonLatGrid::INCLUDES_POLES);
+        return new atlas::grid::ReducedLonLatGrid(pl_.size(), &pl_[0], atlas::grid::ReducedLonLatGrid::INCLUDES_POLES);
     } else {
-        atlas::Domain domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east() );
+        atlas::grid::Domain domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east() );
         // FIXME: we are missing the distrubution of latitudes
-        return new atlas::grids::ReducedLonLatGrid(pl_.size(), &pl_[0], atlas::grids::ReducedLonLatGrid::INCLUDES_POLES, domain);
+        return new atlas::grid::ReducedLonLatGrid(pl_.size(), &pl_[0], atlas::grid::ReducedLonLatGrid::INCLUDES_POLES, domain);
     }
 }
 
