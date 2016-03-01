@@ -9,9 +9,7 @@
  */
 
 /*
- * C Implementation: grib_dump
- *
- * Author: Enrico Fucile <enrico.fucile@ecmwf.int>
+ * C Implementation: gts_dump
  *
  *
  */
@@ -24,12 +22,10 @@ grib_option grib_options[]={
     {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
     {"D",0,0,0,1,0},
     {"d",0,"Print all data values.\n",0,1,0},
-    {"C",0,0,0,1,0},
     {"t",0,0,0,1,0},
     {"H",0,0,0,1,0},
     {"a",0,0,0,1,0},
     {"w:",0,0,0,1,0},
-    {"M",0,0,0,1,0},
     {"T:",0,0,1,0,"T"},
     {"7",0,0,0,1,0},
     {"V",0,0,0,1,0},
@@ -37,24 +33,26 @@ grib_option grib_options[]={
     {"x",0,0,0,1,0}
 };
 
-char* grib_tool_description="Dump the content of a grib file in different formats.";
+char* grib_tool_description="Dump the content of a GTS file in different formats.";
 char* grib_tool_name="gts_dump";
 char* grib_tool_usage="[options] file file ...";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
 /**
-*grib_dump
-*Dump the content of a grib file
+* gts_dump
+* Dump the content of a GTS file
 *
 */
 int main(int argc, char *argv[]) { return grib_tool(argc,argv);}
 
-int grib_tool_before_getopt(grib_runtime_options* options) {
+int grib_tool_before_getopt(grib_runtime_options* options)
+{
   return 0;
 }
 
-int grib_tool_init(grib_runtime_options* options) {
+int grib_tool_init(grib_runtime_options* options)
+{
 
   int opt=grib_options_on("C")+grib_options_on("O")+grib_options_on("D");
 
@@ -62,16 +60,8 @@ int grib_tool_init(grib_runtime_options* options) {
 
 
   if (opt > 1) {
-    printf("%s: simultaneous C/O/D options not allowed\n",grib_tool_name);
+    printf("%s: simultaneous O/D options not allowed\n",grib_tool_name);
     exit(1);
-  }
-
-  if (grib_options_on("C")) {
-    options->dump_mode = "c_code";
-    if (grib_options_on("d"))
-      options->dump_flags = 0;
-    else
-      options->dump_flags = GRIB_DUMP_FLAG_NO_DATA;
   }
 
   if  (grib_options_on("O")) {
@@ -103,11 +93,13 @@ int grib_tool_init(grib_runtime_options* options) {
   return 0;
 }
 
-int grib_tool_new_filename_action(grib_runtime_options* options,const char* file) {
+int grib_tool_new_filename_action(grib_runtime_options* options,const char* file)
+{
    return 0;
 }
 
-int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file) {
+int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
+{
   char tmp[1024];
   if (!options->current_infile->name) return 0;
   sprintf(tmp,"FILE: %s ",options->current_infile->name);
@@ -116,7 +108,8 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
    return 0;
 }
 
-int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
+int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
+{
   long length=0;
   char tmp[1024];
   char identifier[100];
@@ -143,21 +136,24 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
   return 0;
 }
 
-int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h) {
+int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
+{
   grib_handle_delete(h);
   return 0;
 }
 
-void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h) {
+void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
+{
   grib_print_key_values(options,h);
 }
 
-int grib_tool_finalise_action(grib_runtime_options* options) {
+int grib_tool_finalise_action(grib_runtime_options* options)
+{
   return 0;
 }
 
-int grib_no_handle_action(int err) {
+int grib_no_handle_action(int err)
+{
   fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
   return 0;
 }
-
