@@ -258,11 +258,21 @@ int grib_tool_init(grib_runtime_options* options)
         compareAbsolute=0;
     }
     if (grib_options_on("A:")){
+        const char* absTolStr = grib_options_get_option("A:");
+        char* endPtr = NULL; /* for error handling */
         if (grib_options_on("R:")) {
-            maxAbsoluteError = atof(grib_options_get_option("A:"));
+            maxAbsoluteError = strtod(absTolStr,&endPtr);
+            if (*endPtr) {
+                fprintf(stderr, "Invalid absolute error: '%s'\n", absTolStr);
+                exit(1);
+            }
         } else {
             compare_double= &compare_double_absolute;
-            global_tolerance = atof(grib_options_get_option("A:"));
+            global_tolerance= strtod(absTolStr,&endPtr);
+            if (*endPtr) {
+                fprintf(stderr, "Invalid absolute error: '%s'\n", absTolStr);
+                exit(1);
+            }
         }
     }
     if (grib_options_on("P")) {
