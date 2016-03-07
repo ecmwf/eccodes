@@ -8,13 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: codes_info
- *
- * Description:
- *
- */
-
 #include "grib_tools.h"
 
 void usage( char*);
@@ -27,7 +20,6 @@ void usage( char*);
 int main( int argc,char* argv[])
 {
     char* path=NULL;
-    int c=0;
     int nfiles=0;
     unsigned long print_flags=0;
     int major=ECCODES_MAJOR_VERSION;
@@ -35,7 +27,7 @@ int main( int argc,char* argv[])
     int revision=ECCODES_REVISION_VERSION;
 
     while (1) {
-        c = getopt (argc, argv, "vds");
+        int c = getopt (argc, argv, "vds");
 
         if (c == -1)
             break;
@@ -68,18 +60,28 @@ int main( int argc,char* argv[])
 #if GRIB_PTHREADS
         grib_context_log(grib_context_get_default(), GRIB_LOG_DEBUG, "PTHREADS enabled");
 #endif
-        if ((path=codes_getenv("ECCODES_DEFINITION_PATH")) != NULL) {
+        if ((path=getenv("ECCODES_DEFINITION_PATH")) != NULL) {
             printf("Definition files path from environment variable");
             printf(" ECCODES_DEFINITION_PATH=%s\n",path);
+        } else if ((path=getenv("GRIB_DEFINITION_PATH")) != NULL) {
+            printf("Definition files path from environment variable");
+            printf(" GRIB_DEFINITION_PATH=%s\n",path);
+            printf("(This is for backward compatibility. "
+                   "It is recommended you use ECCODES_DEFINITION_PATH instead!)\n");
         } else {
             printf("Default definition files path is used: %s\n",ECCODES_DEFINITION_PATH);
             printf("Definition files path can be changed setting ECCODES_DEFINITION_PATH environment variable\n");
         }
         printf("\n");
 
-        if ((path=codes_getenv("ECCODES_SAMPLES_PATH")) != NULL) {
+        if ((path=getenv("ECCODES_SAMPLES_PATH")) != NULL) {
             printf("SAMPLES path from environment variable");
             printf(" ECCODES_SAMPLES_PATH=%s\n",path);
+        } else if ((path=getenv("GRIB_SAMPLES_PATH")) != NULL) {
+            printf("SAMPLES path from environment variable");
+            printf(" GRIB_SAMPLES_PATH=%s\n",path);
+            printf("(This is for backward compatibility. "
+                   "It is recommended you use ECCODES_SAMPLES_PATH instead!)\n");
         } else {
             printf("Default SAMPLES path is used: %s\n",ECCODES_SAMPLES_PATH);
             printf("SAMPLES path can be changed setting ECCODES_SAMPLES_PATH environment variable\n");
