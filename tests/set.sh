@@ -53,11 +53,10 @@ centre=`${tools_dir}grib_get -p centre:l $outfile`
 [ $centre -eq 80 ]
 
 set +e
-
 ${tools_dir}grib_set -p levtype $infile $outfile 2> $REDIRECT > $REDIRECT
-
 [ $? -ne 0 ]
 
+set -e
 # GRIB-941: encoding of grib2 angles
 angleInDegrees=130.9989
 angleInMicroDegrees=130998900

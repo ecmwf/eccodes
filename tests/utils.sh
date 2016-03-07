@@ -19,9 +19,9 @@ grib_check_key_equals()
 {
    file=$1
    key=$2
-   val=$3
+   expected=$3
    result=`${tools_dir}grib_get -p $key $file`
-   [ "$result" = "$val" ]
+   [ "$result" = "$expected" ]
 }
 
 grib_check_key_exists()
