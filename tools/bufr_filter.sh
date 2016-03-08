@@ -1,14 +1,19 @@
 #!/bin/sh
 set -e 
 
-echo "-# The bufr_filter processes sequentially all bufr messages contained in the input files and applies the rules to each of them. \\n"
+echo "-# The bufr_filter sequentially processes all bufr messages contained in the input files and applies the rules to each of them. \\n"
 echo " Input messages can be written to the output by using the \"write\" statement. The write statement can be parameterised so that output "
 echo " is sent to multiple files depending on key values used in the output file name. \\n"
-echo " If we write a rules_file containing the only statement:\\n \\n"
+echo " First we write a rules_file containing the following statement:\\n \\n"
 echo "\\verbatim"
 echo "write \"../data/split/[bufrHeaderCentre:l]_[dataCategory].bufr[editionNumber]\";"
 echo "\\endverbatim\\n"
-echo "Applying this rules_file to the \"../data/bufr/mutitype.bufr\" bufr file we obtain several files in the ../data/split directory containing "
+echo "Then we create the BUFR file multitype.bufr from three others: \\n"
+echo "\\verbatim"
+echo "mkdir ../data/split \\n"
+echo "cat ../data/bufr/syno_1.bufr ../data/bufr/goes_87.bufr ../data/bufr/gosat.bufr > ../data/split/multitype.bufr \\n"
+echo "\\endverbatim\\n"
+echo "Applying this rules_file to the \"../data/split/multitype.bufr\" bufr file we obtain several files in the ../data/split directory containing "
 echo " messages split according to their key values\\n "
 echo "\\verbatim"
 
@@ -26,7 +31,7 @@ cat > rules_file <<EOF
 write "../data/split/[bufrHeaderCentre:l]_[dataCategory].bufr[editionNumber]";
 EOF
 
-echo ">bufr_filter rules_file ../data/bufr/multitype.bufr"
+echo ">bufr_filter rules_file ../data/split/multitype.bufr"
 echo ">ls ../data/split"
 
 ./bufr_filter rules_file ../data/split/multitype.bufr
