@@ -238,7 +238,7 @@ void gaussian_grid(grib_handle* h)
     if(missing(h,"numberOfPointsAlongAParallel"))   /* same as key Ni */
     {
         /* If missing, this is a REDUCED gaussian grid */
-        const long MAXIMUM_RESOLUTION = 320;
+        const long MAXIMUM_RESOLUTION = 640;
         CHECK(get(h,"PLPresent"));
         CHECK(DBL_EQUAL(west, 0.0, tolerance));
         if (n > MAXIMUM_RESOLUTION) {
