@@ -8,6 +8,10 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
+# Description: How to use an iterator on lat/lon/values and query the bitmap
+#              for missing values
+#              (rather than compare each value with the missingValue key)
+#
 import traceback
 import sys
 
