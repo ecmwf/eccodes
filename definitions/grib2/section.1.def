@@ -14,7 +14,7 @@ meta section1Pointer section_pointer(offsetSection1,section1Length,1);
 
 unsigned[1] numberOfSection = 1 :read_only;
 
-codetable[2] centre  'grib1/0.table' : dump,string_type;
+codetable[2] centre  'grib2/centre.table' : dump,string_type;
 alias identificationOfOriginatingGeneratingCentre=centre;
 meta centreDescription codetable_title(centre);
 
