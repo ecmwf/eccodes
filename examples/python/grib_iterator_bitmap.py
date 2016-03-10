@@ -26,7 +26,13 @@ def example(INPUT):
 
         iterid = codes_grib_iterator_new(gid, 0)
 
-        missingValue = codes_get_double(gid, "missingValue")
+        bitmapPresent = codes_get(gid, 'bitmapPresent')
+        if bitmapPresent:
+            # Get the bitmap array which contains 0s and 1s
+            bitmap = codes_get_array(gid, 'bitmap', int)
+            # Do some sanity checking
+            assert len(bitmap) == codes_get_size(gid, 'values')
+            assert len(bitmap) == codes_get(gid, 'numberOfDataPoints')
 
         i = 0
         while 1:
@@ -38,7 +44,8 @@ def example(INPUT):
 
             sys.stdout.write("- %d - lat=%.6e lon=%.6e value=" % (i, lat, lon))
 
-            if value == missingValue:
+            # Consult bitmap to see if the i'th value is missing
+            if bitmapPresent and bitmap[i] == 0:
                 print "missing"
             else:
                 print "%.6f" % value

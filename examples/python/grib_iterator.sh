@@ -4,11 +4,16 @@
 
 TEMP1=temp1.$$
 TEMP2=temp2.$$
+TEMP3=temp3.$$
 
+# Input file with some missing data values
 FILE="${data_dir}/reduced_latlon_surface.grib1"
 $PYTHON $examples_src/grib_iterator.py $FILE 2> $TEMP1 > $TEMP1
-./p_grib_iterator $FILE        2> $TEMP2 > $TEMP2
+./p_grib_iterator $FILE                      2> $TEMP2 > $TEMP2
 diff $TEMP1 $TEMP2
+
+$PYTHON $examples_src/grib_iterator_bitmap.py $FILE 2> $TEMP3 > $TEMP3
+diff $TEMP1 $TEMP3
 
 
 # Polar stereographic
@@ -17,5 +22,8 @@ $PYTHON $examples_src/grib_iterator.py $FILE 2> $TEMP1 > $TEMP1
 ./p_grib_iterator $FILE        2> $TEMP2 > $TEMP2
 diff $TEMP1 $TEMP2
 
+$PYTHON $examples_src/grib_iterator_bitmap.py $FILE 2> $TEMP3 > $TEMP3
+diff $TEMP1 $TEMP3
 
-rm $TEMP1 $TEMP2 || true
+
+rm $TEMP1 $TEMP2 $TEMP3 || true
