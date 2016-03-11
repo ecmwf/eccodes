@@ -18,6 +18,7 @@ list( APPEND test_bins
       unit_tests
       gauss_sub
       grib_util_set_spec
+      local85
 )
 
 foreach( tool ${test_bins} )
@@ -91,6 +92,7 @@ list( APPEND tests2
     padding
     debug
     grib_util_set_spec
+    local85
 	neg_fctime
 )
 
