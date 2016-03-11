@@ -18,6 +18,7 @@ list( APPEND test_bins
       unit_tests
       gauss_sub
       grib_util_set_spec
+      sh_imag
 )
 
 foreach( tool ${test_bins} )
@@ -92,6 +93,7 @@ list( APPEND tests2
     debug
     grib_util_set_spec
 	neg_fctime
+    sh_imag
 )
 
 # These tests do not require any data downloads
