@@ -152,3 +152,5 @@ ecbuild_add_test( TARGET eccodes_t_ccsds
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ccsds.sh
                   TEST_DEPENDS eccodes_get_gribs
 )
+
+
