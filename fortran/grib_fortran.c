@@ -175,6 +175,7 @@ static int push_file(FILE* f,char* buffer){
 
     if(!file_set){
         file_set = (l_grib_file*)malloc(sizeof(l_grib_file));
+        Assert(file_set);
         file_set->id   = myindex;
         file_set->f    = f;
         file_set->buffer =buffer;
@@ -196,6 +197,7 @@ static int push_file(FILE* f,char* buffer){
     }
 
     the_new = (l_grib_file*)malloc(sizeof(l_grib_file));
+    Assert(the_new);
     the_new->id   = myindex;
     the_new->f    = f;
     the_new->buffer    = buffer;
@@ -226,6 +228,7 @@ static void _push_handle(grib_handle *h,int *gid){
 
     if(!handle_set){
         handle_set = (l_grib_handle*)malloc(sizeof(l_grib_handle));
+        Assert(handle_set);
         handle_set->id   = myindex;
         handle_set->h    = h;
         handle_set->next = NULL;
@@ -250,6 +253,7 @@ static void _push_handle(grib_handle *h,int *gid){
     }
 
     the_new = (l_grib_handle*)malloc(sizeof(l_grib_handle));
+    Assert(the_new);
     the_new->id   = myindex;
     the_new->h    = h;
     the_new->next = current;
@@ -281,6 +285,7 @@ static void _push_index(grib_index *h,int *gid){
 
     if(!index_set){
         index_set = (l_grib_index*)malloc(sizeof(l_grib_index));
+        Assert(index_set);
         index_set->id   = myindex;
         index_set->h    = h;
         index_set->next = NULL;
@@ -305,6 +310,7 @@ static void _push_index(grib_index *h,int *gid){
     }
 
     the_new = (l_grib_index*)malloc(sizeof(l_grib_index));
+    Assert(the_new);
     the_new->id   = myindex;
     the_new->h    = h;
     the_new->next = current;
@@ -336,6 +342,7 @@ static void _push_multi_handle(grib_multi_handle *h,int *gid){
 
     if(!multi_handle_set){
         multi_handle_set = (l_grib_multi_handle*)malloc(sizeof(l_grib_multi_handle));
+        Assert(multi_handle_set);
         multi_handle_set->id   = myindex;
         multi_handle_set->h    = h;
         multi_handle_set->next = NULL;
@@ -360,6 +367,7 @@ static void _push_multi_handle(grib_multi_handle *h,int *gid){
     }
 
     the_new = (l_grib_multi_handle*)malloc(sizeof(l_grib_multi_handle));
+    Assert(the_new);
     the_new->id   = myindex;
     the_new->h    = h;
     the_new->next = current;
@@ -401,6 +409,7 @@ static int _push_iterator(grib_iterator *i){
 
     if(!iterator_set){
         iterator_set = (l_grib_iterator*)malloc(sizeof(l_grib_iterator));
+        Assert(iterator_set);
         iterator_set->id   = myindex;
         iterator_set->i    = i;
         iterator_set->next = NULL;
@@ -421,6 +430,7 @@ static int _push_iterator(grib_iterator *i){
     }
 
     the_new = (l_grib_iterator*)malloc(sizeof(l_grib_iterator));
+    Assert(the_new);
     the_new->id   = myindex;
     the_new->i    = i;
     the_new->next = current;
@@ -446,6 +456,7 @@ static int _push_keys_iterator(grib_keys_iterator *i){
 
     if(!keys_iterator_set){
         keys_iterator_set = (l_grib_keys_iterator*)malloc(sizeof(l_grib_keys_iterator));
+        Assert(keys_iterator_set);
         keys_iterator_set->id   = myindex;
         keys_iterator_set->i    = i;
         keys_iterator_set->next = NULL;
@@ -467,6 +478,7 @@ static int _push_keys_iterator(grib_keys_iterator *i){
     if(!previous) return -1;
 
     the_new = (l_grib_keys_iterator*)malloc(sizeof(l_grib_keys_iterator));
+    Assert(the_new);
     the_new->id   = myindex;
     the_new->i    = i;
     the_new->next = current;

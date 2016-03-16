@@ -345,6 +345,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 
   if (len>0) {
     columns_str=(char*)malloc((len+1)*sizeof(char));
+    Assert(columns_str);
     columns_str=(char*)memcpy(columns_str,pcf,len);
     columns_str[len]='\0';
     columns=atoi(columns_str);
