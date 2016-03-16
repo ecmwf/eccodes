@@ -1254,7 +1254,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         }
         if (!constant) {
             if (editionNumber == 1 ) {
-                long numberOfGroups;
+                long numberOfGroups=0;
                 grib_handle* htmp=grib_handle_clone(outh);
 
                 slen=17;
@@ -1489,6 +1489,7 @@ int parse_keyval_string(char* grib_tool, char* arg, int values_required, int def
     p=strtok(arg,",");
     while (p != NULL) {
         values[i].name=(char*)calloc(1,strlen(p)+1);
+        Assert(values[i].name);
         strcpy((char*)values[i].name,p);
         p=strtok(NULL,",");
         i++;

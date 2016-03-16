@@ -636,6 +636,7 @@ static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors
   /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
   if (is_default_section) {
     upper=(char*)malloc(strlen(a->name)+1);
+    Assert(upper);
     p=(char*)a->name;
     q=upper;
     while (*p != '\0') {

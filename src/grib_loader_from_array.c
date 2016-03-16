@@ -151,6 +151,7 @@ int grib_init_accessor_from_array(grib_loader* loader,grib_accessor* ga,grib_arg
 
                 case GRIB_TYPE_LONG:
                     lvalue=(long*)malloc(sizeof(long)*len);
+                    Assert(lvalue);
                     for (i=0;i<len;i++) lvalue[i]=(long)dvalue[i];
                     grib_context_log(h->context,GRIB_LOG_DEBUG, "Setting long array %s",ga->name);
                     grib_set_long_array(h,ga->name,lvalue,len);

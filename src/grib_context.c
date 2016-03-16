@@ -83,6 +83,7 @@ static void* default_long_lasting_malloc(const grib_context* c, size_t size)
     cntp++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
+    Assert(ret);
     return ret;
 }
 
@@ -103,6 +104,7 @@ static void* default_buffer_malloc(const grib_context* c, size_t size)
     cntp++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
+    Assert(ret);
     return ret;
 }
 
@@ -110,6 +112,7 @@ static void* default_buffer_realloc(const grib_context* c, void* p, size_t size)
 {
     void* ret;
     ret=realloc(p,size);
+    Assert(ret);
     return ret;
 }
 
@@ -130,6 +133,7 @@ static void* default_malloc(const grib_context* c, size_t size)
     cnt++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
+    Assert(ret);
     return ret;
 }
 
@@ -137,6 +141,7 @@ static void* default_realloc(const grib_context* c, void* p, size_t size)
 {
     void* ret;
     ret=realloc(p,size);
+    Assert(ret);
     return ret;
 }
 #endif
@@ -763,7 +768,6 @@ void* grib_context_realloc(const grib_context* c, void *p,size_t size)
     void* q;
     if (!c) c=grib_context_get_default();
     q=c->realloc_mem(c,p,size);
-
     if(!q) {
         grib_context_log(c,GRIB_LOG_FATAL,"grib_context_realloc: error allocating %lu bytes",(unsigned long)size);
         exit(1);
@@ -810,7 +814,6 @@ void grib_context_buffer_free(const grib_context* c, void* p)
 void* grib_context_buffer_realloc(const grib_context* c, void *p,size_t size)
 {
     void* q=c->realloc_buffer_mem(c,p,size);
-
     if(!q) {
         grib_context_log(c,GRIB_LOG_FATAL,"grib_context_buffer_realloc: error allocating %lu bytes",(unsigned long)size);
         exit(1);

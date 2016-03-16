@@ -112,6 +112,7 @@ static int read_GRIB(reader* r)
     /*TODO proper context*/
     c=grib_context_get_default();
     tmp=(unsigned char*)malloc(buflen);
+    Assert(tmp);
     buf=grib_new_buffer(c,tmp,buflen);
     buf->property = GRIB_MY_BUFFER;
 
@@ -588,6 +589,7 @@ static int read_BUFR(reader *r)
     /*TODO proper context*/
     c=grib_context_get_default();
     tmp=(unsigned char*)malloc(buflen);
+    Assert(tmp);
     buf=grib_new_buffer(c,tmp,buflen);
     buf->property = GRIB_MY_BUFFER;
     r->offset=r->tell(r->read_data)-4;
