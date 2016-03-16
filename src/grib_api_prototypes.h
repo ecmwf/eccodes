@@ -920,6 +920,7 @@ void grib_print_api_version(FILE *out);
 grib_context *grib_context_get_default(void);
 char *grib_context_full_defs_path(grib_context *c, const char *basename);
 char *grib_samples_path(const grib_context *c);
+char *grib_definition_path(const grib_context *c);
 void grib_context_free(const grib_context *c, void *p);
 void grib_context_free_persistent(const grib_context *c, void *p);
 void grib_context_reset(grib_context *c);

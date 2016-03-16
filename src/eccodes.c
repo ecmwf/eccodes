@@ -17,6 +17,10 @@ char* codes_samples_path(const grib_context *c)
 {
     return grib_samples_path(c);
 }
+char* codes_definition_path(const grib_context *c)
+{
+    return grib_definition_path(c);
+}
 long codes_get_api_version(void)
 {
     return grib_get_api_version();

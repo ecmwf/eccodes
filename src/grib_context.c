@@ -657,6 +657,11 @@ char* grib_samples_path(const grib_context *c)
     if (!c) c=grib_context_get_default();
     return c->grib_samples_path;
 }
+char* grib_definition_path(const grib_context *c)
+{
+    if (!c) c=grib_context_get_default();
+    return c->grib_definition_files_path;
+}
 
 void grib_context_free(const grib_context* c, void* p)
 {
