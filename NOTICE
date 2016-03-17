@@ -16,3 +16,8 @@ The Max-Planck-Institute for Meteorology and Deutsches Klimarechenzentrum GmbH.
 
 IBM POWER optimisations were developed at
 The Max-Planck-Institute for Meteorology.
+
+PythonicGrib (Python high-level interface) provided by
+Deutscher Wetterdienst.
+
+OpenMP API Support provided by Eric Millin.
