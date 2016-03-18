@@ -45,12 +45,7 @@ Octahedral::Octahedral(long N, const util::BoundingBox &bbox):
 const std::vector<long>& Octahedral::pls() const {
     if (pl_.size() == 0) {
         atlas::grid::global::gaussian::OctahedralGaussian grid(N_);
-
-        const std::vector<int>& v = grid.npts_per_lat();
-        pl_.resize(v.size());
-        for (size_t i = 0; i < v.size(); i++) {
-            pl_[i] = v[i];
-        }
+        pl_ = grid.pl();
     }
     return pl_;
 }

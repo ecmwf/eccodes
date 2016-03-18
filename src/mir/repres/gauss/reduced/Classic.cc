@@ -72,15 +72,13 @@ const std::vector<long> &Classic::pls() const {
                         new atlas::grid::global::gaussian::ClassicGaussian(N_) ));
         ASSERT(grid.get());
 
-        const std::vector<int> &v = grid->npts_per_lat();
+        const std::vector<long> &v = grid->pl();
         ASSERT(v.size() == N_ * 2);
-
-        pl_.resize(v.size());
         for (size_t i = 0; i < v.size(); i++) {
             ASSERT(v[i] > 0);
-            pl_[i] = v[i];
         }
 
+        pl_ = v;
     }
     return pl_;
 }

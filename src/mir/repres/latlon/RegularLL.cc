@@ -92,8 +92,8 @@ atlas::grid::Grid *RegularLL::atlasGrid() const {
     if (globalDomain()) {
 
         grid = new atlas::grid::global::lonlat::RegularLonLat(
-                    (const long) ni_,
-                    (const long) nj_ );
+                    (const size_t) ni_,
+                    (const size_t) nj_ );
 
         // FIXME: an assertion for shift global grids
         ASSERT(bbox_.north() == 90);
@@ -112,8 +112,8 @@ atlas::grid::Grid *RegularLL::atlasGrid() const {
                     increments_ );
 
         grid = new atlas::grid::global::lonlat::RegularLonLat(
-                    (const long) global_ni,
-                    (const long) global_nj );
+                    (const size_t) global_ni,
+                    (const size_t) global_nj );
 
 
         // FIXME: assert if non-global shifted grid
