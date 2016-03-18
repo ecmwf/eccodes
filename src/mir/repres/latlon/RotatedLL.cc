@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 1996-2015 ECMWF.
+ * (C) Copyright 1996-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -19,12 +19,12 @@
 
 #include "eckit/exception/Exceptions.h"
 
+#include "atlas/grid/deprecated/RotatedGrid.h"
+
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/RotatedIterator.h"
 #include "mir/log/MIR.h"
 
-
-#include "atlas/grid/RotatedGrid.h"
 
 namespace mir {
 namespace repres {
@@ -36,14 +36,16 @@ RotatedLL::RotatedLL(const param::MIRParametrisation &parametrisation):
     rotation_(parametrisation) {
 }
 
+
 RotatedLL::RotatedLL(const util::BoundingBox &bbox, const util::Increments &increments, const util::Rotation &rotation):
     RegularLL(bbox, increments),
     rotation_(rotation) {
-
 }
+
 
 RotatedLL::~RotatedLL() {
 }
+
 
 void RotatedLL::print(std::ostream &out) const {
     out << "RotatedLL[";
@@ -59,31 +61,38 @@ const RotatedLL *RotatedLL::cropped(const util::BoundingBox &bbox) const {
     return new RotatedLL(bbox, increments_, rotation_);
 }
 
+
 Iterator *RotatedLL::rotatedIterator() const {
     return new util::RotatedIterator(RegularLL::unrotatedIterator(), rotation_);
 }
+
 
 void RotatedLL::fill(grib_info &info) const  {
     RegularLL::fill(info);
     rotation_.fill(info);
 }
 
+
 void RotatedLL::fill(api::MIRJob &job) const  {
     RegularLL::fill(job);
     rotation_.fill(job);
 }
 
+
 atlas::grid::Grid *RotatedLL::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
-    return new atlas::grid::RotatedGrid(RegularLL::atlasGrid(),
-                                         rotation_.south_pole_latitude(),
-                                         rotation_.south_pole_longitude(),
-                                         rotation_.south_pole_rotation_angle());
+    return new atlas::grid::deprecated::RotatedGrid(
+                RegularLL::atlasGrid(),
+                rotation_.south_pole_latitude(),
+                rotation_.south_pole_longitude(),
+                rotation_.south_pole_rotation_angle() );
 }
+
 
 namespace {
 static RepresentationBuilder<RotatedLL> rotatedLL("rotated_ll");  // Name is what is returned by grib_api
 }
+
 
 }  // namespace latlon
 }  // namespace repres

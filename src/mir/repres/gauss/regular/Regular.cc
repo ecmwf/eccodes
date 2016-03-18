@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 1996-2015 ECMWF.
+ * (C) Copyright 1996-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,6 +12,7 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
+
 #include "mir/repres/gauss/regular/Regular.h"
 
 #include <iostream>
@@ -19,19 +20,20 @@
 #include "eckit/exception/Exceptions.h"
 #include "eckit/memory/ScopedPtr.h"
 
-#include "atlas/grid/GaussianLatitudes.h"
-#include "atlas/grid/GaussianGrid.h"
+#include "atlas/grid/global/gaussian/RegularGaussian.h"
 
-#include "mir/repres/Iterator.h"
-#include "mir/util/Compare.h"
-#include "mir/param/MIRParametrisation.h"
-#include "mir/util/Grib.h"
 #include "mir/api/MIRJob.h"
 #include "mir/log/MIR.h"
+#include "mir/param/MIRParametrisation.h"
+#include "mir/repres/Iterator.h"
+#include "mir/util/Compare.h"
+#include "mir/util/Grib.h"
+
 
 namespace mir {
 namespace repres {
 namespace regular {
+
 
 Regular::Regular(const param::MIRParametrisation &parametrisation):
     Gaussian(parametrisation) {
@@ -47,10 +49,12 @@ Regular::Regular(const param::MIRParametrisation &parametrisation):
     ASSERT(N_ * 2 == Nj);
 }
 
+
 Regular::Regular(size_t N):
     Gaussian(N) {
 
 }
+
 
 void Regular::shape(size_t &ni, size_t &nj) const {
     ASSERT(globalDomain());
@@ -58,10 +62,12 @@ void Regular::shape(size_t &ni, size_t &nj) const {
     nj = N_ * 2;
 }
 
+
 Regular::Regular(size_t N, const util::BoundingBox &bbox):
     Gaussian(N, bbox) {
 
 }
+
 
 Regular::~Regular() {
 }
@@ -95,9 +101,8 @@ bool Regular::globalDomain() const {
         return npole && spole;
     }
     return false;
-
-
 }
+
 
 void Regular::fill(grib_info &info) const  {
 
@@ -138,8 +143,8 @@ void Regular::fill(grib_info &info) const  {
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
     info.packing.extra_settings[j].name = "global";
     info.packing.extra_settings[j].long_value = globalDomain() ? 1 : 0;
-
 }
+
 
 void Regular::fill(api::MIRJob &job) const  {
     ASSERT(globalDomain());
@@ -148,9 +153,10 @@ void Regular::fill(api::MIRJob &job) const  {
     job.set("gridname", os.str());
 }
 
+
 atlas::grid::Grid *Regular::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
-    return new atlas::grid::GaussianGrid(N_);
+    return new atlas::grid::global::gaussian::RegularGaussian(N_);
 }
 
 
@@ -234,15 +240,18 @@ class RegularIterator: public Iterator {
 
 };
 
+
 Iterator *Regular::unrotatedIterator() const {
     // Use a global bounding box if global domain, to avoid rounding issues
     // due to GRIB (in)accuracies
     return new RegularIterator(latitudes(), N_, globalDomain() ? util::BoundingBox() : bbox_);
 }
 
+
 Iterator* Regular::rotatedIterator() const {
     return unrotatedIterator();
 }
+
 
 }  // namespace regular
 }  // namespace repres

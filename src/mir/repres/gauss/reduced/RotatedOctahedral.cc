@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 1996-2015 ECMWF.
+ * (C) Copyright 1996-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,33 +12,37 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
+
 #include "mir/repres/gauss/reduced/RotatedOctahedral.h"
 
 #include <iostream>
 
+#include "atlas/grid/deprecated/RotatedGrid.h"
+
 #include "mir/util/Grib.h"
-#include "atlas/grid/RotatedGrid.h"
 #include "mir/repres/gauss/reduced/RotatedFromPL.h"
 #include "mir/util/RotatedIterator.h"
+
 
 namespace mir {
 namespace repres {
 namespace reduced {
 
 
+RotatedOctahedral::RotatedOctahedral(long N, const util::BoundingBox &bbox, const util::Rotation& rotation):
+    Octahedral(N, bbox),
+    rotation_(rotation) {
+}
+
 
 RotatedOctahedral::~RotatedOctahedral() {
 }
 
-RotatedOctahedral::RotatedOctahedral(long N, const util::BoundingBox &bbox, const util::Rotation& rotation):
-    Octahedral(N, bbox),
-    rotation_(rotation) {
-
-}
 
 void RotatedOctahedral::print(std::ostream &out) const {
     out << "RotatedGGOctahedral[N" << N_ << ",bbox=" << bbox_ << ",rotation=" << rotation_ << "]";
 }
+
 
 void RotatedOctahedral::fill(grib_info &info) const  {
 #ifdef GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG
@@ -50,20 +54,24 @@ void RotatedOctahedral::fill(grib_info &info) const  {
 #endif
 }
 
+
 void RotatedOctahedral::fill(api::MIRJob &job) const  {
     NOTIMP;
 }
+
 
 Iterator* RotatedOctahedral::rotatedIterator() const {
     return new util::RotatedIterator(Octahedral::unrotatedIterator(), rotation_);
 }
 
+
 atlas::grid::Grid *RotatedOctahedral::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
-    return new atlas::grid::RotatedGrid(Octahedral::atlasGrid(),
-                                         rotation_.south_pole_latitude(),
-                                         rotation_.south_pole_longitude(),
-                                         rotation_.south_pole_rotation_angle());
+    return new atlas::grid::deprecated::RotatedGrid(
+                Octahedral::atlasGrid(),
+                rotation_.south_pole_latitude(),
+                rotation_.south_pole_longitude(),
+                rotation_.south_pole_rotation_angle() );
 }
 
 
@@ -71,6 +79,7 @@ const Reduced *RotatedOctahedral::cropped(const util::BoundingBox &bbox, const s
     // We lose the RotatedOctahedral nature of the grid
     return new RotatedFromPL(N_, pl, bbox, rotation_);
 }
+
 
 }  // namespace reduced
 }  // namespace repres

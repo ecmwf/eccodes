@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 1996-2015 ECMWF.
+ * (C) Copyright 1996-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,6 +12,7 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
+
 #include "mir/repres/gauss/reduced/Reduced.h"
 
 #include <limits>
@@ -20,33 +21,36 @@
 #include "eckit/exception/Exceptions.h"
 #include "eckit/memory/ScopedPtr.h"
 
-#include "atlas/grid/GaussianLatitudes.h"
-
+#include "mir/api/MIRJob.h"
+#include "mir/log/MIR.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Grib.h"
-#include "mir/api/MIRJob.h"
-#include "mir/log/MIR.h"
 
 
 namespace mir {
 namespace repres {
 namespace reduced {
 
+
 Reduced::Reduced(size_t N):
     Gaussian(N) {
 }
+
 
 Reduced::Reduced(size_t N, const util::BoundingBox &bbox):
     Gaussian(N, bbox) {
 }
 
+
 Reduced::Reduced(const param::MIRParametrisation &parametrisation):
     Gaussian(parametrisation) {
 }
 
+
 Reduced::~Reduced() {
 }
+
 
 inline void between_0_and_360(double &x) {
     while (x >= 360) {
@@ -56,6 +60,7 @@ inline void between_0_and_360(double &x) {
         x += 360;
     }
 }
+
 
 bool Reduced::globalDomain() const {
 
@@ -96,8 +101,8 @@ bool Reduced::globalDomain() const {
     }
 
     return false;
-
 }
+
 
 void Reduced::fill(grib_info &info) const  {
 
@@ -146,10 +151,12 @@ void Reduced::fill(grib_info &info) const  {
 
 }
 
+
 void Reduced::fill(api::MIRJob &job) const  {
     ASSERT(globalDomain());
     job.set("pl", pls());
 }
+
 
 class GaussianIterator: public Iterator {
     std::vector<double> latitudes_;
@@ -239,11 +246,13 @@ class GaussianIterator: public Iterator {
 
 };
 
+
 Iterator *Reduced::unrotatedIterator() const {
     // Use a global bounding box if global domain, to avoid rounding issues
     // due to GRIB (in)accuracies
     return new GaussianIterator(latitudes(), pls(), globalDomain() ? util::BoundingBox() : bbox_);
 }
+
 
 Iterator* Reduced::rotatedIterator() const {
     return unrotatedIterator();
@@ -361,11 +370,13 @@ const Reduced *Reduced::cropped(const util::BoundingBox &bbox) const  {
     return cropped(bbox, newpl);
 }
 
+
 const Reduced *Reduced::cropped(const util::BoundingBox &bbox, const std::vector<long> &) const {
     std::ostringstream os;
     os << "Reduced::cropped() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
+
 
 }  // namespace reduced
 }  // namespace repres

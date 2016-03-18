@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 1996-2015 ECMWF.
+ * (C) Copyright 1996-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,28 +9,31 @@
  */
 
 /// @author Baudouin Raoult
-/// @LatLon Pedro Maciel
+/// @author Pedro Maciel
 /// @date Apr 2015
 
+
 #include "mir/repres/latlon/LatLon.h"
-#include "mir/repres/Iterator.h"
-#include "mir/param/MIRParametrisation.h"
 
 #include <iostream>
-
-#include "atlas/grid/LonLatGrid.h"
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Timer.h"
 
-#include "mir/util/Grib.h"
-#include "mir/util/Compare.h"
+#include "atlas/grid/global/lonlat/RegularLonLat.h"
+
 #include "mir/action/misc/AreaCropper.h"
 #include "mir/log/MIR.h"
+#include "mir/param/MIRParametrisation.h"
+#include "mir/repres/Iterator.h"
+#include "mir/util/Compare.h"
+#include "mir/util/Grib.h"
+
 
 namespace mir {
 namespace repres {
 namespace latlon {
+
 
 LatLon::LatLon(const param::MIRParametrisation &parametrisation):
     bbox_(parametrisation), increments_(parametrisation) {
@@ -50,6 +53,7 @@ LatLon::LatLon(const util::BoundingBox &bbox,
 
 LatLon::~LatLon() {
 }
+
 
 bool LatLon::globalDomain() const {
 
@@ -92,6 +96,7 @@ void LatLon::setNiNj() {
     computeNiNj(ni_, nj_, bbox_, increments_);
 }
 
+
 void LatLon::computeNiNj(size_t &ni,
                          size_t &nj,
                          const util::BoundingBox &bbox,
@@ -100,6 +105,7 @@ void LatLon::computeNiNj(size_t &ni,
     ni = computeN(bbox.west(), bbox.east(), increments.west_east(), "Ni", "west", "east");
     nj = computeN(bbox.south(), bbox.north(), increments.south_north(), "Nj", "south", "north");
 }
+
 
 void LatLon::reorder(long scanningMode, std::vector<double> &values) const {
     // Code from ecRegrid, UNTESTED!!!
@@ -176,10 +182,12 @@ void LatLon::fill(grib_info &info) const  {
 
 }
 
+
 void LatLon::fill(api::MIRJob &job) const  {
     increments_.fill(job);
     bbox_.fill(job);
 }
+
 
 class LatLonIterator: public Iterator {
     size_t ni_;
@@ -245,6 +253,7 @@ class LatLonIterator: public Iterator {
 
 };
 
+
 Iterator *LatLon::unrotatedIterator() const {
     return new LatLonIterator(ni_, nj_, bbox_.north(), bbox_.west(), increments_.west_east(), increments_.south_north());
 }
@@ -253,6 +262,7 @@ Iterator *LatLon::unrotatedIterator() const {
 Iterator* LatLon::rotatedIterator() const {
     return unrotatedIterator();
 }
+
 
 size_t LatLon::frame(std::vector<double> &values, size_t size, double missingValue) const {
 
@@ -277,10 +287,12 @@ size_t LatLon::frame(std::vector<double> &values, size_t size, double missingVal
 
 }
 
+
 void LatLon::validate(const std::vector<double> &values) const {
     eckit::Log::trace<MIR>() << "LatLon::validate " << values.size() << " ni*nj " << ni_ * nj_ << std::endl;
     ASSERT(values.size() == ni_ * nj_);
 }
+
 
 void LatLon::shape(size_t &ni, size_t &nj) const {
     ni = ni_;

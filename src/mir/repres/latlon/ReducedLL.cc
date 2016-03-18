@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 1996-2015 ECMWF.
+ * (C) Copyright 1996-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,18 +12,20 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
+
 #include "mir/repres/latlon/ReducedLL.h"
 
 #include <iostream>
 
-#include "atlas/grid/LocalGrid.h"
-#include "atlas/grid/ReducedLonLatGrid.h"
+#include "atlas/grid/deprecated/LocalGrid.h"
+#include "atlas/grid/global/lonlat/ReducedLonLat.h"
 
-#include "mir/param/MIRParametrisation.h"
-#include "mir/util/Compare.h"
 #include "mir/action/misc/AreaCropper.h"
-#include "mir/repres/Iterator.h"
 #include "mir/api/MIRJob.h"
+#include "mir/param/MIRParametrisation.h"
+#include "mir/repres/Iterator.h"
+#include "mir/util/Compare.h"
+
 
 namespace mir {
 namespace repres {
@@ -35,6 +37,7 @@ ReducedLL::ReducedLL(const param::MIRParametrisation &parametrisation):
     ASSERT(parametrisation.get("pl", pl_));
     ASSERT(parametrisation.get("Nj", Nj_));
 }
+
 
 ReducedLL::~ReducedLL() {
 }
@@ -49,6 +52,7 @@ void ReducedLL::fill(grib_info &info) const  {
     NOTIMP;
 }
 
+
 void ReducedLL::fill(api::MIRJob &job) const  {
     bbox_.fill(job);
     job.set("pl", pl_);
@@ -56,12 +60,14 @@ void ReducedLL::fill(api::MIRJob &job) const  {
     NOTIMP;
 }
 
+
 void ReducedLL::cropToDomain(const param::MIRParametrisation &parametrisation, data::MIRField &field) const {
     if (!globalDomain()) {
         action::AreaCropper cropper(parametrisation, bbox_);
         cropper.execute(field);
     }
 }
+
 
 bool ReducedLL::globalDomain() const {
 
@@ -85,16 +91,10 @@ bool ReducedLL::globalDomain() const {
     return false;
 }
 
-atlas::grid::Grid *ReducedLL::atlasGrid() const {
 
-    if ( globalDomain() ) {
-        // FIXME: we are missing the distrubution of latitudes
-        return new atlas::grid::ReducedLonLatGrid(pl_.size(), &pl_[0], atlas::grid::ReducedLonLatGrid::INCLUDES_POLES);
-    } else {
-        atlas::grid::Domain domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east() );
-        // FIXME: we are missing the distrubution of latitudes
-        return new atlas::grid::ReducedLonLatGrid(pl_.size(), &pl_[0], atlas::grid::ReducedLonLatGrid::INCLUDES_POLES, domain);
-    }
+atlas::grid::Grid *ReducedLL::atlasGrid() const {
+    // FIXME: we are missing the distribution of latitudes
+    return new atlas::grid::global::lonlat::ReducedLonLat(pl_.size(), &pl_[0]);
 }
 
 
@@ -191,19 +191,23 @@ class ReducedLLIterator: public Iterator {
 
 };
 
+
 Iterator *ReducedLL::unrotatedIterator() const {
     // Use a global bounding box if global domain, to avoid rounding issues
     // due to GRIB (in)accuracies
     return new ReducedLLIterator(Nj_, pl_, globalDomain() ? util::BoundingBox() : bbox_);
 }
 
+
 Iterator* ReducedLL::rotatedIterator() const {
     return unrotatedIterator();
 }
 
+
 namespace {
 static RepresentationBuilder<ReducedLL> reducedLL("reduced_ll"); // Name is what is returned by grib_api
 }
+
 
 }  // namespace latlon
 }  // namespace repres

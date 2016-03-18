@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 1996-2015 ECMWF.
+ * (C) Copyright 1996-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -13,16 +13,17 @@
 /// @date Apr 2015
 
 
+#include "mir/repres/other/UnstructuredGrid.h"
+
 #include <iostream>
 
 #include "eckit/exception/Exceptions.h"
 
+#include "atlas/grid/global/Unstructured.h"
+
 #include "mir/param/MIRParametrisation.h"
-
-#include "mir/repres/other/UnstructuredGrid.h"
-
-#include "atlas/grid/Unstructured.h"
 #include "mir/log/MIR.h"
+
 
 namespace mir {
 namespace repres {
@@ -49,9 +50,11 @@ void UnstructuredGrid::fill(grib_info &info) const  {
     NOTIMP;
 }
 
+
 void UnstructuredGrid::fill(api::MIRJob &job) const  {
     NOTIMP;
 }
+
 
 bool UnstructuredGrid::globalDomain() const {
     eckit::Log::warning() << "UnstructuredGrid::globalDomain: assuming grid is global" << std::endl;
@@ -71,10 +74,11 @@ atlas::grid::Grid *UnstructuredGrid::atlasGrid() const {
         }
     }
 
-    return new atlas::grid::Unstructured(pts);
+    return new atlas::grid::global::Unstructured(pts);
 
     // so constructor takes a vector<Point> (where point is LLPoint2)
 }
+
 
 void UnstructuredGrid::validate(const std::vector<double> &values) const {
     ASSERT(values.size() == latitudes_.size());

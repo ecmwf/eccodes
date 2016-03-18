@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 1996-2015 ECMWF.
+ * (C) Copyright 1996-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,13 +12,16 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
+
 #include "mir/repres/gauss/regular/RotatedGG.h"
 
 #include <iostream>
 
+#include "atlas/grid/deprecated/RotatedGrid.h"
+
 #include "mir/util/Grib.h"
-#include "atlas/grid/RotatedGrid.h"
 #include "mir/util/RotatedIterator.h"
+
 
 namespace mir {
 namespace repres {
@@ -34,18 +37,22 @@ RotatedGG::RotatedGG(const param::MIRParametrisation &parametrisation):
 RotatedGG::~RotatedGG() {
 }
 
+
 RotatedGG::RotatedGG(size_t N, const util::BoundingBox &bbox, const util::Rotation& rotation):
     Regular(N, bbox),
     rotation_(rotation) {
 }
 
+
 const Gridded *RotatedGG::cropped(const util::BoundingBox &bbox) const {
     return new RotatedGG(N_, bbox, rotation_);
 }
 
+
 void RotatedGG::print(std::ostream &out) const {
     out << "RotatedGG[N" << N_ << ",bbox=" << bbox_ << ",rotation" << rotation_ << "]";
 }
+
 
 void RotatedGG::fill(grib_info &info) const  {
     Regular::fill(info);
@@ -53,21 +60,25 @@ void RotatedGG::fill(grib_info &info) const  {
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_GG;
 }
 
+
 void RotatedGG::fill(api::MIRJob &job) const  {
     Regular::fill(job);
     rotation_.fill(job);
 }
 
+
 Iterator* RotatedGG::rotatedIterator() const {
     return new util::RotatedIterator(Regular::unrotatedIterator(), rotation_);
 }
 
+
 atlas::grid::Grid *RotatedGG::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
-    return new atlas::grid::RotatedGrid(Regular::atlasGrid(),
-                                         rotation_.south_pole_latitude(),
-                                         rotation_.south_pole_longitude(),
-                                         rotation_.south_pole_rotation_angle());
+    return new atlas::grid::deprecated::RotatedGrid(
+                Regular::atlasGrid(),
+                rotation_.south_pole_latitude(),
+                rotation_.south_pole_longitude(),
+                rotation_.south_pole_rotation_angle() );
 }
 
 
@@ -75,10 +86,6 @@ namespace {
 static RepresentationBuilder<RotatedGG> rotatedGG("rotated_gg"); // Name is what is returned by grib_api
 }
 
-
-// namespace {
-// static RepresentationBuilder<RotatedGG> reducedGGFromPL("reduced_gg"); // Name is what is returned by grib_api
-// }
 
 }  // namespace reduced
 }  // namespace repres

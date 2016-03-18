@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 1996-2015 ECMWF.
+ * (C) Copyright 1996-2016 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,15 +12,16 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
+
 #include "mir/repres/latlon/RegularLL.h"
 
 #include <iostream>
 
-#include "atlas/grid/LocalGrid.h"
-#include "atlas/grid/LonLatGrid.h"
-
 #include "eckit/exception/Exceptions.h"
 #include "eckit/types/Types.h"
+
+#include "atlas/grid/deprecated/LocalGrid.h"
+#include "atlas/grid/global/lonlat/RegularLonLat.h"
 
 #include "mir/util/Grib.h"
 #include "mir/util/Compare.h"
@@ -46,6 +47,7 @@ RegularLL::RegularLL(const util::BoundingBox &bbox,
 RegularLL::~RegularLL() {
 }
 
+
 // Called by RegularLL::crop()
 const RegularLL *RegularLL::cropped(const util::BoundingBox &bbox) const {
     eckit::Log::trace<MIR>() << "Create cropped copy as RegularLL bbox=" << bbox << std::endl;
@@ -69,9 +71,11 @@ void RegularLL::fill(grib_info &info) const  {
 
 }
 
+
 void RegularLL::fill(api::MIRJob &job) const  {
     LatLon::fill(job);
 }
+
 
 static bool check(double x, double dx) {
     double a = (x > 0 ? x : -x) / dx;
@@ -87,8 +91,9 @@ atlas::grid::Grid *RegularLL::atlasGrid() const {
 
     if (globalDomain()) {
 
-        grid = new atlas::grid::LonLatGrid(ni_,nj_,
-                atlas::grid::LonLatGrid::INCLUDES_POLES);
+        grid = new atlas::grid::global::lonlat::RegularLonLat(
+                    (const long) ni_,
+                    (const long) nj_ );
 
         // FIXME: an assertion for shift global grids
         ASSERT(bbox_.north() == 90);
@@ -106,10 +111,9 @@ atlas::grid::Grid *RegularLL::atlasGrid() const {
                     util::BoundingBox(90, bbox_.west(), -90, bbox_.west() + 360. - increments_.west_east()),
                     increments_ );
 
-        grid = new atlas::grid::LonLatGrid(
-                                global_ni,
-                                global_nj,
-                                atlas::grid::LonLatGrid::INCLUDES_POLES);
+        grid = new atlas::grid::global::lonlat::RegularLonLat(
+                    (const long) global_ni,
+                    (const long) global_nj );
 
 
         // FIXME: assert if non-global shifted grid
@@ -119,7 +123,7 @@ atlas::grid::Grid *RegularLL::atlasGrid() const {
         ASSERT(check(bbox_.east(), increments_.west_east()));
 
         atlas::grid::Domain domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
-        grid = new atlas::grid::LocalGrid(grid, domain);
+        grid = new atlas::grid::deprecated::LocalGrid(grid, domain);
     }
 
     eckit::Log::trace<MIR>() << "RegularLL::atlasGrid is " << *grid << " BoundBox " << bbox_ << std::endl;
@@ -134,14 +138,13 @@ atlas::grid::Grid *RegularLL::atlasGrid() const {
     }
 
     return grid;
-
 }
-
 
 
 namespace {
 static RepresentationBuilder<RegularLL> regularLL("regular_ll"); // Name is what is returned by grib_api
 }
+
 
 }  // namespace latlon
 }  // namespace repres
