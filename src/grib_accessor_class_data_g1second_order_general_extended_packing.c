@@ -689,6 +689,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         return ret;
 
     binary_scale_factor = grib_get_binary_scale_fact(max,reference_value,bits_per_value,&ret);
+    if (ret != GRIB_SUCCESS) return ret;
 
     if((ret = grib_set_long_internal(handle,self->binary_scale_factor, binary_scale_factor)) !=
             GRIB_SUCCESS)

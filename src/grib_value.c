@@ -351,12 +351,13 @@ int grib_set_string_internal(grib_handle* h, const char* name,
 int grib_set_string(grib_handle* h, const char* name, const char* val, size_t *length)
 {
     int ret=0;
-    grib_accessor* a;
+    grib_accessor* a = NULL;
 
     /* Second order doesn't have a proper representation for constant fields.
-       So best not to do the change of packing type
+       So best not to do the change of packing type.
+       Use strncmp to catch all flavours of second order packing e.g. grid_second_order_boustrophedonic
      */
-    if (!grib_inline_strcmp(name,"packingType") && !grib_inline_strcmp(val,"grid_second_order")) {
+    if (!grib_inline_strcmp(name,"packingType") && !strncmp(val,"grid_second_order", 17)) {
         long bitsPerValue=0;
         size_t numCodedVals = 0;
         grib_get_long(h,"bitsPerValue",&bitsPerValue);
