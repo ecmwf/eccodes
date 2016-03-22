@@ -1755,7 +1755,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 dump=1;
                 bitmapSize[bitmapIndex]++;
                 bitmap.cursor=0;
-            } else if (descriptor->code == 222000 || descriptor->code == 224000 ) {
+            } else if (descriptor->code == 222000 || descriptor->code == 224000 || descriptor->code == 225000 ) {
                 bitmap.referredElement=NULL;
                 qualityPresent=1;
                 incrementBitmapIndex=1;
@@ -2088,6 +2088,8 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                     /* substituted values marker operator */
                 case 24:
                     /*first-order statistical values marker operator*/
+                case 25:
+                    /*difference statistical values marker operator*/
                 case 32:
                     /*replaced/retained values marker operator*/
                     if (descriptors[i]->Y==255) {
@@ -2102,9 +2104,6 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                         if (decoding) push_zero_element(self,dval);
                         elementIndex++;
                     }
-                    break;
-                case 25:
-                    /*difference statistical values marker operator*/
                     break;
                 case 35:
                     /* cancel bitmap */
