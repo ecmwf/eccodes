@@ -116,7 +116,8 @@ foreach( test ${tests2} )
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                   RESOURCES asca_139.t1.ref
-                  TEST_DEPENDS eccodes_get_gribs eccodes_get_tigge_gribs eccodes_get_bufrs eccodes_get_metars eccodes_get_gts
+                  TEST_DEPENDS eccodes_download_gribs eccodes_download_tigge_gribs
+                               eccodes_download_bufrs eccodes_download_metars eccodes_download_gts
     )
 endforeach()
 
@@ -126,7 +127,7 @@ ecbuild_add_test( TARGET eccodes_t_lamb_az_eq_area
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/lamb_az_eq_area.sh
                   RESOURCES lamb_az_eq_area.ref
-                  TEST_DEPENDS eccodes_get_gribs
+                  TEST_DEPENDS eccodes_download_gribs
 )
 
 # These ones are conditional
@@ -134,19 +135,19 @@ ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
                   TYPE SCRIPT
                   CONDITION HAVE_NETCDF
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_to_netcdf.sh
-                  TEST_DEPENDS eccodes_get_gribs
+                  TEST_DEPENDS eccodes_download_gribs
 )
 
 ecbuild_add_test( TARGET eccodes_t_jpeg
                   TYPE SCRIPT
                   CONDITION HAVE_JPEG
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/jpeg.sh
-                  TEST_DEPENDS eccodes_get_gribs
+                  TEST_DEPENDS eccodes_download_gribs
 )
 
 ecbuild_add_test( TARGET eccodes_t_ccsds
                   TYPE SCRIPT
                   CONDITION HAVE_AEC
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ccsds.sh
-                  TEST_DEPENDS eccodes_get_gribs
+                  TEST_DEPENDS eccodes_download_gribs
 )

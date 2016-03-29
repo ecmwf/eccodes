@@ -54,7 +54,7 @@ foreach( tool ${tests} )
                       CONDITION HAVE_FORTRAN
                       RESOURCES bufr_read_scatterometer_f.ref
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
-                      TEST_DEPENDS eccodes_get_gribs eccodes_get_bufrs
+                      TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs
     )
 endforeach()
 

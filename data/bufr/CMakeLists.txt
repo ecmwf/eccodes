@@ -15,7 +15,7 @@ STRING(REGEX REPLACE "\n" ";" bufr_refs_to_download "${bufr_refs_to_download}")
 LIST(APPEND bufr_refs_to_download "vos308014_v3_26.bufr")  # See test ecc-197
 
 ecbuild_get_test_multidata(
-     TARGET eccodes_get_bufrs
+     TARGET eccodes_download_bufrs
      NOCHECK
      NAMES ${bufr_files_to_download} ${bufr_refs_to_download}
 )

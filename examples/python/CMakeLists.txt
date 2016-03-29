@@ -65,7 +65,7 @@ foreach( test ${tests} )
                       COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                       CONDITION  HAVE_PYTHON
                       ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
-                      TEST_DEPENDS eccodes_get_gribs eccodes_get_tigge_gribs eccodes_get_bufrs
+                      TEST_DEPENDS eccodes_download_gribs eccodes_download_tigge_gribs eccodes_download_bufrs
     )
 endforeach()
 
@@ -77,5 +77,5 @@ ecbuild_add_test( TARGET eccodes_p_bufr_encode_flight_test
                   CONDITION  HAVE_PYTHON
                   ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
                   RESOURCES   flight_data.csv
-                  TEST_DEPENDS eccodes_get_bufrs
+                  TEST_DEPENDS eccodes_download_bufrs
 )

@@ -92,7 +92,7 @@ foreach( test ${tests} )
     ecbuild_add_test( TARGET eccodes_c_${test}
                   TYPE       SCRIPT
                   COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                  TEST_DEPENDS eccodes_get_gribs eccodes_get_bufrs
+                  TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs
     )
 endforeach()
 
