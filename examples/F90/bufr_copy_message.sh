@@ -9,10 +9,10 @@
 
 . ./include.sh
 
-INPUT="../../data/constant_field.grib1"
-OUTPUT=out.copy.grib1
+INPUT="../../data/bufr/syno_1.bufr"
+OUTPUT=out.copy.bufr
 
-${examples_dir}eccodes_f_copy_message > /dev/null
-${tools_dir}/grib_compare -b centre $INPUT $OUTPUT
+${examples_dir}eccodes_f_bufr_copy_message > /dev/null
+${tools_dir}/bufr_compare -b bufrHeaderSubCentre $INPUT $OUTPUT
 
 rm -f $OUTPUT
