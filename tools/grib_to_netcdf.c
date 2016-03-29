@@ -32,7 +32,7 @@ static char argvString[2048];
 /*=====================================================================*/
 
 static grib_context* ctx = NULL;
-static double missing_value = 9999; /* TODO: Get from GRIBs */
+static double missing_value = 9.9692099683868690e+36; /* See GRIB-953 */
 
 /*===============================================================================*/
 /* request from mars client */
