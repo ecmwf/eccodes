@@ -2048,35 +2048,15 @@
   !> @param status       GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_int_array ( gribid, key, value, status )
       integer(kind=kindOfInt),               intent(in)  :: gribid
-      character(len=*),      intent(in)  :: key
-      integer(kind=kindOfInt), dimension(:),allocatable,intent(inout) :: value
+      character(len=*),      intent(in)                  :: key
+      integer(kind=kindOfInt), dimension(:), intent(out) :: value
       integer(kind=kindOfInt),optional, intent(out)      :: status
 
       integer(kind=kindOfInt)                            :: iret
       integer(kind=kindOfInt)                            :: nb_values
-      integer(kind=kindOfInt)                            :: size_value
-      integer(kind=kindOfInt)                            :: i
 
-      iret=grib_f_get_size_int(gribid,key,nb_values)
-      if (iret /= 0) then
-        call grib_f_write_on_fail(gribid)
-        if (present(status)) then
-           status = iret
-        else
-           call grib_check(iret,'grib_get',key)
-        endif
-        return
-      endif
-      if (allocated(value) .eqv. .false.) then
-        allocate(value(nb_values))
-      end if
-      size_value=size(value)
+      nb_values = size(value)
       iret=grib_f_get_int_array ( gribid, key, value , nb_values )
-      if (iret==0 .and. nb_values==1 .and. size_value/=1) then
-        do i=2,size_value
-          value(i)=value(1)
-        enddo
-      endif
 	  if (iret /= 0) then
 	    call grib_f_write_on_fail(gribid)
 	  endif
@@ -2100,34 +2080,14 @@
   subroutine grib_get_long_array ( gribid, key, value, status )
     integer(kind=kindOfInt),               intent(in)  :: gribid
     character(len=*),      intent(in)  :: key
-    integer(kind = kindOfLong),dimension(:),allocatable,intent(inout) :: value
+    integer(kind = kindOfLong),dimension(:), intent(out) :: value
     integer(kind=kindOfInt),optional, intent(out)      :: status
     integer(kind=kindOfInt)                            :: iret
     integer(kind=kindOfInt)                            :: nb_values
-    integer(kind=kindOfInt)                            :: size_value
-    integer(kind=kindOfInt)                            :: i
 
-    iret=grib_f_get_size_int(gribid,key,nb_values)
-    if (iret /= 0) then
-      call grib_f_write_on_fail(gribid)
-      if (present(status)) then
-         status = iret
-      else
-         call grib_check(iret,'grib_get',key)
-      endif
-      return
-    endif
-    if (allocated(value) .eqv. .false.) then
-      allocate(value(nb_values))
-    end if
-    size_value=size(value)
+    nb_values = size(value)
     iret=grib_f_get_long_array ( gribid, key, value , nb_values )
-    if (iret==0 .and. nb_values==1 .and. size_value/=1) then
-      do i=2,size_value
-        value(i)=value(1)
-      enddo
-    endif
-    if (iret /= 0) then
+	if (iret /= 0) then
 	  call grib_f_write_on_fail(gribid)
 	endif
     if (present(status)) then
@@ -2188,40 +2148,20 @@
   subroutine grib_get_real4_array ( gribid, key, value, status )
       integer(kind=kindOfInt),                 intent(in)  :: gribid
       character(len=*),                        intent(in)  :: key
-      real(kind = kindOfFloat), dimension(:),allocatable,intent(inout) :: value
+      real(kind = kindOfFloat), dimension(:), intent(out)  :: value
       integer(kind=kindOfInt),optional,        intent(out) :: status
       integer(kind=kindOfInt)                              :: iret
       integer(kind=kindOfInt)                              :: nb_values
-      integer(kind=kindOfInt)                              :: size_value
-      integer(kind=kindOfInt)                                :: i
 
-      iret=grib_f_get_size_int(gribid,key,nb_values)
-      if (iret /= 0) then
-        call grib_f_write_on_fail(gribid)
-        if (present(status)) then
-           status = iret
-        else
-           call grib_check(iret,'grib_get',key)
-        endif
-        return
-      endif
-      if (allocated(value) .eqv. .false.) then
-        allocate(value(nb_values))
-      end if
-      size_value=size(value)
+      nb_values = size(value)
       iret=grib_f_get_real4_array ( gribid, key, value , nb_values )
-      if (iret==0 .and. nb_values==1 .and. size_value/=1) then
-        do i=2,size_value
-          value(i)=value(1)
-        enddo
-      endif
 	  if (iret /= 0) then
 	    call grib_f_write_on_fail(gribid)
 	  endif
       if (present(status)) then
-         status = iret
+        status = iret
       else
-         call grib_check(iret,'grib_get',key)
+        call grib_check(iret,'grib_get',key)
       endif
   end subroutine grib_get_real4_array
 
@@ -2238,36 +2178,16 @@
   subroutine grib_get_real8_array ( gribid, key, value, status )
       integer(kind=kindOfInt),                   intent(in)  :: gribid
       character(len=*),                          intent(in)  :: key
-      real(kind = kindOfDouble),dimension(:),allocatable,intent(inout) :: value
+      real(kind = kindOfDouble),dimension(:), intent(out) :: value
       integer(kind=kindOfInt),optional,          intent(out) :: status
       integer(kind=kindOfInt)                                :: iret
       integer(kind=kindOfInt)                                :: nb_values
-      integer(kind=kindOfInt)                                :: size_value
-      integer(kind=kindOfInt)                                :: i
 
-      iret=grib_f_get_size_int(gribid,key,nb_values)
-      if (iret /= 0) then
-        call grib_f_write_on_fail(gribid)
-        if (present(status)) then
-           status = iret
-        else
-           call grib_check(iret,'grib_get',key)
-        endif
-        return
-      endif
-      if (allocated(value) .eqv. .false.) then
-        allocate(value(nb_values))
-      end if
-      size_value=size(value)
+      nb_values = size(value)
       iret=grib_f_get_real8_array ( gribid, key, value, nb_values )
-      if (iret==0 .and. nb_values==1 .and. size_value/=1) then
-        do i=2,size_value
-          value(i)=value(1)
-        enddo
-      endif
-      if (iret /= 0) then
-        call grib_f_write_on_fail(gribid)
-      endif
+	  if (iret /= 0) then
+	    call grib_f_write_on_fail(gribid)
+	  endif
       if (present(status)) then
          status = iret
       else

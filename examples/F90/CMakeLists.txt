@@ -81,6 +81,13 @@ ecbuild_add_executable( TARGET    eccodes_f_set_gvc
                         LINKER_LANGUAGE Fortran
                         LIBS      eccodes_f90 eccodes
 )
+ecbuild_add_executable( TARGET    eccodes_f_grib_print_data_static
+                        NOINSTALL
+                        SOURCES   grib_print_data_static.f90
+                        CONDITION HAVE_FORTRAN
+                        LINKER_LANGUAGE Fortran
+                        LIBS      eccodes_f90 eccodes
+)
 
 
 # # Note extra dependency
