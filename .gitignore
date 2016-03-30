@@ -163,7 +163,7 @@ examples/F90/eccodes_f_read_message
 examples/F90/eccodes_f_samples
 examples/F90/eccodes_f_grib_set_keys
 examples/F90/eccodes_f_grib_set_bitmap
-examples/F90/eccodes_f_set_gvc
+examples/F90/eccodes_f_grib_set_gvc
 examples/F90/eccodes_f_set_missing
 examples/F90/eccodes_f_grib_set_pv
 examples/F90/*.sh.log
