@@ -889,7 +889,8 @@ void grib_print_key_values(grib_runtime_options* options,grib_handle* h)
             the_index = options->index;
             if (the_index >= size) {
                 fprintf(dump_file,"\n");
-                fprintf(stderr, "invalid index value %d (should be between 0 and %ld)\n", options->index, size-1);
+                fprintf(stderr, "invalid index value %d (should be between 0 and %d)\n",
+                        options->index, (int)(size-1));
                 exit(1);
             }
             v=values[options->index];
