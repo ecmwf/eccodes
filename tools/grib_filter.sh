@@ -31,15 +31,15 @@ ls ../data/split
 echo "\\endverbatim\\n"
 
 echo "-# The key values in the file name can also be obtained in a different format by indicating explicitly the type required after a colon."
-echo " - :l for long"
+echo " - :i for integer"
 echo " - :d for double"
 echo " - :s for string"
 echo " ."
 echo "The following statement works in a slightly different way from the previous example, "
-echo " including in the output file name the long values for centre and dataType.\\n"
+echo " including in the output file name the integer values for centre and dataType.\\n"
 
 echo "\\verbatim"
-echo "write \"../data/split/[centre:l]_[date]_[dataType:l]_[levelType].grib[editionNumber]\";"
+echo "write \"../data/split/[centre:i]_[date]_[dataType:i]_[levelType].grib[editionNumber]\";"
 echo "\\endverbatim\\n"
 echo "Running the same command again we obtain a different list of files.\\n"
 echo "\\verbatim"
@@ -52,7 +52,7 @@ else
 fi
 
 cat > rules_file <<EOF
-write "../data/split/[centre:l]_[date]_[dataType:l]_[levelType].grib[editionNumber]";
+write "../data/split/[centre:i]_[date]_[dataType:i]_[levelType].grib[editionNumber]";
 EOF
 
 echo ">grib_filter rules_file ../data/tigge_pf_ecmwf.grib2"

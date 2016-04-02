@@ -6,7 +6,7 @@ echo " Input messages can be written to the output by using the \"write\" statem
 echo " is sent to multiple files depending on key values used in the output file name. \\n"
 echo " First we write a rules_file containing the following statement:\\n \\n"
 echo "\\verbatim"
-echo "write \"../data/split/[bufrHeaderCentre:l]_[dataCategory].bufr[editionNumber]\";"
+echo "write \"../data/split/[bufrHeaderCentre:i]_[dataCategory].bufr[editionNumber]\";"
 echo "\\endverbatim\\n"
 echo "Then we create the BUFR file multitype.bufr from three others: \\n"
 echo "\\verbatim"
@@ -28,7 +28,7 @@ cat ../data/bufr/syno_1.bufr ../data/bufr/goes_87.bufr ../data/bufr/gosat.bufr >
 
 
 cat > rules_file <<EOF
-write "../data/split/[bufrHeaderCentre:l]_[dataCategory].bufr[editionNumber]";
+write "../data/split/[bufrHeaderCentre:i]_[dataCategory].bufr[editionNumber]";
 EOF
 
 echo ">bufr_filter rules_file ../data/split/multitype.bufr"
