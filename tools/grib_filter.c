@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: grib_filter
- *
- */
-
 #include "grib_tools.h"
 
 grib_option grib_options[]={
@@ -31,8 +26,8 @@ grib_option grib_options[]={
     {"7",0,0,0,1,0},
     {"v",0,0,0,1,0}
 };
-char* grib_tool_description="Apply the rules defined in rules_file to each grib "
-   "message\n\tin the grib files provided as arguments.\n\t"
+char* grib_tool_description="Apply the rules defined in rules_file to each GRIB "
+   "message\n\tin the GRIB files provided as arguments.\n\t"
    "If you specify '-' (a single dash) for the rules_file, the rules will be read from standard input.";
 char* grib_tool_name="grib_filter";
 char* grib_tool_usage="[options] rules_file "

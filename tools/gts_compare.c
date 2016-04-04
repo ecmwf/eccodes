@@ -303,7 +303,8 @@ static grib_handle* grib_handle_new_from_file_x(
     return codes_handle_new_from_file(c,f,PRODUCT_GTS,err);
 }
 
-int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
+int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
+{
     int err=0;
     count++;
 
@@ -962,8 +963,8 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
     return err;
 }
 
-int grib_no_handle_action(int err) {
+int grib_no_handle_action(int err)
+{
   fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
   return 0;
 }
-
