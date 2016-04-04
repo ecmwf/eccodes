@@ -19,7 +19,6 @@ grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value */
         {"f",0,0,0,1,0},
         {"c",0,0,1,0,0},
-        {"r",0,0,0,1,0},
         {"q",0,0,1,0,0},
         {"p:",0,0,1,1,0},
         {"P:",0,0,0,1,0},
@@ -42,16 +41,19 @@ grib_option grib_options[]={
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     int ret=grib_tool(argc,argv);
     return ret;
 }
 
-int grib_tool_before_getopt(grib_runtime_options* options) {
+int grib_tool_before_getopt(grib_runtime_options* options)
+{
     return 0;
 }
 
-int grib_tool_init(grib_runtime_options* options) {
+int grib_tool_init(grib_runtime_options* options)
+{
 #if 0
     if (options->outfile && options->outfile->name) {
         options->outfile->file = fopen(options->outfile->name,"w");

@@ -34,17 +34,16 @@ grib_option grib_options[]={
                 "copied to the\n\t\toutput_bufr_file.\n\t\tFor each key a string (key:s), a "
                 "double (key:d) or an integer (key:i)\n\t\ttype can be defined. Default type "
                 "is string.\n",0,1,0},
-                {"B:",0,0,0,1,0},
-                {"V",0,0,0,1,0},
-                {"W:",0,0,0,1,0},
-                {"U",0,0,1,0,0},
-                {"H",0,0,1,0,0},
-                {"T:",0,0,1,0,"B"},
-                {"S",0,0,1,0,0},
-                {"g",0,0,0,1,0},
-                /*      {"G",0,0,0,1,0}, */
-                {"7",0,0,0,1,0},
-                {"v",0,0,0,1,0}
+        {"B:",0,0,0,1,0},
+        {"V",0,0,0,1,0},
+        {"W:",0,0,0,1,0},
+        {"U",0,0,1,0,0},
+        {"H",0,0,1,0,0},
+        {"T:",0,0,1,0,"B"},
+        {"S",0,0,1,0,0},
+        {"g",0,0,0,1,0},
+        {"7",0,0,0,1,0},
+        {"v",0,0,0,1,0}
 };
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
