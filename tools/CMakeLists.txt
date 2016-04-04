@@ -13,7 +13,7 @@ list( APPEND grib_tools_bins
              grib_compare codes_parser grib_index_build
              bufr_ls bufr_dump bufr_set bufr_get
              bufr_copy bufr_compare bufr_index_build
-             gts_compare gts_copy gts_dump gts_filter gts_ls
+             gts_get gts_compare gts_copy gts_dump gts_filter gts_ls
              metar_dump metar_ls metar_compare
              )
 

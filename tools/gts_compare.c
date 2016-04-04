@@ -17,18 +17,6 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
     return (*a==0 && *b==0) ? 0 : 1;
 }
 
-GRIB_INLINE static int grib_inline_rstrcmp(const char* a,const char* b)
-{
-    char* p=(char*)a;
-    char* q=(char*)b;
-    while (*p != 0) p++;
-    while (*q != 0) q++;
-    q--;p--;
-    if (*q != *p) return 1;
-    while((p!=a && q!=b) &&  *(p) == *(q) ) {p--;q--;}
-    return (q==b) ? 0 : 1;
-}
-
 typedef double (*compare_double_proc) (double*,double*,double*);
 
 typedef struct grib_error grib_error;

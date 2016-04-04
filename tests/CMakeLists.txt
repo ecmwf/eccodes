@@ -51,6 +51,7 @@ list( APPEND tests2
     bufr_ls
     bufr_change_edition
     ecc-197
+    gts_get
     gts_ls
     gts_compare
     metar_ls
