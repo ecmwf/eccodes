@@ -21,6 +21,7 @@ noinst_PROGRAMS  = eccodes_f_grib_index \
                    eccodes_f_grib_nearest \
                    eccodes_f_grib_precision \
                    eccodes_f_grib_print_data \
+                   eccodes_f_grib_print_data_static \
                    eccodes_f_grib_set_keys \
                    eccodes_f_grib_set_bitmap \
                    eccodes_f_set_missing \
@@ -60,6 +61,7 @@ eccodes_f_grib_multi_SOURCES=grib_multi.f90
 eccodes_f_grib_nearest_SOURCES=grib_nearest.f90
 eccodes_f_grib_precision_SOURCES=grib_precision.f90
 eccodes_f_grib_print_data_SOURCES=grib_print_data.f90
+eccodes_f_grib_print_data_static_SOURCES=grib_print_data_static.f90
 eccodes_f_grib_set_keys_SOURCES=grib_set_keys.f90
 eccodes_f_grib_set_bitmap_SOURCES=grib_set_bitmap.f90
 eccodes_f_set_missing_SOURCES=set_missing.f90

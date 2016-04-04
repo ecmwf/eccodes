@@ -60,7 +60,7 @@ CLEANFILES = $(noinst_SCRIPTS) \
 			_gribapi_swig.so
 
 # Extra stuff to go into the distribution
-EXTRA_DIST = setup.py.in \
+EXTRA_DIST = setup.py.autotools.in \
 			grib_interface.h \
 			grib_interface.c \
 			gribapi_swig.i \
@@ -97,8 +97,8 @@ do_subst = sed -e 's,[@]LIB_JASPER[@],$(LIB_JASPER),g' \
 clean-local:
 	-rm -rf build
 
-setup.py: setup.py.in
-	$(do_subst) < setup.py.in > setup.py
+setup.py: setup.py.autotools.in
+	$(do_subst) < setup.py.autotools.in > setup.py
 
 gribapi_swig_wrap.c: swig_wrap_$(PYTHON_DATA_HANDLER).c
 	cp -f swig_wrap_$(PYTHON_DATA_HANDLER).c gribapi_swig_wrap.c
