@@ -55,6 +55,7 @@ list( APPEND tests2
     gts_compare
     metar_ls
     metar_dump
+    metar_compare
     bufr_set
     ieee
     grib1to2
