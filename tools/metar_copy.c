@@ -8,43 +8,35 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: bufr_copy
- *
- */
-
 #include "grib_tools.h"
 
-char* grib_tool_description="Copies the content of BUFR files printing"
+char* grib_tool_description="Copies the content of METAR files printing"
         " values of some keys.";
-char* grib_tool_name="bufr_copy";
+char* grib_tool_name="metar_copy";
 char* grib_tool_usage="[options] file file ... output_file";
 
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value */
         {"f",0,0,0,1,0},
         {"c",0,0,1,0,0},
-        /*      {"r",0,0,0,1,0}, */
         {"q",0,0,1,0,0},
         {"p:",0,0,1,1,0},
-        {"s:",0,0,0,1,0},
         {"P:",0,0,0,1,0},
         {"w:","key[:{s/d/i}]=value,key[:{s/d/i}]=value,...","\n\t\tWhere clause."
-                "\n\t\tOnly BUFR messages matching the key/value constraints are "
-                "copied to the\n\t\toutput_bufr_file.\n\t\tFor each key a string (key:s), a "
+                "\n\t\tOnly grib messages matching the key/value constraints are "
+                "copied to the\n\t\toutput_grib_file.\n\t\tFor each key a string (key:s), a "
                 "double (key:d) or an integer (key:i)\n\t\ttype can be defined. Default type "
                 "is string.\n",0,1,0},
-                {"B:",0,0,0,1,0},
-                {"V",0,0,0,1,0},
-                {"W:",0,0,0,1,0},
-                {"U",0,0,1,0,0},
-                {"H",0,0,1,0,0},
-                {"T:",0,0,1,0,"B"},
-                {"S",0,0,1,0,0},
-                {"g",0,0,0,1,0},
-                /*      {"G",0,0,0,1,0}, */
-                {"7",0,0,0,1,0},
-                {"v",0,0,0,1,0}
+       {"B:",0,0,0,1,0},
+       {"V",0,0,0,1,0},
+       {"W:",0,0,0,1,0},
+       {"U",0,0,1,0,0},
+       {"H",0,0,1,0,0},
+       {"T:",0,0,1,0,"M"},  /* METAR */
+       {"S",0,0,1,0,0},
+       {"g",0,0,0,1,0},
+       {"7",0,0,0,1,0},
+       {"v",0,0,0,1,0}
 };
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
@@ -111,8 +103,11 @@ void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
 
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
-    /* if (options->outfile->file)
-       fclose(options->outfile->file); */
+    /*
+  if (options->outfile->file) {
+    fclose(options->outfile->file);
+  }
+     */
     return 0;
 }
 
