@@ -32,6 +32,7 @@ list( APPEND test_bins
       grib_iterator_bitmap
       large_grib1
       grib_clone
+      grib_copy_message
       grib_ensemble_index
       get_product_kind
       bufr_attributes
@@ -67,6 +68,7 @@ list( APPEND tests
    grib_multi_write
    grib_precision
    grib_clone
+   grib_copy_message
    grib_set_pv
    grib_set_bitmap
    grib_list
