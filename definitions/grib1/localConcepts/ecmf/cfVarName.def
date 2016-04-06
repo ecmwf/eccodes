@@ -9255,14 +9255,19 @@
 	 indicatorOfParameter = 20 ;
 	}
 #Total sky direct solar radiation at surface (variable resolution)
-'p230021' = {
+'fdirvar' = {
 	 table2Version = 230 ;
 	 indicatorOfParameter = 21 ;
 	}
 #Clear-sky direct solar radiation at surface (variable resolution)
-'p230022' = {
+'cdirvar' = {
 	 table2Version = 230 ;
 	 indicatorOfParameter = 22 ;
+	}
+#Direct solar radiation (variable resolution)
+'dsrpvar' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 47 ;
 	}
 #Large-scale precipitation fraction (variable resolution)
 'lspfvar' = {
@@ -9330,127 +9335,127 @@
 	 indicatorOfParameter = 251 ;
 	}
 #Mean surface runoff rate
-'p235020' = {
+'msror' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 20 ;
 	}
 #Mean sub-surface runoff rate
-'p235021' = {
+'mssror' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 21 ;
 	}
 #Mean surface photosynthetically active radiation flux, clear sky
-'p235022' = {
+'msparfcs' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 22 ;
 	}
 #Mean snow evaporation rate
-'p235023' = {
+'mser' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 23 ;
 	}
 #Mean snowmelt rate
-'p235024' = {
+'msmr' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 24 ;
 	}
 #Mean magnitude of turbulent surface stress
-'p235025' = {
+'mmtss' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 25 ;
 	}
 #Mean large-scale precipitation fraction
-'p235026' = {
+'mlspf' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 26 ;
 	}
 #Mean surface downward UV radiation flux
-'p235027' = {
+'msdwuvrf' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 27 ;
 	}
 #Mean surface photosynthetically active radiation flux
-'p235028' = {
+'msparf' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 28 ;
 	}
 #Mean large-scale precipitation rate
-'p235029' = {
+'mlspr' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 29 ;
 	}
 #Mean convective precipitation rate
-'p235030' = {
+'mcpr' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 30 ;
 	}
 #Mean snowfall rate
-'p235031' = {
+'msr' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 31 ;
 	}
 #Mean boundary layer dissipation
-'p235032' = {
+'mbld' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 32 ;
 	}
 #Mean surface sensible heat flux
-'p235033' = {
+'msshf' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 33 ;
 	}
 #Mean surface latent heat flux
-'p235034' = {
+'mslhf' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 34 ;
 	}
 #Mean surface downward short-wave radiation flux
-'p235035' = {
+'msdwswrf' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 35 ;
 	}
 #Mean surface downward long-wave radiation flux
-'p235036' = {
+'msdwlwrf' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 36 ;
 	}
 #Mean surface net short-wave radiation flux
-'p235037' = {
+'msnswrf' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 37 ;
 	}
 #Mean surface net long-wave radiation flux
-'p235038' = {
+'msnlwrf' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 38 ;
 	}
 #Mean top net short-wave radiation flux
-'p235039' = {
+'mtnswrf' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 39 ;
 	}
 #Mean top net long-wave radiation flux
-'p235040' = {
+'mtnlwrf' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 40 ;
 	}
 #Mean eastward turbulent surface stress
-'p235041' = {
+'metss' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 41 ;
 	}
 #Mean northward turbulent surface stress
-'p235042' = {
+'mntss' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 42 ;
 	}
 #Mean evaporation rate
-'p235043' = {
+'mer' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 43 ;
 	}
 #Sunshine duration fraction
-'p235044' = {
+'sdf' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 44 ;
 	}
