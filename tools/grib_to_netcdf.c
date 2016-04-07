@@ -2060,7 +2060,6 @@ static void get_nc_options(const request *user_r)
 
 static nc_type translate_nctype(const char *name)
 {
-
     if(!name)
         return NC_SHORT;
 
@@ -2175,7 +2174,6 @@ static int def_latlon(int ncid, fieldset *fs)
     release_field(g);
 
     (void)var_id; /* suppress gcc warning */
-
     return e;
 }
 
@@ -2487,45 +2485,55 @@ static void scale_bitmap(double *vals, long n, void *data, dataset_t *subset)
     case NC_BYTE:
     {
         unsigned char *vscaled = (unsigned char *) data;
-        for(i = 0; i < n; ++i)
-            if(vals[i] == global_missing_value)
+        for(i = 0; i < n; ++i){
+            if(vals[i] == global_missing_value){
                 vscaled[i] = (unsigned char) subset->missing;
+            }
+        }
         break;
     }
 
     case NC_SHORT:
     {
         short int *vscaled = (short int *) data;
-        for(i = 0; i < n; ++i)
-            if(vals[i] == global_missing_value)
+        for(i = 0; i < n; ++i){
+            if(vals[i] == global_missing_value){
                 vscaled[i] = (short int) subset->missing;
+            }
+        }
         break;
     }
 
     case NC_INT:
     {
         int *vscaled = (int *) data;
-        for(i = 0; i < n; ++i)
-            if(vals[i] == global_missing_value)
+        for(i = 0; i < n; ++i){
+            if(vals[i] == global_missing_value){
                 vscaled[i] = (int) subset->missing;
+            }
+        }
         break;
     }
 
     case NC_FLOAT:
     {
         float *vscaled = (float *) data;
-        for(i = 0; i < n; ++i)
-            if(vals[i] == global_missing_value)
+        for(i = 0; i < n; ++i){
+            if(vals[i] == global_missing_value){
                 vscaled[i] = (float) subset->missing;
+            }
+        }
         break;
     }
 
     case NC_DOUBLE:
     {
         double *vscaled = (double *) data;
-        for(i = 0; i < n; ++i)
-            if(vals[i] == global_missing_value)
+        for(i = 0; i < n; ++i){
+            if(vals[i] == global_missing_value){
                 vscaled[i] = (double) subset->missing;
+            }
+        }
         break;
     }
 
@@ -2533,7 +2541,6 @@ static void scale_bitmap(double *vals, long n, void *data, dataset_t *subset)
         grib_context_log(ctx, GRIB_LOG_ERROR, "scale(...): Unknown netcdf type %d", nctype);
         break;
     }
-
 }
 
 static void scale(double *vals, long n, void *data, dataset_t *g)
