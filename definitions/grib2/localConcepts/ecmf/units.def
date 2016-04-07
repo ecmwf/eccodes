@@ -9149,24 +9149,6 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 48 ;
 	}
-#Unbalanced component of specific humidity
-'kg kg**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 54 ;
-	}
-#Unbalanced component of specific cloud liquid water content
-'kg kg**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 55 ;
-	}
-#Unbalanced component of specific cloud ice water content
-'kg kg**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 56 ;
-	}
 #Total column rain water
 'kg m**-2' = {
 	 discipline = 192 ;
