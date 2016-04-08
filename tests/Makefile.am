@@ -36,7 +36,7 @@ TESTS = definitions.sh \
         step.sh \
         set.sh \
         iterator.sh \
-        compare.sh \
+        grib_compare.sh \
         level.sh \
         index.sh \
         bitmap.sh \

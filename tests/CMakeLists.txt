@@ -79,7 +79,7 @@ list( APPEND tests2
     step
     set
     iterator
-    compare
+    grib_compare
     level
     index
     bitmap
