@@ -9,8 +9,6 @@
  */
 
 /*
- * C Implementation: double_cmp
- *
  * Description: compare values retrieved with grib_get_double_array and
  *               grib_get_double_element
  *
@@ -26,13 +24,13 @@ void usage(char* prog) {
 
 int main(int argc, char** argv)
 {
-    int err = 0,i;
+    int err = 0,i = 0;
     double *values = NULL;
     size_t values_len= 0;
     double element_value=0;
 
     FILE* in = NULL;
-    char* filename ;
+    char* filename = NULL;
     grib_handle *h = NULL;
 
     if (argc<2) usage(argv[0]);
@@ -48,6 +46,7 @@ int main(int argc, char** argv)
     h = grib_handle_new_from_file(0,in,&err);
     if (h == NULL) {
         printf("Error: unable to create handle from file %s\n",filename);
+        return 1;
     }
 
     /* get the size of the values array */
@@ -60,8 +59,8 @@ int main(int argc, char** argv)
     if (values_len < 100) exit(1);
 
     for (i = 0; i < 100; i++) {
-        /* get double element */
-        GRIB_CHECK(grib_get_double_element(h,"values",i,&element_value),0);
+        /* get a particular data value */
+        GRIB_CHECK(grib_get_double_element(h, "values", i, &element_value),0);
 
         if (element_value != values[i]) {
             exit(1);

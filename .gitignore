@@ -197,7 +197,7 @@ tests/*.sh.log
 tests/*.sh.trs
 tests/test-suite.log
 tests/bpv_limit
-tests/double_cmp
+tests/grib_double_cmp
 tests/gauss_sub
 tests/gribex_perf
 tests/index

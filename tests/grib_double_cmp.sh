@@ -22,4 +22,4 @@ then
   exit 1
 fi
 
-${test_dir}/double_cmp ${infile}
+${test_dir}/grib_double_cmp ${infile}
