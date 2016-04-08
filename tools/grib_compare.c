@@ -569,6 +569,9 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
     type2=type;
     if (verbose) printf("  comparing %s",name);
 
+    /* If key was blacklisted, then we should not have got here */
+    DebugAssert( !blacklisted(name) );
+
     if( type1==GRIB_TYPE_UNDEFINED && (err = grib_get_native_type(h1,name,&type1)) != GRIB_SUCCESS)
     {
         printInfo(h1);
@@ -988,12 +991,13 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
 
     /* mask only if no -c option or headerMode (-H)*/
     if (blacklist && ( !listFromCommandLine || headerMode )) {
-        grib_string_list* nextb=blacklist;
+        /* See ECC-245, GRIB-573, GRIB-915: Do not change handles in memory */
+        /* grib_string_list* nextb=blacklist;
         while (nextb) {
             grib_clear(h1,nextb->value);
             grib_clear(h2,nextb->value);
             nextb=nextb->next;
-        }
+        } */
     }
 
     if (headerMode) {
@@ -1009,11 +1013,10 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
         h11=grib_handle_new_from_partial_message(h1->context,(void*)msg1,size1);
         h22=grib_handle_new_from_partial_message(h1->context,(void*)msg2,size2);
 
-        iter=grib_keys_iterator_new(h11,
-                GRIB_KEYS_ITERATOR_SKIP_COMPUTED,NULL);
+        iter=grib_keys_iterator_new(h11, GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
 
         if (!iter) {
-            printf("ERROR: unable to get iterator\n");
+            printf("ERROR: unable to get keys iterator\n");
             exit(1);
         }
 
@@ -1034,9 +1037,9 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
 
     if ( listFromCommandLine && onlyListed ) {
         for (i=0; i< options->compare_count; i++) {
-            if (blacklisted((char*)options->compare[i].name)) continue;
+            if (blacklisted(options->compare[i].name)) continue;
             if (options->compare[i].type == GRIB_NAMESPACE) {
-                iter=grib_keys_iterator_new(h1,0,(char*)options->compare[i].name);
+                iter=grib_keys_iterator_new(h1, 0, options->compare[i].name);
                 if (!iter) {
                     printf("ERROR: unable to get iterator\n");
                     exit(1);
@@ -1066,7 +1069,7 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
         iter=grib_keys_iterator_new(h1,GRIB_KEYS_ITERATOR_SKIP_COMPUTED,NULL);
 
         if (!iter) {
-            printf("ERROR: unable to get iterator\n");
+            printf("ERROR: unable to get keys iterator\n");
             exit(1);
         }
 
@@ -1083,9 +1086,9 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
 
         if ( listFromCommandLine ) {
             for (i=0; i< options->compare_count; i++) {
-                if (blacklisted(name)) continue;
+                if (blacklisted(options->compare[i].name)) continue;
                 if (options->compare[i].type == GRIB_NAMESPACE) {
-                    iter=grib_keys_iterator_new(h1,0,(char*)options->compare[i].name);
+                    iter=grib_keys_iterator_new(h1, 0, options->compare[i].name);
                     if (!iter) {
                         printf("ERROR: unable to get iterator for %s\n",options->compare[i].name );
                         exit(1);
@@ -1105,13 +1108,12 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
                 }
             }
         }
-
     }
     return err;
 }
 
-int grib_no_handle_action(int err) {
-  fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
-  return 0;
+int grib_no_handle_action(int err)
+{
+    fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
+    return 0;
 }
-
