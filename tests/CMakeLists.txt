@@ -10,6 +10,7 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 # Build the executables used by test scripts
 ################################################
 list( APPEND test_bins
+      double_cmp
       read_any
       julian
       index
@@ -39,6 +40,7 @@ list( APPEND tests1
     uerra
 )
 list( APPEND tests2
+    double_cmp
     bufr_dump
     bufrdc_desc_ref
     bufrdc_ref
