@@ -776,7 +776,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len) {
         d=0;
         binary_scale_factor = 0;
         reference_value=0;
-
+    } else {
+        if (ret!=GRIB_SUCCESS) {
+            grib_context_log(a->context,GRIB_LOG_ERROR,"COMPLEX_PACKING : Cannot compute binary_scale_factor");
+            return ret;
+        }
     }
     s = grib_power(-binary_scale_factor,2);
 

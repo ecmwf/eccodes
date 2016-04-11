@@ -647,8 +647,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         exit(GRIB_INTERNAL_ERROR);
     }
 
-    binary_scale_factor    = grib_get_binary_scale_fact(max,reference_value,bits_per_value,&err);
-    divisor         = grib_power(-binary_scale_factor,2);
+    binary_scale_factor = grib_get_binary_scale_fact(max,reference_value,bits_per_value,&err);
+    if (err != GRIB_SUCCESS) return err;
+    divisor = grib_power(-binary_scale_factor,2);
 
     for(i=0;i< n_vals;i++)
         sec_val[i] = (unsigned long)((((val[i]*d)-reference_value)*divisor)+0.5);

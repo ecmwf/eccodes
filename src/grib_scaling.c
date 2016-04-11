@@ -16,6 +16,7 @@
 
 #define GRIB_EPSILON  10E-12
 
+/* Return n to the power of s */
 double grib_power(long s,long n)
 {
     double divisor = 1.0;
@@ -38,9 +39,18 @@ long grib_get_binary_scale_fact(double max, double min, long bpval,int *ret)
     double  zs     = 1;
     long    scale  = 0;
     const long last = 127; /* Depends on edition, should be parameter */
+    unsigned long maxint = 0;
 
-    unsigned long maxint = grib_power(bpval,2) - 1;
-    double dmaxint=(double)maxint;
+    /* See ECC-246
+      unsigned long maxint = grib_power(bpval,2) - 1;
+      double dmaxint=(double)maxint;
+    */
+    const double dmaxint = grib_power(bpval,2) - 1;
+    if (dmaxint >= ULONG_MAX) {
+        *ret = GRIB_OUT_OF_RANGE; /*overflow*/
+        return 0;
+    }
+    maxint = (unsigned long)dmaxint; /* Now it's safe to cast */
 
     *ret=0;
     if (bpval < 1) {
