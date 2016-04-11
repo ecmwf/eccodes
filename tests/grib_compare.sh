@@ -15,8 +15,7 @@ REDIRECT=/dev/null
 infile="${data_dir}/regular_latlon_surface.grib1"
 outfile=${infile}.compare.$$
 
-rm -f $outfile || true
-
+rm -f $outfile
 
 ${tools_dir}grib_set -s shortName=2d $infile $outfile
 ${tools_dir}grib_compare -b indicatorOfParameter,paramId,shortName $infile $outfile > $REDIRECT
@@ -45,8 +44,8 @@ rm -rf $temp_dir
 
 # ECC-245: blacklist and 2nd order packing
 # ----------------------------------------
-temp1=grib_compare_temp1.grib1
-temp2=grib_compare_temp2.grib1
+temp1=grib_compare_temp1.grib
+temp2=grib_compare_temp2.grib
 ${tools_dir}grib_copy -w count=25 ${data_dir}/lfpw.grib1 $temp1
 ${tools_dir}grib_copy -w count=30 ${data_dir}/lfpw.grib1 $temp2
 
@@ -56,6 +55,17 @@ ${tools_dir}grib_compare -b firstOrderValues $temp1 $temp2 >/dev/null
 status=$?
 set -e
 [ $status -eq 1 ]
+
+# GRIB-915: blacklisting totalLength key
+${tools_dir}grib_copy -w count=1 ${data_dir}/v.grib2 $temp1
+${tools_dir}grib_copy -w count=2 ${data_dir}/v.grib2 $temp2
+# This should fail as we only blacklisted one key
+set +e
+${tools_dir}grib_compare -b totalLength $temp1 $temp2 >/dev/null
+status=$?
+set -e
+[ $status -eq 1 ]
+
 
 rm -f $temp1 $temp2
 rm -f $outfile
