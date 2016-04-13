@@ -273,7 +273,6 @@ static unsigned char* bitmap_pop_line(unsigned char* bitmap,long* bitmap_len,int
 static int reverse_rows (unsigned long* data, long  len, long number_along_parallel,
         unsigned char* bitmap,long bitmap_len)
 {
-    long count = 0;
     long i = 0;
     long left = 0;
     long right = number_along_parallel-1;
@@ -282,6 +281,7 @@ static int reverse_rows (unsigned long* data, long  len, long number_along_paral
 
     if (bitmap_len==0) {
         /* NO BITMAP*/
+        long count = 0;
         inc=number_along_parallel;
         count = number_along_parallel;
 
@@ -337,7 +337,6 @@ static int reverse_rows (unsigned long* data, long  len, long number_along_paral
             data+=line_len;
             p=bitmap_pop_line(p,&bitmap_left_len,&bit_offset,number_along_parallel,&line_len);
         }
-
     }
 
     return 0;

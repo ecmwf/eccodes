@@ -163,7 +163,9 @@ static void init_class(grib_accessor_class* c)
 
 static int grib_load_codetable(grib_context* c,const char* filename,
         const char* recomposed_name,size_t size,grib_codetable* t);
-static void init(grib_accessor* a, const long len, grib_arguments* params) {
+
+static void init(grib_accessor* a, const long len, grib_arguments* params)
+{
     int n=0;
     grib_accessor_codetable* self  = (grib_accessor_codetable*)a;
     grib_action* act=(grib_action*)(a->creator);
@@ -183,7 +185,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* params) {
         a->vvalue->length=len;
         if (act->default_value!=NULL) {
             const char* p = 0;
-            size_t len = 1;
+            size_t s_len = 1;
             long l;
             int ret=0;
             double d;
@@ -193,23 +195,23 @@ static void init(grib_accessor* a, const long len, grib_arguments* params) {
             switch(type) {
             case GRIB_TYPE_DOUBLE:
                 grib_expression_evaluate_double(grib_handle_of_accessor(a),expression,&d);
-                grib_pack_double(a,&d,&len);
+                grib_pack_double(a,&d,&s_len);
                 break;
 
             case GRIB_TYPE_LONG:
                 grib_expression_evaluate_long(grib_handle_of_accessor(a),expression,&l);
-                grib_pack_long(a,&l,&len);
+                grib_pack_long(a,&l,&s_len);
                 break;
 
             default:
-                len = sizeof(tmp);
-                p = grib_expression_evaluate_string(grib_handle_of_accessor(a),expression,tmp,&len,&ret);
+                s_len = sizeof(tmp);
+                p = grib_expression_evaluate_string(grib_handle_of_accessor(a),expression,tmp,&s_len,&ret);
                 if (ret != GRIB_SUCCESS) {
                     grib_context_log(a->context,GRIB_LOG_FATAL,
                             "unable to evaluate %s as string",a->name);
                 }
-                len = strlen(p)+1;
-                pack_string(a,p,&len);
+                s_len = strlen(p)+1;
+                pack_string(a,p,&s_len);
                 break;
             }
         }
@@ -326,7 +328,6 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
     }
 
     return t;
-
 }
 
 static int grib_load_codetable(grib_context* c,const char* filename,
@@ -444,11 +445,10 @@ static int grib_load_codetable(grib_context* c,const char* filename,
     fclose(f);
 
     return 0;
-
 }
 
-
-void grib_codetable_delete(grib_context* c) {
+void grib_codetable_delete(grib_context* c)
+{
     grib_codetable* t = c->codetable;
 
     while(t)
@@ -566,7 +566,6 @@ static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
 #endif
     }
 
-
     l = strlen(tmp) + 1;
 
     if(*len < l)
@@ -623,7 +622,7 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t *len)
         grib_action* act=(grib_action*)(a->creator);
         if (act->default_value!=NULL) {
             const char* p = 0;
-            size_t len = 1;
+            size_t s_len = 1;
             long l;
             int ret=0;
             double d;
@@ -633,24 +632,24 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t *len)
             switch(type) {
             case GRIB_TYPE_DOUBLE:
                 grib_expression_evaluate_double(grib_handle_of_accessor(a),expression,&d);
-                grib_pack_double(a,&d,&len);
+                grib_pack_double(a,&d,&s_len);
                 break;
 
             case GRIB_TYPE_LONG:
                 grib_expression_evaluate_long(grib_handle_of_accessor(a),expression,&l);
-                grib_pack_long(a,&l,&len);
+                grib_pack_long(a,&l,&s_len);
                 break;
 
             default:
-                len = sizeof(tmp);
-                p = grib_expression_evaluate_string(grib_handle_of_accessor(a),expression,tmp,&len,&ret);
+                s_len = sizeof(tmp);
+                p = grib_expression_evaluate_string(grib_handle_of_accessor(a),expression,tmp,&s_len,&ret);
                 if (ret != GRIB_SUCCESS) {
                     grib_context_log(a->context,GRIB_LOG_FATAL,
                             "unable to evaluate %s as string",a->name);
                     return ret;
                 }
-                len = strlen(p)+1;
-                pack_string(a,p,&len);
+                s_len = strlen(p)+1;
+                pack_string(a,p,&s_len);
                 break;
             }
             return GRIB_SUCCESS;
@@ -660,7 +659,8 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t *len)
     return GRIB_ENCODING_ERROR;
 }
 
-static int pack_expression(grib_accessor* a, grib_expression *e){
+static int pack_expression(grib_accessor* a, grib_expression *e)
+{
     const char* cval;
     int ret=0;
     long lval=0;
