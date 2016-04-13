@@ -10,12 +10,9 @@
 
 
 /*
-
   Author: B.Raoult
   Modified by Enrico Fucile
-
 */
-
 
 #include "grib_api_internal.h"
 #include <math.h>
@@ -127,7 +124,6 @@ typedef int err;
 typedef real (*fop1)(real);
 typedef real (*fop2)(real,real);
 
-
 static void advance(char** form)
 {
     (*form)++;
@@ -156,6 +152,7 @@ static grib_math *readatom(grib_context* c,char** form,int *err)
         p        = (grib_math*)grib_context_malloc(c,sizeof(grib_math));
         p->arity = 1;
         p->name  = strdup("neg");
+        Assert(p->name);
         advance(form);
         p->left  = readatom(c,form,err);
         break;
@@ -164,6 +161,7 @@ static grib_math *readatom(grib_context* c,char** form,int *err)
         p        = (grib_math*)grib_context_malloc(c,sizeof(grib_math));
         p->arity = 1;
         p->name  = strdup("neg");
+        Assert(p->name);
         advance(form);
         p->left  = readatom(c,form,err);
         break;
@@ -180,8 +178,8 @@ static grib_math *readatom(grib_context* c,char** form,int *err)
 
         if(**form == '\'' || **form == '"')
         {
-            char c = *((*form)++);
-            while(**form && **form != c)
+            char achar = *((*form)++);
+            while(**form && **form != achar)
                 buf[i++] = *((*form)++);
             if(**form) (*form)++;
         } else
@@ -194,6 +192,7 @@ static grib_math *readatom(grib_context* c,char** form,int *err)
 
         p = (grib_math*)grib_context_malloc(c,sizeof(grib_math));
         p->name  = strdup(buf);
+        Assert(p->name);
         p->left=0;
 
         switch(**form)
@@ -427,6 +426,7 @@ grib_math *grib_math_clone(grib_context* c,grib_math *m)
         n = (grib_math*)grib_context_malloc(c,sizeof(grib_math));
         n->arity = m->arity;
         n->name  = strdup(m->name);
+        Assert(n->name);
         n->left  = grib_math_clone(c,m->left);
         n->right = grib_math_clone(c,m->right);
     }
@@ -455,6 +455,7 @@ grib_math *grib_math_new(grib_context* c,const char* formula,int *err)
     if (!formula) {*err=GRIB_INVALID_ARGUMENT;return NULL;}
 
     f=strdup(formula);
+    Assert(f);
     fsave=f;
 
     x = reador(c,&f,err);

@@ -101,7 +101,6 @@ static int blacklisted(const char* name)
 static double relative_error(double a,double b,double err)
 {
     double relativeError;
-    double maxAbsoluteError = 1e-19;
 
     if(fabs(a) <= maxAbsoluteError || fabs(b) <= maxAbsoluteError)
         relativeError = fabs(a-b);
@@ -1041,7 +1040,7 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
             if (options->compare[i].type == GRIB_NAMESPACE) {
                 iter=grib_keys_iterator_new(h1, 0, options->compare[i].name);
                 if (!iter) {
-                    printf("ERROR: unable to get iterator\n");
+                    printf("ERROR: unable to get keys iterator\n");
                     exit(1);
                 }
                 while(grib_keys_iterator_next(iter))

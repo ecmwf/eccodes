@@ -47,7 +47,7 @@ static int scan(grib_context* c,grib_runtime_options* options,const char* dir);
 
 FILE* dump_file;
 
-grib_runtime_options options={
+grib_runtime_options global_options={
 		0,         /* verbose       */
 		0,         /* fail          */
 		0,         /* skip          */
@@ -143,7 +143,7 @@ int grib_tool(int argc, char **argv)
 {
     int ret=0;
     grib_context* c=grib_context_get_default();
-    options.context=c;
+    global_options.context=c;
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
     feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
@@ -151,39 +151,39 @@ int grib_tool(int argc, char **argv)
 
     if (getenv("DOXYGEN_USAGE") && argc==1 ) usage_doxygen();
 
-    grib_get_runtime_options(argc,argv,&options);
+    grib_get_runtime_options(argc,argv,&global_options);
 
-    grib_tool_before_getopt(&options);
+    grib_tool_before_getopt(&global_options);
 
-    grib_process_runtime_options(c,argc,argv,&options);
+    grib_process_runtime_options(c,argc,argv,&global_options);
 
-    grib_tool_init(&options);
-    if (options.dump_filename) {
-        dump_file= fopen(options.dump_filename,"w");
+    grib_tool_init(&global_options);
+    if (global_options.dump_filename) {
+        dump_file= fopen(global_options.dump_filename,"w");
         if(!dump_file) {
-            perror(options.dump_filename);
+            perror(global_options.dump_filename);
             exit(1);
         }
     } else {
         dump_file=stdout;
     }
 
-    if (is_index_file(options.infile->name) &&
-            ( options.infile_extra && is_index_file(options.infile_extra->name))) {
-        options.through_index=1;
-        return grib_tool_index(&options);
+    if (is_index_file(global_options.infile->name) &&
+            ( global_options.infile_extra && is_index_file(global_options.infile_extra->name))) {
+        global_options.through_index=1;
+        return grib_tool_index(&global_options);
     }
 
-    if (options.onlyfiles)
-        ret=grib_tool_onlyfiles(&options);
+    if (global_options.onlyfiles)
+        ret=grib_tool_onlyfiles(&global_options);
     else {
-        if (options.orderby)
-            ret=grib_tool_with_orderby(&options);
+        if (global_options.orderby)
+            ret=grib_tool_with_orderby(&global_options);
         else
-            ret=grib_tool_without_orderby(&options);
+            ret=grib_tool_without_orderby(&global_options);
     }
 
-    if (options.dump_filename) fclose(dump_file);
+    if (global_options.dump_filename) fclose(dump_file);
     return ret;
 
 }

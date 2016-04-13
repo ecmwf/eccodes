@@ -205,7 +205,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     long hours = 0, minutes=0, step_mins=0, tmp, tmp_hrs, tmp_mins;
 
     if (self->hours) {
-        long hours,minutes;
         if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->hours,&hours))!=GRIB_SUCCESS) return ret;
         if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->minutes,&minutes))!=GRIB_SUCCESS) return ret;
         *val=hours*100+minutes;

@@ -14,7 +14,7 @@
 
 #include "grib_api.h"
 
-void usage(const char *prog)
+static void usage(const char *prog)
 {
 	fprintf(stderr,"%s:  in1 [in2 ... ]  out\n",prog);
 	exit(1);
