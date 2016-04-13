@@ -179,7 +179,7 @@ static void dump(grib_accessor* a,grib_dumper* dumper)
 
   msg[llen] = 0;
 
-  sprintf(buf,"%s %ld %ld-%ld",msg,v,(long)a->offset+self->loffset,(long)self->llength);
+  sprintf(buf,"%s %lu %ld-%ld", msg, v, (long)a->offset+self->loffset, (long)self->llength);
 
   grib_dump_long(dumper,a,buf);
 

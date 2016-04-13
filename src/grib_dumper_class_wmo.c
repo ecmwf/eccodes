@@ -103,10 +103,10 @@ static int  init(grib_dumper* d)
     return GRIB_SUCCESS;
 }
 
-static int  destroy  (grib_dumper* d){
+static int  destroy  (grib_dumper* d)
+{
     return GRIB_SUCCESS;
 }
-
 
 static void aliases(grib_dumper* d,grib_accessor* a)
 {
@@ -165,7 +165,6 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 
     set_begin_end(d,a);
 
-
     print_offset(self->dumper.out,self->begin,self->theEnd);
 
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
@@ -173,13 +172,13 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 
     if (size>1) {
         int cols=19;
-        int count=0;
+        int icount=0;
         fprintf(self->dumper.out,"%s = { \t",a->name);
         if (values) {
             for (i=0;i<size;i++) {
-                if (count>cols) {fprintf(self->dumper.out,"\n\t\t\t\t");count=0;}
+                if (icount>cols) {fprintf(self->dumper.out,"\n\t\t\t\t");icount=0;}
                 fprintf(self->dumper.out,"%ld ",values[i]);
-                count++;
+                icount++;
             }
             fprintf(self->dumper.out,"}\n");
             grib_context_free(a->context,values);
@@ -533,7 +532,8 @@ static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors
     /*fprintf(self->dumper.out,"<===== %s %s\n",a->creator->op, a->name);*/
 }
 
-static void set_begin_end(grib_dumper* d,grib_accessor* a) {
+static void set_begin_end(grib_dumper* d,grib_accessor* a)
+{
     grib_dumper_wmo *self = (grib_dumper_wmo*)d;
     if ((d->option_flags & GRIB_DUMP_FLAG_OCTECT) != 0) {
 
@@ -545,7 +545,8 @@ static void set_begin_end(grib_dumper* d,grib_accessor* a) {
     }
 }
 
-static void print_offset(FILE* out,long begin,long theEnd) {
+static void print_offset(FILE* out,long begin,long theEnd)
+{
     char tmp[50];
     if (begin == theEnd)
         fprintf(out,"%-10ld" ,begin);
@@ -555,7 +556,8 @@ static void print_offset(FILE* out,long begin,long theEnd) {
     }
 }
 
-static void print_hexadecimal(FILE* out,unsigned long flags,grib_accessor* a) {
+static void print_hexadecimal(FILE* out,unsigned long flags,grib_accessor* a)
+{
     int i=0;
     unsigned long offset=0;
     grib_handle* h=grib_handle_of_accessor(a);
@@ -569,7 +571,6 @@ static void print_hexadecimal(FILE* out,unsigned long flags,grib_accessor* a) {
         fprintf(out," )");
     }
 }
-
 
 static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* comment)
 {
@@ -638,4 +639,3 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
     fprintf(self->dumper.out,"\n");
     grib_context_free(c,values);
 }
-

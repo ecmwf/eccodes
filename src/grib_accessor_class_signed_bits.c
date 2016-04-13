@@ -179,7 +179,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
     grib_dump_long(dumper,a,NULL);
 }
 
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_signed_bits* self = (grib_accessor_signed_bits*)a;
     int i;
@@ -203,7 +203,6 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
     if (ret) return ret;
 
     if (numberOfBits==0) {
-        int i;
         for (i=0;i<rlen;i++) val[i]=0;
         return GRIB_SUCCESS;
     }
@@ -216,7 +215,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
     return GRIB_SUCCESS;
 }
 
-static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
+static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
     grib_accessor_signed_bits* self = (grib_accessor_signed_bits*)a;
     int ret = 0;

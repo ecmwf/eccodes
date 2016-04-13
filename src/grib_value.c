@@ -708,7 +708,7 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
                     !strcmp(packingType,"grid_second_order_SPD2") ||
                     !strcmp(packingType,"grid_second_order_SPD3")
             ) {
-                int ret = 0;
+                ret = 0;
                 slen=11; /*length of 'grid_simple' */
                 if (h->context->debug) {
                     printf("ECCODES DEBUG __grib_set_double_array: Cannot use second order packing for constant fields. Using simple packing\n");
@@ -1147,7 +1147,6 @@ int grib_get_size(grib_handle* h, const char* name,size_t* size)
         a=grib_find_accessor(h, name);
         if(!a) return GRIB_NOT_FOUND;
         if (name[0]=='#') {
-            int ret;
             long count=*size;
             ret=grib_value_count(a,&count);
             *size=count;

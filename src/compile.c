@@ -18,7 +18,8 @@
 
 #define COMPILE_FLAGS(z) if(flags&z) { flags ^= ~z; fprintf(c->out,"%s%s",sep,#z);sep="|";  }
 
-void grib_compile_flags(grib_compiler* c,long flags) {
+void grib_compile_flags(grib_compiler* c,long flags)
+{
     char *sep = "";
 
     fprintf(c->out,"0x%ld",flags);
@@ -51,7 +52,6 @@ void grib_compile_flags(grib_compiler* c,long flags) {
         Assert(0);
     }
 }
-
 
 void grib_compile_action_branch(grib_action* a,grib_compiler* c, char* name)
 {

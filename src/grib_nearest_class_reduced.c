@@ -292,7 +292,6 @@ static int find(grib_nearest* nearest, grib_handle* h,
             for (jj=0;jj<self->j[1];jj++) nlon+=pl[jj];
             nplm1=pl[self->j[1]]-1;
         } else {
-            long row_count,ilon_first,ilon_last;
             for (jj=0;jj<self->j[1];jj++) {
                 row_count=0;ilon_first=0;ilon_last=0;
                 grib_get_reduced_row(pl[jj],self->lon_first,self->lon_last,&row_count,&ilon_first,&ilon_last);

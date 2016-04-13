@@ -138,7 +138,7 @@ grib_option grib_options[]={
     {"v",0,0,0,1,0}
 };
 
-grib_handle* h1=NULL;
+grib_handle* global_handle=NULL;
 int counter=0;
 int theStart=-1;
 int theEnd=-1;
@@ -386,7 +386,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
 
         grib_index_search_same(idx1,h);
-        h1=grib_handle_new_from_index(idx1,&err);
+        global_handle=grib_handle_new_from_index(idx1,&err);
         if (options->verbose) {
             off_t offset=0;
             char* filename=grib_get_field_file(options->index2,&offset);
@@ -396,44 +396,44 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             print_index_key_values(options->index1,counter);
         }
 
-        if (!h1) {
+        if (!global_handle) {
             if (!options->verbose)
                 print_index_key_values(idx1,counter);
             printf("====== NOT FOUND in %s\n",options->infile->name);
         }
 
-        if (!h1 || err!= GRIB_SUCCESS ) {
+        if (!global_handle || err!= GRIB_SUCCESS ) {
             morein1++;
-            if (h1) grib_handle_delete(h1);
+            if (global_handle) grib_handle_delete(global_handle);
             return 0;
         }
 
-        if(compare_handles(h,h1,options)) {
+        if(compare_handles(h,global_handle,options)) {
             error++;
             if (!force) exit(1);
         }
 
-        grib_handle_delete(h1);
+        grib_handle_delete(global_handle);
 
         return 0;
 
     } else if (options->random)
-        h1 = grib_fieldset_next_handle(options->idx,&err);
+        global_handle = grib_fieldset_next_handle(options->idx,&err);
     else
-        h1=grib_handle_new_from_file(h->context,options->infile_extra->file,&err);
+        global_handle=grib_handle_new_from_file(h->context,options->infile_extra->file,&err);
 
-    if (!h1 || err!= GRIB_SUCCESS ) {
+    if (!global_handle || err!= GRIB_SUCCESS ) {
         morein2++;
-        if (h1) grib_handle_delete(h1);
+        if (global_handle) grib_handle_delete(global_handle);
         return 0;
     }
 
-    if(compare_handles(h1,h,options)) {
+    if(compare_handles(global_handle,h,options)) {
         error++;
         if (!force) exit(1);
     }
 
-    grib_handle_delete(h1);
+    grib_handle_delete(global_handle);
 
     return 0;
 }
@@ -442,12 +442,12 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     int err=0;
     if (!options->through_index && !options->random)  {
-        h1=grib_handle_new_from_file(h->context,options->infile_extra->file,&err);
+        global_handle=grib_handle_new_from_file(h->context,options->infile_extra->file,&err);
 
-        if (!h1 || err!= GRIB_SUCCESS)
+        if (!global_handle || err!= GRIB_SUCCESS)
             morein2++;
 
-        grib_handle_delete(h1);
+        grib_handle_delete(global_handle);
 
 
     }
@@ -475,9 +475,9 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     if (error) {
         printf("\n## ERRORS SUMMARY #######\n");
     }
-    while ((h1=grib_handle_new_from_file(c,options->infile_extra->file,&err))) {
+    while ((global_handle=grib_handle_new_from_file(c,options->infile_extra->file,&err))) {
         morein1++;
-        if (h1) grib_handle_delete(h1);
+        if (global_handle) grib_handle_delete(global_handle);
     }
     if (morein1>0) {
         printf("##\n## Different number of messages \n");
