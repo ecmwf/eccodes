@@ -1,4 +1,14 @@
-############################################################################################
+#
+# Copyright 2005-2016 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation
+# nor does it submit to any jurisdiction.
+#
+###############################################################################
 # cmake options:
 #
 #       -DCMAKE_BUILD_TYPE=Debug|RelWithDebInfo|Release|Production
@@ -239,7 +249,7 @@ if( CMAKE_COMPILER_IS_GNUCC )
     ecbuild_add_c_flags("-pedantic")
 endif()
 
-############################################################################################
+###############################################################################
 # contents
 
 ### export package to other ecbuild packages
@@ -287,7 +297,7 @@ ecbuild_dont_pack( DIRS
 
 add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 
-############################################################################################
+###############################################################################
 # export to other projects
 
 # temporary -- add support for ecbuild 1.0.x sub-project inclusion
@@ -331,7 +341,7 @@ if( EC_HAVE_FORTRAN )
   )
 endif()
 
-############################################################################################
+###############################################################################
 # finalize
 
 ecbuild_install_project( NAME ${CMAKE_PROJECT_NAME} )
