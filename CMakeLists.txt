@@ -167,9 +167,9 @@ set( CMAKE_THREAD_PREFER_PTHREAD 1 ) # find thread library, but prefer pthreads
 find_package(Threads REQUIRED)
 
 # debug
-message(STATUS " CMAKE_THREAD_LIBS_INIT=${CMAKE_THREAD_LIBS_INIT}")
-message(STATUS " CMAKE_USE_PTHREADS_INIT=${CMAKE_USE_PTHREADS_INIT}")
-message(STATUS " HAVE_ECCODES_THREADS=${HAVE_ECCODES_THREADS}")
+ecbuild_info(" CMAKE_THREAD_LIBS_INIT=${CMAKE_THREAD_LIBS_INIT}")
+ecbuild_info(" CMAKE_USE_PTHREADS_INIT=${CMAKE_USE_PTHREADS_INIT}")
+ecbuild_info(" HAVE_ECCODES_THREADS=${HAVE_ECCODES_THREADS}")
 
 
 set( GRIB_PTHREADS 0 )
@@ -178,7 +178,7 @@ set( GRIB_LINUX_PTHREADS 0 )
 #if( HAVE_ECCODES_THREADS AND CMAKE_THREAD_LIBS_INIT )
 if( HAVE_ECCODES_THREADS )
     if( NOT ${CMAKE_USE_PTHREADS_INIT} )
-        message( FATAL_ERROR "Pthreads is not supported on your system: thread library found=[${CMAKE_THREAD_LIBS_INIT}]" )
+        ecbuild_critical("Pthreads is not supported on your system: thread library found=[${CMAKE_THREAD_LIBS_INIT}]")
     endif()
     set( GRIB_PTHREADS 1 )
     if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )
@@ -191,11 +191,11 @@ endif()
 
 # Cannot have both options
 if( HAVE_ECCODES_THREADS AND HAVE_ECCODES_OMP_THREADS )
-    message( FATAL_ERROR "Cannot enable both POSIX threads and OMP! Please specify just one option" )
+    ecbuild_critical("Cannot enable both POSIX threads and OMP! Please specify just one option")
 endif()
 
-message(STATUS " GRIB_PTHREADS=${GRIB_PTHREADS}")
-message(STATUS " GRIB_OMP_THREADS=${GRIB_OMP_THREADS}")
+ecbuild_info(" GRIB_PTHREADS=${GRIB_PTHREADS}")
+ecbuild_info(" GRIB_OMP_THREADS=${GRIB_OMP_THREADS}")
 
 set( GRIB_MEM_ALIGN 0 )
 if( ENABLE_ALIGN_MEMORY )
@@ -348,12 +348,12 @@ ecbuild_install_project( NAME ${CMAKE_PROJECT_NAME} )
 
 ecbuild_print_summary()
 
-message(STATUS "")
-message(STATUS "   +---------------------------+")
-message(STATUS "   |  ecCodes version ${ECCODES_VERSION}   |")
-message(STATUS "   |  Configuration completed  |")
-message(STATUS "   +---------------------------+")
-message(STATUS "")
-message(STATUS "   You can now do 'make' to compile the package, 'ctest' to test it and 'make install' to install it afterwards.")
-message(STATUS "")
-message(STATUS "")
+ecbuild_info("")
+ecbuild_info("   +---------------------------+")
+ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}   |")
+ecbuild_info("   |  Configuration completed  |")
+ecbuild_info("   +---------------------------+")
+ecbuild_info("")
+ecbuild_info("   You can now do 'make' to compile the package, 'ctest' to test it and 'make install' to install it afterwards.")
+ecbuild_info("")
+ecbuild_info("")
