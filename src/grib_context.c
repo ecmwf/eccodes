@@ -909,3 +909,40 @@ void grib_context_print(const grib_context *c, void* descriptor,const char* fmt,
     va_end(list);
     c->print(c,descriptor,msg);
 }
+
+void grib_context_set_handle_file_count(grib_context *c, int new_count)
+{
+    if (!c) c=grib_context_get_default();
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex_c);
+    c->handle_file_count = new_count;
+    GRIB_MUTEX_UNLOCK(&mutex_c);
+}
+
+void grib_context_set_handle_total_count(grib_context *c, int new_count)
+{
+    if (!c) c=grib_context_get_default();
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex_c);
+    c->handle_total_count = new_count;
+    GRIB_MUTEX_UNLOCK(&mutex_c);
+}
+
+void grib_context_increment_handle_file_count(grib_context *c)
+{
+    if (!c) c=grib_context_get_default();
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex_c);
+    c->handle_file_count++;
+    GRIB_MUTEX_UNLOCK(&mutex_c);
+}
+
+void grib_context_increment_handle_total_count(grib_context *c)
+{
+    if (!c) c=grib_context_get_default();
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex_c);
+    c->handle_total_count++;
+    GRIB_MUTEX_UNLOCK(&mutex_c);
+}
+
