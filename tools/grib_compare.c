@@ -59,7 +59,7 @@ int morein1=0;
 int morein2=0;
 int listFromCommandLine;
 int verbose=0;
-int tolerance_factor=1;
+double tolerance_factor=1;
 
 /* Returns 0 when the values are considered the same */
 static double compare_double_absolute(double *a,double *b,double tolerance)
