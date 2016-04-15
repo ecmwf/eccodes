@@ -29,7 +29,7 @@ GRIB_INLINE static int grib_inline_rstrcmp(const char* a,const char* b)
     return (q==b) ? 0 : 1;
 }
 
-typedef double (*compare_double_proc) (double*,double*,double*);
+typedef double (*compare_double_proc) (double*,double*,double);
 
 typedef struct grib_error grib_error;
 struct grib_error {
@@ -61,18 +61,20 @@ int listFromCommandLine;
 int verbose=0;
 int tolerance_factor=1;
 
-GRIB_INLINE static double compare_double_absolute(double *a,double *b,double *err)
+/* Returns 0 when the values are considered the same */
+static double compare_double_absolute(double *a,double *b,double tolerance)
 {
     double ret=0;
     double d=fabs(*a-*b);
-    if (d > *err) {
+    if (d > tolerance) {
         ret=d;
     }
     return ret;
     /* return fabs(*a-*b) > *err ? fabs(*a-*b) : 0; */
 }
 
-static double compare_double_relative(double *a,double *b,double *err)
+/* Returns 0 when the values are considered the same */
+static double compare_double_relative(double *a, double *b, double tolerance)
 {
     double relativeError;
 
@@ -83,7 +85,7 @@ static double compare_double_relative(double *a,double *b,double *err)
     else
         relativeError = fabs((*a-*b) / *a);
 
-    return relativeError > *err ? relativeError : 0;
+    return relativeError > tolerance ? relativeError : 0;
 }
 
 static int blacklisted(const char* name)
@@ -859,7 +861,7 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
             value_tolerance*=tolerance_factor;
             if (verbose) printf("  (%d values) tolerance=%g\n",(int)len1,value_tolerance);
             for(i = 0; i < len1; i++) {
-                if((diff=compare_double(pv1++,pv2++,&value_tolerance))!=0) {
+                if((diff=compare_double(pv1++, pv2++, value_tolerance))!=0) {
                     countdiff++;
                     if (maxdiff < diff) {maxdiff=diff;imaxdiff=i;}
                     err1 = GRIB_VALUE_MISMATCH;
