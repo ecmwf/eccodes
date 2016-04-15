@@ -278,7 +278,8 @@ int grib_tool_init(grib_runtime_options* options)
     }
     if (grib_options_on("P")) {
         packingCompare=1;
-        compare_double= &compare_double_absolute;
+        /* GRIB-972: Do not change the comparator yet. Not all GRIBs have packingError key! */
+        /*compare_double= &compare_double_absolute;*/
     }
 
     if (grib_options_on("T:"))
@@ -787,15 +788,21 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
             packingError2=0;
             err1=grib_get_double(h1,"packingError",&packingError1);
             err2=grib_get_double(h2,"packingError",&packingError2);
-            if (packingCompare)
+            if (packingCompare && !err1 && !err2) {
+                /* GRIB-972: Not all GRIBs have packingError key! */
                 value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2;
+                compare_double= &compare_double_absolute;
+            }
         } else if (!grib_inline_strcmp(name,"unpackedValues") ) {
             packingError1=0;
             packingError2=0;
             err1=grib_get_double(h1,"unpackedError",&packingError1);
             err2=grib_get_double(h2,"unpackedError",&packingError2);
-            if (packingCompare)
+            if (packingCompare && !err1 && !err2) {
+                /* GRIB-972: Not all GRIBs have unpackedError key! */
                 value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2;
+                compare_double= &compare_double_absolute;
+            }
         } else if ( !grib_inline_rstrcmp(name,"InDegrees")) {
             packingError1=0.0005;
             packingError2=0.0005;
