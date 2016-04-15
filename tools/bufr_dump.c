@@ -18,7 +18,9 @@
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value*/
         {"j:","s/f/a","\n\t\tJSON mode (JavaScript Object Notation)."
-                    "\n\t\tOptions: s->structure, f->flat (only data), a->all attributes\n",1,1,"s"},
+                    "\n\t\tOptions: s->structure, f->flat (only data), a->all attributes"
+                    "\n\t\tDefault mode is structure.\n",
+                1,1,"s"},
         {"S",0,0,1,0,0},
         {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
         /* {"D",0,0,0,1,0},  */  /* See ECC-215 */
