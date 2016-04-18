@@ -165,13 +165,11 @@ static pthread_once_t once  = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static void thread_init() {
-  pthread_mutexattr_t attr;
-
-  pthread_mutexattr_init(&attr);
-  pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
-  pthread_mutex_init(&mutex,&attr);
-  pthread_mutexattr_destroy(&attr);
-
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&mutex,&attr);
+    pthread_mutexattr_destroy(&attr);
 }
 #elif GRIB_OMP_THREADS
 static int once = 0;
