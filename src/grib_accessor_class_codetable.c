@@ -15,6 +15,34 @@
 #include "grib_api_internal.h"
 #include <ctype.h>
 
+#if GRIB_PTHREADS
+static pthread_once_t once  = PTHREAD_ONCE_INIT;
+static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+
+static void thread_init() {
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&mutex1,&attr);
+    pthread_mutexattr_destroy(&attr);
+}
+#elif GRIB_OMP_THREADS
+static int once = 0;
+static omp_nest_lock_t mutex1;
+
+static void thread_init()
+{
+    GRIB_OMP_CRITICAL(lock_grib_accessor_class_codetable_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex1);
+            once = 1;
+        }
+    }
+}
+#endif
+
 /*
  * strcasecmp is not in the C standard. However, it's defined by
  * 4.4BSD, POSIX.1-2001. So we use our own
@@ -215,9 +243,9 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
                 break;
             }
         }
-    } else
+    } else {
         a->length = len;
-
+    }
 }
 
 static int str_eq(const char* a, const char* b)
@@ -281,6 +309,9 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
         localFilename=grib_context_full_defs_path(c,localRecomposed);
     }
 
+    GRIB_MUTEX_INIT_ONCE(&once,&thread_init);
+    GRIB_MUTEX_LOCK(&mutex1); /* GRIB-930 */
+
     /*printf("%s: Looking in cache: f=%s lf=%s\n", self->att.name, filename, localFilename);*/
     next=c->codetable;
     while(next) {
@@ -289,7 +320,8 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
                         ((localFilename!=0 && next->filename[1]!=NULL)
                                 && strcmp(localFilename,next->filename[1]) ==0)) )
         {
-            return next;
+            t = next;
+            goto the_end;
         }
         /* Special case: see GRIB-735 */
         if (filename==NULL && localFilename!=NULL)
@@ -297,7 +329,8 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
             if ( str_eq(localFilename, next->filename[0]) ||
                  str_eq(localFilename, next->filename[1]) )
             {
-                return next;
+                t = next;
+                goto the_end;
             }
         }
         next = next->next;
@@ -324,8 +357,12 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
 
     if (t->filename[0]==NULL && t->filename[1]==NULL) {
         grib_context_free_persistent(c,t);
-        return NULL;
+        t = NULL;
+        goto the_end;
     }
+
+the_end:
+    GRIB_MUTEX_UNLOCK(&mutex1);
 
     return t;
 }
@@ -470,10 +507,10 @@ void grib_codetable_delete(grib_context* c)
         grib_context_free_persistent(c,t);
         t = s;
     }
-
 }
 
-static void dump(grib_accessor* a, grib_dumper* dumper) {
+static void dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_accessor_codetable* self  = (grib_accessor_codetable*)a;
     char comment[2048];
     grib_codetable* table;
@@ -532,7 +569,6 @@ static void dump(grib_accessor* a, grib_dumper* dumper) {
     strcat(comment,") ");
 
     grib_dump_long(dumper,a,comment);
-
 }
 
 static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
@@ -691,7 +727,8 @@ static void destroy(grib_context* context,grib_accessor* a)
     }
 }
 
-static int  get_native_type(grib_accessor* a){
+static int get_native_type(grib_accessor* a)
+{
     int type=GRIB_TYPE_LONG;
     /*printf("---------- %s flags=%ld GRIB_ACCESSOR_FLAG_STRING_TYPE=%d\n",
          a->name,a->flags,GRIB_ACCESSOR_FLAG_STRING_TYPE);*/
@@ -700,7 +737,7 @@ static int  get_native_type(grib_accessor* a){
     return type;
 }
 
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_codetable* self = (grib_accessor_codetable*)a;
     long rlen = 0;
