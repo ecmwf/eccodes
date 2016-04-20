@@ -178,6 +178,7 @@ void grib_bufr_descriptor_set_reference(bufr_descriptor *v, double reference);
 void grib_bufr_descriptor_set_width(bufr_descriptor *v, long width);
 void grib_bufr_descriptor_set_scale(bufr_descriptor *v, long scale);
 void grib_bufr_descriptor_delete(bufr_descriptor *v);
+int grib_bufr_descriptor_can_be_missing(bufr_descriptor* v);
 
 /* grib_bufr_descriptors_array.c */
 bufr_descriptors_array *grib_bufr_descriptors_array_new(grib_context *c, size_t size, size_t incsize);
