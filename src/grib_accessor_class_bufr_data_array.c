@@ -2107,7 +2107,6 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                 case 25:
                     /*difference statistical values marker operator*/
                     if (descriptors[i]->Y==255) {
-                        double reference;
                         index=get_next_bitmap_descriptor_index(self,elementsDescriptorsIndex,dval);
                         bd=grib_bufr_descriptor_clone(self->expanded->v[index]);
                         bd->reference=-grib_power(bd->width,2);
