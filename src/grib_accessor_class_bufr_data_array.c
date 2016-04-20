@@ -226,7 +226,7 @@ static void init_class(grib_accessor_class* c)
 
 static int process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset);
 
-typedef int (*codec_element_proc) (grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex, grib_buffer* b,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,grib_sarray* sval); 
+typedef int (*codec_element_proc) (grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex, grib_buffer* b,unsigned char* data,long *pos,int i,bufr_descriptor* descriptor,long elementIndex,grib_darray* dval,grib_sarray* sval); 
 typedef int (*codec_replication_proc) (grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,grib_buffer* buff,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,long* numberOfRepetitions);
 
 static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset);
@@ -750,7 +750,8 @@ static double decode_double_value(grib_context* c,unsigned char* data,long* pos,
 }
 
 static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
-        grib_buffer* b,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,grib_sarray* sval)
+        grib_buffer* b,unsigned char* data,long *pos,int i,bufr_descriptor* descriptor,long elementIndex,
+	grib_darray* dval,grib_sarray* sval)
 {
     grib_accessor* a=(grib_accessor*)self;
     grib_darray* dar=0;
@@ -865,7 +866,8 @@ static int encode_new_bitmap(grib_context* c,grib_buffer* buff,long *pos,int idx
 }
 
 static int encode_new_element(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
-        grib_buffer* buff,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,grib_sarray* sval)
+        grib_buffer* buff,unsigned char* data,long *pos,int i,bufr_descriptor* descriptor,
+	long elementIndex,grib_darray* dval,grib_sarray* sval)
 {
     int ii;
     char* csval=0;
@@ -965,7 +967,8 @@ static int encode_new_replication(grib_context* c,grib_accessor_bufr_data_array*
 }
 
 static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
-        grib_buffer* buff,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,grib_sarray* sval)
+        grib_buffer* buff,unsigned char* data,long *pos,int i,bufr_descriptor* descriptor,
+	long elementIndex,grib_darray* dval,grib_sarray* sval)
 {
     int idx,j;
     int err=0;
@@ -1014,7 +1017,7 @@ static int encode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
         *numberOfRepetitions=self->numericValues->v[subsetIndex]->v[elementIndex];
     }
 
-    return encode_element(c,self,subsetIndex,buff,data,pos,i,elementIndex,dval,0);
+    return encode_element(c,self,subsetIndex,buff,data,pos,i,0,elementIndex,dval,0);
 }
 
 static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,long* pos,int iel,grib_iarray* elementsDescriptorsIndex,int iBitmapOperator)
@@ -2022,7 +2025,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                     /* self->bitmapStart=grib_iarray_used_size(elementsDescriptorsIndex)-1; */
                     self->bitmapStart=elementIndex;
                 }
-                err=codec_element(c,self,iss,buffer,data,&pos,i,elementIndex,dval,sval);
+                err=codec_element(c,self,iss,buffer,data,&pos,i,0,elementIndex,dval,sval);
                 if (err) return err;
                 elementIndex++;
                 break;
@@ -2062,7 +2065,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                 case 5:
                     descriptors[i]->width=descriptors[i]->Y*8;
                     descriptors[i]->type=BUFR_DESCRIPTOR_TYPE_STRING;
-                    err=codec_element(c,self,iss,buffer,data,&pos,i,elementIndex,dval,sval);
+                    err=codec_element(c,self,iss,buffer,data,&pos,i,0,elementIndex,dval,sval);
                     if (err) return err;
                     if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
                     elementIndex++;
@@ -2088,13 +2091,26 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                     /* substituted values marker operator */
                 case 24:
                     /*first-order statistical values marker operator*/
-                case 25:
-                    /*difference statistical values marker operator*/
                 case 32:
                     /*replaced/retained values marker operator*/
                     if (descriptors[i]->Y==255) {
                         index=get_next_bitmap_descriptor_index(self,elementsDescriptorsIndex,dval);
-                        err=codec_element(c,self,iss,buffer,data,&pos,index,elementIndex,dval,sval);
+                        err=codec_element(c,self,iss,buffer,data,&pos,index,0,elementIndex,dval,sval);
+                        if (err) return err;
+                        /* self->expanded->v[index] */
+                        if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
+                        elementIndex++;
+                    } else {
+                        if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
+                        if (decoding) push_zero_element(self,dval);
+                        elementIndex++;
+                    }
+                    break;
+                case 25:
+                    /*difference statistical values marker operator*/
+                    if (descriptors[i]->Y==255) {
+                        index=get_next_bitmap_descriptor_index(self,elementsDescriptorsIndex,dval);
+                        err=codec_element(c,self,iss,buffer,data,&pos,index,0,elementIndex,dval,sval);
                         if (err) return err;
                         /* self->expanded->v[index] */
                         if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
@@ -2147,7 +2163,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                 case 9:
                     /* associated field */
                     if (descriptors[i]->X==99 && descriptors[i]->Y==999) {
-                        err=codec_element(c,self,iss,buffer,data,&pos,i,elementIndex,dval,sval);
+                        err=codec_element(c,self,iss,buffer,data,&pos,i,0,elementIndex,dval,sval);
                         if (err) return err;
                         if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
                         elementIndex++;
