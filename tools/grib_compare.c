@@ -789,9 +789,11 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
             err1=grib_get_double(h1,"packingError",&packingError1);
             err2=grib_get_double(h2,"packingError",&packingError2);
             if (packingCompare && !err1 && !err2) {
+                /* packingError specified by user and message supports it */
                 /* GRIB-972: Not all GRIBs have packingError key! */
                 value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2;
                 compare_double= &compare_double_absolute;
+                compareAbsolute=1;
             }
         } else if (!grib_inline_strcmp(name,"unpackedValues") ) {
             packingError1=0;
@@ -799,9 +801,11 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
             err1=grib_get_double(h1,"unpackedError",&packingError1);
             err2=grib_get_double(h2,"unpackedError",&packingError2);
             if (packingCompare && !err1 && !err2) {
+                /* packingError specified by user and message supports it */
                 /* GRIB-972: Not all GRIBs have unpackedError key! */
                 value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2;
                 compare_double= &compare_double_absolute;
+                compareAbsolute=1;
             }
         } else if ( !grib_inline_rstrcmp(name,"InDegrees")) {
             packingError1=0.0005;
@@ -866,7 +870,12 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
                 if (*dval2 > 360 ) dnew2 -= 360.0 ;
             }
             value_tolerance*=tolerance_factor;
-            if (verbose) printf("  (%d values) tolerance=%g\n",(int)len1,value_tolerance);
+            if (verbose) {
+                printf("  (%d values) tolerance=%g \t",(int)len1,value_tolerance);
+                if (compare_double == &compare_double_absolute) printf("using compare_double_absolute");
+                if (compare_double == &compare_double_relative) printf("using compare_double_relative");
+                printf("\n");
+            }
             for(i = 0; i < len1; i++) {
                 if((diff=compare_double(pv1++, pv2++, value_tolerance))!=0) {
                     countdiff++;
