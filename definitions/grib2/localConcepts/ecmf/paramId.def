@@ -9239,24 +9239,6 @@
 	 parameterCategory = 240 ;
 	 parameterNumber = 10 ;
 	}
-#Maximum discharge in 15 day forecast
-'240019' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 19 ;
-	}
-#Maximum rain in 24 hours over the 15 day forecast
-'240023' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 23 ;
-	}
-#Accumulated precipitation over the 15 day forecast
-'240027' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 27 ;
-	}
 #Stream function gradient
 '129001' = {
 	 discipline = 192 ;

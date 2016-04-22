@@ -33,7 +33,6 @@ regular_latlon_surface.grib1
 regular_latlon_surface_constant.grib1
 second_ord_rbr.grib1
 small_ensemble.grib1
-spectral_compex.grib1
 spectral_complex.grib1
 spherical_model_level.grib1
 spherical_pressure_level.grib1
