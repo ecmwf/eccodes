@@ -1032,8 +1032,20 @@ static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,
     switch (descriptors[iBitmapOperator]->code) {
     case 236000:
         cancel_bitmap(self);
-        while (descriptors[edi[iel]]->code>=100000) iel--;
+        while (descriptors[edi[iel]]->code>=100000 || iel==0) iel--;
         bitmapEndElementsDescriptorsIndex=iel;
+        /*looking for another bitmap and pointing before it.
+          This behaviour is not documented in the Manual on codes it is copied from BUFRDC
+          ECC-243
+        */
+        while (iel>0) {
+          while ( descriptors[edi[iel]]->code!=236000 && descriptors[edi[iel]]->code!=222000 && iel!=0) iel--;
+          if (iel!=0) {
+            while (descriptors[edi[iel]]->code>=100000 && iel!=0) iel--;
+            bitmapEndElementsDescriptorsIndex=iel;
+          }
+        }
+
         i=iBitmapOperator+1;
         if (descriptors[i]->code==101000)  {
             iDelayedReplication=iBitmapOperator+2;
@@ -1500,6 +1512,7 @@ static GRIB_INLINE void reset_deeper_qualifiers(grib_accessor* significanceQuali
 typedef struct bitmap_s {
     grib_accessors_list* cursor;
     grib_accessors_list* referredElement;
+    grib_accessors_list* referredElementStart;
 } bitmap_s;
 
 static grib_accessor* get_element_from_bitmap(grib_accessor* a,bitmap_s* bitmap)
@@ -1593,12 +1606,17 @@ static int bitmap_init(bitmap_s* bitmap,grib_accessors_list* bitmapStart,int bit
 {
     int ret=0,i;
     bitmap->cursor=bitmapStart->next;
+    if (bitmap->referredElementStart!=NULL) {
+      bitmap->referredElement=bitmap->referredElementStart;
+      return ret;
+    }
     bitmap->referredElement=bitmapStart;
     while (bitmap_ref_skip(bitmap->referredElement,&ret)) bitmap->referredElement=bitmap->referredElement->prev;
     for (i=1;i<bitmapSize;i++) {
         if (bitmap->referredElement==NULL) return GRIB_INTERNAL_ERROR;
         bitmap->referredElement=bitmap->referredElement->prev;
     }
+    bitmap->referredElementStart=bitmap->referredElement;
     return ret;
 }
 
@@ -1803,13 +1821,15 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
             elementAccessor=create_accessor_from_descriptor(a,associatedFieldAccessor,section,ide,iss,dump,count);
             associatedFieldAccessor=NULL;
             if (elementFromBitmap && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
+              if (descriptor->code != 33007) {
                 grib_accessor* newAccessor=grib_accessor_clone(elementAccessor,section,&err);
                 newAccessor->parent=groupSection;
                 newAccessor->name=grib_context_strdup(c,elementFromBitmap->name);
                 grib_push_accessor(newAccessor,groupSection->block);
                 grib_accessors_list_push(self->dataAccessors,newAccessor);
+              }
 
-                err=grib_accessor_add_attribute(elementFromBitmap,elementAccessor,1);
+              err=grib_accessor_add_attribute(elementFromBitmap,elementAccessor,1);
             } else if (elementAccessor) {
 
                 switch (descriptor->code) {
@@ -1827,6 +1847,8 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                     break;
                 case 31021:
                     associatedFieldSignificanceAccessor=elementAccessor;
+                    break;
+                case 33007:
                     break;
                 default:
                     grib_push_accessor(elementAccessor,section->block);
