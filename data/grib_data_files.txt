@@ -66,7 +66,6 @@ second_ord_rbr.grib1
 simple_bitmap.grib
 simple.grib
 small_ensemble.grib1
-spectral_compex.grib1
 spectral_complex.grib1
 spherical_model_level.grib1
 spherical_model_level.grib2
