@@ -1620,6 +1620,19 @@ static int bitmap_init(bitmap_s* bitmap,grib_accessors_list* bitmapStart,int bit
     return ret;
 }
 
+static grib_accessor* accessor_or_attribute_with_same_name(grib_accessor* a,const char* name) {
+  if (grib_accessor_has_attributes(a)==0) {
+    return a;
+  } else {
+    grib_accessor* ok=a;
+    grib_accessor* next;
+    while ((next=grib_accessor_get_attribute(ok,name))!=NULL) {
+      ok=next;
+    }
+    return ok;
+  }
+}
+
 static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
@@ -1829,7 +1842,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 grib_accessors_list_push(self->dataAccessors,newAccessor);
               }
 
-              err=grib_accessor_add_attribute(elementFromBitmap,elementAccessor,1);
+              err=grib_accessor_add_attribute(accessor_or_attribute_with_same_name(elementFromBitmap,elementAccessor->name),elementAccessor,1);
             } else if (elementAccessor) {
 
                 switch (descriptor->code) {

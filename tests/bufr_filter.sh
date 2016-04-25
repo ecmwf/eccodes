@@ -1180,3 +1180,134 @@ diff ${f}.log.ref ${f}.log
 rm -f ${f}.log ${f}.log.ref
 rm -f $fLog $fOut $fRules 
 
+#-----------------------------------------------------------
+# Test:  several percentConfidence for same element
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set unpack=1;
+print "numberOfSubsets=[numberOfSubsets]";
+print "#1#windDirection";
+print "[#1#windDirection!10', ']";
+print "#1#windDirection->percentConfidence";
+print "[#1#windDirection->percentConfidence!10', ']";
+print "#1#windDirection->percentConfidence->percentConfidence";
+print "[#1#windDirection->percentConfidence->percentConfidence!10', ']";
+print "#1#windDirection->percentConfidence->percentConfidence->percentConfidence";
+print "[#1#windDirection->percentConfidence->percentConfidence->percentConfidence!10', ']";
+print "#2#windDirection";
+print "[#2#windDirection!10', ']";
+print "#2#windDirection->percentConfidence=[#2#windDirection->percentConfidence]";
+print "#2#windDirection->percentConfidence->percentConfidence=[#2#windDirection->percentConfidence->percentConfidence]";
+print "#2#windDirection->percentConfidence->percentConfidence->percentConfidence=[#2#windDirection->percentConfidence->percentConfidence->percentConfidence]";
+print "#3#windDirection";
+print "[#3#windDirection!10', ']";
+print "#3#windDirection->percentConfidence=[#3#windDirection->percentConfidence]";
+print "#3#windDirection->percentConfidence->percentConfidence=[#3#windDirection->percentConfidence->percentConfidence]";
+print "#3#windDirection->percentConfidence->percentConfidence->percentConfidence=[#3#windDirection->percentConfidence->percentConfidence->percentConfidence]";
+EOF
+
+f="go15_87.bufr"
+
+echo "Test: create new BUFR with bitmap" >> $fLog
+echo "file: $f" >> $fLog
+
+${tools_dir}bufr_filter $fRules $f  > ${f}.log
+
+cat > ${f}.log.ref <<EOF
+numberOfSubsets=128
+#1#windDirection
+335, 336, 341, 342, 337, 339, 343, 348, 343, 348, 
+352, 351, 9, 15, 8, 8, 6, 13, 16, 29, 
+18, 16, 2, 359, 359, 30, 31, 21, 22, 27, 
+23, 14, 17, 7, 37, 28, 36, 17, 20, 70, 
+346, 20, 69, 59, 66, 73, 59, 82, 82, 93, 
+102, 136, 246, 41, 52, 57, 68, 39, 106, 127, 
+149, 169, 239, 135, 166, 323, 323, 292, 263, 238, 
+232, 260, 257, 239, 290, 252, 252, 239, 242, 249, 
+243, 243, 294, 277, 267, 266, 253, 252, 244, 239, 
+237, 243, 242, 244, 246, 272, 261, 249, 248, 248, 
+242, 250, 249, 237, 237, 244, 279, 275, 254, 248, 
+251, 247, 255, 245, 255, 238, 241, 233, 278, 266, 
+268, 253, 262, 259, 256, 258, 242, 250
+#1#windDirection->percentConfidence
+99, 92, 100, 93, 99, 90, 87, 89, 97, 87, 
+91, 94, 90, 97, 94, 93, 99, 99, 98, 90, 
+93, 83, 91, 97, 98, 93, 87, 89, 95, 97, 
+93, 99, 93, 87, 85, 96, 75, 91, 76, 99, 
+57, 58, 99, 82, 100, 59, 70, 80, 84, 80, 
+85, 62, 51, 92, 82, 54, 67, 63, 67, 81, 
+86, 77, 70, 79, 73, 68, 60, 81, 63, 91, 
+85, 67, 78, 78, 72, 85, 91, 99, 95, 93, 
+56, 83, 90, 74, 98, 97, 93, 99, 60, 98, 
+96, 75, 77, 99, 95, 70, 91, 57, 81, 94, 
+87, 66, 55, 90, 99, 93, 59, 72, 58, 66, 
+75, 80, 94, 97, 77, 98, 99, 59, 95, 78, 
+63, 97, 92, 96, 81, 86, 91, 66
+#1#windDirection->percentConfidence->percentConfidence
+53, 50, 57, 52, 69, 63, 62, 58, 73, 65, 
+65, 62, 73, 70, 76, 75, 58, 60, 64, 58, 
+76, 70, 54, 59, 61, 76, 54, 56, 71, 69, 
+58, 62, 71, 53, 77, 59, 64, 51, 56, 66, 
+57, 58, 68, 56, 70, 57, 63, 58, 66, 65, 
+67, 65, 68, 72, 72, 55, 58, 56, 57, 62, 
+59, 59, 78, 60, 55, 57, 65, 54, 68, 59, 
+58, 54, 58, 72, 72, 67, 66, 62, 68, 65, 
+66, 76, 64, 70, 70, 65, 63, 69, 54, 63, 
+62, 57, 71, 72, 65, 55, 64, 54, 73, 74, 
+64, 59, 67, 67, 58, 70, 53, 69, 61, 55, 
+62, 64, 59, 63, 72, 59, 62, 62, 58, 51, 
+53, 63, 62, 58, 67, 68, 60, 59
+#1#windDirection->percentConfidence->percentConfidence->percentConfidence
+96, 90, 96, 89, 98, 91, 88, 87, 96, 86, 
+89, 95, 91, 96, 93, 92, 95, 97, 96, 88, 
+92, 84, 91, 97, 98, 90, 84, 88, 94, 96, 
+90, 98, 93, 84, 86, 92, 77, 91, 80, 92, 
+51, 54, 99, 78, 98, 62, 69, 77, 86, 80, 
+80, 55, 54, 87, 83, 61, 56, 52, 59, 72, 
+73, 65, 75, 71, 62, 60, 58, 69, 68, 90, 
+85, 62, 73, 78, 73, 86, 90, 97, 95, 85, 
+60, 86, 91, 76, 94, 95, 92, 98, 60, 94, 
+94, 71, 81, 99, 95, 69, 90, 58, 84, 94, 
+86, 66, 60, 90, 99, 92, 59, 71, 60, 67, 
+77, 84, 94, 96, 78, 97, 88, 65, 90, 72, 
+61, 96, 92, 95, 80, 86, 89, 64
+#2#windDirection
+326, 326, 333, 338, 337, 339, 338, 340, 341, 343, 
+347, 352, 10, 13, 7, 7, 1, 16, 17, 22, 
+16, 14, 9, 2, 4, 33, 25, 29, 26, 32, 
+21, 20, 22, 11, 41, 34, 33, 31, 31, 68, 
+33, 55, 64, 53, 58, 76, 51, 68, 84, 92, 
+97, 101, 249, 38, 47, 51, 65, 68, 111, 145, 
+114, 129, 242, 160, 178, 357, 346, 325, 276, 228, 
+235, 242, 242, 243, 301, 253, 248, 243, 244, 243, 
+243, 243, 295, 285, 272, 268, 257, 253, 245, 245, 
+243, 245, 243, 241, 242, 282, 267, 259, 251, 250, 
+247, 245, 246, 240, 240, 241, 280, 277, 264, 260, 
+257, 252, 250, 249, 251, 240, 240, 238, 278, 263, 
+262, 258, 262, 260, 255, 253, 245, 247
+#2#windDirection->percentConfidence=0
+#2#windDirection->percentConfidence->percentConfidence=0
+#2#windDirection->percentConfidence->percentConfidence->percentConfidence=0
+#3#windDirection
+335, 336, 341, 342, 337, 339, 343, 348, 343, 348, 
+352, 351, 9, 15, 8, 8, 6, 13, 16, 29, 
+18, 16, 2, 359, 359, 30, 31, 21, 22, 27, 
+23, 14, 17, 7, 37, 28, 36, 17, 20, 70, 
+346, 20, 69, 59, 66, 73, 59, 82, 82, 93, 
+102, 136, 246, 41, 52, 57, 68, 39, 106, 127, 
+149, 169, 239, 135, 166, 323, 323, 292, 263, 238, 
+232, 260, 257, 239, 290, 252, 252, 239, 242, 249, 
+243, 243, 294, 277, 267, 266, 253, 252, 244, 239, 
+237, 243, 242, 244, 246, 272, 261, 249, 248, 248, 
+242, 250, 249, 237, 237, 244, 279, 275, 254, 248, 
+251, 247, 255, 245, 255, 238, 241, 233, 278, 266, 
+268, 253, 262, 259, 256, 258, 242, 250
+#3#windDirection->percentConfidence=0
+#3#windDirection->percentConfidence->percentConfidence=0
+#3#windDirection->percentConfidence->percentConfidence->percentConfidence=0
+EOF
+
+diff ${f}.log.ref ${f}.log 
+
+rm -f ${f}.log ${f}.log.ref
+
