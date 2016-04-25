@@ -1311,3 +1311,30 @@ diff ${f}.log.ref ${f}.log
 
 rm -f ${f}.log ${f}.log.ref
 
+#-----------------------------------------------------------
+# Test: Data with two bias correction wrong bitmap
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set unpack=1;
+print "[pressure->percentConfidence]";
+print "[pressure->differenceStatisticalValue]";
+print "[pressure->differenceStatisticalValue->differenceStatisticalValue]";
+EOF
+
+f="metar_with_2_bias.bufr"
+
+echo "Test: Data with two bias correction wrong bitmap" >> $fLog
+echo "file: $f" >> $fLog
+
+${tools_dir}bufr_filter $fRules $f  > ${f}.log
+
+cat > ${f}.log.ref <<EOF
+70
+-1e+100
+-100
+EOF
+
+diff ${f}.log.ref ${f}.log 
+
+rm -f ${f}.log ${f}.log.ref
+
