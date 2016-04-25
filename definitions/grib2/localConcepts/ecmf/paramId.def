@@ -9233,12 +9233,6 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 255 ;
 	}
-#Flood alert levels
-'240010' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 10 ;
-	}
 #Stream function gradient
 '129001' = {
 	 discipline = 192 ;

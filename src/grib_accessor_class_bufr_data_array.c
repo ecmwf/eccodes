@@ -406,6 +406,7 @@ static int get_descriptors(grib_accessor* a)
         self->canBeMissing[i]=grib_bufr_descriptor_can_be_missing(self->expanded->v[i]);
 
     ret=grib_get_long(h,self->numberOfSubsetsName,&(self->numberOfSubsets));
+    if (ret != GRIB_SUCCESS) return ret;
     ret=grib_get_long(h,self->compressedDataName,&(self->compressedData));
 
     return ret;
@@ -745,7 +746,7 @@ static double decode_double_value(grib_context* c,unsigned char* data,long* pos,
 
 static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
         grib_buffer* b,unsigned char* data,long *pos,int i,bufr_descriptor* descriptor,long elementIndex,
-	grib_darray* dval,grib_sarray* sval)
+        grib_darray* dval,grib_sarray* sval)
 {
     grib_accessor* a=(grib_accessor*)self;
     grib_darray* dar=0;
@@ -862,7 +863,7 @@ static int encode_new_bitmap(grib_context* c,grib_buffer* buff,long *pos,int idx
 
 static int encode_new_element(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
         grib_buffer* buff,unsigned char* data,long *pos,int i,bufr_descriptor* descriptor,
-	long elementIndex,grib_darray* dval,grib_sarray* sval)
+        long elementIndex,grib_darray* dval,grib_sarray* sval)
 {
     int ii;
     char* csval=0;
@@ -964,7 +965,7 @@ static int encode_new_replication(grib_context* c,grib_accessor_bufr_data_array*
 
 static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
         grib_buffer* buff,unsigned char* data,long *pos,int i,bufr_descriptor* descriptor,
-	long elementIndex,grib_darray* dval,grib_sarray* sval)
+        long elementIndex,grib_darray* dval,grib_sarray* sval)
 {
     int idx,j;
     int err=0;
@@ -1673,11 +1674,10 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
     /*int forceGroupClosure=0;*/
 
     creatorGroup.op         = "bufr_group";
-    creatorGroup.name="groupNumber";
+    creatorGroup.name       = "groupNumber";
     creatorGroup.name_space = "";
-    creatorGroup.flags     = GRIB_ACCESSOR_FLAG_DUMP;
+    creatorGroup.flags      = GRIB_ACCESSOR_FLAG_DUMP;
     creatorGroup.set        = 0;
-
 
     if (self->dataAccessors) {
         grib_accessors_list_delete(c,self->dataAccessors);
@@ -2026,7 +2026,6 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
         if (self->elementsDescriptorsIndex) grib_viarray_delete(c,self->elementsDescriptorsIndex);
         self->elementsDescriptorsIndex=grib_viarray_new(c,100,100);
     }
-
 
     numberOfDescriptors=grib_bufr_descriptors_array_used_size(self->expanded);
 
