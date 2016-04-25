@@ -385,4 +385,3 @@ uegabe.bufr.num.ref
 syno.bufr.out.ref
 airep.bufr.out.ref
 new_replication.bufr.ref
-metar_with_2_bias.bufr
