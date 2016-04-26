@@ -1338,3 +1338,30 @@ diff ${f}.log.ref ${f}.log
 
 rm -f ${f}.log ${f}.log.ref
 
+#-----------------------------------------------------------
+# Test: Data with substituted value
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set unpack=1;
+print "[#1#geopotential]";
+print "[#1#geopotential->percentConfidence]";
+print "[#1#geopotential->substitutedValue]";
+EOF
+
+f="temp-land-with-substituted-values.bufr"
+
+echo "Test: Data with substituted value" >> $fLog
+echo "file: $f" >> $fLog
+
+${tools_dir}bufr_filter $fRules $f  > ${f}.log
+
+cat > ${f}.log.ref <<EOF
+110
+70
+3
+EOF
+
+diff ${f}.log.ref ${f}.log 
+
+rm -f ${f}.log ${f}.log.ref
+

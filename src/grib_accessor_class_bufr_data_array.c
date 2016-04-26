@@ -1040,7 +1040,7 @@ static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,
           ECC-243
         */
         while (iel>0) {
-          while ( descriptors[edi[iel]]->code!=236000 && descriptors[edi[iel]]->code!=222000 && iel!=0) iel--;
+          while ( descriptors[edi[iel]]->code!=236000 && descriptors[edi[iel]]->code!=222000 && descriptors[edi[iel]]->code!=223000 && iel!=0) iel--;
           if (iel!=0) {
             while (descriptors[edi[iel]]->code>=100000 && iel!=0) iel--;
             bitmapEndElementsDescriptorsIndex=iel;
@@ -1589,6 +1589,7 @@ static int bitmap_ref_skip(grib_accessors_list* al,int* err)
 
     switch (code[0]) {
     case 222000:
+    case 223000:
     case 224000:
     case 225000:
     case 232000:
@@ -1786,7 +1787,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 dump=1;
                 bitmapSize[bitmapIndex]++;
                 bitmap.cursor=0;
-            } else if (descriptor->code == 222000 || descriptor->code == 224000 || descriptor->code == 225000 ) {
+            } else if (descriptor->code == 222000 || descriptor->code == 223000 || descriptor->code == 224000 || descriptor->code == 225000 ) {
                 bitmap.referredElement=NULL;
                 qualityPresent=1;
                 incrementBitmapIndex=1;
@@ -1834,7 +1835,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
             elementAccessor=create_accessor_from_descriptor(a,associatedFieldAccessor,section,ide,iss,dump,count);
             associatedFieldAccessor=NULL;
             if (elementFromBitmap && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
-              if (descriptor->code != 33007) {
+              if (descriptor->code != 33007 && descriptor->code != 223255 ) {
                 grib_accessor* newAccessor=grib_accessor_clone(elementAccessor,section,&err);
                 newAccessor->parent=groupSection;
                 newAccessor->name=grib_context_strdup(c,elementFromBitmap->name);
