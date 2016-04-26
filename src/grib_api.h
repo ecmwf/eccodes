@@ -444,6 +444,7 @@ grib_handle* grib_handle_new_from_message(grib_context* c, void* data, size_t da
 *  Create a handle from a user message in memory. The message will not be freed at the end.
 *  The message will be copied as soon as a modification is needed.
 *  This function works also with multi field messages.
+*  Note: The data pointer argument may be modified
 *
 * @param c           : the context from which the handle will be created (NULL for default context)
 * @param data        : the actual message
