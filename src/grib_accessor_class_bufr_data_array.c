@@ -1031,6 +1031,7 @@ static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,
     int err=0;
 
     switch (descriptors[iBitmapOperator]->code) {
+    case 223000:
     case 236000:
         cancel_bitmap(self);
         while (descriptors[edi[iel]]->code>=100000 || iel==0) iel--;
@@ -2120,8 +2121,6 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                     if (decoding) push_zero_element(self,dval);
                     elementIndex++;
                     break;
-                case 23:
-                    /* substituted values marker operator */
                 case 24:
                     /*first-order statistical values marker operator*/
                 case 32:
@@ -2135,7 +2134,27 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                         elementIndex++;
                     } else {
                         if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
-                        if (decoding) push_zero_element(self,dval);
+                        if (decoding) { 
+                          push_zero_element(self,dval);
+                        }
+                        elementIndex++;
+                    }
+                    break;
+                case 23:
+                    if (descriptors[i]->Y==255) {
+                        index=get_next_bitmap_descriptor_index(self,elementsDescriptorsIndex,dval);
+                        err=codec_element(c,self,iss,buffer,data,&pos,index,0,elementIndex,dval,sval);
+                        if (err) return err;
+                        /* self->expanded->v[index] */
+                        if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
+                        elementIndex++;
+                    } else {
+                        if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
+                        if (decoding) {
+                          push_zero_element(self,dval);
+                          if (descriptors[i+1] && descriptors[i+1]->code!=236000 )
+                            build_bitmap(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                        }
                         elementIndex++;
                     }
                     break;

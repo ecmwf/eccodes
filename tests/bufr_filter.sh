@@ -1358,7 +1358,7 @@ ${tools_dir}bufr_filter $fRules $f  > ${f}.log
 cat > ${f}.log.ref <<EOF
 110
 70
-3
+100
 EOF
 
 diff ${f}.log.ref ${f}.log 
