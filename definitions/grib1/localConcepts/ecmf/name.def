@@ -9264,6 +9264,11 @@
 	 table2Version = 230 ;
 	 indicatorOfParameter = 22 ;
 	}
+#Direct solar radiation (variable resolution)
+'Direct solar radiation (variable resolution)' = {
+	 table2Version = 230 ;
+	 indicatorOfParameter = 47 ;
+	}
 #Large-scale precipitation fraction (variable resolution)
 'Large-scale precipitation fraction (variable resolution)' = {
 	 table2Version = 230 ;

@@ -37,7 +37,7 @@ alias Lo1 =  longitudeOfFirstGridPoint;
 
 #  Resolution and component flag
 # NOTE 1 NOT FOUND
-flags[1] resolutionAndComponentFlag 'grib2/tables/[tablesVersion]/3.3.table' : dump;
+flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : dump;
 
 #  LaD - Latitude where Dx and Dy are specified
 signed[4] LaD  : edition_specific;

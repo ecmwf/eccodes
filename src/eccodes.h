@@ -160,6 +160,7 @@ codes_index* codes_index_new(codes_context* c, const char* keys,int *err);
  * @param filename    : name of the file of messages to be indexed
  * @return            0 if OK, integer value on error
  */
+int codes_index_add_file(grib_index *index, const char *filename);
 int codes_index_write(codes_index *index, const char *filename);
 codes_index* codes_index_read(codes_context* c,const char* filename,int *err);
 
@@ -946,6 +947,7 @@ void codes_grib_multi_support_off(codes_context* c);
 void codes_grib_multi_support_reset_file(codes_context* c, FILE* f);
 
 char* codes_samples_path(const codes_context *c);
+char* codes_definition_path(const codes_context *c);
 /*! @} */
 
 /**

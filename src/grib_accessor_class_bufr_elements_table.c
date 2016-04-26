@@ -181,7 +181,7 @@ char** str_split(char* a_str, const char a_delim)
     count++;
 
     result = (char**)malloc(sizeof(char*) * count);
-
+    Assert(result);
     if (result)
     {
         size_t idx  = 0;

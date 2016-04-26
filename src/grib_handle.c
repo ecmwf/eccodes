@@ -243,8 +243,8 @@ grib_handle* grib_handle_new_from_samples ( grib_context* c, const char* name )
 {
     grib_handle* g = 0;
     if ( c == NULL ) c = grib_context_get_default();
-    c->handle_file_count=0;
-    c->handle_total_count=0;
+    grib_context_set_handle_file_count(c,0);
+    grib_context_set_handle_total_count(c,0);
 
     /*
        g = grib_internal_template(c,name);
@@ -336,8 +336,8 @@ grib_handle* grib_handle_new_from_message_copy ( grib_context* c, const void* da
     void* copy =NULL;
     if ( c == NULL ) c = grib_context_get_default();
 
-    c->handle_file_count=0;
-    c->handle_total_count=0;
+    grib_context_set_handle_file_count(c,0);
+    grib_context_set_handle_total_count(c,0);
     copy = grib_context_malloc ( c,size );
     if ( !copy ) {
         return NULL;
@@ -356,8 +356,8 @@ grib_handle* grib_handle_new_from_partial_message_copy ( grib_context* c, const 
     grib_handle *g = NULL;
     void* copy =NULL;
     if ( c == NULL ) c = grib_context_get_default();
-    c->handle_file_count=0;
-    c->handle_total_count=0;
+    grib_context_set_handle_file_count(c,0);
+    grib_context_set_handle_total_count(c,0);
     copy = grib_context_malloc ( c,size );
     if ( !copy )
         return NULL;
@@ -374,8 +374,8 @@ grib_handle* grib_handle_new_from_partial_message ( grib_context* c,void* data, 
 {
     grib_handle  *gl = NULL;
     if ( c == NULL ) c = grib_context_get_default();
-    c->handle_file_count=0;
-    c->handle_total_count=0;
+    grib_context_set_handle_file_count(c,0);
+    grib_context_set_handle_total_count(c,0);
     gl = grib_new_handle ( c );
     gl->partial = 1;
     return grib_handle_create ( gl,  c, data,  buflen );
@@ -541,8 +541,8 @@ static grib_handle* grib_handle_new_multi ( grib_context* c,unsigned char** data
     }
 
     gl->buffer->property = GRIB_MY_BUFFER;
-    c->handle_file_count++;
-    c->handle_total_count++;
+    grib_context_increment_handle_file_count(c);
+    grib_context_increment_handle_total_count(c);
 
     return gl;
 }
@@ -700,8 +700,8 @@ static grib_handle* grib_handle_new_from_file_multi ( grib_context* c, FILE* f,i
 
     gl->offset=gm->offset;
     gl->buffer->property = GRIB_MY_BUFFER;
-    c->handle_file_count++;
-    c->handle_total_count++;
+    grib_context_increment_handle_file_count(c);
+    grib_context_increment_handle_total_count(c);
 
     if ( c->gts_header_on && gtslen >=8 )
     {
@@ -725,7 +725,7 @@ grib_handle* grib_new_from_file ( grib_context* c, FILE* f,int headers_only,int 
     if ( c->multi_support_on ) h=grib_handle_new_from_file_multi ( c,f,error );
     else h=grib_handle_new_from_file_no_multi ( c,f,headers_only,error );
 
-    if ( h && h->offset == 0 ) c->handle_file_count=1;
+    if ( h && h->offset == 0 ) grib_context_set_handle_file_count(c,1);
 
     if (h) {
         h->product_kind = PRODUCT_GRIB;
@@ -772,8 +772,8 @@ grib_handle* gts_new_from_file ( grib_context* c, FILE* f,int *error )
     gl->offset=offset;
     gl->buffer->property = GRIB_MY_BUFFER;
     gl->product_kind = PRODUCT_GTS;
-    c->handle_file_count++;
-    c->handle_total_count++;
+    grib_context_increment_handle_file_count(c);
+    grib_context_increment_handle_total_count(c);
 
     return gl;
 }
@@ -810,8 +810,8 @@ grib_handle* taf_new_from_file ( grib_context* c, FILE* f,int *error )
     gl->offset=offset;
     gl->buffer->property = GRIB_MY_BUFFER;
     gl->product_kind = PRODUCT_TAF;
-    c->handle_file_count++;
-    c->handle_total_count++;
+    grib_context_increment_handle_file_count(c);
+    grib_context_increment_handle_total_count(c);
 
     return gl;
 }
@@ -848,8 +848,8 @@ grib_handle* metar_new_from_file ( grib_context* c, FILE* f,int *error )
     gl->offset=offset;
     gl->buffer->property = GRIB_MY_BUFFER;
     gl->product_kind = PRODUCT_METAR;
-    c->handle_file_count++;
-    c->handle_total_count++;
+    grib_context_increment_handle_file_count(c);
+    grib_context_increment_handle_total_count(c);
 
     return gl;
 }
@@ -886,8 +886,8 @@ grib_handle* bufr_new_from_file ( grib_context* c, FILE* f,int *error )
     gl->offset=offset;
     gl->buffer->property = GRIB_MY_BUFFER;
     gl->product_kind = PRODUCT_BUFR;
-    c->handle_file_count++;
-    c->handle_total_count++;
+    grib_context_increment_handle_file_count(c);
+    grib_context_increment_handle_total_count(c);
 
     return gl;
 }
@@ -924,8 +924,8 @@ grib_handle* any_new_from_file ( grib_context* c, FILE* f,int *error )
     gl->offset=offset;
     gl->buffer->property = GRIB_MY_BUFFER;
     gl->product_kind = PRODUCT_ANY;
-    c->handle_file_count++;
-    c->handle_total_count++;
+    grib_context_increment_handle_file_count(c);
+    grib_context_increment_handle_total_count(c);
 
     return gl;
 }
@@ -989,8 +989,8 @@ static grib_handle* grib_handle_new_from_file_no_multi ( grib_context* c,FILE* f
     gl->offset=offset;
     gl->buffer->property = GRIB_MY_BUFFER;
 
-    c->handle_file_count++;
-    c->handle_total_count++;
+    grib_context_increment_handle_file_count(c);
+    grib_context_increment_handle_total_count(c);
 
     if ( c->gts_header_on && gtslen >=8 )
     {

@@ -9149,24 +9149,6 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 48 ;
 	}
-#Unbalanced component of specific humidity
-'Unbalanced component of specific humidity' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 54 ;
-	}
-#Unbalanced component of specific cloud liquid water content
-'Unbalanced component of specific cloud liquid water content' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 55 ;
-	}
-#Unbalanced component of specific cloud ice water content
-'Unbalanced component of specific cloud ice water content' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 56 ;
-	}
 #Total column rain water
 'Total column rain water' = {
 	 discipline = 192 ;
@@ -9250,30 +9232,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 255 ;
-	}
-#Flood alert levels
-'Flood alert levels' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 10 ;
-	}
-#Maximum discharge in 15 day forecast
-'Maximum discharge in 15 day forecast' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 19 ;
-	}
-#Maximum rain in 24 hours over the 15 day forecast
-'Maximum rain in 24 hours over the 15 day forecast' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 23 ;
-	}
-#Accumulated precipitation over the 15 day forecast
-'Accumulated precipitation over the 15 day forecast' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 27 ;
 	}
 #Stream function gradient
 'Stream function gradient' = {

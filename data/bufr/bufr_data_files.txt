@@ -125,6 +125,7 @@ syno_1.bufr
 syno_2.bufr
 syno_3.bufr
 syno_4.bufr
+syno_multi.bufr
 synop_multi_subset.bufr
 temp_101.bufr
 temp_102.bufr
@@ -138,3 +139,5 @@ tropical_cyclone.bufr
 uegabe.bufr
 PraticaTemp.bufr
 profiler_european.bufr
+metar_with_2_bias.bufr
+temp-land-with-substituted-values.bufr

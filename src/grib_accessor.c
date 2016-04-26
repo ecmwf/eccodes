@@ -653,6 +653,7 @@ const char* grib_get_type_name(int type)
     return "unknown";
 }
 
+/*
 int grib_accessor_clear_attributes(grib_accessor* a)
 {
     int id;
@@ -661,6 +662,7 @@ int grib_accessor_clear_attributes(grib_accessor* a)
     }
     return 0;
 }
+*/
 
 int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr,int nest_if_clash)
 {

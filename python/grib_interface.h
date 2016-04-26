@@ -34,6 +34,7 @@ int grib_c_new_from_file(FILE *f, int *gid, int headers_only);
 int grib_c_new_any_from_file(FILE *f, int headers_only,int *gid);
 int grib_c_new_bufr_from_file(FILE *f, int headers_only,int *gid);
 int grib_c_new_gts_from_file(FILE *f,int headers_only, int *gid);
+int grib_c_new_metar_from_file(FILE* f,int headers_only, int* gid);
 int grib_c_new_from_index(int *iid, int *gid);
 int grib_c_index_new_from_file(char *file, char *keys, int *gid);
 int grib_c_index_add_file(int* iid, char* file);
@@ -84,6 +85,7 @@ int grib_c_find_nearest_multiple(int *gid, int *is_lsm, double *inlats, double *
 int grib_c_get_real8_array(int *gid, char *key, double *val, int *size);
 int grib_c_set_real8_array(int *gid, char *key, double *val, int *size);
 int grib_c_get_string(int *gid, char *key, char *val, size_t *lsize);
+int grib_c_get_string_array(int* gid, char* key, char** val, size_t *lsize);
 int grib_c_set_string(int *gid, char *key, char *val, int len2);
 int grib_c_get_data_real4(int *gid, float *lats, float *lons, float *values, size_t *size);
 int grib_c_get_data_real8(int *gid, double *lats, double *lons, double *values, size_t *size);

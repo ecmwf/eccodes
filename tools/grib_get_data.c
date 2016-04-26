@@ -116,7 +116,12 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         while(grib_iterator_next(iter,lat++,lon++,val++)) {}
     } else if (err==GRIB_NOT_IMPLEMENTED || err==GRIB_SUCCESS){
         size=numberOfPoints;
-        grib_get_double_array(h,"values",data_values,&size);
+        err = grib_get_double_array(h,"values",data_values,&size);
+        if (err) {
+            grib_context_log(h->context,GRIB_LOG_ERROR,"Cannot decode values: %s",
+                    grib_get_error_message(err));
+            exit(1);
+        }
         if (size!=numberOfPoints) {
             if (!grib_options_on("q"))
                 fprintf(dump_file,"ERROR: wrong number of points %d\n",(int)numberOfPoints);
@@ -279,8 +284,9 @@ static grib_values* get_key_values(grib_runtime_options* options,grib_handle* h)
 
 }
 
-int grib_no_handle_action(int err) {
-  fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
-  return 0;
+int grib_no_handle_action(int err)
+{
+    fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
+    return 0;
 }
 

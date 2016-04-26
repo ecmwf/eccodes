@@ -9149,24 +9149,6 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 48 ;
 	}
-#Unbalanced component of specific humidity
-'ucq' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 54 ;
-	}
-#Unbalanced component of specific cloud liquid water content
-'ucclwc' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 55 ;
-	}
-#Unbalanced component of specific cloud ice water content
-'ucciwc' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 56 ;
-	}
 #Total column rain water
 'tcrw' = {
 	 discipline = 192 ;
@@ -9250,30 +9232,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 255 ;
-	}
-#Flood alert levels
-'flal' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 10 ;
-	}
-#Maximum discharge in 15 day forecast
-'mxcq15d' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 19 ;
-	}
-#Maximum rain in 24 hours over the 15 day forecast
-'mxtp24h15d' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 23 ;
-	}
-#Accumulated precipitation over the 15 day forecast
-'acctp15d' = {
-	 discipline = 192 ;
-	 parameterCategory = 240 ;
-	 parameterNumber = 27 ;
 	}
 #Stream function gradient
 'strfgrd' = {

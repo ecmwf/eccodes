@@ -23,19 +23,18 @@ integer(kind=4)    :: numPoints
 real(kind=8)       :: average
 real(kind=8)       :: the_max
 real(kind=8)       :: the_min
-character(len=256) :: error
 
-call codes_open_file(ifile, &
+  call codes_open_file(ifile, &
            '../../data/constant_field.grib1','r')
 
-! a new grib message is loaded from file
-! igrib is the grib id to be used in subsequent calls
+  ! A new GRIB message is loaded from file
+  ! igrib is the grib id to be used in subsequent calls
   call codes_grib_new_from_file(ifile,igrib)
 
-!  get the size of the values array
+  ! Get the size of the values array
   call codes_get_size(igrib,'values',numPoints)
 
-! get data values
+  ! Get data values
   print*, 'number of points ', numPoints
   allocate(values(numPoints), stat=iret)
 

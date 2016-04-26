@@ -24,7 +24,7 @@ grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value */
         {"f",0,0,0,1,0},
         {"c",0,0,1,0,0},
-/*      {"r",0,0,0,1,0}, */
+        /*      {"r",0,0,0,1,0}, */
         {"q",0,0,1,0,0},
         {"p:",0,0,1,1,0},
         {"s:",0,0,0,1,0},
@@ -42,7 +42,6 @@ grib_option grib_options[]={
         {"T:",0,0,1,0,"B"},
         {"S",0,0,1,0,0},
         {"g",0,0,0,1,0},
-/*      {"G",0,0,0,1,0}, */
         {"7",0,0,0,1,0},
         {"v",0,0,0,1,0}
 };
@@ -88,7 +87,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     int err=0;
     if (!options->skip) {
-
         if (options->set_values_count != 0)
             err=grib_set_values(h,options->set_values,options->set_values_count);
 
@@ -117,8 +115,8 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     return 0;
 }
 
-int grib_no_handle_action(int err) {
-  fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
-  return 0;
+int grib_no_handle_action(int err)
+{
+    fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
+    return 0;
 }
-

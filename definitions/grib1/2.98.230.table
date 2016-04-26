@@ -7,6 +7,7 @@
 44 44 ESVAR Snow evaporation (variable resolution) (kg m**-2)
 45 45 SMLTVAR Snowmelt (variable resolution) (kg m**-2)
 46 46 SDURVAR Solar duration (variable resolution) (s)
+47 47 DSRPVAR Direct solar radiation (variable resolution) (J m**-2)
 50 50 LSPFVAR Large-scale precipitation fraction (variable resolution) (s)
 57 57 UVBVAR Downward UV radiation at the surface (variable resolution) (J m**-2)
 58 58 PARVAR Photosynthetically active radiation at the surface (variable resolution) (J m**-2)

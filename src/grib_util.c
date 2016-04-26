@@ -98,10 +98,10 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom,grib_handle* 
     p=buffer;
     off=0;
     for (i=0;i<=hfrom->sections_count;i++) {
-        grib_handle* h;
-        if (sections[i]) h=hfrom;
-        else h=hto;
-        p=(unsigned char*)memcpy(p,h->buffer->data+section_offset[i],section_length[i]);
+        grib_handle* hand = NULL;
+        if (sections[i]) hand=hfrom;
+        else hand=hto;
+        p=(unsigned char*)memcpy(p,hand->buffer->data+section_offset[i],section_length[i]);
         section_offset[i]=off;
         off+=section_length[i];
         p+=section_length[i];
@@ -777,7 +777,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
         /* convert to second_order if not constant field */
         if (setSecondOrder ) {
-            size_t slen=17;
+            size_t packTypeLen=17;
             int ii=0;
             int constant=1;
             double missingValue=0;
@@ -801,21 +801,21 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                     long numberOfGroups;
                     grib_handle* htmp=grib_handle_clone(h);
 
-                    slen=17;
-                    grib_set_string(htmp,"packingType","grid_second_order",&slen);
+                    packTypeLen=17;
+                    grib_set_string(htmp,"packingType","grid_second_order",&packTypeLen);
                     grib_get_long(htmp,"numberOfGroups",&numberOfGroups);
                     /* GRIBEX is not able to decode overflown numberOfGroups with SPD */
                     if (numberOfGroups>65534 && h->context->no_spd ) {
-                        slen=24;
-                        grib_set_string(h,"packingType","grid_second_order_no_SPD",&slen);
+                        packTypeLen=24;
+                        grib_set_string(h,"packingType","grid_second_order_no_SPD",&packTypeLen);
                         grib_handle_delete(htmp);
                     } else {
                         grib_handle_delete(h);
                         h=htmp;
                     }
                 } else {
-                    slen=17;
-                    grib_set_string(h,"packingType","grid_second_order",&slen);
+                    packTypeLen=17;
+                    grib_set_string(h,"packingType","grid_second_order",&packTypeLen);
                     grib_set_double_array(h,"values",data_values,data_values_count);
                 }
             } else {
@@ -1186,17 +1186,17 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     if((*err = grib_set_double_array(outh,"values",data_values,data_values_count)) != 0)
     {
         FILE* ferror;
-        long i,count;
+        long i,lcount;
         grib_context* c=grib_context_get_default();
 
         ferror=fopen("error.data","w");
-        count=0;
+        lcount=0;
         fprintf(ferror,"# data_values_count=%ld\n",(long)data_values_count);
         fprintf(ferror,"set values={ ");
         for (i=0;i<data_values_count-1;i++) {
             fprintf(ferror,"%g, ",data_values[i]);
-            if (count>10) {fprintf(ferror,"\n");count=0;}
-            count++;
+            if (lcount>10) {fprintf(ferror,"\n");lcount=0;}
+            lcount++;
         }
         fprintf(ferror,"%g }",data_values[data_values_count-1]);
         fclose(ferror);
@@ -1254,7 +1254,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         }
         if (!constant) {
             if (editionNumber == 1 ) {
-                long numberOfGroups;
+                long numberOfGroups=0;
                 grib_handle* htmp=grib_handle_clone(outh);
 
                 slen=17;
@@ -1489,6 +1489,7 @@ int parse_keyval_string(char* grib_tool, char* arg, int values_required, int def
     p=strtok(arg,",");
     while (p != NULL) {
         values[i].name=(char*)calloc(1,strlen(p)+1);
+        Assert(values[i].name);
         strcpy((char*)values[i].name,p);
         p=strtok(NULL,",");
         i++;

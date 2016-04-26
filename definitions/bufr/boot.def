@@ -17,6 +17,8 @@ transient inputExtendedDelayedDescriptorReplicationFactor={-1};
 #negative value=not used
 transient inputShortDelayedDescriptorReplicationFactor={-1};
 
+transient inputDataPresentIndicator={-1};
+
 transient extractSubset=-1;
 transient extractSubset=-1;
 transient extractSubset=-1;

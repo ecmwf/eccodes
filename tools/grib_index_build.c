@@ -55,7 +55,6 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-
     int ret=0;
     grib_context* c=grib_context_get_default();
 
@@ -108,10 +107,9 @@ void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
 
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
-    grib_index_key* keys;
+    grib_index_key* the_keys;
     grib_string_list* values;
     int first;
-
 
     if (compress_index) {
         grib_index_compress(idx);
@@ -120,18 +118,18 @@ int grib_tool_finalise_action(grib_runtime_options* options)
             grib_tool_name,options->outfile->name);
     printf("--- ");
     first=1;
-    keys=idx->keys;
-    while (keys) {
+    the_keys=idx->keys;
+    while (the_keys) {
         if (!first) printf(", ");
-        printf("%s",keys->name);
-        keys=keys->next;
+        printf("%s",the_keys->name);
+        the_keys=the_keys->next;
         first=0;
     }
     printf("\n");
-    keys=idx->keys;
-    while (keys) {
-        printf("--- %s = { ",keys->name);
-        values=keys->values;
+    the_keys=idx->keys;
+    while (the_keys) {
+        printf("--- %s = { ",the_keys->name);
+        values=the_keys->values;
         first=1;
         while (values) {
             if (!first) printf(", ");
@@ -140,7 +138,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
             values=values->next;
         }
         printf(" }\n");
-        keys=keys->next;
+        the_keys=the_keys->next;
     }
     printf("--- %d messages indexed\n",idx->count);
 
@@ -150,8 +148,8 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     return 0;
 }
 
-int grib_no_handle_action(int err) {
-  fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
-  return 0;
+int grib_no_handle_action(int err)
+{
+    fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
+    return 0;
 }
-

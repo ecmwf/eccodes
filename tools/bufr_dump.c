@@ -18,25 +18,27 @@
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value*/
         {"j:","s/f/a","\n\t\tJSON mode (JavaScript Object Notation)."
-                    "\n\t\tOptions: s->structure, f->flat (only data), a->all attributes\n",1,1,"s"},
+                    "\n\t\tOptions: s->structure, f->flat (only data), a->all attributes"
+                    "\n\t\tDefault mode is structure.\n",
+                1,1,"s"},
         {"S",0,0,1,0,0},
         {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
-        {"D",0,0,0,1,0},
+        /* {"D",0,0,0,1,0},  */  /* See ECC-215 */
         {"d",0,"Print all data values.\n",1,1,0},
         {"u",0,"Print only some values.\n",0,1,0},
-        /*     {"C",0,0,0,1,0}, */
+        /* {"C",0,0,0,1,0}, */
         {"t",0,0,0,1,0},
         {"f",0,0,0,1,0},
         {"H",0,0,0,1,0},
         {"a",0,0,0,1,0},
         {"w:",0,0,0,1,0},
         {"s:",0,0,0,1,0},
-        /*     {"M",0,0,0,1,0}, */
+        /* {"M",0,0,0,1,0}, */
         {"T:",0,0,1,0,"B"},
         {"7",0,0,0,1,0},
         {"V",0,0,0,1,0},
         {"q",0,0,1,0,0}
-       /* {"x",0,0,0,1,0} */
+        /* {"x",0,0,0,1,0} */
 };
 
 char* grib_tool_description="Dump the content of a BUFR file in different formats.";
@@ -49,8 +51,8 @@ static int first_handle=1;
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
 /**
- *grib_dump
- *Dump the content of a BUFR file
+ * bufr_dump
+ * Dump the content of a BUFR file
  *
  */
 int main(int argc, char *argv[])
@@ -65,12 +67,12 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    int opt=grib_options_on("C")+grib_options_on("O")+grib_options_on("D");
+    int opt=grib_options_on("C")+grib_options_on("O");
 
     options->dump_mode = "default";
 
     if (opt > 1) {
-        printf("%s: simultaneous j/C/O/D options not allowed\n",grib_tool_name);
+        printf("%s: simultaneous j/C/O options not allowed\n",grib_tool_name);
         exit(1);
     }
 
@@ -101,11 +103,12 @@ int grib_tool_init(grib_runtime_options* options)
                 | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
+    /* See ECC-215
     if (grib_options_on("D")) {
         options->dump_mode = "debug";
         options->dump_flags = GRIB_DUMP_FLAG_VALUES
                 |  GRIB_DUMP_FLAG_READ_ONLY;
-    }
+    }  */
 
     if (grib_options_on("a"))
         options->dump_flags |= GRIB_DUMP_FLAG_ALIASES;
@@ -118,7 +121,6 @@ int grib_tool_init(grib_runtime_options* options)
 
     if (grib_options_on("d") && !grib_options_on("u"))
         options->dump_flags |= GRIB_DUMP_FLAG_ALL_DATA;
-
 
     return 0;
 }
@@ -177,7 +179,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             a=grib_find_accessor(h,"numericValues");
             al=accessor_bufr_data_array_get_dataAccessors(a);
             options->dump_flags=GRIB_DUMP_FLAG_ALL_ATTRIBUTES;
-            grib_dump_bufr_flat(al,h,stdout,options->dump_mode,options->dump_flags,0);
+            codes_dump_bufr_flat(al,h,stdout,options->dump_mode,options->dump_flags,0);
             break;
           case 's':
             err=grib_set_long(h,"unpack",1);
@@ -233,15 +235,14 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 }
 
 int grib_no_handle_action(int err) {
-  if (json ){
-    if (first_handle) {
-      fprintf(dump_file,"{ \"messages\" : [ \n");
-      first_handle=0;
-    } else {
-      fprintf(dump_file,",\n");
+    if (json ){
+        if (first_handle) {
+            fprintf(dump_file,"{ \"messages\" : [ \n");
+            first_handle=0;
+        } else {
+            fprintf(dump_file,",\n");
+        }
     }
-  }
-  fprintf(dump_file,"\"ERROR: unreadable message\"\n");
-  return 0;
+    fprintf(dump_file,"\"ERROR: unreadable message\"\n");
+    return 0;
 }
-

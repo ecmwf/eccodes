@@ -15,7 +15,7 @@ endif()
 
 
 # Download all data files doing md5 check on each
-ecbuild_get_test_multidata( TARGET eccodes_get_gribs
+ecbuild_get_test_multidata( TARGET eccodes_download_gribs
                             NOCHECK
                             NAMES ${files_to_download} )
 

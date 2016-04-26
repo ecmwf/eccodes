@@ -96,7 +96,7 @@ const char* bad = NULL;
 FILE* fgood = NULL;
 FILE* fbad  = NULL;
 
-void check(const char* name,int a)
+static void check(const char* name,int a)
 {
     if(!a) {
         printf("%s, field %d [%s]: %s failed\n",file,field,param,name);
@@ -104,15 +104,17 @@ void check(const char* name,int a)
     }
 }
 
-void warn(const char* name,int a)
+/*
+static void warn(const char* name,int a)
 {
     if(!a) {
         printf("%s, field %d [%s]: %s failed\n",file,field,param,name);
         warning++;
     }
 }
+*/
 
-void save(grib_handle* h, const char *name,FILE* f)
+static void save(grib_handle* h, const char *name,FILE* f)
 {
     size_t size;
     const void *buffer;
@@ -133,7 +135,7 @@ void save(grib_handle* h, const char *name,FILE* f)
     }
 }
 
-long get(grib_handle *h,const char* what)
+static long get(grib_handle *h,const char* what)
 {
     int e; long val;
     if((e = grib_get_long(h,what,&val)) != GRIB_SUCCESS)
@@ -145,7 +147,7 @@ long get(grib_handle *h,const char* what)
     return val;
 }
 
-double dget(grib_handle *h,const char* what)
+static double dget(grib_handle *h,const char* what)
 {
     int e; double val;
     if((e = grib_get_double(h,what,&val)) != GRIB_SUCCESS)
@@ -157,28 +159,28 @@ double dget(grib_handle *h,const char* what)
     return val;
 }
 
-int missing(grib_handle *h,const char* what)
+static int missing(grib_handle *h,const char* what)
 {
     int err=0;
     return grib_is_missing(h,what,&err);
 }
 
-int eq(grib_handle *h,const char* what,long value)
+static int eq(grib_handle *h,const char* what,long value)
 {
     return get(h,what) == value;
 }
 
-int ne(grib_handle *h,const char* what,long value)
+static int ne(grib_handle *h,const char* what,long value)
 {
     return get(h,what) != value;
 }
 
-int ge(grib_handle *h,const char* what,long value)
+static int ge(grib_handle *h,const char* what,long value)
 {
     return get(h,what) >= value;
 }
 
-int le(grib_handle *h,const char* what,long value)
+static int le(grib_handle *h,const char* what,long value)
 {
     return get(h,what) <= value;
 }
@@ -188,7 +190,7 @@ static int DBL_EQUAL(double d1, double d2, double tolerance)
     return fabs(d1-d2) <= tolerance;
 }
 
-void gaussian_grid(grib_handle* h)
+static void gaussian_grid(grib_handle* h)
 {
     const double tolerance = 1.0/1000000.0; /* angular tolerance for grib2: micro degrees */
     long n = get(h,"numberOfParallelsBetweenAPoleAndTheEquator"); /* This is the key N */
@@ -238,7 +240,7 @@ void gaussian_grid(grib_handle* h)
     if(missing(h,"numberOfPointsAlongAParallel"))   /* same as key Ni */
     {
         /* If missing, this is a REDUCED gaussian grid */
-        const long MAXIMUM_RESOLUTION = 320;
+        const long MAXIMUM_RESOLUTION = 640;
         CHECK(get(h,"PLPresent"));
         CHECK(DBL_EQUAL(west, 0.0, tolerance));
         if (n > MAXIMUM_RESOLUTION) {
@@ -249,8 +251,8 @@ void gaussian_grid(grib_handle* h)
     else
     {
         /* REGULAR gaussian grid */
-        long west = get(h,"longitudeOfFirstGridPoint");
-        long east = get(h,"longitudeOfLastGridPoint");
+        long l_west = get(h,"longitudeOfFirstGridPoint");
+        long l_east = get(h,"longitudeOfLastGridPoint");
         long parallel = get(h,"numberOfPointsAlongAParallel");
         long we = get(h,"iDirectionIncrement");
         double dwest  = dget(h,"longitudeOfFirstGridPointInDegrees");
@@ -258,7 +260,7 @@ void gaussian_grid(grib_handle* h)
         double dwe = dget(h,"iDirectionIncrementInDegrees");
         /*printf("parallel=%ld east=%ld west=%ld we=%ld\n",parallel,east,west,we);*/
 
-        CHECK(parallel == (east-west)/we + 1);
+        CHECK(parallel == (l_east-l_west)/we + 1);
         CHECK(fabs((deast-dwest)/dwe + 1 - parallel) < 1e-10);
         CHECK(!get(h,"PLPresent"));
     }
@@ -267,15 +269,15 @@ void gaussian_grid(grib_handle* h)
 
     if(get(h,"PLPresent")) {
         size_t count, i, nPl;
-        int e = grib_get_size(h,"pl",&count);
+        int err_code = grib_get_size(h,"pl",&count);
         double *pl;
         double expected_lon2 = 0;
         long total, max_pl = 0;
         long numberOfValues = get(h,"numberOfValues");
         long numberOfDataPoints = get(h,"numberOfDataPoints");
 
-        if(e) {
-            printf("%s, field %d [%s]: cannot number of pl: %s\n",file,field,param,grib_get_error_message(e));
+        if(err_code) {
+            printf("%s, field %d [%s]: cannot number of pl: %s\n",file,field,param,grib_get_error_message(err_code));
             error++;
             return;
         }
@@ -284,9 +286,9 @@ void gaussian_grid(grib_handle* h)
         CHECK(pl != NULL);
 
         nPl = count;
-        if((e =  grib_get_double_array(h,"pl",pl,&count)))
+        if((err_code =  grib_get_double_array(h,"pl",pl,&count)))
         {
-            printf("%s, field %d [%s]: cannot get pl: %s\n",file,field,param,grib_get_error_message(e));
+            printf("%s, field %d [%s]: cannot get pl: %s\n",file,field,param,grib_get_error_message(err_code));
             free(pl);
             error++;
             return;
@@ -711,7 +713,7 @@ static void given_thickness(grib_handle* h,const parameter* p,double min,double 
     CHECK(!missing(h,"scaledValueOfSecondFixedSurface"));
 }
 
-void latlon_grid(grib_handle* h)
+static void latlon_grid(grib_handle* h)
 {
     const double tolerance = 1.0/1000000.0; /* angular tolerance for grib2: micro degrees */
     long data_points = get(h,"numberOfDataPoints");
@@ -824,7 +826,7 @@ void latlon_grid(grib_handle* h)
 
 #define X(x) printf("%s=%ld ",#x,get(h,#x))
 
-void check_parameter(grib_handle* h,double min,double max)
+static void check_parameter(grib_handle* h,double min,double max)
 {
     int err;
     int best = -1;
@@ -920,7 +922,7 @@ void check_parameter(grib_handle* h,double min,double max)
     }
 }
 
-void verify(grib_handle* h)
+static void verify(grib_handle* h)
 {
     double min = 0,max = 0;
 
@@ -1093,7 +1095,7 @@ void verify(grib_handle* h)
 
 }
 
-void validate(const char* path)
+static void validate(const char* path)
 {
     FILE *f = fopen(path,"r");
     grib_handle *h = 0;
@@ -1142,7 +1144,7 @@ void validate(const char* path)
     }
 }
 
-void scan(const char* name)
+static void scan(const char* name)
 {
     DIR *dir;
     if((dir = opendir(name)) != NULL)
@@ -1162,7 +1164,7 @@ void scan(const char* name)
         validate(name);
 }
 
-void usage()
+static void usage()
 {
     printf("tigge_check [options] grib_file grib_file ...\n");
     printf("   -l: check local area model fields\n");
@@ -1176,7 +1178,7 @@ void usage()
     exit(1);
 }
 
-int main(int argc,const char** argv)
+int main(int argc, char** argv)
 {
     int i;
     int err = 0;

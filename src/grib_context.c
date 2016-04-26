@@ -83,6 +83,7 @@ static void* default_long_lasting_malloc(const grib_context* c, size_t size)
     cntp++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
+    Assert(ret);
     return ret;
 }
 
@@ -103,6 +104,7 @@ static void* default_buffer_malloc(const grib_context* c, size_t size)
     cntp++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
+    Assert(ret);
     return ret;
 }
 
@@ -110,6 +112,7 @@ static void* default_buffer_realloc(const grib_context* c, void* p, size_t size)
 {
     void* ret;
     ret=realloc(p,size);
+    Assert(ret);
     return ret;
 }
 
@@ -130,6 +133,7 @@ static void* default_malloc(const grib_context* c, size_t size)
     cnt++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
+    Assert(ret);
     return ret;
 }
 
@@ -137,6 +141,7 @@ static void* default_realloc(const grib_context* c, void* p, size_t size)
 {
     void* ret;
     ret=realloc(p,size);
+    Assert(ret);
     return ret;
 }
 #endif
@@ -652,6 +657,11 @@ char* grib_samples_path(const grib_context *c)
     if (!c) c=grib_context_get_default();
     return c->grib_samples_path;
 }
+char* grib_definition_path(const grib_context *c)
+{
+    if (!c) c=grib_context_get_default();
+    return c->grib_definition_files_path;
+}
 
 void grib_context_free(const grib_context* c, void* p)
 {
@@ -763,7 +773,6 @@ void* grib_context_realloc(const grib_context* c, void *p,size_t size)
     void* q;
     if (!c) c=grib_context_get_default();
     q=c->realloc_mem(c,p,size);
-
     if(!q) {
         grib_context_log(c,GRIB_LOG_FATAL,"grib_context_realloc: error allocating %lu bytes",(unsigned long)size);
         exit(1);
@@ -810,7 +819,6 @@ void grib_context_buffer_free(const grib_context* c, void* p)
 void* grib_context_buffer_realloc(const grib_context* c, void *p,size_t size)
 {
     void* q=c->realloc_buffer_mem(c,p,size);
-
     if(!q) {
         grib_context_log(c,GRIB_LOG_FATAL,"grib_context_buffer_realloc: error allocating %lu bytes",(unsigned long)size);
         exit(1);
@@ -901,3 +909,40 @@ void grib_context_print(const grib_context *c, void* descriptor,const char* fmt,
     va_end(list);
     c->print(c,descriptor,msg);
 }
+
+void grib_context_set_handle_file_count(grib_context *c, int new_count)
+{
+    if (!c) c=grib_context_get_default();
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex_c);
+    c->handle_file_count = new_count;
+    GRIB_MUTEX_UNLOCK(&mutex_c);
+}
+
+void grib_context_set_handle_total_count(grib_context *c, int new_count)
+{
+    if (!c) c=grib_context_get_default();
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex_c);
+    c->handle_total_count = new_count;
+    GRIB_MUTEX_UNLOCK(&mutex_c);
+}
+
+void grib_context_increment_handle_file_count(grib_context *c)
+{
+    if (!c) c=grib_context_get_default();
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex_c);
+    c->handle_file_count++;
+    GRIB_MUTEX_UNLOCK(&mutex_c);
+}
+
+void grib_context_increment_handle_total_count(grib_context *c)
+{
+    if (!c) c=grib_context_get_default();
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex_c);
+    c->handle_total_count++;
+    GRIB_MUTEX_UNLOCK(&mutex_c);
+}
+

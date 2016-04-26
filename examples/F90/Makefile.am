@@ -21,6 +21,7 @@ noinst_PROGRAMS  = eccodes_f_grib_index \
                    eccodes_f_grib_nearest \
                    eccodes_f_grib_precision \
                    eccodes_f_grib_print_data \
+                   eccodes_f_grib_print_data_static \
                    eccodes_f_grib_set_keys \
                    eccodes_f_grib_set_bitmap \
                    eccodes_f_set_missing \
@@ -32,7 +33,7 @@ noinst_PROGRAMS  = eccodes_f_grib_index \
                    eccodes_f_new_from_file \
                    eccodes_f_copy_namespace \
                    eccodes_f_get_set_uuid \
-                   eccodes_f_set_gvc \
+                   eccodes_f_grib_set_gvc \
                    eccodes_f_grib_clone \
                    eccodes_f_bufr_clone \
                    eccodes_f_bufr_expanded \
@@ -60,6 +61,7 @@ eccodes_f_grib_multi_SOURCES=grib_multi.f90
 eccodes_f_grib_nearest_SOURCES=grib_nearest.f90
 eccodes_f_grib_precision_SOURCES=grib_precision.f90
 eccodes_f_grib_print_data_SOURCES=grib_print_data.f90
+eccodes_f_grib_print_data_static_SOURCES=grib_print_data_static.f90
 eccodes_f_grib_set_keys_SOURCES=grib_set_keys.f90
 eccodes_f_grib_set_bitmap_SOURCES=grib_set_bitmap.f90
 eccodes_f_set_missing_SOURCES=set_missing.f90
@@ -71,7 +73,7 @@ eccodes_f_read_from_file_SOURCES=read_from_file.f90
 eccodes_f_new_from_file_SOURCES=new_from_file.f90
 eccodes_f_copy_namespace_SOURCES=copy_namespace.f90
 eccodes_f_get_set_uuid_SOURCES=get_set_uuid.f90
-eccodes_f_set_gvc_SOURCES=set_gvc.f90
+eccodes_f_grib_set_gvc_SOURCES=grib_set_gvc.f90
 eccodes_f_grib_clone_SOURCES=grib_clone.f90
 eccodes_f_bufr_attributes_SOURCES=bufr_attributes.f90
 eccodes_f_bufr_clone_SOURCES=bufr_clone.f90

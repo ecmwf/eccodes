@@ -773,12 +773,9 @@ grib_action* grib_parse_file( grib_context* gc,const char* filename)
 
         if(error)
         {
-#if 1
             if (a) grib_action_delete(gc,a);
             GRIB_MUTEX_UNLOCK(&mutex_file);
             return NULL;
-#endif
-            a = NULL;
         }
 
         af =(grib_action_file*)grib_context_malloc_clear_persistent(gc,sizeof(grib_action_file));

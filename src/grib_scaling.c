@@ -16,6 +16,7 @@
 
 #define GRIB_EPSILON  10E-12
 
+/* Return n to the power of s */
 double grib_power(long s,long n)
 {
     double divisor = 1.0;
@@ -34,18 +35,31 @@ double grib_power(long s,long n)
 
 long grib_get_binary_scale_fact(double max, double min, long bpval,int *ret)
 {
-    double range         = max - min;
-    double  zs           = 1;
-    long          scale  = 0;
+    double range   = max - min;
+    double  zs     = 1;
+    long    scale  = 0;
     const long last = 127; /* Depends on edition, should be parameter */
+    unsigned long maxint = 0;
 
-    unsigned long maxint = grib_power(bpval,2) - 1;
-    double dmaxint=(double)maxint;
+    /* See ECC-246
+      unsigned long maxint = grib_power(bpval,2) - 1;
+      double dmaxint=(double)maxint;
+    */
+    const double dmaxint = grib_power(bpval,2) - 1;
+    if (dmaxint >= ULONG_MAX) {
+        *ret = GRIB_OUT_OF_RANGE; /*overflow*/
+        return 0;
+    }
+    maxint = (unsigned long)dmaxint; /* Now it's safe to cast */
 
     *ret=0;
+    if (bpval < 1) {
+        *ret = GRIB_ENCODING_ERROR; /* constant field */
+        return 0;
+    }
 
     Assert (bpval >= 1);
-    /*  printf("---- Maxint %ld range=%g\n",maxint,range);      */
+    /*   printf("---- Maxint %ld range=%g\n",maxint,range);    */
     if(range == 0)
         return 0;
 
@@ -76,7 +90,6 @@ long grib_get_binary_scale_fact(double max, double min, long bpval,int *ret)
         scale = -last;
     }
     Assert(scale <= last);
-
     return scale;
 }
 
@@ -92,7 +105,7 @@ long grib_get_bits_per_value(double max, double min, long binary_scale_factor)
 
     if (maxint==0) maxint=1;
 
-    /*  printf("---- Maxint %ld range=%g\n",maxint,range);   */
+    /*  printf("---- Maxint %ld range=%g\n",maxint,range);     */
     if(range == 0)
         return 0;
 

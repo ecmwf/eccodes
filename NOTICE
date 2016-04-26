@@ -8,11 +8,13 @@ Parts of the definitions provided by WMO (http://www.wmo.int/pages/index_en.html
 Microsoft Visual Studio support provided with the help of
 Finnish Meteorological Institute (FMI).
 
-Decoding double array optimisations provided by
-Norwegian Meteorological Institute.
-
 Adaptive Entropy Coding (CCSDS) provided by
 The Max-Planck-Institute for Meteorology and Deutsches Klimarechenzentrum GmbH.
 
 IBM POWER optimisations were developed at
 The Max-Planck-Institute for Meteorology.
+
+Decoding double array optimisations provided by
+Norwegian Meteorological Institute.
+
+OpenMP API Support provided by Eric Millin.

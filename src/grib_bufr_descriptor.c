@@ -103,6 +103,12 @@ void grib_bufr_descriptor_set_scale(bufr_descriptor* v,long scale) {
   v->factor=grib_power(-scale,10);
 }
 
+int grib_bufr_descriptor_can_be_missing(bufr_descriptor* v) {
+  if (v->code==31031 || v->code==999999 ) return 0;
+  if (v->width == 1) return 0;
+  return 1;
+}
+
 void grib_bufr_descriptor_delete(bufr_descriptor* v) {
 
   grib_context* c=NULL;

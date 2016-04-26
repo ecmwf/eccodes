@@ -120,8 +120,10 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             GRIB_CHECK_NOLINE(grib_get_double_array(h,"values",v,&size),0);
         }
 
-        if (options->set_values_count != 0)
+        if (options->set_values_count != 0) {
             err=grib_set_values(h,options->set_values,options->set_values_count);
+            if( err != GRIB_SUCCESS && options->fail) exit(err);
+        }
 
         if ( options->repack ) {
 
@@ -136,7 +138,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             }
 #endif
 
-            GRIB_CHECK_NOLINE(grib_set_double_array(h,"values",v,size),0);
+            if (err == GRIB_SUCCESS) {
+                GRIB_CHECK_NOLINE(grib_set_double_array(h,"values",v,size),0);
+            }
             free(v);
         }
 

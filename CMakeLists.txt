@@ -1,4 +1,14 @@
-############################################################################################
+#
+# Copyright 2005-2016 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation
+# nor does it submit to any jurisdiction.
+#
+###############################################################################
 # cmake options:
 #
 #       -DCMAKE_BUILD_TYPE=Debug|RelWithDebInfo|Release|Production
@@ -6,7 +16,7 @@
 #
 #       -DCMAKE_MODULE_PATH=/path/to/ecbuild/cmake
 
-cmake_minimum_required( VERSION 2.8.4 FATAL_ERROR )
+cmake_minimum_required( VERSION 2.8.11 FATAL_ERROR )
 
 project( eccodes C )
 
@@ -157,9 +167,10 @@ set( CMAKE_THREAD_PREFER_PTHREAD 1 ) # find thread library, but prefer pthreads
 find_package(Threads REQUIRED)
 
 # debug
-message(STATUS " CMAKE_THREAD_LIBS_INIT=${CMAKE_THREAD_LIBS_INIT}")
-message(STATUS " CMAKE_USE_PTHREADS_INIT=${CMAKE_USE_PTHREADS_INIT}")
-message(STATUS " HAVE_ECCODES_THREADS=${HAVE_ECCODES_THREADS}")
+ecbuild_info(" CMAKE_THREAD_LIBS_INIT=${CMAKE_THREAD_LIBS_INIT}")
+ecbuild_info(" CMAKE_USE_PTHREADS_INIT=${CMAKE_USE_PTHREADS_INIT}")
+ecbuild_info(" HAVE_ECCODES_THREADS=${HAVE_ECCODES_THREADS}")
+
 
 set( GRIB_PTHREADS 0 )
 set( GRIB_OMP_THREADS 0 )
@@ -167,7 +178,7 @@ set( GRIB_LINUX_PTHREADS 0 )
 #if( HAVE_ECCODES_THREADS AND CMAKE_THREAD_LIBS_INIT )
 if( HAVE_ECCODES_THREADS )
     if( NOT ${CMAKE_USE_PTHREADS_INIT} )
-        message( FATAL_ERROR "Pthreads is not supported on your system: thread library found=[${CMAKE_THREAD_LIBS_INIT}]" )
+        ecbuild_critical("Pthreads is not supported on your system: thread library found=[${CMAKE_THREAD_LIBS_INIT}]")
     endif()
     set( GRIB_PTHREADS 1 )
     if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )
@@ -180,11 +191,11 @@ endif()
 
 # Cannot have both options
 if( HAVE_ECCODES_THREADS AND HAVE_ECCODES_OMP_THREADS )
-    message( FATAL_ERROR "Cannot enable both POSIX threads and OMP! Please specify just one option" )
+    ecbuild_critical("Cannot enable both POSIX threads and OMP! Please specify just one option")
 endif()
 
-message(STATUS " GRIB_PTHREADS=${GRIB_PTHREADS}")
-message(STATUS " GRIB_OMP_THREADS=${GRIB_OMP_THREADS}")
+ecbuild_info(" GRIB_PTHREADS=${GRIB_PTHREADS}")
+ecbuild_info(" GRIB_OMP_THREADS=${GRIB_OMP_THREADS}")
 
 set( GRIB_MEM_ALIGN 0 )
 if( ENABLE_ALIGN_MEMORY )
@@ -238,7 +249,7 @@ if( CMAKE_COMPILER_IS_GNUCC )
     ecbuild_add_c_flags("-pedantic")
 endif()
 
-############################################################################################
+###############################################################################
 # contents
 
 ### export package to other ecbuild packages
@@ -286,7 +297,7 @@ ecbuild_dont_pack( DIRS
 
 add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 
-############################################################################################
+###############################################################################
 # export to other projects
 
 # temporary -- add support for ecbuild 1.0.x sub-project inclusion
@@ -297,15 +308,16 @@ if( EC_HAVE_FORTRAN )
     list( APPEND ECCODES_LIBRARIES eccodes_f90 )
 endif()
 
+# Bundle
 if( NOT PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME )
   set( ECCODES_FOUND            TRUE PARENT_SCOPE )
   set( ECCODES_DEFINITIONS      ${ECCODES_DEFINITIONS}  PARENT_SCOPE )# includes already TPL definitions
   set( ECCODES_INCLUDE_DIRS     ${ECCODES_INCLUDE_DIRS} ${ECCODES_EXTRA_INCLUDE_DIRS} PARENT_SCOPE )
   set( ECCODES_LIBRARIES        ${ECCODES_LIBRARIES}    ${ECCODES_EXTRA_LIBRARIES} ${CMATH_LIBRARIES} PARENT_SCOPE )
-  set( ECCODES_SAMPLES_PATH     ${ECCODES_SAMPLES_PATH} PARENT_SCOPE )
-  set( ECCODES_IFS_SAMPLES_PATH ${ECCODES_IFS_SAMPLES_PATH} PARENT_SCOPE )
-  set( ECCODES_DEFINITION_PATH  ${ECCODES_DEFINITION_PATH} PARENT_SCOPE )
   set( ECCODES_INSTALL_EXTRA_TOOLS  ${ECCODES_INSTALL_EXTRA_TOOLS} PARENT_SCOPE )
+  set( ECCODES_DEFINITION_PATH  ${CMAKE_BINARY_DIR}/${ECCODES_DEFINITION_SUFF}  PARENT_SCOPE )
+  set( ECCODES_SAMPLES_PATH     ${CMAKE_BINARY_DIR}/${ECCODES_SAMPLES_SUFF}     PARENT_SCOPE )
+  set( ECCODES_IFS_SAMPLES_PATH ${CMAKE_BINARY_DIR}/${ECCODES_IFS_SAMPLES_SUFF} PARENT_SCOPE )
 endif()
 
 # pkg-config
@@ -329,19 +341,19 @@ if( EC_HAVE_FORTRAN )
   )
 endif()
 
-############################################################################################
+###############################################################################
 # finalize
 
 ecbuild_install_project( NAME ${CMAKE_PROJECT_NAME} )
 
 ecbuild_print_summary()
 
-message(STATUS "")
-message(STATUS "   +---------------------------+")
-message(STATUS "   |  ecCodes version ${ECCODES_VERSION}   |")
-message(STATUS "   |  Configuration completed  |")
-message(STATUS "   +---------------------------+")
-message(STATUS "")
-message(STATUS "   You can now do 'make' to compile the package, 'ctest' to test it and 'make install' to install it afterwards.")
-message(STATUS "")
-message(STATUS "")
+ecbuild_info("")
+ecbuild_info("   +---------------------------+")
+ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}   |")
+ecbuild_info("   |  Configuration completed  |")
+ecbuild_info("   +---------------------------+")
+ecbuild_info("")
+ecbuild_info("   You can now do 'make' to compile the package, 'ctest' to test it and 'make install' to install it afterwards.")
+ecbuild_info("")
+ecbuild_info("")

@@ -45,6 +45,7 @@ tools/grib_copy
 tools/grib_count
 tools/bufr_count
 tools/codes_count
+tools/codes_bufr_filter
 tools/grib_diff
 tools/grib_dump
 tools/grib_filter
@@ -70,7 +71,6 @@ tools/grib1to2
 tools/bufr_compare
 tools/bufr_copy
 tools/bufr_dump
-tools/bufr_filter
 tools/bufr_get
 tools/bufr_index_build
 tools/bufr_ls
@@ -158,12 +158,13 @@ examples/F90/eccodes_f_grib_nearest
 examples/F90/eccodes_f_new_from_file
 examples/F90/eccodes_f_grib_precision
 examples/F90/eccodes_f_grib_print_data
+examples/F90/eccodes_f_grib_print_data_static
 examples/F90/eccodes_f_read_from_file
 examples/F90/eccodes_f_read_message
 examples/F90/eccodes_f_samples
 examples/F90/eccodes_f_grib_set_keys
 examples/F90/eccodes_f_grib_set_bitmap
-examples/F90/eccodes_f_set_gvc
+examples/F90/eccodes_f_grib_set_gvc
 examples/F90/eccodes_f_set_missing
 examples/F90/eccodes_f_grib_set_pv
 examples/F90/*.sh.log
@@ -197,7 +198,7 @@ tests/*.sh.log
 tests/*.sh.trs
 tests/test-suite.log
 tests/bpv_limit
-tests/double_cmp
+tests/grib_double_cmp
 tests/gauss_sub
 tests/gribex_perf
 tests/index

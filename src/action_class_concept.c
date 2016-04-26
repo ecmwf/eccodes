@@ -171,12 +171,12 @@ grib_action* grib_action_create_concept( grib_context* context,
 
     a->concept     = concept;
     if (concept) {
-        grib_concept_value* c=concept;
+        grib_concept_value* conc_val=concept;
         grib_trie* index=grib_trie_new(context);
-        while (c) {
-            c->index=index;
-            grib_trie_insert_no_replace(index,c->name,c);
-            c=c->next;
+        while (conc_val) {
+            conc_val->index=index;
+            grib_trie_insert_no_replace(index,conc_val->name,conc_val);
+            conc_val=conc_val->next;
         }
     }
     act->name = grib_context_strdup_persistent(context,name);

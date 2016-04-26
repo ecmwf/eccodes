@@ -36,7 +36,7 @@ TESTS = definitions.sh \
         step.sh \
         set.sh \
         iterator.sh \
-        compare.sh \
+        grib_compare.sh \
         level.sh \
         index.sh \
         bitmap.sh \
@@ -66,7 +66,7 @@ $(TESTS): download_data
 download_data:
 	@$(top_srcdir)/data/download.sh $(top_srcdir)/data
 
-noinst_PROGRAMS = packing_check gauss_sub read_any double_cmp packing pack_unpack \
+noinst_PROGRAMS = packing_check gauss_sub read_any grib_double_cmp packing pack_unpack \
                   multi_from_message julian read_index index gribex_perf\
                   jpeg_perf ccsds_perf so_perf png_perf bpv_limit laplacian \
                   unit_tests grib_util_set_spec
@@ -76,7 +76,7 @@ laplacian_SOURCES = laplacian.c
 packing_SOURCES = packing.c
 packing_check_SOURCES = packing_check.c
 read_any_SOURCES = read_any.c
-double_cmp_SOURCES = double_cmp.c
+grib_double_cmp_SOURCES = grib_double_cmp.c
 pack_unpack_SOURCES = pack_unpack.c
 julian_SOURCES = julian.c
 unit_tests_SOURCES = unit_tests.c

@@ -10,6 +10,7 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 list( APPEND tests
       grib_index
       copy_message
+      bufr_copy_message
       grib_get_keys
       get_data
       get_pl
@@ -54,7 +55,7 @@ foreach( tool ${tests} )
                       CONDITION HAVE_FORTRAN
                       RESOURCES bufr_read_scatterometer_f.ref
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
-                      TEST_DEPENDS eccodes_get_gribs eccodes_get_bufrs
+                      TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs
     )
 endforeach()
 
@@ -74,9 +75,16 @@ ecbuild_add_executable( TARGET    f_copy_namespace
                         LINKER_LANGUAGE Fortran
                         LIBS      eccodes_f90 eccodes
 )
-ecbuild_add_executable( TARGET    eccodes_f_set_gvc
+ecbuild_add_executable( TARGET    eccodes_f_grib_set_gvc
                         NOINSTALL
-                        SOURCES   set_gvc.f90
+                        SOURCES   grib_set_gvc.f90
+                        CONDITION HAVE_FORTRAN
+                        LINKER_LANGUAGE Fortran
+                        LIBS      eccodes_f90 eccodes
+)
+ecbuild_add_executable( TARGET    eccodes_f_grib_print_data_static
+                        NOINSTALL
+                        SOURCES   grib_print_data_static.f90
                         CONDITION HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
                         LIBS      eccodes_f90 eccodes

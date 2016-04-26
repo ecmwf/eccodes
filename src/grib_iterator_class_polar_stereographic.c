@@ -218,7 +218,8 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
                     *lats = asin( cosc*sinphi1 + y*sinc*cosphi1/rho ) * RAD2DEG;
                     *lons = (lambda0+atan2(x*sinc, rho*cosphi1*cosc - y*sinphi1*sinc)) * RAD2DEG;
                 }
-                if (*lons<0) *lons+=360;
+                while (*lons<0)   *lons += 360;
+                while (*lons>360) *lons -= 360;
                 lons++;
                 lats++;
 
@@ -246,7 +247,8 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
                     *lats = asin( cosc*sinphi1 + y*sinc*cosphi1/rho ) * RAD2DEG;
                     *lons = (lambda0+atan2(x*sinc, rho*cosphi1*cosc - y*sinphi1*sinc)) * RAD2DEG;
                 }
-                if (*lons<0) *lons+=360;
+                while (*lons<0)   *lons += 360;
+                while (*lons>360) *lons -= 360;
                 lons++;
                 lats++;
 

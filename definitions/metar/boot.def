@@ -32,118 +32,118 @@ group identifier; non_alpha na;
 group g : dump; non_alpha na;
 
 if ( g is "COR" ) {
-		rename(g,cor);
-		alias isCorrection=one;
-		alias status=correction;
-		group g : dump; non_alpha na;
+    rename(g,cor);
+    alias isCorrection=one;
+    alias status=correction;
+    group g : dump; non_alpha na;
 }
 if (length(g) == 4) {
-		include "metar/cccc.def";
+    include "metar/cccc.def";
 } else {
-		if (g is "METAR") {
-				rename(g,metarTwice);
-				group g : dump; non_alpha na;
-				if (length(g) == 4) { include "metar/cccc.def"; }
-				else {
-						constant CCCC = "unknown";
-						constant coordinatesPresent = 0;
-				}
-		} else {
-				constant CCCC = "unknown";
-				constant coordinatesPresent = 0;
-		}
+        if (g is "METAR") {
+                rename(g,metarTwice);
+                group g : dump; non_alpha na;
+                if (length(g) == 4) { include "metar/cccc.def"; }
+                else {
+                    constant CCCC = "unknown";
+                    constant coordinatesPresent = 0;
+                }
+        } else {
+            constant CCCC = "unknown";
+            constant coordinatesPresent = 0;
+        }
 }
 
 alias ls.CCCC=CCCC;
 if (substr(g,6,1) is "Z" && is_integer(g,0,6) ) {
-		rename(g,YYGGgg);
-		modify YYGGgg : hidden;
-		group g : dump ; non_alpha na;
-		year=getenv("METAR_YEAR") : dump;
-		month=getenv("METAR_MONTH") : dump;
-		day = to_string(YYGGgg,0,2) : dump;
-		hour = to_string(YYGGgg,2,2) : dump;
-		minute = to_string(YYGGgg,4,2) : dump;
+    rename(g,YYGGgg);
+    modify YYGGgg : hidden;
+    group g : dump ; non_alpha na;
+    year=getenv("METAR_YEAR") : dump;
+    month=getenv("METAR_MONTH") : dump;
+    day = to_string(YYGGgg,0,2) : dump;
+    hour = to_string(YYGGgg,2,2) : dump;
+    minute = to_string(YYGGgg,4,2) : dump;
     meta dateTime  sprintf("%s-%s-%s %s:%s",year,month,day,hour,minute);
     alias ls.dateTime=dateTime;
 }
 
 
 if ( ! isCorrection && g is "COR" ) {
-		rename(g,cor);
-		alias status=correction;
-		alias isCorrection=one;
-		group g : dump; non_alpha na;
+    rename(g,cor);
+    alias status=correction;
+    alias isCorrection=one;
+    group g : dump; non_alpha na;
 }
 
 include "metar/wrong_delayed.def";
 
 if ( g is "NIL" ) {
-		rename(g,nil); group g : dump;
+        rename(g,nil); group g : dump;
 } else {
-		if (g is "AUTO") {
-				rename(g,auto);
-				alias isAuto=true;
-				group g : dump; non_alpha na;
-		}
+        if (g is "AUTO") {
+                rename(g,auto);
+                alias isAuto=true;
+                group g : dump; non_alpha na;
+        }
 
-		include "metar/wind.def";
-		include "metar/horizontalVisibility.def";
+        include "metar/wind.def";
+        include "metar/horizontalVisibility.def";
 
-		if ( ! isCavok ) {
-				include "metar/present_weather.def";
-				include "metar/clouds.def";
-		}
+        if ( ! isCavok ) {
+                include "metar/present_weather.def";
+                include "metar/clouds.def";
+        }
 
-		include "metar/missing_field.def";
-		include "metar/temperature.def";
-		include "metar/qnh.def";
-		include "metar/colour.def";
-		include "metar/recent_weather.def";
-		include "metar/wind_shear.def";
-		include "metar/sea_state.def";
-		template runwayState "metar/runwayState.def";
-		include "metar/trend1.def";
-		include "metar/trend2.def";
-		include "metar/trend3.def";
-		include "metar/trend4.def";
+        include "metar/missing_field.def";
+        include "metar/temperature.def";
+        include "metar/qnh.def";
+        include "metar/colour.def";
+        include "metar/recent_weather.def";
+        include "metar/wind_shear.def";
+        include "metar/sea_state.def";
+        template runwayState "metar/runwayState.def";
+        include "metar/trend1.def";
+        include "metar/trend2.def";
+        include "metar/trend3.def";
+        include "metar/trend4.def";
 
 }
 
 include "metar/remark.def";
 
 if (length(g) == 0) {
-		modify g : hidden;
+        modify g : hidden;
 } else {
-		if ( ! remarkPresent) {
-				rename(g,skippedGroup);
-				group g : dump; non_alpha na;
-				include "metar/colour.def";
-				include "metar/recent_weather.def";
-				include "metar/wind_shear.def";
-				include "metar/sea_state.def";
-				template runwayState "metar/runwayState.def";
-				include "metar/temperature.def";
-				include "metar/qnh.def";
-				if (!presentTrend1) {
-						include "metar/trend1.def";
-						include "metar/trend2.def";
-						include "metar/trend3.def";
-						include "metar/trend4.def";
-				}
-		}
-		include "metar/remark.def";
-		if ( ! remarkPresent) {
-				if ( length(g) == 0) {
-						modify g : hidden;
-				} else {
-						rename(g,unknownGroup) ;
-				}
-		}
-		group notDecoded("=") : dump;
-		if (remarkPresent) {
-				rename(notDecoded,remark);
-		}
+        if ( ! remarkPresent) {
+                rename(g,skippedGroup);
+                group g : dump; non_alpha na;
+                include "metar/colour.def";
+                include "metar/recent_weather.def";
+                include "metar/wind_shear.def";
+                include "metar/sea_state.def";
+                template runwayState "metar/runwayState.def";
+                include "metar/temperature.def";
+                include "metar/qnh.def";
+                if (!presentTrend1) {
+                        include "metar/trend1.def";
+                        include "metar/trend2.def";
+                        include "metar/trend3.def";
+                        include "metar/trend4.def";
+                }
+        }
+        include "metar/remark.def";
+        if ( ! remarkPresent) {
+                if ( length(g) == 0) {
+                        modify g : hidden;
+                } else {
+                        rename(g,unknownGroup) ;
+                }
+        }
+        group notDecoded("=") : dump;
+        if (remarkPresent) {
+                rename(notDecoded,remark);
+        }
 }
 ascii[1] endMark :read_only ;
 
@@ -154,5 +154,4 @@ meta lengthOfMessage evaluate( endOfMessage-startOfMessage);
 meta md5Headers md5(startOfMessage,lengthOfMessage);
 
 alias ls.totalLength=totalLength;
-
 

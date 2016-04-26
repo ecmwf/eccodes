@@ -1174,6 +1174,7 @@ void grib_multi_support_off(grib_context* c);
 void grib_multi_support_reset_file(grib_context* c, FILE* f);
 
 char* grib_samples_path(const grib_context *c);
+char* grib_definition_path(const grib_context *c);
 /*! @} */
 
 /**

@@ -54,10 +54,10 @@ grib_options_help grib_options_help_list[] ={
   {"n:","namespace",
    "\n\t\tAll the keys belonging to namespace are printed.\n"},
   {"m",0,"Mars keys are printed.\n"},
-  {"o:","output_grib_file",
-   "\n\t\tOutput grib is written to output_grib_file."
-   "\n\t\tIf an output grib file is required and -o is not used, the"
-   " output grib is written to filtered.out\n"},
+  {"o:","output_file",
+   "\n\t\tOutput is written to output_file."
+   "\n\t\tIf an output file is required and -o is not used, the"
+   " output is written to filter.out\n"},
   {"p:","key[:{s/d/i}],key[:{s/d/i}],...",
    "\n\t\tDeclaration of keys to print."
    "\n\t\tFor each key a string (key:s), a double (key:d) or an integer (key:i)"
@@ -187,7 +187,7 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
     char *karg=NULL,*warg=NULL,*sarg=NULL,*barg=NULL;
 
     if (grib_options_on("V")) {
-        printf("\neccodes Version ");
+        printf("\necCodes Version ");
         grib_print_api_version(stdout);
         printf("\n\n");
         exit(0);
@@ -312,7 +312,7 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
     else grib_gts_header_off(context);
 
     if (grib_options_on("V")) {
-        printf("\neccodes Version ");
+        printf("\necCodes Version ");
         grib_print_api_version(stdout);
         printf("\n\n");
     }

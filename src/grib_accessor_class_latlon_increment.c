@@ -209,7 +209,12 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
 
     if (!directionIncrementGiven && numberOfPoints != GRIB_MISSING_LONG)
     {
-        Assert(numberOfPoints>1);
+        if (numberOfPoints<2) {
+            /* We cannot compute the increment if we don't have enough points! */
+            grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+                    "Cannot compute lat/lon increments. Not enough points!");
+            return GRIB_GEOCALCULUS_PROBLEM;
+        }
         if (!scansPositively) { /* scans negatively */
             if (first > last){
                 *val=(first-last)/(numberOfPoints-1);

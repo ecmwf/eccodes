@@ -4,23 +4,24 @@ from distutils.core import setup, Extension
 import os,sys
 
 attdict = dict(
-   sources = ['gribapi_swig_wrap.c','grib_interface.c'],
+   sources = ['@CMAKE_CURRENT_SOURCE_DIR@/@_swig_c_wrapper@',
+              '@CMAKE_CURRENT_SOURCE_DIR@/grib_interface.c'],
    swig_opts = [],
-   include_dirs = ['.'],
-   library_dirs = ["%s/lib" % sys.prefix],
-   libraries = [],
+   include_dirs = ['.', '@CMAKE_CURRENT_BINARY_DIR@/../src', '@CMAKE_CURRENT_SOURCE_DIR@/../src'],
+   library_dirs = ['@CMAKE_CURRENT_BINARY_DIR@/../lib'],
+   libraries = ['eccodes'],
    extra_objects = [],
-   extra_link_args = [],    # See GRIB-616
+   extra_link_args = []
 )
 
 add_attribute = lambda **args: [list.append(attdict[key],value) for key,value in args.items()]
 
 # assumes build_dir is same as source_dir -- not true for cmake builds
-build_dir = '@BUILD_DIR@'
-add_attribute(
-    include_dirs = os.path.join(build_dir,'src'),
-    extra_objects = os.path.join(build_dir, 'src', '.libs', 'libeccodes.a')
-)
+#build_dir = '@BUILD_DIR@'
+#add_attribute(
+#    include_dirs = os.path.join(build_dir,'src'),
+#    extra_objects = os.path.join(build_dir, 'src', '.libs', 'libeccodes.a')
+#)
 
 with_jasper = '@LIB_JASPER@'
 if with_jasper:
@@ -33,7 +34,7 @@ if with_jasper:
         )
     add_attribute(libraries = 'jasper')
 
-with_openjpeg = '@LIB_OPENJPEG@'
+with_openjpeg = @HAVE_LIBOPENJPEG@
 if with_openjpeg:
     openjpeg_dir = '@OPENJPEG_DIR@'
     if openjpeg_dir and openjpeg_dir != 'system':
@@ -45,12 +46,12 @@ if with_openjpeg:
     add_attribute(libraries = 'openjpeg')
 
 # assumes png is supplied by system paths -- may not be true
-png = '@LIB_PNG@'
+png = @HAVE_PNG@
 if png:
     add_attribute(libraries = 'png')
 
 
-with_aec = '@LIB_AEC@'
+with_aec = @HAVE_AEC@
 if with_aec:
     aec_dir = '@AEC_DIR@'
     if aec_dir and aec_dir != 'system':
@@ -74,13 +75,12 @@ if data_handler == "numpy":
     add_attribute(
         include_dirs = numpy_include,
     )
-
-gribapi_module = Extension('_gribapi_swig',**attdict)
+#gribapi_module = Extension('_gribapi_swig',**attdict)
 
 setup (name = 'gribapi',
-       version = '0.1',
+       version = '@ECCODES_VERSION_STR@',
        author      = 'ECMWF',
        description = """Grib API SWIG module""",
-       ext_modules = [gribapi_module],
+       ext_modules = [Extension('_gribapi_swig',**attdict)],
        py_modules = ['gribapi_swig','gribapi'],
       )

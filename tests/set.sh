@@ -53,9 +53,24 @@ centre=`${tools_dir}grib_get -p centre:l $outfile`
 [ $centre -eq 80 ]
 
 set +e
-
+# This is expected to fail
 ${tools_dir}grib_set -p levtype $infile $outfile 2> $REDIRECT > $REDIRECT
-
 [ $? -ne 0 ]
+set -e
+
+# GRIB-941: encoding of grib2 angles
+angleInDegrees=130.9989
+angleInMicroDegrees=130998900
+files="GRIB2.tmpl regular_gg_pl_grib2.tmpl reduced_gg_pl_320_grib2.tmpl polar_stereographic_pl_grib2.tmpl"
+for f in $files; do
+    f=$ECCODES_SAMPLES_PATH/$f
+    ${tools_dir}grib_set -s longitudeOfFirstGridPointInDegrees=$angleInDegrees $f $outfile
+    grib_check_key_equals $outfile longitudeOfFirstGridPoint $angleInMicroDegrees
+done
+
+# GRIB-943: centre code table
+${tools_dir}grib_set -s centre=289 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $outfile
+${tools_dir}grib_dump -O $outfile | grep -q 'centre = 289.*Zambia'
+
 
 rm -f $outfile || true

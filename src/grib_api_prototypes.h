@@ -178,6 +178,7 @@ void grib_bufr_descriptor_set_reference(bufr_descriptor *v, double reference);
 void grib_bufr_descriptor_set_width(bufr_descriptor *v, long width);
 void grib_bufr_descriptor_set_scale(bufr_descriptor *v, long scale);
 void grib_bufr_descriptor_delete(bufr_descriptor *v);
+int grib_bufr_descriptor_can_be_missing(bufr_descriptor* v);
 
 /* grib_bufr_descriptors_array.c */
 bufr_descriptors_array *grib_bufr_descriptors_array_new(grib_context *c, size_t size, size_t incsize);
@@ -196,6 +197,7 @@ bufr_descriptor **grib_bufr_descriptors_array_get_array(bufr_descriptors_array *
 size_t grib_bufr_descriptors_array_used_size(bufr_descriptors_array *v);
 
 /* grib_darray.c */
+grib_darray* grib_darray_new_from_array(grib_context* c,double* a,size_t size);
 grib_darray *grib_darray_new(grib_context *c, size_t size, size_t incsize);
 grib_darray *grib_darray_resize(grib_context *c, grib_darray *v);
 grib_darray *grib_darray_push(grib_context *c, grib_darray *v, double val);
@@ -903,7 +905,7 @@ void grib_dump_accessors_block(grib_dumper *dumper, grib_block_of_accessors *blo
 void grib_dump_accessors_list(grib_dumper *dumper, grib_accessors_list *al);
 int grib_print(grib_handle *h, const char *name, grib_dumper *d);
 void grib_dump_content(grib_handle *h, FILE *f, const char *mode, unsigned long option_flags, void *data);
-void grib_dump_bufr_flat(grib_accessors_list *al, grib_handle *h, FILE *f, const char *mode, unsigned long option_flags, void *data);
+void codes_dump_bufr_flat(grib_accessors_list *al, grib_handle *h, FILE *f, const char *mode, unsigned long option_flags, void *data);
 
 /* grib_context.c */
 size_t grib_context_read(const grib_context *c, void *ptr, size_t size, void *stream);
@@ -919,6 +921,7 @@ void grib_print_api_version(FILE *out);
 grib_context *grib_context_get_default(void);
 char *grib_context_full_defs_path(grib_context *c, const char *basename);
 char *grib_samples_path(const grib_context *c);
+char *grib_definition_path(const grib_context *c);
 void grib_context_free(const grib_context *c, void *p);
 void grib_context_free_persistent(const grib_context *c, void *p);
 void grib_context_reset(grib_context *c);
@@ -940,6 +943,11 @@ void grib_context_set_buffer_memory_proc(grib_context *c, grib_malloc_proc m, gr
 void grib_context_set_data_accessing_proc(grib_context *c, grib_data_read_proc read, grib_data_write_proc write, grib_data_tell_proc tell);
 void grib_context_log(const grib_context *c, int level, const char *fmt, ...);
 void grib_context_print(const grib_context *c, void *descriptor, const char *fmt, ...);
+void grib_context_set_handle_file_count(grib_context *c, int count);
+void grib_context_set_handle_total_count(grib_context *c, int count);
+void grib_context_increment_handle_file_count(grib_context *c);
+void grib_context_increment_handle_total_count(grib_context *c);
+
 
 /* grib_date.c */
 int grib_julian_to_datetime(double jd, long *year, long *month, long *day, long *hour, long *minute, long *second);
