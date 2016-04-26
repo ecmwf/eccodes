@@ -158,6 +158,7 @@ examples/F90/eccodes_f_grib_nearest
 examples/F90/eccodes_f_new_from_file
 examples/F90/eccodes_f_grib_precision
 examples/F90/eccodes_f_grib_print_data
+examples/F90/eccodes_f_grib_print_data_static
 examples/F90/eccodes_f_read_from_file
 examples/F90/eccodes_f_read_message
 examples/F90/eccodes_f_samples

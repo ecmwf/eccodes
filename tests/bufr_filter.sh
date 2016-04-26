@@ -1363,5 +1363,5 @@ EOF
 
 diff ${f}.log.ref ${f}.log 
 
-rm -f ${f}.log ${f}.log.ref
+rm -f ${f}.log ${f}.log.ref $fLog $fRules
 
