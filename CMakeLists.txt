@@ -228,7 +228,7 @@ if( NOT DEFINED ECCODES_SAMPLES_SUFF )
   set( ECCODES_SAMPLES_SUFF     share/eccodes/samples )
 endif()
 if( NOT DEFINED ECCODES_IFS_SAMPLES_SUFF )
-  set( ECCODES_IFS_SAMPLES_SUFF ifs_samples )
+  set( ECCODES_IFS_SAMPLES_SUFF share/eccodes/ifs_samples )
 endif()
 
 set( ECCODES_DEFINITION_PATH  ${the_default_data_prefix}/${ECCODES_DEFINITION_SUFF} )
