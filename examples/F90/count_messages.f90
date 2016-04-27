@@ -38,7 +38,7 @@ program get
 
   ! Load the messages from the file.
   DO i=1,n
-     call codes_grib_new_from_file(ifile,igrib(i), iret)
+    call codes_grib_new_from_file(ifile,igrib(i), iret)
   END DO
 
   ! we can close the file
@@ -46,59 +46,59 @@ program get
 
   ! Loop on all the messages in memory
   DO i=1,n
-     write(*,*) 'processing message number ',i
-     !     get as a integer
-     call codes_get(igrib(i),'Ni',numberOfPointsAlongAParallel)
-     write(*,*) 'numberOfPointsAlongAParallel=', &
+    write(*,*) 'processing message number ',i
+    !     get as a integer
+    call codes_get(igrib(i),'Ni',numberOfPointsAlongAParallel)
+    write(*,*) 'numberOfPointsAlongAParallel=', &
           numberOfPointsAlongAParallel
 
-     !     get as a integer
-     call codes_get(igrib(i),'Nj',numberOfPointsAlongAMeridian)
-     write(*,*) 'numberOfPointsAlongAMeridian=', &
+    !     get as a integer
+    call codes_get(igrib(i),'Nj',numberOfPointsAlongAMeridian)
+    write(*,*) 'numberOfPointsAlongAMeridian=', &
           numberOfPointsAlongAMeridian
 
-     !     get as a real
-     call codes_get(igrib(i), 'latitudeOfFirstGridPointInDegrees', &
-          latitudeOfFirstPointInDegrees)
-     write(*,*) 'latitudeOfFirstGridPointInDegrees=', &
+    !     get as a real
+    call codes_get(igrib(i), 'latitudeOfFirstGridPointInDegrees', &
+         latitudeOfFirstPointInDegrees)
+    write(*,*) 'latitudeOfFirstGridPointInDegrees=', &
           latitudeOfFirstPointInDegrees
 
-     !     get as a real
-     call codes_get(igrib(i), 'longitudeOfFirstGridPointInDegrees', &
-          longitudeOfFirstPointInDegrees)
-     write(*,*) 'longitudeOfFirstGridPointInDegrees=', &
-          longitudeOfFirstPointInDegrees
+    !     get as a real
+    call codes_get(igrib(i), 'longitudeOfFirstGridPointInDegrees', &
+         longitudeOfFirstPointInDegrees)
+    write(*,*) 'longitudeOfFirstGridPointInDegrees=', &
+         longitudeOfFirstPointInDegrees
 
-     !     get as a real
-     call codes_get(igrib(i), 'latitudeOfLastGridPointInDegrees', &
-          latitudeOfLastPointInDegrees)
-     write(*,*) 'latitudeOfLastGridPointInDegrees=', &
-          latitudeOfLastPointInDegrees
+    !     get as a real
+    call codes_get(igrib(i), 'latitudeOfLastGridPointInDegrees', &
+         latitudeOfLastPointInDegrees)
+    write(*,*) 'latitudeOfLastGridPointInDegrees=', &
+         latitudeOfLastPointInDegrees
 
-     !     get as a real
-     call codes_get(igrib(i), 'longitudeOfLastGridPointInDegrees', &
-          longitudeOfLastPointInDegrees)
-     write(*,*) 'longitudeOfLastGridPointInDegrees=', &
-          longitudeOfLastPointInDegrees
+    !     get as a real
+    call codes_get(igrib(i), 'longitudeOfLastGridPointInDegrees', &
+         longitudeOfLastPointInDegrees)
+    write(*,*) 'longitudeOfLastGridPointInDegrees=', &
+         longitudeOfLastPointInDegrees
 
 
-     !     get the size of the values array
-     call codes_get_size(igrib(i),'values',numberOfValues)
-     write(*,*) 'numberOfValues=',numberOfValues
+    !     get the size of the values array
+    call codes_get_size(igrib(i),'values',numberOfValues)
+    write(*,*) 'numberOfValues=',numberOfValues
 
-     allocate(values(numberOfValues), stat=iret)
-     !     get data values
-     call codes_get(igrib(i),'values',values)
-     call codes_get(igrib(i),'min',min_val) ! can also be obtained through minval(values)
-     call codes_get(igrib(i),'max',max_val) ! can also be obtained through maxval(values)
-     call codes_get(igrib(i),'average',average) ! can also be obtained through maxval(values)
+    allocate(values(numberOfValues), stat=iret)
+    !     get data values
+    call codes_get(igrib(i),'values',values)
+    call codes_get(igrib(i),'min',min_val) ! can also be obtained through minval(values)
+    call codes_get(igrib(i),'max',max_val) ! can also be obtained through maxval(values)
+    call codes_get(igrib(i),'average',average) ! can also be obtained through maxval(values)
 
-     write(*,*)'There are ',numberOfValues, &
+    write(*,*)'There are ',numberOfValues, &
           ' average is ',average, &
           ' min is ',  min_val, &
           ' max is ',  max_val
-     write(*,*) '---------------------'
-     deallocate(values)
+    write(*,*) '---------------------'
+    deallocate(values)
   END DO
 
   DO i=1,n
