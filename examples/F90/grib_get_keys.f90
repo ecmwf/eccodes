@@ -27,9 +27,10 @@ program grib_get_keys
   integer                            ::  numberOfValues
   real                               ::  average,min_val, max_val
   integer                            ::  is_missing
+  character(len=10)                  ::  open_mode='r'
   
   call codes_open_file(ifile, &
-       '../../data/reduced_latlon_surface.grib1','r')
+       '../../data/reduced_latlon_surface.grib1', open_mode)
   
   ! Loop on all the messages in a file.
 
