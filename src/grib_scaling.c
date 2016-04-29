@@ -14,8 +14,6 @@
 
 #include "grib_api_internal.h"
 
-#define GRIB_EPSILON  10E-12
-
 /* Return n to the power of s */
 double grib_power(long s,long n)
 {

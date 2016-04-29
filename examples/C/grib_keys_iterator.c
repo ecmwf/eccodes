@@ -26,7 +26,6 @@
 
 #include "eccodes.h"
 
-#define MAX_KEY_LEN  255
 #define MAX_VAL_LEN  1024
 
 static void usage(char* progname);
