@@ -137,6 +137,7 @@ ecbuild_add_test( TARGET eccodes_t_lamb_az_eq_area
 )
 
 # These ones are conditional
+###########################################
 ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
                   TYPE SCRIPT
                   CONDITION HAVE_NETCDF
@@ -148,6 +149,13 @@ ecbuild_add_test( TARGET eccodes_t_jpeg
                   TYPE SCRIPT
                   CONDITION HAVE_JPEG
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/jpeg.sh
+                  TEST_DEPENDS eccodes_download_gribs
+)
+
+ecbuild_add_test( TARGET eccodes_t_grib_png
+                  TYPE SCRIPT
+                  CONDITION HAVE_PNG
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_png.sh
                   TEST_DEPENDS eccodes_download_gribs
 )
 
