@@ -52,7 +52,7 @@ grib_buffer* grib_create_growable_buffer(const grib_context* c)
   return b;
 }
 
-grib_buffer* grib_new_buffer(const grib_context* c,unsigned char* data,size_t buflen)
+grib_buffer* grib_new_buffer(const grib_context* c, const unsigned char* data, size_t buflen)
 {
   grib_buffer  *b =  (grib_buffer*)grib_context_malloc_clear(c,sizeof(grib_buffer));
 
@@ -66,7 +66,7 @@ grib_buffer* grib_new_buffer(const grib_context* c,unsigned char* data,size_t bu
   b->length   = buflen;
   b->ulength  = buflen;
   b->ulength_bits  = buflen*8;
-  b->data     = data;
+  b->data     = (unsigned char*)data;
 
   return b;
 }

@@ -438,7 +438,7 @@ grib_string_list* grib_util_get_mars_param(const char* param_id);
 * @param data_len    : the length of the message in number of bytes
 * @return            the new handle, NULL if the message is invalid or a problem is encountered
 */
-grib_handle* grib_handle_new_from_message(grib_context* c, void* data, size_t data_len);
+grib_handle* grib_handle_new_from_message(grib_context* c, const void* data, size_t data_len);
 
 /**
 *  Create a handle from a user message in memory. The message will not be freed at the end.
@@ -1002,9 +1002,9 @@ typedef void  (*grib_print_proc)    (const grib_context* c, void* descriptor, co
 * Grib data read proc, format of a procedure referenced in the context that is used to read from a stream in a resource
 *
 * @param c             : the context where the read will apply
-* @param *ptr          : the resource
+* @param ptr          : the resource
 * @param size          : size to read
-* @param *stream       : the stream
+* @param stream       : the stream
 * @return              size read
 */
 typedef size_t  (*grib_data_read_proc) (const grib_context* c,void *ptr, size_t size, void *stream);
@@ -1013,9 +1013,9 @@ typedef size_t  (*grib_data_read_proc) (const grib_context* c,void *ptr, size_t 
 * Grib data read write, format of a procedure referenced in the context that is used to write to a stream from a resource
 *
 * @param c             : the context where the write will apply
-* @param *ptr          : the resource
+* @param ptr          : the resource
 * @param size          : size to read
-* @param *stream       : the stream
+* @param stream       : the stream
 * @return              size written
 */
 typedef size_t  (*grib_data_write_proc)(const grib_context* c,const void *ptr, size_t size,  void *stream);
@@ -1024,7 +1024,7 @@ typedef size_t  (*grib_data_write_proc)(const grib_context* c,const void *ptr, s
 * Grib data tell, format of a procedure referenced in the context that is used to tell the current position in a stream
 *
 * @param c             : the context where the tell will apply
-* @param *stream       : the stream
+* @param stream       : the stream
 * @return              the position in the stream
 */
 typedef off_t    (*grib_data_tell_proc) (const grib_context* c, void *stream);
@@ -1037,7 +1037,7 @@ typedef off_t    (*grib_data_tell_proc) (const grib_context* c, void *stream);
 * @param whence        : If whence is set to SEEK_SET, SEEK_CUR, or SEEK_END,
                          the offset  is  relative  to  the start of the file,
              the current position indicator, or end-of-file, respectively.
-* @param *stream       : the stream
+* @param stream       : the stream
 * @return            0 if OK, integer value on error
 */
 typedef off_t    (*grib_data_seek_proc) (const grib_context* c, off_t offset, int whence, void *stream);
@@ -1046,7 +1046,7 @@ typedef off_t    (*grib_data_seek_proc) (const grib_context* c, off_t offset, in
 * Grib data eof, format of a procedure referenced in the context that is used to test end of file
 *
 * @param c             : the context where the tell will apply
-* @param *stream       : the stream
+* @param stream       : the stream
 * @return              the position in the stream
 */
 typedef int    (*grib_data_eof_proc) (const grib_context* c, void *stream);

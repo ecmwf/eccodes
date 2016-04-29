@@ -183,7 +183,7 @@ grib_handle* grib_new_handle ( grib_context* c )
     return g;
 }
 
-static grib_handle* grib_handle_create ( grib_handle  *gl, grib_context* c,void* data, size_t buflen )
+static grib_handle* grib_handle_create ( grib_handle  *gl, grib_context* c, const void* data, size_t buflen )
 {
     grib_action* next = NULL;
     int err = 0;
@@ -193,7 +193,7 @@ static grib_handle* grib_handle_create ( grib_handle  *gl, grib_context* c,void*
 
     gl->use_trie = 1;
     gl->trie_invalid=0;
-    gl->buffer = grib_new_buffer ( gl->context,(unsigned char*)data,buflen );
+    gl->buffer = grib_new_buffer ( gl->context, (const unsigned char*)data, buflen );
 
     if ( gl->buffer == NULL )
     {
@@ -381,7 +381,7 @@ grib_handle* grib_handle_new_from_partial_message ( grib_context* c,void* data, 
     return grib_handle_create ( gl,  c, data,  buflen );
 }
 
-grib_handle* grib_handle_new_from_message ( grib_context* c,void* data, size_t buflen )
+grib_handle* grib_handle_new_from_message ( grib_context* c, const void* data, size_t buflen )
 {
     grib_handle  *gl = NULL;
     grib_handle  *h = NULL;
