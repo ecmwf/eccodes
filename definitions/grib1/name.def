@@ -152,11 +152,6 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Low cloud cover
-'Low cloud cover' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 73 ;
-	}
 #Medium cloud cover
 'Medium cloud cover' = {
 	 table2Version = 3 ;
@@ -863,11 +858,6 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Low cloud cover
-'Low cloud cover' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 73 ;
-	}
 #Medium cloud cover
 'Medium cloud cover' = {
 	 table2Version = 2 ;
@@ -1558,11 +1548,6 @@
 'Evaporation' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 57 ;
-	}
-#Low cloud cover
-'Low cloud cover' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 73 ;
 	}
 #Medium cloud cover
 'Medium cloud cover' = {

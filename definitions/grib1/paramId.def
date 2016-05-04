@@ -152,11 +152,6 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Low cloud cover
-'186' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 73 ;
-	}
 #Medium cloud cover
 '187' = {
 	 table2Version = 3 ;
@@ -863,11 +858,6 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Low cloud cover
-'186' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 73 ;
-	}
 #Medium cloud cover
 '187' = {
 	 table2Version = 2 ;
@@ -1558,11 +1548,6 @@
 '182' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 57 ;
-	}
-#Low cloud cover
-'186' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 73 ;
 	}
 #Medium cloud cover
 '187' = {
