@@ -184,14 +184,17 @@ sub process {
             # Users will set parameters by shortname or ID
             if ($filename eq 'paramId.def' || $filename eq 'shortName.def') {
                 # The 'typeOfSecondFixedSurface' key has side effects and can change the scale values/factors!
-                # So make sure it comes BEFORE the scale keys! i.e. if we find a scale key then our map should have
-                # the typeOf key since it came before
-                if ($key =~ /scale.*OfSecondFixedSurface/ && !exists($map2{'typeOfSecondFixedSurface'})) {
+                # So make sure it comes BEFORE the scale keys! So if we come across this key ensure none of
+                # scale keys came before it
+                if ( $key =~ /typeOfSecondFixedSurface/ && 
+                    (exists($map2{'scaleFactorOfFirstFixedSurface'}) ||
+                     exists($map2{'scaledValueOfFirstFixedSurface'}) ||
+                     exists($map2{'scaleFactorOfSecondFixedSurface'}) ||
+                     exists($map2{'scaledValueOfSecondFixedSurface'})) )
+                {
                     print "File: $filename, line: $lineNum: TypeOfSurface problem (GRIB-229): Please check: $desc\n";
-                    #$error = 1;
-                }
-                if ($key =~ /typeOfSecondFixedSurface/ && exists($map2{'typeOfFirstFixedSurface'})) {
-                    print "File: $filename, line: $lineNum: Potential TypeOfSurface problem (GRIB-229): Please check: $desc\n";
+                    #print "DUMP,\t", Data::Dumper->Dump([\%map2], [" "]);
+                    $error = 1;
                 }
             }
             $map2{$key} = $val;
