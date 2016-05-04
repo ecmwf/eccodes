@@ -1,4 +1,4 @@
-#!/usr/local/share/perl
+#!/usr/bin/env perl
 
 #
 # Copyright 2005-2016 ECMWF.
