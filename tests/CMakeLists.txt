@@ -165,3 +165,9 @@ ecbuild_add_test( TARGET eccodes_t_ccsds
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ccsds.sh
                   TEST_DEPENDS eccodes_download_gribs
 )
+
+ecbuild_add_test( TARGET eccodes_t_grib_check_param_concepts
+                  TYPE SCRIPT
+                  CONDITION ENABLE_ALL_TESTS
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_param_concepts.sh
+)
