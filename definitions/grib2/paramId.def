@@ -2734,11 +2734,11 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
 	 typeOfSecondFixedSurface = 106 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = 2 ;
 	 scaleFactorOfSecondFixedSurface = 1 ;
-	 typeOfFirstFixedSurface = 106 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 is_tigge = 1 ;
 	}
