@@ -152,11 +152,6 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Medium cloud cover
-'187' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 74 ;
-	}
 #Brightness temperature
 '194' = {
 	 table2Version = 3 ;
@@ -858,11 +853,6 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Medium cloud cover
-'187' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 74 ;
-	}
 #Brightness temperature
 '194' = {
 	 table2Version = 2 ;
@@ -1548,11 +1538,6 @@
 '182' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 57 ;
-	}
-#Medium cloud cover
-'187' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 74 ;
 	}
 #Brightness temperature
 '194' = {

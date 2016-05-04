@@ -152,11 +152,6 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Medium cloud cover
-'(0 - 1)' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 74 ;
-	}
 #Brightness temperature
 'K' = {
 	 table2Version = 3 ;
@@ -858,11 +853,6 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Medium cloud cover
-'(0 - 1)' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 74 ;
-	}
 #Brightness temperature
 'K' = {
 	 table2Version = 2 ;
@@ -1548,11 +1538,6 @@
 'm of water equivalent' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 57 ;
-	}
-#Medium cloud cover
-'(0 - 1)' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 74 ;
 	}
 #Brightness temperature
 'K' = {
