@@ -168,6 +168,6 @@ ecbuild_add_test( TARGET eccodes_t_ccsds
 
 ecbuild_add_test( TARGET eccodes_t_grib_check_param_concepts
                   TYPE SCRIPT
-                  CONDITION ENABLE_ALL_TESTS
+                  CONDITION ENABLE_EXTRA_TESTS
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_param_concepts.sh
 )
