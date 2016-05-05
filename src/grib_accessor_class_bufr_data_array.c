@@ -2248,7 +2248,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                             break;
                         } else {
                             if (ir>0)  {
-                                n[ir-1]-=numberOfElementsToRepeat[ir]+2;
+                                n[ir-1]-=numberOfElementsToRepeat[ir]+1;
                             }
                             i=startRepetition[ir]+numberOfElementsToRepeat[ir];
                             numberOfNestedRepetitions--;
