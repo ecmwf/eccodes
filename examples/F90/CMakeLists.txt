@@ -26,7 +26,8 @@ list( APPEND tests
       set_missing
       grib_set_pv
       samples
-      count_messages
+      grib_count_messages
+      grib_count_messages_multi
       read_message
       read_from_file
       get_set_uuid

@@ -30,8 +30,6 @@
 
 
 #define CHECK(a) check(#a,a)
-#define NUMBER(a) (sizeof(a)/sizeof(a[0]))
-
 
 const char* file = 0;
 int field = 0;

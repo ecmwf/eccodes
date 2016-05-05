@@ -97,6 +97,7 @@ ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "enable memory align
 ecbuild_add_option( FEATURE GRIB_TIMER          DESCRIPTION "enable timer" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "enable POSIX threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "enable OMP threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ALL_TESTS DESCRIPTION "enable extended regression testing" DEFAULT OFF ADVANCED )
 
 ###############################################################################
 # macro processing
@@ -228,7 +229,7 @@ if( NOT DEFINED ECCODES_SAMPLES_SUFF )
   set( ECCODES_SAMPLES_SUFF     share/eccodes/samples )
 endif()
 if( NOT DEFINED ECCODES_IFS_SAMPLES_SUFF )
-  set( ECCODES_IFS_SAMPLES_SUFF ifs_samples )
+  set( ECCODES_IFS_SAMPLES_SUFF share/eccodes/ifs_samples )
 endif()
 
 set( ECCODES_DEFINITION_PATH  ${the_default_data_prefix}/${ECCODES_DEFINITION_SUFF} )
@@ -350,7 +351,7 @@ ecbuild_print_summary()
 
 ecbuild_info("")
 ecbuild_info("   +---------------------------+")
-ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}   |")
+ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}    |")
 ecbuild_info("   |  Configuration completed  |")
 ecbuild_info("   +---------------------------+")
 ecbuild_info("")

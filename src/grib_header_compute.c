@@ -29,7 +29,6 @@ GRIB_INLINE static int strcmp(const char* a,const char* b) {
 }
 #endif
 
-#define SIZE  ((int)4097)
 #ifndef NUMBER
 #define NUMBER(a)    (sizeof(a)/sizeof(a[0])) /* number of elem. of an array */
 #endif

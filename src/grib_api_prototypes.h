@@ -859,7 +859,7 @@ void *grib_buffer_realloc(const grib_context *c, void *p, size_t s);
 /* grib_buffer.c */
 void grib_get_buffer_ownership(const grib_context *c, grib_buffer *b);
 grib_buffer *grib_create_growable_buffer(const grib_context *c);
-grib_buffer *grib_new_buffer(const grib_context *c, unsigned char *data, size_t buflen);
+grib_buffer *grib_new_buffer(const grib_context *c, const unsigned char *data, size_t buflen);
 void grib_buffer_delete(const grib_context *c, grib_buffer *b);
 void grib_grow_buffer(const grib_context *c, grib_buffer *b, size_t new_size);
 void grib_buffer_set_ulength_bits(const grib_context *c, grib_buffer *b, size_t length_bits);
@@ -1005,7 +1005,7 @@ grib_handle *codes_gts_handle_new_from_file(grib_context *c, FILE *f, int *error
 grib_handle *grib_handle_new_from_message_copy(grib_context *c, const void *data, size_t size);
 grib_handle *grib_handle_new_from_partial_message_copy(grib_context *c, const void *data, size_t size);
 grib_handle *grib_handle_new_from_partial_message(grib_context *c, void *data, size_t buflen);
-grib_handle *grib_handle_new_from_message(grib_context *c, void *data, size_t buflen);
+grib_handle *grib_handle_new_from_message(grib_context *c, const void *data, size_t buflen);
 grib_handle *grib_handle_new_from_multi_message(grib_context *c, void **data, size_t *buflen, int *error);
 grib_handle *grib_handle_new_from_file(grib_context *c, FILE *f, int *error);
 grib_handle *grib_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);

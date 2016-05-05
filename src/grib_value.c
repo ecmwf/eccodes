@@ -20,8 +20,6 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
     return (*a==0 && *b==0) ? 0 : 1;
 }
 
-#define SWAP(a,b) temp=(a);(a)=(b);(b)=temp;
-
 int grib_set_expression(grib_handle* h, const char* name,grib_expression* e)
 {
     grib_accessor* a = grib_find_accessor(h, name);

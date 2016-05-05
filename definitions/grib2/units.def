@@ -551,7 +551,7 @@
 	 parameterNumber = 3 ;
 	}
 #Mean wave direction
-'degrees' = {
+'Degree true' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 14 ;

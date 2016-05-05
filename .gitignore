@@ -141,6 +141,8 @@ examples/F90/eccodes_f_bufr_read_header
 examples/F90/eccodes_f_bufr_read_scatterometer
 examples/F90/eccodes_f_bufr_read_tropical_cyclone
 examples/F90/eccodes_f_grib_clone
+examples/F90/eccodes_f_grib_count_messages
+examples/F90/eccodes_f_grib_count_messages_multi
 examples/F90/eccodes_f_copy_message
 examples/F90/eccodes_f_copy_namespace
 examples/F90/eccodes_f_count_messages
@@ -158,6 +160,7 @@ examples/F90/eccodes_f_grib_nearest
 examples/F90/eccodes_f_new_from_file
 examples/F90/eccodes_f_grib_precision
 examples/F90/eccodes_f_grib_print_data
+examples/F90/eccodes_f_grib_print_data_static
 examples/F90/eccodes_f_read_from_file
 examples/F90/eccodes_f_read_message
 examples/F90/eccodes_f_samples
@@ -172,6 +175,7 @@ examples/F90/test-suite.log
 examples/python/.libs/
 examples/python/my.idx
 examples/python/p_count_messages
+examples/python/p_grib_count_messages
 examples/python/p_grib_iterator
 examples/python/p_grib_keys_iterator
 examples/python/p_grib_print_data
