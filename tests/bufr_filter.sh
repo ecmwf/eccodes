@@ -1365,3 +1365,31 @@ diff ${f}.log.ref ${f}.log
 
 rm -f ${f}.log ${f}.log.ref $fLog $fRules
 
+#-----------------------------------------------------------
+# Test: Nested delayed replication
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set masterTablesVersionNumber=24;
+set inputDelayedDescriptorReplicationFactor={2,3,5};
+set unexpandedDescriptors={1001,1002, 107000, 31001,5001,5002,102000, 31001,7004, 12001,12004 };
+print "[numericValues]";
+EOF
+
+f="syno_1.bufr"
+
+echo "Test: Nested delayed replication" >> $fLog
+echo "file: $f" >> $fLog
+
+${tools_dir}bufr_filter $fRules $f  > ${f}.log
+
+cat > ${f}.log.ref <<EOF
+-1e+100 -1e+100 2 -1e+100 -1e+100 3 -1e+100 -1e+100 
+-1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 5 
+-1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 
+-1e+100 -1e+100 -1e+100
+EOF
+
+diff ${f}.log.ref ${f}.log 
+
+rm -f ${f}.log ${f}.log.ref $fLog $fRules
+
