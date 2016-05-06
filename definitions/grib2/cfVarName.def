@@ -412,6 +412,12 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 2 ;
 	}
+#Cloud cover
+'ccl' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 22 ;
+	}
 #Cloudy brightness temperature
 'clbt' = {
          discipline = 3 ;
