@@ -2024,7 +2024,7 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 247 ;
 	}
-#Cloud cover
+#Fraction of cloud cover
 '(0 - 1)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 248 ;
@@ -11730,7 +11730,7 @@
 	 indicatorOfParameter = 229 ;
 	}
 #Mean wave direction
-'degrees' = {
+'Degree true' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 230 ;
 	}

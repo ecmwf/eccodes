@@ -88,8 +88,8 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 84 ;
 	}
-#Cloud cover
-'Cloud cover' = {
+#Fraction of cloud cover
+'Fraction of cloud cover' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 32 ;
