@@ -17,23 +17,23 @@ set -ea
 # several lines
 grib_check_key_equals()
 {
-   file=$1
-   key=$2
-   expected=$3
-   result=`${tools_dir}grib_get -p $key $file`
-   if [ "$result" != "$expected" ]; then
-      echo "File:     $file"
-      echo "Key(s):   $key"
-      echo "Expected: $expected"
-      echo "Result:   $result"
+   a_file=$1
+   a_key=$2
+   a_expected=$3
+   a_result=`${tools_dir}grib_get -p $a_key $a_file`
+   if [ "$a_result" != "$a_expected" ]; then
+      echo "File:     $a_file"
+      echo "Key(s):   $a_key"
+      echo "Expected: $a_expected"
+      echo "Result:   $a_result"
       exit 1
    fi
 }
 
 grib_check_key_exists()
 {
-   file=$1
-   key=$2
+   a_file=$1
+   a_key=$2
    # grib_get will fail if the key is not found
-   $tools_dir/grib_get -p $key $file >/dev/null
+   $tools_dir/grib_get -p $a_key $a_file >/dev/null
 }
