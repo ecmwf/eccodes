@@ -263,7 +263,7 @@ int grib_section_adjust_sizes(grib_section* s,int update,int depth)
         /* grib_section_adjust_sizes(grib_get_sub_section(a),update,depth+1); */
         err = grib_section_adjust_sizes(a->sub_section,update,depth+1);
         if (err) return err;
-        grib_context_log(a->context,GRIB_LOG_DEBUG,"grib_section_adjust_sizes: %s %ld [len=%ld] (depth=%d)\n",a->name,(long)a->offset,(long)a->length,depth);
+        grib_context_log(a->context,GRIB_LOG_DEBUG,"grib_section_adjust_sizes: %s %ld [len=%ld] (depth=%d)",a->name,(long)a->offset,(long)a->length,depth);
 
         l = a->length;
 
@@ -312,7 +312,7 @@ int grib_section_adjust_sizes(grib_section* s,int update,int depth)
         }
 
         if(s->owner) {
-          grib_context_log(s->owner->context,GRIB_LOG_DEBUG,"grib_section_adjust_sizes: updating owner (%s->length old=%ld new=%ld)\n",s->owner->name,(long)s->owner->length,(long)length);
+          grib_context_log(s->owner->context,GRIB_LOG_DEBUG,"grib_section_adjust_sizes: updating owner (%s->length old=%ld new=%ld)",s->owner->name,(long)s->owner->length,(long)length);
           s->owner->length = length;
         }
         s->length = length;
