@@ -16,6 +16,8 @@
 
 extern int yylex();
 extern int yyerror(const char*);
+extern int yylineno;
+extern char* file_being_parsed();
 
 extern   grib_action*           grib_parser_all_actions;
 extern   grib_concept_value*    grib_parser_concept;
@@ -632,10 +634,10 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
    ;
 
 if_block :
-  IF '(' expression ')' '{' instructions '}' { $$ = grib_action_create_if(grib_parser_context,$3,$6,0,0); }
-| IF '(' expression ')' '{' instructions '}' ELSE '{' instructions '}'  { $$ = grib_action_create_if(grib_parser_context,$3,$6,$10,0); }
-| IF_TRANSIENT '(' expression ')' '{' instructions '}' { $$ = grib_action_create_if(grib_parser_context,$3,$6,0,1); }
-| IF_TRANSIENT '(' expression ')' '{' instructions '}' ELSE '{' instructions '}'  { $$ = grib_action_create_if(grib_parser_context,$3,$6,$10,1); }
+  IF '(' expression ')' '{' instructions '}' { $$ = grib_action_create_if(grib_parser_context,$3,$6,0,0,yylineno,file_being_parsed()); }
+| IF '(' expression ')' '{' instructions '}' ELSE '{' instructions '}'  { $$ = grib_action_create_if(grib_parser_context,$3,$6,$10,0,yylineno,file_being_parsed()); }
+| IF_TRANSIENT '(' expression ')' '{' instructions '}' { $$ = grib_action_create_if(grib_parser_context,$3,$6,0,1,yylineno,file_being_parsed()); }
+| IF_TRANSIENT '(' expression ')' '{' instructions '}' ELSE '{' instructions '}'  { $$ = grib_action_create_if(grib_parser_context,$3,$6,$10,1,yylineno,file_being_parsed()); }
    ;
 
 when_block :

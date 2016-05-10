@@ -250,7 +250,7 @@ typedef               struct     grib_action_class       grib_action_class;
 typedef               struct     grib_section            grib_section;
 typedef               struct     grib_packer             grib_packer;
 typedef               struct     grib_codetable          grib_codetable;
-typedef               struct     grib_smart_table          grib_smart_table;
+typedef               struct     grib_smart_table        grib_smart_table;
 
 typedef               struct     grib_accessor           grib_accessor;
 typedef               struct     grib_iterator_class     grib_iterator_class;
@@ -349,28 +349,28 @@ typedef  void  grib_expression_visit_proc                (void* udata, grib_expr
 
 
 struct grib_key_value_list {
-  const char* name;
-  int         type;
-  int         size;
-  long*       long_value;
-  double*     double_value;
-  grib_key_value_list* namespace_value;
-  char* string_value;
-  int         has_value;
-  int         error;
-  grib_key_value_list* next;
-} ;
+    const char* name;
+    int         type;
+    int         size;
+    long*       long_value;
+    double*     double_value;
+    grib_key_value_list* namespace_value;
+    char* string_value;
+    int         has_value;
+    int         error;
+    grib_key_value_list* next;
+};
 
 
 struct second_order_packed {
-  unsigned long nbits_per_widths;
-  unsigned long nbits_per_group_size;
-  size_t size_of_group_array;
-  size_t packed_byte_count;
-  unsigned long *array_of_group_size;
-  unsigned long *array_of_group_width;
-   long *array_of_group_refs;
-} ;
+    unsigned long nbits_per_widths;
+    unsigned long nbits_per_group_size;
+    size_t size_of_group_array;
+    size_t packed_byte_count;
+    unsigned long *array_of_group_size;
+    unsigned long *array_of_group_width;
+    long *array_of_group_refs;
+};
 
 /**
 *  an grib_compression
@@ -392,11 +392,11 @@ typedef int (*grib_loader_init_accessor_proc)(grib_loader*,grib_accessor*,grib_a
 typedef int (*grib_loader_lookup_long_proc) (grib_context*,grib_loader*,const char* name, long* value);
 
 struct grib_loader {
-  void                          *data;
-  grib_loader_init_accessor_proc init_accessor;
-  grib_loader_lookup_long_proc   lookup_long;
-  int                            list_is_resized; /** will be true if we resize a list */
-  int  changing_edition;
+    void                          *data;
+    grib_loader_init_accessor_proc init_accessor;
+    grib_loader_lookup_long_proc   lookup_long;
+    int                            list_is_resized; /** will be true if we resize a list */
+    int                            changing_edition;
 };
 
 /**
@@ -407,26 +407,27 @@ struct grib_loader {
 */
 struct grib_action
 {
-    char                     *name;   /**  name of the definition statement            */
-    char                     *op;     /**  operator of the definition statement        */
-    char                     *name_space;   /**  namspace of the definition statement  */
-    grib_action              *next;   /**  next action in the list                     */
-    grib_action_class        *cclass; /**  link to the structure containing a specific behavior */
-    grib_context             *context;/**  Context                                     */
-    unsigned long            flags;
-    char                    *defaultkey; /** name of the key used as default if not found  */
-	grib_arguments*         default_value; /** default expression as in .def file */
-	char*					set;
-    /* If you had something, don't forget to update grib_action_compile */
+    char                *name;       /**  name of the definition statement */
+    char                *op;         /**  operator of the definition statement */
+    char                *name_space; /**  namespace of the definition statement */
+    grib_action         *next;       /**  next action in the list */
+    grib_action_class   *cclass;     /**  link to the structure containing a specific behaviour */
+    grib_context        *context;    /**  Context */
+    unsigned long       flags;
+    char                *defaultkey;   /** name of the key used as default if not found */
+    grib_arguments*     default_value; /** default expression as in .def file */
+    char*               set;
+    char                *debug_info;   /** purely for debugging and tracing */
+    /* If you add something, don't forget to update grib_action_compile */
 };
 
 typedef struct grib_accessors_list grib_accessors_list;
 
 struct grib_accessors_list {
-	grib_accessor* accessor;
-	grib_accessors_list* next;
-	grib_accessors_list* prev;
-  grib_accessors_list* last;
+    grib_accessor*       accessor;
+    grib_accessors_list* next;
+    grib_accessors_list* prev;
+    grib_accessors_list* last;
 };
 
 /* compile */
@@ -454,41 +455,38 @@ typedef  int  (*action_execute_proc)              (grib_action* a,grib_handle*);
 
 /**
 *  an action_class
-*  Structure supporting the specific behavior of an action
+*  Structure supporting the specific behaviour of an action
 *
 *  @see  grib_action
 */
 struct grib_action_class
 {
-    grib_action_class          **super; /** < link to a more general behavior                         */
-    const char*                name;    /** < name of the behavior class                              */
-    size_t                     size;    /** < size in bytes of the structure                          */
+    grib_action_class          **super; /** < link to a more general behaviour */
+    const char*                name;    /** < name of the behaviour class */
+    size_t                     size;    /** < size in bytes of the structure */
 
-  int                        inited;
-  action_init_class_proc     init_class;
+    int                        inited;
+    action_init_class_proc     init_class;
 
     action_init_proc           init;
-    action_destroy_proc        destroy;
-                                        /** < destructor method to realease the memory    */
+    action_destroy_proc        destroy; /** < destructor method to release the memory */
 
-    grib_dump_proc             dump;    /** < dump method of the action                               */
-    grib_xref_proc             xref;    /** < dump method of the action                               */
-    action_create_accessors_handle_proc       create_accessor;
-                                        /** < method to create the corresponding accessor from a handle*/
-    action_notify_change_proc                      notify_change;
-                                        /** < method to create the corresponding accessor from a handle*/
+    grib_dump_proc             dump;    /** < dump method of the action  */
+    grib_xref_proc             xref;    /** < dump method of the action  */
+    action_create_accessors_handle_proc  create_accessor; /** < method to create the corresponding accessor from a handle*/
+    action_notify_change_proc            notify_change; /** < method to create the corresponding accessor from a handle*/
 
-  action_reparse_proc              reparse;
-  action_execute_proc              execute;
+    action_reparse_proc       reparse;
+    action_execute_proc       execute;
 
-    grib_compile_proc             compile;    /** < compile method of the action                               */
+    grib_compile_proc         compile;    /** < compile method of the action */
 };
 
 
 
 /**
 *  a buffer
-*  Structure containing the datas of a Grib
+*  Structure containing the data of a message
 */
 struct grib_buffer
 {

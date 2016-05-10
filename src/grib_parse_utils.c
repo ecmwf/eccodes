@@ -549,6 +549,11 @@ int grib_yywrap()
     }
 }
 
+char* file_being_parsed()
+{
+    return (char*)parse_file;
+}
+
 int grib_yyerror(const char* msg)
 {
     grib_context_log(grib_parser_context, GRIB_LOG_ERROR,

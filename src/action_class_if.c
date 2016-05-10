@@ -96,12 +96,13 @@ static void init_class(grib_action_class* c)
 
 grib_action* grib_action_create_if( grib_context* context,
         grib_expression* expression,
-        grib_action* block_true,grib_action* block_false,int transient)
+        grib_action* block_true,grib_action* block_false,int transient,
+        int lineno, char* file_being_parsed)
 {
     char name[1024];
     grib_action_if* a ;
-    grib_action_class* c   = grib_action_class_if;
-    grib_action* act       = (grib_action*)grib_context_malloc_clear_persistent(context,c->size);
+    grib_action_class* c = grib_action_class_if;
+    grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context,c->size);
     act->op              = grib_context_strdup_persistent(context,"section");
 
     act->cclass       = c;
@@ -119,6 +120,14 @@ grib_action* grib_action_create_if( grib_context* context,
         sprintf(name,"_if%p",(void*)a);
 
     act->name      = grib_context_strdup_persistent(context,name);
+    act->debug_info= NULL;
+    if (context->debug > 0 && file_being_parsed) {
+        /* Construct debug information showing definition file and line */
+        /* number of IF statement */
+        char debug_info[1024];
+        sprintf(debug_info, "File=%s line=%d", file_being_parsed, lineno);
+        act->debug_info= grib_context_strdup_persistent(context,debug_info);
+    }
 
     return act;
 }
@@ -296,10 +305,10 @@ static void destroy(grib_context* context,grib_action* act)
         f = nf;
     }
 
-
     grib_expression_free(context,a->expression);
 
     grib_context_free_persistent(context, act->name);
+    grib_context_free_persistent(context, act->debug_info);
     grib_context_free_persistent(context, act->op);
 }
 
