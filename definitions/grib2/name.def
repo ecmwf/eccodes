@@ -427,6 +427,20 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 22 ;
 	}
+#Evaporation rate
+'Evaporation rate' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 79 ;
+	}
+#Evaporation
+'Evaporation' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 79 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Cloudy brightness temperature
 'Cloudy brightness temperature' = {
          discipline = 3 ;
