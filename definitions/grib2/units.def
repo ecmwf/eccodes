@@ -400,6 +400,15 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
 	}
+#Surface air relative humidity
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 1 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	}
 #Apparent temperature
 'K' = {
 	 discipline = 0 ;
@@ -549,6 +558,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
+	}
+#Wind direction
+'Degree true' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
 	}
 #Significant height of combined wind waves and swell
 'm' = {
