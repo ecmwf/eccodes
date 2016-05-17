@@ -108,6 +108,18 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 11 ;
 	}
+#Low cloud cover
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 3 ;
+	}
+#Medium cloud cover
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 4 ;
+	}
 #High cloud cover
 '%' = {
 	 discipline = 0 ;
@@ -455,6 +467,12 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
+	}
+#Soil temperature
+'K' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
 	}
 #Cloudy brightness temperature
 'K' = {
