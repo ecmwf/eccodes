@@ -108,6 +108,12 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 11 ;
 	}
+#High cloud cover
+'3075' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 5 ;
+	}
 #10 metre wind gust in the last 3 hours
 '228028' = {
 	 discipline = 0 ;
@@ -440,6 +446,15 @@
 	 parameterNumber = 79 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#10 metre wind direction
+'260260' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
 	}
 #Cloudy brightness temperature
 '260510' = {
