@@ -12502,13 +12502,13 @@
 	 parameterNumber = 202 ;
 	}
 #Bias in the zonal pressure gradient (applied)
-'Pa**m-1' = {
+'Pa m**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 203 ;
 	}
 #Bias in the meridional pressure gradient (applied)
-'Pa**m-1' = {
+'Pa m**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 204 ;

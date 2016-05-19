@@ -12365,12 +12365,12 @@
 	 indicatorOfParameter = 202 ;
 	}
 #Bias in the zonal pressure gradient (applied)
-'Pa**m-1' = {
+'Pa m**-1' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 203 ;
 	}
 #Bias in the meridional pressure gradient (applied)
-'Pa**m-1' = {
+'Pa m**-1' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 204 ;
 	}
