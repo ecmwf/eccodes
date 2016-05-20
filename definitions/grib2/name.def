@@ -514,6 +514,14 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 14 ;
 	}
+#Time-integrated direct short wave radiation flux
+'Time-integrated direct short wave radiation flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Soil temperature
 'Soil temperature' = {
 	 discipline = 2 ;
