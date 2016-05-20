@@ -131,6 +131,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
+	 is_uerra = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
@@ -235,6 +236,39 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
+	}
+#10 metre wind gust for UERRA
+'10 metre wind gust for UERRA' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 is_uerra = 1 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Maximum temperature at 2 metres for UERRA
+'Maximum temperature at 2 metres for UERRA' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 is_uerra = 1 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfFirstFixedSurface = 103 ;
+	}
+#Minimum temperature at 2 metres for UERRA
+'Minimum temperature at 2 metres for UERRA' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 is_uerra = 1 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #Mean temperature tendency due to short-wave radiation
 'Mean temperature tendency due to short-wave radiation' = {
@@ -467,6 +501,18 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
+	}
+#Direct short wave radiation flux
+'Direct short wave radiation flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	}
+#Diffuse short wave radiation flux
+'Diffuse short wave radiation flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
 	}
 #Soil temperature
 'Soil temperature' = {
@@ -709,6 +755,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
+	 is_uerra = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
@@ -721,6 +768,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
+	 is_uerra = 0 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;

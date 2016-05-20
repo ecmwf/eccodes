@@ -120,3 +120,8 @@ if ( ((section1Length > 21) or setCalendarId > 0) and deleteCalendarId == 0) {
   template calendarIdentification "grib2/template.1.[calendarIdentificationTemplateNumber:l].def";
 }
 
+concept is_uerra(zero) {
+   '1' = {productionStatusOfProcessedData=9;}
+   '1' = {productionStatusOfProcessedData=8;}
+   '0' = {dummy=1;}
+}
