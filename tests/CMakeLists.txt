@@ -18,6 +18,7 @@ list( APPEND test_bins
       unit_tests
       gauss_sub
       grib_util_set_spec
+      local85
 )
 
 foreach( tool ${test_bins} )
@@ -91,6 +92,7 @@ list( APPEND tests2
     padding
     debug
     grib_util_set_spec
+    local85
 	neg_fctime
 )
 
@@ -150,3 +152,5 @@ ecbuild_add_test( TARGET eccodes_t_ccsds
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ccsds.sh
                   TEST_DEPENDS eccodes_get_gribs
 )
+
+
