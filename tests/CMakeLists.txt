@@ -19,7 +19,7 @@ list( APPEND test_bins
       unit_tests
       gauss_sub
       grib_util_set_spec
-      local85
+      local_MeteoFrance
 )
 
 foreach( tool ${test_bins} )
@@ -58,7 +58,7 @@ list( APPEND tests2
     gts_ls
     gts_compare
     metar_ls
-	metar_get
+    metar_get
     metar_dump
     metar_compare
     bufr_set
@@ -98,8 +98,8 @@ list( APPEND tests2
     padding
     debug
     grib_util_set_spec
-    local85
-	neg_fctime
+    local_MeteoFrance
+    neg_fctime
 )
 
 # These tests do not require any data downloads
@@ -173,5 +173,4 @@ ecbuild_add_test( TARGET eccodes_t_grib_check_param_concepts
                   CONDITION ENABLE_EXTRA_TESTS
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_param_concepts.sh
 )
-
 

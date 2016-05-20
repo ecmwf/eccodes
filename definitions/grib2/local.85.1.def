@@ -1,4 +1,3 @@
-
 transient defaultFaFieldName = "";
 transient defaultFaLevelName = "";
 transient defaultFaModelName = "";
@@ -28,4 +27,3 @@ unsigned[8]   INBITS : dump;
 # FA scaling factor
 signed[8]     FMULTM = 1 : dump;
 signed[8]     FMULTE = 0 : dump;
-

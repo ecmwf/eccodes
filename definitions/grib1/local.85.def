@@ -1,4 +1,3 @@
-
 transient defaultFaFieldName = "";
 transient defaultFaLevelName = "";
 transient defaultFaModelName = "";
@@ -22,6 +21,4 @@ transient  INBITS  =  0;
 
 transient  FMULTM  = 1;
 transient  FMULTE  = 0;
-
-
 
