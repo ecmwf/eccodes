@@ -1760,13 +1760,13 @@
 	 parameterNumber = 0 ;
 	}
 #Total ozone
-'Dobson' = {
+'DU' = {
 	 discipline = 0 ;
 	 parameterCategory = 14 ;
 	 parameterNumber = 0 ;
 	}
 #Total column integrated ozone
-'Dobson' = {
+'DU' = {
 	 discipline = 0 ;
 	 parameterCategory = 14 ;
 	 parameterNumber = 2 ;
