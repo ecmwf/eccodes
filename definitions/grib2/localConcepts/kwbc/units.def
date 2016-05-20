@@ -474,13 +474,13 @@
 	 parameterNumber = 198 ;
 	}
 #Total Icing Potential Diagnostic
-'non-dim' = {
+'dimensionless' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 206 ;
 	}
 #Number concentration for ice particles
-'non-dim' = {
+'dimensionless' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 207 ;
@@ -978,7 +978,7 @@
 	 parameterNumber = 193 ;
 	}
 #Categorical Ozone Concentration
-'non-dim' = {
+'dimensionless' = {
 	 discipline = 0 ;
 	 parameterCategory = 14 ;
 	 parameterNumber = 194 ;
@@ -1044,7 +1044,7 @@
 	 parameterNumber = 196 ;
 	}
 #Lightning
-'non-dim' = {
+'dimensionless' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 192 ;
