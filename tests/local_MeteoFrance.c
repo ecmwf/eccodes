@@ -840,20 +840,19 @@ static double values[] = {
 
 int main (int argc, char * argv[])
 {
-    grib_handle * h;
-    size_t len;
+    grib_handle* h = NULL;
+    size_t len = 0;
 
     GRIB_CHECK (((h = grib_handle_new_from_samples (NULL, "reduced_gg_ml_grib2")) == NULL), 0);
     len = strlen ("lambert");
     GRIB_CHECK (grib_set_string (h, "gridType", "lambert", &len), 0);
     GRIB_CHECK (grib_set_long (h, "centre", 85), 0);
-    GRIB_CHECK (grib_set_long (h, "centre", 85), 0);
+
     GRIB_CHECK (grib_set_long (h, "grib2LocalSectionPresent", 1), 0);
     GRIB_CHECK (grib_set_long (h, "grib2LocalSectionNumber", 1), 0);
     len = strlen ("SURFTEMPERATURE");
     GRIB_CHECK (grib_set_string (h, "faFieldName", "SURFTEMPERATURE", &len), 0);
-    len = strlen ("lambert");
-    GRIB_CHECK (grib_set_string (h, "gridType", "lambert", &len), 0);
+
     GRIB_CHECK (grib_set_long (h, "Nx", 64), 0);
     GRIB_CHECK (grib_set_long (h, "Ny", 64), 0);
     GRIB_CHECK (grib_set_double (h, "DxInMetres", 2500.00000000000), 0);
@@ -887,12 +886,17 @@ int main (int argc, char * argv[])
     len = strlen ("grid_simple");
     GRIB_CHECK (grib_set_string (h, "packingType", "grid_simple", &len), 0);
     GRIB_CHECK (grib_set_long (h, "numberOfDataPoints", 4096), 0);
+    
+    len = sizeof(values)/sizeof(values[0]);
     GRIB_CHECK (grib_set_double_array (h, "values", values, len), 0);
     len = strlen ("SURFTEMPERATURE");
     GRIB_CHECK (grib_set_string (h, "CLNOMA", "SURFTEMPERATURE", &len), 0);
     GRIB_CHECK (grib_set_long (h, "INGRIB", 120), 0);
     GRIB_CHECK (grib_set_long (h, "LLCOSP", 0), 0);
     GRIB_CHECK (grib_set_long (h, "INBITS", 16), 0);
+
+    /*GRIB_CHECK(grib_write_message(h, "output.meteoFrance.grib", "w"), 0);*/
+
     GRIB_CHECK (grib_handle_delete (h), 0);
 
     printf("ALL OK\n");
