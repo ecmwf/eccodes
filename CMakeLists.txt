@@ -351,7 +351,7 @@ ecbuild_print_summary()
 
 ecbuild_info("")
 ecbuild_info("   +---------------------------+")
-ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}    |")
+ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}   |")
 ecbuild_info("   |  Configuration completed  |")
 ecbuild_info("   +---------------------------+")
 ecbuild_info("")
