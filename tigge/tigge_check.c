@@ -86,9 +86,10 @@ int valueflg = 0;
 const char* param = "unknown";
 int warnflg = 0;
 int zeroflg = 0;
-int is_lam =0;
-int is_s2s =0;
-int is_s2s_refcst =0;
+int is_lam = 0;
+int is_s2s = 0;
+int is_s2s_refcst = 0;
+int is_uerra = 0;
 
 const char* good = NULL;
 const char* bad = NULL;
@@ -403,21 +404,14 @@ static void point_in_time(grib_handle* h,const parameter* p,double min,double ma
         break;
     }
 
-    if (!is_lam)
+    if (is_uerra)
     {
-        if(get(h,"indicatorOfUnitOfTimeRange") == 11) /*  six hours */
+        if(get(h,"indicatorOfUnitOfTimeRange") == 1) /*  hourly */
         {
-            /* Six hourly is OK */
-            ;
-        }
-        else
-        {
-            CHECK(eq(h,"indicatorOfUnitOfTimeRange",1));/* Hours */
-            CHECK((get(h,"forecastTime") % 6) == 0);  /* Every six hours */
+            CHECK((eq(h,"forecastTime",1)||eq(h,"forecastTime",2)||eq(h,"forecastTime",4)||eq(h,"forecastTime",5))||(get(h,"forecastTime") % 3) == 0);
         }
     }
-    else
-    {
+    else if (is_lam) {
         if(get(h,"indicatorOfUnitOfTimeRange") == 10 ) /*  three hours */
         {
             /* Three hourly is OK */
@@ -427,6 +421,17 @@ static void point_in_time(grib_handle* h,const parameter* p,double min,double ma
         {
             CHECK(eq(h,"indicatorOfUnitOfTimeRange",1));/* Hours */
             CHECK((get(h,"forecastTime") % 3) == 0);  /* Every three hours */
+        }
+    } else {
+        if(get(h,"indicatorOfUnitOfTimeRange") == 11) /*  six hours */
+        {
+            /* Six hourly is OK */
+            ;
+        }
+        else
+        {
+            CHECK(eq(h,"indicatorOfUnitOfTimeRange",1));/* Hours */
+            CHECK((get(h,"forecastTime") % 6) == 0);  /* Every six hours */
         }
     }
 
@@ -513,6 +518,10 @@ static void statistical_process(grib_handle* h,const parameter* p,double min,dou
 {
     switch(get(h,"typeOfProcessedData"))
     {
+    case 0: /* UERRA Analysis xxx double check!! */
+        CHECK(eq(h,"productDefinitionTemplateNumber",0));
+        break;
+
     case 2: /* Analysis and forecast products */
         CHECK(eq(h,"productDefinitionTemplateNumber",8));
         break;
@@ -647,8 +656,11 @@ static void from_start(grib_handle* h,const parameter* p,double min,double max)
     statistical_process(h,p,min,max);
     CHECK(eq(h,"startStep",0));
 
-    if(step == 0)
-        CHECK(min == 0 && max == 0);
+    if(step == 0){
+        if(!is_uerra){
+            CHECK(min == 0 && max == 0);
+        }
+    }
     else
     {
         check_range(h,p,min/step,max/step);
@@ -1028,28 +1040,42 @@ static void verify(grib_handle* h)
     CHECK(eq(h,"second",0));
     CHECK(ge(h,"startStep",0));
 
-    if (!is_s2s){
-        CHECK(eq(h,"productionStatusOfProcessedData",4)||eq(h,"productionStatusOfProcessedData",5)); /*  TIGGE prod||test */
-        CHECK(le(h,"endStep",30*24));
-    }
-    else
-    {
+    if (is_s2s){
         CHECK(eq(h,"productionStatusOfProcessedData",6)||eq(h,"productionStatusOfProcessedData",7)); /*  S2S prod||test */
         CHECK(le(h,"endStep",100*24));
     }
-
-    if (!is_lam){
-        CHECK((get(h,"step") % 6) == 0);
+    else if (is_uerra){
+        CHECK(eq(h,"productionStatusOfProcessedData",9)||eq(h,"productionStatusOfProcessedData",10)); /*  UERRA prod||test */
+        CHECK(le(h,"endStep",30));
     }
     else
     {
-        CHECK((get(h,"step") % 3) == 0);
+        CHECK(eq(h,"productionStatusOfProcessedData",4)||eq(h,"productionStatusOfProcessedData",5)); /*  TIGGE prod||test */
+        CHECK(le(h,"endStep",30*24));
     }
 
-    /* 2 = analysis or forecast , 3 = control forecast, 4 = perturbed forecast */
-    CHECK(eq(h,"typeOfProcessedData",2)||eq(h,"typeOfProcessedData",3)||eq(h,"typeOfProcessedData",4));
+    if (is_uerra){
+        CHECK((eq(h,"step",1)||eq(h,"step",2)||eq(h,"step",4)||eq(h,"step",5))||(get(h,"step") % 3) == 0);
+    }
+    else if (is_lam){
+        CHECK((get(h,"step") % 3) == 0);
+    }
+    else
+    {
+        CHECK((get(h,"step") % 6) == 0);
+    }
 
-    /* TODO: validate local usage. Empty for now */
+    if (is_uerra){
+        /* 0 = analysis , 2 = analysis or forecast */
+        CHECK(eq(h,"typeOfProcessedData",0)||eq(h,"typeOfProcessedData",2));
+    }
+    else
+    {
+        /* 2 = analysis or forecast , 3 = control forecast, 4 = perturbed forecast */
+        CHECK(eq(h,"typeOfProcessedData",2)||eq(h,"typeOfProcessedData",3)||eq(h,"typeOfProcessedData",4));
+    }
+
+    /* TODO: validate local usage. Empty for now xxx*/
     /* CHECK(eq(h,"section2.sectionLength",5)); */
 
     /* Section 3 */
@@ -1061,6 +1087,11 @@ static void verify(grib_handle* h)
     case 0:
     case 1: /*rotated latlon*/
         latlon_grid(h);
+        break;
+
+    case 30: /*Lambert conformal*/
+      /*lambert_grid(h); # TODO xxx*/
+        printf("Lambert grid - geometry checking not implemented yet!\n");
         break;
 
     case 40: /* gaussian grid (regular or reduced) */
@@ -1225,6 +1256,10 @@ int main(int argc, char** argv)
 
             case 'r':
                 is_s2s_refcst=1;
+                break;
+
+            case 'u':
+                is_uerra=1;
                 break;
 
             default:
