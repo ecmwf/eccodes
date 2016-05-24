@@ -29,7 +29,7 @@ static void* process_grib(void* threadID)
 
     codes_handle* h = codes_handle_new_from_samples(0, "regular_ll_pl_grib2");
     assert(h);
-    printf("Thread %ld running\n", tid);
+    /*printf("Thread %ld running\n", tid);*/
 
     CODES_CHECK(codes_set_long(h,"indicatorOfUnitOfTimeRange", indicatorOfUnitOfTimeRange),0);
     CODES_CHECK(codes_set_string(h,"indicatorOfUnitOfTimeRange", "s", &str_len),0);
