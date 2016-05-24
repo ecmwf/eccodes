@@ -97,6 +97,11 @@ atlas::grid::Grid *ReducedLL::atlasGrid() const {
     return new atlas::grid::global::lonlat::ReducedLonLat(pl_.size(), &pl_[0]);
 }
 
+atlas::grid::Domain ReducedLL::atlasDomain() const {
+    return globalDomain()
+        ? atlas::grid::Domain::makeGlobal()
+        : atlas::grid::Domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
+}
 
 void ReducedLL::validate(const std::vector<double> &values) const {
     size_t count = 0;

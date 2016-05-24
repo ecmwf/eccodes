@@ -27,6 +27,8 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Grib.h"
 
+#include "atlas/grid/Domain.h"
+
 
 namespace mir {
 namespace repres {
@@ -246,6 +248,11 @@ class GaussianIterator: public Iterator {
 
 };
 
+atlas::grid::Domain Reduced::atlasDomain() const {
+    return globalDomain()
+        ? atlas::grid::Domain::makeGlobal()
+        : atlas::grid::Domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
+}
 
 Iterator *Reduced::unrotatedIterator() const {
     // Use a global bounding box if global domain, to avoid rounding issues

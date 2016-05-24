@@ -300,6 +300,12 @@ void LatLon::shape(size_t &ni, size_t &nj) const {
 }
 
 
+atlas::grid::Domain LatLon::atlasDomain() const {
+    return globalDomain()
+        ? atlas::grid::Domain::makeGlobal()
+        : atlas::grid::Domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
+}
+
 }  // namespace latlon
 }  // namespace repres
 }  // namespace mir

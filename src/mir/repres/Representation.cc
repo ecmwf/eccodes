@@ -20,6 +20,7 @@
 #include "eckit/thread/Once.h"
 
 #include "mir/param/MIRParametrisation.h"
+#include "atlas/grid/Domain.h"
 
 #include "mir/repres/Representation.h"
 #include "mir/log/MIR.h"
@@ -134,6 +135,12 @@ const Representation *Representation::truncate(size_t truncation,
 atlas::grid::Grid *Representation::atlasGrid() const {
     std::ostringstream os;
     os << "Representation::atlasGrid() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+atlas::grid::Domain Representation::atlasDomain() const {
+    std::ostringstream os;
+    os << "Representation::atlasDomain() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
