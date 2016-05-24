@@ -69,3 +69,13 @@ res3=`${tools_dir}grib_get '-F%1.2f' -p min,max,avg $outfile2`
 [ "$res1" = "$res3" ]
 
 rm -f $outfile1 $outfile2 || true
+
+infile=${data_dir}/tigge_ecmwf.grib2
+outfile1=$infile.tmp_ccsds.1
+outfile2=$infile.tmp_ccsds.2
+
+${tools_dir}grib_set -r -s bitsPerValue=17 $infile $outfile1
+${tools_dir}grib_set -r -s packingType=grid_ccsds $outfile1 $outfile2
+${tools_dir}grib_compare -P -c data:n $outfile1 $outfile2
+
+rm -f $outfile1 $outfile2
