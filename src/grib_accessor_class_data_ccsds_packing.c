@@ -275,7 +275,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     */
 
     bits8 = ((bits_per_value + 7)/8)*8;
-    size = n_vals * (bits_per_value + 7)/8;
+    size = n_vals * ((bits_per_value + 7)/8);
     decoded = grib_context_buffer_malloc_clear(a->context,size);
     if(!decoded) {
         err = GRIB_OUT_OF_MEMORY;
