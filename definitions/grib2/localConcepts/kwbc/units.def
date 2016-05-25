@@ -642,13 +642,13 @@
 	 parameterNumber = 205 ;
 	}
 #Covariance between Temperature and Zonal Components of the wind.
-'K*ms-1' = {
+'K m s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 206 ;
 	}
 #Covariance between Temperature and Meridional Components of the wind.
-'K*ms-1' = {
+'K m s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 207 ;
