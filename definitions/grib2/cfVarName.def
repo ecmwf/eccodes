@@ -528,6 +528,70 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 18 ;
 	}
+#Downward short-wave radiation flux, clear sky
+'dswrf_cs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 52 ;
+	}
+#Upward short-wave radiation flux, clear sky
+'uswrf_cs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 53 ;
+	}
+#Downward long-wave radiation flux, clear sky
+'dlwrf_cs' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 8 ;
+	}
+#Soil heat flux
+'sohf' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 26 ;
+	}
+#Percolation rate
+'percr' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 16 ;
+	}
+#Soil depth
+'sod' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 27 ;
+	}
+#Accumulated downward short-wave radiation flux, clear sky
+'adswrf_cs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 52 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Accumulated upward short-wave radiation flux, clear sky
+'auswrf_cs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 53 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Accumulated downward long-wave radiation flux, clear sky
+'adlwrf_cs' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Percolation
+'perc' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 16 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Cloudy brightness temperature
 'clbt' = {
          discipline = 3 ;
@@ -1754,199 +1818,199 @@
 	 parameterNumber = 11 ;
 	}
 #Aerosol type
-'p260129' = {
+'aerot' = {
 	 discipline = 0 ;
 	 parameterCategory = 13 ;
 	 parameterNumber = 0 ;
 	}
 #Total ozone
-'p260130' = {
+'tozne' = {
 	 discipline = 0 ;
 	 parameterCategory = 14 ;
 	 parameterNumber = 0 ;
 	}
 #Total column integrated ozone
-'p260132' = {
+'tcioz' = {
 	 discipline = 0 ;
 	 parameterCategory = 14 ;
 	 parameterNumber = 2 ;
 	}
 #Base spectrum width
-'p260133' = {
+'bswid' = {
 	 discipline = 0 ;
 	 parameterCategory = 15 ;
 	 parameterNumber = 0 ;
 	}
 #Base reflectivity
-'p260134' = {
+'bref' = {
 	 discipline = 0 ;
 	 parameterCategory = 15 ;
 	 parameterNumber = 1 ;
 	}
 #Base radial velocity
-'p260135' = {
+'brvel' = {
 	 discipline = 0 ;
 	 parameterCategory = 15 ;
 	 parameterNumber = 2 ;
 	}
 #Vertically-integrated liquid
-'p260136' = {
+'veril' = {
 	 discipline = 0 ;
 	 parameterCategory = 15 ;
 	 parameterNumber = 3 ;
 	}
 #Layer-maximum base reflectivity
-'p260137' = {
+'lmaxbr' = {
 	 discipline = 0 ;
 	 parameterCategory = 15 ;
 	 parameterNumber = 4 ;
 	}
 #Precipitation
-'p260138' = {
+'prec' = {
 	 discipline = 0 ;
 	 parameterCategory = 15 ;
 	 parameterNumber = 5 ;
 	}
 #Air concentration of Caesium 137
-'p260139' = {
+'acces' = {
 	 discipline = 0 ;
 	 parameterCategory = 18 ;
 	 parameterNumber = 0 ;
 	}
 #Air concentration of Iodine 131
-'p260140' = {
+'aciod' = {
 	 discipline = 0 ;
 	 parameterCategory = 18 ;
 	 parameterNumber = 1 ;
 	}
 #Air concentration of radioactive pollutant
-'p260141' = {
+'acradp' = {
 	 discipline = 0 ;
 	 parameterCategory = 18 ;
 	 parameterNumber = 2 ;
 	}
 #Ground deposition of Caesium 137
-'p260142' = {
+'gdces' = {
 	 discipline = 0 ;
 	 parameterCategory = 18 ;
 	 parameterNumber = 3 ;
 	}
 #Ground deposition of Iodine 131
-'p260143' = {
+'gdiod' = {
 	 discipline = 0 ;
 	 parameterCategory = 18 ;
 	 parameterNumber = 4 ;
 	}
 #Ground deposition of radioactive pollutant
-'p260144' = {
+'gdradp' = {
 	 discipline = 0 ;
 	 parameterCategory = 18 ;
 	 parameterNumber = 5 ;
 	}
 #Time-integrated air concentration of caesium pollutant
-'p260145' = {
+'tiaccp' = {
 	 discipline = 0 ;
 	 parameterCategory = 18 ;
 	 parameterNumber = 6 ;
 	}
 #Time-integrated air concentration of iodine pollutant
-'p260146' = {
+'tiacip' = {
 	 discipline = 0 ;
 	 parameterCategory = 18 ;
 	 parameterNumber = 7 ;
 	}
 #Time-integrated air concentration of radioactive pollutant
-'p260147' = {
+'tiacrp' = {
 	 discipline = 0 ;
 	 parameterCategory = 18 ;
 	 parameterNumber = 8 ;
 	}
 #Volcanic ash
-'p260148' = {
+'volash' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 4 ;
 	}
 #Icing top
-'p260149' = {
+'icit' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 5 ;
 	}
 #Icing base
-'p260150' = {
+'icib' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 6 ;
 	}
 #Icing
-'p260151' = {
+'ici' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 7 ;
 	}
 #Turbulence top
-'p260152' = {
+'turbt' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 8 ;
 	}
 #Turbulence base
-'p260153' = {
+'turbb' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 9 ;
 	}
 #Turbulence
-'p260154' = {
+'turb' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 10 ;
 	}
 #Turbulent kinetic energy
-'p260155' = {
+'tke' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 11 ;
 	}
 #Planetary boundary layer regime
-'p260156' = {
+'pblreg' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 12 ;
 	}
 #Contrail intensity
-'p260157' = {
+'conti' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 13 ;
 	}
 #Contrail engine type
-'p260158' = {
+'contet' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 14 ;
 	}
 #Contrail top
-'p260159' = {
+'contt' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 15 ;
 	}
 #Contrail base
-'p260160' = {
+'contb' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 16 ;
 	}
 #Maximum snow albedo
-'p260161' = {
+'mxsalb' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 17 ;
 	}
 #Snow free albedo
-'p260162' = {
+'snfalb' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 18 ;

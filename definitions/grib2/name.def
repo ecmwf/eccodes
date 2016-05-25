@@ -528,6 +528,70 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 18 ;
 	}
+#Downward short-wave radiation flux, clear sky
+'Downward short-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 52 ;
+	}
+#Upward short-wave radiation flux, clear sky
+'Upward short-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 53 ;
+	}
+#Downward long-wave radiation flux, clear sky
+'Downward long-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 8 ;
+	}
+#Soil heat flux
+'Soil heat flux' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 26 ;
+	}
+#Percolation rate
+'Percolation rate' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 16 ;
+	}
+#Soil depth
+'Soil depth' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 27 ;
+	}
+#Accumulated downward short-wave radiation flux, clear sky
+'Accumulated downward short-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 52 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Accumulated upward short-wave radiation flux, clear sky
+'Accumulated upward short-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 53 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Accumulated downward long-wave radiation flux, clear sky
+'Accumulated downward long-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Percolation
+'Percolation' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 16 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Cloudy brightness temperature
 'Cloudy brightness temperature' = {
          discipline = 3 ;
