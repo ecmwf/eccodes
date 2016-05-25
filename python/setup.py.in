@@ -23,7 +23,7 @@ add_attribute = lambda **args: [list.append(attdict[key],value) for key,value in
 #    extra_objects = os.path.join(build_dir, 'src', '.libs', 'libeccodes.a')
 #)
 
-with_jasper = @LIB_JASPER@
+with_jasper = @HAVE_LIBJASPER@
 if with_jasper:
     jasper_dir = '@JASPER_DIR@'
     if jasper_dir and jasper_dir != 'system':
