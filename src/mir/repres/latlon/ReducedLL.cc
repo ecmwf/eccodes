@@ -17,7 +17,6 @@
 
 #include <iostream>
 
-#include "atlas/grid/deprecated/LocalGrid.h"
 #include "atlas/grid/global/lonlat/ReducedLonLat.h"
 
 #include "mir/action/misc/AreaCropper.h"

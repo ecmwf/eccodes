@@ -20,7 +20,6 @@
 #include "eckit/exception/Exceptions.h"
 #include "eckit/types/Types.h"
 
-#include "atlas/grid/deprecated/LocalGrid.h"
 #include "atlas/grid/global/lonlat/RegularLonLat.h"
 
 #include "mir/util/Grib.h"
