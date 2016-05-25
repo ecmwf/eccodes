@@ -20,7 +20,7 @@ list( APPEND test_bins
       gauss_sub
       grib_util_set_spec
       local_MeteoFrance
-      second_order_bitmap_numberOfValues
+      grib_2nd_order_numValues
 )
 
 foreach( tool ${test_bins} )
@@ -40,7 +40,7 @@ list( APPEND tests1
     unit_tests
     md5
     uerra
-    second_order_bitmap_numberOfValues
+    grib_2nd_order_numValues
 )
 list( APPEND tests2
     grib_double_cmp
