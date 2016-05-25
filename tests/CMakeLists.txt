@@ -20,6 +20,7 @@ list( APPEND test_bins
       gauss_sub
       grib_util_set_spec
       local_MeteoFrance
+      second_order_bitmap_numberOfValues
 )
 
 foreach( tool ${test_bins} )
@@ -39,6 +40,7 @@ list( APPEND tests1
     unit_tests
     md5
     uerra
+    second_order_bitmap_numberOfValues
 )
 list( APPEND tests2
     grib_double_cmp
@@ -118,7 +120,7 @@ ecbuild_add_test( TARGET eccodes_t_check_gaussian_grids
 
 # Note: making the test dependent on the grib files (with DEPENDS)
 #       means they will be downloaded at "make" time
-#       rather than when you do "make test". Use TEST_DEPENDS instead
+#       rather than when you do "ctest". Use TEST_DEPENDS instead
 foreach( test ${tests2} )
     ecbuild_add_test( TARGET eccodes_t_${test}
                   TYPE SCRIPT

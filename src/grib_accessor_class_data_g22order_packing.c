@@ -739,6 +739,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     if((err = grib_set_long_internal(gh,self->orderOfSpatialDifferencing,0 )) != GRIB_SUCCESS)  return err;
     if((err = grib_set_long_internal(gh,self->numberOfOctetsExtraDescriptors,0 )) != GRIB_SUCCESS)  return err;
+    /* ECC-259: Set correct number of values */
+    if((err = grib_set_long_internal(gh,self->numberOfValues,*len )) != GRIB_SUCCESS)  return err;
 
     return GRIB_SUCCESS;
 }
