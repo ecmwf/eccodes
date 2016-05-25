@@ -654,37 +654,37 @@
 	 parameterNumber = 207 ;
 	}
 #Vertical Diffusion Zonal Acceleration
-'ms-2' = {
+'m s**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 208 ;
 	}
 #Vertical Diffusion Meridional Acceleration
-'ms-2' = {
+'m s**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 209 ;
 	}
 #Gravity wave drag zonal acceleration
-'ms-2' = {
+'m s**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 210 ;
 	}
 #Gravity wave drag meridional acceleration
-'ms-2' = {
+'m s**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 211 ;
 	}
 #Convective zonal momentum mixing acceleration
-'ms-2' = {
+'m s**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 212 ;
 	}
 #Convective meridional momentum mixing acceleration
-'ms-2' = {
+'m s**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 213 ;
