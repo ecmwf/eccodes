@@ -40,3 +40,4 @@ meta unpackedError simple_packing_error(zero,binaryScaleFactor,decimalScaleFacto
 alias data.packedValues = codedValues;
 
 template statistics "common/statistics_grid.def";
+

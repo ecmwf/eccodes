@@ -2024,7 +2024,7 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 247 ;
 	}
-#Cloud cover
+#Fraction of cloud cover
 '(0 - 1)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 248 ;
@@ -9025,22 +9025,22 @@
 	 indicatorOfParameter = 48 ;
 	}
 #Instantaneous total lightning density
-'flashes/km2/day' = {
+'flashes km**-2 day**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 50 ;
 	}
 #Averaged total lightning density
-'flashes/km2/day' = {
+'flashes km**-2 day**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 51 ;
 	}
 #Instantaneous cloud-to-ground lightning density
-'flashes/km2/day' = {
+'flashes km**-2 day**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 52 ;
 	}
 #Averaged cloud-to-ground lightning density
-'flashes/km2/day' = {
+'flashes km**-2 day**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 53 ;
 	}
@@ -11730,7 +11730,7 @@
 	 indicatorOfParameter = 229 ;
 	}
 #Mean wave direction
-'degrees' = {
+'Degree true' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 230 ;
 	}
@@ -12365,12 +12365,12 @@
 	 indicatorOfParameter = 202 ;
 	}
 #Bias in the zonal pressure gradient (applied)
-'Pa**m-1' = {
+'Pa m**-1' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 203 ;
 	}
 #Bias in the meridional pressure gradient (applied)
-'Pa**m-1' = {
+'Pa m**-1' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 204 ;
 	}

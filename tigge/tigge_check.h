@@ -1762,7 +1762,7 @@ warning: s2s.z_tigge_c_kwbc_20090829000000_ncep_prod_pf_sl_0024_003_0000_tcw.gri
    },
 
 /*
-   s2s/rums warning: s2s.z_s2s_c_rhmc_20150819000000_glob_prod_0336_017.sl.grib2, field 4 [surface_air_temperature_sfc.glob]: surface_air_temperature_sfc.glob minimum value 177.17 is not in [180,290]
+s2s/rums warning: s2s.z_s2s_c_rhmc_20150819000000_glob_prod_0336_017.sl.grib2, field 4 [surface_air_temperature_sfc.glob]: surface_air_temperature_sfc.glob minimum value 177.17 is not in [180,290]
 s2s/ammc: warning: s2s.2t_20151224_26.grib2, field 12 [surface_air_temperature_sfc.glob.s2]: surface_air_temperature_sfc.glob.s2 maximum value 353.017 is not in [270,350]
 */
 
@@ -2308,6 +2308,76 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       },
       {&daily_average, &predefined_level},
    },
+
+/* UERRA */
+   {
+      "total_cloud_cover_sfc.ur",
+      0,
+      1e-10,
+      0.9999,
+      100.00001,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "ur"},
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 6},
+         {"parameterNumber", GRIB_TYPE_LONG, 1},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 8},
+         {NULL, },
+      },
+      {&point_in_time, &predefined_thickness},
+   },
+   {
+      "high_cloud_cover_sfc.ur",
+      0,
+      1e-10,
+      0.9999,
+      100.00001,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "ur"},
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 6},
+         {"parameterNumber", GRIB_TYPE_LONG, 5},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 8},
+         {NULL, },
+      },
+      {&point_in_time, &predefined_thickness},
+   },
+   {
+      "medium_cloud_cover_sfc.ur",
+      0,
+      1e-10,
+      0.9999,
+      100.00001,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "ur"},
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 6},
+         {"parameterNumber", GRIB_TYPE_LONG, 4},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 8},
+         {NULL, },
+      },
+      {&point_in_time, &predefined_thickness},
+   },
+   {
+      "low_cloud_cover_sfc.ur",
+      0,
+      1e-10,
+      0.9999,
+      100.00001,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "ur"},
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 6},
+         {"parameterNumber", GRIB_TYPE_LONG, 3},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 8},
+         {NULL, },
+      },
+      {&point_in_time, &predefined_thickness},
+   }
 
 };
 

@@ -304,7 +304,7 @@ extern int grib_yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 37 "griby.y"
+#line 39 "griby.y"
 
     char                    *str;
     long                    lval;

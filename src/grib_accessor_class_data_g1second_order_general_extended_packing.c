@@ -1186,6 +1186,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         }
     }
 
+    /* ECC-259: Set correct number of values */
+    ret=grib_set_long_internal(a->parent->h,self->number_of_values, *len);
+    if(ret) return ret;
+
     grib_buffer_replace(a, buffer, size,1,1);
 
     grib_context_free(a->context,buffer);

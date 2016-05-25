@@ -474,13 +474,13 @@
 	 parameterNumber = 198 ;
 	}
 #Total Icing Potential Diagnostic
-'non-dim' = {
+'dimensionless' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 206 ;
 	}
 #Number concentration for ice particles
-'non-dim' = {
+'dimensionless' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 207 ;
@@ -978,7 +978,7 @@
 	 parameterNumber = 193 ;
 	}
 #Categorical Ozone Concentration
-'non-dim' = {
+'dimensionless' = {
 	 discipline = 0 ;
 	 parameterCategory = 14 ;
 	 parameterNumber = 194 ;
@@ -1044,7 +1044,7 @@
 	 parameterNumber = 196 ;
 	}
 #Lightning
-'non-dim' = {
+'dimensionless' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 192 ;
@@ -1613,6 +1613,24 @@
 	 parameterCategory = 255 ;
 	 parameterNumber = 255 ;
 	}
+#Sunshine Duration
+'s' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 201 ;
+	}
+#Icing severity
+'Numeric' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 234 ;
+	}
+#Ventilation Rate
+'m**2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 224 ;
+	}
 #Convective inhibition
 'J kg**-1' = {
 	 discipline = 0 ;
@@ -1631,15 +1649,3 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 8 ;
 }
-#Sunshine Duration
-'s' = {
-	 discipline = 0 ;
-	 parameterCategory = 6 ;
-	 parameterNumber = 201 ;
-	}
-#Ventilation Rate
-'m**2 s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 224 ;
-	}

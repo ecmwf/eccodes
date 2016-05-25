@@ -1613,6 +1613,24 @@
 	 parameterCategory = 255 ;
 	 parameterNumber = 255 ;
 	}
+#Sunshine Duration
+'Sunshine Duration' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 201 ;
+	}
+#Icing severity
+'Icing severity' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 234 ;
+	}
+#Ventilation Rate
+'Ventilation Rate' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 224 ;
+	}
 #Convective inhibition
 'Convective inhibition' = {
 	 discipline = 0 ;
@@ -1630,16 +1648,4 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 8 ;
-	}
-#Sunshine Duration
-'Sunshine Duration' = {
-	 discipline = 0 ;
-	 parameterCategory = 6 ;
-	 parameterNumber = 201 ;
-	}
-#Ventilation Rate
-'Ventilation Rate' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 224 ;
 	}

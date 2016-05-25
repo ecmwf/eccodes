@@ -88,8 +88,8 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 84 ;
 	}
-#Cloud cover
-'Cloud cover' = {
+#Fraction of cloud cover
+'Fraction of cloud cover' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 32 ;
@@ -108,11 +108,30 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 11 ;
 	}
+#Low cloud cover
+'Low cloud cover' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 3 ;
+	}
+#Medium cloud cover
+'Medium cloud cover' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 4 ;
+	}
+#High cloud cover
+'High cloud cover' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 5 ;
+	}
 #10 metre wind gust in the last 3 hours
 '10 metre wind gust in the last 3 hours' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
+	 is_uerra = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
@@ -217,6 +236,39 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
+	}
+#10 metre wind gust for UERRA
+'10 metre wind gust for UERRA' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 is_uerra = 1 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Maximum temperature at 2 metres for UERRA
+'Maximum temperature at 2 metres for UERRA' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 is_uerra = 1 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfFirstFixedSurface = 103 ;
+	}
+#Minimum temperature at 2 metres for UERRA
+'Minimum temperature at 2 metres for UERRA' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 is_uerra = 1 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #Mean temperature tendency due to short-wave radiation
 'Mean temperature tendency due to short-wave radiation' = {
@@ -400,6 +452,15 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
 	}
+#Surface air relative humidity
+'Surface air relative humidity' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 1 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	}
 #Apparent temperature
 'Apparent temperature' = {
 	 discipline = 0 ;
@@ -411,6 +472,61 @@
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 2 ;
+	}
+#Cloud cover
+'Cloud cover' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 22 ;
+	}
+#Evaporation rate
+'Evaporation rate' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 79 ;
+	}
+#Evaporation
+'Evaporation' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 79 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#10 metre wind direction
+'10 metre wind direction' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	}
+#Direct short wave radiation flux
+'Direct short wave radiation flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	}
+#Diffuse short wave radiation flux
+'Diffuse short wave radiation flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	}
+#Time-integrated direct short wave radiation flux
+'Time-integrated direct short wave radiation flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Soil temperature
+'Soil temperature' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
 	}
 #Cloudy brightness temperature
 'Cloudy brightness temperature' = {
@@ -544,6 +660,12 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	}
+#Wind direction
+'Wind direction' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	}
 #Significant height of combined wind waves and swell
 'Significant height of combined wind waves and swell' = {
 	 discipline = 10 ;
@@ -641,6 +763,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
+	 is_uerra = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
@@ -653,6 +776,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
+	 is_uerra = 0 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;

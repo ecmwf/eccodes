@@ -458,7 +458,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
     return size;
 }
 
-bufr_descriptors_array* do_expand(grib_accessor* a,bufr_descriptors_array* unexpanded,change_coding_params* ccp,int *err)
+static bufr_descriptors_array* do_expand(grib_accessor* a,bufr_descriptors_array* unexpanded,change_coding_params* ccp,int *err)
 {
     bufr_descriptors_array* expanded=NULL;
     grib_context* c=a->context;

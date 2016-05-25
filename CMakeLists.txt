@@ -97,6 +97,7 @@ ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "enable memory align
 ecbuild_add_option( FEATURE GRIB_TIMER          DESCRIPTION "enable timer" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "enable POSIX threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "enable OMP threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "enable extended regression testing" DEFAULT OFF ADVANCED )
 
 ###############################################################################
 # macro processing
@@ -350,7 +351,7 @@ ecbuild_print_summary()
 
 ecbuild_info("")
 ecbuild_info("   +---------------------------+")
-ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}    |")
+ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}   |")
 ecbuild_info("   |  Configuration completed  |")
 ecbuild_info("   +---------------------------+")
 ecbuild_info("")

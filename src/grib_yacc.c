@@ -71,6 +71,8 @@
 
 extern int grib_yylex();
 extern int grib_yyerror(const char*);
+extern int grib_yylineno;
+extern char* file_being_parsed();
 
 extern   grib_action*           grib_parser_all_actions;
 extern   grib_concept_value*    grib_parser_concept;
@@ -89,7 +91,7 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
 
 
 /* Line 371 of yacc.c  */
-#line 93 "y.tab.c"
+#line 95 "y.tab.c"
 
 # ifndef YY_NULL
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -383,7 +385,7 @@ extern int grib_yydebug;
 typedef union YYSTYPE
 {
 /* Line 387 of yacc.c  */
-#line 37 "griby.y"
+#line 39 "griby.y"
 
     char                    *str;
     long                    lval;
@@ -403,7 +405,7 @@ typedef union YYSTYPE
 
 
 /* Line 387 of yacc.c  */
-#line 407 "y.tab.c"
+#line 409 "y.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define grib_yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -431,7 +433,7 @@ int grib_yyparse ();
 /* Copy the second part of user declarations.  */
 
 /* Line 390 of yacc.c  */
-#line 435 "y.tab.c"
+#line 437 "y.tab.c"
 
 #ifdef short
 # undef short
@@ -900,34 +902,34 @@ static const grib_yytype_int16 grib_yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const grib_yytype_uint16 grib_yyrline[] =
 {
-       0,   260,   260,   262,   263,   264,   265,   267,   271,   274,
-     275,   276,   277,   280,   281,   285,   286,   289,   290,   291,
-     292,   295,   296,   297,   298,   299,   300,   301,   302,   303,
-     307,   308,   311,   312,   315,   316,   319,   323,   326,   329,
-     332,   335,   338,   341,   344,   347,   350,   353,   357,   360,
-     363,   366,   369,   372,   375,   378,   381,   384,   388,   391,
-     394,   397,   400,   403,   406,   409,   412,   415,   418,   421,
-     425,   428,   431,   434,   437,   440,   443,   446,   449,   452,
-     455,   458,   461,   464,   467,   471,   474,   477,   480,   483,
-     485,   488,   491,   494,   497,   500,   503,   506,   509,   512,
-     515,   518,   521,   524,   527,   530,   533,   535,   537,   540,
-     543,   546,   550,   554,   557,   560,   572,   584,   596,   599,
-     602,   604,   607,   610,   611,   612,   613,   615,   618,   619,
-     620,   621,   622,   623,   624,   625,   627,   628,   629,   630,
-     631,   635,   636,   637,   638,   642,   643,   644,   647,   648,
-     651,   652,   656,   657,   660,   661,   664,   665,   668,   669,
-     670,   671,   672,   673,   674,   675,   676,   677,   678,   679,
-     680,   681,   682,   683,   684,   687,   690,   693,   696,   697,
-     698,   699,   700,   701,   702,   703,   704,   705,   706,   707,
-     708,   709,   710,   711,   712,   716,   717,   720,   721,   724,
-     725,   728,   729,   732,   736,   737,   738,   741,   743,   745,
-     747,   751,   752,   755,   756,   760,   762,   766,   767,   768,
-     769,   772,   773,   774,   776,   777,   778,   779,   780,   781,
-     785,   786,   789,   790,   791,   792,   793,   794,   795,   796,
-     797,   798,   799,   800,   803,   804,   805,   808,   810,   811,
-     812,   813,   814,   815,   820,   821,   824,   825,   828,   829,
-     832,   838,   839,   842,   843,   846,   847,   850,   854,   857,
-     858
+       0,   262,   262,   264,   265,   266,   267,   269,   273,   276,
+     277,   278,   279,   282,   283,   287,   288,   291,   292,   293,
+     294,   297,   298,   299,   300,   301,   302,   303,   304,   305,
+     309,   310,   313,   314,   317,   318,   321,   325,   328,   331,
+     334,   337,   340,   343,   346,   349,   352,   355,   359,   362,
+     365,   368,   371,   374,   377,   380,   383,   386,   390,   393,
+     396,   399,   402,   405,   408,   411,   414,   417,   420,   423,
+     427,   430,   433,   436,   439,   442,   445,   448,   451,   454,
+     457,   460,   463,   466,   469,   473,   476,   479,   482,   485,
+     487,   490,   493,   496,   499,   502,   505,   508,   511,   514,
+     517,   520,   523,   526,   529,   532,   535,   537,   539,   542,
+     545,   548,   552,   556,   559,   562,   574,   586,   598,   601,
+     604,   606,   609,   612,   613,   614,   615,   617,   620,   621,
+     622,   623,   624,   625,   626,   627,   629,   630,   631,   632,
+     633,   637,   638,   639,   640,   644,   645,   646,   649,   650,
+     653,   654,   658,   659,   662,   663,   666,   667,   670,   671,
+     672,   673,   674,   675,   676,   677,   678,   679,   680,   681,
+     682,   683,   684,   685,   686,   689,   692,   695,   698,   699,
+     700,   701,   702,   703,   704,   705,   706,   707,   708,   709,
+     710,   711,   712,   713,   714,   718,   719,   722,   723,   726,
+     727,   730,   731,   734,   738,   739,   740,   743,   745,   747,
+     749,   753,   754,   757,   758,   762,   764,   768,   769,   770,
+     771,   774,   775,   776,   778,   779,   780,   781,   782,   783,
+     787,   788,   791,   792,   793,   794,   795,   796,   797,   798,
+     799,   800,   801,   802,   805,   806,   807,   810,   812,   813,
+     814,   815,   816,   817,   822,   823,   826,   827,   830,   831,
+     834,   840,   841,   844,   845,   848,   849,   852,   856,   859,
+     860
 };
 #endif
 
@@ -2546,574 +2548,574 @@ grib_yyreduce:
     {
         case 2:
 /* Line 1792 of yacc.c  */
-#line 260 "griby.y"
+#line 262 "griby.y"
     { grib_parser_all_actions = 0;grib_parser_concept=0; 
                             grib_parser_hash_array=0;grib_parser_rules=0; }
     break;
 
   case 3:
 /* Line 1792 of yacc.c  */
-#line 262 "griby.y"
+#line 264 "griby.y"
     { grib_parser_concept     = reverse_concept((grib_yyvsp[(1) - (1)].concept_value)); }
     break;
 
   case 4:
 /* Line 1792 of yacc.c  */
-#line 263 "griby.y"
+#line 265 "griby.y"
     { grib_parser_hash_array     = reverse_hash_array((grib_yyvsp[(1) - (1)].hash_array_value)); }
     break;
 
   case 5:
 /* Line 1792 of yacc.c  */
-#line 264 "griby.y"
+#line 266 "griby.y"
     { grib_parser_all_actions = (grib_yyvsp[(1) - (1)].act); }
     break;
 
   case 6:
 /* Line 1792 of yacc.c  */
-#line 265 "griby.y"
+#line 267 "griby.y"
     { grib_parser_rules       = (grib_yyvsp[(1) - (1)].rules); }
     break;
 
   case 7:
 /* Line 1792 of yacc.c  */
-#line 267 "griby.y"
+#line 269 "griby.y"
     { grib_parser_all_actions = 0; grib_parser_concept=0; 
 	                    grib_parser_hash_array=0; grib_parser_rules=0; }
     break;
 
   case 9:
 /* Line 1792 of yacc.c  */
-#line 274 "griby.y"
+#line 276 "griby.y"
     { (grib_yyval.dvalue)=grib_darray_push(0,0,(grib_yyvsp[(1) - (1)].dval));}
     break;
 
   case 10:
 /* Line 1792 of yacc.c  */
-#line 275 "griby.y"
+#line 277 "griby.y"
     { (grib_yyval.dvalue)=grib_darray_push(0,(grib_yyvsp[(1) - (3)].dvalue),(grib_yyvsp[(3) - (3)].dval));}
     break;
 
   case 11:
 /* Line 1792 of yacc.c  */
-#line 276 "griby.y"
+#line 278 "griby.y"
     { (grib_yyval.dvalue)=grib_darray_push(0,0,(grib_yyvsp[(1) - (1)].lval));}
     break;
 
   case 12:
 /* Line 1792 of yacc.c  */
-#line 277 "griby.y"
+#line 279 "griby.y"
     { (grib_yyval.dvalue)=grib_darray_push(0,(grib_yyvsp[(1) - (3)].dvalue),(grib_yyvsp[(3) - (3)].lval));}
     break;
 
   case 13:
 /* Line 1792 of yacc.c  */
-#line 280 "griby.y"
+#line 282 "griby.y"
     { (grib_yyval.svalue)=grib_sarray_push(0,0,(grib_yyvsp[(1) - (1)].str));}
     break;
 
   case 14:
 /* Line 1792 of yacc.c  */
-#line 281 "griby.y"
+#line 283 "griby.y"
     { (grib_yyval.svalue)=grib_sarray_push(0,(grib_yyvsp[(1) - (3)].svalue),(grib_yyvsp[(3) - (3)].str));}
     break;
 
   case 15:
 /* Line 1792 of yacc.c  */
-#line 285 "griby.y"
+#line 287 "griby.y"
     { (grib_yyval.ivalue)=grib_iarray_push(0,(grib_yyvsp[(1) - (1)].lval));}
     break;
 
   case 16:
 /* Line 1792 of yacc.c  */
-#line 286 "griby.y"
+#line 288 "griby.y"
     { (grib_yyval.ivalue)=grib_iarray_push((grib_yyvsp[(1) - (3)].ivalue),(grib_yyvsp[(3) - (3)].lval));}
     break;
 
   case 18:
 /* Line 1792 of yacc.c  */
-#line 290 "griby.y"
+#line 292 "griby.y"
     { (grib_yyvsp[(1) - (2)].act)->next = (grib_yyvsp[(2) - (2)].act); (grib_yyval.act) = (grib_yyvsp[(1) - (2)].act); }
     break;
 
   case 19:
 /* Line 1792 of yacc.c  */
-#line 291 "griby.y"
+#line 293 "griby.y"
     { (grib_yyvsp[(1) - (3)].act)->next = (grib_yyvsp[(3) - (3)].act); (grib_yyval.act) = (grib_yyvsp[(1) - (3)].act); }
     break;
 
   case 20:
 /* Line 1792 of yacc.c  */
-#line 292 "griby.y"
+#line 294 "griby.y"
     {  (grib_yyval.act) = (grib_yyvsp[(1) - (2)].act);}
     break;
 
   case 32:
 /* Line 1792 of yacc.c  */
-#line 311 "griby.y"
+#line 313 "griby.y"
     { (grib_yyval.explist) = 0; }
     break;
 
   case 35:
 /* Line 1792 of yacc.c  */
-#line 316 "griby.y"
+#line 318 "griby.y"
     { (grib_yyvsp[(1) - (3)].explist)->next = (grib_yyvsp[(3) - (3)].explist); (grib_yyval.explist) = (grib_yyvsp[(1) - (3)].explist); }
     break;
 
   case 36:
 /* Line 1792 of yacc.c  */
-#line 319 "griby.y"
+#line 321 "griby.y"
     { (grib_yyval.explist) = grib_arguments_new(grib_parser_context,(grib_yyvsp[(1) - (1)].exp),NULL); }
     break;
 
   case 37:
 /* Line 1792 of yacc.c  */
-#line 324 "griby.y"
+#line 326 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (7)].str),"unsigned",(grib_yyvsp[(3) - (7)].lval),NULL,(grib_yyvsp[(6) - (7)].explist),(grib_yyvsp[(7) - (7)].lval),NULL,NULL);        free((grib_yyvsp[(5) - (7)].str));  }
     break;
 
   case 38:
 /* Line 1792 of yacc.c  */
-#line 327 "griby.y"
+#line 329 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (10)].str),"unsigned",(grib_yyvsp[(3) - (10)].lval),(grib_yyvsp[(7) - (10)].explist),(grib_yyvsp[(9) - (10)].explist),(grib_yyvsp[(10) - (10)].lval),NULL,NULL);        free((grib_yyvsp[(5) - (10)].str));  }
     break;
 
   case 39:
 /* Line 1792 of yacc.c  */
-#line 330 "griby.y"
+#line 332 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (7)].str),"unsigned_bits",(grib_yyvsp[(3) - (7)].lval),NULL,(grib_yyvsp[(6) - (7)].explist),(grib_yyvsp[(7) - (7)].lval),NULL,NULL);        free((grib_yyvsp[(5) - (7)].str));  }
     break;
 
   case 40:
 /* Line 1792 of yacc.c  */
-#line 333 "griby.y"
+#line 335 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (10)].str),"unsigned_bits",(grib_yyvsp[(3) - (10)].lval),(grib_yyvsp[(7) - (10)].explist),(grib_yyvsp[(9) - (10)].explist),(grib_yyvsp[(10) - (10)].lval),NULL,NULL);        free((grib_yyvsp[(5) - (10)].str));  }
     break;
 
   case 41:
 /* Line 1792 of yacc.c  */
-#line 336 "griby.y"
+#line 338 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (7)].str),"ascii",(grib_yyvsp[(3) - (7)].lval),NULL,(grib_yyvsp[(6) - (7)].explist),(grib_yyvsp[(7) - (7)].lval),NULL,NULL);  free((grib_yyvsp[(5) - (7)].str));  }
     break;
 
   case 42:
 /* Line 1792 of yacc.c  */
-#line 339 "griby.y"
+#line 341 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"group",0,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);  free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 43:
 /* Line 1792 of yacc.c  */
-#line 342 "griby.y"
+#line 344 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (7)].str),"group",0,(grib_yyvsp[(4) - (7)].explist),(grib_yyvsp[(6) - (7)].explist),(grib_yyvsp[(7) - (7)].lval),NULL,NULL);  free((grib_yyvsp[(2) - (7)].str));  }
     break;
 
   case 44:
 /* Line 1792 of yacc.c  */
-#line 345 "griby.y"
+#line 347 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(1) - (7)].str),"to_integer",0,(grib_yyvsp[(5) - (7)].explist),0,(grib_yyvsp[(7) - (7)].lval),NULL,NULL);  free((grib_yyvsp[(1) - (7)].str));  }
     break;
 
   case 45:
 /* Line 1792 of yacc.c  */
-#line 348 "griby.y"
+#line 350 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(1) - (7)].str),"sexagesimal2decimal",0,(grib_yyvsp[(5) - (7)].explist),0,(grib_yyvsp[(7) - (7)].lval),NULL,NULL);  free((grib_yyvsp[(1) - (7)].str));  }
     break;
 
   case 46:
 /* Line 1792 of yacc.c  */
-#line 351 "griby.y"
+#line 353 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(1) - (7)].str),"to_string",0,(grib_yyvsp[(5) - (7)].explist),0,(grib_yyvsp[(7) - (7)].lval),NULL,NULL);  free((grib_yyvsp[(1) - (7)].str));  }
     break;
 
   case 47:
 /* Line 1792 of yacc.c  */
-#line 354 "griby.y"
+#line 356 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"non_alpha",0,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);  free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 48:
 /* Line 1792 of yacc.c  */
-#line 358 "griby.y"
+#line 360 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (7)].str),"ascii",(grib_yyvsp[(3) - (7)].lval),NULL,(grib_yyvsp[(6) - (7)].explist),(grib_yyvsp[(7) - (7)].lval),NULL,NULL);  free((grib_yyvsp[(5) - (7)].str));  }
     break;
 
   case 49:
 /* Line 1792 of yacc.c  */
-#line 361 "griby.y"
+#line 363 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (7)].str),"bytes",(grib_yyvsp[(3) - (7)].lval),NULL,(grib_yyvsp[(6) - (7)].explist),(grib_yyvsp[(7) - (7)].lval),NULL,NULL);      free((grib_yyvsp[(5) - (7)].str));  }
     break;
 
   case 50:
 /* Line 1792 of yacc.c  */
-#line 364 "griby.y"
+#line 366 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (10)].str),"bytes",(grib_yyvsp[(3) - (10)].lval),(grib_yyvsp[(7) - (10)].explist),(grib_yyvsp[(9) - (10)].explist),(grib_yyvsp[(10) - (10)].lval),NULL,NULL);      free((grib_yyvsp[(5) - (10)].str));  }
     break;
 
   case 51:
 /* Line 1792 of yacc.c  */
-#line 367 "griby.y"
+#line 369 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (7)].str),"ksec1expver",(grib_yyvsp[(3) - (7)].lval),NULL,(grib_yyvsp[(6) - (7)].explist),(grib_yyvsp[(7) - (7)].lval),NULL,NULL);  free((grib_yyvsp[(5) - (7)].str));  }
     break;
 
   case 52:
 /* Line 1792 of yacc.c  */
-#line 370 "griby.y"
+#line 372 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (7)].str),"signed",(grib_yyvsp[(3) - (7)].lval),NULL,(grib_yyvsp[(6) - (7)].explist),(grib_yyvsp[(7) - (7)].lval),NULL,NULL);      free((grib_yyvsp[(5) - (7)].str));  }
     break;
 
   case 53:
 /* Line 1792 of yacc.c  */
-#line 373 "griby.y"
+#line 375 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (10)].str),"signed",(grib_yyvsp[(3) - (10)].lval),(grib_yyvsp[(7) - (10)].explist),(grib_yyvsp[(9) - (10)].explist),(grib_yyvsp[(10) - (10)].lval),NULL,NULL);      free((grib_yyvsp[(5) - (10)].str));  }
     break;
 
   case 54:
 /* Line 1792 of yacc.c  */
-#line 376 "griby.y"
+#line 378 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (7)].str),"signed_bits",(grib_yyvsp[(3) - (7)].lval),NULL,(grib_yyvsp[(6) - (7)].explist),(grib_yyvsp[(7) - (7)].lval),NULL,NULL);      free((grib_yyvsp[(5) - (7)].str));  }
     break;
 
   case 55:
 /* Line 1792 of yacc.c  */
-#line 379 "griby.y"
+#line 381 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (10)].str),"signed_bits",(grib_yyvsp[(3) - (10)].lval),(grib_yyvsp[(7) - (10)].explist),(grib_yyvsp[(9) - (10)].explist),(grib_yyvsp[(10) - (10)].lval),NULL,NULL);      free((grib_yyvsp[(5) - (10)].str));  }
     break;
 
   case 56:
 /* Line 1792 of yacc.c  */
-#line 382 "griby.y"
+#line 384 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (8)].str),"codetable",(grib_yyvsp[(3) - (8)].lval), (grib_yyvsp[(6) - (8)].explist),(grib_yyvsp[(7) - (8)].explist),(grib_yyvsp[(8) - (8)].lval),NULL,NULL);    free((grib_yyvsp[(5) - (8)].str)); }
     break;
 
   case 57:
 /* Line 1792 of yacc.c  */
-#line 385 "griby.y"
+#line 387 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (12)].str),"codetable",(grib_yyvsp[(3) - (12)].lval), (grib_yyvsp[(6) - (12)].explist),(grib_yyvsp[(7) - (12)].explist),(grib_yyvsp[(12) - (12)].lval),NULL,(grib_yyvsp[(10) - (12)].str));
 					free((grib_yyvsp[(5) - (12)].str));free((grib_yyvsp[(10) - (12)].str)); }
     break;
 
   case 58:
 /* Line 1792 of yacc.c  */
-#line 389 "griby.y"
+#line 391 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (10)].str),"codetable",(grib_yyvsp[(3) - (10)].lval), (grib_yyvsp[(7) - (10)].explist),(grib_yyvsp[(9) - (10)].explist),(grib_yyvsp[(10) - (10)].lval),NULL,NULL);    free((grib_yyvsp[(5) - (10)].str)); }
     break;
 
   case 59:
 /* Line 1792 of yacc.c  */
-#line 392 "griby.y"
+#line 394 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (7)].str),"smart_table",0,(grib_yyvsp[(4) - (7)].explist),(grib_yyvsp[(6) - (7)].explist),(grib_yyvsp[(7) - (7)].lval),NULL,NULL);    free((grib_yyvsp[(2) - (7)].str)); }
     break;
 
   case 60:
 /* Line 1792 of yacc.c  */
-#line 395 "griby.y"
+#line 397 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(1) - (8)].str),"dictionary",0,(grib_yyvsp[(5) - (8)].explist),(grib_yyvsp[(7) - (8)].explist),(grib_yyvsp[(8) - (8)].lval),NULL,NULL);    free((grib_yyvsp[(1) - (8)].str)); }
     break;
 
   case 61:
 /* Line 1792 of yacc.c  */
-#line 398 "griby.y"
+#line 400 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(1) - (8)].str),"getenv",0,(grib_yyvsp[(5) - (8)].explist),(grib_yyvsp[(7) - (8)].explist),(grib_yyvsp[(8) - (8)].lval),NULL,NULL);    free((grib_yyvsp[(1) - (8)].str)); }
     break;
 
   case 62:
 /* Line 1792 of yacc.c  */
-#line 401 "griby.y"
+#line 403 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (8)].str),"complex_codetable",(grib_yyvsp[(3) - (8)].lval), (grib_yyvsp[(6) - (8)].explist),(grib_yyvsp[(7) - (8)].explist),(grib_yyvsp[(8) - (8)].lval),NULL,NULL);    free((grib_yyvsp[(5) - (8)].str)); }
     break;
 
   case 63:
 /* Line 1792 of yacc.c  */
-#line 404 "griby.y"
+#line 406 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (10)].str),"complex_codetable",(grib_yyvsp[(3) - (10)].lval), (grib_yyvsp[(7) - (10)].explist),(grib_yyvsp[(9) - (10)].explist),(grib_yyvsp[(10) - (10)].lval),NULL,NULL);    free((grib_yyvsp[(5) - (10)].str)); }
     break;
 
   case 64:
 /* Line 1792 of yacc.c  */
-#line 407 "griby.y"
+#line 409 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (8)].str),"codeflag",(grib_yyvsp[(3) - (8)].lval), (grib_yyvsp[(6) - (8)].explist),(grib_yyvsp[(7) - (8)].explist),(grib_yyvsp[(8) - (8)].lval),NULL,NULL);  free((grib_yyvsp[(5) - (8)].str)); }
     break;
 
   case 65:
 /* Line 1792 of yacc.c  */
-#line 410 "griby.y"
+#line 412 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (9)].str),"lookup",(grib_yyvsp[(3) - (9)].lval),(grib_yyvsp[(7) - (9)].explist),NULL,(grib_yyvsp[(9) - (9)].lval),NULL,NULL); free((grib_yyvsp[(5) - (9)].str)); }
     break;
 
   case 66:
 /* Line 1792 of yacc.c  */
-#line 413 "griby.y"
+#line 415 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (7)].str),"bit",0,(grib_yyvsp[(4) - (7)].explist),(grib_yyvsp[(6) - (7)].explist),(grib_yyvsp[(7) - (7)].lval),NULL,NULL); free((grib_yyvsp[(2) - (7)].str)); }
     break;
 
   case 67:
 /* Line 1792 of yacc.c  */
-#line 416 "griby.y"
+#line 418 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (2)].str),"label",0,NULL,NULL,0,NULL,NULL);   free((grib_yyvsp[(2) - (2)].str));  }
     break;
 
   case 68:
 /* Line 1792 of yacc.c  */
-#line 419 "griby.y"
+#line 421 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (2)].str),"label",0,NULL,NULL,0,NULL,NULL);   free((grib_yyvsp[(2) - (2)].str));  }
     break;
 
   case 69:
 /* Line 1792 of yacc.c  */
-#line 422 "griby.y"
+#line 424 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"ibmfloat",4,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 70:
 /* Line 1792 of yacc.c  */
-#line 426 "griby.y"
+#line 428 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"int8",1,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 71:
 /* Line 1792 of yacc.c  */
-#line 429 "griby.y"
+#line 431 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"uint8",1,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 72:
 /* Line 1792 of yacc.c  */
-#line 432 "griby.y"
+#line 434 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"int16",2,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 73:
 /* Line 1792 of yacc.c  */
-#line 435 "griby.y"
+#line 437 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"uint16",2,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 74:
 /* Line 1792 of yacc.c  */
-#line 438 "griby.y"
+#line 440 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"int16_little_endian",2,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 75:
 /* Line 1792 of yacc.c  */
-#line 441 "griby.y"
+#line 443 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"uint16_little_endian",2,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 76:
 /* Line 1792 of yacc.c  */
-#line 444 "griby.y"
+#line 446 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"int32",4,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 77:
 /* Line 1792 of yacc.c  */
-#line 447 "griby.y"
+#line 449 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"uint32",4,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 78:
 /* Line 1792 of yacc.c  */
-#line 450 "griby.y"
+#line 452 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"int32_little_endian",4,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 79:
 /* Line 1792 of yacc.c  */
-#line 453 "griby.y"
+#line 455 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"uint32_little_endian",4,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 80:
 /* Line 1792 of yacc.c  */
-#line 456 "griby.y"
+#line 458 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"int64",8,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 81:
 /* Line 1792 of yacc.c  */
-#line 459 "griby.y"
+#line 461 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"uint64",8,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 82:
 /* Line 1792 of yacc.c  */
-#line 462 "griby.y"
+#line 464 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"int64_little_endian",8,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 83:
 /* Line 1792 of yacc.c  */
-#line 465 "griby.y"
+#line 467 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"uint64_little_endian",8,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 84:
 /* Line 1792 of yacc.c  */
-#line 468 "griby.y"
+#line 470 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (7)].str),"blob",0,(grib_yyvsp[(4) - (7)].explist),(grib_yyvsp[(6) - (7)].explist),(grib_yyvsp[(7) - (7)].lval),NULL,NULL);        free((grib_yyvsp[(2) - (7)].str));  }
     break;
 
   case 85:
 /* Line 1792 of yacc.c  */
-#line 472 "griby.y"
+#line 474 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(4) - (6)].str),"ibmfloat",4,NULL,(grib_yyvsp[(5) - (6)].explist),(grib_yyvsp[(6) - (6)].lval),(grib_yyvsp[(2) - (6)].str),NULL);free((grib_yyvsp[(4) - (6)].str)); free((grib_yyvsp[(2) - (6)].str)); }
     break;
 
   case 86:
 /* Line 1792 of yacc.c  */
-#line 475 "griby.y"
+#line 477 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (7)].str),"ibmfloat",4,(grib_yyvsp[(4) - (7)].explist),(grib_yyvsp[(6) - (7)].explist),(grib_yyvsp[(7) - (7)].lval),NULL,NULL);free((grib_yyvsp[(2) - (7)].str));  }
     break;
 
   case 87:
 /* Line 1792 of yacc.c  */
-#line 478 "griby.y"
+#line 480 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (2)].str),"position",0,NULL,NULL,0,NULL,NULL);     free((grib_yyvsp[(2) - (2)].str));  }
     break;
 
   case 88:
 /* Line 1792 of yacc.c  */
-#line 481 "griby.y"
+#line 483 "griby.y"
     { (grib_yyval.act) = grib_action_create_variable(grib_parser_context,(grib_yyvsp[(2) - (5)].str),"constant",0,(grib_yyvsp[(4) - (5)].explist),NULL,(grib_yyvsp[(5) - (5)].lval),NULL);free((grib_yyvsp[(2) - (5)].str)); }
     break;
 
   case 89:
 /* Line 1792 of yacc.c  */
-#line 484 "griby.y"
+#line 486 "griby.y"
     { (grib_yyval.act) = grib_action_create_variable(grib_parser_context,(grib_yyvsp[(2) - (5)].str),"transient",0,(grib_yyvsp[(4) - (5)].explist),(grib_yyvsp[(4) - (5)].explist),(grib_yyvsp[(5) - (5)].lval),NULL);   free((grib_yyvsp[(2) - (5)].str)); }
     break;
 
   case 90:
 /* Line 1792 of yacc.c  */
-#line 486 "griby.y"
+#line 488 "griby.y"
     { (grib_yyval.act) = grib_action_create_transient_darray(grib_parser_context,(grib_yyvsp[(2) - (6)].str),(grib_yyvsp[(5) - (6)].dvalue)); free((grib_yyvsp[(2) - (6)].str)); }
     break;
 
   case 91:
 /* Line 1792 of yacc.c  */
-#line 489 "griby.y"
+#line 491 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (4)].str),"ieeefloat",4,NULL,(grib_yyvsp[(3) - (4)].explist),(grib_yyvsp[(4) - (4)].lval),NULL,NULL);   free((grib_yyvsp[(2) - (4)].str));  }
     break;
 
   case 92:
 /* Line 1792 of yacc.c  */
-#line 492 "griby.y"
+#line 494 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(4) - (6)].str),"ieeefloat",4,NULL,(grib_yyvsp[(5) - (6)].explist),(grib_yyvsp[(6) - (6)].lval),(grib_yyvsp[(2) - (6)].str),NULL);  free((grib_yyvsp[(4) - (6)].str));free((grib_yyvsp[(2) - (6)].str));}
     break;
 
   case 93:
 /* Line 1792 of yacc.c  */
-#line 495 "griby.y"
+#line 497 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (7)].str),"ieeefloat",4,(grib_yyvsp[(4) - (7)].explist),(grib_yyvsp[(6) - (7)].explist),(grib_yyvsp[(7) - (7)].lval),NULL,NULL);free((grib_yyvsp[(2) - (7)].str));  }
     break;
 
   case 94:
 /* Line 1792 of yacc.c  */
-#line 498 "griby.y"
+#line 500 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (2)].str),"g1_half_byte_codeflag",0,NULL,NULL,0,NULL,NULL);free((grib_yyvsp[(2) - (2)].str));  }
     break;
 
   case 95:
 /* Line 1792 of yacc.c  */
-#line 501 "griby.y"
+#line 503 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (5)].str),"section_length",(grib_yyvsp[(3) - (5)].lval),NULL,NULL,0,NULL,NULL);free((grib_yyvsp[(5) - (5)].str));  }
     break;
 
   case 96:
 /* Line 1792 of yacc.c  */
-#line 504 "griby.y"
+#line 506 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (6)].str),"section_length",(grib_yyvsp[(3) - (6)].lval),NULL,(grib_yyvsp[(6) - (6)].explist),0,NULL,NULL);free((grib_yyvsp[(5) - (6)].str));  }
     break;
 
   case 97:
 /* Line 1792 of yacc.c  */
-#line 507 "griby.y"
+#line 509 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (8)].str),"g1_message_length",(grib_yyvsp[(3) - (8)].lval),(grib_yyvsp[(7) - (8)].explist),NULL,0,NULL,NULL);free((grib_yyvsp[(5) - (8)].str));  }
     break;
 
   case 98:
 /* Line 1792 of yacc.c  */
-#line 510 "griby.y"
+#line 512 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (8)].str),"g1_section4_length",(grib_yyvsp[(3) - (8)].lval),(grib_yyvsp[(7) - (8)].explist),NULL,0,NULL,NULL);free((grib_yyvsp[(5) - (8)].str));  }
     break;
 
   case 99:
 /* Line 1792 of yacc.c  */
-#line 513 "griby.y"
+#line 515 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (3)].str),"ksec",0,(grib_yyvsp[(3) - (3)].explist),NULL,0,NULL,NULL);free((grib_yyvsp[(2) - (3)].str)); }
     break;
 
   case 100:
 /* Line 1792 of yacc.c  */
-#line 516 "griby.y"
+#line 518 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (5)].str),"pad",0,(grib_yyvsp[(4) - (5)].explist),0,0,NULL,NULL);   free((grib_yyvsp[(2) - (5)].str)); }
     break;
 
   case 101:
 /* Line 1792 of yacc.c  */
-#line 519 "griby.y"
+#line 521 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (5)].str),"padto",0,(grib_yyvsp[(4) - (5)].explist),0,0,NULL,NULL);   free((grib_yyvsp[(2) - (5)].str)); }
     break;
 
   case 102:
 /* Line 1792 of yacc.c  */
-#line 522 "griby.y"
+#line 524 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (5)].str),"padtoeven",0,(grib_yyvsp[(4) - (5)].explist),0,0,NULL,NULL);   free((grib_yyvsp[(2) - (5)].str)); }
     break;
 
   case 103:
 /* Line 1792 of yacc.c  */
-#line 525 "griby.y"
+#line 527 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (5)].str),"padtomultiple",0,(grib_yyvsp[(4) - (5)].explist),0,0,NULL,NULL);   free((grib_yyvsp[(2) - (5)].str)); }
     break;
 
   case 104:
 /* Line 1792 of yacc.c  */
-#line 528 "griby.y"
+#line 530 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(5) - (6)].str),"message",(grib_yyvsp[(3) - (6)].lval),0,0,(grib_yyvsp[(6) - (6)].lval),NULL,NULL);   free((grib_yyvsp[(5) - (6)].str));  }
     break;
 
   case 105:
 /* Line 1792 of yacc.c  */
-#line 531 "griby.y"
+#line 533 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (3)].str),"message_copy",0,0,0,(grib_yyvsp[(3) - (3)].lval),NULL,NULL);   free((grib_yyvsp[(2) - (3)].str));  }
     break;
 
   case 106:
 /* Line 1792 of yacc.c  */
-#line 534 "griby.y"
+#line 536 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[(2) - (3)].str),"section_padding",0,0,0,(grib_yyvsp[(3) - (3)].lval),NULL,NULL);   free((grib_yyvsp[(2) - (3)].str));  }
     break;
 
   case 107:
 /* Line 1792 of yacc.c  */
-#line 536 "griby.y"
+#line 538 "griby.y"
     { (grib_yyval.act) = grib_action_create_template(grib_parser_context,0,(grib_yyvsp[(2) - (3)].str),(grib_yyvsp[(3) - (3)].str)); free((grib_yyvsp[(2) - (3)].str)); free((grib_yyvsp[(3) - (3)].str));}
     break;
 
   case 108:
 /* Line 1792 of yacc.c  */
-#line 538 "griby.y"
+#line 540 "griby.y"
     { (grib_yyval.act) = grib_action_create_template(grib_parser_context,1,(grib_yyvsp[(2) - (3)].str),(grib_yyvsp[(3) - (3)].str)); free((grib_yyvsp[(2) - (3)].str)); free((grib_yyvsp[(3) - (3)].str));}
     break;
 
   case 109:
 /* Line 1792 of yacc.c  */
-#line 541 "griby.y"
+#line 543 "griby.y"
     { (grib_yyval.act) = grib_action_create_alias(grib_parser_context,(grib_yyvsp[(2) - (5)].str),(grib_yyvsp[(4) - (5)].str),NULL,(grib_yyvsp[(5) - (5)].lval));  free((grib_yyvsp[(2) - (5)].str)); free((grib_yyvsp[(4) - (5)].str)); }
     break;
 
   case 110:
 /* Line 1792 of yacc.c  */
-#line 544 "griby.y"
+#line 546 "griby.y"
     { (grib_yyval.act) = grib_action_create_alias(grib_parser_context,(grib_yyvsp[(2) - (2)].str),NULL,NULL,0);  free((grib_yyvsp[(2) - (2)].str)); }
     break;
 
   case 111:
 /* Line 1792 of yacc.c  */
-#line 547 "griby.y"
+#line 549 "griby.y"
     {
          (grib_yyval.act) = grib_action_create_alias(grib_parser_context,(grib_yyvsp[(4) - (7)].str),(grib_yyvsp[(6) - (7)].str),(grib_yyvsp[(2) - (7)].str),(grib_yyvsp[(7) - (7)].lval));  free((grib_yyvsp[(2) - (7)].str)); free((grib_yyvsp[(4) - (7)].str)); free((grib_yyvsp[(6) - (7)].str));
     }
@@ -3121,7 +3123,7 @@ grib_yyreduce:
 
   case 112:
 /* Line 1792 of yacc.c  */
-#line 551 "griby.y"
+#line 553 "griby.y"
     {
          (grib_yyval.act) = grib_action_create_alias(grib_parser_context,(grib_yyvsp[(4) - (4)].str),NULL,(grib_yyvsp[(2) - (4)].str),0);  free((grib_yyvsp[(2) - (4)].str)); free((grib_yyvsp[(4) - (4)].str)); 
     }
@@ -3129,19 +3131,19 @@ grib_yyreduce:
 
   case 113:
 /* Line 1792 of yacc.c  */
-#line 555 "griby.y"
+#line 557 "griby.y"
     { (grib_yyval.act) = grib_action_create_meta(grib_parser_context,(grib_yyvsp[(2) - (8)].str),(grib_yyvsp[(3) - (8)].str),(grib_yyvsp[(5) - (8)].explist),(grib_yyvsp[(7) - (8)].explist),(grib_yyvsp[(8) - (8)].lval),NULL); free((grib_yyvsp[(2) - (8)].str));free((grib_yyvsp[(3) - (8)].str));}
     break;
 
   case 114:
 /* Line 1792 of yacc.c  */
-#line 558 "griby.y"
+#line 560 "griby.y"
     { (grib_yyval.act) = grib_action_create_meta(grib_parser_context,(grib_yyvsp[(4) - (10)].str),(grib_yyvsp[(5) - (10)].str),(grib_yyvsp[(7) - (10)].explist),(grib_yyvsp[(9) - (10)].explist),(grib_yyvsp[(10) - (10)].lval),(grib_yyvsp[(2) - (10)].str)); free((grib_yyvsp[(4) - (10)].str));free((grib_yyvsp[(5) - (10)].str));free((grib_yyvsp[(2) - (10)].str));}
     break;
 
   case 115:
 /* Line 1792 of yacc.c  */
-#line 561 "griby.y"
+#line 563 "griby.y"
     {
       grib_arguments* a = grib_arguments_new(
         grib_parser_context,
@@ -3157,7 +3159,7 @@ grib_yyreduce:
 
   case 116:
 /* Line 1792 of yacc.c  */
-#line 573 "griby.y"
+#line 575 "griby.y"
     {
       grib_arguments* a = grib_arguments_new(
         grib_parser_context,
@@ -3173,7 +3175,7 @@ grib_yyreduce:
 
   case 117:
 /* Line 1792 of yacc.c  */
-#line 585 "griby.y"
+#line 587 "griby.y"
     {
       grib_arguments* a = grib_arguments_new(
         grib_parser_context,
@@ -3189,823 +3191,823 @@ grib_yyreduce:
 
   case 118:
 /* Line 1792 of yacc.c  */
-#line 597 "griby.y"
+#line 599 "griby.y"
     { (grib_yyval.act) = grib_action_create_put(grib_parser_context,(grib_yyvsp[(2) - (5)].str),(grib_yyvsp[(4) - (5)].explist));free((grib_yyvsp[(2) - (5)].str));}
     break;
 
   case 119:
 /* Line 1792 of yacc.c  */
-#line 600 "griby.y"
+#line 602 "griby.y"
     { (grib_yyval.act) = grib_action_create_remove(grib_parser_context,(grib_yyvsp[(2) - (2)].explist));}
     break;
 
   case 120:
 /* Line 1792 of yacc.c  */
-#line 602 "griby.y"
+#line 604 "griby.y"
     { (grib_yyval.act) = grib_action_create_rename(grib_parser_context,(grib_yyvsp[(3) - (6)].str),(grib_yyvsp[(5) - (6)].str));free((grib_yyvsp[(3) - (6)].str));free((grib_yyvsp[(5) - (6)].str));}
     break;
 
   case 121:
 /* Line 1792 of yacc.c  */
-#line 605 "griby.y"
+#line 607 "griby.y"
     { (grib_yyval.act) = grib_action_create_assert(grib_parser_context,(grib_yyvsp[(3) - (4)].exp));}
     break;
 
   case 122:
 /* Line 1792 of yacc.c  */
-#line 608 "griby.y"
+#line 610 "griby.y"
     { (grib_yyval.act) = grib_action_create_modify(grib_parser_context,(grib_yyvsp[(2) - (3)].str),(grib_yyvsp[(3) - (3)].lval)); free((grib_yyvsp[(2) - (3)].str));}
     break;
 
   case 123:
 /* Line 1792 of yacc.c  */
-#line 610 "griby.y"
+#line 612 "griby.y"
     { (grib_yyval.act) = grib_action_create_set_missing(grib_parser_context,(grib_yyvsp[(2) - (4)].str)); free((grib_yyvsp[(2) - (4)].str)); }
     break;
 
   case 124:
 /* Line 1792 of yacc.c  */
-#line 611 "griby.y"
+#line 613 "griby.y"
     { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[(2) - (4)].str),(grib_yyvsp[(4) - (4)].exp),0); free((grib_yyvsp[(2) - (4)].str)); }
     break;
 
   case 125:
 /* Line 1792 of yacc.c  */
-#line 612 "griby.y"
+#line 614 "griby.y"
     { (grib_yyval.act) = grib_action_create_set_darray(grib_parser_context,(grib_yyvsp[(2) - (6)].str),(grib_yyvsp[(5) - (6)].dvalue)); free((grib_yyvsp[(2) - (6)].str)); }
     break;
 
   case 126:
 /* Line 1792 of yacc.c  */
-#line 613 "griby.y"
+#line 615 "griby.y"
     { (grib_yyval.act) = grib_action_create_set_sarray(grib_parser_context,(grib_yyvsp[(2) - (6)].str),(grib_yyvsp[(5) - (6)].svalue)); free((grib_yyvsp[(2) - (6)].str)); }
     break;
 
   case 127:
 /* Line 1792 of yacc.c  */
-#line 615 "griby.y"
+#line 617 "griby.y"
     { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[(2) - (4)].str),(grib_yyvsp[(4) - (4)].exp),1); free((grib_yyvsp[(2) - (4)].str)); }
     break;
 
   case 128:
 /* Line 1792 of yacc.c  */
-#line 618 "griby.y"
+#line 620 "griby.y"
     { (grib_yyval.act) = grib_action_create_write(grib_parser_context,(grib_yyvsp[(2) - (2)].str),0,0); free((grib_yyvsp[(2) - (2)].str));}
     break;
 
   case 129:
 /* Line 1792 of yacc.c  */
-#line 619 "griby.y"
+#line 621 "griby.y"
     { (grib_yyval.act) = grib_action_create_write(grib_parser_context,"",0,0); }
     break;
 
   case 130:
 /* Line 1792 of yacc.c  */
-#line 620 "griby.y"
+#line 622 "griby.y"
     { (grib_yyval.act) = grib_action_create_write(grib_parser_context,(grib_yyvsp[(5) - (5)].str),0,(grib_yyvsp[(3) - (5)].lval)); free((grib_yyvsp[(5) - (5)].str));}
     break;
 
   case 131:
 /* Line 1792 of yacc.c  */
-#line 621 "griby.y"
+#line 623 "griby.y"
     { (grib_yyval.act) = grib_action_create_write(grib_parser_context,"",0,(grib_yyvsp[(3) - (4)].lval)); }
     break;
 
   case 132:
 /* Line 1792 of yacc.c  */
-#line 622 "griby.y"
+#line 624 "griby.y"
     { (grib_yyval.act) = grib_action_create_write(grib_parser_context,(grib_yyvsp[(2) - (2)].str),1,0); free((grib_yyvsp[(2) - (2)].str));}
     break;
 
   case 133:
 /* Line 1792 of yacc.c  */
-#line 623 "griby.y"
+#line 625 "griby.y"
     { (grib_yyval.act) = grib_action_create_write(grib_parser_context,"",1,0); }
     break;
 
   case 134:
 /* Line 1792 of yacc.c  */
-#line 624 "griby.y"
+#line 626 "griby.y"
     { (grib_yyval.act) = grib_action_create_write(grib_parser_context,(grib_yyvsp[(5) - (5)].str),1,(grib_yyvsp[(3) - (5)].lval)); free((grib_yyvsp[(5) - (5)].str));}
     break;
 
   case 135:
 /* Line 1792 of yacc.c  */
-#line 625 "griby.y"
+#line 627 "griby.y"
     { (grib_yyval.act) = grib_action_create_write(grib_parser_context,"",1,(grib_yyvsp[(3) - (4)].lval)); }
     break;
 
   case 136:
 /* Line 1792 of yacc.c  */
-#line 627 "griby.y"
+#line 629 "griby.y"
     { (grib_yyval.act) = grib_action_create_close(grib_parser_context,(grib_yyvsp[(3) - (4)].str)); free((grib_yyvsp[(3) - (4)].str));}
     break;
 
   case 137:
 /* Line 1792 of yacc.c  */
-#line 628 "griby.y"
+#line 630 "griby.y"
     { (grib_yyval.act) = grib_action_create_print(grib_parser_context,(grib_yyvsp[(2) - (2)].str),0); free((grib_yyvsp[(2) - (2)].str)); }
     break;
 
   case 138:
 /* Line 1792 of yacc.c  */
-#line 629 "griby.y"
+#line 631 "griby.y"
     { (grib_yyval.act) = grib_action_create_print(grib_parser_context,(grib_yyvsp[(5) - (5)].str),(grib_yyvsp[(3) - (5)].str)); free((grib_yyvsp[(5) - (5)].str)); free((grib_yyvsp[(3) - (5)].str));}
     break;
 
   case 139:
 /* Line 1792 of yacc.c  */
-#line 630 "griby.y"
+#line 632 "griby.y"
     { (grib_yyval.act) = grib_action_create_print(grib_parser_context,(grib_yyvsp[(5) - (5)].str),(grib_yyvsp[(3) - (5)].str)); free((grib_yyvsp[(5) - (5)].str)); free((grib_yyvsp[(3) - (5)].str));}
     break;
 
   case 140:
 /* Line 1792 of yacc.c  */
-#line 631 "griby.y"
+#line 633 "griby.y"
     { (grib_yyval.act) = grib_action_create_print(grib_parser_context,"",0);  }
     break;
 
   case 141:
 /* Line 1792 of yacc.c  */
-#line 635 "griby.y"
-    { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[(3) - (7)].exp),(grib_yyvsp[(6) - (7)].act),0,0); }
+#line 637 "griby.y"
+    { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[(3) - (7)].exp),(grib_yyvsp[(6) - (7)].act),0,0,grib_yylineno,file_being_parsed()); }
     break;
 
   case 142:
 /* Line 1792 of yacc.c  */
-#line 636 "griby.y"
-    { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[(3) - (11)].exp),(grib_yyvsp[(6) - (11)].act),(grib_yyvsp[(10) - (11)].act),0); }
+#line 638 "griby.y"
+    { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[(3) - (11)].exp),(grib_yyvsp[(6) - (11)].act),(grib_yyvsp[(10) - (11)].act),0,grib_yylineno,file_being_parsed()); }
     break;
 
   case 143:
 /* Line 1792 of yacc.c  */
-#line 637 "griby.y"
-    { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[(3) - (7)].exp),(grib_yyvsp[(6) - (7)].act),0,1); }
+#line 639 "griby.y"
+    { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[(3) - (7)].exp),(grib_yyvsp[(6) - (7)].act),0,1,grib_yylineno,file_being_parsed()); }
     break;
 
   case 144:
 /* Line 1792 of yacc.c  */
-#line 638 "griby.y"
-    { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[(3) - (11)].exp),(grib_yyvsp[(6) - (11)].act),(grib_yyvsp[(10) - (11)].act),1); }
+#line 640 "griby.y"
+    { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[(3) - (11)].exp),(grib_yyvsp[(6) - (11)].act),(grib_yyvsp[(10) - (11)].act),1,grib_yylineno,file_being_parsed()); }
     break;
 
   case 145:
 /* Line 1792 of yacc.c  */
-#line 642 "griby.y"
+#line 644 "griby.y"
     { (grib_yyval.act) = grib_action_create_when(grib_parser_context,(grib_yyvsp[(3) - (6)].exp),(grib_yyvsp[(5) - (6)].act),NULL); }
     break;
 
   case 146:
 /* Line 1792 of yacc.c  */
-#line 643 "griby.y"
+#line 645 "griby.y"
     { (grib_yyval.act) = grib_action_create_when(grib_parser_context,(grib_yyvsp[(3) - (7)].exp),(grib_yyvsp[(6) - (7)].act),NULL); }
     break;
 
   case 147:
 /* Line 1792 of yacc.c  */
-#line 644 "griby.y"
+#line 646 "griby.y"
     { (grib_yyval.act) = grib_action_create_when(grib_parser_context,(grib_yyvsp[(3) - (11)].exp),(grib_yyvsp[(6) - (11)].act),(grib_yyvsp[(10) - (11)].act)); }
     break;
 
   case 148:
 /* Line 1792 of yacc.c  */
-#line 647 "griby.y"
+#line 649 "griby.y"
     { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[(2) - (4)].str),(grib_yyvsp[(4) - (4)].exp),0); free((grib_yyvsp[(2) - (4)].str)); }
     break;
 
   case 149:
 /* Line 1792 of yacc.c  */
-#line 648 "griby.y"
+#line 650 "griby.y"
     { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[(2) - (4)].str),(grib_yyvsp[(4) - (4)].exp),1); free((grib_yyvsp[(2) - (4)].str)); }
     break;
 
   case 151:
 /* Line 1792 of yacc.c  */
-#line 652 "griby.y"
+#line 654 "griby.y"
     { (grib_yyvsp[(1) - (3)].act)->next = (grib_yyvsp[(2) - (3)].act); (grib_yyval.act) = (grib_yyvsp[(1) - (3)].act); }
     break;
 
   case 152:
 /* Line 1792 of yacc.c  */
-#line 656 "griby.y"
+#line 658 "griby.y"
     { (grib_yyval.explist) = NULL ;}
     break;
 
   case 153:
 /* Line 1792 of yacc.c  */
-#line 657 "griby.y"
+#line 659 "griby.y"
     { (grib_yyval.explist) = (grib_yyvsp[(2) - (2)].explist) ;}
     break;
 
   case 154:
 /* Line 1792 of yacc.c  */
-#line 660 "griby.y"
+#line 662 "griby.y"
     { (grib_yyval.lval) = 0 ; }
     break;
 
   case 155:
 /* Line 1792 of yacc.c  */
-#line 661 "griby.y"
+#line 663 "griby.y"
     { (grib_yyval.lval) = (grib_yyvsp[(2) - (2)].lval); }
     break;
 
   case 157:
 /* Line 1792 of yacc.c  */
-#line 665 "griby.y"
+#line 667 "griby.y"
     { (grib_yyval.lval) = (grib_yyvsp[(1) - (3)].lval) | (grib_yyvsp[(3) - (3)].lval); }
     break;
 
   case 158:
 /* Line 1792 of yacc.c  */
-#line 668 "griby.y"
+#line 670 "griby.y"
     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_READ_ONLY; }
     break;
 
   case 159:
 /* Line 1792 of yacc.c  */
-#line 669 "griby.y"
+#line 671 "griby.y"
     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_LOWERCASE; }
     break;
 
   case 160:
 /* Line 1792 of yacc.c  */
-#line 670 "griby.y"
+#line 672 "griby.y"
     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_DUMP; }
     break;
 
   case 161:
 /* Line 1792 of yacc.c  */
-#line 671 "griby.y"
+#line 673 "griby.y"
     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_JSON; }
     break;
 
   case 162:
 /* Line 1792 of yacc.c  */
-#line 672 "griby.y"
+#line 674 "griby.y"
     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_XML; }
     break;
 
   case 163:
 /* Line 1792 of yacc.c  */
-#line 673 "griby.y"
+#line 675 "griby.y"
     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_NO_COPY; }
     break;
 
   case 164:
 /* Line 1792 of yacc.c  */
-#line 674 "griby.y"
+#line 676 "griby.y"
     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_NO_FAIL; }
     break;
 
   case 165:
 /* Line 1792 of yacc.c  */
-#line 675 "griby.y"
+#line 677 "griby.y"
     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_HIDDEN; }
     break;
 
   case 166:
 /* Line 1792 of yacc.c  */
-#line 676 "griby.y"
+#line 678 "griby.y"
     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC; }
     break;
 
   case 167:
 /* Line 1792 of yacc.c  */
-#line 677 "griby.y"
+#line 679 "griby.y"
     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_CAN_BE_MISSING; }
     break;
 
   case 168:
 /* Line 1792 of yacc.c  */
-#line 678 "griby.y"
+#line 680 "griby.y"
     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_CONSTRAINT; }
     break;
 
   case 169:
 /* Line 1792 of yacc.c  */
-#line 679 "griby.y"
+#line 681 "griby.y"
     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_OVERRIDE; }
     break;
 
   case 170:
 /* Line 1792 of yacc.c  */
-#line 680 "griby.y"
+#line 682 "griby.y"
     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_COPY_OK; }
     break;
 
   case 171:
 /* Line 1792 of yacc.c  */
-#line 681 "griby.y"
+#line 683 "griby.y"
     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_TRANSIENT; }
     break;
 
   case 172:
 /* Line 1792 of yacc.c  */
-#line 682 "griby.y"
+#line 684 "griby.y"
     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_STRING_TYPE; }
     break;
 
   case 173:
 /* Line 1792 of yacc.c  */
-#line 683 "griby.y"
+#line 685 "griby.y"
     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_LONG_TYPE; }
     break;
 
   case 174:
 /* Line 1792 of yacc.c  */
-#line 684 "griby.y"
+#line 686 "griby.y"
     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_DOUBLE_TYPE; }
     break;
 
   case 175:
 /* Line 1792 of yacc.c  */
-#line 687 "griby.y"
+#line 689 "griby.y"
     { (grib_yyval.act) = grib_action_create_list(grib_parser_context,(grib_yyvsp[(1) - (8)].str),(grib_yyvsp[(4) - (8)].exp),(grib_yyvsp[(7) - (8)].act)); free((grib_yyvsp[(1) - (8)].str)); }
     break;
 
   case 176:
 /* Line 1792 of yacc.c  */
-#line 690 "griby.y"
+#line 692 "griby.y"
     { (grib_yyval.act) = grib_action_create_while(grib_parser_context,(grib_yyvsp[(3) - (7)].exp),(grib_yyvsp[(6) - (7)].act));  }
     break;
 
   case 177:
 /* Line 1792 of yacc.c  */
-#line 693 "griby.y"
+#line 695 "griby.y"
     { (grib_yyval.act) = grib_action_create_trigger(grib_parser_context,(grib_yyvsp[(3) - (7)].explist),(grib_yyvsp[(6) - (7)].act));  }
     break;
 
   case 178:
 /* Line 1792 of yacc.c  */
-#line 696 "griby.y"
+#line 698 "griby.y"
     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[(2) - (6)].str),(grib_yyvsp[(4) - (6)].concept_value),0,0,0,0,0,0,(grib_yyvsp[(6) - (6)].lval),0);  free((grib_yyvsp[(2) - (6)].str)); }
     break;
 
   case 179:
 /* Line 1792 of yacc.c  */
-#line 697 "griby.y"
+#line 699 "griby.y"
     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[(2) - (9)].str),(grib_yyvsp[(7) - (9)].concept_value),0,0,(grib_yyvsp[(4) - (9)].str),0,0,0,(grib_yyvsp[(9) - (9)].lval),0);  free((grib_yyvsp[(2) - (9)].str));free((grib_yyvsp[(4) - (9)].str)); }
     break;
 
   case 180:
 /* Line 1792 of yacc.c  */
-#line 698 "griby.y"
+#line 700 "griby.y"
     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[(2) - (12)].str),0,(grib_yyvsp[(6) - (12)].str),0,(grib_yyvsp[(4) - (12)].str),(grib_yyvsp[(8) - (12)].str),(grib_yyvsp[(10) - (12)].str),0,(grib_yyvsp[(12) - (12)].lval),0);  free((grib_yyvsp[(2) - (12)].str));free((grib_yyvsp[(6) - (12)].str));free((grib_yyvsp[(4) - (12)].str));free((grib_yyvsp[(8) - (12)].str));free((grib_yyvsp[(10) - (12)].str)); }
     break;
 
   case 181:
 /* Line 1792 of yacc.c  */
-#line 699 "griby.y"
+#line 701 "griby.y"
     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[(2) - (14)].str),0,(grib_yyvsp[(6) - (14)].str),0,(grib_yyvsp[(4) - (14)].str),(grib_yyvsp[(8) - (14)].str),(grib_yyvsp[(10) - (14)].str),(grib_yyvsp[(12) - (14)].str),(grib_yyvsp[(14) - (14)].lval),0);  free((grib_yyvsp[(2) - (14)].str));free((grib_yyvsp[(6) - (14)].str));free((grib_yyvsp[(4) - (14)].str));free((grib_yyvsp[(8) - (14)].str));free((grib_yyvsp[(10) - (14)].str));free((grib_yyvsp[(12) - (14)].str)); }
     break;
 
   case 182:
 /* Line 1792 of yacc.c  */
-#line 700 "griby.y"
+#line 702 "griby.y"
     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[(2) - (10)].str),0,(grib_yyvsp[(6) - (10)].str),0,(grib_yyvsp[(4) - (10)].str),(grib_yyvsp[(8) - (10)].str),0,0,(grib_yyvsp[(10) - (10)].lval),0);  free((grib_yyvsp[(2) - (10)].str));free((grib_yyvsp[(6) - (10)].str));free((grib_yyvsp[(4) - (10)].str));free((grib_yyvsp[(8) - (10)].str)); }
     break;
 
   case 183:
 /* Line 1792 of yacc.c  */
-#line 701 "griby.y"
+#line 703 "griby.y"
     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[(4) - (14)].str),0,(grib_yyvsp[(8) - (14)].str),(grib_yyvsp[(2) - (14)].str),(grib_yyvsp[(6) - (14)].str),(grib_yyvsp[(10) - (14)].str),(grib_yyvsp[(12) - (14)].str),0,(grib_yyvsp[(14) - (14)].lval),0);  free((grib_yyvsp[(4) - (14)].str));free((grib_yyvsp[(8) - (14)].str));free((grib_yyvsp[(6) - (14)].str));free((grib_yyvsp[(10) - (14)].str)); free((grib_yyvsp[(12) - (14)].str)); free((grib_yyvsp[(2) - (14)].str));}
     break;
 
   case 184:
 /* Line 1792 of yacc.c  */
-#line 702 "griby.y"
+#line 704 "griby.y"
     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[(4) - (12)].str),0,(grib_yyvsp[(8) - (12)].str),(grib_yyvsp[(2) - (12)].str),(grib_yyvsp[(6) - (12)].str),(grib_yyvsp[(10) - (12)].str),0,0,(grib_yyvsp[(12) - (12)].lval),0);  free((grib_yyvsp[(4) - (12)].str));free((grib_yyvsp[(8) - (12)].str));free((grib_yyvsp[(6) - (12)].str));free((grib_yyvsp[(10) - (12)].str)); free((grib_yyvsp[(2) - (12)].str));}
     break;
 
   case 185:
 /* Line 1792 of yacc.c  */
-#line 703 "griby.y"
+#line 705 "griby.y"
     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[(4) - (8)].str),(grib_yyvsp[(6) - (8)].concept_value),0,(grib_yyvsp[(2) - (8)].str),0,0,0,0,(grib_yyvsp[(8) - (8)].lval),0);  free((grib_yyvsp[(2) - (8)].str));free((grib_yyvsp[(4) - (8)].str)); }
     break;
 
   case 186:
 /* Line 1792 of yacc.c  */
-#line 704 "griby.y"
+#line 706 "griby.y"
     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[(4) - (11)].str),(grib_yyvsp[(9) - (11)].concept_value),0,(grib_yyvsp[(2) - (11)].str),(grib_yyvsp[(6) - (11)].str),0,0,0,(grib_yyvsp[(11) - (11)].lval),0);  free((grib_yyvsp[(2) - (11)].str));free((grib_yyvsp[(4) - (11)].str));free((grib_yyvsp[(6) - (11)].str)); }
     break;
 
   case 187:
 /* Line 1792 of yacc.c  */
-#line 705 "griby.y"
+#line 707 "griby.y"
     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[(2) - (6)].str),(grib_yyvsp[(4) - (6)].concept_value),0,0,0,0,0,0,(grib_yyvsp[(6) - (6)].lval),1);  free((grib_yyvsp[(2) - (6)].str)); }
     break;
 
   case 188:
 /* Line 1792 of yacc.c  */
-#line 706 "griby.y"
+#line 708 "griby.y"
     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[(2) - (9)].str),(grib_yyvsp[(7) - (9)].concept_value),0,0,(grib_yyvsp[(4) - (9)].str),0,0,0,(grib_yyvsp[(9) - (9)].lval),1);  free((grib_yyvsp[(2) - (9)].str));free((grib_yyvsp[(4) - (9)].str)); }
     break;
 
   case 189:
 /* Line 1792 of yacc.c  */
-#line 707 "griby.y"
+#line 709 "griby.y"
     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[(2) - (12)].str),0,(grib_yyvsp[(6) - (12)].str),0,(grib_yyvsp[(4) - (12)].str),(grib_yyvsp[(8) - (12)].str),(grib_yyvsp[(10) - (12)].str),0,(grib_yyvsp[(12) - (12)].lval),1);  free((grib_yyvsp[(2) - (12)].str));free((grib_yyvsp[(6) - (12)].str));free((grib_yyvsp[(4) - (12)].str));free((grib_yyvsp[(8) - (12)].str));free((grib_yyvsp[(10) - (12)].str)); }
     break;
 
   case 190:
 /* Line 1792 of yacc.c  */
-#line 708 "griby.y"
+#line 710 "griby.y"
     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[(2) - (10)].str),0,(grib_yyvsp[(6) - (10)].str),0,(grib_yyvsp[(4) - (10)].str),(grib_yyvsp[(8) - (10)].str),0,0,(grib_yyvsp[(10) - (10)].lval),1);  free((grib_yyvsp[(2) - (10)].str));free((grib_yyvsp[(6) - (10)].str));free((grib_yyvsp[(4) - (10)].str));free((grib_yyvsp[(8) - (10)].str)); }
     break;
 
   case 191:
 /* Line 1792 of yacc.c  */
-#line 709 "griby.y"
+#line 711 "griby.y"
     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[(4) - (14)].str),0,(grib_yyvsp[(8) - (14)].str),(grib_yyvsp[(2) - (14)].str),(grib_yyvsp[(6) - (14)].str),(grib_yyvsp[(10) - (14)].str),(grib_yyvsp[(12) - (14)].str),0,(grib_yyvsp[(14) - (14)].lval),1);  free((grib_yyvsp[(4) - (14)].str));free((grib_yyvsp[(8) - (14)].str));free((grib_yyvsp[(6) - (14)].str));free((grib_yyvsp[(10) - (14)].str));free((grib_yyvsp[(12) - (14)].str)); free((grib_yyvsp[(2) - (14)].str));}
     break;
 
   case 192:
 /* Line 1792 of yacc.c  */
-#line 710 "griby.y"
+#line 712 "griby.y"
     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[(4) - (12)].str),0,(grib_yyvsp[(8) - (12)].str),(grib_yyvsp[(2) - (12)].str),(grib_yyvsp[(6) - (12)].str),(grib_yyvsp[(10) - (12)].str),0,0,(grib_yyvsp[(12) - (12)].lval),1);  free((grib_yyvsp[(4) - (12)].str));free((grib_yyvsp[(8) - (12)].str));free((grib_yyvsp[(6) - (12)].str));free((grib_yyvsp[(10) - (12)].str)); free((grib_yyvsp[(2) - (12)].str));}
     break;
 
   case 193:
 /* Line 1792 of yacc.c  */
-#line 711 "griby.y"
+#line 713 "griby.y"
     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[(4) - (8)].str),(grib_yyvsp[(6) - (8)].concept_value),0,(grib_yyvsp[(2) - (8)].str),0,0,0,0,(grib_yyvsp[(8) - (8)].lval),1);  free((grib_yyvsp[(2) - (8)].str));free((grib_yyvsp[(4) - (8)].str)); }
     break;
 
   case 194:
 /* Line 1792 of yacc.c  */
-#line 712 "griby.y"
+#line 714 "griby.y"
     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[(4) - (11)].str),(grib_yyvsp[(9) - (11)].concept_value),0,(grib_yyvsp[(2) - (11)].str),(grib_yyvsp[(6) - (11)].str),0,0,0,(grib_yyvsp[(11) - (11)].lval),1);  free((grib_yyvsp[(2) - (11)].str));free((grib_yyvsp[(4) - (11)].str));free((grib_yyvsp[(6) - (11)].str)); }
     break;
 
   case 196:
 /* Line 1792 of yacc.c  */
-#line 717 "griby.y"
+#line 719 "griby.y"
     { (grib_yyval.concept_value) = (grib_yyvsp[(2) - (2)].concept_value); (grib_yyvsp[(2) - (2)].concept_value)->next = (grib_yyvsp[(1) - (2)].concept_value);   }
     break;
 
   case 198:
 /* Line 1792 of yacc.c  */
-#line 721 "griby.y"
+#line 723 "griby.y"
     { (grib_yyval.hash_array_value) = (grib_yyvsp[(2) - (2)].hash_array_value); (grib_yyvsp[(2) - (2)].hash_array_value)->next = (grib_yyvsp[(1) - (2)].hash_array_value);   }
     break;
 
   case 199:
 /* Line 1792 of yacc.c  */
-#line 724 "griby.y"
+#line 726 "griby.y"
     { (grib_yyval.act) = grib_action_create_hash_array(grib_parser_context,(grib_yyvsp[(2) - (6)].str),(grib_yyvsp[(4) - (6)].hash_array_value),0,0,0,0,0,0,(grib_yyvsp[(6) - (6)].lval),0);  free((grib_yyvsp[(2) - (6)].str)); }
     break;
 
   case 200:
 /* Line 1792 of yacc.c  */
-#line 725 "griby.y"
+#line 727 "griby.y"
     { (grib_yyval.act) = grib_action_create_hash_array(grib_parser_context,(grib_yyvsp[(2) - (12)].str),0,(grib_yyvsp[(6) - (12)].str),0,(grib_yyvsp[(4) - (12)].str),(grib_yyvsp[(8) - (12)].str),(grib_yyvsp[(10) - (12)].str),0,(grib_yyvsp[(12) - (12)].lval),0);  free((grib_yyvsp[(2) - (12)].str));free((grib_yyvsp[(6) - (12)].str));free((grib_yyvsp[(4) - (12)].str));free((grib_yyvsp[(8) - (12)].str));free((grib_yyvsp[(10) - (12)].str)); }
     break;
 
   case 202:
 /* Line 1792 of yacc.c  */
-#line 729 "griby.y"
+#line 731 "griby.y"
     { (grib_yyval.case_value) = (grib_yyvsp[(2) - (2)].case_value); (grib_yyvsp[(2) - (2)].case_value)->next = (grib_yyvsp[(1) - (2)].case_value);   }
     break;
 
   case 203:
 /* Line 1792 of yacc.c  */
-#line 732 "griby.y"
+#line 734 "griby.y"
     { (grib_yyval.case_value) = grib_case_new(grib_parser_context,(grib_yyvsp[(2) - (4)].explist),(grib_yyvsp[(4) - (4)].act));  }
     break;
 
   case 204:
 /* Line 1792 of yacc.c  */
-#line 736 "griby.y"
+#line 738 "griby.y"
     { (grib_yyval.act) = grib_action_create_switch(grib_parser_context,(grib_yyvsp[(3) - (10)].explist),(grib_yyvsp[(6) - (10)].case_value),(grib_yyvsp[(9) - (10)].act)); }
     break;
 
   case 205:
 /* Line 1792 of yacc.c  */
-#line 737 "griby.y"
+#line 739 "griby.y"
     { (grib_yyval.act) = grib_action_create_switch(grib_parser_context,(grib_yyvsp[(3) - (9)].explist),(grib_yyvsp[(6) - (9)].case_value),grib_action_create_noop(grib_parser_context,"continue")); }
     break;
 
   case 206:
 /* Line 1792 of yacc.c  */
-#line 738 "griby.y"
+#line 740 "griby.y"
     { (grib_yyval.act) = grib_action_create_switch(grib_parser_context,(grib_yyvsp[(3) - (7)].explist),(grib_yyvsp[(6) - (7)].case_value),0); }
     break;
 
   case 207:
-/* Line 1792 of yacc.c  */
-#line 741 "griby.y"
-    {
-	  				(grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,(grib_yyvsp[(1) - (5)].str),(grib_yyvsp[(4) - (5)].concept_condition)); free((grib_yyvsp[(1) - (5)].str));}
-    break;
-
-  case 208:
 /* Line 1792 of yacc.c  */
 #line 743 "griby.y"
     {
 	  				(grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,(grib_yyvsp[(1) - (5)].str),(grib_yyvsp[(4) - (5)].concept_condition)); free((grib_yyvsp[(1) - (5)].str));}
     break;
 
-  case 209:
+  case 208:
 /* Line 1792 of yacc.c  */
 #line 745 "griby.y"
+    {
+	  				(grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,(grib_yyvsp[(1) - (5)].str),(grib_yyvsp[(4) - (5)].concept_condition)); free((grib_yyvsp[(1) - (5)].str));}
+    break;
+
+  case 209:
+/* Line 1792 of yacc.c  */
+#line 747 "griby.y"
     {
 					char buf[80]; sprintf(buf,"%ld",(long)(grib_yyvsp[(1) - (5)].lval)); (grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,buf,(grib_yyvsp[(4) - (5)].concept_condition));}
     break;
 
   case 210:
 /* Line 1792 of yacc.c  */
-#line 747 "griby.y"
+#line 749 "griby.y"
     {
 					char buf[80]; sprintf(buf,"%g",(double)(grib_yyvsp[(1) - (5)].dval)); (grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,buf,(grib_yyvsp[(4) - (5)].concept_condition));}
     break;
 
   case 212:
 /* Line 1792 of yacc.c  */
-#line 752 "griby.y"
+#line 754 "griby.y"
     { (grib_yyvsp[(1) - (2)].concept_condition)->next = (grib_yyvsp[(2) - (2)].concept_condition); (grib_yyval.concept_condition) = (grib_yyvsp[(1) - (2)].concept_condition); }
     break;
 
   case 213:
 /* Line 1792 of yacc.c  */
-#line 755 "griby.y"
+#line 757 "griby.y"
     { (grib_yyval.concept_condition) = grib_concept_condition_new(grib_parser_context,(grib_yyvsp[(1) - (4)].str),(grib_yyvsp[(3) - (4)].exp),0); free((grib_yyvsp[(1) - (4)].str)); }
     break;
 
   case 214:
 /* Line 1792 of yacc.c  */
-#line 756 "griby.y"
+#line 758 "griby.y"
     { (grib_yyval.concept_condition) = grib_concept_condition_new(grib_parser_context,(grib_yyvsp[(1) - (6)].str),0,(grib_yyvsp[(4) - (6)].ivalue)); free((grib_yyvsp[(1) - (6)].str)); }
     break;
 
   case 215:
-/* Line 1792 of yacc.c  */
-#line 760 "griby.y"
-    {
-	  				(grib_yyval.hash_array_value) = grib_integer_hash_array_value_new(grib_parser_context,(grib_yyvsp[(1) - (5)].str),(grib_yyvsp[(4) - (5)].ivalue)); free((grib_yyvsp[(1) - (5)].str));}
-    break;
-
-  case 216:
 /* Line 1792 of yacc.c  */
 #line 762 "griby.y"
     {
 	  				(grib_yyval.hash_array_value) = grib_integer_hash_array_value_new(grib_parser_context,(grib_yyvsp[(1) - (5)].str),(grib_yyvsp[(4) - (5)].ivalue)); free((grib_yyvsp[(1) - (5)].str));}
     break;
 
+  case 216:
+/* Line 1792 of yacc.c  */
+#line 764 "griby.y"
+    {
+	  				(grib_yyval.hash_array_value) = grib_integer_hash_array_value_new(grib_parser_context,(grib_yyvsp[(1) - (5)].str),(grib_yyvsp[(4) - (5)].ivalue)); free((grib_yyvsp[(1) - (5)].str));}
+    break;
+
   case 217:
 /* Line 1792 of yacc.c  */
-#line 766 "griby.y"
+#line 768 "griby.y"
     { (grib_yyval.exp) = new_accessor_expression(grib_parser_context,(grib_yyvsp[(3) - (8)].str),(grib_yyvsp[(5) - (8)].lval),(grib_yyvsp[(7) - (8)].lval));  free((grib_yyvsp[(3) - (8)].str)); }
     break;
 
   case 218:
 /* Line 1792 of yacc.c  */
-#line 767 "griby.y"
+#line 769 "griby.y"
     { (grib_yyval.exp) = new_accessor_expression(grib_parser_context,(grib_yyvsp[(1) - (1)].str),0,0); free((grib_yyvsp[(1) - (1)].str)); }
     break;
 
   case 219:
 /* Line 1792 of yacc.c  */
-#line 768 "griby.y"
+#line 770 "griby.y"
     { (grib_yyval.exp) = new_sub_string_expression(grib_parser_context,(grib_yyvsp[(3) - (8)].str),(grib_yyvsp[(5) - (8)].lval),(grib_yyvsp[(7) - (8)].lval));  free((grib_yyvsp[(3) - (8)].str)); }
     break;
 
   case 220:
 /* Line 1792 of yacc.c  */
-#line 769 "griby.y"
+#line 771 "griby.y"
     { (grib_yyval.exp) = new_string_expression(grib_parser_context,(grib_yyvsp[(1) - (1)].str));  free((grib_yyvsp[(1) - (1)].str)); }
     break;
 
   case 222:
 /* Line 1792 of yacc.c  */
-#line 773 "griby.y"
+#line 775 "griby.y"
     { (grib_yyval.exp) = new_long_expression(grib_parser_context,(grib_yyvsp[(1) - (1)].lval));  }
     break;
 
   case 223:
 /* Line 1792 of yacc.c  */
-#line 774 "griby.y"
+#line 776 "griby.y"
     { (grib_yyval.exp) = new_double_expression(grib_parser_context,(grib_yyvsp[(1) - (1)].dval));  /* TODO: change to new_float_expression*/}
     break;
 
   case 224:
 /* Line 1792 of yacc.c  */
-#line 776 "griby.y"
+#line 778 "griby.y"
     { (grib_yyval.exp) = NULL; }
     break;
 
   case 225:
 /* Line 1792 of yacc.c  */
-#line 777 "griby.y"
+#line 779 "griby.y"
     { (grib_yyval.exp) = new_true_expression(grib_parser_context); }
     break;
 
   case 226:
 /* Line 1792 of yacc.c  */
-#line 778 "griby.y"
+#line 780 "griby.y"
     { (grib_yyval.exp) = (grib_yyvsp[(2) - (3)].exp); }
     break;
 
   case 227:
 /* Line 1792 of yacc.c  */
-#line 779 "griby.y"
+#line 781 "griby.y"
     { (grib_yyval.exp) = new_unop_expression(grib_parser_context,&grib_op_neg,&grib_op_neg_d,(grib_yyvsp[(2) - (2)].exp)); }
     break;
 
   case 228:
 /* Line 1792 of yacc.c  */
-#line 780 "griby.y"
+#line 782 "griby.y"
     { (grib_yyval.exp) = new_func_expression(grib_parser_context,(grib_yyvsp[(1) - (3)].str),NULL); free((grib_yyvsp[(1) - (3)].str));}
     break;
 
   case 229:
 /* Line 1792 of yacc.c  */
-#line 781 "griby.y"
+#line 783 "griby.y"
     { (grib_yyval.exp) = new_func_expression(grib_parser_context,(grib_yyvsp[(1) - (4)].str),(grib_yyvsp[(3) - (4)].explist)); free((grib_yyvsp[(1) - (4)].str));}
     break;
 
   case 230:
 /* Line 1792 of yacc.c  */
-#line 785 "griby.y"
+#line 787 "griby.y"
     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_pow,NULL,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp)); }
     break;
 
   case 232:
 /* Line 1792 of yacc.c  */
-#line 789 "griby.y"
+#line 791 "griby.y"
     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_mul,&grib_op_mul_d,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp)); }
     break;
 
   case 233:
 /* Line 1792 of yacc.c  */
-#line 790 "griby.y"
+#line 792 "griby.y"
     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_div,&grib_op_div_d,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp)); }
     break;
 
   case 234:
 /* Line 1792 of yacc.c  */
-#line 791 "griby.y"
+#line 793 "griby.y"
     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_modulo,NULL,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp)); }
     break;
 
   case 235:
 /* Line 1792 of yacc.c  */
-#line 792 "griby.y"
+#line 794 "griby.y"
     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_bit,NULL,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp)); }
     break;
 
   case 236:
 /* Line 1792 of yacc.c  */
-#line 793 "griby.y"
+#line 795 "griby.y"
     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_bitoff,NULL,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp)); }
     break;
 
   case 238:
 /* Line 1792 of yacc.c  */
-#line 795 "griby.y"
+#line 797 "griby.y"
     { (grib_yyval.exp) = new_length_expression(grib_parser_context,(grib_yyvsp[(3) - (4)].str)); free((grib_yyvsp[(3) - (4)].str));}
     break;
 
   case 239:
 /* Line 1792 of yacc.c  */
-#line 796 "griby.y"
+#line 798 "griby.y"
     { (grib_yyval.exp) = new_is_in_list_expression(grib_parser_context,(grib_yyvsp[(3) - (6)].str),(grib_yyvsp[(5) - (6)].str)); free((grib_yyvsp[(3) - (6)].str));free((grib_yyvsp[(5) - (6)].str));}
     break;
 
   case 240:
 /* Line 1792 of yacc.c  */
-#line 797 "griby.y"
+#line 799 "griby.y"
     { (grib_yyval.exp) = new_is_in_dict_expression(grib_parser_context,(grib_yyvsp[(3) - (6)].str),(grib_yyvsp[(5) - (6)].str)); free((grib_yyvsp[(3) - (6)].str));free((grib_yyvsp[(5) - (6)].str));}
     break;
 
   case 241:
 /* Line 1792 of yacc.c  */
-#line 798 "griby.y"
+#line 800 "griby.y"
     { (grib_yyval.exp) = new_is_integer_expression(grib_parser_context,(grib_yyvsp[(3) - (6)].str),(grib_yyvsp[(5) - (6)].lval),0); free((grib_yyvsp[(3) - (6)].str));}
     break;
 
   case 242:
 /* Line 1792 of yacc.c  */
-#line 799 "griby.y"
+#line 801 "griby.y"
     { (grib_yyval.exp) = new_is_integer_expression(grib_parser_context,(grib_yyvsp[(3) - (8)].str),(grib_yyvsp[(5) - (8)].lval),(grib_yyvsp[(7) - (8)].lval)); free((grib_yyvsp[(3) - (8)].str));}
     break;
 
   case 243:
 /* Line 1792 of yacc.c  */
-#line 800 "griby.y"
+#line 802 "griby.y"
     { (grib_yyval.exp) = new_is_integer_expression(grib_parser_context,(grib_yyvsp[(3) - (4)].str),0,0); free((grib_yyvsp[(3) - (4)].str));}
     break;
 
   case 244:
 /* Line 1792 of yacc.c  */
-#line 803 "griby.y"
+#line 805 "griby.y"
     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_add,&grib_op_add_d,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp)); }
     break;
 
   case 245:
 /* Line 1792 of yacc.c  */
-#line 804 "griby.y"
+#line 806 "griby.y"
     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_sub,&grib_op_sub_d,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp)); }
     break;
 
   case 247:
 /* Line 1792 of yacc.c  */
-#line 808 "griby.y"
+#line 810 "griby.y"
     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_gt,&grib_op_gt_d,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp)); }
     break;
 
   case 248:
 /* Line 1792 of yacc.c  */
-#line 810 "griby.y"
+#line 812 "griby.y"
     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_eq,&grib_op_eq_d,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp)); }
     break;
 
   case 249:
 /* Line 1792 of yacc.c  */
-#line 811 "griby.y"
+#line 813 "griby.y"
     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_lt,&grib_op_lt_d,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp)); }
     break;
 
   case 250:
 /* Line 1792 of yacc.c  */
-#line 812 "griby.y"
+#line 814 "griby.y"
     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_ge,&grib_op_ge_d,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp)); }
     break;
 
   case 251:
 /* Line 1792 of yacc.c  */
-#line 813 "griby.y"
+#line 815 "griby.y"
     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_le,&grib_op_le_d,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp)); }
     break;
 
   case 252:
 /* Line 1792 of yacc.c  */
-#line 814 "griby.y"
+#line 816 "griby.y"
     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_ne,&grib_op_ne_d,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp)); }
     break;
 
   case 253:
 /* Line 1792 of yacc.c  */
-#line 815 "griby.y"
+#line 817 "griby.y"
     { (grib_yyval.exp) = new_string_compare_expression(grib_parser_context,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp)); }
     break;
 
   case 254:
 /* Line 1792 of yacc.c  */
-#line 820 "griby.y"
+#line 822 "griby.y"
     { (grib_yyval.exp) = new_unop_expression(grib_parser_context,&grib_op_not,NULL,(grib_yyvsp[(2) - (2)].exp)); }
     break;
 
   case 256:
 /* Line 1792 of yacc.c  */
-#line 824 "griby.y"
+#line 826 "griby.y"
     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_and,NULL,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp)); }
     break;
 
   case 258:
 /* Line 1792 of yacc.c  */
-#line 828 "griby.y"
+#line 830 "griby.y"
     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_or,NULL,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp));}
     break;
 
   case 263:
 /* Line 1792 of yacc.c  */
-#line 842 "griby.y"
+#line 844 "griby.y"
     { (grib_yyval.rule_entry) = grib_new_rule_entry(grib_parser_context,(grib_yyvsp[(1) - (4)].str),(grib_yyvsp[(3) - (4)].exp)); free((grib_yyvsp[(1) - (4)].str)); }
     break;
 
   case 264:
 /* Line 1792 of yacc.c  */
-#line 843 "griby.y"
+#line 845 "griby.y"
     { (grib_yyval.rule_entry) = grib_new_rule_entry(grib_parser_context,"skip",0);}
     break;
 
   case 266:
 /* Line 1792 of yacc.c  */
-#line 847 "griby.y"
+#line 849 "griby.y"
     { (grib_yyvsp[(1) - (2)].rule_entry)->next = (grib_yyvsp[(2) - (2)].rule_entry); (grib_yyval.rule_entry) = (grib_yyvsp[(1) - (2)].rule_entry); }
     break;
 
   case 267:
 /* Line 1792 of yacc.c  */
-#line 850 "griby.y"
+#line 852 "griby.y"
     { (grib_yyval.rules) = grib_new_rule(grib_parser_context,NULL,(grib_yyvsp[(1) - (1)].rule_entry)); }
     break;
 
   case 268:
 /* Line 1792 of yacc.c  */
-#line 854 "griby.y"
+#line 856 "griby.y"
     { (grib_yyval.rules) = grib_new_rule(grib_parser_context,(grib_yyvsp[(3) - (7)].exp),(grib_yyvsp[(6) - (7)].rule_entry)); }
     break;
 
   case 270:
 /* Line 1792 of yacc.c  */
-#line 858 "griby.y"
+#line 860 "griby.y"
     { (grib_yyvsp[(1) - (2)].rules)->next = (grib_yyvsp[(2) - (2)].rules); (grib_yyval.rules) = (grib_yyvsp[(1) - (2)].rules); }
     break;
 
 
 /* Line 1792 of yacc.c  */
-#line 4009 "y.tab.c"
+#line 4011 "y.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter grib_yychar, and that requires
@@ -4237,7 +4239,7 @@ grib_yyreturn:
 
 
 /* Line 2055 of yacc.c  */
-#line 862 "griby.y"
+#line 864 "griby.y"
 
 
 static grib_concept_value *_reverse_concept(grib_concept_value *r,grib_concept_value *s)

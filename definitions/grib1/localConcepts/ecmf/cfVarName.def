@@ -2024,7 +2024,7 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 247 ;
 	}
-#Cloud cover
+#Fraction of cloud cover
 'cc' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 248 ;

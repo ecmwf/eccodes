@@ -103,6 +103,15 @@ echo "}"
 
 echo "\\endverbatim\\n"
 
+echo "-# Here is an example of an IF statement comparing a key with a string. "
+echo "Note you have to use the \"is\" keyword for strings and not \"==\", and to negate you add the \"!\" before the whole condition:\\n \\n"
+echo "\\verbatim"
+echo "# Select Geopotential Height messages which are not on a Reduced Gaussian Grid"
+echo "if (shortName is \"gh\" && !(gridType is \"reduced_gg\" )) {"
+echo "    set step = 72;"
+echo "}"
+echo "\\endverbatim\\n"
+
 echo "-# The switch statement is an enhanced version of the if statement. Its syntax is the following:"
 echo "\\verbatim"
 echo "switch (key1) {"

@@ -88,7 +88,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 84 ;
 	}
-#Cloud cover
+#Fraction of cloud cover
 'cc' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
@@ -108,11 +108,30 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 11 ;
 	}
+#Low cloud cover
+'lcc' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 3 ;
+	}
+#Medium cloud cover
+'mcc' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 4 ;
+	}
+#High cloud cover
+'hcc' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 5 ;
+	}
 #10 metre wind gust in the last 3 hours
 'fg310' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
+	 is_uerra = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
@@ -217,6 +236,39 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
+	}
+#10 metre wind gust for UERRA
+'fgu10' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 is_uerra = 1 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	}
+#Maximum temperature at 2 metres for UERRA
+'mx2tu' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 is_uerra = 1 ;
+	}
+#Minimum temperature at 2 metres for UERRA
+'mn2tu' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 is_uerra = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
 	}
 #Mean temperature tendency due to short-wave radiation
 'mttswr' = {
@@ -400,6 +452,15 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
 	}
+#Surface air relative humidity
+'r2' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
 #Apparent temperature
 'aptmp' = {
 	 discipline = 0 ;
@@ -411,6 +472,61 @@
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 2 ;
+	}
+#Cloud cover
+'ccl' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 22 ;
+	}
+#Evaporation rate
+'evarate' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 79 ;
+	}
+#Evaporation
+'eva' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 79 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#10 metre wind direction
+'wdir10' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	}
+#Direct short wave radiation flux
+'dirswrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	}
+#Diffuse short wave radiation flux
+'difswrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	}
+#Time-integrated direct short wave radiation flux
+'tidirswrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Soil temperature
+'sot' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
 	}
 #Cloudy brightness temperature
 'clbt' = {
@@ -544,6 +660,12 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	}
+#Wind direction
+'wdir' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	}
 #Significant height of combined wind waves and swell
 'swh' = {
 	 discipline = 10 ;
@@ -641,6 +763,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
+	 is_uerra = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
@@ -653,6 +776,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
+	 is_uerra = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
@@ -868,475 +992,475 @@
 	 typeOfFirstFixedSurface = 1 ;
 	}
 #Latent heat net flux
-'p260002' = {
+'lhtfl' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 10 ;
 	}
 #Sensible heat net flux
-'p260003' = {
+'shtfl' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 11 ;
 	}
 #Heat index
-'p260004' = {
+'heatx' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 12 ;
 	}
 #Wind chill factor
-'p260005' = {
+'wcf' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 13 ;
 	}
 #Minimum dew point depression
-'p260006' = {
+'mindpd' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 14 ;
 	}
 #Snow phase change heat flux
-'p260007' = {
+'snohf' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 16 ;
 	}
 #Vapor pressure
-'p260008' = {
+'vapp' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 4 ;
 	}
 #Large scale precipitation (non-convective)
-'p260009' = {
+'ncpcp' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 9 ;
 	}
 #Snowfall rate water equivalent
-'p260010' = {
+'srweq' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 12 ;
 	}
 #Convective snow
-'p260011' = {
+'snoc' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 14 ;
 	}
 #Large scale snow
-'p260012' = {
+'snol' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 15 ;
 	}
 #Snow age
-'p260013' = {
+'snoag' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 17 ;
 	}
 #Absolute humidity
-'p260014' = {
+'absh' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 18 ;
 	}
 #Precipitation type
-'p260015' = {
+'ptype' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
 	}
 #Integrated liquid water
-'p260016' = {
+'iliqw' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 20 ;
 	}
 #Condensate
-'p260017' = {
+'tcond' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 21 ;
 	}
 #Cloud mixing ratio
-'p260018' = {
+'clwmr' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 22 ;
 	}
 #Ice water mixing ratio
-'p260019' = {
+'icmr' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 23 ;
 	}
 #Rain mixing ratio
-'p260020' = {
+'rwmr' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 24 ;
 	}
 #Snow mixing ratio
-'p260021' = {
+'snmr' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 25 ;
 	}
 #Horizontal moisture convergence
-'p260022' = {
+'mconv' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 26 ;
 	}
 #Maximum relative humidity
-'p260023' = {
+'maxrh' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 27 ;
 	}
 #Maximum absolute humidity
-'p260024' = {
+'maxah' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 28 ;
 	}
 #Total snowfall
-'p260025' = {
+'asnow' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 29 ;
 	}
 #Precipitable water category
-'p260026' = {
+'pwcat' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 30 ;
 	}
 #Hail
-'p260027' = {
+'hail' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 31 ;
 	}
 #Graupel (snow pellets)
-'p260028' = {
+'grle' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 32 ;
 	}
 #Categorical rain
-'p260029' = {
+'crain' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 33 ;
 	}
 #Categorical freezing rain
-'p260030' = {
+'cfrzr' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 34 ;
 	}
 #Categorical ice pellets
-'p260031' = {
+'cicep' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 35 ;
 	}
 #Categorical snow
-'p260032' = {
+'csnow' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 36 ;
 	}
 #Convective precipitation rate
-'p260033' = {
+'cprat' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 37 ;
 	}
 #Horizontal moisture divergence
-'p260034' = {
+'mdiv' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 38 ;
 	}
 #Percent frozen precipitation
-'p260035' = {
+'cpofp' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 39 ;
 	}
 #Potential evaporation
-'p260036' = {
+'pevap' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 40 ;
 	}
 #Potential evaporation rate
-'p260037' = {
+'pevpr' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 41 ;
 	}
 #Snow cover
-'p260038' = {
+'snowc' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 42 ;
 	}
 #Rain fraction of total cloud water
-'p260039' = {
+'frain' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 43 ;
 	}
 #Rime factor
-'p260040' = {
+'rime' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 44 ;
 	}
 #Total column integrated rain
-'p260041' = {
+'tcolr' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 45 ;
 	}
 #Total column integrated snow
-'p260042' = {
+'tcols' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 46 ;
 	}
 #Large scale water precipitation (non-convective)
-'p260043' = {
+'lswp' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 47 ;
 	}
 #Convective water precipitation
-'p260044' = {
+'cwp' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 48 ;
 	}
 #Total water precipitation
-'p260045' = {
+'twatp' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 49 ;
 	}
 #Total snow precipitation
-'p260046' = {
+'tsnowp' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 50 ;
 	}
 #Total column water (Vertically integrated total water (vapour + cloud water/ice))
-'p260047' = {
+'tcwat' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 51 ;
 	}
 #Total precipitation rate
-'p260048' = {
+'tprate' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
 	}
 #Total snowfall rate water equivalent
-'p260049' = {
+'tsrwe' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 53 ;
 	}
 #Large scale precipitation rate
-'p260050' = {
+'lsprate' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 54 ;
 	}
 #Convective snowfall rate water equivalent
-'p260051' = {
+'csrwe' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 55 ;
 	}
 #Large scale snowfall rate water equivalent
-'p260052' = {
+'lssrwe' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 56 ;
 	}
 #Total snowfall rate
-'p260053' = {
+'tsrate' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 57 ;
 	}
 #Convective snowfall rate
-'p260054' = {
+'csrate' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 58 ;
 	}
 #Large scale snowfall rate
-'p260055' = {
+'lssrate' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 59 ;
 	}
 #Water equivalent of accumulated snow depth
-'p260056' = {
+'sdwe' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 13 ;
 	}
 #Total column integrated water vapour
-'p260057' = {
+'tciwv' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 64 ;
 	}
 #Rain precipitation rate
-'p260058' = {
+'rprate' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 65 ;
 	}
 #Snow precipitation rate
-'p260059' = {
+'sprate' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 66 ;
 	}
 #Freezing rain precipitation rate
-'p260060' = {
+'fprate' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 67 ;
 	}
 #Ice pellets precipitation rate
-'p260061' = {
+'iprate' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 68 ;
 	}
 #Momentum flux, u component
-'p260062' = {
+'uflx' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 17 ;
 	}
 #Momentum flux, v component
-'p260063' = {
+'vflx' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 18 ;
 	}
 #Maximum wind speed
-'p260064' = {
+'maxgust' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 21 ;
 	}
 #Wind speed (gust)
-'p260065' = {
+'gust' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
 	}
 #u-component of wind (gust)
-'p260066' = {
+'ugust' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 23 ;
 	}
 #v-component of wind (gust)
-'p260067' = {
+'vgust' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 24 ;
 	}
 #Vertical speed shear
-'p260068' = {
+'vwsh' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 25 ;
 	}
 #Horizontal momentum flux
-'p260069' = {
+'mflx' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 26 ;
 	}
 #U-component storm motion
-'p260070' = {
+'ustm' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 27 ;
 	}
 #V-component storm motion
-'p260071' = {
+'vstm' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 28 ;
 	}
 #Drag coefficient
-'p260072' = {
+'cd' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 29 ;
 	}
 #Frictional velocity
-'p260073' = {
+'fricv' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 30 ;
 	}
 #Pressure reduced to MSL
-'p260074' = {
+'prmsl' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 1 ;
 	}
 #Geometric height
-'p260075' = {
+'dist' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 6 ;
 	}
 #Altimeter setting
-'p260076' = {
+'alts' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 11 ;
 	}
 #Thickness
-'p260077' = {
+'thick' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 12 ;
 	}
 #Pressure altitude
-'p260078' = {
+'presalt' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 13 ;
 	}
 #Density altitude
-'p260079' = {
+'denalt' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 14 ;
 	}
 #5-wave geopotential height
-'p260080' = {
+'wavh5' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 15 ;
@@ -1354,7 +1478,7 @@
 	 parameterNumber = 17 ;
 	}
 #Planetary boundary layer height
-'p260083' = {
+'hpbl' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 18 ;
@@ -1366,211 +1490,211 @@
 	 parameterNumber = 19 ;
 	}
 #Standard deviation of sub-grid scale orography
-'p260085' = {
+'sdsgso' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 20 ;
 	}
 #Net short-wave radiation flux (top of atmosphere)
-'p260086' = {
+'nswrt' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 1 ;
 	}
 #Downward short-wave radiation flux
-'p260087' = {
+'dswrf' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 7 ;
 	}
 #Upward short-wave radiation flux
-'p260088' = {
+'uswrf' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 8 ;
 	}
 #Net short wave radiation flux
-'p260089' = {
+'nswrf' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 9 ;
 	}
 #Photosynthetically active radiation
-'p260090' = {
+'photar' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 10 ;
 	}
 #Net short-wave radiation flux, clear sky
-'p260091' = {
+'nswrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 11 ;
 	}
 #Downward UV radiation
-'p260092' = {
+'dwuvr' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 12 ;
 	}
 #UV index (under clear sky)
-'p260093' = {
+'uviucs' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 50 ;
 	}
 #UV index 
-'p260094' = {
+'uvi' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 51 ;
 	}
 #Net long wave radiation flux (surface)
-'p260095' = {
+'nlwrs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 0 ;
 	}
 #Net long wave radiation flux (top of atmosphere)
-'p260096' = {
+'nlwrt' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 1 ;
 	}
 #Downward long-wave radiation flux
-'p260097' = {
+'dlwrf' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 3 ;
 	}
 #Upward long-wave radiation flux
-'p260098' = {
+'ulwrf' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 4 ;
 	}
 #Net long wave radiation flux
-'p260099' = {
+'nlwrf' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 5 ;
 	}
 #Net long-wave radiation flux, clear sky
-'p260100' = {
+'nlwrcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
 	}
 #Cloud Ice
-'p260101' = {
+'cice' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 0 ;
 	}
 #Cloud water
-'p260102' = {
+'cwat' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 6 ;
 	}
 #Cloud amount
-'p260103' = {
+'cdca' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 7 ;
 	}
 #Cloud type
-'p260104' = {
+'cdct' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 8 ;
 	}
 #Thunderstorm maximum tops
-'p260105' = {
+'tmaxt' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 9 ;
 	}
 #Thunderstorm coverage
-'p260106' = {
+'thunc' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 10 ;
 	}
 #Cloud base
-'p260107' = {
+'cdcb' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 11 ;
 	}
 #Cloud top
-'p260108' = {
+'cdct' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 12 ;
 	}
 #Ceiling
-'p260109' = {
+'ceil' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 13 ;
 	}
 #Non-convective cloud cover
-'p260110' = {
+'cdlyr' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 14 ;
 	}
 #Cloud work function
-'p260111' = {
+'cwork' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 15 ;
 	}
 #Convective cloud efficiency
-'p260112' = {
+'cuefi' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 16 ;
 	}
 #Total condensate
-'p260113' = {
+'tcond' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 17 ;
 	}
 #Total column-integrated cloud water
-'p260114' = {
+'tcolw' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 18 ;
 	}
 #Total column-integrated cloud ice
-'p260115' = {
+'tcoli' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 19 ;
 	}
 #Total column-integrated condensate
-'p260116' = {
+'tcolc' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 20 ;
 	}
 #Ice fraction of total condensate
-'p260117' = {
+'fice' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 21 ;
 	}
 #Cloud ice mixing ratio
-'p260118' = {
+'cdcimr' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 23 ;
 	}
 #Sunshine
-'p260119' = {
+'suns' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 24 ;
@@ -1588,7 +1712,7 @@
 	 parameterNumber = 2 ;
 	}
 #KO index
-'p260122' = {
+'kox' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 3 ;
@@ -1600,31 +1724,31 @@
 	 parameterNumber = 4 ;
 	}
 #Sweat index
-'p260124' = {
+'sx' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 5 ;
 	}
 #Storm relative helicity
-'p260125' = {
+'hlcy' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 8 ;
 	}
 #Energy helicity index
-'p260126' = {
+'ehlx' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 9 ;
 	}
 #Surface lifted index
-'p260127' = {
+'lftx' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 10 ;
 	}
 #Best (4-layer) lifted index
-'p260128' = {
+'lftx4' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 11 ;
@@ -1936,343 +2060,343 @@
 	 parameterNumber = 4 ;
 	}
 #Water runoff
-'p260181' = {
+'watr' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 5 ;
 	}
 #Evapotranspiration
-'p260182' = {
+'evapt' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 6 ;
 	}
 #Model terrain height
-'p260183' = {
+'mterh' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 7 ;
 	}
 #Land use
-'p260184' = {
+'landu' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 8 ;
 	}
 #Volumetric soil moisture content
-'p260185' = {
+'soilw' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
 	}
 #Ground heat flux
-'p260186' = {
+'gflux' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 10 ;
 	}
 #Moisture availability
-'p260187' = {
+'mstav' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 11 ;
 	}
 #Exchange coefficient
-'p260188' = {
+'sfexc' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 12 ;
 	}
 #Plant canopy surface water
-'p260189' = {
+'cnwat' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 13 ;
 	}
 #Blackadar mixing length scale
-'p260190' = {
+'bmixl' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 14 ;
 	}
 #Canopy conductance
-'p260191' = {
+'ccond' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 15 ;
 	}
 #Minimal stomatal resistance
-'p260192' = {
+'rsmin' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 16 ;
 	}
 #Solar parameter in canopy conductance
-'p260193' = {
+'rcs' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 18 ;
 	}
 #Temperature parameter in canopy conductance
-'p260194' = {
+'rct' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 19 ;
 	}
 #Soil moisture parameter in canopy conductance
-'p260195' = {
+'rcsol' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
 	}
 #Humidity parameter in canopy conductance
-'p260196' = {
+'rcq' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 21 ;
 	}
 #Column-integrated soil water
-'p260197' = {
+'cisoilw' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 23 ;
 	}
 #Heat flux
-'p260198' = {
+'hflux' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 24 ;
 	}
 #Volumetric soil moisture
-'p260199' = {
+'vsw' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 25 ;
 	}
 #Volumetric wilting point
-'p260200' = {
+'vwiltm' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 27 ;
 	}
 #Upper layer soil temperature
-'p260201' = {
+'uplst' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 1 ;
 	}
 #Upper layer soil moisture
-'p260202' = {
+'uplsm' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 2 ;
 	}
 #Lower layer soil moisture
-'p260203' = {
+'lowlsm' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 3 ;
 	}
 #Bottom layer soil temperature
-'p260204' = {
+'botlst' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 4 ;
 	}
 #Liquid volumetric soil moisture (non-frozen)
-'p260205' = {
+'soill' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 5 ;
 	}
 #Number of soil layers in root zone
-'p260206' = {
+'rlyrs' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 6 ;
 	}
 #Transpiration stress-onset (soil moisture)
-'p260207' = {
+'smref' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 7 ;
 	}
 #Direct evaporation cease (soil moisture)
-'p260208' = {
+'smdry' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 8 ;
 	}
 #Soil porosity
-'p260209' = {
+'poros' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 9 ;
 	}
 #Liquid volumetric soil moisture (non-frozen)
-'p260210' = {
+'liqvsm' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 10 ;
 	}
 #Volumetric transpiration stress-onset (soil moisture)
-'p260211' = {
+'voltso' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 11 ;
 	}
 #Transpiration stress-onset (soil moisture)
-'p260212' = {
+'transo' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 12 ;
 	}
 #Volumetric direct evaporation cease (soil moisture)
-'p260213' = {
+'voldec' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 13 ;
 	}
 #Direct evaporation cease (soil moisture)
-'p260214' = {
+'direc' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 14 ;
 	}
 #Soil porosity
-'p260215' = {
+'soilp' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 15 ;
 	}
 #Volumetric saturation of soil moisture
-'p260216' = {
+'vsosm' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 16 ;
 	}
 #Saturation of soil moisture
-'p260217' = {
+'satosm' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 17 ;
 	}
 #Estimated precipitation
-'p260218' = {
+'estp' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 0 ;
 	}
 #Instantaneous rain rate
-'p260219' = {
+'irrate' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 1 ;
 	}
 #Cloud top height
-'p260220' = {
+'ctoph' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 2 ;
 	}
 #Cloud top height quality indicator
-'p260221' = {
+'ctophqi' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 3 ;
 	}
 #Estimated u component of wind 
-'p260222' = {
+'estu' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 4 ;
 	}
 #Estimated v component of wind
-'p260223' = {
+'estv' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 5 ;
 	}
 #Number of pixels used
-'p260224' = {
+'npixu' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 6 ;
 	}
 #Solar zenith angle
-'p260225' = {
+'solza' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 7 ;
 	}
 #Relative azimuth angle
-'p260226' = {
+'raza' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 8 ;
 	}
 #Reflectance in 0.6 micron channel
-'p260227' = {
+'rfl06' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 9 ;
 	}
 #Reflectance in 0.8 micron channel
-'p260228' = {
+'rfl08' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 10 ;
 	}
 #Reflectance in 1.6 micron channel
-'p260229' = {
+'rfl16' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 11 ;
 	}
 #Reflectance in 3.9 micron channel
-'p260230' = {
+'rfl39' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 12 ;
 	}
 #Atmospheric divergence
-'p260231' = {
+'atmdiv' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 13 ;
 	}
 #Direction of wind waves
-'p260232' = {
+'wvdir' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 4 ;
 	}
 #Primary wave direction
-'p260233' = {
+'dirpw' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 10 ;
 	}
 #Primary wave mean period
-'p260234' = {
+'perpw' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 11 ;
 	}
 #Secondary wave mean period
-'p260235' = {
+'persw' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 13 ;
 	}
 #Current direction
-'p260236' = {
+'dirc' = {
 	 discipline = 10 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 0 ;
 	}
 #Current speed
-'p260237' = {
+'spc' = {
 	 discipline = 10 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 1 ;
@@ -2284,97 +2408,97 @@
 	 parameterNumber = 9 ;
 	}
 #Ice temperature
-'p260239' = {
+'ist' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 8 ;
 	}
 #Deviation of sea level from mean
-'p260240' = {
+'dslm' = {
 	 discipline = 10 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 1 ;
 	}
 #Seconds prior to initial reference time (defined in Section 1)
-'p260241' = {
+'tsec' = {
 	 discipline = 10 ;
 	 parameterCategory = 191 ;
 	 parameterNumber = 0 ;
 	}
 #Albedo
-'p260509' = {
+'al' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 1 ;
 	}
 #Pressure tendency
-'p3003' = {
+'ptend' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 2 ;
 	}
 #ICAO Standard Atmosphere reference height
-'p3005' = {
+'icaht' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 3 ;
 	}
 #Geometrical height
-'p3008' = {
+'h' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 6 ;
 	}
 #Standard deviation of height
-'p3009' = {
+'hstdv' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 7 ;
 	}
 #Maximum temperature
-'p3015' = {
+'tmax' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 4 ;
 	}
 #Minimum temperature
-'p3016' = {
+'tmin' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 5 ;
 	}
 #Dew point temperature
-'p3017' = {
+'dpt' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 6 ;
 	}
 #Lapse rate
-'p3019' = {
+'lapr' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 8 ;
 	}
 #Visibility
-'p3020' = {
+'vis' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 0 ;
 	}
 #Radar spectra (1)
-'p3021' = {
+'rdsp1' = {
 	 discipline = 0 ;
 	 parameterCategory = 15 ;
 	 parameterNumber = 6 ;
 	}
 #Radar spectra (2)
-'p3022' = {
+'rdsp2' = {
 	 discipline = 0 ;
 	 parameterCategory = 15 ;
 	 parameterNumber = 7 ;
 	}
 #Radar spectra (3)
-'p3023' = {
+'rdsp3' = {
 	 discipline = 0 ;
 	 parameterCategory = 15 ;
 	 parameterNumber = 8 ;

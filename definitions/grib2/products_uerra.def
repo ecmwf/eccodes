@@ -20,22 +20,17 @@ alias parameter.shortName=shortName;
 alias parameter.units=units;
 alias parameter.name=name;
 
-if(levtype is "sfc")
-{
-    unalias mars.levelist;
-}
-
 # Special UERRA rule for level type 103 'Specified height level above ground (m)'
 if(typeOfFirstFixedSurface == 103) {
-    # Exclude the parameters: 10u, 10v and 2t
-    if (paramId != 165 &&
-        paramId != 166 &&
-        paramId != 167)
-    {
+    # only the parameters above 10m
+    if (level > 10) {
         constant heightLevelName = 'hl';
         alias mars.levtype = heightLevelName;
+        # levelist was unaliased in template.4.horizontal.def so we must have it back
+        alias mars.levelist = level;
     }
 }
+
 
 alias mars.expver = marsExpver;
 alias mars.class  = marsClass;
