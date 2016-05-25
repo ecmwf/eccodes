@@ -94,7 +94,9 @@ bool ReducedLL::globalDomain() const {
 
 atlas::grid::Grid *ReducedLL::atlasGrid() const {
     // FIXME: we are missing the distribution of latitudes
-    return new atlas::grid::global::lonlat::ReducedLonLat(pl_.size(), &pl_[0]);
+    atlas::grid::Grid *grid = new atlas::grid::global::lonlat::ReducedLonLat(pl_.size(), &pl_[0]);
+    grid->domain(atlasDomain());
+    return grid;
 }
 
 atlas::grid::Domain ReducedLL::atlasDomain() const {

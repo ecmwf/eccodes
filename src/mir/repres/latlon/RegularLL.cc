@@ -87,56 +87,17 @@ atlas::grid::Grid *RegularLL::atlasGrid() const {
 
     eckit::Log::trace<MIR>() << "RegularLL::atlasGrid BBox is " << bbox_ << std::endl;
 
-    atlas::grid::Grid* grid = 0;
+    atlas::grid::Grid *grid = new atlas::grid::global::lonlat::RegularLonLat(
+        (const size_t) ni_,
+        (const size_t) nj_ );
 
-    if (globalDomain()) {
+    // FIXME: an assertion for shift global grids
+    ASSERT(bbox_.north() == 90);
+    ASSERT(bbox_.south() == -90);
+    ASSERT(bbox_.east() == 360 - increments_.west_east());
+    ASSERT(bbox_.west() == 0);
 
-        grid = new atlas::grid::global::lonlat::RegularLonLat(
-                    (const size_t) ni_,
-                    (const size_t) nj_ );
-
-        // FIXME: an assertion for shift global grids
-        ASSERT(bbox_.north() == 90);
-        ASSERT(bbox_.south() == -90);
-        ASSERT(bbox_.east() == 360 - increments_.west_east());
-        ASSERT(bbox_.west() == 0);
-
-    } else {
-
-        size_t global_ni = 0;
-        size_t global_nj = 0;
-
-        computeNiNj(global_ni,
-                    global_nj,
-                    util::BoundingBox(90, bbox_.west(), -90, bbox_.west() + 360. - increments_.west_east()),
-                    increments_ );
-
-        grid = new atlas::grid::global::lonlat::RegularLonLat(
-                    (const size_t) global_ni,
-                    (const size_t) global_nj );
-
-
-        // FIXME: assert if non-global shifted grid
-        ASSERT(check(bbox_.north(), increments_.south_north()));
-        ASSERT(check(bbox_.south(), increments_.south_north()));
-        ASSERT(check(bbox_.west(), increments_.west_east()));
-        ASSERT(check(bbox_.east(), increments_.west_east()));
-
-        atlas::grid::Domain domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
-        grid = new atlas::grid::deprecated::LocalGrid(grid, domain);
-    }
-
-    eckit::Log::trace<MIR>() << "RegularLL::atlasGrid is " << *grid << " BoundBox " << bbox_ << std::endl;
-
-
-    if(!globalDomain()) {
-        std::vector<atlas::grid::Grid::Point> pts;
-        grid->lonlat(pts);
-        for( size_t i = 0; i < pts.size(); ++i)
-            eckit::Log::trace<MIR>() << pts[i] << " ";
-        eckit::Log::trace<MIR>() << std::endl;
-    }
-
+    grid->domain(atlasDomain());
     return grid;
 }
 
