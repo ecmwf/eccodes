@@ -3825,12 +3825,12 @@
 	 indicatorOfParameter = 118 ;
 	}
 #Mean altitude of maximum injection
-'m above sea level' = {
+'m' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 119 ;
 	}
 #Altitude of plume top
-'m above sea level' = {
+'m' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 120 ;
 	}
@@ -4020,7 +4020,7 @@
 	 indicatorOfParameter = 241 ;
 	}
 #Altitude of plume bottom
-'m above sea level' = {
+'m' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 242 ;
 	}
@@ -4105,12 +4105,12 @@
 	 indicatorOfParameter = 118 ;
 	}
 #Altitude of emitter
-'m above sea level' = {
+'m' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 119 ;
 	}
 #Altitude of plume top
-'m above sea level' = {
+'m' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 120 ;
 	}

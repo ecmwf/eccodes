@@ -2988,13 +2988,13 @@
 	 parameterNumber = 79 ;
 	}
 #Mean altitude of maximum injection
-'m above sea level' = {
+'m' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 119 ;
 	}
 #Altitude of plume top
-'m above sea level' = {
+'m' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 120 ;
@@ -3156,7 +3156,7 @@
 	 parameterNumber = 230 ;
 	}
 #Altitude of plume bottom
-'m above sea level' = {
+'m' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 242 ;
@@ -3252,13 +3252,13 @@
 	 parameterNumber = 56 ;
 	}
 #Altitude of emitter
-'m above sea level' = {
+'m' = {
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 119 ;
 	}
 #Altitude of plume top
-'m above sea level' = {
+'m' = {
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 120 ;
