@@ -76,10 +76,10 @@ bool LatLon::globalDomain() const {
 }
 
 
-void LatLon::cropToDomain(const param::MIRParametrisation &parametrisation, data::MIRField &field) const {
+void LatLon::cropToDomain(const param::MIRParametrisation &parametrisation, data::MIRField &field, util::MIRStatistics& statistics) const {
     if (!globalDomain()) {
         action::AreaCropper cropper(parametrisation, bbox_);
-        cropper.execute(field);
+        cropper.execute(field, statistics);
     }
 }
 // size_t LatLon::ni() const {
