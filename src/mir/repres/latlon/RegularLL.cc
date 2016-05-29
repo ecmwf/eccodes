@@ -76,12 +76,6 @@ void RegularLL::fill(api::MIRJob &job) const  {
 }
 
 
-static bool check(double x, double dx) {
-    double a = (x > 0 ? x : -x) / dx;
-    return eckit::FloatCompare<double>::isApproximatelyEqual(size_t(a), a);
-}
-
-
 atlas::grid::Grid *RegularLL::atlasGrid() const {
 
     eckit::Log::trace<MIR>() << "RegularLL::atlasGrid BBox is " << bbox_ << std::endl;
