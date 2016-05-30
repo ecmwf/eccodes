@@ -53,7 +53,7 @@ GribOutput::~GribOutput() {
 }
 
 
-void GribOutput::copy(const param::MIRParametrisation &, input::MIRInput &input) { // Not iterpolation performed
+size_t GribOutput::copy(const param::MIRParametrisation &, input::MIRInput &input) { // Not iterpolation performed
 
     grib_handle *h = input.gribHandle(); // Base class will throw an exception is input cannot provide a grib_handle
     ASSERT(h);
@@ -65,12 +65,12 @@ void GribOutput::copy(const param::MIRParametrisation &, input::MIRInput &input)
 
     out(message, size, false);
 
-    total_ += size;
+    return size;
 
 }
 
 
-void GribOutput::save(const param::MIRParametrisation &parametrisation, input::MIRInput &input, data::MIRField &field) {
+size_t GribOutput::save(const param::MIRParametrisation &parametrisation, input::MIRInput &input, data::MIRField &field) {
 
     field.validate();
 
@@ -225,12 +225,9 @@ void GribOutput::save(const param::MIRParametrisation &parametrisation, input::M
 
     out(message, size, true);
 
-    total_ += size;
+    return size;
 }
 
-unsigned long long GribOutput::total() const {
-    return total_;
-}
 
 #undef X
 
