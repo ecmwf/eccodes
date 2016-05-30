@@ -17,7 +17,6 @@
 #include <istream>
 
 #include "eckit/io/DataHandle.h"
-#include "eckit/io/Length.h"
 
 #include "mir/data/MIRField.h"
 #include "mir/input/MIRInput.h"
@@ -229,7 +228,7 @@ void GribOutput::save(const param::MIRParametrisation &parametrisation, input::M
     total_ += size;
 }
 
-eckit::Length GribOutput::total() const {
+unsigned long long GribOutput::total() const {
     return total_;
 }
 
