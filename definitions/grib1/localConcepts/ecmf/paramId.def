@@ -3674,6 +3674,11 @@
 	 table2Version = 174 ;
 	 indicatorOfParameter = 52 ;
 	}
+#2m specific humidity
+'174096' = {
+	 table2Version = 174 ;
+	 indicatorOfParameter = 96 ;
+	}
 #Sea-ice Snow Thickness
 '174097' = {
 	 table2Version = 174 ;
