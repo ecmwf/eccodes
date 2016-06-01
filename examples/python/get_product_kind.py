@@ -43,7 +43,7 @@ def example():
 def main():
     try:
         example()
-    except CodesInternalError, err:
+    except CodesInternalError as err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

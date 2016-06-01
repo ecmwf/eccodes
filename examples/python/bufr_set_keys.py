@@ -58,7 +58,7 @@ def example():
         key = 'bufrHeaderCentre'
         try:
             print '  %s: %s' % (key, codes_set(gid, key, val))
-        except CodesInternalError, err:
+        except CodesInternalError as err:
             print 'Error with key="%s" : %s' % (key, err.msg)
 
         # check bufrHeaderCentre's value
@@ -79,7 +79,7 @@ def example():
 def main():
     try:
         example()
-    except CodesInternalError, err:
+    except CodesInternalError as err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

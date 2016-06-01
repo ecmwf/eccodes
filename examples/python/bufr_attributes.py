@@ -60,7 +60,7 @@ def example():
         key = 'airTemperatureAt2M'
         try:
             print '  %s: %s' % (key, codes_get(gid, key))
-        except CodesInternalError, err:
+        except CodesInternalError as err:
             print 'Error with key="%s" : %s' % (key, err.msg)
 
         # print the values of the attributes of the key. Attributes themselves
@@ -70,7 +70,7 @@ def example():
             key = 'airTemperatureAt2M' + "->" + attr
             try:
                 print '  %s: %s' % (key, codes_get(gid, key))
-            except CodesInternalError, err:
+            except CodesInternalError as err:
                 print 'Error with key="%s" : %s' % (key, err.msg)
 
         # ------------------------------------------------------------------
@@ -83,7 +83,7 @@ def example():
         key = 'airTemperatureAt2M->percentConfidence'
         try:
             print '  %s: %s' % (key, codes_get(gid, key))
-        except CodesInternalError, err:
+        except CodesInternalError as err:
             print 'Error with key="%s" : %s' % (key, err.msg)
 
         # print the values of the attributes of the key.
@@ -91,7 +91,7 @@ def example():
             key = 'airTemperatureAt2M->percentConfidence' + "->" + attr
             try:
                 print '  %s: %s' % (key, codes_get(gid, key))
-            except CodesInternalError, err:
+            except CodesInternalError as err:
                 print 'Error with key="%s" : %s' % (key, err.msg)
 
         cnt += 1
@@ -106,7 +106,7 @@ def example():
 def main():
     try:
         example()
-    except CodesInternalError, err:
+    except CodesInternalError as err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

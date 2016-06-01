@@ -98,7 +98,7 @@ def main():
 
     try:
         example(csv_filename, input_filename, output_filename)
-    except CodesInternalError, err:
+    except CodesInternalError as err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

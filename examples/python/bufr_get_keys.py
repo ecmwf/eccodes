@@ -51,28 +51,28 @@ def example():
 
         try:
             print '  %s: %s' % (key, codes_get(gid, key))
-        except CodesInternalError, err:
+        except CodesInternalError as err:
             print 'Error with key="%s" : %s' % (key, err.msg)
 
         # Native type integer
         key = 'stationNumber'
         try:
             print '  %s: %s' % (key, codes_get(gid, key))
-        except CodesInternalError, err:
+        except CodesInternalError as err:
             print 'Error with key="%s" : %s' % (key, err.msg)
 
         # Native type float
         key = 'airTemperatureAt2M'
         try:
             print '  %s: %s' % (key, codes_get(gid, key))
-        except CodesInternalError, err:
+        except CodesInternalError as err:
             print 'Error with key="%s" : %s' % (key, err.msg)
 
         # Native type string
         key = 'typicalDate'
         try:
             print '  %s: %s' % (key, codes_get(gid, key))
-        except CodesInternalError, err:
+        except CodesInternalError as err:
             print 'Error with key="%s" : %s' % (key, err.msg)
 
         # --------------------------------
@@ -114,7 +114,7 @@ def example():
 def main():
     try:
         example()
-    except CodesInternalError, err:
+    except CodesInternalError as err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

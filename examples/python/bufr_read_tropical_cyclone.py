@@ -62,7 +62,7 @@ def example():
             numberOfPeriods=numberOfPeriods+1
             try:
                 codes_get_array(gid,"#%d#timePeriod" %numberOfPeriods)
-            except CodesInternalError, err:
+            except CodesInternalError as err:
                 break
             #the numberOfPeriods includes the analysis (period=0)
 
@@ -192,7 +192,7 @@ def example():
 def main():
     try:
         example()
-    except CodesInternalError, err:
+    except CodesInternalError as err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
