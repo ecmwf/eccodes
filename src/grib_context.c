@@ -731,6 +731,29 @@ void grib_context_delete( grib_context* c)
         grib_context_free_persistent(&default_grib_context,c);
 }
 
+void grib_context_set_definitions_path(grib_context* c, const char* path)
+{
+    if (!c) c=grib_context_get_default();
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex_c);
+
+    c->grib_definition_files_path = strdup(path);
+    grib_context_log(c, GRIB_LOG_DEBUG, "Definitions path changed to: %s", c->grib_definition_files_path);
+
+    GRIB_MUTEX_UNLOCK(&mutex_c);
+}
+void grib_context_set_samples_path(grib_context* c, const char* path)
+{
+    if (!c) c=grib_context_get_default();
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex_c);
+
+    c->grib_samples_path = strdup(path);
+    grib_context_log(c, GRIB_LOG_DEBUG, "Samples path changed to: %s",  c->grib_samples_path);
+
+    GRIB_MUTEX_UNLOCK(&mutex_c);
+}
+
 void* grib_context_malloc_persistent(const grib_context* c, size_t size)
 {
     void* p =  c->alloc_persistent_mem(c,size);

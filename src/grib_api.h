@@ -1063,7 +1063,7 @@ grib_context*    grib_context_get_default(void);
 *
 * @param c           : the context to be deleted
 */
-void             grib_context_delete                     (grib_context* c);
+void             grib_context_delete(grib_context* c);
 
 /**
 *  Set the GTS header mode on.
@@ -1103,6 +1103,22 @@ int grib_get_gribex_mode ( grib_context* c);
 * @param c           : the context
 */
 void grib_gribex_mode_off(grib_context* c);
+
+/**
+ * Sets the search path for definition files.
+ *
+ * @param c      : the context to be modified
+ * @param path   : the search path for definition files
+ */
+void grib_context_set_definitions_path(grib_context* c, const char* path);
+
+/**
+ * Sets the search path for sample files.
+ *
+ * @param c      : the context to be modified
+ * @param path   : the search path for sample files
+ */
+void grib_context_set_samples_path(grib_context* c, const char* path);
 
 /**
 *  Sets memory procedures of the context
