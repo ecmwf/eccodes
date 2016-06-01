@@ -72,7 +72,7 @@ ecbuild_add_option( FEATURE AEC
 ecbuild_add_option( FEATURE PYTHON
     DESCRIPTION "build the ecCodes Python interface"
     DEFAULT ON
-    REQUIRED_PACKAGES "Python VERSION 2.5" NumPy
+    REQUIRED_PACKAGES "Python VERSION 2.6" NumPy
 )
 
 ecbuild_add_option( FEATURE FORTRAN
