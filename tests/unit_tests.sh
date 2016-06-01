@@ -10,5 +10,4 @@
 
 
 . ./include.sh
-${test_dir}/unit_tests
-
+exec ${test_dir}/unit_tests
