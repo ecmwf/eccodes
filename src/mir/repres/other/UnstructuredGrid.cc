@@ -16,8 +16,10 @@
 #include "mir/repres/other/UnstructuredGrid.h"
 
 #include <iostream>
+#include <fstream>
 
 #include "eckit/exception/Exceptions.h"
+#include "eckit/filesystem/PathName.h"
 
 #include "atlas/grid/global/Unstructured.h"
 
@@ -33,6 +35,22 @@ namespace other {
 UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation &parametrisation) {
     ASSERT(parametrisation.get("latitudes", latitudes_));
     ASSERT(parametrisation.get("longitudes", longitudes_));
+    ASSERT(latitudes_.size() == longitudes_.size());
+}
+
+UnstructuredGrid::UnstructuredGrid(const eckit::PathName &path) {
+    std::cout << "Open " << path << std::endl;
+    std::ifstream in(path.asString().c_str());
+    if(!in) {
+        throw eckit::CantOpenFile(path);
+    }
+    double lat;
+    double lon;
+    while(in >> lat >> lon) {
+        latitudes_.push_back(lat);
+        longitudes_.push_back(lon);
+    }
+    std::cout << *this << std::endl;
 }
 
 
@@ -41,7 +59,7 @@ UnstructuredGrid::~UnstructuredGrid() {
 
 
 void UnstructuredGrid::print(std::ostream &out) const {
-    out << "UnstructuredGrid["
+    out << "UnstructuredGrid[points=" << latitudes_.size()
         << "]";
 }
 
