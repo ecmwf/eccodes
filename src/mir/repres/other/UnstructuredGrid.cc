@@ -25,7 +25,7 @@
 
 #include "mir/param/MIRParametrisation.h"
 #include "mir/log/MIR.h"
-#include "mir/util/Grib.h"
+#include "mir/repres/Iterator.h"
 
 
 namespace mir {
@@ -104,12 +104,51 @@ void UnstructuredGrid::validate(const std::vector<double> &values) const {
     ASSERT(values.size() == longitudes_.size());
 }
 
-const std::vector<double>& UnstructuredGrid::latitudes() const {
-    return latitudes_;
+
+class UnstructuredGridIterator: public Iterator {
+
+    size_t i_;
+    size_t size_;
+
+    const std::vector<double> &latitudes_;
+    const std::vector<double> &longitudes_;
+
+    virtual void print(std::ostream &out) const {
+        out << "UnstructuredGridIterator[]";
+    }
+
+    virtual bool next(double &lat, double &lon) {
+        lat = latitudes_[i_];
+        lon = longitudes_[i_];
+        return i_++ < size_;
+    }
+
+  public:
+
+    // TODO: Consider keeping a reference on the latitudes and bbox, to avoid copying
+
+    UnstructuredGridIterator(const std::vector<double> &latitudes, const std::vector<double> &longitudes):
+        i_(0),
+        size_(latitudes.size()),
+        latitudes_(latitudes),
+        longitudes_(longitudes) {
+        ASSERT(latitudes_.size() == longitudes_.size());
+    }
+
+    ~UnstructuredGridIterator() {
+
+    }
+
+};
+
+
+Iterator *UnstructuredGrid::unrotatedIterator() const {
+    return new UnstructuredGridIterator(latitudes_, longitudes_);
 }
 
-const std::vector<double>& UnstructuredGrid::longitudes() const {
-    return longitudes_;
+
+Iterator* UnstructuredGrid::rotatedIterator() const {
+    return unrotatedIterator();
 }
 
 
