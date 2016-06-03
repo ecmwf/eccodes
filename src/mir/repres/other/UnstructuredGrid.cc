@@ -25,6 +25,7 @@
 
 #include "mir/param/MIRParametrisation.h"
 #include "mir/log/MIR.h"
+#include "mir/util/Grib.h"
 
 
 namespace mir {
@@ -41,12 +42,12 @@ UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation &parametrisat
 UnstructuredGrid::UnstructuredGrid(const eckit::PathName &path) {
     std::cout << "Open " << path << std::endl;
     std::ifstream in(path.asString().c_str());
-    if(!in) {
+    if (!in) {
         throw eckit::CantOpenFile(path);
     }
     double lat;
     double lon;
-    while(in >> lat >> lon) {
+    while (in >> lat >> lon) {
         latitudes_.push_back(lat);
         longitudes_.push_back(lon);
     }
@@ -101,6 +102,14 @@ atlas::grid::Grid *UnstructuredGrid::atlasGrid() const {
 void UnstructuredGrid::validate(const std::vector<double> &values) const {
     ASSERT(values.size() == latitudes_.size());
     ASSERT(values.size() == longitudes_.size());
+}
+
+const std::vector<double>& UnstructuredGrid::latitudes() const {
+    return latitudes_;
+}
+
+const std::vector<double>& UnstructuredGrid::longitudes() const {
+    return longitudes_;
 }
 
 
