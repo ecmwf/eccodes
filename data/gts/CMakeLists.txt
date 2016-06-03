@@ -14,6 +14,7 @@ ecbuild_get_test_multidata(
      NOCHECK
      NAMES ${gts_files_to_download} ${gts_refs_to_download}
 )
+set_property( TEST eccodes_download_gts APPEND PROPERTY LABELS download_data )
 
 # Copy other files - e.g. text files etc from the source data/gts dir
 LIST(APPEND other_files
