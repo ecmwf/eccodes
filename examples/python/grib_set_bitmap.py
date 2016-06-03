@@ -21,12 +21,22 @@ def example():
     fout = open(OUTPUT, 'w')
     gid = codes_grib_new_from_file(fin)
 
+    # The missingValue is not coded in the message.
+    # It is a value we define as a placeholder for a missing value
+    # at a point in the grid.
+    # It should be chosen so that it cannot be confused
+    # with a valid field value
     codes_set(gid, 'missingValue', MISSING)
+
     values = codes_get_values(gid)
+
+    # Enable bitmap
     codes_set(gid, 'bitmapPresent', 1)
+
     # Change some data values to be missing
     num_missing = 0
     for i in range(100):
+        # Set every other value to a missing value
         if i % 2 == 0:
             values[i] = MISSING
             num_missing += 1
@@ -34,8 +44,9 @@ def example():
 
     # Check counts of missing and non-missing values
     num_data = codes_get(gid, 'numberOfDataPoints', int)
-    assert(codes_get(gid, 'numberOfCodedValues', int) == num_data - num_missing)
-    assert(codes_get(gid, 'numberOfMissing', int) == num_missing)
+    assert num_data == len(values)
+    assert codes_get(gid, 'numberOfCodedValues', int) == num_data - num_missing
+    assert codes_get(gid, 'numberOfMissing', int) == num_missing
 
     codes_write(gid, fout)
     codes_release(gid)
