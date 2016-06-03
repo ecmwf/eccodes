@@ -120,7 +120,7 @@ void Reduced::fill(grib_info &info) const  {
     info.grid.pl_size = pl.size();
 
 
-    for (size_t i = 0; i < info.grid.pl_size; i++) {
+    for (size_t i = 0; i < size_t(info.grid.pl_size); i++) {
         ASSERT(info.grid.pl[i] > 0);
     }
 
