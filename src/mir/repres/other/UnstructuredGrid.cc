@@ -54,6 +54,12 @@ UnstructuredGrid::UnstructuredGrid(const eckit::PathName &path) {
     std::cout << *this << std::endl;
 }
 
+// Take ownership of vectors
+UnstructuredGrid::UnstructuredGrid(std::vector<double>& latitudes, std::vector<double>& longitudes) {
+    std::swap(latitudes_, latitudes);
+    std::swap(longitudes_, longitudes);
+    ASSERT(latitudes_.size() == longitudes_.size());
+}
 
 UnstructuredGrid::~UnstructuredGrid() {
 }
