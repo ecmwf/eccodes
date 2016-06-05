@@ -69,8 +69,8 @@ size_t GribOutput::copy(const param::MIRParametrisation &, input::MIRInput &inpu
 
 }
 
-
 size_t GribOutput::save(const param::MIRParametrisation &parametrisation, input::MIRInput &input, data::MIRField &field) {
+
 
     field.validate();
 
