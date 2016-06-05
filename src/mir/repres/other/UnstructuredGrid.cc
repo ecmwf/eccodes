@@ -40,7 +40,6 @@ UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation &parametrisat
 }
 
 UnstructuredGrid::UnstructuredGrid(const eckit::PathName &path) {
-    std::cout << "Open " << path << std::endl;
     std::ifstream in(path.asString().c_str());
     if (!in) {
         throw eckit::CantOpenFile(path);
@@ -51,7 +50,6 @@ UnstructuredGrid::UnstructuredGrid(const eckit::PathName &path) {
         latitudes_.push_back(lat);
         longitudes_.push_back(lon);
     }
-    std::cout << *this << std::endl;
 }
 
 // Take ownership of vectors
