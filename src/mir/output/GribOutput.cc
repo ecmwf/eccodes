@@ -71,6 +71,8 @@ size_t GribOutput::copy(const param::MIRParametrisation &, input::MIRInput &inpu
 
 size_t GribOutput::save(const param::MIRParametrisation &parametrisation, input::MIRInput &input, data::MIRField &field) {
 
+    ASSERT(field.dimensions() == 1);
+
 
     field.validate();
 
@@ -116,8 +118,8 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, input:
 
     field.representation()->fill(info);
 
-    long paramId = 0;
-    if (parametrisation.get("param-id", paramId)) {
+    long paramId = field.paramId(0);
+    if (paramId) {
         int n = info.packing.extra_settings_count++;
         info.packing.extra_settings[n].name = "paramId";
         info.packing.extra_settings[n].type = GRIB_TYPE_LONG;
@@ -210,8 +212,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, input:
     int flags = 0;
     int err = 0;
 
-    ASSERT(field.dimensions() == 1);
-    const std::vector<double> values = field.values(0);
+    const std::vector<double>& values = field.values(0);
 
     grib_handle *result = grib_util_set_spec(h, &info.grid, &info.packing, flags, &values[0], values.size(), &err);
     HandleFree hf(result); // Make sure handle deleted even in case of exception
