@@ -175,6 +175,24 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 27 ;
 	}
+#Unbalanced component of specific humidity
+'Unbalanced component of specific humidity' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 109 ;
+	}
+#Unbalanced component of specific cloud liquid water content
+'Unbalanced component of specific cloud liquid water content' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 110 ;
+	}
+#Unbalanced component of specific cloud ice water content
+'Unbalanced component of specific cloud ice water content' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 111 ;
+	}
 #Soil moisture top 20 cm
 'Soil moisture top 20 cm' = {
 	 discipline = 2 ;

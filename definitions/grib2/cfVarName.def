@@ -175,6 +175,24 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 27 ;
 	}
+#Unbalanced component of specific humidity
+'ucq' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 109 ;
+	}
+#Unbalanced component of specific cloud liquid water content
+'ucclwc' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 110 ;
+	}
+#Unbalanced component of specific cloud ice water content
+'ucciwc' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 111 ;
+	}
 #Soil moisture top 20 cm
 'sm20' = {
 	 discipline = 2 ;
@@ -2028,7 +2046,7 @@
 	 parameterNumber = 21 ;
 	}
 #Clear air turbulence (CAT)
-'p260165' = {
+'cat' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 22 ;
@@ -2040,85 +2058,85 @@
 	 parameterNumber = 23 ;
 	}
 #Arbitrary text string
-'p260167' = {
+'var190m0' = {
 	 discipline = 0 ;
 	 parameterCategory = 190 ;
 	 parameterNumber = 0 ;
 	}
 #Seconds prior to initial reference time (defined in Section 1)
-'p260168' = {
+'tsec' = {
 	 discipline = 0 ;
 	 parameterCategory = 191 ;
 	 parameterNumber = 0 ;
 	}
 #Flash flood guidance (Encoded as an accumulation over a floating subinterval of time between the ref
-'p260169' = {
+'ffldg' = {
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
 	}
 #Flash flood runoff (Encoded as an accumulation over a floating subinterval of time)
-'p260170' = {
+'ffldro' = {
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 1 ;
 	}
 #Remotely sensed snow cover
-'p260171' = {
+'rssc' = {
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
 	}
 #Elevation of snow covered terrain
-'p260172' = {
+'esct' = {
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	}
 #Snow water equivalent percent of normal
-'p260173' = {
+'swepon' = {
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 4 ;
 	}
 #Baseflow-groundwater runoff
-'p260174' = {
+'bgrun' = {
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 5 ;
 	}
 #Storm surface runoff
-'p260175' = {
+'ssrun' = {
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 6 ;
 	}
 #Conditional percent precipitation amount fractile for an overall period (Encoded as an accumulation)
-'p260176' = {
+'cppop' = {
 	 discipline = 1 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 0 ;
 	}
 #Percent precipitation in a sub-period of an overall period (Encoded as per cent accumulation over th
-'p260177' = {
+'pposp' = {
 	 discipline = 1 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 1 ;
 	}
 #Probability of 0.01 inch of precipitation (POP)
-'p260178' = {
+'pop' = {
 	 discipline = 1 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 2 ;
 	}
 #Land cover (1=land, 0=sea)
-'p260179' = {
+'land' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
 	}
 #Vegetation
-'p260180' = {
+'veg' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 4 ;
@@ -2568,271 +2586,271 @@
 	 parameterNumber = 8 ;
 	}
 #Parcel lifted index (to 500 hPa)
-'p3024' = {
+'pli' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 0 ;
 	}
 #Temperature anomaly
-'p3025' = {
+'ta' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
 	}
 #Pressure anomaly
-'p3026' = {
+'presa' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 8 ;
 	}
 #Geopotential height anomaly
-'p3027' = {
+'gpa' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 9 ;
 	}
 #Wave spectra (1)
-'p3028' = {
+'wvsp1' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
 	}
 #Wave spectra (2)
-'p3029' = {
+'wvsp2' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 1 ;
 	}
 #Wave spectra (3)
-'p3030' = {
+'wvsp3' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
 	}
 #Montgomery stream Function
-'p3037' = {
+'mntsf' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 6 ;
 	}
 #Sigma coordinate vertical velocity
-'p3038' = {
+'sgcvv' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 7 ;
 	}
 #Absolute vorticity
-'p3041' = {
+'absv' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 10 ;
 	}
 #Absolute divergence
-'p3042' = {
+'absd' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 11 ;
 	}
 #Vertical u-component shear
-'p3045' = {
+'vucsh' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 15 ;
 	}
 #Vertical v-component shear
-'p3046' = {
+'vvcsh' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 16 ;
 	}
 #U-component of current 
-'p3049' = {
+'ucurr' = {
 	 discipline = 10 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 2 ;
 	}
 #V-component of current 
-'p3050' = {
+'vcurr' = {
 	 discipline = 10 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 3 ;
 	}
 #Precipitable water
-'p3054' = {
+'pwat' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 3 ;
 	}
 #Saturation deficit
-'p3056' = {
+'satd' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 5 ;
 	}
 #Precipitation rate
-'p3059' = {
+'prate' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 7 ;
 	}
 #Thunderstorm probability
-'p3060' = {
+'tstm' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 2 ;
 	}
 #Convective precipitation (water)
-'p3063' = {
+'acpcp' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 10 ;
 	}
 #Mixed layer depth
-'p3067' = {
+'mld' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 3 ;
 	}
 #Transient thermocline depth
-'p3068' = {
+'tthdp' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 2 ;
 	}
 #Main thermocline depth
-'p3069' = {
+'mthd' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 0 ;
 	}
 #Main thermocline anomaly
-'p3070' = {
+'mtha' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 1 ;
 	}
 #Best lifted index (to 500 hPa)
-'p3077' = {
+'bli' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 1 ;
 	}
 #Soil moisture content
-'p3086' = {
+'ssw' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	}
 #Salinity
-'p3088' = {
+'s' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 3 ;
 	}
 #Density
-'p3089' = {
+'den' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 10 ;
 	}
 #Ice thickness
-'p3092' = {
+'icetk' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
 	}
 #Direction of ice drift
-'p3093' = {
+'diced' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 2 ;
 	}
 #Speed of ice drift
-'p3094' = {
+'siced' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 3 ;
 	}
 #U-component of ice drift
-'p3095' = {
+'uice' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 4 ;
 	}
 #V-component of ice drift
-'p3096' = {
+'vice' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 5 ;
 	}
 #Ice growth rate
-'p3097' = {
+'iceg' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 6 ;
 	}
 #Ice divergence
-'p3098' = {
+'iced' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 7 ;
 	}
 #Snow melt
-'p3099' = {
+'snom' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 16 ;
 	}
 #Significant height of wind waves
-'p3102' = {
+'shww' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 5 ;
 	}
 #Mean period of wind waves
-'p3103' = {
+'mpww' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 6 ;
 	}
 #Direction of swell waves
-'p3104' = {
+'swdir' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 7 ;
 	}
 #Significant height of swell waves
-'p3105' = {
+'swell' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 8 ;
 	}
 #Mean period of swell waves
-'p3106' = {
+'swper' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
 	}
 #Secondary wave direction
-'p3109' = {
+'dirsw' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 12 ;
 	}
 #Net short-wave radiation flux (surface)
-'p3111' = {
+'nswrs' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 0 ;
 	}
 #Global radiation flux
-'p3117' = {
+'grad' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 3 ;
 	}
 #Radiance (with respect to wave number)
-'p3119' = {
+'lwrad' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 5 ;

@@ -175,6 +175,24 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 27 ;
 	}
+#Unbalanced component of specific humidity
+'228054' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 109 ;
+	}
+#Unbalanced component of specific cloud liquid water content
+'228055' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 110 ;
+	}
+#Unbalanced component of specific cloud ice water content
+'228056' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 111 ;
+	}
 #Soil moisture top 20 cm
 '228086' = {
 	 discipline = 2 ;
