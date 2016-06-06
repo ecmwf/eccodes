@@ -323,12 +323,13 @@ endif()
 
 # pkg-config
 ecbuild_pkgconfig(
-  NAME                eccodes
-  URL                 "https://software.ecmwf.int/wiki/display/ECC/"
-  DESCRIPTION         "The ecCodes library"
-  LIBRARIES           eccodes
-  VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_ECCODES_THREADS HAVE_NETCDF
-                      HAVE_PYTHON HAVE_FORTRAN HAVE_PNG HAVE_AEC
+  NAME           eccodes
+  URL            "https://software.ecmwf.int/wiki/display/ECC/"
+  DESCRIPTION    "The ecCodes library"
+  LIBRARIES      eccodes
+  VARIABLES      HAVE_JPG HAVE_LIBJASPER HAVE_LIBOPENJPEG
+                 HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
+                 HAVE_NETCDF HAVE_PYTHON HAVE_FORTRAN HAVE_PNG HAVE_AEC
 )
 if( EC_HAVE_FORTRAN )
   ecbuild_pkgconfig(
@@ -337,8 +338,9 @@ if( EC_HAVE_FORTRAN )
     LIBRARIES           eccodes_f90 eccodes
     DESCRIPTION         "The ecCodes library for Fortran 90"
     IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
-    VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_ECCODES_THREADS HAVE_NETCDF
-                        HAVE_PYTHON HAVE_PNG HAVE_AEC
+    VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_LIBOPENJPEG
+                        HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
+                        HAVE_NETCDF HAVE_PYTHON HAVE_PNG HAVE_AEC
   )
 endif()
 
