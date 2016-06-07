@@ -532,7 +532,7 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 14 ;
 	}
-#Time-integrated direct short wave radiation flux
+#Time-integrated direct short wave radiation flux at surface
 'tidirswrf' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -588,12 +588,14 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 52 ;
 	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Accumulated upward short-wave radiation flux, clear sky
 'auswrf_cs' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 53 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Accumulated downward long-wave radiation flux, clear sky
@@ -601,6 +603,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Percolation
