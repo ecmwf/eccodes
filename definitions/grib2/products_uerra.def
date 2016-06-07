@@ -31,6 +31,10 @@ if(typeOfFirstFixedSurface == 103) {
     }
 }
 
+if(typeOfFirstFixedSurface == 151 && typeOfSecondFixedSurface == 151) {
+    alias level = bottomLevel;
+    alias mars.levelist = level;
+}
 
 alias mars.expver = marsExpver;
 alias mars.class  = marsClass;
