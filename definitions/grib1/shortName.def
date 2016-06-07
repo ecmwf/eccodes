@@ -173,7 +173,7 @@
 	 indicatorOfParameter = 62 ;
 	}
 #Snow depth
-'sd' = {
+'sde' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 66 ;
 	}
@@ -874,7 +874,7 @@
 	 indicatorOfParameter = 62 ;
 	}
 #Snow depth
-'sd' = {
+'sde' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 66 ;
 	}
@@ -1560,7 +1560,7 @@
 	 indicatorOfParameter = 62 ;
 	}
 #Snow depth
-'sd' = {
+'sde' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 66 ;
 	}
