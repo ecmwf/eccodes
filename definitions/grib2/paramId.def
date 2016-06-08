@@ -24,6 +24,17 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	}
+#10 metre wind gust since previous post-processing
+'49' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 is_uerra = 1 ;
+	}
 #Specific rain water content
 '75' = {
 	 discipline = 0 ;
@@ -69,6 +80,28 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 37 ;
+	}
+#Maximum temperature at 2 metres since previous post-processing
+'201' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 is_uerra = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Minimum temperature at 2 metres since previous post-processing
+'202' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 is_uerra = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 3 ;
 	}
 #Ozone mass mixing ratio
 '203' = {
@@ -254,39 +287,6 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
-	}
-#10 metre wind gust for UERRA
-'228256' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 22 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 is_uerra = 1 ;
-	}
-#Maximum temperature at 2 metres for UERRA
-'228257' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 is_uerra = 1 ;
-	}
-#Minimum temperature at 2 metres for UERRA
-'228258' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 is_uerra = 1 ;
 	}
 #Mean temperature tendency due to short-wave radiation
 '235001' = {
@@ -532,7 +532,7 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 14 ;
 	}
-#Time-integrated direct short wave radiation flux at surface
+#Time-integrated surface direct short wave radiation flux
 '260264' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -582,7 +582,7 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 27 ;
 	}
-#Accumulated downward short-wave radiation flux, clear sky
+#Accumulated surface downward short-wave radiation flux, clear sky
 '260423' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -590,7 +590,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Accumulated upward short-wave radiation flux, clear sky
+#Accumulated surface upward short-wave radiation flux, clear sky
 '260427' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -598,7 +598,7 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
-#Accumulated downward long-wave radiation flux, clear sky
+#Accumulated surface downward long-wave radiation flux, clear sky
 '260428' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
