@@ -79,7 +79,9 @@ meta numberOfUnexpandedDescriptors   evaluate( (section3Length - 7) / 2 ) : no_c
 meta unexpandedDescriptorsEncoded raw(totalLength,section3Length,7) : hidden;
 meta unexpandedDescriptors unexpanded_descriptors(unexpandedDescriptorsEncoded,createNewData) :dump,no_copy;
 
-concept BufrTemplate (unknown,"BufrTemplate.def",templatesMasterDir,templatesLocalDir) : no_copy;
+
+concept bufrTemplate (unknown,"BufrTemplate.def",templatesMasterDir,templatesLocalDir) : no_copy;
+alias BufrTemplate=bufrTemplate;
 
 meta elementsTable bufr_elements_table("element.table",tablesMasterDir,tablesLocalDir) : hidden,no_copy; 
 
