@@ -24,6 +24,17 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	}
+#10 metre wind gust since previous post-processing
+'10 metre wind gust since previous post-processing' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 is_uerra = 1 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Specific rain water content
 'Specific rain water content' = {
 	 discipline = 0 ;
@@ -69,6 +80,28 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 37 ;
+	}
+#Maximum temperature at 2 metres since previous post-processing
+'Maximum temperature at 2 metres since previous post-processing' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 is_uerra = 1 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfFirstFixedSurface = 103 ;
+	}
+#Minimum temperature at 2 metres since previous post-processing
+'Minimum temperature at 2 metres since previous post-processing' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 is_uerra = 1 ;
 	}
 #Ozone mass mixing ratio
 'Ozone mass mixing ratio' = {
@@ -254,39 +287,6 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
-	}
-#10 metre wind gust for UERRA
-'10 metre wind gust for UERRA' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 22 ;
-	 is_uerra = 1 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
-#Maximum temperature at 2 metres for UERRA
-'Maximum temperature at 2 metres for UERRA' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 is_uerra = 1 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 typeOfFirstFixedSurface = 103 ;
-	}
-#Minimum temperature at 2 metres for UERRA
-'Minimum temperature at 2 metres for UERRA' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 is_uerra = 1 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #Mean temperature tendency due to short-wave radiation
 'Mean temperature tendency due to short-wave radiation' = {
@@ -532,8 +532,8 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 14 ;
 	}
-#Time-integrated direct short wave radiation flux
-'Time-integrated direct short wave radiation flux' = {
+#Time-integrated surface direct short wave radiation flux
+'Time-integrated surface direct short wave radiation flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 13 ;
@@ -582,26 +582,29 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 27 ;
 	}
-#Accumulated downward short-wave radiation flux, clear sky
-'Accumulated downward short-wave radiation flux, clear sky' = {
+#Accumulated surface downward short-wave radiation flux, clear sky
+'Accumulated surface downward short-wave radiation flux, clear sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 52 ;
 	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
-#Accumulated upward short-wave radiation flux, clear sky
-'Accumulated upward short-wave radiation flux, clear sky' = {
+#Accumulated surface upward short-wave radiation flux, clear sky
+'Accumulated surface upward short-wave radiation flux, clear sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 53 ;
 	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
-#Accumulated downward long-wave radiation flux, clear sky
-'Accumulated downward long-wave radiation flux, clear sky' = {
+#Accumulated surface downward long-wave radiation flux, clear sky
+'Accumulated surface downward long-wave radiation flux, clear sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Percolation
 'Percolation' = {

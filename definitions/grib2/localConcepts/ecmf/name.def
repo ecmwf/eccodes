@@ -293,12 +293,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 48 ;
 	}
-#10 metre wind gust since previous post-processing
-'10 metre wind gust since previous post-processing' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 49 ;
-	}
 #Large-scale precipitation fraction
 'Large-scale precipitation fraction' = {
 	 discipline = 192 ;
@@ -979,18 +973,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 200 ;
-	}
-#Maximum temperature at 2 metres since previous post-processing
-'Maximum temperature at 2 metres since previous post-processing' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 201 ;
-	}
-#Minimum temperature at 2 metres since previous post-processing
-'Minimum temperature at 2 metres since previous post-processing' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 202 ;
 	}
 #Precipitation analysis weights
 'Precipitation analysis weights' = {
