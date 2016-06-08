@@ -85,10 +85,10 @@ atlas::grid::Grid *RegularLL::atlasGrid() const {
         (const size_t) nj_ );
 
     // FIXME: an assertion for shift global grids
-    ASSERT(bbox_.north() == 90);
-    ASSERT(bbox_.south() == -90);
-    ASSERT(bbox_.east() == 360 - increments_.west_east());
-    ASSERT(bbox_.west() == 0);
+    // ASSERT(bbox_.north() == 90);
+    // ASSERT(bbox_.south() == -90);
+    // ASSERT(bbox_.east() == 360 - increments_.west_east());
+    // ASSERT(bbox_.west() == 0);
 
     grid->domain(atlasDomain());
     return grid;
