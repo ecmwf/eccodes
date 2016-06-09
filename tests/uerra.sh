@@ -40,7 +40,7 @@ test_stream_and_type()
 
     ${tools_dir}grib_set -s typeOfProcessedData=0 $tempSample $temp1
     grib_check_key_equals $temp1 'mars.type' 'an'
-    ${tools_dir}grib_set -s typeOfProcessedData=2 $tempSample $temp1
+    ${tools_dir}grib_set -s typeOfProcessedData=1 $tempSample $temp1
     grib_check_key_equals $temp1 'mars.type' 'fc'
 
     ${tools_dir}grib_set -s marsStream=enda $tempSample $temp1    # ENSEMBLE
