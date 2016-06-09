@@ -24,26 +24,14 @@ cd ${data_dir}/bufr
 bufr_files=`cat bufr_data_files.txt`
 for file in ${bufr_files}
 do
-  # JSON dump structure
-  rm -f ${file}.json
-  ${tools_dir}bufr_dump -js $file 2> $REDIRECT > ${file}.json
-  if test "x$JSON_CHECK" != "x"; then
-    json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
-  fi
-
-  # JSON dump all attributes
-  rm -f ${file}.json
-  ${tools_dir}bufr_dump -ja $file 2> $REDIRECT > ${file}.json
-  if test "x$JSON_CHECK" != "x"; then
-    json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
-  fi
-
-  # JSON dump flat
-  rm -f ${file}.json
-  ${tools_dir}bufr_dump -jf $file 2> $REDIRECT > ${file}.json
-  if test "x$JSON_CHECK" != "x"; then
-    json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
-  fi
+  # Test the various JSON dump modes: 'structure', 'all' and 'flat'
+  for mode in s a f; do
+    rm -f ${file}.json
+    ${tools_dir}bufr_dump -j$mode $file 2> $REDIRECT > ${file}.json
+    if test "x$JSON_CHECK" != "x"; then
+      json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
+    fi
+  done
 
   rm -f ${file}.json
 done
