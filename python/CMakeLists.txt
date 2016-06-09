@@ -69,7 +69,7 @@ if( HAVE_PYTHON )
         set( _gribapi_swig "_gribapi_swig${CMAKE_SHARED_LIBRARY_SUFFIX}" )
         # Build the extension module for use in build tree with RPATH pointing to the build tree
         add_custom_command( OUTPUT ${_gribapi_swig}
-                            COMMAND ${PYTHON_EXECUTABLE} setup.py build_ext --inplace -R ${CMAKE_CURRENT_BINARY_DIR}/../lib
+                            COMMAND ${PYTHON_EXECUTABLE} setup.py build_ext --inplace -R ${CMAKE_BINARY_DIR}/lib
                             DEPENDS grib_interface.h grib_interface.c ${_swig_c_wrapper} setup.py.in eccodes )
         # Build the extension module as target for installation with RPATH pointing to the install prefix
         add_custom_command( OUTPUT build/${_gribapi_swig}
