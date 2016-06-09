@@ -49,13 +49,14 @@ if (section2Used == 1) {
     unalias mars.domain;                # No mars domain needed
 }
 
+# See GRIB-911 re typeOfProcessedData values in UERRA
 concept marsType {
 
    fc = {
-     typeOfProcessedData = 2;
+     typeOfProcessedData = 1;
    }
    "9" = {
-     typeOfProcessedData = 2;
+     typeOfProcessedData = 1;
    }
 
    an = {

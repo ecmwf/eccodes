@@ -7488,6 +7488,7 @@ static void init()
     }
 }
 #endif
+
 struct grib_itrie {
   grib_itrie* next[SIZE];
   grib_context *context;
