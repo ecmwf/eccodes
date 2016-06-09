@@ -24,29 +24,36 @@ cd ${data_dir}/bufr
 bufr_files=`cat bufr_data_files.txt`
 for file in ${bufr_files}
 do
-  rm -f ${file}.json | true
-
-  ${tools_dir}bufr_dump -js $file 2> $REDIRECT > ${file}.json
-
-  if test "x$JSON_CHECK" != "x"; then
-    json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
-  fi
-
-  rm -f ${file}.json | true
-
-  ${tools_dir}bufr_dump -ja $file 2> $REDIRECT > ${file}.json
-
-  if test "x$JSON_CHECK" != "x"; then
-    json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
-  fi
-
+  # JSON dump structure
   rm -f ${file}.json
+  ${tools_dir}bufr_dump -js $file 2> $REDIRECT > ${file}.json
+  if test "x$JSON_CHECK" != "x"; then
+    json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
+  fi
 
+  # JSON dump all attributes
+  rm -f ${file}.json
+  ${tools_dir}bufr_dump -ja $file 2> $REDIRECT > ${file}.json
+  if test "x$JSON_CHECK" != "x"; then
+    json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
+  fi
+
+  # JSON dump flat
+  rm -f ${file}.json
   ${tools_dir}bufr_dump -jf $file 2> $REDIRECT > ${file}.json
-
   if test "x$JSON_CHECK" != "x"; then
     json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
   fi
 
   rm -f ${file}.json
 done
+
+# ECC-233: Test JSON dump when selecting messages with '-w' switch
+file=tropical_cyclone.bufr
+for c in 1 3 1/3; do
+  ${tools_dir}bufr_dump -w count=$c $file 2> $REDIRECT > ${file}.json
+  if test "x$JSON_CHECK" != "x"; then
+    json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
+  fi
+done
+

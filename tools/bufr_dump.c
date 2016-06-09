@@ -163,7 +163,10 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         grib_set_flag(h,options->print_keys[i].name,GRIB_ACCESSOR_FLAG_DUMP);
 
     if (json) {
-        if (options->handle_count>1) fprintf(stdout,",\n");
+        /* ECC-233: print comma as separator between messages */
+        if (!first_handle && options->handle_count>1) {
+            fprintf(stdout,",\n");
+        }
         if (json && first_handle) {
             fprintf(stdout,"{ \"messages\" : [ \n");
             first_handle=0;
