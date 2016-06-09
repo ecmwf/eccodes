@@ -20,11 +20,13 @@ alias number=perturbationNumber;
 unsigned[1] numberOfForecastsInEnsemble  : dump;
 alias totalNumber=numberOfForecastsInEnsemble;
 
-#  Rules for TIGGE and S2S
+#  Rules for TIGGE, S2S and UERRA
 if (productionStatusOfProcessedData == 4 ||
     productionStatusOfProcessedData == 5 ||
     productionStatusOfProcessedData == 6 ||
-    productionStatusOfProcessedData == 7)
+    productionStatusOfProcessedData == 7 ||
+    productionStatusOfProcessedData == 8 ||
+    productionStatusOfProcessedData == 9)
 {
     alias mars.number=perturbationNumber;
 }
