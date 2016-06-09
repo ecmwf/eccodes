@@ -8,7 +8,7 @@ attdict = dict(
               '@CMAKE_CURRENT_SOURCE_DIR@/grib_interface.c'],
    swig_opts = [],
    include_dirs = ['.', '@CMAKE_CURRENT_BINARY_DIR@/../src', '@CMAKE_CURRENT_SOURCE_DIR@/../src'],
-   library_dirs = ['@CMAKE_CURRENT_BINARY_DIR@/../lib'],
+   library_dirs = ['@CMAKE_BINARY_DIR@/lib'],
    libraries = ['eccodes'],
    extra_objects = [],
    extra_link_args = []
