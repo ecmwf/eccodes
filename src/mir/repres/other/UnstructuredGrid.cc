@@ -108,6 +108,12 @@ void UnstructuredGrid::validate(const std::vector<double> &values) const {
     ASSERT(values.size() == longitudes_.size());
 }
 
+double UnstructuredGrid::increment() const {
+    double inc = 360.0;
+    // TODO:
+    return 0.1;
+}
+
 
 class UnstructuredGridIterator: public Iterator {
 
