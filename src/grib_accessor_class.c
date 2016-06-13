@@ -109,6 +109,8 @@ static GRIB_INLINE grib_accessor_class* get_class(grib_context* c,char* type)
             return *(table[i].cclass);
         }
     }
+    grib_context_log(c, GRIB_LOG_ERROR, "ecCodes Version: %s\nDefinition files path: %s\n",
+                    ECCODES_VERSION_STR, c->grib_definition_files_path);
     grib_context_log(c,GRIB_LOG_FATAL,"unable to create class %s",type);
     return NULL;
 }
