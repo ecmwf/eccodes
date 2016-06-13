@@ -15,13 +15,9 @@
 
 #include "mir/repres/gauss/regular/Regular.h"
 
-#include <iostream>
-
 #include "eckit/exception/Exceptions.h"
 #include "eckit/memory/ScopedPtr.h"
-
 #include "atlas/grid/global/gaussian/RegularGaussian.h"
-
 #include "mir/api/MIRJob.h"
 #include "mir/log/MIR.h"
 #include "mir/param/MIRParametrisation.h"
@@ -122,7 +118,7 @@ void Regular::fill(grib_info &info) const  {
         info.grid.Nj = 0;
         for (size_t i = 0; i < lats.size(); i++) {
             if (eckit::FloatCompare<double>::isApproximatelyGreaterOrEqual(bbox_.north(), lats[i]) &&
-                    eckit::FloatCompare<double>::isApproximatelyGreaterOrEqual(lats[i], bbox_.south())) {
+                eckit::FloatCompare<double>::isApproximatelyGreaterOrEqual(lats[i], bbox_.south())) {
                 info.grid.Nj++;
             }
         }
@@ -175,10 +171,50 @@ void Regular::validate(const std::vector<double> &values) const {
             }
         }
 
-        eckit::Log::trace<MIR>() << "Reduced::validate " << values.size() << " " << count << std::endl;
+        eckit::Log::trace<MIR>() << "Regular::validate " << values.size() << " " << count << std::endl;
 
         ASSERT(values.size() == count);
     }
+}
+
+
+size_t Regular::frame(std::vector<double>& values, size_t size, double missingValue) const {
+
+    // TODO: Check if that logic cannot also be used for other grid, and therefore move it to a higher class
+    validate(values);
+
+    size_t count = 0;
+    size_t nj = N_ * 2;
+    size_t ni = N_ * 4;
+
+
+    if (!globalDomain()) {
+        const double deltai = 90. / N_;
+        ni = computeN(bbox_.west(), bbox_.east(), deltai, "Ni", "west", "east");
+
+        const std::vector<double> &lats = latitudes();
+        nj = 0;
+        for (size_t i=0; i<lats.size(); ++i) {
+            if (eckit::FloatCompare<double>::isApproximatelyGreaterOrEqual(bbox_.north(), lats[i]) &&
+                eckit::FloatCompare<double>::isApproximatelyGreaterOrEqual(lats[i], bbox_.south())) {
+                nj++;
+            }
+        }
+    }
+
+    size_t k = 0;
+    for (size_t j = 0; j < nj; j++) {
+        for (size_t i = 0; i < ni; i++) {
+            if ( !((i < size) || (j < size) || (i >= ni - size) || (j >= nj - size))) { // Check me, may be buggy
+                values[k] = missingValue;
+                count++;
+            }
+            k++;
+        }
+    }
+
+    ASSERT(k == values.size());
+    return count;
 }
 
 
