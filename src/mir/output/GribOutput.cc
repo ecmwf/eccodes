@@ -55,26 +55,31 @@ GribOutput::~GribOutput() {
 
 size_t GribOutput::copy(const param::MIRParametrisation &, input::MIRInput &input) { // Not iterpolation performed
 
-    grib_handle *h = input.gribHandle(); // Base class will throw an exception is input cannot provide a grib_handle
-    ASSERT(h);
+    size_t total = 0;
+    for (size_t i = 0; i < input.dimensions(); i++) {
+        grib_handle *h = input.gribHandle(i); // Base class will throw an exception is input cannot provide a grib_handle
 
-    const void *message;
-    size_t size;
+        ASSERT(h);
 
-    GRIB_CALL(grib_get_message(h, &message, &size));
+        const void *message;
+        size_t size;
 
-    out(message, size, false);
+        GRIB_CALL(grib_get_message(h, &message, &size));
 
-    return size;
+        out(message, size, false);
+        total += size;
+    }
 
+    return total;
 }
 
 size_t GribOutput::save(const param::MIRParametrisation &parametrisation, input::MIRInput &input, data::MIRField &field) {
 
+    field.validate();
+
     ASSERT(field.dimensions() == 1);
 
 
-    field.validate();
 
     grib_handle *h = input.gribHandle(); // Base class will throw an exception is input cannot provide a grib_handle
 
@@ -212,7 +217,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, input:
     int flags = 0;
     int err = 0;
 
-    const std::vector<double>& values = field.values(0);
+    const std::vector<double> &values = field.values(0);
 
     grib_handle *result = grib_util_set_spec(h, &info.grid, &info.packing, flags, &values[0], values.size(), &err);
     HandleFree hf(result); // Make sure handle deleted even in case of exception
