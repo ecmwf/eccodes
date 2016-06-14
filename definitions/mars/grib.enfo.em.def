@@ -1,3 +1,1 @@
-label "x";
-# See GRIB-965
-#alias   mars.step     = stepRange;
+alias   mars.step     = stepRange;
