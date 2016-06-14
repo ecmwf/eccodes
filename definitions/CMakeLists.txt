@@ -1,4 +1,7 @@
 file( GLOB definition_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.def" )
+
+set(definition_files ${definition_files} PARENT_SCOPE) # needed for memfs
+
 file( GLOB table_files      RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.table" )
 file( GLOB text_files       RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.txt" )
 

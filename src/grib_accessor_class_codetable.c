@@ -375,7 +375,11 @@ static int grib_load_codetable(grib_context* c,const char* filename,
     int lineNumber = 0;
     grib_context_log(c,GRIB_LOG_DEBUG,"Loading code table from %s",filename);
 
-    f=fopen(filename, "r");
+#ifdef HAVE_MEMFS
+        f = codes_memfs_open(filename);
+#else
+        f=fopen(filename, "r");
+#endif
     if (!f) return GRIB_IO_PROBLEM;
 
     Assert(t!=NULL);

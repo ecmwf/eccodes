@@ -400,6 +400,11 @@ configure_file( eccodes_version.h.in eccodes_version.h @ONLY )
 #                    YACC_FLAGS  "-y"
 #                    DEPENDANT action.c )
 
+if(HAVE_MEMFS)
+    list(APPEND ECCODES_EXTRA_LIBRARIES grib_api_memfs)
+endif()
+
+
 ecbuild_add_library(TARGET    eccodes
                     SOURCES   grib_api_version.c
                               # griby.c gribl.c

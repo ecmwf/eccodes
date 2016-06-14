@@ -48,7 +48,7 @@ for directory in dirs:
             print('};', file=g)
 
 print("""
-#include "grib_api_config.h"
+#include "eccodes_config.h"
 #ifdef EC_HAVE_FMEMOPEN
 #define _GNU_SOURCE
 #endif
@@ -156,7 +156,6 @@ static const unsigned char* find(const char* path, size_t* length) {
     size_t i;
 
     const char* start = NULL;
-    printf("==> %s\\n", path);
 """, file=g)
 
 for n in NAMES:
@@ -174,7 +173,6 @@ print("""
     for(i = 0; i < entries_count; i++) {
 
         if(strcmp(start, entries[i].path) == 0) {
-            printf("==> %s\\n", start);
             *length = entries[i].length;
             return entries[i].content;
         }

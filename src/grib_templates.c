@@ -40,7 +40,7 @@ grib_handle* grib_internal_template(grib_context* c,const char* name)
 }
 #endif
 
-static grib_handle* try_template(grib_context* c,const char* dir,const char* name)
+static grib_handle* try_template(grib_context* c,const char* dir,const char* name, int last)
 {
     char path[1024];
     grib_handle *g = NULL;
@@ -51,6 +51,20 @@ static grib_handle* try_template(grib_context* c,const char* dir,const char* nam
     if (c->debug==-1) {
         printf("ECCODES DEBUG: try_template path='%s'\n", path);
     }
+
+#ifdef HAVE_MEMFS
+  if(last && codes_memfs_exists(path)) {
+      FILE* f = codes_memfs_open(path);
+      if(f) {
+        g = grib_handle_new_from_file(c,f,&err);
+        if (!g) {
+            grib_context_log(c,GRIB_LOG_ERROR,"cannot create GRIB handle from %s",path);
+        }
+        fclose(f);
+        return g;
+      }
+  }
+#endif
 
     if(access(path,F_OK) == 0)
     {
@@ -98,7 +112,7 @@ grib_handle* grib_external_template(grib_context* c,const char* name)
         if(*base == ':')
         {
             *p = 0;
-            g = try_template(c,buffer,name);
+            g = try_template(c,buffer,name, 0);
             if(g) return g;
             p = buffer;
             base++; /*advance past delimiter*/
@@ -107,7 +121,7 @@ grib_handle* grib_external_template(grib_context* c,const char* name)
     }
 
     *p = 0;
-    return g = try_template(c,buffer,name);
+    return g = try_template(c,buffer,name, 1);
 }
 
 char* grib_external_template_path(grib_context* c,const char* name)

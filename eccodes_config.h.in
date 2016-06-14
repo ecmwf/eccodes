@@ -96,4 +96,6 @@
 
 #cmakedefine HAVE_NETCDF
 
+#cmakedefine HAVE_MEMFS
+
 #endif /* eccodes_config_h */

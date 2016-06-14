@@ -170,7 +170,11 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
         return GRIB_FILE_NOT_FOUND;
     }
 
-    f=fopen(filename, "r");
+#ifdef HAVE_MEMFS
+        f = codes_memfs_open(filename);
+#else
+        f=fopen(filename, "r");
+#endif
 
     if (!f)
     {
