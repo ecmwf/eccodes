@@ -77,7 +77,7 @@
 001095|observerIdentification|string|OBSERVER IDENTIFICATION|CCITT IA5|0|0|32|Character|0|4
 001096|stationAcquisition|string|STATION ACQUISITION|CCITT IA5|0|0|160|Character|0|20
 001101|stateIdentifier|table|STATE IDENTIFIER|CODE TABLE|0|0|10|CODE TABLE|0|3
-001102|stationNumber|long|NATIONAL STATION IDENTIFIER|Numeric|0|0|30|Numeric|0|9
+001102|nationalStationNumber|long|NATIONAL STATION IDENTIFIER|Numeric|0|0|30|Numeric|0|9
 001124|gridPointIdentifier|long|GRID POINT IDENTIFIER|Numeric|0|0|24|Numeric|0|8
 001144|snapshotIdentifier|long|SNAPSHOT IDENTIFIER|Numeric|0|0|31|Numeric|0|10
 002001|stationType|table|TYPE OF STATION|CODE TABLE|0|0|2|CODE TABLE|0|1
