@@ -91,7 +91,7 @@
 001096|stationAcquisition|string|STATION ACQUISITION|CCITT IA5|0|0|160|Character|0|20
 001099|uniqueProductDefinition|string|UNIQUE PRODUCT DEFINITION|CCITT IA5|0|0|248|Character|0|31
 001101|stateIdentifier|table|STATE IDENTIFIER|CODE TABLE|0|0|10|CODE TABLE|0|3
-001102|stationNumber|long|NATIONAL STATION NUMBER|Numeric|0|0|30|Numeric|0|9
+001102|nationalStationNumber|long|NATIONAL STATION NUMBER|Numeric|0|0|30|Numeric|0|9
 001103|imoNumber|long|IMO NUMBER. UNIQUE LLOYD'S REGISTRY|Numeric|0|0|24|Numeric|0|7
 001110|aircraftTailNumber|string|AIRCRAFT TAIL NUMBER|CCITT IA5|0|0|48|Character|0|6
 001111|originationAirport|string|ORIGINATION AIRPORT|CCITT IA5|0|0|24|Character|0|3

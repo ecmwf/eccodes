@@ -78,7 +78,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr, err.msg
+            sys.stderr.write(err.msg + '\n')
 
         return 1
 
