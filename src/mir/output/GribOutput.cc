@@ -37,7 +37,7 @@ namespace output {
 
 class HandleFree {
     grib_handle *h_;
-  public:
+public:
     HandleFree(grib_handle *h): h_(h) {}
     ~HandleFree() {
         if (h_) grib_handle_delete(h_);
