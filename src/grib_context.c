@@ -643,7 +643,6 @@ char *grib_context_full_defs_path(grib_context* c,const char* basename)
         }
 #ifdef HAVE_MEMFS
 	sprintf(full,"/definitions/%s",basename);
-	printf("=====> %s\n", full);
         if(codes_memfs_exists(full)) {
             fullpath=(grib_string_list*)grib_context_malloc_clear_persistent(c,sizeof(grib_string_list));
             Assert(fullpath);
