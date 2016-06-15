@@ -37,6 +37,7 @@ UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation &parametrisat
     ASSERT(parametrisation.get("latitudes", latitudes_));
     ASSERT(parametrisation.get("longitudes", longitudes_));
     ASSERT(latitudes_.size() == longitudes_.size());
+    ASSERT(longitudes_.size() > 0);
 }
 
 UnstructuredGrid::UnstructuredGrid(const eckit::PathName &path) {
