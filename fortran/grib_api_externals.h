@@ -32,7 +32,8 @@ integer, external :: grib_f_get_int, grib_f_get_long,grib_f_get_int_array, &
                      grib_f_get_real8, grib_f_get_real8_array, &
                      grib_f_get_real4_element, grib_f_get_real8_element, &
                      grib_f_get_real4_elements, grib_f_get_real8_elements, &
-					 grib_f_get_string,grib_f_is_missing,grib_f_is_defined
+					           grib_f_get_string,grib_f_get_string_array, &
+                     grib_f_is_missing,grib_f_is_defined
 integer, external :: grib_f_new_from_index, &
                      grib_f_index_new_from_file, &
                      grib_f_index_add_file, &
