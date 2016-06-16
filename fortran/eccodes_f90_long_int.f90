@@ -100,7 +100,7 @@
                      codes_get_real4, &
                      codes_get_real8, &
                      codes_get_string, &
-                     codes_get_string_array, &
+                     codes_get_byte_array, &
                      codes_get_int_array, &
                      codes_get_real4_array, &
                      codes_get_real8_array
