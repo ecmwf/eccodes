@@ -829,18 +829,16 @@ subroutine codes_get_string ( gribid, key, value, status )
 end subroutine codes_get_string
 
 subroutine codes_get_string_array ( gribid, key, value, status )
-    integer(kind=kindOfInt),               intent(in)  :: gribid
-    character(len=*),      intent(in)                  :: key
+    integer(kind=kindOfInt),               intent(in)        :: gribid
+    character(len=*),      intent(in)                        :: key
     character(len=*), dimension(:),allocatable,intent(inout) :: value
-    character                 :: cvalue(size(value)*len(value(0)))
-    integer(kind=kindOfInt),optional, intent(out)      :: status
+    integer(kind=kindOfInt),optional, intent(out)            :: status
 
+    character                 :: cvalue(size(value)*len(value(0)))
     integer(kind=kindOfInt)                            :: iret
     integer(kind=kindOfInt)                            :: nb_values
     integer(kind=kindOfInt)                            :: slen
-    integer(kind=kindOfInt)                            :: size_value
     integer(kind=kindOfInt)                            :: i,s,j
-
 
     if (allocated(value) .eqv. .false.) then
       iret=CODES_NULL_POINTER
@@ -855,14 +853,10 @@ subroutine codes_get_string_array ( gribid, key, value, status )
     slen=len(value(0))
     iret=grib_f_get_string_array ( gribid, key, cvalue , nb_values, slen )
     value=transfer(cvalue,value)
-    if (iret==0 .and. nb_values==1 .and. size_value/=1) then
-      do i=2,size_value
-        value(i)=value(1)
-      enddo
+
+    if (iret /= 0) then
+      call grib_f_write_on_fail(gribid)
     endif
-  if (iret /= 0) then
-    call grib_f_write_on_fail(gribid)
-  endif
     if (present(status)) then
       status = iret
     else

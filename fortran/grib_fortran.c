@@ -162,7 +162,7 @@ static void czstr_to_fortran(char* str,int len)
     *p=' ';
 }
 
-static void czstr_to_fortran_replace0(char* str,int len)
+/*static void czstr_to_fortran_replace0(char* str,int len)
 {
     char *p,*end;
     p=str; end=str+len-1;
@@ -170,7 +170,7 @@ static void czstr_to_fortran_replace0(char* str,int len)
       if (*p=='\0') *p=' ';
       p++;
     }
-}
+}*/
 
 static void fort_char_clean(char* str,int len)
 {
@@ -2708,8 +2708,8 @@ int grib_f_set_real8_array(int* gid, char* key, double *val, int* size, int len)
 }
 
 /*****************************************************************************/
-int grib_f_get_string_array_(int* gid, char* key, unsigned char* val,int* nvals,int* slen,int len,int len2){
-
+int grib_f_get_string_array_(int* gid, char* key, char* val,int* nvals,int* slen,int len,int len2)
+{
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
     size_t i;
@@ -2720,7 +2720,6 @@ int grib_f_get_string_array_(int* gid, char* key, unsigned char* val,int* nvals,
 
     if(!h) return  GRIB_INVALID_GRIB;
 
-
     cval=(char**)grib_context_malloc_clear(h->context,sizeof(char*)*lsize);
     err = grib_get_string_array(h, cast_char(buf,key,len), cval, &lsize);
     if (err) return err;
@@ -2728,9 +2727,9 @@ int grib_f_get_string_array_(int* gid, char* key, unsigned char* val,int* nvals,
     if (strlen(cval[0])>*slen) err=GRIB_ARRAY_TOO_SMALL;
 
     for (i=0;i<lsize;i++) {
-      memcpy(p,cval[i],*slen);
-      czstr_to_fortran(p,*slen);
-      p+= *slen;
+        memcpy(p,cval[i],*slen);
+        czstr_to_fortran(p,*slen);
+        p+= *slen;
     }
     grib_context_free(h->context,cval);
     /*remember to deallocate each string*/
@@ -2738,10 +2737,10 @@ int grib_f_get_string_array_(int* gid, char* key, unsigned char* val,int* nvals,
     return  err;
 }
 
-int grib_f_get_string_array__(int* gid, char* key, unsigned char* val,int* nvals,int* slen, int len,int len2){
+int grib_f_get_string_array__(int* gid, char* key, char* val,int* nvals,int* slen, int len,int len2){
     return  grib_f_get_string_array_( gid,  key,  val,nvals,slen,len,len2);
 }
-int grib_f_get_string_array(int* gid, char* key, unsigned char* val,int* nvals,int* slen, int len,int len2){
+int grib_f_get_string_array(int* gid, char* key, char* val,int* nvals,int* slen, int len,int len2){
     return  grib_f_get_string_array_( gid,  key,  val, nvals, slen, len,len2);
 }
 
