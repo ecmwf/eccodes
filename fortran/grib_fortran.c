@@ -2708,7 +2708,7 @@ int grib_f_set_real8_array(int* gid, char* key, double *val, int* size, int len)
 }
 
 /*****************************************************************************/
-int grib_f_get_string_array_(int* gid, char* key, char* val,int* nvals,int* slen,int len,int len2)
+int grib_f_get_string_array_(int* gid, char* key, char* val,int* nvals,int* slen,int len)
 {
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
@@ -2737,11 +2737,11 @@ int grib_f_get_string_array_(int* gid, char* key, char* val,int* nvals,int* slen
     return  err;
 }
 
-int grib_f_get_string_array__(int* gid, char* key, char* val,int* nvals,int* slen, int len,int len2){
-    return  grib_f_get_string_array_( gid,  key,  val,nvals,slen,len,len2);
+int grib_f_get_string_array__(int* gid, char* key, char* val,int* nvals,int* slen, int len){
+    return  grib_f_get_string_array_( gid,  key,  val,nvals,slen,len);
 }
-int grib_f_get_string_array(int* gid, char* key, char* val,int* nvals,int* slen, int len,int len2){
-    return  grib_f_get_string_array_( gid,  key,  val, nvals, slen, len,len2);
+int grib_f_get_string_array(int* gid, char* key, char* val,int* nvals,int* slen, int len){
+    return  grib_f_get_string_array_( gid,  key,  val, nvals, slen, len);
 }
 
 /*****************************************************************************/
