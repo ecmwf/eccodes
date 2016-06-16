@@ -2727,7 +2727,7 @@ int grib_f_get_string_array_(int* gid, char* key, char* val,int* nvals,int* slen
     if (strlen(cval[0])>*slen) err=GRIB_ARRAY_TOO_SMALL;
 
     for (i=0;i<lsize;i++) {
-        memcpy(p,cval[i],*slen);
+        strcpy(p,cval[i]);
         czstr_to_fortran(p,*slen);
         p+= *slen;
     }
