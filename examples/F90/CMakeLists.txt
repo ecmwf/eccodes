@@ -36,6 +36,7 @@ list( APPEND tests
       bufr_clone
       bufr_expanded
       bufr_get_keys
+      bufr_get_string_array
       bufr_keys_iterator
       bufr_read_header
       bufr_read_scatterometer
