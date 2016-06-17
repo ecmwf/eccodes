@@ -612,6 +612,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 16 ;
 	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 177 ;
 	}
 #Cloudy brightness temperature
 'clbt' = {
