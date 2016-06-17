@@ -371,11 +371,19 @@ static void point_in_time(grib_handle* h,const parameter* p,double min,double ma
     case 0: /* Analysis */
         if (is_uerra)
             CHECK(eq(h,"productDefinitionTemplateNumber",0)||eq(h,"productDefinitionTemplateNumber",1));
+        if (get(h,"productDefinitionTemplateNumber") == 1){
+            CHECK(ne(h,"numberOfForecastsInEnsemble",0));
+            CHECK(le(h,"perturbationNumber",get(h,"numberOfForecastsInEnsemble")));
+        }
         break;
 
     case 1: /* Forecast */
         if (is_uerra)
             CHECK(eq(h,"productDefinitionTemplateNumber",0)||eq(h,"productDefinitionTemplateNumber",1));
+        if (get(h,"productDefinitionTemplateNumber") == 1){
+            CHECK(ne(h,"numberOfForecastsInEnsemble",0));
+            CHECK(le(h,"perturbationNumber",get(h,"numberOfForecastsInEnsemble")));
+        }
         break;
 
     case 2: /* Analysis and forecast products */
@@ -1145,30 +1153,29 @@ static void verify(grib_handle* h)
         CHECK(eq(h,"productionStatusOfProcessedData",6)||eq(h,"productionStatusOfProcessedData",7)); /*  S2S prod||test */
         CHECK(le(h,"endStep",100*24));
     }
-    else if (is_uerra){
-        CHECK(eq(h,"productionStatusOfProcessedData",8)||eq(h,"productionStatusOfProcessedData",9)); /*  UERRA prod||test */
-        CHECK(le(h,"endStep",30));
-    }
-    else
+    else if (!is_uerra)
     {
         CHECK(eq(h,"productionStatusOfProcessedData",4)||eq(h,"productionStatusOfProcessedData",5)); /*  TIGGE prod||test */
         CHECK(le(h,"endStep",30*24));
     }
 
-    if (is_uerra){
-        CHECK((eq(h,"step",1)||eq(h,"step",2)||eq(h,"step",4)||eq(h,"step",5))||(get(h,"step") % 3) == 0);
-    }
     else if (is_lam){
         CHECK((get(h,"step") % 3) == 0);
     }
-    else
+    else if (!is_uerra)
     {
         CHECK((get(h,"step") % 6) == 0);
     }
 
     if (is_uerra){
-        /* 0 = analysis , 2 = analysis or forecast */
-        CHECK(eq(h,"typeOfProcessedData",0)||eq(h,"typeOfProcessedData",2));
+        CHECK(eq(h,"productionStatusOfProcessedData",8)||eq(h,"productionStatusOfProcessedData",9)); /*  UERRA prod||test */
+        CHECK(le(h,"endStep",30));
+        /* 0 = analysis , 1 = forecast */
+        CHECK(eq(h,"typeOfProcessedData",0)||eq(h,"typeOfProcessedData",1));
+        if (get(h,"typeOfProcessedData") == 0)
+            CHECK(eq(h,"step",0));
+        else
+            CHECK((eq(h,"step",1)||eq(h,"step",2)||eq(h,"step",4)||eq(h,"step",5))||(get(h,"step") % 3) == 0);
     }
     else
     {
