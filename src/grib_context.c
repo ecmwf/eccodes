@@ -629,7 +629,11 @@ char *grib_context_full_defs_path(grib_context* c,const char* basename)
 
         while (dir) {
             sprintf(full,"%s/%s",dir->value,basename);
+#ifdef HAVE_MEMFS
+            if(access(full,F_OK) == 0 || codes_memfs_exists(full)) {
+#else
             if (!access(full,F_OK)) {
+#endif
                 fullpath=(grib_string_list*)grib_context_malloc_clear_persistent(c,sizeof(grib_string_list));
                 Assert(fullpath);
                 fullpath->value=grib_context_strdup(c,full);
@@ -641,19 +645,19 @@ char *grib_context_full_defs_path(grib_context* c,const char* basename)
             }
             dir=dir->next;
         }
-#ifdef HAVE_MEMFS
-	sprintf(full,"/definitions/%s",basename);
-        if(codes_memfs_exists(full)) {
-            fullpath=(grib_string_list*)grib_context_malloc_clear_persistent(c,sizeof(grib_string_list));
-            Assert(fullpath);
-            fullpath->value=grib_context_strdup(c,full);
-            GRIB_MUTEX_LOCK(&mutex_c);
-            grib_trie_insert(c->def_files,basename,fullpath);
-            grib_context_log(c,GRIB_LOG_DEBUG,"Found def file %s in MEMFS",full);
-            GRIB_MUTEX_UNLOCK(&mutex_c);
-            return fullpath->value;
-	}
-#endif
+// #ifdef HAVE_MEMFS
+// 	sprintf(full,"/definitions/%s",basename);
+//         if(codes_memfs_exists(full)) {
+//             fullpath=(grib_string_list*)grib_context_malloc_clear_persistent(c,sizeof(grib_string_list));
+//             Assert(fullpath);
+//             fullpath->value=grib_context_strdup(c,full);
+//             GRIB_MUTEX_LOCK(&mutex_c);
+//             grib_trie_insert(c->def_files,basename,fullpath);
+//             grib_context_log(c,GRIB_LOG_DEBUG,"Found def file %s in MEMFS",full);
+//             GRIB_MUTEX_UNLOCK(&mutex_c);
+//             return fullpath->value;
+// 	}
+// #endif
     }
 
     GRIB_MUTEX_LOCK(&mutex_c);

@@ -67,7 +67,7 @@ struct entry {
 items = [(v, k) for k, v in FILES.items()]
 
 for k, v in sorted(items):
-    print ('{"%s", &%s[0], sizeof(%s) / sizeof(%s[0]) },' % (k, v, v, v), file=g)
+    print ('{"/MEMFS%s", &%s[0], sizeof(%s) / sizeof(%s[0]) },' % (k, v, v, v), file=g)
 
 
 print("""};
@@ -155,25 +155,11 @@ static size_t entries_count = sizeof(entries)/sizeof(entries[0]);
 static const unsigned char* find(const char* path, size_t* length) {
     size_t i;
 
-    const char* start = NULL;
-""", file=g)
-
-for n in NAMES:
-    print("""
-    if(start == NULL) {
-         start = strstr(path, "/%s/");
-    }
-""" % (n,), file=g)
-
-print("""
-    /*printf("%s ===> %s\\n", path, start);*/
-    if(start == NULL) {
-        return NULL;
-    }
 
     for(i = 0; i < entries_count; i++) {
 
-        if(strcmp(start, entries[i].path) == 0) {
+        if(strcmp(path, entries[i].path) == 0) {
+            /*printf("Found in MEMFS %s\\n", path);*/
             *length = entries[i].length;
             return entries[i].content;
         }
