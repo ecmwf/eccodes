@@ -828,6 +828,43 @@ subroutine codes_get_string ( gribid, key, value, status )
     call grib_get_string ( gribid, key, value, status )
 end subroutine codes_get_string
 
+subroutine codes_get_string_array ( gribid, key, value, status )
+    integer(kind=kindOfInt),               intent(in)        :: gribid
+    character(len=*),      intent(in)                        :: key
+    character(len=*), dimension(:),allocatable,intent(inout) :: value
+    integer(kind=kindOfInt),optional, intent(out)            :: status
+
+    character                 :: cvalue(size(value)*len(value(0)))
+    integer(kind=kindOfInt)                            :: iret
+    integer(kind=kindOfInt)                            :: nb_values
+    integer(kind=kindOfInt)                            :: slen
+    integer(kind=kindOfInt)                            :: i,s,j
+
+    if (allocated(value) .eqv. .false.) then
+      iret=CODES_NULL_POINTER
+      if (present(status)) then
+        status = iret
+      else
+        call grib_check(iret,'grib_get',key)
+      endif
+    end if
+
+    nb_values=size(value)
+    slen=len(value(0))
+    iret=grib_f_get_string_array ( gribid, key, cvalue , nb_values, slen )
+    value=transfer(cvalue,value)
+
+    if (iret /= 0) then
+      call grib_f_write_on_fail(gribid)
+    endif
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret,'grib_get',key)
+    endif
+
+end subroutine codes_get_string_array 
+
 ! Note: This function supports the allocatable array attribute
 ! -------------------------------------------------------------
 subroutine codes_get_int_array ( gribid, key, value, status )
@@ -861,9 +898,9 @@ subroutine codes_get_int_array ( gribid, key, value, status )
         value(i)=value(1)
       enddo
     endif
-	if (iret /= 0) then
-	  call grib_f_write_on_fail(gribid)
-	endif
+  if (iret /= 0) then
+    call grib_f_write_on_fail(gribid)
+  endif
     if (present(status)) then
       status = iret
     else
@@ -926,7 +963,6 @@ subroutine codes_get_byte_array ( gribid, key, value, length, status )
     integer(kind=kindOfInt), optional,     intent(out) :: status
     integer(kind=kindOfInt)                            :: iret
     integer(kind=kindOfInt)                            :: nb_values
-    character                                          :: bytes(size(value))
 
     call grib_get_byte_array ( gribid, key, value, length, status )
 end subroutine codes_get_byte_array 
@@ -1144,7 +1180,6 @@ subroutine codes_set_byte_array ( gribid, key, value, length, status )
     integer(kind=kindOfInt), optional,     intent(out) :: status
     integer(kind=kindOfInt)                            :: iret
     integer(kind=kindOfInt)                            :: nb_values
-    character                                          :: bytes(size(value))
 
     call grib_set_byte_array ( gribid, key, value, length, status )
 end subroutine codes_set_byte_array 

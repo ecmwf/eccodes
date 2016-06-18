@@ -38,7 +38,6 @@ do
   tar="full_${files[i]}"
 EOF
 
-  p4 edit ${files[i]}
   if [[ ${precision[i]} -gt 0 ]] 
   then 
     grib_set -r -s bitsPerValue=0,decimalScaleFactor=${precision[i]} full_${files[i]} ${files[i]}
@@ -53,4 +52,3 @@ EOF
   grib_dump ${grib2} > /dev/null
 
 done
-

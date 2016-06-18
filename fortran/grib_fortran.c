@@ -162,6 +162,16 @@ static void czstr_to_fortran(char* str,int len)
     *p=' ';
 }
 
+/*static void czstr_to_fortran_replace0(char* str,int len)
+{
+    char *p,*end;
+    p=str; end=str+len-1;
+    while (p != end) {
+      if (*p=='\0') *p=' ';
+      p++;
+    }
+}*/
+
 static void fort_char_clean(char* str,int len)
 {
     char *p,*end;
@@ -2695,6 +2705,43 @@ int grib_f_set_real8_array__(int* gid, char* key, double *val, int* size, int le
 }
 int grib_f_set_real8_array(int* gid, char* key, double *val, int* size, int len){
     return grib_f_set_real8_array_( gid,  key, val,  size, len);
+}
+
+/*****************************************************************************/
+int grib_f_get_string_array_(int* gid, char* key, char* val,int* nvals,int* slen,int len)
+{
+    grib_handle *h = get_handle(*gid);
+    int err = GRIB_SUCCESS;
+    size_t i;
+    char buf[1024];
+    size_t lsize = *nvals;
+    char** cval=0;
+    char* p=val;
+
+    if(!h) return  GRIB_INVALID_GRIB;
+
+    cval=(char**)grib_context_malloc_clear(h->context,sizeof(char*)*lsize);
+    err = grib_get_string_array(h, cast_char(buf,key,len), cval, &lsize);
+    if (err) return err;
+
+    if (strlen(cval[0])>*slen) err=GRIB_ARRAY_TOO_SMALL;
+
+    for (i=0;i<lsize;i++) {
+        strcpy(p,cval[i]);
+        czstr_to_fortran(p,*slen);
+        p+= *slen;
+    }
+    grib_context_free(h->context,cval);
+    /*remember to deallocate each string*/
+
+    return  err;
+}
+
+int grib_f_get_string_array__(int* gid, char* key, char* val,int* nvals,int* slen, int len){
+    return  grib_f_get_string_array_( gid,  key,  val,nvals,slen,len);
+}
+int grib_f_get_string_array(int* gid, char* key, char* val,int* nvals,int* slen, int len){
+    return  grib_f_get_string_array_( gid,  key,  val, nvals, slen, len);
 }
 
 /*****************************************************************************/

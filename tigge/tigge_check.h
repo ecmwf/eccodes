@@ -1082,7 +1082,6 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
          {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
          {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 10},
 
- /*      {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 255}, */
          {NULL, },
       },
       {&three_hourly, &given_level},
@@ -1382,9 +1381,6 @@ warning: s2s.z_tigge_c_kwbc_20150817000000_ncep_prod_pf_pl_0000_015_0500_w.grib2
       12,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
-
-         {"paramId", GRIB_TYPE_LONG, 135},
-
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 2},
          {"parameterNumber", GRIB_TYPE_LONG, 8},
@@ -2803,7 +2799,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       10,
       150,
       {
-         {"paramId", GRIB_TYPE_LONG, 228256},
+         {"paramId", GRIB_TYPE_LONG, 49},
          {"class", GRIB_TYPE_STRING, 0, "ur"},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 2},
@@ -2817,13 +2813,14 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       {&since_prev_pp, &given_level},
    },
    {
-      "2_metre_maximum_temperature_uerra", /* TBD xxx Length of time range 1/3/6 checks? */
+      "2_metre_maximum_temperature_uerra",
       200,
       340,
       200,
       340,
       {
-         {"paramId", GRIB_TYPE_LONG, 228257},
+         {"paramId", GRIB_TYPE_LONG, 201},
+         {"class", GRIB_TYPE_STRING, 0, "ur"},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 0},
          {"parameterNumber", GRIB_TYPE_LONG, 0},
@@ -2834,13 +2831,14 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       {&since_prev_pp, &given_level},
    },
    {
-      "2_metre_minimum_temperature_uerra", /* TBD xxx Length of time range 1/3/6 checks? */
+      "2_metre_minimum_temperature_uerra",
       200,
       340,
       200,
       340,
       {
-         {"paramId", GRIB_TYPE_LONG, 228258},
+         {"paramId", GRIB_TYPE_LONG, 202},
+         {"class", GRIB_TYPE_STRING, 0, "ur"},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 0},
          {"parameterNumber", GRIB_TYPE_LONG, 0},
@@ -2900,7 +2898,23 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       {&point_in_time, &predefined_level},
    },
    {
-      "liquid_non-frozen_soil_moisture_sfc",
+      "liquid_non-frozen_soil_moisture_level",
+      -1e-19,
+      0,
+      450,
+      800,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260210},
+         {"discipline", GRIB_TYPE_LONG, 2},
+         {"parameterCategory", GRIB_TYPE_LONG, 3},
+         {"parameterNumber", GRIB_TYPE_LONG, 10},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 151},
+         {NULL, },
+      },
+      {&point_in_time, &given_level},
+   },
+   {
+      "liquid_non-frozen_soil_moisture_layer",
       -1e-19,
       0,
       450,
@@ -2919,7 +2933,23 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       {&point_in_time, &given_thickness},
    },
    {
-      "volumetric_soil_moisture_sfc",
+      "volumetric_soil_moisture_level",
+      -1e-19,
+      0,
+      450,
+      800,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260199},
+         {"discipline", GRIB_TYPE_LONG, 2},
+         {"parameterCategory", GRIB_TYPE_LONG, 0},
+         {"parameterNumber", GRIB_TYPE_LONG, 25},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 151},
+         {NULL, },
+      },
+      {&point_in_time, &given_level},
+   },
+   {
+      "volumetric_soil_moisture_layer",
       -1e-19,
       0,
       450,
@@ -2944,7 +2974,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       -1e+10,
        1e+10,
       {
-         {"paramId", GRIB_TYPE_LONG, 260433},
+         {"paramId", GRIB_TYPE_LONG, 260364},
          {"discipline", GRIB_TYPE_LONG, 2},
          {"parameterCategory", GRIB_TYPE_LONG, 3},
          {"parameterNumber", GRIB_TYPE_LONG, 26},
@@ -2954,7 +2984,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       {&point_in_time, &predefined_level},
    },
    {
-      "soil_temperature_sfc",
+      "soil_temperature_level",
       200,
       230,
       300,
@@ -2969,6 +2999,43 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
          {NULL, },
       },
       {&point_in_time, &given_level},
+   },
+   {
+      "soil_temperature_level",
+      200,
+      230,
+      300,
+      350,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260360},
+         {"discipline", GRIB_TYPE_LONG, 2},
+         {"parameterCategory", GRIB_TYPE_LONG, 3},
+         {"parameterNumber", GRIB_TYPE_LONG, 18},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 151},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_level},
+   },
+
+   {
+      "soil_temperature_layer",
+      200,
+      230,
+      300,
+      350,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260360},
+         {"discipline", GRIB_TYPE_LONG, 2},
+         {"parameterCategory", GRIB_TYPE_LONG, 3},
+         {"parameterNumber", GRIB_TYPE_LONG, 18},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 151},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 151},
+         {"scaleFactorOfSecondFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_thickness},
    },
    {
       "total_column_water_sfc.ur",
@@ -2986,6 +3053,25 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
          {NULL, },
       },
       {&point_in_time, &predefined_thickness},
+   },
+
+   {
+      "w_vertical_velocity_pl",
+      -20,
+      0,
+      0,
+      20,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "ur"},
+         {"paramId", GRIB_TYPE_LONG, 135},
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 2},
+         {"parameterNumber", GRIB_TYPE_LONG, 8},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
+         {NULL, },
+      },
+      {&point_in_time, &given_level, &pressure_level},
    },
 
 };

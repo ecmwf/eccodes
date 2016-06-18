@@ -490,6 +490,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
         } else {
             dval=localReference*modifiedFactor;
         }
+        grib_context_log(c, GRIB_LOG_DEBUG," modifiedWidth=%ld lval=%ld dval=%g", modifiedWidth,lval,dval);
         grib_darray_push(c,ret,dval);
     }
 
