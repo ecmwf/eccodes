@@ -7,12 +7,12 @@
     ], 
     "build_systems": [
         {
-            "working_dir": "${project_path}/../../build/grib_api", 
+            "working_dir": "${project_path}/../../build/eccodes", 
             "cmd": [
                 "make"
             ], 
             "file_regex": "([/\\w\\-\\.]+):(\\d+):(\\d+:)?", 
-            "name": "Build"
+            "name": "ecbuild"
         }
     ]
 }
