@@ -166,7 +166,7 @@ for n in NAMES:
 """ % (n,), file=g)
 
 print("""
-    /*printf("%s ===> %s\\n", path, start);*/
+    /* printf("%s ===> %s\\n", path, start); */
     if(start == NULL) {
         return NULL;
     }

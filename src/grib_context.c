@@ -416,13 +416,6 @@ grib_context* grib_context_get_default()
             default_grib_context.log_stream=stdout;
         }
 
-#ifdef HAVE_MEMFS
-        if(!default_grib_context.grib_samples_path)
-            default_grib_context.grib_samples_path = "<memfs>";
-        if(!default_grib_context.grib_definition_files_path)
-            default_grib_context.grib_definition_files_path = "<memfs>";
-#endif
-
 #ifdef ECCODES_SAMPLES_PATH
         if(!default_grib_context.grib_samples_path)
             default_grib_context.grib_samples_path = ECCODES_SAMPLES_PATH ;
