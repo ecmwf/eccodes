@@ -401,7 +401,7 @@ configure_file( eccodes_version.h.in eccodes_version.h @ONLY )
 #                    DEPENDANT action.c )
 
 if(HAVE_MEMFS)
-    list(APPEND ECCODES_EXTRA_LIBRARIES grib_api_memfs)
+    list(APPEND ECCODES_EXTRA_LIBRARIES eccodes_memfs)
 endif()
 
 

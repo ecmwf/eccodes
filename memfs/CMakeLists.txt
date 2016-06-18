@@ -12,7 +12,7 @@ set_source_files_properties( ${CMAKE_CURRENT_BINARY_DIR}/memfs.c PROPERTIES OBJE
     # "${PROJECT_SOURCE_DIR}/memfs.py" ${definition_files}"
     )
 
-ecbuild_add_library(TARGET    grib_api_memfs
+ecbuild_add_library(TARGET    eccodes_memfs
                     CONDITION HAVE_MEMFS
                     SOURCES   ${CMAKE_CURRENT_BINARY_DIR}/memfs.c
                     GENERATED ${CMAKE_CURRENT_BINARY_DIR}/memfs.c )
