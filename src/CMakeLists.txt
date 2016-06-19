@@ -55,6 +55,7 @@ list( APPEND grib_api_srcs
     grib_vsarray.c
     grib_iarray.c
     grib_viarray.c
+    codes_memfs.c
     grib_accessor_class_array.c
     grib_accessor_class_assert.c
     grib_accessor_class_ascii.c

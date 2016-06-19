@@ -72,9 +72,9 @@ static grib_expression_class _grib_expression_class_is_in_dict = {
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     0,                  /* destructor                */
-    &print,                 
-    &compile,                 
-    &add_dependency,       
+    &print,
+    &compile,
+    &add_dependency,
 
 	&native_type,
 	&get_name,
@@ -123,7 +123,7 @@ static grib_trie* load_dictionary(grib_context* c,grib_expression* e, int* err) 
         grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from file %s",self->dictionary,filename);
   }
 
-  f=fopen(filename,"r");
+  f=codes_fopen(filename,"r");
   if (!f) {*err=GRIB_IO_PROBLEM; return NULL;}
 
   dictionary=grib_trie_new(c);

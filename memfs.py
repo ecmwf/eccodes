@@ -178,7 +178,7 @@ FILE* codes_memfs_open(const char* path) {
     size_t size;
     const unsigned char* mem = find(path, &size);
     if(!mem) {
-        return fopen(path, "r");
+        return NULL;
     }
     return fmemopen((void*)mem, size, "r");
 }

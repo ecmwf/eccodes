@@ -604,11 +604,7 @@ void grib_parser_include(const char* included_fname)
         f = stdin;   /* read from std input */
     } else {
         grib_context_log(grib_parser_context,GRIB_LOG_DEBUG,"parsing include file %s",parse_file);
-#ifdef HAVE_MEMFS
-        f = codes_memfs_open(parse_file);
-#else
-        f = fopen(parse_file,"r");
-#endif
+        f = codes_fopen(parse_file,"r");
     }
     /* for(i = 0; i < top ; i++) printf("   "); */
     /* printf("PARSING %s\n",parse_file); */
