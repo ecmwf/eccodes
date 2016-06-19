@@ -29,7 +29,7 @@ for directory in dirs:
                 continue
 
             fname = full[full.find("/%s/" % (dname,)):]
-            print(fname)
+            print("MEMFS add", fname)
             name = re.sub(r'\W', '_', fname)
 
             assert name not in FILES
@@ -159,7 +159,7 @@ static const unsigned char* find(const char* path, size_t* length) {
     for(i = 0; i < entries_count; i++) {
 
         if(strcmp(path, entries[i].path) == 0) {
-            printf("Found in MEMFS %s\\n", path);
+            /*printf("Found in MEMFS %s\\n", path);*/
             *length = entries[i].length;
             return entries[i].content;
         }
