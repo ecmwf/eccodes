@@ -611,6 +611,7 @@
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 177 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Cloudy brightness temperature

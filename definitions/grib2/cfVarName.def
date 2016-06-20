@@ -612,6 +612,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 16 ;
 	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 177 ;
 	}
 #Cloudy brightness temperature
 'clbt' = {
@@ -2859,13 +2860,13 @@
 	 parameterNumber = 5 ;
 	}
 #Radiance (with respect to wave length)
-'p3120' = {
+'swrad' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 6 ;
 	}
 #Wind mixing energy
-'p3126' = {
+'wmixe' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 19 ;
