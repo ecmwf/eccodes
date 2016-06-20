@@ -93,7 +93,7 @@ endif()
 # memfs
 
 ecbuild_add_option( FEATURE MEMFS
-    DESCRIPTION "Memory based access to definitions"
+    DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
     CONDITION EC_HAVE_FMEMOPEN OR EC_HAVE_FUNOPEN
     REQUIRED_PACKAGES "Python VERSION 2.6"
