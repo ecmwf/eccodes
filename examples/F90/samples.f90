@@ -20,7 +20,7 @@ program sample
   integer  :: decimalPrecision
   real     :: missingValue
   character(len=10) stepType
-  double precision, dimension(:), allocatable   :: v1,v2,v 
+  real(kind=8), dimension(:), allocatable   :: v1,v2,v 
 
   date1 = 20080104
   startStep = 0
