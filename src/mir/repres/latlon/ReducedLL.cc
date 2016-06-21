@@ -60,10 +60,10 @@ void ReducedLL::fill(api::MIRJob &job) const  {
 }
 
 
-void ReducedLL::cropToDomain(const param::MIRParametrisation &parametrisation, data::MIRField &field, util::MIRStatistics& statistics) const {
+void ReducedLL::cropToDomain(const param::MIRParametrisation &parametrisation, context::Context & ctx) const {
     if (!globalDomain()) {
         action::AreaCropper cropper(parametrisation, bbox_);
-        cropper.execute(field, statistics);
+        cropper.execute(ctx);
     }
 }
 

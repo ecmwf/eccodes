@@ -26,6 +26,7 @@
 #include "mir/packing/Packer.h"
 #include "eckit/log/Plural.h"
 #include "mir/log/MIR.h"
+#include "mir/action/context/Context.h"
 
 
 namespace mir {
@@ -53,7 +54,9 @@ GribOutput::~GribOutput() {
 }
 
 
-size_t GribOutput::copy(const param::MIRParametrisation &, input::MIRInput &input) { // Not iterpolation performed
+size_t GribOutput::copy(const param::MIRParametrisation &param, context::Context& ctx) { // Not iterpolation performed
+
+    input::MIRInput& input = ctx.input();
 
     size_t total = 0;
     for (size_t i = 0; i < input.dimensions(); i++) {
@@ -73,7 +76,9 @@ size_t GribOutput::copy(const param::MIRParametrisation &, input::MIRInput &inpu
     return total;
 }
 
-size_t GribOutput::save(const param::MIRParametrisation &parametrisation, input::MIRInput &input, data::MIRField &field) {
+size_t GribOutput::save(const param::MIRParametrisation &parametrisation, context::Context& ctx) {
+    data::MIRField& field = ctx.field();
+    input::MIRInput& input = ctx.input();
 
     field.validate();
 
