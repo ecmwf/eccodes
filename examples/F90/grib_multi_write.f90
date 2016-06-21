@@ -18,7 +18,7 @@ program grib2_multi_write
   use eccodes
   implicit none
   integer                            :: infile,outfile
-  integer                            :: in_gribid,iret
+  integer                            :: in_gribid
   integer                            :: multi_gribid
   integer                            :: step,startsection
 

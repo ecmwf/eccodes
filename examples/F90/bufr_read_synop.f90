@@ -26,7 +26,7 @@ integer            :: iret
 integer            :: ibufr
 integer            :: count=0
 integer(kind=4)    :: blockNumber,stationNumber 
-real(kind=8)       :: lat,lon,t2m,td2m,ws,wdir
+real(kind=8)       :: lat,t2m,td2m,ws,wdir
 integer(kind=4)    :: cloudAmount,cloudBaseHeight,lowCloud,midCloud,highCloud 
 
   call codes_open_file(ifile,'../../data/bufr/syno_multi.bufr','r')

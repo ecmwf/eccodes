@@ -14,11 +14,10 @@ program sample
   use eccodes
   implicit none  
   integer  :: err
-  integer  :: outfile, infile, datafile
+  integer  :: outfile, datafile
   integer  :: igribsample,igribclone,igribdata, size1
   integer  :: date1, startStep, endStep, table2Version, indicatorOfParameter
   integer  :: decimalPrecision
-  real     :: missingValue
   character(len=10) stepType
   real(kind=8), dimension(:), allocatable   :: v1,v2,v 
 

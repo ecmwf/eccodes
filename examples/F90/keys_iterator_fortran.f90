@@ -16,12 +16,12 @@
 program keys_iterator
   use eccodes
   implicit none
-  integer            :: kiter,ifile,igrib,iret
-  character(len=256) :: key
-  character(len=256) :: value
+  integer             :: kiter,ifile,igrib,iret
+  character(len=256)  :: key
+  character(len=256)  :: value
   character(len=2048) :: all
-  integer            :: len,strlen
-  integer            :: grib_count
+  integer             :: len
+  integer             :: grib_count
   len=256
 
   ifile=5

@@ -12,16 +12,13 @@
 program set
   use eccodes
   implicit none
-  integer              :: err
+
   integer(kind = 4)    :: centre
   integer(kind = 4)    :: int_value
   character(len = 10)  :: string_value
   character(len = 20)  :: string_centre
-  integer              :: len
-  integer              :: size
   integer              :: infile,outfile
-  integer              :: igrib,iret
-  character(len = 256) :: error
+  integer              :: igrib
 
   infile=5
   outfile=6
@@ -32,24 +29,24 @@ program set
   call codes_open_file(outfile, &
        '../../data/out.grib1','w')
 
-  !     a new grib message is loaded from file
-  !     igrib is the grib id to be used in subsequent calls
+  ! A new grib message is loaded from file
+  ! igrib is the grib id to be used in subsequent calls
   call codes_grib_new_from_file(infile,igrib)
 
-  !     set centre as a long */
+  ! set centre as a long */
   centre=80
   call codes_set(igrib,'centre',centre)
 
-  !     get centre as a integer*4
+  ! get centre as a integer*4
   call codes_get(igrib,'centre',int_value)
   write(*,*) 'centre=',int_value
 
-  !     get centre as a string
+  ! get centre as a string
   call codes_get(igrib,'centre',string_value)
   string_centre='centre='//string_value
   write(*,*) string_centre
 
-  !     write modified message to a file
+  ! write modified message to a file
   call codes_write(igrib,outfile)
 
   call codes_release(igrib)

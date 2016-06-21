@@ -13,10 +13,9 @@
 program new_from_file
 use eccodes
   implicit none
-  integer            :: ifile
-  integer            :: iret
+  integer           :: ifile
+  integer           :: iret
   integer           :: count1=0
-  character(len=256) :: filename
 
 !     Message identifier.
   integer            :: igrib

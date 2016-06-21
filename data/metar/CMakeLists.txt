@@ -17,8 +17,10 @@ ecbuild_get_test_multidata(
      NOCHECK
      NAMES ${metar_files_to_download} ${metar_refs_to_download}
 )
-set_property( TEST eccodes_download_metars APPEND PROPERTY LABELS download_data )
 
+if( ENABLE_TESTS )
+  set_property( TEST eccodes_download_metars APPEND PROPERTY LABELS download_data )
+endif()
 
 # Copy other files - e.g. text files etc from the source data/metar dir
 LIST(APPEND other_files
