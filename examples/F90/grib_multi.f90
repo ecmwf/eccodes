@@ -18,7 +18,6 @@ program multi
   implicit none
   
   integer              :: iret
-  character(len = 256) :: error
   integer(kind = 4)    :: step
   integer              :: ifile,igrib
 

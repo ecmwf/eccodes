@@ -19,7 +19,7 @@ implicit none
 integer            :: ifile
 integer            :: iret
 integer            :: ihandle
-integer            :: i, count=0
+integer            :: count=0
 character(len=32)  :: product_kind
 character(len=120) :: infile_name
 

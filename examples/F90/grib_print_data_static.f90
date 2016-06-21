@@ -16,7 +16,6 @@ program print_data
 use grib_api
 implicit none
 integer            :: ifile
-integer            :: iret
 integer            :: igrib
 integer            :: i
 real(kind=8), dimension(99200)       :: values_static

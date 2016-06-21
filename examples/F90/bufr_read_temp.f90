@@ -19,16 +19,14 @@ program bufr_read_temp
   use eccodes
   implicit none
   integer            :: ifile
-  integer            :: iret,ierr
+  integer            :: iret
   integer            :: ibufr
   integer            :: i, count=0
   integer(kind=4),dimension(:), allocatable  :: timePeriod,extendedVerticalSoundingSignificance
-  integer(kind=4)  :: blockNumber,stationNumber,numberOfLevels
-  character(len=30) :: str
+  integer(kind=4)  :: blockNumber,stationNumber
   real(kind=8),dimension(:), allocatable :: pressure,airTemperature,dewpointTemperature
   real(kind=8),dimension(:), allocatable :: geopotentialHeight,latitudeDisplacement,longitudeDisplacement
   real(kind=8),dimension(:), allocatable :: windDirection,windSpeed
-  character(len=128)   :: keyName
 
   call codes_open_file(ifile,'../../data/bufr/PraticaTemp.bufr','r')
 

@@ -18,45 +18,43 @@ program multi
   implicit none
   
   integer              :: iret
-  character(len = 256) :: error
   integer(kind = 4)    ::  parameterCategory,parameterNumber,discipline
   integer              :: ifile,igrib
 
-  call codes_open_file(ifile, &
-       '../../data/multi.grib2','r')
+  call codes_open_file(ifile, '../../data/multi.grib2','r')
 
-  !     turn on support for multi fields messages */
+  ! turn on support for multi fields messages */
   call codes_grib_multi_support_on()
 
-  !     turn off support for multi fields messages */
+  ! turn off support for multi fields messages */
   !call codes_grib_multi_support_off()
 
   call codes_grib_new_from_file(ifile,igrib)
-  !     Loop on all the messages in a file.
+  ! Loop on all the messages in a file.
 
   do while (igrib .ne. -1)
 
-  !     get as a integer*4
+  ! get as a integer*4
   call codes_get(igrib,'discipline',discipline)
   write(*,*) 'discipline=',discipline
 
-  !     get as a integer*4
+  ! get as a integer*4
   call codes_get(igrib,'parameterCategory', &
        parameterCategory)
   write(*,*) 'parameterCategory=',parameterCategory
 
-  !     get as a integer*4
+  ! get as a integer*4
   call codes_get(igrib,'parameterNumber', &
        parameterNumber)
   write(*,*) 'parameterNumber=',parameterNumber
 
   if ( discipline .eq. 0 .and. parameterCategory .eq. 2) then
-     if (parameterNumber .eq. 2) then
-        write(*,*) "-------- u -------"
-     endif
-     if (parameterNumber .eq. 3) then
-        write(*,*) "-------- v -------"
-     endif
+    if (parameterNumber .eq. 2) then
+      write(*,*) "-------- u -------"
+    endif
+    if (parameterNumber .eq. 3) then
+      write(*,*) "-------- v -------"
+    endif
   endif
 
   call codes_release(igrib)

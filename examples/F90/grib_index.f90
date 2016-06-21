@@ -17,12 +17,11 @@ program index
   implicit none
   
   integer              :: iret
-  character(len = 256) :: error
-  integer,dimension(:),allocatable :: step,level,number
+  integer,dimension(:),allocatable           :: step,level,number
   character(len=20),dimension(:),allocatable :: shortName
-  integer                          :: ostep,olevel,onumber
-  character(len=20)                :: oshortName
-  integer                          :: shortNameSize,numberSize,levelSize,stepSize
+  integer              :: ostep,olevel,onumber
+  character(len=20)    :: oshortName
+  integer              :: shortNameSize,numberSize,levelSize,stepSize
   integer              :: i,j,k,l
   integer              :: idx,igrib,count1
   character(len=10)    :: index_file='index.idx'

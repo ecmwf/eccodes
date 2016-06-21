@@ -15,7 +15,6 @@
 program set
   use eccodes
   implicit none
-  integer(kind = 4)    :: NV
   integer              :: infile,outfile
   integer              :: igrib
 

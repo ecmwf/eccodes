@@ -16,7 +16,7 @@
 program clone
   use eccodes
   implicit none
-  integer                                       :: err,i,iret
+  integer                                       :: err,i
   integer                                       :: nx, ny
   integer                                       :: infile,outfile
   integer                                       :: igrib_in
