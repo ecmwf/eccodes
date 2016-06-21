@@ -3,5 +3,5 @@
 . ./include.sh
 
 REDIRECT=/dev/null
-$PYTHON $examples_src/grib_clone.py 2> $REDIRECT > $REDIRECT
-rm -f out.clone.grib || true
+$PYTHON $examples_src/grib_clone.py
+rm -f out.clone.grib

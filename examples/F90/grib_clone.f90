@@ -27,19 +27,18 @@ program clone
   call codes_open_file(infile,'../../data/constant_field.grib1','r')
   call codes_open_file(outfile,'out.clone.grib1','w')
 
-  !     a new grib message is loaded from file
-  !     igrib is the grib id to be used in subsequent calls
+  ! A new GRIB message is loaded from file.
+  ! igrib is the GRIB id to be used in subsequent calls
   call codes_grib_new_from_file(infile,igrib_in)
 
-  call codes_get(igrib_in,"Ni", nx)
-  
-  call codes_get(igrib_in,"Nj",ny)
+  call codes_get(igrib_in,'Ni', nx)
+  call codes_get(igrib_in,'Nj', ny)
 
   allocate(field2D(nx,ny),stat=err)
 
   if (err .ne. 0) then
-     print*, 'Failed to allocate ', nx*ny, ' values'
-     STOP
+    print*, 'Failed to allocate ', nx*ny, ' values'
+    STOP
   end if
   ! clone the constant field to create 4 new GRIB messages
   do i=0,18,6
