@@ -22,7 +22,7 @@ program clone
   integer                                       :: igrib_in
   integer                                       :: igrib_out
   character(len=2)                              :: step
-  double precision, dimension(:,:), allocatable :: field2D
+  real(kind=8), dimension(:,:), allocatable     :: field2D
   
   call codes_open_file(infile,'../../data/constant_field.grib1','r')
   call codes_open_file(outfile,'out.clone.grib1','w')
@@ -67,7 +67,7 @@ program clone
 contains
 !======================================
 subroutine generate_field(gfield2D)
- double precision, dimension(:,:) :: gfield2D
+ real(kind=8), dimension(:,:) :: gfield2D
 
  call random_number(gfield2D)
 end subroutine generate_field
