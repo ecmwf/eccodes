@@ -29,7 +29,7 @@ for directory in dirs:
                 continue
 
             fname = full[full.find("/%s/" % (dname,)):]
-            print("MEMFS add", fname)
+            #print("MEMFS add", fname)
             name = re.sub(r'\W', '_', fname)
 
             assert name not in FILES
