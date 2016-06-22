@@ -1,5 +1,5 @@
 /*! \defgroup environment Environment variables
-Environment variables applicable to eccodes:
+Environment variables applicable to ecCodes:
 
 \b ECCODES_DEBUG - If set to 1, it will enable debug level logging messages to be displayed by the library.
 
@@ -7,16 +7,16 @@ Environment variables applicable to eccodes:
 
 \b ECCODES_IO_BUFFER_SIZE - Defines the size in bytes of the buffer used in the IO calls from Fortran and in the tools.
 
-\b ECCODES_NO_ABORT - When set to 1 it causes grib_api not to abort execution on failing asserts.
+\b ECCODES_NO_ABORT - When set to 1 it causes ecCodes not to abort execution on failing asserts.
 
-\b GRIB_API_WRITE_ON_FAIL - When set to 1 it will write the last processed grib message in a file named $PID_$FILEID_error.grib on failure in a fortran function used without the return code argument.
+\b ECCODES_GRIB_WRITE_ON_FAIL - When set to 1 it will write the last processed GRIB message in a file named $PID_$FILEID_error.grib on failure in a fortran function used without the return code argument.
 
-\b ECCODES_DEFINITION_PATH - Set to the folder containing the set of definition files you want grib_api to use instead of the default one.
+\b ECCODES_DEFINITION_PATH - Set to the folder containing the set of definition files you want ecCodes to use instead of the default one.
 
-\b ECCODES_GRIBEX_MODE_ON - When set to 1 it will enable the GRIBEX compatibility mode and grib_api will produce GRIB messages readable by GRIBEX.
+\b ECCODES_GRIBEX_MODE_ON - When set to 1 it will enable the GRIBEX compatibility mode and ecCodes will produce GRIB messages readable by GRIBEX.
 
 \b ECCODES_GRIB_IEEE_PACKING - Accepted values 32 or 64 for 32 or 64 bits IEEE floating point respectively. The GRIB message produced will contain data written in IEEE floating point without packing.
 
-\b ECCODES_SAMPLES_PATH - Set to the folder containing the set of samples you want grib_api to use instead of the default one.
+\b ECCODES_SAMPLES_PATH - Set to the folder containing the set of samples you want ecCodes to use instead of the default one.
 
 */

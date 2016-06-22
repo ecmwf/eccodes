@@ -52,9 +52,9 @@ static grib_handle* try_template(grib_context* c,const char* dir,const char* nam
         printf("ECCODES DEBUG: try_template path='%s'\n", path);
     }
 
-    if(access(path,F_OK) == 0)
+    if(codes_access(path,F_OK) == 0)
     {
-        FILE* f = fopen(path,"r");
+        FILE* f = codes_fopen(path,"r");
         if(!f)
         {
             grib_context_log(c,GRIB_LOG_PERROR,"cannot open %s",path);
@@ -76,7 +76,7 @@ static char* try_template_path(grib_context* c,const char* dir,const char* name)
 
     sprintf(path,"%s/%s.tmpl",dir,name);
 
-    if(access(path,R_OK) == 0)
+    if(codes_access(path,R_OK) == 0)
     {
         return grib_context_strdup(c,path);
     }
