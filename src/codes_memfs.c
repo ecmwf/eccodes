@@ -11,17 +11,20 @@
 #include "grib_api_internal.h"
 
 #ifdef HAVE_MEMFS
+/* These two functions are implemented in the generated C file memfs.c in the build area */
+/* See the memfs.py Python generator */
 int codes_memfs_exists(const char* path);
 FILE* codes_memfs_open(const char* path);
 
-FILE* codes_fopen(const char* name, const char *mode) {
+FILE* codes_fopen(const char* name, const char *mode)
+{
     FILE *f;
 
     if (strcmp(mode, "r") != 0) {
         return fopen(name, mode);
     }
 
-    f = codes_memfs_open(name);
+    f = codes_memfs_open(name); /* Load from memory */
     if (f) {
         return f;
     }
@@ -29,12 +32,13 @@ FILE* codes_fopen(const char* name, const char *mode) {
     return fopen(name, mode);
 }
 
-int codes_access(const char* name, int mode) {
+int codes_access(const char* name, int mode)
+{
     if (mode != F_OK) {
         return access(name, mode);
     }
 
-    if (codes_memfs_exists(name)) {
+    if (codes_memfs_exists(name)) { /* Check memory */
         return 0;
     }
 
@@ -43,13 +47,14 @@ int codes_access(const char* name, int mode) {
 
 #else
 
-FILE* codes_fopen(const char* name, const char* mode) {
+FILE* codes_fopen(const char* name, const char* mode)
+{
     return fopen(name, mode);
 }
 
-int codes_access(const char* name, int mode) {
+int codes_access(const char* name, int mode)
+{
     return access(name, mode);
 }
 
 #endif
-
