@@ -798,7 +798,7 @@ void* grib_context_realloc(const grib_context* c, void *p,size_t size)
     q=c->realloc_mem(c,p,size);
     if(!q) {
         grib_context_log(c,GRIB_LOG_FATAL,"grib_context_realloc: error allocating %lu bytes",(unsigned long)size);
-        exit(1);
+        return NULL;
     }
     return q;
 }
@@ -828,7 +828,7 @@ void* grib_context_buffer_malloc(const grib_context* c, size_t size)
     else p=c->alloc_buffer_mem(c,size);
     if(!p) {
         grib_context_log(c,GRIB_LOG_FATAL,"grib_context_buffer_malloc: error allocating %lu bytes",(unsigned long)size);
-        exit(1);
+        return NULL;
     }
     return p;
 }
@@ -844,7 +844,7 @@ void* grib_context_buffer_realloc(const grib_context* c, void *p,size_t size)
     void* q=c->realloc_buffer_mem(c,p,size);
     if(!q) {
         grib_context_log(c,GRIB_LOG_FATAL,"grib_context_buffer_realloc: error allocating %lu bytes",(unsigned long)size);
-        exit(1);
+        return NULL;
     }
     return q;
 }

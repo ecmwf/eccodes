@@ -521,7 +521,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
             !=GRIB_SUCCESS) {
         grib_context_log(a->context,GRIB_LOG_ERROR,
                 "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
-        exit(GRIB_INTERNAL_ERROR);
+        return GRIB_INTERNAL_ERROR;
     }
 
     if(reference_value > min)
