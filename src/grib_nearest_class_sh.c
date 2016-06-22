@@ -78,11 +78,10 @@ static void init_class(grib_nearest_class* c)
 #define LEGENDRE_SIZE(L) (L+1)*(L+2)/2
 
 static void grib_trigs(int m,double lambda,double* c,double* s);
-static void grib_invtrans_legendre(int L,double x,
-                       double* RI,double* TR,double* TI);
+static int grib_invtrans_legendre(int L,double x, double* RI,double* TR,double* TI);
 static double grib_invtrans_trig(int L,double* TR,double* TI,
-                                 double *c,double *s);
-static double grib_invtrans(grib_context *c,int L,double latdeg,double londeg,double* values);
+        double *c,double *s);
+static int grib_invtrans(grib_context *c,int L,double latdeg,double londeg,double* values, double* result);
 
 static int init(grib_nearest* nearest,grib_handle* h,grib_arguments* args)
 {
@@ -128,7 +127,8 @@ static int find(grib_nearest* nearest, grib_handle* h,
 
     Assert(vsize==size);
 
-    val=grib_invtrans(h->context,J,inlat,inlon,values);
+    ret=grib_invtrans(h->context,J,inlat,inlon,values, &val);
+    if (ret != GRIB_SUCCESS) return ret;
 
     grib_context_free(h->context,values);
 
@@ -179,7 +179,7 @@ static double grib_invtrans_trig(int L,double* TR,double* TI,double *c,double *s
     return ret;
 }
 
-static void grib_invtrans_legendre(int L,double x,
+static int grib_invtrans_legendre(int L,double x,
         double* RI,double* TR,double* TI)
 {
     int l,m;
@@ -189,17 +189,17 @@ static void grib_invtrans_legendre(int L,double x,
 
     if (fabs(x) > 1.0) {
         printf("grib_legendreP: invalid x=%g must be abs(x)>0\n",x);
-        exit(1);
+        return GRIB_INVALID_ARGUMENT;
     }
     if (L<0) {
         printf("grib_legendreP: invalid L=%d must be >0\n",L);
-        exit(1);
+        return GRIB_INVALID_ARGUMENT;
     }
 
     pP=(double*)malloc(sizeof(double)*(L+1));
     if (!pP) {
         printf("unable to allocate %d bytes\n",(int)sizeof(double)*(L+1));
-        exit(1);
+        return GRIB_OUT_OF_MEMORY;
     }
 
     y2=(1.0-x*x); fx=1; p0=1; oP=pP; pRI=RI;
@@ -234,14 +234,16 @@ static void grib_invtrans_legendre(int L,double x,
     TR[L]=pP[0] * *(pRI++);
     TI[L]=pP[0] * *(pRI++);
     printf("-- (%d,%d) %.20e %.20e\n",L,L,TR[m],pP[0]);
+    return GRIB_SUCCESS;
 }
 
-static double grib_invtrans(grib_context* context,int L,double latdeg,double londeg,double* values)
+static int grib_invtrans(grib_context* context, int L, double latdeg, double londeg, double* values,
+        double* result)
 {
-    double val;
     double *c,*s,*TR,*TI;
     double sinlat,deg2rad,lonrad;
     int Lp1=L+1;
+    int err = 0;
 
     deg2rad=acos(0.0)/90.0;
     sinlat=sin(latdeg*deg2rad);
@@ -276,14 +278,15 @@ static double grib_invtrans(grib_context* context,int L,double latdeg,double lon
         return GRIB_OUT_OF_MEMORY;
     }
 
-    grib_invtrans_legendre(L,sinlat,values,TR,TI);
+    err = grib_invtrans_legendre(L,sinlat,values,TR,TI);
+    if(err) return err;
 
-    val=grib_invtrans_trig(L,TR,TI,c,s);
+    *result=grib_invtrans_trig(L,TR,TI,c,s);
 
     grib_context_free(context,c);
     grib_context_free(context,s);
     grib_context_free(context,TR);
     grib_context_free(context,TI);
 
-    return val;
+    return GRIB_SUCCESS;
 }

@@ -292,7 +292,7 @@ main(int argc, char **argv)
 		FILE* f = fopen64(argv[1],"r");
 		if(!f) {
 			perror(argv[1]);
-			exit(1);
+			return 1;
 		}
 		while((len = fread(buffer, 1, sizeof(buffer), f)) > 0) {
 			grib_md5_add(&s,buffer,len);
