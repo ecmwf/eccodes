@@ -90,6 +90,14 @@ else()
     set( HAVE_FORTRAN 0 )
 endif()
 
+# memfs
+
+ecbuild_add_option( FEATURE MEMFS
+    DESCRIPTION "Memory based access to definitions/samples"
+    DEFAULT OFF
+    CONDITION EC_HAVE_FMEMOPEN OR EC_HAVE_FUNOPEN
+    REQUIRED_PACKAGES "Python VERSION 2.6"
+)
 # advanced options (not visible in cmake-gui )
 
 ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "enable memory management" DEFAULT OFF ADVANCED )
@@ -273,11 +281,12 @@ endforeach()
 
 include_directories( ${ECCODES_INCLUDE_DIRS}  ${ECCODES_EXTRA_INCLUDE_DIRS} )
 
+add_subdirectory( definitions ) # must be before memfs
+add_subdirectory( memfs )
 add_subdirectory( src )
 add_subdirectory( tools )
 add_subdirectory( fortran )
 add_subdirectory( python )
-add_subdirectory( definitions )
 add_subdirectory( tests )
 add_subdirectory( tigge )
 add_subdirectory( examples )

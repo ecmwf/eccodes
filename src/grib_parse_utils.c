@@ -604,7 +604,7 @@ void grib_parser_include(const char* included_fname)
         f = stdin;   /* read from std input */
     } else {
         grib_context_log(grib_parser_context,GRIB_LOG_DEBUG,"parsing include file %s",parse_file);
-        f = fopen(parse_file,"r");
+        f = codes_fopen(parse_file,"r");
     }
     /* for(i = 0; i < top ; i++) printf("   "); */
     /* printf("PARSING %s\n",parse_file); */

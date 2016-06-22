@@ -1270,6 +1270,11 @@ struct grib_conditions_tree {
     grib_conditions_tree* next_key;
 };
 
+/* support for in-memory definition and tables */
+
+extern int codes_memfs_exists(const char* path);
+extern FILE* codes_memfs_open(const char* path);
+
 /* index structures */
 
 #define STRING_VALUE_LEN 100

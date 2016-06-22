@@ -170,8 +170,7 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
         return GRIB_FILE_NOT_FOUND;
     }
 
-    f=fopen(filename, "r");
-
+    f = codes_fopen(filename, "r");
     if (!f)
     {
         grib_context_log(a->context,(GRIB_LOG_WARNING)|(GRIB_LOG_PERROR),"Cannot open flag table %s",filename);

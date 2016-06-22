@@ -629,7 +629,7 @@ char *grib_context_full_defs_path(grib_context* c,const char* basename)
 
         while (dir) {
             sprintf(full,"%s/%s",dir->value,basename);
-            if (!access(full,F_OK)) {
+            if (!codes_access(full,F_OK)) {
                 fullpath=(grib_string_list*)grib_context_malloc_clear_persistent(c,sizeof(grib_string_list));
                 Assert(fullpath);
                 fullpath->value=grib_context_strdup(c,full);
