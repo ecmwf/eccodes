@@ -131,55 +131,55 @@ static void init_class(grib_accessor_class* c)
 
 
 
-static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_LONG;
+static int  get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_LONG;
 }
 
 static void dump(grib_accessor* a,grib_dumper* dumper)
 {
-  grib_dump_long(dumper,a,NULL);
+    grib_dump_long(dumper,a,NULL);
 }
 
+static int unpack_string(grib_accessor*a , char*  v, size_t *len)
+{
+    long val = 0;
+    size_t l = 1;
+    char repres[1024];
 
+    grib_unpack_long (a , &val, &l);
 
-static int unpack_string(grib_accessor*a , char*  v, size_t *len){
+    if ((val == GRIB_MISSING_LONG) && ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) )
+        sprintf(repres,"MISSING");
+    else
+        sprintf(repres,"%ld", val);
 
-  long val = 0;
-  size_t l = 1;
-  char repres[1024];
+    l = strlen(repres)+1;
 
-  grib_unpack_long (a , &val, &l);
+    if(l >*len ){
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_long : unpack_string : Buffer too small for %s ", a->name );
 
-  if ((val == GRIB_MISSING_LONG) && ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) )
-    sprintf(repres,"MISSING");
-  else
-    sprintf(repres,"%ld", val);
-
-  l = strlen(repres)+1;
-
-  if(l >*len ){
-    grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_long : unpack_string : Buffer too small for %s ", a->name );
+        *len = l;
+        return GRIB_BUFFER_TOO_SMALL;
+    }
+    grib_context_log(a->context,GRIB_LOG_DEBUG, "grib_accessor_long: Casting long %s to string ", a->name);
 
     *len = l;
-    return GRIB_BUFFER_TOO_SMALL;
-  }
-  grib_context_log(a->context,GRIB_LOG_DEBUG, "grib_accessor_long: Casting long %s to string ", a->name);
 
-  *len = l;
-
-  strcpy(v,repres);
-  return GRIB_SUCCESS;
-
+    strcpy(v,repres);
+    return GRIB_SUCCESS;
 }
-static int pack_missing(grib_accessor* a){
 
-  size_t one = 1;
-  long value = GRIB_MISSING_LONG;
+static int pack_missing(grib_accessor* a)
+{
 
-  if(a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)
-    return grib_pack_long(a,&value,&one);
+    size_t one = 1;
+    long value = GRIB_MISSING_LONG;
 
-  return GRIB_VALUE_CANNOT_BE_MISSING;
+    if(a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)
+        return grib_pack_long(a,&value,&one);
+
+    return GRIB_VALUE_CANNOT_BE_MISSING;
 }
 
 
@@ -199,99 +199,100 @@ static int is_missing(grib_accessor* a){
 
   return 0;
 }
-*/
+ */
 
-static int unpack_double(grib_accessor* a, double* val,size_t *len){
-  size_t rlen = 0;
-  long count=0;
-  unsigned long i = 0;
-  long   *values = NULL;
-  long   oneval = 0;
-  int ret = GRIB_SUCCESS;
+static int unpack_double(grib_accessor* a, double* val,size_t *len)
+{
+    size_t rlen = 0;
+    long count=0;
+    unsigned long i = 0;
+    long   *values = NULL;
+    long   oneval = 0;
+    int ret = GRIB_SUCCESS;
 
-  ret=grib_value_count(a,&count);
-  if (ret) return ret;
-  rlen=count;
+    ret=grib_value_count(a,&count);
+    if (ret) return ret;
+    rlen=count;
 
-  if(*len < rlen)
-  {
-    grib_context_log(a->context, GRIB_LOG_ERROR, " wrong size for %s it contains %d values ", a->name , rlen);
-    *len = 0;
-    return GRIB_ARRAY_TOO_SMALL;
-  }
+    if(*len < rlen)
+    {
+        grib_context_log(a->context, GRIB_LOG_ERROR, " wrong size for %s it contains %d values ", a->name , rlen);
+        *len = 0;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
 
-  if(rlen == 1){
-    ret = grib_unpack_long(a,&oneval,&rlen);
-    if(ret != GRIB_SUCCESS) return ret;
-    *val =  oneval;
-    *len = 1;
-    return GRIB_SUCCESS;
-  }
+    if(rlen == 1){
+        ret = grib_unpack_long(a,&oneval,&rlen);
+        if(ret != GRIB_SUCCESS) return ret;
+        *val =  oneval;
+        *len = 1;
+        return GRIB_SUCCESS;
+    }
 
-  values = (long*)grib_context_malloc(a->context,rlen*sizeof(long));
-  if(!values) return GRIB_INTERNAL_ERROR;
+    values = (long*)grib_context_malloc(a->context,rlen*sizeof(long));
+    if(!values) return GRIB_INTERNAL_ERROR;
 
 
-  ret = grib_unpack_long(a,values,&rlen);
-  if(ret != GRIB_SUCCESS){
+    ret = grib_unpack_long(a,values,&rlen);
+    if(ret != GRIB_SUCCESS){
+        grib_context_free(a->context,values);
+        return ret;
+    }
+    for(i=0; i< rlen;i++)
+        val[i] = values[i];
+
     grib_context_free(a->context,values);
-    return ret;
-  }
-  for(i=0; i< rlen;i++)
-    val[i] = values[i];
 
-  grib_context_free(a->context,values);
-
-  *len = rlen;
-  return GRIB_SUCCESS;
+    *len = rlen;
+    return GRIB_SUCCESS;
 }
 
-static int compare(grib_accessor* a,grib_accessor* b) {
-  int retval=0;
-  long *aval=0;
-  long *bval=0;
-  long count=0;
+static int compare(grib_accessor* a,grib_accessor* b)
+{
+    int retval=0;
+    long *aval=0;
+    long *bval=0;
+    long count=0;
 
-  size_t alen = 0;
-  size_t blen = 0;
-  int err=0;
+    size_t alen = 0;
+    size_t blen = 0;
+    int err=0;
 
-  err=grib_value_count(a,&count);
-  if (err) return err;
-  alen=count;
+    err=grib_value_count(a,&count);
+    if (err) return err;
+    alen=count;
 
-  err=grib_value_count(b,&count);
-  if (err) return err;
-  blen=count;
+    err=grib_value_count(b,&count);
+    if (err) return err;
+    blen=count;
 
-  if (alen != blen) return GRIB_COUNT_MISMATCH;
+    if (alen != blen) return GRIB_COUNT_MISMATCH;
 
-  aval=(long*)grib_context_malloc(a->context,alen*sizeof(long));
-  bval=(long*)grib_context_malloc(b->context,blen*sizeof(long));
+    aval=(long*)grib_context_malloc(a->context,alen*sizeof(long));
+    bval=(long*)grib_context_malloc(b->context,blen*sizeof(long));
 
-  grib_unpack_long(a,aval,&alen);
-  grib_unpack_long(b,bval,&blen);
+    grib_unpack_long(a,aval,&alen);
+    grib_unpack_long(b,bval,&blen);
 
-  retval = GRIB_SUCCESS;
-  while (alen != 0) {
-    if (*bval != *aval) retval = GRIB_LONG_VALUE_MISMATCH;
-    alen--;
-  }
+    retval = GRIB_SUCCESS;
+    while (alen != 0) {
+        if (*bval != *aval) retval = GRIB_LONG_VALUE_MISMATCH;
+        alen--;
+    }
 
-  grib_context_free(a->context,aval);
-  grib_context_free(b->context,bval);
+    grib_context_free(a->context,aval);
+    grib_context_free(b->context,bval);
 
-  return retval;
+    return retval;
 }
 
 static int pack_string(grib_accessor* a, const char* val, size_t *len)
 {
-  char* theEnd=NULL;
-  long v=strtol(val,&theEnd,10);
-  if (theEnd) {
-    grib_context_log(a->context,GRIB_LOG_ERROR,"trying to pack \"%s\" as long",val);
-    return GRIB_WRONG_TYPE;
-  }
-  return grib_pack_long( a,&v,len);
+    char* theEnd=NULL;
+    long v=strtol(val,&theEnd,10);
+    if (theEnd) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,"trying to pack \"%s\" as long",val);
+        return GRIB_WRONG_TYPE;
+    }
+    return grib_pack_long( a,&v,len);
 }
-
