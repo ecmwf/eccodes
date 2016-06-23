@@ -2,12 +2,16 @@
 AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@ @FORCE_32_CFLAGS@
 
 TESTS = copy_message.sh grib_get_keys.sh get_data.sh get_pl.sh get_pv.sh grib_keys_iterator.sh \
-        grib_nearest.sh grib_precision.sh grib_multi_write.sh grib_multi.sh grib_print_data.sh grib_set_keys.sh \
-        grib_set_bitmap.sh set_missing.sh grib_set_pv.sh samples.sh grib_count_messages.sh read_message.sh \
-        grib_count_messages_multi.sh \
-        read_from_file.sh grib_index.sh get_set_uuid.sh bufr_attributes.sh grib_clone.sh bufr_clone.sh \
-        bufr_expanded.sh bufr_get_keys.sh bufr_read_header.sh bufr_read_synop.sh \
-        bufr_set_keys.sh bufr_keys_iterator.sh bufr_subset.sh get_product_kind.sh bufr_read_temp.sh \
+        grib_nearest.sh grib_precision.sh grib_multi_write.sh grib_multi.sh \
+        grib_print_data.sh grib_set_keys.sh \
+        grib_set_bitmap.sh set_missing.sh grib_set_pv.sh samples.sh grib_count_messages.sh \
+        read_message.sh grib_count_messages_multi.sh \
+        read_from_file.sh grib_index.sh get_set_uuid.sh \
+        bufr_attributes.sh grib_clone.sh bufr_clone.sh \
+        bufr_expanded.sh bufr_get_keys.sh bufr_get_string_array.sh \
+        bufr_read_header.sh bufr_read_synop.sh \
+        bufr_set_keys.sh bufr_keys_iterator.sh bufr_subset.sh \
+        get_product_kind.sh bufr_read_temp.sh \
         bufr_read_tropical_cyclone.sh bufr_read_scatterometer.sh
 
 noinst_PROGRAMS  = eccodes_f_grib_index \
@@ -40,6 +44,7 @@ noinst_PROGRAMS  = eccodes_f_grib_index \
                    eccodes_f_bufr_clone \
                    eccodes_f_bufr_expanded \
                    eccodes_f_bufr_get_keys \
+                   eccodes_f_bufr_get_string_array \
                    eccodes_f_bufr_read_header \
                    eccodes_f_bufr_read_synop \
                    eccodes_f_bufr_set_keys \
@@ -82,6 +87,7 @@ eccodes_f_bufr_attributes_SOURCES=bufr_attributes.f90
 eccodes_f_bufr_clone_SOURCES=bufr_clone.f90
 eccodes_f_bufr_expanded_SOURCES=bufr_expanded.f90
 eccodes_f_bufr_get_keys_SOURCES=bufr_get_keys.f90
+eccodes_f_bufr_get_string_array_SOURCES=bufr_get_string_array.f90
 eccodes_f_bufr_keys_iterator_SOURCES=bufr_keys_iterator.f90
 eccodes_f_bufr_read_header_SOURCES=bufr_read_header.f90
 eccodes_f_bufr_read_scatterometer_SOURCES=bufr_read_scatterometer.f90
