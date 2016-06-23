@@ -39,7 +39,7 @@ program bufr_read_temp
     call codes_get(ibufr,'timePeriod',timePeriod)
     call codes_get(ibufr,'pressure',pressure)
     call codes_get(ibufr,'extendedVerticalSoundingSignificance',extendedVerticalSoundingSignificance)
-    call codes_get(ibufr,'geopotentialHeight',geopotentialHeight)
+    call codes_get(ibufr,'nonCoordinateGeopotentialHeight',geopotentialHeight)
     call codes_get(ibufr,'latitudeDisplacement',latitudeDisplacement)
     call codes_get(ibufr,'longitudeDisplacement',longitudeDisplacement)
     call codes_get(ibufr,'airTemperature',airTemperature)

@@ -21,7 +21,7 @@ rm -f $fTmp
 REDIRECT=/dev/null
 
 # Run it. The path to the BUFR file is hardcoded in the example
-$PYTHON $examples_src/bufr_read_temp.py 2> $REDIRECT > $fTmp
+$PYTHON $examples_src/bufr_read_temp.py > $fTmp
 
 #TODO: check the results
 

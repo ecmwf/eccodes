@@ -42,7 +42,9 @@ echo "Test: malformed bufr file " >> $fLog
 rm -f $fJsonTmp | true
 
 fBufr=${data_dir}/bufr/"bad.bufr"
-fJsonRef=${data_dir}/bufr/"bad.bufr.json.ref"
+# See ECC-276
+# In v0.16.0 we changed the shortNames so we use a newer ref file
+fJsonRef=${data_dir}/bufr/"bad.bufr.json.v0.16.0.ref"
 
 ${tools_dir}bufr_dump -js $fBufr > $fJsonTmp
 

@@ -95,7 +95,7 @@ int main(int argc,char* argv[])
         CODES_CHECK(codes_get_double_array(h,key_name,sigt_pres,&len),0);
 
         /* Get geopotential */
-        sprintf(key_name,"/verticalSoundingSignificance=4/geopotential");
+        sprintf(key_name,"/verticalSoundingSignificance=4/nonCoordinateGeopotential");
 
         /* Check the size*/
         CODES_CHECK(codes_get_size(h,key_name,&len),0);
