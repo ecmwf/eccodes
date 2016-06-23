@@ -25,7 +25,7 @@ fRef=${data_dir}/bufr/get_string_array.ref
 REDIRECT=/dev/null
 
 #Write the values into a file and compare with reference
-${examples_dir}/eccodes_f_bufr_get_string_array  $f > $fTmp
+${examples_dir}/eccodes_f_bufr_get_string_array > $fTmp
 
 #We compare output to the reference by ignoring the whitespaces 
 diff -w $fRef $fTmp
