@@ -338,6 +338,11 @@ void Reduced::validate(const std::vector<double> &values) const {
         for (size_t i = 0; i < pl.size(); i++) {
             count += pl[i];
         }
+        if (values.size() != count) {
+            std::ostringstream oss;
+            oss << "Failed to validate global " << *this << " " << values.size() << " != " << count;
+            throw eckit::SeriousBug(oss.str());
+        }
         ASSERT(values.size() == count);
     } else {
         eckit::ScopedPtr<Iterator> it(unrotatedIterator());
@@ -353,7 +358,7 @@ void Reduced::validate(const std::vector<double> &values) const {
 
         if (values.size() != count) {
             std::ostringstream oss;
-            oss << "Failed to validate " << *this << " " << values.size() << " != " << count;
+            oss << "Failed to validate non-global " << *this << " " << values.size() << " != " << count;
             throw eckit::SeriousBug(oss.str());
         }
 
