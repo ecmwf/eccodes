@@ -354,7 +354,7 @@ void Reduced::validate(const std::vector<double> &values) const {
         if (values.size() != count) {
             std::ostringstream oss;
             oss << "Failed to validate " << *this << " " << values.size() << " != " << count;
-            throw SeriousBug(oss.str());
+            throw eckit::SeriousBug(oss.str());
         }
 
         ASSERT(values.size() == count);
