@@ -23,7 +23,7 @@ rm -f $fTmp | true
 REDIRECT=/dev/null
 
 # Run the example
-${examples_dir}/eccodes_f_bufr_read_temp 2> $REDIRECT > $fTmp
+${examples_dir}/eccodes_f_bufr_read_temp > $fTmp
 
 #TODO: check the results
 

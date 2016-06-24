@@ -76,7 +76,7 @@ def example(csvfile, input_filename, output_filename):
     codes_set_array(bufr, 'latitude', latitudes)
     codes_set_array(bufr, 'longitude', longitudes)
     codes_set_array(bufr, 'height', altitudes)
-    codes_set_array(bufr, 'pressure', pressures)
+    codes_set_array(bufr, 'nonCoordinatePressure', pressures)
     codes_set_array(bufr, 'windSpeed', windSpeeds)
     codes_set_array(bufr, 'windDirection', windDirections)
     codes_set_array(bufr, 'airTemperature', temperatures)

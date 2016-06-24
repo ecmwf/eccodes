@@ -122,16 +122,16 @@ done
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
-print "pressure=[pressure] [pressure->units]";
-print "pressure->code=[pressure->code!06d]";
-print "pressure->scale=[pressure->scale]";
-print "pressure->reference=[pressure->reference]";
-print "pressure->width=[pressure->width]";
-print "pressure->percentConfidence=[pressure->percentConfidence] [pressure->percentConfidence->units]";
-print "pressure->percentConfidence->code=[pressure->percentConfidence->code!06d]";
-print "pressure->percentConfidence->scale=[pressure->percentConfidence->scale]";
-print "pressure->percentConfidence->reference=[pressure->percentConfidence->reference]";
-print "pressure->percentConfidence->width=[pressure->percentConfidence->width]";
+print "pressure=[nonCoordinatePressure] [nonCoordinatePressure->units]";
+print "pressure->code=[nonCoordinatePressure->code!06d]";
+print "pressure->scale=[nonCoordinatePressure->scale]";
+print "pressure->reference=[nonCoordinatePressure->reference]";
+print "pressure->width=[nonCoordinatePressure->width]";
+print "pressure->percentConfidence=[nonCoordinatePressure->percentConfidence] [nonCoordinatePressure->percentConfidence->units]";
+print "pressure->percentConfidence->code=[nonCoordinatePressure->percentConfidence->code!06d]";
+print "pressure->percentConfidence->scale=[nonCoordinatePressure->percentConfidence->scale]";
+print "pressure->percentConfidence->reference=[nonCoordinatePressure->percentConfidence->reference]";
+print "pressure->percentConfidence->width=[nonCoordinatePressure->percentConfidence->width]";
 EOF
 
 f="syno_1.bufr"
@@ -1316,9 +1316,9 @@ rm -f ${f}.log ${f}.log.ref
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
-print "[pressure->percentConfidence]";
-print "[pressure->differenceStatisticalValue]";
-print "[pressure->differenceStatisticalValue->differenceStatisticalValue]";
+print "[nonCoordinatePressure->percentConfidence]";
+print "[nonCoordinatePressure->differenceStatisticalValue]";
+print "[nonCoordinatePressure->differenceStatisticalValue->differenceStatisticalValue]";
 EOF
 
 f="metar_with_2_bias.bufr"
@@ -1343,9 +1343,9 @@ rm -f ${f}.log ${f}.log.ref
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
-print "[#1#geopotential]";
-print "[#1#geopotential->percentConfidence]";
-print "[#1#geopotential->substitutedValue]";
+print "[#1#nonCoordinateGeopotential]";
+print "[#1#nonCoordinateGeopotential->percentConfidence]";
+print "[#1#nonCoordinateGeopotential->substitutedValue]";
 EOF
 
 f="temp-land-with-substituted-values.bufr"

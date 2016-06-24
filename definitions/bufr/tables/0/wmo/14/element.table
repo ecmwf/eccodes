@@ -426,12 +426,12 @@
 008085|beamIdentifier|table|BEAM IDENTIFIER|CODE TABLE|0|0|3|CODE TABLE|0|1
 008090|decimalScaleOfFollowingSignificands|long|DECIMAL SCALE OF FOLLOWING SIGNIFICANDS|Numeric|0|-127|8|Numeric|0|3
 010001|heightOfLandSurface|long|HEIGHT OF LAND SURFACE|m|0|-400|15|m|0|5
-010002|height|long|HEIGHT|m|-1|-40|16|m|-1|5
-010003|geopotential|long|GEOPOTENTIAL|m2 s-2|-1|-400|17|m2 s-2|-1|6
-010004|pressure|long|PRESSURE|Pa|-1|0|14|Pa|-1|5
-010007|height|long|HEIGHT|m|0|-1000|17|m|0|6
-010008|geopotential|long|GEOPOTENTIAL|m2 s-2|0|-10000|20|m2 s-2|0|7
-010009|geopotentialHeight|long|GEOPOTENTIAL HEIGHT|gpm|0|-1000|17|gpm|0|5
+010002|nonCoordinateHeight|long|HEIGHT|m|-1|-40|16|m|-1|5
+010003|nonCoordinateGeopotential|long|GEOPOTENTIAL|m2 s-2|-1|-400|17|m2 s-2|-1|6
+010004|nonCoordinatePressure|long|PRESSURE|Pa|-1|0|14|Pa|-1|5
+010007|nonCoordinateHeight|long|HEIGHT|m|0|-1000|17|m|0|6
+010008|nonCoordinateGeopotential|long|GEOPOTENTIAL|m2 s-2|0|-10000|20|m2 s-2|0|7
+010009|nonCoordinateGeopotentialHeight|long|GEOPOTENTIAL HEIGHT|gpm|0|-1000|17|gpm|0|5
 010010|minimumPressureReducedToMeanSeaLevel|long|MINIMUM PRESSURE REDUCED TO MEAN SEA LEVEL|Pa|-1|0|14|Pa|-1|5
 010011|maximumPressureReducedToMeanSeaLevel|long|MAXIMUM PRESSURE REDUCED TO MEAN SEA LEVEL|Pa|-1|0|14|Pa|-1|5
 010012|densityAltitude|long|DENSITY ALTITUDE|m|0|-1525|13|m|0|4
@@ -1055,10 +1055,10 @@
 022039|meteorologicalResidualTidalElevationSurgeOrOffset|double|METEOROLOGICAL RESIDUAL TIDAL ELEVATION (SURGE OR OFFSET)|m|3|-5000|12|m|3|4
 022040|meteorologicalResidualTidalElevationSurgeOrOffset|double|METEOROLOGICAL RESIDUAL TIDAL ELEVATION (SURGE OR OFFSET)|m|3|-5000|14|m|3|5
 022041|seaSurfaceTemperature15DayRunningMean|double|SEA-SURFACE TEMPERATURE (15-DAY RUNNING MEAN)|K|1|0|12|K|1|4
-022042|waterTemperature|double|SEA/WATER TEMPERATURE|K|1|0|12|K|1|4
-022043|waterTemperature|double|SEA/WATER TEMPERATURE|K|2|0|15|K|2|5
+022042|oceanographicWaterTemperature|double|SEA/WATER TEMPERATURE|K|1|0|12|K|1|4
+022043|oceanographicWaterTemperature|double|SEA/WATER TEMPERATURE|K|2|0|15|K|2|5
 022044|soundVelocity|double|SOUND VELOCITY|m/s|1|0|14|m/s|1|5
-022045|waterTemperature|double|SEA/WATER TEMPERATURE|K|3|0|19|K|3|6
+022045|oceanographicWaterTemperature|double|SEA/WATER TEMPERATURE|K|3|0|19|K|3|6
 022046|seaIceFraction|long|SEA ICE FRACTION|Numeric|2|0|7|Numeric|2|3
 022049|seaSurfaceTemperature|double|SEA SURFACE TEMPERATURE|K|2|0|15|K|2|5
 022050|standardDeviationSeaSurfaceTemperature|double|STANDARD DEVIATION SEA-SURFACE TEMPERATURE|K|2|0|8|K|2|3
@@ -1070,8 +1070,8 @@
 022062|salinity|double|SALINITY|0/00|2|0|14|0/00|2|5
 022063|totalWaterDepth|long|TOTAL WATER DEPTH|m|0|0|14|m|0|5
 022064|salinity|double|SALINITY|0/00|3|0|17|0/00|3|6
-022065|waterPressure|long|WATER PRESSURE|Pa|-3|0|17|Pa|-3|6
-022066|waterConductivity|double|WATER CONDUCTIVITY|S/m|6|0|26|S/m|6|8
+022065|oceanographicWaterPressure|long|WATER PRESSURE|Pa|-3|0|17|Pa|-3|6
+022066|oceanographicWaterConductivity|double|WATER CONDUCTIVITY|S/m|6|0|26|S/m|6|8
 022067|instrumentTypeForWaterTemperatureOrSalinityProfileMeasurement|table|INSTRUMENT TYPE FOR WATER TEMPERATURE PROFILE MEASUREMENT|CODE TABLE|0|0|10|CODE TABLE|0|4
 022068|waterTemperatureProfileRecorderTypes|table|WATER TEMPERATURE PROFILE RECORDER TYPES|CODE TABLE|0|0|7|CODE TABLE|0|3
 022069|spectralWaveDensity|double|SPECTRAL WAVE DENSITY|m2/Hz|3|0|22|m2/Hz|3|7
@@ -1329,8 +1329,8 @@
 026010|hoursIncluded|flag|HOURS INCLUDED|FLAG TABLE|0|0|26|FLAG TABLE|0|9
 026020|durationOfPrecipitation|long|DURATION OF PRECIPITATION|min|0|0|11|min|0|4
 026030|measurementIntegrationTime|double|MEASUREMENT INTEGRATION TIME|s|2|0|8|s|2|3
-027001|latitude|double|LATITUDE (HIGH ACCURACY)|deg|5|-9000000|25|deg|5|7
-027002|latitude|double|LATITUDE (COARSE ACCURACY)|deg|2|-9000|15|deg|2|4
+027001|nonCoordinateLatitude|double|LATITUDE (HIGH ACCURACY)|deg|5|-9000000|25|deg|5|7
+027002|nonCoordinateLatitude|double|LATITUDE (COARSE ACCURACY)|deg|2|-9000|15|deg|2|4
 027003|alternateLatitude|double|ALTERNATE LATITUDE (COARSE ACCURACY)|deg|2|-9000|15|deg|2|4
 027004|alternateLatitude|double|ALTERNATE LATITUDE (HIGH ACCURACY)|deg|5|-9000000|25|deg|5|7
 027010|footprintAxis1|long|FOOTPRINT AXIS 1|m|-1|0|14|m|-1|5
@@ -1338,8 +1338,8 @@
 027021|satelliteSublocationDimension|long|SATELLITE SUBLOCATION DIMENSION|Numeric|0|0|16|Numeric|0|5
 027031|DistanceFromEarthCentreInDirectionOf0DegreesLongitude|double|IN DIRECTION OF 0 DEGREES LONGITUDE, DISTANCE FROM THE EARTH'S C|m|2|-1073741824|31|m|2|10
 027080|viewingAzimuthAngle|double|VIEWING AZIMUTH ANGLE|deg|2|0|16|deg|0|5
-028001|longitude|double|LONGITUDE (HIGH ACCURACY)|deg|5|-18000000|26|deg|5|8
-028002|longitude|double|LONGITUDE (COARSE ACCURACY)|deg|2|-18000|16|deg|2|5
+028001|nonCoordinateLongitude|double|LONGITUDE (HIGH ACCURACY)|deg|5|-18000000|26|deg|5|8
+028002|nonCoordinateLongitude|double|LONGITUDE (COARSE ACCURACY)|deg|2|-18000|16|deg|2|5
 028003|alternateLongitude|double|ALTERNATE LONGITUDE (COARSE ACCURACY)|deg|2|-18000|16|deg|2|5
 028004|alternateLongitude|double|ALTERNATE LONGITUDE (HIGH ACCURACY)|deg|5|-18000000|26|deg|5|8
 028010|footprintAxis2|long|FOOTPRINT AXIS 2|m|-1|0|14|m|-1|5
