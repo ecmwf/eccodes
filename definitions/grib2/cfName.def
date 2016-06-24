@@ -116,19 +116,47 @@
 	 parameterCategory = 4 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Surface thermal radiation
-'surface_net_upward_shortwave_flux' = {
+#Surface net thermal radiation
+'surface_net_upward_longwave_flux' = {
 	 discipline = 0 ;
 	 parameterNumber = 5 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 parameterCategory = 5 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Top thermal radiation
+#Top net thermal radiation
 'toa_outgoing_longwave_flux' = {
 	 discipline = 0 ;
 	 parameterNumber = 5 ;
 	 typeOfFirstFixedSurface = 8 ;
 	 parameterCategory = 5 ;
 	 typeOfStatisticalProcessing = 1 ;
+}
+#Surface solar radiation downwards
+'surface_downwelling_shortwave_flux_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 7 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Surface net solar radiation
+'surface_net_downward_shortwave_flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 9 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Eastward turbulent surface stress
+'surface_downward_eastward_stress' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 38 ;
+	}
+#Northward turbulent surface stress
+'surface_downward_northward_stress' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 37 ;
 }
