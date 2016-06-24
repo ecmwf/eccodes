@@ -17,6 +17,7 @@
 
 #include <limits>
 #include <cmath>
+#include <sstream>
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/memory/ScopedPtr.h"
