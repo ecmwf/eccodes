@@ -91,14 +91,14 @@ bool Reduced::globalDomain() const {
         const double epsilon = 1.0 / 1000.0;
 
 
-        if(ew > last) {
+        if (ew > last) {
             // The dissemination will put in the GRIB header what is sepecified by the user
             // so, for example if the user specify 359.999999 as the eastern longitude, this
             // value will end up in the header
             return true;
         }
 
-        bool global = fabs(ew-last) < epsilon;
+        bool global = fabs(ew - last) < epsilon;
         return global;
     }
 
@@ -210,7 +210,7 @@ class GaussianIterator: public Iterator {
         return false;
     }
 
-  public:
+public:
 
     // TODO: Consider keeping a reference on the latitudes and bbox, to avoid copying
 
@@ -250,8 +250,8 @@ class GaussianIterator: public Iterator {
 
 atlas::grid::Domain Reduced::atlasDomain() const {
     return globalDomain()
-        ? atlas::grid::Domain::makeGlobal()
-        : atlas::grid::Domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
+           ? atlas::grid::Domain::makeGlobal()
+           : atlas::grid::Domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
 }
 
 Iterator *Reduced::unrotatedIterator() const {
@@ -350,7 +350,11 @@ void Reduced::validate(const std::vector<double> &values) const {
             }
         }
 
-        eckit::Log::trace<MIR>() << "Reduced::validate " << values.size() << " count=" << count << std::endl;
+        if (values.size() != count) {
+            std::ostringstream oss;
+            oss << "Failed to validate " << *this << " " << values.size() << " != " << count;
+            throw SeriousBug(oss.str());
+        }
 
         ASSERT(values.size() == count);
     }
