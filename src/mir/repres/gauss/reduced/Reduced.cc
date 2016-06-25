@@ -340,7 +340,7 @@ void Reduced::validate(const std::vector<double> &values) const {
         }
         if (values.size() != count) {
             std::ostringstream oss;
-            oss << "Failed to validate global " << *this << " " << values.size() << " != " << count;
+            oss << "Failed to validate global " << *this << " got: " << values.size() << " expected: " << count;
             throw eckit::SeriousBug(oss.str());
         }
         ASSERT(values.size() == count);
@@ -358,7 +358,7 @@ void Reduced::validate(const std::vector<double> &values) const {
 
         if (values.size() != count) {
             std::ostringstream oss;
-            oss << "Failed to validate non-global " << *this << " " << values.size() << " != " << count;
+            oss << "Failed to validate non-global " << *this << " got: " << values.size() << " expected: " << count;
             throw eckit::SeriousBug(oss.str());
         }
 
