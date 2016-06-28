@@ -11,7 +11,7 @@ list( APPEND test_bins
    grib_keys_iterator
    grib_print_data
    grib_iterator
-   count_messages
+   grib_count_messages
 )
 
 foreach( tool ${test_bins} )
@@ -29,7 +29,7 @@ endforeach()
 #################################################
 list( APPEND tests
    grib_clone
-   count_messages
+   grib_count_messages
    grib_get_keys
    grib_index
    grib_iterator

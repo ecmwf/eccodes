@@ -55,6 +55,7 @@ list( APPEND grib_api_srcs
     grib_vsarray.c
     grib_iarray.c
     grib_viarray.c
+    codes_memfs.c
     grib_accessor_class_array.c
     grib_accessor_class_assert.c
     grib_accessor_class_ascii.c
@@ -399,6 +400,11 @@ configure_file( eccodes_version.h.in eccodes_version.h @ONLY )
 #                    BISON_FLAGS "-y"
 #                    YACC_FLAGS  "-y"
 #                    DEPENDANT action.c )
+
+if(HAVE_MEMFS)
+    list(APPEND ECCODES_EXTRA_LIBRARIES eccodes_memfs)
+endif()
+
 
 ecbuild_add_library(TARGET    eccodes
                     SOURCES   grib_api_version.c

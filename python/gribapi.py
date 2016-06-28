@@ -20,7 +20,7 @@ NumPy support can be disabled by using the '--disable-numpy' flag.
 
 @em Requirements:
 
-    - Python 2.5 or higher
+    - Python 2.6 or higher
     - NumPy
 
 """

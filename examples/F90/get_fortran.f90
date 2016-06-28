@@ -24,7 +24,6 @@ implicit none
   real(kind=8), dimension(:), allocatable         ::  values
   integer(kind = 4)                               ::  numberOfValues
   real(kind=8)                                    ::  average
-  character(len = 256)                            ::  error
 
   call codes_open_file(ifile, &
        '../../data/reduced_latlon_surface.grib1','r')

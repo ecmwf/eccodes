@@ -220,7 +220,7 @@ static grib_trie* load_dictionary(grib_context* c,grib_accessor* a, int* err)
         grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from file %s",self->dictionary,filename);
     }
 
-    f=fopen(filename,"r");
+    f=codes_fopen(filename,"r");
     if (!f) {*err=GRIB_IO_PROBLEM; return NULL;}
 
     dictionary=grib_trie_new(c);
@@ -240,7 +240,7 @@ static grib_trie* load_dictionary(grib_context* c,grib_accessor* a, int* err)
     fclose(f);
 
     if (localFilename!=0) {
-        f=fopen(localFilename,"r");
+        f=codes_fopen(localFilename,"r");
         if (!f) {*err=GRIB_IO_PROBLEM; return NULL;}
 
         while(fgets(line,sizeof(line)-1,f)) {

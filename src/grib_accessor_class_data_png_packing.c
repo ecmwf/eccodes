@@ -521,7 +521,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
             !=GRIB_SUCCESS) {
         grib_context_log(a->context,GRIB_LOG_ERROR,
                 "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
-        exit(GRIB_INTERNAL_ERROR);
+        return GRIB_INTERNAL_ERROR;
     }
 
     if(reference_value > min)
@@ -642,8 +642,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     bytes = bits8/8;
 
     rows = grib_context_buffer_malloc_clear(a->context,sizeof(png_bytep)*height);
-
-    rows  = malloc(height*sizeof(png_bytep));
+    /*rows  = malloc(height*sizeof(png_bytep));*/
     Assert(rows);
     for (j=0;j<height;j++)
         rows[j] = &encoded[j*width*bytes];

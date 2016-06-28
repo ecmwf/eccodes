@@ -285,7 +285,23 @@ static void init() {
   pthread_mutexattr_destroy(&attr);
 
 }
+#elif GRIB_OMP_THREADS
+static int once = 0;
+static omp_nest_lock_t mutex;
+
+static void init()
+{
+    GRIB_OMP_CRITICAL(lock_grib_hash_keys_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex);
+            once = 1;
+        }
+    }
+}
 #endif
+
 struct grib_itrie {
   grib_itrie* next[SIZE];
   grib_context *context;
@@ -308,7 +324,7 @@ void grib_hash_keys_delete(grib_itrie *t) {
 
   if(t)  {
     int i;
-    for(i = 0; i <= SIZE; i++)
+    for(i = 0; i < SIZE; i++)
       if (t->next[i])
         grib_hash_keys_delete(t->next[i]);
 

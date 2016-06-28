@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
         CODES_CHECK(codes_get_message(source_handle, &buffer, &size),0);
         assert(size == totalLength);
 
-        new_handle = grib_handle_new_from_message(0, (void*)buffer, totalLength);
+        new_handle = grib_handle_new_from_message(0, buffer, totalLength);
 
         if (new_handle == NULL) {
             perror("ERROR: could not create GRIB handle from message");

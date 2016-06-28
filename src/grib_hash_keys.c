@@ -7488,6 +7488,7 @@ static void init()
     }
 }
 #endif
+
 struct grib_itrie {
   grib_itrie* next[SIZE];
   grib_context *context;
@@ -7510,7 +7511,7 @@ void grib_hash_keys_delete(grib_itrie *t) {
 
   if(t)  {
     int i;
-    for(i = 0; i <= SIZE; i++)
+    for(i = 0; i < SIZE; i++)
       if (t->next[i])
         grib_hash_keys_delete(t->next[i]);
 

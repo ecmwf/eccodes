@@ -152,16 +152,6 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Low cloud cover
-'lcc' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 73 ;
-	}
-#Medium cloud cover
-'mcc' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 74 ;
-	}
 #Brightness temperature
 'btmp' = {
 	 table2Version = 3 ;
@@ -183,7 +173,7 @@
 	 indicatorOfParameter = 62 ;
 	}
 #Snow depth
-'sd' = {
+'sde' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 66 ;
 	}
@@ -617,7 +607,7 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 112 ;
 	}
-#Net short-wave radiationflux(atmosph.top)
+#Net short-wave radiation flux(atmosph.top)
 'nswrt' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 113 ;
@@ -863,16 +853,6 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Low cloud cover
-'lcc' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 73 ;
-	}
-#Medium cloud cover
-'mcc' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 74 ;
-	}
 #Brightness temperature
 'btmp' = {
 	 table2Version = 2 ;
@@ -894,7 +874,7 @@
 	 indicatorOfParameter = 62 ;
 	}
 #Snow depth
-'sd' = {
+'sde' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 66 ;
 	}
@@ -1313,7 +1293,7 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 112 ;
 	}
-#Net short-wave radiationflux(atmosph.top)
+#Net short-wave radiation flux(atmosph.top)
 'nswrt' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 113 ;
@@ -1559,16 +1539,6 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Low cloud cover
-'lcc' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 73 ;
-	}
-#Medium cloud cover
-'mcc' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 74 ;
-	}
 #Brightness temperature
 'btmp' = {
 	 table2Version = 1 ;
@@ -1590,7 +1560,7 @@
 	 indicatorOfParameter = 62 ;
 	}
 #Snow depth
-'sd' = {
+'sde' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 66 ;
 	}
@@ -2009,7 +1979,7 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 112 ;
 	}
-#Net short-wave radiationflux(atmosph.top)
+#Net short-wave radiation flux(atmosph.top)
 'nswrt' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 113 ;

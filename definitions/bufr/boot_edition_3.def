@@ -10,9 +10,9 @@
 ascii[4] identifier  = "BUFR" : read_only,hidden;
 alias identifier=identifier;
 
-unsigned[3]   totalLength ;
+section_length[3]   totalLength ;
 
-unsigned[1] edition = 2;
+unsigned[1] edition = 3;
 alias editionNumber=edition;
 
 template    section_1 "bufr/section.1.3.def"   ;

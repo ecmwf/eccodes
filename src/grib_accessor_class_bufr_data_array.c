@@ -490,6 +490,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
         } else {
             dval=localReference*modifiedFactor;
         }
+        grib_context_log(c, GRIB_LOG_DEBUG," modifiedWidth=%ld lval=%ld dval=%g", modifiedWidth,lval,dval);
         grib_darray_push(c,ret,dval);
     }
 
@@ -1263,6 +1264,8 @@ static grib_accessor* create_attribute_variable(char* name,grib_section* section
         grib_pack_double(a,&dval,&len);
         break;
     case GRIB_TYPE_STRING:
+        if (!sval) 
+            return NULL;
         len=strlen(sval);
         grib_pack_string(a,sval,&len);
         break;
@@ -1400,22 +1403,28 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
         }
 
         attribute=create_attribute_variable("index",section,GRIB_TYPE_LONG,0,0,count,flags);
+        if (!attribute) return NULL;
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 
         sprintf(code,"%06ld",self->expanded->v[idx]->code);
         attribute=create_attribute_variable("code",section,GRIB_TYPE_STRING,grib_context_strdup(a->context,code),0,0,flags);
+        if (!attribute) return NULL;
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 
         attribute=create_attribute_variable("units",section,GRIB_TYPE_STRING,self->expanded->v[idx]->units,0,0,GRIB_ACCESSOR_FLAG_DUMP);
+        if (!attribute) return NULL;
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 
         attribute=create_attribute_variable("scale",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->scale,flags);
+        if (!attribute) return NULL;
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 
         attribute=create_attribute_variable("reference",section,GRIB_TYPE_DOUBLE,0,self->expanded->v[idx]->reference,0,flags);
+        if (!attribute) return NULL;
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 
         attribute=create_attribute_variable("width",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->width,flags);
+        if (!attribute) return NULL;
         grib_accessor_add_attribute(elementAccessor,attribute,0);
         break;
     case 2:
@@ -1434,6 +1443,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
             accessor_bufr_data_element_set_subsetNumber(elementAccessor,subset);
 
             attribute=create_attribute_variable("index",section,GRIB_TYPE_LONG,0,0,count,flags);
+            if (!attribute) return NULL;
             grib_accessor_add_attribute(elementAccessor,attribute,0);
 
         } else {
@@ -1441,10 +1451,12 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
             accessor_variable_set_type(elementAccessor,GRIB_TYPE_LONG);
 
             attribute=create_attribute_variable("index",section,GRIB_TYPE_LONG,0,0,count,flags);
+            if (!attribute) return NULL;
             grib_accessor_add_attribute(elementAccessor,attribute,0);
 
             sprintf(code,"%06ld",self->expanded->v[idx]->code);
             attribute=create_attribute_variable("code",section,GRIB_TYPE_STRING,code,0,0,flags);
+            if (!attribute) return NULL;
             grib_accessor_add_attribute(elementAccessor,attribute,0);
         }
         self->expanded->v[idx]->a=elementAccessor;
@@ -1463,22 +1475,28 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
         accessor_bufr_data_element_set_subsetNumber(elementAccessor,subset);
 
         attribute=create_attribute_variable("index",section,GRIB_TYPE_LONG,0,0,count,flags);
+        if (!attribute) return NULL;
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 
         sprintf(code,"%06ld",self->expanded->v[idx]->code);
         attribute=create_attribute_variable("code",section,GRIB_TYPE_STRING,code,0,0,flags);
+        if (!attribute) return NULL;
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 
         attribute=create_attribute_variable("units",section,GRIB_TYPE_STRING,self->expanded->v[idx]->units,0,0,GRIB_ACCESSOR_FLAG_DUMP);
+        if (!attribute) return NULL;
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 
         attribute=create_attribute_variable("scale",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->scale,flags);
+        if (!attribute) return NULL;
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 
         attribute=create_attribute_variable("reference",section,GRIB_TYPE_DOUBLE,0,self->expanded->v[idx]->reference,0,flags);
+        if (!attribute) return NULL;
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 
         attribute=create_attribute_variable("width",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->width,flags);
+        if (!attribute) return NULL;
         grib_accessor_add_attribute(elementAccessor,attribute,0);
         break;
     }
@@ -1834,6 +1852,10 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
             }
             count++;
             elementAccessor=create_accessor_from_descriptor(a,associatedFieldAccessor,section,ide,iss,dump,count);
+            if (!elementAccessor) {
+                err = GRIB_DECODING_ERROR;
+                return err;
+            }
             associatedFieldAccessor=NULL;
             if (elementFromBitmap && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
               if (descriptor->code != 33007 && descriptor->code != 223255 ) {
@@ -2248,7 +2270,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                             break;
                         } else {
                             if (ir>0)  {
-                                n[ir-1]-=numberOfElementsToRepeat[ir]+2;
+                                n[ir-1]-=numberOfElementsToRepeat[ir]+1;
                             }
                             i=startRepetition[ir]+numberOfElementsToRepeat[ir];
                             numberOfNestedRepetitions--;

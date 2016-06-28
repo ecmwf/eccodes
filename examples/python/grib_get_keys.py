@@ -36,7 +36,7 @@ def example():
         for key in keys:
             try:
                 print '  %s: %s' % (key, codes_get(gid, key))
-            except CodesInternalError, err:
+            except CodesInternalError as err:
                 print 'Error with key="%s" : %s' % (key, err.msg)
 
         print 'There are %d values, average is %f, min is %f, max is %f' % (
@@ -54,11 +54,11 @@ def example():
 def main():
     try:
         example()
-    except CodesInternalError, err:
+    except CodesInternalError as err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr, err.msg
+            sys.stderr.write(err.msg + '\n')
 
         return 1
 

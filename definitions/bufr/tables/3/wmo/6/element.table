@@ -251,11 +251,11 @@
 008070|tovsOrAtovsProductQualifier|table|TOVS/ATOVS PRODUCT QUALIFIER|CODE TABLE|0|0|4|NA|0|0
 008072|pixelType|table|PIXEL(S) TYPE|CODE TABLE|0|0|3|NA|0|0
 010001|heightOfLandSurface|long|HEIGHT OF LAND SURFACE|m|0|-400|15|NA|0|0
-010002|height|long|HEIGHT|m|-1|-40|16|NA|0|0
-010003|geopotential|long|GEOPOTENTIAL|m2 s-2|-1|-400|17|NA|0|0
-010004|pressure|long|PRESSURE|Pa|-1|0|14|NA|0|0
-010007|height|long|HEIGHT|m|0|-1000|17|NA|0|0
-010008|geopotential|long|GEOPOTENTIAL|m2 s-2|0|-10000|20|NA|0|0
+010002|nonCoordinateHeight|long|HEIGHT|m|-1|-40|16|NA|0|0
+010003|nonCoordinateGeopotential|long|GEOPOTENTIAL|m2 s-2|-1|-400|17|NA|0|0
+010004|nonCoordinatePressure|long|PRESSURE|Pa|-1|0|14|NA|0|0
+010007|nonCoordinateHeight|long|HEIGHT|m|0|-1000|17|NA|0|0
+010008|nonCoordinateGeopotential|long|GEOPOTENTIAL|m2 s-2|0|-10000|20|NA|0|0
 010031|DistanceFromEarthCentreInDirectionOfNorthPole|double|IN DIRECTION OF THE NORTH POLE , DISTANCE FROM THE EARTH CENTRE|m|2|-1073741824|31|NA|0|0
 010040|numberOfRetrievedLayers|long|NUMBER OF RETRIEVED LAYERS|Numeric|0|0|10|NA|0|0
 010050|standardDeviationAltitude|double|STANDARD DEVIATION ALTITUDE|m|2|0|16|NA|0|0
@@ -528,8 +528,8 @@
 022039|meteorologicalResidualTidalElevationSurgeOrOffset|double|METEOROLOGICAL RESIDUAL TIDAL ELEVATION(SURGE OF OFFSET)|m|3|-5000|12|NA|0|0
 022040|meteorologicalResidualTidalElevationSurgeOrOffset|double|METEOROLOGICAL RESIDUAL TIDAL ELEVATION (SURGE OF OFFSET)|m|3|-5000|14|NA|0|0
 022041|seaSurfaceTemperature15DayRunningMean|double|SEA-SURFACE TEMPERATURE(15-DAY RUNNING MEAN)|K|1|0|12|NA|0|0
-022042|waterTemperature|double|SEA/WATER TEMPERATURE|K|1|0|12|NA|0|0
-022043|waterTemperature|double|SEA/WATER TEMPERATURE|K|2|0|15|NA|0|0
+022042|oceanographicWaterTemperature|double|SEA/WATER TEMPERATURE|K|1|0|12|NA|0|0
+022043|oceanographicWaterTemperature|double|SEA/WATER TEMPERATURE|K|2|0|15|NA|0|0
 022044|soundVelocity|double|SOUND VELOCITY|m/s|1|0|14|NA|0|0
 022050|standardDeviationSeaSurfaceTemperature|double|STANDARD DEVIATION SEA SURFACE TEMPERATURE|K|2|0|8|NA|0|0
 022061|seaState|table|STATE OF THE SEA|CODE TABLE|0|0|4|NA|0|0
@@ -660,14 +660,14 @@
 026001|principalTimeOfDailyReadingInUtcOfMaximumTemperature|double|PRINCIPAL TIME OF DAILY READING IN UTC OF MAXIMUM TEMPERATURE|h|1|0|12|NA|0|0
 026002|principalTimeOfDailyReadingInUtcOfMinimumTemperature|double|PRINCIPAL TIME OF DAILY READING IN UTC OF MINIMUM TEMPERATURE|h|1|0|12|NA|0|0
 026003|timeDifference|long|TIME DIFFERENCE|min|0|-1440|12|NA|0|0
-027001|latitude|double|LATITUDE(HIGH ACCURACY)|deg|5|-9000000|25|NA|0|0
-027002|latitude|double|LATITUDE(COARSE ACCURACY)|deg|2|-9000|15|NA|0|0
+027001|nonCoordinateLatitude|double|LATITUDE(HIGH ACCURACY)|deg|5|-9000000|25|NA|0|0
+027002|nonCoordinateLatitude|double|LATITUDE(COARSE ACCURACY)|deg|2|-9000|15|NA|0|0
 027003|alternateLatitude|double|ALTERNATE LATITUDE|deg|2|-9000|15|NA|0|0
 027020|satelliteLocationCounter|long|SATELLITE LOCATION COUNTER|Numeric|0|0|16|NA|0|0
 027021|satelliteSublocationDimension|long|SATELLITE SUBLOCATION DIMENSION|Numeric|0|0|16|NA|0|0
 027031|DistanceFromEarthCentreInDirectionOf0DegreesLongitude|double|IN DIRECTION OF 0 DEGREES LONGITUDE, DISTANCE FROM THE EARTH'S C|m|2|-1073741824|31|NA|0|0
-028001|longitude|double|LONGITUDE(HIGH ACCURACY)|deg|5|-18000000|26|NA|0|0
-028002|longitude|double|LONGITUDE(COARSE ACCURACY)|deg|2|-18000|16|NA|0|0
+028001|nonCoordinateLongitude|double|LONGITUDE(HIGH ACCURACY)|deg|5|-18000000|26|NA|0|0
+028002|nonCoordinateLongitude|double|LONGITUDE(COARSE ACCURACY)|deg|2|-18000|16|NA|0|0
 028003|alternateLongitude|double|ALTERNATE LONGITUDE|deg|2|-18000|16|NA|0|0
 028031|DistanceFromEarthCentreInDirection90DegreesEast|double|IN DIRECTION OF 90 DEGREES EAST,DISTANCE FROM THE EARTH'S CENTRE|m|2|-1073741824|31|NA|0|0
 029001|projectionType|table|PROJECTION TYPE|CODE TABLE|0|0|3|NA|0|0

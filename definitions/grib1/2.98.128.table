@@ -245,7 +245,7 @@
 245 flsr Forecast logarithm of surface roughness for heat ()
 246 clwc Cloud liquid water content (kg kg**-1)
 247 ciwc Cloud ice water content (kg kg**-1)
-248 cc Cloud cover ((0 - 1))
+248 cc Fraction of cloud cover ((0 - 1))
 249 aiw Accumulated ice water tendency ((-1 to 1))
 250 ice Ice age ((0 - 1))
 251 atte Adiabatic tendency of temperature (K)

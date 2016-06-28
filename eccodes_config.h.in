@@ -96,4 +96,15 @@
 
 #cmakedefine HAVE_NETCDF
 
+#cmakedefine HAVE_MEMFS
+
+#ifdef HAVE_MEMFS
+#undef ECCODES_DEFINITION_PATH
+#define ECCODES_DEFINITION_PATH "/MEMFS/definitions"
+#undef ECCODES_SAMPLES_PATH
+#define ECCODES_SAMPLES_PATH "/MEMFS/samples"
+#undef ECCODES_IFS_SAMPLES_PATH
+#define ECCODES_IFS_SAMPLES_PATH "/MEMFS/ifs_samples"
+#endif
+
 #endif /* eccodes_config_h */

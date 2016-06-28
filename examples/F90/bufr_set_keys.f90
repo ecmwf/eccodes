@@ -14,7 +14,7 @@
 program bufr_set_keys
   use eccodes
   implicit none
-  integer                                       :: err,i,iret
+  integer                                       :: iret
   integer                                       :: infile,outfile
   integer                                       :: ibufr
   integer                                       :: count=0

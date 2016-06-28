@@ -518,3 +518,11 @@ void codes_context_delete(grib_context* c)
 {
     grib_context_delete(c);
 }
+void codes_context_set_definitions_path(grib_context* c, const char* path)
+{
+    grib_context_set_definitions_path(c,path);
+}
+void codes_context_set_samples_path(grib_context* c, const char* path)
+{
+    grib_context_set_samples_path(c, path);
+}

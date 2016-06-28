@@ -107,9 +107,13 @@ static int notify_change(grib_action* act, grib_accessor * notified,
     grib_action* la        = NULL;
 
     if (h->context->debug > 0) {
+        char debug_str[1024] = {0,};
+        if (act->debug_info) {
+            sprintf(debug_str, " (%s)", act->debug_info);
+        }
         grib_context_log(h->context,
-                GRIB_LOG_DEBUG,"------------- SECTION action %s (%s) is triggered by [%s]",
-                act->name, notified->name, changed->name);
+                GRIB_LOG_DEBUG,"------------- SECTION action %s (%s) is triggered by [%s]%s",
+                act->name, notified->name, changed->name, debug_str);
     }
 
     la = grib_action_reparse(act,notified,&doit);

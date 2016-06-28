@@ -297,7 +297,7 @@ static grib_trie* init_list(const char* name)
     grib_context* c=grib_context_get_default();
     full_path=grib_context_full_defs_path(c,name);
 
-    fh=fopen(full_path,"r");
+    fh=codes_fopen(full_path,"r");
     if (!fh) {
         grib_context_log(c,GRIB_LOG_PERROR,"unable to read %s",full_path);
         return NULL;
@@ -1535,7 +1535,7 @@ int parse_keyval_string(char* grib_tool, char* arg, int values_required, int def
                     printf("%s error: no value provided for key \"%s\"\n", grib_tool, values[i].name);
                 else
                     printf("Error: no value provided for key \"%s\"\n", values[i].name);
-                exit(GRIB_INVALID_ARGUMENT);
+                return GRIB_INVALID_ARGUMENT;
             }
             set_value(&values[i],value,equal);
         }

@@ -6,7 +6,7 @@ configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/include.sh ${CMAKE_CURRENT_BINARY_DIR} )
 
 # Build the executables used by test scripts
-################################################
+########################################################################
 list( APPEND test_bins
       grib_nearest
       grib_set_bitmap
@@ -57,7 +57,7 @@ foreach( tool ${test_bins} )
 endforeach()
 
 # Now add each test (shell scripts)
-#################################################
+########################################################################
 list( APPEND tests
    grib_iterator
    grib_get_keys
@@ -92,19 +92,34 @@ list( APPEND tests
 )
 foreach( test ${tests} )
     ecbuild_add_test( TARGET eccodes_c_${test}
-                  TYPE       SCRIPT
-                  COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                  TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs
+                      TYPE       SCRIPT
+                      COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                      TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs
     )
 endforeach()
 
+########################################################################
+# Tests which are conditional
+if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
+    # This one only for POSIX threads
+    ecbuild_add_executable( TARGET    c_grib_pthreads
+                            NOINSTALL
+                            SOURCES   grib_pthreads.c
+                            LIBS      eccodes
+    )
+    ecbuild_add_test( TARGET eccodes_c_grib_pthreads
+                      TYPE       SCRIPT
+                      COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/grib_pthreads.sh
+    )
+endif()
 
-#############################################
+
+########################################################################
 # Tests with no script
-ecbuild_add_test( TARGET    eccodes_c_new_sample
-                  SOURCES   new_sample.c
-                  LIBS      eccodes
-                  ARGS      "out.grib"
-                  ENVIRONMENT "ECCODES_SAMPLES_PATH=${PROJECT_SOURCE_DIR}/samples" "ECCODES_DEFINITION_PATH=${PROJECT_SOURCE_DIR}/definitions"
+ecbuild_add_test(
+    TARGET    eccodes_c_new_sample
+    SOURCES   new_sample.c
+    LIBS      eccodes
+    ARGS      "out.grib"
+    ENVIRONMENT "ECCODES_SAMPLES_PATH=${PROJECT_SOURCE_DIR}/samples" "ECCODES_DEFINITION_PATH=${PROJECT_SOURCE_DIR}/definitions"
 )
-

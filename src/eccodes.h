@@ -925,6 +925,22 @@ int codes_get_gribex_mode(codes_context* c);
 void codes_gribex_mode_off(codes_context* c);
 
 /**
+ * Sets the search path for definition files.
+ *
+ * @param c      : the context to be modified
+ * @param path   : the search path for definition files
+ */
+void codes_context_set_definitions_path(grib_context* c, const char* path);
+
+/**
+ * Sets the search path for sample files.
+ *
+ * @param c      : the context to be modified
+ * @param path   : the search path for sample files
+ */
+void codes_context_set_samples_path(grib_context* c, const char* path);
+
+/**
 *  Turn on support for multiple fields in single grib messages
 *
 * @param c            : the context to be modified

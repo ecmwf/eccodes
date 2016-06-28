@@ -9,35 +9,38 @@
  [options] grib_file grib_file ... output_grib_file
 
 \section OPTIONS 
--s key[:{s/d/l}]=value,key[:{s/d/l}]=value,... \n 
+-s key[:{s/d/i}]=value,key[:{s/d/i}]=value,... \n 
 		Key/values to set.
-		For each key a string (key:s) or a double (key:d) or a long (key:l)
+		For each key a string (key:s), a double (key:d) or an integer (key:i)
 		type can be defined. By default the native type is set.
  \n \n -r  \n Repack data. Sometimes after setting some keys involving properties
 		of the packing algorithm a repacking of data is needed.
 		This repacking is performed setting this -r option.
  \n \n -d value \n 
 		Set all the data values to "value".
- \n \n -p key[:{s/d/l}],key[:{s/d/l}],... \n 
+ \n \n -p key[:{s/d/i}],key[:{s/d/i}],... \n 
 		Declaration of keys to print.
-		For each key a string (key:s) or a double (key:d) or a long (key:l)
+		For each key a string (key:s), a double (key:d) or an integer (key:i)
 		type can be requested. Default type is string.
- \n \n -P key[:{s/d/l}],key[:{s/d/l}],... \n 
+ \n \n -P key[:{s/d/i}],key[:{s/d/i}],... \n 
 		As -p adding the declared keys to the default list.
- \n \n -w key[:{s/d/l}]=value,key[:{s/d/l}]=value,... \n 
+ \n \n -w key[:{s/d/i}]{=/!=}value,key[:{s/d/i}]=value,... \n 
 		Where clause.
 		Set is only executed for grib messages matching all the key/value constraints.
 		If a grib message does not match the constraints it is copied unchanged
 		to the output_grib_file. This behaviour can be changed setting the option -S.
-		For each key a string (key:s) or a double (key:d) or a long (key:l)
+		A valid constraint is of type key=value or key!=value.
+		For each key a string (key:s), a double (key:d) or an integer (key:i)
 		type can be defined. Default type is string.
  \n \n -7  \n Does not fail when the message has wrong length
  \n \n -S  \n Strict. Only grib messages matching all the constraints are copied to
 		the output file
  \n \n -V  \n Version.
- \n \n -M  \n Multi-grib support off. Turn off support for multiple fields in single grib message.
+ \n \n -M  \n Multi-field support off. Turn off support for multiple fields in single grib message.
  \n \n -g  \n Copy GTS header. 
  \n \n -G  \n GRIBEX compatibility mode.
+ \n \n -T T | B | M | A \n Message type. T->GTS, B->BUFR, M->METAR (Experimental),A->Any (Experimental).
+			The input file is interpreted according to the message type.
  \n \n -f  \n Force. Force the execution not to fail on error.
  \n \n -v  \n Verbose.
  \n \n 

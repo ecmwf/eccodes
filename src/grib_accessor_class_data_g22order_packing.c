@@ -644,7 +644,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
             !=GRIB_SUCCESS) {
         grib_context_log(a->context,GRIB_LOG_ERROR,
                 "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
-        exit(GRIB_INTERNAL_ERROR);
+        return GRIB_INTERNAL_ERROR;
     }
 
     binary_scale_factor = grib_get_binary_scale_fact(max,reference_value,bits_per_value,&err);
@@ -739,6 +739,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     if((err = grib_set_long_internal(gh,self->orderOfSpatialDifferencing,0 )) != GRIB_SUCCESS)  return err;
     if((err = grib_set_long_internal(gh,self->numberOfOctetsExtraDescriptors,0 )) != GRIB_SUCCESS)  return err;
+    /* ECC-259: Set correct number of values */
+    if((err = grib_set_long_internal(gh,self->numberOfValues,*len )) != GRIB_SUCCESS)  return err;
 
     return GRIB_SUCCESS;
 }

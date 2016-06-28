@@ -9,5 +9,5 @@
 
 . ./include.sh
 
-${examples_dir}c_set_missing > /dev/null
+${examples_dir}c_set_missing
 rm -f out_surface_level.grib2

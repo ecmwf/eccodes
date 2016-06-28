@@ -152,16 +152,6 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Low cloud cover
-'Low cloud cover' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 73 ;
-	}
-#Medium cloud cover
-'Medium cloud cover' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 74 ;
-	}
 #Brightness temperature
 'Brightness temperature' = {
 	 table2Version = 3 ;
@@ -617,8 +607,8 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 112 ;
 	}
-#Net short-wave radiationflux(atmosph.top)
-'Net short-wave radiationflux(atmosph.top)' = {
+#Net short-wave radiation flux(atmosph.top)
+'Net short-wave radiation flux(atmosph.top)' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 113 ;
 	}
@@ -863,16 +853,6 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Low cloud cover
-'Low cloud cover' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 73 ;
-	}
-#Medium cloud cover
-'Medium cloud cover' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 74 ;
-	}
 #Brightness temperature
 'Brightness temperature' = {
 	 table2Version = 2 ;
@@ -1313,8 +1293,8 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 112 ;
 	}
-#Net short-wave radiationflux(atmosph.top)
-'Net short-wave radiationflux(atmosph.top)' = {
+#Net short-wave radiation flux(atmosph.top)
+'Net short-wave radiation flux(atmosph.top)' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 113 ;
 	}
@@ -1559,16 +1539,6 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Low cloud cover
-'Low cloud cover' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 73 ;
-	}
-#Medium cloud cover
-'Medium cloud cover' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 74 ;
-	}
 #Brightness temperature
 'Brightness temperature' = {
 	 table2Version = 1 ;
@@ -2009,8 +1979,8 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 112 ;
 	}
-#Net short-wave radiationflux(atmosph.top)
-'Net short-wave radiationflux(atmosph.top)' = {
+#Net short-wave radiation flux(atmosph.top)
+'Net short-wave radiation flux(atmosph.top)' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 113 ;
 	}

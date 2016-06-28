@@ -2,7 +2,7 @@ if WITH_PYTHON
 AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@
 
 TESTS = grib_clone.sh \
-        count_messages.sh \
+        grib_count_messages.sh \
         grib_get_keys.sh \
         grib_index.sh \
         grib_iterator.sh \
@@ -32,18 +32,18 @@ TESTS = grib_clone.sh \
 
 TESTS_ENVIRONMENT = TOPBUILDDIR=$(top_builddir) PYTHON=$(PYTHON)
 
-noinst_PROGRAMS = p_grib_keys_iterator p_grib_print_data p_grib_iterator p_count_messages
+noinst_PROGRAMS = p_grib_keys_iterator p_grib_print_data p_grib_iterator p_grib_count_messages
 p_grib_keys_iterator_SOURCES = grib_keys_iterator.c
 p_grib_print_data_SOURCES = grib_print_data.c
 p_grib_iterator_SOURCES = grib_iterator.c
-p_count_messages_SOURCES = count_messages.c
+p_grib_count_messages_SOURCES = grib_count_messages.c
 INCLUDES =  -I$(top_builddir)/src
 LDADD = $(top_builddir)/src/libeccodes.la
 DEPENDENCIES = $(LDADD)
 
 EXTRA_DIST = $(TESTS) include.sh CMakeLists.txt include.ctest.sh.in \
              grib_clone.py \
-             count_messages.py \
+             grib_count_messages.py \
              grib_get_keys.py \
              grib_index.py \
              grib_iterator.py \

@@ -44,7 +44,7 @@ def example():
         timePeriod = codes_get_array(bufr, "timePeriod")
         pressure = codes_get_array(bufr, "pressure")
         extendedVerticalSoundingSignificance = codes_get_array(bufr, "extendedVerticalSoundingSignificance")
-        geopotentialHeight = codes_get_array(bufr, "geopotentialHeight")
+        geopotentialHeight = codes_get_array(bufr, "nonCoordinateGeopotentialHeight")
         latitudeDisplacement = codes_get_array(bufr, "latitudeDisplacement")
         longitudeDisplacement = codes_get_array(bufr, "longitudeDisplacement")
         airTemperature = codes_get_array(bufr, "airTemperature")
@@ -66,11 +66,11 @@ def example():
 def main():
     try:
         example()
-    except CodesInternalError, err:
+    except CodesInternalError as err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr, err.msg
+            sys.stderr.write(err.msg + '\n')
         return 1
 if __name__ == "__main__":
     sys.exit(main())

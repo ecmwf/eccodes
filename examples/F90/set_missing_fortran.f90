@@ -12,12 +12,8 @@
 program set
   use eccodes
   implicit none
-  integer              :: err
-  integer              :: len
-  integer              :: size
   integer              :: infile,outfile
-  integer              :: igrib,iret
-  character(len = 256) :: error
+  integer              :: igrib
 
   infile=5
   outfile=6

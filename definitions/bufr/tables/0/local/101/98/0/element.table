@@ -61,7 +61,7 @@
 008224|landOrSeaFraction|long|LAND/SEA FRACTION|Numeric|3|0|10|NA|0|0
 010083|squaredOffNadirAngleOfSatelliteFromPlatformData|double|(CBS) OFF NADIR ANGLE OF THE SATELLITE FROM PLATFORM DATA|deg|2|-36000|17|NA|0|0
 010084|squaredOffNadirAngleOfSatelliteFromWaveformData|double|(CBS) OFF NADIR ANGLE OF THE SATELLITE FROM WAVEFORM DATA|deg|2|-36000|17|NA|0|0
-010195|height|double|HEIGHT(HIGH ACCURACY)|m|1|-4096|20|NA|0|0
+010195|nonCoordinateHeight|double|HEIGHT(HIGH ACCURACY)|m|1|-4096|20|NA|0|0
 010196|solarZenithAngle|double|SOLAR ZENITH ANGLE|deg|2|-9000|15|NA|0|0
 010197|anemometerHeight|long|ANEMOMETER HEIGHT|m|0|0|9|NA|0|0
 011192|uAt10M|double|U - COMPONENT AT 10 M|m/s|1|-4096|13|NA|0|0
@@ -201,9 +201,9 @@
 025204|scanLineQualityFlagsForAtovs|flag|SCAN LINE QUALITY FLAGS FOR ATOVS|FLAG TABLE|0|0|31|NA|0|0
 025205|channelQualityFlagsForAtovs|flag|CHANNEL QUALITY FLAGS FOR ATOVS|FLAG TABLE|0|0|31|NA|0|0
 025206|fovQualityFlagsForAtovs|flag|FOV QUALITY FLAGS FOR ATOVS|FLAG TABLE|0|0|31|NA|0|0
-026193|year|long|YEAR|a|0|0|12|NA|0|0
-026194|month|long|MONTH|mon|0|0|4|NA|0|0
-026195|day|long|DAY|d|0|0|6|NA|0|0
+026193|nonCoordinateYear|long|YEAR|a|0|0|12|NA|0|0
+026194|nonCoordinateMonth|long|MONTH|mon|0|0|4|NA|0|0
+026195|nonCoordinateDay|long|DAY|d|0|0|6|NA|0|0
 026196|hour|long|HOUR|h|0|0|5|NA|0|0
 026197|minute|long|MINUTE|min|0|0|6|NA|0|0
 026198|second|long|SECOND|s|0|0|6|NA|0|0

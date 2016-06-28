@@ -105,7 +105,7 @@
 110 swp SWP Secondary wave period s
 111 nswrs NSWRS Net short-wave radiation flux (surface) J m**-2
 112 nlwrs NLWRS Net long-wave radiation flux (surface) J m**-2
-113 nswrt NSWRT Net short-wave radiationflux(atmosph.top) J m**-2
+113 nswrt NSWRT Net short-wave radiation flux(atmosph.top) J m**-2
 114 nlwrt NLWRT Net long-wave radiation flux(atmosph.top) J m**-2
 115 lwavr LWAVR Long wave radiation flux J m**-2
 116 swavr SWAVR Short wave radiation flux J m**-2

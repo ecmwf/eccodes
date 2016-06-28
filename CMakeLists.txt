@@ -72,7 +72,7 @@ ecbuild_add_option( FEATURE AEC
 ecbuild_add_option( FEATURE PYTHON
     DESCRIPTION "build the ecCodes Python interface"
     DEFAULT ON
-    REQUIRED_PACKAGES "Python VERSION 2.5" NumPy
+    REQUIRED_PACKAGES "Python VERSION 2.6" NumPy
 )
 
 ecbuild_add_option( FEATURE FORTRAN
@@ -90,6 +90,14 @@ else()
     set( HAVE_FORTRAN 0 )
 endif()
 
+# memfs
+
+ecbuild_add_option( FEATURE MEMFS
+    DESCRIPTION "Memory based access to definitions/samples"
+    DEFAULT OFF
+    CONDITION EC_HAVE_FMEMOPEN OR EC_HAVE_FUNOPEN
+    REQUIRED_PACKAGES "Python VERSION 2.6"
+)
 # advanced options (not visible in cmake-gui )
 
 ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "enable memory management" DEFAULT OFF ADVANCED )
@@ -97,6 +105,7 @@ ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "enable memory align
 ecbuild_add_option( FEATURE GRIB_TIMER          DESCRIPTION "enable timer" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "enable POSIX threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "enable OMP threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "enable extended regression testing" DEFAULT OFF ADVANCED )
 
 ###############################################################################
 # macro processing
@@ -228,7 +237,7 @@ if( NOT DEFINED ECCODES_SAMPLES_SUFF )
   set( ECCODES_SAMPLES_SUFF     share/eccodes/samples )
 endif()
 if( NOT DEFINED ECCODES_IFS_SAMPLES_SUFF )
-  set( ECCODES_IFS_SAMPLES_SUFF ifs_samples )
+  set( ECCODES_IFS_SAMPLES_SUFF share/eccodes/ifs_samples )
 endif()
 
 set( ECCODES_DEFINITION_PATH  ${the_default_data_prefix}/${ECCODES_DEFINITION_SUFF} )
@@ -272,11 +281,12 @@ endforeach()
 
 include_directories( ${ECCODES_INCLUDE_DIRS}  ${ECCODES_EXTRA_INCLUDE_DIRS} )
 
+add_subdirectory( definitions ) # must be before memfs
+add_subdirectory( memfs )
 add_subdirectory( src )
 add_subdirectory( tools )
 add_subdirectory( fortran )
 add_subdirectory( python )
-add_subdirectory( definitions )
 add_subdirectory( tests )
 add_subdirectory( tigge )
 add_subdirectory( examples )
@@ -288,7 +298,7 @@ add_subdirectory( ifs_samples ) # must come after samples
 ecbuild_dont_pack( DIRS
      concepts tests.ecmwf doxygen confluence examples.dev templates parameters java
      gaussian_experimental gribex examples/F77
-     examples/extra bamboo fortran/fortranCtypes tigge/tools share/eccodes grib_api_for_mars
+     examples/extra bamboo fortran/fortranCtypes tigge/tools share/eccodes
      src/.deps tests/.deps tools/.deps tigge/.deps examples/C/.deps examples/python/.deps
      python/.deps fortran/.deps
 )
@@ -322,12 +332,13 @@ endif()
 
 # pkg-config
 ecbuild_pkgconfig(
-  NAME                eccodes
-  URL                 "https://software.ecmwf.int/wiki/display/ECC/"
-  DESCRIPTION         "The ecCodes library"
-  LIBRARIES           eccodes
-  VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_ECCODES_THREADS HAVE_NETCDF
-                      HAVE_PYTHON HAVE_FORTRAN HAVE_PNG HAVE_AEC
+  NAME           eccodes
+  URL            "https://software.ecmwf.int/wiki/display/ECC/"
+  DESCRIPTION    "The ecCodes library"
+  LIBRARIES      eccodes
+  VARIABLES      HAVE_JPG HAVE_LIBJASPER HAVE_LIBOPENJPEG
+                 HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
+                 HAVE_NETCDF HAVE_PYTHON HAVE_FORTRAN HAVE_PNG HAVE_AEC
 )
 if( EC_HAVE_FORTRAN )
   ecbuild_pkgconfig(
@@ -336,8 +347,9 @@ if( EC_HAVE_FORTRAN )
     LIBRARIES           eccodes_f90 eccodes
     DESCRIPTION         "The ecCodes library for Fortran 90"
     IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
-    VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_ECCODES_THREADS HAVE_NETCDF
-                        HAVE_PYTHON HAVE_PNG HAVE_AEC
+    VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_LIBOPENJPEG
+                        HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
+                        HAVE_NETCDF HAVE_PYTHON HAVE_PNG HAVE_AEC
   )
 endif()
 

@@ -293,12 +293,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 48 ;
 	}
-#10 metre wind gust since previous post-processing
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 49 ;
-	}
 #Large-scale precipitation fraction
 's' = {
 	 discipline = 192 ;
@@ -979,18 +973,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 200 ;
-	}
-#Maximum temperature at 2 metres since previous post-processing
-'K' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 201 ;
-	}
-#Minimum temperature at 2 metres since previous post-processing
-'K' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 202 ;
 	}
 #Precipitation analysis weights
 '~' = {
@@ -2988,13 +2970,13 @@
 	 parameterNumber = 79 ;
 	}
 #Mean altitude of maximum injection
-'m above sea level' = {
+'m' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 119 ;
 	}
 #Altitude of plume top
-'m above sea level' = {
+'m' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 120 ;
@@ -3156,7 +3138,7 @@
 	 parameterNumber = 230 ;
 	}
 #Altitude of plume bottom
-'m above sea level' = {
+'m' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 242 ;
@@ -3252,13 +3234,13 @@
 	 parameterNumber = 56 ;
 	}
 #Altitude of emitter
-'m above sea level' = {
+'m' = {
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 119 ;
 	}
 #Altitude of plume top
-'m above sea level' = {
+'m' = {
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 120 ;
@@ -12502,13 +12484,13 @@
 	 parameterNumber = 202 ;
 	}
 #Bias in the zonal pressure gradient (applied)
-'Pa**m-1' = {
+'Pa m**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 203 ;
 	}
 #Bias in the meridional pressure gradient (applied)
-'Pa**m-1' = {
+'Pa m**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 204 ;

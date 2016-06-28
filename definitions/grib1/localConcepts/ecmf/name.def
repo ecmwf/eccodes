@@ -2024,8 +2024,8 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 247 ;
 	}
-#Cloud cover
-'Cloud cover' = {
+#Fraction of cloud cover
+'Fraction of cloud cover' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 248 ;
 	}
@@ -3673,6 +3673,11 @@
 'Relative humidity at 1.5m' = {
 	 table2Version = 174 ;
 	 indicatorOfParameter = 52 ;
+	}
+#2m specific humidity
+'2m specific humidity' = {
+	 table2Version = 174 ;
+	 indicatorOfParameter = 96 ;
 	}
 #Sea-ice Snow Thickness
 'Sea-ice Snow Thickness' = {

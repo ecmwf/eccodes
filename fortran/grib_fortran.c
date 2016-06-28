@@ -26,43 +26,43 @@
 #include <ctype.h>
 
 /* Have file ids distinct from grib ids, in order to be
-*  protected against user errors where a file id is given
-*  instead of a grib id or viceversa
-*/
+ *  protected against user errors where a file id is given
+ *  instead of a grib id or viceversa
+ */
 #define MIN_FILE_ID 50000
 
 #if GRIB_PTHREADS
- static pthread_once_t once  = PTHREAD_ONCE_INIT;
- static pthread_mutex_t handle_mutex = PTHREAD_MUTEX_INITIALIZER;
- static pthread_mutex_t index_mutex = PTHREAD_MUTEX_INITIALIZER;
- static pthread_mutex_t multi_handle_mutex = PTHREAD_MUTEX_INITIALIZER;
- static pthread_mutex_t iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
- static pthread_mutex_t keys_iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_once_t once  = PTHREAD_ONCE_INIT;
+static pthread_mutex_t handle_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t index_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t multi_handle_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t keys_iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
 
- static void init() {
-   pthread_mutexattr_t attr;
+static void init() {
+    pthread_mutexattr_t attr;
 
-   pthread_mutexattr_init(&attr);
-   pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
-   pthread_mutex_init(&handle_mutex,&attr);
-   pthread_mutex_init(&index_mutex,&attr);
-   pthread_mutex_init(&multi_handle_mutex,&attr);
-   pthread_mutex_init(&iterator_mutex,&attr);
-   pthread_mutex_init(&keys_iterator_mutex,&attr);
-   pthread_mutexattr_destroy(&attr);
- }
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&handle_mutex,&attr);
+    pthread_mutex_init(&index_mutex,&attr);
+    pthread_mutex_init(&multi_handle_mutex,&attr);
+    pthread_mutex_init(&iterator_mutex,&attr);
+    pthread_mutex_init(&keys_iterator_mutex,&attr);
+    pthread_mutexattr_destroy(&attr);
+}
 #elif GRIB_OMP_THREADS
- static int once = 0;
- static omp_nest_lock_t handle_mutex;
- static omp_nest_lock_t index_mutex;
- static omp_nest_lock_t multi_handle_mutex;
- static omp_nest_lock_t iterator_mutex;
- static omp_nest_lock_t keys_iterator_mutex;
+static int once = 0;
+static omp_nest_lock_t handle_mutex;
+static omp_nest_lock_t index_mutex;
+static omp_nest_lock_t multi_handle_mutex;
+static omp_nest_lock_t iterator_mutex;
+static omp_nest_lock_t keys_iterator_mutex;
 
- static void init()
- {
+static void init()
+{
     GRIB_OMP_CRITICAL(lock_fortran)
-    {
+            {
         if (once == 0)
         {
             omp_init_nest_lock(&handle_mutex);
@@ -72,8 +72,8 @@
             omp_init_nest_lock(&keys_iterator_mutex);
             once = 1;
         }
-    }
- }
+            }
+}
 #endif
 
 int GRIB_NULL=-1;
@@ -136,7 +136,8 @@ static l_grib_file*   file_set   = NULL;
 static l_grib_iterator* iterator_set = NULL;
 static l_grib_keys_iterator* keys_iterator_set = NULL;
 
-static char* cast_char(char* buf, char* fortstr,int len){
+static char* cast_char(char* buf, char* fortstr,int len)
+{
     char *p,*end;
     if (len == 0 || fortstr == NULL) return NULL;
     memcpy(buf,fortstr,len);
@@ -152,7 +153,8 @@ static char* cast_char(char* buf, char* fortstr,int len){
     return buf;
 }
 
-static void czstr_to_fortran(char* str,int len) {
+static void czstr_to_fortran(char* str,int len)
+{
     char *p,*end;
     p=str; end=str+len-1;
     while (*p != '\0' && p != end) p++;
@@ -160,14 +162,26 @@ static void czstr_to_fortran(char* str,int len) {
     *p=' ';
 }
 
-static void fort_char_clean(char* str,int len) {
+/*static void czstr_to_fortran_replace0(char* str,int len)
+{
+    char *p,*end;
+    p=str; end=str+len-1;
+    while (p != end) {
+      if (*p=='\0') *p=' ';
+      p++;
+    }
+}*/
+
+static void fort_char_clean(char* str,int len)
+{
     char *p,*end;
     p=str; end=str+len-1;
     while (p != end) *(p++)=' ';
     *p=' ';
 }
 
-static int push_file(FILE* f,char* buffer){
+static int push_file(FILE* f,char* buffer)
+{
     l_grib_file* current  = file_set;
     l_grib_file* previous = file_set;
     l_grib_file* the_new      = NULL;
@@ -206,7 +220,8 @@ static int push_file(FILE* f,char* buffer){
     return myindex;
 }
 
-static void _push_handle(grib_handle *h,int *gid){
+static void _push_handle(grib_handle *h,int *gid)
+{
     l_grib_handle* current= handle_set;
     l_grib_handle* previous= handle_set;
     l_grib_handle* the_new= NULL;
@@ -263,7 +278,8 @@ static void _push_handle(grib_handle *h,int *gid){
     return;
 }
 
-static void _push_index(grib_index *h,int *gid){
+static void _push_index(grib_index *h,int *gid)
+{
     l_grib_index* current= index_set;
     l_grib_index* previous= index_set;
     l_grib_index* the_new= NULL;
@@ -320,7 +336,8 @@ static void _push_index(grib_index *h,int *gid){
     return;
 }
 
-static void _push_multi_handle(grib_multi_handle *h,int *gid){
+static void _push_multi_handle(grib_multi_handle *h,int *gid)
+{
     l_grib_multi_handle* current= multi_handle_set;
     l_grib_multi_handle* previous= multi_handle_set;
     l_grib_multi_handle* the_new= NULL;
@@ -377,31 +394,35 @@ static void _push_multi_handle(grib_multi_handle *h,int *gid){
     return;
 }
 
-static void push_handle(grib_handle *h,int *gid){
-    GRIB_MUTEX_INIT_ONCE(&once,&init)
-    GRIB_MUTEX_LOCK(&handle_mutex)
+static void push_handle(grib_handle *h,int *gid)
+{
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&handle_mutex);
     _push_handle(h,gid);
-    GRIB_MUTEX_UNLOCK(&handle_mutex)
+    GRIB_MUTEX_UNLOCK(&handle_mutex);
     return;
 }
 
-static void push_index(grib_index *h,int *gid){
-    GRIB_MUTEX_INIT_ONCE(&once,&init)
-    GRIB_MUTEX_LOCK(&index_mutex)
+static void push_index(grib_index *h,int *gid)
+{
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&index_mutex);
     _push_index(h,gid);
-    GRIB_MUTEX_UNLOCK(&index_mutex)
+    GRIB_MUTEX_UNLOCK(&index_mutex);
     return;
 }
 
-static void push_multi_handle(grib_multi_handle *h,int *gid){
-    GRIB_MUTEX_INIT_ONCE(&once,&init)
-    GRIB_MUTEX_LOCK(&multi_handle_mutex)
+static void push_multi_handle(grib_multi_handle *h,int *gid)
+{
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&multi_handle_mutex);
     _push_multi_handle(h,gid);
-    GRIB_MUTEX_UNLOCK(&multi_handle_mutex)
+    GRIB_MUTEX_UNLOCK(&multi_handle_mutex);
     return;
 }
 
-static int _push_iterator(grib_iterator *i){
+static int _push_iterator(grib_iterator *i)
+{
     l_grib_iterator* current  = iterator_set;
     l_grib_iterator* previous = iterator_set;
     l_grib_iterator* the_new      = NULL;
@@ -439,16 +460,18 @@ static int _push_iterator(grib_iterator *i){
     return myindex;
 }
 
-static int push_iterator(grib_iterator *i){
+static int push_iterator(grib_iterator *i)
+{
     int ret=0;
-    GRIB_MUTEX_INIT_ONCE(&once,&init)
-    GRIB_MUTEX_LOCK(&iterator_mutex)
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&iterator_mutex);
     ret=_push_iterator(i);
-    GRIB_MUTEX_UNLOCK(&iterator_mutex)
+    GRIB_MUTEX_UNLOCK(&iterator_mutex);
     return ret;
 }
 
-static int _push_keys_iterator(grib_keys_iterator *i){
+static int _push_keys_iterator(grib_keys_iterator *i)
+{
     l_grib_keys_iterator* current  = keys_iterator_set;
     l_grib_keys_iterator* previous = keys_iterator_set;
     l_grib_keys_iterator* the_new      = NULL;
@@ -487,76 +510,81 @@ static int _push_keys_iterator(grib_keys_iterator *i){
     return myindex;
 }
 
-static int push_keys_iterator(grib_keys_iterator *i){
+static int push_keys_iterator(grib_keys_iterator *i)
+{
     int ret=0;
-    GRIB_MUTEX_INIT_ONCE(&once,&init)
-    GRIB_MUTEX_LOCK(&keys_iterator_mutex)
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&keys_iterator_mutex);
     ret=_push_keys_iterator(i);
-    GRIB_MUTEX_UNLOCK(&keys_iterator_mutex)
+    GRIB_MUTEX_UNLOCK(&keys_iterator_mutex);
     return ret;
 }
 
-static grib_handle* _get_handle(int handle_id){
+static grib_handle* _get_handle(int handle_id)
+{
     l_grib_handle* current= handle_set;
 
     while(current){
         if(current->id == handle_id) return current->h;
         current = current->next;
     }
-
     return NULL;
 }
 
-static grib_index* _get_index(int index_id){
+static grib_index* _get_index(int index_id)
+{
     l_grib_index* current= index_set;
 
     while(current){
         if(current->id == index_id) return current->h;
         current = current->next;
     }
-
     return NULL;
 }
 
-static grib_multi_handle* _get_multi_handle(int multi_handle_id){
+static grib_multi_handle* _get_multi_handle(int multi_handle_id)
+{
     l_grib_multi_handle* current= multi_handle_set;
 
     while(current){
         if(current->id == multi_handle_id) return current->h;
         current = current->next;
     }
-
     return NULL;
 }
 
-static grib_handle* get_handle(int handle_id){
+static grib_handle* get_handle(int handle_id)
+{
     grib_handle* h=NULL;
-    GRIB_MUTEX_INIT_ONCE(&once,&init)
-    GRIB_MUTEX_LOCK(&handle_mutex)
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&handle_mutex);
     h=_get_handle(handle_id);
-    GRIB_MUTEX_UNLOCK(&handle_mutex)
+    GRIB_MUTEX_UNLOCK(&handle_mutex);
     return h;
 }
 
-static grib_index* get_index(int index_id){
+static grib_index* get_index(int index_id)
+{
     grib_index* h=NULL;
-    GRIB_MUTEX_INIT_ONCE(&once,&init)
-    GRIB_MUTEX_LOCK(&index_mutex)
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&index_mutex);
     h=_get_index(index_id);
-    GRIB_MUTEX_UNLOCK(&index_mutex)
+    GRIB_MUTEX_UNLOCK(&index_mutex);
     return h;
 }
 
-static grib_multi_handle* get_multi_handle(int multi_handle_id){
+static grib_multi_handle* get_multi_handle(int multi_handle_id)
+{
     grib_multi_handle* h=NULL;
-    GRIB_MUTEX_INIT_ONCE(&once,&init)
-    GRIB_MUTEX_LOCK(&multi_handle_mutex)
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&multi_handle_mutex);
     h=_get_multi_handle(multi_handle_id);
-    GRIB_MUTEX_UNLOCK(&multi_handle_mutex)
+    GRIB_MUTEX_UNLOCK(&multi_handle_mutex);
     return h;
 }
 
-static FILE* get_file(int file_id){
+static FILE* get_file(int file_id)
+{
     l_grib_file* current  = file_set;
 
     if ( file_id < MIN_FILE_ID ) return NULL;
@@ -568,7 +596,8 @@ static FILE* get_file(int file_id){
     return NULL;
 }
 
-static grib_iterator* _get_iterator(int iterator_id){
+static grib_iterator* _get_iterator(int iterator_id)
+{
     l_grib_iterator* current  = iterator_set;
 
     while(current){
@@ -577,16 +606,19 @@ static grib_iterator* _get_iterator(int iterator_id){
     }
     return NULL;
 }
-static grib_iterator* get_iterator(int iterator_id){
+
+static grib_iterator* get_iterator(int iterator_id)
+{
     grib_iterator* i=NULL;
-    GRIB_MUTEX_INIT_ONCE(&once,&init)
-    GRIB_MUTEX_LOCK(&iterator_mutex)
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&iterator_mutex);
     i=_get_iterator(iterator_id);
-    GRIB_MUTEX_UNLOCK(&iterator_mutex)
+    GRIB_MUTEX_UNLOCK(&iterator_mutex);
     return i;
 }
 
-static grib_keys_iterator* _get_keys_iterator(int keys_iterator_id){
+static grib_keys_iterator* _get_keys_iterator(int keys_iterator_id)
+{
     l_grib_keys_iterator* current  = keys_iterator_set;
 
     while(current){
@@ -596,16 +628,18 @@ static grib_keys_iterator* _get_keys_iterator(int keys_iterator_id){
     return NULL;
 }
 
-static grib_keys_iterator* get_keys_iterator(int keys_iterator_id){
+static grib_keys_iterator* get_keys_iterator(int keys_iterator_id)
+{
     grib_keys_iterator* i=NULL;
-    GRIB_MUTEX_INIT_ONCE(&once,&init)
-    GRIB_MUTEX_LOCK(&keys_iterator_mutex)
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&keys_iterator_mutex);
     i=_get_keys_iterator(keys_iterator_id);
-    GRIB_MUTEX_UNLOCK(&keys_iterator_mutex)
+    GRIB_MUTEX_UNLOCK(&keys_iterator_mutex);
     return i;
 }
 
-static int clear_file(int file_id){
+static int clear_file(int file_id)
+{
     l_grib_file* current = file_set;
     while(current){
         if(current->id == file_id){
@@ -619,8 +653,8 @@ static int clear_file(int file_id){
     return GRIB_INVALID_FILE;
 }
 
-static int _clear_handle(int handle_id){
-
+static int _clear_handle(int handle_id)
+{
     l_grib_handle* current  = handle_set;
     if (handle_id<0) return 0;
     while(current){
@@ -633,8 +667,8 @@ static int _clear_handle(int handle_id){
     return GRIB_SUCCESS;
 }
 
-static int _clear_index(int index_id){
-
+static int _clear_index(int index_id)
+{
     l_grib_index* current  = index_set;
 
     while(current){
@@ -650,8 +684,8 @@ static int _clear_index(int index_id){
     return GRIB_SUCCESS;
 }
 
-static int _clear_multi_handle(int multi_handle_id){
-
+static int _clear_multi_handle(int multi_handle_id)
+{
     l_grib_multi_handle* current  = multi_handle_set;
 
     while(current){
@@ -664,35 +698,38 @@ static int _clear_multi_handle(int multi_handle_id){
     return GRIB_SUCCESS;
 }
 
-static int clear_handle(int handle_id){
+static int clear_handle(int handle_id)
+{
     int ret=0;
-    GRIB_MUTEX_INIT_ONCE(&once,&init)
-    GRIB_MUTEX_LOCK(&handle_mutex)
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&handle_mutex);
     ret=_clear_handle(handle_id);
-    GRIB_MUTEX_UNLOCK(&handle_mutex)
+    GRIB_MUTEX_UNLOCK(&handle_mutex);
     return ret;
 }
 
-static int clear_index(int index_id){
+static int clear_index(int index_id)
+{
     int ret=0;
-    GRIB_MUTEX_INIT_ONCE(&once,&init)
-    GRIB_MUTEX_LOCK(&index_mutex)
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&index_mutex);
     ret=_clear_index(index_id);
-    GRIB_MUTEX_UNLOCK(&index_mutex)
+    GRIB_MUTEX_UNLOCK(&index_mutex);
     return ret;
 }
 
-static int clear_multi_handle(int multi_handle_id){
+static int clear_multi_handle(int multi_handle_id)
+{
     int ret=0;
-    GRIB_MUTEX_INIT_ONCE(&once,&init)
-    GRIB_MUTEX_LOCK(&multi_handle_mutex)
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&multi_handle_mutex);
     ret=_clear_multi_handle(multi_handle_id);
-    GRIB_MUTEX_UNLOCK(&multi_handle_mutex)
+    GRIB_MUTEX_UNLOCK(&multi_handle_mutex);
     return ret;
 }
 
-static int _clear_iterator(int iterator_id){
-
+static int _clear_iterator(int iterator_id)
+{
     l_grib_iterator* current  = iterator_set;
 
     while(current){
@@ -705,16 +742,18 @@ static int _clear_iterator(int iterator_id){
     return GRIB_INVALID_ITERATOR;
 }
 
-static int clear_iterator(int iterator_id){
+static int clear_iterator(int iterator_id)
+{
     int ret=0;
-    GRIB_MUTEX_INIT_ONCE(&once,&init)
-    GRIB_MUTEX_LOCK(&iterator_mutex)
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&iterator_mutex);
     ret=_clear_iterator(iterator_id);
-    GRIB_MUTEX_UNLOCK(&iterator_mutex)
+    GRIB_MUTEX_UNLOCK(&iterator_mutex);
     return ret;
 }
 
-static int _clear_keys_iterator(int keys_iterator_id){
+static int _clear_keys_iterator(int keys_iterator_id)
+{
 
     l_grib_keys_iterator* current  = keys_iterator_set;
 
@@ -728,12 +767,13 @@ static int _clear_keys_iterator(int keys_iterator_id){
     return GRIB_INVALID_KEYS_ITERATOR;
 }
 
-static int clear_keys_iterator(int keys_iterator_id){
+static int clear_keys_iterator(int keys_iterator_id)
+{
     int ret=0;
-    GRIB_MUTEX_INIT_ONCE(&once,&init)
-    GRIB_MUTEX_LOCK(&keys_iterator_mutex)
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&keys_iterator_mutex);
     ret=_clear_keys_iterator(keys_iterator_id);
-    GRIB_MUTEX_UNLOCK(&keys_iterator_mutex)
+    GRIB_MUTEX_UNLOCK(&keys_iterator_mutex);
     return ret;
 }
 
@@ -833,7 +873,7 @@ int grib_f_read_file(int* fid, char* buffer, size_t* nbytes) {
 int grib_f_open_file_(int* fid, char* name , char* op, int lname, int lop) {
     FILE* f = NULL;
     int ioerr=0;
-    char oper[8];
+    char oper[1024]; /* GRIB-576: open mode */
     char *p;
     char fname[1024];
     int ret=GRIB_SUCCESS;
@@ -2665,6 +2705,43 @@ int grib_f_set_real8_array__(int* gid, char* key, double *val, int* size, int le
 }
 int grib_f_set_real8_array(int* gid, char* key, double *val, int* size, int len){
     return grib_f_set_real8_array_( gid,  key, val,  size, len);
+}
+
+/*****************************************************************************/
+int grib_f_get_string_array_(int* gid, char* key, char* val,int* nvals,int* slen,int len)
+{
+    grib_handle *h = get_handle(*gid);
+    int err = GRIB_SUCCESS;
+    size_t i;
+    char buf[1024];
+    size_t lsize = *nvals;
+    char** cval=0;
+    char* p=val;
+
+    if(!h) return  GRIB_INVALID_GRIB;
+
+    cval=(char**)grib_context_malloc_clear(h->context,sizeof(char*)*lsize);
+    err = grib_get_string_array(h, cast_char(buf,key,len), cval, &lsize);
+    if (err) return err;
+
+    if (strlen(cval[0])>*slen) err=GRIB_ARRAY_TOO_SMALL;
+
+    for (i=0;i<lsize;i++) {
+        strcpy(p,cval[i]);
+        czstr_to_fortran(p,*slen);
+        p+= *slen;
+    }
+    grib_context_free(h->context,cval);
+    /*remember to deallocate each string*/
+
+    return  err;
+}
+
+int grib_f_get_string_array__(int* gid, char* key, char* val,int* nvals,int* slen, int len){
+    return  grib_f_get_string_array_( gid,  key,  val,nvals,slen,len);
+}
+int grib_f_get_string_array(int* gid, char* key, char* val,int* nvals,int* slen, int len){
+    return  grib_f_get_string_array_( gid,  key,  val, nvals, slen, len);
 }
 
 /*****************************************************************************/

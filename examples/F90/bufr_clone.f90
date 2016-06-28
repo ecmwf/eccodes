@@ -16,46 +16,42 @@
 program bufr_clone
   use eccodes
   implicit none
-  integer                                       :: err,i,iret
-  integer                                       :: nx, ny
-  integer                                       :: infile,outfile
-  integer                                       :: ibufr_in
-  integer                                       :: ibufr_out
-  character(len=2)                              :: step
-  double precision, dimension(:,:), allocatable :: field2D
+  integer       :: i,iret
+  integer       :: infile,outfile
+  integer       :: ibufr_in
+  integer       :: ibufr_out
   
   !open source file 
   call codes_open_file(infile,'../../data/bufr/syno_multi.bufr','r')
-  
+
   ! open target file
   call codes_open_file(outfile,'bufr_clone_test_f.clone.bufr','w')
-  
+
   ! the first bufr message is loaded from file
   ! ibufr is the bufr id to be used in subsequent calls
   call codes_bufr_new_from_file(infile,ibufr_in,iret)
 
   ! create several clones of this message and alter them
   ! in different ways
-
   do i=1,3
-    
+
     ! clone the current handle
     call codes_clone(ibufr_in, ibufr_out)
 
     ! This is the place where you may wish to modify the clone 
     ! E.g. we change the bufrHeaderCentre 
     call codes_set(ibufr_out,'bufrHeaderCentre',222)
- 
+
     ! write cloned messages to a file
     call codes_write(ibufr_out,outfile)
-    
-    ! relase the clone's handle
+
+    ! release the clone's handle
     call codes_release(ibufr_out)
   end do  
-  
-! relase the sources 's handle
+
+  ! release the original handle
   call codes_release(ibufr_in)
-  
+
   call codes_close_file(infile)
   call codes_close_file(outfile)
 

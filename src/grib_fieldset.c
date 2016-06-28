@@ -10,7 +10,7 @@
 
 /*
  *
- * Description: routines for grib indexing form a set of files
+ * Description: routines for GRIB indexing from a set of files
  *
  */
 #include "grib_api_internal.h"
@@ -23,14 +23,14 @@
 #define GRIB_ORDER_BY_DESC   -1
 
 GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
-  if (*a != *b) return 1;
-  while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
-  return (*a==0 && *b==0) ? 0 : 1;
+    if (*a != *b) return 1;
+    while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
+    return (*a==0 && *b==0) ? 0 : 1;
 }
 
 static grib_fieldset* grib_fieldset_create_from_keys(grib_context* c,char** keys,int nkeys,int* err);
 static grib_fieldset* grib_fieldset_create_from_order_by(grib_context* c,grib_order_by* ob,
-                                           int* err);
+        int* err);
 static int grib_fieldset_resize(grib_fieldset* set,size_t newsize);
 static void grib_trim(char** x);
 static grib_order_by* grib_fieldset_new_order_by(grib_context* c,char* z);
@@ -482,7 +482,7 @@ static void grib_fieldset_sort(grib_fieldset* set, int beg, int theEnd)
 
         if (grib_fieldset_compare(set,&l,&beg) < 0) {
             SWAP(set->order->el[l],set->order->el[beg])
-                        l--;
+                                l--;
         } else {
             l--;
             SWAP(set->order->el[l],set->order->el[beg])
@@ -590,7 +590,7 @@ int grib_fieldset_add(grib_fieldset* set,char* filename)
     int err=0;
     int i=0;
     grib_handle* h=0;
-   /* int nkeys; */
+    /* int nkeys; */
     grib_file* file;
     double offset=0;
     long length=0;
@@ -599,7 +599,7 @@ int grib_fieldset_add(grib_fieldset* set,char* filename)
     if (!set || !filename ) return GRIB_INVALID_ARGUMENT;
     c=set->context;
 
-   /* nkeys=set->columns_size; */
+    /* nkeys=set->columns_size; */
 
     file=grib_file_open(filename,"r",&err);
     if (!file || !file->handle) return err;

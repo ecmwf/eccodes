@@ -75,17 +75,17 @@
 	 indicatorOfParameter = 19 ;
 	}
 #Radar spectra(1)
-'non-dim' = {
+'dimensionless' = {
 	 table2Version = 254 ;
 	 indicatorOfParameter = 21 ;
 	}
 #Radar spectra(2)
-'non-dim' = {
+'dimensionless' = {
 	 table2Version = 254 ;
 	 indicatorOfParameter = 22 ;
 	}
 #Radar spectra(3)
-'non-dim' = {
+'dimensionless' = {
 	 table2Version = 254 ;
 	 indicatorOfParameter = 23 ;
 	}
@@ -105,17 +105,17 @@
 	 indicatorOfParameter = 27 ;
 	}
 #Wave spectra(1)
-'non-dim' = {
+'dimensionless' = {
 	 table2Version = 254 ;
 	 indicatorOfParameter = 28 ;
 	}
 #Wave spectra(2)
-'non-dim' = {
+'dimensionless' = {
 	 table2Version = 254 ;
 	 indicatorOfParameter = 29 ;
 	}
 #Wave spectra(3)
-'non-dim' = {
+'dimensionless' = {
 	 table2Version = 254 ;
 	 indicatorOfParameter = 30 ;
 	}

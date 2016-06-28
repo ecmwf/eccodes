@@ -670,7 +670,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
             !=GRIB_SUCCESS) {
         grib_context_log(a->context,GRIB_LOG_ERROR,
                 "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
-        exit(GRIB_INTERNAL_ERROR);
+        return GRIB_INTERNAL_ERROR;
     }
     if((ret = grib_set_double_internal(handle,self->reference_value, reference_value)) !=
             GRIB_SUCCESS)
@@ -1185,6 +1185,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 #endif
         }
     }
+
+    /* ECC-259: Set correct number of values */
+    ret=grib_set_long_internal(a->parent->h,self->number_of_values, *len);
+    if(ret) return ret;
 
     grib_buffer_replace(a, buffer, size,1,1);
 

@@ -26,7 +26,8 @@ list( APPEND tests
       set_missing
       grib_set_pv
       samples
-      count_messages
+      grib_count_messages
+      grib_count_messages_multi
       read_message
       read_from_file
       get_set_uuid
@@ -35,6 +36,7 @@ list( APPEND tests
       bufr_clone
       bufr_expanded
       bufr_get_keys
+      bufr_get_string_array
       bufr_keys_iterator
       bufr_read_header
       bufr_read_scatterometer

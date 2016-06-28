@@ -438,12 +438,13 @@ grib_string_list* grib_util_get_mars_param(const char* param_id);
 * @param data_len    : the length of the message in number of bytes
 * @return            the new handle, NULL if the message is invalid or a problem is encountered
 */
-grib_handle* grib_handle_new_from_message(grib_context* c, void* data, size_t data_len);
+grib_handle* grib_handle_new_from_message(grib_context* c, const void* data, size_t data_len);
 
 /**
 *  Create a handle from a user message in memory. The message will not be freed at the end.
 *  The message will be copied as soon as a modification is needed.
 *  This function works also with multi field messages.
+*  Note: The data pointer argument may be modified
 *
 * @param c           : the context from which the handle will be created (NULL for default context)
 * @param data        : the actual message
@@ -1001,9 +1002,9 @@ typedef void  (*grib_print_proc)    (const grib_context* c, void* descriptor, co
 * Grib data read proc, format of a procedure referenced in the context that is used to read from a stream in a resource
 *
 * @param c             : the context where the read will apply
-* @param *ptr          : the resource
+* @param ptr          : the resource
 * @param size          : size to read
-* @param *stream       : the stream
+* @param stream       : the stream
 * @return              size read
 */
 typedef size_t  (*grib_data_read_proc) (const grib_context* c,void *ptr, size_t size, void *stream);
@@ -1012,9 +1013,9 @@ typedef size_t  (*grib_data_read_proc) (const grib_context* c,void *ptr, size_t 
 * Grib data read write, format of a procedure referenced in the context that is used to write to a stream from a resource
 *
 * @param c             : the context where the write will apply
-* @param *ptr          : the resource
+* @param ptr          : the resource
 * @param size          : size to read
-* @param *stream       : the stream
+* @param stream       : the stream
 * @return              size written
 */
 typedef size_t  (*grib_data_write_proc)(const grib_context* c,const void *ptr, size_t size,  void *stream);
@@ -1023,7 +1024,7 @@ typedef size_t  (*grib_data_write_proc)(const grib_context* c,const void *ptr, s
 * Grib data tell, format of a procedure referenced in the context that is used to tell the current position in a stream
 *
 * @param c             : the context where the tell will apply
-* @param *stream       : the stream
+* @param stream       : the stream
 * @return              the position in the stream
 */
 typedef off_t    (*grib_data_tell_proc) (const grib_context* c, void *stream);
@@ -1036,7 +1037,7 @@ typedef off_t    (*grib_data_tell_proc) (const grib_context* c, void *stream);
 * @param whence        : If whence is set to SEEK_SET, SEEK_CUR, or SEEK_END,
                          the offset  is  relative  to  the start of the file,
              the current position indicator, or end-of-file, respectively.
-* @param *stream       : the stream
+* @param stream       : the stream
 * @return            0 if OK, integer value on error
 */
 typedef off_t    (*grib_data_seek_proc) (const grib_context* c, off_t offset, int whence, void *stream);
@@ -1045,7 +1046,7 @@ typedef off_t    (*grib_data_seek_proc) (const grib_context* c, off_t offset, in
 * Grib data eof, format of a procedure referenced in the context that is used to test end of file
 *
 * @param c             : the context where the tell will apply
-* @param *stream       : the stream
+* @param stream       : the stream
 * @return              the position in the stream
 */
 typedef int    (*grib_data_eof_proc) (const grib_context* c, void *stream);
@@ -1062,7 +1063,7 @@ grib_context*    grib_context_get_default(void);
 *
 * @param c           : the context to be deleted
 */
-void             grib_context_delete                     (grib_context* c);
+void             grib_context_delete(grib_context* c);
 
 /**
 *  Set the GTS header mode on.
@@ -1102,6 +1103,22 @@ int grib_get_gribex_mode ( grib_context* c);
 * @param c           : the context
 */
 void grib_gribex_mode_off(grib_context* c);
+
+/**
+ * Sets the search path for definition files.
+ *
+ * @param c      : the context to be modified
+ * @param path   : the search path for definition files
+ */
+void grib_context_set_definitions_path(grib_context* c, const char* path);
+
+/**
+ * Sets the search path for sample files.
+ *
+ * @param c      : the context to be modified
+ * @param path   : the search path for sample files
+ */
+void grib_context_set_samples_path(grib_context* c, const char* path);
 
 /**
 *  Sets memory procedures of the context

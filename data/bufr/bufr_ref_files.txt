@@ -268,7 +268,7 @@ syno_multi.bufr.desc.ref
 synop_multi_subset.bufr.desc.ref
 aaen_55.bufr.ls.ref
 syno_multi.bufr.header.ref
-bad.bufr.json.ref
+bad.bufr.json.v0.16.0.ref
 207003.bufr.json.ref
 new_207003.bufr.ref
 new_aaen_55.bufr.ref
@@ -384,3 +384,4 @@ uegabe.bufr.num.ref
 syno.bufr.out.ref
 airep.bufr.out.ref
 new_replication.bufr.ref
+get_string_array.ref

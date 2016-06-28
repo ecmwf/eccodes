@@ -629,7 +629,7 @@ char *grib_context_full_defs_path(grib_context* c,const char* basename)
 
         while (dir) {
             sprintf(full,"%s/%s",dir->value,basename);
-            if (!access(full,F_OK)) {
+            if (!codes_access(full,F_OK)) {
                 fullpath=(grib_string_list*)grib_context_malloc_clear_persistent(c,sizeof(grib_string_list));
                 Assert(fullpath);
                 fullpath->value=grib_context_strdup(c,full);
@@ -731,6 +731,29 @@ void grib_context_delete( grib_context* c)
         grib_context_free_persistent(&default_grib_context,c);
 }
 
+void grib_context_set_definitions_path(grib_context* c, const char* path)
+{
+    if (!c) c=grib_context_get_default();
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex_c);
+
+    c->grib_definition_files_path = strdup(path);
+    grib_context_log(c, GRIB_LOG_DEBUG, "Definitions path changed to: %s", c->grib_definition_files_path);
+
+    GRIB_MUTEX_UNLOCK(&mutex_c);
+}
+void grib_context_set_samples_path(grib_context* c, const char* path)
+{
+    if (!c) c=grib_context_get_default();
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex_c);
+
+    c->grib_samples_path = strdup(path);
+    grib_context_log(c, GRIB_LOG_DEBUG, "Samples path changed to: %s",  c->grib_samples_path);
+
+    GRIB_MUTEX_UNLOCK(&mutex_c);
+}
+
 void* grib_context_malloc_persistent(const grib_context* c, size_t size)
 {
     void* p =  c->alloc_persistent_mem(c,size);
@@ -775,7 +798,7 @@ void* grib_context_realloc(const grib_context* c, void *p,size_t size)
     q=c->realloc_mem(c,p,size);
     if(!q) {
         grib_context_log(c,GRIB_LOG_FATAL,"grib_context_realloc: error allocating %lu bytes",(unsigned long)size);
-        exit(1);
+        return NULL;
     }
     return q;
 }
@@ -805,7 +828,7 @@ void* grib_context_buffer_malloc(const grib_context* c, size_t size)
     else p=c->alloc_buffer_mem(c,size);
     if(!p) {
         grib_context_log(c,GRIB_LOG_FATAL,"grib_context_buffer_malloc: error allocating %lu bytes",(unsigned long)size);
-        exit(1);
+        return NULL;
     }
     return p;
 }
@@ -821,7 +844,7 @@ void* grib_context_buffer_realloc(const grib_context* c, void *p,size_t size)
     void* q=c->realloc_buffer_mem(c,p,size);
     if(!q) {
         grib_context_log(c,GRIB_LOG_FATAL,"grib_context_buffer_realloc: error allocating %lu bytes",(unsigned long)size);
-        exit(1);
+        return NULL;
     }
     return q;
 }

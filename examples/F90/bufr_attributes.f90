@@ -19,7 +19,7 @@ implicit none
 integer            :: ifile
 integer            :: iret
 integer            :: ibufr
-integer            :: i, count=0
+integer            :: count=0
 integer(kind=4)    :: iVal,conf 
 real(kind=8)       :: t2m
 character(len=32)   :: units, confUnits 

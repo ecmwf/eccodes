@@ -19,6 +19,8 @@ list( APPEND test_bins
       unit_tests
       gauss_sub
       grib_util_set_spec
+      local_MeteoFrance
+      grib_2nd_order_numValues
 )
 
 foreach( tool ${test_bins} )
@@ -38,6 +40,7 @@ list( APPEND tests1
     unit_tests
     md5
     uerra
+    grib_2nd_order_numValues
 )
 list( APPEND tests2
     grib_double_cmp
@@ -57,7 +60,7 @@ list( APPEND tests2
     gts_ls
     gts_compare
     metar_ls
-	metar_get
+    metar_get
     metar_dump
     metar_compare
     bufr_set
@@ -97,7 +100,8 @@ list( APPEND tests2
     padding
     debug
     grib_util_set_spec
-	neg_fctime
+    local_MeteoFrance
+    neg_fctime
 )
 
 # These tests do not require any data downloads
@@ -116,7 +120,7 @@ ecbuild_add_test( TARGET eccodes_t_check_gaussian_grids
 
 # Note: making the test dependent on the grib files (with DEPENDS)
 #       means they will be downloaded at "make" time
-#       rather than when you do "make test". Use TEST_DEPENDS instead
+#       rather than when you do "ctest". Use TEST_DEPENDS instead
 foreach( test ${tests2} )
     ecbuild_add_test( TARGET eccodes_t_${test}
                   TYPE SCRIPT
@@ -137,6 +141,7 @@ ecbuild_add_test( TARGET eccodes_t_lamb_az_eq_area
 )
 
 # These ones are conditional
+###########################################
 ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
                   TYPE SCRIPT
                   CONDITION HAVE_NETCDF
@@ -151,9 +156,23 @@ ecbuild_add_test( TARGET eccodes_t_jpeg
                   TEST_DEPENDS eccodes_download_gribs
 )
 
+ecbuild_add_test( TARGET eccodes_t_grib_png
+                  TYPE SCRIPT
+                  CONDITION HAVE_PNG
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_png.sh
+                  TEST_DEPENDS eccodes_download_gribs
+)
+
 ecbuild_add_test( TARGET eccodes_t_ccsds
                   TYPE SCRIPT
                   CONDITION HAVE_AEC
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ccsds.sh
                   TEST_DEPENDS eccodes_download_gribs
 )
+
+ecbuild_add_test( TARGET eccodes_t_grib_check_param_concepts
+                  TYPE SCRIPT
+                  CONDITION ENABLE_EXTRA_TESTS
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_param_concepts.sh
+)
+

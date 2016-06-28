@@ -24,6 +24,17 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	}
+#10 metre wind gust since previous post-processing
+'10 metre wind gust since previous post-processing' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 is_uerra = 1 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Specific rain water content
 'Specific rain water content' = {
 	 discipline = 0 ;
@@ -70,6 +81,28 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 37 ;
 	}
+#Maximum temperature at 2 metres since previous post-processing
+'Maximum temperature at 2 metres since previous post-processing' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 is_uerra = 1 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfFirstFixedSurface = 103 ;
+	}
+#Minimum temperature at 2 metres since previous post-processing
+'Minimum temperature at 2 metres since previous post-processing' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 is_uerra = 1 ;
+	}
 #Ozone mass mixing ratio
 'Ozone mass mixing ratio' = {
 	 discipline = 0 ;
@@ -88,8 +121,8 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 84 ;
 	}
-#Cloud cover
-'Cloud cover' = {
+#Fraction of cloud cover
+'Fraction of cloud cover' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 32 ;
@@ -108,11 +141,30 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 11 ;
 	}
+#Low cloud cover
+'Low cloud cover' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 3 ;
+	}
+#Medium cloud cover
+'Medium cloud cover' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 4 ;
+	}
+#High cloud cover
+'High cloud cover' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 5 ;
+	}
 #10 metre wind gust in the last 3 hours
 '10 metre wind gust in the last 3 hours' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
+	 is_uerra = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
@@ -155,6 +207,24 @@
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 27 ;
+	}
+#Unbalanced component of specific humidity
+'Unbalanced component of specific humidity' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 118 ;
+	}
+#Unbalanced component of specific cloud liquid water content
+'Unbalanced component of specific cloud liquid water content' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 119 ;
+	}
+#Unbalanced component of specific cloud ice water content
+'Unbalanced component of specific cloud ice water content' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 120 ;
 	}
 #Soil moisture top 20 cm
 'Soil moisture top 20 cm' = {
@@ -400,6 +470,15 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
 	}
+#Surface air relative humidity
+'Surface air relative humidity' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 1 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	}
 #Apparent temperature
 'Apparent temperature' = {
 	 discipline = 0 ;
@@ -411,6 +490,129 @@
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 2 ;
+	}
+#Cloud cover
+'Cloud cover' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 22 ;
+	}
+#Evaporation rate
+'Evaporation rate' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 79 ;
+	}
+#Evaporation
+'Evaporation' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 79 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#10 metre wind direction
+'10 metre wind direction' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	}
+#Direct short wave radiation flux
+'Direct short wave radiation flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	}
+#Diffuse short wave radiation flux
+'Diffuse short wave radiation flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	}
+#Time-integrated surface direct short wave radiation flux
+'Time-integrated surface direct short wave radiation flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Soil temperature
+'Soil temperature' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
+	}
+#Downward short-wave radiation flux, clear sky
+'Downward short-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 52 ;
+	}
+#Upward short-wave radiation flux, clear sky
+'Upward short-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 53 ;
+	}
+#Downward long-wave radiation flux, clear sky
+'Downward long-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 8 ;
+	}
+#Soil heat flux
+'Soil heat flux' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 26 ;
+	}
+#Percolation rate
+'Percolation rate' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 16 ;
+	}
+#Soil depth
+'Soil depth' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 27 ;
+	}
+#Accumulated surface downward short-wave radiation flux, clear sky
+'Accumulated surface downward short-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 52 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Accumulated surface upward short-wave radiation flux, clear sky
+'Accumulated surface upward short-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 53 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Accumulated surface downward long-wave radiation flux, clear sky
+'Accumulated surface downward long-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Percolation
+'Percolation' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 16 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfFirstFixedSurface = 177 ;
 	}
 #Cloudy brightness temperature
 'Cloudy brightness temperature' = {
@@ -544,6 +746,12 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	}
+#Wind direction
+'Wind direction' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	}
 #Significant height of combined wind waves and swell
 'Significant height of combined wind waves and swell' = {
 	 discipline = 10 ;
@@ -641,6 +849,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
+	 is_uerra = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
@@ -653,6 +862,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
+	 is_uerra = 0 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;

@@ -16,11 +16,6 @@
 
 #include <math.h>
 
-#define SCANXY    1
-#define SCANYX    2
-#define SCANRXRY  3
-#define SCANXRY   4
-#define SCANRXY   5
 #define NUMBER(x) (sizeof(x)/sizeof(x[0]))
 #define MAXITER  10
 

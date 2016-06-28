@@ -20,9 +20,8 @@ implicit none
   integer(4)        :: numberOfPoints
   logical            :: is_missing_value
   integer            :: count1=0, count2=0, bitmapPresent=0, bmp_len=0
-  character(len=256) :: filename
 
-!     Message identifier.
+  ! Message identifier.
   integer            :: igrib
 
   ifile=5

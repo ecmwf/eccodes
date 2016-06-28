@@ -16,21 +16,19 @@ program print_data_fortran
 use eccodes
 implicit none
 integer            :: ifile
-integer            :: iret
 integer            :: igrib
 integer            :: i
 real(kind=8), dimension(:), allocatable       :: values
 real(kind=8)       :: average
 real(kind=8)       :: max
 real(kind=8)       :: min
-character(len=256) :: error
 
-call codes_open_file(ifile, &
+  call codes_open_file(ifile, &
            '../../data/constant_field.grib1','r')
 
-!     a new grib message is loaded from file
-!     igrib is the grib id to be used in subsequent calls
-      call codes_grib_new_from_file(ifile,igrib)
+  ! A new grib message is loaded from file
+  ! igrib is the grib id to be used in subsequent calls
+  call codes_grib_new_from_file(ifile,igrib)
 
   call codes_get(igrib,'values',values)
 

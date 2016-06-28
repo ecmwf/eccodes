@@ -9,5 +9,5 @@
 
 . ./include.sh
 
-${examples_dir}c_grib_get_keys > /dev/null
+${examples_dir}c_grib_get_keys
 

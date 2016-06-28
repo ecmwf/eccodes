@@ -2024,7 +2024,7 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 247 ;
 	}
-#Cloud cover
+#Fraction of cloud cover
 '(0 - 1)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 248 ;
@@ -3674,6 +3674,11 @@
 	 table2Version = 174 ;
 	 indicatorOfParameter = 52 ;
 	}
+#2m specific humidity
+'kg kg**-1' = {
+	 table2Version = 174 ;
+	 indicatorOfParameter = 96 ;
+	}
 #Sea-ice Snow Thickness
 'm' = {
 	 table2Version = 174 ;
@@ -3825,12 +3830,12 @@
 	 indicatorOfParameter = 118 ;
 	}
 #Mean altitude of maximum injection
-'m above sea level' = {
+'m' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 119 ;
 	}
 #Altitude of plume top
-'m above sea level' = {
+'m' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 120 ;
 	}
@@ -4020,7 +4025,7 @@
 	 indicatorOfParameter = 241 ;
 	}
 #Altitude of plume bottom
-'m above sea level' = {
+'m' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 242 ;
 	}
@@ -4105,12 +4110,12 @@
 	 indicatorOfParameter = 118 ;
 	}
 #Altitude of emitter
-'m above sea level' = {
+'m' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 119 ;
 	}
 #Altitude of plume top
-'m above sea level' = {
+'m' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 120 ;
 	}
@@ -9025,22 +9030,22 @@
 	 indicatorOfParameter = 48 ;
 	}
 #Instantaneous total lightning density
-'flashes/km2/day' = {
+'flashes km**-2 day**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 50 ;
 	}
 #Averaged total lightning density
-'flashes/km2/day' = {
+'flashes km**-2 day**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 51 ;
 	}
 #Instantaneous cloud-to-ground lightning density
-'flashes/km2/day' = {
+'flashes km**-2 day**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 52 ;
 	}
 #Averaged cloud-to-ground lightning density
-'flashes/km2/day' = {
+'flashes km**-2 day**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 53 ;
 	}
@@ -11730,7 +11735,7 @@
 	 indicatorOfParameter = 229 ;
 	}
 #Mean wave direction
-'degrees' = {
+'Degree true' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 230 ;
 	}
@@ -12365,12 +12370,12 @@
 	 indicatorOfParameter = 202 ;
 	}
 #Bias in the zonal pressure gradient (applied)
-'Pa**m-1' = {
+'Pa m**-1' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 203 ;
 	}
 #Bias in the meridional pressure gradient (applied)
-'Pa**m-1' = {
+'Pa m**-1' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 204 ;
 	}

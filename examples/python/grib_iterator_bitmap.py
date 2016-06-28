@@ -65,11 +65,11 @@ def example(INPUT):
 def main():
     try:
         example(sys.argv[1])
-    except CodesInternalError, err:
+    except CodesInternalError as err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr, err.msg
+            sys.stderr.write(err.msg + '\n')
 
         return 1
 
