@@ -1,6 +1,6 @@
 #!/bin/ksh
 set -ex
-set -A tools grib_dump grib_ls grib_get grib_copy grib_set grib_filter grib_compare grib_get_data grib_keys grib_index_build
+set -A tools grib_dump grib_ls grib_get grib_copy grib_set grib_filter grib_compare grib_get_data grib_index_build
 export DOXYGEN_USAGE=1
 
 cat tools_head.dox > tools.dox
