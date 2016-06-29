@@ -45,21 +45,11 @@ static void init() {
 }  // (anonymous namespace)
 
 
-Representation::Representation(): count_(0) {
+Representation::Representation() {
 }
 
 
 Representation::~Representation() {
-}
-
-void Representation::attach() const {
-    count_++;
-}
-
-void Representation::detach() const {
-    if (--count_ == 0) {
-        delete this;
-    }
 }
 
 RepresentationHandle::RepresentationHandle(const Representation *representation):
