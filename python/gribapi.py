@@ -1868,3 +1868,24 @@ def grib_new_from_message(message):
     error, gribid = _internal.grib_c_new_from_message(0, message, len(message))
     GRIB_CHECK(error)
     return gribid
+
+
+@require(defs_path=str)
+def grib_set_definitions_path(defs_path):
+    """
+    @brief Set the definitions path
+
+    @param defs_path   definitions path
+    """
+    _internal.grib_c_set_definitions_path(defs_path)
+
+
+@require(samples_path=str)
+def grib_set_samples_path(samples_path):
+    """
+    @brief Set the samples path
+
+    @param samples_path   samples path
+    """
+    _internal.grib_c_set_samples_path(samples_path)
+

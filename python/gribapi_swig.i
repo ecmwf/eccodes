@@ -212,3 +212,5 @@ void no_fail_on_wrong_length(int flag);
 long grib_c_get_api_version();
 void grib_c_gts_header_on();
 void grib_c_gts_header_off();
+void grib_c_set_definitions_path(const char* path);
+void grib_c_set_samples_path(const char* path);

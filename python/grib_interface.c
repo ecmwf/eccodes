@@ -2114,3 +2114,15 @@ int grib_c_get_message(int *gid, const void **msg, size_t *size)
     grib_handle *h = get_handle(*gid);
     return grib_get_message(h,msg,size);
 }
+
+void grib_c_set_definitions_path(const char* path)
+{
+    grib_context *c = grib_context_get_default();
+    grib_context_set_definitions_path(c, path);
+}
+
+void grib_c_set_samples_path(const char* path)
+{
+    grib_context *c = grib_context_get_default();
+    grib_context_set_samples_path(c, path);
+}

@@ -8631,6 +8631,54 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_grib_c_set_definitions_path(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  char *arg1 = (char *) 0 ;
+  int res1 ;
+  char *buf1 = 0 ;
+  int alloc1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:grib_c_set_definitions_path",&obj0)) SWIG_fail;
+  res1 = SWIG_AsCharPtrAndSize(obj0, &buf1, NULL, &alloc1);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "grib_c_set_definitions_path" "', argument " "1"" of type '" "char const *""'");
+  }
+  arg1 = (char *)(buf1);
+  grib_c_set_definitions_path((char const *)arg1);
+  resultobj = SWIG_Py_Void();
+  if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
+  return resultobj;
+fail:
+  if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_grib_c_set_samples_path(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  char *arg1 = (char *) 0 ;
+  int res1 ;
+  char *buf1 = 0 ;
+  int alloc1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:grib_c_set_samples_path",&obj0)) SWIG_fail;
+  res1 = SWIG_AsCharPtrAndSize(obj0, &buf1, NULL, &alloc1);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "grib_c_set_samples_path" "', argument " "1"" of type '" "char const *""'");
+  }
+  arg1 = (char *)(buf1);
+  grib_c_set_samples_path((char const *)arg1);
+  resultobj = SWIG_Py_Void();
+  if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
+  return resultobj;
+fail:
+  if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
+  return NULL;
+}
+
+
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"SWIG_PyInstanceMethod_New", (PyCFunction)SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { (char *)"cdata", _wrap_cdata, METH_VARARGS, NULL},
@@ -8762,6 +8810,8 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"grib_c_get_api_version", _wrap_grib_c_get_api_version, METH_VARARGS, NULL},
 	 { (char *)"grib_c_gts_header_on", _wrap_grib_c_gts_header_on, METH_VARARGS, NULL},
 	 { (char *)"grib_c_gts_header_off", _wrap_grib_c_gts_header_off, METH_VARARGS, NULL},
+	 { (char *)"grib_c_set_definitions_path", _wrap_grib_c_set_definitions_path, METH_VARARGS, NULL},
+	 { (char *)"grib_c_set_samples_path", _wrap_grib_c_set_samples_path, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
@@ -9492,6 +9542,7 @@ SWIG_init(void) {
   SWIG_Python_SetConstant(d, "GRIB_TOO_MANY_ATTRIBUTES",SWIG_From_int((int)(-62)));
   SWIG_Python_SetConstant(d, "GRIB_ATTRIBUTE_NOT_FOUND",SWIG_From_int((int)(-63)));
   SWIG_Python_SetConstant(d, "GRIB_UNSUPPORTED_EDITION",SWIG_From_int((int)(-64)));
+  SWIG_Python_SetConstant(d, "GRIB_OUT_OF_RANGE",SWIG_From_int((int)(-65)));
   
   import_array();
   

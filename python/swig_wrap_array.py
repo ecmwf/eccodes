@@ -139,6 +139,7 @@ GRIB_ATTRIBUTE_CLASH = _gribapi_swig.GRIB_ATTRIBUTE_CLASH
 GRIB_TOO_MANY_ATTRIBUTES = _gribapi_swig.GRIB_TOO_MANY_ATTRIBUTES
 GRIB_ATTRIBUTE_NOT_FOUND = _gribapi_swig.GRIB_ATTRIBUTE_NOT_FOUND
 GRIB_UNSUPPORTED_EDITION = _gribapi_swig.GRIB_UNSUPPORTED_EDITION
+GRIB_OUT_OF_RANGE = _gribapi_swig.GRIB_OUT_OF_RANGE
 class intp(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, intp, name, value)
@@ -607,5 +608,13 @@ grib_c_gts_header_on = _gribapi_swig.grib_c_gts_header_on
 def grib_c_gts_header_off():
   return _gribapi_swig.grib_c_gts_header_off()
 grib_c_gts_header_off = _gribapi_swig.grib_c_gts_header_off
+
+def grib_c_set_definitions_path(*args):
+  return _gribapi_swig.grib_c_set_definitions_path(*args)
+grib_c_set_definitions_path = _gribapi_swig.grib_c_set_definitions_path
+
+def grib_c_set_samples_path(*args):
+  return _gribapi_swig.grib_c_set_samples_path(*args)
+grib_c_set_samples_path = _gribapi_swig.grib_c_set_samples_path
 
 

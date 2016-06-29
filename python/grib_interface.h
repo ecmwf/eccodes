@@ -108,5 +108,7 @@ void grib_c_gts_header_on(void);
 void grib_c_gts_header_off(void);
 int grib_c_get_message(int *gid, const void **msg, size_t *size);
 int grib_c_get_string_length(int* gid, char* key, size_t* val);
+void grib_c_set_definitions_path(const char* path);
+void grib_c_set_samples_path(const char* path);
 
 #endif
