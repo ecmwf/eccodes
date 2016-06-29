@@ -313,6 +313,13 @@ int grib_f_multi_append_(int *ingid, int *sec, int *mgid);
 int grib_f_multi_append(int *ingid, int *sec, int *mgid);
 int grib_f_multi_append__(int *ingid, int *sec, int *mgid);
 
+int grib_f_set_definitions_path_(char *path, int len);
+int grib_f_set_definitions_path__(char *path, int len);
+int grib_f_set_definitions_path(char *path, int len);
+int grib_f_set_samples_path_(char *path, int len);
+int grib_f_set_samples_path__(char *path, int len);
+int grib_f_set_samples_path(char *path, int len);
+
 #ifdef __cplusplus
 }
 #endif

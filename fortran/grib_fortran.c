@@ -2972,3 +2972,31 @@ int grib_f_multi_append(int* ingid, int* sec,int* mgid) {
 int grib_f_multi_append__(int* ingid, int* sec,int* mgid) {
     return grib_f_multi_append_(ingid, sec, mgid);
 }
+
+/*****************************************************************************/
+int grib_f_set_definitions_path_(char* path, int len){
+    grib_context* c = grib_context_get_default();
+    char buf[1024];
+    grib_context_set_definitions_path(c, cast_char(buf,path,len));
+    return GRIB_SUCCESS;
+}
+int grib_f_set_definitions_path__(char* path,  int len){
+    return grib_f_set_definitions_path_(path, len);
+}
+int grib_f_set_definitions_path(char* path,  int len){
+    return grib_f_set_definitions_path_(path, len);
+}
+
+
+int grib_f_set_samples_path_(char* path, int len){
+    grib_context* c = grib_context_get_default();
+    char buf[1024];
+    grib_context_set_samples_path(c, cast_char(buf,path,len));
+    return GRIB_SUCCESS;
+}
+int grib_f_set_samples_path__(char* path,  int len){
+    return grib_f_set_samples_path_(path, len);
+}
+int grib_f_set_samples_path(char* path,  int len){
+    return grib_f_set_samples_path_(path, len);
+}

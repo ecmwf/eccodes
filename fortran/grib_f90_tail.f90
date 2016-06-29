@@ -3146,5 +3146,47 @@
       endif
   end subroutine grib_skip_read_only
 
+  !> Set the definition path
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param path       definitions path
+  !> @param status     GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_set_definitions_path ( path,  status )
+      character(len=*),                        intent(in)  :: path
+      integer(kind=kindOfInt),optional, intent(out)        :: status
+      integer(kind=kindOfInt)                              :: iret
+
+      iret=grib_f_set_definitions_path ( path )
+      if (present(status)) then
+         status = iret
+      else
+         call grib_check(iret,'grib_set_definitions_path','('//path//')')
+      endif
+  end subroutine grib_set_definitions_path
+
+  !> Set the samples path
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param path       samples path
+  !> @param status     GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_set_samples_path ( path,  status )
+      character(len=*),                        intent(in)  :: path
+      integer(kind=kindOfInt),optional, intent(out)        :: status
+      integer(kind=kindOfInt)                              :: iret
+
+      iret=grib_f_set_samples_path ( path )
+      if (present(status)) then
+         status = iret
+      else
+         call grib_check(iret,'grib_set_samples_path','('//path//')')
+      endif
+  end subroutine grib_set_samples_path
+
 end module grib_api
 

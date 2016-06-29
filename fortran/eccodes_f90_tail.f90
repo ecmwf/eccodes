@@ -8,7 +8,6 @@ subroutine codes_set_missing ( gribid, key,  status )
     integer(kind=kindOfInt),                 intent(in)  :: gribid
     character(len=*),                        intent(in)  :: key
     integer(kind=kindOfInt),optional, intent(out)        :: status
-    integer(kind=kindOfInt)                              :: iret
 
     call grib_set_missing ( gribid, key,  status )
 end subroutine codes_set_missing 
@@ -19,7 +18,6 @@ subroutine codes_index_create ( indexid, filename, keys,  status )
     character(len=*), intent(in)                    :: filename
     character(len=*), intent(in)                    :: keys
     integer(kind=kindOfInt),optional, intent(out)   :: status
-    integer(kind=kindOfInt)                         :: iret
 
     call grib_index_create ( indexid, filename, keys,  status )
 end subroutine codes_index_create 
@@ -29,7 +27,6 @@ subroutine codes_index_add_file ( indexid, filename, status )
     integer(kind=kindOfInt), intent(in)             :: indexid
     character(len=*), intent(in)                    :: filename
     integer(kind=kindOfInt),optional, intent(out)   :: status
-    integer(kind=kindOfInt)                         :: iret
 
     call grib_index_add_file ( indexid, filename, status )
 end subroutine codes_index_add_file 
@@ -40,7 +37,6 @@ subroutine codes_index_get_size_long( indexid, key, size,  status )
     character(len=*), intent(in)                    :: key
     integer(kind=kindOfLong),       intent(out)   :: size
     integer(kind=kindOfInt),optional, intent(out)   :: status
-    integer(kind=kindOfInt)                         :: iret
 
     call grib_index_get_size_long( indexid, key, size,  status )
 end subroutine codes_index_get_size_long
@@ -51,7 +47,6 @@ subroutine codes_index_get_size_int( indexid, key, size,  status )
     character(len=*), intent(in)                    :: key
     integer(kind=kindOfInt),       intent(out)   :: size
     integer(kind=kindOfInt),optional, intent(out)   :: status
-    integer(kind=kindOfInt)                         :: iret
 
     call grib_index_get_size_int( indexid, key, size,  status )
 end subroutine codes_index_get_size_int
@@ -62,8 +57,6 @@ subroutine codes_index_get_int( indexid, key, values,  status )
     character(len=*),      intent(in)  :: key
     integer(kind=kindOfInt), dimension(:), intent(out) :: values
     integer(kind=kindOfInt),optional, intent(out)      :: status
-    integer(kind=kindOfInt)                            :: iret
-    integer(kind=kindOfInt)                            :: nb_values
 
     call grib_index_get_int( indexid, key, values,  status )
 end subroutine codes_index_get_int
@@ -74,8 +67,6 @@ subroutine codes_index_get_long( indexid, key, values,  status )
     character(len=*),      intent(in)  :: key
     integer(kind=kindOfLong), dimension(:), intent(out) :: values
     integer(kind=kindOfInt),optional, intent(out)      :: status
-    integer(kind=kindOfInt)                            :: iret
-    integer(kind=kindOfInt)                            :: nb_values
 
     call grib_index_get_long( indexid, key, values,  status )
 end subroutine codes_index_get_long
@@ -86,21 +77,16 @@ subroutine codes_index_get_real8( indexid, key, values,  status )
     character(len=*),      intent(in)  :: key
     real(kind=kindOfDouble), dimension(:), intent(out) :: values
     integer(kind=kindOfInt),optional, intent(out)      :: status
-    integer(kind=kindOfInt)                            :: iret
-    integer(kind=kindOfInt)                            :: nb_values
 
     call grib_index_get_real8( indexid, key, values,  status )
 end subroutine codes_index_get_real8
 
 !
 subroutine codes_index_get_string( indexid, key, values,  status )
-    integer(kind=kindOfInt),               intent(in)  :: indexid
-    character(len=*),      intent(in)  :: key
-    character(len=*), dimension(:), intent(out) :: values
-    integer(kind=kindOfInt),optional, intent(out)      :: status
-    integer(kind=kindOfInt)                            :: iret
-    integer(kind=kindOfInt)                            :: nb_values
-    integer(kind=kindOfInt)                            :: size_value
+    integer(kind=kindOfInt),        intent(in)     :: indexid
+    character(len=*),      intent(in)              :: key
+    character(len=*), dimension(:), intent(out)    :: values
+    integer(kind=kindOfInt),optional, intent(out)  :: status
 
     call grib_index_get_string( indexid, key, values,  status )
 end subroutine codes_index_get_string
@@ -111,7 +97,6 @@ subroutine codes_index_select_string( indexid, key, value,  status )
     character(len=*),      intent(in)                  :: key
     character(len=*), intent(in)                :: value
     integer(kind=kindOfInt),optional, intent(out)      :: status
-    integer(kind=kindOfInt)                            :: iret
 
     call grib_index_select_string( indexid, key, value,  status )
 end subroutine codes_index_select_string
@@ -122,7 +107,6 @@ subroutine codes_index_select_int( indexid, key, value,  status )
     character(len=*),      intent(in)                  :: key
     integer(kind=kindOfInt), intent(in)                :: value
     integer(kind=kindOfInt),optional, intent(out)      :: status
-    integer(kind=kindOfInt)                            :: iret
 
     call grib_index_select_int( indexid, key, value,  status )
 end subroutine codes_index_select_int
@@ -133,7 +117,6 @@ subroutine codes_index_select_long( indexid, key, value,  status )
     character(len=*),      intent(in)                  :: key
     integer(kind=kindOfLong), intent(in)               :: value
     integer(kind=kindOfInt),optional, intent(out)      :: status
-    integer(kind=kindOfInt)                            :: iret
 
     call grib_index_select_long( indexid, key, value,  status )
 end subroutine codes_index_select_long
@@ -144,7 +127,6 @@ subroutine codes_index_select_real8( indexid, key, value,  status )
     character(len=*),      intent(in)                  :: key
     real(kind=kindOfDouble), intent(in)                :: value
     integer(kind=kindOfInt),optional, intent(out)      :: status
-    integer(kind=kindOfInt)                            :: iret
 
     call grib_index_select_real8( indexid, key, value,  status )
 end subroutine codes_index_select_real8
@@ -154,7 +136,6 @@ subroutine codes_new_from_index ( indexid, gribid , status)
     integer(kind=kindOfInt),intent(in)              :: indexid
     integer(kind=kindOfInt),intent(out)             :: gribid
     integer(kind=kindOfInt),optional,intent(out)    :: status
-    integer(kind=kindOfInt)                         :: iret
 
     call grib_new_from_index ( indexid, gribid , status)
 end subroutine codes_new_from_index 
@@ -164,7 +145,6 @@ subroutine codes_index_read ( indexid, filename, status )
     integer(kind=kindOfInt),         intent(inout)  :: indexid
     character(len=*), intent(in)                    :: filename
     integer(kind=kindOfInt),optional, intent(out)   :: status
-    integer(kind=kindOfInt)                         :: iret
 
     call grib_index_read ( indexid, filename, status )
 end subroutine codes_index_read 
@@ -174,7 +154,6 @@ subroutine codes_index_write ( indexid, filename, status )
     integer(kind=kindOfInt),         intent(inout)  :: indexid
     character(len=*), intent(in)                    :: filename
     integer(kind=kindOfInt),optional, intent(out)   :: status
-    integer(kind=kindOfInt)                         :: iret
 
     call grib_index_write ( indexid, filename, status )
 end subroutine codes_index_write 
@@ -183,7 +162,6 @@ end subroutine codes_index_write
 subroutine codes_index_release ( indexid, status )
     integer(kind=kindOfInt),          intent(in)  :: indexid
     integer(kind=kindOfInt),optional, intent(out) :: status
-    integer(kind=kindOfInt)                       :: iret
 
     call grib_index_release ( indexid, status )
 end subroutine codes_index_release
@@ -194,7 +172,6 @@ subroutine codes_open_file ( ifile, filename, mode, status )
     character(len=*), intent(in)                      :: filename
     character(LEN=*), intent(in)                      :: mode
     integer(kind=kindOfInt),optional, intent(out)     :: status
-    integer(kind=kindOfInt)                           :: iret
 
     call grib_open_file ( ifile, filename, mode, status )
 end subroutine codes_open_file 
@@ -206,7 +183,6 @@ subroutine codes_read_bytes_char ( ifile, buffer, nbytes, status )
     integer(kind=kindOfInt), intent(in)              :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
     integer(kind=kindOfSize_t)                       :: ibytes
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_read_bytes_char ( ifile, buffer, nbytes, status )
 end subroutine codes_read_bytes_char 
@@ -217,7 +193,6 @@ subroutine codes_read_bytes_char_size_t ( ifile, buffer, nbytes, status )
     character(len=1),dimension(:), intent(out)       :: buffer
     integer(kind=kindOfSize_t), intent(in)           :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_read_bytes_char_size_t ( ifile, buffer, nbytes, status )
 end subroutine codes_read_bytes_char_size_t 
@@ -229,7 +204,6 @@ subroutine codes_read_bytes_int4 ( ifile, buffer, nbytes, status )
     integer(kind=kindOfInt), intent(in)              :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
     integer(kind=kindOfSize_t)                       :: ibytes
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_read_bytes_int4 ( ifile, buffer, nbytes, status )
 end subroutine codes_read_bytes_int4 
@@ -240,7 +214,6 @@ subroutine codes_read_bytes_int4_size_t ( ifile, buffer, nbytes, status )
     integer(kind=4),dimension(:), intent(out)        :: buffer
     integer(kind=kindOfSize_t), intent(in)           :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_read_bytes_int4_size_t ( ifile, buffer, nbytes, status )
 end subroutine codes_read_bytes_int4_size_t 
@@ -1440,5 +1413,22 @@ subroutine codes_skip_read_only  ( iterid, status )
 
     call grib_skip_read_only  ( iterid, status )
 end subroutine codes_skip_read_only  
+
+
+subroutine codes_set_definitions_path ( path,  status )
+    character(len=*),                 intent(in)   :: path
+    integer(kind=kindOfInt),optional, intent(out)  :: status
+
+    call grib_set_definitions_path ( path, status )
+end subroutine codes_set_definitions_path
+
+subroutine codes_set_samples_path ( path,  status )
+    character(len=*),                 intent(in)   :: path
+    integer(kind=kindOfInt),optional, intent(out)  :: status
+
+    call grib_set_samples_path ( path, status )
+end subroutine codes_set_samples_path
+
+
 
 end module eccodes

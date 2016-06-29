@@ -65,3 +65,4 @@ integer, external :: grib_f_write, grib_f_multi_write, grib_f_multi_append
 integer, external :: grib_f_clone, grib_f_copy_namespace
 external :: grib_f_check
 integer, external :: grib_f_util_sections_copy
+integer, external :: grib_f_set_definitions_path, grib_f_set_samples_path
