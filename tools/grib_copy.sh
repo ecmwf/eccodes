@@ -27,12 +27,12 @@ echo "in the name of the output file (This is a good way to split a large GRIB f
 echo "\verbatim"
 echo "> grib_copy in.grib 'out_[shortName].grib'"
 echo "\endverbatim\\n"
+echo "Note: we need to quote the name of the output so the shell does not interpret the square brackets"
 
 echo "-# To copy fields whose typeOfLevel is either 'surface' or 'meanSea'"
 echo "\verbatim"
 echo "> grib_copy -w typeOfLevel=surface/meanSea orig.grib out.grib"
 echo "\endverbatim\\n"
-echo "Note: we need to quote the name of the output so the shell does not interpret the square brackets"
 
 echo "-# To copy selected fields and apply sorting (sorted by level in ascending order)"
 echo "\verbatim"

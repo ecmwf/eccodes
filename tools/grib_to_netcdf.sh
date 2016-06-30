@@ -13,7 +13,7 @@ echo ">grib_to_netcdf -I type,step -o output.nc input.grib"
 echo "\\endverbatim"
 
 echo "-# Do not use time of validity. If time of validity is used, it means the 1D time coordinate is considered as date+time+step, otherwise 3 different dimensions are created."
-echo "-# The default behaviour is to use the time of validity."
+echo "The default behaviour is to use the time of validity."
 echo "\\verbatim"
 echo ">grib_to_netcdf -T -o output.nc input.grib"
 echo "\\endverbatim"
