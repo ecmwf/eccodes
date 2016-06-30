@@ -202,7 +202,7 @@ const Representation *RepresentationFactory::build(const param::MIRParametrisati
     eckit::AutoLock<eckit::Mutex> lock(local_mutex);
     std::map<std::string, RepresentationFactory *>::const_iterator j = m->find(name);
 
-    eckit::Log::trace<MIR>() << "Looking for RepresentationFactory [" << name << "]" << std::endl;
+    // eckit::Log::trace<MIR>() << "Looking for RepresentationFactory [" << name << "]" << std::endl;
 
     if (j == m->end()) {
         eckit::Log::error() << "No RepresentationFactory for [" << name << "]" << std::endl;
