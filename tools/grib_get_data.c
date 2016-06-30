@@ -36,7 +36,8 @@ grib_option grib_options[]={
     {"V",0,0,0,1,0}
 };
 
-char* grib_tool_description="Print a latitude, longitude, data values list ";
+char* grib_tool_description="Print a latitude, longitude, data values list.\n"
+                            "\tNote: Rotated grids are first unrotated";
 char* grib_tool_name="grib_get_data";
 char* grib_tool_usage="[options] grib_file grib_file ...";
 

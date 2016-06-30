@@ -33,3 +33,9 @@ echo "\\code "
 echo ">grib_ls -l 51.46,-1.33,1 -p paramId,name ../data/reduced_gaussian_surface.grib2"
 ./grib_ls -l 51.46,-1.33,1 -p paramId,shortName ../data/reduced_gaussian_surface.grib2
 echo "\\endcode\\n"
+
+echo "-# To get a list ordered by the 'level' key (ascending order).\\n "
+echo "\\verbatim "
+echo "> grib_ls -B 'level:i asc' tigge_af_ecmwf.grib2"
+echo "\\endverbatim\\n "
+echo "Note: we need to specify the ':i' to get a numerical sort. By default values are sorted as strings so a level of 100 would come before 20!"

@@ -4,7 +4,7 @@ DESCRIPTION
         Print the total number of GRIB messages in the given files. 
 
 USAGE 
-        grib_count [options] file file ...
+        grib_count [options] grib_file grib_file ...
 
 OPTIONS
         -v  Verbose mode. The number of messages is given for each file.

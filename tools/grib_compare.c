@@ -146,14 +146,13 @@ int theStart=-1;
 int theEnd=-1;
 
 char* grib_tool_description=
-  "Compare grib messages contained in two files."
+  "Compare GRIB messages contained in two files."
   "\n\tIf some differences are found it fails returning an error code."
   "\n\tFloating point values are compared exactly by default, different tolerance can be defined see -P -A -R."
   "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
 char* grib_tool_name="grib_compare";
-char* grib_tool_usage="[options] "
-        "grib_file grib_file";
+char* grib_tool_usage="[options] grib_file1 grib_file2";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
