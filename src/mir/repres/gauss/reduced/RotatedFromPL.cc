@@ -16,10 +16,8 @@
 #include "mir/repres/gauss/reduced/RotatedFromPL.h"
 
 #include <iostream>
-
-#include "atlas/grid/deprecated/RotatedGrid.h"
-
 #include "mir/util/Grib.h"
+#include "mir/util/RotatedGrid.h"
 #include "mir/util/RotatedIterator.h"
 
 
@@ -67,7 +65,7 @@ void RotatedFromPL::fill(api::MIRJob &job) const  {
 
 atlas::grid::Grid *RotatedFromPL::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
-    return new atlas::grid::deprecated::RotatedGrid(
+    return new util::RotatedGrid(
                 FromPL::atlasGrid(),
                 rotation_.south_pole_latitude(),
                 rotation_.south_pole_longitude(),

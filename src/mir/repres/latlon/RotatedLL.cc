@@ -16,14 +16,11 @@
 #include "mir/repres/latlon/RotatedLL.h"
 
 #include <iostream>
-
 #include "eckit/exception/Exceptions.h"
-
-#include "atlas/grid/deprecated/RotatedGrid.h"
-
-#include "mir/param/MIRParametrisation.h"
-#include "mir/util/RotatedIterator.h"
 #include "mir/log/MIR.h"
+#include "mir/param/MIRParametrisation.h"
+#include "mir/util/RotatedGrid.h"
+#include "mir/util/RotatedIterator.h"
 
 
 namespace mir {
@@ -81,7 +78,7 @@ void RotatedLL::fill(api::MIRJob &job) const  {
 
 atlas::grid::Grid *RotatedLL::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
-    return new atlas::grid::deprecated::RotatedGrid(
+    return new util::RotatedGrid(
                 RegularLL::atlasGrid(),
                 rotation_.south_pole_latitude(),
                 rotation_.south_pole_longitude(),
