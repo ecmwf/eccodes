@@ -762,10 +762,10 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
 
    {
       "time_integrated_top_net_thermal_radiation_sfc",
-      -1e+10,
-       1e+10,
-      -1e+10,
-       1e+10,
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"paramId", GRIB_TYPE_LONG, 179},
@@ -781,10 +781,10 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
 
    {
       "time_integrated_surface_latent_heat_flux_sfc",
-      -1e+10,
-       1e+10,
-      -1e+10,
-       1e+10,
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"paramId", GRIB_TYPE_LONG, 147},
@@ -800,10 +800,10 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
 
    {
       "time_integrated_surface_net_solar_radiation_sfc",
-      -1e+10,
-       1e+10,
-      -1e+10,
-       1e+10,
+      -0.001,
+       0.001,
+      1e+05,
+      1e+09,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"paramId", GRIB_TYPE_LONG, 176},
@@ -819,11 +819,10 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
 
    {
       "time_integrated_surface_net_solar_radiation_downwards_sfc",
-      -1e+10,
-       1e+10,
-      -1e+10,
-       1e+10,
-
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"paramId", GRIB_TYPE_LONG, 169},
@@ -839,10 +838,10 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
 
    {
       "time_integrated_surface_net_thermal_radiation_sfc",
-      -1e+10,
-       1e+10,
-      -1e+10,
-       1e+10,
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"paramId", GRIB_TYPE_LONG, 177},
@@ -858,10 +857,10 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
 
    {
       "time_integrated_surface_net_thermal_radiation_downwards_sfc",
-      -1e+10,
-       1e+10,
-      -1e+10,
-       1e+10,
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"paramId", GRIB_TYPE_LONG, 175},
@@ -877,10 +876,10 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
 
    {
       "time_integrated_surface_sensible_heat_flux_sfc",
-      -1e+10,
-       1e+10,
-      -1e+10,
-       1e+10,
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"paramId", GRIB_TYPE_LONG, 146},
@@ -2634,10 +2633,10 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
          {"parameterCategory", GRIB_TYPE_LONG, 0},
          {"parameterNumber", GRIB_TYPE_LONG, 16},
          {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 1},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 177},
          {NULL, },
       },
-/*     {&from_start, &predefined_level}, xxx typeOfFirstFixedSurface ??? */
-      {&from_start},
+       {&from_start, &predefined_level},
    },
    {
       "2_metre_relative_humidity",
@@ -2793,7 +2792,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       {&point_in_time, &given_level},
    },
    {
-      "10_metre_wind_gust_uerra", /* TBD xxx Length of time range 1/3/6 checks? */
+      "10_metre_wind_gust_uerra",
       0.001,
       10,
       10,
@@ -3073,6 +3072,5 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       },
       {&point_in_time, &given_level, &pressure_level},
    },
-
 };
 

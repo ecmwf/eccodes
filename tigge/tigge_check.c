@@ -1200,6 +1200,7 @@ static void verify(grib_handle* h)
     case 30: /*Lambert conformal*/
       /*lambert_grid(h); # TODO xxx
         printf("warning: Lambert grid - geometry checking not implemented yet!\n"); */
+        CHECK(eq(h,"scanningMode",64)); /* M-F data used to have it wrong.. but it might depends on other projection set up as well!*/
         break;
 
     case 40: /* gaussian grid (regular or reduced) */
@@ -1314,6 +1315,7 @@ static void usage()
     printf("   -z: return 0 to calling shell\n");
     printf("   -s: check s2s fields\n");
     printf("   -r: check s2s reforecast fields\n");
+    printf("   -u: check uerra fields\n");
     exit(1);
 }
 
