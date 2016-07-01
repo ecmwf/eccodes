@@ -21,6 +21,12 @@ grib_option grib_options[]={
                 "\n\t\tOptions: s->structure, f->flat (only data), a->all attributes"
                 "\n\t\tDefault mode is structure.\n",
                 1,1,"s"},
+        {"E:","filter/Fortran/python","\n\t\tEncoding dump. Provides instructions to create the input message."
+                "\n\t\tOptions: filter  -> filter instructions file to encode input BUFR"
+                "\n\t\t         fortran -> fortran program to encode the input BUFR"
+                "\n\t\t         python  -> python script to encode the input BUFR"
+                "\n\t\tDefault mode is filter.\n",
+                0,1,"filter"},
         {"S",0,0,1,0,0},
         {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
         /* {"D",0,0,0,1,0},  */  /* See ECC-215 */
@@ -86,14 +92,6 @@ int grib_tool_init(grib_runtime_options* options)
         json=1;
     }
 
-    if (grib_options_on("C")) {
-        options->dump_mode = "c_code";
-        if (grib_options_on("d"))
-            options->dump_flags = 0;
-        else
-            options->dump_flags = GRIB_DUMP_FLAG_NO_DATA;
-    }
-
     if  (grib_options_on("O")) {
         options->dump_mode = "wmo";
         json=0;
@@ -101,6 +99,11 @@ int grib_tool_init(grib_runtime_options* options)
                 | GRIB_DUMP_FLAG_OCTECT
                 | GRIB_DUMP_FLAG_VALUES
                 | GRIB_DUMP_FLAG_READ_ONLY;
+    }
+
+    if (grib_options_on("E:")) {
+        options->dump_mode = grib_options_get_option("E:");
+        json=0;
     }
 
     /* See ECC-215
@@ -136,9 +139,12 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
     if (!options->current_infile->name) return 0;
     if (json) return 0;
 
-    sprintf(tmp,"FILE: %s ",options->current_infile->name);
-    if (!grib_options_on("C"))
+    if (grib_options_on("E:")) {
+    } else {
+      sprintf(tmp,"FILE: %s ",options->current_infile->name);
+      if (!grib_options_on("C"))
         fprintf(stdout,"***** %s\n",tmp);
+    }
 
     return 0;
 }
@@ -207,7 +213,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             printf("unknown json option %s\n",json_option);
             exit(1);
         }
-    } else {
+      if (!strcmp(options->dump_mode,"default"))
+        printf("}\n");
+    } else if (grib_options_on("O")) {
         sprintf(tmp,"MESSAGE %d ( length=%ld )",options->handle_count,length);
         if (!grib_options_on("C"))
             fprintf(stdout,"#==============   %-38s   ==============\n",tmp);
@@ -218,10 +226,16 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             return err;
         }
         grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
+    } else {
+      err=grib_set_long(h,"unpack",1);
+      if (err) {
+        fprintf(stdout,"\"ERROR: unable to unpack data section\"");
+        options->error=err;
+        return err;
+      }
+      grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
     }
 
-    if (!strcmp(options->dump_mode,"default"))
-        printf("}\n");
     return 0;
 }
 
@@ -239,6 +253,10 @@ void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
     if (json) fprintf(stdout,"\n]}\n");
+    if (!strcmp(options->dump_mode,"filter")) {
+      fprintf(stdout,"set pack=1;\nwrite;\n");
+    }
+
     return 0;
 }
 

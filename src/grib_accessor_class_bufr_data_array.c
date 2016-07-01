@@ -1378,7 +1378,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
         creator.name=grib_context_strdup(a->context,self->expanded->v[idx]->shortName);
         elementAccessor = grib_accessor_factory(section, &creator, 0, NULL);
         if (self->canBeMissing[idx]) elementAccessor->flags |= GRIB_ACCESSOR_FLAG_CAN_BE_MISSING;
-        if (self->expanded->v[idx]->code == 31000 || self->expanded->v[idx]->code == 31001 || self->expanded->v[idx]->code == 31002)
+        if (self->expanded->v[idx]->code == 31000 || self->expanded->v[idx]->code == 31001 || self->expanded->v[idx]->code == 31002 || self->expanded->v[idx]->code == 31031)
             elementAccessor->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
         accessor_bufr_data_element_set_index(elementAccessor,ide);
         accessor_bufr_data_element_set_descriptors(elementAccessor,self->expanded);

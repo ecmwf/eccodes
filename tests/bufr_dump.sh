@@ -36,36 +36,37 @@ done
 #==============================================
 # Testing a malformed bufr file (see ECC-110)
 #==============================================
+# find another way to test malformed bufr 
+#echo "Test: malformed bufr file " >> $fLog
 
-echo "Test: malformed bufr file " >> $fLog
 
-rm -f $fJsonTmp | true
+#rm -f $fJsonTmp | true
 
-fBufr=${data_dir}/bufr/"bad.bufr"
+#fBufr=${data_dir}/bufr/"bad.bufr"
 # See ECC-276
 # In v0.16.0 we changed the shortNames so we use a newer ref file
-fJsonRef=${data_dir}/bufr/"bad.bufr.json.v0.16.0.ref"
+#fJsonRef=${data_dir}/bufr/"bad.bufr.json.v0.16.0.ref"
 
-${tools_dir}bufr_dump -js $fBufr > $fJsonTmp
+#${tools_dir}bufr_dump -js $fBufr > $fJsonTmp
 
-diff $fJsonTmp $fJsonRef
+#diff $fJsonTmp $fJsonRef
 
 #==============================================
 # Testing change of scale (see ECC-111)
 #==============================================
+# FIND another way to test this operator
+#echo "Test: operator 207003 " >> $fLog
 
-echo "Test: operator 207003 " >> $fLog
+#rm -f $fJsonTmp | true
 
-rm -f $fJsonTmp | true
-
-fBufr=${data_dir}/bufr/"207003.bufr"
-fJsonRef=${data_dir}/bufr/"207003.bufr.json.ref"
-
-${tools_dir}bufr_dump -ja $fBufr > $fJsonTmp
-
-diff $fJsonTmp $fJsonRef
-
+#fBufr=${data_dir}/bufr/"207003.bufr"
+#fJsonRef=${data_dir}/bufr/"207003.bufr.json.ref"
+#
+#${tools_dir}bufr_dump -ja $fBufr > $fJsonTmp
+#
+#diff $fJsonTmp $fJsonRef
+#
 #Clean up
-rm -f $fLog 
-rm -f $fJsonTmp | true
+#rm -f $fLog 
+#rm -f $fJsonTmp | true
 

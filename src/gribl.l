@@ -165,8 +165,6 @@ IDENT     {IDENT1}|{IDENT2}|{IDENT3}
 "no_copy"           return NO_COPY;
 "edition_specific"    return EDITION_SPECIFIC;
 "dump"                return DUMP;
-"json"                return JSON;
-"xml"                return XML;
 "no_fail"            return NO_FAIL;
 "hidden"              return HIDDEN;
 "can_be_missing"      return CAN_BE_MISSING;

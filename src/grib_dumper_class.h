@@ -4,6 +4,7 @@ extern grib_dumper_class* grib_dumper_class_compare;
 extern grib_dumper_class* grib_dumper_class_debug;
 extern grib_dumper_class* grib_dumper_class_default;
 extern grib_dumper_class* grib_dumper_class_file;
+extern grib_dumper_class* grib_dumper_class_filter;
 extern grib_dumper_class* grib_dumper_class_json;
 extern grib_dumper_class* grib_dumper_class_keys;
 extern grib_dumper_class* grib_dumper_class_serialize;

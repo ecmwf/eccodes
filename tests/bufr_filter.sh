@@ -905,8 +905,8 @@ if [ -f "$f" ]; then
 
   cat > ${fOut}.log.ref <<EOF
 vos308014_v3_26_sec_2.bufr
-centre                     masterTablesVersionNumber  localTablesVersionNumber   rdbType                    rdbSubtype                 rdbtimeYear                rdbtimeMonth               typicalDate                typicalTime                numberOfSubsets            numberOfObservations       satelliteID                
-ecmf                       26                         0                          0                          0                          0                          0                          00000000                   000000                     40                         0                          0                         
+centre                     masterTablesVersionNumber  localTablesVersionNumber   typicalDate                typicalTime                rdbType                    rdbSubtype                 rdbtimeYear                rdbtimeMonth               numberOfSubsets            numberOfObservations       satelliteID                
+ecmf                       26                         0                          20150107                   142500                     0                          0                          0                          0                          40                         0                          0                         
 1 of 1 messages in vos308014_v3_26_sec_2.bufr
 
 1 of 1 total messages in 1 files
@@ -1392,4 +1392,20 @@ EOF
 diff ${f}.log.ref ${f}.log 
 
 rm -f ${f}.log ${f}.log.ref $fLog $fRules
+
+#-----------------------------------------------------------
+# Test: bufr_dump -Efilter
+#-----------------------------------------------------------
+f="syno_1.bufr"
+g="btem_109.bufr"
+o="out.bufr"
+
+echo "Test: bufr_dump -Efilter " >> $fLog
+echo "file: $f" >> $fLog
+
+${tools_dir}bufr_dump -Efilter $g > $fRules
+${tools_dir}bufr_filter -o $o $fRules $f
+${tools_dir}bufr_compare $o $g
+
+rm -f $o $fRules
 

@@ -670,15 +670,13 @@ flag_list  : flag
 flag: READ_ONLY         { $$ = GRIB_ACCESSOR_FLAG_READ_ONLY; }
     | LOWERCASE            { $$ = GRIB_ACCESSOR_FLAG_LOWERCASE; }
     | DUMP            { $$ = GRIB_ACCESSOR_FLAG_DUMP; }
-    | JSON            { $$ = GRIB_ACCESSOR_FLAG_JSON; }
-    | XML            { $$ = GRIB_ACCESSOR_FLAG_XML; }
+    | ENCODE            { $$ = GRIB_ACCESSOR_FLAG_ENCODE; }
     | NO_COPY            { $$ = GRIB_ACCESSOR_FLAG_NO_COPY; }
-	| NO_FAIL            { $$ = GRIB_ACCESSOR_FLAG_NO_FAIL; }
+	  | NO_FAIL            { $$ = GRIB_ACCESSOR_FLAG_NO_FAIL; }
     | HIDDEN            { $$ = GRIB_ACCESSOR_FLAG_HIDDEN; }
     | EDITION_SPECIFIC  { $$ = GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC; }
     | CAN_BE_MISSING    { $$ = GRIB_ACCESSOR_FLAG_CAN_BE_MISSING; }
     | CONSTRAINT        { $$ = GRIB_ACCESSOR_FLAG_CONSTRAINT; }
-    | OVERRIDE           { $$ = GRIB_ACCESSOR_FLAG_OVERRIDE; }
     | COPY_OK           { $$ = GRIB_ACCESSOR_FLAG_COPY_OK; }
     | TRANS         { $$ = GRIB_ACCESSOR_FLAG_TRANSIENT; }
     | STRING_TYPE         { $$ = GRIB_ACCESSOR_FLAG_STRING_TYPE; }

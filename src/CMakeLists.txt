@@ -272,6 +272,7 @@ list( APPEND grib_api_srcs
     grib_dumper_class_debug.c
     grib_dumper_class_default.c
     grib_dumper_class_keys.c
+    grib_dumper_class_filter.c
     grib_dumper_class_json.c
     grib_dumper_class_xml.c
     grib_dumper_class_c_code.c

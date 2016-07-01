@@ -422,6 +422,7 @@ int grib_write_message(grib_handle* h,const char* file,const char* mode);
 typedef struct grib_string_list grib_string_list;
 struct grib_string_list {
   char* value;
+  int count;
   grib_string_list* next;
 };
 

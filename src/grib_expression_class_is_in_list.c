@@ -74,9 +74,9 @@ static grib_expression_class _grib_expression_class_is_in_list = {
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
-    &print,
-    &compile,
-    &add_dependency,
+    &print,                 
+    &compile,                 
+    &add_dependency,       
 
 	&native_type,
 	&get_name,
