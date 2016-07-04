@@ -103,40 +103,41 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
 
 typedef struct string_count string_count;
 struct string_count {
-  char* value;
-  int count;
-  string_count* next;
+    char* value;
+    int count;
+    string_count* next;
 };
 
-static int get_key_rank(grib_handle* h,grib_string_list* keys,const char* key) {
-  grib_string_list* next=keys;
-  grib_string_list* prev=keys;
-  int ret=0;
-  size_t size=0;
-  grib_context* c=h->context;
+static int get_key_rank(grib_handle* h,grib_string_list* keys,const char* key)
+{
+    grib_string_list* next=keys;
+    grib_string_list* prev=keys;
+    int ret=0;
+    size_t size=0;
+    grib_context* c=h->context;
 
-  while (next && next->value && grib_inline_strcmp(next->value,key)) {
-    prev=next;
-    next=next->next;
-  }
-  if (!next) {
-    prev->next=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
-    next=prev->next;
-  }
-  if (!next->value) {
-    next->value=strdup(key);
-    next->count=0;
-  }
+    while (next && next->value && grib_inline_strcmp(next->value,key)) {
+        prev=next;
+        next=next->next;
+    }
+    if (!next) {
+        prev->next=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
+        next=prev->next;
+    }
+    if (!next->value) {
+        next->value=strdup(key);
+        next->count=0;
+    }
 
-  next->count++;
-  ret=next->count;
-  if (ret==1) {
-    char* s=grib_context_malloc_clear(c,strlen(key)+5);
-    sprintf(s,"#2#%s",key);
-    if (grib_get_size(h,s,&size)==GRIB_NOT_FOUND) ret=0;
-  }
+    next->count++;
+    ret=next->count;
+    if (ret==1) {
+        char* s=grib_context_malloc_clear(c,strlen(key)+5);
+        sprintf(s,"#2#%s",key);
+        if (grib_get_size(h,s,&size)==GRIB_NOT_FOUND) ret=0;
+    }
 
-  return ret;
+    return ret;
 }
 
 static int depth=0;
@@ -163,10 +164,10 @@ static int destroy(grib_dumper* d)
     grib_string_list* cur=self->keys;
     grib_context* c=d->handle->context;
     while(next) {
-      cur=next;
-      next=next->next;
-      grib_context_free(c,cur->value);
-      grib_context_free(c,cur);
+        cur=next;
+        next=next->next;
+        grib_context_free(c,cur->value);
+        grib_context_free(c,cur);
     }
     return GRIB_SUCCESS;
 }
@@ -191,7 +192,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         return;
 
     if (size>1) {
-        values=(double*)grib_context_malloc_clear(a->context,sizeof(double)*size);
+        values=(double*)grib_context_malloc_clear(c,sizeof(double)*size);
         err=grib_unpack_double(a,values,&size);
     } else {
         err=grib_unpack_double(a,&value,&size);
@@ -205,9 +206,9 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         int icount=0;
 
         if ((r=get_key_rank(h,self->keys,a->name))!=0)
-          fprintf(self->dumper.out,"set #%d#%s=",r,a->name);
+            fprintf(self->dumper.out,"set #%d#%s=",r,a->name);
         else
-          fprintf(self->dumper.out,"set %s=",a->name);
+            fprintf(self->dumper.out,"set %s=",a->name);
 
         fprintf(self->dumper.out,"{");
 
@@ -227,18 +228,18 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 
         depth-=2;
         fprintf(self->dumper.out,"};\n");
-        grib_context_free(a->context,values);
+        grib_context_free(c,values);
     } else {
-      r=get_key_rank(h,self->keys,a->name);
-      if( !grib_is_missing_double(a,value) ) {
+        r=get_key_rank(h,self->keys,a->name);
+        if( !grib_is_missing_double(a,value) ) {
 
-        if (r!=0)
-          fprintf(self->dumper.out,"set #%d#%s=",r,a->name);
-        else
-          fprintf(self->dumper.out,"set %s=",a->name);
+            if (r!=0)
+                fprintf(self->dumper.out,"set #%d#%s=",r,a->name);
+            else
+                fprintf(self->dumper.out,"set %s=",a->name);
 
-        fprintf(self->dumper.out,"%g;\n",value);
-      }
+            fprintf(self->dumper.out,"%g;\n",value);
+        }
     }
 
     if (self->isLeaf==0) {
@@ -279,9 +280,9 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
     if (size>1) {
         int icount=0;
         if ((r=get_key_rank(h,self->keys,a->name))!=0)
-          fprintf(self->dumper.out,"set #%d#%s=",r,a->name);
+            fprintf(self->dumper.out,"set #%d#%s=",r,a->name);
         else
-          fprintf(self->dumper.out,"set %s=",a->name);
+            fprintf(self->dumper.out,"set %s=",a->name);
 
         fprintf(self->dumper.out,"{");
 
@@ -296,24 +297,24 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
         }
         if (icount>cols || i==0) {fprintf(self->dumper.out,"\n      ");icount=0;}
         if (grib_is_missing_long(a,values[i])) {
-          fprintf(self->dumper.out,"missing ");
+            fprintf(self->dumper.out,"missing ");
         } else {
-          fprintf(self->dumper.out,"%ld ",values[i]);
+            fprintf(self->dumper.out,"%ld ",values[i]);
         }
 
         depth-=2;
         fprintf(self->dumper.out,"};\n");
         grib_context_free(a->context,values);
     } else {
-      r=get_key_rank(h,self->keys,a->name);
-      if( !grib_is_missing_long(a,value) ) {
-        if (r!=0)
-          fprintf(self->dumper.out,"set #%d#%s=",r,a->name);
-        else
-          fprintf(self->dumper.out,"set %s=",a->name);
+        r=get_key_rank(h,self->keys,a->name);
+        if( !grib_is_missing_long(a,value) ) {
+            if (r!=0)
+                fprintf(self->dumper.out,"set #%d#%s=",r,a->name);
+            else
+                fprintf(self->dumper.out,"set %s=",a->name);
 
-        fprintf(self->dumper.out,"%ld;\n",value);
-      }
+            fprintf(self->dumper.out,"%ld;\n",value);
+        }
     }
 
     if (self->isLeaf==0) {
@@ -343,12 +344,12 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 
     r=get_key_rank(h,self->keys,a->name);
     if( !grib_is_missing_double(a,value) ) {
-      if (r!=0)
-        fprintf(self->dumper.out,"set #%d#%s=",r,a->name);
-      else
-        fprintf(self->dumper.out,"set %s=",a->name);
+        if (r!=0)
+            fprintf(self->dumper.out,"set #%d#%s=",r,a->name);
+        else
+            fprintf(self->dumper.out,"set %s=",a->name);
 
-      fprintf(self->dumper.out,"%g;\n",value);
+        fprintf(self->dumper.out,"%g;\n",value);
     }
 
     if (self->isLeaf==0) {
@@ -384,9 +385,9 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
     if (self->isLeaf==0) {
         depth+=2;
         if ((r=get_key_rank(h,self->keys,a->name))!=0)
-          fprintf(self->dumper.out,"set #%d#%s=",r,a->name);
+            fprintf(self->dumper.out,"set #%d#%s=",r,a->name);
         else
-          fprintf(self->dumper.out,"set %s=",a->name);
+            fprintf(self->dumper.out,"set %s=",a->name);
     }
 
     self->empty=0;
@@ -399,16 +400,16 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
 
     err = grib_unpack_string_array(a,values,&size);
 
-    fprintf(self->dumper.out,"{",depth," ");
+    fprintf(self->dumper.out, "{%-*s ",depth," ");
     depth+=2;
     for  (i=0;i<size-1;i++) {
-        fprintf(self->dumper.out,"\"%s\",\n",depth," ",values[i]);
+        fprintf(self->dumper.out,"\"%-*s\",%s\n",depth," ",values[i]);
     }
-    fprintf(self->dumper.out,"\"%s\"\n",depth," ",values[i]);
+    fprintf(self->dumper.out,"\"%-*s\"%s\n",depth," ",values[i]);
 
     depth-=2;
-    fprintf(self->dumper.out,"};",depth," ");
 
+    fprintf(self->dumper.out, "%-*s };",depth," ");
 
     if (self->isLeaf==0) {
         dump_attributes(d,a);
@@ -450,16 +451,16 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     p=value;
     r=get_key_rank(h,self->keys,a->name);
     if (grib_is_missing_string(a,value,size))
-      return;
+        return;
 
     while(*p) { if(!isprint(*p)) *p = '.'; p++; }
 
     if (self->isLeaf==0) {
         depth+=2;
         if (r!=0)
-          fprintf(self->dumper.out,"set #%d#%s=",r,a->name);
+            fprintf(self->dumper.out,"set #%d#%s=",r,a->name);
         else
-          fprintf(self->dumper.out,"set %s=",a->name);
+            fprintf(self->dumper.out,"set %s=",a->name);
     }
     fprintf(self->dumper.out,"\"%s\";\n",value);
 
@@ -482,25 +483,25 @@ static void dump_label(grib_dumper* d,grib_accessor* a,const char* comment)
 }
 
 static void _dump_long_array(grib_handle* h,FILE* f,const char* key,const char* print_key) {
-  long* val;
-  size_t size=0,i;
-  int cols=9,icount=0;
+    long* val;
+    size_t size=0,i;
+    int cols=9,icount=0;
 
 
-  if (grib_get_size(h,key,&size)==GRIB_NOT_FOUND) return;
+    if (grib_get_size(h,key,&size)==GRIB_NOT_FOUND) return;
 
-  val=grib_context_malloc_clear(h->context,sizeof(long)*size);
-  grib_get_long_array(h,key,val,&size);
-  fprintf(f,"set %s= {",print_key);
-  for (i=0;i<size-1;i++) {
-    if (icount>cols || i==0) {fprintf(f,"\n      ");icount=0;}
-    fprintf(f,"%ld, ",val[i]);
-    icount++;
-  }
-  if (icount>cols) {fprintf(f,"\n      ");}
-  fprintf(f,"%ld};\n",val[size-1]);
+    val=grib_context_malloc_clear(h->context,sizeof(long)*size);
+    grib_get_long_array(h,key,val,&size);
+    fprintf(f,"set %s= {",print_key);
+    for (i=0;i<size-1;i++) {
+        if (icount>cols || i==0) {fprintf(f,"\n      ");icount=0;}
+        fprintf(f,"%ld, ",val[i]);
+        icount++;
+    }
+    if (icount>cols) {fprintf(f,"\n      ");}
+    fprintf(f,"%ld};\n",val[size-1]);
 
-  grib_context_free(h->context,val);
+    grib_context_free(h->context,val);
 
 }
 
@@ -539,7 +540,7 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a)
 {
     int i=0;
     grib_dumper_filter *self = (grib_dumper_filter*)d;
-    FILE* out=self->dumper.out;
+    /* FILE* out=self->dumper.out; */
     unsigned long flags;
     while (a->attributes[i] && i < MAX_ACCESSOR_ATTRIBUTES) {
         self->isAttribute=1;
@@ -557,14 +558,14 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a)
         a->attributes[i]->flags |= GRIB_ACCESSOR_FLAG_DUMP;
         /* switch (grib_accessor_get_native_type(a->attributes[i])) { */
         /* case GRIB_TYPE_LONG: */
-            /* dump_long(d,a->attributes[i],0); */
-            /* break; */
+        /* dump_long(d,a->attributes[i],0); */
+        /* break; */
         /* case GRIB_TYPE_DOUBLE: */
-            /* dump_values(d,a->attributes[i]); */
-            /* break; */
+        /* dump_values(d,a->attributes[i]); */
+        /* break; */
         /* case GRIB_TYPE_STRING: */
-            /* dump_string_array(d,a->attributes[i],0); */
-            /* break; */
+        /* dump_string_array(d,a->attributes[i],0); */
+        /* break; */
         /* } */
         a->attributes[i]->flags=flags;
         i++;
