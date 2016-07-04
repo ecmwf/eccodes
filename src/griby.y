@@ -499,9 +499,6 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
    | G1_HALF_BYTE  IDENT
    { $$ = grib_action_create_gen(grib_parser_context,$2,"g1_half_byte_codeflag",0,NULL,NULL,0,NULL,NULL);free($2);  }
 
-    | SECTION_LENGTH  '[' INTEGER ']'   IDENT
-	{ $$ = grib_action_create_gen(grib_parser_context,$5,"section_length",$3,NULL,NULL,0,NULL,NULL);free($5);  }
-
     | SECTION_LENGTH  '[' INTEGER ']'   IDENT default
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"section_length",$3,NULL,$6,0,NULL,NULL);free($5);  }
 
@@ -670,7 +667,6 @@ flag_list  : flag
 flag: READ_ONLY         { $$ = GRIB_ACCESSOR_FLAG_READ_ONLY; }
     | LOWERCASE            { $$ = GRIB_ACCESSOR_FLAG_LOWERCASE; }
     | DUMP            { $$ = GRIB_ACCESSOR_FLAG_DUMP; }
-    | ENCODE            { $$ = GRIB_ACCESSOR_FLAG_ENCODE; }
     | NO_COPY            { $$ = GRIB_ACCESSOR_FLAG_NO_COPY; }
 	  | NO_FAIL            { $$ = GRIB_ACCESSOR_FLAG_NO_FAIL; }
     | HIDDEN            { $$ = GRIB_ACCESSOR_FLAG_HIDDEN; }
