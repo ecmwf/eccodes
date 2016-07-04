@@ -450,7 +450,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     err = grib_unpack_string(a,value,&size);
     p=value;
     r=get_key_rank(h,self->keys,a->name);
-    if (grib_is_missing_string(a,value,size))
+    if (grib_is_missing_string(a,(unsigned char *)value,size))
         return;
 
     while(*p) { if(!isprint(*p)) *p = '.'; p++; }
