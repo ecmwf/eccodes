@@ -171,7 +171,7 @@ void Regular::validate(const std::vector<double> &values) const {
             }
         }
 
-        eckit::Log::trace<MIR>() << "Regular::validate " << values.size() << " " << count << std::endl;
+        eckit::Log::trace<MIR>() << "Regular::validate " << values.size() << " " << count << eckit::newl;
 
         ASSERT(values.size() == count);
     }
