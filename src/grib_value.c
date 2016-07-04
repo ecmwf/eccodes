@@ -541,20 +541,20 @@ int grib_is_missing_double(grib_accessor* a,double x)
     return ret;
 }
 
-int grib_is_missing_string(grib_accessor* a,char* x,size_t len)
+int grib_is_missing_string(grib_accessor* a,unsigned char* x,size_t len)
 {
     int ret;
     size_t i=0;
 
     ret=1;
     for (i=0;i<len;i++) {
-      if (x[i] != 0x7F) {
+      if (x[i] != 0xFF ) {
         ret=0;
         break;
       }
     }
 
-    ret = ( a==NULL || (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)) && (ret=1) ? 1 : 0;
+    ret = ( a==NULL || ( (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) && ret==1 )) ? 1 : 0;
     return ret;
 }
 

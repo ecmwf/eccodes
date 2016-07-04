@@ -1185,7 +1185,7 @@ int grib_set_missing_internal(grib_handle *h, const char *name);
 int grib_set_missing(grib_handle *h, const char *name);
 int grib_is_missing_long(grib_accessor *a, long x);
 int grib_is_missing_double(grib_accessor *a, double x);
-int grib_is_missing_string(grib_accessor* a,char* x,size_t len);
+int grib_is_missing_string(grib_accessor* a,unsigned char* x,size_t len);
 int grib_accessor_is_missing(grib_accessor *a, int *err);
 int grib_is_missing(grib_handle *h, const char *name, int *err);
 int grib_is_defined(grib_handle *h, const char *name);
