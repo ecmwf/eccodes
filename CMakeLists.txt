@@ -98,6 +98,12 @@ ecbuild_add_option( FEATURE MEMFS
     CONDITION EC_HAVE_FMEMOPEN OR EC_HAVE_FUNOPEN
     REQUIRED_PACKAGES "Python VERSION 2.6"
 )
+
+if( HAVE_MEMFS AND "${CMAKE_C_COMPILER_ID}" STREQUAL "Cray")
+  set( HAVE_MEMFS OFF )
+  ecbuild_warn("MEMFS not supported with Cray C compiler")
+endif()
+
 # advanced options (not visible in cmake-gui )
 
 ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "enable memory management" DEFAULT OFF ADVANCED )
