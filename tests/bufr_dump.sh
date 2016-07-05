@@ -30,7 +30,7 @@ REDIRECT=/dev/null
 
 for file in ${bufr_files}
 do
-  ${tools_dir}bufr_dump -O ${data_dir}/bufr/$file
+  ${tools_dir}bufr_dump -O ${data_dir}/bufr/$file >/dev/null
 done
 
 #==============================================
