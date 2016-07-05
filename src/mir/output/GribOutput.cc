@@ -33,7 +33,7 @@ namespace mir {
 namespace output {
 
 
-#define X(a) eckit::Log::trace<MIR>() << "  GRIB encoding: " << #a << " = " << a << eckit::newl
+#define X(a) eckit::Log::trace<MIR>() << "  GRIB encoding: " << #a << " = " << a << std::endl
 
 
 class HandleFree {
@@ -152,7 +152,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
                                          << eckit::Plural(field.values(i).size(), "value")
                                          << ", ignoring packer "
                                          << packer
-                                         << eckit::newl;
+                                         << std::endl;
 
 
             } else {

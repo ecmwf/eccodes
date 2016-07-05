@@ -199,9 +199,9 @@ class GaussianIterator: public Iterator {
 
             }
 
-            // eckit::Log::trace<MIR>() << "++++++ " << lat << " " << lon << " - " << bbox_ << " -> " << bbox_.contains(lat, lon) << eckit::newl;
+            // eckit::Log::trace<MIR>() << "++++++ " << lat << " " << lon << " - " << bbox_ << " -> " << bbox_.contains(lat, lon) << std::endl;
 
-            // eckit::Log::trace<MIR>() << "++++++ " << j_ << " " << nj_ << " - " << i_ << " " << ni_ << eckit::newl;
+            // eckit::Log::trace<MIR>() << "++++++ " << j_ << " " << nj_ << " - " << i_ << " " << ni_ << std::endl;
 
             if (bbox_.contains(lat, lon)) {
                 count_++;
@@ -237,13 +237,13 @@ public:
         ni_ = pl_[p_++];
         nj_ = pl_.size();
 
-        // eckit::Log::trace<MIR>() << "GaussianIterator ni=" << ni_ << " nj=" << nj_ << " j=" << j_ << " " << bbox_ << eckit::newl;
+        // eckit::Log::trace<MIR>() << "GaussianIterator ni=" << ni_ << " nj=" << nj_ << " j=" << j_ << " " << bbox_ << std::endl;
 
 
     }
 
     ~GaussianIterator() {
-        // std::cout << "~GaussianIterator " << count_ << eckit::newl;
+        // std::cout << "~GaussianIterator " << count_ << std::endl;
         // ASSERT(count_ == ni_ * nj_);
     }
 

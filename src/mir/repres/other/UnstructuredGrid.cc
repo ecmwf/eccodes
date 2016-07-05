@@ -81,7 +81,7 @@ void UnstructuredGrid::fill(api::MIRJob &job) const  {
 
 
 bool UnstructuredGrid::globalDomain() const {
-    eckit::Log::warning() << "UnstructuredGrid::globalDomain: assuming grid is global" << eckit::newl;
+    eckit::Log::warning() << "UnstructuredGrid::globalDomain: assuming grid is global" << std::endl;
     return true;
 }
 
@@ -94,7 +94,7 @@ atlas::grid::Grid *UnstructuredGrid::atlasGrid() const {
     for (size_t i = 0; i < latitudes_.size(); i++) {
         pts->push_back(atlas::grid::Grid::Point(longitudes_[i], latitudes_[i]));
         if (i < 10) {
-            eckit::Log::trace<MIR>() << "UnstructuredGrid::atlasGrid lon=" << longitudes_[i] << ", lat=" << latitudes_[i] << eckit::newl;
+            eckit::Log::trace<MIR>() << "UnstructuredGrid::atlasGrid lon=" << longitudes_[i] << ", lat=" << latitudes_[i] << std::endl;
         }
     }
 

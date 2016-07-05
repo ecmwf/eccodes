@@ -149,12 +149,12 @@ class ReducedLLIterator: public Iterator {
                 if (j_ < nj_) {
                     ASSERT(p_ < pl_.size());
                     ni_ = pl_[p_++];
-                    // eckit::Log::trace<MIR>() << "ni = " << ni_ << eckit::newl;
+                    // eckit::Log::trace<MIR>() << "ni = " << ni_ << std::endl;
                 }
 
             }
 
-            // eckit::Log::trace<MIR>() << "++++++ " << lat << " " << lon << " - " << bbox_ << " -> " << bbox_.contains(lat, lon) << eckit::newl;
+            // eckit::Log::trace<MIR>() << "++++++ " << lat << " " << lon << " - " << bbox_ << " -> " << bbox_.contains(lat, lon) << std::endl;
 
             if (bbox_.contains(lat, lon)) {
                 count_++;
@@ -185,13 +185,13 @@ class ReducedLLIterator: public Iterator {
         ni_ = pl_[p_++];
 
         // eckit::Log::trace<MIR>() << "ReducedLLIterator ni=" << ni_ << " nj=" << nj_
-        // << " j=" << j_ << " " << bbox_ << " ns=" << ns_ << eckit::newl;
+        // << " j=" << j_ << " " << bbox_ << " ns=" << ns_ << std::endl;
 
 
     }
 
     ~ReducedLLIterator() {
-        std::cout << "~ReducedLLIterator " << count_ << eckit::newl;
+        std::cout << "~ReducedLLIterator " << count_ << std::endl;
         // ASSERT(count_ == ni_ * nj_);
     }
 

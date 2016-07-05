@@ -49,7 +49,7 @@ RegularLL::~RegularLL() {
 
 // Called by RegularLL::crop()
 const RegularLL *RegularLL::cropped(const util::BoundingBox &bbox) const {
-    // eckit::Log::trace<MIR>() << "Create cropped copy as RegularLL bbox=" << bbox << eckit::newl;
+    // eckit::Log::trace<MIR>() << "Create cropped copy as RegularLL bbox=" << bbox << std::endl;
     return new RegularLL(bbox, increments_);
 }
 
@@ -78,7 +78,7 @@ void RegularLL::fill(api::MIRJob &job) const  {
 
 atlas::grid::Grid *RegularLL::atlasGrid() const {
 
-    // eckit::Log::trace<MIR>() << "RegularLL::atlasGrid BBox is " << bbox_ << eckit::newl;
+    // eckit::Log::trace<MIR>() << "RegularLL::atlasGrid BBox is " << bbox_ << std::endl;
 
     atlas::grid::Grid *grid = new atlas::grid::global::lonlat::RegularLonLat(
         (const size_t) ni_,
