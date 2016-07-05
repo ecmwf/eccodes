@@ -384,16 +384,16 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
 
     err = grib_unpack_string_array(a,values,&size);
 
-    fprintf(self->dumper.out, "{%-*s ",depth," ");
+    fprintf(self->dumper.out, "{");
     depth+=2;
     for  (i=0;i<size-1;i++) {
-        fprintf(self->dumper.out,"\"%-*s\",%s\n",depth," ",values[i]);
+        fprintf(self->dumper.out,"    \"%s\",\n",values[i]);
     }
-    fprintf(self->dumper.out,"\"%-*s\"%s\n",depth," ",values[i]);
+    fprintf(self->dumper.out,"    \"%s\"\n",values[i]);
 
     depth-=2;
 
-    fprintf(self->dumper.out, "%-*s };",depth," ");
+    fprintf(self->dumper.out, "};\n");
 
     if (self->isLeaf==0) {
         dump_attributes(d,a);
