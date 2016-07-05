@@ -530,6 +530,13 @@ static int encode_string_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     return err;
 }
 
+static void set_missing_long_to_double(grib_darray* dvalues) {
+  size_t i,n=grib_darray_used_size(dvalues);
+  for (i=0;i<n;i++) {
+    if (dvalues->v[i]==GRIB_MISSING_LONG) dvalues->v[i]=GRIB_MISSING_DOUBLE;
+  }
+}
+
 static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr_descriptor* bd,
         grib_accessor_bufr_data_array* self,grib_darray* dvalues)
 {
@@ -556,6 +563,8 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     start=self->start;
     nvals=self->end - self->start;
     if (nvals<=0) return GRIB_NO_VALUES;
+
+    set_missing_long_to_double(dvalues);
 
     v=dvalues->v;
 
@@ -1338,7 +1347,8 @@ static void set_creator_name(grib_action* creator,int code)
         creator->name = (char*)"associatedField";
         break;
     default :
-        creator->name = (char*)"operator";
+        if (code > 204999 && code < 206000) creator->name =  (char*)"text";
+        else creator->name = (char*)"operator";
         break;
     }
 }
@@ -1429,7 +1439,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
         break;
     case 2:
         set_creator_name(&creator,self->expanded->v[idx]->code);
-        if (bufr_descriptor_is_marker(self->expanded->v[idx])) {
+        if (bufr_descriptor_is_marker(self->expanded->v[idx]) ) {
             elementAccessor = grib_accessor_factory(section, &creator, 0, NULL);
             if (self->canBeMissing[idx]) elementAccessor->flags |= GRIB_ACCESSOR_FLAG_CAN_BE_MISSING;
             accessor_bufr_data_element_set_index(elementAccessor,ide);

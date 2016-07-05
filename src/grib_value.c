@@ -546,6 +546,7 @@ int grib_is_missing_string(grib_accessor* a,unsigned char* x,size_t len)
     int ret;
     size_t i=0;
 
+    if (len==0) return 0;
     ret=1;
     for (i=0;i<len;i++) {
       if (x[i] != 0xFF ) {

@@ -181,7 +181,6 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     int i,r;
     int cols=9;
     long count=0;
-    double missing_value = GRIB_MISSING_DOUBLE;
     grib_context* c=a->context;
     grib_handle* h=grib_handle_of_accessor(a);
 
@@ -201,7 +200,6 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     self->begin=0;
     self->empty=0;
 
-    err = grib_set_double(h, "missingValue", missing_value);
     if (size>1) {
         int icount=0;
 
@@ -214,17 +212,11 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 
         for (i=0; i<size-1; ++i) {
             if (icount>cols || i==0) {fprintf(self->dumper.out,"\n      ");icount=0;}
-            if (values[i] == missing_value)
-                fprintf(self->dumper.out,"missing, \n");
-            else
-                fprintf(self->dumper.out,"%g, ", values[i]);
+            fprintf(self->dumper.out,"%.18e, ", values[i]);
             icount++;
         }
         if (icount>cols || i==0) {fprintf(self->dumper.out,"\n      ");icount=0;}
-        if (grib_is_missing_double(a,values[i]))
-            fprintf(self->dumper.out, "%s","missing");
-        else
-            fprintf(self->dumper.out, "%g",values[i]);
+        fprintf(self->dumper.out, "%.18e",values[i]);
 
         depth-=2;
         fprintf(self->dumper.out,"};\n");
@@ -238,7 +230,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
             else
                 fprintf(self->dumper.out,"set %s=",a->name);
 
-            fprintf(self->dumper.out,"%g;\n",value);
+            fprintf(self->dumper.out,"%.18e;\n",value);
         }
     }
 
@@ -256,7 +248,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
     long value; size_t size = 1;
     long *values=NULL;
     int err = 0;
-    int i,r;
+    int i,r,icount;
     int cols=9;
     long count=0;
     grib_handle* h=grib_handle_of_accessor(a);
@@ -278,7 +270,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
     self->empty=0;
 
     if (size>1) {
-        int icount=0;
+        icount=0;
         if ((r=get_key_rank(h,self->keys,a->name))!=0)
             fprintf(self->dumper.out,"set #%d#%s=",r,a->name);
         else
@@ -288,19 +280,11 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 
         for (i=0;i<size-1;i++) {
             if (icount>cols || i==0) {fprintf(self->dumper.out,"\n      ");icount=0;}
-            if (grib_is_missing_long(a,values[i])) {
-                fprintf(self->dumper.out,"missing, ");
-            } else {
-                fprintf(self->dumper.out,"%ld, ",values[i]);
-            }
+            fprintf(self->dumper.out,"%ld, ",values[i]);
             icount++;
         }
         if (icount>cols || i==0) {fprintf(self->dumper.out,"\n      ");icount=0;}
-        if (grib_is_missing_long(a,values[i])) {
-            fprintf(self->dumper.out,"missing ");
-        } else {
-            fprintf(self->dumper.out,"%ld ",values[i]);
-        }
+        fprintf(self->dumper.out,"%ld ",values[i]);
 
         depth-=2;
         fprintf(self->dumper.out,"};\n");
@@ -349,7 +333,7 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
         else
             fprintf(self->dumper.out,"set %s=",a->name);
 
-        fprintf(self->dumper.out,"%g;\n",value);
+        fprintf(self->dumper.out,"%.18e;\n",value);
     }
 
     if (self->isLeaf==0) {
