@@ -57,6 +57,7 @@ list( APPEND tests2
     bufr_change_edition
     ecc-197
     ecc-286
+    ecc-288
     gts_get
     gts_ls
     gts_compare
