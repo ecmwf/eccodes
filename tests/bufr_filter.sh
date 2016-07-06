@@ -1407,7 +1407,7 @@ grst_26.bufr gsd1_208.bufr gsd2_208.bufr gsd3_208.bufr gst4_26.bufr hirb_55.bufr
 ikco_217.bufr itrg_208.bufr itwt_233.bufr j2eo_216.bufr j2nb_216.bufr jaso_214.bufr kond_209.bufr maer_207.bufr meta_140.bufr
 mhen_55.bufr mhsa_55.bufr mhsb_55.bufr mhse_55.bufr mloz_206.bufr modi_87.bufr modw_87.bufr monw_87.bufr new.bufr nomi_206.bufr
 nos1_208.bufr nos2_208.bufr nos3_208.bufr nos4_208.bufr nos5_208.bufr nos6_208.bufr nos7_208.bufr nos8_208.bufr ocea_131.bufr
-ocea_132.bufr ocea_133.bufr ocea_21.bufr pilo_91.bufr profiler_european.bufr rada_250.bufr rado_250.bufr s4kn_165.bufr
+ocea_132.bufr ocea_133.bufr ocea_21.bufr pgps_110.bufr pilo_91.bufr profiler_european.bufr rada_250.bufr rado_250.bufr s4kn_165.bufr
 sb19_206.bufr sbu8_206.bufr ship_11.bufr ship_12.bufr ship_13.bufr ship_14.bufr ship_19.bufr ship_9.bufr smin_49.bufr smis_49.bufr
 smiu_49.bufr smos_203.bufr sn4k_165.bufr soil_7.bufr ssbt_127.bufr stuk_7.bufr syno_1.bufr syno_2.bufr syno_3.bufr syno_4.bufr
 synop_multi_subset.bufr temp_101.bufr temp_102.bufr temp_106.bufr tmr7_129.bufr tros_31.bufr uegabe.bufr wavb_134.bufr"
