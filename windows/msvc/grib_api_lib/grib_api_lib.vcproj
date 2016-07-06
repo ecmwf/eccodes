@@ -421,6 +421,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\codes_memfs.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\compile.c"
 				>
 			</File>
@@ -1386,6 +1390,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_dumper_class_default.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_dumper_class_filter.c"
 				>
 			</File>
 			<File
