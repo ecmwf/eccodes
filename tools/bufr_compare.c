@@ -313,6 +313,16 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("t:"))
         tolerance_factor=atof(grib_options_get_option("t:"));
 
+    if (grib_options_on("R:")) {
+        char* sarg=grib_options_get_option("R:");
+        options->tolerance_count=MAX_KEYS;
+        ret=parse_keyval_string(grib_tool_name, sarg,1,GRIB_TYPE_DOUBLE,options->tolerance,&(options->tolerance_count));
+        if (ret == GRIB_INVALID_ARGUMENT) {
+            usage();
+            exit(1);
+        }
+    }
+
     {
         /* Check for 2nd file being a directory. If so, we assume user is comparing to a file */
         /* with the same name as first file in that directory */

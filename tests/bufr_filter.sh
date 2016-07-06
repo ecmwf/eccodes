@@ -1425,3 +1425,4 @@ do
 
 done
 
+rm -f $fLog
