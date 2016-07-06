@@ -588,7 +588,7 @@ grib_iterator*      grib_iterator_new      (grib_handle*   h, unsigned long flag
 * @param values      : returned array of data values
 * @return            0 if OK, integer value on error
 */
-int grib_get_data(grib_handle *h, double *lats, double *lons, double *values, size_t *size);
+int grib_get_data(grib_handle *h, double *lats, double *lons, double *values);
 
 /**
 * Get the next value from an iterator.

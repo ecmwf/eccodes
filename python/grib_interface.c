@@ -1926,7 +1926,6 @@ int grib_c_set_string(int* gid, char* key, char* val, int len2)
 
 int grib_c_get_data_real4(int* gid,float* lats, float* lons,float* values,size_t* size)
 {
-
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
     double *lat8=NULL,*lon8=NULL,*val8 = NULL;
@@ -1941,7 +1940,7 @@ int grib_c_get_data_real4(int* gid,float* lats, float* lons,float* values,size_t
     lat8 = grib_context_malloc(h->context,(*size)*(sizeof(double)));
     if(!lat8) return GRIB_OUT_OF_MEMORY;
 
-    err=grib_get_data(h,lat8,lon8,val8,size);
+    err=grib_get_data(h,lat8,lon8,val8);
 
     for(i=0;i<*size;i++) {
         values[i] = val8[i];
@@ -1954,15 +1953,14 @@ int grib_c_get_data_real4(int* gid,float* lats, float* lons,float* values,size_t
     grib_context_free(h->context,lon8);
 
     return err;
-
 }
-
+/*
 int grib_c_get_data_real8(int* gid,double* lats, double* lons,double* values,size_t* size)
 {
     grib_handle *h = get_handle(*gid);
-    return grib_get_data(h,lats,lons,values,size);
+    return grib_get_data(h,lats,lons,values);
 }
-
+*/
 int grib_c_copy_message(int* gid, void* mess,size_t* len)
 {
     grib_handle *h = get_handle(*gid);

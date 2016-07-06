@@ -9,9 +9,9 @@
  */
 
 /*! \file eccodes.h
-  \brief eccodes C header file
+  \brief The ecCodes C header file
 
-  This is the only file that must be included to use the eccodes library
+  This is the only file that must be included to use the ecCodes library
   from C.
 */
 
@@ -492,7 +492,7 @@ codes_iterator* codes_grib_iterator_new(codes_handle* h, unsigned long flags, in
 * @param values      : returned array of data values
 * @return            0 if OK, integer value on error
 */
-int codes_grib_get_data(codes_handle *h, double *lats, double *lons, double *values, size_t *size);
+int codes_grib_get_data(codes_handle *h, double *lats, double *lons, double *values);
 
 /**
 * Get the next value from an iterator.

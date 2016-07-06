@@ -2808,7 +2808,7 @@ int grib_f_get_data_real4_(int* gid,float* lats, float* lons,float* values,size_
     lat8 = (double*)grib_context_malloc(h->context,(*size)*(sizeof(double)));
     if(!lat8) return GRIB_OUT_OF_MEMORY;
 
-    err=grib_get_data(h,lat8,lon8,val8,size);
+    err=grib_get_data(h,lat8,lon8,val8);
 
     for(i=0;i<*size;i++) {
         values[i] = val8[i];
@@ -2833,7 +2833,7 @@ int grib_f_get_data_real4(int* gid,float* lats, float* lons,float* values,size_t
 int grib_f_get_data_real8_(int* gid,double* lats, double* lons,double* values,size_t* size) {
 
     grib_handle *h = get_handle(*gid);
-    return grib_get_data(h,lats,lons,values,size);
+    return grib_get_data(h,lats,lons,values);
 
 }
 int grib_f_get_data_real8__(int* gid,double* lats, double* lons,double* values,size_t* size) {

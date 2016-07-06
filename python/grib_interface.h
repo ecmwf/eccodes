@@ -88,7 +88,7 @@ int grib_c_get_string(int *gid, char *key, char *val, size_t *lsize);
 int grib_c_get_string_array(int* gid, char* key, char** val, size_t *lsize);
 int grib_c_set_string(int *gid, char *key, char *val, int len2);
 int grib_c_get_data_real4(int *gid, float *lats, float *lons, float *values, size_t *size);
-int grib_c_get_data_real8(int *gid, double *lats, double *lons, double *values, size_t *size);
+/*int grib_c_get_data_real8(int *gid, double *lats, double *lons, double *values, size_t *size);*/
 int grib_c_get_message_size(int *gid, size_t *len);
 int grib_c_get_message_offset(int *gid, off_t *len);
 int grib_c_copy_message(int *gid, void *mess, size_t *len);

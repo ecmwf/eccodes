@@ -251,9 +251,9 @@ grib_iterator* codes_grib_iterator_new(grib_handle* h, unsigned long flags,int* 
 {
     return grib_iterator_new(h,flags,error);
 }
-int codes_grib_get_data(grib_handle *h, double *lats, double *lons, double *values, size_t *size)
+int codes_grib_get_data(grib_handle *h, double *lats, double *lons, double *values)
 {
-    return grib_get_data(h,lats,lons,values,size);
+    return grib_get_data(h,lats,lons,values);
 }
 int codes_grib_iterator_next(grib_iterator *i, double* lat,double* lon,double* value)
 {

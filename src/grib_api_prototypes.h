@@ -1330,7 +1330,7 @@ int compare_points(const void *a, const void *b);
 /* grib_iterator_class_lambert_conformal.c */
 
 /* grib_iterator.c */
-int grib_get_data(grib_handle *h, double *lats, double *lons, double *values, size_t *size);
+int grib_get_data(grib_handle *h, double *lats, double *lons, double *values);
 int grib_iterator_next(grib_iterator *i, double *lat, double *lon, double *value);
 int grib_iterator_has_next(grib_iterator *i);
 int grib_iterator_previous(grib_iterator *i, double *lat, double *lon, double *value);
