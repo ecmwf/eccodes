@@ -15,9 +15,17 @@
 # It tests decoding a BUFR file which cannot be done unless
 # we extend the definitions to include extra files
 # ---------------------------------------------------------
+label="ecc-197-test"
+
+input=${data_dir}/bufr/vos308014_v3_26.bufr
+if [ ! -f $input ]; then
+  echo "Data file $input not available"
+  exit 0
+fi
+TEMP=${label}.temp
 
 # Create a temporary directory which holds the tables etc
-TEMP_DIR=ecc-197-temp-dir.$$
+TEMP_DIR=${label}.temp-dir.$$
 rm -rf $TEMP_DIR
 mkdir -p $TEMP_DIR/definitions/bufr/tables/0/wmo/26
 
@@ -32,7 +40,11 @@ MY_DEFS=`pwd`/$TEMP_DIR/definitions
 export ECCODES_DEFINITION_PATH=$MY_DEFS:$ECCODES_DEFINITION_PATH
 
 # Now decode
-${tools_dir}bufr_dump ${data_dir}/bufr/vos308014_v3_26.bufr >/dev/null
+${tools_dir}bufr_dump $input > $TEMP
+# Ensure output JSON has all the expected contents
+# After calling 'wc' and 'set', $1 will be the line count
+set `wc -l $TEMP`
+[ "$1" = "35725" ]
 
 rm -rf $TEMP_DIR
-
+rm -f $TEMP
