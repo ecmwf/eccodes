@@ -11,24 +11,22 @@
 . ./include.sh
 
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_read_scatterometer_c"
 
-#Define tmp file
+# Define tmp file
 fTmp=${label}.tmp.txt
-rm -f $fTmp | true
+rm -f $fTmp
 
-#We check "asca_139.bufr". The path is
-#hardcoded in the example
+# We check "asca_139.bufr". The path is hardcoded in the example
 
 REDIRECT=/dev/null
 
-#Write the key values into a file
-${examples_dir}c_bufr_read_scatterometer #2> $REDIRECT > $fTmp
+# Write the key values into a file
+${examples_dir}c_bufr_read_scatterometer 2> $REDIRECT > $fTmp
 
-#TODO: check the results
+# Check the results
+grep -q "Number of values: 2016" $fTmp
 
-#cat  $fTmp
-
-#Clean up
-rm -f $fTmp | true
+# Clean up
+rm -f $fTmp
