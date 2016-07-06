@@ -104,7 +104,7 @@ ${tools_dir}/bufr_compare -r ${fBufrInput1} ${fBufrInput2}>> $fLog
 #----------------------------------------------------
 ${tools_dir}bufr_set -s subCentre=12 aaen_55.bufr $fBufrTmp
 set +e
-${tools_dir}bufr_compare aaen_55.bufr $fBufrTmp
+${tools_dir}bufr_compare aaen_55.bufr $fBufrTmp >/dev/null
 status=$?
 set -e
 [ $status -eq 1 ]
@@ -116,7 +116,7 @@ temp_dir=tempdir.bufr_compare
 mkdir -p $temp_dir
 infile=aaen_55.bufr
 cp $infile $temp_dir
-${tools_dir}bufr_compare $infile $temp_dir
+${tools_dir}bufr_compare $infile $temp_dir >/dev/null
 
 
 #Clean up
