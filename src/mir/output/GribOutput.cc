@@ -27,10 +27,14 @@
 #include "eckit/log/Plural.h"
 #include "mir/log/MIR.h"
 #include "mir/action/context/Context.h"
+#include "eckit/thread/Mutex.h"
+#include "eckit/thread/AutoLock.h"
 
 
 namespace mir {
 namespace output {
+
+static eckit::Mutex local_mutex;
 
 
 #define X(a) eckit::Log::trace<MIR>() << "  GRIB encoding: " << #a << " = " << a << std::endl
@@ -77,6 +81,9 @@ size_t GribOutput::copy(const param::MIRParametrisation &param, context::Context
 }
 
 size_t GribOutput::save(const param::MIRParametrisation &parametrisation, context::Context& ctx) {
+
+
+
     data::MIRField& field = ctx.field();
     input::MIRInput& input = ctx.input();
 
@@ -86,7 +93,8 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 
     for (size_t i = 0; i < field.dimensions(); i++) {
 
-
+        // Protect grib_api
+        eckit::AutoLock<eckit::Mutex> lock(local_mutex);
 
         grib_handle *h = input.gribHandle(i); // Base class will throw an exception is input cannot provide a grib_handle
 
