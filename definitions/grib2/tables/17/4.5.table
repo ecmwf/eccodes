@@ -40,7 +40,7 @@
 119 hpl Hybrid pressure level (-)
 # 120-149 Reserved 
 150 150 Generalized vertical height coordinate 
-151 151 Soil level (Numeric)
+151 sol Soil level (Numeric)
 # 152-159 Reserved 
 160 160 Depth below sea level (m)
 161 161 Depth below water surface (m)
