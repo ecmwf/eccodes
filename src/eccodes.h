@@ -77,25 +77,82 @@ Log mode for information for processing information
 #define CODES_NEAREST_SAME_DATA   GRIB_NEAREST_SAME_DATA  
 #define CODES_NEAREST_SAME_POINT  GRIB_NEAREST_SAME_POINT 
 
+/*! Iteration is carried out on all the keys available in the message
+\ingroup keys_iterator
+\see codes_keys_iterator_new
+*/
 #define CODES_KEYS_ITERATOR_ALL_KEYS               GRIB_KEYS_ITERATOR_ALL_KEYS
+
+/*! read only keys are skipped by keys iterator.
+\ingroup keys_iterator
+\see codes_keys_iterator_new
+*/
 #define CODES_KEYS_ITERATOR_SKIP_READ_ONLY         GRIB_KEYS_ITERATOR_SKIP_READ_ONLY
+
+/*! optional keys are skipped by keys iterator.
+\ingroup keys_iterator
+\see codes_keys_iterator_new */
 #define CODES_KEYS_ITERATOR_SKIP_OPTIONAL          GRIB_KEYS_ITERATOR_SKIP_OPTIONAL
+
+/*! edition specific keys are skipped by keys iterator.
+\ingroup keys_iterator
+\see codes_keys_iterator_new */
 #define CODES_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC  GRIB_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC
+
+/*! coded keys are skipped by keys iterator.
+\ingroup keys_iterator
+\see codes_keys_iterator_new */
 #define CODES_KEYS_ITERATOR_SKIP_CODED             GRIB_KEYS_ITERATOR_SKIP_CODED
+
+/*! computed keys are skipped by keys iterator.
+\ingroup keys_iterator
+\see codes_keys_iterator_new */
 #define CODES_KEYS_ITERATOR_SKIP_COMPUTED          GRIB_KEYS_ITERATOR_SKIP_COMPUTED
+
+/*! duplicates of a key are skipped by keys iterator.
+\ingroup keys_iterator
+\see codes_keys_iterator_new */
 #define CODES_KEYS_ITERATOR_SKIP_DUPLICATES        GRIB_KEYS_ITERATOR_SKIP_DUPLICATES
+
+/*! function keys are skipped by keys iterator.
+\ingroup keys_iterator
+\see codes_keys_iterator_new */
 #define CODES_KEYS_ITERATOR_SKIP_FUNCTION          GRIB_KEYS_ITERATOR_SKIP_FUNCTION
 
 
 typedef struct grib_values            codes_values;
 typedef struct grib_key_value_list    codes_key_value_list;
+
+/*! Codes handle,   structure giving access to parsed values by keys
+    \ingroup codes_handle
+*/
 typedef struct grib_handle            codes_handle;
+
+/*! GRIB multi field handle,   structure used to build multi fields messages.
+    \ingroup codes_handle
+ */
 typedef struct grib_multi_handle      codes_multi_handle;
+
+/*! Codes context,  structure containing the memory methods, the parsers and the formats.
+    \ingroup codes_context
+*/
 typedef struct grib_context           codes_context;
+
+/*! Codes iterator, structure supporting a geographic iteration of values in a GRIB message.
+    \ingroup codes_iterator
+*/
 typedef struct grib_iterator          codes_iterator;
+
+/*! Codes nearest, structure used to find the nearest points of a latitude longitude point in a GRIB message.
+    \ingroup codes_iterator
+*/
 typedef struct grib_nearest           codes_nearest;
 typedef struct grib_box               codes_box;
 typedef struct grib_points            codes_points;
+
+/*! Codes keys iterator. Iterator over keys.
+    \ingroup keys_iterator
+*/
 typedef struct grib_keys_iterator     codes_keys_iterator;
 typedef struct grib_fieldset          codes_fieldset;
 typedef struct grib_order_by          codes_order_by;
@@ -106,7 +163,6 @@ typedef struct grib_iarray            codes_iarray;
 typedef struct grib_vdarray           codes_vdarray;
 typedef struct grib_vsarray           codes_vsarray;
 typedef struct grib_viarray           codes_viarray;
-typedef struct grib_index             codes_index;
 typedef struct grib_string_list       codes_string_list;
 typedef struct grib_util_packing_spec codes_util_packing_spec;
 typedef struct grib_util_grid_spec    codes_util_grid_spec;
@@ -125,6 +181,10 @@ int  codes_values_check(codes_handle* h, codes_values* values, int count);
 The codes_index is the structure giving indexed access to messages in a file.
  */
 /*! @{*/
+
+/*! index structure to access messages in a file.
+*/
+typedef struct grib_index             codes_index;
 
 /**
  *  Create a new index form a file. The file is indexed with the keys in argument.
@@ -266,7 +326,7 @@ void codes_index_delete(codes_index* index);
 /*! @} */
 
 /*! \defgroup codes_handle The codes_handle
-The codes_handle is the structure giving access to parsed grib values by keys.
+The codes_handle is the structure giving access to parsed message values by keys.
 */
 /*! @{*/
 /**
@@ -401,7 +461,7 @@ codes_handle* codes_handle_clone(codes_handle* h)                 ;
 int codes_handle_delete(codes_handle* h);
 
 /**
- *  Create an empty multi field handle.
+ *  Create an empty multi field GRIB handle.
  *  Remember always to delete the multi handle when it is not needed any more to avoid
  *  memory leaks.
  *
@@ -411,7 +471,7 @@ codes_multi_handle* codes_grib_multi_handle_new(codes_context* c);
 
 /**
  *  Append the sections starting with start_section of the message pointed by h at
- *  the end of the multi field handle mh.
+ *  the end of the multi field GRIB handle mh.
  *  Remember always to delete the multi handle when it is not needed any more to avoid
  *  memory leaks.
  *
@@ -423,7 +483,7 @@ codes_multi_handle* codes_grib_multi_handle_new(codes_context* c);
 int codes_grib_multi_handle_append(codes_handle* h,int start_section,codes_multi_handle* mh);
 
 /**
- * Delete multi field handle.
+ * Delete multi field GRIB handle.
  *
  * @param mh           : The multi field handle to be deleted.
  * @return            0 if OK, integer value on error
@@ -431,11 +491,11 @@ int codes_grib_multi_handle_append(codes_handle* h,int start_section,codes_multi
 int codes_grib_multi_handle_delete(codes_multi_handle* mh);
 
 /**
- *  Write a multi field handle in a file.
+ *  Write a multi field GRIB handle in a file.
  *  Remember always to delete the multi handle when it is not needed any more to avoid
  *  memory leaks.
  *
- * @param mh           : The multi field handle to be written.
+ * @param mh           : The multi field GRIB handle to be written.
  * @param f            : File on which the file handle is written.
  * @return            0 if OK, integer value on error
  */
@@ -448,7 +508,7 @@ int codes_grib_multi_handle_write(codes_multi_handle* mh,FILE* f);
 /**
 * getting the message attached to a handle
 *
-* @param h              : the grib handle to which the buffer should be gathered
+* @param h              : the handle to which the buffer should be gathered
 * @param message        : the pointer to be set to the handle's data
 * @param message_length : On exit, the message size in number of bytes
 * @return            0 if OK, integer value on error
@@ -459,7 +519,7 @@ int codes_get_message(codes_handle* h ,const void** message, size_t *message_len
 /**
 * getting a copy of the message attached to a handle
 *
-* @param h              : the grib handle to which the buffer should be returned
+* @param h              : the handle to which the buffer should be returned
 * @param message        : the pointer to the data buffer to be filled
 * @param message_length : On entry, the size in number of bytes of the allocated empty message.
 *                         On exit, the actual message length in number of bytes
@@ -472,7 +532,7 @@ int codes_get_message_copy(codes_handle* h,  void* message,size_t *message_lengt
 /*! @{ */
 
 /*!
-* \brief Create a new iterator from a handle, using current geometry and values.
+* \brief Create a new iterator from a GRIB handle, using current geometry and values.
 *
 * \param h           : the handle from which the iterator will be created
 * \param flags       : flags for future use.
@@ -903,7 +963,7 @@ void codes_gts_header_off(codes_context* c);
 
 /**
 *  Set the GRIBEX mode on.
-*  Grib files will be compatible with GRIBEX.
+*  GRIB files will be compatible with GRIBEX.
 *
 * @param c           : the context
 */
@@ -941,21 +1001,21 @@ void codes_context_set_definitions_path(grib_context* c, const char* path);
 void codes_context_set_samples_path(grib_context* c, const char* path);
 
 /**
-*  Turn on support for multiple fields in single grib messages
+*  Turn on support for multiple fields in single GRIB messages
 *
 * @param c            : the context to be modified
 */
 void codes_grib_multi_support_on(codes_context* c);
 
 /**
-*  Turn off support for multiple fields in single grib messages
+*  Turn off support for multiple fields in single GRIB messages
 *
 * @param c            : the context to be modified
 */
 void codes_grib_multi_support_off(codes_context* c);
 
 /**
-*  Reset file handle in multiple field support mode
+*  Reset file handle in multiple GRIB field support mode
 *
 * @param c            : the context to be modified
 * @param f            : the file pointer
