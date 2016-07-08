@@ -153,6 +153,16 @@ static char* cast_char(char* buf, char* fortstr,int len)
     return buf;
 }
 
+static char* cast_char_no_cut(char* buf, char* fortstr,int len)
+{
+    char *p,*end;
+    if (len == 0 || fortstr == NULL) return NULL;
+    memcpy(buf,fortstr,len);
+    buf[len]='\0';
+
+    return buf;
+}
+
 static void czstr_to_fortran(char* str,int len)
 {
     char *p,*end;
@@ -2729,10 +2739,10 @@ int grib_f_get_string_array_(int* gid, char* key, char* val,int* nvals,int* slen
     for (i=0;i<lsize;i++) {
         strcpy(p,cval[i]);
         czstr_to_fortran(p,*slen);
+        grib_context_free(h->context,cval[i]);
         p+= *slen;
     }
     grib_context_free(h->context,cval);
-    /*remember to deallocate each string*/
 
     return  err;
 }
@@ -2742,6 +2752,45 @@ int grib_f_get_string_array__(int* gid, char* key, char* val,int* nvals,int* sle
 }
 int grib_f_get_string_array(int* gid, char* key, char* val,int* nvals,int* slen, int len){
     return  grib_f_get_string_array_( gid,  key,  val, nvals, slen, len);
+}
+
+
+/*****************************************************************************/
+int grib_f_set_string_array_(int* gid, char* key, char* val,int* nvals,int* slen,int len)
+{
+    grib_handle *h = get_handle(*gid);
+    int err = GRIB_SUCCESS;
+    size_t i;
+    char buf[1024];
+    size_t lsize = *nvals;
+    char** cval=0;
+    char* p=val;
+    grib_context* c=h->context;
+
+    if(!h) return  GRIB_INVALID_GRIB;
+
+    cval=(char**)grib_context_malloc_clear(h->context,sizeof(char*)*lsize);
+    for (i=0;i<lsize;i++) {
+        cval[i]=grib_context_malloc_clear(c,sizeof(char)* (*slen+1));
+        cast_char_no_cut(cval[i],p,*slen);
+        p+= *slen;
+    }
+    err = grib_set_string_array(h, cast_char(buf,key,len), cval, lsize);
+    if (err) return err;
+
+    for (i=0;i<lsize;i++) {
+        grib_context_free(c,cval[i]);
+    }
+    grib_context_free(c,cval);
+
+    return  err;
+}
+
+int grib_f_set_string_array__(int* gid, char* key, char* val,int* nvals,int* slen, int len){
+    return  grib_f_set_string_array_( gid,  key,  val,nvals,slen,len);
+}
+int grib_f_set_string_array(int* gid, char* key, char* val,int* nvals,int* slen, int len){
+    return  grib_f_set_string_array_( gid,  key,  val, nvals, slen, len);
 }
 
 /*****************************************************************************/
@@ -2774,13 +2823,13 @@ int grib_f_set_string_(int* gid, char* key, char* val, int len, int len2){
 
     grib_handle *h = get_handle(*gid);
 
-    char buf[1024];
-    char buf2[1024];
+    char buf[1024]={0,};
+    char buf2[1024]={0,};
     size_t lsize = len2;
 
     if(!h) return GRIB_INVALID_GRIB;
 
-    return grib_set_string(h, cast_char(buf,key,len), cast_char(buf2,val,len2), &lsize);
+    return grib_set_string(h, cast_char(buf,key,len), cast_char_no_cut(buf2,val,len2), &lsize);
 
 }
 
