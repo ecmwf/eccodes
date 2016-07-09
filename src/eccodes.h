@@ -60,22 +60,22 @@ Log mode for information for processing information
 #define CODES_UTIL_SET_SPEC_FLAGS_ONLY_PACKING GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING
 
 /* Dump option flags*/
-#define CODES_DUMP_FLAG_READ_ONLY    GRIB_DUMP_FLAG_READ_ONLY   
-#define CODES_DUMP_FLAG_DUMP_OK      GRIB_DUMP_FLAG_DUMP_OK     
-#define CODES_DUMP_FLAG_VALUES       GRIB_DUMP_FLAG_VALUES      
-#define CODES_DUMP_FLAG_CODED        GRIB_DUMP_FLAG_CODED       
-#define CODES_DUMP_FLAG_OCTECT       GRIB_DUMP_FLAG_OCTECT      
-#define CODES_DUMP_FLAG_ALIASES      GRIB_DUMP_FLAG_ALIASES     
-#define CODES_DUMP_FLAG_TYPE         GRIB_DUMP_FLAG_TYPE        
-#define CODES_DUMP_FLAG_HEXADECIMAL  GRIB_DUMP_FLAG_HEXADECIMAL 
-#define CODES_DUMP_FLAG_NO_DATA      GRIB_DUMP_FLAG_NO_DATA     
-#define CODES_DUMP_FLAG_ALL_DATA     GRIB_DUMP_FLAG_ALL_DATA     
-#define CODES_DUMP_FLAG_ALL_ATTRIBUTES     GRIB_DUMP_FLAG_ALL_ATTRIBUTES     
+#define CODES_DUMP_FLAG_READ_ONLY    GRIB_DUMP_FLAG_READ_ONLY
+#define CODES_DUMP_FLAG_DUMP_OK      GRIB_DUMP_FLAG_DUMP_OK
+#define CODES_DUMP_FLAG_VALUES       GRIB_DUMP_FLAG_VALUES
+#define CODES_DUMP_FLAG_CODED        GRIB_DUMP_FLAG_CODED
+#define CODES_DUMP_FLAG_OCTECT       GRIB_DUMP_FLAG_OCTECT
+#define CODES_DUMP_FLAG_ALIASES      GRIB_DUMP_FLAG_ALIASES
+#define CODES_DUMP_FLAG_TYPE         GRIB_DUMP_FLAG_TYPE
+#define CODES_DUMP_FLAG_HEXADECIMAL  GRIB_DUMP_FLAG_HEXADECIMAL
+#define CODES_DUMP_FLAG_NO_DATA      GRIB_DUMP_FLAG_NO_DATA
+#define CODES_DUMP_FLAG_ALL_DATA     GRIB_DUMP_FLAG_ALL_DATA
+#define CODES_DUMP_FLAG_ALL_ATTRIBUTES     GRIB_DUMP_FLAG_ALL_ATTRIBUTES
 
 /* codes_nearest flags */
-#define CODES_NEAREST_SAME_GRID   GRIB_NEAREST_SAME_GRID  
-#define CODES_NEAREST_SAME_DATA   GRIB_NEAREST_SAME_DATA  
-#define CODES_NEAREST_SAME_POINT  GRIB_NEAREST_SAME_POINT 
+#define CODES_NEAREST_SAME_GRID   GRIB_NEAREST_SAME_GRID
+#define CODES_NEAREST_SAME_DATA   GRIB_NEAREST_SAME_DATA
+#define CODES_NEAREST_SAME_POINT  GRIB_NEAREST_SAME_POINT
 
 /*! Iteration is carried out on all the keys available in the message
 \ingroup keys_iterator
@@ -214,7 +214,7 @@ codes_index* codes_index_new_from_file(codes_context* c, char* filename,const ch
 codes_index* codes_index_new(codes_context* c, const char* keys,int *err);
 
 /**
- *  Indexes the file given in argument in the index given in argument. 
+ *  Indexes the file given in argument in the index given in argument.
  *
  * @param index       : index
  * @param filename    : name of the file of messages to be indexed
@@ -382,11 +382,11 @@ grib_handle* codes_bufr_handle_new_from_file(grib_context* c, FILE* f, int* erro
 
 
 /**
-*  Write a coded message in a file.     
+*  Write a coded message in a file.
 *
 * @param h           : codes_handle to be written
-* @param file        : name of the file 
-* @param mode        : mode 
+* @param file        : name of the file
+* @param mode        : mode
 * @return            0 if OK, integer value on error
 */
 int codes_write_message(codes_handle* h,const char* file,const char* mode);
@@ -813,7 +813,7 @@ int codes_get_long_array(codes_handle* h, const char* key, long* vals, size_t *l
 * @return          0 if OK, integer value on error
 */
 int codes_copy_namespace(codes_handle* dest, const char* name, codes_handle* src);
-  
+
 /**
 *  Set a long value from a key. If several keys of the same name are present, the last one is set
 *  @see  codes_get_long
@@ -926,7 +926,7 @@ void codes_dump_action_tree(codes_context* c, FILE* f) ;
  grib_print_proc
  grib_data_read_proc
  grib_data_write_proc
- grib_data_tell_proc 
+ grib_data_tell_proc
  grib_data_seek_proc
  grib_data_eof_proc
 */
@@ -1146,7 +1146,7 @@ int codes_points_get_values(codes_handle* h, codes_points* points, double* val);
 #define CODES_UTIL_GRID_SPEC_REGULAR_GG GRIB_UTIL_GRID_SPEC_REGULAR_GG
 #define CODES_UTIL_GRID_SPEC_ROTATED_GG GRIB_UTIL_GRID_SPEC_ROTATED_GG
 #define CODES_UTIL_GRID_SPEC_REDUCED_GG GRIB_UTIL_GRID_SPEC_REDUCED_GG
-#define CODES_UTIL_GRID_SPEC_SH         GRIB_UTIL_GRID_SPEC_SH        
+#define CODES_UTIL_GRID_SPEC_SH         GRIB_UTIL_GRID_SPEC_SH
 #define CODES_UTIL_GRID_SPEC_REDUCED_LL GRIB_UTIL_GRID_SPEC_REDUCED_LL
 #define CODES_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC
 
