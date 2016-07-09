@@ -38,6 +38,7 @@ static eckit::Mutex local_mutex;
 
 
 #define X(a) eckit::Log::trace<MIR>() << "  GRIB encoding: " << #a << " = " << a << std::endl
+#define Y(a) oss << " " << #a << "=" << a
 
 
 class HandleFree {
@@ -236,6 +237,26 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 
         grib_handle *result = grib_util_set_spec(h, &info.grid, &info.packing, flags, &values[0], values.size(), &err);
         HandleFree hf(result); // Make sure handle deleted even in case of exception
+
+
+        if(err == GRIB_WRONG_GRID) {
+            std::ostringstream oss;
+
+            oss << "GRIB_WRONG_GRID: ";
+
+            Y(info.grid.grid_type);
+            Y(info.grid.Ni);
+            Y(info.grid.Nj);
+            Y(info.grid.iDirectionIncrementInDegrees);
+            Y(info.grid.jDirectionIncrementInDegrees);
+            Y(info.grid.longitudeOfFirstGridPointInDegrees);
+            Y(info.grid.longitudeOfLastGridPointInDegrees);
+            Y(info.grid.latitudeOfFirstGridPointInDegrees);
+            Y(info.grid.latitudeOfLastGridPointInDegrees);
+
+            throw eckit::SeriousBug(oss.str());
+        }
+
 
         GRIB_CALL(err);
 
