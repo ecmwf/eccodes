@@ -72,9 +72,9 @@ static grib_expression_class _grib_expression_class_is_in_dict = {
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     0,                  /* destructor                */
-    &print,
-    &compile,
-    &add_dependency,
+    &print,                 
+    &compile,                 
+    &add_dependency,       
 
 	&native_type,
 	&get_name,

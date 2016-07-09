@@ -818,7 +818,7 @@ subroutine codes_get_string_array ( gribid, key, value, status )
       if (present(status)) then
         status = iret
       else
-        call grib_check(iret,'grib_get',key)
+        call grib_check(iret,'codes_get',key)
       endif
     end if
 
@@ -833,10 +833,45 @@ subroutine codes_get_string_array ( gribid, key, value, status )
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret,'grib_get',key)
+      call grib_check(iret,'codes_get',key)
     endif
 
 end subroutine codes_get_string_array 
+
+subroutine codes_set_string_array ( gribid, key, value, status )
+    integer(kind=kindOfInt),                     intent(in)   :: gribid
+    character(len=*),                            intent(in)   :: key
+    character(len=*), dimension(:),allocatable,  intent(in)   :: value
+    integer(kind=kindOfInt),optional,            intent(out)  :: status
+
+    character                 :: cvalue(size(value)*len(value(0)))
+    character                 :: svalue(len(value(0)))
+    integer(kind=kindOfInt)                            :: iret
+    integer(kind=kindOfInt)                            :: nb_values
+    integer(kind=kindOfInt)                            :: slen
+    integer(kind=kindOfInt)                            :: i,s,j,l
+
+    nb_values=size(value)
+    slen=len(value(0))
+    j=1
+    do i=1,nb_values
+      cvalue(j:j+slen-1)=transfer(value(i),svalue)
+      j=j+slen
+    enddo
+
+    iret=grib_f_set_string_array ( gribid, key, cvalue , nb_values, slen )
+
+    if (iret /= 0) then
+      call grib_f_write_on_fail(gribid)
+    endif
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret,'codes_set',key)
+    endif
+
+end subroutine codes_set_string_array 
+
 
 ! Note: This function supports the allocatable array attribute
 ! -------------------------------------------------------------

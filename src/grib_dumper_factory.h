@@ -3,6 +3,7 @@
 { "debug", &grib_dumper_class_debug, },
 { "default", &grib_dumper_class_default, },
 { "filter", &grib_dumper_class_filter, },
+{ "fortran", &grib_dumper_class_fortran, },
 { "json", &grib_dumper_class_json, },
 { "keys", &grib_dumper_class_keys, },
 { "serialize", &grib_dumper_class_serialize, },
