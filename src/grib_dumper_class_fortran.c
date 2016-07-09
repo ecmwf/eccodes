@@ -219,7 +219,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     if (size>1) {
 
         fprintf(self->dumper.out,"  if(allocated(rvalues)) deallocate(rvalues)\n");
-        fprintf(self->dumper.out,"  allocate(rvalues(%d))\n",size);
+        fprintf(self->dumper.out,"  allocate(rvalues(%ld))\n",size);
 
 
         fprintf(self->dumper.out,"  rvalues=(/");
@@ -297,7 +297,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 
     if (size>1) {
         fprintf(self->dumper.out,"  if(allocated(ivalues)) deallocate(ivalues)\n");
-        fprintf(self->dumper.out,"  allocate(ivalues(%d))\n",size);
+        fprintf(self->dumper.out,"  allocate(ivalues(%ld))\n",size);
 
 
         fprintf(self->dumper.out,"  ivalues=(/");
@@ -398,7 +398,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
     }
 
     fprintf(self->dumper.out,"  if(allocated(svalues)) deallocate(svalues)\n");
-    fprintf(self->dumper.out,"  allocate(svalues(%d))\n",size);
+    fprintf(self->dumper.out,"  allocate(svalues(%ld))\n",size);
 
     fprintf(self->dumper.out,"  svalues=(/");
 
@@ -507,9 +507,9 @@ static void _dump_long_array(grib_handle* h,FILE* f,const char* key,const char* 
     if (grib_get_size(h,key,&size)==GRIB_NOT_FOUND) return;
 
     fprintf(f,"  if(allocated(ivalues)) deallocate(ivalues)\n");
-    fprintf(f,"  allocate(ivalues(%d))\n",size);
+    fprintf(f,"  allocate(ivalues(%ld))\n",size);
 
-    fprintf(f,"  ivalues=(/ ",print_key);
+    fprintf(f,"  ivalues=(/ %s",print_key);
 
     val=grib_context_malloc_clear(h->context,sizeof(long)*size);
     grib_get_long_array(h,key,val,&size);

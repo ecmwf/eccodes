@@ -155,7 +155,6 @@ static char* cast_char(char* buf, char* fortstr,int len)
 
 static char* cast_char_no_cut(char* buf, char* fortstr,int len)
 {
-    char *p,*end;
     if (len == 0 || fortstr == NULL) return NULL;
     memcpy(buf,fortstr,len);
     buf[len]='\0';
@@ -2775,7 +2774,7 @@ int grib_f_set_string_array_(int* gid, char* key, char* val,int* nvals,int* slen
         cast_char_no_cut(cval[i],p,*slen);
         p+= *slen;
     }
-    err = grib_set_string_array(h, cast_char(buf,key,len), cval, lsize);
+    err = grib_set_string_array(h, cast_char(buf,key,len), (const char **)cval, lsize);
     if (err) return err;
 
     for (i=0;i<lsize;i++) {
