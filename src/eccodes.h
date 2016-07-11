@@ -125,35 +125,48 @@ typedef struct grib_key_value_list    codes_key_value_list;
 
 /*! Codes handle,   structure giving access to parsed values by keys
     \ingroup codes_handle
+    \struct codes_handle
 */
+struct codes_handle;
 typedef struct grib_handle            codes_handle;
 
 /*! GRIB multi field handle,   structure used to build multi fields messages.
     \ingroup codes_handle
+    \struct codes_multi_handle
  */
+struct codes_multi_handle;
 typedef struct grib_multi_handle      codes_multi_handle;
 
 /*! Codes context,  structure containing the memory methods, the parsers and the formats.
     \ingroup codes_context
+    \struct codes_context
 */
+struct codes_context;
 typedef struct grib_context           codes_context;
 
 /*! Codes iterator, structure supporting a geographic iteration of values in a GRIB message.
-    \ingroup codes_iterator
+    \ingroup iterators
+    \struct codes_iterator
 */
+struct codes_iterator;
 typedef struct grib_iterator          codes_iterator;
 
 /*! Codes nearest, structure used to find the nearest points of a latitude longitude point in a GRIB message.
-    \ingroup codes_iterator
+    \ingroup iterators
+    \struct codes_nearest
 */
+struct codes_nearest;
 typedef struct grib_nearest           codes_nearest;
 typedef struct grib_box               codes_box;
 typedef struct grib_points            codes_points;
 
 /*! Codes keys iterator. Iterator over keys.
     \ingroup keys_iterator
+    \struct codes_keys_iterator
 */
+struct codes_keys_iterator;
 typedef struct grib_keys_iterator     codes_keys_iterator;
+
 typedef struct grib_fieldset          codes_fieldset;
 typedef struct grib_order_by          codes_order_by;
 typedef struct grib_where             codes_where;
@@ -177,13 +190,16 @@ codes_handle* codes_fieldset_next_handle(codes_fieldset* set,int* err);
 int  codes_fieldset_count(codes_fieldset *set);
 int  codes_values_check(codes_handle* h, codes_values* values, int count);
 
-/*! \defgroup codes_index The codes_index
+/*! \defgroup codes_index The indexing feature
 The codes_index is the structure giving indexed access to messages in a file.
  */
 /*! @{*/
 
 /*! index structure to access messages in a file.
+ * \ingroup codes_index
+ * \struct codes_index
 */
+struct codes_index;
 typedef struct grib_index             codes_index;
 
 /**
@@ -325,7 +341,7 @@ void codes_index_delete(codes_index* index);
 
 /*! @} */
 
-/*! \defgroup codes_handle The codes_handle
+/*! \defgroup codes_handle The message handle
 The codes_handle is the structure giving access to parsed message values by keys.
 */
 /*! @{*/

@@ -171,7 +171,7 @@
         call grib_check(iret,'grib_index_get','('//key//')')
       endif
   end subroutine grib_index_get_int
-      
+
   !> Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as long or when the native type of the key is long.
   !>
   !>
@@ -293,7 +293,7 @@
       call grib_check(iret,'grib_index_select','('//key//')')
     endif
   end subroutine grib_index_select_string
-      
+
   !> Select the message subset with key==value. The value is a integer. The key must have been created with integer type or have integer as native type if the type was not explicitly defined in the index creation.
   !>
   !>
@@ -321,7 +321,7 @@
       call grib_check(iret,'grib_index_select','('//key//')')
     endif
   end subroutine grib_index_select_int
-      
+
   !> Select the message subset with key==value. The value is a integer. The key must have been created with integer type or have integer as native type if the type was not explicitly defined in the index creation.
   !>
   !>
@@ -349,8 +349,8 @@
         call grib_check(iret,'grib_index_select','('//key//')')
       endif
   end subroutine grib_index_select_long
-      
-   !> Select the message subset with key==value. The value is a real. The key must have been created with real type or have real as native type if the type was not explicitly defined in the index creation.
+
+  !> Select the message subset with key==value. The value is a real. The key must have been created with real type or have real as native type if the type was not explicitly defined in the index creation.
   !>
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
@@ -2787,7 +2787,7 @@
          call grib_check(iret,'grib_write','')
       endif
   end subroutine grib_write
-          
+
   !> Write a multi field message to a file.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
@@ -2810,7 +2810,7 @@
       call grib_check(iret,'grib_multi_write','')
     endif
     end subroutine grib_multi_write
-                      
+
   !> Append a single field grib message to a multi field grib message.
   !> Only the sections with section number greather or equal "startsection" are copied from the input single message to the multi field output grib.
   !>
