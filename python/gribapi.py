@@ -1,22 +1,20 @@
 """
 @package gribapi
-@brief This package is a low level Python interface to ecCodes. It offers almost one to one bindings to the C API functions.
+@brief This package is the \b Python interface to ecCodes. It offers almost one to one bindings to the C API functions.
 
-The Python interface to GRIB API uses the <a href="http://numpy.scipy.org/"><b>NumPy</b></a> package
+The Python interface to ecCodes uses the <a href="http://numpy.scipy.org/"><b>NumPy</b></a> package
 as the container of choice for the possible arrays of values that can be encoded/decoded in and from a grib message.
 Numpy is a package used for scientific computing in Python and an efficient container for generic data.
 
-The Python interface and its support for NumPy can be enabled/disabled from the configure by using the following configure flags:\n
+The Python interface can be enabled/disabled from cmake by using the following flag:\n
 
-@code
---enable-python
---disable-numpy
-
+@code{.unparsed}
+    -DENABLE_PYTHON=ON
+or
+    -DENABLE_PYTHON=OFF
 @endcode
 
-When the '--enable-python' flag is used, then the system Python will be used to build the interface.
-
-NumPy support can be disabled by using the '--disable-numpy' flag.
+When this is enabed, then the system Python will be used to build the interface.
 
 @em Requirements:
 
@@ -105,7 +103,7 @@ class GribInternalError(Exception):
     def __str__(self):
         return self.msg
 
-
+# @cond
 class Bunch(dict):
     """
     The collector of a bunch of named stuff :).
@@ -135,8 +133,9 @@ class Bunch(dict):
                  for (attribute, value)
                  in self.__dict__.items()]
         return '\n'.join(state)
+# @endcond
 
-
+# @cond
 def with_numpy():
     """
     @brief Is numpy enabled?
@@ -150,8 +149,9 @@ def with_numpy():
         pass
 
     return numpy
+# @endcond
 
-
+# @cond
 @require(errid=int)
 def GRIB_CHECK(errid):
     """
@@ -163,6 +163,7 @@ def GRIB_CHECK(errid):
     """
     if errid:
         raise GribInternalError(errid)
+# @endcond
 
 
 @require(fileobj=file)
@@ -247,7 +248,7 @@ def any_new_from_file(fileobj, headers_only = False):
     @brief Load in memory a message from a file.
 
     The message can be accessed through its id and it will be available\n
-    until @ref codes_release is called.\n
+    until @ref grib_release is called.\n
 
     \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
 

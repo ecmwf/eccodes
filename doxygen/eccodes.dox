@@ -1,0 +1,88 @@
+/*! \mainpage ecCodes
+
+\section overview Overview
+
+\b ecCodes is a package developed by ECMWF which provides an application programming interface and a
+set of tools for decoding and encoding messages in the following formats:
+
+- WMO FM-92 GRIB edition 1 and edition 2 (<a href="http://www.wmo.int/pages/prog/www/WMOCodes/Guides/GRIB/Introduction_GRIB1-GRIB2.pdf">See WMO document</a>)
+- WMO FM-94 BUFR edition 3 and edition 4 (<a href="http://www.wmo.int/pages/prog/www/WMOCodes/Guides/BUFRCREX/Layer1-2-English.pdf">See WMO document</a>)
+- WMO GTS <a href="http://www.wmo.int/pages/prog/www/WIS/Publications/WMO_386/WMO_386_Vol_I_en.pdf">abbreviated header</a> (only decoding in this release).
+
+A useful set of <a href="https://software.ecmwf.int/wiki/display/ECC/Command+line+tools">command line tools</a>
+provide quick access to the messages. C, Fortran 90 and Python interfaces provide access to the main ecCodes functionality.
+
+ecCodes is an evolution of <a href="https://software.ecmwf.int/wiki/display/GRIB/Home">GRIB-API</a>.  It is designed to provide the user with a simple set of functions to access
+data from several formats with a key/value approach.
+
+For GRIB encoding and decoding, the GRIB-API functionality is provided fully in ecCodes with the same user interface and behaviour. Interfaces for C, Fortran 90 and Python are all maintained as in GRIB-API.  However, the GRIB-API Fortran 77 interface is no longer available.
+
+In addition, a new set of functions with the prefix "codes_" is provided to operate on all the supported message formats. These functions have the same interface and behaviour as the "grib_" functions. 
+
+A selection of GRIB-API tools  has been included in ecCodes (ecCodes GRIB tools), while new tools are available for the BUFR (ecCodes BUFR tools) and GTS formats. The new tools have been developed to be as similar as possible to the existing GRIB-API tools maintaining, where possible, the same options and behaviour. A significant difference compared with GRIB-API tools is that bufr_dump produces output in json format which can be used in many web based applications.
+
+Migration from GRIB-API to ecCodes is expected to be transparent for current GRIB-API users. The GRIB-API library is fully available in the ecCodes library.  Users are encouraged to test their GRIB-API applications by linking with the ecCodes library and to provide feedback of any problems encountered.
+
+
+
+##############
+The ecCodes library is written entirely in C and some command line \ref tools "tools" are 
+provided to give a quick way to manipulate GRIB and BUFR data. Moreover a \ref eccodes "Fortran interface 90" is available
+giving access to the main features of the C library.
+
+The library is designed to access and modify messages in both editions with the same
+\ref get_set "function calls" using a set of \ref keys to access the coded information 
+( examples: \ref grib_get_keys.f90 "grib_get_keys.f90" \ref set.f90 "set.f90", \ref grib_get_keys.c "grib_get_keys.c", \ref set.c "set.c", \ref grib_get_examples "grib_get", \ref grib_set_examples "grib_set" ). 
+
+The \ref keys "keys" available for a message are different depending not only on the edition
+but also and mainly on the type of each message and the information it contains. 
+A list of all the available keys in a message can be obtained dynamically using the 
+library as shown in \ref keys_iterator.c "keys_iterator.c" or using the \ref tools 
+as shown in \ref grib_dump_examples "grib_dump" or \ref grib_keys_examples "grib_keys".
+
+GRIB API will replace the GRIBEX function and a 
+<a href="/publications/manuals/grib_api/gribexkeys/callGribex.html">table of conversion</a> between the
+numeric encoding of GRIBEX and the alphanumeric keys of GRIB API is provided to help
+the migration.
+
+To learn how to use the grib_api we recommend the user works through the \ref grib_examples.
+
+Reference manuals are also provided for the C library (organized in \ref modules), for the 
+\ref eccodes "Fortran 90 interface" and for the \ref gribapi "Python interface".
+
+
+\ref installation "Installation" instructions are also provided.
+
+\section ecwf_users Compiling and linking on ECMWF platforms
+
+ecCodes is installed on all systems at ECMWF with both its components: the library
+and the tools.\n
+The latest version of the tools is always available in the system PATH so that
+users can begin using the tools immediately by typing directly the tool name (\ref tools "see tools reference").\n
+The latest version of the library is also installed on any platform and it is available for linking through the
+following two environment variables: $ECCODES_INCLUDE $ECCODES_LIB.\n\n
+Here is a short summary on how to compile and link on ECMWF systems:\n
+
+- ecgate, hpce, hpcf
+\verbatim
+> xlc -o foo foo.c $ECCODES_INCLUDE $ECCODES_LIB -lm
+\endverbatim \n
+\verbatim
+> xlf90 -o foo foo.f90 $ECCODES_INCLUDE $ECCODES_LIB
+\endverbatim\n
+- linux cluster (C programs)
+\verbatim
+> gcc -m32 -o foo foo.c $ECCODES_INCLUDE $ECCODES_LIB 
+\endverbatim \n
+- workstation (C programs)
+\verbatim
+> gcc -o foo foo.c $ECCODES_INCLUDE $ECCODES_LIB 
+\endverbatim \n
+- linux cluster,workstation (Fortran programs)
+\verbatim
+> use pgf90
+> pgf90 -o foo foo.f90 $ECCODES_INCLUDE $ECCODES_LIB
+\endverbatim\n
+
+
+*/
