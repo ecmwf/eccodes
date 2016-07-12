@@ -10,6 +10,8 @@ set -e
 
 ./process_C_header.pl ../src/grib_api.h ../src/eccodes.h > eccodes.h
 
+./process_python.pl ../python/gribapi.py > eccodes.py
+
 rm -fr ../html/*
 touch ../html/Makefile.am
 doxygen grib_api_wiz.cfg
@@ -19,3 +21,4 @@ doxygen grib_api_wiz.cfg
 
 # Remove temp files
 rm -f eccodes.h
+rm -f eccodes.py
