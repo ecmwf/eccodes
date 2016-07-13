@@ -18,7 +18,6 @@
 #include <iostream>
 #include "eckit/exception/Exceptions.h"
 #include "eckit/types/FloatCompare.h"
-#include "eckit/log/Timer.h"
 #include "atlas/grid/lonlat/RegularLonLat.h"
 #include "mir/action/misc/AreaCropper.h"
 #include "mir/log/MIR.h"
@@ -32,16 +31,46 @@ namespace repres {
 namespace latlon {
 
 
-LatLon::LatLon(const param::MIRParametrisation &parametrisation):
-    bbox_(parametrisation), increments_(parametrisation) {
-    ASSERT(parametrisation.get("Ni", ni_));
-    ASSERT(parametrisation.get("Nj", nj_));
+namespace {
+
+
+size_t computeN(double first, double last, double inc, const char* n_name) {
+    typedef eckit::FloatCompare<double> cmp;
+
+    ASSERT(first <= last);
+    ASSERT(inc > 0);
+
+    size_t p = size_t((last - first) / inc);
+    double d0 = fabs(last - (first + p * inc));
+    double d1 = fabs(last - (first + (p + 1) * inc));
+    ASSERT(d0 != d1);
+
+    size_t n = p + (d0<d1? 0 : 1);
+    // eckit::Log::trace<MIR>() << p << " " << d0 << " " << d1 << " " << inc << " " << first << " " << last << std::endl;
+
+    if (!cmp::isApproximatelyEqual(n*inc + first, last)) {
+        std::ostringstream os;
+        os << "computeN: cannot compute accurately " << n_name << " from " << first << "/to/" << last << "/by/" << inc;
+        eckit::Log::trace<MIR>() << os.str() << std::endl;
+        throw eckit::BadValue(os.str());
+    }
+
+    return n + 1;
+}
+
 
 }
 
 
-LatLon::LatLon(const util::BoundingBox &bbox,
-               const util::Increments &increments):
+LatLon::LatLon(const param::MIRParametrisation &parametrisation) :
+    bbox_(parametrisation),
+    increments_(parametrisation) {
+    ASSERT(parametrisation.get("Ni", ni_));
+    ASSERT(parametrisation.get("Nj", nj_));
+}
+
+
+LatLon::LatLon(const util::BoundingBox &bbox, const util::Increments &increments) :
     bbox_(bbox),
     increments_(increments) {
     setNiNj();
@@ -82,17 +111,8 @@ void LatLon::cropToDomain(const param::MIRParametrisation &parametrisation, cont
 
 
 void LatLon::setNiNj() {
-    computeNiNj(ni_, nj_, bbox_, increments_);
-}
-
-
-void LatLon::computeNiNj(size_t &ni,
-                         size_t &nj,
-                         const util::BoundingBox &bbox,
-                         const util::Increments &increments) {
-
-    ni = computeN(bbox.west(), bbox.east(), increments.west_east(), "Ni", "west", "east");
-    nj = computeN(bbox.south(), bbox.north(), increments.south_north(), "Nj", "south", "north");
+    ni_ = computeN(bbox_.west(),  bbox_.east(),  increments_.west_east(),   "Ni");
+    nj_ = computeN(bbox_.south(), bbox_.north(), increments_.south_north(), "Nj");
 }
 
 
@@ -195,7 +215,17 @@ class LatLonIterator : public Iterator {
     size_t count_;
 
     virtual void print(std::ostream &out) const {
-        out << "LatLonIterator[]";
+        out << "LatLonIterator["
+            <<  "ni="     << ni_
+            << ",nj="     << nj_
+            << ",north="  << north_
+            << ",west="   << west_
+            << ",we="     << we_
+            << ",ns="     << ns_
+            << ",i="      << i_
+            << ",j="      << j_
+            << ",count="  << count_
+            << "]";
     }
 
     virtual bool next(double &lat, double &lon) {

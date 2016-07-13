@@ -16,6 +16,7 @@
 #include "mir/repres/gauss/regular/Regular.h"
 
 #include "eckit/exception/Exceptions.h"
+#include "eckit/log/Plural.h"
 #include "eckit/memory/ScopedPtr.h"
 #include "eckit/types/FloatCompare.h"
 #include "atlas/grid/gaussian/RegularGaussian.h"
@@ -33,30 +34,66 @@ namespace regular {
 
 Regular::Regular(const param::MIRParametrisation &parametrisation):
     Gaussian(parametrisation) {
-
-    // Only global input supported...
-
-    size_t Ni;
-    ASSERT(parametrisation.get("Ni", Ni));
-    ASSERT(N_ * 4 == Ni);
-
-    size_t Nj;
-    ASSERT(parametrisation.get("Nj", Nj));
-    ASSERT(N_ * 2 == Nj);
+    setNiNj();
 }
 
 
 Regular::Regular(size_t N):
     Gaussian(N) {
+    setNiNj();
 }
 
 
 Regular::Regular(size_t N, const util::BoundingBox &bbox):
     Gaussian(N, bbox) {
+    setNiNj();
 }
 
 
 Regular::~Regular() {
+}
+
+
+void Regular::fill(grib_info &info) const  {
+
+    // See copy_spec_from_ksec.c in libemos for info
+
+    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_GG;
+
+    info.grid.N = N_;
+    info.grid.iDirectionIncrementInDegrees = 90.0 / N_;
+    info.grid.Ni = Ni_;
+    info.grid.Nj = Nj_;
+
+    bbox_.fill(info);
+
+    /*
+        Comment in libemos is:
+
+        "grib_api to set global area in full precision for gaussian grid"
+
+        TODO: check and document
+
+    */
+
+    size_t j = info.packing.extra_settings_count++;
+    info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
+    info.packing.extra_settings[j].name = "global";
+    info.packing.extra_settings[j].long_value = globalDomain()? 1 : 0;
+}
+
+
+void Regular::fill(api::MIRJob &job) const  {
+    ASSERT(globalDomain());
+    std::stringstream os;
+    os << "F" << N_;
+    job.set("gridname", os.str());
+}
+
+
+atlas::grid::Grid *Regular::atlasGrid() const {
+    ASSERT(globalDomain()); // Atlas support needed for non global grids
+    return new atlas::grid::gaussian::RegularGaussian(N_);
 }
 
 
@@ -91,81 +128,51 @@ bool Regular::globalDomain() const {
 }
 
 
-void Regular::fill(grib_info &info) const  {
-
-    // See copy_spec_from_ksec.c in libemos for info
-
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_GG;
-
-    info.grid.N = N_;
-    info.grid.iDirectionIncrementInDegrees = 90.0 / N_;
-
-    if (globalDomain()) {
-        info.grid.Nj = N_ * 2;
-        info.grid.Ni = N_ * 4;
-    } else {
-        info.grid.Ni = computeN(bbox_.west(), bbox_.east(), info.grid.iDirectionIncrementInDegrees, "Ni", "west", "east");
-        const std::vector<double> &lats = latitudes();
-        info.grid.Nj = 0;
-        for (size_t i = 0; i < lats.size(); i++) {
-            if (eckit::FloatCompare<double>::isApproximatelyGreaterOrEqual(bbox_.north(), lats[i]) &&
-                    eckit::FloatCompare<double>::isApproximatelyGreaterOrEqual(lats[i], bbox_.south())) {
-                info.grid.Nj++;
-            }
-        }
-    }
-
-    bbox_.fill(info);
-
-    /*
-        Comment in libemos is:
-
-        "grib_api to set global area in full precision for gaussian grid"
-
-        TODO: check and document
-
-    */
-
-    size_t j = info.packing.extra_settings_count++;
-    info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
-    info.packing.extra_settings[j].name = "global";
-    info.packing.extra_settings[j].long_value = globalDomain() ? 1 : 0;
-}
-
-
-void Regular::fill(api::MIRJob &job) const  {
-    ASSERT(globalDomain());
-    std::stringstream os;
-    os << "F" << N_;
-    job.set("gridname", os.str());
-}
-
-
-atlas::grid::Grid *Regular::atlasGrid() const {
-    ASSERT(globalDomain()); // Atlas support needed for non global grids
-    return new atlas::grid::gaussian::RegularGaussian(N_);
-}
-
-
 void Regular::validate(const std::vector<double> &values) const {
     if (globalDomain()) {
         ASSERT(values.size() == (N_ * 2) * (N_ * 4));
-    } else {
+    }
+    else {
         eckit::ScopedPtr<Iterator> it(unrotatedIterator());
+        long long count = 0;
         double lat;
         double lon;
-
-        size_t count = 0;
         while (it->next(lat, lon)) {
-            if (bbox_.contains(lat, lon)) {
+            if (bbox_.contains(lat, lon))
                 count++;
-            }
         }
-
-        eckit::Log::trace<MIR>() << "Regular::validate " << values.size() << " " << count << std::endl;
-
-        ASSERT(values.size() == count);
+        eckit::Log::trace<MIR>() << "Regular::validate checked " << eckit::Plural(values.size(),"value") << ", got " << eckit::BigNum(count) << "." << std::endl;
+        ASSERT(values.size() == size_t(count));
     }
+}
+
+
+void Regular::setNiNj() {
+    //TODO Only global input supported...
+    const double lon_middle = (bbox_.west()  + bbox_.east() )/2.;
+    const double lat_middle = (bbox_.north() + bbox_.south())/2.;
+
+    Ni_ = N_ * 4;
+    if (!globalDomain()) {
+        Ni_ = 0;
+        for (size_t i=0; i<N_*4; ++i) {
+            const double lon = bbox_.west() + (i * 90.0) / N_;
+            if (bbox_.contains(lat_middle, lon))
+                ++Ni_;
+        }
+    }
+    ASSERT(2 <= Ni_ <= N_*4);
+
+    Nj_ = N_ * 2;
+    if (!globalDomain()) {
+        Nj_ = 0;
+        const std::vector<double>& lats = latitudes();
+        for (std::vector<double>::const_iterator lat=lats.begin(); lat!=lats.end(); ++lat) {
+            if (bbox_.contains(*lat, lon_middle))
+                ++Nj_;
+        }
+    }
+    ASSERT(2 <= Nj_ <= N_*2);
 }
 
 
@@ -175,28 +182,11 @@ size_t Regular::frame(std::vector<double>& values, size_t size, double missingVa
     validate(values);
 
     size_t count = 0;
-    size_t nj = N_ * 2;
-    size_t ni = N_ * 4;
-
-
-    if (!globalDomain()) {
-        const double deltai = 90. / N_;
-        ni = computeN(bbox_.west(), bbox_.east(), deltai, "Ni", "west", "east");
-
-        const std::vector<double> &lats = latitudes();
-        nj = 0;
-        for (size_t i=0; i<lats.size(); ++i) {
-            if (eckit::FloatCompare<double>::isApproximatelyGreaterOrEqual(bbox_.north(), lats[i]) &&
-                    eckit::FloatCompare<double>::isApproximatelyGreaterOrEqual(lats[i], bbox_.south())) {
-                nj++;
-            }
-        }
-    }
 
     size_t k = 0;
-    for (size_t j = 0; j < nj; j++) {
-        for (size_t i = 0; i < ni; i++) {
-            if ( !((i < size) || (j < size) || (i >= ni - size) || (j >= nj - size))) { // Check me, may be buggy
+    for (size_t j=0; j<Nj_; j++) {
+        for (size_t i=0; i<Ni_; i++) {
+            if (!((i < size) || (j < size) || (i >= Ni_ - size) || (j >= Nj_ - size))) { // Check me, may be buggy
                 values[k] = missingValue;
                 count++;
             }
@@ -209,34 +199,43 @@ size_t Regular::frame(std::vector<double>& values, size_t size, double missingVa
 }
 
 
-class RegularIterator: public Iterator {
+class RegularIterator : public Iterator {
 
-    size_t ni_;
-    size_t nj_;
+    std::vector<double> latitudes_;
+    util::BoundingBox bbox_;
+
+    const size_t N_;
+    const size_t Ni_;
+    const size_t Nj_;
 
     size_t i_;
     size_t j_;
 
     size_t count_;
 
-    util::BoundingBox bbox_;
-    std::vector<double> latitudes_;
-
     virtual void print(std::ostream &out) const {
-        out << "RegularIterator[]";
+        out << "RegularIterator["
+            <<  "bbox="  << bbox_
+            << ",N="     << N_
+            << ",Ni="    << Ni_
+            << ",Nj="    << Nj_
+            << ",i="     << i_
+            << ",j="     << j_
+            << ",count=" << count_
+            << "]";
     }
 
     virtual bool next(double &lat, double &lon) {
-        while (j_ < nj_ && i_ < ni_) {
-            lat = latitudes_[j_];
-            lon = (i_ * 360.0) / ni_;
-            i_++;
-            if (i_ == ni_) {
+        while (j_ < Nj_ && i_ < Ni_) {
 
+            lat = latitudes_[j_];
+            lon = (i_ * 90.0) / N_;
+
+            i_++;
+            if (i_ == Ni_) {
                 j_++;
                 i_ = 0;
             }
-
             if (bbox_.contains(lat, lon)) {
                 count_++;
                 return true;
@@ -246,23 +245,23 @@ class RegularIterator: public Iterator {
     }
 
     ~RegularIterator() {
-        // ASSERT(count_ == ni_ * nj_);
+        ASSERT(count_ == Ni_ * Nj_);
     }
 
 public:
 
     // TODO: Consider keeping a reference on the latitudes and bbox, to avoid copying
 
-    RegularIterator(const std::vector <double> &latitudes, size_t N, const util::BoundingBox &bbox):
-        ni_(N * 4),
-        nj_(N * 2),
+    RegularIterator(const std::vector<double>& latitudes, size_t N, size_t Ni, size_t Nj, const util::BoundingBox &bbox) :
+        latitudes_(latitudes),
+        bbox_(bbox),
+        N_(N),
+        Ni_(Ni),
+        Nj_(Nj),
         i_(0),
         j_(0),
-        count_(0),
-        bbox_(bbox),
-        latitudes_(latitudes) {
-        ASSERT(latitudes_.size() == nj_);
-
+        count_(0) {
+        ASSERT(latitudes_.size() == Nj_);
     }
 
 };
@@ -271,7 +270,7 @@ public:
 Iterator *Regular::unrotatedIterator() const {
     // Use a global bounding box if global domain, to avoid rounding issues
     // due to GRIB (in)accuracies
-    return new RegularIterator(latitudes(), N_, globalDomain() ? util::BoundingBox() : bbox_);
+    return new RegularIterator(latitudes(), N_, Ni_, Nj_, globalDomain() ? util::BoundingBox() : bbox_);
 }
 
 
@@ -282,8 +281,8 @@ Iterator* Regular::rotatedIterator() const {
 
 void Regular::shape(size_t &ni, size_t &nj) const {
     ASSERT(globalDomain());
-    ni = N_ * 4;
-    nj = N_ * 2;
+    ni = Ni_;
+    nj = Nj_;
 }
 
 
