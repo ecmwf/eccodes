@@ -32,6 +32,7 @@ fi
 echo "AEC feature was enabled."
 
 BLACKLIST="totalLength,section5Length,section7Length,dataRepresentationTemplateNumber,typeOfPacking"
+BLACKLIST="totalLength,section5Length,section7Length,dataRepresentationTemplateNumber"
 
 infile=${data_dir}/ccsds.grib2
 outfile1=$infile.tmp_ccsds.1
@@ -39,7 +40,8 @@ outfile2=$infile.tmp_ccsds.2
 
 rm -f $outfile1 $outfile2 || true
 ${tools_dir}grib_set -f -r -s packingType=grid_simple $infile $outfile1 2> $REDIRECT
-${tools_dir}grib_compare -P -b $BLACKLIST,typeOfCompressionUsed,targetCompressionRatio $infile $outfile1 > $REDIRECT
+${tools_dir}grib_compare -P -b $BLACKLIST $outfile1 $infile > $REDIRECT
+
 ${tools_dir}grib_set -r -s packingType=grid_ccsds $outfile1 $outfile2
 ${tools_dir}grib_compare -P -b $BLACKLIST $outfile1 $outfile2 > $REDIRECT
 
@@ -60,7 +62,7 @@ outfile2=$infile.tmp_ccsds.2
 ${tools_dir}grib_set -r -s packingType=grid_ccsds $infile $outfile1
 ${tools_dir}grib_compare -P -b $BLACKLIST $infile $outfile1 > $REDIRECT
 ${tools_dir}grib_set -f -r -s packingType=grid_simple $outfile1 $outfile2 2> $REDIRECT
-${tools_dir}grib_compare -P -b $BLACKLIST,typeOfCompressionUsed,targetCompressionRatio $outfile1 $outfile2  > $REDIRECT
+${tools_dir}grib_compare -P -b $BLACKLIST $outfile2 $outfile1  > $REDIRECT
 
 res1=`${tools_dir}grib_get '-F%1.2f' -p min,max,avg $infile`
 res2=`${tools_dir}grib_get '-F%1.2f' -p min,max,avg $outfile1`
