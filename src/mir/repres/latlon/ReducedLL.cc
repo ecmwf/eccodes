@@ -17,7 +17,7 @@
 
 #include <iostream>
 
-#include "atlas/grid/global/lonlat/ReducedLonLat.h"
+#include "atlas/grid/lonlat/ReducedLonLat.h"
 
 #include "mir/action/misc/AreaCropper.h"
 #include "mir/api/MIRJob.h"
@@ -93,9 +93,7 @@ bool ReducedLL::globalDomain() const {
 
 atlas::grid::Grid *ReducedLL::atlasGrid() const {
     // FIXME: we are missing the distribution of latitudes
-    atlas::grid::Grid *grid = new atlas::grid::global::lonlat::ReducedLonLat(pl_.size(), &pl_[0]);
-    grid->domain(atlasDomain());
-    return grid;
+    return new atlas::grid::lonlat::ReducedLonLat(pl_.size(), &pl_[0], atlasDomain());
 }
 
 atlas::grid::Domain ReducedLL::atlasDomain() const {

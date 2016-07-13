@@ -17,7 +17,7 @@
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/memory/ScopedPtr.h"
-#include "atlas/grid/global/gaussian/RegularGaussian.h"
+#include "atlas/grid/gaussian/RegularGaussian.h"
 #include "mir/api/MIRJob.h"
 #include "mir/log/MIR.h"
 #include "mir/param/MIRParametrisation.h"
@@ -152,7 +152,7 @@ void Regular::fill(api::MIRJob &job) const  {
 
 atlas::grid::Grid *Regular::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
-    return new atlas::grid::global::gaussian::RegularGaussian(N_);
+    return new atlas::grid::gaussian::RegularGaussian(N_);
 }
 
 

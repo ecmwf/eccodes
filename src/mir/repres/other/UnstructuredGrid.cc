@@ -21,7 +21,7 @@
 #include "eckit/exception/Exceptions.h"
 #include "eckit/filesystem/PathName.h"
 
-#include "atlas/grid/global/Unstructured.h"
+#include "atlas/grid/Unstructured.h"
 
 #include "mir/param/MIRParametrisation.h"
 #include "mir/log/MIR.h"
@@ -98,7 +98,7 @@ atlas::grid::Grid *UnstructuredGrid::atlasGrid() const {
         }
     }
 
-    return new atlas::grid::global::Unstructured(pts);
+    return new atlas::grid::Unstructured(pts);
 
     // so constructor takes a vector<Point> (where point is LLPoint2)
 }

@@ -20,7 +20,7 @@
 #include "eckit/exception/Exceptions.h"
 #include "eckit/types/Types.h"
 
-#include "atlas/grid/global/lonlat/RegularLonLat.h"
+#include "atlas/grid/lonlat/RegularLonLat.h"
 
 #include "mir/util/Grib.h"
 #include "mir/util/Compare.h"
@@ -77,21 +77,7 @@ void RegularLL::fill(api::MIRJob &job) const  {
 
 
 atlas::grid::Grid *RegularLL::atlasGrid() const {
-
-    // eckit::Log::trace<MIR>() << "RegularLL::atlasGrid BBox is " << bbox_ << std::endl;
-
-    atlas::grid::Grid *grid = new atlas::grid::global::lonlat::RegularLonLat(
-        (const size_t) ni_,
-        (const size_t) nj_ );
-
-    // FIXME: an assertion for shift global grids
-    // ASSERT(bbox_.north() == 90);
-    // ASSERT(bbox_.south() == -90);
-    // ASSERT(bbox_.east() == 360 - increments_.west_east());
-    // ASSERT(bbox_.west() == 0);
-
-    grid->domain(atlasDomain());
-    return grid;
+    return new atlas::grid::lonlat::RegularLonLat(ni_, nj_, atlasDomain());
 }
 
 

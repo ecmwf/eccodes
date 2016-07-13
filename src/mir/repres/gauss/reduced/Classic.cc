@@ -18,7 +18,7 @@
 #include "eckit/log/Timer.h"
 
 #include "atlas/grid/Grid.h"
-#include "atlas/grid/global/Structured.h"
+#include "atlas/grid/Structured.h"
 #include "atlas/grid/grids.h"
 
 #include "mir/api/MIRJob.h"
@@ -60,16 +60,16 @@ void Classic::fill(api::MIRJob &job) const  {
 
 atlas::grid::Grid *Classic::atlasGrid() const {
     ASSERT(globalDomain()); // Atlas support needed for non global grids
-    return new atlas::grid::global::gaussian::ClassicGaussian(N_);
+    return new atlas::grid::gaussian::ClassicGaussian(N_);
 }
 
 
 const std::vector<long> &Classic::pls() const {
     if (pl_.size() == 0) {
 
-        eckit::ScopedPtr<atlas::grid::global::Structured> grid(
-                    dynamic_cast<atlas::grid::global::Structured*>(
-                        new atlas::grid::global::gaussian::ClassicGaussian(N_) ));
+        eckit::ScopedPtr<atlas::grid::Structured> grid(
+                    dynamic_cast<atlas::grid::Structured*>(
+                        new atlas::grid::gaussian::ClassicGaussian(N_) ));
         ASSERT(grid.get());
 
         const std::vector<long> &v = grid->pl();

@@ -20,7 +20,7 @@
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Timer.h"
 
-#include "atlas/grid/global/lonlat/RegularLonLat.h"
+#include "atlas/grid/lonlat/RegularLonLat.h"
 
 #include "mir/action/misc/AreaCropper.h"
 #include "mir/log/MIR.h"
