@@ -874,7 +874,7 @@ def grib_get_double_array(msgid, key):
 
     @param msgid   id of the message loaded in memory
     @param key     key name
-    @return numpy.ndarray or array
+    @return        numpy.ndarray
     @exception GribInternalError
     """
     if with_numpy():
@@ -904,8 +904,8 @@ def grib_get_string_array(msgid, key):
     @brief Get the value of the key as an array of strings.
 
     @param msgid   id of the message loaded in memory
-    @param key      key name
-    @return numpy.ndarray or array
+    @param key     key name
+    @return        numpy.ndarray
     @exception GribInternalError
     """
     nval = grib_get_size(msgid,key)
@@ -964,8 +964,8 @@ def grib_get_long_array(msgid, key):
     Otherwise, Python's native array type will be used.
 
     @param msgid      id of the message loaded in memory
-    @param key         key name
-    @return numpy.ndarray or array
+    @param key        key name
+    @return           numpy.ndarray
     @exception GribInternalError
     """
     if with_numpy():
@@ -1087,7 +1087,7 @@ def grib_index_get_size(indexid, key):
 
     @param indexid    id of an index created from a file. The index must have been created on the given key.
     @param key        key for which the number of values is computed
-    @return number of distinct values for key in index
+    @return           number of distinct values for key in index
     @exception GribInternalError
     """
     err, value = _internal.grib_c_index_get_size_long(indexid, key)
@@ -1107,7 +1107,7 @@ def grib_index_get_long(indexid, key):
 
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key for wich the values are returned
-    @return tuple with values of key in index
+    @return          tuple with values of key in index
     @exception GribInternalError
     """
     nval = grib_index_get_size(indexid, key)
@@ -1138,7 +1138,7 @@ def grib_index_get_string(indexid, key):
 
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key for wich the values are returned
-    @return tuple with values of key in index
+    @return          tuple with values of key in index
     @exception GribInternalError
     """
     nval = grib_index_get_size(indexid, key)
@@ -1159,8 +1159,8 @@ def grib_index_get_string(indexid, key):
     return tuple(result)
 
 
-@require(iid=int, key=str)
-def grib_index_get_double(iid, key):
+@require(indexid=int, key=str)
+def grib_index_get_double(indexid, key):
     """
     @brief Get the distinct values of the key in argument contained in the index.
     The key must belong to the index.
@@ -1169,18 +1169,18 @@ def grib_index_get_double(iid, key):
 
     \b Examples: \ref grib_index.py "grib_index.py"
 
-    @param iid    id of an index created from a file. The index must have been created with the key in argument.
-    @param key    key for wich the values are returned
-    @return tuple with values of key in index
+    @param indexid  id of an index created from a file. The index must have been created with the key in argument.
+    @param key      key for wich the values are returned
+    @return         tuple with values of key in index
     @exception GribInternalError
     """
-    nval = grib_index_get_size(iid, key)
+    nval = grib_index_get_size(indexid, key)
 
     a = _internal.new_doubleArray(nval)
     s = _internal.intp()
     s.assign(nval)
 
-    GRIB_CHECK(_internal.grib_c_index_get_real8(iid, key, a, s))
+    GRIB_CHECK(_internal.grib_c_index_get_real8(indexid, key, a, s))
 
     result = []
     for i in range(nval):
@@ -1209,8 +1209,8 @@ def grib_index_select_long(indexid, key, value):
     GRIB_CHECK(_internal.grib_c_index_select_long(indexid, key, value))
 
 
-@require(iid=int, key=str, value=float)
-def grib_index_select_double(iid, key, value):
+@require(indexid=int, key=str, value=float)
+def grib_index_select_double(indexid, key, value):
     """
     @brief Select the message subset with key==value.
     The value is a double.
@@ -1219,12 +1219,12 @@ def grib_index_select_double(iid, key, value):
 
     \b Examples: \ref grib_index.py "grib_index.py"
 
-    @param iid       id of an index created from a file. The index must have been created with the key in argument.
+    @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key to be selected
     @param value     value of the key to select
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_index_select_real8(iid, key, value))
+    GRIB_CHECK(_internal.grib_c_index_select_real8(indexid, key, value))
 
 
 @require(indexid=int, key=str, value=str)
@@ -1257,7 +1257,7 @@ def grib_new_from_index(indexid):
     \b Examples: \ref grib_index.py "grib_index.py"
 
     @param indexid   id of an index created from a file.
-    @return id of the message loaded in memory or None if end of index
+    @return          id of the message loaded in memory or None if end of index
     @exception GribInternalError
     """
     err, gribid = _internal.grib_c_new_from_index(indexid, 0)
@@ -1276,8 +1276,8 @@ def grib_get_message_size(msgid):
     """
     @brief Get the size of a coded message.
 
-    @param msgid      id of the message loaded in memory
-    @return size in bytes of the message
+    @param msgid     id of the message loaded in memory
+    @return          size in bytes of the message
     @exception GribInternalError
     """
     err, value = _internal.grib_c_get_message_size(msgid)
@@ -1290,8 +1290,8 @@ def grib_get_message_offset(msgid):
     """
     @brief Get the offset of a coded message.
 
-    @param msgid      id of the message loaded in memory
-    @return offset in bytes of the message
+    @param msgid    id of the message loaded in memory
+    @return         offset in bytes of the message
     @exception GribInternalError
     """
     err, value = _internal.grib_c_get_message_offset(msgid)
@@ -1307,7 +1307,7 @@ def grib_get_double_element(gribid, key, index):
     @param gribid      id of the grib loaded in memory
     @param key         the key to be searched
     @param index       zero based index of value to retrieve
-    @return value
+    @return            value
     @exception GribInternalError
 
     """
@@ -1324,7 +1324,7 @@ def grib_get_double_elements(gribid, key, indexes):
     @param gribid      id of the grib loaded in memory
     @param key         the key to be searched
     @param indexes     list or tuple of indexes
-    @return numpy.ndarray or array
+    @return            numpy.ndarray
     @exception GribInternalError
 
     """
@@ -1361,10 +1361,10 @@ def grib_get_elements(gribid, key, indexes):
     """
     @brief Retrieve the elements of the key array for the indexes specified in the input.
 
-    @param gribid      id of the grib loaded in memory
-    @param key         the key to be searched
-    @param indexes     single index or a list of indexes
-    @return numpy.ndarray or array containing the values of key for the given indexes
+    @param gribid     id of the grib loaded in memory
+    @param key        the key to be searched
+    @param indexes    single index or a list of indexes
+    @return           numpy.ndarray containing the values of key for the given indexes
     @exception GribInternalError
     """
     try:
@@ -1577,15 +1577,15 @@ def grib_get_array(msgid, key, ktype=None):
     """
     @brief Get the contents of an array key.
 
-    The output array will be stored in a NumPy ndarray or array.
+    The output array will be stored in a NumPy ndarray.
     The type of the array returned depends on the native type of the requested key.
     The type of value returned can be forced by using the type argument of the function.
     The type argument can be int or float.
 
     @param msgid      id of the message loaded in memory
-    @param key         the key to get the value for
-    @param ktype       the type we want the output in (can be int or float), native type if not specified
-    @return numpy.ndarray or array
+    @param key        the key to get the value for
+    @param ktype      the type we want the output in (can be int or float), native type if not specified
+    @return           numpy.ndarray
     @exception GribInternalError
     """
     if ktype is None:
@@ -1607,12 +1607,12 @@ def grib_get_values(gribid):
     """
     @brief Retrieve the contents of the 'values' key.
 
-    A NumPy ndarray or Python array containing the values in the message is returned.
+    A NumPy ndarray containing the values in the message is returned.
 
     \b Examples: \ref print_data.py "print_data.py", \ref samples.py "samples.py"
 
     @param gribid   id of the grib loaded in memory
-    @return numpy.ndarray or array
+    @return         numpy.ndarray
     @exception GribInternalError
     """
     return grib_get_double_array(gribid, "values")
