@@ -16,9 +16,7 @@
 #include "mir/repres/latlon/ReducedLL.h"
 
 #include <iostream>
-
 #include "atlas/grid/lonlat/ReducedLonLat.h"
-
 #include "mir/action/misc/AreaCropper.h"
 #include "mir/api/MIRJob.h"
 #include "mir/param/MIRParametrisation.h"
@@ -35,6 +33,8 @@ ReducedLL::ReducedLL(const param::MIRParametrisation &parametrisation):
     bbox_(parametrisation) {
     ASSERT(parametrisation.get("pl", pl_));
     ASSERT(parametrisation.get("Nj", Nj_));
+    ASSERT(Nj_);
+    ASSERT(pl_.size()==Nj_);
 }
 
 
@@ -96,11 +96,6 @@ atlas::grid::Grid *ReducedLL::atlasGrid() const {
     return new atlas::grid::lonlat::ReducedLonLat(pl_.size(), &pl_[0], atlasDomain());
 }
 
-atlas::grid::Domain ReducedLL::atlasDomain() const {
-    return globalDomain()
-           ? atlas::grid::Domain::makeGlobal()
-           : atlas::grid::Domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
-}
 
 void ReducedLL::validate(const std::vector<double> &values) const {
     size_t count = 0;
@@ -113,7 +108,7 @@ void ReducedLL::validate(const std::vector<double> &values) const {
 
 class ReducedLLIterator: public Iterator {
 
-    const std::vector<long> &pl_;
+    const std::vector<long>& pl_;
     util::BoundingBox bbox_;
 
     size_t ni_;
@@ -147,12 +142,9 @@ class ReducedLLIterator: public Iterator {
                 if (j_ < nj_) {
                     ASSERT(p_ < pl_.size());
                     ni_ = pl_[p_++];
-                    // eckit::Log::trace<MIR>() << "ni = " << ni_ << std::endl;
                 }
 
             }
-
-            // eckit::Log::trace<MIR>() << "++++++ " << lat << " " << lon << " - " << bbox_ << " -> " << bbox_.contains(lat, lon) << std::endl;
 
             if (bbox_.contains(lat, lon)) {
                 count_++;
@@ -162,9 +154,7 @@ class ReducedLLIterator: public Iterator {
         return false;
     }
 
-  public:
-
-    // TODO: Consider keeping a reference on the latitudes and bbox, to avoid copying
+public:
 
     ReducedLLIterator(size_t nj, const std::vector<long> &pl, const util::BoundingBox &bbox):
         pl_(pl),
@@ -182,15 +172,7 @@ class ReducedLLIterator: public Iterator {
         ns_ = (bbox_.north() - bbox_.south()) / (nj_ - 1);
         ni_ = pl_[p_++];
 
-        // eckit::Log::trace<MIR>() << "ReducedLLIterator ni=" << ni_ << " nj=" << nj_
-        // << " j=" << j_ << " " << bbox_ << " ns=" << ns_ << std::endl;
-
-
-    }
-
-    ~ReducedLLIterator() {
-        std::cout << "~ReducedLLIterator " << count_ << std::endl;
-        // ASSERT(count_ == ni_ * nj_);
+        // eckit::Log::trace<MIR>() << *this << std::endl;
     }
 
 };

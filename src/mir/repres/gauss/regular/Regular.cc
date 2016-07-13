@@ -17,12 +17,12 @@
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/memory/ScopedPtr.h"
+#include "eckit/types/FloatCompare.h"
 #include "atlas/grid/gaussian/RegularGaussian.h"
 #include "mir/api/MIRJob.h"
 #include "mir/log/MIR.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
-#include "mir/util/Compare.h"
 #include "mir/util/Grib.h"
 
 
@@ -48,20 +48,11 @@ Regular::Regular(const param::MIRParametrisation &parametrisation):
 
 Regular::Regular(size_t N):
     Gaussian(N) {
-
-}
-
-
-void Regular::shape(size_t &ni, size_t &nj) const {
-    ASSERT(globalDomain());
-    ni = N_ * 4;
-    nj = N_ * 2;
 }
 
 
 Regular::Regular(size_t N, const util::BoundingBox &bbox):
     Gaussian(N, bbox) {
-
 }
 
 
@@ -254,7 +245,11 @@ class RegularIterator: public Iterator {
         return false;
     }
 
-  public:
+    ~RegularIterator() {
+        // ASSERT(count_ == ni_ * nj_);
+    }
+
+public:
 
     // TODO: Consider keeping a reference on the latitudes and bbox, to avoid copying
 
@@ -270,10 +265,6 @@ class RegularIterator: public Iterator {
 
     }
 
-    ~RegularIterator() {
-        // ASSERT(count_ == ni_ * nj_);
-    }
-
 };
 
 
@@ -286,6 +277,13 @@ Iterator *Regular::unrotatedIterator() const {
 
 Iterator* Regular::rotatedIterator() const {
     return unrotatedIterator();
+}
+
+
+void Regular::shape(size_t &ni, size_t &nj) const {
+    ASSERT(globalDomain());
+    ni = N_ * 4;
+    nj = N_ * 2;
 }
 
 

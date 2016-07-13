@@ -16,15 +16,10 @@
 #include "mir/repres/latlon/RegularLL.h"
 
 #include <iostream>
-
-#include "eckit/exception/Exceptions.h"
-#include "eckit/types/Types.h"
-
+#include "eckit/types/FloatCompare.h"
 #include "atlas/grid/lonlat/RegularLonLat.h"
-
-#include "mir/util/Grib.h"
-#include "mir/util/Compare.h"
 #include "mir/log/MIR.h"
+#include "mir/util/Grib.h"
 
 
 namespace mir {

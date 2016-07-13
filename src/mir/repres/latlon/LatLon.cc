@@ -16,17 +16,14 @@
 #include "mir/repres/latlon/LatLon.h"
 
 #include <iostream>
-
 #include "eckit/exception/Exceptions.h"
+#include "eckit/types/FloatCompare.h"
 #include "eckit/log/Timer.h"
-
 #include "atlas/grid/lonlat/RegularLonLat.h"
-
 #include "mir/action/misc/AreaCropper.h"
 #include "mir/log/MIR.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
-#include "mir/util/Compare.h"
 #include "mir/util/Grib.h"
 
 
@@ -82,17 +79,9 @@ void LatLon::cropToDomain(const param::MIRParametrisation &parametrisation, cont
         cropper.execute(ctx);
     }
 }
-// size_t LatLon::ni() const {
-//     return ni_;
-// }
-
-// size_t LatLon::nj() const {
-//     return nj_;
-// }
 
 
 void LatLon::setNiNj() {
-
     computeNiNj(ni_, nj_, bbox_, increments_);
 }
 
@@ -189,7 +178,8 @@ void LatLon::fill(api::MIRJob &job) const  {
 }
 
 
-class LatLonIterator: public Iterator {
+class LatLonIterator : public Iterator {
+
     size_t ni_;
     size_t nj_;
 
@@ -204,8 +194,6 @@ class LatLonIterator: public Iterator {
 
     size_t count_;
 
-
-
     virtual void print(std::ostream &out) const {
         out << "LatLonIterator[]";
     }
@@ -214,12 +202,11 @@ class LatLonIterator: public Iterator {
         if (j_ < nj_) {
             if (i_ < ni_) {
                 lat = north_ - j_ * ns_; // This is slower, but looks more precise
-                lon = west_ + i_ * we_; // This is slower, but looks more precise
+                lon = west_  + i_ * we_; // This is slower, but looks more precise
                 i_++;
                 if (i_ == ni_) {
                     j_++;
                     i_ = 0;
-
                 }
                 count_++;
                 return true;
@@ -228,7 +215,7 @@ class LatLonIterator: public Iterator {
         return false;
     }
 
-  public:
+public:
     LatLonIterator(size_t ni,
                    size_t nj,
                    double north,
@@ -305,6 +292,7 @@ atlas::grid::Domain LatLon::atlasDomain() const {
            ? atlas::grid::Domain::makeGlobal()
            : atlas::grid::Domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
 }
+
 
 }  // namespace latlon
 }  // namespace repres

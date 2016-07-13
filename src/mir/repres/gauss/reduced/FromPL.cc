@@ -13,12 +13,11 @@
 /// @date Apr 2015
 
 
-#include "eckit/exception/Exceptions.h"
-
-#include "atlas/grid/gaussian/ReducedGaussian.h"
-
-#include "mir/param/MIRParametrisation.h"
 #include "mir/repres/gauss/reduced/FromPL.h"
+
+#include "eckit/exception/Exceptions.h"
+#include "atlas/grid/gaussian/ReducedGaussian.h"
+#include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
 
 
@@ -27,7 +26,7 @@ namespace repres {
 namespace reduced {
 
 
-FromPL::FromPL(const param::MIRParametrisation &parametrisation): Reduced(parametrisation) {
+FromPL::FromPL(const param::MIRParametrisation &parametrisation) : Reduced(parametrisation) {
     ASSERT(parametrisation.get("pl", pl_));
 }
 
@@ -36,7 +35,7 @@ FromPL::~FromPL() {
 }
 
 
-FromPL::FromPL(size_t N, const std::vector<long> &pl, const util::BoundingBox &bbox):
+FromPL::FromPL(size_t N, const std::vector<long> &pl, const util::BoundingBox &bbox) :
     Reduced(N, bbox),
     pl_(pl) {
 }

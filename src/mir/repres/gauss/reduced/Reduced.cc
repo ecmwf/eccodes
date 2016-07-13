@@ -15,20 +15,17 @@
 
 #include "mir/repres/gauss/reduced/Reduced.h"
 
-#include <limits>
 #include <cmath>
+#include <limits>
 #include <sstream>
-
 #include "eckit/exception/Exceptions.h"
 #include "eckit/memory/ScopedPtr.h"
-
+#include "atlas/grid/Domain.h"
 #include "mir/api/MIRJob.h"
 #include "mir/log/MIR.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Grib.h"
-
-#include "atlas/grid/Domain.h"
 
 
 namespace mir {
@@ -136,7 +133,7 @@ void Reduced::fill(grib_info &info) const  {
 
     */
 
-    bool global = globalDomain();
+    const bool global = globalDomain();
 
     size_t j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
@@ -161,9 +158,10 @@ void Reduced::fill(api::MIRJob &job) const  {
 }
 
 
-class GaussianIterator: public Iterator {
-    std::vector<double> latitudes_;
-    const std::vector<long> &pl_;
+class GaussianIterator : public Iterator {
+
+    const std::vector<double>& latitudes_;
+    const std::vector<long>& pl_;
     util::BoundingBox bbox_;
 
     size_t ni_;
@@ -175,7 +173,6 @@ class GaussianIterator: public Iterator {
     size_t p_;
 
     size_t count_;
-
 
     virtual void print(std::ostream &out) const {
         out << "GaussianIterator[]";
@@ -213,9 +210,7 @@ class GaussianIterator: public Iterator {
 
 public:
 
-    // TODO: Consider keeping a reference on the latitudes and bbox, to avoid copying
-
-    GaussianIterator(const std::vector <double> &latitudes, const std::vector<long> &pl, const util::BoundingBox &bbox):
+    GaussianIterator(const std::vector<double>& latitudes, const std::vector<long>& pl, const util::BoundingBox &bbox):
         latitudes_(latitudes),
         pl_(pl),
         bbox_(bbox),
@@ -225,7 +220,7 @@ public:
         p_(0),
         count_(0) {
 
-        // lattitude_ covers the whole globe, while pl_ covers only the current bbox_
+        // latitude_ covers the whole globe, while pl_ covers only the current bbox_
         ASSERT(pl_.size() <= latitudes_.size());
 
         // Position to first latitude
@@ -237,23 +232,18 @@ public:
         ni_ = pl_[p_++];
         nj_ = pl_.size();
 
-        // eckit::Log::trace<MIR>() << "GaussianIterator ni=" << ni_ << " nj=" << nj_ << " j=" << j_ << " " << bbox_ << std::endl;
-
-
-    }
-
-    ~GaussianIterator() {
-        // std::cout << "~GaussianIterator " << count_ << std::endl;
-        // ASSERT(count_ == ni_ * nj_);
+        // eckit::Log::trace<MIR>() << *this << std::endl;
     }
 
 };
+
 
 atlas::grid::Domain Reduced::atlasDomain() const {
     return globalDomain()
            ? atlas::grid::Domain::makeGlobal()
            : atlas::grid::Domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
 }
+
 
 Iterator *Reduced::unrotatedIterator() const {
     // Use a global bounding box if global domain, to avoid rounding issues
@@ -326,44 +316,36 @@ size_t Reduced::frame(std::vector<double> &values, size_t size, double missingVa
 
     ASSERT(k == values.size());
     return count;
-
 }
 
 
 void Reduced::validate(const std::vector<double> &values) const {
 
+    size_t count = 0;
+
     if (globalDomain()) {
         const std::vector<long> &pl = pls();
-        size_t count = 0;
         for (size_t i = 0; i < pl.size(); i++) {
-            count += pl[i];
+            count += static_cast<size_t>(pl[i]);
         }
-        if (values.size() != count) {
-            std::ostringstream oss;
-            oss << "Failed to validate global " << *this << " got: " << values.size() << " expected: " << count;
-            throw eckit::SeriousBug(oss.str());
-        }
-        ASSERT(values.size() == count);
-    } else {
+    }
+    else {
         eckit::ScopedPtr<Iterator> it(unrotatedIterator());
         double lat;
         double lon;
-
-        size_t count = 0;
         while (it->next(lat, lon)) {
             if (bbox_.contains(lat, lon)) {
-                count++;
+                ++count;
             }
         }
-
-        if (values.size() != count) {
-            std::ostringstream oss;
-            oss << "Failed to validate non-global " << *this << " got: " << values.size() << " expected: " << count;
-            throw eckit::SeriousBug(oss.str());
-        }
-
-        ASSERT(values.size() == count);
     }
+
+    if (values.size() != count) {
+        std::ostringstream oss;
+        oss << "Reduced::validate " << *this << " got: " << values.size() << " expected: " << count;
+        throw eckit::SeriousBug(oss.str());
+    }
+    ASSERT(values.size() == count);
 }
 
 
@@ -388,7 +370,7 @@ const Reduced *Reduced::cropped(const util::BoundingBox &bbox) const  {
 }
 
 
-const Reduced *Reduced::cropped(const util::BoundingBox &bbox, const std::vector<long> &) const {
+const Reduced *Reduced::cropped(const util::BoundingBox&, const std::vector<long>&) const {
     std::ostringstream os;
     os << "Reduced::cropped() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
