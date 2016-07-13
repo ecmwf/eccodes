@@ -5,11 +5,12 @@
     <tab type="mainpage" visible="yes" title=""/>
     <tab type="pages" visible="no" title="The Pages" intro=""/>
     <tab type="modules" visible="yes" title="C Interface" intro=""/>
+    <tab type="user" url="@ref eccodes" title="F90 Interface"/>
     <tab type="namespaces" visible="yes" title="Python Interface">
       <tab type="namespacelist" visible="yes" title="" intro=""/>
       <tab type="namespacemembers" visible="yes" title="" intro=""/>
     </tab>
-    <tab type="user" url="@ref eccodes" title="F90 Interface"/>
+    
     <tab type="classes" visible="no" title="Classes">
       <tab type="classlist" visible="yes" title="" intro=""/>
       <tab type="classindex" visible="$ALPHABETICAL_INDEX" title="xxindex"/> 
