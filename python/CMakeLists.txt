@@ -71,10 +71,7 @@ if( HAVE_PYTHON )
         add_custom_command( OUTPUT ${_gribapi_swig}
                             COMMAND ${PYTHON_EXECUTABLE} setup.py build_ext --inplace -R ${CMAKE_BINARY_DIR}/lib
                             DEPENDS grib_interface.h grib_interface.c ${_swig_c_wrapper} setup.py.in eccodes )
-        # Build the extension module as target for installation with RPATH pointing to the install prefix
-        add_custom_command( OUTPUT build/${_gribapi_swig}
-                            COMMAND ${PYTHON_EXECUTABLE} setup.py build_ext -b build -R ${CMAKE_INSTALL_PREFIX}/${INSTALL_LIB_DIR}
-                            DEPENDS grib_interface.h grib_interface.c ${_swig_c_wrapper} setup.py.in eccodes )
+        add_custom_target(build_swig_wrapper ALL DEPENDS ${_gribapi_swig})
 
         #ecbuild_add_library(TARGET    _gribapi_swig
         #                    TYPE SHARED
@@ -84,25 +81,12 @@ if( HAVE_PYTHON )
         # Don't use the lib prefix.  This is needed for the python case where a _modulename.so is generated
         #set_target_properties(_gribapi_swig PROPERTIES PREFIX "")
 
-        # Copy the wrapper python file to build area
-        set( _swig_py  gribapi_swig.py )
-        add_custom_command(
-           OUTPUT ${_swig_py}
-           COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${_swig_py_wrapper} ${CMAKE_CURRENT_BINARY_DIR}/${_swig_py}
-           DEPENDS ${_gribapi_swig} build/${_gribapi_swig}
-        )
-        add_custom_target(copy_swig_py ALL DEPENDS ${_swig_py})
-        #######################
+        # Copy gribapi and eccodes python modules to build area
+        file( COPY eccodes gribapi DESTINATION . )
+        configure_file( ${_swig_py_wrapper} gribapi/gribapi_swig.py COPYONLY )
 
-        #install(TARGETS _gribapi_swig DESTINATION ${PYTHON_DEST_GRIBAPI} )
-
-        #install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gribapi_swig.py  DESTINATION ${PYTHON_DEST_GRIBAPI})
-        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/build/${_gribapi_swig} ${CMAKE_CURRENT_BINARY_DIR}/gribapi_swig.py  DESTINATION ${PYTHON_DEST_GRIBAPI})
-        install(FILES gribapi.py DESTINATION ${PYTHON_DEST_GRIBAPI})
-        install(FILES eccodes.py DESTINATION ${PYTHON_DEST_ECCODES})
-        
-        install(FILES init_gribapi.py DESTINATION ${PYTHON_DEST_GRIBAPI} RENAME __init__.py)
-        install(FILES init_eccodes.py DESTINATION ${PYTHON_DEST_ECCODES} RENAME __init__.py)
+        # Call distutils for installation
+        install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} setup.py install --prefix ${CMAKE_INSTALL_PREFIX} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})")
 
     endif()
 

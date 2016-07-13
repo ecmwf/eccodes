@@ -11,7 +11,7 @@ attdict = dict(
    library_dirs = ['@CMAKE_BINARY_DIR@/lib'],
    libraries = ['eccodes'],
    extra_objects = [],
-   extra_link_args = []
+   extra_link_args = ['-Wl,-rpath,@CMAKE_INSTALL_PREFIX@/lib']
 )
 
 add_attribute = lambda **args: [list.append(attdict[key],value) for key,value in args.items()]
@@ -77,10 +77,10 @@ if data_handler == "numpy":
     )
 #gribapi_module = Extension('_gribapi_swig',**attdict)
 
-setup (name = 'gribapi',
+setup (name = 'eccodes',
        version = '@ECCODES_VERSION_STR@',
        author      = 'ECMWF',
-       description = """Grib API SWIG module""",
-       ext_modules = [Extension('_gribapi_swig',**attdict)],
-       py_modules = ['gribapi_swig','gribapi'],
+       description = """Python interface for eccodes and grib_api""",
+       ext_modules = [Extension('gribapi._gribapi_swig',**attdict)],
+       packages = ['eccodes','gribapi'],
       )
