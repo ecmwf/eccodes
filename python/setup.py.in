@@ -36,7 +36,7 @@ if with_openjpeg:
     add_attribute(libraries='openjpeg')
 
 # assumes png is supplied by system paths -- may not be true
-png = @HAVE_PNG@
+png = @HAVE_LIBPNG@
 if png:
     add_attribute(libraries='png')
 
