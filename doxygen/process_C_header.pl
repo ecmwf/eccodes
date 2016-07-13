@@ -35,15 +35,24 @@ close ECCO_HEADER_FILE;
 # Apply the value from our map to the equivalent CODES_ macros
 foreach (@ecco_lines) {
     if (/^\s*#define\s+(CODES[_A-z0-9]+)\s+(GRIB.+)/) {
+        # Replace macro lines like:
+        #   #define CODES_OUT_OF_RANGE   GRIB_OUT_OF_RANGE
+        # with
+        #   #define CODES_OUT_OF_RANGE   -65
         my $ecco_macro = $1;
         my $grib_macro = $2;
         print "#define $ecco_macro $macro_map{$grib_macro}\n";
     }
-    #elsif (/^\s*typedef\s+struct\s+(grib_.*)\s+(codes_.*) *;/) {
-    #    my $grib_struct = $1;
-    #    my $ecco_struct = $2;
-    #    print "typedef struct $ecco_struct $ecco_struct;\n";
-    #}
+    elsif (/^\s*typedef\s+struct\s+(grib_.*)\s+(codes_.*) *;/) {
+        # The struct documentation is placed before declarations like:
+        #   typedef struct grib_iterator codes_iterator;
+        # This is not useful for users so instead we add just the struct
+        # declaration beforehand e.g.
+        #   struct codes_iterator;
+        my $grib_struct = $1;
+        my $ecco_struct = $2;
+        print "struct $ecco_struct;\n$&\n";  # Note: $& references the matched string
+    }
     else {
         print;
     }
