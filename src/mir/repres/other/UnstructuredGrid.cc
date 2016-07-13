@@ -110,7 +110,7 @@ void UnstructuredGrid::validate(const std::vector<double> &values) const {
 }
 
 double UnstructuredGrid::increment() const {
-   // double inc = 360.0;
+    // double inc = 360.0;
     // TODO:
     return 0.1;
 }

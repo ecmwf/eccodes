@@ -118,7 +118,7 @@ void Regular::fill(grib_info &info) const  {
         info.grid.Nj = 0;
         for (size_t i = 0; i < lats.size(); i++) {
             if (eckit::FloatCompare<double>::isApproximatelyGreaterOrEqual(bbox_.north(), lats[i]) &&
-                eckit::FloatCompare<double>::isApproximatelyGreaterOrEqual(lats[i], bbox_.south())) {
+                    eckit::FloatCompare<double>::isApproximatelyGreaterOrEqual(lats[i], bbox_.south())) {
                 info.grid.Nj++;
             }
         }
@@ -196,7 +196,7 @@ size_t Regular::frame(std::vector<double>& values, size_t size, double missingVa
         nj = 0;
         for (size_t i=0; i<lats.size(); ++i) {
             if (eckit::FloatCompare<double>::isApproximatelyGreaterOrEqual(bbox_.north(), lats[i]) &&
-                eckit::FloatCompare<double>::isApproximatelyGreaterOrEqual(lats[i], bbox_.south())) {
+                    eckit::FloatCompare<double>::isApproximatelyGreaterOrEqual(lats[i], bbox_.south())) {
                 nj++;
             }
         }

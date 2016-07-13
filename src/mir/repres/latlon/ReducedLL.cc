@@ -98,8 +98,8 @@ atlas::grid::Grid *ReducedLL::atlasGrid() const {
 
 atlas::grid::Domain ReducedLL::atlasDomain() const {
     return globalDomain()
-        ? atlas::grid::Domain::makeGlobal()
-        : atlas::grid::Domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
+           ? atlas::grid::Domain::makeGlobal()
+           : atlas::grid::Domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
 }
 
 void ReducedLL::validate(const std::vector<double> &values) const {

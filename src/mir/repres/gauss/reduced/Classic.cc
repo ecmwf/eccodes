@@ -68,8 +68,8 @@ const std::vector<long> &Classic::pls() const {
     if (pl_.size() == 0) {
 
         eckit::ScopedPtr<atlas::grid::Structured> grid(
-                    dynamic_cast<atlas::grid::Structured*>(
-                        new atlas::grid::gaussian::ClassicGaussian(N_) ));
+            dynamic_cast<atlas::grid::Structured*>(
+                new atlas::grid::gaussian::ClassicGaussian(N_) ));
         ASSERT(grid.get());
 
         const std::vector<long> &v = grid->pl();
