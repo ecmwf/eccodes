@@ -5,16 +5,11 @@ use strict;
 $|=1;
 my $debug = 0;
 
-#if (scalar @ARGV < 1) {
-#  &usage;
-#}
-
 while (<>) {
 
-    s/\@package gribapi/\@package eccodes/;
+    s/\@package gribapi/\@package ecCodes/;
 
     s/\bGRIB_CHECK\b/CODES_CHECK/;
-
     s/\bGRIB_MISSING_DOUBLE\b/CODES_MISSING_DOUBLE/;
     s/\bGRIB_MISSING_LONG\b/CODES_MISSING_LONG/;
 
