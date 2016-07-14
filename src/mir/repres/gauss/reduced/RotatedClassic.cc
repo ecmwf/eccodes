@@ -64,7 +64,6 @@ Iterator* RotatedClassic::rotatedIterator() const {
 
 
 atlas::grid::Grid *RotatedClassic::atlasGrid() const {
-    ASSERT(globalDomain()); // Atlas support needed for non global grids
     return new util::RotatedGrid(
                 Classic::atlasGrid(),
                 rotation_.south_pole_latitude(),

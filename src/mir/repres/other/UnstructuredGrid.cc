@@ -77,9 +77,9 @@ void UnstructuredGrid::fill(api::MIRJob &job) const  {
 }
 
 
-bool UnstructuredGrid::globalDomain() const {
-    eckit::Log::warning() << "UnstructuredGrid::globalDomain: assuming grid is global" << std::endl;
-    return true;
+atlas::grid::Domain UnstructuredGrid::atlasDomain() const {
+    eckit::Log::warning() << "UnstructuredGrid::atlasDomain: assuming grid is global" << std::endl;
+    return atlas::grid::Domain::makeGlobal();
 }
 
 

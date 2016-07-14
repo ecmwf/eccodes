@@ -79,12 +79,11 @@ void Regular::fill(grib_info &info) const  {
     size_t j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
     info.packing.extra_settings[j].name = "global";
-    info.packing.extra_settings[j].long_value = globalDomain()? 1 : 0;
+    info.packing.extra_settings[j].long_value = atlasDomain().isGlobal()? 1 : 0;
 }
 
 
 void Regular::fill(api::MIRJob &job) const  {
-    ASSERT(globalDomain());
     std::stringstream os;
     os << "F" << N_;
     job.set("gridname", os.str());
@@ -92,44 +91,60 @@ void Regular::fill(api::MIRJob &job) const  {
 
 
 atlas::grid::Grid *Regular::atlasGrid() const {
-    ASSERT(globalDomain()); // Atlas support needed for non global grids
-    return new atlas::grid::gaussian::RegularGaussian(N_);
+    return new atlas::grid::gaussian::RegularGaussian(N_, atlasDomain());
 }
 
 
-bool Regular::globalDomain() const {
+atlas::grid::Domain Regular::atlasDomain() const {
 
-    if (bbox_.west() == 0 && bbox_.east() == 360 && bbox_.north() == 90 && bbox_.south() == -90) {
-        return true;
-    }
+    const std::vector<double> &lats = latitudes();
+    ASSERT(lats.size()>=2);
 
-// unused //  size_t Nj = N_ * 2;
-    size_t Ni = N_ * 4;
+    const double ew = bbox_.east() - bbox_.west();
+    const double inc_west_east = 90.0/N_;
 
-
-    double last = 360.0 - 360.0 / Ni ;
-    double ew = bbox_.east() - bbox_.west();
-
+    // adjust bounding box on GRIB precision
     // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree
     // Use the precision given by GRIB in this check
+    const double epsilon_grib1 = 1.0 / 1000.0;
+    eckit::FloatApproxCompare<double> cmp_eps(epsilon_grib1);
 
-    const double epsilon = 1.0 / 1000.0;
+    double adjust_north = bbox_.north();
+    double adjust_south = bbox_.south();
 
-    bool full = fabs(ew - last) < epsilon;
-
-    if (full) {
-        const std::vector<double> &lats = latitudes();
-        ASSERT(lats.size());
-        bool npole = fabs(bbox_.north() - lats[0]) < epsilon;
-        bool spole = fabs(bbox_.south() - lats[lats.size() - 1]) < epsilon;
-        return npole && spole;
+    for (std::vector<double>::const_iterator lat=lats.begin(); lat!=lats.end(); ++lat) {
+        if (cmp_eps(adjust_north, *lat))
+            adjust_north = std::max(adjust_north, *lat);
+        if (cmp_eps(adjust_south, *lat))
+            adjust_south = std::min(adjust_south, *lat);
     }
-    return false;
+
+    double adjust_west  = bbox_.west();
+    double adjust_east  = bbox_.east();
+
+    for (size_t i=0; i<4*N_; ++i) {
+        const double lon1 = bbox_.west() + static_cast<double>(i*90.0)/static_cast<double>(N_);
+        const double lon2 = bbox_.east() - static_cast<double>(i*90.0)/static_cast<double>(N_);
+        if (cmp_eps(adjust_east, lon1) || cmp_eps(adjust_east, lon2))
+            adjust_east = std::max(adjust_east, std::max(lon1, lon2));
+        if (cmp_eps(adjust_west, lon1) || cmp_eps(adjust_west, lon2))
+            adjust_west = std::min(adjust_west, std::min(lon1, lon2));
+    }
+
+    const bool isPeriodicEastWest = cmp_eps(ew + inc_west_east, 360.0);
+    const bool includesPoleNorth  = cmp_eps(adjust_north, lats.front());
+    const bool includesPoleSouth  = cmp_eps(adjust_south, lats.back());
+
+    return atlas::grid::Domain(
+                includesPoleNorth?  90 : adjust_north, isPeriodicEastWest?   0 : adjust_west,
+                includesPoleSouth? -90 : adjust_south, isPeriodicEastWest? 360 : adjust_east );
 }
 
 
 void Regular::validate(const std::vector<double> &values) const {
-    if (globalDomain()) {
+    const atlas::grid::Domain dom = atlasDomain();
+
+    if (dom.isGlobal()) {
         ASSERT(values.size() == (N_ * 2) * (N_ * 4));
     }
     else {
@@ -138,37 +153,37 @@ void Regular::validate(const std::vector<double> &values) const {
         double lat;
         double lon;
         while (it->next(lat, lon)) {
-            if (bbox_.contains(lat, lon))
+            if (dom.contains(lon, lat))
                 count++;
         }
-        eckit::Log::trace<MIR>() << "Regular::validate checked " << eckit::Plural(values.size(),"value") << ", got " << eckit::BigNum(count) << "." << std::endl;
+        eckit::Log::trace<MIR>() << "Regular::validate checked " << eckit::Plural(values.size(),"value") << ", within domain: " << eckit::BigNum(count) << "." << std::endl;
         ASSERT(values.size() == size_t(count));
     }
 }
 
 
 void Regular::setNiNj() {
-    //TODO Only global input supported...
-    const double lon_middle = (bbox_.west()  + bbox_.east() )/2.;
-    const double lat_middle = (bbox_.north() + bbox_.south())/2.;
+    const atlas::grid::Domain dom = atlasDomain();
+    const double lon_middle = (dom.west() + dom.east())/2.;
+    const double lat_middle = (dom.north() + dom.south())/2.;
 
     Ni_ = N_ * 4;
-    if (!globalDomain()) {
+    if (!dom.isPeriodicEastWest()) {
         Ni_ = 0;
         for (size_t i=0; i<N_*4; ++i) {
-            const double lon = bbox_.west() + (i * 90.0) / N_;
-            if (bbox_.contains(lat_middle, lon))
+            const double lon = dom.west() + (i * 90.0) / N_;
+            if (dom.contains(lon, lat_middle))
                 ++Ni_;
         }
     }
     ASSERT(2 <= Ni_ <= N_*4);
 
     Nj_ = N_ * 2;
-    if (!globalDomain()) {
+    if (!dom.includesPoleNorth() || !dom.includesPoleSouth()) {
         Nj_ = 0;
         const std::vector<double>& lats = latitudes();
         for (std::vector<double>::const_iterator lat=lats.begin(); lat!=lats.end(); ++lat) {
-            if (bbox_.contains(*lat, lon_middle))
+            if (dom.contains(lon_middle, *lat))
                 ++Nj_;
         }
     }
@@ -202,7 +217,7 @@ size_t Regular::frame(std::vector<double>& values, size_t size, double missingVa
 class RegularIterator : public Iterator {
 
     std::vector<double> latitudes_;
-    util::BoundingBox bbox_;
+    const double west_;
 
     const size_t N_;
     const size_t Ni_;
@@ -210,17 +225,19 @@ class RegularIterator : public Iterator {
 
     size_t i_;
     size_t j_;
+    size_t k_;
 
     size_t count_;
 
     virtual void print(std::ostream &out) const {
         out << "RegularIterator["
-            <<  "bbox="  << bbox_
+            <<  "west="  << west_
             << ",N="     << N_
             << ",Ni="    << Ni_
             << ",Nj="    << Nj_
             << ",i="     << i_
             << ",j="     << j_
+            << ",k="     << k_
             << ",count=" << count_
             << "]";
     }
@@ -228,18 +245,17 @@ class RegularIterator : public Iterator {
     virtual bool next(double &lat, double &lon) {
         while (j_ < Nj_ && i_ < Ni_) {
 
-            lat = latitudes_[j_];
-            lon = (i_ * 90.0) / N_;
+            ASSERT(j_ + k_ < latitudes_.size());
+            lat = latitudes_[j_ + k_];
+            lon = west_ + (i_ * 90.0) / N_;
 
             i_++;
             if (i_ == Ni_) {
                 j_++;
                 i_ = 0;
             }
-            if (bbox_.contains(lat, lon)) {
-                count_++;
-                return true;
-            }
+            count_++;
+            return true;
         }
         return false;
     }
@@ -250,27 +266,35 @@ class RegularIterator : public Iterator {
 
 public:
 
-    // TODO: Consider keeping a reference on the latitudes and bbox, to avoid copying
+    // TODO: Consider keeping a reference on the latitudes, to avoid copying
 
-    RegularIterator(const std::vector<double>& latitudes, size_t N, size_t Ni, size_t Nj, const util::BoundingBox &bbox) :
+    RegularIterator(const std::vector<double>& latitudes, size_t N, size_t Ni, size_t Nj, const atlas::grid::Domain& dom) :
         latitudes_(latitudes),
-        bbox_(bbox),
+        west_(dom.west()),
         N_(N),
         Ni_(Ni),
         Nj_(Nj),
         i_(0),
         j_(0),
+        k_(0),
         count_(0) {
-        ASSERT(latitudes_.size() == Nj_);
+
+        // latitudes_ covers the whole globe, but (Ni_,Nj_) cover only the domain
+        ASSERT(latitudes_.size() == N * 2);
+        ASSERT(2 <= Ni_ && Ni_ <= N * 4);
+        ASSERT(2 <= Nj_ && Nj_ <= N * 2);
+
+        // Position to first latitude
+        while (k_ < latitudes_.size() && dom.north() < latitudes_[k_]) {
+            k_++;
+        }
     }
 
 };
 
 
 Iterator *Regular::unrotatedIterator() const {
-    // Use a global bounding box if global domain, to avoid rounding issues
-    // due to GRIB (in)accuracies
-    return new RegularIterator(latitudes(), N_, Ni_, Nj_, globalDomain() ? util::BoundingBox() : bbox_);
+    return new RegularIterator(latitudes(), N_, Ni_, Nj_, atlasDomain());
 }
 
 
@@ -280,7 +304,6 @@ Iterator* Regular::rotatedIterator() const {
 
 
 void Regular::shape(size_t &ni, size_t &nj) const {
-    ASSERT(globalDomain());
     ni = Ni_;
     nj = Nj_;
 }

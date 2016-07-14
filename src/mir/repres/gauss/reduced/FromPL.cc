@@ -58,9 +58,8 @@ void FromPL::fill(api::MIRJob &job) const  {
 
 
 atlas::grid::Grid *FromPL::atlasGrid() const {
-    ASSERT(globalDomain()); // Atlas support needed for non global grids
-    ASSERT (pl_.size() > 0);
-    return new atlas::grid::gaussian::ReducedGaussian(N_, &pl_[0]);
+    ASSERT (pl_.size());
+    return new atlas::grid::gaussian::ReducedGaussian(N_, &pl_[0], atlasDomain());
 }
 
 

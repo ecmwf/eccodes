@@ -15,10 +15,11 @@
 
 #include "mir/repres/latlon/LatLon.h"
 
+#include <cmath>
 #include <iostream>
 #include "eckit/exception/Exceptions.h"
 #include "eckit/types/FloatCompare.h"
-#include "atlas/grid/lonlat/RegularLonLat.h"
+#include "atlas/grid/Domain.h"
 #include "mir/action/misc/AreaCropper.h"
 #include "mir/log/MIR.h"
 #include "mir/param/MIRParametrisation.h"
@@ -81,29 +82,8 @@ LatLon::~LatLon() {
 }
 
 
-bool LatLon::globalDomain() const {
-
-    // Special case for shifted grids
-    double ns = bbox_.north() - bbox_.south() ;
-    double ew = bbox_.east() - bbox_.west() ;
-
-    bool all_lons = eckit::FloatCompare<double>::isApproximatelyEqual(ew + increments_.west_east() , 360);
-    bool all_lats = eckit::FloatCompare<double>::isApproximatelyEqual(ns, 180) ||
-                    eckit::FloatCompare<double>::isApproximatelyEqual(ns + increments_.south_north(), 180);
-
-    return all_lats && all_lons;
-    //     if (all_lats && all_lons)  {
-    //         eckit::Log::trace<MIR>() << "WARNING: global shifted grid (before): " << bbox_ << " ===== " << increments_ << std::endl;
-    //         bbox_ = util::BoundingBox::Global(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
-    //         eckit::Log::trace<MIR>() << "WARNING: global shifted grid (after): " << bbox_ << " ===== " << increments_ << std::endl;
-    //     }
-
-    // }
-}
-
-
 void LatLon::cropToDomain(const param::MIRParametrisation &parametrisation, context::Context & ctx) const {
-    if (!globalDomain()) {
+    if (!atlasDomain().isGlobal()) {
         action::AreaCropper cropper(parametrisation, bbox_);
         cropper.execute(ctx);
     }
@@ -318,9 +298,21 @@ void LatLon::shape(size_t &ni, size_t &nj) const {
 
 
 atlas::grid::Domain LatLon::atlasDomain() const {
-    return globalDomain()
-           ? atlas::grid::Domain::makeGlobal()
-           : atlas::grid::Domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
+    typedef eckit::FloatCompare<double> cmp;
+
+    // Special case for shifted grids
+    const double ns = bbox_.north() - bbox_.south() ;
+    const double ew = bbox_.east()  - bbox_.west() ;
+
+    const bool isPeriodicEastWest = cmp::isApproximatelyEqual(ew + increments_.west_east(), 360.);
+    const bool includesPoles = cmp::isApproximatelyEqual(ns, 180.)
+                            || cmp::isApproximatelyEqual(ns + increments_.south_north(), 180.);
+
+    return atlas::grid::Domain(
+                includesPoles?       90 : bbox_.north(),
+                isPeriodicEastWest?   0 : bbox_.west(),
+                includesPoles?      -90 : bbox_.south(),
+                isPeriodicEastWest? 360 : bbox_.east() );
 }
 
 

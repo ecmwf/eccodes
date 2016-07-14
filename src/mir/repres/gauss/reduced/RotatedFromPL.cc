@@ -64,7 +64,6 @@ void RotatedFromPL::fill(api::MIRJob &job) const  {
 
 
 atlas::grid::Grid *RotatedFromPL::atlasGrid() const {
-    ASSERT(globalDomain()); // Atlas support needed for non global grids
     return new util::RotatedGrid(
                 FromPL::atlasGrid(),
                 rotation_.south_pole_latitude(),

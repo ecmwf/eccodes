@@ -61,39 +61,40 @@ void ReducedLL::fill(api::MIRJob &job) const  {
 
 
 void ReducedLL::cropToDomain(const param::MIRParametrisation &parametrisation, context::Context & ctx) const {
-    if (!globalDomain()) {
+    if (!atlasDomain().isGlobal()) {
         action::AreaCropper cropper(parametrisation, bbox_);
         cropper.execute(ctx);
     }
 }
 
 
-bool ReducedLL::globalDomain() const {
-
-    // FIXME: cache
-    if (bbox_.north() == 90 && bbox_.south() == -90) {
-        if (Nj_ == pl_.size()) {
-            ASSERT(pl_.size());
-            long maxpl = pl_[0];
-            for (size_t i = 1; i < pl_.size(); i++) {
-                maxpl = std::max(maxpl, pl_[i]);
-            }
-
-            double ew = 360.0 / maxpl;
-
-            if (eckit::FloatCompare<double>::isApproximatelyEqual(bbox_.east() - bbox_.west() + ew, 360.)) {
-                return true;
-            }
-        }
-
-    }
-    return false;
+atlas::grid::Grid *ReducedLL::atlasGrid() const {
+    return new atlas::grid::lonlat::ReducedLonLat(pl_.size(), &pl_[0], atlasDomain());
 }
 
 
-atlas::grid::Grid *ReducedLL::atlasGrid() const {
-    // FIXME: we are missing the distribution of latitudes
-    return new atlas::grid::lonlat::ReducedLonLat(pl_.size(), &pl_[0], atlasDomain());
+atlas::grid::Domain ReducedLL::atlasDomain() const {
+    typedef eckit::FloatCompare<double> cmp;
+
+    ASSERT(pl_.size());
+
+    long maxpl = pl_[0];
+    for (size_t i=1; i<pl_.size(); ++i) {
+        maxpl = std::max(maxpl, pl_[i]);
+    }
+
+    const double ew = bbox_.east() - bbox_.west();
+    const double inc_west_east = maxpl? ew/double(maxpl) : 0.;
+
+    const bool isPeriodicEastWest = cmp::isApproximatelyEqual(ew + inc_west_east, 360.);
+    const bool includesPoleNorth  = cmp::isApproximatelyEqual(bbox_.north(),  90.);
+    const bool includesPoleSouth  = cmp::isApproximatelyEqual(bbox_.south(), -90.);
+
+    return atlas::grid::Domain(
+                includesPoleNorth?   90 : bbox_.north(),
+                isPeriodicEastWest?   0 : bbox_.west(),
+                includesPoleSouth?  -90 : bbox_.south(),
+                isPeriodicEastWest? 360 : bbox_.east() );
 }
 
 
@@ -109,30 +110,39 @@ void ReducedLL::validate(const std::vector<double> &values) const {
 class ReducedLLIterator: public Iterator {
 
     const std::vector<long>& pl_;
-    util::BoundingBox bbox_;
+    const atlas::grid::Domain domain_;
 
     size_t ni_;
-    size_t nj_;
+    const size_t nj_;
 
     size_t i_;
     size_t j_;
     size_t p_;
 
     size_t count_;
-    double north_;
-    double west_;
-    double east_;
-    double ns_;
-
 
     virtual void print(std::ostream &out) const {
-        out << "ReducedLLIterator[]";
+        out << "ReducedLLIterator["
+            <<  "domain=" << domain_
+            << ",ni="     << ni_
+            << ",nj="     << nj_
+            << ",i="      << i_
+            << ",j="      << j_
+            << ",p="      << p_
+            << ",count="  << count_
+            << "]";
     }
 
     virtual bool next(double &lat, double &lon) {
+
+        const double ew = (domain_.east() - domain_.west());
+        const double inc_north_south = (domain_.north() - domain_.south()) / (nj_ - 1);
+
         while (j_ < nj_ && i_ < ni_) {
-            lat = north_ - j_ * ns_;
-            lon = west_ + (i_ * (east_ - west_)) / ni_;
+
+            lat = domain_.north() - j_ * inc_north_south;
+            lon = domain_.west() + (i_ * ew) / ni_;
+
             i_++;
             if (i_ == ni_) {
 
@@ -146,7 +156,7 @@ class ReducedLLIterator: public Iterator {
 
             }
 
-            if (bbox_.contains(lat, lon)) {
+            if (domain_.contains(lon,lat)) {
                 count_++;
                 return true;
             }
@@ -156,20 +166,15 @@ class ReducedLLIterator: public Iterator {
 
 public:
 
-    ReducedLLIterator(size_t nj, const std::vector<long> &pl, const util::BoundingBox &bbox):
+    ReducedLLIterator(size_t nj, const std::vector<long>& pl, const atlas::grid::Domain& dom) :
         pl_(pl),
-        bbox_(bbox),
+        domain_(dom),
         nj_(nj),
         i_(0),
         j_(0),
         p_(0),
         count_(0) {
 
-
-        north_ = bbox_.north();
-        west_ = bbox_.west();
-        east_ = bbox_.east();
-        ns_ = (bbox_.north() - bbox_.south()) / (nj_ - 1);
         ni_ = pl_[p_++];
 
         // eckit::Log::trace<MIR>() << *this << std::endl;
@@ -179,9 +184,7 @@ public:
 
 
 Iterator *ReducedLL::unrotatedIterator() const {
-    // Use a global bounding box if global domain, to avoid rounding issues
-    // due to GRIB (in)accuracies
-    return new ReducedLLIterator(Nj_, pl_, globalDomain() ? util::BoundingBox() : bbox_);
+    return new ReducedLLIterator(Nj_, pl_, atlasDomain());
 }
 
 

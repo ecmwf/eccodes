@@ -55,8 +55,7 @@ void Classic::fill(api::MIRJob &job) const  {
 
 
 atlas::grid::Grid* Classic::atlasGrid() const {
-    ASSERT(globalDomain()); // Atlas support needed for non global grids
-    return new atlas::grid::gaussian::ClassicGaussian(N_);
+    return new atlas::grid::gaussian::ClassicGaussian(N_, atlasDomain());
 }
 
 

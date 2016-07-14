@@ -18,6 +18,9 @@
 #include <iostream>
 #include "eckit/types/FloatCompare.h"
 #include "atlas/grid/lonlat/RegularLonLat.h"
+#include "atlas/grid/lonlat/ShiftedLat.h"
+#include "atlas/grid/lonlat/ShiftedLon.h"
+#include "atlas/grid/lonlat/ShiftedLonLat.h"
 #include "mir/log/MIR.h"
 #include "mir/util/Grib.h"
 
@@ -71,8 +74,45 @@ void RegularLL::fill(api::MIRJob &job) const  {
 }
 
 
-atlas::grid::Grid *RegularLL::atlasGrid() const {
-    return new atlas::grid::lonlat::RegularLonLat(ni_, nj_, atlasDomain());
+atlas::grid::lonlat::Shift RegularLL::atlasShift() const {
+    typedef eckit::FloatCompare<double> cmp;
+
+    // locate latitude/longitude origin via accumulation of increments, in range [0,inc[
+    // NOTE: shift is assumed half-increment origin dispacement; Domain is checked for
+    // global NS/EW range (this could/should be revised).
+    const double inc_we = increments_.west_east();
+    const double inc_sn = increments_.south_north();
+    ASSERT(cmp::isStrictlyGreater(inc_we, 0));
+    ASSERT(cmp::isStrictlyGreater(inc_sn, 0));
+
+    int i=0, j=0;
+    while (bbox_.west()  + i*inc_we < inc_we) { ++i; }
+    while (bbox_.west()  + i*inc_we > inc_we) { --i; }
+    while (bbox_.south() + j*inc_sn < inc_sn) { ++j; }
+    while (bbox_.south() + j*inc_sn > inc_sn) { --j; }
+    const double
+            lon_origin = bbox_.west()  + i*inc_we,
+            lat_origin = bbox_.south() + j*inc_sn;
+
+    const atlas::grid::Domain dom = atlasDomain();
+    const bool
+            includesBothPoles = dom.includesPoleNorth() && dom.includesPoleSouth(),
+            isShiftedLon = dom.isPeriodicEastWest() && cmp::isApproximatelyEqual(lon_origin, inc_we/2.),
+            isShiftedLat = includesBothPoles        && cmp::isApproximatelyEqual(lat_origin, inc_sn/2.);
+
+    return atlas::grid::lonlat::Shift(isShiftedLon, isShiftedLat);
+}
+
+
+atlas::grid::Grid* RegularLL::atlasGrid() const {
+    using namespace atlas::grid::lonlat;
+    const Shift shift = atlasShift();
+
+    // return non-shifted/shifted grid
+    return shift(Shift::LON|Shift::LAT)? static_cast<LonLat*>(new ShiftedLonLat (ni_, nj_, atlasDomain()))
+         : shift(Shift::LON)?            static_cast<LonLat*>(new ShiftedLon    (ni_, nj_, atlasDomain()))
+         : shift(Shift::LAT)?            static_cast<LonLat*>(new ShiftedLat    (ni_, nj_, atlasDomain()))
+         :                               static_cast<LonLat*>(new RegularLonLat (ni_, nj_, atlasDomain()));
 }
 
 

@@ -20,6 +20,7 @@
 #include <sstream>
 #include "eckit/exception/Exceptions.h"
 #include "eckit/memory/ScopedPtr.h"
+#include "eckit/types/FloatCompare.h"
 #include "atlas/grid/Domain.h"
 #include "mir/api/MIRJob.h"
 #include "mir/log/MIR.h"
@@ -62,48 +63,6 @@ inline void between_0_and_360(double &x) {
 }
 
 
-bool Reduced::globalDomain() const {
-
-    // TODO: cache me
-
-    if (bbox_.west() == 0 && bbox_.east() == 360 && bbox_.north() == 90 && bbox_.south() == -90) {
-        return true;
-    }
-
-    const std::vector<long> &pl = pls();
-    ASSERT(pl.size());
-
-    if (N_ * 2 == pl.size()) {
-
-        long most_points = pl[0];
-        for (size_t i = 1; i < pl.size(); i++) {
-            most_points = std::max(most_points, pl[i]);
-        }
-
-        double last = 360.0 - 360.0 / most_points ;
-        double ew = bbox_.east() - bbox_.west();
-
-        // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree
-        // Use the precision given by GRIB in this check
-
-        const double epsilon = 1.0 / 1000.0;
-
-
-        if (ew > last) {
-            // The dissemination will put in the GRIB header what is sepecified by the user
-            // so, for example if the user specify 359.999999 as the eastern longitude, this
-            // value will end up in the header
-            return true;
-        }
-
-        bool global = fabs(ew - last) < epsilon;
-        return global;
-    }
-
-    return false;
-}
-
-
 void Reduced::fill(grib_info &info) const  {
 
     // See copy_spec_from_ksec.c in libemos for info
@@ -133,7 +92,7 @@ void Reduced::fill(grib_info &info) const  {
 
     */
 
-    const bool global = globalDomain();
+    const bool global = atlasDomain().isGlobal();
 
     size_t j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
@@ -153,7 +112,7 @@ void Reduced::fill(grib_info &info) const  {
 
 
 void Reduced::fill(api::MIRJob &job) const  {
-    ASSERT(globalDomain());
+    ASSERT(atlasDomain().isGlobal());
     job.set("pl", pls());
 }
 
@@ -162,45 +121,51 @@ class GaussianIterator : public Iterator {
 
     const std::vector<double>& latitudes_;
     const std::vector<long>& pl_;
-    util::BoundingBox bbox_;
+    const atlas::grid::Domain domain_;
 
     size_t ni_;
-    size_t nj_;
+    const size_t nj_;
 
     size_t i_;
     size_t j_;
     size_t k_;
     size_t p_;
+    size_t imax_;
 
     size_t count_;
 
     virtual void print(std::ostream &out) const {
-        out << "GaussianIterator[]";
+        out << "GaussianIterator["
+            <<  "domain=" << domain_
+            << ",ni="     << ni_
+            << ",nj="     << nj_
+            << ",i="      << i_
+            << ",j="      << j_
+            << ",k="      << k_
+            << ",p="      << p_
+            << ",imax="   << imax_
+            << ",count="  << count_
+            << "]";
     }
 
     virtual bool next(double &lat, double &lon) {
-        while (j_ < nj_ && i_ < ni_) {
+        while (j_ < nj_ && i_ < imax_) {
+
             ASSERT(j_ + k_ < latitudes_.size());
             lat = latitudes_[j_ + k_];
-            lon = (i_ * 360.0) / ni_;
+            lon = (i_ * 360.) / ni_;
+
             i_++;
-            if (i_ == ni_) {
-
+            if (i_ == imax_) {
                 j_++;
-                i_ = 0;
-
                 if (j_ < nj_) {
                     ASSERT(p_ < pl_.size());
-                    ni_ = pl_[p_++];
+                    ni_ = static_cast<size_t>(pl_[p_++]);
                 }
-
+                position_lon_idx(i_, imax_, domain_, ni_);
             }
 
-            // eckit::Log::trace<MIR>() << "++++++ " << lat << " " << lon << " - " << bbox_ << " -> " << bbox_.contains(lat, lon) << std::endl;
-
-            // eckit::Log::trace<MIR>() << "++++++ " << j_ << " " << nj_ << " - " << i_ << " " << ni_ << std::endl;
-
-            if (bbox_.contains(lat, lon)) {
+            if (domain_.contains(lon,lat)) {
                 count_++;
                 return true;
             }
@@ -210,45 +175,111 @@ class GaussianIterator : public Iterator {
 
 public:
 
-    GaussianIterator(const std::vector<double>& latitudes, const std::vector<long>& pl, const util::BoundingBox &bbox):
+    GaussianIterator(const std::vector<double>& latitudes, const std::vector<long>& pl, const atlas::grid::Domain& dom) :
         latitudes_(latitudes),
         pl_(pl),
-        bbox_(bbox),
-        i_(0),
+        domain_(dom),
+        nj_(pl_.size()),
         j_(0),
-        k_(0),
         p_(0),
         count_(0) {
 
-        // latitude_ covers the whole globe, while pl_ covers only the current bbox_
+        // latitudes_/pl_ cover the whole globe
         ASSERT(pl_.size() <= latitudes_.size());
+        ASSERT(pl_.size() >= 2);
 
-        // Position to first latitude
-        while (k_ < latitudes_.size() && bbox_.north() < latitudes_[k_]) {
-            k_++;
-        }
-        ASSERT(k_ < latitudes_.size());
-
-        ni_ = pl_[p_++];
-        nj_ = pl_.size();
+        // position to first latitude and first/last longitude
+        ni_ = static_cast<size_t>(pl_[p_++]);
+        position_lat_idx(k_,        domain_, latitudes_);
+        position_lon_idx(i_, imax_, domain_, ni_);
 
         // eckit::Log::trace<MIR>() << *this << std::endl;
+    }
+
+private:
+
+    static void position_lat_idx(size_t& j, const atlas::grid::Domain& dom, const std::vector<double>& lats) {
+        j=0;
+        while (j < lats.size() && dom.north() < lats[j]) {
+            j++;
+        }
+        ASSERT(j < lats.size());
+    }
+
+    static void position_lon_idx(size_t& imin, size_t& imax, const atlas::grid::Domain& dom, const size_t& n) {
+        typedef eckit::FloatCompare<double> cmp;
+        const double west_positive = dom.west() + (cmp::isStrictlyGreater(0., dom.west())? 360. : 0.);
+        const double east_positive = dom.east() + (cmp::isStrictlyGreater(0., dom.west())? 360. : 0.);
+        ASSERT(cmp::isApproximatelyGreaterOrEqual(360., east_positive-west_positive));
+
+        // assuming n>0, returned range satisfies: 0 <= imin < imax; and imax - imin <= n
+        imin = 0;
+        while (imin<n && cmp::isStrictlyGreater(west_positive, (imin * 360.) / n)) {
+            ++imin;
+        }
+        imax = (imin = imin%n);
+        while (imax-imin<n && cmp::isApproximatelyGreaterOrEqual(east_positive, (imax * 360.) / n)) {
+            ++imax;
+        }
+        ASSERT(imax > imin);
     }
 
 };
 
 
 atlas::grid::Domain Reduced::atlasDomain() const {
-    return globalDomain()
-           ? atlas::grid::Domain::makeGlobal()
-           : atlas::grid::Domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
+    typedef eckit::FloatCompare<double> cmp;
+
+    // calculate EW and NS increments
+    const std::vector<long>& pl = pls();
+    const std::vector<double>& lats = latitudes();
+    ASSERT(pl.size());
+    ASSERT(lats.size());
+
+    long max_pl = pl[0];
+    for (size_t i = 0; i<pl.size(); i++) {
+        max_pl = std::max(max_pl, pl[i]);
+    }
+
+    double max_inc_north_south = std::numeric_limits<double>::epsilon();
+    for (size_t j=1; j<lats.size(); ++j) {
+        max_inc_north_south = std::max(max_inc_north_south, lats[j-1]-lats[j]);
+    }
+    ASSERT(cmp::isStrictlyGreater(max_inc_north_south, 0));
+
+    const double ew = bbox_.east() - bbox_.west();
+    const double inc_west_east = max_pl? ew/double(max_pl) : 0.;
+
+    // confirm domain limits
+    const double epsilon_grib1 = 1.0 / 1000.0;
+
+    const bool isPeriodicEastWest =
+               cmp::isApproximatelyEqual(360., ew + inc_west_east)
+
+            // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree. Use the precision given by GRIB in this check
+            || cmp::isApproximatelyEqual(360., ew + inc_west_east, epsilon_grib1 )
+
+            // The dissemination will put in the GRIB header what is specified by the user
+            // so, for example if the user specify 359.999999 as the eastern longitude, this
+            // value will end up in the header
+            || (ew + inc_west_east > 360.);
+
+    const bool
+            includesPoleNorth = cmp::isApproximatelyEqual(bbox_.north(),  90, max_inc_north_south),
+            includesPoleSouth = cmp::isApproximatelyEqual(bbox_.south(), -90, max_inc_north_south),
+            isNorthAtEquator  = cmp::isApproximatelyEqual(bbox_.north(),   0, max_inc_north_south),
+            isSouthAtEquator  = cmp::isApproximatelyEqual(bbox_.south(),   0, max_inc_north_south);
+
+    return atlas::grid::Domain(
+                includesPoleNorth?   90 : isNorthAtEquator? 0 : bbox_.north(),
+                isPeriodicEastWest?   0 : bbox_.west(),
+                includesPoleSouth?  -90 : isSouthAtEquator? 0 : bbox_.south(),
+                isPeriodicEastWest? 360 : bbox_.east() );
 }
 
 
 Iterator *Reduced::unrotatedIterator() const {
-    // Use a global bounding box if global domain, to avoid rounding issues
-    // due to GRIB (in)accuracies
-    return new GaussianIterator(latitudes(), pls(), globalDomain() ? util::BoundingBox() : bbox_);
+    return new GaussianIterator(latitudes(), pls(), atlasDomain());
 }
 
 
@@ -323,7 +354,7 @@ void Reduced::validate(const std::vector<double> &values) const {
 
     size_t count = 0;
 
-    if (globalDomain()) {
+    if (atlasDomain().isGlobal()) {
         const std::vector<long> &pl = pls();
         for (size_t i = 0; i < pl.size(); i++) {
             count += static_cast<size_t>(pl[i]);
@@ -334,17 +365,11 @@ void Reduced::validate(const std::vector<double> &values) const {
         double lat;
         double lon;
         while (it->next(lat, lon)) {
-            if (bbox_.contains(lat, lon)) {
-                ++count;
-            }
+            ++count;
         }
     }
 
-    if (values.size() != count) {
-        std::ostringstream oss;
-        oss << "Reduced::validate " << *this << " got: " << values.size() << " expected: " << count;
-        throw eckit::SeriousBug(oss.str());
-    }
+    eckit::Log::trace<MIR>() << "Reduced::validate " << values.size() << " count=" << count << std::endl;
     ASSERT(values.size() == count);
 }
 

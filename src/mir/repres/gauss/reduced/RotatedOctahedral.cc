@@ -64,7 +64,6 @@ Iterator* RotatedOctahedral::rotatedIterator() const {
 
 
 atlas::grid::Grid *RotatedOctahedral::atlasGrid() const {
-    ASSERT(globalDomain()); // Atlas support needed for non global grids
     return new util::RotatedGrid(
                 Octahedral::atlasGrid(),
                 rotation_.south_pole_latitude(),
