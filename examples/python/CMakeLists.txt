@@ -79,3 +79,13 @@ ecbuild_add_test( TARGET eccodes_p_bufr_encode_flight_test
                   RESOURCES   flight_data.csv
                   TEST_DEPENDS eccodes_download_bufrs
 )
+
+# Conditional tests
+ecbuild_add_test( TARGET eccodes_p_grib_ccsds_test
+                  TYPE       SCRIPT
+                  DEPENDS    ${ptools}
+                  COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds.sh
+                  CONDITION  HAVE_PYTHON AND HAVE_AEC
+                  ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
+                  TEST_DEPENDS eccodes_download_gribs
+)
