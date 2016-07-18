@@ -7,7 +7,6 @@ if test "x$ECCODES_TEST_VERBOSE_OUTPUT" != "x"; then
    set -x
 fi
 
-proj_dir=@PROJECT_SOURCE_DIR@
 data_dir=@PROJECT_BINARY_DIR@/data
 
 # use definitions from binary dir to test if installation will be correct
@@ -24,5 +23,5 @@ samp_dir="@CMAKE_BINARY_DIR@/share/@PROJECT_NAME@/samples"
 ECCODES_SAMPLES_PATH=${samp_dir}
 export ECCODES_SAMPLES_PATH
 
-PYTHONPATH=$proj_dir/python:@PROJECT_BINARY_DIR@/python:$PYTHONPATH
+PYTHONPATH=@PROJECT_BINARY_DIR@/python:$PYTHONPATH
 export PYTHONPATH
