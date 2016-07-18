@@ -64,6 +64,10 @@ if with_aec:
 setup(name='eccodes',
       version='@ECCODES_VERSION_STR@',
       author='ECMWF',
-      description="""Python interface for eccodes and grib_api""",
+      author_email='Software.Support@ecmwf.int',
+      description="""Python interface for ecCodes""",
+      license='Apache License, Version 2.0',
+      url='https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home',
+      download_url='https://software.ecmwf.int/wiki/display/ECC/Releases',
       ext_modules=[Extension('gribapi._gribapi_swig', **attdict)],
       packages=['eccodes', 'gribapi'])
