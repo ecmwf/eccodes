@@ -105,6 +105,10 @@ list( APPEND tests2
     local_MeteoFrance
     neg_fctime
 )
+if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
+    list(APPEND tests2 bufr_dump_fortran)
+endif()
+
 
 # These tests do not require any data downloads
 foreach( test ${tests1} )
