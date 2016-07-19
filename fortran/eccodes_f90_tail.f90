@@ -1065,7 +1065,7 @@ subroutine codes_new_from_message_int4 ( msgid, message, status )
     call grib_new_from_message_int4 ( msgid, message, status )
 end subroutine codes_new_from_message_int4
 
-  !> Create a new valid gribid from a sample contained in a samples directory pointed
+  !> Create a new valid gribid from a GRIB sample contained in a samples directory pointed
   !> by the environment variable ECCODES_SAMPLES_PATH.
   !> To know where the samples directory is run the codes_info tool.\n
   !>
@@ -1079,13 +1079,40 @@ end subroutine codes_new_from_message_int4
   !> @param gribid       id of the grib loaded in memory
   !> @param samplename name of the sample to be used
   !> @param status       CODES_SUCCESS if OK, integer value on error
-subroutine codes_new_from_samples  ( gribid, samplename, status )
+subroutine codes_grib_new_from_samples  ( gribid, samplename, status )
     integer(kind=kindOfInt),          intent(out) :: gribid
     character(len=*), intent(in)                  :: samplename
     integer(kind=kindOfInt),optional, intent(out) :: status
 
     call grib_new_from_samples  ( gribid, samplename, status )
-end subroutine codes_new_from_samples
+end subroutine codes_grib_new_from_samples
+
+  !> Create a new valid bufrid from a BUFR sample contained in a samples directory pointed
+  !> by the environment variable ECCODES_SAMPLES_PATH.
+  !> To know where the samples directory is run the codes_info tool.\n
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref codes_get_error_string.
+  !>
+  !>
+  !>
+  !> @param bufrid       id of the BUFR loaded in memory
+  !> @param samplename name of the sample to be used
+  !> @param status       CODES_SUCCESS if OK, integer value on error
+subroutine codes_bufr_new_from_samples  ( bufrid, samplename, status )
+      integer(kind=kindOfInt),          intent(out) :: bufrid
+      character(len=*), intent(in)                  :: samplename
+      integer(kind=kindOfInt),optional, intent(out) :: status
+      integer(kind=kindOfInt)                       :: iret
+
+      iret=codes_bufr_f_new_from_samples ( bufrid, samplename )
+      if (present(status)) then
+         status = iret
+      else
+         call grib_check(iret,'codes_bufr_new_from_samples','('//samplename//')')
+      endif
+end subroutine codes_bufr_new_from_samples
 
   !> Free the memory for the message referred as msgid.
   !>

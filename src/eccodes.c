@@ -159,7 +159,7 @@ grib_handle* codes_handle_new_from_message_copy(grib_context* c, const void* dat
 {
     return grib_handle_new_from_message_copy(c,data,data_len);
 }
-grib_handle* codes_handle_new_from_samples (grib_context* c, const char* res_name)
+grib_handle* codes_grib_handle_new_from_samples (grib_context* c, const char* res_name)
 {
     return grib_handle_new_from_samples(c, res_name);
 }

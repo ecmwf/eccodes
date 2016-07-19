@@ -1317,6 +1317,30 @@ int grib_f_new_from_samples(int* gid, char* name , int lname){
 }
 
 /*****************************************************************************/
+int codes_bufr_f_new_from_samples_(int* gid, char* name , int lname){
+    char fname[1024];
+    grib_handle *h = NULL;
+
+    h = codes_bufr_handle_new_from_samples(NULL,cast_char(fname,name,lname));
+    /*   grib_context_set_debug(h->context,1);*/
+
+    if(h){
+        push_handle(h,gid);
+        return GRIB_SUCCESS;
+    }
+
+    *gid = -1;
+    return  GRIB_FILE_NOT_FOUND;
+}
+
+int codes_bufr_f_new_from_samples__(int* gid, char* name , int lname){
+    return  codes_bufr_f_new_from_samples_( gid,  name ,  lname);
+}
+int codes_bufr_f_new_from_samples(int* gid, char* name , int lname){
+    return  codes_bufr_f_new_from_samples_( gid,  name ,  lname);
+}
+
+/*****************************************************************************/
 int grib_f_clone_(int* gidsrc,int* giddest){
     grib_handle *src  = get_handle(*gidsrc);
     grib_handle *dest = NULL;

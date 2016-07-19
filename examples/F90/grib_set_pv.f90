@@ -48,7 +48,7 @@ program grib_set_pv
   
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls
-  call codes_new_from_samples(igrib, "reduced_gg_sfc_grib1")
+  call codes_grib_new_from_samples(igrib, "reduced_gg_sfc_grib1")
 
   !     set levtype to ml (model level)
   call codes_set(igrib,'typeOfLevel','hybrid')

@@ -70,6 +70,36 @@ static grib_handle* try_template(grib_context* c,const char* dir,const char* nam
     return g;
 }
 
+static grib_handle* try_bufr_template(grib_context* c,const char* dir,const char* name)
+{
+    char path[1024];
+    grib_handle *g = NULL;
+    int err = 0;
+
+    sprintf(path,"%s/%s.tmpl",dir,name);
+
+    if (c->debug==-1) {
+        printf("ECCODES DEBUG: try_template path='%s'\n", path);
+    }
+
+    if(codes_access(path,F_OK) == 0)
+    {
+        FILE* f = codes_fopen(path,"r");
+        if(!f)
+        {
+            grib_context_log(c,GRIB_LOG_PERROR,"cannot open %s",path);
+            return NULL;
+        }
+        g = codes_bufr_handle_new_from_file(c,f,&err);
+        if (!g) {
+            grib_context_log(c,GRIB_LOG_ERROR,"cannot create BUFR handle from %s",path);
+        }
+        fclose(f);
+    }
+
+    return g;
+}
+
 static char* try_template_path(grib_context* c,const char* dir,const char* name)
 {
     char path[1024];
@@ -108,6 +138,33 @@ grib_handle* grib_external_template(grib_context* c,const char* name)
 
     *p = 0;
     return g = try_template(c,buffer,name);
+}
+
+grib_handle* bufr_external_template(grib_context* c,const char* name)
+{
+    const char *base = c->grib_samples_path;
+    char buffer[1024];
+    char *p = buffer;
+    grib_handle *g = NULL;
+
+    if(!base) return NULL;
+
+    while(*base)
+    {
+        if(*base == ':')
+        {
+            *p = 0;
+            g = try_bufr_template(c,buffer,name);
+            if(g) return g;
+            p = buffer;
+            base++; /*advance past delimiter*/
+        }
+        *p++ = *base++;
+    }
+
+    *p = 0;
+    g = try_bufr_template(c,buffer,name);
+    return g;
 }
 
 char* grib_external_template_path(grib_context* c,const char* name)

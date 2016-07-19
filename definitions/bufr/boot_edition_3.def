@@ -17,9 +17,11 @@ alias editionNumber=edition;
 
 template    section_1 "bufr/section.1.3.def"   ;
 
-flagbit section2Present(section1Flags,7) = 1;
+flagbit localSectionPresent(section1Flags,7) = 1;
+alias section2Present=localSectionPresent;
 
-if(section2Present){
+
+if(localSectionPresent){
    template section_2 "bufr/section.2.def"     ;
 }
 else {

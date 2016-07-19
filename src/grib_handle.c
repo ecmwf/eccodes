@@ -262,6 +262,29 @@ grib_handle* grib_handle_new_from_samples ( grib_context* c, const char* name )
     return g;
 }
 
+grib_handle* codes_bufr_handle_new_from_samples ( grib_context* c, const char* name )
+{
+    grib_handle* g = 0;
+    if ( c == NULL ) c = grib_context_get_default();
+    grib_context_set_handle_file_count(c,0);
+    grib_context_set_handle_total_count(c,0);
+
+    /*
+       g = grib_internal_template(c,name);
+       if(g) return g;
+     */
+    if (c->debug) {
+        printf("ECCODES DEBUG: grib_handle_new_from_samples '%s'\n", name);
+    }
+
+    g=bufr_external_template ( c,name );
+    if ( !g )
+        grib_context_log ( c,GRIB_LOG_ERROR,"Unable to load sample file %s.tmpl\n                    in %s",
+                name, c->grib_samples_path );
+
+    return g;
+}
+
 int grib_write_message(grib_handle* h,const char* file,const char* mode)
 {
     FILE* fh=0;

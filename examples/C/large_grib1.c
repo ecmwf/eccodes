@@ -33,7 +33,7 @@ int main()
         values[i] = 10*rand;
     }
 
-    h = codes_handle_new_from_samples(0, "GRIB1");
+    h = codes_grib_handle_new_from_samples(0, "GRIB1");
 
     CODES_CHECK(codes_set_long(h, "Ni", ni), 0);
     CODES_CHECK(codes_set_long(h, "Nj", nj), 0);

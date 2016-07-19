@@ -509,7 +509,7 @@ static void _dump_long_array(grib_handle* h,FILE* f,const char* key,const char* 
     fprintf(f,"  if(allocated(ivalues)) deallocate(ivalues)\n");
     fprintf(f,"  allocate(ivalues(%ld))\n",size);
 
-    fprintf(f,"  ivalues=(/ %s",print_key);
+    fprintf(f,"  ivalues=(/ ");
 
     val=grib_context_malloc_clear(h->context,sizeof(long)*size);
     grib_get_long_array(h,key,val,&size);
@@ -597,12 +597,23 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a)
 
 static void header(grib_dumper* d,grib_handle* h) {
   grib_dumper_fortran *self = (grib_dumper_fortran*)d;
+  char sampleName[200]={0};
+  long localSectionPresent,edition;
+
+  grib_get_long(h,"localSectionPresent",&localSectionPresent);
+  grib_get_long(h,"edition",&edition);
+
+  if (localSectionPresent)
+    sprintf(sampleName,"BUFR%ld_local.bufr",edition);
+  else
+    sprintf(sampleName,"BUFR%ld.bufr",edition);
+
   fprintf(self->dumper.out,"!  This program has been automatically generated with bufr_dump -Efortran\n");
   fprintf(self->dumper.out,"program bufr_create_message\n");
   fprintf(self->dumper.out,"  use eccodes\n");
   fprintf(self->dumper.out,"  implicit none\n");
   fprintf(self->dumper.out,"  integer                                       :: iret\n");
-  fprintf(self->dumper.out,"  integer                                       :: infile,outfile\n");
+  fprintf(self->dumper.out,"  integer                                       :: outfile\n");
   fprintf(self->dumper.out,"  integer                                       :: ibufr\n");
   fprintf(self->dumper.out,"  integer                                       :: count=0\n");
   fprintf(self->dumper.out,"  integer(kind=4), dimension(:), allocatable    :: ivalues\n");
@@ -610,8 +621,10 @@ static void header(grib_dumper* d,grib_handle* h) {
   fprintf(self->dumper.out,"  integer, parameter  :: max_strsize = 100\n");
   fprintf(self->dumper.out,"  character(len=max_strsize) , dimension(:),allocatable   :: svalues\n");
   fprintf(self->dumper.out,"  real(kind=8), dimension(:), allocatable       :: rvalues\n");
-  fprintf(self->dumper.out,"\n\n  call codes_open_file(infile,'infile.bufr','r')\n");
-  fprintf(self->dumper.out,"  call codes_bufr_new_from_file(infile,ibufr,iret)\n");
+  /* fprintf(self->dumper.out,"\n\n  call codes_open_file(infile,'infile.bufr','r')\n"); */
+  /* fprintf(self->dumper.out,"  call codes_bufr_new_from_file(infile,ibufr,iret)\n"); */
+  fprintf(self->dumper.out,"  call codes_bufr_new_from_samples(ibufr,'%s',iret)\n",sampleName);
+
   fprintf(self->dumper.out,"  if (iret/=CODES_SUCCESS) then\n");
   fprintf(self->dumper.out,"    print *,'ERROR reading BUFR from input file'\n");
   fprintf(self->dumper.out,"    stop 1\n");
@@ -624,7 +637,6 @@ static void footer(grib_dumper* d,grib_handle* h) {
   fprintf(self->dumper.out,"  call codes_open_file(outfile,'outfile.bufr','w')\n");
   fprintf(self->dumper.out,"  call codes_write(ibufr,outfile)\n");
   fprintf(self->dumper.out,"  call codes_close_file(outfile)\n");
-  fprintf(self->dumper.out,"  call codes_close_file(infile)\n");
   fprintf(self->dumper.out,"  call codes_release(ibufr)\n");
   fprintf(self->dumper.out,"  if(allocated(ivalues)) deallocate(ivalues)\n");
   fprintf(self->dumper.out,"  if(allocated(rvalues)) deallocate(rvalues)\n");
