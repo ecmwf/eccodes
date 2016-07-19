@@ -405,7 +405,6 @@ void codes_dump_content(grib_handle* h,FILE* out,const char* mode, unsigned long
 {
     grib_dump_content(h, out, mode, option_flags, arg);
 }
-
 /* GTS, GRIBEX */
 /******************************************************************************/
 void codes_gts_header_off(grib_context* c)

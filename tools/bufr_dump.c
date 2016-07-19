@@ -53,6 +53,7 @@ char* grib_tool_usage="[options] file file ...";
 static int json=0;
 static char* json_option=0;
 static int first_handle=1;
+static grib_dumper* dumper=0;
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
@@ -233,7 +234,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         options->error=err;
         return err;
       }
-      grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
+      dumper=grib_dump_content_with_dumper(h,dumper,stdout,options->dump_mode,options->dump_flags,0);
     }
 
     return 0;
@@ -255,6 +256,9 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     if (json) fprintf(stdout,"\n]}\n");
     if (!strcmp(options->dump_mode,"filter")) {
       fprintf(stdout,"set pack=1;\nwrite;\n");
+    }
+    if (!strcmp(options->dump_mode,"fortran")) {
+      fprintf(stdout,"end program bufr_create_message\n");
     }
 
     return 0;
