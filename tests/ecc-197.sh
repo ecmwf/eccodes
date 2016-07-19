@@ -44,7 +44,7 @@ ${tools_dir}bufr_dump $input > $TEMP
 # Ensure output JSON has all the expected contents
 # After calling 'wc' and 'set', $1 will be the line count
 set `wc -l $TEMP`
-[ "$1" = "35725" ]
+[ $1 -gt 35700 ]
 
 rm -rf $TEMP_DIR
 rm -f $TEMP

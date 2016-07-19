@@ -599,7 +599,6 @@ static void header(grib_dumper* d,grib_handle* h) {
   grib_dumper_fortran *self = (grib_dumper_fortran*)d;
   char sampleName[200]={0};
   long localSectionPresent,edition,bufrHeaderCentre,isSatellite;
-  int ret=0;
 
   grib_get_long(h,"localSectionPresent",&localSectionPresent);
   grib_get_long(h,"bufrHeaderCentre",&bufrHeaderCentre);
