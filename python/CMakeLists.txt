@@ -56,7 +56,7 @@ if( HAVE_PYTHON )
         configure_file( swig_wrap_numpy.py gribapi/gribapi_swig.py COPYONLY )
 
         # Call distutils for installation
-        install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} setup.py install --prefix ${CMAKE_INSTALL_PREFIX} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})")
+        install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} setup.py install --prefix $ENV{DESTDIR}${CMAKE_INSTALL_PREFIX} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})")
 
     endif()
 
