@@ -31,11 +31,7 @@ namespace mir {
 namespace repres {
 namespace latlon {
 
-
-namespace {
-
-
-size_t computeN(double first, double last, double inc, const char* n_name) {
+static size_t computeN(double first, double last, double inc, const char* n_name) {
     typedef eckit::FloatCompare<double> cmp;
 
     ASSERT(first <= last);
@@ -57,9 +53,6 @@ size_t computeN(double first, double last, double inc, const char* n_name) {
     }
 
     return n + 1;
-}
-
-
 }
 
 
