@@ -402,7 +402,6 @@ subroutine codes_read_bytes_char ( ifile, buffer, nbytes, status )
     character(len=1),dimension(:), intent(out)       :: buffer
     integer(kind=kindOfInt), intent(in)              :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
-    integer(kind=kindOfSize_t)                       :: ibytes
 
     call grib_read_bytes_char ( ifile, buffer, nbytes, status )
 end subroutine codes_read_bytes_char 
@@ -445,7 +444,6 @@ subroutine codes_read_bytes_int4 ( ifile, buffer, nbytes, status )
     integer(kind=4),dimension(:), intent(out)        :: buffer
     integer(kind=kindOfInt), intent(in)              :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
-    integer(kind=kindOfSize_t)                       :: ibytes
 
     call grib_read_bytes_int4 ( ifile, buffer, nbytes, status )
 end subroutine codes_read_bytes_int4 
@@ -486,8 +484,6 @@ subroutine codes_read_bytes_real4 ( ifile, buffer, nbytes, status )
     real(kind=4),dimension(:), intent(out)           :: buffer
     integer(kind=kindOfInt), intent(in)              :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
-    integer(kind=kindOfSize_t)                       :: ibytes
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_read_bytes_real4 ( ifile, buffer, nbytes, status )
 end subroutine codes_read_bytes_real4 
@@ -509,7 +505,6 @@ subroutine codes_read_bytes_real4_size_t ( ifile, buffer, nbytes, status )
     real(kind=4),dimension(:), intent(out)           :: buffer
     integer(kind=kindOfSize_t), intent(inout)        :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_read_bytes_real4_size_t ( ifile, buffer, nbytes, status )
 end subroutine codes_read_bytes_real4_size_t 
@@ -531,8 +526,6 @@ subroutine codes_read_bytes_real8 ( ifile, buffer, nbytes, status )
     real(kind=8),dimension(:), intent(out)           :: buffer
     integer(kind=kindOfInt), intent(in)              :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
-    integer(kind=kindOfSize_t)                       :: ibytes
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_read_bytes_real8 ( ifile, buffer, nbytes, status )
 end subroutine codes_read_bytes_real8 
@@ -554,7 +547,6 @@ subroutine codes_read_bytes_real8_size_t ( ifile, buffer, nbytes, status )
     real(kind=8),dimension(:), intent(out)           :: buffer
     integer(kind=kindOfSize_t), intent(inout)        :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_read_bytes_real8_size_t ( ifile, buffer, nbytes, status )
 end subroutine codes_read_bytes_real8_size_t 
@@ -576,8 +568,6 @@ subroutine codes_read_from_file_int4 ( ifile, buffer, nbytes, status )
     integer(kind=4),dimension(:), intent(out)        :: buffer
     integer(kind=kindOfInt), intent(inout)           :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
-    integer(kind=kindOfSize_t)                       :: ibytes
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_read_from_file_int4 ( ifile, buffer, nbytes, status )
 end subroutine codes_read_from_file_int4 
@@ -599,7 +589,6 @@ subroutine codes_read_from_file_int4_size_t ( ifile, buffer, nbytes, status )
     integer(kind=4),dimension(:), intent(out)        :: buffer
     integer(kind=kindOfSize_t), intent(inout)        :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_read_from_file_int4_size_t ( ifile, buffer, nbytes, status )
 end subroutine codes_read_from_file_int4_size_t 
@@ -621,8 +610,6 @@ subroutine codes_read_from_file_real4 ( ifile, buffer, nbytes, status )
     real(kind=4),dimension(:), intent(out)           :: buffer
     integer(kind=kindOfInt), intent(inout)           :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
-    integer(kind=kindOfSize_t)                       :: ibytes
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_read_from_file_real4 ( ifile, buffer, nbytes, status )
 end subroutine codes_read_from_file_real4 
@@ -644,7 +631,6 @@ subroutine codes_read_from_file_real4_size_t ( ifile, buffer, nbytes, status )
     real(kind=4),dimension(:), intent(out)           :: buffer
     integer(kind=kindOfSize_t), intent(inout)        :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_read_from_file_real4_size_t ( ifile, buffer, nbytes, status )
 end subroutine codes_read_from_file_real4_size_t 
@@ -664,8 +650,6 @@ subroutine codes_read_from_file_real8 ( ifile, buffer, nbytes, status )
     real(kind=8),dimension(:), intent(out)           :: buffer
     integer(kind=kindOfInt), intent(inout)           :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
-    integer(kind=kindOfSize_t)                       :: ibytes
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_read_from_file_real8 ( ifile, buffer, nbytes, status )
 end subroutine codes_read_from_file_real8 
@@ -687,7 +671,6 @@ subroutine codes_read_from_file_real8_size_t ( ifile, buffer, nbytes, status )
     real(kind=8),dimension(:), intent(out)           :: buffer
     integer(kind=kindOfSize_t), intent(inout)        :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_read_from_file_real8_size_t ( ifile, buffer, nbytes, status )
 end subroutine codes_read_from_file_real8_size_t 
@@ -709,8 +692,6 @@ subroutine codes_read_from_file_char ( ifile, buffer, nbytes, status )
     character(len=1),dimension(:), intent(out)       :: buffer
     integer(kind=kindOfInt), intent(inout)           :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
-    integer(kind=kindOfSize_t)                       :: ibytes
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_read_from_file_char ( ifile, buffer, nbytes, status )
 end subroutine codes_read_from_file_char
@@ -731,7 +712,6 @@ subroutine codes_read_from_file_char_size_t ( ifile, buffer, nbytes, status )
     character(len=1),dimension(:), intent(out)       :: buffer
     integer(kind=kindOfSize_t), intent(inout)        :: nbytes
     integer(kind=kindOfInt),optional, intent(out)    :: status
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_read_from_file_char_size_t ( ifile, buffer, nbytes, status )
 end subroutine codes_read_from_file_char_size_t 
@@ -753,8 +733,6 @@ subroutine codes_write_bytes_char ( ifile, buffer, nbytes, status )
     character(len=1), dimension(:),intent(in)        :: buffer
     integer(kind=kindOfInt), intent(in)              :: nbytes
     integer(kind=kindOfInt),optional,intent(out)     :: status
-    integer(kind=kindOfSize_t)                       :: ibytes
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_write_bytes_char ( ifile, buffer, nbytes, status )
 end subroutine codes_write_bytes_char 
@@ -776,7 +754,6 @@ subroutine codes_write_bytes_char_size_t ( ifile, buffer, nbytes, status )
     character(len=1), dimension(:),intent(in)        :: buffer
     integer(kind=kindOfSize_t), intent(in)           :: nbytes
     integer(kind=kindOfInt),optional,intent(out)     :: status
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_write_bytes_char_size_t ( ifile, buffer, nbytes, status )
 end subroutine codes_write_bytes_char_size_t 
@@ -798,8 +775,6 @@ subroutine codes_write_bytes_int4 ( ifile, buffer, nbytes, status )
     integer(kind=4), dimension(:),intent(in)         :: buffer
     integer(kind=kindOfInt), intent(in)              :: nbytes
     integer(kind=kindOfInt),optional,intent(out)     :: status
-    integer(kind=kindOfSize_t)                       :: ibytes
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_write_bytes_int4 ( ifile, buffer, nbytes, status )
 end subroutine codes_write_bytes_int4 
@@ -819,7 +794,6 @@ subroutine codes_write_bytes_int4_size_t ( ifile, buffer, nbytes, status )
     integer(kind=4), dimension(:),intent(in)         :: buffer
     integer(kind=kindOfSize_t), intent(in)           :: nbytes
     integer(kind=kindOfInt),optional,intent(out)     :: status
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_write_bytes_int4_size_t ( ifile, buffer, nbytes, status )
 end subroutine codes_write_bytes_int4_size_t 
@@ -840,8 +814,6 @@ subroutine codes_write_bytes_real4 ( ifile, buffer, nbytes, status )
     real(kind=4), dimension(:),intent(in)            :: buffer
     integer(kind=kindOfInt), intent(in)              :: nbytes
     integer(kind=kindOfInt),optional,intent(out)     :: status
-    integer(kind=kindOfSize_t)                       :: ibytes
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_write_bytes_real4 ( ifile, buffer, nbytes, status )
 end subroutine codes_write_bytes_real4
@@ -863,7 +835,6 @@ subroutine codes_write_bytes_real4_size_t ( ifile, buffer, nbytes, status )
     real(kind=4), dimension(:),intent(in)            :: buffer
     integer(kind=kindOfSize_t), intent(in)           :: nbytes
     integer(kind=kindOfInt),optional,intent(out)     :: status
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_write_bytes_real4_size_t ( ifile, buffer, nbytes, status )
 end subroutine codes_write_bytes_real4_size_t 
@@ -906,7 +877,6 @@ subroutine codes_write_bytes_real8_size_t ( ifile, buffer, nbytes, status )
     real(kind=8), dimension(:),intent(in)            :: buffer
     integer(kind=kindOfSize_t), intent(in)           :: nbytes
     integer(kind=kindOfInt),optional,intent(out)     :: status
-    integer(kind=kindOfInt)                          :: iret
 
     call grib_write_bytes_real8_size_t ( ifile, buffer, nbytes, status )
 end subroutine codes_write_bytes_real8_size_t 
@@ -942,7 +912,6 @@ subroutine codes_count_in_file ( ifile, n , status)
     integer(kind=kindOfInt),intent(in)              :: ifile
     integer(kind=kindOfInt),intent(out)             :: n
     integer(kind=kindOfInt),optional,intent(out)    :: status
-    integer(kind=kindOfInt)                         :: iret
 
     call grib_count_in_file ( ifile, n , status)
 end subroutine codes_count_in_file 
@@ -952,7 +921,6 @@ subroutine codes_headers_only_new_from_file ( ifile, gribid , status)
     integer(kind=kindOfInt),intent(in)              :: ifile
     integer(kind=kindOfInt),intent(out)             :: gribid
     integer(kind=kindOfInt),optional,intent(out)    :: status
-    integer(kind=kindOfInt)                         :: iret
 
     call grib_headers_only_new_from_file ( ifile, gribid , status)
 end subroutine codes_headers_only_new_from_file 
@@ -973,7 +941,6 @@ subroutine codes_new_from_file (ifile, msgid , product_kind, status)
     integer(kind=kindOfInt),intent(out)             :: msgid
     integer(kind=kindOfInt),intent(in)              :: product_kind
     integer(kind=kindOfInt),optional,intent(out)    :: status
-    integer(kind=kindOfInt)                         :: iret
 
     if (product_kind == CODES_PRODUCT_GRIB) then
         call codes_grib_new_from_file ( ifile, msgid , status)
@@ -992,7 +959,6 @@ subroutine codes_any_new_from_file ( ifile, id , status)
     integer(kind=kindOfInt),intent(in)              :: ifile
     integer(kind=kindOfInt),intent(out)             :: id
     integer(kind=kindOfInt),optional,intent(out)    :: status
-    integer(kind=kindOfInt)                         :: iret
 
     call any_new_from_file ( ifile, id , status)
 end subroutine codes_any_new_from_file 
@@ -1002,7 +968,6 @@ subroutine codes_grib_new_from_file ( ifile, gribid , status)
     integer(kind=kindOfInt),intent(in)              :: ifile
     integer(kind=kindOfInt),intent(out)             :: gribid
     integer(kind=kindOfInt),optional,intent(out)    :: status
-    integer(kind=kindOfInt)                         :: iret
 
     call grib_new_from_file ( ifile, gribid , status)
 end subroutine codes_grib_new_from_file 
@@ -1012,7 +977,6 @@ subroutine codes_bufr_new_from_file ( ifile, bufrid , status)
     integer(kind=kindOfInt),intent(in)              :: ifile
     integer(kind=kindOfInt),intent(out)             :: bufrid
     integer(kind=kindOfInt),optional,intent(out)    :: status
-    integer(kind=kindOfInt)                         :: iret
 
     call bufr_new_from_file ( ifile, bufrid, status)
 end subroutine codes_bufr_new_from_file
@@ -1161,7 +1125,6 @@ subroutine codes_grib_util_sections_copy ( gribid_from, gribid_to, what, gribid_
     integer(kind=kindOfInt),          intent(out) :: gribid_out
     integer(kind=kindOfInt),          intent(in) :: what
     integer(kind=kindOfInt),optional, intent(out) :: status
-    integer(kind=kindOfInt)                       :: iret
 
     call grib_util_sections_copy ( gribid_from, gribid_to, what, gribid_out,status )
 end subroutine codes_grib_util_sections_copy
@@ -1224,8 +1187,6 @@ subroutine codes_grib_get_data_real4 ( gribid, lats, lons, values, status )
     real ( kind = kindOfFloat ), dimension(:),intent(out)  :: lats, lons
     real ( kind = kindOfFloat ), dimension(:),intent(out)  :: values
     integer(kind=kindOfInt),optional, intent(out)          :: status
-    integer(kind=kindOfInt)                                :: iret
-    integer(kind=kindOfSize_t)                             :: npoints
 
     call grib_get_data_real4 ( gribid, lats, lons, values, status )
 end subroutine codes_grib_get_data_real4
@@ -1250,8 +1211,6 @@ subroutine codes_grib_get_data_real8 ( gribid, lats, lons, values, status )
     real ( kind = kindOfDouble ), dimension(:),intent(out)  :: lats, lons
     real ( kind = kindOfDouble ), dimension(:),intent(out)  :: values
     integer(kind=kindOfInt),optional, intent(out)           :: status
-    integer(kind=kindOfInt)                                 :: iret
-    integer(kind=kindOfSize_t)                              :: npoints
 
     call grib_get_data_real8 ( gribid, lats, lons, values, status )
 end subroutine codes_grib_get_data_real8
@@ -1367,7 +1326,6 @@ subroutine codes_get_error_string ( error, error_message, status )
     integer(kind=kindOfInt),          intent(in)  :: error
     character(len=*), intent(out)                 :: error_message
     integer(kind=kindOfInt),optional, intent(out) :: status
-    integer(kind=kindOfInt)                       :: iret
 
     call grib_get_error_string ( error, error_message, status )
 end subroutine codes_get_error_string
@@ -1429,7 +1387,6 @@ subroutine codes_get_int(msgid,key,value,status)
     character(len=*), intent(in)                  :: key
     integer(kind = kindOfInt),     intent(out)    :: value
     integer(kind=kindOfInt),optional, intent(out) :: status
-    integer(kind=kindOfInt)                       :: iret
 
     call grib_get_int(msgid,key,value,status)
 end subroutine codes_get_int
@@ -1506,7 +1463,6 @@ subroutine codes_get_real4 ( msgid, key, value, status )
     character(len=*),                 intent(in)             :: key
     real(kind = kindOfFloat),         intent(out)            :: value
     integer(kind=kindOfInt),optional, intent(out)            :: status
-    integer(kind=kindOfInt)                                  :: iret
 
     call grib_get_real4 ( msgid, key, value, status )
 end subroutine codes_get_real4
@@ -1562,7 +1518,6 @@ subroutine codes_get_string_array ( msgid, key, value, status )
     integer(kind=kindOfInt)                            :: iret
     integer(kind=kindOfInt)                            :: nb_values
     integer(kind=kindOfInt)                            :: slen
-    integer(kind=kindOfInt)                            :: i,s,j
 
     if (allocated(value) .eqv. .false.) then
       iret=CODES_NULL_POINTER
@@ -1600,7 +1555,7 @@ subroutine codes_set_string_array ( gribid, key, value, status )
     integer(kind=kindOfInt)                            :: iret
     integer(kind=kindOfInt)                            :: nb_values
     integer(kind=kindOfInt)                            :: slen
-    integer(kind=kindOfInt)                            :: i,s,j,l
+    integer(kind=kindOfInt)                            :: i,j
 
     nb_values=size(value)
     slen=len(value(0))
@@ -1720,8 +1675,8 @@ subroutine codes_get_long_array ( msgid, key, value, status )
       enddo
     endif
     if (iret /= 0) then
-	  call grib_f_write_on_fail(msgid)
-	endif
+      call grib_f_write_on_fail(msgid)
+    endif
     if (present(status)) then
       status = iret
     else
@@ -1793,9 +1748,9 @@ subroutine codes_get_real4_array ( msgid, key, value, status)
         value(i)=value(1)
       enddo
     endif
-	if (iret /= 0) then
-	  call grib_f_write_on_fail(msgid)
-	endif
+    if (iret /= 0) then
+      call grib_f_write_on_fail(msgid)
+    endif
     if (present(status)) then
        status = iret
     else
@@ -1957,7 +1912,6 @@ subroutine codes_set_int ( msgid, key, value, status )
     character(len=*), intent(in)                  :: key
     integer(kind=kindOfInt),          intent(in)  :: value
     integer(kind=kindOfInt),optional, intent(out) :: status
-    integer(kind=kindOfInt)                       :: iret
 
     call grib_set_int ( msgid, key, value, status )
 end subroutine codes_set_int
@@ -1978,7 +1932,6 @@ subroutine codes_set_long ( msgid, key, value, status )
     character(len=*), intent(in)                  :: key
     integer(kind=kindOfLong),         intent(in)  :: value
     integer(kind=kindOfInt),optional, intent(out) :: status
-    integer(kind=kindOfInt)                       :: iret
 
     call grib_set_long ( msgid, key, value, status )
 end subroutine codes_set_long
@@ -1999,7 +1952,6 @@ subroutine codes_set_real4 ( msgid, key, value, status )
     character(len=*),                        intent(in)  :: key
     real(kind = kindOfFloat),                intent(in)  :: value
     integer(kind=kindOfInt),optional,        intent(out) :: status
-    integer(kind=kindOfInt)                              :: iret
 
     call grib_set_real4 ( msgid, key, value, status )
 end subroutine codes_set_real4 
@@ -2019,7 +1971,6 @@ subroutine codes_set_real8 ( msgid, key, value, status )
     character(len=*),                         intent(in)  :: key
     real(kind = kindOfDouble),                intent(in)  :: value
     integer(kind=kindOfInt),optional,         intent(out) :: status
-    integer(kind=kindOfInt)                               :: iret
 
     call grib_set_real8 ( msgid, key, value, status )
 end subroutine codes_set_real8 
@@ -2099,8 +2050,6 @@ subroutine codes_set_real4_array ( msgid, key, value, status )
     character(len=*),                        intent(in)  :: key
     real(kind = kindOfFloat), dimension(:),  intent(in)  :: value
     integer(kind=kindOfInt),optional,        intent(out) :: status
-    integer(kind=kindOfInt)                              :: iret
-    integer(kind=kindOfInt)                              :: nb_values
 
     call grib_set_real4_array ( msgid, key, value, status )
 end subroutine codes_set_real4_array 
@@ -2120,8 +2069,6 @@ subroutine codes_set_real8_array ( msgid, key, value, status)
     character(len=*),                         intent(in)  :: key
     real(kind = kindOfDouble), dimension(:),  intent(in)  :: value
     integer(kind=kindOfInt),optional,         intent(out) :: status
-    integer(kind=kindOfInt)                               :: iret
-    integer(kind=kindOfInt)                               :: nb_values
 
     call grib_set_real8_array ( msgid, key, value, status)
 end subroutine codes_set_real8_array
@@ -2143,8 +2090,6 @@ subroutine codes_set_force_real4_array ( msgid, key, value, status )
     character(len=*),                        intent(in)  :: key
     real(kind = kindOfFloat), dimension(:),  intent(in)  :: value
     integer(kind=kindOfInt),optional,        intent(out) :: status
-    integer(kind=kindOfInt)                              :: iret
-    integer(kind=kindOfInt)                              :: nb_values
 
     call grib_set_force_real4_array ( msgid, key, value, status )
 end subroutine codes_set_force_real4_array
@@ -2165,8 +2110,6 @@ subroutine codes_set_force_real8_array ( msgid, key, value, status)
     character(len=*),                         intent(in)  :: key
     real(kind = kindOfDouble), dimension(:),  intent(in)  :: value
     integer(kind=kindOfInt),optional,         intent(out) :: status
-    integer(kind=kindOfInt)                               :: iret
-    integer(kind=kindOfInt)                               :: nb_values
 
     call grib_set_force_real8_array ( msgid, key, value, status)
 end subroutine codes_set_force_real8_array
@@ -2187,7 +2130,6 @@ subroutine codes_set_string  ( msgid, key, value , status)
     character(len=*),                             intent(in)  :: key
     character(len=*),                             intent(in)  :: value
     integer(kind=kindOfInt),optional,             intent(out) :: status
-    integer(kind=kindOfInt)                                   :: iret
 
     call grib_set_string  ( msgid, key, value , status)
 end subroutine codes_set_string
@@ -2205,8 +2147,6 @@ subroutine codes_get_message_size_int  ( msgid, nbytes, status)
     integer(kind=kindOfInt),                      intent(in)  :: msgid
     integer(kind=kindOfInt),                      intent(out) :: nbytes
     integer(kind=kindOfInt),optional,             intent(out) :: status
-    integer(kind=kindOfInt)                                   :: iret
-    integer(kind=kindOfSize_t)                                :: ibytes
 
     call grib_get_message_size_int  ( msgid, nbytes, status)
 end subroutine codes_get_message_size_int
@@ -2225,7 +2165,6 @@ subroutine codes_get_message_size_size_t  ( msgid, nbytes, status)
     integer(kind=kindOfInt),                      intent(in)  :: msgid
     integer(kind=kindOfSize_t),                   intent(out) :: nbytes
     integer(kind=kindOfInt),optional,             intent(out) :: status
-    integer(kind=kindOfInt)                                   :: iret
 
     call grib_get_message_size_size_t  ( msgid, nbytes, status)
 end subroutine codes_get_message_size_size_t
@@ -2260,7 +2199,6 @@ subroutine codes_write ( msgid, ifile  , status)
     integer(kind=kindOfInt),          intent(in)  :: msgid
     integer(kind=kindOfInt),          intent(in)  :: ifile
     integer(kind=kindOfInt),optional, intent(out) :: status
-    integer(kind=kindOfInt)               :: iret
 
     call grib_write ( msgid, ifile  , status)
 end subroutine codes_write
@@ -2278,7 +2216,6 @@ subroutine codes_grib_multi_write ( multigribid, ifile  , status)
     integer(kind=kindOfInt),          intent(in)  :: multigribid
     integer(kind=kindOfInt),          intent(in)  :: ifile
     integer(kind=kindOfInt),optional, intent(out) :: status
-    integer(kind=kindOfInt)               :: iret
 
     call grib_multi_write ( multigribid, ifile  , status)
 end subroutine codes_grib_multi_write 
@@ -2333,8 +2270,6 @@ subroutine codes_grib_find_nearest_multiple(gribid,is_lsm,  &
     real(kind = kindOfDouble), dimension(:), intent(out)   :: values
     integer(kind = kindOfInt), dimension(:), intent(out)  :: indexes
     integer(kind=kindOfInt),optional, intent(out)         :: status
-    integer(kind=kindOfInt)                               :: iret
-    integer(kind=kindOfInt) :: npoints
 
     call grib_find_nearest_multiple(gribid,is_lsm,   &
                  inlats,inlons,outlats,outlons,      &
@@ -2370,7 +2305,6 @@ subroutine codes_grib_find_nearest_single(gribid,is_lsm,  &
     real(kind = kindOfDouble), intent(out)  :: value
     integer(kind = kindOfInt), intent(out)  :: index
     integer(kind=kindOfInt),optional, intent(out)  :: status
-    integer(kind=kindOfInt)                        :: iret
 
     call grib_find_nearest_single(gribid,is_lsm,  &
                  inlat,inlon,outlat,outlon,       &
@@ -2405,9 +2339,8 @@ subroutine codes_grib_find_nearest_four_single(gribid,is_lsm, &
     real(kind = kindOfDouble), dimension(4), intent(out)    :: outlon
     real(kind = kindOfDouble), dimension(4), intent(out)    :: distance
     real(kind = kindOfDouble), dimension(4), intent(out)    :: value
-    integer(kind = kindOfInt), dimension(4), intent(out)   :: index
-    integer(kind=kindOfInt),optional, intent(out)          :: status
-    integer(kind=kindOfInt)                                :: iret
+    integer(kind = kindOfInt), dimension(4), intent(out)    :: index
+    integer(kind=kindOfInt),optional, intent(out)           :: status
 
     call grib_find_nearest_four_single(gribid,is_lsm, &
                  inlat,inlon,outlat,outlon,           &
@@ -2483,7 +2416,6 @@ end subroutine codes_gribex_mode_off
 subroutine codes_skip_computed ( iterid , status)
     integer(kind=kindOfInt),          intent(in)  :: iterid
     integer(kind=kindOfInt),optional, intent(out) :: status
-    integer(kind=kindOfInt)   :: iret
 
     call grib_skip_computed ( iterid , status)
 end subroutine codes_skip_computed 
