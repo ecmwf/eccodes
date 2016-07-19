@@ -954,16 +954,32 @@ subroutine codes_new_from_file (ifile, msgid , product_kind, status)
     end if
 end subroutine codes_new_from_file
 
-!
-subroutine codes_any_new_from_file ( ifile, id , status)
+  !> Load in memory a message from a file.
+  !>
+  !> The message can be accessed through its msgid and it will be available\n
+  !> until @ref codes_release is called.\n
+  !>
+  !> @param ifile     id of the file opened with @ref codes_open_file
+  !> @param msgid     id of the message loaded in memory
+  !> @param status    CODES_SUCCESS if OK, GRIB_END_OF_FILE at the end of file, or error code
+subroutine codes_any_new_from_file ( ifile, msgid , status)
     integer(kind=kindOfInt),intent(in)              :: ifile
-    integer(kind=kindOfInt),intent(out)             :: id
+    integer(kind=kindOfInt),intent(out)             :: msgid
     integer(kind=kindOfInt),optional,intent(out)    :: status
 
-    call any_new_from_file ( ifile, id , status)
+    call any_new_from_file ( ifile, msgid , status)
 end subroutine codes_any_new_from_file 
 
-!
+  !> Load in memory a GRIB message from a file.
+  !>
+  !> The message can be accessed through its gribid and it will be available\n
+  !> until @ref codes_release is called.\n
+  !>
+  !> \b Examples: \ref grib_get_keys.f90 "grib_get_keys.f90"
+  !>
+  !> @param ifile     id of the file opened with @ref codes_open_file
+  !> @param gribid    id of the GRIB loaded in memory
+  !> @param status    CODES_SUCCESS if OK, GRIB_END_OF_FILE at the end of file, or error code
 subroutine codes_grib_new_from_file ( ifile, gribid , status)
     integer(kind=kindOfInt),intent(in)              :: ifile
     integer(kind=kindOfInt),intent(out)             :: gribid
@@ -972,7 +988,16 @@ subroutine codes_grib_new_from_file ( ifile, gribid , status)
     call grib_new_from_file ( ifile, gribid , status)
 end subroutine codes_grib_new_from_file 
 
-!
+  !> Load in memory a BUFR message from a file.
+  !>
+  !> The message can be accessed through its bufrid and it will be available\n
+  !> until @ref codes_release is called.\n
+  !>
+  !> \b Examples: \ref bufr_get_keys.f90 "bufr_get_keys.f90"
+  !>
+  !> @param ifile     id of the file opened with @ref codes_open_file
+  !> @param bufrid    id of the BUFR loaded in memory
+  !> @param status    CODES_SUCCESS if OK, GRIB_END_OF_FILE at the end of file, or error code
 subroutine codes_bufr_new_from_file ( ifile, bufrid , status)
     integer(kind=kindOfInt),intent(in)              :: ifile
     integer(kind=kindOfInt),intent(out)             :: bufrid
@@ -1505,9 +1530,17 @@ subroutine codes_get_string ( msgid, key, value, status )
     call grib_get_string ( msgid, key, value, status )
 end subroutine codes_get_string
 
- !>
- !> TODO
- !>
+  !> Get the string array of values for a key from a message.
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref codes_get_error_string.\n
+  !> Note: This function supports the \b allocatable array attribute
+  !>
+  !> @param msgid       id of the message loaded in memory
+  !> @param key         key name
+  !> @param value       string array value
+  !> @param status      CODES_SUCCESS if OK, integer value on error
 subroutine codes_get_string_array ( msgid, key, value, status )
     integer(kind=kindOfInt),               intent(in)        :: msgid
     character(len=*),      intent(in)                        :: key
@@ -1544,6 +1577,16 @@ subroutine codes_get_string_array ( msgid, key, value, status )
 
 end subroutine codes_get_string_array 
 
+  !> Set the string values for an array key in a message.
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref codes_get_error_string.
+  !>
+  !> @param msgid      id of the message loaded in memory
+  !> @param key        key name
+  !> @param value      string array value
+  !> @param status     CODES_SUCCESS if OK, integer value on error
 subroutine codes_set_string_array ( gribid, key, value, status )
     integer(kind=kindOfInt),                     intent(in)   :: gribid
     character(len=*),                            intent(in)   :: key

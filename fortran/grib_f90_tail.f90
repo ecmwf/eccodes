@@ -1316,13 +1316,21 @@
       endif
   end subroutine bufr_new_from_file
 
-  subroutine any_new_from_file ( ifile, id , status)
+  !> Load in memory a message from a file.
+  !>
+  !> The message can be accessed through its msgid and it will be available\n
+  !> until @ref codes_release is called.\n
+  !>
+  !> @param ifile     id of the file opened with @ref codes_open_file
+  !> @param msgid     id of the message loaded in memory
+  !> @param status    GRIB_SUCCESS if OK, GRIB_END_OF_FILE at the end of file, or error code
+  subroutine any_new_from_file ( ifile, msgid , status)
       integer(kind=kindOfInt),intent(in)              :: ifile
-      integer(kind=kindOfInt),intent(out)             :: id
+      integer(kind=kindOfInt),intent(out)             :: msgid
       integer(kind=kindOfInt),optional,intent(out)    :: status
       integer(kind=kindOfInt)                         :: iret
 
-      iret=any_f_new_from_file( ifile, id )
+      iret=any_f_new_from_file( ifile, msgid )
       if (present(status)) then
          status = iret
       else
