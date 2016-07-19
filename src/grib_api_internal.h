@@ -653,6 +653,7 @@ struct grib_dumper {
    unsigned long      option_flags;
    void*              arg;
    int                depth;
+   long                count;
    grib_handle*       handle;
    grib_dumper_class* cclass;
  };
