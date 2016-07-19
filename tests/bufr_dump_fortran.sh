@@ -17,8 +17,9 @@ label="bufr_dump_fortran_test"
 fLog=${label}".log"
 rm -f $fLog
 
-#Define temp generated F90 source file
+#Define temp files
 tempSrc=$label.temp.f90
+tempExe=$label.temp.exe
 
 # bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
@@ -48,12 +49,25 @@ BUILD_CONFIG=../eccodes_f90.pc
 # Work out the Fortran compiler being used
 #F90Compiler=`grep -w ECCODES_Fortran_COMPILER $BUILD_CONFIG | cut -d' ' -f3` | sed -e 's/"//g'
 F90Compiler=`grep ^FC= $BUILD_CONFIG | cut -d'=' -f2`
+LIB_ECC="../lib/libeccodes.so"
+LIB_F90="../lib/libeccodes_f90.so"
+MOD_DIR="../fortran/modules"
+COMPILE=0
+
+# Only works with dynamic libraries.
+if [ -f $F90Compiler -a -f $LIB_ECC -a -f $LIB_F90 -a -d $MOD_DIR ]; then
+  COMPILE=1
+fi
 
 for file in ${bufr_files}
 do
+  # Generate F90 code from BUFR file
   ${tools_dir}bufr_dump -Efortran ${data_dir}/bufr/$file > $tempSrc
-  # Assumes dynamic libraries exist. TODO: test with static libs
-  $F90Compiler $tempSrc -I ../fortran/modules ../lib/libeccodes_f90.so ../lib/libeccodes.so
+  
+  # Compile
+  if [ $COMPILE -eq 1 ]; then
+    $F90Compiler -o $tempExe $tempSrc -I $MOD_DIR  $LIB_F90  $LIB_ECC
+  fi
 done
 
-rm -f $tempSrc
+rm -f $tempSrc $tempExe
