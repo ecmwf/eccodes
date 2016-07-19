@@ -948,7 +948,7 @@ subroutine codes_new_from_file (ifile, msgid , product_kind, status)
         call codes_bufr_new_from_file ( ifile, msgid , status)
     else
         if (product_kind /= CODES_PRODUCT_ANY) then
-            call grib_check(CODES_INTERNAL_ERROR,'codes_new_from_file','invalid_product_kind')
+            call grib_check(CODES_INTERNAL_ERROR,'new_from_file','invalid_product_kind')
         end if
         call codes_any_new_from_file ( ifile, msgid , status)
     end if
@@ -1084,10 +1084,8 @@ end subroutine codes_grib_new_from_samples
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref codes_get_error_string.
   !>
-  !>
-  !>
   !> @param bufrid       id of the BUFR loaded in memory
-  !> @param samplename name of the sample to be used
+  !> @param samplename   name of the BUFR sample to be used
   !> @param status       CODES_SUCCESS if OK, integer value on error
 subroutine codes_bufr_new_from_samples  ( bufrid, samplename, status )
       integer(kind=kindOfInt),          intent(out) :: bufrid
@@ -1099,7 +1097,7 @@ subroutine codes_bufr_new_from_samples  ( bufrid, samplename, status )
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'codes_bufr_new_from_samples','('//samplename//')')
+         call grib_check(iret,'bufr_new_from_samples','('//samplename//')')
       endif
 end subroutine codes_bufr_new_from_samples
 
@@ -1557,7 +1555,7 @@ subroutine codes_get_string_array ( msgid, key, value, status )
       if (present(status)) then
         status = iret
       else
-        call grib_check(iret,'codes_get',key)
+        call grib_check(iret,'get',key)
       endif
     end if
 
@@ -1572,7 +1570,7 @@ subroutine codes_get_string_array ( msgid, key, value, status )
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret,'codes_get',key)
+      call grib_check(iret,'get',key)
     endif
 
 end subroutine codes_get_string_array 
@@ -1616,7 +1614,7 @@ subroutine codes_set_string_array ( gribid, key, value, status )
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret,'codes_set',key)
+      call grib_check(iret,'set',key)
     endif
 
 end subroutine codes_set_string_array 
@@ -1650,7 +1648,7 @@ subroutine codes_get_int_array ( msgid, key, value, status )
       if (present(status)) then
         status = iret
       else
-        call grib_check(iret,'codes_get',key)
+        call grib_check(iret,'get',key)
       endif
       return
     endif
@@ -1670,7 +1668,7 @@ subroutine codes_get_int_array ( msgid, key, value, status )
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret,'grib_get',key)
+      call grib_check(iret,'get',key)
     endif
 
 end subroutine codes_get_int_array 
@@ -1703,7 +1701,7 @@ subroutine codes_get_long_array ( msgid, key, value, status )
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'codes_get',key)
+         call grib_check(iret,'get',key)
       endif
       return
     endif
@@ -1723,7 +1721,7 @@ subroutine codes_get_long_array ( msgid, key, value, status )
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret,'codes_get',key)
+      call grib_check(iret,'get',key)
     endif
 
 end subroutine codes_get_long_array 
@@ -1777,7 +1775,7 @@ subroutine codes_get_real4_array ( msgid, key, value, status)
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'codes_get',key)
+         call grib_check(iret,'get',key)
       endif
       return
     endif
@@ -1797,7 +1795,7 @@ subroutine codes_get_real4_array ( msgid, key, value, status)
     if (present(status)) then
        status = iret
     else
-       call grib_check(iret,'codes_get',key)
+       call grib_check(iret,'get',key)
     endif
 end subroutine codes_get_real4_array
 
@@ -1829,7 +1827,7 @@ subroutine codes_get_real8_array ( msgid, key, value, status )
       if (present(status)) then
         status = iret
       else
-        call grib_check(iret,'grib_get',key)
+        call grib_check(iret,'get',key)
       endif
       return
     endif
@@ -1849,7 +1847,7 @@ subroutine codes_get_real8_array ( msgid, key, value, status )
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret,'grib_get',key)
+      call grib_check(iret,'get',key)
     endif
 end subroutine codes_get_real8_array 
 

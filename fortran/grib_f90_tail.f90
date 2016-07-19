@@ -28,7 +28,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_set_missing','('//key//')')
+         call grib_check(iret,'set_missing','('//key//')')
       endif
   end subroutine grib_set_missing
 
@@ -56,7 +56,7 @@
       if (present(status)) then
         status = iret
       else
-        call grib_check(iret,'grib_index_create','('//filename//')')
+        call grib_check(iret,'index_create','('//filename//')')
       endif
   end subroutine grib_index_create
 
@@ -82,7 +82,7 @@
       if (present(status)) then
           status = iret
       else
-          call grib_check(iret,'grib_index_add_file','('//filename//')')
+          call grib_check(iret,'index_add_file','('//filename//')')
       endif
   end subroutine grib_index_add_file
 
@@ -110,7 +110,7 @@
       if (present(status)) then
         status = iret
       else
-        call grib_check(iret,'grib_index_get_size','('//key//')')
+        call grib_check(iret,'index_get_size','('//key//')')
       endif
   end subroutine grib_index_get_size_long
 
@@ -138,7 +138,7 @@
       if (present(status)) then
         status = iret
       else
-        call grib_check(iret,'grib_index_get_size','('//key//')')
+        call grib_check(iret,'index_get_size','('//key//')')
       endif
   end subroutine grib_index_get_size_int
 
@@ -168,7 +168,7 @@
       if (present(status)) then
         status = iret
       else
-        call grib_check(iret,'grib_index_get','('//key//')')
+        call grib_check(iret,'index_get','('//key//')')
       endif
   end subroutine grib_index_get_int
 
@@ -198,7 +198,7 @@
       if (present(status)) then
         status = iret
       else
-        call grib_check(iret,'grib_index_get','('//key//')')
+        call grib_check(iret,'index_get','('//key//')')
       endif
   end subroutine grib_index_get_long
 
@@ -228,7 +228,7 @@
       if (present(status)) then
         status = iret
       else
-        call grib_check(iret,'grib_index_get','('//key//')')
+        call grib_check(iret,'index_get','('//key//')')
       endif
   end subroutine grib_index_get_real8
 
@@ -261,7 +261,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret,'grib_index_get','('//key//')')
+      call grib_check(iret,'index_get','('//key//')')
     endif
   end subroutine grib_index_get_string
 
@@ -290,7 +290,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret,'grib_index_select','('//key//')')
+      call grib_check(iret,'index_select','('//key//')')
     endif
   end subroutine grib_index_select_string
 
@@ -318,7 +318,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret,'grib_index_select','('//key//')')
+      call grib_check(iret,'index_select','('//key//')')
     endif
   end subroutine grib_index_select_int
 
@@ -346,7 +346,7 @@
       if (present(status)) then
         status = iret
       else
-        call grib_check(iret,'grib_index_select','('//key//')')
+        call grib_check(iret,'index_select','('//key//')')
       endif
   end subroutine grib_index_select_long
 
@@ -374,7 +374,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret,'grib_index_select','('//key//')')
+      call grib_check(iret,'index_select','('//key//')')
     endif
     end subroutine grib_index_select_real8
 
@@ -400,7 +400,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret,'grib_new_from_index','')
+      call grib_check(iret,'new_from_index','')
     endif
   end subroutine grib_new_from_index
 
@@ -426,7 +426,7 @@
     if (present(status)) then
         status = iret
     else
-        call grib_check(iret,'grib_index_read','('//filename//')')
+        call grib_check(iret,'index_read','('//filename//')')
     endif
       
   end subroutine grib_index_read
@@ -454,7 +454,7 @@
     if (present(status)) then
         status = iret
     else
-        call grib_check(iret,'grib_index_write','('//filename//')')
+        call grib_check(iret,'index_write','('//filename//')')
     endif
       
   end subroutine grib_index_write
@@ -477,7 +477,7 @@
           if (present(status)) then
             status = iret
           else
-            call grib_check(iret,'grib_index_release','')
+            call grib_check(iret,'index_release','')
           endif
   end subroutine grib_index_release
 
@@ -505,7 +505,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_open_file','('//filename//')')
+           call grib_check(iret,'open_file','('//filename//')')
         endif
   end subroutine grib_open_file
 
@@ -534,7 +534,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_read_bytes','')
+           call grib_check(iret,'read_bytes','')
         endif
   end subroutine grib_read_bytes_char
 
@@ -561,7 +561,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_read_bytes','')
+           call grib_check(iret,'read_bytes','')
         endif
   end subroutine grib_read_bytes_char_size_t
 
@@ -590,7 +590,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_read_bytes','')
+           call grib_check(iret,'read_bytes','')
         endif
   end subroutine grib_read_bytes_int4
 
@@ -617,7 +617,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_read_bytes','')
+           call grib_check(iret,'read_bytes','')
         endif
   end subroutine grib_read_bytes_int4_size_t
 
@@ -646,7 +646,7 @@
       if (present(status)) then
         status = iret
       else
-        call grib_check(iret,'grib_read_bytes','')
+        call grib_check(iret,'read_bytes','')
       endif
   end subroutine grib_read_bytes_real4
 
@@ -673,7 +673,7 @@
       if (present(status)) then
         status = iret
       else
-        call grib_check(iret,'grib_read_bytes','')
+        call grib_check(iret,'read_bytes','')
       endif
   end subroutine grib_read_bytes_real4_size_t
 
@@ -702,7 +702,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_read_bytes','')
+           call grib_check(iret,'read_bytes','')
         endif
   end subroutine grib_read_bytes_real8
 
@@ -729,7 +729,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_read_bytes','')
+           call grib_check(iret,'read_bytes','')
         endif
   end subroutine grib_read_bytes_real8_size_t
 
@@ -762,7 +762,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_read_from_file','')
+           call grib_check(iret,'read_from_file','')
         endif
   end subroutine grib_read_from_file_int4
 
@@ -789,7 +789,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_read_from_file','')
+           call grib_check(iret,'read_from_file','')
         endif
   end subroutine grib_read_from_file_int4_size_t
 
@@ -822,7 +822,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_read_from_file','')
+           call grib_check(iret,'read_from_file','')
         endif
   end subroutine grib_read_from_file_real4
 
@@ -849,7 +849,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_read_from_file','')
+           call grib_check(iret,'read_from_file','')
         endif
   end subroutine grib_read_from_file_real4_size_t
 
@@ -882,7 +882,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_read_from_file','')
+           call grib_check(iret,'read_from_file','')
         endif
   end subroutine grib_read_from_file_real8
 
@@ -909,7 +909,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_read_from_file','')
+           call grib_check(iret,'read_from_file','')
         endif
   end subroutine grib_read_from_file_real8_size_t
 
@@ -942,7 +942,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_read_from_file','')
+           call grib_check(iret,'read_from_file','')
         endif
   end subroutine grib_read_from_file_char
 
@@ -969,7 +969,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_read_from_file','')
+           call grib_check(iret,'read_from_file','')
         endif
   end subroutine grib_read_from_file_char_size_t
 
@@ -998,7 +998,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_write_bytes','')
+           call grib_check(iret,'write_bytes','')
         endif
   end subroutine grib_write_bytes_char
 
@@ -1025,7 +1025,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_write_bytes','')
+           call grib_check(iret,'write_bytes','')
         endif
   end subroutine grib_write_bytes_char_size_t
 
@@ -1054,7 +1054,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_write_bytes','')
+           call grib_check(iret,'write_bytes','')
         endif
   end subroutine grib_write_bytes_int4
 
@@ -1081,7 +1081,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_write_bytes','')
+           call grib_check(iret,'write_bytes','')
         endif
   end subroutine grib_write_bytes_int4_size_t
 
@@ -1110,7 +1110,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_write_bytes','')
+           call grib_check(iret,'write_bytes','')
         endif
   end subroutine grib_write_bytes_real4
 
@@ -1137,7 +1137,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_write_bytes','')
+           call grib_check(iret,'write_bytes','')
         endif
   end subroutine grib_write_bytes_real4_size_t
 
@@ -1166,7 +1166,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_write_bytes','')
+           call grib_check(iret,'write_bytes','')
         endif
   end subroutine grib_write_bytes_real8
 
@@ -1193,7 +1193,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_write_bytes','')
+           call grib_check(iret,'write_bytes','')
         endif
   end subroutine grib_write_bytes_real8_size_t
 
@@ -1219,7 +1219,7 @@
         if (present(status)) then
            status = iret
         else
-           call grib_check(iret,'grib_close_file','')
+           call grib_check(iret,'close_file','')
         endif
   end subroutine grib_close_file
 
@@ -1240,7 +1240,7 @@
       if (present(status)) then
          status = iret
       else
-          call grib_check(iret,'grib_count_in_file','')
+          call grib_check(iret,'count_in_file','')
       endif
   end subroutine grib_count_in_file
 
@@ -1264,7 +1264,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_headers_only_new_from_file','')
+         call grib_check(iret,'headers_only_new_from_file','')
       endif
   end subroutine grib_headers_only_new_from_file
 
@@ -1349,14 +1349,13 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !>
   !> \b Examples: \ref copy_message.f90 "copy_message.f90"
   !>
   !> @param gribid      id of the grib loaded in memory
   !> @param message     character array containing the coded message
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_new_from_message_char( gribid, message, status )
-      integer(kind=kindOfInt),intent(out)             :: gribid
+      integer(kind=kindOfInt),intent(out)               :: gribid
       character(len=1), dimension(:),intent(in)         :: message
       integer(kind=kindOfInt),optional, intent(out)     :: status
       integer(kind=kindOfSize_t)                        :: size_bytes
@@ -1367,7 +1366,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_new_from_message','')
+         call grib_check(iret,'new_from_message','')
       endif
 
   end subroutine grib_new_from_message_char
@@ -1390,17 +1389,17 @@
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_new_from_message_int4 ( gribid, message, status )
       integer(kind=kindOfInt),intent(out)             :: gribid
-      integer(kind=4), dimension(:),intent(in)          :: message
-      integer(kind=kindOfInt),optional, intent(out)     :: status
-      integer(kind=kindOfSize_t)                        :: size_bytes
-      integer(kind=kindOfInt)                           :: iret
+      integer(kind=4), dimension(:),intent(in)        :: message
+      integer(kind=kindOfInt),optional, intent(out)   :: status
+      integer(kind=kindOfSize_t)                      :: size_bytes
+      integer(kind=kindOfInt)                         :: iret
 
       size_bytes=size(message,dim=1)*sizeOfInteger4
       iret = grib_f_new_from_message ( gribid, message, size_bytes )
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_new_from_message','')
+         call grib_check(iret,'new_from_message','')
       endif
 
   end subroutine grib_new_from_message_int4
@@ -1456,7 +1455,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_release','')
+         call grib_check(iret,'release','')
       endif
   end subroutine grib_release
 
@@ -1488,7 +1487,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_clone','')
+         call grib_check(iret,'clone','')
       endif
   end subroutine grib_clone
 
@@ -1662,7 +1661,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_keys_iterator_new',namespace)
+         call grib_check(iret,'keys_iterator_new',namespace)
       endif
   end subroutine grib_keys_iterator_new
 
@@ -1700,7 +1699,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_keys_iterator_delete','')
+         call grib_check(iret,'keys_iterator_delete','')
       endif
   end subroutine grib_keys_iterator_delete
 
@@ -1722,7 +1721,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_keys_iterator_get_name',name)
+         call grib_check(iret,'keys_iterator_get_name',name)
       endif
   end subroutine grib_keys_iterator_get_name
 
@@ -1743,7 +1742,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_keys_iterator_rewind','')
+         call grib_check(iret,'keys_iterator_rewind','')
       endif
   end subroutine grib_keys_iterator_rewind
 
@@ -1764,7 +1763,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_dump','')
+         call grib_check(iret,'dump','')
       endif
   end subroutine grib_dump
 
@@ -1783,7 +1782,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_get_error_string','')
+         call grib_check(iret,'get_error_string','')
       endif
   end subroutine grib_get_error_string
 
@@ -1813,7 +1812,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_get_size',key)
+         call grib_check(iret,'get_size',key)
       endif
   end subroutine grib_get_size_int
 
@@ -1843,7 +1842,7 @@
   if (present(status)) then
     status = iret
   else
-    call grib_check(iret,'grib_get_size',key)
+    call grib_check(iret,'get_size',key)
   endif
   end subroutine grib_get_size_long
 
@@ -1871,7 +1870,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_get',key)
+         call grib_check(iret,'get',key)
       endif
   end subroutine grib_get_int
 
@@ -1899,7 +1898,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret,'grib_get',key)
+      call grib_check(iret,'get',key)
     endif
   end subroutine grib_get_long
 
@@ -1927,7 +1926,7 @@
     if (present(status)) then
     status = iret
     else
-    call grib_check(iret,'grib_is_missing',key)
+    call grib_check(iret,'is_missing',key)
     endif
   end subroutine grib_is_missing
 
@@ -1955,7 +1954,7 @@
     if (present(status)) then
     status = iret
     else
-    call grib_check(iret,'grib_is_defined',key)
+    call grib_check(iret,'is_defined',key)
     endif
   end subroutine grib_is_defined
 
@@ -1983,7 +1982,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_get',key)
+         call grib_check(iret,'get',key)
       endif
   end subroutine grib_get_real4
 
@@ -2011,7 +2010,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_get',key)
+         call grib_check(iret,'get',key)
       endif
   end subroutine grib_get_real8
 
@@ -2039,7 +2038,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_get',key)
+         call grib_check(iret,'get',key)
       endif
   end subroutine grib_get_string
 
@@ -2071,7 +2070,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_get',key)
+         call grib_check(iret,'get',key)
       endif
   end subroutine grib_get_int_array
 
@@ -2101,7 +2100,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret,'grib_get',key)
+      call grib_check(iret,'get',key)
     endif
   end subroutine grib_get_long_array
 
@@ -2139,7 +2138,7 @@
     if (present(status)) then
        status = iret
     else
-       call grib_check(iret,'grib_get',key)
+       call grib_check(iret,'get',key)
     endif
   end subroutine grib_get_byte_array
 
@@ -2169,7 +2168,7 @@
       if (present(status)) then
         status = iret
       else
-        call grib_check(iret,'grib_get',key)
+        call grib_check(iret,'get',key)
       endif
   end subroutine grib_get_real4_array
 
@@ -2199,7 +2198,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_get',key)
+         call grib_check(iret,'get',key)
       endif
   end subroutine grib_get_real8_array
 
@@ -2229,7 +2228,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_get',key)
+         call grib_check(iret,'get',key)
       endif
   end subroutine grib_get_real4_element
 
@@ -2259,7 +2258,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_get',key)
+         call grib_check(iret,'get',key)
       endif
   end subroutine grib_get_real8_element
 
@@ -2291,7 +2290,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_get',key)
+         call grib_check(iret,'get',key)
       endif
   end subroutine grib_get_real4_elements
 
@@ -2323,7 +2322,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_get',key)
+         call grib_check(iret,'get',key)
       endif
   end subroutine grib_get_real8_elements
 
@@ -2351,7 +2350,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_set',key)
+         call grib_check(iret,'set',key)
       endif
   end subroutine grib_set_int
 
@@ -2379,7 +2378,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret,'grib_set',key)
+      call grib_check(iret,'set',key)
     endif
   end subroutine grib_set_long
 
@@ -2407,7 +2406,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_set',key)
+         call grib_check(iret,'set',key)
       endif
   end subroutine grib_set_real4
 
@@ -2435,7 +2434,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_set',key)
+         call grib_check(iret,'set',key)
       endif
   end subroutine grib_set_real8
 
@@ -2465,7 +2464,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_set',key)
+         call grib_check(iret,'set',key)
       endif
   end subroutine grib_set_int_array
 
@@ -2495,7 +2494,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret,'grib_set',key)
+      call grib_check(iret,'set',key)
     endif
       
   end subroutine grib_set_long_array
@@ -2533,7 +2532,7 @@
     if (present(status)) then
        status = iret
     else
-       call grib_check(iret,'grib_set',key)
+       call grib_check(iret,'set',key)
     endif
   end subroutine grib_set_byte_array
 
@@ -2563,7 +2562,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_set',key)
+         call grib_check(iret,'set',key)
       endif
   end subroutine grib_set_real4_array
 
@@ -2593,7 +2592,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_set',key)
+         call grib_check(iret,'set',key)
       endif
   end subroutine grib_set_real8_array
 
@@ -2624,7 +2623,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_set',key)
+         call grib_check(iret,'set',key)
       endif
   end subroutine grib_set_force_real4_array
 
@@ -2655,7 +2654,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_set',key)
+         call grib_check(iret,'set',key)
       endif
   end subroutine grib_set_force_real8_array
 
@@ -2683,7 +2682,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_set',key)
+         call grib_check(iret,'set',key)
       endif
   end subroutine grib_set_string
 
@@ -2714,7 +2713,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_get_message_size','')
+         call grib_check(iret,'get_message_size','')
       endif
   end subroutine grib_get_message_size_int
 
@@ -2740,7 +2739,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_get_message_size','')
+         call grib_check(iret,'get_message_size','')
       endif
   end subroutine grib_get_message_size_size_t
 
@@ -2768,7 +2767,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_copy_message','')
+         call grib_check(iret,'copy_message','')
       endif
   end subroutine grib_copy_message
 
@@ -2792,7 +2791,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_write','')
+         call grib_check(iret,'write','')
       endif
   end subroutine grib_write
 
@@ -3079,7 +3078,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_skip_computed','')
+         call grib_check(iret,'skip_computed','')
       endif
   end subroutine grib_skip_computed
 
@@ -3104,7 +3103,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_skip_coded','')
+         call grib_check(iret,'skip_coded','')
       endif
   end subroutine grib_skip_coded
 
@@ -3128,7 +3127,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_skip_duplicates','')
+         call grib_check(iret,'skip_duplicates','')
       endif
   end subroutine grib_skip_duplicates
 
@@ -3150,7 +3149,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_skip_read_only','')
+         call grib_check(iret,'skip_read_only','')
       endif
   end subroutine grib_skip_read_only
 
@@ -3171,7 +3170,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_set_definitions_path','('//path//')')
+         call grib_check(iret,'set_definitions_path','('//path//')')
       endif
   end subroutine grib_set_definitions_path
 
@@ -3192,7 +3191,7 @@
       if (present(status)) then
          status = iret
       else
-         call grib_check(iret,'grib_set_samples_path','('//path//')')
+         call grib_check(iret,'set_samples_path','('//path//')')
       endif
   end subroutine grib_set_samples_path
 
