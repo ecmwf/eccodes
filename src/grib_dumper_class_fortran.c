@@ -598,15 +598,22 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a)
 static void header(grib_dumper* d,grib_handle* h) {
   grib_dumper_fortran *self = (grib_dumper_fortran*)d;
   char sampleName[200]={0};
-  long localSectionPresent,edition;
+  long localSectionPresent,edition,bufrHeaderCentre,isSatellite;
+  int ret=0;
 
   grib_get_long(h,"localSectionPresent",&localSectionPresent);
+  grib_get_long(h,"bufrHeaderCentre",&bufrHeaderCentre);
   grib_get_long(h,"edition",&edition);
 
-  if (localSectionPresent)
-    sprintf(sampleName,"BUFR%ld_local.bufr",edition);
-  else
+  if (localSectionPresent && bufrHeaderCentre==98 ) {
+    grib_get_long(h,"isSatellite",&isSatellite);
+    if (isSatellite) 
+      sprintf(sampleName,"BUFR%ld_local_satellite.bufr",edition);
+    else
+      sprintf(sampleName,"BUFR%ld_local.bufr",edition);
+  } else {
     sprintf(sampleName,"BUFR%ld.bufr",edition);
+  }
 
   fprintf(self->dumper.out,"!  This program has been automatically generated with bufr_dump -Efortran\n");
   fprintf(self->dumper.out,"program bufr_create_message\n");
