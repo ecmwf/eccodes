@@ -1041,15 +1041,16 @@ static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,
     int err=0;
 
     switch (descriptors[iBitmapOperator]->code) {
-    case 223000:
-    case 236000:
+      case 222000:
+      case 223000:
+      case 236000:
         cancel_bitmap(self);
         while (descriptors[edi[iel]]->code>=100000 || iel==0) iel--;
         bitmapEndElementsDescriptorsIndex=iel;
         /*looking for another bitmap and pointing before it.
           This behaviour is not documented in the Manual on codes it is copied from BUFRDC
           ECC-243
-        */
+         */
         while (iel>0) {
           while ( descriptors[edi[iel]]->code!=236000 && descriptors[edi[iel]]->code!=222000 && descriptors[edi[iel]]->code!=223000 && iel!=0) iel--;
           if (iel!=0) {
@@ -1060,50 +1061,78 @@ static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,
 
         i=iBitmapOperator+1;
         if (descriptors[i]->code==101000)  {
-            iDelayedReplication=iBitmapOperator+2;
-            Assert( descriptors[iDelayedReplication]->code==31001 ||
-                    descriptors[iDelayedReplication]->code==31002 );
-            i=iDelayedReplication;
-            if (self->compressedData) {
-                ppos=*pos;
-                if (err) return err;
-                localReference=grib_decode_unsigned_long(data,pos,descriptors[i]->width)+descriptors[i]->reference;
-                width=grib_decode_unsigned_long(data,pos,6);
-                *pos=ppos;
-                if (width) {
-                    /* delayed replication number is not constant. NOT IMPLEMENTED */
-                    Assert(0);
-                } else {
-                    bitmapSize=localReference*descriptors[i]->factor;
-                }
+          iDelayedReplication=iBitmapOperator+2;
+          Assert( descriptors[iDelayedReplication]->code==31001 ||
+              descriptors[iDelayedReplication]->code==31002 );
+          i=iDelayedReplication;
+          if (self->compressedData) {
+            ppos=*pos;
+            if (err) return err;
+            localReference=grib_decode_unsigned_long(data,pos,descriptors[i]->width)+descriptors[i]->reference;
+            width=grib_decode_unsigned_long(data,pos,6);
+            *pos=ppos;
+            if (width) {
+              /* delayed replication number is not constant. NOT IMPLEMENTED */
+              Assert(0);
             } else {
-                ppos=*pos;
-                if (err) return err;
-                bitmapSize=grib_decode_unsigned_long(data,pos,descriptors[i]->width)+
-                        descriptors[i]->reference*descriptors[i]->factor;
-                *pos=ppos;
+              bitmapSize=localReference*descriptors[i]->factor;
             }
+          } else {
+            ppos=*pos;
+            if (err) return err;
+            bitmapSize=grib_decode_unsigned_long(data,pos,descriptors[i]->width)+
+              descriptors[i]->reference*descriptors[i]->factor;
+            *pos=ppos;
+          }
         } else if (descriptors[i]->code==31031){
-            bitmapSize=0;
-            while (descriptors[i]->code==31031) {bitmapSize++;i++;}
+          bitmapSize=0;
+          while (descriptors[i]->code==31031) {bitmapSize++;i++;}
         }
         iel=bitmapEndElementsDescriptorsIndex;
         n=bitmapSize-1;
         while ( n>0 && iel>=0 ) {
-            if (descriptors[edi[iel]]->code<100000) n--;
-            iel--;
+          if (descriptors[edi[iel]]->code<100000) n--;
+          iel--;
         }
         self->bitmapStartElementsDescriptorsIndex=iel;
         restart_bitmap(self);
         break;
-    default :
+      default :
         grib_context_log(c,GRIB_LOG_ERROR,"unsupported operator %d\n",
-                descriptors[iBitmapOperator]->code);
+            descriptors[iBitmapOperator]->code);
         return GRIB_INTERNAL_ERROR;
     }
     return GRIB_SUCCESS;
 }
 
+static int consume_bitmap(grib_accessor_bufr_data_array *self,int iBitmapOperator)
+{
+    int bitmapSize=0,iDelayedReplication;
+    int i;
+    grib_accessor* a=(grib_accessor*)self;
+    grib_context* c=a->context;
+    bufr_descriptor** descriptors=self->expanded->v;
+
+    i=iBitmapOperator+1;
+    if (descriptors[i]->code==101000)  {
+      iDelayedReplication=iBitmapOperator+2;
+      switch (descriptors[iDelayedReplication]->code) {
+        case 31001:
+          bitmapSize=self->inputReplications[self->iInputReplications];
+          break;
+        case 31002:
+          bitmapSize=self->inputExtendedReplications[self->iInputExtendedReplications];
+          break;
+        default :
+          Assert(0);
+      }
+    } else if (descriptors[i]->code==31031){
+      bitmapSize=0;
+      while (descriptors[i]->code==31031) {bitmapSize++;i++;}
+    }
+    self->bitmapCurrent+=bitmapSize;
+    return GRIB_SUCCESS;
+}
 static int build_bitmap_new_data(grib_accessor_bufr_data_array *self,unsigned char* data,long* pos,int iel,grib_iarray* elementsDescriptorsIndex,int iBitmapOperator)
 {
     int bitmapSize=0,iDelayedReplication=0;
@@ -1113,42 +1142,54 @@ static int build_bitmap_new_data(grib_accessor_bufr_data_array *self,unsigned ch
     grib_context* c=a->context;
     bufr_descriptor** descriptors=self->expanded->v;
     long* edi=elementsDescriptorsIndex->v;
-    /* int iel=grib_iarray_used_size(elementsDescriptorsIndex)-1; */
 
     switch (descriptors[iBitmapOperator]->code) {
-    case 236000:
-        cancel_bitmap(self);
+      case 222000:
+      case 223000:
+      case 236000:
         while (descriptors[edi[iel]]->code>=100000) iel--;
         bitmapEndElementsDescriptorsIndex=iel;
+        /*looking for another bitmap and pointing before it.
+          This behaviour is not documented in the Manual on codes it is copied from BUFRDC
+          ECC-243
+         */
+        while (iel>0) {
+          while ( descriptors[edi[iel]]->code!=236000 && descriptors[edi[iel]]->code!=222000 && descriptors[edi[iel]]->code!=223000 && iel!=0) iel--;
+          if (iel!=0) {
+            while (descriptors[edi[iel]]->code>=100000 && iel!=0) iel--;
+            bitmapEndElementsDescriptorsIndex=iel;
+          }
+        }
+
         i=iBitmapOperator+1;
         if (descriptors[i]->code==101000)  {
-            iDelayedReplication=iBitmapOperator+2;
-            switch (descriptors[iDelayedReplication]->code) {
+          iDelayedReplication=iBitmapOperator+2;
+          switch (descriptors[iDelayedReplication]->code) {
             case 31001:
-                bitmapSize=self->inputReplications[self->iInputReplications];
-                break;
+              bitmapSize=self->inputReplications[self->iInputReplications];
+              break;
             case 31002:
-                bitmapSize=self->inputExtendedReplications[self->iInputExtendedReplications];
-                break;
+              bitmapSize=self->inputExtendedReplications[self->iInputExtendedReplications];
+              break;
             default :
-                Assert(0);
-            }
+              Assert(0);
+          }
         } else if (descriptors[i]->code==31031){
-            bitmapSize=0;
-            while (descriptors[i]->code==31031) {bitmapSize++;i++;}
+          bitmapSize=0;
+          while (descriptors[i]->code==31031) {bitmapSize++;i++;}
         }
         iel=bitmapEndElementsDescriptorsIndex;
         n=bitmapSize-1;
         while ( n>0 && iel>=0 ) {
-            if (descriptors[edi[iel]]->code<100000) n--;
-            iel--;
+          if (descriptors[edi[iel]]->code<100000) n--;
+          iel--;
         }
         self->bitmapStartElementsDescriptorsIndex=iel;
-        restart_bitmap(self);
+        self->bitmapCurrentElementsDescriptorsIndex=iel-1;
         break;
-    default :
+      default :
         grib_context_log(c,GRIB_LOG_ERROR,"unsupported operator %d\n",
-                descriptors[iBitmapOperator]->code);
+            descriptors[iBitmapOperator]->code);
         return GRIB_INTERNAL_ERROR;
     }
     return GRIB_SUCCESS;
@@ -1821,6 +1862,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 qualityPresent=1;
                 incrementBitmapIndex=1;
                 dump=1;
+                bitmap.cursor=0;
                 extraElement+=1;
             } else if (descriptor->code == 236000 || descriptor->code == 237000 ) {
                 bitmap.referredElement=NULL;
@@ -2091,6 +2133,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                     /* self->bitmapStart=grib_iarray_used_size(elementsDescriptorsIndex)-1; */
                     self->bitmapStart=elementIndex;
                 }
+
                 err=codec_element(c,self,iss,buffer,data,&pos,i,0,elementIndex,dval,sval);
                 if (err) return err;
                 elementIndex++;
@@ -2137,6 +2180,21 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                     elementIndex++;
                     break;
                 case 22:
+                    if (descriptors[i]->Y==0)  {
+                      if (flag==PROCESS_DECODE) {
+                        grib_iarray_push(elementsDescriptorsIndex,i);
+                        push_zero_element(self,dval);
+                      } else if (flag==PROCESS_ENCODE) {
+                        if (descriptors[i+1] && descriptors[i+1]->code!=236000 && descriptors[i+1]->code!=237000 )
+                          restart_bitmap(self);
+                      } else if (flag==PROCESS_NEW_DATA) {
+                        grib_iarray_push(elementsDescriptorsIndex,i);
+                        if (descriptors[i+1] && descriptors[i+1]->code!=236000 && descriptors[i+1]->code!=237000 )
+                          consume_bitmap(self,i);
+                      }
+                      elementIndex++;
+                    }
+                    break;
                 case 26:
                 case 27:
                 case 29:
@@ -2181,13 +2239,20 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                         if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
                         elementIndex++;
                     } else {
-                        if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
-                        if (decoding) {
-                          push_zero_element(self,dval);
-                          if (descriptors[i+1] && descriptors[i+1]->code!=236000 )
-                            build_bitmap(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
-                        }
-                        elementIndex++;
+                      if (flag==PROCESS_DECODE) {
+                        grib_iarray_push(elementsDescriptorsIndex,i);
+                        push_zero_element(self,dval);
+                        if (descriptors[i+1] && descriptors[i+1]->code!=236000 && descriptors[i+1]->code!=237000 )
+                          build_bitmap(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                      } else if (flag==PROCESS_ENCODE) {
+                        if (descriptors[i+1] && descriptors[i+1]->code!=236000 && descriptors[i+1]->code!=237000 )
+                          restart_bitmap(self);
+                      } else if (flag==PROCESS_NEW_DATA) {
+                        grib_iarray_push(elementsDescriptorsIndex,i);
+                        if (descriptors[i+1] && descriptors[i+1]->code!=236000 && descriptors[i+1]->code!=237000 )
+                          build_bitmap_new_data(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                      }
+                      elementIndex++;
                     }
                     break;
                 case 25:
