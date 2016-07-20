@@ -40,34 +40,31 @@ sb19_206.bufr sbu8_206.bufr ship_11.bufr ship_12.bufr ship_13.bufr ship_14.bufr 
 smiu_49.bufr smos_203.bufr sn4k_165.bufr soil_7.bufr ssbt_127.bufr stuk_7.bufr syno_1.bufr syno_2.bufr syno_3.bufr syno_4.bufr
 synop_multi_subset.bufr temp_101.bufr temp_102.bufr temp_106.bufr tmr7_129.bufr tros_31.bufr uegabe.bufr wavb_134.bufr"
 
-# If FORTRAN is enabled, then the pkgconfig file will exist
+# If FORTRAN is enabled, then the pkgconfig should be one level above the test dir
 PKGCONFIG_FILE=../eccodes_f90.pc
 CACHE_FILE=../CMakeCache.txt
-# MODULE_DIR="../fortran/modules"
 
 # Work out the Fortran compiler, the flags etc from pkgconfig
 COMPILE_AND_RUN=0
 
 if command -v pkg-config >/dev/null 2>&1; then
-   COMPILER=`pkg-config --variable=FC $PKGCONFIG_FILE`
-   FLAGS_COMPILER=`pkg-config --cflags $PKGCONFIG_FILE`
-   # FLAGS_COMPILER="-I $MODULE_DIR "$FLAGS_COMPILER
-   FLAGS_LINKER=`pkg-config --libs $PKGCONFIG_FILE`
+  if [ -f "$PKGCONFIG_FILE" ]; then
+    COMPILER=`pkg-config --variable=FC $PKGCONFIG_FILE`
+    FLAGS_COMPILER=`pkg-config --cflags $PKGCONFIG_FILE`
+    FLAGS_LINKER=`pkg-config --libs $PKGCONFIG_FILE`
 
-   # The pkgconfig variables refer to the install directory. Change to build dir
-   BUILD_DIR=`grep -w eccodes_BINARY_DIR $CACHE_FILE | cut -d'=' -f2`
-   INSTALL_DIR=`grep -w CMAKE_INSTALL_PREFIX $CACHE_FILE | cut -d'=' -f2`
-   FLAGS_LINKER=`echo $FLAGS_LINKER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
-   FLAGS_COMPILER=`echo $FLAGS_COMPILER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
+    # The pkgconfig variables refer to the install directory. Change to build dir
+    BUILD_DIR=`grep -w eccodes_BINARY_DIR $CACHE_FILE | cut -d'=' -f2`
+    INSTALL_DIR=`grep -w CMAKE_INSTALL_PREFIX $CACHE_FILE | cut -d'=' -f2`
+    FLAGS_LINKER=`echo $FLAGS_LINKER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
+    FLAGS_COMPILER=`echo $FLAGS_COMPILER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
 
-   COMPILE_AND_RUN=1
-fi
-
-# TODO: Compilation only works with dynamic libraries (i.e. shared libs enabled)
-SHARED_LIBS=`grep -w BUILD_SHARED_LIBS $CACHE_FILE | cut -d'=' -f2`
-if [ "$SHARED_LIBS" = "OFF" ]; then
-   # Disable building executable
-   COMPILE_AND_RUN=0
+    # TODO: For now only support when shared libs enabled
+    SHARED_LIBS=`grep -w BUILD_SHARED_LIBS $CACHE_FILE | cut -d'=' -f2`
+    if [ "$SHARED_LIBS" = "ON" ]; then
+      COMPILE_AND_RUN=1
+    fi
+  fi
 fi
 
 for file in ${bufr_files}
