@@ -40,40 +40,32 @@ sb19_206.bufr sbu8_206.bufr ship_11.bufr ship_12.bufr ship_13.bufr ship_14.bufr 
 smiu_49.bufr smos_203.bufr sn4k_165.bufr soil_7.bufr ssbt_127.bufr stuk_7.bufr syno_1.bufr syno_2.bufr syno_3.bufr syno_4.bufr
 synop_multi_subset.bufr temp_101.bufr temp_102.bufr temp_106.bufr tmr7_129.bufr tros_31.bufr uegabe.bufr wavb_134.bufr"
 
-
-REDIRECT=/dev/null
-
-# PKGCONFIG_FILE=../eccodes_ecbuild_config.h
-# If FORTRAN is enabled, then the pkgconfig file is guaranteed to be here
+# If FORTRAN is enabled, then the pkgconfig should be one level above the test dir
 PKGCONFIG_FILE=../eccodes_f90.pc
 CACHE_FILE=../CMakeCache.txt
-MODULE_DIR="../fortran/modules"
 
 # Work out the Fortran compiler, the flags etc from pkgconfig
-#F90Compiler=`grep -w ECCODES_Fortran_COMPILER $PKGCONFIG_FILE | cut -d' ' -f3` | sed -e 's/"//g'
-COMPILE=0
-PKGCONFIG_CMD=""
+COMPILE_AND_RUN=0
+
 if command -v pkg-config >/dev/null 2>&1; then
-   PKGCONFIG_CMD=pkg-config
-   # Get the F90 compiler
-   COMPILER=`$PKGCONFIG_CMD --variable=FC $PKGCONFIG_FILE`
-   FLAGS_COMPILER=`$PKGCONFIG_CMD --cflags $PKGCONFIG_FILE`
-   FLAGS_COMPILER="-I $MODULE_DIR "$FLAGS_COMPILER
-   FLAGS_LINKER=`$PKGCONFIG_CMD --libs $PKGCONFIG_FILE`
-   BUILD_DIR=`grep -w eccodes_BINARY_DIR $CACHE_FILE | cut -d'=' -f2`
-   INSTALL_DIR=`grep -w CMAKE_INSTALL_PREFIX $CACHE_FILE | cut -d'=' -f2`
-   FLAGS_LINKER=`echo $FLAGS_LINKER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
-   COMPILE=1
+  if [ -f "$PKGCONFIG_FILE" ]; then
+    COMPILER=`pkg-config --variable=FC $PKGCONFIG_FILE`
+    FLAGS_COMPILER=`pkg-config --cflags $PKGCONFIG_FILE`
+    FLAGS_LINKER=`pkg-config --libs $PKGCONFIG_FILE`
+
+    # The pkgconfig variables refer to the install directory. Change to build dir
+    BUILD_DIR=`grep -w eccodes_BINARY_DIR $CACHE_FILE | cut -d'=' -f2`
+    INSTALL_DIR=`grep -w CMAKE_INSTALL_PREFIX $CACHE_FILE | cut -d'=' -f2`
+    FLAGS_LINKER=`echo $FLAGS_LINKER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
+    FLAGS_COMPILER=`echo $FLAGS_COMPILER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
+
+    # TODO: For now only support when shared libs enabled
+    SHARED_LIBS=`grep -w BUILD_SHARED_LIBS $CACHE_FILE | cut -d'=' -f2`
+    if [ "$SHARED_LIBS" = "ON" ]; then
+      COMPILE_AND_RUN=1
+    fi
+  fi
 fi
-
-#F90Compiler=`grep ^FC= $PKGCONFIG_FILE | cut -d'=' -f2`
-#LIB_ECC="../lib/libeccodes.so"
-#LIB_F90="../lib/libeccodes_f90.so"
-
-# Only works with dynamic libraries
-#if [ -f $F90Compiler -a -f $LIB_ECC -a -f $LIB_F90 -a -d $MOD_DIR ]; then
-#  COMPILE=1
-#fi
 
 for file in ${bufr_files}
 do
@@ -81,10 +73,9 @@ do
   ${tools_dir}bufr_dump -Efortran ${data_dir}/bufr/$file > $tempSrc
   
   # Compile
-  if [ $COMPILE -eq 1 ]; then
-    #$F90Compiler -o $tempExe $tempSrc -I $MOD_DIR  $LIB_F90  $LIB_ECC
+  if [ $COMPILE_AND_RUN -eq 1 ]; then
     $COMPILER -o $tempExe $tempSrc $FLAGS_COMPILER $FLAGS_LINKER
-    [ -x $tempExe ]
+    # The executable always creates a file called outfile.bufr
     ./$tempExe
     ${tools_dir}bufr_compare ${data_dir}/bufr/$file $tempBufr
   fi
