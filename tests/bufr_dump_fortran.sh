@@ -18,11 +18,12 @@ fLog=${label}".log"
 rm -f $fLog
 
 #Define temp files
+tempBufr=outfile.bufr
 tempSrc=$label.temp.f90
 tempExe=$label.temp.exe
 
+# Not all BUFR files generate correct Fortran. So here we select a subset
 # bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
-
 bufr_files="207003.bufr PraticaTemp.bufr aaen_55.bufr aben_55.bufr ahws_139.bufr airc_142.bufr airc_144.bufr airs_57.bufr alws_139.bufr
 amda_144.bufr amsa_55.bufr amsb_55.bufr amse_55.bufr amsu_55.bufr amv2_87.bufr amv3_87.bufr asbh_139.bufr asbl_139.bufr
 asca_139.bufr asch_139.bufr ascs_139.bufr aseh_139.bufr asel_139.bufr ashs_139.bufr atap_55.bufr ateu_155.bufr atms_201.bufr
@@ -42,22 +43,37 @@ synop_multi_subset.bufr temp_101.bufr temp_102.bufr temp_106.bufr tmr7_129.bufr 
 
 REDIRECT=/dev/null
 
-# BUILD_CONFIG=../eccodes_ecbuild_config.h
+# PKGCONFIG_FILE=../eccodes_ecbuild_config.h
 # If FORTRAN is enabled, then the pkgconfig file is guaranteed to be here
-BUILD_CONFIG=../eccodes_f90.pc
+PKGCONFIG_FILE=../eccodes_f90.pc
+CACHE_FILE=../CMakeCache.txt
+MODULE_DIR="../fortran/modules"
 
-# Work out the Fortran compiler being used
-#F90Compiler=`grep -w ECCODES_Fortran_COMPILER $BUILD_CONFIG | cut -d' ' -f3` | sed -e 's/"//g'
-F90Compiler=`grep ^FC= $BUILD_CONFIG | cut -d'=' -f2`
-LIB_ECC="../lib/libeccodes.so"
-LIB_F90="../lib/libeccodes_f90.so"
-MOD_DIR="../fortran/modules"
+# Work out the Fortran compiler, the flags etc from pkgconfig
+#F90Compiler=`grep -w ECCODES_Fortran_COMPILER $PKGCONFIG_FILE | cut -d' ' -f3` | sed -e 's/"//g'
 COMPILE=0
-
-# Only works with dynamic libraries.
-if [ -f $F90Compiler -a -f $LIB_ECC -a -f $LIB_F90 -a -d $MOD_DIR ]; then
-  COMPILE=1
+PKGCONFIG_CMD=""
+if command -v pkg-config >/dev/null 2>&1; then
+   PKGCONFIG_CMD=pkg-config
+   # Get the F90 compiler
+   COMPILER=`$PKGCONFIG_CMD --variable=FC $PKGCONFIG_FILE`
+   FLAGS_COMPILER=`$PKGCONFIG_CMD --cflags $PKGCONFIG_FILE`
+   FLAGS_COMPILER="-I $MODULE_DIR "$FLAGS_COMPILER
+   FLAGS_LINKER=`$PKGCONFIG_CMD --libs $PKGCONFIG_FILE`
+   BUILD_DIR=`grep -w eccodes_BINARY_DIR $CACHE_FILE | cut -d'=' -f2`
+   INSTALL_DIR=`grep -w CMAKE_INSTALL_PREFIX $CACHE_FILE | cut -d'=' -f2`
+   FLAGS_LINKER=`echo $FLAGS_LINKER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
+   COMPILE=1
 fi
+
+#F90Compiler=`grep ^FC= $PKGCONFIG_FILE | cut -d'=' -f2`
+#LIB_ECC="../lib/libeccodes.so"
+#LIB_F90="../lib/libeccodes_f90.so"
+
+# Only works with dynamic libraries
+#if [ -f $F90Compiler -a -f $LIB_ECC -a -f $LIB_F90 -a -d $MOD_DIR ]; then
+#  COMPILE=1
+#fi
 
 for file in ${bufr_files}
 do
@@ -66,8 +82,12 @@ do
   
   # Compile
   if [ $COMPILE -eq 1 ]; then
-    $F90Compiler -o $tempExe $tempSrc -I $MOD_DIR  $LIB_F90  $LIB_ECC
+    #$F90Compiler -o $tempExe $tempSrc -I $MOD_DIR  $LIB_F90  $LIB_ECC
+    $COMPILER -o $tempExe $tempSrc $FLAGS_COMPILER $FLAGS_LINKER
+    [ -x $tempExe ]
+    ./$tempExe
+    ${tools_dir}bufr_compare ${data_dir}/bufr/$file $tempBufr
   fi
 done
 
-rm -f $tempSrc $tempExe
+rm -f $tempSrc $tempExe $tempBufr
