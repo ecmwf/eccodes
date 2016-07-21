@@ -1602,7 +1602,7 @@ subroutine codes_set_string_array ( gribid, key, value, status )
     slen=len(value(0))
     j=1
     do i=1,nb_values
-      cvalue(j:j+slen-1)=transfer(value(i),svalue)
+      cvalue(j:j+slen-1)=transfer(trim(value(i)),svalue)
       j=j+slen
     enddo
 
