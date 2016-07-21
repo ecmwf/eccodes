@@ -140,6 +140,7 @@ int grib_c_set_key_vals(int* gid, char* keyvals);
 int grib_c_is_missing(int* gid, char* key, int* OUTPUT);
 int grib_c_is_defined(int* gid, char* key, int* OUTPUT);
 
+// Numpy Support
 %apply (double* IN_ARRAY1, int DIM1) {(double* dpin_val, int dpin_val_dim1)};
 %apply (long* IN_ARRAY1, int DIM1) {(long* lpin_val, int lpin_val_dim1)};
 %apply (int* IN_ARRAY1, int DIM1) {(int* ipin_index, int ipin_index_dim1)};
