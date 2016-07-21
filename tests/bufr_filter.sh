@@ -398,28 +398,25 @@ rm -f ${f}.ref ${f}.log
 #-----------------------------------------------------------
 # Test: set unexpandedDescriptors big test
 #-----------------------------------------------------------
-fRulesReady="set_unexpandedDescriptors.filter"
-f="syno_1.bufr"
-testScript="set_unexpandedDescriptors_test.sh"
-testScript1="set_unexpandedDescriptors_test_1.sh"
-echo "Test: set unexpandedDescriptors big test" >> $fLog
-echo "file: $f" >> $fLog
+#fRulesReady="set_unexpandedDescriptors.filter"
+#f="syno_1.bufr"
+#testScript="set_unexpandedDescriptors_test.sh"
+#testScript1="set_unexpandedDescriptors_test_1.sh"
+#echo "Test: set unexpandedDescriptors big test" >> $fLog
+#echo "file: $f" >> $fLog
 
-cat >$testScript <<EOF
-set -e
+#cat >$testScript <<EOF
+#set -e
+#
+#EOF
+#echo "set -x" > $testScript1
+#chmod +x $testScript1
 
-EOF
-echo "set -x" > $testScript1
-chmod +x $testScript1
-
-${tools_dir}codes_bufr_filter $fRulesReady $f 2>> $fLog 1>> $testScript
-
-sed -e "s:diff:${tools_dir}bufr_compare:" < $testScript >> $testScript1
-
-./$testScript1
-
-rm -f new_*bufr 
-rm -f $testScript $testScript1
+#${tools_dir}codes_bufr_filter $fRulesReady $f 2>> $fLog 1>> $testScript
+#sed -e "s:diff:${tools_dir}bufr_compare:" < $testScript >> $testScript1
+#./$testScript1
+#rm -f new_*bufr 
+#rm -f $testScript $testScript1
 
 #-----------------------------------------------------------
 # Test:  packing   

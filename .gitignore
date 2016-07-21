@@ -307,7 +307,6 @@ include
 data/bufr/*diff
 data/bufr/*decode
 data/bufr/*test
-data/bufr/set_unexpandedDescriptors.filter
 
 *.sublime-workspace
 *.old
