@@ -282,12 +282,11 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
     double value; size_t size = 1;
     double *values=NULL;
     int err = 0;
-    int i,r,icount;
+    int i,icount;
     int cols=2;
     long count=0;
     char* sval;
     grib_context* c=a->context;
-    grib_handle* h=grib_handle_of_accessor(a);
 
     grib_value_count(a,&count);
     size=count;
@@ -331,7 +330,7 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
 
         fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s' &\n,rvalues)\n",prefix,a->name);
     } else {
-        r=get_key_rank(h,self->keys,a->name);
+        /* int r=get_key_rank(h,self->keys,a->name); */
         if( !grib_is_missing_double(a,value) ) {
 
             sval=dval_to_string(c,value);
@@ -461,11 +460,10 @@ static void dump_long_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
     long value; size_t size = 1;
     long *values=NULL;
     int err = 0;
-    int i,r,icount;
+    int i,icount;
     int cols=4;
     long count=0;
     grib_context* c=a->context;
-    grib_handle* h=grib_handle_of_accessor(a);
 
     grib_value_count(a,&count);
     size=count;
@@ -504,7 +502,7 @@ static void dump_long_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
         fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s' &\n,ivalues)\n",prefix,a->name);
 
     } else {
-        r=get_key_rank(h,self->keys,a->name);
+        /* int r=get_key_rank(h,self->keys,a->name); */
         if( !grib_is_missing_long(a,value) ) {
             fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s'&\n,",prefix,a->name);
             fprintf(self->dumper.out,"%ld)\n",value);
