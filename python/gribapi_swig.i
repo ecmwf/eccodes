@@ -12,14 +12,10 @@
 #include "grib_interface.h"
 %}
 
-#if defined(NUMPY)
-
 %include "numpy.i"
 %init %{
 import_array();
 %}
-
-#endif
 
 /* Converts a PyFile instance to a stdio FILE* */
 %typemap(in) FILE* {
@@ -144,8 +140,6 @@ int grib_c_set_key_vals(int* gid, char* keyvals);
 int grib_c_is_missing(int* gid, char* key, int* OUTPUT);
 int grib_c_is_defined(int* gid, char* key, int* OUTPUT);
 
-#if defined(NUMPY)
-
 %apply (double* IN_ARRAY1, int DIM1) {(double* dpin_val, int dpin_val_dim1)};
 %apply (long* IN_ARRAY1, int DIM1) {(long* lpin_val, int lpin_val_dim1)};
 %apply (int* IN_ARRAY1, int DIM1) {(int* ipin_index, int ipin_index_dim1)};
@@ -178,7 +172,6 @@ int grib_get_double_ndelements(int* gid, char* key, int* ipin_index, int ipin_in
 %clear double* dpout_val, int dpout_val_dim1;
 %clear long* lpout_val, int lpout_val_dim1;
 
-#endif
 // ---
 
 // nearest
