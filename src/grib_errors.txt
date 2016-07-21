@@ -71,3 +71,4 @@ GRIB_TOO_MANY_ATTRIBUTES      Too many attributes. Increase MAX_ACCESSOR_ATTRIBU
 GRIB_ATTRIBUTE_NOT_FOUND      Attribute not found.
 GRIB_UNSUPPORTED_EDITION      Edition not supported.
 GRIB_OUT_OF_RANGE             Value out of coding range
+GRIB_WRONG_BITMAP_SIZE        Size of bitmap is incorrect

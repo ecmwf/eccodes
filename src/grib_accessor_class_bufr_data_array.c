@@ -1206,6 +1206,7 @@ static int get_next_bitmap_descriptor_index_new_bitmap(grib_accessor_bufr_data_a
 
     if (self->compressedData) {
         DebugAssert(i<self->nInputBitmap);
+        if (i>=self->nInputBitmap) return GRIB_WRONG_BITMAP_SIZE;
         while (self->inputBitmap[i]==1) {
             self->bitmapCurrent++;
             self->bitmapCurrentElementsDescriptorsIndex++;
@@ -1215,7 +1216,7 @@ static int get_next_bitmap_descriptor_index_new_bitmap(grib_accessor_bufr_data_a
             i++;
         }
     } else {
-        DebugAssert(i<self->nInputBitmap);
+        if (i>=self->nInputBitmap) return GRIB_WRONG_BITMAP_SIZE;
         while (self->inputBitmap[i]==1) {
             self->bitmapCurrent++;
             self->bitmapCurrentElementsDescriptorsIndex++;
