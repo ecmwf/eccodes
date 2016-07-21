@@ -63,10 +63,12 @@ do
     ./$tempExe
     ${tools_dir}bufr_compare ${data_dir}/bufr/$file $tempBufr
 
-    ${tools_dir}bufr_dump -jf ${data_dir}/bufr/$file > $file.json
-    ${tools_dir}bufr_dump -jf $tempBufr              > $tempBufr.json
-    #diff $file.json $tempBufr.json
-    rm -f $file.json $tempBufr.json
+    TEMP_JSON1=${label}.$file.json
+    TEMP_JSON2=${label}.$tempBufr.json
+    ${tools_dir}bufr_dump ${data_dir}/bufr/$file > $TEMP_JSON1
+    ${tools_dir}bufr_dump $tempBufr              > $TEMP_JSON2
+    diff  $TEMP_JSON1 $TEMP_JSON2
+    rm -f $TEMP_JSON1 $TEMP_JSON2
   fi
 done
 
