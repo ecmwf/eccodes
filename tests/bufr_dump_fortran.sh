@@ -62,6 +62,11 @@ do
     # The executable always creates a file called outfile.bufr
     ./$tempExe
     ${tools_dir}bufr_compare ${data_dir}/bufr/$file $tempBufr
+
+    ${tools_dir}bufr_dump -jf ${data_dir}/bufr/$file > $file.json
+    ${tools_dir}bufr_dump -jf $tempBufr              > $tempBufr.json
+    #diff $file.json $tempBufr.json
+    rm -f $file.json $tempBufr.json
   fi
 done
 
