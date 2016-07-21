@@ -1109,8 +1109,6 @@ static int consume_bitmap(grib_accessor_bufr_data_array *self,int iBitmapOperato
 {
     int bitmapSize=0,iDelayedReplication;
     int i;
-    grib_accessor* a=(grib_accessor*)self;
-    grib_context* c=a->context;
     bufr_descriptor** descriptors=self->expanded->v;
 
     i=iBitmapOperator+1;
