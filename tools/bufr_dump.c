@@ -87,7 +87,7 @@ int grib_tool_init(grib_runtime_options* options)
         options->dump_mode = "json";
         json_option=grib_options_get_option("j:");
         if (strlen(json_option)>1 || ( json_option[0] != 's' && json_option[0]!= 'f' && json_option[0]!= 'a')) {
-            printf("wrong json option %s\n",json_option);
+            printf("%s: Invalid JSON option %s\n", grib_tool_name, json_option);
             exit(1);
         }
         json=1;
@@ -211,7 +211,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
             break;
         default :
-            printf("unknown json option %s\n",json_option);
+            printf("Unknown JSON option %s\n",json_option);
             exit(1);
         }
       if (!strcmp(options->dump_mode,"default"))
@@ -235,6 +235,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         return err;
       }
       dumper=grib_dump_content_with_dumper(h,dumper,stdout,options->dump_mode,options->dump_flags,0);
+      if (!dumper) exit(1);
     }
 
     return 0;
