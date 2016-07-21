@@ -774,7 +774,7 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a,char* prefix)
     int i=0;
     grib_dumper_fortran *self = (grib_dumper_fortran*)d;
     unsigned long flags;
-    while (a->attributes[i] && i < MAX_ACCESSOR_ATTRIBUTES) {
+    while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
       self->isAttribute=1;
       if (  (d->option_flags & GRIB_DUMP_FLAG_ALL_ATTRIBUTES ) == 0
           && (a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_DUMP)== 0 )
@@ -829,9 +829,7 @@ static void header(grib_dumper* d,grib_handle* h) {
     fprintf(self->dumper.out,"  integer                                       :: iret\n");
     fprintf(self->dumper.out,"  integer                                       :: outfile\n");
     fprintf(self->dumper.out,"  integer                                       :: ibufr\n");
-    fprintf(self->dumper.out,"  integer                                       :: count=0\n");
     fprintf(self->dumper.out,"  integer(kind=4), dimension(:), allocatable    :: ivalues\n");
-    fprintf(self->dumper.out,"  integer            :: strsize\n");
     fprintf(self->dumper.out,"  integer, parameter  :: max_strsize = 100\n");
     fprintf(self->dumper.out,"  character(len=max_strsize) , dimension(:),allocatable   :: svalues\n");
     fprintf(self->dumper.out,"  real(kind=8), dimension(:), allocatable       :: rvalues\n");
