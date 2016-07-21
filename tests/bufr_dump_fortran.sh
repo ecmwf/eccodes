@@ -60,6 +60,7 @@ do
   if [ $COMPILE_AND_RUN -eq 1 ]; then
     $COMPILER -o $tempExe $tempSrc $FLAGS_COMPILER $FLAGS_LINKER
     # The executable always creates a file called outfile.bufr
+    # valgrind --error-exitcode=1  ./$tempExe
     ./$tempExe
     ${tools_dir}bufr_compare ${data_dir}/bufr/$file $tempBufr
 
@@ -67,7 +68,7 @@ do
     TEMP_JSON2=${label}.$tempBufr.json
     ${tools_dir}bufr_dump ${data_dir}/bufr/$file > $TEMP_JSON1
     ${tools_dir}bufr_dump $tempBufr              > $TEMP_JSON2
-    diff  $TEMP_JSON1 $TEMP_JSON2
+    diff -w $TEMP_JSON1 $TEMP_JSON2
     rm -f $TEMP_JSON1 $TEMP_JSON2
   fi
 done
