@@ -136,22 +136,6 @@ class Bunch(dict):
 # @endcond
 
 # @cond
-def with_numpy():
-    """
-    @brief Is numpy enabled?
-    @return 0->disabled, 1->enabled
-    """
-    numpy = 0
-    try:
-        _internal.with_numpy()
-        numpy = 1
-    except AttributeError:
-        pass
-
-    return numpy
-# @endcond
-
-# @cond
 @require(errid=int)
 def GRIB_CHECK(errid):
     """
@@ -848,20 +832,7 @@ def grib_set_double_array(msgid, key, inarray):
     @param inarray tuple,list,array,numpy.ndarray
     @exception GribInternalError
     """
-    if with_numpy():
-        GRIB_CHECK(_internal.grib_set_double_ndarray(msgid, key, inarray))
-    else:
-        nval = len(inarray)
-        a = _internal.new_doubleArray(nval)
-        s = _internal.intp()
-        s.assign(nval)
-
-        for i in range(nval):
-            _internal.doubleArray_setitem(a, i, inarray[i])
-
-        GRIB_CHECK(_internal.grib_c_set_real8_array(msgid, key, a, s))
-
-        _internal.delete_doubleArray(a)
+    GRIB_CHECK(_internal.grib_set_double_ndarray(msgid, key, inarray))
 
 
 @require(msgid=int, key=str)
@@ -877,26 +848,11 @@ def grib_get_double_array(msgid, key):
     @return        numpy.ndarray
     @exception GribInternalError
     """
-    if with_numpy():
-        nval = grib_get_size(msgid, key)
-        err, result = _internal.grib_get_double_ndarray(msgid, key, nval)
-        GRIB_CHECK(err)
-        return result
-    else:
-        nval = grib_get_size(msgid, key)
-        a = _internal.new_doubleArray(nval)
-        s = _internal.intp()
-        s.assign(nval)
+    nval = grib_get_size(msgid, key)
+    err, result = _internal.grib_get_double_ndarray(msgid, key, nval)
+    GRIB_CHECK(err)
+    return result
 
-        GRIB_CHECK(_internal.grib_c_get_real8_array(msgid, key, a, s))
-
-        result = array("d")
-        for i in range(nval):
-            result.append(_internal.doubleArray_getitem(a, i))
-
-        _internal.delete_doubleArray(a)
-
-        return result
 
 @require(msgid=int, key=str)
 def grib_get_string_array(msgid, key):
@@ -939,20 +895,7 @@ def grib_set_long_array(msgid, key, inarray):
     @param inarray     tuple,list,python array,numpy array
     @exception GribInternalError
     """
-    if with_numpy():
-        GRIB_CHECK(_internal.grib_set_long_ndarray(msgid, key, inarray))
-    else:
-        nval = len(inarray)
-        a = _internal.new_longArray(nval)
-        s = _internal.intp()
-        s.assign(nval)
-
-        for i in range(nval):
-            _internal.longArray_setitem(a, i, inarray[i])
-
-        GRIB_CHECK(_internal.grib_c_set_long_array(msgid, key, a, s))
-
-        _internal.delete_longArray(a)
+    GRIB_CHECK(_internal.grib_set_long_ndarray(msgid, key, inarray))
 
 
 @require(msgid=int, key=str)
@@ -968,26 +911,10 @@ def grib_get_long_array(msgid, key):
     @return           numpy.ndarray
     @exception GribInternalError
     """
-    if with_numpy():
-        nval = grib_get_size(msgid, key)
-        err, result = _internal.grib_get_long_ndarray(msgid, key, nval)
-        GRIB_CHECK(err)
-        return result
-    else:
-        nval = grib_get_size(msgid, key)
-        a = _internal.new_longArray(nval)
-        s = _internal.intp()
-        s.assign(nval)
-
-        GRIB_CHECK(_internal.grib_c_get_long_array(msgid, key, a, s))
-
-        result = array("l")
-        for i in range(nval):
-            result.append(_internal.longArray_getitem(a, i))
-
-        _internal.delete_longArray(a)
-
-        return result
+    nval = grib_get_size(msgid, key)
+    err, result = _internal.grib_get_long_ndarray(msgid, key, nval)
+    GRIB_CHECK(err)
+    return result
 
 
 def grib_multi_new():
@@ -1328,33 +1255,10 @@ def grib_get_double_elements(gribid, key, indexes):
     @exception GribInternalError
 
     """
-    if with_numpy():
-        nidx = len(indexes)
-        err, result = _internal.grib_get_double_ndelements(gribid, key, indexes, nidx)
-        GRIB_CHECK(err)
-        return result
-    else:
-        nidx = len(indexes)
-
-        pidx = _internal.new_intArray(nidx)
-        pval = _internal.new_doubleArray(nidx)
-        psize = _internal.intp()
-        psize.assign(nidx)
-
-        for i in range(len(indexes)):
-            _internal.intArray_setitem(pidx, i, indexes[i])
-
-        err = _internal.grib_c_get_real8_elements(gribid, key, pidx, pval, psize)
-        GRIB_CHECK(err)
-
-        result = array("d")
-        for i in range(psize.value()):
-            result.append(_internal.doubleArray_getitem(pval, i))
-
-        _internal.delete_intArray(pidx)
-        _internal.delete_doubleArray(pval)
-
-        return result
+    nidx = len(indexes)
+    err, result = _internal.grib_get_double_ndelements(gribid, key, indexes, nidx)
+    GRIB_CHECK(err)
+    return result
 
 
 def grib_get_elements(gribid, key, indexes):
