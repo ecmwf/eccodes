@@ -17,10 +17,7 @@ label="bufr_dump_fortran_test"
 fLog=${label}".log"
 rm -f $fLog
 
-#Define temp files
 tempBufr=outfile.bufr
-tempSrc=$label.temp.f90
-tempExe=$label.temp.exe
 
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
@@ -28,11 +25,11 @@ bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 PKGCONFIG_FILE=../eccodes_f90.pc
 CACHE_FILE=../CMakeCache.txt
 
-# Work out the Fortran compiler, the flags etc from pkgconfig
 COMPILE_AND_RUN=0
 
 if command -v pkg-config >/dev/null 2>&1; then
   if [ -f "$PKGCONFIG_FILE" ]; then
+    # Work out the Fortran compiler and flags from pkgconfig
     COMPILER=`pkg-config --variable=FC $PKGCONFIG_FILE`
     FLAGS_COMPILER=`pkg-config --cflags $PKGCONFIG_FILE`
     FLAGS_LINKER=`pkg-config --libs $PKGCONFIG_FILE`
@@ -53,6 +50,9 @@ fi
 
 for file in ${bufr_files}
 do
+  tempSrc=$label.$file.f90
+  tempExe=$label.$file.exe
+
   # Generate F90 code from BUFR file
   ${tools_dir}bufr_dump -Efortran ${data_dir}/bufr/$file > $tempSrc
   
@@ -68,9 +68,9 @@ do
     TEMP_JSON2=${label}.$tempBufr.json
     ${tools_dir}bufr_dump ${data_dir}/bufr/$file > $TEMP_JSON1
     ${tools_dir}bufr_dump $tempBufr              > $TEMP_JSON2
-    diff -w $TEMP_JSON1 $TEMP_JSON2
+    diff $TEMP_JSON1 $TEMP_JSON2
     rm -f $TEMP_JSON1 $TEMP_JSON2
   fi
-done
 
-rm -f $tempSrc $tempExe $tempBufr
+  rm -f $tempExe $tempSrc $tempBufr
+done

@@ -2779,6 +2779,16 @@ int grib_f_get_string_array(int* gid, char* key, char* val,int* nvals,int* slen,
 
 
 /*****************************************************************************/
+/* Strip whitespace from the end of a string */
+static void rtrim(char* s)
+{
+    Assert(s);
+    size_t len = strlen(s);
+    while (len > 0 && isspace((unsigned char)s[len - 1]))
+        len--;
+    s[len] = '\0';
+}
+
 int grib_f_set_string_array_(int* gid, char* key, char* val,int* nvals,int* slen,int len)
 {
     grib_handle *h = get_handle(*gid);
@@ -2796,6 +2806,7 @@ int grib_f_set_string_array_(int* gid, char* key, char* val,int* nvals,int* slen
     for (i=0;i<lsize;i++) {
         cval[i]=grib_context_malloc_clear(c,sizeof(char)* (*slen+1));
         cast_char_no_cut(cval[i],p,*slen);
+        rtrim( cval[i] ); /* trim spaces at end of string */
         p+= *slen;
     }
     err = grib_set_string_array(h, cast_char(buf,key,len), (const char **)cval, lsize);
