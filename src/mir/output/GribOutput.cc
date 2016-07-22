@@ -235,6 +235,14 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 
         const std::vector<double> &values = field.values(i);
 
+
+        for(auto j = values.begin(); j != values.end(); ++j) {
+            double x = *j;
+            ASSERT(x < 3e38);
+            ASSERT(x > -3e38);
+        }
+
+
         grib_handle *result = grib_util_set_spec(h, &info.grid, &info.packing, flags, &values[0], values.size(), &err);
         HandleFree hf(result); // Make sure handle deleted even in case of exception
 
