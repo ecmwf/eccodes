@@ -162,7 +162,7 @@ class GaussianIterator : public Iterator {
                     ASSERT(p_ < pl_.size());
                     ni_ = static_cast<size_t>(pl_[p_++]);
                 }
-                position_lon_idx(i_, imax_, domain_, ni_);
+                repositionToFirstLongitudeIndex(i_, imax_, domain_, ni_);
             }
 
             if (domain_.contains(lon,lat)) {
@@ -190,15 +190,15 @@ public:
 
         // position to first latitude and first/last longitude
         ni_ = static_cast<size_t>(pl_[p_++]);
-        position_lat_idx(k_,        domain_, latitudes_);
-        position_lon_idx(i_, imax_, domain_, ni_);
+        repositionToFirstLatitudeIndex (k_,        domain_, latitudes_);
+        repositionToFirstLongitudeIndex(i_, imax_, domain_, ni_);
 
         // eckit::Log::trace<MIR>() << *this << std::endl;
     }
 
 private:
 
-    static void position_lat_idx(size_t& j, const atlas::grid::Domain& dom, const std::vector<double>& lats) {
+    static void repositionToFirstLatitudeIndex(size_t& j, const atlas::grid::Domain& dom, const std::vector<double>& lats) {
         j=0;
         while (j < lats.size() && dom.north() < lats[j]) {
             j++;
@@ -206,7 +206,7 @@ private:
         ASSERT(j < lats.size());
     }
 
-    static void position_lon_idx(size_t& imin, size_t& imax, const atlas::grid::Domain& dom, const size_t& n) {
+    static void repositionToFirstLongitudeIndex(size_t& imin, size_t& imax, const atlas::grid::Domain& dom, const size_t& n) {
         typedef eckit::FloatCompare<double> cmp;
         const double west_positive = dom.west() + (cmp::isStrictlyGreater(0., dom.west())? 360. : 0.);
         const double east_positive = dom.east() + (cmp::isStrictlyGreater(0., dom.west())? 360. : 0.);
@@ -248,7 +248,7 @@ atlas::grid::Domain Reduced::atlasDomain() const {
     ASSERT(cmp::isStrictlyGreater(max_inc_north_south, 0));
 
     const double ew = bbox_.east() - bbox_.west();
-    const double inc_west_east = max_pl? ew/double(max_pl) : 0.;
+    const double inc_west_east = max_pl? 360./double(max_pl) : 0.;
 
     // confirm domain limits
     const double epsilon_grib1 = 1.0 / 1000.0;
