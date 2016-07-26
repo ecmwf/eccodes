@@ -2782,8 +2782,9 @@ int grib_f_get_string_array(int* gid, char* key, char* val,int* nvals,int* slen,
 /* Strip whitespace from the end of a string */
 static void rtrim(char* s)
 {
+    size_t len = 0;
     Assert(s);
-    size_t len = strlen(s);
+    len = strlen(s);
     while (len > 0 && isspace((unsigned char)s[len - 1]))
         len--;
     s[len] = '\0';
