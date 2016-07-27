@@ -174,16 +174,17 @@ static int destroy(grib_dumper* d)
     return GRIB_SUCCESS;
 }
 
-static char* dval_to_string(grib_context* c,double v) {
-  char* sval=grib_context_malloc_clear(c,sizeof(char)*40);
-  char* p;
-  sprintf(sval,"%.18e",v);
-  p=sval;
-  while (*p !=0 ) {
-    if (*p == 'e') *p='d';
-    p++;
-  }
-  return sval;
+static char* dval_to_string(grib_context* c,double v)
+{
+    char* sval=grib_context_malloc_clear(c,sizeof(char)*40);
+    char* p;
+    sprintf(sval,"%.18e",v);
+    p=sval;
+    while (*p !=0 ) {
+        if (*p == 'e') *p='d';
+        p++;
+    }
+    return sval;
 }
 
 static void dump_values(grib_dumper* d,grib_accessor* a)
@@ -259,18 +260,18 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     }
 
     if (self->isLeaf==0) {
-      char* prefix;
-      int dofree=0;
+        char* prefix;
+        int dofree=0;
 
-      if (r!=0) {
-        prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
-        dofree=1;
-        sprintf(prefix,"#%d#%s",r,a->name);
-      } else prefix=(char*)a->name;
+        if (r!=0) {
+            prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
+            dofree=1;
+            sprintf(prefix,"#%d#%s",r,a->name);
+        } else prefix=(char*)a->name;
 
-      dump_attributes(d,a,prefix);
-      if (dofree) grib_context_free(c,prefix);
-      depth-=2;
+        dump_attributes(d,a,prefix);
+        if (dofree) grib_context_free(c,prefix);
+        depth-=2;
     }
 
     (void)err; /* TODO */
@@ -342,15 +343,15 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
     }
 
     if (self->isLeaf==0) {
-      char* prefix1;
+        char* prefix1;
 
-      prefix1=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+strlen(prefix)+5));
-      sprintf(prefix1,"%s->%s",prefix,a->name);
+        prefix1=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+strlen(prefix)+5));
+        sprintf(prefix1,"%s->%s",prefix,a->name);
 
-      dump_attributes(d,a,prefix1);
+        dump_attributes(d,a,prefix1);
 
-      grib_context_free(c,prefix1);
-      depth-=2;
+        grib_context_free(c,prefix1);
+        depth-=2;
     }
 
     (void)err; /* TODO */
@@ -374,22 +375,22 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0  ) return;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0) {
-      if (self->isLeaf==0) {
-        char* prefix;
-        int dofree=0;
+        if (self->isLeaf==0) {
+            char* prefix;
+            int dofree=0;
 
-        r=get_key_rank(h,self->keys,a->name);
-        if (r!=0) {
-          prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
-          dofree=1;
-          sprintf(prefix,"#%d#%s",r,a->name);
-        } else prefix=(char*)a->name;
+            r=get_key_rank(h,self->keys,a->name);
+            if (r!=0) {
+                prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
+                dofree=1;
+                sprintf(prefix,"#%d#%s",r,a->name);
+            } else prefix=(char*)a->name;
 
-        dump_attributes(d,a,prefix);
-        if (dofree) grib_context_free(c,prefix);
-        depth-=2;
-      }
-      return;
+            dump_attributes(d,a,prefix);
+            if (dofree) grib_context_free(c,prefix);
+            depth-=2;
+        }
+        return;
     }
 
     if (size>1) {
@@ -438,18 +439,18 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
     }
 
     if (self->isLeaf==0) {
-      char* prefix;
-      int dofree=0;
+        char* prefix;
+        int dofree=0;
 
-      if (r!=0) {
-        prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
-        dofree=1;
-        sprintf(prefix,"#%d#%s",r,a->name);
-      } else prefix=(char*)a->name;
+        if (r!=0) {
+            prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
+            dofree=1;
+            sprintf(prefix,"#%d#%s",r,a->name);
+        } else prefix=(char*)a->name;
 
-      dump_attributes(d,a,prefix);
-      if (dofree) grib_context_free(c,prefix);
-      depth-=2;
+        dump_attributes(d,a,prefix);
+        if (dofree) grib_context_free(c,prefix);
+        depth-=2;
     }
     (void)err; /* TODO */
 }
@@ -510,15 +511,15 @@ static void dump_long_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
     }
 
     if (self->isLeaf==0) {
-      char* prefix1;
+        char* prefix1;
 
-      prefix1=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+strlen(prefix)+5));
-      sprintf(prefix1,"%s->%s",prefix,a->name);
+        prefix1=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+strlen(prefix)+5));
+        sprintf(prefix1,"%s->%s",prefix,a->name);
 
-      dump_attributes(d,a,prefix1);
+        dump_attributes(d,a,prefix1);
 
-      grib_context_free(c,prefix1);
-      depth-=2;
+        grib_context_free(c,prefix1);
+        depth-=2;
     }
     (void)err; /* TODO */
 }
@@ -544,28 +545,28 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 
     r=get_key_rank(h,self->keys,a->name);
     if( !grib_is_missing_double(a,value) ) {
-      sval=dval_to_string(c,value);
-      if (r!=0)
-        fprintf(self->dumper.out,"  call codes_set(ibufr,'#%d#%s',%s)\n",r,a->name,sval);
-      else
-        fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',%s)\n",a->name,sval);
+        sval=dval_to_string(c,value);
+        if (r!=0)
+            fprintf(self->dumper.out,"  call codes_set(ibufr,'#%d#%s',%s)\n",r,a->name,sval);
+        else
+            fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',%s)\n",a->name,sval);
 
-      grib_context_free(c,sval);
+        grib_context_free(c,sval);
     }
 
     if (self->isLeaf==0) {
-      char* prefix;
-      int dofree=0;
+        char* prefix;
+        int dofree=0;
 
-      if (r!=0) {
-        prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
-        dofree=1;
-        sprintf(prefix,"#%d#%s",r,a->name);
-      } else prefix=(char*)a->name;
+        if (r!=0) {
+            prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
+            dofree=1;
+            sprintf(prefix,"#%d#%s",r,a->name);
+        } else prefix=(char*)a->name;
 
-      dump_attributes(d,a,prefix);
-      if (dofree) grib_context_free(c,prefix);
-      depth-=2;
+        dump_attributes(d,a,prefix);
+        if (dofree) grib_context_free(c,prefix);
+        depth-=2;
     }
 }
 
@@ -622,18 +623,18 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
     }
 
     if (self->isLeaf==0) {
-      char* prefix;
-      int dofree=0;
+        char* prefix;
+        int dofree=0;
 
-      if (r!=0) {
-        prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
-        dofree=1;
-        sprintf(prefix,"#%d#%s",r,a->name);
-      } else prefix=(char*)a->name;
+        if (r!=0) {
+            prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
+            dofree=1;
+            sprintf(prefix,"#%d#%s",r,a->name);
+        } else prefix=(char*)a->name;
 
-      dump_attributes(d,a,prefix);
-      if (dofree) grib_context_free(c,prefix);
-      depth-=2;
+        dump_attributes(d,a,prefix);
+        if (dofree) grib_context_free(c,prefix);
+        depth-=2;
     }
 
     grib_context_free(c,values);
@@ -684,18 +685,18 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 
 
     if (self->isLeaf==0) {
-      char* prefix;
-      int dofree=0;
+        char* prefix;
+        int dofree=0;
 
-      if (r!=0) {
-        prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
-        dofree=1;
-        sprintf(prefix,"#%d#%s",r,a->name);
-      } else prefix=(char*)a->name;
+        if (r!=0) {
+            prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
+            dofree=1;
+            sprintf(prefix,"#%d#%s",r,a->name);
+        } else prefix=(char*)a->name;
 
-      dump_attributes(d,a,prefix);
-      if (dofree) grib_context_free(c,prefix);
-      depth-=2;
+        dump_attributes(d,a,prefix);
+        if (dofree) grib_context_free(c,prefix);
+        depth-=2;
     }
 
     grib_context_free(c,value);
@@ -710,7 +711,8 @@ static void dump_label(grib_dumper* d,grib_accessor* a,const char* comment)
 {
 }
 
-static void _dump_long_array(grib_handle* h,FILE* f,const char* key,const char* print_key) {
+static void _dump_long_array(grib_handle* h,FILE* f,const char* key,const char* print_key)
+{
     long* val;
     size_t size=0,i;
     int cols=9,icount=0;
@@ -773,84 +775,86 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a,char* prefix)
     grib_dumper_fortran *self = (grib_dumper_fortran*)d;
     unsigned long flags;
     while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
-      self->isAttribute=1;
-      if (  (d->option_flags & GRIB_DUMP_FLAG_ALL_ATTRIBUTES ) == 0
-          && (a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_DUMP)== 0 )
-      {
-        i++;
-        continue;
-      }
-      self->isLeaf=a->attributes[i]->attributes[0]==NULL ? 1 : 0;
-      flags=a->attributes[i]->flags;
-      a->attributes[i]->flags |= GRIB_ACCESSOR_FLAG_DUMP;
-      switch (grib_accessor_get_native_type(a->attributes[i])) {
+        self->isAttribute=1;
+        if (  (d->option_flags & GRIB_DUMP_FLAG_ALL_ATTRIBUTES ) == 0
+                && (a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_DUMP)== 0 )
+        {
+            i++;
+            continue;
+        }
+        self->isLeaf=a->attributes[i]->attributes[0]==NULL ? 1 : 0;
+        flags=a->attributes[i]->flags;
+        a->attributes[i]->flags |= GRIB_ACCESSOR_FLAG_DUMP;
+        switch (grib_accessor_get_native_type(a->attributes[i])) {
         case GRIB_TYPE_LONG:
-          dump_long_attribute(d,a->attributes[i],prefix);
-          break;
+            dump_long_attribute(d,a->attributes[i],prefix);
+            break;
         case GRIB_TYPE_DOUBLE:
-          dump_values_attribute(d,a->attributes[i],prefix);
-          break;
+            dump_values_attribute(d,a->attributes[i],prefix);
+            break;
         case GRIB_TYPE_STRING:
-          break;
-      }
-      a->attributes[i]->flags=flags;
-      i++;
+            break;
+        }
+        a->attributes[i]->flags=flags;
+        i++;
     }
     self->isLeaf=0;
     self->isAttribute=0;
 }
 
-static void header(grib_dumper* d,grib_handle* h) {
-  grib_dumper_fortran *self = (grib_dumper_fortran*)d;
-  char sampleName[200]={0};
-  long localSectionPresent,edition,bufrHeaderCentre,isSatellite;
+static void header(grib_dumper* d,grib_handle* h)
+{
+    grib_dumper_fortran *self = (grib_dumper_fortran*)d;
+    char sampleName[200]={0};
+    long localSectionPresent,edition,bufrHeaderCentre,isSatellite;
 
-  grib_get_long(h,"localSectionPresent",&localSectionPresent);
-  grib_get_long(h,"bufrHeaderCentre",&bufrHeaderCentre);
-  grib_get_long(h,"edition",&edition);
+    grib_get_long(h,"localSectionPresent",&localSectionPresent);
+    grib_get_long(h,"bufrHeaderCentre",&bufrHeaderCentre);
+    grib_get_long(h,"edition",&edition);
 
-  if (localSectionPresent && bufrHeaderCentre==98 ) {
-    grib_get_long(h,"isSatellite",&isSatellite);
-    if (isSatellite)
-      sprintf(sampleName,"BUFR%ld_local_satellite.bufr",edition);
-    else
-      sprintf(sampleName,"BUFR%ld_local.bufr",edition);
-  } else {
-    sprintf(sampleName,"BUFR%ld.bufr",edition);
-  }
+    if (localSectionPresent && bufrHeaderCentre==98 ) {
+        grib_get_long(h,"isSatellite",&isSatellite);
+        if (isSatellite)
+            sprintf(sampleName,"BUFR%ld_local_satellite.bufr",edition);
+        else
+            sprintf(sampleName,"BUFR%ld_local.bufr",edition);
+    } else {
+        sprintf(sampleName,"BUFR%ld.bufr",edition);
+    }
 
-  if (d->count<2) {
-    fprintf(self->dumper.out,"!  This program has been automatically generated with bufr_dump -Efortran\n");
-    fprintf(self->dumper.out,"program bufr_create_message\n");
-    fprintf(self->dumper.out,"  use eccodes\n");
-    fprintf(self->dumper.out,"  implicit none\n");
-    fprintf(self->dumper.out,"  integer                                       :: iret\n");
-    fprintf(self->dumper.out,"  integer                                       :: outfile\n");
-    fprintf(self->dumper.out,"  integer                                       :: ibufr\n");
-    fprintf(self->dumper.out,"  integer(kind=4), dimension(:), allocatable    :: ivalues\n");
-    fprintf(self->dumper.out,"  integer, parameter  :: max_strsize = 100\n");
-    fprintf(self->dumper.out,"  character(len=max_strsize) , dimension(:),allocatable   :: svalues\n");
-    fprintf(self->dumper.out,"  real(kind=8), dimension(:), allocatable       :: rvalues\n");
-  }
-  fprintf(self->dumper.out,"  call codes_bufr_new_from_samples(ibufr,'%s',iret)\n",sampleName);
-  fprintf(self->dumper.out,"  if (iret/=CODES_SUCCESS) then\n");
-  fprintf(self->dumper.out,"    print *,'ERROR creating BUFR from %s'\n",sampleName);
-  fprintf(self->dumper.out,"    stop 1\n");
-  fprintf(self->dumper.out,"  endif\n");
+    if (d->count<2) {
+        fprintf(self->dumper.out,"!  This program has been automatically generated with bufr_dump -Efortran\n");
+        fprintf(self->dumper.out,"program bufr_create_message\n");
+        fprintf(self->dumper.out,"  use eccodes\n");
+        fprintf(self->dumper.out,"  implicit none\n");
+        fprintf(self->dumper.out,"  integer                                       :: iret\n");
+        fprintf(self->dumper.out,"  integer                                       :: outfile\n");
+        fprintf(self->dumper.out,"  integer                                       :: ibufr\n");
+        fprintf(self->dumper.out,"  integer(kind=4), dimension(:), allocatable    :: ivalues\n");
+        fprintf(self->dumper.out,"  integer, parameter  :: max_strsize = 100\n");
+        fprintf(self->dumper.out,"  character(len=max_strsize) , dimension(:),allocatable   :: svalues\n");
+        fprintf(self->dumper.out,"  real(kind=8), dimension(:), allocatable       :: rvalues\n");
+    }
+    fprintf(self->dumper.out,"  call codes_bufr_new_from_samples(ibufr,'%s',iret)\n",sampleName);
+    fprintf(self->dumper.out,"  if (iret/=CODES_SUCCESS) then\n");
+    fprintf(self->dumper.out,"    print *,'ERROR creating BUFR from %s'\n",sampleName);
+    fprintf(self->dumper.out,"    stop 1\n");
+    fprintf(self->dumper.out,"  endif\n");
 }
 
-static void footer(grib_dumper* d,grib_handle* h) {
-  grib_dumper_fortran *self = (grib_dumper_fortran*)d;
-  fprintf(self->dumper.out,"  call codes_set(ibufr,'pack',1)\n");
-  if (d->count==1)
-    fprintf(self->dumper.out,"  call codes_open_file(outfile,'outfile.bufr','w')\n");
-  else
-    fprintf(self->dumper.out,"  call codes_open_file(outfile,'outfile.bufr','a')\n");
+static void footer(grib_dumper* d,grib_handle* h)
+{
+    grib_dumper_fortran *self = (grib_dumper_fortran*)d;
+    fprintf(self->dumper.out,"  call codes_set(ibufr,'pack',1)\n");
+    if (d->count==1)
+        fprintf(self->dumper.out,"  call codes_open_file(outfile,'outfile.bufr','w')\n");
+    else
+        fprintf(self->dumper.out,"  call codes_open_file(outfile,'outfile.bufr','a')\n");
 
-  fprintf(self->dumper.out,"  call codes_write(ibufr,outfile)\n");
-  fprintf(self->dumper.out,"  call codes_close_file(outfile)\n");
-  fprintf(self->dumper.out,"  call codes_release(ibufr)\n");
-  fprintf(self->dumper.out,"  if(allocated(ivalues)) deallocate(ivalues)\n");
-  fprintf(self->dumper.out,"  if(allocated(rvalues)) deallocate(rvalues)\n");
-  fprintf(self->dumper.out,"  if(allocated(svalues)) deallocate(svalues)\n");
+    fprintf(self->dumper.out,"  call codes_write(ibufr,outfile)\n");
+    fprintf(self->dumper.out,"  call codes_close_file(outfile)\n");
+    fprintf(self->dumper.out,"  call codes_release(ibufr)\n");
+    fprintf(self->dumper.out,"  if(allocated(ivalues)) deallocate(ivalues)\n");
+    fprintf(self->dumper.out,"  if(allocated(rvalues)) deallocate(rvalues)\n");
+    fprintf(self->dumper.out,"  if(allocated(svalues)) deallocate(svalues)\n");
 }
