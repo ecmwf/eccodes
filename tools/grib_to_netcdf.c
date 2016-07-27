@@ -4106,10 +4106,15 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
             {
                 grib_context_log(ctx, GRIB_LOG_ERROR, "Wrong number of fields");
                 grib_context_log(ctx, GRIB_LOG_ERROR, "File contains %d GRIBs, %d left in internal description, %d in request", i, fs->count, cnt);
+                grib_context_log(ctx, GRIB_LOG_ERROR, "The fields are not considered distinct!\n");
                 /*grib_context_log(ctx, GRIB_LOG_ERROR, "MARS description");*/
                 /*print_all_requests(setup.mars_description);*/
-                grib_context_log(ctx, GRIB_LOG_ERROR, "Internal description");
-                print_all_requests(temp_data_r);
+                if (ctx->debug) {
+                    grib_context_log(ctx, GRIB_LOG_ERROR, "Internal description");
+                    print_all_requests(temp_data_r);
+                }
+                grib_context_log(ctx, GRIB_LOG_ERROR, "Hint: This may be due to several fields having the same validity time.");
+                grib_context_log(ctx, GRIB_LOG_ERROR, "Try using the -T option (Do not use time of validity)");
                 exit(1);
             }
         }
