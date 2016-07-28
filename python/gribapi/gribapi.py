@@ -6,7 +6,7 @@ The Python interface to ecCodes uses the <a href="http://numpy.scipy.org/"><b>Nu
 as the container of choice for the possible arrays of values that can be encoded/decoded in and from a grib message.
 Numpy is a package used for scientific computing in Python and an efficient container for generic data.
 
-The Python interface can be enabled/disabled from cmake by using the following flag:\n
+The Python interface can be enabled/disabled from CMake by using the following flag:\n
 
 @code{.unparsed}
     -DENABLE_PYTHON=ON
@@ -23,11 +23,10 @@ When this is enabed, then the system Python will be used to build the interface.
 
 """
 import gribapi_swig as _internal
-#from gribapi import gribapi_swig as _internal
+# from gribapi import gribapi_swig as _internal
 import types
 import sys
 import os
-from array import array
 from functools import wraps
 # import inspect
 
@@ -37,17 +36,17 @@ KEYTYPES = {
     3: str,
 }
 
-CODES_PRODUCT_ANY=0
+CODES_PRODUCT_ANY = 0
 """ Generic product kind """
-CODES_PRODUCT_GRIB=1
+CODES_PRODUCT_GRIB = 1
 """ GRIB product kind """
-CODES_PRODUCT_BUFR=2
+CODES_PRODUCT_BUFR = 2
 """ BUFR product kind """
-CODES_PRODUCT_METAR=3
+CODES_PRODUCT_METAR = 3
 """ METAR product kind """
-CODES_PRODUCT_GTS=4
+CODES_PRODUCT_GTS = 4
 """ GTS product kind """
-CODES_PRODUCT_TAF=5
+CODES_PRODUCT_TAF = 5
 """ TAF product kind """
 
 # Constants for 'missing'
@@ -103,6 +102,7 @@ class GribInternalError(Exception):
     def __str__(self):
         return self.msg
 
+
 # @cond
 class Bunch(dict):
     """
@@ -134,6 +134,7 @@ class Bunch(dict):
                  in self.__dict__.items()]
         return '\n'.join(state)
 # @endcond
+
 
 # @cond
 @require(errid=int)
@@ -172,8 +173,9 @@ def gts_new_from_file(fileobj, headers_only=False):
     else:
         return gribid
 
+
 @require(fileobj=file)
-def metar_new_from_file(fileobj, headers_only = False):
+def metar_new_from_file(fileobj, headers_only=False):
     """
     @brief Load in memory a METAR message from a file.
 
@@ -194,8 +196,9 @@ def metar_new_from_file(fileobj, headers_only = False):
     else:
         return gribid
 
-@require(fileobj=file,product_kind=int)
-def codes_new_from_file(fileobj, product_kind, headers_only = False):
+
+@require(fileobj=file, product_kind=int)
+def codes_new_from_file(fileobj, product_kind, headers_only=False):
     """
     @brief Load in memory a message from a file for a given product.
 
@@ -222,8 +225,9 @@ def codes_new_from_file(fileobj, product_kind, headers_only = False):
         return any_new_from_file(fileobj, headers_only)
     raise Exception("Invalid product kind: " + product_kind)
 
+
 @require(fileobj=file)
-def any_new_from_file(fileobj, headers_only = False):
+def any_new_from_file(fileobj, headers_only=False):
     """
     @brief Load in memory a message from a file.
 
@@ -245,6 +249,7 @@ def any_new_from_file(fileobj, headers_only = False):
             GRIB_CHECK(err)
     else:
         return gribid
+
 
 @require(fileobj=file)
 def bufr_new_from_file(fileobj, headers_only=False):
@@ -864,22 +869,23 @@ def grib_get_string_array(msgid, key):
     @return        numpy.ndarray
     @exception GribInternalError
     """
-    nval = grib_get_size(msgid,key)
+    nval = grib_get_size(msgid, key)
     a = _internal.new_stringArray(nval)
     s = _internal.sizetp()
     s.assign(nval)
 
-    GRIB_CHECK(_internal.grib_c_get_string_array(msgid,key,a,s))
+    GRIB_CHECK(_internal.grib_c_get_string_array(msgid, key, a, s))
 
     result = list()
     for i in range(nval):
-        result.append(_internal.stringArray_getitem(a,i))
+        result.append(_internal.stringArray_getitem(a, i))
 
     _internal.delete_stringArray(a)
 
     return result
 
-@require(msgid=int,key=str)
+
+@require(msgid=int, key=str)
 def grib_set_long_array(msgid, key, inarray):
     """
     @brief Set the value of the key to an integer array.
@@ -1787,4 +1793,3 @@ def grib_set_samples_path(samples_path):
     @param samples_path   samples path
     """
     _internal.grib_c_set_samples_path(samples_path)
-
