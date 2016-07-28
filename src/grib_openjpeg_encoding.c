@@ -342,8 +342,18 @@ int grib_openjpeg_encode(grib_context *c, j2k_encode_helper *helper)
 
     parameters.tcp_numlayers  = 1;
     parameters.cp_disto_alloc = 1;
-    parameters.numresolution =  1;
+    /* parameters.numresolution =  1; */
     parameters.tcp_rates[0]   = helper->compression;
+
+    /* By default numresolution = 6 (must be between 1 and 32)
+     * This may be too large for some of our datasets, eg. 1xn, so adjust ...
+     */
+    parameters.numresolution = 6;
+    while ( (helper->width <  (OPJ_UINT32) (1 << (parameters.numresolution - 1U)) ) ||
+            (helper->height <  (OPJ_UINT32) (1 << (parameters.numresolution - 1U)) ))
+    {
+        parameters.numresolution--;
+    }
 
     /* initialize image component */
     cmptparm.prec = helper->bits_per_value;
