@@ -826,7 +826,7 @@ def grib_set_double_array(msgid, key, inarray):
 
     The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...
 
-    If NumPy is enabled, the wrapper will internally try to convert the input to a NumPy array
+    The wrapper will internally try to convert the input to a NumPy array
     before extracting its data and length. This is possible as NumPy
     allows the construction of arrays from arbitrary python sequences.
 
@@ -843,10 +843,7 @@ def grib_set_double_array(msgid, key, inarray):
 @require(msgid=int, key=str)
 def grib_get_double_array(msgid, key):
     """
-    @brief Get the value of the key as a double array.
-
-    If NumPy is enabled, the double array will be stored in a NumPy ndarray.
-    Otherwise, Python's native array type will be used.
+    @brief Get the value of the key as a NumPy array of doubles.
 
     @param msgid   id of the message loaded in memory
     @param key     key name
@@ -862,11 +859,11 @@ def grib_get_double_array(msgid, key):
 @require(msgid=int, key=str)
 def grib_get_string_array(msgid, key):
     """
-    @brief Get the value of the key as an array of strings.
+    @brief Get the value of the key as a list of strings.
 
     @param msgid   id of the message loaded in memory
     @param key     key name
-    @return        numpy.ndarray
+    @return        list
     @exception GribInternalError
     """
     nval = grib_get_size(msgid, key)
@@ -890,7 +887,9 @@ def grib_set_long_array(msgid, key, inarray):
     """
     @brief Set the value of the key to an integer array.
 
-    If NumPy is enabled, the wrapper will internally try to convert the input to a NumPy array
+    The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...
+
+    The wrapper will internally try to convert the input to a NumPy array
     before extracting its data and length. This is possible as NumPy
     allows the construction of arrays from arbitrary python sequences.
 
@@ -898,7 +897,7 @@ def grib_set_long_array(msgid, key, inarray):
 
     @param msgid       id of the message loaded in memory
     @param key         key name
-    @param inarray     tuple,list,python array,numpy array
+    @param inarray     tuple,list,python array,numpy.ndarray
     @exception GribInternalError
     """
     GRIB_CHECK(_internal.grib_set_long_ndarray(msgid, key, inarray))
@@ -908,9 +907,6 @@ def grib_set_long_array(msgid, key, inarray):
 def grib_get_long_array(msgid, key):
     """
     @brief Get the integer array of values for a key from a grib message.
-
-    If NumPy is enabled, the integer array will be stored in a NumPy ndarray.
-    Otherwise, Python's native array type will be used.
 
     @param msgid      id of the message loaded in memory
     @param key        key name
@@ -1490,11 +1486,11 @@ def grib_get_array(msgid, key, ktype=None):
     The output array will be stored in a NumPy ndarray.
     The type of the array returned depends on the native type of the requested key.
     The type of value returned can be forced by using the type argument of the function.
-    The type argument can be int or float.
+    The type argument can be int, float or string.
 
     @param msgid      id of the message loaded in memory
     @param key        the key to get the value for
-    @param ktype      the type we want the output in (can be int or float), native type if not specified
+    @param ktype      the type we want the output in (can be int, float or string), native type if not specified
     @return           numpy.ndarray
     @exception GribInternalError
     """
@@ -1535,7 +1531,7 @@ def grib_set_values(gribid, values):
 
     The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...
 
-    If NumPy is enabled, the wrapper will internally try to convert the input to a NumPy array
+    The wrapper will internally try to convert the input to a NumPy array
     before extracting its data and length. This is possible as NumPy
     allows the construction of arrays from arbitrary python sequences.
 
@@ -1586,7 +1582,7 @@ def grib_set_array(msgid, key, value):
 
     The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...
 
-    If NumPy is enabled, the wrapper will internally try to convert the input to a NumPy array
+    The wrapper will internally try to convert the input to a NumPy array
     before extracting its data and length. This is possible as NumPy
     allows the construction of arrays from arbitrary python sequences.
 
