@@ -137,6 +137,11 @@ foreach( test ${tests2} )
     )
 endforeach()
 
+if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
+    set_tests_properties ( eccodes_t_bufr_dump_fortran PROPERTIES TIMEOUT 2500)
+endif()
+
+
 ###########################################
 # Note: the reference file is in the tests dir not data dir!
 ecbuild_add_test( TARGET eccodes_t_lamb_az_eq_area
