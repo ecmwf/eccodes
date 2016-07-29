@@ -35,15 +35,18 @@ if with_jasper:
                       extra_link_args='-Wl,-rpath,' + os.path.join(jasper_dir, 'lib'))
     add_attribute(libraries='jasper')
 
-#with_openjpeg = @HAVE_LIBOPENJPEG@
-#if with_openjpeg:
-#    openjpeg_dir = '@OPENJPEG_DIR@'
-#    if openjpeg_dir and openjpeg_dir != 'system':
-#        add_attribute(include_dirs=os.path.join(openjpeg_dir, 'include'),
-#                      library_dirs=os.path.join(openjpeg_dir, 'lib'),
-#                      extra_link_args='-Wl,-rpath,' + os.path.join(openjpeg_dir, 'lib'))
-#    add_attribute(libraries='openjpeg')
-#
+shared_libs='@BUILD_SHARED_LIBS@'
+if shared_libs == 'OFF':
+    with_openjpeg = @HAVE_LIBOPENJPEG@
+    if with_openjpeg:
+        openjpeg_lib_dir = '@OPENJPEG_LIB_DIR@'
+        openjpeg_inc_dir = '@OPENJPEG_INCLUDE_DIR@'
+        if openjpeg_lib_dir and openjpeg_inc_dir:
+            add_attribute(include_dirs=openjpeg_inc_dir,
+                          library_dirs=openjpeg_lib_dir,
+                          extra_link_args='-Wl,-rpath,' + openjpeg_lib_dir)
+        add_attribute(libraries='openjp2')
+
 
 # assumes png is supplied by system paths -- may not be true
 png = @HAVE_LIBPNG@
