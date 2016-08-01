@@ -178,11 +178,6 @@ static char* dval_to_string(grib_context* c,double v)
 {
     char* sval=grib_context_malloc_clear(c,sizeof(char)*40);
     sprintf(sval,"%.18e",v);
-    /* p=sval;
-    while (*p !=0 ) {
-        if (*p == 'e') *p='d';
-        p++;
-    } */
     return sval;
 }
 
@@ -215,22 +210,17 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     self->empty=0;
 
     if (size>1) {
-
-        /*fprintf(self->dumper.out,"  if(allocated(rvalues)) deallocate(rvalues)\n");
-        fprintf(self->dumper.out,"  allocate(rvalues(%ld))\n",size);*/
-
-
-        fprintf(self->dumper.out,"  rvalues=(");
+        fprintf(self->dumper.out,"    rvalues=(");
 
         icount=0;
         for (i=0; i<size-1; ++i) {
-            if (icount>cols || i==0) {fprintf(self->dumper.out,"  \n      ");icount=0;}
+            if (icount>cols || i==0) {fprintf(self->dumper.out,"\n        ");icount=0;}
             sval=dval_to_string(c,values[i]);
             fprintf(self->dumper.out,"%s, ", sval);
             grib_context_free(c,sval);
             icount++;
         }
-        if (icount>cols || i==0) {fprintf(self->dumper.out,"  \n      ");icount=0;}
+        if (icount>cols || i==0) {fprintf(self->dumper.out,"\n        ");icount=0;}
         sval=dval_to_string(c,values[i]);
         fprintf(self->dumper.out,"%s", sval);
         grib_context_free(c,sval);
@@ -240,18 +230,18 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         grib_context_free(c,values);
 
         if ((r=get_key_rank(h,self->keys,a->name))!=0)
-            fprintf(self->dumper.out,"  codes_set(ibufr, '#%d#%s', rvalues)\n",r,a->name);
+            fprintf(self->dumper.out,"    codes_set_array(ibufr, '#%d#%s', rvalues)\n",r,a->name);
         else
-            fprintf(self->dumper.out,"  codes_set(ibufr, '%s', rvalues)\n",a->name);
+            fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s', rvalues)\n",a->name);
     } else {
         r=get_key_rank(h,self->keys,a->name);
         if( !grib_is_missing_double(a,value) ) {
 
             sval=dval_to_string(c,value);
             if (r!=0)
-                fprintf(self->dumper.out,"  codes_set(ibufr, '#%d#%s', %s)\n",r,a->name,sval);
+                fprintf(self->dumper.out,"    codes_set(ibufr, '#%d#%s', %s)\n",r,a->name,sval);
             else
-                fprintf(self->dumper.out,"  codes_set(ibufr, '%s', %s)\n",a->name,sval);
+                fprintf(self->dumper.out,"    codes_set(ibufr, '%s', %s)\n",a->name,sval);
 
             grib_context_free(c,sval);
 
@@ -305,21 +295,17 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
 
     if (size>1) {
 
-        /* fprintf(self->dumper.out,"  if(allocated(rvalues)) deallocate(rvalues)\n");
-        fprintf(self->dumper.out,"  allocate(rvalues(%ld))\n",size); */
-
-
-        fprintf(self->dumper.out,"  rvalues=(");
+        fprintf(self->dumper.out,"    rvalues=(");
 
         icount=0;
         for (i=0; i<size-1; ++i) {
-            if (icount>cols || i==0) {fprintf(self->dumper.out,"  \n      ");icount=0;}
+            if (icount>cols || i==0) {fprintf(self->dumper.out,"\n      ");icount=0;}
             sval=dval_to_string(c,values[i]);
             fprintf(self->dumper.out,"%s, ", sval);
             grib_context_free(c,sval);
             icount++;
         }
-        if (icount>cols || i==0) {fprintf(self->dumper.out,"  \n      ");icount=0;}
+        if (icount>cols || i==0) {fprintf(self->dumper.out,"\n      ");icount=0;}
         sval=dval_to_string(c,values[i]);
         fprintf(self->dumper.out,"%s", sval);
         grib_context_free(c,sval);
@@ -328,13 +314,13 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
         fprintf(self->dumper.out,")\n");
         grib_context_free(c,values);
 
-        fprintf(self->dumper.out,"  codes_set(ibufr, '%s->%s' \n, rvalues)\n",prefix,a->name);
+        fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s->%s' \n, rvalues)\n",prefix,a->name);
     } else {
         /* int r=get_key_rank(h,self->keys,a->name); */
         if( !grib_is_missing_double(a,value) ) {
 
             sval=dval_to_string(c,value);
-            fprintf(self->dumper.out,"  codes_set(ibufr, '%s->%s' \n,%s)\n",prefix,a->name,sval);
+            fprintf(self->dumper.out,"    codes_set(ibufr, '%s->%s' \n,%s)\n",prefix,a->name,sval);
 
             grib_context_free(c,sval);
 
@@ -402,36 +388,32 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
     self->empty=0;
 
     if (size>1) {
-        /* fprintf(self->dumper.out,"  if(allocated(ivalues)) deallocate(ivalues)\n");
-        fprintf(self->dumper.out,"  allocate(ivalues(%ld))\n",size); */
-
-
-        fprintf(self->dumper.out,"  ivalues=(");
+        fprintf(self->dumper.out,"    ivalues=(");
         icount=0;
         for (i=0;i<size-1;i++) {
-            if (icount>cols || i==0) {fprintf(self->dumper.out,"\n      ");icount=0;}
+            if (icount>cols || i==0) {fprintf(self->dumper.out,"\n        ");icount=0;}
             fprintf(self->dumper.out,"%ld, ",values[i]);
             icount++;
         }
-        if (icount>cols || i==0) {fprintf(self->dumper.out,"\n      ");icount=0;}
-        fprintf(self->dumper.out,"%ld ",values[i]);
+        if (icount>cols || i==0) {fprintf(self->dumper.out,"\n        ");icount=0;}
+        fprintf(self->dumper.out,"%ld",values[i]);
 
         depth-=2;
         fprintf(self->dumper.out,")\n");
         grib_context_free(a->context,values);
 
         if ((r=get_key_rank(h,self->keys,a->name))!=0)
-            fprintf(self->dumper.out,"  codes_set(ibufr, '#%d#%s', ivalues)\n",r,a->name);
+            fprintf(self->dumper.out,"    codes_set_array(ibufr, '#%d#%s', ivalues)\n",r,a->name);
         else
-            fprintf(self->dumper.out,"  codes_set(ibufr, '%s', ivalues)\n",a->name);
+            fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s', ivalues)\n",a->name);
 
     } else {
         r=get_key_rank(h,self->keys,a->name);
         if( !grib_is_missing_long(a,value) ) {
             if (r!=0)
-                fprintf(self->dumper.out,"  codes_set(ibufr, '#%d#%s', ",r,a->name);
+                fprintf(self->dumper.out,"    codes_set(ibufr, '#%d#%s', ",r,a->name);
             else
-                fprintf(self->dumper.out,"  codes_set(ibufr, '%s', ",a->name);
+                fprintf(self->dumper.out,"    codes_set(ibufr, '%s', ",a->name);
 
             fprintf(self->dumper.out,"%ld)\n",value);
         }
@@ -481,11 +463,8 @@ static void dump_long_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
     self->empty=0;
 
     if (size>1) {
-        /* fprintf(self->dumper.out,"  if(allocated(ivalues)) deallocate(ivalues)\n");
-        fprintf(self->dumper.out,"  allocate(ivalues(%ld))\n",size); */
 
-
-        fprintf(self->dumper.out,"  ivalues=(");
+        fprintf(self->dumper.out,"    ivalues=(");
         icount=0;
         for (i=0;i<size-1;i++) {
             if (icount>cols || i==0) {fprintf(self->dumper.out,"  \n      ");icount=0;}
@@ -499,12 +478,12 @@ static void dump_long_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
         fprintf(self->dumper.out,")\n");
         grib_context_free(a->context,values);
 
-        fprintf(self->dumper.out,"  codes_set(ibufr, '%s->%s' \n,ivalues)\n",prefix,a->name);
+        fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s->%s' \n,ivalues)\n",prefix,a->name);
 
     } else {
         /* int r=get_key_rank(h,self->keys,a->name); */
         if( !grib_is_missing_long(a,value) ) {
-            fprintf(self->dumper.out,"  codes_set(ibufr, '%s->%s'\n,",prefix,a->name);
+            fprintf(self->dumper.out,"    codes_set(ibufr, '%s->%s'\n,",prefix,a->name);
             fprintf(self->dumper.out,"%ld)\n",value);
         }
     }
@@ -546,9 +525,9 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
     if( !grib_is_missing_double(a,value) ) {
         sval=dval_to_string(c,value);
         if (r!=0)
-            fprintf(self->dumper.out,"  codes_set(ibufr, '#%d#%s', %s)\n",r,a->name,sval);
+            fprintf(self->dumper.out,"    codes_set(ibufr, '#%d#%s', %s)\n",r,a->name,sval);
         else
-            fprintf(self->dumper.out,"  codes_set(ibufr, '%s', %s)\n",a->name,sval);
+            fprintf(self->dumper.out,"    codes_set(ibufr, '%s', %s)\n",a->name,sval);
 
         grib_context_free(c,sval);
     }
@@ -592,11 +571,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
         return;
     }
 
-    /* fprintf(self->dumper.out,"  if(allocated(svalues)) deallocate(svalues)\n");
-    fprintf(self->dumper.out,"  allocate(svalues(%ld))\n",size); */
-
     fprintf(self->dumper.out,"  svalues=(");
-
 
     self->empty=0;
 
@@ -616,9 +591,9 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
 
     if (self->isLeaf==0) {
         if ((r=get_key_rank(h,self->keys,a->name))!=0)
-            fprintf(self->dumper.out,"  codes_set_string_array(ibufr,'#%d#%s',svalues)\n",r,a->name);
+            fprintf(self->dumper.out,"    codes_set_string_array(ibufr,'#%d#%s',svalues)\n",r,a->name);
         else
-            fprintf(self->dumper.out,"  codes_set_string_array(ibufr,'%s',svalues)\n",a->name);
+            fprintf(self->dumper.out,"    codes_set_string_array(ibufr,'%s',svalues)\n",a->name);
     }
 
     if (self->isLeaf==0) {
@@ -676,9 +651,9 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     if (self->isLeaf==0) {
         depth+=2;
         if (r!=0)
-            fprintf(self->dumper.out,"  codes_set(ibufr, '#%d#%s',",r,a->name);
+            fprintf(self->dumper.out,"    codes_set(ibufr, '#%d#%s',",r,a->name);
         else
-            fprintf(self->dumper.out,"  codes_set(ibufr, '%s',",a->name);
+            fprintf(self->dumper.out,"    codes_set(ibufr, '%s',",a->name);
     }
     fprintf(self->dumper.out,"\'%s\')\n",value);
 
@@ -716,13 +691,9 @@ static void _dump_long_array(grib_handle* h,FILE* f,const char* key,const char* 
     size_t size=0,i;
     int cols=9,icount=0;
 
-
     if (grib_get_size(h,key,&size)==GRIB_NOT_FOUND) return;
 
-    /* fprintf(f,"  if(allocated(ivalues)) deallocate(ivalues)\n");
-    fprintf(f,"  allocate(ivalues(%ld))\n",size); */
-
-    fprintf(f,"  ivalues=( ");
+    fprintf(f,"    ivalues=( ");
 
     val=grib_context_malloc_clear(h->context,sizeof(long)*size);
     grib_get_long_array(h,key,val,&size);
@@ -735,8 +706,7 @@ static void _dump_long_array(grib_handle* h,FILE* f,const char* key,const char* 
     fprintf(f,"%ld )\n",val[size-1]);
 
     grib_context_free(h->context,val);
-    fprintf(f,"  codes_set(ibufr, '%s', ivalues)\n",print_key);
-
+    fprintf(f,"    codes_set_array(ibufr, '%s', ivalues)\n",print_key);
 }
 
 static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors* block)
@@ -832,19 +802,19 @@ static void header(grib_dumper* d,grib_handle* h)
         fprintf(self->dumper.out,"from eccodes import *\n\n\n");
         fprintf(self->dumper.out,"def bufr_create_message():\n");
     }
-    fprintf(self->dumper.out,"  ibufr = codes_new_from_samples('%s')\n",sampleName);
+    fprintf(self->dumper.out,"    ibufr = codes_bufr_new_from_samples('%s')\n",sampleName);
 }
 
 static void footer(grib_dumper* d,grib_handle* h)
 {
     grib_dumper_python *self = (grib_dumper_python*)d;
-    fprintf(self->dumper.out,"  codes_set(ibufr, 'pack', 1)\n");
+    fprintf(self->dumper.out,"    codes_set(ibufr, 'pack', 1)\n");
     if (d->count==1)
-        fprintf(self->dumper.out,"  outfile = open('outfile.bufr', 'w')\n");
+        fprintf(self->dumper.out,"    outfile = open('outfile.bufr', 'w')\n");
     else
-        fprintf(self->dumper.out,"  outfile = open('outfile.bufr', 'a')\n");
+        fprintf(self->dumper.out,"    outfile = open('outfile.bufr', 'a')\n");
 
-    fprintf(self->dumper.out,"  codes_write(ibufr,outfile)\n");
-    fprintf(self->dumper.out,"  codes_close_file(outfile)\n");
-    fprintf(self->dumper.out,"  codes_release(ibufr)\n");
+    fprintf(self->dumper.out,"    codes_write(ibufr,outfile)\n");
+    /*fprintf(self->dumper.out,"    codes_close_file(outfile)\n");*/
+    fprintf(self->dumper.out,"    codes_release(ibufr)\n");
 }
