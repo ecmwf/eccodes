@@ -261,6 +261,18 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     if (!strcmp(options->dump_mode,"fortran")) {
       fprintf(stdout,"end program bufr_create_message\n");
     }
+    if (!strcmp(options->dump_mode,"python")) {
+      fprintf(stdout,"\n\n");
+      fprintf(stdout,"def main():\n");
+      fprintf(stdout,"  try:\n");
+      fprintf(stdout,"    bufr_create_message()\n");
+      fprintf(stdout,"  except CodesInternalError as err:\n");
+      fprintf(stdout,"    traceback.print_exc(file=sys.stderr)\n");
+      fprintf(stdout,"    return 1\n");
+      fprintf(stdout,"\n\n");
+      fprintf(stdout,"if __name__ == \"__main__\":\n");
+      fprintf(stdout,"  sys.exit(main())\n");
+    }
 
     return 0;
 }
