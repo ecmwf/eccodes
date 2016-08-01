@@ -57,7 +57,7 @@ static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_acce
 static void header         (grib_dumper*,grib_handle*);
 static void footer         (grib_dumper*,grib_handle*);
 
-typedef struct grib_dumper_fortran {
+typedef struct grib_dumper_python {
     grib_dumper          dumper;  
 /* Members defined in fortran */
 	long section_offset;
@@ -66,13 +66,13 @@ typedef struct grib_dumper_fortran {
 	long isLeaf;
 	long isAttribute;
 	grib_string_list* keys;
-} grib_dumper_fortran;
+} grib_dumper_python;
 
 
-static grib_dumper_class _grib_dumper_class_fortran = {
+static grib_dumper_class _grib_dumper_class_python = {
     0,                              /* super                     */
     "fortran",                              /* name                      */
-    sizeof(grib_dumper_fortran),     /* size                      */
+    sizeof(grib_dumper_python),     /* size                      */
     0,                                   /* inited */
     &init_class,                         /* init_class */
     &init,                               /* init                      */
@@ -90,7 +90,7 @@ static grib_dumper_class _grib_dumper_class_fortran = {
     &footer,                             /* footer   */
 };
 
-grib_dumper_class* grib_dumper_class_fortran = &_grib_dumper_class_fortran;
+grib_dumper_class* grib_dumper_class_python = &_grib_dumper_class_python;
 
 /* END_CLASS_IMP */
 static void dump_attributes(grib_dumper* d,grib_accessor* a,char* prefix);
@@ -147,7 +147,7 @@ static void init_class      (grib_dumper_class* c){}
 
 static int init(grib_dumper* d)
 {
-    grib_dumper_fortran *self = (grib_dumper_fortran*)d;
+    grib_dumper_python *self = (grib_dumper_python*)d;
     grib_context* c=d->handle->context;
     self->section_offset=0;
     self->empty=1;
@@ -161,7 +161,7 @@ static int init(grib_dumper* d)
 
 static int destroy(grib_dumper* d)
 {
-    grib_dumper_fortran *self = (grib_dumper_fortran*)d;
+    grib_dumper_python *self = (grib_dumper_python*)d;
     grib_string_list* next=self->keys;
     grib_string_list* cur=self->keys;
     grib_context* c=d->handle->context;
@@ -189,7 +189,7 @@ static char* dval_to_string(grib_context* c,double v)
 
 static void dump_values(grib_dumper* d,grib_accessor* a)
 {
-    grib_dumper_fortran *self = (grib_dumper_fortran*)d;
+    grib_dumper_python *self = (grib_dumper_python*)d;
     double value; size_t size = 1;
     double *values=NULL;
     int err = 0;
@@ -279,7 +279,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 
 static void dump_values_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
 {
-    grib_dumper_fortran *self = (grib_dumper_fortran*)d;
+    grib_dumper_python *self = (grib_dumper_python*)d;
     double value; size_t size = 1;
     double *values=NULL;
     int err = 0;
@@ -359,7 +359,7 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
 
 static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 {
-    grib_dumper_fortran *self = (grib_dumper_fortran*)d;
+    grib_dumper_python *self = (grib_dumper_python*)d;
     long value; size_t size = 1;
     long *values=NULL;
     int err = 0;
@@ -457,7 +457,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 
 static void dump_long_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
 {
-    grib_dumper_fortran *self = (grib_dumper_fortran*)d;
+    grib_dumper_python *self = (grib_dumper_python*)d;
     long value; size_t size = 1;
     long *values=NULL;
     int err = 0;
@@ -530,7 +530,7 @@ static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
 
 static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 {
-    grib_dumper_fortran *self = (grib_dumper_fortran*)d;
+    grib_dumper_python *self = (grib_dumper_python*)d;
     double value; size_t size = 1;
     int r;
     char* sval;
@@ -572,7 +572,7 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 
 static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* comment)
 {
-    grib_dumper_fortran *self = (grib_dumper_fortran*)d;
+    grib_dumper_python *self = (grib_dumper_python*)d;
     char **values;
     size_t size = 0,i=0;
     grib_context* c=NULL;
@@ -643,7 +643,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
 
 static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 {
-    grib_dumper_fortran *self = (grib_dumper_fortran*)d;
+    grib_dumper_python *self = (grib_dumper_python*)d;
     char *value=NULL;
     char *p = NULL;
     size_t size = 0;
@@ -742,7 +742,7 @@ static void _dump_long_array(grib_handle* h,FILE* f,const char* key,const char* 
 
 static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors* block)
 {
-    grib_dumper_fortran *self = (grib_dumper_fortran*)d;
+    grib_dumper_python *self = (grib_dumper_python*)d;
     if (!grib_inline_strcmp(a->name,"BUFR") ||
             !grib_inline_strcmp(a->name,"GRIB") ||
             !grib_inline_strcmp(a->name,"META")
@@ -772,7 +772,7 @@ static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors
 static void dump_attributes(grib_dumper* d,grib_accessor* a,char* prefix)
 {
     int i=0;
-    grib_dumper_fortran *self = (grib_dumper_fortran*)d;
+    grib_dumper_python *self = (grib_dumper_python*)d;
     unsigned long flags;
     while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
         self->isAttribute=1;
@@ -804,7 +804,7 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a,char* prefix)
 
 static void header(grib_dumper* d,grib_handle* h)
 {
-    grib_dumper_fortran *self = (grib_dumper_fortran*)d;
+    grib_dumper_python *self = (grib_dumper_python*)d;
     char sampleName[200]={0};
     long localSectionPresent,edition,bufrHeaderCentre,isSatellite;
 
@@ -823,31 +823,22 @@ static void header(grib_dumper* d,grib_handle* h)
     }
 
     if (d->count<2) {
-        fprintf(self->dumper.out,"!  This program has been automatically generated with bufr_dump -Efortran\n");
-        fprintf(self->dumper.out,"!  Using ecCodes version: ");
+        /* This is the first message being processed */
+        fprintf(self->dumper.out, "#  This program has been automatically generated with bufr_dump -Epython\n");
+        fprintf(self->dumper.out, "#  Using ecCodes version: ");
         grib_print_api_version(self->dumper.out);
         fprintf(self->dumper.out, "\n\n");
-        fprintf(self->dumper.out,"program bufr_create_message\n");
-        fprintf(self->dumper.out,"  use eccodes\n");
-        fprintf(self->dumper.out,"  implicit none\n");
-        fprintf(self->dumper.out,"  integer                                       :: iret\n");
-        fprintf(self->dumper.out,"  integer                                       :: outfile\n");
-        fprintf(self->dumper.out,"  integer                                       :: ibufr\n");
-        fprintf(self->dumper.out,"  integer(kind=4), dimension(:), allocatable    :: ivalues\n");
-        fprintf(self->dumper.out,"  integer, parameter  :: max_strsize = 100\n");
-        fprintf(self->dumper.out,"  character(len=max_strsize) , dimension(:),allocatable   :: svalues\n");
-        fprintf(self->dumper.out,"  real(kind=8), dimension(:), allocatable       :: rvalues\n");
+        fprintf(self->dumper.out,"import traceback\n");
+        fprintf(self->dumper.out,"import sys\n");
+        fprintf(self->dumper.out,"from eccodes import *\n\n");
+        fprintf(self->dumper.out,"def bufr_create_message():\n");
     }
-    fprintf(self->dumper.out,"  call codes_bufr_new_from_samples(ibufr,'%s',iret)\n",sampleName);
-    fprintf(self->dumper.out,"  if (iret/=CODES_SUCCESS) then\n");
-    fprintf(self->dumper.out,"    print *,'ERROR creating BUFR from %s'\n",sampleName);
-    fprintf(self->dumper.out,"    stop 1\n");
-    fprintf(self->dumper.out,"  endif\n");
+    fprintf(self->dumper.out,"    ibufr = codes_new_from_samples('%s')\n",sampleName);
 }
 
 static void footer(grib_dumper* d,grib_handle* h)
 {
-    grib_dumper_fortran *self = (grib_dumper_fortran*)d;
+    grib_dumper_python *self = (grib_dumper_python*)d;
     fprintf(self->dumper.out,"  call codes_set(ibufr,'pack',1)\n");
     if (d->count==1)
         fprintf(self->dumper.out,"  call codes_open_file(outfile,'outfile.bufr','w')\n");

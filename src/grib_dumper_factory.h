@@ -4,6 +4,7 @@
 { "default", &grib_dumper_class_default, },
 { "filter", &grib_dumper_class_filter, },
 { "fortran", &grib_dumper_class_fortran, },
+{ "python", &grib_dumper_class_python, },
 { "json", &grib_dumper_class_json, },
 { "keys", &grib_dumper_class_keys, },
 { "serialize", &grib_dumper_class_serialize, },
