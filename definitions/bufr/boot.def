@@ -20,13 +20,18 @@ transient inputShortDelayedDescriptorReplicationFactor={-1};
 transient inputDataPresentIndicator={-1};
 
 transient extractSubset=-1;
-transient extractSubset=-1;
-transient extractSubset=-1;
+transient extractSubsetList={-1};
 transient extractSubsetIntervalStart=-1;
 transient extractSubsetIntervalEnd=-1;
+transient extractAreaWestLongitude=0;
+transient extractAreaEastLongitude=0;
+transient extractAreaNorthLatitude=0;
+transient extractAreaSouthLatitude=0;
 
 
-meta doExtractSubsets bufr_extract_subsets(numericValues,pack,numberOfSubsets,extractSubset,extractSubsetIntervalStart,extractSubsetIntervalEnd);
+meta doExtractSubsets bufr_extract_subsets(numericValues,pack,numberOfSubsets,extractSubset,extractSubsetIntervalStart,extractSubsetIntervalEnd,extractSubsetList);
+#meta doExtractArea bufr_extract_area_subsets(doExtractSubsets,numberOfSubsets,extractSubsetIntervalStart,extractSubsetIntervalEnd,extractSubsetList,
+#                                              extractAreaWestLongitude,extractAreaEastLongitude,extractAreaNorthLatitude,extractAreaSouthLatitude)=0;
 
 template boot_edition "bufr/boot_edition_[ed:l].def";
 

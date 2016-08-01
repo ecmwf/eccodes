@@ -929,8 +929,12 @@ set extractSubset=2;
 set doExtractSubsets=1;
 write;
 
-set extractSubsetIntervalStart=3;
+set extractSubsetIntervalStart=5;
 set extractSubsetIntervalEnd=8;
+set doExtractSubsets=1;
+write;
+
+set extractSubsetList={1,3};
 set doExtractSubsets=1;
 write;
 EOF
@@ -953,7 +957,8 @@ cat > ${fOut}.log.ref <<EOF
 stationNumber=27 84 270 272 308 371 381 382 387 413 464 485
 stationNumber=272
 stationNumber=84
-stationNumber=270 272 308 371 381 382
+stationNumber=308 371 381 382 84
+stationNumber=308 371 381 382 84 27 270
 EOF
 
 diff ${fOut}.log.ref ${fOut}.log 
@@ -1030,9 +1035,9 @@ fieldOfViewNumber=1
 orbitNumber=2147483647
 casRegistryNumber=10102-44-0
 === message number 2
-numberOfSubsets=6
-solarElevation=29.71 29.23 37.21 36.78 36.34 35.46
-fieldOfViewNumber=2 2 0 0 0 1
+numberOfSubsets=7
+solarElevation=29.71 29.23 37.21 36.78 36.34 35.46 33.2
+fieldOfViewNumber=2 2 0 0 0 1 1
 orbitNumber=2147483647
 casRegistryNumber=10102-44-0
 EOF
