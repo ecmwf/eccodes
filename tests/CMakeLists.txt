@@ -109,7 +109,6 @@ if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
     list(APPEND tests2 bufr_dump_fortran)
 endif()
 
-
 # These tests do not require any data downloads
 foreach( test ${tests1} )
     ecbuild_add_test( TARGET eccodes_t_${test}
@@ -141,6 +140,16 @@ if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
     set_tests_properties ( eccodes_t_bufr_dump_fortran PROPERTIES TIMEOUT 2500)
 endif()
 
+
+if( HAVE_PYTHON AND ENABLE_EXTRA_TESTS )
+    set(test bufr_dump_python)
+    ecbuild_add_test( TARGET eccodes_t_${test}
+                      TYPE SCRIPT
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                      ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE} PYTHONPATH=@PROJECT_BINARY_DIR@/python
+                      TEST_DEPENDS eccodes_download_bufrs
+    )
+endif()
 
 ###########################################
 # Note: the reference file is in the tests dir not data dir!
