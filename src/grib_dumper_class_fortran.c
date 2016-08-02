@@ -190,7 +190,7 @@ static char* dval_to_string(grib_context* c,double v)
 static void dump_values(grib_dumper* d,grib_accessor* a)
 {
     grib_dumper_fortran *self = (grib_dumper_fortran*)d;
-    double value; size_t size = 1;
+    double value; size_t size = 0;
     double *values=NULL;
     int err = 0;
     int i,r,icount;
@@ -218,8 +218,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     if (size>1) {
 
         fprintf(self->dumper.out,"  if(allocated(rvalues)) deallocate(rvalues)\n");
-        fprintf(self->dumper.out,"  allocate(rvalues(%ld))\n",size);
-
+        fprintf(self->dumper.out,"  allocate(rvalues(%lu))\n", (unsigned long)size);
 
         fprintf(self->dumper.out,"  rvalues=(/");
 
@@ -280,7 +279,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 static void dump_values_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
 {
     grib_dumper_fortran *self = (grib_dumper_fortran*)d;
-    double value; size_t size = 1;
+    double value; size_t size = 0;
     double *values=NULL;
     int err = 0;
     int i,icount;
@@ -307,8 +306,7 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
     if (size>1) {
 
         fprintf(self->dumper.out,"  if(allocated(rvalues)) deallocate(rvalues)\n");
-        fprintf(self->dumper.out,"  allocate(rvalues(%ld))\n",size);
-
+        fprintf(self->dumper.out,"  allocate(rvalues(%lu))\n", (unsigned long)size);
 
         fprintf(self->dumper.out,"  rvalues=(/");
 
@@ -360,7 +358,7 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
 static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_fortran *self = (grib_dumper_fortran*)d;
-    long value; size_t size = 1;
+    long value; size_t size = 0;
     long *values=NULL;
     int err = 0;
     int i,r,icount;
@@ -404,8 +402,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 
     if (size>1) {
         fprintf(self->dumper.out,"  if(allocated(ivalues)) deallocate(ivalues)\n");
-        fprintf(self->dumper.out,"  allocate(ivalues(%ld))\n",size);
-
+        fprintf(self->dumper.out,"  allocate(ivalues(%lu))\n", (unsigned long)size);
 
         fprintf(self->dumper.out,"  ivalues=(/");
         icount=0;
@@ -458,7 +455,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 static void dump_long_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
 {
     grib_dumper_fortran *self = (grib_dumper_fortran*)d;
-    long value; size_t size = 1;
+    long value; size_t size = 0;
     long *values=NULL;
     int err = 0;
     int i,icount;
@@ -483,8 +480,7 @@ static void dump_long_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
 
     if (size>1) {
         fprintf(self->dumper.out,"  if(allocated(ivalues)) deallocate(ivalues)\n");
-        fprintf(self->dumper.out,"  allocate(ivalues(%ld))\n",size);
-
+        fprintf(self->dumper.out,"  allocate(ivalues(%lu))\n", (unsigned long)size);
 
         fprintf(self->dumper.out,"  ivalues=(/");
         icount=0;
@@ -594,10 +590,9 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
     }
 
     fprintf(self->dumper.out,"  if(allocated(svalues)) deallocate(svalues)\n");
-    fprintf(self->dumper.out,"  allocate(svalues(%ld))\n",size);
+    fprintf(self->dumper.out,"  allocate(svalues(%lu))\n", (unsigned long)size);
 
     fprintf(self->dumper.out,"  svalues=(/");
-
 
     self->empty=0;
 
@@ -613,7 +608,6 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
         fprintf(self->dumper.out,"    \"%s\", &\n",values[i]);
     }
     fprintf(self->dumper.out,"    \"%s\" /)\n",values[i]);
-
 
     if (self->isLeaf==0) {
         if ((r=get_key_rank(h,self->keys,a->name))!=0)
@@ -717,11 +711,10 @@ static void _dump_long_array(grib_handle* h,FILE* f,const char* key,const char* 
     size_t size=0,i;
     int cols=9,icount=0;
 
-
     if (grib_get_size(h,key,&size)==GRIB_NOT_FOUND) return;
 
     fprintf(f,"  if(allocated(ivalues)) deallocate(ivalues)\n");
-    fprintf(f,"  allocate(ivalues(%ld))\n",size);
+    fprintf(f,"  allocate(ivalues(%lu))\n", (unsigned long)size);
 
     fprintf(f,"  ivalues=(/ ");
 
@@ -737,7 +730,6 @@ static void _dump_long_array(grib_handle* h,FILE* f,const char* key,const char* 
 
     grib_context_free(h->context,val);
     fprintf(f,"  call codes_set(ibufr,'%s',ivalues)\n",print_key);
-
 }
 
 static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors* block)
