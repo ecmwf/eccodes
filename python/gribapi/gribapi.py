@@ -795,7 +795,7 @@ def grib_new_from_samples(samplename):
     @return id of the message loaded in memory
     @exception GribInternalError
     """
-    err, msgid = _internal.grib_c_new_from_samples(0, samplename)
+    err, msgid = _internal.grib_c_grib_new_from_samples(0, samplename)
     GRIB_CHECK(err)
     return msgid
 
@@ -901,6 +901,35 @@ def grib_get_string_array(msgid, key):
 
     return result
 
+@require(msgid=int, key=str)
+def grib_set_string_array(msgid, key, inarray):
+    """
+    @brief Set the value of the key to a string array.
+
+    The input array can be a python sequence like tuple, list, array, ...
+
+    The wrapper will internally try to convert the input to a NumPy array
+    before extracting its data and length. This is possible as NumPy
+    allows the construction of arrays from arbitrary python sequences.
+
+    The elements of the input sequence need to be convertible to a double.
+
+    @param msgid   id of the message loaded in memory
+    @param key     key name
+    @param inarray tuple,list,array
+    @exception GribInternalError
+    """
+    #_internal.print_args(['a', 'b', 'c'])
+    GRIB_CHECK(_internal.grib_c_set_string_array(msgid, key, inarray))
+    return
+    #nval = len(inarray)
+    #a = _internal.new_stringArray(nval)
+    #s = _internal.sizetp()
+    #s.assign(nval)
+    #for i in range(nval):
+    #    _internal.stringArray_setitem(a, i, inarray[i])
+
+    #GRIB_CHECK( _internal.grib_c_set_string_array(msgid, key, a, nval) )
 
 @require(msgid=int, key=str)
 def grib_set_long_array(msgid, key, inarray):

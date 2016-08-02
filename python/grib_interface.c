@@ -1003,7 +1003,7 @@ int grib_c_new_from_message_copy(int* gid, void* buffer , size_t* bufsize)
     return  GRIB_INTERNAL_ERROR;
 }
 
-int grib_c_new_from_samples(int* gid, char* name)
+int grib_c_grib_new_from_samples(int* gid, char* name)
 {
     grib_handle *h = NULL;
 
@@ -1938,6 +1938,30 @@ int grib_c_set_string(int* gid, char* key, char* val, int len2)
     if(!h) return GRIB_INVALID_GRIB;
 
     return grib_set_string(h, key, val, &lsize);
+}
+
+int grib_c_set_string_array(int *gid, char *key, const char **val)
+{
+    grib_handle *h = get_handle(*gid);
+    int err = GRIB_SUCCESS;
+    size_t lsize = 0;
+    /*char** sarray = NULL;*/
+
+    if(!h) return GRIB_INVALID_GRIB;
+
+    /*    if(*size)
+        sarray = grib_context_malloc(h->context,lsize*(sizeof(double)));
+    else
+        sarray = grib_context_malloc(h->context,sizeof(double));
+
+    if(!sarray) return GRIB_OUT_OF_MEMORY;
+    */
+    while(val[lsize]) {
+        /*sarray[lsize] = val[lsize];*/
+        ++lsize;
+    }
+    err = grib_set_string_array(h, key, val, lsize);
+    return err;
 }
 
 int grib_c_get_data_real4(int* gid,float* lats, float* lons,float* values,size_t* size)

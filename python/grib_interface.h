@@ -26,8 +26,8 @@ int grib_c_keys_iterator_get_name(int *iterid, char *name, int len);
 int grib_c_keys_iterator_rewind(int *kiter);
 int grib_c_new_from_message(int *gid, void *buffer, size_t *bufsize);
 int grib_c_new_from_message_copy(int *gid, void *buffer, size_t *bufsize);
-int grib_c_new_from_samples(int *gid, char *name);
-int grib_c_new_bufr_from_samples(int *gid, char *name);
+int grib_c_grib_new_from_samples(int *gid, char *name);
+int grib_c_bufr_new_from_samples(int *gid, char *name);
 int grib_c_clone(int *gidsrc, int *giddest);
 int grib_c_copy_namespace(int *gidsrc, char *name, int *giddest);
 int grib_c_count_in_file(FILE *f, int *n);
@@ -88,6 +88,7 @@ int grib_c_set_real8_array(int *gid, char *key, double *val, int *size);
 int grib_c_get_string(int *gid, char *key, char *val, size_t *lsize);
 int grib_c_get_string_array(int* gid, char* key, char** val, size_t *lsize);
 int grib_c_set_string(int *gid, char *key, char *val, int len2);
+int grib_c_set_string_array(int *gid, char *key, const char **val);
 int grib_c_get_data_real4(int *gid, float *lats, float *lons, float *values, size_t *size);
 /*int grib_c_get_data_real8(int *gid, double *lats, double *lons, double *values, size_t *size);*/
 int grib_c_get_message_size(int *gid, size_t *len);
