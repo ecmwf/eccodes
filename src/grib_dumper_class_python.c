@@ -210,7 +210,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     self->empty=0;
 
     if (size>1) {
-        fprintf(self->dumper.out,"    rvalues=(");
+        fprintf(self->dumper.out,"    rvalues = (");
 
         icount=0;
         for (i=0; i<size-1; ++i) {
@@ -226,7 +226,8 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         grib_context_free(c,sval);
 
         depth-=2;
-        fprintf(self->dumper.out,")\n");
+        /* Note: In python to make a tuple with one element, you need the trailing comma */
+        fprintf(self->dumper.out,",)\n");
         grib_context_free(c,values);
 
         if ((r=get_key_rank(h,self->keys,a->name))!=0)
@@ -295,7 +296,7 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
 
     if (size>1) {
 
-        fprintf(self->dumper.out,"    rvalues=(");
+        fprintf(self->dumper.out,"    rvalues = (");
 
         icount=0;
         for (i=0; i<size-1; ++i) {
@@ -311,7 +312,8 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
         grib_context_free(c,sval);
 
         depth-=2;
-        fprintf(self->dumper.out,")\n");
+        /* Note: In python to make a tuple with one element, you need the trailing comma */
+        fprintf(self->dumper.out,",)\n");
         grib_context_free(c,values);
 
         fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s->%s' \n, rvalues)\n",prefix,a->name);
@@ -323,7 +325,6 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
             fprintf(self->dumper.out,"    codes_set(ibufr, '%s->%s' \n,%s)\n",prefix,a->name,sval);
 
             grib_context_free(c,sval);
-
         }
     }
 
@@ -388,7 +389,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
     self->empty=0;
 
     if (size>1) {
-        fprintf(self->dumper.out,"    ivalues=(");
+        fprintf(self->dumper.out,"    ivalues = (");
         icount=0;
         for (i=0;i<size-1;i++) {
             if (icount>cols || i==0) {fprintf(self->dumper.out,"\n        ");icount=0;}
@@ -399,7 +400,8 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
         fprintf(self->dumper.out,"%ld",values[i]);
 
         depth-=2;
-        fprintf(self->dumper.out,")\n");
+        /* Note: In python to make a tuple with one element, you need the trailing comma */
+        fprintf(self->dumper.out,",)\n");
         grib_context_free(a->context,values);
 
         if ((r=get_key_rank(h,self->keys,a->name))!=0)
@@ -463,8 +465,7 @@ static void dump_long_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
     self->empty=0;
 
     if (size>1) {
-
-        fprintf(self->dumper.out,"    ivalues=(");
+        fprintf(self->dumper.out,"    ivalues = (");
         icount=0;
         for (i=0;i<size-1;i++) {
             if (icount>cols || i==0) {fprintf(self->dumper.out,"  \n      ");icount=0;}
@@ -475,7 +476,8 @@ static void dump_long_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
         fprintf(self->dumper.out,"%ld ",values[i]);
 
         depth-=2;
-        fprintf(self->dumper.out,")\n");
+        /* Note: In python to make a tuple with one element, you need the trailing comma */
+        fprintf(self->dumper.out,",)\n");
         grib_context_free(a->context,values);
 
         fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s->%s' \n,ivalues)\n",prefix,a->name);
@@ -571,7 +573,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
         return;
     }
 
-    fprintf(self->dumper.out,"  svalues=(");
+    fprintf(self->dumper.out,"    svalues = (");
 
     self->empty=0;
 
@@ -584,16 +586,15 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
     err = grib_unpack_string_array(a,values,&size);
 
     for  (i=0;i<size-1;i++) {
-        fprintf(self->dumper.out,"    \"%s\", &\n",values[i]);
+        fprintf(self->dumper.out,"    \"%s\", \n",values[i]);
     }
-    fprintf(self->dumper.out,"    \"%s\" )\n",values[i]);
-
+    fprintf(self->dumper.out,"    \"%s\", )\n",values[i]);
 
     if (self->isLeaf==0) {
         if ((r=get_key_rank(h,self->keys,a->name))!=0)
-            fprintf(self->dumper.out,"    codes_set_string_array(ibufr,'#%d#%s',svalues)\n",r,a->name);
+            fprintf(self->dumper.out,"    codes_set_string_array(ibufr, '#%d#%s', list(svalues))\n",r,a->name);
         else
-            fprintf(self->dumper.out,"    codes_set_string_array(ibufr,'%s',svalues)\n",a->name);
+            fprintf(self->dumper.out,"    codes_set_string_array(ibufr, '%s', list(svalues))\n",a->name);
     }
 
     if (self->isLeaf==0) {
@@ -693,7 +694,7 @@ static void _dump_long_array(grib_handle* h,FILE* f,const char* key,const char* 
 
     if (grib_get_size(h,key,&size)==GRIB_NOT_FOUND) return;
 
-    fprintf(f,"    ivalues=( ");
+    fprintf(f,"    ivalues = (");
 
     val=grib_context_malloc_clear(h->context,sizeof(long)*size);
     grib_get_long_array(h,key,val,&size);
@@ -703,7 +704,8 @@ static void _dump_long_array(grib_handle* h,FILE* f,const char* key,const char* 
         icount++;
     }
     if (icount>cols) {fprintf(f,"  \n      ");}
-    fprintf(f,"%ld )\n",val[size-1]);
+    /* Note: In python to make a tuple with one element, you need the trailing comma */
+    fprintf(f,"%ld ,)\n",val[size-1]);
 
     grib_context_free(h->context,val);
     fprintf(f,"    codes_set_array(ibufr, '%s', ivalues)\n",print_key);
@@ -814,7 +816,7 @@ static void footer(grib_dumper* d,grib_handle* h)
     else
         fprintf(self->dumper.out,"    outfile = open('outfile.bufr', 'a')\n");
 
-    fprintf(self->dumper.out,"    codes_write(ibufr,outfile)\n");
+    fprintf(self->dumper.out,"    codes_write(ibufr, outfile)\n");
     /*fprintf(self->dumper.out,"    codes_close_file(outfile)\n");*/
     fprintf(self->dumper.out,"    codes_release(ibufr)\n");
 }
