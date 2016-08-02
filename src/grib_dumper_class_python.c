@@ -592,9 +592,9 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
 
     if (self->isLeaf==0) {
         if ((r=get_key_rank(h,self->keys,a->name))!=0)
-            fprintf(self->dumper.out,"    codes_set_string_array(ibufr, '#%d#%s', list(svalues))\n",r,a->name);
+            fprintf(self->dumper.out,"    codes_set_string_array(ibufr, '#%d#%s', svalues)\n",r,a->name);
         else
-            fprintf(self->dumper.out,"    codes_set_string_array(ibufr, '%s', list(svalues))\n",a->name);
+            fprintf(self->dumper.out,"    codes_set_string_array(ibufr, '%s', svalues)\n",a->name);
     }
 
     if (self->isLeaf==0) {

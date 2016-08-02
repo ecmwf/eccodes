@@ -901,6 +901,7 @@ def grib_get_string_array(msgid, key):
 
     return result
 
+
 @require(msgid=int, key=str)
 def grib_set_string_array(msgid, key, inarray):
     """
@@ -919,17 +920,8 @@ def grib_set_string_array(msgid, key, inarray):
     @param inarray tuple,list,array
     @exception GribInternalError
     """
-    #_internal.print_args(['a', 'b', 'c'])
-    GRIB_CHECK(_internal.grib_c_set_string_array(msgid, key, inarray))
-    return
-    #nval = len(inarray)
-    #a = _internal.new_stringArray(nval)
-    #s = _internal.sizetp()
-    #s.assign(nval)
-    #for i in range(nval):
-    #    _internal.stringArray_setitem(a, i, inarray[i])
+    GRIB_CHECK( _internal.grib_c_set_string_array(msgid, key, list(inarray)) )
 
-    #GRIB_CHECK( _internal.grib_c_set_string_array(msgid, key, a, nval) )
 
 @require(msgid=int, key=str)
 def grib_set_long_array(msgid, key, inarray):
@@ -1623,11 +1615,12 @@ def grib_set(msgid, key, value):
 @require(msgid=int, key=str)
 def grib_set_array(msgid, key, value):
     """
-    @brief Set the value for an array key in a grib message.
+    @brief Set the value for an array key in a message.
 
-    Some array keys can be "values","pl", "pv" respectively the data values,
-    the list of number of points for each latitude in a reduced grid and the list of
-    vertical levels.
+    Examples of array keys:
+    "values" - data values
+    "pl" - list of number of points for each latitude in a reduced grid
+    "pv" - list of vertical levels
 
     The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...
 
@@ -1635,11 +1628,10 @@ def grib_set_array(msgid, key, value):
     before extracting its data and length. This is possible as NumPy
     allows the construction of arrays from arbitrary python sequences.
 
-    @param msgid      id of the grib loaded in memory
+    @param msgid       id of the message loaded in memory
     @param key         key name
-    @param value       array value to set for key
+    @param value       array to set for key
     @exception GribInternalError
-
     """
     val0 = None
     try:
@@ -1651,6 +1643,8 @@ def grib_set_array(msgid, key, value):
         grib_set_double_array(msgid, key, value)
     elif isinstance(val0, int):
         grib_set_long_array(msgid, key, value)
+    elif isinstance(val0, str):
+        grib_set_string_array(msgid, key, value)
     else:
         raise GribInternalError("Invalid type of value when setting key '%s'." % key)
 
