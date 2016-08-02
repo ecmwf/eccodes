@@ -159,7 +159,7 @@ int grib_c_is_defined(int* gid, char* key, int* OUTPUT);
         return NULL;
       }
     }
-    $1[i] = 0;
+    $1[i] = 0;  /* Last entry set to NULL */
   } else {
     PyErr_SetString(PyExc_TypeError,"not a list");
     return NULL;

@@ -1945,19 +1945,13 @@ int grib_c_set_string_array(int *gid, char *key, const char **val)
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
     size_t lsize = 0;
-    /*char** sarray = NULL;*/
 
     if(!h) return GRIB_INVALID_GRIB;
 
-    /*    if(*size)
-        sarray = grib_context_malloc(h->context,lsize*(sizeof(double)));
-    else
-        sarray = grib_context_malloc(h->context,sizeof(double));
-
-    if(!sarray) return GRIB_OUT_OF_MEMORY;
-    */
+    /* Note: The array passed in will have its final entry as NULL */
+    /* so to find its size we just iterate thru it. */
+    /* See typemap for char** in swig interface file */
     while(val[lsize]) {
-        /*sarray[lsize] = val[lsize];*/
         ++lsize;
     }
     err = grib_set_string_array(h, key, val, lsize);
