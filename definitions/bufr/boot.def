@@ -29,7 +29,7 @@ transient extractAreaNorthLatitude=0;
 transient extractAreaSouthLatitude=0;
 
 
-meta doExtractSubsets bufr_extract_subsets(numericValues,pack);
+meta doExtractSubsets bufr_extract_subsets(numericValues,pack,numberOfSubsets,extractSubset,extractSubsetIntervalStart,extractSubsetIntervalEnd,extractSubsetList);
 #meta doExtractArea bufr_extract_area_subsets(doExtractSubsets,numberOfSubsets,extractSubsetList,
 #                                              extractAreaWestLongitude,extractAreaEastLongitude,extractAreaNorthLatitude,extractAreaSouthLatitude)=0;
 
