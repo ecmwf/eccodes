@@ -1019,6 +1019,22 @@ int grib_c_new_from_samples(int* gid, char* name)
     return  GRIB_FILE_NOT_FOUND;
 }
 
+int grib_c_bufr_new_from_samples(int* gid, char* name)
+{
+    grib_handle *h = NULL;
+
+    h = codes_bufr_handle_new_from_samples(NULL,name);
+    /*   grib_context_set_debug(h->context,1);*/
+
+    if(h){
+        push_handle(h,gid);
+        return GRIB_SUCCESS;
+    }
+
+    *gid = -1;
+    return  GRIB_FILE_NOT_FOUND;
+}
+
 int grib_c_clone(int* gidsrc,int* giddest)
 {
     grib_handle *src  = get_handle(*gidsrc);

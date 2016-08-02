@@ -31,7 +31,7 @@ def example():
     assert(len(pv) == numberOfCoefficients)
 
     fout = open('out.pv.grib1', 'w')
-    gid = codes_new_from_samples('reduced_gg_sfc_grib1')
+    gid = codes_grib_new_from_samples('reduced_gg_sfc_grib1')
 
     codes_set(gid, 'typeOfLevel', 'hybrid')
     codes_set(gid, 'level', 2)

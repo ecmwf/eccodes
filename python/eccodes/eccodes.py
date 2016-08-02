@@ -46,7 +46,8 @@ from gribapi import grib_get_long as codes_get_long
 from gribapi import grib_get_double as codes_get_double
 from gribapi import grib_set_long as codes_set_long
 from gribapi import grib_set_double as codes_set_double
-from gribapi import grib_new_from_samples as codes_new_from_samples
+from gribapi import grib_new_from_samples as codes_grib_new_from_samples
+from gribapi import codes_bufr_new_from_samples
 from gribapi import grib_clone as codes_clone
 from gribapi import grib_set_double_array as codes_set_double_array
 from gribapi import grib_get_double_array as codes_get_double_array
