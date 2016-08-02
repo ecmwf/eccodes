@@ -5167,6 +5167,51 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_grib_c_bufr_new_from_samples(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  int *arg1 = (int *) 0 ;
+  char *arg2 = (char *) 0 ;
+  int temp1 ;
+  int res1 = 0 ;
+  int res2 ;
+  char *buf2 = 0 ;
+  int alloc2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:grib_c_bufr_new_from_samples",&obj0,&obj1)) SWIG_fail;
+  if (!(SWIG_IsOK((res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1),SWIGTYPE_p_int,0))))) {
+    int val; 
+    int ecode = SWIG_AsVal_int(obj0, &val);
+    if (!SWIG_IsOK(ecode)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "grib_c_bufr_new_from_samples" "', argument " "1"" of type '" "int""'");
+    }
+    temp1 = (int)(val);
+    arg1 = &temp1;
+    res1 = SWIG_AddTmpMask(ecode);
+  }
+  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "grib_c_bufr_new_from_samples" "', argument " "2"" of type '" "char *""'");
+  }
+  arg2 = (char *)(buf2);
+  result = (int)grib_c_bufr_new_from_samples(arg1,arg2);
+  resultobj = SWIG_From_int((int)(result));
+  if (SWIG_IsTmpObj(res1)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg1)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res1) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg1), SWIGTYPE_p_int, new_flags));
+  }
+  if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+  return resultobj;
+fail:
+  if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_grib_c_index_new_from_file(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   char *arg1 = (char *) 0 ;
@@ -8735,6 +8780,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"grib_c_iterator_new", _wrap_grib_c_iterator_new, METH_VARARGS, NULL},
 	 { (char *)"grib_c_keys_iterator_new", _wrap_grib_c_keys_iterator_new, METH_VARARGS, NULL},
 	 { (char *)"grib_c_new_from_samples", _wrap_grib_c_new_from_samples, METH_VARARGS, NULL},
+	 { (char *)"grib_c_bufr_new_from_samples", _wrap_grib_c_bufr_new_from_samples, METH_VARARGS, NULL},
 	 { (char *)"grib_c_index_new_from_file", _wrap_grib_c_index_new_from_file, METH_VARARGS, NULL},
 	 { (char *)"grib_c_index_add_file", _wrap_grib_c_index_add_file, METH_VARARGS, NULL},
 	 { (char *)"grib_c_new_from_index", _wrap_grib_c_new_from_index, METH_VARARGS, NULL},
@@ -9543,6 +9589,7 @@ SWIG_init(void) {
   SWIG_Python_SetConstant(d, "GRIB_ATTRIBUTE_NOT_FOUND",SWIG_From_int((int)(-63)));
   SWIG_Python_SetConstant(d, "GRIB_UNSUPPORTED_EDITION",SWIG_From_int((int)(-64)));
   SWIG_Python_SetConstant(d, "GRIB_OUT_OF_RANGE",SWIG_From_int((int)(-65)));
+  SWIG_Python_SetConstant(d, "GRIB_WRONG_BITMAP_SIZE",SWIG_From_int((int)(-66)));
   
   import_array();
   

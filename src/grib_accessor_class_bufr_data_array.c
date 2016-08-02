@@ -2034,7 +2034,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
     grib_iarray* elementsDescriptorsIndex=0;
 
     long pos=0,dataOffset=0;
-    long iiss,iss,end,start,elementIndex,index;
+    long iiss,iss,end,elementIndex,index;
     long numberOfDescriptors;
     long totalSize;
     bufr_descriptor** descriptors=0;

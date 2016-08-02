@@ -783,7 +783,7 @@ def grib_set_double(msgid, key, value):
 @require(samplename=str)
 def grib_new_from_samples(samplename):
     """
-    @brief Create a new valid message from a sample.
+    @brief Create a new valid GRIB message from a sample.
 
     The available samples are picked up from the directory pointed to
     by the environment variable ECCODES_SAMPLES_PATH.
@@ -796,6 +796,26 @@ def grib_new_from_samples(samplename):
     @exception GribInternalError
     """
     err, msgid = _internal.grib_c_new_from_samples(0, samplename)
+    GRIB_CHECK(err)
+    return msgid
+
+
+@require(samplename=str)
+def codes_bufr_new_from_samples(samplename):
+    """
+    @brief Create a new valid BUFR message from a sample.
+
+    The available samples are picked up from the directory pointed to
+    by the environment variable ECCODES_SAMPLES_PATH.
+    To know where the samples directory is run the codes_info tool.\n
+
+    \b Examples: \ref samples.py "samples.py"
+
+    @param samplename   name of the BUFR sample to be used
+    @return             id of the message loaded in memory
+    @exception GribInternalError
+    """
+    err, msgid = _internal.grib_c_bufr_new_from_samples(0, samplename)
     GRIB_CHECK(err)
     return msgid
 

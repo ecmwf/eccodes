@@ -45,6 +45,7 @@ int grib_c_new_metar_from_file(FILE* f, int headers_only, int* INOUT);
 int grib_c_iterator_new(int* INPUT, int* OUTPUT, int* INPUT);
 int grib_c_keys_iterator_new(int* INPUT, int* OUTPUT, char* name_space);
 int grib_c_new_from_samples(int* INOUT, char* name);
+int grib_c_bufr_new_from_samples(int* INOUT, char* name);
 int grib_c_index_new_from_file(char* file, char* keys, int* OUTPUT);
 int grib_c_index_add_file(int* INPUT, char* file);
 int grib_c_new_from_index(int *INPUT, int *INOUT);
