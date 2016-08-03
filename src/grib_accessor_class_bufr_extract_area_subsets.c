@@ -17,10 +17,15 @@
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = init; get_native_type
    IMPLEMENTS = pack_long;
-   MEMBERS    = const char* numericValues
-   MEMBERS    = const char* pack
-   MEMBERS    = grib_accessor* numericValuesAccessor
-   MEMBERS    = grib_accessor* packAccessor
+   MEMBERS    = const char* doExtractSubsets
+   MEMBERS    = const char* numberOfSubsets
+   MEMBERS    = const char* extractSubsetList
+   MEMBERS    = const char* extractAreaWestLongitude
+   MEMBERS    = const char* extractAreaEastLongitude
+   MEMBERS    = const char* extractAreaNorthLatitude
+   MEMBERS    = const char* extractAreaSouthLatitude
+   MEMBERS    = const char* extractAreaLongitudeRank
+   MEMBERS    = const char* extractAreaLatitudeRank
    END_CLASS_DEF
 
  */
@@ -40,22 +45,27 @@ static int pack_long(grib_accessor*, const long* val,size_t *len);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
-typedef struct grib_accessor_bufr_extract_subsets {
+typedef struct grib_accessor_bufr_extract_area_subsets {
     grib_accessor          att;
 /* Members defined in gen */
-/* Members defined in bufr_extract_subsets */
-	const char* numericValues;
-	const char* pack;
-	grib_accessor* numericValuesAccessor;
-	grib_accessor* packAccessor;
-} grib_accessor_bufr_extract_subsets;
+/* Members defined in bufr_extract_area_subsets */
+	const char* doExtractSubsets;
+	const char* numberOfSubsets;
+	const char* extractSubsetList;
+	const char* extractAreaWestLongitude;
+	const char* extractAreaEastLongitude;
+	const char* extractAreaNorthLatitude;
+	const char* extractAreaSouthLatitude;
+	const char* extractAreaLongitudeRank;
+	const char* extractAreaLatitudeRank;
+} grib_accessor_bufr_extract_area_subsets;
 
 extern grib_accessor_class* grib_accessor_class_gen;
 
-static grib_accessor_class _grib_accessor_class_bufr_extract_subsets = {
+static grib_accessor_class _grib_accessor_class_bufr_extract_area_subsets = {
     &grib_accessor_class_gen,                      /* super                     */
-    "bufr_extract_subsets",                      /* name                      */
-    sizeof(grib_accessor_bufr_extract_subsets),  /* size                      */
+    "bufr_extract_area_subsets",                      /* name                      */
+    sizeof(grib_accessor_bufr_extract_area_subsets),  /* size                      */
     0,                           /* inited */
     &init_class,                 /* init_class */
     &init,                       /* init                      */
@@ -96,7 +106,7 @@ static grib_accessor_class _grib_accessor_class_bufr_extract_subsets = {
 };
 
 
-grib_accessor_class* grib_accessor_class_bufr_extract_subsets = &_grib_accessor_class_bufr_extract_subsets;
+grib_accessor_class* grib_accessor_class_bufr_extract_area_subsets = &_grib_accessor_class_bufr_extract_area_subsets;
 
 
 static void init_class(grib_accessor_class* c)
@@ -135,24 +145,22 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-static void get_accessors(grib_accessor* a)
-{
-    grib_accessor_bufr_extract_subsets *self =(grib_accessor_bufr_extract_subsets*)a;
-    grib_handle* h=grib_handle_of_accessor(a);
-
-    if (self->packAccessor) return;
-    self->numericValuesAccessor=grib_find_accessor(h,self->numericValues);
-    self->packAccessor=grib_find_accessor(h,self->pack);
-}
-
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
     int n=0;
-    grib_accessor_bufr_extract_subsets *self =(grib_accessor_bufr_extract_subsets*)a;
+    grib_accessor_bufr_extract_area_subsets *self =(grib_accessor_bufr_extract_area_subsets*)a;
 
     a->length=0;
-    self->numericValues = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-    self->pack = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    self->doExtractSubsets = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    self->numberOfSubsets = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    self->extractSubsetList = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    self->extractAreaWestLongitude = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    self->extractAreaEastLongitude = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    self->extractAreaNorthLatitude = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    self->extractAreaSouthLatitude = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    self->extractAreaLongitudeRank = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    self->extractAreaLatitudeRank = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }
 
@@ -161,17 +169,103 @@ static int get_native_type(grib_accessor* a)
     return GRIB_TYPE_LONG;
 }
 
+static int select_area(grib_accessor* a) {
+  int ret=0;
+  long compressed=0;
+  grib_accessor_bufr_extract_area_subsets *self =(grib_accessor_bufr_extract_area_subsets*)a;
+  grib_handle* h=grib_handle_of_accessor(a);
+  grib_context* c=h->context;
+
+  ret=grib_get_long(h,"compressedData",&compressed);
+  if (ret) return ret;
+
+  if (compressed) {
+    double *lat=0;
+    double *lon=0;
+    size_t n;
+    double lonWest,lonEast,latNorth,latSouth;
+    long numberOfSubsets,i,latRank,lonRank;
+    grib_iarray* subsets;
+    long *subsets_ar=0;
+    size_t nsubsets=0;
+    char latstr[20]={0,};
+    char lonstr[20]={0,};
+
+    ret=grib_get_long(h,self->numberOfSubsets,&numberOfSubsets);
+    if (ret) return ret;
+
+    subsets=grib_iarray_new(c,numberOfSubsets,10);
+
+    ret=grib_set_long(h,"unpack",1);
+    if (ret) return ret;
+
+    ret=grib_get_long(h,self->extractAreaLongitudeRank,&lonRank);
+    if (ret) return ret;
+    sprintf(lonstr,"#%ld#longitude",lonRank);
+    ret=grib_get_long(h,self->extractAreaLatitudeRank,&latRank);
+    if (ret) return ret;
+    sprintf(latstr,"#%ld#latitude",latRank);
+
+    n=numberOfSubsets;
+    lat=grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
+    ret=grib_get_double_array(h,latstr,lat,&n);
+    if (ret) return ret;
+    if (n!=numberOfSubsets) return GRIB_INTERNAL_ERROR;
+
+    lon=grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
+    ret=grib_get_double_array(h,lonstr,lon,&n);
+    if (ret) return ret;
+    if (n!=numberOfSubsets) return GRIB_INTERNAL_ERROR;
+
+    ret=grib_get_double(h,self->extractAreaWestLongitude,&lonWest);
+    if (ret) return ret;
+    ret=grib_get_double(h,self->extractAreaEastLongitude,&lonEast);
+    if (ret) return ret;
+    ret=grib_get_double(h,self->extractAreaNorthLatitude,&latNorth);
+    if (ret) return ret;
+    ret=grib_get_double(h,self->extractAreaSouthLatitude,&latSouth);
+    if (ret) return ret;
+
+    for (i=0;i<numberOfSubsets;i++) {
+      /* printf("++++++ lat: %g <= %g <= %g lon: %g <= %g <= %g \n",latSouth,lat[i],latNorth,lonWest,lon[i],lonEast); */
+      if (lat[i]>=latSouth && lat[i]<=latNorth && lon[i]>=lonWest && lon[i]<=lonEast) {
+        grib_iarray_push(subsets,i+1);
+        /* printf("++++++++ %ld\n",i+1); */
+      }
+    }
+
+    subsets_ar=grib_iarray_get_array(subsets);
+    nsubsets=grib_iarray_used_size(subsets);
+    ret=grib_set_long_array(h,self->extractSubsetList,subsets_ar,nsubsets);
+    if (ret) return ret;
+
+    ret=grib_set_long(h,self->doExtractSubsets,1);
+    if (ret) return ret;
+
+    grib_context_free(c,lat);
+    grib_context_free(c,lon);
+    grib_iarray_delete(subsets);
+    subsets=0;
+
+  } else {
+    return GRIB_NOT_IMPLEMENTED;
+  }
+
+  return ret;
+}
+
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
     int err=0;
-    grib_accessor_bufr_extract_subsets *self =(grib_accessor_bufr_extract_subsets*)a;
+    grib_accessor_bufr_extract_area_subsets *self =(grib_accessor_bufr_extract_area_subsets*)a;
     size_t l=1;
     long v[1];
 
-    get_accessors(a);
+    if (*len==0) return GRIB_SUCCESS;
+    err=select_area(a);
+    if (err) return err;
 
-    v[0]=1;
-    err=grib_pack_long(self->packAccessor,v,&l);
+    err=grib_set_long(a->parent->h,self->doExtractSubsets,1);
     if (err) return err;
 
     return err;
