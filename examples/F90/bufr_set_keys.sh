@@ -14,7 +14,7 @@ label="bufr_set_keys_test_f"
 
 #Prepare tmp file
 fBufrTmp=${label}.tmp.bufr
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 #The  bufr file to change
 f=${data_dir}/bufr/syno_multi.bufr
@@ -22,11 +22,11 @@ f=${data_dir}/bufr/syno_multi.bufr
 REDIRECT=/dev/null
 
 #The input ($f) and output ($fBufrTmp) are hardcoded in the f90 example!!!
-${examples_dir}/eccodes_f_bufr_set_keys >$REDIRECT 2> $REDIRECT
+${examples_dir}/eccodes_f_bufr_set_keys >$REDIRECT
 
-#Compare modified file  to the original
+#Compare modified file to the original
 set +e
-${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT
+${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT
 
 #Check if they are different
 if [ $? -eq 0 ]; then
@@ -40,4 +40,4 @@ set -e
 [ `${tools_dir}/bufr_count $f` = `${tools_dir}/bufr_count ${fBufrTmp}` ]
 
 #Clean up
-rm -f ${fBufrTmp} | true
+rm -f ${fBufrTmp}
