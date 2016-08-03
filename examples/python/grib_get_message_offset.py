@@ -32,7 +32,7 @@ def example():
         if id is None:
             break
 
-        print 'Offset:  ', codes_get_message_offset(id)
+        print codes_get_message_offset(id)
 
         codes_release(id)
 

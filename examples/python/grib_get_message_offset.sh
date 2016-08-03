@@ -11,10 +11,13 @@
 . ./include.sh
 
 label="get_message_offset_p"
-fTmp=${label}.tmp
+fTmp1=${label}.1.tmp
+fTmp2=${label}.2.tmp
 
 input=${data_dir}/mixed.grib
 
-$PYTHON $examples_src/grib_get_message_offset.py $input
+$PYTHON $examples_src/grib_get_message_offset.py $input > $fTmp1
+${tools_dir}/grib_get -p offset:i $input > $fTmp2
+diff $fTmp1 $fTmp2
 
-rm -f ${fTmp}
+rm -f $fTmp1 $fTmp2
