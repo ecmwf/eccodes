@@ -30,6 +30,7 @@ endforeach()
 list( APPEND tests
    grib_clone
    grib_count_messages
+   grib_get_message_offset
    grib_get_keys
    grib_index
    grib_iterator
