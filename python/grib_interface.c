@@ -24,6 +24,7 @@
 #endif
 
 #include <ctype.h>
+#include <errno.h>
 
 #if GRIB_PTHREADS
  static pthread_once_t once  = PTHREAD_ONCE_INIT;
@@ -73,7 +74,6 @@
 
 int GRIB_NULL=-1;
 int GRIB_NULL_NEAREST=-1;
-extern int errno;
 
 typedef struct l_grib_file l_grib_file;
 
