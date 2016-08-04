@@ -59,7 +59,6 @@ extern "C" {
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <time.h>
 
 /* Microsoft Windows Visual Studio support */
 #include "eccodes_windef.h"

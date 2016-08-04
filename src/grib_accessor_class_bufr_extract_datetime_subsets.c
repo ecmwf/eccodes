@@ -151,217 +151,212 @@ static int get_native_type(grib_accessor* a)
     return GRIB_TYPE_LONG;
 }
 
-static int select_datetime(grib_accessor* a) {
-  int ret=0;
-  long compressed=0;
-  grib_accessor_bufr_extract_datetime_subsets *self =(grib_accessor_bufr_extract_datetime_subsets*)a;
-  grib_handle* h=grib_handle_of_accessor(a);
-  grib_context* c=h->context;
+static int select_datetime(grib_accessor* a)
+{
+    int ret=0;
+    long compressed=0;
+    grib_accessor_bufr_extract_datetime_subsets *self =(grib_accessor_bufr_extract_datetime_subsets*)a;
+    grib_handle* h=grib_handle_of_accessor(a);
+    grib_context* c=h->context;
 
-  ret=grib_get_long(h,"compressedData",&compressed);
-  if (ret) return ret;
-
-  if (compressed) {
-    size_t n;
-    struct tm start;
-    struct tm end;
-    struct tm datetime;
-    time_t start_t,end_t,datetime_t;
-    char start_str[80]={0,},end_str[80]={0,},datetime_str[80]={0,};
-    long yearRank,monthRank,dayRank,hourRank,minuteRank,secondRank;
-    long yearStart,monthStart,dayStart,hourStart,minuteStart,secondStart;
-    long yearEnd,monthEnd,dayEnd,hourEnd,minuteEnd,secondEnd;
-    long *year,*month,*hour,*day,*minute;
-    double *second;
-    long numberOfSubsets,i;
-    grib_iarray* subsets;
-    long *subsets_ar=0;
-    size_t nsubsets=0;
-    char yearstr[20]={0,};
-    char monthstr[20]={0,};
-    char daystr[20]={0,};
-    char hourstr[20]={0,};
-    char minutestr[20]={0,};
-    char secondstr[20]={0,};
-
-    ret=grib_get_long(h,self->numberOfSubsets,&numberOfSubsets);
+    ret=grib_get_long(h,"compressedData",&compressed);
     if (ret) return ret;
 
-    subsets=grib_iarray_new(c,numberOfSubsets,10);
+    if (compressed) {
+        size_t n;
+        double julianStart=0, julianEnd=0, julianDT=0;
+        char start_str[80]={0,},end_str[80]={0,};
+        long yearRank,monthRank,dayRank,hourRank,minuteRank,secondRank;
+        long yearStart,monthStart,dayStart,hourStart,minuteStart,secondStart;
+        long yearEnd,monthEnd,dayEnd,hourEnd,minuteEnd,secondEnd;
+        long *year,*month,*hour,*day,*minute;
+        double *second;
+        long numberOfSubsets,i;
+        grib_iarray* subsets;
+        long *subsets_ar=0;
+        size_t nsubsets=0;
+        char yearstr[20]={0,};
+        char monthstr[20]={0,};
+        char daystr[20]={0,};
+        char hourstr[20]={0,};
+        char minutestr[20]={0,};
+        char secondstr[20]={0,};
 
-    ret=grib_set_long(h,"unpack",1);
-    if (ret) return ret;
+        ret=grib_get_long(h,self->numberOfSubsets,&numberOfSubsets);
+        if (ret) return ret;
 
-    ret=grib_get_long(h,"extractDateTimeYearRank",&yearRank);
-    if (ret) return ret;
-    sprintf(yearstr,"#%ld#year",yearRank);
+        subsets=grib_iarray_new(c,numberOfSubsets,10);
 
-    ret=grib_get_long(h,"extractDateTimeMonthRank",&monthRank);
-    if (ret) return ret;
-    sprintf(monthstr,"#%ld#month",monthRank);
+        ret=grib_set_long(h,"unpack",1);
+        if (ret) return ret;
 
-    ret=grib_get_long(h,"extractDateTimeDayRank",&dayRank);
-    if (ret) return ret;
-    sprintf(daystr,"#%ld#day",dayRank);
+        ret=grib_get_long(h,"extractDateTimeYearRank",&yearRank);
+        if (ret) return ret;
+        sprintf(yearstr,"#%ld#year",yearRank);
 
-    ret=grib_get_long(h,"extractDateTimeHourRank",&hourRank);
-    if (ret) return ret;
-    sprintf(hourstr,"#%ld#hour",hourRank);
+        ret=grib_get_long(h,"extractDateTimeMonthRank",&monthRank);
+        if (ret) return ret;
+        sprintf(monthstr,"#%ld#month",monthRank);
 
-    ret=grib_get_long(h,"extractDateTimeMinuteRank",&minuteRank);
-    if (ret) return ret;
-    sprintf(minutestr,"#%ld#minute",minuteRank);
+        ret=grib_get_long(h,"extractDateTimeDayRank",&dayRank);
+        if (ret) return ret;
+        sprintf(daystr,"#%ld#day",dayRank);
 
-    ret=grib_get_long(h,"extractDateTimeSecondRank",&secondRank);
-    if (ret) return ret;
-    sprintf(secondstr,"#%ld#second",secondRank);
+        ret=grib_get_long(h,"extractDateTimeHourRank",&hourRank);
+        if (ret) return ret;
+        sprintf(hourstr,"#%ld#hour",hourRank);
 
-    n=numberOfSubsets;
-    year=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
-    ret=grib_get_long_array(h,yearstr,year,&n);
-    if (ret) return ret;
-    if (n!=numberOfSubsets) {
-      if (n==1) {
-        for (i=1;i<numberOfSubsets;i++) year[i]=year[0];
-      } else return GRIB_INTERNAL_ERROR;
+        ret=grib_get_long(h,"extractDateTimeMinuteRank",&minuteRank);
+        if (ret) return ret;
+        sprintf(minutestr,"#%ld#minute",minuteRank);
+
+        ret=grib_get_long(h,"extractDateTimeSecondRank",&secondRank);
+        if (ret) return ret;
+        sprintf(secondstr,"#%ld#second",secondRank);
+
+        n=numberOfSubsets;
+        year=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
+        ret=grib_get_long_array(h,yearstr,year,&n);
+        if (ret) return ret;
+        if (n!=numberOfSubsets) {
+            if (n==1) {
+                for (i=1;i<numberOfSubsets;i++) year[i]=year[0];
+            } else return GRIB_INTERNAL_ERROR;
+        }
+
+        n=numberOfSubsets;
+        month=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
+        ret=grib_get_long_array(h,monthstr,month,&n);
+        if (ret) return ret;
+        if (n!=numberOfSubsets) {
+            if (n==1) {
+                for (i=1;i<numberOfSubsets;i++) month[i]=month[0];
+            } else return GRIB_INTERNAL_ERROR;
+        }
+
+        n=numberOfSubsets;
+        day=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
+        ret=grib_get_long_array(h,daystr,day,&n);
+        if (ret) return ret;
+        if (n!=numberOfSubsets) {
+            if (n==1) {
+                for (i=1;i<numberOfSubsets;i++) day[i]=day[0];
+            } else return GRIB_INTERNAL_ERROR;
+        }
+
+        n=numberOfSubsets;
+        hour=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
+        ret=grib_get_long_array(h,hourstr,hour,&n);
+        if (ret) return ret;
+        if (n!=numberOfSubsets) {
+            if (n==1) {
+                for (i=1;i<numberOfSubsets;i++) hour[i]=hour[0];
+            } else return GRIB_INTERNAL_ERROR;
+        }
+
+        n=numberOfSubsets;
+        minute=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
+        ret=grib_get_long_array(h,minutestr,minute,&n);
+        if (ret) {
+            ret=0;
+            minute[0]=0;
+            n=1;
+        }
+        if (n!=numberOfSubsets) {
+            if (n==1) {
+                for (i=1;i<numberOfSubsets;i++) minute[i]=minute[0];
+            } else return GRIB_INTERNAL_ERROR;
+        }
+
+        n=numberOfSubsets;
+        second=grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
+        ret=grib_get_double_array(h,secondstr,second,&n);
+        if (ret) {
+            ret=0;
+            second[0]=0;
+            n=1;
+        }
+        if (n!=numberOfSubsets) {
+            if (n==1) {
+                for (i=1;i<numberOfSubsets;i++) second[i]=second[0];
+            } else return GRIB_INTERNAL_ERROR;
+        }
+
+        ret=grib_get_long(h,"extractDateTimeYearStart",&yearStart);
+        if (ret) return ret;
+        ret=grib_get_long(h,"extractDateTimeMonthStart",&monthStart);
+        if (ret) return ret;
+        ret=grib_get_long(h,"extractDateTimeDayStart",&dayStart);
+        if (ret) return ret;
+        ret=grib_get_long(h,"extractDateTimeHourStart",&hourStart);
+        if (ret) return ret;
+        ret=grib_get_long(h,"extractDateTimeMinuteStart",&minuteStart);
+        if (ret) minuteStart=0;
+        ret=grib_get_long(h,"extractDateTimeSecondStart",&secondStart);
+        if (ret) secondStart=0;
+        sprintf(start_str,"%04ld/%02ld/%02ld %02ld:%02ld:%02ld",yearStart,monthStart,dayStart,hourStart,minuteStart,secondStart);
+        grib_datetime_to_julian(yearStart,monthStart,dayStart,hourStart,minuteStart,secondStart, &julianStart);
+        /* TODO: if error occurred return GRIB_INTERNAL_ERROR */
+
+        ret=grib_get_long(h,"extractDateTimeYearEnd",&yearEnd);
+        if (ret) return ret;
+        ret=grib_get_long(h,"extractDateTimeMonthEnd",&monthEnd);
+        if (ret) return ret;
+        ret=grib_get_long(h,"extractDateTimeDayEnd",&dayEnd);
+        if (ret) return ret;
+        ret=grib_get_long(h,"extractDateTimeHourEnd",&hourEnd);
+        if (ret) return ret;
+        ret=grib_get_long(h,"extractDateTimeMinuteEnd",&minuteEnd);
+        if (ret) minuteEnd=0;
+        ret=grib_get_long(h,"extractDateTimeSecondEnd",&secondEnd);
+        if (ret) secondEnd=0;
+        sprintf(end_str,"%04ld/%02ld/%02ld %02ld:%02ld:%02ld",yearEnd,monthEnd,dayEnd,hourEnd,minuteEnd,secondEnd);
+        grib_datetime_to_julian(yearEnd,monthEnd,dayEnd,hourEnd,minuteEnd,secondEnd, &julianEnd);
+        /* TODO: if error occurred return GRIB_INTERNAL_ERROR */
+
+        if (julianEnd <= julianStart) {
+            grib_context_log(c,GRIB_LOG_ERROR,"Wrong definition of time interval: end (%s) is not after start (%s)",end_str,start_str);
+            return GRIB_INTERNAL_ERROR;
+        }
+
+        for (i=0;i<numberOfSubsets;i++) {
+            /*sprintf(datetime_str,"%04ld/%02ld/%02ld %02ld:%02ld:%02ld",year[i],month[i],day[i],hour[i],minute[i],(long)round(second[i]));*/
+            grib_datetime_to_julian(year[i],month[i],day[i],hour[i],minute[i],(long)round(second[i]), &julianDT);
+            /* TODO: if error occurred return GRIB_INTERNAL_ERROR */
+
+            if (julianDT>=julianStart && julianEnd>=julianDT) {
+                grib_iarray_push(subsets,i+1);
+                /* printf("++++++++ %ld\n",i+1); */
+            }
+        }
+
+        nsubsets=grib_iarray_used_size(subsets);
+        ret=grib_set_long(h,"extractDateTimeNumberOfSubsets",nsubsets);
+        if (ret) return ret;
+
+        if (nsubsets!=0) {
+            subsets_ar=grib_iarray_get_array(subsets);
+            ret=grib_set_long_array(h,self->extractSubsetList,subsets_ar,nsubsets);
+            if (ret) return ret;
+
+            ret=grib_set_long(h,self->doExtractSubsets,1);
+            if (ret) return ret;
+        }
+
+        grib_context_free(c,year);
+        grib_context_free(c,month);
+        grib_context_free(c,day);
+        grib_context_free(c,hour);
+        grib_context_free(c,minute);
+        grib_context_free(c,second);
+        grib_iarray_delete(subsets);
+        subsets=0;
+
+    } else {
+        return GRIB_NOT_IMPLEMENTED;
     }
 
-    n=numberOfSubsets;
-    month=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
-    ret=grib_get_long_array(h,monthstr,month,&n);
-    if (ret) return ret;
-    if (n!=numberOfSubsets) {
-      if (n==1) {
-        for (i=1;i<numberOfSubsets;i++) month[i]=month[0];
-      } else return GRIB_INTERNAL_ERROR;
-    }
-
-    n=numberOfSubsets;
-    day=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
-    ret=grib_get_long_array(h,daystr,day,&n);
-    if (ret) return ret;
-    if (n!=numberOfSubsets) {
-      if (n==1) {
-        for (i=1;i<numberOfSubsets;i++) day[i]=day[0];
-      } else return GRIB_INTERNAL_ERROR;
-    }
-
-    n=numberOfSubsets;
-    hour=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
-    ret=grib_get_long_array(h,hourstr,hour,&n);
-    if (ret) return ret;
-    if (n!=numberOfSubsets) {
-      if (n==1) {
-        for (i=1;i<numberOfSubsets;i++) hour[i]=hour[0];
-      } else return GRIB_INTERNAL_ERROR;
-    }
-
-    n=numberOfSubsets;
-    minute=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
-    ret=grib_get_long_array(h,minutestr,minute,&n);
-    if (ret) {
-      ret=0;
-      minute[0]=0;
-      n=1;
-    }
-    if (n!=numberOfSubsets) {
-      if (n==1) {
-        for (i=1;i<numberOfSubsets;i++) minute[i]=minute[0];
-      } else return GRIB_INTERNAL_ERROR;
-    }
-
-    n=numberOfSubsets;
-    second=grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
-    ret=grib_get_double_array(h,secondstr,second,&n);
-    if (ret) {
-      ret=0;
-      second[0]=0;
-      n=1;
-    }
-    if (n!=numberOfSubsets) {
-      if (n==1) {
-        for (i=1;i<numberOfSubsets;i++) second[i]=second[0];
-      } else return GRIB_INTERNAL_ERROR;
-    }
-
-    ret=grib_get_long(h,"extractDateTimeYearStart",&yearStart);
-    if (ret) return ret;
-    ret=grib_get_long(h,"extractDateTimeMonthStart",&monthStart);
-    if (ret) return ret;
-    ret=grib_get_long(h,"extractDateTimeDayStart",&dayStart);
-    if (ret) return ret;
-    ret=grib_get_long(h,"extractDateTimeHourStart",&hourStart);
-    if (ret) return ret;
-    ret=grib_get_long(h,"extractDateTimeMinuteStart",&minuteStart);
-    if (ret) minuteStart=0;
-    ret=grib_get_long(h,"extractDateTimeSecondStart",&secondStart);
-    if (ret) secondStart=0;
-    sprintf(start_str,"%04ld/%02ld/%02ld %02ld:%02ld:%02ld",yearStart,monthStart,dayStart,hourStart,minuteStart,secondStart);
-    strptime(start_str, "%Y/%m/%d %T", &start);
-    start_t=mktime(&start);
-    if (start_t==-1) return GRIB_INTERNAL_ERROR;
-
-    ret=grib_get_long(h,"extractDateTimeYearEnd",&yearEnd);
-    if (ret) return ret;
-    ret=grib_get_long(h,"extractDateTimeMonthEnd",&monthEnd);
-    if (ret) return ret;
-    ret=grib_get_long(h,"extractDateTimeDayEnd",&dayEnd);
-    if (ret) return ret;
-    ret=grib_get_long(h,"extractDateTimeHourEnd",&hourEnd);
-    if (ret) return ret;
-    ret=grib_get_long(h,"extractDateTimeMinuteEnd",&minuteEnd);
-    if (ret) minuteEnd=0;
-    ret=grib_get_long(h,"extractDateTimeSecondEnd",&secondEnd);
-    if (ret) secondEnd=0;
-    sprintf(end_str,"%04ld/%02ld/%02ld %02ld:%02ld:%02ld",yearEnd,monthEnd,dayEnd,hourEnd,minuteEnd,secondEnd);
-    strptime(end_str, "%Y/%m/%d %T", &end);
-    end_t=mktime(&end);
-    if (end_t==-1) return GRIB_INTERNAL_ERROR;
-    if (difftime(end_t,start_t)<=0) {
-      grib_context_log(c,GRIB_LOG_ERROR,"Wrong definition of time interval: end (%s) is not after start (%s)",end_str,start_str);
-      return GRIB_INTERNAL_ERROR;
-    }
-
-    for (i=0;i<numberOfSubsets;i++) {
-      sprintf(datetime_str,"%04ld/%02ld/%02ld %02ld:%02ld:%02ld",year[i],month[i],day[i],hour[i],minute[i],(long)round(second[i]));
-      strptime(datetime_str, "%Y/%m/%d %T", &datetime);
-      datetime_t=mktime(&datetime);
-      if (datetime_t==-1) return GRIB_INTERNAL_ERROR;
-      /* printf("++++++ %s <= %s (%g) <= %s\n",start_str,datetime_str,second[i],end_str); */
-
-      if (difftime(datetime_t,start_t)>=0 && difftime(end_t,datetime_t)>=0) {
-        grib_iarray_push(subsets,i+1);
-        /* printf("++++++++ %ld\n",i+1); */
-      }
-    }
-
-    nsubsets=grib_iarray_used_size(subsets);
-    ret=grib_set_long(h,"extractDateTimeNumberOfSubsets",nsubsets);
-    if (ret) return ret;
-
-    if (nsubsets!=0) {
-      subsets_ar=grib_iarray_get_array(subsets);
-      ret=grib_set_long_array(h,self->extractSubsetList,subsets_ar,nsubsets);
-      if (ret) return ret;
-
-      ret=grib_set_long(h,self->doExtractSubsets,1);
-      if (ret) return ret;
-    }
-
-    grib_context_free(c,year);
-    grib_context_free(c,month);
-    grib_context_free(c,day);
-    grib_context_free(c,hour);
-    grib_context_free(c,minute);
-    grib_context_free(c,second);
-    grib_iarray_delete(subsets);
-    subsets=0;
-
-  } else {
-    return GRIB_NOT_IMPLEMENTED;
-  }
-
-  return ret;
+    return ret;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
