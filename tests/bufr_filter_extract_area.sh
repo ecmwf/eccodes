@@ -43,13 +43,13 @@ cat > $fRules <<EOF
 EOF
 
 inputBufr="amsa_55.bufr"
-outputBufr=${label}.${f}.out
+outputBufr=${label}.${inputBufr}.out
 outputFilt=${label}.txt
 outputRef=${label}.ref
 rm -f $outputFilt
 
 echo "Test: Area extraction" >> $fLog
-echo "file: outputBufr" >> $fLog
+echo "file: $outputBufr" >> $fLog
 
 ${tools_dir}bufr_filter -o $outputBufr $fRules $inputBufr > $outputFilt
 [ -f $outputBufr ]

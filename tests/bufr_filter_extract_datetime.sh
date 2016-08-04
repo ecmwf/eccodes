@@ -56,16 +56,16 @@ print "extracted [extractDateTimeNumberOfSubsets] of [originalNumberOfSubsets] s
 EOF
 
 inputBufr="amsa_55.bufr"
-outputBufr=${label}.${f}.out
+outputBufr=${label}.${inputBufr}.out
 outputFilt=${label}.txt
 outputRef=${label}.ref
 rm -f $outputFilt
 
 echo "Test: Datetime extraction" >> $fLog
-echo "file: $f" >> $fLog
+echo "file: $inputBufr" >> $fLog
 
 ${tools_dir}bufr_filter -o $outputBufr $fRules $inputBufr  > $outputFilt
-[ -f $outputFilt ]
+[ -f $outputBufr ]
 
 cat > $fRules <<EOF
 set unpack=1;
