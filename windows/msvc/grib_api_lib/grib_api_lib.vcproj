@@ -517,6 +517,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_accessor_class_bufr_extract_area_subsets.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_bufr_extract_subsets.c"
 				>
 			</File>
@@ -1397,11 +1401,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_dumper_class_fortran.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_dumper_class_json.c"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_dumper_class_keys.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_dumper_class_python.c"
 				>
 			</File>
 			<File

@@ -7965,7 +7965,7 @@ SWIGINTERN PyObject *_wrap_grib_c_set_string_array(PyObject *SWIGUNUSEDPARM(self
           return NULL;
         }
       }
-      arg3[i] = 0;
+      arg3[i] = 0;  /* Last entry set to NULL */
     } else {
       PyErr_SetString(PyExc_TypeError,"not a list");
       return NULL;

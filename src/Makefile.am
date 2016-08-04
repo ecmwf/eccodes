@@ -70,6 +70,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_bufr_group.c \
 	grib_accessor_class_bufr_string_values.c \
 	grib_accessor_class_pack_bufr_values.c \
+	grib_accessor_class_bufr_extract_area_subsets.c \
 	grib_accessor_class_group.c \
 	grib_accessor_class_unpack_bufr_values.c \
 	grib_accessor_class_bufr_has_delayed_replication.c \
