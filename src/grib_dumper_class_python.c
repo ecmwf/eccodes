@@ -59,7 +59,7 @@ static void footer         (grib_dumper*,grib_handle*);
 
 typedef struct grib_dumper_python {
     grib_dumper          dumper;  
-/* Members defined in fortran */
+/* Members defined in python */
 	long section_offset;
 	long empty;
 	long end;
@@ -71,7 +71,7 @@ typedef struct grib_dumper_python {
 
 static grib_dumper_class _grib_dumper_class_python = {
     0,                              /* super                     */
-    "fortran",                              /* name                      */
+    "python",                              /* name                      */
     sizeof(grib_dumper_python),     /* size                      */
     0,                                   /* inited */
     &init_class,                         /* init_class */
