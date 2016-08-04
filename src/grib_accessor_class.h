@@ -17,6 +17,7 @@ extern grib_accessor_class* grib_accessor_class_bufr_data_array;
 extern grib_accessor_class* grib_accessor_class_bufr_data_element;
 extern grib_accessor_class* grib_accessor_class_bufr_elements_table;
 extern grib_accessor_class* grib_accessor_class_bufr_extract_area_subsets;
+extern grib_accessor_class* grib_accessor_class_bufr_extract_datetime_subsets;
 extern grib_accessor_class* grib_accessor_class_bufr_extract_subsets;
 extern grib_accessor_class* grib_accessor_class_bufr_group;
 extern grib_accessor_class* grib_accessor_class_bufr_has_delayed_replication;

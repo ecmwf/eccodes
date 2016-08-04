@@ -17,6 +17,7 @@
 { "bufr_data_element", &grib_accessor_class_bufr_data_element, },
 { "bufr_elements_table", &grib_accessor_class_bufr_elements_table, },
 { "bufr_extract_area_subsets", &grib_accessor_class_bufr_extract_area_subsets, },
+{ "bufr_extract_datetime_subsets", &grib_accessor_class_bufr_extract_datetime_subsets, },
 { "bufr_extract_subsets", &grib_accessor_class_bufr_extract_subsets, },
 { "bufr_group", &grib_accessor_class_bufr_group, },
 { "bufr_has_delayed_replication", &grib_accessor_class_bufr_has_delayed_replication, },

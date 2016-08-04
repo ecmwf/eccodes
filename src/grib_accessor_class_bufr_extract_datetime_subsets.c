@@ -20,13 +20,6 @@
    MEMBERS    = const char* doExtractSubsets
    MEMBERS    = const char* numberOfSubsets
    MEMBERS    = const char* extractSubsetList
-   MEMBERS    = const char* extractAreaWestLongitude
-   MEMBERS    = const char* extractAreaEastLongitude
-   MEMBERS    = const char* extractAreaNorthLatitude
-   MEMBERS    = const char* extractAreaSouthLatitude
-   MEMBERS    = const char* extractAreaLongitudeRank
-   MEMBERS    = const char* extractAreaLatitudeRank
-   MEMBERS    = const char* extractAreaNumberOfSubsets
    END_CLASS_DEF
 
  */
@@ -46,28 +39,21 @@ static int pack_long(grib_accessor*, const long* val,size_t *len);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
-typedef struct grib_accessor_bufr_extract_area_subsets {
+typedef struct grib_accessor_bufr_extract_datetime_subsets {
     grib_accessor          att;
 /* Members defined in gen */
-/* Members defined in bufr_extract_area_subsets */
+/* Members defined in bufr_extract_datetime_subsets */
 	const char* doExtractSubsets;
 	const char* numberOfSubsets;
 	const char* extractSubsetList;
-	const char* extractAreaWestLongitude;
-	const char* extractAreaEastLongitude;
-	const char* extractAreaNorthLatitude;
-	const char* extractAreaSouthLatitude;
-	const char* extractAreaLongitudeRank;
-	const char* extractAreaLatitudeRank;
-	const char* extractAreaNumberOfSubsets;
-} grib_accessor_bufr_extract_area_subsets;
+} grib_accessor_bufr_extract_datetime_subsets;
 
 extern grib_accessor_class* grib_accessor_class_gen;
 
-static grib_accessor_class _grib_accessor_class_bufr_extract_area_subsets = {
+static grib_accessor_class _grib_accessor_class_bufr_extract_datetime_subsets = {
     &grib_accessor_class_gen,                      /* super                     */
-    "bufr_extract_area_subsets",                      /* name                      */
-    sizeof(grib_accessor_bufr_extract_area_subsets),  /* size                      */
+    "bufr_extract_datetime_subsets",                      /* name                      */
+    sizeof(grib_accessor_bufr_extract_datetime_subsets),  /* size                      */
     0,                           /* inited */
     &init_class,                 /* init_class */
     &init,                       /* init                      */
@@ -108,7 +94,7 @@ static grib_accessor_class _grib_accessor_class_bufr_extract_area_subsets = {
 };
 
 
-grib_accessor_class* grib_accessor_class_bufr_extract_area_subsets = &_grib_accessor_class_bufr_extract_area_subsets;
+grib_accessor_class* grib_accessor_class_bufr_extract_datetime_subsets = &_grib_accessor_class_bufr_extract_datetime_subsets;
 
 
 static void init_class(grib_accessor_class* c)
@@ -150,19 +136,12 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
     int n=0;
-    grib_accessor_bufr_extract_area_subsets *self =(grib_accessor_bufr_extract_area_subsets*)a;
+    grib_accessor_bufr_extract_datetime_subsets *self =(grib_accessor_bufr_extract_datetime_subsets*)a;
 
     a->length=0;
     self->doExtractSubsets = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
     self->numberOfSubsets = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
     self->extractSubsetList = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-    self->extractAreaWestLongitude = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-    self->extractAreaEastLongitude = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-    self->extractAreaNorthLatitude = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-    self->extractAreaSouthLatitude = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-    self->extractAreaLongitudeRank = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-    self->extractAreaLatitudeRank = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-    self->extractAreaNumberOfSubsets = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
 
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }
@@ -172,10 +151,10 @@ static int get_native_type(grib_accessor* a)
     return GRIB_TYPE_LONG;
 }
 
-static int select_area(grib_accessor* a) {
+static int select_datetime(grib_accessor* a) {
   int ret=0;
   long compressed=0;
-  grib_accessor_bufr_extract_area_subsets *self =(grib_accessor_bufr_extract_area_subsets*)a;
+  grib_accessor_bufr_extract_datetime_subsets *self =(grib_accessor_bufr_extract_datetime_subsets*)a;
   grib_handle* h=grib_handle_of_accessor(a);
   grib_context* c=h->context;
 
@@ -183,16 +162,21 @@ static int select_area(grib_accessor* a) {
   if (ret) return ret;
 
   if (compressed) {
-    double *lat=0;
-    double *lon=0;
     size_t n;
-    double lonWest,lonEast,latNorth,latSouth;
-    long numberOfSubsets,i,latRank,lonRank;
+    long yearRank,monthRank,dayRank,hourRank,minuteRank,secondRank;
+    long yearStart,monthStart,dayStart,hourStart,minuteStart,secondStart;
+    long yearEnd,monthEnd,dayEnd,hourEnd,minuteEnd,secondEnd;
+    long *year,*month,*hour,*day,*minute,*second;
+    long numberOfSubsets,i;
     grib_iarray* subsets;
     long *subsets_ar=0;
     size_t nsubsets=0;
-    char latstr[20]={0,};
-    char lonstr[20]={0,};
+    char yearstr[20]={0,};
+    char monthstr[20]={0,};
+    char daystr[20]={0,};
+    char hourstr[20]={0,};
+    char minutestr[20]={0,};
+    char secondstr[20]={0,};
 
     ret=grib_get_long(h,self->numberOfSubsets,&numberOfSubsets);
     if (ret) return ret;
@@ -202,56 +186,151 @@ static int select_area(grib_accessor* a) {
     ret=grib_set_long(h,"unpack",1);
     if (ret) return ret;
 
-    ret=grib_get_long(h,self->extractAreaLongitudeRank,&lonRank);
+    ret=grib_get_long(h,"extractDateTimeYearRank",&yearRank);
     if (ret) return ret;
-    sprintf(lonstr,"#%ld#longitude",lonRank);
-    ret=grib_get_long(h,self->extractAreaLatitudeRank,&latRank);
+    sprintf(yearstr,"#%ld#year",yearRank);
+
+    ret=grib_get_long(h,"extractDateTimeMonthRank",&monthRank);
     if (ret) return ret;
-    sprintf(latstr,"#%ld#latitude",latRank);
+    sprintf(monthstr,"#%ld#month",monthRank);
+
+    ret=grib_get_long(h,"extractDateTimeDayRank",&dayRank);
+    if (ret) return ret;
+    sprintf(daystr,"#%ld#day",dayRank);
+
+    ret=grib_get_long(h,"extractDateTimeHourRank",&hourRank);
+    if (ret) return ret;
+    sprintf(hourstr,"#%ld#hour",hourRank);
+
+    ret=grib_get_long(h,"extractDateTimeMinuteRank",&minuteRank);
+    if (ret) return ret;
+    sprintf(minutestr,"#%ld#minute",minuteRank);
+
+    ret=grib_get_long(h,"extractDateTimeSecondRank",&secondRank);
+    if (ret) return ret;
+    sprintf(secondstr,"#%ld#second",secondRank);
 
     n=numberOfSubsets;
-    lat=grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
-    ret=grib_get_double_array(h,latstr,lat,&n);
+    year=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
+    ret=grib_get_long_array(h,yearstr,year,&n);
     if (ret) return ret;
-    if (n!=numberOfSubsets) return GRIB_INTERNAL_ERROR;
+    if (n!=numberOfSubsets) {
+      if (n==1) {
+        for (i=1;i<numberOfSubsets;i++) year[i]=year[0];
+      } else return GRIB_INTERNAL_ERROR;
+    }
 
-    lon=grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
-    ret=grib_get_double_array(h,lonstr,lon,&n);
+    n=numberOfSubsets;
+    month=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
+    ret=grib_get_long_array(h,monthstr,month,&n);
     if (ret) return ret;
-    if (n!=numberOfSubsets) return GRIB_INTERNAL_ERROR;
+    if (n!=numberOfSubsets) {
+      if (n==1) {
+        for (i=1;i<numberOfSubsets;i++) month[i]=month[0];
+      } else return GRIB_INTERNAL_ERROR;
+    }
 
-    ret=grib_get_double(h,self->extractAreaWestLongitude,&lonWest);
+    n=numberOfSubsets;
+    day=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
+    ret=grib_get_long_array(h,daystr,day,&n);
     if (ret) return ret;
-    ret=grib_get_double(h,self->extractAreaEastLongitude,&lonEast);
+    if (n!=numberOfSubsets) {
+      if (n==1) {
+        for (i=1;i<numberOfSubsets;i++) day[i]=day[0];
+      } else return GRIB_INTERNAL_ERROR;
+    }
+
+    n=numberOfSubsets;
+    hour=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
+    ret=grib_get_long_array(h,hourstr,hour,&n);
     if (ret) return ret;
-    ret=grib_get_double(h,self->extractAreaNorthLatitude,&latNorth);
+    if (n!=numberOfSubsets) {
+      if (n==1) {
+        for (i=1;i<numberOfSubsets;i++) hour[i]=hour[0];
+      } else return GRIB_INTERNAL_ERROR;
+    }
+
+    n=numberOfSubsets;
+    minute=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
+    ret=grib_get_long_array(h,minutestr,minute,&n);
+    if (ret) {
+      ret=0;
+      minute[0]=0;
+      n=1;
+    }
+    if (n!=numberOfSubsets) {
+      if (n==1) {
+        for (i=1;i<numberOfSubsets;i++) minute[i]=minute[0];
+      } else return GRIB_INTERNAL_ERROR;
+    }
+
+    n=numberOfSubsets;
+    second=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
+    ret=grib_get_long_array(h,secondstr,second,&n);
+    if (ret) {
+      ret=0;
+      second[0]=0;
+      n=1;
+    }
+    if (n!=numberOfSubsets) {
+      if (n==1) {
+        for (i=1;i<numberOfSubsets;i++) second[i]=second[0];
+      } else return GRIB_INTERNAL_ERROR;
+    }
+
+    ret=grib_get_long(h,"extractDateTimeYearStart",&yearStart);
     if (ret) return ret;
-    ret=grib_get_double(h,self->extractAreaSouthLatitude,&latSouth);
+    ret=grib_get_long(h,"extractDateTimeMonthStart",&monthStart);
     if (ret) return ret;
+    ret=grib_get_long(h,"extractDateTimeDayStart",&dayStart);
+    if (ret) return ret;
+    ret=grib_get_long(h,"extractDateTimeHourStart",&hourStart);
+    if (ret) return ret;
+    ret=grib_get_long(h,"extractDateTimeMinuteStart",&minuteStart);
+    if (ret) minuteStart=0;
+    ret=grib_get_long(h,"extractDateTimeSecondStart",&secondStart);
+    if (ret) secondStart=0;
+
+    ret=grib_get_long(h,"extractDateTimeYearEnd",&yearEnd);
+    if (ret) return ret;
+    ret=grib_get_long(h,"extractDateTimeMonthEnd",&monthEnd);
+    if (ret) return ret;
+    ret=grib_get_long(h,"extractDateTimeDayEnd",&dayEnd);
+    if (ret) return ret;
+    ret=grib_get_long(h,"extractDateTimeHourEnd",&hourEnd);
+    if (ret) return ret;
+    ret=grib_get_long(h,"extractDateTimeMinuteEnd",&minuteEnd);
+    if (ret) minuteEnd=0;
+    ret=grib_get_long(h,"extractDateTimeSecondEnd",&secondEnd);
+    if (ret) secondEnd=0;
 
     for (i=0;i<numberOfSubsets;i++) {
-      /* printf("++++++ lat: %g <= %g <= %g lon: %g <= %g <= %g \n",latSouth,lat[i],latNorth,lonWest,lon[i],lonEast); */
-      if (lat[i]>=latSouth && lat[i]<=latNorth && lon[i]>=lonWest && lon[i]<=lonEast) {
+      printf("++++++ day: %ld <= %ld <= %ld hour: %ld <= %ld <= %ld minute: %ld <= %ld <= %ld second: %ld <= %ld <= %ld \n",
+              dayStart,day[i],dayEnd, hourStart,hour[i],hourEnd,
+              minuteStart,minute[i],minuteEnd,secondStart,second[i],secondEnd);
+      if (year[i]>=yearStart && year[i]<=yearEnd && month[i]>=monthStart && month[i]<=monthEnd
+          && day[i]>=dayStart && day[i]<=dayEnd && hour[i]>=hourStart && hour[i]<=hourEnd
+          && minute[i]>=minuteStart && minute[i]<=minuteEnd && second[i]>=secondStart && second[i]<=secondEnd
+          ) {
         grib_iarray_push(subsets,i+1);
-        /* printf("++++++++ %ld\n",i+1); */
+        printf("++++++++ %ld\n",i+1);
       }
     }
 
+    subsets_ar=grib_iarray_get_array(subsets);
     nsubsets=grib_iarray_used_size(subsets);
-    ret=grib_set_long(h,self->extractAreaNumberOfSubsets,nsubsets);
+    ret=grib_set_long_array(h,self->extractSubsetList,subsets_ar,nsubsets);
     if (ret) return ret;
 
-    if (nsubsets!=0) {
-      subsets_ar=grib_iarray_get_array(subsets);
-      ret=grib_set_long_array(h,self->extractSubsetList,subsets_ar,nsubsets);
-      if (ret) return ret;
+    ret=grib_set_long(h,self->doExtractSubsets,1);
+    if (ret) return ret;
 
-      ret=grib_set_long(h,self->doExtractSubsets,1);
-      if (ret) return ret;
-    }
-
-    grib_context_free(c,lat);
-    grib_context_free(c,lon);
+    grib_context_free(c,year);
+    grib_context_free(c,month);
+    grib_context_free(c,day);
+    grib_context_free(c,hour);
+    grib_context_free(c,minute);
+    grib_context_free(c,second);
     grib_iarray_delete(subsets);
     subsets=0;
 
@@ -265,12 +344,12 @@ static int select_area(grib_accessor* a) {
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
     int err=0;
-    grib_accessor_bufr_extract_area_subsets *self =(grib_accessor_bufr_extract_area_subsets*)a;
+    grib_accessor_bufr_extract_datetime_subsets *self =(grib_accessor_bufr_extract_datetime_subsets*)a;
     size_t l=1;
     long v[1];
 
     if (*len==0) return GRIB_SUCCESS;
-    err=select_area(a);
+    err=select_datetime(a);
     if (err) return err;
 
     err=grib_set_long(a->parent->h,self->doExtractSubsets,1);

@@ -23,17 +23,42 @@ transient extractSubset=-1;
 transient extractSubsetList={-1};
 transient extractSubsetIntervalStart=-1;
 transient extractSubsetIntervalEnd=-1;
+
+meta doExtractSubsets bufr_extract_subsets(numericValues,pack,numberOfSubsets,extractSubset,extractSubsetIntervalStart,extractSubsetIntervalEnd,extractSubsetList);
+
 transient extractAreaWestLongitude=1.1;
 transient extractAreaEastLongitude=1.1;
 transient extractAreaNorthLatitude=1.1;
 transient extractAreaSouthLatitude=1.1;
 transient extractAreaLatitudeRank=1;
 transient extractAreaLongitudeRank=1;
+transient extractAreaNumberOfSubsets=0;
 
-
-meta doExtractSubsets bufr_extract_subsets(numericValues,pack,numberOfSubsets,extractSubset,extractSubsetIntervalStart,extractSubsetIntervalEnd,extractSubsetList);
 meta doExtractArea bufr_extract_area_subsets(doExtractSubsets,numberOfSubsets,extractSubsetList,extractAreaWestLongitude,extractAreaEastLongitude,
-                                              extractAreaNorthLatitude,extractAreaSouthLatitude,extractAreaLongitudeRank,extractAreaLatitudeRank)=0;
+                                              extractAreaNorthLatitude,extractAreaSouthLatitude,extractAreaLongitudeRank,extractAreaLatitudeRank,extractAreaNumberOfSubsets)=0;
+
+transient extractDateTimeYearStart=2016;
+transient extractDateTimeMonthStart=1;
+transient extractDateTimeDayStart=1;
+transient extractDateTimeHourStart=1;
+transient extractDateTimeMinuteStart=1;
+transient extractDateTimeSecondStart=1;
+
+transient extractDateTimeYearEnd=2016;
+transient extractDateTimeMonthEnd=1;
+transient extractDateTimeDayEnd=1;
+transient extractDateTimeHourEnd=1;
+transient extractDateTimeMinuteEnd=1;
+transient extractDateTimeSecondEnd=1;
+
+transient extractDateTimeYearRank=1;
+transient extractDateTimeMonthRank=1;
+transient extractDateTimeDayRank=1;
+transient extractDateTimeHourRank=1;
+transient extractDateTimeMinuteRank=1;
+transient extractDateTimeSecondRank=1;
+
+meta doExtractDateTime bufr_extract_datetime_subsets(doExtractSubsets,numberOfSubsets,extractSubsetList);
 
 template boot_edition "bufr/boot_edition_[ed:l].def";
 
