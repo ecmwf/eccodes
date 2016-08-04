@@ -52,6 +52,8 @@ list( APPEND tests2
     bufr_count
     bufr_get
     bufr_filter
+    #bufr_filter_extract_datetime
+    bufr_filter_extract_area
     bufr_json
     bufr_ls
     bufr_change_edition
