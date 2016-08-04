@@ -1533,3 +1533,94 @@ diff ${f}.log.ref ${f}.log
 
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
 
+#-----------------------------------------------------------
+# Test: Datetime extraction
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+transient originalNumberOfSubsets=numberOfSubsets;
+
+transient extractDateTimeYearStart=2012;
+transient extractDateTimeMonthStart=10;
+transient extractDateTimeDayStart=31;
+transient extractDateTimeHourStart=0;
+transient extractDateTimeMinuteStart=1;
+transient extractDateTimeSecondStart=31.6;
+
+transient extractDateTimeYearEnd=2012;
+transient extractDateTimeMonthEnd=10;
+transient extractDateTimeDayEnd=31;
+transient extractDateTimeHourEnd=0;
+transient extractDateTimeMinuteEnd=1;
+transient extractDateTimeSecondEnd=39.6;
+
+set doExtractDateTime=1;
+if (extractDateTimeNumberOfSubsets!=0) {
+  write;
+}
+
+print "extracted [extractDateTimeNumberOfSubsets] of [originalNumberOfSubsets] subsets";
+EOF
+
+f="amsa_55.bufr"
+
+echo "Test: Datetime extraction" >> $fLog
+echo "file: $f" >> $fLog
+
+${tools_dir}bufr_filter -o ${f}.out $fRules $f  > ${f}.log
+cat > $fRules <<EOF
+set unpack=1;
+print "year=[year!15]";
+print "===========";
+print "month=[month!15]";
+print "===========";
+print "day=[day!15]";
+print "===========";
+print "hour=[hour!15]";
+print "===========";
+print "minute=[minute!15]";
+print "===========";
+print "second=[second!15]";
+print "===========";
+EOF
+${tools_dir}bufr_filter $fRules $f ${f}.out  >> ${f}.log
+
+cat > ${f}.log.ref <<EOF
+extracted 30 of 128 subsets
+year=2012
+===========
+month=10
+===========
+day=31
+===========
+hour=0
+===========
+minute=1
+===========
+second=23.54 23.54 23.54 23.54 23.54 23.54 23.54 23.54 23.54 23.54 23.54 23.54 23.54 23.54 23.54 
+23.54 23.54 23.54 23.54 23.54 23.54 23.54 23.54 23.54 23.54 23.54 23.54 23.54 23.54 23.54 
+31.54 31.54 31.54 31.54 31.54 31.54 31.54 31.54 31.54 31.54 31.54 31.54 31.54 31.54 31.54 
+31.54 31.54 31.54 31.54 31.54 31.54 31.54 31.54 31.54 31.54 31.54 31.54 31.54 31.54 31.54 
+39.54 39.54 39.54 39.54 39.54 39.54 39.54 39.54 39.54 39.54 39.54 39.54 39.54 39.54 39.54 
+39.54 39.54 39.54 39.54 39.54 39.54 39.54 39.54 39.54 39.54 39.54 39.54 39.54 39.54 39.54 
+47.54 47.54 47.54 47.54 47.54 47.54 47.54 47.54 47.54 47.54 47.54 47.54 47.54 47.54 47.54 
+47.54 47.54 47.54 47.54 47.54 47.54 47.54 47.54 47.54 47.54 47.54 47.54 47.54 47.54 47.54 
+55.54 55.54 55.54 55.54 55.54 55.54 55.54 55.54
+===========
+year=2012
+===========
+month=10
+===========
+day=31
+===========
+hour=0
+===========
+minute=1
+===========
+second=31.54
+===========
+EOF
+
+diff ${f}.log.ref ${f}.log 
+
+rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
+

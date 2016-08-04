@@ -163,10 +163,16 @@ static int select_datetime(grib_accessor* a) {
 
   if (compressed) {
     size_t n;
+    struct tm start;
+    struct tm end;
+    struct tm datetime;
+    time_t start_t,end_t,datetime_t;
+    char start_str[80]={0,},end_str[80]={0,},datetime_str[80]={0,};
     long yearRank,monthRank,dayRank,hourRank,minuteRank,secondRank;
     long yearStart,monthStart,dayStart,hourStart,minuteStart,secondStart;
     long yearEnd,monthEnd,dayEnd,hourEnd,minuteEnd,secondEnd;
-    long *year,*month,*hour,*day,*minute,*second;
+    long *year,*month,*hour,*day,*minute;
+    double *second;
     long numberOfSubsets,i;
     grib_iarray* subsets;
     long *subsets_ar=0;
@@ -265,8 +271,8 @@ static int select_datetime(grib_accessor* a) {
     }
 
     n=numberOfSubsets;
-    second=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
-    ret=grib_get_long_array(h,secondstr,second,&n);
+    second=grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
+    ret=grib_get_double_array(h,secondstr,second,&n);
     if (ret) {
       ret=0;
       second[0]=0;
@@ -290,6 +296,10 @@ static int select_datetime(grib_accessor* a) {
     if (ret) minuteStart=0;
     ret=grib_get_long(h,"extractDateTimeSecondStart",&secondStart);
     if (ret) secondStart=0;
+    sprintf(start_str,"%04ld/%02ld/%02ld %02ld:%02ld:%02ld",yearStart,monthStart,dayStart,hourStart,minuteStart,secondStart);
+    strptime(start_str, "%Y/%m/%d %T", &start);
+    start_t=mktime(&start);
+    if (start_t==-1) return GRIB_INTERNAL_ERROR;
 
     ret=grib_get_long(h,"extractDateTimeYearEnd",&yearEnd);
     if (ret) return ret;
@@ -303,27 +313,40 @@ static int select_datetime(grib_accessor* a) {
     if (ret) minuteEnd=0;
     ret=grib_get_long(h,"extractDateTimeSecondEnd",&secondEnd);
     if (ret) secondEnd=0;
+    sprintf(end_str,"%04ld/%02ld/%02ld %02ld:%02ld:%02ld",yearEnd,monthEnd,dayEnd,hourEnd,minuteEnd,secondEnd);
+    strptime(end_str, "%Y/%m/%d %T", &end);
+    end_t=mktime(&end);
+    if (end_t==-1) return GRIB_INTERNAL_ERROR;
+    if (difftime(end_t,start_t)<=0) {
+      grib_context_log(c,GRIB_LOG_ERROR,"Wrong definition of time interval: end (%s) is not after start (%s)",end_str,start_str);
+      return GRIB_INTERNAL_ERROR;
+    }
 
     for (i=0;i<numberOfSubsets;i++) {
-      printf("++++++ day: %ld <= %ld <= %ld hour: %ld <= %ld <= %ld minute: %ld <= %ld <= %ld second: %ld <= %ld <= %ld \n",
-              dayStart,day[i],dayEnd, hourStart,hour[i],hourEnd,
-              minuteStart,minute[i],minuteEnd,secondStart,second[i],secondEnd);
-      if (year[i]>=yearStart && year[i]<=yearEnd && month[i]>=monthStart && month[i]<=monthEnd
-          && day[i]>=dayStart && day[i]<=dayEnd && hour[i]>=hourStart && hour[i]<=hourEnd
-          && minute[i]>=minuteStart && minute[i]<=minuteEnd && second[i]>=secondStart && second[i]<=secondEnd
-          ) {
+      sprintf(datetime_str,"%04ld/%02ld/%02ld %02ld:%02ld:%02ld",year[i],month[i],day[i],hour[i],minute[i],(long)round(second[i]));
+      strptime(datetime_str, "%Y/%m/%d %T", &datetime);
+      datetime_t=mktime(&datetime);
+      if (datetime_t==-1) return GRIB_INTERNAL_ERROR;
+      /* printf("++++++ %s <= %s (%g) <= %s\n",start_str,datetime_str,second[i],end_str); */
+
+      if (difftime(datetime_t,start_t)>=0 && difftime(end_t,datetime_t)>=0) {
         grib_iarray_push(subsets,i+1);
-        printf("++++++++ %ld\n",i+1);
+        /* printf("++++++++ %ld\n",i+1); */
       }
     }
 
-    subsets_ar=grib_iarray_get_array(subsets);
     nsubsets=grib_iarray_used_size(subsets);
-    ret=grib_set_long_array(h,self->extractSubsetList,subsets_ar,nsubsets);
+    ret=grib_set_long(h,"extractDateTimeNumberOfSubsets",nsubsets);
     if (ret) return ret;
 
-    ret=grib_set_long(h,self->doExtractSubsets,1);
-    if (ret) return ret;
+    if (nsubsets!=0) {
+      subsets_ar=grib_iarray_get_array(subsets);
+      ret=grib_set_long_array(h,self->extractSubsetList,subsets_ar,nsubsets);
+      if (ret) return ret;
+
+      ret=grib_set_long(h,self->doExtractSubsets,1);
+      if (ret) return ret;
+    }
 
     grib_context_free(c,year);
     grib_context_free(c,month);

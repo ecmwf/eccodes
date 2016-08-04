@@ -57,6 +57,7 @@ transient extractDateTimeDayRank=1;
 transient extractDateTimeHourRank=1;
 transient extractDateTimeMinuteRank=1;
 transient extractDateTimeSecondRank=1;
+transient extractDateTimeNumberOfSubsets=0;
 
 meta doExtractDateTime bufr_extract_datetime_subsets(doExtractSubsets,numberOfSubsets,extractSubsetList);
 
