@@ -1554,6 +1554,7 @@ transient extractDateTimeMinuteEnd=1;
 transient extractDateTimeSecondEnd=39.6;
 
 set doExtractDateTime=1;
+print "Debug msg: extractDateTimeNumberOfSubsets=[extractDateTimeNumberOfSubsets]";
 if (extractDateTimeNumberOfSubsets!=0) {
   write;
 }
@@ -1567,6 +1568,8 @@ echo "Test: Datetime extraction" >> $fLog
 echo "file: $f" >> $fLog
 
 ${tools_dir}bufr_filter -o ${f}.out $fRules $f  > ${f}.log
+[ -f ${f}.out ]
+
 cat > $fRules <<EOF
 set unpack=1;
 print "year=[year!15]";
