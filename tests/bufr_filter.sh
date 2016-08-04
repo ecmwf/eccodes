@@ -1568,7 +1568,7 @@ echo "Test: Datetime extraction" >> $fLog
 echo "file: $f" >> $fLog
 
 ${tools_dir}bufr_filter -o ${f}.out $fRules $f  > ${f}.log
-[ -f ${f}.out ]
+if [ -f ${f}.out ]; then
 
 cat > $fRules <<EOF
 set unpack=1;
@@ -1624,6 +1624,6 @@ second=31.54
 EOF
 
 diff ${f}.log.ref ${f}.log 
-
+fi
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
 
