@@ -345,8 +345,6 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
     int err=0;
     grib_accessor_bufr_extract_datetime_subsets *self =(grib_accessor_bufr_extract_datetime_subsets*)a;
-    size_t l=1;
-    long v[1];
 
     if (*len==0) return GRIB_SUCCESS;
     err=select_datetime(a);
