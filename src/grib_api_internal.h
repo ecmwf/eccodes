@@ -187,6 +187,8 @@ extern "C" {
  #define DebugAssertAccess(array, index, size)
 #endif
 
+/* Return true if two strings are equal */
+#define STR_EQ(a, b) (strcmp ((a), (b)) == 0)
 
 #include "grib_api.h"
 
