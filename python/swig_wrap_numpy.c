@@ -2923,7 +2923,7 @@ SWIG_From_int  (int value)
 
 typedef int intp;
 
-SWIGINTERN intp *new_intp(){
+SWIGINTERN intp *new_intp(void){
     return (int *)malloc(sizeof(int));
   }
 SWIGINTERN void delete_intp(intp *self){
@@ -3009,7 +3009,7 @@ SWIGINTERN intp *intp_frompointer(int *t){
 
 typedef size_t sizetp;
 
-SWIGINTERN sizetp *new_sizetp(){
+SWIGINTERN sizetp *new_sizetp(void){
     return (size_t *)malloc(sizeof(size_t));
   }
 SWIGINTERN void delete_sizetp(sizetp *self){
@@ -3045,7 +3045,7 @@ SWIGINTERN sizetp *sizetp_frompointer(size_t *t){
 
 typedef long longp;
 
-SWIGINTERN longp *new_longp(){
+SWIGINTERN longp *new_longp(void){
     return (long *)malloc(sizeof(long));
   }
 SWIGINTERN void delete_longp(longp *self){
@@ -3066,7 +3066,7 @@ SWIGINTERN longp *longp_frompointer(long *t){
 
 typedef double doublep;
 
-SWIGINTERN doublep *new_doublep(){
+SWIGINTERN doublep *new_doublep(void){
     return (double *)malloc(sizeof(double));
   }
 SWIGINTERN void delete_doublep(doublep *self){
