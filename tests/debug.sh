@@ -37,8 +37,6 @@ small_ensemble.grib1
 spectral_complex.grib1
 spherical_model_level.grib1
 spherical_pressure_level.grib1
-test.grib1
-
 constant_field.grib2
 gfs.c255.grib2
 jpeg.grib2
@@ -65,14 +63,11 @@ spherical_pressure_level.grib2
 test_uuid.grib2
 tigge_af_ecmwf.grib2
 tigge_cf_ecmwf.grib2
-tigge_ecmwf.grib2
-tigge_pf_ecmwf.grib2
 v.grib2
 "
 
 for file in $files; do
    if [ -f ${data_dir}/$file ]; then
-      ${tools_dir}grib_dump -O ${data_dir}/$file 2> $REDIRECT > $REDIRECT
+      time ${tools_dir}grib_dump -Da ${data_dir}/$file 2> $REDIRECT > $REDIRECT
    fi
 done
-
