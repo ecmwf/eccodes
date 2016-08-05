@@ -26,3 +26,8 @@ test_dir=@PROJECT_BINARY_DIR@/tests
 samp_dir="@CMAKE_BINARY_DIR@/share/@PROJECT_NAME@/samples"
 ECCODES_SAMPLES_PATH=${samp_dir}
 export ECCODES_SAMPLES_PATH
+
+# Options
+HAVE_JPG=@HAVE_JPG@
+HAVE_PNG=@HAVE_PNG@
+HAVE_AEC=@HAVE_AEC@

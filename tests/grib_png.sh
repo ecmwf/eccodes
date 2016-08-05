@@ -22,6 +22,10 @@ files="
  regular_latlon_surface_constant.grib2
 "
 
+if [ $HAVE_JPG -eq 1 ]; then
+ files="multi.grib2 v.grib2"$files
+fi
+
 # TODO: For the following the PNG packing fails with an assert!
 #       grib_accessor_class_data_png_packing.c: Assert(p->offset + length <= p->length)
 #  data/sample.grib2
