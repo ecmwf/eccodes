@@ -787,7 +787,15 @@ static int _grib_set_long_array(grib_handle* h, const char* name, const long* va
 {
     size_t encoded = 0;
     grib_accessor* a = grib_find_accessor(h, name);
-    int err = a ?_grib_set_long_array_internal(h,a,val,length,&encoded,check) : GRIB_NOT_FOUND ;
+    int err =0;
+
+    if (!a) return GRIB_NOT_FOUND ;
+    if (name[0]=='/' || name[0]=='#' ) {
+        if(check && (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY))
+            return GRIB_READ_ONLY;
+        err=grib_pack_long(a, val, &length);
+        encoded=length;
+    } else err=_grib_set_long_array_internal(h,a,val,length,&encoded,check);
 
     if(err == GRIB_SUCCESS && length > encoded)
         err = GRIB_ARRAY_TOO_SMALL;

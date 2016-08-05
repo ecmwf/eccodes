@@ -916,6 +916,7 @@ void grib_dump_accessors_block(grib_dumper *dumper, grib_block_of_accessors *blo
 void grib_dump_accessors_list(grib_dumper *dumper, grib_accessors_list *al);
 int grib_print(grib_handle *h, const char *name, grib_dumper *d);
 void grib_dump_content(grib_handle *h, FILE *f, const char *mode, unsigned long option_flags, void *data);
+grib_dumper* grib_dump_content_with_dumper(grib_handle *h, grib_dumper* dumper,FILE *f, const char *mode, unsigned long option_flags, void *data);
 void codes_dump_bufr_flat(grib_accessors_list *al, grib_handle *h, FILE *f, const char *mode, unsigned long option_flags, void *data);
 
 /* grib_context.c */
@@ -1005,6 +1006,7 @@ void grib_section_delete(grib_context *c, grib_section *b);
 int grib_handle_delete(grib_handle *h);
 grib_handle *grib_new_handle(grib_context *c);
 grib_handle *grib_handle_new_from_samples(grib_context *c, const char *name);
+grib_handle *codes_bufr_handle_new_from_samples(grib_context *c, const char *name);
 int grib_write_message(grib_handle *h, const char *file, const char *mode);
 grib_handle *grib_handle_clone(grib_handle *h);
 grib_handle *codes_handle_new_from_file(grib_context *c, FILE *f, ProductKind product, int *error);
@@ -1156,6 +1158,7 @@ long grib_get_decimal_scale_fact(double max, double min, long bpval, long binary
 grib_handle *grib_internal_template(grib_context *c, const char *name);
 grib_handle *grib_internal_template(grib_context *c, const char *name);
 grib_handle *grib_external_template(grib_context *c, const char *name);
+grib_handle *bufr_external_template(grib_context *c, const char *name);
 char *grib_external_template_path(grib_context *c, const char *name);
 
 /* grib_dependency.c */
@@ -1330,7 +1333,7 @@ int compare_points(const void *a, const void *b);
 /* grib_iterator_class_lambert_conformal.c */
 
 /* grib_iterator.c */
-int grib_get_data(grib_handle *h, double *lats, double *lons, double *values, size_t *size);
+int grib_get_data(grib_handle *h, double *lats, double *lons, double *values);
 int grib_iterator_next(grib_iterator *i, double *lat, double *lon, double *value);
 int grib_iterator_has_next(grib_iterator *i);
 int grib_iterator_previous(grib_iterator *i, double *lat, double *lon, double *value);

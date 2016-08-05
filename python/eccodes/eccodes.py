@@ -21,6 +21,7 @@ from gribapi import grib_multi_support_off as codes_grib_multi_support_off
 from gribapi import grib_release as codes_release
 from gribapi import grib_get_string as codes_get_string
 from gribapi import grib_set_string as codes_set_string
+from gribapi import grib_set_string_array as codes_set_string_array
 from gribapi import grib_gribex_mode_on as codes_gribex_mode_on
 from gribapi import grib_gribex_mode_off as codes_gribex_mode_off
 from gribapi import grib_write as codes_write
@@ -46,7 +47,8 @@ from gribapi import grib_get_long as codes_get_long
 from gribapi import grib_get_double as codes_get_double
 from gribapi import grib_set_long as codes_set_long
 from gribapi import grib_set_double as codes_set_double
-from gribapi import grib_new_from_samples as codes_new_from_samples
+from gribapi import grib_new_from_samples as codes_grib_new_from_samples
+from gribapi import codes_bufr_new_from_samples
 from gribapi import grib_clone as codes_clone
 from gribapi import grib_set_double_array as codes_set_double_array
 from gribapi import grib_get_double_array as codes_get_double_array

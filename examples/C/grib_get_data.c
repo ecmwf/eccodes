@@ -65,7 +65,7 @@ int main (int argc, char **argv)
         return 1;
     }
 
-    CODES_CHECK (codes_grib_get_data (h, lats, lons, values, NULL), 0);
+    CODES_CHECK (codes_grib_get_data (h, lats, lons, values), 0);
 
     for (i = 0; i < numberOfPoints; ++i) {
         if (values[i] != missing) {

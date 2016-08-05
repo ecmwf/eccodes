@@ -70,6 +70,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_bufr_group.c \
 	grib_accessor_class_bufr_string_values.c \
 	grib_accessor_class_pack_bufr_values.c \
+	grib_accessor_class_bufr_extract_area_subsets.c \
 	grib_accessor_class_group.c \
 	grib_accessor_class_unpack_bufr_values.c \
 	grib_accessor_class_bufr_has_delayed_replication.c \
@@ -287,6 +288,9 @@ libeccodes_la_prototypes= \
 	grib_dumper_class_debug.c \
 	grib_dumper_class_default.c \
 	grib_dumper_class_keys.c \
+	grib_dumper_class_filter.c \
+	grib_dumper_class_fortran.c \
+	grib_dumper_class_python.c \
 	grib_dumper_class_json.c \
 	grib_dumper_class_xml.c \
 	grib_dumper_class_c_code.c \

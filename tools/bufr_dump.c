@@ -21,7 +21,7 @@ grib_option grib_options[]={
                 "\n\t\tOptions: s->structure, f->flat (only data), a->all attributes"
                 "\n\t\tDefault mode is structure.\n",
                 1,1,"s"},
-        {"E:","filter/Fortran/python","\n\t\tEncoding dump. Provides instructions to create the input message."
+        {"E:","filter/fortran/python","\n\t\tEncoding dump. Provides instructions to create the input message."
                 "\n\t\tOptions: filter  -> filter instructions file to encode input BUFR"
                 "\n\t\t         fortran -> fortran program to encode the input BUFR"
                 "\n\t\t         python  -> python script to encode the input BUFR"
@@ -53,6 +53,7 @@ char* grib_tool_usage="[options] file file ...";
 static int json=0;
 static char* json_option=0;
 static int first_handle=1;
+static grib_dumper* dumper=0;
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
@@ -86,7 +87,7 @@ int grib_tool_init(grib_runtime_options* options)
         options->dump_mode = "json";
         json_option=grib_options_get_option("j:");
         if (strlen(json_option)>1 || ( json_option[0] != 's' && json_option[0]!= 'f' && json_option[0]!= 'a')) {
-            printf("wrong json option %s\n",json_option);
+            printf("%s: Invalid JSON option %s\n", grib_tool_name, json_option);
             exit(1);
         }
         json=1;
@@ -210,7 +211,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
             break;
         default :
-            printf("unknown json option %s\n",json_option);
+            printf("Unknown JSON option %s\n",json_option);
             exit(1);
         }
       if (!strcmp(options->dump_mode,"default"))
@@ -233,7 +234,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         options->error=err;
         return err;
       }
-      grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
+      dumper=grib_dump_content_with_dumper(h,dumper,stdout,options->dump_mode,options->dump_flags,0);
+      if (!dumper) exit(1);
     }
 
     return 0;
@@ -255,6 +257,21 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     if (json) fprintf(stdout,"\n]}\n");
     if (!strcmp(options->dump_mode,"filter")) {
       fprintf(stdout,"set pack=1;\nwrite;\n");
+    }
+    if (!strcmp(options->dump_mode,"fortran")) {
+      fprintf(stdout,"end program bufr_create_message\n");
+    }
+    if (!strcmp(options->dump_mode,"python")) {
+      fprintf(stdout,"\n\n");
+      fprintf(stdout,"def main():\n");
+      fprintf(stdout,"    try:\n");
+      fprintf(stdout,"        bufr_create_message()\n");
+      fprintf(stdout,"    except CodesInternalError as err:\n");
+      fprintf(stdout,"        traceback.print_exc(file=sys.stderr)\n");
+      fprintf(stdout,"        return 1\n");
+      fprintf(stdout,"\n\n");
+      fprintf(stdout,"if __name__ == \"__main__\":\n");
+      fprintf(stdout,"    sys.exit(main())\n");
     }
 
     return 0;

@@ -140,6 +140,7 @@ GRIB_TOO_MANY_ATTRIBUTES = _gribapi_swig.GRIB_TOO_MANY_ATTRIBUTES
 GRIB_ATTRIBUTE_NOT_FOUND = _gribapi_swig.GRIB_ATTRIBUTE_NOT_FOUND
 GRIB_UNSUPPORTED_EDITION = _gribapi_swig.GRIB_UNSUPPORTED_EDITION
 GRIB_OUT_OF_RANGE = _gribapi_swig.GRIB_OUT_OF_RANGE
+GRIB_WRONG_BITMAP_SIZE = _gribapi_swig.GRIB_WRONG_BITMAP_SIZE
 class intp(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, intp, name, value)
@@ -329,9 +330,13 @@ def grib_c_keys_iterator_new(*args):
   return _gribapi_swig.grib_c_keys_iterator_new(*args)
 grib_c_keys_iterator_new = _gribapi_swig.grib_c_keys_iterator_new
 
-def grib_c_new_from_samples(*args):
-  return _gribapi_swig.grib_c_new_from_samples(*args)
-grib_c_new_from_samples = _gribapi_swig.grib_c_new_from_samples
+def grib_c_grib_new_from_samples(*args):
+  return _gribapi_swig.grib_c_grib_new_from_samples(*args)
+grib_c_grib_new_from_samples = _gribapi_swig.grib_c_grib_new_from_samples
+
+def grib_c_bufr_new_from_samples(*args):
+  return _gribapi_swig.grib_c_bufr_new_from_samples(*args)
+grib_c_bufr_new_from_samples = _gribapi_swig.grib_c_bufr_new_from_samples
 
 def grib_c_index_new_from_file(*args):
   return _gribapi_swig.grib_c_index_new_from_file(*args)
@@ -577,9 +582,9 @@ def grib_c_is_defined(*args):
   return _gribapi_swig.grib_c_is_defined(*args)
 grib_c_is_defined = _gribapi_swig.grib_c_is_defined
 
-def with_numpy():
-  return _gribapi_swig.with_numpy()
-with_numpy = _gribapi_swig.with_numpy
+def grib_c_set_string_array(*args):
+  return _gribapi_swig.grib_c_set_string_array(*args)
+grib_c_set_string_array = _gribapi_swig.grib_c_set_string_array
 
 def grib_set_double_ndarray(*args):
   return _gribapi_swig.grib_set_double_ndarray(*args)

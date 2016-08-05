@@ -15,7 +15,7 @@ label="bufr_dump_test"
 
 #Create log file
 fLog=${label}".log"
-rm -f $fLog | true
+rm -f $fLog
 touch $fLog
 
 #Define tmp bufr files
@@ -70,3 +70,4 @@ done
 #rm -f $fLog 
 #rm -f $fJsonTmp | true
 
+rm -f $fLog

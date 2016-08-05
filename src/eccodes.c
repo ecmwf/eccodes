@@ -159,7 +159,7 @@ grib_handle* codes_handle_new_from_message_copy(grib_context* c, const void* dat
 {
     return grib_handle_new_from_message_copy(c,data,data_len);
 }
-grib_handle* codes_handle_new_from_samples (grib_context* c, const char* res_name)
+grib_handle* codes_grib_handle_new_from_samples (grib_context* c, const char* res_name)
 {
     return grib_handle_new_from_samples(c, res_name);
 }
@@ -251,9 +251,9 @@ grib_iterator* codes_grib_iterator_new(grib_handle* h, unsigned long flags,int* 
 {
     return grib_iterator_new(h,flags,error);
 }
-int codes_grib_get_data(grib_handle *h, double *lats, double *lons, double *values, size_t *size)
+int codes_grib_get_data(grib_handle *h, double *lats, double *lons, double *values)
 {
-    return grib_get_data(h,lats,lons,values,size);
+    return grib_get_data(h,lats,lons,values);
 }
 int codes_grib_iterator_next(grib_iterator *i, double* lat,double* lon,double* value)
 {
@@ -405,7 +405,6 @@ void codes_dump_content(grib_handle* h,FILE* out,const char* mode, unsigned long
 {
     grib_dump_content(h, out, mode, option_flags, arg);
 }
-
 /* GTS, GRIBEX */
 /******************************************************************************/
 void codes_gts_header_off(grib_context* c)

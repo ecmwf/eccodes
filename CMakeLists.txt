@@ -72,7 +72,7 @@ ecbuild_add_option( FEATURE AEC
 ecbuild_add_option( FEATURE PYTHON
     DESCRIPTION "build the ecCodes Python interface"
     DEFAULT ON
-    REQUIRED_PACKAGES "Python VERSION 2.6" NumPy
+    REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy
 )
 
 ecbuild_add_option( FEATURE FORTRAN
@@ -90,19 +90,18 @@ else()
     set( HAVE_FORTRAN 0 )
 endif()
 
-# memfs
-
+# memfs requires only Python executable and not its libraries
 ecbuild_add_option( FEATURE MEMFS
     DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
     CONDITION EC_HAVE_FMEMOPEN OR EC_HAVE_FUNOPEN
-    REQUIRED_PACKAGES "Python VERSION 2.6"
+    REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS"
 )
 
-if( HAVE_MEMFS AND "${CMAKE_C_COMPILER_ID}" STREQUAL "Cray")
-  set( HAVE_MEMFS OFF )
-  ecbuild_warn("MEMFS not supported with Cray C compiler")
-endif()
+#if( HAVE_MEMFS AND "${CMAKE_C_COMPILER_ID}" STREQUAL "Cray")
+#  set( HAVE_MEMFS OFF )
+#  ecbuild_warn("MEMFS not supported with Cray C compiler")
+#endif()
 
 # advanced options (not visible in cmake-gui )
 
@@ -368,7 +367,7 @@ ecbuild_print_summary()
 
 ecbuild_info("")
 ecbuild_info("   +---------------------------+")
-ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}   |")
+ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}    |")
 ecbuild_info("   |  Configuration completed  |")
 ecbuild_info("   +---------------------------+")
 ecbuild_info("")

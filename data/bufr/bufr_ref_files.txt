@@ -268,7 +268,6 @@ syno_multi.bufr.desc.ref
 synop_multi_subset.bufr.desc.ref
 aaen_55.bufr.ls.ref
 syno_multi.bufr.header.ref
-bad.bufr.json.v0.16.0.ref
 207003.bufr.json.ref
 new_207003.bufr.ref
 new_aaen_55.bufr.ref
@@ -378,7 +377,6 @@ new_temp_106.bufr.ref
 new_tmr7_129.bufr.ref
 new_tros_31.bufr.ref
 new_wavb_134.bufr.ref
-set_unexpandedDescriptors.filter
 311001.bufr.ref
 uegabe.bufr.num.ref
 syno.bufr.out.ref

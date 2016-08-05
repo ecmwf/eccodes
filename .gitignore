@@ -28,8 +28,13 @@ rpms/eccodes.spec
 rpms/eccodes_f90.pc
 aclocal.m4
 src/config.h.in~
-python/gribapi.pyc
-python/eccodes.pyc
+
+python/eccodes.py
+python/eccodes/__init__.pyc
+python/eccodes/eccodes.pyc
+python/gribapi.py
+python/gribapi/__init__.pyc
+python/gribapi/gribapi.pyc
 python/gribapi_swig.pyc
 
 # Generated stuff from builds
@@ -302,7 +307,6 @@ include
 data/bufr/*diff
 data/bufr/*decode
 data/bufr/*test
-data/bufr/set_unexpandedDescriptors.filter
 
 *.sublime-workspace
 *.old

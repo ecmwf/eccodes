@@ -1,22 +1,20 @@
 """
 @package gribapi
-@brief This package is a low level Python interface to ecCodes. It offers almost one to one bindings to the C API functions.
+@brief This package is the \b Python interface to ecCodes. It offers almost one to one bindings to the C API functions.
 
-The Python interface to GRIB API uses the <a href="http://numpy.scipy.org/"><b>NumPy</b></a> package
+The Python interface to ecCodes uses the <a href="http://numpy.scipy.org/"><b>NumPy</b></a> package
 as the container of choice for the possible arrays of values that can be encoded/decoded in and from a grib message.
 Numpy is a package used for scientific computing in Python and an efficient container for generic data.
 
-The Python interface and its support for NumPy can be enabled/disabled from the configure by using the following configure flags:\n
+The Python interface can be enabled/disabled from CMake by using the following flag:\n
 
-@code
---enable-python
---disable-numpy
-
+@code{.unparsed}
+    -DENABLE_PYTHON=ON
+or
+    -DENABLE_PYTHON=OFF
 @endcode
 
-When the '--enable-python' flag is used, then the system Python will be used to build the interface.
-
-NumPy support can be disabled by using the '--disable-numpy' flag.
+When this is enabed, then the system Python will be used to build the interface.
 
 @em Requirements:
 
@@ -25,11 +23,10 @@ NumPy support can be disabled by using the '--disable-numpy' flag.
 
 """
 import gribapi_swig as _internal
-#from gribapi import gribapi_swig as _internal
+# from gribapi import gribapi_swig as _internal
 import types
 import sys
 import os
-from array import array
 from functools import wraps
 # import inspect
 
@@ -39,17 +36,17 @@ KEYTYPES = {
     3: str,
 }
 
-CODES_PRODUCT_ANY=0
+CODES_PRODUCT_ANY = 0
 """ Generic product kind """
-CODES_PRODUCT_GRIB=1
+CODES_PRODUCT_GRIB = 1
 """ GRIB product kind """
-CODES_PRODUCT_BUFR=2
+CODES_PRODUCT_BUFR = 2
 """ BUFR product kind """
-CODES_PRODUCT_METAR=3
+CODES_PRODUCT_METAR = 3
 """ METAR product kind """
-CODES_PRODUCT_GTS=4
+CODES_PRODUCT_GTS = 4
 """ GTS product kind """
-CODES_PRODUCT_TAF=5
+CODES_PRODUCT_TAF = 5
 """ TAF product kind """
 
 # Constants for 'missing'
@@ -106,6 +103,7 @@ class GribInternalError(Exception):
         return self.msg
 
 
+# @cond
 class Bunch(dict):
     """
     The collector of a bunch of named stuff :).
@@ -135,23 +133,10 @@ class Bunch(dict):
                  for (attribute, value)
                  in self.__dict__.items()]
         return '\n'.join(state)
+# @endcond
 
 
-def with_numpy():
-    """
-    @brief Is numpy enabled?
-    @return 0->disabled, 1->enabled
-    """
-    numpy = 0
-    try:
-        _internal.with_numpy()
-        numpy = 1
-    except AttributeError:
-        pass
-
-    return numpy
-
-
+# @cond
 @require(errid=int)
 def GRIB_CHECK(errid):
     """
@@ -163,6 +148,7 @@ def GRIB_CHECK(errid):
     """
     if errid:
         raise GribInternalError(errid)
+# @endcond
 
 
 @require(fileobj=file)
@@ -170,17 +156,8 @@ def gts_new_from_file(fileobj, headers_only=False):
     """
     @brief Load in memory a GTS message from a file.
 
-    The message can be accessed through its id and it will be available\n
+    The message can be accessed through its id and will be available\n
     until @ref grib_release is called.\n
-
-    The message can be loaded headers only by using the headers_only argument.
-    Default is to have the headers only option grib_set to off (False). If set to on (True),
-    data values will be skipped. This will result in a significant performance gain
-    if one is only interested in browsing through messages to retrieve metadata.
-    Any attempt to retrieve data values keys when in the headers only mode will
-    result in a key not found error.
-
-    \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
 
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
@@ -196,22 +173,14 @@ def gts_new_from_file(fileobj, headers_only=False):
     else:
         return gribid
 
+
 @require(fileobj=file)
-def metar_new_from_file(fileobj, headers_only = False):
+def metar_new_from_file(fileobj, headers_only=False):
     """
     @brief Load in memory a METAR message from a file.
 
-    The message can be accessed through its id and it will be available\n
+    The message can be accessed through its id and will be available\n
     until @ref grib_release is called.\n
-
-    The message can be loaded headers only by using the headers_only argument.
-    Default is to have the headers only option grib_set to off (False). If set to on (True),
-    data values will be skipped. This will result in a significant performance gain
-    if one is only interested in browsing through messages to retrieve metadata.
-    Any attempt to retrieve data values keys when in the headers only mode will
-    result in a key not found error.
-
-    \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
 
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
@@ -227,8 +196,23 @@ def metar_new_from_file(fileobj, headers_only = False):
     else:
         return gribid
 
-@require(fileobj=file,product_kind=int)
-def codes_new_from_file(fileobj, product_kind, headers_only = False):
+
+@require(fileobj=file, product_kind=int)
+def codes_new_from_file(fileobj, product_kind, headers_only=False):
+    """
+    @brief Load in memory a message from a file for a given product.
+
+    The message can be accessed through its id and will be available\n
+    until @ref grib_release is called.\n
+
+    \b Examples: \ref get_product_kind.py "get_product_kind.py"
+
+    @param fileobj        python file object
+    @param product_kind   one of CODES_PRODUCT_GRIB, CODES_PRODUCT_BUFR, CODES_PRODUCT_METAR or CODES_PRODUCT_GTS
+    @param headers_only   whether or not to load the message with the headers only
+    @return               id of the message loaded in memory
+    @exception GribInternalError
+    """
     if product_kind == CODES_PRODUCT_GRIB:
         return grib_new_from_file(fileobj, headers_only)
     if product_kind == CODES_PRODUCT_BUFR:
@@ -241,13 +225,14 @@ def codes_new_from_file(fileobj, product_kind, headers_only = False):
         return any_new_from_file(fileobj, headers_only)
     raise Exception("Invalid product kind: " + product_kind)
 
+
 @require(fileobj=file)
-def any_new_from_file(fileobj, headers_only = False):
+def any_new_from_file(fileobj, headers_only=False):
     """
     @brief Load in memory a message from a file.
 
-    The message can be accessed through its id and it will be available\n
-    until @ref codes_release is called.\n
+    The message can be accessed through its id and will be available\n
+    until @ref grib_release is called.\n
 
     \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
 
@@ -265,22 +250,16 @@ def any_new_from_file(fileobj, headers_only = False):
     else:
         return gribid
 
+
 @require(fileobj=file)
 def bufr_new_from_file(fileobj, headers_only=False):
     """
     @brief Load in memory a BUFR message from a file.
 
-    The message can be accessed through its id and it will be available\n
+    The message can be accessed through its id and will be available\n
     until @ref grib_release is called.\n
 
-    The message can be loaded headers only by using the headers_only argument.
-    Default is to have the headers only option grib_set to off (False). If set to on (True),
-    data values will be skipped. This will result in a significant performance gain
-    if one is only interested in browsing through messages to retrieve metadata.
-    Any attempt to retrieve data values keys when in the headers only mode will
-    result in a key not found error.
-
-    \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
+    \b Examples: \ref bufr_get_keys.py "bufr_get_keys.py"
 
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
@@ -302,7 +281,7 @@ def grib_new_from_file(fileobj, headers_only=False):
     """
     @brief Load in memory a grib message from a file.
 
-    The message can be accessed through its gribid and it will be available\n
+    The message can be accessed through its gribid and will be available\n
     until @ref grib_release is called.\n
 
     The message can be loaded headers only by using the headers_only argument.
@@ -363,31 +342,31 @@ def grib_multi_support_off():
     _internal.grib_c_multi_support_off()
 
 
-@require(gribid=int)
-def grib_release(gribid):
+@require(msgid=int)
+def grib_release(msgid):
     """
-    @brief Free the memory for the message referred as gribid.
+    @brief Free the memory for the message referred as msgid.
 
     \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
 
-    @param gribid      id of the grib loaded in memory
+    @param msgid      id of the message loaded in memory
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_release(gribid))
+    GRIB_CHECK(_internal.grib_c_release(msgid))
 
 
-@require(gribid=int, key=str)
-def grib_get_string(gribid, key):
+@require(msgid=int, key=str)
+def grib_get_string(msgid, key):
     """
-    @brief Get the string value of a key from a grib message.
+    @brief Get the string value of a key from a message.
 
-    @param gribid      id of the grib loaded in memory
+    @param msgid       id of the message loaded in memory
     @param key         key name
     @return string value of key
     @exception GribInternalError
     """
-    length = grib_get_string_length(gribid, key)
-    err, value = _internal.grib_c_get_string(gribid, key, length)
+    length = grib_get_string_length(msgid, key)
+    err, value = _internal.grib_c_get_string(msgid, key, length)
     GRIB_CHECK(err)
 
     stpos = value.find('\0')
@@ -397,17 +376,17 @@ def grib_get_string(gribid, key):
     return value
 
 
-@require(gribid=int, key=str, value=str)
-def grib_set_string(gribid, key, value):
+@require(msgid=int, key=str, value=str)
+def grib_set_string(msgid, key, value):
     """
     @brief Set the value for a string key in a grib message.
 
-    @param gribid      id of the grib loaded in memory
+    @param msgid      id of the message loaded in memory
     @param key         key name
     @param value       string value
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_set_string(gribid, key, value, len(value)))
+    GRIB_CHECK(_internal.grib_c_set_string(msgid, key, value, len(value)))
 
 
 def grib_gribex_mode_on():
@@ -428,18 +407,18 @@ def grib_gribex_mode_off():
     _internal.grib_c_gribex_mode_off()
 
 
-@require(gribid=int, fileobj=file)
-def grib_write(gribid, fileobj):
+@require(msgid=int, fileobj=file)
+def grib_write(msgid, fileobj):
     """
     @brief Write a message to a file.
 
     \b Examples: \ref grib_set_keys.py "grib_set_keys.py"
 
-    @param gribid     id of the grib loaded in memory
+    @param msgid      id of the message loaded in memory
     @param fileobj    python file object
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_write(gribid, fileobj))
+    GRIB_CHECK(_internal.grib_c_write(msgid, fileobj))
 
 
 @require(multigribid=int, fileobj=file)
@@ -475,32 +454,32 @@ def grib_multi_append(ingribid, startsection, multigribid):
     GRIB_CHECK(_internal.grib_c_multi_append(ingribid, startsection, multigribid))
 
 
-@require(gribid=int, key=str)
-def grib_get_size(gribid, key):
+@require(msgid=int, key=str)
+def grib_get_size(msgid, key):
     """
     @brief Get the size of an array key.
 
     \b Examples: \ref grib_get_keys.py "grib_get_keys.py",\ref count_messages.py "count_messages.py"
 
-    @param gribid      id of the grib loaded in memory
-    @param key         name of the key
+    @param msgid      id of the message loaded in memory
+    @param key        name of the key
     @exception GribInternalError
     """
-    err, result = _internal.grib_c_get_size_long(gribid, key)
+    err, result = _internal.grib_c_get_size_long(msgid, key)
     GRIB_CHECK(err)
     return result
 
 
-@require(gribid=int, key=str)
-def grib_get_string_length(gribid, key):
+@require(msgid=int, key=str)
+def grib_get_string_length(msgid, key):
     """
     @brief Get the length of the string version of a key.
 
-    @param gribid      id of the grib loaded in memory
+    @param msgid      id of the message loaded in memory
     @param key         name of the key
     @exception GribInternalError
     """
-    err, result = _internal.grib_c_get_string_length(gribid, key)
+    err, result = _internal.grib_c_get_string_length(msgid, key)
     GRIB_CHECK(err)
     return result
 
@@ -642,8 +621,8 @@ def grib_iterator_next(iterid):
         return (lat, lon, value)
 
 
-@require(gribid=int)
-def grib_keys_iterator_new(gribid, namespace=None):
+@require(msgid=int)
+def grib_keys_iterator_new(msgid, namespace=None):
     """
     @brief Create a new iterator on the keys.
 
@@ -660,12 +639,12 @@ def grib_keys_iterator_new(gribid, namespace=None):
 
     \b Examples: \ref grib_iterator.py "grib_iterator.py"
 
-    @param gribid      id of the grib loaded in memory
+    @param msgid      id of the message loaded in memory
     @param namespace   the namespace of the keys to search for (all the keys if None)
     @return keys iterator id to be used in the keys iterator functions
     @exception GribInternalError
     """
-    err, iterid = _internal.grib_c_keys_iterator_new(gribid, namespace)
+    err, iterid = _internal.grib_c_keys_iterator_new(msgid, namespace)
     GRIB_CHECK(err)
     return iterid
 
@@ -726,45 +705,45 @@ def grib_keys_iterator_rewind(iterid):
     GRIB_CHECK(_internal.grib_c_keys_iterator_rewind(iterid))
 
 
-@require(gribid=int, key=str)
-def grib_get_long(gribid, key):
+@require(msgid=int, key=str)
+def grib_get_long(msgid, key):
     """
     @brief Get the value of a key in a grib message as an int.
 
-    @param gribid      id of the grib loaded in memory
+    @param msgid       id of the message loaded in memory
     @param key         key name
     @return value of key as int
     @exception GribInternalError
     """
-    err, value = _internal.grib_c_get_long(gribid, key)
+    err, value = _internal.grib_c_get_long(msgid, key)
     GRIB_CHECK(err)
     return value
 
 
-@require(gribid=int, key=str)
-def grib_get_double(gribid, key):
+@require(msgid=int, key=str)
+def grib_get_double(msgid, key):
     """
     @brief Get the value of a key in a grib message as a float.
 
-    @param gribid      id of the grib loaded in memory
+    @param msgid      id of the message loaded in memory
     @param key         key name
     @return value of key as float
     @exception GribInternalError
     """
-    err, value = _internal.grib_c_get_double(gribid, key)
+    err, value = _internal.grib_c_get_double(msgid, key)
     GRIB_CHECK(err)
     return value
 
 
-@require(gribid=int, key=str, value=(int, long, float, str))
-def grib_set_long(gribid, key, value):
+@require(msgid=int, key=str, value=(int, long, float, str))
+def grib_set_long(msgid, key, value):
     """
     @brief Set the integer value for a key in a grib message.
 
     A TypeError exception will be thrown if value cannot be represented
     as an integer.
 
-    @param gribid      id of the grib loaded in memory
+    @param msgid      id of the message loaded in memory
     @param key         key name
     @param value       value to set
     @exception GribInternalError,TypeError
@@ -777,18 +756,18 @@ def grib_set_long(gribid, key, value):
     if value > sys.maxint:
         raise TypeError("Invalid type")
 
-    GRIB_CHECK(_internal.grib_c_set_long(gribid, key, value))
+    GRIB_CHECK(_internal.grib_c_set_long(msgid, key, value))
 
 
-@require(gribid=int, key=str, value=(int, long, float, str))
-def grib_set_double(gribid, key, value):
+@require(msgid=int, key=str, value=(int, long, float, str))
+def grib_set_double(msgid, key, value):
     """
     @brief Set the double value for a key in a grib message.
 
     A TypeError exception will be thrown if value cannot be represented
     as a float.
 
-    @param gribid      id of the grib loaded in memory
+    @param msgid       id of the message loaded in memory
     @param key         key name
     @param value       float value to set
     @exception GribInternalError,TypeError
@@ -798,13 +777,13 @@ def grib_set_double(gribid, key, value):
     except (ValueError, TypeError):
         raise TypeError("Invalid type")
 
-    GRIB_CHECK(_internal.grib_c_set_double(gribid, key, value))
+    GRIB_CHECK(_internal.grib_c_set_double(msgid, key, value))
 
 
 @require(samplename=str)
 def grib_new_from_samples(samplename):
     """
-    @brief Create a new valid gribid from a sample.
+    @brief Create a new valid GRIB message from a sample.
 
     The available samples are picked up from the directory pointed to
     by the environment variable ECCODES_SAMPLES_PATH.
@@ -813,191 +792,172 @@ def grib_new_from_samples(samplename):
     \b Examples: \ref samples.py "samples.py"
 
     @param samplename   name of the sample to be used
-    @return id of the grib loaded in memory
+    @return id of the message loaded in memory
     @exception GribInternalError
     """
-    err, gribid = _internal.grib_c_new_from_samples(0, samplename)
+    err, msgid = _internal.grib_c_grib_new_from_samples(0, samplename)
     GRIB_CHECK(err)
-    return gribid
+    return msgid
 
 
-@require(gribid_src=int)
-def grib_clone(gribid_src):
+@require(samplename=str)
+def codes_bufr_new_from_samples(samplename):
+    """
+    @brief Create a new valid BUFR message from a sample.
+
+    The available samples are picked up from the directory pointed to
+    by the environment variable ECCODES_SAMPLES_PATH.
+    To know where the samples directory is run the codes_info tool.\n
+
+    \b Examples: \ref samples.py "samples.py"
+
+    @param samplename   name of the BUFR sample to be used
+    @return             id of the message loaded in memory
+    @exception GribInternalError
+    """
+    err, msgid = _internal.grib_c_bufr_new_from_samples(0, samplename)
+    GRIB_CHECK(err)
+    return msgid
+
+
+@require(msgid_src=int)
+def grib_clone(msgid_src):
     """
     @brief Create a copy of a message.
 
-    Create a copy of a given message (\em gribid_src) resulting in a new
-    message in memory (\em gribid_dest) identical to the original one.
+    Create a copy of a given message (\em msgid_src) resulting in a new
+    message in memory (\em msgid_dest) identical to the original one.
 
     \b Examples: \ref grib_clone.py "grib_clone.py"
 
-    @param gribid_src     id of grib to be cloned
+    @param msgid_src     id of message to be cloned
     @return id of clone
     @exception GribInternalError
     """
-    err, newgribid_src = _internal.grib_c_clone(gribid_src, 0)
+    err, newmsgid_src = _internal.grib_c_clone(msgid_src, 0)
     GRIB_CHECK(err)
-    return newgribid_src
+    return newmsgid_src
 
 
-@require(gribid=int, key=str)
-def grib_set_double_array(gribid, key, inarray):
+@require(msgid=int, key=str)
+def grib_set_double_array(msgid, key, inarray):
     """
     @brief Set the value of the key to a double array.
 
     The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...
 
-    If NumPy is enabled, the wrapper will internally try to convert the input to a NumPy array
+    The wrapper will internally try to convert the input to a NumPy array
     before extracting its data and length. This is possible as NumPy
     allows the construction of arrays from arbitrary python sequences.
 
     The elements of the input sequence need to be convertible to a double.
 
-    @param gribid   id of the grib loaded in memory
-    @param key      key name
-    @param inarray  tuple,list,array,numpy.ndarray
+    @param msgid   id of the message loaded in memory
+    @param key     key name
+    @param inarray tuple,list,array,numpy.ndarray
     @exception GribInternalError
     """
-    if with_numpy():
-        GRIB_CHECK(_internal.grib_set_double_ndarray(gribid, key, inarray))
-    else:
-        nval = len(inarray)
-        a = _internal.new_doubleArray(nval)
-        s = _internal.intp()
-        s.assign(nval)
-
-        for i in range(nval):
-            _internal.doubleArray_setitem(a, i, inarray[i])
-
-        GRIB_CHECK(_internal.grib_c_set_real8_array(gribid, key, a, s))
-
-        _internal.delete_doubleArray(a)
+    GRIB_CHECK(_internal.grib_set_double_ndarray(msgid, key, inarray))
 
 
-@require(gribid=int, key=str)
-def grib_get_double_array(gribid, key):
+@require(msgid=int, key=str)
+def grib_get_double_array(msgid, key):
     """
-    @brief Get the value of the key as a double array.
+    @brief Get the value of the key as a NumPy array of doubles.
 
-    If NumPy is enabled, the double array will be stored in a NumPy ndarray.
-    Otherwise, Python's native array type will be used.
-
-    @param gribid   id of the grib loaded in memory
-    @param key      key name
-    @return numpy.ndarray or array
+    @param msgid   id of the message loaded in memory
+    @param key     key name
+    @return        numpy.ndarray
     @exception GribInternalError
     """
-    if with_numpy():
-        nval = grib_get_size(gribid, key)
-        err, result = _internal.grib_get_double_ndarray(gribid, key, nval)
-        GRIB_CHECK(err)
-        return result
-    else:
-        nval = grib_get_size(gribid, key)
-        a = _internal.new_doubleArray(nval)
-        s = _internal.intp()
-        s.assign(nval)
+    nval = grib_get_size(msgid, key)
+    err, result = _internal.grib_get_double_ndarray(msgid, key, nval)
+    GRIB_CHECK(err)
+    return result
 
-        GRIB_CHECK(_internal.grib_c_get_real8_array(gribid, key, a, s))
 
-        result = array("d")
-        for i in range(nval):
-            result.append(_internal.doubleArray_getitem(a, i))
-
-        _internal.delete_doubleArray(a)
-
-        return result
-
-@require(gribid=int, key=str)
-def grib_get_string_array(gribid, key):
+@require(msgid=int, key=str)
+def grib_get_string_array(msgid, key):
     """
-    @brief Get the value of the key as an array of strings.
+    @brief Get the value of the key as a list of strings.
 
-    @param gribid   id of the grib loaded in memory
-    @param key      key name
-    @return numpy.ndarray or array
+    @param msgid   id of the message loaded in memory
+    @param key     key name
+    @return        list
     @exception GribInternalError
     """
-    nval = grib_get_size(gribid,key)
+    nval = grib_get_size(msgid, key)
     a = _internal.new_stringArray(nval)
     s = _internal.sizetp()
     s.assign(nval)
 
-    GRIB_CHECK(_internal.grib_c_get_string_array(gribid,key,a,s))
+    GRIB_CHECK(_internal.grib_c_get_string_array(msgid, key, a, s))
 
     result = list()
     for i in range(nval):
-        result.append(_internal.stringArray_getitem(a,i))
+        result.append(_internal.stringArray_getitem(a, i))
 
     _internal.delete_stringArray(a)
 
     return result
 
-@require(gribid=int,key=str)
-def grib_set_long_array(gribid, key, inarray):
+
+@require(msgid=int, key=str)
+def grib_set_string_array(msgid, key, inarray):
+    """
+    @brief Set the value of the key to a string array.
+
+    The input array can be a python sequence like tuple, list, array, ...
+
+    The wrapper will internally try to convert the input to a NumPy array
+    before extracting its data and length. This is possible as NumPy
+    allows the construction of arrays from arbitrary python sequences.
+
+    The elements of the input sequence need to be convertible to a double.
+
+    @param msgid   id of the message loaded in memory
+    @param key     key name
+    @param inarray tuple,list,array
+    @exception GribInternalError
+    """
+    GRIB_CHECK( _internal.grib_c_set_string_array(msgid, key, list(inarray)) )
+
+
+@require(msgid=int, key=str)
+def grib_set_long_array(msgid, key, inarray):
     """
     @brief Set the value of the key to an integer array.
 
-    If NumPy is enabled, the wrapper will internally try to convert the input to a NumPy array
+    The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...
+
+    The wrapper will internally try to convert the input to a NumPy array
     before extracting its data and length. This is possible as NumPy
     allows the construction of arrays from arbitrary python sequences.
 
     The elements of the input sequence need to be convertible to an int.
 
-    @param gribid      id of the grib loaded in memory
+    @param msgid       id of the message loaded in memory
     @param key         key name
-    @param inarray     tuple,list,python array,numpy array
+    @param inarray     tuple,list,python array,numpy.ndarray
     @exception GribInternalError
     """
-    if with_numpy():
-        GRIB_CHECK(_internal.grib_set_long_ndarray(gribid, key, inarray))
-    else:
-        nval = len(inarray)
-        a = _internal.new_longArray(nval)
-        s = _internal.intp()
-        s.assign(nval)
-
-        for i in range(nval):
-            _internal.longArray_setitem(a, i, inarray[i])
-
-        GRIB_CHECK(_internal.grib_c_set_long_array(gribid, key, a, s))
-
-        _internal.delete_longArray(a)
+    GRIB_CHECK(_internal.grib_set_long_ndarray(msgid, key, inarray))
 
 
-@require(gribid=int, key=str)
-def grib_get_long_array(gribid, key):
+@require(msgid=int, key=str)
+def grib_get_long_array(msgid, key):
     """
     @brief Get the integer array of values for a key from a grib message.
 
-    If NumPy is enabled, the integer array will be stored in a NumPy ndarray.
-    Otherwise, Python's native array type will be used.
-
-    @param gribid      id of the grib loaded in memory
-    @param key         key name
-    @return numpy.ndarray or array
+    @param msgid      id of the message loaded in memory
+    @param key        key name
+    @return           numpy.ndarray
     @exception GribInternalError
     """
-    if with_numpy():
-        nval = grib_get_size(gribid, key)
-        err, result = _internal.grib_get_long_ndarray(gribid, key, nval)
-        GRIB_CHECK(err)
-        return result
-    else:
-        nval = grib_get_size(gribid, key)
-        a = _internal.new_longArray(nval)
-        s = _internal.intp()
-        s.assign(nval)
-
-        GRIB_CHECK(_internal.grib_c_get_long_array(gribid, key, a, s))
-
-        result = array("l")
-        for i in range(nval):
-            result.append(_internal.longArray_getitem(a, i))
-
-        _internal.delete_longArray(a)
-
-        return result
+    nval = grib_get_size(msgid, key)
+    err, result = _internal.grib_get_long_ndarray(msgid, key, nval)
+    GRIB_CHECK(err)
+    return result
 
 
 def grib_multi_new():
@@ -1090,13 +1050,14 @@ def grib_index_release(indexid):
 @require(indexid=int, key=str)
 def grib_index_get_size(indexid, key):
     """
-    @brief Get the number of distinct values for the index key. The key must belong to the index.
+    @brief Get the number of distinct values for the index key.
+    The key must belong to the index.
 
     \b Examples: \ref grib_index.py "grib_index.py"
 
     @param indexid    id of an index created from a file. The index must have been created on the given key.
     @param key        key for which the number of values is computed
-    @return number of distinct values for key in index
+    @return           number of distinct values for key in index
     @exception GribInternalError
     """
     err, value = _internal.grib_c_index_get_size_long(indexid, key)
@@ -1107,7 +1068,8 @@ def grib_index_get_size(indexid, key):
 @require(indexid=int, key=str)
 def grib_index_get_long(indexid, key):
     """
-    @brief Get the distinct values of the key in argument contained in the index. The key must belong to the index.
+    @brief Get the distinct values of the key in argument contained in the index.
+    The key must belong to the index.
 
     This function is used when the type of the key was explicitly defined as long or when the native type of the key is long.
 
@@ -1115,7 +1077,7 @@ def grib_index_get_long(indexid, key):
 
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key for wich the values are returned
-    @return tuple with values of key in index
+    @return          tuple with values of key in index
     @exception GribInternalError
     """
     nval = grib_index_get_size(indexid, key)
@@ -1137,7 +1099,8 @@ def grib_index_get_long(indexid, key):
 
 def grib_index_get_string(indexid, key):
     """
-    @brief Get the distinct values of the key in argument contained in the index. The key must belong to the index.
+    @brief Get the distinct values of the key in argument contained in the index.
+    The key must belong to the index.
 
     This function is used when the type of the key was explicitly defined as string or when the native type of the key is string.
 
@@ -1145,7 +1108,7 @@ def grib_index_get_string(indexid, key):
 
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key for wich the values are returned
-    @param return tuple with values of key in index
+    @return          tuple with values of key in index
     @exception GribInternalError
     """
     nval = grib_index_get_size(indexid, key)
@@ -1166,27 +1129,28 @@ def grib_index_get_string(indexid, key):
     return tuple(result)
 
 
-@require(iid=int, key=str)
-def grib_index_get_double(iid, key):
+@require(indexid=int, key=str)
+def grib_index_get_double(indexid, key):
     """
-    @brief Get the distinct values of the key in argument contained in the index. The key must belong to the index.
+    @brief Get the distinct values of the key in argument contained in the index.
+    The key must belong to the index.
 
     This function is used when the type of the key was explicitly defined as double or when the native type of the key is double.
 
     \b Examples: \ref grib_index.py "grib_index.py"
 
-    @param indexid   id of an index created from a file. The index must have been created with the key in argument.
-    @param key       key for wich the values are returned
-    @return tuple with values of key in index
+    @param indexid  id of an index created from a file. The index must have been created with the key in argument.
+    @param key      key for wich the values are returned
+    @return         tuple with values of key in index
     @exception GribInternalError
     """
-    nval = grib_index_get_size(iid, key)
+    nval = grib_index_get_size(indexid, key)
 
     a = _internal.new_doubleArray(nval)
     s = _internal.intp()
     s.assign(nval)
 
-    GRIB_CHECK(_internal.grib_c_index_get_real8(iid, key, a, s))
+    GRIB_CHECK(_internal.grib_c_index_get_real8(indexid, key, a, s))
 
     result = []
     for i in range(nval):
@@ -1197,10 +1161,11 @@ def grib_index_get_double(iid, key):
     return tuple(result)
 
 
-@require(indexid=int, key=str, val=int)
-def grib_index_select_long(indexid, key, val):
+@require(indexid=int, key=str, value=int)
+def grib_index_select_long(indexid, key, value):
     """
-    @brief Select the message subset with key==value. The value is an integer.
+    @brief Select the message subset with key==value.
+    The value is an integer.
 
     The key must have been created with integer type or have integer as native type if the type was not explicitly defined in the index creation.
 
@@ -1211,13 +1176,14 @@ def grib_index_select_long(indexid, key, val):
     @param value     value of the key to select
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_index_select_long(indexid, key, val))
+    GRIB_CHECK(_internal.grib_c_index_select_long(indexid, key, value))
 
 
-@require(iid=int, key=str, val=float)
-def grib_index_select_double(iid, key, val):
+@require(indexid=int, key=str, value=float)
+def grib_index_select_double(indexid, key, value):
     """
-    @brief Select the message subset with key==value. The value is a double.
+    @brief Select the message subset with key==value.
+    The value is a double.
 
     The key must have been created with integer type or have integer as native type if the type was not explicitly defined in the index creation.
 
@@ -1228,20 +1194,17 @@ def grib_index_select_double(iid, key, val):
     @param value     value of the key to select
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_index_select_real8(iid, key, val))
+    GRIB_CHECK(_internal.grib_c_index_select_real8(indexid, key, value))
 
 
-@require(indexid=int, key=str, val=str)
-def grib_index_select_string(indexid, key, val):
+@require(indexid=int, key=str, value=str)
+def grib_index_select_string(indexid, key, value):
     """
-    @brief Select the message subset with key==value. The value is a integer.
+    @brief Select the message subset with key==value.
+    The value is an integer.
 
     The key must have been created with string type or have string as native type if the type was not explicitly defined in the index creation.
 
-    In case of error, if the status parameter (optional) is not given, the program will
-    exit with an error message.\n Otherwise the error message can be
-    gathered with @ref grib_get_error_string.
-
     \b Examples: \ref grib_index.py "grib_index.py"
 
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
@@ -1249,7 +1212,7 @@ def grib_index_select_string(indexid, key, val):
     @param value     value of the key to select
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_index_select_string(indexid, key, val))
+    GRIB_CHECK(_internal.grib_c_index_select_string(indexid, key, value))
 
 
 def grib_new_from_index(indexid):
@@ -1259,12 +1222,12 @@ def grib_new_from_index(indexid):
     All the keys belonging to the index must be selected before calling this function.
     Successive calls to this function will return all the handles compatible with the constraints defined selecting the values of the index keys.
 
-    The message can be accessed through its gribid and it will be available until @ref grib_release is called.
+    The message can be accessed through its gribid and will be available until @ref grib_release is called.
 
     \b Examples: \ref grib_index.py "grib_index.py"
 
     @param indexid   id of an index created from a file.
-    @return id of the grib loaded in memory or None if end of index
+    @return          id of the message loaded in memory or None if end of index
     @exception GribInternalError
     """
     err, gribid = _internal.grib_c_new_from_index(indexid, 0)
@@ -1278,30 +1241,30 @@ def grib_new_from_index(indexid):
         return gribid
 
 
-@require(gribid=int)
-def grib_get_message_size(gribid):
+@require(msgid=int)
+def grib_get_message_size(msgid):
     """
     @brief Get the size of a coded message.
 
-    @param gribid      id of the grib loaded in memory
-    @return size in bytes of the message
+    @param msgid     id of the message loaded in memory
+    @return          size in bytes of the message
     @exception GribInternalError
     """
-    err, value = _internal.grib_c_get_message_size(gribid)
+    err, value = _internal.grib_c_get_message_size(msgid)
     GRIB_CHECK(err)
     return value
 
 
-@require(gribid=int)
-def grib_get_message_offset(gribid):
+@require(msgid=int)
+def grib_get_message_offset(msgid):
     """
     @brief Get the offset of a coded message.
 
-    @param gribid      id of the grib loaded in memory
-    @return offset in bytes of the message
+    @param msgid    id of the message loaded in memory
+    @return         offset in bytes of the message
     @exception GribInternalError
     """
-    err, value = _internal.grib_c_get_message_offset(gribid)
+    err, value = _internal.grib_c_get_message_offset(msgid)
     GRIB_CHECK(err)
     return value
 
@@ -1314,7 +1277,7 @@ def grib_get_double_element(gribid, key, index):
     @param gribid      id of the grib loaded in memory
     @param key         the key to be searched
     @param index       zero based index of value to retrieve
-    @return value
+    @return            value
     @exception GribInternalError
 
     """
@@ -1331,47 +1294,24 @@ def grib_get_double_elements(gribid, key, indexes):
     @param gribid      id of the grib loaded in memory
     @param key         the key to be searched
     @param indexes     list or tuple of indexes
-    @return numpy.ndarray or array
+    @return            numpy.ndarray
     @exception GribInternalError
 
     """
-    if with_numpy():
-        nidx = len(indexes)
-        err, result = _internal.grib_get_double_ndelements(gribid, key, indexes, nidx)
-        GRIB_CHECK(err)
-        return result
-    else:
-        nidx = len(indexes)
-
-        pidx = _internal.new_intArray(nidx)
-        pval = _internal.new_doubleArray(nidx)
-        psize = _internal.intp()
-        psize.assign(nidx)
-
-        for i in range(len(indexes)):
-            _internal.intArray_setitem(pidx, i, indexes[i])
-
-        err = _internal.grib_c_get_real8_elements(gribid, key, pidx, pval, psize)
-        GRIB_CHECK(err)
-
-        result = array("d")
-        for i in range(psize.value()):
-            result.append(_internal.doubleArray_getitem(pval, i))
-
-        _internal.delete_intArray(pidx)
-        _internal.delete_doubleArray(pval)
-
-        return result
+    nidx = len(indexes)
+    err, result = _internal.grib_get_double_ndelements(gribid, key, indexes, nidx)
+    GRIB_CHECK(err)
+    return result
 
 
 def grib_get_elements(gribid, key, indexes):
     """
     @brief Retrieve the elements of the key array for the indexes specified in the input.
 
-    @param gribid      id of the grib loaded in memory
-    @param key         the key to be searched
-    @param indexes     single index or a list of indexes
-    @return numpy.ndarray or array containing the values of key for the given indexes
+    @param gribid     id of the grib loaded in memory
+    @param key        the key to be searched
+    @param indexes    single index or a list of indexes
+    @return           numpy.ndarray containing the values of key for the given indexes
     @exception GribInternalError
     """
     try:
@@ -1385,8 +1325,8 @@ def grib_get_elements(gribid, key, indexes):
     return result
 
 
-@require(gribid=int, key=str)
-def grib_set_missing(gribid, key):
+@require(msgid=int, key=str)
+def grib_set_missing(msgid, key):
     """
     @brief Set as missing the value for a key in a grib message.
 
@@ -1395,11 +1335,11 @@ def grib_set_missing(gribid, key):
 
     \b Examples: \ref set_missing.py "set_missing.py"
 
-    @param  gribid     id of the grib loaded in memory
-    @param  key        key name
+    @param  msgid     id of the message loaded in memory
+    @param  key       key name
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_set_missing(gribid, key))
+    GRIB_CHECK(_internal.grib_c_set_missing(msgid, key))
 
 
 @require(gribid=int)
@@ -1441,8 +1381,8 @@ def grib_set_key_vals(gribid, key_vals):
     GRIB_CHECK(_internal.grib_c_set_key_vals(gribid, key_vals_str))
 
 
-@require(gribid=int, key=str)
-def grib_is_missing(gribid, key):
+@require(msgid=int, key=str)
+def grib_is_missing(msgid, key):
     """
     @brief Check if the value of a key is MISSING.
 
@@ -1451,26 +1391,26 @@ def grib_is_missing(gribid, key):
     The value of a key MISSING has a special significance and that can be read about
     in the WMO documentation.
 
-    @param gribid      id of the grib loaded in memory
+    @param msgid      id of the message loaded in memory
     @param key         key name
     @return 0->not missing, 1->missing
     @exception GribInternalError
     """
-    err, value = _internal.grib_c_is_missing(gribid, key)
+    err, value = _internal.grib_c_is_missing(msgid, key)
     GRIB_CHECK(err)
     return value
 
 
-@require(gribid=int, key=str)
-def grib_is_defined(gribid, key):
+@require(msgid=int, key=str)
+def grib_is_defined(msgid, key):
     """
     @brief Check if a key is defined (exists)
-    @param gribid      id of the grib loaded in memory
-    @param key         key name
-    @return            0->not defined, 1->defined
-    @exception         GribInternalError
+    @param msgid      id of the message loaded in memory
+    @param key        key name
+    @return           0->not defined, 1->defined
+    @exception        GribInternalError
     """
-    err, value = _internal.grib_c_is_defined(gribid, key)
+    err, value = _internal.grib_c_is_defined(msgid, key)
     GRIB_CHECK(err)
     return value
 
@@ -1544,8 +1484,8 @@ def grib_get_native_type(gribid, key):
         return None
 
 
-@require(gribid=int, key=str)
-def grib_get(gribid, key, ktype=None):
+@require(msgid=int, key=str)
+def grib_get(msgid, key, ktype=None):
     """
     @brief Get the value of a key in a grib message.
 
@@ -1553,58 +1493,58 @@ def grib_get(gribid, key, ktype=None):
     The type of value returned can be forced by using the type argument of the
     function. The type argument can be int, float or str.
 
-    The \em gribid references a grib message loaded in memory.
+    The \em msgid references a grib message loaded in memory.
 
     \b Examples: \ref grib_get_keys.py "grib_get_keys.py", \ref print_data.py "print_data.py"
 
     @see grib_new_from_file, grib_release, grib_set
 
-    @param gribid      id of the grib loaded in memory
+    @param msgid      id of the grib loaded in memory
     @param key         key name
     @param ktype       the type we want the output in (int, float or str), native type if not specified
     @return scalar value of key as int, float or str
     @exception GribInternalError
     """
     if ktype is None:
-        ktype = grib_get_native_type(gribid, key)
+        ktype = grib_get_native_type(msgid, key)
 
     result = None
     if ktype is int:
-        result = grib_get_long(gribid, key)
+        result = grib_get_long(msgid, key)
     elif ktype is float:
-        result = grib_get_double(gribid, key)
+        result = grib_get_double(msgid, key)
     elif ktype is str:
-        result = grib_get_string(gribid, key)
+        result = grib_get_string(msgid, key)
 
     return result
 
 
-@require(gribid=int, key=str)
-def grib_get_array(gribid, key, ktype=None):
+@require(msgid=int, key=str)
+def grib_get_array(msgid, key, ktype=None):
     """
     @brief Get the contents of an array key.
 
-    The output array will be stored in a NumPy ndarray or array.
+    The output array will be stored in a NumPy ndarray.
     The type of the array returned depends on the native type of the requested key.
     The type of value returned can be forced by using the type argument of the function.
-    The type argument can be int or float.
+    The type argument can be int, float or string.
 
-    @param gribid      id of the grib loaded in memory
-    @param key         the key to get the value for
-    @param ktype       the type we want the output in (can be int or float), native type if not specified
-    @return numpy.ndarray or array
+    @param msgid      id of the message loaded in memory
+    @param key        the key to get the value for
+    @param ktype      the type we want the output in (can be int, float or string), native type if not specified
+    @return           numpy.ndarray
     @exception GribInternalError
     """
     if ktype is None:
-        ktype = grib_get_native_type(gribid, key)
+        ktype = grib_get_native_type(msgid, key)
 
     result = None
     if ktype is int:
-        result = grib_get_long_array(gribid, key)
+        result = grib_get_long_array(msgid, key)
     elif ktype is float:
-        result = grib_get_double_array(gribid, key)
+        result = grib_get_double_array(msgid, key)
     elif ktype is str:
-        result = grib_get_string_array(gribid, key)
+        result = grib_get_string_array(msgid, key)
 
     return result
 
@@ -1614,12 +1554,12 @@ def grib_get_values(gribid):
     """
     @brief Retrieve the contents of the 'values' key.
 
-    A NumPy ndarray or Python array containing the values in the message is returned.
+    A NumPy ndarray containing the values in the message is returned.
 
     \b Examples: \ref print_data.py "print_data.py", \ref samples.py "samples.py"
 
     @param gribid   id of the grib loaded in memory
-    @return numpy.ndarray or array
+    @return         numpy.ndarray
     @exception GribInternalError
     """
     return grib_get_double_array(gribid, "values")
@@ -1632,7 +1572,7 @@ def grib_set_values(gribid, values):
 
     The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...
 
-    If NumPy is enabled, the wrapper will internally try to convert the input to a NumPy array
+    The wrapper will internally try to convert the input to a NumPy array
     before extracting its data and length. This is possible as NumPy
     allows the construction of arrays from arbitrary python sequences.
 
@@ -1646,8 +1586,8 @@ def grib_set_values(gribid, values):
     grib_set_double_array(gribid, "values", values)
 
 
-@require(gribid=int, key=str)
-def grib_set(gribid, key, value):
+@require(msgid=int, key=str)
+def grib_set(msgid, key, value):
     """
     @brief Set the value for a scalar key in a grib message.
 
@@ -1657,41 +1597,41 @@ def grib_set(gribid, key, value):
 
     @see grib_new_from_file, grib_release, grib_get
 
-    @param gribid      id of the grib loaded in memory
+    @param msgid      id of the grib loaded in memory
     @param key         key name
     @param value       scalar value to set for key
     @exception GribInternalError
     """
     if isinstance(value, int):
-        grib_set_long(gribid, key, value)
+        grib_set_long(msgid, key, value)
     elif isinstance(value, float):
-        grib_set_double(gribid, key, value)
+        grib_set_double(msgid, key, value)
     elif isinstance(value, str):
-        grib_set_string(gribid, key, value)
+        grib_set_string(msgid, key, value)
     else:
         raise GribInternalError("Invalid type of value when setting key '%s'." % key)
 
 
-@require(gribid=int, key=str)
-def grib_set_array(gribid, key, value):
+@require(msgid=int, key=str)
+def grib_set_array(msgid, key, value):
     """
-    @brief Set the value for an array key in a grib message.
+    @brief Set the value for an array key in a message.
 
-    Some array keys can be "values","pl", "pv" respectively the data values,
-    the list of number of points for each latitude in a reduced grid and the list of
-    vertical levels.
+    Examples of array keys:
+    "values" - data values
+    "pl" - list of number of points for each latitude in a reduced grid
+    "pv" - list of vertical levels
 
     The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...
 
-    If NumPy is enabled, the wrapper will internally try to convert the input to a NumPy array
+    The wrapper will internally try to convert the input to a NumPy array
     before extracting its data and length. This is possible as NumPy
     allows the construction of arrays from arbitrary python sequences.
 
-    @param gribid      id of the grib loaded in memory
+    @param msgid       id of the message loaded in memory
     @param key         key name
-    @param value       array value to set for key
+    @param value       array to set for key
     @exception GribInternalError
-
     """
     val0 = None
     try:
@@ -1700,9 +1640,11 @@ def grib_set_array(gribid, key, value):
         pass
 
     if isinstance(val0, float):
-        grib_set_double_array(gribid, key, value)
+        grib_set_double_array(msgid, key, value)
     elif isinstance(val0, int):
-        grib_set_long_array(gribid, key, value)
+        grib_set_long_array(msgid, key, value)
+    elif isinstance(val0, str):
+        grib_set_string_array(msgid, key, value)
     else:
         raise GribInternalError("Invalid type of value when setting key '%s'." % key)
 
@@ -1710,12 +1652,14 @@ def grib_set_array(gribid, key, value):
 @require(indexid=int, key=str)
 def grib_index_get(indexid, key, ktype=str):
     """
-    @brief Get the distinct values of an index key. The key must belong to the index.
+    @brief Get the distinct values of an index key.
+    The key must belong to the index.
 
     \b Examples: \ref grib_index.py "grib_index.py"
 
     @param indexid   id of an index created from a file. The index must have been created on the given key.
     @param key       key for which the values are returned
+    @param ktype     the type we want the output in (int, float or str), str if not specified
     @return array of values
     @exception GribInternalError
     """
@@ -1834,20 +1778,20 @@ def grib_get_api_version():
 __version__ = grib_get_api_version()
 
 
-@require(gribid=int)
-def grib_get_message(gribid):
+@require(msgid=int)
+def grib_get_message(msgid):
     """
     @brief Get the binary message.
 
-    Returns the binary string message associated with the grib identified by gribid.
+    Returns the binary string message associated with the grib identified by msgid.
 
     @see grib_new_from_message
 
-    @param gribid      id of the grib loaded in memory
-    @return binary string message associated with gribid
+    @param msgid      id of the grib loaded in memory
+    @return binary string message associated with msgid
     @exception GribInternalError
     """
-    error, message = _internal.grib_c_get_message(gribid)
+    error, message = _internal.grib_c_get_message(msgid)
     GRIB_CHECK(error)
     return message
 
@@ -1862,12 +1806,12 @@ def grib_new_from_message(message):
     @see grib_get_message
 
     @param message binary string message
-    @return gribid of the newly created grib message
+    @return msgid of the newly created grib message
     @exception GribInternalError
     """
-    error, gribid = _internal.grib_c_new_from_message(0, message, len(message))
+    error, msgid = _internal.grib_c_new_from_message(0, message, len(message))
     GRIB_CHECK(error)
-    return gribid
+    return msgid
 
 
 @require(defs_path=str)
@@ -1888,4 +1832,3 @@ def grib_set_samples_path(samples_path):
     @param samples_path   samples path
     """
     _internal.grib_c_set_samples_path(samples_path)
-

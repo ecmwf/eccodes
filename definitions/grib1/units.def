@@ -142,11 +142,6 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 83 ;
 	}
-#Albedo
-'(0 - 1)' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 84 ;
-	}
 #Evaporation
 'm of water equivalent' = {
 	 table2Version = 3 ;
@@ -843,11 +838,6 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 83 ;
 	}
-#Albedo
-'(0 - 1)' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 84 ;
-	}
 #Evaporation
 'm of water equivalent' = {
 	 table2Version = 2 ;
@@ -1528,11 +1518,6 @@
 'm' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 83 ;
-	}
-#Albedo
-'(0 - 1)' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 84 ;
 	}
 #Evaporation
 'm of water equivalent' = {

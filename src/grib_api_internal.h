@@ -187,6 +187,8 @@ extern "C" {
  #define DebugAssertAccess(array, index, size)
 #endif
 
+/* Return true if two strings are equal */
+#define STR_EQ(a, b) (strcmp ((a), (b)) == 0)
 
 #include "grib_api.h"
 
@@ -653,6 +655,7 @@ struct grib_dumper {
    unsigned long      option_flags;
    void*              arg;
    int                depth;
+   long                count;
    grib_handle*       handle;
    grib_dumper_class* cclass;
  };

@@ -21,7 +21,6 @@ bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
 for f in ${bufr_files}; do
   if [ "$f" = "ias1_240.bufr" ]; then continue; fi
-  if [ "$f" = "bad.bufr" ]; then      continue; fi
   
   # Convert to BUFR edition 4
   ${tools_dir}bufr_set -s editionNumber=4 $f $fBufrTmp

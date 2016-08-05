@@ -20,7 +20,7 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    sample_id = codes_new_from_samples("regular_ll_sfc_grib1")
+    sample_id = codes_grib_new_from_samples("regular_ll_sfc_grib1")
     fin = open(INPUT)
     fout = open(OUTPUT, 'w')
 

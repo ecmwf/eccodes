@@ -1,0 +1,42 @@
+/*! \mainpage ecCodes
+
+\section overview Overview
+
+\b %ecCodes is a package developed by ECMWF which provides an application programming interface and a
+set of tools for decoding and encoding messages in the following formats:
+
+- WMO FM-92 GRIB edition 1 and edition 2 (<a href="http://www.wmo.int/pages/prog/www/WMOCodes/Guides/GRIB/Introduction_GRIB1-GRIB2.pdf">See WMO document</a>)
+- WMO FM-94 BUFR edition 3 and edition 4 (<a href="http://www.wmo.int/pages/prog/www/WMOCodes/Guides/BUFRCREX/Layer1-2-English.pdf">See WMO document</a>)
+- WMO GTS <a href="http://www.wmo.int/pages/prog/www/WIS/Publications/WMO_386/WMO_386_Vol_I_en.pdf">abbreviated header</a> (only decoding in this release).
+
+A useful set of <a href="https://software.ecmwf.int/wiki/display/ECC/Command+line+tools">command line tools</a>
+provide quick access to the messages. C, Fortran 90 and Python interfaces provide access to the main %ecCodes functionality.
+
+%ecCodes is an evolution of <a href="https://software.ecmwf.int/wiki/display/GRIB/Home">GRIB-API</a>.  It is designed to provide the user with a simple set of
+functions to access data from several formats with a key/value approach.
+
+For GRIB encoding and decoding, the GRIB-API functionality is provided fully in %ecCodes with the same user interface and behaviour.
+Interfaces for C, Fortran 90 and Python are all maintained as in GRIB-API.  However, the GRIB-API Fortran 77 interface is no longer available.
+
+In addition, a new set of functions with the prefix "codes_" is provided to operate on all the supported message formats.
+These functions have the same interface and behaviour as the "grib_" functions. 
+
+A selection of GRIB-API tools has been included in %ecCodes (<a href="https://software.ecmwf.int/wiki/display/ECC/GRIB+tools">ecCodes GRIB tools</a>),
+while new tools are available for the BUFR (<a href="https://software.ecmwf.int/wiki/display/ECC/BUFR+tools">ecCodes BUFR tools</a>) and GTS formats.
+The new tools have been developed to be as similar as possible to the existing GRIB-API tools maintaining, where possible, the same options and behaviour.
+A significant difference compared with GRIB-API tools is that bufr_dump produces output
+in <a href="https://en.wikipedia.org/wiki/JSON">JSON</a> format which can be used in many web based applications.
+
+Migration from GRIB-API to %ecCodes is expected to be transparent for current GRIB-API users. The GRIB-API library is fully available in the %ecCodes library.
+Users are encouraged to test their GRIB-API applications by linking with the %ecCodes library and to provide feedback of any problems encountered.
+
+\warning Name clashes prevent a simultaneous use of the GRIB-API and %ecCodes libraries. For this reason, and to simplify the software maintenance,
+it is planned to replace GRIB-API by %ecCodes.\n The functions with the "grib_" prefix will, however, be maintained in %ecCodes.
+
+#########
+Reference manuals are also provided for the C library (organized in \ref modules), for the 
+\ref eccodes "Fortran 90 interface" and for the \ref ecCodes "Python interface".
+
+<a href="https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation">Installation instructions</a> are also provided.
+
+*/

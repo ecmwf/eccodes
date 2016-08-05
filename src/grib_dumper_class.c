@@ -86,11 +86,28 @@ int grib_print(grib_handle* h, const char* name, grib_dumper *d ){
 void grib_dump_content(grib_handle* h, FILE* f,const char* mode,unsigned long option_flags,void *data)
 {
     grib_dumper *dumper;
-    dumper =  grib_dumper_factory(mode?mode:"serialize",h,f,option_flags,data);
+    dumper = grib_dumper_factory(mode?mode:"serialize",h,f,option_flags,data);
     grib_dump_header(dumper,h);
     grib_dump_accessors_block(dumper,h->root->block);
     grib_dump_footer(dumper,h);
     grib_dumper_delete(dumper);
+}
+
+grib_dumper* grib_dump_content_with_dumper(grib_handle* h, grib_dumper* dumper, FILE* f,const char* mode,unsigned long option_flags,void *data)
+{
+    long count=1;
+    if (dumper!=NULL) {
+      count=dumper->count;
+      count++;
+    }
+    dumper = grib_dumper_factory(mode?mode:"serialize",h,f,option_flags,data);
+    if (!dumper) return NULL;
+    dumper->count=count;
+
+    grib_dump_header(dumper,h);
+    grib_dump_accessors_block(dumper,h->root->block);
+    grib_dump_footer(dumper,h);
+    return dumper;
 }
 
 void codes_dump_bufr_flat(grib_accessors_list* al,grib_handle* h, FILE* f,const char* mode,unsigned long option_flags,void *data)

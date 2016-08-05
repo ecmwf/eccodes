@@ -27,7 +27,7 @@ static void* process_grib(void* threadID)
     double pv[4]={1,2,3,4};
     const size_t pvsize=4;
 
-    codes_handle* h = codes_handle_new_from_samples(0, "regular_ll_pl_grib2");
+    codes_handle* h = codes_grib_handle_new_from_samples(0, "regular_ll_pl_grib2");
     assert(h);
     printf("Thread %ld running\n", tid);
 

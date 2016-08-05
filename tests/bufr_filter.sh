@@ -398,28 +398,25 @@ rm -f ${f}.ref ${f}.log
 #-----------------------------------------------------------
 # Test: set unexpandedDescriptors big test
 #-----------------------------------------------------------
-fRulesReady="set_unexpandedDescriptors.filter"
-f="syno_1.bufr"
-testScript="set_unexpandedDescriptors_test.sh"
-testScript1="set_unexpandedDescriptors_test_1.sh"
-echo "Test: set unexpandedDescriptors big test" >> $fLog
-echo "file: $f" >> $fLog
+#fRulesReady="set_unexpandedDescriptors.filter"
+#f="syno_1.bufr"
+#testScript="set_unexpandedDescriptors_test.sh"
+#testScript1="set_unexpandedDescriptors_test_1.sh"
+#echo "Test: set unexpandedDescriptors big test" >> $fLog
+#echo "file: $f" >> $fLog
 
-cat >$testScript <<EOF
-set -e
+#cat >$testScript <<EOF
+#set -e
+#
+#EOF
+#echo "set -x" > $testScript1
+#chmod +x $testScript1
 
-EOF
-echo "set -x" > $testScript1
-chmod +x $testScript1
-
-${tools_dir}codes_bufr_filter $fRulesReady $f 2>> $fLog 1>> $testScript
-
-sed -e "s:diff:${tools_dir}bufr_compare:" < $testScript >> $testScript1
-
-./$testScript1
-
-rm -f new_*bufr 
-rm -f $testScript $testScript1
+#${tools_dir}codes_bufr_filter $fRulesReady $f 2>> $fLog 1>> $testScript
+#sed -e "s:diff:${tools_dir}bufr_compare:" < $testScript >> $testScript1
+#./$testScript1
+#rm -f new_*bufr 
+#rm -f $testScript $testScript1
 
 #-----------------------------------------------------------
 # Test:  packing   
@@ -932,8 +929,12 @@ set extractSubset=2;
 set doExtractSubsets=1;
 write;
 
-set extractSubsetIntervalStart=3;
+set extractSubsetIntervalStart=5;
 set extractSubsetIntervalEnd=8;
+set doExtractSubsets=1;
+write;
+
+set extractSubsetList={1,3};
 set doExtractSubsets=1;
 write;
 EOF
@@ -956,7 +957,8 @@ cat > ${fOut}.log.ref <<EOF
 stationNumber=27 84 270 272 308 371 381 382 387 413 464 485
 stationNumber=272
 stationNumber=84
-stationNumber=270 272 308 371 381 382
+stationNumber=308 371 381 382 84
+stationNumber=308 371 381 382 84 27 270
 EOF
 
 diff ${fOut}.log.ref ${fOut}.log 
@@ -1033,9 +1035,9 @@ fieldOfViewNumber=1
 orbitNumber=2147483647
 casRegistryNumber=10102-44-0
 === message number 2
-numberOfSubsets=6
-solarElevation=29.71 29.23 37.21 36.78 36.34 35.46
-fieldOfViewNumber=2 2 0 0 0 1
+numberOfSubsets=7
+solarElevation=29.71 29.23 37.21 36.78 36.34 35.46 33.2
+fieldOfViewNumber=2 2 0 0 0 1 1
 orbitNumber=2147483647
 casRegistryNumber=10102-44-0
 EOF
@@ -1407,7 +1409,7 @@ grst_26.bufr gsd1_208.bufr gsd2_208.bufr gsd3_208.bufr gst4_26.bufr hirb_55.bufr
 ikco_217.bufr itrg_208.bufr itwt_233.bufr j2eo_216.bufr j2nb_216.bufr jaso_214.bufr kond_209.bufr maer_207.bufr meta_140.bufr
 mhen_55.bufr mhsa_55.bufr mhsb_55.bufr mhse_55.bufr mloz_206.bufr modi_87.bufr modw_87.bufr monw_87.bufr new.bufr nomi_206.bufr
 nos1_208.bufr nos2_208.bufr nos3_208.bufr nos4_208.bufr nos5_208.bufr nos6_208.bufr nos7_208.bufr nos8_208.bufr ocea_131.bufr
-ocea_132.bufr ocea_133.bufr ocea_21.bufr pilo_91.bufr profiler_european.bufr rada_250.bufr rado_250.bufr s4kn_165.bufr
+ocea_132.bufr ocea_133.bufr ocea_21.bufr pgps_110.bufr pilo_91.bufr profiler_european.bufr rada_250.bufr rado_250.bufr s4kn_165.bufr
 sb19_206.bufr sbu8_206.bufr ship_11.bufr ship_12.bufr ship_13.bufr ship_14.bufr ship_19.bufr ship_9.bufr smin_49.bufr smis_49.bufr
 smiu_49.bufr smos_203.bufr sn4k_165.bufr soil_7.bufr ssbt_127.bufr stuk_7.bufr syno_1.bufr syno_2.bufr syno_3.bufr syno_4.bufr
 synop_multi_subset.bufr temp_101.bufr temp_102.bufr temp_106.bufr tmr7_129.bufr tros_31.bufr uegabe.bufr wavb_134.bufr"
@@ -1425,3 +1427,5 @@ do
 
 done
 
+rm -f $fLog
+rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules

@@ -11,12 +11,12 @@
 position offsetSection1;
 section_length[3] section1Length ;
 
-unsigned[1]  masterTableNumber;
+unsigned[1]  masterTableNumber :dump;
 
 codetable[1] bufrHeaderSubCentre 'grib1/0.table' : dump;
 unsigned[1] bufrHeaderCentre            : dump;
 
-unsigned[1]  updateSequenceNumber;
+unsigned[1]  updateSequenceNumber :dump;
 
 flags[1]     section1Flags 'bufr/section1_flags.table' = 128 : hidden ; # = section 2 present
 

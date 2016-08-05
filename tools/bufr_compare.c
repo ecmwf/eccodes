@@ -160,20 +160,20 @@ grib_option grib_options[]={
         {"E:","end","Last field to be processed.\n",0,1,0},
         {"a",0,"-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n"
                 ,0,1,0},
-                {"H",0,"Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},
-                {"R:",0,0,0,1,0},
-                {"A:",0,0,0,1,0},
-                {"P",0,"Compare data values using the packing error as tolerance.\n",0,1,0},
-                {"t:","factor","Compare data values using factor multiplied by the tolerance specified in options -P -R -A.\n",0,1,0},
-                {"w:",0,0,0,1,0},
-                {"f",0,0,0,1,0},
-                {"F",0,0,1,0,0},
-                {"q",0,0,1,0,0},
-                {"M",0,0,1,0,0},
-                {"I",0,0,1,0,0},
-                {"V",0,0,0,1,0},
-                {"7",0,0,0,1,0},
-                {"v",0,0,0,1,0}
+        {"H",0,"Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},
+        {"R:",0,0,0,1,0},
+        {"A:",0,0,0,1,0},
+        {"P",0,"Compare data values using the packing error as tolerance.\n",0,1,0},
+        {"t:","factor","Compare data values using factor multiplied by the tolerance specified in options -P -R -A.\n",0,1,0},
+        {"w:",0,0,0,1,0},
+        {"f",0,0,0,1,0},
+        {"F",0,0,1,0,0},
+        {"q",0,0,1,0,0},
+        {"M",0,0,1,0,0},
+        {"I",0,0,1,0,0},
+        {"V",0,0,0,1,0},
+        {"7",0,0,0,1,0},
+        {"v",0,0,0,1,0}
 };
 
 grib_handle* global_handle=NULL;
@@ -182,14 +182,13 @@ int start=-1;
 int end=-1;
 
 char* grib_tool_description=
-        "Compare BUFR messages contained in two files."
-        "\n\tIf some differences are found it fails returning an error code."
-        "\n\tFloating point values are compared exactly by default, different tolerance can be defined see -P -A -R."
-        "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
+    "Compare BUFR messages contained in two files."
+    "\n\tIf some differences are found it fails returning an error code."
+    "\n\tFloating point values are compared exactly by default, different tolerance can be defined see -P -A -R."
+    "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
 char* grib_tool_name="bufr_compare";
-char* grib_tool_usage="[options] "
-        "file file";
+char* grib_tool_usage="[options] bufr_file1 bufr_file2";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
@@ -346,19 +345,20 @@ int grib_tool_init(grib_runtime_options* options)
     return 0;
 }
 
-int grib_tool_new_filename_action(grib_runtime_options* options,const char* file) {
+int grib_tool_new_filename_action(grib_runtime_options* options,const char* file)
+{
     return 0;
 }
-int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file) {
+
+int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
+{
     return 0;
 }
 
 static void printInfo(grib_handle* h)
 {
-
     printf("== %d == DIFFERENCE == ",count);
     lastPrint=count;
-
 }
 
 static void print_index_key_values(grib_index* index,int icounter,const char* error_message)
@@ -511,7 +511,6 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         grib_index_delete(options->index1);
         grib_index_delete(options->index2);
     }
-
 
     if (error !=0) exit(1);
     return 0;

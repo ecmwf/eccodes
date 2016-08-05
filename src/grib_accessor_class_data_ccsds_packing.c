@@ -275,7 +275,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     */
 
     bits8 = ((bits_per_value + 7)/8)*8;
-    size = n_vals * (bits_per_value + 7)/8;
+    size = n_vals * ((bits_per_value + 7)/8);
     decoded = grib_context_buffer_malloc_clear(a->context,size);
     if(!decoded) {
         err = GRIB_OUT_OF_MEMORY;
@@ -387,7 +387,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
             /* Make sure we can decode it again */
             double ref = 1e-100;
             grib_get_double_internal(grib_handle_of_accessor(a),self->reference_value,&ref);
-            printf("%g %g %g\n",reference_value,ref,reference_value-ref);
+            /*printf("%g %g %g\n",reference_value,ref,reference_value-ref);*/
             Assert(ref == reference_value);
         }
 

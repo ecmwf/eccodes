@@ -41,14 +41,6 @@ alias mars.class  = marsClass;
 alias mars.param = paramId;
 alias mars.origin = centre;
 
-# Tigge-LAM rules
-if (section2Used == 1) {
-    constant marsLamModel = 'lam';
-    alias mars.model = marsLamModel;    # model redefined. It is not 'glob'
-    alias mars.origin = tiggeSuiteID;   # origin is the suiteName for Tigge-LAM
-    unalias mars.domain;                # No mars domain needed
-}
-
 # See GRIB-911 re typeOfProcessedData values in UERRA
 concept marsType {
 

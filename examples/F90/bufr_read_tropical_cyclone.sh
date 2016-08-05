@@ -16,19 +16,18 @@ label="bufr_read_tropical_cyclone_f"
 
 #Define tmp file
 fTmp=${label}".tmp.txt"
-rm -f $fTmp | true
+rm -f $fTmp
 
-#We check "tropical_cyclone.bufr". The path is
-#hardcoded in the example
+#We check "tropical_cyclone.bufr". The path is hardcoded in the example
 
 REDIRECT=/dev/null
 
 #Write the values into a file and compare with reference
-${examples_dir}/eccodes_f_bufr_read_tropical_cyclone #2> $REDIRECT > $fTmp
+${examples_dir}/eccodes_f_bufr_read_tropical_cyclone 2> $REDIRECT > $fTmp
 
-#TODO: check the output
-
-#cat  $fTmp
+# Check the output
+grep -q "Date and time: 18.11.2015  0:0" $fTmp
+grep -q "== Member  52" $fTmp
 
 #Clean up
-rm -f $fTmp | true
+rm -f $fTmp

@@ -421,6 +421,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\codes_memfs.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\compile.c"
 				>
 			</File>
@@ -510,6 +514,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_accessor_class_bufr_elements_table.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_accessor_class_bufr_extract_area_subsets.c"
 				>
 			</File>
 			<File
@@ -1389,11 +1397,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_dumper_class_filter.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_dumper_class_fortran.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_dumper_class_json.c"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_dumper_class_keys.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_dumper_class_python.c"
 				>
 			</File>
 			<File

@@ -13,14 +13,15 @@ alias identifier=identifier;
 
 unsigned[3]   totalLength ;
 
-unsigned[1] edition = 2;
+unsigned[1] edition = 2 : dump;
 alias editionNumber=edition;
 
 template    section_1 "bufr/section.1.2.def"   ;
 
-flagbit section2Present(section1Flags,7) = 1;
+flagbit localSectionPresent(section1Flags,7) = 1;
+alias section2Present=localSectionPresent;
 
-if(section2Present){
+if(localSectionPresent){
    template section_2 "bufr/section.2.def"     ;
 }
 else {
