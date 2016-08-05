@@ -31,28 +31,27 @@ fRules=${label}.filter
 # Test: Datetime extraction
 #-----------------------------------------------------------
 cat > $fRules <<EOF
-transient originalNumberOfSubsets=numberOfSubsets;
+ transient originalNumberOfSubsets=numberOfSubsets;
 
-transient extractDateTimeYearStart=2012;
-transient extractDateTimeMonthStart=10;
-transient extractDateTimeDayStart=31;
-transient extractDateTimeHourStart=0;
-transient extractDateTimeMinuteStart=1;
-transient extractDateTimeSecondStart=31.6;
+ transient extractDateTimeYearStart=2012;
+ transient extractDateTimeMonthStart=10;
+ transient extractDateTimeDayStart=31;
+ transient extractDateTimeHourStart=0;
+ transient extractDateTimeMinuteStart=1;
+ transient extractDateTimeSecondStart=31.6;
 
-transient extractDateTimeYearEnd=2012;
-transient extractDateTimeMonthEnd=10;
-transient extractDateTimeDayEnd=31;
-transient extractDateTimeHourEnd=0;
-transient extractDateTimeMinuteEnd=1;
-transient extractDateTimeSecondEnd=39.6;
+ transient extractDateTimeYearEnd=2012;
+ transient extractDateTimeMonthEnd=10;
+ transient extractDateTimeDayEnd=31;
+ transient extractDateTimeHourEnd=0;
+ transient extractDateTimeMinuteEnd=1;
+ transient extractDateTimeSecondEnd=39.6;
 
-set doExtractDateTime=1;
-if (extractDateTimeNumberOfSubsets!=0) {
-  write;
-}
-
-print "extracted [extractDateTimeNumberOfSubsets] of [originalNumberOfSubsets] subsets";
+ set doExtractDateTime=1;
+ if (extractDateTimeNumberOfSubsets!=0) {
+   write;
+ }
+ print "extracted [extractDateTimeNumberOfSubsets] of [originalNumberOfSubsets] subsets";
 EOF
 
 inputBufr="amsa_55.bufr"
@@ -121,5 +120,75 @@ second=31.54
 EOF
 
 diff $outputRef $outputFilt
+
+#-----------------------------------------------------------
+# Test invalid date
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+ transient originalNumberOfSubsets=numberOfSubsets;
+ transient extractDateTimeYearStart=2012;
+ transient extractDateTimeMonthStart=19; # Bad month
+ transient extractDateTimeDayStart=31;
+ transient extractDateTimeHourStart=0;
+ transient extractDateTimeMinuteStart=1;
+ transient extractDateTimeSecondStart=31.6;
+
+ transient extractDateTimeYearEnd=2012;
+ transient extractDateTimeMonthEnd=10;
+ transient extractDateTimeDayEnd=31;
+ transient extractDateTimeHourEnd=0;
+ transient extractDateTimeMinuteEnd=1;
+ transient extractDateTimeSecondEnd=39.6;
+
+ set doExtractDateTime=1;
+EOF
+
+inputBufr="amsa_55.bufr"
+outputBufr=${label}.${inputBufr}.out
+
+set +e
+${tools_dir}bufr_filter -o $outputBufr $fRules $inputBufr
+status=$?
+set -e
+if [ $status -eq 0 ]; then
+   echo "Bad start date: bufr_filter should have failed!"
+   exit 1
+fi
+
+#-----------------------------------------------------------
+# Test end date < start date
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+ transient originalNumberOfSubsets=numberOfSubsets;
+ transient extractDateTimeYearStart=2012;
+ transient extractDateTimeMonthStart=10;
+ transient extractDateTimeDayStart=31;
+ transient extractDateTimeHourStart=0;
+ transient extractDateTimeMinuteStart=1;
+ transient extractDateTimeSecondStart=31.6;
+
+ transient extractDateTimeYearEnd=2012;
+ transient extractDateTimeMonthEnd=10;
+ transient extractDateTimeDayEnd=30; #Error
+ transient extractDateTimeHourEnd=0;
+ transient extractDateTimeMinuteEnd=1;
+ transient extractDateTimeSecondEnd=39.6;
+
+ set doExtractDateTime=1;
+EOF
+
+inputBufr="amsa_55.bufr"
+outputBufr=${label}.${inputBufr}.out
+
+set +e
+${tools_dir}bufr_filter -o $outputBufr $fRules $inputBufr
+status=$?
+set -e
+if [ $status -eq 0 ]; then
+   echo "End date before start date: bufr_filter should have failed!"
+   exit 1
+fi
+
+
 
 rm -f $outputRef $outputFilt $outputBufr $fLog $fRules

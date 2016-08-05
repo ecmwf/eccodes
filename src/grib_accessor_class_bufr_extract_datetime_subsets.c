@@ -151,6 +151,24 @@ static int get_native_type(grib_accessor* a)
     return GRIB_TYPE_LONG;
 }
 
+/* Convert input date to Julian number. If date is invalid, return -1 */
+static double date_to_julian(long year,long month,long day,long hour,long minute,long second)
+{
+    double result = 0;
+    grib_datetime_to_julian(year,month,day,hour,minute,second, &result);
+
+    {
+        /* Check conversion worked by going other way */
+        long year1, month1, day1, hour1, minute1, second1;
+        grib_julian_to_datetime(result, &year1, &month1, &day1, &hour1, &minute1, &second1);
+        if (year1 != year || month1 != month || day1 != day || minute1 != minute || second1 != second)
+        {
+            result = -1; /* Failed. Invalid date*/
+        }
+    }
+    return result;
+}
+
 static int select_datetime(grib_accessor* a)
 {
     int ret=0;
@@ -165,11 +183,11 @@ static int select_datetime(grib_accessor* a)
     if (compressed) {
         size_t n;
         double julianStart=0, julianEnd=0, julianDT=0;
-        char start_str[80]={0,},end_str[80]={0,};
+        char start_str[80]={0,},end_str[80]={0,},datetime_str[80]={0,};
         long yearRank,monthRank,dayRank,hourRank,minuteRank,secondRank;
         long yearStart,monthStart,dayStart,hourStart,minuteStart,secondStart;
         long yearEnd,monthEnd,dayEnd,hourEnd,minuteEnd,secondEnd;
-        long *year,*month,*hour,*day,*minute;
+        long *year,*month,*day,*hour,*minute;
         double *second;
         long numberOfSubsets,i;
         grib_iarray* subsets;
@@ -295,8 +313,11 @@ static int select_datetime(grib_accessor* a)
         ret=grib_get_long(h,"extractDateTimeSecondStart",&secondStart);
         if (ret) secondStart=0;
         sprintf(start_str,"%04ld/%02ld/%02ld %02ld:%02ld:%02ld",yearStart,monthStart,dayStart,hourStart,minuteStart,secondStart);
-        grib_datetime_to_julian(yearStart,monthStart,dayStart,hourStart,minuteStart,secondStart, &julianStart);
-        /* TODO: if error occurred return GRIB_INTERNAL_ERROR */
+        julianStart = date_to_julian(yearStart,monthStart,dayStart,hourStart,minuteStart,secondStart);
+        if (julianStart == -1) {
+            grib_context_log(c,GRIB_LOG_ERROR,"Invalid start date/time: %s", start_str);
+            return GRIB_INTERNAL_ERROR;
+        }
 
         ret=grib_get_long(h,"extractDateTimeYearEnd",&yearEnd);
         if (ret) return ret;
@@ -311,8 +332,11 @@ static int select_datetime(grib_accessor* a)
         ret=grib_get_long(h,"extractDateTimeSecondEnd",&secondEnd);
         if (ret) secondEnd=0;
         sprintf(end_str,"%04ld/%02ld/%02ld %02ld:%02ld:%02ld",yearEnd,monthEnd,dayEnd,hourEnd,minuteEnd,secondEnd);
-        grib_datetime_to_julian(yearEnd,monthEnd,dayEnd,hourEnd,minuteEnd,secondEnd, &julianEnd);
-        /* TODO: if error occurred return GRIB_INTERNAL_ERROR */
+        julianEnd = date_to_julian(yearEnd,monthEnd,dayEnd,hourEnd,minuteEnd,secondEnd);
+        if (julianEnd == -1) {
+            grib_context_log(c,GRIB_LOG_ERROR,"Invalid end date/time: %s", end_str);
+            return GRIB_INTERNAL_ERROR;
+        }
 
         if (julianEnd <= julianStart) {
             grib_context_log(c,GRIB_LOG_ERROR,"Wrong definition of time interval: end (%s) is not after start (%s)",end_str,start_str);
@@ -320,9 +344,12 @@ static int select_datetime(grib_accessor* a)
         }
 
         for (i=0;i<numberOfSubsets;i++) {
-            /*sprintf(datetime_str,"%04ld/%02ld/%02ld %02ld:%02ld:%02ld",year[i],month[i],day[i],hour[i],minute[i],(long)round(second[i]));*/
-            grib_datetime_to_julian(year[i],month[i],day[i],hour[i],minute[i],(long)round(second[i]), &julianDT);
-            /* TODO: if error occurred return GRIB_INTERNAL_ERROR */
+            sprintf( datetime_str, "%04ld/%02ld/%02ld %02ld:%02ld:%02ld",year[i],month[i],day[i],hour[i],minute[i], (long)round(second[i]) );
+            julianDT = date_to_julian( year[i],month[i],day[i],hour[i],minute[i],(long)round(second[i]) );
+            if (julianDT == -1) {
+                grib_context_log(c,GRIB_LOG_ERROR,"Invalid date/time: %s", datetime_str);
+                return GRIB_INTERNAL_ERROR;
+            }
 
             if (julianDT>=julianStart && julianEnd>=julianDT) {
                 grib_iarray_push(subsets,i+1);
