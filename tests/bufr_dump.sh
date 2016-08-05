@@ -24,7 +24,6 @@ fJsonTmp=${label}".json.tmp"
 #==============================================
 # Testing bufr_dump -O
 #==============================================
-
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 REDIRECT=/dev/null
 
@@ -32,6 +31,22 @@ for file in ${bufr_files}
 do
   ${tools_dir}bufr_dump -O ${data_dir}/bufr/$file >/dev/null
 done
+
+#==============================================
+# Testing output when ECCODES_DEBUG is enabled
+#==============================================
+file="aaen_55.bufr"
+export ECCODES_DEBUG=1
+
+# By default debug output goes to stderr
+${tools_dir}bufr_dump -O ${data_dir}/bufr/$file 2>&1 | grep -q "BUFR data .*ing"
+
+# Redirect it to stdout
+export ECCODES_LOG_STREAM=stdout
+${tools_dir}bufr_dump -O ${data_dir}/bufr/$file | grep -q "BUFR data .*ing"
+
+unset ECCODES_DEBUG
+unset ECCODES_LOG_STREAM
 
 #==============================================
 # Testing a malformed bufr file (see ECC-110)

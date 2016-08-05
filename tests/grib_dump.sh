@@ -68,6 +68,6 @@ v.grib2
 
 for file in $files; do
    if [ -f ${data_dir}/$file ]; then
-      ${tools_dir}grib_dump -Da ${data_dir}/$file 2> $REDIRECT > $REDIRECT
+      ${tools_dir}grib_dump -O ${data_dir}/$file 2> $REDIRECT > $REDIRECT
    fi
 done

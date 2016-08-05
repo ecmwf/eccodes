@@ -102,7 +102,8 @@ list( APPEND tests2
     tigge_conversions
     read_any
     padding
-    debug
+    grib_dump
+    grib_dump_debug
     grib_util_set_spec
     local_MeteoFrance
     neg_fctime
