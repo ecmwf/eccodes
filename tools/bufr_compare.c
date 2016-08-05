@@ -235,11 +235,11 @@ int grib_tool_init(grib_runtime_options* options)
     else headerMode=0;
 
     if (grib_options_on("H") && grib_options_on("c:")) {
-        printf("Error: -H and -c options are incompatible. Choose one of the two please.\n");
+        fprintf(stderr,"Error: -H and -c options are incompatible. Choose one of the two please.\n");
         exit(1);
     }
     if (grib_options_on("a") && !grib_options_on("c:")) {
-        printf("Error: -a option requires -c option. Please define a list of keys with the -c option.\n");
+        fprintf(stderr,"Error: -a option requires -c option. Please define a list of keys with the -c option.\n");
         exit(1);
     }
 
@@ -265,8 +265,8 @@ int grib_tool_init(grib_runtime_options* options)
         options->idx=grib_fieldset_new_from_files(context,filename,
                 nfiles,0,0,0,orderby,&ret);
         if (ret) {
-            printf("unable to create index for input file %s (%s)",
-                    options->infile_extra->name,grib_get_error_message(ret));
+            fprintf(stderr,"unable to create index for input file %s (%s)",
+                    options->infile_extra->name, grib_get_error_message(ret));
             exit(ret);
         }
     } else {
@@ -597,22 +597,18 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
         return err;
     }
 
-    /*
-  if(type1 != type2)
-  {
-    printInfo(handle1);
-    printf("Warning, [%s] has different types: 1st field: [%s], 2nd field: [%s]\n",
-        name,grib_get_type_name(type1),grib_get_type_name(type2));
-    return GRIB_TYPE_MISMATCH; 
-  }
-     */
+    /* if(type1 != type2) {
+         printInfo(handle1);
+         printf("Warning, [%s] has different types: 1st field: [%s], 2nd field: [%s]\n",
+           name,grib_get_type_name(type1),grib_get_type_name(type2));
+         return GRIB_TYPE_MISMATCH;
+    } */
 
     if(type1 == GRIB_TYPE_LABEL)
         return err;
 
     if(type1 == GRIB_TYPE_SECTION)
         return err;
-
 
     if((err = grib_get_size(handle1,name,&len1)) != GRIB_SUCCESS)
     {
@@ -638,15 +634,12 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
         return err;
     }
 
-    /*
-  if(len1 != len2 && type1 != GRIB_TYPE_STRING)
-  {
-    printInfo(handle1);
-    printf("[%s] has different size: 1st field: %ld, 2nd field: %ld\n",name,(long)len1,(long)len2);
-    save_error(c,name);
-    return GRIB_COUNT_MISMATCH;
-  }
-     */
+    /* if(len1 != len2 && type1 != GRIB_TYPE_STRING) {
+          printInfo(handle1);
+          printf("[%s] has different size: 1st field: %ld, 2nd field: %ld\n",name,(long)len1,(long)len2);
+          save_error(c,name);
+          return GRIB_COUNT_MISMATCH;
+        } */
 
     if (options->mode != MODE_BUFR) {
         /* TODO: Ignore missing values for keys in BUFR. Not yet implemented */
@@ -984,10 +977,10 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
     }
 
     return GRIB_SUCCESS;
-
 }
 
-static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options, int *err) {
+static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options, int *err)
+{
     int ret=0;
     const char* name=NULL;
     grib_keys_iterator* iter  = NULL;
@@ -996,7 +989,7 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
     iter=grib_keys_iterator_new(handle1,0,NULL);
 
     if (!iter) {
-        printf("ERROR: unable to get iterator\n");
+        grib_context_log(handle1->context, GRIB_LOG_ERROR, "unable to create keys iterator");
         exit(1);
     }
 
@@ -1008,7 +1001,7 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
 
         if (blacklisted(name)) continue;
         if (xa==NULL || ( xa->flags & GRIB_ACCESSOR_FLAG_DUMP )==0 ) continue;
-        if(compare_values(options,handle1,handle2,name,GRIB_TYPE_UNDEFINED))  {
+        if (compare_values(options,handle1,handle2,name,GRIB_TYPE_UNDEFINED)) {
             err++;
             write_messages(handle1,handle2);
             ret=1;
@@ -1049,11 +1042,9 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
         h11=grib_handle_new_from_partial_message(handle1->context,(void*)msg1,size1);
         h22=grib_handle_new_from_partial_message(handle1->context,(void*)msg2,size2);
 
-        iter=grib_keys_iterator_new(h11,
-                GRIB_KEYS_ITERATOR_SKIP_COMPUTED,NULL);
-
+        iter=grib_keys_iterator_new(h11, GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
         if (!iter) {
-            printf("ERROR: unable to get iterator\n");
+            grib_context_log(handle1->context, GRIB_LOG_ERROR, "unable to create keys iterator");
             exit(1);
         }
 
@@ -1081,7 +1072,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
             if (options->compare[i].type == GRIB_NAMESPACE) {
                 iter=grib_keys_iterator_new(handle1,0,(char*)options->compare[i].name);
                 if (!iter) {
-                    printf("ERROR: unable to get iterator\n");
+                    grib_context_log(handle1->context, GRIB_LOG_ERROR, "unable to get iterator");
                     exit(1);
                 }
                 while(grib_keys_iterator_next(iter))
@@ -1141,7 +1132,8 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
                 if (options->compare[i].type == GRIB_NAMESPACE) {
                     iter=grib_keys_iterator_new(handle1,0,(char*)options->compare[i].name);
                     if (!iter) {
-                        printf("ERROR: unable to get iterator for %s\n",options->compare[i].name );
+                        grib_context_log(handle1->context, GRIB_LOG_ERROR,
+                                "ERROR: unable to get keys iterator for %s",options->compare[i].name);
                         exit(1);
                     }
                     while(grib_keys_iterator_next(iter))
