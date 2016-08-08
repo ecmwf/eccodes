@@ -32,10 +32,12 @@ transient extractAreaNorthLatitude=1.1;
 transient extractAreaSouthLatitude=1.1;
 transient extractAreaLatitudeRank=1;
 transient extractAreaLongitudeRank=1;
-transient extractAreaNumberOfSubsets=0;
+transient extractedAreaNumberOfSubsets=0;
 
-meta doExtractArea bufr_extract_area_subsets(doExtractSubsets,numberOfSubsets,extractSubsetList,extractAreaWestLongitude,extractAreaEastLongitude,
-                                              extractAreaNorthLatitude,extractAreaSouthLatitude,extractAreaLongitudeRank,extractAreaLatitudeRank,extractAreaNumberOfSubsets)=0;
+meta doExtractArea bufr_extract_area_subsets(
+    doExtractSubsets,numberOfSubsets,extractSubsetList,extractAreaWestLongitude,extractAreaEastLongitude,
+    extractAreaNorthLatitude,extractAreaSouthLatitude,extractAreaLongitudeRank,extractAreaLatitudeRank,
+    extractedAreaNumberOfSubsets)=0;
 
 transient extractDateTimeYearStart=2016;
 transient extractDateTimeMonthStart=1;
@@ -57,7 +59,7 @@ transient extractDateTimeDayRank=1;
 transient extractDateTimeHourRank=1;
 transient extractDateTimeMinuteRank=1;
 transient extractDateTimeSecondRank=1;
-transient extractDateTimeNumberOfSubsets=0;
+transient extractedDateTimeNumberOfSubsets=0;
 
 meta doExtractDateTime bufr_extract_datetime_subsets(doExtractSubsets,numberOfSubsets,extractSubsetList);
 

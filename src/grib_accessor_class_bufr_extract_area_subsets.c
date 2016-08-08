@@ -26,7 +26,7 @@
    MEMBERS    = const char* extractAreaSouthLatitude
    MEMBERS    = const char* extractAreaLongitudeRank
    MEMBERS    = const char* extractAreaLatitudeRank
-   MEMBERS    = const char* extractAreaNumberOfSubsets
+   MEMBERS    = const char* extractedAreaNumberOfSubsets
    END_CLASS_DEF
 
  */
@@ -59,7 +59,7 @@ typedef struct grib_accessor_bufr_extract_area_subsets {
 	const char* extractAreaSouthLatitude;
 	const char* extractAreaLongitudeRank;
 	const char* extractAreaLatitudeRank;
-	const char* extractAreaNumberOfSubsets;
+	const char* extractedAreaNumberOfSubsets;
 } grib_accessor_bufr_extract_area_subsets;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -162,7 +162,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
     self->extractAreaSouthLatitude = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
     self->extractAreaLongitudeRank = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
     self->extractAreaLatitudeRank = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-    self->extractAreaNumberOfSubsets = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    self->extractedAreaNumberOfSubsets = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
 
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }
@@ -238,7 +238,7 @@ static int select_area(grib_accessor* a) {
     }
 
     nsubsets=grib_iarray_used_size(subsets);
-    ret=grib_set_long(h,self->extractAreaNumberOfSubsets,nsubsets);
+    ret=grib_set_long(h,self->extractedAreaNumberOfSubsets,nsubsets);
     if (ret) return ret;
 
     if (nsubsets!=0) {

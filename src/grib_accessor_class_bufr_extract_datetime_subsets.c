@@ -358,7 +358,7 @@ static int select_datetime(grib_accessor* a)
         }
 
         nsubsets=grib_iarray_used_size(subsets);
-        ret=grib_set_long(h,"extractDateTimeNumberOfSubsets",nsubsets);
+        ret=grib_set_long(h,"extractedDateTimeNumberOfSubsets",nsubsets);
         if (ret) return ret;
 
         if (nsubsets!=0) {
