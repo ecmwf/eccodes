@@ -40,7 +40,6 @@ python/gribapi_swig.pyc
 # Generated stuff from builds
 src/.libs/
 tools/.libs/
-tools/all_keys
 tools/big2gribex
 tools/gaussian
 tools/gg_sub_area_check
@@ -51,7 +50,6 @@ tools/grib_count
 tools/bufr_count
 tools/codes_count
 tools/codes_bufr_filter
-tools/grib_diff
 tools/grib_dump
 tools/grib_filter
 tools/grib_get
