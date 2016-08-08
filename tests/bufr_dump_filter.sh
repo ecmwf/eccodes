@@ -44,6 +44,17 @@ sb19_206.bufr sbu8_206.bufr ship_11.bufr ship_12.bufr ship_13.bufr ship_14.bufr 
 smiu_49.bufr smos_203.bufr sn4k_165.bufr soil_7.bufr ssbt_127.bufr stuk_7.bufr syno_1.bufr syno_2.bufr syno_3.bufr syno_4.bufr
 synop_multi_subset.bufr temp_101.bufr temp_102.bufr temp_106.bufr tmr7_129.bufr tros_31.bufr uegabe.bufr wavb_134.bufr"
 
+exclude="
+airc_142.bufr  b004_145.bufr  go15_87.bufr   monw_87.bufr            ship_11.bufr  syno_1.bufr       
+airc_144.bufr  b005_87.bufr   goee_87.bufr   ocea_131.bufr           ship_12.bufr  syno_2.bufr       
+amda_144.bufr  b005_89.bufr   goes_87.bufr   ocea_132.bufr           ship_13.bufr  syno_3.bufr       
+amv2_87.bufr   cmwi_87.bufr   goga_89.bufr   ocea_133.bufr           ship_14.bufr  syno_4.bufr       
+amv3_87.bufr   cmwn_87.bufr   jaso_214.bufr  ocea_21.bufr            ship_19.bufr  temp_101.bufr     
+avhm_87.bufr   emsg_189.bufr  meta_140.bufr  pilo_91.bufr            ship_9.bufr   temp_102.bufr     
+avhn_87.bufr   emsg_87.bufr   modi_87.bufr   profiler_european.bufr  soil_7.bufr   temp_106.bufr     
+b002_96.bufr   euwv_87.bufr   modw_87.bufr   rado_250.bufr           stuk_7.bufr   uegabe.bufr
+"
+
 for f in $files
 do
   echo "Test: bufr_dump -Efilter " >> $fLog
@@ -53,20 +64,20 @@ do
   ${tools_dir}bufr_filter -o $fBufrTmp $fRules $f
   ${tools_dir}bufr_compare $fBufrTmp $f
 
-  if [ "$f" = "airc_142.bufr" ]; then continue; fi
-  if [ "$f" = "airc_144.bufr" ]; then continue; fi
-  if [ "$f" = "amda_144.bufr" ]; then continue; fi
-  if [ "$f" = "amv2_87.bufr" ]; then continue; fi
-  if [ "$f" = "amv3_87.bufr" ]; then continue; fi
-  if [ "$f" = "avhm_87.bufr" ]; then continue; fi
+  # TODO: Some need to be excluded for now
+  compare_dumps=1
+  for ex in $exclude; do
+    if [ "$f" = "$ex" ]; then compare_dumps=0; fi
+  done
 
-
-  TEMP_JSON1=${label}.$f.json
-  TEMP_JSON2=${label}.$fBufrTmp.json
-  ${tools_dir}bufr_dump $f        > $TEMP_JSON1
-  ${tools_dir}bufr_dump $fBufrTmp > $TEMP_JSON2
-  #diff $TEMP_JSON1 $TEMP_JSON2
-  rm -f $TEMP_JSON1 $TEMP_JSON2
+  if [ $compare_dumps -eq 1 ]; then
+    TEMP_JSON1=${label}.$f.json
+    TEMP_JSON2=${label}.$fBufrTmp.json
+    ${tools_dir}bufr_dump $f        > $TEMP_JSON1
+    ${tools_dir}bufr_dump $fBufrTmp > $TEMP_JSON2
+    diff $TEMP_JSON1 $TEMP_JSON2
+    rm -f $TEMP_JSON1 $TEMP_JSON2
+  fi
 
   rm -f $fBufrTmp $fRules
 done
