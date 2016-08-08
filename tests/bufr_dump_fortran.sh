@@ -18,6 +18,8 @@ fLog=${label}".log"
 rm -f $fLog
 
 tempBufr=outfile.bufr
+tempDir=${label}.dir
+mkdir -p $tempDir
 
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
@@ -47,6 +49,8 @@ if command -v pkg-config >/dev/null 2>&1; then
     fi
   fi
 fi
+
+cd $tempDir
 
 for file in ${bufr_files}
 do
