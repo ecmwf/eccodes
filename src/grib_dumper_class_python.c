@@ -785,11 +785,11 @@ static void header(grib_dumper* d, grib_handle* h)
     if (localSectionPresent && bufrHeaderCentre==98 ) {
         grib_get_long(h,"isSatellite",&isSatellite);
         if (isSatellite)
-            sprintf(sampleName,"BUFR%ld_local_satellite.bufr",edition);
+            sprintf(sampleName,"BUFR%ld_local_satellite",edition);
         else
-            sprintf(sampleName,"BUFR%ld_local.bufr",edition);
+            sprintf(sampleName,"BUFR%ld_local",edition);
     } else {
-        sprintf(sampleName,"BUFR%ld.bufr",edition);
+        sprintf(sampleName,"BUFR%ld",edition);
     }
 
     if (d->count<2) {
