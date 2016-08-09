@@ -450,8 +450,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
             morein2++;
 
         grib_handle_delete(global_handle);
-
-
     }
 
     grib_handle_delete(h);
