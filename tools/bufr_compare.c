@@ -1011,7 +1011,27 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
 
     return GRIB_SUCCESS;
 }
-/*#define ECC302 1*/
+
+void reset_all_keys()
+{
+    /* Clear the list of all keys from any previous handle */
+    grib_string_list* next=allkeys;
+    grib_string_list* cur=allkeys;
+    grib_context* c = grib_context_get_default();
+    while(next) {
+        cur=next;
+        next=next->next;
+        grib_context_free(c,cur->value);
+        grib_context_free(c,cur);
+    }
+    /* Allocate a new one */
+    allkeys=grib_context_malloc_clear(c, sizeof(grib_string_list));
+    if (!allkeys) {
+        fprintf(stderr, "Failed to allocate memory for keys");
+        exit(1);
+    }
+}
+
 static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options, int *err)
 {
     int ret=0;
@@ -1020,34 +1040,33 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
     grib_set_long(handle1,"unpack",1);
     grib_set_long(handle2,"unpack",1);
     iter=grib_keys_iterator_new(handle1,0,NULL);
-    allkeys=grib_context_malloc_clear(handle1->context,sizeof(grib_string_list));
 
     if (!iter) {
         grib_context_log(handle1->context, GRIB_LOG_ERROR, "unable to create keys iterator");
         exit(1);
     }
 
+    reset_all_keys();
+
     while(grib_keys_iterator_next(iter))
     {
-        int rank = 0;
-        int i = 0;
+        int rank = 0, i = 0;
         int dofree = 0;
-        char fullname[512] = {0,};
+        char fullname[1024] = {0,};
         char* prefix = NULL;
 
         grib_accessor* xa=grib_keys_iterator_get_accessor(iter);
         name=grib_keys_iterator_get_name(iter);
-        /* printf("----- comparing %s\n",name); */
-
         if (blacklisted(name)) continue;
         if (xa==NULL || ( xa->flags & GRIB_ACCESSOR_FLAG_DUMP )==0 ) continue;
+        /* Compare the key itself */
         if (compare_values(options,handle1,handle2,name,GRIB_TYPE_UNDEFINED)) {
             err++;
             write_messages(handle1,handle2);
             ret=1;
         }
-        /* attributes */
-#ifdef ECC302
+
+        /* Now compare the key attributes (if any) */
         rank = get_key_rank(handle1, allkeys, xa->name);
         if (rank != 0) {
             sprintf(fullname, "#%d#%s", rank, xa->name);
@@ -1058,10 +1077,9 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
             sprintf(fullname, "%s", xa->name);
             prefix = (char*)xa->name;
         }
-        /* not a leaf */
         i=0;
         while (i < MAX_ACCESSOR_ATTRIBUTES && xa->attributes[i]) {
-            int isLeaf = 0;
+            /*int isLeaf = 0;*/
             long native_type = 0;
             grib_accessor* aa = NULL;
             if ( (xa->attributes[i]->flags & GRIB_ACCESSOR_FLAG_DUMP)== 0 ) {
@@ -1069,15 +1087,10 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
                 continue;
             }
             aa = xa->attributes[i]; /*dump_long_attribute*/
-            native_type = grib_accessor_get_native_type(aa);
-            /* read only check?? */
+            native_type = grib_accessor_get_native_type(aa);     /* read only check?? */
             sprintf(fullname, "%s->%s", prefix, aa->name);
-            isLeaf=aa->attributes[0]==NULL ? 1 : 0;
-            if (native_type == GRIB_TYPE_LONG ||
-                    native_type == GRIB_TYPE_DOUBLE)
-            {
-                /*printf("++ i=%d fullname='%s' (leaf=%d)\n",i,fullname,isLeaf);*/
-                /*printf("  Comparing %s\n", fullname);*/
+            /*isLeaf=aa->attributes[0]==NULL ? 1 : 0;*/
+            if (native_type == GRIB_TYPE_LONG || native_type == GRIB_TYPE_DOUBLE) {
                 if (compare_values(options,handle1,handle2,fullname,GRIB_TYPE_UNDEFINED)) {
                     err++;
                     write_messages(handle1,handle2);
@@ -1087,7 +1100,6 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
             ++i;
         }
         if (dofree) grib_context_free(handle1->context, prefix);
-#endif
     }
 
     grib_keys_iterator_delete(iter);
