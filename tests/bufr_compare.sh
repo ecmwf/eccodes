@@ -74,17 +74,17 @@ ${tools_dir}/bufr_compare -b dataCategory $f ${fBufrTmp}>> $fLog
 # Test: comparing with the -r switch
 #----------------------------------------------------
 #Create a bufr file with various message types
-cat syno_multi.bufr temp_101.bufr > $fBufrInput1 
-cat temp_101.bufr syno_multi.bufr > $fBufrInput2
+#cat syno_multi.bufr temp_101.bufr > $fBufrInput1 
+#cat temp_101.bufr syno_multi.bufr > $fBufrInput2
 
-set +e
-${tools_dir}/bufr_compare ${fBufrInput1} ${fBufrInput2} >> $fLog
-if [ $? -eq 0 ]; then
-   echo "bufr_compare should have failed if the message order in the files is different" >&2
-   exit 1
-fi
-set -e
-${tools_dir}/bufr_compare -r ${fBufrInput1} ${fBufrInput2}>> $fLog
+#set +e
+#${tools_dir}/bufr_compare ${fBufrInput1} ${fBufrInput2} >> $fLog
+#if [ $? -eq 0 ]; then
+#   echo "bufr_compare should have failed if the message order in the files is different" >&2
+#   exit 1
+#fi
+#set -e
+#${tools_dir}/bufr_compare -r ${fBufrInput1} ${fBufrInput2}>> $fLog
 
 #----------------------------------------------------
 # Change subCentre and compare
@@ -105,7 +105,7 @@ mkdir -p $temp_dir
 infile=aaen_55.bufr
 cp $infile $temp_dir
 ${tools_dir}bufr_compare $infile $temp_dir >/dev/null
-rm -rf $temp_dir
+rm -fr $temp_dir
 
 #----------------------------------------------------
 # Compare attributes
