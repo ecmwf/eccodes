@@ -183,30 +183,30 @@ static double relative_error(double a,double b,double err)
 }
 
 grib_option grib_options[]={
-        /*  {id, args, help}, on, command_line, value*/
-        {"r",0,"Compare files in which the messages are not in the same order. This option is time expensive.\n",0,1,0},
-        {"b:",0,0,0,1,0},
-        {"d",0,"Write different messages on files\n",0,1,0},
-        {"T:",0,0,1,0,"B"},
-        {"c:",0,0,0,1,0},
-        {"S:","start","First field to be processed.\n",0,1,0},
-        {"E:","end","Last field to be processed.\n",0,1,0},
-        {"a",0,"-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n"
+    /*  {id, args, help}, on, command_line, value*/
+    /*{"r",0,"Compare files in which the messages are not in the same order. This option is time expensive.\n",0,1,0},*/
+    {"b:",0,0,0,1,0},
+    {"d",0,"Write different messages on files\n",0,1,0},
+    {"T:",0,0,1,0,"B"},
+    {"c:",0,0,0,1,0},
+    {"S:","start","First field to be processed.\n",0,1,0},
+    {"E:","end","Last field to be processed.\n",0,1,0},
+    {"a",0,"-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n"
                 ,0,1,0},
-        {"H",0,"Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},
-        {"R:",0,0,0,1,0},
-        {"A:",0,0,0,1,0},
-        {"P",0,"Compare data values using the packing error as tolerance.\n",0,1,0},
-        {"t:","factor","Compare data values using factor multiplied by the tolerance specified in options -P -R -A.\n",0,1,0},
-        {"w:",0,0,0,1,0},
-        {"f",0,0,0,1,0},
-        {"F",0,0,1,0,0},
-        {"q",0,0,1,0,0},
-        {"M",0,0,1,0,0},
-        {"I",0,0,1,0,0},
-        {"V",0,0,0,1,0},
-        {"7",0,0,0,1,0},
-        {"v",0,0,0,1,0}
+    {"H",0,"Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},
+    {"R:",0,0,0,1,0},
+    {"A:",0,0,0,1,0},
+    {"P",0,"Compare data values using the packing error as tolerance.\n",0,1,0},
+    {"t:","factor","Compare data values using factor multiplied by the tolerance specified in options -P -R -A.\n",0,1,0},
+    {"w:",0,0,0,1,0},
+    {"f",0,0,0,1,0},
+    {"F",0,0,1,0,0},
+    {"q",0,0,1,0,0},
+    {"M",0,0,1,0,0},
+    {"I",0,0,1,0,0},
+    {"V",0,0,0,1,0},
+    {"7",0,0,0,1,0},
+    {"v",0,0,0,1,0}
 };
 
 grib_handle* global_handle=NULL;
