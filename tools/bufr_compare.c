@@ -1083,10 +1083,7 @@ static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_ru
 {
     int ret = 0;
     grib_context* c = handle1->context;
-    char* fullname = NULL;
-    /*char fullname[1024] = {0,};*/
-
-    fullname = grib_context_malloc_clear( c, sizeof(char)*(strlen(a->name)+strlen(prefix)+5) );
+    char* fullname = grib_context_malloc_clear( c, sizeof(char)*(strlen(a->name)+strlen(prefix)+5) );
     sprintf(fullname, "%s->%s", prefix, a->name);
     if (compare_values(options, handle1, handle2, fullname, GRIB_TYPE_UNDEFINED)) {
         err++;
@@ -1119,7 +1116,7 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
         exit(1);
     }
 
-    release_keys_list();
+    release_keys_list(); /* The keys list is used to determine the rank */
     new_keys_list();
 
     while(grib_keys_iterator_next(iter))
