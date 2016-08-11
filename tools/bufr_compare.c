@@ -44,7 +44,7 @@ compare_double_proc compare_double;
 double global_tolerance=0;
 int packingCompare=0;
 grib_string_list* blacklist=0;
-grib_string_list* allkeys = NULL;
+grib_string_list* keys_list = NULL; /* Used to determine rank of key */
 int compareAbsolute=1;
 
 static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options);
@@ -63,6 +63,32 @@ int verbose=0;
 int tolerance_factor=1;
 static int write_error=0;
 
+/* Create the list of keys (global variable keys_list) */
+static void new_keys_list()
+{
+    grib_context* c = grib_context_get_default();
+    keys_list=grib_context_malloc_clear(c, sizeof(grib_string_list));
+    if (!keys_list) {
+        fprintf(stderr, "Failed to allocate memory for keys list");
+        exit(1);
+    }
+}
+
+/* Free the keys list (global variable keys_list) */
+static void release_keys_list()
+{
+    grib_string_list* next=keys_list;
+    grib_string_list* cur=keys_list;
+    grib_context* c = grib_context_get_default();
+    while(next) {
+        cur=next;
+        next=next->next;
+        grib_context_free(c,cur->value);
+        grib_context_free(c,cur);
+    }
+}
+
+/* Return the rank of the key using global list of keys */
 static int get_key_rank(grib_handle* h, grib_string_list* keys, const char* key)
 {
     grib_string_list* next=keys;
@@ -87,9 +113,15 @@ static int get_key_rank(grib_handle* h, grib_string_list* keys, const char* key)
     next->count++;
     ret=next->count;
     if (ret==1) {
+        /* If the count is 1 it could mean two things: */
+        /*   This is the first instance of the key and there is another one */
+        /*   This is the first and only instance of the key */
+        /* So we check if there is a second one of this key, */
+        /* If not, then rank is zero i.e. this is the only instance */
         char* s=grib_context_malloc_clear(c,strlen(key)+5);
         sprintf(s,"#2#%s",key);
         if (grib_get_size(h,s,&size)==GRIB_NOT_FOUND) ret=0;
+        grib_context_free(c, s);
     }
 
     return ret;
@@ -505,10 +537,10 @@ void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
 
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
-    grib_error* e=error_summary;
+    grib_error* e = error_summary;
     int err=0;
     grib_context* c=grib_context_get_default();
-    error+=morein1+morein2;
+    error += morein1+morein2;
 
     /*if (grib_options_on("w:")) return 0;*/
 
@@ -544,8 +576,8 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         grib_index_delete(options->index1);
         grib_index_delete(options->index2);
     }
-
-    if (error !=0) exit(1);
+    release_keys_list();
+    if (error != 0) exit(1);
     return 0;
 }
 
@@ -1012,41 +1044,24 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
     return GRIB_SUCCESS;
 }
 
-void reset_all_keys()
-{
-    /* Clear the list of all keys from any previous handle */
-    grib_string_list* next=allkeys;
-    grib_string_list* cur=allkeys;
-    grib_context* c = grib_context_get_default();
-    while(next) {
-        cur=next;
-        next=next->next;
-        grib_context_free(c,cur->value);
-        grib_context_free(c,cur);
-    }
-    /* Allocate a new one */
-    allkeys=grib_context_malloc_clear(c, sizeof(grib_string_list));
-    if (!allkeys) {
-        fprintf(stderr, "Failed to allocate memory for keys");
-        exit(1);
-    }
-}
-
 static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options, int *err)
 {
     int ret=0;
     const char* name=NULL;
     grib_keys_iterator* iter  = NULL;
+    grib_context* context=handle1->context;
+
     grib_set_long(handle1,"unpack",1);
     grib_set_long(handle2,"unpack",1);
     iter=grib_keys_iterator_new(handle1,0,NULL);
 
     if (!iter) {
-        grib_context_log(handle1->context, GRIB_LOG_ERROR, "unable to create keys iterator");
+        grib_context_log(context, GRIB_LOG_ERROR, "unable to create keys iterator");
         exit(1);
     }
 
-    reset_all_keys();
+    release_keys_list();
+    new_keys_list();
 
     while(grib_keys_iterator_next(iter))
     {
@@ -1067,14 +1082,12 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
         }
 
         /* Now compare the key attributes (if any) */
-        rank = get_key_rank(handle1, allkeys, xa->name);
+        rank = get_key_rank(handle1, keys_list, xa->name);
         if (rank != 0) {
-            sprintf(fullname, "#%d#%s", rank, xa->name);
-            prefix=grib_context_malloc_clear(handle1->context,sizeof(char)*(strlen(xa->name)+10));
+            prefix=grib_context_malloc_clear(context,sizeof(char)*(strlen(xa->name)+10));
             dofree = 1;
             sprintf(prefix,"#%d#%s", rank, xa->name);
         } else {
-            sprintf(fullname, "%s", xa->name);
             prefix = (char*)xa->name;
         }
         i=0;
@@ -1086,8 +1099,8 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
                 ++i;
                 continue;
             }
-            aa = xa->attributes[i]; /*dump_long_attribute*/
-            native_type = grib_accessor_get_native_type(aa);     /* read only check?? */
+            aa = xa->attributes[i];
+            native_type = grib_accessor_get_native_type(aa);  /* TODO: read only check? */
             sprintf(fullname, "%s->%s", prefix, aa->name);
             /*isLeaf=aa->attributes[0]==NULL ? 1 : 0;*/
             if (native_type == GRIB_TYPE_LONG || native_type == GRIB_TYPE_DOUBLE) {
@@ -1099,7 +1112,7 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
             }
             ++i;
         }
-        if (dofree) grib_context_free(handle1->context, prefix);
+        if (dofree) grib_context_free(context, prefix);
     }
 
     grib_keys_iterator_delete(iter);
