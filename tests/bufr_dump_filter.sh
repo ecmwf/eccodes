@@ -42,9 +42,9 @@ j2nb_216.bufr kond_209.bufr maer_207.bufr mhen_55.bufr mhsa_55.bufr mhsb_55.bufr
 mloz_206.bufr new.bufr nomi_206.bufr nos1_208.bufr nos2_208.bufr nos3_208.bufr nos4_208.bufr
 nos5_208.bufr nos6_208.bufr nos7_208.bufr nos8_208.bufr pgps_110.bufr rada_250.bufr s4kn_165.bufr
 sb19_206.bufr sbu8_206.bufr smin_49.bufr smis_49.bufr smiu_49.bufr smos_203.bufr sn4k_165.bufr
-ssbt_127.bufr synop_multi_subset.bufr tmr7_129.bufr tros_31.bufr uegabe.bufr wavb_134.bufr"
+ssbt_127.bufr synop_multi_subset.bufr tmr7_129.bufr tros_31.bufr wavb_134.bufr"
 
-exclude="uegabe.bufr"
+exclude=""
 
 for f in $files
 do
@@ -57,9 +57,9 @@ do
 
   # TODO: Some need to be excluded from the JSON compare
   compare_dumps=1
-  for ex in $exclude; do
-    if [ "$f" = "$ex" ]; then compare_dumps=0; fi
-  done
+  #for ex in $exclude; do
+  #  if [ "$f" = "$ex" ]; then compare_dumps=0; fi
+  #done
 
   if [ $compare_dumps -eq 1 ]; then
     TEMP_JSON1=${label}.$f.json
