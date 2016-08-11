@@ -133,9 +133,15 @@ static int get_key_rank(grib_handle* h,grib_string_list* keys, const char* key)
     next->count++;
     ret=next->count;
     if (ret==1) {
+        /* If the count is 1 it could mean two things: */
+        /*   This is the first instance of the key and there is another one */
+        /*   This is the first and only instance of the key */
+        /* So we check if there is a second one of this key, */
+        /* If not, then rank is zero i.e. this is the only instance */
         char* s=grib_context_malloc_clear(c,strlen(key)+5);
         sprintf(s,"#2#%s",key);
         if (grib_get_size(h,s,&size)==GRIB_NOT_FOUND) ret=0;
+        grib_context_free(c, s);
     }
 
     return ret;
