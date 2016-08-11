@@ -45,10 +45,16 @@ double global_tolerance=0;
 int packingCompare=0;
 grib_string_list* blacklist=0;
 grib_string_list* keys_list = NULL; /* Used to determine rank of key */
+int isLeafKey = 0; /* 0 if key is top-level, 1 if key has no children attributes */
 int compareAbsolute=1;
 
 static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options);
 static int compare_values(grib_runtime_options* options, grib_handle* handle1, grib_handle *handle2, const char *name, int type);
+static int compare_attributes(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options,
+        grib_accessor* a, const char* prefix, int* err);
+static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options,
+        grib_accessor* a, const char* prefix, int* err);
+
 int error=0;
 int count=0;
 int lastPrint=0;
@@ -1044,6 +1050,59 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
     return GRIB_SUCCESS;
 }
 
+static int compare_attributes(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options,
+        grib_accessor* a, const char* prefix, int* err)
+{
+    int i=0, ret=0;
+    while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes[i])
+    {
+        /*long native_type = 0;*/
+        grib_accessor* aa = NULL;
+        if ( (a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_DUMP)== 0 ) {
+            ++i; /* next attribute */
+            continue;
+        }
+        aa = a->attributes[i];
+        /*native_type = grib_accessor_get_native_type(aa);   TODO: read only check? */
+
+        isLeafKey = aa->attributes[0]==NULL ? 1 : 0; /* update global variable */
+
+        if (compare_attribute(handle1, handle2, options, aa, prefix, err)) {
+            err++;
+            write_messages(handle1, handle2);
+            ret = 1;
+        }
+
+        ++i; /* next attribute */
+    }
+
+    return ret;
+}
+static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options,
+        grib_accessor* a, const char* prefix, int* err)
+{
+    int ret = 0;
+    grib_context* c = handle1->context;
+    char* fullname = NULL;
+    /*char fullname[1024] = {0,};*/
+
+    fullname = grib_context_malloc_clear( c, sizeof(char)*(strlen(a->name)+strlen(prefix)+5) );
+    sprintf(fullname, "%s->%s", prefix, a->name);
+    if (compare_values(options, handle1, handle2, fullname, GRIB_TYPE_UNDEFINED)) {
+        err++;
+        write_messages(handle1, handle2);
+        ret=1;
+    }
+    /* Recurse if this key has children */
+    if (!isLeafKey) {
+        if (compare_attributes(handle1, handle2, options, a, fullname, err)) {
+            ret=1;
+        }
+    }
+    grib_context_free(c, fullname);
+    return ret;
+}
+
 static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options, int *err)
 {
     int ret=0;
@@ -1065,23 +1124,17 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
 
     while(grib_keys_iterator_next(iter))
     {
-        int rank = 0, i = 0;
+        int rank = 0;
         int dofree = 0;
-        char fullname[1024] = {0,};
         char* prefix = NULL;
-
         grib_accessor* xa=grib_keys_iterator_get_accessor(iter);
+
+        isLeafKey = 0; /* clear global variable for each key */
         name=grib_keys_iterator_get_name(iter);
         if (blacklisted(name)) continue;
         if (xa==NULL || ( xa->flags & GRIB_ACCESSOR_FLAG_DUMP )==0 ) continue;
-        /* Compare the key itself */
-        if (compare_values(options,handle1,handle2,name,GRIB_TYPE_UNDEFINED)) {
-            err++;
-            write_messages(handle1,handle2);
-            ret=1;
-        }
 
-        /* Now compare the key attributes (if any) */
+        /* Get full name of key, e.g. '#2#windSpeed' or 'blockNumber' */
         rank = get_key_rank(handle1, keys_list, xa->name);
         if (rank != 0) {
             prefix=grib_context_malloc_clear(context,sizeof(char)*(strlen(xa->name)+10));
@@ -1090,27 +1143,18 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
         } else {
             prefix = (char*)xa->name;
         }
-        i=0;
-        while (i < MAX_ACCESSOR_ATTRIBUTES && xa->attributes[i]) {
-            /*int isLeaf = 0;*/
-            long native_type = 0;
-            grib_accessor* aa = NULL;
-            if ( (xa->attributes[i]->flags & GRIB_ACCESSOR_FLAG_DUMP)== 0 ) {
-                ++i;
-                continue;
-            }
-            aa = xa->attributes[i];
-            native_type = grib_accessor_get_native_type(aa);  /* TODO: read only check? */
-            sprintf(fullname, "%s->%s", prefix, aa->name);
-            /*isLeaf=aa->attributes[0]==NULL ? 1 : 0;*/
-            if (native_type == GRIB_TYPE_LONG || native_type == GRIB_TYPE_DOUBLE) {
-                if (compare_values(options,handle1,handle2,fullname,GRIB_TYPE_UNDEFINED)) {
-                    err++;
-                    write_messages(handle1,handle2);
-                    ret=1;
-                }
-            }
-            ++i;
+
+        /* Compare the key itself */
+        if (compare_values(options, handle1, handle2, prefix, GRIB_TYPE_UNDEFINED)) {
+            err++;
+            write_messages(handle1, handle2);
+            ret=1;
+        }
+        /* Now compare the key attributes (if any) */
+        if (compare_attributes(handle1, handle2, options, xa, prefix, err)) {
+            err++;
+            write_messages(handle1, handle2);
+            ret=1;
         }
         if (dofree) grib_context_free(context, prefix);
     }
