@@ -373,7 +373,8 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
     switch (ret) {
     case GRIB_CONSTANT_FIELD:
         grib_buffer_replace(a, NULL, 0,1,1);
-        return GRIB_SUCCESS;
+        err = grib_set_long_internal(grib_handle_of_accessor(a), self->number_of_values, *len);
+        return err;
         break;
     case GRIB_SUCCESS:
         break;
@@ -536,21 +537,19 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
 
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR,
-            "JPEG support not enabled.");
+    grib_context_log(a->context, GRIB_LOG_ERROR, "JPEG support not enabled.");
     return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR,
-            "JPEG support not enabled.");
+    grib_context_log(a->context, GRIB_LOG_ERROR, "JPEG support not enabled.");
     return GRIB_NOT_IMPLEMENTED;
 }
 
 #endif
 
-static int  unpack_double_element(grib_accessor* a, size_t idx, double* val)
+static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 {
     size_t size;
     double* values;
