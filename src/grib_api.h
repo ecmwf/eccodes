@@ -169,12 +169,12 @@ struct grib_values {
 } ;
 
 
-/*! Grib handle,   structure giving access to parsed grib values by keys
+/*! Grib handle,   structure giving access to parsed message values by keys
     \ingroup grib_handle
 */
 typedef struct grib_handle    grib_handle;
 
-/*! Grib multi field handle,   structure used to build multi fields messages.
+/*! Grib multi field handle,   structure used to build multi field GRIB messages.
     \ingroup grib_handle
  */
 typedef struct grib_multi_handle    grib_multi_handle;
@@ -184,7 +184,7 @@ typedef struct grib_multi_handle    grib_multi_handle;
 */
 typedef struct grib_context   grib_context;
 
-/*! Grib iterator, structure supporting a geographic iteration of values on a grib message.
+/*! Grib iterator, structure supporting a geographic iteration of values on a GRIB message.
     \ingroup grib_iterator
 */
 typedef struct grib_iterator  grib_iterator;
@@ -544,7 +544,7 @@ int grib_multi_handle_write(grib_multi_handle* mh,FILE* f);
 /**
 * getting the message attached to a handle
 *
-* @param h              : the grib handle to which the buffer should be gathered
+* @param h              : the handle to which the buffer should be gathered
 * @param message        : the pointer to be set to the handle's data
 * @param message_length : On exit, the message size in number of bytes
 * @return            0 if OK, integer value on error
@@ -555,7 +555,7 @@ int grib_get_message(grib_handle* h ,const void** message, size_t *message_lengt
 /**
 * getting a copy of the message attached to a handle
 *
-* @param h              : the grib handle to which the buffer should be returned
+* @param h              : the handle to which the buffer should be returned
 * @param message        : the pointer to the data buffer to be filled
 * @param message_length : On entry, the size in number of bytes of the allocated empty message.
 *                         On exit, the actual message length in number of bytes
@@ -682,7 +682,7 @@ int                 grib_nearest_delete   (grib_nearest *nearest);
 * Find the nearest point of a set of points whose latitudes and longitudes
 * are given in the inlats, inlons arrays respectively.
 * If the flag is_lsm is 1 the nearest land point is returned and the
-* grib passed as handle (h) is considered a land sea mask.
+* GRIB passed as handle (h) is considered a land sea mask.
 * The land nearest point is the nearest point with land sea mask value>=0.5.
 * If no nearest land points are found the nearest value is returned.
 * If the flag is_lsm is 0 the nearest point is returned.
@@ -1177,7 +1177,7 @@ void    grib_context_set_logging_proc(grib_context* c, grib_log_proc logp);
 void grib_multi_support_on(grib_context* c);
 
 /**
-*  Turn off support for multiple fields in single grib messages
+*  Turn off support for multiple fields in single GRIB messages
 *
 * @param c            : the context to be modified
 */
@@ -1225,10 +1225,10 @@ attributes or by the namespace they belong to.
 /*! Create a new iterator from a valid and initialised handle.
 *  @param h             : the handle whose keys you want to iterate
 *  @param filter_flags  : flags to filter out some of the keys through their attributes
-*  @param name_space     : if not null the iteration is carried out only on
+*  @param name_space    : if not null the iteration is carried out only on
 *                         keys belonging to the namespace passed. (NULL for all the keys)
 *  @return              keys iterator ready to iterate through keys according to filter_flags
-*                         and namespace
+*                       and namespace
 */
 grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space);
 
