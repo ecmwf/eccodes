@@ -2283,7 +2283,8 @@ subroutine codes_grib_multi_append ( ingribid, startsection, multigribid  , stat
     call grib_multi_append ( ingribid, startsection, multigribid  , status)
 end subroutine codes_grib_multi_append 
 
-  !> Find the nearest point of a given latitude/longitude point.
+  !> Find the nearest point of a set of points whose latitudes and longitudes
+  !> are given in the inlats, inlons arrays respectively.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
@@ -2354,7 +2355,7 @@ subroutine codes_grib_find_nearest_single(gribid,is_lsm,  &
 end subroutine codes_grib_find_nearest_single
 
 
-  !> Find the nearest point of a given latitude/longitude point.
+  !> Find the 4 nearest points of a latitude longitude point.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
