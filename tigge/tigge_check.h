@@ -526,14 +526,15 @@ parameter parameters[] = {
    },
 /* 
    S2S/CAWCR: specific_humidity_pl minimum value -0.0108485 is not in [-0.01,0.001]
-   s2s/ammc: warning: s2s.q_20150913_4.grib2, field 71 [specific_humidity_pl]: specific_humidity_pl maximum value 0.0511279 is not in [5e-05,0.05]
+   s2s/ammc: warning: s2s.q_20160623_4.grib2, field 288 [specific_humidity_pl]: specific_humidity_pl minimum value -0.0209212 is not in [-0.02,0.001]
+   s2s/ammc: warning: s2s.q_20160717_21.grib2, field 99 [specific_humidity_pl]: specific_humidity_pl maximum value 0.0820876 is not in [5e-05,0.08]
 */
    {
       "specific_humidity_pl",
-      -2e-2,
+      -1e-1,
       1.e-3,
       5e-5,
-      8e-2,
+      1e-1,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"discipline", GRIB_TYPE_LONG, 0},
@@ -690,12 +691,12 @@ mogreps in the past -> min <180, 290>
 s2s/kwbc/enfh: warning: s2s.z_s2s_c_rhmc_20150819000000_glob_prod_0006_000.sl.grib2, field 2 [surface_air_maximum_temperature_sfc]: surface_air_maximum_temperature_sfc minimum value 179.427 is not in [190,240]
 s2s/kwbc/enfh: warning: s2s.z_tigge_c_kwbc_20071002000000_ncep_prod_pf_sl_0006_001_0000_mx2t6.grib2, field 146 [surface_air_maximum_temperature_sfc]: surface_air_maximum_temperature_sfc minimum value 240.208 is not in [175,240]
 s2s/isac/enfo: warning: z_s2s_c_isac_201510190000_glob_prod_pf_0744_05.sl.grib2, field 513 [surface_air_maximum_temperature_sfc]: surface_air_maximum_temperature_sfc minimum value 245.143 is not in [175,245]
-s2s/lfpw/enfo: s2s.lfpw_mx2t6_2.grib2, field 3 [surface_air_maximum_temperature_sfc]: surface_air_maximum_temperature_sfc minimum value 167.434 is not in [175,250]
+s2s/lfpw/enfo: warning: s2s.lfpw_mx2t6_2.grib2, field 86 [surface_air_maximum_temperature_sfc]: surface_air_maximum_temperature_sfc minimum value 250.116 is not in [160,250]
 */
    {
       "surface_air_maximum_temperature_sfc",
       160,
-      250,
+      255,
       300,
       380,
       {
@@ -716,13 +717,15 @@ warning: s2s.z_tigge_c_kwbc_20090817000000_ncep_prod_pf_sl_0006_002_0000_mn2t6.g
 s2s/kwbc/enfh: warning: s2s.z_s2s_c_rhmc_20150819000000_glob_prod_0006_000.sl.grib2, field 1 [surface_air_minimum_temperature_sfc]: surface_air_minimum_temperature_sfc minimum value 179.642 is not in [183,240]
 s2s/ammc/enfo: warning: s2s.mn2t6_20150917_24.grib2, field 1 [surface_air_minimum_temperature_sfc]: surface_air_minimum_temperature_sfc minimum value 167.556 is not in [175,240]
 s2s/isac/enfo: warning: z_s2s_c_isac_201510190000_glob_prod_pf_0744_24.sl.grib2, field 671 [surface_air_minimum_temperature_sfc]: surface_air_minimum_temperature_sfc minimum value 241.292 is not in [160,240]
+s2s/rums/enfh: warning: s2s.z_s2s_c_rhmc_19910316000000_glob_prod_009.sl.grib2, field 2204 [surface_air_minimum_temperature_sfc]: surface_air_minimum_temperature_sfc maximum value 325.122 is not in [300,325]
+s2s/lfpw/enfo: warning: s2s.lfpw_mn2t6_2.grib2, field 82 [surface_air_minimum_temperature_sfc]: surface_air_minimum_temperature_sfc minimum value 250.259 is not in [160,250]
 */
    {
       "surface_air_minimum_temperature_sfc",
       160,
-      245,
+      260,
       300,
-      325,
+      330,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"paramId", GRIB_TYPE_LONG, 122},
@@ -797,11 +800,14 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
       },
       {&from_start, &predefined_level},
    },
-
+/*
+ s2s/enfh/ecmf: warning: s2s.2016081800.prod.1104.1.pf.20150818.sl.1104.grib2, field 150 [time_integrated_surface_net_solar_radiation_sfc]: time_integrated_surface_net_solar_radiation_sfc minimum value 2966.09 is not in [-0.001,2000]
+ s2s/enfo/ammc: warning: s2s.ssr_20160807_25.grib2, field 62 [time_integrated_surface_net_solar_radiation_sfc]: time_integrated_surface_net_solar_radiation_sfc minimum value 10280.6 is not in [-0.1,10000]
+ */
    {
       "time_integrated_surface_net_solar_radiation_sfc",
-      -0.001,
-       0.001,
+      -0.1,
+       20000,
       1e+05,
       1e+09,
       {
@@ -823,6 +829,7 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
        1e+8,
       -1e+8,
        1e+8,
+
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"paramId", GRIB_TYPE_LONG, 169},
@@ -962,8 +969,7 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
 
 /*
    2013-??-??: maximum changed to <0,133> because of cosmo-de boundary effects when coupled with IFS ..
-   2014-07-16-18UTC: maximum changed to <0,200> because of GLAMEPS, v2 maximum value 170.646 (tigge_lam.20140716_18+003.mem025.grib2)
-   2014-08-06-09UTC: warning: tigge_lam.20140805_12+009.mem025.grib2:total_precipitation_sfc.lam maximum value 259.002 is not in [0,200]
+   glameps: warning: tigge_lam.20160814_00+006.mem026.grib2, field 6 [total_precipitation_sfc.lam]: total_precipitation_sfc.lam maximum value 361.151 is not in [0,350]
 */
 
    {
@@ -971,7 +977,7 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
       -0.05,
       0.1,
       0.,
-      300.,
+      400.,
       {
          {"model", GRIB_TYPE_STRING, 0, "lam"},
 
@@ -1014,15 +1020,14 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
    },
 
 /*
-   2014-25-07: upper limit for max changed to <0,150> because of glameps => tigge_lam.20140724_18+003.mem026.grib2, large_scale_precipitation_sfc.lam maximum value 104.745 is not in [0,100]
-   2014-08-11: glameps-hirlamcons-eu, 20140808, 00UTC, test: tigge_lam.20140808_00+006.mem026.grib2, large_scale_precipitation_sfc.lam maximum value 186.24 is not in [0,150]
+   glameps-hirlamcons-eu: warning: tigge_lam.20160814_00+009.mem026.grib2, field 7 [large_scale_precipitation_sfc.lam]: large_scale_precipitation_sfc.lam maximum value 370.829 is not in [0,350]
 */
    {
       "large_scale_precipitation_sfc.lam",
       -0.05,
       0.1,
       0.0,
-      300.,
+      400.,
       {
          {"model", GRIB_TYPE_STRING, 0, "lam"},
 
@@ -1081,6 +1086,7 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
          {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
          {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 10},
 
+ /*      {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 255}, */
          {NULL, },
       },
       {&three_hourly, &given_level},
@@ -1158,13 +1164,16 @@ s2s_devel, ecmf: warning: s2s.128151.2014111700.test.sfc.pf.768.4.grib2, mean_se
 tigge_lam.tigge_mogreps-uk_2014122709_03+0036.grib2, field 1: mean_sea_level_pressure_sfc minimum value 103069 is not in [90000,103000]
 warning: s2s.2015082000.prod.1104.50.pf.sl.648.grib2, field 335 [mean_sea_level_pressure_sfc]: mean_sea_level_pressure_sfc minimum value 89778 is not in [90000,104000]
 s2s/lfpw: warning: s2s.lfpw_msl_0.grib2, field 1 [mean_sea_level_pressure_sfc]: mean_sea_level_pressure_sfc minimum value 88258.8 is not in [89000,104000]
+s2s/rjtd: warning: s2s.z_tigge_c_rjtd_201605101200_glob_prod_pf_sl_0636_009_0000_msl.grib2, field 1 [mean_sea_level_pressure_sfc]: mean_sea_level_pressure_sfc maximum value 109411 is not in [98000,109000]
+s2s/ammc: warning: s2s.z_s2s_c_cwao_20010602000000_glob_prod_sl_000.grib2, field 833 [mean_sea_level_pressure_sfc]: mean_sea_level_pressure_sfc maximum value 109994
+s2s/enfh/cwao: warning: s2s.z_s2s_c_cwao_20070721000000_glob_prod_sl_001.grib2, field 298 [mean_sea_level_pressure_sfc]: mean_sea_level_pressure_sfc maximum value 110320 is not in [98000,110000]
 */
    {
       "mean_sea_level_pressure_sfc",
       88000,
       104000,
       98000,
-      109000,
+      111000,
       {
          {"paramId", GRIB_TYPE_LONG, 151},
 
@@ -1215,7 +1224,7 @@ s2s/egrr: s2s.z_s2s_c_ukmo_20160102000000_glob_prod_pf_1440_002.rt.pl.grib2, fie
       200,
       35000,
       {
-         {"model", GRIB_TYPE_STRING, 0, "glob"},
+/*       {"model", GRIB_TYPE_STRING, 0, "glob"}, */
 
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 3},
@@ -1229,12 +1238,14 @@ s2s/egrr: s2s.z_s2s_c_ukmo_20160102000000_glob_prod_pf_1440_002.rt.pl.grib2, fie
 
 /*
 warning: s2s.lfpw_t_10.grib2, field 61 [temperature_pl]: temperature_pl minimum value 159.934 is not in [160,260]
+s2s/egrr: warning: s2s.z_s2s_c_ukmo_19960417000000_glob_prod_pf_1440_002.hc.pl.grib2, field 450 [temperature_pl]: temperature_pl minimum value 260.687 is not in [150,260]
+s2s/egrr-enfo warning: s2s.z_s2s_c_ukmo_20160520000000_glob_prod_pf_1440_003.rt.pl.grib2, field 450 [temperature_pl]: temperature_pl minimum value 270.611 is not in [150,270]
 */
 
    {
       "temperature_pl",
       150,
-      260,
+      275,
       200,
       330,
       {
@@ -1254,13 +1265,14 @@ warning: s2s.lfpw_t_10.grib2, field 61 [temperature_pl]: temperature_pl minimum 
 /* 
    S2S/ammc: warning: s2s.t_20150906_21.grib2, field 11 [temperature_pl]: temperature_pl minimum value 44.6657 is not in [50,260]
    S2S/ammc: warning: s2s.t_20150906_24.grib2, field 321 [temperature_pl]: temperature_pl minimum value -48.9135 is not in [50,260]
+   S2S/ammc: warning: s2s.t_20160403_16.grib2, field 571 [temperature_pl.ammc]: temperature_pl.ammc maximum value 343.462 is not in [200,340]
 */
    {
       "temperature_pl.ammc",
-      -100,
+      -999,
       260,
       200,
-      340,
+      350,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
 
@@ -1310,13 +1322,15 @@ warning: s2s.z_tigge_c_kwbc_20020817000000_ncep_prod_pf_pl_0000_003_0010_u.grib2
    S2S/CAWCR: v_velocity_pl maximum value 8.54936 is not in [10,150]
    S2S/CAWCR: v_velocity_pl minimum value -128.209 is not in [-120,-10]
    ammc-s2s-enfo: warning: s2s.v_20160131_0.grib2, field 430 [v_velocity_pl]: v_velocity_pl minimum value -4.84592 is not in [-190,-5]
+   ammc-s2s-enfo: warning: s2s.v_20160324_7.grib2, field 160 [v_velocity_pl]: v_velocity_pl maximum value 3.79724 is not in [4,190]
+   ammc-s2s-enfo: warning: s2s.v_20160526_0.grib2, field 611 [v_velocity_pl]: v_velocity_pl minimum value -194.691 is not in [-190,-2]
 */
 
    {
       "v_velocity_pl",
-      -190,
-      -4,
-      4,
+      -200,
+      -2,
+      2,
       190,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
@@ -1370,16 +1384,20 @@ warning: s2s.z_tigge_c_kwbc_20020817000000_ncep_prod_pf_pl_0000_003_0010_u.grib2
    s2s_devel, ecmf, 20150101, 00UTC, test, enfh, warning: s2s.2015010100.test.768.10.pf.20020101.pl.0.grib2, field 372 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -5.02998 is not in [-5,0] 
 warning: s2s.z_tigge_c_kwbc_20150817000000_ncep_prod_pf_pl_0000_015_0500_w.grib2, field 3 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -7.25731 is not in [-6,0]
   s2s/kwbc/enfo: warning: s2s.z_tigge_c_kwbc_20151114000000_ncep_prod_pf_pl_0000_011_0500_w.grib2, field 7 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -10.202 is not in [-10,0]
+  s2s/cwao/enfo: warning: s2s.z_s2s_c_cwao_20160512000000_glob_prod_??_pl_00_384_003.grib2, field 28 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -19.8681 is not in [-12,0]
 
 */
    {
       "w_vertical_velocity_pl",
-      -12,
+      -25,
       0,
       0,
-      12,
+      25,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
+
+         {"paramId", GRIB_TYPE_LONG, 135},
+
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 2},
          {"parameterNumber", GRIB_TYPE_LONG, 8},
@@ -1623,11 +1641,12 @@ s2s_devel, ecmf, 20141229, 00UTC, test, enfh, real:  s2s.2014122900.test.768.10.
 warning: s2s.z_tigge_c_kwbc_19990817000000_ncep_prod_cf_sl_0024_000_0000_tcw.grib2, field 33 [total_column_water_sfc.glob]: total_column_water_sfc.glob minimum value -0.168614 is not in [0.001,1]
 warning: s2s.z_tigge_c_kwbc_20090829000000_ncep_prod_pf_sl_0024_003_0000_tcw.grib2, field 11 [total_column_water_sfc.glob]: total_column_water_sfc.glob minimum value -2.00987 is not in [-2,1]
   => [-2.00987,1]
+  lfpw/enfo: warning: s2s.lfpw_tcw_0.grib2, field 10 [total_column_water_sfc.glob.s2]: total_column_water_sfc.glob.s2 minimum value 1.01153 is not in [-3,1]
 */
    {
       "total_column_water_sfc.glob.s2",
       -3.0,
-      1,
+      2,
       50,
       150,
       {
@@ -1730,11 +1749,11 @@ s2s/ammc: warning: s2s.2t_20151224_26.grib2, field 12 [surface_air_temperature_s
 s2s/kwbc/enfh: warning: s2s.z_s2s_c_rhmc_20150819000000_glob_prod_1464_000.sl.grib2, field 17 [skin_temperature_sfc.glob]: skin_temperature_sfc.glob minimum value 237.261 is not in [
 s2s/rums/enfo warning: s2s.z_s2s_c_rhmc_20150826000000_glob_prod_1392_003.sl.grib2, field 15 [skin_temperature_sfc.glob]: skin_temperature_sfc.glob minimum value 240.467 is not in [180,240]
 s2s/ammc/enfo warning: warning: s2s.skt_20150920_4.grib2, field 12 [skin_temperature_sfc.glob]: skin_temperature_sfc.glob minimum value 179.087 is not in [180,245]
-180,230]
+s2s/ammc/enfo warning: warning: s2s.skt_20160410_21.grib2, field 57 [skin_temperature_sfc.glob.s2]: skin_temperature_sfc.glob.s2 minimum value 164.277 is not in [175,245]
 */
    {
       "skin_temperature_sfc.glob.s2",
-      175,
+      160,
       245,
       300,
       355,
@@ -1974,6 +1993,34 @@ warning: s2s.z_tigge_c_kwbc_19990817000000_ncep_prod_cf_sl_0024_000_0000_sd.grib
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"class", GRIB_TYPE_STRING, 0, "s2"},
+
+         {"paramId", GRIB_TYPE_LONG, 228141},
+
+         {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 0},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 1},
+         {"parameterNumber", GRIB_TYPE_LONG, 60},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {NULL, },
+      },
+      {&daily_average, &predefined_level},
+   },
+
+/*s2s/isac:warning: s2s.z_s2s_c_isac_201510190000_glob_prod_cf_0744_00.sl.grib2, field 25 [snow_depth_water_equivalent_sfc.glob]: snow_depth_water_equivalent_sfc.glob maximum value 118.824
+  s2s/cwao:warning: warning: s2s.z_s2s_c_cwao_20130211000000_glob_prod_sl_000.grib2, field 23 [snow_depth_water_equivalent_sfc.glob.s2]: snow_depth_water_equivalent_sfc.glob.s2 maximum value 30452.5 is not in [100,15000]
+*/
+   {
+      "snow_depth_water_equivalent_sfc.glob.s2.cwao",
+      -4e-19,
+      0,
+      100,
+      40000,
+      {
+         {"model", GRIB_TYPE_STRING, 0, "glob"},
+         {"class", GRIB_TYPE_STRING, 0, "s2"},
+         {"centre", GRIB_TYPE_STRING, 1, "cwao"},
 
          {"paramId", GRIB_TYPE_LONG, 228141},
 
@@ -2299,7 +2346,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
    {
       "temperature_ml",
       150,
-      260,
+      270,
       200,
       330,
       {
@@ -2553,9 +2600,9 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
    {
       "relative_humidity_hl",
       0,
-      0.005,
-      0.01,
-      1.001,
+      0.1,
+      90,
+      100.1,
       {
          {"paramId", GRIB_TYPE_LONG, 157},
          {"discipline", GRIB_TYPE_LONG, 0},
@@ -2570,7 +2617,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
    {
       "temperature_hl",
       150,
-      260,
+      270,
       200,
       330,
       {
@@ -2641,9 +2688,9 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
    {
       "2_metre_relative_humidity",
       0,
-      0.3,
-      0.5,
-      1.001,
+      10,
+      90,
+      100.1,
       {
          {"paramId", GRIB_TYPE_LONG, 260242},
          {"discipline", GRIB_TYPE_LONG, 0},
@@ -2981,23 +3028,6 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
          {NULL, },
       },
       {&point_in_time, &predefined_level},
-   },
-   {
-      "soil_temperature_level",
-      200,
-      230,
-      300,
-      350,
-      {
-         {"paramId", GRIB_TYPE_LONG, 260360},
-         {"discipline", GRIB_TYPE_LONG, 2},
-         {"parameterCategory", GRIB_TYPE_LONG, 3},
-         {"parameterNumber", GRIB_TYPE_LONG, 18},
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 151},
-         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
-         {NULL, },
-      },
-      {&point_in_time, &given_level},
    },
    {
       "soil_temperature_level",
