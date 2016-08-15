@@ -1393,6 +1393,7 @@ char get_dir_separator_char(void);
 const char *extract_filename(const char *filepath);
 int is_gaussian_global(double lat1, double lat2, double lon1, double lon2, long num_points_equator, const double *latitudes, double angular_precision);
 char *codes_getenv(const char *name);
+int compute_key_rank(grib_handle* h, grib_string_list* keys, const char* key);
 
 /* compile.c */
 void grib_compile_flags(grib_compiler *c, long flags);

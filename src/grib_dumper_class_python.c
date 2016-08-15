@@ -109,44 +109,6 @@ struct string_count {
     string_count* next;
 };
 
-static int get_key_rank(grib_handle* h,grib_string_list* keys, const char* key)
-{
-    grib_string_list* next=keys;
-    grib_string_list* prev=keys;
-    int ret=0;
-    size_t size=0;
-    grib_context* c=h->context;
-
-    while (next && next->value && grib_inline_strcmp(next->value,key)) {
-        prev=next;
-        next=next->next;
-    }
-    if (!next) {
-        prev->next=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
-        next=prev->next;
-    }
-    if (!next->value) {
-        next->value=strdup(key);
-        next->count=0;
-    }
-
-    next->count++;
-    ret=next->count;
-    if (ret==1) {
-        /* If the count is 1 it could mean two things: */
-        /*   This is the first instance of the key and there is another one */
-        /*   This is the first and only instance of the key */
-        /* So we check if there is a second one of this key, */
-        /* If not, then rank is zero i.e. this is the only instance */
-        char* s=grib_context_malloc_clear(c,strlen(key)+5);
-        sprintf(s,"#2#%s",key);
-        if (grib_get_size(h,s,&size)==GRIB_NOT_FOUND) ret=0;
-        grib_context_free(c, s);
-    }
-
-    return ret;
-}
-
 static int depth=0;
 
 static void init_class      (grib_dumper_class* c){}
@@ -236,12 +198,12 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         fprintf(self->dumper.out,",)\n");
         grib_context_free(c,values);
 
-        if ((r=get_key_rank(h,self->keys,a->name))!=0)
+        if ((r=compute_key_rank(h,self->keys,a->name))!=0)
             fprintf(self->dumper.out,"    codes_set_array(ibufr, '#%d#%s', rvalues)\n",r,a->name);
         else
             fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s', rvalues)\n",a->name);
     } else {
-        r=get_key_rank(h,self->keys,a->name);
+        r=compute_key_rank(h,self->keys,a->name);
         if( !grib_is_missing_double(a,value) ) {
 
             sval=dval_to_string(c,value);
@@ -323,7 +285,7 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a, const char* p
 
         fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s->%s' \n, rvalues)\n",prefix,a->name);
     } else {
-        /* int r=get_key_rank(h,self->keys,a->name); */
+        /* int r=compute_key_rank(h,self->keys,a->name); */
         if( !grib_is_missing_double(a,value) ) {
 
             sval=dval_to_string(c,value);
@@ -370,7 +332,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
             char* prefix;
             int dofree=0;
 
-            r=get_key_rank(h,self->keys,a->name);
+            r=compute_key_rank(h,self->keys,a->name);
             if (r!=0) {
                 prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
                 dofree=1;
@@ -409,13 +371,13 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out,",)\n");
         grib_context_free(a->context,values);
 
-        if ((r=get_key_rank(h,self->keys,a->name))!=0)
+        if ((r=compute_key_rank(h,self->keys,a->name))!=0)
             fprintf(self->dumper.out,"    codes_set_array(ibufr, '#%d#%s', ivalues)\n",r,a->name);
         else
             fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s', ivalues)\n",a->name);
 
     } else {
-        r=get_key_rank(h,self->keys,a->name);
+        r=compute_key_rank(h,self->keys,a->name);
         if( !grib_is_missing_long(a,value) ) {
             if (r!=0)
                 fprintf(self->dumper.out,"    codes_set(ibufr, '#%d#%s', ",r,a->name);
@@ -488,7 +450,7 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s->%s' \n,ivalues)\n",prefix,a->name);
 
     } else {
-        /* int r=get_key_rank(h,self->keys,a->name); */
+        /* int r=compute_key_rank(h,self->keys,a->name); */
         if( !grib_is_missing_long(a,value) ) {
             fprintf(self->dumper.out,"    codes_set(ibufr, '%s->%s'\n,",prefix,a->name);
             fprintf(self->dumper.out,"%ld)\n",value);
@@ -528,7 +490,7 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 
     self->empty=0;
 
-    r=get_key_rank(h,self->keys,a->name);
+    r=compute_key_rank(h,self->keys,a->name);
     if( !grib_is_missing_double(a,value) ) {
         sval=dval_to_string(c,value);
         if (r!=0)
@@ -596,7 +558,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
     fprintf(self->dumper.out,"    \"%s\", )\n",values[i]);
 
     if (self->isLeaf==0) {
-        if ((r=get_key_rank(h,self->keys,a->name))!=0)
+        if ((r=compute_key_rank(h,self->keys,a->name))!=0)
             fprintf(self->dumper.out,"    codes_set_string_array(ibufr, '#%d#%s', svalues)\n",r,a->name);
         else
             fprintf(self->dumper.out,"    codes_set_string_array(ibufr, '%s', svalues)\n",a->name);
@@ -648,7 +610,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 
     err = grib_unpack_string(a,value,&size);
     p=value;
-    r=get_key_rank(h,self->keys,a->name);
+    r=compute_key_rank(h,self->keys,a->name);
     if (grib_is_missing_string(a,(unsigned char *)value,size))
         return;
 

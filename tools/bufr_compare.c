@@ -94,45 +94,6 @@ static void release_keys_list()
     }
 }
 
-/* Return the rank of the key using global list of keys */
-static int get_key_rank(grib_handle* h, grib_string_list* keys, const char* key)
-{
-    grib_string_list* next=keys;
-    grib_string_list* prev=keys;
-    int ret=0;
-    size_t size=0;
-    grib_context* c=h->context;
-
-    while (next && next->value && grib_inline_strcmp(next->value,key)) {
-        prev=next;
-        next=next->next;
-    }
-    if (!next) {
-        prev->next=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
-        next=prev->next;
-    }
-    if (!next->value) {
-        next->value=strdup(key);
-        next->count=0;
-    }
-
-    next->count++;
-    ret=next->count;
-    if (ret==1) {
-        /* If the count is 1 it could mean two things: */
-        /*   This is the first instance of the key and there is another one */
-        /*   This is the first and only instance of the key */
-        /* So we check if there is a second one of this key, */
-        /* If not, then rank is zero i.e. this is the only instance */
-        char* s=grib_context_malloc_clear(c,strlen(key)+5);
-        sprintf(s,"#2#%s",key);
-        if (grib_get_size(h,s,&size)==GRIB_NOT_FOUND) ret=0;
-        grib_context_free(c, s);
-    }
-
-    return ret;
-}
-
 GRIB_INLINE static double compare_double_absolute(double *a,double *b,double *err)
 {
     double ret=0;
@@ -1132,7 +1093,7 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
         if (xa==NULL || ( xa->flags & GRIB_ACCESSOR_FLAG_DUMP )==0 ) continue;
 
         /* Get full name of key, e.g. '#2#windSpeed' or 'blockNumber' */
-        rank = get_key_rank(handle1, keys_list, xa->name);
+        rank = compute_key_rank(handle1, keys_list, xa->name);
         if (rank != 0) {
             prefix=grib_context_malloc_clear(context,sizeof(char)*(strlen(xa->name)+10));
             dofree = 1;
