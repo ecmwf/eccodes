@@ -48,10 +48,10 @@ cat > $fRules <<EOF
  transient extractDateTimeSecondEnd=39.6;
 
  set doExtractDateTime=1;
- if (extractDateTimeNumberOfSubsets!=0) {
+ if (extractedDateTimeNumberOfSubsets!=0) {
    write;
  }
- print "extracted [extractDateTimeNumberOfSubsets] of [originalNumberOfSubsets] subsets";
+ print "extracted [extractedDateTimeNumberOfSubsets] of [originalNumberOfSubsets] subsets";
 EOF
 
 inputBufr="amsa_55.bufr"

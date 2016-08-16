@@ -53,7 +53,7 @@ TESTS = definitions.sh \
         padding.sh \
         lamb_az_eq_area.sh \
         grib_to_netcdf.sh \
-        debug.sh \
+        grib_dump_debug.sh \
         jpeg.sh \
         ccsds.sh \
         md5.sh \

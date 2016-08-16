@@ -1585,18 +1585,18 @@ end subroutine codes_get_string_array
   !> @param key        key name
   !> @param value      string array value
   !> @param status     CODES_SUCCESS if OK, integer value on error
-subroutine codes_set_string_array ( gribid, key, value, status )
-    integer(kind=kindOfInt),                     intent(in)   :: gribid
+subroutine codes_set_string_array ( msgid, key, value, status )
+    integer(kind=kindOfInt),                     intent(in)   :: msgid
     character(len=*),                            intent(in)   :: key
     character(len=*), dimension(:),allocatable,  intent(in)   :: value
     integer(kind=kindOfInt),optional,            intent(out)  :: status
 
     character                 :: cvalue(size(value)*len(value(0)))
     character                 :: svalue(len(value(0)))
-    integer(kind=kindOfInt)                            :: iret
-    integer(kind=kindOfInt)                            :: nb_values
-    integer(kind=kindOfInt)                            :: slen
-    integer(kind=kindOfInt)                            :: i,j
+    integer(kind=kindOfInt)   :: iret
+    integer(kind=kindOfInt)   :: nb_values
+    integer(kind=kindOfInt)   :: slen
+    integer(kind=kindOfInt)   :: i,j
 
     nb_values=size(value)
     slen=len(value(0))
@@ -1607,10 +1607,10 @@ subroutine codes_set_string_array ( gribid, key, value, status )
       j=j+slen
     enddo
 
-    iret=grib_f_set_string_array ( gribid, key, cvalue , nb_values, slen )
+    iret=grib_f_set_string_array ( msgid, key, cvalue , nb_values, slen )
 
     if (iret /= 0) then
-      call grib_f_write_on_fail(gribid)
+      call grib_f_write_on_fail(msgid)
     endif
     if (present(status)) then
       status = iret
@@ -2283,7 +2283,8 @@ subroutine codes_grib_multi_append ( ingribid, startsection, multigribid  , stat
     call grib_multi_append ( ingribid, startsection, multigribid  , status)
 end subroutine codes_grib_multi_append 
 
-  !> Find the nearest point of a given latitude/longitude point.
+  !> Find the nearest point of a set of points whose latitudes and longitudes
+  !> are given in the inlats, inlons arrays respectively.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
@@ -2354,7 +2355,7 @@ subroutine codes_grib_find_nearest_single(gribid,is_lsm,  &
 end subroutine codes_grib_find_nearest_single
 
 
-  !> Find the nearest point of a given latitude/longitude point.
+  !> Find the 4 nearest points of a latitude longitude point.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be

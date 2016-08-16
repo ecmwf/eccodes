@@ -45,6 +45,7 @@ list( APPEND tests1
 list( APPEND tests2
     grib_double_cmp
     bufr_dump
+    bufr_dump_filter
     bufrdc_desc_ref
     bufrdc_ref
     bufr_compare
@@ -102,7 +103,8 @@ list( APPEND tests2
     tigge_conversions
     read_any
     padding
-    debug
+    grib_dump
+    grib_dump_debug
     grib_util_set_spec
     local_MeteoFrance
     neg_fctime

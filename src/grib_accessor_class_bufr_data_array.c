@@ -530,11 +530,12 @@ static int encode_string_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     return err;
 }
 
-static void set_missing_long_to_double(grib_darray* dvalues) {
-  size_t i,n=grib_darray_used_size(dvalues);
-  for (i=0;i<n;i++) {
-    if (dvalues->v[i]==GRIB_MISSING_LONG) dvalues->v[i]=GRIB_MISSING_DOUBLE;
-  }
+static void set_missing_long_to_double(grib_darray* dvalues)
+{
+    size_t i,n=grib_darray_used_size(dvalues);
+    for (i=0;i<n;i++) {
+        if (dvalues->v[i]==GRIB_MISSING_LONG) dvalues->v[i]=GRIB_MISSING_DOUBLE;
+    }
 }
 
 static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr_descriptor* bd,
@@ -1012,6 +1013,10 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
                     grib_context_log(c,GRIB_LOG_ERROR,"%g ",self->numericValues->v[elementIndex]->v[i]);
             }
         } else {
+            if (self->numericValues->v[subsetIndex] == NULL) {
+                grib_context_log(c,GRIB_LOG_ERROR,"Invalid subset index %d (number of subsets=%ld)", subsetIndex, self->numberOfSubsets);
+                return GRIB_INVALID_ARGUMENT;
+            }
             err=encode_double_value(c,buff,pos,bd,self,self->numericValues->v[subsetIndex]->v[elementIndex]);
             if (err) {
                 grib_context_log(c,GRIB_LOG_ERROR,"encoding %s=%g",bd->shortName,self->numericValues->v[subsetIndex]->v[elementIndex]);
@@ -1707,16 +1712,16 @@ static int bitmap_init(bitmap_s* bitmap,grib_accessors_list* bitmapStart,int bit
 }
 
 static grib_accessor* accessor_or_attribute_with_same_name(grib_accessor* a,const char* name) {
-  if (grib_accessor_has_attributes(a)==0) {
-    return a;
-  } else {
-    grib_accessor* ok=a;
-    grib_accessor* next;
-    while ((next=grib_accessor_get_attribute(ok,name))!=NULL) {
-      ok=next;
+    if (grib_accessor_has_attributes(a)==0) {
+        return a;
+    } else {
+        grib_accessor* ok=a;
+        grib_accessor* next;
+        while ((next=grib_accessor_get_attribute(ok,name))!=NULL) {
+            ok=next;
+        }
+        return ok;
     }
-    return ok;
-  }
 }
 
 static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset)

@@ -93,9 +93,9 @@ static grib_dumper_class _grib_dumper_class_fortran = {
 grib_dumper_class* grib_dumper_class_fortran = &_grib_dumper_class_fortran;
 
 /* END_CLASS_IMP */
-static void dump_attributes(grib_dumper* d,grib_accessor* a,char* prefix);
+static void dump_attributes(grib_dumper* d, grib_accessor* a, const char* prefix);
 
-GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
+GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 {
     if (*a != *b) return 1;
     while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
@@ -108,38 +108,6 @@ struct string_count {
     int count;
     string_count* next;
 };
-
-static int get_key_rank(grib_handle* h,grib_string_list* keys,const char* key)
-{
-    grib_string_list* next=keys;
-    grib_string_list* prev=keys;
-    int ret=0;
-    size_t size=0;
-    grib_context* c=h->context;
-
-    while (next && next->value && grib_inline_strcmp(next->value,key)) {
-        prev=next;
-        next=next->next;
-    }
-    if (!next) {
-        prev->next=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
-        next=prev->next;
-    }
-    if (!next->value) {
-        next->value=strdup(key);
-        next->count=0;
-    }
-
-    next->count++;
-    ret=next->count;
-    if (ret==1) {
-        char* s=grib_context_malloc_clear(c,strlen(key)+5);
-        sprintf(s,"#2#%s",key);
-        if (grib_get_size(h,s,&size)==GRIB_NOT_FOUND) ret=0;
-    }
-
-    return ret;
-}
 
 static int depth=0;
 
@@ -174,7 +142,7 @@ static int destroy(grib_dumper* d)
     return GRIB_SUCCESS;
 }
 
-static char* dval_to_string(grib_context* c,double v)
+static char* dval_to_string(grib_context* c, double v)
 {
     char* sval=grib_context_malloc_clear(c,sizeof(char)*40);
     char* p;
@@ -187,7 +155,7 @@ static char* dval_to_string(grib_context* c,double v)
     return sval;
 }
 
-static void dump_values(grib_dumper* d,grib_accessor* a)
+static void dump_values(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_fortran *self = (grib_dumper_fortran*)d;
     double value; size_t size = 0;
@@ -239,12 +207,12 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         fprintf(self->dumper.out,"/)\n");
         grib_context_free(c,values);
 
-        if ((r=get_key_rank(h,self->keys,a->name))!=0)
+        if ((r=compute_key_rank(h,self->keys,a->name))!=0)
             fprintf(self->dumper.out,"  call codes_set(ibufr,'#%d#%s',rvalues)\n",r,a->name);
         else
             fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',rvalues)\n",a->name);
     } else {
-        r=get_key_rank(h,self->keys,a->name);
+        r=compute_key_rank(h,self->keys,a->name);
         if( !grib_is_missing_double(a,value) ) {
 
             sval=dval_to_string(c,value);
@@ -276,7 +244,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     (void)err; /* TODO */
 }
 
-static void dump_values_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
+static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* prefix)
 {
     grib_dumper_fortran *self = (grib_dumper_fortran*)d;
     double value; size_t size = 0;
@@ -329,7 +297,7 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
 
         fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s' &\n,rvalues)\n",prefix,a->name);
     } else {
-        /* int r=get_key_rank(h,self->keys,a->name); */
+        /* int r=compute_key_rank(h,self->keys,a->name); */
         if( !grib_is_missing_double(a,value) ) {
 
             sval=dval_to_string(c,value);
@@ -355,7 +323,7 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
     (void)err; /* TODO */
 }
 
-static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
+static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
 {
     grib_dumper_fortran *self = (grib_dumper_fortran*)d;
     long value; size_t size = 0;
@@ -377,7 +345,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
             char* prefix;
             int dofree=0;
 
-            r=get_key_rank(h,self->keys,a->name);
+            r=compute_key_rank(h,self->keys,a->name);
             if (r!=0) {
                 prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
                 dofree=1;
@@ -418,13 +386,13 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
         fprintf(self->dumper.out,"/)\n");
         grib_context_free(a->context,values);
 
-        if ((r=get_key_rank(h,self->keys,a->name))!=0)
+        if ((r=compute_key_rank(h,self->keys,a->name))!=0)
             fprintf(self->dumper.out,"  call codes_set(ibufr,'#%d#%s',ivalues)\n",r,a->name);
         else
             fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',ivalues)\n",a->name);
 
     } else {
-        r=get_key_rank(h,self->keys,a->name);
+        r=compute_key_rank(h,self->keys,a->name);
         if( !grib_is_missing_long(a,value) ) {
             if (r!=0)
                 fprintf(self->dumper.out,"  call codes_set(ibufr,'#%d#%s',",r,a->name);
@@ -452,7 +420,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
     (void)err; /* TODO */
 }
 
-static void dump_long_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
+static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* prefix)
 {
     grib_dumper_fortran *self = (grib_dumper_fortran*)d;
     long value; size_t size = 0;
@@ -499,7 +467,7 @@ static void dump_long_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
         fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s' &\n,ivalues)\n",prefix,a->name);
 
     } else {
-        /* int r=get_key_rank(h,self->keys,a->name); */
+        /* int r=compute_key_rank(h,self->keys,a->name); */
         if( !grib_is_missing_long(a,value) ) {
             fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s'&\n,",prefix,a->name);
             fprintf(self->dumper.out,"%ld)\n",value);
@@ -520,11 +488,11 @@ static void dump_long_attribute(grib_dumper* d,grib_accessor* a,char* prefix)
     (void)err; /* TODO */
 }
 
-static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
+static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
 {
 }
 
-static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
+static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_fortran *self = (grib_dumper_fortran*)d;
     double value; size_t size = 1;
@@ -539,7 +507,7 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 
     self->empty=0;
 
-    r=get_key_rank(h,self->keys,a->name);
+    r=compute_key_rank(h,self->keys,a->name);
     if( !grib_is_missing_double(a,value) ) {
         sval=dval_to_string(c,value);
         if (r!=0)
@@ -566,7 +534,7 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
     }
 }
 
-static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* comment)
+static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_fortran *self = (grib_dumper_fortran*)d;
     char **values;
@@ -610,7 +578,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
     fprintf(self->dumper.out,"    \"%s\" /)\n",values[i]);
 
     if (self->isLeaf==0) {
-        if ((r=get_key_rank(h,self->keys,a->name))!=0)
+        if ((r=compute_key_rank(h,self->keys,a->name))!=0)
             fprintf(self->dumper.out,"  call codes_set_string_array(ibufr,'#%d#%s',svalues)\n",r,a->name);
         else
             fprintf(self->dumper.out,"  call codes_set_string_array(ibufr,'%s',svalues)\n",a->name);
@@ -635,7 +603,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
     (void)err; /* TODO */
 }
 
-static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
+static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_fortran *self = (grib_dumper_fortran*)d;
     char *value=NULL;
@@ -662,7 +630,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 
     err = grib_unpack_string(a,value,&size);
     p=value;
-    r=get_key_rank(h,self->keys,a->name);
+    r=compute_key_rank(h,self->keys,a->name);
     if (grib_is_missing_string(a,(unsigned char *)value,size))
         return;
 
@@ -697,15 +665,15 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     (void)err; /* TODO */
 }
 
-static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)
+static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
 {
 }
 
-static void dump_label(grib_dumper* d,grib_accessor* a,const char* comment)
+static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
 {
 }
 
-static void _dump_long_array(grib_handle* h,FILE* f,const char* key,const char* print_key)
+static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const char* print_key)
 {
     long* val;
     size_t size=0,i;
@@ -732,7 +700,7 @@ static void _dump_long_array(grib_handle* h,FILE* f,const char* key,const char* 
     fprintf(f,"  call codes_set(ibufr,'%s',ivalues)\n",print_key);
 }
 
-static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors* block)
+static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
 {
     grib_dumper_fortran *self = (grib_dumper_fortran*)d;
     if (!grib_inline_strcmp(a->name,"BUFR") ||
@@ -761,7 +729,7 @@ static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors
     }
 }
 
-static void dump_attributes(grib_dumper* d,grib_accessor* a,char* prefix)
+static void dump_attributes(grib_dumper* d,grib_accessor* a, const char* prefix)
 {
     int i=0;
     grib_dumper_fortran *self = (grib_dumper_fortran*)d;
@@ -794,7 +762,7 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a,char* prefix)
     self->isAttribute=0;
 }
 
-static void header(grib_dumper* d,grib_handle* h)
+static void header(grib_dumper* d, grib_handle* h)
 {
     grib_dumper_fortran *self = (grib_dumper_fortran*)d;
     char sampleName[200]={0};
@@ -807,11 +775,11 @@ static void header(grib_dumper* d,grib_handle* h)
     if (localSectionPresent && bufrHeaderCentre==98 ) {
         grib_get_long(h,"isSatellite",&isSatellite);
         if (isSatellite)
-            sprintf(sampleName,"BUFR%ld_local_satellite.bufr",edition);
+            sprintf(sampleName,"BUFR%ld_local_satellite",edition);
         else
-            sprintf(sampleName,"BUFR%ld_local.bufr",edition);
+            sprintf(sampleName,"BUFR%ld_local",edition);
     } else {
-        sprintf(sampleName,"BUFR%ld.bufr",edition);
+        sprintf(sampleName,"BUFR%ld",edition);
     }
 
     if (d->count<2) {
@@ -837,7 +805,7 @@ static void header(grib_dumper* d,grib_handle* h)
     fprintf(self->dumper.out,"  endif\n");
 }
 
-static void footer(grib_dumper* d,grib_handle* h)
+static void footer(grib_dumper* d, grib_handle* h)
 {
     grib_dumper_fortran *self = (grib_dumper_fortran*)d;
     fprintf(self->dumper.out,"  call codes_set(ibufr,'pack',1)\n");

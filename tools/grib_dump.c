@@ -16,25 +16,25 @@
 #include "grib_tools.h"
 
 grib_option grib_options[]={
-/*  {id, args, help}, on, command_line, value*/
-    {"S",0,0,1,0,0},
-    {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
-    {"D",0,0,0,1,0},
-    {"d",0,"Print all data values.\n",0,1,0},
-    {"j",0,0,0,1,0},
-    /*  {"C",0,0,0,1,0}, */   /* See ECC-234 */
-    {"t",0,0,0,1,0},
-    {"H",0,0,0,1,0},
-    {"a",0,0,0,1,0},
-    {"w:",0,0,0,1,0},
-    {"s:",0,0,0,1,0},
-    {"M",0,0,0,1,0},
-    {"T:",0,0,0,1,0},
-    {"7",0,0,0,1,0},
-    {"V",0,0,0,1,0},
-    {"q",0,0,1,0,0},
-    {"X:",0,0,0,1,0},
-    {"x",0,0,0,1,0}
+        /*  {id, args, help}, on, command_line, value*/
+        {"S",0,0,1,0,0},
+        {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
+        {"D",0,0,0,1,0},
+        {"d",0,"Print all data values.\n",0,1,0},
+        {"j",0,0,0,1,0},
+        /*  {"C",0,0,0,1,0}, */   /* See ECC-234 */
+        {"t",0,0,0,1,0},
+        {"H",0,0,0,1,0},
+        {"a",0,0,0,1,0},
+        {"w:",0,0,0,1,0},
+        {"s:",0,0,0,1,0},
+        {"M",0,0,0,1,0},
+        {"T:",0,0,0,1,0},
+        {"7",0,0,0,1,0},
+        {"V",0,0,0,1,0},
+        {"q",0,0,1,0,0},
+        {"X:",0,0,0,1,0},
+        {"x",0,0,0,1,0}
 };
 
 char* grib_tool_description="Dump the content of a grib file in different formats.";
@@ -83,7 +83,7 @@ int grib_tool_init(grib_runtime_options* options)
         else
             options->dump_flags = GRIB_DUMP_FLAG_NO_DATA;
     }
-    */
+     */
 
     if  (grib_options_on("O")) {
         options->dump_mode = "wmo";
@@ -140,7 +140,7 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
             int err = 0;
             grib_context* c = grib_context_get_default();
             const char* filename = options->current_infile->name;
-            
+
             err = grib_index_dump_file(stdout, filename);
             if (err) {
                 grib_context_log(c, GRIB_LOG_ERROR, "%s: Could not dump index file \"%s\".\n%s\n",
@@ -151,7 +151,7 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
             }
             /* Since there are no GRIB messages, we have to stop tool exiting in case there
              * are more index files
-            */
+             */
             options->fail = 0;
         }
     }
@@ -212,8 +212,9 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     return 0;
 }
 
-int grib_no_handle_action(int err) {
-  fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
-  return 0;
+int grib_no_handle_action(int err)
+{
+    fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
+    return 0;
 }
 

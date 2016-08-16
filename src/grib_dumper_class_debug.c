@@ -95,10 +95,10 @@ static int  init(grib_dumper* d)
     return GRIB_SUCCESS;
 }
 
-static int  destroy  (grib_dumper* d){
+static int  destroy  (grib_dumper* d)
+{
     return GRIB_SUCCESS;
 }
-
 
 static void aliases(grib_dumper* d,grib_accessor* a)
 {
@@ -350,7 +350,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         dump_double(d,a,NULL);
         return ;
     }
-    buf = (double*)grib_context_malloc(d->handle->context,size * sizeof(double));
+    buf = (double*)grib_context_malloc_clear(d->handle->context,size * sizeof(double));
 
     set_begin_end(d,a);
 
@@ -359,8 +359,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     aliases(d,a);
     fprintf(self->dumper.out," {");
 
-    if(!buf)
-    {
+    if(!buf) {
         if(size == 0)
             fprintf(self->dumper.out,"}\n");
         else
@@ -371,7 +370,6 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     fprintf(self->dumper.out,"\n");
 
     err =  grib_unpack_double(a,buf,&size);
-
     if(err){
         grib_context_free(d->handle->context,buf);
         fprintf(self->dumper.out," *** ERR=%d (%s) [grib_dumper_debug::dump_values]\n}",err,grib_get_error_message(err));
@@ -382,7 +380,6 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         more = size - 100;
         size = 100;
     }
-
 
     k = 0;
     while(k < size)
@@ -402,10 +399,8 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         fprintf(self->dumper.out,"%d %g\n",k,buf[k]);
 
 #endif
-
     }
-    if(more)
-    {
+    if(more) {
         for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");
         fprintf(self->dumper.out,"... %d more values\n",more);
     }
@@ -450,7 +445,8 @@ static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors
     fprintf(self->dumper.out,"<===== %s %s\n",a->creator->op, a->name);
 }
 
-static void set_begin_end(grib_dumper* d,grib_accessor* a) {
+static void set_begin_end(grib_dumper* d,grib_accessor* a)
+{
     grib_dumper_debug *self = (grib_dumper_debug*)d;
     if ((d->option_flags & GRIB_DUMP_FLAG_OCTECT) != 0) {
 
