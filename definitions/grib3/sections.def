@@ -1,0 +1,89 @@
+# Copyright 2005-2016 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+# 
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
+lookup[1]  sectionNumber(4) ;
+
+if(sectionNumber == 1 or new() ){
+   position sectionPosition;
+   template section_1 "grib3/section.1.def"; #Originator Section
+}
+
+lookup[1]  sectionNumber(4) ;
+
+#alias section2Used=zero;
+#alias setLocalDefinition=grib3LocalSectionPresent;
+if( sectionNumber == 2 or new() ){
+   position sectionPosition;
+   template section_2 "grib3/section.2.def"; #Repetitions and Index Section
+} 
+
+lookup[1]  sectionNumber(4) ;
+
+if(sectionNumber == 3 or new() ){
+   position sectionPosition;
+   template section_3 "grib3/section.3.def"; #Time Domain Section
+}
+
+lookup[1]  sectionNumber(4) ;
+
+if(sectionNumber == 4 or new() ){
+   position sectionPosition;
+   template section_4 "grib3/section.4.def"; #Horizontal Domain Section
+}
+
+lookup[1]  sectionNumber(4) ;
+
+if(sectionNumber == 5 or new() ){
+   position sectionPosition;
+   template section_5 "grib3/section.5.def"; #Vertical Domain Section
+}
+
+lookup[1]  sectionNumber(4) ;
+
+if(sectionNumber == 6 or new() ){
+   position sectionPosition;
+   template section_6 "grib3/section.6.def"; #Generating Process Section
+}
+
+lookup[1]  sectionNumber(4) ;
+
+if(sectionNumber == 7 or new() ){
+   position sectionPosition;
+   template section_7 "grib3/section.7.def"; #Observable Property Section
+}
+
+lookup[1]  sectionNumber(4) ;
+
+# Used to mark end of headers. Can be accessed with grib_get_offset()
+position   endOfHeadersMaker;
+
+meta lengthOfHeaders evaluate( endOfHeadersMaker-startOfHeaders);
+meta md5Headers md5(startOfHeaders,lengthOfHeaders);
+
+if(sectionNumber == 8 or new() ){
+   position sectionPosition;
+   template section_8 "grib3/section.8.def"; #Data Representation Section
+}
+
+lookup[1]  sectionNumber(4) ;
+
+if(sectionNumber == 9 or new() ){
+   position sectionPosition;
+   template section_9 "grib3/section.9.def"; #Overlay Section
+}
+
+lookup[1]  sectionNumber(4) ;
+
+if(sectionNumber == 10 or new() ){
+   position sectionPosition;
+   template section_10 "grib3/section.10.def"; #Data Section
+}
+
+
+#template     metas "grib3/meta.def";

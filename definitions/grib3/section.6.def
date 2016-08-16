@@ -1,0 +1,64 @@
+# Copyright 2005-2016 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+# 
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
+label "grib 2 Section 6 BIT-MAP SECTION";
+# START grib2::section
+# SECTION 6, BIT-MAP SECTION
+#  Length of section in octets
+# (nn)
+position offsetSection6;
+position offsetBSection6;
+
+section_length[4] section6Length ;
+meta section6 section_pointer(offsetSection6,section6Length,6);
+
+#  Number of section
+unsigned[1] numberOfSection = 6:read_only;
+
+#  Bit-map indicator
+# NOTE 1 NOT FOUND
+codetable[1] bitMapIndicator ('6.0.table',masterDir,localDir) = 255 : dump;
+
+#transient bitmapPresent=1;
+meta geography.bitmapPresent g2bitmap_present(bitMapIndicator): dump;
+
+# Bitmap...
+if(bitMapIndicator == 0)
+{
+
+  if(dataRepresentationTemplateNumber == 1)
+  {
+    if(matrixBitmapsPresent == 1)
+    {
+      meta primaryBitmap g2bitmap( tableReference,
+          missingValue,
+          offsetBSection6,
+          section6Length,
+          numberOfDataMatrices) : read_only;
+    }
+    else
+    {
+      meta geography.bitmap g2bitmap( tableReference,
+          missingValue,
+          offsetBSection6,
+          section6Length,
+          numberOfDataPoints) : read_only;
+    }
+  }
+  else
+  {
+    meta geography.bitmap g2bitmap( tableReference,
+        missingValue,
+        offsetBSection6,
+        section6Length,
+        numberOfDataPoints) : read_only;
+  }
+}
+
+meta md5Section6 md5(offsetSection6,section6Length);

@@ -1,0 +1,19 @@
+# Copyright 2005-2016 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+# 
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
+label "grib 2 Section 5 template 5.61";
+# START 2/template.5.61 ----------------------------------------------------------------------
+# Grid point data - Simple packing with logarithmic preprocessing
+constant typeOfPreProcessing=1;
+
+include "grib2/template.5.packing.def";
+
+ieeefloat   preProcessingParameter  : read_only;
+
+# END   2/template.5.61 ----------------------------------------------------------------------
