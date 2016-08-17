@@ -48,28 +48,27 @@ alias geography.bitmapPresent=bitmapPresent;
 transient angularPrecision=1000;  # milli degrees
 
 if(gridDescriptionSectionPresent){
-   template section_2 "grib1/section.2.def"     ;
+  template section_2 "grib1/section.2.def"     ;
 } else {
   template predefined_grid "grib1/predefined_grid.def";
 }
 
-
 # Used to mark end of headers. Can be accessed with grib_get_offset()
-position   endOfHeadersMaker;
+position   endOfHeadersMarker;
 
-meta lengthOfHeaders evaluate( endOfHeadersMaker-startOfHeaders);
+meta lengthOfHeaders evaluate( endOfHeadersMarker-startOfHeaders);
 meta md5Headers md5(startOfHeaders,lengthOfHeaders);
 
 if (!headersOnly) {
-transient  missingValue   = 9999 : dump;
+  transient  missingValue   = 9999 : dump;
 
-if(bitmapPresent) {
-    template   section3 "grib1/section.3.def"     ;
-} else {
-   constant   tableReference = 0;
-}
+  if(bitmapPresent) {
+    template   section3 "grib1/section.3.def";
+  } else {
+    constant   tableReference = 0;
+  }
 
-template     section_4 "grib1/section.4.def"     ;
+  template     section_4 "grib1/section.4.def";
 
-template     section_5 "grib1/section.5.def"     ;
+  template     section_5 "grib1/section.5.def";
 }

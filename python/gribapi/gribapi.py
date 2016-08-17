@@ -1009,7 +1009,8 @@ def grib_index_new_from_file(filename, keys):
     \b Examples: \ref grib_index.py "grib_index.py"
 
     @param filename   path of the file to index on
-    @param keys       sequence of keys to index on
+    @param keys       sequence of keys to index on.
+                      The type of the key can be explicitly declared appending :l for long (or alternatively :i), :d for double, :s for string to the key name.
     @return index id
     @exception GribInternalError
     """

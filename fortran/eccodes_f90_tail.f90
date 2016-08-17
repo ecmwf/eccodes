@@ -35,10 +35,12 @@ end subroutine codes_set_missing
 !>
 !> \b Examples: \ref grib_index.f90 "grib_index.f90"
 !>
-!> @param indexid     id of the newly created index
-!> @param filename    name of the file of messages to be indexed
-!> @param keys        : comma separated list of keys for the index. The type of the key can be explicitly declared appending :l for long, :d for double, :s for string to the key name. If the type is not declared explicitly, the native type is assumed.
-!> @param status      CODES_SUCCESS if OK, integer value on error
+!> @param indexid   id of the newly created index
+!> @param filename  name of the file of messages to be indexed
+!> @param keys      comma separated list of keys for the index.
+!>                  The type of the key can be explicitly declared appending :l for long (or alternatively :i), :d for double, :s for string to the key name.
+!>                  If the type is not declared explicitly, the native type is assumed.
+!> @param status    CODES_SUCCESS if OK, integer value on error
 subroutine codes_index_create ( indexid, filename, keys,  status )
     integer(kind=kindOfInt),         intent(inout)  :: indexid
     character(len=*), intent(in)                    :: filename

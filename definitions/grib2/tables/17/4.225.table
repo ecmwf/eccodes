@@ -1,4 +1,4 @@
-# Code table 4.225 - Weather (see FM 94 BUFR/FM 95 CREX Code table 0 20 003 - Present weather) 
+# Code table 4.225 - Weather (see FM 94 BUFR/FM 95 CREX Code table 0 20 003 - Present weather)
 00 00 Cloud development not observed or not observable
 01 01 Clouds generally dissolving or becoming less developed
 02 02 State of sky on the whole unchanged

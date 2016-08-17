@@ -8,21 +8,20 @@
 #
 
 position startOfHeaders;
-ascii[4] identifier               ;
+ascii[4] identifier;
 
 alias ls.identifier=identifier;
 transient missingValue   = 9999;
 constant  ieeeFloats   = 0;
-template  section1 "tide/section.1.def"        ;
-template  mars     "tide/mars_labeling.def"    ;
+template  section1 "tide/section.1.def";
+template  mars     "tide/mars_labeling.def";
 
 # Used to mark end of headers. Can be accessed with grib_get_offset()
-position   endOfHeadersMaker;
-meta lengthOfHeaders evaluate( endOfHeadersMaker-startOfHeaders);
+position   endOfHeadersMarker;
+meta lengthOfHeaders evaluate( endOfHeadersMarker-startOfHeaders);
 meta md5Headers md5(startOfHeaders,lengthOfHeaders);
 
+template  section4 "tide/section.4.def";
+ascii[4]  endMark;
 
-template  section4 "tide/section.4.def"        ;
-ascii[4]  endMark  ;
-
-position   totalLength; 
+position   totalLength;
