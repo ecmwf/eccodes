@@ -6,89 +6,68 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
-
-
+# Originator Section
 position offsetSection1;
 section_length[4] section1Length ;
 meta section1Pointer section_pointer(offsetSection1,section1Length,1);
 
 unsigned[1] numberOfSection = 1 :read_only;
 
-codetable[2] centre  'grib3/centre.table' : dump,string_type;
+codetable[2] centre  'grib2/centre.table' : dump,string_type;
 alias identificationOfOriginatingGeneratingCentre=centre;
 meta centreDescription codetable_title(centre);
-
 
 alias parameter.centre=centre;
 alias ls.centre=centre;
 alias originatingCentre=centre;
 
-
 unsigned[2] subCentre  : dump;
 
 _if (subCentre==98 ) {
-alias centreForLocal=subCentre;
+  alias centreForLocal=subCentre;
 } else {
-alias centreForLocal=centre;
+  alias centreForLocal=centre;
 }
 
-codetable[1] tablesVersion 'grib3/tables/1.0.table' = 5 : edition_specific;
+codetable[1] tablesVersion 'grib3/tables/1.0.table' = 1 : edition_specific;
 alias gribMasterTablesVersionNumber=tablesVersion;
 
 transient masterDir="grib3/tables/[tablesVersion]";
 when (tablesVersion!=255) {
   set masterDir="grib3/tables/[tablesVersion]";
 } else {
-  set masterDir="grib3/tables/4";
+  set masterDir="grib3/tables/1";
 }
 
-codetable[1] localTablesVersion 'grib3/tables/[tablesVersion]/1.1.table' ;
-alias versionNumberOfGribLocalTables=localTablesVersion;
+codetable[1] identificationOfProject 'grib3/tables/[tablesVersion]/1.1.table' ;
 
-transient localDir="";
-if (localTablesVersion != 0) {
-  transient localDir="grib3/tables/local/[centre]/[localTablesVersion]";
-}
-
-#  Significance of Reference Time
-codetable[1] significanceOfReferenceTime ('1.2.table',masterDir,localDir) = 1 : dump;
-
-#  Year
-# (4 digits)
-unsigned[2] year ;
-
-#  Month
-unsigned[1] month ;
-
-#  Day
-unsigned[1] day ;
-
-#  Hour
-unsigned[1] hour ;
-
-#  Minute
-unsigned[1] minute ;
-
-#  Second
-unsigned[1] second ;
-
-meta    dataDate    g2date(year,month,day) : dump;
-alias mars.date = dataDate;
-alias ls.date = dataDate;
-
-meta julianDay julian_day(dataDate,hour,minute,second) : edition_specific;
-
-meta      dataTime    time(hour,minute,second) : dump;
-alias mars.time = dataTime;
-
+#codetable[1] localTablesVersion 'grib3/tables/[tablesVersion]/1.1.table' ;
+#alias versionNumberOfGribLocalTables=localTablesVersion;
+#transient localDir="";
+#if (localTablesVersion != 0) {
+#  transient localDir="grib3/tables/local/[centre]/[localTablesVersion]";
+#}
 
 #  Production status of processed data in this GRIB message
-codetable[1] productionStatusOfProcessedData ('1.3.table',masterDir,localDir) : dump;
+codetable[1] productionStatusOfProcessedData ('1.2.table',masterDir,localDir) : dump;
+concept is_uerra(zero) {
+   '1' = {productionStatusOfProcessedData=9;}
+   '1' = {productionStatusOfProcessedData=8;}
+   '0' = {dummy=1;}
+}
+
+unsigned[2] originatorLocalTemplateNumber = missing() : dump,edition_specific,can_be_missing;
+unsigned[2] lengthOfOriginatorLocalTemplate = 0: dump,edition_specific;
+template_nofail originatorLocalTemplate "grib3/template.1.originator.[originatorLocalTemplateNumber:l].def";
+
+
+unsigned[2] projectLocalTemplateNumber = missing() : dump,edition_specific,can_be_missing;
+unsigned[2] lengthOfProjectLocalTemplate = 0: dump,edition_specific;
+template_nofail projectLocalTemplate "grib3/template.1.project.[projectLocalTemplateNumber:l].def";
 
 #  Type of processed data in this GRIB message
-codetable[1] typeOfProcessedData ('1.4.table',masterDir,localDir) = 255  : dump,string_type,no_fail;
-
-alias ls.dataType=typeOfProcessedData;
+#codetable[1] typeOfProcessedData ('1.4.table',masterDir,localDir) = 255  : dump,string_type,no_fail;
+#alias ls.dataType=typeOfProcessedData;
 
 meta md5Section1 md5(offsetSection1,section1Length);
 
@@ -111,17 +90,12 @@ concept stepType {
     "ratio"   = {selectStepTemplateInterval=1; stepTypeInternal="ratio";}
 }
 
-transient setCalendarId = 0 ;
-transient deleteCalendarId = 0 ;
-alias calendarIdPresent = zero;
-if ( ((section1Length > 21) or setCalendarId > 0) and deleteCalendarId == 0) {
-  alias calendarIdPresent = present;
-  codetable[2] calendarIdentificationTemplateNumber ('1.5.table',masterDir,localDir) : dump,string_type,no_fail;
-  template calendarIdentification "grib3/template.1.[calendarIdentificationTemplateNumber:l].def";
-}
+#transient setCalendarId = 0 ;
+#transient deleteCalendarId = 0 ;
+#alias calendarIdPresent = zero;
+#if ( ((section1Length > 21) or setCalendarId > 0) and deleteCalendarId == 0) {
+#  alias calendarIdPresent = present;
+#  codetable[2] calendarIdentificationTemplateNumber ('1.5.table',masterDir,localDir) : dump,string_type,no_fail;
+#  template calendarIdentification "grib3/template.1.[calendarIdentificationTemplateNumber:l].def";
+#}
 
-concept is_uerra(zero) {
-   '1' = {productionStatusOfProcessedData=9;}
-   '1' = {productionStatusOfProcessedData=8;}
-   '0' = {dummy=1;}
-}

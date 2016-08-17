@@ -52,9 +52,9 @@ if(sectionNumber == 7 or new() ){
 lookup[1]  sectionNumber(4) ;
 
 # Used to mark end of headers. Can be accessed with grib_get_offset()
-position   endOfHeadersMaker;
+position   endOfHeadersMarker;
 
-meta lengthOfHeaders evaluate( endOfHeadersMaker-startOfHeaders);
+meta lengthOfHeaders evaluate( endOfHeadersMarker-startOfHeaders);
 meta md5Headers md5(startOfHeaders,lengthOfHeaders);
 
 if(sectionNumber == 8 or new() ){
