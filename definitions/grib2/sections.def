@@ -41,9 +41,9 @@
    }
 
    # Used to mark end of headers. Can be accessed with grib_get_offset()
-   position   endOfHeadersMaker;
+   position   endOfHeadersMarker;
 
-   meta lengthOfHeaders evaluate( endOfHeadersMaker-startOfHeaders);
+   meta lengthOfHeaders evaluate( endOfHeadersMarker-startOfHeaders);
    meta md5Headers md5(startOfHeaders,lengthOfHeaders);
 
    lookup[1]    sectionNumber(4) ;

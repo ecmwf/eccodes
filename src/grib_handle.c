@@ -1213,17 +1213,17 @@ int grib_get_message ( grib_handle* h,const void** msg,size_t* size )
 int grib_get_message_headers ( grib_handle* h,const void** msg,size_t* size )
 {
     int ret=0;
-    size_t endOfHeadersMaker;
+    size_t endOfHeadersMarker;
     *msg  =  h->buffer->data;
     *size =  h->buffer->ulength;
 
-    if ((ret=grib_get_offset(h,"endOfHeadersMaker",&endOfHeadersMaker))!=GRIB_SUCCESS) {
+    if ((ret=grib_get_offset(h,"endOfHeadersMarker",&endOfHeadersMarker))!=GRIB_SUCCESS) {
         grib_context_log(h->context,GRIB_LOG_FATAL,
-                "grib_get_message_headers unable to get offset of endOfHeadersMaker");
+                "grib_get_message_headers unable to get offset of endOfHeadersMarker");
         return ret;
     }
 
-    *size=endOfHeadersMaker;
+    *size=endOfHeadersMarker;
 
     return ret;
 }
