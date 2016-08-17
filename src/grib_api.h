@@ -247,6 +247,7 @@ typedef struct grib_index grib_index;
  * @param filename    : name of the file of messages to be indexed
  * @param keys        : comma separated list of keys for the index.
  *    The type of the key can be explicitly declared appending :l for long,
+ *    (or alternatively :i)
  *    :d for double, :s for string to the key name. If the type is not
  *    declared explicitly, the native type is assumed.
  * @param err         :  0 if OK, integer value on error
@@ -260,6 +261,7 @@ grib_index* grib_index_new_from_file(grib_context* c,
  * @param c           : context  (NULL for default context)
  * @param keys        : comma separated list of keys for the index.
  *    The type of the key can be explicitly declared appending :l for long,
+ *    (or alternatively :i)
  *    :d for double, :s for string to the key name. If the type is not
  *    declared explicitly, the native type is assumed.
  * @param err         :  0 if OK, integer value on error
