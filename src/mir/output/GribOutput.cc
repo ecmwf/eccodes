@@ -171,7 +171,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 #endif
         }
 
-        if (LibMir::instance().tracing()) {
+        if (LibMir::instance().debug()) {
             X(info.grid.grid_type);
             X(info.grid.Ni);
             X(info.grid.Nj);
