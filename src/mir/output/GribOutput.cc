@@ -171,7 +171,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 #endif
         }
 
-        if (eckit::Log::tracing<MIR>()) {
+        if (MIR::instance().tracing()) {
             X(info.grid.grid_type);
             X(info.grid.Ni);
             X(info.grid.Nj);
@@ -282,6 +282,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 }
 
 
+#undef Y
 #undef X
 
 
