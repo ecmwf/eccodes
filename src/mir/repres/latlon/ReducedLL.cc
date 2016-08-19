@@ -177,7 +177,7 @@ public:
 
         ni_ = pl_[p_++];
 
-        // eckit::Log::trace<MIR>() << *this << std::endl;
+        // eckit::Log::debug<LibMir>() << *this << std::endl;
     }
 
 };

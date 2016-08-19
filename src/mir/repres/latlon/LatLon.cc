@@ -21,7 +21,7 @@
 #include "eckit/types/FloatCompare.h"
 #include "atlas/grid/Domain.h"
 #include "mir/action/misc/AreaCropper.h"
-#include "mir/log/MIR.h"
+#include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Grib.h"
@@ -43,12 +43,12 @@ static size_t computeN(double first, double last, double inc, const char* n_name
     ASSERT(d0 != d1);
 
     size_t n = p + (d0<d1? 0 : 1);
-    // eckit::Log::trace<MIR>() << p << " " << d0 << " " << d1 << " " << inc << " " << first << " " << last << std::endl;
+    // eckit::Log::debug<LibMir>() << p << " " << d0 << " " << d1 << " " << inc << " " << first << " " << last << std::endl;
 
     if (!cmp::isApproximatelyEqual(n*inc + first, last)) {
         std::ostringstream os;
         os << "computeN: cannot compute accurately " << n_name << " from " << first << "/to/" << last << "/by/" << inc;
-        eckit::Log::trace<MIR>() << os.str() << std::endl;
+        eckit::Log::debug<LibMir>() << os.str() << std::endl;
         throw eckit::BadValue(os.str());
     }
 
@@ -92,8 +92,8 @@ void LatLon::setNiNj() {
 void LatLon::reorder(long scanningMode, std::vector<double> &values) const {
     // Code from ecRegrid, UNTESTED!!!
 
-    eckit::Log::trace<MIR>() << "WARNING: UNTESTED!!! ";
-    eckit::Log::trace<MIR>() << "LatLon::reorder scanning mode 0x" << std::hex << scanningMode << std::dec << std::endl;
+    eckit::Log::debug<LibMir>() << "WARNING: UNTESTED!!! ";
+    eckit::Log::debug<LibMir>() << "LatLon::reorder scanning mode 0x" << std::hex << scanningMode << std::dec << std::endl;
 
     ASSERT(values.size() == ni_ * nj_);
 
@@ -279,7 +279,7 @@ size_t LatLon::frame(std::vector<double> &values, size_t size, double missingVal
 
 
 void LatLon::validate(const std::vector<double> &values) const {
-    eckit::Log::trace<MIR>() << "LatLon::validate " << values.size() << " ni*nj " << ni_ * nj_ << std::endl;
+    eckit::Log::debug<LibMir>() << "LatLon::validate " << values.size() << " ni*nj " << ni_ * nj_ << std::endl;
     ASSERT(values.size() == ni_ * nj_);
 }
 

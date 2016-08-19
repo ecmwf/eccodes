@@ -25,7 +25,7 @@
 #include "mir/util/Grib.h"
 #include "mir/packing/Packer.h"
 #include "eckit/log/Plural.h"
-#include "mir/log/MIR.h"
+#include "mir/config/LibMir.h"
 #include "mir/action/context/Context.h"
 #include "eckit/thread/Mutex.h"
 #include "eckit/thread/AutoLock.h"
@@ -37,7 +37,7 @@ namespace output {
 static eckit::Mutex local_mutex;
 
 
-#define X(a) eckit::Log::trace<MIR>() << "  GRIB encoding: " << #a << " = " << a << std::endl
+#define X(a) eckit::Log::debug<LibMir>() << "  GRIB encoding: " << #a << " = " << a << std::endl
 #define Y(a) oss << " " << #a << "=" << a
 
 
@@ -157,7 +157,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 
                 // There is a bug in grib_api if the user ask 1 value and select second-order
                 // Once this fixed, remove this code
-                eckit::Log::trace<MIR>() << "Field has "
+                eckit::Log::debug<LibMir>() << "Field has "
                                          << eckit::Plural(field.values(i).size(), "value")
                                          << ", ignoring packer "
                                          << packer
@@ -171,7 +171,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 #endif
         }
 
-        if (MIR::instance().tracing()) {
+        if (LibMir::instance().tracing()) {
             X(info.grid.grid_type);
             X(info.grid.Ni);
             X(info.grid.Nj);

@@ -21,7 +21,7 @@
 #include "eckit/types/FloatCompare.h"
 #include "atlas/grid/gaussian/RegularGaussian.h"
 #include "mir/api/MIRJob.h"
-#include "mir/log/MIR.h"
+#include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Grib.h"
@@ -156,7 +156,7 @@ void Regular::validate(const std::vector<double> &values) const {
             if (dom.contains(lon, lat))
                 count++;
         }
-        eckit::Log::trace<MIR>() << "Regular::validate checked " << eckit::Plural(values.size(),"value") << ", within domain: " << eckit::BigNum(count) << "." << std::endl;
+        eckit::Log::debug<LibMir>() << "Regular::validate checked " << eckit::Plural(values.size(),"value") << ", within domain: " << eckit::BigNum(count) << "." << std::endl;
         ASSERT(values.size() == size_t(count));
     }
 }

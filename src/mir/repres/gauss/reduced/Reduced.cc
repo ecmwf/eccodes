@@ -23,7 +23,7 @@
 #include "eckit/types/FloatCompare.h"
 #include "atlas/grid/Domain.h"
 #include "mir/api/MIRJob.h"
-#include "mir/log/MIR.h"
+#include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Grib.h"
@@ -193,7 +193,7 @@ public:
         repositionToFirstLatitudeIndex (k_,        domain_, latitudes_);
         repositionToFirstLongitudeIndex(i_, imax_, domain_, ni_);
 
-        // eckit::Log::trace<MIR>() << *this << std::endl;
+        // eckit::Log::debug<LibMir>() << *this << std::endl;
     }
 
 private:
@@ -369,7 +369,7 @@ void Reduced::validate(const std::vector<double> &values) const {
         }
     }
 
-    eckit::Log::trace<MIR>() << "Reduced::validate " << values.size() << " count=" << count << std::endl;
+    eckit::Log::debug<LibMir>() << "Reduced::validate " << values.size() << " count=" << count << std::endl;
     ASSERT(values.size() == count);
 }
 

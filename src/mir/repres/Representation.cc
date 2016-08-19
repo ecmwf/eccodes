@@ -20,7 +20,7 @@
 #include "eckit/thread/Mutex.h"
 #include "eckit/thread/Once.h"
 #include "atlas/grid/Domain.h"
-#include "mir/log/MIR.h"
+#include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 
 
@@ -217,7 +217,7 @@ const Representation *RepresentationFactory::build(const param::MIRParametrisati
     eckit::AutoLock<eckit::Mutex> lock(local_mutex);
     std::map<std::string, RepresentationFactory *>::const_iterator j = m->find(name);
 
-    // eckit::Log::trace<MIR>() << "Looking for RepresentationFactory [" << name << "]" << std::endl;
+    // eckit::Log::debug<LibMir>() << "Looking for RepresentationFactory [" << name << "]" << std::endl;
 
     if (j == m->end()) {
         eckit::Log::error() << "No RepresentationFactory for [" << name << "]" << std::endl;

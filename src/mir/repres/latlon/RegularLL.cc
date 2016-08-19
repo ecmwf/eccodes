@@ -21,7 +21,7 @@
 #include "atlas/grid/lonlat/ShiftedLat.h"
 #include "atlas/grid/lonlat/ShiftedLon.h"
 #include "atlas/grid/lonlat/ShiftedLonLat.h"
-#include "mir/log/MIR.h"
+#include "mir/config/LibMir.h"
 #include "mir/util/Grib.h"
 
 
@@ -47,7 +47,7 @@ RegularLL::~RegularLL() {
 
 // Called by RegularLL::crop()
 const RegularLL *RegularLL::cropped(const util::BoundingBox &bbox) const {
-    // eckit::Log::trace<MIR>() << "Create cropped copy as RegularLL bbox=" << bbox << std::endl;
+    // eckit::Log::debug<LibMir>() << "Create cropped copy as RegularLL bbox=" << bbox << std::endl;
     return new RegularLL(bbox, increments_);
 }
 
