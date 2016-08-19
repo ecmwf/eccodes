@@ -996,7 +996,7 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
         }
     }
 
-    grib_file_close(filename, &err);
+    grib_file_close(filename, 0, &err);
 
     if (err != GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR,"unable to write message\n");

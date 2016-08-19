@@ -643,7 +643,7 @@ int grib_db_load(grib_db* db,char* filename) {
    }
    if (h) grib_handle_delete(h);
 
-   grib_file_close(file->name,&err);
+   grib_file_close(file->name, 0, &err);
 
    return ret;
 }
@@ -695,7 +695,7 @@ grib_handle* grib_db_retrieve(grib_fieldset* set,int i,int* err) {
    h=grib_handle_new_from_file(set->context,field->file->handle,err);
    if (*err!=GRIB_SUCCESS) return NULL;
 
-   grib_file_close(field->file->name,err);
+   grib_file_close(field->file->name, 0, err);
 
    return h;
 }

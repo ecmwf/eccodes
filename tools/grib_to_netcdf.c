@@ -1058,7 +1058,7 @@ static err to_expand_mem(field *g)
         if(g->handle)
             grib_get_message(g->handle, &dummy, &g->length);
 
-        grib_file_close(file->name, &e);
+        grib_file_close(file->name, 0, &e);
         if(!g->handle)
             return -1;
 
@@ -4094,7 +4094,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
         grib_handle_delete(h);
     }
 
-    grib_file_close(file->name, &e);
+    grib_file_close(file->name, 0, &e);
 
     {
         /* Now do some checks */
