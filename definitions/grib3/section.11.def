@@ -7,9 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
-constant section8Length=4;
-position offsetSection8;
+constant section11Length=4;
+position offsetSection11;
 ascii[4] '7777' = "7777" : read_only;
-meta section8Pointer section_pointer(offsetSection8,section8Length,8);
-
+meta section11Pointer section_pointer(offsetSection11,section11Length,11);

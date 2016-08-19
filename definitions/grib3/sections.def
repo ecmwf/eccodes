@@ -10,43 +10,43 @@
 lookup[1]  sectionNumber(4) ;
 if(sectionNumber == 1 or new() ){
    position sectionPosition;
-   template section_1 "grib3/section.1.def"; #Originator Section
+   template section_1 "grib3/section.01.def"; #Originator Section
 }
 
 lookup[1]  sectionNumber(4) ;
 if( sectionNumber == 2 or new() ){
    position sectionPosition;
-   template section_2 "grib3/section.2.def"; #Repetitions and Index Section
+   template section_2 "grib3/section.02.def"; #Repetitions and Index Section
 } 
 
 lookup[1]  sectionNumber(4) ;
 if(sectionNumber == 3 or new() ){
    position sectionPosition;
-   template section_3 "grib3/section.3.def"; #Time Domain Section
+   template section_3 "grib3/section.03.def"; #Time Domain Section
 }
 
 lookup[1]  sectionNumber(4) ;
 if(sectionNumber == 4 or new() ){
    position sectionPosition;
-   template section_4 "grib3/section.4.def"; #Horizontal Domain Section
+   template section_4 "grib3/section.04.def"; #Horizontal Domain Section
 }
 
 lookup[1]  sectionNumber(4) ;
 if(sectionNumber == 5 or new() ){
    position sectionPosition;
-   template section_5 "grib3/section.5.def"; #Vertical Domain Section
+   template section_5 "grib3/section.05.def"; #Vertical Domain Section
 }
 
 lookup[1]  sectionNumber(4) ;
 if(sectionNumber == 6 or new() ){
    position sectionPosition;
-   template section_6 "grib3/section.6.def"; #Generating Process Section
+   template section_6 "grib3/section.06.def"; #Generating Process Section
 }
 
 lookup[1]  sectionNumber(4) ;
 if(sectionNumber == 7 or new() ){
    position sectionPosition;
-   template section_7 "grib3/section.7.def"; #Observable Property Section
+   template section_7 "grib3/section.07.def"; #Observable Property Section
 }
 
 lookup[1]  sectionNumber(4) ;
@@ -59,13 +59,13 @@ meta md5Headers md5(startOfHeaders,lengthOfHeaders);
 
 if(sectionNumber == 8 or new() ){
    position sectionPosition;
-   template section_8 "grib3/section.8.def"; #Data Representation Section
+   template section_8 "grib3/section.08.def"; #Data Representation Section
 }
 
 lookup[1]  sectionNumber(4) ;
 if(sectionNumber == 9 or new() ){
    position sectionPosition;
-   template section_9 "grib3/section.9.def"; #Overlay Section
+   template section_9 "grib3/section.09.def"; #Overlay Section
 }
 
 lookup[1]  sectionNumber(4) ;
@@ -73,6 +73,5 @@ if(sectionNumber == 10 or new() ){
    position sectionPosition;
    template section_10 "grib3/section.10.def"; #Data Section
 }
-
 
 #template     metas "grib3/meta.def";

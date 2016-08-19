@@ -25,10 +25,9 @@ transient missingValue   = 9999;
 constant ieeeFloats   = 1 : edition_specific;
 constant isHindcast = 0;
 
-include "grib3/section.0.def"; #Indicator Section
+include "grib3/section.00.def"; #Indicator Section
 
 template core "grib3/sections.def";
-
 
 #if(!new())
 #{
@@ -40,4 +39,4 @@ template core "grib3/sections.def";
   #}
 #}
 
-template     section_8 "grib3/section.11.def"; #End Section
+template section_11 "grib3/section.11.def"; #End Section
