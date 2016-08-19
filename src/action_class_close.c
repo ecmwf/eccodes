@@ -104,7 +104,7 @@ static int execute(grib_action* act, grib_handle *h)
   err=grib_get_string(h,self->filename,filename,&len);
   /* fprintf(stderr,"++++ name %s\n",filename); */
   if (err) return err;
-  /* grib_file_close_force(filename,&err); */
+  /* grib_file_close(filename,1,&err); */
   file=grib_get_file(filename,&err);
   if (err) return err;
   if (file) grib_file_pool_delete_file(file);

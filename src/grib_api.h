@@ -221,9 +221,6 @@ typedef struct bufr_descriptor bufr_descriptor;
 typedef struct bufr_descriptors_array bufr_descriptors_array;
 
 grib_fieldset *grib_fieldset_new_from_files(grib_context *c, char *filenames[], int nfiles, char **keys, int nkeys, char *where_string, char *order_by_string, int *err);
-
-
-
 void grib_fieldset_delete(grib_fieldset* set);
 void grib_fieldset_rewind(grib_fieldset* set);
 int grib_fieldset_apply_order_by(grib_fieldset* set,const char* order_by_string);

@@ -641,7 +641,7 @@ static void grib_field_delete(grib_context* c,grib_field* field)
     grib_field_delete(c,field->next);
 
     if (field->file) {
-        grib_file_close(field->file->name,&err);
+        grib_file_close(field->file->name, 0, &err);
         field->file=NULL;
     }
 
@@ -1083,7 +1083,7 @@ int _codes_index_add_file(grib_index* index,const char* filename,int message_typ
 
     }
 
-    grib_file_close(file->name,&err);
+    grib_file_close(file->name, 0, &err);
 
     if (err) return err;
     index->rewind=1;
@@ -1247,7 +1247,7 @@ int grib_index_add_file(grib_index* index, const char* filename)
 
     }
 
-    grib_file_close(file->name,&err);
+    grib_file_close(file->name, 0, &err);
 
     if (err) return err;
     index->rewind=1;
@@ -1481,7 +1481,7 @@ grib_handle* codes_index_get_handle(grib_field* field,int message_type,int *err)
     h=message_new(0,field->file->handle,0,err);
     if (*err!=GRIB_SUCCESS) return NULL;
 
-    grib_file_close(field->file->name,err);
+    grib_file_close(field->file->name, 0, err);
     return h;
 }
 

@@ -634,7 +634,7 @@ int grib_fieldset_add(grib_fieldset* set,char* filename)
     }
     if (h) grib_handle_delete(h);
 
-    grib_file_close(file->name,&err);
+    grib_file_close(file->name, 0, &err);
 
     grib_fieldset_rewind(set);
 
@@ -697,7 +697,7 @@ grib_handle* grib_fieldset_retrieve(grib_fieldset* set,int i,int* err)
     h=grib_handle_new_from_file(set->context,field->file->handle,err);
     if (*err!=GRIB_SUCCESS) return NULL;
 
-    grib_file_close(field->file->name,err);
+    grib_file_close(field->file->name, 0, err);
 
     return h;
 }
@@ -800,6 +800,11 @@ static void grib_fieldset_delete_fields(grib_fieldset* set)
     for (i=0;i<set->size;i++) {
         if (!set->fields[i]) continue;
         set->fields[i]->file->refcount--;
+        /* See GRIB-1010: force file close */
+        {
+            /* int err = 0; */
+            /* grib_file_close(set->fields[i]->file->name, 1, &err); */
+        }
         grib_context_free(set->context,set->fields[i]);
     }
     grib_context_free(set->context,set->fields);
