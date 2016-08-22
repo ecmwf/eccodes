@@ -24,12 +24,12 @@ alias geography.Nj=Nj;
 # LaR - geographic latitude of reference point
 signed[4] latitudeOfReferencePoint: edition_specific,no_copy ;
 alias LaR = latitudeOfReferencePoint;
-meta geography.latitudeOfReferencePointInDegrees scale(latitudeOfReferencePoint,oneConstant,grib2divider,truncateDegrees) : dump;
+meta geography.latitudeOfReferencePointInDegrees scale(latitudeOfReferencePoint,oneConstant,grib3divider,truncateDegrees) : dump;
 
 # LoR - geographic longitude of reference point
 signed[4] longitudeOfReferencePoint : edition_specific,no_copy;
 alias LoR = longitudeOfReferencePoint;
-meta geography.longitudeOfReferencePointInDegrees scale(longitudeOfReferencePoint,oneConstant,grib2divider,truncateDegrees) : dump;
+meta geography.longitudeOfReferencePointInDegrees scale(longitudeOfReferencePoint,oneConstant,grib3divider,truncateDegrees) : dump;
 
 include "grib2/template.3.resolution_flags.def";
 

@@ -20,14 +20,14 @@ alias Nr  = numberOfRadials;
 signed[4] latitudeOfCenterPoint ;
 alias La1 =  latitudeOfCenterPoint;
 meta  geography.latitudeOfCenterPointInDegrees
-        scale(latitudeOfCenterPoint,one,grib2divider,truncateDegrees) : dump;
+        scale(latitudeOfCenterPoint,one,grib3divider,truncateDegrees) : dump;
 alias La1InDegrees=latitudeOfCenterPointInDegrees;
 
 #  Lo1 - longitude of centre point
 unsigned[4] longitudeOfCenterPoint ;
 alias Lo1 =  longitudeOfCenterPoint;
 meta  geography.longitudeOfCenterPointInDegrees
-        scale(longitudeOfCenterPoint,one,grib2divider,truncateDegrees) : dump;
+        scale(longitudeOfCenterPoint,one,grib3divider,truncateDegrees) : dump;
 alias Lo1InDegrees=longitudeOfCenterPointInDegrees;
 
 #  Dx - spacing of bins along radials

@@ -24,7 +24,7 @@ alias numberOfDiamonds=nd;
 
 #  Latitude of the pole point of the icosahedron on the sphere
 signed[4] latitudeOfThePolePoint  : dump ;
-meta geography.latitudeOfThePolePointInDegrees scale(latitudeOfThePolePoint,one,grib2divider,truncateDegrees) : dump;
+meta geography.latitudeOfThePolePointInDegrees scale(latitudeOfThePolePoint,one,grib3divider,truncateDegrees) : dump;
 
 #  Longitude of the pole point of the icosahedron on the sphere
 unsigned[4] longitudeOfThePolePoint  : dump ;

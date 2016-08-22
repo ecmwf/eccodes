@@ -24,29 +24,29 @@ alias geography.Nj=Nj;
 # La1 - latitude of first grid point
 signed[4] latitudeOfFirstGridPoint: edition_specific,no_copy ;
 alias La1 =  latitudeOfFirstGridPoint;
-meta geography.latitudeOfFirstGridPointInDegrees scale(latitudeOfFirstGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;
+meta geography.latitudeOfFirstGridPointInDegrees scale(latitudeOfFirstGridPoint,oneConstant,grib3divider,truncateDegrees) : dump;
 
 # Lo1 - longitude of first grid point
 signed[4] longitudeOfFirstGridPoint : edition_specific,no_copy;
 alias Lo1 =  longitudeOfFirstGridPoint;
-meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;
+meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,oneConstant,grib3divider,truncateDegrees) : dump;
 
 include "grib2/template.3.resolution_flags.def";
 
 # LaD - Latitude(s) at which the Mercator projection intersects the Earth
 # (Latitude(s) where Di and Dj are specified)
 signed[4] LaD : edition_specific,no_copy;
-meta geography.LaDInDegrees scale(LaD,oneConstant,grib2divider,truncateDegrees) : dump;
+meta geography.LaDInDegrees scale(LaD,oneConstant,grib3divider,truncateDegrees) : dump;
 
 # La2 - latitude of last grid point
 signed[4] latitudeOfLastGridPoint : edition_specific,no_copy;
 alias La2 =  latitudeOfLastGridPoint;
-meta geography.latitudeOfLastGridPointInDegrees scale(latitudeOfLastGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;
+meta geography.latitudeOfLastGridPointInDegrees scale(latitudeOfLastGridPoint,oneConstant,grib3divider,truncateDegrees) : dump;
 
 # Lo2 - longitude of last grid point
 signed[4] longitudeOfLastGridPoint: edition_specific,no_copy ;
 alias Lo2 =  longitudeOfLastGridPoint;
-meta geography.longitudeOfLastGridPointInDegrees scale(longitudeOfLastGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;
+meta geography.longitudeOfLastGridPointInDegrees scale(longitudeOfLastGridPoint,oneConstant,grib3divider,truncateDegrees) : dump;
 
 include "grib2/template.3.scanning_mode.def";
 
@@ -55,7 +55,7 @@ include "grib2/template.3.scanning_mode.def";
 #         Di and Dj must be equal to each other
 unsigned[4] orientationOfTheGrid : dump ;
 meta geography.orientationOfTheGridInDegrees
-    scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) : dump;
+    scale(orientationOfTheGrid,oneConstant,grib3divider,truncateDegrees) : dump;
     
 # Di - longitudinal direction grid length
 # NOTE 2: Grid lengths are in units of 10**-3 m, at the latitude specified by LaD

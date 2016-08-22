@@ -16,13 +16,13 @@ signed[4] latitudeOfThePoleOfStretching  : edition_specific,no_copy;
 signed[4] longitudeOfThePoleOfStretching  : edition_specific,no_copy;
 
 meta  geography.latitudeOfStretchingPoleInDegrees
-      scale(latitudeOfThePoleOfStretching,oneConstant,grib2divider,truncateDegrees) : dump;
+      scale(latitudeOfThePoleOfStretching,oneConstant,grib3divider,truncateDegrees) : dump;
 meta  geography.longitudeOfStretchingPoleInDegrees
-      scale(longitudeOfThePoleOfStretching,oneConstant,grib2divider,truncateDegrees) : dump;
+      scale(longitudeOfThePoleOfStretching,oneConstant,grib3divider,truncateDegrees) : dump;
 
 #  Stretching factor
 unsigned[4] stretchingFactorScaled  : edition_specific,no_copy; 
 
 meta  geography.stretchingFactor
-      scale(stretchingFactorScaled,oneConstant,grib2divider) : dump;
+      scale(stretchingFactorScaled,oneConstant,grib3divider) : dump;
 

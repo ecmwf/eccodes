@@ -16,7 +16,7 @@ unsigned[4] longitudeOfSouthernPole : no_copy;
 alias longitudeOfTheSouthernPoleOfProjection=longitudeOfSouthernPole;
 
 meta  geography.latitudeOfSouthernPoleInDegrees   scale(latitudeOfSouthernPole
-                                                 ,one,grib2divider,truncateDegrees) : dump;
+                                                 ,one,grib3divider,truncateDegrees) : dump;
 meta  geography.longitudeOfSouthernPoleInDegrees   g2lon(longitudeOfSouthernPole) : dump;
 
 #  Angle of rotation of projection

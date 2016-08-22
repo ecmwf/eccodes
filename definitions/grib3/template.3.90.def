@@ -28,8 +28,8 @@ signed[4] latitudeOfSubSatellitePoint ;
 #  Lop - longitude of sub-satellite point
 signed[4] longitudeOfSubSatellitePoint ;
 
-meta  geography.latitudeOfSubSatellitePointInDegrees   scale(latitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) : dump;
-meta  geography.longitudeOfSubSatellitePointInDegrees   scale(longitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) : dump;
+meta  geography.latitudeOfSubSatellitePointInDegrees   scale(latitudeOfSubSatellitePoint,one,grib3divider,truncateDegrees) : dump;
+meta  geography.longitudeOfSubSatellitePointInDegrees   scale(longitudeOfSubSatellitePoint,one,grib3divider,truncateDegrees) : dump;
 
 include "grib2/template.3.resolution_flags.def";
 
@@ -58,7 +58,7 @@ include "grib2/template.3.scanning_mode.def";
 #  Orientation of the grid; i.e., the angle between the increasing Y-axis and the meridian of the sub-satellite point in the direction of increasing latitude
 signed[4] orientationOfTheGrid : edition_specific;
 meta geography.orientationOfTheGridInDegrees
-    scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) : dump; 
+    scale(orientationOfTheGrid,oneConstant,grib3divider,truncateDegrees) : dump; 
 
 #  Nr - altitude of the camera from the Earth's centre, measured in units of the Earth's
 # (equatorial)

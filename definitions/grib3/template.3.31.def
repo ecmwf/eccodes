@@ -53,20 +53,20 @@ include "grib2/template.3.scanning_mode.def";
 
 #  Latin 1 - first latitude from the pole at which the secant cone cuts the sphere
 signed[4] Latin1 :edition_specific;
-meta  geography.Latin1InDegrees scale(Latin1,one,grib2divider,truncateDegrees) : dump;
+meta  geography.Latin1InDegrees scale(Latin1,one,grib3divider,truncateDegrees) : dump;
 
 #  Latin 2 - second latitude from the pole at which the secant cone cuts the sphere
 unsigned[4] Latin2  : edition_specific;
-meta  geography.Latin2InDegrees scale(Latin2,one,grib2divider,truncateDegrees) : dump;
+meta  geography.Latin2InDegrees scale(Latin2,one,grib3divider,truncateDegrees) : dump;
 
 #  Latitude of the southern pole of projection
 signed[4] latitudeOfTheSouthernPoleOfProjection : edition_specific ;
 alias latitudeOfSouthernPole=latitudeOfTheSouthernPoleOfProjection;
-meta  geography.latitudeOfSouthernPoleInDegrees   scale(latitudeOfTheSouthernPoleOfProjection          ,one,grib2divider,truncateDegrees) : dump;
+meta  geography.latitudeOfSouthernPoleInDegrees   scale(latitudeOfTheSouthernPoleOfProjection          ,one,grib3divider,truncateDegrees) : dump;
 
 
 #  Longitude of the southern pole of projection
 unsigned[4] longitudeOfTheSouthernPoleOfProjection :edition_specific;
 alias longitudeOfSouthernPole=longitudeOfTheSouthernPoleOfProjection;
-meta  geography.longitudeOfSouthernPoleInDegrees   scale(longitudeOfTheSouthernPoleOfProjection,oneConstant,grib2divider,truncateDegrees) : dump;
+meta  geography.longitudeOfSouthernPoleInDegrees   scale(longitudeOfTheSouthernPoleOfProjection,oneConstant,grib3divider,truncateDegrees) : dump;
 
