@@ -7,9 +7,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# TEMPLATE 4.1, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time
+# TEMPLATE 4.1, Rotated latitude/longitude regular grid on ellipsoidal planet 
 
-include "grib2/template.4.parameter.def"
-include "grib2/template.4.point_in_time.def";
-include "grib2/template.4.horizontal.def"
-include "grib2/template.4.eps.def"
+# Ellipsoid of revolution defined with axis lengths
+include "grib3/template.component.4.0.def"
+
+# Latitude/longitude regular grid
+include "grib3/template.component.4.1.def"
+
+# Rotation of latitude/longitude coordinate system
+include "grib3/template.component.4.2.def"

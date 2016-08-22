@@ -7,10 +7,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# TEMPLATE 4.0, Latitude/longitude regular grid on ellipsoidal planet
+# TEMPLATE 6.2, Statistical post-processing of all ensemble members
 
-# Ellipsoid of revolution defined with axis lengths
-include "grib3/template.component.4.0.def";
+# Process type and identifier
+include "grib3/template.component.6.0.def";
 
-# Latitude/longitude regular grid
-include "grib3/template.component.4.1.def";
+# Ensemble size
+include "grib3/template.component.6.1.def";
+
+# Statistical post-processing of ensemble members
+include "grib3/template.component.6.3.def";

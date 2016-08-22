@@ -7,37 +7,10 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# START 2/template.7.1 ----------------------------------------------------------------------
-# TEMPLATE 7.1, Matrix values at grid point -simple packing
-# Octets 6-nn : Binary data values - binary string, with each
-# (scaled)
-# ????          data_values__binary_string_with_each
+# TEMPLATE 7.1, Observable Property with units conversion
 
-  meta codedValues data_g2simple_packing(
-        section7Length,
-        offsetBeforeData,
-        offsetSection7,
-        unitsFactor,
-        unitsBias,
-        changingPrecision,
-        numberOfValues,
-        bitsPerValue,
-        referenceValue,
-        binaryScaleFactor,
-        decimalScaleFactor
-  ): read_only;
+# Observable property by discipline, category and number
+include "grib3/template.component.7.0.def";
 
-  meta values data_apply_bitmap(codedValues,
-                                bitmap,
-                                missingValue,
-                                binaryScaleFactor,
-                                numberOfDataPoints,
-                                numberOfValues) : dump;
-
-meta packingError simple_packing_error(bitsPerValue,binaryScaleFactor,decimalScaleFactor,referenceValue,ieee) : no_copy;
-meta unpackedError simple_packing_error(zero,binaryScaleFactor,decimalScaleFactor,referenceValue,ieee) : no_copy;
-
-alias data.packedValues = codedValues;
-
-template statistics "common/statistics_grid.def";
-
+# Units conversion
+include "grib3/template.component.7.1.def";

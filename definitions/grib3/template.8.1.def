@@ -7,10 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# TEMPLATE 4.0, Latitude/longitude regular grid on ellipsoidal planet
+# TEMPLATE 8.1, IEEE floating point
 
-# Ellipsoid of revolution defined with axis lengths
-include "grib3/template.component.4.0.def";
-
-# Latitude/longitude regular grid
-include "grib3/template.component.4.1.def";
+# IEEE floating point
+include "grib3/template.component.8.1.def";

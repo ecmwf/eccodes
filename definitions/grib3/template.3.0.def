@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# TEMPLATE 3.0, Latitude/longitude (or equidistant cylindrical, or Plate Carree)
+# TEMPLATE 3.0, Forecast point in time
 
-include "grib2/template.3.shape_of_the_earth.def";
-include "grib2/template.3.latlon.def";
+# Forecast point in time
+include "grib3/template.component.3.0.def";
