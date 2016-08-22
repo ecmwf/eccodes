@@ -26,6 +26,7 @@
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
+#include "mir/util/Angles.h"
 #include "mir/util/Grib.h"
 
 
@@ -50,16 +51,6 @@ Reduced::Reduced(const param::MIRParametrisation &parametrisation):
 
 
 Reduced::~Reduced() {
-}
-
-
-inline void between_0_and_360(double &x) {
-    while (x >= 360) {
-        x -= 360;
-    }
-    while (x < 0 ) {
-        x += 360;
-    }
 }
 
 
@@ -103,8 +94,10 @@ void Reduced::fill(grib_info &info) const  {
         // It looks like dissemination files have longitudes between 0 and 360
         // See if that logic needs to be moved to BoundingBox
 
-        between_0_and_360(info.grid.longitudeOfFirstGridPointInDegrees);
-        between_0_and_360(info.grid.longitudeOfLastGridPointInDegrees);
+        double Lo1 = info.grid.longitudeOfFirstGridPointInDegrees;
+        double Lo2 = info.grid.longitudeOfLastGridPointInDegrees;
+        info.grid.longitudeOfFirstGridPointInDegrees = util::angles::between_0_and_360(Lo1);
+        info.grid.longitudeOfLastGridPointInDegrees  = util::angles::between_0_and_360(Lo2);
 
     }
 
