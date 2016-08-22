@@ -29,7 +29,7 @@ signed[1] scaleFactorOfSecondSize = missing() : can_be_missing,dump;
 signed[4] scaledValueOfSecondSize = missing() : can_be_missing,dump;
 
 codetable[1] typeOfWavelengthInterval ('4.91.table',masterDir,localDir) : dump;
-alias typeOfIntervalForFirstAndSecondWavelength=typeOfSizeInterval;
+alias typeOfIntervalForFirstAndSecondWavelength=typeOfWavelengthInterval;
 
 # wavelengths in metres
 signed[1] scaleFactorOfFirstWavelength : dump;
