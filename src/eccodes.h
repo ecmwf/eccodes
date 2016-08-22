@@ -393,10 +393,10 @@ grib_handle* codes_bufr_handle_new_from_file(grib_context* c, FILE* f, int* erro
 
 
 /**
-*  Write a coded message in a file.
+*  Write a coded message to a file.
 *
 * @param h           : codes_handle to be written
-* @param file        : name of the file
+* @param file        : name of the output file
 * @param mode        : mode
 * @return            0 if OK, integer value on error
 */
@@ -481,8 +481,8 @@ codes_handle* codes_handle_clone(codes_handle* h)                 ;
 int codes_handle_delete(codes_handle* h);
 
 /**
- *  Create an empty multi field GRIB handle.
- *  Remember always to delete the multi handle when it is not needed any more to avoid
+ *  Create an empty multi-field GRIB handle.
+ *  Remember always to delete the multi-handle when it is not needed any more to avoid
  *  memory leaks.
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
@@ -491,31 +491,31 @@ codes_multi_handle* codes_grib_multi_handle_new(codes_context* c);
 
 /**
  *  Append the sections starting with start_section of the message pointed by h at
- *  the end of the multi field GRIB handle mh.
- *  Remember always to delete the multi handle when it is not needed any more to avoid
+ *  the end of the multi-field GRIB handle mh.
+ *  Remember always to delete the multi-handle when it is not needed any more to avoid
  *  memory leaks.
  *
  * @param h           : The handle from which the sections are copied.
  * @param start_section : section number. Starting from this section all the sections to the end of the message will be copied.
- * @param mh           : The multi field handle on which the sections are appended.
+ * @param mh          : The multi-field handle on which the sections are appended.
  * @return            0 if OK, integer value on error
  */
 int codes_grib_multi_handle_append(codes_handle* h,int start_section,codes_multi_handle* mh);
 
 /**
- * Delete multi field GRIB handle.
+ * Delete multi-field GRIB handle.
  *
- * @param mh           : The multi field handle to be deleted.
+ * @param mh          : The multi-field handle to be deleted.
  * @return            0 if OK, integer value on error
  */
 int codes_grib_multi_handle_delete(codes_multi_handle* mh);
 
 /**
- *  Write a multi field GRIB handle in a file.
- *  Remember always to delete the multi handle when it is not needed any more to avoid
+ *  Write a multi-field GRIB handle in a file.
+ *  Remember always to delete the multi-handle when it is not needed any more to avoid
  *  memory leaks.
  *
- * @param mh           : The multi field GRIB handle to be written.
+ * @param mh          : The multi-field GRIB handle to be written.
  * @param f            : File on which the file handle is written.
  * @return            0 if OK, integer value on error
  */
@@ -1062,7 +1062,6 @@ const char* codes_get_git_sha1(void);
 
 /**
 *  Prints the API version
-*
 *
 */
 void codes_print_api_version(FILE* out);
