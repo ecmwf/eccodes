@@ -114,7 +114,7 @@ class GaussianIterator : public Iterator {
 
     const std::vector<double>& latitudes_;
     const std::vector<long>& pl_;
-    const atlas::grid::Domain domain_;
+    const util::BoundingBox bbox_;
 
     size_t ni_;
     const size_t nj_;
@@ -129,15 +129,15 @@ class GaussianIterator : public Iterator {
 
     virtual void print(std::ostream &out) const {
         out << "GaussianIterator["
-            <<  "domain=" << domain_
-            << ",ni="     << ni_
-            << ",nj="     << nj_
-            << ",i="      << i_
-            << ",j="      << j_
-            << ",k="      << k_
-            << ",p="      << p_
-            << ",imax="   << imax_
-            << ",count="  << count_
+            <<  "bbox="  << bbox_
+            << ",ni="    << ni_
+            << ",nj="    << nj_
+            << ",i="     << i_
+            << ",j="     << j_
+            << ",k="     << k_
+            << ",p="     << p_
+            << ",imax="  << imax_
+            << ",count=" << count_
             << "]";
     }
 
@@ -155,10 +155,10 @@ class GaussianIterator : public Iterator {
                     ASSERT(p_ < pl_.size());
                     ni_ = static_cast<size_t>(pl_[p_++]);
                 }
-                repositionToFirstLongitudeIndex(i_, imax_, domain_, ni_);
+                repositionToFirstLongitudeIndex(i_, imax_, bbox_, ni_);
             }
 
-            if (domain_.contains(lon,lat)) {
+            if (bbox_.contains(lat, lon)) {
                 count_++;
                 return true;
             }
@@ -168,10 +168,10 @@ class GaussianIterator : public Iterator {
 
 public:
 
-    GaussianIterator(const std::vector<double>& latitudes, const std::vector<long>& pl, const atlas::grid::Domain& dom) :
+    GaussianIterator(const std::vector<double>& latitudes, const std::vector<long>& pl, const util::BoundingBox& bbox) :
         latitudes_(latitudes),
         pl_(pl),
-        domain_(dom),
+        bbox_(bbox),
         nj_(pl_.size()),
         j_(0),
         p_(0),
@@ -183,26 +183,26 @@ public:
 
         // position to first latitude and first/last longitude
         ni_ = static_cast<size_t>(pl_[p_++]);
-        repositionToFirstLatitudeIndex (k_,        domain_, latitudes_);
-        repositionToFirstLongitudeIndex(i_, imax_, domain_, ni_);
+        repositionToFirstLatitudeIndex (k_,        bbox_, latitudes_);
+        repositionToFirstLongitudeIndex(i_, imax_, bbox_, ni_);
 
         // eckit::Log::debug<LibMir>() << *this << std::endl;
     }
 
 private:
 
-    static void repositionToFirstLatitudeIndex(size_t& j, const atlas::grid::Domain& dom, const std::vector<double>& lats) {
+    static void repositionToFirstLatitudeIndex(size_t& j, const util::BoundingBox& bbox, const std::vector<double>& lats) {
         j=0;
-        while (j < lats.size() && dom.north() < lats[j]) {
+        while (j < lats.size() && bbox.north() < lats[j]) {
             j++;
         }
         ASSERT(j < lats.size());
     }
 
-    static void repositionToFirstLongitudeIndex(size_t& imin, size_t& imax, const atlas::grid::Domain& dom, const size_t& n) {
+    static void repositionToFirstLongitudeIndex(size_t& imin, size_t& imax, const util::BoundingBox& bbox, const size_t& n) {
         typedef eckit::FloatCompare<double> cmp;
-        const double west_positive = dom.west() + (cmp::isStrictlyGreater(0., dom.west())? 360. : 0.);
-        const double east_positive = dom.east() + (cmp::isStrictlyGreater(0., dom.west())? 360. : 0.);
+        const double west_positive = bbox.west() + (cmp::isStrictlyGreater(0., bbox.west())? 360. : 0.);
+        const double east_positive = bbox.east() + (cmp::isStrictlyGreater(0., bbox.west())? 360. : 0.);
         ASSERT(cmp::isApproximatelyGreaterOrEqual(360., east_positive-west_positive));
 
         // assuming n>0, returned range satisfies: 0 <= imin < imax; and imax - imin <= n
@@ -263,16 +263,17 @@ atlas::grid::Domain Reduced::atlasDomain() const {
             isNorthAtEquator  = cmp::isApproximatelyEqual(bbox_.north(),   0, max_inc_north_south),
             isSouthAtEquator  = cmp::isApproximatelyEqual(bbox_.south(),   0, max_inc_north_south);
 
-    return atlas::grid::Domain(
-                includesPoleNorth?   90 : isNorthAtEquator? 0 : bbox_.north(),
-                isPeriodicEastWest?   0 : bbox_.west(),
-                includesPoleSouth?  -90 : isSouthAtEquator? 0 : bbox_.south(),
-                isPeriodicEastWest? 360 : bbox_.east() );
+    const double
+            north = includesPoleNorth?   90 : isNorthAtEquator? 0 : bbox_.north(),
+            south = includesPoleSouth?  -90 : isSouthAtEquator? 0 : bbox_.south(),
+            west = bbox_.west(),
+            east = isPeriodicEastWest? bbox_.west() + 360 : bbox_.east();
+    return atlas::grid::Domain(north, west, south, east);
 }
 
 
 Iterator *Reduced::unrotatedIterator() const {
-    return new GaussianIterator(latitudes(), pls(), atlasDomain());
+    return new GaussianIterator(latitudes(), pls(), bbox_);
 }
 
 
