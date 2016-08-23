@@ -324,6 +324,7 @@ static int read_GRIB(reader* r)
         break;
 
     case 2:
+    case 3:
         length = 0;
 
         if(sizeof(long) >= 8) {
