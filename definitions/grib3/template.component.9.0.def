@@ -1,0 +1,39 @@
+# Overlay Section Template Component 9.0 - Bitmap
+
+
+#  Bit-map indicator
+codetable[1] bitMapIndicator ('6.0.table',masterDir,localDir) = 255 : dump;
+
+meta geography.bitmapPresent g2bitmap_present(bitMapIndicator): dump;
+
+# Bitmap...
+if(bitMapIndicator == 0)
+{
+  if(dataRepresentationTemplateNumber == 1)
+  {
+    if(matrixBitmapsPresent == 1)
+    {
+      meta primaryBitmap g2bitmap( tableReference,
+          missingValue,
+          offsetBSection6,
+          section6Length,
+          numberOfDataMatrices) : read_only;
+    }
+    else
+    {
+      meta geography.bitmap g2bitmap( tableReference,
+          missingValue,
+          offsetBSection6,
+          section6Length,
+          numberOfDataPoints) : read_only;
+    }
+  }
+  else
+  {
+    meta geography.bitmap g2bitmap( tableReference,
+        missingValue,
+        offsetBSection6,
+        section6Length,
+        numberOfDataPoints) : read_only;
+  }
+}
