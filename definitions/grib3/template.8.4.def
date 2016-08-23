@@ -10,4 +10,4 @@
 # TEMPLATE 8.1, IEEE floating point
 
 # IEEE floating point
-include "grib3/template.component.8.1.def";
+include "grib3/template.component.8.4.def";
