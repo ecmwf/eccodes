@@ -801,15 +801,15 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
       {&from_start, &predefined_level},
    },
 /*
- s2s/enfh/ecmf: warning: s2s.2016081800.prod.1104.1.pf.20150818.sl.1104.grib2, field 150 [time_integrated_surface_net_solar_radiation_sfc]: time_integrated_surface_net_solar_radiation_sfc minimum value 2966.09 is not in [-0.001,2000]
+ s2s/enfh/rums: warning: s2s.z_s2s_c_rhmc_19850217000000_glob_prod_1296_000.sl.grib2, field 24 [time_integrated_surface_net_solar_radiation_sfc]: time_integrated_surface_net_solar_radiation_sfc minimum value 20718.7 is not in [-0.1,20000]
  s2s/enfo/ammc: warning: s2s.ssr_20160807_25.grib2, field 62 [time_integrated_surface_net_solar_radiation_sfc]: time_integrated_surface_net_solar_radiation_sfc minimum value 10280.6 is not in [-0.1,10000]
  */
    {
       "time_integrated_surface_net_solar_radiation_sfc",
       -0.1,
-       20000,
       1e+05,
-      1e+09,
+      1e+05,
+      1e+07,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"paramId", GRIB_TYPE_LONG, 176},
@@ -825,11 +825,10 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
 
    {
       "time_integrated_surface_net_solar_radiation_downwards_sfc",
-      -1e+8,
-       1e+8,
-      -1e+8,
-       1e+8,
-
+      -0.1,
+      200000,
+      1e+05,
+      1e+09,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"paramId", GRIB_TYPE_LONG, 169},
@@ -2600,7 +2599,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
    {
       "relative_humidity_hl",
       0,
-      0.1,
+      10,
       90,
       100.1,
       {
@@ -2736,10 +2735,10 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
    },
    {
       "time_integrated_surface_clear-sky_solar_radiation_downwards",
-      -1e+10,
-       1e+10,
-      -1e+10,
-       1e+10,
+      -0.1,
+      200000,
+      1e+05,
+      1e+09,
       {
          {"paramId", GRIB_TYPE_LONG, 260423},
          {"discipline", GRIB_TYPE_LONG, 0},
@@ -2753,10 +2752,10 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
    },
    {
       "time_integrated_surface_clear-sky_solar_radiation_upwards",
-      -1e+10,
-       1e+10,
-      -1e+10,
-       1e+10,
+      -0.1,
+      200000,
+      1e+05,
+      1e+09,
       {
          {"paramId", GRIB_TYPE_LONG, 260427},
          {"discipline", GRIB_TYPE_LONG, 0},
@@ -2787,10 +2786,10 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
    },
    {
       "time_integrated_surface_direct_solar_radiation",
-      -1e+10,
-       1e+10,
-      -1e+10,
-       1e+10,
+      -0.1,
+      20000,
+      1e+05,
+      1e+09,
       {
          {"paramId", GRIB_TYPE_LONG, 260264},
          {"discipline", GRIB_TYPE_LONG, 0},
