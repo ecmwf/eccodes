@@ -379,7 +379,7 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t *l
     a = grib_find_accessor(h, name);
 
     if (h->context->debug)
-        printf("ECCODES DEBUG grib_set_string %s=%s\n",name,val);
+        printf("ECCODES DEBUG grib_set_string %s=|%s|\n",name,val);
 
     if(a)
     {
