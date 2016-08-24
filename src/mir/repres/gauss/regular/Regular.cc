@@ -76,7 +76,7 @@ void Regular::fill(grib_info &info) const  {
 
     */
 
-    size_t j = info.packing.extra_settings_count++;
+    long j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
     info.packing.extra_settings[j].name = "global";
     info.packing.extra_settings[j].long_value = atlasDomain().isGlobal()? 1 : 0;
@@ -96,12 +96,17 @@ atlas::grid::Grid *Regular::atlasGrid() const {
 
 
 atlas::grid::Domain Regular::atlasDomain() const {
+    return atlasDomain(bbox_);
+}
+
+
+atlas::grid::Domain Regular::atlasDomain(const util::BoundingBox& bbox) const {
 
     const std::vector<double> &lats = latitudes();
     ASSERT(lats.size()>=2);
 
-    const double ew = bbox_.east() - bbox_.west();
-    const double inc_west_east = 90.0/N_;
+    const double ew = bbox.east() - bbox.west();
+    const double N = static_cast<double>(N_);
 
     // adjust bounding box on GRIB precision
     // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree
@@ -109,8 +114,8 @@ atlas::grid::Domain Regular::atlasDomain() const {
     const double epsilon_grib1 = 1.0 / 1000.0;
     eckit::FloatApproxCompare<double> cmp_eps(epsilon_grib1);
 
-    double adjust_north = bbox_.north();
-    double adjust_south = bbox_.south();
+    double adjust_north = bbox.north();
+    double adjust_south = bbox.south();
 
     for (std::vector<double>::const_iterator lat=lats.begin(); lat!=lats.end(); ++lat) {
         if (cmp_eps(adjust_north, *lat))
@@ -119,25 +124,30 @@ atlas::grid::Domain Regular::atlasDomain() const {
             adjust_south = std::min(adjust_south, *lat);
     }
 
-    double adjust_west  = bbox_.west();
-    double adjust_east  = bbox_.east();
+    double adjust_west  = bbox.west();
+    double adjust_east  = bbox.east();
 
     for (size_t i=0; i<4*N_; ++i) {
-        const double lon1 = bbox_.west() + static_cast<double>(i*90.0)/static_cast<double>(N_);
-        const double lon2 = bbox_.east() - static_cast<double>(i*90.0)/static_cast<double>(N_);
+        const double lon1 = bbox.west() + static_cast<double>(i*90.0)/N;
+        const double lon2 = bbox.east() - static_cast<double>(i*90.0)/N;
         if (cmp_eps(adjust_east, lon1) || cmp_eps(adjust_east, lon2))
             adjust_east = std::max(adjust_east, std::max(lon1, lon2));
         if (cmp_eps(adjust_west, lon1) || cmp_eps(adjust_west, lon2))
             adjust_west = std::min(adjust_west, std::min(lon1, lon2));
     }
 
-    const bool isPeriodicEastWest = cmp_eps(ew + inc_west_east, 360.0);
-    const bool includesPoleNorth  = cmp_eps(adjust_north, lats.front());
-    const bool includesPoleSouth  = cmp_eps(adjust_south, lats.back());
+    const bool
+            isPeriodicEastWest = cmp_eps(ew + 90.0/N, 360.0),
+            includesPoleNorth  = cmp_eps(adjust_north, lats.front()),
+            includesPoleSouth  = cmp_eps(adjust_south, lats.back());
 
-    return atlas::grid::Domain(
-                includesPoleNorth?  90 : adjust_north, isPeriodicEastWest?   0 : adjust_west,
-                includesPoleSouth? -90 : adjust_south, isPeriodicEastWest? 360 : adjust_east );
+    const double
+            north = includesPoleNorth?  90 : adjust_north,
+            south = includesPoleSouth? -90 : adjust_south,
+            west = isPeriodicEastWest?   0 : adjust_west,
+            east = isPeriodicEastWest? 360 : adjust_east;
+
+    return atlas::grid::Domain(north, west, south, east);
 }
 
 

@@ -143,6 +143,13 @@ atlas::grid::Domain Representation::atlasDomain() const {
 }
 
 
+atlas::grid::Domain Representation::atlasDomain(const util::BoundingBox&) const {
+    std::ostringstream os;
+    os << "Representation::atlasDomain(BoundingBox) not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+
 size_t Representation::truncation() const {
     std::ostringstream os;
     os << "Representation::truncation() not implemented for " << *this;

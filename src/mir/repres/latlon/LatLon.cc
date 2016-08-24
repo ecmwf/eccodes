@@ -291,21 +291,26 @@ void LatLon::shape(size_t &ni, size_t &nj) const {
 
 
 atlas::grid::Domain LatLon::atlasDomain() const {
+  return atlasDomain(bbox_);
+}
+
+
+atlas::grid::Domain LatLon::atlasDomain(const util::BoundingBox& bbox) const {
     typedef eckit::FloatCompare<double> cmp;
 
     // Special case for shifted grids
-    const double ns = bbox_.north() - bbox_.south() ;
-    const double ew = bbox_.east()  - bbox_.west() ;
+    const double ns = bbox.north() - bbox.south() ;
+    const double ew = bbox.east()  - bbox.west() ;
 
     const bool isPeriodicEastWest = cmp::isApproximatelyEqual(ew + increments_.west_east(), 360.);
     const bool includesPoles = cmp::isApproximatelyEqual(ns, 180.)
                             || cmp::isApproximatelyEqual(ns + increments_.south_north(), 180.);
 
     return atlas::grid::Domain(
-                includesPoles?       90 : bbox_.north(),
-                isPeriodicEastWest?   0 : bbox_.west(),
-                includesPoles?      -90 : bbox_.south(),
-                isPeriodicEastWest? 360 : bbox_.east() );
+                includesPoles?       90 : bbox.north(),
+                isPeriodicEastWest?   0 : bbox.west(),
+                includesPoles?      -90 : bbox.south(),
+                isPeriodicEastWest? 360 : bbox.east() );
 }
 
 

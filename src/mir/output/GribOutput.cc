@@ -12,27 +12,27 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
+
 #include "mir/output/GribOutput.h"
 
 #include <istream>
-
 #include "eckit/io/DataHandle.h"
-
+#include "eckit/log/Plural.h"
+#include "eckit/thread/AutoLock.h"
+#include "eckit/thread/Mutex.h"
+#include "mir/action/context/Context.h"
+#include "mir/config/LibMir.h"
 #include "mir/data/MIRField.h"
 #include "mir/input/MIRInput.h"
+#include "mir/packing/Packer.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Representation.h"
 #include "mir/util/Grib.h"
-#include "mir/packing/Packer.h"
-#include "eckit/log/Plural.h"
-#include "mir/config/LibMir.h"
-#include "mir/action/context/Context.h"
-#include "eckit/thread/Mutex.h"
-#include "eckit/thread/AutoLock.h"
 
 
 namespace mir {
 namespace output {
+
 
 static eckit::Mutex local_mutex;
 
@@ -80,6 +80,7 @@ size_t GribOutput::copy(const param::MIRParametrisation &param, context::Context
 
     return total;
 }
+
 
 size_t GribOutput::save(const param::MIRParametrisation &parametrisation, context::Context& ctx) {
 
@@ -141,10 +142,10 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 
         long paramId = field.paramId(i);
         if (paramId) {
-            int n = info.packing.extra_settings_count++;
-            info.packing.extra_settings[n].name = "paramId";
-            info.packing.extra_settings[n].type = GRIB_TYPE_LONG;
-            info.packing.extra_settings[n].long_value = paramId;
+            long j = info.packing.extra_settings_count++;
+            info.packing.extra_settings[j].name = "paramId";
+            info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
+            info.packing.extra_settings[j].long_value = paramId;
         }
 
         std::string packing;
