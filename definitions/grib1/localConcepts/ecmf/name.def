@@ -3354,6 +3354,46 @@
 	 table2Version = 140 ;
 	 indicatorOfParameter = 84 ;
 	}
+#Wave energy flux magnitude
+'Wave energy flux magnitude' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 112 ;
+	}
+#Wave energy flux mean direction
+'Wave energy flux mean direction' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 113 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 10 to 12 seconds
+'Significant wave height of all waves with periods within the inclusive range from 10 to 12 seconds' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 114 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
+'Significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 115 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds
+'Significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 116 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds
+'Significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 117 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds
+'Significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 118 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds
+'Significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 119 ;
+	}
 #Significant wave height of all waves with period larger than 10s
 'Significant wave height of all waves with period larger than 10s' = {
 	 table2Version = 140 ;

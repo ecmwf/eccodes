@@ -3354,6 +3354,46 @@
 	 table2Version = 140 ;
 	 indicatorOfParameter = 84 ;
 	}
+#Wave energy flux magnitude
+'wefxm' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 112 ;
+	}
+#Wave energy flux mean direction
+'wefxd' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 113 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 10 to 12 seconds
+'h1012' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 114 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
+'h1214' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 115 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds
+'h1417' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 116 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds
+'h1721' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 117 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds
+'h2125' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 118 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds
+'h2530' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 119 ;
+	}
 #Significant wave height of all waves with period larger than 10s
 'sh10' = {
 	 table2Version = 140 ;
