@@ -2783,7 +2783,7 @@ int grib_f_get_string_array(int* gid, char* key, char* val,int* nvals,int* slen,
 static void rtrim(char* s)
 {
     size_t len = 0;
-    Assert(s);
+    if (!s) return;
     len = strlen(s);
     while (len > 0 && isspace((unsigned char)s[len - 1]))
         len--;
@@ -2857,15 +2857,19 @@ int grib_f_get_string(int* gid, char* key, char* val,  int len, int len2){
 int grib_f_set_string_(int* gid, char* key, char* val, int len, int len2){
 
     grib_handle *h = get_handle(*gid);
+    char* val_str = NULL;
 
     char buf[1024]={0,};
     char buf2[1024]={0,};
     size_t lsize = len2;
 
     if(!h) return GRIB_INVALID_GRIB;
+    
+    /* For BUFR, the value may contain spaces e.g. stationOrSiteName='CAMPO NOVO' */
+    val_str = cast_char_no_cut(buf2,val,len2);
+    rtrim( val_str ); /* trim spaces at end of string */
 
-    return grib_set_string(h, cast_char(buf,key,len), cast_char_no_cut(buf2,val,len2), &lsize);
-
+    return grib_set_string(h, cast_char(buf,key,len), val_str, &lsize);
 }
 
 int grib_f_set_string__(int* gid, char* key, char* val, int len, int len2){
