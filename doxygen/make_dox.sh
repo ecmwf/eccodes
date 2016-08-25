@@ -43,4 +43,18 @@ for fn in $fnames; do
   perl -p -i -e "s|$fn\.f90|<a href=\"https://software.ecmwf.int/wiki/display/ECC/$fn\" target=\"_blank\">$fn.f90</a>|" $F90_file
 done
 
+pnames="
+grib_get_keys
+bufr_get_keys
+grib_nearest
+grib_index
+grib_multi_write
+grib_iterator
+grib_clone
+"
+for fn in $pnames; do
+  perl -p -i -e "s|$fn\.py|<a href=\"https://software.ecmwf.int/wiki/display/ECC/$fn\" target=\"_blank\">$fn.py</a>|" $Py_file
+done
+
+
 echo DONE
