@@ -297,8 +297,26 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     grib_value_count(a,&count);
     size=count;
 
-    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
+    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0  ) return;
+
+    if ( (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0) {
+        if (self->isLeaf==0) {
+            char* prefix;
+            int dofree=0;
+            
+            r=compute_key_rank(h,self->keys,a->name);
+            if (r!=0) {
+                prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
+                dofree=1;
+                sprintf(prefix,"#%d#%s",r,a->name);
+            } else prefix=(char*)a->name;
+            
+            dump_attributes(d,a,prefix);
+            if (dofree) grib_context_free(c,prefix);
+            depth-=2;
+        }
         return;
+    }
 
     if (size>1) {
         values=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
