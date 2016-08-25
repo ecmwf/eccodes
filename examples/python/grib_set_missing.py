@@ -15,7 +15,7 @@ import sys
 from eccodes import *
 
 INPUT = '../../data/tigge/tigge_ecmf_pl_t.grib'
-OUTPUT = 'out.set_missing.grib'
+OUTPUT = 'out.p_set_missing.grib'
 VERBOSE = 1  # verbose error reporting
 
 

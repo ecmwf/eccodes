@@ -15,7 +15,7 @@ import sys
 from eccodes import *
 
 INPUT = '../../data/tp_ecmwf.grib'
-OUTPUT = 'out.samples.grib'
+OUTPUT = 'p_out.grib_samples.grib'
 VERBOSE = 1  # verbose error reporting
 
 

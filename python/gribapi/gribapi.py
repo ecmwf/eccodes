@@ -789,7 +789,7 @@ def grib_new_from_samples(samplename):
     by the environment variable ECCODES_SAMPLES_PATH.
     To know where the samples directory is run the codes_info tool.\n
 
-    \b Examples: \ref samples.py "samples.py"
+    \b Examples: \ref grib_samples.py "grib_samples.py"
 
     @param samplename   name of the sample to be used
     @return id of the message loaded in memory
@@ -809,7 +809,7 @@ def codes_bufr_new_from_samples(samplename):
     by the environment variable ECCODES_SAMPLES_PATH.
     To know where the samples directory is run the codes_info tool.\n
 
-    \b Examples: \ref samples.py "samples.py"
+    \b Examples: \ref grib_samples.py "grib_samples.py"
 
     @param samplename   name of the BUFR sample to be used
     @return             id of the message loaded in memory
@@ -1334,7 +1334,7 @@ def grib_set_missing(msgid, key):
     It can be used to set a missing value in the grib header but not in
     the data values.
 
-    \b Examples: \ref set_missing.py "set_missing.py"
+    \b Examples: \ref grib_set_missing.py "grib_set_missing.py"
 
     @param  msgid     id of the message loaded in memory
     @param  key       key name
@@ -1496,7 +1496,7 @@ def grib_get(msgid, key, ktype=None):
 
     The \em msgid references a grib message loaded in memory.
 
-    \b Examples: \ref grib_get_keys.py "grib_get_keys.py", \ref print_data.py "print_data.py"
+    \b Examples: \ref grib_get_keys.py "grib_get_keys.py", \ref grib_print_data.py "grib_print_data.py"
 
     @see grib_new_from_file, grib_release, grib_set
 
@@ -1557,7 +1557,7 @@ def grib_get_values(gribid):
 
     A NumPy ndarray containing the values in the message is returned.
 
-    \b Examples: \ref print_data.py "print_data.py", \ref samples.py "samples.py"
+    \b Examples: \ref grib_print_data.py "grib_print_data.py", \ref grib_samples.py "grib_samples.py"
 
     @param gribid   id of the grib loaded in memory
     @return         numpy.ndarray
@@ -1579,7 +1579,7 @@ def grib_set_values(gribid, values):
 
     The elements of the input sequence need to be convertible to a double.
 
-    \b Examples: \ref grib_clone.py "grib_clone.py", \ref samples.py "samples.py"
+    \b Examples: \ref grib_clone.py "grib_clone.py", \ref grib_samples.py "grib_samples.py"
 
     @param gribid   id of the grib loaded in memory
     @param values   array of values to set as tuple, list, array or numpy.ndarray

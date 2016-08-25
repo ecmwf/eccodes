@@ -38,9 +38,9 @@ list( APPEND tests
    grib_multi_write
    grib_nearest
    grib_print_data
-   samples
+   grib_samples
    grib_set_keys
-   set_missing
+   grib_set_missing
    binary_message
    grib_set_bitmap
    bufr_attributes

@@ -9,9 +9,9 @@ that can be taken as a starting point to write more complex programs.\n
 - \ref grib_print_data.py "grib_print_data.py" How to print all the data contained in a grib file.
 - \ref set.py "set.py" How to set values through the key names.
 - \ref grib_nearest.py "grib_nearest.py" How to find the nearest grid points.
-- \ref set_missing.py "set_missing.py" How to set a missing value in the header.
+- \ref grib_set_missing.py "grib_set_missing.py" How to set a missing value in the header.
 - \ref count_messages.py "count_messages.py" How to count the messages in a file and loop through them. 
-- \ref samples.py "samples.py" How to create a new message from a sample.
+- \ref grib_samples.py "grib_samples.py" How to create a new message from a sample.
 - \ref grib_clone.py "grib_clone.py" How to clone a message.
 - \ref grib_iterator.py "grib_iterator.py" How to use an iterator on latitude, longitude, values.
 - \ref grib_keys_iterator.py "grib_keys_iterator.py" How to get the names of all the keys.

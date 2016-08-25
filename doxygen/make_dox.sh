@@ -45,12 +45,17 @@ done
 
 pnames="
 grib_get_keys
-bufr_get_keys
+grib_set_keys
+grib_samples
+grib_set_missing
 grib_nearest
 grib_index
+grib_print_data
 grib_multi_write
 grib_iterator
 grib_clone
+grib_keys_iterator
+bufr_get_keys
 "
 for fn in $pnames; do
   perl -p -i -e "s|$fn\.py|<a href=\"https://software.ecmwf.int/wiki/display/ECC/$fn\" target=\"_blank\">$fn.py</a>|" $Py_file
