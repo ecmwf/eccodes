@@ -4,7 +4,7 @@ AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@ @FORCE_32_CFLAGS@
 TESTS = grib_copy_message.sh grib_get_keys.sh get_data.sh get_pl.sh get_pv.sh grib_keys_iterator.sh \
         grib_nearest.sh grib_precision.sh grib_multi_write.sh grib_multi.sh \
         grib_print_data.sh grib_set_keys.sh \
-        grib_set_bitmap.sh set_missing.sh grib_set_pv.sh samples.sh grib_count_messages.sh \
+        grib_set_bitmap.sh grib_set_missing.sh grib_set_pv.sh samples.sh grib_count_messages.sh \
         read_message.sh grib_count_messages_multi.sh \
         read_from_file.sh grib_index.sh get_set_uuid.sh \
         bufr_attributes.sh grib_clone.sh bufr_clone.sh \
@@ -29,7 +29,7 @@ noinst_PROGRAMS  = eccodes_f_grib_index \
                    eccodes_f_grib_print_data_static \
                    eccodes_f_grib_set_keys \
                    eccodes_f_grib_set_bitmap \
-                   eccodes_f_set_missing \
+                   eccodes_f_grib_set_missing \
                    eccodes_f_grib_set_pv \
                    eccodes_f_samples \
                    eccodes_f_grib_count_messages \
@@ -71,7 +71,7 @@ eccodes_f_grib_print_data_SOURCES=grib_print_data.f90
 eccodes_f_grib_print_data_static_SOURCES=grib_print_data_static.f90
 eccodes_f_grib_set_keys_SOURCES=grib_set_keys.f90
 eccodes_f_grib_set_bitmap_SOURCES=grib_set_bitmap.f90
-eccodes_f_set_missing_SOURCES=set_missing.f90
+eccodes_f_grib_set_missing_SOURCES=grib_set_missing.f90
 eccodes_f_grib_set_pv_SOURCES=grib_set_pv.f90
 eccodes_f_samples_SOURCES=samples.f90
 eccodes_f_grib_count_messages_SOURCES=grib_count_messages.f90

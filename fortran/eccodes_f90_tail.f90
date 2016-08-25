@@ -14,7 +14,7 @@
 !> exit with an error message.\n Otherwise the error message can be
 !> gathered with @ref codes_get_error_string.
 !>
-!> \b Examples: \ref set_missing.f90 "set_missing.f90"
+!> \b Examples: \ref grib_set_missing.f90 "grib_set_missing.f90"
 !>
 !> @param id      ID of the message loaded in memory
 !> @param key     key name

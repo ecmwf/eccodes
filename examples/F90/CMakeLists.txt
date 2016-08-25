@@ -23,7 +23,7 @@ list( APPEND tests
       grib_print_data
       grib_set_keys
       grib_set_bitmap
-      set_missing
+      grib_set_missing
       grib_set_pv
       samples
       grib_count_messages

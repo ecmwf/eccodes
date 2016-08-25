@@ -36,7 +36,7 @@ grib_clone
 grib_copy_message
 count_messages
 samples
-set_missing
+grib_set_missing
 "
 
 for fn in $fnames; do

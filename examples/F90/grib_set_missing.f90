@@ -25,7 +25,7 @@ program set
        '../../data/reduced_gaussian_pressure_level.grib2','r')
 
   call codes_open_file(outfile, &
-       'out_surface_level.grib2','w')
+       'f_out_surface_level.grib2','w')
 
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls

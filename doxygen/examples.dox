@@ -1,4 +1,4 @@
-/*! \page examples Grib API examples
+/*! \page examples GRIB API examples
 
 \example grib_get_keys.c grib_get_keys.c How to get values through the key names.
 \example set.c set.c How to set values through the key names.
@@ -19,7 +19,7 @@ defined in a message and how to iterate through them.
 \example get_data.f90 How to get latitude/longitude/values.
 \example set.f90 How to set values through the key names.
 \example grib_set_bitmap.f90 How to set and use a bitmap.
-\example set_missing.f90 How to set a missing value in the header.
+\example grib_set_missing.f90 How to set a missing value in the header.
 \example grib_set_pv.f90 How to set the list of levels.
 \example samples.f90 How to create a new message from a samples.
 \example grib_clone.f90 How to clone a message.
