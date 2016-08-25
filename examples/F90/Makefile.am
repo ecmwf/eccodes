@@ -1,7 +1,7 @@
 
 AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@ @FORCE_32_CFLAGS@
 
-TESTS = copy_message.sh grib_get_keys.sh get_data.sh get_pl.sh get_pv.sh grib_keys_iterator.sh \
+TESTS = grib_copy_message.sh grib_get_keys.sh get_data.sh get_pl.sh get_pv.sh grib_keys_iterator.sh \
         grib_nearest.sh grib_precision.sh grib_multi_write.sh grib_multi.sh \
         grib_print_data.sh grib_set_keys.sh \
         grib_set_bitmap.sh set_missing.sh grib_set_pv.sh samples.sh grib_count_messages.sh \
@@ -15,7 +15,7 @@ TESTS = copy_message.sh grib_get_keys.sh get_data.sh get_pl.sh get_pv.sh grib_ke
         bufr_read_tropical_cyclone.sh bufr_read_scatterometer.sh
 
 noinst_PROGRAMS  = eccodes_f_grib_index \
-                   eccodes_f_copy_message \
+                   eccodes_f_grib_copy_message \
                    eccodes_f_grib_get_keys \
                    eccodes_f_get_data \
                    eccodes_f_get_pl \
@@ -57,7 +57,7 @@ noinst_PROGRAMS  = eccodes_f_grib_index \
                    eccodes_f_bufr_read_scatterometer
 
 eccodes_f_grib_index_SOURCES=grib_index.f90
-eccodes_f_copy_message_SOURCES=copy_message.f90
+eccodes_f_grib_copy_message_SOURCES=grib_copy_message.f90
 eccodes_f_grib_get_keys_SOURCES=grib_get_keys.f90
 eccodes_f_get_data_SOURCES=get_data.f90
 eccodes_f_get_pl_SOURCES=get_pl.f90

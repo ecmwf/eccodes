@@ -9,7 +9,7 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 ################################################
 list( APPEND tests
       grib_index
-      copy_message
+      grib_copy_message
       bufr_copy_message
       grib_get_keys
       get_data

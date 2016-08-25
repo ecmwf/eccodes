@@ -31,7 +31,7 @@ that can be taken as a starting point to write more complex programs.\n
 - \ref grib_set_pv.f90 "grib_set_pv.f90" how to set the list of levels.
 - \ref samples.f90 "samples.f90" how to create a new message from a template.
 - \ref grib_clone.f90 "grib_clone.f90" how to clone a message.
-- \ref copy_message.f90 "copy_message.f90" how to copy a message in memory and create a new message.
+- \ref grib_copy_message.f90 "grib_copy_message.f90" how to copy a message in memory and create a new message.
 - \ref grib_keys_iterator.f90 "grib_keys_iterator.f90" how to get the names of all the keys
 defined in a message and how to iterate through them.
 - \ref grib_precision.f90 "grib_precision.f90" how to control precision when coding a grib field.

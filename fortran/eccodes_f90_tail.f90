@@ -1019,7 +1019,7 @@ end subroutine codes_bufr_new_from_file
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref codes_get_error_string.
   !>
-  !> \b Examples: \ref copy_message.f90 "copy_message.f90"
+  !> \b Examples: \ref grib_copy_message.f90 "grib_copy_message.f90"
   !>
   !> @param msgid       id of the message loaded in memory
   !> @param message     character array containing the coded message
@@ -1043,7 +1043,7 @@ end subroutine codes_new_from_message_char
   !> gathered with @ref codes_get_error_string.
   !>
   !>
-  !> \b Examples: \ref copy_message.f90 "copy_message.f90"
+  !> \b Examples: \ref grib_copy_message.f90 "grib_copy_message.f90"
   !>
   !> @param msgid       id of the message loaded in memory
   !> @param message     integer array containing the coded message

@@ -35,7 +35,7 @@ module eccodes
   !> gathered with @ref codes_get_error_string.
   !>
   !>
-  !> \b Examples: \ref copy_message.f90 "copy_message.f90"
+  !> \b Examples: \ref grib_copy_message.f90 "grib_copy_message.f90"
   !>
   !> @param id          ID of the message loaded in memory
   !> @param message     array containing the coded message

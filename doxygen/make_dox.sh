@@ -33,11 +33,11 @@ bufr_get_keys
 grib_index
 grib_get_keys
 grib_clone
+grib_copy_message
 count_messages
 samples
 set_missing
 "
-# Add later copy_message -> grib_copy_message
 
 for fn in $fnames; do
   perl -p -i -e "s|$fn\.f90|<a href=\"https://software.ecmwf.int/wiki/display/ECC/$fn\" target=\"_blank\">$fn.f90</a>|" $F90_file
