@@ -24,7 +24,7 @@ that can be taken as a starting point to write more complex programs.\n
 - \ref count_messages.f90 "count_messages.f90" count the messages in a file and loop through them.
 - \ref get_pl.f90 "get_pl.f90" how to get the list of number of points for each parallel in reduced grids.
 - \ref get_pv.f90 "get_pv.f90" how to get the list of levels.
-- \ref get_data.f90 "get_data.f90" how to get latitude/longitude/values.
+- \ref grib_get_data.f90 "grib_get_data.f90" how to get latitude/longitude/values.
 - \ref set.f90 "set.f90" how to set values through the key names.
 - \ref grib_set_bitmap.f90 "grib_set_bitmap.f90" how to set and use a bitmap.
 - \ref grib_set_missing.f90 "grib_set_missing.f90" how to set a missing value in the header.

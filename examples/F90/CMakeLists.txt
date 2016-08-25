@@ -12,7 +12,7 @@ list( APPEND tests
       grib_copy_message
       bufr_copy_message
       grib_get_keys
-      get_data
+      grib_get_data
       get_pl
       get_pv
       grib_keys_iterator

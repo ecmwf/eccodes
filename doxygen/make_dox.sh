@@ -25,22 +25,25 @@ rm -f eccodes.h
 rm -f ecCodes.py
 
 # Change the links from any example code back to confluence
-F90_file=../html/classeccodes.html
-Py_file=../html/namespaceec_codes.html
-
 fnames="
 bufr_get_keys
 grib_index
 grib_get_keys
+grib_set_keys
+grib_get_data
 grib_clone
+grib_print_data
 grib_copy_message
 count_messages
+grib_nearest
 grib_samples
 grib_set_missing
 "
 
 for fn in $fnames; do
-  perl -p -i -e "s|$fn\.f90|<a href=\"https://software.ecmwf.int/wiki/display/ECC/$fn\" target=\"_blank\">$fn.f90</a>|" $F90_file
+  perl -p -i -e "s|$fn\.f90|<a href=\"https://software.ecmwf.int/wiki/display/ECC/$fn\" target=\"_blank\">$fn.f90</a>|" ../html/classeccodes.html
+  # Do all F90 interface files too
+  perl -p -i -e "s|$fn\.f90|<a href=\"https://software.ecmwf.int/wiki/display/ECC/$fn\" target=\"_blank\">$fn.f90</a>|" ../html/interfaceeccodes*.html
 done
 
 pnames="
@@ -58,8 +61,7 @@ grib_keys_iterator
 bufr_get_keys
 "
 for fn in $pnames; do
-  perl -p -i -e "s|$fn\.py|<a href=\"https://software.ecmwf.int/wiki/display/ECC/$fn\" target=\"_blank\">$fn.py</a>|" $Py_file
+  perl -p -i -e "s|$fn\.py|<a href=\"https://software.ecmwf.int/wiki/display/ECC/$fn\" target=\"_blank\">$fn.py</a>|" ../html/namespaceec_codes.html
 done
-
 
 echo DONE

@@ -127,7 +127,7 @@ module eccodes
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref codes_get_error_string.
   !>
-  !> \b Examples: \ref get_data.f90 "get_data.f90"
+  !> \b Examples: \ref grib_get_data.f90 "grib_get_data.f90"
   !>
   !> @param[in] gribid       id of the grib loaded in memory
   !> @param[out] lats        latitudes array with dimension "size"
