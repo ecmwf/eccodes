@@ -25,7 +25,7 @@ list( APPEND tests
       grib_set_bitmap
       grib_set_missing
       grib_set_pv
-      samples
+      grib_samples
       grib_count_messages
       grib_count_messages_multi
       read_message

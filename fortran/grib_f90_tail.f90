@@ -1413,7 +1413,7 @@
   !> gathered with @ref grib_get_error_string.
   !>
   !>
-  !> \b Examples: \ref samples.f90 "samples.f90"
+  !> \b Examples: \ref grib_samples.f90 "grib_samples.f90"
   !>
   !> @param gribid       id of the grib loaded in memory
   !> @param samplename name of the sample to be used

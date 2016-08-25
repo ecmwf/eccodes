@@ -167,7 +167,7 @@ examples/F90/eccodes_f_grib_print_data
 examples/F90/eccodes_f_grib_print_data_static
 examples/F90/eccodes_f_read_from_file
 examples/F90/eccodes_f_read_message
-examples/F90/eccodes_f_samples
+examples/F90/eccodes_f_grib_samples
 examples/F90/eccodes_f_grib_set_keys
 examples/F90/eccodes_f_grib_set_bitmap
 examples/F90/eccodes_f_grib_set_gvc

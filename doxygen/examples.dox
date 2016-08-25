@@ -21,7 +21,7 @@ defined in a message and how to iterate through them.
 \example grib_set_bitmap.f90 How to set and use a bitmap.
 \example grib_set_missing.f90 How to set a missing value in the header.
 \example grib_set_pv.f90 How to set the list of levels.
-\example samples.f90 How to create a new message from a samples.
+\example grib_samples.f90 How to create a new message from a GRIB samples file
 \example grib_clone.f90 How to clone a message.
 \example grib_copy_message.f90 How to copy a message in memory and create a new message.
 \example grib_keys_iterator.f90 How to get the names of all the keys

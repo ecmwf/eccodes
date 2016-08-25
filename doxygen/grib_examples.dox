@@ -29,7 +29,7 @@ that can be taken as a starting point to write more complex programs.\n
 - \ref grib_set_bitmap.f90 "grib_set_bitmap.f90" how to set and use a bitmap.
 - \ref grib_set_missing.f90 "grib_set_missing.f90" how to set a missing value in the header.
 - \ref grib_set_pv.f90 "grib_set_pv.f90" how to set the list of levels.
-- \ref samples.f90 "samples.f90" how to create a new message from a template.
+- \ref grib_samples.f90 "grib_samples.f90" how to create a new message from a template.
 - \ref grib_clone.f90 "grib_clone.f90" how to clone a message.
 - \ref grib_copy_message.f90 "grib_copy_message.f90" how to copy a message in memory and create a new message.
 - \ref grib_keys_iterator.f90 "grib_keys_iterator.f90" how to get the names of all the keys

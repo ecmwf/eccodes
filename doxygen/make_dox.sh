@@ -24,7 +24,7 @@ doxygen grib_api_wiz.cfg
 rm -f eccodes.h
 rm -f ecCodes.py
 
-# Hack. Change the links from any example code to confluence
+# Change the links from any example code back to confluence
 F90_file=../html/classeccodes.html
 Py_file=../html/namespaceec_codes.html
 
@@ -35,7 +35,7 @@ grib_get_keys
 grib_clone
 grib_copy_message
 count_messages
-samples
+grib_samples
 grib_set_missing
 "
 
