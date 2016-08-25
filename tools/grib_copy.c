@@ -36,6 +36,7 @@ grib_option grib_options[]={
              "double (key:d) or an integer (key:i)\n\t\ttype can be defined. Default type "
              "is string.\n",0,1,0},
         {"B:",0,0,0,1,0},
+        /*{"s:",0,0,0,1,0},*/
         {"V",0,0,0,1,0},
         {"W:",0,0,0,1,0},
         {"M",0,0,0,1,0},
@@ -90,6 +91,16 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     double* v;
     size_t size=0;
+
+    /* For '-s' option
+    if (!options->skip) {
+        int err = 0;
+        if (options->set_values_count != 0)
+            err=grib_set_values(h,options->set_values,options->set_values_count);
+        if( err != GRIB_SUCCESS && options->fail) exit(err);
+    }
+    */
+
     if ( options->repack ) {
         GRIB_CHECK_NOLINE(grib_get_size(h,"values",&size),0);
 
