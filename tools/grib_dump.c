@@ -45,9 +45,8 @@ static int json=0;
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
 /**
- *grib_dump
- *Dump the content of a grib file
- *
+ * grib_dump
+ * Dump the contents of a GRIB file
  */
 int main(int argc, char *argv[])
 {
@@ -217,4 +216,3 @@ int grib_no_handle_action(int err)
     fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
     return 0;
 }
-
