@@ -81,15 +81,18 @@ size_t GribOutput::copy(const param::MIRParametrisation &param, context::Context
     return total;
 }
 
-static double tmp_fix(double x, double scale = 10000) {
-    x *= scale;
-    x = x < 0 ? floor(x) : ceil(x);
-    return x / scale;
+static double round_sw(double x, double scale = 1000) {
+    return floor(x * scale) / scale;
 }
 
-// #define FIX(x) x=tmp_fix(x)
 
-#define FIX(x)
+static double round_ne(double x, double scale = 1000) {
+    return ceil(x * scale) / scale;
+}
+
+#define FIX_SW(x) x=round_sw(x)
+#define FIX_NE(x) x=round_ne(x)
+
 
 size_t GribOutput::save(const param::MIRParametrisation &parametrisation, context::Context& ctx) {
 
@@ -181,13 +184,14 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 #endif
         }
 
-         FIX(info.grid.longitudeOfFirstGridPointInDegrees);
-            FIX(info.grid.longitudeOfLastGridPointInDegrees);
-            FIX(info.grid.latitudeOfFirstGridPointInDegrees);
-            FIX(info.grid.latitudeOfLastGridPointInDegrees);
+        FIX_NE(info.grid.latitudeOfFirstGridPointInDegrees);
+        FIX_SW(info.grid.longitudeOfFirstGridPointInDegrees);
 
-FIX(info.grid.iDirectionIncrementInDegrees);
-            FIX(info.grid.jDirectionIncrementInDegrees);
+        FIX_SW(info.grid.latitudeOfLastGridPointInDegrees);
+        FIX_NE(info.grid.longitudeOfLastGridPointInDegrees);
+
+// FIX(info.grid.iDirectionIncrementInDegrees);
+//             FIX(info.grid.jDirectionIncrementInDegrees);
 
         if (LibMir::instance().debug()) {
             X(info.grid.grid_type);
