@@ -81,6 +81,14 @@ size_t GribOutput::copy(const param::MIRParametrisation &param, context::Context
     return total;
 }
 
+static double tmp_fix(double x, double scale = 10000) {
+    x *= scale;
+    x = x < 0 ? floor(x) : ceil(x);
+    return x / scale;
+}
+
+#define FIX(x) x=tmp_fix(x)
+
 size_t GribOutput::save(const param::MIRParametrisation &parametrisation, context::Context& ctx) {
 
 
@@ -170,6 +178,12 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 
 #endif
         }
+
+         FIX(info.grid.longitudeOfFirstGridPointInDegrees);
+            FIX(info.grid.longitudeOfLastGridPointInDegrees);
+            FIX(info.grid.latitudeOfFirstGridPointInDegrees);
+            FIX(info.grid.latitudeOfLastGridPointInDegrees);
+
 
         if (LibMir::instance().debug()) {
             X(info.grid.grid_type);
