@@ -74,6 +74,11 @@ atlas::grid::Grid *ReducedLL::atlasGrid() const {
 
 
 atlas::grid::Domain ReducedLL::atlasDomain() const {
+  return atlasDomain(bbox_);
+}
+
+
+atlas::grid::Domain ReducedLL::atlasDomain(const util::BoundingBox& bbox) const {
     typedef eckit::FloatCompare<double> cmp;
 
     ASSERT(pl_.size());
@@ -83,18 +88,18 @@ atlas::grid::Domain ReducedLL::atlasDomain() const {
         maxpl = std::max(maxpl, pl_[i]);
     }
 
-    const double ew = bbox_.east() - bbox_.west();
+    const double ew = bbox.east() - bbox.west();
     const double inc_west_east = maxpl? ew/double(maxpl) : 0.;
 
     const bool isPeriodicEastWest = cmp::isApproximatelyEqual(ew + inc_west_east, 360.);
-    const bool includesPoleNorth  = cmp::isApproximatelyEqual(bbox_.north(),  90.);
-    const bool includesPoleSouth  = cmp::isApproximatelyEqual(bbox_.south(), -90.);
+    const bool includesPoleNorth  = cmp::isApproximatelyEqual(bbox.north(),  90.);
+    const bool includesPoleSouth  = cmp::isApproximatelyEqual(bbox.south(), -90.);
 
     return atlas::grid::Domain(
-                includesPoleNorth?   90 : bbox_.north(),
-                isPeriodicEastWest?   0 : bbox_.west(),
-                includesPoleSouth?  -90 : bbox_.south(),
-                isPeriodicEastWest? 360 : bbox_.east() );
+                includesPoleNorth?   90 : bbox.north(),
+                isPeriodicEastWest?   0 : bbox.west(),
+                includesPoleSouth?  -90 : bbox.south(),
+                isPeriodicEastWest? 360 : bbox.east() );
 }
 
 

@@ -83,24 +83,14 @@ void Reduced::fill(grib_info &info) const  {
 
     */
 
-    const bool global = atlasDomain().isGlobal();
+    // for GRIB, a global field is also aligned with Greenwich
+    bool global = atlasDomain().isGlobal();
+    bool westAtGreenwich = eckit::FloatCompare<double>::isApproximatelyEqual(0, bbox_.west());
 
-    size_t j = info.packing.extra_settings_count++;
+    long j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
     info.packing.extra_settings[j].name = "global";
-    info.packing.extra_settings[j].long_value = global ? 1 : 0;
-
-    if (!global) {
-        // It looks like dissemination files have longitudes between 0 and 360
-        // See if that logic needs to be moved to BoundingBox
-
-        double Lo1 = info.grid.longitudeOfFirstGridPointInDegrees;
-        double Lo2 = info.grid.longitudeOfLastGridPointInDegrees;
-        info.grid.longitudeOfFirstGridPointInDegrees = util::angles::between_0_and_360(Lo1);
-        info.grid.longitudeOfLastGridPointInDegrees  = util::angles::between_0_and_360(Lo2);
-
-    }
-
+    info.packing.extra_settings[j].long_value = global && westAtGreenwich? 1 : 0;
 }
 
 
@@ -158,7 +148,7 @@ class GaussianIterator : public Iterator {
                 repositionToFirstLongitudeIndex(i_, imax_, domain_, ni_);
             }
 
-            if (domain_.contains(lon,lat)) {
+            if (domain_.contains(lon, lat)) {
                 count_++;
                 return true;
             }
@@ -221,6 +211,11 @@ private:
 
 
 atlas::grid::Domain Reduced::atlasDomain() const {
+    return atlasDomain(bbox_);
+}
+
+
+atlas::grid::Domain Reduced::atlasDomain(const util::BoundingBox& bbox) const {
     typedef eckit::FloatCompare<double> cmp;
 
     // calculate EW and NS increments
@@ -240,7 +235,7 @@ atlas::grid::Domain Reduced::atlasDomain() const {
     }
     ASSERT(cmp::isStrictlyGreater(max_inc_north_south, 0));
 
-    const double ew = bbox_.east() - bbox_.west();
+    const double ew = bbox.east() - bbox.west();
     const double inc_west_east = max_pl? 360./double(max_pl) : 0.;
 
     // confirm domain limits
@@ -258,16 +253,17 @@ atlas::grid::Domain Reduced::atlasDomain() const {
             || (ew + inc_west_east > 360.);
 
     const bool
-            includesPoleNorth = cmp::isApproximatelyEqual(bbox_.north(),  90, max_inc_north_south),
-            includesPoleSouth = cmp::isApproximatelyEqual(bbox_.south(), -90, max_inc_north_south),
-            isNorthAtEquator  = cmp::isApproximatelyEqual(bbox_.north(),   0, max_inc_north_south),
-            isSouthAtEquator  = cmp::isApproximatelyEqual(bbox_.south(),   0, max_inc_north_south);
+            includesPoleNorth = cmp::isApproximatelyEqual(bbox.north(),  90, max_inc_north_south),
+            includesPoleSouth = cmp::isApproximatelyEqual(bbox.south(), -90, max_inc_north_south),
+            isNorthAtEquator  = cmp::isApproximatelyEqual(bbox.north(),   0, max_inc_north_south),
+            isSouthAtEquator  = cmp::isApproximatelyEqual(bbox.south(),   0, max_inc_north_south);
 
-    return atlas::grid::Domain(
-                includesPoleNorth?   90 : isNorthAtEquator? 0 : bbox_.north(),
-                isPeriodicEastWest?   0 : bbox_.west(),
-                includesPoleSouth?  -90 : isSouthAtEquator? 0 : bbox_.south(),
-                isPeriodicEastWest? 360 : bbox_.east() );
+    const double
+            north = includesPoleNorth?   90 : isNorthAtEquator? 0 : bbox.north(),
+            south = includesPoleSouth?  -90 : isSouthAtEquator? 0 : bbox.south(),
+            west = bbox.west(),
+            east = isPeriodicEastWest? bbox.west() + 360 : bbox.east();
+    return atlas::grid::Domain(north, west, south, east);
 }
 
 
