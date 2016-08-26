@@ -151,7 +151,7 @@ examples/F90/eccodes_f_grib_copy_message
 examples/F90/eccodes_f_copy_namespace
 examples/F90/eccodes_f_count_messages
 examples/F90/eccodes_f_grib_get_keys
-examples/F90/eccodes_f_get_data
+examples/F90/eccodes_f_grib_get_data
 examples/F90/eccodes_f_get_product_kind
 examples/F90/eccodes_f_get_pl
 examples/F90/eccodes_f_get_pv
