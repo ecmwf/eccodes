@@ -81,7 +81,6 @@ size_t GribOutput::copy(const param::MIRParametrisation &param, context::Context
     return total;
 }
 
-<<<<<<< HEAD
 static double tmp_fix(double x, double scale = 10000) {
     x *= scale;
     x = x < 0 ? floor(x) : ceil(x);
@@ -89,8 +88,7 @@ static double tmp_fix(double x, double scale = 10000) {
 }
 
 #define FIX(x) x=tmp_fix(x)
-=======
->>>>>>> cbc40ed7522190cd14d61c93045e762120620096
+
 
 size_t GribOutput::save(const param::MIRParametrisation &parametrisation, context::Context& ctx) {
 
