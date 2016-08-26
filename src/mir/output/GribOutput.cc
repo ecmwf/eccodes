@@ -87,8 +87,9 @@ static double tmp_fix(double x, double scale = 10000) {
     return x / scale;
 }
 
-#define FIX(x) x=tmp_fix(x)
+// #define FIX(x) x=tmp_fix(x)
 
+#define FIX(x)
 
 size_t GribOutput::save(const param::MIRParametrisation &parametrisation, context::Context& ctx) {
 
