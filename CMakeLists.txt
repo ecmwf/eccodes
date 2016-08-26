@@ -305,7 +305,7 @@ ecbuild_dont_pack( DIRS
      gaussian_experimental gribex examples/F77
      examples/extra bamboo fortran/fortranCtypes tigge/tools share/eccodes
      src/.deps tests/.deps tools/.deps tigge/.deps examples/C/.deps examples/python/.deps
-     python/.deps fortran/.deps
+     python/.deps fortran/.deps .settings
 )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
