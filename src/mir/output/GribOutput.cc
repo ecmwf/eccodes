@@ -81,17 +81,17 @@ size_t GribOutput::copy(const param::MIRParametrisation &param, context::Context
     return total;
 }
 
-static double round_sw(double x, double scale = 1000) {
+static double round_sw(double x, double scale) {
     return floor(x * scale) / scale;
 }
 
 
-static double round_ne(double x, double scale = 1000) {
+static double round_ne(double x, double scale) {
     return ceil(x * scale) / scale;
 }
 
-#define FIX_SW(x) x=round_sw(x)
-#define FIX_NE(x) x=round_ne(x)
+#define FIX_SW(x) x=round_sw(x, scale)
+#define FIX_NE(x) x=round_ne(x, scale)
 
 
 size_t GribOutput::save(const param::MIRParametrisation &parametrisation, context::Context& ctx) {
@@ -183,6 +183,13 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 
 #endif
         }
+
+        long edition = info.packing.editionNumber;
+        if(!edition) {
+            GRIB_CALL(grib_get_long(h, "editionNumber", &edition));
+        }
+
+        double scale = edition == 1 ? 1000: 1000000;
 
         FIX_NE(info.grid.latitudeOfFirstGridPointInDegrees);
         FIX_SW(info.grid.longitudeOfFirstGridPointInDegrees);
