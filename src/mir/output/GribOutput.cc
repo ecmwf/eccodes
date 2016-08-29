@@ -200,7 +200,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 // FIX(info.grid.iDirectionIncrementInDegrees);
 //             FIX(info.grid.jDirectionIncrementInDegrees);
 
-        if (LibMir::instance().debug()) {
+        if (eckit::Log::debug<LibMir>()) {
             X(info.grid.grid_type);
             X(info.grid.Ni);
             X(info.grid.Nj);
