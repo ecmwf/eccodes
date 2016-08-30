@@ -126,6 +126,9 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("d") && !grib_options_on("u"))
         options->dump_flags |= GRIB_DUMP_FLAG_ALL_DATA;
 
+    /* Turn off GRIB multi-field support mode. Not relevant for BUFR */
+    grib_multi_support_off(grib_context_get_default());
+
     return 0;
 }
 
@@ -140,7 +143,18 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
     if (json) return 0;
 
     if (grib_options_on("E:")) {
-        /* No action */
+        if (!strcmp(options->dump_mode, "filter")) {
+            /* Dump filter for one message only. Multi-message BUFR files will not work! */
+            int err = 0, numMessages=0;
+            grib_context *c = grib_context_get_default();
+            err = grib_count_in_file(c, options->current_infile->file, &numMessages);
+            if (!err && numMessages > 1) {
+                fprintf(stderr,"\nERROR: Cannot dump filter for multi-message BUFR files.\n");
+                fprintf(stderr,"       (The input file \"%s\" has %d messages)\n", options->current_infile->name, numMessages);
+                fprintf(stderr,"       Please split the input file and dump filter for each message separately.\n");
+                exit(1);
+            }
+        }
     }
     else {
         char tmp[1024];

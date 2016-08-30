@@ -160,9 +160,6 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     long length=0;
-    char tmp[1024];
-    char identifier[100];
-    size_t idlen=100;
     int i,err=0;
     if (grib_get_long(h,"totalLength",&length) != GRIB_SUCCESS)
         length=-9999;
@@ -179,6 +176,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     if(json) {
     }
     else {
+        char tmp[1024];
+        char identifier[100];
+        size_t idlen=100;
         sprintf(tmp,"MESSAGE %d ( length=%ld )",options->handle_count,length);
         if (!grib_options_on("C"))
             fprintf(stdout,"#==============   %-38s   ==============\n",tmp);
