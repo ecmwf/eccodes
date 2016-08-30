@@ -228,7 +228,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
         options->error=err;
 
         if (!h) {
-            grib_no_handle_action(err);
+            grib_no_handle_action(options, err);
 
             failed=(grib_failed*)grib_context_malloc_clear(c,sizeof(grib_failed));
             failed->count=infile->handle_count;
@@ -327,7 +327,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
 
             if (!h) {
                 /* fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n"); */
-                grib_no_handle_action(err);
+                grib_no_handle_action(options, err);
 
                 failed=(grib_failed*)grib_context_malloc_clear(c,sizeof(grib_failed));
                 failed->count=infile->handle_count;

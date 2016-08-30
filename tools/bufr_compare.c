@@ -1280,7 +1280,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
     return err;
 }
 
-int grib_no_handle_action(int err)
+int grib_no_handle_action(grib_runtime_options* options, int err)
 {
     fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
     return 0;

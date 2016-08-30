@@ -136,15 +136,17 @@ int grib_tool_new_filename_action(grib_runtime_options* options,const char* file
 
 int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
 {
-    char tmp[1024];
     if (!options->current_infile->name) return 0;
     if (json) return 0;
 
     if (grib_options_on("E:")) {
-    } else {
-      sprintf(tmp,"FILE: %s ",options->current_infile->name);
-      if (!grib_options_on("C"))
-        fprintf(stdout,"***** %s\n",tmp);
+        /* No action */
+    }
+    else {
+        char tmp[1024];
+        sprintf(tmp,"FILE: %s ",options->current_infile->name);
+        if (!grib_options_on("C"))
+            fprintf(stdout,"***** %s\n",tmp);
     }
 
     return 0;
@@ -153,7 +155,6 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     long length=0;
-    char tmp[1024];
     int i,err=0;
     grib_accessor* a=NULL;
     grib_accessors_list* al=NULL;
@@ -163,7 +164,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     if (!options->skip) {
         if (options->set_values_count != 0)
             err=grib_set_values(h,options->set_values,options->set_values_count);
-        if( err != GRIB_SUCCESS && options->fail) exit(err);
+        if (err != GRIB_SUCCESS && options->fail) exit(err);
     }
 
     for (i=0;i<options->print_keys_count;i++)
@@ -182,9 +183,15 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         case 'f':
             err=grib_set_long(h,"unpack",2);
             if (err) {
-                fprintf(stdout,"\"ERROR: unable to unpack data section\"");
-                options->error=err;
-                return err;
+                if (options->fail) {
+                    fprintf(stderr, "ERROR: unable to unpack data section: %s (message=%d)\n",
+                            grib_get_error_message(err), options->handle_count);
+                    exit(err);
+                } else {
+                    fprintf(stdout,"\"ERROR: unable to unpack data section\"");
+                    options->error=err;
+                    return err;
+                }
             }
             a=grib_find_accessor(h,"numericValues");
             al=accessor_bufr_data_array_get_dataAccessors(a);
@@ -194,18 +201,30 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         case 's':
             err=grib_set_long(h,"unpack",1);
             if (err) {
-                fprintf(stdout,"\"ERROR: unable to unpack data section\"");
-                options->error=err;
-                return err;
+                if (options->fail) {
+                    fprintf(stderr, "ERROR: unable to unpack data section: %s (message=%d)\n",
+                            grib_get_error_message(err), options->handle_count);
+                    exit(err);
+                } else {
+                    fprintf(stdout,"\"ERROR: unable to unpack data section\"");
+                    options->error=err;
+                    return err;
+                }
             }
             grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
             break;
         case 'a':
             err=grib_set_long(h,"unpack",1);
             if (err) {
-                fprintf(stdout,"\"ERROR: unable to unpack data section\"");
-                options->error=err;
-                return err;
+                if (options->fail) {
+                    fprintf(stderr, "ERROR: unable to unpack data section: %s (message=%d)\n",
+                            grib_get_error_message(err), options->handle_count);
+                    exit(err);
+                } else {
+                    fprintf(stdout,"\"ERROR: unable to unpack data section\"");
+                    options->error=err;
+                    return err;
+                }
             }
             options->dump_flags=GRIB_DUMP_FLAG_ALL_ATTRIBUTES;
             grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
@@ -214,28 +233,40 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             printf("Unknown JSON option %s\n",json_option);
             exit(1);
         }
-      if (!strcmp(options->dump_mode,"default"))
-        printf("}\n");
+        if (!strcmp(options->dump_mode,"default")) {
+            printf("}\n");
+        }
     } else if (grib_options_on("O")) {
+        char tmp[1024];
         sprintf(tmp,"MESSAGE %d ( length=%ld )",options->handle_count,length);
         if (!grib_options_on("C"))
             fprintf(stdout,"#==============   %-38s   ==============\n",tmp);
         err=grib_set_long(h,"unpack",1);
         if (err) {
-            fprintf(stdout,"\"ERROR: unable to unpack data section\"");
-            options->error=err;
-            return err;
+            if (options->fail) {
+                fprintf(stderr, "ERROR: unable to unpack data section: %s\n",grib_get_error_message(err));
+                exit(err);
+            } else {
+                fprintf(stdout,"\"ERROR: unable to unpack data section\"");
+                options->error=err;
+                return err;
+            }
         }
         grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
     } else {
-      err=grib_set_long(h,"unpack",1);
-      if (err) {
-        fprintf(stdout,"\"ERROR: unable to unpack data section\"");
-        options->error=err;
-        return err;
-      }
-      dumper=grib_dump_content_with_dumper(h,dumper,stdout,options->dump_mode,options->dump_flags,0);
-      if (!dumper) exit(1);
+        err=grib_set_long(h,"unpack",1);
+        if (err) {
+            if (options->fail) {
+                fprintf(stderr, "ERROR: unable to unpack data section: %s\n",grib_get_error_message(err));
+                exit(err);
+            } else {
+                fprintf(stdout,"\"ERROR: unable to unpack data section\"");
+                options->error=err;
+                return err;
+            }
+        }
+        dumper=grib_dump_content_with_dumper(h,dumper,stdout,options->dump_mode,options->dump_flags,0);
+        if (!dumper) exit(1);
     }
 
     return 0;
@@ -256,28 +287,29 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 {
     if (json) fprintf(stdout,"\n]}\n");
     if (!strcmp(options->dump_mode,"filter")) {
-      fprintf(stdout,"set pack=1;\nwrite;\n");
+        fprintf(stdout,"set pack=1;\nwrite;\n");
     }
     if (!strcmp(options->dump_mode,"fortran")) {
-      fprintf(stdout,"end program bufr_create_message\n");
+        fprintf(stdout,"end program bufr_create_message\n");
     }
     if (!strcmp(options->dump_mode,"python")) {
-      fprintf(stdout,"\n\n");
-      fprintf(stdout,"def main():\n");
-      fprintf(stdout,"    try:\n");
-      fprintf(stdout,"        bufr_create_message()\n");
-      fprintf(stdout,"    except CodesInternalError as err:\n");
-      fprintf(stdout,"        traceback.print_exc(file=sys.stderr)\n");
-      fprintf(stdout,"        return 1\n");
-      fprintf(stdout,"\n\n");
-      fprintf(stdout,"if __name__ == \"__main__\":\n");
-      fprintf(stdout,"    sys.exit(main())\n");
+        fprintf(stdout,"\n\n");
+        fprintf(stdout,"def main():\n");
+        fprintf(stdout,"    try:\n");
+        fprintf(stdout,"        bufr_create_message()\n");
+        fprintf(stdout,"    except CodesInternalError as err:\n");
+        fprintf(stdout,"        traceback.print_exc(file=sys.stderr)\n");
+        fprintf(stdout,"        return 1\n");
+        fprintf(stdout,"\n\n");
+        fprintf(stdout,"if __name__ == \"__main__\":\n");
+        fprintf(stdout,"    sys.exit(main())\n");
     }
 
     return 0;
 }
 
-int grib_no_handle_action(int err) {
+int grib_no_handle_action(grib_runtime_options* options, int err)
+{
     if (json ){
         if (first_handle) {
             fprintf(dump_file,"{ \"messages\" : [ \n");
@@ -287,5 +319,8 @@ int grib_no_handle_action(int err) {
         }
     }
     fprintf(dump_file,"\"ERROR: unreadable message\"\n");
+    if (options->fail) {
+        exit(1);
+    }
     return 0;
 }
