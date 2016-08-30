@@ -186,7 +186,7 @@ void Regular::setNiNj() {
                 ++Ni_;
         }
     }
-    ASSERT(2 <= Ni_ <= N_*4);
+    ASSERT(2 <= Ni_ && Ni_ <= N_*4);
 
     Nj_ = N_ * 2;
     if (!dom.includesPoleNorth() || !dom.includesPoleSouth()) {
@@ -197,7 +197,7 @@ void Regular::setNiNj() {
                 ++Nj_;
         }
     }
-    ASSERT(2 <= Nj_ <= N_*2);
+    ASSERT(2 <= Nj_ && Nj_ <= N_*2);
 }
 
 
