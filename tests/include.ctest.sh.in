@@ -21,7 +21,7 @@ tools_dir=@CMAKE_BINARY_DIR@/bin/
 tigge_dir=@CMAKE_BINARY_DIR@/bin/
 
 # ecCodes tests are in the PROJECT_BINARY_DIR
-test_dir=@PROJECT_BINARY_DIR@/tests
+test_dir=@PROJECT_BINARY_DIR@/tests/
 
 # use samples from binary dir to test if installation will be correct
 samp_dir="@CMAKE_BINARY_DIR@/share/@PROJECT_NAME@/samples"
