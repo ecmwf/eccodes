@@ -561,6 +561,29 @@ static const char* get_grid_type_name(const int spec_grid_type)
     return NULL;
 }
 
+static int is_constant_field(grib_handle* h, const double* data_values, size_t data_values_count)
+{
+    int ii=0;
+    int constant=1;
+    double missingValue=0;
+    double value = missingValue;
+
+    grib_get_double(h,"missingValue",&missingValue);
+    for (ii=0;ii<data_values_count;ii++) {
+        if (data_values[ii]!=missingValue) {
+            if (value==missingValue) {
+                value=data_values[ii];
+            } else {
+                if (value!=data_values[ii]) {
+                    constant=0;
+                    break;
+                }
+            }
+        }
+    }
+    return constant;
+}
+
 grib_handle* grib_util_set_spec(grib_handle* h,
         const grib_util_grid_spec    *spec,
         const grib_util_packing_spec *packing_spec,
@@ -1175,7 +1198,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     if((*err = grib_set_values(outh,values,count)) != 0)
     {
-        fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot set values  %s\n",grib_get_error_message(*err));
+        fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot set key values: %s\n",grib_get_error_message(*err));
 
         for(i = 0; i < count; i++)
             if(values[i].error)
@@ -1183,39 +1206,45 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         goto cleanup;
     }
 
-    if((*err = grib_set_double_array(outh,"values",data_values,data_values_count)) != 0)
+    /* See GRIB-947 */
+    if (setSecondOrder && editionNumber != 1 && !is_constant_field(outh, data_values, data_values_count))
     {
-        FILE* ferror;
-        long i,lcount;
-        grib_context* c=grib_context_get_default();
+        /* Do not set the values at this point for this case. See later for 'setSecondOrder' */
+    }
+    else
+    {
+        if((*err = grib_set_double_array(outh,"values",data_values,data_values_count)) != 0)
+        {
+            FILE* ferror;
+            long i,lcount;
+            grib_context* c=grib_context_get_default();
 
-        ferror=fopen("error.data","w");
-        lcount=0;
-        fprintf(ferror,"# data_values_count=%ld\n",(long)data_values_count);
-        fprintf(ferror,"set values={ ");
-        for (i=0;i<data_values_count-1;i++) {
-            fprintf(ferror,"%g, ",data_values[i]);
-            if (lcount>10) {fprintf(ferror,"\n");lcount=0;}
-            lcount++;
+            ferror=fopen("error.data","w");
+            lcount=0;
+            fprintf(ferror,"# data_values_count=%ld\n",(long)data_values_count);
+            fprintf(ferror,"set values={ ");
+            for (i=0;i<data_values_count-1;i++) {
+                fprintf(ferror,"%g, ",data_values[i]);
+                if (lcount>10) {fprintf(ferror,"\n");lcount=0;}
+                lcount++;
+            }
+            fprintf(ferror,"%g }",data_values[data_values_count-1]);
+            fclose(ferror);
+            if (c->write_on_fail)
+                grib_write_message(outh,"error.grib","w");
+            goto cleanup;
         }
-        fprintf(ferror,"%g }",data_values[data_values_count-1]);
-        fclose(ferror);
-        if (c->write_on_fail)
-            grib_write_message(outh,"error.grib","w");
-        goto cleanup;
     }
     /* grib_write_message(outh,"h.grib","w"); */
     /* if the field is empty GRIBEX is packing as simple*/
-    /*
-	if (!strcmp(input_packing_type,"grid_simple_matrix")) {
+    /*	if (!strcmp(input_packing_type,"grid_simple_matrix")) {
 		long numberOfValues;
 		grib_get_long(outh,"numberOfValues",&numberOfValues);
 		if (numberOfValues==0)  {
 			slen=11;
 			grib_set_string(outh,"packingType","grid_simple",&slen);
 		}
-	}
-     */
+	}   */
 
     if (grib1_high_resolution_fix) {
         /* GRIB-863: must set increments to MISSING */
@@ -1234,24 +1263,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     /* convert to second_order if not constant field */
     if (setSecondOrder ) {
-        int ii=0;
-        int constant=1;
-        double missingValue=0;
-        double value=missingValue;
+        int constant = is_constant_field(outh, data_values, data_values_count);
 
-        grib_get_double(outh,"missingValue",&missingValue);
-        for (ii=0;ii<data_values_count;ii++) {
-            if (data_values[ii]!=missingValue) {
-                if (value==missingValue) {
-                    value=data_values[ii];
-                } else {
-                    if (value!=data_values[ii]) {
-                        constant=0;
-                        break;
-                    }
-                }
-            }
-        }
         if (!constant) {
             if (editionNumber == 1 ) {
                 long numberOfGroups=0;
@@ -1272,12 +1285,16 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             } else {
                 slen=17;
                 grib_set_string(outh,"packingType","grid_second_order",&slen);
-                grib_set_double_array(outh,"values",data_values,data_values_count);
+                *err = grib_set_double_array(outh,"values", data_values, data_values_count);
+                if (*err != GRIB_SUCCESS) {
+                    fprintf(stderr,"GRIB_UTIL_SET_SPEC: setting data values failed! %s\n", grib_get_error_message(*err));
+                    goto cleanup;
+                }
             }
         } else {
             if (outh->context->gribex_mode_on) {
                 outh->context->gribex_mode_on=0;
-                grib_set_double_array(outh,"values",data_values,data_values_count);
+                grib_set_double_array(outh,"values", data_values, data_values_count);
                 outh->context->gribex_mode_on=1;
             }
         }

@@ -16,21 +16,37 @@ infile=../data/latlon.grib
 outfile=out.grib_util_set_spec.grib
 rm -f $outfile
 
-${test_dir}/grib_util_set_spec $infile $outfile > /dev/null
+${test_dir}grib_util_set_spec $infile $outfile > /dev/null
 
 res=`${tools_dir}grib_get -p Ni,Nj,numberOfValues,bitsPerValue $outfile`
 [ "$res" = "17 14 238 24" ]
 
+# Check output file geometry
 ${tools_dir}grib_get_data $outfile > /dev/null
 
-### Reduced Gaussian Grid
+### Reduced Gaussian Grid N=32 second order packing
 ###########################################
-infile=$ECCODES_SAMPLES_PATH/reduced_gg_pl_320_grib2.tmpl
+infile=../data/reduced_gaussian_model_level.grib2
 outfile=out.grib_util_set_spec.grib
 rm -f $outfile
 
-${test_dir}/grib_util_set_spec $infile $outfile
+${test_dir}grib_util_set_spec $infile $outfile
 
+# Check output file
+grib_check_key_equals $outfile packingType grid_second_order
+${tools_dir}grib_get_data $outfile > /dev/null
+CHECK_TOOL="${tools_dir}grib_check_gaussian_grid"
+if [ -x $CHECK_TOOL ]; then
+  $CHECK_TOOL $outfile
+fi
+
+### Constant field N=32
+###########################################
+infile=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+rm -f $outfile
+
+${test_dir}grib_util_set_spec $infile $outfile
+grib_check_key_equals $outfile "packingType,const" "grid_simple 1"
 ${tools_dir}grib_get_data $outfile > /dev/null
 
 
