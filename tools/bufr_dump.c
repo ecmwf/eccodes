@@ -25,6 +25,7 @@ grib_option grib_options[]={
                 "\n\t\tOptions: filter  -> filter instructions file to encode input BUFR"
                 "\n\t\t         fortran -> fortran program to encode the input BUFR"
                 "\n\t\t         python  -> python script to encode the input BUFR"
+                "\n\t\t         C       -> C program to encode the input BUFR"
                 "\n\t\tDefault mode is filter.\n",
                 0,1,"filter"},
         {"S",0,0,1,0,0},
@@ -306,6 +307,11 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     if (!strcmp(options->dump_mode,"fortran")) {
         fprintf(stdout,"end program bufr_create_message\n");
     }
+    if (!strcmp(options->dump_mode,"C")) {
+        fprintf(stdout,"  return 0;\n");
+        fprintf(stdout,"}\n");
+    }
+
     if (!strcmp(options->dump_mode,"python")) {
         fprintf(stdout,"\n\n");
         fprintf(stdout,"def main():\n");

@@ -274,6 +274,7 @@ list( APPEND grib_api_srcs
     grib_dumper_class_debug.c
     grib_dumper_class_default.c
     grib_dumper_class_keys.c
+    grib_dumper_class_C.c
     grib_dumper_class_filter.c
     grib_dumper_class_fortran.c
     grib_dumper_class_python.c

@@ -112,6 +112,9 @@ list( APPEND tests2
 if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
     list(APPEND tests2 bufr_dump_fortran)
 endif()
+if( ENABLE_EXTRA_TESTS )
+    list(APPEND tests2 bufr_dump_C)
+endif()
 
 # These tests do not require any data downloads
 foreach( test ${tests1} )
@@ -142,6 +145,9 @@ endforeach()
 
 if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
     set_tests_properties ( eccodes_t_bufr_dump_fortran PROPERTIES TIMEOUT 2500)
+endif()
+if( ENABLE_EXTRA_TESTS )
+    set_tests_properties ( eccodes_t_bufr_dump_C PROPERTIES TIMEOUT 2500)
 endif()
 
 
