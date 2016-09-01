@@ -562,14 +562,12 @@ static const char* get_grid_type_name(const int spec_grid_type)
     return NULL;
 }
 
-static int is_constant_field(grib_handle* h, const double* data_values, size_t data_values_count)
+static int is_constant_field(const double missingValue, const double* data_values, size_t data_values_count)
 {
     int ii=0;
     int constant=1;
-    double missingValue=0;
     double value = missingValue;
 
-    grib_get_double(h,"missingValue",&missingValue);
     for (ii=0;ii<data_values_count;ii++) {
         if (data_values[ii]!=missingValue) {
             if (value==missingValue) {
@@ -671,7 +669,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     size_t slen=17;
     int grib1_high_resolution_fix = 0; /* boolean: See GRIB-863 */
     int global_grid = 0; /* boolean */
-    const int dataValuesConstant = is_constant_field(h, data_values, data_values_count);
+    double theMissingValue = 0;
 
     static grib_util_packing_spec default_packing_spec = {0, };
     Assert(h);
@@ -803,7 +801,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         /* convert to second_order if not constant field */
         if (setSecondOrder ) {
             size_t packTypeLen=17;
-            const int constant=is_constant_field(h, data_values, data_values_count);
+            int constant=0;
+            double missingValue=0;
+            grib_get_double(h,"missingValue",&missingValue);
+            constant=is_constant_field(missingValue, data_values, data_values_count);
 
             if (!constant) {
                 if (editionNumber == 1 ) {
@@ -1192,9 +1193,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         goto cleanup;
     }
 
-    /* See ECC-326 */
-    if (setSecondOrder && editionNumber != 1 && !is_constant_field(outh, data_values, data_values_count))
+    grib_get_double(outh, "missingValue", &theMissingValue);
+    if (setSecondOrder && editionNumber != 1 && !is_constant_field(theMissingValue, data_values, data_values_count))
     {
+        /* See ECC-326 */
         /* Do not set the values at this point for this case. See later for 'setSecondOrder' */
     }
     else
@@ -1249,7 +1251,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     /* convert to second_order if not constant field. (Also see ECC-326) */
     if (setSecondOrder ) {
-        int constant = is_constant_field(outh, data_values, data_values_count);
+        int constant = 0;
+        double missingValue=0;
+        grib_get_double(outh,"missingValue",&missingValue);
+        constant = is_constant_field(missingValue, data_values, data_values_count);
 
         if (!constant) {
             if (editionNumber == 1 ) {
