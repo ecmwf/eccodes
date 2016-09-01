@@ -669,7 +669,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     size_t slen=17;
     int grib1_high_resolution_fix = 0; /* boolean: See GRIB-863 */
     int global_grid = 0; /* boolean */
-    double theMissingValue = 0;
 
     static grib_util_packing_spec default_packing_spec = {0, };
     Assert(h);
@@ -898,7 +897,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         if (editionNumber == 1) {
             /* GRIB-863: GRIB1 cannot represent increments less than a millidegree */
             if (!grib1_angle_can_be_encoded(spec->iDirectionIncrementInDegrees) ||
-                !grib1_angle_can_be_encoded(spec->jDirectionIncrementInDegrees))
+                    !grib1_angle_can_be_encoded(spec->jDirectionIncrementInDegrees))
             {
                 grib1_high_resolution_fix = 1;
                 /* Set flag to compute the increments */
@@ -1140,7 +1139,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             Assert(count < 1024);
             values[count++] = packing_spec->extra_settings[i];
             if (strcmp(packing_spec->extra_settings[i].name, "global")==0 &&
-                packing_spec->extra_settings[i].long_value == 1)
+                    packing_spec->extra_settings[i].long_value == 1)
             {
                 /* GRIB-922: Request is for a global grid. Setting this key will
                  * calculate the lat/lon values. So the spec's lat/lon can be ignored */
@@ -1193,36 +1192,28 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         goto cleanup;
     }
 
-    grib_get_double(outh, "missingValue", &theMissingValue);
-    if (setSecondOrder && editionNumber != 1 && !is_constant_field(theMissingValue, data_values, data_values_count))
+    if((*err = grib_set_double_array(outh,"values",data_values,data_values_count)) != 0)
     {
-        /* See ECC-326 */
-        /* Do not set the values at this point for this case. See later for 'setSecondOrder' */
-    }
-    else
-    {
-        if((*err = grib_set_double_array(outh,"values",data_values,data_values_count)) != 0)
-        {
-            FILE* ferror;
-            long i,lcount;
-            grib_context* c=grib_context_get_default();
+        FILE* ferror;
+        long i,lcount;
+        grib_context* c=grib_context_get_default();
 
-            ferror=fopen("error.data","w");
-            lcount=0;
-            fprintf(ferror,"# data_values_count=%ld\n",(long)data_values_count);
-            fprintf(ferror,"set values={ ");
-            for (i=0;i<data_values_count-1;i++) {
-                fprintf(ferror,"%g, ",data_values[i]);
-                if (lcount>10) {fprintf(ferror,"\n");lcount=0;}
-                lcount++;
-            }
-            fprintf(ferror,"%g }",data_values[data_values_count-1]);
-            fclose(ferror);
-            if (c->write_on_fail)
-                grib_write_message(outh,"error.grib","w");
-            goto cleanup;
+        ferror=fopen("error.data","w");
+        lcount=0;
+        fprintf(ferror,"# data_values_count=%ld\n",(long)data_values_count);
+        fprintf(ferror,"set values={ ");
+        for (i=0;i<data_values_count-1;i++) {
+            fprintf(ferror,"%g, ",data_values[i]);
+            if (lcount>10) {fprintf(ferror,"\n");lcount=0;}
+            lcount++;
         }
+        fprintf(ferror,"%g }",data_values[data_values_count-1]);
+        fclose(ferror);
+        if (c->write_on_fail)
+            grib_write_message(outh,"error.grib","w");
+        goto cleanup;
     }
+
     /* grib_write_message(outh,"h.grib","w"); */
     /* if the field is empty GRIBEX is packing as simple*/
     /*	if (!strcmp(input_packing_type,"grid_simple_matrix")) {
@@ -1311,7 +1302,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     return outh;
 
-    cleanup:
+cleanup:
     if(outh)  grib_handle_delete(outh);
     return NULL;
 }
