@@ -334,7 +334,8 @@ static grib_trie* init_list(const char* name)
     return 0;
 }
 
-static void print_values(grib_context* c, const grib_util_grid_spec2* spec, const double* data_values,size_t data_values_count,const grib_values *values,int count)
+static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
+        const double* data_values, const size_t data_values_count, const grib_values *values, const int count)
 {
     int i;
     printf("ECCODES DEBUG grib_util grib_set_values: setting %d values \n",count);
@@ -670,6 +671,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     size_t slen=17;
     int grib1_high_resolution_fix = 0; /* boolean: See GRIB-863 */
     int global_grid = 0; /* boolean */
+    const int dataValuesConstant = is_constant_field(h, data_values, data_values_count);
 
     static grib_util_packing_spec default_packing_spec = {0, };
     Assert(h);
@@ -801,24 +803,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         /* convert to second_order if not constant field */
         if (setSecondOrder ) {
             size_t packTypeLen=17;
-            int ii=0;
-            int constant=1;
-            double missingValue=0;
-            double value=missingValue;
+            const int constant=is_constant_field(h, data_values, data_values_count);
 
-            grib_get_double(h,"missingValue",&missingValue);
-            for (ii=0;ii<data_values_count;ii++) {
-                if (data_values[ii]!=missingValue) {
-                    if (value==missingValue) {
-                        value=data_values[ii];
-                    } else {
-                        if (value!=data_values[ii]) {
-                            constant=0;
-                            break;
-                        }
-                    }
-                }
-            }
             if (!constant) {
                 if (editionNumber == 1 ) {
                     long numberOfGroups;
@@ -1206,7 +1192,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         goto cleanup;
     }
 
-    /* See GRIB-947 */
+    /* See ECC-326 */
     if (setSecondOrder && editionNumber != 1 && !is_constant_field(outh, data_values, data_values_count))
     {
         /* Do not set the values at this point for this case. See later for 'setSecondOrder' */
@@ -1261,7 +1247,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     /*grib_dump_content(outh, stdout,"debug", ~0, NULL);*/
 
-    /* convert to second_order if not constant field */
+    /* convert to second_order if not constant field. (Also see ECC-326) */
     if (setSecondOrder ) {
         int constant = is_constant_field(outh, data_values, data_values_count);
 
