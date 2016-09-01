@@ -30,10 +30,16 @@ infile=../data/reduced_gaussian_model_level.grib2
 outfile=out.grib_util_set_spec.grib
 rm -f $outfile
 
+stats_old=`${tools_dir}grib_get -F%.2f -p min,max $infile`
+[ "$stats_old" = "160.25 224.45" ]
+
 ${test_dir}grib_util_set_spec $infile $outfile
 
-# Check output file
+# Check output file. Values are scaled up by 1.1
 grib_check_key_equals $outfile packingType grid_second_order
+stats_new=`${tools_dir}grib_get -F%.2f -p min,max $outfile`
+[ "$stats_new" = "176.28 246.90" ]
+
 ${tools_dir}grib_get_data $outfile > /dev/null
 CHECK_TOOL="${tools_dir}grib_check_gaussian_grid"
 if [ -x $CHECK_TOOL ]; then
