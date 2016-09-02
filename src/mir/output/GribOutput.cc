@@ -219,9 +219,9 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
             X(info.grid.bitmapPresent);
             X(info.grid.missingValue);
             X(info.grid.pl_size);
-            for (size_t i = 0; i < info.grid.pl_size; i++) {
-                X(info.grid.pl[i]);
-                if (i > 4) break;
+            for (long j = 0; j < info.grid.pl_size; j++) {
+                X(info.grid.pl[j]);
+                if (j > 4) break;
             }
 
             X(info.grid.truncation);
@@ -241,17 +241,17 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
             X(info.packing.deleteLocalDefinition);
             // X(info.packing.extra_settings);
             X(info.packing.extra_settings_count);
-            for (size_t i = 0; i < info.packing.extra_settings_count; i++) {
-                X(info.packing.extra_settings[i].name);
-                switch (info.packing.extra_settings[i].type) {
+            for (long j = 0; j < info.packing.extra_settings_count; j++) {
+                X(info.packing.extra_settings[j].name);
+                switch (info.packing.extra_settings[j].type) {
                 case GRIB_TYPE_LONG:
-                    X(info.packing.extra_settings[i].long_value);
+                    X(info.packing.extra_settings[j].long_value);
                     break;
                 case GRIB_TYPE_DOUBLE:
-                    X(info.packing.extra_settings[i].double_value);
+                    X(info.packing.extra_settings[j].double_value);
                     break;
                 case GRIB_TYPE_STRING:
-                    X(info.packing.extra_settings[i].string_value);
+                    X(info.packing.extra_settings[j].string_value);
                     break;
                 }
 
