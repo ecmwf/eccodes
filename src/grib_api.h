@@ -924,6 +924,18 @@ int grib_set_force_double_array(grib_handle* h, const char* key, const double* v
 * @return            0 if OK, integer value on error
 */
 int grib_set_long_array   (grib_handle* h, const char*  key , const long*          vals   , size_t length);
+
+/**
+*  Set a string array from a key. If several keys of the same name are present, the last one is set
+*  @see  grib_get_string_array
+*
+* @param h           : the handle to set the data to
+* @param key         : the key to be searched
+* @param vals        : the address of a string array where the data will be read
+* @param length      : a size_t that contains the length of the array on input
+* @return            0 if OK, integer value on error
+*/
+int grib_set_string_array(grib_handle* h, const char *key, const char **vals, size_t length);
 /*! @} */
 
 

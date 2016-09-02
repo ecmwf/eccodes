@@ -21,25 +21,7 @@ tempBufr=outfile.bufr
 tempDir=${label}.dir
 mkdir -p $tempDir
 
-#bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
-bufr_files="
-207003.bufr    ascs_139.bufr  b006_96.bufr   goga_89.bufr   new.bufr                soil_7.bufr
-aaen_55.bufr   aseh_139.bufr  btem_109.bufr  hirb_55.bufr   nomi_206.bufr           ssbt_127.bufr
-aben_55.bufr   asel_139.bufr  cmwi_87.bufr   hirs_55.bufr   ocea_131.bufr           stuk_7.bufr
-ahws_139.bufr  ashs_139.bufr  cmwn_87.bufr   ias1_240.bufr  ocea_21.bufr            syno_1.bufr
-airs_57.bufr   atap_55.bufr   cori_156.bufr  iasi_241.bufr  pilo_91.bufr            syno_2.bufr
-alws_139.bufr  ateu_155.bufr  crit_202.bufr  itwt_233.bufr  profiler_european.bufr  syno_3.bufr
-amsa_55.bufr   atms_201.bufr  csrh_189.bufr  jaso_214.bufr  rada_250.bufr           syno_4.bufr
-amsb_55.bufr   atov_55.bufr   emsg_189.bufr  maer_207.bufr  rado_250.bufr           syno_multi.bufr
-amse_55.bufr   avhm_87.bufr   emsg_87.bufr   mhen_55.bufr   s4kn_165.bufr           temp-land-with-substituted-values.bufr
-amsu_55.bufr   avhn_87.bufr   euwv_87.bufr   mhsa_55.bufr   sb19_206.bufr           temp_101.bufr
-amv2_87.bufr   avhr_58.bufr   fy3a_154.bufr  mhsb_55.bufr   sbu8_206.bufr           tmr7_129.bufr
-amv3_87.bufr   b002_95.bufr   fy3b_154.bufr  mhse_55.bufr   smin_49.bufr            uegabe.bufr
-asbh_139.bufr  b002_96.bufr   g2to_206.bufr  mloz_206.bufr  smis_49.bufr
-asbl_139.bufr  b003_56.bufr   go15_87.bufr   modi_87.bufr   smiu_49.bufr
-asca_139.bufr  b005_87.bufr   goee_87.bufr   modw_87.bufr   smos_203.bufr
-asch_139.bufr  b005_89.bufr   goes_87.bufr   monw_87.bufr   sn4k_165.bufr
-"
+bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
 # pkgconfig should be one level above the test dir
 PKGCONFIG_FILE=../eccodes.pc

@@ -389,6 +389,12 @@ int codes_set_long_array(grib_handle* h, const char* key, const long* vals, size
 {
     return grib_set_long_array(h,key,vals,length);
 }
+
+int codes_set_string_array(grib_handle *h, const char *key, const char **vals, size_t length)
+{
+    return grib_set_string_array(h, key, vals, length);
+}
+
 int codes_set_values(grib_handle* h,grib_values*  grib_values , size_t arg_count)
 {
     return grib_set_values(h,grib_values,arg_count);

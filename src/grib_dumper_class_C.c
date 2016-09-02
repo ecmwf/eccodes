@@ -547,13 +547,11 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         return;
     }
 
-    fprintf(self->dumper.out,"  if(allocated(svalues)) deallocate(svalues)\n");
-    fprintf(self->dumper.out,"  allocate(svalues(%lu))\n", (unsigned long)size);
-
-    fprintf(self->dumper.out,"  svalues=(/");
+    fprintf(self->dumper.out,"  free(svalues);\n");
+    fprintf(self->dumper.out,"  svalues = (char**)malloc(%lu * sizeof(char*));\n", (unsigned long)size);
+    fprintf(self->dumper.out,"  size = %lu;\n", size);
 
     self->empty=0;
-
     values=(char**)grib_context_malloc_clear(c,size*sizeof(char*));
     if (!values) {
         grib_context_log(c,GRIB_LOG_FATAL,"unable to allocate %d bytes",(int)size);
@@ -561,17 +559,16 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     }
 
     err = grib_unpack_string_array(a,values,&size);
-
     for  (i=0;i<size-1;i++) {
-        fprintf(self->dumper.out,"    \"%s\", &\n",values[i]);
+        fprintf(self->dumper.out,"  svalues[%lu]=\"%s\"; \n", i, values[i]);
     }
-    fprintf(self->dumper.out,"    \"%s\" /)\n",values[i]);
+    fprintf(self->dumper.out,"  svalues[%lu]=\"%s\";\n", i, values[i]);
 
     if (self->isLeaf==0) {
         if ((r=compute_key_rank(h,self->keys,a->name))!=0)
-            fprintf(self->dumper.out,"  call codes_set_string_array(ibufr,'#%d#%s',svalues)\n",r,a->name);
+            fprintf(self->dumper.out,"  codes_set_string_array(h, \"#%d#%s\", (const char **)svalues, size);\n",r,a->name);
         else
-            fprintf(self->dumper.out,"  call codes_set_string_array(ibufr,'%s',svalues)\n",a->name);
+            fprintf(self->dumper.out,"  codes_set_string_array(h, \"%s\", (const char **)svalues, size);\n",a->name);
     }
 
     if (self->isLeaf==0) {
@@ -629,12 +626,11 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     if (self->isLeaf==0) {
         depth+=2;
         if (r!=0)
-            fprintf(self->dumper.out,"  call codes_set(ibufr,'#%d#%s',",r,a->name);
+            fprintf(self->dumper.out,"  codes_set_string(h, \"#%d#%s\", ", r, a->name);
         else
-            fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',",a->name);
+            fprintf(self->dumper.out,"  codes_set_string(h, \"%s\", ", a->name);
     }
-    fprintf(self->dumper.out,"\'%s\')\n",value);
-
+    fprintf(self->dumper.out,"\"%s\", &size);\n",value);
 
     if (self->isLeaf==0) {
         char* prefix;
