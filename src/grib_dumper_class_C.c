@@ -180,6 +180,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     if (size>1) {
         fprintf(self->dumper.out,"  free(rvalues); rvalues = NULL;\n\n");
         fprintf(self->dumper.out,"  rvalues = (double*)malloc(%lu*sizeof(double));\n", (unsigned long)size);
+        fprintf(self->dumper.out,"  if (!rvalues) { fprintf(stderr, \"Failed to allocate memory (rvalues).\\n\"); return 1; }\n");
         fprintf(self->dumper.out,"  size = %lu;", size);
 
         icount=0;
@@ -214,7 +215,6 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
                 fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double(h, \"%s\", %s), 0);\n", a->name, sval);
 
             grib_context_free(c,sval);
-
         }
     }
 
@@ -266,6 +266,7 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
     if (size>1) {
         fprintf(self->dumper.out,"  free(rvalues); rvalues = NULL;\n");
         fprintf(self->dumper.out,"  rvalues = (double*)malloc(%lu*sizeof(double));\n", (unsigned long)size);
+        fprintf(self->dumper.out,"  if (!rvalues) { fprintf(stderr, \"Failed to allocate memory (rvalues).\\n\"); return 1; }\n");
         fprintf(self->dumper.out,"  size = %lu;", size);
 
         icount=0;
@@ -361,6 +362,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
     if (size>1) {
         fprintf(self->dumper.out,"  free(ivalues); ivalues = NULL;\n\n");
         fprintf(self->dumper.out,"  ivalues = (long*)malloc(%lu*sizeof(long));\n", (unsigned long)size);
+        fprintf(self->dumper.out,"  if (!ivalues) { fprintf(stderr, \"Failed to allocate memory (ivalues).\\n\"); return 1; }\n");
         fprintf(self->dumper.out,"  size = %lu;", size);
 
         icount=0;
@@ -439,6 +441,7 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     if (size>1) {
         fprintf(self->dumper.out,"  free(ivalues); ivalues = NULL;\n");
         fprintf(self->dumper.out,"  ivalues = (long*)malloc(%lu*sizeof(long));\n", (unsigned long)size);
+        fprintf(self->dumper.out,"  if (!ivalues) { fprintf(stderr, \"Failed to allocate memory (ivalues).\\n\"); return 1; }\n");
         fprintf(self->dumper.out,"  size = %lu;", size);
 
         icount=0;
@@ -549,6 +552,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
 
     fprintf(self->dumper.out,"  free(svalues);\n");
     fprintf(self->dumper.out,"  svalues = (char**)malloc(%lu * sizeof(char*));\n", (unsigned long)size);
+    fprintf(self->dumper.out,"  if (!svalues) { fprintf(stderr, \"Failed to allocate memory (svalues).\\n\"); return 1; }\n");
     fprintf(self->dumper.out,"  size = %lu;\n", size);
 
     self->empty=0;
@@ -669,6 +673,7 @@ static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const cha
 
     fprintf(f,"  free(ivalues); ivalues = NULL;\n");
     fprintf(f,"  ivalues = (long*)malloc(%lu*sizeof(long));\n", (unsigned long)size);
+    fprintf(f,"  if (!ivalues) { fprintf(stderr, \"Failed to allocate memory (ivalues).\\n\"); return 1; }\n");
     fprintf(f,"  size = %lu;", size);
 
     val=grib_context_malloc_clear(h->context,sizeof(long)*size);
@@ -753,6 +758,8 @@ static void header(grib_dumper* d, grib_handle* h)
     char sampleName[200]={0};
     long localSectionPresent,edition,bufrHeaderCentre,isSatellite;
 
+    Assert(h->product_kind == PRODUCT_BUFR);
+
     grib_get_long(h,"localSectionPresent",&localSectionPresent);
     grib_get_long(h,"bufrHeaderCentre",&bufrHeaderCentre);
     grib_get_long(h,"edition",&edition);
@@ -777,11 +784,11 @@ static void header(grib_dumper* d, grib_handle* h)
         fprintf(self->dumper.out,"{\n");
         fprintf(self->dumper.out,"  size_t         size=0;\n");
         fprintf(self->dumper.out,"  const void*    buffer = NULL;\n");
-        fprintf(self->dumper.out,"  FILE *         fout = NULL;\n");
+        fprintf(self->dumper.out,"  FILE*          fout = NULL;\n");
         fprintf(self->dumper.out,"  codes_handle*  h = NULL;\n");
         fprintf(self->dumper.out,"  long*          ivalues = NULL;\n");
         fprintf(self->dumper.out,"  char**         svalues = NULL;\n");
-        fprintf(self->dumper.out,"  double*        rvalues = NULL;\n\n");
+        fprintf(self->dumper.out,"  double*        rvalues = NULL;\n");
         fprintf(self->dumper.out,"  const char*    sampleName = \"%s\";\n\n", sampleName);
     }
 
