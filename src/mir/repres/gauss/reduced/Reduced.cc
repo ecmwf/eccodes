@@ -90,7 +90,7 @@ void Reduced::fill(grib_info &info) const  {
     long j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
     info.packing.extra_settings[j].name = "global";
-    info.packing.extra_settings[j].long_value = global && westAtGreenwich? 1 : 0;
+    info.packing.extra_settings[j].long_value = global && westAtGreenwich ? 1 : 0;
 }
 
 
@@ -182,7 +182,7 @@ public:
 private:
 
     static void repositionToFirstLatitudeIndex(size_t& j, const atlas::grid::Domain& dom, const std::vector<double>& lats) {
-        j=0;
+        j = 0;
         while (j < lats.size() && dom.north() < lats[j]) {
             j++;
         }
@@ -191,17 +191,18 @@ private:
 
     static void repositionToFirstLongitudeIndex(size_t& imin, size_t& imax, const atlas::grid::Domain& dom, const size_t& n) {
         typedef eckit::FloatCompare<double> cmp;
-        const double west_positive = dom.west() + (cmp::isStrictlyGreater(0., dom.west())? 360. : 0.);
-        const double east_positive = dom.east() + (cmp::isStrictlyGreater(0., dom.west())? 360. : 0.);
-        ASSERT(cmp::isApproximatelyGreaterOrEqual(360., east_positive-west_positive));
+        const double west_positive = dom.west() + (cmp::isStrictlyGreater(0., dom.west()) ? 360. : 0.);
+        const double east_positive = dom.east() + (cmp::isStrictlyGreater(0., dom.west()) ? 360. : 0.);
+        ASSERT(cmp::isApproximatelyGreaterOrEqual(360., east_positive - west_positive));
 
         // assuming n>0, returned range satisfies: 0 <= imin < imax; and imax - imin <= n
         imin = 0;
-        while (imin<n && cmp::isStrictlyGreater(west_positive, (imin * 360.) / n)) {
+        while (imin < n && cmp::isStrictlyGreater(west_positive, (imin * 360.) / n)) {
             ++imin;
         }
-        imax = (imin = imin%n);
-        while (imax-imin<n && cmp::isApproximatelyGreaterOrEqual(east_positive, (imax * 360.) / n)) {
+        imin = imin % n;
+        imax = imin;
+        while (imax - imin < n && cmp::isApproximatelyGreaterOrEqual(east_positive, (imax * 360.) / n)) {
             ++imax;
         }
         ASSERT(imax > imin);
@@ -225,44 +226,44 @@ atlas::grid::Domain Reduced::atlasDomain(const util::BoundingBox& bbox) const {
     ASSERT(lats.size());
 
     long max_pl = pl[0];
-    for (size_t i = 0; i<pl.size(); i++) {
+    for (size_t i = 0; i < pl.size(); i++) {
         max_pl = std::max(max_pl, pl[i]);
     }
 
     double max_inc_north_south = std::numeric_limits<double>::epsilon();
-    for (size_t j=1; j<lats.size(); ++j) {
-        max_inc_north_south = std::max(max_inc_north_south, lats[j-1]-lats[j]);
+    for (size_t j = 1; j < lats.size(); ++j) {
+        max_inc_north_south = std::max(max_inc_north_south, lats[j - 1] - lats[j]);
     }
     ASSERT(cmp::isStrictlyGreater(max_inc_north_south, 0));
 
     const double ew = bbox.east() - bbox.west();
-    const double inc_west_east = max_pl? 360./double(max_pl) : 0.;
+    const double inc_west_east = max_pl ? 360. / double(max_pl) : 0.;
 
     // confirm domain limits
     const double epsilon_grib1 = 1.0 / 1000.0;
 
     const bool isPeriodicEastWest =
-               cmp::isApproximatelyEqual(360., ew + inc_west_east)
+        cmp::isApproximatelyEqual(360., ew + inc_west_east)
 
-            // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree. Use the precision given by GRIB in this check
-            || cmp::isApproximatelyEqual(360., ew + inc_west_east, epsilon_grib1 )
+        // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree. Use the precision given by GRIB in this check
+        || cmp::isApproximatelyEqual(360., ew + inc_west_east, epsilon_grib1 )
 
-            // The dissemination will put in the GRIB header what is specified by the user
-            // so, for example if the user specify 359.999999 as the eastern longitude, this
-            // value will end up in the header
-            || (ew + inc_west_east > 360.);
+        // The dissemination will put in the GRIB header what is specified by the user
+        // so, for example if the user specify 359.999999 as the eastern longitude, this
+        // value will end up in the header
+        || (ew + inc_west_east > 360.);
 
     const bool
-            includesPoleNorth = cmp::isApproximatelyEqual(bbox.north(),  90, max_inc_north_south),
-            includesPoleSouth = cmp::isApproximatelyEqual(bbox.south(), -90, max_inc_north_south),
-            isNorthAtEquator  = cmp::isApproximatelyEqual(bbox.north(),   0, max_inc_north_south),
-            isSouthAtEquator  = cmp::isApproximatelyEqual(bbox.south(),   0, max_inc_north_south);
+    includesPoleNorth = cmp::isApproximatelyEqual(bbox.north(),  90, max_inc_north_south),
+    includesPoleSouth = cmp::isApproximatelyEqual(bbox.south(), -90, max_inc_north_south),
+    isNorthAtEquator  = cmp::isApproximatelyEqual(bbox.north(),   0, max_inc_north_south),
+    isSouthAtEquator  = cmp::isApproximatelyEqual(bbox.south(),   0, max_inc_north_south);
 
     const double
-            north = includesPoleNorth?   90 : isNorthAtEquator? 0 : bbox.north(),
-            south = includesPoleSouth?  -90 : isSouthAtEquator? 0 : bbox.south(),
-            west = bbox.west(),
-            east = isPeriodicEastWest? bbox.west() + 360 : bbox.east();
+    north = includesPoleNorth ?   90 : isNorthAtEquator ? 0 : bbox.north(),
+    south = includesPoleSouth ?  -90 : isSouthAtEquator ? 0 : bbox.south(),
+    west = bbox.west(),
+    east = isPeriodicEastWest ? bbox.west() + 360 : bbox.east();
     return atlas::grid::Domain(north, west, south, east);
 }
 
