@@ -21,7 +21,7 @@ attdict = dict(sources=['@CMAKE_CURRENT_SOURCE_DIR@/swig_wrap_numpy.c',
                library_dirs=['@CMAKE_BINARY_DIR@/lib'],
                libraries=['eccodes'],
                extra_objects=[],
-               extra_link_args=['-Wl,-rpath,@CMAKE_INSTALL_PREFIX@/lib'])
+               extra_link_args=['-Wl,-rpath,@CMAKE_INSTALL_PREFIX@/@INSTALL_LIB_DIR@'])
 
 add_attribute = lambda **args: [list.append(attdict[key], value)
                                 for key, value in args.items()]
