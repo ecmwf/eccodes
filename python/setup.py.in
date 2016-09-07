@@ -29,37 +29,28 @@ if shared_libs == 'OFF':
     add_attribute = lambda **args: [list.append(attdict[key], value)
                                     for key, value in args.items()]
 
-    with_jasper = @HAVE_LIBJASPER@
-    if with_jasper:
+    if @HAVE_LIBJASPER@:
         jasper_dir = '@JASPER_DIR@'
         if jasper_dir and jasper_dir != 'system':
-            add_attribute(include_dirs=os.path.join(jasper_dir, 'include'),
-                          library_dirs=os.path.join(jasper_dir, 'lib'),
+            add_attribute(library_dirs=os.path.join(jasper_dir, 'lib'),
                           extra_link_args='-Wl,-rpath,' + os.path.join(jasper_dir, 'lib'))
         add_attribute(libraries='jasper')
 
-    with_openjpeg = @HAVE_LIBOPENJPEG@
-    if with_openjpeg:
+    if @HAVE_LIBOPENJPEG@:
         openjpeg_lib_dir = '@OPENJPEG_LIB_DIR@'
-        openjpeg_inc_dir = '@OPENJPEG_INCLUDE_DIR@'
-        if openjpeg_lib_dir and openjpeg_inc_dir:
-            add_attribute(include_dirs=openjpeg_inc_dir,
-                          library_dirs=openjpeg_lib_dir,
+        if openjpeg_lib_dir:
+            add_attribute(library_dirs=openjpeg_lib_dir,
                           extra_link_args='-Wl,-rpath,' + openjpeg_lib_dir)
         add_attribute(libraries='openjp2')
 
     # assumes png is supplied by system paths -- may not be true
-    png = @HAVE_LIBPNG@
-    if png:
+    if @HAVE_LIBPNG@:
         add_attribute(libraries='png')
 
-
-    with_aec = @HAVE_AEC@
-    if with_aec:
+    if @HAVE_AEC@:
         aec_dir = '@AEC_DIR@'
         if aec_dir and aec_dir != 'system':
-            add_attribute(include_dirs=os.path.join(aec_dir, 'include'),
-                          library_dirs=os.path.join(aec_dir, 'lib'),
+            add_attribute(library_dirs=os.path.join(aec_dir, 'lib'),
                           extra_link_args='-Wl,-rpath,' + os.path.join(aec_dir, 'lib'))
         add_attribute(libraries='aec')
 
