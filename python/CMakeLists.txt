@@ -14,6 +14,10 @@ if( HAVE_PYTHON )
         get_filename_component(OPENJPEG_LIB_DIR ${OPENJPEG_LIBRARY} PATH )
     endif()
 
+    if( HAVE_AEC )
+      get_filename_component(AEC_DIR ${AEC_INCLUDE_DIR} PATH )
+    endif()
+
     configure_file( setup.py.in setup.py )
 
     # compile swig interface
