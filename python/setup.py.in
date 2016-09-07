@@ -19,7 +19,7 @@ attdict = dict(sources=['@CMAKE_CURRENT_SOURCE_DIR@/swig_wrap_numpy.c',
                              '@CMAKE_CURRENT_SOURCE_DIR@/../src',
                              numpy_include],
                library_dirs=['@CMAKE_BINARY_DIR@/lib'],
-               runtime_library_dirs=['@CMAKE_INSTALL_PREFIX@/@INSTALL_LIB_DIR@'],
+               runtime_library_dirs=[],
                libraries=['eccodes'],
                extra_objects=[])
 
