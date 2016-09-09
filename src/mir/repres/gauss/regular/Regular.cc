@@ -144,9 +144,8 @@ atlas::grid::Domain Regular::atlasDomain(const util::BoundingBox& bbox) const {
     const double
             north = includesPoleNorth?  90 : adjust_north,
             south = includesPoleSouth? -90 : adjust_south,
-            west = isPeriodicEastWest?   0 : adjust_west,
-            east = isPeriodicEastWest? 360 : adjust_east;
-
+            west = adjust_west,
+            east = isPeriodicEastWest? adjust_west + 360 : adjust_east;
     return atlas::grid::Domain(north, west, south, east);
 }
 

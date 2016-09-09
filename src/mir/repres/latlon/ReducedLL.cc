@@ -148,11 +148,12 @@ atlas::grid::Domain ReducedLL::atlasDomain(const util::BoundingBox& bbox) const 
     const bool includesPoleNorth  = cmp::isApproximatelyEqual(bbox.north(),  90.);
     const bool includesPoleSouth  = cmp::isApproximatelyEqual(bbox.south(), -90.);
 
-    return atlas::grid::Domain(
-                includesPoleNorth?   90 : bbox.north(),
-                isPeriodicEastWest?   0 : bbox.west(),
-                includesPoleSouth?  -90 : bbox.south(),
-                isPeriodicEastWest? 360 : bbox.east() );
+    const double
+            north = includesPoleNorth?   90 : bbox.north(),
+            south = includesPoleSouth?  -90 : bbox.south(),
+            west = bbox.west(),
+            east = isPeriodicEastWest? bbox.west() + 360 : bbox.east();
+    return atlas::grid::Domain(north, west, south, east);
 }
 
 

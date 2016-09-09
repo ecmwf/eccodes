@@ -161,7 +161,6 @@ void LatLon::fill(grib_info &info) const  {
 
     increments_.fill(info);
     bbox_.fill(info);
-
 }
 
 
@@ -291,7 +290,7 @@ void LatLon::shape(size_t &ni, size_t &nj) const {
 
 
 atlas::grid::Domain LatLon::atlasDomain() const {
-  return atlasDomain(bbox_);
+    return atlasDomain(bbox_);
 }
 
 
@@ -306,11 +305,12 @@ atlas::grid::Domain LatLon::atlasDomain(const util::BoundingBox& bbox) const {
     const bool includesPoles = cmp::isApproximatelyEqual(ns, 180.)
                             || cmp::isApproximatelyEqual(ns + increments_.south_north(), 180.);
 
-    return atlas::grid::Domain(
-                includesPoles?       90 : bbox.north(),
-                isPeriodicEastWest?   0 : bbox.west(),
-                includesPoles?      -90 : bbox.south(),
-                isPeriodicEastWest? 360 : bbox.east() );
+    const double
+            north = includesPoles?   90 : bbox.north(),
+            south = includesPoles?  -90 : bbox.south(),
+            west = bbox.west(),
+            east = isPeriodicEastWest? bbox.west() + 360 : bbox.east();
+    return atlas::grid::Domain(north, west, south, east);
 }
 
 
