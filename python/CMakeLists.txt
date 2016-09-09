@@ -30,7 +30,7 @@ if( HAVE_PYTHON )
     # endif()
 
     ####### Do not invoke swig. Use our own generated C wrapper file ######
-    set( _gribapi_swig "_gribapi_swig${CMAKE_SHARED_LIBRARY_SUFFIX}" )
+    set( _gribapi_swig "gribapi/_gribapi_swig${CMAKE_SHARED_LIBRARY_SUFFIX}" )
     # Build the extension module for use in build tree with RPATH pointing to the build tree
     add_custom_command( OUTPUT ${_gribapi_swig}
                         COMMAND ${PYTHON_EXECUTABLE} setup.py build_ext --inplace --rpath ${CMAKE_BINARY_DIR}/lib
