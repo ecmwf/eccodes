@@ -76,10 +76,14 @@ void Regular::fill(grib_info &info) const  {
 
     */
 
+    // for GRIB, a global field is also aligned with Greenwich
+    bool global = atlasDomain().isGlobal();
+    bool westAtGreenwich = eckit::FloatCompare<double>::isApproximatelyEqual(0, bbox_.west());
+
     long j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
     info.packing.extra_settings[j].name = "global";
-    info.packing.extra_settings[j].long_value = atlasDomain().isGlobal()? 1 : 0;
+    info.packing.extra_settings[j].long_value = global && westAtGreenwich? 1 : 0;
 }
 
 
@@ -144,9 +148,8 @@ atlas::grid::Domain Regular::atlasDomain(const util::BoundingBox& bbox) const {
     const double
             north = includesPoleNorth?  90 : adjust_north,
             south = includesPoleSouth? -90 : adjust_south,
-            west = isPeriodicEastWest?   0 : adjust_west,
-            east = isPeriodicEastWest? 360 : adjust_east;
-
+            west = adjust_west,
+            east = isPeriodicEastWest? adjust_west + 360 : adjust_east;
     return atlas::grid::Domain(north, west, south, east);
 }
 
