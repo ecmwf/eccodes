@@ -45,7 +45,7 @@ list( APPEND tests1
 list( APPEND tests2
     grib_double_cmp
     bufr_dump
-    bufr_dump_filter
+    bufr_dump_encode_filter
     bufrdc_desc_ref
     bufrdc_ref
     bufr_compare
@@ -110,10 +110,10 @@ list( APPEND tests2
     neg_fctime
 )
 if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
-    list(APPEND tests2 bufr_dump_fortran)
+    list(APPEND tests2 bufr_dump_encode_fortran)
 endif()
 if( ENABLE_EXTRA_TESTS )
-    list(APPEND tests2 bufr_dump_C)
+    list(APPEND tests2 bufr_dump_encode_C)
 endif()
 
 # These tests do not require any data downloads
@@ -144,15 +144,15 @@ foreach( test ${tests2} )
 endforeach()
 
 if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
-    set_tests_properties ( eccodes_t_bufr_dump_fortran PROPERTIES TIMEOUT 2500)
+    set_tests_properties ( eccodes_t_bufr_dump_encode_fortran PROPERTIES TIMEOUT 2500)
 endif()
 if( ENABLE_EXTRA_TESTS )
-    set_tests_properties ( eccodes_t_bufr_dump_C PROPERTIES TIMEOUT 2500)
+    set_tests_properties ( eccodes_t_bufr_dump_encode_C PROPERTIES TIMEOUT 2500)
 endif()
 
 
 if( HAVE_PYTHON AND ENABLE_EXTRA_TESTS )
-    set(test bufr_dump_python)
+    set(test bufr_dump_encode_python)
     ecbuild_add_test( TARGET eccodes_t_${test}
                       TYPE SCRIPT
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh

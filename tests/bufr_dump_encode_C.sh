@@ -11,7 +11,7 @@
 . ./include.sh
 
 #Define a common label for all the tmp files
-label="bufr_dump_C_test"
+label="bufr_dump_encode_C_test"
 
 #Create log file
 fLog=${label}".log"
