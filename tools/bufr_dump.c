@@ -327,6 +327,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 return err;
             }
         }
+        if (grib_options_on("D:") && strcmp(options->dump_mode,"filter")==0) {
+            fprintf(stdout,"set unpack=1;\n");
+        }
         dumper=grib_dump_content_with_dumper(h,dumper,stdout,dumper_name,options->dump_flags,0);
         if (!dumper) exit(1);
     }
