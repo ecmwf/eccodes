@@ -1397,11 +1397,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\grib_dumper_class_filter.c"
+				RelativePath="..\..\..\src\grib_dumper_class_bufr_encode_filter.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\grib_dumper_class_fortran.c"
+				RelativePath="..\..\..\src\grib_dumper_class_bufr_encode_fortran.c"
 				>
 			</File>
 			<File
@@ -1413,7 +1413,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\grib_dumper_class_python.c"
+				RelativePath="..\..\..\src\grib_dumper_class_bufr_encode_python.c"
 				>
 			</File>
 			<File

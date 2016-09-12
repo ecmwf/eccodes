@@ -274,10 +274,10 @@ list( APPEND grib_api_srcs
     grib_dumper_class_debug.c
     grib_dumper_class_default.c
     grib_dumper_class_keys.c
-    grib_dumper_class_C.c
-    grib_dumper_class_filter.c
-    grib_dumper_class_fortran.c
-    grib_dumper_class_python.c
+    grib_dumper_class_bufr_encode_C.c
+    grib_dumper_class_bufr_encode_filter.c
+    grib_dumper_class_bufr_encode_fortran.c
+    grib_dumper_class_bufr_encode_python.c
     grib_dumper_class_json.c
     grib_dumper_class_xml.c
     grib_dumper_class_c_code.c

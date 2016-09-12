@@ -33,7 +33,7 @@ libeccodes_la_prototypes= \
 	action_class_trigger.c \
 	action_class_when.c \
 	action_class_concept.c \
-    action_class_hash_array.c \
+	action_class_hash_array.c \
 	action_class_set.c \
 	action_class_set_darray.c \
 	action_class_set_iarray.c \
@@ -289,10 +289,10 @@ libeccodes_la_prototypes= \
 	grib_dumper_class_debug.c \
 	grib_dumper_class_default.c \
 	grib_dumper_class_keys.c \
-	grib_dumper_class_C.c \
-	grib_dumper_class_filter.c \
-	grib_dumper_class_fortran.c \
-	grib_dumper_class_python.c \
+	grib_dumper_class_bufr_encode_C.c \
+	grib_dumper_class_bufr_encode_filter.c \
+	grib_dumper_class_bufr_encode_fortran.c \
+	grib_dumper_class_bufr_encode_python.c \
 	grib_dumper_class_json.c \
 	grib_dumper_class_xml.c \
 	grib_dumper_class_c_code.c \

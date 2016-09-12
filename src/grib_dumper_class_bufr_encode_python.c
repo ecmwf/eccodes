@@ -57,7 +57,7 @@ static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_acce
 static void header         (grib_dumper*,grib_handle*);
 static void footer         (grib_dumper*,grib_handle*);
 
-typedef struct grib_dumper_python {
+typedef struct grib_dumper_bufr_encode_python {
     grib_dumper          dumper;  
 /* Members defined in python */
 	long section_offset;
@@ -66,13 +66,13 @@ typedef struct grib_dumper_python {
 	long isLeaf;
 	long isAttribute;
 	grib_string_list* keys;
-} grib_dumper_python;
+} grib_dumper_bufr_encode_python;
 
 
-static grib_dumper_class _grib_dumper_class_python = {
+static grib_dumper_class _grib_dumper_class_bufr_encode_python = {
     0,                              /* super                     */
-    "python",                              /* name                      */
-    sizeof(grib_dumper_python),     /* size                      */
+    "bufr_encode_python",           /* name                      */
+    sizeof(grib_dumper_bufr_encode_python),     /* size                      */
     0,                                   /* inited */
     &init_class,                         /* init_class */
     &init,                               /* init                      */
@@ -90,7 +90,7 @@ static grib_dumper_class _grib_dumper_class_python = {
     &footer,                             /* footer   */
 };
 
-grib_dumper_class* grib_dumper_class_python = &_grib_dumper_class_python;
+grib_dumper_class* grib_dumper_class_bufr_encode_python = &_grib_dumper_class_bufr_encode_python;
 
 /* END_CLASS_IMP */
 static void dump_attributes(grib_dumper* d,grib_accessor* a, const char* prefix);
@@ -115,7 +115,7 @@ static void init_class      (grib_dumper_class* c){}
 
 static int init(grib_dumper* d)
 {
-    grib_dumper_python *self = (grib_dumper_python*)d;
+    grib_dumper_bufr_encode_python *self = (grib_dumper_bufr_encode_python*)d;
     grib_context* c=d->handle->context;
     self->section_offset=0;
     self->empty=1;
@@ -129,7 +129,7 @@ static int init(grib_dumper* d)
 
 static int destroy(grib_dumper* d)
 {
-    grib_dumper_python *self = (grib_dumper_python*)d;
+    grib_dumper_bufr_encode_python *self = (grib_dumper_bufr_encode_python*)d;
     grib_string_list* next=self->keys;
     grib_string_list* cur=self->keys;
     grib_context* c=d->handle->context;
@@ -151,7 +151,7 @@ static char* dval_to_string(const grib_context* c,double v)
 
 static void dump_values(grib_dumper* d,grib_accessor* a)
 {
-    grib_dumper_python *self = (grib_dumper_python*)d;
+    grib_dumper_bufr_encode_python *self = (grib_dumper_bufr_encode_python*)d;
     double value; size_t size = 0;
     double *values=NULL;
     int err = 0;
@@ -236,7 +236,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 
 static void dump_values_attribute(grib_dumper* d,grib_accessor* a, const char* prefix)
 {
-    grib_dumper_python *self = (grib_dumper_python*)d;
+    grib_dumper_bufr_encode_python *self = (grib_dumper_bufr_encode_python*)d;
     double value; size_t size = 0;
     double *values=NULL;
     int err = 0;
@@ -312,7 +312,7 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a, const char* p
 
 static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 {
-    grib_dumper_python *self = (grib_dumper_python*)d;
+    grib_dumper_bufr_encode_python *self = (grib_dumper_bufr_encode_python*)d;
     long value; size_t size = 0;
     long *values=NULL;
     int err = 0;
@@ -407,7 +407,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 
 static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* prefix)
 {
-    grib_dumper_python *self = (grib_dumper_python*)d;
+    grib_dumper_bufr_encode_python *self = (grib_dumper_bufr_encode_python*)d;
     long value; size_t size = 0;
     long *values=NULL;
     int err = 0;
@@ -477,7 +477,7 @@ static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
 
 static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 {
-    grib_dumper_python *self = (grib_dumper_python*)d;
+    grib_dumper_bufr_encode_python *self = (grib_dumper_bufr_encode_python*)d;
     double value; size_t size = 1;
     int r;
     char* sval;
@@ -519,7 +519,7 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 
 static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* comment)
 {
-    grib_dumper_python *self = (grib_dumper_python*)d;
+    grib_dumper_bufr_encode_python *self = (grib_dumper_bufr_encode_python*)d;
     char **values;
     size_t size = 0,i=0;
     grib_context* c=NULL;
@@ -585,7 +585,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
 
 static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 {
-    grib_dumper_python *self = (grib_dumper_python*)d;
+    grib_dumper_bufr_encode_python *self = (grib_dumper_bufr_encode_python*)d;
     char *value=NULL;
     char *p = NULL;
     size_t size = 0;
@@ -680,7 +680,7 @@ static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const cha
 
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
 {
-    grib_dumper_python *self = (grib_dumper_python*)d;
+    grib_dumper_bufr_encode_python *self = (grib_dumper_bufr_encode_python*)d;
     if (!grib_inline_strcmp(a->name,"BUFR") ||
             !grib_inline_strcmp(a->name,"GRIB") ||
             !grib_inline_strcmp(a->name,"META")
@@ -710,7 +710,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
 static void dump_attributes(grib_dumper* d,grib_accessor* a, const char* prefix)
 {
     int i=0;
-    grib_dumper_python *self = (grib_dumper_python*)d;
+    grib_dumper_bufr_encode_python *self = (grib_dumper_bufr_encode_python*)d;
     unsigned long flags;
     while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
         self->isAttribute=1;
@@ -742,7 +742,7 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a, const char* prefix)
 
 static void header(grib_dumper* d, grib_handle* h)
 {
-    grib_dumper_python *self = (grib_dumper_python*)d;
+    grib_dumper_bufr_encode_python *self = (grib_dumper_bufr_encode_python*)d;
     char sampleName[200]={0};
     long localSectionPresent,edition,bufrHeaderCentre,isSatellite;
 
@@ -776,7 +776,7 @@ static void header(grib_dumper* d, grib_handle* h)
 
 static void footer(grib_dumper* d, grib_handle* h)
 {
-    grib_dumper_python *self = (grib_dumper_python*)d;
+    grib_dumper_bufr_encode_python *self = (grib_dumper_bufr_encode_python*)d;
     fprintf(self->dumper.out,"    codes_set(ibufr, 'pack', 1)\n");
     if (d->count==1)
         fprintf(self->dumper.out,"    outfile = open('outfile.bufr', 'w')\n");

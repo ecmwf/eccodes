@@ -167,6 +167,41 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
     return 0;
 }
 
+static char* get_dumper_name(grib_runtime_options* options)
+{
+    if (grib_options_on("E:")) {
+        /* Dumper for ENCODING */
+        if (strcmp(options->dump_mode,"filter")==0) {
+            return "bufr_encode_filter";
+        }
+        if (strcmp(options->dump_mode,"fortran")==0) {
+            return "bufr_encode_fortran";
+        }
+        if (strcmp(options->dump_mode,"C")==0) {
+            return "bufr_encode_C";
+        }
+        if (strcmp(options->dump_mode,"python")==0) {
+            return "bufr_encode_python";
+        }
+    }
+    else if (grib_options_on("D:")) {
+        /* Dumper for DECODING */
+        if (strcmp(options->dump_mode,"filter")==0) {
+            return "bufr_decode_filter";
+        }
+        if (strcmp(options->dump_mode,"fortran")==0) {
+            return "bufr_decode_fortran";
+        }
+        if (strcmp(options->dump_mode,"C")==0) {
+            return "bufr_decode_C";
+        }
+        if (strcmp(options->dump_mode,"python")==0) {
+            return "bufr_decode_python";
+        }
+    }
+    return options->dump_mode;
+}
+
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     long length=0;
@@ -269,6 +304,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
         grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
     } else {
+        const char* dumper_name = get_dumper_name(options);
         err=grib_set_long(h,"unpack",1);
         if (err) {
             if (options->fail) {
@@ -280,7 +316,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 return err;
             }
         }
-        dumper=grib_dump_content_with_dumper(h,dumper,stdout,options->dump_mode,options->dump_flags,0);
+        dumper=grib_dump_content_with_dumper(h,dumper,stdout,dumper_name,options->dump_flags,0);
         if (!dumper) exit(1);
     }
 
@@ -301,30 +337,57 @@ void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
     if (json) fprintf(stdout,"\n]}\n");
-    if (!strcmp(options->dump_mode,"filter")) {
-        fprintf(stdout,"set pack=1;\nwrite;\n");
-    }
-    if (!strcmp(options->dump_mode,"fortran")) {
-        fprintf(stdout,"end program bufr_create_message\n");
-    }
-    if (!strcmp(options->dump_mode,"C")) {
-        fprintf(stdout,"  return 0;\n");
-        fprintf(stdout,"}\n");
-    }
 
-    if (!strcmp(options->dump_mode,"python")) {
-        fprintf(stdout,"\n\n");
-        fprintf(stdout,"def main():\n");
-        fprintf(stdout,"    try:\n");
-        fprintf(stdout,"        bufr_create_message()\n");
-        fprintf(stdout,"    except CodesInternalError as err:\n");
-        fprintf(stdout,"        traceback.print_exc(file=sys.stderr)\n");
-        fprintf(stdout,"        return 1\n");
-        fprintf(stdout,"\n\n");
-        fprintf(stdout,"if __name__ == \"__main__\":\n");
-        fprintf(stdout,"    sys.exit(main())\n");
+    if (grib_options_on("E:")) {
+        /* Code for ENCODING */
+        if (!strcmp(options->dump_mode,"filter")) {
+            fprintf(stdout,"set pack=1;\nwrite;\n");
+        }
+        if (!strcmp(options->dump_mode,"fortran")) {
+            fprintf(stdout,"end program bufr_create_message\n");
+        }
+        if (!strcmp(options->dump_mode,"C")) {
+            fprintf(stdout,"  return 0;\n");
+            fprintf(stdout,"}\n");
+        }
+        if (!strcmp(options->dump_mode,"python")) {
+            fprintf(stdout,"\n\n");
+            fprintf(stdout,"def main():\n");
+            fprintf(stdout,"    try:\n");
+            fprintf(stdout,"        bufr_create_message()\n");
+            fprintf(stdout,"    except CodesInternalError as err:\n");
+            fprintf(stdout,"        traceback.print_exc(file=sys.stderr)\n");
+            fprintf(stdout,"        return 1\n");
+            fprintf(stdout,"\n\n");
+            fprintf(stdout,"if __name__ == \"__main__\":\n");
+            fprintf(stdout,"    sys.exit(main())\n");
+        }
     }
+    else if (grib_options_on("D:")) {
+        /* Code for DECODING */
+        if (!strcmp(options->dump_mode,"filter")) {
 
+        }
+        if (!strcmp(options->dump_mode,"fortran")) {
+
+        }
+        if (!strcmp(options->dump_mode,"C")) {
+            fprintf(stdout,"  return 0;\n");
+            fprintf(stdout,"}\n");
+        }
+        if (!strcmp(options->dump_mode,"python")) {
+            fprintf(stdout,"\n\n");
+            fprintf(stdout,"def main():\n");
+            fprintf(stdout,"    try:\n");
+            fprintf(stdout,"        bufr_decode_message()\n");
+            fprintf(stdout,"    except CodesInternalError as err:\n");
+            fprintf(stdout,"        traceback.print_exc(file=sys.stderr)\n");
+            fprintf(stdout,"        return 1\n");
+            fprintf(stdout,"\n\n");
+            fprintf(stdout,"if __name__ == \"__main__\":\n");
+            fprintf(stdout,"    sys.exit(main())\n");
+        }
+    }
     return 0;
 }
 
