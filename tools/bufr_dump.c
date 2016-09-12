@@ -21,6 +21,13 @@ grib_option grib_options[]={
                 "\n\t\tOptions: s->structure, f->flat (only data), a->all attributes"
                 "\n\t\tDefault mode is structure.\n",
                 1,1,"s"},
+        {"D:","filter/fortran/python/C","\n\t\tDecoding dump. Provides instructions to decode the input message."
+                "\n\t\tOptions: filter  -> filter instructions file to decode input BUFR"
+                "\n\t\t         fortran -> fortran program to decode the input BUFR"
+                "\n\t\t         python  -> python script to decode the input BUFR"
+                "\n\t\t         C       -> C program to decode the input BUFR"
+                "\n\t\tDefault mode is filter.\n",
+                0,1,"filter"},
         {"E:","filter/fortran/python/C","\n\t\tEncoding dump. Provides instructions to create the input message."
                 "\n\t\tOptions: filter  -> filter instructions file to encode input BUFR"
                 "\n\t\t         fortran -> fortran program to encode the input BUFR"
@@ -103,6 +110,10 @@ int grib_tool_init(grib_runtime_options* options)
                 | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
+    if (grib_options_on("D:")) {
+        options->dump_mode = grib_options_get_option("D:");
+        json=0;
+    }
     if (grib_options_on("E:")) {
         options->dump_mode = grib_options_get_option("E:");
         json=0;
@@ -143,7 +154,7 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
     if (!options->current_infile->name) return 0;
     if (json) return 0;
 
-    if (grib_options_on("E:")) {
+    if (grib_options_on("E:") || grib_options_on("D:")) {
         if (!strcmp(options->dump_mode, "filter")) {
             /* Dump filter for one message only. Multi-message BUFR files will not work! */
             int err = 0, numMessages=0;
