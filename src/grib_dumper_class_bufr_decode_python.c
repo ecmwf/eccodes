@@ -769,7 +769,7 @@ static void header(grib_dumper* d, grib_handle* h)
         fprintf(self->dumper.out,"import traceback\n");
         fprintf(self->dumper.out,"import sys\n");
         fprintf(self->dumper.out,"from eccodes import *\n\n\n");
-        fprintf(self->dumper.out,"def bufr_create_message():\n");
+        fprintf(self->dumper.out,"def bufr_decode_message():\n");
     }
     fprintf(self->dumper.out,"    ibufr = codes_bufr_new_from_samples('%s')\n",sampleName);
 }
@@ -784,6 +784,5 @@ static void footer(grib_dumper* d, grib_handle* h)
         fprintf(self->dumper.out,"    outfile = open('outfile.bufr', 'a')\n");
 
     fprintf(self->dumper.out,"    codes_write(ibufr, outfile)\n");
-    /*fprintf(self->dumper.out,"    codes_close_file(outfile)\n");*/
     fprintf(self->dumper.out,"    codes_release(ibufr)\n");
 }
