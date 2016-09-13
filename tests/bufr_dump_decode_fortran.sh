@@ -61,9 +61,13 @@ do
   # Generate F90 code from BUFR file
   ${tools_dir}bufr_dump -Dfortran ${filePath} > $tempSrc
 
+  if [ "$file" = "emsg_189.bufr" ]; then
+    continue
+  fi
+
   # Compile
   if [ $COMPILE_AND_RUN -eq 1 ]; then
-    $COMPILER -ffree-line-length-0 -g -o $tempExe $tempSrc $FLAGS_COMPILER $FLAGS_LINKER
+    $COMPILER -o $tempExe $tempSrc $FLAGS_COMPILER $FLAGS_LINKER
     # valgrind --error-exitcode=1 --track-origins=yes  ./$tempExe $filePath
     ./$tempExe $filePath
   fi
