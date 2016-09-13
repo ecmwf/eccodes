@@ -8,22 +8,23 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FOTRAN 90 Implementation: get_product_kind
+! FORTRAN 90 Implementation: get_product_kind
 !
 ! Description: how to process a file containing a mix of messages
 !              and print the kind of product (e.g. GRIB, BUFR etc)
 !
 program get_product_kind
-use eccodes
-implicit none
-integer            :: ifile
-integer            :: iret
-integer            :: ihandle
-integer            :: count=0
-character(len=32)  :: product_kind
-character(len=120) :: infile_name
+  use eccodes
+  implicit none
+  integer            :: ifile
+  integer            :: iret
+  integer            :: ihandle
+  integer            :: count=0
+  character(len=32)  :: product_kind
+  character(len=120) :: infile_name
 
   call getarg(1, infile_name)
+  write(*,*) 'infile_name|',infile_name,'|'
   call codes_open_file(ifile,infile_name,'r')
 
 ! the first message is loaded from file

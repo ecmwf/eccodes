@@ -8,7 +8,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FOTRAN 90 Implementation: bufr_read_synop
+! FORTRAN 90 Implementation: bufr_read_synop
 !
 ! Description: how to read SYNOP BUFR messages.
  

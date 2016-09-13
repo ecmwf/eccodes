@@ -8,7 +8,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FOTRAN 90 Implementation: bufr_read_tropical_cyclone
+! FORTRAN 90 Implementation: bufr_read_tropical_cyclone
 !
 ! Description: how to read data for a tropical cyclone BUFR message.
 ! 

@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
             return 1;
         }
 
-        /* relase the clone's handle */
+        /* release the clone's handle */
         codes_handle_delete(clone_handle);
     }
 

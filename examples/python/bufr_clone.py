@@ -51,7 +51,7 @@ def example():
         # write the cloned message to a file
         codes_write(clone_id, fout)
 
-        # relase the clone's handle
+        # release the clone's handle
         codes_release(clone_id)
 
     # release the source's handle
