@@ -112,6 +112,7 @@ list( APPEND tests2
 )
 if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
     list(APPEND tests2 bufr_dump_encode_fortran)
+    list(APPEND tests2 bufr_dump_decode_fortran)
 endif()
 if( ENABLE_EXTRA_TESTS )
     list(APPEND tests2 bufr_dump_encode_C)

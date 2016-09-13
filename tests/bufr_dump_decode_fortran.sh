@@ -64,7 +64,7 @@ do
   # Compile
   if [ $COMPILE_AND_RUN -eq 1 ]; then
     $COMPILER -ffree-line-length-0 -g -o $tempExe $tempSrc $FLAGS_COMPILER $FLAGS_LINKER
-    # valgrind --error-exitcode=1  ./$tempExe
+    # valgrind --error-exitcode=1 --track-origins=yes  ./$tempExe $filePath
     ./$tempExe $filePath
   fi
 

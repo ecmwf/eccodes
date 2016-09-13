@@ -378,7 +378,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
             fprintf(stdout,"set pack=1;\nwrite;\n");
         }
         if (!strcmp(options->dump_mode,"fortran")) {
-            fprintf(stdout,"end program bufr_create_message\n");
+            fprintf(stdout,"end program bufr_encode\n");
         }
         if (!strcmp(options->dump_mode,"C")) {
             fprintf(stdout,"  return 0;\n");
@@ -388,7 +388,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
             fprintf(stdout,"\n\n");
             fprintf(stdout,"def main():\n");
             fprintf(stdout,"    try:\n");
-            fprintf(stdout,"        bufr_create_message()\n");
+            fprintf(stdout,"        bufr_encode()\n");
             fprintf(stdout,"    except CodesInternalError as err:\n");
             fprintf(stdout,"        traceback.print_exc(file=sys.stderr)\n");
             fprintf(stdout,"        return 1\n");
@@ -403,7 +403,8 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
         }
         if (!strcmp(options->dump_mode,"fortran")) {
-
+            fprintf(stdout,"\n  call codes_close_file(ifile)\n");
+            fprintf(stdout,"end program bufr_decode\n");
         }
         if (!strcmp(options->dump_mode,"C")) {
             fprintf(stdout,"  return 0;\n");
@@ -413,7 +414,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
             fprintf(stdout,"\n\n");
             fprintf(stdout,"def main():\n");
             fprintf(stdout,"    try:\n");
-            fprintf(stdout,"        bufr_decode_message()\n");
+            fprintf(stdout,"        bufr_decode()\n");
             fprintf(stdout,"    except CodesInternalError as err:\n");
             fprintf(stdout,"        traceback.print_exc(file=sys.stderr)\n");
             fprintf(stdout,"        return 1\n");
