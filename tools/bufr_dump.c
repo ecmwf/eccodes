@@ -213,6 +213,28 @@ static char* get_dumper_name(grib_runtime_options* options)
     return options->dump_mode;
 }
 
+static void print_header(grib_runtime_options* options)
+{
+    if (strcmp(options->dump_mode,"filter")==0) {
+        int print_unpack=0;
+        char generator_name[32];
+
+        if (grib_options_on("D:")) {
+            strcpy(generator_name, "-Dfilter");
+            print_unpack = 1;
+        }
+        else if (grib_options_on("E:")) {
+            strcpy(generator_name, "-Efilter");
+        }
+
+        fprintf(stdout,"#  This filter was automatically generated with bufr_dump %s\n", generator_name);
+        fprintf(stdout,"#  Using ecCodes version: ");
+        grib_print_api_version(stdout);
+        fprintf(stdout, "\n\n");
+        if (print_unpack) fprintf(stdout,"set unpack=1;\n");
+    }
+}
+
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     long length=0;
@@ -327,9 +349,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 return err;
             }
         }
-        if (grib_options_on("D:") && strcmp(options->dump_mode,"filter")==0) {
-            fprintf(stdout,"set unpack=1;\n");
-        }
+        print_header(options);
         dumper=grib_dump_content_with_dumper(h,dumper,stdout,dumper_name,options->dump_flags,0);
         if (!dumper) exit(1);
     }

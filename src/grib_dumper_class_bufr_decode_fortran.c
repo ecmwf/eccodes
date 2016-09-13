@@ -783,7 +783,7 @@ static void header(grib_dumper* d, grib_handle* h)
     }
 
     if (d->count<2) {
-        fprintf(self->dumper.out,"!  This program has been automatically generated with bufr_dump -Dfortran\n");
+        fprintf(self->dumper.out,"!  This program was automatically generated with bufr_dump -Dfortran\n");
         fprintf(self->dumper.out,"!  Using ecCodes version: ");
         grib_print_api_version(self->dumper.out);
         fprintf(self->dumper.out, "\n\n");
