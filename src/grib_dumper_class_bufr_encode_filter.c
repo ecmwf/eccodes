@@ -487,7 +487,7 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
 static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_encode_filter *self = (grib_dumper_bufr_encode_filter*)d;
-    char **values;
+    char **values=NULL;
     size_t size = 0,i=0;
     grib_context* c=NULL;
     int err = 0;

@@ -45,6 +45,7 @@ list( APPEND tests1
 list( APPEND tests2
     grib_double_cmp
     bufr_dump
+    bufr_dump_decode_filter
     bufr_dump_encode_filter
     bufrdc_desc_ref
     bufrdc_ref
