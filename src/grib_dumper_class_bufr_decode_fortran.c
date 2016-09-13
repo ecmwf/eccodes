@@ -615,7 +615,7 @@ static void header(grib_dumper* d, grib_handle* h)
         fprintf(self->dumper.out,"program bufr_decode\n");
         fprintf(self->dumper.out,"  use eccodes\n");
         fprintf(self->dumper.out,"  implicit none\n");
-        fprintf(self->dumper.out,"  integer, parameter                                      :: max_strsize = 100\n");
+        fprintf(self->dumper.out,"  integer, parameter                                      :: max_strsize = 200\n");
         fprintf(self->dumper.out,"  integer                                                 :: iret\n");
         fprintf(self->dumper.out,"  integer                                                 :: ifile\n");
         fprintf(self->dumper.out,"  integer                                                 :: ibufr\n");
