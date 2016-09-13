@@ -297,7 +297,6 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
 
         fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s' &\n,rvalues)\n",prefix,a->name);
     } else {
-        /* int r=compute_key_rank(h,self->keys,a->name); */
         if( !grib_is_missing_double(a,value) ) {
 
             sval=dval_to_string(c,value);
@@ -787,7 +786,7 @@ static void header(grib_dumper* d, grib_handle* h)
         fprintf(self->dumper.out,"!  Using ecCodes version: ");
         grib_print_api_version(self->dumper.out);
         fprintf(self->dumper.out, "\n\n");
-        fprintf(self->dumper.out,"program bufr_create_message\n");
+        fprintf(self->dumper.out,"program bufr_encode\n");
         fprintf(self->dumper.out,"  use eccodes\n");
         fprintf(self->dumper.out,"  implicit none\n");
         fprintf(self->dumper.out,"  integer                                       :: iret\n");
