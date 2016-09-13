@@ -142,19 +142,6 @@ static int destroy(grib_dumper* d)
     return GRIB_SUCCESS;
 }
 
-static char* dval_to_string(grib_context* c, double v)
-{
-    char* sval=grib_context_malloc_clear(c,sizeof(char)*40);
-    char* p;
-    sprintf(sval,"%.18e",v);
-    p=sval;
-    while (*p !=0 ) {
-        if (*p == 'e') *p='d';
-        p++;
-    }
-    return sval;
-}
-
 static void dump_values(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_bufr_decode_fortran *self = (grib_dumper_bufr_decode_fortran*)d;
@@ -215,11 +202,9 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* prefix)
 {
     grib_dumper_bufr_decode_fortran *self = (grib_dumper_bufr_decode_fortran*)d;
-    double value; size_t size = 0;
-    double *values=NULL;
+    double value=0; size_t size = 0;
     int err = 0;
     long count=0;
-    char* sval;
     grib_context* c=a->context;
 
     grib_value_count(a,&count);
@@ -228,25 +213,17 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) !=0)
         return;
 
-    if (size>1) {
-        values=(double*)grib_context_malloc_clear(c,sizeof(double)*size);
-        err=grib_unpack_double(a,values,&size);
-    } else {
+    if (size <= 1) {
         err=grib_unpack_double(a,&value,&size);
     }
 
     self->empty=0;
 
     if (size>1) {
-        grib_context_free(c,values);
-
         fprintf(self->dumper.out,"  call codes_get(ibufr, '%s->%s', rvalues)\n",prefix,a->name);
     } else {
         if( !grib_is_missing_double(a,value) ) {
-            sval=dval_to_string(c,value);
             fprintf(self->dumper.out,"  call codes_get(ibufr, '%s->%s', realVal)\n", prefix, a->name);
-
-            grib_context_free(c,sval);
         }
     }
 
@@ -269,7 +246,6 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_decode_fortran *self = (grib_dumper_bufr_decode_fortran*)d;
     long value; size_t size = 0;
-    long *values=NULL;
     int err = 0;
     int r=0;
     long count=0;
@@ -300,10 +276,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
         return;
     }
 
-    if (size>1) {
-        values=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
-        err=grib_unpack_long(a,values,&size);
-    } else {
+    if (size <= 1) {
         err=grib_unpack_long(a,&value,&size);
     }
 
@@ -312,7 +285,6 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
     if (size>1) {
         depth-=2;
         fprintf(self->dumper.out,"  if(allocated(ivalues)) deallocate(ivalues)\n");
-        grib_context_free(a->context,values);
 
         if ((r=compute_key_rank(h,self->keys,a->name))!=0)
             fprintf(self->dumper.out,"  call codes_get(ibufr, '#%d#%s', ivalues)\n", r,a->name);
@@ -350,7 +322,6 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
 {
     grib_dumper_bufr_decode_fortran *self = (grib_dumper_bufr_decode_fortran*)d;
     long value; size_t size = 0;
-    long *values=NULL;
     int err = 0;
     long count=0;
     grib_context* c=a->context;
@@ -361,10 +332,7 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
 
-    if (size>1) {
-        values=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
-        err=grib_unpack_long(a,values,&size);
-    } else {
+    if (size <= 1) {
         err=grib_unpack_long(a,&value,&size);
     }
 
@@ -373,7 +341,6 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     if (size>1) {
         depth-=2;
         fprintf(self->dumper.out,"  if(allocated(ivalues)) deallocate(ivalues)\n");
-        grib_context_free(a->context,values);
 
         fprintf(self->dumper.out,"  call codes_get(ibufr, '%s->%s', ivalues)\n", prefix, a->name);
 
@@ -406,7 +373,6 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     grib_dumper_bufr_decode_fortran *self = (grib_dumper_bufr_decode_fortran*)d;
     double value; size_t size = 1;
     int r;
-    char* sval;
     grib_handle* h=grib_handle_of_accessor(a);
     grib_context* c=h->context;
 
@@ -418,13 +384,10 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
 
     r=compute_key_rank(h,self->keys,a->name);
     if( !grib_is_missing_double(a,value) ) {
-        sval=dval_to_string(c,value);
         if (r!=0)
             fprintf(self->dumper.out,"  call codes_get(ibufr,'#%d#%s', realVal)\n",r,a->name);
         else
             fprintf(self->dumper.out,"  call codes_get(ibufr,'%s', realVal)\n",a->name);
-
-        grib_context_free(c,sval);
     }
 
     if (self->isLeaf==0) {
@@ -446,7 +409,6 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
 static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_decode_fortran *self = (grib_dumper_bufr_decode_fortran*)d;
-    char **values;
     size_t size = 0;
     grib_context* c=NULL;
     int err = 0;
@@ -471,14 +433,6 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
 
     self->empty=0;
 
-    values=(char**)grib_context_malloc_clear(c,size*sizeof(char*));
-    if (!values) {
-        grib_context_log(c,GRIB_LOG_FATAL,"unable to allocate %d bytes",(int)size);
-        return;
-    }
-
-    err = grib_unpack_string_array(a,values,&size);
-
     if (self->isLeaf==0) {
         if ((r=compute_key_rank(h,self->keys,a->name))!=0)
             fprintf(self->dumper.out,"  call codes_get_string_array(ibufr,'#%d#%s',svalues)\n",r,a->name);
@@ -501,7 +455,6 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         depth-=2;
     }
 
-    grib_context_free(c,values);
     (void)err; /* TODO */
 }
 
