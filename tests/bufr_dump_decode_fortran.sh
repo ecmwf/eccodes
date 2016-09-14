@@ -74,3 +74,6 @@ do
 
   rm -f $tempExe $tempSrc
 done
+
+cd $test_dir
+rm -fr $tempDir

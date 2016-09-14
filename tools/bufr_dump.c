@@ -412,9 +412,10 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         }
         if (!strcmp(options->dump_mode,"python")) {
             fprintf(stdout,"\n\n");
+            fprintf(stdout,"    f.close()\n\n");
             fprintf(stdout,"def main():\n");
             fprintf(stdout,"    try:\n");
-            fprintf(stdout,"        bufr_decode()\n");
+            fprintf(stdout,"        bufr_decode(sys.argv[1])\n");
             fprintf(stdout,"    except CodesInternalError as err:\n");
             fprintf(stdout,"        traceback.print_exc(file=sys.stderr)\n");
             fprintf(stdout,"        return 1\n");

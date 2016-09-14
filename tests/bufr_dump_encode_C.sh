@@ -84,3 +84,6 @@ do
 
   rm -f $tempExe $tempSrc $tempBufr
 done
+
+cd $test_dir
+rm -fr $tempDir

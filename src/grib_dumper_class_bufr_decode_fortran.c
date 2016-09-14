@@ -601,13 +601,9 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a, const char* prefix)
 static void header(grib_dumper* d, grib_handle* h)
 {
     grib_dumper_bufr_decode_fortran *self = (grib_dumper_bufr_decode_fortran*)d;
-    long localSectionPresent,edition,bufrHeaderCentre;
-
-    grib_get_long(h,"localSectionPresent",&localSectionPresent);
-    grib_get_long(h,"bufrHeaderCentre",&bufrHeaderCentre);
-    grib_get_long(h,"edition",&edition);
 
     if (d->count<2) {
+        /* This is the first message being processed */
         fprintf(self->dumper.out,"!  This program was automatically generated with bufr_dump -Dfortran\n");
         fprintf(self->dumper.out,"!  Using ecCodes version: ");
         grib_print_api_version(self->dumper.out);
@@ -639,13 +635,6 @@ static void header(grib_dumper* d, grib_handle* h)
 static void footer(grib_dumper* d, grib_handle* h)
 {
     grib_dumper_bufr_decode_fortran *self = (grib_dumper_bufr_decode_fortran*)d;
-    /*if (d->count==1)
-        fprintf(self->dumper.out,"  call codes_open_file(outfile,'outfile.bufr','w')\n");
-    else
-        fprintf(self->dumper.out,"  call codes_open_file(outfile,'outfile.bufr','a')\n");
-    */
-
     /*fprintf(self->dumper.out,"  call codes_close_file(ifile)\n");*/
     fprintf(self->dumper.out,"  call codes_release(ibufr)\n");
-
 }

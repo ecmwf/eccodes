@@ -1,19 +1,19 @@
 from gribapi import __version__
 
 from gribapi import GRIB_CHECK as CODES_CHECK
+
 from gribapi import CODES_PRODUCT_GRIB
 from gribapi import CODES_PRODUCT_BUFR
 from gribapi import CODES_PRODUCT_ANY
-
 from gribapi import GRIB_MISSING_DOUBLE as CODES_MISSING_DOUBLE
 from gribapi import GRIB_MISSING_LONG as CODES_MISSING_LONG
 
-from gribapi import grib_new_from_file as codes_grib_new_from_file
-from gribapi import bufr_new_from_file as codes_bufr_new_from_file
-from gribapi import metar_new_from_file as codes_metar_new_from_file
 from gribapi import gts_new_from_file as codes_gts_new_from_file
-from gribapi import any_new_from_file as codes_any_new_from_file
+from gribapi import metar_new_from_file as codes_metar_new_from_file
 from gribapi import codes_new_from_file
+from gribapi import any_new_from_file as codes_any_new_from_file
+from gribapi import bufr_new_from_file as codes_bufr_new_from_file
+from gribapi import grib_new_from_file as codes_grib_new_from_file
 
 from gribapi import grib_count_in_file as codes_count_in_file
 from gribapi import grib_multi_support_on as codes_grib_multi_support_on
@@ -21,7 +21,6 @@ from gribapi import grib_multi_support_off as codes_grib_multi_support_off
 from gribapi import grib_release as codes_release
 from gribapi import grib_get_string as codes_get_string
 from gribapi import grib_set_string as codes_set_string
-from gribapi import grib_set_string_array as codes_set_string_array
 from gribapi import grib_gribex_mode_on as codes_gribex_mode_on
 from gribapi import grib_gribex_mode_off as codes_gribex_mode_off
 from gribapi import grib_write as codes_write
@@ -52,6 +51,8 @@ from gribapi import codes_bufr_new_from_samples
 from gribapi import grib_clone as codes_clone
 from gribapi import grib_set_double_array as codes_set_double_array
 from gribapi import grib_get_double_array as codes_get_double_array
+from gribapi import grib_get_string_array as codes_get_string_array
+from gribapi import grib_set_string_array as codes_set_string_array
 from gribapi import grib_set_long_array as codes_set_long_array
 from gribapi import grib_get_long_array as codes_get_long_array
 from gribapi import grib_multi_new as codes_grib_multi_new
