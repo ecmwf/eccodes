@@ -21,6 +21,8 @@ tempDir=${label}.dir
 mkdir -p $tempDir
 cd $tempDir
 
+echo "PYTHONPATH set to $PYTHONPATH"
+
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
 for file in ${bufr_files}

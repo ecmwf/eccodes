@@ -116,6 +116,7 @@ if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
 endif()
 if( ENABLE_EXTRA_TESTS )
     list(APPEND tests2 bufr_dump_encode_C)
+    list(APPEND tests2 bufr_dump_decode_C)
 endif()
 
 # These tests do not require any data downloads

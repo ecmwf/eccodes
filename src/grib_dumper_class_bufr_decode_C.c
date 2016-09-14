@@ -155,8 +155,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     double value; size_t size = 0;
     double *values=NULL;
     int err = 0;
-    int i,r,icount;
-    int cols=2;
+    int r=0;
     long count=0;
     char* sval;
     grib_context* c=a->context;
@@ -181,38 +180,24 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         fprintf(self->dumper.out,"  free(rvalues); rvalues = NULL;\n\n");
         fprintf(self->dumper.out,"  rvalues = (double*)malloc(%lu*sizeof(double));\n", (unsigned long)size);
         fprintf(self->dumper.out,"  if (!rvalues) { fprintf(stderr, \"Failed to allocate memory (rvalues).\\n\"); return 1; }\n");
-        fprintf(self->dumper.out,"  size = %lu;", size);
-
-        icount=0;
-        for (i=0; i<size-1; ++i) {
-            if (icount>cols || i==0) {fprintf(self->dumper.out,"\n  ");icount=0;}
-            sval=dval_to_string(c,values[i]);
-            fprintf(self->dumper.out,"rvalues[%d]=%s; ", i, sval);
-            grib_context_free(c,sval);
-            icount++;
-        }
-        if (icount>cols || i==0) {fprintf(self->dumper.out,"\n  ");icount=0;}
-        sval=dval_to_string(c,values[i]);
-        fprintf(self->dumper.out,"rvalues[%d]=%s;", i,sval);
-        grib_context_free(c,sval);
+        fprintf(self->dumper.out,"  size = %lu;\n", size);
 
         depth-=2;
-        fprintf(self->dumper.out,"\n");
         grib_context_free(c,values);
 
         if ((r=compute_key_rank(h,self->keys,a->name))!=0)
-            fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double_array(h, \"#%d#%s\",rvalues, size), 0);\n", r, a->name);
+            fprintf(self->dumper.out,"  CODES_CHECK(codes_get_double_array(h, \"#%d#%s\",rvalues, &size), 0);\n", r, a->name);
         else
-            fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double_array(h, \"%s\", rvalues, size), 0);\n",a->name);
+            fprintf(self->dumper.out,"  CODES_CHECK(codes_get_double_array(h, \"%s\", rvalues, &size), 0);\n",a->name);
     } else {
         r=compute_key_rank(h,self->keys,a->name);
         if( !grib_is_missing_double(a,value) ) {
 
             sval=dval_to_string(c,value);
             if (r!=0)
-                fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double(h, \"#%d#%s\", %s), 0);\n", r, a->name, sval);
+                fprintf(self->dumper.out,"  CODES_CHECK(codes_get_double(h, \"#%d#%s\", &doubleVal), 0);\n", r, a->name);
             else
-                fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double(h, \"%s\", %s), 0);\n", a->name, sval);
+                fprintf(self->dumper.out,"  CODES_CHECK(codes_get_double(h, \"%s\", &doubleVal), 0);\n", a->name);
 
             grib_context_free(c,sval);
         }
@@ -242,8 +227,6 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
     double value; size_t size = 0;
     double *values=NULL;
     int err = 0;
-    int i,icount;
-    int cols=2;
     long count=0;
     char* sval;
     grib_context* c=a->context;
@@ -267,32 +250,18 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
         fprintf(self->dumper.out,"  free(rvalues); rvalues = NULL;\n");
         fprintf(self->dumper.out,"  rvalues = (double*)malloc(%lu*sizeof(double));\n", (unsigned long)size);
         fprintf(self->dumper.out,"  if (!rvalues) { fprintf(stderr, \"Failed to allocate memory (rvalues).\\n\"); return 1; }\n");
-        fprintf(self->dumper.out,"  size = %lu;", size);
-
-        icount=0;
-        for (i=0; i<size-1; ++i) {
-            if (icount>cols || i==0) {fprintf(self->dumper.out,"\n  ");icount=0;}
-            sval=dval_to_string(c,values[i]);
-            fprintf(self->dumper.out,"rvalues[%d]=%s; ", i, sval);
-            grib_context_free(c,sval);
-            icount++;
-        }
-        if (icount>cols || i==0) {fprintf(self->dumper.out,"\n  ");icount=0;}
-        sval=dval_to_string(c,values[i]);
-        fprintf(self->dumper.out,"rvalues[%d]=%s;", i,sval);
-        grib_context_free(c,sval);
+        fprintf(self->dumper.out,"  size = %lu\n;", size);
 
         depth-=2;
-        fprintf(self->dumper.out,"\n");
         grib_context_free(c,values);
 
-        fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double_array(h, \"%s->%s\", rvalues, size), 0);\n", prefix,a->name);
+        fprintf(self->dumper.out,"  CODES_CHECK(codes_get_double_array(h, \"%s->%s\", rvalues, &size), 0);\n", prefix,a->name);
     } else {
         /* int r=compute_key_rank(h,self->keys,a->name); */
         if( !grib_is_missing_double(a,value) ) {
 
             sval=dval_to_string(c,value);
-            fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double(h, \"%s->%s\", %s), 0);\n", prefix,a->name, sval);
+            fprintf(self->dumper.out,"  CODES_CHECK(codes_get_double(h, \"%s->%s\", &doubleVal), 0);\n", prefix,a->name);
 
             grib_context_free(c,sval);
 
@@ -320,8 +289,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
     long value; size_t size = 0;
     long *values=NULL;
     int err = 0;
-    int i,r,icount;
-    int cols=4;
+    int r=0;
     long count=0;
     grib_context* c=a->context;
     grib_handle* h=grib_handle_of_accessor(a);
@@ -363,35 +331,23 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
         fprintf(self->dumper.out,"  free(ivalues); ivalues = NULL;\n\n");
         fprintf(self->dumper.out,"  ivalues = (long*)malloc(%lu*sizeof(long));\n", (unsigned long)size);
         fprintf(self->dumper.out,"  if (!ivalues) { fprintf(stderr, \"Failed to allocate memory (ivalues).\\n\"); return 1; }\n");
-        fprintf(self->dumper.out,"  size = %lu;", size);
-
-        icount=0;
-        for (i=0;i<size-1;i++) {
-            if (icount>cols || i==0) {fprintf(self->dumper.out,"\n  ");icount=0;}
-            fprintf(self->dumper.out,"ivalues[%d]=%ld; ", i, values[i]);
-            icount++;
-        }
-        if (icount>cols || i==0) {fprintf(self->dumper.out,"\n  ");icount=0;}
-        fprintf(self->dumper.out,"ivalues[%d]=%ld;", i, values[i]);
+        fprintf(self->dumper.out,"  size = %lu;\n", size);
 
         depth-=2;
-        fprintf(self->dumper.out,"\n");
         grib_context_free(a->context,values);
 
         if ((r=compute_key_rank(h,self->keys,a->name))!=0)
-            fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long_array(h, \"#%d#%s\", ivalues, size), 0);\n",r,a->name);
+            fprintf(self->dumper.out,"  CODES_CHECK(codes_get_long_array(h, \"#%d#%s\", ivalues, &size), 0);\n",r,a->name);
         else
-            fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long_array(h, \"%s\", ivalues, size), 0);\n",a->name);
+            fprintf(self->dumper.out,"  CODES_CHECK(codes_get_long_array(h, \"%s\", ivalues, &size), 0);\n",a->name);
 
     } else {
         r=compute_key_rank(h,self->keys,a->name);
         if( !grib_is_missing_long(a,value) ) {
             if (r!=0)
-                fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long(h, \"#%d#%s\", ", r,a->name);
+                fprintf(self->dumper.out,"  CODES_CHECK(codes_get_long(h, \"#%d#%s\", &longVal), 0);\n", r,a->name);
             else
-                fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long(h, \"%s\", ", a->name);
-
-            fprintf(self->dumper.out,"%ld), 0);\n",value);
+                fprintf(self->dumper.out,"  CODES_CHECK(codes_get_long(h, \"%s\", &longVal), 0);\n", a->name);
         }
     }
 
@@ -418,8 +374,6 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     long value; size_t size = 0;
     long *values=NULL;
     int err = 0;
-    int i,icount;
-    int cols=4;
     long count=0;
     grib_context* c=a->context;
 
@@ -442,28 +396,17 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         fprintf(self->dumper.out,"  free(ivalues); ivalues = NULL;\n");
         fprintf(self->dumper.out,"  ivalues = (long*)malloc(%lu*sizeof(long));\n", (unsigned long)size);
         fprintf(self->dumper.out,"  if (!ivalues) { fprintf(stderr, \"Failed to allocate memory (ivalues).\\n\"); return 1; }\n");
-        fprintf(self->dumper.out,"  size = %lu;", size);
-
-        icount=0;
-        for (i=0;i<size-1;i++) {
-            if (icount>cols || i==0) {fprintf(self->dumper.out,"\n  ");icount=0;}
-            fprintf(self->dumper.out,"ivalues[%d]=%ld; ", i, values[i]);
-            icount++;
-        }
-        if (icount>cols || i==0) {fprintf(self->dumper.out,"\n  ");icount=0;}
-        fprintf(self->dumper.out,"ivalues[%d]=%ld;", i, values[i]);
+        fprintf(self->dumper.out,"  size = %lu;\n", size);
 
         depth-=2;
-        fprintf(self->dumper.out,"\n");
         grib_context_free(a->context,values);
 
-        fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long_array(h, \"%s->%s\", ivalues, size), 0);\n", prefix,a->name);
+        fprintf(self->dumper.out,"  CODES_CHECK(codes_get_long_array(h, \"%s->%s\", ivalues, &size), 0);\n", prefix,a->name);
 
     } else {
         /* int r=compute_key_rank(h,self->keys,a->name); */
         if( !grib_is_missing_long(a,value) ) {
-            fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long(h, \"%s->%s\", ", prefix,a->name);
-            fprintf(self->dumper.out,"%ld), 0);\n",value);
+            fprintf(self->dumper.out,"  CODES_CHECK(codes_get_long(h, \"%s->%s\", &longVal), 0);\n", prefix,a->name);
         }
     }
 
@@ -504,9 +447,9 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     if( !grib_is_missing_double(a,value) ) {
         sval=dval_to_string(c,value);
         if (r!=0)
-            fprintf(self->dumper.out,"  codes_set_double(h, \"#%d#%s\", %s);\n", r,a->name, sval);
+            fprintf(self->dumper.out,"  CODES_CHECK(codes_get_double(h, \"#%d#%s\", &doubleVal), 0);\n", r,a->name);
         else
-            fprintf(self->dumper.out,"  codes_set_double(h, \"%s\", %s);\n", a->name, sval);
+            fprintf(self->dumper.out,"  CODES_CHECK(codes_get_double(h, \"%s\", &doubleVal), 0);\n", a->name);
 
         grib_context_free(c,sval);
     }
@@ -570,9 +513,9 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
 
     if (self->isLeaf==0) {
         if ((r=compute_key_rank(h,self->keys,a->name))!=0)
-            fprintf(self->dumper.out,"  codes_set_string_array(h, \"#%d#%s\", (const char **)svalues, size);\n",r,a->name);
+            fprintf(self->dumper.out,"  codes_get_string_array(h, \"#%d#%s\", (const char **)svalues, size);\n",r,a->name);
         else
-            fprintf(self->dumper.out,"  codes_set_string_array(h, \"%s\", (const char **)svalues, size);\n",a->name);
+            fprintf(self->dumper.out,"  codes_get_string_array(h, \"%s\", (const char **)svalues, size);\n",a->name);
     }
 
     if (self->isLeaf==0) {
@@ -627,14 +570,14 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
     while(*p) { if(!isprint(*p)) *p = '.'; p++; }
 
+    fprintf(self->dumper.out,"  size = 1024;\n"); /* TODO */
     if (self->isLeaf==0) {
         depth+=2;
         if (r!=0)
-            fprintf(self->dumper.out,"  codes_set_string(h, \"#%d#%s\", ", r, a->name);
+            fprintf(self->dumper.out,"  CODES_CHECK(codes_get_string(h, \"#%d#%s\", strVal, &size), 0);\n", r, a->name);
         else
-            fprintf(self->dumper.out,"  codes_set_string(h, \"%s\", ", a->name);
+            fprintf(self->dumper.out,"  CODES_CHECK(codes_get_string(h, \"%s\", strVal, &size), 0);\n", a->name);
     }
-    fprintf(self->dumper.out,"\"%s\", &size);\n",value);
 
     if (self->isLeaf==0) {
         char* prefix;
@@ -665,10 +608,7 @@ static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
 
 static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const char* print_key)
 {
-    long* val;
-    size_t size=0,i;
-    int cols=9,icount=0;
-
+    size_t size=0;
     if (grib_get_size(h,key,&size)==GRIB_NOT_FOUND) return;
 
     fprintf(f,"  free(ivalues); ivalues = NULL;\n");
@@ -676,18 +616,7 @@ static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const cha
     fprintf(f,"  if (!ivalues) { fprintf(stderr, \"Failed to allocate memory (ivalues).\\n\"); return 1; }\n");
     fprintf(f,"  size = %lu;", size);
 
-    val=grib_context_malloc_clear(h->context,sizeof(long)*size);
-    grib_get_long_array(h,key,val,&size);
-    for (i=0;i<size-1;i++) {
-        if (icount>cols || i==0) {fprintf(f,"\n  ");icount=0;}
-        fprintf(f,"ivalues[%lu]=%ld; ", i, val[i]);
-        icount++;
-    }
-    if (icount>cols) {fprintf(f,"\n  ");}
-    fprintf(f,"ivalues[%lu]=%ld;\n", size-1, val[size-1]);
-
-    grib_context_free(h->context,val);
-    fprintf(f,"  CODES_CHECK(codes_set_long_array(h, \"%s\", ivalues, size), 0);\n",print_key);
+    fprintf(f,"  CODES_CHECK(codes_get_long_array(h, \"%s\", ivalues, &size), 0);\n",print_key);
 }
 
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
@@ -755,74 +684,55 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a, const char* prefix)
 static void header(grib_dumper* d, grib_handle* h)
 {
     grib_dumper_bufr_decode_C *self = (grib_dumper_bufr_decode_C*)d;
-    char sampleName[200]={0};
-    long localSectionPresent,edition,bufrHeaderCentre,isSatellite;
-
     Assert(h->product_kind == PRODUCT_BUFR);
 
-    grib_get_long(h,"localSectionPresent",&localSectionPresent);
-    grib_get_long(h,"bufrHeaderCentre",&bufrHeaderCentre);
-    grib_get_long(h,"edition",&edition);
-
-    if (localSectionPresent && bufrHeaderCentre==98 ) {
-        grib_get_long(h,"isSatellite",&isSatellite);
-        if (isSatellite)
-            sprintf(sampleName,"BUFR%ld_local_satellite",edition);
-        else
-            sprintf(sampleName,"BUFR%ld_local",edition);
-    } else {
-        sprintf(sampleName,"BUFR%ld",edition);
-    }
-
     if (d->count<2) {
+        /* This is the first message being processed */
         fprintf(self->dumper.out,"/* This program was automatically generated with bufr_dump -DC */\n");
         fprintf(self->dumper.out,"/* Using ecCodes version: ");
         grib_print_api_version(self->dumper.out);
         fprintf(self->dumper.out, " */\n\n");
         fprintf(self->dumper.out,"#include \"eccodes.h\"\n");
-        fprintf(self->dumper.out,"int main()\n");
+        fprintf(self->dumper.out,"int main(int argc, char* argv[])\n");
         fprintf(self->dumper.out,"{\n");
-        fprintf(self->dumper.out,"  size_t         size=0;\n");
-        fprintf(self->dumper.out,"  const void*    buffer = NULL;\n");
-        fprintf(self->dumper.out,"  FILE*          fout = NULL;\n");
+        fprintf(self->dumper.out,"  size_t         size = 0;\n");
+        fprintf(self->dumper.out,"  int            err = 0;\n");
+        fprintf(self->dumper.out,"  FILE*          in = NULL;\n");
         fprintf(self->dumper.out,"  codes_handle*  h = NULL;\n");
+        fprintf(self->dumper.out,"  long           longVal = 0;\n");
+        fprintf(self->dumper.out,"  double         doubleVal = 0.0;\n");
+        fprintf(self->dumper.out,"  char           strVal[1024] = {0,};\n");
         fprintf(self->dumper.out,"  long*          ivalues = NULL;\n");
         fprintf(self->dumper.out,"  char**         svalues = NULL;\n");
         fprintf(self->dumper.out,"  double*        rvalues = NULL;\n");
-        fprintf(self->dumper.out,"  const char*    sampleName = \"%s\";\n\n", sampleName);
+        fprintf(self->dumper.out,"  const char*    infile_name = argv[1];\n\n");
+        
+        fprintf(self->dumper.out,"  in = fopen(infile_name, \"r\");\n");
+        fprintf(self->dumper.out,"  if (!in) {\n");
+        fprintf(self->dumper.out,"    fprintf(stderr,\"ERROR: Unable to open input BUFR file %%s\\n\", infile_name);\n");
+        fprintf(self->dumper.out,"    return 1;\n");
+        fprintf(self->dumper.out,"  }\n\n");
     }
 
-    fprintf(self->dumper.out,"  h = codes_bufr_handle_new_from_samples(NULL, sampleName);\n");
+    fprintf(self->dumper.out,"  h = codes_handle_new_from_file(NULL, in, PRODUCT_BUFR, &err);\n");
     fprintf(self->dumper.out,"  if (h == NULL) {\n");
-    fprintf(self->dumper.out,"    fprintf(stderr, \"ERROR creating BUFR from %%s\\n\", sampleName);\n");
+    fprintf(self->dumper.out,"    fprintf(stderr, \"ERROR creating BUFR\\n\");\n");
     fprintf(self->dumper.out,"    return 1;\n");
     fprintf(self->dumper.out,"  }\n");
+    fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long(h, \"unpack\", 1),0);\n\n");
 }
 
 static void footer(grib_dumper* d, grib_handle* h)
 {
     grib_dumper_bufr_decode_C *self = (grib_dumper_bufr_decode_C*)d;
-    fprintf(self->dumper.out,"\n  codes_set_long(h, \"pack\", 1);\n");
-    if (d->count==1)
-        fprintf(self->dumper.out,"  fout = fopen(\"outfile.bufr\", \"w\");\n");
-    else
-        fprintf(self->dumper.out,"  fout = fopen(\"outfile.bufr\", \"a\");\n");
 
     /*fprintf(self->dumper.out,"  fout = fopen(\"outfile.bufr\", \"w\");");*/
-    fprintf(self->dumper.out,"  if (!fout) {\n");
-    fprintf(self->dumper.out,"    fprintf(stderr, \"Failed to open output file.\\n\");\n");
-    fprintf(self->dumper.out,"    return 1;\n");
-    fprintf(self->dumper.out,"  }\n");
-    fprintf(self->dumper.out,"  CODES_CHECK(codes_get_message(h,&buffer,&size),0);\n");
-    fprintf(self->dumper.out,"  if (fwrite(buffer,1,size,fout) != size) {\n");
-    fprintf(self->dumper.out,"    fprintf(stderr, \"Failed to write data.\\n\");\n");
-    fprintf(self->dumper.out,"    return 1;\n");
-    fprintf(self->dumper.out,"  }\n");
-    fprintf(self->dumper.out,"  if (fclose(fout)) {\n");
+    /*fprintf(self->dumper.out,"  if (fclose(fout)) {\n");
     fprintf(self->dumper.out,"    fprintf(stderr, \"Failed to close file handle.\\n\");\n");
     fprintf(self->dumper.out,"    return 1;\n");
     fprintf(self->dumper.out,"  }\n");
-    fprintf(self->dumper.out,"  \n");
+    */
+    fprintf(self->dumper.out,"\n");
     fprintf(self->dumper.out,"  codes_handle_delete(h);\n");
     fprintf(self->dumper.out,"  free(ivalues); ivalues = NULL;\n");
     fprintf(self->dumper.out,"  free(rvalues); rvalues = NULL;\n");
