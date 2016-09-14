@@ -152,12 +152,11 @@ static char* dval_to_string(const grib_context* c,double v)
 static void dump_values(grib_dumper* d,grib_accessor* a)
 {
     grib_dumper_bufr_decode_python *self = (grib_dumper_bufr_decode_python*)d;
-    double value; size_t size = 0;
-    double *values=NULL;
+    double value = 0; size_t size = 0;
     int err = 0;
     int r=0;
     long count=0;
-    char* sval;
+    char* sval = NULL;
     grib_context* c=a->context;
     grib_handle* h=grib_handle_of_accessor(a);
 
@@ -167,10 +166,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) !=0)
         return;
 
-    if (size>1) {
-        values=(double*)grib_context_malloc_clear(c,sizeof(double)*size);
-        err=grib_unpack_double(a,values,&size);
-    } else {
+    if (size <= 1) {
         err=grib_unpack_double(a,&value,&size);
     }
 
@@ -178,8 +174,6 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 
     if (size>1) {
         depth-=2;
-        grib_context_free(c,values);
-
         if ((r=compute_key_rank(h,self->keys,a->name))!=0)
             fprintf(self->dumper.out,"    dVals = codes_get_array(ibufr, '#%d#%s')\n",r,a->name);
         else
@@ -220,10 +214,7 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a, const char* p
 {
     grib_dumper_bufr_decode_python *self = (grib_dumper_bufr_decode_python*)d;
     double value; size_t size = 0;
-    double *values=NULL;
     int err = 0;
-    int i,icount;
-    int cols=2;
     long count=0;
     char* sval;
     grib_context* c=a->context;
@@ -234,44 +225,21 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a, const char* p
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) !=0)
         return;
 
-    if (size>1) {
-        values=(double*)grib_context_malloc_clear(c,sizeof(double)*size);
-        err=grib_unpack_double(a,values,&size);
-    } else {
+    if (size <= 1) {
         err=grib_unpack_double(a,&value,&size);
     }
 
     self->empty=0;
 
     if (size>1) {
-
-        fprintf(self->dumper.out,"    rvalues = (");
-
-        icount=0;
-        for (i=0; i<size-1; ++i) {
-            if (icount>cols || i==0) {fprintf(self->dumper.out,"\n      ");icount=0;}
-            sval=dval_to_string(c,values[i]);
-            fprintf(self->dumper.out,"%s, ", sval);
-            grib_context_free(c,sval);
-            icount++;
-        }
-        if (icount>cols || i==0) {fprintf(self->dumper.out,"\n      ");icount=0;}
-        sval=dval_to_string(c,values[i]);
-        fprintf(self->dumper.out,"%s", sval);
-        grib_context_free(c,sval);
-
         depth-=2;
-        /* Note: In python to make a tuple with one element, you need the trailing comma */
-        fprintf(self->dumper.out,",)\n");
-        grib_context_free(c,values);
-
-        fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s->%s' \n, rvalues)\n",prefix,a->name);
+        fprintf(self->dumper.out,"    dVals = codes_get_array(ibufr, '%s->%s')\n", prefix,a->name);
     } else {
         /* int r=compute_key_rank(h,self->keys,a->name); */
         if( !grib_is_missing_double(a,value) ) {
 
             sval=dval_to_string(c,value);
-            fprintf(self->dumper.out,"    codes_set(ibufr, '%s->%s' \n,%s)\n",prefix,a->name,sval);
+            fprintf(self->dumper.out,"    dVal = codes_get(ibufr, '%s->%s')\n", prefix,a->name);
 
             grib_context_free(c,sval);
         }
@@ -295,8 +263,7 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a, const char* p
 static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_decode_python *self = (grib_dumper_bufr_decode_python*)d;
-    long value; size_t size = 0;
-    long *values=NULL;
+    long value=0; size_t size = 0;
     int err = 0;
     int r=0;
     long count=0;
@@ -327,10 +294,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         return;
     }
 
-    if (size>1) {
-        values=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
-        err=grib_unpack_long(a,values,&size);
-    } else {
+    if (size <= 1) {
         err=grib_unpack_long(a,&value,&size);
     }
 
@@ -338,8 +302,6 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 
     if (size>1) {
         depth-=2;
-        grib_context_free(a->context,values);
-
         if ((r=compute_key_rank(h,self->keys,a->name))!=0)
             fprintf(self->dumper.out,"    iValues = codes_get_array(ibufr, '#%d#%s')\n",r,a->name);
         else
@@ -375,8 +337,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* prefix)
 {
     grib_dumper_bufr_decode_python *self = (grib_dumper_bufr_decode_python*)d;
-    long value; size_t size = 0;
-    long *values=NULL;
+    long value=0; size_t size = 0;
     int err = 0;
     long count=0;
     grib_context* c=a->context;
@@ -387,10 +348,7 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
 
-    if (size>1) {
-        values=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
-        err=grib_unpack_long(a,values,&size);
-    } else {
+    if (size <= 1) {
         err=grib_unpack_long(a,&value,&size);
     }
 
@@ -398,10 +356,7 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
 
     if (size>1) {
         depth-=2;
-        grib_context_free(a->context,values);
-
         fprintf(self->dumper.out,"    iVals = codes_get_array(ibufr, '%s->%s')\n",prefix,a->name);
-
     } else {
         if( !grib_is_missing_long(a,value) ) {
             fprintf(self->dumper.out,"    iVal = codes_get(ibufr, '%s->%s')\n",prefix,a->name);
@@ -429,9 +384,9 @@ static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
 static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_bufr_decode_python *self = (grib_dumper_bufr_decode_python*)d;
-    double value; size_t size = 1;
+    double value=0; size_t size = 1;
     int r;
-    char* sval;
+    char* sval = NULL;
     grib_handle* h=grib_handle_of_accessor(a);
     grib_context* c=h->context;
 
@@ -471,7 +426,6 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_bufr_decode_python *self = (grib_dumper_bufr_decode_python*)d;
-    char **values;
     size_t size = 0;
     grib_context* c=NULL;
     int err = 0;
@@ -492,14 +446,6 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
     }
 
     self->empty=0;
-
-    values=(char**)grib_context_malloc_clear(c,size*sizeof(char*));
-    if (!values) {
-        grib_context_log(c,GRIB_LOG_FATAL,"unable to allocate %d bytes",(int)size);
-        return;
-    }
-
-    err = grib_unpack_string_array(a,values,&size);
 
     if (self->isLeaf==0) {
         if ((r=compute_key_rank(h,self->keys,a->name))!=0)
@@ -523,7 +469,6 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
         depth-=2;
     }
 
-    grib_context_free(c,values);
     (void)err; /* TODO */
 }
 
@@ -678,8 +623,8 @@ static void header(grib_dumper* d, grib_handle* h)
         fprintf(self->dumper.out,"import traceback\n");
         fprintf(self->dumper.out,"import sys\n");
         fprintf(self->dumper.out,"from eccodes import *\n\n\n");
-        fprintf(self->dumper.out,"def bufr_decode(input):\n");
-        fprintf(self->dumper.out,"    f = open(input)\n");
+        fprintf(self->dumper.out,"def bufr_decode(input_file):\n");
+        fprintf(self->dumper.out,"    f = open(input_file)\n");
     }
     fprintf(self->dumper.out,"    # Message number %ld\n    # -----------------\n", d->count);
     fprintf(self->dumper.out,"    print 'Decoding message number %ld'\n", d->count);
