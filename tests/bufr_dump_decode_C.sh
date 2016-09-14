@@ -60,7 +60,8 @@ do
   # Generate C code from BUFR file
   ${tools_dir}bufr_dump -DC $filePath > $tempSrc
 
-  if [ "$file" = "pgps_110.bufr" ]; then
+  # Too large
+  if [ "$file" = "ias1_240.bufr" ]; then
     continue
   fi
 

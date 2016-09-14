@@ -506,16 +506,12 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     }
 
     err = grib_unpack_string_array(a,values,&size);
-    for  (i=0;i<size-1;i++) {
-        fprintf(self->dumper.out,"  svalues[%lu]=\"%s\"; \n", i, values[i]);
-    }
-    fprintf(self->dumper.out,"  svalues[%lu]=\"%s\";\n", i, values[i]);
 
     if (self->isLeaf==0) {
         if ((r=compute_key_rank(h,self->keys,a->name))!=0)
-            fprintf(self->dumper.out,"  codes_get_string_array(h, \"#%d#%s\", (const char **)svalues, size);\n",r,a->name);
+            fprintf(self->dumper.out,"  codes_get_string_array(h, \"#%d#%s\", svalues, &size);\n",r,a->name);
         else
-            fprintf(self->dumper.out,"  codes_get_string_array(h, \"%s\", (const char **)svalues, size);\n",a->name);
+            fprintf(self->dumper.out,"  codes_get_string_array(h, \"%s\", svalues, &size);\n",a->name);
     }
 
     if (self->isLeaf==0) {
