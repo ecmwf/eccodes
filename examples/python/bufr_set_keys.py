@@ -38,15 +38,15 @@ def example():
     while 1:
 
         # get handle for message
-        gid = codes_bufr_new_from_file(fin)
-        if gid is None:
+        bufr = codes_bufr_new_from_file(fin)
+        if bufr is None:
             break
 
         print "message: %s" % cnt
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        # codes_set(gid,'unpack',1)
+        # codes_set(bufr,'unpack',1)
 
         # This is the place where you may wish to modify the message
         # E.g. we change the centre
@@ -57,20 +57,20 @@ def example():
 
         key = 'bufrHeaderCentre'
         try:
-            print '  %s: %s' % (key, codes_set(gid, key, val))
+            print '  %s: %s' % (key, codes_set(bufr, key, val))
         except CodesInternalError as err:
             print 'Error with key="%s" : %s' % (key, err.msg)
 
         # check bufrHeaderCentre's value
-        print '  %s''s new value is: %d' % (key, codes_get(gid, key))
+        print '  %s''s new value is: %d' % (key, codes_get(bufr, key))
 
         # write modified message to output
-        codes_write(gid, fout)
+        codes_write(bufr, fout)
 
         cnt += 1
 
         # delete handle
-        codes_release(gid)
+        codes_release(bufr)
 
     fin.close()
     fout.close()

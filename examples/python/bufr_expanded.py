@@ -33,15 +33,15 @@ def example():
     # loop for the messages in the file
     while 1:
         # get handle for message
-        gid = codes_bufr_new_from_file(f)
-        if gid is None:
+        bufr = codes_bufr_new_from_file(f)
+        if bufr is None:
             break
 
         print "message: %s" % cnt
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(gid, 'unpack', 1)
+        codes_set(bufr, 'unpack', 1)
 
         # ----------------------------------
         # get all the expanded data values
@@ -49,18 +49,18 @@ def example():
         key = 'numericValues'
 
         # get size
-        num = codes_get_size(gid, key)
+        num = codes_get_size(bufr, key)
         print '  size of %s is: %s' % (key, num)
 
         # get values
-        values = codes_get_array(gid, key)
+        values = codes_get_array(bufr, key)
         for i in xrange(len(values)):
             print "   %d %.10e" % (i + 1, values[i])
 
         cnt += 1
 
         # delete handle
-        codes_release(gid)
+        codes_release(bufr)
 
     # close the file
     f.close()
