@@ -944,7 +944,7 @@ int grib_set_string_array(grib_handle* h, const char *key, const char **vals, si
 *
 * @param h            : the handle to be printed
 * @param out          : output file handle
-* @param mode         : available dump modes are: debug wmo c_code
+* @param mode         : Examples of available dump modes: debug wmo
 * @param option_flags : all the GRIB_DUMP_FLAG_x flags can be used
 * @param arg          : used to provide a format to output data (experimental)
 */
