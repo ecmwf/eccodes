@@ -35,7 +35,7 @@ char* grib_tool_description="Apply the rules defined in rules_file to each BUFR 
    "If you specify '-' (a single dash) for the rules_file, the rules will be read from standard input.";
 char* grib_tool_name="bufr_filter";
 char* grib_tool_usage="[options] rules_file "
-        "file file ...";
+        "bufr_file bufr_file ...";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
