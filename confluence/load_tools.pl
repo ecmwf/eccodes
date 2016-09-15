@@ -430,16 +430,12 @@ sub examplePath {
 #------------------------------------------------------------
 # Generate confluence formatted html string form a source file
 #------------------------------------------------------------
-
 sub getDoc {
-    
     my ($name) = @_;
-    
     my $fPath=docPath($name);
-    
     my $str;
     my $tbody=0;
-       
+
     open (IN,"<$fPath") or return "";
     while (defined (my $line = <IN>)) {
             
@@ -471,9 +467,9 @@ sub getDoc {
                 $str=$str."</p>";
                 $tbody=0;
             }    
-            
+
             my @v=split(/\t|\s{2,}/,$line);
-            
+
             if($#v+1 > 0) {
                 $str=$str."<br /><b>".@v[0]."</b><br /><p>";
                 if($#v+1 > 1) {
@@ -495,12 +491,12 @@ sub getDoc {
             }
         }  
     } 
-    
+
     close IN;
     if($tbody == 1) {
         $str=$str."</p>";
     }    
-    
+
     return $str;
 }    
 
@@ -509,49 +505,45 @@ sub getDoc {
 #--------------------------------------------------------
 
 sub getDescription {
-    
     my ($name) = @_;
-    
     my $fPath=docPath($name);
-    
+
     print "\tExtract desription from: ".$fPath."\n";
-     
+
     my $str;
-    
+
     local $/=undef;  
     open (IN,"<$fPath") or return "";
     $str=<IN>;
     close IN;
-    
+
     ($str) = ($str =~ /DESCRIPTION\s*([\S|\s]+)USAGE/);
     $str =~ s/\n/ /g; 
-    
+
     return $str;
 }  
 
 #--------------------------------------------------------
-# 
+#
 #--------------------------------------------------------
-
 sub getExample {
-    
+
     my ($name) = @_;
-    
     my $fPath=examplePath($name);    
-    
+
     unless($fPath) {
         return "";
     }   
-    
+
     my $str;
-   
+
     local $/=undef;  
     open (IN,"<$fPath") or return "";
     $str=<IN>;
     close IN;
-    
+
     my @v=split(/-#/,$str);
-    
+
     $str="<h2>".$name." examples</h2>";
     $str=$str."<ol>";
     foreach my $block (@v) {
@@ -605,7 +597,5 @@ sub getExample {
     }
 
     $str=$str."</ol>";
-
-
     return $str;
 }    
