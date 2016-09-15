@@ -299,7 +299,7 @@ libeccodes_la_prototypes= \
 	grib_dumper_class_bufr_decode_python.c \
 	grib_dumper_class_json.c \
 	grib_dumper_class_xml.c \
-	grib_dumper_class_c_code.c \
+	grib_dumper_class_grib_encode_C.c \
 	grib_dumper_class_wmo.c \
 	grib_dumper_class.c \
 	grib_context.c \

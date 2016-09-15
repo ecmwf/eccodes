@@ -1385,7 +1385,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\grib_dumper_class_c_code.c"
+				RelativePath="..\..\..\src\grib_dumper_class_grib_encode_C.c"
 				>
 			</File>
 			<File

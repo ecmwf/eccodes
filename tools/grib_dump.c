@@ -76,7 +76,7 @@ int grib_tool_init(grib_runtime_options* options)
 
     /* See ECC-234
     if (grib_options_on("C")) {
-        options->dump_mode = "c_code";
+        options->dump_mode = "grib_encode_C";
         if (grib_options_on("d"))
             options->dump_flags = 0;
         else
