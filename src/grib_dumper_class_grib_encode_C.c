@@ -51,17 +51,17 @@ static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_acce
 static void header         (grib_dumper*,grib_handle*);
 static void footer         (grib_dumper*,grib_handle*);
 
-typedef struct grib_dumper_c_code {
+typedef struct grib_dumper_grib_encode_C {
     grib_dumper          dumper;  
 /* Members defined in c_code */
 	int cr;
-} grib_dumper_c_code;
+} grib_dumper_grib_encode_C;
 
 
-static grib_dumper_class _grib_dumper_class_c_code = {
+static grib_dumper_class _grib_dumper_class_grib_encode_C = {
     0,                              /* super                     */
-    "c_code",                              /* name                      */
-    sizeof(grib_dumper_c_code),     /* size                      */
+    "grib_encode_C",                /* name                      */
+    sizeof(grib_dumper_grib_encode_C),     /* size                      */
     0,                                   /* inited */
     &init_class,                         /* init_class */
     &init,                               /* init                      */
@@ -79,14 +79,14 @@ static grib_dumper_class _grib_dumper_class_c_code = {
     &footer,                             /* footer   */
 };
 
-grib_dumper_class* grib_dumper_class_c_code = &_grib_dumper_class_c_code;
+grib_dumper_class* grib_dumper_class_grib_encode_C = &_grib_dumper_class_grib_encode_C;
 
 /* END_CLASS_IMP */
 static void init_class      (grib_dumper_class* c){}
 
 static int  init(grib_dumper* d)
 {
-  /* grib_dumper_c_code *self = (grib_dumper_c_code*)d; */
+  /* grib_dumper_grib_encode_C *self = (grib_dumper_grib_encode_C*)d; */
   return GRIB_SUCCESS;
 }
 
@@ -129,7 +129,7 @@ static void pcomment(FILE* f,long value,const char* p)
 
 static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 {
-  grib_dumper_c_code *self = (grib_dumper_c_code*)d;
+  grib_dumper_grib_encode_C *self = (grib_dumper_grib_encode_C*)d;
   long value; size_t size = 1;
   int err = grib_unpack_long(a,&value,&size);
 
@@ -157,7 +157,7 @@ static int test_bit(long a, long b) {return a&(1<<b);}
 
 static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
 {
-  grib_dumper_c_code *self = (grib_dumper_c_code*)d;
+  grib_dumper_grib_encode_C *self = (grib_dumper_grib_encode_C*)d;
   long value; size_t size = 1;
   int err = grib_unpack_long(a,&value,&size);
   int i;
@@ -196,7 +196,7 @@ static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
 
 static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 {
-  grib_dumper_c_code *self = (grib_dumper_c_code*)d;
+  grib_dumper_grib_encode_C *self = (grib_dumper_grib_encode_C*)d;
   double value; size_t size = 1;
   int err = grib_unpack_double(a,&value,&size);
   if(a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
@@ -217,7 +217,7 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 
 static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 {
-  grib_dumper_c_code *self = (grib_dumper_c_code*)d;
+  grib_dumper_grib_encode_C *self = (grib_dumper_grib_encode_C*)d;
   char value[1024]; size_t size = sizeof(value);
   int err = grib_unpack_string(a,value,&size);
 
@@ -241,7 +241,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 
 static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)
 {
-  grib_dumper_c_code *self = (grib_dumper_c_code*)d;
+  grib_dumper_grib_encode_C *self = (grib_dumper_grib_encode_C*)d;
   int err =0;
   size_t size = a->length;
   unsigned char* buf;
@@ -265,7 +265,7 @@ static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)
   err = grib_unpack_bytes(a,buf,&size);
   if(err){
     grib_context_free(d->handle->context,buf);
-    fprintf(self->dumper.out," *** ERR=%d (%s) [grib_dumper_c_code::dump_bytes]\n}",err,grib_get_error_message(err));
+    fprintf(self->dumper.out," *** ERR=%d (%s) [grib_dumper_grib_encode_C::dump_bytes]\n}",err,grib_get_error_message(err));
     return ;
   }
 
@@ -295,7 +295,7 @@ static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)
 
 static void dump_values(grib_dumper* d,grib_accessor* a)
 {
-  grib_dumper_c_code *self = (grib_dumper_c_code*)d;
+  grib_dumper_grib_encode_C *self = (grib_dumper_grib_encode_C*)d;
   int k,err =0;
   double*  buf = NULL;
   int type=0;
@@ -372,13 +372,13 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 
 static void dump_label(grib_dumper* d,grib_accessor* a,const char* comment)
 {
-  grib_dumper_c_code *self = (grib_dumper_c_code*)d;
+  grib_dumper_grib_encode_C *self = (grib_dumper_grib_encode_C*)d;
   fprintf(self->dumper.out,"\n    /* %s */\n\n",a->name);
 }
 
 static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors* block)
 {
-  /*grib_dumper_c_code *self = (grib_dumper_c_code*)d;*/
+  /*grib_dumper_grib_encode_C *self = (grib_dumper_grib_encode_C*)d;*/
   grib_dump_accessors_block(d,block);
 }
 
@@ -386,7 +386,7 @@ static void header(grib_dumper* d,grib_handle* h)
 {
   long edition=0;
   int ret=0;
-  grib_dumper_c_code *self = (grib_dumper_c_code*)d;
+  grib_dumper_grib_encode_C *self = (grib_dumper_grib_encode_C*)d;
     ret=grib_get_long(h,"editionNumber",&edition);
   if (ret != GRIB_SUCCESS) {
     grib_context_log(h->context,GRIB_LOG_ERROR,"Unable to get edition number.");
@@ -427,7 +427,7 @@ static void header(grib_dumper* d,grib_handle* h)
 
 static void footer(grib_dumper* d,grib_handle* h)
 {
-  grib_dumper_c_code *self = (grib_dumper_c_code*)d;
+  grib_dumper_grib_encode_C *self = (grib_dumper_grib_encode_C*)d;
 
   fprintf(self->dumper.out,
 
