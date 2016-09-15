@@ -168,16 +168,16 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         depth-=2;
 
         if ((r=compute_key_rank(h,self->keys,a->name))!=0)
-            fprintf(self->dumper.out,"  call codes_get(ibufr, '#%d#%s', rvalues)\n",r,a->name);
+            fprintf(self->dumper.out,"  call codes_get(ibufr, '#%d#%s', rValues)\n",r,a->name);
         else
-            fprintf(self->dumper.out,"  call codes_get(ibufr, '%s', rvalues)\n",a->name);
+            fprintf(self->dumper.out,"  call codes_get(ibufr, '%s', rValues)\n",a->name);
     } else {
         r=compute_key_rank(h,self->keys,a->name);
         if( !grib_is_missing_double(a,value) ) {
             if (r!=0)
-                fprintf(self->dumper.out,"  call codes_get(ibufr, '#%d#%s', realVal)\n", r, a->name);
+                fprintf(self->dumper.out,"  call codes_get(ibufr, '#%d#%s', rVal)\n", r, a->name);
             else
-                fprintf(self->dumper.out,"  call codes_get(ibufr, '%s', realVal)\n", a->name);
+                fprintf(self->dumper.out,"  call codes_get(ibufr, '%s', rVal)\n", a->name);
         }
     }
 
@@ -220,10 +220,10 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
     self->empty=0;
 
     if (size>1) {
-        fprintf(self->dumper.out,"  call codes_get(ibufr, '%s->%s', rvalues)\n",prefix,a->name);
+        fprintf(self->dumper.out,"  call codes_get(ibufr, '%s->%s', rValues)\n",prefix,a->name);
     } else {
         if( !grib_is_missing_double(a,value) ) {
-            fprintf(self->dumper.out,"  call codes_get(ibufr, '%s->%s', realVal)\n", prefix, a->name);
+            fprintf(self->dumper.out,"  call codes_get(ibufr, '%s->%s', rVal)\n", prefix, a->name);
         }
     }
 
@@ -284,20 +284,20 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
 
     if (size>1) {
         depth-=2;
-        fprintf(self->dumper.out,"  if(allocated(ivalues)) deallocate(ivalues)\n");
+        fprintf(self->dumper.out,"  if(allocated(iValues)) deallocate(iValues)\n");
 
         if ((r=compute_key_rank(h,self->keys,a->name))!=0)
-            fprintf(self->dumper.out,"  call codes_get(ibufr, '#%d#%s', ivalues)\n", r,a->name);
+            fprintf(self->dumper.out,"  call codes_get(ibufr, '#%d#%s', iValues)\n", r,a->name);
         else
-            fprintf(self->dumper.out,"  call codes_get(ibufr, '%s', ivalues)\n", a->name);
+            fprintf(self->dumper.out,"  call codes_get(ibufr, '%s', iValues)\n", a->name);
 
     } else {
         r=compute_key_rank(h,self->keys,a->name);
         if( !grib_is_missing_long(a,value) ) {
             if (r!=0)
-                fprintf(self->dumper.out,"  call codes_get(ibufr, '#%d#%s', intVal)\n", r, a->name);
+                fprintf(self->dumper.out,"  call codes_get(ibufr, '#%d#%s', iVal)\n", r, a->name);
             else
-                fprintf(self->dumper.out,"  call codes_get(ibufr, '%s', intVal)\n", a->name);
+                fprintf(self->dumper.out,"  call codes_get(ibufr, '%s', iVal)\n", a->name);
         }
     }
 
@@ -340,13 +340,13 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
 
     if (size>1) {
         depth-=2;
-        fprintf(self->dumper.out,"  if(allocated(ivalues)) deallocate(ivalues)\n");
+        fprintf(self->dumper.out,"  if(allocated(iValues)) deallocate(iValues)\n");
 
-        fprintf(self->dumper.out,"  call codes_get(ibufr, '%s->%s', ivalues)\n", prefix, a->name);
+        fprintf(self->dumper.out,"  call codes_get(ibufr, '%s->%s', iValues)\n", prefix, a->name);
 
     } else {
         if( !grib_is_missing_long(a,value) ) {
-            fprintf(self->dumper.out,"  call codes_get(ibufr, '%s->%s', intVal)\n", prefix, a->name);
+            fprintf(self->dumper.out,"  call codes_get(ibufr, '%s->%s', iVal)\n", prefix, a->name);
         }
     }
 
@@ -385,9 +385,9 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     r=compute_key_rank(h,self->keys,a->name);
     if( !grib_is_missing_double(a,value) ) {
         if (r!=0)
-            fprintf(self->dumper.out,"  call codes_get(ibufr,'#%d#%s', realVal)\n",r,a->name);
+            fprintf(self->dumper.out,"  call codes_get(ibufr,'#%d#%s', rVal)\n",r,a->name);
         else
-            fprintf(self->dumper.out,"  call codes_get(ibufr,'%s', realVal)\n",a->name);
+            fprintf(self->dumper.out,"  call codes_get(ibufr,'%s', rVal)\n",a->name);
     }
 
     if (self->isLeaf==0) {
@@ -428,16 +428,16 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         return;
     }
 
-    fprintf(self->dumper.out,"  if(allocated(svalues)) deallocate(svalues)\n");
-    fprintf(self->dumper.out,"  allocate(svalues(%lu))\n", (unsigned long)size);
+    fprintf(self->dumper.out,"  if(allocated(sValues)) deallocate(sValues)\n");
+    fprintf(self->dumper.out,"  allocate(sValues(%lu))\n", (unsigned long)size);
 
     self->empty=0;
 
     if (self->isLeaf==0) {
         if ((r=compute_key_rank(h,self->keys,a->name))!=0)
-            fprintf(self->dumper.out,"  call codes_get_string_array(ibufr,'#%d#%s',svalues)\n",r,a->name);
+            fprintf(self->dumper.out,"  call codes_get_string_array(ibufr,'#%d#%s',sValues)\n",r,a->name);
         else
-            fprintf(self->dumper.out,"  call codes_get_string_array(ibufr,'%s',svalues)\n",a->name);
+            fprintf(self->dumper.out,"  call codes_get_string_array(ibufr,'%s',sValues)\n",a->name);
     }
 
     if (self->isLeaf==0) {
@@ -494,9 +494,9 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     if (self->isLeaf==0) {
         depth+=2;
         if (r!=0)
-            fprintf(self->dumper.out,"  call codes_get(ibufr, '#%d#%s', strVal)\n", r,a->name);
+            fprintf(self->dumper.out,"  call codes_get(ibufr, '#%d#%s', sVal)\n", r,a->name);
         else
-            fprintf(self->dumper.out,"  call codes_get(ibufr, '%s', strVal)\n", a->name);
+            fprintf(self->dumper.out,"  call codes_get(ibufr, '%s', sVal)\n", a->name);
     }
     /*fprintf(self->dumper.out,"\'%s\')\n",value);*/
 
@@ -533,7 +533,7 @@ static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const cha
     size_t size=0;
     if (grib_get_size(h,key,&size)==GRIB_NOT_FOUND) return;
 
-    fprintf(f,"  call codes_get(ibufr, '%s', ivalues)\n",print_key);
+    fprintf(f,"  call codes_get(ibufr, '%s', iValues)\n",print_key);
 }
 
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
@@ -615,14 +615,13 @@ static void header(grib_dumper* d, grib_handle* h)
         fprintf(self->dumper.out,"  integer                                                 :: iret\n");
         fprintf(self->dumper.out,"  integer                                                 :: ifile\n");
         fprintf(self->dumper.out,"  integer                                                 :: ibufr\n");
-        fprintf(self->dumper.out,"  integer(kind=4)                                         :: intVal\n");
-        fprintf(self->dumper.out,"  real(kind=8)                                            :: realVal\n");
-        fprintf(self->dumper.out,"  character(len=max_strsize)                              :: strVal\n");
-        fprintf(self->dumper.out,"  integer(kind=4), dimension(:), allocatable              :: ivalues\n");
+        fprintf(self->dumper.out,"  integer(kind=4)                                         :: iVal\n");
+        fprintf(self->dumper.out,"  real(kind=8)                                            :: rVal\n");
+        fprintf(self->dumper.out,"  character(len=max_strsize)                              :: sVal\n");
+        fprintf(self->dumper.out,"  integer(kind=4), dimension(:), allocatable              :: iValues\n");
+        fprintf(self->dumper.out,"  character(len=max_strsize) , dimension(:),allocatable   :: sValues\n");
+        fprintf(self->dumper.out,"  real(kind=8), dimension(:), allocatable                 :: rValues\n\n");
         fprintf(self->dumper.out,"  character(len=max_strsize)                              :: infile_name\n");
-        fprintf(self->dumper.out,"  character(len=max_strsize) , dimension(:),allocatable   :: svalues\n");
-        fprintf(self->dumper.out,"  real(kind=8), dimension(:), allocatable                 :: rvalues\n\n");
-
         fprintf(self->dumper.out,"  call getarg(1, infile_name)\n");
         fprintf(self->dumper.out,"  call codes_open_file(ifile, infile_name, 'r')\n\n");
     }
