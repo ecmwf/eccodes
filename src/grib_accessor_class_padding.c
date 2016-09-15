@@ -161,6 +161,6 @@ static void resize(grib_accessor* a,size_t new_size)
 
 }
 
-static int value_count(grib_accessor* a,long *c){ *c=1;return 0;}
+static int value_count(grib_accessor* a,long *c){ *c=a->length; return 0;}
 static long byte_count(grib_accessor* a){ return a->length;}
 static size_t string_length(grib_accessor* a){ return (size_t)a->length;}
