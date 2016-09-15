@@ -407,6 +407,10 @@ int grib_tool_finalise_action(grib_runtime_options* options)
             fprintf(stdout,"end program bufr_decode\n");
         }
         if (!strcmp(options->dump_mode,"C")) {
+            fprintf(stdout,"  if (fclose(fin)!=0) {\n");
+            fprintf(stdout,"    fprintf(stderr, \"Failed to close file handle.\\n\");\n");
+            fprintf(stdout,"    return 1;\n");
+            fprintf(stdout,"  }\n");
             fprintf(stdout,"  return 0;\n");
             fprintf(stdout,"}\n");
         }

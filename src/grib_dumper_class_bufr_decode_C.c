@@ -177,7 +177,8 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     self->empty=0;
 
     if (size>1) {
-        fprintf(self->dumper.out,"  free(rvalues); rvalues = NULL;\n\n");
+        fprintf(self->dumper.out,"\n");
+        fprintf(self->dumper.out,"  free(rvalues);\n");
         fprintf(self->dumper.out,"  rvalues = (double*)malloc(%lu*sizeof(double));\n", (unsigned long)size);
         fprintf(self->dumper.out,"  if (!rvalues) { fprintf(stderr, \"Failed to allocate memory (rvalues).\\n\"); return 1; }\n");
         fprintf(self->dumper.out,"  size = %lu;\n", size);
@@ -247,7 +248,8 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
     self->empty=0;
 
     if (size>1) {
-        fprintf(self->dumper.out,"  free(rvalues); rvalues = NULL;\n");
+        fprintf(self->dumper.out,"\n");
+        fprintf(self->dumper.out,"  free(rvalues);\n");
         fprintf(self->dumper.out,"  rvalues = (double*)malloc(%lu*sizeof(double));\n", (unsigned long)size);
         fprintf(self->dumper.out,"  if (!rvalues) { fprintf(stderr, \"Failed to allocate memory (rvalues).\\n\"); return 1; }\n");
         fprintf(self->dumper.out,"  size = %lu\n;", size);
@@ -328,7 +330,8 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
     self->empty=0;
 
     if (size>1) {
-        fprintf(self->dumper.out,"  free(ivalues); ivalues = NULL;\n\n");
+        fprintf(self->dumper.out,"\n");
+        fprintf(self->dumper.out,"  free(ivalues);\n");
         fprintf(self->dumper.out,"  ivalues = (long*)malloc(%lu*sizeof(long));\n", (unsigned long)size);
         fprintf(self->dumper.out,"  if (!ivalues) { fprintf(stderr, \"Failed to allocate memory (ivalues).\\n\"); return 1; }\n");
         fprintf(self->dumper.out,"  size = %lu;\n", size);
@@ -393,7 +396,8 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     self->empty=0;
 
     if (size>1) {
-        fprintf(self->dumper.out,"  free(ivalues); ivalues = NULL;\n");
+        fprintf(self->dumper.out,"\n");
+        fprintf(self->dumper.out,"  free(ivalues);\n");
         fprintf(self->dumper.out,"  ivalues = (long*)malloc(%lu*sizeof(long));\n", (unsigned long)size);
         fprintf(self->dumper.out,"  if (!ivalues) { fprintf(stderr, \"Failed to allocate memory (ivalues).\\n\"); return 1; }\n");
         fprintf(self->dumper.out,"  size = %lu;\n", size);
@@ -493,6 +497,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         return;
     }
 
+    fprintf(self->dumper.out,"\n");
     fprintf(self->dumper.out,"  free(svalues);\n");
     fprintf(self->dumper.out,"  svalues = (char**)malloc(%lu * sizeof(char*));\n", (unsigned long)size);
     fprintf(self->dumper.out,"  if (!svalues) { fprintf(stderr, \"Failed to allocate memory (svalues).\\n\"); return 1; }\n");
@@ -607,7 +612,7 @@ static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const cha
     size_t size=0;
     if (grib_get_size(h,key,&size)==GRIB_NOT_FOUND) return;
 
-    fprintf(f,"  free(ivalues); ivalues = NULL;\n");
+    fprintf(f,"  free(ivalues);\n");
     fprintf(f,"  ivalues = (long*)malloc(%lu*sizeof(long));\n", (unsigned long)size);
     fprintf(f,"  if (!ivalues) { fprintf(stderr, \"Failed to allocate memory (ivalues).\\n\"); return 1; }\n");
     fprintf(f,"  size = %lu;", size);
@@ -693,7 +698,7 @@ static void header(grib_dumper* d, grib_handle* h)
         fprintf(self->dumper.out,"{\n");
         fprintf(self->dumper.out,"  size_t         size = 0;\n");
         fprintf(self->dumper.out,"  int            err = 0;\n");
-        fprintf(self->dumper.out,"  FILE*          in = NULL;\n");
+        fprintf(self->dumper.out,"  FILE*          fin = NULL;\n");
         fprintf(self->dumper.out,"  codes_handle*  h = NULL;\n");
         fprintf(self->dumper.out,"  long           longVal = 0;\n");
         fprintf(self->dumper.out,"  double         doubleVal = 0.0;\n");
@@ -701,18 +706,23 @@ static void header(grib_dumper* d, grib_handle* h)
         fprintf(self->dumper.out,"  long*          ivalues = NULL;\n");
         fprintf(self->dumper.out,"  char**         svalues = NULL;\n");
         fprintf(self->dumper.out,"  double*        rvalues = NULL;\n");
-        fprintf(self->dumper.out,"  const char*    infile_name = argv[1];\n\n");
-        
-        fprintf(self->dumper.out,"  in = fopen(infile_name, \"r\");\n");
-        fprintf(self->dumper.out,"  if (!in) {\n");
+        fprintf(self->dumper.out,"  const char*    infile_name = NULL;\n\n");
+
+        fprintf(self->dumper.out,"  if (argc != 2) {\n");
+        fprintf(self->dumper.out,"    fprintf(stderr, \"Usage: %%s BUFR_file\\n\", argv[0]);\n");
+        fprintf(self->dumper.out,"    return 1;\n");
+        fprintf(self->dumper.out,"  }\n");
+        fprintf(self->dumper.out,"  infile_name = argv[1];\n");
+        fprintf(self->dumper.out,"  fin = fopen(infile_name, \"r\");\n");
+        fprintf(self->dumper.out,"  if (!fin) {\n");
         fprintf(self->dumper.out,"    fprintf(stderr,\"ERROR: Unable to open input BUFR file %%s\\n\", infile_name);\n");
         fprintf(self->dumper.out,"    return 1;\n");
         fprintf(self->dumper.out,"  }\n\n");
     }
 
-    fprintf(self->dumper.out,"  h = codes_handle_new_from_file(NULL, in, PRODUCT_BUFR, &err);\n");
+    fprintf(self->dumper.out,"  h = codes_handle_new_from_file(NULL, fin, PRODUCT_BUFR, &err);\n");
     fprintf(self->dumper.out,"  if (h == NULL) {\n");
-    fprintf(self->dumper.out,"    fprintf(stderr, \"ERROR creating BUFR\\n\");\n");
+    fprintf(self->dumper.out,"    fprintf(stderr, \"ERROR: cannot create BUFR handle\\n\");\n");
     fprintf(self->dumper.out,"    return 1;\n");
     fprintf(self->dumper.out,"  }\n");
     fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long(h, \"unpack\", 1),0);\n\n");

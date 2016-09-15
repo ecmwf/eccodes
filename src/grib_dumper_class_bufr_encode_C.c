@@ -818,7 +818,7 @@ static void footer(grib_dumper* d, grib_handle* h)
     fprintf(self->dumper.out,"    fprintf(stderr, \"Failed to write data.\\n\");\n");
     fprintf(self->dumper.out,"    return 1;\n");
     fprintf(self->dumper.out,"  }\n");
-    fprintf(self->dumper.out,"  if (fclose(fout)) {\n");
+    fprintf(self->dumper.out,"  if (fclose(fout)!=0) {\n");
     fprintf(self->dumper.out,"    fprintf(stderr, \"Failed to close file handle.\\n\");\n");
     fprintf(self->dumper.out,"    return 1;\n");
     fprintf(self->dumper.out,"  }\n");
