@@ -60,6 +60,11 @@ do
   # Generate C code from BUFR file
   ${tools_dir}bufr_dump -EC ${data_dir}/bufr/$file > $tempSrc
 
+  # Too large for this test
+  if [ "$file" = "ias1_240.bufr" ]; then
+    continue
+  fi
+
   # Compile
   if [ $COMPILE_AND_RUN -eq 1 ]; then
     # TODO: eccodes.h and the generated eccodes_version.h need to be pointed to

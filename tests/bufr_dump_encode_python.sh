@@ -29,6 +29,11 @@ do
   inputBufr=${data_dir}/bufr/$file
   tempSrc=$label.$file.py
 
+  # Too large for this test
+  if [ "$file" = "ias1_240.bufr" ]; then
+    continue
+  fi
+
   # Generate Python code from BUFR file
   ${tools_dir}bufr_dump -Epython $inputBufr > $tempSrc
   # The python code always creates an output file called outfile.bufr

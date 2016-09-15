@@ -61,6 +61,12 @@ do
   # Generate F90 code from BUFR file
   ${tools_dir}bufr_dump -Dfortran ${filePath} > $tempSrc
 
+  # Too large for this test
+  if [ "$file" = "ias1_240.bufr" ]; then
+    continue
+  fi
+
+  # Very long lines
   if [ "$file" = "emsg_189.bufr" ]; then
     continue
   fi
