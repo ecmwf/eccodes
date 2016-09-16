@@ -116,6 +116,17 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation &param1,
         return false;
     }
 
+    long edition1 = -1;
+    long edition2 = -1;
+
+    param1.get("user.edition", edition1);
+    param2.get("user.edition", edition2);
+
+    if (edition1 != edition2) {
+        return false;
+    }
+
+
     return true;
 }
 
@@ -173,6 +184,11 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
             info.packing.bitsPerValue = bits;
         }
 
+        long edition;
+        if (parametrisation.get("user.edition", edition)) {
+            info.packing.editionNumber = edition;
+        }
+
         // Ask last representation to update info
 
         field.representation()->fill(info);
@@ -209,7 +225,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 #endif
         }
 
-        long edition = info.packing.editionNumber;
+        edition = info.packing.editionNumber;
         if (!edition) {
             GRIB_CALL(grib_get_long(h, "editionNumber", &edition));
         }
