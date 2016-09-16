@@ -93,6 +93,31 @@ static double round_ne(double x, double scale) {
 #define FIX_SW(x) x=round_sw(x, scale)
 #define FIX_NE(x) x=round_ne(x, scale)
 
+bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParametrisation &param) const {
+    bool ok = false;
+
+    long bits;
+    if (param.get("user.accuracy", bits)) {
+        out << "accuracy=" << bits;
+        ok = true;
+    }
+
+    std::string packing;
+    if (param.get("user.packing", packing)) {
+        if (ok) { out << ","; }
+        out << "packing=" << packing;
+        ok = true;
+    }
+
+    long edition;
+    if (param.get("user.edition", edition)) {
+        if (ok) { out << ","; }
+        out << "edition=" << edition;
+        ok = true;
+    }
+
+    return ok;
+}
 
 bool GribOutput::sameParametrisation(const param::MIRParametrisation &param1,
                                      const param::MIRParametrisation & param2) const {
