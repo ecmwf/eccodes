@@ -786,22 +786,7 @@ void grib_skip_check(grib_runtime_options* options,grib_handle* h)
     }
 }
 
-static int string_value_is_missing(const char* val, size_t length)
-{
-    /* For a string value to be missing, all its chars have to be */
-    /* all 1's i.e. -1 */
-    int i=0;
-    if (val == NULL || length == 0)
-        return 0;
-    for(i=0; i<length; ++i) {
-        if (val[i] != -1) {
-            return 0;  /* not all bits set, so not missing */
-        }
-    }
-    return 1;
-}
-
-void grib_print_key_values(grib_runtime_options* options,grib_handle* h)
+void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
 {
     int i=0;
     int ret=0,width=0;
@@ -811,6 +796,7 @@ void grib_print_key_values(grib_runtime_options* options,grib_handle* h)
     char value[MAX_STRING_LEN];
     char* notfound="not_found";
     int written_to_dump = 0; /* boolean */
+    grib_accessor* acc = NULL;
 
     if (!options->verbose) return;
 
@@ -826,8 +812,10 @@ void grib_print_key_values(grib_runtime_options* options,grib_handle* h)
                     grib_get_native_type(h, options->print_keys[i].name, &(options->print_keys[i].type));
                 switch (options->print_keys[i].type) {
                 case GRIB_TYPE_STRING:
+                    acc = grib_find_accessor(h, options->print_keys[i].name);
                     ret=grib_get_string(h, options->print_keys[i].name, value, &len);
-                    if (string_value_is_missing(value, len)) sprintf(value,"MISSING");
+                    if (grib_is_missing_string(acc, (unsigned char *)value, len))
+                        sprintf(value,"MISSING");
                     break;
                 case GRIB_TYPE_DOUBLE:
                     ret=grib_get_double(h, options->print_keys[i].name, &dvalue);
@@ -848,6 +836,7 @@ void grib_print_key_values(grib_runtime_options* options,grib_handle* h)
                 }
             }
         } else {
+            /* Other products e.g. GRIB */
             if (grib_is_missing(h,options->print_keys[i].name,&ret) && ret==GRIB_SUCCESS) {
                 sprintf(value,"MISSING");
             }
