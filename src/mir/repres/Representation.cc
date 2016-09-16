@@ -79,9 +79,9 @@ void Representation::setSimplePacking(grib_info &) const {
 }
 
 
-void Representation::setSecondOrderPacking(grib_info &) const {
+void Representation::setGivenPacking(grib_info &) const {
     std::ostringstream os;
-    os << "Representation::setSecondOrderPacking() not implemented for " << *this;
+    os << "Representation::setGivenPacking() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
