@@ -47,5 +47,19 @@ ${tools_dir}/bufr_get -p totalLength,bufrHeaderCentre,bufrHeaderSubCentre,master
 cat $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_get
 diff $ref_get $res_get
 
+
+#-------------------------------------------
+# ECC-236
+#-------------------------------------------
+result=`${tools_dir}/bufr_get -s unpack=1 -p nonCoordinatePressure syno_1.bufr`
+[ "$result" = "100910" ]
+result=`${tools_dir}/bufr_get -s unpack=1 -p stationOrSiteName bssh_176.bufr`
+[ "$result" = "Helgoland" ]
+result=`${tools_dir}/bufr_get -s unpack=1 -p majorFrameCount aaen_55.bufr`
+[ "$result" = "MISSING" ]
+result=`${tools_dir}/bufr_get -s unpack=1 -p satelliteIdentifier wavb_134.bufr`
+[ "$result" = "MISSING" ]
+
+
 #Clean up
 rm -f $fLog $fTmp $res_get
