@@ -155,6 +155,7 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation &param1,
     return true;
 }
 
+
 size_t GribOutput::save(const param::MIRParametrisation &parametrisation, context::Context& ctx) {
 
 
@@ -192,65 +193,10 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 
         grib_info info = {{0},};
 
+        fill(info, parametrisation, ctx, i);
 
 
-        /* bitmap */
-        info.grid.bitmapPresent = field.hasMissing() ? 1 : 0;
-        info.grid.missingValue = field.missingValue();
-
-        /* Packing options */
-
-        info.packing.packing = GRIB_UTIL_PACKING_SAME_AS_INPUT;
-        info.packing.accuracy = GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT;
-
-        long bits;
-        if (parametrisation.get("user.accuracy", bits)) {
-            info.packing.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
-            info.packing.bitsPerValue = bits;
-        }
-
-        long edition;
-        if (parametrisation.get("user.edition", edition)) {
-            info.packing.editionNumber = edition;
-        }
-
-        // Ask last representation to update info
-
-        field.representation()->fill(info);
-
-        long paramId = field.paramId(i);
-        if (paramId) {
-            long j = info.packing.extra_settings_count++;
-            info.packing.extra_settings[j].name = "paramId";
-            info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
-            info.packing.extra_settings[j].long_value = paramId;
-        }
-
-        std::string packing;
-        if (parametrisation.get("user.packing", packing)) {
-            const packing::Packer &packer = packing::Packer::lookup(packing);
-#if 0
-            packer.fill(info, *field.representation());
-#else
-            if (field.values(i).size() < 4) {
-
-                // There is a bug in grib_api if the user ask 1 value and select second-order
-                // Once this fixed, remove this code
-                eckit::Log::debug<LibMir>() << "Field has "
-                                            << eckit::Plural(field.values(i).size(), "value")
-                                            << ", ignoring packer "
-                                            << packer
-                                            << std::endl;
-
-
-            } else {
-                packer.fill(info, *field.representation());
-            }
-
-#endif
-        }
-
-        edition = info.packing.editionNumber;
+        long edition = info.packing.editionNumber;
         if (!edition) {
             GRIB_CALL(grib_get_long(h, "editionNumber", &edition));
         }
@@ -262,6 +208,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 
         FIX_SW(info.grid.latitudeOfLastGridPointInDegrees);
         FIX_NE(info.grid.longitudeOfLastGridPointInDegrees);
+
 
 // FIX(info.grid.iDirectionIncrementInDegrees);
 //             FIX(info.grid.jDirectionIncrementInDegrees);
@@ -375,6 +322,72 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 
     return total;
 }
+
+
+void GribOutput::fill(grib_info& info,
+                      const param::MIRParametrisation &parametrisation, context::Context& ctx, size_t i) const {
+
+    data::MIRField& field = ctx.field();
+    input::MIRInput& input = ctx.input();
+
+    /* bitmap */
+    info.grid.bitmapPresent = field.hasMissing() ? 1 : 0;
+    info.grid.missingValue = field.missingValue();
+
+    /* Packing options */
+
+    info.packing.packing = GRIB_UTIL_PACKING_SAME_AS_INPUT;
+    info.packing.accuracy = GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT;
+
+    long bits;
+    if (parametrisation.get("user.accuracy", bits)) {
+        info.packing.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
+        info.packing.bitsPerValue = bits;
+    }
+
+    long edition;
+    if (parametrisation.get("user.edition", edition)) {
+        info.packing.editionNumber = edition;
+    }
+
+    // Ask last representation to update info
+
+    field.representation()->fill(info);
+
+    long paramId = field.paramId(i);
+    if (paramId) {
+        long j = info.packing.extra_settings_count++;
+        info.packing.extra_settings[j].name = "paramId";
+        info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
+        info.packing.extra_settings[j].long_value = paramId;
+    }
+
+    std::string packing;
+    if (parametrisation.get("user.packing", packing)) {
+        const packing::Packer &packer = packing::Packer::lookup(packing);
+#if 0
+        packer.fill(info, *field.representation());
+#else
+        if (field.values(i).size() < 4) {
+
+            // There is a bug in grib_api if the user ask 1 value and select second-order
+            // Once this fixed, remove this code
+            eckit::Log::debug<LibMir>() << "Field has "
+                                        << eckit::Plural(field.values(i).size(), "value")
+                                        << ", ignoring packer "
+                                        << packer
+                                        << std::endl;
+
+
+        } else {
+            packer.fill(info, *field.representation());
+        }
+
+#endif
+    }
+
+}
+
 
 
 #undef Y
