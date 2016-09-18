@@ -261,7 +261,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
         }
 
 // Give a chance to a sub-class to modifie info
-        fill(info, parametrisation, ctx, i);
+        fill(h, info);
 
 
         edition = info.packing.editionNumber;
@@ -391,14 +391,9 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
     return total;
 }
 
-
-void GribOutput::fill(grib_info& info,
-                      const param::MIRParametrisation &parametrisation,
-                      context::Context& ctx,
-                      size_t i) const {
+void GribOutput::fill(grib_handle* handle, grib_info& info) const {
 
 }
-
 
 
 #undef Y
