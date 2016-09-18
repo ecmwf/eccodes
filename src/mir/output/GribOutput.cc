@@ -155,18 +155,6 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation &param1,
     return true;
 }
 
-class AutoCleanup {
-    grib_info& info_;
-public:
-    AutoCleanup(grib_info& info): info_(info) {}
-    ~AutoCleanup() {
-        for (size_t i = 0; i < info_.packing.extra_settings_count ; i++) {
-            if (info_.packing.extra_settings[i].name) {
-                free((void*)info_.packing.extra_settings[i].name);
-            }
-        }
-    }
-};
 
 size_t GribOutput::save(const param::MIRParametrisation &parametrisation, context::Context& ctx) {
 
@@ -204,12 +192,79 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 #endif
 
         grib_info info = {{0},};
-        AutoCleanup cleanup(info);
 
+        /* bitmap */
+        info.grid.bitmapPresent = field.hasMissing() ? 1 : 0;
+        info.grid.missingValue = field.missingValue();
+
+        /* Packing options */
+
+        info.packing.packing = GRIB_UTIL_PACKING_SAME_AS_INPUT;
+        info.packing.accuracy = GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT;
+
+        long bits;
+        if (parametrisation.get("user.accuracy", bits)) {
+            info.packing.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
+            info.packing.bitsPerValue = bits;
+        }
+
+        long edition;
+        if (parametrisation.get("user.edition", edition)) {
+            info.packing.editionNumber = edition;
+        }
+
+        // Ask last representation to update info
+
+        field.representation()->fill(info);
+
+        // long paramId = field.paramId(i);
+        // if (paramId) {
+        //     long j = info.packing.extra_settings_count++;
+        //     info.packing.extra_settings[j].name = "paramId";
+        //     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
+        //     info.packing.extra_settings[j].long_value = paramId;
+        // }
+
+        // The paramId will now come from here
+        auto md = field.metadata(i);
+        for (auto k = md.begin(); k != md.end(); ++k) {
+            long j = info.packing.extra_settings_count++;
+            ASSERT(j < sizeof(info.packing.extra_settings) / sizeof(info.packing.extra_settings[0]));
+            info.packing.extra_settings[j].name = (*k).first.c_str();
+            ASSERT(info.packing.extra_settings[j].name);
+            info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
+            info.packing.extra_settings[j].long_value = (*k).second;
+        }
+
+        std::string packing;
+        if (parametrisation.get("user.packing", packing)) {
+            const packing::Packer &packer = packing::Packer::lookup(packing);
+#if 0
+            packer.fill(info, *field.representation());
+#else
+            if (field.values(i).size() < 4) {
+
+                // There is a bug in grib_api if the user ask 1 value and select second-order
+                // Once this fixed, remove this code
+                eckit::Log::debug<LibMir>() << "Field has "
+                                            << eckit::Plural(field.values(i).size(), "value")
+                                            << ", ignoring packer "
+                                            << packer
+                                            << std::endl;
+
+
+            } else {
+                packer.fill(info, *field.representation());
+            }
+
+#endif
+        }
+
+// Give a chance to a sub-class to modifie info
         fill(info, parametrisation, ctx, i);
 
 
-        long edition = info.packing.editionNumber;
+        edition = info.packing.editionNumber;
         if (!edition) {
             GRIB_CALL(grib_get_long(h, "editionNumber", &edition));
         }
@@ -338,77 +393,9 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 
 
 void GribOutput::fill(grib_info& info,
-                      const param::MIRParametrisation &parametrisation, context::Context& ctx, size_t i) const {
-
-    data::MIRField& field = ctx.field();
-    input::MIRInput& input = ctx.input();
-
-    /* bitmap */
-    info.grid.bitmapPresent = field.hasMissing() ? 1 : 0;
-    info.grid.missingValue = field.missingValue();
-
-    /* Packing options */
-
-    info.packing.packing = GRIB_UTIL_PACKING_SAME_AS_INPUT;
-    info.packing.accuracy = GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT;
-
-    long bits;
-    if (parametrisation.get("user.accuracy", bits)) {
-        info.packing.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
-        info.packing.bitsPerValue = bits;
-    }
-
-    long edition;
-    if (parametrisation.get("user.edition", edition)) {
-        info.packing.editionNumber = edition;
-    }
-
-    // Ask last representation to update info
-
-    field.representation()->fill(info);
-
-    // long paramId = field.paramId(i);
-    // if (paramId) {
-    //     long j = info.packing.extra_settings_count++;
-    //     info.packing.extra_settings[j].name = "paramId";
-    //     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
-    //     info.packing.extra_settings[j].long_value = paramId;
-    // }
-
-    // The paramId will now come from here
-    auto md = field.metadata(i);
-    for (auto k = md.begin(); k != md.end(); ++k) {
-        long j = info.packing.extra_settings_count++;
-        ASSERT(j < sizeof(info.packing.extra_settings) / sizeof(info.packing.extra_settings[0]));
-        info.packing.extra_settings[j].name = strdup((*k).first.c_str());
-        ASSERT(info.packing.extra_settings[j].name);
-        info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
-        info.packing.extra_settings[j].long_value = (*k).second;
-    }
-
-    std::string packing;
-    if (parametrisation.get("user.packing", packing)) {
-        const packing::Packer &packer = packing::Packer::lookup(packing);
-#if 0
-        packer.fill(info, *field.representation());
-#else
-        if (field.values(i).size() < 4) {
-
-            // There is a bug in grib_api if the user ask 1 value and select second-order
-            // Once this fixed, remove this code
-            eckit::Log::debug<LibMir>() << "Field has "
-                                        << eckit::Plural(field.values(i).size(), "value")
-                                        << ", ignoring packer "
-                                        << packer
-                                        << std::endl;
-
-
-        } else {
-            packer.fill(info, *field.representation());
-        }
-
-#endif
-    }
+                      const param::MIRParametrisation &parametrisation,
+                      context::Context& ctx,
+                      size_t i) const {
 
 }
 
