@@ -155,6 +155,18 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation &param1,
     return true;
 }
 
+class AutoCleanup {
+    grib_info& info_;
+public:
+    AutoCleanup(grib_info& info): info_(info) {}
+    ~AutoCleanup() {
+        for (size_t i = 0; i < info_.packing.extra_settings_count ; i++) {
+            if (info_.packing.extra_settings[i].name) {
+                free((void*)info_.packing.extra_settings[i].name);
+            }
+        }
+    }
+};
 
 size_t GribOutput::save(const param::MIRParametrisation &parametrisation, context::Context& ctx) {
 
@@ -192,6 +204,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 #endif
 
         grib_info info = {{0},};
+        AutoCleanup cleanup(info);
 
         fill(info, parametrisation, ctx, i);
 
@@ -367,7 +380,8 @@ void GribOutput::fill(grib_info& info,
     for (auto k = md.begin(); k != md.end(); ++k) {
         long j = info.packing.extra_settings_count++;
         ASSERT(j < sizeof(info.packing.extra_settings) / sizeof(info.packing.extra_settings[0]));
-        info.packing.extra_settings[j].name = (*k).first.c_str();
+        info.packing.extra_settings[j].name = strdup((*k).first.c_str());
+        ASSERT(info.packing.extra_settings[j].name);
         info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
         info.packing.extra_settings[j].long_value = (*k).second;
     }
