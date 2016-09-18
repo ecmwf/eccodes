@@ -354,12 +354,22 @@ void GribOutput::fill(grib_info& info,
 
     field.representation()->fill(info);
 
-    long paramId = field.paramId(i);
-    if (paramId) {
+    // long paramId = field.paramId(i);
+    // if (paramId) {
+    //     long j = info.packing.extra_settings_count++;
+    //     info.packing.extra_settings[j].name = "paramId";
+    //     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
+    //     info.packing.extra_settings[j].long_value = paramId;
+    // }
+
+    // The paramId will now come from here
+    auto md = field.metadata(i);
+    for (auto k = md.begin(); k != md.end(); ++k) {
         long j = info.packing.extra_settings_count++;
-        info.packing.extra_settings[j].name = "paramId";
+        ASSERT(j < sizeof(info.packing.extra_settings) / sizeof(info.packing.extra_settings[0]));
+        info.packing.extra_settings[j].name = (*k).first.c_str();
         info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
-        info.packing.extra_settings[j].long_value = paramId;
+        info.packing.extra_settings[j].long_value = (*k).second;
     }
 
     std::string packing;
