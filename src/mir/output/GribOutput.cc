@@ -231,7 +231,6 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
             long j = info.packing.extra_settings_count++;
             ASSERT(j < sizeof(info.packing.extra_settings) / sizeof(info.packing.extra_settings[0]));
             info.packing.extra_settings[j].name = (*k).first.c_str();
-            ASSERT(info.packing.extra_settings[j].name);
             info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
             info.packing.extra_settings[j].long_value = (*k).second;
         }
