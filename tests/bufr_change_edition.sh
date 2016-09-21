@@ -24,7 +24,7 @@ for f in ${bufr_files}; do
   
   # Convert to BUFR edition 4
   ${tools_dir}bufr_set -s editionNumber=4 $f $fBufrTmp
-  ${tools_dir}bufr_compare $f $fBufrTmp
+  ${tools_dir}bufr_compare -b edition $f $fBufrTmp
   
   ed=`${tools_dir}bufr_get -w count=1 -p editionNumber $fBufrTmp`
   [ "$ed" = "4" ]
