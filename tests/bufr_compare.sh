@@ -26,6 +26,9 @@ fBufrTmp=${label}".bufr.tmp"
 fBufrInput1=${label}".bufr.input1"
 fBufrInput2=${label}".bufr.input2"
 
+#Define filter rules file
+fRules=${label}.filter
+
 #----------------------------------------------------
 # Test: comparing same files
 #----------------------------------------------------
@@ -120,6 +123,20 @@ grep -q "#1#windDirection->percentConfidence" $fLog
 grep -q "#1#windSpeed->percentConfidence" $fLog
 grep -q "#1#coldestClusterTemperature->percentConfidence" $fLog
 
+#----------------------------------------------------
+# Header only mode
+#----------------------------------------------------
+f="syno_1.bufr"
+cat > $fRules <<EOF
+ set unpack=1;
+ set relativeHumidity=27;
+ set horizontalVisibility=1500;
+ set pack=1;
+ write;
+EOF
+${tools_dir}codes_bufr_filter -o $fBufrTmp $fRules $f
+# Header keys have not changed
+${tools_dir}bufr_compare -H $f $fBufrTmp
 
 #Clean up
-rm -f $fLog $fBufrTmp $fBufrInput1 $fBufrInput2
+rm -f $fLog $fBufrTmp $fBufrInput1 $fBufrInput2 $fRules

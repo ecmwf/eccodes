@@ -1071,8 +1071,20 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
     grib_keys_iterator* iter  = NULL;
     grib_context* context=handle1->context;
 
-    grib_set_long(handle1,"unpack",1);
-    grib_set_long(handle2,"unpack",1);
+    if (!headerMode) {
+        /* See ECC-333: By setting unpack we get ALL the bufr keys. */
+        /*              In headerMode we want just the header ones */
+        ret = grib_set_long(handle1,"unpack",1);
+        if (ret != GRIB_SUCCESS) {
+            grib_context_log(context, GRIB_LOG_ERROR, "Failed to unpack 1st message: %s", grib_get_error_message(ret));
+            exit(1);
+        }
+        ret = grib_set_long(handle2,"unpack",1);
+        if (ret != GRIB_SUCCESS) {
+            grib_context_log(context, GRIB_LOG_ERROR, "Failed to unpack 2nd message: %s", grib_get_error_message(ret));
+            exit(1);
+        }
+    }
     iter=grib_keys_iterator_new(handle1,0,NULL);
 
     if (!iter) {
@@ -1139,43 +1151,6 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
             grib_clear(handle2,nextb->value);
             nextb=nextb->next;
         }
-    }
-
-    if (headerMode) {
-        const void *msg1=NULL,*msg2=NULL;
-        size_t size1=0,size2=0;
-        grib_handle *h11, *h22;
-        GRIB_CHECK_NOLINE(grib_get_message_headers(handle1,&msg1,&size1),0);
-        GRIB_CHECK_NOLINE(grib_get_message_headers(handle2,&msg2,&size2),0);
-        if (size1==size2 && !memcmp(msg1,msg2,size1))
-            return 0;
-
-        err=0;
-        h11=grib_handle_new_from_partial_message(handle1->context,(void*)msg1,size1);
-        h22=grib_handle_new_from_partial_message(handle1->context,(void*)msg2,size2);
-
-        iter=grib_keys_iterator_new(h11, GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
-        if (!iter) {
-            grib_context_log(handle1->context, GRIB_LOG_ERROR, "unable to create keys iterator");
-            exit(1);
-        }
-
-        while(grib_keys_iterator_next(iter))
-        {
-            name=grib_keys_iterator_get_name(iter);
-            /*printf("----- comparing %s\n",name);*/
-
-            if (blacklisted(name)) continue;
-            if(compare_values(options,h11,h22,name,GRIB_TYPE_UNDEFINED))  {
-                err++;
-                write_messages(h11,h22);
-            }
-        }
-
-        grib_keys_iterator_delete(iter);
-        grib_handle_delete(h11);
-        grib_handle_delete(h22);
-        return err;
     }
 
     if ( listFromCommandLine && onlyListed ) {
