@@ -8,60 +8,60 @@
 #
 
 lookup[1] ed       (7,editionNumber);
-transient missingValue=999999;
+transient missingValue=999999 : hidden;
 
 #negative value=not used
-transient inputDelayedDescriptorReplicationFactor={-1};
+transient inputDelayedDescriptorReplicationFactor={-1} : hidden;
 #negative value=not used
-transient inputExtendedDelayedDescriptorReplicationFactor={-1};
+transient inputExtendedDelayedDescriptorReplicationFactor={-1} : hidden;
 #negative value=not used
-transient inputShortDelayedDescriptorReplicationFactor={-1};
+transient inputShortDelayedDescriptorReplicationFactor={-1} : hidden;
 
-transient inputDataPresentIndicator={-1};
+transient inputDataPresentIndicator={-1} : hidden;
 
-transient extractSubset=-1;
-transient extractSubsetList={-1};
-transient extractSubsetIntervalStart=-1;
-transient extractSubsetIntervalEnd=-1;
+transient extractSubset=-1 : hidden;
+transient extractSubsetList={-1} : hidden;
+transient extractSubsetIntervalStart=-1 : hidden;
+transient extractSubsetIntervalEnd=-1 : hidden;
 
-meta doExtractSubsets bufr_extract_subsets(numericValues,pack,numberOfSubsets,extractSubset,extractSubsetIntervalStart,extractSubsetIntervalEnd,extractSubsetList);
+meta doExtractSubsets bufr_extract_subsets(numericValues,pack,numberOfSubsets,extractSubset,extractSubsetIntervalStart,extractSubsetIntervalEnd,extractSubsetList) : hidden;
 
-transient extractAreaWestLongitude=1.1;
-transient extractAreaEastLongitude=1.1;
-transient extractAreaNorthLatitude=1.1;
-transient extractAreaSouthLatitude=1.1;
-transient extractAreaLatitudeRank=1;
-transient extractAreaLongitudeRank=1;
-transient extractedAreaNumberOfSubsets=0;
+transient extractAreaWestLongitude=1.1 : hidden;
+transient extractAreaEastLongitude=1.1 : hidden;
+transient extractAreaNorthLatitude=1.1 : hidden;
+transient extractAreaSouthLatitude=1.1 : hidden;
+transient extractAreaLatitudeRank=1 : hidden;
+transient extractAreaLongitudeRank=1 : hidden;
+transient extractedAreaNumberOfSubsets=0 : hidden;
 
 meta doExtractArea bufr_extract_area_subsets(
     doExtractSubsets,numberOfSubsets,extractSubsetList,extractAreaWestLongitude,extractAreaEastLongitude,
     extractAreaNorthLatitude,extractAreaSouthLatitude,extractAreaLongitudeRank,extractAreaLatitudeRank,
-    extractedAreaNumberOfSubsets)=0;
+    extractedAreaNumberOfSubsets)=0 : hidden;
 
-transient extractDateTimeYearStart=2016;
-transient extractDateTimeMonthStart=1;
-transient extractDateTimeDayStart=1;
-transient extractDateTimeHourStart=1;
-transient extractDateTimeMinuteStart=1;
-transient extractDateTimeSecondStart=1;
+transient extractDateTimeYearStart=2016 : hidden;
+transient extractDateTimeMonthStart=1 : hidden;
+transient extractDateTimeDayStart=1 : hidden;
+transient extractDateTimeHourStart=1 : hidden;
+transient extractDateTimeMinuteStart=1 : hidden;
+transient extractDateTimeSecondStart=1 : hidden;
 
-transient extractDateTimeYearEnd=2016;
-transient extractDateTimeMonthEnd=1;
-transient extractDateTimeDayEnd=1;
-transient extractDateTimeHourEnd=1;
-transient extractDateTimeMinuteEnd=1;
-transient extractDateTimeSecondEnd=1;
+transient extractDateTimeYearEnd=2016 : hidden;
+transient extractDateTimeMonthEnd=1 : hidden;
+transient extractDateTimeDayEnd=1 : hidden;
+transient extractDateTimeHourEnd=1 : hidden;
+transient extractDateTimeMinuteEnd=1 : hidden;
+transient extractDateTimeSecondEnd=1 : hidden;
 
-transient extractDateTimeYearRank=1;
-transient extractDateTimeMonthRank=1;
-transient extractDateTimeDayRank=1;
-transient extractDateTimeHourRank=1;
-transient extractDateTimeMinuteRank=1;
-transient extractDateTimeSecondRank=1;
-transient extractedDateTimeNumberOfSubsets=0;
+transient extractDateTimeYearRank=1 : hidden;
+transient extractDateTimeMonthRank=1 : hidden;
+transient extractDateTimeDayRank=1 : hidden;
+transient extractDateTimeHourRank=1 : hidden;
+transient extractDateTimeMinuteRank=1 : hidden;
+transient extractDateTimeSecondRank=1 : hidden;
+transient extractedDateTimeNumberOfSubsets=0 : hidden;
 
-meta doExtractDateTime bufr_extract_datetime_subsets(doExtractSubsets,numberOfSubsets,extractSubsetList);
+meta doExtractDateTime bufr_extract_datetime_subsets(doExtractSubsets,numberOfSubsets,extractSubsetList) : hidden;
 
 template boot_edition "bufr/boot_edition_[ed:l].def";
 

@@ -484,8 +484,8 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
 
     | TRANS       IDENT   '=' argument  flags
         { $$ = grib_action_create_variable(grib_parser_context,$2,"transient",0,$4,$4,$5,NULL);   free($2); }
-    | TRANS       IDENT   '=' '{' dvalues '}' 
-        { $$ = grib_action_create_transient_darray(grib_parser_context,$2,$5); free($2); }
+    | TRANS       IDENT   '=' '{' dvalues '}' flags 
+        { $$ = grib_action_create_transient_darray(grib_parser_context,$2,$5,$7); free($2); }
 
     | FLOAT       IDENT    default   flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$2,"ieeefloat",4,NULL,$3,$4,NULL,NULL);   free($2);  }

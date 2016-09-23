@@ -11,13 +11,13 @@ constant definitionFilesVersion="2.0.0.0" : hidden;
 constant internalVersion=30 : hidden;
 meta checkInternalVersion check_internal_version(internalVersion) : hidden;
 
-UseEcmfConventions = getenv("ECCODES_USE_ECMF_CONVENTIONS","1");
+UseEcmfConventions = getenv("ECCODES_USE_ECMF_CONVENTIONS","1") :hidden ;
 
 constant defaultTypeOfLevel="unknown" : hidden;
 
 # GRIBEX special boustrophedonic mode. See GRIB-472
 # If the environment variable is not defined, the key will be 0
-GRIBEX_boustrophedonic = getenv("ECCODES_GRIBEX_BOUSTROPHEDONIC","0");
+GRIBEX_boustrophedonic = getenv("ECCODES_GRIBEX_BOUSTROPHEDONIC","0")  :hidden;
 
 
 constant zero=0 : hidden;
@@ -45,8 +45,8 @@ transient truncateDegrees=0 : hidden;
 transient dummy = 1 :hidden;
 constant unknown="unknown" : hidden;
 constant oneConstant=1 : hidden;
-constant thousand=1000;
-constant hundred=100;
+constant thousand=1000 :hidden;
+constant hundred=100 :hidden;
 constant oneMillionConstant=1000000 : hidden;
 constant grib1divider = 1000 : hidden;
 meta offset offset_file() : hidden;

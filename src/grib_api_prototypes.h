@@ -104,7 +104,7 @@ grib_action *grib_action_create_variable(grib_context *context, const char *name
 grib_action *grib_action_create_modify(grib_context *context, const char *name, long flags);
 
 /* action_class_transient_darray.c */
-grib_action *grib_action_create_transient_darray(grib_context *context, const char *name, grib_darray *darray);
+grib_action *grib_action_create_transient_darray(grib_context *context, const char *name, grib_darray *darray,int flags);
 
 /* grib_accessor.c */
 void grib_accessor_dump(grib_accessor *a, grib_dumper *f);
