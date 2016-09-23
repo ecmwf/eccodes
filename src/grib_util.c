@@ -686,6 +686,14 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         return NULL;
     }
 
+    if (packing_spec->deleteLocalDefinition) {
+        /* TODO: We need two calls because of grib1/grib2 issues re removing local defs! */
+        if (editionNumber==1){
+            SET_LONG_VALUE("deleteLocalDefinition",1);
+        }
+        SET_LONG_VALUE("setLocalDefinition", 0);
+    }
+
     len=100;
     grib_get_string(h,"packingType",input_packing_type,&len);
     grib_get_long(h,"bitsPerValue",&input_bits_per_value);
@@ -1278,10 +1286,16 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     }
 
     if (packing_spec->editionNumber && packing_spec->editionNumber!=editionNumber) {
-        grib_set_long(outh,"edition", packing_spec->editionNumber);
+        *err = grib_set_long(outh,"edition", packing_spec->editionNumber);
+        if (*err != GRIB_SUCCESS) {
+            fprintf(stderr,"GRIB_UTIL_SET_SPEC: Failed to change edition to %ld: %s\n",
+                    packing_spec->editionNumber, grib_get_error_message(*err));
+            goto cleanup;
+        }
     }
 
     if (packing_spec->deleteLocalDefinition) {
+        /* TODO: We need two calls because of grib1/grib2 issues re removing local defs! */
         grib_set_long(outh,"setLocalDefinition", 0);
         grib_set_long(outh,"deleteLocalDefinition", 1);
     }

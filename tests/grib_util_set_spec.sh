@@ -9,13 +9,17 @@
 #
 
 . ./include.sh
+#test_dir="valgrind --error-exitcode=1 "$test_dir
 
-### Regular Lat/Lon Grid
-###########################################
+# --------------------------------------------------
+# Regular Lat/Lon Grid
+# --------------------------------------------------
 infile=../data/latlon.grib
 outfile=out.grib_util_set_spec.grib
+tempOut=temp.grib_util_set_spec.grib
 rm -f $outfile
 
+# GRIB1 with local definition for MARS
 ${test_dir}grib_util_set_spec $infile $outfile > /dev/null
 
 res=`${tools_dir}grib_get -p edition,section2Used,Ni,Nj,numberOfValues,bitsPerValue $outfile`
@@ -24,8 +28,29 @@ res=`${tools_dir}grib_get -p edition,section2Used,Ni,Nj,numberOfValues,bitsPerVa
 # Check output file geometry
 ${tools_dir}grib_get_data $outfile > /dev/null
 
-### Reduced Gaussian Grid N=32 second order packing
-###########################################
+# Remove the local definition from input
+${tools_dir}grib_set -s deleteLocalDefinition=1 $infile $tempOut
+${test_dir}grib_util_set_spec $tempOut $outfile > /dev/null
+
+# Add another grib1 local definition (which is not in grib2)
+${tools_dir}grib_set -s setLocalDefinition=1,localDefinitionNumber=5 $infile $tempOut
+infile=$tempOut
+${test_dir}grib_util_set_spec $tempOut $outfile > /dev/null
+res=`${tools_dir}grib_get -p edition,section2Used $outfile`
+[ "$res" = "2 0" ]
+
+# GRIB2 input with local definition
+infile=../data/regular_latlon_surface.grib2
+${test_dir}grib_util_set_spec $infile $outfile > /dev/null
+grib_check_key_equals $outfile section2Used 0
+# GRIB2 input without local definition
+infile=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${test_dir}grib_util_set_spec $infile $outfile > /dev/null
+grib_check_key_equals $outfile section2Used 0
+
+# --------------------------------------------------
+# Reduced Gaussian Grid N=32 second order packing
+# --------------------------------------------------
 infile=../data/reduced_gaussian_model_level.grib2
 outfile=out.grib_util_set_spec.grib
 rm -f $outfile
@@ -57,4 +82,4 @@ ${tools_dir}grib_get_data $outfile > /dev/null
 
 
 ### Clean up
-rm -f $outfile
+rm -f $outfile $tempOut

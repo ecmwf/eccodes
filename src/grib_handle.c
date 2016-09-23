@@ -145,7 +145,8 @@ int grib_handle_delete ( grib_handle* h )
         grib_dependency *d = h->dependencies;
         grib_dependency *n;
 
-        Assert ( h->kid == NULL );
+        if ( h->kid != NULL )
+            return GRIB_INTERNAL_ERROR;
 
         while ( d )
         {

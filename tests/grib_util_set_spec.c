@@ -167,6 +167,6 @@ int main(int argc, char *argv[])
 
     test_regular_ll(infile, outfile);
     test_reduced_gg(infile, outfile);
-
+    printf("ALL OK\n");
     return 0;
 }

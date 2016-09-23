@@ -158,6 +158,9 @@ static int notify_change(grib_action* act, grib_accessor * notified,
     loader.lookup_long   = grib_lookup_long_from_handle;
     loader.init_accessor = grib_init_accessor_from_handle;
 
+    if (h->kid != NULL) {
+        return GRIB_INTERNAL_ERROR;
+    }
 
     Assert(h->kid == NULL);
     tmp_handle->loader = &loader;
