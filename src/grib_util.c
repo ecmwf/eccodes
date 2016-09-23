@@ -686,11 +686,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         return NULL;
     }
 
-    if (packing_spec->deleteLocalDefinition) {
-        /* TODO: not working for grib2 */
-        SET_LONG_VALUE("deleteLocalDefinition",1);
-    }
-
     len=100;
     grib_get_string(h,"packingType",input_packing_type,&len);
     grib_get_long(h,"bitsPerValue",&input_bits_per_value);
@@ -1282,8 +1277,14 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         }
     }
 
-    if(packing_spec->editionNumber && packing_spec->editionNumber!=editionNumber)
+    if (packing_spec->editionNumber && packing_spec->editionNumber!=editionNumber) {
         grib_set_long(outh,"edition", packing_spec->editionNumber);
+    }
+
+    if (packing_spec->deleteLocalDefinition) {
+        grib_set_long(outh,"setLocalDefinition", 0);
+        grib_set_long(outh,"deleteLocalDefinition", 1);
+    }
 
     if ( (*err = check_handle_against_spec(outh, editionNumber, spec, global_grid)) != GRIB_SUCCESS)
     {

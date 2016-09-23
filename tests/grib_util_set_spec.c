@@ -134,6 +134,9 @@ void test_regular_ll(const char* input_filename, const char* output_filename)
     packing_spec.bitsPerValue = 24;
     packing_spec.accuracy=GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
     packing_spec.packing=GRIB_UTIL_PACKING_USE_PROVIDED;
+    /* Convert to edition 2 and remove local use section */
+    packing_spec.editionNumber = 2;
+    packing_spec.deleteLocalDefinition = 1;
 
     finalh = codes_grib_util_set_spec(
             handle,

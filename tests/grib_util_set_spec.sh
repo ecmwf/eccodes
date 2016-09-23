@@ -18,8 +18,8 @@ rm -f $outfile
 
 ${test_dir}grib_util_set_spec $infile $outfile > /dev/null
 
-res=`${tools_dir}grib_get -p Ni,Nj,numberOfValues,bitsPerValue $outfile`
-[ "$res" = "17 14 238 24" ]
+res=`${tools_dir}grib_get -p edition,section2Used,Ni,Nj,numberOfValues,bitsPerValue $outfile`
+[ "$res" = "2 0 17 14 238 24" ]
 
 # Check output file geometry
 ${tools_dir}grib_get_data $outfile > /dev/null
