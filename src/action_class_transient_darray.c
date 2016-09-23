@@ -86,7 +86,7 @@ static void init_class(grib_action_class* c)
 }
 /* END_CLASS_IMP */
 
-grib_action* grib_action_create_transient_darray( grib_context* context, const char* name, grib_darray* darray)
+grib_action* grib_action_create_transient_darray( grib_context* context, const char* name, grib_darray* darray,int flags)
 {
     grib_action_transient_darray* a = NULL;
     grib_action_class* c   = grib_action_class_transient_darray;
@@ -96,6 +96,7 @@ grib_action* grib_action_create_transient_darray( grib_context* context, const c
     act->cclass       = c;
     a                 = (grib_action_transient_darray*)act;
     act->context      = context;
+    act->flags        = flags;
 
     a->darray  = darray;
     a->name        = grib_context_strdup_persistent(context,name);
