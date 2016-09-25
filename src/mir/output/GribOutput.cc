@@ -387,6 +387,11 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 
         GRIB_CALL(grib_get_message(result, &message, &size));
 
+
+        const char* bytes = reinterpret_cast<const char*>(message);
+        ASSERT(bytes[0] == 'G' && bytes[1] == 'R' && bytes[2] == 'I' && bytes[3] == 'B');
+        ASSERT(bytes[size - 4] == '7' && bytes[size - 3] == '7' && bytes[size - 2] == '7' && bytes[size - 1] == '7');
+
         out(message, size, true);
         total += size;
 
