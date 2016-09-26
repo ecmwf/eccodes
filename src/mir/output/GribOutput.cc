@@ -16,10 +16,12 @@
 #include "mir/output/GribOutput.h"
 
 #include <istream>
+
 #include "eckit/io/DataHandle.h"
 #include "eckit/log/Plural.h"
 #include "eckit/thread/AutoLock.h"
 #include "eckit/thread/Mutex.h"
+
 #include "mir/action/context/Context.h"
 #include "mir/config/LibMir.h"
 #include "mir/data/MIRField.h"
@@ -33,6 +35,7 @@
 namespace mir {
 namespace output {
 
+//----------------------------------------------------------------------------------------------------------------------
 
 static eckit::Mutex local_mutex;
 
@@ -404,10 +407,10 @@ void GribOutput::fill(grib_handle* handle, grib_info& info) const {
 
 }
 
-
 #undef Y
 #undef X
 
+//----------------------------------------------------------------------------------------------------------------------
 
 }  // namespace output
 }  // namespace mir
