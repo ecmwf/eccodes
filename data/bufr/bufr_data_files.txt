@@ -106,10 +106,7 @@ rado_250.bufr
 s4kn_165.bufr
 sb19_206.bufr
 sbu8_206.bufr
-ship_11.bufr
-ship_12.bufr
 ship_13.bufr
-ship_14.bufr
 ship_19.bufr
 ship_9.bufr
 smin_49.bufr
@@ -121,7 +118,6 @@ soil_7.bufr
 ssbt_127.bufr
 stuk_7.bufr
 syno_1.bufr
-syno_2.bufr
 syno_3.bufr
 syno_4.bufr
 syno_multi.bufr

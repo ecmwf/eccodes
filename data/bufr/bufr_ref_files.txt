@@ -106,10 +106,7 @@ rado_250.bufr.num.ref
 s4kn_165.bufr.num.ref
 sb19_206.bufr.num.ref
 sbu8_206.bufr.num.ref
-ship_11.bufr.num.ref
-ship_12.bufr.num.ref
 ship_13.bufr.num.ref
-ship_14.bufr.num.ref
 ship_19.bufr.num.ref
 ship_9.bufr.num.ref
 smin_49.bufr.num.ref
@@ -121,7 +118,6 @@ soil_7.bufr.num.ref
 ssbt_127.bufr.num.ref
 stuk_7.bufr.num.ref
 syno_1.bufr.num.ref
-syno_2.bufr.num.ref
 syno_3.bufr.num.ref
 syno_4.bufr.num.ref
 temp_101.bufr.num.ref
@@ -240,10 +236,7 @@ rado_250.bufr.desc.ref
 s4kn_165.bufr.desc.ref
 sb19_206.bufr.desc.ref
 sbu8_206.bufr.desc.ref
-ship_11.bufr.desc.ref
-ship_12.bufr.desc.ref
 ship_13.bufr.desc.ref
-ship_14.bufr.desc.ref
 ship_19.bufr.desc.ref
 ship_9.bufr.desc.ref
 smin_49.bufr.desc.ref
@@ -255,7 +248,6 @@ soil_7.bufr.desc.ref
 ssbt_127.bufr.desc.ref
 stuk_7.bufr.desc.ref
 syno_1.bufr.desc.ref
-syno_2.bufr.desc.ref
 syno_3.bufr.desc.ref
 syno_4.bufr.desc.ref
 temp_101.bufr.desc.ref
@@ -351,10 +343,7 @@ new_ocea_21.bufr.ref
 new_pgps_110.bufr.ref
 new_pilo_91.bufr.ref
 new_s4kn_165.bufr.ref
-new_ship_11.bufr.ref
-new_ship_12.bufr.ref
 new_ship_13.bufr.ref
-new_ship_14.bufr.ref
 new_ship_19.bufr.ref
 new_ship_9.bufr.ref
 new_smin_49.bufr.ref
@@ -366,7 +355,6 @@ new_soil_7.bufr.ref
 new_ssbt_127.bufr.ref
 new_stuk_7.bufr.ref
 new_syno_1.bufr.ref
-new_syno_2.bufr.ref
 new_syno_3.bufr.ref
 new_syno_4.bufr.ref
 new_syno_multi.bufr.ref

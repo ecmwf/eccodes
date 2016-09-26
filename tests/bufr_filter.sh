@@ -439,8 +439,8 @@ ifco_208.bufr ikco_217.bufr itrg_208.bufr itwt_233.bufr j2eo_216.bufr j2nb_216.b
 meta_140.bufr mhen_55.bufr mhsa_55.bufr mhsb_55.bufr mhse_55.bufr mloz_206.bufr modi_87.bufr modw_87.bufr monw_87.bufr
 new.bufr nomi_206.bufr nos1_208.bufr nos2_208.bufr nos3_208.bufr nos4_208.bufr nos5_208.bufr nos6_208.bufr nos7_208.bufr
 nos8_208.bufr ocea_131.bufr ocea_132.bufr ocea_133.bufr ocea_21.bufr pgps_110.bufr pilo_91.bufr rada_250.bufr rado_250.bufr
-s4kn_165.bufr sb19_206.bufr sbu8_206.bufr ship_11.bufr ship_12.bufr ship_13.bufr ship_14.bufr ship_19.bufr ship_9.bufr smin_49.bufr
-smis_49.bufr smiu_49.bufr smos_203.bufr sn4k_165.bufr soil_7.bufr ssbt_127.bufr stuk_7.bufr syno_1.bufr syno_2.bufr syno_3.bufr
+s4kn_165.bufr sb19_206.bufr sbu8_206.bufr ship_13.bufr ship_19.bufr ship_9.bufr smin_49.bufr
+smis_49.bufr smiu_49.bufr smos_203.bufr sn4k_165.bufr soil_7.bufr ssbt_127.bufr stuk_7.bufr syno_1.bufr syno_3.bufr
 syno_4.bufr syno_multi.bufr synop_multi_subset.bufr temp_101.bufr temp_102.bufr temp_106.bufr tmr7_129.bufr tropical_cyclone.bufr
 tros_31.bufr wavb_134.bufr"
 
@@ -467,7 +467,7 @@ set unpack=1;
 print "[shipOrMobileLandStationIdentifier]";
 EOF
 
-f="ship_11.bufr"
+f="ship_9.bufr"
 echo "Test: get string" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
