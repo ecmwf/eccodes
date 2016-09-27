@@ -135,11 +135,11 @@ if( ENABLE_JPG )
     #       which can affect future package discovery if not undone by the caller.
     #       The current CMAKE_PREFIX_PATH is backed up as _CMAKE_PREFIX_PATH
     #
-    set(ECBUILD_NO_DEPRECATIONS ON)  # Suppress deprecation message
+    set(CMAKE_WARN_DEPRECATED OFF) # Suppress deprecation message
     ecbuild_add_extra_search_paths( jasper )
     find_package( Jasper )
     set(CMAKE_PREFIX_PATH ${_CMAKE_PREFIX_PATH})    # Restore CMAKE_PREFIX_PATH
-    set(ECBUILD_NO_DEPRECATIONS OFF) # Remove suppression
+    set(CMAKE_WARN_DEPRECATED ON)  # Remove suppression
 
     find_package( OpenJPEG )
 
