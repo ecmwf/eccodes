@@ -2159,13 +2159,13 @@ subroutine codes_set_force_real8_array ( msgid, key, value, status)
 end subroutine codes_set_force_real8_array
   !> @endcond
 
-  !> Set the character value for a string key in a grib message.
+  !> Set the character value for a string key in a message.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref codes_get_error_string.
   !>
-  !> @param msgid      id of the grib loaded in memory
+  !> @param msgid      id of the message loaded in memory
   !> @param key        key name
   !> @param value      character value
   !> @param status     CODES_SUCCESS if OK, integer value on error

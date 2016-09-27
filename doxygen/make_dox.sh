@@ -20,7 +20,12 @@ doxygen grib_api_wiz.cfg
 # Do not copy this. Use default generated doxygen.css
 # cp doxygen.css ../html/
 
+# Change the links from example code back to confluence
 # ./convert_links.sh
+
+# Note:
+#  May have to edit html/interfaceeccodes_1_1codes__set.html
+#  to remove the weird */ inserted for subroutine 'codes_set_string'
 
 # Remove temp files
 rm -f eccodes.h
