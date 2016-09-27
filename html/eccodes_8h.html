@@ -493,6 +493,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gabb904f520644caa008034bd2be9349ec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__get__set.html#gabb904f520644caa008034bd2be9349ec">codes_set_long_array</a> (<a class="el" href="structcodes__handle.html">codes_handle</a> *h, const char *key, const long *vals, size_t length)</td></tr>
 <tr class="memdesc:gabb904f520644caa008034bd2be9349ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a long array from a key.  <a href="group__get__set.html#gabb904f520644caa008034bd2be9349ec">More...</a><br/></td></tr>
 <tr class="separator:gabb904f520644caa008034bd2be9349ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6840ee00df4366a431bedcef609f8ae5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__get__set.html#ga6840ee00df4366a431bedcef609f8ae5">codes_set_string_array</a> (<a class="el" href="structcodes__handle.html">codes_handle</a> *h, const char *key, const char **vals, size_t length)</td></tr>
+<tr class="memdesc:ga6840ee00df4366a431bedcef609f8ae5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a string array from a key.  <a href="group__get__set.html#ga6840ee00df4366a431bedcef609f8ae5">More...</a><br/></td></tr>
+<tr class="separator:ga6840ee00df4366a431bedcef609f8ae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9cf0dd7ede554cc4b8a56728d768d88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eccodes_8h.html#ab9cf0dd7ede554cc4b8a56728d768d88">codes_dump_content</a> (<a class="el" href="structcodes__handle.html">codes_handle</a> *h, FILE *out, const char *mode, unsigned long option_flags, void *arg)</td></tr>
 <tr class="memdesc:ab9cf0dd7ede554cc4b8a56728d768d88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print all keys, with the context print procedure and dump mode to a resource.  <a href="#ab9cf0dd7ede554cc4b8a56728d768d88">More...</a><br/></td></tr>
 <tr class="separator:ab9cf0dd7ede554cc4b8a56728d768d88"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -644,7 +647,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">h</td><td>: the handle to be printed </td></tr>
     <tr><td class="paramname">out</td><td>: output file handle </td></tr>
-    <tr><td class="paramname">mode</td><td>: available dump modes are: debug wmo c_code </td></tr>
+    <tr><td class="paramname">mode</td><td>: Examples of available dump modes: debug wmo </td></tr>
     <tr><td class="paramname">option_flags</td><td>: all the CODES_DUMP_FLAG_x flags can be used </td></tr>
     <tr><td class="paramname">arg</td><td>: used to provide a format to output data (experimental) </td></tr>
   </table>

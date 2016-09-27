@@ -140,6 +140,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gabb904f520644caa008034bd2be9349ec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__get__set.html#gabb904f520644caa008034bd2be9349ec">codes_set_long_array</a> (<a class="el" href="structcodes__handle.html">codes_handle</a> *h, const char *key, const long *vals, size_t length)</td></tr>
 <tr class="memdesc:gabb904f520644caa008034bd2be9349ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a long array from a key.  <a href="#gabb904f520644caa008034bd2be9349ec">More...</a><br/></td></tr>
 <tr class="separator:gabb904f520644caa008034bd2be9349ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6840ee00df4366a431bedcef609f8ae5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__get__set.html#ga6840ee00df4366a431bedcef609f8ae5">codes_set_string_array</a> (<a class="el" href="structcodes__handle.html">codes_handle</a> *h, const char *key, const char **vals, size_t length)</td></tr>
+<tr class="memdesc:ga6840ee00df4366a431bedcef609f8ae5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a string array from a key.  <a href="#ga6840ee00df4366a431bedcef609f8ae5">More...</a><br/></td></tr>
+<tr class="separator:ga6840ee00df4366a431bedcef609f8ae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
@@ -1049,6 +1052,58 @@ Functions</h2></td></tr>
     <tr><td class="paramname">key</td><td>: the key to be searched </td></tr>
     <tr><td class="paramname">mesg</td><td>: the address of a string where the data will be read </td></tr>
     <tr><td class="paramname">length</td><td>: the address of a size_t that contains the length of the string on input, and that contains the actual packed length of the string on output </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if OK, integer value on error </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga6840ee00df4366a431bedcef609f8ae5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int codes_set_string_array </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcodes__handle.html">codes_handle</a> *&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char **&#160;</td>
+          <td class="paramname"><em>vals</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set a string array from a key. </p>
+<p>If several keys of the same name are present, the last one is set </p>
+<dl class="section see"><dt>See Also</dt><dd><a class="el" href="group__get__set.html#gac43a3c0bf2561ceeb4bcc22d734b53b1" title="Get long array values from a key. ">codes_get_long_array</a></dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">h</td><td>: the handle to set the data to </td></tr>
+    <tr><td class="paramname">key</td><td>: the key to be searched </td></tr>
+    <tr><td class="paramname">vals</td><td>: the address of a string array where the data will be read </td></tr>
+    <tr><td class="paramname">length</td><td>: a size_t that contains the length of the array on input </td></tr>
   </table>
   </dd>
 </dl>
