@@ -1,12 +1,7 @@
 # assert(local=1)
-
 meta verificationDate        g1verificationdate(dataDate, dataTime, endStep) : read_only;
 meta monthlyVerificationDate g1monthlydate(verificationDate) : dump,no_copy;
 alias mars.date            = monthlyVerificationDate;
 
-# class 3 is "er" which is 15 year re-analysis (ERA15)
-# Only ERA15 has time and step
-if(class != 3) {
-    unalias mars.time;
-    unalias mars.step;
-}
+unalias mars.time;
+unalias mars.step;
