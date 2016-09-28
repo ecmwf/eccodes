@@ -35,7 +35,7 @@ if( HAVE_PYTHON )
     add_custom_command( OUTPUT ${_gribapi_swig}
                         COMMAND ${PYTHON_EXECUTABLE} setup.py build_ext --inplace --rpath ${CMAKE_BINARY_DIR}/lib
                         DEPENDS grib_interface.h grib_interface.c swig_wrap_numpy.c setup.py.in eccodes )
-    add_custom_target(build_swig_wrapper ALL DEPENDS ${_gribapi_swig})
+    add_custom_target(eccodes_build_swig_wrapper ALL DEPENDS ${_gribapi_swig})
 
     #ecbuild_add_library(TARGET    _gribapi_swig
     #                    TYPE SHARED
