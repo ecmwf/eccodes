@@ -697,23 +697,29 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t *len)
 
 static int pack_expression(grib_accessor* a, grib_expression *e)
 {
-    const char* cval;
+    const char* cval=NULL;
     int ret=0;
     long lval=0;
     size_t len = 1;
-    char tmp[1024];
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     if (strcmp(e->cclass->name,"long")==0) {
-        ret=grib_expression_evaluate_long(grib_handle_of_accessor(a),e,&lval);
+        ret=grib_expression_evaluate_long(hand,e,&lval);
+        /*if (hand->context->debug)
+            printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %ld\n", a->name,lval);*/
+
         ret = grib_pack_long(a,&lval,&len);
     } else {
+        char tmp[1024];
         len = sizeof(tmp);
-        cval = grib_expression_evaluate_string(grib_handle_of_accessor(a),e,tmp,&len,&ret);
+        cval = grib_expression_evaluate_string(hand,e,tmp,&len,&ret);
         if (ret!=GRIB_SUCCESS) {
             grib_context_log(a->context,GRIB_LOG_ERROR,"grib_accessor_codetable.pack_expression: unable to evaluate string %s to be set in %s\n",grib_expression_get_name(e),a->name);
             return ret;
         }
         len = strlen(cval) + 1;
+        /*if (hand->context->debug)
+            printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %s\n", a->name, cval);*/
         ret = grib_pack_string(a,cval,&len);
     }
     return ret;
