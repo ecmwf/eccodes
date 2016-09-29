@@ -41,3 +41,12 @@
 	 scaleFactorOfFirstFixedSurface = 1 ;
 	 scaledValueOfFirstFixedSurface = 15 ;
 	}
+#Surface air relative humidity
+'Surface air relative humidity' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 1 ;
+	 scaledValueOfFirstFixedSurface = 15 ;
+	 scaleFactorOfFirstFixedSurface = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	}
