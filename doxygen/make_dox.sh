@@ -21,7 +21,7 @@ doxygen grib_api_wiz.cfg
 # cp doxygen.css ../html/
 
 # Change the links from example code back to confluence
-# ./convert_links.sh
+./convert_links.sh
 
 # Note:
 #  May have to edit html/interfaceeccodes_1_1codes__set.html
