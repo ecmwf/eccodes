@@ -1049,6 +1049,7 @@ struct grib_context
     grib_string_list*                blacklist;
     int                             ieee_packing;
     int                             unpack;
+    int                             no_fail_on_wrong_data_section_length;
     FILE*                           log_stream;
     grib_trie*                      classes;
     grib_trie*                      lists;
