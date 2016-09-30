@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# TEMPLATE 7.60000, BiFourier coefficients - complex packing
+# TEMPLATE 7.53, BiFourier coefficients - complex packing
 
 constant biFourierCoefficients = 1;
 constant complexPacking = 1;
@@ -26,7 +26,6 @@ meta codedValues data_g2bifourier_packing(
           referenceValue,
           binaryScaleFactor,
           decimalScaleFactor,
-          optimizeScaleFactor,
 
           unpackedSubsetPrecision,
 

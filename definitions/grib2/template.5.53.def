@@ -9,7 +9,7 @@
 
 
 
-# TEMPLATE 5.60000, BiFourier coefficients data - complex packing
+# TEMPLATE 5.53, BiFourier coefficients data - complex packing
 
 include "grib2/template.5.packing.def";
 
