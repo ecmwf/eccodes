@@ -224,9 +224,10 @@ static void init_class(grib_accessor_class* c)
 
 /* Set the error code, if it is bad and we should fail (default case), return */
 /* variable 'err' is assumed to be pointer to int */
-#define CHECK_END_DATA_RETURN(ctx,b,size)     {*err=check_end_data(ctx,b,size); if (*err!=0 && ctx->no_fail_on_wrong_data_section_length==0) return; }
-#define CHECK_END_DATA_RETURN_0(ctx,b,size)   {*err=check_end_data(ctx,b,size); if (*err!=0 && ctx->no_fail_on_wrong_data_section_length==0) return 0; }
-#define CHECK_END_DATA_RETURN_ERR(ctx,b,size) {*err=check_end_data(ctx,b,size); if (*err!=0 && ctx->no_fail_on_wrong_data_section_length==0) return *err; }
+/* If BUFRDC mode is enabled, then we tolerate problems like wrong data section length */
+#define CHECK_END_DATA_RETURN(ctx,b,size)     {*err=check_end_data(ctx,b,size); if (*err!=0 && ctx->bufrdc_mode==0) return; }
+#define CHECK_END_DATA_RETURN_0(ctx,b,size)   {*err=check_end_data(ctx,b,size); if (*err!=0 && ctx->bufrdc_mode==0) return 0; }
+#define CHECK_END_DATA_RETURN_ERR(ctx,b,size) {*err=check_end_data(ctx,b,size); if (*err!=0 && ctx->bufrdc_mode==0) return *err; }
 
 static int process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset);
 

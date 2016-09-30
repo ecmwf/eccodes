@@ -339,7 +339,7 @@ static grib_context default_grib_context = {
         0,                            /* blacklist                  */
         0,                            /* ieee_packing               */
         0,                            /* unpack                     */
-        0,                            /* no_fail_on_wrong_data_section_length*/
+        0,                            /* bufrdc_mode                */
         0,                            /* log_stream                 */
         0,                            /* classes                    */
         0                             /* lists                      */
@@ -362,22 +362,22 @@ grib_context* grib_context_get_default()
 
     if(!default_grib_context.inited)
     {
-        const char * write_on_fail = NULL;
-        const char * large_constant_fields = NULL;
-        const char * no_abort = NULL;
-        const char * debug = NULL;
-        const char *gribex=NULL;
-        const char *ieee_packing=NULL;
-        const char *io_buffer_size=NULL;
-        const char *log_stream=NULL;
-        const char *no_big_group_split=NULL;
-        const char *no_spd=NULL;
-        const char *keep_matrix=NULL;
-        const char *no_fail_on_wrong_data_section_length=NULL;
-        const char *nounpack=NULL;
+        const char* write_on_fail = NULL;
+        const char* large_constant_fields = NULL;
+        const char* no_abort = NULL;
+        const char* debug = NULL;
+        const char* gribex = NULL;
+        const char* ieee_packing = NULL;
+        const char* io_buffer_size = NULL;
+        const char* log_stream = NULL;
+        const char* no_big_group_split = NULL;
+        const char* no_spd = NULL;
+        const char* keep_matrix = NULL;
+        const char* bufrdc_mode = NULL;
+        const char* nounpack = NULL;
 
         write_on_fail = codes_getenv("ECCODES_GRIB_WRITE_ON_FAIL");
-        no_fail_on_wrong_data_section_length = codes_getenv("ECCODES_BUFR_NO_FAIL_ON_WRONG_DATA_SECTION_LENGTH");
+        bufrdc_mode = codes_getenv("ECCODES_BUFRDC_MODE_ON");
         large_constant_fields = codes_getenv("ECCODES_GRIB_LARGE_CONSTANT_FIELDS");
         no_abort = codes_getenv("ECCODES_NO_ABORT");
         debug = codes_getenv("ECCODES_DEBUG");
@@ -472,11 +472,7 @@ grib_context* grib_context_get_default()
         default_grib_context.def_files=grib_trie_new(&(default_grib_context));
         default_grib_context.lists=grib_trie_new(&(default_grib_context));
         default_grib_context.classes=grib_trie_new(&(default_grib_context));
-        if (no_fail_on_wrong_data_section_length!=NULL) {
-          default_grib_context.no_fail_on_wrong_data_section_length=1;
-        } else {
-          default_grib_context.no_fail_on_wrong_data_section_length=0;
-        }
+        default_grib_context.bufrdc_mode = bufrdc_mode ? atoi(bufrdc_mode) : 0;
     }
 
     GRIB_MUTEX_UNLOCK(&mutex_c);
