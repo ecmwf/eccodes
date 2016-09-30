@@ -1046,7 +1046,7 @@ struct grib_context
     int                             hash_array_count;
     grib_hash_array_value*          hash_array[MAX_NUM_HASH_ARRAY];
     grib_trie*                      def_files;
-    grib_string_list*                blacklist;
+    grib_string_list*               blacklist;
     int                             ieee_packing;
     int                             unpack;
     int                             no_fail_on_wrong_data_section_length;

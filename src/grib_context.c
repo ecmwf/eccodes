@@ -314,11 +314,11 @@ static grib_context default_grib_context = {
 
         &default_log,                 /* logging_procedure          */
         &default_print,               /* print procedure            */
-        0,                            /* code tables                */
-        0,                            /* smart tables               */
-        0,                            /* files                      */
-        0,                            /* multigrib support on       */
-        0,                            /* multigrib support          */
+        0,                            /* grib_codetable*            */
+        0,                            /* grib_smart_table*          */
+        0,                            /* char* outfilename          */
+        0,                            /* int multi_support_on       */
+        0,                            /* grib_multi_support* multi_support*/
         0,                            /* grib_definition_files_dir  */
         0,                            /* handle_file_count          */
         0,                            /* handle_total_count         */
@@ -327,23 +327,24 @@ static grib_context default_grib_context = {
         0,                            /* gts_header_on              */
         0,                            /* gribex_mode_on             */
         0,                            /* large_constant_fields      */
-        0,                            /* keys (grib_trie*)          */
+        0,                            /* grib_itrie* keys           */
         0,                            /* keys_count                 */
-        0,                            /* concepts_index             */
+        0,                            /* grib_itrie* concepts_index */
         0,                            /* concepts_count             */
         {0,},                         /* concepts                   */
-        0,                            /* hash_array_index */
-        0,                            /* hash_array_count */
-        {0,},                         /* hash_array */
+        0,                            /* hash_array_index           */
+        0,                            /* hash_array_count           */
+        {0,},                         /* hash_array                 */
         0,                            /* def_files                  */
-        0,                            /* ieee_packing               */
-        0,                            /* unpack */
         0,                            /* blacklist                  */
+        0,                            /* ieee_packing               */
+        0,                            /* unpack                     */
+        0,                            /* no_fail_on_wrong_data_section_length*/
         0,                            /* log_stream                 */
-        0,                             /* classes */
-        0                             /* lists */
+        0,                            /* classes                    */
+        0                             /* lists                      */
 #if GRIB_PTHREADS
-        ,PTHREAD_MUTEX_INITIALIZER  /* mutex                     */
+        ,PTHREAD_MUTEX_INITIALIZER    /* mutex                      */
 #endif
 };
 
