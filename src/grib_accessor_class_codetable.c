@@ -278,11 +278,9 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
     grib_codetable* next=NULL ;
     grib_accessor* a=(grib_accessor*)self;
     char *filename=0;
-    char name[1024]={0,};
     char recomposed[1024]={0,};
     char localRecomposed[1024]={0,};
     char *localFilename=0;
-    char localName[1024]={0,};
     char masterDir[1024]={0,};
     char localDir[1024]={0,};
     size_t len=1024;
@@ -295,6 +293,7 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
         grib_get_string(h,self->localDir,localDir,&len);
 
     if (*masterDir!=0) {
+        char name[1024]={0,};
         sprintf(name,"%s/%s",masterDir,self->tablename);
         grib_recompose_name(h, NULL,name, recomposed,0);
         filename=grib_context_full_defs_path(c,recomposed);
@@ -304,6 +303,7 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
     }
 
     if (*localDir!=0) {
+        char localName[1024]={0,};
         sprintf(localName,"%s/%s",localDir,self->tablename);
         grib_recompose_name(h, NULL,localName, localRecomposed,0);
         localFilename=grib_context_full_defs_path(c,localRecomposed);
@@ -476,7 +476,6 @@ static int grib_load_codetable(grib_context* c,const char* filename,
         t->entries[code].abbreviation = grib_context_strdup_persistent(c,abbreviation);
         t->entries[code].title        = grib_context_strdup_persistent(c,title);
         t->entries[code].units        = grib_context_strdup_persistent(c,units);
-
     }
 
     fclose(f);
