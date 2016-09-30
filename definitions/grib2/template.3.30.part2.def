@@ -1,0 +1,10 @@
+#  LaD - Latitude where Dx and Dy are specified
+signed[4] LaD : edition_specific ;
+alias latitudeWhereDxAndDyAreSpecified=LaD;
+meta  geography.LaDInDegrees scale(LaD,one,grib2divider,truncateDegrees) : dump;
+
+
+#  LoV - Longitude of meridian parallel to Y-axis along which latitude increases as the Y-coordinate increases
+unsigned[4] LoV  : edition_specific;
+meta  geography.LoVInDegrees scale(LoV,one,grib2divider,truncateDegrees) : dump;
+

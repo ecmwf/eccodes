@@ -1,0 +1,4 @@
+
+#  Projection centre flag
+flags[1] projectionCentreFlag 'grib2/tables/[tablesVersion]/3.5.table' : dump;
+

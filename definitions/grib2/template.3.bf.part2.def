@@ -1,0 +1,7 @@
+
+unsigned[4] biFourierResolutionParameterN : dump;
+
+unsigned[4] biFourierResolutionParameterM : dump;
+
+codetable[1] biFourierTruncationType ('3.99.table',masterDir,localDir) : dump;
+
