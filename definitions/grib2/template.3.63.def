@@ -1,14 +1,23 @@
-#!/bin/sh
 # Copyright 2005-2015 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
+# 
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+# TEMPLATE 3.63, BiFourier coefficients on lambert projection
 
-exec $test_dir/lam_bf
-#xterm -e gdb $test_dir/lam_bf
+transient biFourierMakeTemplate = 0;
+
+include "grib2/template.3.bf.def"
+
+include "grib2/template.3.shape_of_the_earth.def";
+
+include "grib2/template.3.30.part1.def"
+include "grib2/template.3.30.part2.def"
+include "grib2/template.3.30.part3.def"
+include "grib2/template.3.30.part4.def"
+
+

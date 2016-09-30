@@ -1,7 +1,0 @@
-label "BiFourier coefficients";
-constant biFourierCoefficients=1;
-
-codetable[1]  spectralType ('3.6.table',masterDir,localDir) = 99 : no_copy;
-alias spectralDataRepresentationType=spectralType;
-
-

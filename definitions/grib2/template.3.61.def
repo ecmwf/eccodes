@@ -7,24 +7,16 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# TEMPLATE 3.33010, BiFourier coefficients on lambert projection
+# TEMPLATE 3.61, Bi-Fourier coefficients on Mercator projection
 
 transient biFourierMakeTemplate = 0;
 
-include "grib2/template.3.bf.part1.def"
+include "grib2/template.3.bf.def"
 
 include "grib2/template.3.shape_of_the_earth.def";
 
-include "grib2/template.3.bf.part2.def"
+include "grib2/template.3.10.part1.def"
+include "grib2/template.3.10.part2.def"
+include "grib2/template.3.10.part3.def"
 
-include "grib2/template.3.30.part1.def"
-
-include "grib2/template.3.30.part2.def"
-
-include "grib2/template.3.bf.part3.def"
-
-include "grib2/template.3.30.part3.def"
-
-include "grib2/template.3.30.part4.def"
-
-
+# END   2/template.3.61 ----------------------------------------------------------------------
