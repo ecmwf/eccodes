@@ -104,7 +104,7 @@ static int notify_change(grib_action* act, grib_accessor * notified,
     grib_handle* tmp_handle;
     int doit = 0;
 
-    grib_action* la        = NULL;
+    grib_action* la = NULL;
 
     if (h->context->debug > 0) {
         char debug_str[1024] = {0,};
@@ -168,15 +168,15 @@ static int notify_change(grib_action* act, grib_accessor * notified,
     h->kid = tmp_handle;
     /* printf("tmp_handle- main %p %p\n",(void*)tmp_handle,(void*)h); */
 
-    grib_context_log(h->context,GRIB_LOG_DEBUG,"------------- CREATE TMP BLOCK ", act->name, notified->name);
+    grib_context_log(h->context,GRIB_LOG_DEBUG,"------------- CREATE TMP BLOCK act=%s notified=%s", act->name, notified->name);
     tmp_handle->root  = grib_section_create(tmp_handle,NULL);
 
     tmp_handle->use_trie=1;
 
     err=grib_create_accessor(tmp_handle->root, act, &loader);
     if (err) {
-        if (err == GRIB_NOT_FOUND) {
-            /* FIXME: Allow this error. Needed when changing some packingTypes */
+        if (err == GRIB_NOT_FOUND && strcmp(act->name, "dataValues")==0) {
+            /* FIXME: Allow this error. Needed when changing some packingTypes e.g. CCSDS to Simple */
             err = GRIB_SUCCESS;
         } else {
             return err;
