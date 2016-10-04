@@ -194,6 +194,8 @@ private:
         const double west_positive = dom.west() + (cmp::isStrictlyGreater(0., dom.west()) ? 360. : 0.);
         const double east_positive = dom.east() + (cmp::isStrictlyGreater(0., dom.west()) ? 360. : 0.);
         ASSERT(cmp::isApproximatelyGreaterOrEqual(360., east_positive - west_positive));
+        
+        ASSERT(n);
 
         // assuming n>0, returned range satisfies: 0 <= imin < imax; and imax - imin <= n
         imin = 0;
