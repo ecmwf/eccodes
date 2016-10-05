@@ -402,7 +402,7 @@ grib_context* grib_context_get_default()
         default_grib_context.no_big_group_split = no_big_group_split ? atoi(no_big_group_split) : 0;
         default_grib_context.no_spd = no_spd ? atoi(no_spd) : 0;
         default_grib_context.keep_matrix = keep_matrix ? atoi(keep_matrix) : 1;
-   		  default_grib_context.unpack = nounpack ? 0 : 1;
+        default_grib_context.unpack = nounpack ? 0 : 1;
         default_grib_context.write_on_fail  = write_on_fail ? atoi(write_on_fail) : 0;
         default_grib_context.no_abort  = no_abort ? atoi(no_abort) : 0;
         default_grib_context.debug  = debug ? atoi(debug) : 0;
