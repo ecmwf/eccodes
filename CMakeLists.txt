@@ -61,6 +61,7 @@ ecbuild_add_option( FEATURE NETCDF
     DESCRIPTION "support for GRIB to NetCDF conversion"
     DEFAULT ON
     REQUIRED_PACKAGES NetCDF
+    NO_TPL
 )
 
 ecbuild_add_option( FEATURE AEC
