@@ -157,13 +157,14 @@ static int get_native_type(grib_accessor* a)
     return GRIB_TYPE_LONG;
 }
 
-static int apply_thinning(grib_accessor* a,long skip) {
+static int apply_thinning(grib_accessor* a,long skip)
+{
     grib_accessor_bufr_simple_thinning *self =(grib_accessor_bufr_simple_thinning*)a;
     int ret=0;
     grib_handle* h=grib_handle_of_accessor(a);
     grib_context* c=h->context;
     long compressed=0,nsubsets;
-    long numberOfSubsets,i;
+    long i;
     grib_iarray* subsets;
     long *subsets_ar=0;
     long start=0,radius=0;
@@ -171,39 +172,38 @@ static int apply_thinning(grib_accessor* a,long skip) {
     ret=grib_get_long(h,"compressedData",&compressed);
     if (ret) return ret;
     if (compressed) {
-      long numberOfSubsets=0;
-      ret=grib_get_long(h,self->numberOfSubsets,&numberOfSubsets);
-      if (ret) return ret;
-
-      ret=grib_get_long(h,self->simpleThinningStart,&start);
-      if (ret) return ret;
-
-      ret=grib_get_long(h,self->simpleThinningMissingRadius,&radius);
-      if (ret) return ret;
-
-      subsets=grib_iarray_new(c,numberOfSubsets / skip + 1 ,10);
-      for (i=0;i<numberOfSubsets;i+=skip+1) {
-        grib_iarray_push(subsets,i+1);
-      }
-
-      nsubsets=grib_iarray_used_size(subsets);
-
-      if (nsubsets!=0) {
-        subsets_ar=grib_iarray_get_array(subsets);
-        ret=grib_set_long_array(h,self->extractSubsetList,subsets_ar,nsubsets);
+        long numberOfSubsets=0;
+        ret=grib_get_long(h,self->numberOfSubsets,&numberOfSubsets);
         if (ret) return ret;
 
-        ret=grib_set_long(h,"unpack",1);
+        ret=grib_get_long(h,self->simpleThinningStart,&start);
         if (ret) return ret;
 
-        ret=grib_set_long(h,self->doExtractSubsets,1);
+        ret=grib_get_long(h,self->simpleThinningMissingRadius,&radius);
         if (ret) return ret;
-      }
+
+        subsets=grib_iarray_new(c,numberOfSubsets / skip + 1 ,10);
+        for (i=0;i<numberOfSubsets;i+=skip+1) {
+            grib_iarray_push(subsets,i+1);
+        }
+
+        nsubsets=grib_iarray_used_size(subsets);
+
+        if (nsubsets!=0) {
+            subsets_ar=grib_iarray_get_array(subsets);
+            ret=grib_set_long_array(h,self->extractSubsetList,subsets_ar,nsubsets);
+            if (ret) return ret;
+
+            ret=grib_set_long(h,"unpack",1);
+            if (ret) return ret;
+
+            ret=grib_set_long(h,self->doExtractSubsets,1);
+            if (ret) return ret;
+        }
 
     } else {
-      return GRIB_NOT_IMPLEMENTED;
+        return GRIB_NOT_IMPLEMENTED;
     }
-
 
     return ret;
 }
