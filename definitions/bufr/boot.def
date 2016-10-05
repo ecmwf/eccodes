@@ -24,7 +24,7 @@ transient extractSubsetList={-1} : hidden;
 transient extractSubsetIntervalStart=-1 : hidden;
 transient extractSubsetIntervalEnd=-1 : hidden;
 
-meta doExtractSubsets bufr_extract_subsets(numericValues,pack,numberOfSubsets,extractSubset,extractSubsetIntervalStart,extractSubsetIntervalEnd,extractSubsetList) : hidden;
+meta doExtractSubsets bufr_extract_subsets(numericValues,pack,numberOfSubsets,extractSubset,extractSubsetIntervalStart,extractSubsetIntervalEnd,extractSubsetList)=0 : hidden;
 
 transient extractAreaWestLongitude=1.1 : hidden;
 transient extractAreaEastLongitude=1.1 : hidden;
@@ -61,7 +61,11 @@ transient extractDateTimeMinuteRank=1 : hidden;
 transient extractDateTimeSecondRank=1 : hidden;
 transient extractedDateTimeNumberOfSubsets=0 : hidden;
 
-meta doExtractDateTime bufr_extract_datetime_subsets(doExtractSubsets,numberOfSubsets,extractSubsetList) : hidden;
+meta doExtractDateTime bufr_extract_datetime_subsets(doExtractSubsets,numberOfSubsets,extractSubsetList)=0 : hidden;
+
+transient simpleThinningStart=1 : hidden;
+transient simpleThinningMissingRadius=0 : hidden;
+meta simpleThinningSkip bufr_simple_thinning(doExtractSubsets,numberOfSubsets,extractSubsetList,simpleThinningStart,simpleThinningMissingRadius)=0 : hidden;
 
 template boot_edition "bufr/boot_edition_[ed:l].def";
 

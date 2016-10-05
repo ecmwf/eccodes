@@ -57,7 +57,7 @@ static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_acce
 
 typedef struct grib_dumper_bufr_decode_filter {
     grib_dumper          dumper;  
-/* Members defined in filter */
+/* Members defined in bufr_decode_filter */
 	long section_offset;
 	long begin;
 	long empty;
@@ -70,7 +70,7 @@ typedef struct grib_dumper_bufr_decode_filter {
 
 static grib_dumper_class _grib_dumper_class_bufr_decode_filter = {
     0,                              /* super                     */
-    "bufr_decode_filter",           /* name                      */
+    "bufr_decode_filter",                              /* name                      */
     sizeof(grib_dumper_bufr_decode_filter),     /* size                      */
     0,                                   /* inited */
     &init_class,                         /* init_class */

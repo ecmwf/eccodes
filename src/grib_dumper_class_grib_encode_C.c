@@ -53,14 +53,14 @@ static void footer         (grib_dumper*,grib_handle*);
 
 typedef struct grib_dumper_grib_encode_C {
     grib_dumper          dumper;  
-/* Members defined in c_code */
+/* Members defined in grib_encode_C */
 	int cr;
 } grib_dumper_grib_encode_C;
 
 
 static grib_dumper_class _grib_dumper_class_grib_encode_C = {
     0,                              /* super                     */
-    "grib_encode_C",                /* name                      */
+    "grib_encode_C",                              /* name                      */
     sizeof(grib_dumper_grib_encode_C),     /* size                      */
     0,                                   /* inited */
     &init_class,                         /* init_class */
