@@ -59,7 +59,7 @@ static void footer         (grib_dumper*,grib_handle*);
 
 typedef struct grib_dumper_bufr_encode_python {
     grib_dumper          dumper;  
-/* Members defined in python */
+/* Members defined in bufr_encode_python */
 	long section_offset;
 	long empty;
 	long end;
@@ -71,7 +71,7 @@ typedef struct grib_dumper_bufr_encode_python {
 
 static grib_dumper_class _grib_dumper_class_bufr_encode_python = {
     0,                              /* super                     */
-    "bufr_encode_python",           /* name                      */
+    "bufr_encode_python",                              /* name                      */
     sizeof(grib_dumper_bufr_encode_python),     /* size                      */
     0,                                   /* inited */
     &init_class,                         /* init_class */

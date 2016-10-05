@@ -21,6 +21,7 @@
 { "bufr_extract_subsets", &grib_accessor_class_bufr_extract_subsets, },
 { "bufr_group", &grib_accessor_class_bufr_group, },
 { "bufr_has_delayed_replication", &grib_accessor_class_bufr_has_delayed_replication, },
+{ "bufr_simple_thinning", &grib_accessor_class_bufr_simple_thinning, },
 { "bufr_string_values", &grib_accessor_class_bufr_string_values, },
 { "bufrdc_expanded_descriptors", &grib_accessor_class_bufrdc_expanded_descriptors, },
 { "bytes", &grib_accessor_class_bytes, },

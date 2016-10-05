@@ -247,6 +247,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_unsigned.c
     grib_accessor_class_unsigned_bits.c
     grib_accessor_class_raw.c
+    grib_accessor_class_bufr_simple_thinning.c
     grib_accessor_class_bufr_extract_subsets.c
     grib_accessor_class_bufr_extract_area_subsets.c
     grib_accessor_class_bufr_extract_datetime_subsets.c

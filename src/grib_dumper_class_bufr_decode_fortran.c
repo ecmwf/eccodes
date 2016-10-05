@@ -59,7 +59,7 @@ static void footer         (grib_dumper*,grib_handle*);
 
 typedef struct grib_dumper_bufr_decode_fortran {
     grib_dumper          dumper;  
-/* Members defined in fortran */
+/* Members defined in bufr_decode_fortran */
 	long section_offset;
 	long empty;
 	long end;
@@ -71,8 +71,8 @@ typedef struct grib_dumper_bufr_decode_fortran {
 
 static grib_dumper_class _grib_dumper_class_bufr_decode_fortran = {
     0,                              /* super                     */
-    "bufr_decode_fortran",          /* name                      */
-    sizeof(grib_dumper_bufr_decode_fortran),    /* size                      */
+    "bufr_decode_fortran",                              /* name                      */
+    sizeof(grib_dumper_bufr_decode_fortran),     /* size                      */
     0,                                   /* inited */
     &init_class,                         /* init_class */
     &init,                               /* init                      */
