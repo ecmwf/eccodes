@@ -1286,11 +1286,27 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     }
 
     if (packing_spec->editionNumber && packing_spec->editionNumber!=editionNumber) {
+        int i = 0;
         *err = grib_set_long(outh,"edition", packing_spec->editionNumber);
         if (*err != GRIB_SUCCESS) {
             fprintf(stderr,"GRIB_UTIL_SET_SPEC: Failed to change edition to %ld: %s\n",
                     packing_spec->editionNumber, grib_get_error_message(*err));
             goto cleanup;
+        }
+        /* ECC-353 */
+        /* Check values previously set to see any need re-setting as we have just changed edition. */
+        /* e.g. JPEG packing is only available in GRIB edition 2 */
+        for(i = 0; i < count; ++i) {
+            if ( strcmp(values[i].name, "packingType")==0 ) {
+                if (strcmp(values[i].string_value, "grid_jpeg")==0) {
+                    *err = grib_set_string(outh, values[i].name, values[i].string_value, &slen);
+                    if (*err != GRIB_SUCCESS) {
+                        fprintf(stderr,"GRIB_UTIL_SET_SPEC: Failed to change packingType to %s: %s\n",
+                                values[i].string_value, grib_get_error_message(*err));
+                        goto cleanup;
+                    }
+                }
+            }
         }
     }
 
