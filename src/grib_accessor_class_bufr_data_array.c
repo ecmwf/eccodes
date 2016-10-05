@@ -222,6 +222,13 @@ static void init_class(grib_accessor_class* c)
 #define round(a) ( (a) >=0 ? ((a)+0.5) : ((a)-0.5) )
 #endif
 
+/* Set the error code, if it is bad and we should fail (default case), return */
+/* variable 'err' is assumed to be pointer to int */
+/* If BUFRDC mode is enabled, then we tolerate problems like wrong data section length */
+#define CHECK_END_DATA_RETURN(ctx,b,size)     {*err=check_end_data(ctx,b,size); if (*err!=0 && ctx->bufrdc_mode==0) return; }
+#define CHECK_END_DATA_RETURN_0(ctx,b,size)   {*err=check_end_data(ctx,b,size); if (*err!=0 && ctx->bufrdc_mode==0) return 0; }
+#define CHECK_END_DATA_RETURN_ERR(ctx,b,size) {*err=check_end_data(ctx,b,size); if (*err!=0 && ctx->bufrdc_mode==0) return *err; }
+
 static int process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset);
 
 typedef int (*codec_element_proc) (grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex, grib_buffer* b,unsigned char* data,long *pos,int i,bufr_descriptor* descriptor,long elementIndex,grib_darray* dval,grib_sarray* sval); 
@@ -418,31 +425,37 @@ static void decode_string_array(grib_context* c,unsigned char* data,long* pos, b
     grib_sarray* sa=grib_sarray_new(c,self->numberOfSubsets,10);
 
     modifiedWidth= bd->width;
-    /* modifiedReference= bd->reference; */
-    /*modifiedFactor= bd->factor;*/
 
     sval=(char*)grib_context_malloc_clear(c,modifiedWidth/8+1);
-    *err=check_end_data(c,self,modifiedWidth);
-    if (*err) return ;
+    CHECK_END_DATA_RETURN(c,self,modifiedWidth);
+    if (*err) {
+      grib_sarray_push(c,sa,sval);
+      grib_vsarray_push(c,self->stringValues,sa);
+      return;
+    }
     grib_decode_string(data,pos,modifiedWidth/8,sval);
-    /* clean_string(sval,modifiedWidth/8); */
-    *err=check_end_data(c,self,6);
-    if (*err) return ;
+    CHECK_END_DATA_RETURN(c,self,6);
+    if (*err) {
+      grib_sarray_push(c,sa,sval);
+      grib_vsarray_push(c,self->stringValues,sa);
+      return;
+    }
     width=grib_decode_unsigned_long(data,pos,6);
     if (width) {
-        grib_context_free(c,sval);
-        *err=check_end_data(c,self,width*8*self->numberOfSubsets);
-        if (*err) return ;
-        for (j=0;j<self->numberOfSubsets;j++) {
-            sval=(char*)grib_context_malloc_clear(c,width+1);
-            grib_decode_string(data,pos,width,sval);
-            /* clean_string(sval,width); */
-            grib_sarray_push(c,sa,sval);
-        }
-    } else {
-        /* for (j=0;j<self->numberOfSubsets;j++) { */
+        CHECK_END_DATA_RETURN(c,self,width*8*self->numberOfSubsets);
+      if (*err) {
         grib_sarray_push(c,sa,sval);
-        /* } */
+        grib_vsarray_push(c,self->stringValues,sa);
+        return;
+      }
+      grib_context_free(c,sval);
+      for (j=0;j<self->numberOfSubsets;j++) {
+        sval=(char*)grib_context_malloc_clear(c,width+1);
+        grib_decode_string(data,pos,width,sval);
+        grib_sarray_push(c,sa,sval);
+      }
+    } else {
+      grib_sarray_push(c,sa,sval);
     }
     grib_vsarray_push(c,self->stringValues,sa);
 }
@@ -463,16 +476,32 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
     modifiedFactor= bd->factor;
     modifiedWidth= bd->width;
 
-    *err=check_end_data(c,self,modifiedWidth+6);
-    if (*err) return NULL;
+    CHECK_END_DATA_RETURN_0(c,self,modifiedWidth+6);
+    if (*err) {
+      dval=GRIB_MISSING_DOUBLE;
+      lval=0;
+      grib_context_log(c, GRIB_LOG_DEBUG," modifiedWidth=%ld lval=%ld dval=%g", modifiedWidth,lval,dval);
+      ret=grib_darray_new(c,100,100);
+      grib_darray_push(c,ret,dval);
+      *err=0;
+      return ret;
+    }
     lval=grib_decode_unsigned_long(data,pos,modifiedWidth);
     localReference=(long)lval+modifiedReference;
     localWidth=grib_decode_unsigned_long(data,pos,6);
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tlocalWidth=%ld",localWidth);
     ret=grib_darray_new(c,100,100);
     if (localWidth) {
-        *err=check_end_data(c,self,localWidth*self->numberOfSubsets);
-        if (*err) return NULL;
+        CHECK_END_DATA_RETURN_0(c,self,localWidth*self->numberOfSubsets);
+        if (*err) {
+          dval=GRIB_MISSING_DOUBLE;
+          lval=0;
+          grib_context_log(c, GRIB_LOG_DEBUG," modifiedWidth=%ld lval=%ld dval=%g", modifiedWidth,lval,dval);
+          ret=grib_darray_new(c,100,100);
+          grib_darray_push(c,ret,dval);
+          *err=0;
+          return ret;
+        }
         for (j=0;j<self->numberOfSubsets;j++) {
             lval=grib_decode_unsigned_long(data,pos,localWidth);
             if (grib_is_all_bits_one(lval,localWidth) && canBeMissing) {
@@ -725,9 +754,9 @@ static char* decode_string_value(grib_context* c,unsigned char* data,long* pos, 
 
     len= bd->width / 8;
 
-    *err=check_end_data(c,self,bd->width);
-    if (*err) return NULL;
+    CHECK_END_DATA_RETURN_0(c,self,bd->width);
     sval=(char*)grib_context_malloc_clear(c,len+1);
+    if (*err) {*err=0; return sval;}
     grib_decode_string(data,pos,len,sval);
 
     /* clean_string(sval,len); */
@@ -750,8 +779,9 @@ static double decode_double_value(grib_context* c,unsigned char* data,long* pos,
     modifiedFactor= bd->factor;
     modifiedWidth= bd->width;
 
-    *err=check_end_data(c,self,modifiedWidth);
-    if (*err) return dval;
+    CHECK_END_DATA_RETURN_0(c,self,modifiedWidth);
+    if (*err) {*err=0; return GRIB_MISSING_DOUBLE;}
+
     lval=grib_decode_unsigned_long(data,pos,modifiedWidth);
     if (grib_is_all_bits_one(lval,modifiedWidth) && canBeMissing) {
         dval=GRIB_MISSING_DOUBLE;
@@ -820,32 +850,40 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
 static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
         grib_buffer* buff,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,long* numberOfRepetitions)
 {
-    int err=0;
+    int ret=0;
+    int *err;
     int localReference,width;
     bufr_descriptor** descriptors=0;
+    err=&ret;
     descriptors=self->expanded->v;
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -%ld- \tcode=%6.6ld width=%ld ",
             i,self->expanded->v[i]->code,self->expanded->v[i]->width);
     if (self->compressedData) {
         grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication localReference width=%ld", descriptors[i]->width);
-        err=check_end_data(c,self,descriptors[i]->width+6);
-        if (err) return err;
-        localReference=grib_decode_unsigned_long(data,pos,descriptors[i]->width)+descriptors[i]->reference;
-        grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication localWidth width=6");
-        width=grib_decode_unsigned_long(data,pos,6);
-        if (width) {
+        CHECK_END_DATA_RETURN_ERR(c,self,descriptors[i]->width+6);
+        if (*err) {
+          *numberOfRepetitions=0;
+        } else {
+          localReference=grib_decode_unsigned_long(data,pos,descriptors[i]->width)+descriptors[i]->reference;
+          grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication localWidth width=6");
+          width=grib_decode_unsigned_long(data,pos,6);
+          if (width) {
             /* delayed replication number is not constant. NOT IMPLEMENTED */
             return GRIB_NOT_IMPLEMENTED;
-        } else {
+          } else {
             *numberOfRepetitions=localReference*descriptors[i]->factor;
             grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication value=%ld",*numberOfRepetitions);
+          }
         }
     } else {
-        err=check_end_data(c,self,descriptors[i]->width);
-        if (err) return err;
-        *numberOfRepetitions=grib_decode_unsigned_long(data,pos,descriptors[i]->width)+
-                descriptors[i]->reference*descriptors[i]->factor;
-        grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication value=%ld",*numberOfRepetitions);
+        CHECK_END_DATA_RETURN_ERR(c,self,descriptors[i]->width);
+        if (*err) { 
+          *numberOfRepetitions=0;
+        } else {
+          *numberOfRepetitions=grib_decode_unsigned_long(data,pos,descriptors[i]->width)+
+            descriptors[i]->reference*descriptors[i]->factor;
+          grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication value=%ld",*numberOfRepetitions);
+        }
     }
     if (self->compressedData) {
         dval=grib_darray_new(c,1,100);
@@ -854,7 +892,7 @@ static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
     } else {
         grib_darray_push(c,dval,(double)(*numberOfRepetitions));
     }
-    return err;
+    return ret;
 }
 
 static int encode_new_bitmap(grib_context* c,grib_buffer* buff,long *pos,int idx,grib_accessor_bufr_data_array* self)
