@@ -1394,3 +1394,38 @@ EOF
 diff ${f}.log.ref ${f}.log 
 
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
+#-----------------------------------------------------------
+# Test: Nested delayed replication
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set simpleThinningSkip=36;
+set doSimpleThinning=1;
+set pack=1;
+write;
+EOF
+
+f="imssnow.bufr"
+
+echo "Test: Simple thinning" >> $fLog
+echo "file: $f" >> $fLog
+
+${tools_dir}bufr_filter -o ${f}.out $fRules $f
+
+cat > $fRules <<EOF
+set unpack=1;
+print "latitude=[latitude]";
+print "longitude=[longitude]";
+print "height=[height]";
+EOF
+
+${tools_dir}bufr_filter $fRules ${f}.out > ${f}.log
+
+cat > ${f}.log.ref <<EOF
+latitude=4.93301 5.17216 5.40243 5.62361 7.86075
+longitude=118.16205 117.41896 116.66977 115.91467 99.56805
+height=119 231 587 187 23
+EOF
+
+diff ${f}.log.ref ${f}.log 
+
+rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
