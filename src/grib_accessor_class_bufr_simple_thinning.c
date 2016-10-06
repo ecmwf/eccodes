@@ -167,7 +167,7 @@ static int apply_thinning(grib_accessor* a) {
     grib_handle* h=grib_handle_of_accessor(a);
     grib_context* c=h->context;
     long compressed=0,nsubsets;
-    long numberOfSubsets,i;
+    long i;
     grib_iarray* subsets;
     long *subsets_ar=0;
     long start=0,radius=0;
@@ -210,7 +210,6 @@ static int apply_thinning(grib_accessor* a) {
     } else {
       return GRIB_NOT_IMPLEMENTED;
     }
-
 
     return ret;
 }
