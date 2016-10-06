@@ -181,9 +181,9 @@ static int apply_thinning(grib_accessor* a)
         if (ret) return ret;
 
         ret=grib_get_long(h,self->simpleThinningStart,&start);
-      if (ret) return ret;
+        if (ret) return ret;
 
-      ret=grib_get_long(h,self->simpleThinningSkip,&skip);
+        ret=grib_get_long(h,self->simpleThinningSkip,&skip);
         if (ret) return ret;
 
         ret=grib_get_long(h,self->simpleThinningMissingRadius,&radius);
