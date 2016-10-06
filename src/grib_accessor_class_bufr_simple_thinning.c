@@ -22,6 +22,7 @@
    MEMBERS    = const char* extractSubsetList
    MEMBERS    = const char* simpleThinningStart
    MEMBERS    = const char* simpleThinningMissingRadius
+   MEMBERS    = const char* simpleThinningSkip
    END_CLASS_DEF
 
  */
@@ -50,6 +51,7 @@ typedef struct grib_accessor_bufr_simple_thinning {
 	const char* extractSubsetList;
 	const char* simpleThinningStart;
 	const char* simpleThinningMissingRadius;
+	const char* simpleThinningSkip;
 } grib_accessor_bufr_simple_thinning;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -148,6 +150,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
     self->extractSubsetList = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
     self->simpleThinningStart = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
     self->simpleThinningMissingRadius = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    self->simpleThinningSkip = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
 
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }
@@ -157,9 +160,10 @@ static int get_native_type(grib_accessor* a)
     return GRIB_TYPE_LONG;
 }
 
-static int apply_thinning(grib_accessor* a,long skip) {
+static int apply_thinning(grib_accessor* a) {
     grib_accessor_bufr_simple_thinning *self =(grib_accessor_bufr_simple_thinning*)a;
     int ret=0;
+    long skip;
     grib_handle* h=grib_handle_of_accessor(a);
     grib_context* c=h->context;
     long compressed=0,nsubsets;
@@ -176,6 +180,9 @@ static int apply_thinning(grib_accessor* a,long skip) {
       if (ret) return ret;
 
       ret=grib_get_long(h,self->simpleThinningStart,&start);
+      if (ret) return ret;
+
+      ret=grib_get_long(h,self->simpleThinningSkip,&skip);
       if (ret) return ret;
 
       ret=grib_get_long(h,self->simpleThinningMissingRadius,&radius);
@@ -214,7 +221,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     grib_accessor_bufr_simple_thinning *self =(grib_accessor_bufr_simple_thinning*)a;
 
     if (*len==0) return GRIB_SUCCESS;
-    err=apply_thinning(a,*val);
+    err=apply_thinning(a);
     if (err) return err;
 
     err=grib_set_long(a->parent->h,self->doExtractSubsets,1);

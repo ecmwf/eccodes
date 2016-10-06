@@ -65,7 +65,8 @@ meta doExtractDateTime bufr_extract_datetime_subsets(doExtractSubsets,numberOfSu
 
 transient simpleThinningStart=1 : hidden;
 transient simpleThinningMissingRadius=0 : hidden;
-meta simpleThinningSkip bufr_simple_thinning(doExtractSubsets,numberOfSubsets,extractSubsetList,simpleThinningStart,simpleThinningMissingRadius)=0 : hidden;
+transient simpleThinningSkip=1 : hidden;
+meta doSimpleThinning bufr_simple_thinning(doExtractSubsets,numberOfSubsets,extractSubsetList,simpleThinningStart,simpleThinningMissingRadius,simpleThinningSkip)=0 : hidden;
 
 template boot_edition "bufr/boot_edition_[ed:l].def";
 
