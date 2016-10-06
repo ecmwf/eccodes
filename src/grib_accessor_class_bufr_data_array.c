@@ -225,7 +225,6 @@ static void init_class(grib_accessor_class* c)
 /* Set the error code, if it is bad and we should fail (default case), return */
 /* variable 'err' is assumed to be pointer to int */
 /* If BUFRDC mode is enabled, then we tolerate problems like wrong data section length */
-#define CHECK_END_DATA_RETURN(ctx,b,size)     {*err=check_end_data(ctx,b,size); if (*err!=0 && ctx->bufrdc_mode==0) return; }
 #define CHECK_END_DATA_RETURN_0(ctx,b,size)   {*err=check_end_data(ctx,b,size); if (*err!=0 && ctx->bufrdc_mode==0) return 0; }
 #define CHECK_END_DATA_RETURN_ERR(ctx,b,size) {*err=check_end_data(ctx,b,size); if (*err!=0 && ctx->bufrdc_mode==0) return *err; }
 
@@ -417,9 +416,11 @@ static int get_descriptors(grib_accessor* a)
     return ret;
 }
 
-static void decode_string_array(grib_context* c,unsigned char* data,long* pos, bufr_descriptor* bd,
-        grib_accessor_bufr_data_array* self,int *err)
+static int decode_string_array(grib_context* c, unsigned char* data, long* pos, bufr_descriptor* bd,
+        grib_accessor_bufr_data_array* self)
 {
+    int ret=0;
+    int* err = &ret;
     char* sval=0;
     int j,modifiedWidth,width;
     grib_sarray* sa=grib_sarray_new(c,self->numberOfSubsets,10);
@@ -427,26 +428,26 @@ static void decode_string_array(grib_context* c,unsigned char* data,long* pos, b
     modifiedWidth= bd->width;
 
     sval=(char*)grib_context_malloc_clear(c,modifiedWidth/8+1);
-    CHECK_END_DATA_RETURN(c,self,modifiedWidth);
+    CHECK_END_DATA_RETURN_ERR(c,self,modifiedWidth);
     if (*err) {
       grib_sarray_push(c,sa,sval);
       grib_vsarray_push(c,self->stringValues,sa);
-      return;
+      return ret;
     }
     grib_decode_string(data,pos,modifiedWidth/8,sval);
-    CHECK_END_DATA_RETURN(c,self,6);
+    CHECK_END_DATA_RETURN_ERR(c,self,6);
     if (*err) {
       grib_sarray_push(c,sa,sval);
       grib_vsarray_push(c,self->stringValues,sa);
-      return;
+      return ret;
     }
     width=grib_decode_unsigned_long(data,pos,6);
     if (width) {
-        CHECK_END_DATA_RETURN(c,self,width*8*self->numberOfSubsets);
+        CHECK_END_DATA_RETURN_ERR(c,self,width*8*self->numberOfSubsets);
       if (*err) {
         grib_sarray_push(c,sa,sval);
         grib_vsarray_push(c,self->stringValues,sa);
-        return;
+        return ret;
       }
       grib_context_free(c,sval);
       for (j=0;j<self->numberOfSubsets;j++) {
@@ -458,6 +459,7 @@ static void decode_string_array(grib_context* c,unsigned char* data,long* pos, b
       grib_sarray_push(c,sa,sval);
     }
     grib_vsarray_push(c,self->stringValues,sa);
+    return ret;
 }
 
 static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long* pos,
@@ -809,7 +811,7 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
     if (bd->type==BUFR_DESCRIPTOR_TYPE_STRING) {
         /* string */
         if (self->compressedData) {
-            decode_string_array(c,data,pos,bd,self,&err);
+            err = decode_string_array(c,data,pos,bd,self);
             index=grib_vsarray_used_size(self->stringValues);
             dar=grib_darray_new(c,self->numberOfSubsets,10);
             index=self->numberOfSubsets*(index-1);
