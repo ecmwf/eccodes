@@ -1395,7 +1395,7 @@ diff ${f}.log.ref ${f}.log
 
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
 #-----------------------------------------------------------
-# Test: Nested delayed replication
+# Test: Simple thinning
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set simpleThinningSkip=36;
