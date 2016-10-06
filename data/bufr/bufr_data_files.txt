@@ -136,3 +136,4 @@ PraticaTemp.bufr
 profiler_european.bufr
 metar_with_2_bias.bufr
 temp-land-with-substituted-values.bufr
+imssnow.bufr
