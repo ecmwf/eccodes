@@ -22,6 +22,7 @@
 #include "atlas/grid/lonlat/ShiftedLon.h"
 #include "atlas/grid/lonlat/ShiftedLonLat.h"
 #include "mir/config/LibMir.h"
+#include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
 
 
@@ -31,13 +32,17 @@ namespace latlon {
 
 
 RegularLL::RegularLL(const param::MIRParametrisation &parametrisation):
-    LatLon(parametrisation) {
+    LatLon(parametrisation),
+    bboxDefinesGrid_(false) {
+    parametrisation.get("bounding-box-defines-grid", bboxDefinesGrid_);
 }
 
 
 RegularLL::RegularLL(const util::BoundingBox &bbox,
-                     const util::Increments &increments):
-    LatLon(bbox, increments) {
+                     const util::Increments &increments,
+                     bool bboxDefinesGrid) :
+    LatLon(bbox, increments),
+    bboxDefinesGrid_(bboxDefinesGrid) {
 }
 
 
@@ -48,14 +53,15 @@ RegularLL::~RegularLL() {
 // Called by RegularLL::crop()
 const RegularLL *RegularLL::cropped(const util::BoundingBox &bbox) const {
     // eckit::Log::debug<LibMir>() << "Create cropped copy as RegularLL bbox=" << bbox << std::endl;
-    return new RegularLL(bbox, increments_);
+    return new RegularLL(bbox, increments_, bboxDefinesGrid_);
 }
 
 
 void RegularLL::print(std::ostream &out) const {
     out << "RegularLL[";
     LatLon::print(out);
-    out << "]";
+    out << ",bboxDefinesGrid=" << bboxDefinesGrid_
+        << "]";
 }
 
 
