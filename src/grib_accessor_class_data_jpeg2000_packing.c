@@ -379,7 +379,8 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
     case GRIB_SUCCESS:
         break;
     default:
-        grib_context_log(a->context,GRIB_LOG_ERROR,"unable to compute packing parameters\n");
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                "grib_accessor_class_data_jpeg2000_packing pack_double: unable to compute packing parameters");
         return ret;
     }
 
@@ -450,8 +451,11 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
 
     if(width*height != *len)
     {
-        /* fprintf(stderr,"width=%ld height=%ld len=%d\n",(long)width,(long)height,(long)*len); */
-        Assert(width*height == *len);
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                "grib_accessor_class_data_jpeg2000_packing pack_double: width=%ld height=%ld len=%d."
+                " width*height should equal len!",
+                (long)width, (long)height, (long)*len);
+        return GRIB_INTERNAL_ERROR;
     }
 
     switch( type_of_compression_used)
@@ -524,7 +528,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
 
     grib_buffer_replace(a, helper.jpeg_buffer, helper.jpeg_length, 1, 1);
 
-    cleanup:
+cleanup:
 
     grib_context_free(a->context,buf);
 
