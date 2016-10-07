@@ -294,7 +294,6 @@ void accessor_bufr_data_element_set_stringValues(grib_accessor *a, grib_vsarray 
 void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor *a, grib_viarray *elementsDescriptorsIndex);
 
 /* grib_accessor_class_bufr_elements_table.c */
-char **str_split(char *a_str, const char a_delim);
 int bufr_descriptor_is_marker(bufr_descriptor *d);
 bufr_descriptor *accessor_bufr_elements_table_get_descriptor(grib_accessor *a, int code, int *err);
 
@@ -1391,6 +1390,7 @@ const char *extract_filename(const char *filepath);
 int is_gaussian_global(double lat1, double lat2, double lon1, double lon2, long num_points_equator, const double *latitudes, double angular_precision);
 char *codes_getenv(const char *name);
 int compute_key_rank(grib_handle* h, grib_string_list* keys, const char* key);
+char **str_split(char *a_str, const char a_delim);
 
 /* compile.c */
 void grib_compile_flags(grib_compiler *c, long flags);
