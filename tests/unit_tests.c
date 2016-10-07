@@ -1366,6 +1366,26 @@ void test_gaussian_latitude_640()
 	free(lats);
 }
 
+void test_string_splitting()
+{
+    int i=0;
+    char input[80] = "Born|To|Be|Wild";
+    char** list=0;
+    list = str_split(input, '|');
+    for(i=0; list[i] != NULL; ++i) {} /* count how many tokens */
+    assert(i == 4);
+    assert( strcmp(list[0], "Born")==0 );
+    assert( strcmp(list[1], "To")==0 );
+    assert( strcmp(list[2], "Be")==0 );
+    assert( strcmp(list[3], "Wild")==0 );
+
+    strcpy(input, "Hell");
+    list = str_split(input, '|');
+    for(i=0; list[i] != NULL; ++i) {} /* count how many tokens */
+    assert(i == 1);
+    assert( strcmp(list[0], "Hell")==0 );
+}
+
 int main(int argc, char** argv)
 {
     /*printf("Doing unit tests. GRIB API version = %ld\n", grib_get_api_version());*/
@@ -1389,6 +1409,8 @@ int main(int argc, char** argv)
 
     test_grib_nearest_smaller_ibmfloat();
     test_grib_nearest_smaller_ieeefloat();
+
+    test_string_splitting();
 
     return 0;
 }
