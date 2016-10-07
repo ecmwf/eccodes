@@ -1379,11 +1379,16 @@ void test_string_splitting()
     assert( strcmp(list[2], "Be")==0 );
     assert( strcmp(list[3], "Wild")==0 );
 
-    strcpy(input, "Hell");
+    strcpy(input, "Steppenwolf");
     list = str_split(input, '|');
     for(i=0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 1);
-    assert( strcmp(list[0], "Hell")==0 );
+    assert( strcmp(list[0], "Steppenwolf")==0 );
+
+    /* Note: currently cannot cope with */
+    /*  input being NULL */
+    /*  input being empty */
+    /*  input having several adjacent delimiters e.g. 'A||B|||C' */
 }
 
 int main(int argc, char** argv)
