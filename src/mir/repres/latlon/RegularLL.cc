@@ -33,17 +33,12 @@ namespace latlon {
 
 
 RegularLL::RegularLL(const param::MIRParametrisation &parametrisation):
-    LatLon(parametrisation),
-    bboxDefinesGrid_(false) {
-    parametrisation.get("bounding-box-defines-grid", bboxDefinesGrid_);
-}
+    LatLon(parametrisation) {}
 
 
 RegularLL::RegularLL(const util::BoundingBox &bbox,
-                     const util::Increments &increments,
-                     bool bboxDefinesGrid) :
-    LatLon(bbox, increments),
-    bboxDefinesGrid_(bboxDefinesGrid) {
+                     const util::Increments &increments) :
+    LatLon(bbox, increments) {
 }
 
 
@@ -54,15 +49,14 @@ RegularLL::~RegularLL() {
 // Called by RegularLL::crop()
 const RegularLL *RegularLL::cropped(const util::BoundingBox &bbox) const {
     // eckit::Log::debug<LibMir>() << "Create cropped copy as RegularLL bbox=" << bbox << std::endl;
-    return new RegularLL(bbox, increments_, bboxDefinesGrid_);
+    return new RegularLL(bbox, increments_);
 }
 
 
 void RegularLL::print(std::ostream &out) const {
     out << "RegularLL[";
     LatLon::print(out);
-    out << ",bboxDefinesGrid=" << bboxDefinesGrid_
-        << "]";
+    out << "]";
 }
 
 
@@ -115,14 +109,8 @@ atlas::grid::Grid* RegularLL::atlasGrid() const {
     using namespace atlas::grid::lonlat;
     const Shift shift = atlasShift();
 
-    if (bboxDefinesGrid_) {
-        ASSERT(!shift(Shift::LON | Shift::LAT));
-        ASSERT(!shift(Shift::LON));
-        ASSERT(!shift(Shift::LAT));
+    // TODO: missing assertion for non-global, or shifted by not 1/2 grid
 
-        return new util::OffsetGrid(new RegularLonLat (ni_, nj_, atlasDomain()), 0.5, 0.5);
-
-    }
 
     // return non-shifted/shifted grid
     return shift(Shift::LON | Shift::LAT) ? static_cast<LonLat*>(new ShiftedLonLat (ni_, nj_, atlasDomain()))
