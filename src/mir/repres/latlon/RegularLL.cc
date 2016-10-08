@@ -24,6 +24,7 @@
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
+#include "mir/util/OffsetGrid.h"
 
 
 namespace mir {
@@ -91,20 +92,20 @@ atlas::grid::lonlat::Shift RegularLL::atlasShift() const {
     ASSERT(cmp::isStrictlyGreater(inc_we, 0));
     ASSERT(cmp::isStrictlyGreater(inc_sn, 0));
 
-    int i=0, j=0;
-    while (bbox_.west()  + i*inc_we < inc_we) { ++i; }
-    while (bbox_.west()  + i*inc_we > inc_we) { --i; }
-    while (bbox_.south() + j*inc_sn < inc_sn) { ++j; }
-    while (bbox_.south() + j*inc_sn > inc_sn) { --j; }
+    int i = 0, j = 0;
+    while (bbox_.west()  + i * inc_we < inc_we) { ++i; }
+    while (bbox_.west()  + i * inc_we > inc_we) { --i; }
+    while (bbox_.south() + j * inc_sn < inc_sn) { ++j; }
+    while (bbox_.south() + j * inc_sn > inc_sn) { --j; }
     const double
-            lon_origin = bbox_.west()  + i*inc_we,
-            lat_origin = bbox_.south() + j*inc_sn;
+    lon_origin = bbox_.west()  + i * inc_we,
+    lat_origin = bbox_.south() + j * inc_sn;
 
     const atlas::grid::Domain dom = atlasDomain();
     const bool
-            includesBothPoles = dom.includesPoleNorth() && dom.includesPoleSouth(),
-            isShiftedLon = dom.isPeriodicEastWest() && cmp::isApproximatelyEqual(lon_origin, inc_we/2.),
-            isShiftedLat = includesBothPoles        && cmp::isApproximatelyEqual(lat_origin, inc_sn/2.);
+    includesBothPoles = dom.includesPoleNorth() && dom.includesPoleSouth(),
+    isShiftedLon = dom.isPeriodicEastWest() && cmp::isApproximatelyEqual(lon_origin, inc_we / 2.),
+    isShiftedLat = includesBothPoles        && cmp::isApproximatelyEqual(lat_origin, inc_sn / 2.);
 
     return atlas::grid::lonlat::Shift(isShiftedLon, isShiftedLat);
 }
@@ -114,11 +115,20 @@ atlas::grid::Grid* RegularLL::atlasGrid() const {
     using namespace atlas::grid::lonlat;
     const Shift shift = atlasShift();
 
+    if (bboxDefinesGrid_) {
+        ASSERT(!shift(Shift::LON | Shift::LAT));
+        ASSERT(!shift(Shift::LON));
+        ASSERT(!shift(Shift::LAT));
+
+        return new util::OffsetGrid(new RegularLonLat (ni_, nj_, atlasDomain()), 0.5, 0.5);
+
+    }
+
     // return non-shifted/shifted grid
-    return shift(Shift::LON|Shift::LAT)? static_cast<LonLat*>(new ShiftedLonLat (ni_, nj_, atlasDomain()))
-         : shift(Shift::LON)?            static_cast<LonLat*>(new ShiftedLon    (ni_, nj_, atlasDomain()))
-         : shift(Shift::LAT)?            static_cast<LonLat*>(new ShiftedLat    (ni_, nj_, atlasDomain()))
-         :                               static_cast<LonLat*>(new RegularLonLat (ni_, nj_, atlasDomain()));
+    return shift(Shift::LON | Shift::LAT) ? static_cast<LonLat*>(new ShiftedLonLat (ni_, nj_, atlasDomain()))
+           : shift(Shift::LON) ?            static_cast<LonLat*>(new ShiftedLon    (ni_, nj_, atlasDomain()))
+           : shift(Shift::LAT) ?            static_cast<LonLat*>(new ShiftedLat    (ni_, nj_, atlasDomain()))
+           :                               static_cast<LonLat*>(new RegularLonLat (ni_, nj_, atlasDomain()));
 }
 
 
