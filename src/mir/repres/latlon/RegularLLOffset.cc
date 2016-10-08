@@ -62,15 +62,6 @@ Iterator *RegularLLOffset::unrotatedIterator() const {
 }
 
 
-void RegularLLOffset::fill(grib_info &info) const  {
-    RegularLL::fill(info);
-}
-
-
-void RegularLLOffset::fill(api::MIRJob &job) const  {
-    RegularLL::fill(job);
-}
-
 
 atlas::grid::Grid *RegularLLOffset::atlasGrid() const {
     return new util::OffsetGrid(

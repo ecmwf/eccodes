@@ -33,7 +33,8 @@ class RegularLLOffset : public RegularLL {
 
     // -- Contructors
 
-    RegularLLOffset(const util::BoundingBox &bbox, const util::Increments &increments,
+    RegularLLOffset(const util::BoundingBox &bbox,
+        const util::Increments &increments,
         double northwards, double eastwards);
 
     // -- Destructor
@@ -95,8 +96,6 @@ class RegularLLOffset : public RegularLL {
 
     // -- Overridden methods
 
-    virtual void fill(grib_info &) const;
-    virtual void fill(api::MIRJob &) const;
     virtual atlas::grid::Grid *atlasGrid() const;
     virtual Iterator* unrotatedIterator() const; // Before rotation
 
