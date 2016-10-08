@@ -16,7 +16,7 @@
 #ifndef RotatedLLOffset_H
 #define RotatedLLOffset_H
 
-#include "mir/repres/latlon/RotatedLL.h"
+#include "mir/repres/latlon/RegularLLOffset.h"
 
 
 namespace mir {
@@ -24,7 +24,7 @@ namespace repres {
 namespace latlon {
 
 
-class RotatedLLOffset : public RotatedLL {
+class RotatedLLOffset : public RegularLLOffset {
   public:
 
     // -- Exceptions
@@ -97,8 +97,10 @@ class RotatedLLOffset : public RotatedLL {
 
     // -- Overridden methods
 
+    virtual void fill(grib_info &) const;
+    virtual void fill(api::MIRJob &) const;
+
     virtual atlas::grid::Grid *atlasGrid() const;
-    virtual Iterator* unrotatedIterator() const; // Before rotation
     virtual Iterator* rotatedIterator() const; // Before rotation
 
     // From RegularLL

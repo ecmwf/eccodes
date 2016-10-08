@@ -72,6 +72,7 @@ class RegularLLOffset : public RegularLL {
 
     // -- Overridden methods
     // None
+    virtual atlas::grid::Grid *atlasGrid() const;
 
     // -- Class members
     // None
@@ -96,7 +97,6 @@ class RegularLLOffset : public RegularLL {
 
     // -- Overridden methods
 
-    virtual atlas::grid::Grid *atlasGrid() const;
     virtual Iterator* unrotatedIterator() const; // Before rotation
 
     // From RegularLL

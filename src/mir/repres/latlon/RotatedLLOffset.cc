@@ -21,7 +21,10 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/OffsetGrid.h"
 #include "mir/util/OffsetIterator.h"
-
+#include "mir/util/RotatedIterator.h"
+#include "mir/util/RotatedGrid.h"
+#include "mir/util/RotatedGrid.h"
+#include "mir/util/RotatedIterator.h"
 
 namespace mir {
 namespace repres {
@@ -33,9 +36,8 @@ RotatedLLOffset::RotatedLLOffset(const util::BoundingBox &bbox,
                                  const util::Rotation& rotation,
                                  double northwards,
                                  double eastwards):
-    RotatedLL(bbox, increments, rotation),
-    northwards_(northwards),
-    eastwards_(eastwards) {
+    RegularLLOffset(bbox, increments, northwards, eastwards),
+    rotation_(rotation) {
 }
 
 
@@ -45,33 +47,43 @@ RotatedLLOffset::~RotatedLLOffset() {
 
 void RotatedLLOffset::print(std::ostream &out) const {
     out << "RotatedLLOffset[";
-    RotatedLL::print(out);
-    out << ",northwards" << northwards_
-        << ",eastwards" << eastwards_
+    RegularLLOffset::print(out);
+  out << ",rotation=" << rotation_
         << "]";
 }
 
 
-// Called by RotatedLL::crop()
+// Called by RotatedLLOffset::crop()
 const RotatedLLOffset *RotatedLLOffset::cropped(const util::BoundingBox &bbox) const {
     eckit::Log::debug<LibMir>() << "Create cropped copy as RotatedLLOffset bbox=" << bbox << std::endl;
     return new RotatedLLOffset(bbox, increments_, rotation_, northwards_, eastwards_);
 }
 
 
-Iterator *RotatedLLOffset::unrotatedIterator() const {
-    return new util::OffsetIterator(RotatedLL::unrotatedIterator(), northwards_, eastwards_);
-}
 
 Iterator *RotatedLLOffset::rotatedIterator() const {
-    return new util::OffsetIterator(RotatedLL::rotatedIterator(), northwards_, eastwards_);
+    return new util::RotatedIterator(RegularLLOffset::rotatedIterator(), rotation_);
 }
 
+
+void RotatedLLOffset::fill(grib_info &info) const  {
+    RegularLLOffset::fill(info);
+    rotation_.fill(info);
+}
+
+
+void RotatedLLOffset::fill(api::MIRJob &job) const  {
+    RegularLLOffset::fill(job);
+    rotation_.fill(job);
+}
+
+
 atlas::grid::Grid *RotatedLLOffset::atlasGrid() const {
-    return new util::OffsetGrid(
-               RotatedLL::atlasGrid(),
-               northwards_,
-               eastwards_);
+    return new util::RotatedGrid(
+                RegularLLOffset::atlasGrid(),
+                rotation_.south_pole_latitude(),
+                rotation_.south_pole_longitude(),
+                rotation_.south_pole_rotation_angle() );
 }
 
 
