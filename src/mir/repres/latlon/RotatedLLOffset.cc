@@ -15,14 +15,7 @@
 
 #include "mir/repres/latlon/RotatedLLOffset.h"
 
-#include <iostream>
-#include "eckit/exception/Exceptions.h"
 #include "mir/config/LibMir.h"
-#include "mir/param/MIRParametrisation.h"
-#include "mir/util/OffsetGrid.h"
-#include "mir/util/OffsetIterator.h"
-#include "mir/util/RotatedIterator.h"
-#include "mir/util/RotatedGrid.h"
 #include "mir/util/RotatedGrid.h"
 #include "mir/util/RotatedIterator.h"
 
