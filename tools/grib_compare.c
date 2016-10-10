@@ -124,7 +124,7 @@ grib_option grib_options[]={
     {"E:","end","Last field to be processed.\n",0,1,0},
     {"a",0,"-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n"
             ,0,1,0},
-    {"H",0,"Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},
+    {"H",0,"Compare only message headers (everything except data and bitmap). Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},
     {"R:",0,0,0,1,0},
     {"A:",0,0,0,1,0},
     {"P",0,"Compare data values using the packing error as tolerance.\n",0,1,0},
