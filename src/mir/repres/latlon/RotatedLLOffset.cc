@@ -41,7 +41,7 @@ RotatedLLOffset::~RotatedLLOffset() {
 void RotatedLLOffset::print(std::ostream &out) const {
     out << "RotatedLLOffset[";
     RegularLLOffset::print(out);
-  out << ",rotation=" << rotation_
+    out << ",rotation=" << rotation_
         << "]";
 }
 
@@ -73,10 +73,10 @@ void RotatedLLOffset::fill(api::MIRJob &job) const  {
 
 atlas::grid::Grid *RotatedLLOffset::atlasGrid() const {
     return new util::RotatedGrid(
-                RegularLLOffset::atlasGrid(),
-                rotation_.south_pole_latitude(),
-                rotation_.south_pole_longitude(),
-                rotation_.south_pole_rotation_angle() );
+               RegularLLOffset::atlasGrid(),
+               rotation_.south_pole_latitude(),
+               rotation_.south_pole_longitude(),
+               rotation_.south_pole_rotation_angle() );
 }
 
 
