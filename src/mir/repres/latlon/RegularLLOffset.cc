@@ -44,8 +44,8 @@ RegularLLOffset::~RegularLLOffset() {
 void RegularLLOffset::print(std::ostream &out) const {
     out << "RegularLLOffset[";
     RegularLL::print(out);
-    out << ",northwards" << northwards_
-        << ",eastwards" << eastwards_
+    out << ",northwards=" << northwards_
+        << ",eastwards=" << eastwards_
         << "]";
 }
 
