@@ -42,15 +42,15 @@ def example():
     # loop for the messages in the file
     while 1:
         # get handle for message
-        gid = codes_bufr_new_from_file(f)
-        if gid is None:
+        bufr = codes_bufr_new_from_file(f)
+        if bufr is None:
             break
 
         print "message: %s" % cnt
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(gid, 'unpack', 1)
+        codes_set(bufr, 'unpack', 1)
 
         # --------------------------------------------------------------
         # We will read the value and all the attributes available for
@@ -59,7 +59,7 @@ def example():
         # get the value
         key = 'airTemperatureAt2M'
         try:
-            print '  %s: %s' % (key, codes_get(gid, key))
+            print '  %s: %s' % (key, codes_get(bufr, key))
         except CodesInternalError as err:
             print 'Error with key="%s" : %s' % (key, err.msg)
 
@@ -69,7 +69,7 @@ def example():
         for attr in attrs:
             key = 'airTemperatureAt2M' + "->" + attr
             try:
-                print '  %s: %s' % (key, codes_get(gid, key))
+                print '  %s: %s' % (key, codes_get(bufr, key))
             except CodesInternalError as err:
                 print 'Error with key="%s" : %s' % (key, err.msg)
 
@@ -82,7 +82,7 @@ def example():
         # get the value
         key = 'airTemperatureAt2M->percentConfidence'
         try:
-            print '  %s: %s' % (key, codes_get(gid, key))
+            print '  %s: %s' % (key, codes_get(bufr, key))
         except CodesInternalError as err:
             print 'Error with key="%s" : %s' % (key, err.msg)
 
@@ -90,14 +90,14 @@ def example():
         for attr in attrs:
             key = 'airTemperatureAt2M->percentConfidence' + "->" + attr
             try:
-                print '  %s: %s' % (key, codes_get(gid, key))
+                print '  %s: %s' % (key, codes_get(bufr, key))
             except CodesInternalError as err:
                 print 'Error with key="%s" : %s' % (key, err.msg)
 
         cnt += 1
 
         # delete handle
-        codes_release(gid)
+        codes_release(bufr)
 
     # close the file
     f.close()

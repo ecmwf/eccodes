@@ -198,7 +198,7 @@ static int u2s1[] =  {
         43200,   /* (12) 12 hours */
         900,     /* (13) 15 minutes  */
         1800,    /* (14) 30 minutes */
-        1        /* (15) seconds  */
+        1        /* (15) seconds  */   /* See ECC-316 */
 };
 
 static int units_index[] = {
@@ -244,6 +244,9 @@ int grib_g1_step_get_steps(grib_accessor* a,long* start,long* theEnd)
 
     err = grib_get_long_internal(grib_handle_of_accessor(a),self->unit,&unit);
     if(err)           return err;
+    if (unit == 254) {
+        unit = 15; /* See ECC-316: WMO says 254 is for 'seconds' but we use 15! */
+    }
 
     err = grib_get_long_internal(grib_handle_of_accessor(a),self->p1,&p1);
     if(err)               return err;
@@ -321,6 +324,9 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
 
         if (error_on_units) {
             grib_get_long_internal(grib_handle_of_accessor(a),self->unit,&unit);
+            if (unit==254) {
+                unit=15; /* See ECC-316 */
+            }
             grib_set_long_internal(grib_handle_of_accessor(a),self->step_unit,unit);
             grib_context_log(a->context,GRIB_LOG_ERROR,
                     "unable to represent the step in %s\n                    Hint: try changing the step units",
@@ -337,7 +343,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
         if(err)  return err;
     } else sprintf(stepType,"unknown");
 
-    /* Patch for olf forecast probabilities */
+    /* Patch for old forecast probabilities */
     if (self->patch_fp_precip)
     {
         start += 24;
@@ -473,6 +479,9 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len)
 
     if((ret = grib_get_long_internal(h,self->unit,&unit)))
         return ret;
+    if (unit == 254) {
+        unit=15; /* See ECC-316 */
+    }
 
     if(self->step_unit!=NULL && (ret = grib_get_long_internal(h,self->step_unit,&step_unit)))
         return ret;

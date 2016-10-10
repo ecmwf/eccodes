@@ -5459,6 +5459,256 @@
 	 table2Version = 213 ;
 	 indicatorOfParameter = 5 ;
 	}
+#Random pattern 1 for SPP scheme
+'213101' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 101 ;
+	}
+#Random pattern 2 for SPP scheme
+'213102' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 102 ;
+	}
+#Random pattern 3 for SPP scheme
+'213103' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 103 ;
+	}
+#Random pattern 4 for SPP scheme
+'213104' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 104 ;
+	}
+#Random pattern 5 for SPP scheme
+'213105' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 105 ;
+	}
+#Random pattern 6 for SPP scheme
+'213106' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 106 ;
+	}
+#Random pattern 7 for SPP scheme
+'213107' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 107 ;
+	}
+#Random pattern 8 for SPP scheme
+'213108' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 108 ;
+	}
+#Random pattern 9 for SPP scheme
+'213109' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 109 ;
+	}
+#Random pattern 10 for SPP scheme
+'213110' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 110 ;
+	}
+#Random pattern 11 for SPP scheme
+'213111' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 111 ;
+	}
+#Random pattern 12 for SPP scheme
+'213112' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 112 ;
+	}
+#Random pattern 13 for SPP scheme
+'213113' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 113 ;
+	}
+#Random pattern 14 for SPP scheme
+'213114' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 114 ;
+	}
+#Random pattern 15 for SPP scheme
+'213115' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 115 ;
+	}
+#Random pattern 16 for SPP scheme
+'213116' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 116 ;
+	}
+#Random pattern 17 for SPP scheme
+'213117' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 117 ;
+	}
+#Random pattern 18 for SPP scheme
+'213118' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 118 ;
+	}
+#Random pattern 19 for SPP scheme
+'213119' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 119 ;
+	}
+#Random pattern 20 for SPP scheme
+'213120' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 120 ;
+	}
+#Random pattern 21 for SPP scheme
+'213121' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 121 ;
+	}
+#Random pattern 22 for SPP scheme
+'213122' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 122 ;
+	}
+#Random pattern 23 for SPP scheme
+'213123' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 123 ;
+	}
+#Random pattern 24 for SPP scheme
+'213124' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 124 ;
+	}
+#Random pattern 25 for SPP scheme
+'213125' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 125 ;
+	}
+#Random pattern 26 for SPP scheme
+'213126' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 126 ;
+	}
+#Random pattern 27 for SPP scheme
+'213127' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 127 ;
+	}
+#Random pattern 28 for SPP scheme
+'213128' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 128 ;
+	}
+#Random pattern 29 for SPP scheme
+'213129' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 129 ;
+	}
+#Random pattern 30 for SPP scheme
+'213130' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 130 ;
+	}
+#Random pattern 31 for SPP scheme
+'213131' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 131 ;
+	}
+#Random pattern 32 for SPP scheme
+'213132' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 132 ;
+	}
+#Random pattern 33 for SPP scheme
+'213133' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 133 ;
+	}
+#Random pattern 34 for SPP scheme
+'213134' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 134 ;
+	}
+#Random pattern 35 for SPP scheme
+'213135' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 135 ;
+	}
+#Random pattern 36 for SPP scheme
+'213136' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 136 ;
+	}
+#Random pattern 37 for SPP scheme
+'213137' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 137 ;
+	}
+#Random pattern 38 for SPP scheme
+'213138' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 138 ;
+	}
+#Random pattern 39 for SPP scheme
+'213139' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 139 ;
+	}
+#Random pattern 40 for SPP scheme
+'213140' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 140 ;
+	}
+#Random pattern 41 for SPP scheme
+'213141' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 141 ;
+	}
+#Random pattern 42 for SPP scheme
+'213142' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 142 ;
+	}
+#Random pattern 43 for SPP scheme
+'213143' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 143 ;
+	}
+#Random pattern 44 for SPP scheme
+'213144' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 144 ;
+	}
+#Random pattern 45 for SPP scheme
+'213145' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 145 ;
+	}
+#Random pattern 46 for SPP scheme
+'213146' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 146 ;
+	}
+#Random pattern 47 for SPP scheme
+'213147' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 147 ;
+	}
+#Random pattern 48 for SPP scheme
+'213148' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 148 ;
+	}
+#Random pattern 49 for SPP scheme
+'213149' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 149 ;
+	}
+#Random pattern 50 for SPP scheme
+'213150' = {
+	 table2Version = 213 ;
+	 indicatorOfParameter = 150 ;
+	}
 # Cosine of solar zenith angle
 '214001' = {
 	 table2Version = 214 ;

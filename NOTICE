@@ -18,3 +18,8 @@ Decoding double array optimisations provided by
 Norwegian Meteorological Institute.
 
 OpenMP API Support provided by Eric Millin.
+
+Fortran source code for grib_typeSizes.f90 from Robert Pincus
+Cooperative Institue for Meteorological Satellite Studies
+University of Wisconsin
+

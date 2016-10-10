@@ -9,9 +9,9 @@ that can be taken as a starting point to write more complex programs.\n
 - \ref grib_print_data.py "grib_print_data.py" How to print all the data contained in a grib file.
 - \ref set.py "set.py" How to set values through the key names.
 - \ref grib_nearest.py "grib_nearest.py" How to find the nearest grid points.
-- \ref set_missing.py "set_missing.py" How to set a missing value in the header.
+- \ref grib_set_missing.py "grib_set_missing.py" How to set a missing value in the header.
 - \ref count_messages.py "count_messages.py" How to count the messages in a file and loop through them. 
-- \ref samples.py "samples.py" How to create a new message from a sample.
+- \ref grib_samples.py "grib_samples.py" How to create a new message from a sample.
 - \ref grib_clone.py "grib_clone.py" How to clone a message.
 - \ref grib_iterator.py "grib_iterator.py" How to use an iterator on latitude, longitude, values.
 - \ref grib_keys_iterator.py "grib_keys_iterator.py" How to get the names of all the keys.
@@ -24,14 +24,14 @@ that can be taken as a starting point to write more complex programs.\n
 - \ref count_messages.f90 "count_messages.f90" count the messages in a file and loop through them.
 - \ref get_pl.f90 "get_pl.f90" how to get the list of number of points for each parallel in reduced grids.
 - \ref get_pv.f90 "get_pv.f90" how to get the list of levels.
-- \ref get_data.f90 "get_data.f90" how to get latitude/longitude/values.
+- \ref grib_get_data.f90 "grib_get_data.f90" how to get latitude/longitude/values.
 - \ref set.f90 "set.f90" how to set values through the key names.
 - \ref grib_set_bitmap.f90 "grib_set_bitmap.f90" how to set and use a bitmap.
-- \ref set_missing.f90 "set_missing.f90" how to set a missing value in the header.
+- \ref grib_set_missing.f90 "grib_set_missing.f90" how to set a missing value in the header.
 - \ref grib_set_pv.f90 "grib_set_pv.f90" how to set the list of levels.
-- \ref samples.f90 "samples.f90" how to create a new message from a template.
+- \ref grib_samples.f90 "grib_samples.f90" how to create a new message from a template.
 - \ref grib_clone.f90 "grib_clone.f90" how to clone a message.
-- \ref copy_message.f90 "copy_message.f90" how to copy a message in memory and create a new message.
+- \ref grib_copy_message.f90 "grib_copy_message.f90" how to copy a message in memory and create a new message.
 - \ref grib_keys_iterator.f90 "grib_keys_iterator.f90" how to get the names of all the keys
 defined in a message and how to iterate through them.
 - \ref grib_precision.f90 "grib_precision.f90" how to control precision when coding a grib field.

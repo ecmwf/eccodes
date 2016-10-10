@@ -17,12 +17,14 @@ temp1=${label}".1.tmp"
 temp2=${label}".2.tmp"
 
 files="
- multi.grib2
  reduced_gaussian_model_level.grib2
  reduced_gaussian_sub_area.grib2
- v.grib2
  regular_latlon_surface_constant.grib2
 "
+
+if [ $HAVE_JPG -eq 1 ]; then
+ files="multi.grib2 v.grib2"$files
+fi
 
 # TODO: For the following the PNG packing fails with an assert!
 #       grib_accessor_class_data_png_packing.c: Assert(p->offset + length <= p->length)

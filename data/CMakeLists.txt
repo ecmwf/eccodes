@@ -23,7 +23,6 @@ if( ENABLE_TESTS )
   set_property( TEST eccodes_download_gribs APPEND PROPERTY LABELS download_data )
 endif()
 
-
 # Copy other files - e.g. reference data, text files etc from the source data dir
 LIST(APPEND other_files
     60_model_levels
@@ -64,6 +63,7 @@ LIST(APPEND other_files
     step_grib1.log
     typeOfProcessedData.ok
     tigge_pf_ecmwf.grib2.ref
+    grib_data_files.txt
 )
 
 foreach( file ${other_files} )

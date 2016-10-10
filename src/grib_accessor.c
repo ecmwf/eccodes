@@ -78,6 +78,7 @@ int grib_is_missing_internal(grib_accessor* a)
     Assert(0);
     return 0;
 }
+
 int grib_pack_double(grib_accessor* a, const double* v, size_t *len )
 {
     grib_accessor_class *c = a->cclass;
@@ -496,7 +497,7 @@ void grib_accessor_delete(grib_context *ct, grib_accessor* a)
     while(c)
     {
         grib_accessor_class *s = c->super ? *(c->super) : NULL;
-        grib_context_log(ct,GRIB_LOG_DEBUG,"destroy %s ==> %s",c->name,a->name);
+        /*grib_context_log(ct,GRIB_LOG_DEBUG,"destroy %s ==> %s",c->name,a->name);*/
         if(c->destroy) {
             c->destroy(ct,a);
         }
@@ -662,7 +663,7 @@ int grib_accessor_clear_attributes(grib_accessor* a)
     }
     return 0;
 }
-*/
+ */
 
 int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr,int nest_if_clash)
 {
@@ -674,8 +675,8 @@ int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr,int nest_if
     same=_grib_accessor_get_attribute(a,attr->name,&id);
 
     if (same) {
-      if (nest_if_clash==0) return GRIB_ATTRIBUTE_CLASH;
-      aloc=same;
+        if (nest_if_clash==0) return GRIB_ATTRIBUTE_CLASH;
+        aloc=same;
     }
 
     for (id=0;id<MAX_ACCESSOR_ATTRIBUTES;id++) {
@@ -805,7 +806,7 @@ grib_accessors_list* grib_accessors_list_last(grib_accessors_list* al)
       last=next;
       next=last->next;
     }
-    */
+     */
     return al->last;
 }
 
@@ -829,8 +830,8 @@ void grib_accessors_list_delete(grib_context* c,grib_accessors_list* al)
 
     while (al) {
         tmp=al->next;
+        /*grib_accessor_delete(c, al->accessor);*/
         grib_context_free(c,al);
         al=tmp;
     }
-
 }

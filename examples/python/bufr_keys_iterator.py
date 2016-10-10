@@ -34,18 +34,18 @@ def example():
     # loop for the messages in the file
     while 1:
         # get handle for message
-        gid = codes_bufr_new_from_file(f)
-        if gid is None:
+        bufr = codes_bufr_new_from_file(f)
+        if bufr is None:
             break
 
         print "message: %s" % cnt
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        # codes_set(gid,'unpack',1)
+        # codes_set(bufr,'unpack',1)
 
         # get key iterator for a given namespace
-        iterid = codes_keys_iterator_new(gid, 'ls')
+        iterid = codes_keys_iterator_new(bufr, 'ls')
 
         # Different types of keys can be skipped
         # codes_skip_computed(iterid)
@@ -68,7 +68,7 @@ def example():
         cnt += 1
 
         # delete handle
-        codes_release(gid)
+        codes_release(bufr)
 
     # close the file
     f.close()

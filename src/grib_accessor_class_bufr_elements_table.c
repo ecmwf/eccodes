@@ -152,6 +152,8 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
+/* From https://stackoverflow.com/questions/32506614/manipulation-of-delimiters-within-arrays */
+/* Returns an array of strings the last of which is NULL */
 char** str_split(char* a_str, const char a_delim)
 {
     char** result    = 0;

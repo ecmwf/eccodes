@@ -41,14 +41,25 @@ ref_get=$f".ls.ref"
 
 echo "Test: -p switch" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_get -p totalLength,bufrHeaderCentre,bufrHeaderSubCentre,masterTableNumber,masterTablesVersionNumber,localTablesVersionNumber,numberOfSubsets,numberOfObservations $f  > $fTmp
+${tools_dir}/bufr_get -p totalLength,bufrHeaderCentre,bufrHeaderSubCentre,masterTableNumber,masterTablesVersionNumber,localTablesVersionNumber,numberOfSubsets,localNumberOfObservations $f > $fTmp
 
 #Write the values into a file and compare with ref
 cat $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_get
 diff $ref_get $res_get
 
-#Clean up
-rm -f $fLog
-rm -f $fTmp | true
-rm -f $res_get | true
 
+#-------------------------------------------
+# ECC-236
+#-------------------------------------------
+result=`${tools_dir}/bufr_get -s unpack=1 -p nonCoordinatePressure syno_1.bufr`
+[ "$result" = "100910" ]
+result=`${tools_dir}/bufr_get -s unpack=1 -p stationOrSiteName bssh_176.bufr`
+[ "$result" = "Helgoland" ]
+result=`${tools_dir}/bufr_get -s unpack=1 -p majorFrameCount aaen_55.bufr`
+[ "$result" = "MISSING" ]
+result=`${tools_dir}/bufr_get -s unpack=1 -p satelliteIdentifier wavb_134.bufr`
+[ "$result" = "MISSING" ]
+
+
+#Clean up
+rm -f $fLog $fTmp $res_get

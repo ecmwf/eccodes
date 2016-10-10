@@ -35,7 +35,7 @@
 	 table2Version = 128 ;
 	}
 #Total column water vapour
-'lwe_thickness_of_atmosphere_water_vapor_content' = {
+'lwe_thickness_of_atmosphere_mass_content_of_water_vapor' = {
 	 indicatorOfParameter = 137 ;
 	 table2Version = 128 ;
 	}
@@ -60,7 +60,7 @@
 	 table2Version = 128 ;
 	}
 #Stratiform precipitation (Large-scale precipitation)
-'lwe_thickness_of_large_scale_precipitation_amount' = {
+'lwe_thickness_of_stratiform_precipitation_amount' = {
 	 indicatorOfParameter = 142 ;
 	 table2Version = 128 ;
 	}
@@ -75,7 +75,7 @@
 	 table2Version = 128 ;
 	}
 #Boundary layer dissipation
-'dissipation_in_atmosphere_boundary_layer' = {
+'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {
 	 indicatorOfParameter = 145 ;
 	 table2Version = 128 ;
 	}
@@ -190,7 +190,7 @@
 	 table2Version = 128 ;
 	}
 #Temperature of snow layer
-'snow_temperature' = {
+'temperature_in_surface_snow' = {
 	 indicatorOfParameter = 238 ;
 	 table2Version = 128 ;
 }

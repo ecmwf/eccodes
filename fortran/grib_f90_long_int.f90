@@ -85,7 +85,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> \b Examples: \ref grib_get_keys.f90 "grib_get_keys.f90", \ref print_data.f90 "print_data.f90"
+  !> \b Examples: \ref grib_get_keys.f90 "grib_get_keys.f90", \ref grib_print_data.f90 "grib_print_data.f90"
   !>
   !> @see grib_new_from_file, grib_release, grib_set
   !>
@@ -137,7 +137,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> \b Examples: \ref set.f90 "set.f90"
+  !> \b Examples: \ref grib_set_keys.f90 "grib_set_keys.f90"
   !>
   !> @see grib_new_from_file, grib_release, grib_get
   !>

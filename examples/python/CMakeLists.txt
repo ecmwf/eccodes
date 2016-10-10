@@ -30,6 +30,7 @@ endforeach()
 list( APPEND tests
    grib_clone
    grib_count_messages
+   grib_get_message_offset
    grib_get_keys
    grib_index
    grib_iterator
@@ -37,9 +38,9 @@ list( APPEND tests
    grib_multi_write
    grib_nearest
    grib_print_data
-   samples
+   grib_samples
    grib_set_keys
-   set_missing
+   grib_set_missing
    binary_message
    grib_set_bitmap
    bufr_attributes
@@ -78,4 +79,14 @@ ecbuild_add_test( TARGET eccodes_p_bufr_encode_flight_test
                   ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
                   RESOURCES   flight_data.csv
                   TEST_DEPENDS eccodes_download_bufrs
+)
+
+# Conditional tests
+ecbuild_add_test( TARGET eccodes_p_grib_ccsds_test
+                  TYPE       SCRIPT
+                  DEPENDS    ${ptools}
+                  COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds.sh
+                  CONDITION  HAVE_PYTHON AND HAVE_AEC
+                  ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
+                  TEST_DEPENDS eccodes_download_gribs
 )

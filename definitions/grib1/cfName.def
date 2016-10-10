@@ -41,7 +41,7 @@
 	 table2Version = 3 ;
 	}
 #Boundary layer dissipation
-'dissipation_in_atmosphere_boundary_layer' = {
+'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {
 	 indicatorOfParameter = 123 ;
 	 table2Version = 3 ;
 	}
@@ -144,7 +144,7 @@
 	 table2Version = 2 ;
 	}
 #Boundary layer dissipation
-'dissipation_in_atmosphere_boundary_layer' = {
+'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {
 	 indicatorOfParameter = 123 ;
 	 table2Version = 2 ;
 	}
@@ -247,7 +247,7 @@
 	 table2Version = 1 ;
 	}
 #Boundary layer dissipation
-'dissipation_in_atmosphere_boundary_layer' = {
+'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {
 	 indicatorOfParameter = 123 ;
 	 table2Version = 1 ;
 	}

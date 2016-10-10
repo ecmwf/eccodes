@@ -1,4 +1,4 @@
-/*! \page keys Grib API keys
+/*! \page keys ecCodes keys
 The GRIBEX routine used at ECMWF to encode and decode GRIB messages works 
 on a number based table to retrive all the information from the message. 
 This approach forces the user either to learn a code table 
@@ -22,7 +22,7 @@ The names are always easily releated to the meaning of their value.\n
 A different set of keys is available for each message because the content 
 is different. It is easy to find the keys available in a message by using 
 the GRIB tools (\ref grib_dump "grib_dump) 
-or the library (\ref keys_iterator.c "keys_iterator.c").\n
+or the library (\ref grib_keys_iterator.c "grib_keys_iterator.c").\n
 
 \section coded_computed Coded and Computed keys
 

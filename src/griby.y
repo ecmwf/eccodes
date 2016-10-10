@@ -484,8 +484,8 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
 
     | TRANS       IDENT   '=' argument  flags
         { $$ = grib_action_create_variable(grib_parser_context,$2,"transient",0,$4,$4,$5,NULL);   free($2); }
-    | TRANS       IDENT   '=' '{' dvalues '}' 
-        { $$ = grib_action_create_transient_darray(grib_parser_context,$2,$5); free($2); }
+    | TRANS       IDENT   '=' '{' dvalues '}' flags 
+        { $$ = grib_action_create_transient_darray(grib_parser_context,$2,$5,$7); free($2); }
 
     | FLOAT       IDENT    default   flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$2,"ieeefloat",4,NULL,$3,$4,NULL,NULL);   free($2);  }
@@ -498,9 +498,6 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
 
    | G1_HALF_BYTE  IDENT
    { $$ = grib_action_create_gen(grib_parser_context,$2,"g1_half_byte_codeflag",0,NULL,NULL,0,NULL,NULL);free($2);  }
-
-    | SECTION_LENGTH  '[' INTEGER ']'   IDENT
-	{ $$ = grib_action_create_gen(grib_parser_context,$5,"section_length",$3,NULL,NULL,0,NULL,NULL);free($5);  }
 
     | SECTION_LENGTH  '[' INTEGER ']'   IDENT default
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"section_length",$3,NULL,$6,0,NULL,NULL);free($5);  }
@@ -670,15 +667,12 @@ flag_list  : flag
 flag: READ_ONLY         { $$ = GRIB_ACCESSOR_FLAG_READ_ONLY; }
     | LOWERCASE            { $$ = GRIB_ACCESSOR_FLAG_LOWERCASE; }
     | DUMP            { $$ = GRIB_ACCESSOR_FLAG_DUMP; }
-    | JSON            { $$ = GRIB_ACCESSOR_FLAG_JSON; }
-    | XML            { $$ = GRIB_ACCESSOR_FLAG_XML; }
     | NO_COPY            { $$ = GRIB_ACCESSOR_FLAG_NO_COPY; }
-	| NO_FAIL            { $$ = GRIB_ACCESSOR_FLAG_NO_FAIL; }
+	  | NO_FAIL            { $$ = GRIB_ACCESSOR_FLAG_NO_FAIL; }
     | HIDDEN            { $$ = GRIB_ACCESSOR_FLAG_HIDDEN; }
     | EDITION_SPECIFIC  { $$ = GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC; }
     | CAN_BE_MISSING    { $$ = GRIB_ACCESSOR_FLAG_CAN_BE_MISSING; }
     | CONSTRAINT        { $$ = GRIB_ACCESSOR_FLAG_CONSTRAINT; }
-    | OVERRIDE           { $$ = GRIB_ACCESSOR_FLAG_OVERRIDE; }
     | COPY_OK           { $$ = GRIB_ACCESSOR_FLAG_COPY_OK; }
     | TRANS         { $$ = GRIB_ACCESSOR_FLAG_TRANSIENT; }
     | STRING_TYPE         { $$ = GRIB_ACCESSOR_FLAG_STRING_TYPE; }

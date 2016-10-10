@@ -24,7 +24,7 @@ set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} 
 
 include( ecbuild_system NO_POLICY_SCOPE )
 
-ecbuild_requires_macro_version( 1.9 )
+ecbuild_requires_macro_version( 2.4 )
 
 ###############################################################################
 # local project
@@ -72,7 +72,7 @@ ecbuild_add_option( FEATURE AEC
 ecbuild_add_option( FEATURE PYTHON
     DESCRIPTION "build the ecCodes Python interface"
     DEFAULT ON
-    REQUIRED_PACKAGES "Python VERSION 2.6" NumPy
+    REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy
 )
 
 ecbuild_add_option( FEATURE FORTRAN
@@ -90,14 +90,19 @@ else()
     set( HAVE_FORTRAN 0 )
 endif()
 
-# memfs
-
+# memfs requires only Python executable and not its libraries
 ecbuild_add_option( FEATURE MEMFS
     DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
     CONDITION EC_HAVE_FMEMOPEN OR EC_HAVE_FUNOPEN
-    REQUIRED_PACKAGES "Python VERSION 2.6"
+    REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS"
 )
+
+#if( HAVE_MEMFS AND "${CMAKE_C_COMPILER_ID}" STREQUAL "Cray")
+#  set( HAVE_MEMFS OFF )
+#  ecbuild_warn("MEMFS not supported with Cray C compiler")
+#endif()
+
 # advanced options (not visible in cmake-gui )
 
 ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "enable memory management" DEFAULT OFF ADVANCED )
@@ -130,11 +135,11 @@ if( ENABLE_JPG )
     #       which can affect future package discovery if not undone by the caller.
     #       The current CMAKE_PREFIX_PATH is backed up as _CMAKE_PREFIX_PATH
     #
-    set(ECBUILD_NO_DEPRECATIONS ON)  # Suppress deprecation message
+    set(CMAKE_WARN_DEPRECATED OFF) # Suppress deprecation message
     ecbuild_add_extra_search_paths( jasper )
     find_package( Jasper )
     set(CMAKE_PREFIX_PATH ${_CMAKE_PREFIX_PATH})    # Restore CMAKE_PREFIX_PATH
-    set(ECBUILD_NO_DEPRECATIONS OFF) # Remove suppression
+    set(CMAKE_WARN_DEPRECATED ON)  # Remove suppression
 
     find_package( OpenJPEG )
 
@@ -297,10 +302,9 @@ add_subdirectory( ifs_samples ) # must come after samples
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
 ecbuild_dont_pack( DIRS
      concepts tests.ecmwf doxygen confluence examples.dev templates parameters java
-     gaussian_experimental gribex examples/F77
-     examples/extra bamboo fortran/fortranCtypes tigge/tools share/eccodes
-     src/.deps tests/.deps tools/.deps tigge/.deps examples/C/.deps examples/python/.deps
-     python/.deps fortran/.deps
+     config m4 rpms gaussian_experimental gribex examples/F77
+     examples/extra examples/deprecated bamboo fortran/fortranCtypes tigge/tools
+     share/eccodes  .settings
 )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
@@ -336,6 +340,7 @@ ecbuild_pkgconfig(
   URL            "https://software.ecmwf.int/wiki/display/ECC/"
   DESCRIPTION    "The ecCodes library"
   LIBRARIES      eccodes
+  IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
   VARIABLES      HAVE_JPG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                  HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
                  HAVE_NETCDF HAVE_PYTHON HAVE_FORTRAN HAVE_PNG HAVE_AEC
@@ -347,6 +352,7 @@ if( EC_HAVE_FORTRAN )
     LIBRARIES           eccodes_f90 eccodes
     DESCRIPTION         "The ecCodes library for Fortran 90"
     IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
+                        ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
     VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                         HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
                         HAVE_NETCDF HAVE_PYTHON HAVE_PNG HAVE_AEC
@@ -362,7 +368,7 @@ ecbuild_print_summary()
 
 ecbuild_info("")
 ecbuild_info("   +---------------------------+")
-ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}   |")
+ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}    |")
 ecbuild_info("   |  Configuration completed  |")
 ecbuild_info("   +---------------------------+")
 ecbuild_info("")

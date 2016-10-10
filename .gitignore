@@ -28,14 +28,18 @@ rpms/eccodes.spec
 rpms/eccodes_f90.pc
 aclocal.m4
 src/config.h.in~
-python/gribapi.pyc
-python/eccodes.pyc
+
+python/eccodes.py
+python/eccodes/__init__.pyc
+python/eccodes/eccodes.pyc
+python/gribapi.py
+python/gribapi/__init__.pyc
+python/gribapi/gribapi.pyc
 python/gribapi_swig.pyc
 
 # Generated stuff from builds
 src/.libs/
 tools/.libs/
-tools/all_keys
 tools/big2gribex
 tools/gaussian
 tools/gg_sub_area_check
@@ -46,7 +50,6 @@ tools/grib_count
 tools/bufr_count
 tools/codes_count
 tools/codes_bufr_filter
-tools/grib_diff
 tools/grib_dump
 tools/grib_filter
 tools/grib_get
@@ -134,6 +137,7 @@ examples/F90/eccodes_f_bufr_read_temp
 examples/F90/eccodes_f_bufr_attributes
 examples/F90/eccodes_f_bufr_set_keys
 examples/F90/eccodes_f_bufr_get_keys
+examples/F90/eccodes_f_bufr_get_string_array
 examples/F90/eccodes_f_bufr_keys_iterator
 examples/F90/eccodes_f_bufr_subset
 examples/F90/eccodes_f_bufr_clone
@@ -143,11 +147,11 @@ examples/F90/eccodes_f_bufr_read_tropical_cyclone
 examples/F90/eccodes_f_grib_clone
 examples/F90/eccodes_f_grib_count_messages
 examples/F90/eccodes_f_grib_count_messages_multi
-examples/F90/eccodes_f_copy_message
+examples/F90/eccodes_f_grib_copy_message
 examples/F90/eccodes_f_copy_namespace
 examples/F90/eccodes_f_count_messages
 examples/F90/eccodes_f_grib_get_keys
-examples/F90/eccodes_f_get_data
+examples/F90/eccodes_f_grib_get_data
 examples/F90/eccodes_f_get_product_kind
 examples/F90/eccodes_f_get_pl
 examples/F90/eccodes_f_get_pv
@@ -163,11 +167,11 @@ examples/F90/eccodes_f_grib_print_data
 examples/F90/eccodes_f_grib_print_data_static
 examples/F90/eccodes_f_read_from_file
 examples/F90/eccodes_f_read_message
-examples/F90/eccodes_f_samples
+examples/F90/eccodes_f_grib_samples
 examples/F90/eccodes_f_grib_set_keys
 examples/F90/eccodes_f_grib_set_bitmap
 examples/F90/eccodes_f_grib_set_gvc
-examples/F90/eccodes_f_set_missing
+examples/F90/eccodes_f_grib_set_missing
 examples/F90/eccodes_f_grib_set_pv
 examples/F90/*.sh.log
 examples/F90/*.sh.trs
@@ -301,7 +305,6 @@ include
 data/bufr/*diff
 data/bufr/*decode
 data/bufr/*test
-data/bufr/set_unexpandedDescriptors.filter
 
 *.sublime-workspace
 *.old

@@ -115,7 +115,7 @@ static void warn(const char* name,int a)
         warning++;
     }
 }
-*/
+ */
 
 static void save(grib_handle* h, const char *name,FILE* f)
 {
@@ -339,6 +339,45 @@ static void gaussian_grid(grib_handle* h)
     CHECK(eq(h,"resolutionAndComponentFlags8",0));
 }
 
+static void check_validity_datetime(grib_handle* h)
+{
+    /* If we just set the stepRange (for non-instantaneous fields) to its
+     * current value, then this causes the validity date and validity time
+     * keys to be correctly computed.
+     * Then we can compare the previous (possibly wrongly coded) value with
+     * the newly computed one
+     */
+    char stepType[15]={0,};
+    int err = 0;
+    size_t str_len = 100;
+
+    err = grib_get_string(h, "stepType", stepType, &str_len);
+    if (err) return;
+    if (strcmp(stepType, "instant")!=0) { /* not instantaneous */
+        char stepRange[100]={0,};
+        long saved_validityDate, saved_validityTime;
+        long validityDate, validityTime;
+
+        /* Check only applies to accumulated, max etc. */
+        err = grib_get_string(h, "stepRange", stepRange, &str_len);
+        if (err) return;
+
+        saved_validityDate = get(h, "validityDate");
+        saved_validityTime = get(h, "validityTime");
+
+        err = grib_set_string(h, "stepRange", stepRange, &str_len);
+        if (err) return;
+        validityDate = get(h, "validityDate");
+        validityTime = get(h, "validityTime");
+
+        if (validityDate!=saved_validityDate || validityTime!=saved_validityTime) {
+            printf("warning: %s, field %d [%s]: invalid validity Date/Time (Should be %ld and %ld)\n",
+                    file,field,param, validityDate, validityTime);
+            warning++;
+        }
+    }
+}
+
 static void check_range(grib_handle* h,const parameter* p,double min,double max)
 {
     if(!valueflg)
@@ -396,7 +435,7 @@ static void point_in_time(grib_handle* h,const parameter* p,double min,double ma
         if (is_s2s_refcst)
             CHECK(eq(h,"productDefinitionTemplateNumber",60));
         else if (is_s2s)
-          /*CHECK(eq(h,"productDefinitionTemplateNumber",60)||eq(h,"productDefinitionTemplateNumber",11)||eq(h,"productDefinitionTemplateNumber",1));*/
+            /*CHECK(eq(h,"productDefinitionTemplateNumber",60)||eq(h,"productDefinitionTemplateNumber",11)||eq(h,"productDefinitionTemplateNumber",1));*/
             CHECK(eq(h,"productDefinitionTemplateNumber",1));
         else
             CHECK(eq(h,"productDefinitionTemplateNumber",1));
@@ -408,7 +447,7 @@ static void point_in_time(grib_handle* h,const parameter* p,double min,double ma
         if (is_s2s_refcst)
             CHECK(eq(h,"productDefinitionTemplateNumber",60));
         else if (is_s2s)
-          /*CHECK(eq(h,"productDefinitionTemplateNumber",60)||eq(h,"productDefinitionTemplateNumber",11)||eq(h,"productDefinitionTemplateNumber",1));*/
+            /*CHECK(eq(h,"productDefinitionTemplateNumber",60)||eq(h,"productDefinitionTemplateNumber",11)||eq(h,"productDefinitionTemplateNumber",1));*/
             CHECK(eq(h,"productDefinitionTemplateNumber",1));
         else
             CHECK(eq(h,"productDefinitionTemplateNumber",1));
@@ -654,7 +693,7 @@ static void statistical_process(grib_handle* h,const parameter* p,double min,dou
         }
     } else {
         if(get(h,"indicatorOfUnitOfTimeRange") == 11) /*  six hours */
-    {
+        {
             /* Six hourly is OK */
             ;
         }
@@ -678,23 +717,22 @@ static void statistical_process(grib_handle* h,const parameter* p,double min,dou
     else
         CHECK(eq(h,"timeIncrementBetweenSuccessiveFields",0));
 
-    
-        CHECK(eq(h,"minuteOfEndOfOverallTimeInterval",0));
-        CHECK(eq(h,"secondOfEndOfOverallTimeInterval",0));
+
+    CHECK(eq(h,"minuteOfEndOfOverallTimeInterval",0));
+    CHECK(eq(h,"secondOfEndOfOverallTimeInterval",0));
 
     if (is_uerra)
-        {
+    {
         CHECK((eq(h,"endStep",1)||eq(h,"endStep",2)||eq(h,"endStep",4)||eq(h,"endStep",5))||(get(h,"endStep") % 3) == 0);
-        }
+    }
     else if (is_lam)
-        {
-            CHECK((get(h,"endStep") % 3) == 0);  /* Every three hours */
-        }
+    {
+        CHECK((get(h,"endStep") % 3) == 0);  /* Every three hours */
+    }
     else
     {
         CHECK((get(h,"endStep") % 6) == 0); /* Every six hours */
     }
-
 
     if(get(h,"indicatorOfUnitForTimeRange") == 11)
     {
@@ -907,16 +945,30 @@ static void latlon_grid(grib_handle* h)
         dsouth = dtmp;
     }
 
-    if (!is_lam) CHECK(north > south);
-    if (!is_lam) CHECK(east  > west);
+    if (!(is_lam || is_uerra))
+    {
+        double area, globe;
+        CHECK(north > south);
+        CHECK(east  > west);
+
+        /* Check that the grid is symmetrical */
+        CHECK(north == -south);
+        CHECK( DBL_EQUAL(dnorth, -dsouth, tolerance) );
+        CHECK(parallel == (east-west)/we + 1);
+        CHECK(fabs((deast-dwest)/dwe + 1 - parallel) < 1e-10);
+        CHECK(meridian == (north-south)/ns + 1);
+        CHECK(fabs((dnorth-dsouth)/dns + 1 - meridian) < 1e-10 );
+
+        /* Check that the field is global */
+        area  = (dnorth-dsouth) * (deast-dwest);
+        globe = 360.0*180.0;
+        CHECK(area <= globe);
+        CHECK(area >= globe*0.95);
+    }
 
     /* GRIB2 requires longitudes are always positive */
     CHECK(east >= 0);
     CHECK(west >= 0);
-
-    /* Check that the grid is symmetrical */
-    if (!is_lam) CHECK(north == -south);
-    if (!is_lam) CHECK( DBL_EQUAL(dnorth, -dsouth, tolerance) );
 
     /*
       printf("meridian=%ld north=%ld south=%ld ns=%ld \n",meridian,north,south,ns);
@@ -925,19 +977,6 @@ static void latlon_grid(grib_handle* h)
       printf("parallel=%ld east=%f west=%f we=%f \n",parallel,deast,dwest,dwe);
      */
 
-    if (!is_lam) CHECK(parallel == (east-west)/we + 1);
-    if (!is_lam) CHECK(fabs((deast-dwest)/dwe + 1 - parallel) < 1e-10);
-
-    if (!is_lam) CHECK(meridian == (north-south)/ns + 1);
-    if (!is_lam) CHECK(fabs((dnorth-dsouth)/dns + 1 - meridian) < 1e-10 );
-
-    /* Check that the field is global */
-    if (!is_lam) {
-        double area  = (dnorth-dsouth) * (deast-dwest);
-        double globe = 360.0*180.0;
-        CHECK(area <= globe);
-        CHECK(area >= globe*0.95);
-    }
 }
 
 #define X(x) printf("%s=%ld ",#x,get(h,#x))
@@ -971,18 +1010,18 @@ static void check_parameter(grib_handle* h,double min,double max)
                     /* printf("Skipping model keyword for UERRA class\n"); */
                     matches++; /*xxx hack to pretend that model key was matched.. */
                 } else {
-                if (strcasecmp(parameters[i].pairs[j].value_string,"MISSING")==0) {
-                    int is_miss = grib_is_missing(h, parameters[i].pairs[j].key, &err);
-                    if (err == GRIB_SUCCESS && is_miss) {
-                        matches++;
+                    if (strcasecmp(parameters[i].pairs[j].value_string,"MISSING")==0) {
+                        int is_miss = grib_is_missing(h, parameters[i].pairs[j].key, &err);
+                        if (err == GRIB_SUCCESS && is_miss) {
+                            matches++;
+                        }
+                    }
+                    else if(grib_get_string(h,parameters[i].pairs[j].key,strval,&len) == GRIB_SUCCESS) {
+                        if(strcmp(parameters[i].pairs[j].value_string, strval) == 0) {
+                            matches++;
+                        }
                     }
                 }
-                else if(grib_get_string(h,parameters[i].pairs[j].key,strval,&len) == GRIB_SUCCESS) {
-                    if(strcmp(parameters[i].pairs[j].value_string, strval) == 0) {
-                        matches++;
-                    }
-                }
-            }
             }
             else {
                 assert(!"Unknown key type");
@@ -1137,13 +1176,16 @@ static void verify(grib_handle* h)
         }
     }
 
-    /* Only 00, 06 12 and 18 Cycle OK */
-    if (!is_lam){
-        CHECK(eq(h,"hour",0) || eq(h,"hour",6) || eq(h,"hour",12) || eq(h,"hour",18));
+    if (is_uerra){
+        CHECK(le(h,"hour",24));
+    }
+    else if (is_lam){
+        CHECK(eq(h,"hour",0) || eq(h,"hour",3) || eq(h,"hour",6) || eq(h,"hour",9) || eq(h,"hour",12) || eq(h,"hour",15) || eq(h,"hour",18) || eq(h,"hour",21));
     }
     else
     {
-        CHECK(eq(h,"hour",0) || eq(h,"hour",3) || eq(h,"hour",6) || eq(h,"hour",9) || eq(h,"hour",12) || eq(h,"hour",15) || eq(h,"hour",18) || eq(h,"hour",21));
+    /* Only 00, 06 12 and 18 Cycle OK */
+        CHECK(eq(h,"hour",0) || eq(h,"hour",6) || eq(h,"hour",12) || eq(h,"hour",18));
     }
     CHECK(eq(h,"minute",0));
     CHECK(eq(h,"second",0));
@@ -1159,10 +1201,13 @@ static void verify(grib_handle* h)
         CHECK(le(h,"endStep",30*24));
     }
 
-    else if (is_lam){
+    if (is_uerra){
+        CHECK((eq(h,"step",1)||eq(h,"step",2)||eq(h,"step",4)||eq(h,"step",5))||(get(h,"step") % 3) == 0);
+    }
+    else if (is_lam) {
         CHECK((get(h,"step") % 3) == 0);
     }
-    else if (!is_uerra)
+    else
     {
         CHECK((get(h,"step") % 6) == 0);
     }
@@ -1198,8 +1243,9 @@ static void verify(grib_handle* h)
         break;
 
     case 30: /*Lambert conformal*/
-      /*lambert_grid(h); # TODO xxx
+        /*lambert_grid(h); # TODO xxx
         printf("warning: Lambert grid - geometry checking not implemented yet!\n"); */
+       /*CHECK(eq(h,"scanningMode",64));*/ /* M-F data used to have it wrong.. but it might depends on other projection set up as well!*/
         break;
 
     case 40: /* gaussian grid (regular or reduced) */
@@ -1225,6 +1271,8 @@ static void verify(grib_handle* h)
 
     /* Check values */
     CHECK(eq(h,"typeOfOriginalFieldValues",0)); /* Floating point */
+
+    check_validity_datetime(h);
 
     /* do not store empty values e.g. fluxes at step 0
         todo ?? now it's allowed in the code here!
@@ -1314,6 +1362,7 @@ static void usage()
     printf("   -z: return 0 to calling shell\n");
     printf("   -s: check s2s fields\n");
     printf("   -r: check s2s reforecast fields\n");
+    printf("   -u: check uerra fields\n");
     exit(1);
 }
 

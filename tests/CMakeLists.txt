@@ -45,6 +45,8 @@ list( APPEND tests1
 list( APPEND tests2
     grib_double_cmp
     bufr_dump
+    bufr_dump_decode_filter
+    bufr_dump_encode_filter
     bufrdc_desc_ref
     bufrdc_ref
     bufr_compare
@@ -52,10 +54,14 @@ list( APPEND tests2
     bufr_count
     bufr_get
     bufr_filter
+    bufr_filter_extract_datetime
+    bufr_filter_extract_area
     bufr_json
     bufr_ls
     bufr_change_edition
     ecc-197
+    ecc-286
+    ecc-288
     gts_get
     gts_ls
     gts_compare
@@ -98,11 +104,20 @@ list( APPEND tests2
     tigge_conversions
     read_any
     padding
-    debug
+    grib_dump
+    grib_dump_debug
     grib_util_set_spec
     local_MeteoFrance
     neg_fctime
 )
+if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
+    list(APPEND tests2 bufr_dump_encode_fortran)
+    list(APPEND tests2 bufr_dump_decode_fortran)
+endif()
+if( ENABLE_EXTRA_TESTS )
+    list(APPEND tests2 bufr_dump_encode_C)
+    list(APPEND tests2 bufr_dump_decode_C)
+endif()
 
 # These tests do not require any data downloads
 foreach( test ${tests1} )
@@ -130,6 +145,26 @@ foreach( test ${tests2} )
                                eccodes_download_bufrs eccodes_download_metars eccodes_download_gts
     )
 endforeach()
+
+if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
+    set_tests_properties ( eccodes_t_bufr_dump_encode_fortran PROPERTIES TIMEOUT 2500)
+endif()
+if( ENABLE_EXTRA_TESTS )
+    set_tests_properties ( eccodes_t_bufr_dump_encode_C PROPERTIES TIMEOUT 2500)
+endif()
+
+
+if( HAVE_PYTHON AND ENABLE_EXTRA_TESTS )
+    list( APPEND ptests bufr_dump_encode_python bufr_dump_decode_python )
+    foreach( test ${ptests} )
+        ecbuild_add_test( TARGET eccodes_t_${test}
+                          TYPE SCRIPT
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                          ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE} PYTHONPATH=${PROJECT_BINARY_DIR}/python
+                          TEST_DEPENDS eccodes_download_bufrs
+        )
+    endforeach()
+endif()
 
 ###########################################
 # Note: the reference file is in the tests dir not data dir!

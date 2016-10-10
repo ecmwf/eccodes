@@ -17,9 +17,9 @@ uint8    spare;
 
 template  metadata "wrap/metadata.[version].def";
 
-position   endOfHeadersMaker;
+position   endOfHeadersMarker;
 
-constant dataLength = (totalLength - endOfHeadersMaker - 4);
+constant dataLength = (totalLength - endOfHeadersMarker - 4);
 blob data[dataLength]  : dump;
 
 ascii[4]  endMark = `7777`  : dump;

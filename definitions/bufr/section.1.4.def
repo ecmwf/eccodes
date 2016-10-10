@@ -11,13 +11,13 @@
 position offsetSection1;
 section_length[3] section1Length ;
 
-unsigned[1]  masterTableNumber;
+unsigned[1]  masterTableNumber : dump ;
 
 codetable[2] bufrHeaderCentre 							'grib1/0.table' : dump;
 unsigned[2] bufrHeaderSubCentre            : dump;
 alias ls.centre=bufrHeaderCentre;
 
-unsigned[1]  updateSequenceNumber;
+unsigned[1]  updateSequenceNumber : dump;
 
 flags[1]     section1Flags 'bufr/section1_flags.table' = 128 : hidden ; # = section 2 present
 
@@ -36,6 +36,9 @@ unsigned[1] typicalDay : dump;
 unsigned[1] typicalHour : dump;
 unsigned[1] typicalMinute : dump;
 unsigned[1] typicalSecond : dump;
+
+meta ls.typicalDate sprintf("%.4d%.2d%.2d",typicalYear,typicalMonth,typicalDay) : dump,no_copy,read_only;
+meta ls.typicalTime sprintf("%.2d%.2d%.2d",typicalHour,typicalMinute,typicalSecond) :dump,no_copy,read_only;
 
 alias ls.masterTablesVersionNumber=masterTablesVersionNumber;
 alias ls.localTablesVersionNumber=localTablesVersionNumber;

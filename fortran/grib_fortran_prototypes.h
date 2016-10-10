@@ -97,6 +97,9 @@ int grib_f_new_from_message_copy(int *gid, void *buffer, size_t *bufsize);
 int grib_f_new_from_samples_(int *gid, char *name, int lname);
 int grib_f_new_from_samples__(int *gid, char *name, int lname);
 int grib_f_new_from_samples(int *gid, char *name, int lname);
+int codes_bufr_f_new_from_samples_(int *gid, char *name, int lname);
+int codes_bufr_f_new_from_samples__(int *gid, char *name, int lname);
+int codes_bufr_f_new_from_samples(int *gid, char *name, int lname);
 int grib_f_clone_(int *gidsrc, int *giddest);
 int grib_f_clone__(int *gidsrc, int *giddest);
 int grib_f_clone(int *gidsrc, int *giddest);
@@ -312,6 +315,13 @@ int grib_f_multi_write(int *gid, int *fid);
 int grib_f_multi_append_(int *ingid, int *sec, int *mgid);
 int grib_f_multi_append(int *ingid, int *sec, int *mgid);
 int grib_f_multi_append__(int *ingid, int *sec, int *mgid);
+
+int grib_f_set_definitions_path_(char *path, int len);
+int grib_f_set_definitions_path__(char *path, int len);
+int grib_f_set_definitions_path(char *path, int len);
+int grib_f_set_samples_path_(char *path, int len);
+int grib_f_set_samples_path__(char *path, int len);
+int grib_f_set_samples_path(char *path, int len);
 
 #ifdef __cplusplus
 }

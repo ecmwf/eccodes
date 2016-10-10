@@ -13,6 +13,8 @@ _gribapi_swig_la_LDFLAGS = -module -avoid-version $(PYTHON_LDFLAGS)
 INCLUDES = $(PYTHON_INCLUDES) -I$(NUMPY_INCLUDE)
 
 gribapi_swig_wrap.c: swig_wrap_$(PYTHON_DATA_HANDLER).c
+	ln -s gribapi/gribapi.py
+	ln -s eccodes/eccodes.py
 	cp -f swig_wrap_$(PYTHON_DATA_HANDLER).c gribapi_swig_wrap.c
 
 gribapi_swig.py: swig_wrap_$(PYTHON_DATA_HANDLER).py
@@ -101,6 +103,8 @@ setup.py: setup.py.autotools.in
 	$(do_subst) < setup.py.autotools.in > setup.py
 
 gribapi_swig_wrap.c: swig_wrap_$(PYTHON_DATA_HANDLER).c
+	ln -s gribapi/gribapi.py
+	ln -s eccodes/eccodes.py
 	cp -f swig_wrap_$(PYTHON_DATA_HANDLER).c gribapi_swig_wrap.c
 
 gribapi_swig.py: swig_wrap_$(PYTHON_DATA_HANDLER).py

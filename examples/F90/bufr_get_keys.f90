@@ -8,7 +8,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FOTRAN 90 Implementation: bufr_get_keys
+! FORTRAN 90 Implementation: bufr_get_keys
 !
 ! Description: how to read values of different type of keys from BUFR messages.
 !
@@ -33,7 +33,7 @@ character(len=9)   :: typicalDate
   call codes_bufr_new_from_file(ifile,ibufr,iret)
 
   do while (iret/=CODES_END_OF_FILE)
-    
+
     ! For debugging
     call codes_dump(ibufr)
 
@@ -43,46 +43,46 @@ character(len=9)   :: typicalDate
     ! we need to instruct ecCodes to expand all the descriptors 
     ! i.e. unpack the data values
     call codes_set(ibufr,"unpack",1);
-    
+
     ! get as character
     call codes_get(ibufr,'typicalDate',typicalDate)
     write(*,*) '  typicalDate:',typicalDate
-   
+
     ! get as integer
     call codes_get(ibufr,'blockNumber',blockNumber);
     write(*,*) '  blockNumber:',blockNumber
-    
+
     ! get as integer
     call codes_get(ibufr,'stationNumber',stationNumber);
     write(*,*) '  stationNumber:',stationNumber
-    
+
     ! get as real
     call codes_get(ibufr,'airTemperatureAt2M',t2m);
     write(*,*) '  airTemperatureAt2M:',t2m
-   
+
     ! ---- array of integer ----------------
-     
-    ! get the exapanded descriptors
+
+    ! get the expanded descriptors
     call codes_get(ibufr,'bufrdcExpandedDescriptors',descriptors)
- 
+
     do i=1,size(descriptors)
         write(*,*) '  ',i,descriptors(i)
-    enddo  
-   
+    enddo
+
     ! ---- array of real ----------------
-     
-    ! get the exapanded data values
+
+    ! get the expanded data values
     call codes_get(ibufr,'numericValues',values)
- 
+
     do i=1,size(values)
         write(*,*) '  ',i,values(i)
     enddo
-   
+
     ! get as character
     call codes_get(ibufr,'typicalDate',typicalDate)
     write(*,*) '  typicalDate:',typicalDate
-   
-    ! free arrays 
+
+    ! free arrays
     deallocate(values)
     deallocate(descriptors)
 
@@ -91,13 +91,13 @@ character(len=9)   :: typicalDate
 
     ! load the next bufr message
     call codes_bufr_new_from_file(ifile,ibufr,iret)
-    
-    count=count+1
-    
-  end do  
 
-! close file  
+    count=count+1
+
+  end do
+
+  ! close file
   call codes_close_file(ifile)
- 
+
 
 end program bufr_get_keys

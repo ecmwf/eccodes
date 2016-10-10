@@ -22,7 +22,7 @@ bin_PROGRAMS = grib_histogram big2gribex \
                gts_copy gts_dump gts_filter gts_ls \
 							 metar_dump metar_ls
 
-noinst_PROGRAMS =  gaussian grib_diff mars_request xref all_keys #compile #dumpload grib_compare_old
+noinst_PROGRAMS =  gaussian mars_request xref #compile #dumpload grib_compare_old
 
 #test_SOURCES   =  test.c
 
@@ -38,7 +38,6 @@ codes_count_SOURCES           =  codes_count.c
 grib_histogram_SOURCES        =  grib_histogram.c
 codes_parser_SOURCES          =  codes_parser.c
 grib_list_keys_SOURCES        =  list_keys.c
-all_keys_SOURCES              =  all_keys.c
 grib2ppm_SOURCES              =  grib2ppm.c
 codes_info_SOURCES            =  codes_info.c
 grib_ls_SOURCES               =  grib_ls.c
@@ -49,7 +48,6 @@ grib_set_SOURCES              =  grib_set.c
 grib_index_build_SOURCES      =  grib_index_build.c
 grib_get_SOURCES              =  grib_get.c
 grib_get_data_SOURCES         =  grib_get_data.c
-grib_diff_SOURCES             =  grib_diff.c
 grib_compare_SOURCES          =  grib_compare.c 
 big2gribex_SOURCES            =  big2gribex.c
 mars_request_SOURCES          =  mars_request.c

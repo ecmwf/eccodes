@@ -19,13 +19,13 @@ program bufr_set_keys
   integer                                       :: ibufr
   integer                                       :: count=0
   integer(kind=4)                               :: centre, centreNew
-  
-  ! open input file 
+
+  ! open input file
   call codes_open_file(infile,'../../data/bufr/syno_multi.bufr','r')
-  
+
   ! open output file
   call codes_open_file(outfile,'bufr_set_keys_test_f.tmp.bufr','w')
-  
+
   ! the first bufr message is loaded from file
   ! ibufr is the bufr id to be used in subsequent calls
   call codes_bufr_new_from_file(infile,ibufr,iret)
@@ -33,33 +33,33 @@ program bufr_set_keys
   do while (iret/=CODES_END_OF_FILE)
 
     write(*,*) 'message: ',count
-    
+
     ! This is the place where you may wish to modify the message 
     ! E.g. we change the centre
-    
+
     ! set centre
     centre=222
     call codes_set(ibufr,'bufrHeaderCentre',222)
     write(*,*) '  set bufrHeaderCentre to:',centre
-    
+
     ! check centre's new value
     centreNew=0
     call codes_get(ibufr,'bufrHeaderCentre',centreNew)
     write(*,*) '  bufrHeaderCentre''s new value:',centreNew
- 
+
     ! write modified message to a file
     call codes_write(ibufr,outfile)
-  
-    ! relase the handle
+
+    ! release the handle
     call codes_release(ibufr)
-    
+
     ! next message from source
     call codes_bufr_new_from_file(infile,ibufr,iret)
-    
+
     count=count+1
-    
+
   end do
-    
+
   call codes_close_file(infile)
   call codes_close_file(outfile)
 

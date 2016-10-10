@@ -14,8 +14,6 @@ meta localMinute bits(keyData,27,6) : long_type,no_copy;
 meta localSecond bits(keyData,33,6) : long_type,no_copy;
 meta spare  bits(keyData,39,1) : no_copy; # 40 bits = 10 bytes
 
-meta ls.typicalDate sprintf("%.4d%.2d%.2d",localYear,localMonth,localDay) : dump,no_copy;
-meta ls.typicalTime sprintf("%.2d%.2d%.2d",localHour,localMinute,localSecond) :dump,no_copy;
 
 # isSatellite and other stuff moved to section 3
 ascii[8]    keyMore : hidden; 

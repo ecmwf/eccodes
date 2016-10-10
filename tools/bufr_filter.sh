@@ -2,6 +2,7 @@
 set -e 
 
 echo "-# The bufr_filter sequentially processes all bufr messages contained in the input files and applies the rules to each of them. \\n"
+
 echo " Input messages can be written to the output by using the \"write\" statement. The write statement can be parameterised so that output "
 echo " is sent to multiple files depending on key values used in the output file name. \\n"
 echo " First we write a rules_file containing the following statement:\\n \\n"
@@ -10,8 +11,8 @@ echo "write \"../data/split/[bufrHeaderCentre:i]_[dataCategory].bufr[editionNumb
 echo "\\endverbatim\\n"
 echo "Then we create the BUFR file multitype.bufr from three others: \\n"
 echo "\\verbatim"
-echo "mkdir ../data/split \\n"
-echo "cat ../data/bufr/syno_1.bufr ../data/bufr/goes_87.bufr ../data/bufr/gosat.bufr > ../data/split/multitype.bufr \\n"
+echo ">mkdir ../data/split \\n"
+echo ">cat ../data/bufr/syno_1.bufr ../data/bufr/goes_87.bufr ../data/bufr/gosat.bufr > ../data/split/multitype.bufr \\n"
 echo "\\endverbatim\\n"
 echo "Applying this rules_file to the \"../data/split/multitype.bufr\" bufr file we obtain several files in the ../data/split directory containing "
 echo " messages split according to their key values\\n "
@@ -38,7 +39,6 @@ echo ">ls ../data/split"
 ls ../data/split
 
 echo "\\endverbatim\\n"
-
 
 echo "-# The bufr <b>header</b> information can be accessed without unpacking the data. This rules_file: \\n"
 echo "\\verbatim"
@@ -148,19 +148,19 @@ echo "The \"~\" operator can be used to match \"anything\".\\n\\n"
 # Attributes 
  
 echo "-# To access the keys' <b>attributes</b> use the -> operator. \\n"
-echo " The example below prints the attributes of key <i>pressure</i> from a SYNOP bufr message. \\n"
+echo " The example below prints the attributes of key <i>nonCoordinatePressure</i> from a SYNOP bufr message. \\n"
 
 echo "\\verbatim"
-echo "print \"pressure=[pressure] [pressure->units]\";"
-echo "print \"pressure->code=[pressure->code!06d]\";"
-echo "print \"pressure->scale=[pressure->scale]\";"
-echo "print \"pressure->reference=[pressure->reference]\";"
-echo "print \"pressure->width=[pressure->width]\";"
-echo "print \"pressure->percentConfidence=[pressure->percentConfidence] [pressure->percentConfidence->units]\";"
-echo "print \"pressure->percentConfidence->code=[pressure->percentConfidence->code!06d]\";"
-echo "print \"pressure->percentConfidence->scale=[pressure->percentConfidence->scale]\";"
-echo "print \"pressure->percentConfidence->reference=[pressure->percentConfidence->reference]\";"
-echo "print \"pressure->percentConfidence->width=[pressure->percentConfidence->width]\";"
+echo "print \"nonCoordinatePressure=[nonCoordinatePressure] [nonCoordinatePressure->units]\";"
+echo "print \"nonCoordinatePressure->code=[nonCoordinatePressure->code!06d]\";"
+echo "print \"nonCoordinatePressure->scale=[nonCoordinatePressure->scale]\";"
+echo "print \"nonCoordinatePressure->reference=[nonCoordinatePressure->reference]\";"
+echo "print \"nonCoordinatePressure->width=[nonCoordinatePressure->width]\";"
+echo "print \"nonCoordinatePressure->percentConfidence=[nonCoordinatePressure->percentConfidence] [nonCoordinatePressure->percentConfidence->units]\";"
+echo "print \"nonCoordinatePressure->percentConfidence->code=[nonCoordinatePressure->percentConfidence->code!06d]\";"
+echo "print \"nonCoordinatePressure->percentConfidence->scale=[nonCoordinatePressure->percentConfidence->scale]\";"
+echo "print \"nonCoordinatePressure->percentConfidence->reference=[nonCoordinatePressure->percentConfidence->reference]\";"
+echo "print \"nonCoordinatePressure->percentConfidence->width=[nonCoordinatePressure->percentConfidence->width]\";"
 echo "\\endverbatim\\n"
 
 echo "The result is:"
@@ -168,16 +168,16 @@ echo "The result is:"
 echo "\\verbatim"
 cat > rules_file <<EOF
 set unpack=1;
-print "pressure=[pressure] [pressure->units]";
-print "pressure->code=[pressure->code!06d]";
-print "pressure->scale=[pressure->scale]";
-print "pressure->reference=[pressure->reference]";
-print "pressure->width=[pressure->width]";
-print "pressure->percentConfidence=[pressure->percentConfidence] [pressure->percentConfidence->units]";
-print "pressure->percentConfidence->code=[pressure->percentConfidence->code!06d]";
-print "pressure->percentConfidence->scale=[pressure->percentConfidence->scale]";
-print "pressure->percentConfidence->reference=[pressure->percentConfidence->reference]";
-print "pressure->percentConfidence->width=[pressure->percentConfidence->width]";
+print "nonCoordinatePressure=[nonCoordinatePressure] [nonCoordinatePressure->units]";
+print "nonCoordinatePressure->code=[nonCoordinatePressure->code!06d]";
+print "nonCoordinatePressure->scale=[nonCoordinatePressure->scale]";
+print "nonCoordinatePressure->reference=[nonCoordinatePressure->reference]";
+print "nonCoordinatePressure->width=[nonCoordinatePressure->width]";
+print "nonCoordinatePressure->percentConfidence=[nonCoordinatePressure->percentConfidence] [nonCoordinatePressure->percentConfidence->units]";
+print "nonCoordinatePressure->percentConfidence->code=[nonCoordinatePressure->percentConfidence->code!06d]";
+print "nonCoordinatePressure->percentConfidence->scale=[nonCoordinatePressure->percentConfidence->scale]";
+print "nonCoordinatePressure->percentConfidence->reference=[nonCoordinatePressure->percentConfidence->reference]";
+print "nonCoordinatePressure->percentConfidence->width=[nonCoordinatePressure->percentConfidence->width]";
 EOF
 
 echo ">bufr_filter rules_file ../data/bufr/syno_1.bufr"

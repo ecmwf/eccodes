@@ -24,6 +24,7 @@
 #endif
 
 #include <ctype.h>
+#include <errno.h>
 
 #if GRIB_PTHREADS
  static pthread_once_t once  = PTHREAD_ONCE_INIT;
@@ -73,7 +74,6 @@
 
 int GRIB_NULL=-1;
 int GRIB_NULL_NEAREST=-1;
-extern int errno;
 
 typedef struct l_grib_file l_grib_file;
 
@@ -1003,11 +1003,27 @@ int grib_c_new_from_message_copy(int* gid, void* buffer , size_t* bufsize)
     return  GRIB_INTERNAL_ERROR;
 }
 
-int grib_c_new_from_samples(int* gid, char* name)
+int grib_c_grib_new_from_samples(int* gid, char* name)
 {
     grib_handle *h = NULL;
 
     h = grib_handle_new_from_samples(NULL,name);
+    /*   grib_context_set_debug(h->context,1);*/
+
+    if(h){
+        push_handle(h,gid);
+        return GRIB_SUCCESS;
+    }
+
+    *gid = -1;
+    return  GRIB_FILE_NOT_FOUND;
+}
+
+int grib_c_bufr_new_from_samples(int* gid, char* name)
+{
+    grib_handle *h = NULL;
+
+    h = codes_bufr_handle_new_from_samples(NULL,name);
     /*   grib_context_set_debug(h->context,1);*/
 
     if(h){
@@ -1924,9 +1940,26 @@ int grib_c_set_string(int* gid, char* key, char* val, int len2)
     return grib_set_string(h, key, val, &lsize);
 }
 
+int grib_c_set_string_array(int *gid, char *key, const char **val)
+{
+    grib_handle *h = get_handle(*gid);
+    int err = GRIB_SUCCESS;
+    size_t lsize = 0;
+
+    if(!h) return GRIB_INVALID_GRIB;
+
+    /* Note: The array passed in will have its final entry as NULL */
+    /* so to find its size we just iterate thru it. */
+    /* See typemap for char** in swig interface file */
+    while(val[lsize]) {
+        ++lsize;
+    }
+    err = grib_set_string_array(h, key, val, lsize);
+    return err;
+}
+
 int grib_c_get_data_real4(int* gid,float* lats, float* lons,float* values,size_t* size)
 {
-
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
     double *lat8=NULL,*lon8=NULL,*val8 = NULL;
@@ -1941,7 +1974,7 @@ int grib_c_get_data_real4(int* gid,float* lats, float* lons,float* values,size_t
     lat8 = grib_context_malloc(h->context,(*size)*(sizeof(double)));
     if(!lat8) return GRIB_OUT_OF_MEMORY;
 
-    err=grib_get_data(h,lat8,lon8,val8,size);
+    err=grib_get_data(h,lat8,lon8,val8);
 
     for(i=0;i<*size;i++) {
         values[i] = val8[i];
@@ -1954,15 +1987,14 @@ int grib_c_get_data_real4(int* gid,float* lats, float* lons,float* values,size_t
     grib_context_free(h->context,lon8);
 
     return err;
-
 }
-
+/*
 int grib_c_get_data_real8(int* gid,double* lats, double* lons,double* values,size_t* size)
 {
     grib_handle *h = get_handle(*gid);
-    return grib_get_data(h,lats,lons,values,size);
+    return grib_get_data(h,lats,lons,values);
 }
-
+*/
 int grib_c_copy_message(int* gid, void* mess,size_t* len)
 {
     grib_handle *h = get_handle(*gid);
@@ -2113,4 +2145,16 @@ int grib_c_get_message(int *gid, const void **msg, size_t *size)
 {
     grib_handle *h = get_handle(*gid);
     return grib_get_message(h,msg,size);
+}
+
+void grib_c_set_definitions_path(const char* path)
+{
+    grib_context *c = grib_context_get_default();
+    grib_context_set_definitions_path(c, path);
+}
+
+void grib_c_set_samples_path(const char* path)
+{
+    grib_context *c = grib_context_get_default();
+    grib_context_set_samples_path(c, path);
 }

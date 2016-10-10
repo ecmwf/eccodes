@@ -58,9 +58,9 @@ int main(int argc,char** argv)
 			continue;
 		}
 
-		if((err = grib_get_offset(g,"endOfHeadersMaker",&off)))
+		if((err = grib_get_offset(g,"endOfHeadersMarker",&off)))
 		{
-			fprintf(stderr,"Cannot get values endOfHeadersMaker  %d\n",err);
+			fprintf(stderr,"Cannot get values endOfHeadersMarker  %d\n",err);
 			exit(11);
 		}
 

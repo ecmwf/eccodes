@@ -16,34 +16,32 @@ program set
   integer(kind = 4)    :: centre, date1
   integer              :: infile,outfile
   integer              :: igrib
+  character(len=12)    :: marsType = 'ses'
 
   centre = 80
   call current_date(date1)
-  call codes_open_file(infile, &
-       '../../data/regular_latlon_surface_constant.grib1','r')
+  call codes_open_file(infile, '../../data/regular_latlon_surface_constant.grib1','r')
+  call codes_open_file(outfile, 'out.set.grib1','w')
 
-  call codes_open_file(outfile, &
-       'out.set.grib1','w')
-
-  !     a new grib message is loaded from file
-  !     igrib is the grib id to be used in subsequent calls
+  ! A new GRIB message is loaded from file
+  ! igrib is the grib id to be used in subsequent calls
   call codes_grib_new_from_file(infile,igrib)
 
   call codes_set(igrib,'dataDate',date1)
+  call codes_set(igrib,'type', marsType)
+
   !     set centre as a integer */
   call codes_set(igrib,'centre',centre)
 
-! check if it is correct in the actual GRIB message
-
+  ! Check if it is correct in the actual GRIB message
   call check_settings(igrib)
 
-  !     write modified message to a file
+  ! Write modified message to a file
   call codes_write(igrib,outfile)
 
   call codes_release(igrib)
 
   call codes_close_file(infile)
-
   call codes_close_file(outfile)
 
 contains

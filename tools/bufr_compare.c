@@ -44,10 +44,17 @@ compare_double_proc compare_double;
 double global_tolerance=0;
 int packingCompare=0;
 grib_string_list* blacklist=0;
+grib_string_list* keys_list = NULL; /* Used to determine rank of key */
+int isLeafKey = 0; /* 0 if key is top-level, 1 if key has no children attributes */
 int compareAbsolute=1;
 
 static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options);
 static int compare_values(grib_runtime_options* options, grib_handle* handle1, grib_handle *handle2, const char *name, int type);
+static int compare_attributes(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options,
+        grib_accessor* a, const char* prefix, int* err);
+static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options,
+        grib_accessor* a, const char* prefix, int* err);
+
 int error=0;
 int count=0;
 int lastPrint=0;
@@ -61,6 +68,31 @@ int listFromCommandLine;
 int verbose=0;
 int tolerance_factor=1;
 static int write_error=0;
+
+/* Create the list of keys (global variable keys_list) */
+static void new_keys_list()
+{
+    grib_context* c = grib_context_get_default();
+    keys_list=grib_context_malloc_clear(c, sizeof(grib_string_list));
+    if (!keys_list) {
+        fprintf(stderr, "Failed to allocate memory for keys list");
+        exit(1);
+    }
+}
+
+/* Free the keys list (global variable keys_list) */
+static void release_keys_list()
+{
+    grib_string_list* next=keys_list;
+    grib_string_list* cur=keys_list;
+    grib_context* c = grib_context_get_default();
+    while(next) {
+        cur=next;
+        next=next->next;
+        grib_context_free(c,cur->value);
+        grib_context_free(c,cur);
+    }
+}
 
 GRIB_INLINE static double compare_double_absolute(double *a,double *b,double *err)
 {
@@ -150,30 +182,30 @@ static double relative_error(double a,double b,double err)
 }
 
 grib_option grib_options[]={
-        /*  {id, args, help}, on, command_line, value*/
-        {"r",0,"Compare files in which the messages are not in the same order. This option is time expensive.\n",0,1,0},
-        {"b:",0,0,0,1,0},
-        {"d",0,"Write different messages on files\n",0,1,0},
-        {"T:",0,0,1,0,"B"},
-        {"c:",0,0,0,1,0},
-        {"S:","start","First field to be processed.\n",0,1,0},
-        {"E:","end","Last field to be processed.\n",0,1,0},
-        {"a",0,"-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n"
+    /*  {id, args, help}, on, command_line, value*/
+    /*{"r",0,"Compare files in which the messages are not in the same order. This option is time expensive.\n",0,1,0},*/
+    {"b:",0,0,0,1,0},
+    {"d",0,"Write different messages on files\n",0,1,0},
+    {"T:",0,0,1,0,"B"},
+    {"c:",0,0,0,1,0},
+    {"S:","start","First field to be processed.\n",0,1,0},
+    {"E:","end","Last field to be processed.\n",0,1,0},
+    {"a",0,"-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n"
                 ,0,1,0},
-                {"H",0,"Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},
-                {"R:",0,0,0,1,0},
-                {"A:",0,0,0,1,0},
-                {"P",0,"Compare data values using the packing error as tolerance.\n",0,1,0},
-                {"t:","factor","Compare data values using factor multiplied by the tolerance specified in options -P -R -A.\n",0,1,0},
-                {"w:",0,0,0,1,0},
-                {"f",0,0,0,1,0},
-                {"F",0,0,1,0,0},
-                {"q",0,0,1,0,0},
-                {"M",0,0,1,0,0},
-                {"I",0,0,1,0,0},
-                {"V",0,0,0,1,0},
-                {"7",0,0,0,1,0},
-                {"v",0,0,0,1,0}
+    {"H",0,"Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},
+    {"R:",0,0,0,1,0},
+    {"A:",0,0,0,1,0},
+    {"P",0,"Compare data values using the packing error as tolerance.\n",0,1,0},
+    {"t:","factor","Compare data values using factor multiplied by the tolerance specified in options -P -R -A.\n",0,1,0},
+    {"w:",0,0,0,1,0},
+    {"f",0,0,0,1,0},
+    {"F",0,0,1,0,0},
+    {"q",0,0,1,0,0},
+    {"M",0,0,1,0,0},
+    {"I",0,0,1,0,0},
+    {"V",0,0,0,1,0},
+    {"7",0,0,0,1,0},
+    {"v",0,0,0,1,0}
 };
 
 grib_handle* global_handle=NULL;
@@ -182,14 +214,13 @@ int start=-1;
 int end=-1;
 
 char* grib_tool_description=
-        "Compare BUFR messages contained in two files."
-        "\n\tIf some differences are found it fails returning an error code."
-        "\n\tFloating point values are compared exactly by default, different tolerance can be defined see -P -A -R."
-        "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
+    "Compare BUFR messages contained in two files."
+    "\n\tIf some differences are found it fails returning an error code."
+    "\n\tFloating point values are compared exactly by default, different tolerance can be defined see -P -A -R."
+    "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
 char* grib_tool_name="bufr_compare";
-char* grib_tool_usage="[options] "
-        "file file";
+char* grib_tool_usage="[options] bufr_file1 bufr_file2";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
@@ -236,11 +267,11 @@ int grib_tool_init(grib_runtime_options* options)
     else headerMode=0;
 
     if (grib_options_on("H") && grib_options_on("c:")) {
-        printf("Error: -H and -c options are incompatible. Choose one of the two please.\n");
+        fprintf(stderr,"Error: -H and -c options are incompatible. Choose one of the two please.\n");
         exit(1);
     }
     if (grib_options_on("a") && !grib_options_on("c:")) {
-        printf("Error: -a option requires -c option. Please define a list of keys with the -c option.\n");
+        fprintf(stderr,"Error: -a option requires -c option. Please define a list of keys with the -c option.\n");
         exit(1);
     }
 
@@ -266,8 +297,8 @@ int grib_tool_init(grib_runtime_options* options)
         options->idx=grib_fieldset_new_from_files(context,filename,
                 nfiles,0,0,0,orderby,&ret);
         if (ret) {
-            printf("unable to create index for input file %s (%s)",
-                    options->infile_extra->name,grib_get_error_message(ret));
+            fprintf(stderr,"unable to create index for input file %s (%s)",
+                    options->infile_extra->name, grib_get_error_message(ret));
             exit(ret);
         }
     } else {
@@ -313,6 +344,16 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("t:"))
         tolerance_factor=atof(grib_options_get_option("t:"));
 
+    if (grib_options_on("R:")) {
+        char* sarg=grib_options_get_option("R:");
+        options->tolerance_count=MAX_KEYS;
+        ret=parse_keyval_string(grib_tool_name, sarg,1,GRIB_TYPE_DOUBLE,options->tolerance,&(options->tolerance_count));
+        if (ret == GRIB_INVALID_ARGUMENT) {
+            usage();
+            exit(1);
+        }
+    }
+
     {
         /* Check for 2nd file being a directory. If so, we assume user is comparing to a file */
         /* with the same name as first file in that directory */
@@ -333,22 +374,26 @@ int grib_tool_init(grib_runtime_options* options)
         }
     }
 
+    /* Turn off GRIB multi-field support mode. Not relevant for BUFR */
+    grib_multi_support_off(grib_context_get_default());
+
     return 0;
 }
 
-int grib_tool_new_filename_action(grib_runtime_options* options,const char* file) {
+int grib_tool_new_filename_action(grib_runtime_options* options,const char* file)
+{
     return 0;
 }
-int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file) {
+
+int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
+{
     return 0;
 }
 
 static void printInfo(grib_handle* h)
 {
-
     printf("== %d == DIFFERENCE == ",count);
     lastPrint=count;
-
 }
 
 static void print_index_key_values(grib_index* index,int icounter,const char* error_message)
@@ -462,10 +507,10 @@ void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
 
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
-    grib_error* e=error_summary;
+    grib_error* e = error_summary;
     int err=0;
     grib_context* c=grib_context_get_default();
-    error+=morein1+morein2;
+    error += morein1+morein2;
 
     /*if (grib_options_on("w:")) return 0;*/
 
@@ -501,9 +546,8 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         grib_index_delete(options->index1);
         grib_index_delete(options->index2);
     }
-
-
-    if (error !=0) exit(1);
+    release_keys_list();
+    if (error != 0) exit(1);
     return 0;
 }
 
@@ -588,22 +632,18 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
         return err;
     }
 
-    /*
-  if(type1 != type2)
-  {
-    printInfo(handle1);
-    printf("Warning, [%s] has different types: 1st field: [%s], 2nd field: [%s]\n",
-        name,grib_get_type_name(type1),grib_get_type_name(type2));
-    return GRIB_TYPE_MISMATCH; 
-  }
-     */
+    /* if(type1 != type2) {
+         printInfo(handle1);
+         printf("Warning, [%s] has different types: 1st field: [%s], 2nd field: [%s]\n",
+           name,grib_get_type_name(type1),grib_get_type_name(type2));
+         return GRIB_TYPE_MISMATCH;
+    } */
 
     if(type1 == GRIB_TYPE_LABEL)
         return err;
 
     if(type1 == GRIB_TYPE_SECTION)
         return err;
-
 
     if((err = grib_get_size(handle1,name,&len1)) != GRIB_SUCCESS)
     {
@@ -629,15 +669,12 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
         return err;
     }
 
-    /*
-  if(len1 != len2 && type1 != GRIB_TYPE_STRING)
-  {
-    printInfo(handle1);
-    printf("[%s] has different size: 1st field: %ld, 2nd field: %ld\n",name,(long)len1,(long)len2);
-    save_error(c,name);
-    return GRIB_COUNT_MISMATCH;
-  }
-     */
+    /* if(len1 != len2 && type1 != GRIB_TYPE_STRING) {
+          printInfo(handle1);
+          printf("[%s] has different size: 1st field: %ld, 2nd field: %ld\n",name,(long)len1,(long)len2);
+          save_error(c,name);
+          return GRIB_COUNT_MISMATCH;
+        } */
 
     if (options->mode != MODE_BUFR) {
         /* TODO: Ignore missing values for keys in BUFR. Not yet implemented */
@@ -975,35 +1012,124 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
     }
 
     return GRIB_SUCCESS;
-
 }
 
-static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options, int *err) {
+static int compare_attributes(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options,
+        grib_accessor* a, const char* prefix, int* err)
+{
+    int i=0, ret=0;
+    while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes[i])
+    {
+        /*long native_type = 0;*/
+        grib_accessor* aa = NULL;
+        if ( (a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_DUMP)== 0 ) {
+            ++i; /* next attribute */
+            continue;
+        }
+        aa = a->attributes[i];
+        /*native_type = grib_accessor_get_native_type(aa);   TODO: read only check? */
+
+        isLeafKey = aa->attributes[0]==NULL ? 1 : 0; /* update global variable */
+
+        if (compare_attribute(handle1, handle2, options, aa, prefix, err)) {
+            err++;
+            write_messages(handle1, handle2);
+            ret = 1;
+        }
+
+        ++i; /* next attribute */
+    }
+
+    return ret;
+}
+static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options,
+        grib_accessor* a, const char* prefix, int* err)
+{
+    int ret = 0;
+    grib_context* c = handle1->context;
+    char* fullname = grib_context_malloc_clear( c, sizeof(char)*(strlen(a->name)+strlen(prefix)+5) );
+    sprintf(fullname, "%s->%s", prefix, a->name);
+    if (compare_values(options, handle1, handle2, fullname, GRIB_TYPE_UNDEFINED)) {
+        err++;
+        write_messages(handle1, handle2);
+        ret=1;
+    }
+    /* Recurse if this key has children */
+    if (!isLeafKey) {
+        if (compare_attributes(handle1, handle2, options, a, fullname, err)) {
+            ret=1;
+        }
+    }
+    grib_context_free(c, fullname);
+    return ret;
+}
+
+static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options, int *err)
+{
     int ret=0;
     const char* name=NULL;
     grib_keys_iterator* iter  = NULL;
-    grib_set_long(handle1,"unpack",1);
-    grib_set_long(handle2,"unpack",1);
+    grib_context* context=handle1->context;
+
+    if (!headerMode) {
+        /* See ECC-333: By setting unpack we get ALL the bufr keys. */
+        /*              In headerMode we want just the header ones */
+        ret = grib_set_long(handle1,"unpack",1);
+        if (ret != GRIB_SUCCESS) {
+            grib_context_log(context, GRIB_LOG_ERROR, "Failed to unpack 1st message: %s", grib_get_error_message(ret));
+            exit(1);
+        }
+        ret = grib_set_long(handle2,"unpack",1);
+        if (ret != GRIB_SUCCESS) {
+            grib_context_log(context, GRIB_LOG_ERROR, "Failed to unpack 2nd message: %s", grib_get_error_message(ret));
+            exit(1);
+        }
+    }
     iter=grib_keys_iterator_new(handle1,0,NULL);
 
     if (!iter) {
-        printf("ERROR: unable to get iterator\n");
+        grib_context_log(context, GRIB_LOG_ERROR, "unable to create keys iterator");
         exit(1);
     }
 
+    release_keys_list(); /* The keys list is used to determine the rank */
+    new_keys_list();
+
     while(grib_keys_iterator_next(iter))
     {
+        int rank = 0;
+        int dofree = 0;
+        char* prefix = NULL;
         grib_accessor* xa=grib_keys_iterator_get_accessor(iter);
-        name=grib_keys_iterator_get_name(iter);
-        /* printf("----- comparing %s\n",name); */
 
+        isLeafKey = 0; /* clear global variable for each key */
+        name=grib_keys_iterator_get_name(iter);
         if (blacklisted(name)) continue;
         if (xa==NULL || ( xa->flags & GRIB_ACCESSOR_FLAG_DUMP )==0 ) continue;
-        if(compare_values(options,handle1,handle2,name,GRIB_TYPE_UNDEFINED))  {
+
+        /* Get full name of key, e.g. '#2#windSpeed' or 'blockNumber' */
+        rank = compute_key_rank(handle1, keys_list, xa->name);
+        if (rank != 0) {
+            prefix=grib_context_malloc_clear(context,sizeof(char)*(strlen(xa->name)+10));
+            dofree = 1;
+            sprintf(prefix,"#%d#%s", rank, xa->name);
+        } else {
+            prefix = (char*)xa->name;
+        }
+
+        /* Compare the key itself */
+        if (compare_values(options, handle1, handle2, prefix, GRIB_TYPE_UNDEFINED)) {
             err++;
-            write_messages(handle1,handle2);
+            write_messages(handle1, handle2);
             ret=1;
         }
+        /* Now compare the key attributes (if any) */
+        if (compare_attributes(handle1, handle2, options, xa, prefix, err)) {
+            err++;
+            write_messages(handle1, handle2);
+            ret=1;
+        }
+        if (dofree) grib_context_free(context, prefix);
     }
 
     grib_keys_iterator_delete(iter);
@@ -1027,52 +1153,13 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
         }
     }
 
-    if (headerMode) {
-        const void *msg1=NULL,*msg2=NULL;
-        size_t size1=0,size2=0;
-        grib_handle *h11, *h22;
-        GRIB_CHECK_NOLINE(grib_get_message_headers(handle1,&msg1,&size1),0);
-        GRIB_CHECK_NOLINE(grib_get_message_headers(handle2,&msg2,&size2),0);
-        if (size1==size2 && !memcmp(msg1,msg2,size1))
-            return 0;
-
-        err=0;
-        h11=grib_handle_new_from_partial_message(handle1->context,(void*)msg1,size1);
-        h22=grib_handle_new_from_partial_message(handle1->context,(void*)msg2,size2);
-
-        iter=grib_keys_iterator_new(h11,
-                GRIB_KEYS_ITERATOR_SKIP_COMPUTED,NULL);
-
-        if (!iter) {
-            printf("ERROR: unable to get iterator\n");
-            exit(1);
-        }
-
-        while(grib_keys_iterator_next(iter))
-        {
-            name=grib_keys_iterator_get_name(iter);
-            /*printf("----- comparing %s\n",name);*/
-
-            if (blacklisted(name)) continue;
-            if(compare_values(options,h11,h22,name,GRIB_TYPE_UNDEFINED))  {
-                err++;
-                write_messages(h11,h22);
-            }
-        }
-
-        grib_keys_iterator_delete(iter);
-        grib_handle_delete(h11);
-        grib_handle_delete(h22);
-        return err;
-    }
-
     if ( listFromCommandLine && onlyListed ) {
         for (i=0; i< options->compare_count; i++) {
             if (blacklisted((char*)options->compare[i].name)) continue;
             if (options->compare[i].type == GRIB_NAMESPACE) {
                 iter=grib_keys_iterator_new(handle1,0,(char*)options->compare[i].name);
                 if (!iter) {
-                    printf("ERROR: unable to get iterator\n");
+                    grib_context_log(handle1->context, GRIB_LOG_ERROR, "unable to get iterator");
                     exit(1);
                 }
                 while(grib_keys_iterator_next(iter))
@@ -1132,7 +1219,8 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
                 if (options->compare[i].type == GRIB_NAMESPACE) {
                     iter=grib_keys_iterator_new(handle1,0,(char*)options->compare[i].name);
                     if (!iter) {
-                        printf("ERROR: unable to get iterator for %s\n",options->compare[i].name );
+                        grib_context_log(handle1->context, GRIB_LOG_ERROR,
+                                "ERROR: unable to get keys iterator for %s",options->compare[i].name);
                         exit(1);
                     }
                     while(grib_keys_iterator_next(iter))
@@ -1170,7 +1258,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
     return err;
 }
 
-int grib_no_handle_action(int err)
+int grib_no_handle_action(grib_runtime_options* options, int err)
 {
     fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
     return 0;

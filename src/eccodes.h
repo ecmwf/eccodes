@@ -9,9 +9,9 @@
  */
 
 /*! \file eccodes.h
-  \brief eccodes C header file
+  \brief The ecCodes C header file
 
-  This is the only file that must be included to use the eccodes library
+  This is the only file that must be included to use the ecCodes library
   from C.
 */
 
@@ -60,43 +60,107 @@ Log mode for information for processing information
 #define CODES_UTIL_SET_SPEC_FLAGS_ONLY_PACKING GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING
 
 /* Dump option flags*/
-#define CODES_DUMP_FLAG_READ_ONLY    GRIB_DUMP_FLAG_READ_ONLY   
-#define CODES_DUMP_FLAG_DUMP_OK      GRIB_DUMP_FLAG_DUMP_OK     
-#define CODES_DUMP_FLAG_VALUES       GRIB_DUMP_FLAG_VALUES      
-#define CODES_DUMP_FLAG_CODED        GRIB_DUMP_FLAG_CODED       
-#define CODES_DUMP_FLAG_OCTECT       GRIB_DUMP_FLAG_OCTECT      
-#define CODES_DUMP_FLAG_ALIASES      GRIB_DUMP_FLAG_ALIASES     
-#define CODES_DUMP_FLAG_TYPE         GRIB_DUMP_FLAG_TYPE        
-#define CODES_DUMP_FLAG_HEXADECIMAL  GRIB_DUMP_FLAG_HEXADECIMAL 
-#define CODES_DUMP_FLAG_NO_DATA      GRIB_DUMP_FLAG_NO_DATA     
-#define CODES_DUMP_FLAG_ALL_DATA     GRIB_DUMP_FLAG_ALL_DATA     
-#define CODES_DUMP_FLAG_ALL_ATTRIBUTES     GRIB_DUMP_FLAG_ALL_ATTRIBUTES     
+#define CODES_DUMP_FLAG_READ_ONLY    GRIB_DUMP_FLAG_READ_ONLY
+#define CODES_DUMP_FLAG_DUMP_OK      GRIB_DUMP_FLAG_DUMP_OK
+#define CODES_DUMP_FLAG_VALUES       GRIB_DUMP_FLAG_VALUES
+#define CODES_DUMP_FLAG_CODED        GRIB_DUMP_FLAG_CODED
+#define CODES_DUMP_FLAG_OCTECT       GRIB_DUMP_FLAG_OCTECT
+#define CODES_DUMP_FLAG_ALIASES      GRIB_DUMP_FLAG_ALIASES
+#define CODES_DUMP_FLAG_TYPE         GRIB_DUMP_FLAG_TYPE
+#define CODES_DUMP_FLAG_HEXADECIMAL  GRIB_DUMP_FLAG_HEXADECIMAL
+#define CODES_DUMP_FLAG_NO_DATA      GRIB_DUMP_FLAG_NO_DATA
+#define CODES_DUMP_FLAG_ALL_DATA     GRIB_DUMP_FLAG_ALL_DATA
+#define CODES_DUMP_FLAG_ALL_ATTRIBUTES     GRIB_DUMP_FLAG_ALL_ATTRIBUTES
 
 /* codes_nearest flags */
-#define CODES_NEAREST_SAME_GRID   GRIB_NEAREST_SAME_GRID  
-#define CODES_NEAREST_SAME_DATA   GRIB_NEAREST_SAME_DATA  
-#define CODES_NEAREST_SAME_POINT  GRIB_NEAREST_SAME_POINT 
+#define CODES_NEAREST_SAME_GRID   GRIB_NEAREST_SAME_GRID
+#define CODES_NEAREST_SAME_DATA   GRIB_NEAREST_SAME_DATA
+#define CODES_NEAREST_SAME_POINT  GRIB_NEAREST_SAME_POINT
 
+/*! Iteration is carried out on all the keys available in the message
+\ingroup keys_iterator
+\see codes_keys_iterator_new
+*/
 #define CODES_KEYS_ITERATOR_ALL_KEYS               GRIB_KEYS_ITERATOR_ALL_KEYS
+
+/*! read only keys are skipped by keys iterator.
+\ingroup keys_iterator
+\see codes_keys_iterator_new
+*/
 #define CODES_KEYS_ITERATOR_SKIP_READ_ONLY         GRIB_KEYS_ITERATOR_SKIP_READ_ONLY
+
+/*! optional keys are skipped by keys iterator.
+\ingroup keys_iterator
+\see codes_keys_iterator_new */
 #define CODES_KEYS_ITERATOR_SKIP_OPTIONAL          GRIB_KEYS_ITERATOR_SKIP_OPTIONAL
+
+/*! edition specific keys are skipped by keys iterator.
+\ingroup keys_iterator
+\see codes_keys_iterator_new */
 #define CODES_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC  GRIB_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC
+
+/*! coded keys are skipped by keys iterator.
+\ingroup keys_iterator
+\see codes_keys_iterator_new */
 #define CODES_KEYS_ITERATOR_SKIP_CODED             GRIB_KEYS_ITERATOR_SKIP_CODED
+
+/*! computed keys are skipped by keys iterator.
+\ingroup keys_iterator
+\see codes_keys_iterator_new */
 #define CODES_KEYS_ITERATOR_SKIP_COMPUTED          GRIB_KEYS_ITERATOR_SKIP_COMPUTED
+
+/*! duplicates of a key are skipped by keys iterator.
+\ingroup keys_iterator
+\see codes_keys_iterator_new */
 #define CODES_KEYS_ITERATOR_SKIP_DUPLICATES        GRIB_KEYS_ITERATOR_SKIP_DUPLICATES
+
+/*! function keys are skipped by keys iterator.
+\ingroup keys_iterator
+\see codes_keys_iterator_new */
 #define CODES_KEYS_ITERATOR_SKIP_FUNCTION          GRIB_KEYS_ITERATOR_SKIP_FUNCTION
 
 
 typedef struct grib_values            codes_values;
 typedef struct grib_key_value_list    codes_key_value_list;
+
+/*! Codes handle,   structure giving access to parsed values by keys
+    \ingroup codes_handle
+    \struct codes_handle
+*/
 typedef struct grib_handle            codes_handle;
+
+/*! GRIB multi field handle,   structure used to build multi fields messages.
+    \ingroup codes_handle
+    \struct codes_multi_handle
+ */
 typedef struct grib_multi_handle      codes_multi_handle;
+
+/*! Codes context,  structure containing the memory methods, the parsers and the formats.
+    \ingroup codes_context
+    \struct codes_context
+*/
 typedef struct grib_context           codes_context;
+
+/*! Codes iterator, structure supporting a geographic iteration of values in a GRIB message.
+    \ingroup iterators
+    \struct codes_iterator
+*/
 typedef struct grib_iterator          codes_iterator;
+
+/*! Codes nearest, structure used to find the nearest points of a latitude longitude point in a GRIB message.
+    \ingroup iterators
+    \struct codes_nearest
+*/
 typedef struct grib_nearest           codes_nearest;
 typedef struct grib_box               codes_box;
 typedef struct grib_points            codes_points;
+
+/*! Codes keys iterator. Iterator over keys.
+    \ingroup keys_iterator
+    \struct codes_keys_iterator
+*/
 typedef struct grib_keys_iterator     codes_keys_iterator;
+
 typedef struct grib_fieldset          codes_fieldset;
 typedef struct grib_order_by          codes_order_by;
 typedef struct grib_where             codes_where;
@@ -106,7 +170,6 @@ typedef struct grib_iarray            codes_iarray;
 typedef struct grib_vdarray           codes_vdarray;
 typedef struct grib_vsarray           codes_vsarray;
 typedef struct grib_viarray           codes_viarray;
-typedef struct grib_index             codes_index;
 typedef struct grib_string_list       codes_string_list;
 typedef struct grib_util_packing_spec codes_util_packing_spec;
 typedef struct grib_util_grid_spec    codes_util_grid_spec;
@@ -121,10 +184,16 @@ codes_handle* codes_fieldset_next_handle(codes_fieldset* set,int* err);
 int  codes_fieldset_count(codes_fieldset *set);
 int  codes_values_check(codes_handle* h, codes_values* values, int count);
 
-/*! \defgroup codes_index The codes_index
+/*! \defgroup codes_index The indexing feature
 The codes_index is the structure giving indexed access to messages in a file.
  */
 /*! @{*/
+
+/*! index structure to access messages in a file.
+ * \ingroup codes_index
+ * \struct codes_index
+*/
+typedef struct grib_index             codes_index;
 
 /**
  *  Create a new index form a file. The file is indexed with the keys in argument.
@@ -133,6 +202,7 @@ The codes_index is the structure giving indexed access to messages in a file.
  * @param filename    : name of the file of messages to be indexed
  * @param keys        : comma separated list of keys for the index.
  *    The type of the key can be explicitly declared appending :l for long,
+ *    (or alternatively :i)
  *    :d for double, :s for string to the key name. If the type is not
  *    declared explicitly, the native type is assumed.
  * @param err         :  0 if OK, integer value on error
@@ -146,6 +216,7 @@ codes_index* codes_index_new_from_file(codes_context* c, char* filename,const ch
  * @param c           : context  (NULL for default context)
  * @param keys        : comma separated list of keys for the index.
  *    The type of the key can be explicitly declared appending :l for long,
+ *    (or alternatively :i)
  *    :d for double, :s for string to the key name. If the type is not
  *    declared explicitly, the native type is assumed.
  * @param err         :  0 if OK, integer value on error
@@ -154,7 +225,7 @@ codes_index* codes_index_new_from_file(codes_context* c, char* filename,const ch
 codes_index* codes_index_new(codes_context* c, const char* keys,int *err);
 
 /**
- *  Indexes the file given in argument in the index given in argument. 
+ *  Indexes the file given in argument in the index given in argument.
  *
  * @param index       : index
  * @param filename    : name of the file of messages to be indexed
@@ -265,8 +336,8 @@ void codes_index_delete(codes_index* index);
 
 /*! @} */
 
-/*! \defgroup codes_handle The codes_handle
-The codes_handle is the structure giving access to parsed grib values by keys.
+/*! \defgroup codes_handle The message handle
+The codes_handle is the structure giving access to parsed message values by keys.
 */
 /*! @{*/
 /**
@@ -322,11 +393,11 @@ grib_handle* codes_bufr_handle_new_from_file(grib_context* c, FILE* f, int* erro
 
 
 /**
-*  Write a coded message in a file.     
+*  Write a coded message to a file.
 *
 * @param h           : codes_handle to be written
-* @param file        : name of the file 
-* @param mode        : mode 
+* @param file        : name of the output file
+* @param mode        : mode
 * @return            0 if OK, integer value on error
 */
 int codes_write_message(codes_handle* h,const char* file,const char* mode);
@@ -372,15 +443,24 @@ codes_handle* codes_handle_new_from_message_copy(codes_context* c, const void* d
 
 
 /**
- *  Create a handle from a message contained in a samples directory.
+ *  Create a handle from a GRIB message contained in a samples directory.
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
  * @param res_name    : the resource name
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
-codes_handle* codes_handle_new_from_samples (codes_context* c, const char* res_name)  ;
+codes_handle* codes_grib_handle_new_from_samples (codes_context* c, const char* res_name)  ;
 
+/**
+ *  Create a handle from a BUFR message contained in a samples directory.
+ *  The message is copied at the creation of the handle
+ *
+ * @param c           : the context from which the handle will be created (NULL for default context)
+ * @param res_name    : the resource name
+ * @return            the new handle, NULL if the resource is invalid or a problem is encountered
+ */
+codes_handle* codes_bufr_handle_new_from_samples (codes_context* c, const char* res_name)  ;
 
 
 /**
@@ -401,8 +481,8 @@ codes_handle* codes_handle_clone(codes_handle* h)                 ;
 int codes_handle_delete(codes_handle* h);
 
 /**
- *  Create an empty multi field handle.
- *  Remember always to delete the multi handle when it is not needed any more to avoid
+ *  Create an empty multi-field GRIB handle.
+ *  Remember always to delete the multi-handle when it is not needed any more to avoid
  *  memory leaks.
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
@@ -411,31 +491,31 @@ codes_multi_handle* codes_grib_multi_handle_new(codes_context* c);
 
 /**
  *  Append the sections starting with start_section of the message pointed by h at
- *  the end of the multi field handle mh.
- *  Remember always to delete the multi handle when it is not needed any more to avoid
+ *  the end of the multi-field GRIB handle mh.
+ *  Remember always to delete the multi-handle when it is not needed any more to avoid
  *  memory leaks.
  *
  * @param h           : The handle from which the sections are copied.
  * @param start_section : section number. Starting from this section all the sections to the end of the message will be copied.
- * @param mh           : The multi field handle on which the sections are appended.
+ * @param mh          : The multi-field handle on which the sections are appended.
  * @return            0 if OK, integer value on error
  */
 int codes_grib_multi_handle_append(codes_handle* h,int start_section,codes_multi_handle* mh);
 
 /**
- * Delete multi field handle.
+ * Delete multi-field GRIB handle.
  *
- * @param mh           : The multi field handle to be deleted.
+ * @param mh          : The multi-field handle to be deleted.
  * @return            0 if OK, integer value on error
  */
 int codes_grib_multi_handle_delete(codes_multi_handle* mh);
 
 /**
- *  Write a multi field handle in a file.
- *  Remember always to delete the multi handle when it is not needed any more to avoid
+ *  Write a multi-field GRIB handle in a file.
+ *  Remember always to delete the multi-handle when it is not needed any more to avoid
  *  memory leaks.
  *
- * @param mh           : The multi field handle to be written.
+ * @param mh          : The multi-field GRIB handle to be written.
  * @param f            : File on which the file handle is written.
  * @return            0 if OK, integer value on error
  */
@@ -448,7 +528,7 @@ int codes_grib_multi_handle_write(codes_multi_handle* mh,FILE* f);
 /**
 * getting the message attached to a handle
 *
-* @param h              : the grib handle to which the buffer should be gathered
+* @param h              : the handle to which the buffer should be gathered
 * @param message        : the pointer to be set to the handle's data
 * @param message_length : On exit, the message size in number of bytes
 * @return            0 if OK, integer value on error
@@ -459,7 +539,7 @@ int codes_get_message(codes_handle* h ,const void** message, size_t *message_len
 /**
 * getting a copy of the message attached to a handle
 *
-* @param h              : the grib handle to which the buffer should be returned
+* @param h              : the handle to which the buffer should be returned
 * @param message        : the pointer to the data buffer to be filled
 * @param message_length : On entry, the size in number of bytes of the allocated empty message.
 *                         On exit, the actual message length in number of bytes
@@ -472,7 +552,7 @@ int codes_get_message_copy(codes_handle* h,  void* message,size_t *message_lengt
 /*! @{ */
 
 /*!
-* \brief Create a new iterator from a handle, using current geometry and values.
+* \brief Create a new iterator from a GRIB handle, using current geometry and values.
 *
 * \param h           : the handle from which the iterator will be created
 * \param flags       : flags for future use.
@@ -492,7 +572,7 @@ codes_iterator* codes_grib_iterator_new(codes_handle* h, unsigned long flags, in
 * @param values      : returned array of data values
 * @return            0 if OK, integer value on error
 */
-int codes_grib_get_data(codes_handle *h, double *lats, double *lons, double *values, size_t *size);
+int codes_grib_get_data(codes_handle *h, double *lats, double *lons, double *values);
 
 /**
 * Get the next value from an iterator.
@@ -753,7 +833,7 @@ int codes_get_long_array(codes_handle* h, const char* key, long* vals, size_t *l
 * @return          0 if OK, integer value on error
 */
 int codes_copy_namespace(codes_handle* dest, const char* name, codes_handle* src);
-  
+
 /**
 *  Set a long value from a key. If several keys of the same name are present, the last one is set
 *  @see  codes_get_long
@@ -830,6 +910,18 @@ int codes_set_force_double_array(codes_handle* h, const char* key, const double*
 * @return            0 if OK, integer value on error
 */
 int codes_set_long_array(codes_handle* h, const char* key, const long* vals, size_t length);
+
+/**
+*  Set a string array from a key. If several keys of the same name are present, the last one is set
+*  @see  codes_get_long_array
+*
+* @param h           : the handle to set the data to
+* @param key         : the key to be searched
+* @param vals        : the address of a string array where the data will be read
+* @param length      : a size_t that contains the length of the array on input
+* @return            0 if OK, integer value on error
+*/
+int codes_set_string_array(codes_handle *h, const char *key, const char **vals, size_t length);
 /*! @} */
 
 
@@ -838,7 +930,7 @@ int codes_set_long_array(codes_handle* h, const char* key, const long* vals, siz
 *
 * @param h            : the handle to be printed
 * @param out          : output file handle
-* @param mode         : available dump modes are: debug wmo c_code
+* @param mode         : Examples of available dump modes: debug wmo
 * @param option_flags : all the CODES_DUMP_FLAG_x flags can be used
 * @param arg          : used to provide a format to output data (experimental)
 */
@@ -866,7 +958,7 @@ void codes_dump_action_tree(codes_context* c, FILE* f) ;
  grib_print_proc
  grib_data_read_proc
  grib_data_write_proc
- grib_data_tell_proc 
+ grib_data_tell_proc
  grib_data_seek_proc
  grib_data_eof_proc
 */
@@ -903,7 +995,7 @@ void codes_gts_header_off(codes_context* c);
 
 /**
 *  Set the GRIBEX mode on.
-*  Grib files will be compatible with GRIBEX.
+*  GRIB files will be compatible with GRIBEX.
 *
 * @param c           : the context
 */
@@ -941,21 +1033,21 @@ void codes_context_set_definitions_path(grib_context* c, const char* path);
 void codes_context_set_samples_path(grib_context* c, const char* path);
 
 /**
-*  Turn on support for multiple fields in single grib messages
+*  Turn on support for multiple fields in single GRIB messages
 *
 * @param c            : the context to be modified
 */
 void codes_grib_multi_support_on(codes_context* c);
 
 /**
-*  Turn off support for multiple fields in single grib messages
+*  Turn off support for multiple fields in single GRIB messages
 *
 * @param c            : the context to be modified
 */
 void codes_grib_multi_support_off(codes_context* c);
 
 /**
-*  Reset file handle in multiple field support mode
+*  Reset file handle in multiple GRIB field support mode
 *
 * @param c            : the context to be modified
 * @param f            : the file pointer
@@ -982,7 +1074,6 @@ const char* codes_get_git_sha1(void);
 
 /**
 *  Prints the API version
-*
 *
 */
 void codes_print_api_version(FILE* out);
@@ -1086,7 +1177,7 @@ int codes_points_get_values(codes_handle* h, codes_points* points, double* val);
 #define CODES_UTIL_GRID_SPEC_REGULAR_GG GRIB_UTIL_GRID_SPEC_REGULAR_GG
 #define CODES_UTIL_GRID_SPEC_ROTATED_GG GRIB_UTIL_GRID_SPEC_ROTATED_GG
 #define CODES_UTIL_GRID_SPEC_REDUCED_GG GRIB_UTIL_GRID_SPEC_REDUCED_GG
-#define CODES_UTIL_GRID_SPEC_SH         GRIB_UTIL_GRID_SPEC_SH        
+#define CODES_UTIL_GRID_SPEC_SH         GRIB_UTIL_GRID_SPEC_SH
 #define CODES_UTIL_GRID_SPEC_REDUCED_LL GRIB_UTIL_GRID_SPEC_REDUCED_LL
 #define CODES_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC
 
@@ -1262,7 +1353,8 @@ Error codes returned by the eccodes functions.
 #define CODES_UNSUPPORTED_EDITION GRIB_UNSUPPORTED_EDITION
 /** Value out of coding range */
 #define CODES_OUT_OF_RANGE        GRIB_OUT_OF_RANGE
-
+/** Size of bitmap is incorrect */
+#define CODES_WRONG_BITMAP_SIZE   GRIB_WRONG_BITMAP_SIZE
 
 /*! @}*/
 #endif

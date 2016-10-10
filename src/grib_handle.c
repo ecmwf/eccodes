@@ -145,7 +145,8 @@ int grib_handle_delete ( grib_handle* h )
         grib_dependency *d = h->dependencies;
         grib_dependency *n;
 
-        Assert ( h->kid == NULL );
+        if ( h->kid != NULL )
+            return GRIB_INTERNAL_ERROR;
 
         while ( d )
         {
@@ -255,6 +256,29 @@ grib_handle* grib_handle_new_from_samples ( grib_context* c, const char* name )
     }
 
     g=grib_external_template ( c,name );
+    if ( !g )
+        grib_context_log ( c,GRIB_LOG_ERROR,"Unable to load sample file %s.tmpl\n                    in %s",
+                name, c->grib_samples_path );
+
+    return g;
+}
+
+grib_handle* codes_bufr_handle_new_from_samples ( grib_context* c, const char* name )
+{
+    grib_handle* g = 0;
+    if ( c == NULL ) c = grib_context_get_default();
+    grib_context_set_handle_file_count(c,0);
+    grib_context_set_handle_total_count(c,0);
+
+    /*
+       g = grib_internal_template(c,name);
+       if(g) return g;
+     */
+    if (c->debug) {
+        printf("ECCODES DEBUG: grib_handle_new_from_samples '%s'\n", name);
+    }
+
+    g=bufr_external_template ( c,name );
     if ( !g )
         grib_context_log ( c,GRIB_LOG_ERROR,"Unable to load sample file %s.tmpl\n                    in %s",
                 name, c->grib_samples_path );
@@ -480,7 +504,7 @@ static grib_handle* grib_handle_new_multi ( grib_context* c,unsigned char** data
                     if ( !gm->bitmap_section )
                     {
                         grib_context_log ( c, GRIB_LOG_ERROR,
-                                "grib_handle_new_from_file : cannot create handle, missing bitmap\n" );
+                                "grib_handle_new_multi : cannot create handle, missing bitmap\n" );
                         return NULL;
                     }
                     gm->sections[secnum]= gm->bitmap_section;
@@ -536,7 +560,7 @@ static grib_handle* grib_handle_new_multi ( grib_context* c,unsigned char** data
     if ( !gl )
     {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
+        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_multi: cannot create handle \n" );
         return NULL;
     }
 
@@ -637,7 +661,7 @@ static grib_handle* grib_handle_new_from_file_multi ( grib_context* c, FILE* f,i
                 {
                     if ( !gm->bitmap_section )
                     {
-                        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle, missing bitmap\n" );
+                        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file_multi: cannot create handle, missing bitmap\n" );
                         grib_context_free ( c,data );
                         return NULL;
                     }
@@ -693,7 +717,7 @@ static grib_handle* grib_handle_new_from_file_multi ( grib_context* c, FILE* f,i
     if ( !gl )
     {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
+        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file_multi: cannot create handle \n" );
         grib_context_free ( c,data );
         return NULL;
     }
@@ -740,7 +764,7 @@ grib_handle* grib_new_from_file ( grib_context* c, FILE* f,int headers_only,int 
     return h;
 }
 
-grib_handle* gts_new_from_file ( grib_context* c, FILE* f,int *error )
+grib_handle* gts_new_from_file( grib_context* c, FILE* f,int *error )
 {
     void *data = NULL;
     size_t olen = 0;
@@ -764,7 +788,7 @@ grib_handle* gts_new_from_file ( grib_context* c, FILE* f,int *error )
     if ( !gl )
     {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
+        grib_context_log ( c, GRIB_LOG_ERROR, "gts_new_from_file: cannot create handle \n" );
         grib_context_free ( c,data );
         return NULL;
     }
@@ -778,7 +802,7 @@ grib_handle* gts_new_from_file ( grib_context* c, FILE* f,int *error )
     return gl;
 }
 
-grib_handle* taf_new_from_file ( grib_context* c, FILE* f,int *error )
+grib_handle* taf_new_from_file( grib_context* c, FILE* f,int *error )
 {
     void *data = NULL;
     size_t olen = 0;
@@ -802,7 +826,7 @@ grib_handle* taf_new_from_file ( grib_context* c, FILE* f,int *error )
     if ( !gl )
     {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
+        grib_context_log ( c, GRIB_LOG_ERROR, "taf_new_from_file: cannot create handle \n" );
         grib_context_free ( c,data );
         return NULL;
     }
@@ -816,7 +840,7 @@ grib_handle* taf_new_from_file ( grib_context* c, FILE* f,int *error )
     return gl;
 }
 
-grib_handle* metar_new_from_file ( grib_context* c, FILE* f,int *error )
+grib_handle* metar_new_from_file( grib_context* c, FILE* f,int *error )
 {
     void *data = NULL;
     size_t olen = 0;
@@ -840,7 +864,7 @@ grib_handle* metar_new_from_file ( grib_context* c, FILE* f,int *error )
     if ( !gl )
     {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
+        grib_context_log ( c, GRIB_LOG_ERROR, "metar_new_from_file: cannot create handle \n" );
         grib_context_free ( c,data );
         return NULL;
     }
@@ -854,7 +878,7 @@ grib_handle* metar_new_from_file ( grib_context* c, FILE* f,int *error )
     return gl;
 }
 
-grib_handle* bufr_new_from_file ( grib_context* c, FILE* f,int *error )
+grib_handle* bufr_new_from_file( grib_context* c, FILE* f,int *error )
 {
     void *data = NULL;
     size_t olen = 0;
@@ -878,7 +902,7 @@ grib_handle* bufr_new_from_file ( grib_context* c, FILE* f,int *error )
     if ( !gl )
     {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
+        grib_context_log ( c, GRIB_LOG_ERROR, "bufr_new_from_file: cannot create handle \n" );
         grib_context_free ( c,data );
         return NULL;
     }
@@ -892,7 +916,7 @@ grib_handle* bufr_new_from_file ( grib_context* c, FILE* f,int *error )
     return gl;
 }
 
-grib_handle* any_new_from_file ( grib_context* c, FILE* f,int *error )
+grib_handle* any_new_from_file( grib_context* c, FILE* f,int *error )
 {
     void *data = NULL;
     size_t olen = 0;
@@ -916,7 +940,7 @@ grib_handle* any_new_from_file ( grib_context* c, FILE* f,int *error )
     if ( !gl )
     {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
+        grib_context_log ( c, GRIB_LOG_ERROR, "any_new_from_file : cannot create handle\n" );
         grib_context_free ( c,data );
         return NULL;
     }
@@ -981,7 +1005,7 @@ static grib_handle* grib_handle_new_from_file_no_multi ( grib_context* c,FILE* f
     if ( !gl )
     {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file : cannot create handle \n" );
+        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_file_no_multi: cannot create handle\n" );
         grib_context_free ( c,data );
         return NULL;
     }
@@ -1190,17 +1214,17 @@ int grib_get_message ( grib_handle* h,const void** msg,size_t* size )
 int grib_get_message_headers ( grib_handle* h,const void** msg,size_t* size )
 {
     int ret=0;
-    size_t endOfHeadersMaker;
+    size_t endOfHeadersMarker;
     *msg  =  h->buffer->data;
     *size =  h->buffer->ulength;
 
-    if ((ret=grib_get_offset(h,"endOfHeadersMaker",&endOfHeadersMaker))!=GRIB_SUCCESS) {
+    if ((ret=grib_get_offset(h,"endOfHeadersMarker",&endOfHeadersMarker))!=GRIB_SUCCESS) {
         grib_context_log(h->context,GRIB_LOG_FATAL,
-                "grib_get_message_headers unable to get offset of endOfHeadersMaker");
+                "grib_get_message_headers unable to get offset of endOfHeadersMarker");
         return ret;
     }
 
-    *size=endOfHeadersMaker;
+    *size=endOfHeadersMarker;
 
     return ret;
 }

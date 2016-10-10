@@ -12,15 +12,15 @@
 
 \section overview Overview
 
-The grib_api is the application program interface developed at ECMWF
+ecCodes is the application program interface developed at ECMWF
 to provide an easy and realiable way for encoding and 
 decoding WMO FM-92 GRIB 
 <a href="http://www.wmo.ch/pages/prog/www/WMOCodes/Manual/WMO306_vol-I-2-PartB-GRIB1.pdf">edition 1</a> and 
 <a href="http://www.wmo.ch/pages/prog/www/DPS/grib-2.html">edition 2</a> messages. 
 
-With the grib_api library, that is written entirely in C, some command line \ref tools "tools" are 
-provided to give a quick way to manipulate grib data. Moreover a \ref grib_api "Fortran interface 90" is available
-giving access to the main features of the C library. 
+The ecCodes library is written entirely in C and some command line \ref tools "tools" are 
+provided to give a quick way to manipulate GRIB and BUFR data. Moreover a \ref eccodes "Fortran interface 90" is available
+giving access to the main features of the C library.
 
 The library is designed to access and modify messages in both editions with the same
 \ref get_set "function calls" using a set of \ref keys to access the coded information 
@@ -39,8 +39,9 @@ the migration.
 
 To learn how to use the grib_api we recommend the user works through the \ref grib_examples.
 
-Reference manuals are also provided for the C library (organized in \ref modules) and for the 
-\ref grib_api "Fortran 90 interface".
+Reference manuals are also provided for the C library (organized in \ref modules), for the 
+\ref eccodes "Fortran 90 interface" and for the \ref gribapi "Python interface".
+
 
 \ref installation "Installation" instructions are also provided.
 

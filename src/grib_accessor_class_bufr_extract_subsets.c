@@ -19,12 +19,8 @@
    IMPLEMENTS = pack_long;
    MEMBERS    = const char* numericValues
    MEMBERS    = const char* pack
-   MEMBERS    = const char* numberOfSubsets
-   MEMBERS    = const char* subset
    MEMBERS    = grib_accessor* numericValuesAccessor
    MEMBERS    = grib_accessor* packAccessor
-   MEMBERS    = grib_accessor* numberOfSubsetsAccessor
-   MEMBERS    = grib_accessor* subsetAccessor
    END_CLASS_DEF
 
  */
@@ -50,12 +46,8 @@ typedef struct grib_accessor_bufr_extract_subsets {
 /* Members defined in bufr_extract_subsets */
 	const char* numericValues;
 	const char* pack;
-	const char* numberOfSubsets;
-	const char* subset;
 	grib_accessor* numericValuesAccessor;
 	grib_accessor* packAccessor;
-	grib_accessor* numberOfSubsetsAccessor;
-	grib_accessor* subsetAccessor;
 } grib_accessor_bufr_extract_subsets;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -151,8 +143,6 @@ static void get_accessors(grib_accessor* a)
     if (self->packAccessor) return;
     self->numericValuesAccessor=grib_find_accessor(h,self->numericValues);
     self->packAccessor=grib_find_accessor(h,self->pack);
-    self->numberOfSubsetsAccessor=grib_find_accessor(h,self->numberOfSubsets);
-    self->subsetAccessor=grib_find_accessor(h,self->subset);
 }
 
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
@@ -163,8 +153,6 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
     a->length=0;
     self->numericValues = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
     self->pack = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-    self->numberOfSubsets = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-    self->subset = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }
 
@@ -172,10 +160,6 @@ static int get_native_type(grib_accessor* a)
 {
     return GRIB_TYPE_LONG;
 }
-
-#define PROCESS_DECODE     0
-#define PROCESS_NEW_DATA   1
-#define PROCESS_ENCODE     2
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
@@ -189,14 +173,6 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     v[0]=1;
     err=grib_pack_long(self->packAccessor,v,&l);
     if (err) return err;
-    err=grib_unpack_long(self->subsetAccessor,v,&l);
-    if (err) return err;
 
-    /* this does not work at the moment, we need to fix it */
-    /* err=accessor_bufr_data_array_process_elements(self->numericValuesAccessor,PROCESS_ENCODE,v[0],0,0); */
-    /* v[0]=1; */
-    /* err=grib_pack_long(self->numberOfSubsetsAccessor,v,&l); */
-    /* if (err) return err; */
-    /* err=accessor_bufr_data_array_create_keys(self->numericValuesAccessor,extractSubset,0,0); */
     return err;
 }

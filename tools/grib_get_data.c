@@ -36,7 +36,8 @@ grib_option grib_options[]={
     {"V",0,0,0,1,0}
 };
 
-char* grib_tool_description="Print a latitude, longitude, data values list ";
+char* grib_tool_description="Print a latitude, longitude, data values list.\n"
+                            "\tNote: Rotated grids are first unrotated";
 char* grib_tool_name="grib_get_data";
 char* grib_tool_usage="[options] grib_file grib_file ...";
 
@@ -284,9 +285,8 @@ static grib_values* get_key_values(grib_runtime_options* options,grib_handle* h)
 
 }
 
-int grib_no_handle_action(int err)
+int grib_no_handle_action(grib_runtime_options* options, int err)
 {
     fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
     return 0;
 }
-

@@ -8,7 +8,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FOTRAN 90 Implementation: bufr_attributes
+! FORTRAN 90 Implementation: bufr_attributes
 !
 ! Description: how to read attributes of keys in BUFR messages.
 !

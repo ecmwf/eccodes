@@ -104,7 +104,7 @@ grib_action *grib_action_create_variable(grib_context *context, const char *name
 grib_action *grib_action_create_modify(grib_context *context, const char *name, long flags);
 
 /* action_class_transient_darray.c */
-grib_action *grib_action_create_transient_darray(grib_context *context, const char *name, grib_darray *darray);
+grib_action *grib_action_create_transient_darray(grib_context *context, const char *name, grib_darray *darray,int flags);
 
 /* grib_accessor.c */
 void grib_accessor_dump(grib_accessor *a, grib_dumper *f);
@@ -906,8 +906,6 @@ void grib_dump_footer(grib_dumper *d, grib_handle *h);
 
 /* grib_dumper_class_xml.c */
 
-/* grib_dumper_class_c_code.c */
-
 /* grib_dumper_class_wmo.c */
 
 /* grib_dumper_class.c */
@@ -916,6 +914,7 @@ void grib_dump_accessors_block(grib_dumper *dumper, grib_block_of_accessors *blo
 void grib_dump_accessors_list(grib_dumper *dumper, grib_accessors_list *al);
 int grib_print(grib_handle *h, const char *name, grib_dumper *d);
 void grib_dump_content(grib_handle *h, FILE *f, const char *mode, unsigned long option_flags, void *data);
+grib_dumper* grib_dump_content_with_dumper(grib_handle *h, grib_dumper* dumper,FILE *f, const char *mode, unsigned long option_flags, void *data);
 void codes_dump_bufr_flat(grib_accessors_list *al, grib_handle *h, FILE *f, const char *mode, unsigned long option_flags, void *data);
 
 /* grib_context.c */
@@ -986,8 +985,7 @@ int grib_file_pool_read(grib_context *c, FILE *fh);
 int grib_file_pool_write(FILE *fh);
 grib_file *grib_file_open(const char *filename, const char *mode, int *err);
 void grib_file_pool_delete_file(grib_file *file);
-void grib_file_close_force(const char *filename, int *err);
-void grib_file_close(const char *filename, int *err);
+void grib_file_close(const char *filename, int force, int *err);
 void grib_file_close_all(int *err);
 grib_file *grib_get_file(const char *filename, int *err);
 grib_file *grib_find_file(short id);
@@ -1005,6 +1003,7 @@ void grib_section_delete(grib_context *c, grib_section *b);
 int grib_handle_delete(grib_handle *h);
 grib_handle *grib_new_handle(grib_context *c);
 grib_handle *grib_handle_new_from_samples(grib_context *c, const char *name);
+grib_handle *codes_bufr_handle_new_from_samples(grib_context *c, const char *name);
 int grib_write_message(grib_handle *h, const char *file, const char *mode);
 grib_handle *grib_handle_clone(grib_handle *h);
 grib_handle *codes_handle_new_from_file(grib_context *c, FILE *f, ProductKind product, int *error);
@@ -1156,6 +1155,7 @@ long grib_get_decimal_scale_fact(double max, double min, long bpval, long binary
 grib_handle *grib_internal_template(grib_context *c, const char *name);
 grib_handle *grib_internal_template(grib_context *c, const char *name);
 grib_handle *grib_external_template(grib_context *c, const char *name);
+grib_handle *bufr_external_template(grib_context *c, const char *name);
 char *grib_external_template_path(grib_context *c, const char *name);
 
 /* grib_dependency.c */
@@ -1185,6 +1185,7 @@ int grib_set_missing_internal(grib_handle *h, const char *name);
 int grib_set_missing(grib_handle *h, const char *name);
 int grib_is_missing_long(grib_accessor *a, long x);
 int grib_is_missing_double(grib_accessor *a, double x);
+int grib_is_missing_string(grib_accessor* a,unsigned char* x,size_t len);
 int grib_accessor_is_missing(grib_accessor *a, int *err);
 int grib_is_missing(grib_handle *h, const char *name, int *err);
 int grib_is_defined(grib_handle *h, const char *name);
@@ -1329,7 +1330,7 @@ int compare_points(const void *a, const void *b);
 /* grib_iterator_class_lambert_conformal.c */
 
 /* grib_iterator.c */
-int grib_get_data(grib_handle *h, double *lats, double *lons, double *values, size_t *size);
+int grib_get_data(grib_handle *h, double *lats, double *lons, double *values);
 int grib_iterator_next(grib_iterator *i, double *lat, double *lon, double *value);
 int grib_iterator_has_next(grib_iterator *i);
 int grib_iterator_previous(grib_iterator *i, double *lat, double *lon, double *value);
@@ -1389,6 +1390,7 @@ char get_dir_separator_char(void);
 const char *extract_filename(const char *filepath);
 int is_gaussian_global(double lat1, double lat2, double lon1, double lon2, long num_points_equator, const double *latitudes, double angular_precision);
 char *codes_getenv(const char *name);
+int compute_key_rank(grib_handle* h, grib_string_list* keys, const char* key);
 
 /* compile.c */
 void grib_compile_flags(grib_compiler *c, long flags);

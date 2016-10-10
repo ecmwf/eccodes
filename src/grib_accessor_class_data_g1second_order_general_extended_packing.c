@@ -724,6 +724,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         break;
     }
     if (orderOfSPD) {
+        Assert(orderOfSPD >=0 && orderOfSPD < numberOfValues);
         bias=X[orderOfSPD];
         for (i=orderOfSPD+1;i<numberOfValues;i++) {
             if ( bias > X[i] ) bias=X[i];

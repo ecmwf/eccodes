@@ -169,12 +169,12 @@ struct grib_values {
 } ;
 
 
-/*! Grib handle,   structure giving access to parsed grib values by keys
+/*! Grib handle,   structure giving access to parsed message values by keys
     \ingroup grib_handle
 */
 typedef struct grib_handle    grib_handle;
 
-/*! Grib multi field handle,   structure used to build multi fields messages.
+/*! Grib multi field handle,   structure used to build multi field GRIB messages.
     \ingroup grib_handle
  */
 typedef struct grib_multi_handle    grib_multi_handle;
@@ -184,7 +184,7 @@ typedef struct grib_multi_handle    grib_multi_handle;
 */
 typedef struct grib_context   grib_context;
 
-/*! Grib iterator, structure supporting a geographic iteration of values on a grib message.
+/*! Grib iterator, structure supporting a geographic iteration of values on a GRIB message.
     \ingroup grib_iterator
 */
 typedef struct grib_iterator  grib_iterator;
@@ -221,9 +221,6 @@ typedef struct bufr_descriptor bufr_descriptor;
 typedef struct bufr_descriptors_array bufr_descriptors_array;
 
 grib_fieldset *grib_fieldset_new_from_files(grib_context *c, char *filenames[], int nfiles, char **keys, int nkeys, char *where_string, char *order_by_string, int *err);
-
-
-
 void grib_fieldset_delete(grib_fieldset* set);
 void grib_fieldset_rewind(grib_fieldset* set);
 int grib_fieldset_apply_order_by(grib_fieldset* set,const char* order_by_string);
@@ -247,6 +244,7 @@ typedef struct grib_index grib_index;
  * @param filename    : name of the file of messages to be indexed
  * @param keys        : comma separated list of keys for the index.
  *    The type of the key can be explicitly declared appending :l for long,
+ *    (or alternatively :i)
  *    :d for double, :s for string to the key name. If the type is not
  *    declared explicitly, the native type is assumed.
  * @param err         :  0 if OK, integer value on error
@@ -260,6 +258,7 @@ grib_index* grib_index_new_from_file(grib_context* c,
  * @param c           : context  (NULL for default context)
  * @param keys        : comma separated list of keys for the index.
  *    The type of the key can be explicitly declared appending :l for long,
+ *    (or alternatively :i)
  *    :d for double, :s for string to the key name. If the type is not
  *    declared explicitly, the native type is assumed.
  * @param err         :  0 if OK, integer value on error
@@ -422,6 +421,7 @@ int grib_write_message(grib_handle* h,const char* file,const char* mode);
 typedef struct grib_string_list grib_string_list;
 struct grib_string_list {
   char* value;
+  int count;
   grib_string_list* next;
 };
 
@@ -543,7 +543,7 @@ int grib_multi_handle_write(grib_multi_handle* mh,FILE* f);
 /**
 * getting the message attached to a handle
 *
-* @param h              : the grib handle to which the buffer should be gathered
+* @param h              : the handle to which the buffer should be gathered
 * @param message        : the pointer to be set to the handle's data
 * @param message_length : On exit, the message size in number of bytes
 * @return            0 if OK, integer value on error
@@ -554,7 +554,7 @@ int grib_get_message(grib_handle* h ,const void** message, size_t *message_lengt
 /**
 * getting a copy of the message attached to a handle
 *
-* @param h              : the grib handle to which the buffer should be returned
+* @param h              : the handle to which the buffer should be returned
 * @param message        : the pointer to the data buffer to be filled
 * @param message_length : On entry, the size in number of bytes of the allocated empty message.
 *                         On exit, the actual message length in number of bytes
@@ -587,7 +587,7 @@ grib_iterator*      grib_iterator_new      (grib_handle*   h, unsigned long flag
 * @param values      : returned array of data values
 * @return            0 if OK, integer value on error
 */
-int grib_get_data(grib_handle *h, double *lats, double *lons, double *values, size_t *size);
+int grib_get_data(grib_handle *h, double *lats, double *lons, double *values);
 
 /**
 * Get the next value from an iterator.
@@ -681,7 +681,7 @@ int                 grib_nearest_delete   (grib_nearest *nearest);
 * Find the nearest point of a set of points whose latitudes and longitudes
 * are given in the inlats, inlons arrays respectively.
 * If the flag is_lsm is 1 the nearest land point is returned and the
-* grib passed as handle (h) is considered a land sea mask.
+* GRIB passed as handle (h) is considered a land sea mask.
 * The land nearest point is the nearest point with land sea mask value>=0.5.
 * If no nearest land points are found the nearest value is returned.
 * If the flag is_lsm is 0 the nearest point is returned.
@@ -924,6 +924,18 @@ int grib_set_force_double_array(grib_handle* h, const char* key, const double* v
 * @return            0 if OK, integer value on error
 */
 int grib_set_long_array   (grib_handle* h, const char*  key , const long*          vals   , size_t length);
+
+/**
+*  Set a string array from a key. If several keys of the same name are present, the last one is set
+*  @see  grib_get_string_array
+*
+* @param h           : the handle to set the data to
+* @param key         : the key to be searched
+* @param vals        : the address of a string array where the data will be read
+* @param length      : a size_t that contains the length of the array on input
+* @return            0 if OK, integer value on error
+*/
+int grib_set_string_array(grib_handle* h, const char *key, const char **vals, size_t length);
 /*! @} */
 
 
@@ -932,7 +944,7 @@ int grib_set_long_array   (grib_handle* h, const char*  key , const long*       
 *
 * @param h            : the handle to be printed
 * @param out          : output file handle
-* @param mode         : available dump modes are: debug wmo c_code
+* @param mode         : Examples of available dump modes: debug wmo
 * @param option_flags : all the GRIB_DUMP_FLAG_x flags can be used
 * @param arg          : used to provide a format to output data (experimental)
 */
@@ -1176,7 +1188,7 @@ void    grib_context_set_logging_proc(grib_context* c, grib_log_proc logp);
 void grib_multi_support_on(grib_context* c);
 
 /**
-*  Turn off support for multiple fields in single grib messages
+*  Turn off support for multiple fields in single GRIB messages
 *
 * @param c            : the context to be modified
 */
@@ -1224,10 +1236,10 @@ attributes or by the namespace they belong to.
 /*! Create a new iterator from a valid and initialised handle.
 *  @param h             : the handle whose keys you want to iterate
 *  @param filter_flags  : flags to filter out some of the keys through their attributes
-*  @param name_space     : if not null the iteration is carried out only on
+*  @param name_space    : if not null the iteration is carried out only on
 *                         keys belonging to the namespace passed. (NULL for all the keys)
 *  @return              keys iterator ready to iterate through keys according to filter_flags
-*                         and namespace
+*                       and namespace
 */
 grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space);
 
@@ -1649,5 +1661,7 @@ Error codes returned by the grib_api functions.
 #define GRIB_UNSUPPORTED_EDITION		-64
 /** Value out of coding range */
 #define GRIB_OUT_OF_RANGE		-65
+/** Size of bitmap is incorrect */
+#define GRIB_WRONG_BITMAP_SIZE		-66
 /*! @}*/
 #endif

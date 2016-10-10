@@ -63,7 +63,10 @@ FLOAT3    {NSIGNED}+{EXP}?
 IDENT1     [_A-Za-z]+[_0-9A-Za-z]*
 IDENT2     "\/"{IDENT1}"\="({NSIGNED}|{FLOAT1}|{FLOAT2}|{FLOAT3})"\/"{IDENT1}
 IDENT3     "\#"{NUMB}"\#"{IDENT1}
-IDENT     {IDENT1}|{IDENT2}|{IDENT3}
+IDENT4     {NUMB}+{IDENT1}
+IDENT_ATTR  "->"{IDENT1}
+IDENT5    ({IDENT1}|{IDENT3}|{IDENT4})({IDENT_ATTR})+
+IDENT     {IDENT1}|{IDENT2}|{IDENT3}|{IDENT4}|{IDENT5}
 
 %%
 
@@ -165,8 +168,6 @@ IDENT     {IDENT1}|{IDENT2}|{IDENT3}
 "no_copy"           return NO_COPY;
 "edition_specific"    return EDITION_SPECIFIC;
 "dump"                return DUMP;
-"json"                return JSON;
-"xml"                return XML;
 "no_fail"            return NO_FAIL;
 "hidden"              return HIDDEN;
 "can_be_missing"      return CAN_BE_MISSING;

@@ -23,13 +23,13 @@ grib_option grib_options[]={
         {"p:",0,0,1,1,0},
         {"P:",0,0,0,1,0},
         {"w:","key[:{s/d/i}]{=/!=}value,key[:{s/d/i}]=value,...",
-                "\n\t\tWhere clause.\n\t\tSet is only executed for grib messages matching all the "
-                "key/value constraints.\n\t\tIf a grib message does not match the constraints it is"
-                " copied unchanged\n\t\tto the output_grib_file. This behaviour can be changed "
-                "setting the option -S."
-                "\n\t\tA valid constraint is of type key=value or key!=value."
-                "\n\t\tFor each key a string (key:s), a double (key:d) or"
-                " an integer (key:i)\n\t\ttype can be defined. Default type is string.\n",0,1,0},
+              "\n\t\tWhere clause.\n\t\tSet is only executed for grib messages matching all the "
+              "key/value constraints.\n\t\tIf a grib message does not match the constraints it is"
+              " copied unchanged\n\t\tto the output_grib_file. This behaviour can be changed "
+              "setting the option -S."
+              "\n\t\tA valid constraint is of type key=value or key!=value."
+              "\n\t\tFor each key a string (key:s), a double (key:d) or"
+              " an integer (key:i)\n\t\ttype can be defined. Default type is string.\n",0,1,0},
         {"q",0,0,1,0,0},
         {"7",0,0,0,1,0},
         {"S",0,0,0,1,0},
@@ -102,7 +102,7 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
 
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
-	size_t i=0;
+    size_t i=0;
     int err=0;
 
     if (!options->skip) {
@@ -131,12 +131,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 for(i = 0; i< size; i++)
                     v[i] =  options->constant;
             }
-#if 0
-            if (grib_options_on("n:")) {
-                for(i = 0; i< size; i++)
-                    v[i] =  options->constant;
-            }
-#endif
 
             if (err == GRIB_SUCCESS) {
                 GRIB_CHECK_NOLINE(grib_set_double_array(h,"values",v,size),0);
@@ -175,8 +169,8 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     return 0;
 }
 
-int grib_no_handle_action(int err) {
-  fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
-  return 0;
+int grib_no_handle_action(grib_runtime_options* options, int err)
+{
+    fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
+    return 0;
 }
-

@@ -34,8 +34,8 @@ program grib_get_keys
   
   ! Loop on all the messages in a file.
 
-  !     a new grib message is loaded from file
-  !     igrib is the grib id to be used in subsequent calls
+  ! A new GRIB message is loaded from file
+  ! igrib is the grib id to be used in subsequent calls
   call  codes_grib_new_from_file(ifile,igrib, iret) 
 
   LOOP: DO WHILE (iret /= CODES_END_OF_FILE)
@@ -43,11 +43,11 @@ program grib_get_keys
     ! For debugging
     call grib_dump(igrib)
 
-    !check if the value of the key is MISSING
+    ! Check if the value of the key is MISSING
     is_missing=0;
     call codes_is_missing(igrib,'Ni',is_missing);
     if ( is_missing /= 1 ) then
-        !     get as a integer
+        ! Key value is not missing so get as an integer
         call codes_get(igrib,'Ni',numberOfPointsAlongAParallel) 
         write(*,*) 'numberOfPointsAlongAParallel=', &
              numberOfPointsAlongAParallel
@@ -55,55 +55,55 @@ program grib_get_keys
         write(*,*) 'numberOfPointsAlongAParallel is missing'
     endif     
 
-    !     get as a integer
+    ! Get as an integer
     call codes_get(igrib,'Nj',numberOfPointsAlongAMeridian) 
     write(*,*) 'numberOfPointsAlongAMeridian=', &
          numberOfPointsAlongAMeridian
 
-    !     get as a real
+    ! Get as a real
     call codes_get(igrib, 'latitudeOfFirstGridPointInDegrees', &
           latitudeOfFirstPointInDegrees) 
     write(*,*) 'latitudeOfFirstGridPointInDegrees=', &
           latitudeOfFirstPointInDegrees
 
-    !     get as a real
+    ! Get as a real
     call codes_get(igrib, 'longitudeOfFirstGridPointInDegrees', &
           longitudeOfFirstPointInDegrees) 
     write(*,*) 'longitudeOfFirstGridPointInDegrees=', &
           longitudeOfFirstPointInDegrees
 
-    !     get as a real
+    ! Get as a real
     call codes_get(igrib, 'latitudeOfLastGridPointInDegrees', &
           latitudeOfLastPointInDegrees) 
     write(*,*) 'latitudeOfLastGridPointInDegrees=', &
           latitudeOfLastPointInDegrees
 
-    !     get as a real
+    ! Get as a real
     call codes_get(igrib, 'longitudeOfLastGridPointInDegrees', &
           longitudeOfLastPointInDegrees) 
     write(*,*) 'longitudeOfLastGridPointInDegrees=', &
           longitudeOfLastPointInDegrees
 
-    !     get the size of the values array
+    ! Get the size of the values array
     call codes_get_size(igrib,'values',numberOfValues)
     write(*,*) 'numberOfValues=',numberOfValues
 
     allocate(values(numberOfValues), stat=iret)
-    !     get data values
+    ! Get data values
     call codes_get(igrib,'values',values)
     call codes_get(igrib,'min',min_val) ! can also be obtained through minval(values)
     call codes_get(igrib,'max',max_val) ! can also be obtained through maxval(values)
     call codes_get(igrib,'average',average) ! can also be obtained through maxval(values)
 
     deallocate(values)
-          
+
     write(*,*)'There are ',numberOfValues, &
           ' average is ',average, &
           ' min is ',  min_val, &
           ' max is ',  max_val
-     
+
     call codes_release(igrib)
-     
+
     call codes_grib_new_from_file(ifile,igrib, iret)
 
   end do LOOP

@@ -53,12 +53,15 @@ TESTS = definitions.sh \
         padding.sh \
         lamb_az_eq_area.sh \
         grib_to_netcdf.sh \
-        debug.sh \
+        grib_dump_debug.sh \
         jpeg.sh \
         ccsds.sh \
         md5.sh \
         grib_util_set_spec.sh \
-        neg_fctime.sh
+        neg_fctime.sh \
+        ecc-197.sh \
+        ecc-286.sh \
+        ecc-288.sh
 
 # First download all the necessary data for testing
 # Note: if download fails, no tests will be done

@@ -15,7 +15,8 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 
-int grib_get_data(grib_handle* h,double* lats, double* lons,double* values,size_t* size) {
+int grib_get_data(grib_handle* h,double* lats, double* lons,double* values)
+{
     int err=0;
     grib_iterator* iter=NULL;
     double *lat,*lon,*val;

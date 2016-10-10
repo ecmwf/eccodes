@@ -1,10 +1,10 @@
 
 AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@ @FORCE_32_CFLAGS@
 
-TESTS = copy_message.sh grib_get_keys.sh get_data.sh get_pl.sh get_pv.sh grib_keys_iterator.sh \
+TESTS = grib_copy_message.sh grib_get_keys.sh grib_get_data.sh get_pl.sh get_pv.sh grib_keys_iterator.sh \
         grib_nearest.sh grib_precision.sh grib_multi_write.sh grib_multi.sh \
         grib_print_data.sh grib_set_keys.sh \
-        grib_set_bitmap.sh set_missing.sh grib_set_pv.sh samples.sh grib_count_messages.sh \
+        grib_set_bitmap.sh grib_set_missing.sh grib_set_pv.sh grib_samples.sh grib_count_messages.sh \
         read_message.sh grib_count_messages_multi.sh \
         read_from_file.sh grib_index.sh get_set_uuid.sh \
         bufr_attributes.sh grib_clone.sh bufr_clone.sh \
@@ -15,9 +15,9 @@ TESTS = copy_message.sh grib_get_keys.sh get_data.sh get_pl.sh get_pv.sh grib_ke
         bufr_read_tropical_cyclone.sh bufr_read_scatterometer.sh
 
 noinst_PROGRAMS  = eccodes_f_grib_index \
-                   eccodes_f_copy_message \
+                   eccodes_f_grib_copy_message \
                    eccodes_f_grib_get_keys \
-                   eccodes_f_get_data \
+                   eccodes_f_grib_get_data \
                    eccodes_f_get_pl \
                    eccodes_f_get_pv \
                    eccodes_f_grib_keys_iterator \
@@ -29,9 +29,9 @@ noinst_PROGRAMS  = eccodes_f_grib_index \
                    eccodes_f_grib_print_data_static \
                    eccodes_f_grib_set_keys \
                    eccodes_f_grib_set_bitmap \
-                   eccodes_f_set_missing \
+                   eccodes_f_grib_set_missing \
                    eccodes_f_grib_set_pv \
-                   eccodes_f_samples \
+                   eccodes_f_grib_samples \
                    eccodes_f_grib_count_messages \
                    eccodes_f_grib_count_messages_multi \
                    eccodes_f_read_message \
@@ -57,9 +57,9 @@ noinst_PROGRAMS  = eccodes_f_grib_index \
                    eccodes_f_bufr_read_scatterometer
 
 eccodes_f_grib_index_SOURCES=grib_index.f90
-eccodes_f_copy_message_SOURCES=copy_message.f90
+eccodes_f_grib_copy_message_SOURCES=grib_copy_message.f90
 eccodes_f_grib_get_keys_SOURCES=grib_get_keys.f90
-eccodes_f_get_data_SOURCES=get_data.f90
+eccodes_f_grib_get_data_SOURCES=grib_get_data.f90
 eccodes_f_get_pl_SOURCES=get_pl.f90
 eccodes_f_get_pv_SOURCES=get_pv.f90
 eccodes_f_grib_keys_iterator_SOURCES=grib_keys_iterator.f90
@@ -71,9 +71,9 @@ eccodes_f_grib_print_data_SOURCES=grib_print_data.f90
 eccodes_f_grib_print_data_static_SOURCES=grib_print_data_static.f90
 eccodes_f_grib_set_keys_SOURCES=grib_set_keys.f90
 eccodes_f_grib_set_bitmap_SOURCES=grib_set_bitmap.f90
-eccodes_f_set_missing_SOURCES=set_missing.f90
+eccodes_f_grib_set_missing_SOURCES=grib_set_missing.f90
 eccodes_f_grib_set_pv_SOURCES=grib_set_pv.f90
-eccodes_f_samples_SOURCES=samples.f90
+eccodes_f_grib_samples_SOURCES=grib_samples.f90
 eccodes_f_grib_count_messages_SOURCES=grib_count_messages.f90
 eccodes_f_grib_count_messages_multi_SOURCES=grib_count_messages_multi.f90
 eccodes_f_read_message_SOURCES=read_message.f90

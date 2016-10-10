@@ -247,7 +247,10 @@ list( APPEND grib_api_srcs
     grib_accessor_class_unsigned.c
     grib_accessor_class_unsigned_bits.c
     grib_accessor_class_raw.c
+    grib_accessor_class_bufr_simple_thinning.c
     grib_accessor_class_bufr_extract_subsets.c
+    grib_accessor_class_bufr_extract_area_subsets.c
+    grib_accessor_class_bufr_extract_datetime_subsets.c
     grib_accessor_class_spd.c
     grib_accessor_class_sum.c
     grib_accessor_class_to_integer.c
@@ -272,9 +275,17 @@ list( APPEND grib_api_srcs
     grib_dumper_class_debug.c
     grib_dumper_class_default.c
     grib_dumper_class_keys.c
+    grib_dumper_class_bufr_encode_C.c
+    grib_dumper_class_bufr_encode_filter.c
+    grib_dumper_class_bufr_encode_fortran.c
+    grib_dumper_class_bufr_encode_python.c
+    grib_dumper_class_bufr_decode_C.c
+    grib_dumper_class_bufr_decode_filter.c
+    grib_dumper_class_bufr_decode_fortran.c
+    grib_dumper_class_bufr_decode_python.c
     grib_dumper_class_json.c
     grib_dumper_class_xml.c
-    grib_dumper_class_c_code.c
+    grib_dumper_class_grib_encode_C.c
     grib_dumper_class_wmo.c
     grib_dumper_class.c
     grib_context.c

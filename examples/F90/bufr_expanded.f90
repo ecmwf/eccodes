@@ -10,7 +10,7 @@
 !
 ! FORTRAN 90 Implementation: bufr_expanded
 !
-! Description: how to read all the exapanded data values from BUFR messages.
+! Description: how to read all the expanded data values from BUFR messages.
 !
 !
 program bufr_expanded
@@ -31,19 +31,19 @@ real(kind=8), dimension(:), allocatable       :: values
   call codes_bufr_new_from_file(ifile,ibufr,iret)
 
   do while (iret/=CODES_END_OF_FILE)
-    
+
     ! get and print some keys form the BUFR header 
     write(*,*) 'message: ',count
 
     ! we need to instruct ecCodes to expand all the descriptors 
     ! i.e. unpack the data values
     call codes_set(ibufr,"unpack",1);
-    
-    ! get the exapanded data values
+
+    ! get the expanded data values
     call codes_get(ibufr,'numericValues',values)
 
     numberOfValues=size(values)
- 
+
     do i=1,numberOfValues
         write(*,*) '  ',i,values(i)
     enddo
@@ -53,16 +53,16 @@ real(kind=8), dimension(:), allocatable       :: values
 
     ! load the next bufr message
     call codes_bufr_new_from_file(ifile,ibufr,iret)
-    
-    ! free array 
-    deallocate(values)
-        
-    count=count+1
-    
-  end do  
 
-! close file  
+    ! free array
+    deallocate(values)
+
+    count=count+1
+
+  end do
+
+! close file
   call codes_close_file(ifile)
- 
+
 
 end program bufr_expanded

@@ -12,27 +12,24 @@
 
 REDIRECT=/dev/null
 
-#set -eax 
-
 dir="${data_dir}/tigge/"
 
 # check tigge global
-for file in ${dir}/tigge_*.grib
+for file in ${dir}tigge_*.grib
 do
    ${tigge_dir}tigge_check ${file} 2> $REDIRECT > $REDIRECT
 done
 
 # check tigge-lam
-for file in ${dir}/tiggelam_*.grib
+for file in ${dir}tiggelam_*.grib
 do
    ${tigge_dir}tigge_check -l ${file} 2> $REDIRECT > $REDIRECT
 done
 
 
-# Now test non-TIGGE files too. We now expect tigge_check to fail!
-# All the grib files in the samples are non-TIGGE
-for file in ${ECCODES_SAMPLES_PATH}/*.tmpl
-do
+# Test non-TIGGE files too. We now expect tigge_check to fail!
+# All the GRIB files in the samples are non-TIGGE
+for file in ${ECCODES_SAMPLES_PATH}/regular_*.tmpl; do
    set +e
    ${tigge_dir}tigge_check ${file} 2> $REDIRECT > $REDIRECT
    status=$?
@@ -53,5 +50,26 @@ diff ${data_dir}/tigge_pf_ecmwf.grib2.ref $TEMP
 input=${dir}/tigge_ecmf_sfc_sd.grib
 ${tools_dir}grib_set -s productionStatusOfProcessedData=5 $input $TEMP
 ${tools_dir}grib_compare -bproductionStatusOfProcessedData $input $TEMP
+
+rm -f $TEMP
+
+# GRIB-757 validity date/time check fails for the following:
+tigge_bad_validity="
+  tigge_kwbc_sfc_sf.grib
+  tigge_kwbc_sfc_slhf.grib
+  tigge_kwbc_sfc_sshf.grib
+  tigge_kwbc_sfc_ssr.grib
+  tigge_kwbc_sfc_str.grib
+  tigge_kwbc_sfc_ttr.grib
+"
+for file in $tigge_bad_validity; do
+   set +e
+   ${tigge_dir}tigge_check -w ${dir}${file} > $TEMP
+   status=$?
+   set -e
+   [ $status -eq 1 ]
+   cat $TEMP
+   grep -q "invalid validity Date/Time" $TEMP
+done
 
 rm -f $TEMP

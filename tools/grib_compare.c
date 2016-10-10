@@ -124,7 +124,7 @@ grib_option grib_options[]={
     {"E:","end","Last field to be processed.\n",0,1,0},
     {"a",0,"-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n"
             ,0,1,0},
-    {"H",0,"Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},
+    {"H",0,"Compare only message headers (everything except data and bitmap). Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},
     {"R:",0,0,0,1,0},
     {"A:",0,0,0,1,0},
     {"P",0,"Compare data values using the packing error as tolerance.\n",0,1,0},
@@ -146,14 +146,13 @@ int theStart=-1;
 int theEnd=-1;
 
 char* grib_tool_description=
-  "Compare grib messages contained in two files."
+  "Compare GRIB messages contained in two files."
   "\n\tIf some differences are found it fails returning an error code."
   "\n\tFloating point values are compared exactly by default, different tolerance can be defined see -P -A -R."
   "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
 char* grib_tool_name="grib_compare";
-char* grib_tool_usage="[options] "
-        "grib_file grib_file";
+char* grib_tool_usage="[options] grib_file1 grib_file2";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
@@ -451,8 +450,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
             morein2++;
 
         grib_handle_delete(global_handle);
-
-
     }
 
     grib_handle_delete(h);
@@ -1129,7 +1126,7 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
     return err;
 }
 
-int grib_no_handle_action(int err)
+int grib_no_handle_action(grib_runtime_options* options, int err)
 {
     fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
     return 0;

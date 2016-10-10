@@ -50,7 +50,7 @@
 174 174 Top surface of ice on sea, lake or river 
 175 175 Top surface of ice, under snow cover, on sea, lake or river 
 176 176 Bottom surface (underside) ice on sea, lake or river 
-177 177 Deep soil (of indefinite depth) 
+177 sfc Deep soil (of indefinite depth) 
 178 178 Reserved 
 179 179 Top surface of glacier ice and inland ice 
 180 180 Deep inland or glacier ice (of indefinite depth) 

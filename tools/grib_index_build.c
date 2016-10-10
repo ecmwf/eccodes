@@ -15,7 +15,7 @@
 
 #include "grib_tools.h"
 
-char* grib_tool_description="Build an index file for a set of input grib files.";
+char* grib_tool_description="Build an index file for a set of input GRIB files.";
 char* grib_tool_name="grib_index_build";
 char* grib_tool_usage="[options] grib_file grib_file ... ";
 grib_index* idx=NULL;
@@ -148,7 +148,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     return 0;
 }
 
-int grib_no_handle_action(int err)
+int grib_no_handle_action(grib_runtime_options* options, int err)
 {
     fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
     return 0;

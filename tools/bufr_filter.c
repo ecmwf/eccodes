@@ -35,7 +35,7 @@ char* grib_tool_description="Apply the rules defined in rules_file to each BUFR 
    "If you specify '-' (a single dash) for the rules_file, the rules will be read from standard input.";
 char* grib_tool_name="bufr_filter";
 char* grib_tool_usage="[options] rules_file "
-        "file file ...";
+        "bufr_file bufr_file ...";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
@@ -59,6 +59,9 @@ int grib_tool_init(grib_runtime_options* options)
 
     if ( options->outfile && options->outfile->name )
         options->action->context->outfilename=options->outfile->name;
+
+    /* Turn off GRIB multi-field support mode. Not relevant for BUFR */
+    grib_multi_support_off(grib_context_get_default());
 
     return 0;
 }
@@ -114,8 +117,8 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     return 0;
 }
 
-int grib_no_handle_action(int err) {
-  fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
-  return 0;
+int grib_no_handle_action(grib_runtime_options* options, int err)
+{
+    fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
+    return 0;
 }
-

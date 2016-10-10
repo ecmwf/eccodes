@@ -142,11 +142,6 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 83 ;
 	}
-#Albedo
-'al' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 84 ;
-	}
 #Evaporation
 'e' = {
 	 table2Version = 3 ;
@@ -843,11 +838,6 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 83 ;
 	}
-#Albedo
-'al' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 84 ;
-	}
 #Evaporation
 'e' = {
 	 table2Version = 2 ;
@@ -1528,11 +1518,6 @@
 'sr' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 83 ;
-	}
-#Albedo
-'al' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 84 ;
 	}
 #Evaporation
 'e' = {

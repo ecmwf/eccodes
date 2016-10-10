@@ -8,29 +8,28 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FOTRAN 90 Implementation: bufr_get_string_array
+! FORTRAN 90 Implementation: bufr_get_string_array
 !
 ! Description: how to get an array of strings from a BUFR message.
  
 program bufr_get_string_array
-use eccodes
-implicit none
-integer            :: ifile
-integer            :: iret,i,n
-integer            :: ibufr
-integer            :: strsize
-integer, parameter  :: max_strsize = 20
-character(len=max_strsize) , dimension(:),allocatable   :: stationOrSiteName 
+  use eccodes
+  implicit none
+  integer            :: ifile
+  integer            :: iret,i,n
+  integer            :: ibufr
+  integer            :: strsize
+  integer, parameter  :: max_strsize = 20
+  character(len=max_strsize) , dimension(:),allocatable   :: stationOrSiteName 
 
   call codes_open_file(ifile,'../../data/bufr/pgps_110.bufr','r')
 
   call codes_bufr_new_from_file(ifile,ibufr,iret)
 
-
   ! unpack the data values
   call codes_set(ibufr,'unpack',1)
 
-  ! get the width of the strings which is te same for all of them
+  ! get the width of the strings which is the same for all of them
   call codes_get(ibufr,'stationOrSiteName->width',strsize)
 
   ! the width is given in bits
@@ -42,7 +41,7 @@ character(len=max_strsize) , dimension(:),allocatable   :: stationOrSiteName
     print *,'stationOrSiteName array dimension is ',max_strsize,' and should be ',strsize
     call exit(1)
   end if
-    
+
   ! allocating the array of strings to be passed to codes_get_string_array is mandatory
   call codes_get_size(ibufr,'stationOrSiteName',n)
   allocate(stationOrSiteName(n))
@@ -55,14 +54,12 @@ character(len=max_strsize) , dimension(:),allocatable   :: stationOrSiteName
 
   !remember to deallocate 
   deallocate(stationOrSiteName)
-    
+
   ! release memory associated with bufr handle
-  ! ibufr won't be accessible any more from codes_release on
+  ! ibufr won't be accessible after this
   call codes_release(ibufr)
 
   ! close file  
   call codes_close_file(ifile)
- 
 
 end program bufr_get_string_array
-

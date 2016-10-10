@@ -150,6 +150,10 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
+#ifdef ECCODES_ON_WINDOWS
+#define round(a) ( (a) >=0 ? ((a)+0.5) : ((a)-0.5) )
+#endif
+
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
     grib_accessor_bits* self = (grib_accessor_bits*)a;
@@ -221,7 +225,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     p  = h->buffer->data + grib_byte_offset(x);
     *val=grib_decode_unsigned_long(p,&start,length);
 
-    *val=(*val+self->referenceValue)/self->scale;
+    *val=((long)*val+self->referenceValue)/self->scale;
 
     *len=1;
 
@@ -246,7 +250,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     p=h->buffer->data + grib_byte_offset(x);
 
-    lval= *val *self->scale - self->referenceValue;
+    lval= round(*val * self->scale) - self->referenceValue;
     return grib_encode_unsigned_longb(p,lval,&start,length);
 
 }

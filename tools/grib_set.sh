@@ -37,12 +37,10 @@ To change packing algorithm from grid_simple (simple packing) to grid_jpeg (jpeg
 >grib_set -s packingType=grid_jpeg ../data/regular_gaussian_model_level.grib2 out.grib2
 \\endverbatim\\n"
 
-echo "-# It's possible to ask grib_api to calculate the number of bits per value needed to pack a given
+echo "-# It's possible to ask ecCodes to calculate the number of bits per value needed to pack a given
 field with a fixed number of decimal digits of precision. For example if we want to pack a temperature
 expressed in Kelvin with 1 digits of precision after the decimal point we can set changeDecimalPrecision=1 \\n
 \\verbatim 
 >grib_set -s changeDecimalPrecision=1 ../data/regular_latlon_surface.grib2 ../data/out.grib2
-rm -f ../data/out.grib2 | true
-./grib_set -s changeDecimalPrecision=1 ../data/regular_latlon_surface.grib2 ../data/out.grib2
 \\endverbatim\\n"
 

@@ -11,7 +11,7 @@
 /*
  * C Implementation: bufr_expanded
  *
- * Description: how to read all the exapanded data values from BUFR messages.
+ * Description: how to read all the expanded data values from BUFR messages.
  *
  */
 
@@ -62,7 +62,7 @@ int main(int argc,char* argv[])
         /* allocate array for data values */
         values = (double*)malloc(values_len*sizeof(double));
 
-        /* get the exapanded data values*/
+        /* get the expanded data values*/
         CODES_CHECK(codes_get_double_array(h, "numericValues", values, &values_len),0);
 
         for(i = 0; i < values_len; i++)

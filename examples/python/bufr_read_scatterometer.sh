@@ -11,25 +11,22 @@
 . ./include.sh
 
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_read_scatterometer_p"
 
-#Define tmp file
+# Define tmp file
 fTmp=${label}.tmp.txt
-rm -f $fTmp | true
+rm -f $fTmp
 
-#We check "asca_1391.bufr". The path is
-#hardcoded in the example
+# We check "asca_1391.bufr". The path is hardcoded in the example
 
 REDIRECT=/dev/null
 
-#Write the key values into a file
+# Write the key values into a file
 $PYTHON $examples_src/bufr_read_scatterometer.py 2> $REDIRECT > $fTmp
 
-#TODO: check the results
+# Check the results
+grep -q "Number of values: 2016" $fTmp
 
-#cat  $fTmp
-
-#Clean up
+# Clean up
 rm -f $fTmp
-

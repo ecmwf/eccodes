@@ -497,7 +497,7 @@ static void destroy(grib_context* ct, grib_accessor* a)
         grib_context_free(ct,a->vvalue);
         a->vvalue=NULL;
     }
-    grib_context_log(ct,GRIB_LOG_DEBUG,"address=%p",a);
+    /*grib_context_log(ct,GRIB_LOG_DEBUG,"address=%p",a);*/
 }
 
 static grib_section* sub_section(grib_accessor* a)

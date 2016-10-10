@@ -17,7 +17,7 @@ void test_reduced_gg(const char* input_filename, const char* output_filename)
     /* based on copy_spec_from_ksec */
     int err = 0;
     size_t slen = 32, inlen = 0, outlen = 0;
-    size_t size=0;
+    size_t i=0, size=0;
     int set_spec_flags=0;
     double* values = NULL;
     FILE* in = NULL;
@@ -43,20 +43,23 @@ void test_reduced_gg(const char* input_filename, const char* output_filename)
     CODES_CHECK(grib_get_size(handle,"values",&inlen), 0);
     values = (double*)malloc(sizeof(double)*inlen);
     CODES_CHECK(grib_get_double_array(handle, "values", values,&inlen), 0);
+    for(i=0; i<inlen; ++i) {
+        values[i] *= 1.10;
+    }
 
     spec.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
-    spec.N = 320;   /* hardcoded for now */
+    spec.N = 32;   /* hardcoded for now */
     spec.Nj = 2 * spec.N;
     outlen = inlen;
     spec.iDirectionIncrementInDegrees = 1.5;
     spec.jDirectionIncrementInDegrees = 1.5;
-    spec.latitudeOfFirstGridPointInDegrees  = 89.785;
+    spec.latitudeOfFirstGridPointInDegrees  = 87.863799;
     spec.longitudeOfFirstGridPointInDegrees = 0.0;
-    spec.latitudeOfLastGridPointInDegrees   = -89.785;
-    spec.longitudeOfLastGridPointInDegrees  = 359.719;
+    spec.latitudeOfLastGridPointInDegrees   = -spec.latitudeOfFirstGridPointInDegrees;
+    spec.longitudeOfLastGridPointInDegrees  = 357.187500;
     spec.bitmapPresent = 0;
 
-    packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;
+    packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER;
     packing_spec.bitsPerValue = 24;
     packing_spec.accuracy=GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
     packing_spec.packing=GRIB_UTIL_PACKING_USE_PROVIDED;
@@ -131,6 +134,9 @@ void test_regular_ll(const char* input_filename, const char* output_filename)
     packing_spec.bitsPerValue = 24;
     packing_spec.accuracy=GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
     packing_spec.packing=GRIB_UTIL_PACKING_USE_PROVIDED;
+    /* Convert to edition 2 and remove local use section */
+    packing_spec.editionNumber = 2;
+    packing_spec.deleteLocalDefinition = 1;
 
     finalh = codes_grib_util_set_spec(
             handle,
@@ -161,6 +167,6 @@ int main(int argc, char *argv[])
 
     test_regular_ll(infile, outfile);
     test_reduced_gg(infile, outfile);
-
+    printf("ALL OK\n");
     return 0;
 }

@@ -618,6 +618,7 @@ static int read_BUFR(reader *r)
     /* assert(edition != 1); */
 
     switch (edition) {
+      case 0:
       case 1:
         {
         int n;

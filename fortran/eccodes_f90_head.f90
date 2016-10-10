@@ -7,9 +7,8 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!> Module eccodes
-!>
-!> The eccodes module provides the Fortran 90 interface.
+!> Module eccodes\n
+!> This is the \b Fortran90 interface for ecCodes
 module eccodes
 
   use grib_api
@@ -27,7 +26,7 @@ module eccodes
 
   !> Create a new message in memory from an integer or character array containting the coded message.
   !>
-  !> The message can be accessed through its gribid and it will be available\n
+  !> The message can be accessed through its ID and it will be available\n
   !> until @ref codes_release is called. A reference to the original coded\n
   !> message is kept in the new message structure.
   !>
@@ -36,9 +35,9 @@ module eccodes
   !> gathered with @ref codes_get_error_string.
   !>
   !>
-  !> \b Examples: \ref copy_message.f90 "copy_message.f90"
+  !> \b Examples: \ref grib_copy_message.f90 "grib_copy_message.f90"
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param id          ID of the message loaded in memory
   !> @param message     array containing the coded message
   !> @param status      CODES_SUCCESS if OK, integer value on error
   interface codes_new_from_message
@@ -48,12 +47,12 @@ module eccodes
 
   !> Get a value of specified index from an array key.
   !>
-  !> Given a gribid and key name as input a value corresponding to the given index
+  !> Given an ID and key name as input a value corresponding to the given index
   !> is returned. The index is zero based i.e. the first element has
   !> zero index, the second element index one and so on.
   !> If the parameter index is an array all the values correspondig to the indexes
   !> list is returned.
-  !> The gribid references to a grib message loaded in memory.
+  !> The ID references to a message loaded in memory.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
@@ -63,7 +62,7 @@ module eccodes
   !>
   !> @see codes_new_from_file, codes_release, codes_get
   !>
-  !> @param[in] gribid      id of the grib loaded in memory
+  !> @param[in] id          ID of the message loaded in memory
   !> @param[in] key         key name
   !> @param[in] index       index can be a scalar or array of integer(4)
   !> @param[out] value      value can be a scalar or array of integer(4),real(4),real(8)
@@ -128,7 +127,7 @@ module eccodes
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref codes_get_error_string.
   !>
-  !> \b Examples: \ref get_data.f90 "get_data.f90"
+  !> \b Examples: \ref grib_get_data.f90 "grib_get_data.f90"
   !>
   !> @param[in] gribid       id of the grib loaded in memory
   !> @param[out] lats        latitudes array with dimension "size"

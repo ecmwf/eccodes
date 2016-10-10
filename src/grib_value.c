@@ -379,7 +379,7 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t *l
     a = grib_find_accessor(h, name);
 
     if (h->context->debug)
-        printf("ECCODES DEBUG grib_set_string %s=%s\n",name,val);
+        printf("ECCODES DEBUG grib_set_string %s=|%s|\n",name,val);
 
     if(a)
     {
@@ -538,6 +538,26 @@ int grib_is_missing_long(grib_accessor* a,long x)
 int grib_is_missing_double(grib_accessor* a,double x)
 {
     int ret = ( a==NULL || (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)) && (x==GRIB_MISSING_DOUBLE) ? 1 : 0;
+    return ret;
+}
+
+int grib_is_missing_string(grib_accessor* a, unsigned char* x, size_t len)
+{
+    /* For a string value to be missing, every character has to be */
+    /* all 1's (i.e. 0xFF) */
+    int ret;
+    size_t i=0;
+
+    if (len==0) return 0;
+    ret=1;
+    for (i=0;i<len;i++) {
+        if (x[i] != 0xFF ) {
+            ret=0;
+            break;
+        }
+    }
+
+    ret = ( a==NULL || ( (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) && ret==1 )) ? 1 : 0;
     return ret;
 }
 
@@ -769,7 +789,15 @@ static int _grib_set_long_array(grib_handle* h, const char* name, const long* va
 {
     size_t encoded = 0;
     grib_accessor* a = grib_find_accessor(h, name);
-    int err = a ?_grib_set_long_array_internal(h,a,val,length,&encoded,check) : GRIB_NOT_FOUND ;
+    int err =0;
+
+    if (!a) return GRIB_NOT_FOUND ;
+    if (name[0]=='/' || name[0]=='#' ) {
+        if(check && (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY))
+            return GRIB_READ_ONLY;
+        err=grib_pack_long(a, val, &length);
+        encoded=length;
+    } else err=_grib_set_long_array_internal(h,a,val,length,&encoded,check);
 
     if(err == GRIB_SUCCESS && length > encoded)
         err = GRIB_ARRAY_TOO_SMALL;
