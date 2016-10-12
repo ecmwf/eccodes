@@ -31,7 +31,7 @@ fRules=${label}.filter
 # Test: Area extraction
 #-----------------------------------------------------------
 cat > $fRules <<EOF
- transient originalNumberOfSubsets=numberOfSubsets;
+ transient originalNumberOfSubsets = numberOfSubsets;
  set extractAreaNorthLatitude=52.5;
  set extractAreaSouthLatitude=51.1;
  set extractAreaWestLongitude=155.2;
@@ -40,6 +40,7 @@ cat > $fRules <<EOF
  set doExtractArea=1;
  write;
  print "extracted [numberOfSubsets] of [originalNumberOfSubsets] subsets";
+ assert(numberOfSubsets == extractedAreaNumberOfSubsets);
 EOF
 
 inputBufr="amsa_55.bufr"
