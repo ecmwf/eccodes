@@ -71,6 +71,11 @@ size_t SphericalHarmonics::truncation() const {
 }
 
 
+void SphericalHarmonics::comparison(std::string& compare) const {
+    compare = "SphericalHarmonics";
+}
+
+
 void SphericalHarmonics::truncate(
         size_t truncation_from,
         size_t truncation_to,

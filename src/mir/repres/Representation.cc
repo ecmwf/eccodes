@@ -157,6 +157,11 @@ size_t Representation::truncation() const {
 }
 
 
+void Representation::comparison(std::string&) const {
+    // do nothing
+}
+
+
 size_t Representation::frame(std::vector<double> &values, size_t size, double missingValue) const {
     std::ostringstream os;
     os << "Representation::frame() not implemented for " << *this;
