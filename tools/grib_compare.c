@@ -818,10 +818,20 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
         }
 
         if (!compareAbsolute) {
+            int all_specified = 0; /* =1 if relative comparison with "all" specified */
             for (i=0;i<options->tolerance_count;i++) {
-                if (!strcmp((options->tolerance[i]).name,name)) {
+                if (!strcmp((options->tolerance[i]).name, "all")) {
+                    all_specified = 1;
                     value_tolerance=(options->tolerance[i]).double_value;
                     break;
+                }
+            }
+            if (!all_specified) {
+                for (i=0;i<options->tolerance_count;i++) {
+                    if (!strcmp((options->tolerance[i]).name,name)) {
+                        value_tolerance=(options->tolerance[i]).double_value;
+                        break;
+                    }
                 }
             }
         }
