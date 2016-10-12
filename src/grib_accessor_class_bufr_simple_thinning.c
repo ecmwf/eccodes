@@ -185,6 +185,7 @@ static int apply_thinning(grib_accessor* a)
 
         ret=grib_get_long(h,self->simpleThinningSkip,&skip);
         if (ret) return ret;
+        if (skip <= 0) return GRIB_INVALID_KEY_VALUE;
 
         ret=grib_get_long(h,self->simpleThinningMissingRadius,&radius);
         if (ret) return ret;
