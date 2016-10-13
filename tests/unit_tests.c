@@ -1374,16 +1374,16 @@ void test_string_splitting()
     list = str_split(input, '|');
     for(i=0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 4);
-    assert( strcmp(list[0], "Born")==0 );
-    assert( strcmp(list[1], "To")==0 );
-    assert( strcmp(list[2], "Be")==0 );
-    assert( strcmp(list[3], "Wild")==0 );
+    if ( strcmp(list[0], "Born")!=0 ) assert(0);
+    if ( strcmp(list[1], "To")  !=0 ) assert(0);
+    if ( strcmp(list[2], "Be")  !=0 ) assert(0);
+    if ( strcmp(list[3], "Wild")!=0 ) assert(0);
 
     strcpy(input, "Steppenwolf");
     list = str_split(input, '|');
     for(i=0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 1);
-    assert( strcmp(list[0], "Steppenwolf")==0 );
+    if ( strcmp(list[0], "Steppenwolf")!=0 ) assert(0);
 
     /* Note: currently cannot cope with */
     /*  input being NULL */
