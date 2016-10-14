@@ -409,8 +409,10 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     err = grib_unpack_string(a,value,&size);
     p=value;
 
-    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0) {
+        grib_context_free(c,value);
         return;
+    }
 
     while(*p) { if(!isprint(*p)) *p = '.'; p++; }
 

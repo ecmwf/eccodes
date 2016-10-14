@@ -225,8 +225,7 @@ static void init_class(grib_accessor_class* c)
 /* Set the error code, if it is bad and we should fail (default case), return */
 /* variable 'err' is assumed to be pointer to int */
 /* If BUFRDC mode is enabled, then we tolerate problems like wrong data section length */
-#define CHECK_END_DATA_RETURN_0(ctx,b,size)   {*err=check_end_data(ctx,b,size); if (*err!=0 && ctx->bufrdc_mode==0) return 0; }
-#define CHECK_END_DATA_RETURN_ERR(ctx,b,size) {*err=check_end_data(ctx,b,size); if (*err!=0 && ctx->bufrdc_mode==0) return *err; }
+#define CHECK_END_DATA_RETURN(ctx,b,size,retval) {*err=check_end_data(ctx,b,size); if (*err!=0 && ctx->bufrdc_mode==0) return retval; }
 
 static int process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset);
 
@@ -428,14 +427,14 @@ static int decode_string_array(grib_context* c, unsigned char* data, long* pos, 
     modifiedWidth= bd->width;
 
     sval=(char*)grib_context_malloc_clear(c,modifiedWidth/8+1);
-    CHECK_END_DATA_RETURN_ERR(c,self,modifiedWidth);
+    CHECK_END_DATA_RETURN(c, self, modifiedWidth, *err);
     if (*err) {
       grib_sarray_push(c,sa,sval);
       grib_vsarray_push(c,self->stringValues,sa);
       return ret;
     }
     grib_decode_string(data,pos,modifiedWidth/8,sval);
-    CHECK_END_DATA_RETURN_ERR(c,self,6);
+    CHECK_END_DATA_RETURN(c, self, 6, *err);
     if (*err) {
       grib_sarray_push(c,sa,sval);
       grib_vsarray_push(c,self->stringValues,sa);
@@ -443,7 +442,7 @@ static int decode_string_array(grib_context* c, unsigned char* data, long* pos, 
     }
     width=grib_decode_unsigned_long(data,pos,6);
     if (width) {
-        CHECK_END_DATA_RETURN_ERR(c,self,width*8*self->numberOfSubsets);
+        CHECK_END_DATA_RETURN(c, self, width*8*self->numberOfSubsets, *err);
       if (*err) {
         grib_sarray_push(c,sa,sval);
         grib_vsarray_push(c,self->stringValues,sa);
@@ -478,7 +477,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
     modifiedFactor= bd->factor;
     modifiedWidth= bd->width;
 
-    CHECK_END_DATA_RETURN_0(c,self,modifiedWidth+6);
+    CHECK_END_DATA_RETURN(c, self, modifiedWidth+6, NULL);
     if (*err) {
       dval=GRIB_MISSING_DOUBLE;
       lval=0;
@@ -494,7 +493,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tlocalWidth=%ld",localWidth);
     ret=grib_darray_new(c,100,100);
     if (localWidth) {
-        CHECK_END_DATA_RETURN_0(c,self,localWidth*self->numberOfSubsets);
+        CHECK_END_DATA_RETURN(c, self, localWidth*self->numberOfSubsets, NULL);
         if (*err) {
           dval=GRIB_MISSING_DOUBLE;
           lval=0;
@@ -756,7 +755,7 @@ static char* decode_string_value(grib_context* c,unsigned char* data,long* pos, 
 
     len= bd->width / 8;
 
-    CHECK_END_DATA_RETURN_0(c,self,bd->width);
+    CHECK_END_DATA_RETURN(c, self, bd->width, NULL);
     sval=(char*)grib_context_malloc_clear(c,len+1);
     if (*err) {*err=0; return sval;}
     grib_decode_string(data,pos,len,sval);
@@ -781,7 +780,7 @@ static double decode_double_value(grib_context* c,unsigned char* data,long* pos,
     modifiedFactor= bd->factor;
     modifiedWidth= bd->width;
 
-    CHECK_END_DATA_RETURN_0(c,self,modifiedWidth);
+    CHECK_END_DATA_RETURN(c, self, modifiedWidth, 0);
     if (*err) {*err=0; return GRIB_MISSING_DOUBLE;}
 
     lval=grib_decode_unsigned_long(data,pos,modifiedWidth);
@@ -862,7 +861,7 @@ static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
             i,self->expanded->v[i]->code,self->expanded->v[i]->width);
     if (self->compressedData) {
         grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication localReference width=%ld", descriptors[i]->width);
-        CHECK_END_DATA_RETURN_ERR(c,self,descriptors[i]->width+6);
+        CHECK_END_DATA_RETURN(c, self, descriptors[i]->width+6, *err);
         if (*err) {
           *numberOfRepetitions=0;
         } else {
@@ -878,7 +877,7 @@ static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
           }
         }
     } else {
-        CHECK_END_DATA_RETURN_ERR(c,self,descriptors[i]->width);
+        CHECK_END_DATA_RETURN(c, self, descriptors[i]->width, *err);
         if (*err) { 
           *numberOfRepetitions=0;
         } else {
