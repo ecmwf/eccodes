@@ -152,6 +152,11 @@ Log mode for information for processing information
 \see grib_keys_iterator_new */
 #define GRIB_KEYS_ITERATOR_SKIP_FUNCTION           (1<<6)
 
+/*! only keys present in the dump
+\ingroup keys_iterator
+\see grib_keys_iterator_new */
+#define GRIB_KEYS_ITERATOR_DUMP_ONLY           (1<<7)
+
 typedef struct grib_key_value_list grib_key_value_list;
 
 typedef struct grib_values grib_values;

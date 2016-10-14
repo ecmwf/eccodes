@@ -257,6 +257,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
 {
 
     a->length = 0;
+    a->flags |= GRIB_ACCESSOR_FLAG_BUFR_DATA;
     /* a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
 }
 

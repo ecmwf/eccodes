@@ -201,16 +201,3 @@ void grib_xref_action_branch(FILE* out,grib_action* a,const char* path)
     }
 }
 
-void grib_compile(grib_action* a, grib_compiler* compiler)
-{
-    grib_action_class *c = a->cclass;
-    init(c);
-    if(c->compile) {
-        c->compile(a,compiler);
-    }
-    else 
-    {
-        fprintf(stderr, "NO COMPILE METHOD '%s'\n", c->name);
-        Assert(0);
-    }
-}

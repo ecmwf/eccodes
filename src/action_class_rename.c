@@ -20,7 +20,7 @@
    CLASS      = action
    IMPLEMENTS = create_accessor
    IMPLEMENTS = dump
-   IMPLEMENTS = destroy; xref; compile
+   IMPLEMENTS = destroy; xref
    MEMBERS    = char* the_old
    MEMBERS    = char* the_new
    END_CLASS_DEF
@@ -40,7 +40,6 @@ or edit "action.class" and rerun ./make_class.pl
 static void init_class      (grib_action_class*);
 static void dump            (grib_action* d, FILE*,int);
 static void xref            (grib_action* d, FILE* f,const char* path);
-static void compile         (grib_action* a, grib_compiler* compiler);
 static void destroy         (grib_context*,grib_action*);
 static int create_accessor(grib_section*,grib_action*,grib_loader*);
 
@@ -70,7 +69,6 @@ static grib_action_class _grib_action_class_rename = {
     0,                            /* notify_change */
     0,                            /* reparse */
     0,                            /* execute */
-    &compile,                            /* compile */
 };
 
 grib_action_class* grib_action_class_rename = &_grib_action_class_rename;
@@ -94,11 +92,6 @@ grib_action* grib_action_create_rename( grib_context* context, char* the_old, ch
     a->the_old=grib_context_strdup_persistent(context,the_old);
     a->the_new=grib_context_strdup_persistent(context,the_new);
     return act;
-}
-
-static void compile(grib_action* act, grib_compiler* compiler)
-{
-    Assert(0);
 }
 
 static void rename_accessor(grib_accessor *a,char* name)

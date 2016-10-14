@@ -68,7 +68,6 @@ static grib_action_class _grib_action_class_assert = {
     &notify_change,                            /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */
-    0,                            /* compile */
 };
 
 grib_action_class* grib_action_class_assert = &_grib_action_class_assert;

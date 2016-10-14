@@ -7,7 +7,6 @@ static void        init(grib_expression* e);
 static void        destroy(grib_context*,grib_expression* e);
 
 static void        print(grib_context*,grib_expression*,grib_handle*);
-static void        compile(grib_expression*,grib_compiler*);
 static void        add_dependency(grib_expression* e, grib_accessor* observer);
 static string get_name(grib_expression* e);
 
@@ -33,7 +32,6 @@ static grib_expression_class _grib_expression_class_NAME = {
     &init,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,                 
-    &compile,                 
     &add_dependency,       
 
 	&native_type,

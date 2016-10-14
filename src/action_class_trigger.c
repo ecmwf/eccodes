@@ -75,7 +75,6 @@ static grib_action_class _grib_action_class_trigger = {
     0,                            /* notify_change */
     &reparse,                            /* reparse */
     0,                            /* execute */
-    0,                            /* compile */
 };
 
 grib_action_class* grib_action_class_trigger = &_grib_action_class_trigger;
@@ -85,7 +84,6 @@ static void init_class(grib_action_class* c)
 	c->xref	=	(*(c->super))->xref;
 	c->notify_change	=	(*(c->super))->notify_change;
 	c->execute	=	(*(c->super))->execute;
-	c->compile	=	(*(c->super))->compile;
 }
 /* END_CLASS_IMP */
 

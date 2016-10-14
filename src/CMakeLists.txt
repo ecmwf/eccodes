@@ -284,7 +284,6 @@ list( APPEND grib_api_srcs
     grib_dumper_class_bufr_decode_fortran.c
     grib_dumper_class_bufr_decode_python.c
     grib_dumper_class_json.c
-    grib_dumper_class_xml.c
     grib_dumper_class_grib_encode_C.c
     grib_dumper_class_wmo.c
     grib_dumper_class.c
@@ -301,6 +300,7 @@ list( APPEND grib_api_srcs
     grib_itrie.c
     grib_rules.c
     grib_keys_iterator.c
+    bufr_keys_iterator.c
     grib_parse_utils.c
     grib_query.c
     grib_scaling.c
@@ -348,7 +348,6 @@ list( APPEND grib_api_srcs
     grib_iterator_class_regular.c
     grib_expression.c
     grib_util.c
-    compile.c
     functions.c
     grib_accessor_class.h
     grib_accessor_factory.h

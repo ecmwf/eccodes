@@ -119,6 +119,10 @@ Log mode for information for processing information
 \see codes_keys_iterator_new */
 #define CODES_KEYS_ITERATOR_SKIP_FUNCTION          GRIB_KEYS_ITERATOR_SKIP_FUNCTION
 
+/*!  only keys present in the dump
+\ingroup keys_iterator
+\see codes_keys_iterator_new */
+#define CODES_KEYS_ITERATOR_DUMP_ONLY          GRIB_KEYS_ITERATOR_DUMP_ONLY
 
 typedef struct grib_values            codes_values;
 typedef struct grib_key_value_list    codes_key_value_list;
@@ -1093,12 +1097,14 @@ attributes or by the namespace they belong to.
 *                         and namespace
 */
 codes_keys_iterator* codes_keys_iterator_new(codes_handle* h,unsigned long filter_flags, const char* name_space);
+codes_keys_iterator* bufr_keys_iterator_new(codes_handle* h);
 
 /*! Step to the next iterator.
 *  @param kiter         : valid codes_keys_iterator
 *  @return              1 if next iterator exists, 0 if no more elements to iterate on
 */
 int codes_keys_iterator_next(codes_keys_iterator *kiter);
+int bufr_keys_iterator_next(codes_keys_iterator *kiter);
 
 
 /*! get the key name from the iterator
@@ -1119,12 +1125,16 @@ int codes_keys_iterator_delete( codes_keys_iterator* kiter);
 */
 int codes_keys_iterator_rewind(codes_keys_iterator* kiter);
 
+char* bufr_keys_iterator_get_name(codes_keys_iterator* kiter);
+char* bufr_keys_iterator_get_next_attribute_name(grib_keys_iterator* kiter);
+
 int codes_keys_iterator_set_flags(codes_keys_iterator *kiter,unsigned long flags);
 
 int codes_keys_iterator_get_long(codes_keys_iterator *kiter, long *v, size_t *len);
 int codes_keys_iterator_get_double(codes_keys_iterator *kiter, double *v, size_t *len);
 int codes_keys_iterator_get_string(codes_keys_iterator *kiter, char *v, size_t *len);
 int codes_keys_iterator_get_bytes(codes_keys_iterator *kiter, unsigned char *v, size_t *len);
+int codes_copy_key(grib_handle* h1,grib_handle* h2,const char* key,int type);
 
 /* @} */
 

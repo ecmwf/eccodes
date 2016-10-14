@@ -420,7 +420,6 @@ struct grib_action
     grib_arguments*     default_value; /** default expression as in .def file */
     char*               set;
     char*               debug_info;   /** purely for debugging and tracing */
-    /* If you add something, don't forget to update grib_action_compile */
 };
 
 typedef struct grib_accessors_list grib_accessors_list;
@@ -432,23 +431,12 @@ struct grib_accessors_list {
     grib_accessors_list* last;
 };
 
-/* compile */
-
-typedef struct grib_compiler {
-    int         cnt;
-    int         max;
-    FILE*       out;
-    const char* var;
-} grib_compiler;
-
-
 
 typedef  int  (*action_create_accessors_handle_proc)        (grib_section* p, grib_action* a, grib_loader* h);
 typedef  int  (*action_notify_change_proc)                   (grib_action* a, grib_accessor* observer,grib_accessor * observed);
 
 typedef  void  (*grib_dump_proc)                         (grib_action*, FILE*, int );
 typedef  void  (*grib_xref_proc)                         (grib_action*, FILE*,const char*);
-typedef  void  (*grib_compile_proc)                         (grib_action*, grib_compiler*);
 typedef  void  (*action_init_class_proc)            (grib_action_class* a);
 typedef  void  (*action_init_proc)                  (grib_action* a);
 typedef  void  (*action_destroy_proc)                  (grib_context* context,  grib_action* a);
@@ -481,7 +469,6 @@ struct grib_action_class
     action_reparse_proc       reparse;
     action_execute_proc       execute;
 
-    grib_compile_proc         compile;    /** < compile method of the action */
 };
 
 
@@ -556,7 +543,7 @@ struct grib_accessor
 #define GRIB_ACCESSOR_FLAG_CAN_BE_MISSING   (1<<4)
 #define GRIB_ACCESSOR_FLAG_HIDDEN           (1<<5)
 #define GRIB_ACCESSOR_FLAG_CONSTRAINT       (1<<6)
-#define GRIB_ACCESSOR_FLAG_OVERRIDE         (1<<7)
+#define GRIB_ACCESSOR_FLAG_BUFR_DATA        (1<<7)
 #define GRIB_ACCESSOR_FLAG_NO_COPY          (1<<8)
 #define GRIB_ACCESSOR_FLAG_COPY_OK          (1<<9)
 #define GRIB_ACCESSOR_FLAG_FUNCTION         (1<<10)
@@ -567,9 +554,6 @@ struct grib_accessor
 #define GRIB_ACCESSOR_FLAG_LONG_TYPE        (1<<15)
 #define GRIB_ACCESSOR_FLAG_DOUBLE_TYPE      (1<<16)
 #define GRIB_ACCESSOR_FLAG_LOWERCASE        (1<<17)
-#define GRIB_ACCESSOR_FLAG_XML              (1<<18)
-#define GRIB_ACCESSOR_FLAG_JSON             (1<<19)
-/* when adding a flag, update grib_compile_flags*/
 
 /**
 *  a section accessor
@@ -1069,7 +1053,6 @@ typedef const char* (*expression_evaluate_string_proc)(grib_expression*,grib_han
 typedef const char* (*expression_get_name_proc)(grib_expression*);
 
 typedef void        (*expression_print_proc)(grib_context*,grib_expression*,grib_handle*);
-typedef void        (*expression_compile_proc)(grib_expression*,grib_compiler*);
 typedef void        (*expression_add_dependency_proc) (grib_expression*e, grib_accessor* observer );
 
 typedef struct grib_expression_class grib_expression_class;
@@ -1097,7 +1080,6 @@ struct grib_expression_class {
 
 
     expression_print_proc              print;
-    expression_compile_proc            compile;
     expression_add_dependency_proc     add_dependency;
 
     expression_native_type_proc        native_type;
@@ -1358,6 +1340,21 @@ struct grib_action_file_list
 {
     grib_action_file * first;
     grib_action_file * last ;
+};
+
+/* keys iterator common to grib and bufr*/
+struct grib_keys_iterator{
+  grib_handle     *handle;
+  unsigned long   filter_flags;     /** flags to filter out accessors */
+  unsigned long   accessor_flags;     /** flags to filter out accessors */
+  grib_accessor   *current;
+  char            *name_space;
+  int             at_start;
+  int             match;
+  int             i_curr_attribute;
+  grib_accessor** attributes;
+  char*           prefix;
+  grib_trie       *seen;
 };
 
 

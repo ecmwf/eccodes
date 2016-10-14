@@ -72,7 +72,6 @@ static grib_action_class _grib_action_class_transient_darray = {
     0,                            /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */
-    0,                            /* compile */
 };
 
 grib_action_class* grib_action_class_transient_darray = &_grib_action_class_transient_darray;
@@ -82,7 +81,6 @@ static void init_class(grib_action_class* c)
 	c->create_accessor	=	(*(c->super))->create_accessor;
 	c->notify_change	=	(*(c->super))->notify_change;
 	c->reparse	=	(*(c->super))->reparse;
-	c->compile	=	(*(c->super))->compile;
 }
 /* END_CLASS_IMP */
 

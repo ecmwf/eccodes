@@ -66,7 +66,6 @@ static grib_action_class _grib_action_class_section = {
     &notify_change,                            /* notify_change */
     &reparse,                            /* reparse */
     0,                            /* execute */
-    0,                            /* compile */
 };
 
 grib_action_class* grib_action_class_section = &_grib_action_class_section;

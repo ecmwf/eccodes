@@ -20,7 +20,7 @@
    IMPLEMENTS = native_type
    IMPLEMENTS = evaluate_long
    IMPLEMENTS = evaluate_double
-   IMPLEMENTS = print;compile
+   IMPLEMENTS = print
    IMPLEMENTS = add_dependency
    MEMBERS    = grib_expression *left
    MEMBERS = grib_expression *right
@@ -45,7 +45,6 @@ static void init_class              (grib_expression_class*);
 static void        destroy(grib_context*,grib_expression* e);
 
 static void        print(grib_context*,grib_expression*,grib_handle*);
-static void        compile(grib_expression*,grib_compiler*);
 static void        add_dependency(grib_expression* e, grib_accessor* observer);
 
 static int        native_type(grib_expression*,grib_handle*);
@@ -70,7 +69,6 @@ static grib_expression_class _grib_expression_class_string_compare = {
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,                 
-    &compile,                 
     &add_dependency,       
 
 	&native_type,
@@ -156,16 +154,6 @@ grib_expression* new_string_compare_expression(grib_context* c,
     e->left                = left;
     e->right               = right;
     return (grib_expression*)e;
-}
-
-static void compile(grib_expression* g,grib_compiler* c)
-{
-    grib_expression_string_compare* e = (grib_expression_string_compare*)g;
-    fprintf(c->out,"new_string_compare_expression(ctx,");
-    grib_expression_compile(e->left,c);
-    fprintf(c->out,",");
-    grib_expression_compile(e->right,c);
-    fprintf(c->out,")");
 }
 
 static int native_type(grib_expression* g,grib_handle *h)

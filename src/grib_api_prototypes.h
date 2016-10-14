@@ -10,7 +10,6 @@ int grib_action_execute(grib_action *a, grib_handle *h);
 void grib_dump_action_branch(FILE *out, grib_action *a, int decay);
 void grib_dump_action_tree(grib_context *ctx, FILE *out);
 void grib_xref_action_branch(FILE *out, grib_action *a, const char *path);
-void grib_compile(grib_action *a, grib_compiler *compiler);
 
 /* action_class_alias.c */
 grib_action *grib_action_create_alias(grib_context *context, const char *name, const char *arg1, const char *name_space, int flags);
@@ -903,8 +902,6 @@ void grib_dump_footer(grib_dumper *d, grib_handle *h);
 
 /* grib_dumper_class_json.c */
 
-/* grib_dumper_class_xml.c */
-
 /* grib_dumper_class_wmo.c */
 
 /* grib_dumper_class.c */
@@ -1360,7 +1357,6 @@ int grib_expression_evaluate_double(grib_handle *h, grib_expression *g, double *
 const char *grib_expression_evaluate_string(grib_handle *h, grib_expression *g, char *buf, size_t *size, int *err);
 const char *grib_expression_get_name(grib_expression *g);
 void grib_expression_print(grib_context *ctx, grib_expression *g, grib_handle *f);
-void grib_expression_compile(grib_expression *g, grib_compiler *f);
 void grib_expression_free(grib_context *ctx, grib_expression *g);
 void grib_expression_add_dependency(grib_expression *e, grib_accessor *observer);
 int grib_expression_set_value(grib_handle *h, grib_expression *g, grib_values *v);
@@ -1391,12 +1387,6 @@ int is_gaussian_global(double lat1, double lat2, double lon1, double lon2, long 
 char *codes_getenv(const char *name);
 int compute_key_rank(grib_handle* h, grib_string_list* keys, const char* key);
 char **str_split(char *a_str, const char a_delim);
-
-/* compile.c */
-void grib_compile_flags(grib_compiler *c, long flags);
-void grib_compile_action_branch(grib_action *a, grib_compiler *c, char *name);
-void grib_compile_expression(grib_expression *e, grib_compiler *compiler);
-void grib_compile_arguments(grib_arguments *a, grib_compiler *compiler);
 
 /* functions.c */
 long grib_op_eq(long a, long b);

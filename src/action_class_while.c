@@ -67,7 +67,6 @@ static grib_action_class _grib_action_class_while = {
     0,                            /* notify_change */
     0,                            /* reparse */
     0,                            /* execute */
-    0,                            /* compile */
 };
 
 grib_action_class* grib_action_class_while = &_grib_action_class_while;
@@ -78,7 +77,6 @@ static void init_class(grib_action_class* c)
 	c->notify_change	=	(*(c->super))->notify_change;
 	c->reparse	=	(*(c->super))->reparse;
 	c->execute	=	(*(c->super))->execute;
-	c->compile	=	(*(c->super))->compile;
 }
 /* END_CLASS_IMP */
 

@@ -68,7 +68,6 @@ static grib_expression_class _grib_expression_class_constant = {
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,                 
-    0,                 
     &add_dependency,       
 
 	&native_type,

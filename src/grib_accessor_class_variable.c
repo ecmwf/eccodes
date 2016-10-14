@@ -410,6 +410,7 @@ static grib_accessor* make_clone(grib_accessor* a,grib_section* s,int* err)
   the_clone=grib_accessor_factory(s, &creator, 0, NULL);
   the_clone->parent=NULL;
   the_clone->h=s->h;
+  the_clone->flags=a->flags;
   variableAccessor=(grib_accessor_variable*)the_clone;
 
   *err=0;

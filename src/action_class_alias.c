@@ -22,7 +22,6 @@
    IMPLEMENTS = create_accessor
    IMPLEMENTS = dump;xref
    IMPLEMENTS = destroy
-   IMPLEMENTS = compile
    MEMBERS    = char* target
    END_CLASS_DEF
 
@@ -41,7 +40,6 @@ or edit "action.class" and rerun ./make_class.pl
 static void init_class      (grib_action_class*);
 static void dump            (grib_action* d, FILE*,int);
 static void xref            (grib_action* d, FILE* f,const char* path);
-static void compile         (grib_action* a, grib_compiler* compiler);
 static void destroy         (grib_context*,grib_action*);
 static int create_accessor(grib_section*,grib_action*,grib_loader*);
 
@@ -70,7 +68,6 @@ static grib_action_class _grib_action_class_alias = {
     0,                            /* notify_change */
     0,                            /* reparse */
     0,                            /* execute */
-    &compile,                            /* compile */
 };
 
 grib_action_class* grib_action_class_alias = &_grib_action_class_alias;
@@ -100,30 +97,6 @@ grib_action* grib_action_create_alias(grib_context* context, const char* name, c
     a->target         = arg1 ? grib_context_strdup_persistent(context, arg1) : NULL;
 
     return act;
-}
-
-static void compile(grib_action* act, grib_compiler *compiler)
-{
-    grib_action_alias* a  = (grib_action_alias*)act;
-    fprintf(compiler->out,"%s = grib_action_create_alias(ctx,",compiler->var);
-    fprintf(compiler->out,"\"%s\",",act->name);
-    if(a->target) {
-        fprintf(compiler->out,"\"%s\",",a->target);
-    }
-    else
-    {
-        fprintf(compiler->out,"NULL,");
-    }
-    if(act->name_space) {
-        fprintf(compiler->out,"\"%s\",",act->name_space);
-    }
-    else
-    {
-        fprintf(compiler->out,"NULL,");
-    }
-    grib_compile_flags(compiler, act->flags);
-    fprintf(compiler->out,");");
-    fprintf(compiler->out,"\n");
 }
 
 static int same(const char* a,const char* b) 
@@ -184,7 +157,6 @@ static int create_accessor( grib_section* p, grib_action* act,grib_loader *h)
         return GRIB_INTERNAL_ERROR;
     }
 
-    /* if(self->target == NULL || (act->flags & GRIB_ACCESSOR_FLAG_OVERRIDE)) */
     y = grib_find_accessor_fast(p->h,act->name);
 
     /* delete old alias if already defined */

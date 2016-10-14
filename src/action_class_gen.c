@@ -23,7 +23,6 @@
    IMPLEMENTS = dump;xref
    IMPLEMENTS = destroy
    IMPLEMENTS = notify_change
-   IMPLEMENTS = compile
    MEMBERS    = long            len
    MEMBERS    = grib_arguments* params
    END_CLASS_DEF
@@ -43,7 +42,6 @@ or edit "action.class" and rerun ./make_class.pl
 static void init_class      (grib_action_class*);
 static void dump            (grib_action* d, FILE*,int);
 static void xref            (grib_action* d, FILE* f,const char* path);
-static void compile         (grib_action* a, grib_compiler* compiler);
 static void destroy         (grib_context*,grib_action*);
 static int create_accessor(grib_section*,grib_action*,grib_loader*);
 static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* observed);
@@ -74,7 +72,6 @@ static grib_action_class _grib_action_class_gen = {
     &notify_change,                            /* notify_change */
     0,                            /* reparse */
     0,                            /* execute */
-    &compile,                            /* compile */
 };
 
 grib_action_class* grib_action_class_gen = &_grib_action_class_gen;
@@ -142,7 +139,6 @@ static void xref( grib_action* act, FILE* f,const char *path)
     F(GRIB_ACCESSOR_FLAG_CAN_BE_MISSING);
     F(GRIB_ACCESSOR_FLAG_HIDDEN);
     F(GRIB_ACCESSOR_FLAG_CONSTRAINT);
-    F(GRIB_ACCESSOR_FLAG_OVERRIDE);
     F(GRIB_ACCESSOR_FLAG_NO_COPY);
     F(GRIB_ACCESSOR_FLAG_COPY_OK);
     F(GRIB_ACCESSOR_FLAG_FUNCTION);
@@ -207,34 +203,4 @@ static void destroy(grib_context* context,grib_action* act)
     if (act->set)
         grib_context_free_persistent(context, act->set);
 
-}
-
-static void compile(grib_action* act, grib_compiler* compiler)
-{
-    grib_action_gen* a  = (grib_action_gen*)act;
-    fprintf(compiler->out,"%s = grib_action_create_gen(ctx,",compiler->var);
-    fprintf(compiler->out,"\"%s\",",act->name);
-    fprintf(compiler->out,"\"%s\",",act->op);
-    fprintf(compiler->out,"%ld,",a->len);
-    grib_compile_arguments(a->params,        compiler);
-    fprintf(compiler->out,",");
-    grib_compile_arguments(act->default_value,        compiler);
-    fprintf(compiler->out,",");
-    grib_compile_flags(compiler,act->flags);
-    fprintf(compiler->out,",");
-    if(act->name_space) {
-        fprintf(compiler->out,"\"%s\",",act->name_space);
-    }
-    else
-    {
-        fprintf(compiler->out,"NULL,");
-    }    
-    if(act->set) {
-        fprintf(compiler->out,"\"%s\");",act->set);
-    }
-    else
-    {
-        fprintf(compiler->out,"NULL);");
-    }
-    fprintf(compiler->out,"\n");
 }

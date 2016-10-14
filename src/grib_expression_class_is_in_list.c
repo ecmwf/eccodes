@@ -23,7 +23,6 @@
    IMPLEMENTS = evaluate_double
    IMPLEMENTS = evaluate_string
    IMPLEMENTS = print
-   IMPLEMENTS = compile
    IMPLEMENTS = add_dependency
    MEMBERS    = const char *name
    MEMBERS    = const char *list
@@ -48,7 +47,6 @@ static void init_class              (grib_expression_class*);
 static void        destroy(grib_context*,grib_expression* e);
 
 static void        print(grib_context*,grib_expression*,grib_handle*);
-static void        compile(grib_expression*,grib_compiler*);
 static void        add_dependency(grib_expression* e, grib_accessor* observer);
 static string get_name(grib_expression* e);
 
@@ -75,7 +73,6 @@ static grib_expression_class _grib_expression_class_is_in_list = {
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,                 
-    &compile,                 
     &add_dependency,       
 
 	&native_type,
@@ -246,12 +243,6 @@ grib_expression* new_is_in_list_expression(grib_context* c,const char* name,cons
   e->name                   = grib_context_strdup_persistent(c,name);
   e->list                   = grib_context_strdup_persistent(c,list);
   return (grib_expression*)e;
-}
-
-static void compile(grib_expression* g,grib_compiler* c)
-{
-	grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
-    fprintf(c->out,"new_is_in_list_expression(ctx,\"%s\")",e->name);
 }
 
 static int native_type(grib_expression* g,grib_handle *h)

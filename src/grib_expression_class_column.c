@@ -72,7 +72,6 @@ static grib_expression_class _grib_expression_class_column = {
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     0,                 
-    0,                 
     0,       
 
 	&native_type,

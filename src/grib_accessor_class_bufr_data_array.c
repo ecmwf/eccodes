@@ -1450,7 +1450,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     char code[10]={0,};
     int idx=0;
-    unsigned long flags=0;
+    unsigned long flags=GRIB_ACCESSOR_FLAG_READ_ONLY;
     grib_action operatorCreator = {0, };
     grib_accessor* elementAccessor=NULL;
     grib_action creator = {0, };
@@ -1513,7 +1513,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
         if (!attribute) return NULL;
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 
-        attribute=create_attribute_variable("units",section,GRIB_TYPE_STRING,self->expanded->v[idx]->units,0,0,GRIB_ACCESSOR_FLAG_DUMP);
+        attribute=create_attribute_variable("units",section,GRIB_TYPE_STRING,self->expanded->v[idx]->units,0,0,GRIB_ACCESSOR_FLAG_DUMP | flags);
         if (!attribute) return NULL;
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 

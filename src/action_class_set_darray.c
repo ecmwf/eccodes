@@ -67,7 +67,6 @@ static grib_action_class _grib_action_class_set_darray = {
     0,                            /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */
-    0,                            /* compile */
 };
 
 grib_action_class* grib_action_class_set_darray = &_grib_action_class_set_darray;

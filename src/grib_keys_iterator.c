@@ -17,17 +17,6 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
     return (*a==0 && *b==0) ? 0 : 1;
 }
 
-struct grib_keys_iterator{
-    grib_handle   *handle;
-    unsigned long filter_flags;     /** flags to filter out accessors */
-    unsigned long accessor_flags;     /** flags to filter out accessors */
-    grib_accessor *current;
-    char    *name_space;
-    int            at_start;
-    int            match;
-    grib_trie     *seen;
-};
-
 grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space)
 {
     grib_keys_iterator* ki=NULL;

@@ -25,7 +25,6 @@
    IMPLEMENTS = dump
    IMPLEMENTS = destroy
    IMPLEMENTS = reparse
-   IMPLEMENTS = compile
    MEMBERS    = int nofail
    MEMBERS    = char*           arg
    END_CLASS_DEF
@@ -44,7 +43,6 @@ or edit "action.class" and rerun ./make_class.pl
 
 static void init_class      (grib_action_class*);
 static void dump            (grib_action* d, FILE*,int);
-static void compile         (grib_action* a, grib_compiler* compiler);
 static void destroy         (grib_context*,grib_action*);
 static int create_accessor(grib_section*,grib_action*,grib_loader*);
 static grib_action* reparse(grib_action* a,grib_accessor* acc,int *doit);
@@ -77,7 +75,6 @@ static grib_action_class _grib_action_class_template = {
     0,                            /* notify_change */
     &reparse,                            /* reparse */
     0,                            /* execute */
-    &compile,                            /* compile */
 };
 
 grib_action_class* grib_action_class_template = &_grib_action_class_template;
@@ -107,22 +104,6 @@ grib_action* grib_action_create_template( grib_context* context,int nofail,const
 
     return act;
 }
-
-static void compile(grib_action* act, grib_compiler *compiler)
-{
-    grib_action_template* a  = (grib_action_template*)act;
-    fprintf(compiler->out,"%s = grib_action_create_template(ctx,", compiler->var);
-    fprintf(compiler->out,"%d,",a->nofail);
-    fprintf(compiler->out,"\"%s\",",act->name);
-    if(a->arg) {
-        fprintf(compiler->out,"\"%s\");",a->arg);
-    }
-    else
-    {
-        fprintf(compiler->out,"NULL);");
-    }    
-    fprintf(compiler->out,"\n");
-}    
 
 static void dump( grib_action* act, FILE* f, int lvl)
 {

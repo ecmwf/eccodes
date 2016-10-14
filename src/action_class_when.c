@@ -18,7 +18,7 @@
    START_CLASS_DEF
    CLASS      = action
    IMPLEMENTS = create_accessor
-   IMPLEMENTS = dump;xref;compile
+   IMPLEMENTS = dump;xref
    IMPLEMENTS = destroy;notify_change
    MEMBERS    = grib_expression *expression
    MEMBERS    = grib_action     *block_true
@@ -41,7 +41,6 @@ or edit "action.class" and rerun ./make_class.pl
 static void init_class      (grib_action_class*);
 static void dump            (grib_action* d, FILE*,int);
 static void xref            (grib_action* d, FILE* f,const char* path);
-static void compile         (grib_action* a, grib_compiler* compiler);
 static void destroy         (grib_context*,grib_action*);
 static int create_accessor(grib_section*,grib_action*,grib_loader*);
 static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* observed);
@@ -74,7 +73,6 @@ static grib_action_class _grib_action_class_when = {
     &notify_change,                            /* notify_change */
     0,                            /* reparse */
     0,                            /* execute */
-    &compile,                            /* compile */
 };
 
 grib_action_class* grib_action_class_when = &_grib_action_class_when;
@@ -109,27 +107,6 @@ grib_action* grib_action_create_when( grib_context* context,
     act->name      = grib_context_strdup_persistent(context,name);
 
     return act;
-}
-
-static void compile(grib_action* act, grib_compiler *compiler)
-{
-    grib_action_when* a  = (grib_action_when*)act;
-    char t[80];
-    char f[80];
-
-    if(a->block_true)
-        grib_compile_action_branch(a->block_true, compiler,t); 
-    else
-        strcpy(t,"NULL");
-
-    if(a->block_false)
-        grib_compile_action_branch(a->block_false, compiler,f);
-    else
-        strcpy(f,"NULL");
-
-    fprintf(compiler->out,"%s = grib_action_create_when(ctx,",compiler->var);
-    grib_compile_expression(a->expression, compiler);
-    fprintf(compiler->out,",%s,%s);\n", t,f);
 }
 
 static int create_accessor(grib_section* p, grib_action* act,grib_loader *h)
