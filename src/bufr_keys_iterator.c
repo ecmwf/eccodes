@@ -75,10 +75,12 @@ static void mark_seen(grib_keys_iterator* ki,const char* name)
   }
 }
 
+/*
 static int was_seen(grib_keys_iterator* ki,const char* name)
 {
     return grib_trie_get(ki->seen,name) != NULL;
 }
+*/
 
 int codes_bufr_keys_iterator_rewind(grib_keys_iterator* ki)
 {
@@ -221,13 +223,17 @@ int codes_bufr_keys_iterator_delete( grib_keys_iterator* kiter)
     return 0;
 }
 
-char** codes_bufr_copy_data(grib_handle* hin,grib_handle* hout, size_t* nkeys, int* err) {
-  grib_keys_iterator* kiter=NULL;;
+char** codes_bufr_copy_data(grib_handle* hin,grib_handle* hout, size_t* nkeys, int* err)
+{
+  grib_keys_iterator* kiter=NULL;
   char* name=0;
   char** keys=NULL;
   grib_sarray* k=0;
 
-  if (hin==NULL || hout==NULL) return GRIB_NULL_HANDLE;
+  if (hin==NULL || hout==NULL) {
+      *err = GRIB_NULL_HANDLE;
+      return NULL;
+  }
 
   kiter=codes_bufr_data_section_keys_iterator_new(hin);
   if (!kiter) return NULL;
@@ -249,8 +255,8 @@ char** codes_bufr_copy_data(grib_handle* hin,grib_handle* hout, size_t* nkeys, i
   keys=grib_sarray_get_array(hin->context,k);
   grib_sarray_delete(hin->context,k);
 
-  *err=codes_set_long(hout,"pack",1);
+  *err=grib_set_long(hout,"pack",1);
 
-  codes_keys_iterator_delete(kiter);
+  grib_keys_iterator_delete(kiter);
   return keys;
 }
