@@ -1097,14 +1097,16 @@ attributes or by the namespace they belong to.
 *                         and namespace
 */
 codes_keys_iterator* codes_keys_iterator_new(codes_handle* h,unsigned long filter_flags, const char* name_space);
-codes_keys_iterator* bufr_keys_iterator_new(codes_handle* h);
+codes_keys_iterator* codes_bufr_keys_iterator_new(codes_handle* h);
+codes_keys_iterator* codes_bufr_data_section_keys_iterator_new(codes_handle* h);
+int codes_bufr_copy_data(codes_handle* hin,codes_handle* hout);
 
 /*! Step to the next iterator.
 *  @param kiter         : valid codes_keys_iterator
 *  @return              1 if next iterator exists, 0 if no more elements to iterate on
 */
 int codes_keys_iterator_next(codes_keys_iterator *kiter);
-int bufr_keys_iterator_next(codes_keys_iterator *kiter);
+int codes_bufr_keys_iterator_next(codes_keys_iterator *kiter);
 
 
 /*! get the key name from the iterator
@@ -1125,8 +1127,8 @@ int codes_keys_iterator_delete( codes_keys_iterator* kiter);
 */
 int codes_keys_iterator_rewind(codes_keys_iterator* kiter);
 
-char* bufr_keys_iterator_get_name(codes_keys_iterator* kiter);
-char* bufr_keys_iterator_get_next_attribute_name(grib_keys_iterator* kiter);
+char* codes_bufr_keys_iterator_get_name(codes_keys_iterator* kiter);
+char* codes_bufr_keys_iterator_get_next_attribute_name(grib_keys_iterator* kiter);
 
 int codes_keys_iterator_set_flags(codes_keys_iterator *kiter,unsigned long flags);
 

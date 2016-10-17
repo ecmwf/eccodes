@@ -1346,7 +1346,8 @@ struct grib_action_file_list
 struct grib_keys_iterator{
   grib_handle     *handle;
   unsigned long   filter_flags;     /** flags to filter out accessors */
-  unsigned long   accessor_flags;     /** flags to filter out accessors */
+  unsigned long   accessor_flags_skip;
+  unsigned long   accessor_flags_only;
   grib_accessor   *current;
   char            *name_space;
   int             at_start;

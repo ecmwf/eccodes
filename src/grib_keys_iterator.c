@@ -25,7 +25,6 @@ grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_f
 
     ki= (grib_keys_iterator*)grib_context_malloc_clear(h->context,sizeof(grib_keys_iterator));
     if (!ki) return NULL;
-    Assert(ki->accessor_flags == 0);
 
     ki->filter_flags = filter_flags;
     ki->handle       = h;
@@ -59,13 +58,13 @@ int grib_keys_iterator_set_flags(grib_keys_iterator* ki,unsigned long flags)
     if(flags & GRIB_KEYS_ITERATOR_SKIP_CODED)    ki->filter_flags |= GRIB_KEYS_ITERATOR_SKIP_CODED;
 
     if(flags & GRIB_KEYS_ITERATOR_SKIP_FUNCTION)
-        ki->accessor_flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
+        ki->accessor_flags_skip |= GRIB_ACCESSOR_FLAG_FUNCTION;
 
     if(flags & GRIB_KEYS_ITERATOR_SKIP_READ_ONLY)
-        ki->accessor_flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+        ki->accessor_flags_skip |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 
     if(flags & GRIB_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC)
-        ki->accessor_flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
+        ki->accessor_flags_skip |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 
     return ret;
 }
@@ -100,7 +99,7 @@ static int skip(grib_keys_iterator* kiter)
     if(kiter->current->flags & GRIB_ACCESSOR_FLAG_HIDDEN)
         return 1;
 
-    if(kiter->current->flags &  kiter->accessor_flags)
+    if(kiter->current->flags &  kiter->accessor_flags_skip)
         return 1;
 
     if((kiter->filter_flags & GRIB_KEYS_ITERATOR_SKIP_COMPUTED) && kiter->current->length == 0)

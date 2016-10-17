@@ -17,7 +17,7 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
     return (*a==0 && *b==0) ? 0 : 1;
 }
 
-grib_keys_iterator* bufr_keys_iterator_new(grib_handle* h)
+grib_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h)
 {
     grib_keys_iterator* ki=NULL;
 
@@ -26,9 +26,34 @@ grib_keys_iterator* bufr_keys_iterator_new(grib_handle* h)
     ki= (grib_keys_iterator*)grib_context_malloc_clear(h->context,sizeof(grib_keys_iterator));
     if (!ki) return NULL;
 
-    ki->filter_flags = GRIB_KEYS_ITERATOR_DUMP_ONLY;
+    ki->filter_flags = 0;
     ki->handle       = h;
     ki->i_curr_attribute=0;
+    ki->accessor_flags_only= GRIB_ACCESSOR_FLAG_DUMP;
+    ki->accessor_flags_skip= GRIB_ACCESSOR_FLAG_HIDDEN | GRIB_ACCESSOR_FLAG_READ_ONLY;
+
+    ki->at_start     = 1;
+    ki->match        = 0;
+
+    if(ki->seen==NULL ) ki->seen = grib_trie_new(h->context);
+
+    return ki;
+}
+
+grib_keys_iterator* codes_bufr_data_section_keys_iterator_new(grib_handle* h)
+{
+    grib_keys_iterator* ki=NULL;
+
+    if (!h) return NULL;
+
+    ki= (grib_keys_iterator*)grib_context_malloc_clear(h->context,sizeof(grib_keys_iterator));
+    if (!ki) return NULL;
+
+    ki->filter_flags = 0;
+    ki->handle       = h;
+    ki->i_curr_attribute=0;
+    ki->accessor_flags_only= GRIB_ACCESSOR_FLAG_BUFR_DATA | GRIB_ACCESSOR_FLAG_DUMP;
+    ki->accessor_flags_skip= GRIB_ACCESSOR_FLAG_HIDDEN | GRIB_ACCESSOR_FLAG_READ_ONLY;
 
     ki->at_start     = 1;
     ki->match        = 0;
@@ -55,7 +80,7 @@ static int was_seen(grib_keys_iterator* ki,const char* name)
     return grib_trie_get(ki->seen,name) != NULL;
 }
 
-int bufr_keys_iterator_rewind(grib_keys_iterator* ki)
+int codes_bufr_keys_iterator_rewind(grib_keys_iterator* ki)
 {
     ki->at_start = 1;
     return GRIB_SUCCESS;
@@ -63,33 +88,17 @@ int bufr_keys_iterator_rewind(grib_keys_iterator* ki)
 
 static int skip(grib_keys_iterator* kiter)
 {
-    /* TODO: set the section to hidden, to speed up that */
-    /* if(grib_get_sub_section(kiter->current)) */
-    kiter->match = 0;
     if(kiter->current->sub_section)
         return 1;
 
-    if(kiter->current->flags & GRIB_ACCESSOR_FLAG_HIDDEN)
-        return 1;
+    if(kiter->current->flags & kiter->accessor_flags_skip)
+      return 1;
 
-    if((kiter->filter_flags & GRIB_KEYS_ITERATOR_DUMP_ONLY)!=0 && (kiter->current->flags & GRIB_ACCESSOR_FLAG_DUMP)!=0 && 
-        (kiter->current->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)==0 && (kiter->current->flags & GRIB_ACCESSOR_FLAG_HIDDEN)==0) {
-        mark_seen(kiter,kiter->current->name);
-        return 0;
-    } else return 1;
-
-    if(kiter->current->flags &  kiter->accessor_flags)
-        return 1;
-
-    if((kiter->filter_flags & GRIB_KEYS_ITERATOR_SKIP_COMPUTED) && kiter->current->length == 0)
-        return 1;
-
-    if((kiter->filter_flags & GRIB_KEYS_ITERATOR_SKIP_CODED) && kiter->current->length != 0)
-        return 1;
-
-    if(kiter->filter_flags & GRIB_KEYS_ITERATOR_SKIP_DUPLICATES) {
-      if(was_seen(kiter,kiter->current->name)!=0)
-        return 1;
+    if(kiter->accessor_flags_only == (kiter->current->flags & kiter->accessor_flags_only))  {
+      mark_seen(kiter,kiter->current->name);
+      return 0;
+    } else  {
+      return 1;
     }
 
     mark_seen(kiter,kiter->current->name);
@@ -110,8 +119,8 @@ static int next_attribute(grib_keys_iterator* kiter)
   i_curr_attribute=kiter->i_curr_attribute-1;
 
   while (kiter->i_curr_attribute < MAX_ACCESSOR_ATTRIBUTES && kiter->attributes[kiter->i_curr_attribute] ) {
-        if ((kiter->attributes[kiter->i_curr_attribute]->flags & GRIB_ACCESSOR_FLAG_DUMP) != 0 
-         || (kiter->attributes[kiter->i_curr_attribute]->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) ==0) break;
+        if ((kiter->attributes[kiter->i_curr_attribute]->flags & GRIB_ACCESSOR_FLAG_DUMP) != 0
+         && (kiter->attributes[kiter->i_curr_attribute]->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) ==0) break;
     kiter->i_curr_attribute++;
   }
 
@@ -141,7 +150,7 @@ static int next_attribute(grib_keys_iterator* kiter)
 
 }
 
-int bufr_keys_iterator_next(grib_keys_iterator* kiter)
+int codes_bufr_keys_iterator_next(grib_keys_iterator* kiter)
 {
     if(kiter->at_start)
     {
@@ -172,7 +181,7 @@ int bufr_keys_iterator_next(grib_keys_iterator* kiter)
     return kiter->current != NULL;
 }
 
-char* bufr_keys_iterator_get_name(grib_keys_iterator* kiter)
+char* codes_bufr_keys_iterator_get_name(grib_keys_iterator* kiter)
 {
   int *r=0;
   char* ret=0;
@@ -195,12 +204,12 @@ char* bufr_keys_iterator_get_name(grib_keys_iterator* kiter)
   return ret;
 }
 
-grib_accessor* bufr_keys_iterator_get_accessor(grib_keys_iterator* kiter)
+grib_accessor* codes_bufr_keys_iterator_get_accessor(grib_keys_iterator* kiter)
 {
     return kiter->current;
 }
 
-int bufr_keys_iterator_delete( grib_keys_iterator* kiter)
+int codes_bufr_keys_iterator_delete( grib_keys_iterator* kiter)
 {
     if (kiter) {
         if(kiter->seen)
@@ -212,3 +221,29 @@ int bufr_keys_iterator_delete( grib_keys_iterator* kiter)
     return 0;
 }
 
+int codes_bufr_copy_data(grib_handle* hin,grib_handle* hout) {
+  grib_keys_iterator* kiter=NULL;;
+  int err=0;
+  char* name=0;
+
+  kiter=codes_bufr_data_section_keys_iterator_new(hin);
+  if (!kiter) return GRIB_INTERNAL_ERROR;
+
+  while(codes_bufr_keys_iterator_next(kiter))
+  {
+    name = codes_bufr_keys_iterator_get_name(kiter);
+    /* if the copy fail we want to keep copying without error message
+      this is because the copy can be between structures that are not 
+      identical and we want to copy what can be copied and skip what 
+      cannot be copied because is not in the output handle
+    */
+    codes_copy_key(hin,hout,name,0);
+    grib_context_free(hin->context,name);
+  }
+
+  err=codes_set_long(hout,"pack",1);
+  if (err) return err;
+
+  codes_keys_iterator_delete(kiter);
+  return err;
+}
