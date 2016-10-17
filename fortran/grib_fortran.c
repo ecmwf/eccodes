@@ -2771,6 +2771,36 @@ int grib_f_get_string_array(int* gid, char* key, char* val,int* nvals,int* slen,
     return  grib_f_get_string_array_( gid,  key,  val, nvals, slen, len);
 }
 
+/*****************************************************************************/
+int codes_f_bufr_copy_data_(int* gid1,int* gid2)
+{
+    grib_handle *hin = get_handle(*gid1);
+    grib_handle *hout = get_handle(*gid2);
+    int err = GRIB_SUCCESS;
+    size_t i;
+    size_t lsize ;
+    char** ckeys=0;
+
+    if(!hin || !hout ) return  GRIB_INVALID_GRIB;
+
+    ckeys=codes_bufr_copy_data(hin,hout,&lsize,&err);
+    if (err) return err;
+
+    for (i=0;i<lsize;i++) {
+        grib_context_free(hin->context,ckeys[i]);
+    }
+    grib_context_free(hin->context,ckeys);
+
+    return  err;
+}
+
+int codes_f_bufr_copy_data__(int* gid1,int* gid2){
+    return  codes_f_bufr_copy_data_(gid1, gid2);
+}
+int codes_f_bufr_copy_data(int* gid1,int* gid2){
+    return  codes_f_bufr_copy_data_(gid1, gid2);
+}
+
 
 /*****************************************************************************/
 /* Strip whitespace from the end of a string */

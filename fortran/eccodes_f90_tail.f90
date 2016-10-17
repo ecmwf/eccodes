@@ -1577,6 +1577,33 @@ subroutine codes_get_string_array ( msgid, key, value, status )
 
 end subroutine codes_get_string_array 
 
+  !> Copy data values from a BUFR message msgid1 to another message msdid2
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref codes_get_error_string.\n
+  !> Note: This function supports the \b allocatable array attribute
+  !>
+  !> @param msgid1      id of the message from which the data are copied
+  !> @param msgid2      id of the message to which the data are copied
+  !> @param status      CODES_SUCCESS if OK, integer value on error
+subroutine codes_bufr_copy_data ( msgid1, msgid2, status )
+    integer(kind=kindOfInt),               intent(in)        :: msgid1
+    integer(kind=kindOfInt),               intent(in)        :: msgid2
+    integer(kind=kindOfInt),optional, intent(out)            :: status
+    integer(kind=kindOfInt)                            :: iret
+
+
+    iret=codes_f_bufr_copy_data ( msgid1,msgid2 )
+
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret,'bufr_copy_data','error while copying')
+    endif
+
+end subroutine codes_bufr_copy_data 
+
   !> Set the string values for an array key in a message.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
