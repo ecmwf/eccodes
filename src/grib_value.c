@@ -1677,7 +1677,7 @@ int codes_copy_key(grib_handle* h1,grib_handle* h2,const char* key,int type)
   long* al;
   char* s=0;
   char** as=0;
-  size_t len1,len2,len;
+  size_t len1,len;
   int err=0;
 
   if (  type != GRIB_TYPE_DOUBLE &&
@@ -1727,14 +1727,14 @@ int codes_copy_key(grib_handle* h1,grib_handle* h2,const char* key,int type)
         s=grib_context_malloc_clear(h1->context,len);
         err=grib_get_string(h1,key,s,&len);
         if (err) return err;
-        err=grib_set_string(h2,key,s,len);
+        err=grib_set_string(h2,key,s,&len);
         grib_context_free(h1->context,s);
         return err;
       } else {
         as=grib_context_malloc_clear(h1->context,len1*sizeof(char*));
         err=grib_get_string_array(h1,key,as,&len1);
         if (err) return err;
-        err=grib_set_string_array(h2,key,as,len1);
+        err=grib_set_string_array(h2,key,(const char **)as,len1);
         return err;
       }
       break;
