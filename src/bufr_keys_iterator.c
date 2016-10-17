@@ -237,6 +237,7 @@ char** codes_bufr_copy_data(grib_handle* hin,grib_handle* hout, size_t* nkeys, i
 
   kiter=codes_bufr_data_section_keys_iterator_new(hin);
   if (!kiter) return NULL;
+  k=grib_sarray_new(hin->context,50,10);
 
   while(codes_bufr_keys_iterator_next(kiter))
   {
