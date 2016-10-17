@@ -1115,6 +1115,16 @@ int grib_keys_iterator_get_string(grib_keys_iterator *kiter, char *v, size_t *le
 int grib_keys_iterator_get_bytes(grib_keys_iterator *kiter, unsigned char *v, size_t *len);
 int grib_keys_iterator_get_native_type(grib_keys_iterator *kiter);
 
+/* bufr_keys_iterator.c */
+grib_keys_iterator *codes_bufr_keys_iterator_new(grib_handle *h);
+grib_keys_iterator *codes_bufr_data_section_keys_iterator_new(grib_handle *h);
+int codes_bufr_keys_iterator_rewind(grib_keys_iterator *ki);
+int codes_bufr_keys_iterator_next(grib_keys_iterator *kiter);
+char *codes_bufr_keys_iterator_get_name(grib_keys_iterator *kiter);
+grib_accessor *codes_bufr_keys_iterator_get_accessor(grib_keys_iterator *kiter);
+int codes_bufr_keys_iterator_delete(grib_keys_iterator *kiter);
+char **codes_bufr_copy_data(grib_handle *hin, grib_handle *hout, size_t *nkeys, int *err);
+
 /* grib_parse_utils.c */
 int grib_recompose_name(grib_handle *h, grib_accessor *observer, const char *uname, char *fname, int fail);
 int grib_accessor_print(grib_accessor *a, const char *name, int type, const char *format, const char *separator, int maxcols, int *newline, FILE *out);
@@ -1446,3 +1456,4 @@ int grib_encode_double_array_complex(size_t n_vals, double *val, long nbits, dou
 /* codes_memfs */
 FILE* codes_fopen(const char* name, const char* mode);
 int codes_access(const char* name, int mode);
+
