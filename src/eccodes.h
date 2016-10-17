@@ -1099,7 +1099,7 @@ attributes or by the namespace they belong to.
 codes_keys_iterator* codes_keys_iterator_new(codes_handle* h,unsigned long filter_flags, const char* name_space);
 codes_keys_iterator* codes_bufr_keys_iterator_new(codes_handle* h);
 codes_keys_iterator* codes_bufr_data_section_keys_iterator_new(codes_handle* h);
-int codes_bufr_copy_data(codes_handle* hin,codes_handle* hout);
+char** codes_bufr_copy_data(grib_handle* hin,grib_handle* hout, size_t* nkeys, int* err);
 
 /*! Step to the next iterator.
 *  @param kiter         : valid codes_keys_iterator

@@ -221,13 +221,16 @@ int codes_bufr_keys_iterator_delete( grib_keys_iterator* kiter)
     return 0;
 }
 
-int codes_bufr_copy_data(grib_handle* hin,grib_handle* hout) {
+char** codes_bufr_copy_data(grib_handle* hin,grib_handle* hout, size_t* nkeys, int* err) {
   grib_keys_iterator* kiter=NULL;;
-  int err=0;
   char* name=0;
+  char** keys=NULL;
+  grib_sarray* k=0;
+
+  if (hin==NULL || hout==NULL) return GRIB_NULL_HANDLE;
 
   kiter=codes_bufr_data_section_keys_iterator_new(hin);
-  if (!kiter) return GRIB_INTERNAL_ERROR;
+  if (!kiter) return NULL;
 
   while(codes_bufr_keys_iterator_next(kiter))
   {
@@ -237,13 +240,17 @@ int codes_bufr_copy_data(grib_handle* hin,grib_handle* hout) {
       identical and we want to copy what can be copied and skip what 
       cannot be copied because is not in the output handle
     */
-    codes_copy_key(hin,hout,name,0);
-    grib_context_free(hin->context,name);
+    *err=codes_copy_key(hin,hout,name,0);
+    if (*err==0) k=grib_sarray_push(hin->context,k,name);
+
   }
 
-  err=codes_set_long(hout,"pack",1);
-  if (err) return err;
+  *nkeys=grib_sarray_used_size(k);
+  keys=grib_sarray_get_array(hin->context,k);
+  grib_sarray_delete(hin->context,k);
+
+  *err=codes_set_long(hout,"pack",1);
 
   codes_keys_iterator_delete(kiter);
-  return err;
+  return keys;
 }
