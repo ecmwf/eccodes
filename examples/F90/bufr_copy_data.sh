@@ -8,13 +8,15 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
 . ./include.sh
-set -x
 
-TEMP=out.bufr
-REF=compare.log.ref
-MYLOG=compare.log
+#Define a common label for all the tmp files
+label="bufr_copy_data_f"
 
-rm -f ${TEMP} ${REF} ${MYLOG} | true
+TEMP=$label.out.bufr
+REF=$label.compare.log.ref
+MYLOG=$label.compare.log
+
+rm -f ${TEMP} ${REF} ${MYLOG}
 
 cat > ${REF} <<EOF
 == 1 == DIFFERENCE == Different size for "unexpandedDescriptors"  [43]  [28]
@@ -50,9 +52,16 @@ cat > ${REF} <<EOF
 == 1 == DIFFERENCE == [#2#windSpeed->units] not found in 2nd field
 EOF
 
+pwd
 INPUT=${data_dir}/bufr/metar_with_2_bias.bufr
-${examples_dir}eccodes_f_bufr_copy_data ${INPUT} ${TEMP}  > /dev/null
-${tools_dir}bufr_compare ${TEMP} ${INPUT} > ${MYLOG} | true
+${examples_dir}eccodes_f_bufr_copy_data ${INPUT} ${TEMP}
+# The input and output BUFR messages should be different
+set +e
+${tools_dir}bufr_compare ${TEMP} ${INPUT} > ${MYLOG}
+status=$?
+set -e
+[ $status -ne 0 ]
+
 diff ${MYLOG} ${REF}
 
 rm -f ${TEMP} ${REF} ${MYLOG}
