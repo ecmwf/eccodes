@@ -261,39 +261,38 @@ char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin,grib_handle* hou
     return keys;
 }
 
-int codes_bufr_copy_data(grib_handle* hin,grib_handle* hout)
+int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
 {
-  grib_keys_iterator* kiter=NULL;
-  char* name=0;
-  int err=0;
-  int nkeys=0;
+    grib_keys_iterator* kiter=NULL;
+    char* name=0;
+    int err=0;
+    int nkeys=0;
 
-  if (hin==NULL || hout==NULL) {
-      return GRIB_NULL_HANDLE;
-  }
+    if (hin==NULL || hout==NULL) {
+        return GRIB_NULL_HANDLE;
+    }
 
-  kiter=codes_bufr_data_section_keys_iterator_new(hin);
-  if (!kiter) return GRIB_INTERNAL_ERROR;
+    kiter=codes_bufr_data_section_keys_iterator_new(hin);
+    if (!kiter) return GRIB_INTERNAL_ERROR;
 
-  while(codes_bufr_keys_iterator_next(kiter))
-  {
-    name = codes_bufr_keys_iterator_get_name(kiter);
-    /* if the copy fail we want to keep copying without error message
-      this is because the copy can be between structures that are not
-      identical and we want to copy what can be copied and skip what
-      cannot be copied because is not in the output handle
-    */
-    err=codes_copy_key(hin,hout,name,0);
-    if (err==0) nkeys++;
-    grib_context_free(hin->context,name);
+    while(codes_bufr_keys_iterator_next(kiter))
+    {
+        name = codes_bufr_keys_iterator_get_name(kiter);
+        /* if the copy fails we want to keep copying without any error messages.
+           This is because the copy can be between structures that are not
+           identical and we want to copy what can be copied and skip what
+           cannot be copied because is not in the output handle
+         */
+        err=codes_copy_key(hin, hout, name, 0);
+        if (err==0) nkeys++;
+        grib_context_free(hin->context,name);
+    }
 
-  }
+    if (nkeys > 0) {
+        /* Do the pack if something was copied */
+        err=grib_set_long(hout, "pack", 1);
+    }
 
-  if (nkeys > 0) {
-    /* Do the pack if something was copied */
-    err=grib_set_long(hout, "pack", 1);
-  }
-
-  grib_keys_iterator_delete(kiter);
-  return err;
+    grib_keys_iterator_delete(kiter);
+    return err;
 }
