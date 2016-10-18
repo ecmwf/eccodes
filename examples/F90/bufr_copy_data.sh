@@ -16,6 +16,7 @@ TEMP=$label.out.bufr
 REF=$label.compare.log.ref
 MYLOG=$label.compare.log
 
+cd ${data_dir}/bufr
 rm -f ${TEMP} ${REF} ${MYLOG}
 
 cat > ${REF} <<EOF
@@ -52,15 +53,14 @@ cat > ${REF} <<EOF
 == 1 == DIFFERENCE == [#2#windSpeed->units] not found in 2nd field
 EOF
 
-pwd
-INPUT=${data_dir}/bufr/metar_with_2_bias.bufr
+INPUT=metar_with_2_bias.bufr
 ${examples_dir}eccodes_f_bufr_copy_data ${INPUT} ${TEMP}
 # The input and output BUFR messages should be different
 set +e
 ${tools_dir}bufr_compare ${TEMP} ${INPUT} > ${MYLOG}
 status=$?
 set -e
-[ $status -ne 0 ]
+[ $status -eq 1 ]
 
 diff ${MYLOG} ${REF}
 
