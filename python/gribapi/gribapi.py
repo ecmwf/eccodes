@@ -819,6 +819,16 @@ def codes_bufr_new_from_samples(samplename):
     GRIB_CHECK(err)
     return msgid
 
+@require(msgid_src=int, msgid_dst=int)
+def codes_bufr_copy_data(msgid_src, msgid_dst):
+    """
+    @brief Copy the data section of a BUFR message.
+    TODO
+    """
+    err, msgid_dst = _internal.grib_c_bufr_copy_data(msgid_src, msgid_dst)
+    GRIB_CHECK(err)
+    return msgid_dst
+
 
 @require(msgid_src=int)
 def grib_clone(msgid_src):

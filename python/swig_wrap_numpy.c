@@ -6389,6 +6389,55 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_grib_c_bufr_copy_data(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  int *arg1 = (int *) 0 ;
+  int *arg2 = (int *) 0 ;
+  int temp1 ;
+  int res1 = 0 ;
+  int temp2 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:grib_c_bufr_copy_data",&obj0,&obj1)) SWIG_fail;
+  if (!(SWIG_IsOK((res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1),SWIGTYPE_p_int,0))))) {
+    int val; 
+    int ecode = SWIG_AsVal_int(obj0, &val);
+    if (!SWIG_IsOK(ecode)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "grib_c_bufr_copy_data" "', argument " "1"" of type '" "int""'");
+    }
+    temp1 = (int)(val);
+    arg1 = &temp1;
+    res1 = SWIG_AddTmpMask(ecode);
+  }
+  if (!(SWIG_IsOK((res2 = SWIG_ConvertPtr(obj1,SWIG_as_voidptrptr(&arg2),SWIGTYPE_p_int,0))))) {
+    int val; 
+    int ecode = SWIG_AsVal_int(obj1, &val);
+    if (!SWIG_IsOK(ecode)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "grib_c_bufr_copy_data" "', argument " "2"" of type '" "int""'");
+    }
+    temp2 = (int)(val);
+    arg2 = &temp2;
+    res2 = SWIG_AddTmpMask(ecode);
+  }
+  result = (int)grib_c_bufr_copy_data(arg1,arg2);
+  resultobj = SWIG_From_int((int)(result));
+  if (SWIG_IsTmpObj(res2)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg2)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res2) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_int, new_flags));
+  }
+  if (SWIG_IsNewObj(res1)) free((char*)arg1);
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res1)) free((char*)arg1);
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_grib_c_keys_iterator_get_name(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int *arg1 = (int *) 0 ;
@@ -8873,6 +8922,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"grib_c_skip_read_only", _wrap_grib_c_skip_read_only, METH_VARARGS, NULL},
 	 { (char *)"grib_c_skip_function", _wrap_grib_c_skip_function, METH_VARARGS, NULL},
 	 { (char *)"grib_c_keys_iterator_rewind", _wrap_grib_c_keys_iterator_rewind, METH_VARARGS, NULL},
+	 { (char *)"grib_c_bufr_copy_data", _wrap_grib_c_bufr_copy_data, METH_VARARGS, NULL},
 	 { (char *)"grib_c_keys_iterator_get_name", _wrap_grib_c_keys_iterator_get_name, METH_VARARGS, NULL},
 	 { (char *)"grib_c_index_get_size_long", _wrap_grib_c_index_get_size_long, METH_VARARGS, NULL},
 	 { (char *)"grib_c_index_get_long", _wrap_grib_c_index_get_long, METH_VARARGS, NULL},

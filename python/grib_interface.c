@@ -2011,6 +2011,26 @@ int grib_c_copy_message(int* gid, void* mess,size_t* len)
     return GRIB_SUCCESS;
 }
 
+int grib_c_bufr_copy_data(int *msgid_src, int *msgid_dst)
+{
+    char** copied_keys = NULL;
+    int err = 0;
+    size_t i = 0, num_copied = 0;
+    grib_handle* src  = get_handle(*msgid_src);
+    grib_handle* dest = get_handle(*msgid_dst);
+    if (!src || !dest) {
+        return GRIB_INVALID_GRIB;
+    }
+
+    copied_keys = codes_bufr_copy_data(src, dest, &num_copied, &err);
+    for (i=0; i<num_copied; i++) {
+        grib_context_free(src->context, copied_keys[i]);
+    }
+    grib_context_free(src->context, copied_keys);
+
+    return err;
+}
+
 void grib_c_check(int* err,char* call,char* str)
 {
     grib_context* c=grib_context_get_default();
