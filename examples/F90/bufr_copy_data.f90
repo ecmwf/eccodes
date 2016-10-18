@@ -1,3 +1,20 @@
+!
+!Copyright 2005-2016 ECMWF.
+!
+! This software is licensed under the terms of the Apache Licence Version 2.0
+!which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+!
+! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+!
+!
+! FORTRAN 90 implementation: bufr_copy_data
+!
+! Description: How to copy all the values in the data section that are present in the same
+!              position in the data tree and with the same number of values to the output handle
+!
+!
+
 program bufr_encode
   use eccodes
   implicit none
@@ -7,11 +24,11 @@ program bufr_encode
   integer                                       :: ibufr
   integer                                       :: ibufrin
   integer(kind=4), dimension(:), allocatable    :: ivalues
-  integer, parameter  :: max_strsize = 100
+  integer, parameter                            :: max_strsize = 200
   character(len=max_strsize) , dimension(:),allocatable   :: svalues
   real(kind=8), dimension(:), allocatable       :: rvalues
-  character(len=max_strsize)                              :: infile_name
-  character(len=max_strsize)                              :: outfile_name
+  character(len=max_strsize)                    :: infile_name
+  character(len=max_strsize)                    :: outfile_name
 
   call codes_bufr_new_from_samples(ibufr,'BUFR3',iret)
   call getarg(1, infile_name)
@@ -63,7 +80,7 @@ program bufr_encode
 
   call codes_set(ibufrin,'unpack',1)
 
-  call codes_bufr_copy_data ( ibufrin,ibufr)
+  call codes_bufr_copy_data(ibufrin, ibufr)
 
   call codes_open_file(outfile,outfile_name,'w')
   call codes_write(ibufr,outfile)

@@ -45,6 +45,7 @@ list( APPEND tests
    grib_set_bitmap
    bufr_attributes
    bufr_clone
+   bufr_copy_data
    bufr_expanded
    bufr_get_keys
    bufr_keys_iterator

@@ -10,12 +10,13 @@
 . ./include.sh
 
 #Define a common label for all the tmp files
-label="bufr_copy_data_c"
+label="bufr_copy_data_py"
 
 TEMP=$label.out.bufr
 REF=$label.compare.log.ref
 MYLOG=$label.compare.log
 
+cd ${data_dir}/bufr
 rm -f ${TEMP} ${REF} ${MYLOG}
 
 cat > ${REF} <<EOF
@@ -52,9 +53,8 @@ cat > ${REF} <<EOF
 == 1 == DIFFERENCE == [#2#windSpeed->units] not found in 2nd field
 EOF
 
-INPUT=${data_dir}/bufr/metar_with_2_bias.bufr
-${examples_dir}c_bufr_copy_data ${INPUT} ${TEMP}
-
+INPUT=metar_with_2_bias.bufr
+$PYTHON ${examples_src}bufr_copy_data.py ${INPUT} ${TEMP}
 # The input and output BUFR messages should be different
 set +e
 ${tools_dir}bufr_compare ${TEMP} ${INPUT} > ${MYLOG}
