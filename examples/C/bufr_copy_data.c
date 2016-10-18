@@ -61,7 +61,6 @@ int main(int argc, char *argv[])
 
   while((h = codes_handle_new_from_file(0,f,PRODUCT_BUFR,&err)) != NULL)
   {
-    codes_keys_iterator* kiter=NULL;
     if(!h) {
       printf("ERROR: Unable to create grib handle\n");
       exit(1);

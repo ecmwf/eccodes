@@ -26,10 +26,10 @@ VERBOSE = 1  # verbose error reporting
 
 def example():
 
-    # open bufr file
+    # open BUFR file
     fin = open(INPUT)
 
-    # open otput bufr file
+    # open output BUFR file
     fout = open(OUTPUT, 'w')
 
     cnt = 0
