@@ -1099,8 +1099,14 @@ attributes or by the namespace they belong to.
 codes_keys_iterator* codes_keys_iterator_new(codes_handle* h,unsigned long filter_flags, const char* name_space);
 codes_keys_iterator* codes_bufr_keys_iterator_new(codes_handle* h);
 codes_keys_iterator* codes_bufr_data_section_keys_iterator_new(codes_handle* h);
+
+/* codes_bufr_copy_data copies all the values in the data section that are present in the same position in the data tree
+ * and with the same number of values to the output handle. Should not exit with error if the output handle has a different
+ * structure as the aim is to copy what is possible to be copied.
+ * This will allow the user to add something to a message by creating a new message with additions or changes to the
+ * unexpandedDescriptors and copying what is possible to copy from the original message. */
 char **codes_bufr_copy_data_return_copied_keys(grib_handle *hin, grib_handle *hout, size_t *nkeys, int *err);
-int codes_bufr_copy_data(grib_handle* hin,grib_handle* hout);
+int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout);
 
 
 /*! Step to the next iterator.

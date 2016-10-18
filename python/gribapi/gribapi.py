@@ -822,8 +822,15 @@ def codes_bufr_new_from_samples(samplename):
 @require(msgid_src=int, msgid_dst=int)
 def codes_bufr_copy_data(msgid_src, msgid_dst):
     """
-    @brief Copy the data section of a BUFR message.
-    TODO
+    @brief Copy data values from a BUFR message msgid_src to another message msgid_dst
+
+    Copies all the values in the data section that are present in the same position
+    in the data tree and with the same number of values to the output handle.
+
+    @param msgid_src     id of the message from which the data are copied
+    @param msgid_dst     id of the message to which the data are copied
+    @return id of new message
+    @exception GribInternalError
     """
     err, msgid_dst = _internal.grib_c_bufr_copy_data(msgid_src, msgid_dst)
     GRIB_CHECK(err)
