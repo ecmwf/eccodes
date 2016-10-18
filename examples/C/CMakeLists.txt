@@ -35,6 +35,7 @@ list( APPEND test_bins
       grib_copy_message
       grib_ensemble_index
       get_product_kind
+      bufr_copy_data
       bufr_attributes
       bufr_clone
       bufr_expanded
@@ -77,6 +78,7 @@ list( APPEND tests
    set_missing
    sections_copy
    bufr_attributes
+   bufr_copy_data
    bufr_clone
    bufr_expanded
    bufr_get_keys

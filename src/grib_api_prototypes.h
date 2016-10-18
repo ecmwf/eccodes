@@ -1123,7 +1123,8 @@ int codes_bufr_keys_iterator_next(grib_keys_iterator *kiter);
 char *codes_bufr_keys_iterator_get_name(grib_keys_iterator *kiter);
 grib_accessor *codes_bufr_keys_iterator_get_accessor(grib_keys_iterator *kiter);
 int codes_bufr_keys_iterator_delete(grib_keys_iterator *kiter);
-char **codes_bufr_copy_data(grib_handle *hin, grib_handle *hout, size_t *nkeys, int *err);
+char **codes_bufr_copy_data_return_copied_keys(grib_handle *hin, grib_handle *hout, size_t *nkeys, int *err);
+int codes_bufr_copy_data(grib_handle* hin,grib_handle* hout);
 
 /* grib_parse_utils.c */
 int grib_recompose_name(grib_handle *h, grib_accessor *observer, const char *uname, char *fname, int fail);

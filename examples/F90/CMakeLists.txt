@@ -33,6 +33,7 @@ list( APPEND tests
       get_set_uuid
       grib_clone
       bufr_attributes
+      bufr_copy_data
       bufr_clone
       bufr_expanded
       bufr_get_keys

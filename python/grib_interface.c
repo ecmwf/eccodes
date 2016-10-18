@@ -2022,11 +2022,7 @@ int grib_c_bufr_copy_data(int *msgid_src, int *msgid_dst)
         return GRIB_INVALID_GRIB;
     }
 
-    copied_keys = codes_bufr_copy_data(src, dest, &num_copied, &err);
-    for (i=0; i<num_copied; i++) {
-        grib_context_free(src->context, copied_keys[i]);
-    }
-    grib_context_free(src->context, copied_keys);
+    err = codes_bufr_copy_data(src, dest);
 
     return err;
 }

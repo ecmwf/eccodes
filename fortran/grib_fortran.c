@@ -2783,13 +2783,8 @@ int codes_f_bufr_copy_data_(int* gid1,int* gid2)
 
     if(!hin || !hout ) return  GRIB_INVALID_GRIB;
 
-    ckeys=codes_bufr_copy_data(hin,hout,&lsize,&err);
+    err=codes_bufr_copy_data(hin,hout);
     if (err) return err;
-
-    for (i=0;i<lsize;i++) {
-        grib_context_free(hin->context,ckeys[i]);
-    }
-    grib_context_free(hin->context,ckeys);
 
     return  err;
 }
