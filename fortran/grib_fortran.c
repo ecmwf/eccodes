@@ -2777,9 +2777,6 @@ int codes_f_bufr_copy_data_(int* gid1,int* gid2)
     grib_handle *hin = get_handle(*gid1);
     grib_handle *hout = get_handle(*gid2);
     int err = GRIB_SUCCESS;
-    size_t i;
-    size_t lsize ;
-    char** ckeys=0;
 
     if(!hin || !hout ) return  GRIB_INVALID_GRIB;
 

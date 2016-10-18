@@ -2013,9 +2013,7 @@ int grib_c_copy_message(int* gid, void* mess,size_t* len)
 
 int grib_c_bufr_copy_data(int *msgid_src, int *msgid_dst)
 {
-    char** copied_keys = NULL;
     int err = 0;
-    size_t i = 0, num_copied = 0;
     grib_handle* src  = get_handle(*msgid_src);
     grib_handle* dest = get_handle(*msgid_dst);
     if (!src || !dest) {
@@ -2023,7 +2021,6 @@ int grib_c_bufr_copy_data(int *msgid_src, int *msgid_dst)
     }
 
     err = codes_bufr_copy_data(src, dest);
-
     return err;
 }
 
