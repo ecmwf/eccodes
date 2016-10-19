@@ -302,6 +302,10 @@ bufr_descriptor *accessor_bufr_elements_table_get_descriptor(grib_accessor *a, i
 
 /* grib_accessor_class_pack_bufr_values.c */
 
+/* grib_accessor_class_bufr_extract_area_subsets.c */
+
+/* grib_accessor_class_bufr_extract_datetime_subsets.c */
+
 /* grib_accessor_class_group.c */
 
 /* grib_accessor_class_unpack_bufr_values.c */
@@ -686,8 +690,6 @@ int grib_jasper_encode(grib_context *c, j2k_encode_helper *helper);
 /* grib_openjpeg_encoding.c */
 int grib_openjpeg_encode(grib_context *c, j2k_encode_helper *helper);
 int grib_openjpeg_decode(grib_context *c, unsigned char *buf, size_t *buflen, double *val, size_t *n_vals);
-int grib_openjpeg_decode(grib_context *c, unsigned char *buf, size_t *buflen, double *val, size_t *n_vals);
-int grib_openjpeg_encode(grib_context *c, j2k_encode_helper *helper);
 
 /* action_class_set_missing.c */
 grib_action *grib_action_create_set_missing(grib_context *context, const char *name);
@@ -765,6 +767,8 @@ void accessor_raw_set_length(grib_accessor *a, size_t len);
 long accessor_raw_get_offset(grib_accessor *a);
 
 /* grib_accessor_class_bufr_extract_subsets.c */
+
+/* grib_accessor_class_bufr_simple_thinning.c */
 
 /* grib_accessor_class_spd.c */
 
@@ -900,7 +904,25 @@ void grib_dump_footer(grib_dumper *d, grib_handle *h);
 
 /* grib_dumper_class_keys.c */
 
+/* grib_dumper_class_bufr_encode_C.c */
+
+/* grib_dumper_class_bufr_encode_filter.c */
+
+/* grib_dumper_class_bufr_encode_fortran.c */
+
+/* grib_dumper_class_bufr_encode_python.c */
+
+/* grib_dumper_class_bufr_decode_C.c */
+
+/* grib_dumper_class_bufr_decode_filter.c */
+
+/* grib_dumper_class_bufr_decode_fortran.c */
+
+/* grib_dumper_class_bufr_decode_python.c */
+
 /* grib_dumper_class_json.c */
+
+/* grib_dumper_class_grib_encode_C.c */
 
 /* grib_dumper_class_wmo.c */
 
@@ -932,6 +954,8 @@ void grib_context_free(const grib_context *c, void *p);
 void grib_context_free_persistent(const grib_context *c, void *p);
 void grib_context_reset(grib_context *c);
 void grib_context_delete(grib_context *c);
+void grib_context_set_definitions_path(grib_context *c, const char *path);
+void grib_context_set_samples_path(grib_context *c, const char *path);
 void *grib_context_malloc_persistent(const grib_context *c, size_t size);
 char *grib_context_strdup_persistent(const grib_context *c, const char *s);
 void *grib_context_malloc_clear_persistent(const grib_context *c, size_t size);
@@ -1123,8 +1147,6 @@ int codes_bufr_keys_iterator_next(grib_keys_iterator *kiter);
 char *codes_bufr_keys_iterator_get_name(grib_keys_iterator *kiter);
 grib_accessor *codes_bufr_keys_iterator_get_accessor(grib_keys_iterator *kiter);
 int codes_bufr_keys_iterator_delete(grib_keys_iterator *kiter);
-char **codes_bufr_copy_data_return_copied_keys(grib_handle *hin, grib_handle *hout, size_t *nkeys, int *err);
-int codes_bufr_copy_data(grib_handle* hin,grib_handle* hout);
 
 /* grib_parse_utils.c */
 int grib_recompose_name(grib_handle *h, grib_accessor *observer, const char *uname, char *fname, int fail);
@@ -1242,6 +1264,7 @@ int grib_get_nearest_smaller_value(grib_handle *h, const char *name, double val,
 void grib_print_values(grib_values *values, int count);
 int grib_values_check(grib_handle *h, grib_values *values, int count);
 int grib_key_equal(grib_handle *h1, grib_handle *h2, const char *key, int type, int *err);
+int codes_copy_key(grib_handle *h1, grib_handle *h2, const char *key, int type);
 
 /* grib_errors.c */
 const char *grib_get_error_message(int code);
@@ -1399,6 +1422,10 @@ char *codes_getenv(const char *name);
 int compute_key_rank(grib_handle* h, grib_string_list* keys, const char* key);
 char **str_split(char *a_str, const char a_delim);
 
+/* bufr_util.c */
+char **codes_bufr_copy_data_return_copied_keys(grib_handle *hin, grib_handle *hout, size_t *nkeys, int *err);
+int codes_bufr_copy_data(grib_handle *hin, grib_handle *hout);
+
 /* functions.c */
 long grib_op_eq(long a, long b);
 long grib_op_ne(long a, long b);
@@ -1434,6 +1461,10 @@ const char *grib_binop_double_proc_name(grib_binop_double_proc proc);
 const char *grib_unop_long_proc_name(grib_unop_long_proc proc);
 const char *grib_unop_double_proc_name(grib_unop_double_proc proc);
 
+/* codes_memfs.c */
+FILE *codes_fopen(const char *name, const char *mode);
+int codes_access(const char *name, int mode);
+
 /* grib_api_version.c */
 const char *grib_get_git_sha1(void);
 
@@ -1452,9 +1483,3 @@ int grib_decode_double_array_complex(const unsigned char *p, long *bitp, long nb
 int grib_encode_long_array(size_t n_vals, const long *val, long bits_per_value, unsigned char *p, long *off);
 int grib_encode_double_array(size_t n_vals, const double *val, long bits_per_value, double reference_value, double d, double divisor, unsigned char *p, long *off);
 int grib_encode_double_array_complex(size_t n_vals, double *val, long nbits, double reference_value, double *scal, double d, double divisor, unsigned char *p, long *bitp);
-
-
-/* codes_memfs */
-FILE* codes_fopen(const char* name, const char* mode);
-int codes_access(const char* name, int mode);
-
