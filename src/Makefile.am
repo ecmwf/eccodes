@@ -363,6 +363,7 @@ libeccodes_la_prototypes= \
 	grib_iterator_class_regular.c \
 	grib_expression.c \
 	grib_util.c \
+	bufr_util.c \
 	functions.c \
 	codes_memfs.c \
 	grib_api_version.c
