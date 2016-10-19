@@ -25,8 +25,6 @@ program bufr_encode
   integer                                       :: ibufrin
   integer(kind=4), dimension(:), allocatable    :: ivalues
   integer, parameter                            :: max_strsize = 200
-  character(len=max_strsize) , dimension(:),allocatable   :: svalues
-  real(kind=8), dimension(:), allocatable       :: rvalues
   character(len=max_strsize)                    :: infile_name
   character(len=max_strsize)                    :: outfile_name
 
