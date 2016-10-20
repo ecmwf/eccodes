@@ -18,7 +18,11 @@
 16 16 Level of neutral buoyancy or equilibrium level (LNB)
 # 17-19 Reserved 
 20 20 Isothermal level (K)
-# 21-99 Reserved 
+21 21 Lowest level where mass density exceeds the specified value (base for a given threshold of mass density) (kg m-3)
+22 22 Highest level where mass density exceeds the specified value (top for a given threshold of mass density) (kg m-3)
+23 23 Lowest level where air concentration exceeds the specified value (base for a given threshold of air concentration) (Bq m-3)
+24 24 Highest level where air concentration exceeds the specified value (top for a given threshold of air concentration) (Bq m-3)
+# 25-99 Reserved 
 100 pl Isobaric surface (Pa)
 101 sfc Mean sea level 
 102 102 Specific altitude above mean sea level (m)
@@ -34,7 +38,8 @@
 112 112 Reserved 
 113 113 Logarithmic hybrid level 
 114 114 Snow level (Numeric)
-# 115-116 Reserved 
+115 115 Sigma height level
+# 116 Reserved
 117 117 Mixed layer depth (m)
 118 hhl Hybrid height level (-)
 119 hpl Hybrid pressure level (-)
