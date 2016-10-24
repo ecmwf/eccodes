@@ -1429,3 +1429,46 @@ EOF
 diff ${f}.log.ref ${f}.log 
 
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
+#-----------------------------------------------------------
+# Test: subset extraction constant values
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set numberOfSubsets=10;
+set compressedData=1;
+set unexpandedDescriptors={5002};
+set latitude={0,0,0,0,0,0,0,1,0,0};
+set pack=1;
+write;
+EOF
+
+f="go15_87.bufr"
+
+echo "Test: subset extraction constant values" >> $fLog
+echo "file: $f" >> $fLog
+
+${tools_dir}bufr_filter -o ${f}.out $fRules $f
+
+cat > $fRules <<EOF
+set unpack=1;
+set extractSubsetIntervalStart=1;
+set extractSubsetIntervalEnd=4;
+set doExtractSubsets=1;
+write;
+EOF
+
+${tools_dir}bufr_filter -o ${f}.out.out $fRules ${f}.out
+
+cat > $fRules <<EOF
+set unpack=1;
+print "latitude=[latitude]";
+EOF
+
+${tools_dir}bufr_filter $fRules ${f}.out.out > ${f}.log
+
+cat > ${f}.log.ref <<EOF
+latitude=0
+EOF
+
+diff ${f}.log.ref ${f}.log 
+
+rm -f ${f}.log ${f}.log.ref ${f}.out ${f}.out.out $fLog $fRules
