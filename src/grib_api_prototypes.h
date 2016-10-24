@@ -205,6 +205,7 @@ grib_darray *grib_darray_push(grib_context *c, grib_darray *v, double val);
 void grib_darray_delete(grib_context *c, grib_darray *v);
 double *grib_darray_get_array(grib_context *c, grib_darray *v);
 size_t grib_darray_used_size(grib_darray *v);
+int grib_darray_is_constant(grib_darray* v);
 
 /* grib_sarray.c */
 grib_sarray *grib_sarray_new(grib_context *c, size_t size, size_t incsize);
@@ -231,6 +232,7 @@ void grib_iarray_delete(grib_iarray *v);
 void grib_iarray_delete_array(grib_iarray *v);
 long *grib_iarray_get_array(grib_iarray *v);
 size_t grib_iarray_used_size(grib_iarray *v);
+int grib_iarray_is_constant(grib_iarray* v);
 
 /* grib_vdarray.c */
 grib_vdarray *grib_vdarray_new(grib_context *c, size_t size, size_t incsize);

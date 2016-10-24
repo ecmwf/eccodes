@@ -582,6 +582,8 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     double* v=NULL;
     double* values=NULL;
     int thereIsAMissing=0;
+    int is_constant;
+    double val0;
 
     if (self->iss_list==NULL) return GRIB_INTERNAL_ERROR;
 
@@ -601,7 +603,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     v=dvalues->v;
 
     /* is constant */
-    if (grib_darray_used_size(dvalues)==1) {
+    if (grib_darray_is_constant(dvalues)) {
         localWidth=0;
         grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
         if (*v == GRIB_MISSING_DOUBLE) {
@@ -617,11 +619,16 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
 
     if (nvals>grib_darray_used_size(dvalues)) return GRIB_ARRAY_TOO_SMALL;
     values=grib_context_malloc_clear(c,sizeof(double)*nvals);
-    for (i=0;i<nvals;i++) values[i]=dvalues->v[self->iss_list->v[i]];
+    val0=dvalues->v[self->iss_list->v[0]];
+    is_constant=1;
+    for (i=0;i<nvals;i++) {
+      values[i]=dvalues->v[self->iss_list->v[i]];
+      if (val0 != values[i]) is_constant=0;
+    }
     v=values;
 
-    /* encoding only one value out of many*/
-    if (nvals==1) {
+    /* encoding a range with constant values*/
+    if (is_constant==1) {
         localWidth=0;
         grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
         if (*v == GRIB_MISSING_DOUBLE) {
