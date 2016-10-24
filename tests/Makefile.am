@@ -21,7 +21,7 @@ TESTS = definitions.sh \
         grib2to1.sh \
         badgrib.sh \
         ls.sh \
-        filter.sh  \
+        grib_filter.sh  \
         multi.sh \
         budg.sh \
         gridType.sh \

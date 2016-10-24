@@ -75,7 +75,7 @@ list( APPEND tests2
     grib2to1
     badgrib
     ls
-    filter
+    grib_filter
     multi
     budg
     gridType
