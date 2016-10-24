@@ -39,7 +39,6 @@ list( APPEND tests1
     definitions
     calendar
     unit_tests
-    bufr_keys_iter
     md5
     uerra
     grib_2nd_order_numValues
@@ -61,6 +60,7 @@ list( APPEND tests2
     bufr_json
     bufr_ls
     bufr_change_edition
+    bufr_keys_iter
     ecc-197
     ecc-286
     ecc-288
