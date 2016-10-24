@@ -121,5 +121,24 @@ echo 'set centre="kwbc";write;' | ${tools_dir}/grib_filter -o temp_filt.grib2 - 
 result=`${tools_dir}/grib_get -p centre temp_filt.grib2`
 [ "$result" = "kwbc" ]
 
+
+# ECC-365: placeholder in the output filename
+########################################################
+input=${data_dir}/tigge_cf_ecmwf.grib2
+echo 'write;' | ${tools_dir}/grib_filter -o 'temp.out.gfilter.[date].[level].grib' - $input
+[ -f temp.out.gfilter.20070122.925.grib ]
+[ -f temp.out.gfilter.20070122.320.grib ]
+[ -f temp.out.gfilter.20070122.2.grib ]
+[ -f temp.out.gfilter.20070122.10.grib ]
+[ -f temp.out.gfilter.20070122.0.grib ]
+[ -f temp.out.gfilter.20060630.0.grib ]
+[ -f temp.out.gfilter.20060623.0.grib ]
+# Check the contents of one of the output files
+c=`${tools_dir}/grib_count temp.out.gfilter.20070122.320.grib`
+[ "$c" = 1 ]
+grib_check_key_equals temp.out.gfilter.20070122.320.grib "date,level" "20070122 320"
+rm -f temp.out.gfilter.*.grib
+
+
 rm -f temp_filt.grib2 temp.filt
 rm -f ${data_dir}/formatint.rules ${data_dir}/binop.rules
