@@ -1709,47 +1709,6 @@ char* codes_getenv(const char* name)
     return result;
 }
 
-/* Return the rank of the key using list of keys (For BUFR keys) */
-/* The argument 'keys' is an input as well as output from each call */
-int compute_key_rank(grib_handle* h, grib_string_list* keys, const char* key)
-{
-    grib_string_list* next=keys;
-    grib_string_list* prev=keys;
-    int theRank=0;
-    size_t size=0;
-    grib_context* c=h->context;
-    Assert(h->product_kind == PRODUCT_BUFR);
-
-    while (next && next->value && strcmp(next->value,key)) {
-        prev=next;
-        next=next->next;
-    }
-    if (!next) {
-        prev->next=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
-        next=prev->next;
-    }
-    if (!next->value) {
-        next->value=strdup(key);
-        next->count=0;
-    }
-
-    next->count++;
-    theRank=next->count;
-    if (theRank==1) {
-        /* If the count is 1 it could mean two things: */
-        /*   This is the first instance of the key and there is another one */
-        /*   This is the first and only instance of the key */
-        /* So we check if there is a second one of this key, */
-        /* If not, then rank is zero i.e. this is the only instance */
-        char* s=grib_context_malloc_clear(c,strlen(key)+5);
-        sprintf(s,"#2#%s",key);
-        if (grib_get_size(h,s,&size)==GRIB_NOT_FOUND) theRank=0;
-        grib_context_free(c, s);
-    }
-
-    return theRank;
-}
-
 /* From https://stackoverflow.com/questions/32506614/manipulation-of-delimiters-within-arrays */
 /* Returns an array of strings the last of which is NULL */
 char** str_split(char* a_str, const char a_delim)

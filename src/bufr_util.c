@@ -10,6 +10,47 @@
 
 #include "grib_api_internal.h"
 
+/* Return the rank of the key using list of keys (For BUFR keys) */
+/* The argument 'keys' is an input as well as output from each call */
+int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* key)
+{
+    grib_string_list* next=keys;
+    grib_string_list* prev=keys;
+    int theRank=0;
+    size_t size=0;
+    grib_context* c=h->context;
+    Assert(h->product_kind == PRODUCT_BUFR);
+
+    while (next && next->value && strcmp(next->value,key)) {
+        prev=next;
+        next=next->next;
+    }
+    if (!next) {
+        prev->next=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
+        next=prev->next;
+    }
+    if (!next->value) {
+        next->value=strdup(key);
+        next->count=0;
+    }
+
+    next->count++;
+    theRank=next->count;
+    if (theRank==1) {
+        /* If the count is 1 it could mean two things: */
+        /*   This is the first instance of the key and there is another one */
+        /*   This is the first and only instance of the key */
+        /* So we check if there is a second one of this key, */
+        /* If not, then rank is zero i.e. this is the only instance */
+        char* s=grib_context_malloc_clear(c,strlen(key)+5);
+        sprintf(s,"#2#%s",key);
+        if (grib_get_size(h,s,&size)==GRIB_NOT_FOUND) theRank=0;
+        grib_context_free(c, s);
+    }
+
+    return theRank;
+}
+
 char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin,grib_handle* hout, size_t* nkeys, int* err)
 {
     grib_keys_iterator* kiter=NULL;

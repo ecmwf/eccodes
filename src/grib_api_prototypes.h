@@ -1421,10 +1421,10 @@ char get_dir_separator_char(void);
 const char *extract_filename(const char *filepath);
 int is_gaussian_global(double lat1, double lat2, double lon1, double lon2, long num_points_equator, const double *latitudes, double angular_precision);
 char *codes_getenv(const char *name);
-int compute_key_rank(grib_handle* h, grib_string_list* keys, const char* key);
 char **str_split(char *a_str, const char a_delim);
 
 /* bufr_util.c */
+int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* key);
 char **codes_bufr_copy_data_return_copied_keys(grib_handle *hin, grib_handle *hout, size_t *nkeys, int *err);
 int codes_bufr_copy_data(grib_handle *hin, grib_handle *hout);
 
