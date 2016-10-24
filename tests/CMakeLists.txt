@@ -17,6 +17,7 @@ list( APPEND test_bins
       multi_from_message
       read_index
       unit_tests
+      bufr_keys_iter
       gauss_sub
       grib_util_set_spec
       local_MeteoFrance
@@ -38,6 +39,7 @@ list( APPEND tests1
     definitions
     calendar
     unit_tests
+    bufr_keys_iter
     md5
     uerra
     grib_2nd_order_numValues
