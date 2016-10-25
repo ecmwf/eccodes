@@ -35,7 +35,8 @@ endforeach()
 
 # Now add each test (shell scripts)
 #################################################
-list( APPEND tests1
+# These tests do not require any data downloads
+list( APPEND tests_no_data_reqd
     definitions
     calendar
     unit_tests
@@ -43,7 +44,8 @@ list( APPEND tests1
     uerra
     grib_2nd_order_numValues
 )
-list( APPEND tests2
+# These tests do require data downloads
+list( APPEND tests_data_reqd
     grib_double_cmp
     bufr_dump
     bufr_dump_decode_filter
@@ -113,16 +115,16 @@ list( APPEND tests2
     neg_fctime
 )
 if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
-    list(APPEND tests2 bufr_dump_encode_fortran)
-    list(APPEND tests2 bufr_dump_decode_fortran)
+    list(APPEND tests_data_reqd bufr_dump_encode_fortran)
+    list(APPEND tests_data_reqd bufr_dump_decode_fortran)
 endif()
 if( ENABLE_EXTRA_TESTS )
-    list(APPEND tests2 bufr_dump_encode_C)
-    list(APPEND tests2 bufr_dump_decode_C)
+    list(APPEND tests_data_reqd bufr_dump_encode_C)
+    list(APPEND tests_data_reqd bufr_dump_decode_C)
 endif()
 
 # These tests do not require any data downloads
-foreach( test ${tests1} )
+foreach( test ${tests_no_data_reqd} )
     ecbuild_add_test( TARGET eccodes_t_${test}
                       TYPE SCRIPT
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
@@ -138,7 +140,7 @@ ecbuild_add_test( TARGET eccodes_t_check_gaussian_grids
 # Note: making the test dependent on the grib files (with DEPENDS)
 #       means they will be downloaded at "make" time
 #       rather than when you do "ctest". Use TEST_DEPENDS instead
-foreach( test ${tests2} )
+foreach( test ${tests_data_reqd} )
     ecbuild_add_test( TARGET eccodes_t_${test}
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
