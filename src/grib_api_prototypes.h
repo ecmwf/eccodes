@@ -1016,6 +1016,7 @@ void grib_file_delete(grib_file *file);
 
 /* grib_geography.c */
 int grib_get_gaussian_latitudes(long trunc, double *lats);
+int is_gaussian_global(double lat1, double lat2, double lon1, double lon2, long num_points_equator, const double *latitudes, double angular_precision);
 
 /* grib_handle.c */
 grib_section *grib_section_create(grib_handle *h, grib_accessor *owner);
@@ -1419,7 +1420,6 @@ int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNum
 int is_index_file(const char *filename);
 char get_dir_separator_char(void);
 const char *extract_filename(const char *filepath);
-int is_gaussian_global(double lat1, double lat2, double lon1, double lon2, long num_points_equator, const double *latitudes, double angular_precision);
 char *codes_getenv(const char *name);
 char **str_split(char *a_str, const char a_delim);
 

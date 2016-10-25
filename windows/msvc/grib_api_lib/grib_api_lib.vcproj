@@ -421,11 +421,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\codes_memfs.c"
+				RelativePath="..\..\..\src\bufr_keys_iterator.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\compile.c"
+				RelativePath="..\..\..\src\bufr_util.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\codes_memfs.c"
 				>
 			</File>
 			<File
@@ -1450,10 +1454,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_dumper_class_wmo.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\grib_dumper_class_xml.c"
 				>
 			</File>
 			<File
