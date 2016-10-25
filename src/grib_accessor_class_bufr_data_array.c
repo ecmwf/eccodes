@@ -1009,7 +1009,8 @@ static int encode_new_replication(grib_context* c,grib_accessor_bufr_data_array*
         }
         break;
     default:
-        Assert(0);
+        grib_context_log(c, GRIB_LOG_ERROR, "unsupported descriptor code %d\n", descriptors[i]->code);
+        return GRIB_INTERNAL_ERROR;
     }
 
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding replication: \twidth=%ld pos=%ld ulength=%ld ulength_bits=%ld",
