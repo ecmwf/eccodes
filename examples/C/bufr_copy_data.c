@@ -81,11 +81,16 @@ int main(int argc, char *argv[])
     while((h = codes_handle_new_from_file(0,f,PRODUCT_BUFR,&err)) != NULL)
     {
         if(!h) {
-            printf("ERROR: Unable to create grib handle\n");
-            exit(1);
+            printf("ERROR: Unable to create BUFR handle\n");
+            return 1;
         }
         /* codes_copy_key(h,ho,"unexpandedDescriptors",0); */
-        codes_set_long(h,"unpack",1);
+        err = codes_set_long(h,"unpack",1);
+        if (err) {
+            printf("ERROR: Unable to unpack BUFR message. Quitting\n");
+            printf("       %s\n", codes_get_error_message(err));
+            return 1;
+        }
 
         /* err=codes_bufr_copy_data(h,ho); */
         keys=codes_bufr_copy_data_return_copied_keys(h,ho,&nkeys,&err);
@@ -99,7 +104,7 @@ int main(int argc, char *argv[])
         codes_handle_delete(h);
     }
     fclose(f);
-    grib_write_message(ho,outfile,"w");
+    codes_write_message(ho,outfile,"w");
     codes_handle_delete(ho);
 
     return err;
