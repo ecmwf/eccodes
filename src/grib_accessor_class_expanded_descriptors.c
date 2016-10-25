@@ -168,6 +168,13 @@ typedef struct change_coding_params {
     double referenceFactor;
 } change_coding_params ;
 
+/* Handy macro to catch errors.
+ * Arguments: array is a pointer to 'bufr_descriptors_array', result is pointer to 'bufr_descriptor' */
+#define DESCRIPTORS_POP_FRONT_OR_RETURN(array,result) {\
+       if(array->n == 0) { *err=GRIB_INTERNAL_ERROR; return 0; } \
+       result=grib_bufr_descriptors_array_pop_front(array); \
+    }
+
 static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
@@ -230,7 +237,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
     switch (us->F) {
     case 3:
         /* sequence */
-        u=grib_bufr_descriptors_array_pop_front(unexpanded);
+        DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded,u);
 #if MYDEBUG
         for (idepth=0;idepth<depth;idepth++) printf("\t");
         printf("+++ pop  %06ld\n",u->code);
@@ -265,7 +272,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
         if (us->Y==0) {
             /* delayed replication */
             bufr_descriptor* uidx=0;
-            u=grib_bufr_descriptors_array_pop_front(unexpanded);
+            DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded,u);
 #if MYDEBUG
             for (idepth=0;idepth<depth;idepth++) printf("\t");
             printf("+++ pop  %06ld\n",u->code);
@@ -278,7 +285,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             inner_unexpanded=grib_bufr_descriptors_array_new(c,100,100);
             inner_expanded=grib_bufr_descriptors_array_new(c,100,100);
             for (j=0;j<us->X+1;j++) {
-                u0=grib_bufr_descriptors_array_pop_front(unexpanded);
+                DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded, u0);
                 grib_bufr_descriptors_array_push(inner_unexpanded,u0);
 #if MYDEBUG
                 for (idepth=0;idepth<depth;idepth++) printf("\t");
@@ -298,7 +305,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             grib_bufr_descriptor_set_code(0,(size-1)*1000+100000,uidx);
             size++;
         } else {
-            u=grib_bufr_descriptors_array_pop_front(unexpanded);
+            DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded,u);
 #if MYDEBUG
             for (idepth=0;idepth<depth;idepth++) printf("\t");
             printf("+++ pop  %06ld\n",u->code);
@@ -307,7 +314,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             size=us->X*us->Y;
             ur=(bufr_descriptor**)grib_context_malloc_clear(c,us->X*sizeof(bufr_descriptor));
             for (j=0;j<us->X;j++) {
-                ur[j]=grib_bufr_descriptors_array_pop_front(unexpanded);
+                DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded,ur[j]);
 #if MYDEBUG
                 for (idepth=0;idepth<depth;idepth++) printf("\t");
                 printf("+++ pop  %06ld\n",ur[j]->code);
@@ -340,7 +347,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
         break;
 
     case 0:
-        u=grib_bufr_descriptors_array_pop_front(unexpanded);
+        DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded,u);
         size=1;
         if (ccp->associatedFieldWidth && u->X!=31) {
             bufr_descriptor* au=grib_bufr_descriptor_new(self->tablesAccessor,999999,err);
@@ -386,7 +393,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
         break;
 
     case 2:
-        u=grib_bufr_descriptors_array_pop_front(unexpanded);
+        DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded,u);
 #if MYDEBUG
         for (idepth=0;idepth<depth;idepth++) printf("\t");
         printf("+++ pop  %06ld\n",u->code);
@@ -440,7 +447,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
         break;
 
         default:
-            u=grib_bufr_descriptors_array_pop_front(unexpanded);
+            DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded,u);
 #if MYDEBUG
             for (idepth=0;idepth<depth;idepth++) printf("\t");
             printf("+++ pop  %06ld\n",u->code);

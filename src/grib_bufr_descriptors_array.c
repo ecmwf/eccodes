@@ -11,28 +11,28 @@
 #include "grib_api_internal.h"
 
 bufr_descriptors_array* grib_bufr_descriptors_array_new(grib_context* c,size_t size,size_t incsize) {
-  bufr_descriptors_array* v=NULL;
+    bufr_descriptors_array* v=NULL;
 
-  if (!c) c=grib_context_get_default();
+    if (!c) c=grib_context_get_default();
 
-  v=(bufr_descriptors_array*)grib_context_malloc(c,sizeof(bufr_descriptors_array));
-  if (!v) {
-    grib_context_log(c,GRIB_LOG_ERROR,
-          "bufr_descriptors_array_new unable to allocate %d bytes\n",sizeof(bufr_descriptors_array));
-    return NULL;
-  }
-  v->context=c;
-  v->size=size;
-  v->n=0;
-  v->incsize=incsize;
-  v->v=(bufr_descriptor**)grib_context_malloc(c,sizeof(bufr_descriptor*)*size);
-  v->number_of_pop_front=0;
-  if (!v->v) {
-    grib_context_log(c,GRIB_LOG_ERROR,
-          "grib_bufr_descriptors_array_new unable to allocate %d bytes\n",sizeof(bufr_descriptor)*size);
-    return NULL;
-  }
-  return v;
+    v=(bufr_descriptors_array*)grib_context_malloc(c,sizeof(bufr_descriptors_array));
+    if (!v) {
+        grib_context_log(c,GRIB_LOG_ERROR,
+                "bufr_descriptors_array_new unable to allocate %d bytes\n",sizeof(bufr_descriptors_array));
+        return NULL;
+    }
+    v->context=c;
+    v->size=size;
+    v->n=0;
+    v->incsize=incsize;
+    v->v=(bufr_descriptor**)grib_context_malloc(c,sizeof(bufr_descriptor*)*size);
+    v->number_of_pop_front=0;
+    if (!v->v) {
+        grib_context_log(c,GRIB_LOG_ERROR,
+                "grib_bufr_descriptors_array_new unable to allocate %d bytes\n",sizeof(bufr_descriptor)*size);
+        return NULL;
+    }
+    return v;
 }
 
 bufr_descriptor* grib_bufr_descriptors_array_pop(bufr_descriptors_array* a) {
@@ -51,126 +51,126 @@ bufr_descriptor* grib_bufr_descriptors_array_pop_front(bufr_descriptors_array* a
 }
 
 bufr_descriptors_array* grib_bufr_descriptors_array_resize_to(bufr_descriptors_array* v,size_t newsize) {
-  bufr_descriptor** newv;
-  size_t i;
-  grib_context* c=v->context;
+    bufr_descriptor** newv;
+    size_t i;
+    grib_context* c=v->context;
 
-  if (newsize<v->size) return v;
+    if (newsize<v->size) return v;
 
-  if (!c) c=grib_context_get_default();
+    if (!c) c=grib_context_get_default();
 
-  newv=(bufr_descriptor**)grib_context_malloc_clear(c,newsize*sizeof(bufr_descriptor*));
-  if (!newv) {
-    grib_context_log(c,GRIB_LOG_ERROR,
-          "grib_bufr_descriptors_array_resize unable to allocate %d bytes\n",sizeof(bufr_descriptor*)*newsize);
-    return NULL;
-  }
+    newv=(bufr_descriptor**)grib_context_malloc_clear(c,newsize*sizeof(bufr_descriptor*));
+    if (!newv) {
+        grib_context_log(c,GRIB_LOG_ERROR,
+                "grib_bufr_descriptors_array_resize unable to allocate %d bytes\n",sizeof(bufr_descriptor*)*newsize);
+        return NULL;
+    }
 
-  for (i=0;i<v->n;i++) newv[i]=v->v[i];
+    for (i=0;i<v->n;i++) newv[i]=v->v[i];
 
-  v->v-=v->number_of_pop_front;
-  grib_context_free(c,v->v);
+    v->v-=v->number_of_pop_front;
+    grib_context_free(c,v->v);
 
-  v->v=newv;
-  v->size=newsize;
-  v->number_of_pop_front=0;
+    v->v=newv;
+    v->size=newsize;
+    v->number_of_pop_front=0;
 
-  return v;
+    return v;
 }
 
 bufr_descriptors_array* grib_bufr_descriptors_array_resize(bufr_descriptors_array* v) {
-  int newsize=v->incsize+v->size;
+    int newsize=v->incsize+v->size;
 
-  return grib_bufr_descriptors_array_resize_to(v,newsize);
+    return grib_bufr_descriptors_array_resize_to(v,newsize);
 }
 
 bufr_descriptors_array* grib_bufr_descriptors_array_push(bufr_descriptors_array* v,bufr_descriptor* val) {
-  size_t start_size=100;
-  size_t start_incsize=100;
+    size_t start_size=100;
+    size_t start_incsize=100;
 
-  if (!v) v=grib_bufr_descriptors_array_new(0,start_size,start_incsize);
+    if (!v) v=grib_bufr_descriptors_array_new(0,start_size,start_incsize);
 
-  if (v->n >= v->size-v->number_of_pop_front)
-    v=grib_bufr_descriptors_array_resize(v);
+    if (v->n >= v->size-v->number_of_pop_front)
+        v=grib_bufr_descriptors_array_resize(v);
 
-  v->v[v->n]=val;
-  v->n++;
-  return v;
+    v->v[v->n]=val;
+    v->n++;
+    return v;
 }
 
 bufr_descriptors_array* grib_bufr_descriptors_array_append(bufr_descriptors_array* v,bufr_descriptors_array* ar) {
-  size_t start_size=100;
-  size_t start_incsize=100;
-  size_t i;
-  bufr_descriptor* vv=0;
+    size_t start_size=100;
+    size_t start_incsize=100;
+    size_t i;
+    bufr_descriptor* vv=0;
 
-  if (!v) v=grib_bufr_descriptors_array_new(0,start_size,start_incsize);
+    if (!v) v=grib_bufr_descriptors_array_new(0,start_size,start_incsize);
 
-  for (i=0;i<ar->n;i++) {
-    vv=grib_bufr_descriptor_clone(ar->v[i]);
-    grib_bufr_descriptors_array_push(v,vv);
-  }
+    for (i=0;i<ar->n;i++) {
+        vv=grib_bufr_descriptor_clone(ar->v[i]);
+        grib_bufr_descriptors_array_push(v,vv);
+    }
 
-  grib_bufr_descriptors_array_delete(ar);
-  ar=0;
+    grib_bufr_descriptors_array_delete(ar);
+    ar=0;
 
-  return v;
+    return v;
 }
 
 bufr_descriptors_array* grib_bufr_descriptors_array_push_front(bufr_descriptors_array* v,bufr_descriptor* val) {
-  size_t start_size=100;
-  size_t start_incsize=100;
-  int i;
-  if (!v) v=grib_bufr_descriptors_array_new(0,start_size,start_incsize);
+    size_t start_size=100;
+    size_t start_incsize=100;
+    int i;
+    if (!v) v=grib_bufr_descriptors_array_new(0,start_size,start_incsize);
 
-  if (v->number_of_pop_front) {
-    v->v--;
-    v->number_of_pop_front--;
-  } else {
-    if (v->n >= v->size) v=grib_bufr_descriptors_array_resize(v);
-    for (i=v->n;i>0;i--) v[i]=v[i-1];
-  }
-  v->v[0]=val;
-  v->n++;
+    if (v->number_of_pop_front) {
+        v->v--;
+        v->number_of_pop_front--;
+    } else {
+        if (v->n >= v->size) v=grib_bufr_descriptors_array_resize(v);
+        for (i=v->n;i>0;i--) v[i]=v[i-1];
+    }
+    v->v[0]=val;
+    v->n++;
 
-  return v;
+    return v;
 }
 
 bufr_descriptor* grib_bufr_descriptors_array_get(bufr_descriptors_array* a,size_t i) {
-  return a->v[i];
+    return a->v[i];
 }
 
 void grib_bufr_descriptors_array_set(bufr_descriptors_array* a,size_t i,bufr_descriptor* v) {
-  a->v[i]=v;
+    a->v[i]=v;
 }
 
 void grib_bufr_descriptors_array_delete(bufr_descriptors_array* v) {
-  grib_context* c;
+    grib_context* c;
 
-  if (!v) return;
-  c=v->context;
+    if (!v) return;
+    c=v->context;
 
-  grib_bufr_descriptors_array_delete_array(v);
+    grib_bufr_descriptors_array_delete_array(v);
 
-  grib_context_free(c,v);
+    grib_context_free(c,v);
 }
 
 void grib_bufr_descriptors_array_delete_array(bufr_descriptors_array* v) {
-  grib_context* c;
-  int i;
-  bufr_descriptor** vv=NULL;
+    grib_context* c;
+    int i;
+    bufr_descriptor** vv=NULL;
 
-  if (!v) return;
-  c=v->context;
+    if (!v) return;
+    c=v->context;
 
-  if (v->v) {
-    vv=v->v;
-    for (i=0;i<v->n;i++) {
-      grib_bufr_descriptor_delete(vv[i]);
+    if (v->v) {
+        vv=v->v;
+        for (i=0;i<v->n;i++) {
+            grib_bufr_descriptor_delete(vv[i]);
+        }
+        vv = v->v - v->number_of_pop_front;
+        grib_context_free(c,vv);
     }
-    vv = v->v - v->number_of_pop_front;
-    grib_context_free(c,vv);
-  }
 }
 
 bufr_descriptor** grib_bufr_descriptors_array_get_array(bufr_descriptors_array* v) {

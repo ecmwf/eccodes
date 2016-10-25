@@ -256,7 +256,7 @@ grib_hash_array_value* get_hash_array(grib_handle* h,grib_action* a)
     } else if (full) {
         c=grib_parse_hash_array_file(context,full);
     } else {
-        grib_context_log(context,GRIB_LOG_FATAL,
+        grib_context_log(context,GRIB_LOG_ERROR,
                 "unable to find definition file %s in %s:%s:%s\nDefinition files path=\"%s\"",
                 self->basename,master,ecmf,local,context->grib_definition_files_path);
         return NULL;

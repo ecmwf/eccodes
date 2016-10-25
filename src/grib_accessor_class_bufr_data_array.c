@@ -402,6 +402,7 @@ static int get_descriptors(grib_accessor* a)
     if (!self->expandedAccessor)
         self->expandedAccessor=grib_find_accessor(grib_handle_of_accessor(a),self->expandedDescriptorsName);
     self->expanded=grib_accessor_class_expanded_descriptors_get_expanded(self->expandedAccessor,&ret);
+    if (ret != GRIB_SUCCESS) return ret;
 
     numberOfDescriptors=grib_bufr_descriptors_array_used_size(self->expanded);
     self->canBeMissing=(int*)grib_context_malloc_clear(c,numberOfDescriptors*sizeof(int));
@@ -1130,7 +1131,8 @@ static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,
                 *pos=ppos;
                 if (width) {
                     /* delayed replication number is not constant. NOT IMPLEMENTED */
-                    Assert(0);
+                    grib_context_log(c,GRIB_LOG_ERROR, "Delayed replication number is not constant");
+                    return GRIB_NOT_IMPLEMENTED;
                 } else {
                     bitmapSize=localReference*descriptors[i]->factor;
                 }
