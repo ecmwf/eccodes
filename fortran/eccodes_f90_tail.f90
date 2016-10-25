@@ -1888,17 +1888,17 @@ end subroutine codes_get_real8_array
   !>
   !> @param msgid   id of the grib loaded in memory
   !> @param key     key name
-  !> @param index   integer(4) index
+  !> @param kindex  integer(4) index
   !> @param value   real(4) value
   !> @param status  CODES_SUCCESS if OK, integer value on error
-subroutine codes_get_real4_element ( msgid, key, index,value, status )
+subroutine codes_get_real4_element ( msgid, key, kindex,value, status )
     integer(kind=kindOfInt),                     intent(in)  :: msgid
     character(len=*),                            intent(in)  :: key
-    integer(kind=kindOfInt),                     intent(in)  :: index
+    integer(kind=kindOfInt),                     intent(in)  :: kindex
     real(kind = kindOfFloat),                    intent(out) :: value
     integer(kind=kindOfInt),optional,            intent(out) :: status
 
-    call grib_get_real4_element ( msgid, key, index,value, status )
+    call grib_get_real4_element ( msgid, key, kindex,value, status )
 end subroutine codes_get_real4_element 
 
 
@@ -1910,17 +1910,17 @@ end subroutine codes_get_real4_element
   !>
   !> @param msgid      id of the grib loaded in memory
   !> @param key        key name
-  !> @param index      integer(4) index
+  !> @param kindex     integer(4) index
   !> @param value      real(8) value
   !> @param status     CODES_SUCCESS if OK, integer value on error
-subroutine codes_get_real8_element ( msgid, key, index,value, status )
+subroutine codes_get_real8_element ( msgid, key, kindex,value, status )
     integer(kind=kindOfInt),                     intent(in)  :: msgid
     character(len=*),                            intent(in)  :: key
-    integer(kind=kindOfInt),                     intent(in)  :: index
+    integer(kind=kindOfInt),                     intent(in)  :: kindex
     real(kind = kindOfDouble),                   intent(out) :: value
     integer(kind=kindOfInt),optional,            intent(out) :: status
 
-    call grib_get_real8_element ( msgid, key, index,value, status )
+    call grib_get_real8_element ( msgid, key, kindex,value, status )
 end subroutine codes_get_real8_element
 
 
@@ -1932,17 +1932,17 @@ end subroutine codes_get_real8_element
   !>
   !> @param msgid      id of the grib loaded in memory
   !> @param key        key name
-  !> @param index      integer(4) array indexes
+  !> @param kindex     integer(4) array indexes
   !> @param value      real(4) array value
   !> @param status     CODES_SUCCESS if OK, integer value on error
-subroutine codes_get_real4_elements ( msgid, key, index,value, status )
+subroutine codes_get_real4_elements ( msgid, key, kindex,value, status )
     integer(kind=kindOfInt),                  intent(in)  :: msgid
     character(len=*),                         intent(in)  :: key
-    integer(kind=kindOfInt),dimension(:),  intent(in)     :: index
+    integer(kind=kindOfInt),dimension(:),  intent(in)     :: kindex
     real(kind = kindOfFloat), dimension(:),   intent(out) :: value
     integer(kind=kindOfInt),optional,         intent(out) :: status
 
-    call grib_get_real4_elements ( msgid, key, index,value, status )
+    call grib_get_real4_elements ( msgid, key, kindex,value, status )
 end subroutine codes_get_real4_elements 
 
   !> Get the real(8) values whose indexes are stored in the array "index" from an array key.
@@ -1953,17 +1953,17 @@ end subroutine codes_get_real4_elements
   !>
   !> @param msgid      id of the grib loaded in memory
   !> @param key        key name
-  !> @param index      integer(4) array index
+  !> @param kindex     integer(4) array index
   !> @param value      real(8) array value
   !> @param status     CODES_SUCCESS if OK, integer value on error
-subroutine codes_get_real8_elements ( msgid, key, index,value, status )
+subroutine codes_get_real8_elements ( msgid, key, kindex,value, status )
     integer(kind=kindOfInt),                   intent(in)  :: msgid
     character(len=*),                          intent(in)  :: key
-    integer(kind=kindOfInt),dimension(:),   intent(in)     :: index
+    integer(kind=kindOfInt),dimension(:),   intent(in)     :: kindex
     real(kind = kindOfDouble), dimension(:),   intent(out) :: value
     integer(kind=kindOfInt),optional,          intent(out) :: status
 
-    call grib_get_real8_elements ( msgid, key, index,value, status )
+    call grib_get_real8_elements ( msgid, key, kindex,value, status )
 end subroutine codes_get_real8_elements 
 
   !> Set the integer value for a key in a message.
@@ -2359,12 +2359,12 @@ end subroutine codes_grib_find_nearest_multiple
   !> @param outlat     latitude of the nearest point
   !> @param outlon     longitude of the nearest point
   !> @param distance   distance between the given point and its nearest
-  !> @param index      zero based index
+  !> @param kindex     zero based index
   !> @param value      value of the field in the nearest point
   !> @param status     CODES_SUCCESS if OK, integer value on error
 subroutine codes_grib_find_nearest_single(gribid,is_lsm,  &
                  inlat,inlon,outlat,outlon,          &
-                 value,distance, index,status)
+                 value,distance, kindex,status)
     integer(kind=kindOfInt),   intent(in)   :: gribid
     logical,                   intent(in)   :: is_lsm
     real(kind = kindOfDouble), intent(in)   :: inlat
@@ -2373,12 +2373,12 @@ subroutine codes_grib_find_nearest_single(gribid,is_lsm,  &
     real(kind = kindOfDouble), intent(out)  :: outlon
     real(kind = kindOfDouble), intent(out)  :: distance
     real(kind = kindOfDouble), intent(out)  :: value
-    integer(kind = kindOfInt), intent(out)  :: index
+    integer(kind = kindOfInt), intent(out)  :: kindex
     integer(kind=kindOfInt),optional, intent(out)  :: status
 
     call grib_find_nearest_single(gribid,is_lsm,  &
                  inlat,inlon,outlat,outlon,       &
-                 value,distance, index,status)
+                 value,distance, kindex,status)
 end subroutine codes_grib_find_nearest_single
 
 
@@ -2395,12 +2395,12 @@ end subroutine codes_grib_find_nearest_single
   !> @param outlat     latitude of the nearest point
   !> @param outlon     longitude of the nearest point
   !> @param distance   distance between the given point and its nearest
-  !> @param index      zero based index
+  !> @param kindex     zero based index
   !> @param value      value of the field in the nearest point
   !> @param status     CODES_SUCCESS if OK, integer value on error
 subroutine codes_grib_find_nearest_four_single(gribid,is_lsm, &
                  inlat,inlon,outlat,outlon,              &
-                 value,distance, index,status)
+                 value,distance, kindex,status)
     integer(kind=kindOfInt),                  intent(in)    :: gribid
     logical,                                  intent(in)    :: is_lsm
     real(kind = kindOfDouble), intent(in)                   :: inlat
@@ -2409,12 +2409,12 @@ subroutine codes_grib_find_nearest_four_single(gribid,is_lsm, &
     real(kind = kindOfDouble), dimension(4), intent(out)    :: outlon
     real(kind = kindOfDouble), dimension(4), intent(out)    :: distance
     real(kind = kindOfDouble), dimension(4), intent(out)    :: value
-    integer(kind = kindOfInt), dimension(4), intent(out)    :: index
+    integer(kind = kindOfInt), dimension(4), intent(out)    :: kindex
     integer(kind=kindOfInt),optional, intent(out)           :: status
 
     call grib_find_nearest_four_single(gribid,is_lsm, &
                  inlat,inlon,outlat,outlon,           &
-                 value,distance, index,status)
+                 value,distance, kindex,status)
   end subroutine codes_grib_find_nearest_four_single
 
 
