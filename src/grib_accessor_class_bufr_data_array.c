@@ -529,7 +529,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
 static int encode_string_array(grib_context* c,grib_buffer* buff,long* pos, bufr_descriptor* bd,
         grib_accessor_bufr_data_array* self,grib_sarray* stringValues)
 {
-    int err=0,n;
+    int err=0,n,ival;
     int k,j,modifiedWidth,width;
 
     if (self->iss_list==NULL) return GRIB_INTERNAL_ERROR;
@@ -538,7 +538,12 @@ static int encode_string_array(grib_context* c,grib_buffer* buff,long* pos, bufr
 
     if (n<=0) return GRIB_NO_VALUES;
 
-    if (grib_sarray_used_size(stringValues)==1) n=1;
+    if (grib_sarray_used_size(stringValues)==1) {
+      n=1;
+      ival=0;
+    } else {
+      ival=self->iss_list->v[0];
+    }
 
     if (n>grib_sarray_used_size(stringValues))
         return GRIB_ARRAY_TOO_SMALL;
@@ -546,7 +551,7 @@ static int encode_string_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     modifiedWidth= bd->width;
 
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
-    grib_encode_string(buff->data,pos,modifiedWidth/8,stringValues->v[self->iss_list->v[0]]);
+    grib_encode_string(buff->data,pos,modifiedWidth/8,stringValues->v[ival]);
     width= n > 1 ? modifiedWidth : 0;
 
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
