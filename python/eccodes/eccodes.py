@@ -100,3 +100,4 @@ from gribapi import grib_set_definitions_path as codes_set_definitions_path
 from gribapi import grib_set_samples_path as codes_set_samples_path
 
 from gribapi import GribInternalError as CodesInternalError
+from gribapi.errors import *

@@ -29,6 +29,8 @@ import sys
 import os
 from functools import wraps
 # import inspect
+from . import errors
+from errors import *  # noqa
 
 KEYTYPES = {
     1: int,
@@ -85,25 +87,6 @@ def require(**_params_):
         return modified
     return check_types
 
-
-class GribInternalError(Exception):
-    """
-    @brief Wrap errors coming from the C API in a Python exception object.
-    """
-    def __init__(self, value):
-        # Call the base class constructor with the parameters it needs
-        Exception.__init__(self, value)
-        if type(value) is int:
-            err, self.msg = _internal.grib_c_get_error_string(value, 1024)
-            assert err == 0
-        else:
-            self.msg = value
-
-    def __str__(self):
-        return self.msg
-
-
-# @cond
 class Bunch(dict):
     """
     The collector of a bunch of named stuff :).
@@ -147,7 +130,7 @@ def GRIB_CHECK(errid):
     @exception GribInternalError
     """
     if errid:
-        raise GribInternalError(errid)
+        errors.raise_grib_error(errid)
 # @endcond
 
 
@@ -1372,7 +1355,7 @@ def grib_set_key_vals(gribid, key_vals):
     @exception         GribInternalError
     """
     if len(key_vals) == 0:
-        raise GribInternalError("Empty key/values argument")
+        raise errors.InvalidKeyValueError("Empty key/values argument")
     key_vals_str = ""
     if isinstance(key_vals, str):
         # Plain string. We need to do a DEEP copy so as not to change the original
@@ -1383,7 +1366,7 @@ def grib_set_key_vals(gribid, key_vals):
             if not isinstance(kv, str):
                 raise TypeError("Invalid list/tuple element type '%s'" % kv)
             if '=' not in str(kv):
-                raise GribInternalError("Invalid list/tuple element format '%s'" % kv)
+                raise errors.GribInternalError("Invalid list/tuple element format '%s'" % kv)
             if len(key_vals_str) > 0:
                 key_vals_str += ','
             key_vals_str += kv
@@ -1627,7 +1610,7 @@ def grib_set(msgid, key, value):
     elif isinstance(value, str):
         grib_set_string(msgid, key, value)
     else:
-        raise GribInternalError("Invalid type of value when setting key '%s'." % key)
+        raise errors.GribInternalError("Invalid type of value when setting key '%s'." % key)
 
 
 @require(msgid=int, key=str)
@@ -1664,7 +1647,7 @@ def grib_set_array(msgid, key, value):
     elif isinstance(val0, str):
         grib_set_string_array(msgid, key, value)
     else:
-        raise GribInternalError("Invalid type of value when setting key '%s'." % key)
+        raise errors.GribInternalError("Invalid type of value when setting key '%s'." % key)
 
 
 @require(indexid=int, key=str)
@@ -1718,7 +1701,7 @@ def grib_index_select(indexid, key, value):
     elif isinstance(value, str):
         grib_index_select_string(indexid, key, value)
     else:
-        raise GribInternalError("Invalid type of value when setting key '%s'." % key)
+        raise errors.GribInternalError("Invalid type of value when setting key '%s'." % key)
 
 
 @require(indexid=int, filename=str)
