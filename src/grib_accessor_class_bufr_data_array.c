@@ -546,7 +546,7 @@ static int encode_string_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     modifiedWidth= bd->width;
 
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
-    grib_encode_string(buff->data,pos,modifiedWidth/8,stringValues->v[0]);
+    grib_encode_string(buff->data,pos,modifiedWidth/8,stringValues->v[self->iss_list->v[0]]);
     width= n > 1 ? modifiedWidth : 0;
 
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
