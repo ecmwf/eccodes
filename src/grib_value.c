@@ -402,7 +402,9 @@ int grib_set_string_array(grib_handle* h, const char* name, const char** val, si
 
     a = grib_find_accessor(h, name);
 
-    grib_context_log(h->context,GRIB_LOG_DEBUG,"grib_set_string %s=%s\n",name,val);
+    if (h->context->debug) {
+        printf("ECCODES DEBUG grib_set_string_array key=%s %ld values\n",name,(long)length);
+    }
 
     if(a)
     {
@@ -664,7 +666,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
     int ret=0;
 
     if (h->context->debug)
-        printf("ECCODES DEBUG grib_set_double_array_internal key=%s %ld values\n",name, (long)length);
+        printf("ECCODES DEBUG grib_set_double_array_internal key=%s %ld values\n",name,(long)length);
 
     if (length==0) {
         grib_accessor* a = grib_find_accessor(h, name);
