@@ -45,15 +45,19 @@ sub write_python_errors {
 sub write_F90_errors {
     my $errdict = shift;
 
-    open(F,">grib_api_constants.h.new") or die "grib_api_constants.h.new: $!";
+    open(F1,">grib_api_constants.h.new") or die "grib_api_constants.h.new: $!";
+    open(F2,">eccodes_constants.h.new") or die "eccodes_constants.h.new: $!";
 
     foreach (sort {$a<=>$b} keys %{$errdict}){
-        printf F "  integer, parameter,public :: %-50s = %d\n",
-            $errdict->{$_}{name},$_;
+        my $name = $errdict->{$_}{name};
+        printf F1 "  integer, parameter,public :: %-50s = %d\n", $name,$_;
+        (my $eccodes_name = $name) =~ s/GRIB_/CODES_/;
+        printf F2 "  integer, parameter,public :: %-50s = %d\n", $eccodes_name,$_;
     }
-    printf F "  integer, parameter,public :: %-50s = %d\n","GRIB_NULL",-1;
-
-    close(F);
+    printf F1 "  integer, parameter,public :: %-50s = %d\n","GRIB_NULL",-1;
+    printf F2 "  integer, parameter,public :: %-50s = %d\n","CODES_NULL",-1;
+    close(F1);
+    close(F2);
 }
 
 sub write_C_errors {
