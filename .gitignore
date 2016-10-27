@@ -12,8 +12,10 @@ src/config.h
 src/eccodes_version.h
 src/grib_api.h.new
 src/grib_api_constants.h.new
+src/eccodes_constants.h.new
 src/grib_errors.c.new
 src/grib_errors.h.new
+src/errors.py.new
 config/test-driver
 autom4te.cache/
 config.log
