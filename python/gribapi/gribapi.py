@@ -1609,6 +1609,9 @@ def grib_set(msgid, key, value):
         grib_set_double(msgid, key, value)
     elif isinstance(value, str):
         grib_set_string(msgid, key, value)
+    elif hasattr(value, "__iter__"):
+        # The value passed in is iterable; i.e. a list or array etc
+        grib_set_array(msgid, key, value)
     else:
         raise errors.GribInternalError("Invalid type of value when setting key '%s'." % key)
 

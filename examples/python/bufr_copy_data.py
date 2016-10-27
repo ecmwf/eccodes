@@ -31,7 +31,7 @@ def example(input_filename, output_filename):
         1, 1, 1, 1, 1, 0, 1, 1, 1, 1,
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         1, 1, 1, 1, 1, 1, 1, 1, 0)
-    codes_set_array(ibufr, 'inputDataPresentIndicator', ivalues)
+    codes_set(ibufr, 'inputDataPresentIndicator', ivalues)
     codes_set(ibufr, 'edition', 3)
     codes_set(ibufr, 'masterTableNumber', 0)
     codes_set(ibufr, 'bufrHeaderSubCentre', 0)
@@ -55,7 +55,7 @@ def example(input_filename, output_filename):
         236000,101023,31031,1031,1032,8024,101001,225255,
         1063,2001,4001,4002,4003,4004,4005,5002,
         6002,7001,7006,11001,11016,11017,11002)
-    codes_set_array(ibufr, 'unexpandedDescriptors', ivalues)
+    codes_set(ibufr, 'unexpandedDescriptors', ivalues)
     codes_set(ibufrin, 'unpack', 1)
     codes_bufr_copy_data(ibufrin, ibufr) # Copy data across
 
