@@ -187,28 +187,47 @@ sub write_public {
     my $errdict = shift;
 
     open(GAH,"<grib_api.h") or die "grib_api.h: $!";
-    open(H,">grib_api.h.new") or die "grib_api.h.new: $!";
+    open(ECH,"<eccodes.h") or die "eccodes.h: $!";
+
+    open(H1,">grib_api.h.new") or die "grib_api.h.new: $!";
+    open(H2,">eccodes.h.new") or die "eccodes.h.new: $!";
+
     open(IN,"<grib_api.h.in") or die "grib_api.h.in: $!";
 
     foreach (<GAH>) {
         last if /This part is automatically generated/;
-        print H;
+        print H1;
+    }
+    foreach (<ECH>) {
+        last if /This part is automatically generated/;
+        print H2;
     }
 
     foreach (<IN>) {
         if (/^!ERRORS/) {
             foreach my $code (reverse sort {$a<=>$b} keys %{$errdict}) {
                 my $desc = $errdict->{$code};
-                print H "/** $desc->{text} */\n";
-                print H "#define $desc->{name}\t\t$code\n";
+                my $name = $desc->{name};
+                print H1 "/** $desc->{text} */\n";
+                print H1 "#define ${name}\t\t$code\n";
+
+                print H2 "/** $desc->{text} */\n";
+                (my $ecc_name = $name) =~ s/GRIB_/CODES_/;
+                print H2 "#define ${ecc_name}\t\t${name}\n";
             }
         } else {
-            print H;
+            print H1;
+            # For eccodes.h, replace grib_api with eccodes
+            s/grib_errors_H/eccodes_errors_H/ if (/grib_errors_H/);
+            s/grib_api functions/eccodes functions/ if (/returned by the grib_api functions/);
+            print H2;
         }
     }
 
     close(GAH);
-    close(H);
+    close(ECH);
+    close(H1);
+    close(H2);
     close(IN);
 }
 
