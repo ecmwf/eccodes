@@ -13,7 +13,7 @@ use strict; use warnings;
 
 my $internal = get_internal_errors();
 my $public = get_public_errors();
-# print "DUMP,\t", Data::Dumper->Dump([\$public], [" "]);
+#print "DUMP,\t", Data::Dumper->Dump([\$public], [" "]);
 
 write_public($public);
 #write_internal($internal);
@@ -24,8 +24,8 @@ write_python_exceptions($public);
 
 sub write_python_exceptions {
     my $errdict = shift;
-    my %errmap = (); # code -> mangled name
-    open(H,">py_exceptions.py") or die "py_exceptions.py: $!";
+    my %errmap = (); # code -> class name
+    open(H,">errors.py.new") or die "errors.py.new: $!";
 
     my $header = <<'END_HEADER';
 """
@@ -62,15 +62,15 @@ END_HEADER
         my $code = $_;
         my $name = $errdict->{$_}{name};
         my $text = $errdict->{$_}{text};
-        # Convert name to Exception class
-        $name =~ s/GRIB_//;
+        # Convert name e.g. GRIB_WRONG_ARRAY_SIZE -> WrongArraySizeError
+        $name =~ s/GRIB_//;         # Remove GRIB_
         my $name_lc = $name;
-        $name_lc =~ s/_/ /g;
-        $name_lc = lc $name_lc;
-        $name_lc =~ s/(\w+)/\u$1/g;
-        $name_lc =~ s/ //g;
+        $name_lc =~ s/_/ /g;        # Remove underscores
+        $name_lc = lc $name_lc;     # lowercase
+        $name_lc =~ s/(\w+)/\u$1/g; # First letter uppercase
+        $name_lc =~ s/ //g;         # Remove spaces
         $name = $name_lc;
-        if ($name !~ /Error$/) {
+        if ($name !~ /Error$/) {    # Append Error (unless already there)
             $name = $name . "Error";
         }
         $name = 'FunctionNotImplementedError' if ($name eq 'NotImplementedError');
@@ -82,22 +82,23 @@ END_HEADER
         $name = 'InvalidBitsPerValueError'    if ($name eq 'InvalidBpvError');
         $name = 'KeyValueNotFoundError'       if ($name eq 'NotFoundError');
 
-        print H "class ${name}(GribInternalError):\n";  ## $name,$_;
-        print H "    \"\"\"${text}.\"\"\"\n";
+        if ($code != 0) { # Ignore SUCCESS
+            print H "class ${name}(GribInternalError):\n";  ## $name,$_;
+            print H "    \"\"\"${text}.\"\"\"\n";
 
-        $errmap{$code} = $name; # store for next loop
+            $errmap{$code} = $name; # store for next loop
+        }
     }
+
     print H "\nERROR_MAP = {\n";
     my $i = 0;
-    my $size = keys %{$errdict};
-    foreach (sort {$a<=>$b} keys %{$errdict}){
-        my $name = $errdict->{$_}{name};
-        my $code = $_;
+    my $size = keys %errmap;
+    for my $code (sort { $a <=> $b } keys %errmap) {
         next if ($code == 0);
         $i++;
         my $ktext = sprintf("%-3d", $code);
-        print H "    $ktext : $name";
-        print H ",\n" if ($i < $size-1);
+        print H "    $ktext : $errmap{$code}";
+        print H ",\n" if ($i < $size);
     }
     print H "\n}\n\n";
 
