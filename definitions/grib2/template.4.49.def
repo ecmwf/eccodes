@@ -6,7 +6,10 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
-# TEMPLATE 4.55, Spatio-temporal changing tiles at a horizontal level or horizontal layer at a point in time
 
-include "grib2/template.4.parameter_tile.def"
-include "grib2/template.4.horizontal.def"
+# TEMPLATE 4.49, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for optical properties of aerosol
+
+include "grib2/template.4.parameter_aerosol_optical.def";
+include "grib2/template.4.point_in_time.def";
+include "grib2/template.4.horizontal.def";
+include "grib2/template.4.eps.def"
