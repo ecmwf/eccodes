@@ -13,12 +13,108 @@ use strict; use warnings;
 
 my $internal = get_internal_errors();
 my $public = get_public_errors();
+# print "DUMP,\t", Data::Dumper->Dump([\$public], [" "]);
 
 write_public($public);
 #write_internal($internal);
 write_C_errors($public,$internal);
 write_F90_errors($public);
 write_python_errors($public);
+write_python_exceptions($public);
+
+sub write_python_exceptions {
+    my $errdict = shift;
+    my %errmap = (); # code -> mangled name
+    open(H,">py_exceptions.py") or die "py_exceptions.py: $!";
+
+    my $header = <<'END_HEADER';
+"""
+Exception class hierarchy
+"""
+
+import gribapi_swig as _internal
+
+
+class GribInternalError(Exception):
+    """
+    @brief Wrap errors coming from the C API in a Python exception object.
+
+    Base class for all exceptions
+    """
+
+    def __init__(self, value):
+        # Call the base class constructor with the parameters it needs
+        Exception.__init__(self, value)
+        if type(value) is int:
+            err, self.msg = _internal.grib_c_get_error_string(value, 1024)
+            assert err == 0
+        else:
+            self.msg = value
+
+    def __str__(self):
+        return self.msg
+
+
+END_HEADER
+    print H $header;
+
+    foreach (sort {$a<=>$b} keys %{$errdict}){
+        my $code = $_;
+        my $name = $errdict->{$_}{name};
+        my $text = $errdict->{$_}{text};
+        # Convert name to Exception class
+        $name =~ s/GRIB_//;
+        my $name_lc = $name;
+        $name_lc =~ s/_/ /g;
+        $name_lc = lc $name_lc;
+        $name_lc =~ s/(\w+)/\u$1/g;
+        $name_lc =~ s/ //g;
+        $name = $name_lc;
+        if ($name !~ /Error$/) {
+            $name = $name . "Error";
+        }
+        $name = 'FunctionNotImplementedError' if ($name eq 'NotImplementedError');
+        $name = 'MessageEndNotFoundError'     if ($name eq '7777NotFoundError');
+        $name = 'IOProblemError'              if ($name eq 'IoProblemError');
+        $name = 'MessageInvalidError'         if ($name eq 'InvalidMessageError');
+        $name = 'GeocalculusError'            if ($name eq 'GeocalculusProblemError');
+        $name = 'InvalidOrderByError'         if ($name eq 'InvalidOrderbyError');
+        $name = 'InvalidBitsPerValueError'    if ($name eq 'InvalidBpvError');
+        $name = 'KeyValueNotFoundError'       if ($name eq 'NotFoundError');
+
+        print H "class ${name}(GribInternalError):\n";  ## $name,$_;
+        print H "    \"\"\"${text}.\"\"\"\n";
+
+        $errmap{$code} = $name; # store for next loop
+    }
+    print H "\nERROR_MAP = {\n";
+    my $i = 0;
+    my $size = keys %{$errdict};
+    foreach (sort {$a<=>$b} keys %{$errdict}){
+        my $name = $errdict->{$_}{name};
+        my $code = $_;
+        next if ($code == 0);
+        $i++;
+        my $ktext = sprintf("%-3d", $code);
+        print H "    $ktext : $name";
+        print H ",\n" if ($i < $size-1);
+    }
+    print H "\n}\n\n";
+
+    # Footer
+    my $footer = <<'END_FOOTER';
+
+def raise_grib_error(errid):
+    """
+    Raise the GribInternalError corresponding to ``errid``.
+    """
+    raise ERROR_MAP[errid](errid)
+END_FOOTER
+    print H $footer;
+
+    close(H);
+}
+
 
 sub write_python_errors {
     my $errdict = shift;
