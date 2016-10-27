@@ -25,164 +25,138 @@ class GribInternalError(Exception):
         return self.msg
 
 
-class EndOfFileError(GribInternalError):
-    """End of resource reached."""
-class InternalError(GribInternalError):
-    """Internal error."""
-class BufferTooSmallError(GribInternalError):
-    """Passed buffer is too small."""
-class FunctionNotImplementedError(GribInternalError):
-    """Function not yet implemented."""
-class MessageEndNotFoundError(GribInternalError):
-    """Missing 7777 at end of message."""
-class ArrayTooSmallError(GribInternalError):
-    """Passed array is too small."""
-class FileNotFoundError(GribInternalError):
-    """File not found."""
-class CodeNotFoundInTableError(GribInternalError):
-    """Code not found in code table."""
-class WrongArraySizeError(GribInternalError):
-    """Array size mismatch."""
-class KeyValueNotFoundError(GribInternalError):
-    """Key/value not found."""
-class IOProblemError(GribInternalError):
-    """Input output problem."""
-class MessageInvalidError(GribInternalError):
-    """Message invalid."""
-class DecodingError(GribInternalError):
-    """Decoding invalid."""
-class EncodingError(GribInternalError):
-    """Encoding invalid."""
-class NoMoreInSetError(GribInternalError):
-    """Code cannot unpack because of string too small."""
-class GeocalculusError(GribInternalError):
-    """Problem with calculation of geographic attributes."""
-class OutOfMemoryError(GribInternalError):
-    """Out of memory."""
-class ReadOnlyError(GribInternalError):
-    """Value is read only."""
-class InvalidArgumentError(GribInternalError):
-    """Invalid argument."""
-class NullHandleError(GribInternalError):
-    """Null handle."""
-class InvalidSectionNumberError(GribInternalError):
-    """Invalid section number."""
-class ValueCannotBeMissingError(GribInternalError):
-    """Value cannot be missing."""
-class WrongLengthError(GribInternalError):
-    """Wrong message length."""
-class InvalidTypeError(GribInternalError):
-    """Invalid key type."""
-class WrongStepError(GribInternalError):
-    """Unable to set step."""
-class WrongStepUnitError(GribInternalError):
-    """Wrong units for step (step must be integer)."""
-class InvalidFileError(GribInternalError):
-    """Invalid file id."""
-class InvalidGribError(GribInternalError):
-    """Invalid grib id."""
-class InvalidIndexError(GribInternalError):
-    """Invalid index id."""
-class InvalidIteratorError(GribInternalError):
-    """Invalid iterator id."""
-class InvalidKeysIteratorError(GribInternalError):
-    """Invalid keys iterator id."""
-class InvalidNearestError(GribInternalError):
-    """Invalid nearest id."""
-class InvalidOrderByError(GribInternalError):
-    """Invalid order by."""
-class MissingKeyError(GribInternalError):
-    """Missing a key from the fieldset."""
-class OutOfAreaError(GribInternalError):
-    """The point is out of the grid area."""
-class ConceptNoMatchError(GribInternalError):
-    """Concept no match."""
-class HashArrayNoMatchError(GribInternalError):
-    """Hash array no match."""
-class NoDefinitionsError(GribInternalError):
-    """Definitions files not found."""
-class WrongTypeError(GribInternalError):
-    """Wrong type while packing."""
-class EndError(GribInternalError):
-    """End of resource."""
-class NoValuesError(GribInternalError):
-    """Unable to code a field without values."""
-class WrongGridError(GribInternalError):
-    """Grid description is wrong or inconsistent."""
-class EndOfIndexError(GribInternalError):
-    """End of index reached."""
-class NullIndexError(GribInternalError):
-    """Null index."""
-class PrematureEndOfFileError(GribInternalError):
-    """End of resource reached when reading message."""
-class InternalArrayTooSmallError(GribInternalError):
-    """An internal array is too small."""
-class MessageTooLargeError(GribInternalError):
-    """Message is too large for the current architecture."""
-class ConstantFieldError(GribInternalError):
-    """Constant field."""
-class SwitchNoMatchError(GribInternalError):
-    """Switch unable to find a matching case."""
-class UnderflowError(GribInternalError):
-    """Underflow."""
-class MessageMalformedError(GribInternalError):
-    """Message malformed."""
-class CorruptedIndexError(GribInternalError):
-    """Index is corrupted."""
-class InvalidBitsPerValueError(GribInternalError):
-    """Invalid number of bits per value."""
-class DifferentEditionError(GribInternalError):
-    """Edition of two messages is different."""
-class ValueDifferentError(GribInternalError):
-    """Value is different."""
-class InvalidKeyValueError(GribInternalError):
-    """Invalid key value."""
-class StringTooSmallError(GribInternalError):
-    """String is smaller than requested."""
-class WrongConversionError(GribInternalError):
-    """Wrong type conversion."""
-class MissingBufrEntryError(GribInternalError):
-    """Missing BUFR table entry for descriptor."""
-class NullPointerError(GribInternalError):
-    """Null pointer."""
-class AttributeClashError(GribInternalError):
-    """Attribute is already present, cannot add."""
-class TooManyAttributesError(GribInternalError):
-    """Too many attributes. Increase MAX_ACCESSOR_ATTRIBUTES."""
-class AttributeNotFoundError(GribInternalError):
-    """Attribute not found.."""
-class UnsupportedEditionError(GribInternalError):
-    """Edition not supported.."""
-class OutOfRangeError(GribInternalError):
-    """Value out of coding range."""
 class WrongBitmapSizeError(GribInternalError):
     """Size of bitmap is incorrect."""
-class ValueMismatchError(GribInternalError):
-    """Value mismatch."""
-class DoubleValueMismatchError(GribInternalError):
-    """double values are different."""
-class LongValueMismatchError(GribInternalError):
-    """long values are different."""
-class ByteValueMismatchError(GribInternalError):
-    """byte values are different."""
-class StringValueMismatchError(GribInternalError):
-    """string values are different."""
-class OffsetMismatchError(GribInternalError):
-    """Offset mismatch."""
-class CountMismatchError(GribInternalError):
-    """Count mismatch."""
-class NameMismatchError(GribInternalError):
-    """Name mismatch."""
-class TypeMismatchError(GribInternalError):
-    """Type mismatch."""
-class TypeAndValueMismatchError(GribInternalError):
-    """Type and value mismatch."""
-class UnableToCompareAccessorsError(GribInternalError):
-    """Unable to compare accessors."""
-class UnableToResetIteratorError(GribInternalError):
-    """Unable to reset iterator."""
-class AssertionFailureError(GribInternalError):
-    """Assertion failure."""
+class OutOfRangeError(GribInternalError):
+    """Value out of coding range."""
+class UnsupportedEditionError(GribInternalError):
+    """Edition not supported.."""
+class AttributeNotFoundError(GribInternalError):
+    """Attribute not found.."""
+class TooManyAttributesError(GribInternalError):
+    """Too many attributes. Increase MAX_ACCESSOR_ATTRIBUTES."""
+class AttributeClashError(GribInternalError):
+    """Attribute is already present, cannot add."""
+class NullPointerError(GribInternalError):
+    """Null pointer."""
+class MissingBufrEntryError(GribInternalError):
+    """Missing BUFR table entry for descriptor."""
+class WrongConversionError(GribInternalError):
+    """Wrong type conversion."""
+class StringTooSmallError(GribInternalError):
+    """String is smaller than requested."""
+class InvalidKeyValueError(GribInternalError):
+    """Invalid key value."""
+class ValueDifferentError(GribInternalError):
+    """Value is different."""
+class DifferentEditionError(GribInternalError):
+    """Edition of two messages is different."""
+class InvalidBitsPerValueError(GribInternalError):
+    """Invalid number of bits per value."""
+class CorruptedIndexError(GribInternalError):
+    """Index is corrupted."""
+class MessageMalformedError(GribInternalError):
+    """Message malformed."""
+class UnderflowError(GribInternalError):
+    """Underflow."""
+class SwitchNoMatchError(GribInternalError):
+    """Switch unable to find a matching case."""
+class ConstantFieldError(GribInternalError):
+    """Constant field."""
+class MessageTooLargeError(GribInternalError):
+    """Message is too large for the current architecture."""
+class InternalArrayTooSmallError(GribInternalError):
+    """An internal array is too small."""
+class PrematureEndOfFileError(GribInternalError):
+    """End of resource reached when reading message."""
+class NullIndexError(GribInternalError):
+    """Null index."""
+class EndOfIndexError(GribInternalError):
+    """End of index reached."""
+class WrongGridError(GribInternalError):
+    """Grid description is wrong or inconsistent."""
+class NoValuesError(GribInternalError):
+    """Unable to code a field without values."""
+class EndError(GribInternalError):
+    """End of resource."""
+class WrongTypeError(GribInternalError):
+    """Wrong type while packing."""
+class NoDefinitionsError(GribInternalError):
+    """Definitions files not found."""
+class HashArrayNoMatchError(GribInternalError):
+    """Hash array no match."""
+class ConceptNoMatchError(GribInternalError):
+    """Concept no match."""
+class OutOfAreaError(GribInternalError):
+    """The point is out of the grid area."""
+class MissingKeyError(GribInternalError):
+    """Missing a key from the fieldset."""
+class InvalidOrderByError(GribInternalError):
+    """Invalid order by."""
+class InvalidNearestError(GribInternalError):
+    """Invalid nearest id."""
+class InvalidKeysIteratorError(GribInternalError):
+    """Invalid keys iterator id."""
+class InvalidIteratorError(GribInternalError):
+    """Invalid iterator id."""
+class InvalidIndexError(GribInternalError):
+    """Invalid index id."""
+class InvalidGribError(GribInternalError):
+    """Invalid grib id."""
+class InvalidFileError(GribInternalError):
+    """Invalid file id."""
+class WrongStepUnitError(GribInternalError):
+    """Wrong units for step (step must be integer)."""
+class WrongStepError(GribInternalError):
+    """Unable to set step."""
+class InvalidTypeError(GribInternalError):
+    """Invalid key type."""
+class WrongLengthError(GribInternalError):
+    """Wrong message length."""
+class ValueCannotBeMissingError(GribInternalError):
+    """Value cannot be missing."""
+class InvalidSectionNumberError(GribInternalError):
+    """Invalid section number."""
+class NullHandleError(GribInternalError):
+    """Null handle."""
+class InvalidArgumentError(GribInternalError):
+    """Invalid argument."""
+class ReadOnlyError(GribInternalError):
+    """Value is read only."""
+class OutOfMemoryError(GribInternalError):
+    """Out of memory."""
+class GeocalculusError(GribInternalError):
+    """Problem with calculation of geographic attributes."""
+class NoMoreInSetError(GribInternalError):
+    """Code cannot unpack because of string too small."""
+class EncodingError(GribInternalError):
+    """Encoding invalid."""
+class DecodingError(GribInternalError):
+    """Decoding invalid."""
+class MessageInvalidError(GribInternalError):
+    """Message invalid."""
+class IOProblemError(GribInternalError):
+    """Input output problem."""
+class KeyValueNotFoundError(GribInternalError):
+    """Key/value not found."""
+class WrongArraySizeError(GribInternalError):
+    """Array size mismatch."""
+class CodeNotFoundInTableError(GribInternalError):
+    """Code not found in code table."""
+class FileNotFoundError(GribInternalError):
+    """File not found."""
+class ArrayTooSmallError(GribInternalError):
+    """Passed array is too small."""
+class MessageEndNotFoundError(GribInternalError):
+    """Missing 7777 at end of message."""
+class FunctionNotImplementedError(GribInternalError):
+    """Function not yet implemented."""
+class BufferTooSmallError(GribInternalError):
+    """Passed buffer is too small."""
+class InternalError(GribInternalError):
+    """Internal error."""
+class EndOfFileError(GribInternalError):
+    """End of resource reached."""
 
 ERROR_MAP = {
     -66 : WrongBitmapSizeError,
@@ -250,20 +224,7 @@ ERROR_MAP = {
     -4  : FunctionNotImplementedError,
     -3  : BufferTooSmallError,
     -2  : InternalError,
-    -1  : EndOfFileError,
-    1   : ValueMismatchError,
-    2   : DoubleValueMismatchError,
-    3   : LongValueMismatchError,
-    4   : ByteValueMismatchError,
-    5   : StringValueMismatchError,
-    6   : OffsetMismatchError,
-    7   : CountMismatchError,
-    8   : NameMismatchError,
-    9   : TypeMismatchError,
-    10  : TypeAndValueMismatchError,
-    11  : UnableToCompareAccessorsError,
-    12  : UnableToResetIteratorError,
-    13  : AssertionFailureError
+    -1  : EndOfFileError
 }
 
 
