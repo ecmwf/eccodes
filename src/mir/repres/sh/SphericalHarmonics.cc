@@ -52,12 +52,13 @@ void SphericalHarmonics::fill(grib_info &info) const  {
     // See copy_spec_from_ksec.c in libemos for info
 
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_SH;
-    info.grid.truncation = truncation_;
-    // This may be usefulle after vod2uv
+    info.grid.truncation = static_cast<long>(truncation_);
+
+    // Decision: MIR-131
+    info.packing.packing_type = GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX; // Check if this is needed, why does grib_api not copy input?
     info.packing.computeLaplacianOperator = 1;
     info.packing.truncateLaplacian = 1;
     // info.packing.laplacianOperator = 0;
-    info.packing.packing_type = GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX; // Check if this is needed, why does grib_api not copy input?
 }
 
 
@@ -71,8 +72,8 @@ size_t SphericalHarmonics::truncation() const {
 }
 
 
-void SphericalHarmonics::comparison(std::string& compare) const {
-    compare = "SphericalHarmonics";
+void SphericalHarmonics::comparison(std::string& comparator) const {
+    comparator = "spectral";
 }
 
 
