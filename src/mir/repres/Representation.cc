@@ -157,6 +157,13 @@ size_t Representation::truncation() const {
 }
 
 
+size_t Representation::pentagonalResolutionTs() const {
+    std::ostringstream os;
+    os << "Representation::pentagonalResolutionTs() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+
 void Representation::comparison(std::string&) const {
     // do nothing
 }

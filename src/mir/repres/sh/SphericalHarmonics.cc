@@ -29,6 +29,7 @@ namespace sh {
 
 SphericalHarmonics::SphericalHarmonics(const param::MIRParametrisation &parametrisation) {
     ASSERT(parametrisation.get("truncation", truncation_));
+    ASSERT(parametrisation.get("TS", Ts_));
 }
 
 
@@ -69,6 +70,11 @@ void SphericalHarmonics::fill(api::MIRJob& job) const {
 
 size_t SphericalHarmonics::truncation() const {
     return truncation_;
+}
+
+
+size_t SphericalHarmonics::pentagonalResolutionTs() const {
+    return Ts_;
 }
 
 
