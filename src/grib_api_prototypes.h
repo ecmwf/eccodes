@@ -153,7 +153,7 @@ grib_accessor *_grib_accessor_get_attribute(grib_accessor *a, const char *name, 
 int grib_accessor_has_attributes(grib_accessor *a);
 grib_accessor *grib_accessor_get_attribute(grib_accessor *a, const char *name);
 grib_accessors_list *grib_accessors_list_create(grib_context *c);
-void grib_accessors_list_push(grib_accessors_list *al, grib_accessor *a);
+void grib_accessors_list_push(grib_accessors_list *al, grib_accessor *a,int rank);
 grib_accessors_list *grib_accessors_list_last(grib_accessors_list *al);
 grib_accessors_list *grib_accessors_list_find(grib_accessors_list *al, grib_accessor *a);
 void grib_accessors_list_delete(grib_context *c, grib_accessors_list *al);
@@ -280,6 +280,7 @@ size_t grib_viarray_used_size(grib_viarray *v);
 int accessor_bufr_data_array_create_keys(grib_accessor *a, long onlySubset, long startSubset, long endSubset);
 int accessor_bufr_data_array_process_elements(grib_accessor *a, int flag, long onlySubset, long startSubset, long endSubset);
 grib_vsarray *accessor_bufr_data_array_get_stringValues(grib_accessor *a);
+grib_trie* accessor_bufr_data_array_get_dataAccessorsTrie(grib_accessor* a);
 grib_accessors_list *accessor_bufr_data_array_get_dataAccessors(grib_accessor *a);
 void accessor_bufr_data_array_set_unpackMode(grib_accessor *a, int unpackMode);
 
@@ -1112,6 +1113,7 @@ int grib_count_in_file(grib_context *c, FILE *f, int *n);
 /* grib_trie.c */
 grib_trie *grib_trie_new(grib_context *c);
 void grib_trie_delete(grib_trie *t);
+void grib_trie_delete_container(grib_trie *t);
 void grib_trie_clear(grib_trie *t);
 void *grib_trie_insert(grib_trie *t, const char *key, void *data);
 void *grib_trie_insert_no_replace(grib_trie *t, const char *key, void *data);
@@ -1169,8 +1171,6 @@ grib_action *grib_parse_file(grib_context *gc, const char *filename);
 int grib_type_to_int(char id);
 
 /* grib_query.c */
-char *get_rank(const char *name, long *rank);
-char *get_condition(const char *name, codes_condition *condition);
 grib_accessors_list *grib_find_accessors_list(grib_handle *h, const char *name);
 char *grib_split_name_attribute(grib_context *c, const char *name, char *attribute_name);
 grib_accessor *grib_find_accessor(grib_handle *h, const char *name);

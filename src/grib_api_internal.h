@@ -426,6 +426,7 @@ typedef struct grib_accessors_list grib_accessors_list;
 
 struct grib_accessors_list {
     grib_accessor*       accessor;
+    int rank;
     grib_accessors_list* next;
     grib_accessors_list* prev;
     grib_accessors_list* last;

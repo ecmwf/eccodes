@@ -62,6 +62,8 @@
    MEMBERS    = int nInputShortReplications
    MEMBERS    = int iInputShortReplications
    MEMBERS    = grib_iarray* iss_list
+   MEMBERS    = grib_trie* dataAccessorsTrie
+   MEMBERS    = grib_trie* dataAccessorsRank
 
    END_CLASS_DEF
 
@@ -133,6 +135,8 @@ typedef struct grib_accessor_bufr_data_array {
 	int nInputShortReplications;
 	int iInputShortReplications;
 	grib_iarray* iss_list;
+	grib_trie* dataAccessorsTrie;
+	grib_trie* dataAccessorsRank;
 } grib_accessor_bufr_data_array;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -287,6 +291,8 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
     cancel_bitmap(self);
     self->expanded=0;
     self->expandedAccessor=0;
+    self->dataAccessorsTrie=0;
+    self->dataAccessorsRank=0;
 
     a->length=0;
     self->bitsToEndData=get_length(a)*8;
@@ -384,6 +390,12 @@ grib_accessors_list* accessor_bufr_data_array_get_dataAccessors(grib_accessor* a
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     return self->dataAccessors;
+}
+
+grib_trie* accessor_bufr_data_array_get_dataAccessorsTrie(grib_accessor* a)
+{
+    grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
+    return self->dataAccessorsTrie;
 }
 
 void accessor_bufr_data_array_set_unpackMode(grib_accessor* a,int unpackMode)
@@ -1780,10 +1792,29 @@ static grib_accessor* accessor_or_attribute_with_same_name(grib_accessor* a,cons
     }
 }
 
+static int get_key_rank(grib_trie* accessorsRank,grib_accessor* a) {
+  int* r=(int*)grib_trie_get(accessorsRank,a->name);
+
+  if (r) (*r)++;
+  else {
+    r=grib_context_malloc(a->context,sizeof(int));
+    *r=1;
+    grib_trie_insert(accessorsRank,a->name,(void*)r);
+  }
+  return *r;
+}
+
+static void grib_data_accessors_trie_push(grib_trie* accessorsTrie,grib_accessor* a,int r) {
+  char* name=grib_context_malloc_clear(a->context,strlen(a->name)+20);
+  sprintf(name,"#%d#%s",r,a->name);
+  grib_trie_insert(accessorsTrie,name,a);
+}
+
 static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     int err=0;
+    int rank;
     grib_accessor* elementAccessor=0;
     grib_accessor* associatedFieldAccessor=0;
     grib_accessor* associatedFieldSignificanceAccessor=0;
@@ -1827,10 +1858,18 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
 
     if (self->dataAccessors) {
         grib_accessors_list_delete(c,self->dataAccessors);
-        /* grib_empty_section ( c,self->dataKeys ); */
-        /* grib_context_free ( c,self->dataKeys->block ); */
     }
     self->dataAccessors=grib_accessors_list_create(c);
+
+    if (self->dataAccessorsTrie) {
+        grib_trie_delete(self->dataAccessorsTrie);
+    }
+    self->dataAccessorsTrie=grib_trie_new(c);
+
+    if (self->dataAccessorsRank) {
+        grib_trie_delete(self->dataAccessorsRank);
+    }
+    self->dataAccessorsRank=grib_trie_new(c);
 
     end= self->compressedData ? 1 : self->numberOfSubsets;
     groupNumber=1;
@@ -1981,7 +2020,9 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 grib_pack_long(asn,&subsetNumber,&len);
 
                 grib_push_accessor(asn,section->block);
-                grib_accessors_list_push(self->dataAccessors,asn);
+                rank=get_key_rank(self->dataAccessorsRank,asn);
+                grib_accessors_list_push(self->dataAccessors,asn,rank);
+                grib_data_accessors_trie_push(self->dataAccessorsTrie,asn,rank);
             }
             count++;
             elementAccessor=create_accessor_from_descriptor(a,associatedFieldAccessor,section,ide,iss,dump,count);
@@ -1996,7 +2037,9 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                     newAccessor->parent=groupSection;
                     newAccessor->name=grib_context_strdup(c,elementFromBitmap->name);
                     grib_push_accessor(newAccessor,groupSection->block);
-                    grib_accessors_list_push(self->dataAccessors,newAccessor);
+                    rank=get_key_rank(self->dataAccessorsRank,newAccessor);
+                    grib_accessors_list_push(self->dataAccessors,newAccessor,rank);
+                    grib_data_accessors_trie_push(self->dataAccessorsTrie,newAccessor,rank);
                 }
 
                 err=grib_accessor_add_attribute(accessor_or_attribute_with_same_name(elementFromBitmap,elementAccessor->name),elementAccessor,1);
@@ -2022,8 +2065,10 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                     break;
                 default:
                     grib_push_accessor(elementAccessor,section->block);
-                    grib_accessors_list_push(self->dataAccessors,elementAccessor);
+                    rank=get_key_rank(self->dataAccessorsRank,elementAccessor);
+                    grib_accessors_list_push(self->dataAccessors,elementAccessor,rank);
                     lastAccessorInList=grib_accessors_list_last(self->dataAccessors);
+                    grib_data_accessors_trie_push(self->dataAccessorsTrie,elementAccessor,rank);
                 }
             }
         }
@@ -2563,4 +2608,6 @@ static void destroy(grib_context* c,grib_accessor* a)
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     self_clear(c,self);
     if (self->dataAccessors) grib_accessors_list_delete(c,self->dataAccessors);
+    if (self->dataAccessorsTrie) grib_trie_delete_container(self->dataAccessorsTrie);
+    if (self->dataAccessorsRank) grib_trie_delete(self->dataAccessorsRank);
 }

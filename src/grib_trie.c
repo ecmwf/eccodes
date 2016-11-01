@@ -47,7 +47,7 @@ static int mapping[] = {
 0, /* 20 */
 0, /* 21 */
 0, /* 22 */
-0, /* 23 */
+38, /* # */
 0, /* 24 */
 0, /* 25 */
 0, /* 26 */
@@ -270,7 +270,7 @@ static int mapping[] = {
 0, /* ff */
 };
 
-#define SIZE 38
+#define SIZE 39
 
 #if GRIB_PTHREADS
 static pthread_once_t once  = PTHREAD_ONCE_INIT;
@@ -318,6 +318,24 @@ grib_trie *grib_trie_new(grib_context* c) {
   t->first=SIZE;
   t->last=-1;
   return t;
+}
+
+void grib_trie_delete_container(grib_trie *t) {
+  GRIB_MUTEX_INIT_ONCE(&once,&init)
+  GRIB_MUTEX_LOCK(&mutex)
+  if(t)  {
+    int i;
+    for(i = t->first; i <= t->last; i++)
+      if (t->next[i]) {
+        grib_trie_delete_container(t->next[i]);
+      }
+#ifdef RECYCLE_TRIE
+    grib_context_free_persistent(t->context,t);
+#else
+    grib_context_free(t->context,t);
+#endif
+  }
+  GRIB_MUTEX_UNLOCK(&mutex)
 }
 
 void grib_trie_delete(grib_trie *t) {
