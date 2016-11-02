@@ -16,10 +16,6 @@
 #ifndef grib_api_H
 #define grib_api_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,6 +38,10 @@ extern "C" {
 typedef enum ProductKind {PRODUCT_ANY, PRODUCT_GRIB, PRODUCT_BUFR, PRODUCT_METAR, PRODUCT_GTS, PRODUCT_TAF} ProductKind;
 
 #include "eccodes_version.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* sections */
 #define GRIB_SECTION_PRODUCT 	(1<<0)
