@@ -202,7 +202,6 @@ static char* get_condition(const char* name,codes_condition* condition)
 }
 
 static grib_accessor* _search_by_rank(grib_accessor* a,const char* name) {
-    long r=1;
     grib_accessor* ret=NULL;
     grib_trie* t=accessor_bufr_data_array_get_dataAccessorsTrie(a);
 
@@ -238,6 +237,7 @@ static grib_accessor* search_by_rank(grib_handle* h, const char* name,const char
         char* str=get_rank(name,&rank);
         ret=_search_and_cache(h,str,the_namespace);
         grib_context_free(h->context,str);
+        return ret;
     }
 }
 
@@ -389,7 +389,6 @@ grib_accessors_list* grib_find_accessors_list(grib_handle* h,const char* name)
 static grib_accessor* search_and_cache(grib_handle* h, const char* name,const char *the_namespace)
 {
     grib_accessor* a=NULL;
-    long rank;
 
     if (name[0]=='#') {
         a=search_by_rank(h,name,the_namespace);
