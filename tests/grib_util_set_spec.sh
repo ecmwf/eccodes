@@ -49,11 +49,12 @@ ${test_dir}grib_util_set_spec $infile $outfile > /dev/null
 grib_check_key_equals $outfile section2Used 0
 
 # Convert to edition2 and use JPEG for packing
-infile=../data/latlon.grib
-${test_dir}grib_util_set_spec -e 2 -p grid_jpeg $infile $outfile > /dev/null
-res=`${tools_dir}grib_get -p edition,section2Used,packingType $outfile`
-[ "$res" = "2 1 grid_jpeg" ]
-
+if [ $HAVE_JPG -eq 1 ]; then
+  infile=../data/latlon.grib
+  ${test_dir}grib_util_set_spec -e 2 -p grid_jpeg $infile $outfile > /dev/null
+  res=`${tools_dir}grib_get -p edition,section2Used,packingType $outfile`
+  [ "$res" = "2 1 grid_jpeg" ]
+fi
 
 # --------------------------------------------------
 # Reduced Gaussian Grid N=32 second order packing
