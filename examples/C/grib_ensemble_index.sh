@@ -11,3 +11,13 @@
 
 input="../../data/index.grib"
 ${examples_dir}c_grib_ensemble_index $input
+
+# ECC-378: Empty input file
+temp=temp_index.empty.grib
+touch $temp
+set +e
+${examples_dir}c_grib_ensemble_index $temp 2>/dev/null
+status=$?
+set -e
+[ $status -ne 0 ]
+rm -f $temp
