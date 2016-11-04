@@ -940,6 +940,7 @@ int _codes_index_add_file(grib_index* index,const char* filename,int message_typ
 {
     double dval;
     size_t svallen;
+    size_t message_count = 0;
     long length,lval;
     char buf[1024]={0,};
     int err=0;
@@ -990,6 +991,7 @@ int _codes_index_add_file(grib_index* index,const char* filename,int message_typ
         index_key=index->keys;
         field_tree=index->fields;
         index_key->value[0]=0;
+        message_count++;
 
         while (index_key) {
             if (index_key->type==GRIB_TYPE_UNDEFINED) {
@@ -1071,7 +1073,6 @@ int _codes_index_add_file(grib_index* index,const char* filename,int message_typ
         if (err) return err;
         field->length=length;
 
-
         if (field_tree->field) {
             grib_field* pfield=field_tree->field;
             while (pfield->next) pfield=pfield->next;
@@ -1080,15 +1081,17 @@ int _codes_index_add_file(grib_index* index,const char* filename,int message_typ
             field_tree->field=field;
 
         if (h) grib_handle_delete(h);
-
     }
 
     grib_file_close(file->name, 0, &err);
 
     if (err) return err;
     index->rewind=1;
+    if (message_count == 0) {
+        grib_context_log(c,GRIB_LOG_ERROR,"File %s contains no messages", filename);
+        return GRIB_END_OF_FILE;
+    }
     return GRIB_SUCCESS;
-
 }
 
 #if 0
