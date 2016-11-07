@@ -45,3 +45,5 @@ for c in 1 3 1/3; do
   fi
 done
 
+# ECC-272
+${tools_dir}bufr_dump -jf aaen_55.bufr | grep -q -w channelRadiance
