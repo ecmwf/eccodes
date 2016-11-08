@@ -1370,7 +1370,8 @@ int grib_f_copy_key_(int* gidsrc,int* giddest,const char* key,int *type,int len)
     grib_handle *dest = get_handle(*giddest);
 
     if(src!=NULL && dest!=NULL){
-            return codes_copy_key(src,dest,cast_char(buf,key,len),*type);
+        char* ckey = (char*)key;
+        return codes_copy_key(src,dest,cast_char(buf,ckey,len),*type);
     }
 
     return GRIB_INVALID_GRIB;
