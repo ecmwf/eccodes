@@ -68,3 +68,4 @@ integer, external :: grib_f_clone, grib_f_copy_namespace
 external :: grib_f_check
 integer, external :: grib_f_util_sections_copy
 integer, external :: grib_f_set_definitions_path, grib_f_set_samples_path
+integer, external :: grib_f_julian_to_datetime, grib_f_datetime_to_julian, grib_f_copy_key

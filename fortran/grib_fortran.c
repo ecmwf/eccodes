@@ -1364,6 +1364,18 @@ int grib_f_clone(int* gidsrc,int* giddest){
 }
 
 /*****************************************************************************/
+int grib_f_copy_key_(int* gidsrc,int* giddest,const char* key,int *type,int len){
+    char buf[512]={0,};
+    grib_handle *src  = get_handle(*gidsrc);
+    grib_handle *dest = get_handle(*giddest);
+
+    if(src!=NULL && dest!=NULL){
+            return codes_copy_key(src,dest,cast_char(buf,key,len),*type);
+    }
+
+    return GRIB_INVALID_GRIB;
+}
+/*****************************************************************************/
 int grib_f_util_sections_copy_(int* gidfrom,int* gidto,int* what,int *gidout){
     int err=0;
     grib_handle *hfrom  = get_handle(*gidfrom);
@@ -3104,3 +3116,24 @@ int grib_f_set_samples_path__(char* path,  int len){
 int grib_f_set_samples_path(char* path,  int len){
     return grib_f_set_samples_path_(path, len);
 }
+
+int grib_f_julian_to_datetime(double* jd,long* year,long* month,long* day,long *hour,long *minute,long *second) {
+    return grib_julian_to_datetime(*jd,year,month,day,hour,minute,second);
+}
+int grib_f_julian_to_datetime_(double* jd,long* year,long* month,long* day,long *hour,long *minute,long *second) {
+    return grib_julian_to_datetime(*jd,year,month,day,hour,minute,second);
+}
+int grib_f_julian_to_datetime__(double* jd,long* year,long* month,long* day,long *hour,long *minute,long *second) {
+    return grib_julian_to_datetime(*jd,year,month,day,hour,minute,second);
+}
+
+int grib_f_datetime_to_julian(long* year,long* month,long* day, long* hour,long* minute,long* second,double* jd) {
+    return grib_datetime_to_julian(*year,*month,*day,*hour,*minute,*second,jd);
+}
+int grib_f_datetime_to_julian_(long* year,long* month,long* day, long* hour,long* minute,long* second,double* jd) {
+    return grib_datetime_to_julian(*year,*month,*day,*hour,*minute,*second,jd);
+}
+int grib_f_datetime_to_julian__(long* year,long* month,long* day, long* hour,long* minute,long* second,double* jd) {
+    return grib_datetime_to_julian(*year,*month,*day,*hour,*minute,*second,jd);
+}
+

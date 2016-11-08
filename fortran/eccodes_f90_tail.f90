@@ -2573,6 +2573,56 @@ subroutine codes_set_samples_path ( path,  status )
 end subroutine codes_set_samples_path
 
 
+subroutine codes_julian_to_datetime ( jd,year,month,day,hour,minute,second,  status )
+    real(kind=kindOfDouble) , intent(in)          :: jd
+    integer(kind=kindOfLong) , intent(out)         :: year,month,day,hour,minute,second
+    integer(kind=kindOfInt),optional, intent(out)  :: status
+    integer(kind=kindOfInt)                        :: iret
+
+    iret=grib_f_julian_to_datetime(jd,year,month,day,hour,minute,second)
+    if (iret /= 0) then
+      if (present(status)) then
+         status = iret
+      else
+         call grib_check(iret,'codes_julian_to_datetime',' ')
+      endif
+      return
+    endif
+end subroutine codes_julian_to_datetime
+
+subroutine codes_datetime_to_julian ( year,month,day,hour,minute,second,jd, status )
+    integer(kind=kindOfLong) , intent(in) :: year,month,day,hour,minute,second
+    real (kind=kindOfDouble) , intent(out)  :: jd
+    integer(kind=kindOfInt),optional, intent(out)  :: status
+    integer(kind=kindOfInt)                        :: iret
+
+    iret=grib_f_datetime_to_julian(year,month,day,hour,minute,second,jd)
+    if (iret /= 0) then
+      if (present(status)) then
+         status = iret
+      else
+         call grib_check(iret,'codes_datetime_to_julian',' ')
+      endif
+      return
+    endif
+end subroutine codes_datetime_to_julian
+
+
+subroutine codes_copy_key( msgin,msgout, key,type, status )
+    integer(kind=kindOfInt),                 intent(in)  :: msgin,msgout,type
+    character(len=*),                        intent(in)  :: key
+    integer(kind=kindOfInt),optional,        intent(out) :: status
+    integer(kind=kindOfInt)                        :: iret
+
+    iret=grib_f_copy_key ( msgin,msgout, key, type, status )
+    if (iret /= 0) then
+      if (present(status)) then
+         status = iret
+      else
+         call grib_check(iret,'codes_copy_key',key)
+      endif
+      return
+    endif
+end subroutine codes_copy_key 
 
 end module eccodes
-
