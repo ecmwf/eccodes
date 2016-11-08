@@ -64,12 +64,9 @@ void grib_dump_accessors_block(grib_dumper* dumper,grib_block_of_accessors* bloc
 void grib_dump_accessors_list(grib_dumper* dumper,grib_accessors_list* al)
 {
     grib_accessors_list* cur=al;
-    grib_accessors_list* next=al->next;
-
-    while(next) {
+    while(cur) {
         grib_accessor_dump(cur->accessor,dumper);
-        cur=next;
-        next=cur->next;
+        cur = cur->next;
     }
 }
 
