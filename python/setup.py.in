@@ -36,13 +36,6 @@ if shared_libs == 'OFF':
                           runtime_library_dirs=os.path.join(jasper_dir, 'lib'))
         add_attribute(libraries='jasper')
 
-    if @HAVE_LIBOPENJPEG@:
-        openjpeg_lib_dir = '@OPENJPEG_LIB_DIR@'
-        if openjpeg_lib_dir:
-            add_attribute(library_dirs=openjpeg_lib_dir,
-                          runtime_library_dirs=openjpeg_lib_dir)
-        add_attribute(libraries='openjp2')
-
     # assumes png is supplied by system paths -- may not be true
     if @HAVE_LIBPNG@:
         add_attribute(libraries='png')

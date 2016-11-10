@@ -10,10 +10,6 @@ if( HAVE_PYTHON )
         get_filename_component(JASPER_DIR ${JASPER_INCLUDE_DIR} PATH )
     endif()
 
-    if( HAVE_LIBOPENJPEG )
-        get_filename_component(OPENJPEG_LIB_DIR ${OPENJPEG_LIBRARY} PATH )
-    endif()
-
     if( HAVE_AEC )
       get_filename_component(AEC_DIR ${AEC_INCLUDE_DIR} PATH )
     endif()
