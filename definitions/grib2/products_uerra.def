@@ -30,6 +30,10 @@ if(typeOfFirstFixedSurface == 103) {
         alias mars.levelist = level;
     }
 }
+if(typeOfFirstFixedSurface == 118) {
+    constant levTypeName = 'ml';
+    alias mars.levtype = levTypeName;
+}
 
 if(typeOfFirstFixedSurface == 151 && typeOfSecondFixedSurface == 151) {
     alias level = bottomLevel;
