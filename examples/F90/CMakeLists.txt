@@ -45,6 +45,7 @@ list( APPEND tests
       bufr_read_temp
       bufr_read_tropical_cyclone
       bufr_set_keys
+      bufr_copy_keys
       bufr_subset
       get_product_kind
 )
