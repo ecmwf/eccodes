@@ -1519,7 +1519,6 @@
   !> gathered with @ref grib_get_error_string.
   !>
   !>
-  !>
   !> @param gribid_src     source message
   !> @param gribid_dest    destination message
   !> @param namespace      namespace to be copied

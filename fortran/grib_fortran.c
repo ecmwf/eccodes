@@ -1364,17 +1364,25 @@ int grib_f_clone(int* gidsrc,int* giddest){
 }
 
 /*****************************************************************************/
-int grib_f_copy_key_(int* gidsrc,int* giddest,const char* key,int *type,int len){
-    char buf[512]={0,};
+int grib_f_copy_key_(int* gidsrc, char* key, int* giddest, int len)
+{
     grib_handle *src  = get_handle(*gidsrc);
     grib_handle *dest = get_handle(*giddest);
 
-    if(src!=NULL && dest!=NULL){
+    if(src && dest) {
+        char buf[1024]={0,};
         char* ckey = (char*)key;
-        return codes_copy_key(src,dest,cast_char(buf,ckey,len),*type);
+        const int type = GRIB_TYPE_UNDEFINED; /* will be computed */
+        return codes_copy_key(src, dest, cast_char(buf,ckey,len), type);
     }
 
     return GRIB_INVALID_GRIB;
+}
+int grib_f_copy_key__(int* gidsrc, char* name, int* giddest, int len){
+    return grib_f_copy_key_(gidsrc, name, giddest, len);
+}
+int grib_f_copy_key(int* gidsrc, char* name, int* giddest, int len){
+    return grib_f_copy_key_(gidsrc, name, giddest, len);
 }
 /*****************************************************************************/
 int grib_f_util_sections_copy_(int* gidfrom,int* gidto,int* what,int *gidout){
@@ -2798,7 +2806,6 @@ int codes_f_bufr_copy_data_(int* gid1,int* gid2)
 
     return  err;
 }
-
 int codes_f_bufr_copy_data__(int* gid1,int* gid2){
     return  codes_f_bufr_copy_data_(gid1, gid2);
 }

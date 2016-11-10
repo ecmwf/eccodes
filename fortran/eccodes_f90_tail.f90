@@ -2607,21 +2607,28 @@ subroutine codes_datetime_to_julian ( year,month,day,hour,minute,second,jd, stat
     endif
 end subroutine codes_datetime_to_julian
 
+  !> Copy the value of a key from the source message to the destination message
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param msgid_src     source message
+  !> @param msgid_dest    destination message
+  !> @param key           key whose value is to be copied
+  !> @param status        GRIB_SUCCESS if OK, integer value on error
+subroutine codes_copy_key( msgid_src, key, msgid_dest, status )
+    integer(kind=kindOfInt),          intent(in)  :: msgid_src
+    integer(kind=kindOfInt),          intent(in)  :: msgid_dest
+    character(LEN=*),                 intent(in)  :: key
+    integer(kind=kindOfInt),optional, intent(out) :: status
+    integer(kind=kindOfInt)                       :: iret
 
-subroutine codes_copy_key( msgin,msgout, key,type, status )
-    integer(kind=kindOfInt),                 intent(in)  :: msgin,msgout,type
-    character(len=*),                        intent(in)  :: key
-    integer(kind=kindOfInt),optional,        intent(out) :: status
-    integer(kind=kindOfInt)                        :: iret
-
-    iret=grib_f_copy_key ( msgin,msgout, key, type, status )
-    if (iret /= 0) then
-      if (present(status)) then
-         status = iret
-      else
-         call grib_check(iret,'codes_copy_key',key)
-      endif
-      return
+    iret=grib_f_copy_key(msgid_src, key, msgid_dest)
+    if (present(status)) then
+        status = iret
+    else
+        call grib_check(iret,'codes_copy_key','('//key//')')
     endif
 end subroutine codes_copy_key 
 
