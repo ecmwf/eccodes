@@ -37,7 +37,7 @@ noinst_PROGRAMS  = eccodes_f_grib_index \
                    eccodes_f_read_message \
                    eccodes_f_read_from_file \
                    eccodes_f_new_from_file \
-                   eccodes_f_copy_namespace \
+                   eccodes_f_grib_copy_namespace \
                    eccodes_f_get_set_uuid \
                    eccodes_f_grib_set_gvc \
                    eccodes_f_grib_clone \
@@ -79,7 +79,7 @@ eccodes_f_grib_count_messages_multi_SOURCES=grib_count_messages_multi.f90
 eccodes_f_read_message_SOURCES=read_message.f90
 eccodes_f_read_from_file_SOURCES=read_from_file.f90
 eccodes_f_new_from_file_SOURCES=new_from_file.f90
-eccodes_f_copy_namespace_SOURCES=copy_namespace.f90
+eccodes_f_grib_copy_namespace_SOURCES=grib_copy_namespace.f90
 eccodes_f_get_set_uuid_SOURCES=get_set_uuid.f90
 eccodes_f_grib_set_gvc_SOURCES=grib_set_gvc.f90
 eccodes_f_grib_clone_SOURCES=grib_clone.f90
