@@ -264,6 +264,11 @@ void grib_print_api_version(FILE* out)
     */
 }
 
+const char* grib_get_package_name()
+{
+    return "ecCodes";
+}
+
 static grib_context default_grib_context = {
         0,                            /* inited                     */
         0,                            /* debug                      */

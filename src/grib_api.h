@@ -1226,6 +1226,13 @@ long grib_get_api_version(void);
 const char* grib_get_git_sha1(void);
 
 /**
+*  Get the package name
+*
+*  @return character string with package name
+*/
+const char* grib_get_package_name(void);
+
+/**
 *  Prints the API version
 *
 *

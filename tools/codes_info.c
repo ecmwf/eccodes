@@ -52,8 +52,8 @@ int main( int argc,char* argv[])
 
     if (print_flags ==  INFO_PRINT_ALL) {
         printf("\n");
-        printf("eccodes Version %d.%d.%d",
-                major,minor,revision);
+        printf("%s Version %d.%d.%d",
+                grib_get_package_name(), major,minor,revision);
         /* if (ECCODES_MAJOR_VERSION < 1) printf(" PRE-RELEASE"); */
         printf("\n");
         printf("\n");
