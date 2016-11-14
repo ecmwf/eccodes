@@ -10,7 +10,7 @@
 
 #include "grib_tools.h"
 
-void usage( char*);
+void usage(const char*);
 
 #define INFO_PRINT_ALL              0
 #define INFO_PRINT_VERSION          (1<<0)
@@ -115,7 +115,7 @@ int main( int argc,char* argv[])
     return 0;
 }
 
-void usage(char* progname) {
+void usage(const char* progname) {
     printf("\nUsage: %s [-v] [-d] [-s]\n",progname);
     exit(1);
 }
