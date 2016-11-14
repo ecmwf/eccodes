@@ -59,6 +59,7 @@ constant PUnset = -32767;
       referenceValue,
       binaryScaleFactor,
       decimalScaleFactor,
+      optimizeScaleFactor,
 
       GRIBEXShBugPresent,
       ieeeFloats,
@@ -89,6 +90,7 @@ constant PUnset = -32767;
       referenceValue,
       binaryScaleFactor,
       decimalScaleFactor,
+      optimizeScaleFactor,
 
       GRIBEXShBugPresent,
       ieeeFloats,
@@ -117,6 +119,7 @@ constant PUnset = -32767;
       referenceValue,
       binaryScaleFactor,
       decimalScaleFactor,
+      optimizeScaleFactor,
 
       GRIBEXShBugPresent,
       ieeeFloats,

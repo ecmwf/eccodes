@@ -156,6 +156,7 @@ alias numberOfBitsContainingEachPackedValue = bitsPerValue;
         referenceValue,
         binaryScaleFactor,
         decimalScaleFactor,
+        optimizeScaleFactor,
         halfByte,
 		packingType,
 		grid_ieee,precision,

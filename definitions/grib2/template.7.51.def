@@ -29,6 +29,7 @@ meta codedValues data_g2complex_packing(
           referenceValue,
           binaryScaleFactor,
           decimalScaleFactor,
+          optimizeScaleFactor,
 
           GRIBEXShBugPresent,
           unpackedSubsetPrecision,
@@ -60,6 +61,7 @@ meta codedValues data_g2complex_packing(
           referenceValue,
           binaryScaleFactor,
           decimalScaleFactor,
+          optimizeScaleFactor,
 
           GRIBEXShBugPresent,
           unpackedSubsetPrecision,
@@ -89,6 +91,7 @@ meta codedValues data_g2complex_packing(
           referenceValue,
           binaryScaleFactor,
           decimalScaleFactor,
+          optimizeScaleFactor,
 
           GRIBEXShBugPresent,
           unpackedSubsetPrecision,

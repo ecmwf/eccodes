@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "grib_optimize_decimal_factor.h"
 #include <math.h>
 /*
    This is used by make_class.pl
@@ -70,6 +71,7 @@ typedef struct grib_accessor_data_complex_packing {
 	const char*  reference_value;
 	const char*  binary_scale_factor;
 	const char*  decimal_scale_factor;
+	const char*  optimize_scaling_factor;
 /* Members defined in data_complex_packing */
 	const char*  GRIBEX_sh_bug_present;
 	const char*  ieee_floats;
@@ -586,6 +588,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len) {
     double reference_value      = 0;
     long   binary_scale_factor         = 0;
     long   decimal_scale_factor = 0;
+    long   optimize_scaling_factor = 0;
     long   laplacianOperatorIsSet = 0;
 
     double laplacianOperator = 0;
@@ -613,6 +616,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len) {
         return ret;
 
     if((ret = grib_get_long_internal(gh,self->decimal_scale_factor,&decimal_scale_factor)) != GRIB_SUCCESS)
+        return ret;
+
+    if((ret = grib_get_long_internal(gh,self->optimize_scaling_factor,&optimize_scaling_factor)) != GRIB_SUCCESS)
         return ret;
 
     if((ret = grib_get_long_internal(gh,self->GRIBEX_sh_bug_present,&GRIBEX_sh_bug_present)) != GRIB_SUCCESS)

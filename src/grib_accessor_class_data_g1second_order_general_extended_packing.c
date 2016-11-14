@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "grib_optimize_decimal_factor.h"
 
 /*
    This is used by make_class.pl
@@ -89,6 +90,7 @@ typedef struct grib_accessor_data_g1second_order_general_extended_packing {
 	const char*  reference_value;
 	const char*  binary_scale_factor;
 	const char*  decimal_scale_factor;
+	const char*  optimize_scaling_factor;
 /* Members defined in data_g1second_order_general_extended_packing */
 	const char* half_byte;
 	const char* packingType;
@@ -641,6 +643,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     long dataHeadersLength,widthsLength,lengthsLength,firstOrderValuesLength;
     long decimal_scale_factor;
     grib_handle* handle = grib_handle_of_accessor(a);
+    long optimize_scaling_factor = 0;
+    grib_context* c=handle->context;
+    int compat_gribex = c->gribex_mode_on && self->edition==1;
 
     self->dirty=1;
 

@@ -22,6 +22,8 @@ list( APPEND test_bins
       grib_util_set_spec
       local_MeteoFrance
       grib_2nd_order_numValues
+      optimize_scaling
+      optimize_scaling_sh
 )
 
 foreach( tool ${test_bins} )
@@ -75,6 +77,8 @@ list( APPEND tests_data_reqd
     metar_compare
     bufr_set
     ieee
+    optimize_scaling
+    optimize_scaling_sh
     grib1to2
     grib2to1
     badgrib
@@ -214,4 +218,3 @@ ecbuild_add_test( TARGET eccodes_t_grib_check_param_concepts
                   CONDITION ENABLE_EXTRA_TESTS
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_param_concepts.sh
 )
-

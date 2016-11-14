@@ -58,6 +58,7 @@ typedef struct grib_accessor_data_g2complex_packing {
 	const char*  reference_value;
 	const char*  binary_scale_factor;
 	const char*  decimal_scale_factor;
+	const char*  optimize_scaling_factor;
 /* Members defined in data_complex_packing */
 	const char*  GRIBEX_sh_bug_present;
 	const char*  ieee_floats;

@@ -25,6 +25,7 @@
         referenceValue,
         binaryScaleFactor,
         decimalScaleFactor,
+        optimizeScaleFactor,
         typeOfPreProcessing,
         preProcessingParameter
   ): read_only;

@@ -175,6 +175,9 @@ concept name(nameECMF,"name.def",conceptsMasterDir,conceptsLocalDirAll) : dump,n
 signed[2] decimalScaleFactor :dump;
 transient setLocalDefinition= 0 : no_copy;
 
+# Try different values of binaryScaleFactor and decimalScaleFactor to reduce packing error
+transient optimizeScaleFactor = 0;
+
 meta      dataDate            g1date(centuryOfReferenceTimeOfData,yearOfCentury,month,day) : dump;
 meta      year                evaluate(dataDate / 10000) ;
 
