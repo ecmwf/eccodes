@@ -6,7 +6,9 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
-# TEMPLATE 4.56, individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for spatio-temporal changing tile parameters
+# TEMPLATE 4.56, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for spatio-temporal changing tile parameters
+
+# Note: This template is deprecated. Template 4.59 should be used instead.
 
 include "grib2/template.4.parameter_tile.def"
 include "grib2/template.4.horizontal.def"
@@ -23,4 +25,3 @@ alias number=perturbationNumber;
 
 unsigned[1] numberOfForecastsInEnsemble  : dump;
 alias totalNumber=numberOfForecastsInEnsemble;
-

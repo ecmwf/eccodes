@@ -13,6 +13,9 @@ constant dataRepresentationType = 90;
 
 # START 2/template.4.30 ----------------------------------------------------------------------
 # TEMPLATE 4.30, Satellite Product
+
+# Note: This template is deprecated. Template 4.31 should be used instead.
+
 #  Parameter category
 codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir) : dump;
 

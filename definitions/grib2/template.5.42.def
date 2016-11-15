@@ -7,12 +7,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# TEMPLATE 5.42, Grid point and spectral data - CCSDS
+# TEMPLATE 5.42, Grid point and spectral data - CCSDS recommended lossless compression
 
 include "grib2/template.5.packing.def";
 include "grib2/template.5.original_values.def";
 
 unsigned[1] ccsdsFlags : dump;
+alias ccsdsCompressionOptionsMask=ccsdsFlags;
 
 flagbit AEC_DATA_SIGNED_OPTION_MASK(ccsdsFlags,0)     = 0;
 
@@ -28,3 +29,4 @@ flagbit AEC_PAD_RSI_OPTION_MASK(ccsdsFlags,5)         = 0;
 
 unsigned[1] ccsdsBlockSize = 32 : dump;
 unsigned[2] ccsdsRsi = 128      : dump;
+alias referenceSampleInterval=ccsdsRsi;
