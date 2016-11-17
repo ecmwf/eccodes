@@ -366,6 +366,7 @@ libeccodes_la_prototypes= \
 	bufr_util.c \
 	functions.c \
 	codes_memfs.c \
+	grib_optimize_decimal_factor.c \
 	grib_api_version.c
 
 libeccodes_extra_prototypes = grib_bits_any_endian.c grib_bits_any_endian_simple.c
