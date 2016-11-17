@@ -9309,12 +9309,12 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 46 ;
 	}
-#Height of Zero Deg Wet Bulb Temperature
+#Height of zero-degree wet-bulb temperature
 'm' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 47 ;
 	}
-#Height of One Deg Wet Bulb Temperature
+#Height of one-degree wet-bulb temperature
 'm' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 48 ;
