@@ -14,6 +14,7 @@
 
 #include "grib_api_internal.h"
 #include "grib_optimize_decimal_factor.h"
+#include <float.h>
 
 /*
    This is used by make_class.pl
@@ -468,6 +469,14 @@ static int producing_large_constant_fields(const grib_context* c, grib_handle* h
     return 0;
 }
 
+static int check_range(const double val)
+{
+    if (val < DBL_MAX && val > -DBL_MAX)
+        return GRIB_SUCCESS;
+    else
+        return GRIB_ENCODING_ERROR;
+}
+
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
     grib_accessor_data_simple_packing* self =  (grib_accessor_data_simple_packing*)a;
@@ -532,6 +541,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         if (val[i] < min ) min = val[i];
     }
 #endif
+    if ((err = check_range(max)) != GRIB_SUCCESS) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,"Maximum value out of range: %g", max);
+        return err;
+    }
+    if ((err = check_range(min)) != GRIB_SUCCESS) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,"Minimum value out of range: %g", min);
+        return err;
+    }
 
     /* constant field only reference_value is set and bits_per_value=0 */
     if(max==min) {
