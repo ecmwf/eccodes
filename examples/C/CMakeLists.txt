@@ -114,6 +114,16 @@ if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
                       TYPE       SCRIPT
                       COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/grib_pthreads.sh
     )
+# TODO
+#    ecbuild_add_executable( TARGET    c_bufr_pthreads
+#                            NOINSTALL
+#                            SOURCES   bufr_pthreads.c
+#                            LIBS      eccodes
+#    )
+#    ecbuild_add_test( TARGET eccodes_c_bufr_pthreads
+#                      TYPE       SCRIPT
+#                      COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/bufr_pthreads.sh
+#    )
 endif()
 
 
