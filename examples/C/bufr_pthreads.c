@@ -15,16 +15,30 @@
 #include "eccodes.h"
 #define NUM_THREADS 3
 
-static void* process_bufr(void* hand)
+static int DBL_EQUAL(double d1, double d2, double tolerance)
 {
-    codes_handle* h = (codes_handle*)hand;
-    long longVal = 0;
+    return fabs(d1-d2) <= tolerance;
+}
+
+static void* process_bufr(void* arg)
+{
+    codes_handle* h = (codes_handle*)arg;
+    long numSubsets = 0;
+    size_t size = 0;
+    double* dValues = NULL;
 
     CODES_CHECK(codes_set_long(h, "unpack", 1),0);
-    CODES_CHECK(codes_get_long(h,"numberOfSubsets", &longVal),0);
-    printf("numberOfSubsets=%ld\n", longVal);
+    CODES_CHECK(codes_get_long(h,"numberOfSubsets", &numSubsets),0);
+    /*printf("numberOfSubsets=%ld\n", numSubsets);*/
+    assert( numSubsets == 2016 || numSubsets == 128 );
 
-    codes_handle_delete(h);
+    dValues = (double*)malloc(numSubsets*sizeof(double));
+    assert(dValues);
+    size = numSubsets;
+    CODES_CHECK(codes_get_double_array(h, "latitude", dValues, &size), 0);
+    assert( DBL_EQUAL(dValues[0], 43.119, 0.01) || DBL_EQUAL(dValues[0], -58.174, 0.01) );
+
+    free(dValues);
     pthread_exit(NULL);
 }
 
@@ -32,46 +46,25 @@ int main(int argc, char** argv)
 {
     pthread_t thread1, thread2;
     int error = 0, err = 0;
-    long i = 0;
     FILE* fin = 0;
     codes_handle* h1 = 0;
     codes_handle* h2 = 0;
     fin = fopen("../../data/bufr/asca_139.bufr", "r");
-    h1 = codes_handle_new_from_file(NULL, fin, PRODUCT_BUFR, &err);
+    h1 = codes_handle_new_from_file(NULL, fin, PRODUCT_BUFR, &err); assert(h1);
     fclose(fin);
     fin = fopen("../../data/bufr/aaen_55.bufr", "r");
-    h2 = codes_handle_new_from_file(NULL, fin, PRODUCT_BUFR, &err);
+    h2 = codes_handle_new_from_file(NULL, fin, PRODUCT_BUFR, &err); assert(h2);
     fclose(fin);
 
-    printf("Start thread 1...\n");
-    error = pthread_create(&thread1, NULL, process_bufr, (void *)h1); if(error)return 1;
-    printf("Start thread 2...\n");
-    error = pthread_create(&thread2, NULL, process_bufr, (void *)h2); if(error)return 1;
-    printf("All done...\n");
-#if 0
-    for( i=0; i<NUM_THREADS; ++i) {
-        FILE* fin = 0;
-        char* filename = NULL;
-        codes_handle* h = 0;
-        int err = 0;
-        if ( i == 0 ) filename = "../../data/bufr/asca_139.bufr";
-        if ( i == 1 ) filename = "../../data/bufr/temp_101.bufr";
-        if ( i == 2 ) filename = "../../data/bufr/syno_1.bufr";
-        assert(filename);
-        fin = fopen(filename, "r");
-        assert(fin);
-        h = codes_handle_new_from_file(NULL, fin, PRODUCT_BUFR, &err);
-        assert(h);
-        printf("Creating thread %ld\n", i);
-        error = pthread_create(&threads[i], NULL, process_bufr, (void *)h);
-        if (error) {
-            return 1;
-        }
-        fclose(fin);
-    }
-#endif
+    error = pthread_create(&thread1, NULL, process_bufr, (void *)h1);
+    assert(!error);
+
+    error = pthread_create(&thread2, NULL, process_bufr, (void *)h2);
+    assert(!error);
+
     pthread_join( thread1, NULL);
     pthread_join( thread2, NULL);
-    /*pthread_exit(NULL);*/
+    codes_handle_delete(h1);
+    codes_handle_delete(h2);
     return 0;
 }

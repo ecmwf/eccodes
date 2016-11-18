@@ -104,26 +104,20 @@ endforeach()
 ########################################################################
 # Tests which are conditional
 if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
-    # This one only for POSIX threads
-    ecbuild_add_executable( TARGET    c_grib_pthreads
-                            NOINSTALL
-                            SOURCES   grib_pthreads.c
-                            LIBS      eccodes
-    )
-    ecbuild_add_test( TARGET eccodes_c_grib_pthreads
-                      TYPE       SCRIPT
-                      COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/grib_pthreads.sh
-    )
-# TODO
-#    ecbuild_add_executable( TARGET    c_bufr_pthreads
-#                            NOINSTALL
-#                            SOURCES   bufr_pthreads.c
-#                            LIBS      eccodes
-#    )
-#    ecbuild_add_test( TARGET eccodes_c_bufr_pthreads
-#                      TYPE       SCRIPT
-#                      COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/bufr_pthreads.sh
-#    )
+    # For POSIX threads
+    LIST(APPEND pthread_tests grib_pthreads bufr_pthreads)
+    foreach( test ${pthread_tests} )
+        ecbuild_add_executable( TARGET    c_${test}
+                                NOINSTALL
+                                SOURCES   ${test}.c
+                                LIBS      eccodes
+        )
+        ecbuild_add_test( TARGET       eccodes_c_${test}
+                          TYPE         SCRIPT
+                          COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                          TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs
+        )
+    endforeach()
 endif()
 
 
