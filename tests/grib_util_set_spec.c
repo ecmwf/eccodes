@@ -197,7 +197,7 @@ void usage(const char *prog)
 
 int main(int argc, char *argv[])
 {
-    int opt = 0, remove_local_def = 0, i = 0;
+    int opt = 0, remove_local_def = 0;
     int edition = 0;
     char* packingType = NULL;
     const char* prog = argv[0];
