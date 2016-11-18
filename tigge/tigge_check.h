@@ -1472,7 +1472,7 @@ uerra, eswi-an: an.sp.sfc.grib2, field 1 [surface_pressure_sfc]: surface_pressur
       -0.001,
        5,
        0.5,
-       15,
+       30,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
 
@@ -2490,7 +2490,7 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       "cloud_cover_hl",
       0,
       1e-10,
-      100,
+      80,
       100.00001,
       {
          {"discipline", GRIB_TYPE_LONG, 0},
@@ -2644,7 +2644,7 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
    {
       "2_metre_relative_humidity",
       0,
-      20,
+      25,
       90,
       100.1,
       {
@@ -2689,6 +2689,27 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       60,
       100,
       {
+         {"paramId", GRIB_TYPE_LONG, 260509},
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 19},
+         {"parameterNumber", GRIB_TYPE_LONG, 1},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {NULL, },
+      },
+      {&point_in_time, &predefined_level},
+   },
+/*
+  uerra, egrr:  The albedo is 0 at night because it is dependent on solar radiation
+*/
+   {
+      "albedo_sfc.uerra-egrr",
+      0,
+      20,
+      0,
+      100,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "ur"},
+         {"centre", GRIB_TYPE_STRING, 1, "egrr"},
          {"paramId", GRIB_TYPE_LONG, 260509},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 19},
@@ -2818,7 +2839,7 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       0,
       10,
       10,
-      200,
+      300,
       {
          {"paramId", GRIB_TYPE_LONG, 207},
          {"discipline", GRIB_TYPE_LONG, 0},
@@ -2911,8 +2932,8 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
    {
       "evaporation_sfc",
       -10,
-      -0.1,
-       0.1,
+       0,
+       0,
        5,
       {
          {"paramId", GRIB_TYPE_LONG, 260259},
@@ -2944,12 +2965,13 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
 
 /*
   uerra, cosmo-det-an: surface_roughness_sfc maximum value 9.36719 is not in [1.3,1.8]
+  uerra, egrr:  surface roughness is fixed at 0.5 over land and is close to 0 over sea
 */
    {
       "surface_roughness_sfc",
-       1e-8,
-       1e-5,
-       1.3,
+       0,
+       0.001,
+       0.5,
        10,
       {
          {"paramId", GRIB_TYPE_LONG, 173},
@@ -3141,7 +3163,7 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       "skin_temperature_sfc",
       160,
       300,
-      300,
+      280,
       355,
       {
          {"paramId", GRIB_TYPE_LONG, 235},
