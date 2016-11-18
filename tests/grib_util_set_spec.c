@@ -220,17 +220,17 @@ int main(int argc, char *argv[])
                 break;
         }
     }
-    
+
     /* After option processing expect just two files */
     if (argc-optind != 2) usage(prog);
 
-    for (i = optind; i < argc; i++) {
+    /*for (i = optind; i < argc; i++) {
         printf ("File argument %s\n", argv[i]);
-    }
-    
+    }*/
+
     infile_name = argv[argc-2];
     outfile_name = argv[argc-1];
-    
+
     test_regular_ll(remove_local_def, edition, packingType, infile_name, outfile_name);
     test_reduced_gg(remove_local_def, edition, packingType, infile_name, outfile_name);
 
