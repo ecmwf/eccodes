@@ -19,11 +19,9 @@ label="gts_get_test"
 #Create log file
 fLog=${label}".log"
 rm -f $fLog
-touch $fLog
 
 #Define tmp file
 fTmp=${label}".tmp.txt"
-rm -f $fTmp
 
 #----------------------------------------------
 # Test "-p" switch
@@ -31,5 +29,4 @@ rm -f $fTmp
 gts_file=EGRR20150317121020_00493212.DAT
 ${tools_dir}/gts_get -p TT,AA,II,CCCC,YY,GG,gg,BBB $gts_file >/dev/null
 
-rm -f $fLog $res_ls 
-
+rm -f $fLog
