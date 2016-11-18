@@ -13,6 +13,8 @@ TESTS = definitions.sh \
         bufr_set.sh \
         bufr_change_edition.sh \
         gts_ls.sh \
+        gts_compare.sh \
+        gts_get.sh \
         metar_ls.sh \
         metar_dump.sh \
         ieee.sh \
