@@ -66,7 +66,7 @@ int main(int argc, char** argv)
     for (i=0;i<values_len;i++) {
         if (count>100) {e*=10; count=1;}
         values[i]=d;
-        printf("%g \n",values[i]);
+        /*printf("%g \n",values[i]);*/
         d+=e;
         count++;
     }
