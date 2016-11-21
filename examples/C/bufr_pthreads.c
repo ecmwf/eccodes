@@ -45,7 +45,7 @@ static void* process_bufr(void* arg)
 int main(int argc, char** argv)
 {
     pthread_t thread1, thread2;
-    int error = 0, err = 0;
+    int err = 0;
     FILE* fin = 0;
     codes_handle* h1 = 0;
     codes_handle* h2 = 0;
@@ -56,14 +56,14 @@ int main(int argc, char** argv)
     h2 = codes_handle_new_from_file(NULL, fin, PRODUCT_BUFR, &err); assert(h2);
     fclose(fin);
 
-    error = pthread_create(&thread1, NULL, process_bufr, (void *)h1);
-    assert(!error);
+    err = pthread_create(&thread1, NULL, process_bufr, (void *)h1);
+    assert(!err);
 
-    error = pthread_create(&thread2, NULL, process_bufr, (void *)h2);
-    assert(!error);
+    err = pthread_create(&thread2, NULL, process_bufr, (void *)h2);
+    assert(!err);
 
-    pthread_join( thread1, NULL);
-    pthread_join( thread2, NULL);
+    pthread_join(thread1, NULL);
+    pthread_join(thread2, NULL);
     codes_handle_delete(h1);
     codes_handle_delete(h2);
     return 0;

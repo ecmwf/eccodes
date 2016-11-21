@@ -60,13 +60,16 @@ int main(int argc, char** argv)
     pthread_t threads[NUM_THREADS];
     int error = 0;
     long i = 0;
-    for( i=0; i<NUM_THREADS; ++i) {
+    for (i=0; i<NUM_THREADS; ++i) {
         printf("Creating thread %ld\n", i);
         error = pthread_create(&threads[i], NULL, process_grib, (void *)i);
         if (error) {
             return 1;
         }
     }
-    pthread_exit(NULL);
+    for (i=0; i<NUM_THREADS; ++i) {
+        pthread_join(threads[i], NULL);
+    }
+
     return 0;
 }
