@@ -9,6 +9,7 @@
 !
 !
 !  Description: how to set a bitmap in a GRIB message
+!               to encode missing values in the data
 !
 !
 program set_bitmap
