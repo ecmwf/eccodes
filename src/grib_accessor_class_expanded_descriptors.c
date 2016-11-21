@@ -201,7 +201,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 static bufr_descriptors_array* do_expand(grib_accessor* a,bufr_descriptors_array* unexpanded,change_coding_params* ccp,int *err);
 
-static int depth=-1;
+static int global_depth=-1;
 
 static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded,
         change_coding_params* ccp, int* err)
@@ -224,14 +224,13 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
     int idepth;
 #endif
 
-
     if (grib_bufr_descriptors_array_used_size(unexpanded)==0) return 0;
 
     us=grib_bufr_descriptor_clone(grib_bufr_descriptors_array_get(unexpanded,0));
 
     *err=0;
 #if MYDEBUG
-    for (idepth=0;idepth<depth;idepth++) printf("\t");
+    for (idepth=0;idepth<global_depth;idepth++) printf("\t");
     printf("expanding ==> %d-%02d-%03d\n",us->F,us->X,us->Y);
 #endif
     switch (us->F) {
@@ -239,7 +238,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
         /* sequence */
         DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded,u);
 #if MYDEBUG
-        for (idepth=0;idepth<depth;idepth++) printf("\t");
+        for (idepth=0;idepth<global_depth;idepth++) printf("\t");
         printf("+++ pop  %06ld\n",u->code);
 #endif
         /*this is to get the sequence elements of the sequence unexpanded[i] */
@@ -260,7 +259,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
         grib_bufr_descriptors_array_delete(inner_unexpanded);
 #if MYDEBUG
         for (i=0;i<inner_expanded->n;i++) {
-            for (idepth=0;idepth<depth;idepth++) printf("\t");
+            for (idepth=0;idepth<global_depth;idepth++) printf("\t");
             printf("+++ push %06ld\n",inner_expanded->v[i]->code);
         }
 #endif
@@ -274,9 +273,9 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             bufr_descriptor* uidx=0;
             DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded,u);
 #if MYDEBUG
-            for (idepth=0;idepth<depth;idepth++) printf("\t");
+            for (idepth=0;idepth<global_depth;idepth++) printf("\t");
             printf("+++ pop  %06ld\n",u->code);
-            for (idepth=0;idepth<depth;idepth++) printf("\t");
+            for (idepth=0;idepth<global_depth;idepth++) printf("\t");
             printf("+++ push %06ld\n",u->code);
 #endif
             grib_bufr_descriptors_array_push(expanded,u);
@@ -288,7 +287,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
                 DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded, u0);
                 grib_bufr_descriptors_array_push(inner_unexpanded,u0);
 #if MYDEBUG
-                for (idepth=0;idepth<depth;idepth++) printf("\t");
+                for (idepth=0;idepth<global_depth;idepth++) printf("\t");
                 printf("+++ pop  %06ld\n",u0->code);
 #endif
             }
@@ -296,7 +295,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             size=grib_bufr_descriptors_array_used_size(inner_expanded);
 #if MYDEBUG
             for (i=0;i<inner_expanded->n;i++) {
-                for (idepth=0;idepth<depth;idepth++) printf("\t");
+                for (idepth=0;idepth<global_depth;idepth++) printf("\t");
                 printf("+++ push %06ld\n",inner_expanded->v[i]->code);
             }
 #endif
@@ -307,7 +306,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
         } else {
             DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded,u);
 #if MYDEBUG
-            for (idepth=0;idepth<depth;idepth++) printf("\t");
+            for (idepth=0;idepth<global_depth;idepth++) printf("\t");
             printf("+++ pop  %06ld\n",u->code);
 #endif
             grib_bufr_descriptor_delete(u);
@@ -316,7 +315,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             for (j=0;j<us->X;j++) {
                 DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded,ur[j]);
 #if MYDEBUG
-                for (idepth=0;idepth<depth;idepth++) printf("\t");
+                for (idepth=0;idepth<global_depth;idepth++) printf("\t");
                 printf("+++ pop  %06ld\n",ur[j]->code);
 #endif
             }
@@ -337,7 +336,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             grib_bufr_descriptors_array_delete(inner_unexpanded);
 #if MYDEBUG
             for (i=0;i<inner_expanded->n;i++) {
-                for (idepth=0;idepth<depth;idepth++) printf("\t");
+                for (idepth=0;idepth<global_depth;idepth++) printf("\t");
                 printf("+++ push %06ld\n",inner_expanded->v[i]->code);
             }
 #endif
@@ -357,16 +356,16 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             au->name=grib_context_strdup(c,"associated field");
             au->units=grib_context_strdup(c,"associated units");
 #if MYDEBUG
-            for (idepth=0;idepth<depth;idepth++) printf("\t");
+            for (idepth=0;idepth<global_depth;idepth++) printf("\t");
             printf("+++ push %06ld (%ld %g %ld)",au->code,au->scale,au->reference,au->width);
 #endif
             grib_bufr_descriptors_array_push(expanded,au);
             size++;
         }
 #if MYDEBUG
-        for (idepth=0;idepth<depth;idepth++) printf("\t");
+        for (idepth=0;idepth<global_depth;idepth++) printf("\t");
         printf("+++ pop  %06ld\n",u->code);
-        for (idepth=0;idepth<depth;idepth++) printf("\t");
+        for (idepth=0;idepth<global_depth;idepth++) printf("\t");
         printf("+++ push %06ld [type=%d] (%ld %g %ld)",u->code,
                 u->type,u->scale,u->reference,u->width);
 #endif
@@ -395,7 +394,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
     case 2:
         DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded,u);
 #if MYDEBUG
-        for (idepth=0;idepth<depth;idepth++) printf("\t");
+        for (idepth=0;idepth<global_depth;idepth++) printf("\t");
         printf("+++ pop  %06ld\n",u->code);
 #endif
         switch(us->X) {
@@ -438,7 +437,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             break;
         default:
 #if MYDEBUG
-            for (idepth=0;idepth<depth;idepth++) printf("\t");
+            for (idepth=0;idepth<global_depth;idepth++) printf("\t");
             printf("+++ push %06ld\n",u->code);
 #endif
             grib_bufr_descriptors_array_push(expanded,u);
@@ -449,16 +448,16 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
         default:
             DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded,u);
 #if MYDEBUG
-            for (idepth=0;idepth<depth;idepth++) printf("\t");
+            for (idepth=0;idepth<global_depth;idepth++) printf("\t");
             printf("+++ pop  %06ld\n",u->code);
-            for (idepth=0;idepth<depth;idepth++) printf("\t");
+            for (idepth=0;idepth<global_depth;idepth++) printf("\t");
             printf("+++ push %06ld\n",u->code);
 #endif
             grib_bufr_descriptors_array_push(expanded,u);
             size=1;
     }
 #if MYDEBUG
-    for (idepth=0;idepth<depth;idepth++) printf("\t");
+    for (idepth=0;idepth<global_depth;idepth++) printf("\t");
     printf("expanding <== %d-%.2d-%.3d (size=%ld)\n\n",us->F,us->X,us->Y,size);
 #endif
     if (us) grib_bufr_descriptor_delete(us);
@@ -471,23 +470,22 @@ static bufr_descriptors_array* do_expand(grib_accessor* a,bufr_descriptors_array
     grib_context* c=a->context;
 #if MYDEBUG
     int idepth;
+    global_depth++;
 #endif
-
-    depth++;
 
     expanded=grib_bufr_descriptors_array_new(c,100,100);
 
 #if MYDEBUG
     {
         int i;
-        for (idepth=0;idepth<depth;idepth++) printf("\t");
+        for (idepth=0;idepth<global_depth;idepth++) printf("\t");
         printf("to be expanded ==> \n");
         for (i=0;i<unexpanded->n;i++) {
             bufr_descriptor* xx=grib_bufr_descriptors_array_get(unexpanded,i);
-            for (idepth=0;idepth<depth;idepth++) printf("\t");
+            for (idepth=0;idepth<global_depth;idepth++) printf("\t");
             printf("%06ld\n",xx->code);
         }
-        for (idepth=0;idepth<depth;idepth++) printf("\t");
+        for (idepth=0;idepth<global_depth;idepth++) printf("\t");
         printf("to be expanded <== \n\n");
     }
 #endif
@@ -497,21 +495,23 @@ static bufr_descriptors_array* do_expand(grib_accessor* a,bufr_descriptors_array
 #if MYDEBUG
     {
         int i;
-        for (idepth=0;idepth<depth;idepth++) printf("\t");
+        for (idepth=0;idepth<global_depth;idepth++) printf("\t");
         printf("expanded ==> \n");
         for (i=0;i<expanded->n;i++) {
             bufr_descriptor* xx=grib_bufr_descriptors_array_get(expanded,i);
-            for (idepth=0;idepth<depth;idepth++) printf("\t");
+            for (idepth=0;idepth<global_depth;idepth++) printf("\t");
             printf("==  %-6d== %06ld ",i,xx->code);
             printf("%ld %g %ld",xx->scale,xx->reference,xx->width);
             printf("\n");
         }
-        for (idepth=0;idepth<depth;idepth++) printf("\t");
+        for (idepth=0;idepth<global_depth;idepth++) printf("\t");
         printf("expanded <== \n\n");
     }
 #endif
 
-    depth--;
+#if MYDEBUG
+    global_depth--;
+#endif
 
     return expanded;
 }

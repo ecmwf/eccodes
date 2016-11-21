@@ -15,6 +15,34 @@
 #include "grib_api_internal.h"
 #include <ctype.h>
 
+#if GRIB_PTHREADS
+static pthread_once_t once  = PTHREAD_ONCE_INIT;
+static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+
+static void thread_init() {
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&mutex1,&attr);
+    pthread_mutexattr_destroy(&attr);
+}
+#elif GRIB_OMP_THREADS
+static int once = 0;
+static omp_nest_lock_t mutex1;
+
+static void thread_init()
+{
+    GRIB_OMP_CRITICAL(lock_grib_accessor_class_bufr_elements_table_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex1);
+            once = 1;
+        }
+    }
+}
+#endif
+
 /*
    This is used by make_class.pl
 
@@ -204,16 +232,19 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     } else {
         grib_context_log(c,GRIB_LOG_DEBUG,"found def file %s",filename);
     }
+    GRIB_MUTEX_INIT_ONCE(&once,&thread_init);
+    GRIB_MUTEX_LOCK(&mutex1);
+
     dictionary=(grib_trie*)grib_trie_get(c->lists,dictName);
     if (dictionary) {
         grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from cache",self->dictionary);
-        return dictionary;
+        goto the_end;
     } else {
         grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from file %s",self->dictionary,filename);
     }
 
     f=codes_fopen(filename,"r");
-    if (!f) {*err=GRIB_IO_PROBLEM; return NULL;}
+    if (!f) {*err=GRIB_IO_PROBLEM; dictionary=NULL; goto the_end;}
 
     dictionary=grib_trie_new(c);
 
@@ -226,7 +257,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
 
     if (localFilename!=0) {
         f=codes_fopen(localFilename,"r");
-        if (!f) {*err=GRIB_IO_PROBLEM; return NULL;}
+        if (!f) {*err=GRIB_IO_PROBLEM; dictionary=NULL; goto the_end;}
 
         while(fgets(line,sizeof(line)-1,f)) {
             list=str_split(line,'|');
@@ -236,6 +267,9 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
         fclose(f);
     }
     grib_trie_insert(c->lists,dictName,dictionary);
+
+the_end:
+    GRIB_MUTEX_UNLOCK(&mutex1);
     return dictionary;
 }
 
