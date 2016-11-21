@@ -201,7 +201,9 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 static bufr_descriptors_array* do_expand(grib_accessor* a,bufr_descriptors_array* unexpanded,change_coding_params* ccp,int *err);
 
+#if MYDEBUG
 static int global_depth=-1;
+#endif
 
 static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded,
         change_coding_params* ccp, int* err)
