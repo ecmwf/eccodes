@@ -1421,7 +1421,7 @@ int is_index_file(const char *filename);
 char get_dir_separator_char(void);
 const char *extract_filename(const char *filepath);
 char *codes_getenv(const char *name);
-char **str_split(char *a_str, const char a_delim);
+char** string_split(char* inputString, const char delimiterChar);
 
 /* bufr_util.c */
 int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* key);

@@ -1682,53 +1682,47 @@ char* codes_getenv(const char* name)
     return result;
 }
 
-/* From https://stackoverflow.com/questions/32506614/manipulation-of-delimiters-within-arrays */
 /* Returns an array of strings the last of which is NULL */
-char** str_split(char* a_str, const char a_delim)
+char** string_split(char* inputString, const char delimiterChar)
 {
-    char** result    = 0;
-    size_t count     = 0;
-    char* tmp        = a_str;
-    char* last_comma = 0;
-    char delim[2];
-    delim[0] = a_delim;
-    delim[1] = 0;
+    char** result = NULL;
+    char* p = inputString;
+    char* lastDelimiter = NULL;
+    char* aToken = NULL;
+    char delimiterString[2] = {0, 0};
+    size_t numTokens = 0;
+    size_t strLength = 0;
+    size_t index = 0;
 
-    /* Count how many elements will be extracted. */
-    Assert(a_str);
-    while (*tmp)
-    {
-        if (a_delim == *tmp)
-        {
-            count++;
-            last_comma = tmp;
+    Assert(inputString);
+    while (*p) {
+        const char ctmp = *p;
+        if (ctmp == delimiterChar) {
+            ++numTokens;
+            lastDelimiter = p;
         }
-        tmp++;
+        p++;
     }
+    strLength = strlen(inputString);
+    if (lastDelimiter < (inputString + strLength - 1)) {
+        ++numTokens; /* there is a trailing token */
+    }
+    ++numTokens; /* terminating NULL string to mark the end */
 
-    /* Add space for trailing token. */
-    count += last_comma < (a_str + strlen(a_str) - 1);
-
-    /* Add space for terminating null string so caller
-       knows where the list of returned strings ends. */
-    count++;
-
-    result = (char**)malloc(sizeof(char*) * count);
+    result = (char**)malloc(numTokens * sizeof(char*));
     Assert(result);
-    if (result)
-    {
-        size_t idx  = 0;
-        char* token = strtok(a_str, delim);
 
-        while (token)
-        {
-            Assert(idx < count);
-            *(result + idx++) = strdup(token);
-            token = strtok(0, delim);
-        }
-        Assert(idx == count - 1);
-        *(result + idx) = 0;
+    delimiterString[0] = delimiterChar;
+    delimiterString[1] = '\0';
+    /* Start tokenizing */
+    aToken = strtok(inputString, delimiterString);
+    while (aToken) {
+        Assert(index < numTokens);
+        *(result + index++) = strdup(aToken);
+        aToken = strtok(NULL, delimiterString);
     }
+    Assert(index == numTokens - 1);
+    *(result + index) = '\0';
 
     return result;
 }
