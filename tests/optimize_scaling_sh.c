@@ -265,7 +265,7 @@ int main (int argc, char * argv[])
         /* Compare our values */
         for(i=0; i<ILCHAM; ++i)
         {
-            const double diff = abs(zval[i]-values[i]);
+            const double diff = fabs(zval[i]-values[i]);
             if (diff > 1e-8) {
                 fprintf(stderr,"Unpacked value different: i=%d values[i]=%g zval[i]=%g\n", i, values[i], zval[i]);
                 return 1;
