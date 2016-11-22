@@ -1682,19 +1682,22 @@ char* codes_getenv(const char* name)
     return result;
 }
 
+
 /* Returns an array of strings the last of which is NULL */
-char** string_split(char* inputString, const char delimiterChar)
+char** string_split(char* inputString, const char* delimiter)
 {
     char** result = NULL;
     char* p = inputString;
     char* lastDelimiter = NULL;
     char* aToken = NULL;
-    char delimiterString[2] = {0, 0};
     size_t numTokens = 0;
     size_t strLength = 0;
     size_t index = 0;
+    char delimiterChar = 0;
 
-    Assert(inputString);
+    DebugAssert(inputString);
+    DebugAssert( delimiter && (strlen(delimiter)==1) );
+    delimiterChar = delimiter[0];
     while (*p) {
         const char ctmp = *p;
         if (ctmp == delimiterChar) {
@@ -1712,14 +1715,12 @@ char** string_split(char* inputString, const char delimiterChar)
     result = (char**)malloc(numTokens * sizeof(char*));
     Assert(result);
 
-    delimiterString[0] = delimiterChar;
-    delimiterString[1] = '\0';
     /* Start tokenizing */
-    aToken = strtok(inputString, delimiterString);
+    aToken = strtok(inputString, delimiter);
     while (aToken) {
         Assert(index < numTokens);
         *(result + index++) = strdup(aToken);
-        aToken = strtok(NULL, delimiterString);
+        aToken = strtok(NULL, delimiter);
     }
     Assert(index == numTokens - 1);
     *(result + index) = '\0';

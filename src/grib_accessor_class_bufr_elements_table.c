@@ -249,7 +249,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     dictionary=grib_trie_new(c);
 
     while(fgets(line,sizeof(line)-1,f)) {
-        list=string_split(line,'|');
+        list=string_split(line, "|");
         grib_trie_insert(dictionary,list[0],list);
     }
 
@@ -260,7 +260,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
         if (!f) {*err=GRIB_IO_PROBLEM; dictionary=NULL; goto the_end;}
 
         while(fgets(line,sizeof(line)-1,f)) {
-            list=string_split(line,'|');
+            list=string_split(line, "|");
             grib_trie_insert(dictionary,list[0],list);
         }
 
