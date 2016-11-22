@@ -1473,3 +1473,37 @@ EOF
 diff ${f}.log.ref ${f}.log 
 
 rm -f ${f}.log ${f}.log.ref ${f}.out ${f}.out.out $fLog $fRules
+#-----------------------------------------------------------
+# Test: fix for ECC-389 
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set numberOfSubsets=2;
+set unexpandedDescriptors={310008};
+
+set #14#brightnessTemperature={266.53,266.53000000001};
+set pack=1;
+
+write;
+EOF
+
+f="amsu_55.bufr"
+
+echo "Test: fix for ECC-389" >> $fLog
+echo "file: $f" >> $fLog
+
+${tools_dir}bufr_filter -o ${f}.out $fRules $f
+
+cat > $fRules <<EOF
+set unpack=1;
+print "[#14#brightnessTemperature]";
+EOF
+
+${tools_dir}bufr_filter $fRules ${f}.out > ${f}.log
+
+cat > ${f}.log.ref <<EOF
+266.53
+EOF
+
+diff ${f}.log.ref ${f}.log 
+
+rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules

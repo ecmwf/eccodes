@@ -622,7 +622,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     v=dvalues->v;
 
     /* is constant */
-    if (grib_darray_is_constant(dvalues)) {
+    if (grib_darray_is_constant(dvalues,modifiedFactor*.5)) {
         localWidth=0;
         grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
         if (*v == GRIB_MISSING_DOUBLE) {
