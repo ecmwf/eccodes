@@ -186,7 +186,6 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
             if (ilon_first>ilon_last) ilon_first-=pl[j];
             for (i=ilon_first;i<=ilon_last;i++) {
 #ifdef DEBUG
-                Assert(0);
                 Assert(iter->e < iter->nv);
 #endif
                 self->los[iter->e]=((i)*360.0)/pl[j];
