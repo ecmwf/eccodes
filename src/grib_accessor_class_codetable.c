@@ -255,7 +255,7 @@ static int str_eq(const char* a, const char* b)
     return 0;
 }
 
-#ifdef DEBUG
+#ifdef DEBUGGING
 static void dump_codetable(grib_codetable* atable)
 {
     grib_codetable* next = NULL;
