@@ -22,6 +22,20 @@ defs_dirs="
  $ECCODES_DEFINITION_PATH/grib2
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/ecmf
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf
+
+ $ECCODES_DEFINITION_PATH/grib1/localConcepts/ammc
+ $ECCODES_DEFINITION_PATH/grib1/localConcepts/eidb
+ $ECCODES_DEFINITION_PATH/grib1/localConcepts/ekmi
+ $ECCODES_DEFINITION_PATH/grib1/localConcepts/enmi
+ $ECCODES_DEFINITION_PATH/grib1/localConcepts/eswi
+ $ECCODES_DEFINITION_PATH/grib1/localConcepts/lfpw
+ $ECCODES_DEFINITION_PATH/grib1/localConcepts/lowm
+ $ECCODES_DEFINITION_PATH/grib1/localConcepts/rjtd
+
+ $ECCODES_DEFINITION_PATH/grib2/localConcepts/egrr
+ $ECCODES_DEFINITION_PATH/grib2/localConcepts/ekmi
+ $ECCODES_DEFINITION_PATH/grib2/localConcepts/eswi
+ $ECCODES_DEFINITION_PATH/grib2/localConcepts/lfpw
 "
 
 for dir in $defs_dirs; do
