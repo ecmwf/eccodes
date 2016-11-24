@@ -59,7 +59,7 @@ my %name_map = process("name.def");
 my $count = scalar(keys %name_map);
 
 ok($count > 0, "Check some params found");
-die "No params found" if ($count eq 0);
+die "No params found." if ($count eq 0);
 
 my %paramId_map   = process("paramId.def");
 print Data::Dumper->Dump([\%paramId_map], ["paramId_map"]), $/ if ($debug);
@@ -152,8 +152,7 @@ sub process {
     open FILE, $filename or die "Tried to open $filename\n$!";
     my @lines = <FILE>;
     close(FILE);
-
-    print "Processing $filename\n" if ($debug);
+    print "Processing $filename\n";
 
     my $error = 0; # boolean: 1 if at least one error encountered
     my %map1 = ();
@@ -173,13 +172,8 @@ sub process {
             $desc = $1;
             $desc =~ s/^\s+//;  #remove leading spaces
             $desc =~ s/\s+$//;  #remove trailing spaces
-            die "File: $filename, line: $lineNum: Description contains invalid characters" if (non_printable($desc));
-            die "File: $filename, line: $lineNum: Empty description" if ($desc eq "");
-        }
-        # Concept line: 'xxx' = {
-        elsif ($this =~ /^'(.*)' *= *{ *$/) {
-            $concept_value = $1;
-            die "File: $filename, line: $lineNum: Value contains invalid characters" if (non_printable($concept_value));
+            die "File: $filename, line: $lineNum: Description contains invalid characters." if (non_printable($desc));
+            die "File: $filename, line: $lineNum: Empty description." if ($desc eq "");
         }
         # key = value
         elsif ($this =~ /(\w+)\s*=\s*([^ ]+)\s*;/ && $desc) {
@@ -207,8 +201,9 @@ sub process {
             }
             $map2{$key} = $val;
         }
-        elsif ($this =~ /'(.*)'.*=/) {
+        elsif ($this =~ /'(.*)' *= *{/) {
             $concept = $1;
+            die "File: $filename, line: $lineNum: Value contains invalid characters." if (non_printable($concept));
             if ($filename eq 'cfVarName.def') {
                #if ($concept =~ /^[0-9]/) {
                # Check CF naming convention. Do not allow numeric initial char or ~
