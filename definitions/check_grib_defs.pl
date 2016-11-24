@@ -153,6 +153,8 @@ sub process {
     my @lines = <FILE>;
     close(FILE);
 
+    print "Processing $filename\n" if ($debug);
+
     my $error = 0; # boolean: 1 if at least one error encountered
     my %map1 = ();
     my %map2 = ();  # inner map
@@ -171,7 +173,13 @@ sub process {
             $desc = $1;
             $desc =~ s/^\s+//;  #remove leading spaces
             $desc =~ s/\s+$//;  #remove trailing spaces
+            die "File: $filename, line: $lineNum: Description contains invalid characters" if (non_printable($desc));
             die "File: $filename, line: $lineNum: Empty description" if ($desc eq "");
+        }
+        # Concept line: 'xxx' = {
+        elsif ($this =~ /^'(.*)' *= *{ *$/) {
+            $concept_value = $1;
+            die "File: $filename, line: $lineNum: Value contains invalid characters" if (non_printable($concept_value));
         }
         # key = value
         elsif ($this =~ /(\w+)\s*=\s*([^ ]+)\s*;/ && $desc) {
@@ -280,6 +288,11 @@ sub is_goodval {
 sub is_integer {
     my $val = shift;
     return ($val =~ /^\d+$/);
+}
+
+sub non_printable {
+    my $str = shift;
+    return ($str =~ /[^[:ascii:]]/);
 }
 
 ################
