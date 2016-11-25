@@ -1075,7 +1075,7 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
                         bd->shortName, bd->code, bd->width,
                         bd->scale, bd->reference);
                 for (j=0;j<grib_darray_used_size(self->numericValues->v[elementIndex]);j++)
-                    grib_context_log(c,GRIB_LOG_ERROR,"%g ",self->numericValues->v[elementIndex]->v[i]);
+                    grib_context_log(c,GRIB_LOG_ERROR,"value[%d]\t= %g", j,self->numericValues->v[elementIndex]->v[j]);
             }
         } else {
             if (self->numericValues->v[subsetIndex] == NULL) {
