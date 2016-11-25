@@ -504,9 +504,9 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     if( !grib_is_missing_double(a,value) ) {
         sval=dval_to_string(c,value);
         if (r!=0)
-            fprintf(self->dumper.out,"  codes_set_double(h, \"#%d#%s\", %s);\n", r,a->name, sval);
+            fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double(h, \"#%d#%s\", %s), 0);\n", r,a->name, sval);
         else
-            fprintf(self->dumper.out,"  codes_set_double(h, \"%s\", %s);\n", a->name, sval);
+            fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double(h, \"%s\", %s), 0);\n", a->name, sval);
 
         grib_context_free(c,sval);
     }
@@ -802,7 +802,7 @@ static void header(grib_dumper* d, grib_handle* h)
 static void footer(grib_dumper* d, grib_handle* h)
 {
     grib_dumper_bufr_encode_C *self = (grib_dumper_bufr_encode_C*)d;
-    fprintf(self->dumper.out,"\n  codes_set_long(h, \"pack\", 1);\n");
+    fprintf(self->dumper.out,"\n  CODES_CHECK(codes_set_long(h, \"pack\", 1), 0);\n");
     if (d->count==1)
         fprintf(self->dumper.out,"  fout = fopen(\"outfile.bufr\", \"w\");\n");
     else
