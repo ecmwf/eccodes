@@ -362,7 +362,6 @@ void grib_smart_table_delete(grib_context *c);
 /* grib_accessor_class_smart_table_column.c */
 
 /* grib_accessor_class_codetable.c */
-int grib_strcasecmp(const char *s1, const char *s2);
 void grib_codetable_delete(grib_context *c);
 
 /* grib_accessor_class_codetable_units.c */
@@ -1420,9 +1419,7 @@ int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNu
 int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber);
 int is_index_file(const char *filename);
 char get_dir_separator_char(void);
-const char *extract_filename(const char *filepath);
 char *codes_getenv(const char *name);
-char **string_split(char *inputString, const char *delimiter);
 
 /* bufr_util.c */
 int compute_bufr_key_rank(grib_handle *h, grib_string_list *keys, const char *key);
