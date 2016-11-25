@@ -211,7 +211,7 @@ static void destroy(grib_context* context,grib_action* act)
     grib_context_free_persistent(context, self->basename);
 }
 
-grib_hash_array_value* get_hash_array_impl(grib_handle* h,grib_action* a)
+static grib_hash_array_value* get_hash_array_impl(grib_handle* h,grib_action* a)
 {
     char buf[1024]={0,};
     char master[1024]={0,};
