@@ -972,7 +972,7 @@
 				RelativePath="..\..\..\src\grib_accessor_class_int8.c"
 				>
 			</File>
-            <File
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_iterator.c"
 				>
 			</File>
@@ -1677,6 +1677,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_optimize_decimal_factor.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\tools\grib_options.c"
 				>
 			</File>
@@ -1742,6 +1746,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\md5.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\string_util.c"
 				>
 			</File>
 			<File
