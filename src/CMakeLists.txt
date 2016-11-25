@@ -349,6 +349,7 @@ list( APPEND grib_api_srcs
     grib_expression.c
     grib_util.c
     bufr_util.c
+    string_util.c
     functions.c
     grib_accessor_class.h
     grib_accessor_factory.h

@@ -2815,17 +2815,6 @@ int codes_f_bufr_copy_data(int* gid1,int* gid2){
 
 
 /*****************************************************************************/
-/* Strip whitespace from the end of a string */
-static void rtrim(char* s)
-{
-    size_t len = 0;
-    if (!s) return;
-    len = strlen(s);
-    while (len > 0 && isspace((unsigned char)s[len - 1]))
-        len--;
-    s[len] = '\0';
-}
-
 int grib_f_set_string_array_(int* gid, char* key, char* val,int* nvals,int* slen,int len)
 {
     grib_handle *h = get_handle(*gid);

@@ -364,6 +364,7 @@ libeccodes_la_prototypes= \
 	grib_expression.c \
 	grib_util.c \
 	bufr_util.c \
+	string_util.c \
 	functions.c \
 	codes_memfs.c \
 	grib_optimize_decimal_factor.c \

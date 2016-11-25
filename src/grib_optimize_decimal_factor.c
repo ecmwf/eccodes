@@ -15,7 +15,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-double epsilon ()
+static double epsilon()
 {
     volatile double e = 1.;
     while (1. != (1. + e))

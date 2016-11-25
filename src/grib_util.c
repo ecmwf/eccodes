@@ -1636,16 +1636,6 @@ char get_dir_separator_char(void)
     return DIR_SEPARATOR_CHAR;
 }
 
-/* Return the component after final slash */
-/*  "/tmp/x"  -> "x"  */
-/*  "/tmp/"   -> ""   */
-const char* extract_filename(const char* filepath)
-{
-    const char* s = strrchr(filepath, get_dir_separator_char());
-    if (!s) return filepath;
-    else    return s + 1;
-}
-
 char* codes_getenv(const char* name)
 {
     /* Look for the new ecCodes environment variable names */
@@ -1679,51 +1669,5 @@ char* codes_getenv(const char* name)
     if (result == NULL) {
         result = getenv(old_name);
     }
-    return result;
-}
-
-
-/* Returns an array of strings the last of which is NULL */
-char** string_split(char* inputString, const char* delimiter)
-{
-    char** result = NULL;
-    char* p = inputString;
-    char* lastDelimiter = NULL;
-    char* aToken = NULL;
-    size_t numTokens = 0;
-    size_t strLength = 0;
-    size_t index = 0;
-    char delimiterChar = 0;
-
-    DebugAssert(inputString);
-    DebugAssert( delimiter && (strlen(delimiter)==1) );
-    delimiterChar = delimiter[0];
-    while (*p) {
-        const char ctmp = *p;
-        if (ctmp == delimiterChar) {
-            ++numTokens;
-            lastDelimiter = p;
-        }
-        p++;
-    }
-    strLength = strlen(inputString);
-    if (lastDelimiter < (inputString + strLength - 1)) {
-        ++numTokens; /* there is a trailing token */
-    }
-    ++numTokens; /* terminating NULL string to mark the end */
-
-    result = (char**)malloc(numTokens * sizeof(char*));
-    Assert(result);
-
-    /* Start tokenizing */
-    aToken = strtok(inputString, delimiter);
-    while (aToken) {
-        Assert(index < numTokens);
-        *(result + index++) = strdup(aToken);
-        aToken = strtok(NULL, delimiter);
-    }
-    Assert(index == numTokens - 1);
-    *(result + index) = '\0';
-
     return result;
 }
