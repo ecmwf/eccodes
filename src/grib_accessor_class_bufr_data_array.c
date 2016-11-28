@@ -671,10 +671,10 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     /* ECC-379: First determine if we need to change any out-of-range value */
     if (dont_fail_if_out_of_range) {
         while (ii<nvals) {
-            /* Treatment of out-of-range values. Turn them into 'missing' values */
+            /* Turn out-of-range values into 'missing' */
             if (*v!=GRIB_MISSING_DOUBLE && (*v < minAllowed || *v > maxAllowed)) {
-                printf("Value at index %ld (%g) out of range (minAllowed=%g, maxAllowed=%g). Setting it to missing value\n",
-                        (long)ii, *v, minAllowed, maxAllowed);
+                printf("encode_double_array: %s. Value at index %ld (%g) out of range (minAllowed=%g, maxAllowed=%g). Setting it to missing value\n",
+                        bd->shortName, (long)ii, *v, minAllowed, maxAllowed);
                 *v = GRIB_MISSING_DOUBLE;
             }
             ii++;
@@ -715,7 +715,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
             localWidth++;
             allone=grib_power(localWidth,2)-1;
         }
-        if (localWidth == 1 ) localWidth++;
+        if (localWidth == 1) localWidth++;
     } else {
         if (thereIsAMissing==1) localWidth=1;
         else localWidth=0;
@@ -774,8 +774,8 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_
     }
     else if (value>maxAllowed || value<minAllowed) {
         if (dont_fail_if_out_of_range) {
-            printf("Value (%g) out of range (minAllowed=%g, maxAllowed=%g). Setting it to missing value\n",
-                   value, minAllowed, maxAllowed);
+            printf("encode_double_value: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g). Setting it to missing value\n",
+                   bd->shortName, value, minAllowed, maxAllowed);
             value = GRIB_MISSING_DOUBLE;  /* Ignore the bad value and instead use 'missing' */
             grib_set_bits_on(buff->data,pos,modifiedWidth);
         } else {
