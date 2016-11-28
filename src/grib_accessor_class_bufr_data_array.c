@@ -597,12 +597,13 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     double localRange,modifiedFactor,inverseFactor;
     size_t ii;
     int nvals = 0;
-    double min,max,maxAllowed,minAllowed;
+    double min=0,max=0,maxAllowed,minAllowed;
     double* v=NULL;
     double* values=NULL;
     int thereIsAMissing=0;
     int is_constant;
     double val0;
+    const int dont_fail_if_out_of_range = c->bufr_set_to_missing_if_out_of_range;/* ECC-379 */
 
     if (self->iss_list==NULL) return GRIB_INTERNAL_ERROR;
 
@@ -667,8 +668,30 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
         v++;
         ii++;
     }
-    min=*v;
-    max=*v;
+    /* ECC-379: First determine if we need to change any out-of-range value */
+    if (dont_fail_if_out_of_range) {
+        while (ii<nvals) {
+            /* Treatment of out-of-range values. Turn them into 'missing' values */
+            if (*v!=GRIB_MISSING_DOUBLE && (*v < minAllowed || *v > maxAllowed)) {
+                printf("Value at index %ld (%g) out of range (minAllowed=%g, maxAllowed=%g). Setting it to missing value\n",
+                        (long)ii, *v, minAllowed, maxAllowed);
+                *v = GRIB_MISSING_DOUBLE;
+            }
+            ii++;
+            v++;
+        }
+    }
+    /* Determine min and max values. */
+    /* Note: value[0] could be missing so cannot set min/max to this.
+     * Find first value which is non-missing as a starting point */
+    for (i=0;i<nvals;i++) {
+        if (values[i] != GRIB_MISSING_DOUBLE) {
+            min = max = values[i];
+            break;
+        }
+    }
+    ii=0;
+    v=values;
     while (ii<nvals) {
         if (*v<min && *v!=GRIB_MISSING_DOUBLE) min=*v;
         if (*v>max && *v!=GRIB_MISSING_DOUBLE) max=*v;
@@ -676,9 +699,9 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
         ii++;
         v++;
     }
-    if (max>maxAllowed && max!=GRIB_MISSING_DOUBLE) 
+    if (max>maxAllowed && max!=GRIB_MISSING_DOUBLE)
         return GRIB_OUT_OF_RANGE;
-    if (min<minAllowed && min!=GRIB_MISSING_DOUBLE) 
+    if (min<minAllowed && min!=GRIB_MISSING_DOUBLE)
         return GRIB_OUT_OF_RANGE;
 
     reference=round(min*inverseFactor);
@@ -737,18 +760,29 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_
     int err=0;
     int modifiedWidth,modifiedReference;
     double modifiedFactor;
+    const int dont_fail_if_out_of_range = c->bufr_set_to_missing_if_out_of_range; /* ECC-379 */
 
     modifiedReference= bd->reference;
     modifiedFactor= bd->factor;
     modifiedWidth= bd->width;
+    maxAllowed=(grib_power(modifiedWidth,2)+modifiedReference)*modifiedFactor;
+    minAllowed=modifiedReference*modifiedFactor;
 
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
     if (value==GRIB_MISSING_DOUBLE) {
         grib_set_bits_on(buff->data,pos,modifiedWidth);
-    } else {
-        maxAllowed=(grib_power(modifiedWidth,2)+modifiedReference)*modifiedFactor;
-        minAllowed=modifiedReference*modifiedFactor;
-        if (value>maxAllowed || value<minAllowed) return GRIB_OUT_OF_RANGE;
+    }
+    else if (value>maxAllowed || value<minAllowed) {
+        if (dont_fail_if_out_of_range) {
+            printf("Value (%g) out of range (minAllowed=%g, maxAllowed=%g). Setting it to missing value\n",
+                   value, minAllowed, maxAllowed);
+            value = GRIB_MISSING_DOUBLE;  /* Ignore the bad value and instead use 'missing' */
+            grib_set_bits_on(buff->data,pos,modifiedWidth);
+        } else {
+            return GRIB_OUT_OF_RANGE;
+        }
+    }
+    else {
         lval=round(value/modifiedFactor)-modifiedReference;
         grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
     }
