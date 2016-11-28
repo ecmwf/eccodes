@@ -803,7 +803,7 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int *err)
     fh=fopen(filename,"r");
     if (!fh) {
         grib_context_log(c,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),
-                "Unable to write in file %s",filename);
+                "Unable to read file %s",filename);
         perror(filename);
         *err=GRIB_IO_PROBLEM;
         return NULL;
