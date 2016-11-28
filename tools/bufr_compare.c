@@ -584,6 +584,13 @@ static void save_error(grib_context* c,const char* key)
     }
 }
 
+static char* double_as_string(grib_context* c, double v)
+{
+    char* sval=grib_context_malloc_clear(c, sizeof(char)*40);
+    if (v == GRIB_MISSING_DOUBLE) sprintf(sval,"MISSING");
+    else                          sprintf(sval,"%.20e",v);
+    return sval;
+}
 static int compare_values(grib_runtime_options* options, grib_handle* handle1, grib_handle *handle2, const char *name, int type)
 {
     size_t len1 = 0;
@@ -906,13 +913,22 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                 save_error(c,name);
                 if (len1>1) {
                     printf("double [%s]: %d out of %ld different\n",name,countdiff,(long)len1);
-                    if (compareAbsolute) printf(" max");
-                    printf(" absolute diff. = %.16e,",fabs(dval1[imaxdiff]-dval2[imaxdiff]));
-                    if (!compareAbsolute) printf(" max");
-                    printf(" relative diff. = %g",relative_error(dval1[imaxdiff],dval2[imaxdiff],value_tolerance));
-                    printf("\n\tmax diff. element %d: %.20e %.20e",
-                            imaxdiff,dval1[imaxdiff],dval2[imaxdiff]);
-                    printf("\n\ttolerance=%.16e",value_tolerance);
+                    if (dval1[imaxdiff] != GRIB_MISSING_DOUBLE && dval2[imaxdiff] != GRIB_MISSING_DOUBLE) {
+                        if (compareAbsolute) printf(" max");
+                        printf(" absolute diff. = %.16e,",fabs(dval1[imaxdiff]-dval2[imaxdiff]));
+                        if (!compareAbsolute) printf(" max");
+                        printf(" relative diff. = %g",relative_error(dval1[imaxdiff],dval2[imaxdiff],value_tolerance));
+                        printf("\n\tmax diff. element %d: %.20e %.20e",
+                                imaxdiff,dval1[imaxdiff],dval2[imaxdiff]);
+                        printf("\n\ttolerance=%.16e",value_tolerance);
+                    } else {
+                        /* One or both values are missing */
+                        char* sval1 = double_as_string(c, dval1[imaxdiff]);
+                        char* sval2 = double_as_string(c, dval2[imaxdiff]);
+                        printf("\tdiff. element %d: %s %s", imaxdiff, sval1, sval2);
+                        grib_context_free(c,sval1);
+                        grib_context_free(c,sval2);
+                    }
                     if (packingError2!=0 || packingError1!=0)
                         printf(" packingError: [%g] [%g]",packingError1,packingError2);
 
@@ -927,11 +943,19 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                     }
                     printf("\n");
                 } else {
-                    printf("double [%s]: [%.20e] != [%.20e]\n",
-                            name,dval1[0],dval2[0]);
-                    printf("\tabsolute diff. = %g,",fabs(dval1[0]-dval2[0]));
-                    printf(" relative diff. = %g\n",relative_error(dval1[0],dval2[0],value_tolerance));
-                    printf("\ttolerance=%g\n",value_tolerance);
+                    if (dval1[0] != GRIB_MISSING_DOUBLE && dval2[0] != GRIB_MISSING_DOUBLE) {
+                        printf("double [%s]: [%.20e] != [%.20e]\n", name, dval1[0], dval2[0]);
+                        printf("\tabsolute diff. = %g,",fabs(dval1[0]-dval2[0]));
+                        printf(" relative diff. = %g\n",relative_error(dval1[0],dval2[0],value_tolerance));
+                        printf("\ttolerance=%g\n",value_tolerance);
+                    } else {
+                        /* One or both values are missing */
+                        char* sval1 = double_as_string(c, dval1[0]);
+                        char* sval2 = double_as_string(c, dval2[0]);
+                        printf("double [%s]: [%s] != [%s]\n", name, sval1, sval2);
+                        grib_context_free(c,sval1);
+                        grib_context_free(c,sval2);
+                    }
                 }
             }
         }
