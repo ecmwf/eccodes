@@ -24,6 +24,7 @@ int main(int argc,char* argv[])
     grib_keys_iterator* kiter = NULL;
     char* input_filename = NULL;
     FILE* f = NULL;
+    grib_context* c = grib_context_get_default();
     
     if (argc!=2) usage(argv[0]);
     input_filename = argv[1];
@@ -40,7 +41,9 @@ int main(int argc,char* argv[])
     {
         char* kname = codes_bufr_keys_iterator_get_name(kiter);
         printf("%s\n", kname);
+        grib_context_free(c, kname);
     }
     grib_keys_iterator_delete(kiter);
+    codes_handle_delete(h);
     return 0;
 }
