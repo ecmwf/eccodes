@@ -742,8 +742,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
             if(grib_inline_strcmp(sval1,sval2) != 0)
             {
                 printInfo(handle1);
-                printf("string [%s]: [%s] != [%s]\n",
-                        name,sval1,sval2);
+                printf("string [%s]: [%s] != [%s]\n", name, sval1, sval2);
                 err1 = GRIB_VALUE_MISMATCH;
                 save_error(c,name);
             }
@@ -798,14 +797,11 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                 save_error(c,name);
                 err1 = GRIB_VALUE_MISMATCH;
                 if(len1 == 1)
-                    printf("long [%s]: [%ld] != [%ld]\n",
-                            name,*lval1,*lval2);
+                    printf("long [%s]: [%ld] != [%ld]\n", name, *lval1, *lval2);
                 else
-                    printf("long [%s] %d out of %ld different\n",
-                            name,countdiff,(long)len1);
+                    printf("long [%s] %d out of %ld different\n", name, countdiff, (long)len1);
             }
         }
-
 
         grib_context_free(handle1->context,lval1);
         grib_context_free(handle2->context,lval2);
@@ -996,7 +992,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
             if(memcmp(uval1,uval2,len1) != 0)
             {
                 int i;
-                for(i = 0; i < len1; i++)
+                for(i = 0; i < len1; i++) {
                     if(uval1[i] != uval2[i])
                     {
                         printInfo(handle1);
@@ -1011,6 +1007,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                         err1 = GRIB_VALUE_MISMATCH;
                         break;
                     }
+                }
                 err1 = GRIB_VALUE_MISMATCH;
             }
         }
@@ -1066,6 +1063,7 @@ static int compare_attributes(grib_handle* handle1, grib_handle* handle2, grib_r
 
     return ret;
 }
+
 static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options,
         grib_accessor* a, const char* prefix, int* err)
 {
