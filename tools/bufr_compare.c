@@ -1141,6 +1141,8 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
             prefix = (char*)xa->name;
         }
 
+        if (blacklisted(prefix)) continue;
+
         /* Compare the key itself */
         if (compare_values(options, handle1, handle2, prefix, GRIB_TYPE_UNDEFINED)) {
             err++;
