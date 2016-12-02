@@ -24,6 +24,7 @@ list( APPEND test_bins
       grib_2nd_order_numValues
       optimize_scaling
       optimize_scaling_sh
+      ecc-386
 )
 
 foreach( tool ${test_bins} )
@@ -219,4 +220,11 @@ ecbuild_add_test( TARGET eccodes_t_grib_check_param_concepts
                   TYPE SCRIPT
                   CONDITION ENABLE_EXTRA_TESTS
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_param_concepts.sh
+)
+# Performance test. Must have -DENABLE_GRIB_TIMER=ON
+ecbuild_add_test( TARGET eccodes_t_ecc-386
+                  TYPE SCRIPT
+                  CONDITION ENABLE_EXTRA_TESTS AND ENABLE_GRIB_TIMER
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ecc-386.sh
+                  TEST_DEPENDS eccodes_download_gribs
 )

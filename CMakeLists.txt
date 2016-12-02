@@ -162,7 +162,7 @@ endif()
 ###############################################################################
 # other options
 
-if( GRIB_TIMER )
+if( HAVE_GRIB_TIMER )
     set( GRIB_TIMER 1 )
 else()
     set( GRIB_TIMER 0 )
