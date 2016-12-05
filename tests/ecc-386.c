@@ -30,8 +30,8 @@ int main(int argc, char** argv)
     grib_handle *h = NULL;
     size_t values_len = 0;
     double *values = NULL;
-    double time_taken_actual = 0;
-    const double time_taken_expected = 6; /* seconds */
+    double duration_actual = 0;
+    const double duration_max = 3; /* seconds */
     const int num_repetitions = 1000;
 
     if (argc<2) usage(argv[0]);
@@ -61,13 +61,13 @@ int main(int argc, char** argv)
         GRIB_CHECK(grib_get_double_array(h,"values",values,&values_len),0);
     }
     grib_timer_stop(tes,0);
-    time_taken_actual = grib_timer_value(tes);
-    if (time_taken_actual > time_taken_expected) {
+    duration_actual = grib_timer_value(tes);
+    if (duration_actual > duration_max) {
         fprintf(stderr, "Decoding took longer than expected! actual time=%g, expected to take less than %g seconds",
-                time_taken_actual, time_taken_expected);
+                duration_actual, duration_max);
         return 1;
     }
-    printf("Test passed. Actual decode time=%g\n", time_taken_actual);
+    printf("Test passed. Actual decode time=%g\n", duration_actual);
     free(values);
     grib_handle_delete(h);
     fclose(in);
