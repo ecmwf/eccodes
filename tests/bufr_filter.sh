@@ -139,7 +139,7 @@ echo "Test: attributes" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
 cat > ${f}.ref <<EOF
 pressure=100910 Pa
 pressure->code=010004
