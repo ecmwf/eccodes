@@ -21,7 +21,6 @@
 #undef PACKAGE_STRING
 #undef PACKAGE_TARNAME
 #undef PACKAGE_VERSION
-#include "jasper/jasper.h"
 #endif
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS

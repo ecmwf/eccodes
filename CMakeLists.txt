@@ -148,6 +148,8 @@ if( ENABLE_JPG )
         list( APPEND ECCODES_TPLS Jasper )
         set( HAVE_JPEG 1 )
         set( HAVE_LIBJASPER 1 )
+        # Extract Jasper's major version number to enable conditional code. See ECC-396
+        string(REGEX REPLACE "^([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1" JASPER_VERSION_MAJOR "${JASPER_VERSION_STRING}")
     endif()
 
     if( OPENJPEG_FOUND )
