@@ -112,6 +112,13 @@
 	 indicatorOfTypeOfLevel = 105 ;
 	 level = 10 ;
 	}
+#10 metre V wind component
+'10v' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 34 ;
+	 indicatorOfTypeOfLevel = 105 ;
+	 topLevel = 10 ;
+	}
 #2 metre temperature
 '2t' = {
 	 table2Version = 200 ;
