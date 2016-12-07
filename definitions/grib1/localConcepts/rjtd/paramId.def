@@ -70,6 +70,11 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 39 ;
 	}
+#Total column water vapour
+'137' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 54 ;
+	}
 #Vorticity (relative)
 '138' = {
 	 table2Version = 200 ;
@@ -649,11 +654,6 @@
 '3053' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 53 ;
-	}
-#Precipitable water
-'3054' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 54 ;
 	}
 #Vapour pressure
 '3055' = {

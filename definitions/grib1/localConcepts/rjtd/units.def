@@ -70,6 +70,11 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 39 ;
 	}
+#Total column water vapour
+'kg m**-2' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 54 ;
+	}
 #Vorticity (relative)
 's**-1' = {
 	 table2Version = 200 ;
@@ -649,11 +654,6 @@
 'kg kg**-1' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 53 ;
-	}
-#Precipitable water
-'kg m**-2' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 54 ;
 	}
 #Vapour pressure
 'Pa' = {

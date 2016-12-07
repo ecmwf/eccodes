@@ -70,6 +70,11 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 39 ;
 	}
+#Total column water vapour
+'tcwv' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 54 ;
+	}
 #Vorticity (relative)
 'vo' = {
 	 table2Version = 200 ;
@@ -649,11 +654,6 @@
 'mixr' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 53 ;
-	}
-#Precipitable water
-'pwat' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 54 ;
 	}
 #Vapour pressure
 'vp' = {

@@ -70,6 +70,11 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 39 ;
 	}
+#Total column water vapour
+'Total column water vapour' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 54 ;
+	}
 #Vorticity (relative)
 'Vorticity (relative)' = {
 	 table2Version = 200 ;
@@ -649,11 +654,6 @@
 'Humidity mixing ratio' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 53 ;
-	}
-#Precipitable water
-'Precipitable water' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 54 ;
 	}
 #Vapour pressure
 'Vapour pressure' = {
