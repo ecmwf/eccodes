@@ -243,8 +243,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Total ozone
-'tozne' = {
+#Total column integrated ozone
+'tcioz' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 10 ;
 	}

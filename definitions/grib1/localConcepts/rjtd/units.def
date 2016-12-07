@@ -243,7 +243,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Total ozone
+#Total column integrated ozone
 'DU' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 10 ;
