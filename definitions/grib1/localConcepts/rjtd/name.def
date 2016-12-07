@@ -395,11 +395,6 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 159 ;
 	}
-#Zonal thermal energy flux
-'Zonal thermal energy flux' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 190 ;
-	}
 #Convective meridional acceleration
 'Convective meridional acceleration' = {
 	 table2Version = 200 ;
@@ -894,6 +889,11 @@
 'Percentage of vegetation' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 87 ;
+	}
+#Vertical integral of eastward heat flux
+'Vertical integral of eastward heat flux' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 190 ;
 	}
 #Vertical integral of northward heat flux
 'Vertical integral of northward heat flux' = {

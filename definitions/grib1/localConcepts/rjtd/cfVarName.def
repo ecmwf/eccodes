@@ -395,11 +395,6 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 159 ;
 	}
-#Zonal thermal energy flux
-'utheclm' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 190 ;
-	}
 #Convective meridional acceleration
 'cnvvahbl' = {
 	 table2Version = 200 ;
@@ -894,6 +889,11 @@
 'vegrea' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 87 ;
+	}
+#Vertical integral of eastward heat flux
+'vithee' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 190 ;
 	}
 #Vertical integral of northward heat flux
 'vithen' = {

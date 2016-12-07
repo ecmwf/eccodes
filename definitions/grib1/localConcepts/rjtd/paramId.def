@@ -395,11 +395,6 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 159 ;
 	}
-#Zonal thermal energy flux
-'260630' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 190 ;
-	}
 #Convective meridional acceleration
 '260632' = {
 	 table2Version = 200 ;
@@ -894,6 +889,11 @@
 '160199' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 87 ;
+	}
+#Vertical integral of eastward heat flux
+'162069' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 190 ;
 	}
 #Vertical integral of northward heat flux
 '162070' = {
