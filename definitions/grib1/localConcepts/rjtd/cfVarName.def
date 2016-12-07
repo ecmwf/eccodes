@@ -105,6 +105,13 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 52 ;
 	}
+#10 metre U wind component
+'u10' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 33 ;
+	 indicatorOfTypeOfLevel = 105 ;
+	 level = 10 ;
+	}
 #2 metre temperature
 't2m' = {
 	 table2Version = 200 ;
