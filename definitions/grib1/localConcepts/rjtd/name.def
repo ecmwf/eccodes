@@ -165,6 +165,13 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 123 ;
 	}
+#2m specific humidity
+'2m specific humidity' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 51 ;
+	 indicatorOfTypeOfLevel = 105 ;
+	 level = 2 ;
+	}
 #Convective snow
 'Convective snow' = {
 	 table2Version = 200 ;
