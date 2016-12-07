@@ -400,11 +400,6 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 190 ;
 	}
-#Meridional thermal energy flux
-'W m**-1' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 191 ;
-	}
 #Convective meridional acceleration
 'm s**-1 per day' = {
 	 table2Version = 200 ;
@@ -899,6 +894,11 @@
 '%' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 87 ;
+	}
+#Vertical integral of northward heat flux
+'W m**-1' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 191 ;
 	}
 #Vertical integral of eastward water vapour flux
 'kg m**-1 s**-1' = {

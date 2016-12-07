@@ -400,11 +400,6 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 190 ;
 	}
-#Meridional thermal energy flux
-'260631' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 191 ;
-	}
 #Convective meridional acceleration
 '260632' = {
 	 table2Version = 200 ;
@@ -899,6 +894,11 @@
 '160199' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 87 ;
+	}
+#Vertical integral of northward heat flux
+'162070' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 191 ;
 	}
 #Vertical integral of eastward water vapour flux
 '162071' = {

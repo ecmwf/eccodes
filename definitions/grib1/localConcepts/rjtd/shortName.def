@@ -400,11 +400,6 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 190 ;
 	}
-#Meridional thermal energy flux
-'vtheclm' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 191 ;
-	}
 #Convective meridional acceleration
 'cnvvahbl' = {
 	 table2Version = 200 ;
@@ -899,6 +894,11 @@
 'vegrea' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 87 ;
+	}
+#Vertical integral of northward heat flux
+'vithen' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 191 ;
 	}
 #Vertical integral of eastward water vapour flux
 'viwve' = {
