@@ -220,6 +220,13 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 155 ;
 	}
+#Surface air relative humidity
+'Surface air relative humidity' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 52 ;
+	 indicatorOfTypeOfLevel = 105 ;
+	 level = 2 ;
+	}
 #Clear Sky Downward Solar Flux
 'Clear Sky Downward Solar Flux' = {
 	 table2Version = 200 ;
