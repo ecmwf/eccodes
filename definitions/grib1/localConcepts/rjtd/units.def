@@ -59,6 +59,12 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 51 ;
 	}
+#Surface pressure
+'Pa' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 1 ;
+	 indicatorOfTypeOfLevel = 1 ;
+	}
 #Vertical velocity
 'Pa s**-1' = {
 	 table2Version = 200 ;

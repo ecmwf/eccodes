@@ -59,6 +59,12 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 51 ;
 	}
+#Surface pressure
+'sp' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 1 ;
+	 indicatorOfTypeOfLevel = 1 ;
+	}
 #Vertical velocity
 'w' = {
 	 table2Version = 200 ;
@@ -110,7 +116,7 @@
 	 indicatorOfParameter = 229 ;
 	}
 #Snow depth
-'sd' = {
+'sde' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 66 ;
 	}
@@ -830,7 +836,7 @@
 	 indicatorOfParameter = 112 ;
 	}
 #Net short-wave radiation flux(atmosph.top)
-'nlwrt' = {
+'nswrt' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 113 ;
 	}
@@ -895,7 +901,7 @@
 	 indicatorOfParameter = 87 ;
 	}
 #Vertical integral of eastward water vapour flux
-'vi' = {
+'viwve' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 157 ;
 	}
