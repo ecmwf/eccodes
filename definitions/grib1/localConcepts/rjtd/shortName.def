@@ -19,6 +19,11 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 32 ;
 	}
+#Montgomery potential
+'mont' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 37 ;
+	}
 #Pressure
 'pres' = {
 	 table2Version = 200 ;
@@ -588,11 +593,6 @@
 'wdir' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 31 ;
-	}
-#Montgomery stream Function
-'mntsf' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 37 ;
 	}
 #Sigma coordinate vertical velocity
 'sgcvv' = {
