@@ -191,8 +191,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 123 ;
 	}
-#2m specific humidity
-'2m specific humidity' = {
+#2 metre specific humidity
+'2 metre specific humidity' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 51 ;
 	 indicatorOfTypeOfLevel = 105 ;

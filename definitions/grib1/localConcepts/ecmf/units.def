@@ -3714,7 +3714,7 @@
 	 table2Version = 174 ;
 	 indicatorOfParameter = 52 ;
 	}
-#2m specific humidity
+#2 metre specific humidity
 'kg kg**-1' = {
 	 table2Version = 174 ;
 	 indicatorOfParameter = 96 ;
