@@ -253,8 +253,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 155 ;
 	}
-#Surface air relative humidity
-'Surface air relative humidity' = {
+#2 metre relative humidity
+'2 metre relative humidity' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 52 ;
 	 indicatorOfTypeOfLevel = 105 ;

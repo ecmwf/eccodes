@@ -488,8 +488,8 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
 	}
-#Surface air relative humidity
-'Surface air relative humidity' = {
+#2 metre relative humidity
+'2 metre relative humidity' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 1 ;
