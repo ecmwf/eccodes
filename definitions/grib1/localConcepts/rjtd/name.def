@@ -19,6 +19,11 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 32 ;
 	}
+#Sea-ice cover
+'Sea-ice cover' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 91 ;
+	}
 #Montgomery potential
 'Montgomery potential' = {
 	 table2Version = 200 ;
@@ -730,11 +735,6 @@
 'Density' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 89 ;
-	}
-#Ice cover (1=ice, 0=no ice)
-'Ice cover (1=ice, 0=no ice)' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 91 ;
 	}
 #Ice thickness
 'Ice thickness' = {
