@@ -100,6 +100,13 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 52 ;
 	}
+#2 metre temperature
+'K' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 11 ;
+	 indicatorOfTypeOfLevel = 105 ;
+	 level = 2 ;
+	}
 #Land-sea mask
 '(0 - 1)' = {
 	 table2Version = 200 ;
