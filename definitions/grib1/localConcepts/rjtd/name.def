@@ -285,11 +285,6 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 151 ;
 	}
-#Meridional water vapour flux
-'Meridional water vapour flux' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 152 ;
-	}
 #Adiabatic meridional acceleration
 'Adiabatic meridional acceleration' = {
 	 table2Version = 200 ;
@@ -904,6 +899,11 @@
 'Vertical integral of eastward water vapour flux' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 157 ;
+	}
+#Vertical integral of northward water vapour flux
+'Vertical integral of northward water vapour flux' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 152 ;
 	}
 #specific cloud water content
 'specific cloud water content' = {

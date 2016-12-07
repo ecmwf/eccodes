@@ -285,11 +285,6 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 151 ;
 	}
-#Meridional water vapour flux
-'kg m**-1 s**-1' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 152 ;
-	}
 #Adiabatic meridional acceleration
 'm s**-1 per day' = {
 	 table2Version = 200 ;
@@ -904,6 +899,11 @@
 'kg m**-1 s**-1' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 157 ;
+	}
+#Vertical integral of northward water vapour flux
+'kg m**-1 s**-1' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 152 ;
 	}
 #specific cloud water content
 'kg kg**-1' = {
