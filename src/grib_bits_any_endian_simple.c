@@ -114,6 +114,7 @@ int grib_decode_double_array(const unsigned char* p, long *bitp, long bitsPerVal
             }
             x=((lvalue*s)+reference_value)*d;
             val[i] = (double)x;
+            /*  *bitp += bitsPerValue * n_vals; */
         }
     }
     else
