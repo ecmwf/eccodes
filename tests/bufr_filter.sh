@@ -171,7 +171,7 @@ echo "Test: access element by rank" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
 cat > ${f}.ref <<EOF
 pressure=98500 Pa
 pressure=102000 101800 100000 98500 96400 92500 92100 89700 
@@ -205,7 +205,7 @@ echo "Test: access marker operators" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
 cat > ${f}.ref <<EOF
 brightnessTemperature={-1e+100,290.8,-1e+100,289.7,289.5,289.5,289.4,287.5,
 287.4,288.3,288.2,-1e+100,-1e+100,-1e+100,-1e+100,-1e+100,
@@ -279,7 +279,7 @@ echo "Test: access marker operators 2" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
 cat > ${f}.ref <<EOF
 pressure=102000 101800 100000 98500 96400 92500 92100 89700 
 88100 86100 85000 84400 79400 79000 78300 77300 
@@ -331,7 +331,7 @@ echo "file: $f" >> $fLog
 ${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
 rm -f ${f}.log
-${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
 
 REFERENCE_FILE="../../tests/asca_139.t1.ref"
 diff $REFERENCE_FILE ${f}.log
@@ -356,7 +356,7 @@ echo "Test: access by condition 2" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
 cat > ${f}.ref <<EOF
 ----- /verticalSoundingSignificance=4/airTemperature -----
 272.1 269.5 268.1 267.9 266.7 266.1 264.9 264.9 
@@ -472,7 +472,7 @@ echo "Test: get string" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
 cat > ${f}.ref <<EOF
 WYM9567
 EOF
@@ -496,7 +496,7 @@ echo "Test: get string array and stringValues" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
 cat > ${f}.ref <<EOF
 TROMSO-HOLT          
 PASVIK               
@@ -765,7 +765,7 @@ echo "Test: access subsets by condition" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
 cat > ${f}.ref <<EOF
 stationId=01371
 latitude=61.122
@@ -795,7 +795,7 @@ echo "Test: access subsets and attribute by condition" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
 cat > ${f}.ref <<EOF
 /subsetNumber=1/airTemperature->percentConfidence=70 %
 EOF
@@ -818,7 +818,7 @@ echo "Test: set key by rank" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 
-${tools_dir}codes_bufr_filter $fRules $f 2>> ${f}.log 1>> ${f}.log
+${tools_dir}codes_bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
 cat > ${f}.ref <<EOF
 #4#airTemperature=300.1
 EOF
