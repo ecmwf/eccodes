@@ -3715,7 +3715,7 @@
 	 indicatorOfParameter = 52 ;
 	}
 #2 metre specific humidity
-'~' = {
+'2sh' = {
 	 table2Version = 174 ;
 	 indicatorOfParameter = 96 ;
 	}
