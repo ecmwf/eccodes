@@ -361,6 +361,7 @@ libeccodes_la_prototypes= \
 	grib_iterator_class_gen.c \
 	grib_iterator_class_latlon.c \
 	grib_iterator_class_regular.c \
+	grib_iterator_class_space_view.c \
 	grib_expression.c \
 	grib_util.c \
 	bufr_util.c \
