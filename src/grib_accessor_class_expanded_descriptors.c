@@ -547,6 +547,10 @@ static int expand(grib_accessor* a)
     grib_bufr_descriptors_array_delete(self->expanded);
     err=grib_get_size(grib_handle_of_accessor(a),self->unexpandedDescriptors,&unexpandedSize);
     if (err) return err;
+    if (unexpandedSize==0) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Unexpanded size is zero!", a->name);
+        return GRIB_DECODING_ERROR;
+    }
     u=(long*)grib_context_malloc_clear(c,sizeof(long)*unexpandedSize);
     if (!u) {err=GRIB_OUT_OF_MEMORY; return err;}
     err=grib_get_long_array(grib_handle_of_accessor(a),self->unexpandedDescriptors,u,&unexpandedSize);
@@ -569,7 +573,6 @@ static int expand(grib_accessor* a)
     grib_bufr_descriptors_array_delete(unexpanded);
 
     return err;
-
 }
 
 int grib_accessor_class_expanded_descriptors_set_do_expand(grib_accessor* a,long do_expand)
@@ -586,7 +589,7 @@ bufr_descriptors_array* grib_accessor_class_expanded_descriptors_get_expanded(gr
     return self->expanded;
 }
 
-static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
     int ret=0;
@@ -617,7 +620,7 @@ static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
     return ret;
 }
 
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
     int ret=0;
@@ -658,7 +661,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
     return GRIB_SUCCESS;
 }
 
-static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
+static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
     self->do_expand=1;

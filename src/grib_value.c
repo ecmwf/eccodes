@@ -1029,7 +1029,7 @@ int grib_get_bytes(grib_handle* h, const char* name, unsigned char* val, size_t 
     grib_accessor* act = grib_find_accessor(h, name);
     err = act? grib_unpack_bytes(act, val, length) : GRIB_NOT_FOUND;
     if(err) grib_context_log(h->context,GRIB_LOG_ERROR,
-            "grib_get_bytes_internal %s failed %s",  name, grib_get_error_message(err));
+            "grib_get_bytes %s failed %s",  name, grib_get_error_message(err));
     return err;
 }
 

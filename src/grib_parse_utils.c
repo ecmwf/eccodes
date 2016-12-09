@@ -285,7 +285,6 @@ int grib_accessors_list_print(grib_handle* h,grib_accessors_list* al,const char*
     char* p=NULL;
     double* dval=0;
     long* lval=0;
-    char sbuf[1024]={0,};
     char** cvals=NULL;
     int ret=0;
     char* myformat=NULL;
@@ -301,8 +300,9 @@ int grib_accessors_list_print(grib_handle* h,grib_accessors_list* al,const char*
     case GRIB_TYPE_STRING:
         myseparator= separator ? (char*)separator : default_separator;
         if (size==1) {
-            len=1024;
-            grib_unpack_string(al->accessor,sbuf,&len);
+            char sbuf[1024]={0,};
+            len = sizeof(sbuf);
+            ret = grib_unpack_string(al->accessor,sbuf,&len);
             fprintf(out,"%s",sbuf);
         } else {
             int i=0;
@@ -327,7 +327,7 @@ int grib_accessors_list_print(grib_handle* h,grib_accessors_list* al,const char*
         myformat= format ? (char*)format : double_format;
         myseparator= separator ? (char*)separator : default_separator;
         dval=(double*)grib_context_malloc_clear(h->context,sizeof(double)*size);
-        grib_accessors_list_unpack_double(al,dval,&size);
+        ret = grib_accessors_list_unpack_double(al,dval,&size);
         if (size==1) fprintf(out,myformat,dval[0]);
         else {
             int i=0;
@@ -350,7 +350,7 @@ int grib_accessors_list_print(grib_handle* h,grib_accessors_list* al,const char*
         myformat= format ? (char*)format : long_format;
         myseparator= separator ? (char*)separator : default_separator;
         lval=(long*)grib_context_malloc_clear(h->context,sizeof(long)*size);
-        grib_accessors_list_unpack_long(al,lval,&size);
+        ret = grib_accessors_list_unpack_long(al,lval,&size);
         if (size==1) fprintf(out, myformat, lval[0]);
         else {
             int i=0;
