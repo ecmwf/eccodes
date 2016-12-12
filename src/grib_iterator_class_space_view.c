@@ -102,23 +102,30 @@ static int next(grib_iterator* i, double *lat, double *lon, double *val)
 static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
 {
     int ret=0;
-#if 0
     double *lats,*lons;
     double latOfSubSatellitePointInDegrees,lonOfSubSatellitePointInDegrees;
-    double orientationInDegrees;
-    double lonFirst,latFirst,radius=0,xpInGridLengths=0,ypInGridLengths=0;
-    long nx,ny,standardParallel,centralLongitude,Dx,Dy;
-    double lambda0,xFirst,yFirst,x,y;
-    double k,sinphi1,cosphi1;
+    double orientationInDegrees, nrInRadiusOfEarth;
+    double radius=0,xpInGridLengths=0,ypInGridLengths=0;
+    long nx, ny, earthIsOblate;
     long alternativeRowScanning,iScansNegatively;
-    long jScansPositively,jPointsAreConsecutive, southPoleOnPlane;
-    double sinphi,cosphi,cosdlambda,sindlambda;
-    double cosc,sinc;
-    long i,j;
+    long Xo, Yo;
+    long jScansPositively,jPointsAreConsecutive;
+    long i;
 
+    double major, minor, r_eq, r_pol, sat_height;
+    double lap, lop, orient_angle, angular_size;
+    double xp, yp, dx, dy, rx, ry, x, y;
+    double cos_x, cos_y, sin_x, sin_y;
+    double factor_1, factor_2, tmp1, Sd, Sn, Sxy, S1, S2, S3;
+    int x0, y0, ix, iy;
+    double *s_x, *c_x;
+    
     grib_iterator_space_view* self = (grib_iterator_space_view*)iter;
 
     const char* sradius                 = grib_arguments_get_name(h,args,self->carg++);
+    const char* sEarthIsOblate          = grib_arguments_get_name(h,args,self->carg++);
+    const char* sMajorAxisInMetres   = grib_arguments_get_name(h,args,self->carg++);
+    const char* sMinorAxisInMetres   = grib_arguments_get_name(h,args,self->carg++);
     const char* snx                     = grib_arguments_get_name(h,args,self->carg++);
     const char* sny                     = grib_arguments_get_name(h,args,self->carg++);
     const char* sLatOfSubSatellitePointInDegrees = grib_arguments_get_name(h,args,self->carg++);
@@ -128,7 +135,7 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     const char* sXpInGridLengths        = grib_arguments_get_name(h,args,self->carg++);
     const char* sYpInGridLengths        = grib_arguments_get_name(h,args,self->carg++);
     const char* sOrientationInDegrees   = grib_arguments_get_name(h,args,self->carg++);
-    const char* sNr   = grib_arguments_get_name(h,args,self->carg++);
+    const char* sNrInRadiusOfEarth      = grib_arguments_get_name(h,args,self->carg++);
     const char* sXo   = grib_arguments_get_name(h,args,self->carg++);
     const char* sYo   = grib_arguments_get_name(h,args,self->carg++);
 
@@ -136,16 +143,24 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     const char* sjScansPositively       = grib_arguments_get_name(h,args,self->carg++);
     const char* sjPointsAreConsecutive  = grib_arguments_get_name(h,args,self->carg++);
     const char* salternativeRowScanning = grib_arguments_get_name(h,args,self->carg++);
-    double c,rho;
-    sinphi1 = cosphi1 = 0.0;
 
-    if((ret = grib_get_double_internal(h, sradius,&radius)) != GRIB_SUCCESS)
-        return ret;
     if((ret = grib_get_long_internal(h, snx,&nx)) != GRIB_SUCCESS)
         return ret;
     if((ret = grib_get_long_internal(h, sny,&ny)) != GRIB_SUCCESS)
         return ret;
+    if((ret = grib_get_long_internal(h, sEarthIsOblate, &earthIsOblate)) != GRIB_SUCCESS)
+        return ret;
 
+    if (earthIsOblate) {
+        if((ret = grib_get_double_internal(h, sMajorAxisInMetres, &major)) != GRIB_SUCCESS)
+            return ret;
+        if((ret = grib_get_double_internal(h, sMinorAxisInMetres, &minor)) != GRIB_SUCCESS)
+            return ret;
+    } else {
+        if((ret = grib_get_double_internal(h, sradius, &radius)) != GRIB_SUCCESS)
+            return ret;
+    }
+    
     if (iter->nv!=nx*ny) {
         grib_context_log(h->context,GRIB_LOG_ERROR, "Wrong number of points (%ld!=%ldx%ld)", iter->nv,nx,ny);
         return GRIB_WRONG_GRID;
@@ -154,9 +169,9 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
         return ret;
     if((ret = grib_get_double_internal(h, sLonOfSubSatellitePointInDegrees,&lonOfSubSatellitePointInDegrees)) != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_long_internal(h, sDx,&Dx)) != GRIB_SUCCESS)
+    if((ret = grib_get_double_internal(h, sDx, &dx)) != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_long_internal(h, sDy,&Dy)) != GRIB_SUCCESS)
+    if((ret = grib_get_double_internal(h, sDy, &dy)) != GRIB_SUCCESS)
         return ret;
     if((ret = grib_get_double_internal(h, sXpInGridLengths,&xpInGridLengths)) != GRIB_SUCCESS)
         return ret;
@@ -164,7 +179,12 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
         return ret;
     if((ret = grib_get_double_internal(h, sOrientationInDegrees,&orientationInDegrees)) != GRIB_SUCCESS)
         return ret;
-    
+    if((ret = grib_get_double_internal(h, sNrInRadiusOfEarth,&nrInRadiusOfEarth)) != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_long_internal(h, sXo,&Xo)) != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_long_internal(h, sYo,&Yo)) != GRIB_SUCCESS)
+        return ret;
     if((ret = grib_get_long_internal(h, sjPointsAreConsecutive,&jPointsAreConsecutive)) != GRIB_SUCCESS)
         return ret;
     if((ret = grib_get_long_internal(h, sjScansPositively,&jScansPositively)) != GRIB_SUCCESS)
@@ -174,15 +194,38 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     if((ret = grib_get_long_internal(h, salternativeRowScanning,&alternativeRowScanning)) != GRIB_SUCCESS)
         return ret;
 
-    standardParallel = (southPoleOnPlane == 1) ? -90 : +90;
-    sinphi1 = sin(standardParallel*DEG2RAD);
-    cosphi1 = cos(standardParallel*DEG2RAD);
-    lambda0 = centralLongitude*DEG2RAD;
-    latFirst= latFirstInDegrees*DEG2RAD;
-    lonFirst= lonFirstInDegrees*DEG2RAD;
+    if (earthIsOblate) {
+        r_eq = major ;  /* In m */
+        r_pol = minor;
+    } else {
+        return GRIB_NOT_IMPLEMENTED;
+        r_eq = r_pol = radius * 0.001;
+    }
+    angular_size = 2.0 * asin(1.0 / nrInRadiusOfEarth);
+    sat_height = nrInRadiusOfEarth * r_eq;
 
-    Dx = iScansNegatively == 0 ? Dx : -Dx;
-    Dy = jScansPositively == 1 ? Dy : -Dy;
+    lap = latOfSubSatellitePointInDegrees;
+    lop = lonOfSubSatellitePointInDegrees;
+    /* apply default scaling factor */
+    lap *= 1e-6;
+    lop *= 1e-6;
+    lap *= DEG2RAD;
+    lop *= DEG2RAD;
+
+    orient_angle = orientationInDegrees;
+    /* apply default scaling factor */
+    if (orient_angle != 0.0) return GRIB_NOT_IMPLEMENTED;
+
+    xp = xpInGridLengths;
+    yp = ypInGridLengths;
+    x0 = Xo;
+    y0 = Yo;
+
+    rx = angular_size / dx;
+    ry = (r_pol/r_eq) * angular_size / dy;
+
+    /*dx = iScansNegatively == 0 ? dx : -dx;
+    dy = jScansPositively == 1 ? dy : -dy;*/
     self->lats = (double*)grib_context_malloc(h->context,iter->nv*sizeof(double));
     if (!self->lats) {
         grib_context_log(h->context,GRIB_LOG_ERROR, "unable to allocate %ld bytes",iter->nv*sizeof(double));
@@ -196,79 +239,72 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     lats=self->lats;
     lons=self->lons;
 
-    /* compute xFirst,yFirst in metres */
-    sinphi=sin(latFirst);
-    cosphi=cos(latFirst);
-    cosdlambda=cos(lonFirst-lambda0);
-    sindlambda=sin(lonFirst-lambda0);
+    if (!iScansNegatively) {
+        xp = xp - x0;
+    } else {
+        xp = (nx-1) - (xp - x0);
+    }
+    if (jScansPositively) {
+        yp = yp - y0;
+    }
+    else {
+        yp = (ny-1) - (yp - y0);
+    }
+    i = 0;
+    factor_2 = (r_eq/r_pol)*(r_eq/r_pol);
+    factor_1 = sat_height * sat_height - r_eq * r_eq;
 
-    k = 2.0 * radius / ( 1 + sinphi1*sinphi + cosphi1*cosphi*cosdlambda );
-    xFirst = k * cosphi * sindlambda;
-    yFirst = k * (cosphi1*sinphi - sinphi1*cosphi*cosdlambda);
+    s_x = (double *) grib_context_malloc(h->context, nx*sizeof(double));
+    if (!s_x) {
+        grib_context_log(h->context,GRIB_LOG_ERROR, "unable to allocate %ld bytes",nx*sizeof(double));
+        return GRIB_OUT_OF_MEMORY;
+    }
+    c_x = (double *) grib_context_malloc(h->context, nx*sizeof(double));
+    if (!c_x) {
+        grib_context_log(h->context,GRIB_LOG_ERROR, "unable to allocate %ld bytes",nx*sizeof(double));
+        return GRIB_OUT_OF_MEMORY;
+    }
 
-    /*kp=radius*2.0*tan(pi4-phi/2);
-    xFirst=kp*cosphi*sindlambda;
-    yFirst=-kp*cosphi*cosdlambda;*/
+    for (ix = 0; ix < nx; ix++) {
+        x = (ix - xp) * rx;
+        s_x[ix] = sin(x);
+        c_x[ix] = sqrt(1.0 - s_x[ix]*s_x[ix]);
+    }
 
-    if (jPointsAreConsecutive)
-    {
-        x=xFirst;
-        for (i=0;i<nx;i++) {
-            y=yFirst;
-            for (j=0;j<ny;j++) {
-                rho=sqrt(x*x+y*y);
-                if (rho == 0) {
-                    /* indeterminate case */
-                    *lats = standardParallel;
-                    *lons = centralLongitude;
-                }
-                else {
-                    c=2*atan2(rho,(2.0*radius));
-                    cosc=cos(c);
-                    sinc=sin(c);
-                    *lats = asin( cosc*sinphi1 + y*sinc*cosphi1/rho ) * RAD2DEG;
-                    *lons = (lambda0+atan2(x*sinc, rho*cosphi1*cosc - y*sinphi1*sinc)) * RAD2DEG;
-                }
-                while (*lons<0)   *lons += 360;
-                while (*lons>360) *lons -= 360;
-                lons++;
-                lats++;
+    for (iy = 0; iy < ny; iy++) {
+        y = (iy - yp) * ry;
+        sin_y = sin(y);
+        cos_y = sqrt(1.0 - sin_y*sin_y);
 
-                y+=Dy;
+        tmp1 = (1 + (factor_2-1.0)*sin_y*sin_y);
+        
+        for (ix = 0; ix < nx; ix++, i++) {
+            /* x = (ix - xp) * rx; */
+            sin_x = s_x[ix];
+            cos_x = c_x[ix];
+            
+            Sd = sat_height * cos_x * cos_y;
+            Sd = Sd * Sd - tmp1*factor_1;
+            if (Sd <= 0.0) {    // outside of view
+                lats[i] = lons[i] = 0; /* TODO: error? */
             }
-            x+=Dx;
+            else {
+                Sd = sqrt(Sd);
+                Sn = (sat_height*cos_x*cos_y - Sd) / tmp1;
+                S1 = sat_height - Sn * cos_x * cos_y;
+                S2 = Sn * sin_x * cos_y;
+                S3 = Sn * sin_y;
+                Sxy = sqrt(S1*S1 + S2*S2);
+                lons[i] = atan(S2/S1)*(RAD2DEG) + lop;
+                lats[i] = atan(factor_2*S3/Sxy)*(RAD2DEG);
+                /*printf("lat=%g   lon=%g\n", lats[i], lons[i]);*/
+            }
+            /*while (lons[i]<0)   lons[i] += 360;
+            while (lons[i]>360) lons[i] -= 360;*/
         }
     }
-    else
-    {
-        y=yFirst;
-        for (j=0;j<ny;j++) {
-            x=xFirst;
-            for (i=0;i<nx;i++) {
-                rho=sqrt(x*x+y*y);
-                if (rho == 0) {
-                    /* indeterminate case */
-                    *lats = standardParallel;
-                    *lons = centralLongitude;
-                }
-                else {
-                    c=2*atan2(rho,(2.0*radius));
-                    cosc=cos(c);
-                    sinc=sin(c);
-                    *lats = asin( cosc*sinphi1 + y*sinc*cosphi1/rho ) * RAD2DEG;
-                    *lons = (lambda0+atan2(x*sinc, rho*cosphi1*cosc - y*sinphi1*sinc)) * RAD2DEG;
-                }
-                while (*lons<0)   *lons += 360;
-                while (*lons>360) *lons -= 360;
-                lons++;
-                lats++;
-
-                x+=Dx;
-            }
-            y+=Dy;
-        }
-    }
-#endif
+    grib_context_free(h->context, s_x);
+    grib_context_free(h->context, c_x);
     iter->e = -1;
 
     return ret;

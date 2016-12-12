@@ -78,11 +78,14 @@ alias yCoordinateOfOriginOfSectorImage=Yo;
 alias geography.Yo=Yo;
 
 iterator space_view(numberOfPoints, missingValue, values, radius,
+          earthIsOblate,
+          earthMajorAxis, earthMinorAxis,
           Nx, Ny,
           latitudeOfSubSatellitePointInDegrees,
           longitudeOfSubSatellitePointInDegrees,
           dx, dy, XpInGridLengths, YpInGridLengths,
-          orientationOfTheGridInDegrees, Nr, Xo, Yo,
+          orientationOfTheGridInDegrees,
+          NrInRadiusOfEarth, Xo, Yo,
           iScansNegatively,
           jScansPositively,
           jPointsAreConsecutive,
