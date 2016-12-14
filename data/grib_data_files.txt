@@ -22,6 +22,7 @@ index.grib
 grid_ieee.grib
 jpeg.grib2
 latlon.grib
+high_level_api.grib2
 lfpw.grib1
 missing_field.grib1
 missing.grib2
