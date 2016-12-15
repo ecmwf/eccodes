@@ -8,7 +8,7 @@ Author: Daniel Lee, DWD, 2014
 
 import collections
 
-import eccodes
+from .. import eccodes
 
 
 class IndexNotSelectedError(Exception):

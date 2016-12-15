@@ -5,7 +5,7 @@ messages when it is no longer needed.
 Author: Daniel Lee, DWD, 2014
 """
 
-import eccodes
+from .. import eccodes
 from .gribmessage import GribMessage
 
 
