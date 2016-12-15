@@ -81,6 +81,7 @@ END_HEADER
         $name = 'InvalidOrderByError'         if ($name eq 'InvalidOrderbyError');
         $name = 'InvalidBitsPerValueError'    if ($name eq 'InvalidBpvError');
         $name = 'KeyValueNotFoundError'       if ($name eq 'NotFoundError');
+        $name = 'MemoryAllocationError'       if ($name eq 'OutOfMemoryError');
 
         if ($code != 0) { # Ignore SUCCESS
             print H "class ${name}(GribInternalError):\n";  ## $name,$_;

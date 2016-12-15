@@ -123,8 +123,8 @@ class InvalidArgumentError(GribInternalError):
     """Invalid argument."""
 class ReadOnlyError(GribInternalError):
     """Value is read only."""
-class OutOfMemoryError(GribInternalError):
-    """Out of memory."""
+class MemoryAllocationError(GribInternalError):
+    """Memory allocation error."""
 class GeocalculusError(GribInternalError):
     """Problem with calculation of geographic attributes."""
 class NoMoreInSetError(GribInternalError):
@@ -208,7 +208,7 @@ ERROR_MAP = {
     -20 : NullHandleError,
     -19 : InvalidArgumentError,
     -18 : ReadOnlyError,
-    -17 : OutOfMemoryError,
+    -17 : MemoryAllocationError,
     -16 : GeocalculusError,
     -15 : NoMoreInSetError,
     -14 : EncodingError,

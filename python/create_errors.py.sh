@@ -74,6 +74,7 @@ while (<>) {
         $name = 'InvalidOrderByError'         if ($name eq 'InvalidOrderbyError');
         $name = 'InvalidBitsPerValueError'    if ($name eq 'InvalidBpvError');
         $name = 'KeyValueNotFoundError'       if ($name eq 'NotFoundError');
+        $name = 'MemoryAllocationError'       if ($name eq 'OutOfMemoryError');
 
         # Print the class declaration
         print "class ${name}(GribInternalError):\n";

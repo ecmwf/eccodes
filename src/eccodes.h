@@ -1280,7 +1280,7 @@ Error codes returned by the eccodes functions.
 #define CODES_NO_MORE_IN_SET		GRIB_NO_MORE_IN_SET
 /** Problem with calculation of geographic attributes */
 #define CODES_GEOCALCULUS_PROBLEM		GRIB_GEOCALCULUS_PROBLEM
-/** Out of memory */
+/** Memory allocation error */
 #define CODES_OUT_OF_MEMORY		GRIB_OUT_OF_MEMORY
 /** Value is read only */
 #define CODES_READ_ONLY		GRIB_READ_ONLY
