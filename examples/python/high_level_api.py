@@ -41,14 +41,11 @@ class TestGribFile(unittest.TestCase):
             self.assertEqual(len(grib.open_messages), 5)
         self.assertEqual(len(grib.open_messages), 0)
 
-    def test_iteration_works(self):
-        """The GribFile allows proper iteration over all messages."""
-        step_ranges = []
+    def test_message_counting_works(self):
+        """The GribFile is aware of its messages."""
         with GribFile(TESTGRIB) as grib:
-            for _ in range(len(grib)):
-                msg = GribMessage(grib)
-                step_ranges.append(msg["stepRange"])
-        self.assertSequenceEqual(step_ranges, ["0", "6", "12", "18", "24"])
+            msg_count = len(grib)
+        self.assertEqual(msg_count, 5)
 
     def test_iterator_protocol(self):
         """The GribFile allows pythonic iteration over all messages."""
@@ -79,7 +76,7 @@ class TestGribMessage(unittest.TestCase):
         """Metadata is read correctly from GribMessage."""
         with GribFile(TESTGRIB) as grib:
             msg = GribMessage(grib)
-            key_count = 251
+            key_count = 253
             self.assertEqual(len(msg), key_count)
             self.assertEqual(msg.size(), 160219)
             self.assertEqual(len(msg.keys()), key_count)
