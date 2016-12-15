@@ -265,9 +265,9 @@ static int find_next_group(const unsigned long* vals, size_t len, unsigned long 
     lmin = vals[0];
     lmax = lmin;
 
-    while(i < len){
-        if(vals[i] < lmin) lmin = vals[i];
-        if(vals[i] > lmax) lmax = vals[i];
+    while(i < len) {
+        if      (vals[i] > lmax) lmax = vals[i];
+        else if (vals[i] < lmin) lmin = vals[i];
         /*Assert((lmax-lmin) >= 0);*/
         *nbits = calc_bits_needed(lmax-lmin);
         *r_val = lmin;
@@ -632,10 +632,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     min = max;
     for(i=0;i< n_vals;i++)
     {
-        if ( val[i] > max )
-            max = val[i];
-        if ( val[i] < min )
-            min = val[i];
+        if      ( val[i] > max ) max = val[i];
+        else if ( val[i] < min ) min = val[i];
     }
     min *= d;
     max *= d;

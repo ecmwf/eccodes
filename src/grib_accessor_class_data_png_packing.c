@@ -361,8 +361,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     /*-------------------------------------------*/
     *len = n_vals;
 
-
-    cleanup:
+cleanup:
     if(png)
         png_destroy_read_struct(&png, info?&info:NULL, theEnd?&theEnd:NULL);
     return err;
@@ -494,25 +493,20 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         height = 1;
     }
 
-
     if(width*height != *len)
     {
         fprintf(stderr,"width=%ld height=%ld len=%ld\n", (long)width, (long)height, (long)(*len) );
         Assert(width*height == *len);
     }
 
-
     d = grib_power(decimal_scale_factor,10) ;
-
 
     max = val[0];
     min = max;
     for(i=1;i< n_vals;i++)
     {
-        if (val[i] > max )
-            max = val[i];
-        if (val[i] < min )
-            min = val[i];
+        if      (val[i] > max) max = val[i];
+        else if (val[i] < min) min = val[i];
     }
     min *= d;
     max *= d;
@@ -568,7 +562,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         goto cleanup;
     }
 
-
     if((err = grib_set_double_internal(grib_handle_of_accessor(a),self->reference_value, reference_value)) != GRIB_SUCCESS)
         return err;
     {
@@ -608,14 +601,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         goto cleanup;
     }
 
-
     callback_data.buffer = buf;
     callback_data.offset = 0;
     callback_data.length = buflen;
 
     /* printf("buflen=%d\n",buflen); */
-
-
     png_set_write_fn(png,&callback_data,png_write_callback,png_flush_callback);
 
     depth = bits8;
@@ -637,7 +627,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
             depth, colour, PNG_INTERLACE_NONE,
             PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 
-
     /*bytes=bit_depth/8;*/
     bytes = bits8/8;
 
@@ -653,10 +642,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     Assert(callback_data.offset <= callback_data.length);
 
-
     grib_buffer_replace(a, buf, callback_data.offset,1,1);
 
-    cleanup:
+cleanup:
     if(png)
         png_destroy_write_struct(&png, info?&info:NULL);
 
