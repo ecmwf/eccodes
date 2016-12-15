@@ -1371,7 +1371,7 @@ void test_string_splitting()
     int i=0;
     char input[80] = "Born|To|Be|Wild";
     char** list=0;
-    list = str_split(input, '|');
+    list = string_split(input, "|");
     for(i=0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 4);
     if ( strcmp(list[0], "Born")!=0 ) assert(0);
@@ -1379,8 +1379,15 @@ void test_string_splitting()
     if ( strcmp(list[2], "Be")  !=0 ) assert(0);
     if ( strcmp(list[3], "Wild")!=0 ) assert(0);
 
+    strcpy(input, "12345|a gap|");
+    list = string_split(input, "|");
+    for(i=0; list[i] != NULL; ++i) {} /* count how many tokens */
+    assert(i == 2);
+    if ( strcmp(list[0], "12345")!=0 ) assert(0);
+    if ( strcmp(list[1], "a gap")!=0 ) assert(0);
+
     strcpy(input, "Steppenwolf");
-    list = str_split(input, '|');
+    list = string_split(input, ",");
     for(i=0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 1);
     if ( strcmp(list[0], "Steppenwolf")!=0 ) assert(0);

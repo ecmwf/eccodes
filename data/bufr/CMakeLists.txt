@@ -19,9 +19,6 @@ ecbuild_get_test_multidata(
      NOCHECK
      NAMES ${bufr_files_to_download} ${bufr_refs_to_download}
 )
-if( ENABLE_TESTS )
-  set_property( TEST eccodes_download_bufrs APPEND PROPERTY LABELS download_data )
-endif()
 
 # Copy other files - e.g. text files etc from the source data/bufr dir
 LIST(APPEND other_files

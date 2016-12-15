@@ -402,7 +402,9 @@ int grib_set_string_array(grib_handle* h, const char* name, const char** val, si
 
     a = grib_find_accessor(h, name);
 
-    grib_context_log(h->context,GRIB_LOG_DEBUG,"grib_set_string %s=%s\n",name,val);
+    if (h->context->debug) {
+        printf("ECCODES DEBUG grib_set_string_array key=%s %ld values\n",name,(long)length);
+    }
 
     if(a)
     {
@@ -664,7 +666,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
     int ret=0;
 
     if (h->context->debug)
-        printf("ECCODES DEBUG grib_set_double_array_internal key=%s %ld values\n",name, (long)length);
+        printf("ECCODES DEBUG grib_set_double_array_internal key=%s %ld values\n",name,(long)length);
 
     if (length==0) {
         grib_accessor* a = grib_find_accessor(h, name);
@@ -1027,7 +1029,7 @@ int grib_get_bytes(grib_handle* h, const char* name, unsigned char* val, size_t 
     grib_accessor* act = grib_find_accessor(h, name);
     err = act? grib_unpack_bytes(act, val, length) : GRIB_NOT_FOUND;
     if(err) grib_context_log(h->context,GRIB_LOG_ERROR,
-            "grib_get_bytes_internal %s failed %s",  name, grib_get_error_message(err));
+            "grib_get_bytes %s failed %s",  name, grib_get_error_message(err));
     return err;
 }
 
@@ -1036,6 +1038,8 @@ int grib_get_native_type(grib_handle* h, const char* name,int* type)
     grib_accessors_list* al=NULL;
     grib_accessor* a =NULL;
     *type = GRIB_TYPE_UNDEFINED;
+
+    DebugAssert( name != NULL && strlen(name) > 0 );
 
     if (name[0] == '/' ) {
         al=grib_find_accessors_list(h,name);
@@ -1695,6 +1699,7 @@ int codes_copy_key(grib_handle* h1,grib_handle* h2,const char* key,int type)
       if (len1==1) {
         err=grib_get_double(h1,key,&d);
         if (err) return err;
+        grib_context_log(h1->context,GRIB_LOG_DEBUG,"codes_copy_key: %s=%g\n",key,d);
         err=grib_set_double(h2,key,d);
         return err;
       } else {
@@ -1710,6 +1715,7 @@ int codes_copy_key(grib_handle* h1,grib_handle* h2,const char* key,int type)
       if (len1==1) {
         err=grib_get_long(h1,key,&l);
         if (err) return err;
+        grib_context_log(h1->context,GRIB_LOG_DEBUG,"codes_copy_key: %s=%ld\n",key,l);
         err=grib_set_long(h2,key,l);
         return err;
       } else {
@@ -1727,6 +1733,7 @@ int codes_copy_key(grib_handle* h1,grib_handle* h2,const char* key,int type)
         s=grib_context_malloc_clear(h1->context,len);
         err=grib_get_string(h1,key,s,&len);
         if (err) return err;
+        grib_context_log(h1->context,GRIB_LOG_DEBUG,"codes_copy_key: %s=%s\n",key,s);
         err=grib_set_string(h2,key,s,&len);
         grib_context_free(h1->context,s);
         return err;

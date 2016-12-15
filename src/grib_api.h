@@ -16,10 +16,6 @@
 #ifndef grib_api_H
 #define grib_api_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,6 +38,10 @@ extern "C" {
 typedef enum ProductKind {PRODUCT_ANY, PRODUCT_GRIB, PRODUCT_BUFR, PRODUCT_METAR, PRODUCT_GTS, PRODUCT_TAF} ProductKind;
 
 #include "eccodes_version.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* sections */
 #define GRIB_SECTION_PRODUCT 	(1<<0)
@@ -1226,6 +1226,13 @@ long grib_get_api_version(void);
 const char* grib_get_git_sha1(void);
 
 /**
+*  Get the package name
+*
+*  @return character string with package name
+*/
+const char* grib_get_package_name(void);
+
+/**
 *  Prints the API version
 *
 *
@@ -1569,7 +1576,7 @@ Error codes returned by the grib_api functions.
 #define GRIB_NO_MORE_IN_SET		-15
 /** Problem with calculation of geographic attributes */
 #define GRIB_GEOCALCULUS_PROBLEM		-16
-/** Out of memory */
+/** Memory allocation error */
 #define GRIB_OUT_OF_MEMORY		-17
 /** Value is read only */
 #define GRIB_READ_ONLY		-18

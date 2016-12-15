@@ -71,6 +71,24 @@ _if (shapeOfTheEarth == 2){
   alias earthMajorAxisInMetres=earthMajorAxis;
   alias earthMinorAxisInMetres=earthMinorAxis;
 }
+_if (shapeOfTheEarth == 3){
+  # Major and minor axes specified (in km) by data producer
+  meta earthMajorAxis from_scale_factor_scaled_value(
+       scaleFactorOfEarthMajorAxis, scaledValueOfEarthMajorAxis);
+  meta earthMinorAxis from_scale_factor_scaled_value(
+       scaleFactorOfEarthMinorAxis, scaledValueOfEarthMinorAxis);
+  meta earthMajorAxisInMetres scale(earthMajorAxis, thousand, one, zero);
+  meta earthMinorAxisInMetres scale(earthMinorAxis, thousand, one, zero);
+}
+_if (shapeOfTheEarth == 7){
+  # Major and minor axes specified (in m) by data producer
+  meta earthMajorAxis from_scale_factor_scaled_value(
+       scaleFactorOfEarthMajorAxis, scaledValueOfEarthMajorAxis);
+  meta earthMinorAxis from_scale_factor_scaled_value(
+       scaleFactorOfEarthMinorAxis, scaledValueOfEarthMinorAxis);
+  alias earthMajorAxisInMetres=earthMajorAxis;
+  alias earthMinorAxisInMetres=earthMinorAxis;
+}
 _if (shapeOfTheEarth == 4 || shapeOfTheEarth == 5){
   # 4 -> IAG-GRS80 model
   # 5 -> WGS84

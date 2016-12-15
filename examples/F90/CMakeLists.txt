@@ -25,9 +25,11 @@ list( APPEND tests
       grib_set_bitmap
       grib_set_missing
       grib_set_pv
+      grib_set_data
       grib_samples
       grib_count_messages
       grib_count_messages_multi
+      grib_copy_namespace
       read_message
       read_from_file
       get_set_uuid
@@ -45,6 +47,7 @@ list( APPEND tests
       bufr_read_temp
       bufr_read_tropical_cyclone
       bufr_set_keys
+      bufr_copy_keys
       bufr_subset
       get_product_kind
 )
@@ -64,16 +67,9 @@ endforeach()
 
 # Executables without a shell script
 # TODO
-ecbuild_add_executable( TARGET    f_new_from_file
+ecbuild_add_executable( TARGET    eccodes_f_new_from_file
                         NOINSTALL
                         SOURCES   new_from_file.f90
-                        CONDITION HAVE_FORTRAN
-                        LINKER_LANGUAGE Fortran
-                        LIBS      eccodes_f90 eccodes
-)
-ecbuild_add_executable( TARGET    f_copy_namespace
-                        NOINSTALL
-                        SOURCES   copy_namespace.f90
                         CONDITION HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
                         LIBS      eccodes_f90 eccodes

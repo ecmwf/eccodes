@@ -68,6 +68,7 @@ typedef struct grib_accessor_data_sh_unpacked {
 	const char*  reference_value;
 	const char*  binary_scale_factor;
 	const char*  decimal_scale_factor;
+	const char*  optimize_scaling_factor;
 /* Members defined in data_sh_unpacked */
 	const char*  GRIBEX_sh_bug_present;
 	const char*  ieee_floats;

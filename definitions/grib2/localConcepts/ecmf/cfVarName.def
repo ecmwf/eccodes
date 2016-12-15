@@ -9119,13 +9119,13 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 43 ;
 	}
-#Height of Zero Deg Wet Bulb Temperature
+#Height of zero-degree wet-bulb temperature
 'hwbt0' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 47 ;
 	}
-#Height of One Deg Wet Bulb Temperature
+#Height of one-degree wet-bulb temperature
 'hwbt1' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;

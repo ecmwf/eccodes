@@ -12,8 +12,10 @@ src/config.h
 src/eccodes_version.h
 src/grib_api.h.new
 src/grib_api_constants.h.new
+src/eccodes_constants.h.new
 src/grib_errors.c.new
 src/grib_errors.h.new
+src/errors.py.new
 config/test-driver
 autom4te.cache/
 config.log
@@ -57,6 +59,9 @@ tools/grib_get_data
 tools/grib_histogram
 tools/grib_index_build
 tools/gts_copy
+tools/gts_compare
+tools/gts_get
+tools/metar_compare
 tools/gts_dump
 tools/gts_filter
 tools/gts_ls
@@ -83,6 +88,7 @@ tools/metar_dump
 tools/metar_filter
 tools/metar_get
 tools/metar_ls
+tools/metar_copy
 tools/taf_dump
 tools/taf_filter
 tools/taf_get
@@ -145,6 +151,7 @@ examples/F90/eccodes_f_bufr_read_header
 examples/F90/eccodes_f_bufr_read_scatterometer
 examples/F90/eccodes_f_bufr_read_tropical_cyclone
 examples/F90/eccodes_f_grib_clone
+examples/F90/eccodes_f_grib_copy_namespace
 examples/F90/eccodes_f_grib_count_messages
 examples/F90/eccodes_f_grib_count_messages_multi
 examples/F90/eccodes_f_grib_copy_message

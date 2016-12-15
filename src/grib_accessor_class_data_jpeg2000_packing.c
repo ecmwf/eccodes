@@ -70,6 +70,7 @@ typedef struct grib_accessor_data_jpeg2000_packing {
 	const char*  reference_value;
 	const char*  binary_scale_factor;
 	const char*  decimal_scale_factor;
+	const char*  optimize_scaling_factor;
 /* Members defined in data_jpeg2000_packing */
 	const char*   type_of_compression_used;
 	const char*   target_compression_ratio;

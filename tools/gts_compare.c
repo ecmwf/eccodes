@@ -47,17 +47,6 @@ int verbose=0;
 int tolerance_factor=1;
 static int write_error=0;
 
-GRIB_INLINE static double compare_double_absolute(double *a,double *b,double *err)
-{
-    double ret=0;
-    double d=fabs(*a-*b);
-    if (d > *err) {
-        ret=d;
-    }
-    return ret;
-    /* return fabs(*a-*b) > *err ? fabs(*a-*b) : 0; */
-}
-
 static int write_count=0;
 
 static void write_message(grib_handle* h,const char* str)

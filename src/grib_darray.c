@@ -93,4 +93,16 @@ double* grib_darray_get_array(grib_context* c,grib_darray* v) {
   return ret;
 }
 
+int grib_darray_is_constant(grib_darray* v,double eps) {
+  int i;
+  double val;
+  if (v->n == 1) return 1;
+
+  val=v->v[0];
+  for (i=1;i<v->n;i++)  {
+    if (fabs(val-v->v[i]) > eps) return 0;
+  }
+  return 1;
+}
+
 size_t grib_darray_used_size(grib_darray* v) { return v->n;}

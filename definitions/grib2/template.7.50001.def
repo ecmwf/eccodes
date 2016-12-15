@@ -31,6 +31,7 @@ if(bitmapPresent)   {
      referenceValue,
      binaryScaleFactor,
      decimalScaleFactor,
+     optimizeScaleFactor,
 	#g1second_order_row_by_row args
 	 halfByte,
 	 packingType,
@@ -72,6 +73,7 @@ if(bitmapPresent)   {
 		 referenceValue,
 		 binaryScaleFactor,
 		 decimalScaleFactor,
+         optimizeScaleFactor,
 		#g1second_order_row_by_row args
 		 halfByte,
 		 packingType,

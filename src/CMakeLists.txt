@@ -346,9 +346,11 @@ list( APPEND grib_api_srcs
     grib_iterator_class_gen.c
     grib_iterator_class_latlon.c
     grib_iterator_class_regular.c
+    grib_iterator_class_space_view.c
     grib_expression.c
     grib_util.c
     bufr_util.c
+    string_util.c
     functions.c
     grib_accessor_class.h
     grib_accessor_factory.h
@@ -383,6 +385,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_uint64_little_endian.c
     grib_accessor_class_uint8.c
     grib_accessor_class_blob.c
+    grib_optimize_decimal_factor.c
     eccodes_windef.h
     # We ship our own generated lex/yacc C files
     grib_yacc.c  grib_lex.c

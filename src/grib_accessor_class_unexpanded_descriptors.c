@@ -151,7 +151,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
     grib_dump_long(dumper,a,NULL);
 }
 
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_unexpanded_descriptors* self = (grib_accessor_unexpanded_descriptors*)a;
     int ret=0;
@@ -167,7 +167,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
     if (ret) return ret;
 
     if (rlen==0) {
-        grib_context_log(a->context,GRIB_LOG_FATAL,
+        grib_context_log(a->context,GRIB_LOG_ERROR,
                 "No descriptors in section 3. Malformed message.");
         return GRIB_MESSAGE_MALFORMED;
     }
@@ -190,7 +190,7 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
     return GRIB_SUCCESS;
 }
 
-static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
+static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
     grib_accessor_unexpanded_descriptors* self = (grib_accessor_unexpanded_descriptors*)a;
     int ret=0,i;
@@ -228,7 +228,6 @@ static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
     return ret;
 }
 
-
 static int value_count(grib_accessor* a,long* numberOfUnexpandedDescriptors)
 {
     grib_accessor_unexpanded_descriptors* self = (grib_accessor_unexpanded_descriptors*)a;
@@ -240,7 +239,8 @@ static int value_count(grib_accessor* a,long* numberOfUnexpandedDescriptors)
     return 0;
 }
 
-static long byte_offset(grib_accessor* a){
+static long byte_offset(grib_accessor* a)
+{
     return a->offset;
 }
 
@@ -249,7 +249,7 @@ static void update_size(grib_accessor* a,size_t s)
     a->length = s;
 }
 
-static long next_offset(grib_accessor* a){
+static long next_offset(grib_accessor* a)
+{
     return byte_offset(a)+a->length;
 }
-

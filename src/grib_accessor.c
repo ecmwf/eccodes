@@ -779,7 +779,7 @@ grib_accessors_list* grib_accessors_list_create(grib_context* c)
     return (grib_accessors_list*)grib_context_malloc_clear(c,sizeof(grib_accessors_list));
 }
 
-void grib_accessors_list_push(grib_accessors_list* al,grib_accessor* a)
+void grib_accessors_list_push(grib_accessors_list* al,grib_accessor* a,int rank)
 {
     grib_accessors_list* last;
     grib_context* c=a->context;
@@ -789,9 +789,11 @@ void grib_accessors_list_push(grib_accessors_list* al,grib_accessor* a)
         last->next=(grib_accessors_list*)grib_context_malloc_clear(c,sizeof(grib_accessors_list));
         last->next->accessor=a;
         last->next->prev=last;
+        last->next->rank=rank;
         al->last=last->next;
     } else {
         al->accessor=a;
+        al->rank=rank;
         al->last=al;
     }
 }

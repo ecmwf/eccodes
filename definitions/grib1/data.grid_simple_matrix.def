@@ -81,6 +81,7 @@ if(matrixOfValues == 0)
                referenceValue,
                binaryScaleFactor,
                decimalScaleFactor,
+               optimizeScaleFactor,
                halfByte,
                packingType,
                grid_ieee
@@ -106,6 +107,7 @@ if(matrixOfValues == 0)
               referenceValue,
               binaryScaleFactor,
               decimalScaleFactor,
+              optimizeScaleFactor,
               halfByte
         ) : dump;
 
@@ -168,6 +170,7 @@ if(matrixOfValues == 0)
                referenceValue,
                binaryScaleFactor,
                decimalScaleFactor,
+               optimizeScaleFactor,
                halfByte
             ) : read_only;
 

@@ -44,21 +44,6 @@ static void thread_init()
 #endif
 
 /*
- * strcasecmp is not in the C standard. However, it's defined by
- * 4.4BSD, POSIX.1-2001. So we use our own
-*/
-int grib_strcasecmp(const char *s1, const char *s2)
-{
-   const unsigned char *us1 = (const unsigned char *)s1,
-                       *us2 = (const unsigned char *)s2;
-
-   while (tolower(*us1) == tolower(*us2++))
-      if (*us1++ == '\0')
-         return (0);
-   return (tolower(*us1) - tolower(*--us2));
-}
-
-/*
    This is used by make_class.pl
 
    START_CLASS_DEF
@@ -255,7 +240,7 @@ static int str_eq(const char* a, const char* b)
     return 0;
 }
 
-#ifdef DEBUG
+#ifdef DEBUGGING
 static void dump_codetable(grib_codetable* atable)
 {
     grib_codetable* next = NULL;
@@ -631,7 +616,7 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t *len)
 
     typedef int (*cmpproc)(const char*, const char*);
 #ifndef ECCODES_ON_WINDOWS
-    cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? grib_strcasecmp : strcmp;
+    cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? strcmp_nocase : strcmp;
 #else
     /* Microsoft Windows Visual Studio support */
     cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? stricmp : strcmp;

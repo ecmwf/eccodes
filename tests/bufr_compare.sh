@@ -53,7 +53,7 @@ fi
 set -e
 
 #----------------------------------------------------
-# Test: comparing with and witout the -b switch
+# Test: comparing with and without the -b switch
 #----------------------------------------------------
 f="syno_1.bufr"
 echo "Test: comparing with and witout the -b switch" >> $fLog

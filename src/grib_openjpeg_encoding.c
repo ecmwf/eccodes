@@ -296,7 +296,7 @@ static void opj_memory_stream_do_nothing(void * p_user_data)
 }
 
 /* Create a stream to use memory as the input or output */
-opj_stream_t* opj_stream_create_default_memory_stream(opj_memory_stream* memoryStream, OPJ_BOOL is_read_stream)
+static opj_stream_t* opj_stream_create_default_memory_stream(opj_memory_stream* memoryStream, OPJ_BOOL is_read_stream)
 {
 	opj_stream_t* stream;
 

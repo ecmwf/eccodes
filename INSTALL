@@ -35,7 +35,7 @@ However it requires that cmake be installed on your system.
 
 You can also pass options to the cmake command above. Some typical examples are:
 
- -DBUILD_SHARED_LIBS=OFF         Install static libraries, not shared
+ -DENABLE_NETCDF=ON              Enable GRIB to netCDF conversion
  -DENABLE_ECCODES_THREADS=ON     Enable POSIX threads
  -DENABLE_JPG=ON                 Enable JPEG encoding/decoding (for GRIB packing)
  -DCMAKE_Fortran_COMPILER=pgf90  Set Fortran compiler to Portland Group F90 compiler

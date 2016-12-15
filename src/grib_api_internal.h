@@ -426,6 +426,7 @@ typedef struct grib_accessors_list grib_accessors_list;
 
 struct grib_accessors_list {
     grib_accessor*       accessor;
+    int rank;
     grib_accessors_list* next;
     grib_accessors_list* prev;
     grib_accessors_list* last;
@@ -1034,6 +1035,7 @@ struct grib_context
     int                             ieee_packing;
     int                             unpack;
     int                             bufrdc_mode;
+    int                             bufr_set_to_missing_if_out_of_range;
     FILE*                           log_stream;
     grib_trie*                      classes;
     grib_trie*                      lists;

@@ -62,6 +62,7 @@ typedef struct grib_accessor_data_dummy_field {
 	const char*  reference_value;
 	const char*  binary_scale_factor;
 	const char*  decimal_scale_factor;
+	const char*  optimize_scaling_factor;
 /* Members defined in data_g1simple_packing */
 	const char*  half_byte;
 	const char*  packingType;

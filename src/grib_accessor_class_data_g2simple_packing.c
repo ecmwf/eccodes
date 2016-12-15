@@ -59,6 +59,7 @@ typedef struct grib_accessor_data_g2simple_packing {
 	const char*  reference_value;
 	const char*  binary_scale_factor;
 	const char*  decimal_scale_factor;
+	const char*  optimize_scaling_factor;
 /* Members defined in data_g2simple_packing */
 } grib_accessor_data_g2simple_packing;
 

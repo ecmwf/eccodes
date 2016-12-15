@@ -25,8 +25,6 @@ program bufr_encode
   integer                                       :: ibufrin
   integer(kind=4), dimension(:), allocatable    :: ivalues
   integer, parameter                            :: max_strsize = 200
-  character(len=max_strsize) , dimension(:),allocatable   :: svalues
-  real(kind=8), dimension(:), allocatable       :: rvalues
   character(len=max_strsize)                    :: infile_name
   character(len=max_strsize)                    :: outfile_name
 
@@ -69,7 +67,7 @@ program bufr_encode
   call codes_set(ibufr,'observedData',1)
   call codes_set(ibufr,'compressedData',0)
   if(allocated(ivalues)) deallocate(ivalues)
-  allocate(ivalues(28))
+  allocate(ivalues(43))
   ivalues=(/  &
     307011,7006,10004,222000,101023,31031,1031,1032,101023,33007, &
     225000,236000,101023,31031,1031,1032,8024,101001,225255,225000, &

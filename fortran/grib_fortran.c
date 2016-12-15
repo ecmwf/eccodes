@@ -1364,6 +1364,27 @@ int grib_f_clone(int* gidsrc,int* giddest){
 }
 
 /*****************************************************************************/
+int grib_f_copy_key_(int* gidsrc, char* key, int* giddest, int len)
+{
+    grib_handle *src  = get_handle(*gidsrc);
+    grib_handle *dest = get_handle(*giddest);
+
+    if(src && dest) {
+        char buf[1024]={0,};
+        char* ckey = (char*)key;
+        const int type = GRIB_TYPE_UNDEFINED; /* will be computed */
+        return codes_copy_key(src, dest, cast_char(buf,ckey,len), type);
+    }
+
+    return GRIB_INVALID_GRIB;
+}
+int grib_f_copy_key__(int* gidsrc, char* name, int* giddest, int len){
+    return grib_f_copy_key_(gidsrc, name, giddest, len);
+}
+int grib_f_copy_key(int* gidsrc, char* name, int* giddest, int len){
+    return grib_f_copy_key_(gidsrc, name, giddest, len);
+}
+/*****************************************************************************/
 int grib_f_util_sections_copy_(int* gidfrom,int* gidto,int* what,int *gidout){
     int err=0;
     grib_handle *hfrom  = get_handle(*gidfrom);
@@ -2785,7 +2806,6 @@ int codes_f_bufr_copy_data_(int* gid1,int* gid2)
 
     return  err;
 }
-
 int codes_f_bufr_copy_data__(int* gid1,int* gid2){
     return  codes_f_bufr_copy_data_(gid1, gid2);
 }
@@ -2795,17 +2815,6 @@ int codes_f_bufr_copy_data(int* gid1,int* gid2){
 
 
 /*****************************************************************************/
-/* Strip whitespace from the end of a string */
-static void rtrim(char* s)
-{
-    size_t len = 0;
-    if (!s) return;
-    len = strlen(s);
-    while (len > 0 && isspace((unsigned char)s[len - 1]))
-        len--;
-    s[len] = '\0';
-}
-
 int grib_f_set_string_array_(int* gid, char* key, char* val,int* nvals,int* slen,int len)
 {
     grib_handle *h = get_handle(*gid);
@@ -3104,3 +3113,24 @@ int grib_f_set_samples_path__(char* path,  int len){
 int grib_f_set_samples_path(char* path,  int len){
     return grib_f_set_samples_path_(path, len);
 }
+
+int grib_f_julian_to_datetime(double* jd,long* year,long* month,long* day,long *hour,long *minute,long *second) {
+    return grib_julian_to_datetime(*jd,year,month,day,hour,minute,second);
+}
+int grib_f_julian_to_datetime_(double* jd,long* year,long* month,long* day,long *hour,long *minute,long *second) {
+    return grib_julian_to_datetime(*jd,year,month,day,hour,minute,second);
+}
+int grib_f_julian_to_datetime__(double* jd,long* year,long* month,long* day,long *hour,long *minute,long *second) {
+    return grib_julian_to_datetime(*jd,year,month,day,hour,minute,second);
+}
+
+int grib_f_datetime_to_julian(long* year,long* month,long* day, long* hour,long* minute,long* second,double* jd) {
+    return grib_datetime_to_julian(*year,*month,*day,*hour,*minute,*second,jd);
+}
+int grib_f_datetime_to_julian_(long* year,long* month,long* day, long* hour,long* minute,long* second,double* jd) {
+    return grib_datetime_to_julian(*year,*month,*day,*hour,*minute,*second,jd);
+}
+int grib_f_datetime_to_julian__(long* year,long* month,long* day, long* hour,long* minute,long* second,double* jd) {
+    return grib_datetime_to_julian(*year,*month,*day,*hour,*minute,*second,jd);
+}
+

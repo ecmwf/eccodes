@@ -291,7 +291,7 @@ static omp_nest_lock_t mutex;
 
 static void init()
 {
-    GRIB_OMP_CRITICAL(lock_grib_hash_keys_c)
+    GRIB_OMP_CRITICAL(lock_grib_itrie_keys_c)
     {
         if (once == 0)
         {

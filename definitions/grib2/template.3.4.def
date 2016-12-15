@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# TEMPLATE 3.4, variable resolution latitude/longitude
+# TEMPLATE 3.4, Variable resolution latitude/longitude
             
 include "grib2/template.3.shape_of_the_earth.def";
 include "grib2/template.3.latlon_vares.def";

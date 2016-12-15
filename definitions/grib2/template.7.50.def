@@ -30,7 +30,8 @@ transient numberOfPackedValues = numberOfValues - 1 : no_copy;
               bitsPerValue,
               referenceValue,
               binaryScaleFactor,
-              decimalScaleFactor
+              decimalScaleFactor,
+              optimizeScaleFactor
     ) : read_only;
 
 

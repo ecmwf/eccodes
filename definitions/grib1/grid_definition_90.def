@@ -49,7 +49,7 @@ include "grib1/scanning_mode.def";
 unsigned[3] orientationOfTheGrid : edition_specific ;
 meta geography.orientationOfTheGridInDegrees  scale(orientationOfTheGrid,oneConstant,grib1divider,truncateDegrees) : dump;
 
-unsigned[3] NrInRadiusOfEarth : edition_specific,no_copy;
+unsigned[3] NrInRadiusOfEarth : edition_specific,can_be_missing,no_copy;
 alias altitudeOfTheCameraFromTheEarthSCenterMeasuredInUnitsOfTheEarth = NrInRadiusOfEarth;
 
 unsigned[2]  Xo : dump;

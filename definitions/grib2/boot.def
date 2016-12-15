@@ -7,6 +7,10 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
+# This gets updated twice a year by WMO.
+# See http://www.wmo.int/pages/prog/www/WMOCodes/WMO306_vI2/LatestVERSION/LatestVERSION.html
+constant tablesVersionLatest = 18 : edition_specific;
+
 constant one = 1 : hidden ;
 constant million = 1000000 : hidden;
 constant grib2divider   = 1000000;
@@ -20,7 +24,6 @@ meta gts_TTAAii gts_header(20,6) : no_copy,hidden,read_only;
 meta gts_CCCC gts_header(27,4) : no_copy,hidden,read_only;
 meta gts_ddhh00 gts_header(32,6) : no_copy,hidden,read_only;
 
-
 transient  missingValue   = 9999;
 constant ieeeFloats   = 1 : edition_specific;
 constant isHindcast = 0;
@@ -28,7 +31,6 @@ constant isHindcast = 0;
 include "grib2/section.0.def";
 
 template core "grib2/sections.def";
-
 
 #if(!new())
 #{
@@ -40,5 +42,4 @@ template core "grib2/sections.def";
   #}
 #}
 
-template     section_8 "grib2/section.8.def";
-
+template section_8 "grib2/section.8.def";

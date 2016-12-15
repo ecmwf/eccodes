@@ -15,6 +15,9 @@ signed[2]   binaryScaleFactor : no_copy;
 
 signed[2]   decimalScaleFactor :no_copy;
 
+# Try different values of binaryScaleFactor and decimalScaleFactor to reduce packing error
+transient optimizeScaleFactor = 0;
+
 unsigned[1] bitsPerValue ;
 if (bitsPerValue) {
 	unsigned[1] widthOfFirstOrderValues :no_copy ;

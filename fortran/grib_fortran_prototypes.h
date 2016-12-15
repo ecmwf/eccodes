@@ -109,6 +109,11 @@ int grib_f_util_sections_copy(int *gidfrom, int *gidto, int *what, int *gidout);
 int grib_f_copy_namespace_(int *gidsrc, char *name, int *giddest, int len);
 int grib_f_copy_namespace__(int *gidsrc, char *name, int *giddest, int len);
 int grib_f_copy_namespace(int *gidsrc, char *name, int *giddest, int len);
+
+int grib_f_copy_key_ (int *gidsrc, char *name, int *giddest, int len);
+int grib_f_copy_key__(int *gidsrc, char *name, int *giddest, int len);
+int grib_f_copy_key  (int *gidsrc, char *name, int *giddest, int len);
+
 int grib_f_count_in_file(int *fid, int *n);
 int grib_f_count_in_file_(int *fid, int *n);
 int grib_f_count_in_file__(int *fid, int *n);

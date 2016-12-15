@@ -19,6 +19,16 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 32 ;
 	}
+#Sea-ice cover
+'Sea-ice cover' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 91 ;
+	}
+#Montgomery potential
+'Montgomery potential' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 37 ;
+	}
 #Pressure
 'Pressure' = {
 	 table2Version = 200 ;
@@ -54,10 +64,21 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 51 ;
 	}
+#Surface pressure
+'Surface pressure' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 1 ;
+	 indicatorOfTypeOfLevel = 1 ;
+	}
 #Vertical velocity
 'Vertical velocity' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 39 ;
+	}
+#Total column water vapour
+'Total column water vapour' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 54 ;
 	}
 #Vorticity (relative)
 'Vorticity (relative)' = {
@@ -83,6 +104,27 @@
 'Relative humidity' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 52 ;
+	}
+#10 metre U wind component
+'10 metre U wind component' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 33 ;
+	 indicatorOfTypeOfLevel = 105 ;
+	 level = 10 ;
+	}
+#10 metre V wind component
+'10 metre V wind component' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 34 ;
+	 indicatorOfTypeOfLevel = 105 ;
+	 topLevel = 10 ;
+	}
+#2 metre temperature
+'2 metre temperature' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 11 ;
+	 indicatorOfTypeOfLevel = 105 ;
+	 level = 2 ;
 	}
 #Land-sea mask
 'Land-sea mask' = {
@@ -149,6 +191,13 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 123 ;
 	}
+#2 metre specific humidity
+'2 metre specific humidity' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 51 ;
+	 indicatorOfTypeOfLevel = 105 ;
+	 level = 2 ;
+	}
 #Convective snow
 'Convective snow' = {
 	 table2Version = 200 ;
@@ -194,8 +243,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Total ozone
-'Total ozone' = {
+#Total column integrated ozone
+'Total column integrated ozone' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 10 ;
 	}
@@ -203,6 +252,13 @@
 'Ground heat flux' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 155 ;
+	}
+#2 metre relative humidity
+'2 metre relative humidity' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 52 ;
+	 indicatorOfTypeOfLevel = 105 ;
+	 level = 2 ;
 	}
 #Clear Sky Downward Solar Flux
 'Clear Sky Downward Solar Flux' = {
@@ -268,11 +324,6 @@
 'Adiabatic zonal acceleration' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 151 ;
-	}
-#Meridional water vapour flux
-'Meridional water vapour flux' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 152 ;
 	}
 #Adiabatic meridional acceleration
 'Adiabatic meridional acceleration' = {
@@ -378,16 +429,6 @@
 'Zonal momentum flux by short gravity wave' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 159 ;
-	}
-#Zonal thermal energy flux
-'Zonal thermal energy flux' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 190 ;
-	}
-#Meridional thermal energy flux
-'Meridional thermal energy flux' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 191 ;
 	}
 #Convective meridional acceleration
 'Convective meridional acceleration' = {
@@ -589,11 +630,6 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 31 ;
 	}
-#Montgomery stream Function
-'Montgomery stream Function' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 37 ;
-	}
 #Sigma coordinate vertical velocity
 'Sigma coordinate vertical velocity' = {
 	 table2Version = 200 ;
@@ -643,11 +679,6 @@
 'Humidity mixing ratio' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 53 ;
-	}
-#Precipitable water
-'Precipitable water' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 54 ;
 	}
 #Vapour pressure
 'Vapour pressure' = {
@@ -718,11 +749,6 @@
 'Density' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 89 ;
-	}
-#Ice cover (1=ice, 0=no ice)
-'Ice cover (1=ice, 0=no ice)' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 91 ;
 	}
 #Ice thickness
 'Ice thickness' = {
@@ -894,10 +920,25 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 87 ;
 	}
+#Vertical integral of eastward heat flux
+'Vertical integral of eastward heat flux' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 190 ;
+	}
+#Vertical integral of northward heat flux
+'Vertical integral of northward heat flux' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 191 ;
+	}
 #Vertical integral of eastward water vapour flux
 'Vertical integral of eastward water vapour flux' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 157 ;
+	}
+#Vertical integral of northward water vapour flux
+'Vertical integral of northward water vapour flux' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 152 ;
 	}
 #specific cloud water content
 'specific cloud water content' = {

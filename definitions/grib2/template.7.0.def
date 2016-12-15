@@ -23,7 +23,8 @@ meta codedValues data_g2simple_packing(
       bitsPerValue,
       referenceValue,
       binaryScaleFactor,
-      decimalScaleFactor
+      decimalScaleFactor,
+      optimizeScaleFactor
 ): read_only;
 
 meta values data_apply_bitmap(codedValues,

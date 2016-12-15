@@ -361,11 +361,14 @@ libeccodes_la_prototypes= \
 	grib_iterator_class_gen.c \
 	grib_iterator_class_latlon.c \
 	grib_iterator_class_regular.c \
+	grib_iterator_class_space_view.c \
 	grib_expression.c \
 	grib_util.c \
 	bufr_util.c \
+	string_util.c \
 	functions.c \
 	codes_memfs.c \
+	grib_optimize_decimal_factor.c \
 	grib_api_version.c
 
 libeccodes_extra_prototypes = grib_bits_any_endian.c grib_bits_any_endian_simple.c

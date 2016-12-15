@@ -10,13 +10,6 @@
 
 #include "grib_api_internal.h"
 
-GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
-{
-    if (*a != *b) return 1;
-    while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
-    return (*a==0 && *b==0) ? 0 : 1;
-}
-
 grib_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h)
 {
     grib_keys_iterator* ki=NULL;

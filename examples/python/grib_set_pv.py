@@ -36,7 +36,7 @@ def example():
     codes_set(gid, 'typeOfLevel', 'hybrid')
     codes_set(gid, 'level', 2)
     codes_set(gid, 'PVPresent', 1)
-    codes_set_array(gid, 'pv', pv)
+    codes_set(gid, 'pv', pv)
 
     codes_write(gid, fout)
 

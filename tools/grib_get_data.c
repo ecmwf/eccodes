@@ -196,6 +196,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     }
 
     if (iter) grib_iterator_delete(iter);
+    if (bitmap) free(bitmap);
 
     free(data_values);
     if (iter) {
