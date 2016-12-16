@@ -28,8 +28,4 @@ class GribFile(CodesFile):
         >>> len(grib.open_messages)
     """
 
-    def next(self):
-        try:
-            return GribMessage(self)
-        except IOError:
-            raise StopIteration()
+    MessageClass = GribMessage

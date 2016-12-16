@@ -60,10 +60,11 @@ class GribMessage(CodesMessage):
         ...     msg.close()
     """
 
+    product_kind = eccodes.CODES_PRODUCT_GRIB
+
     # Arguments included explicitly to support introspection
-    # TODO: Include headers_only option
     def __init__(self, codes_file=None, clone=None, sample=None,
-                 gribindex=None):
+                 headers_only=False, gribindex=None):
         """
         Open a message and inform the GRIB file that it's been incremented.
 
@@ -74,7 +75,7 @@ class GribMessage(CodesMessage):
         if gribindex is None:
             grib_args_present = False
         super(self.__class__, self).__init__(codes_file, clone, sample,
-                                             grib_args_present)
+                                             headers_only, grib_args_present)
         #: GribIndex referencing message
         self.grib_index = None
         if gribindex is not None:
@@ -91,16 +92,6 @@ class GribMessage(CodesMessage):
         super(self.__class__, self).__exit__(exc_type, exc_val, exc_tb)
         if self.grib_index:
             self.grib_index.open_messages.remove(self)
-
-    # I'd like these to be simple function mappings but this worked better in
-    # the interest of time
-    @staticmethod
-    def new_from_sample(samplename):
-        return eccodes.codes_grib_new_from_samples(samplename)
-
-    @staticmethod
-    def new_from_file(fileobj, headers_only=False):
-        return eccodes.codes_grib_new_from_file(fileobj, headers_only)
 
     @property
     def gid(self):

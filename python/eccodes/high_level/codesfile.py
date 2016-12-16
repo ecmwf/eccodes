@@ -15,6 +15,9 @@ class CodesFile(file):
     read by ecCodes should implement.
     """
 
+    #: Type of messages belonging to this file
+    MessageClass = None
+
     def __init__(self, filename, mode="r"):
         """Open file and receive codes file handle."""
         #: File handle for working with actual file on disc
@@ -47,4 +50,7 @@ class CodesFile(file):
         return self
 
     def next(self):
-        raise NotImplementedError
+        try:
+            return self.MessageClass(self)
+        except IOError:
+            raise StopIteration()

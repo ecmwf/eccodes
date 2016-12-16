@@ -17,8 +17,11 @@ class CodesMessage(object):
     messages read by ecCodes should implement.
     """
 
+    #: ecCodes enum-like PRODUCT constant
+    product_kind = None
+
     def __init__(self, codes_file=None, clone=None, sample=None,
-                 other_args_found=False):
+                 headers_only=False, other_args_found=False):
         """
         Open a message and inform the host file that it's been incremented.
 
@@ -30,8 +33,8 @@ class CodesMessage(object):
         :param clone: A valid ``CodesMessage``
         :param sample: A valid sample path to create ``CodesMessage`` from
         """
-        if not other_args_found and codes_file is None and clone is None and \
-                        sample is None:
+        if (not other_args_found and codes_file is None and clone is None and
+                    sample is None):
             raise RuntimeError("CodesMessage initialization parameters not "
                                "present.")
         #: Unique ID, for ecCodes interface
@@ -39,7 +42,8 @@ class CodesMessage(object):
         #: File containing message
         self.codes_file = None
         if codes_file is not None:
-            self.codes_id = self.new_from_file(codes_file.file_handle)
+            self.codes_id = eccodes.codes_new_from_file(
+                codes_file.file_handle, self.product_kind, headers_only)
             if self.codes_id is None:
                 raise IOError("CodesFile %s is exhausted" % codes_file.name)
             self.codes_file = codes_file
@@ -56,16 +60,6 @@ class CodesMessage(object):
             # This is a hack because the API does not accept inheritance
             outfile = self.codes_file.file_handle
         eccodes.codes_write(self.codes_id, outfile)
-
-    @staticmethod
-    def new_from_sample(samplename):
-        """For generic handling of message types."""
-        raise NotImplementedError
-
-    @staticmethod
-    def new_from_file(fileobj, headers_only=False):
-        """For generic handling of message types."""
-        raise NotImplementedError
 
     def __setitem__(self, key, value):
         """
