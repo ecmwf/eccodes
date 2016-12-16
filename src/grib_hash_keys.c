@@ -8124,7 +8124,7 @@ int grib_hash_keys_insert(grib_itrie* t,const char* key)
       (*(t->count))++;
   } else {
       grib_context_log(t->context,GRIB_LOG_ERROR,
-        "grib_hash_keys_get_id: too many accessors, increase ACCESSORS_ARRAY_SIZE\n");
+        "grib_hash_keys_insert: too many accessors, increase ACCESSORS_ARRAY_SIZE\n");
       Assert(*(t->count)+TOTAL_KEYWORDS < ACCESSORS_ARRAY_SIZE);
   }
 

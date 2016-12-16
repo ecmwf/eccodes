@@ -310,100 +310,102 @@ struct grib_itrie {
 };
 
 
-grib_itrie *grib_hash_keys_new(grib_context* c,int* count) {
-  grib_itrie* t = (grib_itrie*)grib_context_malloc_clear(c,sizeof(grib_itrie));
-  t->context = c;
-  t->id=-1;
-  t->count=count;
-  return t;
+grib_itrie *grib_hash_keys_new(grib_context* c,int* count)
+{
+    grib_itrie* t = (grib_itrie*)grib_context_malloc_clear(c,sizeof(grib_itrie));
+    t->context = c;
+    t->id=-1;
+    t->count=count;
+    return t;
 }
 
-void grib_hash_keys_delete(grib_itrie *t) {
-  GRIB_MUTEX_INIT_ONCE(&once,&init)
-  GRIB_MUTEX_LOCK(&mutex)
+void grib_hash_keys_delete(grib_itrie *t)
+{
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex);
 
-  if(t)  {
-    int i;
-    for(i = 0; i < SIZE; i++)
-      if (t->next[i])
-        grib_hash_keys_delete(t->next[i]);
+    if(t)  {
+        int i;
+        for(i = 0; i < SIZE; i++)
+            if (t->next[i])
+                grib_hash_keys_delete(t->next[i]);
 
-    grib_context_free(t->context,t);
+        grib_context_free(t->context,t);
 
-  }
+    }
 
-  GRIB_MUTEX_UNLOCK(&mutex)
+    GRIB_MUTEX_UNLOCK(&mutex);
 }
 
 int grib_hash_keys_get_id(grib_itrie* t,const char* key)
 {
-  const char *k=key;
-  grib_itrie* last=t;
+    const char *k=key;
+    grib_itrie* last=t;
 
-  struct grib_keys_hash* hash=grib_keys_hash_get(key,strlen(key));
+    struct grib_keys_hash* hash=grib_keys_hash_get(key,strlen(key));
 
-  if (hash) { 
-	  /* printf("%s found %s (%d)\n",key,hash->name,hash->id); */
-	  return hash->id;
-  }
+    if (hash) {
+        /* printf("%s found %s (%d)\n",key,hash->name,hash->id); */
+        return hash->id;
+    }
 
-  /* printf("+++ \"%s\"\n",key); */
+    /* printf("+++ \"%s\"\n",key); */
 
-  GRIB_MUTEX_INIT_ONCE(&once,&init)
-  GRIB_MUTEX_LOCK(&mutex)
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex);
 
-  while(*k && t)  t = t->next[mapping[(int)*k++]];
+    while(*k && t)  t = t->next[mapping[(int)*k++]];
 
-  if(t != NULL && t->id != -1) {
-	GRIB_MUTEX_UNLOCK(&mutex)
-	return t->id+TOTAL_KEYWORDS+1;
-  } else {
-	int ret=grib_hash_keys_insert(last,key);
-	GRIB_MUTEX_UNLOCK(&mutex)
-	return ret+TOTAL_KEYWORDS+1;
-  }
+    if(t != NULL && t->id != -1) {
+        GRIB_MUTEX_UNLOCK(&mutex);
+        return t->id+TOTAL_KEYWORDS+1;
+    } else {
+        int ret=grib_hash_keys_insert(last,key);
+        GRIB_MUTEX_UNLOCK(&mutex);
+        return ret+TOTAL_KEYWORDS+1;
+    }
 }
 
 int grib_hash_keys_insert(grib_itrie* t,const char* key)
 {
-  const char *k = key;
-  grib_itrie *last = t;
-  int* count;
+    const char *k = key;
+    grib_itrie *last = t;
+    int* count;
 
-  GRIB_MUTEX_INIT_ONCE(&once,&init)
+    GRIB_MUTEX_INIT_ONCE(&once,&init)
 
-  GRIB_MUTEX_LOCK(&mutex)
+    GRIB_MUTEX_LOCK(&mutex)
 
-  count=t->count;
+    count=t->count;
 
-  while(*k && t) {
-    last = t;
-    t = t->next[mapping[(int)*k]];
-    if(t) k++;
-  }
-
-  if (*k!=0)  {
-    t=last;
-    while(*k) {
-      int j = mapping[(int)*k++];
-      t->next[j] = grib_hash_keys_new(t->context,count);
-      t = t->next[j];
+    while(*k && t) {
+        last = t;
+        t = t->next[mapping[(int)*k]];
+        if(t) k++;
     }
-  }
-  if (*(t->count)+TOTAL_KEYWORDS < ACCESSORS_ARRAY_SIZE) {
-      t->id=*(t->count);
-      (*(t->count))++;
-  } else {
-      grib_context_log(t->context,GRIB_LOG_ERROR,
-        "grib_hash_keys_get_id: too many accessors, increase ACCESSORS_ARRAY_SIZE\n");
-      Assert(*(t->count)+TOTAL_KEYWORDS < ACCESSORS_ARRAY_SIZE);
-  }
 
-  GRIB_MUTEX_UNLOCK(&mutex)
+    if (*k!=0)  {
+        t=last;
+        while(*k) {
+            int j = mapping[(int)*k++];
+            t->next[j] = grib_hash_keys_new(t->context,count);
+            t = t->next[j];
+        }
+    }
+    if (*(t->count)+TOTAL_KEYWORDS < ACCESSORS_ARRAY_SIZE) {
+        t->id=*(t->count);
+        (*(t->count))++;
+    } else {
+        grib_context_log(t->context,GRIB_LOG_ERROR,
+                "grib_hash_keys_insert: too many accessors, increase ACCESSORS_ARRAY_SIZE\n");
+        Assert(*(t->count)+TOTAL_KEYWORDS < ACCESSORS_ARRAY_SIZE);
+    }
 
-  /*printf("grib_hash_keys_get_id: %s -> %d\n",key,t->id);*/
+    GRIB_MUTEX_UNLOCK(&mutex)
 
-  return t->id;
+    /*printf("grib_hash_keys_get_id: %s -> %d\n",key,t->id);*/
+
+    return t->id;
 }
 
 int grib_hash_keys_get_size(grib_itrie* t) {return *(t->count);}
