@@ -11,32 +11,9 @@ from .. import eccodes
 class CodesFile(file):
 
     """
-    An abstract class to specify and/or implement behavior that files read by
-    ecCodes should implement.
+    An abstract class to specify and/or implement common behavior that files
+    read by ecCodes should implement.
     """
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, type, value, traceback):
-        """Close all open messages, release GRIB file handle and close file."""
-        while self.open_messages:
-            self.open_messages.pop().close()
-        self.file_handle.close()
-
-    def close(self):
-        """Possibility to manually close file."""
-        self.__exit__(None, None, None)
-
-    def __len__(self):
-        """Return total number of messages in file."""
-        return eccodes.codes_count_in_file(self.file_handle)
-
-    def __iter__(self):
-        return self
-
-    def next(self):
-        raise NotImplementedError
 
     def __init__(self, filename, mode="r"):
         """Open file and receive codes file handle."""
@@ -48,3 +25,26 @@ class CodesFile(file):
         self.message = 0
         #: Open messages
         self.open_messages = []
+
+    def __exit__(self, type, value, traceback):
+        """Close all open messages, release GRIB file handle and close file."""
+        while self.open_messages:
+            self.open_messages.pop().close()
+        self.file_handle.close()
+
+    def __len__(self):
+        """Return total number of messages in file."""
+        return eccodes.codes_count_in_file(self.file_handle)
+
+    def __enter__(self):
+        return self
+
+    def close(self):
+        """Possibility to manually close file."""
+        self.__exit__(None, None, None)
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        raise NotImplementedError
