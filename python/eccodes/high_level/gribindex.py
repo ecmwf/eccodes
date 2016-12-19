@@ -34,7 +34,7 @@ class GribIndex(object):
     def __enter__(self):
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, exception_type, exception_value, traceback):
         """Release GRIB message handle and inform file of release."""
         while self.open_messages:
             self.open_messages[0].close()
@@ -79,9 +79,9 @@ class GribIndex(object):
         """Return number of distinct values for index key."""
         return eccodes.codes_index_get_size(self.iid, key)
 
-    def values(self, key, type=str):
+    def values(self, key, ktype=str):
         """Return distinct values of index key."""
-        return eccodes.codes_index_get(self.iid, key, type)
+        return eccodes.codes_index_get(self.iid, key, ktype)
 
     def add(self, filename):
         """Add ``filename`` to the ``GribIndex``."""

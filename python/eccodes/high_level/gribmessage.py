@@ -59,6 +59,7 @@ class GribMessage(object):
         ...     # If desired, messages can be closed manually or used in with
         ...     msg.close()
     """
+
     def __enter__(self):
         return self
 
@@ -144,7 +145,7 @@ class GribMessage(object):
         if grib_file is not None:
             self.gid = eccodes.codes_grib_new_from_file(grib_file.file_handle)
             if self.gid is None:
-                raise IOError("Grib file %s is exhausted" % grib_file.name)
+                raise IOError("Grib file %s is exhausted." % grib_file.name)
             self.grib_file = grib_file
             self.grib_file.message += 1
             self.grib_file.open_messages.append(self)
@@ -175,7 +176,7 @@ class GribMessage(object):
     def get(self, key, ktype=None):
         """Get value of a given key as its native or specified type."""
         if self.missing(key):
-            raise KeyError("Key is missing from message.")
+            raise KeyError("Value of key %s is MISSING." % key)
         if eccodes.codes_get_size(self.gid, key) > 1:
             ret = eccodes.codes_get_array(self.gid, key, ktype)
         else:

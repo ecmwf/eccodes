@@ -79,12 +79,12 @@ class TestGribMessage(unittest.TestCase):
         """Metadata is read correctly from GribMessage."""
         with GribFile(TESTGRIB) as grib:
             msg = GribMessage(grib)
-            key_count = 251
+            key_count = 253
             self.assertEqual(len(msg), key_count)
             self.assertEqual(msg.size(), 160219)
             self.assertEqual(len(msg.keys()), key_count)
 
-    def test_missing_message_behavior(self):
+    def test_missing_message_behaviour(self):
         """Missing messages are detected properly."""
         with GribFile(TESTGRIB) as grib:
             msg = GribMessage(grib)

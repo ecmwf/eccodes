@@ -30,7 +30,7 @@ class GribFile(file):
     def __enter__(self):
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, exception_type, exception_value, traceback):
         """Close all open messages, release GRIB file handle and close file."""
         while self.open_messages:
             self.open_messages.pop().close()
