@@ -68,4 +68,4 @@ setup(name='eccodes',
       url='https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home',
       download_url='https://software.ecmwf.int/wiki/display/ECC/Releases',
       ext_modules=[Extension('gribapi._gribapi_swig', **attdict)],
-      packages=['eccodes', 'gribapi'])
+      packages=['eccodes', 'eccodes.high_level', 'gribapi'])
