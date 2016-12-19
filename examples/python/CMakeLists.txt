@@ -40,6 +40,7 @@ list( APPEND tests
    grib_print_data
    grib_samples
    grib_set_keys
+   grib_set_pv
    grib_set_missing
    binary_message
    grib_set_bitmap
