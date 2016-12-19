@@ -31,7 +31,6 @@ if [ $skip_test -eq 1 ]; then
 fi
 echo "AEC feature was enabled."
 
-BLACKLIST="totalLength,section5Length,section7Length,dataRepresentationTemplateNumber,typeOfPacking"
 BLACKLIST="totalLength,section5Length,section7Length,dataRepresentationTemplateNumber"
 
 infile=${data_dir}/ccsds.grib2
@@ -72,6 +71,7 @@ res3=`${tools_dir}grib_get '-F%1.2f' -p min,max,avg $outfile2`
 
 rm -f $outfile1 $outfile2 || true
 
+# ECC-297
 infile=${data_dir}/tigge_ecmwf.grib2
 outfile1=$infile.tmp_ccsds.1
 outfile2=$infile.tmp_ccsds.2
