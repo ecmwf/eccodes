@@ -223,6 +223,9 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
     if (grib_options_on("l:"))
         options->latlon=grib_options_get_option("l:");
 
+    if (grib_options_on("j")) options->json_output=1;
+    else options->json_output=0;
+
     if (grib_options_on("X:"))
         options->infile_offset=atol(grib_options_get_option("X:"));
 

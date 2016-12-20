@@ -110,8 +110,8 @@ grib_runtime_options global_options={
         0,         /* headers_only  */
         0,         /* skip_all  */
         {{0,},},   /* grib_values tolerance[MAX_KEYS] */
-        0          /* infile_offset */
-
+        0,         /* infile_offset */
+        0          /* JSON output */
 };
 
 static grib_handle* grib_handle_new_from_file_x(grib_context* c,FILE* f,int mode,int headers_only,int *err)
@@ -344,7 +344,10 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
                 continue;
             }
 
-            grib_print_header(options,h);
+            if (options->json_output == 0)
+                grib_print_header(options,h);
+            else
+                grib_tools_set_print_keys(options,h,options->name_space);
 
             grib_skip_check(options,h);
 
@@ -619,6 +622,8 @@ static void grib_print_header(grib_runtime_options* options,grib_handle* h)
     size_t strlenkey=0;
     int width;
     int written_to_dump = 0; /* boolean */
+    if (options->json_output)
+        return; /* For JSON output we do not print a single header for all msgs */
     if (options->handle_count!=1)
         return;
 
@@ -785,6 +790,42 @@ void grib_skip_check(grib_runtime_options* options,grib_handle* h)
     }
 }
 
+static void get_key_value(grib_handle* h, const char* key_name, char* value_str, const char* format)
+{
+    int ret = 0, type = 0;
+    double dvalue = 0;
+    long lvalue = 0;
+    size_t len=MAX_STRING_LEN;
+    grib_get_native_type(h, key_name, &type);
+    if (type == GRIB_TYPE_STRING)
+    {
+        ret=grib_get_string(h, key_name, value_str, &len);
+    }
+    else if (type == GRIB_TYPE_DOUBLE)
+    {
+        ret=grib_get_double( h, key_name, &dvalue);
+        sprintf(value_str, format, dvalue);
+    }
+    else if (type == GRIB_TYPE_LONG)
+    {
+        ret=grib_get_long( h, key_name, &lvalue);
+        sprintf(value_str,"%ld", lvalue);
+    }
+    else if (type == GRIB_TYPE_BYTES)
+    {
+        ret=grib_get_string(h, key_name, value_str, &len);
+    }
+    else
+    {
+        fprintf(dump_file,"invalid format option for %s\n", key_name);
+        exit(1);
+    }
+    if (ret != GRIB_SUCCESS) {
+        fprintf(dump_file,"Failed to get value for key %s\n", key_name);
+        exit(1);
+    }
+}
+
 void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
 {
     int i=0;
@@ -798,6 +839,21 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     grib_accessor* acc = NULL;
 
     if (!options->verbose) return;
+
+    if (options->json_output) {
+        fprintf(dump_file, "\"message %d\" : {\n", options->handle_count);
+        for (i=0;i<options->print_keys_count;i++) {
+            fprintf(dump_file,"\t\"%s\": ", options->print_keys[i].name);
+            get_key_value(h, options->print_keys[i].name, value, options->format);
+            fprintf(dump_file,"\"%s\"", value);
+            if (i != options->print_keys_count-1)
+                fprintf(dump_file,",\n");
+            else
+                fprintf(dump_file,"\n");
+        }
+        fprintf(dump_file, "},\n");
+        return;
+    }
 
     for (i=0;i<options->print_keys_count;i++) {
         size_t len=MAX_STRING_LEN;
@@ -949,8 +1005,9 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
 void grib_print_file_statistics(grib_runtime_options* options,grib_tools_file* file)
 {
     grib_failed* failed=NULL;
-
     Assert(file);
+    if (options->json_output)
+        return;
 
     failed=file->failed;
 
@@ -977,6 +1034,8 @@ void grib_print_file_statistics(grib_runtime_options* options,grib_tools_file* f
 
 void grib_print_full_statistics(grib_runtime_options* options)
 {
+    if (options->json_output)
+        return;
     if (options->print_statistics && options->verbose)
         fprintf(dump_file,"%d of %d total messages in %d files\n",
                 options->filter_handle_count,options->handle_count,options->file_count);
