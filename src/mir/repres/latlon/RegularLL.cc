@@ -76,15 +76,15 @@ void RegularLL::fill(api::MIRJob &job) const  {
 
 
 atlas::grid::lonlat::Shift RegularLL::atlasShift() const {
-    typedef eckit::FloatCompare<double> cmp;
+    
 
     // locate latitude/longitude origin via accumulation of increments, in range [0,inc[
     // NOTE: shift is assumed half-increment origin dispacement; Domain is checked for
     // global NS/EW range (this could/should be revised).
     const double inc_we = increments_.west_east();
     const double inc_sn = increments_.south_north();
-    ASSERT(cmp::isStrictlyGreater(inc_we, 0));
-    ASSERT(cmp::isStrictlyGreater(inc_sn, 0));
+    ASSERT(eckit::types::is_strictly_greater(inc_we, 0.));
+    ASSERT(eckit::types::is_strictly_greater(inc_sn, 0.));
 
     int i = 0, j = 0;
     while (bbox_.west()  + i * inc_we < inc_we) { ++i; }
@@ -98,8 +98,8 @@ atlas::grid::lonlat::Shift RegularLL::atlasShift() const {
     const atlas::grid::Domain dom = atlasDomain();
     const bool
     includesBothPoles = dom.includesPoleNorth() && dom.includesPoleSouth(),
-    isShiftedLon = dom.isPeriodicEastWest() && cmp::isApproximatelyEqual(lon_origin, inc_we / 2.),
-    isShiftedLat = includesBothPoles        && cmp::isApproximatelyEqual(lat_origin, inc_sn / 2.);
+    isShiftedLon = dom.isPeriodicEastWest() && eckit::types::is_approximately_equal(lon_origin, inc_we / 2.),
+    isShiftedLat = includesBothPoles        && eckit::types::is_approximately_equal(lat_origin, inc_sn / 2.);
 
     return atlas::grid::lonlat::Shift(isShiftedLon, isShiftedLat);
 }

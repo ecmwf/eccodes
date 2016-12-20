@@ -85,7 +85,7 @@ void Reduced::fill(grib_info &info) const  {
 
     // for GRIB, a global field is also aligned with Greenwich
     bool global = atlasDomain().isGlobal();
-    bool westAtGreenwich = eckit::FloatCompare<double>::isApproximatelyEqual(0, bbox_.west());
+    bool westAtGreenwich = eckit::types::is_approximately_equal<double>(0, bbox_.west());
 
     long j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
@@ -190,21 +190,21 @@ private:
     }
 
     static void repositionToFirstLongitudeIndex(size_t& imin, size_t& imax, const atlas::grid::Domain& dom, const size_t& n) {
-        typedef eckit::FloatCompare<double> cmp;
-        const double west_positive = dom.west() + (cmp::isStrictlyGreater(0., dom.west()) ? 360. : 0.);
-        const double east_positive = dom.east() + (cmp::isStrictlyGreater(0., dom.west()) ? 360. : 0.);
-        ASSERT(cmp::isApproximatelyGreaterOrEqual(360., east_positive - west_positive));
+
+        const double west_positive = dom.west() + (eckit::types::is_strictly_greater(0., dom.west()) ? 360. : 0.);
+        const double east_positive = dom.east() + (eckit::types::is_strictly_greater(0., dom.west()) ? 360. : 0.);
+        ASSERT(eckit::types::is_approximately_greater_or_equal(360., east_positive - west_positive));
         
         ASSERT(n);
 
         // assuming n>0, returned range satisfies: 0 <= imin < imax; and imax - imin <= n
         imin = 0;
-        while (imin < n && cmp::isStrictlyGreater(west_positive, (imin * 360.) / n)) {
+        while (imin < n && eckit::types::is_strictly_greater(west_positive, (imin * 360.) / n)) {
             ++imin;
         }
         imin = imin % n;
         imax = imin;
-        while (imax - imin < n && cmp::isApproximatelyGreaterOrEqual(east_positive, (imax * 360.) / n)) {
+        while (imax - imin < n && eckit::types::is_approximately_greater_or_equal(east_positive, (imax * 360.) / n)) {
             ++imax;
         }
         ASSERT(imax > imin);
@@ -219,7 +219,7 @@ atlas::grid::Domain Reduced::atlasDomain() const {
 
 
 atlas::grid::Domain Reduced::atlasDomain(const util::BoundingBox& bbox) const {
-    typedef eckit::FloatCompare<double> cmp;
+
 
     // calculate EW and NS increments
     const std::vector<long>& pl = pls();
@@ -236,7 +236,7 @@ atlas::grid::Domain Reduced::atlasDomain(const util::BoundingBox& bbox) const {
     for (size_t j = 1; j < lats.size(); ++j) {
         max_inc_north_south = std::max(max_inc_north_south, lats[j - 1] - lats[j]);
     }
-    ASSERT(cmp::isStrictlyGreater(max_inc_north_south, 0));
+    ASSERT(eckit::types::is_strictly_greater(max_inc_north_south, 0.));
 
     const double ew = bbox.east() - bbox.west();
     const double inc_west_east = max_pl ? 360. / double(max_pl) : 0.;
@@ -245,10 +245,10 @@ atlas::grid::Domain Reduced::atlasDomain(const util::BoundingBox& bbox) const {
     const double epsilon_grib1 = 1.0 / 1000.0;
 
     const bool isPeriodicEastWest =
-        cmp::isApproximatelyEqual(360., ew + inc_west_east)
+        eckit::types::is_approximately_equal(360., ew + inc_west_east)
 
         // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree. Use the precision given by GRIB in this check
-        || cmp::isApproximatelyEqual(360., ew + inc_west_east, epsilon_grib1 )
+        || eckit::types::is_approximately_equal(360., ew + inc_west_east, epsilon_grib1 )
 
         // The dissemination will put in the GRIB header what is specified by the user
         // so, for example if the user specify 359.999999 as the eastern longitude, this
@@ -256,10 +256,10 @@ atlas::grid::Domain Reduced::atlasDomain(const util::BoundingBox& bbox) const {
         || (ew + inc_west_east > 360.);
 
     const bool
-    includesPoleNorth = cmp::isApproximatelyEqual(bbox.north(),  90, max_inc_north_south),
-    includesPoleSouth = cmp::isApproximatelyEqual(bbox.south(), -90, max_inc_north_south),
-    isNorthAtEquator  = cmp::isApproximatelyEqual(bbox.north(),   0, max_inc_north_south),
-    isSouthAtEquator  = cmp::isApproximatelyEqual(bbox.south(),   0, max_inc_north_south);
+    includesPoleNorth = eckit::types::is_approximately_equal(bbox.north(),  90., max_inc_north_south),
+    includesPoleSouth = eckit::types::is_approximately_equal(bbox.south(), -90., max_inc_north_south),
+    isNorthAtEquator  = eckit::types::is_approximately_equal(bbox.north(),   0., max_inc_north_south),
+    isSouthAtEquator  = eckit::types::is_approximately_equal(bbox.south(),   0., max_inc_north_south);
 
     const double
     north = includesPoleNorth ?   90 : isNorthAtEquator ? 0 : bbox.north(),

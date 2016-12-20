@@ -125,7 +125,7 @@ atlas::grid::Domain ReducedLL::atlasDomain() const {
 
 
 atlas::grid::Domain ReducedLL::atlasDomain(const util::BoundingBox& bbox) const {
-    typedef eckit::FloatCompare<double> cmp;
+    
 
     ASSERT(pl_.size());
 
@@ -141,12 +141,12 @@ atlas::grid::Domain ReducedLL::atlasDomain(const util::BoundingBox& bbox) const 
     const double epsilon_grib1 = 1.0 / 1000.0;
 
     const bool isPeriodicEastWest =
-               cmp::isApproximatelyEqual(ew + inc_west_east, 360.)
+               eckit::types::is_approximately_equal(ew + inc_west_east, 360.)
 
             // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree. Use the precision given by GRIB in this check
-            || cmp::isApproximatelyEqual(ew + inc_west_east, 360., epsilon_grib1);
-    const bool includesPoleNorth  = cmp::isApproximatelyEqual(bbox.north(),  90.);
-    const bool includesPoleSouth  = cmp::isApproximatelyEqual(bbox.south(), -90.);
+            || eckit::types::is_approximately_equal(ew + inc_west_east, 360., epsilon_grib1);
+    const bool includesPoleNorth  = eckit::types::is_approximately_equal(bbox.north(),  90.);
+    const bool includesPoleSouth  = eckit::types::is_approximately_equal(bbox.south(), -90.);
 
     const double
             north = includesPoleNorth?   90 : bbox.north(),

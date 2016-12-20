@@ -32,7 +32,8 @@ namespace repres {
 namespace latlon {
 
 static size_t computeN(double first, double last, double inc, const char* n_name) {
-    typedef eckit::FloatCompare<double> cmp;
+
+
 
     ASSERT(first <= last);
     ASSERT(inc > 0);
@@ -45,7 +46,7 @@ static size_t computeN(double first, double last, double inc, const char* n_name
     size_t n = p + (d0<d1? 0 : 1);
     // eckit::Log::debug<LibMir>() << p << " " << d0 << " " << d1 << " " << inc << " " << first << " " << last << std::endl;
 
-    if (!cmp::isApproximatelyEqual(n*inc + first, last)) {
+    if (!eckit::types::is_approximately_equal(n*inc + first, last)) {
         std::ostringstream os;
         os << "computeN: cannot compute accurately " << n_name << " from " << first << "/to/" << last << "/by/" << inc;
         eckit::Log::debug<LibMir>() << os.str() << std::endl;
@@ -295,15 +296,15 @@ atlas::grid::Domain LatLon::atlasDomain() const {
 
 
 atlas::grid::Domain LatLon::atlasDomain(const util::BoundingBox& bbox) const {
-    typedef eckit::FloatCompare<double> cmp;
+
 
     // Special case for shifted grids
     const double ns = bbox.north() - bbox.south() ;
     const double ew = bbox.east()  - bbox.west() ;
 
-    const bool isPeriodicEastWest = cmp::isApproximatelyEqual(ew + increments_.west_east(), 360.);
-    const bool includesPoles = cmp::isApproximatelyEqual(ns, 180.)
-                            || cmp::isApproximatelyEqual(ns + increments_.south_north(), 180.);
+    const bool isPeriodicEastWest = eckit::types::is_approximately_equal(ew + increments_.west_east(), 360.);
+    const bool includesPoles = eckit::types::is_approximately_equal(ns, 180.)
+                            || eckit::types::is_approximately_equal(ns + increments_.south_north(), 180.);
 
     const double
             north = includesPoles?   90 : bbox.north(),

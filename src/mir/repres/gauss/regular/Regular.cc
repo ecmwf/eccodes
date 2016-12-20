@@ -78,7 +78,7 @@ void Regular::fill(grib_info &info) const  {
 
     // for GRIB, a global field is also aligned with Greenwich
     bool global = atlasDomain().isGlobal();
-    bool westAtGreenwich = eckit::FloatCompare<double>::isApproximatelyEqual(0, bbox_.west());
+    bool westAtGreenwich = eckit::types::is_approximately_equal<double>(0, bbox_.west());
 
     long j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
@@ -116,7 +116,7 @@ atlas::grid::Domain Regular::atlasDomain(const util::BoundingBox& bbox) const {
     // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree
     // Use the precision given by GRIB in this check
     const double epsilon_grib1 = 1.0 / 1000.0;
-    eckit::FloatApproxCompare<double> cmp_eps(epsilon_grib1);
+    eckit::types::CompareApproximatelyEqual<double> cmp_eps(epsilon_grib1);
 
     double adjust_north = bbox.north();
     double adjust_south = bbox.south();
