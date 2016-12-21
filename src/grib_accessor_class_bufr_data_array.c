@@ -64,6 +64,7 @@
    MEMBERS    = grib_iarray* iss_list
    MEMBERS    = grib_trie* dataAccessorsTrie
    MEMBERS    = grib_trie* dataAccessorsRank
+   MEMBERS    = grib_sarray* tempStrings
 
    END_CLASS_DEF
 
@@ -137,6 +138,7 @@ typedef struct grib_accessor_bufr_data_array {
 	grib_iarray* iss_list;
 	grib_trie* dataAccessorsTrie;
 	grib_trie* dataAccessorsRank;
+	grib_sarray* tempStrings;
 } grib_accessor_bufr_data_array;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -1511,6 +1513,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     char code[10]={0,};
+    char* temp_str = NULL;
     int idx=0;
     unsigned long flags=GRIB_ACCESSOR_FLAG_READ_ONLY;
     grib_action operatorCreator = {0, };
@@ -1540,6 +1543,8 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
     case 0:
     case 1:
         creator.name=grib_context_strdup(a->context, self->expanded->v[idx]->shortName);
+        /* ECC-325: store alloc'd string (due to strdup) for clean up later */
+        grib_sarray_push(a->context, self->tempStrings, creator.name);
         elementAccessor = grib_accessor_factory(section, &creator, 0, NULL);
         if (self->canBeMissing[idx]) elementAccessor->flags |= GRIB_ACCESSOR_FLAG_CAN_BE_MISSING;
         if (self->expanded->v[idx]->code == 31000 || self->expanded->v[idx]->code == 31001 || self->expanded->v[idx]->code == 31002 || self->expanded->v[idx]->code == 31031)
@@ -1571,8 +1576,10 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 
         sprintf(code,"%06ld",self->expanded->v[idx]->code);
-        attribute=create_attribute_variable("code",section,GRIB_TYPE_STRING,grib_context_strdup(a->context,code),0,0,flags);
+        temp_str = grib_context_strdup(a->context,code);
+        attribute=create_attribute_variable("code",section,GRIB_TYPE_STRING,temp_str,0,0,flags);
         if (!attribute) return NULL;
+        grib_sarray_push(a->context, self->tempStrings, temp_str);/* ECC-325: store alloc'd string (due to strdup) for clean up later */
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 
         attribute=create_attribute_variable("units",section,GRIB_TYPE_STRING,self->expanded->v[idx]->units,0,0,GRIB_ACCESSOR_FLAG_DUMP | flags);
@@ -1909,6 +1916,13 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
         grib_trie_delete(self->dataAccessorsRank);
     }
     self->dataAccessorsRank=grib_trie_new(c);
+
+    if (self->tempStrings) {
+        grib_sarray_delete_content(c, self->tempStrings);
+        grib_sarray_delete        (c, self->tempStrings);
+        self->tempStrings=NULL;
+    }
+    self->tempStrings = grib_sarray_new(c, self->numberOfSubsets, 10);
 
     end= self->compressedData ? 1 : self->numberOfSubsets;
     groupNumber=1;
@@ -2282,7 +2296,6 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
         grib_iarray_delete(self->iss_list);
         self->iss_list=0;
     }
-
     end= self->compressedData == 1 ? 1 : self->numberOfSubsets ;
 
     if (flag!=PROCESS_DECODE) {
@@ -2649,4 +2662,8 @@ static void destroy(grib_context* c,grib_accessor* a)
     if (self->dataAccessors) grib_accessors_list_delete(c,self->dataAccessors);
     if (self->dataAccessorsTrie) grib_trie_delete_container(self->dataAccessorsTrie);
     if (self->dataAccessorsRank) grib_trie_delete(self->dataAccessorsRank);
+    if (self->tempStrings) {
+        grib_sarray_delete_content(c, self->tempStrings);
+        grib_sarray_delete        (c, self->tempStrings);
+    }
 }
