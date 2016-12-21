@@ -249,7 +249,7 @@ static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
 static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_wmo *self = (grib_dumper_wmo*)d;
-    double value; size_t size = 1;
+    double value=0; size_t size = 1;
     int err = grib_unpack_double(a,&value,&size);
 
 
