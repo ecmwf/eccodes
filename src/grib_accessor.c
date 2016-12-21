@@ -503,6 +503,7 @@ void grib_accessor_delete(grib_context *ct, grib_accessor* a)
         }
         c = s;
     }
+    /*printf("Debug: grib_accessor_delete a=%p (%s)\n", (void*)a, a->name);*/
     grib_context_free(ct,a);
 }
 
