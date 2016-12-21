@@ -13,52 +13,11 @@ from .codesmessage import CodesMessage
 from .codesfile import CodesFile
 
 
-# TODO: Docstring is mostly redundant, perhaps move into base class?
 class BufrMessage(CodesMessage):
 
-    """
-    A BUFR message.
-
-    Each ``BufrMessage`` is stored as a key/value pair in a dictionary-like
-    structure. It can be used in a context manager or by itself. When the
-    ``BufrFile`` it belongs to is closed, it closes any open ``BufrMessage``s
-    that belong to it. If a ``BufrMessage`` is closed before its ``BufrFile``
-    is closed, it informs the ``BufrFile`` of its closure.
-
-    Scalar and vector values are set appropriately through the same method.
-
-    Usage::
-
-        >>> with BufrFile(filename) as bufr:
-        ...     # Access shortNames of all messages
-        ...     for msg in bufr:
-        ...         print(msg["shortName"])
-        ...     # Report number of keys in message
-        ...     len(msg)
-        ...     # Report message size in bytes
-        ...     msg.size
-        ...     # Report keys in message
-        ...     msg.keys()
-        ...     # Check if value is missing
-        ...     msg.missing("scaleFactorOfSecondFixedSurface")
-        ...     # Set scalar value
-        ...     msg["scaleFactorOfSecondFixedSurface"] = 5
-        ...     # Check key's value
-        ...     msg["scaleFactorOfSecondFixedSurface"]
-        ...     # Set value to missing
-        ...     msg.set_missing("scaleFactorOfSecondFixedSurface")
-        ...     # Missing values raise exception when read with dict notation
-        ...     msg["scaleFactorOfSecondFixedSurface"]
-        ...     # Array values are set transparently
-        ...     msg["values"] = [1, 2, 3]
-        ...     # Messages can be written to file
-        ...     with open(testfile, "w") as test:
-        ...         msg.write(test)
-        ...     # Messages can be cloned from other messages
-        ...     msg2 = BufrMessage(clone=msg)
-        ...     # If desired, messages can be closed manually or used in with
-        ...     msg.close()
-    """
+    __doc__ = "\n".join(CodesMessage.__doc__.splitlines()[4:]).format(
+        prod_type="BUFR", classname="BufrMessage", parent="BufrFile",
+        alias="bufr")
 
     product_kind = eccodes.CODES_PRODUCT_BUFR
 
@@ -114,21 +73,7 @@ class BufrMessage(CodesMessage):
 
 class BufrFile(CodesFile):
 
-    """
-    A BUFR file handle meant for use in a context manager.
-
-    Individual messages can be accessed using the ``next`` method. Of course,
-    it is also possible to iterate over each message in the file::
-
-        >>> with BufrFile(filename) as bufr:
-        ...     # Print number of messages in file
-        ...     len(bufr)
-        ...     # Open all messages in file
-        ...     for msg in bufr:
-        ...         print(msg["shortName"])
-        ...     len(bufr.open_messages)
-        >>> # When the file is closed, any open messages are closed
-        >>> len(bufr.open_messages)
-    """
+    __doc__ = "\n".join(CodesFile.__doc__.splitlines()[4:]).format(
+        prod_type="BUFR", classname="BufrFile", alias="bufr")
 
     MessageClass = BufrMessage

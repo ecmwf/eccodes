@@ -13,6 +13,21 @@ class CodesFile(file):
     """
     An abstract class to specify and/or implement common behavior that files
     read by ecCodes should implement.
+
+    A {prod_type} file handle meant for use in a context manager.
+
+    Individual messages can be accessed using the ``next`` method. Of course,
+    it is also possible to iterate over each message in the file::
+
+        >>> with {classname}(filename) as {alias}:
+        ...     # Print number of messages in file
+        ...     len({alias})
+        ...     # Open all messages in file
+        ...     for msg in {alias}:
+        ...         print(msg[key_name])
+        ...     len({alias}.open_messages)
+        >>> # When the file is closed, any open messages are closed
+        >>> len({alias}.open_messages)
     """
 
     #: Type of messages belonging to this file

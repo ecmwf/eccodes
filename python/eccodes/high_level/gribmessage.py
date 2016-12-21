@@ -16,49 +16,9 @@ class IndexNotSelectedError(Exception):
 
 class GribMessage(CodesMessage):
 
-    """
-    A GRIB message.
-
-    Each ``GribMessage`` is stored as a key/value pair in a dictionary-like
-    structure. It can be used in a context manager or by itself. When the
-    ``GribFile`` it belongs to is closed, it closes any open ``GribMessage``s
-    that belong to it. If a ``GribMessage`` is closed before its ``GribFile``
-    is closed, it informs the ``GribFile`` of its closure.
-
-    Scalar and vector values are set appropriately through the same method.
-
-    Usage::
-
-        >>> with GribFile(filename) as grib:
-        ...     # Access shortNames of all messages
-        ...     for msg in grib:
-        ...         print(msg["shortName"])
-        ...     # Report number of keys in message
-        ...     len(msg)
-        ...     # Report message size in bytes
-        ...     msg.size
-        ...     # Report keys in message
-        ...     msg.keys()
-        ...     # Check if value is missing
-        ...     msg.missing("scaleFactorOfSecondFixedSurface")
-        ...     # Set scalar value
-        ...     msg["scaleFactorOfSecondFixedSurface"] = 5
-        ...     # Check key's value
-        ...     msg["scaleFactorOfSecondFixedSurface"]
-        ...     # Set value to missing
-        ...     msg.set_missing("scaleFactorOfSecondFixedSurface")
-        ...     # Missing values raise exception when read with dict notation
-        ...     msg["scaleFactorOfSecondFixedSurface"]
-        ...     # Array values are set transparently
-        ...     msg["values"] = [1, 2, 3]
-        ...     # Messages can be written to file
-        ...     with open(testfile, "w") as test:
-        ...         msg.write(test)
-        ...     # Messages can be cloned from other messages
-        ...     msg2 = GribMessage(clone=msg)
-        ...     # If desired, messages can be closed manually or used in with
-        ...     msg.close()
-    """
+    __doc__ = "\n".join(CodesMessage.__doc__.splitlines()[4:]).format(
+        prod_type="GRIB", classname="GribMessage", parent="GribFile",
+        alias="grib")
 
     product_kind = eccodes.CODES_PRODUCT_GRIB
 

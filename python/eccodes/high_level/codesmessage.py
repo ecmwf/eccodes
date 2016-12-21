@@ -15,6 +15,53 @@ class CodesMessage(object):
     """
     An abstract class to specify and/or implement common behavior that
     messages read by ecCodes should implement.
+
+    A {prod_type} message.
+
+    Each ``{classname}`` is stored as a key/value pair in a dictionary-like
+    structure. It can be used in a context manager or by itself. When the
+    ``{parent}`` it belongs to is closed, the ``{parent}`` closes any open
+    ``{classname}``s that belong to it. If a ``{classname}`` is closed before
+    its ``{parent}`` is closed, it informs the ``{parent}`` of its closure.
+
+    Scalar and vector values are set appropriately through the same method.
+
+    ``{classname}``s can be instantiated from a ``{parent}``, cloned from
+    other ``{classname}``s or taken from samples. Iterating over the members
+    of a ``{parent}`` extracts the ``{classname}``s it contains until the
+    ``{parent}`` is exhausted.
+
+    Usage::
+
+        >>> with {parent}(filename) as {alias}:
+        ...     # Access a key from each message
+        ...     for msg in {alias}:
+        ...         print(msg[key_name])
+        ...     # Report number of keys in message
+        ...     len(msg)
+        ...     # Report message size in bytes
+        ...     msg.size
+        ...     # Report keys in message
+        ...     msg.keys()
+        ...     # Check if value is missing
+        ...     msg.missing(key_name)
+        ...     # Set scalar value
+        ...     msg[scalar_key] = 5
+        ...     # Check key's value
+        ...     msg[scalar_key]
+        ...     # Set value to missing
+        ...     msg.set_missing(key_name)
+        ...     # Missing values raise exception when read with dict notation
+        ...     msg[key_name]
+        ...     # Array values are set transparently
+        ...     msg[array_key] = [1, 2, 3]
+        ...     # Messages can be written to file
+        ...     with open(testfile, "w") as test:
+        ...         msg.write(test)
+        ...     # Messages can be cloned from other messages
+        ...     msg2 = {classname}(clone=msg)
+        ...     # If desired, messages can be closed manually or used in with
+        ...     msg.close()
     """
 
     #: ecCodes enum-like PRODUCT constant
