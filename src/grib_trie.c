@@ -270,10 +270,10 @@ static int mapping[] = {
 0, /* ff */
 };
 
-static const size_t NUM_MAPPINGS = sizeof(mapping)/sizeof(mapping[0]);
-
 /* ECC-388 */
 #ifdef DEBUG
+ static const size_t NUM_MAPPINGS = sizeof(mapping)/sizeof(mapping[0]);
+
  #define DebugCheckBounds(index, value) \
    do { \
     if (!((index) >= 0 && (index) < NUM_MAPPINGS) ) {printf("ERROR: string='%s' index=%ld @ %s +%d \n", value, (long)index, __FILE__, __LINE__); abort();} \
