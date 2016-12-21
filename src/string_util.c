@@ -87,7 +87,7 @@ char** string_split(char* inputString, const char* delimiter)
         aToken = strtok(NULL, delimiter);
     }
     Assert(index == numTokens - 1);
-    *(result + index) = '\0';
+    *(result + index) = NULL;
 
     return result;
 }
