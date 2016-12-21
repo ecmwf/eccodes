@@ -80,8 +80,7 @@ class CodesMessage(object):
         :param clone: A valid ``CodesMessage``
         :param sample: A valid sample path to create ``CodesMessage`` from
         """
-        if (not other_args_found and codes_file is None and clone is None and
-                    sample is None):
+        if not other_args_found and codes_file is None and clone is None and sample is None:
             raise RuntimeError("CodesMessage initialization parameters not "
                                "present.")
         #: Unique ID, for ecCodes interface
@@ -142,7 +141,7 @@ class CodesMessage(object):
     def get(self, key, ktype=None):
         """Get value of a given key as its native or specified type."""
         if self.missing(key):
-            raise KeyError("Key is missing from message.")
+            raise KeyError("Value of key %s is MISSING." % key)
         if eccodes.codes_get_size(self.codes_id, key) > 1:
             ret = eccodes.codes_get_array(self.codes_id, key, ktype)
         else:
