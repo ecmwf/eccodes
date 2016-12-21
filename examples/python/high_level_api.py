@@ -238,7 +238,7 @@ class TestGribMessage(unittest.TestCase):
             self.assertEqual(msg.size(), 160219)
             self.assertEqual(len(msg.keys()), len(msg))
 
-    def test_missing_message_behavior(self):
+    def test_missing_message_behaviour(self):
         """Missing messages are detected properly."""
         with GribFile(TESTGRIB) as grib:
             msg = GribMessage(grib)

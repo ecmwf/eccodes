@@ -48,6 +48,9 @@ if shared_libs == 'OFF':
     if @HAVE_LIBPNG@:
         add_attribute(libraries='png')
 
+    if @HAVE_MEMFS@:
+        add_attribute(libraries='eccodes_memfs')
+
     if @HAVE_AEC@:
         aec_dir = '@AEC_DIR@'
         if aec_dir and aec_dir != 'system':

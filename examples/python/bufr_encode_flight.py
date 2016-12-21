@@ -63,23 +63,23 @@ def example(csvfile, input_filename, output_filename):
     # to choose the template for the BUFR message
 
     #unexpandedDescriptors = [301051,4006,7002,10004,12001,11001,11002,11031,11032,11033,20041]
-    #codes_set(bufr, 'unexpandedDescriptors', unexpandedDescriptors)
+    #codes_set_array(bufr, 'unexpandedDescriptors', unexpandedDescriptors)
 
     codes_set(bufr,'BufrTemplate','aircraftReportWithSecondsAndPressure')
 
-    codes_set(bufr, 'year', years)
-    codes_set(bufr, 'month', months)
-    codes_set(bufr, 'day', days)
-    codes_set(bufr, 'hour', hours)
-    codes_set(bufr, 'minute', minutes)
-    codes_set(bufr, 'second', seconds)
-    codes_set(bufr, 'latitude', latitudes)
-    codes_set(bufr, 'longitude', longitudes)
-    codes_set(bufr, 'height', altitudes)
-    codes_set(bufr, 'nonCoordinatePressure', pressures)
-    codes_set(bufr, 'windSpeed', windSpeeds)
-    codes_set(bufr, 'windDirection', windDirections)
-    codes_set(bufr, 'airTemperature', temperatures)
+    codes_set_array(bufr, 'year', years)
+    codes_set_array(bufr, 'month', months)
+    codes_set_array(bufr, 'day', days)
+    codes_set_array(bufr, 'hour', hours)
+    codes_set_array(bufr, 'minute', minutes)
+    codes_set_array(bufr, 'second', seconds)
+    codes_set_array(bufr, 'latitude', latitudes)
+    codes_set_array(bufr, 'longitude', longitudes)
+    codes_set_array(bufr, 'height', altitudes)
+    codes_set_array(bufr, 'nonCoordinatePressure', pressures)
+    codes_set_array(bufr, 'windSpeed', windSpeeds)
+    codes_set_array(bufr, 'windDirection', windDirections)
+    codes_set_array(bufr, 'airTemperature', temperatures)
 
     codes_set(bufr, 'pack', 1)
 
