@@ -20,7 +20,7 @@ from eccodes import *
 VERBOSE = 1  # verbose error reporting
 
 def example(input_filename, output_filename):
-    ibufr = codes_bufr_new_from_samples('BUFR3')
+    ibufr = codes_new_from_samples('BUFR3', CODES_PRODUCT_BUFR)
     f = open(input_filename)
     ibufrin = codes_bufr_new_from_file(f)
     ivalues=(

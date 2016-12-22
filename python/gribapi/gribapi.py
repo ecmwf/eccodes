@@ -763,6 +763,29 @@ def grib_set_double(msgid, key, value):
     GRIB_CHECK(_internal.grib_c_set_double(msgid, key, value))
 
 
+@require(samplename=str, product_kind=int)
+def codes_new_from_samples(samplename, product_kind):
+    """
+    @brief Create a new valid message from a sample for a given product.
+
+    The available samples are picked up from the directory pointed to
+    by the environment variable ECCODES_SAMPLES_PATH.
+    To know where the samples directory is run the codes_info tool.\n
+
+    \b Examples: \ref grib_samples.py "grib_samples.py"
+
+    @param samplename     name of the sample to be used
+    @param product_kind   CODES_PRODUCT_GRIB or CODES_PRODUCT_BUFR
+    @return               id of the message loaded in memory
+    @exception GribInternalError
+    """
+    if product_kind == CODES_PRODUCT_GRIB:
+        return grib_new_from_samples(samplename)
+    if product_kind == CODES_PRODUCT_BUFR:
+        return codes_bufr_new_from_samples(samplename)
+    raise Exception("Invalid product kind: " + product_kind)
+
+
 @require(samplename=str)
 def grib_new_from_samples(samplename):
     """
@@ -792,7 +815,7 @@ def codes_bufr_new_from_samples(samplename):
     by the environment variable ECCODES_SAMPLES_PATH.
     To know where the samples directory is run the codes_info tool.\n
 
-    \b Examples: \ref grib_samples.py "grib_samples.py"
+    \b Examples: \ref bufr_copy_data.py "bufr_copy_data.py"
 
     @param samplename   name of the BUFR sample to be used
     @return             id of the message loaded in memory
