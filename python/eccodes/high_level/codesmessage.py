@@ -189,4 +189,3 @@ class CodesMessage(object):
     def items(self):
         """Return list of tuples of all key/value pairs."""
         return [(key, self[key]) for key in self.keys()]
-

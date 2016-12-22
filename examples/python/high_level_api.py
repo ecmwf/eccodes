@@ -393,6 +393,5 @@ class TestBufrMessage(unittest.TestCase):
             self.assertSequenceEqual(msg.keys(), msg2.keys())
 
 
-
 if __name__ == "__main__":
     unittest.main()
