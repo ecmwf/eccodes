@@ -177,7 +177,6 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     assert(self->len <= sizeof(long)*8);
 
     a->length=0;
-
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
@@ -252,7 +251,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     lval= round(*val * self->scale) - self->referenceValue;
     return grib_encode_unsigned_longb(p,lval,&start,length);
-
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
@@ -288,7 +286,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     return grib_encode_unsigned_longb(p,*val,&start,length);
 }
 
-static int  get_native_type(grib_accessor* a){
+static int get_native_type(grib_accessor* a)
+{
     int type=GRIB_TYPE_BYTES;
     grib_accessor_bits* self = (grib_accessor_bits*)a;
 
@@ -304,7 +303,8 @@ static int  get_native_type(grib_accessor* a){
     return type;
 }
 
-static int unpack_string(grib_accessor*a , char*  v, size_t *len){
+static int unpack_string(grib_accessor*a , char*  v, size_t *len)
+{
     int ret=0;
     double dval=0;
     long lval=0;
@@ -329,21 +329,21 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
     return ret;
 }
 
-static long byte_count(grib_accessor* a){
-  grib_context_log(a->context,GRIB_LOG_DEBUG,"byte_count of %s = %ld",a->name,a->length);
-  return a->length;
-
+static long byte_count(grib_accessor* a)
+{
+    grib_context_log(a->context,GRIB_LOG_DEBUG,"byte_count of %s = %ld",a->name,a->length);
+    return a->length;
 }
 
-static int unpack_bytes (grib_accessor* a,unsigned char* buffer, size_t *len) {
-  if (*len < a->length) {
+static int unpack_bytes (grib_accessor* a,unsigned char* buffer, size_t *len)
+{
+    if (*len < a->length) {
+        *len = a->length;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
     *len = a->length;
-    return GRIB_ARRAY_TOO_SMALL;
-  }
-  *len = a->length;
 
-  memcpy(buffer, grib_handle_of_accessor(a)->buffer->data + a->offset, *len);
+    memcpy(buffer, grib_handle_of_accessor(a)->buffer->data + a->offset, *len);
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
-
