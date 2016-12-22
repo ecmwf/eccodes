@@ -98,7 +98,8 @@ class CodesMessage(object):
         elif clone is not None:
             self.codes_id = eccodes.codes_clone(clone.codes_id)
         elif sample is not None:
-            self.codes_id = self.new_from_sample(sample)
+            self.codes_id = eccodes.codes_new_from_samples(
+                sample, self.product_kind)
 
     def write(self, outfile=None):
         """Write message to file."""

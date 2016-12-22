@@ -24,6 +24,7 @@ GRIB (
 BUFR (
       bufr_attributes
       bufr_clone
+      bufr_copy_data
       bufr_encode_flight
       bufr_expanded
       bufr_get_keys
