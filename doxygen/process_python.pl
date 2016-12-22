@@ -50,7 +50,7 @@ while (<>) {
     s/\bgrib_get_double\b/codes_get_double/;
     s/\bgrib_set_long\b/codes_set_long/;
     s/\bgrib_set_double\b/codes_set_double/;
-    s/\bgrib_new_from_samples\b/codes_new_from_samples/;
+    s/\bgrib_new_from_samples\b/codes_grib_new_from_samples/;
     s/\bgrib_clone\b/codes_clone/;
     s/\bgrib_set_double_array\b/codes_set_double_array/;
     s/\bgrib_get_double_array\b/codes_get_double_array/;
