@@ -315,4 +315,6 @@ data/bufr/*test
 
 *.sublime-workspace
 *.old
+.idea
 
+build/
