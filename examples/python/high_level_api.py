@@ -368,12 +368,12 @@ class TestBufrMessage(unittest.TestCase):
 
     # TODO: Test behavior with missing messages (SUP-1874)
 
-    # This fails due to SUP-1875
+    # See ECC-402 re use of '5.0' and not '5'
     def test_value_setting(self):
         """Keys can be set properly."""
         with BufrFile(TESTBUFR) as bufr:
             msg = BufrMessage(bufr)
-            key, val = "localLongitude", 5
+            key, val = "localLongitude", 5.0
             msg[key] = val
             self.assertEqual(msg[key], val)
 
