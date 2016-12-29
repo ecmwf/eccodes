@@ -11,7 +11,7 @@ from .. import eccodes
 class CodesFile(file):
 
     """
-    An abstract class to specify and/or implement common behavior that files
+    An abstract class to specify and/or implement common behaviour that files
     read by ecCodes should implement.
 
     A {prod_type} file handle meant for use in a context manager.

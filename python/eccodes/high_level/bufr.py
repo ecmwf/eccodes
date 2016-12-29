@@ -46,7 +46,7 @@ class BufrMessage(CodesMessage):
         """
         Report if key is missing.
 
-        Overloaded due to confusing behavior in ``codes_is_missing`` (SUP-1874).
+        Overloaded due to confusing behaviour in ``codes_is_missing`` (SUP-1874).
         """
         return not bool(eccodes.codes_is_defined(self.codes_id, key))
 

@@ -13,7 +13,7 @@ from .. import eccodes
 class CodesMessage(object):
 
     """
-    An abstract class to specify and/or implement common behavior that
+    An abstract class to specify and/or implement common behaviour that
     messages read by ecCodes should implement.
 
     A {prod_type} message.
