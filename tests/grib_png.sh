@@ -22,7 +22,7 @@ files="
  regular_latlon_surface_constant.grib2
 "
 
-if [ $HAVE_JPG -eq 1 ]; then
+if [ $HAVE_JPEG -eq 1 ]; then
  files="multi.grib2 v.grib2"$files
 fi
 
