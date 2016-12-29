@@ -327,7 +327,7 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_json *self = (grib_dumper_json*)d;
-    char **values;
+    char **values = NULL;
     size_t size = 0,i=0;
     grib_context* c=NULL;
     int err = 0;
@@ -371,7 +371,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
     }
     fprintf(self->dumper.out,"\n%-*s[",depth," ");
     depth+=2;
-    for  (i=0;i<size-1;i++) {
+    for (i=0;i<size-1;i++) {
         fprintf(self->dumper.out,"%-*s\"%s\",\n",depth," ",values[i]);
     }
     fprintf(self->dumper.out,"%-*s\"%s\"\n",depth," ",values[i]);
@@ -387,6 +387,9 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
         fprintf(self->dumper.out,"\n%-*s}",depth," ");
     }
 
+    for (i=0;i<size;i++) {
+        grib_context_free(c, values[i]);
+    }
     grib_context_free(c,values);
     (void)err; /* TODO */
 }
