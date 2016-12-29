@@ -510,18 +510,18 @@ struct grib_virtual_value {
 
 struct grib_accessor
 {
-  const char*            name  ;     /** < name of the accessor                       */
+  const char*            name  ;      /** < name of the accessor                       */
   const char*            name_space;  /** < namespace to which the accessor belongs    */
   grib_context*          context;
   grib_handle*           h;
-  grib_action*           creator  ;  /** < action that created the accessor           */
+  grib_action*           creator  ;   /** < action that created the accessor           */
   long                   length ;     /** < byte length of the accessor                */
   long                   offset ;     /** < offset of the data in the buffer           */
-  grib_section*          parent;     /** < section to which the accessor is attached  */
-  grib_accessor*         next  ;     /** < next accessor in list                      */
-  grib_accessor*         previous;   /** < next accessor in list                      */
-  grib_accessor_class*   cclass;     /** < behavior of the accessor                   */
-  unsigned long          flags;      /** < Various flags                              */
+  grib_section*          parent;      /** < section to which the accessor is attached  */
+  grib_accessor*         next  ;      /** < next accessor in list                      */
+  grib_accessor*         previous;    /** < next accessor in list                      */
+  grib_accessor_class*   cclass;      /** < behaviour of the accessor                  */
+  unsigned long          flags;       /** < Various flags                              */
   grib_section*          sub_section;
 
   const char*            all_names[MAX_ACCESSOR_NAMES]  ;   /** < name of the accessor  */
