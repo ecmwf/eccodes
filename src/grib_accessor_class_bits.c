@@ -170,6 +170,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     } else {
         self->referenceValuePresent=0;
     }
+    self->scale = 1;
     if (self->referenceValuePresent) {
         self->scale=grib_arguments_get_double(grib_handle_of_accessor(a),c,n++);
     }
@@ -263,6 +264,12 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 
     if(*len != 1) return GRIB_WRONG_ARRAY_SIZE;
 
+    if (get_native_type(a) == GRIB_TYPE_DOUBLE) {
+        /* ECC-402 */
+        const double dVal = (double)(*val);
+        return pack_double(a, &dVal, len);
+    }
+
     start  = self->start;
     length = self->len;
 
@@ -297,7 +304,7 @@ static int get_native_type(grib_accessor* a)
     if (a->flags & GRIB_ACCESSOR_FLAG_LONG_TYPE)
         type=GRIB_TYPE_LONG;
 
-    if (self->referenceValuePresent) 
+    if (self->referenceValuePresent)
         type=GRIB_TYPE_DOUBLE;
 
     return type;
@@ -309,6 +316,7 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len)
     double dval=0;
     long lval=0;
     size_t llen=1;
+    grib_accessor_class* super = NULL;
 
     switch (get_native_type(a)) {
     case GRIB_TYPE_LONG:
@@ -324,7 +332,8 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len)
         break;
 
     default:
-        Assert(0);
+        super = *(a->cclass->super);
+        ret = super->unpack_string(a,v,len);
     }
     return ret;
 }

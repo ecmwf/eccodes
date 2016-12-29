@@ -366,14 +366,13 @@ class TestBufrMessage(unittest.TestCase):
             msg = BufrMessage(bufr)
             self.assertEqual(msg["airTemperatureAt2M"], 274.5)
 
-    # TODO: Test behavior with missing messages (SUP-1874)
+    # TODO: Test behaviour with missing messages (SUP-1874)
 
-    # See ECC-402 re use of '5.0' and not '5'
     def test_value_setting(self):
         """Keys can be set properly."""
         with BufrFile(TESTBUFR) as bufr:
             msg = BufrMessage(bufr)
-            key, val = "localLongitude", 5.0
+            key, val = "localLongitude", 5
             msg[key] = val
             self.assertEqual(msg[key], val)
 
