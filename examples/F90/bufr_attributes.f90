@@ -32,10 +32,10 @@ character(len=32)   :: units, confUnits
 
   do while (iret/=CODES_END_OF_FILE)
     
-    ! get and print some keys form the BUFR header 
+    ! Get and print some keys form the BUFR header 
     write(*,*) 'message: ',count
 
-    ! we need to instruct ecCodes to expand all the descriptors 
+    ! We need to instruct ecCodes to expand all the descriptors 
     ! i.e. unpack the data values
     call codes_set(ibufr,"unpack",1);
 
@@ -43,75 +43,72 @@ character(len=32)   :: units, confUnits
     !  We will read the value and all the attributes available for
     !  the 2m temperature.
     ! ---------------------------------------------------------------- 
-    
-    ! get the element's value as as real
+
+    ! Get the element's value as as real
     call codes_get(ibufr,'airTemperatureAt2M',t2m);
     write(*,*) '  airTemperatureAt2M:',t2m
    
-    ! get the element's code (see BUFR code table B)
+    ! Get the element's code (see BUFR code table B)
     call codes_get(ibufr,'airTemperatureAt2M->code',iVal);
     write(*,*) '  airTemperatureAt2M->code:',iVal
    
-    ! get the element's units (see BUFR code table B)
+    ! Get the element's units (see BUFR code table B)
     call codes_get(ibufr,'airTemperatureAt2M->units',units)
     write(*,*) '  airTemperatureAt2M->units:',units
    
-    ! get the element's scale (see BUFR code table B)
+    ! Get the element's scale (see BUFR code table B)
     call codes_get(ibufr,'airTemperatureAt2M->scale',iVal);
     write(*,*) '  airTemperatureAt2M->code:',iVal
    
-    ! get the element's reference (see BUFR code table B)
+    ! Get the element's reference (see BUFR code table B)
     call codes_get(ibufr,'airTemperatureAt2M->reference',iVal);
     write(*,*) '  airTemperatureAt2M->reference:',iVal
    
-    ! get the element's width (see BUFR code table B)
+    ! Get the element's width (see BUFR code table B)
     call codes_get(ibufr,'airTemperatureAt2M->width',iVal);
     write(*,*) '  airTemperatureAt2M->width:',iVal
-       
+
     ! -------------------------------------------------------------------
     !  The 2m temperature data element in this message has an associated 
     !  field: percentConfidence. Its value and attributes can be accessed 
     !  in a similar manner as was shown above for 2m temperature. 
     ! ------------------------------------------------------------------- 
- 
-    ! get the element's value as as real
+
+    ! Get the element's value as as real
     call codes_get(ibufr,'airTemperatureAt2M->percentConfidence',conf);
     write(*,*) '  airTemperatureAt2M->percentConfidence:', conf
-   
-    ! get the element's code (see BUFR code table B)
+
+    ! Get the element's code (see BUFR code table B)
     call codes_get(ibufr,'airTemperatureAt2M->percentConfidence->code',iVal);
     write(*,*) '  airTemperatureAt2M->percentConfidence->code:',iVal
-   
-    ! get the element's units (see BUFR code table B)
+
+    ! Get the element's units (see BUFR code table B)
     call codes_get(ibufr,'airTemperatureAt2M->percentConfidence->units',confUnits)
     write(*,*) '  airTemperatureAt2M->percentConfidence->units:',confUnits
-   
-    ! get the element's scale (see BUFR code table B)
+
+    ! Get the element's scale (see BUFR code table B)
     call codes_get(ibufr,'airTemperatureAt2M->percentConfidence->scale',iVal);
     write(*,*) '  airTemperatureAt2M->percentConfidence->code:',iVal
-   
-    ! get the element's reference (see BUFR code table B)
+
+    ! Get the element's reference (see BUFR code table B)
     call codes_get(ibufr,'airTemperatureAt2M->percentConfidence->reference',iVal);
     write(*,*) '  airTemperatureAt2M->percentConfidence->reference:',iVal
-   
-    ! get the element's width (see BUFR code table B)
+
+    ! Get the element's width (see BUFR code table B)
     call codes_get(ibufr,'airTemperatureAt2M->percentConfidence->width',iVal);
     write(*,*) '  airTemperatureAt2M->percentConfidence->width:',iVal
- 
- 
-    ! release the bufr message
+
+    ! Release the bufr message
     call codes_release(ibufr)
 
-    ! load the next bufr message
+    ! Load the next bufr message
     call codes_bufr_new_from_file(ifile,ibufr,iret)
-    
+
     count=count+1
-    
+
   end do  
 
-! close file  
+  ! Close file  
   call codes_close_file(ifile)
- 
 
 end program bufr_attributes
-

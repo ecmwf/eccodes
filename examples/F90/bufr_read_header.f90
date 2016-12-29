@@ -27,51 +27,50 @@ integer(kind=4)    :: numberofsubsets
 
   call codes_open_file(ifile,'../../data/bufr/syno_multi.bufr','r')
 
-! the first bufr message is loaded from file
-! ibufr is the bufr id to be used in subsequent calls
+  ! The first bufr message is loaded from file,
+  ! ibufr is the bufr id to be used in subsequent calls
   call codes_bufr_new_from_file(ifile,ibufr,iret)
 
   do while (iret/=CODES_END_OF_FILE)
-    
-    ! get and print some keys form the BUFR header 
+
+    ! Get and print some keys form the BUFR header 
     write(*,*) 'message: ',count
-    
+
     call codes_get(ibufr,'dataCategory',dataCategory);
     write(*,*) '  dataCategory:',dataCategory
-    
+
     call codes_get(ibufr,'dataSubCategory',dataSubCategory);
     write(*,*) '  dataSubCategory:',dataSubCategory
-    
+
     call codes_get(ibufr,'typicalDate',typicalDate);
     write(*,*) '  typicalDate:',typicalDate
-    
+
     call codes_get(ibufr,'bufrHeaderCentre',centre);
     write(*,*) '  bufrHeaderCentre:',centre
-  
+
     call codes_get(ibufr,'bufrHeaderSubCentre',subcentre)
     write(*,*) '  bufrHeaderSubCentre:',subcentre
-  
+
     call codes_get(ibufr,'masterTablesVersionNumber',masterversion)
     write(*,*) '  masterTablesVersionNumber:',masterversion
 
     call codes_get(ibufr,'localTablesVersionNumber',localversion)
     write(*,*) '  localTablesVersionNumber:',localversion
-    
+
     call codes_get(ibufr,'numberOfSubsets',numberofsubsets)
     write(*,*) '  numberOfSubsets:',numberofsubsets   
-  
-    ! release the bufr message
+
+    ! Release the bufr message
     call codes_release(ibufr)
 
-    ! load the next bufr message
+    ! Load the next bufr message
     call codes_bufr_new_from_file(ifile,ibufr,iret)
-    
-    count=count+1
-    
-  end do  
 
-! close file  
+    count=count+1
+
+  end do
+
+  ! Close file
   call codes_close_file(ifile)
- 
 
 end program bufr_read_header

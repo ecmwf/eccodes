@@ -45,7 +45,7 @@ def example():
 
         print "message: %s" % cnt
 
-        # we need to instruct ecCodes to expand all the descriptors
+        # We need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
         codes_set(bufr, 'unpack', 1)
 
@@ -86,10 +86,10 @@ def example():
 
         cnt += 1
 
-        # delete handle
+        # Release handle
         codes_release(bufr)
 
-    # close the file
+    # Close the file
     f.close()
 
 

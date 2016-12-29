@@ -39,7 +39,7 @@ program bufr_read_tropical_cyclone
 
   call codes_open_file(ifile,'../../data/bufr/tropical_cyclone.bufr','r')
 
-  ! the first BUFR message is loaded from file.
+  ! The first BUFR message is loaded from file.
   ! ibufr is the BUFR id to be used in subsequent calls
   call codes_bufr_new_from_file(ifile,ibufr,iret)
 
@@ -47,7 +47,7 @@ program bufr_read_tropical_cyclone
 
     write(*,'(A,I3,A)') '**************** MESSAGE: ',count,'  *****************'
 
-    ! we need to instruct ecCodes to unpack the data values
+    ! We need to instruct ecCodes to unpack the data values
     call codes_set(ibufr,"unpack",1);
 
     call codes_get(ibufr,'year',year);
@@ -60,7 +60,7 @@ program bufr_read_tropical_cyclone
     call codes_get(ibufr,'stormIdentifier',stormIdentifier)
     write(*,'(A,A)')'Storm identifier: ',stormIdentifier
 
-    !How many different timePeriod in the data structure?
+    ! How many different timePeriod in the data structure?
     rankPeriod=0
     ierr=0
     do while(ierr==0) 
@@ -69,7 +69,7 @@ program bufr_read_tropical_cyclone
       call codes_get(ibufr,'#'//trim(rankPeriodStr)//'#timePeriod',period,ierr)
       if(allocated(period)) deallocate(period)
     enddo
-    !the numberOfPeriods includes the analysis (period=0)
+    ! The numberOfPeriods includes the analysis (period=0)
     numberOfPeriods=rankPeriod
 
     call codes_get(ibufr,'ensembleMemberNumber',memberNumber)
@@ -142,7 +142,7 @@ program bufr_read_tropical_cyclone
     rankWind=1
     rankPeriod=0
 
-    !loop on all periods excluding analysis period(1)=0
+    ! Loop on all periods excluding analysis period(1)=0
     do i=2,numberOfPeriods
 
       rankPeriod=rankPeriod+1
@@ -156,7 +156,7 @@ program bufr_read_tropical_cyclone
       enddo
       deallocate(ivalues)
       
-      !Location of the storm
+      ! Location of the storm
       rankSignificance=rankSignificance+1
       write (rankSignificanceStr,'(I0)')rankSignificance 
       call codes_get(ibufr,'#'//trim(rankSignificanceStr)//'#meteorologicalAttributeSignificance',ivalues);
@@ -185,7 +185,7 @@ program bufr_read_tropical_cyclone
         stop 1
       endif
 
-      !Location of maximum wind
+      ! Location of maximum wind
       rankSignificance=rankSignificance+1
       write (rankSignificanceStr,'(I0)')rankSignificance 
       call codes_get(ibufr,'#'//trim(rankSignificanceStr)//'#meteorologicalAttributeSignificance',ivalues);
@@ -216,7 +216,7 @@ program bufr_read_tropical_cyclone
 
     enddo
 
-    ! ---- Print the values --------------------------------
+    ! Print the values
     do i=1,size(memberNumber)
       skipMember=1
       do j=1,size(period)
@@ -259,17 +259,17 @@ program bufr_read_tropical_cyclone
     deallocate(longitudeMaxWind0)
     deallocate(windMaxWind0)
 
-    ! release the BUFR message
+    ! Release the BUFR message
     call codes_release(ibufr)
 
-    ! load the next BUFR message
+    ! Load the next BUFR message
     call codes_bufr_new_from_file(ifile,ibufr,iret)
 
     count=count+1
 
   end do  
 
-  ! close file  
+  ! Close file  
   call codes_close_file(ifile)
- 
+
 end program bufr_read_tropical_cyclone

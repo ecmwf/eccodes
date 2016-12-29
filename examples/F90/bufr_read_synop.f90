@@ -31,15 +31,15 @@ integer(kind=4)    :: cloudAmount,cloudBaseHeight,lowCloud,midCloud,highCloud
 
   call codes_open_file(ifile,'../../data/bufr/syno_multi.bufr','r')
 
-! the first bufr message is loaded from file
-! ibufr is the bufr id to be used in subsequent calls
+  ! The first bufr message is loaded from file,
+  ! ibufr is the bufr id to be used in subsequent calls
   call codes_bufr_new_from_file(ifile,ibufr,iret)
 
   do while (iret/=CODES_END_OF_FILE)
 
     write(*,*) 'message: ',count
 
-    ! we need to instruct ecCodes to expand all the descriptors 
+    ! We need to instruct ecCodes to expand all the descriptors 
     ! i.e. unpack the data values
     call codes_set(ibufr,"unpack",1)
     
@@ -104,19 +104,17 @@ integer(kind=4)    :: cloudAmount,cloudBaseHeight,lowCloud,midCloud,highCloud
     call codes_get(ibufr,'#3#cloudType',highCloud)
     write(*,*) '  cloudType (high):',highCloud 
    
-    ! release the bufr message
+    ! Release the bufr message
     call codes_release(ibufr)
 
-    ! load the next bufr message
+    ! Load the next bufr message
     call codes_bufr_new_from_file(ifile,ibufr,iret)
     
     count=count+1
     
   end do  
 
-! close file  
+  ! Close file  
   call codes_close_file(ifile)
- 
 
 end program bufr_read_synop
-

@@ -26,13 +26,13 @@ program bufr_get_string_array
 
   call codes_bufr_new_from_file(ifile,ibufr,iret)
 
-  ! unpack the data values
+  ! Unpack the data values
   call codes_set(ibufr,'unpack',1)
 
-  ! get the width of the strings which is the same for all of them
+  ! Get the width of the strings which is the same for all of them
   call codes_get(ibufr,'stationOrSiteName->width',strsize)
 
-  ! the width is given in bits
+  ! The width is given in bits
   strsize=strsize/8
 
   ! max_strsize has to be set to a value >= to the size of the strings that we are getting 
@@ -42,24 +42,24 @@ program bufr_get_string_array
     call exit(1)
   end if
 
-  ! allocating the array of strings to be passed to codes_get_string_array is mandatory
+  ! Allocating the array of strings to be passed to codes_get_string_array is mandatory
   call codes_get_size(ibufr,'stationOrSiteName',n)
   allocate(stationOrSiteName(n))
 
-  ! passing an array of strings stationOrSiteName which must be allocated beforehand 
+  ! Passing an array of strings stationOrSiteName which must be allocated beforehand 
   call codes_get_string_array(ibufr,'stationOrSiteName',stationOrSiteName)
   do i=1,n
     write(*,'(A)')trim(stationOrSiteName(i))
   end do
 
-  !remember to deallocate 
+  ! Remember to deallocate 
   deallocate(stationOrSiteName)
 
-  ! release memory associated with bufr handle
+  ! Release memory associated with bufr handle
   ! ibufr won't be accessible after this
   call codes_release(ibufr)
 
-  ! close file  
+  ! Close file  
   call codes_close_file(ifile)
 
 end program bufr_get_string_array
