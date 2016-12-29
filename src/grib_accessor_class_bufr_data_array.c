@@ -330,7 +330,7 @@ static void self_clear(grib_context* c,grib_accessor_bufr_data_array* self)
     grib_vdarray_delete_content(c,self->numericValues);
     grib_vdarray_delete(c,self->numericValues);
     if(self->stringValues) {
-        /* grib_vsarray_delete_content(c,self->stringValues); */
+        grib_vsarray_delete_content(c,self->stringValues);
         grib_vsarray_delete(c,self->stringValues);
     }
     grib_viarray_delete_content(c,self->elementsDescriptorsIndex);
