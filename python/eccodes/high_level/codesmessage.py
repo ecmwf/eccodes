@@ -43,15 +43,10 @@ class CodesMessage(object):
         ...     msg.size
         ...     # Report keys in message
         ...     msg.keys()
-        ...     # Check if value is missing
-        ...     msg.missing(key_name)
         ...     # Set scalar value
         ...     msg[scalar_key] = 5
         ...     # Check key's value
         ...     msg[scalar_key]
-        ...     # Set value to missing
-        ...     msg.set_missing(key_name)
-        ...     # Missing values raise exception when read with dict notation
         ...     msg[key_name]
         ...     # Array values are set transparently
         ...     msg[array_key] = [1, 2, 3]
@@ -141,21 +136,13 @@ class CodesMessage(object):
 
     def get(self, key, ktype=None):
         """Get value of a given key as its native or specified type."""
-        if self.missing(key):
-            raise KeyError("Value of key %s is MISSING." % key)
+        # if self.missing(key):
+        #    raise KeyError("Value of key %s is MISSING." % key)
         if eccodes.codes_get_size(self.codes_id, key) > 1:
             ret = eccodes.codes_get_array(self.codes_id, key, ktype)
         else:
             ret = eccodes.codes_get(self.codes_id, key, ktype)
         return ret
-
-    def missing(self, key):
-        """Report if key is missing."""
-        return bool(eccodes.codes_is_missing(self.codes_id, key))
-
-    def set_missing(self, key):
-        """Set a key to missing."""
-        eccodes.codes_set_missing(self.codes_id, key)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Release message handle and inform host file of release."""

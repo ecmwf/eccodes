@@ -42,13 +42,13 @@ class BufrMessage(CodesMessage):
             self.unpacked = True
         return super(self.__class__, self).get(key, ktype)
 
-    def missing(self, key):
-        """
-        Report if key is missing.
-
-        Overloaded due to confusing behaviour in ``codes_is_missing`` (SUP-1874).
-        """
-        return not bool(eccodes.codes_is_defined(self.codes_id, key))
+    #def missing(self, key):
+    #    """
+    #    Report if key is missing.#
+    #
+    #    Overloaded due to confusing behaviour in ``codes_is_missing`` (SUP-1874).
+    #    """
+    #    return not bool(eccodes.codes_is_defined(self.codes_id, key))
 
     def keys(self, namespace=None):
         self.unpacked = True

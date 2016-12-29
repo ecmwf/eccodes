@@ -53,6 +53,14 @@ class GribMessage(CodesMessage):
         if self.grib_index:
             self.grib_index.open_messages.remove(self)
 
+    def missing(self, key):
+        """Report if the value of a key is MISSING."""
+        return bool(eccodes.codes_is_missing(self.codes_id, key))
+
+    def set_missing(self, key):
+        """Set the value of key to MISSING."""
+        eccodes.codes_set_missing(self.codes_id, key)
+
     @property
     def gid(self):
         """Provided for backwards compatibility."""
