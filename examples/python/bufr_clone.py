@@ -14,7 +14,6 @@
 # Description: how to create a new BUFR message by cloning
 # an existing message.
 #
-#
 
 import traceback
 import sys
@@ -24,7 +23,6 @@ from eccodes import *
 INPUT = '../../data/bufr/syno_1.bufr'
 OUTPUT = 'bufr_clone_test_p.clone.bufr'
 VERBOSE = 1  # verbose error reporting
-
 
 def example():
 
@@ -39,7 +37,6 @@ def example():
 
     # create several clones of this message and alter them
     # in different ways
-
     for centre in range(0, 3):
 
         # clone the message
