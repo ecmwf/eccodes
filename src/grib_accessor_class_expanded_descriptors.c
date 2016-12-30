@@ -284,7 +284,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             idx=expanded->n-1;
             size=0;
             inner_unexpanded=grib_bufr_descriptors_array_new(c,100,100);
-            inner_expanded=grib_bufr_descriptors_array_new(c,100,100);
+
             for (j=0;j<us->X+1;j++) {
                 DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded, u0);
                 grib_bufr_descriptors_array_push(inner_unexpanded,u0);
@@ -294,6 +294,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
 #endif
             }
             inner_expanded=do_expand(a,inner_unexpanded,ccp,err);
+            grib_bufr_descriptors_array_delete(inner_unexpanded);
             size=grib_bufr_descriptors_array_used_size(inner_expanded);
 #if MYDEBUG
             for (i=0;i<inner_expanded->n;i++) {
