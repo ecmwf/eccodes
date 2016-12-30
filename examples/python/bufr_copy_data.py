@@ -59,8 +59,8 @@ def example(input_filename, output_filename):
     codes_set(ibufrin, 'unpack', 1)
     codes_bufr_copy_data(ibufrin, ibufr) # Copy data across
 
-    outfile = open(output_filename, 'w')
-    codes_write(ibufr, outfile)
+    with open(output_filename, 'w') as outfile:
+        codes_write(ibufr, outfile)
     codes_release(ibufr)
     codes_release(ibufrin)
 
