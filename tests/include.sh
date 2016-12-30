@@ -41,7 +41,9 @@ else
     export ECCODES_SAMPLES_PATH
     tools_dir=$cpath/tools/
 
-#tools_dir="valgrind --error-exitcode=1 -q $cpath/tools/"
+    if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
+      tools_dir="valgrind --error-exitcode=1 -q $cpath/tools/"
+    fi
 
     tigge_dir=$cpath/tigge/
     data_dir=$cpath/data

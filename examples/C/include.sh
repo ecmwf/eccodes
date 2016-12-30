@@ -35,8 +35,10 @@ else
     tools_dir=$cpath/tools/
     examples_dir=$cpath/examples/C/
 
-#tools_dir="valgrind --error-exitcode=1 -q $cpath/tools/"
-#examples_dir="valgrind --error-exitcode=1 -q $cpath/examples/C/"
+    if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
+      tools_dir="valgrind --error-exitcode=1 -q $cpath/tools/"
+      examples_dir="valgrind --error-exitcode=1 -q $cpath/examples/C/"
+    fi
 
     data_dir=$cpath/data
   else

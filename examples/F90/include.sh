@@ -36,8 +36,10 @@ else
     data_dir=$cpath/data
     samples_dir=$cpath/samples
 
-#tools_dir="valgrind --error-exitcode=1 -q $cpath/tools/"
-#examples_dir="valgrind --error-exitcode=1 -q $cpath/examples/F90/"
+    if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
+      tools_dir="valgrind --error-exitcode=1 -q $cpath/tools/"
+      examples_dir="valgrind --error-exitcode=1 -q $cpath/examples/F90/"
+    fi
 
   else
     echo "Skipping test $0"
