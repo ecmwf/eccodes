@@ -140,8 +140,8 @@ struct grib_key_err {
 
 int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
 {
-    int *err=0;
-    int type;
+    int *err=NULL;
+    int type, error_code=0;
     size_t len;
     char *sval = NULL;
     unsigned char *uval = NULL;
@@ -250,6 +250,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
                 if((*err = grib_set_double_array(dest,key,dval,len)) != GRIB_SUCCESS)
                     return *err;
 
+                grib_context_free(src->context,dval);
                 break;
 
             case GRIB_TYPE_BYTES:
@@ -283,6 +284,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
             key_err=key_err->next;
         }
     }
+    error_code = *err; /* copy the error code before cleanup */
     grib_keys_iterator_delete(iter);
     key_err=first;
     while (key_err) {
@@ -292,7 +294,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
         key_err=next;
     }
 
-    return *err;
+    return error_code;
 }
 
 int grib_set_double(grib_handle* h, const char* name, double val)
