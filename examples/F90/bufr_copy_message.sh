@@ -13,6 +13,6 @@ INPUT="../../data/bufr/syno_1.bufr"
 OUTPUT=out.copy.bufr
 
 ${examples_dir}eccodes_f_bufr_copy_message > /dev/null
-${tools_dir}/bufr_compare -b bufrHeaderSubCentre $INPUT $OUTPUT
+${tools_dir}bufr_compare -b bufrHeaderSubCentre $INPUT $OUTPUT
 
 rm -f $OUTPUT

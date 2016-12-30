@@ -113,7 +113,8 @@ static void dump( grib_action* act, FILE* f, int lvl)
     grib_context_print(act->context,f,"Template %s  %s\n",act->name , a->arg );
 }
 
-grib_action* get_empty_template(grib_context* c,int *err) {
+grib_action* get_empty_template(grib_context* c,int *err)
+{
     char fname[]="empty_template.def";
     char* path=0;
 
@@ -128,7 +129,7 @@ grib_action* get_empty_template(grib_context* c,int *err) {
     }
 }
 
-static int  create_accessor(grib_section* p, grib_action* act, grib_loader *h )
+static int create_accessor(grib_section* p, grib_action* act, grib_loader *h)
 {
     int ret = GRIB_SUCCESS;
     grib_action_template* a = ( grib_action_template*)act;
@@ -159,7 +160,7 @@ static int  create_accessor(grib_section* p, grib_action* act, grib_loader *h )
     }
     as->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
     gs = as->sub_section;
-    gs->branch = la; /* Will be used to prevent unecessary reparse */
+    gs->branch = la; /* Will be used to prevent unnecessary reparse */
 
     grib_push_accessor(as,p->block);
 

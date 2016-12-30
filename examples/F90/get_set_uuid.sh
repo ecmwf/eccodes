@@ -10,7 +10,7 @@
 . ./include.sh
 
 
-uuid=`${tools_dir}/grib_get -w count=1 -p uuidOfVGrid:s ${data_dir}/test_uuid.grib2`
+uuid=`${tools_dir}grib_get -w count=1 -p uuidOfVGrid:s ${data_dir}/test_uuid.grib2`
 [ "$uuid" = "08b1e836bc6911e1951fb51b5624ad8d" ]
 
 # This reads the file in data/test_uuid.grib2 and creates test_uuid.grib2
@@ -21,7 +21,7 @@ output=out_uuid.grib2
 
 [ -f "$output" ]
 
-uuid=`${tools_dir}/grib_get -w count=1 -p uuidOfVGrid:s $output`
+uuid=`${tools_dir}grib_get -w count=1 -p uuidOfVGrid:s $output`
 [ "$uuid" = "8dad24561bb51f95e11169bc36e8b108" ]
 
 rm -f $output
