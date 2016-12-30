@@ -290,17 +290,17 @@ class TestGribIndex(unittest.TestCase):
             idx.add(TESTGRIB)
         os.unlink(TEST_INDEX)
 
-    # TODO: Following test disabled due to error message:
-    #   GRIB_API ERROR: please select a value for index key "dataDate"
-    # Must investigate
-    #
-    def _test_index_comprehension(self):
+    def test_index_comprehension(self):
         """GribIndex understands underlying GRIB index properly."""
         with GribIndex(TESTGRIB, TEST_KEYS) as idx:
             self.assertEqual(idx.size(TEST_KEYS[1]), 5)
             self.assertSequenceEqual(idx.values(TEST_KEYS[1]), TEST_STEPRANGE)
             with self.assertRaises(IndexNotSelectedError):
+                # Note: The following will issue a message to stderr:
+                #   ECCODES ERROR   :  please select a value for index key "dataDate"
+                # This is expected behaviour
                 idx.select({TEST_KEYS[1]: TEST_VALUES[0]})
+            # Now it will be OK as we have selected all necessary keys
             idx.select(SELECTION_DICTIONARY)
             self.assertEqual(len(idx.open_messages), 1)
 
