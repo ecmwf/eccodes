@@ -1617,6 +1617,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_iterator_class_space_view.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_itrie.c"
 				>
 			</File>
