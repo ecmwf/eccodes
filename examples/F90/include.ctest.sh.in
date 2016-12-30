@@ -18,6 +18,13 @@ export ECCODES_DEFINITION_PATH
 tools_dir=@CMAKE_BINARY_DIR@/bin/
 examples_dir=@CMAKE_CURRENT_BINARY_DIR@/
 
+# If this environment variable is set, then run the
+# executables with valgrind
+if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
+   tools_dir="valgrind --error-exitcode=1 -q $tools_dir"
+   examples_dir="valgrind --error-exitcode=1 -q $examples_dir"
+fi
+
 # use samples from binary dir to test if installation will be correct
 samp_dir="@CMAKE_BINARY_DIR@/share/@PROJECT_NAME@/samples"
 ECCODES_SAMPLES_PATH=${samp_dir}
