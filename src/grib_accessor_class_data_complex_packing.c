@@ -1326,18 +1326,40 @@ static int pack_double_optimised(grib_accessor* a, const double* val, size_t *le
         mmax++;
     }
 
-    Assert(optimize_scaling_factor);
-    ret = grib_optimize_decimal_factor (a, self->reference_value,
-            max, min, bits_per_value, 0, 1,
-            &decimal_scale_factor,
-            &binary_scale_factor,
-            &reference_value);
-    if (ret !=GRIB_SUCCESS) {
-        grib_context_log(gh->context,GRIB_LOG_ERROR,
-                "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
-        return GRIB_INTERNAL_ERROR;
+    if (optimize_scaling_factor)
+    {
+        ret = grib_optimize_decimal_factor (a, self->reference_value,
+                max, min, bits_per_value, 0, 1,
+                &decimal_scale_factor,
+                &binary_scale_factor,
+                &reference_value);
+        if (ret !=GRIB_SUCCESS) {
+            grib_context_log(gh->context,GRIB_LOG_ERROR,
+                    "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
+            return GRIB_INTERNAL_ERROR;
+        }
     }
+    else
+    {
+        if (grib_get_nearest_smaller_value(gh,self->reference_value,min,&reference_value)
+                !=GRIB_SUCCESS) {
+            grib_context_log(gh->context,GRIB_LOG_ERROR,
+                    "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
+            return GRIB_INTERNAL_ERROR;
+        }
+        binary_scale_factor = grib_get_binary_scale_fact(max,reference_value,bits_per_value,&ret);
 
+        if (ret==GRIB_UNDERFLOW) {
+            d=0;
+            binary_scale_factor = 0;
+            reference_value=0;
+        } else {
+            if (ret!=GRIB_SUCCESS) {
+                grib_context_log(a->context,GRIB_LOG_ERROR,"COMPLEX_PACKING : Cannot compute binary_scale_factor");
+                return ret;
+            }
+        }
+    }
     d = grib_power(+decimal_scale_factor,10);
     s = grib_power(- binary_scale_factor, 2);
 
