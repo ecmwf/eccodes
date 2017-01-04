@@ -99,7 +99,7 @@ static int next(grib_iterator* i, double *lat, double *lon, double *val)
 #define RAD2DEG   57.29577951308232087684  /* 180 over pi */
 #define DEG2RAD   0.01745329251994329576   /* pi over 180 */
 
-static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
+static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 {
     /* REFERENCE:
     *  LRIT/HRIT Global Specification (CGMS 03, Issue 2.6, 12.08.1999)
@@ -120,6 +120,7 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     double factor_1, factor_2, tmp1, Sd, Sn, Sxy, S1, S2, S3;
     int x0, y0, ix, iy;
     double *s_x, *c_x; /* arrays storing sin and cos values */
+    size_t array_size = (iter->nv * sizeof(double));
     
     grib_iterator_space_view* self = (grib_iterator_space_view*)iter;
 
@@ -230,14 +231,14 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     rx = angular_size / dx;
     ry = (r_pol/r_eq) * angular_size / dy;
 
-    self->lats = (double*)grib_context_malloc(h->context,iter->nv*sizeof(double));
+    self->lats = (double*)grib_context_malloc(h->context, array_size);
     if (!self->lats) {
-        grib_context_log(h->context,GRIB_LOG_ERROR, "unable to allocate %ld bytes",iter->nv*sizeof(double));
+        grib_context_log(h->context,GRIB_LOG_ERROR, "unable to allocate %ld bytes", array_size);
         return GRIB_OUT_OF_MEMORY;
     }
-    self->lons = (double*)grib_context_malloc(h->context,iter->nv*sizeof(double));
+    self->lons = (double*)grib_context_malloc(h->context, array_size);
     if (!self->lats) {
-        grib_context_log(h->context,GRIB_LOG_ERROR, "unable to allocate %ld bytes",iter->nv*sizeof(double));
+        grib_context_log(h->context,GRIB_LOG_ERROR, "unable to allocate %ld bytes", array_size);
         return GRIB_OUT_OF_MEMORY;
     }
     lats=self->lats;
