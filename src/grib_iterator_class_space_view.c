@@ -215,11 +215,11 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     lop = lonOfSubSatellitePointInDegrees;
     lap *= 1e-6; /* default scaling factor */
     lop *= 1e-6;
+    if (lap != 0.0) return GRIB_NOT_IMPLEMENTED;
     lap *= DEG2RAD;
     lop *= DEG2RAD;
 
     orient_angle = orientationInDegrees;
-    /* apply default scaling factor */
     if (orient_angle != 0.0) return GRIB_NOT_IMPLEMENTED;
 
     xp = xpInGridLengths;
