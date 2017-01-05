@@ -54,15 +54,17 @@ typedef struct reader {
 
 static int read_the_rest(reader* r,size_t message_length,unsigned char* tmp, int already_read, int check7777)
 {
-    int err            = 0;
+    int err = GRIB_SUCCESS;
     size_t buffer_size;
     size_t rest;
     unsigned char* buffer;
 
+    if (message_length==0)
+        return GRIB_BUFFER_TOO_SMALL;
+
     buffer_size = message_length;
     rest=message_length-already_read;
     r->message_size=message_length;
-
     buffer = (unsigned char*)r->alloc(r->alloc_data,&buffer_size,&err);
     if(err) return err;
 
