@@ -927,9 +927,9 @@ int grib_get_double_element(grib_handle* h, const char* name, int i, double* val
 {
     grib_accessor* act = grib_find_accessor(h, name);
 
-    if(act)
+    if (act) {
         return grib_unpack_double_element(act, i,val);
-
+    }
     return GRIB_NOT_FOUND;
 }
 
@@ -945,40 +945,54 @@ int grib_points_get_values(grib_handle* h, grib_points* points, double* val)
         if (ret) return ret;
         val+=points->group_len[i];
     }
-    return 0;
+    return GRIB_SUCCESS;
 }
 
-int grib_get_double_elements(grib_handle* h, const char* name, int* i, long len, double* val)
+int grib_get_double_elements(grib_handle* h, const char* name, int* index_array, long len, double* val_array)
 {
     double* values=0;
-    int ret=0;
-    size_t size=0;
-    int j=0;
+    int err=0;
+    size_t size=0, num_bytes = 0;
+    long j = 0;
     grib_accessor* act =NULL;
 
     act= grib_find_accessor(h, name);
+    if (!act) return GRIB_NOT_FOUND;
 
-    ret=_grib_get_size(h,act,&size);
+    err=_grib_get_size(h,act,&size);
 
-    if (ret!=GRIB_SUCCESS) {
+    if (err!=GRIB_SUCCESS) {
         grib_context_log(h->context,GRIB_LOG_ERROR,"grib_get_double_elements: cannot get size of %s\n",name);
-        return ret;
+        return err;
     }
 
-    values=(double*)grib_context_malloc( h->context,size * sizeof(double));
+    /* Check index array has valid values */
+    for (j=0;j<len;j++) {
+        const int anIndex = index_array[j];
+        if (anIndex < 0 || anIndex >= size) {
+            grib_context_log(h->context,GRIB_LOG_ERROR,
+                    "grib_get_double_elements: index out of range: %d (should be between 0 and %ld)", anIndex, size-1);
+            return GRIB_INVALID_ARGUMENT;
+        }
+    }
+
+    num_bytes = size * sizeof(double);
+    values=(double*)grib_context_malloc(h->context, num_bytes);
     if (!values) {
-        grib_context_log(h->context,GRIB_LOG_ERROR,"grib_get_double_elements: unable to allocate %ld bytes\n",
-                size*sizeof(double));
+        grib_context_log(h->context,GRIB_LOG_ERROR,"grib_get_double_elements: unable to allocate %ld bytes\n", num_bytes);
         return GRIB_OUT_OF_MEMORY;
     }
 
-    ret = grib_unpack_double(act, values, &size);
-
-    for (j=0;j<len;j++) val[j]=values[i[j]];
+    err = grib_unpack_double(act, values, &size);
+    if (!err) {
+        for (j=0;j<len;j++) {
+            val_array[j] = values[index_array[j]];
+        }
+    }
 
     grib_context_free(h->context,values);
 
-    return GRIB_SUCCESS;
+    return err;
 }
 
 int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t *length)
@@ -1332,41 +1346,41 @@ static void grib_clean_key_value(grib_context* c,grib_key_value_list* kv)
 
 static int grib_get_key_value(grib_handle* h,grib_key_value_list* kv)
 {
-    int ret=0;
+    int err=0;
     size_t size=0;
     grib_keys_iterator* iter=NULL;
     grib_key_value_list* list=NULL;
 
     if (kv->has_value) grib_clean_key_value(h->context,kv);
 
-    ret=grib_get_size(h,kv->name,&size);
-    if (ret) {
-        kv->error=ret;
-        return ret;
+    err=grib_get_size(h,kv->name,&size);
+    if (err) {
+        kv->error=err;
+        return err;
     }
     if (size==0) size=512;
 
     switch (kv->type) {
     case GRIB_TYPE_LONG:
         kv->long_value=(long*)grib_context_malloc_clear(h->context,size*sizeof(long));
-        ret=grib_get_long_array(h,kv->name,kv->long_value,&size);
-        kv->error=ret;
+        err=grib_get_long_array(h,kv->name,kv->long_value,&size);
+        kv->error=err;
         break;
     case GRIB_TYPE_DOUBLE:
         kv->double_value=(double*)grib_context_malloc_clear(h->context,size*sizeof(double));
-        ret=grib_get_double_array(h,kv->name,kv->double_value,&size);
-        kv->error=ret;
+        err=grib_get_double_array(h,kv->name,kv->double_value,&size);
+        kv->error=err;
         break;
     case GRIB_TYPE_STRING:
         grib_get_string_length(h,kv->name,&size);
         kv->string_value=(char*)grib_context_malloc_clear(h->context,size*sizeof(char));
-        ret=grib_get_string(h,kv->name,kv->string_value,&size);
-        kv->error=ret;
+        err=grib_get_string(h,kv->name,kv->string_value,&size);
+        kv->error=err;
         break;
     case GRIB_TYPE_BYTES:
         kv->string_value=(char*)grib_context_malloc_clear(h->context,size*sizeof(char));
-        ret=grib_get_bytes(h,kv->name,(unsigned char*)kv->string_value,&size);
-        kv->error=ret;
+        err=grib_get_bytes(h,kv->name,(unsigned char*)kv->string_value,&size);
+        kv->error=err;
         break;
     case GRIB_NAMESPACE:
         iter=grib_keys_iterator_new(h,0,(char*)kv->name);
@@ -1375,8 +1389,8 @@ static int grib_get_key_value(grib_handle* h,grib_key_value_list* kv)
         while(grib_keys_iterator_next(iter))
         {
             list->name=grib_keys_iterator_get_name(iter);
-            ret=grib_get_native_type(h,list->name,&(list->type));
-            ret=grib_get_key_value(h,list);
+            err=grib_get_native_type(h,list->name,&(list->type));
+            err=grib_get_key_value(h,list);
             list->next=(grib_key_value_list*)grib_context_malloc_clear(h->context,sizeof(grib_key_value_list));
             list=list->next;
         }
@@ -1384,12 +1398,12 @@ static int grib_get_key_value(grib_handle* h,grib_key_value_list* kv)
         break;
 
     default:
-        ret=grib_get_native_type(h,kv->name,&(kv->type));
-        ret=grib_get_key_value(h,kv);
+        err=grib_get_native_type(h,kv->name,&(kv->type));
+        err=grib_get_key_value(h,kv);
         break;
     }
     kv->has_value=1;
-    return ret;
+    return err;
 }
 
 grib_key_value_list* grib_key_value_list_clone(grib_context* c,grib_key_value_list* list)
