@@ -757,7 +757,7 @@ int codes_get_double(codes_handle* h, const char* key, double* value            
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param i           : zero based index
+* @param i           : zero-based index
 * @param value       : the address of a double where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
@@ -768,22 +768,22 @@ int codes_get_double_element(codes_handle* h, const char* key, int i, double* va
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param i           : zero based array of indexes
+* @param i           : zero-based array of indexes
 * @param size        : size of the i and value arrays
-* @param value       : the address of a double where the data will be retrieved
+* @param value       : the double array for the data values
 * @return            0 if OK, integer value on error
 */
-int codes_get_double_elements(codes_handle* h, const char* key, int* i, long size,double* value);
+int codes_get_double_elements(codes_handle* h, const char* key, int* i, long size, double* value);
 
 /**
 *  Get a string value from a key, if several keys of the same name are present, the last one is returned
 * @see  codes_set_string
 *
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param mesg       : the address of a string where the data will be retrieved
-* @param length      : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
-* @return            0 if OK, integer value on error
+* @param h         : the handle to get the data from
+* @param key       : the key to be searched
+* @param mesg      : the address of a string where the data will be retrieved
+* @param length    : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
+* @return          0 if OK, integer value on error
 */
 int codes_get_string(codes_handle* h, const char* key, char* mesg, size_t *length  );
 

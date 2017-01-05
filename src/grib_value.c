@@ -948,7 +948,7 @@ int grib_points_get_values(grib_handle* h, grib_points* points, double* val)
     return 0;
 }
 
-int grib_get_double_elements(grib_handle* h, const char* name, int* i, long len,double* val)
+int grib_get_double_elements(grib_handle* h, const char* name, int* i, long len, double* val)
 {
     double* values=0;
     int ret=0;
@@ -966,7 +966,6 @@ int grib_get_double_elements(grib_handle* h, const char* name, int* i, long len,
     }
 
     values=(double*)grib_context_malloc( h->context,size * sizeof(double));
-
     if (!values) {
         grib_context_log(h->context,GRIB_LOG_ERROR,"grib_get_double_elements: unable to allocate %ld bytes\n",
                 size*sizeof(double));
