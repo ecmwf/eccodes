@@ -1121,6 +1121,7 @@ def grib_index_get_long(indexid, key):
     return tuple(result)
 
 
+@require(indexid=int, key=str)
 def grib_index_get_string(indexid, key):
     """
     @brief Get the distinct values of the key in argument contained in the index.
@@ -1239,6 +1240,7 @@ def grib_index_select_string(indexid, key, value):
     GRIB_CHECK(_internal.grib_c_index_select_string(indexid, key, value))
 
 
+@require(indexid=int)
 def grib_new_from_index(indexid):
     """
     @brief Create a new handle from an index after having selected the key values.
@@ -1328,6 +1330,7 @@ def grib_get_double_elements(gribid, key, indexes):
     return result
 
 
+@require(gribid=int, key=str)
 def grib_get_elements(gribid, key, indexes):
     """
     @brief Retrieve the elements of the key array for the indexes specified in the input.
