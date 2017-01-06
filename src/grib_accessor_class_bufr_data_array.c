@@ -1213,7 +1213,7 @@ static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,
         restart_bitmap(self);
         break;
     default :
-        grib_context_log(c,GRIB_LOG_ERROR,"unsupported operator %d\n",
+        grib_context_log(c,GRIB_LOG_ERROR,"build_bitmap: unsupported operator %d\n",
                 descriptors[iBitmapOperator]->code);
         return GRIB_INTERNAL_ERROR;
     }
@@ -1302,7 +1302,7 @@ static int build_bitmap_new_data(grib_accessor_bufr_data_array *self,unsigned ch
         self->bitmapCurrentElementsDescriptorsIndex=iel-1;
         break;
     default :
-        grib_context_log(c,GRIB_LOG_ERROR,"unsupported operator %d\n",
+        grib_context_log(c,GRIB_LOG_ERROR,"build_bitmap_new_data: unsupported operator %d\n",
                 descriptors[iBitmapOperator]->code);
         return GRIB_INTERNAL_ERROR;
     }
@@ -2512,7 +2512,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                     elementIndex++;
                     break;
                 default :
-                    grib_context_log(c,GRIB_LOG_ERROR,"unsupported operator %d\n",descriptors[i]->X);
+                    grib_context_log(c,GRIB_LOG_ERROR,"process_elements: unsupported operator %d\n",descriptors[i]->X);
                     return GRIB_INTERNAL_ERROR;
                 }
                 break;
