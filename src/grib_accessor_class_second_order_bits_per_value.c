@@ -159,7 +159,7 @@ static int number_of_bits(unsigned long x, long* result)
         (*result)++;
         if (*result >= count) {
             return GRIB_ENCODING_ERROR;
-    }
+        }
     }
     return GRIB_SUCCESS;
 }
@@ -185,7 +185,7 @@ static int pack_long(grib_accessor* a, const long* val,size_t *len)
     return 0;
 }
 
-static int  unpack_long(grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     int ret=GRIB_SUCCESS;
     size_t size=0;
@@ -223,8 +223,8 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
     max=values[0];
     min=max;
     for (i=1;i<size;i++) {
-        if (max<values[i]) max=values[i];
-        if (min>values[i]) min=values[i];
+        if      (max<values[i]) max=values[i];
+        else if (min>values[i]) min=values[i];
     }
 
     d=grib_power(decimalScaleFactor,10);
