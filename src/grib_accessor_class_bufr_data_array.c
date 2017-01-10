@@ -65,6 +65,7 @@
    MEMBERS    = grib_trie* dataAccessorsTrie
    MEMBERS    = grib_trie* dataAccessorsRank
    MEMBERS    = grib_sarray* tempStrings
+   MEMBERS    = int change_ref_value_operand
 
    END_CLASS_DEF
 
@@ -139,6 +140,7 @@ typedef struct grib_accessor_bufr_data_array {
 	grib_trie* dataAccessorsTrie;
 	grib_trie* dataAccessorsRank;
 	grib_sarray* tempStrings;
+	int change_ref_value_operand;
 } grib_accessor_bufr_data_array;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -295,6 +297,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
     self->expandedAccessor=0;
     self->dataAccessorsTrie=0;
     self->dataAccessorsRank=0;
+    self->change_ref_value_operand=0; /* 0, 255 or YYY */
 
     a->length=0;
     self->bitsToEndData=get_length(a)*8;
@@ -338,9 +341,10 @@ static void self_clear(grib_context* c,grib_accessor_bufr_data_array* self)
     if (self->inputReplications) grib_context_free(c,self->inputReplications);
     if (self->inputExtendedReplications) grib_context_free(c,self->inputExtendedReplications);
     if (self->inputShortReplications) grib_context_free(c,self->inputShortReplications);
+    self->change_ref_value_operand = 0;
 }
 
-static int  get_native_type(grib_accessor* a)
+static int get_native_type(grib_accessor* a)
 {
     return GRIB_TYPE_DOUBLE;
 }
@@ -902,10 +906,19 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
             dar=decode_double_array(c,data,pos,bd,self->canBeMissing[i],self,&err);
             grib_vdarray_push(c,self->numericValues,dar);
         } else {
-            cdval=decode_double_value(c,data,pos,bd,self->canBeMissing[i],self,&err);
-            grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \t %s = %g",
-                    bd->shortName,cdval);
-            grib_darray_push(c,dval,cdval);
+            /* Uncompressed */
+            if (self->change_ref_value_operand > 0 && self->change_ref_value_operand != 255) {
+                /* Change Reference Values: Definition phase */
+                const int number_of_bits = self->change_ref_value_operand;
+                double new_ref_val = (double)grib_decode_signed_longb(data, pos, number_of_bits);
+                grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data decoding: 203YYY (uncomp)", bd->code, new_ref_val);
+                /* store in dict: code => new_ref_val */
+            } else {
+                cdval=decode_double_value(c,data,pos,bd,self->canBeMissing[i],self,&err);
+                grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \t %s = %g",
+                        bd->shortName,cdval);
+                grib_darray_push(c,dval,cdval);
+            }
         }
     }
     return err;
@@ -1350,7 +1363,6 @@ static int get_next_bitmap_descriptor_index(grib_accessor_bufr_data_array *self,
 {
     int i;
     bufr_descriptor** descriptors=self->expanded->v;
-
 
     if (self->compressedData) {
         if (self->numericValues->n==0)
@@ -2373,31 +2385,21 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
             case 2:
                 /* Operator */
                 switch(descriptors[i]->X) {
-#if 0
+#ifdef IMPL_OP203YYY
                 case 3:
-                    /* TODO: 203YYY */
+                    /* TODO: 203YYY Change reference values */
                     if (descriptors[i]->Y == 255) {
                         printf("Debug: operator 203YYY: Termination\n");
+                        self->change_ref_value_operand = 255;
                     } else if (descriptors[i]->Y == 0) {
                         printf("Debug: operator 203YYY: Clearing override of table B\n");
+                        self->change_ref_value_operand = 0;
                     } else {
-                        int number_of_bits = descriptors[i]->Y;
-                        double        ref_as_dval = 0;
-                        long          ref_as_lval = 0;
-                        /*char dbg_msg[256];*/
-                        printf("Debug: operator 203YYY: Use YYY=%d\n", descriptors[i]->Y);
-                        /* Read YYY bits from Data Section */
-                        ref_as_lval = grib_decode_signed_longb(data, &pos, number_of_bits);
-                        ref_as_dval = ref_as_lval;
-                        /*ref_as_lval = grib_decode_signed_long(data, temp_pos, descriptors[i]->Y);*/
-                        /*ref_as_ulval = grib_decode_unsigned_long(data, &temp_pos, descriptors[i]->Y);*/
-                        /*the_ref_val = decode_double_value(c,data,&temp_pos,&tempBd,0,self,&err);*/
-                        /*bufr_print_binary(dbg_msg, ref_as_ulval, number_of_bits);*/
-                        printf("Debug:......  signed=%ld  double=%g\n", ref_as_lval, ref_as_dval);
+                        self->change_ref_value_operand = descriptors[i]->Y;/* num bits for ref vals */
                     }
                     break;
 #endif
-                case 5:
+                case 5: /* Signify character */
                     descriptors[i]->width=descriptors[i]->Y*8;
                     descriptors[i]->type=BUFR_DESCRIPTOR_TYPE_STRING;
                     err=codec_element(c,self,iss,buffer,data,&pos,i,0,elementIndex,dval,sval);
@@ -2405,7 +2407,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                     if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
                     elementIndex++;
                     break;
-                case 22:
+                case 22: /* Quality information follows */
                     if (descriptors[i]->Y==0)  {
                         if (flag==PROCESS_DECODE) {
                             grib_iarray_push(elementsDescriptorsIndex,i);
