@@ -2373,6 +2373,30 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
             case 2:
                 /* Operator */
                 switch(descriptors[i]->X) {
+#if 0
+                case 3:
+                    /* TODO: 203YYY */
+                    if (descriptors[i]->Y == 255) {
+                        printf("Debug: operator 203YYY: Termination\n");
+                    } else if (descriptors[i]->Y == 0) {
+                        printf("Debug: operator 203YYY: Clearing override of table B\n");
+                    } else {
+                        int number_of_bits = descriptors[i]->Y;
+                        double        ref_as_dval = 0;
+                        long          ref_as_lval = 0;
+                        /*char dbg_msg[256];*/
+                        printf("Debug: operator 203YYY: Use YYY=%d\n", descriptors[i]->Y);
+                        /* Read YYY bits from Data Section */
+                        ref_as_lval = grib_decode_signed_longb(data, &pos, number_of_bits);
+                        ref_as_dval = ref_as_lval;
+                        /*ref_as_lval = grib_decode_signed_long(data, temp_pos, descriptors[i]->Y);*/
+                        /*ref_as_ulval = grib_decode_unsigned_long(data, &temp_pos, descriptors[i]->Y);*/
+                        /*the_ref_val = decode_double_value(c,data,&temp_pos,&tempBd,0,self,&err);*/
+                        /*bufr_print_binary(dbg_msg, ref_as_ulval, number_of_bits);*/
+                        printf("Debug:......  signed=%ld  double=%g\n", ref_as_lval, ref_as_dval);
+                    }
+                    break;
+#endif
                 case 5:
                     descriptors[i]->width=descriptors[i]->Y*8;
                     descriptors[i]->type=BUFR_DESCRIPTOR_TYPE_STRING;
@@ -2514,7 +2538,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                 default :
                     grib_context_log(c,GRIB_LOG_ERROR,"process_elements: unsupported operator %d\n",descriptors[i]->X);
                     return GRIB_INTERNAL_ERROR;
-                }
+                } /* F == 2 */
                 break;
                 case 9:
                     /* associated field */
@@ -2530,7 +2554,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                 default:
                     err=GRIB_INTERNAL_ERROR;
                     return err;
-            }
+            } /* switch F */
 
             /* delayed repetition check */
             innr=numberOfNestedRepetitions-1;
@@ -2562,7 +2586,6 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                     }
                 }
             }
-
         }
         if (flag!=PROCESS_ENCODE) grib_viarray_push(c,self->elementsDescriptorsIndex,elementsDescriptorsIndex);
         if (decoding && !self->compressedData) {
