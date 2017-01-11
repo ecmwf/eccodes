@@ -419,7 +419,7 @@ codes_string_list* codes_grib_util_get_mars_param(const char* param_id);
 * @param data_len    : the length of the message in number of bytes
 * @return            the new handle, NULL if the message is invalid or a problem is encountered
 */
-codes_handle* codes_handle_new_from_message(codes_context* c, void* data, size_t data_len);
+codes_handle* codes_handle_new_from_message(codes_context* c, const void* data, size_t data_len);
 
 /**
 *  Create a handle from a user message in memory. The message will not be freed at the end.

@@ -155,7 +155,7 @@ int codes_write_message(grib_handle* h,const char* file,const char* mode)
 {
     return grib_write_message(h,file,mode);
 }
-grib_handle* codes_handle_new_from_message(grib_context* c, void* data, size_t data_len)
+grib_handle* codes_handle_new_from_message(grib_context* c, const void* data, size_t data_len)
 {
     return grib_handle_new_from_message(c,data,data_len);
 }
