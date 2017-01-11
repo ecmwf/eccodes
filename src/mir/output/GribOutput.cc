@@ -216,8 +216,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
             info.packing.editionNumber = edition;
         }
 
-        // Ask last representation to update info
-
+        // Ask representation to update info
         field.representation()->fill(info);
 
         // long paramId = field.paramId(i);
@@ -232,7 +231,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
         auto md = field.metadata(i);
         for (auto k = md.begin(); k != md.end(); ++k) {
             long j = info.packing.extra_settings_count++;
-            ASSERT(j < sizeof(info.packing.extra_settings) / sizeof(info.packing.extra_settings[0]));
+            ASSERT(j < long(sizeof(info.packing.extra_settings) / sizeof(info.packing.extra_settings[0])));
             info.packing.extra_settings[j].name = (*k).first.c_str();
             info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
             info.packing.extra_settings[j].long_value = (*k).second;
@@ -267,7 +266,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
             info.packing.deleteLocalDefinition = remove ? 1 : 0;
         }
 
-// Give a chance to a sub-class to modifie info
+        // Give a chance to a sub-class to modify info
         fill(h, info);
 
 
