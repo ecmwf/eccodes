@@ -884,12 +884,19 @@ static double decode_double_value(grib_context* c,unsigned char* data,long* pos,
     int modifiedWidth,modifiedReference;
     double modifiedFactor;
     double dval=0;
+    double new_ref_val = 0; /*Operator 203*/
 
     *err=0;
 
     modifiedReference= bd->reference;
     modifiedFactor= bd->factor;
     modifiedWidth= bd->width;
+
+    /* Operator 203: Check if we have changed ref value for this element. If so use it */
+    if (tableB_override_get_ref_val(self, bd->code, &new_ref_val) == GRIB_SUCCESS) {
+        modifiedReference = new_ref_val;
+        grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: decode_element, uncompressed. Changed ref val: %g\n", new_ref_val);
+    }
 
     CHECK_END_DATA_RETURN(c, self, modifiedWidth, 0);
     if (*err) {*err=0; return GRIB_MISSING_DOUBLE;}
@@ -960,18 +967,10 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
                 err=check_end_data(c, self, bd->width); /*advance bitsToEnd*/
                 if (err) return err;
             } else {
-                /* Check if we have changed ref value for this element. If so use it */
-                double saved_ref_val = bd->reference;
-                double new_ref_val = 0;
-                if (tableB_override_get_ref_val(self, bd->code, &new_ref_val) == GRIB_SUCCESS) {
-                    bd->reference = new_ref_val;
-                    grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: decode_element, uncompressed. Changed ref val: %g\n", new_ref_val);
-                }
                 cdval=decode_double_value(c,data,pos,bd,self->canBeMissing[i],self,&err);
                 grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \t %s = %g",
                         bd->shortName,cdval);
                 grib_darray_push(c,dval,cdval);
-                bd->reference = saved_ref_val;
             }
         }
     }
