@@ -8,6 +8,10 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#ifdef __gnu_hurd__
+ #define _FILE_OFFSET_BITS 64 /* 64-bit offsets off_t not the default on Hurd/i386 */
+#endif
+
 #include "grib_api_internal.h"
 #include <stdio.h>
 #ifndef ECCODES_ON_WINDOWS

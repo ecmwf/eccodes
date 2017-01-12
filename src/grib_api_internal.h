@@ -171,12 +171,16 @@ extern "C" {
  #define DebugAssert(a)
 #endif
 
-/* Compile time assertion - Thanks to Ralf Holly */
-#define COMPILE_TIME_ASSERT(e) \
+#ifdef __gnu_hurd__
+ #define COMPILE_TIME_ASSERT(condition) \
+   extern int compile_time_assert[!!(condition) - 1]
+#else
+ /* Compile time assertion - Thanks to Ralf Holly */
+ #define COMPILE_TIME_ASSERT(condition) \
    do { \
-       enum { assert_static__ = 1/(e) }; \
+       enum { assert_static__ = 1/(condition) }; \
       } while (0)
-
+#endif
 
 #ifndef NDEBUG
  #define DebugAssertAccess(array, index, size) \
