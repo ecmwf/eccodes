@@ -76,7 +76,7 @@ int main(int argc, char** argv)
         const int NUM = 3;
         int index_arr[]    = {0, values_len/2, values_len-1};
         double vals_arr[3] = {0, 0, 0};
-        CODES_CHECK(grib_get_double_elements(h, "values", index_arr, NUM, vals_arr), 0);
+        CODES_CHECK(codes_get_double_elements(h, "values", index_arr, NUM, vals_arr), 0);
         for (i=0; i<NUM; ++i){
             printf("value at index %d = %.10e\n", index_arr[i], vals_arr[i]);
         }

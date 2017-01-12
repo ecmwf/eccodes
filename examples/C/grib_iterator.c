@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     int n=0;
     char* filename = NULL;
 
-    /* Message handle. Required in all the grib_api calls acting on a message.*/
+    /* Message handle. Required in all the ecCodes calls acting on a message.*/
     codes_handle *h = NULL;
     /* Iterator on lat/lon/values.*/
     codes_iterator* iter=NULL;

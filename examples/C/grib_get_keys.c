@@ -135,9 +135,9 @@ int main(int argc, char** argv)
         char* name = "reservedNeedNotBePresent";
         unsigned char* byte_val = NULL ;
         size_t keySize = 0;
-        CODES_CHECK(grib_get_size(h, name, &keySize), 0);
+        CODES_CHECK(codes_get_size(h, name, &keySize), 0);
         byte_val = malloc(keySize*sizeof(char));
-        GRIB_CHECK(grib_get_bytes(h, name, byte_val, &keySize), name);
+        GRIB_CHECK(codes_get_bytes(h, name, byte_val, &keySize), name);
     }
     
     codes_handle_delete(h);
