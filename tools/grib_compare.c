@@ -1034,8 +1034,8 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
             return 0;
 
         err=0;
-        h11=grib_handle_new_from_partial_message(h1->context,(void*)msg1,size1);
-        h22=grib_handle_new_from_partial_message(h1->context,(void*)msg2,size2);
+        h11=grib_handle_new_from_partial_message(h1->context,msg1,size1);
+        h22=grib_handle_new_from_partial_message(h1->context,msg2,size2);
 
         iter=grib_keys_iterator_new(h11, GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
 

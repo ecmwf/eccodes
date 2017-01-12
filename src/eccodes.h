@@ -1174,7 +1174,7 @@ void codes_check(const char* call,const char*  file,int line,int e,const char* m
 
 int codes_set_values(codes_handle* h, codes_values* codes_values, size_t arg_count);
 codes_handle* codes_handle_new_from_partial_message_copy(codes_context* c, const void* data, size_t size);
-codes_handle* codes_handle_new_from_partial_message(codes_context* c,void* data, size_t buflen);
+codes_handle* codes_handle_new_from_partial_message(codes_context* c, const void* data, size_t buflen);
 int codes_is_missing(codes_handle* h, const char* key, int* err);
 int codes_is_defined(codes_handle* h, const char* key);
 int codes_set_missing(codes_handle* h, const char* key);

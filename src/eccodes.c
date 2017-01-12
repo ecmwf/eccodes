@@ -179,7 +179,7 @@ grib_handle* codes_handle_new_from_partial_message_copy(grib_context* c, const v
 {
     return grib_handle_new_from_partial_message_copy(c,data,size);
 }
-grib_handle* codes_handle_new_from_partial_message(grib_context* c,void* data, size_t buflen)
+grib_handle* codes_handle_new_from_partial_message(grib_context* c, const void* data, size_t buflen)
 {
     return grib_handle_new_from_partial_message(c,data,buflen);
 }
