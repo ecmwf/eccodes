@@ -802,6 +802,14 @@ struct bufr_descriptors_array {
   grib_context* context;
 } ;
 
+/* BUFR: operator 203: Table B changed reference values */
+typedef struct bufr_tableb_override bufr_tableb_override;
+struct bufr_tableb_override {
+  bufr_tableb_override* next;
+  int                   code;
+  double                new_ref_val;
+};
+
 struct codes_condition {
   char*  left;
   int    rightType;
@@ -1425,6 +1433,7 @@ struct grib_smart_table {
   size_t            numberOfEntries;
   grib_smart_table_entry* entries;
 };
+
 
 #if GRIB_TIMER
 typedef struct grib_timer {

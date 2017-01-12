@@ -66,6 +66,7 @@
    MEMBERS    = grib_trie* dataAccessorsRank
    MEMBERS    = grib_sarray* tempStrings
    MEMBERS    = int change_ref_value_operand
+   MEMBERS    = bufr_tableb_override* tableb_override
 
    END_CLASS_DEF
 
@@ -141,6 +142,7 @@ typedef struct grib_accessor_bufr_data_array {
 	grib_trie* dataAccessorsRank;
 	grib_sarray* tempStrings;
 	int change_ref_value_operand;
+	bufr_tableb_override* tableb_override;
 } grib_accessor_bufr_data_array;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -220,6 +222,9 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
+/*Experimental: move to proper header file and make member of self*/
+#define IMPL_OP203YYY 1
+
 #define MAX_NESTED_REPLICATIONS 8
 
 #define PROCESS_DECODE     0
@@ -271,6 +276,44 @@ static size_t get_length(grib_accessor* a)
     return len;
 }
 
+#if IMPL_OP203YYY == 1
+static void tableB_override_store_ref_val(grib_context* c, grib_accessor_bufr_data_array *self, int code, double new_ref_val)
+{
+    bufr_tableb_override* tb=(bufr_tableb_override*)grib_context_malloc_clear(c, sizeof(bufr_tableb_override));
+    tb->code = code;
+    tb->new_ref_val = new_ref_val;
+    if (!self->tableb_override) {
+        self->tableb_override = tb;
+    } else {
+        /*Add to end of linked list*/
+        bufr_tableb_override* q = self->tableb_override;
+        while(q->next) q=q->next;
+        q->next = tb;
+    }
+}
+static int tableB_override_get_ref_val(grib_accessor_bufr_data_array *self, int code, double* out_ref_val)
+{
+    bufr_tableb_override* p = self->tableb_override;
+    while (p) {
+        if (p->code == code) {
+            *out_ref_val = p->new_ref_val;
+            return GRIB_SUCCESS;
+        }
+        p = p->next;
+    }
+    return GRIB_NOT_FOUND;
+}
+static void tableB_override_clear(grib_context* c, grib_accessor_bufr_data_array *self)
+{
+    bufr_tableb_override* tb = self->tableb_override;
+    while(tb) {
+        bufr_tableb_override* n = tb->next;
+        grib_context_free(c,tb);
+        tb = n;
+    }
+}
+#endif
+
 static void init(grib_accessor* a,const long v, grib_arguments* params)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
@@ -298,6 +341,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
     self->dataAccessorsTrie=0;
     self->dataAccessorsRank=0;
     self->change_ref_value_operand=0; /* 0, 255 or YYY */
+    self->tableb_override = NULL;
 
     a->length=0;
     self->bitsToEndData=get_length(a)*8;
@@ -342,6 +386,7 @@ static void self_clear(grib_context* c,grib_accessor_bufr_data_array* self)
     if (self->inputExtendedReplications) grib_context_free(c,self->inputExtendedReplications);
     if (self->inputShortReplications) grib_context_free(c,self->inputShortReplications);
     self->change_ref_value_operand = 0;
+    tableB_override_clear(c, self);
 }
 
 static int get_native_type(grib_accessor* a)
@@ -907,18 +952,35 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
             grib_vdarray_push(c,self->numericValues,dar);
         } else {
             /* Uncompressed */
+#if IMPL_OP203YYY == 1
             if (self->change_ref_value_operand > 0 && self->change_ref_value_operand != 255) {
-                /* Change Reference Values: Definition phase */
+                /* TODO: Change Reference Values: Definition phase */
                 const int number_of_bits = self->change_ref_value_operand;
                 double new_ref_val = (double)grib_decode_signed_longb(data, pos, number_of_bits);
-                grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data decoding: 203YYY (uncomp)", bd->code, new_ref_val);
-                /* store in dict: code => new_ref_val */
+                grib_context_log(c, GRIB_LOG_DEBUG, "//BUFR data decoding: 203YYY (uncomp) Store: %ld => %g", bd->code, new_ref_val);
+                tableB_override_store_ref_val(c, self, bd->code, new_ref_val);
+                err=check_end_data(c, self, bd->width); /*advance bitsToEnd*/
+                if(err) return err;
             } else {
+                /* Check if we have changed ref value for this element. If so use it */
+                double saved_ref_val = bd->reference;
+                double new_ref_val = 0;
+                if (tableB_override_get_ref_val(self, bd->code, &new_ref_val) == GRIB_SUCCESS) {
+                    bd->reference = new_ref_val;
+                    grib_context_log(c, GRIB_LOG_DEBUG,"//BUFR data decoding: 203YYY (uncomp). Use NEW REF VAL: %g\n", new_ref_val);
+                }
                 cdval=decode_double_value(c,data,pos,bd,self->canBeMissing[i],self,&err);
                 grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \t %s = %g",
                         bd->shortName,cdval);
                 grib_darray_push(c,dval,cdval);
+                bd->reference = saved_ref_val;
             }
+#else
+            cdval=decode_double_value(c,data,pos,bd,self->canBeMissing[i],self,&err);
+            grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \t %s = %g",
+                    bd->shortName,cdval);
+            grib_darray_push(c,dval,cdval);
+#endif
         }
     }
     return err;
@@ -2385,18 +2447,25 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
             case 2:
                 /* Operator */
                 switch(descriptors[i]->X) {
-#ifdef IMPL_OP203YYY
+#if IMPL_OP203YYY == 1
                 case 3:
                     /* TODO: 203YYY Change reference values */
+                    if (flag != PROCESS_DECODE) {
+                        grib_context_log(c,GRIB_LOG_ERROR,"process_elements: unsupported operator %d\n",descriptors[i]->X);
+                        return GRIB_INTERNAL_ERROR;
+                    }
                     if (descriptors[i]->Y == 255) {
                         printf("Debug: operator 203YYY: Termination\n");
                         self->change_ref_value_operand = 255;
                     } else if (descriptors[i]->Y == 0) {
                         printf("Debug: operator 203YYY: Clearing override of table B\n");
+                        tableB_override_clear(c, self);
                         self->change_ref_value_operand = 0;
                     } else {
-                        self->change_ref_value_operand = descriptors[i]->Y;/* num bits for ref vals */
+                        self->change_ref_value_operand = descriptors[i]->Y;
                     }
+                    grib_iarray_push(elementsDescriptorsIndex,i);
+                    if (decoding) push_zero_element(self,dval);
                     break;
 #endif
                 case 5: /* Signify character */
