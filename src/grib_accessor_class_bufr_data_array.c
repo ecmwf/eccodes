@@ -952,13 +952,13 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         } else {
             /* Uncompressed */
             if (self->change_ref_value_operand > 0 && self->change_ref_value_operand != 255) {
-                /* TODO: Change Reference Values: Definition phase */
+                /* Operator 203YYY: Change Reference Values: Definition phase */
                 const int number_of_bits = self->change_ref_value_operand;
                 double new_ref_val = (double)grib_decode_signed_longb(data, pos, number_of_bits);
                 grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: decode_element, uncompressed. Store %ld => %g", bd->code, new_ref_val);
                 tableB_override_store_ref_val(c, self, bd->code, new_ref_val);
                 err=check_end_data(c, self, bd->width); /*advance bitsToEnd*/
-                if(err) return err;
+                if (err) return err;
             } else {
                 /* Check if we have changed ref value for this element. If so use it */
                 double saved_ref_val = bd->reference;
@@ -2441,9 +2441,9 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                 switch(descriptors[i]->X) {
 
                 case 3:
-                    /* TODO: 203YYY Change reference values */
+                    /* Change reference values */
                     if (flag != PROCESS_DECODE) {
-                        grib_context_log(c,GRIB_LOG_ERROR,"process_elements: unsupported operator %d",descriptors[i]->X);
+                        grib_context_log(c,GRIB_LOG_ERROR,"process_elements: operator %d supported for decoding only",descriptors[i]->X);
                         return GRIB_INTERNAL_ERROR;
                     }
                     if (descriptors[i]->Y == 255) {
