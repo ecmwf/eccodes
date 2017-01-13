@@ -673,7 +673,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
     }
 
     if (ns) {
-        kiter=grib_keys_iterator_new(h,0,(char*)ns);
+        kiter=grib_keys_iterator_new(h,0,ns);
         if (!kiter) {
             fprintf(dump_file,"ERROR: Unable to create keys iterator\n");
             exit(1);

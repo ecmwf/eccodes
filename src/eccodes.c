@@ -65,7 +65,7 @@ void codes_check(const char* call,const char*  file,int line,int e,const char* m
 
 /* Fieldsets */
 /******************************************************************************/
-grib_fieldset *codes_fieldset_new_from_files(grib_context *c, char *filenames[], int nfiles, char **keys, int nkeys, char *where_string, char *order_by_string, int *err)
+grib_fieldset *codes_fieldset_new_from_files(grib_context *c, char *filenames[], int nfiles, char **keys, int nkeys, const char *where_string, const char *order_by_string, int *err)
 {
     return grib_fieldset_new_from_files(c, filenames, nfiles, keys, nkeys, where_string, order_by_string, err);
 }

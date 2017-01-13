@@ -155,7 +155,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
 
     if (!dest || !src) return GRIB_NULL_HANDLE;
 
-    iter=grib_keys_iterator_new(src,0,(char*)name);
+    iter=grib_keys_iterator_new(src,0,name);
 
     if (!iter) {
         grib_context_log(src->context,GRIB_LOG_ERROR,"grib_copy_namespace: unable to get iterator for %s",name );
@@ -1383,7 +1383,7 @@ static int grib_get_key_value(grib_handle* h,grib_key_value_list* kv)
         kv->error=err;
         break;
     case GRIB_NAMESPACE:
-        iter=grib_keys_iterator_new(h,0,(char*)kv->name);
+        iter=grib_keys_iterator_new(h,0,kv->name);
         list=(grib_key_value_list*)grib_context_malloc_clear(h->context,sizeof(grib_key_value_list));
         kv->namespace_value=list;
         while(grib_keys_iterator_next(iter))

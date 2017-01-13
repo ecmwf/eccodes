@@ -225,7 +225,7 @@ typedef struct grib_viarray grib_viarray;
 typedef struct bufr_descriptor bufr_descriptor;
 typedef struct bufr_descriptors_array bufr_descriptors_array;
 
-grib_fieldset *grib_fieldset_new_from_files(grib_context *c, char *filenames[], int nfiles, char **keys, int nkeys, char *where_string, char *order_by_string, int *err);
+grib_fieldset *grib_fieldset_new_from_files(grib_context *c, char *filenames[], int nfiles, char **keys, int nkeys, const char *where_string, const char *order_by_string, int *err);
 void grib_fieldset_delete(grib_fieldset* set);
 void grib_fieldset_rewind(grib_fieldset* set);
 int grib_fieldset_apply_order_by(grib_fieldset* set,const char* order_by_string);
@@ -801,7 +801,7 @@ int grib_get_double_elements(grib_handle* h, const char* key, int* i, long size,
 * @param length      : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
 * @return            0 if OK, integer value on error
 */
-int grib_get_string       (grib_handle* h, const char* key, char*   mesg,             size_t *length);
+int grib_get_string(grib_handle* h, const char* key, char* mesg, size_t *length);
 
 int grib_get_string_array(grib_handle* h, const char* name, char** val, size_t *length);
 
