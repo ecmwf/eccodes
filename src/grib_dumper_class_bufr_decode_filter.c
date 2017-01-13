@@ -120,7 +120,7 @@ static int init(grib_dumper* d)
     self->empty=1;
     self->isLeaf=0;
     self->isAttribute=0;
-    self->keys=grib_context_malloc_clear(c,sizeof(grib_string_list));
+    self->keys=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
 
     return GRIB_SUCCESS;
 }
@@ -185,7 +185,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         int dofree=0;
 
         if (r!=0) {
-            prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
+            prefix=(char*)grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
             dofree=1;
             sprintf(prefix,"#%d#%s",r,a->name);
         } else prefix=(char*)a->name;
@@ -227,7 +227,7 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a, const char* p
     }
 
     if (self->isLeaf==0) {
-        char* prefix1 = grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+strlen(prefix)+5));
+        char* prefix1 = (char*)grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+strlen(prefix)+5));
         sprintf(prefix1,"%s->%s",prefix,a->name);
 
         dump_attributes(d,a,prefix1);
@@ -261,7 +261,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
             
             r=compute_bufr_key_rank(h,self->keys,a->name);
             if (r!=0) {
-                prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
+                prefix=(char*)grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
                 dofree=1;
                 sprintf(prefix,"#%d#%s",r,a->name);
             } else prefix=(char*)a->name;
@@ -301,7 +301,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         int dofree=0;
 
         if (r!=0) {
-            prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
+            prefix=(char*)grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
             dofree=1;
             sprintf(prefix,"#%d#%s",r,a->name);
         } else prefix=(char*)a->name;
@@ -326,7 +326,7 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     fprintf(self->dumper.out,"print \"%s->%s = [%s->%s]\";\n", prefix, a->name, prefix, a->name);
 
     if (self->isLeaf==0) {
-        char* prefix1 = grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+strlen(prefix)+5));
+        char* prefix1 = (char*)grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+strlen(prefix)+5));
         sprintf(prefix1,"%s->%s",prefix,a->name);
 
         dump_attributes(d,a,prefix1);
@@ -369,7 +369,7 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
         int dofree=0;
 
         if (r!=0) {
-            prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
+            prefix=(char*)grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
             dofree=1;
             sprintf(prefix,"#%d#%s",r,a->name);
         } else prefix=(char*)a->name;
@@ -419,7 +419,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         int dofree=0;
 
         if (r!=0) {
-            prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
+            prefix=(char*)grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
             dofree=1;
             sprintf(prefix,"#%d#%s",r,a->name);
         } else prefix=(char*)a->name;
@@ -480,7 +480,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         int dofree=0;
 
         if (r!=0) {
-            prefix=grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
+            prefix=(char*)grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
             dofree=1;
             sprintf(prefix,"#%d#%s",r,a->name);
         } else prefix=(char*)a->name;
