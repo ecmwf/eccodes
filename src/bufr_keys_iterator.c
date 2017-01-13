@@ -62,7 +62,7 @@ static void mark_seen(grib_keys_iterator* ki,const char* name)
 
     if (r) (*r)++;
     else {
-        r=grib_context_malloc(ki->handle->context,sizeof(int));
+        r=(int*)grib_context_malloc(ki->handle->context,sizeof(int));
         *r=1;
         grib_trie_insert(ki->seen,name,(void*)r);
     }
@@ -121,7 +121,7 @@ static int next_attribute(grib_keys_iterator* kiter)
 
     if (kiter->attributes[kiter->i_curr_attribute]) {
         if (!kiter->prefix) {
-            kiter->prefix=grib_context_malloc_clear(kiter->current->context,strlen(kiter->current->name)+10);
+            kiter->prefix=(char*)grib_context_malloc_clear(kiter->current->context,strlen(kiter->current->name)+10);
             r=(int*)grib_trie_get(kiter->seen,kiter->current->name);
             sprintf(kiter->prefix,"#%d#%s",*r,kiter->current->name);
         }
@@ -134,7 +134,7 @@ static int next_attribute(grib_keys_iterator* kiter)
             kiter->prefix=0;
             return 0;
         }
-        prefix=grib_context_malloc_clear(kiter->current->context,strlen(kiter->prefix)+strlen(kiter->attributes[i_curr_attribute]->name)+3);
+        prefix=(char*)grib_context_malloc_clear(kiter->current->context,strlen(kiter->prefix)+strlen(kiter->attributes[i_curr_attribute]->name)+3);
         sprintf(prefix,"%s->%s",kiter->prefix,kiter->attributes[i_curr_attribute]->name);
         grib_context_free(kiter->current->context,kiter->prefix);
         kiter->prefix=prefix;
@@ -184,10 +184,10 @@ char* codes_bufr_keys_iterator_get_name(grib_keys_iterator* kiter)
 
     if (kiter->prefix) {
         int iattribute=kiter->i_curr_attribute-1;
-        ret=grib_context_malloc_clear(kiter->handle->context,strlen(kiter->prefix)+strlen(kiter->attributes[iattribute]->name)+10);
+        ret=(char*)grib_context_malloc_clear(kiter->handle->context,strlen(kiter->prefix)+strlen(kiter->attributes[iattribute]->name)+10);
         sprintf(ret,"%s->%s",kiter->prefix,kiter->attributes[iattribute]->name);
     } else {
-        ret=grib_context_malloc_clear(kiter->handle->context,strlen(kiter->current->name)+10);
+        ret=(char*)grib_context_malloc_clear(kiter->handle->context,strlen(kiter->current->name)+10);
 
         if (kiter->current->flags & GRIB_ACCESSOR_FLAG_BUFR_DATA) {
             r=(int*)grib_trie_get(kiter->seen,kiter->current->name);

@@ -42,7 +42,7 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
         /*   This is the first and only instance of the key */
         /* So we check if there is a second one of this key, */
         /* If not, then rank is zero i.e. this is the only instance */
-        char* s=grib_context_malloc_clear(c,strlen(key)+5);
+        char* s=(char*)grib_context_malloc_clear(c,strlen(key)+5);
         sprintf(s,"#2#%s",key);
         if (grib_get_size(h,s,&size)==GRIB_NOT_FOUND) theRank=0;
         grib_context_free(c, s);
