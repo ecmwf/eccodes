@@ -210,12 +210,12 @@ static int select_area(grib_accessor* a) {
     sprintf(latstr,"#%ld#latitude",latRank);
 
     n=numberOfSubsets;
-    lat=grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
+    lat=(double*)grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
     ret=grib_get_double_array(h,latstr,lat,&n);
     if (ret) return ret;
     if (n!=numberOfSubsets) return GRIB_INTERNAL_ERROR;
 
-    lon=grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
+    lon=(double*)grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
     ret=grib_get_double_array(h,lonstr,lon,&n);
     if (ret) return ret;
     if (n!=numberOfSubsets) return GRIB_INTERNAL_ERROR;
