@@ -434,12 +434,12 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 77 ;
 	}
-#Total column liquid water
+#Total column cloud liquid water
 'kg m**-2' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 78 ;
 	}
-#Total column ice water
+#Total column cloud ice water
 'kg m**-2' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 79 ;

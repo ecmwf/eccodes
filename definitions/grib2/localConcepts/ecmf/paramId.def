@@ -431,13 +431,13 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 74 ;
 	}
-#Total column liquid water
+#Total column cloud liquid water
 '78' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 78 ;
 	}
-#Total column ice water
+#Total column cloud ice water
 '79' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
