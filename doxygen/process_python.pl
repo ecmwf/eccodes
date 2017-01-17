@@ -56,6 +56,8 @@ while (<>) {
     s/\bgrib_get_double_array\b/codes_get_double_array/;
     s/\bgrib_set_long_array\b/codes_set_long_array/;
     s/\bgrib_get_long_array\b/codes_get_long_array/;
+    s/\bgrib_set_string_array\b/codes_set_string_array/;
+    s/\bgrib_get_string_array\b/codes_get_string_array/;
     s/\bgrib_multi_new\b/codes_grib_multi_new/;
     s/\bgrib_multi_release\b/codes_grib_multi_release/;
     s/\bgrib_copy_namespace\b/codes_copy_namespace/;
