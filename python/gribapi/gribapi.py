@@ -87,6 +87,7 @@ def require(**_params_):
         return modified
     return check_types
 
+# @cond
 class Bunch(dict):
     """
     The collector of a bunch of named stuff :).

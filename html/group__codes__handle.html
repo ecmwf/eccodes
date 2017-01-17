@@ -106,9 +106,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gac82dbaba240ebf6e76cdbcf2007a6bee"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__codes__handle.html#gac82dbaba240ebf6e76cdbcf2007a6bee">codes_write_message</a> (<a class="el" href="structcodes__handle.html">codes_handle</a> *h, const char *file, const char *mode)</td></tr>
 <tr class="memdesc:gac82dbaba240ebf6e76cdbcf2007a6bee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a coded message to a file.  <a href="#gac82dbaba240ebf6e76cdbcf2007a6bee">More...</a><br/></td></tr>
 <tr class="separator:gac82dbaba240ebf6e76cdbcf2007a6bee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaece49330c864391261cd6a0c10a18dc2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcodes__handle.html">codes_handle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__codes__handle.html#gaece49330c864391261cd6a0c10a18dc2">codes_handle_new_from_message</a> (<a class="el" href="structcodes__context.html">codes_context</a> *c, void *data, size_t data_len)</td></tr>
-<tr class="memdesc:gaece49330c864391261cd6a0c10a18dc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a handle from a user message in memory.  <a href="#gaece49330c864391261cd6a0c10a18dc2">More...</a><br/></td></tr>
-<tr class="separator:gaece49330c864391261cd6a0c10a18dc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga095447ed85ff2142dbda2867ee3b4c8d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcodes__handle.html">codes_handle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__codes__handle.html#ga095447ed85ff2142dbda2867ee3b4c8d">codes_handle_new_from_message</a> (<a class="el" href="structcodes__context.html">codes_context</a> *c, const void *data, size_t data_len)</td></tr>
+<tr class="memdesc:ga095447ed85ff2142dbda2867ee3b4c8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a handle from a user message in memory.  <a href="#ga095447ed85ff2142dbda2867ee3b4c8d">More...</a><br/></td></tr>
+<tr class="separator:ga095447ed85ff2142dbda2867ee3b4c8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga385864d5f06e1de0e8ee13388ca4117c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcodes__handle.html">codes_handle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__codes__handle.html#ga385864d5f06e1de0e8ee13388ca4117c">codes_grib_handle_new_from_multi_message</a> (<a class="el" href="structcodes__context.html">codes_context</a> *c, void **data, size_t *data_len, int *error)</td></tr>
 <tr class="memdesc:ga385864d5f06e1de0e8ee13388ca4117c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a handle from a user message in memory.  <a href="#ga385864d5f06e1de0e8ee13388ca4117c">More...</a><br/></td></tr>
 <tr class="separator:ga385864d5f06e1de0e8ee13388ca4117c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -570,7 +570,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Frees a handle, also frees the message if it is not a user message. </p>
-<dl class="section see"><dt>See Also</dt><dd><a class="el" href="group__codes__handle.html#gaece49330c864391261cd6a0c10a18dc2" title="Create a handle from a user message in memory. ">codes_handle_new_from_message</a> </dd></dl>
+<dl class="section see"><dt>See Also</dt><dd><a class="el" href="group__codes__handle.html#ga095447ed85ff2142dbda2867ee3b4c8d" title="Create a handle from a user message in memory. ">codes_handle_new_from_message</a> </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">h</td><td>: The handle to be deleted </td></tr>
@@ -632,7 +632,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="gaece49330c864391261cd6a0c10a18dc2"></a>
+<a class="anchor" id="ga095447ed85ff2142dbda2867ee3b4c8d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -645,7 +645,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">void *&#160;</td>
+          <td class="paramtype">const void *&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>

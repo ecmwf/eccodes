@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['the_20message_20handle',['The message handle',['../group__codes__handle.html',1,'']]],
-  ['the_20indexing_20feature',['The indexing feature',['../group__codes__index.html',1,'']]],
-  ['the_20context_20object',['The context object',['../group__context.html',1,'']]],
   ['test_5fclone',['test_clone',['../classhigh__level__api_1_1_test_grib_message.html#ac4ad8985e15d4cb25c2907c09f76891b',1,'high_level_api.TestGribMessage.test_clone()'],['../classhigh__level__api_1_1_test_bufr_message.html#ac4ad8985e15d4cb25c2907c09f76891b',1,'high_level_api.TestBufrMessage.test_clone()']]],
   ['test_5fcontent',['test_content',['../classhigh__level__api_1_1_test_bufr_message.html#aae0bd902ad06975ab7daff87c34aea50',1,'high_level_api::TestBufrMessage']]],
   ['test_5fcreate_5fand_5fserialize_5findex',['test_create_and_serialize_index',['../classhigh__level__api_1_1_test_grib_index.html#a66286a9b57f5493b5f366cda130d4c32',1,'high_level_api::TestGribIndex']]],
@@ -15,10 +12,5 @@ var searchData=
   ['test_5fread_5finvalid_5ffile',['test_read_invalid_file',['../classhigh__level__api_1_1_test_grib_file.html#adf65917be1841c4717dee205457d576b',1,'high_level_api.TestGribFile.test_read_invalid_file()'],['../classhigh__level__api_1_1_test_bufr_file.html#adf65917be1841c4717dee205457d576b',1,'high_level_api.TestBufrFile.test_read_invalid_file()']]],
   ['test_5fread_5fpast_5flast_5fmessage',['test_read_past_last_message',['../classhigh__level__api_1_1_test_grib_file.html#a42d0160d68272b2d96cdffbc2db5f3f2',1,'high_level_api.TestGribFile.test_read_past_last_message()'],['../classhigh__level__api_1_1_test_bufr_file.html#a42d0160d68272b2d96cdffbc2db5f3f2',1,'high_level_api.TestBufrFile.test_read_past_last_message()']]],
   ['test_5fserialize',['test_serialize',['../classhigh__level__api_1_1_test_grib_message.html#aa2e02e263da64ba84940736a7f00fd96',1,'high_level_api.TestGribMessage.test_serialize()'],['../classhigh__level__api_1_1_test_bufr_message.html#aa2e02e263da64ba84940736a7f00fd96',1,'high_level_api.TestBufrMessage.test_serialize()']]],
-  ['test_5fvalue_5fsetting',['test_value_setting',['../classhigh__level__api_1_1_test_grib_message.html#a9cab109486b0ae16e800b8777db052e7',1,'high_level_api.TestGribMessage.test_value_setting()'],['../classhigh__level__api_1_1_test_bufr_message.html#a9cab109486b0ae16e800b8777db052e7',1,'high_level_api.TestBufrMessage.test_value_setting()']]],
-  ['testbufrfile',['TestBufrFile',['../classhigh__level__api_1_1_test_bufr_file.html',1,'high_level_api']]],
-  ['testbufrmessage',['TestBufrMessage',['../classhigh__level__api_1_1_test_bufr_message.html',1,'high_level_api']]],
-  ['testgribfile',['TestGribFile',['../classhigh__level__api_1_1_test_grib_file.html',1,'high_level_api']]],
-  ['testgribindex',['TestGribIndex',['../classhigh__level__api_1_1_test_grib_index.html',1,'high_level_api']]],
-  ['testgribmessage',['TestGribMessage',['../classhigh__level__api_1_1_test_grib_message.html',1,'high_level_api']]]
+  ['test_5fvalue_5fsetting',['test_value_setting',['../classhigh__level__api_1_1_test_grib_message.html#a9cab109486b0ae16e800b8777db052e7',1,'high_level_api.TestGribMessage.test_value_setting()'],['../classhigh__level__api_1_1_test_bufr_message.html#a9cab109486b0ae16e800b8777db052e7',1,'high_level_api.TestBufrMessage.test_value_setting()']]]
 ];
