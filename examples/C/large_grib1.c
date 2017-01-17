@@ -20,7 +20,7 @@ int main()
     double *values;
     int i = 0;
     codes_handle *h = NULL;
-    char* filename = "bigfile.grib";
+    const char* filename = "bigfile.grib";
 
     values = (double*) malloc(ni*nj*sizeof(double));
     if (!values) {
