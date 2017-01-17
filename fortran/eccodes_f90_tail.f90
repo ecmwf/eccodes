@@ -2611,7 +2611,7 @@ end subroutine codes_datetime_to_julian
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
-  !> gathered with @ref grib_get_error_string.
+  !> gathered with @ref codes_get_error_string.
   !>
   !> @param msgid_src     source message
   !> @param msgid_dest    destination message
