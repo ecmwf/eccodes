@@ -46,6 +46,7 @@ list( APPEND tests_no_data_reqd
     md5
     uerra
     grib_2nd_order_numValues
+    julian
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd
@@ -109,7 +110,6 @@ list( APPEND tests_data_reqd
     second_order
     multi_from_message
     change_scanning
-    julian
     statistics
     tigge
     tigge_conversions
