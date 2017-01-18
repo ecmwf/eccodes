@@ -18,7 +18,7 @@
 #include "omp.h"
 #endif
 
-#define mask1(i)    (1u << i)
+#define mask1(i)    (1UL << i)
 #define test(n,i)    !!((n) & mask1(i))
 
 long GRIB_MASK = -1;       /* Mask of sword bits */
