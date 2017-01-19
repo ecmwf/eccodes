@@ -181,7 +181,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         fprintf(self->dumper.out,"  free(rvalues); rvalues = NULL;\n\n");
         fprintf(self->dumper.out,"  rvalues = (double*)malloc(%lu*sizeof(double));\n", (unsigned long)size);
         fprintf(self->dumper.out,"  if (!rvalues) { fprintf(stderr, \"Failed to allocate memory (rvalues).\\n\"); return 1; }\n");
-        fprintf(self->dumper.out,"  size = %lu;", size);
+        fprintf(self->dumper.out,"  size = %lu;", (unsigned long)size);
 
         icount=0;
         for (i=0; i<size-1; ++i) {
@@ -267,7 +267,7 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
         fprintf(self->dumper.out,"  free(rvalues); rvalues = NULL;\n");
         fprintf(self->dumper.out,"  rvalues = (double*)malloc(%lu*sizeof(double));\n", (unsigned long)size);
         fprintf(self->dumper.out,"  if (!rvalues) { fprintf(stderr, \"Failed to allocate memory (rvalues).\\n\"); return 1; }\n");
-        fprintf(self->dumper.out,"  size = %lu;", size);
+        fprintf(self->dumper.out,"  size = %lu;", (unsigned long)size);
 
         icount=0;
         for (i=0; i<size-1; ++i) {
@@ -363,7 +363,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
         fprintf(self->dumper.out,"  free(ivalues); ivalues = NULL;\n\n");
         fprintf(self->dumper.out,"  ivalues = (long*)malloc(%lu*sizeof(long));\n", (unsigned long)size);
         fprintf(self->dumper.out,"  if (!ivalues) { fprintf(stderr, \"Failed to allocate memory (ivalues).\\n\"); return 1; }\n");
-        fprintf(self->dumper.out,"  size = %lu;", size);
+        fprintf(self->dumper.out,"  size = %lu;", (unsigned long)size);
 
         icount=0;
         for (i=0;i<size-1;i++) {
@@ -442,7 +442,7 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         fprintf(self->dumper.out,"  free(ivalues); ivalues = NULL;\n");
         fprintf(self->dumper.out,"  ivalues = (long*)malloc(%lu*sizeof(long));\n", (unsigned long)size);
         fprintf(self->dumper.out,"  if (!ivalues) { fprintf(stderr, \"Failed to allocate memory (ivalues).\\n\"); return 1; }\n");
-        fprintf(self->dumper.out,"  size = %lu;", size);
+        fprintf(self->dumper.out,"  size = %lu;", (unsigned long)size);
 
         icount=0;
         for (i=0;i<size-1;i++) {
@@ -553,7 +553,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     fprintf(self->dumper.out,"  free(svalues);\n");
     fprintf(self->dumper.out,"  svalues = (char**)malloc(%lu * sizeof(char*));\n", (unsigned long)size);
     fprintf(self->dumper.out,"  if (!svalues) { fprintf(stderr, \"Failed to allocate memory (svalues).\\n\"); return 1; }\n");
-    fprintf(self->dumper.out,"  size = %lu;\n", size);
+    fprintf(self->dumper.out,"  size = %lu;\n", (unsigned long)size);
 
     self->empty=0;
     values=(char**)grib_context_malloc_clear(c,size*sizeof(char*));
@@ -674,7 +674,7 @@ static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const cha
     fprintf(f,"  free(ivalues); ivalues = NULL;\n");
     fprintf(f,"  ivalues = (long*)malloc(%lu*sizeof(long));\n", (unsigned long)size);
     fprintf(f,"  if (!ivalues) { fprintf(stderr, \"Failed to allocate memory (ivalues).\\n\"); return 1; }\n");
-    fprintf(f,"  size = %lu;", size);
+    fprintf(f,"  size = %lu;", (unsigned long)size);
 
     val=(long*)grib_context_malloc_clear(h->context,sizeof(long)*size);
     grib_get_long_array(h,key,val,&size);
