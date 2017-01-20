@@ -229,7 +229,7 @@ int main (int argc, char * argv[])
     grib_handle * h;
     double zval[ILCHAM];
     int ioptimizeScaleFactor;
-    double zerr[2];
+    double zerr[2] = {0,0};
     int i, m, n, k;
 
     for (ioptimizeScaleFactor = 0; ioptimizeScaleFactor < 2; ioptimizeScaleFactor++)

@@ -640,7 +640,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     }
 
     if (nvals>grib_darray_used_size(dvalues)) return GRIB_ARRAY_TOO_SMALL;
-    values=grib_context_malloc_clear(c,sizeof(double)*nvals);
+    values=(double*)grib_context_malloc_clear(c,sizeof(double)*nvals);
     val0=dvalues->v[self->iss_list->v[0]];
     is_constant=1;
     for (i=0;i<nvals;i++) {
@@ -1841,7 +1841,7 @@ static int get_key_rank(grib_trie* accessorsRank,grib_accessor* a)
 
     if (r) (*r)++;
     else {
-        r=grib_context_malloc(a->context,sizeof(int));
+        r=(int*)grib_context_malloc(a->context,sizeof(int));
         *r=1;
         grib_trie_insert(accessorsRank,a->name,(void*)r);
     }
@@ -1850,7 +1850,7 @@ static int get_key_rank(grib_trie* accessorsRank,grib_accessor* a)
 
 static void grib_data_accessors_trie_push(grib_trie* accessorsTrie, grib_accessor* a, int r)
 {
-    char* name=grib_context_malloc_clear(a->context, strlen(a->name)+20);
+    char* name=(char*)grib_context_malloc_clear(a->context, strlen(a->name)+20);
     sprintf(name,"#%d#%s", r, a->name);
     grib_trie_insert(accessorsTrie, name, a);
     grib_context_free(a->context, name);
@@ -2143,7 +2143,7 @@ static void set_input_replications(grib_handle* h,grib_accessor_bufr_data_array 
     self->iInputShortReplications=0;
     if (grib_get_size(h,"inputDelayedDescriptorReplicationFactor",&nInputReplications)==0 && nInputReplications!=0) {
         if (self->inputReplications) grib_context_free(h->context,self->inputReplications);
-        self->inputReplications=grib_context_malloc_clear(h->context,sizeof(long)*nInputReplications);
+        self->inputReplications=(long*)grib_context_malloc_clear(h->context,sizeof(long)*nInputReplications);
         grib_get_long_array(h,"inputDelayedDescriptorReplicationFactor",self->inputReplications,&nInputReplications);
         /* default-> no input replications*/
         if (self->inputReplications[0]<0) self->nInputReplications=-1;
@@ -2151,7 +2151,7 @@ static void set_input_replications(grib_handle* h,grib_accessor_bufr_data_array 
     }
     if (grib_get_size(h,"inputExtendedDelayedDescriptorReplicationFactor",&nInputExtendedReplications)==0 && nInputExtendedReplications!=0) {
         if (self->inputExtendedReplications) grib_context_free(h->context,self->inputExtendedReplications);
-        self->inputExtendedReplications=grib_context_malloc_clear(h->context,sizeof(long)*nInputExtendedReplications);
+        self->inputExtendedReplications=(long*)grib_context_malloc_clear(h->context,sizeof(long)*nInputExtendedReplications);
         grib_get_long_array(h,"inputExtendedDelayedDescriptorReplicationFactor",self->inputExtendedReplications,&nInputExtendedReplications);
         /* default-> no input replications*/
         if (self->inputExtendedReplications[0]<0) self->nInputExtendedReplications=-1;
@@ -2159,7 +2159,7 @@ static void set_input_replications(grib_handle* h,grib_accessor_bufr_data_array 
     }
     if (grib_get_size(h,"inputShortDelayedDescriptorReplicationFactor",&nInputShortReplications)==0 && nInputShortReplications!=0) {
         if (self->inputShortReplications) grib_context_free(h->context,self->inputShortReplications);
-        self->inputShortReplications=grib_context_malloc_clear(h->context,sizeof(long)*nInputShortReplications);
+        self->inputShortReplications=(long*)grib_context_malloc_clear(h->context,sizeof(long)*nInputShortReplications);
         grib_get_long_array(h,"inputShortDelayedDescriptorReplicationFactor",self->inputShortReplications,&nInputShortReplications);
         /* default-> no input replications*/
         if (self->inputShortReplications[0]<0) self->nInputShortReplications=-1;
@@ -2174,7 +2174,7 @@ static void set_input_bitmap(grib_handle* h,grib_accessor_bufr_data_array *self)
     self->iInputBitmap=0;
     if (grib_get_size(h,"inputDataPresentIndicator",&nInputBitmap)==0 && nInputBitmap!=0) {
         if (self->inputBitmap) grib_context_free(h->context,self->inputBitmap);
-        self->inputBitmap=grib_context_malloc_clear(h->context,sizeof(long)*nInputBitmap);
+        self->inputBitmap=(double*)grib_context_malloc_clear(h->context,sizeof(double)*nInputBitmap);
         grib_get_double_array(h,"inputDataPresentIndicator",self->inputBitmap,&nInputBitmap);
         /* default-> no input bitmap*/
         if (self->inputBitmap[0]<0) self->nInputBitmap=-1;
@@ -2260,7 +2260,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
         err=grib_get_size(grib_handle_of_accessor(a),"extractSubsetList",&subsetListSize);
         if (err) return err;
         if (subsetList) grib_context_free(c,subsetList);
-        subsetList=grib_context_malloc_clear(c,subsetListSize*sizeof(long));
+        subsetList=(long*)grib_context_malloc_clear(c,subsetListSize*sizeof(long));
         err=grib_get_long_array(grib_handle_of_accessor(a),"extractSubsetList",subsetList,&subsetListSize);
         if (err) return err;
         codec_replication=&encode_replication;
