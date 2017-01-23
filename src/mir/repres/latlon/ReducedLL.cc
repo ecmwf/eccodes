@@ -24,44 +24,6 @@
 #include "mir/util/Compare.h"
 
 
-namespace {
-
-
-void clipPlArray(std::vector<long>& pl, mir::util::BoundingBox& bbox) {
-    const long N = long(pl.size());
-    ASSERT(N > 1);
-
-    long NZerosNorth = 0;
-    for (std::vector<long>::const_iterator i = pl.cbegin(); i != pl.cend() && !*i; ++i) {
-        ++NZerosNorth;
-    }
-
-    long NZerosSouth = 0;
-    for (std::vector<long>::const_reverse_iterator i = pl.crbegin(); i != pl.crend() && !*i; ++i) {
-        ++NZerosSouth;
-    }
-
-    // make sure to have at least two (non-zero) entries in pl array, before and after clipping
-    if (NZerosNorth + NZerosSouth + 2 <= N) {
-
-        // adjust bounding box, as if without leading/trailing zeros
-        const double inc_north_south = (bbox.north() - bbox.south()) / (N - 1);
-        double adjustedNorth = bbox.north() - NZerosNorth * inc_north_south;
-        double adjustedSouth = bbox.south() + NZerosSouth * inc_north_south;
-        bbox = mir::util::BoundingBox(
-                   adjustedNorth, bbox.west(),
-                   adjustedSouth, bbox.east() );
-
-        // clip pl array
-        std::vector<long> plClipped(pl.begin() + NZerosNorth, pl.end() - NZerosSouth);
-        pl.swap(plClipped);
-    }
-}
-
-
-}  // (anonymous namespace)
-
-
 namespace mir {
 namespace repres {
 namespace latlon {
@@ -73,11 +35,6 @@ ReducedLL::ReducedLL(const param::MIRParametrisation &parametrisation):
     ASSERT(parametrisation.get("Nj", Nj_));
     ASSERT(Nj_);
     ASSERT(pl_.size()==Nj_);
-
-    // adjust (a copy of) the pl array and bbox, if pl array starts/ends with zeros
-    clipped_pl_ = pl_;
-    clipped_bbox_ = bbox_;
-    clipPlArray(clipped_pl_, clipped_bbox_);
 }
 
 
@@ -85,20 +42,17 @@ ReducedLL::~ReducedLL() {
 }
 
 
-void ReducedLL::print(std::ostream& out) const {
-    out << "ReducedLL["
-        <<  "bbox=" << bbox_
-        << ",clipped_bbox=" << clipped_bbox_
-        << "]";
+void ReducedLL::print(std::ostream &out) const {
+    out << "ReducedLL[bbox=" << bbox_ << "]";
 }
 
 
-void ReducedLL::fill(grib_info&) const  {
+void ReducedLL::fill(grib_info &info) const  {
     NOTIMP;
 }
 
 
-void ReducedLL::fill(api::MIRJob& job) const  {
+void ReducedLL::fill(api::MIRJob &job) const  {
     bbox_.fill(job);
     job.set("pl", pl_);
     job.set("Nj", Nj_);
@@ -107,7 +61,7 @@ void ReducedLL::fill(api::MIRJob& job) const  {
 
 
 void ReducedLL::cropToDomain(const param::MIRParametrisation &parametrisation, context::Context & ctx) const {
-    if (!atlasDomain(clipped_bbox_).isGlobal()) {
+    if (!atlasDomain().isGlobal()) {
         action::AreaCropper cropper(parametrisation, bbox_);
         cropper.execute(ctx);
     }
@@ -115,12 +69,12 @@ void ReducedLL::cropToDomain(const param::MIRParametrisation &parametrisation, c
 
 
 atlas::grid::Grid *ReducedLL::atlasGrid() const {
-    return new atlas::grid::lonlat::ReducedLonLat(clipped_pl_.size(), &clipped_pl_[0], atlasDomain(clipped_bbox_));
+    return new atlas::grid::lonlat::ReducedLonLat(pl_.size(), &pl_[0], atlasDomain());
 }
 
 
 atlas::grid::Domain ReducedLL::atlasDomain() const {
-    return atlasDomain(bbox_);
+  return atlasDomain(bbox_);
 }
 
 
