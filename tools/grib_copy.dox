@@ -26,7 +26,7 @@
 		type can be defined. Default type is string.
  \n \n -B order by directive \n 
 		Order by. The output will be ordered according to the order by directive.
-		Order by example: "step asc, centre desc" (step ascending and centre descending)
+		Order by example: "step:i asc, centre desc" (step numeric ascending and centre descending)
  \n \n -V  \n Version.
  \n \n -W width \n 
 		Minimum width of each column in output. Default is 10.
