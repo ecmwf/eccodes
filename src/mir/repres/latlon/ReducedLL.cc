@@ -87,16 +87,15 @@ atlas::grid::Domain ReducedLL::atlasDomain(const util::BoundingBox& bbox) const 
     }
 
     const double ew = bbox.east() - bbox.west();
-    const double inc_west_east = maxpl? ew/double(maxpl) : 0.;
 
     // confirm domain limits
     const double epsilon_grib1 = 1.0 / 1000.0;
 
     const bool isPeriodicEastWest =
-               eckit::types::is_approximately_equal(ew + inc_west_east, 360.)
+               eckit::types::is_approximately_equal((360. - ew) * maxpl, 360.)
 
             // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree. Use the precision given by GRIB in this check
-            || eckit::types::is_approximately_equal(ew + inc_west_east, 360., epsilon_grib1);
+            || eckit::types::is_approximately_equal((360. - ew) * maxpl, 360., epsilon_grib1);
     const bool includesPoleNorth  = eckit::types::is_approximately_equal(bbox.north(),  90.);
     const bool includesPoleSouth  = eckit::types::is_approximately_equal(bbox.south(), -90.);
 
