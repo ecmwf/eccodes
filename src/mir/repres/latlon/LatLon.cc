@@ -31,10 +31,8 @@ namespace mir {
 namespace repres {
 namespace latlon {
 
+
 static size_t computeN(double first, double last, double inc, const char* n_name) {
-
-
-
     ASSERT(first <= last);
     ASSERT(inc > 0);
 
@@ -46,7 +44,8 @@ static size_t computeN(double first, double last, double inc, const char* n_name
     size_t n = p + (d0<d1? 0 : 1);
     // eckit::Log::debug<LibMir>() << p << " " << d0 << " " << d1 << " " << inc << " " << first << " " << last << std::endl;
 
-    if (!eckit::types::is_approximately_equal(n*inc + first, last)) {
+    const double eps = double(std::numeric_limits<float>::epsilon());
+    if (!eckit::types::is_approximately_equal(n*inc + first, last, eps)) {
         std::ostringstream os;
         os << "computeN: cannot compute accurately " << n_name << " from " << first << "/to/" << last << "/by/" << inc;
         eckit::Log::debug<LibMir>() << os.str() << std::endl;
