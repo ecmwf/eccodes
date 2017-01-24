@@ -1143,7 +1143,6 @@ int codes_keys_iterator_delete( codes_keys_iterator* kiter);
 int codes_keys_iterator_rewind(codes_keys_iterator* kiter);
 
 char* codes_bufr_keys_iterator_get_name(codes_keys_iterator* kiter);
-char* codes_bufr_keys_iterator_get_next_attribute_name(grib_keys_iterator* kiter);
 
 int codes_keys_iterator_set_flags(codes_keys_iterator *kiter,unsigned long flags);
 
