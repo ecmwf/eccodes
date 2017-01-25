@@ -3,10 +3,13 @@
 
 grib_errors.c : grib_errors.txt errors.pl
 	./errors.pl
-	cmp grib_errors.c grib_errors.c.new || (cp grib_errors.c.new grib_errors.c)
-	cmp grib_api.h grib_api.h.new       || (cp grib_api.h.new grib_api.h)
-	cmp ../fortran/grib_api_constants.h grib_api_constants.h.new || (cp grib_api_constants.h.new ../fortran/grib_api_constants.h)
-	cmp ../python/grib_errors.h grib_errors.h.new || (cp grib_errors.h.new ../python/grib_errors.h)
+	cmp -s grib_errors.c grib_errors.c.new || (cp grib_errors.c.new grib_errors.c)
+	cmp -s grib_api.h grib_api.h.new       || (cp grib_api.h.new grib_api.h)
+	cmp -s eccodes.h eccodes.h.new         || (mv eccodes.h.new eccodes.h)
+	cmp -s ../fortran/grib_api_constants.h grib_api_constants.h.new || (mv grib_api_constants.h.new ../fortran/grib_api_constants.h)
+	cmp -s ../fortran/eccodes_constants.h  eccodes_constants.h.new  || (mv eccodes_constants.h.new  ../fortran/eccodes_constants.h)
+	cmp -s ../python/grib_errors.h grib_errors.h.new || (mv grib_errors.h.new ../python/grib_errors.h)
+	cmp -s ../python/gribapi/errors.py errors.py.new || (mv errors.py.new ../python/gribapi/errors.py)
 
 
 proto:;-chmod +w grib_api_prototypes.h; mkptypes -A $(libeccodes_la_prototypes) $(libeccodes_extra_prototypes) > temp && mv temp grib_api_prototypes.h;rm -f temp

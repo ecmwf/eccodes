@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -246,8 +246,12 @@ void grib_buffer_replace( grib_accessor *a, const unsigned char* data,
                 message_length - offset - oldsize);
 
     /* copy new data */
-
-    memcpy(buffer->data + offset, data, newsize);
+    DebugAssert( buffer->data + offset );
+    DebugAssert( data || (newsize==0) );/* if data==NULL then newsize must be 0 */
+    if (data) {
+        /* Note: memcpy behaviour is undefined if either dest or src is NULL */
+        memcpy(buffer->data + offset, data, newsize);
+    }
 
     if(increase)
     {

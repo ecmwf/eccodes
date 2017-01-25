@@ -8,3 +8,4 @@ extern grib_iterator_class* grib_iterator_class_latlon;
 extern grib_iterator_class* grib_iterator_class_latlon_reduced;
 extern grib_iterator_class* grib_iterator_class_polar_stereographic;
 extern grib_iterator_class* grib_iterator_class_regular;
+extern grib_iterator_class* grib_iterator_class_space_view;

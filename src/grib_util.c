@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -666,6 +666,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     double laplacianOperator;
     int packingTypeIsSet=0;
     int setSecondOrder=0;
+    int setJpegPacking=0;
     size_t slen=17;
     int grib1_high_resolution_fix = 0; /* boolean: See GRIB-863 */
     int global_grid = 0; /* boolean */
@@ -1071,8 +1072,12 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                 SET_STRING_VALUE("packingType","grid_complex");
             break;
         case GRIB_UTIL_PACKING_TYPE_JPEG:
+            /* Have to delay JPEG packing:
+             * Reason 1: It is not available in GRIB1 and so we have to wait until we change edition
+             * Reason 2: It has to be done AFTER we set the data values
+             */
             if (strcmp(input_packing_type,"grid_jpeg") && !strcmp(input_packing_type,"grid_simple"))
-                SET_STRING_VALUE("packingType","grid_jpeg");
+                setJpegPacking = 1;
             break;
         case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
             /* we delay the set of grid_second_order because we don't want
@@ -1291,6 +1296,19 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             fprintf(stderr,"GRIB_UTIL_SET_SPEC: Failed to change edition to %ld: %s\n",
                     packing_spec->editionNumber, grib_get_error_message(*err));
             goto cleanup;
+        }
+    }
+
+    if (editionNumber > 1 || packing_spec->editionNumber > 1) {
+        /* ECC-353 */
+        /* JPEG packing is not available in GRIB edition 1 and has to be done AFTER we set data values */
+        if (setJpegPacking == 1) {
+            *err = grib_set_string(outh, "packingType", "grid_jpeg", &slen);
+            if (*err != GRIB_SUCCESS) {
+                fprintf(stderr,"GRIB_UTIL_SET_SPEC: Failed to change packingType to JPEG: %s\n",
+                        grib_get_error_message(*err));
+                goto cleanup;
+            }
         }
     }
 
@@ -1618,43 +1636,6 @@ char get_dir_separator_char(void)
     return DIR_SEPARATOR_CHAR;
 }
 
-/* Return the component after final slash */
-/*  "/tmp/x"  -> "x"  */
-/*  "/tmp/"   -> ""   */
-const char* extract_filename(const char* filepath)
-{
-    const char* s = strrchr(filepath, get_dir_separator_char());
-    if (!s) return filepath;
-    else    return s + 1;
-}
-
-/* Boolean return type: 1 if the reduced gaussian field is global, 0 for sub area */
-int is_gaussian_global(
-        double lat1, double lat2, double lon1, double lon2,/* bounding box*/
-        long num_points_equator, /* num points on latitude at equator */
-        const double* latitudes, /* array of Gaussian latitudes (size 2*N) */
-        double angular_precision /* tolerance for angle comparison */
-)
-{
-    int global = 1;
-    const double d = fabs(latitudes[0] - latitudes[1]);
-    /* Compute the expected last longitude for a global field */
-    const double lon2_global = 360.0 - 360.0/num_points_equator;
-    /* Compute difference between expected longitude and actual one */
-    const double lon2_diff = fabs( lon2  - lon2_global ) - 360.0/num_points_equator;
-
-    /* Note: final gaussian latitude = -first latitude */
-    if ( (fabs(lat1 - latitudes[0]) >= d ) ||
-         (fabs(lat2 + latitudes[0]) >= d ) ||
-         lon1 != 0                         ||
-         lon2_diff > angular_precision
-    )
-    {
-        global = 0; /* sub area */
-    }
-    return global;
-}
-
 char* codes_getenv(const char* name)
 {
     /* Look for the new ecCodes environment variable names */
@@ -1689,45 +1670,4 @@ char* codes_getenv(const char* name)
         result = getenv(old_name);
     }
     return result;
-}
-
-/* Return the rank of the key using list of keys (For BUFR keys) */
-/* The argument 'keys' is an input as well as output from each call */
-int compute_key_rank(grib_handle* h, grib_string_list* keys, const char* key)
-{
-    grib_string_list* next=keys;
-    grib_string_list* prev=keys;
-    int theRank=0;
-    size_t size=0;
-    grib_context* c=h->context;
-    Assert(h->product_kind == PRODUCT_BUFR);
-
-    while (next && next->value && strcmp(next->value,key)) {
-        prev=next;
-        next=next->next;
-    }
-    if (!next) {
-        prev->next=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
-        next=prev->next;
-    }
-    if (!next->value) {
-        next->value=strdup(key);
-        next->count=0;
-    }
-
-    next->count++;
-    theRank=next->count;
-    if (theRank==1) {
-        /* If the count is 1 it could mean two things: */
-        /*   This is the first instance of the key and there is another one */
-        /*   This is the first and only instance of the key */
-        /* So we check if there is a second one of this key, */
-        /* If not, then rank is zero i.e. this is the only instance */
-        char* s=grib_context_malloc_clear(c,strlen(key)+5);
-        sprintf(s,"#2#%s",key);
-        if (grib_get_size(h,s,&size)==GRIB_NOT_FOUND) theRank=0;
-        grib_context_free(c, s);
-    }
-
-    return theRank;
 }

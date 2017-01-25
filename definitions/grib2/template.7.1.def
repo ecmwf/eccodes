@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -24,7 +24,8 @@
         bitsPerValue,
         referenceValue,
         binaryScaleFactor,
-        decimalScaleFactor
+        decimalScaleFactor,
+        optimizeScaleFactor
   ): read_only;
 
   meta values data_apply_bitmap(codedValues,
@@ -40,4 +41,3 @@ meta unpackedError simple_packing_error(zero,binaryScaleFactor,decimalScaleFacto
 alias data.packedValues = codedValues;
 
 template statistics "common/statistics_grid.def";
-

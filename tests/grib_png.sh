@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -22,7 +22,7 @@ files="
  regular_latlon_surface_constant.grib2
 "
 
-if [ $HAVE_JPG -eq 1 ]; then
+if [ $HAVE_JPEG -eq 1 ]; then
  files="multi.grib2 v.grib2"$files
 fi
 

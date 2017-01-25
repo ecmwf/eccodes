@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -50,7 +50,6 @@ int main(int argc, char** argv)
         printf("Error: unable to create handle from file %s\n",filename);
     }
 
-
     /* get the size of the values array*/
     CODES_CHECK(codes_get_size(h,"values",&values_len),0);
 
@@ -60,10 +59,9 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_get_double_array(h,"values",values,&values_len),0);
 
     for(i = 0; i < values_len; i++)
-        printf("%d  %.10e\n",i+1,values[i]);
+        printf("%d  %.10e\n",i,values[i]);
 
     free(values);
-
 
     CODES_CHECK(codes_get_double(h,"max",&max),0);
     CODES_CHECK(codes_get_double(h,"min",&min),0);
@@ -71,6 +69,18 @@ int main(int argc, char** argv)
 
     printf("%d values found in %s\n",(int)values_len,filename);
     printf("max=%.10e min=%.10e average=%.10e\n",max,min,average);
+
+    {
+        /* Example of accessing specific elements from data values */
+        int i=0;
+        const int NUM = 3;
+        int index_arr[]    = {0, values_len/2, values_len-1};
+        double vals_arr[3] = {0, 0, 0};
+        CODES_CHECK(codes_get_double_elements(h, "values", index_arr, NUM, vals_arr), 0);
+        for (i=0; i<NUM; ++i){
+            printf("value at index %d = %.10e\n", index_arr[i], vals_arr[i]);
+        }
+    }
 
     codes_handle_delete(h);
 

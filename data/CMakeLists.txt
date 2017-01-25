@@ -19,9 +19,6 @@ ecbuild_get_test_multidata( TARGET eccodes_download_gribs
                             NOCHECK
                             NAMES ${files_to_download} )
 
-if( ENABLE_TESTS )
-  set_property( TEST eccodes_download_gribs APPEND PROPERTY LABELS download_data )
-endif()
 
 # Copy other files - e.g. reference data, text files etc from the source data dir
 LIST(APPEND other_files

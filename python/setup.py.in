@@ -38,14 +38,18 @@ if shared_libs == 'OFF':
 
     if @HAVE_LIBOPENJPEG@:
         openjpeg_lib_dir = '@OPENJPEG_LIB_DIR@'
+        openjpeg_libname = '@OJ_WITHOUT_LIB@'
         if openjpeg_lib_dir:
             add_attribute(library_dirs=openjpeg_lib_dir,
                           runtime_library_dirs=openjpeg_lib_dir)
-        add_attribute(libraries='openjp2')
+        add_attribute(libraries=openjpeg_libname)
 
     # assumes png is supplied by system paths -- may not be true
     if @HAVE_LIBPNG@:
         add_attribute(libraries='png')
+
+    if @HAVE_MEMFS@:
+        add_attribute(libraries='eccodes_memfs')
 
     if @HAVE_AEC@:
         aec_dir = '@AEC_DIR@'
@@ -64,4 +68,4 @@ setup(name='eccodes',
       url='https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home',
       download_url='https://software.ecmwf.int/wiki/display/ECC/Releases',
       ext_modules=[Extension('gribapi._gribapi_swig', **attdict)],
-      packages=['eccodes', 'gribapi'])
+      packages=['eccodes', 'eccodes.high_level', 'gribapi'])

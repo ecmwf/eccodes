@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -13,6 +13,6 @@ INPUT="../../data/constant_field.grib1"
 OUTPUT=out.copy.grib1
 
 ${examples_dir}eccodes_f_grib_copy_message > /dev/null
-${tools_dir}/grib_compare -b centre $INPUT $OUTPUT
+${tools_dir}grib_compare -b centre $INPUT $OUTPUT
 
 rm -f $OUTPUT

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -11,7 +11,9 @@
 /*
  * C Implementation: grib_set_data
  *
- * Description: set the data contained in a GRIB file
+ * Description: set the data contained in a GRIB file.
+ *              In this example no missing values are present
+ *              If there are missing values, refer to: grib_set_bitmap
  *
  */
 #include <stdio.h>
@@ -64,7 +66,7 @@ int main(int argc, char** argv)
     for (i=0;i<values_len;i++) {
         if (count>100) {e*=10; count=1;}
         values[i]=d;
-        printf("%g \n",values[i]);
+        /*printf("%g \n",values[i]);*/
         d+=e;
         count++;
     }

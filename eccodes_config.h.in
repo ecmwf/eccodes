@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -105,6 +105,10 @@
 #define ECCODES_SAMPLES_PATH "/MEMFS/samples"
 #undef ECCODES_IFS_SAMPLES_PATH
 #define ECCODES_IFS_SAMPLES_PATH "/MEMFS/ifs_samples"
+#endif
+
+#ifdef HAVE_LIBJASPER
+#define JASPER_VERSION_MAJOR @JASPER_VERSION_MAJOR@
 #endif
 
 #endif /* eccodes_config_h */

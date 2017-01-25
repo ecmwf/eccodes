@@ -421,11 +421,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\codes_memfs.c"
+				RelativePath="..\..\..\src\bufr_keys_iterator.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\compile.c"
+				RelativePath="..\..\..\src\bufr_util.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\codes_memfs.c"
 				>
 			</File>
 			<File
@@ -968,7 +972,7 @@
 				RelativePath="..\..\..\src\grib_accessor_class_int8.c"
 				>
 			</File>
-            <File
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_iterator.c"
 				>
 			</File>
@@ -1453,10 +1457,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\grib_dumper_class_xml.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\grib_errors.c"
 				>
 			</File>
@@ -1617,6 +1617,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_iterator_class_space_view.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_itrie.c"
 				>
 			</File>
@@ -1674,6 +1678,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_openjpeg_encoding.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_optimize_decimal_factor.c"
 				>
 			</File>
 			<File
@@ -1742,6 +1750,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\md5.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\string_util.c"
 				>
 			</File>
 			<File

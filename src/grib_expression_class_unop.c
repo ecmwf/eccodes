@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -21,7 +21,6 @@
    IMPLEMENTS = evaluate_long
    IMPLEMENTS = evaluate_double
    IMPLEMENTS = print
-   IMPLEMENTS = compile
    IMPLEMENTS = add_dependency
    MEMBERS    = grib_expression *exp
    MEMBERS = grib_unop_long_proc  long_func
@@ -47,7 +46,6 @@ static void init_class              (grib_expression_class*);
 static void        destroy(grib_context*,grib_expression* e);
 
 static void        print(grib_context*,grib_expression*,grib_handle*);
-static void        compile(grib_expression*,grib_compiler*);
 static void        add_dependency(grib_expression* e, grib_accessor* observer);
 
 static int        native_type(grib_expression*,grib_handle*);
@@ -73,7 +71,6 @@ static grib_expression_class _grib_expression_class_unop = {
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,                 
-    &compile,                 
     &add_dependency,       
 
 	&native_type,
@@ -146,16 +143,6 @@ grib_expression* new_unop_expression(grib_context* c,
     e->long_func          = long_func;
     e->double_func         = double_func;
     return (grib_expression*)e;
-}
-
-static void compile(grib_expression* g,grib_compiler* c)
-{
-    grib_expression_unop* e = (grib_expression_unop*)g;
-    fprintf(c->out,"new_unop_expression(ctx,");
-    fprintf(c->out,"%s,",grib_unop_long_proc_name(e->long_func));
-    fprintf(c->out,"%s,",grib_unop_double_proc_name(e->double_func));
-    grib_expression_compile(e->exp,c);
-    fprintf(c->out,")");
 }
 
 static int native_type(grib_expression* g,grib_handle *h)

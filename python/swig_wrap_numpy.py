@@ -470,6 +470,10 @@ def grib_c_keys_iterator_rewind(*args):
   return _gribapi_swig.grib_c_keys_iterator_rewind(*args)
 grib_c_keys_iterator_rewind = _gribapi_swig.grib_c_keys_iterator_rewind
 
+def grib_c_bufr_copy_data(*args):
+  return _gribapi_swig.grib_c_bufr_copy_data(*args)
+grib_c_bufr_copy_data = _gribapi_swig.grib_c_bufr_copy_data
+
 def grib_c_keys_iterator_get_name(*args):
   return _gribapi_swig.grib_c_keys_iterator_get_name(*args)
 grib_c_keys_iterator_get_name = _gribapi_swig.grib_c_keys_iterator_get_name

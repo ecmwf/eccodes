@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -210,12 +210,12 @@ static int select_area(grib_accessor* a) {
     sprintf(latstr,"#%ld#latitude",latRank);
 
     n=numberOfSubsets;
-    lat=grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
+    lat=(double*)grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
     ret=grib_get_double_array(h,latstr,lat,&n);
     if (ret) return ret;
     if (n!=numberOfSubsets) return GRIB_INTERNAL_ERROR;
 
-    lon=grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
+    lon=(double*)grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
     ret=grib_get_double_array(h,lonstr,lon,&n);
     if (ret) return ret;
     if (n!=numberOfSubsets) return GRIB_INTERNAL_ERROR;

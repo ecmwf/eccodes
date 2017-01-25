@@ -6,7 +6,8 @@ alias mars.date             = monthlyVerificationDate;
 #
 # See GRIB-422, GRIB-497, GRIB-766, GRIB-833
 #
-if (class is "em" || class is "e2" || class is "ea" || class is "ep")
+if (class is "em" || class is "e2" || class is "ea" || class is "ep" ||
+    class is "rd" || class is "mc" || class is "et")
 {
    alias mars.step = endStep;
 }

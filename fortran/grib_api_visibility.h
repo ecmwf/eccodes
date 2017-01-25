@@ -12,7 +12,7 @@ public :: grib_keys_iterator_get_name, &
           grib_keys_iterator_rewind
 public :: grib_new_from_message, &
           grib_new_from_samples, grib_new_from_file, &
-		  grib_read_from_file,grib_headers_only_new_from_file
+          grib_read_from_file,grib_headers_only_new_from_file
 public :: grib_release
 public :: grib_dump
 public :: grib_get_error_string
@@ -23,4 +23,4 @@ public :: grib_check
 public :: grib_clone, grib_copy_namespace
 public :: grib_index_get,grib_index_select,&
           grib_index_create,grib_index_get_size,grib_index_release,&
-		  grib_util_sections_copy
+          grib_util_sections_copy

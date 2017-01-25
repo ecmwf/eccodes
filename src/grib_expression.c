@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -91,27 +91,6 @@ void grib_expression_print(grib_context* ctx,grib_expression* g,grib_handle* f)
         c = c->super ? *(c->super) : NULL;
     }
     Assert(1==0);
-}
-
-void grib_expression_compile(grib_expression* g,grib_compiler* f)
-{
-    grib_expression_class *c = g->cclass;
-    if(!c->compile)
-    {
-        fprintf(stderr, "NO COMPILE METHOD %s\n", c->name);
-        Assert(0);
-    }
-    while(c)
-    {
-        if(c->compile)
-        {
-            c->compile(g,f);
-            return;
-        }
-        c = c->super ? *(c->super) : NULL;
-    }
-    Assert(1==0);
-
 }
 
 void grib_expression_free(grib_context* ctx,grib_expression* g)

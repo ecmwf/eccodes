@@ -20,6 +20,12 @@ export ECCODES_DEFINITION_PATH
 tools_dir=@CMAKE_BINARY_DIR@/bin/
 tigge_dir=@CMAKE_BINARY_DIR@/bin/
 
+# If this environment variable is set, then run the
+# executables with valgrind
+if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
+   tools_dir="valgrind --error-exitcode=1 -q @CMAKE_BINARY_DIR@/bin/"
+fi
+
 # ecCodes tests are in the PROJECT_BINARY_DIR
 test_dir=@PROJECT_BINARY_DIR@/tests/
 
@@ -29,6 +35,6 @@ ECCODES_SAMPLES_PATH=${samp_dir}
 export ECCODES_SAMPLES_PATH
 
 # Options
-HAVE_JPG=@HAVE_JPG@
+HAVE_JPEG=@HAVE_JPEG@
 HAVE_PNG=@HAVE_PNG@
 HAVE_AEC=@HAVE_AEC@

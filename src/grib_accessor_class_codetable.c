@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -42,21 +42,6 @@ static void thread_init()
     }
 }
 #endif
-
-/*
- * strcasecmp is not in the C standard. However, it's defined by
- * 4.4BSD, POSIX.1-2001. So we use our own
-*/
-int grib_strcasecmp(const char *s1, const char *s2)
-{
-   const unsigned char *us1 = (const unsigned char *)s1,
-                       *us2 = (const unsigned char *)s2;
-
-   while (tolower(*us1) == tolower(*us2++))
-      if (*us1++ == '\0')
-         return (0);
-   return (tolower(*us1) - tolower(*--us2));
-}
 
 /*
    This is used by make_class.pl
@@ -255,7 +240,7 @@ static int str_eq(const char* a, const char* b)
     return 0;
 }
 
-#ifdef DEBUG
+#ifdef DEBUGGING
 static void dump_codetable(grib_codetable* atable)
 {
     grib_codetable* next = NULL;
@@ -278,11 +263,9 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
     grib_codetable* next=NULL ;
     grib_accessor* a=(grib_accessor*)self;
     char *filename=0;
-    char name[1024]={0,};
     char recomposed[1024]={0,};
     char localRecomposed[1024]={0,};
     char *localFilename=0;
-    char localName[1024]={0,};
     char masterDir[1024]={0,};
     char localDir[1024]={0,};
     size_t len=1024;
@@ -295,6 +278,7 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
         grib_get_string(h,self->localDir,localDir,&len);
 
     if (*masterDir!=0) {
+        char name[1024]={0,};
         sprintf(name,"%s/%s",masterDir,self->tablename);
         grib_recompose_name(h, NULL,name, recomposed,0);
         filename=grib_context_full_defs_path(c,recomposed);
@@ -304,6 +288,7 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
     }
 
     if (*localDir!=0) {
+        char localName[1024]={0,};
         sprintf(localName,"%s/%s",localDir,self->tablename);
         grib_recompose_name(h, NULL,localName, localRecomposed,0);
         localFilename=grib_context_full_defs_path(c,localRecomposed);
@@ -476,7 +461,6 @@ static int grib_load_codetable(grib_context* c,const char* filename,
         t->entries[code].abbreviation = grib_context_strdup_persistent(c,abbreviation);
         t->entries[code].title        = grib_context_strdup_persistent(c,title);
         t->entries[code].units        = grib_context_strdup_persistent(c,units);
-
     }
 
     fclose(f);
@@ -632,7 +616,7 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t *len)
 
     typedef int (*cmpproc)(const char*, const char*);
 #ifndef ECCODES_ON_WINDOWS
-    cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? grib_strcasecmp : strcmp;
+    cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? strcmp_nocase : strcmp;
 #else
     /* Microsoft Windows Visual Studio support */
     cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? stricmp : strcmp;
@@ -697,23 +681,29 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t *len)
 
 static int pack_expression(grib_accessor* a, grib_expression *e)
 {
-    const char* cval;
+    const char* cval=NULL;
     int ret=0;
     long lval=0;
     size_t len = 1;
-    char tmp[1024];
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     if (strcmp(e->cclass->name,"long")==0) {
-        ret=grib_expression_evaluate_long(grib_handle_of_accessor(a),e,&lval);
+        ret=grib_expression_evaluate_long(hand,e,&lval);
+        /*if (hand->context->debug)
+            printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %ld\n", a->name,lval);*/
+
         ret = grib_pack_long(a,&lval,&len);
     } else {
+        char tmp[1024];
         len = sizeof(tmp);
-        cval = grib_expression_evaluate_string(grib_handle_of_accessor(a),e,tmp,&len,&ret);
+        cval = grib_expression_evaluate_string(hand,e,tmp,&len,&ret);
         if (ret!=GRIB_SUCCESS) {
             grib_context_log(a->context,GRIB_LOG_ERROR,"grib_accessor_codetable.pack_expression: unable to evaluate string %s to be set in %s\n",grib_expression_get_name(e),a->name);
             return ret;
         }
         len = strlen(cval) + 1;
+        /*if (hand->context->debug)
+            printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %s\n", a->name, cval);*/
         ret = grib_pack_string(a,cval,&len);
     }
     return ret;

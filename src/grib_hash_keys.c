@@ -7728,7 +7728,7 @@ grib_keys_hash_get (const char *str, unsigned int len)
   return 0;
 }
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -8124,7 +8124,7 @@ int grib_hash_keys_insert(grib_itrie* t,const char* key)
       (*(t->count))++;
   } else {
       grib_context_log(t->context,GRIB_LOG_ERROR,
-        "grib_hash_keys_get_id: too many accessors, increase ACCESSORS_ARRAY_SIZE\n");
+        "grib_hash_keys_insert: too many accessors, increase ACCESSORS_ARRAY_SIZE\n");
       Assert(*(t->count)+TOTAL_KEYWORDS < ACCESSORS_ARRAY_SIZE);
   }
 

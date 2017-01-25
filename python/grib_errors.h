@@ -39,7 +39,7 @@ Error codes returned by the grib_api functions.
 #define GRIB_NO_MORE_IN_SET		-15
 /** Problem with calculation of geographic attributes */
 #define GRIB_GEOCALCULUS_PROBLEM		-16
-/** Out of memory */
+/** Memory allocation error */
 #define GRIB_OUT_OF_MEMORY		-17
 /** Value is read only */
 #define GRIB_READ_ONLY		-18

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -110,7 +110,13 @@ int grib_jasper_encode(grib_context *c, j2k_encode_helper *helper)
     image.maxcmpts_ = 1;
     image.clrspc_   = JAS_CLRSPC_SGRAY;
     image.cmprof_   = 0;
+
+#if JASPER_VERSION_MAJOR == 1
+    /* ECC-396: Support for Jasper 2.0
+     * Jasper version 1 had the 'inmem_' data member but
+     * version 2 removed it from the interface */
     image.inmem_    = 1;
+#endif
 
     cmpt.tlx_       = 0;
     cmpt.tly_       = 0;

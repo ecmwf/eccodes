@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -7,12 +7,31 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
+
+#include "grib_api_internal.h"
 #include "eccodes.h"
 #include <assert.h>
 
 #define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
 
-void test_reduced_gg(const char* input_filename, const char* output_filename)
+int get_packing_type_code(const char* packingType)
+{
+    int result = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;
+    if (packingType==NULL)
+        return result;
+
+    if (STR_EQUAL(packingType, "grid_jpeg"))
+        result = GRIB_UTIL_PACKING_TYPE_JPEG;
+    else if (STR_EQUAL(packingType, "grid_simple"))
+        result = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;
+    else if (STR_EQUAL(packingType, "grid_second_order"))
+        result = GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER;
+
+    return result;
+}
+
+void test_reduced_gg(int remove_local_def, int edition, const char* packingType,
+                     const char* input_filename, const char* output_filename)
 {
     /* based on copy_spec_from_ksec */
     int err = 0;
@@ -59,7 +78,8 @@ void test_reduced_gg(const char* input_filename, const char* output_filename)
     spec.longitudeOfLastGridPointInDegrees  = 357.187500;
     spec.bitmapPresent = 0;
 
-    packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER;
+    /*packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER;*/
+    packing_spec.packing_type = get_packing_type_code(packingType);
     packing_spec.bitsPerValue = 24;
     packing_spec.accuracy=GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
     packing_spec.packing=GRIB_UTIL_PACKING_USE_PROVIDED;
@@ -86,7 +106,8 @@ void test_reduced_gg(const char* input_filename, const char* output_filename)
     fclose(out);
 }
 
-void test_regular_ll(const char* input_filename, const char* output_filename)
+void test_regular_ll(int remove_local_def, int edition, const char* packingType,
+                     const char* input_filename, const char* output_filename)
 {
     /* based on copy_spec_from_ksec */
     int err = 0;
@@ -130,13 +151,18 @@ void test_regular_ll(const char* input_filename, const char* output_filename)
     spec.longitudeOfLastGridPointInDegrees  = 15.0;
     spec.bitmapPresent = 0;
 
-    packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;
+    /*packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;*/
+    packing_spec.packing_type = get_packing_type_code(packingType);
     packing_spec.bitsPerValue = 24;
     packing_spec.accuracy=GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
     packing_spec.packing=GRIB_UTIL_PACKING_USE_PROVIDED;
-    /* Convert to edition 2 and remove local use section */
-    packing_spec.editionNumber = 2;
-    packing_spec.deleteLocalDefinition = 1;
+
+    if (edition != 0) {
+        packing_spec.editionNumber = edition;
+    }
+    if (remove_local_def) {
+        packing_spec.deleteLocalDefinition = 1;
+    }
 
     finalh = codes_grib_util_set_spec(
             handle,
@@ -160,13 +186,53 @@ void test_regular_ll(const char* input_filename, const char* output_filename)
     fclose(out);
 }
 
+void usage(const char *prog)
+{
+    fprintf(stderr, "%s: [-p packingType] [-r] [-e edition] in.grib out.grib\n", prog);
+    fprintf(stderr, "-p  packingType: one of grid_jpeg, grid_second_order or grid_simple\n");
+    fprintf(stderr, "-r  remove local definition\n");
+    fprintf(stderr, "-e  edition: 1 or 2\n");
+    exit(1);
+}
+
 int main(int argc, char *argv[])
 {
-    const char *infile = argv[1];
-    const char *outfile = argv[2];
+    int opt = 0, remove_local_def = 0;
+    int edition = 0;
+    char* packingType = NULL;
+    const char* prog = argv[0];
+    char* infile_name = NULL;
+    char* outfile_name = NULL;
+    
+    while ((opt = getopt(argc, argv, "re:p:")) != -1) {
+        switch (opt) {
+            case 'r':
+                remove_local_def=1;
+                break;
+            case 'p':
+                packingType = optarg;
+                break;
+            case 'e':
+                edition = atoi(optarg);
+                break;
+            default:
+                usage(prog);
+                break;
+        }
+    }
 
-    test_regular_ll(infile, outfile);
-    test_reduced_gg(infile, outfile);
-    printf("ALL OK\n");
+    /* After option processing expect just two files */
+    if (argc-optind != 2) usage(prog);
+
+    /*for (i = optind; i < argc; i++) {
+        printf ("File argument %s\n", argv[i]);
+    }*/
+
+    infile_name = argv[argc-2];
+    outfile_name = argv[argc-1];
+
+    test_regular_ll(remove_local_def, edition, packingType, infile_name, outfile_name);
+    test_reduced_gg(remove_local_def, edition, packingType, infile_name, outfile_name);
+
     return 0;
 }

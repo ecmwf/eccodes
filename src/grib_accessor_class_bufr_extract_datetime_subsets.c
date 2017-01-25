@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -233,7 +233,7 @@ static int select_datetime(grib_accessor* a)
         sprintf(secondstr,"#%ld#second",secondRank);
 
         n=numberOfSubsets;
-        year=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
+        year=(long*)grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
         ret=grib_get_long_array(h,yearstr,year,&n);
         if (ret) return ret;
         if (n!=numberOfSubsets) {
@@ -243,7 +243,7 @@ static int select_datetime(grib_accessor* a)
         }
 
         n=numberOfSubsets;
-        month=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
+        month=(long*)grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
         ret=grib_get_long_array(h,monthstr,month,&n);
         if (ret) return ret;
         if (n!=numberOfSubsets) {
@@ -253,7 +253,7 @@ static int select_datetime(grib_accessor* a)
         }
 
         n=numberOfSubsets;
-        day=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
+        day=(long*)grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
         ret=grib_get_long_array(h,daystr,day,&n);
         if (ret) return ret;
         if (n!=numberOfSubsets) {
@@ -263,7 +263,7 @@ static int select_datetime(grib_accessor* a)
         }
 
         n=numberOfSubsets;
-        hour=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
+        hour=(long*)grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
         ret=grib_get_long_array(h,hourstr,hour,&n);
         if (ret) return ret;
         if (n!=numberOfSubsets) {
@@ -273,7 +273,7 @@ static int select_datetime(grib_accessor* a)
         }
 
         n=numberOfSubsets;
-        minute=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
+        minute=(long*)grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
         ret=grib_get_long_array(h,minutestr,minute,&n);
         if (ret) {
             ret=0;
@@ -287,7 +287,7 @@ static int select_datetime(grib_accessor* a)
         }
 
         n=numberOfSubsets;
-        second=grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
+        second=(double*)grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
         ret=grib_get_double_array(h,secondstr,second,&n);
         if (ret) {
             ret=0;

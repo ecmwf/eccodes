@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -35,6 +35,8 @@ if command -v pkg-config >/dev/null 2>&1; then
     COMPILER=`pkg-config --variable=CC $PKGCONFIG_FILE`
     FLAGS_COMPILER=`pkg-config --cflags $PKGCONFIG_FILE`
     FLAGS_LINKER=`pkg-config --libs $PKGCONFIG_FILE`
+    #CMAKE_C_FLAGS=`grep CMAKE_C_FLAGS:STRING $CACHE_FILE | cut -d'=' -f2-`
+    #FLAGS_COMPILER="$FLAGS_COMPILER $CMAKE_C_FLAGS"
 
     # The pkgconfig variables refer to the install directory. Change to build dir
     BUILD_DIR=`grep -w eccodes_BINARY_DIR $CACHE_FILE | cut -d'=' -f2`

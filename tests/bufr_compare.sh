@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -53,7 +53,7 @@ fi
 set -e
 
 #----------------------------------------------------
-# Test: comparing with and witout the -b switch
+# Test: comparing with and without the -b switch
 #----------------------------------------------------
 f="syno_1.bufr"
 echo "Test: comparing with and witout the -b switch" >> $fLog

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -201,16 +201,3 @@ void grib_xref_action_branch(FILE* out,grib_action* a,const char* path)
     }
 }
 
-void grib_compile(grib_action* a, grib_compiler* compiler)
-{
-    grib_action_class *c = a->cclass;
-    init(c);
-    if(c->compile) {
-        c->compile(a,compiler);
-    }
-    else 
-    {
-        fprintf(stderr, "NO COMPILE METHOD '%s'\n", c->name);
-        Assert(0);
-    }
-}

@@ -13,6 +13,8 @@ TESTS = definitions.sh \
         bufr_set.sh \
         bufr_change_edition.sh \
         gts_ls.sh \
+        gts_compare.sh \
+        gts_get.sh \
         metar_ls.sh \
         metar_dump.sh \
         ieee.sh \
@@ -21,7 +23,7 @@ TESTS = definitions.sh \
         grib2to1.sh \
         badgrib.sh \
         ls.sh \
-        filter.sh  \
+        grib_filter.sh  \
         multi.sh \
         budg.sh \
         gridType.sh \

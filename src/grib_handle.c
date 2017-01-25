@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -394,7 +394,7 @@ grib_handle* grib_handle_new_from_partial_message_copy ( grib_context* c, const 
     return g;
 }
 
-grib_handle* grib_handle_new_from_partial_message ( grib_context* c,void* data, size_t buflen )
+grib_handle* grib_handle_new_from_partial_message ( grib_context* c, const void* data, size_t buflen )
 {
     grib_handle  *gl = NULL;
     if ( c == NULL ) c = grib_context_get_default();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -60,13 +60,16 @@ int main(int argc, char** argv)
     pthread_t threads[NUM_THREADS];
     int error = 0;
     long i = 0;
-    for( i=0; i<NUM_THREADS; ++i) {
+    for (i=0; i<NUM_THREADS; ++i) {
         printf("Creating thread %ld\n", i);
         error = pthread_create(&threads[i], NULL, process_grib, (void *)i);
         if (error) {
             return 1;
         }
     }
-    pthread_exit(NULL);
+    for (i=0; i<NUM_THREADS; ++i) {
+        pthread_join(threads[i], NULL);
+    }
+
     return 0;
 }

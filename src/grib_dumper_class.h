@@ -17,4 +17,3 @@ extern grib_dumper_class* grib_dumper_class_keys;
 extern grib_dumper_class* grib_dumper_class_serialize;
 extern grib_dumper_class* grib_dumper_class_string;
 extern grib_dumper_class* grib_dumper_class_wmo;
-extern grib_dumper_class* grib_dumper_class_xml;

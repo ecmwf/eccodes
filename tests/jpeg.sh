@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -74,10 +74,13 @@ rm -f $outfile2
 res=`${tools_dir}grib_get -l 0,50 $outfile1`
 [ "$res" = "2.47244 2.47244 2.5115 2.51931 " ]
 
+rm -f $outfile1
+
 # ECC-317: Constant JPEG field numberOfValues
 # Create a JPEG encoded GRIB message to have all constant values and one more value
 # than input GRIB message
 infile=${data_dir}/jpeg.grib2
+outfile=$infile.temp.const
 tempFilter1=temp.grib_jpeg_test1.filt
 tempFilter2=temp.grib_jpeg_test2.filt
 numberOfValuesOrig=`${tools_dir}grib_get -p numberOfValues $infile`
@@ -92,11 +95,9 @@ ${tools_dir}grib_filter $tempFilter1 $infile |\
    sed -e 's/[0-9][0-9]*/1/' |\
    sed -e 's/set values={1,/set values={1,1,/' > $tempFilter2
 # Apply the new filter to create the constant field JPEG file
-${tools_dir}grib_filter -o $outfile1 $tempFilter2 $infile
+${tools_dir}grib_filter -o $outfile $tempFilter2 $infile
 numberOfValuesNew=`expr $numberOfValuesOrig + 1`
-grib_check_key_equals $outfile1 "numberOfValues" $numberOfValuesNew
-# If all the values counts match up, the the lat/lon iterator will not fail
-${tools_dir}grib_get_data $outfile1 >/dev/null
+grib_check_key_equals $outfile "numberOfValues" $numberOfValuesNew
 rm -f $tempFilter1 $tempFilter2
 
-rm -f $outfile1 $outfile2
+rm -f $outfile $outfile2

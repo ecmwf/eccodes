@@ -431,14 +431,14 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 74 ;
 	}
-#Total column liquid water
-'Total column liquid water' = {
+#Total column cloud liquid water
+'Total column cloud liquid water' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 78 ;
 	}
-#Total column ice water
-'Total column ice water' = {
+#Total column cloud ice water
+'Total column cloud ice water' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 79 ;
@@ -9119,14 +9119,14 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 43 ;
 	}
-#Height of Zero Deg Wet Bulb Temperature
-'Height of Zero Deg Wet Bulb Temperature' = {
+#Height of zero-degree wet-bulb temperature
+'Height of zero-degree wet-bulb temperature' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 47 ;
 	}
-#Height of One Deg Wet Bulb Temperature
-'Height of One Deg Wet Bulb Temperature' = {
+#Height of one-degree wet-bulb temperature
+'Height of one-degree wet-bulb temperature' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 48 ;

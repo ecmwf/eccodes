@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -584,6 +584,13 @@ static void save_error(grib_context* c,const char* key)
     }
 }
 
+static char* double_as_string(grib_context* c, double v)
+{
+    char* sval=grib_context_malloc_clear(c, sizeof(char)*40);
+    if (v == GRIB_MISSING_DOUBLE) sprintf(sval,"MISSING");
+    else                          sprintf(sval,"%.20e",v);
+    return sval;
+}
 static int compare_values(grib_runtime_options* options, grib_handle* handle1, grib_handle *handle2, const char *name, int type)
 {
     size_t len1 = 0;
@@ -735,8 +742,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
             if(grib_inline_strcmp(sval1,sval2) != 0)
             {
                 printInfo(handle1);
-                printf("string [%s]: [%s] != [%s]\n",
-                        name,sval1,sval2);
+                printf("string [%s]: [%s] != [%s]\n", name, sval1, sval2);
                 err1 = GRIB_VALUE_MISMATCH;
                 save_error(c,name);
             }
@@ -791,14 +797,11 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                 save_error(c,name);
                 err1 = GRIB_VALUE_MISMATCH;
                 if(len1 == 1)
-                    printf("long [%s]: [%ld] != [%ld]\n",
-                            name,*lval1,*lval2);
+                    printf("long [%s]: [%ld] != [%ld]\n", name, *lval1, *lval2);
                 else
-                    printf("long [%s] %d out of %ld different\n",
-                            name,countdiff,(long)len1);
+                    printf("long [%s] %d out of %ld different\n", name, countdiff, (long)len1);
             }
         }
-
 
         grib_context_free(handle1->context,lval1);
         grib_context_free(handle2->context,lval2);
@@ -906,13 +909,22 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                 save_error(c,name);
                 if (len1>1) {
                     printf("double [%s]: %d out of %ld different\n",name,countdiff,(long)len1);
-                    if (compareAbsolute) printf(" max");
-                    printf(" absolute diff. = %.16e,",fabs(dval1[imaxdiff]-dval2[imaxdiff]));
-                    if (!compareAbsolute) printf(" max");
-                    printf(" relative diff. = %g",relative_error(dval1[imaxdiff],dval2[imaxdiff],value_tolerance));
-                    printf("\n\tmax diff. element %d: %.20e %.20e",
-                            imaxdiff,dval1[imaxdiff],dval2[imaxdiff]);
-                    printf("\n\ttolerance=%.16e",value_tolerance);
+                    if (dval1[imaxdiff] != GRIB_MISSING_DOUBLE && dval2[imaxdiff] != GRIB_MISSING_DOUBLE) {
+                        if (compareAbsolute) printf(" max");
+                        printf(" absolute diff. = %.16e,",fabs(dval1[imaxdiff]-dval2[imaxdiff]));
+                        if (!compareAbsolute) printf(" max");
+                        printf(" relative diff. = %g",relative_error(dval1[imaxdiff],dval2[imaxdiff],value_tolerance));
+                        printf("\n\tmax diff. element %d: %.20e %.20e",
+                                imaxdiff,dval1[imaxdiff],dval2[imaxdiff]);
+                        printf("\n\ttolerance=%.16e",value_tolerance);
+                    } else {
+                        /* One or both values are missing */
+                        char* sval1 = double_as_string(c, dval1[imaxdiff]);
+                        char* sval2 = double_as_string(c, dval2[imaxdiff]);
+                        printf("\tdiff. element %d: %s %s", imaxdiff, sval1, sval2);
+                        grib_context_free(c,sval1);
+                        grib_context_free(c,sval2);
+                    }
                     if (packingError2!=0 || packingError1!=0)
                         printf(" packingError: [%g] [%g]",packingError1,packingError2);
 
@@ -927,11 +939,19 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                     }
                     printf("\n");
                 } else {
-                    printf("double [%s]: [%.20e] != [%.20e]\n",
-                            name,dval1[0],dval2[0]);
-                    printf("\tabsolute diff. = %g,",fabs(dval1[0]-dval2[0]));
-                    printf(" relative diff. = %g\n",relative_error(dval1[0],dval2[0],value_tolerance));
-                    printf("\ttolerance=%g\n",value_tolerance);
+                    if (dval1[0] != GRIB_MISSING_DOUBLE && dval2[0] != GRIB_MISSING_DOUBLE) {
+                        printf("double [%s]: [%.20e] != [%.20e]\n", name, dval1[0], dval2[0]);
+                        printf("\tabsolute diff. = %g,",fabs(dval1[0]-dval2[0]));
+                        printf(" relative diff. = %g\n",relative_error(dval1[0],dval2[0],value_tolerance));
+                        printf("\ttolerance=%g\n",value_tolerance);
+                    } else {
+                        /* One or both values are missing */
+                        char* sval1 = double_as_string(c, dval1[0]);
+                        char* sval2 = double_as_string(c, dval2[0]);
+                        printf("double [%s]: [%s] != [%s]\n", name, sval1, sval2);
+                        grib_context_free(c,sval1);
+                        grib_context_free(c,sval2);
+                    }
                 }
             }
         }
@@ -972,7 +992,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
             if(memcmp(uval1,uval2,len1) != 0)
             {
                 int i;
-                for(i = 0; i < len1; i++)
+                for(i = 0; i < len1; i++) {
                     if(uval1[i] != uval2[i])
                     {
                         printInfo(handle1);
@@ -987,6 +1007,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                         err1 = GRIB_VALUE_MISMATCH;
                         break;
                     }
+                }
                 err1 = GRIB_VALUE_MISMATCH;
             }
         }
@@ -1042,6 +1063,7 @@ static int compare_attributes(grib_handle* handle1, grib_handle* handle2, grib_r
 
     return ret;
 }
+
 static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options,
         grib_accessor* a, const char* prefix, int* err)
 {
@@ -1108,7 +1130,7 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
         if (xa==NULL || ( xa->flags & GRIB_ACCESSOR_FLAG_DUMP )==0 ) continue;
 
         /* Get full name of key, e.g. '#2#windSpeed' or 'blockNumber' */
-        rank = compute_key_rank(handle1, keys_list, xa->name);
+        rank = compute_bufr_key_rank(handle1, keys_list, xa->name);
         if (rank != 0) {
             prefix=grib_context_malloc_clear(context,sizeof(char)*(strlen(xa->name)+10));
             dofree = 1;
@@ -1116,6 +1138,8 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
         } else {
             prefix = (char*)xa->name;
         }
+
+        if (blacklisted(prefix)) continue;
 
         /* Compare the key itself */
         if (compare_values(options, handle1, handle2, prefix, GRIB_TYPE_UNDEFINED)) {
@@ -1157,7 +1181,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
         for (i=0; i< options->compare_count; i++) {
             if (blacklisted((char*)options->compare[i].name)) continue;
             if (options->compare[i].type == GRIB_NAMESPACE) {
-                iter=grib_keys_iterator_new(handle1,0,(char*)options->compare[i].name);
+                iter=grib_keys_iterator_new(handle1,0,options->compare[i].name);
                 if (!iter) {
                     grib_context_log(handle1->context, GRIB_LOG_ERROR, "unable to get iterator");
                     exit(1);
@@ -1217,7 +1241,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
             for (i=0; i< options->compare_count; i++) {
                 if (blacklisted(name)) continue;
                 if (options->compare[i].type == GRIB_NAMESPACE) {
-                    iter=grib_keys_iterator_new(handle1,0,(char*)options->compare[i].name);
+                    iter=grib_keys_iterator_new(handle1,0,options->compare[i].name);
                     if (!iter) {
                         grib_context_log(handle1->context, GRIB_LOG_ERROR,
                                 "ERROR: unable to get keys iterator for %s",options->compare[i].name);

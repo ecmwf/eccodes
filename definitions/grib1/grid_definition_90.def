@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -49,7 +49,7 @@ include "grib1/scanning_mode.def";
 unsigned[3] orientationOfTheGrid : edition_specific ;
 meta geography.orientationOfTheGridInDegrees  scale(orientationOfTheGrid,oneConstant,grib1divider,truncateDegrees) : dump;
 
-unsigned[3] NrInRadiusOfEarth : edition_specific,no_copy;
+unsigned[3] NrInRadiusOfEarth : edition_specific,can_be_missing,no_copy;
 alias altitudeOfTheCameraFromTheEarthSCenterMeasuredInUnitsOfTheEarth = NrInRadiusOfEarth;
 
 unsigned[2]  Xo : dump;

@@ -434,12 +434,12 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 77 ;
 	}
-#Total column liquid water
+#Total column cloud liquid water
 'kg m**-2' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 78 ;
 	}
-#Total column ice water
+#Total column cloud ice water
 'kg m**-2' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 79 ;
@@ -3714,7 +3714,7 @@
 	 table2Version = 174 ;
 	 indicatorOfParameter = 52 ;
 	}
-#2m specific humidity
+#2 metre specific humidity
 'kg kg**-1' = {
 	 table2Version = 174 ;
 	 indicatorOfParameter = 96 ;
@@ -9309,12 +9309,12 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 46 ;
 	}
-#Height of Zero Deg Wet Bulb Temperature
+#Height of zero-degree wet-bulb temperature
 'm' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 47 ;
 	}
-#Height of One Deg Wet Bulb Temperature
+#Height of one-degree wet-bulb temperature
 'm' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 48 ;

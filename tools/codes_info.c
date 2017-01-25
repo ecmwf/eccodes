@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,7 +10,7 @@
 
 #include "grib_tools.h"
 
-void usage( char*);
+void usage(const char*);
 
 #define INFO_PRINT_ALL              0
 #define INFO_PRINT_VERSION          (1<<0)
@@ -52,8 +52,8 @@ int main( int argc,char* argv[])
 
     if (print_flags ==  INFO_PRINT_ALL) {
         printf("\n");
-        printf("eccodes Version %d.%d.%d",
-                major,minor,revision);
+        printf("%s Version %d.%d.%d",
+                grib_get_package_name(), major,minor,revision);
         /* if (ECCODES_MAJOR_VERSION < 1) printf(" PRE-RELEASE"); */
         printf("\n");
         printf("\n");
@@ -115,7 +115,7 @@ int main( int argc,char* argv[])
     return 0;
 }
 
-void usage(char* progname) {
+void usage(const char* progname) {
     printf("\nUsage: %s [-v] [-d] [-s]\n",progname);
     exit(1);
 }

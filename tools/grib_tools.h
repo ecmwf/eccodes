@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -7,6 +7,10 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
+
+#ifdef __gnu_hurd__
+ #define _FILE_OFFSET_BITS 64 /* 64-bit offsets off_t not the default on Hurd/i386 */
+#endif
 
 #include "grib_api_internal.h"
 #include <stdio.h>

@@ -1,5 +1,5 @@
 /**
-* Copyright 2005-2016 ECMWF
+* Copyright 2005-2017 ECMWF
 *
 * Licensed under the GNU Lesser General Public License which
 * incorporates the terms and conditions of version 3 of the GNU
@@ -257,6 +257,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
 {
 
     a->length = 0;
+    a->flags |= GRIB_ACCESSOR_FLAG_BUFR_DATA;
     /* a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
 }
 

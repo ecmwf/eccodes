@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -2009,6 +2009,19 @@ int grib_c_copy_message(int* gid, void* mess,size_t* len)
     memcpy(mess,h->buffer->data,h->buffer->ulength);
     *len=h->buffer->ulength;
     return GRIB_SUCCESS;
+}
+
+int grib_c_bufr_copy_data(int *msgid_src, int *msgid_dst)
+{
+    int err = 0;
+    grib_handle* src  = get_handle(*msgid_src);
+    grib_handle* dest = get_handle(*msgid_dst);
+    if (!src || !dest) {
+        return GRIB_INVALID_GRIB;
+    }
+
+    err = codes_bufr_copy_data(src, dest);
+    return err;
 }
 
 void grib_c_check(int* err,char* call,char* str)

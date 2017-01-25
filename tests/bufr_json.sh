@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -45,3 +45,5 @@ for c in 1 3 1/3; do
   fi
 done
 
+# ECC-272
+${tools_dir}bufr_dump -jf aaen_55.bufr | grep -q -w channelRadiance

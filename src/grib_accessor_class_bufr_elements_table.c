@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,6 +14,34 @@
 
 #include "grib_api_internal.h"
 #include <ctype.h>
+
+#if GRIB_PTHREADS
+static pthread_once_t once  = PTHREAD_ONCE_INIT;
+static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+
+static void thread_init() {
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&mutex1,&attr);
+    pthread_mutexattr_destroy(&attr);
+}
+#elif GRIB_OMP_THREADS
+static int once = 0;
+static omp_nest_lock_t mutex1;
+
+static void thread_init()
+{
+    GRIB_OMP_CRITICAL(lock_grib_accessor_class_bufr_elements_table_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex1);
+            once = 1;
+        }
+    }
+}
+#endif
 
 /*
    This is used by make_class.pl
@@ -152,56 +180,6 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-/* From https://stackoverflow.com/questions/32506614/manipulation-of-delimiters-within-arrays */
-/* Returns an array of strings the last of which is NULL */
-char** str_split(char* a_str, const char a_delim)
-{
-    char** result    = 0;
-    size_t count     = 0;
-    char* tmp        = a_str;
-    char* last_comma = 0;
-    char delim[2];
-    delim[0] = a_delim;
-    delim[1] = 0;
-
-    /* Count how many elements will be extracted. */
-    while (*tmp)
-    {
-        if (a_delim == *tmp)
-        {
-            count++;
-            last_comma = tmp;
-        }
-        tmp++;
-    }
-
-    /* Add space for trailing token. */
-    count += last_comma < (a_str + strlen(a_str) - 1);
-
-    /* Add space for terminating null string so caller
-       knows where the list of returned strings ends. */
-    count++;
-
-    result = (char**)malloc(sizeof(char*) * count);
-    Assert(result);
-    if (result)
-    {
-        size_t idx  = 0;
-        char* token = strtok(a_str, delim);
-
-        while (token)
-        {
-            Assert(idx < count);
-            *(result + idx++) = strdup(token);
-            token = strtok(0, delim);
-        }
-        Assert(idx == count - 1);
-        *(result + idx) = 0;
-    }
-
-    return result;
-}
-
 static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
 {
     grib_accessor_bufr_elements_table* self = (grib_accessor_bufr_elements_table*)a;
@@ -210,10 +188,6 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     char line[1024]={0,};
     char masterDir[1024]={0,};
     char localDir[1024]={0,};
-    char name[1024]={0,};
-    char localName[1024]={0,};
-    char recomposed[1024]={0,};
-    char localRecomposed[1024]={0,};
     char dictName[1024]={0,};
     char *localFilename=0;
     char** list=0;
@@ -231,6 +205,8 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     if (self->localDir != NULL) grib_get_string(h,self->localDir,localDir,&len);
 
     if (*masterDir!=0) {
+        char name[1024]={0,};
+        char recomposed[1024]={0,};
         sprintf(name,"%s/%s",masterDir,self->dictionary);
         grib_recompose_name(h, NULL,name, recomposed,0);
         filename=grib_context_full_defs_path(c,recomposed);
@@ -239,6 +215,8 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     }
 
     if (*localDir!=0) {
+        char localRecomposed[1024]={0,};
+        char localName[1024]={0,};
         sprintf(localName,"%s/%s",localDir,self->dictionary);
         grib_recompose_name(h, NULL,localName, localRecomposed,0);
         localFilename=grib_context_full_defs_path(c,localRecomposed);
@@ -254,21 +232,24 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     } else {
         grib_context_log(c,GRIB_LOG_DEBUG,"found def file %s",filename);
     }
+    GRIB_MUTEX_INIT_ONCE(&once,&thread_init);
+    GRIB_MUTEX_LOCK(&mutex1);
+
     dictionary=(grib_trie*)grib_trie_get(c->lists,dictName);
     if (dictionary) {
         grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from cache",self->dictionary);
-        return dictionary;
+        goto the_end;
     } else {
         grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from file %s",self->dictionary,filename);
     }
 
     f=codes_fopen(filename,"r");
-    if (!f) {*err=GRIB_IO_PROBLEM; return NULL;}
+    if (!f) {*err=GRIB_IO_PROBLEM; dictionary=NULL; goto the_end;}
 
     dictionary=grib_trie_new(c);
 
     while(fgets(line,sizeof(line)-1,f)) {
-        list=str_split(line,'|');
+        list=string_split(line, "|");
         grib_trie_insert(dictionary,list[0],list);
     }
 
@@ -276,16 +257,19 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
 
     if (localFilename!=0) {
         f=codes_fopen(localFilename,"r");
-        if (!f) {*err=GRIB_IO_PROBLEM; return NULL;}
+        if (!f) {*err=GRIB_IO_PROBLEM; dictionary=NULL; goto the_end;}
 
         while(fgets(line,sizeof(line)-1,f)) {
-            list=str_split(line,'|');
+            list=string_split(line, "|");
             grib_trie_insert(dictionary,list[0],list);
         }
 
         fclose(f);
     }
     grib_trie_insert(c->lists,dictName,dictionary);
+
+the_end:
+    GRIB_MUTEX_UNLOCK(&mutex1);
     return dictionary;
 }
 

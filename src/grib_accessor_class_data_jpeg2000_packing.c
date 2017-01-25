@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -70,6 +70,7 @@ typedef struct grib_accessor_data_jpeg2000_packing {
 	const char*  reference_value;
 	const char*  binary_scale_factor;
 	const char*  decimal_scale_factor;
+	const char*  optimize_scaling_factor;
 /* Members defined in data_jpeg2000_packing */
 	const char*   type_of_compression_used;
 	const char*   target_compression_ratio;
@@ -379,7 +380,8 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
     case GRIB_SUCCESS:
         break;
     default:
-        grib_context_log(a->context,GRIB_LOG_ERROR,"unable to compute packing parameters\n");
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                "grib_accessor_class_data_jpeg2000_packing pack_double: unable to compute packing parameters");
         return ret;
     }
 
@@ -450,8 +452,11 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
 
     if(width*height != *len)
     {
-        /* fprintf(stderr,"width=%ld height=%ld len=%d\n",(long)width,(long)height,(long)*len); */
-        Assert(width*height == *len);
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                "grib_accessor_class_data_jpeg2000_packing pack_double: width=%ld height=%ld len=%d."
+                " width*height should equal len!",
+                (long)width, (long)height, (long)*len);
+        return GRIB_INTERNAL_ERROR;
     }
 
     switch( type_of_compression_used)
@@ -524,7 +529,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
 
     grib_buffer_replace(a, helper.jpeg_buffer, helper.jpeg_length, 1, 1);
 
-    cleanup:
+cleanup:
 
     grib_context_free(a->context,buf);
 

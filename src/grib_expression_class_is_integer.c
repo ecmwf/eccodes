@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -23,7 +23,6 @@
    IMPLEMENTS = evaluate_double
    IMPLEMENTS = evaluate_string
    IMPLEMENTS = print
-   IMPLEMENTS = compile
    IMPLEMENTS = add_dependency
    MEMBERS    = char *name
    MEMBERS    = size_t start
@@ -49,7 +48,6 @@ static void init_class              (grib_expression_class*);
 static void        destroy(grib_context*,grib_expression* e);
 
 static void        print(grib_context*,grib_expression*,grib_handle*);
-static void        compile(grib_expression*,grib_compiler*);
 static void        add_dependency(grib_expression* e, grib_accessor* observer);
 static string get_name(grib_expression* e);
 
@@ -77,7 +75,6 @@ static grib_expression_class _grib_expression_class_is_integer = {
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,                 
-    &compile,                 
     &add_dependency,       
 
 	&native_type,
@@ -192,12 +189,6 @@ grib_expression* new_is_integer_expression(grib_context* c,const char *name,int 
   e->start	= start;
   e->length	= length;
   return (grib_expression*)e;
-}
-
-static void compile(grib_expression* g,grib_compiler* c)
-{
-	grib_expression_is_integer* e = (grib_expression_is_integer*)g;
-    fprintf(c->out,"new_is_integer_expression(ctx,\"%s\")",e->name);
 }
 
 static int native_type(grib_expression* g,grib_handle *h)

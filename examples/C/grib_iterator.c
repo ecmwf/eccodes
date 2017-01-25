@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     int n=0;
     char* filename = NULL;
 
-    /* Message handle. Required in all the grib_api calls acting on a message.*/
+    /* Message handle. Required in all the ecCodes calls acting on a message.*/
     codes_handle *h = NULL;
     /* Iterator on lat/lon/values.*/
     codes_iterator* iter=NULL;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -222,12 +222,12 @@ void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
     }
     l->last = a;
 
-
     if (grib_handle_of_accessor(a)->use_trie) {
         if (*(a->all_names[0]) != '_') {
             id=grib_hash_keys_get_id(a->context->keys,a->all_names[0]);
-
-
+#ifdef DEBUG
+            Assert(id >=0 && id < ACCESSORS_ARRAY_SIZE);
+#endif
             a->same=grib_handle_of_accessor(a)->accessors[id];
             link_same_attributes(a,a->same);
             grib_handle_of_accessor(a)->accessors[id]=a;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -64,12 +64,9 @@ void grib_dump_accessors_block(grib_dumper* dumper,grib_block_of_accessors* bloc
 void grib_dump_accessors_list(grib_dumper* dumper,grib_accessors_list* al)
 {
     grib_accessors_list* cur=al;
-    grib_accessors_list* next=al->next;
-
-    while(next) {
+    while(cur) {
         grib_accessor_dump(cur->accessor,dumper);
-        cur=next;
-        next=cur->next;
+        cur = cur->next;
     }
 }
 

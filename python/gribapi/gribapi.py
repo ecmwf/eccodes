@@ -29,6 +29,8 @@ import sys
 import os
 from functools import wraps
 # import inspect
+from . import errors
+from errors import *  # noqa
 
 KEYTYPES = {
     1: int,
@@ -85,24 +87,6 @@ def require(**_params_):
         return modified
     return check_types
 
-
-class GribInternalError(Exception):
-    """
-    @brief Wrap errors coming from the C API in a Python exception object.
-    """
-    def __init__(self, value):
-        # Call the base class constructor with the parameters it needs
-        Exception.__init__(self, value)
-        if type(value) is int:
-            err, self.msg = _internal.grib_c_get_error_string(value, 1024)
-            assert err == 0
-        else:
-            self.msg = value
-
-    def __str__(self):
-        return self.msg
-
-
 # @cond
 class Bunch(dict):
     """
@@ -147,7 +131,7 @@ def GRIB_CHECK(errid):
     @exception GribInternalError
     """
     if errid:
-        raise GribInternalError(errid)
+        errors.raise_grib_error(errid)
 # @endcond
 
 
@@ -780,6 +764,29 @@ def grib_set_double(msgid, key, value):
     GRIB_CHECK(_internal.grib_c_set_double(msgid, key, value))
 
 
+@require(samplename=str, product_kind=int)
+def codes_new_from_samples(samplename, product_kind):
+    """
+    @brief Create a new valid message from a sample for a given product.
+
+    The available samples are picked up from the directory pointed to
+    by the environment variable ECCODES_SAMPLES_PATH.
+    To know where the samples directory is run the codes_info tool.\n
+
+    \b Examples: \ref grib_samples.py "grib_samples.py"
+
+    @param samplename     name of the sample to be used
+    @param product_kind   CODES_PRODUCT_GRIB or CODES_PRODUCT_BUFR
+    @return               id of the message loaded in memory
+    @exception GribInternalError
+    """
+    if product_kind == CODES_PRODUCT_GRIB:
+        return grib_new_from_samples(samplename)
+    if product_kind == CODES_PRODUCT_BUFR:
+        return codes_bufr_new_from_samples(samplename)
+    raise Exception("Invalid product kind: " + product_kind)
+
+
 @require(samplename=str)
 def grib_new_from_samples(samplename):
     """
@@ -809,7 +816,7 @@ def codes_bufr_new_from_samples(samplename):
     by the environment variable ECCODES_SAMPLES_PATH.
     To know where the samples directory is run the codes_info tool.\n
 
-    \b Examples: \ref grib_samples.py "grib_samples.py"
+    \b Examples: \ref bufr_copy_data.py "bufr_copy_data.py"
 
     @param samplename   name of the BUFR sample to be used
     @return             id of the message loaded in memory
@@ -818,6 +825,23 @@ def codes_bufr_new_from_samples(samplename):
     err, msgid = _internal.grib_c_bufr_new_from_samples(0, samplename)
     GRIB_CHECK(err)
     return msgid
+
+@require(msgid_src=int, msgid_dst=int)
+def codes_bufr_copy_data(msgid_src, msgid_dst):
+    """
+    @brief Copy data values from a BUFR message msgid_src to another message msgid_dst
+
+    Copies all the values in the data section that are present in the same position
+    in the data tree and with the same number of values to the output handle.
+
+    @param msgid_src     id of the message from which the data are copied
+    @param msgid_dst     id of the message to which the data are copied
+    @return id of new message
+    @exception GribInternalError
+    """
+    err, msgid_dst = _internal.grib_c_bufr_copy_data(msgid_src, msgid_dst)
+    GRIB_CHECK(err)
+    return msgid_dst
 
 
 @require(msgid_src=int)
@@ -1098,6 +1122,7 @@ def grib_index_get_long(indexid, key):
     return tuple(result)
 
 
+@require(indexid=int, key=str)
 def grib_index_get_string(indexid, key):
     """
     @brief Get the distinct values of the key in argument contained in the index.
@@ -1216,6 +1241,7 @@ def grib_index_select_string(indexid, key, value):
     GRIB_CHECK(_internal.grib_c_index_select_string(indexid, key, value))
 
 
+@require(indexid=int)
 def grib_new_from_index(indexid):
     """
     @brief Create a new handle from an index after having selected the key values.
@@ -1305,6 +1331,7 @@ def grib_get_double_elements(gribid, key, indexes):
     return result
 
 
+@require(gribid=int, key=str)
 def grib_get_elements(gribid, key, indexes):
     """
     @brief Retrieve the elements of the key array for the indexes specified in the input.
@@ -1355,7 +1382,7 @@ def grib_set_key_vals(gribid, key_vals):
     @exception         GribInternalError
     """
     if len(key_vals) == 0:
-        raise GribInternalError("Empty key/values argument")
+        raise errors.InvalidKeyValueError("Empty key/values argument")
     key_vals_str = ""
     if isinstance(key_vals, str):
         # Plain string. We need to do a DEEP copy so as not to change the original
@@ -1366,7 +1393,7 @@ def grib_set_key_vals(gribid, key_vals):
             if not isinstance(kv, str):
                 raise TypeError("Invalid list/tuple element type '%s'" % kv)
             if '=' not in str(kv):
-                raise GribInternalError("Invalid list/tuple element format '%s'" % kv)
+                raise errors.GribInternalError("Invalid list/tuple element format '%s'" % kv)
             if len(key_vals_str) > 0:
                 key_vals_str += ','
             key_vals_str += kv
@@ -1609,8 +1636,11 @@ def grib_set(msgid, key, value):
         grib_set_double(msgid, key, value)
     elif isinstance(value, str):
         grib_set_string(msgid, key, value)
+    #elif hasattr(value, "__iter__"):
+    #    # The value passed in is iterable; i.e. a list or array etc
+    #    grib_set_array(msgid, key, value)
     else:
-        raise GribInternalError("Invalid type of value when setting key '%s'." % key)
+        raise errors.GribInternalError("Invalid type of value when setting key '%s'." % key)
 
 
 @require(msgid=int, key=str)
@@ -1647,7 +1677,7 @@ def grib_set_array(msgid, key, value):
     elif isinstance(val0, str):
         grib_set_string_array(msgid, key, value)
     else:
-        raise GribInternalError("Invalid type of value when setting key '%s'." % key)
+        raise errors.GribInternalError("Invalid type of value when setting key '%s'." % key)
 
 
 @require(indexid=int, key=str)
@@ -1701,7 +1731,7 @@ def grib_index_select(indexid, key, value):
     elif isinstance(value, str):
         grib_index_select_string(indexid, key, value)
     else:
-        raise GribInternalError("Invalid type of value when setting key '%s'." % key)
+        raise errors.GribInternalError("Invalid type of value when setting key '%s'." % key)
 
 
 @require(indexid=int, filename=str)

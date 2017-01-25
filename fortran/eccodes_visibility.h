@@ -27,3 +27,4 @@ public :: codes_clone, codes_copy_namespace
 public :: codes_index_get,codes_index_select,&
           codes_index_create,codes_index_get_size,codes_index_release,&
           codes_grib_util_sections_copy
+public :: codes_datetime_to_julian,codes_julian_to_datetime,codes_copy_key

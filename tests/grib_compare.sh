@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -65,6 +65,17 @@ ${tools_dir}grib_compare -b totalLength $temp1 $temp2 >/dev/null
 status=$?
 set -e
 [ $status -eq 1 ]
+
+
+# ECC-355: -R with "all" option
+# ----------------------------------------
+${tools_dir}grib_copy -w count=1 ${data_dir}/tigge_cf_ecmwf.grib2 $temp1
+${tools_dir}grib_copy -w count=1 ${data_dir}/tigge_pf_ecmwf.grib2 $temp2
+BLACKLIST="typeOfProcessedData,typeOfEnsembleForecast,perturbationNumber"
+# Specify relative tolerances for each floating point key
+${tools_dir}grib_compare -b $BLACKLIST -R referenceValue=0.03,codedValues=2 $temp1 $temp2
+# Now try the "all" option with the highest relative diff value
+${tools_dir}grib_compare -b $BLACKLIST -R all=2 $temp1 $temp2
 
 
 rm -f $temp1 $temp2

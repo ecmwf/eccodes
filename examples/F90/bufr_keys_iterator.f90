@@ -1,5 +1,5 @@
 !
-!Copyright 2005-2016 ECMWF.
+!Copyright 2005-2017 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 !which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -29,19 +29,19 @@ integer            :: kiter
 
   call codes_open_file(ifile,'../../data/bufr/syno_1.bufr','r')
 
-! name_space='' to get all the keys 
+  ! name_space='' to get all the keys 
   name_space='ls'
 
-! the first bufr message is loaded from file
-! ibufr is the bufr id to be used in subsequent calls
+  ! The first bufr message is loaded from file,
+  ! ibufr is the bufr id to be used in subsequent calls
   call codes_bufr_new_from_file(ifile,ibufr,iret)
 
   do while (iret /= CODES_END_OF_FILE)
-    
-    ! get and print some keys form the BUFR header 
+
+    ! Get and print some keys form the BUFR header 
     write(*,*) 'message: ',count
- 
-    ! create key iterator
+
+    ! Create key iterator
     call codes_keys_iterator_new(ibufr,kiter,name_space,iret)
 
     if (iret .ne. 0) then
@@ -49,36 +49,35 @@ integer            :: kiter
         call exit(1)
     end if   
 
-    ! get first key 
+    ! Get first key
     call codes_keys_iterator_next(kiter, iret)
 
-    ! loop over keys
+    ! Loop over keys
     do while (iret == CODES_SUCCESS) 
     
-        ! print key name
+        ! Print key name
         call codes_keys_iterator_get_name(kiter,key)
         write(*,*) '  ',trim(key)
         
-        ! get next key
+        ! Get next key
         call codes_keys_iterator_next(kiter, iret)
          
     end do
       
-    ! delete key iterator 
+    ! Delete key iterator 
     call codes_keys_iterator_delete(kiter)
-   
-    ! release the bufr message
+
+    ! Release the bufr message
     call codes_release(ibufr)
 
-    ! load the next bufr message
+    ! Load the next bufr message
     call codes_bufr_new_from_file(ifile,ibufr,iret)
-    
-    count=count+1
-    
-  end do  
 
-! close file  
+    count=count+1
+
+  end do
+
+  ! Close file  
   call codes_close_file(ifile)
- 
 
 end program bufr_keys_iterator

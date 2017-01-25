@@ -99,6 +99,8 @@ int grib_c_skip_duplicates(int* iterid);
 int grib_c_skip_read_only(int* iterid);
 int grib_c_skip_function(int* iterid);
 int grib_c_keys_iterator_rewind(int* iterid);
+int grib_c_bufr_copy_data(int* gid, int* INOUT);
+
 
 %cstring_bounded_output(char* name, 1024);
 int grib_c_keys_iterator_get_name(int* iterid, char* name, int len);

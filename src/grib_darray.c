@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -93,14 +93,14 @@ double* grib_darray_get_array(grib_context* c,grib_darray* v) {
   return ret;
 }
 
-int grib_darray_is_constant(grib_darray* v) {
+int grib_darray_is_constant(grib_darray* v,double eps) {
   int i;
   double val;
   if (v->n == 1) return 1;
 
   val=v->v[0];
   for (i=1;i<v->n;i++)  {
-    if (val!=v->v[i]) return 0;
+    if (fabs(val-v->v[i]) > eps) return 0;
   }
   return 1;
 }

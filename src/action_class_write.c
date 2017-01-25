@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -68,7 +68,6 @@ static grib_action_class _grib_action_class_write = {
     0,                            /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */
-    0,                            /* compile */
 };
 
 grib_action_class* grib_action_class_write = &_grib_action_class_write;
@@ -110,7 +109,7 @@ static int execute(grib_action* act, grib_handle *h)
     int err = GRIB_SUCCESS;
     size_t size;
     const void* buffer = NULL;
-    const char* filename;
+    const char* filename = NULL;
     char string[1024] = { 0, };
 
     grib_file* of = NULL;
@@ -124,9 +123,16 @@ static int execute(grib_action* act, grib_handle *h)
         err = grib_recompose_name(h, NULL, a->name, string, 0);
         filename = string;
     } else {
-        filename = act->context->outfilename ?	act->context->outfilename : "filter.out";
+        if (act->context->outfilename) {
+            filename = act->context->outfilename;
+            err = grib_recompose_name(h, NULL, act->context->outfilename, string, 0);
+            if (!err) filename = string;
+        } else {
+            filename = "filter.out";
+        }
     }
 
+    Assert(filename);
     if (a->append) of = grib_file_open(filename, "a", &err);
     else           of = grib_file_open(filename, "w", &err);
 

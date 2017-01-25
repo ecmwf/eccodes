@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -20,7 +20,6 @@
    IMPLEMENTS = destroy
    IMPLEMENTS = evaluate_string
    IMPLEMENTS = print
-   IMPLEMENTS = compile
    IMPLEMENTS = add_dependency
    MEMBERS    = char* value
    END_CLASS_DEF
@@ -44,7 +43,6 @@ static void init_class              (grib_expression_class*);
 static void        destroy(grib_context*,grib_expression* e);
 
 static void        print(grib_context*,grib_expression*,grib_handle*);
-static void        compile(grib_expression*,grib_compiler*);
 static void        add_dependency(grib_expression* e, grib_accessor* observer);
 
 static int        native_type(grib_expression*,grib_handle*);
@@ -67,7 +65,6 @@ static grib_expression_class _grib_expression_class_sub_string = {
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,                 
-    &compile,                 
     &add_dependency,       
 
 	&native_type,
@@ -123,14 +120,6 @@ grib_expression* new_sub_string_expression(grib_context* c,const char* value,siz
 	e->value               = grib_context_strdup_persistent(c,v);
 	return (grib_expression*)e;
 }
-
-
-static void compile(grib_expression* g,grib_compiler* c)
-{
-	grib_expression_sub_string* e = (grib_expression_sub_string*)g;
-    fprintf(c->out,"new_sub_string_expression(ctx,\"%s\")",e->value);
-}
-
 
 static int native_type(grib_expression* g,grib_handle *h)
 {

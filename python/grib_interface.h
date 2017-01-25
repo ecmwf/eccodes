@@ -94,6 +94,7 @@ int grib_c_get_data_real4(int *gid, float *lats, float *lons, float *values, siz
 int grib_c_get_message_size(int *gid, size_t *len);
 int grib_c_get_message_offset(int *gid, size_t *len);
 int grib_c_copy_message(int *gid, void *mess, size_t *len);
+int grib_c_bufr_copy_data(int *msgid_src, int *msgid_dst);
 void grib_c_check(int *err, char *call, char *str);
 int grib_c_write(int *gid, FILE *f);
 int grib_c_multi_new(int* mgid);

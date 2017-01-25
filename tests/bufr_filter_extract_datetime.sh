@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -31,7 +31,7 @@ fRules=${label}.filter
 # Test: Datetime extraction
 #-----------------------------------------------------------
 cat > $fRules <<EOF
- transient originalNumberOfSubsets=numberOfSubsets;
+ transient originalNumberOfSubsets = numberOfSubsets;
 
  transient extractDateTimeYearStart=2012;
  transient extractDateTimeMonthStart=10;
@@ -52,6 +52,7 @@ cat > $fRules <<EOF
    write;
  }
  print "extracted [extractedDateTimeNumberOfSubsets] of [originalNumberOfSubsets] subsets";
+ assert(numberOfSubsets == extractedDateTimeNumberOfSubsets);
 EOF
 
 inputBufr="amsa_55.bufr"

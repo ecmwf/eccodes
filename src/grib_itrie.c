@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -310,90 +310,91 @@ struct grib_itrie {
 
 grib_itrie *grib_itrie_new(grib_context* c,int* count)
 {
-  grib_itrie* t = (grib_itrie*)grib_context_malloc_clear(c,sizeof(grib_itrie));
-  t->context = c;
-  t->id=-1;
-  t->count=count;
-  return t;
+    grib_itrie* t = (grib_itrie*)grib_context_malloc_clear(c,sizeof(grib_itrie));
+    t->context = c;
+    t->id=-1;
+    t->count=count;
+    return t;
 }
 
-void grib_itrie_delete(grib_itrie *t) {
-  GRIB_MUTEX_INIT_ONCE(&once,&init)
-  GRIB_MUTEX_LOCK(&mutex)
+void grib_itrie_delete(grib_itrie *t)
+{
+    GRIB_MUTEX_INIT_ONCE(&once,&init)
+          GRIB_MUTEX_LOCK(&mutex)
 
-  if(t)  {
-    int i;
-    for(i = 0; i < SIZE; i++)
-      if (t->next[i])
-        grib_itrie_delete(t->next[i]);
+          if(t)  {
+              int i;
+              for(i = 0; i < SIZE; i++)
+                  if (t->next[i])
+                      grib_itrie_delete(t->next[i]);
 
-    grib_context_free(t->context,t);
+              grib_context_free(t->context,t);
 
-  }
+          }
 
-  GRIB_MUTEX_UNLOCK(&mutex)
+    GRIB_MUTEX_UNLOCK(&mutex)
 }
 
 int grib_itrie_get_id(grib_itrie* t,const char* key)
 {
-  const char *k=key;
-  grib_itrie* last=t;
+    const char *k=key;
+    grib_itrie* last=t;
 
-  GRIB_MUTEX_INIT_ONCE(&once,&init)
-  GRIB_MUTEX_LOCK(&mutex)
+    GRIB_MUTEX_INIT_ONCE(&once,&init)
+    GRIB_MUTEX_LOCK(&mutex)
 
-  while(*k && t)  t = t->next[mapping[(int)*k++]];
+    while(*k && t)  t = t->next[mapping[(int)*k++]];
 
-  if(t != NULL && t->id != -1) {
-	GRIB_MUTEX_UNLOCK(&mutex)
-	return t->id;
-  } else {
-	int ret=grib_itrie_insert(last,key);
-	GRIB_MUTEX_UNLOCK(&mutex)
-	return ret;
-  }
+    if(t != NULL && t->id != -1) {
+        GRIB_MUTEX_UNLOCK(&mutex)
+	        return t->id;
+    } else {
+        int ret=grib_itrie_insert(last,key);
+        GRIB_MUTEX_UNLOCK(&mutex)
+        return ret;
+    }
 }
 
 int grib_itrie_insert(grib_itrie* t,const char* key)
 {
-  const char *k = key;
-  grib_itrie *last = t;
-  int* count;
+    const char *k = key;
+    grib_itrie *last = t;
+    int* count;
 
-  GRIB_MUTEX_INIT_ONCE(&once,&init)
+    GRIB_MUTEX_INIT_ONCE(&once,&init)
 
-  GRIB_MUTEX_LOCK(&mutex)
+    GRIB_MUTEX_LOCK(&mutex)
 
-  count=t->count;
+    count=t->count;
 
-  while(*k && t) {
-    last = t;
-    t = t->next[mapping[(int)*k]];
-    if(t) k++;
-  }
-
-  if (*k!=0)  {
-    t=last;
-    while(*k) {
-      int j = mapping[(int)*k++];
-      t->next[j] = grib_itrie_new(t->context,count);
-      t = t->next[j];
+    while(*k && t) {
+        last = t;
+        t = t->next[mapping[(int)*k]];
+        if(t) k++;
     }
-  }
-  if (*(t->count) < MAX_NUM_CONCEPTS) {
-      t->id=*(t->count);
-      (*(t->count))++;
-  } else {
-      grib_context_log(t->context,GRIB_LOG_ERROR,
-        "grib_itrie_get_id: too many accessors, increase MAX_NUM_CONCEPTS\n");
-      Assert(*(t->count) < MAX_NUM_CONCEPTS);
-  }
 
-  GRIB_MUTEX_UNLOCK(&mutex)
+    if (*k!=0)  {
+        t=last;
+        while(*k) {
+            int j = mapping[(int)*k++];
+            t->next[j] = grib_itrie_new(t->context,count);
+            t = t->next[j];
+        }
+    }
+    if (*(t->count) < MAX_NUM_CONCEPTS) {
+        t->id=*(t->count);
+        (*(t->count))++;
+    } else {
+        grib_context_log(t->context,GRIB_LOG_ERROR,
+                "grib_itrie_insert: too many accessors, increase MAX_NUM_CONCEPTS\n");
+        Assert(*(t->count) < MAX_NUM_CONCEPTS);
+    }
 
-  /*printf("grib_itrie_get_id: %s -> %d\n",key,t->id);*/
+    GRIB_MUTEX_UNLOCK(&mutex)
 
-  return t->id;
+    /*printf("grib_itrie_get_id: %s -> %d\n",key,t->id);*/
+
+    return t->id;
 }
 
 int grib_itrie_get_size(grib_itrie* t) {return *(t->count);}

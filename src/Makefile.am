@@ -299,7 +299,6 @@ libeccodes_la_prototypes= \
 	grib_dumper_class_bufr_decode_fortran.c \
 	grib_dumper_class_bufr_decode_python.c \
 	grib_dumper_class_json.c \
-	grib_dumper_class_xml.c \
 	grib_dumper_class_grib_encode_C.c \
 	grib_dumper_class_wmo.c \
 	grib_dumper_class.c \
@@ -316,6 +315,7 @@ libeccodes_la_prototypes= \
 	grib_itrie.c \
 	grib_rules.c \
 	grib_keys_iterator.c \
+	bufr_keys_iterator.c \
 	grib_parse_utils.c \
 	grib_query.c \
 	grib_scaling.c \
@@ -361,11 +361,14 @@ libeccodes_la_prototypes= \
 	grib_iterator_class_gen.c \
 	grib_iterator_class_latlon.c \
 	grib_iterator_class_regular.c \
+	grib_iterator_class_space_view.c \
 	grib_expression.c \
 	grib_util.c \
-	compile.c \
+	bufr_util.c \
+	string_util.c \
 	functions.c \
 	codes_memfs.c \
+	grib_optimize_decimal_factor.c \
 	grib_api_version.c
 
 libeccodes_extra_prototypes = grib_bits_any_endian.c grib_bits_any_endian_simple.c

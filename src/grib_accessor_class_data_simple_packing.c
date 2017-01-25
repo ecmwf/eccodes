@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -13,6 +13,8 @@
  *******************************/
 
 #include "grib_api_internal.h"
+#include "grib_optimize_decimal_factor.h"
+#include <float.h>
 
 /*
    This is used by make_class.pl
@@ -35,6 +37,7 @@
    MEMBERS=const char*  reference_value
    MEMBERS=const char*  binary_scale_factor
    MEMBERS=const char*  decimal_scale_factor
+   MEMBERS=const char*  optimize_scaling_factor
    END_CLASS_DEF
 
  */
@@ -76,6 +79,7 @@ typedef struct grib_accessor_data_simple_packing {
 	const char*  reference_value;
 	const char*  binary_scale_factor;
 	const char*  decimal_scale_factor;
+	const char*  optimize_scaling_factor;
 } grib_accessor_data_simple_packing;
 
 extern grib_accessor_class* grib_accessor_class_values;
@@ -172,6 +176,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
     self->reference_value = grib_arguments_get_name(gh,args,self->carg++);
     self->binary_scale_factor = grib_arguments_get_name(gh,args,self->carg++);
     self->decimal_scale_factor = grib_arguments_get_name(gh,args,self->carg++);
+    self->optimize_scaling_factor = grib_arguments_get_name(gh,args,self->carg++);
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
     self->dirty=1;
 }
@@ -464,6 +469,14 @@ static int producing_large_constant_fields(const grib_context* c, grib_handle* h
     return 0;
 }
 
+static int check_range(const double val)
+{
+    if (val < DBL_MAX && val > -DBL_MAX)
+        return GRIB_SUCCESS;
+    else
+        return GRIB_ENCODING_ERROR;
+}
+
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
     grib_accessor_data_simple_packing* self =  (grib_accessor_data_simple_packing*)a;
@@ -478,6 +491,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     long   bits_per_value = 0;
     long   decimal_scale_factor = 0;
     long   decimal_scale_factor_get = 0;
+    long   optimize_scaling_factor = 0;
     double decimal = 1;
     double max = 0;
     double min = 0;
@@ -504,6 +518,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     if((err = grib_get_long_internal(gh,self->decimal_scale_factor, &decimal_scale_factor_get))
             != GRIB_SUCCESS)
         return err;
+    if((err = grib_get_long_internal(gh,self->optimize_scaling_factor, &optimize_scaling_factor))
+            != GRIB_SUCCESS)
+        return err;
     /*/
      * check we don't encode bpv > max(ulong)-1 as it is
      * not currently supported by the algorithm
@@ -524,6 +541,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         if (val[i] < min ) min = val[i];
     }
 #endif
+    if ((err = check_range(max)) != GRIB_SUCCESS) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,"Maximum value out of range: %g", max);
+        return err;
+    }
+    if ((err = check_range(min)) != GRIB_SUCCESS) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,"Minimum value out of range: %g", min);
+        return err;
+    }
 
     /* constant field only reference_value is set and bits_per_value=0 */
     if(max==min) {
@@ -642,6 +667,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
                         "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
                 return GRIB_INTERNAL_ERROR;
             }
+        } else if (optimize_scaling_factor) {
+          int compat_gribex = c->gribex_mode_on && self->edition==1;
+
+          if((err = grib_optimize_decimal_factor (a, self->reference_value,
+                                                  max, min, bits_per_value,
+                                                  compat_gribex, 1,
+                                                  &decimal_scale_factor, &binary_scale_factor, &reference_value)) != GRIB_SUCCESS)
+            return err;
         } else {
             /* printf("max=%g reference_value=%g grib_power(-last,2)=%g decimal_scale_factor=%ld bits_per_value=%ld\n",
                max,reference_value,grib_power(-last,2),decimal_scale_factor,bits_per_value);*/
