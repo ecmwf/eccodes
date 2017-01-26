@@ -43,7 +43,7 @@ int main(int argc,char* argv[])
         printf("%s\n", kname);
         grib_context_free(c, kname);
     }
-    grib_keys_iterator_delete(kiter);
+    codes_bufr_keys_iterator_delete(kiter);
     codes_handle_delete(h);
     return 0;
 }

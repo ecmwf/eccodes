@@ -1327,6 +1327,121 @@ subroutine codes_keys_iterator_rewind ( iterid, status )
     call grib_keys_iterator_rewind ( iterid, status )
 end subroutine codes_keys_iterator_rewind
 
+
+! BUFR keys iterator
+! -----------------------
+  !> Create a new iterator on the keys of a BUFR message.
+  !>
+  !> The keys iterator can be navigated to give all the key names which
+  !> can then be used to get or set the key values with \ref codes_get or
+  !> \ref codes_set.
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref codes_get_error_string.
+  !>
+  !> @param msgid       id of the BUFR message loaded in memory
+  !> @param iterid      keys iterator id to be used in the keys iterator functions
+  !> @param status      CODES_SUCCESS if OK, integer value on error
+subroutine codes_bufr_keys_iterator_new ( msgid, iterid, status )
+    integer(kind=kindOfInt),          intent(in)     :: msgid
+    integer(kind=kindOfInt),          intent(inout)  :: iterid
+    integer(kind=kindOfInt),optional, intent(out)    :: status
+    integer(kind=kindOfInt)                          :: iret
+
+    iret = codes_f_bufr_keys_iterator_new(msgid, iterid)
+    if (present(status)) then
+        status = iret
+    else
+        call grib_check(iret,'bufr_keys_iterator_new','')
+    endif
+end subroutine codes_bufr_keys_iterator_new
+
+
+  !> Advance to the next BUFR keys iterator value.
+  !>
+  !> @param iterid   keys iterator id created with @ref codes_bufr_keys_iterator_new
+  !> @param status   CODES_SUCCESS if next iterator exists, integer value if no more elements to iterate on
+subroutine codes_bufr_keys_iterator_next (iterid , status)
+    integer(kind=kindOfInt),          intent(in)  :: iterid
+    integer(kind=kindOfInt),optional, intent(out) :: status
+    integer(kind=kindOfInt)                       :: iret
+
+    status = GRIB_SUCCESS
+    iret = codes_f_bufr_keys_iterator_next( iterid )
+    if (iret == 0) then
+        ! no more elements
+        status = GRIB_END
+    endif
+end subroutine codes_bufr_keys_iterator_next
+
+
+  !> Get the name of a key from a BUFR keys iterator.
+  !>
+  !> If the status parameter (optional) is not given the program will exit with an error message\n
+  !> otherwise the error message can be gathered with @ref codes_get_error_string.\n
+  !>
+  !> @param iterid      keys iterator id created with @ref codes_bufr_keys_iterator_new
+  !> @param name        key name to be retrieved
+  !> @param status      CODES_SUCCESS if OK, integer value on error
+subroutine codes_bufr_keys_iterator_get_name( iterid, name, status )
+    integer(kind=kindOfInt),          intent(in)    :: iterid
+    character(LEN=*), intent(out)                   :: name
+    integer(kind=kindOfInt),optional, intent(out)   :: status
+    integer(kind=kindOfInt)                         :: iret
+
+    iret = codes_f_bufr_keys_iterator_get_name( iterid, name )
+    if (present(status)) then
+        status = iret
+    else
+        call grib_check(iret,'bufr_keys_iterator_get_name',name)
+    endif
+end subroutine codes_bufr_keys_iterator_get_name
+
+  !> Rewind a BUFR keys iterator.
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param iterid      keys iterator id created with @ref codes_bufr_keys_iterator_new
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine codes_bufr_keys_iterator_rewind( iterid, status )
+      integer(kind=kindOfInt),          intent(in)    :: iterid
+      integer(kind=kindOfInt),optional, intent(out)   :: status
+      integer(kind=kindOfInt)                         :: iret
+
+      iret = codes_f_bufr_keys_iterator_rewind( iterid )
+      if (present(status)) then
+         status = iret
+      else
+         call grib_check(iret,'bufr_keys_iterator_rewind','')
+      endif
+  end subroutine codes_bufr_keys_iterator_rewind
+
+  !> Delete a BUFR keys iterator and free memory.
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param iterid      keys iterator id created with @ref codes_bufr_keys_iterator_new
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine codes_bufr_keys_iterator_delete (iterid , status)
+      integer(kind=kindOfInt),          intent(in)  :: iterid
+      integer(kind=kindOfInt),optional, intent(out) :: status
+      integer(kind=kindOfInt)                       :: iret
+
+      iret = codes_f_bufr_keys_iterator_delete(iterid)
+      if (present(status)) then
+         status = iret
+      else
+         call grib_check(iret,'bufr_keys_iterator_delete','')
+      endif
+  end subroutine codes_bufr_keys_iterator_delete
+
+
+
   !> Dump the content of a message.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will

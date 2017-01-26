@@ -1116,7 +1116,7 @@ char **codes_bufr_copy_data_return_copied_keys(grib_handle *hin, grib_handle *ho
 int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout);
 
 
-/*! Step to the next iterator.
+/*! Step to the next item from the keys iterator.
 *  @param kiter         : valid codes_keys_iterator
 *  @return              1 if next iterator exists, 0 if no more elements to iterate on
 */
@@ -1124,23 +1124,25 @@ int codes_keys_iterator_next(codes_keys_iterator *kiter);
 int codes_bufr_keys_iterator_next(codes_keys_iterator *kiter);
 
 
-/*! get the key name from the iterator
+/*! get the key name from the keys iterator
 *  @param kiter         : valid codes_keys_iterator
 *  @return              key name
 */
 const char* codes_keys_iterator_get_name(codes_keys_iterator *kiter);
 
-/*! Delete the iterator.
+/*! Delete the keys iterator.
 *  @param kiter         : valid codes_keys_iterator
 *  @return              0 if OK, integer value on error
 */
 int codes_keys_iterator_delete( codes_keys_iterator* kiter);
+int codes_bufr_keys_iterator_delete( codes_keys_iterator* kiter);
 
-/*! Rewind the iterator.
+/*! Rewind the keys iterator.
 *  @param kiter         : valid codes_keys_iterator
 *  @return              0 if OK, integer value on error
 */
 int codes_keys_iterator_rewind(codes_keys_iterator* kiter);
+int codes_bufr_keys_iterator_rewind(codes_keys_iterator* kiter);
 
 char* codes_bufr_keys_iterator_get_name(codes_keys_iterator* kiter);
 

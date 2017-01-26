@@ -12,7 +12,7 @@
 !
 !
 ! Description: how to use keys_iterator functions and the
-!              codes_keys_iterator structure to get all the available
+!              codes_bufr_keys_iterator structure to get all the available
 !              keys in a BUFR message.
 !
 !
@@ -23,14 +23,10 @@ integer            :: ifile
 integer            :: iret
 integer            :: ibufr
 integer            :: count=0
-character(len=20)  :: name_space
 character(len=256) :: key
 integer            :: kiter
 
   call codes_open_file(ifile,'../../data/bufr/syno_1.bufr','r')
-
-  ! name_space='' to get all the keys 
-  name_space='ls'
 
   ! The first bufr message is loaded from file,
   ! ibufr is the bufr id to be used in subsequent calls
@@ -38,34 +34,36 @@ integer            :: kiter
 
   do while (iret /= CODES_END_OF_FILE)
 
-    ! Get and print some keys form the BUFR header 
+    ! Get and print some keys form the BUFR header
     write(*,*) 'message: ',count
 
-    ! Create key iterator
-    call codes_keys_iterator_new(ibufr,kiter,name_space,iret)
+    ! We need to instruct ecCodes to expand all the descriptors
+    ! i.e. unpack the data values
+    call codes_set(ibufr,"unpack",1);
+
+    ! Create BUFR keys iterator
+    call codes_bufr_keys_iterator_new(ibufr,kiter,iret)
 
     if (iret .ne. 0) then
-        write(*,*) 'ERROR: Unable to create keys iterator'
+        write(*,*) 'ERROR: Unable to create BUFR keys iterator'
         call exit(1)
-    end if   
+    end if
 
     ! Get first key
-    call codes_keys_iterator_next(kiter, iret)
+    call codes_bufr_keys_iterator_next(kiter, iret)
 
     ! Loop over keys
-    do while (iret == CODES_SUCCESS) 
-    
+    do while (iret == CODES_SUCCESS)
         ! Print key name
-        call codes_keys_iterator_get_name(kiter,key)
+        call codes_bufr_keys_iterator_get_name(kiter,key)
         write(*,*) '  ',trim(key)
-        
+
         ! Get next key
-        call codes_keys_iterator_next(kiter, iret)
-         
+        call codes_bufr_keys_iterator_next(kiter, iret)
     end do
-      
-    ! Delete key iterator 
-    call codes_keys_iterator_delete(kiter)
+
+    ! Delete key iterator
+    call codes_bufr_keys_iterator_delete(kiter)
 
     ! Release the bufr message
     call codes_release(ibufr)
@@ -77,7 +75,7 @@ integer            :: kiter
 
   end do
 
-  ! Close file  
+  ! Close file
   call codes_close_file(ifile)
 
 end program bufr_keys_iterator

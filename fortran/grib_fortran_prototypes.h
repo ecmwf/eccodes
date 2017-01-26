@@ -49,6 +49,7 @@ int grib_f_iterator_next(int *iterid, double *lat, double *lon, double *value);
 int grib_f_iterator_delete_(int *iterid);
 int grib_f_iterator_delete__(int *iterid);
 int grib_f_iterator_delete(int *iterid);
+
 int grib_f_keys_iterator_new_(int *gid, int *iterid, char *name_space, int len);
 int grib_f_keys_iterator_new__(int *gid, int *iterid, char *name_space, int len);
 int grib_f_keys_iterator_new(int *gid, int *iterid, char *name_space, int len);
@@ -58,6 +59,24 @@ int grib_f_keys_iterator_next(int *iterid);
 int grib_f_keys_iterator_delete_(int *iterid);
 int grib_f_keys_iterator_delete__(int *iterid);
 int grib_f_keys_iterator_delete(int *iterid);
+
+/*BUFR keys iterator*/
+int codes_f_bufr_keys_iterator_new_(int *gid, int *iterid);
+int codes_f_bufr_keys_iterator_new__(int *gid, int *iterid);
+int codes_f_bufr_keys_iterator_new(int *gid, int *iterid);
+int codes_f_bufr_keys_iterator_next_(int *iterid);
+int codes_f_bufr_keys_iterator_next__(int *iterid);
+int codes_f_bufr_keys_iterator_next(int *iterid);
+int codes_f_bufr_keys_iterator_get_name_(int *iterid, char *name, int len);
+int codes_f_bufr_keys_iterator_get_name__(int *kiter, char *name, int len);
+int codes_f_bufr_keys_iterator_get_name(int *kiter, char *name, int len);
+int codes_f_bufr_keys_iterator_rewind_(int *kiter);
+int codes_f_bufr_keys_iterator_rewind__(int *kiter);
+int codes_f_bufr_keys_iterator_rewind(int *kiter);
+int codes_f_bufr_keys_iterator_delete_(int *iterid);
+int codes_f_bufr_keys_iterator_delete__(int *iterid);
+int codes_f_bufr_keys_iterator_delete(int *iterid);
+
 int grib_f_gribex_mode_on_(void);
 int grib_f_gribex_mode_on__(void);
 int grib_f_gribex_mode_on(void);
