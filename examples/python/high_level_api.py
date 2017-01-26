@@ -132,56 +132,49 @@ KNOWN_GRIB_KEYS = ['7777', 'EPS information', 'GRIBEditionNumber', 'N', 'NV',
                    'unitsOfSecondFixedSurface', 'unpackedError',
                    'uvRelativeToGrid', 'validityDate', 'validityTime',
                    'values', 'x', 'year']
-KNOWN_BUFR_KEYS = ['3HourPressureChange', '7777', 'BUFRstr',
-                   'airTemperatureAt2M', 'blockNumber', 'bufrHeaderCentre',
-                   'bufrHeaderSubCentre', 'bufrTemplate',
-                   'bufrdcExpandedDescriptors', 'centre',
-                   'characteristicOfPressureTendency', 'cloudAmount',
-                   'cloudCoverTotal', 'cloudType', 'compressedData',
-                   'corr1Data', 'corr2Data', 'corr3Data', 'corr4Data',
-                   'correction1', 'correction1Part', 'correction2',
-                   'correction2Part', 'correction3', 'correction3Part',
-                   'correction4', 'correction4Part', 'createNewData',
-                   'dataCategory', 'dataPresentIndicator', 'dataSubCategory',
-                   'day', 'defaultSequence', 'dewpointTemperatureAt2M', 'ed',
-                   'edition', 'expandedAbbreviations', 'expandedCodes',
-                   'expandedCrex_scales', 'expandedCrex_units',
-                   'expandedCrex_widths', 'expandedNames',
-                   'expandedOriginalCodes', 'expandedOriginalReferences',
-                   'expandedOriginalScales', 'expandedOriginalWidths',
-                   'expandedTypes', 'expandedUnits', 'generatingApplication',
-                   'globalDomain', 'heightOfBaseOfCloud', 'heightOfStation',
-                   'horizontalVisibility', 'hour', 'isSatellite',
-                   'isSatelliteType', 'latitude', 'lengthDescriptors',
-                   'localDay', 'localHour', 'localLatitude', 'localLongitude',
-                   'localMinute', 'localMonth', 'localSecond',
-                   'localSectionPresent', 'localTablesVersionNumber',
-                   'localYear', 'longitude', 'masterTableNumber',
-                   'masterTablesVersionNumber', 'md5Data', 'md5Structure',
-                   'messageLength', 'minute', 'month', 'nonCoordinatePressure',
-                   'numberOfSubsets', 'numberOfUnexpandedDescriptors',
-                   'observedData', 'operator', 'pastWeather1', 'pastWeather2',
-                   'presentWeather', 'pressureReducedToMeanSeaLevel',
-                   'qualityControl', 'rdbSubtype', 'rdbType', 'rdbtime',
-                   'rdbtimeDay', 'rdbtimeHour', 'rdbtimeMinute',
-                   'rdbtimeSecond', 'rectime', 'rectimeDay', 'rectimeHour',
-                   'rectimeMinute', 'rectimeSecond', 'relativeHumidity',
-                   'reservedSection2', 'reservedSection3', 'section1Length',
-                   'section1Padding', 'section2Length', 'section2Padding',
-                   'section3Flags', 'section3Length', 'section3Padding',
-                   'section4Length', 'section4Padding', 'section5Length',
-                   'sequences', 'spare', 'spare1', 'stationNumber',
-                   'stationType', 'subsetNumber', 'tableNumber',
-                   'templatesLocalDir', 'templatesMasterDir', 'totalLength',
-                   'totalPrecipitationPast6Hours', 'totalSnowDepth',
-                   'typicalCentury', 'typicalDate', 'typicalDay',
-                   'typicalHour', 'typicalMinute', 'typicalMonth',
-                   'typicalSecond', 'typicalTime', 'typicalYear',
-                   'typicalYearOfCentury', 'unexpandedDescriptors',
-                   'updateSequenceNumber',
-                   'verticalSignificanceSurfaceObservations',
-                   'windDirectionAt10M', 'windSpeedAt10M', 'year']
-
+KNOWN_BUFR_KEYS = ['edition', 'masterTableNumber', 'bufrHeaderSubCentre', 'bufrHeaderCentre',
+                   'updateSequenceNumber', 'dataCategory', 'dataSubCategory', 'masterTablesVersionNumber',
+                   'localTablesVersionNumber', 'typicalYearOfCentury', 'typicalMonth', 'typicalDay',
+                   'typicalHour', 'typicalMinute', 'rdbType', 'rdbSubtype', 'rdbtimeDay', 'rdbtimeHour',
+                   'rdbtimeMinute', 'rdbtimeSecond', 'rectimeDay', 'rectimeHour', 'rectimeMinute', 'rectimeSecond',
+                   'correction1', 'correction1Part', 'correction2', 'correction2Part', 'correction3', 'correction3Part',
+                   'correction4', 'correction4Part', 'qualityControl', 'numberOfSubsets', 'localLatitude', 'localLongitude',
+                   'observedData', 'compressedData', 'unexpandedDescriptors', '#1#blockNumber',
+                   '#1#blockNumber->percentConfidence', '#1#stationNumber', '#1#stationNumber->percentConfidence',
+                   '#1#stationType', '#1#stationType->percentConfidence', '#1#year', '#1#year->percentConfidence',
+                   '#1#month', '#1#month->percentConfidence', '#1#day', '#1#day->percentConfidence', '#1#hour',
+                   '#1#hour->percentConfidence', '#1#minute', '#1#minute->percentConfidence', '#1#latitude',
+                   '#1#latitude->percentConfidence', '#1#longitude', '#1#longitude->percentConfidence',
+                   '#1#heightOfStation', '#1#heightOfStation->percentConfidence', '#1#nonCoordinatePressure',
+                   '#1#nonCoordinatePressure->percentConfidence', '#1#pressureReducedToMeanSeaLevel',
+                   '#1#pressureReducedToMeanSeaLevel->percentConfidence', '#1#3HourPressureChange',
+                   '#1#3HourPressureChange->percentConfidence', '#1#characteristicOfPressureTendency',
+                   '#1#characteristicOfPressureTendency->percentConfidence', '#1#windDirectionAt10M',
+                   '#1#windDirectionAt10M->percentConfidence', '#1#windSpeedAt10M', '#1#windSpeedAt10M->percentConfidence',
+                   '#1#airTemperatureAt2M', '#1#airTemperatureAt2M->percentConfidence', '#1#dewpointTemperatureAt2M',
+                   '#1#dewpointTemperatureAt2M->percentConfidence', '#1#relativeHumidity',
+                   '#1#relativeHumidity->percentConfidence', '#1#horizontalVisibility',
+                   '#1#horizontalVisibility->percentConfidence', '#1#presentWeather',
+                   '#1#presentWeather->percentConfidence', '#1#pastWeather1', '#1#pastWeather1->percentConfidence',
+                   '#1#pastWeather2', '#1#pastWeather2->percentConfidence', '#1#cloudCoverTotal',
+                   '#1#cloudCoverTotal->percentConfidence', '#1#verticalSignificanceSurfaceObservations',
+                   '#1#verticalSignificanceSurfaceObservations->percentConfidence', '#1#cloudAmount',
+                   '#1#cloudAmount->percentConfidence', '#1#heightOfBaseOfCloud',
+                   '#1#heightOfBaseOfCloud->percentConfidence', '#1#cloudType', '#1#cloudType->percentConfidence',
+                   '#2#cloudType', '#2#cloudType->percentConfidence', '#3#cloudType', '#3#cloudType->percentConfidence',
+                   '#2#verticalSignificanceSurfaceObservations', '#2#verticalSignificanceSurfaceObservations->percentConfidence',
+                   '#2#cloudAmount', '#2#cloudAmount->percentConfidence', '#4#cloudType',
+                   '#4#cloudType->percentConfidence', '#2#heightOfBaseOfCloud', '#2#heightOfBaseOfCloud->percentConfidence',
+                   '#3#verticalSignificanceSurfaceObservations', '#3#verticalSignificanceSurfaceObservations->percentConfidence',
+                   '#3#cloudAmount', '#3#cloudAmount->percentConfidence', '#5#cloudType', '#5#cloudType->percentConfidence',
+                   '#3#heightOfBaseOfCloud', '#3#heightOfBaseOfCloud->percentConfidence', '#4#verticalSignificanceSurfaceObservations',
+                   '#4#verticalSignificanceSurfaceObservations->percentConfidence', '#4#cloudAmount', '#4#cloudAmount->percentConfidence',
+                   '#6#cloudType', '#6#cloudType->percentConfidence', '#4#heightOfBaseOfCloud', '#4#heightOfBaseOfCloud->percentConfidence',
+                   '#5#verticalSignificanceSurfaceObservations', '#5#verticalSignificanceSurfaceObservations->percentConfidence', '#5#cloudAmount',
+                   '#5#cloudAmount->percentConfidence', '#7#cloudType', '#7#cloudType->percentConfidence', '#5#heightOfBaseOfCloud',
+                   '#5#heightOfBaseOfCloud->percentConfidence', '#1#totalPrecipitationPast6Hours',
+                   '#1#totalPrecipitationPast6Hours->percentConfidence', '#1#totalSnowDepth', '#1#totalSnowDepth->percentConfidence',
+                   '#1#centre', '#1#generatingApplication']
 
 class TestGribFile(unittest.TestCase):
 
@@ -233,8 +226,9 @@ class TestGribMessage(unittest.TestCase):
         """Metadata is read correctly from GribMessage."""
         with GribFile(TESTGRIB) as grib:
             msg = GribMessage(grib)
+            msg_keys = msg.keys()
             for key in KNOWN_GRIB_KEYS:
-                assert key in msg.keys()
+                assert key in msg_keys
             self.assertEqual(msg.size(), 160219)
             self.assertEqual(len(msg.keys()), len(msg))
 
@@ -355,8 +349,9 @@ class TestBufrMessage(unittest.TestCase):
         """Metadata is read correctly from BufrMessage."""
         with BufrFile(TESTBUFR) as bufr:
             msg = BufrMessage(bufr)
+            msg_keys = msg.keys()
             for key in KNOWN_BUFR_KEYS:
-                assert key in msg.keys()
+                assert key in msg_keys
             self.assertEqual(msg.size(), 220)
             self.assertEqual(len(msg.keys()), len(msg))
 

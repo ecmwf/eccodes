@@ -52,7 +52,14 @@ class BufrMessage(CodesMessage):
 
     def keys(self, namespace=None):
         self.unpacked = True
-        return super(self.__class__, self).keys(namespace)
+        #return super(self.__class__, self).keys(namespace)
+        iterator = eccodes.codes_bufr_keys_iterator_new(self.codes_id)
+        keys = []
+        while eccodes.codes_bufr_keys_iterator_next(iterator):
+            key = eccodes.codes_bufr_keys_iterator_get_name(iterator)
+            keys.append(key)
+        eccodes.codes_bufr_keys_iterator_delete(iterator)
+        return keys
 
     @property
     def unpacked(self):
