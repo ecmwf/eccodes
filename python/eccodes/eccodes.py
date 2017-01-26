@@ -42,6 +42,11 @@ from gribapi import grib_keys_iterator_next as codes_keys_iterator_next
 from gribapi import grib_keys_iterator_delete as codes_keys_iterator_delete
 from gribapi import grib_keys_iterator_get_name as codes_keys_iterator_get_name
 from gribapi import grib_keys_iterator_rewind as codes_keys_iterator_rewind
+from gribapi import codes_bufr_keys_iterator_new
+from gribapi import codes_bufr_keys_iterator_next
+from gribapi import codes_bufr_keys_iterator_delete
+from gribapi import codes_bufr_keys_iterator_get_name
+from gribapi import codes_bufr_keys_iterator_rewind
 from gribapi import grib_get_long as codes_get_long
 from gribapi import grib_get_double as codes_get_double
 from gribapi import grib_set_long as codes_set_long

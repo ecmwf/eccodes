@@ -688,6 +688,83 @@ def grib_keys_iterator_rewind(iterid):
     """
     GRIB_CHECK(_internal.grib_c_keys_iterator_rewind(iterid))
 
+# BUFR keys iterator
+@require(msgid=int)
+def codes_bufr_keys_iterator_new(msgid):
+    """
+    @brief Create a new iterator on the BUFR keys.
+
+    The keys iterator can be navigated to give all the key names which
+    can then be used to get or set the key values with \ref codes_get or
+    \ref codes_set.
+
+    \b Examples: \ref bufr_keys_iterator.py "bufr_keys_iterator.py"
+
+    @param msgid      id of the BUFR message loaded in memory
+    @return keys iterator id to be used in the keys iterator functions
+    @exception GribInternalError
+    """
+    err, iterid = _internal.codes_c_bufr_keys_iterator_new(msgid)
+    GRIB_CHECK(err)
+    return iterid
+
+
+@require(iterid=int)
+def codes_bufr_keys_iterator_next(iterid):
+    """
+    @brief Advance to the next BUFR keys iterator value.
+
+    \b Examples: \ref bufr_keys_iterator.py "bufr_keys_iterator.py"
+
+    @param iterid      keys iterator id created with @ref codes_bufr_keys_iterator_new
+    @exception GribInternalError
+    """
+    res = _internal.codes_c_bufr_keys_iterator_next(iterid)
+    if res < 0:
+        GRIB_CHECK(res)
+    return res
+
+
+@require(iterid=int)
+def codes_bufr_keys_iterator_delete(iterid):
+    """
+    @brief Delete a keys iterator and free memory.
+
+    \b Examples: \ref bufr_keys_iterator.py "bufr_keys_iterator.py"
+
+    @param iterid      keys iterator id created with @ref codes_bufr_keys_iterator_new
+    @exception GribInternalError
+    """
+    GRIB_CHECK(_internal.codes_c_bufr_keys_iterator_delete(iterid))
+
+
+@require(iterid=int)
+def codes_bufr_keys_iterator_get_name(iterid):
+    """
+    @brief Get the name of a key from a BUFR keys iterator.
+
+    \b Examples: \ref bufr_keys_iterator.py "bufr_keys_iterator.py"
+
+    @param iterid      keys iterator id created with @ref codes_bufr_keys_iterator_new
+    @return key name to be retrieved
+    @exception GribInternalError
+    """
+    err, name = _internal.codes_c_bufr_keys_iterator_get_name(iterid, 1024)
+    GRIB_CHECK(err)
+    return name
+
+
+@require(iterid=int)
+def codes_bufr_keys_iterator_rewind(iterid):
+    """
+    @brief Rewind a BUFR keys iterator.
+
+    @param iterid      keys iterator id created with @ref codes_bufr_keys_iterator_new
+    @exception GribInternalError
+    """
+    GRIB_CHECK(_internal.codes_c_bufr_keys_iterator_rewind(iterid))
+
+
 
 @require(msgid=int, key=str)
 def grib_get_long(msgid, key):

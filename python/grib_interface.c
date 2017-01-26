@@ -57,7 +57,7 @@
 
  static void init()
  {
-    GRIB_OMP_CRITICAL(lock_fortran)
+    GRIB_OMP_CRITICAL(lock_python)
     {
         if (once == 0)
         {
@@ -864,7 +864,6 @@ static int _grib_c_keys_iterator_new_(int* gid,int* iterid,char* name_space)
         *iterid=-1;
     return err;
 }
-
 int grib_c_keys_iterator_new(int* gid,int* iterid,char* name_space)
 {
     int ret=0;
@@ -874,7 +873,6 @@ int grib_c_keys_iterator_new(int* gid,int* iterid,char* name_space)
     GRIB_MUTEX_UNLOCK(&keys_iterator_mutex)
     return ret;
 }
-
 int grib_c_keys_iterator_next(int* iterid)
 {
     int ret = 0;
@@ -887,11 +885,115 @@ int grib_c_keys_iterator_next(int* iterid)
 
     return ret;
 }
-
 int grib_c_keys_iterator_delete(int* iterid)
 {
     return clear_keys_iterator(*iterid);
 }
+int grib_c_keys_iterator_get_name(int* iterid,char* name,int len)
+{
+    size_t lsize=len;
+    char buf[1024]={0,};
+
+    grib_keys_iterator* kiter=get_keys_iterator(*iterid);
+
+    if (!kiter) return GRIB_INVALID_KEYS_ITERATOR;
+    if (grib_keys_iterator_get_accessor(kiter)==NULL)
+        return GRIB_INVALID_KEYS_ITERATOR;
+
+    sprintf(buf,"%s",grib_keys_iterator_get_name(kiter));
+    lsize=strlen(buf);
+
+    if (len < lsize) return GRIB_ARRAY_TOO_SMALL;
+
+    memcpy(name,buf,lsize);
+    name[lsize] = '\0';
+
+    return 0;
+}
+int grib_c_keys_iterator_rewind(int* kiter)
+{
+    grib_keys_iterator* i=get_keys_iterator(*kiter);
+
+    if (!i) return GRIB_INVALID_KEYS_ITERATOR;
+    return grib_keys_iterator_rewind(i);
+}
+
+/*BUFR keys iterator*/
+static int _codes_c_bufr_keys_iterator_new_(int* gid,int* iterid)
+{
+    int err=0;
+    grib_handle* h;
+    grib_keys_iterator* iter;
+
+    h=get_handle(*gid);
+    if (!h) {
+        *iterid=-1;
+        return GRIB_NULL_HANDLE;
+    }
+    iter=codes_bufr_keys_iterator_new(h);
+    if (iter)
+        *iterid=push_keys_iterator(iter);
+    else
+        *iterid=-1;
+    return err;
+}
+int codes_c_bufr_keys_iterator_new(int* gid,int* iterid)
+{
+    int ret=0;
+    GRIB_MUTEX_INIT_ONCE(&once,&init)
+    GRIB_MUTEX_LOCK(&keys_iterator_mutex)
+    ret = _codes_c_bufr_keys_iterator_new_(gid,iterid);
+    GRIB_MUTEX_UNLOCK(&keys_iterator_mutex)
+    return ret;
+}
+
+int codes_c_bufr_keys_iterator_next(int* iterid)
+{
+    int ret = 0;
+    grib_keys_iterator* iter= get_keys_iterator(*iterid);
+
+    if (!iter) return GRIB_INVALID_KEYS_ITERATOR;
+
+    ret = codes_bufr_keys_iterator_next(iter);
+
+    return ret;
+}
+
+int codes_c_bufr_keys_iterator_get_name(int* iterid,char* name,int len)
+{
+    size_t lsize=len;
+    char buf[1024]={0,};
+
+    grib_keys_iterator* kiter=get_keys_iterator(*iterid);
+
+    if (!kiter) return GRIB_INVALID_KEYS_ITERATOR;
+    if (codes_bufr_keys_iterator_get_accessor(kiter)==NULL)
+      return GRIB_INVALID_KEYS_ITERATOR;
+
+    sprintf(buf,"%s",codes_bufr_keys_iterator_get_name(kiter));
+    lsize=strlen(buf);
+
+    if (len < lsize) return GRIB_ARRAY_TOO_SMALL;
+
+    memcpy(name,buf,lsize);
+    name[lsize] = '\0';
+
+    return 0;
+}
+
+int codes_c_bufr_keys_iterator_rewind(int* kiter)
+{
+    grib_keys_iterator* i=get_keys_iterator(*kiter);
+
+    if (!i) return GRIB_INVALID_KEYS_ITERATOR;
+    return codes_bufr_keys_iterator_rewind(i);
+}
+
+int codes_c_bufr_keys_iterator_delete(int* iterid)
+{
+    return clear_keys_iterator(*iterid);
+}
+
 
 int grib_c_gribex_mode_on(void)
 {
@@ -945,36 +1047,6 @@ int grib_c_skip_function(int* iterid)
     grib_keys_iterator* iter=get_keys_iterator(*iterid);
     if (!iter) return GRIB_INVALID_KEYS_ITERATOR;
     return grib_keys_iterator_set_flags(iter,GRIB_KEYS_ITERATOR_SKIP_FUNCTION);
-}
-
-int grib_c_keys_iterator_get_name(int* iterid,char* name,int len)
-{
-    size_t lsize=len;
-    char buf[1024]={0,};
-
-    grib_keys_iterator* kiter=get_keys_iterator(*iterid);
-
-    if (!kiter) return GRIB_INVALID_KEYS_ITERATOR;
-  if (grib_keys_iterator_get_accessor(kiter)==NULL)
-      return GRIB_INVALID_KEYS_ITERATOR;
-
-    sprintf(buf,"%s",grib_keys_iterator_get_name(kiter));
-    lsize=strlen(buf);
-
-    if (len < lsize) return GRIB_ARRAY_TOO_SMALL;
-
-    memcpy(name,buf,lsize);
-    name[lsize] = '\0';
-
-    return 0;
-}
-
-int grib_c_keys_iterator_rewind(int* kiter)
-{
-    grib_keys_iterator* i=get_keys_iterator(*kiter);
-
-    if (!i) return GRIB_INVALID_KEYS_ITERATOR;
-    return grib_keys_iterator_rewind(i);
 }
 
 int grib_c_new_from_message(int* gid, void* buffer , size_t* bufsize)
