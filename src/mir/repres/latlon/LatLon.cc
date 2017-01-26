@@ -37,8 +37,8 @@ static size_t computeN(double first, double last, double inc, const char* n_name
     ASSERT(inc > 0);
 
     size_t p = size_t((last - first) / inc);
-    double d0 = fabs(last - (first + p * inc));
-    double d1 = fabs(last - (first + (p + 1) * inc));
+    double d0 = std::abs(last - (first + p * inc));
+    double d1 = std::abs(last - (first + (p + 1) * inc));
     ASSERT(d0 != d1);
 
     size_t n = p + (d0<d1? 0 : 1);
