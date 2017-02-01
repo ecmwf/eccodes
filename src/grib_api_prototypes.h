@@ -172,7 +172,6 @@ void grib_hash_array_value_delete(grib_context *c, grib_hash_array_value *v);
 /* grib_bufr_descriptor.c */
 bufr_descriptor *grib_bufr_descriptor_new(grib_accessor *tables_accessor, int code, int *err);
 bufr_descriptor *grib_bufr_descriptor_clone(bufr_descriptor *d);
-void grib_bufr_descriptor_set_values(bufr_descriptor *v, int scale, int reference, int width);
 int grib_bufr_descriptor_set_code(grib_accessor *tables_accessor, int code, bufr_descriptor *v);
 void grib_bufr_descriptor_set_reference(bufr_descriptor *v, double reference);
 void grib_bufr_descriptor_set_width(bufr_descriptor *v, long width);
