@@ -75,7 +75,7 @@ int main(int argc,char* argv[])
         /* loop over the keys */
         while(codes_bufr_keys_iterator_next(kiter))
         {
-            /* get key name. This needs to be free'd later */
+            /* get key name */
             char* name = codes_bufr_keys_iterator_get_name(kiter);
             printf("  %s=",name);
 
@@ -96,7 +96,6 @@ int main(int argc,char* argv[])
                 /* for arrays */
                 printf("(array of %ld)\n",klen);
             }
-            free(name);
         }
 
         /* delete key iterator */
