@@ -1641,7 +1641,7 @@ static hypercube *new_hypercube(const request *r)
     int total = 0, count = 0;
     int n = 0;
     const char *val = 0;
-
+    Assert(h);
     h->r = clone_one_request(r);
     h->cube = empty_request("CUBE");
 
@@ -1746,8 +1746,10 @@ static hypercube *new_hypercube_from_mars_request(const request *r)
     }
 
     n = count_values(s.c->cube, "axis");
-    if(n)
+    if(n) {
         s.c->compare = (namecmp*)calloc(sizeof(namecmp), n);
+        Assert(s.c->compare);
+    }
 
     for(i = 0; i < n; i++)
         s.c->compare[i] = comparator(get_value(s.c->cube, "axis", i));
@@ -1771,8 +1773,10 @@ static hypercube *new_simple_hypercube_from_mars_request(const request *r)
 
     free_one_request(s.r);
     n = count_values(s.c->cube, "axis");
-    if(n)
+    if(n) {
         s.c->compare = (namecmp*)calloc(sizeof(namecmp), n);
+        Assert(s.c->compare);
+    }
 
     for(i = 0; i < n; i++)
         s.c->compare[i] = comparator(get_value(s.c->cube, "axis", i));
