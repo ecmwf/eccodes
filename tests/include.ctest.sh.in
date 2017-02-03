@@ -26,7 +26,7 @@ if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
 fi
 
 # ecCodes tests are in the PROJECT_BINARY_DIR
-test_dir=@PROJECT_BINARY_DIR@/tests/
+test_dir=@PROJECT_BINARY_DIR@/tests
 
 # use samples from binary dir to test if installation will be correct
 samp_dir="@CMAKE_BINARY_DIR@/@ECCODES_SAMPLES_SUFF@"
