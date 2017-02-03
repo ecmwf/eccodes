@@ -14,7 +14,7 @@ then
   echo SKIP: $0
   exit
 fi
-${examples_dir}c_grib_multi_write ${data_dir}/sample.grib2 ${data_dir}/multi_sample.grib2 > /dev/null
+${examples_dir}/c_grib_multi_write ${data_dir}/sample.grib2 ${data_dir}/multi_sample.grib2 > /dev/null
 
 ${tools_dir}/grib_get -p step ${data_dir}/multi_sample.grib2 > ${data_dir}/multi_step.test
 

@@ -13,7 +13,7 @@ GRIB1=${data_dir}/regular_latlon_surface.grib1
 GRIB2=${proj_dir}/samples/regular_ll_sfc_grib2.tmpl
 OUT=temp.$$.out
 
-${examples_dir}c_grib_set_pv $GRIB1 $OUT > /dev/null
-${examples_dir}c_grib_set_pv $GRIB2 $OUT > /dev/null
+${examples_dir}/c_grib_set_pv $GRIB1 $OUT > /dev/null
+${examples_dir}/c_grib_set_pv $GRIB2 $OUT > /dev/null
 
 rm -f $OUT

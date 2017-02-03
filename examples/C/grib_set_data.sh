@@ -11,6 +11,6 @@
 
 OUT=temp.c_grib_set_data.out.grib
 
-${examples_dir}c_grib_set_data $OUT
+${examples_dir}/c_grib_set_data $OUT
 
 rm -f $OUT

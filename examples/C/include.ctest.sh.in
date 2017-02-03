@@ -16,7 +16,7 @@ ECCODES_DEFINITION_PATH="${def_dir}"
 export ECCODES_DEFINITION_PATH
 
 tools_dir=@CMAKE_BINARY_DIR@/bin
-examples_dir=@CMAKE_CURRENT_BINARY_DIR@/
+examples_dir=@CMAKE_CURRENT_BINARY_DIR@
 
 # If this environment variable is set, then run the
 # executables with valgrind

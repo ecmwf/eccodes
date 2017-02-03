@@ -16,6 +16,6 @@ fTmp=${label}.tmp
 # Create a file containing both GRIB and BUFR messages
 cat ${data_dir}/sample.grib2 ${data_dir}/bufr/syno_multi.bufr >$fTmp
 
-${examples_dir}c_get_product_kind $fTmp
+${examples_dir}/c_get_product_kind $fTmp
 
 rm -f $fTmp

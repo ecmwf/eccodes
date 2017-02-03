@@ -10,5 +10,5 @@
 . ./include.sh
 
 for i in `seq 0 100`; do
-   ${examples_dir}c_grib_pthreads
+   ${examples_dir}/c_grib_pthreads
 done

@@ -7,6 +7,6 @@ then
   echo SKIP: $0
   exit
 fi
-${examples_dir}multi > /dev/null
+${examples_dir}/multi > /dev/null
 
 

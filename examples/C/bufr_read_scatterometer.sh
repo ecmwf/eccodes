@@ -23,7 +23,7 @@ rm -f $fTmp
 REDIRECT=/dev/null
 
 # Write the key values into a file
-${examples_dir}c_bufr_read_scatterometer 2> $REDIRECT > $fTmp
+${examples_dir}/c_bufr_read_scatterometer 2> $REDIRECT > $fTmp
 
 # Check the results
 grep -q "Number of values: 2016" $fTmp

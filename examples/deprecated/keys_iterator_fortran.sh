@@ -2,6 +2,6 @@
 
 . ./include.sh
 
-${examples_dir}keys_iterator_fortran > /dev/null
+${examples_dir}/keys_iterator_fortran > /dev/null
 
 

@@ -12,7 +12,7 @@ then
   ECCODES_SAMPLES_PATH=$cpath/templates
   export ECCODES_SAMPLES_PATH
   tools_dir=$cpath/tools
-  examples_dir=$cpath/examples/
+  examples_dir=$cpath/examples
   data_dir=$cpath/data
 else
   echo "Skipping test $0"

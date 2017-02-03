@@ -53,7 +53,7 @@ cat > ${REF} <<EOF
 EOF
 
 INPUT=${data_dir}/bufr/metar_with_2_bias.bufr
-${examples_dir}c_bufr_copy_data ${INPUT} ${TEMP}
+${examples_dir}/c_bufr_copy_data ${INPUT} ${TEMP}
 
 # The input and output BUFR messages should be different
 set +e

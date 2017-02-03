@@ -9,5 +9,5 @@
 
 . ./include.sh
 
-${examples_dir}c_grib_list
+${examples_dir}/c_grib_list
 

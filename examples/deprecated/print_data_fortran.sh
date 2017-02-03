@@ -2,7 +2,7 @@
 
 . ./include.sh
 
-numberOfValues=`${examples_dir}print_data_fortran | grep values | awk '{print $1}'`
+numberOfValues=`${examples_dir}/print_data_fortran | grep values | awk '{print $1}'`
 
 if [ $numberOfValues -ne 99200 ]
 then
