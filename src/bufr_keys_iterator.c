@@ -10,17 +10,18 @@
 
 #include "grib_api_internal.h"
 
-grib_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h)
+bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h)
 {
-    grib_keys_iterator* ki=NULL;
+    bufr_keys_iterator* ki=NULL;
 
     if (!h) return NULL;
 
-    ki= (grib_keys_iterator*)grib_context_malloc_clear(h->context,sizeof(grib_keys_iterator));
+    ki= (bufr_keys_iterator*)grib_context_malloc_clear(h->context,sizeof(bufr_keys_iterator));
     if (!ki) return NULL;
 
-    ki->filter_flags = 0;
     ki->handle       = h;
+    Assert(h->product_kind==PRODUCT_BUFR);
+    ki->names        = NULL;
     ki->i_curr_attribute=0;
     ki->accessor_flags_only= GRIB_ACCESSOR_FLAG_DUMP;
     ki->accessor_flags_skip= GRIB_ACCESSOR_FLAG_HIDDEN | GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -33,17 +34,17 @@ grib_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h)
     return ki;
 }
 
-grib_keys_iterator* codes_bufr_data_section_keys_iterator_new(grib_handle* h)
+bufr_keys_iterator* codes_bufr_data_section_keys_iterator_new(grib_handle* h)
 {
-    grib_keys_iterator* ki=NULL;
+    bufr_keys_iterator* ki=NULL;
 
     if (!h) return NULL;
 
-    ki= (grib_keys_iterator*)grib_context_malloc_clear(h->context,sizeof(grib_keys_iterator));
+    ki= (bufr_keys_iterator*)grib_context_malloc_clear(h->context,sizeof(bufr_keys_iterator));
     if (!ki) return NULL;
 
-    ki->filter_flags = 0;
     ki->handle       = h;
+    Assert(h->product_kind==PRODUCT_BUFR);
     ki->i_curr_attribute=0;
     ki->accessor_flags_only= GRIB_ACCESSOR_FLAG_BUFR_DATA | GRIB_ACCESSOR_FLAG_DUMP;
     ki->accessor_flags_skip= GRIB_ACCESSOR_FLAG_HIDDEN | GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -56,7 +57,7 @@ grib_keys_iterator* codes_bufr_data_section_keys_iterator_new(grib_handle* h)
     return ki;
 }
 
-static void mark_seen(grib_keys_iterator* ki,const char* name)
+static void mark_seen(bufr_keys_iterator* ki,const char* name)
 {
     int* r=(int*)grib_trie_get(ki->seen,name);
 
@@ -68,20 +69,13 @@ static void mark_seen(grib_keys_iterator* ki,const char* name)
     }
 }
 
-/*
-static int was_seen(grib_keys_iterator* ki,const char* name)
-{
-    return grib_trie_get(ki->seen,name) != NULL;
-}
- */
-
-int codes_bufr_keys_iterator_rewind(grib_keys_iterator* ki)
+int codes_bufr_keys_iterator_rewind(bufr_keys_iterator* ki)
 {
     ki->at_start = 1;
     return GRIB_SUCCESS;
 }
 
-static int skip(grib_keys_iterator* kiter)
+static int skip(bufr_keys_iterator* kiter)
 {
     if(kiter->current->sub_section)
         return 1;
@@ -101,7 +95,7 @@ static int skip(grib_keys_iterator* kiter)
     return 0;
 }
 
-static int next_attribute(grib_keys_iterator* kiter)
+static int next_attribute(bufr_keys_iterator* kiter)
 {
     int *r=0;
     int i_curr_attribute;
@@ -142,10 +136,9 @@ static int next_attribute(grib_keys_iterator* kiter)
         kiter->i_curr_attribute=0;
         return next_attribute(kiter);
     }
-
 }
 
-int codes_bufr_keys_iterator_next(grib_keys_iterator* kiter)
+int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter)
 {
     if(kiter->at_start)
     {
@@ -176,7 +169,7 @@ int codes_bufr_keys_iterator_next(grib_keys_iterator* kiter)
     return kiter->current != NULL;
 }
 
-char* codes_bufr_keys_iterator_get_name(grib_keys_iterator* kiter)
+char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter)
 {
     int *r=0;
     char* ret=0;
@@ -199,18 +192,18 @@ char* codes_bufr_keys_iterator_get_name(grib_keys_iterator* kiter)
     return ret;
 }
 
-grib_accessor* codes_bufr_keys_iterator_get_accessor(grib_keys_iterator* kiter)
+grib_accessor* codes_bufr_keys_iterator_get_accessor(bufr_keys_iterator* kiter)
 {
     return kiter->current;
 }
 
-int codes_bufr_keys_iterator_delete( grib_keys_iterator* kiter)
+int codes_bufr_keys_iterator_delete(bufr_keys_iterator* kiter)
 {
     if (kiter) {
         if(kiter->seen)
             grib_trie_delete(kiter->seen);
-        if (kiter->name_space)
-            grib_context_free(kiter->handle->context,kiter->name_space);
+        /*if (kiter->name_space)
+            grib_context_free(kiter->handle->context,kiter->name_space);*/
         grib_context_free(kiter->handle->context,kiter);
     }
     return 0;

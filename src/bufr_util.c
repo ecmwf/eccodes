@@ -53,7 +53,7 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
 
 char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin,grib_handle* hout, size_t* nkeys, int* err)
 {
-    grib_keys_iterator* kiter=NULL;
+    bufr_keys_iterator* kiter=NULL;
     char* name=0;
     char** keys=NULL;
     grib_sarray* k=0;
@@ -85,13 +85,13 @@ char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin,grib_handle* hou
         /* Do the pack if something was copied */
         *err=grib_set_long(hout, "pack", 1);
     }
-    grib_keys_iterator_delete(kiter);
+    codes_bufr_keys_iterator_delete(kiter);
     return keys;
 }
 
 int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
 {
-    grib_keys_iterator* kiter=NULL;
+    bufr_keys_iterator* kiter=NULL;
     char* name=0;
     int err=0;
     int nkeys=0;
@@ -121,6 +121,6 @@ int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
         err=grib_set_long(hout, "pack", 1);
     }
 
-    grib_keys_iterator_delete(kiter);
+    codes_bufr_keys_iterator_delete(kiter);
     return err;
 }
