@@ -569,9 +569,9 @@ static int _push_bufr_keys_iterator(bufr_keys_iterator *i)
 
     the_new = (l_bufr_keys_iterator*)malloc(sizeof(l_bufr_keys_iterator));
     Assert(the_new);
-    the_new->id   = myindex;
-    the_new->i    = i;
-    the_new->next = current;
+    the_new->id    = myindex;
+    the_new->i     = i;
+    the_new->next  = current;
     previous->next = the_new;
 
     return myindex;

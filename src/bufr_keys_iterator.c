@@ -20,7 +20,7 @@ bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h)
     if (!ki) return NULL;
 
     ki->handle       = h;
-    Assert(h->product_kind==PRODUCT_BUFR);
+    Assert(h->product_kind == PRODUCT_BUFR);
     ki->names        = NULL;
     ki->i_curr_attribute=0;
     ki->accessor_flags_only= GRIB_ACCESSOR_FLAG_DUMP;
@@ -29,7 +29,7 @@ bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h)
     ki->at_start     = 1;
     ki->match        = 0;
 
-    if(ki->seen==NULL ) ki->seen = grib_trie_new(h->context);
+    if (ki->seen==NULL ) ki->seen = grib_trie_new(h->context);
 
     return ki;
 }
@@ -44,7 +44,7 @@ bufr_keys_iterator* codes_bufr_data_section_keys_iterator_new(grib_handle* h)
     if (!ki) return NULL;
 
     ki->handle       = h;
-    Assert(h->product_kind==PRODUCT_BUFR);
+    Assert(h->product_kind == PRODUCT_BUFR);
     ki->i_curr_attribute=0;
     ki->accessor_flags_only= GRIB_ACCESSOR_FLAG_BUFR_DATA | GRIB_ACCESSOR_FLAG_DUMP;
     ki->accessor_flags_skip= GRIB_ACCESSOR_FLAG_HIDDEN | GRIB_ACCESSOR_FLAG_READ_ONLY;
