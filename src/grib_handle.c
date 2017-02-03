@@ -317,7 +317,9 @@ int grib_write_message(grib_handle* h,const char* file,const char* mode)
 
 grib_handle* grib_handle_clone ( grib_handle* h )
 {
-    return grib_handle_new_from_message_copy ( h->context, h->buffer->data, h->buffer->ulength );
+    grib_handle* result = grib_handle_new_from_message_copy ( h->context, h->buffer->data, h->buffer->ulength );
+    result->product_kind = h->product_kind;
+    return result;
 }
 
 grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind product, int* error)
