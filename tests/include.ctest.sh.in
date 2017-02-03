@@ -11,8 +11,7 @@ proj_dir=@PROJECT_SOURCE_DIR@
 data_dir=@PROJECT_BINARY_DIR@/data
 
 # use definitions from binary dir to test if installation will be correct
-# Note: 'definitions' is a symlink so must put final slash to interpret as directory
-def_dir="@CMAKE_BINARY_DIR@/@ECCODES_DEFINITION_SUFF@/"
+def_dir="@CMAKE_BINARY_DIR@/@ECCODES_DEFINITION_SUFF@"
 ECCODES_DEFINITION_PATH="${def_dir}"
 export ECCODES_DEFINITION_PATH
 
