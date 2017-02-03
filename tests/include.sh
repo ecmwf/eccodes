@@ -45,14 +45,14 @@ else
       tools_dir="valgrind --error-exitcode=1 -q $cpath/tools"
     fi
 
-    tigge_dir=$cpath/tigge/
+    tigge_dir=$cpath/tigge
     data_dir=$cpath/data
     test_dir=$cpath/tests/
     def_dir=$cpath/definitions
     src_dir=$cpath/src
   else
     tools_dir="."
-    tigge_dir=""
+    tigge_dir="."
   fi
 
   if [ -z "${GRIB_API_INCLUDE}" ]

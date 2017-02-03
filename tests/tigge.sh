@@ -17,13 +17,13 @@ dir="${data_dir}/tigge/"
 # check tigge global
 for file in ${dir}tigge_*.grib
 do
-   ${tigge_dir}tigge_check ${file} 2> $REDIRECT > $REDIRECT
+   ${tigge_dir}/tigge_check ${file} 2> $REDIRECT > $REDIRECT
 done
 
 # check tigge-lam
 for file in ${dir}tiggelam_*.grib
 do
-   ${tigge_dir}tigge_check -l ${file} 2> $REDIRECT > $REDIRECT
+   ${tigge_dir}/tigge_check -l ${file} 2> $REDIRECT > $REDIRECT
 done
 
 
@@ -31,7 +31,7 @@ done
 # All the GRIB files in the samples are non-TIGGE
 for file in ${ECCODES_SAMPLES_PATH}/regular_*.tmpl; do
    set +e
-   ${tigge_dir}tigge_check ${file} 2> $REDIRECT > $REDIRECT
+   ${tigge_dir}/tigge_check ${file} 2> $REDIRECT > $REDIRECT
    status=$?
    set -e
    if [ $status -eq 0 ]; then
@@ -64,7 +64,7 @@ tigge_bad_validity="
 "
 for file in $tigge_bad_validity; do
    set +e
-   ${tigge_dir}tigge_check -w ${dir}${file} > $TEMP
+   ${tigge_dir}/tigge_check -w ${dir}${file} > $TEMP
    status=$?
    set -e
    [ $status -eq 1 ]
