@@ -32,11 +32,11 @@ else
     export ECCODES_DEFINITION_PATH
     ECCODES_SAMPLES_PATH=$cpath/samples
     export ECCODES_SAMPLES_PATH
-    tools_dir=$cpath/tools/
+    tools_dir=$cpath/tools
     examples_dir=$cpath/examples/C/
 
     if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
-      tools_dir="valgrind --error-exitcode=1 -q $cpath/tools/"
+      tools_dir="valgrind --error-exitcode=1 -q $cpath/tools"
       examples_dir="valgrind --error-exitcode=1 -q $cpath/examples/C/"
     fi
 
@@ -61,6 +61,6 @@ else
   # Download the data needed for tests
   ${data_dir}/download.sh "${data_dir}"
 
-  #${tools_dir}codes_info
+  #${tools_dir}/codes_info
   set -u
 fi

@@ -17,18 +17,18 @@ outfile=${data_dir}/set.grib1
 
 rm -f $outfile || true
 
-${tools_dir}grib_set -v -p levtype,centre,levtype:l,centre:l -s levtype=pl,centre=80 $infile $outfile >$REDIRECT
+${tools_dir}/grib_set -v -p levtype,centre,levtype:l,centre:l -s levtype=pl,centre=80 $infile $outfile >$REDIRECT
 
-levtype=`${tools_dir}grib_get -p levtype $outfile`
+levtype=`${tools_dir}/grib_get -p levtype $outfile`
 [ $levtype = "pl" ]
 
-centre=`${tools_dir}grib_get -p centre $outfile`
+centre=`${tools_dir}/grib_get -p centre $outfile`
 [ $centre = "cnmc" ]
 
-levtype=`${tools_dir}grib_get -p levtype:l $outfile`
+levtype=`${tools_dir}/grib_get -p levtype:l $outfile`
 [ $levtype -eq 100 ]
 
-centre=`${tools_dir}grib_get -p centre:l $outfile`
+centre=`${tools_dir}/grib_get -p centre:l $outfile`
 [ $centre -eq 80 ]
 
 rm -f $outfile || true
@@ -38,23 +38,23 @@ outfile=${data_dir}/set.grib2
 
 rm -f $outfile || true
 
-${tools_dir}grib_set -v -p levtype:l,centre:s  -s levtype:l=100,centre:s=cnmc $infile $outfile >$REDIRECT
+${tools_dir}/grib_set -v -p levtype:l,centre:s  -s levtype:l=100,centre:s=cnmc $infile $outfile >$REDIRECT
 
-levtype=`${tools_dir}grib_get -p levtype $outfile`
+levtype=`${tools_dir}/grib_get -p levtype $outfile`
 [ $levtype = "pl" ]
 
-centre=`${tools_dir}grib_get -p centre $outfile`
+centre=`${tools_dir}/grib_get -p centre $outfile`
 [ $centre = "cnmc" ]
 
-levtype=`${tools_dir}grib_get -p levtype:l $outfile`
+levtype=`${tools_dir}/grib_get -p levtype:l $outfile`
 [ $levtype -eq 100 ]
 
-centre=`${tools_dir}grib_get -p centre:l $outfile`
+centre=`${tools_dir}/grib_get -p centre:l $outfile`
 [ $centre -eq 80 ]
 
 set +e
 # This is expected to fail
-${tools_dir}grib_set -p levtype $infile $outfile 2> $REDIRECT > $REDIRECT
+${tools_dir}/grib_set -p levtype $infile $outfile 2> $REDIRECT > $REDIRECT
 [ $? -ne 0 ]
 set -e
 
@@ -64,13 +64,13 @@ angleInMicroDegrees=130998900
 files="GRIB2.tmpl regular_gg_pl_grib2.tmpl reduced_gg_pl_320_grib2.tmpl polar_stereographic_pl_grib2.tmpl"
 for f in $files; do
     f=$ECCODES_SAMPLES_PATH/$f
-    ${tools_dir}grib_set -s longitudeOfFirstGridPointInDegrees=$angleInDegrees $f $outfile
+    ${tools_dir}/grib_set -s longitudeOfFirstGridPointInDegrees=$angleInDegrees $f $outfile
     grib_check_key_equals $outfile longitudeOfFirstGridPoint $angleInMicroDegrees
 done
 
 # GRIB-943: centre code table
-${tools_dir}grib_set -s centre=289 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $outfile
-${tools_dir}grib_dump -O $outfile | grep -q 'centre = 289.*Zambia'
+${tools_dir}/grib_set -s centre=289 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $outfile
+${tools_dir}/grib_dump -O $outfile | grep -q 'centre = 289.*Zambia'
 
 
 rm -f $outfile || true

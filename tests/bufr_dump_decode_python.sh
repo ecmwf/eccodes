@@ -36,7 +36,7 @@ do
   fi
 
   # Generate Python code from BUFR file
-  ${tools_dir}bufr_dump -Dpython $inputBufr > $tempSrc
+  ${tools_dir}/bufr_dump -Dpython $inputBufr > $tempSrc
 
   $PYTHON $tempSrc $inputBufr
 

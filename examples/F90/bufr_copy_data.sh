@@ -57,7 +57,7 @@ INPUT=metar_with_2_bias.bufr
 ${examples_dir}eccodes_f_bufr_copy_data ${INPUT} ${TEMP}
 # The input and output BUFR messages should be different
 set +e
-${tools_dir}bufr_compare ${TEMP} ${INPUT} > ${MYLOG}
+${tools_dir}/bufr_compare ${TEMP} ${INPUT} > ${MYLOG}
 status=$?
 set -e
 [ $status -eq 1 ]

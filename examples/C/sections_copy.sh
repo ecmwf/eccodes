@@ -19,7 +19,7 @@ ${examples_dir}c_sections_copy $REGUL_GRID_FILE $GAUSS_GRID_FILE g $OUTPUT >/dev
 
 # Now the output should have a regular grid
 # but its date should be the same as the Gaussian grid sample
-grid_tmpl=`${tools_dir}grib_get -p gridType,date $OUTPUT`
+grid_tmpl=`${tools_dir}/grib_get -p gridType,date $OUTPUT`
 [ "$grid_tmpl" = "regular_ll 20100912" ]
 
 
@@ -29,7 +29,7 @@ ${examples_dir}c_sections_copy $GAUSS_GRID_FILE $REGUL_GRID_FILE g $OUTPUT >/dev
 
 # Now the output should have a gaussian grid
 # but its date should be the same as the regular grid
-grid_tmpl=`${tools_dir}grib_get -p gridType,date $OUTPUT`
+grid_tmpl=`${tools_dir}/grib_get -p gridType,date $OUTPUT`
 [ "$grid_tmpl" = "reduced_gg 20070323" ]
 
 
@@ -39,7 +39,7 @@ ${examples_dir}c_sections_copy $REGUL_GRID_FILE $GAUSS_GRID_FILE gp $OUTPUT >/de
 
 # Now the output should have a regular grid
 # and its date should be the same as the regular latlon
-grid_tmpl=`${tools_dir}grib_get -p gridType,date $OUTPUT`
+grid_tmpl=`${tools_dir}/grib_get -p gridType,date $OUTPUT`
 [ "$grid_tmpl" = "regular_ll 20070323" ]
 
 
@@ -48,6 +48,6 @@ grid_tmpl=`${tools_dir}grib_get -p gridType,date $OUTPUT`
 ${examples_dir}c_sections_copy $REGUL_GRID_FILE $GAUSS_GRID_FILE p,l,g,d,b $OUTPUT >/dev/null
 
 # Now the output should be identical to the regular grib
-${tools_dir}grib_compare $REGUL_GRID_FILE $OUTPUT
+${tools_dir}/grib_compare $REGUL_GRID_FILE $OUTPUT
 
 rm -f $OUTPUT

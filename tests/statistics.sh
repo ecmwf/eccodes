@@ -30,7 +30,7 @@ print "max=[max] min=[min] average=[average]";
 
 EOF
 
-${tools_dir}grib_filter statistics.filter ${data_dir}/$file > statistics.out
+${tools_dir}/grib_filter statistics.filter ${data_dir}/$file > statistics.out
 
 diff statistics.out ${data_dir}/statistics.out.good
 

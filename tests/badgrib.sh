@@ -12,5 +12,5 @@
 
 REDIRECT=/dev/null
 
-${tools_dir}grib_ls -7 ${data_dir}/bad.grib 2> $REDIRECT > $REDIRECT
+${tools_dir}/grib_ls -7 ${data_dir}/bad.grib 2> $REDIRECT > $REDIRECT
 

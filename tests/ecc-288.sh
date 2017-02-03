@@ -26,17 +26,17 @@ cat > $tempRules <<EOF
  write;
 EOF
 
-${tools_dir}bufr_filter -o $tempOut $tempRules $BufrFile
+${tools_dir}/bufr_filter -o $tempOut $tempRules $BufrFile
 
 # There is a difference in localLongitude, rel error=6.58627e-06
 # So this should fail
 set +e
-${tools_dir}bufr_compare $tempOut $BufrFile
+${tools_dir}/bufr_compare $tempOut $BufrFile
 status=$?
 set -e
 [ $status -eq 1 ]
 
 # Now apply the option and now it should pass
-${tools_dir}bufr_compare -R localLongitude=6.59e-06  $tempOut $BufrFile
+${tools_dir}/bufr_compare -R localLongitude=6.59e-06  $tempOut $BufrFile
 
 rm -rf $tempOut $tempRules

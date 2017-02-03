@@ -59,7 +59,7 @@ do
   filePath=${data_dir}/bufr/$file
 
   # Generate F90 code from BUFR file
-  ${tools_dir}bufr_dump -Dfortran ${filePath} > $tempSrc
+  ${tools_dir}/bufr_dump -Dfortran ${filePath} > $tempSrc
 
   # Too large for this test
   if [ "$file" = "ias1_240.bufr" ]; then

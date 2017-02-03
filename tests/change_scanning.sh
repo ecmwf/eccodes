@@ -54,17 +54,17 @@ EOF
       write "${data_dir}/scan1.grib";
 EOF
     
-      ${tools_dir}grib_filter ${data_dir}/change_scanning_${gridType}.filter $file
-      #ed=`${tools_dir}grib_get -p edition ${data_dir}/scan1.grib`
+      ${tools_dir}/grib_filter ${data_dir}/change_scanning_${gridType}.filter $file
+      #ed=`${tools_dir}/grib_get -p edition ${data_dir}/scan1.grib`
       #echo edition=$ed
     
-      ${tools_dir}grib_set -s swapScanningX=1 ${data_dir}/scan1.grib ${data_dir}/scan.grib
-      ${tools_dir}grib_get_data -F "%g" ${data_dir}/scan.grib > ${data_dir}/scan_x_${gridType}_${Ni}_${Nj}.dump
+      ${tools_dir}/grib_set -s swapScanningX=1 ${data_dir}/scan1.grib ${data_dir}/scan.grib
+      ${tools_dir}/grib_get_data -F "%g" ${data_dir}/scan.grib > ${data_dir}/scan_x_${gridType}_${Ni}_${Nj}.dump
       diff ${data_dir}/scan_x_${gridType}_${Ni}_${Nj}.dump ${data_dir}/scan_x_${gridType}_${Ni}_${Nj}_good.dump
       rm -f ${data_dir}/scan_x_${gridType}_${Ni}_${Nj}.dump
     
-      ${tools_dir}grib_set -s swapScanningY=1 ${data_dir}/scan1.grib ${data_dir}/scan.grib
-      ${tools_dir}grib_get_data -F "%g" ${data_dir}/scan.grib > ${data_dir}/scan_y_${gridType}_${Ni}_${Nj}.dump
+      ${tools_dir}/grib_set -s swapScanningY=1 ${data_dir}/scan1.grib ${data_dir}/scan.grib
+      ${tools_dir}/grib_get_data -F "%g" ${data_dir}/scan.grib > ${data_dir}/scan_y_${gridType}_${Ni}_${Nj}.dump
       diff ${data_dir}/scan_y_${gridType}_${Ni}_${Nj}.dump ${data_dir}/scan_y_${gridType}_${Ni}_${Nj}_good.dump 
       rm -f ${data_dir}/scan_y_${gridType}_${Ni}_${Nj}.dump
       rm -f ${data_dir}/change_scanning_${gridType}.filter

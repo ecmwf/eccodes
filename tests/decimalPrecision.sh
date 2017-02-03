@@ -20,11 +20,11 @@ for file in $files; do
   infile=${data_dir}/$file
   outfile1=${infile}_decimalPrecision_1
   outfile2=${infile}_decimalPrecision_2
-  ${tools_dir}grib_set -r -s decimalScaleFactor=1,bitsPerValue=0 $infile $outfile1
-  ${tools_dir}grib_compare -P -c data:n $infile $outfile1 > $REDIRECT
+  ${tools_dir}/grib_set -r -s decimalScaleFactor=1,bitsPerValue=0 $infile $outfile1
+  ${tools_dir}/grib_compare -P -c data:n $infile $outfile1 > $REDIRECT
 
-  ${tools_dir}grib_set -s changeDecimalPrecision=1 $infile $outfile2
-  ${tools_dir}grib_compare -P -c data:n $infile $outfile2 > $REDIRECT
-  ${tools_dir}grib_compare $outfile1 $outfile2
+  ${tools_dir}/grib_set -s changeDecimalPrecision=1 $infile $outfile2
+  ${tools_dir}/grib_compare -P -c data:n $infile $outfile2 > $REDIRECT
+  ${tools_dir}/grib_compare $outfile1 $outfile2
   rm -f $outfile1 $outfile2 || true
 done

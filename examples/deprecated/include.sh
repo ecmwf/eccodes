@@ -11,7 +11,7 @@ then
   export ECCODES_DEFINITION_PATH
   ECCODES_SAMPLES_PATH=$cpath/templates
   export ECCODES_SAMPLES_PATH
-  tools_dir=$cpath/tools/
+  tools_dir=$cpath/tools
   examples_dir=$cpath/examples/
   data_dir=$cpath/data
 else
@@ -31,7 +31,7 @@ then
   GRIB_API_LIB=`pwd`/src
 fi
 
-#${tools_dir}codes_info
+#${tools_dir}/codes_info
 
 set -u
 

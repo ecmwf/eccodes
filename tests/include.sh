@@ -39,10 +39,10 @@ else
     export ECCODES_DEFINITION_PATH
     ECCODES_SAMPLES_PATH=$cpath/samples
     export ECCODES_SAMPLES_PATH
-    tools_dir=$cpath/tools/
+    tools_dir=$cpath/tools
 
     if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
-      tools_dir="valgrind --error-exitcode=1 -q $cpath/tools/"
+      tools_dir="valgrind --error-exitcode=1 -q $cpath/tools"
     fi
 
     tigge_dir=$cpath/tigge/
@@ -51,7 +51,7 @@ else
     def_dir=$cpath/definitions
     src_dir=$cpath/src
   else
-    tools_dir=""
+    tools_dir="."
     tigge_dir=""
   fi
 

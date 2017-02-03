@@ -88,7 +88,7 @@ v.grib2
 for file in $files; do
   infile=${data_dir}/$file
   if [ -f "$infile" ]; then
-    ${tools_dir}grib_get -p bitsPerValue $infile >/dev/null
+    ${tools_dir}/grib_get -p bitsPerValue $infile >/dev/null
   fi
 done
 
@@ -102,16 +102,16 @@ for file in `echo $files`; do
   outfile1=${infile}_bitsPerValue_1
   outfile2=${infile}_bitsPerValue_2
 
-  ${tools_dir}grib_set -r -s bitsPerValue=10 $infile $outfile1
+  ${tools_dir}/grib_set -r -s bitsPerValue=10 $infile $outfile1
 
-  ${tools_dir}grib_set -s setBitsPerValue=10 $infile $outfile2
+  ${tools_dir}/grib_set -s setBitsPerValue=10 $infile $outfile2
 
-  ${tools_dir}grib_compare $outfile1 $outfile2
+  ${tools_dir}/grib_compare $outfile1 $outfile2
 
   rm -f $outfile1 $outfile2 || true
 
 done
 
 # Extra test for grid_complex_spatial_differencing
-res=`${tools_dir}grib_get -p decimalScaleFactor,bitsPerValue ${data_dir}/gfs.c255.grib2`
+res=`${tools_dir}/grib_get -p decimalScaleFactor,bitsPerValue ${data_dir}/gfs.c255.grib2`
 [ "$res" = "1 20" ]

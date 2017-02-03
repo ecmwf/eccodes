@@ -42,14 +42,14 @@ done
 
 # GRIB-531
 TEMP=temp.$$.tigge
-${tools_dir}grib_get -nparameter ${data_dir}/tigge_pf_ecmwf.grib2 > $TEMP
+${tools_dir}/grib_get -nparameter ${data_dir}/tigge_pf_ecmwf.grib2 > $TEMP
 diff ${data_dir}/tigge_pf_ecmwf.grib2.ref $TEMP
 
 # GRIB-205. Changing productionStatusOfProcessedData should not change
 # anything else
 input=${dir}/tigge_ecmf_sfc_sd.grib
-${tools_dir}grib_set -s productionStatusOfProcessedData=5 $input $TEMP
-${tools_dir}grib_compare -bproductionStatusOfProcessedData $input $TEMP
+${tools_dir}/grib_set -s productionStatusOfProcessedData=5 $input $TEMP
+${tools_dir}/grib_compare -bproductionStatusOfProcessedData $input $TEMP
 
 rm -f $TEMP
 

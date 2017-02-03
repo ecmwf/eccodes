@@ -35,17 +35,17 @@ do
   fi
 
   # Generate Python code from BUFR file
-  ${tools_dir}bufr_dump -Epython $inputBufr > $tempSrc
+  ${tools_dir}/bufr_dump -Epython $inputBufr > $tempSrc
   # The python code always creates an output file called outfile.bufr
   $PYTHON $tempSrc
 
   # Check original BUFR file against one we generated from sample
-  ${tools_dir}bufr_compare $inputBufr $tempBufr
+  ${tools_dir}/bufr_compare $inputBufr $tempBufr
 
   TEMP_JSON1=${label}.$file.json
   TEMP_JSON2=${label}.$tempBufr.json
-  ${tools_dir}bufr_dump $inputBufr > $TEMP_JSON1
-  ${tools_dir}bufr_dump $tempBufr  > $TEMP_JSON2
+  ${tools_dir}/bufr_dump $inputBufr > $TEMP_JSON1
+  ${tools_dir}/bufr_dump $tempBufr  > $TEMP_JSON2
   diff $TEMP_JSON1 $TEMP_JSON2 2>/dev/null
   rm -f $TEMP_JSON1 $TEMP_JSON2
 

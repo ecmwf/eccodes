@@ -13,10 +13,10 @@ TEMP=c_grib_copy_message.grib
 
 INPUT=${data_dir}/reduced_gaussian_pressure_level.grib1
 ${examples_dir}c_grib_copy_message ${INPUT} ${TEMP}  > /dev/null
-${tools_dir}grib_compare -b hour ${INPUT} ${TEMP}
+${tools_dir}/grib_compare -b hour ${INPUT} ${TEMP}
 
 INPUT=${data_dir}/sample.grib2
 ${examples_dir}c_grib_copy_message ${INPUT} ${TEMP}  > /dev/null
-${tools_dir}grib_compare -b hour ${INPUT} ${TEMP}
+${tools_dir}/grib_compare -b hour ${INPUT} ${TEMP}
 
 rm -f ${TEMP}

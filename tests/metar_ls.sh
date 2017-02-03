@@ -34,7 +34,7 @@ export METAR_YEAR=2015
 export METAR_MONTH=4
 
 echo $f >> $fLog
-${tools_dir}metar_ls $f >> $fLog
+${tools_dir}/metar_ls $f >> $fLog
 
 #-------------------------------------------
 # Test "-p" switch
@@ -43,7 +43,7 @@ ref_ls=$f".ls.ref"
 res_ls=$f".ls.test"
 REDIRECT=/dev/null
 
-${tools_dir}/metar_ls -pCCCC,latitude,longitude,dateTime,elevation,temperature,dewPointTemperature,qnh $f 2> $REDIRECT > $res_ls
+${tools_dir}//metar_ls -pCCCC,latitude,longitude,dateTime,elevation,temperature,dewPointTemperature,qnh $f 2> $REDIRECT > $res_ls
 
 diff $ref_ls $res_ls >$REDIRECT 2> $REDIRECT
 
