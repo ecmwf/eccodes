@@ -54,7 +54,7 @@ cat > ${REF} <<EOF
 EOF
 
 INPUT=metar_with_2_bias.bufr
-$PYTHON ${examples_src}bufr_copy_data.py ${INPUT} ${TEMP}
+$PYTHON ${examples_src}/bufr_copy_data.py ${INPUT} ${TEMP}
 # The input and output BUFR messages should be different
 set +e
 ${tools_dir}/bufr_compare ${TEMP} ${INPUT} > ${MYLOG}
