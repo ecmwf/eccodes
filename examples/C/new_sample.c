@@ -361,7 +361,7 @@ int main(int argc,const char** argv)
     vdouble[ 484] =       1; vdouble[ 485] =       1; vdouble[ 486] =       1; vdouble[ 487] =       1;
     vdouble[ 488] =       1; vdouble[ 489] =       1; vdouble[ 490] =       1; vdouble[ 491] =       1;
     vdouble[ 492] =       1; vdouble[ 493] =       1; vdouble[ 494] =       1; vdouble[ 495] =       1;
-   
+
     CODES_CHECK(codes_set_double_array(h,"values",vdouble,size),0);
     free(vdouble);
     CODES_CHECK(codes_set_long(h,"dirty_statistics",1),0);
