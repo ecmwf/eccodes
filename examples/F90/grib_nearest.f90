@@ -2,12 +2,12 @@
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-! 
+!
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!  Description: how to use codes_grib_find_nearest and codes_get_element 
+!  Description: how to use codes_grib_find_nearest and codes_get_element
 !
 !
 !
@@ -43,15 +43,15 @@ program find
   close(unit=1)
   call codes_open_file(infile, &
        '../../data/reduced_gaussian_lsm.grib1','r')
-  
+
   !     a new grib message is loaded from file
   !     igrib is the grib id to be used in subsequent calls
   call codes_grib_new_from_file(infile,igrib)
-  
+
 
   call codes_grib_find_nearest(igrib, .true., lats, lons, nearest_lats, nearest_lons,lsm_values, distances, indexes)
   call codes_release(igrib)
-  
+
   call codes_close_file(infile)
 
 ! will apply it to another GRIB

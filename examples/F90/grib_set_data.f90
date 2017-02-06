@@ -2,7 +2,7 @@
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-! 
+!
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
@@ -36,7 +36,7 @@ program set_data
   ! But if your data array has a different size, then specify the grid geometry
   ! (e.g. keys Ni, Nj etc) and set the correct number of data values
   call codes_get_size(igrib,'values',numberOfValues)
-  
+
   allocate(values(numberOfValues), stat=iret)
   d = 10e-8
   e = d
@@ -51,7 +51,7 @@ program set_data
     d = d + e
     cnt = cnt + 1
   end do
-  
+
   call codes_set(igrib, 'bitsPerValue', 16)
 
   ! set data values

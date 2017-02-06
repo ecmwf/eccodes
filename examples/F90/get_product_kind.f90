@@ -44,12 +44,12 @@ program get_product_kind
 
     ! load the next message
     call codes_new_from_file(ifile,ihandle,CODES_PRODUCT_ANY,iret)
-    
-    count=count+1
-    
-  end do  
 
-  ! close file  
+    count=count+1
+
+  end do
+
+  ! close file
   call codes_close_file(ifile)
 
 end program get_product_kind

@@ -21,7 +21,7 @@ integer            :: iret
 integer            :: ibufr
 integer            :: i, count=0
 integer(kind=4)    :: numberOfSubsets
-integer(kind=4)    :: blockNumber,stationNumber 
+integer(kind=4)    :: blockNumber,stationNumber
 character(100)     :: key
 !real(kind=8)       :: t2m
 
@@ -33,12 +33,12 @@ character(100)     :: key
 
   do while (iret/=CODES_END_OF_FILE)
 
-    ! Get and print some keys form the BUFR header 
+    ! Get and print some keys form the BUFR header
     write(*,*) 'message: ',count
 
-    ! We need to instruct ecCodes to expand all the descriptors 
+    ! We need to instruct ecCodes to expand all the descriptors
     ! i.e. unpack the data values
-    call codes_set(ibufr,'unpack',1);   
+    call codes_set(ibufr,'unpack',1);
 
     ! Find out the number of subsets
     call codes_get(ibufr,'numberOfSubsets',numberOfSubsets)
@@ -47,17 +47,17 @@ character(100)     :: key
     ! Loop over the subsets
     do i=1,numberOfSubsets
 
- 100    format('/subsetNumber=',I5.5,'/blockNumber')       
-        write(key,100) I       
+ 100    format('/subsetNumber=',I5.5,'/blockNumber')
+        write(key,100) I
         write(*,*) key
-                
+
         write(*,*) ' subsetNumber:',i
         ! read and print some data values
-         
+
         call codes_get(ibufr,key,blockNumber);
         write(*,*) '  blockNumber:',blockNumber
-        
-        write(key,*) '/subsetNumber=',I,'/stationNumber'       
+
+        write(key,*) '/subsetNumber=',I,'/stationNumber'
         call codes_get(ibufr,'stationNumber',stationNumber);
         write(*,*) '  stationNumber:',stationNumber
 
@@ -73,7 +73,7 @@ character(100)     :: key
 
   end do
 
-  ! Close file  
+  ! Close file
   call codes_close_file(ifile)
 
 end program bufr_subset

@@ -11,7 +11,7 @@
 ! FORTRAN 90 Implementation: bufr_get_string_array
 !
 ! Description: how to get an array of strings from a BUFR message.
- 
+
 program bufr_get_string_array
   use eccodes
   implicit none
@@ -20,7 +20,7 @@ program bufr_get_string_array
   integer            :: ibufr
   integer            :: strsize
   integer, parameter  :: max_strsize = 20
-  character(len=max_strsize) , dimension(:),allocatable   :: stationOrSiteName 
+  character(len=max_strsize) , dimension(:),allocatable   :: stationOrSiteName
 
   call codes_open_file(ifile,'../../data/bufr/pgps_110.bufr','r')
 
@@ -35,7 +35,7 @@ program bufr_get_string_array
   ! The width is given in bits
   strsize=strsize/8
 
-  ! max_strsize has to be set to a value >= to the size of the strings that we are getting 
+  ! max_strsize has to be set to a value >= to the size of the strings that we are getting
   ! back from the call to codes_get_string_array
   if (strsize > max_strsize) then
     print *,'stationOrSiteName array dimension is ',max_strsize,' and should be ',strsize
@@ -46,20 +46,20 @@ program bufr_get_string_array
   call codes_get_size(ibufr,'stationOrSiteName',n)
   allocate(stationOrSiteName(n))
 
-  ! Passing an array of strings stationOrSiteName which must be allocated beforehand 
+  ! Passing an array of strings stationOrSiteName which must be allocated beforehand
   call codes_get_string_array(ibufr,'stationOrSiteName',stationOrSiteName)
   do i=1,n
     write(*,'(A)')trim(stationOrSiteName(i))
   end do
 
-  ! Remember to deallocate 
+  ! Remember to deallocate
   deallocate(stationOrSiteName)
 
   ! Release memory associated with bufr handle
   ! ibufr won't be accessible after this
   call codes_release(ibufr)
 
-  ! Close file  
+  ! Close file
   call codes_close_file(ifile)
 
 end program bufr_get_string_array
