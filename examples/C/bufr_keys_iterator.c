@@ -53,7 +53,7 @@ int main(int argc,char* argv[])
     /* loop over the messages in the BUFR file */
     while ((h = codes_handle_new_from_file(NULL,in,PRODUCT_BUFR,&err)) != NULL || err != CODES_SUCCESS)
     {
-        codes_keys_iterator* kiter=NULL;
+        codes_bufr_keys_iterator* kiter=NULL;
         if (h == NULL) {
             printf("Error: unable to create handle for message %d\n",cnt);
             cnt++;

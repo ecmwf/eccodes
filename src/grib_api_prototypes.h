@@ -1144,13 +1144,13 @@ int grib_keys_iterator_get_bytes(grib_keys_iterator *kiter, unsigned char *v, si
 int grib_keys_iterator_get_native_type(grib_keys_iterator *kiter);
 
 /* bufr_keys_iterator.c */
-grib_keys_iterator *codes_bufr_keys_iterator_new(grib_handle *h);
-grib_keys_iterator *codes_bufr_data_section_keys_iterator_new(grib_handle *h);
-int codes_bufr_keys_iterator_rewind(grib_keys_iterator *ki);
-int codes_bufr_keys_iterator_next(grib_keys_iterator *kiter);
-char *codes_bufr_keys_iterator_get_name(grib_keys_iterator *kiter);
-grib_accessor *codes_bufr_keys_iterator_get_accessor(grib_keys_iterator *kiter);
-int codes_bufr_keys_iterator_delete(grib_keys_iterator *kiter);
+bufr_keys_iterator *codes_bufr_keys_iterator_new(grib_handle *h);
+bufr_keys_iterator *codes_bufr_data_section_keys_iterator_new(grib_handle *h);
+int codes_bufr_keys_iterator_rewind(bufr_keys_iterator *ki);
+int codes_bufr_keys_iterator_next(bufr_keys_iterator *kiter);
+char *codes_bufr_keys_iterator_get_name(bufr_keys_iterator *kiter);
+grib_accessor *codes_bufr_keys_iterator_get_accessor(bufr_keys_iterator *kiter);
+int codes_bufr_keys_iterator_delete(bufr_keys_iterator *kiter);
 
 /* grib_parse_utils.c */
 int grib_recompose_name(grib_handle *h, grib_accessor *observer, const char *uname, char *fname, int fail);

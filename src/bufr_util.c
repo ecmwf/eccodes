@@ -53,7 +53,7 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
 
 char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin,grib_handle* hout, size_t* nkeys, int* err)
 {
-    grib_keys_iterator* kiter=NULL;
+    bufr_keys_iterator* kiter=NULL;
     char* name=0;
     char** keys=NULL;
     grib_sarray* k=0;
@@ -76,7 +76,11 @@ char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin,grib_handle* hou
            cannot be copied because is not in the output handle
          */
         *err=codes_copy_key(hin, hout, name, 0);
-        if (*err==0) k=grib_sarray_push(hin->context, k, name);
+        if (*err==0) {
+            /* 'name' will be freed when we call codes_bufr_keys_iterator_delete so copy */
+            char* copied_name = strdup(name);
+            k=grib_sarray_push(hin->context, k, copied_name);
+        }
     }
     *nkeys=grib_sarray_used_size(k);
     keys=grib_sarray_get_array(hin->context, k);
@@ -85,13 +89,13 @@ char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin,grib_handle* hou
         /* Do the pack if something was copied */
         *err=grib_set_long(hout, "pack", 1);
     }
-    grib_keys_iterator_delete(kiter);
+    codes_bufr_keys_iterator_delete(kiter);
     return keys;
 }
 
 int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
 {
-    grib_keys_iterator* kiter=NULL;
+    bufr_keys_iterator* kiter=NULL;
     char* name=0;
     int err=0;
     int nkeys=0;
@@ -113,7 +117,6 @@ int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
          */
         err=codes_copy_key(hin, hout, name, 0);
         if (err==0) nkeys++;
-        grib_context_free(hin->context,name);
     }
 
     if (nkeys > 0) {
@@ -121,6 +124,6 @@ int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
         err=grib_set_long(hout, "pack", 1);
     }
 
-    grib_keys_iterator_delete(kiter);
+    codes_bufr_keys_iterator_delete(kiter);
     return err;
 }
