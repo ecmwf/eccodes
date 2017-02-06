@@ -3,6 +3,7 @@ from __future__ import print_function
 import os
 import re
 import sys
+import binascii
 
 assert len(sys.argv) > 2
 
@@ -37,10 +38,19 @@ for directory in dirs:
 
             print('static const unsigned char %s[] = {' % (name,), file=g)
 
-            with open(full) as f:
+            with open(full, 'rb') as f:
                 i = 0
-                for n in re.findall('..', f.read().encode("hex")):
-                    print("0x%s," % (n,), end="", file=g)
+                #Python 2
+                #fcont = f.read().encode("hex")
+                
+                #Python 2 and 3
+                fcont = binascii.hexlify(f.read())
+                
+                for n in range(0, len(fcont), 2):
+                    twoChars = fcont[n:n+2]
+                    if sys.version_info.major > 2:
+                        twoChars = str(twoChars,'ascii')
+                    print("0x%s," % (twoChars,), end="", file=g)
                     i += 1
                     if (i % 20) == 0:
                         print("", file=g)
