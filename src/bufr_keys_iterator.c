@@ -174,6 +174,7 @@ char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter)
     int *r=0;
     char* ret=0;
     Assert(kiter->current);
+    grib_context* c = kiter->handle->context;
 
     if (kiter->prefix) {
         int iattribute=kiter->i_curr_attribute-1;
@@ -189,6 +190,18 @@ char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter)
             sprintf(ret,"%s",kiter->current->name);
         }
     }
+
+    /* Store in list of names to be deleted later */
+    grib_string_list* sl=(grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
+    sl->value = ret;
+    if (!kiter->names) {
+        kiter->names = sl;
+    } else {
+        /*Add to end of linked list*/
+        grib_string_list* q = kiter->names;
+        while(q->next) q=q->next;
+        q->next = sl;
+    }
     return ret;
 }
 
@@ -200,11 +213,18 @@ grib_accessor* codes_bufr_keys_iterator_get_accessor(bufr_keys_iterator* kiter)
 int codes_bufr_keys_iterator_delete(bufr_keys_iterator* kiter)
 {
     if (kiter) {
+        grib_context* c = kiter->handle->context;
+        grib_string_list* sl = kiter->names;
+        while(sl) {
+            grib_string_list* n = sl->next;
+            grib_context_free(c, sl->value);
+            grib_context_free(c, sl);
+            sl = n;
+        }
+        kiter->names=NULL;
         if(kiter->seen)
             grib_trie_delete(kiter->seen);
-        /*if (kiter->name_space)
-            grib_context_free(kiter->handle->context,kiter->name_space);*/
-        grib_context_free(kiter->handle->context,kiter);
+        grib_context_free(c,kiter);
     }
     return 0;
 }

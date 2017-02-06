@@ -76,7 +76,11 @@ char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin,grib_handle* hou
            cannot be copied because is not in the output handle
          */
         *err=codes_copy_key(hin, hout, name, 0);
-        if (*err==0) k=grib_sarray_push(hin->context, k, name);
+        if (*err==0) {
+            /* 'name' will be freed when we call codes_bufr_keys_iterator_delete so copy */
+            char* copied_name = strdup(name);
+            k=grib_sarray_push(hin->context, k, copied_name);
+        }
     }
     *nkeys=grib_sarray_used_size(k);
     keys=grib_sarray_get_array(hin->context, k);
@@ -113,7 +117,6 @@ int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
          */
         err=codes_copy_key(hin, hout, name, 0);
         if (err==0) nkeys++;
-        grib_context_free(hin->context,name);
     }
 
     if (nkeys > 0) {
