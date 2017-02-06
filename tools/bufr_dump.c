@@ -17,18 +17,18 @@
 
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value*/
-        {"j:","s/f/a","\n\t\tJSON mode (JavaScript Object Notation)."
+        {"j:","s|f|a","\n\t\tJSON mode (JavaScript Object Notation)."
                 "\n\t\tOptions: s->structure, f->flat (only data), a->all attributes"
                 "\n\t\tDefault mode is structure.\n",
                 1,1,"s"},
-        {"D:","filter/fortran/python/C","\n\t\tDecoding dump. Provides instructions to decode the input message."
+        {"D:","filter|fortran|python|C","\n\t\tDecoding dump. Provides instructions to decode the input message."
                 "\n\t\tOptions: filter  -> filter instructions file to decode input BUFR"
                 "\n\t\t         fortran -> fortran program to decode the input BUFR"
                 "\n\t\t         python  -> python script to decode the input BUFR"
                 "\n\t\t         C       -> C program to decode the input BUFR"
                 "\n\t\tDefault mode is filter.\n",
                 0,1,"filter"},
-        {"E:","filter/fortran/python/C","\n\t\tEncoding dump. Provides instructions to create the input message."
+        {"E:","filter|fortran|python|C","\n\t\tEncoding dump. Provides instructions to create the input message."
                 "\n\t\tOptions: filter  -> filter instructions file to encode input BUFR"
                 "\n\t\t         fortran -> fortran program to encode the input BUFR"
                 "\n\t\t         python  -> python script to encode the input BUFR"

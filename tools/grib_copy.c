@@ -28,7 +28,7 @@ grib_option grib_options[]={
         {"q",0,0,1,0,0},
         {"p:",0,0,1,1,0},
         {"P:",0,0,0,1,0},
-        {"w:","key[:{s/d/i}]{=/!=}value,key[:{s/d/i}]=value,...","\n\t\tWhere clause."
+        {"w:","key[:{s|d|i}]{=|!=}value,key[:{s|d|i}]=value,...","\n\t\tWhere clause."
              "\n\t\tOnly grib messages matching the key/value constraints are "
              "copied to the\n\t\toutput_grib_file."
              "\n\t\tA valid constraint is of type key=value or key!=value."

@@ -79,7 +79,7 @@ is printed.
 
 echo "-# Some options are provided to compare only a set of keys in the messages. The option -H is used to compare only the headers 
 coded in the message, it doesn't compare the data values. 
-The option \"-c key1:[i/d/s/n],key2:[i/d/s/n],... \" can be used to 
+The option \"-c key1:[i|d|s|n],key2:[i|d|s|n],... \" can be used to 
 compare a set of keys or namespaces. The letter after the colon is optional and it is used to force the
 type used in the comparison which is otherwise assumed to be the native type of the key. 
 The possible types are:
