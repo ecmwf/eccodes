@@ -9,11 +9,11 @@ assert len(sys.argv) > 2
 
 dirs = [os.path.realpath(x) for x in sys.argv[1:-1]]
 print(dirs)
-# exit(1)
 
 FILES = {}
 NAMES = []
 
+# The last argument is the generated C file
 g = open(sys.argv[-1], "w")
 
 for directory in dirs:
@@ -42,10 +42,12 @@ for directory in dirs:
                 i = 0
                 #Python 2
                 #fcont = f.read().encode("hex")
-                
+
                 #Python 2 and 3
                 fcont = binascii.hexlify(f.read())
-                
+
+                # Read two characters at a time and convert to C hex
+                # e.g. 23 -> 0x23
                 for n in range(0, len(fcont), 2):
                     twoChars = fcont[n:n+2]
                     if sys.version_info.major > 2:
