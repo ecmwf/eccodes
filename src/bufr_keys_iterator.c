@@ -10,7 +10,7 @@
 
 #include "grib_api_internal.h"
 
-bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h)
+bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h, unsigned long filter_flags)
 {
     bufr_keys_iterator* ki=NULL;
 
@@ -25,6 +25,7 @@ bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h)
     ki= (bufr_keys_iterator*)grib_context_malloc_clear(h->context,sizeof(bufr_keys_iterator));
     if (!ki) return NULL;
 
+    ki->filter_flags = filter_flags;
     ki->handle       = h;
     Assert(h->product_kind == PRODUCT_BUFR);
     ki->names        = NULL;

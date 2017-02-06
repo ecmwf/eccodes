@@ -66,7 +66,7 @@ int main(int argc,char* argv[])
         CODES_CHECK(codes_set_long(h,"unpack",1),0);
 
         /* get BUFR key iterator */
-        kiter=codes_bufr_keys_iterator_new(h);
+        kiter=codes_bufr_keys_iterator_new(h,0);
         if (!kiter) {
             printf("ERROR: Unable to create BUFR keys iterator\n");
             exit(1);

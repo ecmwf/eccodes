@@ -1254,7 +1254,7 @@ attributes or by the namespace they belong to.
 *                       and namespace
 */
 grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space);
-bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h);
+bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h, unsigned long filter_flags);
 bufr_keys_iterator* codes_bufr_data_section_keys_iterator_new(grib_handle* h);
 
 /*! Step to the next iterator.

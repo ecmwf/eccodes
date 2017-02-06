@@ -1367,7 +1367,7 @@ static int _codes_f_bufr_keys_iterator_new_(int* gid,int* iterid) {
         return GRIB_NULL_HANDLE;
     }
     Assert(h->product_kind==PRODUCT_BUFR);
-    iter=codes_bufr_keys_iterator_new(h);
+    iter=codes_bufr_keys_iterator_new(h,0);
     if (iter)
         *iterid=push_bufr_keys_iterator(iter);
     else

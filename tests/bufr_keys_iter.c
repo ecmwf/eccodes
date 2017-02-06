@@ -36,7 +36,7 @@ int main(int argc,char* argv[])
     CODES_CHECK(codes_set_long(h,"unpack",1), 0);
 
     /*kiter=codes_bufr_data_section_keys_iterator_new(h);*/
-    kiter = codes_bufr_keys_iterator_new(h);
+    kiter = codes_bufr_keys_iterator_new(h, 0);
     while(codes_bufr_keys_iterator_next(kiter))
     {
         char* kname = codes_bufr_keys_iterator_get_name(kiter);

@@ -1144,7 +1144,7 @@ int grib_keys_iterator_get_bytes(grib_keys_iterator *kiter, unsigned char *v, si
 int grib_keys_iterator_get_native_type(grib_keys_iterator *kiter);
 
 /* bufr_keys_iterator.c */
-bufr_keys_iterator *codes_bufr_keys_iterator_new(grib_handle *h);
+bufr_keys_iterator *codes_bufr_keys_iterator_new(grib_handle *h, unsigned long filter_flags);
 bufr_keys_iterator *codes_bufr_data_section_keys_iterator_new(grib_handle *h);
 int codes_bufr_keys_iterator_rewind(bufr_keys_iterator *ki);
 int codes_bufr_keys_iterator_next(bufr_keys_iterator *kiter);
