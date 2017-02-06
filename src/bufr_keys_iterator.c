@@ -169,6 +169,8 @@ int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter)
     return kiter->current != NULL;
 }
 
+/* The return value is constructed so we allocate memory for it. */
+/* We free in codes_bufr_keys_iterator_delete() */
 char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter)
 {
     int *r=0;
@@ -197,10 +199,10 @@ char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter)
     if (!kiter->names) {
         kiter->names = sl;
     } else {
-        /*Add to end of linked list*/
-        grib_string_list* q = kiter->names;
-        while(q->next) q=q->next;
-        q->next = sl;
+        /* Add to beginning of list for speed. Order doesn't matter */
+        grib_string_list* tmp = kiter->names;
+        kiter->names = sl;
+        sl->next = tmp;
     }
     return ret;
 }
