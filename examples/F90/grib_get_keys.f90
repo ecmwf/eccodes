@@ -40,9 +40,6 @@ program grib_get_keys
 
   LOOP: DO WHILE (iret /= CODES_END_OF_FILE)
 
-    ! For debugging
-    call grib_dump(igrib)
-
     ! Check if the value of the key is MISSING
     is_missing=0;
     call codes_is_missing(igrib,'Ni',is_missing);
