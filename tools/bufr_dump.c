@@ -57,7 +57,7 @@ grib_option grib_options[]={
 
 char* grib_tool_description="Dump the content of a BUFR file in different formats.";
 char* grib_tool_name="bufr_dump";
-char* grib_tool_usage="[options] file file ...";
+char* grib_tool_usage="[options] bufr_file bufr_file ...";
 static int json=0;
 static char* json_option=0;
 static int first_handle=1;
