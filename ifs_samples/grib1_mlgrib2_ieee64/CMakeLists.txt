@@ -1,5 +1,5 @@
 set( _basedir grib1_mlgrib2_ieee64 )
-set( _destination_install ${CMAKE_INSTALL_PREFIX}/${ECCODES_IFS_SAMPLES_SUFF}/${_basedir} )
+set( _destination_install ${ECCODES_IFS_SAMPLES_SUFF}/${_basedir} )
 set( _destination_build   ${CMAKE_BINARY_DIR}/${ECCODES_IFS_SAMPLES_SUFF}/${_basedir} )
 
 list( APPEND ifs_samples_${_basedir}
