@@ -195,7 +195,7 @@ grib_option grib_options[]={
     {"H",0,"Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},
     {"R:",0,0,0,1,0},
     {"A:",0,0,0,1,0},
-    {"P",0,"Compare data values using the packing error as tolerance.\n",0,1,0},
+/*    {"P",0,"Compare data values using the packing error as tolerance.\n",0,1,0},*/
     {"t:","factor","Compare data values using factor multiplied by the tolerance specified in options -P -R -A.\n",0,1,0},
     {"w:",0,0,0,1,0},
     {"f",0,0,0,1,0},
