@@ -95,7 +95,7 @@ grib_options_help grib_options_help_list[] ={
    "\tCompare floating point values using the relative error as tolerance."
 "\n\t\tkey1=relative_error will compare key1 using relative_error1."
 "\n\t\tall=relative_error will compare all the floating point keys using relative_error. Default all=0.\n"},
-  {"S",0,"Strict. Only grib messages matching all the constraints are copied to"
+  {"S",0,"Strict. Only messages matching all the constraints are copied to"
    "\n\t\tthe output file\n"},
   {"T:","T | B | M | A","Message type. T->GTS, B->BUFR, M->METAR (Experimental),A->Any (Experimental).\n\t\t\tThe input file is interpreted according to the message type.\n"},
   {"V",0,"Version.\n"},
