@@ -59,10 +59,6 @@ if( HAVE_PYTHON )
                                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})")
     # Call distutils for installation
     install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} setup.py install --root \$ENV{DESTDIR}/ --prefix ${CMAKE_INSTALL_PREFIX}
-                                                                                --install-lib ${ECCODES_FULL_INSTALL_LIB_DIR}
-                                                                                --install-header ${ECCODES_FULL_INSTALL_INCLUDE_DIR}
-                                                                                --install-scripts ${ECCODES_FULL_INSTALL_BIN_DIR}
-                                                                                --install-data ${ECCODES_FULL_INSTALL_DATA_DIR}
                                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})")
 
 endif()
