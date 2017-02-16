@@ -32,7 +32,7 @@ alias gribTablesVersionNo=table2Version;
 #assert(section1Length > 5);
 
 #  Identification of originating/generating centre
-codetable[1] centre 'grib1/0.table' : dump,string_type;
+codetable[1] centre 'common/c-1.table' : dump,string_type;
 alias identificationOfOriginatingGeneratingCentre=centre;
 meta centreDescription codetable_title(centre);
 

@@ -52,7 +52,7 @@ alias number=perturbationNumber;
 unsigned[1] numberOfForecastsInEnsemble : dump ;
 alias totalNumber=numberOfForecastsInEnsemble;
 
-codetable[1] dataOrigin "grib1/0.table" : dump;
+codetable[1] dataOrigin "common/c-1.table" : dump;
 alias origin = dataOrigin;
 
 ascii[4] modelIdentifier : dump ;

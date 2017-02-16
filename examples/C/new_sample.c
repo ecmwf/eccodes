@@ -47,7 +47,7 @@ int main(int argc,const char** argv)
 
     CODES_CHECK(codes_set_long(h,"editionNumber",2),0);
 
-    /* 98 = European Center for Medium-Range Weather Forecasts (grib1/0.table)  */
+    /* 98 = European Center for Medium-Range Weather Forecasts */
     CODES_CHECK(codes_set_long(h,"centre",98),0);
 
     CODES_CHECK(codes_set_long(h,"subCentre",0),0);

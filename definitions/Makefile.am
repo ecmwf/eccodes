@@ -8796,6 +8796,8 @@ dist_definitionscdf_DATA = \
 
 definitionscommondir = @ECCODES_DEFINITION_PATH@/common
 dist_definitionscommon_DATA = \
+	common/c-1.table\
+	common/c-11.table\
 	common/statistics_grid.def\
 	common/statistics_spectral.def
 
@@ -8805,7 +8807,6 @@ dist_definitionsgrib1_DATA = \
 	grib1/0.eidb.table\
 	grib1/0.eswi.table\
 	grib1/0.rjtd.table\
-	grib1/0.table\
 	grib1/1.table\
 	grib1/10.table\
 	grib1/11-2.table\
@@ -9173,7 +9174,6 @@ definitionsgrib2dir = @ECCODES_DEFINITION_PATH@/grib2
 dist_definitionsgrib2_DATA = \
 	grib2/boot.def\
 	grib2/boot_multifield.def\
-	grib2/centre.table\
 	grib2/cfName.def\
 	grib2/cfVarName.def\
 	grib2/dimension.0.table\
