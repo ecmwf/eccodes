@@ -27,7 +27,8 @@ grib_option grib_options[]={
                 "key/value constraints.\n\t\tIf a BUFR message does not match the constraints it is"
                 " copied unchanged\n\t\tto the output_bufr_file. This behaviour can be changed "
                 "setting the option -S.\n\t\tFor each key a string (key:s), a double (key:d) or"
-                " an integer (key:i)\n\t\ttype can be defined. Default type is string.\n",0,1,0},
+                " an integer (key:i)\n\t\ttype can be defined. Default type is string."
+                "\n\t\tNote: only one -w clause is allowed.\n", 0,1,0},
         {"q",0,0,1,0,0},
         {"7",0,0,0,1,0},
         {"S",0,0,0,1,0},

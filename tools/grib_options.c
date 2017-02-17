@@ -78,7 +78,8 @@ grib_options_help grib_options_help_list[] ={
    "\n\t\tA valid constraint is of type key=value or key!=value."
    "\n\t\tFor each key a string (key:s), a double (key:d) or"
    " an integer (key:i)\n\t\ttype can be specified. Default type is string."
-   "\n\t\tIn the value you can also use the forward-slash character '/' to specify an OR condition (i.e. a logical disjunction)\n"
+   "\n\t\tIn the value you can also use the forward-slash character '/' to specify an OR condition (i.e. a logical disjunction)"
+   "\n\t\tNote: only one -w clause is allowed.\n"
   },
   {"v",0,"Verbose.\n"},
   {"7",0,"Does not fail when the message has wrong length\n"},

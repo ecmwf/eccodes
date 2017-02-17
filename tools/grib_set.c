@@ -29,7 +29,8 @@ grib_option grib_options[]={
               "setting the option -S."
               "\n\t\tA valid constraint is of type key=value or key!=value."
               "\n\t\tFor each key a string (key:s), a double (key:d) or"
-              " an integer (key:i)\n\t\ttype can be defined. Default type is string.\n",0,1,0},
+              " an integer (key:i)\n\t\ttype can be defined. Default type is string."
+              "\n\t\tNote: only one -w clause is allowed.\n",0,1,0},
         {"q",0,0,1,0,0},
         {"7",0,0,0,1,0},
         {"S",0,0,0,1,0},
