@@ -85,12 +85,14 @@ size_t GribOutput::copy(const param::MIRParametrisation &param, context::Context
 }
 
 static double round_sw(double x, double scale) {
-    return floor(x * scale) / scale;
+    // round with sub-'scale' precision (under floor-truncated 'scale')
+    return floor(x * scale + 0.1) / scale;
 }
 
 
 static double round_ne(double x, double scale) {
-    return ceil(x * scale) / scale;
+    // round with sub-'scale' precision (under ceil-truncated 'scale')
+    return ceil(x * scale - 0.1) / scale;
 }
 
 #define FIX_SW(x) x=round_sw(x, scale)
