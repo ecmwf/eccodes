@@ -71,7 +71,6 @@ end subroutine codes_index_add_file
 
   !> Get the number of distinct values of the key in argument contained in the index. The key must belong to the index.
   !>
-  !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref codes_get_error_string.
@@ -368,7 +367,6 @@ end subroutine codes_index_release
 
   !> Open a file according to a mode.
   !>
-  !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref codes_get_error_string.
@@ -377,7 +375,7 @@ end subroutine codes_index_release
   !>
   !> @param ifile       id of the opened file to be used in all the file functions.
   !> @param filename    name of the file to be open
-  !> @param mode        open mode can be 'r' (read only) or 'w' (write only)
+  !> @param mode        open mode can be 'r' (read) or 'w' (write)
   !> @param status      CODES_SUCCESS if OK, integer value on error
 subroutine codes_open_file ( ifile, filename, mode, status )
     integer(kind=kindOfInt),intent(out)               :: ifile
@@ -963,7 +961,7 @@ end subroutine codes_new_from_file
   !>
   !> @param ifile     id of the file opened with @ref codes_open_file
   !> @param msgid     id of the message loaded in memory
-  !> @param status    CODES_SUCCESS if OK, GRIB_END_OF_FILE at the end of file, or error code
+  !> @param status    CODES_SUCCESS if OK, CODES_END_OF_FILE at the end of file, or error code
 subroutine codes_any_new_from_file ( ifile, msgid , status)
     integer(kind=kindOfInt),intent(in)              :: ifile
     integer(kind=kindOfInt),intent(out)             :: msgid
@@ -981,7 +979,7 @@ end subroutine codes_any_new_from_file
   !>
   !> @param ifile     id of the file opened with @ref codes_open_file
   !> @param gribid    id of the GRIB loaded in memory
-  !> @param status    CODES_SUCCESS if OK, GRIB_END_OF_FILE at the end of file, or error code
+  !> @param status    CODES_SUCCESS if OK, CODES_END_OF_FILE at the end of file, or error code
 subroutine codes_grib_new_from_file ( ifile, gribid , status)
     integer(kind=kindOfInt),intent(in)              :: ifile
     integer(kind=kindOfInt),intent(out)             :: gribid
@@ -999,7 +997,7 @@ end subroutine codes_grib_new_from_file
   !>
   !> @param ifile     id of the file opened with @ref codes_open_file
   !> @param bufrid    id of the BUFR loaded in memory
-  !> @param status    CODES_SUCCESS if OK, GRIB_END_OF_FILE at the end of file, or error code
+  !> @param status    CODES_SUCCESS if OK, CODES_END_OF_FILE at the end of file, or error code
 subroutine codes_bufr_new_from_file ( ifile, bufrid , status)
     integer(kind=kindOfInt),intent(in)              :: ifile
     integer(kind=kindOfInt),intent(out)             :: bufrid
@@ -1405,7 +1403,7 @@ end subroutine codes_bufr_keys_iterator_get_name
   !> gathered with @ref grib_get_error_string.
   !>
   !> @param iterid      keys iterator id created with @ref codes_bufr_keys_iterator_new
-  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  !> @param status      CODES_SUCCESS if OK, integer value on error
   subroutine codes_bufr_keys_iterator_rewind( iterid, status )
       integer(kind=kindOfInt),          intent(in)    :: iterid
       integer(kind=kindOfInt),optional, intent(out)   :: status
