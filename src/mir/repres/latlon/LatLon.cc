@@ -38,10 +38,14 @@ static size_t computeN(double first, double last, double inc, const char* n_name
 
     size_t p = size_t((last - first) / inc);
     double d0 = std::abs(last - (first + p * inc));
-    double d1 = std::abs(last - (first + (p + 1) * inc));
-    ASSERT(d0 != d1);
+    double d1;
+    while ((d1 = std::abs(last - (first + (p + 1) * inc))) < d0) {
+        ASSERT(d0 != d1);
+        ++p;
+        d0 = d1;
+    }
 
-    size_t n = p + (d0<d1? 0 : 1);
+    size_t n = p;
     // eckit::Log::debug<LibMir>() << p << " " << d0 << " " << d1 << " " << inc << " " << first << " " << last << std::endl;
 
     const double eps = double(std::numeric_limits<float>::epsilon());
