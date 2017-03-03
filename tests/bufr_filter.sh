@@ -1477,13 +1477,11 @@ rm -f ${f}.log ${f}.log.ref ${f}.out ${f}.out.out $fLog $fRules
 # Test: fix for ECC-389 
 #-----------------------------------------------------------
 cat > $fRules <<EOF
-set numberOfSubsets=2;
-set unexpandedDescriptors={310008};
-
-set #14#brightnessTemperature={266.53,266.53000000001};
-set pack=1;
-
-write;
+ set numberOfSubsets=2;
+ set unexpandedDescriptors={310008};
+ set #14#brightnessTemperature={266.53,266.53000000001};
+ set pack=1;
+ write;
 EOF
 
 f="amsu_55.bufr"
@@ -1505,5 +1503,43 @@ cat > ${f}.log.ref <<EOF
 EOF
 
 diff ${f}.log.ref ${f}.log 
+
+rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
+
+#-----------------------------------------------------------
+# Test: change width using operator 201YYY
+#-----------------------------------------------------------
+HIGH_TEMPERATURE=10000
+cat > $fRules <<EOF
+ set unpack=1;
+ set airTemperature=$HIGH_TEMPERATURE;
+ set pack=1;
+ write;
+EOF
+f="bssh_176.bufr"
+
+ # This should fail. Out of Range
+set +e
+${tools_dir}/bufr_filter -o ${f}.out $fRules $f
+status=$?
+set -e
+[ $status -ne 0 ]
+
+# Now change the width of airTemperature to allow high value
+cat > $fRules <<EOF
+ set unpack=1;
+ set edition=4;
+ set unexpandedDescriptors={301022,12023,201138,12101,201000,12023};
+ set airTemperature=$HIGH_TEMPERATURE;
+ set pack=1;
+ print "airTemperature=[airTemperature], width=[airTemperature->width]";
+ write;
+EOF
+${tools_dir}/bufr_filter -o ${f}.out $fRules $f > ${f}.log
+
+cat > ${f}.log.ref <<EOF
+airTemperature=$HIGH_TEMPERATURE, width=26
+EOF
+diff ${f}.log.ref ${f}.log
 
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
