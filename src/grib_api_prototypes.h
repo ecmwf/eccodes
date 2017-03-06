@@ -632,9 +632,9 @@ void accessor_variable_set_type(grib_accessor *a, int type);
 
 /* grib_accessor_class_g2grid.c */
 
-/* grib_accessor_class_unexpanded_descriptors.c */
+/* grib_accessor_class_bufr_unexpanded_descriptors.c */
 
-/* grib_accessor_class_expanded_descriptors.c */
+/* grib_accessor_class_bufr_expanded_descriptors.c */
 int grib_accessor_class_expanded_descriptors_set_do_expand(grib_accessor *a, long do_expand);
 bufr_descriptors_array *grib_accessor_class_expanded_descriptors_get_expanded(grib_accessor *a, int *err);
 
