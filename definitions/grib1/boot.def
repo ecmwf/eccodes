@@ -26,7 +26,7 @@ constant section0Length=8 ;
 meta section0Pointer section_pointer(offsetSection0,section0Length,0);
 
 # Due to a trick done by GRIBEX to support large GRIBs, we need a special treatment
-# of the message length and of the section4 lenth, so instead of
+# of the message length and of the section4 length, so instead of
 # section_length[3] totalLength                     ;
 # we get:
 g1_message_length[3] totalLength(section4Length) ;
@@ -37,7 +37,7 @@ template      section_1 "grib1/section.1.def"   ;
 
 alias ls.edition = editionNumber;
 
-# Not flagbit numbers 7 to 0, while wmo is 1 to 8
+# Note flagbit numbers 7 to 0, while wmo is 1 to 8
 flagbit gridDescriptionSectionPresent(section1Flags,7) = 1;
 meta GDSPresent gds_is_present(gridDescriptionSectionPresent,gridDefinition,bitmapPresent,values): dump ;
 #alias GDSPresent = gridDescriptionSectionPresent;
