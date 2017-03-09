@@ -35,7 +35,7 @@ grib_option grib_options[]={
         {"v",0,0,1,0,0}
 };
 
-char* grib_tool_description="Get values of some keys from a BUFR file."
+char* grib_tool_description="Get values of some header keys from a BUFR file."
         "\n\tIt is similar to bufr_ls, but fails returning an error code "
         "\n\twhen an error occurs (e.g. key not found).";
 char* grib_tool_name="bufr_get";
