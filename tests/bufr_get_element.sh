@@ -8,18 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# --- test on the grid_ieee type of packing
-# ---   check if retrieving data through grib_get_double_array and
-# ---   grib_get_double_element provides the same result
-
 . ./include.sh
 
-infile=${data_dir}/grid_ieee.grib
-
-# if [ ! -f ${infile} ]
-# then
-#   echo no data to test
-#   exit 1
-# fi
-
-${test_dir}/grib_double_cmp ${infile}
+${test_dir}/bufr_get_element

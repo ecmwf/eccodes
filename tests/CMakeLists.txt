@@ -25,6 +25,7 @@ list( APPEND test_bins
       optimize_scaling
       optimize_scaling_sh
       ecc-386
+      bufr_get_element
 )
 
 foreach( tool ${test_bins} )
@@ -67,6 +68,7 @@ list( APPEND tests_data_reqd
     bufr_ls
     bufr_change_edition
     bufr_keys_iter
+    bufr_get_element
     ecc-197
     ecc-286
     ecc-288
