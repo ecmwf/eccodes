@@ -51,7 +51,7 @@ static size_t computeN(double first, double last, double inc, const char* n_name
     const double eps = double(std::numeric_limits<float>::epsilon());
     if (!eckit::types::is_approximately_equal(n*inc + first, last, eps)) {
         std::ostringstream os;
-        os << "computeN: cannot compute accurately " << n_name << " from " << first << "/to/" << last << "/by/" << inc;
+        os << "computeN: cannot compute accurately " << n_name << " from " << first << "/to/" << last << "/by/" << inc << " n=" << n << ", error=" << (last- (n*inc + first)) ;
         eckit::Log::debug<LibMir>() << os.str() << std::endl;
         throw eckit::BadValue(os.str());
     }
@@ -207,8 +207,8 @@ class LatLonIterator : public Iterator {
     virtual bool next(double &lat, double &lon) {
         if (j_ < nj_) {
             if (i_ < ni_) {
-                lat = north_ - j_ * ns_; // This is slower, but looks more precise
-                lon = west_  + i_ * we_; // This is slower, but looks more precise
+                lat = north_ - j_ * ns_;         // This is slower, but looks more precise
+                lon = ((west_  + i_ * we_)   + ((west_+ni_*we_) - (ni_-i_)*we_)) / 2.0 ; // This is slower, but looks more precise
                 i_++;
                 if (i_ == ni_) {
                     j_++;
