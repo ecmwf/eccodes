@@ -26,6 +26,7 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Grib.h"
 
+#include "eckit/types/Fraction.h"
 
 namespace mir {
 namespace repres {
@@ -179,11 +180,13 @@ class LatLonIterator : public Iterator {
     size_t ni_;
     size_t nj_;
 
-    double north_;
-    double west_;
+    eckit::Fraction north_;
+    eckit::Fraction west_;
+    eckit::Fraction lat_;
+    eckit::Fraction lon_;
 
-    double we_;
-    double ns_;
+    eckit::Fraction we_;
+    eckit::Fraction ns_;
 
     size_t i_;
     size_t j_;
@@ -207,12 +210,14 @@ class LatLonIterator : public Iterator {
     virtual bool next(double &lat, double &lon) {
         if (j_ < nj_) {
             if (i_ < ni_) {
-                lat = north_ - j_ * ns_;         // This is slower, but looks more precise
-                lon = ((west_  + i_ * we_)   + ((west_+ni_*we_) - (ni_-i_)*we_)) / 2.0 ; // This is slower, but looks more precise
-                i_++;
+                lat = lat_;
+                lon = lon_;
+                lon_ += we_;
                 if (i_ == ni_) {
                     j_++;
+                    lat_ -= ns_;
                     i_ = 0;
+                    lon_ = west_;
                 }
                 count_++;
                 return true;
@@ -232,6 +237,8 @@ public:
         nj_(nj),
         north_(north),
         west_(west),
+        lat_(north),
+        lon_(west_),
         we_(we),
         ns_(ns),
         i_(0),
@@ -248,7 +255,12 @@ public:
 
 
 Iterator *LatLon::unrotatedIterator() const {
-    return new LatLonIterator(ni_, nj_, bbox_.north(), bbox_.west(), increments_.west_east(), increments_.south_north());
+    return new LatLonIterator(ni_,
+                              nj_,
+                              bbox_.north(),
+                              bbox_.west(),
+                              increments_.west_east(),
+                              increments_.south_north());
 }
 
 
