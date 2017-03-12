@@ -83,7 +83,7 @@ void Regular::fill(grib_info &info) const  {
     long j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
     info.packing.extra_settings[j].name = "global";
-    info.packing.extra_settings[j].long_value = global && westAtGreenwich? 1 : 0;
+    info.packing.extra_settings[j].long_value = global && westAtGreenwich ? 1 : 0;
 }
 
 
@@ -107,7 +107,7 @@ atlas::grid::Domain Regular::atlasDomain() const {
 atlas::grid::Domain Regular::atlasDomain(const util::BoundingBox& bbox) const {
 
     const std::vector<double> &lats = latitudes();
-    ASSERT(lats.size()>=2);
+    ASSERT(lats.size() >= 2);
 
     const double ew = bbox.east() - bbox.west();
     const double N = static_cast<double>(N_);
@@ -121,35 +121,42 @@ atlas::grid::Domain Regular::atlasDomain(const util::BoundingBox& bbox) const {
     double adjust_north = bbox.north();
     double adjust_south = bbox.south();
 
-    for (std::vector<double>::const_iterator lat=lats.begin(); lat!=lats.end(); ++lat) {
-        if (cmp_eps(adjust_north, *lat))
+    for (std::vector<double>::const_iterator lat = lats.begin(); lat != lats.end(); ++lat) {
+        if (cmp_eps(adjust_north, *lat)) {
             adjust_north = std::max(adjust_north, *lat);
-        if (cmp_eps(adjust_south, *lat))
+        }
+        if (cmp_eps(adjust_south, *lat)) {
             adjust_south = std::min(adjust_south, *lat);
+        }
     }
 
     double adjust_west  = bbox.west();
     double adjust_east  = bbox.east();
 
-    for (size_t i=0; i<4*N_; ++i) {
-        const double lon1 = bbox.west() + static_cast<double>(i*90.0)/N;
-        const double lon2 = bbox.east() - static_cast<double>(i*90.0)/N;
-        if (cmp_eps(adjust_east, lon1) || cmp_eps(adjust_east, lon2))
+    for (size_t i = 0; i < 4 * N_; ++i) {
+
+        const double lon1 = bbox.west() + double(i * 90.0) / N;
+        const double lon2 = bbox.east() - double(i * 90.0) / N;
+
+        if (cmp_eps(adjust_east, lon1) || cmp_eps(adjust_east, lon2)) {
             adjust_east = std::max(adjust_east, std::max(lon1, lon2));
-        if (cmp_eps(adjust_west, lon1) || cmp_eps(adjust_west, lon2))
+        }
+        if (cmp_eps(adjust_west, lon1) || cmp_eps(adjust_west, lon2)) {
             adjust_west = std::min(adjust_west, std::min(lon1, lon2));
+        }
     }
 
     const bool
-            isPeriodicEastWest = cmp_eps(ew + 90.0/N, 360.0),
-            includesPoleNorth  = cmp_eps(adjust_north, lats.front()),
-            includesPoleSouth  = cmp_eps(adjust_south, lats.back());
+    isPeriodicEastWest = cmp_eps(ew + 90.0 / N, 360.0),
+    includesPoleNorth  = cmp_eps(adjust_north, lats.front()),
+    includesPoleSouth  = cmp_eps(adjust_south, lats.back());
 
     const double
-            north = includesPoleNorth?  90 : adjust_north,
-            south = includesPoleSouth? -90 : adjust_south,
-            west = adjust_west,
-            east = isPeriodicEastWest? adjust_west + 360 : adjust_east;
+    north = includesPoleNorth ?  90 : adjust_north,
+    south = includesPoleSouth ? -90 : adjust_south,
+    west = adjust_west,
+    east = isPeriodicEastWest ? adjust_west + 360 : adjust_east;
+
     return atlas::grid::Domain(north, west, south, east);
 }
 
@@ -162,45 +169,51 @@ void Regular::validate(const std::vector<double> &values) const {
     }
     else {
         eckit::ScopedPtr<Iterator> it(unrotatedIterator());
+
         long long count = 0;
         double lat;
         double lon;
+
         while (it->next(lat, lon)) {
-            if (dom.contains(lon, lat))
+            if (dom.contains(lon, lat)) {
                 count++;
+            }
         }
-        eckit::Log::debug<LibMir>() << "Regular::validate checked " << eckit::Plural(values.size(),"value") << ", within domain: " << eckit::BigNum(count) << "." << std::endl;
+
+        eckit::Log::debug<LibMir>() << "Regular::validate checked " << eckit::Plural(values.size(), "value") << ", within domain: " << eckit::BigNum(count) << "." << std::endl;
         ASSERT(values.size() == size_t(count));
     }
 }
 
 
 void Regular::setNiNj() {
-    const atlas::grid::Domain dom = atlasDomain();
-    const double lon_middle = (dom.west() + dom.east())/2.;
-    const double lat_middle = (dom.north() + dom.south())/2.;
+    const atlas::grid::Domain domain = atlasDomain();
+    const double lon_middle = (domain.west() + domain.east()) / 2.;
+    const double lat_middle = (domain.north() + domain.south()) / 2.;
 
     Ni_ = N_ * 4;
-    if (!dom.isPeriodicEastWest()) {
+    if (!domain.isPeriodicEastWest()) {
         Ni_ = 0;
-        for (size_t i=0; i<N_*4; ++i) {
-            const double lon = dom.west() + (i * 90.0) / N_;
-            if (dom.contains(lon, lat_middle))
+        for (size_t i = 0; i < N_ * 4; ++i) {
+            const double lon = domain.west() + (i * 90.0) / N_;
+            if (domain.contains(lon, lat_middle)) {
                 ++Ni_;
+            }
         }
     }
-    ASSERT(2 <= Ni_ && Ni_ <= N_*4);
+    ASSERT(2 <= Ni_ && Ni_ <= N_ * 4);
 
     Nj_ = N_ * 2;
-    if (!dom.includesPoleNorth() || !dom.includesPoleSouth()) {
+    if (!domain.includesPoleNorth() || !domain.includesPoleSouth()) {
         Nj_ = 0;
         const std::vector<double>& lats = latitudes();
-        for (std::vector<double>::const_iterator lat=lats.begin(); lat!=lats.end(); ++lat) {
-            if (dom.contains(lon_middle, *lat))
+        for (std::vector<double>::const_iterator lat = lats.begin(); lat != lats.end(); ++lat) {
+            if (domain.contains(lon_middle, *lat)) {
                 ++Nj_;
+            }
         }
     }
-    ASSERT(2 <= Nj_ && Nj_ <= N_*2);
+    ASSERT(2 <= Nj_ && Nj_ <= N_ * 2);
 }
 
 
@@ -212,8 +225,8 @@ size_t Regular::frame(std::vector<double>& values, size_t size, double missingVa
     size_t count = 0;
 
     size_t k = 0;
-    for (size_t j=0; j<Nj_; j++) {
-        for (size_t i=0; i<Ni_; i++) {
+    for (size_t j = 0; j < Nj_; j++) {
+        for (size_t i = 0; i < Ni_; i++) {
             if (!((i < size) || (j < size) || (i >= Ni_ - size) || (j >= Nj_ - size))) { // Check me, may be buggy
                 values[k] = missingValue;
                 count++;
