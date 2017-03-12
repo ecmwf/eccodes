@@ -28,6 +28,7 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Angles.h"
 #include "mir/util/Grib.h"
+#include "eckit/types/Fraction.h"
 
 
 namespace mir {
@@ -109,11 +110,13 @@ class GaussianIterator : public Iterator {
     size_t ni_;
     const size_t nj_;
 
+    eckit::Fraction lon_;
+    eckit::Fraction inc_;
+
     size_t i_;
     size_t j_;
     size_t k_;
     size_t p_;
-    size_t imax_;
 
     size_t count_;
 
@@ -126,26 +129,28 @@ class GaussianIterator : public Iterator {
             << ",j="      << j_
             << ",k="      << k_
             << ",p="      << p_
-            << ",imax="   << imax_
             << ",count="  << count_
             << "]";
     }
 
     virtual bool next(double &lat, double &lon) {
-        while (j_ < nj_ && i_ < imax_) {
+        while (j_ < nj_ && i_ < ni_) {
 
             ASSERT(j_ + k_ < latitudes_.size());
             lat = latitudes_[j_ + k_];
-            lon = (i_ * 360.) / ni_;
+            lon = lon_;
 
             i_++;
-            if (i_ == imax_) {
+            lon_ += inc_;
+
+            if (i_ == ni_) {
                 j_++;
                 if (j_ < nj_) {
                     ASSERT(p_ < pl_.size());
-                    ni_ = static_cast<size_t>(pl_[p_++]);
+                    ni_ = size_t(pl_[p_++]);
+                    lon_ = 0;
+                    inc_ = eckit::Fraction(360, ni_);
                 }
-                repositionToFirstLongitudeIndex(i_, imax_, domain_, ni_);
             }
 
             if (domain_.contains(lon, lat)) {
@@ -172,43 +177,13 @@ public:
         ASSERT(pl_.size() >= 2);
 
         // position to first latitude and first/last longitude
-        ni_ = static_cast<size_t>(pl_[p_++]);
-        repositionToFirstLatitudeIndex (k_,        domain_, latitudes_);
-        repositionToFirstLongitudeIndex(i_, imax_, domain_, ni_);
+        ni_ = size_t(pl_[p_++]);
+        inc_ = eckit::Fraction(360, ni_);
+
 
         // eckit::Log::debug<LibMir>() << *this << std::endl;
     }
 
-private:
-
-    static void repositionToFirstLatitudeIndex(size_t& j, const atlas::grid::Domain& dom, const std::vector<double>& lats) {
-        j = 0;
-        while (j < lats.size() && dom.north() < lats[j]) {
-            j++;
-        }
-        ASSERT(j < lats.size());
-    }
-
-    static void repositionToFirstLongitudeIndex(size_t& imin, size_t& imax, const atlas::grid::Domain& dom, const size_t& n) {
-
-        const double west_positive = dom.west() + (eckit::types::is_strictly_greater(0., dom.west()) ? 360. : 0.);
-        const double east_positive = dom.east() + (eckit::types::is_strictly_greater(0., dom.west()) ? 360. : 0.);
-        ASSERT(eckit::types::is_approximately_greater_or_equal(360., east_positive - west_positive));
-        
-        ASSERT(n);
-
-        // assuming n>0, returned range satisfies: 0 <= imin < imax; and imax - imin <= n
-        imin = 0;
-        while (imin < n && eckit::types::is_strictly_greater(west_positive, (imin * 360.) / n)) {
-            ++imin;
-        }
-        imin = imin % n;
-        imax = imin;
-        while (imax - imin < n && eckit::types::is_approximately_greater_or_equal(east_positive, (imax * 360.) / n)) {
-            ++imax;
-        }
-        ASSERT(imax > imin);
-    }
 
 };
 
