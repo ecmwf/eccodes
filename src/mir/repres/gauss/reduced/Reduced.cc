@@ -197,6 +197,27 @@ public:
         // eckit::Log::debug<LibMir>() << *this << std::endl;
     }
 
+    // static void repositionToFirstLongitudeIndex(size_t& imin, size_t& imax, const atlas::grid::Domain& dom, const size_t& n) {
+
+    //     const double west_positive = dom.west() + (eckit::types::is_strictly_greater(0., dom.west()) ? 360. : 0.);
+    //     const double east_positive = dom.east() + (eckit::types::is_strictly_greater(0., dom.west()) ? 360. : 0.);
+    //     ASSERT(eckit::types::is_approximately_greater_or_equal(360., east_positive - west_positive));
+
+    //     ASSERT(n);
+
+    //     // assuming n>0, returned range satisfies: 0 <= imin < imax; and imax - imin <= n
+    //     imin = 0;
+    //     while (imin < n && eckit::types::is_strictly_greater(west_positive, (imin * 360.) / n)) {
+    //         ++imin;
+    //     }
+    //     imin = imin % n;
+    //     imax = imin;
+    //     while (imax - imin < n && eckit::types::is_approximately_greater_or_equal(east_positive, (imax * 360.) / n)) {
+    //         ++imax;
+    //     }
+    //     ASSERT(imax > imin);
+    // }
+
 
 };
 
