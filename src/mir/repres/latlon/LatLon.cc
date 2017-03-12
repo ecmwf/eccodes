@@ -41,7 +41,7 @@ static size_t computeN(double first, double last, double inc, const char* n_name
     eckit::Fraction l(last);
     eckit::Fraction i(inc);
 
-    long long n = (f - l) / i;
+    long long n = (l - f) / i;
     // return n+1;
 
     // size_t p = size_t((last - first) / inc);
