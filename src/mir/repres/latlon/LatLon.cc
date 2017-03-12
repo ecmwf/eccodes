@@ -33,7 +33,7 @@ namespace repres {
 namespace latlon {
 
 
-static size_t computeN(double first, double last, double inc, const char* n_name) {
+static size_t computeN(double first, double last, double inc) {
     ASSERT(first <= last);
     ASSERT(inc > 0);
 
@@ -42,27 +42,6 @@ static size_t computeN(double first, double last, double inc, const char* n_name
     eckit::Fraction i(inc);
 
     long long n = (l - f) / i;
-    // return n+1;
-
-    // size_t p = size_t((last - first) / inc);
-    // double d0 = std::abs(last - (first + p * inc));
-    // double d1;
-    // while ((d1 = std::abs(last - (first + (p + 1) * inc))) < d0) {
-    //     ASSERT(d0 != d1);
-    //     ++p;
-    //     d0 = d1;
-    // }
-
-    // size_t n = p;
-    // // eckit::Log::debug<LibMir>() << p << " " << d0 << " " << d1 << " " << inc << " " << first << " " << last << std::endl;
-
-    // const double eps = double(std::numeric_limits<float>::epsilon());
-    // if (!eckit::types::is_approximately_equal(n*inc + first, last, eps)) {
-    //     std::ostringstream os;
-    //     os << "computeN: cannot compute accurately " << n_name << " from " << first << "/to/" << last << "/by/" << inc << " n=" << n << ", error=" << (last- (n*inc + first)) ;
-    //     eckit::Log::debug<LibMir>() << os.str() << std::endl;
-    //     throw eckit::BadValue(os.str());
-    // }
 
     return n + 1;
 }
@@ -96,8 +75,8 @@ void LatLon::cropToDomain(const param::MIRParametrisation &parametrisation, cont
 
 
 void LatLon::setNiNj() {
-    ni_ = computeN(bbox_.west(),  bbox_.east(),  increments_.west_east(),   "Ni");
-    nj_ = computeN(bbox_.south(), bbox_.north(), increments_.south_north(), "Nj");
+    ni_ = computeN(bbox_.west(),  bbox_.east(),  increments_.west_east());
+    nj_ = computeN(bbox_.south(), bbox_.north(), increments_.south_north());
 }
 
 
