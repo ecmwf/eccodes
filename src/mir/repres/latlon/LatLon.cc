@@ -37,25 +37,32 @@ static size_t computeN(double first, double last, double inc, const char* n_name
     ASSERT(first <= last);
     ASSERT(inc > 0);
 
-    size_t p = size_t((last - first) / inc);
-    double d0 = std::abs(last - (first + p * inc));
-    double d1;
-    while ((d1 = std::abs(last - (first + (p + 1) * inc))) < d0) {
-        ASSERT(d0 != d1);
-        ++p;
-        d0 = d1;
-    }
+    eckit::Fraction f(first);
+    eckit::Fraction l(last);
+    eckit::Fraction i(inc);
 
-    size_t n = p;
-    // eckit::Log::debug<LibMir>() << p << " " << d0 << " " << d1 << " " << inc << " " << first << " " << last << std::endl;
+    long long n = (f - l) / i;
+    // return n+1;
 
-    const double eps = double(std::numeric_limits<float>::epsilon());
-    if (!eckit::types::is_approximately_equal(n*inc + first, last, eps)) {
-        std::ostringstream os;
-        os << "computeN: cannot compute accurately " << n_name << " from " << first << "/to/" << last << "/by/" << inc << " n=" << n << ", error=" << (last- (n*inc + first)) ;
-        eckit::Log::debug<LibMir>() << os.str() << std::endl;
-        throw eckit::BadValue(os.str());
-    }
+    // size_t p = size_t((last - first) / inc);
+    // double d0 = std::abs(last - (first + p * inc));
+    // double d1;
+    // while ((d1 = std::abs(last - (first + (p + 1) * inc))) < d0) {
+    //     ASSERT(d0 != d1);
+    //     ++p;
+    //     d0 = d1;
+    // }
+
+    // size_t n = p;
+    // // eckit::Log::debug<LibMir>() << p << " " << d0 << " " << d1 << " " << inc << " " << first << " " << last << std::endl;
+
+    // const double eps = double(std::numeric_limits<float>::epsilon());
+    // if (!eckit::types::is_approximately_equal(n*inc + first, last, eps)) {
+    //     std::ostringstream os;
+    //     os << "computeN: cannot compute accurately " << n_name << " from " << first << "/to/" << last << "/by/" << inc << " n=" << n << ", error=" << (last- (n*inc + first)) ;
+    //     eckit::Log::debug<LibMir>() << os.str() << std::endl;
+    //     throw eckit::BadValue(os.str());
+    // }
 
     return n + 1;
 }
@@ -320,13 +327,13 @@ atlas::grid::Domain LatLon::atlasDomain(const util::BoundingBox& bbox) const {
 
     const bool isPeriodicEastWest = eckit::types::is_approximately_equal(ew + increments_.west_east(), 360.);
     const bool includesPoles = eckit::types::is_approximately_equal(ns, 180.)
-                            || eckit::types::is_approximately_equal(ns + increments_.south_north(), 180.);
+                               || eckit::types::is_approximately_equal(ns + increments_.south_north(), 180.);
 
     const double
-            north = includesPoles?   90 : bbox.north(),
-            south = includesPoles?  -90 : bbox.south(),
-            west = bbox.west(),
-            east = isPeriodicEastWest? bbox.west() + 360 : bbox.east();
+    north = includesPoles ?   90 : bbox.north(),
+    south = includesPoles ?  -90 : bbox.south(),
+    west = bbox.west(),
+    east = isPeriodicEastWest ? bbox.west() + 360 : bbox.east();
     return atlas::grid::Domain(north, west, south, east);
 }
 
