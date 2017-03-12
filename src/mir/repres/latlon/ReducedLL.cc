@@ -22,6 +22,8 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Compare.h"
+#include "eckit/types/Fraction.h"
+
 
 
 namespace mir {
@@ -34,7 +36,7 @@ ReducedLL::ReducedLL(const param::MIRParametrisation &parametrisation):
     ASSERT(parametrisation.get("pl", pl_));
     ASSERT(parametrisation.get("Nj", Nj_));
     ASSERT(Nj_);
-    ASSERT(pl_.size()==Nj_);
+    ASSERT(pl_.size() == Nj_);
 }
 
 
@@ -74,7 +76,7 @@ atlas::grid::Grid *ReducedLL::atlasGrid() const {
 
 
 atlas::grid::Domain ReducedLL::atlasDomain() const {
-  return atlasDomain(bbox_);
+    return atlasDomain(bbox_);
 }
 
 
@@ -82,7 +84,7 @@ atlas::grid::Domain ReducedLL::atlasDomain(const util::BoundingBox& bbox) const 
     ASSERT(pl_.size());
 
     long maxpl = pl_[0];
-    for (size_t i=1; i<pl_.size(); ++i) {
+    for (size_t i = 1; i < pl_.size(); ++i) {
         maxpl = std::max(maxpl, pl_[i]);
     }
 
@@ -92,18 +94,18 @@ atlas::grid::Domain ReducedLL::atlasDomain(const util::BoundingBox& bbox) const 
     const double epsilon_grib1 = 1.0 / 1000.0;
 
     const bool isPeriodicEastWest =
-               eckit::types::is_approximately_equal((360. - ew) * maxpl, 360.)
+        eckit::types::is_approximately_equal((360. - ew) * maxpl, 360.)
 
-            // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree. Use the precision given by GRIB in this check
-            || eckit::types::is_approximately_equal((360. - ew) * maxpl, 360., epsilon_grib1);
+        // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree. Use the precision given by GRIB in this check
+        || eckit::types::is_approximately_equal((360. - ew) * maxpl, 360., epsilon_grib1);
     const bool includesPoleNorth  = eckit::types::is_approximately_equal(bbox.north(),  90.);
     const bool includesPoleSouth  = eckit::types::is_approximately_equal(bbox.south(), -90.);
 
     const double
-            north = includesPoleNorth?   90 : bbox.north(),
-            south = includesPoleSouth?  -90 : bbox.south(),
-            west = bbox.west(),
-            east = isPeriodicEastWest? bbox.west() + 360 : bbox.east();
+    north = includesPoleNorth ?   90 : bbox.north(),
+    south = includesPoleSouth ?  -90 : bbox.south(),
+    west = bbox.west(),
+    east = isPeriodicEastWest ? bbox.west() + 360 : bbox.east();
     return atlas::grid::Domain(north, west, south, east);
 }
 
@@ -125,6 +127,17 @@ class ReducedLLIterator: public Iterator {
     size_t ni_;
     const size_t nj_;
 
+    const eckit::Fraction west_;
+
+    const eckit::Fraction ew_;
+
+    eckit::Fraction inc_west_east_;
+
+    const eckit::Fraction inc_north_south_;
+
+    eckit::Fraction lat_;
+    eckit::Fraction lon_;
+
     size_t i_;
     size_t j_;
     size_t p_;
@@ -145,28 +158,33 @@ class ReducedLLIterator: public Iterator {
 
     virtual bool next(double &lat, double &lon) {
 
-        const double ew = (domain_.east() - domain_.west());
-        const double inc_north_south = (domain_.north() - domain_.south()) / (nj_ - 1);
 
         while (j_ < nj_ && i_ < ni_) {
 
-            lat = domain_.north() - j_ * inc_north_south;
-            lon = domain_.west() + (i_ * ew) / ni_;
+            lat = lat_;
+            lon = lon_;
 
             i_++;
+            lon_ += inc_west_east_;
+
+
             if (i_ == ni_) {
 
                 j_++;
+                lat_ -= inc_north_south_;
+                lon_ = west_;
+
                 i_ = 0;
 
                 if (j_ < nj_) {
                     ASSERT(p_ < pl_.size());
                     ni_ = pl_[p_++];
+                    inc_west_east_ = ew_ / ni_;
                 }
 
             }
 
-            if (domain_.contains(lon,lat)) {
+            if (domain_.contains(lon, lat)) {
                 count_++;
                 return true;
             }
@@ -180,12 +198,22 @@ public:
         pl_(pl),
         domain_(dom),
         nj_(nj),
+
+        west_(domain_.west()),
+
+        ew_(domain_.east() - domain_.west()),
+
+        inc_north_south_(eckit::Fraction(domain_.north() - domain_.south()) / (nj_ - 1)),
+
+        lat_(domain_.north()),
+        lon_(west_),
         i_(0),
         j_(0),
         p_(0),
         count_(0) {
 
         ni_ = pl_[p_++];
+        inc_west_east_ = ew_ / ni_;
 
         // eckit::Log::debug<LibMir>() << *this << std::endl;
     }
