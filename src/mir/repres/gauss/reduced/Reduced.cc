@@ -137,6 +137,7 @@ class GaussianIterator : public Iterator {
         while (j_ < nj_ && i_ < ni_) {
 
             ASSERT(j_ + k_ < latitudes_.size());
+
             lat = latitudes_[j_ + k_];
             lon = lon_;
 
@@ -150,6 +151,9 @@ class GaussianIterator : public Iterator {
                     ni_ = size_t(pl_[p_++]);
                     lon_ = 0;
                     inc_ = eckit::Fraction(360, ni_);
+                    i_ = 0;
+
+
                 }
             }
 
@@ -168,7 +172,9 @@ public:
         pl_(pl),
         domain_(dom),
         nj_(pl_.size()),
+        i_(0),
         j_(0),
+        k_(0),
         p_(0),
         count_(0) {
 
@@ -177,8 +183,15 @@ public:
         ASSERT(pl_.size() >= 2);
 
         // position to first latitude and first/last longitude
+
+        while (k_ < latitudes_.size() && domain_.north() < latitudes_[k_]) {
+            k_++;
+        }
+        ASSERT(k_ < latitudes_.size());
+
         ni_ = size_t(pl_[p_++]);
         inc_ = eckit::Fraction(360, ni_);
+        lon_ = 0;
 
 
         // eckit::Log::debug<LibMir>() << *this << std::endl;
