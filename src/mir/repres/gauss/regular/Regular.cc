@@ -25,7 +25,7 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Grib.h"
-
+#include "eckit/types/Fraction.h"
 
 namespace mir {
 namespace repres {
@@ -249,6 +249,9 @@ class RegularIterator : public Iterator {
     const size_t Ni_;
     const size_t Nj_;
 
+    eckit::Fraction lon_;
+    const eckit::Fraction inc_;
+
     size_t i_;
     size_t j_;
     size_t k_;
@@ -273,12 +276,15 @@ class RegularIterator : public Iterator {
 
             ASSERT(j_ + k_ < latitudes_.size());
             lat = latitudes_[j_ + k_];
-            lon = west_ + (i_ * 90.0) / N_;
+            lon = lon_;
 
             i_++;
+            lon_ += inc_;
+
             if (i_ == Ni_) {
                 j_++;
                 i_ = 0;
+                lon_ = west_;
             }
             count_++;
             return true;
@@ -300,6 +306,8 @@ public:
         N_(N),
         Ni_(Ni),
         Nj_(Nj),
+        lon_(west_),
+        inc_(90, N_),
         i_(0),
         j_(0),
         k_(0),
@@ -314,6 +322,7 @@ public:
         while (k_ < latitudes_.size() && dom.north() < latitudes_[k_]) {
             k_++;
         }
+
     }
 
 };
