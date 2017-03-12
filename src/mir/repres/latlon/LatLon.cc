@@ -213,6 +213,7 @@ class LatLonIterator : public Iterator {
                 lat = lat_;
                 lon = lon_;
                 lon_ += we_;
+                i_++;
                 if (i_ == ni_) {
                     j_++;
                     lat_ -= ns_;
