@@ -757,7 +757,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\grib_accessor_class_bufr_expanded_descriptors.c"
+				RelativePath="..\..\..\src\grib_accessor_class_expanded_descriptors.c"
 				>
 			</File>
 			<File
@@ -1285,7 +1285,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\grib_accessor_class_bufr_unexpanded_descriptors.c"
+				RelativePath="..\..\..\src\grib_accessor_class_unexpanded_descriptors.c"
 				>
 			</File>
 			<File
