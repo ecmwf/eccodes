@@ -23,10 +23,10 @@ for f in ${bufr_files}; do
   if [ "$f" = "ias1_240.bufr" ]; then continue; fi
   
   # Convert to BUFR edition 4
-  ${tools_dir}bufr_set -s editionNumber=4 $f $fBufrTmp
-  ${tools_dir}bufr_compare -b edition $f $fBufrTmp
+  ${tools_dir}/bufr_set -s editionNumber=4 $f $fBufrTmp
+  ${tools_dir}/bufr_compare -b edition $f $fBufrTmp
   
-  ed=`${tools_dir}bufr_get -w count=1 -p editionNumber $fBufrTmp`
+  ed=`${tools_dir}/bufr_get -w count=1 -p editionNumber $fBufrTmp`
   [ "$ed" = "4" ]
 
 done

@@ -772,7 +772,7 @@ void* grib_context_malloc_persistent(const grib_context* c, size_t size)
     void* p =  c->alloc_persistent_mem(c,size);
     if(!p) {
         grib_context_log(c,GRIB_LOG_FATAL,"grib_context_malloc: error allocating %lu bytes",(unsigned long)size);
-        Assert(1);
+        Assert(0);
     }
     return p;
 }
@@ -799,7 +799,7 @@ void* grib_context_malloc(const grib_context* c, size_t size)
     else p=c->alloc_mem(c,size);
     if(!p) {
         grib_context_log(c,GRIB_LOG_FATAL,"grib_context_malloc: error allocating %lu bytes",(unsigned long)size);
-        Assert(1);
+        Assert(0);
     }
     return p;
 }

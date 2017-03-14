@@ -209,7 +209,7 @@ typedef struct grib_points  grib_points;
     \ingroup keys_iterator
 */
 typedef struct grib_keys_iterator    grib_keys_iterator;
-
+typedef struct bufr_keys_iterator    bufr_keys_iterator;
 
 typedef struct grib_fieldset grib_fieldset;
 
@@ -1254,31 +1254,36 @@ attributes or by the namespace they belong to.
 *                       and namespace
 */
 grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space);
+bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h, unsigned long filter_flags);
+bufr_keys_iterator* codes_bufr_data_section_keys_iterator_new(grib_handle* h);
 
 /*! Step to the next iterator.
 *  @param kiter         : valid grib_keys_iterator
 *  @return              1 if next iterator exists, 0 if no more elements to iterate on
 */
-int grib_keys_iterator_next(grib_keys_iterator *kiter);
-
+int grib_keys_iterator_next(grib_keys_iterator* kiter);
+int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter);
 
 /*! get the key name from the iterator
 *  @param kiter         : valid grib_keys_iterator
 *  @return              key name
 */
 const char* grib_keys_iterator_get_name(grib_keys_iterator *kiter);
+char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter);
 
 /*! Delete the iterator.
 *  @param kiter         : valid grib_keys_iterator
 *  @return              0 if OK, integer value on error
 */
-int grib_keys_iterator_delete( grib_keys_iterator* kiter);
+int grib_keys_iterator_delete(grib_keys_iterator* kiter);
+int codes_bufr_keys_iterator_delete(bufr_keys_iterator* kiter);
 
 /*! Rewind the iterator.
 *  @param kiter         : valid grib_keys_iterator
 *  @return              0 if OK, integer value on error
 */
 int grib_keys_iterator_rewind(grib_keys_iterator* kiter);
+int codes_bufr_keys_iterator_rewind(bufr_keys_iterator* kiter);
 
 int grib_keys_iterator_set_flags(grib_keys_iterator *kiter,unsigned long flags);
 

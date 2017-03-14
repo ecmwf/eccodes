@@ -38,23 +38,23 @@ simple_bitmap.grib"
 no_packing="gen.grib|row.grib|gen_bitmap.grib|constant_width_bitmap.grib|constant_width_boust_bitmap.grib"
 
 test_data() {
-	${tools_dir}grib_filter test.filter $simple > $simple.data
+	${tools_dir}/grib_filter test.filter $simple > $simple.data
 
 	for f in $files
 	do 
-		${tools_dir}grib_filter test.filter $f > $f.data
+		${tools_dir}/grib_filter test.filter $f > $f.data
 		diff $simple.data $f.data > /dev/null
-		${tools_dir}grib_compare -cvalues $f $simple
+		${tools_dir}/grib_compare -cvalues $f $simple
 		echo $f decoding test passed > $REDIRECT
 
 		exclude=`echo $f | awk " /$no_packing/ {print \"found\";} "`
 		if [ -z "$exclude" ] && [ $encoding != 0 ]
 		then
 			rm -f $f.copied
-			${tools_dir}grib_copy -r $f $f.copied
-			${tools_dir}grib_filter test.filter $f.copied > $f.copied.data
+			${tools_dir}/grib_copy -r $f $f.copied
+			${tools_dir}/grib_filter test.filter $f.copied > $f.copied.data
 			diff $simple.data $f.copied.data > /dev/null
-			${tools_dir}grib_compare -cvalues $f.copied $simple
+			${tools_dir}/grib_compare -cvalues $f.copied $simple
 			echo $f encoding test passed > $REDIRECT
 			echo > $REDIRECT
 		fi
@@ -78,26 +78,26 @@ test_data
 
 # Now make sure grib_dump works on a second-order row-by-row file
 # See GRIB-147
-${tools_dir}grib_dump second_ord_rbr.grib1 > $REDIRECT
+${tools_dir}/grib_dump second_ord_rbr.grib1 > $REDIRECT
 
 # Test nearest neighbour on second order with a bitmap
 # GRIB-541
 sec_ord_bmp=sec_ord_bmp.$$.grib1
 
 # Convert to second order packing
-${tools_dir}grib_set -r -s packingType=grid_second_order gen_bitmap.grib $sec_ord_bmp
+${tools_dir}/grib_set -r -s packingType=grid_second_order gen_bitmap.grib $sec_ord_bmp
 # Check there are missing values
-nums=`${tools_dir}grib_get -p numberOfDataPoints,numberOfCodedValues,numberOfMissing $sec_ord_bmp`
+nums=`${tools_dir}/grib_get -p numberOfDataPoints,numberOfCodedValues,numberOfMissing $sec_ord_bmp`
 [ "$nums" = "5969 4 5965" ]
 
-res=`${tools_dir}grib_get -l 33,88.5 $sec_ord_bmp`
+res=`${tools_dir}/grib_get -l 33,88.5 $sec_ord_bmp`
 [ "$res" = "9999 5.51552 9999 9999 " ]
 
-res=`${tools_dir}/grib_get -l 28.5,90 $sec_ord_bmp`
+res=`${tools_dir}//grib_get -l 28.5,90 $sec_ord_bmp`
 [ "$res" = "3.51552 9999 5.26552 9999 " ]
 
 # GRIB-203 nearest on M-F second order boustrophedonic
-res=`${tools_dir}grib_get -w count=1 -l 0,0 lfpw.grib1`
+res=`${tools_dir}/grib_get -w count=1 -l 0,0 lfpw.grib1`
 [ "$res" = "20560.7 20563.4 20554.7 20559.5 " ]
 
 rm -f $sec_ord_bmp

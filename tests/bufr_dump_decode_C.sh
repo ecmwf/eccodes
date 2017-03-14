@@ -60,7 +60,7 @@ do
   filePath=${data_dir}/bufr/$file
 
   # Generate C code from BUFR file
-  ${tools_dir}bufr_dump -DC $filePath > $tempSrc
+  ${tools_dir}/bufr_dump -DC $filePath > $tempSrc
 
   # Too large for this test
   if [ "$file" = "ias1_240.bufr" ]; then

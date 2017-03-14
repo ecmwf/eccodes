@@ -58,7 +58,7 @@ do
   tempExe=$label.$file.exe
 
   # Generate F90 code from BUFR file
-  ${tools_dir}bufr_dump -Efortran ${data_dir}/bufr/$file > $tempSrc
+  ${tools_dir}/bufr_dump -Efortran ${data_dir}/bufr/$file > $tempSrc
 
   # Too large for this test
   if [ "$file" = "ias1_240.bufr" ]; then
@@ -71,12 +71,12 @@ do
     # The executable always creates a file called outfile.bufr
     # valgrind --error-exitcode=1  ./$tempExe
     ./$tempExe
-    ${tools_dir}bufr_compare ${data_dir}/bufr/$file $tempBufr
+    ${tools_dir}/bufr_compare ${data_dir}/bufr/$file $tempBufr
 
     TEMP_JSON1=${label}.$file.json
     TEMP_JSON2=${label}.$tempBufr.json
-    ${tools_dir}bufr_dump ${data_dir}/bufr/$file > $TEMP_JSON1
-    ${tools_dir}bufr_dump $tempBufr              > $TEMP_JSON2
+    ${tools_dir}/bufr_dump ${data_dir}/bufr/$file > $TEMP_JSON1
+    ${tools_dir}/bufr_dump $tempBufr              > $TEMP_JSON2
     diff $TEMP_JSON1 $TEMP_JSON2
     rm -f $TEMP_JSON1 $TEMP_JSON2
   fi

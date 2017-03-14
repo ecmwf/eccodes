@@ -2,6 +2,6 @@
 
 . ./include.sh
 
-${examples_dir}precision > /dev/null
+${examples_dir}/precision > /dev/null
 
 

@@ -10,6 +10,13 @@ public :: codes_skip_computed, &
           codes_skip_read_only
 public :: codes_keys_iterator_get_name, &
           codes_keys_iterator_rewind
+          
+public :: codes_bufr_keys_iterator_new, &
+          codes_bufr_keys_iterator_next, &
+          codes_bufr_keys_iterator_get_name, &
+          codes_bufr_keys_iterator_rewind, &
+          codes_bufr_keys_iterator_delete
+
 public :: codes_new_from_message, &
           codes_grib_new_from_samples, codes_new_from_file, &
           codes_bufr_new_from_samples, &

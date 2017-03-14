@@ -317,7 +317,9 @@ int grib_write_message(grib_handle* h,const char* file,const char* mode)
 
 grib_handle* grib_handle_clone ( grib_handle* h )
 {
-    return grib_handle_new_from_message_copy ( h->context, h->buffer->data, h->buffer->ulength );
+    grib_handle* result = grib_handle_new_from_message_copy ( h->context, h->buffer->data, h->buffer->ulength );
+    result->product_kind = h->product_kind;
+    return result;
 }
 
 grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind product, int* error)
@@ -798,6 +800,7 @@ grib_handle* gts_new_from_file( grib_context* c, FILE* f,int *error )
     gl->product_kind = PRODUCT_GTS;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
+    if (gl->offset == 0) grib_context_set_handle_file_count(c,1);
 
     return gl;
 }
@@ -836,6 +839,7 @@ grib_handle* taf_new_from_file( grib_context* c, FILE* f,int *error )
     gl->product_kind = PRODUCT_TAF;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
+    if (gl->offset == 0) grib_context_set_handle_file_count(c,1);
 
     return gl;
 }
@@ -874,6 +878,7 @@ grib_handle* metar_new_from_file( grib_context* c, FILE* f,int *error )
     gl->product_kind = PRODUCT_METAR;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
+    if (gl->offset == 0) grib_context_set_handle_file_count(c,1);
 
     return gl;
 }
@@ -912,6 +917,7 @@ grib_handle* bufr_new_from_file( grib_context* c, FILE* f,int *error )
     gl->product_kind = PRODUCT_BUFR;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
+    if (gl->offset == 0) grib_context_set_handle_file_count(c,1);
 
     return gl;
 }
@@ -950,6 +956,7 @@ grib_handle* any_new_from_file( grib_context* c, FILE* f,int *error )
     gl->product_kind = PRODUCT_ANY;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
+    if (gl->offset == 0) grib_context_set_handle_file_count(c,1);
 
     return gl;
 }

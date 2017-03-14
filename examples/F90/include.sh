@@ -31,14 +31,14 @@ else
     export ECCODES_DEFINITION_PATH
     ECCODES_SAMPLES_PATH=$cpath/samples
     export ECCODES_SAMPLES_PATH
-    tools_dir=$cpath/tools/
-    examples_dir=$cpath/examples/F90/
+    tools_dir=$cpath/tools
+    examples_dir=$cpath/examples/F90
     data_dir=$cpath/data
     samples_dir=$cpath/samples
 
     if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
-      tools_dir="valgrind --error-exitcode=1 -q $cpath/tools/"
-      examples_dir="valgrind --error-exitcode=1 -q $cpath/examples/F90/"
+      tools_dir="valgrind --error-exitcode=1 -q $cpath/tools"
+      examples_dir="valgrind --error-exitcode=1 -q $cpath/examples/F90"
     fi
 
   else

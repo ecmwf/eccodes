@@ -11,7 +11,7 @@
 ! FORTRAN 90 Implementation: bufr_read_tropical_cyclone
 !
 ! Description: how to read data for a tropical cyclone BUFR message.
-! 
+!
 
 program bufr_read_tropical_cyclone
   use eccodes
@@ -20,7 +20,7 @@ program bufr_read_tropical_cyclone
   integer            :: iret
   integer            :: ibufr,skipMember
   integer            :: significance
-  integer            :: year,month,day,hour,minute 
+  integer            :: year,month,day,hour,minute
   integer            :: i,j,k,ierr,count=1
   integer            :: rankPosition,rankSignificance,rankPressure,rankWind
   integer            :: rankPeriod,numberOfPeriods
@@ -63,9 +63,9 @@ program bufr_read_tropical_cyclone
     ! How many different timePeriod in the data structure?
     rankPeriod=0
     ierr=0
-    do while(ierr==0) 
+    do while(ierr==0)
       rankPeriod=rankPeriod+1
-      write (rankPeriodStr,'(I0)')rankPeriod 
+      write (rankPeriodStr,'(I0)')rankPeriod
       call codes_get(ibufr,'#'//trim(rankPeriodStr)//'#timePeriod',period,ierr)
       if(allocated(period)) deallocate(period)
     enddo
@@ -96,7 +96,7 @@ program bufr_read_tropical_cyclone
       write(*,'(a)')'Observed storm centre position missing'
     else
       write(*,'(A,F8.2,A,F8.2)')'Observed storm centre: latitude=',latitudeCentre,' longitude=',longitudeCentre
-    endif 
+    endif
 
     ! Location of storm in perturbed analysis
     call codes_get(ibufr,'#2#meteorologicalAttributeSignificance',significance);
@@ -146,7 +146,7 @@ program bufr_read_tropical_cyclone
     do i=2,numberOfPeriods
 
       rankPeriod=rankPeriod+1
-      write (rankPeriodStr,'(I0)')rankPeriod 
+      write (rankPeriodStr,'(I0)')rankPeriod
       call codes_get(ibufr,'#'//trim(rankPeriodStr)//'#timePeriod',ivalues);
       do k=1,size(ivalues)
         if (ivalues(k)/=CODES_MISSING_LONG) then
@@ -155,10 +155,10 @@ program bufr_read_tropical_cyclone
         endif
       enddo
       deallocate(ivalues)
-      
+
       ! Location of the storm
       rankSignificance=rankSignificance+1
-      write (rankSignificanceStr,'(I0)')rankSignificance 
+      write (rankSignificanceStr,'(I0)')rankSignificance
       call codes_get(ibufr,'#'//trim(rankSignificanceStr)//'#meteorologicalAttributeSignificance',ivalues);
       do k=1,size(ivalues)
         if (ivalues(k)/=CODES_MISSING_LONG) then
@@ -169,7 +169,7 @@ program bufr_read_tropical_cyclone
       deallocate(ivalues)
 
       rankPosition=rankPosition+1
-      write (rankPositionStr,'(I0)')rankPosition 
+      write (rankPositionStr,'(I0)')rankPosition
       call codes_get(ibufr,'#'//trim(rankPositionStr)//'#latitude',values);
       latitude(:,i)=values
       call codes_get(ibufr,'#'//trim(rankPositionStr)//'#longitude',values);
@@ -177,7 +177,7 @@ program bufr_read_tropical_cyclone
 
       if (significance==1) then
         rankPressure=rankPressure+1
-        write (rankPressureStr,'(I0)')rankPressure 
+        write (rankPressureStr,'(I0)')rankPressure
         call codes_get(ibufr,'#'//trim(rankPressureStr)//'#pressureReducedToMeanSeaLevel',values);
         pressure(:,i)=values
       else
@@ -187,7 +187,7 @@ program bufr_read_tropical_cyclone
 
       ! Location of maximum wind
       rankSignificance=rankSignificance+1
-      write (rankSignificanceStr,'(I0)')rankSignificance 
+      write (rankSignificanceStr,'(I0)')rankSignificance
       call codes_get(ibufr,'#'//trim(rankSignificanceStr)//'#meteorologicalAttributeSignificance',ivalues);
       do k=1,size(ivalues)
         if (ivalues(k)/=CODES_MISSING_LONG) then
@@ -198,7 +198,7 @@ program bufr_read_tropical_cyclone
       deallocate(ivalues)
 
       rankPosition=rankPosition+1
-      write (rankPositionStr,'(I0)')rankPosition 
+      write (rankPositionStr,'(I0)')rankPosition
       call codes_get(ibufr,'#'//trim(rankPositionStr)//'#latitude',values);
       latitudeWind(:,i)=values
       call codes_get(ibufr,'#'//trim(rankPositionStr)//'#longitude',values);
@@ -206,7 +206,7 @@ program bufr_read_tropical_cyclone
 
       if (significance==3) then
         rankWind=rankWind+1
-        write (rankWindStr,'(I0)')rankWind 
+        write (rankWindStr,'(I0)')rankWind
         call codes_get(ibufr,'#'//trim(rankWindStr)//'#windSpeedAt10M',values);
         wind(:,i)=values
       else
@@ -267,9 +267,9 @@ program bufr_read_tropical_cyclone
 
     count=count+1
 
-  end do  
+  end do
 
-  ! Close file  
+  ! Close file
   call codes_close_file(ifile)
 
 end program bufr_read_tropical_cyclone

@@ -1348,12 +1348,11 @@ struct grib_action_file_list
     grib_action_file * last ;
 };
 
-/* keys iterator common to grib and bufr*/
+/* Common keys iterator */
 struct grib_keys_iterator{
   grib_handle     *handle;
   unsigned long   filter_flags;     /** flags to filter out accessors */
   unsigned long   accessor_flags_skip;
-  unsigned long   accessor_flags_only;
   grib_accessor   *current;
   char            *name_space;
   int             at_start;
@@ -1364,6 +1363,21 @@ struct grib_keys_iterator{
   grib_trie       *seen;
 };
 
+/* BUFR-specific keys iterator */
+struct bufr_keys_iterator{
+  grib_handle*      handle;
+  unsigned long     filter_flags;     /** flags to filter out accessors */
+  unsigned long     accessor_flags_skip;
+  unsigned long     accessor_flags_only;
+  grib_accessor*    current;
+  grib_string_list* names;
+  int               at_start;
+  int               match;
+  int               i_curr_attribute;
+  grib_accessor**   attributes;
+  char*             prefix;
+  grib_trie*        seen;
+};
 
 /* ----------*/
 /* md5 */

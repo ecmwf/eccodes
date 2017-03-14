@@ -1,5 +1,5 @@
 #examples
-#TODO: bufr_keys_iterator removed until implement new interface
+
 GRIB (
       grib_clone
       grib_copy_message
@@ -29,6 +29,7 @@ BUFR (
       bufr_expanded
       bufr_get_keys
       bufr_get_string_array
+      bufr_keys_iterator
       bufr_read_header
       bufr_read_scatterometer
       bufr_read_synop

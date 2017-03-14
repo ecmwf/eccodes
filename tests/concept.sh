@@ -74,7 +74,7 @@ tmp="tmp.concept.out"
 for d in $data
 do
   set -e
-  ${tools_dir}grib_ls -p gridType,packingType -w dataRepresentationType!=192 ${data_dir}/$d > $tmp
+  ${tools_dir}/grib_ls -p gridType,packingType -w dataRepresentationType!=192 ${data_dir}/$d > $tmp
  
   set +e
   grep unknown $tmp

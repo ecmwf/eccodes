@@ -23,6 +23,12 @@ grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_f
 
     if (!h) return NULL;
 
+    /*if (h->product_kind == PRODUCT_BUFR) {
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "Invalid keys iterator for BUFR message: please use codes_bufr_keys_iterator_new");
+        return NULL;
+    }*/
+
     ki= (grib_keys_iterator*)grib_context_malloc_clear(h->context,sizeof(grib_keys_iterator));
     if (!ki) return NULL;
 

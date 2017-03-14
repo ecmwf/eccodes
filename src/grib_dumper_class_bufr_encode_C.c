@@ -386,12 +386,20 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
     } else {
         r=compute_bufr_key_rank(h,self->keys,a->name);
         if( !grib_is_missing_long(a,value) ) {
-            if (r!=0)
+            int doing_unexpandedDescriptors=0;
+            if (r!=0) {
                 fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long(h, \"#%d#%s\", ", r,a->name);
-            else
+            } else {
+                if (strcmp(a->name, "unexpandedDescriptors")==0) {
+                    doing_unexpandedDescriptors=1;
+                    fprintf(self->dumper.out,"\n  /* Create the structure of the data section */\n");
+                }
                 fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long(h, \"%s\", ", a->name);
+            }
 
             fprintf(self->dumper.out,"%ld), 0);\n",value);
+            if (doing_unexpandedDescriptors)
+                fprintf(self->dumper.out,"\n");
         }
     }
 
@@ -802,7 +810,8 @@ static void header(grib_dumper* d, grib_handle* h)
 static void footer(grib_dumper* d, grib_handle* h)
 {
     grib_dumper_bufr_encode_C *self = (grib_dumper_bufr_encode_C*)d;
-    fprintf(self->dumper.out,"\n  CODES_CHECK(codes_set_long(h, \"pack\", 1), 0);\n");
+    fprintf(self->dumper.out,"\n  /* Encode the keys back in the data section */\n");
+    fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long(h, \"pack\", 1), 0);\n\n");
     if (d->count==1)
         fprintf(self->dumper.out,"  fout = fopen(\"outfile.bufr\", \"w\");\n");
     else

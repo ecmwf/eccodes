@@ -64,7 +64,7 @@ list( APPEND tests
 
 # The high level python test requires new features in the unittest
 # which are only there for python 2.7 onwards
-if( PYTHON_VERSION_STRING VERSION_GREATER "2.7" )
+if( HAVE_PYTHON AND PYTHON_VERSION_STRING VERSION_GREATER "2.7" )
     ecbuild_info("Python examples: Adding test for PythonicGrib")
     list( APPEND tests high_level_api )
 endif()

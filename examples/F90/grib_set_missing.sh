@@ -9,5 +9,5 @@
 
 . ./include.sh
 
-${examples_dir}eccodes_f_grib_set_missing > /dev/null
+${examples_dir}/eccodes_f_grib_set_missing > /dev/null
 rm -f f_out_surface_level.grib2

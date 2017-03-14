@@ -13,14 +13,14 @@
 label="grib_copy_namespace_test_f"
 
 INPUT=../../data/regular_latlon_surface.grib1
-res=`${tools_dir}grib_get -p Ni,Nj $INPUT`
+res=`${tools_dir}/grib_get -p Ni,Nj $INPUT`
 [ "$res" = "16 31" ]
 
 #The input and output BUFR files are hardcoded in the f90 example!!!
 OUTPUT=out.grib_copy_namespace.grib
-${examples_dir}./eccodes_f_grib_copy_namespace
+${examples_dir}/eccodes_f_grib_copy_namespace
 
-res=`${tools_dir}grib_get -p Ni,Nj $OUTPUT`
+res=`${tools_dir}/grib_get -p Ni,Nj $OUTPUT`
 [ "$res" = "MISSING 501" ]
 
 rm -f $OUTPUT

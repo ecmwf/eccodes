@@ -31,24 +31,24 @@ cat > $tempRules <<EOF
  write;
 EOF
 
-${tools_dir}bufr_filter -o $tempOut $tempRules $BufrFile
+${tools_dir}/bufr_filter -o $tempOut $tempRules $BufrFile
 
 # There are two differences. So this should fail
 set +e
-${tools_dir}bufr_compare $tempOut $BufrFile
+${tools_dir}/bufr_compare $tempOut $BufrFile
 status=$?
 set -e
 [ $status -eq 1 ]
 
 # Blacklist all the channelQualityFlagsForAtovs keys
-${tools_dir}bufr_compare -b channelQualityFlagsForAtovs $tempOut $BufrFile
+${tools_dir}/bufr_compare -b channelQualityFlagsForAtovs $tempOut $BufrFile
 
 # Blacklist both the channelQualityFlagsForAtovs keys individually
-${tools_dir}bufr_compare -b '#3#channelQualityFlagsForAtovs,#5#channelQualityFlagsForAtovs' $tempOut $BufrFile
+${tools_dir}/bufr_compare -b '#3#channelQualityFlagsForAtovs,#5#channelQualityFlagsForAtovs' $tempOut $BufrFile
 
 # Blacklist only one of the channelQualityFlagsForAtovs keys. Will fail
 set +e
-${tools_dir}bufr_compare -b '#5#channelQualityFlagsForAtovs' $tempOut $BufrFile >$tempText
+${tools_dir}/bufr_compare -b '#5#channelQualityFlagsForAtovs' $tempOut $BufrFile >$tempText
 status=$?
 set -e
 [ $status -eq 1 ]

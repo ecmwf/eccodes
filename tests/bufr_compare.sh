@@ -35,7 +35,7 @@ fRules=${label}.filter
 f="syno_1.bufr"
 echo "Test: comparing the same files" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_compare $f $f >> $fLog
+${tools_dir}//bufr_compare $f $f >> $fLog
 
 #----------------------------------------------------
 # Test: comparing two completely different files
@@ -45,7 +45,7 @@ f1="syno_1.bufr"
 f2="aaen_55.bufr"
 echo "Test: comparing two completely different files" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_compare $f1 $f2 >> $fLog
+${tools_dir}//bufr_compare $f1 $f2 >> $fLog
 if [ $? -eq 0 ]; then
    echo "bufr_compare should have failed if files are completely different" >&2
    exit 1
@@ -60,10 +60,10 @@ echo "Test: comparing with and witout the -b switch" >> $fLog
 echo "file: $f" >> $fLog
 
 #Alter a key in the file 
-${tools_dir}/bufr_set -s dataCategory=2 $f ${fBufrTmp} >> $fLog
+${tools_dir}//bufr_set -s dataCategory=2 $f ${fBufrTmp} >> $fLog
 
 set +e
-${tools_dir}/bufr_compare $f ${fBufrTmp}>> $fLog
+${tools_dir}//bufr_compare $f ${fBufrTmp}>> $fLog
 if [ $? -eq 0 ]; then
    echo "bufr_compare should have failed if files are different" >&2
    exit 1
@@ -71,7 +71,7 @@ fi
 set -e
 
 # Now compare with -b switch. No difference should be found.
-${tools_dir}/bufr_compare -b dataCategory $f ${fBufrTmp}>> $fLog
+${tools_dir}//bufr_compare -b dataCategory $f ${fBufrTmp}>> $fLog
 
 #----------------------------------------------------
 # Test: comparing with the -r switch
@@ -81,20 +81,20 @@ ${tools_dir}/bufr_compare -b dataCategory $f ${fBufrTmp}>> $fLog
 #cat temp_101.bufr syno_multi.bufr > $fBufrInput2
 
 #set +e
-#${tools_dir}/bufr_compare ${fBufrInput1} ${fBufrInput2} >> $fLog
+#${tools_dir}//bufr_compare ${fBufrInput1} ${fBufrInput2} >> $fLog
 #if [ $? -eq 0 ]; then
 #   echo "bufr_compare should have failed if the message order in the files is different" >&2
 #   exit 1
 #fi
 #set -e
-#${tools_dir}/bufr_compare -r ${fBufrInput1} ${fBufrInput2}>> $fLog
+#${tools_dir}//bufr_compare -r ${fBufrInput1} ${fBufrInput2}>> $fLog
 
 #----------------------------------------------------
 # Change subCentre and compare
 #----------------------------------------------------
-${tools_dir}bufr_set -s bufrHeaderSubCentre=12 aaen_55.bufr $fBufrTmp
+${tools_dir}/bufr_set -s bufrHeaderSubCentre=12 aaen_55.bufr $fBufrTmp
 set +e
-${tools_dir}bufr_compare aaen_55.bufr $fBufrTmp > $fLog 2>&1
+${tools_dir}/bufr_compare aaen_55.bufr $fBufrTmp > $fLog 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
@@ -107,14 +107,14 @@ temp_dir=tempdir.${label}
 mkdir -p $temp_dir
 infile=aaen_55.bufr
 cp $infile $temp_dir
-${tools_dir}bufr_compare $infile $temp_dir >/dev/null
+${tools_dir}/bufr_compare $infile $temp_dir >/dev/null
 rm -fr $temp_dir
 
 #----------------------------------------------------
 # Compare attributes
 #----------------------------------------------------
 set +e
-${tools_dir}bufr_compare amv2_87.bufr amv3_87.bufr > $fLog 2>&1
+${tools_dir}/bufr_compare amv2_87.bufr amv3_87.bufr > $fLog 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
@@ -134,9 +134,9 @@ cat > $fRules <<EOF
  set pack=1;
  write;
 EOF
-${tools_dir}codes_bufr_filter -o $fBufrTmp $fRules $f
+${tools_dir}/codes_bufr_filter -o $fBufrTmp $fRules $f
 # Header keys have not changed
-${tools_dir}bufr_compare -H $f $fBufrTmp
+${tools_dir}/bufr_compare -H $f $fBufrTmp
 
 #Clean up
 rm -f $fLog $fBufrTmp $fBufrInput1 $fBufrInput2 $fRules

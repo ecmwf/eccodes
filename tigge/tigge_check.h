@@ -1199,6 +1199,26 @@ s2s/egrr: s2s.z_s2s_c_ukmo_20160102000000_glob_prod_pf_1440_002.rt.pl.grib2, fie
       {&point_in_time, &given_level, &pressure_level},
    },
 
+   {
+      "geopotential_pl",
+      -1300,
+      306000,
+      200,
+      350000,
+      {
+/*       {"model", GRIB_TYPE_STRING, 0, "glob"}, */
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 3},
+         {"parameterNumber", GRIB_TYPE_LONG, 4},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
+         {NULL, },
+      },
+      {&point_in_time, &given_level, &pressure_level},
+   },
+
+
 /*
 warning: s2s.lfpw_t_10.grib2, field 61 [temperature_pl]: temperature_pl minimum value 159.934 is not in [160,260]
 s2s/egrr: warning: s2s.z_s2s_c_ukmo_19960417000000_glob_prod_pf_1440_002.hc.pl.grib2, field 450 [temperature_pl]: temperature_pl minimum value 260.687 is not in [150,260]
@@ -1261,16 +1281,15 @@ warning: s2s.z_tigge_c_kwbc_20020817000000_ncep_prod_pf_pl_0000_003_0010_u.grib2
    s2s/ammc: warning: s2s.u_20150913_31.grib2, field 550 [u_velocity_pl]: u_velocity_pl minimum value 0.352796 is not in [-150,-0.001]
    s2s/ammc: warning: s2s.u_20151101_13.grib2, field 401 [u_velocity_pl]: u_velocity_pl minimum value -195.645 is not in [-180,1]
    uerra/edzw-an: warning: /tmp/marm/uerra/cosmo/sample2/grib2/an.200812020800.u.pl.grib2, field 1 [u_velocity_pl]: u_velocity_pl minimum value 1.41138 is not in [-200,1]
+   s2s, ammc-enfo: s2s.u_20161222_4.pl.grib2, field 261 [u_velocity_pl]: u_velocity_pl minimum value -223.937 is not in [-200,-1]
 */
    {
       "u_velocity_pl",
-      -200,
-      -1,
+      -250,
+      5,
       1,
-      200,
+      250,
       {
-         {"model", GRIB_TYPE_STRING, 0, "glob"},
-
          {"paramId", GRIB_TYPE_LONG, 131},
 
          {"discipline", GRIB_TYPE_LONG, 0},
@@ -1349,17 +1368,16 @@ warning: s2s.z_tigge_c_kwbc_20020817000000_ncep_prod_pf_pl_0000_003_0010_u.grib2
 warning: s2s.z_tigge_c_kwbc_20150817000000_ncep_prod_pf_pl_0000_015_0500_w.grib2, field 3 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -7.25731 is not in [-6,0]
   s2s/kwbc/enfo: warning: s2s.z_tigge_c_kwbc_20151114000000_ncep_prod_pf_pl_0000_011_0500_w.grib2, field 7 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -10.202 is not in [-10,0]
   s2s/cwao/enfo: warning: s2s.z_s2s_c_cwao_20160512000000_glob_prod_??_pl_00_384_003.grib2, field 28 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -19.8681 is not in [-12,0]
+  s2s/rksl/enfh: warning: s2s.002.pl.grib2, field 2489 [w_vertical_velocity_pl]: w_vertical_velocity_pl maximum value -1.23174 is not in [-1,25]
 
 */
    {
       "w_vertical_velocity_pl",
       -25,
       0,
-      0,
+       -2,
       25,
       {
-         {"model", GRIB_TYPE_STRING, 0, "glob"},
-
          {"paramId", GRIB_TYPE_LONG, 135},
 
          {"discipline", GRIB_TYPE_LONG, 0},
@@ -1471,7 +1489,7 @@ uerra, eswi-an: an.sp.sfc.grib2, field 1 [surface_pressure_sfc]: surface_pressur
       "water_runoff_sfc",
       -0.001,
        5,
-       0.5,
+       0.3,
        30,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
@@ -1767,7 +1785,7 @@ s2s/rums warning: s2s.z_s2s_c_rhmc_20150819000000_glob_prod_1464_001.sl.grib2, f
       "soil_moisture_top_100_cm_sfc.glob",
       -1e-15,
       70,
-      400,
+      380,
       1400,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
@@ -1933,7 +1951,7 @@ warning: s2s.z_tigge_c_kwbc_19990817000000_ncep_prod_cf_sl_0024_000_0000_sd.grib
 */
    {
       "snow_depth_water_equivalent_sfc.glob.s2",
-      0,
+      -0.00001,
       0,
       100,
       15000,
@@ -2253,6 +2271,28 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       },
       {&point_in_time, &predefined_thickness},
    },
+/* 
+
+uerra/egrr (something like ad hoc 1 grid-point issue (similarly grid-point storms..)): warning: enda.2009-01-20.sfc.grib2, field 831 [low_cloud_cover_sfc]: low_cloud_cover_sfc maximum value 317.188 is not in [0.9999,100]
+*/
+   {
+      "low_cloud_cover_sfc.egrr",
+      0,
+      1e-10,
+      0.9999,
+      400.00001,
+      {
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 6},
+         {"parameterNumber", GRIB_TYPE_LONG, 3},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 8},
+         {NULL, },
+      },
+      {&point_in_time, &predefined_thickness},
+   },
+
+
    /* uerra model levels */
    {
       "pressure_ml",
@@ -2311,7 +2351,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
    {
       "u_velocity_ml",
       -200,
-         5,
+        10,
        0.1,
        200,
       {
@@ -2363,7 +2403,8 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
 
 /* 
 uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl.grib2, field 76 [geopotential_height_pl.ur]: geopotential_height_pl.ur minimum value -2938.29 is not in [-1300,300000]
-*/
+
+??? xxx TBD to be deleted and the global one used only!
 
    {
       "geopotential_height_pl.ur",
@@ -2383,6 +2424,7 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       },
       {&point_in_time, &given_level, &pressure_level},
    },
+*/
 
    {
       "specific_cloud_ice_water_content_pl",
@@ -2469,9 +2511,9 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
    {
       "relative_humidity_pl",
        0,
-       20,
+       30,
        0,
-       100.01,
+       160,
       {
          {"paramId", GRIB_TYPE_LONG, 157},
          {"discipline", GRIB_TYPE_LONG, 0},
@@ -2555,7 +2597,7 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       0,
       20,
       1,
-      100.01,
+      160,
       {
          {"paramId", GRIB_TYPE_LONG, 157},
          {"discipline", GRIB_TYPE_LONG, 0},
@@ -2646,7 +2688,7 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       0,
       25,
       90,
-      100.1,
+      130,
       {
          {"paramId", GRIB_TYPE_LONG, 260242},
          {"discipline", GRIB_TYPE_LONG, 0},
@@ -3099,7 +3141,7 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       "soil_temperature_layer",
       200,
       280,
-      300,
+      285,
       350,
       {
          {"paramId", GRIB_TYPE_LONG, 260360},
@@ -3115,24 +3157,6 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       {&point_in_time, &given_thickness, &has_bitmap, &has_soil_layer},
    },
 
-   {
-      "w_vertical_velocity_pl",
-      -20,
-      0,
-      0,
-      20,
-      {
-         {"class", GRIB_TYPE_STRING, 0, "ur"},
-         {"paramId", GRIB_TYPE_LONG, 135},
-         {"discipline", GRIB_TYPE_LONG, 0},
-         {"parameterCategory", GRIB_TYPE_LONG, 2},
-         {"parameterNumber", GRIB_TYPE_LONG, 8},
-
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
-         {NULL, },
-      },
-      {&point_in_time, &given_level, &pressure_level},
-   },
    {
       "cloud_cover_pl.ur",
       0,
@@ -3202,7 +3226,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
    {
       "total_cloud_cover_sfc.ur.eswi",
       0,
-      1e-10,
+      2e-10,
       90.,
       100.,
       {
@@ -3220,29 +3244,6 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
       {&point_in_time, &predefined_thickness},
    },
 
-/*
- uerra, cosmo-det-an: u_velocity_pl minimum value 1.40681 is not in [-200,-1]
-*/
-   {
-      "u_velocity_pl",
-      -200,
-      5,
-      1,
-      200,
-      {
-         {"class", GRIB_TYPE_STRING, 0, "ur"},
-
-         {"paramId", GRIB_TYPE_LONG, 131},
-
-         {"discipline", GRIB_TYPE_LONG, 0},
-         {"parameterCategory", GRIB_TYPE_LONG, 2},
-         {"parameterNumber", GRIB_TYPE_LONG, 2},
-
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
-         {NULL, },
-      },
-      {&point_in_time, &given_level, &pressure_level},
-   },
    {
       "soil_depth",
       0.005,
@@ -3260,6 +3261,39 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
       },
       {&point_in_time, &given_level, &has_bitmap, &has_soil_level},
    },
+
+   {
+      "volumetric_field_capacity",
+      -1e-6,
+      1e-6,
+      -1e-6,
+      1e-6,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260211},
+         {"discipline", GRIB_TYPE_LONG, 2},
+         {"parameterCategory", GRIB_TYPE_LONG, 3},
+         {"parameterNumber", GRIB_TYPE_LONG, 11},
+         {NULL, },
+      },
+      {&point_in_time, &has_bitmap},
+   },
+
+   {
+      "volumetric_wilting_point",
+      -1e-6,
+      1e-6,
+      -1e-6,
+      1e-6,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260200},
+         {"discipline", GRIB_TYPE_LONG, 2},
+         {"parameterCategory", GRIB_TYPE_LONG, 0},
+         {"parameterNumber", GRIB_TYPE_LONG, 27},
+         {NULL, },
+      },
+      {&point_in_time, &has_bitmap},
+   },
+
 
 };
 

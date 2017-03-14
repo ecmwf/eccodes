@@ -12,11 +12,12 @@
 #Define a common label for all the tmp files
 label="bufr_copy_data_c"
 
-TEMP=$label.out.bufr
+TEMP_BUFR=$label.out.bufr
+TEMP_TEXT=$label.out.txt
 REF=$label.compare.log.ref
 MYLOG=$label.compare.log
 
-rm -f ${TEMP} ${REF} ${MYLOG}
+rm -f ${TEMP_BUFR} ${TEMP_TEXT} ${REF} ${MYLOG}
 
 cat > ${REF} <<EOF
 == 1 == DIFFERENCE == Different size for "unexpandedDescriptors"  [43]  [28]
@@ -53,15 +54,18 @@ cat > ${REF} <<EOF
 EOF
 
 INPUT=${data_dir}/bufr/metar_with_2_bias.bufr
-${examples_dir}c_bufr_copy_data ${INPUT} ${TEMP}
+${examples_dir}/c_bufr_copy_data ${INPUT} ${TEMP_BUFR} > ${TEMP_TEXT}
+
+num_copied_keys=`grep -c '^Copied' ${TEMP_TEXT}`
+[ $num_copied_keys -eq 58 ]
 
 # The input and output BUFR messages should be different
 set +e
-${tools_dir}bufr_compare ${TEMP} ${INPUT} > ${MYLOG}
+${tools_dir}/bufr_compare ${TEMP_BUFR} ${INPUT} > ${MYLOG}
 status=$?
 set -e
 [ $status -eq 1 ]
 
 diff ${MYLOG} ${REF}
 
-rm -f ${TEMP} ${REF} ${MYLOG}
+rm -f ${TEMP_BUFR} ${REF} ${MYLOG} ${TEMP_TEXT}

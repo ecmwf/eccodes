@@ -11,7 +11,7 @@
 ! FORTRAN 90 Implementation: bufr_read_scatterometer
 !
 ! Description: how to read data for a given beam from scatterometer BUFR messages.
-! 
+!
 ! Please note that scatterometer data can be encoded in various ways in BUFR. Therefore the code
 ! below might not work directly for other types of messages than the one used in the
 ! example. It is advised to use bufr_dump first to understand the structure of these messages.
@@ -38,15 +38,15 @@ real(kind=8), dimension(:), allocatable :: year
 
     write(*,'(A,I3)') 'message: ',count
 
-    ! We need to instruct ecCodes to expand all the descriptors 
+    ! We need to instruct ecCodes to expand all the descriptors
     ! i.e. unpack the data values
     call codes_set(ibufr,"unpack",1);
 
     ! The BUFR file contains a single message with 2016 subsets in a compressed form.
     ! It means each subset has exactly the same structure: they store one location with
-    ! several beams and one backscatter value in each beam. 
+    ! several beams and one backscatter value in each beam.
     !
-    ! To print the backScatter values for beamIdentifier=2 from all the subsets 
+    ! To print the backScatter values for beamIdentifier=2 from all the subsets
     ! we will simply access the key by condition (see below).
 
     ! Read the total number of subsets.
@@ -78,13 +78,13 @@ real(kind=8), dimension(:), allocatable :: year
 
     ! Print the values
     write(*,*) 'pixel   lat    lon     backscatter'
-    write(*,*) "--------------------------------------" 
+    write(*,*) "--------------------------------------"
 
     do i=1,numObs
         write(*,'(I4,3F10.5)') i,latVal(i),lonVal(i),bscatterVal(i)
-    end do 
-     
-    ! Free arrays 
+    end do
+
+    ! Free arrays
     deallocate(latVal)
     deallocate(lonVal)
     deallocate(bscatterVal)
@@ -97,9 +97,9 @@ real(kind=8), dimension(:), allocatable :: year
 
     count=count+1
 
-  end do  
+  end do
 
-  ! Close file  
+  ! Close file
   call codes_close_file(ifile)
 
 end program bufr_read_scatterometer

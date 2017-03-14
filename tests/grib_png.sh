@@ -34,10 +34,10 @@ fi
 
 for file in $files; do
   infile=${data_dir}/$file
-  ${tools_dir}grib_set -r -s packingType=grid_png $infile $temp >/dev/null
+  ${tools_dir}/grib_set -r -s packingType=grid_png $infile $temp >/dev/null
 
-  ${tools_dir}grib_get '-F%.2f' -p min,max,avg $infile > $temp1
-  ${tools_dir}grib_get '-F%.2f' -p min,max,avg $temp   > $temp2
+  ${tools_dir}/grib_get '-F%.2f' -p min,max,avg $infile > $temp1
+  ${tools_dir}/grib_get '-F%.2f' -p min,max,avg $temp   > $temp2
   diff $temp1 $temp2
 
   rm -f $temp $temp1 $temp2

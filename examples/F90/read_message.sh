@@ -14,9 +14,9 @@ out=out.readmsg.grib
 
 rm -f $out | true
 
-${examples_dir}eccodes_f_read_message > /dev/null
+${examples_dir}/eccodes_f_read_message > /dev/null
 
-${tools_dir}grib_compare $in $out
+${tools_dir}/grib_compare $in $out
 
 rm -f $out
 

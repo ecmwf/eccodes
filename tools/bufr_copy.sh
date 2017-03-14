@@ -13,5 +13,5 @@ echo "\endverbatim\\n"
 
 echo "-# Use the square brackets to insert the value of a key in the name of the output file. \\n"
 echo "\verbatim"
-echo ">bufr_copy in.bufr out_[dataCategory].bufr "
+echo ">bufr_copy in.bufr 'out_[dataCategory].bufr' "
 echo "\endverbatim\\n"

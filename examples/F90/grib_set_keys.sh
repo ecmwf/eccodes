@@ -9,12 +9,12 @@
 
 . ./include.sh
 
-${examples_dir}eccodes_f_grib_set_keys > /dev/null
-res=`${tools_dir}grib_get -p centre out.set.grib1`
+${examples_dir}/eccodes_f_grib_set_keys > /dev/null
+res=`${tools_dir}/grib_get -p centre out.set.grib1`
 [ "$res" = "cnmc" ]
 
-${examples_dir}eccodes_f_grib_set_gvc > /dev/null
-res=`${tools_dir}grib_get -p typeOfLevel,NV out_gvc.grib2`
+${examples_dir}/eccodes_f_grib_set_gvc > /dev/null
+res=`${tools_dir}/grib_get -p typeOfLevel,NV out_gvc.grib2`
 [ "$res" = "generalVertical 6" ]
 
 rm -f out.set.grib1 out_gvc.grib2

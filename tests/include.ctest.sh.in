@@ -11,26 +11,25 @@ proj_dir=@PROJECT_SOURCE_DIR@
 data_dir=@PROJECT_BINARY_DIR@/data
 
 # use definitions from binary dir to test if installation will be correct
-# Note: 'definitions' is a symlink so must put final slash to interpret as directory
-def_dir="@CMAKE_BINARY_DIR@/share/@PROJECT_NAME@/definitions/"
+def_dir="@CMAKE_BINARY_DIR@/@ECCODES_DEFINITION_SUFF@"
 ECCODES_DEFINITION_PATH="${def_dir}"
 export ECCODES_DEFINITION_PATH
 
 # binaries are in the TOP CMAKE_BINARY_DIR
-tools_dir=@CMAKE_BINARY_DIR@/bin/
-tigge_dir=@CMAKE_BINARY_DIR@/bin/
+tools_dir=@CMAKE_BINARY_DIR@/bin
+tigge_dir=@CMAKE_BINARY_DIR@/bin
 
 # If this environment variable is set, then run the
 # executables with valgrind
 if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
-   tools_dir="valgrind --error-exitcode=1 -q @CMAKE_BINARY_DIR@/bin/"
+   tools_dir="valgrind --error-exitcode=1 -q @CMAKE_BINARY_DIR@/bin"
 fi
 
 # ecCodes tests are in the PROJECT_BINARY_DIR
-test_dir=@PROJECT_BINARY_DIR@/tests/
+test_dir=@PROJECT_BINARY_DIR@/tests
 
 # use samples from binary dir to test if installation will be correct
-samp_dir="@CMAKE_BINARY_DIR@/share/@PROJECT_NAME@/samples"
+samp_dir="@CMAKE_BINARY_DIR@/@ECCODES_SAMPLES_SUFF@"
 ECCODES_SAMPLES_PATH=${samp_dir}
 export ECCODES_SAMPLES_PATH
 

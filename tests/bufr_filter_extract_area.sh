@@ -52,7 +52,7 @@ rm -f $outputFilt
 echo "Test: Area extraction" >> $fLog
 echo "file: $outputBufr" >> $fLog
 
-${tools_dir}bufr_filter -o $outputBufr $fRules $inputBufr > $outputFilt
+${tools_dir}/bufr_filter -o $outputBufr $fRules $inputBufr > $outputFilt
 [ -f $outputBufr ]
 
 cat > $fRules <<EOF
@@ -68,7 +68,7 @@ print "===========";
 print "fieldOfViewNumber=[fieldOfViewNumber!15]";
 print "===========";
 EOF
-${tools_dir}bufr_filter $fRules $inputBufr $outputBufr  >> $outputFilt
+${tools_dir}/bufr_filter $fRules $inputBufr $outputBufr  >> $outputFilt
 
 cat > $outputRef <<EOF
 extracted 14 of 128 subsets

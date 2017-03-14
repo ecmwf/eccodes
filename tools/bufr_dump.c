@@ -17,18 +17,18 @@
 
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value*/
-        {"j:","s/f/a","\n\t\tJSON mode (JavaScript Object Notation)."
+        {"j:","s|f|a","\n\t\tJSON mode (JavaScript Object Notation)."
                 "\n\t\tOptions: s->structure, f->flat (only data), a->all attributes"
                 "\n\t\tDefault mode is structure.\n",
                 1,1,"s"},
-        {"D:","filter/fortran/python/C","\n\t\tDecoding dump. Provides instructions to decode the input message."
+        {"D:","filter|fortran|python|C","\n\t\tDecoding dump. Provides instructions to decode the input message."
                 "\n\t\tOptions: filter  -> filter instructions file to decode input BUFR"
                 "\n\t\t         fortran -> fortran program to decode the input BUFR"
                 "\n\t\t         python  -> python script to decode the input BUFR"
                 "\n\t\t         C       -> C program to decode the input BUFR"
                 "\n\t\tDefault mode is filter.\n",
                 0,1,"filter"},
-        {"E:","filter/fortran/python/C","\n\t\tEncoding dump. Provides instructions to create the input message."
+        {"E:","filter|fortran|python|C","\n\t\tEncoding dump. Provides instructions to create the input message."
                 "\n\t\tOptions: filter  -> filter instructions file to encode input BUFR"
                 "\n\t\t         fortran -> fortran program to encode the input BUFR"
                 "\n\t\t         python  -> python script to encode the input BUFR"
@@ -57,7 +57,7 @@ grib_option grib_options[]={
 
 char* grib_tool_description="Dump the content of a BUFR file in different formats.";
 char* grib_tool_name="bufr_dump";
-char* grib_tool_usage="[options] file file ...";
+char* grib_tool_usage="[options] bufr_file bufr_file ...";
 static int json=0;
 static char* json_option=0;
 static int first_handle=1;

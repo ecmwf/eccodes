@@ -24,7 +24,7 @@ grib_handle *hh=0;
 grib_values key_values[MAX_KEY_VALUES];
 int key_values_size=MAX_KEY_VALUES;
 
-char* grib_tool_description="Merge two fields with identical parameters and different geografical area";
+char* grib_tool_description="Merge two fields with identical parameters and different geographical area";
 char* grib_tool_name="grib_merge";
 char* grib_tool_usage="[options] file file ... output_file";
 

@@ -18,6 +18,8 @@
 double grib_power(long s,long n)
 {
     double divisor = 1.0;
+    if (s==0) return 1.0;
+    if (s==1) return n;
     while(s < 0)
     {
         divisor /= n;

@@ -12,11 +12,11 @@
 TEMP=cloned.grib
 
 INPUT=${data_dir}/reduced_gaussian_pressure_level.grib1
-${examples_dir}c_grib_clone ${INPUT} ${TEMP}  > /dev/null
-${tools_dir}grib_compare ${INPUT} ${TEMP}
+${examples_dir}/c_grib_clone ${INPUT} ${TEMP}  > /dev/null
+${tools_dir}/grib_compare ${INPUT} ${TEMP}
 
 INPUT=${data_dir}/sample.grib2
-${examples_dir}c_grib_clone ${INPUT} ${TEMP}  > /dev/null
-${tools_dir}grib_compare ${INPUT} ${TEMP}
+${examples_dir}/c_grib_clone ${INPUT} ${TEMP}  > /dev/null
+${tools_dir}/grib_compare ${INPUT} ${TEMP}
 
 rm -f ${TEMP}

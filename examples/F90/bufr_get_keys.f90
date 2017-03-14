@@ -20,11 +20,11 @@ integer            :: ifile
 integer            :: iret
 integer            :: ibufr
 integer            :: i, count=0
-integer(kind=4)    :: blockNumber,stationNumber 
+integer(kind=4)    :: blockNumber,stationNumber
 real(kind=8)       :: t2m
 integer(kind=4), dimension(:), allocatable    :: descriptors
 real(kind=8), dimension(:), allocatable       :: values
-character(len=9)   :: typicalDate 
+character(len=9)   :: typicalDate
 
   call codes_open_file(ifile,'../../data/bufr/syno_multi.bufr','r')
 
@@ -34,13 +34,10 @@ character(len=9)   :: typicalDate
 
   do while (iret/=CODES_END_OF_FILE)
 
-    ! For debugging
-    call codes_dump(ibufr)
-
-    ! Get and print some keys form the BUFR header 
+    ! Get and print some keys form the BUFR header
     write(*,*) 'message: ',count
 
-    ! We need to instruct ecCodes to expand all the descriptors 
+    ! We need to instruct ecCodes to expand all the descriptors
     ! i.e. unpack the data values
     call codes_set(ibufr,"unpack",1);
 

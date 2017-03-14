@@ -164,6 +164,7 @@ typedef struct grib_points            codes_points;
     \struct codes_keys_iterator
 */
 typedef struct grib_keys_iterator     codes_keys_iterator;
+typedef struct bufr_keys_iterator     codes_bufr_keys_iterator;
 
 typedef struct grib_fieldset          codes_fieldset;
 typedef struct grib_order_by          codes_order_by;
@@ -1098,14 +1099,12 @@ attributes or by the namespace they belong to.
 /*! Create a new iterator from a valid and initialised handle.
 *  @param h             : the handle whose keys you want to iterate
 *  @param filter_flags  : flags to filter out some of the keys through their attributes
-*  @param name_space     : if not null the iteration is carried out only on
+*  @param name_space    : if not null the iteration is carried out only on
 *                         keys belonging to the namespace passed. (NULL for all the keys)
 *  @return              keys iterator ready to iterate through keys according to filter_flags
-*                         and namespace
+*                       and namespace
 */
 codes_keys_iterator* codes_keys_iterator_new(codes_handle* h,unsigned long filter_flags, const char* name_space);
-codes_keys_iterator* codes_bufr_keys_iterator_new(codes_handle* h);
-codes_keys_iterator* codes_bufr_data_section_keys_iterator_new(codes_handle* h);
 
 /* codes_bufr_copy_data copies all the values in the data section that are present in the same position in the data tree
  * and with the same number of values to the output handle. Should not exit with error if the output handle has a different
@@ -1116,36 +1115,33 @@ char **codes_bufr_copy_data_return_copied_keys(grib_handle *hin, grib_handle *ho
 int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout);
 
 
-/*! Step to the next iterator.
+/*! Step to the next item from the keys iterator.
 *  @param kiter         : valid codes_keys_iterator
 *  @return              1 if next iterator exists, 0 if no more elements to iterate on
 */
 int codes_keys_iterator_next(codes_keys_iterator *kiter);
-int codes_bufr_keys_iterator_next(codes_keys_iterator *kiter);
 
 
-/*! get the key name from the iterator
+/*! get the key name from the keys iterator
 *  @param kiter         : valid codes_keys_iterator
 *  @return              key name
 */
 const char* codes_keys_iterator_get_name(codes_keys_iterator *kiter);
 
-/*! Delete the iterator.
+/*! Delete the keys iterator.
 *  @param kiter         : valid codes_keys_iterator
 *  @return              0 if OK, integer value on error
 */
 int codes_keys_iterator_delete( codes_keys_iterator* kiter);
 
-/*! Rewind the iterator.
+/*! Rewind the keys iterator.
 *  @param kiter         : valid codes_keys_iterator
 *  @return              0 if OK, integer value on error
 */
 int codes_keys_iterator_rewind(codes_keys_iterator* kiter);
 
-char* codes_bufr_keys_iterator_get_name(codes_keys_iterator* kiter);
 
 int codes_keys_iterator_set_flags(codes_keys_iterator *kiter,unsigned long flags);
-
 int codes_keys_iterator_get_long(codes_keys_iterator *kiter, long *v, size_t *len);
 int codes_keys_iterator_get_double(codes_keys_iterator *kiter, double *v, size_t *len);
 int codes_keys_iterator_get_string(codes_keys_iterator *kiter, char *v, size_t *len);

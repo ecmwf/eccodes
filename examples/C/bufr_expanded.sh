@@ -24,7 +24,7 @@ f=${data_dir}/bufr/syno_1.bufr
 REDIRECT=/dev/null
 
 #Write the values into a file
-${examples_dir}c_bufr_expanded $f > $fTmp 2> $REDIRECT 
+${examples_dir}/c_bufr_expanded $f > $fTmp 2> $REDIRECT
 
 #TODO: add a better check. It could be compared against the bufrdc
 # references.

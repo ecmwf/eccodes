@@ -26,7 +26,7 @@ ${examples_dir}/eccodes_f_bufr_set_keys >$REDIRECT
 
 #Compare modified file to the original
 set +e
-${tools_dir}bufr_compare $f $fBufrTmp >$REDIRECT
+${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT
 
 #Check if they are different
 if [ $? -eq 0 ]; then
@@ -37,7 +37,7 @@ fi
 set -e
 
 #Check if modified file has the same number of messages
-[ `${tools_dir}bufr_count $f` = `${tools_dir}bufr_count ${fBufrTmp}` ]
+[ `${tools_dir}/bufr_count $f` = `${tools_dir}/bufr_count ${fBufrTmp}` ]
 
 #Clean up
 rm -f ${fBufrTmp}

@@ -4,6 +4,13 @@ integer, external :: grib_f_multi_support_on, grib_f_multi_support_off
 integer, external :: grib_f_keys_iterator_new, &
                      grib_f_keys_iterator_next, &
                      grib_f_keys_iterator_delete
+
+integer, external :: codes_f_bufr_keys_iterator_new, &
+                     codes_f_bufr_keys_iterator_next, &
+                     codes_f_bufr_keys_iterator_get_name, &
+                     codes_f_bufr_keys_iterator_rewind, &
+                     codes_f_bufr_keys_iterator_delete
+
 integer, external :: grib_f_skip_computed, &
                      grib_f_skip_coded, &
                      grib_f_skip_edition_specific, &

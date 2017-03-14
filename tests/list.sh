@@ -23,7 +23,7 @@ EOF
 
 file="${data_dir}/reduced_gaussian_model_level.grib2"
 
-${tools_dir}grib_filter  list.filter $file
+${tools_dir}/grib_filter  list.filter $file
 
 cat >list.filter<<EOF
 print("x.out") "productDefinitionTemplateNumber=[productDefinitionTemplateNumber]";
@@ -35,7 +35,7 @@ print("x.out") "scaleFactorOfCentralWaveNumber={[scaleFactorOfCentralWaveNumber'
 print("x.out") "scaledValueOfCentralWaveNumber={[scaledValueOfCentralWaveNumber',']}";
 EOF
 
-${tools_dir}grib_filter list.filter test.list.grib
+${tools_dir}/grib_filter list.filter test.list.grib
 
 cat >list.ref<<EOF
 productDefinitionTemplateNumber=31

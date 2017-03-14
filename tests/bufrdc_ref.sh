@@ -29,7 +29,7 @@ do
 
   rm -f $res_num | true
 
-  ${tools_dir}codes_bufr_filter bufrdc_num_ref.filter $file 2> $REDIRECT > $res_num
+  ${tools_dir}/codes_bufr_filter bufrdc_num_ref.filter $file 2> $REDIRECT > $res_num
 
   # Exclude the BUFR file uegabe.bufr because its reference file is incorrect
   if [ "$bf" = "uegabe.bufr" ]; then

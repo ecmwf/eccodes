@@ -42,13 +42,6 @@ bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d) {
   return cd;
 }
 
-void grib_bufr_descriptor_set_values(bufr_descriptor* v,int scale,int reference,int width) {
-  if (!v) return;
-  v->scale=scale;
-  v->width=width;
-  v->factor=grib_power(-scale,10);
-}
-
 int grib_bufr_descriptor_set_code(grib_accessor* tables_accessor,int code,bufr_descriptor* v) {
   int err=0;
   grib_context* c;

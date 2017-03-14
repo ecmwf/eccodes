@@ -17,18 +17,18 @@ label="bufr_keys_iterator_test_c"
 
 #Define tmp file
 fTmp=${label}".tmp.txt"
-rm -f $fTmp | true
+rm -f $fTmp
 
 REDIRECT=/dev/null
 
 f=${data_dir}/bufr/syno_1.bufr
 
 #Dump the keys
-${examples_dir}c_bufr_keys_iterator $f 2> $REDIRECT > $fTmp
+${examples_dir}/c_bufr_keys_iterator $f 2> $REDIRECT > $fTmp
 
 #TODO: check the output
-
-#cat  $fTmp
+grep -q '#5#cloudAmount->percentConfidence=70' $fTmp
+grep -q 'unexpandedDescriptors=(array of 10)'  $fTmp
 
 #Clean up
-rm -f $fTmp | true
+rm -f $fTmp

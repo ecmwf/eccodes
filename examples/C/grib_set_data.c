@@ -58,7 +58,7 @@ int main(int argc, char** argv)
     /* But if your data array has a different size, then specify the grid geometry */
     /* (e.g. keys Ni, Nj etc) and set the correct number of data values */
     CODES_CHECK(codes_get_size(h, "values", &values_len),0);
-    
+
     values = (double*)malloc(values_len*sizeof(double));
     d=10e-8;
     e=d;

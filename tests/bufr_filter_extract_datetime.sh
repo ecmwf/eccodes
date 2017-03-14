@@ -64,7 +64,7 @@ rm -f $outputFilt
 echo "Test: Datetime extraction" >> $fLog
 echo "file: $inputBufr" >> $fLog
 
-${tools_dir}bufr_filter -o $outputBufr $fRules $inputBufr  > $outputFilt
+${tools_dir}/bufr_filter -o $outputBufr $fRules $inputBufr  > $outputFilt
 [ -f $outputBufr ]
 
 cat > $fRules <<EOF
@@ -82,7 +82,7 @@ print "===========";
 print "second=[second!15]";
 print "===========";
 EOF
-${tools_dir}bufr_filter $fRules $inputBufr $outputBufr  >> $outputFilt
+${tools_dir}/bufr_filter $fRules $inputBufr $outputBufr  >> $outputFilt
 
 cat > $outputRef <<EOF
 extracted 30 of 128 subsets
@@ -148,7 +148,7 @@ inputBufr="amsa_55.bufr"
 outputBufr=${label}.${inputBufr}.out
 
 set +e
-${tools_dir}bufr_filter -o $outputBufr $fRules $inputBufr
+${tools_dir}/bufr_filter -o $outputBufr $fRules $inputBufr
 status=$?
 set -e
 if [ $status -eq 0 ]; then
@@ -182,7 +182,7 @@ inputBufr="amsa_55.bufr"
 outputBufr=${label}.${inputBufr}.out
 
 set +e
-${tools_dir}bufr_filter -o $outputBufr $fRules $inputBufr
+${tools_dir}/bufr_filter -o $outputBufr $fRules $inputBufr
 status=$?
 set -e
 if [ $status -eq 0 ]; then

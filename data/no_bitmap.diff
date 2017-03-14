@@ -5,7 +5,7 @@
 ======================   SECTION_1 ( length=52, padding=0 )    ======================
 1-3       section1Length = 52
 4         table2Version = 128
-5         centre = 98 [European Centre for Medium-Range Weather Forecasts (grib1/0.table) ]
+5         centre = 98 [European Centre for Medium-Range Weather Forecasts (common/c-1.table) ]
 6         generatingProcessIdentifier = 130
 7         gridDefinition = 255
 8         section1Flags = 128 [10000000]

@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "eccodes.h"  
+#include "eccodes.h"
 
 void usage(const char* prog) {
     printf("Usage: %s grib_file\n",prog);

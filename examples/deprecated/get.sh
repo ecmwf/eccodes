@@ -2,6 +2,6 @@
 
 . ./include.sh
 
-${examples_dir}get > /dev/null
+${examples_dir}/get > /dev/null
 
 

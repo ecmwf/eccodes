@@ -18,5 +18,5 @@ set values = { 1.0e-110, 1.5e-110, 1.005e-110 }
 write;
 EOF
 
-${tools_dir}grib_filter ${data_dir}/f.rules ${data_dir}/ 2> $REDIRECT > $REDIRECT
+${tools_dir}/grib_filter ${data_dir}/f.rules ${data_dir}/ 2> $REDIRECT > $REDIRECT
 

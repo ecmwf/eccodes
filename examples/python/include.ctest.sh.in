@@ -10,16 +10,16 @@ fi
 data_dir=@PROJECT_BINARY_DIR@/data
 
 # use definitions from binary dir to test if installation will be correct
-def_dir="@CMAKE_BINARY_DIR@/share/@PROJECT_NAME@/definitions"
+def_dir="@CMAKE_BINARY_DIR@/@ECCODES_DEFINITION_SUFF@"
 ECCODES_DEFINITION_PATH="${def_dir}"
 export ECCODES_DEFINITION_PATH
 
-tools_dir=@CMAKE_BINARY_DIR@/bin/
-examples_dir=@CMAKE_CURRENT_BINARY_DIR@/
-examples_src=@CMAKE_CURRENT_SOURCE_DIR@/
+tools_dir=@CMAKE_BINARY_DIR@/bin
+examples_dir=@CMAKE_CURRENT_BINARY_DIR@
+examples_src=@CMAKE_CURRENT_SOURCE_DIR@
 
 # use samples from binary dir to test if installation will be correct
-samp_dir="@CMAKE_BINARY_DIR@/share/@PROJECT_NAME@/samples"
+samp_dir="@CMAKE_BINARY_DIR@/@ECCODES_SAMPLES_SUFF@"
 ECCODES_SAMPLES_PATH=${samp_dir}
 export ECCODES_SAMPLES_PATH
 

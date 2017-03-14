@@ -22,7 +22,7 @@ grib_option grib_options[]={
         {"P:",0,0,0,1,0},
         {"w:",0,0,0,1,0},
 /*      {"j",0,"JSON output\n",0,1,0}, */
-        {"B:",0,0,0,1,0},
+/*      {"B:",0,0,0,1,0},              */
         {"s:",0,0,0,1,0},
         {"n:",0,0,1,1,"ls"},
         {"m",0,0,0,1,0},
@@ -38,9 +38,10 @@ grib_option grib_options[]={
 };
 
 char* grib_tool_description="List content of BUFR files printing values of "
-        "some keys.\n\tIt does not fail when a key is not found.";
+        "some header keys.\n\tOnly scalar keys can be printed."
+        "\n\tIt does not fail when a key is not found.";
 char* grib_tool_name="bufr_ls";
-char* grib_tool_usage="[options] file file ...";
+char* grib_tool_usage="[options] bufr_file bufr_file ...";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 

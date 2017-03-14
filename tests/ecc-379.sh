@@ -34,17 +34,17 @@ EOF
 
 # Expect this to fail as two values are out-of-range
 set +e
-${tools_dir}bufr_filter -o $tempOut $tempRules $BufrFile 2>/dev/null
+${tools_dir}/bufr_filter -o $tempOut $tempRules $BufrFile 2>/dev/null
 status=$?
 set -e
 [ $status -ne 0 ]
 # Now set environment variable to turn out-of-range values into 'missing'
 export ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE=1
-${tools_dir}bufr_filter -o $tempOut $tempRules $BufrFile
+${tools_dir}/bufr_filter -o $tempOut $tempRules $BufrFile
 unset ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE
 
-#echo 'set unpack=1;print "[longitude]";' | ${tools_dir}bufr_filter - $BufrFile
-#echo 'set unpack=1;print "[longitude]";' | ${tools_dir}bufr_filter - $tempOut > $tempText
+#echo 'set unpack=1;print "[longitude]";' | ${tools_dir}/bufr_filter - $BufrFile
+#echo 'set unpack=1;print "[longitude]";' | ${tools_dir}/bufr_filter - $tempOut > $tempText
 #cat > $tempRef << EOF
 #-1e+100 -172.14317 -1e+100 -170.17433 -169.407 -168.9308 -168.49104 -167.98389 
 #-166.95331 -166.52921 -166.06108 -165.66135 -164.99666 -164.67058 -164.23764
@@ -62,13 +62,13 @@ EOF
 
 # The latitude is out of range. So we expect this to fail
 set +e
-${tools_dir}bufr_filter -o $tempOut $tempRules $BufrFile 2>/dev/null
+${tools_dir}/bufr_filter -o $tempOut $tempRules $BufrFile 2>/dev/null
 status=$?
 set -e
 [ $status -ne 0 ]
 
 export ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE=1
-${tools_dir}bufr_filter -o $tempOut $tempRules $BufrFile
+${tools_dir}/bufr_filter -o $tempOut $tempRules $BufrFile
 unset ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE
 
 # ------------------------

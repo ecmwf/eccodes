@@ -11,5 +11,5 @@
 
 for i in `seq 0 100`; do
    #echo iteration $i
-   ${examples_dir}c_bufr_pthreads
+   ${examples_dir}/c_bufr_pthreads
 done

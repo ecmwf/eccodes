@@ -15,7 +15,7 @@ label="bufr_keys_iterator_test_p"
 
 #Define tmp file
 fTmp=${label}".tmp.txt"
-rm -f $fTmp | true
+rm -f $fTmp
 
 REDIRECT=/dev/null
 
@@ -26,9 +26,8 @@ f=${data_dir}/bufr/syno_1.bufr
 $PYTHON $examples_src/bufr_keys_iterator.py 2> $REDIRECT > $fTmp
 
 #TODO: check the output
-
-#cat  $fTmp
+grep -q '#6#cloudType->percentConfidence' $fTmp
+grep -q '#2#verticalSignificanceSurfaceObservations->percentConfidence' $fTmp
 
 #Clean up
 rm -f $fTmp
-

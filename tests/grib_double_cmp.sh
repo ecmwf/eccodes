@@ -16,10 +16,10 @@
 
 infile=${data_dir}/grid_ieee.grib
 
-if [ ! -f ${infile} ]
-then
-  echo no data to test
-  exit 1
-fi
+# if [ ! -f ${infile} ]
+# then
+#   echo no data to test
+#   exit 1
+# fi
 
 ${test_dir}/grib_double_cmp ${infile}

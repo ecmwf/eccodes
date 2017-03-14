@@ -9,4 +9,4 @@
 
 . ./include.sh
 
-${examples_dir}c_grib_get_data > /dev/null
+${examples_dir}/c_grib_get_data > /dev/null

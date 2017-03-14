@@ -56,22 +56,22 @@ print "grib[edition]: level=[level] topLevel=[topLevel] bottomLevel=[bottomLevel
 EOF
 
     
-${tools_dir}grib_filter level.filter $file > test.dump
+${tools_dir}/grib_filter level.filter $file > test.dump
 diff temp.level.good test.dump
 
 # GRIB-492
-${tools_dir}grib_set -s indicatorOfTypeOfLevel=110 $sample_g1 $temp
-res=`${tools_dir}grib_get -p indicatorOfTypeOfLevel:l,topLevel,bottomLevel $temp`
+${tools_dir}/grib_set -s indicatorOfTypeOfLevel=110 $sample_g1 $temp
+res=`${tools_dir}/grib_get -p indicatorOfTypeOfLevel:l,topLevel,bottomLevel $temp`
 [ "$res" = "110 0 0" ]
 
 # GRIB-415 evaluate level as a double
-${tools_dir}grib_set -s scaledValueOfFirstFixedSurface=15,scaleFactorOfFirstFixedSurface=1 $sample_g2 $temp
-res=`${tools_dir}grib_get -p level:d $temp`
+${tools_dir}/grib_set -s scaledValueOfFirstFixedSurface=15,scaleFactorOfFirstFixedSurface=1 $sample_g2 $temp
+res=`${tools_dir}/grib_get -p level:d $temp`
 [ "$res" = "1.5" ]
 
 # GRIB-637 grib2 Potential vorticity surface
 input=${data_dir}/tigge_pf_ecmwf.grib2
-res=`${tools_dir}grib_get -wcount=7 -F%.20f -p level:d $input`
+res=`${tools_dir}/grib_get -wcount=7 -F%.20f -p level:d $input`
 [ "$res" = "2.00000000000000000000" ]
 
 rm -f level.filter temp.level.good test.dump $temp

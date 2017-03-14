@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-codetable[1] dataOrigin "grib1/0.table" : dump;
+codetable[1] dataOrigin "common/c-1.table" : dump;
 alias mars.origin=dataOrigin;
 
 ascii[4] modelIdentifier : dump ;

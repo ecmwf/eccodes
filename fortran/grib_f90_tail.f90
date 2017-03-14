@@ -2826,7 +2826,7 @@
   !>
   !> @param ingribid      id of the input single grib 
   !> @param startsection  starting from startsection (included) all the sections are copied from the input single grib to the output multi grib
-  !> @param multigribid    id of the output multi filed grib
+  !> @param multigribid    id of the output multi field grib
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_multi_append ( ingribid, startsection, multigribid  , status)
     integer(kind=kindOfInt),          intent(in)  :: ingribid

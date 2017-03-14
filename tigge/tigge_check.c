@@ -766,13 +766,13 @@ static void has_bitmap(grib_handle* h,const parameter* p,double min,double max)
 static void has_soil_level(grib_handle* h,const parameter* p,double min,double max)
 {
     CHECK(get(h,"topLevel") == get(h,"bottomLevel"));
-    CHECK(le(h,"level",8)); /* max in UERRA */
+    CHECK(le(h,"level",14)); /* max in UERRA */
 }
 
 static void has_soil_layer(grib_handle* h,const parameter* p,double min,double max)
 {
     CHECK(get(h,"topLevel") == get(h,"bottomLevel") - 1);
-    CHECK(le(h,"level",8)); /* max in UERRA */
+    CHECK(le(h,"level",14)); /* max in UERRA */
 }
 
 static void six_hourly(grib_handle* h,const parameter* p,double min,double max)

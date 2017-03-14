@@ -9,6 +9,6 @@
 
 . ./include.sh
 
-${examples_dir}c_grib_set_keys
+${examples_dir}/c_grib_set_keys
 
 rm -f out.set.grib1

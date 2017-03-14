@@ -220,6 +220,28 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 37 ;
 	}
+#maximum CAPE in the last 6 hours
+'228035' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 lengthOfTimeRange = 6 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#maximum CAPES in the last 6 hours
+'228036' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 19 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 lengthOfTimeRange = 6 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	}
 #Height of convective cloud top
 '228046' = {
 	 discipline = 0 ;

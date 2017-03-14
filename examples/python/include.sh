@@ -19,7 +19,7 @@ else
   export ECCODES_DEFINITION_PATH
   ECCODES_SAMPLES_PATH=$cpath/samples
   export ECCODES_SAMPLES_PATH
-  tools_dir=$cpath/tools/
+  tools_dir=$cpath/tools
   examples_dir=$cpath/examples/python
   data_dir=$cpath/data
   examples_src=$examples_dir

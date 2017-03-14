@@ -9,12 +9,12 @@
 
 . ./include.sh
 
-[ -z "$ECCODES_DEFINITION_PATH" ] | ECCODES_DEFINITION_PATH=`${tools_dir}codes_info -d`
+[ -z "$ECCODES_DEFINITION_PATH" ] | ECCODES_DEFINITION_PATH=`${tools_dir}/codes_info -d`
 
 touch tmp$$
 for file in `find $ECCODES_DEFINITION_PATH -name '*.def' -print`
 do
-  ${tools_dir}grib_list_keys $file >> tmp$$  
+  ${tools_dir}/grib_list_keys $file >> tmp$$  
 done
 
 cat >keys <<EOF

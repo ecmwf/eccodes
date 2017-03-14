@@ -34,30 +34,30 @@ do
   file=${data_dir}/$f
   output=${file}.grib2_
   rm -f ${output}
-  ${tools_dir}grib_set -s editionNumber=2 ${file}.grib1 ${output} 2> $REDIRECT > $REDIRECT
+  ${tools_dir}/grib_set -s editionNumber=2 ${file}.grib1 ${output} 2> $REDIRECT > $REDIRECT
 
-  grib1Statistics=`${tools_dir}grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib1` 
-  grib2Statistics=`${tools_dir}grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${output}` 
+  grib1Statistics=`${tools_dir}/grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib1` 
+  grib2Statistics=`${tools_dir}/grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${output}` 
 
   if [ "$grib1Statistics" != "$grib2Statistics" ]; then 
     exit 1
   fi
 
-  #${tools_dir}grib_compare -A1.0e-8 -c values ${file}.grib1 ${output} 2> /dev/null > /dev/null
-  ${tools_dir}grib_compare -P -c values ${file}.grib1 ${output} 2> $REDIRECT > $REDIRECT
+  #${tools_dir}/grib_compare -A1.0e-8 -c values ${file}.grib1 ${output} 2> /dev/null > /dev/null
+  ${tools_dir}/grib_compare -P -c values ${file}.grib1 ${output} 2> $REDIRECT > $REDIRECT
   
   rm -f ${output}
 
 done
 
-#sed "s:toolsdir:${tools_dir}:" ${tools_dir}grib1to2.txt > ${tools_dir}grib1to2.test
-#chmod +x ${tools_dir}grib1to2.test
-#${tools_dir}grib1to2.test -f ${data_dir}/test.grib1 ${data_dir}/test.grib2
-#${tools_dir}grib_get -p typeOfProcessedData:s,type:s ${data_dir}/test.grib2 > ${data_dir}/typeOfProcessedData.log
+#sed "s:toolsdir:${tools_dir}/:" ${tools_dir}/grib1to2.txt > ${tools_dir}/grib1to2.test
+#chmod +x ${tools_dir}/grib1to2.test
+#${tools_dir}/grib1to2.test -f ${data_dir}/test.grib1 ${data_dir}/test.grib2
+#${tools_dir}/grib_get -p typeOfProcessedData:s,type:s ${data_dir}/test.grib2 > ${data_dir}/typeOfProcessedData.log
 
 #diff ${data_dir}/typeOfProcessedData.log ${data_dir}/typeOfProcessedData.ok
 
-#${tools_dir}grib_compare -Pe ${data_dir}/test.grib1 ${data_dir}/test.grib2
+#${tools_dir}/grib_compare -Pe ${data_dir}/test.grib1 ${data_dir}/test.grib2
 
 #rm -f ${data_dir}/test.grib2
 
