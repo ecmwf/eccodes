@@ -18,6 +18,7 @@
 #include "eckit/exception/Exceptions.h"
 #include "atlas/grid/gaussian/ReducedGaussian.h"
 #include "mir/param/MIRParametrisation.h"
+#include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 
 

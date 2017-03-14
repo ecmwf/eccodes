@@ -16,8 +16,9 @@
 #include "mir/repres/gauss/reduced/Octahedral.h"
 
 #include "atlas/grid/gaussian/OctahedralGaussian.h"
-#include "mir/util/Grib.h"
 #include "mir/api/MIRJob.h"
+#include "mir/util/Domain.h"
+#include "mir/util/Grib.h"
 
 
 namespace mir {

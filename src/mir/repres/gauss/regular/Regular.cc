@@ -24,8 +24,10 @@
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
+#include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "eckit/types/Fraction.h"
+
 
 namespace mir {
 namespace repres {
@@ -99,12 +101,12 @@ atlas::grid::Grid *Regular::atlasGrid() const {
 }
 
 
-atlas::grid::Domain Regular::domain() const {
+util::Domain Regular::domain() const {
     return domain(bbox_);
 }
 
 
-atlas::grid::Domain Regular::domain(const util::BoundingBox& bbox) const {
+util::Domain Regular::domain(const util::BoundingBox& bbox) const {
 
     const std::vector<double> &lats = latitudes();
     ASSERT(lats.size() >= 2);
@@ -157,12 +159,12 @@ atlas::grid::Domain Regular::domain(const util::BoundingBox& bbox) const {
     west = adjust_west,
     east = isPeriodicEastWest ? adjust_west + 360 : adjust_east;
 
-    return atlas::grid::Domain(north, west, south, east);
+    return util::Domain(north, west, south, east);
 }
 
 
 void Regular::validate(const std::vector<double> &values) const {
-    const atlas::grid::Domain dom = domain();
+    const util::Domain dom = domain();
 
     if (dom.isGlobal()) {
         ASSERT(values.size() == (N_ * 2) * (N_ * 4));
@@ -187,7 +189,7 @@ void Regular::validate(const std::vector<double> &values) const {
 
 
 void Regular::setNiNj() {
-    const atlas::grid::Domain dom = domain();
+    const util::Domain dom = domain();
     const double lon_middle = (dom.west() + dom.east()) / 2.;
     const double lat_middle = (dom.north() + dom.south()) / 2.;
 
@@ -300,7 +302,7 @@ public:
 
     // TODO: Consider keeping a reference on the latitudes, to avoid copying
 
-    RegularIterator(const std::vector<double>& latitudes, size_t N, size_t Ni, size_t Nj, const atlas::grid::Domain& dom) :
+    RegularIterator(const std::vector<double>& latitudes, size_t N, size_t Ni, size_t Nj, const util::Domain& dom) :
         latitudes_(latitudes),
         west_(dom.west()),
         N_(N),

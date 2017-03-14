@@ -18,6 +18,7 @@
 #include "atlas/grid/Structured.h"
 #include "atlas/grid/grids.h"
 #include "mir/api/MIRJob.h"
+#include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 
 

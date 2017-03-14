@@ -19,14 +19,14 @@
 #include <iostream>
 #include "eckit/exception/Exceptions.h"
 #include "eckit/types/FloatCompare.h"
-#include "atlas/grid/Domain.h"
+#include "eckit/types/Fraction.h"
 #include "mir/action/misc/AreaCropper.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
+#include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 
-#include "eckit/types/Fraction.h"
 
 namespace mir {
 namespace repres {
@@ -292,12 +292,12 @@ void LatLon::shape(size_t &ni, size_t &nj) const {
 }
 
 
-atlas::grid::Domain LatLon::domain() const {
+util::Domain LatLon::domain() const {
     return domain(bbox_);
 }
 
 
-atlas::grid::Domain LatLon::domain(const util::BoundingBox& bbox) const {
+util::Domain LatLon::domain(const util::BoundingBox& bbox) const {
 
 
     // Special case for shifted grids
@@ -313,7 +313,7 @@ atlas::grid::Domain LatLon::domain(const util::BoundingBox& bbox) const {
     south = includesPoles ?  -90 : bbox.south(),
     west = bbox.west(),
     east = isPeriodicEastWest ? bbox.west() + 360 : bbox.east();
-    return atlas::grid::Domain(north, west, south, east);
+    return util::Domain(north, west, south, east);
 }
 
 

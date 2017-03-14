@@ -19,9 +19,9 @@
 #include "eckit/thread/AutoLock.h"
 #include "eckit/thread/Mutex.h"
 #include "eckit/thread/Once.h"
-#include "atlas/grid/Domain.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
+#include "mir/util/Domain.h"
 
 
 namespace mir {
@@ -136,14 +136,14 @@ atlas::grid::Grid *Representation::atlasGrid() const {
 }
 
 
-atlas::grid::Domain Representation::domain() const {
+util::Domain Representation::domain() const {
     std::ostringstream os;
     os << "Representation::domain() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 
-atlas::grid::Domain Representation::domain(const util::BoundingBox&) const {
+util::Domain Representation::domain(const util::BoundingBox&) const {
     std::ostringstream os;
     os << "Representation::domain(BoundingBox) not implemented for " << *this;
     throw eckit::SeriousBug(os.str());

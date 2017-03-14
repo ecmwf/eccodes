@@ -21,12 +21,11 @@
 #include "eckit/exception/Exceptions.h"
 #include "eckit/memory/ScopedPtr.h"
 #include "eckit/types/FloatCompare.h"
-#include "atlas/grid/Domain.h"
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
-#include "mir/util/Angles.h"
+#include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "eckit/types/Fraction.h"
 
@@ -106,7 +105,7 @@ class GaussianIterator : public Iterator {
 
     const std::vector<double>& latitudes_;
     const std::vector<long>& pl_;
-    const atlas::grid::Domain domain_;
+    const util::Domain domain_;
 
     size_t ni_;
     const size_t nj_;
@@ -168,7 +167,7 @@ class GaussianIterator : public Iterator {
 
 public:
 
-    GaussianIterator(const std::vector<double>& latitudes, const std::vector<long>& pl, const atlas::grid::Domain& dom) :
+    GaussianIterator(const std::vector<double>& latitudes, const std::vector<long>& pl, const util::Domain& dom) :
         latitudes_(latitudes),
         pl_(pl),
         domain_(dom),
@@ -198,7 +197,7 @@ public:
         // eckit::Log::debug<LibMir>() << *this << std::endl;
     }
 
-    // static void repositionToFirstLongitudeIndex(size_t& imin, size_t& imax, const atlas::grid::Domain& dom, const size_t& n) {
+    // static void repositionToFirstLongitudeIndex(size_t& imin, size_t& imax, const util::Domain& dom, const size_t& n) {
 
     //     const double west_positive = dom.west() + (eckit::types::is_strictly_greater(0., dom.west()) ? 360. : 0.);
     //     const double east_positive = dom.east() + (eckit::types::is_strictly_greater(0., dom.west()) ? 360. : 0.);
@@ -223,12 +222,12 @@ public:
 };
 
 
-atlas::grid::Domain Reduced::domain() const {
+util::Domain Reduced::domain() const {
     return domain(bbox_);
 }
 
 
-atlas::grid::Domain Reduced::domain(const util::BoundingBox& bbox) const {
+util::Domain Reduced::domain(const util::BoundingBox& bbox) const {
 
 
     // calculate EW and NS increments
@@ -276,7 +275,7 @@ atlas::grid::Domain Reduced::domain(const util::BoundingBox& bbox) const {
     south = includesPoleSouth ?  -90 : isSouthAtEquator ? 0 : bbox.south(),
     west = bbox.west(),
     east = isPeriodicEastWest ? bbox.west() + 360 : bbox.east();
-    return atlas::grid::Domain(north, west, south, east);
+    return util::Domain(north, west, south, east);
 }
 
 

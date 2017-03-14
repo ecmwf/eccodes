@@ -22,6 +22,7 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Compare.h"
+#include "mir/util/Domain.h"
 #include "eckit/types/Fraction.h"
 
 
@@ -75,12 +76,12 @@ atlas::grid::Grid *ReducedLL::atlasGrid() const {
 }
 
 
-atlas::grid::Domain ReducedLL::domain() const {
+util::Domain ReducedLL::domain() const {
     return domain(bbox_);
 }
 
 
-atlas::grid::Domain ReducedLL::domain(const util::BoundingBox& bbox) const {
+util::Domain ReducedLL::domain(const util::BoundingBox& bbox) const {
     ASSERT(pl_.size());
 
     long maxpl = pl_[0];
@@ -106,7 +107,7 @@ atlas::grid::Domain ReducedLL::domain(const util::BoundingBox& bbox) const {
     south = includesPoleSouth ?  -90 : bbox.south(),
     west = bbox.west(),
     east = isPeriodicEastWest ? bbox.west() + 360 : bbox.east();
-    return atlas::grid::Domain(north, west, south, east);
+    return util::Domain(north, west, south, east);
 }
 
 
@@ -122,7 +123,7 @@ void ReducedLL::validate(const std::vector<double> &values) const {
 class ReducedLLIterator: public Iterator {
 
     const std::vector<long>& pl_;
-    const atlas::grid::Domain domain_;
+    const util::Domain domain_;
 
     size_t ni_;
     const size_t nj_;
@@ -194,7 +195,7 @@ class ReducedLLIterator: public Iterator {
 
 public:
 
-    ReducedLLIterator(size_t nj, const std::vector<long>& pl, const atlas::grid::Domain& dom) :
+    ReducedLLIterator(size_t nj, const std::vector<long>& pl, const util::Domain& dom) :
         pl_(pl),
         domain_(dom),
         nj_(nj),

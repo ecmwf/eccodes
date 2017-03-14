@@ -23,6 +23,7 @@
 #include "atlas/grid/lonlat/ShiftedLonLat.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
+#include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "mir/util/OffsetGrid.h"
 
@@ -95,7 +96,7 @@ atlas::grid::lonlat::Shift RegularLL::atlasShift() const {
     lon_origin = bbox_.west()  + i * inc_we,
     lat_origin = bbox_.south() + j * inc_sn;
 
-    const atlas::grid::Domain dom = domain();
+    const util::Domain dom = domain();
     const bool
     includesBothPoles = dom.includesPoleNorth() && dom.includesPoleSouth(),
     isShiftedLon = dom.isPeriodicEastWest() && eckit::types::is_approximately_equal(lon_origin, inc_we / 2.),

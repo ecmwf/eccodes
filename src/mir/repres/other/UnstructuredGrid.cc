@@ -23,6 +23,7 @@
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
+#include "mir/util/Domain.h"
 
 
 namespace mir {
@@ -77,15 +78,15 @@ void UnstructuredGrid::fill(api::MIRJob &job) const  {
 }
 
 
-atlas::grid::Domain UnstructuredGrid::domain() const {
+util::Domain UnstructuredGrid::domain() const {
     eckit::Log::warning() << "UnstructuredGrid::domain(): assuming grid is global" << std::endl;
-    return atlas::grid::Domain::makeGlobal();
+    return util::Domain::makeGlobal();
 }
 
 
-atlas::grid::Domain UnstructuredGrid::domain(const util::BoundingBox&) const {
+util::Domain UnstructuredGrid::domain(const util::BoundingBox&) const {
     eckit::Log::warning() << "UnstructuredGrid::domain(BoundingBox): assuming grid is global" << std::endl;
-    return atlas::grid::Domain::makeGlobal();
+    return util::Domain::makeGlobal();
 }
 
 
