@@ -95,7 +95,7 @@ atlas::grid::lonlat::Shift RegularLL::atlasShift() const {
     lon_origin = bbox_.west()  + i * inc_we,
     lat_origin = bbox_.south() + j * inc_sn;
 
-    const atlas::grid::Domain dom = atlasDomain();
+    const atlas::grid::Domain dom = domain();
     const bool
     includesBothPoles = dom.includesPoleNorth() && dom.includesPoleSouth(),
     isShiftedLon = dom.isPeriodicEastWest() && eckit::types::is_approximately_equal(lon_origin, inc_we / 2.),
@@ -113,10 +113,10 @@ atlas::grid::Grid* RegularLL::atlasGrid() const {
 
 
     // return non-shifted/shifted grid
-    return shift(Shift::LON | Shift::LAT) ? static_cast<LonLat*>(new ShiftedLonLat (ni_, nj_, atlasDomain()))
-           : shift(Shift::LON) ?            static_cast<LonLat*>(new ShiftedLon    (ni_, nj_, atlasDomain()))
-           : shift(Shift::LAT) ?            static_cast<LonLat*>(new ShiftedLat    (ni_, nj_, atlasDomain()))
-           :                               static_cast<LonLat*>(new RegularLonLat (ni_, nj_, atlasDomain()));
+    return shift(Shift::LON | Shift::LAT) ? static_cast<LonLat*>(new ShiftedLonLat (ni_, nj_, domain()))
+           : shift(Shift::LON) ?            static_cast<LonLat*>(new ShiftedLon    (ni_, nj_, domain()))
+           : shift(Shift::LAT) ?            static_cast<LonLat*>(new ShiftedLat    (ni_, nj_, domain()))
+           :                               static_cast<LonLat*>(new RegularLonLat (ni_, nj_, domain()));
 }
 
 

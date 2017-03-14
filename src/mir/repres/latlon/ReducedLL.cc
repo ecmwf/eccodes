@@ -63,7 +63,7 @@ void ReducedLL::fill(api::MIRJob &job) const  {
 
 
 void ReducedLL::cropToDomain(const param::MIRParametrisation &parametrisation, context::Context & ctx) const {
-    if (!atlasDomain().isGlobal()) {
+    if (!domain().isGlobal()) {
         action::AreaCropper cropper(parametrisation, bbox_);
         cropper.execute(ctx);
     }
@@ -71,16 +71,16 @@ void ReducedLL::cropToDomain(const param::MIRParametrisation &parametrisation, c
 
 
 atlas::grid::Grid *ReducedLL::atlasGrid() const {
-    return new atlas::grid::lonlat::ReducedLonLat(pl_.size(), &pl_[0], atlasDomain());
+    return new atlas::grid::lonlat::ReducedLonLat(pl_.size(), &pl_[0], domain());
 }
 
 
-atlas::grid::Domain ReducedLL::atlasDomain() const {
-    return atlasDomain(bbox_);
+atlas::grid::Domain ReducedLL::domain() const {
+    return domain(bbox_);
 }
 
 
-atlas::grid::Domain ReducedLL::atlasDomain(const util::BoundingBox& bbox) const {
+atlas::grid::Domain ReducedLL::domain(const util::BoundingBox& bbox) const {
     ASSERT(pl_.size());
 
     long maxpl = pl_[0];
@@ -222,7 +222,7 @@ public:
 
 
 Iterator *ReducedLL::unrotatedIterator() const {
-    return new ReducedLLIterator(Nj_, pl_, atlasDomain());
+    return new ReducedLLIterator(Nj_, pl_, domain());
 }
 
 

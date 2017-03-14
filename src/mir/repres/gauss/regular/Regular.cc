@@ -77,7 +77,7 @@ void Regular::fill(grib_info &info) const  {
     */
 
     // for GRIB, a global field is also aligned with Greenwich
-    bool global = atlasDomain().isGlobal();
+    bool global = domain().isGlobal();
     bool westAtGreenwich = eckit::types::is_approximately_equal<double>(0, bbox_.west());
 
     long j = info.packing.extra_settings_count++;
@@ -95,16 +95,16 @@ void Regular::fill(api::MIRJob &job) const  {
 
 
 atlas::grid::Grid *Regular::atlasGrid() const {
-    return new atlas::grid::gaussian::RegularGaussian(N_, atlasDomain());
+    return new atlas::grid::gaussian::RegularGaussian(N_, domain());
 }
 
 
-atlas::grid::Domain Regular::atlasDomain() const {
-    return atlasDomain(bbox_);
+atlas::grid::Domain Regular::domain() const {
+    return domain(bbox_);
 }
 
 
-atlas::grid::Domain Regular::atlasDomain(const util::BoundingBox& bbox) const {
+atlas::grid::Domain Regular::domain(const util::BoundingBox& bbox) const {
 
     const std::vector<double> &lats = latitudes();
     ASSERT(lats.size() >= 2);
@@ -162,7 +162,7 @@ atlas::grid::Domain Regular::atlasDomain(const util::BoundingBox& bbox) const {
 
 
 void Regular::validate(const std::vector<double> &values) const {
-    const atlas::grid::Domain dom = atlasDomain();
+    const atlas::grid::Domain dom = domain();
 
     if (dom.isGlobal()) {
         ASSERT(values.size() == (N_ * 2) * (N_ * 4));
@@ -187,7 +187,7 @@ void Regular::validate(const std::vector<double> &values) const {
 
 
 void Regular::setNiNj() {
-    const atlas::grid::Domain domain = atlasDomain();
+    const atlas::grid::Domain domain = domain();
     const double lon_middle = (domain.west() + domain.east()) / 2.;
     const double lat_middle = (domain.north() + domain.south()) / 2.;
 
@@ -329,7 +329,7 @@ public:
 
 
 Iterator *Regular::unrotatedIterator() const {
-    return new RegularIterator(latitudes(), N_, Ni_, Nj_, atlasDomain());
+    return new RegularIterator(latitudes(), N_, Ni_, Nj_, domain());
 }
 
 

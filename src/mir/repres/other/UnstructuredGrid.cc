@@ -77,14 +77,14 @@ void UnstructuredGrid::fill(api::MIRJob &job) const  {
 }
 
 
-atlas::grid::Domain UnstructuredGrid::atlasDomain() const {
-    eckit::Log::warning() << "UnstructuredGrid::atlasDomain(): assuming grid is global" << std::endl;
+atlas::grid::Domain UnstructuredGrid::domain() const {
+    eckit::Log::warning() << "UnstructuredGrid::domain(): assuming grid is global" << std::endl;
     return atlas::grid::Domain::makeGlobal();
 }
 
 
-atlas::grid::Domain UnstructuredGrid::atlasDomain(const util::BoundingBox&) const {
-    eckit::Log::warning() << "UnstructuredGrid::atlasDomain(BoundingBox): assuming grid is global" << std::endl;
+atlas::grid::Domain UnstructuredGrid::domain(const util::BoundingBox&) const {
+    eckit::Log::warning() << "UnstructuredGrid::domain(BoundingBox): assuming grid is global" << std::endl;
     return atlas::grid::Domain::makeGlobal();
 }
 

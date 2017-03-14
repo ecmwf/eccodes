@@ -136,16 +136,16 @@ atlas::grid::Grid *Representation::atlasGrid() const {
 }
 
 
-atlas::grid::Domain Representation::atlasDomain() const {
+atlas::grid::Domain Representation::domain() const {
     std::ostringstream os;
-    os << "Representation::atlasDomain() not implemented for " << *this;
+    os << "Representation::domain() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 
-atlas::grid::Domain Representation::atlasDomain(const util::BoundingBox&) const {
+atlas::grid::Domain Representation::domain(const util::BoundingBox&) const {
     std::ostringstream os;
-    os << "Representation::atlasDomain(BoundingBox) not implemented for " << *this;
+    os << "Representation::domain(BoundingBox) not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 

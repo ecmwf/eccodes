@@ -67,7 +67,7 @@ LatLon::~LatLon() {
 
 
 void LatLon::cropToDomain(const param::MIRParametrisation &parametrisation, context::Context & ctx) const {
-    if (!atlasDomain().isGlobal()) {
+    if (!domain().isGlobal()) {
         action::AreaCropper cropper(parametrisation, bbox_);
         cropper.execute(ctx);
     }
@@ -292,12 +292,12 @@ void LatLon::shape(size_t &ni, size_t &nj) const {
 }
 
 
-atlas::grid::Domain LatLon::atlasDomain() const {
-    return atlasDomain(bbox_);
+atlas::grid::Domain LatLon::domain() const {
+    return domain(bbox_);
 }
 
 
-atlas::grid::Domain LatLon::atlasDomain(const util::BoundingBox& bbox) const {
+atlas::grid::Domain LatLon::domain(const util::BoundingBox& bbox) const {
 
 
     // Special case for shifted grids

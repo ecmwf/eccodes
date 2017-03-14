@@ -85,7 +85,7 @@ void Reduced::fill(grib_info &info) const  {
     */
 
     // for GRIB, a global field is also aligned with Greenwich
-    bool global = atlasDomain().isGlobal();
+    bool global = domain().isGlobal();
     bool westAtGreenwich = eckit::types::is_approximately_equal<double>(0, bbox_.west());
 
     long j = info.packing.extra_settings_count++;
@@ -96,7 +96,7 @@ void Reduced::fill(grib_info &info) const  {
 
 
 void Reduced::fill(api::MIRJob &job) const  {
-    ASSERT(atlasDomain().isGlobal());
+    ASSERT(domain().isGlobal());
     job.set("pl", pls());
 }
 
@@ -222,12 +222,12 @@ public:
 };
 
 
-atlas::grid::Domain Reduced::atlasDomain() const {
-    return atlasDomain(bbox_);
+atlas::grid::Domain Reduced::domain() const {
+    return domain(bbox_);
 }
 
 
-atlas::grid::Domain Reduced::atlasDomain(const util::BoundingBox& bbox) const {
+atlas::grid::Domain Reduced::domain(const util::BoundingBox& bbox) const {
 
 
     // calculate EW and NS increments
@@ -280,7 +280,7 @@ atlas::grid::Domain Reduced::atlasDomain(const util::BoundingBox& bbox) const {
 
 
 Iterator *Reduced::unrotatedIterator() const {
-    return new GaussianIterator(latitudes(), pls(), atlasDomain());
+    return new GaussianIterator(latitudes(), pls(), domain());
 }
 
 
@@ -355,7 +355,7 @@ void Reduced::validate(const std::vector<double> &values) const {
 
     size_t count = 0;
 
-    if (atlasDomain().isGlobal()) {
+    if (domain().isGlobal()) {
         const std::vector<long> &pl = pls();
         for (size_t i = 0; i < pl.size(); i++) {
             count += static_cast<size_t>(pl[i]);
