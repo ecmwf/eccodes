@@ -3,7 +3,7 @@
 @brief This package is the \b Python interface to ecCodes. It offers almost one to one bindings to the C API functions.
 
 The Python interface to ecCodes uses the <a href="http://numpy.scipy.org/"><b>NumPy</b></a> package
-as the container of choice for the possible arrays of values that can be encoded/decoded in and from a grib message.
+as the container of choice for the possible arrays of values that can be encoded/decoded in and from a message.
 Numpy is a package used for scientific computing in Python and an efficient container for generic data.
 
 The Python interface can be enabled/disabled from CMake by using the following flag:\n
@@ -124,7 +124,7 @@ class Bunch(dict):
 @require(errid=int)
 def GRIB_CHECK(errid):
     """
-    Utility function checking the GRIB API error code and raising
+    Utility function checking the ecCodes error code and raising
     an error if that was set.
 
     @param errid  the C interface error id to check
@@ -310,7 +310,7 @@ def grib_count_in_file(fileobj):
 
 def grib_multi_support_on():
     """
-    @brief Turn on the support for multiple fields in a single message.
+    @brief Turn on the support for multiple fields in a single GRIB message.
 
     @exception GribInternalError
     """
@@ -319,7 +319,7 @@ def grib_multi_support_on():
 
 def grib_multi_support_off():
     """
-    @brief Turn off the support for multiple fields in a single message.
+    @brief Turn off the support for multiple fields in a single GRIB message.
 
     @exception GribInternalError
     """
@@ -329,7 +329,7 @@ def grib_multi_support_off():
 @require(msgid=int)
 def grib_release(msgid):
     """
-    @brief Free the memory for the message referred as msgid.
+    @brief Free the memory for the message referred to by msgid.
 
     \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
 
@@ -363,7 +363,7 @@ def grib_get_string(msgid, key):
 @require(msgid=int, key=str, value=str)
 def grib_set_string(msgid, key, value):
     """
-    @brief Set the value for a string key in a grib message.
+    @brief Set the value for a string key in a message.
 
     @param msgid      id of the message loaded in memory
     @param key         key name
@@ -375,7 +375,7 @@ def grib_set_string(msgid, key, value):
 
 def grib_gribex_mode_on():
     """
-    @brief Turn on the compatibility mode with gribex.
+    @brief Turn on the compatibility mode with GRIBEX.
 
     @exception GribInternalError
     """
@@ -384,7 +384,7 @@ def grib_gribex_mode_on():
 
 def grib_gribex_mode_off():
     """
-    @brief Turn off the compatibility mode with gribex.
+    @brief Turn off the compatibility mode with GRIBEX.
 
     @exception GribInternalError
     """
@@ -408,11 +408,11 @@ def grib_write(msgid, fileobj):
 @require(multigribid=int, fileobj=file)
 def grib_multi_write(multigribid, fileobj):
     """
-    @brief Write a multi field message to a file.
+    @brief Write a multi-field GRIB message to a file.
 
     \b Examples: \ref grib_multi_write.py "grib_multi_write.py"
 
-    @param multigribid      id of the multi field grib loaded in memory
+    @param multigribid      id of the multi-field grib loaded in memory
     @param fileobj          python file object
     @exception GribInternalError
     """
@@ -422,17 +422,17 @@ def grib_multi_write(multigribid, fileobj):
 @require(ingribid=int, startsection=int, multigribid=int)
 def grib_multi_append(ingribid, startsection, multigribid):
     """
-    @brief Append a single field grib message to a multi field grib message.
+    @brief Append a single-field GRIB message to a multi-field GRIB message.
 
     Only the sections with section number greather or equal "startsection"
-    are copied from the input single message to the multi field output grib.
+    are copied from the input single message to the multi-field output grib.
 
     \b Examples: \ref grib_multi_write.py "grib_multi_write.py"
 
-    @param ingribid      id of the input single grib
+    @param ingribid      id of the input single-field GRIB
     @param startsection  starting from startsection (included) all the sections are copied
-                         from the input single grib to the output multi grib
-    @param multigribid   id of the output multi filed grib
+                         from the input single grib to the output multi-field grib
+    @param multigribid   id of the output multi-field GRIB
     @exception GribInternalError
     """
     GRIB_CHECK(_internal.grib_c_multi_append(ingribid, startsection, multigribid))
@@ -556,14 +556,14 @@ def grib_skip_function(iterid):
 @require(gribid=int, mode=int)
 def grib_iterator_new(gribid, mode):
     """
-    @brief Create a new geoiterator for the given message, using its geometry and values.
+    @brief Create a new geoiterator for the given GRIB message, using its geometry and values.
 
-    The geoiterator can be used to go through all the geopoints in a message and
+    The geoiterator can be used to go through all the geopoints in a GRIB message and
     retrieve the values corresponding to those geopoints.
 
     \b Examples: \ref grib_iterator.py "grib_iterator.py"
 
-    @param gribid  id of the grib loaded in memory
+    @param gribid  id of the GRIB loaded in memory
     @param mode    flags for future use
     @return geoiterator id
     """
@@ -728,7 +728,7 @@ def codes_bufr_keys_iterator_next(iterid):
 @require(iterid=int)
 def codes_bufr_keys_iterator_delete(iterid):
     """
-    @brief Delete a keys iterator and free memory.
+    @brief Delete a BUFR keys iterator and free memory.
 
     \b Examples: \ref bufr_keys_iterator.py "bufr_keys_iterator.py"
 
@@ -769,7 +769,7 @@ def codes_bufr_keys_iterator_rewind(iterid):
 @require(msgid=int, key=str)
 def grib_get_long(msgid, key):
     """
-    @brief Get the value of a key in a grib message as an int.
+    @brief Get the value of a key in a message as an integer.
 
     @param msgid       id of the message loaded in memory
     @param key         key name
@@ -784,7 +784,7 @@ def grib_get_long(msgid, key):
 @require(msgid=int, key=str)
 def grib_get_double(msgid, key):
     """
-    @brief Get the value of a key in a grib message as a float.
+    @brief Get the value of a key in a message as a float.
 
     @param msgid      id of the message loaded in memory
     @param key         key name
@@ -799,7 +799,7 @@ def grib_get_double(msgid, key):
 @require(msgid=int, key=str, value=(int, long, float, str))
 def grib_set_long(msgid, key, value):
     """
-    @brief Set the integer value for a key in a grib message.
+    @brief Set the integer value for a key in a message.
 
     A TypeError exception will be thrown if value cannot be represented
     as an integer.
@@ -823,7 +823,7 @@ def grib_set_long(msgid, key, value):
 @require(msgid=int, key=str, value=(int, long, float, str))
 def grib_set_double(msgid, key, value):
     """
-    @brief Set the double value for a key in a grib message.
+    @brief Set the double value for a key in a message.
 
     A TypeError exception will be thrown if value cannot be represented
     as a float.
@@ -1048,7 +1048,7 @@ def grib_set_long_array(msgid, key, inarray):
 @require(msgid=int, key=str)
 def grib_get_long_array(msgid, key):
     """
-    @brief Get the integer array of values for a key from a grib message.
+    @brief Get the integer array of values for a key from a message.
 
     @param msgid      id of the message loaded in memory
     @param key        key name
@@ -1063,11 +1063,11 @@ def grib_get_long_array(msgid, key):
 
 def grib_multi_new():
     """
-    @brief Create a new multi field and return its id.
+    @brief Create a new multi-field GRIB message and return its id.
 
     \b Examples: \ref grib_multi_write.py "grib_multi_write.py"
 
-    @return id of the multi field
+    @return id of the multi-field message
     @exception GribInternalError
     """
     err, mgid = _internal.grib_c_multi_new()
@@ -1078,11 +1078,11 @@ def grib_multi_new():
 @require(gribid=int)
 def grib_multi_release(gribid):
     """
-    @brief Release a multi field from memory.
+    @brief Release a multi-field message from memory.
 
     \b Examples: \ref grib_multi_write.py "grib_multi_write.py"
 
-    @param gribid    id of the multi field we want to release the memory for
+    @param gribid    id of the multi-field we want to release the memory for
     @exception GribInternalError
     """
     GRIB_CHECK(_internal.grib_c_multi_release(gribid))
@@ -1433,9 +1433,9 @@ def grib_get_elements(gribid, key, indexes):
 @require(msgid=int, key=str)
 def grib_set_missing(msgid, key):
     """
-    @brief Set as missing the value for a key in a grib message.
+    @brief Set as missing the value for a key in a GRIB message.
 
-    It can be used to set a missing value in the grib header but not in
+    It can be used to set a missing value in the GRIB header but not in
     the data values.
 
     \b Examples: \ref grib_set_missing.py "grib_set_missing.py"
@@ -1592,13 +1592,13 @@ def grib_get_native_type(gribid, key):
 @require(msgid=int, key=str)
 def grib_get(msgid, key, ktype=None):
     """
-    @brief Get the value of a key in a grib message.
+    @brief Get the value of a key in a message.
 
     The type of value returned depends on the native type of the requested key.
     The type of value returned can be forced by using the type argument of the
     function. The type argument can be int, float or str.
 
-    The \em msgid references a grib message loaded in memory.
+    The \em msgid references a message loaded in memory.
 
     \b Examples: \ref grib_get_keys.py "grib_get_keys.py", \ref grib_print_data.py "grib_print_data.py"
 
@@ -1694,7 +1694,7 @@ def grib_set_values(gribid, values):
 @require(msgid=int, key=str)
 def grib_set(msgid, key, value):
     """
-    @brief Set the value for a scalar key in a grib message.
+    @brief Set the value for a scalar key in a message.
 
     The input value can be a python int, float or str.
 
@@ -1909,12 +1909,12 @@ def grib_new_from_message(message):
     """
     @brief Create a grib handle from a message in memory.
 
-    Create a new grib message from the input binary string and return its grib id.
+    Create a new message from the input binary string and return its grib id.
 
     @see grib_get_message
 
     @param message binary string message
-    @return msgid of the newly created grib message
+    @return msgid of the newly created message
     @exception GribInternalError
     """
     error, msgid = _internal.grib_c_new_from_message(0, message, len(message))
