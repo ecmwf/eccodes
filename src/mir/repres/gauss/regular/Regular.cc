@@ -187,16 +187,16 @@ void Regular::validate(const std::vector<double> &values) const {
 
 
 void Regular::setNiNj() {
-    const atlas::grid::Domain domain = domain();
-    const double lon_middle = (domain.west() + domain.east()) / 2.;
-    const double lat_middle = (domain.north() + domain.south()) / 2.;
+    const atlas::grid::Domain dom = domain();
+    const double lon_middle = (dom.west() + dom.east()) / 2.;
+    const double lat_middle = (dom.north() + dom.south()) / 2.;
 
     Ni_ = N_ * 4;
-    if (!domain.isPeriodicEastWest()) {
+    if (!dom.isPeriodicEastWest()) {
         Ni_ = 0;
         for (size_t i = 0; i < N_ * 4; ++i) {
-            const double lon = domain.west() + (i * 90.0) / N_;
-            if (domain.contains(lon, lat_middle)) {
+            const double lon = dom.west() + (i * 90.0) / N_;
+            if (dom.contains(lon, lat_middle)) {
                 ++Ni_;
             }
         }
@@ -204,11 +204,11 @@ void Regular::setNiNj() {
     ASSERT(2 <= Ni_ && Ni_ <= N_ * 4);
 
     Nj_ = N_ * 2;
-    if (!domain.includesPoleNorth() || !domain.includesPoleSouth()) {
+    if (!dom.includesPoleNorth() || !dom.includesPoleSouth()) {
         Nj_ = 0;
         const std::vector<double>& lats = latitudes();
         for (std::vector<double>::const_iterator lat = lats.begin(); lat != lats.end(); ++lat) {
-            if (domain.contains(lon_middle, *lat)) {
+            if (dom.contains(lon_middle, *lat)) {
                 ++Nj_;
             }
         }

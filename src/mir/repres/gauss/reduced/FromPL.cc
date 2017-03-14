@@ -23,6 +23,7 @@
 
 namespace mir {
 namespace repres {
+namespace gauss {
 namespace reduced {
 
 
@@ -69,6 +70,7 @@ const std::vector<long> &FromPL::pls() const {
 
 
 }  // namespace reduced
+}  // namespace gauss
 }  // namespace repres
 }  // namespace mir
 

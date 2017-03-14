@@ -23,6 +23,7 @@
 
 namespace mir {
 namespace repres {
+namespace gauss {
 namespace reduced {
 
 
@@ -88,6 +89,7 @@ static RepresentationBuilder<RotatedFromPL> rotatedGG("reduced_rotated_gg"); // 
 
 
 }  // namespace reduced
+}  // namespace gauss
 }  // namespace repres
 }  // namespace mir
 

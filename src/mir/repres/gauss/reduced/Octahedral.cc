@@ -22,6 +22,7 @@
 
 namespace mir {
 namespace repres {
+namespace gauss {
 namespace reduced {
 
 
@@ -68,6 +69,7 @@ const std::vector<long>& Octahedral::pls() const {
 
 
 }  // namespace reduced
+}  // namespace gauss
 }  // namespace repres
 }  // namespace mir
 
