@@ -206,8 +206,8 @@ list( APPEND grib_api_srcs
     grib_accessor_class_data_g1second_order_general_packing.c
     grib_accessor_class_data_g1second_order_general_extended_packing.c
     grib_accessor_class_g2grid.c
-    grib_accessor_class_bufr_unexpanded_descriptors.c
-    grib_accessor_class_bufr_expanded_descriptors.c
+    grib_accessor_class_unexpanded_descriptors.c
+    grib_accessor_class_expanded_descriptors.c
     grib_accessor_class_bufrdc_expanded_descriptors.c
     grib_accessor_class_data_apply_bitmap.c
     grib_accessor_class_data_apply_boustrophedonic.c
