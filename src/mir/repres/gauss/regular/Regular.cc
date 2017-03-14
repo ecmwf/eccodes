@@ -163,28 +163,25 @@ util::Domain Regular::domain(const util::BoundingBox& bbox) const {
 }
 
 
-void Regular::validate(const std::vector<double> &values) const {
+void Regular::validate(const std::vector<double>& values) const {
     const util::Domain dom = domain();
+    long long count = 0;
 
     if (dom.isGlobal()) {
-        ASSERT(values.size() == (N_ * 2) * (N_ * 4));
-    }
-    else {
+        count = (N_ * 2) * (N_ * 4);
+    } else {
         eckit::ScopedPtr<Iterator> it(unrotatedIterator());
-
-        long long count = 0;
         double lat;
         double lon;
-
         while (it->next(lat, lon)) {
-            if (dom.contains(lon, lat)) {
-                count++;
+            if (dom.contains(lat, lon)) {
+                ++count;
             }
         }
-
-        eckit::Log::debug<LibMir>() << "Regular::validate checked " << eckit::Plural(values.size(), "value") << ", within domain: " << eckit::BigNum(count) << "." << std::endl;
-        ASSERT(values.size() == size_t(count));
     }
+
+    eckit::Log::debug<LibMir>() << "Regular::validate checked " << eckit::Plural(values.size(), "value") << ", within domain: " << eckit::BigNum(count) << "." << std::endl;
+    ASSERT(values.size() == size_t(count));
 }
 
 
@@ -198,7 +195,7 @@ void Regular::setNiNj() {
         Ni_ = 0;
         for (size_t i = 0; i < N_ * 4; ++i) {
             const double lon = dom.west() + (i * 90.0) / N_;
-            if (dom.contains(lon, lat_middle)) {
+            if (dom.contains(lat_middle, lon)) {
                 ++Ni_;
             }
         }
@@ -210,7 +207,7 @@ void Regular::setNiNj() {
         Nj_ = 0;
         const std::vector<double>& lats = latitudes();
         for (std::vector<double>::const_iterator lat = lats.begin(); lat != lats.end(); ++lat) {
-            if (dom.contains(lon_middle, *lat)) {
+            if (dom.contains(*lat, lon_middle)) {
                 ++Nj_;
             }
         }

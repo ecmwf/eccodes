@@ -19,6 +19,7 @@
 #include <limits>
 #include <sstream>
 #include "eckit/exception/Exceptions.h"
+#include "eckit/log/Plural.h"
 #include "eckit/memory/ScopedPtr.h"
 #include "eckit/types/FloatCompare.h"
 #include "mir/api/MIRJob.h"
@@ -157,7 +158,7 @@ class GaussianIterator : public Iterator {
                 }
             }
 
-            if (domain_.contains(lon, lat)) {
+            if (domain_.contains(lat, lon)) {
                 count_++;
                 return true;
             }
@@ -351,17 +352,16 @@ size_t Reduced::frame(std::vector<double> &values, size_t size, double missingVa
 }
 
 
-void Reduced::validate(const std::vector<double> &values) const {
+void Reduced::validate(const std::vector<double>& values) const {
+    const util::Domain dom = domain();
+    long long count = 0;
 
-    size_t count = 0;
-
-    if (domain().isGlobal()) {
-        const std::vector<long> &pl = pls();
+    if (dom.isGlobal()) {
+        const std::vector<long>& pl = pls();
         for (size_t i = 0; i < pl.size(); i++) {
-            count += static_cast<size_t>(pl[i]);
+            count += pl[i];
         }
-    }
-    else {
+    } else {
         eckit::ScopedPtr<Iterator> it(unrotatedIterator());
         double lat;
         double lon;
@@ -370,8 +370,8 @@ void Reduced::validate(const std::vector<double> &values) const {
         }
     }
 
-    eckit::Log::debug<LibMir>() << "Reduced::validate " << values.size() << " count=" << count << std::endl;
-    ASSERT(values.size() == count);
+    eckit::Log::debug<LibMir>() << "Reduced::validate checked " << eckit::Plural(values.size(), "value") << ", within domain: " << eckit::BigNum(count) << "." << std::endl;
+    ASSERT(values.size() == size_t(count));
 }
 
 

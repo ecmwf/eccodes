@@ -185,7 +185,7 @@ class ReducedLLIterator: public Iterator {
 
             }
 
-            if (domain_.contains(lon, lat)) {
+            if (domain_.contains(lat, lon)) {
                 count_++;
                 return true;
             }
