@@ -14,7 +14,7 @@
 
 
 #include "grib_api_internal.h"
-/* 
+/*
    This is used by make_class.pl
 
    START_CLASS_DEF
@@ -44,7 +44,7 @@ static int notify_change(grib_accessor*,grib_accessor*);
 typedef struct grib_accessor_assert {
     grib_accessor          att;
 /* Members defined in gen */
-/* Members defined in assert */
+/* Members defined in ASSERT */
 } grib_accessor_assert;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -71,7 +71,7 @@ static grib_accessor_class _grib_accessor_class_assert = {
     0,                  /* grib_pack procedures long      */
     0,                /* grib_unpack procedures long    */
     0,                /* grib_pack procedures double    */
-    0,              /* grib_unpack procedures double  */
+    0,              /* grib_unpa™ck procedures double  */
     0,                /* grib_pack procedures string    */
     0,              /* grib_unpack procedures string  */
     0,          /* grib_pack array procedures string    */

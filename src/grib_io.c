@@ -617,7 +617,7 @@ static int read_BUFR(reader *r)
 
     edition = tmp[i++];
 
-    /* assert(edition != 1); */
+    /* ASSERT(edition != 1); */
 
     switch (edition) {
       case 0:

@@ -8,6 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_api.h"
 #include "grib_api_internal.h"
 #include <errno.h>
 #include <stdlib.h>
@@ -982,3 +983,20 @@ void grib_context_increment_handle_total_count(grib_context *c)
     GRIB_MUTEX_UNLOCK(&mutex_c);
 }
 
+static codes_assertion_failed_proc assertion = NULL;
+
+void code_set_codes_assertion_failed_proc(codes_assertion_failed_proc proc) {
+    assertion = proc;
+}
+
+void codes_assertion_failed(const char* message, const char* file, int line, const char* function) {
+    if(assertion == NULL) {
+        fprintf(stderr, "eccodes assertion failed: %s in %s, %s:%d\n", message, function, file, line);
+        abort();
+    }
+    else {
+        char buffer[10240];
+        sprintf(buffer, "eccodes assertion failed: %s in %s, %s:%d", message, function, file, line);
+        assertion(buffer);
+    }
+}

@@ -22,7 +22,7 @@ extern "C" {
 #endif
 
 /* cmake config header */
-#ifdef HAVE_ECCODES_CONFIG_H 
+#ifdef HAVE_ECCODES_CONFIG_H
 #include "eccodes_config.h"
 #endif
 
@@ -125,11 +125,11 @@ extern "C" {
 #if GRIB_PTHREADS
  #include <pthread.h>
  #define GRIB_MUTEX_INIT_ONCE(a,b) pthread_once(a,b);
- #define GRIB_MUTEX_LOCK(a) pthread_mutex_lock(a); 
+ #define GRIB_MUTEX_LOCK(a) pthread_mutex_lock(a);
  #define GRIB_MUTEX_UNLOCK(a) pthread_mutex_unlock(a);
  /*
  #define GRIB_MUTEX_LOCK(a) {pthread_mutex_lock(a); printf("MUTEX LOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);}
- #define GRIB_MUTEX_UNLOCK(a) {pthread_mutex_unlock(a);printf("MUTEX UNLOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);} 
+ #define GRIB_MUTEX_UNLOCK(a) {pthread_mutex_unlock(a);printf("MUTEX UNLOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);}
  */
 #elif GRIB_OMP_THREADS
  #include <omp.h>
@@ -504,9 +504,9 @@ struct grib_buffer
 typedef struct grib_virtual_value grib_virtual_value;
 
 struct grib_virtual_value {
-  long     lval;       
-  double   dval;  
-  char*    cval; 
+  long     lval;
+  double   dval;
+  char*    cval;
   int      missing;
   int      length;
   int      type;
@@ -813,6 +813,11 @@ struct codes_condition {
   long   rightLong;
   double rightDouble;
 };
+
+
+void codes_assertion_failed(const char* message, const char* file, int line, const char* function);
+
+#define ASSERT(a) do { if(!(a)) codes_assertion_failed(#a, __FILE__, __LINE__, __FUNCTION__); } while(0)
 
 #define MAX_SET_VALUES      10
 #define MAX_ACCESSOR_CACHE  100

@@ -14,7 +14,7 @@
 
 
 #include "grib_api_internal.h"
-#include <assert.h>
+
 
 /*
    This is used by make_class.pl
@@ -175,7 +175,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
         self->scale=grib_arguments_get_double(grib_handle_of_accessor(a),c,n++);
     }
 
-    assert(self->len <= sizeof(long)*8);
+    ASSERT(self->len <= sizeof(long)*8);
 
     a->length=0;
 }
@@ -298,7 +298,7 @@ static int get_native_type(grib_accessor* a)
     int type=GRIB_TYPE_BYTES;
     grib_accessor_bits* self = (grib_accessor_bits*)a;
 
-    if (a->flags & GRIB_ACCESSOR_FLAG_STRING_TYPE)  
+    if (a->flags & GRIB_ACCESSOR_FLAG_STRING_TYPE)
         type=GRIB_TYPE_STRING;
 
     if (a->flags & GRIB_ACCESSOR_FLAG_LONG_TYPE)

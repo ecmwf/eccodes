@@ -8,7 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 #include "grib_api_internal.h"
-#include <assert.h>
 
 /*
  * C Implementation: gaussian_reduced
@@ -87,7 +86,7 @@ void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoi
       }
     }
 
-    assert(*npoints==irange);
+    ASSERT(*npoints==irange);
 #if EFDEBUG
 	printf("--  pl=%ld npoints=%ld range=%.10e ilon_first=%ld ilon_last=%ld irange=%ld\n",
 		   pl,*npoints,range,*ilon_first,*ilon_last,irange);
