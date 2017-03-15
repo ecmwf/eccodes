@@ -84,7 +84,7 @@ for k, v in sorted(items):
 
 print("""};
 
-#ifdef EC_HAVE_FUNOPEN
+#if defined(EC_HAVE_FUNOPEN) && !defined(EC_HAVE_FMEMOPEN)
 
 typedef struct mem_file {
     const char* buffer;
