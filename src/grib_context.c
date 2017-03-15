@@ -985,7 +985,7 @@ void grib_context_increment_handle_total_count(grib_context *c)
 
 static codes_assertion_failed_proc assertion = NULL;
 
-void code_set_codes_assertion_failed_proc(codes_assertion_failed_proc proc) {
+void codes_set_codes_assertion_failed_proc(codes_assertion_failed_proc proc) {
     assertion = proc;
 }
 
