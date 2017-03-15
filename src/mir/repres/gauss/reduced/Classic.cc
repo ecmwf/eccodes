@@ -57,7 +57,10 @@ void Classic::fill(api::MIRJob &job) const  {
 
 
 atlas::grid::Grid* Classic::atlasGrid() const {
-    return new atlas::grid::gaussian::ClassicGaussian(N_, domain());
+    util::Domain dom = domain();
+    atlas::grid::Domain atlasDomain(dom.north(), dom.west(), dom.south(), dom.east());
+
+    return new atlas::grid::gaussian::ClassicGaussian(N_, atlasDomain);
 }
 
 

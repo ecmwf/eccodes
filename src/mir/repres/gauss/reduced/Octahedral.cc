@@ -56,7 +56,10 @@ void Octahedral::fill(api::MIRJob &job) const  {
 
 
 atlas::grid::Grid *Octahedral::atlasGrid() const {
-    return new atlas::grid::gaussian::OctahedralGaussian(N_, domain());
+    util::Domain dom = domain();
+    atlas::grid::Domain atlasDomain(dom.north(), dom.west(), dom.south(), dom.east());
+
+    return new atlas::grid::gaussian::OctahedralGaussian(N_, atlasDomain);
 }
 
 

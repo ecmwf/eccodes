@@ -105,12 +105,12 @@ atlas::grid::Grid* RegularLL::atlasGrid() const {
 
     // TODO: missing assertion for non-global, or shifted by not 1/2 grid
 
-
     // return non-shifted/shifted grid
-    return isShiftedLon || isShiftedLat? static_cast<LonLat*>(new ShiftedLonLat (ni_, nj_, domain()))
-           : isShiftedLon?               static_cast<LonLat*>(new ShiftedLon    (ni_, nj_, domain()))
-           : isShiftedLat?               static_cast<LonLat*>(new ShiftedLat    (ni_, nj_, domain()))
-           :                             static_cast<LonLat*>(new RegularLonLat (ni_, nj_, domain()));
+    atlas::grid::Domain atlasDomain(dom.north(), dom.west(), dom.south(), dom.east());
+    return isShiftedLon || isShiftedLat? static_cast<LonLat*>(new ShiftedLonLat (ni_, nj_, atlasDomain))
+           : isShiftedLon?               static_cast<LonLat*>(new ShiftedLon    (ni_, nj_, atlasDomain))
+           : isShiftedLat?               static_cast<LonLat*>(new ShiftedLat    (ni_, nj_, atlasDomain))
+           :                             static_cast<LonLat*>(new RegularLonLat (ni_, nj_, atlasDomain));
 }
 
 

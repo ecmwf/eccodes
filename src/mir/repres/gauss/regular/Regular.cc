@@ -97,7 +97,10 @@ void Regular::fill(api::MIRJob &job) const  {
 
 
 atlas::grid::Grid *Regular::atlasGrid() const {
-    return new atlas::grid::gaussian::RegularGaussian(N_, domain());
+    util::Domain dom = domain();
+    atlas::grid::Domain atlasDomain(dom.north(), dom.west(), dom.south(), dom.east());
+
+    return new atlas::grid::gaussian::RegularGaussian(N_, atlasDomain);
 }
 
 
