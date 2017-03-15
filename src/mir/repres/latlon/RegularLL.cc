@@ -76,8 +76,9 @@ void RegularLL::fill(api::MIRJob &job) const  {
 }
 
 
-atlas::grid::lonlat::Shift RegularLL::atlasShift() const {
-    
+atlas::grid::Grid* RegularLL::atlasGrid() const {
+    using namespace atlas::grid::lonlat;
+
 
     // locate latitude/longitude origin via accumulation of increments, in range [0,inc[
     // NOTE: shift is assumed half-increment origin dispacement; Domain is checked for
@@ -102,22 +103,14 @@ atlas::grid::lonlat::Shift RegularLL::atlasShift() const {
     isShiftedLon = dom.isPeriodicEastWest() && eckit::types::is_approximately_equal(lon_origin, inc_we / 2.),
     isShiftedLat = includesBothPoles        && eckit::types::is_approximately_equal(lat_origin, inc_sn / 2.);
 
-    return atlas::grid::lonlat::Shift(isShiftedLon, isShiftedLat);
-}
-
-
-atlas::grid::Grid* RegularLL::atlasGrid() const {
-    using namespace atlas::grid::lonlat;
-    const Shift shift = atlasShift();
-
     // TODO: missing assertion for non-global, or shifted by not 1/2 grid
 
 
     // return non-shifted/shifted grid
-    return shift(Shift::LON | Shift::LAT) ? static_cast<LonLat*>(new ShiftedLonLat (ni_, nj_, domain()))
-           : shift(Shift::LON) ?            static_cast<LonLat*>(new ShiftedLon    (ni_, nj_, domain()))
-           : shift(Shift::LAT) ?            static_cast<LonLat*>(new ShiftedLat    (ni_, nj_, domain()))
-           :                               static_cast<LonLat*>(new RegularLonLat (ni_, nj_, domain()));
+    return isShiftedLon || isShiftedLat? static_cast<LonLat*>(new ShiftedLonLat (ni_, nj_, domain()))
+           : isShiftedLon?               static_cast<LonLat*>(new ShiftedLon    (ni_, nj_, domain()))
+           : isShiftedLat?               static_cast<LonLat*>(new ShiftedLat    (ni_, nj_, domain()))
+           :                             static_cast<LonLat*>(new RegularLonLat (ni_, nj_, domain()));
 }
 
 
