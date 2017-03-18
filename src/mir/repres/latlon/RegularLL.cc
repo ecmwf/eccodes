@@ -26,6 +26,8 @@
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "mir/util/OffsetGrid.h"
+#include "mir/data/MIRField.h"
+#include "eckit/types/Fraction.h"
 
 
 namespace mir {
@@ -113,6 +115,46 @@ atlas::grid::Grid* RegularLL::atlasGrid() const {
            :                             static_cast<LonLat*>(new RegularLonLat (ni_, nj_, atlasDomain));
 }
 
+
+Representation* RegularLL::globalise(data::MIRField& field) const {
+    ASSERT(field.representation() == this);
+
+    if (domain().isGlobal()) {
+        return 0;
+    }
+
+    // For now, we only use that function for the LAW model, so we only grow by the end (south pole)
+    ASSERT(eckit::Fraction(bbox_.north()) == 90);
+    ASSERT(eckit::Fraction(bbox_.west()) == 0);
+    ASSERT(eckit::Fraction(bbox_.east()) + eckit::Fraction(increments_.west_east()) == 360);
+
+    util::BoundingBox newbbox(bbox_.north(), bbox_.west(), -90, bbox_.east());
+
+    eckit::ScopedPtr<RegularLL> newll(new RegularLL(newbbox, increments_));
+
+    ASSERT(newll->nj_ > nj_);
+    ASSERT(newll->ni_ == ni_);
+
+    size_t n = ni_ * nj_;
+    size_t newn = newll->ni_ * newll->nj_;
+    double missingValue = field.missingValue();
+
+    for (size_t i = 0; i < field.dimensions(); i++ ) {
+        std::vector<double> newvalues(newn, missingValue);
+        const std::vector<double> &values = field.direct(i);
+        ASSERT(values.size() == n);
+
+        for (size_t j = 0 ; j < n; ++j) {
+            newvalues[j] = values[j];
+        }
+
+        field.update(newvalues, i);
+    }
+
+    field.hasMissing(true);
+
+    return newll.release();
+}
 
 namespace {
 static RepresentationBuilder<RegularLL> regularLL("regular_ll"); // Name is what is returned by grib_api
