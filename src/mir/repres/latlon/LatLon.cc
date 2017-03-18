@@ -289,7 +289,7 @@ Representation* LatLon::globalise(data::MIRField& field) const {
 
     // For now, we only use that function for the LAW model, so we only grow by the end (south pole)
     ASSERT(eckit::Fraction(bbox_.north()) == 90);
-    ASSERT(eckit::Fraction(bbox_.east()) == 0);
+    ASSERT(eckit::Fraction(bbox_.west()) == 0);
     ASSERT(eckit::Fraction(bbox_.east()) + eckit::Fraction(increments_.west_east()) == 360);
 
     util::BoundingBox newbbox(bbox_.north(), bbox_.west(), -90, bbox_.east());
