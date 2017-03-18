@@ -175,6 +175,11 @@ size_t Representation::frame(std::vector<double> &values, size_t size, double mi
     throw eckit::SeriousBug(os.str());
 }
 
+Representation* Representation::globalise(data::MIRField& field) const {
+    std::ostringstream os;
+    os << "Representation::globalise() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
 
 void Representation::reorder(long scanningMode, std::vector<double> &values) const {
     std::ostringstream os;

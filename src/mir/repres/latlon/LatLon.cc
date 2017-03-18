@@ -26,6 +26,7 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
+#include "mir/data/MIRField.h"
 
 
 namespace mir {
@@ -279,6 +280,45 @@ size_t LatLon::frame(std::vector<double> &values, size_t size, double missingVal
 
 }
 
+Representation* LatLon::globalise(data::MIRField& field) const {
+    ASSERT(field.representation() == this);
+
+    if (domain().isGlobal()) {
+        return 0;
+    }
+
+    // For now, we only use that function for the LAW model, so we only grow by the end (south pole)
+    ASSERT(eckit::Fraction(bbox_.north()) == 90);
+    ASSERT(eckit::Fraction(bbox_.east()) == 0);
+    ASSERT(eckit::Fraction(bbox_.east()) + eckit::Fraction(increments_.west_east()) == 360);
+
+    util::BoundingBox newbbox(bbox_.north(), bbox_.west(), -90, bbox_.east());
+
+    eckit::ScopedPtr<LatLon> newll(new LatLon(newbbox, increments_));
+
+    ASSERT(newll->nj_ > nj_);
+    ASSERT(newll->ni_ == ni_);
+
+    size_t n = ni_ * nj_;
+    size_t newn = newll->ni_ * newll->nj_;
+    double missingValue = field.missingValue();
+
+    for (size_t i = 0; i < field.dimensions(); i++ ) {
+        std::vector<double> newvalues(newn, missingValue);
+        const std::vector<double> &values = field.direct(i);
+        ASSERT(values.size() == n);
+
+        for (size_t j = 0 ; j < n; ++j) {
+            newvalues[j] = values[j];
+        }
+
+        field.update(newvalues, i);
+    }
+
+    field.hasMissing(true);
+
+    return newll.release();
+}
 
 void LatLon::validate(const std::vector<double> &values) const {
     eckit::Log::debug<LibMir>() << "LatLon::validate " << values.size() << " ni*nj " << ni_ * nj_ << std::endl;
@@ -297,7 +337,7 @@ util::Domain LatLon::domain() const {
 }
 
 
-util::Domain LatLon::domain(const util::BoundingBox& bbox) const {
+util::Domain LatLon::domain(const util::BoundingBox & bbox) const {
 
 
     // Special case for shifted grids
