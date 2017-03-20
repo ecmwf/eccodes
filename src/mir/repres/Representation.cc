@@ -181,6 +181,13 @@ Representation* Representation::globalise(data::MIRField& field) const {
     throw eckit::SeriousBug(os.str());
 }
 
+Representation* Representation::subset(data::MIRField& field,
+                                       const util::Increments& increments) const {
+    std::ostringstream os;
+    os << "Representation::subset() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
 void Representation::reorder(long scanningMode, std::vector<double> &values) const {
     std::ostringstream os;
     os << "Representation::reorder() not implemented for " << *this;

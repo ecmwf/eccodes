@@ -33,19 +33,6 @@ namespace repres {
 namespace latlon {
 
 
-static size_t computeN(double first, double last, double inc) {
-    ASSERT(first <= last);
-    ASSERT(inc > 0);
-
-    eckit::Fraction f(first);
-    eckit::Fraction l(last);
-    eckit::Fraction i(inc);
-
-    long long n = (l - f) / i;
-
-    return n + 1;
-}
-
 
 LatLon::LatLon(const param::MIRParametrisation &parametrisation) :
     bbox_(parametrisation),
@@ -75,8 +62,8 @@ void LatLon::cropToDomain(const param::MIRParametrisation &parametrisation, cont
 
 
 void LatLon::setNiNj() {
-    ni_ = computeN(bbox_.west(),  bbox_.east(),  increments_.west_east());
-    nj_ = computeN(bbox_.south(), bbox_.north(), increments_.south_north());
+    ni_ = bbox_.computeNi(increments_);
+    nj_ = bbox_.computeNj(increments_);
 }
 
 

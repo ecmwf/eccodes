@@ -109,9 +109,9 @@ atlas::grid::Grid* RegularLL::atlasGrid() const {
 
     // return non-shifted/shifted grid
     atlas::grid::Domain atlasDomain(dom.north(), dom.west(), dom.south(), dom.east());
-    return isShiftedLon || isShiftedLat? static_cast<LonLat*>(new ShiftedLonLat (ni_, nj_, atlasDomain))
-           : isShiftedLon?               static_cast<LonLat*>(new ShiftedLon    (ni_, nj_, atlasDomain))
-           : isShiftedLat?               static_cast<LonLat*>(new ShiftedLat    (ni_, nj_, atlasDomain))
+    return isShiftedLon || isShiftedLat ? static_cast<LonLat*>(new ShiftedLonLat (ni_, nj_, atlasDomain))
+           : isShiftedLon ?               static_cast<LonLat*>(new ShiftedLon    (ni_, nj_, atlasDomain))
+           : isShiftedLat ?               static_cast<LonLat*>(new ShiftedLat    (ni_, nj_, atlasDomain))
            :                             static_cast<LonLat*>(new RegularLonLat (ni_, nj_, atlasDomain));
 }
 
@@ -153,6 +153,51 @@ Representation* RegularLL::globalise(data::MIRField& field) const {
 
     field.hasMissing(true);
 
+    return newll.release();
+}
+
+Representation* RegularLL::subset(data::MIRField& field,
+                                  const util::Increments& increments) const {
+
+    ASSERT(field.representation() == this);
+
+    // Increments must match
+
+    if (!increments.multipleOf(increments_)) {
+        std::ostringstream oss;
+        oss << "RegularLL::subset " << increments << " is not a multiple  of " << increments_;
+        throw eckit::UserError(oss.str());
+    }
+
+
+    size_t skipI = 0;
+    size_t skipJ = 0;
+    increments.ratio(increments_, skipI, skipJ);
+
+    eckit::ScopedPtr<RegularLL> newll(new RegularLL(bbox_, increments));
+
+    size_t n = ni_ * nj_;
+    size_t newn = newll->ni_ * newll->nj_;
+
+    std::cout << "n = " << n << " newn " << newn << std::endl;
+
+    for (size_t f = 0; f < field.dimensions(); f++ ) {
+        std::vector<double> newvalues(newn);
+        const std::vector<double> &values = field.direct(f);
+        ASSERT(values.size() == n);
+
+        size_t k = 0;
+        for (size_t j = 0; j < nj_; j += skipJ) {
+            for (size_t i = 0; i < ni_; i += skipI) {
+                ASSERT(k < newn);
+                ASSERT(j*ni_ +i < n);
+                newvalues[k++] = values[j * ni_ + i];
+            }
+        }
+
+        ASSERT(k == newvalues.size());
+        field.update(newvalues, f);
+    }
     return newll.release();
 }
 
