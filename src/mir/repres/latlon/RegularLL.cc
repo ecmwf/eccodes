@@ -179,8 +179,6 @@ Representation* RegularLL::subset(data::MIRField& field,
     size_t n = ni_ * nj_;
     size_t newn = newll->ni_ * newll->nj_;
 
-    std::cout << "n = " << n << " newn " << newn << std::endl;
-
     for (size_t f = 0; f < field.dimensions(); f++ ) {
         std::vector<double> newvalues(newn);
         const std::vector<double> &values = field.direct(f);
