@@ -60,6 +60,7 @@ list( APPEND tests
    get_product_kind
    gts_get_keys
    metar_get_keys
+   ecc-448
 )
 
 # The high level python test requires new features in the unittest

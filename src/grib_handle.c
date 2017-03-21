@@ -356,6 +356,24 @@ grib_handle* codes_gts_handle_new_from_file(grib_context* c, FILE* f, int* error
     return gts_new_from_file(c, f, error);
 }
 
+static int determine_product_kind(grib_handle* h, ProductKind* prod_kind)
+{
+    int err = 0;
+    size_t len = 0;
+    char prod_kind_str[256]={0,};
+    err = grib_get_length(h, "kindOfProduct", &len);
+    if (!err) {
+        err = grib_get_string(h, "kindOfProduct", prod_kind_str, &len);
+        if      (strcmp(prod_kind_str, "GRIB")==0)  *prod_kind = PRODUCT_GRIB;
+        else if (strcmp(prod_kind_str, "BUFR")==0)  *prod_kind = PRODUCT_BUFR;
+        else if (strcmp(prod_kind_str, "METAR")==0) *prod_kind = PRODUCT_METAR;
+        else if (strcmp(prod_kind_str, "GTS")==0)   *prod_kind = PRODUCT_GTS;
+        else if (strcmp(prod_kind_str, "TAF")==0)   *prod_kind = PRODUCT_TAF;
+        else *prod_kind = PRODUCT_ANY;
+    }
+    return err;
+}
+
 grib_handle* grib_handle_new_from_message_copy ( grib_context* c, const void* data, size_t size )
 {
     grib_handle *g = NULL;
@@ -411,9 +429,15 @@ grib_handle* grib_handle_new_from_message ( grib_context* c, const void* data, s
 {
     grib_handle  *gl = NULL;
     grib_handle  *h = NULL;
+    ProductKind product_kind = PRODUCT_ANY;
     if ( c == NULL ) c = grib_context_get_default();
     gl = grib_new_handle ( c );
     h=grib_handle_create ( gl,  c, data,  buflen );
+
+    /* See ECC-448 */
+    if (determine_product_kind(h, &product_kind) == GRIB_SUCCESS) {
+        h->product_kind = product_kind;
+    }
     return h;
 }
 
