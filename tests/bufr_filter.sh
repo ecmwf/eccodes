@@ -1400,7 +1400,6 @@ rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
 cat > $fRules <<EOF
 set simpleThinningSkip=36;
 set doSimpleThinning=1;
-set pack=1;
 write;
 assert(numberOfSubsets == 5);
 EOF
