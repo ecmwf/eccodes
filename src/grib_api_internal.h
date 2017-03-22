@@ -1037,7 +1037,6 @@ struct grib_context
     grib_trie*                      def_files;
     grib_string_list*               blacklist;
     int                             ieee_packing;
-    int                             unpack;
     int                             bufrdc_mode;
     int                             bufr_set_to_missing_if_out_of_range;
     FILE*                           log_stream;
