@@ -51,7 +51,7 @@
 70 70 Post-processing analysis or forecast at a horizontal level or in a horizontal layer at a point in time
 71 71 Post-processing individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time
 72 72 Post-processing average, accumulation, extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
-73 73 Post-processing individual ensemble forecast, control and perturbed, at a horizontal level or n a horizontal layer, in a continuous or non-continuous time interval
+73 73 Post-processing individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer, in a continuous or non-continuous time interval
 # 74-90 Reserved
 91 91 Categorical forecasts at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval 
 # 92-253 Reserved
