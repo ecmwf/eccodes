@@ -614,7 +614,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
     char buff[100];
     size_t bufflen=100;
-    char sval[100];
+    char sval[100] = {0};
     char* p=sval;
     size_t svallen=100;
     grib_accessor_g1step_range* self = (grib_accessor_g1step_range*)a;
