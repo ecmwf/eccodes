@@ -38,29 +38,29 @@ simple_bitmap.grib"
 no_packing="gen.grib|row.grib|gen_bitmap.grib|constant_width_bitmap.grib|constant_width_boust_bitmap.grib"
 
 test_data() {
-	${tools_dir}/grib_filter test.filter $simple > $simple.data
+    ${tools_dir}/grib_filter test.filter $simple > $simple.data
 
-	for f in $files
-	do 
-		${tools_dir}/grib_filter test.filter $f > $f.data
-		diff $simple.data $f.data > /dev/null
-		${tools_dir}/grib_compare -cvalues $f $simple
-		echo $f decoding test passed > $REDIRECT
+    for f in $files
+    do 
+        ${tools_dir}/grib_filter test.filter $f > $f.data
+        diff $simple.data $f.data > /dev/null
+        ${tools_dir}/grib_compare -cvalues $f $simple
+        echo $f decoding test passed > $REDIRECT
 
-		exclude=`echo $f | awk " /$no_packing/ {print \"found\";} "`
-		if [ -z "$exclude" ] && [ $encoding != 0 ]
-		then
-			rm -f $f.copied
-			${tools_dir}/grib_copy -r $f $f.copied
-			${tools_dir}/grib_filter test.filter $f.copied > $f.copied.data
-			diff $simple.data $f.copied.data > /dev/null
-			${tools_dir}/grib_compare -cvalues $f.copied $simple
-			echo $f encoding test passed > $REDIRECT
-			echo > $REDIRECT
-		fi
+        exclude=`echo $f | awk " /$no_packing/ {print \"found\";} "`
+        if [ -z "$exclude" ] && [ $encoding != 0 ]
+        then
+            rm -f $f.copied
+            ${tools_dir}/grib_copy -r $f $f.copied
+            ${tools_dir}/grib_filter test.filter $f.copied > $f.copied.data
+            diff $simple.data $f.copied.data > /dev/null
+            ${tools_dir}/grib_compare -cvalues $f.copied $simple
+            echo $f encoding test passed > $REDIRECT
+            echo > $REDIRECT
+        fi
 
-	done
-	rm -f *.data *.copied
+    done
+    rm -f *.data *.copied
 }
 
 
@@ -93,12 +93,29 @@ nums=`${tools_dir}/grib_get -p numberOfDataPoints,numberOfCodedValues,numberOfMi
 res=`${tools_dir}/grib_get -l 33,88.5 $sec_ord_bmp`
 [ "$res" = "9999 5.51552 9999 9999 " ]
 
-res=`${tools_dir}//grib_get -l 28.5,90 $sec_ord_bmp`
+res=`${tools_dir}/grib_get -l 28.5,90 $sec_ord_bmp`
 [ "$res" = "3.51552 9999 5.26552 9999 " ]
 
 # GRIB-203 nearest on M-F second order boustrophedonic
 res=`${tools_dir}/grib_get -w count=1 -l 0,0 lfpw.grib1`
 [ "$res" = "20560.7 20563.4 20554.7 20559.5 " ]
 
-rm -f $sec_ord_bmp
+# Unpack/pack test for second order grib1 data
+# --------------------------------------------
+g1files="lfpw.grib1
+   gen_ext_spd_2.grib
+   gen_ext_spd_3.grib"
+temp_grib1=temp.second_order.grib
+temp_stat1=temp.second_order.stat1
+temp_stat2=temp.second_order.stat2
+
+for f1 in $g1files; do
+    # This does unpack and repack
+    ${tools_dir}/grib_copy -r $f1 $temp_grib1
+    ${tools_dir}/grib_get -n statistics $f1         > $temp_stat1
+    ${tools_dir}/grib_get -n statistics $temp_grib1 > $temp_stat2
+    perl ${test_dir}/number_compare.pl $temp_stat1 $temp_stat2
+done
+
+rm -f $temp_grib1 $sec_ord_bmp
 rm -f test.filter
