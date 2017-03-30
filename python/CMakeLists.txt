@@ -58,7 +58,13 @@ if( HAVE_PYTHON )
     install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} setup.py build_ext --rpath ${CMAKE_INSTALL_PREFIX}/${INSTALL_LIB_DIR}
                                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})")
     # Call distutils for installation
-    install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} setup.py install --root \$ENV{DESTDIR}/ --prefix ${CMAKE_INSTALL_PREFIX}
+    install(CODE "if( \$ENV{DESTDIR} )
+                    set( __root \"--root \$ENV{DESTDIR}\" )
+                  endif()
+                  execute_process(COMMAND ${PYTHON_EXECUTABLE} setup.py install
+                                            \${__root}
+                                            --prefix ${CMAKE_INSTALL_PREFIX}
+                                            --record=${CMAKE_BINARY_DIR}/extra_install.txt
                                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})")
 
 endif()
