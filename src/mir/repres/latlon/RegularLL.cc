@@ -25,7 +25,6 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
-#include "mir/util/OffsetGrid.h"
 #include "mir/data/MIRField.h"
 #include "eckit/types/Fraction.h"
 

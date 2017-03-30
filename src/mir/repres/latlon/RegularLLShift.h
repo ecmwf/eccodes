@@ -13,10 +13,12 @@
 /// @date Apr 2015
 
 
-#ifndef RotatedLLOffset_H
-#define RotatedLLOffset_H
+#ifndef RegularLLShift_H
+#define RegularLLShift_H
 
-#include "mir/repres/latlon/RegularLLOffset.h"
+#include "mir/repres/latlon/RegularLL.h"
+#include "mir/util/Rotation.h"
+#include "mir/util/Shift.h"
 
 
 namespace mir {
@@ -24,7 +26,7 @@ namespace repres {
 namespace latlon {
 
 
-class RotatedLLOffset : public RegularLLOffset {
+class RegularLLShift : public RegularLL {
   public:
 
     // -- Exceptions
@@ -32,14 +34,13 @@ class RotatedLLOffset : public RegularLLOffset {
 
     // -- Contructors
 
-    RotatedLLOffset(const util::BoundingBox &bbox,
+    RegularLLShift(const util::BoundingBox &bbox,
         const util::Increments &increments,
-        const util::Rotation &rotation,
-        double northwards, double eastwards);
+        const util::Shift& shift);
 
     // -- Destructor
 
-    virtual ~RotatedLLOffset();
+    virtual ~RegularLLShift();
 
     // -- Convertors
     // None
@@ -63,9 +64,7 @@ class RotatedLLOffset : public RegularLLOffset {
 
     // -- Members
 
-    util::Rotation rotation_;
-    double northwards_;
-    double eastwards_;
+    util::Shift shift_;
 
     // -- Methods
 
@@ -73,6 +72,7 @@ class RotatedLLOffset : public RegularLLOffset {
 
     // -- Overridden methods
     // None
+    virtual atlas::grid::Grid *atlasGrid() const;
 
     // -- Class members
     // None
@@ -82,12 +82,12 @@ class RotatedLLOffset : public RegularLLOffset {
 
   private:
 
-    // RotatedLLOffset();
+    // RegularLLShift();
 
     // No copy allowed
 
-    RotatedLLOffset(const RotatedLLOffset &);
-    RotatedLLOffset &operator=(const RotatedLLOffset &);
+    RegularLLShift(const RegularLLShift &);
+    RegularLLShift &operator=(const RegularLLShift &);
 
     // -- Members
     // None
@@ -97,14 +97,10 @@ class RotatedLLOffset : public RegularLLOffset {
 
     // -- Overridden methods
 
-    virtual void fill(grib_info &) const;
-    virtual void fill(api::MIRJob &) const;
-
-    virtual atlas::grid::Grid *atlasGrid() const;
-    virtual Iterator* rotatedIterator() const; // Before rotation
+    virtual Iterator* unrotatedIterator() const; // Before rotation
 
     // From RegularLL
-    virtual const RotatedLLOffset *cropped(const util::BoundingBox &bbox) const;
+    virtual const RegularLLShift *cropped(const util::BoundingBox &bbox) const;
 
     // -- Class members
     // None
