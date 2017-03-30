@@ -978,3 +978,24 @@ void grib_context_increment_handle_total_count(grib_context *c)
     GRIB_MUTEX_UNLOCK(&mutex_c);
 }
 
+static codes_assertion_failed_proc assertion = NULL;
+
+void codes_set_codes_assertion_failed_proc(codes_assertion_failed_proc proc)
+{
+    assertion = proc;
+}
+
+void codes_assertion_failed(const char* message, const char* file, int line)
+{
+    /* Default behaviour is to abort
+     * unless user has supplied his own assertion routine */
+    if (assertion == NULL) {
+        fprintf(stderr, "ecCodes assertion failed: `%s' in %s:%d\n", message, file, line);
+        abort();
+    }
+    else {
+        char buffer[10240];
+        sprintf(buffer, "ecCodes assertion failed: `%s' in %s:%d", message, file, line);
+        assertion(buffer);
+    }
+}

@@ -45,7 +45,7 @@ static int execute(grib_action* a,grib_handle* h);
 
 
 typedef struct grib_action_assert {
-    grib_action          act;  
+    grib_action          act;
 /* Members defined in assert */
 	grib_expression *expression;
 } grib_action_assert;
@@ -101,7 +101,7 @@ static int create_accessor(grib_section* p, grib_action* act,grib_loader *h)
 
   grib_push_accessor(as,p->block);
 
-  
+
   return GRIB_SUCCESS;
 }
 
