@@ -1271,10 +1271,10 @@ static int pack_double_optimised(grib_accessor* a, const double* val, size_t *le
         if (val[i] < min ) min = val[i];
     }
 
-    if((ret=grib_get_long_internal(handle,self->bits_per_value,&bits_per_value)) != GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(handle,self->bits_per_value,&bits_per_value)) != GRIB_SUCCESS)
         return ret;
 
-    if((ret = grib_get_long_internal(handle,self->optimize_scaling_factor, &optimize_scaling_factor))
+    if ((ret = grib_get_long_internal(handle,self->optimize_scaling_factor, &optimize_scaling_factor))
             != GRIB_SUCCESS)
         return ret;
 
@@ -1290,6 +1290,10 @@ static int pack_double_optimised(grib_accessor* a, const double* val, size_t *le
         divisor = grib_power(-binary_scale_factor,2);
         min = min * decimal;
         max = max * decimal;
+
+        if((ret = grib_set_long_internal(handle,self->decimal_scale_factor, decimal_scale_factor)) !=
+                GRIB_SUCCESS)
+            return ret;
     }
     else
     {
@@ -1297,6 +1301,7 @@ static int pack_double_optimised(grib_accessor* a, const double* val, size_t *le
         if (min==max) {
             grib_set_long_internal(handle,self->decimal_scale_factor, 0);
         }
+
         if((ret = grib_get_long_internal(handle,self->decimal_scale_factor, &decimal_scale_factor))
                 != GRIB_SUCCESS)
             return ret;
@@ -1314,15 +1319,7 @@ static int pack_double_optimised(grib_accessor* a, const double* val, size_t *le
         binary_scale_factor = grib_get_binary_scale_fact(max,reference_value,bits_per_value,&ret);
 
         divisor = grib_power(-binary_scale_factor,2);
-
-        if((ret = grib_set_long_internal(handle,self->binary_scale_factor, binary_scale_factor)) !=
-                GRIB_SUCCESS)
-            return ret;
     }
-
-    if((ret = grib_set_long_internal(handle,self->decimal_scale_factor, decimal_scale_factor)) !=
-            GRIB_SUCCESS)
-        return ret;
 
     if((ret = grib_set_long_internal(handle,self->binary_scale_factor, binary_scale_factor)) !=
             GRIB_SUCCESS)
