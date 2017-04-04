@@ -1285,6 +1285,11 @@ static int pack_double_optimised(grib_accessor* a, const double* val, size_t *le
                 compat_gribex, 1,
                 &decimal_scale_factor, &binary_scale_factor, &reference_value)) != GRIB_SUCCESS)
             return ret;
+
+        decimal = grib_power(decimal_scale_factor,10);
+        divisor = grib_power(-binary_scale_factor,2);
+        min = min * decimal;
+        max = max * decimal;
     }
     else
     {
@@ -1296,24 +1301,24 @@ static int pack_double_optimised(grib_accessor* a, const double* val, size_t *le
                 != GRIB_SUCCESS)
             return ret;
 
+        decimal = grib_power(decimal_scale_factor,10);
+        min = min * decimal;
+        max = max * decimal;
+
         if (grib_get_nearest_smaller_value(handle,self->reference_value,min,&reference_value)
                 !=GRIB_SUCCESS) {
-            grib_context_log(handle->context,GRIB_LOG_ERROR,
+            grib_context_log(a->context,GRIB_LOG_ERROR,
                     "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
-            exit(GRIB_INTERNAL_ERROR);
+            return GRIB_INTERNAL_ERROR;
         }
         binary_scale_factor = grib_get_binary_scale_fact(max,reference_value,bits_per_value,&ret);
+
+        divisor = grib_power(-binary_scale_factor,2);
 
         if((ret = grib_set_long_internal(handle,self->binary_scale_factor, binary_scale_factor)) !=
                 GRIB_SUCCESS)
             return ret;
     }
-
-    decimal = grib_power(decimal_scale_factor,10);
-    divisor = grib_power(-binary_scale_factor,2);
-
-    min = min * decimal;
-    max = max * decimal;
 
     if((ret = grib_set_long_internal(handle,self->decimal_scale_factor, decimal_scale_factor)) !=
             GRIB_SUCCESS)
