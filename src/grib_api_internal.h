@@ -164,12 +164,6 @@ extern "C" {
 
 #define Assert(a) do { if(!(a)) codes_assertion_failed(#a, __FILE__, __LINE__); } while(0)
 
-#ifndef NDEBUG
- #define DebugAssert(a) Assert(a)
-#else
- #define DebugAssert(a)
-#endif
-
 #ifdef __gnu_hurd__
  #define COMPILE_TIME_ASSERT(condition) \
    extern int compile_time_assert[!!(condition) - 1]
@@ -181,12 +175,14 @@ extern "C" {
       } while (0)
 #endif
 
-#ifndef NDEBUG
+#ifdef DEBUG
+ #define DebugAssert(a) Assert(a)
  #define DebugAssertAccess(array, index, size) \
    do { \
     if (!((index) >= 0 && (index) < (size)) ) {printf("ARRAY ACCESS ERROR: array=%s idx=%ld size=%ld @ %s +%d \n", #array, index, size, __FILE__, __LINE__); abort();} \
    } while(0)
 #else
+ #define DebugAssert(a)
  #define DebugAssertAccess(array, index, size)
 #endif
 
