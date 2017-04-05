@@ -73,7 +73,7 @@ download_data:
 
 noinst_PROGRAMS = packing_check gauss_sub read_any grib_double_cmp packing pack_unpack \
                   multi_from_message julian read_index index gribex_perf\
-                  jpeg_perf ccsds_perf so_perf png_perf bpv_limit laplacian \
+                  jpeg_perf grib_ccsds_perf so_perf png_perf bpv_limit laplacian \
                   unit_tests grib_util_set_spec
 
 multi_from_message_SOURCES = multi_from_message.c
@@ -90,7 +90,7 @@ read_index_SOURCES = read_index.c
 jpeg_perf_SOURCES = jpeg_perf.c
 so_perf_SOURCES = so_perf.c
 png_perf_SOURCES = png_perf.c
-ccsds_perf_SOURCES  = ccsds_perf.c
+grib_ccsds_perf_SOURCES  = grib_ccsds_perf.c
 gribex_perf_SOURCES = gribex_perf.c
 gauss_sub_SOURCES = gauss_sub.c
 grib_util_set_spec_SOURCES = grib_util_set_spec.c

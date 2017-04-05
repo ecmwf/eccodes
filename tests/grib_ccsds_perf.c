@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
   FILE* fout=NULL;
   char* finname;
   char* ofilename;
-  char defofilename[]="ccsds_perf.out";
+  char defofilename[]="grib_ccsds_perf.out";
   double *values=NULL;
   int append=0;
   size_t nvalues=0;

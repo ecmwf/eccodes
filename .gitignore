@@ -228,7 +228,7 @@ tests/read_any
 tests/read_index
 tests/so_perf
 tests/unit_tests
-tests/ccsds_perf
+tests/grib_ccsds_perf
 tests/grib_util_set_spec
 tigge/.libs/
 tigge/tigge_accumulations
