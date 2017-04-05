@@ -111,7 +111,7 @@ list( APPEND tests_data_reqd
     list
     grib_second_order
     multi_from_message
-    change_scanning
+    grib_change_scanning
     statistics
     tigge
     tigge_conversions

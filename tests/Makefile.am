@@ -45,7 +45,7 @@ TESTS = definitions.sh \
         list.sh \
         grib_second_order.sh \
         multi_from_message.sh \
-        change_scanning.sh \
+        grib_change_scanning.sh \
         julian.sh \
         statistics.sh \
         tigge.sh \
