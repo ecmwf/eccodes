@@ -43,7 +43,7 @@ TESTS = definitions.sh \
         index.sh \
         bitmap.sh \
         list.sh \
-        second_order.sh \
+        grib_second_order.sh \
         multi_from_message.sh \
         change_scanning.sh \
         julian.sh \

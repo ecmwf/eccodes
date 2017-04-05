@@ -109,7 +109,7 @@ list( APPEND tests_data_reqd
     index
     bitmap
     list
-    second_order
+    grib_second_order
     multi_from_message
     change_scanning
     statistics
