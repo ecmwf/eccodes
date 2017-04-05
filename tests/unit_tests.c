@@ -11,6 +11,8 @@
 #include <assert.h>
 #include "grib_api_internal.h"
 
+int assertion_caught = 0;
+
 typedef enum {IBM_FLOAT, IEEE_FLOAT} FloatRep;
 
 void compare_doubles(const double d1, const double d2, const double epsilon)
@@ -1398,9 +1400,32 @@ void test_string_splitting()
     /*  input having several adjacent delimiters e.g. 'A||B|||C' */
 }
 
+static void my_assertion_proc(const char* message)
+{
+    printf("Caught it: %s\n", message);
+    assertion_caught = 1;
+}
+
+void test_assertion_catching()
+{
+    assert(assertion_caught == 0);
+    codes_set_codes_assertion_failed_proc(&my_assertion_proc);
+
+    /* Do something illegal */
+    string_split("", " ");
+
+    assert(assertion_caught == 1);
+
+    /* Restore everything */
+    codes_set_codes_assertion_failed_proc(NULL);
+    assertion_caught = 0;
+}
+
 int main(int argc, char** argv)
 {
-    /*printf("Doing unit tests. GRIB API version = %ld\n", grib_get_api_version());*/
+    /*printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());*/
+
+    test_assertion_catching();
 
     test_gaussian_latitude_640();
 
