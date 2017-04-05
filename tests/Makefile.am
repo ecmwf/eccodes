@@ -22,7 +22,7 @@ TESTS = definitions.sh \
         unit_tests.sh \
         grib2to1.sh \
         badgrib.sh \
-        ls.sh \
+        grib_ls.sh \
         grib_filter.sh  \
         multi.sh \
         budg.sh \
@@ -35,13 +35,13 @@ TESTS = definitions.sh \
         get_fail.sh \
         missing.sh \
         local.sh \
-        step.sh \
+        grib_step.sh \
         grib_set.sh \
-        iterator.sh \
+        grib_iterator.sh \
         grib_compare.sh \
         grib_level.sh \
         index.sh \
-        bitmap.sh \
+        grib_bitmap.sh \
         list.sh \
         grib_second_order.sh \
         multi_from_message.sh \
@@ -52,7 +52,7 @@ TESTS = definitions.sh \
         uerra.sh \
         tigge_conversions.sh \
         read_any.sh \
-        padding.sh \
+        grib_padding.sh \
         lamb_az_eq_area.sh \
         grib_to_netcdf.sh \
         grib_dump_debug.sh \

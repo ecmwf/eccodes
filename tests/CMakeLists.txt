@@ -88,7 +88,7 @@ list( APPEND tests_data_reqd
     grib1to2
     grib2to1
     badgrib
-    ls
+    grib_ls
     grib_filter
     multi
     budg
@@ -101,13 +101,13 @@ list( APPEND tests_data_reqd
     get_fail
     missing
     local
-    step
+    grib_step
     grib_set
-    iterator
+    grib_iterator
     grib_compare
     grib_level
     index
-    bitmap
+    grib_bitmap
     list
     grib_second_order
     multi_from_message
@@ -116,7 +116,7 @@ list( APPEND tests_data_reqd
     tigge
     tigge_conversions
     read_any
-    padding
+    grib_padding
     grib_dump
     grib_dump_debug
     grib_util_set_spec
