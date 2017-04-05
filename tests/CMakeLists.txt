@@ -90,17 +90,17 @@ list( APPEND tests_data_reqd
     badgrib
     grib_ls
     grib_filter
-    multi
+    grib_multi
     budg
     gridType
-    octahedral
-    global
+    grib_octahedral
+    grib_global
     concept
     decimalPrecision
     bitsPerValue
     get_fail
     missing
-    local
+    grib_local
     grib_step
     grib_set
     grib_iterator

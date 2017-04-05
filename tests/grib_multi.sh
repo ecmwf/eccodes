@@ -10,13 +10,7 @@
 
 . ./include.sh
 
-if [ ! -f ${data_dir}/multi.grib2 ]
-then
-  echo no data to test
-  exit 0
-fi
-
-tmpdata=grib_api.$$.grib
+tmpdata=grib_multi.$$.grib
 rm -f $tmpdata
 
 parameterNumber=`${tools_dir}/grib_get -p parameterNumber -w parameterCategory=2,parameterNumber=3 ${data_dir}/multi.grib2`
@@ -42,4 +36,4 @@ then
   exit 1
 fi
 
-rm -f $tmpdata.1 $tmpdata.rules || true
+rm -f $tmpdata.1 $tmpdata.rules

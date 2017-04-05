@@ -24,17 +24,17 @@ TESTS = definitions.sh \
         badgrib.sh \
         grib_ls.sh \
         grib_filter.sh  \
-        multi.sh \
+        grib_multi.sh \
         budg.sh \
         gridType.sh \
-        octahedral.sh \
-        global.sh \
+        grib_octahedral.sh \
+        grib_global.sh \
         concept.sh \
         decimalPrecision.sh \
         bitsPerValue.sh \
         get_fail.sh \
         missing.sh \
-        local.sh \
+        grib_local.sh \
         grib_step.sh \
         grib_set.sh \
         grib_iterator.sh \
