@@ -36,10 +36,10 @@ TESTS = definitions.sh \
         missing.sh \
         local.sh \
         step.sh \
-        set.sh \
+        grib_set.sh \
         iterator.sh \
         grib_compare.sh \
-        level.sh \
+        grib_level.sh \
         index.sh \
         bitmap.sh \
         list.sh \
@@ -47,7 +47,7 @@ TESTS = definitions.sh \
         multi_from_message.sh \
         grib_change_scanning.sh \
         julian.sh \
-        statistics.sh \
+        grib_statistics.sh \
         tigge.sh \
         uerra.sh \
         tigge_conversions.sh \

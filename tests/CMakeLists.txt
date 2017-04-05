@@ -102,17 +102,17 @@ list( APPEND tests_data_reqd
     missing
     local
     step
-    set
+    grib_set
     iterator
     grib_compare
-    level
+    grib_level
     index
     bitmap
     list
     grib_second_order
     multi_from_message
     grib_change_scanning
-    statistics
+    grib_statistics
     tigge
     tigge_conversions
     read_any
