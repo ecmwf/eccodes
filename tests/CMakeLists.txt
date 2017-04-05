@@ -211,10 +211,10 @@ ecbuild_add_test( TARGET eccodes_t_grib_png
                   TEST_DEPENDS eccodes_download_gribs
 )
 
-ecbuild_add_test( TARGET eccodes_t_ccsds
+ecbuild_add_test( TARGET eccodes_t_grib_ccsds
                   TYPE SCRIPT
                   CONDITION HAVE_AEC
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ccsds.sh
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds.sh
                   TEST_DEPENDS eccodes_download_gribs
 )
 

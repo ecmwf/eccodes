@@ -57,7 +57,7 @@ TESTS = definitions.sh \
         grib_to_netcdf.sh \
         grib_dump_debug.sh \
         jpeg.sh \
-        ccsds.sh \
+        grib_ccsds.sh \
         md5.sh \
         grib_util_set_spec.sh \
         neg_fctime.sh \
