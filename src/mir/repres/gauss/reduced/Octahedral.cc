@@ -15,7 +15,7 @@
 
 #include "mir/repres/gauss/reduced/Octahedral.h"
 
-#include "atlas/grid/gaussian/OctahedralGaussian.h"
+#include "atlas/grid.h"
 #include "mir/api/MIRJob.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
@@ -55,18 +55,29 @@ void Octahedral::fill(api::MIRJob &job) const  {
 }
 
 
-atlas::grid::Grid *Octahedral::atlasGrid() const {
+atlas::grid::Grid Octahedral::atlasGrid() const {
     util::Domain dom = domain();
-    atlas::grid::Domain atlasDomain(dom.north(), dom.west(), dom.south(), dom.east());
+    atlas::grid::RectangularDomain atlasDomain({dom.west(), dom.east()}, {dom.south(), dom.north()});
 
-    return new atlas::grid::gaussian::OctahedralGaussian(N_, atlasDomain);
+    return atlas::grid::ReducedGaussianGrid("O" + std::to_string(N_), atlasDomain);
 }
 
 
 const std::vector<long>& Octahedral::pls() const {
     if (pl_.size() == 0) {
-        atlas::grid::gaussian::OctahedralGaussian grid(N_);
-        pl_ = grid.pl();
+
+        atlas::grid::Grid::Config config;
+        config.set("name", "O" + std::to_string(N_));
+        atlas::grid::ReducedGaussianGrid grid(config);
+        ASSERT(grid);
+
+        const std::vector<long>& pl = grid.nx();
+        ASSERT(pl.size() == N_ * 2);
+        for (size_t i = 0; i < pl.size(); i++) {
+            ASSERT(pl[i] > 0);
+        }
+
+        pl_ = pl;
     }
     return pl_;
 }

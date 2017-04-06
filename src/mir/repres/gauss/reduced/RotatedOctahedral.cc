@@ -18,7 +18,6 @@
 #include <iostream>
 #include "mir/repres/gauss/reduced/RotatedFromPL.h"
 #include "mir/util/Grib.h"
-#include "mir/util/RotatedGrid.h"
 #include "mir/util/RotatedIterator.h"
 
 
@@ -64,12 +63,8 @@ Iterator* RotatedOctahedral::rotatedIterator() const {
 }
 
 
-atlas::grid::Grid *RotatedOctahedral::atlasGrid() const {
-    return new util::RotatedGrid(
-                Octahedral::atlasGrid(),
-                rotation_.south_pole_latitude(),
-                rotation_.south_pole_longitude(),
-                rotation_.south_pole_rotation_angle() );
+atlas::grid::Grid RotatedOctahedral::atlasGrid() const {
+    return rotation_.rotate(Octahedral::atlasGrid());
 }
 
 

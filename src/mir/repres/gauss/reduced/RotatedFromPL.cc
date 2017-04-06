@@ -17,7 +17,6 @@
 
 #include <iostream>
 #include "mir/util/Grib.h"
-#include "mir/util/RotatedGrid.h"
 #include "mir/util/RotatedIterator.h"
 
 
@@ -64,12 +63,8 @@ void RotatedFromPL::fill(api::MIRJob &job) const  {
 }
 
 
-atlas::grid::Grid *RotatedFromPL::atlasGrid() const {
-    return new util::RotatedGrid(
-                FromPL::atlasGrid(),
-                rotation_.south_pole_latitude(),
-                rotation_.south_pole_longitude(),
-                rotation_.south_pole_rotation_angle() );
+atlas::grid::Grid RotatedFromPL::atlasGrid() const {
+    return rotation_.rotate(FromPL::atlasGrid());
 }
 
 

@@ -16,8 +16,8 @@
 #include "mir/repres/latlon/RotatedLLShift.h"
 
 #include "mir/config/LibMir.h"
-#include "mir/util/RotatedGrid.h"
 #include "mir/util/RotatedIterator.h"
+
 
 namespace mir {
 namespace repres {
@@ -71,12 +71,8 @@ void RotatedLLShift::fill(api::MIRJob &job) const  {
 }
 
 
-atlas::grid::Grid *RotatedLLShift::atlasGrid() const {
-    return new util::RotatedGrid(
-               RegularLLShift::atlasGrid(),
-               rotation_.south_pole_latitude(),
-               rotation_.south_pole_longitude(),
-               rotation_.south_pole_rotation_angle() );
+atlas::grid::Grid RotatedLLShift::atlasGrid() const {
+    return rotation_.rotate(RegularLLShift::atlasGrid());
 }
 
 

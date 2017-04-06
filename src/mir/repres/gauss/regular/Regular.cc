@@ -18,15 +18,16 @@
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Plural.h"
 #include "eckit/memory/ScopedPtr.h"
+#include "eckit/types/Fraction.h"
 #include "eckit/types/FloatCompare.h"
-#include "atlas/grid/gaussian/RegularGaussian.h"
+#include "atlas/grid.h"
+#include "atlas/grid/detail/domain/RectangularDomain.h"
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
-#include "eckit/types/Fraction.h"
 
 
 namespace mir {
@@ -96,11 +97,11 @@ void Regular::fill(api::MIRJob &job) const  {
 }
 
 
-atlas::grid::Grid *Regular::atlasGrid() const {
+atlas::grid::Grid Regular::atlasGrid() const {
     util::Domain dom = domain();
-    atlas::grid::Domain atlasDomain(dom.north(), dom.west(), dom.south(), dom.east());
+    atlas::grid::RectangularDomain atlasDomain({dom.west(), dom.east()}, {dom.south(), dom.north()});
 
-    return new atlas::grid::gaussian::RegularGaussian(N_, atlasDomain);
+    return atlas::grid::RegularGaussianGrid("F" + std::to_string(N_), atlasDomain);
 }
 
 

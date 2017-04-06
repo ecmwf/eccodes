@@ -72,7 +72,6 @@ class RegularLLShift : public RegularLL {
 
     // -- Overridden methods
     // None
-    virtual atlas::grid::Grid *atlasGrid() const;
 
     // -- Class members
     // None

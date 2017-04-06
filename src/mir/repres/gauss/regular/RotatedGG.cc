@@ -17,7 +17,6 @@
 
 #include <iostream>
 #include "mir/util/Grib.h"
-#include "mir/util/RotatedGrid.h"
 #include "mir/util/RotatedIterator.h"
 
 
@@ -70,12 +69,8 @@ Iterator* RotatedGG::rotatedIterator() const {
 }
 
 
-atlas::grid::Grid *RotatedGG::atlasGrid() const {
-    return new util::RotatedGrid(
-                Regular::atlasGrid(),
-                rotation_.south_pole_latitude(),
-                rotation_.south_pole_longitude(),
-                rotation_.south_pole_rotation_angle() );
+atlas::grid::Grid RotatedGG::atlasGrid() const {
+    return rotation_.rotate(Regular::atlasGrid());
 }
 
 

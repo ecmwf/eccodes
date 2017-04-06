@@ -19,7 +19,6 @@
 #include "eckit/exception/Exceptions.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
-#include "mir/util/ShiftGrid.h"
 #include "mir/util/ShiftIterator.h"
 
 
@@ -57,14 +56,6 @@ const RegularLLShift *RegularLLShift::cropped(const util::BoundingBox &bbox) con
 
 Iterator *RegularLLShift::unrotatedIterator() const {
     return new util::ShiftIterator(RegularLL::unrotatedIterator(), shift_);
-}
-
-
-
-atlas::grid::Grid *RegularLLShift::atlasGrid() const {
-    return new util::ShiftGrid(
-               RegularLL::atlasGrid(),
-               shift_);
 }
 
 

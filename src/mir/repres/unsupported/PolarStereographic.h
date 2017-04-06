@@ -97,14 +97,10 @@ class PolarStereographic : public Gridded {
     // -- Methods
     // None
 
-
     // -- Overridden methods
 
     virtual void fill(grib_info &) const;
     virtual void validate(const std::vector<double> &) const;
-    virtual atlas::grid::Grid *atlasGrid() const;
-
-
 
     // -- Class members
     // None

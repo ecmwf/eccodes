@@ -16,7 +16,7 @@
 #include "mir/repres/latlon/ReducedLL.h"
 
 #include <iostream>
-#include "atlas/grid/lonlat/ReducedLonLat.h"
+#include "atlas/grid.h"
 #include "mir/action/misc/AreaCropper.h"
 #include "mir/api/MIRJob.h"
 #include "mir/param/MIRParametrisation.h"
@@ -70,11 +70,15 @@ void ReducedLL::cropToDomain(const param::MIRParametrisation &parametrisation, c
     }
 }
 
-atlas::grid::Grid *ReducedLL::atlasGrid() const {
-    util::Domain dom = domain();
-    atlas::grid::Domain atlasDomain(dom.north(), dom.west(), dom.south(), dom.east());
 
-    return new atlas::grid::lonlat::ReducedLonLat(pl_.size(), &pl_[0], atlasDomain);
+atlas::grid::Grid ReducedLL::atlasGrid() const {
+    util::Domain dom = domain();
+
+    using atlas::grid::StructuredGrid;
+    StructuredGrid::XSpace xspace({ dom.west(), dom.east() }, pl_, !dom.isPeriodicEastWest());
+    StructuredGrid::YSpace yspace( atlas::grid::LinearSpacing( { dom.north(), dom.south() }, pl_.size()));
+
+    return atlas::grid::StructuredGrid(xspace, yspace);
 }
 
 

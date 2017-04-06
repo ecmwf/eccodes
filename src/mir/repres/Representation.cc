@@ -19,6 +19,7 @@
 #include "eckit/thread/AutoLock.h"
 #include "eckit/thread/Mutex.h"
 #include "eckit/thread/Once.h"
+#include "atlas/grid.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Domain.h"
@@ -133,7 +134,7 @@ const Representation *Representation::truncate(size_t truncation,
 }
 
 
-atlas::grid::Grid *Representation::atlasGrid() const {
+atlas::grid::Grid Representation::atlasGrid() const {
     std::ostringstream os;
     os << "Representation::atlasGrid() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());

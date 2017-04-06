@@ -19,7 +19,6 @@
 #include "eckit/exception/Exceptions.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
-#include "mir/util/RotatedGrid.h"
 #include "mir/util/RotatedIterator.h"
 
 
@@ -76,12 +75,8 @@ void RotatedLL::fill(api::MIRJob &job) const  {
 }
 
 
-atlas::grid::Grid *RotatedLL::atlasGrid() const {
-    return new util::RotatedGrid(
-                RegularLL::atlasGrid(),
-                rotation_.south_pole_latitude(),
-                rotation_.south_pole_longitude(),
-                rotation_.south_pole_rotation_angle() );
+atlas::grid::Grid RotatedLL::atlasGrid() const {
+    return rotation_.rotate(RegularLL::atlasGrid());;
 }
 
 

@@ -17,16 +17,13 @@
 
 #include <iostream>
 #include "eckit/types/FloatCompare.h"
-#include "atlas/grid/lonlat/RegularLonLat.h"
-#include "atlas/grid/lonlat/ShiftedLat.h"
-#include "atlas/grid/lonlat/ShiftedLon.h"
-#include "atlas/grid/lonlat/ShiftedLonLat.h"
+#include "eckit/types/Fraction.h"
+#include "atlas/grid.h"
 #include "mir/config/LibMir.h"
+#include "mir/data/MIRField.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
-#include "mir/data/MIRField.h"
-#include "eckit/types/Fraction.h"
 
 
 namespace mir {
@@ -77,9 +74,7 @@ void RegularLL::fill(api::MIRJob &job) const  {
 }
 
 
-atlas::grid::Grid* RegularLL::atlasGrid() const {
-    using namespace atlas::grid::lonlat;
-
+atlas::grid::Grid RegularLL::atlasGrid() const {
 
     // locate latitude/longitude origin via accumulation of increments, in range [0,inc[
     // NOTE: shift is assumed half-increment origin dispacement; Domain is checked for
@@ -107,11 +102,16 @@ atlas::grid::Grid* RegularLL::atlasGrid() const {
     // TODO: missing assertion for non-global, or shifted by not 1/2 grid
 
     // return non-shifted/shifted grid
-    atlas::grid::Domain atlasDomain(dom.north(), dom.west(), dom.south(), dom.east());
-    return isShiftedLon || isShiftedLat ? static_cast<LonLat*>(new ShiftedLonLat (ni_, nj_, atlasDomain))
-           : isShiftedLon ?               static_cast<LonLat*>(new ShiftedLon    (ni_, nj_, atlasDomain))
-           : isShiftedLat ?               static_cast<LonLat*>(new ShiftedLat    (ni_, nj_, atlasDomain))
-           :                             static_cast<LonLat*>(new RegularLonLat (ni_, nj_, atlasDomain));
+
+    std::string name = (isShiftedLon && isShiftedLat? "S"
+                                      : isShiftedLon? "Slon"
+                                      : isShiftedLat? "Slat"
+                                      :               "L")
+            + std::to_string(ni_) + "x" + std::to_string(nj_);
+
+    atlas::grid::RectangularDomain domain({dom.west(), dom.east()}, {dom.south(), dom.north()});
+
+    return atlas::grid::RegularLonLatGrid(name, domain);
 }
 
 
