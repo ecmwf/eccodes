@@ -75,43 +75,20 @@ void RegularLL::fill(api::MIRJob &job) const  {
 
 
 atlas::grid::Grid RegularLL::atlasGrid() const {
-
-    // locate latitude/longitude origin via accumulation of increments, in range [0,inc[
-    // NOTE: shift is assumed half-increment origin dispacement; Domain is checked for
-    // global NS/EW range (this could/should be revised).
-    const double inc_we = increments_.west_east();
-    const double inc_sn = increments_.south_north();
-    ASSERT(eckit::types::is_strictly_greater(inc_we, 0.));
-    ASSERT(eckit::types::is_strictly_greater(inc_sn, 0.));
-
-    int i = 0, j = 0;
-    while (bbox_.west()  + i * inc_we < inc_we) { ++i; }
-    while (bbox_.west()  + i * inc_we > inc_we) { --i; }
-    while (bbox_.south() + j * inc_sn < inc_sn) { ++j; }
-    while (bbox_.south() + j * inc_sn > inc_sn) { --j; }
-    const double
-    lon_origin = bbox_.west()  + i * inc_we,
-    lat_origin = bbox_.south() + j * inc_sn;
-
+    std::string name = "L";
     const util::Domain dom = domain();
-    const bool
-    includesBothPoles = dom.includesPoleNorth() && dom.includesPoleSouth(),
-    isShiftedLon = dom.isPeriodicEastWest() && eckit::types::is_approximately_equal(lon_origin, inc_we / 2.),
-    isShiftedLat = includesBothPoles        && eckit::types::is_approximately_equal(lat_origin, inc_sn / 2.);
 
-    // TODO: missing assertion for non-global, or shifted by not 1/2 grid
+    if (dom.isGlobal()) {
+        name = shifted(bbox_, increments_)? "S"
+             : shifted(bbox_, increments_, true, false)? "Slon"
+             : shifted(bbox_, increments_, false, true)? "Slat"
+             : "L";
+    }
+
+    name += std::to_string(ni_) + "x" + std::to_string(nj_);
 
     // return non-shifted/shifted grid
-
-    std::string name = (isShiftedLon && isShiftedLat? "S"
-                                      : isShiftedLon? "Slon"
-                                      : isShiftedLat? "Slat"
-                                      :               "L")
-            + std::to_string(ni_) + "x" + std::to_string(nj_);
-
-    atlas::grid::RectangularDomain domain({dom.west(), dom.east()}, {dom.south(), dom.north()});
-
-    return atlas::grid::RegularLonLatGrid(name, domain);
+    return atlas::grid::RegularLonLatGrid(name, atlas::grid::RectangularDomain({dom.west(), dom.east()}, {dom.south(), dom.north()}));
 }
 
 

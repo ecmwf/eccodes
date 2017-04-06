@@ -67,6 +67,21 @@ void LatLon::setNiNj() {
 }
 
 
+bool LatLon::shifted(const util::BoundingBox& bbox, const util::Increments& inc, bool check_lon, bool check_lat) {
+    ASSERT(check_lon || check_lat);
+
+    // FIXME get precision from GRIB (angularPrecision)
+    double eps = 0.001;
+    double sn = inc.south_north();
+    double we = inc.west_east();
+
+    bool shifted_lon = (!check_lon) ||  eckit::types::is_approximately_equal(bbox.west(), we/2., eps);
+    bool shifted_lat = (!check_lat) || (eckit::types::is_approximately_equal(bbox.north(),  90. - sn/2., eps)
+                                    &&  eckit::types::is_approximately_equal(bbox.south(), -90. + sn/2., eps));
+    return shifted_lon && shifted_lat;
+}
+
+
 void LatLon::reorder(long scanningMode, std::vector<double> &values) const {
     // Code from ecRegrid, UNTESTED!!!
 
@@ -284,22 +299,34 @@ util::Domain LatLon::domain() const {
 }
 
 
-util::Domain LatLon::domain(const util::BoundingBox & bbox) const {
+util::Domain LatLon::domain(const util::BoundingBox& bbox) const {
+    using eckit::Fraction;
+
+    double sn(increments_.south_north());
+    double we(increments_.west_east());
 
 
-    // Special case for shifted grids
-    const double ns = bbox.north() - bbox.south() ;
-    const double ew = bbox.east()  - bbox.west() ;
+    double north = long(bbox.north() / sn) * sn;
+    double south = long(bbox.south() / sn) * sn;
+    double east = bbox.east();
+    double west = bbox.west();
 
-    const bool isPeriodicEastWest = eckit::types::is_approximately_equal(ew + increments_.west_east(), 360.);
-    const bool includesPoles = eckit::types::is_approximately_equal(ns, 180.)
-                               || eckit::types::is_approximately_equal(ns + increments_.south_north(), 180.);
+    // FIXME get precision from GRIB (angularPrecision)
+    double eps = 0.001;
 
-    const double
-    north = includesPoles ?   90 : bbox.north(),
-    south = includesPoles ?  -90 : bbox.south(),
-    west = bbox.west(),
-    east = isPeriodicEastWest ? bbox.west() + 360 : bbox.east();
+
+    // correct if grid range is pole-to-pole, or is shifted South-North
+    if (eckit::types::is_approximately_equal(north - south, 180., eps) || shifted(bbox_, increments_, false, true)) {
+        north =  90;
+        south = -90;
+    }
+
+
+    // correct if grid is range 360
+    if (eckit::types::is_approximately_equal(east - west + we, 360., eps) ) {
+        east = west + 360;
+    }
+
     return util::Domain(north, west, south, east);
 }
 
