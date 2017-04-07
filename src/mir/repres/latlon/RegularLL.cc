@@ -75,20 +75,22 @@ void RegularLL::fill(api::MIRJob &job) const  {
 
 
 atlas::grid::Grid RegularLL::atlasGrid() const {
-    std::string name = "L";
     const util::Domain dom = domain();
 
-    if (dom.isGlobal()) {
-        name = shifted(bbox_, increments_)? "S"
-             : shifted(bbox_, increments_, true, false)? "Slon"
-             : shifted(bbox_, increments_, false, true)? "Slat"
-             : "L";
-    }
+    // use bounding box for non-shifted/shifted grid (it is the best we have)
+    bool isPeriodicEastWest = dom.isPeriodicEastWest();
+    double north = bbox_.north();
+    double south = bbox_.south();
+    double west = bbox_.west();
+    double east = isPeriodicEastWest? west + 360 : bbox_.east();
 
-    name += std::to_string(ni_) + "x" + std::to_string(nj_);
+    using atlas::grid::StructuredGrid;
+    using atlas::grid::LinearSpacing;
+    StructuredGrid::XSpace xspace( LinearSpacing( { west,  east  }, long(ni_), !isPeriodicEastWest));
+    StructuredGrid::YSpace yspace( LinearSpacing( { north, south }, long(nj_)));
 
-    // return non-shifted/shifted grid
-    return atlas::grid::RegularLonLatGrid(name, atlas::grid::RectangularDomain({dom.west(), dom.east()}, {dom.south(), dom.north()}));
+    atlas::grid::RectangularDomain domain({ dom.west(), dom.east() }, { dom.south(), dom.north() });
+    return StructuredGrid(xspace, yspace, StructuredGrid::Projection(), domain);
 }
 
 
