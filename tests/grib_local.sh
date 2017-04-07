@@ -65,3 +65,18 @@ diff local.log local.good.log
 
 rm -f local.log loc.grib1 loc.grib2 loc1.grib1 loc1.grib2 eps.grib1 eps.grib2
 
+# Local Definition 5
+# ----------------------
+sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+temp=temp.grib_local.grib
+${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=5 $sample_g1 $temp.1
+${tools_dir}/grib_set -s \
+   forecastProbabilityNumber=2,totalNumberOfForecastProbabilities=25,thresholdIndicator=3,lowerThreshold=54,upperThreshold=56 \
+   $temp.1 $temp.2
+${tools_dir}/grib_set -s edition=2 $temp.2 $temp.3
+# Now check all LD5 keys from grib1 made it into grib2
+grib_check_key_equals $temp.3 edition,productDefinitionTemplateNumber "2 5"
+grib_check_key_equals $temp.3 forecastProbabilityNumber,totalNumberOfForecastProbabilities "2 25"
+grib_check_key_equals $temp.3 probabilityType,scaledValueOfLowerLimit,scaledValueOfUpperLimit "2 54 56"
+
+rm -f $temp.1 $temp.2 $temp.3

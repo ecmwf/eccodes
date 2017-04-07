@@ -269,6 +269,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
         }
         break;
 
+    case 5: /* Forecast probability data */
     case 7:  /* Sensitivity data */
     case 9:  /* Singular vectors and ensemble perturbations */
     case 11: /* Supplementary data used by the analysis */

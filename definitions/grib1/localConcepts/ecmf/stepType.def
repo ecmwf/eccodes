@@ -32,3 +32,9 @@
 "avgas"   = {timeRangeIndicator=128;}
 "avgad"   = {timeRangeIndicator=130;}
 "avgid"   = {timeRangeIndicator=133;}
+
+
+
+# TP
+"accum" = {timeRangeIndicator=0;indicatorOfParameter=228;gribTablesVersionNo=128;centre=98;}
+"accum" = {timeRangeIndicator=1;indicatorOfParameter=228;gribTablesVersionNo=128;centre=98;}
