@@ -97,7 +97,7 @@ list( APPEND tests_data_reqd
     grib_global
     grib_concept
     decimalPrecision
-    bitsPerValue
+    grib_bitsPerValue
     get_fail
     missing
     grib_local

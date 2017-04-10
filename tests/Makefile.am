@@ -31,7 +31,7 @@ TESTS = definitions.sh \
         grib_global.sh \
         grib_concept.sh \
         decimalPrecision.sh \
-        bitsPerValue.sh \
+        grib_bitsPerValue.sh \
         get_fail.sh \
         missing.sh \
         grib_local.sh \
