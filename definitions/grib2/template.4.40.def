@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# TEMPLATE 4.40, Analysis or forecast at a horizontal level or in a horizontal layer at a point in time
+# TEMPLATE 4.40, Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for atmospheric chemical constituents
 
 include "grib2/template.4.parameter_chemical.def";
 include "grib2/template.4.point_in_time.def";
