@@ -29,7 +29,7 @@ TESTS = definitions.sh \
         gridType.sh \
         grib_octahedral.sh \
         grib_global.sh \
-        concept.sh \
+        grib_concept.sh \
         decimalPrecision.sh \
         bitsPerValue.sh \
         get_fail.sh \

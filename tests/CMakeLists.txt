@@ -95,7 +95,7 @@ list( APPEND tests_data_reqd
     gridType
     grib_octahedral
     grib_global
-    concept
+    grib_concept
     decimalPrecision
     bitsPerValue
     get_fail
