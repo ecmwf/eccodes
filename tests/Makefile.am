@@ -56,7 +56,7 @@ TESTS = definitions.sh \
         lamb_az_eq_area.sh \
         grib_to_netcdf.sh \
         grib_dump_debug.sh \
-        jpeg.sh \
+        grib_jpeg.sh \
         grib_ccsds.sh \
         md5.sh \
         grib_util_set_spec.sh \

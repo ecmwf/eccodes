@@ -197,10 +197,10 @@ ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
                   TEST_DEPENDS eccodes_download_gribs
 )
 
-ecbuild_add_test( TARGET eccodes_t_jpeg
+ecbuild_add_test( TARGET eccodes_t_grib_jpeg
                   TYPE SCRIPT
                   CONDITION HAVE_JPEG
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/jpeg.sh
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_jpeg.sh
                   TEST_DEPENDS eccodes_download_gribs
 )
 
