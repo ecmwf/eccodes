@@ -60,7 +60,7 @@ TESTS = definitions.sh \
         grib_ccsds.sh \
         md5.sh \
         grib_util_set_spec.sh \
-        neg_fctime.sh \
+        grib_neg_fctime.sh \
         ecc-197.sh \
         ecc-286.sh \
         ecc-288.sh

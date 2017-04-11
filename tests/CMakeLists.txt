@@ -121,7 +121,7 @@ list( APPEND tests_data_reqd
     grib_dump_debug
     grib_util_set_spec
     local_MeteoFrance
-    neg_fctime
+    grib_neg_fctime
 )
 if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
     list(APPEND tests_data_reqd bufr_dump_encode_fortran)
