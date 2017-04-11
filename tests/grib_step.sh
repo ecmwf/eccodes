@@ -94,6 +94,10 @@ ${tools_dir}/grib_set -s indicatorOfUnitOfTimeRange=m $grib2_sample $temp
 unit=`${tools_dir}/grib_get -p indicatorOfUnitOfTimeRange $temp`
 [ "$unit" = "0" ]
 
+# ECC-457
+input=${data_dir}/tp_ecmwf.grib
+stepRange=`${tools_dir}/grib_get -w count=1 -p stepRange,startStep,endStep,stepType $input`
+[ "$stepRange" = "12 12 12 instant" ]
+
 rm -f $temp
 rm -f $grib2File.p8tmp ${grib2File}.tmp x.grib
-
