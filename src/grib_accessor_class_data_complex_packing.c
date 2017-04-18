@@ -1338,16 +1338,18 @@ static int pack_double_optimised(grib_accessor* a, const double* val, size_t *le
                     "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
+        d = grib_power(+decimal_scale_factor,10);
     }
     else
     {
-        if (grib_get_nearest_smaller_value(gh,self->reference_value,min,&reference_value)
+        d = grib_power(+decimal_scale_factor,10);
+        if (grib_get_nearest_smaller_value(gh,self->reference_value,d*min,&reference_value)
                 !=GRIB_SUCCESS) {
             grib_context_log(gh->context,GRIB_LOG_ERROR,
-                    "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
+                    "unable to find nearest_smaller_value of %g for %s",d*min,self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
-        binary_scale_factor = grib_get_binary_scale_fact(max,reference_value,bits_per_value,&ret);
+        binary_scale_factor = grib_get_binary_scale_fact(d*max,reference_value,bits_per_value,&ret);
 
         if (ret==GRIB_UNDERFLOW) {
             d=0;
@@ -1360,7 +1362,6 @@ static int pack_double_optimised(grib_accessor* a, const double* val, size_t *le
             }
         }
     }
-    d = grib_power(+decimal_scale_factor,10);
     s = grib_power(- binary_scale_factor, 2);
 
     i=0;
