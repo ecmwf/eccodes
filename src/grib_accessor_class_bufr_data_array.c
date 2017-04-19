@@ -2373,6 +2373,9 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
             case 2:
                 /* Operator */
                 switch(descriptors[i]->X) {
+                case 3:
+                    grib_context_log(c,GRIB_LOG_ERROR,"process_elements: operator %d not yet implemented\n",descriptors[i]->X);
+                    return GRIB_NOT_IMPLEMENTED;
                 case 5:
                     descriptors[i]->width=descriptors[i]->Y*8;
                     descriptors[i]->type=BUFR_DESCRIPTOR_TYPE_STRING;
