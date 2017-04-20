@@ -22,32 +22,32 @@ ${tools_dir}/grib_set -s setLocalDefinition=1           reduced_gaussian_model_l
 # conversion 1->2
 for localDefinitionNumber in 1 15 26 30
 do
-	${tools_dir}/grib_set -s localDefinitionNumber=$localDefinitionNumber,perturbationNumber=2,numberOfForecastsInEnsemble=50 loc.grib1 eps.grib1
-	${tools_dir}/grib_set -s edition=2 eps.grib1 eps.grib2
+    ${tools_dir}/grib_set -s localDefinitionNumber=$localDefinitionNumber,perturbationNumber=2,numberOfForecastsInEnsemble=50 loc.grib1 eps.grib1
+    ${tools_dir}/grib_set -s edition=2 eps.grib1 eps.grib2
 
-	${tools_dir}/grib_get -p localDefinitionNumber,perturbationNumber,numberOfForecastsInEnsemble,productDefinitionTemplateNumber eps.grib2 >> local.log
-	${tools_dir}/grib_compare -e -b param eps.grib1 eps.grib2
+    ${tools_dir}/grib_get -p localDefinitionNumber,perturbationNumber,numberOfForecastsInEnsemble,productDefinitionTemplateNumber eps.grib2 >> local.log
+    ${tools_dir}/grib_compare -e -b param eps.grib1 eps.grib2
 
-	${tools_dir}/grib_set -s localDefinitionNumber=$localDefinitionNumber,numberOfForecastsInEnsemble=0 loc.grib1 eps.grib1
-	${tools_dir}/grib_set -s edition=2 eps.grib1 eps.grib2
+    ${tools_dir}/grib_set -s localDefinitionNumber=$localDefinitionNumber,numberOfForecastsInEnsemble=0 loc.grib1 eps.grib1
+    ${tools_dir}/grib_set -s edition=2 eps.grib1 eps.grib2
 
-	${tools_dir}/grib_get -f -p localDefinitionNumber,perturbationNumber,productDefinitionTemplateNumber eps.grib2 >> local.log
-	${tools_dir}/grib_compare -e -b param eps.grib1 eps.grib2
+    ${tools_dir}/grib_get -f -p localDefinitionNumber,perturbationNumber,productDefinitionTemplateNumber eps.grib2 >> local.log
+    ${tools_dir}/grib_compare -e -b param eps.grib1 eps.grib2
 done
 
 #local -> local
 for localStart in 1 7 9 20 25 26 30
 do
-	${tools_dir}/grib_set -s localDefinitionNumber=$localStart loc.grib1 loc1.grib1
-	${tools_dir}/grib_set -s edition=2 loc1.grib1 loc1.grib2
-	${tools_dir}/grib_get -p localDefinitionNumber loc1.grib1 >> local.log
-	${tools_dir}/grib_get -p localDefinitionNumber loc1.grib2 >> local.log
-	
-	for localEps in 1 15 26 30
-	do
-		${tools_dir}/grib_set -s localDefinitionNumber=$localEps,eps=1,perturbationNumber=2,numberOfForecastsInEnsemble=50 loc1.grib2 eps.grib2
-		${tools_dir}/grib_get -p localDefinitionNumber,perturbationNumber,numberOfForecastsInEnsemble,productDefinitionTemplateNumber eps.grib2 >> local.log
-	done
+    ${tools_dir}/grib_set -s localDefinitionNumber=$localStart loc.grib1 loc1.grib1
+    ${tools_dir}/grib_set -s edition=2 loc1.grib1 loc1.grib2
+    ${tools_dir}/grib_get -p localDefinitionNumber loc1.grib1 >> local.log
+    ${tools_dir}/grib_get -p localDefinitionNumber loc1.grib2 >> local.log
+    
+    for localEps in 1 15 26 30
+    do
+        ${tools_dir}/grib_set -s localDefinitionNumber=$localEps,eps=1,perturbationNumber=2,numberOfForecastsInEnsemble=50 loc1.grib2 eps.grib2
+        ${tools_dir}/grib_get -p localDefinitionNumber,perturbationNumber,numberOfForecastsInEnsemble,productDefinitionTemplateNumber eps.grib2 >> local.log
+    done
 done
 
 #special types/streams
@@ -77,6 +77,20 @@ grib_check_key_equals $temp localUsePresent 0
 grib_check_key_equals $sample_g2 "localUsePresent,section2Used" "1 1"
 ${tools_dir}/grib_set -s deleteLocalDefinition=1 $sample_g2 $temp
 grib_check_key_equals $temp "localUsePresent,section2Used" "0 0"
+rm -f $temp
+
+# Empty local section for GRIB2
+# ------------------------------
+sample_g2=$ECCODES_SAMPLES_PATH/reduced_gg_pl_640_grib2.tmpl
+temp=temp.grib_local.grib
+${tools_dir}/grib_set -s setLocalDefinition=1,addEmptySection2=1 $sample_g2 $temp
+grib_check_key_equals $temp section2Length 5
+
+sample_g2=$ECCODES_SAMPLES_PATH/reduced_gg_pl_400_grib2.tmpl
+grib_check_key_equals $sample_g2 section2Length 17
+${tools_dir}/grib_set -s addEmptySection2=1 $sample_g2 $temp
+grib_check_key_equals $temp section2Length 5
+rm -f $temp
 
 # Local Definition 5
 # -----------------------
@@ -92,4 +106,4 @@ grib_check_key_equals $temp.3 edition,productDefinitionTemplateNumber "2 5"
 grib_check_key_equals $temp.3 forecastProbabilityNumber,totalNumberOfForecastProbabilities "2 25"
 grib_check_key_equals $temp.3 probabilityType,scaledValueOfLowerLimit,scaledValueOfUpperLimit "2 54 56"
 
-rm -f $temp.1 $temp.2 $temp.3
+rm -f $temp $temp.1 $temp.2 $temp.3
