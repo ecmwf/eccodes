@@ -65,8 +65,21 @@ diff local.log local.good.log
 
 rm -f local.log loc.grib1 loc.grib2 loc1.grib1 loc1.grib2 eps.grib1 eps.grib2
 
+# Delete Local Definition
+# -----------------------
+sample_g1=$ECCODES_SAMPLES_PATH/reduced_gg_pl_640_grib1.tmpl
+sample_g2=$ECCODES_SAMPLES_PATH/reduced_gg_pl_640_grib2.tmpl
+temp=temp.grib_local.grib
+grib_check_key_equals $sample_g1 localUsePresent 1
+${tools_dir}/grib_set -s deleteLocalDefinition=1 $sample_g1 $temp
+grib_check_key_equals $temp localUsePresent 0
+
+grib_check_key_equals $sample_g2 "localUsePresent,section2Used" "1 1"
+${tools_dir}/grib_set -s deleteLocalDefinition=1 $sample_g2 $temp
+grib_check_key_equals $temp "localUsePresent,section2Used" "0 0"
+
 # Local Definition 5
-# ----------------------
+# -----------------------
 sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 temp=temp.grib_local.grib
 ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=5 $sample_g1 $temp.1
