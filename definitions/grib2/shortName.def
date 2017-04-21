@@ -589,6 +589,7 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 6 ;
 	 indicatorOfUnitForTimeRange = 1 ;
+	 is_uerra = 0 ;
 	}
 #Evaporation in the last 24 hours
 'eva24' = {
@@ -599,6 +600,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 24 ;
+	 is_uerra = 0 ;
 	}
 #Soil temperature
 'sot' = {

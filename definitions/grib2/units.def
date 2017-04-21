@@ -586,6 +586,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 79 ;
 	 lengthOfTimeRange = 6 ;
+	 is_uerra = 0 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
@@ -597,6 +598,7 @@
 	 parameterNumber = 79 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 lengthOfTimeRange = 24 ;
+	 is_uerra = 0 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}

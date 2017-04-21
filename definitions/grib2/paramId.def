@@ -586,6 +586,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 79 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 is_uerra = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 6 ;
 	 indicatorOfUnitForTimeRange = 1 ;
@@ -599,6 +600,7 @@
 	 lengthOfTimeRange = 24 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 is_uerra = 0 ;
 	}
 #Soil temperature
 '260360' = {

@@ -589,12 +589,14 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 lengthOfTimeRange = 6 ;
+	 is_uerra = 0 ;
 	}
 #Evaporation in the last 24 hours
 'Evaporation in the last 24 hours' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 79 ;
+	 is_uerra = 0 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
