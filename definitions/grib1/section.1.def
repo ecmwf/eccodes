@@ -236,6 +236,12 @@ alias mars.param  = marsParam;
 if (centre == 34 && subCentre == 241)
 {
    alias mars.param = paramId;
+
+   if (indicatorOfTypeOfLevel == 101) {
+      # See ECC-467
+      constant sfc_levtype = "sfc";
+      alias mars.levtype = sfc_levtype;
+   }
 }
 
 meta time.validityDate validity_date(dataDate,dataTime,step,stepUnits);
