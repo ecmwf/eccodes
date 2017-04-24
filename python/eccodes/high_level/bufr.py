@@ -67,7 +67,7 @@ class BufrMessage(CodesMessage):
 
     @unpacked.setter
     def unpacked(self, val):
-        eccodes.codes_set(self.codes_id, "unpack", val)
+        eccodes.codes_set(self.codes_id, "unpack", val) #TODO: Do not call automatically
         self._unpacked = val
 
     def __setitem__(self, key, value):
@@ -75,7 +75,7 @@ class BufrMessage(CodesMessage):
         if not self._unpacked:
             self.unpacked = True
         super(self.__class__, self).__setitem__(key, value)
-        eccodes.codes_set(self.codes_id, "pack", True)
+        eccodes.codes_set(self.codes_id, "pack", True) #TODO: Do not call automatically
 
     def copy_data(self, destMsg):
         """Copy data values from this message to another message"""

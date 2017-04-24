@@ -349,6 +349,7 @@ class TestBufrMessage(unittest.TestCase):
         """Metadata is read correctly from BufrMessage."""
         with BufrFile(TESTBUFR) as bufr:
             msg = BufrMessage(bufr)
+            #msg['unpack'] = 1
             msg_keys = msg.keys()
             for key in KNOWN_BUFR_KEYS:
                 assert key in msg_keys
@@ -359,6 +360,7 @@ class TestBufrMessage(unittest.TestCase):
         """Data values are read correctly from BufrMessage."""
         with BufrFile(TESTBUFR) as bufr:
             msg = BufrMessage(bufr)
+            #msg['unpack'] = 1
             self.assertEqual(msg["airTemperatureAt2M"], 274.5)
 
     # TODO: Test behaviour with missing messages (SUP-1874)
@@ -385,6 +387,52 @@ class TestBufrMessage(unittest.TestCase):
             msg = BufrMessage(bufr)
             msg2 = BufrMessage(clone=msg)
             self.assertSequenceEqual(msg.keys(), msg2.keys())
+
+    # Test disabled for now. Need to sort out the superfluous calls to pack and unpack
+    def _test_copy_data(self):
+        """Can copy data section from one message to another"""
+        bufr = BufrMessage(sample='BUFR3')
+        with BufrFile('../../data/bufr/metar_with_2_bias.bufr') as bufrf:
+            bufrin = BufrMessage(bufrf)
+            ivalues=(
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 1, 1, 1, 1, 1, 1, 1,
+                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                1, 1, 1, 1, 1, 0, 1, 1, 1, 1,
+                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                1, 1, 1, 1, 1, 1, 1, 1, 0)
+            bufr['inputDataPresentIndicator'] = ivalues
+            bufr['edition'] = 3
+            bufr['masterTableNumber'] = 0
+            bufr['bufrHeaderSubCentre'] = 0
+            bufr['bufrHeaderCentre'] = 98
+            bufr['updateSequenceNumber'] = 1
+            bufr['dataCategory'] = 0
+            bufr['dataSubCategory'] = 140
+            bufr['masterTablesVersionNumber'] = 13
+            bufr['localTablesVersionNumber'] = 1
+            bufr['typicalYearOfCentury'] = 15
+            bufr['typicalMonth'] = 5
+            bufr['typicalDay'] = 4
+            bufr['typicalHour'] = 9
+            bufr['typicalMinute'] = 30
+            bufr['numberOfSubsets'] = 1
+            bufr['observedData'] = 1
+            bufr['compressedData'] = 0
+            ivalues=(
+                307011,7006,10004,222000,101023,31031,1031,1032,101023,33007,
+                225000,236000,101023,31031,1031,1032,8024,101001,225255,225000,
+                236000,101023,31031,1031,1032,8024,101001,225255,
+                1063,2001,4001,4002,4003,4004,4005,5002,
+                6002,7001,7006,11001,11016,11017,11002)
+            bufr['unexpandedDescriptors'] = ivalues
+            bufrin['unpack'] = 1
+            bufrin.copy_data(bufr)
+            with open(TEST_OUTPUT, 'w') as test:
+                bufr.write(test)
+            os.unlink(TEST_OUTPUT)
+
 
 
 if __name__ == "__main__":
