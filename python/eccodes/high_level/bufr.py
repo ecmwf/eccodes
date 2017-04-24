@@ -77,6 +77,9 @@ class BufrMessage(CodesMessage):
         super(self.__class__, self).__setitem__(key, value)
         eccodes.codes_set(self.codes_id, "pack", True)
 
+    def copy_data(self, destMsg):
+        """Copy data values from this message to another message"""
+        return eccodes.codes_bufr_copy_data(self.codes_id, destMsg.codes_id)
 
 class BufrFile(CodesFile):
 
