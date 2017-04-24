@@ -182,40 +182,40 @@ class TestGribFile(unittest.TestCase):
 
     def test_memory_management(self):
         """Messages in GribFile can be opened and closed properly."""
-        with GribFile(TESTGRIB) as grib:
-            self.assertEqual(len(grib), 5)
-            for i in range(len(grib)):
-                msg = GribMessage(grib)
+        with GribFile(TESTGRIB) as grib_file:
+            self.assertEqual(len(grib_file), 5)
+            for i in range(len(grib_file)):
+                msg = GribMessage(grib_file)
                 self.assertEqual(msg["shortName"], "msl")
-            self.assertEqual(len(grib.open_messages), 5)
-        self.assertEqual(len(grib.open_messages), 0)
+            self.assertEqual(len(grib_file.open_messages), 5)
+        self.assertEqual(len(grib_file.open_messages), 0)
 
     def test_message_counting_works(self):
         """The GribFile is aware of its messages."""
-        with GribFile(TESTGRIB) as grib:
-            msg_count = len(grib)
+        with GribFile(TESTGRIB) as grib_file:
+            msg_count = len(grib_file)
         self.assertEqual(msg_count, 5)
 
     def test_iterator_protocol(self):
         """The GribFile allows pythonic iteration over all messages."""
         step_ranges = []
-        with GribFile(TESTGRIB) as grib:
-            for msg in grib:
+        with GribFile(TESTGRIB) as grib_file:
+            for msg in grib_file:
                 step_ranges.append(msg["stepRange"])
         self.assertSequenceEqual(step_ranges, ["0", "6", "12", "18", "24"])
 
     def test_read_past_last_message(self):
         """Trying to open message on exhausted GRIB file raises IOError."""
-        with GribFile(TESTGRIB) as grib:
-            for _ in range(len(grib)):
-                GribMessage(grib)
-            self.assertRaises(IOError, lambda: GribMessage(grib))
+        with GribFile(TESTGRIB) as grib_file:
+            for _ in range(len(grib_file)):
+                GribMessage(grib_file)
+            self.assertRaises(IOError, lambda: GribMessage(grib_file))
 
     def test_read_invalid_file(self):
         """Trying to open message on nonexistent GRIB file raises IOError."""
         with NamedTemporaryFile(mode='r') as f:
-            with GribFile(f.name) as grib:
-                self.assertRaises(IOError, lambda: GribMessage(grib))
+            with GribFile(f.name) as grib_file:
+                self.assertRaises(IOError, lambda: GribMessage(grib_file))
 
 
 class TestGribMessage(unittest.TestCase):
@@ -224,8 +224,8 @@ class TestGribMessage(unittest.TestCase):
 
     def test_metadata(self):
         """Metadata is read correctly from GribMessage."""
-        with GribFile(TESTGRIB) as grib:
-            msg = GribMessage(grib)
+        with GribFile(TESTGRIB) as grib_file:
+            msg = GribMessage(grib_file)
             msg_keys = msg.keys()
             for key in KNOWN_GRIB_KEYS:
                 assert key in msg_keys
@@ -234,8 +234,8 @@ class TestGribMessage(unittest.TestCase):
 
     def test_missing_message_behaviour(self):
         """Key with MISSING value."""
-        with GribFile(TESTGRIB) as grib:
-            msg = GribMessage(grib)
+        with GribFile(TESTGRIB) as grib_file:
+            msg = GribMessage(grib_file)
             self.assertTrue(msg.missing("scaleFactorOfSecondFixedSurface"))
             msg["scaleFactorOfSecondFixedSurface"] = 5
             msg.set_missing("scaleFactorOfSecondFixedSurface")
@@ -244,23 +244,23 @@ class TestGribMessage(unittest.TestCase):
 
     def test_value_setting(self):
         """Keys can be set properly."""
-        with GribFile(TESTGRIB) as grib:
-            msg = GribMessage(grib)
+        with GribFile(TESTGRIB) as grib_file:
+            msg = GribMessage(grib_file)
             msg["scaleFactorOfSecondFixedSurface"] = 5
             msg["values"] = [1, 2, 3]
 
     def test_serialize(self):
         """Message can be serialized to file."""
-        with GribFile(TESTGRIB) as grib:
-            msg = GribMessage(grib)
+        with GribFile(TESTGRIB) as grib_file:
+            msg = GribMessage(grib_file)
             with open(TEST_OUTPUT, "w") as test:
                 msg.write(test)
         os.unlink(TEST_OUTPUT)
 
     def test_clone(self):
         """Messages can be used to produce clone Messages."""
-        with GribFile(TESTGRIB) as grib:
-            msg = GribMessage(grib)
+        with GribFile(TESTGRIB) as grib_file:
+            msg = GribMessage(grib_file)
             msg2 = GribMessage(clone=msg)
             self.assertSequenceEqual(msg.keys(), msg2.keys())
 
@@ -305,40 +305,40 @@ class TestBufrFile(unittest.TestCase):
 
     def test_memory_management(self):
         """Messages in BufrFile can be opened and closed properly."""
-        with BufrFile(TESTBUFR) as bufr:
-            self.assertEqual(len(bufr), 3)
-            for i in range(len(bufr)):
-                msg = BufrMessage(bufr)
+        with BufrFile(TESTBUFR) as bufr_file:
+            self.assertEqual(len(bufr_file), 3)
+            for i in range(len(bufr_file)):
+                msg = BufrMessage(bufr_file)
                 self.assertEqual(msg["bufrHeaderCentre"], 98)
-            self.assertEqual(len(bufr.open_messages), 3)
-        self.assertEquals(len(bufr.open_messages), 0)
+            self.assertEqual(len(bufr_file.open_messages), 3)
+        self.assertEquals(len(bufr_file.open_messages), 0)
 
     def test_message_counting_works(self):
         """The BufrFile is aware of its messages."""
-        with BufrFile(TESTBUFR) as bufr:
-            msg_count = len(bufr)
+        with BufrFile(TESTBUFR) as bufr_file:
+            msg_count = len(bufr_file)
         self.assertEqual(msg_count, 3)
 
     def test_iterator_protocol(self):
         """The BufrFile allows pythonic iteration over all messages."""
         latitudes = []
-        with BufrFile(TESTBUFR) as bufr:
-            for msg in bufr:
+        with BufrFile(TESTBUFR) as bufr_file:
+            for msg in bufr_file:
                 latitudes.append(msg["localLatitude"])
         self.assertSequenceEqual(latitudes, [70.93, 77, 78.92])
 
     def test_read_past_last_message(self):
         """Trying to open message on exhausted BUFR file raises IOError."""
-        with BufrFile(TESTBUFR) as bufr:
-            for _ in range(len(bufr)):
-                BufrMessage(bufr)
-            self.assertRaises(IOError, lambda: BufrMessage(bufr))
+        with BufrFile(TESTBUFR) as bufr_file:
+            for _ in range(len(bufr_file)):
+                BufrMessage(bufr_file)
+            self.assertRaises(IOError, lambda: BufrMessage(bufr_file))
 
     def test_read_invalid_file(self):
         """Trying to open message on nonexistent file raises IOError."""
         with NamedTemporaryFile(mode='r') as f:
-            with BufrFile(f.name) as bufr:
-                self.assertRaises(IOError, lambda: BufrMessage(bufr))
+            with BufrFile(f.name) as bufr_file:
+                self.assertRaises(IOError, lambda: BufrMessage(bufr_file))
 
 
 class TestBufrMessage(unittest.TestCase):
@@ -347,9 +347,8 @@ class TestBufrMessage(unittest.TestCase):
 
     def test_metadata(self):
         """Metadata is read correctly from BufrMessage."""
-        with BufrFile(TESTBUFR) as bufr:
-            msg = BufrMessage(bufr)
-            #msg['unpack'] = 1
+        with BufrFile(TESTBUFR) as bufr_file:
+            msg = BufrMessage(bufr_file)
             msg_keys = msg.keys()
             for key in KNOWN_BUFR_KEYS:
                 assert key in msg_keys
@@ -358,42 +357,41 @@ class TestBufrMessage(unittest.TestCase):
 
     def test_content(self):
         """Data values are read correctly from BufrMessage."""
-        with BufrFile(TESTBUFR) as bufr:
-            msg = BufrMessage(bufr)
-            #msg['unpack'] = 1
+        with BufrFile(TESTBUFR) as bufr_file:
+            msg = BufrMessage(bufr_file)
+            msg.unpack()
             self.assertEqual(msg["airTemperatureAt2M"], 274.5)
 
     # TODO: Test behaviour with missing messages (SUP-1874)
 
     def test_value_setting(self):
         """Keys can be set properly."""
-        with BufrFile(TESTBUFR) as bufr:
-            msg = BufrMessage(bufr)
+        with BufrFile(TESTBUFR) as bufr_file:
+            msg = BufrMessage(bufr_file)
             key, val = "localLongitude", 5
             msg[key] = val
             self.assertEqual(msg[key], val)
 
     def test_serialize(self):
         """Message can be serialized to file."""
-        with BufrFile(TESTBUFR) as bufr:
-            msg = BufrMessage(bufr)
+        with BufrFile(TESTBUFR) as bufr_file:
+            msg = BufrMessage(bufr_file)
             with open(TEST_OUTPUT, "w") as test:
                 msg.write(test)
         os.unlink(TEST_OUTPUT)
 
     def test_clone(self):
         """Messages can be used to produce clone Messages."""
-        with BufrFile(TESTBUFR) as bufr:
-            msg = BufrMessage(bufr)
+        with BufrFile(TESTBUFR) as bufr_file:
+            msg = BufrMessage(bufr_file)
             msg2 = BufrMessage(clone=msg)
             self.assertSequenceEqual(msg.keys(), msg2.keys())
 
-    # Test disabled for now. Need to sort out the superfluous calls to pack and unpack
-    def _test_copy_data(self):
+    def test_copy_data(self):
         """Can copy data section from one message to another"""
         bufr = BufrMessage(sample='BUFR3')
-        with BufrFile('../../data/bufr/metar_with_2_bias.bufr') as bufrf:
-            bufrin = BufrMessage(bufrf)
+        with BufrFile('../../data/bufr/metar_with_2_bias.bufr') as bufr_file:
+            bufrin = BufrMessage(bufr_file)
             ivalues=(
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -427,7 +425,7 @@ class TestBufrMessage(unittest.TestCase):
                 1063,2001,4001,4002,4003,4004,4005,5002,
                 6002,7001,7006,11001,11016,11017,11002)
             bufr['unexpandedDescriptors'] = ivalues
-            bufrin['unpack'] = 1
+            bufrin.unpack()
             bufrin.copy_data(bufr)
             with open(TEST_OUTPUT, 'w') as test:
                 bufr.write(test)

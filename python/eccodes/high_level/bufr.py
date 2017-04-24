@@ -33,14 +33,14 @@ class BufrMessage(CodesMessage):
         """
         super(self.__class__, self).__init__(codes_file, clone, sample,
                                              headers_only)
-        self._unpacked = False
+        #self._unpacked = False
 
-    def get(self, key, ktype=None):
-        """Return requested value, unpacking data values if necessary."""
-        # TODO: Only do this if accessing arrays that need unpacking
-        if not self._unpacked:
-            self.unpacked = True
-        return super(self.__class__, self).get(key, ktype)
+    #def get(self, key, ktype=None):
+    #    """Return requested value, unpacking data values if necessary."""
+    #    # TODO: Only do this if accessing arrays that need unpacking
+    #    if not self._unpacked:
+    #        self.unpacked = True
+    #    return super(self.__class__, self).get(key, ktype)
 
     #def missing(self, key):
     #    """
@@ -50,8 +50,16 @@ class BufrMessage(CodesMessage):
     #    """
     #    return not bool(eccodes.codes_is_defined(self.codes_id, key))
 
+    def unpack(self):
+        """Decode data section"""
+        eccodes.codes_set(self.codes_id, 'unpack', 1)
+
+    def pack(self):
+        """Encode data section"""
+        eccodes.codes_set(self.codes_id, 'pack', 1)
+
     def keys(self, namespace=None):
-        self.unpacked = True
+        self.unpack()
         #return super(self.__class__, self).keys(namespace)
         iterator = eccodes.codes_bufr_keys_iterator_new(self.codes_id)
         keys = []
@@ -61,21 +69,21 @@ class BufrMessage(CodesMessage):
         eccodes.codes_bufr_keys_iterator_delete(iterator)
         return keys
 
-    @property
-    def unpacked(self):
-        return self._unpacked
+    #@property
+    #def unpacked(self):
+    #    return self._unpacked
 
-    @unpacked.setter
-    def unpacked(self, val):
-        eccodes.codes_set(self.codes_id, "unpack", val) #TODO: Do not call automatically
-        self._unpacked = val
+    #@unpacked.setter
+    #def unpacked(self, val):
+    #    eccodes.codes_set(self.codes_id, "unpack", val)
+    #    self._unpacked = val
 
-    def __setitem__(self, key, value):
-        """Set item and pack BUFR."""
-        if not self._unpacked:
-            self.unpacked = True
-        super(self.__class__, self).__setitem__(key, value)
-        eccodes.codes_set(self.codes_id, "pack", True) #TODO: Do not call automatically
+    #def __setitem__(self, key, value):
+    #    """Set item and pack BUFR."""
+    #    if not self._unpacked:
+    #        self.unpacked = True
+    #    super(self.__class__, self).__setitem__(key, value)
+    #    eccodes.codes_set(self.codes_id, "pack", True)
 
     def copy_data(self, destMsg):
         """Copy data values from this message to another message"""
