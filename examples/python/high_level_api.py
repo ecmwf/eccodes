@@ -349,6 +349,7 @@ class TestBufrMessage(unittest.TestCase):
         """Metadata is read correctly from BufrMessage."""
         with BufrFile(TESTBUFR) as bufr_file:
             msg = BufrMessage(bufr_file)
+            msg.unpack()
             msg_keys = msg.keys()
             for key in KNOWN_BUFR_KEYS:
                 assert key in msg_keys

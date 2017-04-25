@@ -59,7 +59,7 @@ class BufrMessage(CodesMessage):
         eccodes.codes_set(self.codes_id, 'pack', 1)
 
     def keys(self, namespace=None):
-        self.unpack()
+        #self.unpack()
         #return super(self.__class__, self).keys(namespace)
         iterator = eccodes.codes_bufr_keys_iterator_new(self.codes_id)
         keys = []
