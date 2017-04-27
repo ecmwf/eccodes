@@ -290,8 +290,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 84 ;
 	}
-#Evaporation
-'Evaporation' = {
+#Mean evaporation
+'Mean evaporation' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 57 ;
 	}
