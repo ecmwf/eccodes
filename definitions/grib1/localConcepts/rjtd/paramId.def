@@ -315,7 +315,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 64 ;
 	}
-#Water run-off
+#Mean surface water runoff
 '260605' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 90 ;
@@ -360,7 +360,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Evapotranspiration
+#Mean evapotranspiration
 '260615' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 202 ;
