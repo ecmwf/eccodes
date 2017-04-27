@@ -300,7 +300,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 61 ;
 	}
-#Large scale precipitation
+#Mean large scale precipitation
 'mm per day' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 62 ;

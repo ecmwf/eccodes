@@ -300,8 +300,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 61 ;
 	}
-#Large scale precipitation
-'Large scale precipitation' = {
+#Mean large scale precipitation
+'Mean large scale precipitation' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 62 ;
 	}
