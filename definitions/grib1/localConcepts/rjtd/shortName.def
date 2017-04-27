@@ -305,12 +305,12 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 62 ;
 	}
-#Convective precipitation
+#Mean convective precipitation
 'cpratsfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 63 ;
 	}
-#Snowfall rate water equivalent
+#Mean snowfall rate water equivalent
 'srweqsfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 64 ;
@@ -335,17 +335,17 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 165 ;
 	}
-#Frequency of deep convection
+#Mean frequency of deep convection
 'frcvsfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 170 ;
 	}
-#Frequency of shallow convection
+#Mean frequency of shallow convection
 'frcvssfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 171 ;
 	}
-#Frequency of stratocumulus parameterisation
+#Mean frequency of stratocumulus parameterisation
 'frscsfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 172 ;
@@ -410,22 +410,22 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 239 ;
 	}
-#Zonal momentum flux by long gravity wave
+#Mean zonal momentum flux by long gravity wave
 'fglusfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Meridional momentum flux by long gravity wave
+#Mean meridional momentum flux by long gravity wave
 'fglvsfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 148 ;
 	}
-#Meridional momentum flux by short gravity wave
+#Mean meridional momentum flux by short gravity wave
 'fgsvsfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Zonal momentum flux by short gravity wave
+#Mean zonal momentum flux by short gravity wave
 'fgsusfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 159 ;
