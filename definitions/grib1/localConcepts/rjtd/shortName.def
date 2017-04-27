@@ -950,8 +950,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 85 ;
 	}
-#Snow Fall water equivalent
-'sf' = {
+#Snow depth water equivalent
+'sd' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 65 ;
 	}
