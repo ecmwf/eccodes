@@ -39,6 +39,11 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 4 ;
 	}
+#Total column cloud ice water
+'79' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 58 ;
+	}
 #Geopotential
 '129' = {
 	 table2Version = 200 ;
@@ -227,11 +232,6 @@
 '260098' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 212 ;
-	}
-#Cloud Ice
-'260101' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 58 ;
 	}
 #Cloud water
 '260102' = {

@@ -39,6 +39,11 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 4 ;
 	}
+#Total column cloud ice water
+'tciw' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 58 ;
+	}
 #Geopotential
 'z' = {
 	 table2Version = 200 ;
@@ -227,11 +232,6 @@
 'ulwrf' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 212 ;
-	}
-#Cloud Ice
-'cice' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 58 ;
 	}
 #Cloud water
 'cwat' = {

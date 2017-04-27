@@ -39,6 +39,11 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 4 ;
 	}
+#Total column cloud ice water
+'kg m**-2' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 58 ;
+	}
 #Geopotential
 'm**2 s**-2' = {
 	 table2Version = 200 ;
@@ -227,11 +232,6 @@
 'W m**-2' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 212 ;
-	}
-#Cloud Ice
-'kg m**-2' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 58 ;
 	}
 #Cloud water
 'kg m**-2' = {

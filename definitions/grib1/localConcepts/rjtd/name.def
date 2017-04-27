@@ -39,6 +39,11 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 4 ;
 	}
+#Total column cloud ice water
+'Total column cloud ice water' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 58 ;
+	}
 #Geopotential
 'Geopotential' = {
 	 table2Version = 200 ;
@@ -227,11 +232,6 @@
 'Upward long-wave radiation flux' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 212 ;
-	}
-#Cloud Ice
-'Cloud Ice' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 58 ;
 	}
 #Cloud water
 'Cloud water' = {
