@@ -295,8 +295,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Total precipitation
-'Total precipitation' = {
+#Mean total precipitation
+'Mean total precipitation' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 61 ;
 	}
