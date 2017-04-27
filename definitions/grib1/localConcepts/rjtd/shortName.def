@@ -39,6 +39,11 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 4 ;
 	}
+#Total column cloud liquid water
+'tclw' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 227 ;
+	}
 #Total column cloud ice water
 'tciw' = {
 	 table2Version = 200 ;
@@ -379,11 +384,6 @@
 'smcugl' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 226 ;
-	}
-#Cloud liquid water
-'cwclm' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 227 ;
 	}
 #Upward mass flux at cloud base
 'mflxbhbl' = {

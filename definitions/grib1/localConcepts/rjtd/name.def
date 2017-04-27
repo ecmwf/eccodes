@@ -39,6 +39,11 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 4 ;
 	}
+#Total column cloud liquid water
+'Total column cloud liquid water' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 227 ;
+	}
 #Total column cloud ice water
 'Total column cloud ice water' = {
 	 table2Version = 200 ;
@@ -379,11 +384,6 @@
 'Mass concentration of condensed water in soil' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 226 ;
-	}
-#Cloud liquid water
-'Cloud liquid water' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 227 ;
 	}
 #Upward mass flux at cloud base
 'Upward mass flux at cloud base' = {

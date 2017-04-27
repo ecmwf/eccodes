@@ -39,6 +39,11 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 4 ;
 	}
+#Total column cloud liquid water
+'78' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 227 ;
+	}
 #Total column cloud ice water
 '79' = {
 	 table2Version = 200 ;
@@ -379,11 +384,6 @@
 '260619' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 226 ;
-	}
-#Cloud liquid water
-'260620' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 227 ;
 	}
 #Upward mass flux at cloud base
 '260621' = {
