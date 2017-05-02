@@ -253,6 +253,10 @@ class TestGribMessage(unittest.TestCase):
 
     def test_multi_value_setting(self):
         """Multiple keys/values can be set properly."""
+        msg = GribMessage(sample='GRIB1')
+        msg[ 'paramId', 'stepType', 'edition' ] = 49, 'avg', 2
+        self.assertEqual( msg['shortName'], '10fg' )
+        # Another test
         with GribFile(TESTGRIB) as grib_file:
             msg = GribMessage(grib_file)
             msg[ 'setLocalDefinition', 'localDefinitionNumber' ] = 1,25
