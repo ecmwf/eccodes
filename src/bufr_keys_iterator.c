@@ -182,8 +182,9 @@ char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter)
 {
     int *r=0;
     char* ret=0;
-    Assert(kiter->current);
     grib_context* c = kiter->handle->context;
+    grib_string_list* sl = NULL;
+    Assert(kiter->current);
 
     if (kiter->prefix) {
         int iattribute=kiter->i_curr_attribute-1;
@@ -201,7 +202,7 @@ char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter)
     }
 
     /* Store in list of names to be deleted later */
-    grib_string_list* sl=(grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
+    sl=(grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
     sl->value = ret;
     if (!kiter->names) {
         kiter->names = sl;

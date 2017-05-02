@@ -382,10 +382,11 @@ static void check_validity_datetime(grib_handle* h)
 
 static void check_range(grib_handle* h,const parameter* p,double min,double max)
 {
+    double missing = 0;
     if(!valueflg)
         return;
 
-    double missing = dget(h,"missingValue");
+    missing = dget(h,"missingValue");
 
     /* See ECC-437 */
     if(!(get(h,"bitMapIndicator") == 0 && min == missing && max == missing)){

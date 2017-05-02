@@ -611,7 +611,7 @@ static void grib_split_long_groups(grib_handle* hand, grib_context* c,long* numb
 }
 
 #if 0
-// Old implementation. Now superseded. See ECC-441 and ECC-261
+/* Old implementation. Now superseded. See ECC-441 and ECC-261 */
 static int pack_double_old(grib_accessor* a, const double* val, size_t *len)
 {
     grib_accessor_data_g1second_order_general_extended_packing* self =  (grib_accessor_data_g1second_order_general_extended_packing*)a;

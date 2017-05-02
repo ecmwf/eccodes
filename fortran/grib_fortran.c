@@ -536,7 +536,7 @@ static int push_keys_iterator(grib_keys_iterator *i)
     return ret;
 }
 
-// BUFR Keys iterator
+/* BUFR Keys iterator */
 static int _push_bufr_keys_iterator(bufr_keys_iterator *i)
 {
     l_bufr_keys_iterator* current  = bufr_keys_iterator_set;
@@ -704,7 +704,7 @@ static grib_keys_iterator* get_keys_iterator(int keys_iterator_id)
     return i;
 }
 
-// BUFR
+/* BUFR */
 static bufr_keys_iterator* _get_bufr_keys_iterator(int keys_iterator_id)
 {
     l_bufr_keys_iterator* current  = bufr_keys_iterator_set;
@@ -863,7 +863,7 @@ static int clear_keys_iterator(int keys_iterator_id)
     return ret;
 }
 
-//BUFR
+/* BUFR */
 static int _clear_bufr_keys_iterator(int keys_iterator_id)
 {
     l_bufr_keys_iterator* current  = bufr_keys_iterator_set;
