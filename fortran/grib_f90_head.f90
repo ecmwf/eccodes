@@ -1,4 +1,4 @@
-! Copyright 2005-2016 ECMWF.
+! Copyright 2005-2017 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -33,7 +33,7 @@ module grib_api
   !> gathered with @ref grib_get_error_string.
   !>
   !>
-  !> \b Examples: \ref copy_message.f90 "copy_message.f90"
+  !> \b Examples: \ref grib_copy_message.f90 "grib_copy_message.f90"
   !>
   !> @param gribid      id of the grib loaded in memory
   !> @param message     array containing the coded message
@@ -125,7 +125,7 @@ module grib_api
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> \b Examples: \ref get_data.f90 "get_data.f90"
+  !> \b Examples: \ref grib_get_data.f90 "grib_get_data.f90"
   !>
   !> @param[in] gribid       id of the grib loaded in memory
   !> @param[out] lats        latitudes array with dimension "size"

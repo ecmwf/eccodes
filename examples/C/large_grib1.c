@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -20,7 +20,7 @@ int main()
     double *values;
     int i = 0;
     codes_handle *h = NULL;
-    char* filename = "bigfile.grib";
+    const char* filename = "bigfile.grib";
 
     values = (double*) malloc(ni*nj*sizeof(double));
     if (!values) {

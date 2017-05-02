@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -46,17 +46,6 @@ int listFromCommandLine;
 int verbose=0;
 int tolerance_factor=1;
 static int write_error=0;
-
-GRIB_INLINE static double compare_double_absolute(double *a,double *b,double *err)
-{
-    double ret=0;
-    double d=fabs(*a-*b);
-    if (d > *err) {
-        ret=d;
-    }
-    return ret;
-    /* return fabs(*a-*b) > *err ? fabs(*a-*b) : 0; */
-}
 
 static int write_count=0;
 
@@ -819,8 +808,8 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
             return 0;
 
         err=0;
-        h11=grib_handle_new_from_partial_message(h1->context,(void*)msg1,size1);
-        h22=grib_handle_new_from_partial_message(h1->context,(void*)msg2,size2);
+        h11=grib_handle_new_from_partial_message(h1->context,msg1,size1);
+        h22=grib_handle_new_from_partial_message(h1->context,msg2,size2);
 
         iter=grib_keys_iterator_new(h11,
                 GRIB_KEYS_ITERATOR_SKIP_COMPUTED,NULL);
@@ -852,7 +841,7 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
         for (i=0; i< options->compare_count; i++) {
             if (blacklisted((char*)options->compare[i].name)) continue;
             if (options->compare[i].type == GRIB_NAMESPACE) {
-                iter=grib_keys_iterator_new(h1,0,(char*)options->compare[i].name);
+                iter=grib_keys_iterator_new(h1,0,options->compare[i].name);
                 if (!iter) {
                     printf("ERROR: unable to get iterator\n");
                     exit(1);
@@ -912,7 +901,7 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
             for (i=0; i< options->compare_count; i++) {
                 if (blacklisted(name)) continue;
                 if (options->compare[i].type == GRIB_NAMESPACE) {
-                    iter=grib_keys_iterator_new(h1,0,(char*)options->compare[i].name);
+                    iter=grib_keys_iterator_new(h1,0,options->compare[i].name);
                     if (!iter) {
                         printf("ERROR: unable to get iterator for %s\n",options->compare[i].name );
                         exit(1);
@@ -951,8 +940,8 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
     return err;
 }
 
-int grib_no_handle_action(int err)
+int grib_no_handle_action(grib_runtime_options* options, int err)
 {
-  fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
-  return 0;
+    fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
+    return 0;
 }

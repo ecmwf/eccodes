@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -32,7 +32,7 @@ alias gribTablesVersionNo=table2Version;
 #assert(section1Length > 5);
 
 #  Identification of originating/generating centre
-codetable[1] centre 'grib1/0.table' : dump,string_type;
+codetable[1] centre 'common/c-1.table' : dump,string_type;
 alias identificationOfOriginatingGeneratingCentre=centre;
 meta centreDescription codetable_title(centre);
 
@@ -92,26 +92,25 @@ if ( indicatorOfTypeOfLevel == 101 or
 }
 else
 {
-  unsigned[2] level : can_be_missing,dump;
-  if (indicatorOfTypeOfLevel == 210) {
-    meta marsLevel scale(level,oneConstant,hundred) : read_only;
-	alias mars.levelist = marsLevel;
-  } 
-  alias vertical.level=level;
-  alias vertical.topLevel    = level;
-  alias vertical.bottomLevel = level;
-  alias ls.level=level;
-  alias lev=level;
-
+    unsigned[2] level : can_be_missing,dump;
+    if (indicatorOfTypeOfLevel == 210) {
+        meta marsLevel scale(level,oneConstant,hundred) : read_only;
+        alias mars.levelist = marsLevel;
+    }
+    alias vertical.level=level;
+    alias vertical.topLevel    = level;
+    alias vertical.bottomLevel = level;
+    alias ls.level=level;
+    alias lev=level;
 }
 
-if(	indicatorOfTypeOfLevel == 109 ||
-	indicatorOfTypeOfLevel == 100 ||
-	indicatorOfTypeOfLevel == 110 ||
-	indicatorOfTypeOfLevel == 113 ||
-	indicatorOfTypeOfLevel == 117)
+if( indicatorOfTypeOfLevel == 109 ||
+    indicatorOfTypeOfLevel == 100 ||
+    indicatorOfTypeOfLevel == 110 ||
+    indicatorOfTypeOfLevel == 113 ||
+    indicatorOfTypeOfLevel == 117)
 {
-	  alias mars.levelist = level;
+    alias mars.levelist = level;
 }
 
 unsigned[1] yearOfCentury : edition_specific ;
@@ -144,9 +143,9 @@ codetable[1] subCentre 'grib1/0.[centre].table' : dump;
 if(table2Version >= 128) {
   _if (centre != 98 && subCentre == 98) {
     alias centreForTable2 = subCentre;
-} else {
+  } else {
     alias centreForTable2 = centre;
-}
+  }
 } else {
   alias centreForTable2 = WMO;
 }
@@ -175,15 +174,18 @@ concept name(nameECMF,"name.def",conceptsMasterDir,conceptsLocalDirAll) : dump,n
 signed[2] decimalScaleFactor :dump;
 transient setLocalDefinition= 0 : no_copy;
 
-meta      dataDate            g1date(centuryOfReferenceTimeOfData,yearOfCentury,month,day) : dump;
-meta      year                evaluate(dataDate / 10000) ;
+# Try different values of binaryScaleFactor and decimalScaleFactor to reduce packing error
+transient optimizeScaleFactor = 0;
+
+meta dataDate   g1date(centuryOfReferenceTimeOfData,yearOfCentury,month,day) : dump;
+meta year       evaluate(dataDate / 10000) ;
 
 meta dataTime   time(hour,minute,second) : dump;
 meta julianDay  julian_day(dataDate,hour,minute,second) : edition_specific;
 
 codetable[1] stepUnits 'stepUnits.table' = 1 : transient,dump,no_copy;
 
-concept_nofail stepType (timeRangeIndicator, "stepType.def", conceptsMasterDir, conceptsLocalDirAll)
+concept_nofail stepType (timeRangeIndicator, "stepType.def", conceptsMasterDir, conceptsLocalDirAll);
 
 #alias stepTypeInternal=stepType;
 #alias lengthOfTimeRange=numberIncludedInAverage;
@@ -192,18 +194,18 @@ concept_nofail stepType (timeRangeIndicator, "stepType.def", conceptsMasterDir, 
 #alias timeIncrement=zero;
 
 #if (timeRangeIndicator==113) {
-#	alias lengthOfTimeRange=numberIncludedInAverage;
-#	alias indicatorOfUnitForTimeRange=unitOfTimeRange;
-#	alias indicatorOfUnitForTimeIncrement=unitOfTimeRange;
-#	alias timeIncrement=P2;
-#	alias forecastTime=P1;
+#    alias lengthOfTimeRange=numberIncludedInAverage;
+#    alias indicatorOfUnitForTimeRange=unitOfTimeRange;
+#    alias indicatorOfUnitForTimeIncrement=unitOfTimeRange;
+#    alias timeIncrement=P2;
+#    alias forecastTime=P1;
 #}
 
 #if (stepType is "accum") {
-#		transient accumulationRange=P2-P1;
-#		alias lengthOfTimeRange=accumulationRange;
-#		alias forecastTime=P1;
-#		alias indicatorOfUnitForTimeRange=unitOfTimeRange;
+#        transient accumulationRange=P2-P1;
+#        alias lengthOfTimeRange=accumulationRange;
+#        alias forecastTime=P1;
+#        alias indicatorOfUnitForTimeRange=unitOfTimeRange;
 #}
 
 #conversion 1->2
@@ -234,6 +236,12 @@ alias mars.param  = marsParam;
 if (centre == 34 && subCentre == 241)
 {
    alias mars.param = paramId;
+
+   if (indicatorOfTypeOfLevel == 101) {
+      # See ECC-467
+      constant sfc_levtype = "sfc";
+      alias mars.levtype = sfc_levtype;
+   }
 }
 
 meta time.validityDate validity_date(dataDate,dataTime,step,stepUnits);
@@ -259,21 +267,20 @@ if(((section1Length > 40) or new() or setLocalDefinition> 0) and deleteLocalDefi
       }
     }
 
-	template_nofail marsKeywords "mars/grib.[stream:s].[type:s].def";
-	#template marsKeywords "mars/grib.[stream:s].[type:s].def";
+    template_nofail marsKeywords "mars/grib.[stream:s].[type:s].def";
+    #template marsKeywords "mars/grib.[stream:s].[type:s].def";
 
   }
   else
-  { 
-	if ( !new() || setLocalDefinition ) {
-		# Other centres
-		pad reservedNeedNotBePresent(12);
-		template_nofail  localDefinition  "grib1/local.[centre:l].def";
+  {
+    if ( !new() || setLocalDefinition ) {
+        # Other centres
+        pad reservedNeedNotBePresent(12);
+        template_nofail  localDefinition  "grib1/local.[centre:l].def";
     
-		section_padding localExtensionPadding : read_only;
-	}
+        section_padding localExtensionPadding : read_only;
+    }
   }
-
 }
 else
 {
@@ -307,5 +314,11 @@ alias time.dataTime=dataTime;
 alias time.startStep=startStep;
 alias time.endStep=endStep;
 alias time.stepType=stepType;
+
+# ECC-457: GRIB1 to GRIB2 conversion
+concept_nofail stepTypeForConversion (unknown, "stepTypeForConversion.def", conceptsMasterDir, conceptsLocalDirAll);
+if (stepTypeForConversion is "accum" ) {
+    alias productDefinitionTemplateNumber=eight;
+}
 
 meta md5Section1 md5(offsetSection1,section1Length);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -61,6 +61,7 @@ typedef struct grib_accessor_data_g1simple_packing {
 	const char*  reference_value;
 	const char*  binary_scale_factor;
 	const char*  decimal_scale_factor;
+	const char*  optimize_scaling_factor;
 /* Members defined in data_g1simple_packing */
 	const char*  half_byte;
 	const char*  packingType;
@@ -277,12 +278,12 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
         return GRIB_SUCCESS;
         break;
     case GRIB_INVALID_BPV:
-        grib_context_log(a->context,GRIB_LOG_ERROR,"unable to compute packing parameters\n");
+        grib_context_log(a->context,GRIB_LOG_ERROR,"unable to compute packing parameters. Invalid bits per value\n");
         return ret;
     case GRIB_SUCCESS:
         break;
     default:
-        grib_context_log(a->context,GRIB_LOG_FATAL,"unable to compute packing parameters\n");
+        grib_context_log(a->context,GRIB_LOG_ERROR,"unable to compute packing parameters\n");
         return ret;
     }
 

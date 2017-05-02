@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -161,6 +161,6 @@ static void resize(grib_accessor* a,size_t new_size)
 
 }
 
-static int value_count(grib_accessor* a,long *c){ *c=1;return 0;}
+static int value_count(grib_accessor* a,long *c){ *c=a->length; return 0;}
 static long byte_count(grib_accessor* a){ return a->length;}
 static size_t string_length(grib_accessor* a){ return (size_t)a->length;}

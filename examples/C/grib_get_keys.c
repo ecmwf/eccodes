@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -128,6 +128,16 @@ int main(int argc, char** argv)
         codes_get_string(h, "file", file, &len);
         eq = strcmp(file, filename);
         if (eq != 0) assert(!"file and filename not equal");
+    }
+
+    {
+        /* Example of getting bytes */
+        char* name = "reservedNeedNotBePresent";
+        unsigned char* byte_val = NULL ;
+        size_t keySize = 0;
+        CODES_CHECK(codes_get_size(h, name, &keySize), 0);
+        byte_val = malloc(keySize*sizeof(char));
+        GRIB_CHECK(codes_get_bytes(h, name, byte_val, &keySize), name);
     }
 
     codes_handle_delete(h);

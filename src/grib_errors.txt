@@ -17,7 +17,7 @@ GRIB_DECODING_ERROR                 Decoding invalid
 GRIB_ENCODING_ERROR                 Encoding invalid
 GRIB_NO_MORE_IN_SET                 Code cannot unpack because of string too small
 GRIB_GEOCALCULUS_PROBLEM            Problem with calculation of geographic attributes
-GRIB_OUT_OF_MEMORY                  Out of memory
+GRIB_OUT_OF_MEMORY                  Memory allocation error
 GRIB_READ_ONLY                      Value is read only
 GRIB_INVALID_ARGUMENT               Invalid argument
 GRIB_NULL_HANDLE                    Null handle

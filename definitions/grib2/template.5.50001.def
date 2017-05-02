@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,6 +14,9 @@ meta referenceValueError reference_value_error(referenceValue,ieee);
 signed[2]   binaryScaleFactor : no_copy;
 
 signed[2]   decimalScaleFactor :no_copy;
+
+# Try different values of binaryScaleFactor and decimalScaleFactor to reduce packing error
+transient optimizeScaleFactor = 0;
 
 unsigned[1] bitsPerValue ;
 if (bitsPerValue) {

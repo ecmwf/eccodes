@@ -72,7 +72,7 @@ echo "\\endverbatim\\n "
 
 #echo "\\endverbatim\\n "
 
-echo "-# To list only the scond message from a BUFR file:\\n "
+echo "-# To list only the second message from a BUFR file:\\n "
 echo "\\verbatim "
 echo "> bufr_ls -w count=2 ../data/bufr/syno_multi.bufr"
 

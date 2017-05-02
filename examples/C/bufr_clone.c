@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
             return 1;
         }
 
-        /* relase the clone's handle */
+        /* release the clone's handle */
         codes_handle_delete(clone_handle);
     }
 

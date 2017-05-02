@@ -9,10 +9,10 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 ################################################
 list( APPEND tests
       grib_index
-      copy_message
+      grib_copy_message
       bufr_copy_message
       grib_get_keys
-      get_data
+      grib_get_data
       get_pl
       get_pv
       grib_keys_iterator
@@ -23,16 +23,19 @@ list( APPEND tests
       grib_print_data
       grib_set_keys
       grib_set_bitmap
-      set_missing
+      grib_set_missing
       grib_set_pv
-      samples
+      grib_set_data
+      grib_samples
       grib_count_messages
       grib_count_messages_multi
+      grib_copy_namespace
       read_message
       read_from_file
       get_set_uuid
       grib_clone
       bufr_attributes
+      bufr_copy_data
       bufr_clone
       bufr_expanded
       bufr_get_keys
@@ -44,6 +47,7 @@ list( APPEND tests
       bufr_read_temp
       bufr_read_tropical_cyclone
       bufr_set_keys
+      bufr_copy_keys
       bufr_subset
       get_product_kind
 )
@@ -63,16 +67,9 @@ endforeach()
 
 # Executables without a shell script
 # TODO
-ecbuild_add_executable( TARGET    f_new_from_file
+ecbuild_add_executable( TARGET    eccodes_f_new_from_file
                         NOINSTALL
                         SOURCES   new_from_file.f90
-                        CONDITION HAVE_FORTRAN
-                        LINKER_LANGUAGE Fortran
-                        LIBS      eccodes_f90 eccodes
-)
-ecbuild_add_executable( TARGET    f_copy_namespace
-                        NOINSTALL
-                        SOURCES   copy_namespace.f90
                         CONDITION HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
                         LIBS      eccodes_f90 eccodes

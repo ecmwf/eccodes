@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -33,7 +33,7 @@ static grib_fieldset* grib_fieldset_create_from_order_by(grib_context* c,grib_or
         int* err);
 static int grib_fieldset_resize(grib_fieldset* set,size_t newsize);
 static void grib_trim(char** x);
-static grib_order_by* grib_fieldset_new_order_by(grib_context* c,char* z);
+static grib_order_by* grib_fieldset_new_order_by(grib_context* c, const char* z);
 static int grib_fieldset_compare(grib_fieldset* set,int* i,int* j);
 static void grib_fieldset_sort(grib_fieldset* set, int beg, int theEnd);
 static int grib_fieldset_columns_resize(grib_fieldset* set,size_t newsize);
@@ -238,8 +238,8 @@ int grib_fieldset_column_copy_from_handle(grib_handle* h,grib_fieldset* set,int 
 
 /* --------------- grib_fieldset functions ------------------*/
 grib_fieldset* grib_fieldset_new_from_files(grib_context* c,char* filenames[],
-        int nfiles, char** keys,int nkeys,
-        char* where_string,char* order_by_string,int* err)
+        int nfiles, char** keys, int nkeys,
+        const char* where_string, const char* order_by_string, int* err)
 {
     int i=0;
     int ret=GRIB_SUCCESS;
@@ -403,7 +403,7 @@ int grib_fieldset_apply_order_by(grib_fieldset* set,const char* order_by_string)
         set->order_by=0;
     }
 
-    ob=grib_fieldset_new_order_by(set->context,(char*)order_by_string);
+    ob=grib_fieldset_new_order_by(set->context, order_by_string);
     if ((err=grib_fieldset_set_order_by(set,ob)) != GRIB_SUCCESS)
         return err;
 
@@ -509,7 +509,7 @@ void grib_fieldset_delete_order_by(grib_context* c,grib_order_by* order_by)
     return;
 }
 
-static grib_order_by* grib_fieldset_new_order_by(grib_context* c,char* obstr)
+static grib_order_by* grib_fieldset_new_order_by(grib_context* c, const char* obstr)
 {
     char *t1=0,*t2=0,*p=0;
     int id=0;

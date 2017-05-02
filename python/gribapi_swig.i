@@ -44,6 +44,7 @@ int grib_c_new_gts_from_file(FILE* f, int headers_only, int* INOUT);
 int grib_c_new_metar_from_file(FILE* f, int headers_only, int* INOUT);
 int grib_c_iterator_new(int* INPUT, int* OUTPUT, int* INPUT);
 int grib_c_keys_iterator_new(int* INPUT, int* OUTPUT, char* name_space);
+int codes_c_bufr_keys_iterator_new(int* INPUT, int* OUTPUT);
 int grib_c_grib_new_from_samples(int* INOUT, char* name);
 int grib_c_bufr_new_from_samples(int* INOUT, char* name);
 int grib_c_index_new_from_file(char* file, char* keys, int* OUTPUT);
@@ -91,7 +92,9 @@ int grib_c_gribex_mode_off(void);
 
 // keys iterator
 int grib_c_keys_iterator_next(int* iterid);
+int codes_c_bufr_keys_iterator_next(int* iterid);
 int grib_c_keys_iterator_delete(int* iterid);
+int codes_c_bufr_keys_iterator_delete(int* iterid);
 int grib_c_skip_computed(int* iterid);
 int grib_c_skip_coded(int* iterid);
 int grib_c_skip_edition_specific(int* iterid);
@@ -99,9 +102,13 @@ int grib_c_skip_duplicates(int* iterid);
 int grib_c_skip_read_only(int* iterid);
 int grib_c_skip_function(int* iterid);
 int grib_c_keys_iterator_rewind(int* iterid);
+int codes_c_bufr_keys_iterator_rewind(int* iterid);
+int grib_c_bufr_copy_data(int* gid, int* INOUT);
+
 
 %cstring_bounded_output(char* name, 1024);
 int grib_c_keys_iterator_get_name(int* iterid, char* name, int len);
+int codes_c_bufr_keys_iterator_get_name(int* iterid, char* name, int len);
 // ---
 
 // indexing routines

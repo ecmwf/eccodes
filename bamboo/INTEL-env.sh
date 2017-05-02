@@ -7,4 +7,4 @@ module unload grib_api
 module unload emos
 module unload fftw
 module unload libemos
-module switch gnu intel/15.0.2
+module switch gnu intel/16.0.3

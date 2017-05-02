@@ -49,7 +49,7 @@
 	 parameterCategory = 2 ;
 	}
 #Boundary layer dissipation
-'dissipation_in_atmosphere_boundary_layer' = {
+'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {
 	 discipline = 0 ;
 	 parameterNumber = 20 ;
 	 parameterCategory = 2 ;

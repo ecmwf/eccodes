@@ -8,3 +8,4 @@
 { "latlon_reduced", &grib_iterator_class_latlon_reduced, },
 { "polar_stereographic", &grib_iterator_class_polar_stereographic, },
 { "regular", &grib_iterator_class_regular, },
+{ "space_view", &grib_iterator_class_space_view, },

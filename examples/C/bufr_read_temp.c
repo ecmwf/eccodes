@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,8 +14,8 @@
  * Description: how to read temperature significant levels from TEMP BUFR messages.
  *
  */
- 
-/* 
+
+/*
  * Please note that TEMP reports can be encoded in various ways in BUFR. Therefore the code
  * below might not work directly for other types of TEMP messages than the one used in the
  * example. It is advised to use bufr_dump to understand the structure of the messages.
@@ -65,7 +65,7 @@ int main(int argc,char* argv[])
          *
          * In our BUFR message verticalSoundingSignificance is always followed by
          *    geopotential, airTemperature, dewpointTemperature,
-         *    windDirection, windSpeed and pressure. 
+         *    windDirection, windSpeed and pressure.
          * So in order to access any of these keys we need to use the
          * condition: verticalSoundingSignificance=4.
          */

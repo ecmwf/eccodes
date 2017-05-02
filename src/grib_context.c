@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -264,6 +264,11 @@ void grib_print_api_version(FILE* out)
     */
 }
 
+const char* grib_get_package_name()
+{
+    return "ecCodes";
+}
+
 static grib_context default_grib_context = {
         0,                            /* inited                     */
         0,                            /* debug                      */
@@ -314,11 +319,11 @@ static grib_context default_grib_context = {
 
         &default_log,                 /* logging_procedure          */
         &default_print,               /* print procedure            */
-        0,                            /* code tables                */
-        0,                            /* smart tables               */
-        0,                            /* files                      */
-        0,                            /* multigrib support on       */
-        0,                            /* multigrib support          */
+        0,                            /* grib_codetable*            */
+        0,                            /* grib_smart_table*          */
+        0,                            /* char* outfilename          */
+        0,                            /* int multi_support_on       */
+        0,                            /* grib_multi_support* multi_support*/
         0,                            /* grib_definition_files_dir  */
         0,                            /* handle_file_count          */
         0,                            /* handle_total_count         */
@@ -327,23 +332,24 @@ static grib_context default_grib_context = {
         0,                            /* gts_header_on              */
         0,                            /* gribex_mode_on             */
         0,                            /* large_constant_fields      */
-        0,                            /* keys (grib_trie*)          */
+        0,                            /* grib_itrie* keys           */
         0,                            /* keys_count                 */
-        0,                            /* concepts_index             */
+        0,                            /* grib_itrie* concepts_index */
         0,                            /* concepts_count             */
         {0,},                         /* concepts                   */
-        0,                            /* hash_array_index */
-        0,                            /* hash_array_count */
-        {0,},                         /* hash_array */
+        0,                            /* hash_array_index           */
+        0,                            /* hash_array_count           */
+        {0,},                         /* hash_array                 */
         0,                            /* def_files                  */
-        0,                            /* ieee_packing               */
-        0,                            /* unpack */
         0,                            /* blacklist                  */
+        0,                            /* ieee_packing               */
+        0,                            /* bufrdc_mode                */
+        0,                            /* bufr_set_to_missing_if_out_of_range */
         0,                            /* log_stream                 */
-        0,                             /* classes */
-        0                             /* lists */
+        0,                            /* classes                    */
+        0                             /* lists                      */
 #if GRIB_PTHREADS
-        ,PTHREAD_MUTEX_INITIALIZER  /* mutex                     */
+        ,PTHREAD_MUTEX_INITIALIZER    /* mutex                      */
 #endif
 };
 
@@ -361,20 +367,23 @@ grib_context* grib_context_get_default()
 
     if(!default_grib_context.inited)
     {
-        const char * write_on_fail = NULL;
-        const char * large_constant_fields = NULL;
-        const char * no_abort = NULL;
-        const char * debug = NULL;
-        const char *gribex=NULL;
-        const char *ieee_packing=NULL;
-        const char *io_buffer_size=NULL;
-        const char *log_stream=NULL;
-        const char *no_big_group_split=NULL;
-        const char *no_spd=NULL;
-        const char *keep_matrix=NULL;
-        const char *nounpack=NULL;
+        const char* write_on_fail = NULL;
+        const char* large_constant_fields = NULL;
+        const char* no_abort = NULL;
+        const char* debug = NULL;
+        const char* gribex = NULL;
+        const char* ieee_packing = NULL;
+        const char* io_buffer_size = NULL;
+        const char* log_stream = NULL;
+        const char* no_big_group_split = NULL;
+        const char* no_spd = NULL;
+        const char* keep_matrix = NULL;
+        const char* bufrdc_mode = NULL;
+        const char* bufr_set_to_missing_if_out_of_range = NULL;
 
         write_on_fail = codes_getenv("ECCODES_GRIB_WRITE_ON_FAIL");
+        bufrdc_mode = codes_getenv("ECCODES_BUFRDC_MODE_ON");
+        bufr_set_to_missing_if_out_of_range = codes_getenv("ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE");
         large_constant_fields = codes_getenv("ECCODES_GRIB_LARGE_CONSTANT_FIELDS");
         no_abort = codes_getenv("ECCODES_NO_ABORT");
         debug = codes_getenv("ECCODES_DEBUG");
@@ -385,7 +394,6 @@ grib_context* grib_context_get_default()
         no_big_group_split = codes_getenv("ECCODES_GRIB_NO_BIG_GROUP_SPLIT");
         no_spd = codes_getenv("ECCODES_GRIB_NO_SPD");
         keep_matrix = codes_getenv("ECCODES_GRIB_KEEP_MATRIX");
-        nounpack = codes_getenv("ECCODES_NO_UNPACK");
 
         /* On UNIX, when we read from a file we get exactly what is in the file on disk.
          * But on Windows a file can be opened in binary or text mode. In binary mode the system behaves exactly as in UNIX.
@@ -399,7 +407,6 @@ grib_context* grib_context_get_default()
         default_grib_context.no_big_group_split = no_big_group_split ? atoi(no_big_group_split) : 0;
         default_grib_context.no_spd = no_spd ? atoi(no_spd) : 0;
         default_grib_context.keep_matrix = keep_matrix ? atoi(keep_matrix) : 1;
-   		default_grib_context.unpack = nounpack ? 0 : 1;
         default_grib_context.write_on_fail  = write_on_fail ? atoi(write_on_fail) : 0;
         default_grib_context.no_abort  = no_abort ? atoi(no_abort) : 0;
         default_grib_context.debug  = debug ? atoi(debug) : 0;
@@ -469,6 +476,8 @@ grib_context* grib_context_get_default()
         default_grib_context.def_files=grib_trie_new(&(default_grib_context));
         default_grib_context.lists=grib_trie_new(&(default_grib_context));
         default_grib_context.classes=grib_trie_new(&(default_grib_context));
+        default_grib_context.bufrdc_mode = bufrdc_mode ? atoi(bufrdc_mode) : 0;
+        default_grib_context.bufr_set_to_missing_if_out_of_range = bufr_set_to_missing_if_out_of_range ? atoi(bufr_set_to_missing_if_out_of_range) : 0;
     }
 
     GRIB_MUTEX_UNLOCK(&mutex_c);
@@ -759,7 +768,7 @@ void* grib_context_malloc_persistent(const grib_context* c, size_t size)
     void* p =  c->alloc_persistent_mem(c,size);
     if(!p) {
         grib_context_log(c,GRIB_LOG_FATAL,"grib_context_malloc: error allocating %lu bytes",(unsigned long)size);
-        Assert(1);
+        Assert(0);
     }
     return p;
 }
@@ -786,7 +795,7 @@ void* grib_context_malloc(const grib_context* c, size_t size)
     else p=c->alloc_mem(c,size);
     if(!p) {
         grib_context_log(c,GRIB_LOG_FATAL,"grib_context_malloc: error allocating %lu bytes",(unsigned long)size);
-        Assert(1);
+        Assert(0);
     }
     return p;
 }
@@ -969,3 +978,24 @@ void grib_context_increment_handle_total_count(grib_context *c)
     GRIB_MUTEX_UNLOCK(&mutex_c);
 }
 
+static codes_assertion_failed_proc assertion = NULL;
+
+void codes_set_codes_assertion_failed_proc(codes_assertion_failed_proc proc)
+{
+    assertion = proc;
+}
+
+void codes_assertion_failed(const char* message, const char* file, int line)
+{
+    /* Default behaviour is to abort
+     * unless user has supplied his own assertion routine */
+    if (assertion == NULL) {
+        fprintf(stderr, "ecCodes assertion failed: `%s' in %s:%d\n", message, file, line);
+        abort();
+    }
+    else {
+        char buffer[10240];
+        sprintf(buffer, "ecCodes assertion failed: `%s' in %s:%d", message, file, line);
+        assertion(buffer);
+    }
+}

@@ -20,7 +20,7 @@ static const char *errors[] = {
 "Encoding invalid",		/* -14 GRIB_ENCODING_ERROR */
 "Code cannot unpack because of string too small",		/* -15 GRIB_NO_MORE_IN_SET */
 "Problem with calculation of geographic attributes",		/* -16 GRIB_GEOCALCULUS_PROBLEM */
-"Out of memory",		/* -17 GRIB_OUT_OF_MEMORY */
+"Memory allocation error",		/* -17 GRIB_OUT_OF_MEMORY */
 "Value is read only",		/* -18 GRIB_READ_ONLY */
 "Invalid argument",		/* -19 GRIB_INVALID_ARGUMENT */
 "Null handle",		/* -20 GRIB_NULL_HANDLE */
@@ -113,11 +113,3 @@ void grib_check(const char* call,const char*  file,int line,int e,const char* ms
         exit(e);
     }
 }
-
-
-void grib_fail(const char* expr,const char* file,int line,int silent) {
-	 if (!silent)
-   fprintf(stderr,"%s at line %d: assertion failure Assert(%s)\n",file,line,expr);
-   abort();
-}
-

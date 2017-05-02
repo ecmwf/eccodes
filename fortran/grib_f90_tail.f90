@@ -10,7 +10,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> \b Examples: \ref set_missing.f90 "set_missing.f90"
+  !> \b Examples: \ref grib_set_missing.f90 "grib_set_missing.f90"
   !>
   !> @param  gribid     id of the grib loaded in memory
   !> @param key     key name
@@ -1349,7 +1349,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> \b Examples: \ref copy_message.f90 "copy_message.f90"
+  !> \b Examples: \ref grib_copy_message.f90 "grib_copy_message.f90"
   !>
   !> @param gribid      id of the grib loaded in memory
   !> @param message     character array containing the coded message
@@ -1382,7 +1382,7 @@
   !> gathered with @ref grib_get_error_string.
   !>
   !>
-  !> \b Examples: \ref copy_message.f90 "copy_message.f90"
+  !> \b Examples: \ref grib_copy_message.f90 "grib_copy_message.f90"
   !>
   !> @param gribid      id of the grib loaded in memory
   !> @param message     integer array containing the coded message
@@ -1413,7 +1413,7 @@
   !> gathered with @ref grib_get_error_string.
   !>
   !>
-  !> \b Examples: \ref samples.f90 "samples.f90"
+  !> \b Examples: \ref grib_samples.f90 "grib_samples.f90"
   !>
   !> @param gribid       id of the grib loaded in memory
   !> @param samplename name of the sample to be used
@@ -1449,9 +1449,9 @@
       integer(kind=kindOfInt)                       :: iret
 
       iret=grib_f_release ( gribid )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -1481,9 +1481,9 @@
       integer(kind=kindOfInt)                       :: iret
 
       iret=grib_f_clone(gribid_src,gribid_dest)
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid_src)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid_src)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -1495,14 +1495,14 @@
       integer(kind=kindOfInt),          intent(in)  :: gribid_from
       integer(kind=kindOfInt),          intent(in) :: gribid_to
       integer(kind=kindOfInt),          intent(out) :: gribid_out
-      integer(kind=kindOfInt),			intent(in) :: what
+      integer(kind=kindOfInt),          intent(in) :: what
       integer(kind=kindOfInt),optional, intent(out) :: status
       integer(kind=kindOfInt)                       :: iret
 
       iret=grib_f_util_sections_copy(gribid_from,gribid_to,what,gribid_out)
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid_from)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid_from)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -1517,7 +1517,6 @@
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
-  !>
   !>
   !>
   !> @param gribid_src     source message
@@ -1582,9 +1581,9 @@
 
       npoints=size(lats)
       iret = grib_f_get_data_real4 ( gribid, lats, lons, values,npoints )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -1618,9 +1617,9 @@
 
       npoints=size(lats)
       iret = grib_f_get_data_real8 ( gribid, lats, lons, values,npoints )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -1806,9 +1805,9 @@
       integer(kind=kindOfInt)                       :: iret
 
       iret=grib_f_get_size_int ( gribid, key, size )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -1864,9 +1863,9 @@
       integer(kind=kindOfInt)                       :: iret
 
       iret=grib_f_get_int ( gribid, key, value )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -1892,9 +1891,9 @@
     integer(kind=kindOfInt)                       :: iret
 
     iret=grib_f_get_long ( gribid, key, value )
-	 if (iret /= 0) then
-	   call grib_f_write_on_fail(gribid)
-	 endif
+    if (iret /= 0) then
+       call grib_f_write_on_fail(gribid)
+    endif
     if (present(status)) then
       status = iret
     else
@@ -1920,9 +1919,9 @@
     integer(kind=kindOfInt)                       :: iret
 
     iret=grib_f_is_missing ( gribid, key, is_missing )
-	 if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	 endif
+    if (iret /= 0) then
+      call grib_f_write_on_fail(gribid)
+    endif
     if (present(status)) then
     status = iret
     else
@@ -1948,9 +1947,9 @@
   integer(kind=kindOfInt)                       :: iret
 
     iret=grib_f_is_defined( gribid, key, is_defined )
-	 if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	 endif
+    if (iret /= 0) then
+      call grib_f_write_on_fail(gribid)
+    endif
     if (present(status)) then
     status = iret
     else
@@ -1976,9 +1975,9 @@
       integer(kind=kindOfInt)                                  :: iret
 
       iret=grib_f_get_real4 ( gribid, key, value )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2004,9 +2003,9 @@
       integer(kind=kindOfInt)                           :: iret
 
       iret=grib_f_get_real8 ( gribid, key, value )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2032,9 +2031,9 @@
       integer(kind=kindOfInt)                       :: iret
 
       iret=grib_f_get_string ( gribid, key, value )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2064,9 +2063,9 @@
 
       nb_values = size(value)
       iret=grib_f_get_int_array ( gribid, key, value , nb_values )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2094,9 +2093,9 @@
 
     nb_values = size(value)
     iret=grib_f_get_long_array ( gribid, key, value , nb_values )
-	if (iret /= 0) then
-	  call grib_f_write_on_fail(gribid)
-	endif
+    if (iret /= 0) then
+      call grib_f_write_on_fail(gribid)
+    endif
     if (present(status)) then
       status = iret
     else
@@ -2162,9 +2161,9 @@
 
       nb_values = size(value)
       iret=grib_f_get_real4_array ( gribid, key, value , nb_values )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
         status = iret
       else
@@ -2192,9 +2191,9 @@
 
       nb_values = size(value)
       iret=grib_f_get_real8_array ( gribid, key, value, nb_values )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2209,22 +2208,22 @@
   !> gathered with @ref grib_get_error_string.
   !>
   !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
-  !> @param index       integer(4) index
+  !> @param key         key name
+  !> @param kindex      integer(4) index
   !> @param value       real(4) value
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
-  subroutine grib_get_real4_element ( gribid, key, index,value, status )
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_get_real4_element ( gribid, key, kindex,value, status )
       integer(kind=kindOfInt),                     intent(in)  :: gribid
       character(len=*),                            intent(in)  :: key
-      integer(kind=kindOfInt),                       intent(in)  :: index
-      real(kind = kindOfFloat),intent(out) :: value
+      integer(kind=kindOfInt),                     intent(in)  :: kindex
+      real(kind = kindOfFloat),intent(out)                     :: value
       integer(kind=kindOfInt),optional,            intent(out) :: status
       integer(kind=kindOfInt)                                  :: iret
 
-      iret=grib_f_get_real4_element ( gribid, key, index,value )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      iret=grib_f_get_real4_element ( gribid, key, kindex,value )
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2238,23 +2237,23 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
-  !> @param index       integer(4) index
-  !> @param value       real(8) value
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
-  subroutine grib_get_real8_element ( gribid, key, index,value, status )
+  !> @param gribid    id of the grib loaded in memory
+  !> @param key       key name
+  !> @param kindex    integer(4) index
+  !> @param value     real(8) value
+  !> @param status    GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_get_real8_element ( gribid, key, kindex,value, status )
       integer(kind=kindOfInt),                     intent(in)  :: gribid
       character(len=*),                            intent(in)  :: key
-      integer(kind=kindOfInt),                  intent(in)  :: index
+      integer(kind=kindOfInt),                     intent(in)  :: kindex
       real(kind = kindOfDouble),                   intent(out) :: value
       integer(kind=kindOfInt),optional,            intent(out) :: status
       integer(kind=kindOfInt)                                  :: iret
 
-      iret=grib_f_get_real8_element ( gribid, key, index,value )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      iret=grib_f_get_real8_element ( gribid, key, kindex,value )
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2268,25 +2267,25 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
-  !> @param index       integer(4) array indexes
-  !> @param value       real(4) array value
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
-  subroutine grib_get_real4_elements ( gribid, key, index,value, status )
+  !> @param gribid   id of the grib loaded in memory
+  !> @param key      key name
+  !> @param kindex   integer(4) array indexes
+  !> @param value    real(4) array value
+  !> @param status   GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_get_real4_elements ( gribid, key, kindex, value, status )
       integer(kind=kindOfInt),                  intent(in)  :: gribid
       character(len=*),                         intent(in)  :: key
-      integer(kind=kindOfInt),dimension(:),  intent(in)  :: index
+      integer(kind=kindOfInt),dimension(:),     intent(in)  :: kindex
       real(kind = kindOfFloat), dimension(:),   intent(out) :: value
       integer(kind=kindOfInt),optional,         intent(out) :: status
       integer(kind=kindOfInt)                               :: iret
       integer(kind=kindOfInt)                               ::npoints
 
       npoints=size(value)
-      iret=grib_f_get_real4_elements ( gribid, key, index,value,npoints )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      iret=grib_f_get_real4_elements ( gribid, key, kindex,value,npoints )
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2300,25 +2299,25 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
-  !> @param index       integer(4) array index
-  !> @param value       real(8) array value
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
-  subroutine grib_get_real8_elements ( gribid, key, index,value, status )
+  !> @param gribid   id of the grib loaded in memory
+  !> @param key      key name
+  !> @param kindex   integer(4) array index
+  !> @param value    real(8) array value
+  !> @param status   GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_get_real8_elements ( gribid, key, kindex, value, status )
       integer(kind=kindOfInt),                   intent(in)  :: gribid
       character(len=*),                          intent(in)  :: key
-      integer(kind=kindOfInt),dimension(:),   intent(in)  :: index
+      integer(kind=kindOfInt),dimension(:),      intent(in)  :: kindex
       real(kind = kindOfDouble), dimension(:),   intent(out) :: value
       integer(kind=kindOfInt),optional,          intent(out) :: status
       integer(kind=kindOfInt)                                :: iret
       integer(kind=kindOfInt)                                :: npoints
 
       npoints=size(value)
-      iret=grib_f_get_real8_elements ( gribid, key, index,value,npoints )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      iret=grib_f_get_real8_elements ( gribid, key, kindex,value,npoints )
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2344,9 +2343,9 @@
       integer(kind=kindOfInt)                       :: iret
 
       iret=grib_f_set_int ( gribid, key, value )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2400,9 +2399,9 @@
       integer(kind=kindOfInt)                              :: iret
 
       iret=grib_f_set_real4 ( gribid, key, value )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2428,9 +2427,9 @@
       integer(kind=kindOfInt)                               :: iret
 
       iret=grib_f_set_real8 ( gribid, key, value )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2458,9 +2457,9 @@
 
       nb_values = size(value)
       iret=grib_f_set_int_array ( gribid, key, value, nb_values )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2488,9 +2487,9 @@
 
     nb_values = size(value)
     iret=grib_f_set_long_array ( gribid, key, value, nb_values )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+    if (iret /= 0) then
+      call grib_f_write_on_fail(gribid)
+    endif
     if (present(status)) then
       status = iret
     else
@@ -2556,9 +2555,9 @@
 
       nb_values = size(value)
       iret=grib_f_set_real4_array ( gribid, key, value, nb_values )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2586,9 +2585,9 @@
 
       nb_values = size(value)
       iret=grib_f_set_real8_array ( gribid, key, value, nb_values )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2617,9 +2616,9 @@
 
       nb_values = size(value)
       iret=grib_f_set_force_real4_array ( gribid, key, value, nb_values )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2648,9 +2647,9 @@
 
       nb_values = size(value)
       iret=grib_f_set_force_real8_array ( gribid, key, value, nb_values )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2676,9 +2675,9 @@
       integer(kind=kindOfInt)                                   :: iret
 
       iret=grib_f_set_string  ( gribid, key, value )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2707,9 +2706,9 @@
         iret = GRIB_MESSAGE_TOO_LARGE
       endif
       nbytes = ibytes
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2733,9 +2732,9 @@
       integer(kind=kindOfInt)                                   :: iret
 
       iret=grib_f_get_message_size ( gribid, nbytes )
-	  if (iret /= 0) then
-	    call grib_f_write_on_fail(gribid)
-	  endif
+      if (iret /= 0) then
+        call grib_f_write_on_fail(gribid)
+      endif
       if (present(status)) then
          status = iret
       else
@@ -2827,7 +2826,7 @@
   !>
   !> @param ingribid      id of the input single grib 
   !> @param startsection  starting from startsection (included) all the sections are copied from the input single grib to the output multi grib
-  !> @param multigribid    id of the output multi filed grib
+  !> @param multigribid    id of the output multi field grib
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_multi_append ( ingribid, startsection, multigribid  , status)
     integer(kind=kindOfInt),          intent(in)  :: ingribid
@@ -2905,12 +2904,12 @@
   !> @param outlat     latitude of the nearest point
   !> @param outlon     longitude of the nearest point
   !> @param distance   distance between the given point and its nearest
-  !> @param index      zero based index
+  !> @param kindex     zero based index
   !> @param value      value of the field in the nearest point
   !> @param status     GRIB_SUCCESS if OK, integer value on error
-  subroutine grib_find_nearest_single(gribid,is_lsm,                  &
-                 inlat,inlon,outlat,outlon,              &
-                 value,distance, index,status)
+  subroutine grib_find_nearest_single(gribid, is_lsm,       &
+                 inlat, inlon, outlat, outlon,              &
+                 value, distance, kindex, status)
     integer(kind=kindOfInt),                                  intent(in)    :: gribid
     logical,                                  intent(in)    :: is_lsm
     real(kind = kindOfDouble), intent(in)    :: inlat
@@ -2919,14 +2918,14 @@
     real(kind = kindOfDouble), intent(out)   :: outlon
     real(kind = kindOfDouble), intent(out)   :: distance
     real(kind = kindOfDouble), intent(out)   :: value
-    integer(kind = kindOfInt), intent(out)  :: index
+    integer(kind = kindOfInt), intent(out)   :: kindex
     integer(kind=kindOfInt),optional, intent(out)                           :: status
     integer(kind=kindOfInt)                                                 :: iret
     integer(kind=kindOfInt) :: intis_lsm =0
 
     if (is_lsm) intis_lsm=1
     iret=grib_f_find_nearest_single(gribid,intis_lsm,inlat,inlon,outlat,outlon, &
-      value,distance,index)
+      value,distance,kindex)
 
     if (present(status)) then
          status = iret
@@ -2948,21 +2947,21 @@
   !> @param outlat     latitude of the nearest point
   !> @param outlon     longitude of the nearest point
   !> @param distance   distance between the given point and its nearest
-  !> @param index      zero based index
+  !> @param kindex     zero based index
   !> @param value      value of the field in the nearest point
   !> @param status     GRIB_SUCCESS if OK, integer value on error
   subroutine grib_find_nearest_four_single(gribid,is_lsm, &
                  inlat,inlon,outlat,outlon,               &
-                 value,distance, index,status)
+                 value,distance, kindex,status)
     integer(kind=kindOfInt),                                  intent(in)    :: gribid
-    logical,                                  intent(in)    :: is_lsm
-    real(kind = kindOfDouble), intent(in)    :: inlat
-    real(kind = kindOfDouble), intent(in)    :: inlon
+    logical,                                  intent(in)   :: is_lsm
+    real(kind = kindOfDouble), intent(in)                  :: inlat
+    real(kind = kindOfDouble), intent(in)                  :: inlon
     real(kind = kindOfDouble), dimension(4), intent(out)   :: outlat
     real(kind = kindOfDouble), dimension(4), intent(out)   :: outlon
     real(kind = kindOfDouble), dimension(4), intent(out)   :: distance
     real(kind = kindOfDouble), dimension(4), intent(out)   :: value
-    integer(kind = kindOfInt), dimension(4), intent(out)  :: index
+    integer(kind = kindOfInt), dimension(4), intent(out)   :: kindex
     integer(kind=kindOfInt),optional, intent(out)                           :: status
     integer(kind=kindOfInt)                                                 :: iret
     integer(kind=kindOfInt) :: intis_lsm =0
@@ -2970,7 +2969,7 @@
     if (is_lsm) intis_lsm=1
 
     iret=grib_f_find_nearest_four_single(gribid,intis_lsm,inlat,inlon,outlat,outlon, &
-      value,distance,index)
+      value,distance,kindex)
 
     if (present(status)) then
        status = iret

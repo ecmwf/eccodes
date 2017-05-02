@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -50,7 +50,7 @@ struct parameter {
     double max1;
     double max2;
     pair   pairs[15];
-    check_proc checks[4];
+    check_proc checks[5];
 };
 
 static void point_in_time(grib_handle*,const parameter*,double,double);
@@ -65,6 +65,8 @@ static void predefined_level(grib_handle*,const parameter*,double,double);
 static void predefined_thickness(grib_handle*,const parameter*,double,double);
 static void given_thickness(grib_handle*,const parameter*,double,double);
 static void has_bitmap(grib_handle*,const parameter*,double,double);
+static void has_soil_level(grib_handle*,const parameter*,double,double);
+static void has_soil_layer(grib_handle*,const parameter*,double,double);
 
 static void height_level(grib_handle*,const parameter*,double,double);
 static void pressure_level(grib_handle*,const parameter*,double,double);
@@ -383,23 +385,30 @@ static void check_range(grib_handle* h,const parameter* p,double min,double max)
     if(!valueflg)
         return;
 
-    if(min < p->min1 || min > p->min2)
-    {
-        printf("warning: %s, field %d [%s]: %s minimum value %g is not in [%g,%g]\n",file,field,param,
-                p->name,
-                min,p->min1,p->min2);
-        printf("  => [%g,%g]\n",min < p->min1 ? min : p->min1, min > p->min2 ? min : p->min2);
+    double missing = dget(h,"missingValue");
 
-        warning++;
-    }
+    /* See ECC-437 */
+    if(!(get(h,"bitMapIndicator") == 0 && min == missing && max == missing)){
 
-    if(max < p->max1 || max > p->max2 )
-    {
-        printf("warning: %s, field %d [%s]: %s maximum value %g is not in [%g,%g]\n",file,field,param,
-                p->name,
-                max,p->max1,p->max2);
-        printf("  => [%g,%g]\n",max < p->max1 ? max : p->max1, max > p->max2 ? max : p->max2);
-        warning++;
+        if(min < p->min1 || min > p->min2)
+        {
+            printf("warning: %s, field %d [%s]: %s minimum value %g is not in [%g,%g]\n",file,field,param,
+                    p->name,
+                    min,p->min1,p->min2);
+            printf("  => [%g,%g]\n",min < p->min1 ? min : p->min1, min > p->min2 ? min : p->min2);
+
+            warning++;
+        }
+
+        if(max < p->max1 || max > p->max2 )
+        {
+            printf("warning: %s, field %d [%s]: %s maximum value %g is not in [%g,%g]\n",file,field,param,
+                    p->name,
+                    max,p->max1,p->max2);
+            printf("  => [%g,%g]\n",max < p->max1 ? max : p->max1, max > p->max2 ? max : p->max2);
+            warning++;
+        }
+
     }
 }
 
@@ -465,14 +474,7 @@ static void point_in_time(grib_handle* h,const parameter* p,double min,double ma
         break;
     }
 
-    if (is_uerra)
-    {
-        if(get(h,"indicatorOfUnitOfTimeRange") == 1) /*  hourly */
-        {
-            CHECK((eq(h,"forecastTime",1)||eq(h,"forecastTime",2)||eq(h,"forecastTime",4)||eq(h,"forecastTime",5))||(get(h,"forecastTime") % 3) == 0);
-        }
-    }
-    else if (is_lam) {
+    if (is_lam) {
         if(get(h,"indicatorOfUnitOfTimeRange") == 10 ) /*  three hours */
         {
             /* Three hourly is OK */
@@ -483,7 +485,14 @@ static void point_in_time(grib_handle* h,const parameter* p,double min,double ma
             CHECK(eq(h,"indicatorOfUnitOfTimeRange",1));/* Hours */
             CHECK((get(h,"forecastTime") % 3) == 0);  /* Every three hours */
         }
-    } else {
+    } 
+    else if (is_uerra) {
+        if(get(h,"indicatorOfUnitOfTimeRange") == 1) /*  hourly */
+        {
+            CHECK((eq(h,"forecastTime",1)||eq(h,"forecastTime",2)||eq(h,"forecastTime",4)||eq(h,"forecastTime",5))||(get(h,"forecastTime") % 3) == 0);
+        }
+    }
+    else {
         if(get(h,"indicatorOfUnitOfTimeRange") == 11) /*  six hours */
         {
             /* Six hourly is OK */
@@ -673,14 +682,7 @@ static void statistical_process(grib_handle* h,const parameter* p,double min,dou
         break;
     }
 
-    if (is_uerra)
-    {
-        if(get(h,"indicatorOfUnitOfTimeRange") == 1) /*  hourly */
-        {
-            CHECK((eq(h,"forecastTime",1)||eq(h,"forecastTime",2)||eq(h,"forecastTime",4)||eq(h,"forecastTime",5))||(get(h,"forecastTime") % 3) == 0);
-        }
-    }
-    else if (is_lam) {
+    if (is_lam) {
         if(get(h,"indicatorOfUnitOfTimeRange") == 10 ) /*  three hours */
         {
             /* Three hourly is OK */
@@ -691,7 +693,17 @@ static void statistical_process(grib_handle* h,const parameter* p,double min,dou
             CHECK(eq(h,"indicatorOfUnitOfTimeRange",1));/* Hours */
             CHECK((get(h,"forecastTime") % 3) == 0);  /* Every three hours */
         }
-    } else {
+    } 
+    else if (is_uerra) 
+    {
+/*  forecastTime for uerra might be all steps decreased by 1 i.e 0,1,2,3,4,5,8,11...29 too many... */
+        if(get(h,"indicatorOfUnitOfTimeRange") == 1)
+        {
+            CHECK(le(h,"forecastTime",30));
+        }
+    }
+    else 
+    {
         if(get(h,"indicatorOfUnitOfTimeRange") == 11) /*  six hours */
         {
             /* Six hourly is OK */
@@ -733,6 +745,7 @@ static void statistical_process(grib_handle* h,const parameter* p,double min,dou
     {
         CHECK((get(h,"endStep") % 6) == 0); /* Every six hours */
     }
+    
 
     if(get(h,"indicatorOfUnitForTimeRange") == 11)
     {
@@ -755,6 +768,18 @@ static void has_bitmap(grib_handle* h,const parameter* p,double min,double max)
 {
     /* printf("bitMapIndicator %ld\n",get(h,"bitMapIndicator")); */
     CHECK(eq(h,"bitMapIndicator",0));
+}
+
+static void has_soil_level(grib_handle* h,const parameter* p,double min,double max)
+{
+    CHECK(get(h,"topLevel") == get(h,"bottomLevel"));
+    CHECK(le(h,"level",14)); /* max in UERRA */
+}
+
+static void has_soil_layer(grib_handle* h,const parameter* p,double min,double max)
+{
+    CHECK(get(h,"topLevel") == get(h,"bottomLevel") - 1);
+    CHECK(le(h,"level",14)); /* max in UERRA */
 }
 
 static void six_hourly(grib_handle* h,const parameter* p,double min,double max)

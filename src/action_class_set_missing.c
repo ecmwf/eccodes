@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -64,7 +64,6 @@ static grib_action_class _grib_action_class_set_missing = {
     0,                            /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */
-    0,                            /* compile */
 };
 
 grib_action_class* grib_action_class_set_missing = &_grib_action_class_set_missing;

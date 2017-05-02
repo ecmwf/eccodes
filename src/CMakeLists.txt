@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -247,6 +247,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_unsigned.c
     grib_accessor_class_unsigned_bits.c
     grib_accessor_class_raw.c
+    grib_accessor_class_bufr_simple_thinning.c
     grib_accessor_class_bufr_extract_subsets.c
     grib_accessor_class_bufr_extract_area_subsets.c
     grib_accessor_class_bufr_extract_datetime_subsets.c
@@ -274,12 +275,16 @@ list( APPEND grib_api_srcs
     grib_dumper_class_debug.c
     grib_dumper_class_default.c
     grib_dumper_class_keys.c
-    grib_dumper_class_filter.c
-    grib_dumper_class_fortran.c
-    grib_dumper_class_python.c
+    grib_dumper_class_bufr_encode_C.c
+    grib_dumper_class_bufr_encode_filter.c
+    grib_dumper_class_bufr_encode_fortran.c
+    grib_dumper_class_bufr_encode_python.c
+    grib_dumper_class_bufr_decode_C.c
+    grib_dumper_class_bufr_decode_filter.c
+    grib_dumper_class_bufr_decode_fortran.c
+    grib_dumper_class_bufr_decode_python.c
     grib_dumper_class_json.c
-    grib_dumper_class_xml.c
-    grib_dumper_class_c_code.c
+    grib_dumper_class_grib_encode_C.c
     grib_dumper_class_wmo.c
     grib_dumper_class.c
     grib_context.c
@@ -295,6 +300,7 @@ list( APPEND grib_api_srcs
     grib_itrie.c
     grib_rules.c
     grib_keys_iterator.c
+    bufr_keys_iterator.c
     grib_parse_utils.c
     grib_query.c
     grib_scaling.c
@@ -340,9 +346,11 @@ list( APPEND grib_api_srcs
     grib_iterator_class_gen.c
     grib_iterator_class_latlon.c
     grib_iterator_class_regular.c
+    grib_iterator_class_space_view.c
     grib_expression.c
     grib_util.c
-    compile.c
+    bufr_util.c
+    string_util.c
     functions.c
     grib_accessor_class.h
     grib_accessor_factory.h
@@ -377,6 +385,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_uint64_little_endian.c
     grib_accessor_class_uint8.c
     grib_accessor_class_blob.c
+    grib_optimize_decimal_factor.c
     eccodes_windef.h
     # We ship our own generated lex/yacc C files
     grib_yacc.c  grib_lex.c

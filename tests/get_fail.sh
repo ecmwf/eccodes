@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,7 +14,7 @@ REDIRECT=/dev/null
 
 set +e 
 
-${tools_dir}grib_get -p gribname ${data_dir}/regular_latlon_surface.grib1 2> $REDIRECT > $REDIRECT
+${tools_dir}/grib_get -p gribname ${data_dir}/regular_latlon_surface.grib1 2> $REDIRECT > $REDIRECT
 
 if [ $? -eq 0 ] 
   then

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -33,16 +33,16 @@ do
   file=${data_dir}/$f
   output=${file}.grib1_
   rm -f ${output} || true
-  ${tools_dir}grib_set -s editionNumber=1 ${file}.grib2 ${output} 2> $REDIRECT > $REDIRECT
+  ${tools_dir}/grib_set -s editionNumber=1 ${file}.grib2 ${output} 2> $REDIRECT > $REDIRECT
 
-  grib1Statistics=`${tools_dir}grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${output}` 
-  grib2Statistics=`${tools_dir}grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib2` 
+  grib1Statistics=`${tools_dir}/grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${output}` 
+  grib2Statistics=`${tools_dir}/grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib2` 
 
   if [ "$grib1Statistics" != "$grib2Statistics" ]; then 
     exit 1
   fi
 
-  #${tools_dir}grib_compare -A1.0e-8 -c values ${output} ${file}.grib2 2> /dev/null > /dev/null
+  #${tools_dir}/grib_compare -A1.0e-8 -c values ${output} ${file}.grib2 2> /dev/null > /dev/null
   rm -f ${output}
 done
 
@@ -64,10 +64,10 @@ while [ $i -le $COUNT ]; do
 done
 echo "};write;"       >> $filter
 # Apply this filter to a grib2 file from samples.
-${tools_dir}grib_filter -o temp.pv.grib2 $filter $ECCODES_SAMPLES_PATH/reduced_gg_ml_grib2.tmpl
+${tools_dir}/grib_filter -o temp.pv.grib2 $filter $ECCODES_SAMPLES_PATH/reduced_gg_ml_grib2.tmpl
 # Convert this new grib2 file to grib1. This command SHOULD FAIL
 set +e
-${tools_dir}grib_set -s edition=1 temp.pv.grib2 temp.bad.grib1 2>$REDIRECT
+${tools_dir}/grib_set -s edition=1 temp.pv.grib2 temp.bad.grib1 2>$REDIRECT
 if [ $? -eq 0 ]; then
   echo "ERROR: Conversion from grib2 to grib1 should have failed for large NV!" >&2
   exit 1

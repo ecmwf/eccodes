@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,6 +10,8 @@
 
 #include <assert.h>
 #include "grib_api_internal.h"
+
+int assertion_caught = 0;
 
 typedef enum {IBM_FLOAT, IEEE_FLOAT} FloatRep;
 
@@ -1366,9 +1368,64 @@ void test_gaussian_latitude_640()
 	free(lats);
 }
 
+void test_string_splitting()
+{
+    int i=0;
+    char input[80] = "Born|To|Be|Wild";
+    char** list=0;
+    list = string_split(input, "|");
+    for(i=0; list[i] != NULL; ++i) {} /* count how many tokens */
+    assert(i == 4);
+    if ( strcmp(list[0], "Born")!=0 ) assert(0);
+    if ( strcmp(list[1], "To")  !=0 ) assert(0);
+    if ( strcmp(list[2], "Be")  !=0 ) assert(0);
+    if ( strcmp(list[3], "Wild")!=0 ) assert(0);
+
+    strcpy(input, "12345|a gap|");
+    list = string_split(input, "|");
+    for(i=0; list[i] != NULL; ++i) {} /* count how many tokens */
+    assert(i == 2);
+    if ( strcmp(list[0], "12345")!=0 ) assert(0);
+    if ( strcmp(list[1], "a gap")!=0 ) assert(0);
+
+    strcpy(input, "Steppenwolf");
+    list = string_split(input, ",");
+    for(i=0; list[i] != NULL; ++i) {} /* count how many tokens */
+    assert(i == 1);
+    if ( strcmp(list[0], "Steppenwolf")!=0 ) assert(0);
+
+    /* Note: currently cannot cope with */
+    /*  input being NULL */
+    /*  input being empty */
+    /*  input having several adjacent delimiters e.g. 'A||B|||C' */
+}
+
+static void my_assertion_proc(const char* message)
+{
+    printf("Caught it: %s\n", message);
+    assertion_caught = 1;
+}
+
+void test_assertion_catching()
+{
+    assert(assertion_caught == 0);
+    codes_set_codes_assertion_failed_proc(&my_assertion_proc);
+
+    /* Do something illegal */
+    string_split("", " ");
+
+    assert(assertion_caught == 1);
+
+    /* Restore everything */
+    codes_set_codes_assertion_failed_proc(NULL);
+    assertion_caught = 0;
+}
+
 int main(int argc, char** argv)
 {
-    /*printf("Doing unit tests. GRIB API version = %ld\n", grib_get_api_version());*/
+    /*printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());*/
+
+    test_assertion_catching();
 
     test_gaussian_latitude_640();
 
@@ -1389,6 +1446,8 @@ int main(int argc, char** argv)
 
     test_grib_nearest_smaller_ibmfloat();
     test_grib_nearest_smaller_ieeefloat();
+
+    test_string_splitting();
 
     return 0;
 }

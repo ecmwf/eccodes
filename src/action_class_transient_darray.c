@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -72,7 +72,6 @@ static grib_action_class _grib_action_class_transient_darray = {
     0,                            /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */
-    0,                            /* compile */
 };
 
 grib_action_class* grib_action_class_transient_darray = &_grib_action_class_transient_darray;
@@ -82,11 +81,10 @@ static void init_class(grib_action_class* c)
 	c->create_accessor	=	(*(c->super))->create_accessor;
 	c->notify_change	=	(*(c->super))->notify_change;
 	c->reparse	=	(*(c->super))->reparse;
-	c->compile	=	(*(c->super))->compile;
 }
 /* END_CLASS_IMP */
 
-grib_action* grib_action_create_transient_darray( grib_context* context, const char* name, grib_darray* darray)
+grib_action* grib_action_create_transient_darray( grib_context* context, const char* name, grib_darray* darray,int flags)
 {
     grib_action_transient_darray* a = NULL;
     grib_action_class* c   = grib_action_class_transient_darray;
@@ -96,6 +94,7 @@ grib_action* grib_action_create_transient_darray( grib_context* context, const c
     act->cclass       = c;
     a                 = (grib_action_transient_darray*)act;
     act->context      = context;
+    act->flags        = flags;
 
     a->darray  = darray;
     a->name        = grib_context_strdup_persistent(context,name);

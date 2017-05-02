@@ -2,7 +2,6 @@ static void init_class      (grib_action_class*);
 static void init            (grib_action* d);
 static void dump            (grib_action* d, FILE*,int);
 static void xref            (grib_action* d, FILE* f,const char* path);
-static void compile         (grib_action* a, grib_compiler* compiler);
 static void destroy         (grib_context*,grib_action*);
 static int create_accessor(grib_section*,grib_action*,grib_loader*);
 static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* observed);
@@ -34,7 +33,6 @@ static grib_action_class _grib_action_class_NAME = {
     &notify_change,                            /* notify_change */
     &reparse,                            /* reparse */
     &execute,                            /* execute */
-    &compile,                            /* compile */
 };
 
 grib_action_class* grib_action_class_NAME = &_grib_action_class_NAME;

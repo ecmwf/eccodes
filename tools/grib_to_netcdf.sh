@@ -23,3 +23,8 @@ echo "Note these types were chosen to provide a reasonably wide range of trade-o
 echo "\\verbatim"
 echo ">grib_to_netcdf -D NC_FLOAT -o output.nc input.grib"
 echo "\\endverbatim"
+
+echo "-# Set the netcdf dimension 'time' to be unlimited i.e. time can have unlimited length so variables using this dimension can grow along this dimension."
+echo "\\verbatim"
+echo ">grib_to_netcdf -u time -o output.nc input.grib"
+echo "\\endverbatim"

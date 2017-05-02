@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,7 +9,7 @@
  */
 
 /***************************************************************************
- *   Enrico  Fucile 2012
+ *   Enrico  Fucile 2012                                                   *
  *                                                                         *
  ***************************************************************************/
 #include "grib_api_internal.h"
@@ -79,7 +79,6 @@ static grib_action_class _grib_action_class_hash_array = {
     0,                            /* notify_change */
     0,                            /* reparse */
     0,                            /* execute */
-    0,                            /* compile */
 };
 
 grib_action_class* grib_action_class_hash_array = &_grib_action_class_hash_array;
@@ -91,10 +90,36 @@ static void init_class(grib_action_class* c)
 	c->notify_change	=	(*(c->super))->notify_change;
 	c->reparse	=	(*(c->super))->reparse;
 	c->execute	=	(*(c->super))->execute;
-	c->compile	=	(*(c->super))->compile;
 }
 /* END_CLASS_IMP */
 
+#if GRIB_PTHREADS
+static pthread_once_t once  = PTHREAD_ONCE_INIT;
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+static void init() {
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&mutex,&attr);
+    pthread_mutexattr_destroy(&attr);
+}
+#elif GRIB_OMP_THREADS
+static int once = 0;
+static omp_nest_lock_t mutex;
+
+static void init()
+{
+    GRIB_OMP_CRITICAL(lock_action_class_hash_array_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex);
+            once = 1;
+        }
+    }
+}
+#endif
 
 grib_action* grib_action_create_hash_array( grib_context* context,
         const char* name,
@@ -186,7 +211,7 @@ static void destroy(grib_context* context,grib_action* act)
     grib_context_free_persistent(context, self->basename);
 }
 
-grib_hash_array_value* get_hash_array(grib_handle* h,grib_action* a)
+static grib_hash_array_value* get_hash_array_impl(grib_handle* h,grib_action* a)
 {
     char buf[1024]={0,};
     char master[1024]={0,};
@@ -258,7 +283,7 @@ grib_hash_array_value* get_hash_array(grib_handle* h,grib_action* a)
     } else if (full) {
         c=grib_parse_hash_array_file(context,full);
     } else {
-        grib_context_log(context,GRIB_LOG_FATAL,
+        grib_context_log(context,GRIB_LOG_ERROR,
                 "unable to find definition file %s in %s:%s:%s\nDefinition files path=\"%s\"",
                 self->basename,master,ecmf,local,context->grib_definition_files_path);
         return NULL;
@@ -279,4 +304,16 @@ grib_hash_array_value* get_hash_array(grib_handle* h,grib_action* a)
     }
 
     return h->context->hash_array[id];
+}
+
+grib_hash_array_value* get_hash_array(grib_handle* h,grib_action* a)
+{
+    grib_hash_array_value* result = NULL;
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex);
+
+    result = get_hash_array_impl(h, a);
+
+    GRIB_MUTEX_UNLOCK(&mutex);
+    return result;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -119,6 +119,10 @@ Log mode for information for processing information
 \see codes_keys_iterator_new */
 #define CODES_KEYS_ITERATOR_SKIP_FUNCTION          GRIB_KEYS_ITERATOR_SKIP_FUNCTION
 
+/*!  only keys present in the dump
+\ingroup keys_iterator
+\see codes_keys_iterator_new */
+#define CODES_KEYS_ITERATOR_DUMP_ONLY          GRIB_KEYS_ITERATOR_DUMP_ONLY
 
 typedef struct grib_values            codes_values;
 typedef struct grib_key_value_list    codes_key_value_list;
@@ -160,6 +164,7 @@ typedef struct grib_points            codes_points;
     \struct codes_keys_iterator
 */
 typedef struct grib_keys_iterator     codes_keys_iterator;
+typedef struct bufr_keys_iterator     codes_bufr_keys_iterator;
 
 typedef struct grib_fieldset          codes_fieldset;
 typedef struct grib_order_by          codes_order_by;
@@ -175,7 +180,7 @@ typedef struct grib_util_packing_spec codes_util_packing_spec;
 typedef struct grib_util_grid_spec    codes_util_grid_spec;
 
 
-codes_fieldset *codes_fieldset_new_from_files(codes_context *c, char *filenames[], int nfiles, char **keys, int nkeys, char *where_string, char *order_by_string, int *err);
+codes_fieldset *codes_fieldset_new_from_files(codes_context *c, char *filenames[], int nfiles, char **keys, int nkeys, const char *where_string, const char *order_by_string, int *err);
 
 void codes_fieldset_delete(codes_fieldset* set);
 void codes_fieldset_rewind(codes_fieldset* set);
@@ -415,7 +420,7 @@ codes_string_list* codes_grib_util_get_mars_param(const char* param_id);
 * @param data_len    : the length of the message in number of bytes
 * @return            the new handle, NULL if the message is invalid or a problem is encountered
 */
-codes_handle* codes_handle_new_from_message(codes_context* c, void* data, size_t data_len);
+codes_handle* codes_handle_new_from_message(codes_context* c, const void* data, size_t data_len);
 
 /**
 *  Create a handle from a user message in memory. The message will not be freed at the end.
@@ -753,7 +758,7 @@ int codes_get_double(codes_handle* h, const char* key, double* value            
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param i           : zero based index
+* @param i           : zero-based index
 * @param value       : the address of a double where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
@@ -764,22 +769,22 @@ int codes_get_double_element(codes_handle* h, const char* key, int i, double* va
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param i           : zero based array of indexes
+* @param i           : zero-based array of indexes
 * @param size        : size of the i and value arrays
-* @param value       : the address of a double where the data will be retrieved
+* @param value       : the double array for the data values
 * @return            0 if OK, integer value on error
 */
-int codes_get_double_elements(codes_handle* h, const char* key, int* i, long size,double* value);
+int codes_get_double_elements(codes_handle* h, const char* key, int* i, long size, double* value);
 
 /**
 *  Get a string value from a key, if several keys of the same name are present, the last one is returned
 * @see  codes_set_string
 *
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param mesg       : the address of a string where the data will be retrieved
-* @param length      : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
-* @return            0 if OK, integer value on error
+* @param h         : the handle to get the data from
+* @param key       : the key to be searched
+* @param mesg      : the address of a string where the data will be retrieved
+* @param length    : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
+* @return          0 if OK, integer value on error
 */
 int codes_get_string(codes_handle* h, const char* key, char* mesg, size_t *length  );
 
@@ -910,6 +915,18 @@ int codes_set_force_double_array(codes_handle* h, const char* key, const double*
 * @return            0 if OK, integer value on error
 */
 int codes_set_long_array(codes_handle* h, const char* key, const long* vals, size_t length);
+
+/**
+*  Set a string array from a key. If several keys of the same name are present, the last one is set
+*  @see  codes_get_long_array
+*
+* @param h           : the handle to set the data to
+* @param key         : the key to be searched
+* @param vals        : the address of a string array where the data will be read
+* @param length      : a size_t that contains the length of the array on input
+* @return            0 if OK, integer value on error
+*/
+int codes_set_string_array(codes_handle *h, const char *key, const char **vals, size_t length);
 /*! @} */
 
 
@@ -918,7 +935,7 @@ int codes_set_long_array(codes_handle* h, const char* key, const long* vals, siz
 *
 * @param h            : the handle to be printed
 * @param out          : output file handle
-* @param mode         : available dump modes are: debug wmo c_code
+* @param mode         : Examples of available dump modes: debug wmo
 * @param option_flags : all the CODES_DUMP_FLAG_x flags can be used
 * @param arg          : used to provide a format to output data (experimental)
 */
@@ -1061,6 +1078,13 @@ long codes_get_api_version(void);
 const char* codes_get_git_sha1(void);
 
 /**
+*  Get the package name
+*
+*  @return character string with package name
+*/
+const char* codes_get_package_name(void);
+
+/**
 *  Prints the API version
 *
 */
@@ -1075,40 +1099,49 @@ attributes or by the namespace they belong to.
 /*! Create a new iterator from a valid and initialised handle.
 *  @param h             : the handle whose keys you want to iterate
 *  @param filter_flags  : flags to filter out some of the keys through their attributes
-*  @param name_space     : if not null the iteration is carried out only on
+*  @param name_space    : if not null the iteration is carried out only on
 *                         keys belonging to the namespace passed. (NULL for all the keys)
 *  @return              keys iterator ready to iterate through keys according to filter_flags
-*                         and namespace
+*                       and namespace
 */
 codes_keys_iterator* codes_keys_iterator_new(codes_handle* h,unsigned long filter_flags, const char* name_space);
 
-/*! Step to the next iterator.
+/* codes_bufr_copy_data copies all the values in the data section that are present in the same position in the data tree
+ * and with the same number of values to the output handle. Should not exit with error if the output handle has a different
+ * structure as the aim is to copy what is possible to be copied.
+ * This will allow the user to add something to a message by creating a new message with additions or changes to the
+ * unexpandedDescriptors and copying what is possible to copy from the original message. */
+char **codes_bufr_copy_data_return_copied_keys(grib_handle *hin, grib_handle *hout, size_t *nkeys, int *err);
+int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout);
+
+
+/*! Step to the next item from the keys iterator.
 *  @param kiter         : valid codes_keys_iterator
 *  @return              1 if next iterator exists, 0 if no more elements to iterate on
 */
 int codes_keys_iterator_next(codes_keys_iterator *kiter);
 
 
-/*! get the key name from the iterator
+/*! get the key name from the keys iterator
 *  @param kiter         : valid codes_keys_iterator
 *  @return              key name
 */
 const char* codes_keys_iterator_get_name(codes_keys_iterator *kiter);
 
-/*! Delete the iterator.
+/*! Delete the keys iterator.
 *  @param kiter         : valid codes_keys_iterator
 *  @return              0 if OK, integer value on error
 */
 int codes_keys_iterator_delete( codes_keys_iterator* kiter);
 
-/*! Rewind the iterator.
+/*! Rewind the keys iterator.
 *  @param kiter         : valid codes_keys_iterator
 *  @return              0 if OK, integer value on error
 */
 int codes_keys_iterator_rewind(codes_keys_iterator* kiter);
 
-int codes_keys_iterator_set_flags(codes_keys_iterator *kiter,unsigned long flags);
 
+int codes_keys_iterator_set_flags(codes_keys_iterator *kiter,unsigned long flags);
 int codes_keys_iterator_get_long(codes_keys_iterator *kiter, long *v, size_t *len);
 int codes_keys_iterator_get_double(codes_keys_iterator *kiter, double *v, size_t *len);
 int codes_keys_iterator_get_string(codes_keys_iterator *kiter, char *v, size_t *len);
@@ -1136,7 +1169,7 @@ void codes_check(const char* call,const char*  file,int line,int e,const char* m
 
 int codes_set_values(codes_handle* h, codes_values* codes_values, size_t arg_count);
 codes_handle* codes_handle_new_from_partial_message_copy(codes_context* c, const void* data, size_t size);
-codes_handle* codes_handle_new_from_partial_message(codes_context* c,void* data, size_t buflen);
+codes_handle* codes_handle_new_from_partial_message(codes_context* c, const void* data, size_t buflen);
 int codes_is_missing(codes_handle* h, const char* key, int* err);
 int codes_is_defined(codes_handle* h, const char* key);
 int codes_set_missing(codes_handle* h, const char* key);
@@ -1208,141 +1241,139 @@ codes_handle *codes_grib_util_set_spec(codes_handle *h,
 Error codes returned by the eccodes functions.
 */
 /*! @{*/
-
 /** No error */
-#define CODES_SUCCESS            GRIB_SUCCESS
+#define CODES_SUCCESS		GRIB_SUCCESS
 /** End of resource reached */
-#define CODES_END_OF_FILE        GRIB_END_OF_FILE
+#define CODES_END_OF_FILE		GRIB_END_OF_FILE
 /** Internal error */
-#define CODES_INTERNAL_ERROR     GRIB_INTERNAL_ERROR
+#define CODES_INTERNAL_ERROR		GRIB_INTERNAL_ERROR
 /** Passed buffer is too small */
-#define CODES_BUFFER_TOO_SMALL   GRIB_BUFFER_TOO_SMALL
+#define CODES_BUFFER_TOO_SMALL		GRIB_BUFFER_TOO_SMALL
 /** Function not yet implemented */
-#define CODES_NOT_IMPLEMENTED    GRIB_NOT_IMPLEMENTED
+#define CODES_NOT_IMPLEMENTED		GRIB_NOT_IMPLEMENTED
 /** Missing 7777 at end of message */
-#define CODES_7777_NOT_FOUND     GRIB_7777_NOT_FOUND
+#define CODES_7777_NOT_FOUND		GRIB_7777_NOT_FOUND
 /** Passed array is too small */
-#define CODES_ARRAY_TOO_SMALL    GRIB_ARRAY_TOO_SMALL
+#define CODES_ARRAY_TOO_SMALL		GRIB_ARRAY_TOO_SMALL
 /** File not found */
-#define CODES_FILE_NOT_FOUND     GRIB_FILE_NOT_FOUND
+#define CODES_FILE_NOT_FOUND		GRIB_FILE_NOT_FOUND
 /** Code not found in code table */
-#define CODES_CODE_NOT_FOUND_IN_TABLE GRIB_CODE_NOT_FOUND_IN_TABLE
+#define CODES_CODE_NOT_FOUND_IN_TABLE		GRIB_CODE_NOT_FOUND_IN_TABLE
 /** Array size mismatch */
-#define CODES_WRONG_ARRAY_SIZE    GRIB_WRONG_ARRAY_SIZE
+#define CODES_WRONG_ARRAY_SIZE		GRIB_WRONG_ARRAY_SIZE
 /** Key/value not found */
-#define CODES_NOT_FOUND           GRIB_NOT_FOUND
+#define CODES_NOT_FOUND		GRIB_NOT_FOUND
 /** Input output problem */
-#define CODES_IO_PROBLEM          GRIB_IO_PROBLEM
+#define CODES_IO_PROBLEM		GRIB_IO_PROBLEM
 /** Message invalid */
-#define CODES_INVALID_MESSAGE     GRIB_INVALID_MESSAGE
+#define CODES_INVALID_MESSAGE		GRIB_INVALID_MESSAGE
 /** Decoding invalid */
-#define CODES_DECODING_ERROR      GRIB_DECODING_ERROR
+#define CODES_DECODING_ERROR		GRIB_DECODING_ERROR
 /** Encoding invalid */
-#define CODES_ENCODING_ERROR      GRIB_ENCODING_ERROR
+#define CODES_ENCODING_ERROR		GRIB_ENCODING_ERROR
 /** Code cannot unpack because of string too small */
-#define CODES_NO_MORE_IN_SET     GRIB_NO_MORE_IN_SET
+#define CODES_NO_MORE_IN_SET		GRIB_NO_MORE_IN_SET
 /** Problem with calculation of geographic attributes */
-#define CODES_GEOCALCULUS_PROBLEM  GRIB_GEOCALCULUS_PROBLEM
-/** Out of memory */
-#define CODES_OUT_OF_MEMORY        GRIB_OUT_OF_MEMORY
+#define CODES_GEOCALCULUS_PROBLEM		GRIB_GEOCALCULUS_PROBLEM
+/** Memory allocation error */
+#define CODES_OUT_OF_MEMORY		GRIB_OUT_OF_MEMORY
 /** Value is read only */
-#define CODES_READ_ONLY            GRIB_READ_ONLY
+#define CODES_READ_ONLY		GRIB_READ_ONLY
 /** Invalid argument */
-#define CODES_INVALID_ARGUMENT     GRIB_INVALID_ARGUMENT
+#define CODES_INVALID_ARGUMENT		GRIB_INVALID_ARGUMENT
 /** Null handle */
-#define CODES_NULL_HANDLE          GRIB_NULL_HANDLE
+#define CODES_NULL_HANDLE		GRIB_NULL_HANDLE
 /** Invalid section number */
-#define CODES_INVALID_SECTION_NUMBER  GRIB_INVALID_SECTION_NUMBER
+#define CODES_INVALID_SECTION_NUMBER		GRIB_INVALID_SECTION_NUMBER
 /** Value cannot be missing */
-#define CODES_VALUE_CANNOT_BE_MISSING GRIB_VALUE_CANNOT_BE_MISSING
+#define CODES_VALUE_CANNOT_BE_MISSING		GRIB_VALUE_CANNOT_BE_MISSING
 /** Wrong message length */
-#define CODES_WRONG_LENGTH        GRIB_WRONG_LENGTH
+#define CODES_WRONG_LENGTH		GRIB_WRONG_LENGTH
 /** Invalid key type */
-#define CODES_INVALID_TYPE        GRIB_INVALID_TYPE
+#define CODES_INVALID_TYPE		GRIB_INVALID_TYPE
 /** Unable to set step */
-#define CODES_WRONG_STEP          GRIB_WRONG_STEP
+#define CODES_WRONG_STEP		GRIB_WRONG_STEP
 /** Wrong units for step (step must be integer) */
-#define CODES_WRONG_STEP_UNIT     GRIB_WRONG_STEP_UNIT
+#define CODES_WRONG_STEP_UNIT		GRIB_WRONG_STEP_UNIT
 /** Invalid file id */
-#define CODES_INVALID_FILE        GRIB_INVALID_FILE
+#define CODES_INVALID_FILE		GRIB_INVALID_FILE
 /** Invalid grib id */
-#define CODES_INVALID_GRIB        GRIB_INVALID_GRIB
+#define CODES_INVALID_GRIB		GRIB_INVALID_GRIB
 /** Invalid index id */
-#define CODES_INVALID_INDEX       GRIB_INVALID_INDEX
+#define CODES_INVALID_INDEX		GRIB_INVALID_INDEX
 /** Invalid iterator id */
-#define CODES_INVALID_ITERATOR    GRIB_INVALID_ITERATOR
+#define CODES_INVALID_ITERATOR		GRIB_INVALID_ITERATOR
 /** Invalid keys iterator id */
-#define CODES_INVALID_KEYS_ITERATOR  GRIB_INVALID_KEYS_ITERATOR
+#define CODES_INVALID_KEYS_ITERATOR		GRIB_INVALID_KEYS_ITERATOR
 /** Invalid nearest id */
-#define CODES_INVALID_NEAREST     GRIB_INVALID_NEAREST
+#define CODES_INVALID_NEAREST		GRIB_INVALID_NEAREST
 /** Invalid order by */
-#define CODES_INVALID_ORDERBY     GRIB_INVALID_ORDERBY
+#define CODES_INVALID_ORDERBY		GRIB_INVALID_ORDERBY
 /** Missing a key from the fieldset */
-#define CODES_MISSING_KEY         GRIB_MISSING_KEY
+#define CODES_MISSING_KEY		GRIB_MISSING_KEY
 /** The point is out of the grid area */
-#define CODES_OUT_OF_AREA         GRIB_OUT_OF_AREA
+#define CODES_OUT_OF_AREA		GRIB_OUT_OF_AREA
 /** Concept no match */
-#define CODES_CONCEPT_NO_MATCH    GRIB_CONCEPT_NO_MATCH
+#define CODES_CONCEPT_NO_MATCH		GRIB_CONCEPT_NO_MATCH
 /** Hash array no match */
-#define CODES_HASH_ARRAY_NO_MATCH GRIB_HASH_ARRAY_NO_MATCH
+#define CODES_HASH_ARRAY_NO_MATCH		GRIB_HASH_ARRAY_NO_MATCH
 /** Definitions files not found */
-#define CODES_NO_DEFINITIONS      GRIB_NO_DEFINITIONS
+#define CODES_NO_DEFINITIONS		GRIB_NO_DEFINITIONS
 /** Wrong type while packing */
-#define CODES_WRONG_TYPE          GRIB_WRONG_TYPE
+#define CODES_WRONG_TYPE		GRIB_WRONG_TYPE
 /** End of resource */
-#define CODES_END                 GRIB_END
+#define CODES_END		GRIB_END
 /** Unable to code a field without values */
-#define CODES_NO_VALUES           GRIB_NO_VALUES
+#define CODES_NO_VALUES		GRIB_NO_VALUES
 /** Grid description is wrong or inconsistent */
-#define CODES_WRONG_GRID          GRIB_WRONG_GRID
+#define CODES_WRONG_GRID		GRIB_WRONG_GRID
 /** End of index reached */
-#define CODES_END_OF_INDEX        GRIB_END_OF_INDEX
+#define CODES_END_OF_INDEX		GRIB_END_OF_INDEX
 /** Null index */
-#define CODES_NULL_INDEX          GRIB_NULL_INDEX
+#define CODES_NULL_INDEX		GRIB_NULL_INDEX
 /** End of resource reached when reading message */
-#define CODES_PREMATURE_END_OF_FILE  GRIB_PREMATURE_END_OF_FILE
+#define CODES_PREMATURE_END_OF_FILE		GRIB_PREMATURE_END_OF_FILE
 /** An internal array is too small */
-#define CODES_INTERNAL_ARRAY_TOO_SMALL  GRIB_INTERNAL_ARRAY_TOO_SMALL
+#define CODES_INTERNAL_ARRAY_TOO_SMALL		GRIB_INTERNAL_ARRAY_TOO_SMALL
 /** Message is too large for the current architecture */
-#define CODES_MESSAGE_TOO_LARGE   GRIB_MESSAGE_TOO_LARGE
+#define CODES_MESSAGE_TOO_LARGE		GRIB_MESSAGE_TOO_LARGE
 /** Constant field */
-#define CODES_CONSTANT_FIELD      GRIB_CONSTANT_FIELD
+#define CODES_CONSTANT_FIELD		GRIB_CONSTANT_FIELD
 /** Switch unable to find a matching case */
-#define CODES_SWITCH_NO_MATCH     GRIB_SWITCH_NO_MATCH
+#define CODES_SWITCH_NO_MATCH		GRIB_SWITCH_NO_MATCH
 /** Underflow */
-#define CODES_UNDERFLOW           GRIB_UNDERFLOW
+#define CODES_UNDERFLOW		GRIB_UNDERFLOW
 /** Message malformed */
-#define CODES_MESSAGE_MALFORMED   GRIB_MESSAGE_MALFORMED
+#define CODES_MESSAGE_MALFORMED		GRIB_MESSAGE_MALFORMED
 /** Index is corrupted */
-#define CODES_CORRUPTED_INDEX     GRIB_CORRUPTED_INDEX
+#define CODES_CORRUPTED_INDEX		GRIB_CORRUPTED_INDEX
 /** Invalid number of bits per value */
-#define CODES_INVALID_BPV         GRIB_INVALID_BPV
+#define CODES_INVALID_BPV		GRIB_INVALID_BPV
 /** Edition of two messages is different */
-#define CODES_DIFFERENT_EDITION   GRIB_DIFFERENT_EDITION
+#define CODES_DIFFERENT_EDITION		GRIB_DIFFERENT_EDITION
 /** Value is different */
-#define CODES_VALUE_DIFFERENT     GRIB_VALUE_DIFFERENT
+#define CODES_VALUE_DIFFERENT		GRIB_VALUE_DIFFERENT
 /** Invalid key value */
-#define CODES_INVALID_KEY_VALUE   GRIB_INVALID_KEY_VALUE
+#define CODES_INVALID_KEY_VALUE		GRIB_INVALID_KEY_VALUE
 /** String is smaller than requested */
-#define CODES_STRING_TOO_SMALL    GRIB_STRING_TOO_SMALL
+#define CODES_STRING_TOO_SMALL		GRIB_STRING_TOO_SMALL
 /** Wrong type conversion */
-#define CODES_WRONG_CONVERSION    GRIB_WRONG_CONVERSION
+#define CODES_WRONG_CONVERSION		GRIB_WRONG_CONVERSION
 /** Missing BUFR table entry for descriptor */
-#define CODES_MISSING_BUFR_ENTRY  GRIB_MISSING_BUFR_ENTRY
+#define CODES_MISSING_BUFR_ENTRY		GRIB_MISSING_BUFR_ENTRY
 /** Null pointer */
-#define CODES_NULL_POINTER        GRIB_NULL_POINTER
+#define CODES_NULL_POINTER		GRIB_NULL_POINTER
 /** Attribute is already present, cannot add */
-#define CODES_ATTRIBUTE_CLASH     GRIB_ATTRIBUTE_CLASH
+#define CODES_ATTRIBUTE_CLASH		GRIB_ATTRIBUTE_CLASH
 /** Too many attributes. Increase MAX_ACCESSOR_ATTRIBUTES */
-#define CODES_TOO_MANY_ATTRIBUTES GRIB_TOO_MANY_ATTRIBUTES
+#define CODES_TOO_MANY_ATTRIBUTES		GRIB_TOO_MANY_ATTRIBUTES
 /** Attribute not found. */
-#define CODES_ATTRIBUTE_NOT_FOUND GRIB_ATTRIBUTE_NOT_FOUND
+#define CODES_ATTRIBUTE_NOT_FOUND		GRIB_ATTRIBUTE_NOT_FOUND
 /** Edition not supported. */
-#define CODES_UNSUPPORTED_EDITION GRIB_UNSUPPORTED_EDITION
+#define CODES_UNSUPPORTED_EDITION		GRIB_UNSUPPORTED_EDITION
 /** Value out of coding range */
-#define CODES_OUT_OF_RANGE        GRIB_OUT_OF_RANGE
+#define CODES_OUT_OF_RANGE		GRIB_OUT_OF_RANGE
 /** Size of bitmap is incorrect */
-#define CODES_WRONG_BITMAP_SIZE   GRIB_WRONG_BITMAP_SIZE
-
+#define CODES_WRONG_BITMAP_SIZE		GRIB_WRONG_BITMAP_SIZE
 /*! @}*/
 #endif

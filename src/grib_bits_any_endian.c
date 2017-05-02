@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -21,23 +21,27 @@ typedef struct bits_all_one_t {
 
 static bits_all_one_t bits_all_one={0,0,{0,}};
 
-static void init_bits_all_one() {
+static void init_bits_all_one()
+{
     int size=sizeof(long)*8;
     long* v=0;
     unsigned long cmask=-1;
     bits_all_one.size=size;
     bits_all_one.inited=1;
     v=bits_all_one.v+size;
-    *v= cmask << size;
+    /*
+     * The result of a shift operation is undefined if the RHS is negative or
+     * greater than or equal to the number of bits in the (promoted) shift-expression
+     */
+    /* *v= cmask << size; */
+    *v = -1;
     while (size>0)  *(--v)= ~(cmask << --size);
-
 }
 
-int grib_is_all_bits_one(long val, long nbits) {
-
+int grib_is_all_bits_one(long val, long nbits)
+{
     if (!bits_all_one.inited) init_bits_all_one();
     return bits_all_one.v[nbits]==val;
-
 }
 
 int grib_encode_string(const unsigned char* bitStream, long *bitOffset, size_t numberOfCharacters,char* string)
@@ -290,4 +294,3 @@ int grib_encode_unsigned_longb(unsigned char* p, unsigned long val ,long *bitp, 
 #include "grib_bits_any_endian_simple.c"
 
 #endif
-

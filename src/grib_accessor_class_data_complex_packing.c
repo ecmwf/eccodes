@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "grib_optimize_decimal_factor.h"
 #include <math.h>
 /*
    This is used by make_class.pl
@@ -70,6 +71,7 @@ typedef struct grib_accessor_data_complex_packing {
 	const char*  reference_value;
 	const char*  binary_scale_factor;
 	const char*  decimal_scale_factor;
+	const char*  optimize_scaling_factor;
 /* Members defined in data_complex_packing */
 	const char*  GRIBEX_sh_bug_present;
 	const char*  ieee_floats;
@@ -219,8 +221,7 @@ static int value_count(grib_accessor* a,long* count)
     return ret;
 }
 
-
-static int  unpack_double(grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
     grib_accessor_data_complex_packing* self =  (grib_accessor_data_complex_packing*)a;
     grib_handle* gh = grib_handle_of_accessor(a);
@@ -393,8 +394,8 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
         {
             for(hcount=0;hcount<sub_k+1;hcount++)
             {
-                val[i++] =  decode_float(grib_decode_unsigned_long(hres,&hpos,32))*d;
-                val[i++] =  decode_float(grib_decode_unsigned_long(hres,&hpos,32))*d;
+                val[i++] =  decode_float(grib_decode_unsigned_long(hres,&hpos,32));
+                val[i++] =  decode_float(grib_decode_unsigned_long(hres,&hpos,32));
 
                 if (GRIBEX_sh_bug_present && hcount==sub_k){
                     /*  bug in ecmwf data, last row (K+1)is scaled but should not */
@@ -418,9 +419,9 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
         (void)pval;   /* suppress gcc warning */
         for(lcount=hcount; lcount < maxv ; lcount++)
         {
-            val[i++] =  (double) ((grib_decode_unsigned_long(lres, &lpos,
+            val[i++] =  d * (double) ((grib_decode_unsigned_long(lres, &lpos,
                     bits_per_value)*s)+reference_value)*scals[lup];
-            val[i++] =  (double) ((grib_decode_unsigned_long(lres, &lpos,
+            val[i++] =  d * (double) ((grib_decode_unsigned_long(lres, &lpos,
                     bits_per_value)*s)+reference_value)*scals[lup];
             lup++;
         }
@@ -434,16 +435,10 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     Assert(*len >= i);
     *len = i;
 
-    if(d != 1) {
-        for(i=0;i<*len;i++)
-            val[i++] *= d;
-    }
-
     grib_context_free(a->context,scals);
 
     return ret;
 }
-
 
 #define MAXVAL(a,b) a>b?a:b
 
@@ -550,9 +545,8 @@ static double calculate_pfactor(grib_context *ctx,const double* spectralField, l
     return pFactor;
 }
 
-
-static int pack_double(grib_accessor* a, const double* val, size_t *len) {
-
+static int pack_double(grib_accessor* a, const double* val, size_t *len)
+{
     grib_accessor_data_complex_packing* self =  (grib_accessor_data_complex_packing*)a;
     grib_handle* gh = grib_handle_of_accessor(a);
 
@@ -586,6 +580,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len) {
     double reference_value      = 0;
     long   binary_scale_factor         = 0;
     long   decimal_scale_factor = 0;
+    long   optimize_scaling_factor = 0;
     long   laplacianOperatorIsSet = 0;
 
     double laplacianOperator = 0;
@@ -615,6 +610,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len) {
     if((ret = grib_get_long_internal(gh,self->decimal_scale_factor,&decimal_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
+    if((ret = grib_get_long_internal(gh,self->optimize_scaling_factor,&optimize_scaling_factor)) != GRIB_SUCCESS)
+        return ret;
+
     if((ret = grib_get_long_internal(gh,self->GRIBEX_sh_bug_present,&GRIBEX_sh_bug_present)) != GRIB_SUCCESS)
         return ret;
 
@@ -641,7 +639,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len) {
 
     self->dirty=1;
 
-
     switch (ieee_floats) {
     case 0:
         encode_float =grib_ibm_to_long;
@@ -663,7 +660,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len) {
     Assert (pen_j == pen_k); Assert( pen_j == pen_m);
 
     n_vals = (pen_j+1)*(pen_j+2);
-    d = grib_power(decimal_scale_factor,10) ;
 
     if(*len != n_vals){
         grib_context_log(a->context,GRIB_LOG_ERROR,"COMPLEX_PACKING : wrong number of values, expected %d - got %d",n_vals,*len);
@@ -672,6 +668,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len) {
 
     if (pen_j == sub_j) {
         double* values;
+        d = grib_power(decimal_scale_factor,10) ;
         if (d) {
             values=(double*)grib_context_malloc_clear(a->context,sizeof(double)*n_vals);
             for (i=0;i<n_vals;i++) values[i]=val[i]*d;
@@ -694,10 +691,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len) {
         grib_get_double_internal(gh,self->laplacianOperator,&laplacianOperator);
     }
 
-    /*
-   printf("PACKING LAPLACE set=%ld value=%.20f\n",laplacianOperatorIsSet,laplacianOperator);
-     */
-
     hsize = 4*(sub_k+1)*(sub_k+2);
     lsize = ((n_vals - ((sub_k+1)*(sub_k+2)))*bits_per_value)/8;
 
@@ -718,7 +711,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len) {
     scals[0] =0;
     for(i=1;i<maxv;i++)
         scals[i] = ((double)pow(i*(i+1),laplacianOperator));
-
 
     i=0;
 
@@ -743,7 +735,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len) {
 
         for(lcount=hcount; lcount < maxv ; lcount++)
         {
-            current_val = ((val[i++]*d) * scals[lup]);
+            current_val = ((val[i++]) * scals[lup]);
             if(mixmax_unset == 0){
                 max = current_val;
                 min = current_val;
@@ -753,7 +745,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len) {
             if(current_val > max) max = current_val;
             if(current_val < min) min = current_val;
 
-            current_val = ((val[i++]*d) * scals[lup]);
+            current_val = ((val[i++]) * scals[lup]);
             if(current_val > max) max = current_val;
             if(current_val < min) min = current_val;
 
@@ -764,27 +756,43 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len) {
         mmax++;
     }
 
-    if (grib_get_nearest_smaller_value(gh,self->reference_value,min,&reference_value)
-            !=GRIB_SUCCESS) {
-        grib_context_log(a->context,GRIB_LOG_ERROR,
-                "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
-        return GRIB_INTERNAL_ERROR;
+    if (optimize_scaling_factor)
+    {
+        ret = grib_optimize_decimal_factor (a, self->reference_value,
+                max, min, bits_per_value, 0, 1,
+                &decimal_scale_factor,
+                &binary_scale_factor,
+                &reference_value);
+        if (ret !=GRIB_SUCCESS) {
+            grib_context_log(gh->context,GRIB_LOG_ERROR,
+                    "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
+            return GRIB_INTERNAL_ERROR;
+        }
+        d = grib_power(+decimal_scale_factor,10);
     }
-    binary_scale_factor = grib_get_binary_scale_fact(max,reference_value,bits_per_value,&ret);
+    else
+    {
+        d = grib_power(+decimal_scale_factor,10);
+        if (grib_get_nearest_smaller_value(gh,self->reference_value,d*min,&reference_value)
+                !=GRIB_SUCCESS) {
+            grib_context_log(gh->context,GRIB_LOG_ERROR,
+                    "unable to find nearest_smaller_value of %g for %s",d*min,self->reference_value);
+            return GRIB_INTERNAL_ERROR;
+        }
+        binary_scale_factor = grib_get_binary_scale_fact(d*max,reference_value,bits_per_value,&ret);
 
-    if (ret==GRIB_UNDERFLOW) {
-        d=0;
-        binary_scale_factor = 0;
-        reference_value=0;
-    } else {
-        if (ret!=GRIB_SUCCESS) {
-            grib_context_log(a->context,GRIB_LOG_ERROR,"COMPLEX_PACKING : Cannot compute binary_scale_factor");
-            return ret;
+        if (ret==GRIB_UNDERFLOW) {
+            d=0;
+            binary_scale_factor = 0;
+            reference_value=0;
+        } else {
+            if (ret!=GRIB_SUCCESS) {
+                grib_context_log(a->context,GRIB_LOG_ERROR,"COMPLEX_PACKING : Cannot compute binary_scale_factor");
+                return ret;
+            }
         }
     }
-    s = grib_power(-binary_scale_factor,2);
-
-    /* printf("D : %.30f\n",d); */
+    s = grib_power(- binary_scale_factor, 2);
 
     i=0;
 
@@ -812,9 +820,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len) {
 
                     /* _test(val[i]*d,0); */
 
-                    grib_encode_unsigned_long(hres, encode_float(val[i++]*d) , &hpos, 32);
+                    grib_encode_unsigned_long(hres, encode_float(val[i++]) , &hpos, 32);
                     /* _test(val[i]*d,0); */
-                    grib_encode_unsigned_long(hres, encode_float(val[i++]*d) , &hpos, 32);
+                    grib_encode_unsigned_long(hres, encode_float(val[i++]) , &hpos, 32);
                 }
                 lup++;
             }
@@ -887,11 +895,12 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len) {
 
     if((ret = grib_set_long_internal(gh,self->binary_scale_factor, binary_scale_factor)) != GRIB_SUCCESS)
         return ret;
+    if((ret = grib_set_long_internal(gh,self->decimal_scale_factor,decimal_scale_factor)) != GRIB_SUCCESS)
+        return ret;
 
     grib_buffer_replace(a, buf, buflen,1,1);
     grib_context_free(a->context,buf);
     grib_context_free(a->context,scals);
 
     return ret;
-
 }

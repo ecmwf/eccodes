@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -64,7 +64,9 @@ IDENT1     [_A-Za-z]+[_0-9A-Za-z]*
 IDENT2     "\/"{IDENT1}"\="({NSIGNED}|{FLOAT1}|{FLOAT2}|{FLOAT3})"\/"{IDENT1}
 IDENT3     "\#"{NUMB}"\#"{IDENT1}
 IDENT4     {NUMB}+{IDENT1}
-IDENT     {IDENT1}|{IDENT2}|{IDENT3}|{IDENT4}
+IDENT_ATTR  "->"{IDENT1}
+IDENT5    ({IDENT1}|{IDENT3}|{IDENT4})({IDENT_ATTR})+
+IDENT     {IDENT1}|{IDENT2}|{IDENT3}|{IDENT4}|{IDENT5}
 
 %%
 

@@ -35,6 +35,7 @@ list( APPEND test_bins
       grib_copy_message
       grib_ensemble_index
       get_product_kind
+      bufr_copy_data
       bufr_attributes
       bufr_clone
       bufr_expanded
@@ -69,7 +70,9 @@ list( APPEND tests
    grib_precision
    grib_clone
    grib_copy_message
+   grib_ensemble_index
    grib_set_pv
+   grib_set_data
    grib_set_bitmap
    grib_list
    grib_get_data
@@ -77,6 +80,7 @@ list( APPEND tests
    set_missing
    sections_copy
    bufr_attributes
+   bufr_copy_data
    bufr_clone
    bufr_expanded
    bufr_get_keys
@@ -101,16 +105,20 @@ endforeach()
 ########################################################################
 # Tests which are conditional
 if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
-    # This one only for POSIX threads
-    ecbuild_add_executable( TARGET    c_grib_pthreads
-                            NOINSTALL
-                            SOURCES   grib_pthreads.c
-                            LIBS      eccodes
-    )
-    ecbuild_add_test( TARGET eccodes_c_grib_pthreads
-                      TYPE       SCRIPT
-                      COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/grib_pthreads.sh
-    )
+    # For POSIX threads
+    LIST(APPEND pthread_tests grib_pthreads bufr_pthreads)
+    foreach( test ${pthread_tests} )
+        ecbuild_add_executable( TARGET    c_${test}
+                                NOINSTALL
+                                SOURCES   ${test}.c
+                                LIBS      eccodes
+        )
+        ecbuild_add_test( TARGET       eccodes_c_${test}
+                          TYPE         SCRIPT
+                          COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                          TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs
+        )
+    endforeach()
 endif()
 
 

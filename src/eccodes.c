@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,7 +9,6 @@
  */
 
 #include "eccodes.h"
-#include <assert.h>
 
 /* Generic functions */
 /******************************************************************************/
@@ -28,6 +27,10 @@ long codes_get_api_version(void)
 const char* codes_get_git_sha1()
 {
     return grib_get_git_sha1();
+}
+const char* codes_get_package_name(void)
+{
+    return grib_get_package_name();
 }
 void codes_print_api_version(FILE* out)
 {
@@ -61,7 +64,7 @@ void codes_check(const char* call,const char*  file,int line,int e,const char* m
 
 /* Fieldsets */
 /******************************************************************************/
-grib_fieldset *codes_fieldset_new_from_files(grib_context *c, char *filenames[], int nfiles, char **keys, int nkeys, char *where_string, char *order_by_string, int *err)
+grib_fieldset *codes_fieldset_new_from_files(grib_context *c, char *filenames[], int nfiles, char **keys, int nkeys, const char *where_string, const char *order_by_string, int *err)
 {
     return grib_fieldset_new_from_files(c, filenames, nfiles, keys, nkeys, where_string, order_by_string, err);
 }
@@ -151,7 +154,7 @@ int codes_write_message(grib_handle* h,const char* file,const char* mode)
 {
     return grib_write_message(h,file,mode);
 }
-grib_handle* codes_handle_new_from_message(grib_context* c, void* data, size_t data_len)
+grib_handle* codes_handle_new_from_message(grib_context* c, const void* data, size_t data_len)
 {
     return grib_handle_new_from_message(c,data,data_len);
 }
@@ -175,7 +178,7 @@ grib_handle* codes_handle_new_from_partial_message_copy(grib_context* c, const v
 {
     return grib_handle_new_from_partial_message_copy(c,data,size);
 }
-grib_handle* codes_handle_new_from_partial_message(grib_context* c,void* data, size_t buflen)
+grib_handle* codes_handle_new_from_partial_message(grib_context* c, const void* data, size_t buflen)
 {
     return grib_handle_new_from_partial_message(c,data,buflen);
 }
@@ -389,6 +392,12 @@ int codes_set_long_array(grib_handle* h, const char* key, const long* vals, size
 {
     return grib_set_long_array(h,key,vals,length);
 }
+
+int codes_set_string_array(grib_handle *h, const char *key, const char **vals, size_t length)
+{
+    return grib_set_string_array(h, key, vals, length);
+}
+
 int codes_set_values(grib_handle* h,grib_values*  grib_values , size_t arg_count)
 {
     return grib_set_values(h,grib_values,arg_count);

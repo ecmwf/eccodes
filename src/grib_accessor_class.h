@@ -21,6 +21,7 @@ extern grib_accessor_class* grib_accessor_class_bufr_extract_datetime_subsets;
 extern grib_accessor_class* grib_accessor_class_bufr_extract_subsets;
 extern grib_accessor_class* grib_accessor_class_bufr_group;
 extern grib_accessor_class* grib_accessor_class_bufr_has_delayed_replication;
+extern grib_accessor_class* grib_accessor_class_bufr_simple_thinning;
 extern grib_accessor_class* grib_accessor_class_bufr_string_values;
 extern grib_accessor_class* grib_accessor_class_bufrdc_expanded_descriptors;
 extern grib_accessor_class* grib_accessor_class_bytes;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,10 +15,6 @@
 
 #ifndef grib_api_H
 #define grib_api_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,6 +38,10 @@ extern "C" {
 typedef enum ProductKind {PRODUCT_ANY, PRODUCT_GRIB, PRODUCT_BUFR, PRODUCT_METAR, PRODUCT_GTS, PRODUCT_TAF} ProductKind;
 
 #include "eccodes_version.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* sections */
 #define GRIB_SECTION_PRODUCT 	(1<<0)
@@ -152,6 +152,11 @@ Log mode for information for processing information
 \see grib_keys_iterator_new */
 #define GRIB_KEYS_ITERATOR_SKIP_FUNCTION           (1<<6)
 
+/*! only keys present in the dump
+\ingroup keys_iterator
+\see grib_keys_iterator_new */
+#define GRIB_KEYS_ITERATOR_DUMP_ONLY           (1<<7)
+
 typedef struct grib_key_value_list grib_key_value_list;
 
 typedef struct grib_values grib_values;
@@ -204,7 +209,7 @@ typedef struct grib_points  grib_points;
     \ingroup keys_iterator
 */
 typedef struct grib_keys_iterator    grib_keys_iterator;
-
+typedef struct bufr_keys_iterator    bufr_keys_iterator;
 
 typedef struct grib_fieldset grib_fieldset;
 
@@ -220,7 +225,7 @@ typedef struct grib_viarray grib_viarray;
 typedef struct bufr_descriptor bufr_descriptor;
 typedef struct bufr_descriptors_array bufr_descriptors_array;
 
-grib_fieldset *grib_fieldset_new_from_files(grib_context *c, char *filenames[], int nfiles, char **keys, int nkeys, char *where_string, char *order_by_string, int *err);
+grib_fieldset *grib_fieldset_new_from_files(grib_context *c, char *filenames[], int nfiles, char **keys, int nkeys, const char *where_string, const char *order_by_string, int *err);
 void grib_fieldset_delete(grib_fieldset* set);
 void grib_fieldset_rewind(grib_fieldset* set);
 int grib_fieldset_apply_order_by(grib_fieldset* set,const char* order_by_string);
@@ -768,7 +773,7 @@ int grib_get_double       (grib_handle* h, const char* key, double* value);
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param i           : zero based index
+* @param i           : zero-based index
 * @param value       : the address of a double where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
@@ -779,12 +784,12 @@ int grib_get_double_element(grib_handle* h, const char* key, int i, double* valu
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param i           : zero based array of indexes
+* @param i           : zero-based array of indexes
 * @param size        : size of the i and value arrays
-* @param value       : the address of a double where the data will be retrieved
+* @param value       : the double array for the data values
 * @return            0 if OK, integer value on error
 */
-int grib_get_double_elements(grib_handle* h, const char* key, int* i, long size,double* value);
+int grib_get_double_elements(grib_handle* h, const char* key, int* i, long size, double* value);
 
 /**
 *  Get a string value from a key, if several keys of the same name are present, the last one is returned
@@ -796,7 +801,7 @@ int grib_get_double_elements(grib_handle* h, const char* key, int* i, long size,
 * @param length      : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
 * @return            0 if OK, integer value on error
 */
-int grib_get_string       (grib_handle* h, const char* key, char*   mesg,             size_t *length);
+int grib_get_string(grib_handle* h, const char* key, char* mesg, size_t *length);
 
 int grib_get_string_array(grib_handle* h, const char* name, char** val, size_t *length);
 
@@ -924,6 +929,18 @@ int grib_set_force_double_array(grib_handle* h, const char* key, const double* v
 * @return            0 if OK, integer value on error
 */
 int grib_set_long_array   (grib_handle* h, const char*  key , const long*          vals   , size_t length);
+
+/**
+*  Set a string array from a key. If several keys of the same name are present, the last one is set
+*  @see  grib_get_string_array
+*
+* @param h           : the handle to set the data to
+* @param key         : the key to be searched
+* @param vals        : the address of a string array where the data will be read
+* @param length      : a size_t that contains the length of the array on input
+* @return            0 if OK, integer value on error
+*/
+int grib_set_string_array(grib_handle* h, const char *key, const char **vals, size_t length);
 /*! @} */
 
 
@@ -932,7 +949,7 @@ int grib_set_long_array   (grib_handle* h, const char*  key , const long*       
 *
 * @param h            : the handle to be printed
 * @param out          : output file handle
-* @param mode         : available dump modes are: debug wmo c_code
+* @param mode         : Examples of available dump modes: debug wmo
 * @param option_flags : all the GRIB_DUMP_FLAG_x flags can be used
 * @param arg          : used to provide a format to output data (experimental)
 */
@@ -1209,6 +1226,13 @@ long grib_get_api_version(void);
 const char* grib_get_git_sha1(void);
 
 /**
+*  Get the package name
+*
+*  @return character string with package name
+*/
+const char* grib_get_package_name(void);
+
+/**
 *  Prints the API version
 *
 *
@@ -1230,31 +1254,36 @@ attributes or by the namespace they belong to.
 *                       and namespace
 */
 grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space);
+bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h, unsigned long filter_flags);
+bufr_keys_iterator* codes_bufr_data_section_keys_iterator_new(grib_handle* h);
 
 /*! Step to the next iterator.
 *  @param kiter         : valid grib_keys_iterator
 *  @return              1 if next iterator exists, 0 if no more elements to iterate on
 */
-int grib_keys_iterator_next(grib_keys_iterator *kiter);
-
+int grib_keys_iterator_next(grib_keys_iterator* kiter);
+int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter);
 
 /*! get the key name from the iterator
 *  @param kiter         : valid grib_keys_iterator
 *  @return              key name
 */
 const char* grib_keys_iterator_get_name(grib_keys_iterator *kiter);
+char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter);
 
 /*! Delete the iterator.
 *  @param kiter         : valid grib_keys_iterator
 *  @return              0 if OK, integer value on error
 */
-int grib_keys_iterator_delete( grib_keys_iterator* kiter);
+int grib_keys_iterator_delete(grib_keys_iterator* kiter);
+int codes_bufr_keys_iterator_delete(bufr_keys_iterator* kiter);
 
 /*! Rewind the iterator.
 *  @param kiter         : valid grib_keys_iterator
 *  @return              0 if OK, integer value on error
 */
 int grib_keys_iterator_rewind(grib_keys_iterator* kiter);
+int codes_bufr_keys_iterator_rewind(bufr_keys_iterator* kiter);
 
 int grib_keys_iterator_set_flags(grib_keys_iterator *kiter,unsigned long flags);
 
@@ -1262,6 +1291,7 @@ int grib_keys_iterator_get_long(grib_keys_iterator *kiter, long *v, size_t *len)
 int grib_keys_iterator_get_double(grib_keys_iterator *kiter, double *v, size_t *len);
 int grib_keys_iterator_get_string(grib_keys_iterator *kiter, char *v, size_t *len);
 int grib_keys_iterator_get_bytes(grib_keys_iterator *kiter, unsigned char *v, size_t *len);
+int codes_copy_key(grib_handle* h1,grib_handle* h2,const char* key,int type);
 
 /* @} */
 
@@ -1285,7 +1315,7 @@ void grib_check(const char* call,const char*  file,int line,int e,const char* ms
 
 int grib_set_values(grib_handle* h,grib_values*  grib_values , size_t arg_count);
 grib_handle* grib_handle_new_from_partial_message_copy(grib_context* c, const void* data, size_t size);
-grib_handle* grib_handle_new_from_partial_message(grib_context* c,void* data, size_t buflen);
+grib_handle* grib_handle_new_from_partial_message(grib_context* c, const void* data, size_t buflen);
 int grib_is_missing(grib_handle* h, const char* key, int* err);
 int grib_is_defined(grib_handle* h, const char* key);
 int grib_set_missing(grib_handle* h, const char* key);
@@ -1506,6 +1536,9 @@ grib_handle *grib_util_set_spec2(grib_handle *h,
 /* --------------------------------------- */
 
 
+typedef void (*codes_assertion_failed_proc)(const char* message);
+void codes_set_codes_assertion_failed_proc(codes_assertion_failed_proc proc);
+
 #ifdef __cplusplus
 }
 #endif
@@ -1551,7 +1584,7 @@ Error codes returned by the grib_api functions.
 #define GRIB_NO_MORE_IN_SET		-15
 /** Problem with calculation of geographic attributes */
 #define GRIB_GEOCALCULUS_PROBLEM		-16
-/** Out of memory */
+/** Memory allocation error */
 #define GRIB_OUT_OF_MEMORY		-17
 /** Value is read only */
 #define GRIB_READ_ONLY		-18

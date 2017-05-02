@@ -5122,6 +5122,45 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_codes_c_bufr_keys_iterator_new(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  int *arg1 = (int *) 0 ;
+  int *arg2 = (int *) 0 ;
+  int temp1 ;
+  int res1 = 0 ;
+  int temp2 ;
+  int res2 = SWIG_TMPOBJ ;
+  PyObject * obj0 = 0 ;
+  int result;
+  
+  arg2 = &temp2;
+  if (!PyArg_ParseTuple(args,(char *)"O:codes_c_bufr_keys_iterator_new",&obj0)) SWIG_fail;
+  if (!(SWIG_IsOK((res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1),SWIGTYPE_p_int,0))))) {
+    int val; 
+    int ecode = SWIG_AsVal_int(obj0, &val);
+    if (!SWIG_IsOK(ecode)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "codes_c_bufr_keys_iterator_new" "', argument " "1"" of type '" "int""'");
+    }
+    temp1 = (int)(val);
+    arg1 = &temp1;
+    res1 = SWIG_AddTmpMask(ecode);
+  }
+  result = (int)codes_c_bufr_keys_iterator_new(arg1,arg2);
+  resultobj = SWIG_From_int((int)(result));
+  if (SWIG_IsTmpObj(res2)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg2)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res2) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_int, new_flags));
+  }
+  if (SWIG_IsNewObj(res1)) free((char*)arg1);
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res1)) free((char*)arg1);
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_grib_c_grib_new_from_samples(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int *arg1 = (int *) 0 ;
@@ -6157,6 +6196,35 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_codes_c_bufr_keys_iterator_next(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  int *arg1 = (int *) 0 ;
+  int temp1 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:codes_c_bufr_keys_iterator_next",&obj0)) SWIG_fail;
+  if (!(SWIG_IsOK((res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1),SWIGTYPE_p_int,0))))) {
+    int val; 
+    int ecode = SWIG_AsVal_int(obj0, &val);
+    if (!SWIG_IsOK(ecode)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "codes_c_bufr_keys_iterator_next" "', argument " "1"" of type '" "int""'");
+    }
+    temp1 = (int)(val);
+    arg1 = &temp1;
+    res1 = SWIG_AddTmpMask(ecode);
+  }
+  result = (int)codes_c_bufr_keys_iterator_next(arg1);
+  resultobj = SWIG_From_int((int)(result));
+  if (SWIG_IsNewObj(res1)) free((char*)arg1);
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res1)) free((char*)arg1);
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_grib_c_keys_iterator_delete(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int *arg1 = (int *) 0 ;
@@ -6177,6 +6245,35 @@ SWIGINTERN PyObject *_wrap_grib_c_keys_iterator_delete(PyObject *SWIGUNUSEDPARM(
     res1 = SWIG_AddTmpMask(ecode);
   }
   result = (int)grib_c_keys_iterator_delete(arg1);
+  resultobj = SWIG_From_int((int)(result));
+  if (SWIG_IsNewObj(res1)) free((char*)arg1);
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res1)) free((char*)arg1);
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_codes_c_bufr_keys_iterator_delete(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  int *arg1 = (int *) 0 ;
+  int temp1 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:codes_c_bufr_keys_iterator_delete",&obj0)) SWIG_fail;
+  if (!(SWIG_IsOK((res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1),SWIGTYPE_p_int,0))))) {
+    int val; 
+    int ecode = SWIG_AsVal_int(obj0, &val);
+    if (!SWIG_IsOK(ecode)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "codes_c_bufr_keys_iterator_delete" "', argument " "1"" of type '" "int""'");
+    }
+    temp1 = (int)(val);
+    arg1 = &temp1;
+    res1 = SWIG_AddTmpMask(ecode);
+  }
+  result = (int)codes_c_bufr_keys_iterator_delete(arg1);
   resultobj = SWIG_From_int((int)(result));
   if (SWIG_IsNewObj(res1)) free((char*)arg1);
   return resultobj;
@@ -6389,6 +6486,84 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_codes_c_bufr_keys_iterator_rewind(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  int *arg1 = (int *) 0 ;
+  int temp1 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:codes_c_bufr_keys_iterator_rewind",&obj0)) SWIG_fail;
+  if (!(SWIG_IsOK((res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1),SWIGTYPE_p_int,0))))) {
+    int val; 
+    int ecode = SWIG_AsVal_int(obj0, &val);
+    if (!SWIG_IsOK(ecode)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "codes_c_bufr_keys_iterator_rewind" "', argument " "1"" of type '" "int""'");
+    }
+    temp1 = (int)(val);
+    arg1 = &temp1;
+    res1 = SWIG_AddTmpMask(ecode);
+  }
+  result = (int)codes_c_bufr_keys_iterator_rewind(arg1);
+  resultobj = SWIG_From_int((int)(result));
+  if (SWIG_IsNewObj(res1)) free((char*)arg1);
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res1)) free((char*)arg1);
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_grib_c_bufr_copy_data(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  int *arg1 = (int *) 0 ;
+  int *arg2 = (int *) 0 ;
+  int temp1 ;
+  int res1 = 0 ;
+  int temp2 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:grib_c_bufr_copy_data",&obj0,&obj1)) SWIG_fail;
+  if (!(SWIG_IsOK((res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1),SWIGTYPE_p_int,0))))) {
+    int val; 
+    int ecode = SWIG_AsVal_int(obj0, &val);
+    if (!SWIG_IsOK(ecode)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "grib_c_bufr_copy_data" "', argument " "1"" of type '" "int""'");
+    }
+    temp1 = (int)(val);
+    arg1 = &temp1;
+    res1 = SWIG_AddTmpMask(ecode);
+  }
+  if (!(SWIG_IsOK((res2 = SWIG_ConvertPtr(obj1,SWIG_as_voidptrptr(&arg2),SWIGTYPE_p_int,0))))) {
+    int val; 
+    int ecode = SWIG_AsVal_int(obj1, &val);
+    if (!SWIG_IsOK(ecode)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "grib_c_bufr_copy_data" "', argument " "2"" of type '" "int""'");
+    }
+    temp2 = (int)(val);
+    arg2 = &temp2;
+    res2 = SWIG_AddTmpMask(ecode);
+  }
+  result = (int)grib_c_bufr_copy_data(arg1,arg2);
+  resultobj = SWIG_From_int((int)(result));
+  if (SWIG_IsTmpObj(res2)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg2)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res2) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_int, new_flags));
+  }
+  if (SWIG_IsNewObj(res1)) free((char*)arg1);
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res1)) free((char*)arg1);
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_grib_c_keys_iterator_get_name(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int *arg1 = (int *) 0 ;
@@ -6421,6 +6596,49 @@ SWIGINTERN PyObject *_wrap_grib_c_keys_iterator_get_name(PyObject *SWIGUNUSEDPAR
   } 
   arg3 = (int)(val3);
   result = (int)grib_c_keys_iterator_get_name(arg1,arg2,arg3);
+  resultobj = SWIG_From_int((int)(result));
+  arg2[1024] = 0;  
+  resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_FromCharPtr(arg2));
+  if (SWIG_IsNewObj(res1)) free((char*)arg1);
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res1)) free((char*)arg1);
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_codes_c_bufr_keys_iterator_get_name(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  int *arg1 = (int *) 0 ;
+  char *arg2 = (char *) 0 ;
+  int arg3 ;
+  int temp1 ;
+  int res1 = 0 ;
+  char temp2[1024+1] ;
+  int val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  int result;
+  
+  arg2 = (char *) temp2;
+  if (!PyArg_ParseTuple(args,(char *)"OO:codes_c_bufr_keys_iterator_get_name",&obj0,&obj1)) SWIG_fail;
+  if (!(SWIG_IsOK((res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1),SWIGTYPE_p_int,0))))) {
+    int val; 
+    int ecode = SWIG_AsVal_int(obj0, &val);
+    if (!SWIG_IsOK(ecode)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "codes_c_bufr_keys_iterator_get_name" "', argument " "1"" of type '" "int""'");
+    }
+    temp1 = (int)(val);
+    arg1 = &temp1;
+    res1 = SWIG_AddTmpMask(ecode);
+  }
+  ecode3 = SWIG_AsVal_int(obj1, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "codes_c_bufr_keys_iterator_get_name" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = (int)(val3);
+  result = (int)codes_c_bufr_keys_iterator_get_name(arg1,arg2,arg3);
   resultobj = SWIG_From_int((int)(result));
   arg2[1024] = 0;  
   resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_FromCharPtr(arg2));
@@ -8838,6 +9056,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"grib_c_new_metar_from_file", _wrap_grib_c_new_metar_from_file, METH_VARARGS, NULL},
 	 { (char *)"grib_c_iterator_new", _wrap_grib_c_iterator_new, METH_VARARGS, NULL},
 	 { (char *)"grib_c_keys_iterator_new", _wrap_grib_c_keys_iterator_new, METH_VARARGS, NULL},
+	 { (char *)"codes_c_bufr_keys_iterator_new", _wrap_codes_c_bufr_keys_iterator_new, METH_VARARGS, NULL},
 	 { (char *)"grib_c_grib_new_from_samples", _wrap_grib_c_grib_new_from_samples, METH_VARARGS, NULL},
 	 { (char *)"grib_c_bufr_new_from_samples", _wrap_grib_c_bufr_new_from_samples, METH_VARARGS, NULL},
 	 { (char *)"grib_c_index_new_from_file", _wrap_grib_c_index_new_from_file, METH_VARARGS, NULL},
@@ -8865,7 +9084,9 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"grib_c_gribex_mode_on", _wrap_grib_c_gribex_mode_on, METH_VARARGS, NULL},
 	 { (char *)"grib_c_gribex_mode_off", _wrap_grib_c_gribex_mode_off, METH_VARARGS, NULL},
 	 { (char *)"grib_c_keys_iterator_next", _wrap_grib_c_keys_iterator_next, METH_VARARGS, NULL},
+	 { (char *)"codes_c_bufr_keys_iterator_next", _wrap_codes_c_bufr_keys_iterator_next, METH_VARARGS, NULL},
 	 { (char *)"grib_c_keys_iterator_delete", _wrap_grib_c_keys_iterator_delete, METH_VARARGS, NULL},
+	 { (char *)"codes_c_bufr_keys_iterator_delete", _wrap_codes_c_bufr_keys_iterator_delete, METH_VARARGS, NULL},
 	 { (char *)"grib_c_skip_computed", _wrap_grib_c_skip_computed, METH_VARARGS, NULL},
 	 { (char *)"grib_c_skip_coded", _wrap_grib_c_skip_coded, METH_VARARGS, NULL},
 	 { (char *)"grib_c_skip_edition_specific", _wrap_grib_c_skip_edition_specific, METH_VARARGS, NULL},
@@ -8873,7 +9094,10 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"grib_c_skip_read_only", _wrap_grib_c_skip_read_only, METH_VARARGS, NULL},
 	 { (char *)"grib_c_skip_function", _wrap_grib_c_skip_function, METH_VARARGS, NULL},
 	 { (char *)"grib_c_keys_iterator_rewind", _wrap_grib_c_keys_iterator_rewind, METH_VARARGS, NULL},
+	 { (char *)"codes_c_bufr_keys_iterator_rewind", _wrap_codes_c_bufr_keys_iterator_rewind, METH_VARARGS, NULL},
+	 { (char *)"grib_c_bufr_copy_data", _wrap_grib_c_bufr_copy_data, METH_VARARGS, NULL},
 	 { (char *)"grib_c_keys_iterator_get_name", _wrap_grib_c_keys_iterator_get_name, METH_VARARGS, NULL},
+	 { (char *)"codes_c_bufr_keys_iterator_get_name", _wrap_codes_c_bufr_keys_iterator_get_name, METH_VARARGS, NULL},
 	 { (char *)"grib_c_index_get_size_long", _wrap_grib_c_index_get_size_long, METH_VARARGS, NULL},
 	 { (char *)"grib_c_index_get_long", _wrap_grib_c_index_get_long, METH_VARARGS, NULL},
 	 { (char *)"grib_c_index_get_real8", _wrap_grib_c_index_get_real8, METH_VARARGS, NULL},

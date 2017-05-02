@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -24,73 +24,80 @@ grib_handle *hh=0;
 grib_values key_values[MAX_KEY_VALUES];
 int key_values_size=MAX_KEY_VALUES;
 
-char* grib_tool_description="Merge two fields with identical parameters and different geografical area";
+char* grib_tool_description="Merge two fields with identical parameters and different geographical area";
 char* grib_tool_name="grib_merge";
 char* grib_tool_usage="[options] file file ... output_file";
 
 grib_option grib_options[]={
-/*  {id, args, help}, on, command_line, value */
-    {"f",0,0,0,1,0},
-    {"c",0,0,1,0,0},
-    {"r",0,0,0,1,0},
-    {"q",0,0,1,0,0},
-    {"p:",0,0,1,1,0},
-    {"P:",0,0,0,1,0},
-    {"B:",0,0,1,1,"md5Product"},
-    {"V",0,0,0,1,0},
-    {"W:",0,0,0,1,0},
-    {"M",0,0,0,1,0},
-    {"U",0,0,1,0,0},
-    {"H",0,0,1,0,0},
-    {"T:",0,0,1,0,"G"},
-    {"S",0,0,1,0,0},
-    {"g",0,0,0,1,0},
-    {"G",0,0,0,1,0},
-    {"7",0,0,0,1,0},
-    {"v",0,0,0,1,0}
+        /*  {id, args, help}, on, command_line, value */
+        {"f",0,0,0,1,0},
+        {"c",0,0,1,0,0},
+        {"r",0,0,0,1,0},
+        {"q",0,0,1,0,0},
+        {"p:",0,0,1,1,0},
+        {"P:",0,0,0,1,0},
+        {"B:",0,0,1,1,"md5Product"},
+        {"V",0,0,0,1,0},
+        {"W:",0,0,0,1,0},
+        {"M",0,0,0,1,0},
+        {"U",0,0,1,0,0},
+        {"H",0,0,1,0,0},
+        {"T:",0,0,1,0,"G"},
+        {"S",0,0,1,0,0},
+        {"g",0,0,0,1,0},
+        {"G",0,0,0,1,0},
+        {"7",0,0,0,1,0},
+        {"v",0,0,0,1,0}
 };
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
-int main(int argc, char *argv[]) {
-  int ret=grib_tool(argc,argv);
-  return ret;
+int main(int argc, char *argv[])
+{
+    int ret=grib_tool(argc,argv);
+    return ret;
 }
 
-int grib_tool_before_getopt(grib_runtime_options* options) {
-  return 0;
+int grib_tool_before_getopt(grib_runtime_options* options)
+{
+    return 0;
 }
 
-int grib_tool_init(grib_runtime_options* options) {
-  return 0;
+int grib_tool_init(grib_runtime_options* options)
+{
+    return 0;
 }
 
-int grib_tool_new_filename_action(grib_runtime_options* options,const char* file) {
-   return 0;
+int grib_tool_new_filename_action(grib_runtime_options* options,const char* file)
+{
+    return 0;
 }
 
-int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file) {
-   return 0;
+int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
+{
+    return 0;
 }
 
 int idx(double lat,double lon,double latFirst,double lonFirst,double latLast,double lonLast,
-                long Ni,double di,double dj) {
-  long ilon,ilat;
-  if ((ilon=(lon-lonFirst)/di) < 0 ) return -1;
-  if ((ilat=(latFirst-lat)/dj) < 0 ) return -1;
-  if (lon>lonLast) {
-    if (lonLast==180) {
-      lon-=360;
-      ilon=(lon-lonFirst)/di;
-    } else 
-      return -1;
-  }
-  if (lat<latLast) return -1;
-  if ((ilat=(latFirst-lat)/dj) < 0 ) return -1;
-  return ilon+ilat*Ni;
+        long Ni,double di,double dj)
+{
+    long ilon,ilat;
+    if ((ilon=(lon-lonFirst)/di) < 0 ) return -1;
+    if ((ilat=(latFirst-lat)/dj) < 0 ) return -1;
+    if (lon>lonLast) {
+        if (lonLast==180) {
+            lon-=360;
+            ilon=(lon-lonFirst)/di;
+        } else
+            return -1;
+    }
+    if (lat<latLast) return -1;
+    if ((ilat=(latFirst-lat)/dj) < 0 ) return -1;
+    return ilon+ilat*Ni;
 }
 
-grib_handle* merge(grib_handle* h1,grib_handle* h2) {
+grib_handle* merge(grib_handle* h1,grib_handle* h2)
+{
     char s1[100]={0,};
     size_t len1;
     char s2[100]={0,};
@@ -116,11 +123,11 @@ grib_handle* merge(grib_handle* h1,grib_handle* h2) {
                     | GRIB_DUMP_FLAG_VALUES 
                     | GRIB_DUMP_FLAG_READ_ONLY;
 
-    */
+     */
 
     /* same products? */
     if (grib_key_equal(h1,h2,"md5Product",GRIB_TYPE_STRING,&err)==0 && err==0) {
-      return NULL;
+        return NULL;
     }
 
     /* can we do it?*/
@@ -141,12 +148,12 @@ grib_handle* merge(grib_handle* h1,grib_handle* h2) {
 
     if (!grib_key_equal(h1,h2,"iDirectionIncrementInDegrees",GRIB_TYPE_DOUBLE,&err) ) {
         grib_context_log(h1->context,GRIB_LOG_WARNING,
-            "unable to merge: different iDirectionIncrementInDegrees");
+                "unable to merge: different iDirectionIncrementInDegrees");
         return NULL;
     }
     if (!grib_key_equal(h1,h2,"jDirectionIncrementInDegrees",GRIB_TYPE_DOUBLE,&err) ) {
         grib_context_log(h1->context,GRIB_LOG_WARNING,
-            "unable to merge: different jDirectionIncrementInDegrees");
+                "unable to merge: different jDirectionIncrementInDegrees");
         return NULL;
     }
 
@@ -171,10 +178,10 @@ grib_handle* merge(grib_handle* h1,grib_handle* h2) {
     /* do we have something to do?*/
 
     if ( grib_key_equal(h1,h2,"latitudeOfFirstGridPointInDegrees",GRIB_TYPE_DOUBLE,&err) &&
-         grib_key_equal(h1,h2,"latitudeOfLastGridPointInDegrees",GRIB_TYPE_DOUBLE,&err)  &&
-         grib_key_equal(h1,h2,"longitudeOfFirstGridPointInDegrees",GRIB_TYPE_DOUBLE,&err) &&
-         grib_key_equal(h1,h2,"longitudeOfLastGridPointInDegrees",GRIB_TYPE_DOUBLE,&err)
-       ) {
+            grib_key_equal(h1,h2,"latitudeOfLastGridPointInDegrees",GRIB_TYPE_DOUBLE,&err)  &&
+            grib_key_equal(h1,h2,"longitudeOfFirstGridPointInDegrees",GRIB_TYPE_DOUBLE,&err) &&
+            grib_key_equal(h1,h2,"longitudeOfLastGridPointInDegrees",GRIB_TYPE_DOUBLE,&err)
+    ) {
         /* no we don't */
         return NULL;
     }
@@ -221,8 +228,8 @@ grib_handle* merge(grib_handle* h1,grib_handle* h2) {
 
     if (lonFirst==0 && lonLast==360) lonLast-=di;
     if (lonFirst==-180 && lonLast==180) { 
-      lonFirst=0;
-      lonLast=360-di;
+        lonFirst=0;
+        lonLast=360-di;
     }
 
     /* create new grib for bigger area*/
@@ -272,11 +279,11 @@ grib_handle* merge(grib_handle* h1,grib_handle* h2) {
     grib_get_double_array(h2,"values",v2,&sn);
 
     for (i=0;i<n;i++) {
-      if ((j=idx(lat[i],lon[i],latFirst1,lonFirst1,latLast1,lonLast1,Ni1,di1,dj1)) >=0 ) {
-        v[i]=v1[j];
-      } else if ( (j=idx(lat[i],lon[i],latFirst2,lonFirst2,latLast2,lonLast2,Ni2,di2,dj2))>=0) {
-        v[i]=v2[j];
-      }
+        if ((j=idx(lat[i],lon[i],latFirst1,lonFirst1,latLast1,lonLast1,Ni1,di1,dj1)) >=0 ) {
+            v[i]=v1[j];
+        } else if ( (j=idx(lat[i],lon[i],latFirst2,lonFirst2,latLast2,lonLast2,Ni2,di2,dj2))>=0) {
+            v[i]=v2[j];
+        }
     }
 
     grib_set_double_array(h,"values",v,n);
@@ -284,50 +291,54 @@ grib_handle* merge(grib_handle* h1,grib_handle* h2) {
     return h;
 }
 
-int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
-  int err=0;
-  grib_handle* hm=0;
-  char md5[200]={0,};
-  char fname[210]={0,};
-  size_t lmd5;
+int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
+{
+    int err=0;
+    grib_handle* hm=0;
+    char md5[200]={0,};
+    char fname[210]={0,};
+    size_t lmd5;
 
-  if (!hh) { hh=grib_handle_clone(h); return 0; }
-  grib_get_string(h,"md5Product",md5,&lmd5);
-  sprintf(fname,"_%s.orig.grib",md5);
-  grib_write_message(h,fname,"a");
+    if (!hh) { hh=grib_handle_clone(h); return 0; }
+    grib_get_string(h,"md5Product",md5,&lmd5);
+    sprintf(fname,"_%s.orig.grib",md5);
+    grib_write_message(h,fname,"a");
 
-  if ((hm=merge(h,hh))==NULL ) {
-      grib_tools_write_message(options,hh);
-      lmd5=sizeof(md5)/sizeof(*md5);
-      grib_get_string(hh,"md5Product",md5,&lmd5);
-      sprintf(fname,"_%s.merge.grib",md5);
-      grib_write_message(hh,fname,"a");
-  }
-  grib_handle_delete(hh);
-  hh = hm!=NULL ? hm : grib_handle_clone(h) ;
+    if ((hm=merge(h,hh))==NULL ) {
+        grib_tools_write_message(options,hh);
+        lmd5=sizeof(md5)/sizeof(*md5);
+        grib_get_string(hh,"md5Product",md5,&lmd5);
+        sprintf(fname,"_%s.merge.grib",md5);
+        grib_write_message(hh,fname,"a");
+    }
+    grib_handle_delete(hh);
+    hh = hm!=NULL ? hm : grib_handle_clone(h) ;
 
-  return err;
+    return err;
 }
 
-int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h) {
-  grib_handle_delete(h);
-  return 0;
+int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
+{
+    grib_handle_delete(h);
+    return 0;
 }
 
-void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h) {
-  grib_print_key_values(options,h);
+void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
+{
+    grib_print_key_values(options,h);
 }
 
-int grib_tool_finalise_action(grib_runtime_options* options) {
-  grib_tools_write_message(options,hh);
-  if (options->outfile->file) {
-    fclose(options->outfile->file);
-  }
-  return 0;
+int grib_tool_finalise_action(grib_runtime_options* options)
+{
+    grib_tools_write_message(options,hh);
+    if (options->outfile->file) {
+        fclose(options->outfile->file);
+    }
+    return 0;
 }
 
-int grib_no_handle_action(int err) {
-  fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
-  return 0;
+int grib_no_handle_action(grib_runtime_options* options, int err)
+{
+    fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
+    return 0;
 }
-

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -45,9 +45,8 @@ static int json=0;
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
 /**
- *grib_dump
- *Dump the content of a grib file
- *
+ * grib_dump
+ * Dump the contents of a GRIB file
  */
 int main(int argc, char *argv[])
 {
@@ -77,7 +76,7 @@ int grib_tool_init(grib_runtime_options* options)
 
     /* See ECC-234
     if (grib_options_on("C")) {
-        options->dump_mode = "c_code";
+        options->dump_mode = "grib_encode_C";
         if (grib_options_on("d"))
             options->dump_flags = 0;
         else
@@ -161,9 +160,6 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     long length=0;
-    char tmp[1024];
-    char identifier[100];
-    size_t idlen=100;
     int i,err=0;
     if (grib_get_long(h,"totalLength",&length) != GRIB_SUCCESS)
         length=-9999;
@@ -180,6 +176,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     if(json) {
     }
     else {
+        char tmp[1024];
+        char identifier[100];
+        size_t idlen=100;
         sprintf(tmp,"MESSAGE %d ( length=%ld )",options->handle_count,length);
         if (!grib_options_on("C"))
             fprintf(stdout,"#==============   %-38s   ==============\n",tmp);
@@ -212,9 +211,8 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     return 0;
 }
 
-int grib_no_handle_action(int err)
+int grib_no_handle_action(grib_runtime_options* options, int err)
 {
     fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
     return 0;
 }
-

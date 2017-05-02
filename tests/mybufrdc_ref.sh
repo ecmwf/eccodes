@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -28,7 +28,7 @@ do
   rm -f $res_num | true
 
   set +e
-  ${tools_dir}codes_bufr_filter bufrdc_num_ref.filter $file 2> $REDIRECT > $res_num
+  ${tools_dir}/codes_bufr_filter bufrdc_num_ref.filter $file 2> $REDIRECT > $res_num
   if [ $? != 0 ]
   then
     mv $file $file.no

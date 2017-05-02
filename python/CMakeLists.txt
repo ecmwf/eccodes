@@ -11,7 +11,15 @@ if( HAVE_PYTHON )
     endif()
 
     if( HAVE_LIBOPENJPEG )
+        # Get the name of the OpenJPEG library: version dependent!
+        # E.g. openjpeg (version 1.5) or openjp2 (version 2.x)
         get_filename_component(OPENJPEG_LIB_DIR ${OPENJPEG_LIBRARY} PATH )
+        get_filename_component(OJ_NAME_WE       ${OPENJPEG_LIBRARY} NAME_WE )
+        STRING(REGEX REPLACE "^lib" "" OJ_WITHOUT_LIB ${OJ_NAME_WE})
+    endif()
+
+    if( HAVE_AEC )
+      get_filename_component(AEC_DIR ${AEC_INCLUDE_DIR} PATH )
     endif()
 
     configure_file( setup.py.in setup.py )
@@ -26,12 +34,12 @@ if( HAVE_PYTHON )
     # endif()
 
     ####### Do not invoke swig. Use our own generated C wrapper file ######
-    set( _gribapi_swig "_gribapi_swig${CMAKE_SHARED_LIBRARY_SUFFIX}" )
+    set( _gribapi_swig "gribapi/_gribapi_swig${CMAKE_SHARED_LIBRARY_SUFFIX}" )
     # Build the extension module for use in build tree with RPATH pointing to the build tree
     add_custom_command( OUTPUT ${_gribapi_swig}
-                        COMMAND ${PYTHON_EXECUTABLE} setup.py build_ext --inplace -R ${CMAKE_BINARY_DIR}/lib
+                        COMMAND ${PYTHON_EXECUTABLE} setup.py build_ext --inplace --rpath ${CMAKE_BINARY_DIR}/lib
                         DEPENDS grib_interface.h grib_interface.c swig_wrap_numpy.c setup.py.in eccodes )
-    add_custom_target(build_swig_wrapper ALL DEPENDS ${_gribapi_swig})
+    add_custom_target(eccodes_build_swig_wrapper ALL DEPENDS ${_gribapi_swig})
 
     #ecbuild_add_library(TARGET    _gribapi_swig
     #                    TYPE SHARED
@@ -46,7 +54,17 @@ if( HAVE_PYTHON )
     file( COPY eccodes gribapi DESTINATION . )
     configure_file( swig_wrap_numpy.py gribapi/gribapi_swig.py COPYONLY )
 
+    # Build the extension module for use in install tree with RPATH pointing to install tree
+    install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} setup.py build_ext --rpath ${CMAKE_INSTALL_PREFIX}/${INSTALL_LIB_DIR}
+                                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})")
     # Call distutils for installation
-    install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} setup.py install --prefix $ENV{DESTDIR}${CMAKE_INSTALL_PREFIX} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})")
+    install(CODE "if( \$ENV{DESTDIR} )
+                    set( __root \"--root \$ENV{DESTDIR}\" )
+                  endif()
+                  execute_process(COMMAND ${PYTHON_EXECUTABLE} setup.py install
+                                            \${__root}
+                                            --prefix ${CMAKE_INSTALL_PREFIX}
+                                            --record=${CMAKE_BINARY_DIR}/extra_install.txt
+                                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})")
 
 endif()

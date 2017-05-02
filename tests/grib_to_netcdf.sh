@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -19,7 +19,7 @@ rm -f $tmp_out | true
 # Invoke the grib_to_netcdf command with no options. If NetCDF was enabled
 # we get a usage message otherwise we get a specific message. Note: In both cases
 # the command fails.
-${tools_dir}grib_to_netcdf > $tmp_out
+${tools_dir}/grib_to_netcdf > $tmp_out
 grep 'ecCodes was not compiled with NETCDF enabled' $tmp_out > /dev/null
 if [ $? -eq 0 ]; then
   # Message was found
@@ -53,8 +53,8 @@ do
    do
       rm -f $tmp_netcdf | true
       if [ -f "${data_dir}/$f" ]; then
-        ${tools_dir}grib_to_netcdf -D $dt -o $tmp_netcdf ${data_dir}/$f >/dev/null
-	${tools_dir}grib_to_netcdf -T -o $tmp_netcdf ${data_dir}/$f >/dev/null
+        ${tools_dir}/grib_to_netcdf -D $dt -o $tmp_netcdf ${data_dir}/$f >/dev/null
+	${tools_dir}/grib_to_netcdf -T -o $tmp_netcdf ${data_dir}/$f >/dev/null
       fi
    done
 done
@@ -62,10 +62,10 @@ done
 # Try creating different kinds; netcdf3 classic and large
 # TODO: enable tests for netcdf4 formats too
 input=${data_dir}/regular_latlon_surface.grib2
-${tools_dir}grib_to_netcdf -k 1 -o $tmp_netcdf $input >/dev/null
-${tools_dir}grib_to_netcdf -k 2 -o $tmp_netcdf $input >/dev/null
-#${tools_dir}grib_to_netcdf -k 3 -o $tmp_netcdf $input >/dev/null
-#${tools_dir}grib_to_netcdf -k 4 -o $tmp_netcdf $input >/dev/null
+${tools_dir}/grib_to_netcdf -k 1 -o $tmp_netcdf $input >/dev/null
+${tools_dir}/grib_to_netcdf -k 2 -o $tmp_netcdf $input >/dev/null
+#${tools_dir}/grib_to_netcdf -k 3 -o $tmp_netcdf $input >/dev/null
+#${tools_dir}/grib_to_netcdf -k 4 -o $tmp_netcdf $input >/dev/null
 
 rm -f $tmp_netcdf | true
 

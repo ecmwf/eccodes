@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -28,14 +28,14 @@ grib_option grib_options[]={
         {"q",0,0,1,0,0},
         {"p:",0,0,1,1,0},
         {"P:",0,0,0,1,0},
-        {"w:","key[:{s/d/i}]{=/!=}value,key[:{s/d/i}]=value,...","\n\t\tWhere clause."
-             "\n\t\tOnly grib messages matching the key/value constraints are "
-             "copied to the\n\t\toutput_grib_file."
+        {"w:","key[:{s|d|i}]{=|!=}value,key[:{s|d|i}]=value,...","\n\t\tWhere clause."
+             "\n\t\tOnly grib messages matching the key/value constraints are copied to the output_grib_file."
              "\n\t\tA valid constraint is of type key=value or key!=value."
              "\n\t\tFor each key a string (key:s), a "
-             "double (key:d) or an integer (key:i)\n\t\ttype can be defined. Default type "
-             "is string.\n",0,1,0},
+             "double (key:d) or an integer (key:i)\n\t\ttype can be defined. Default type is string"
+             "\n\t\tNote: only one -w clause is allowed.\n",0,1,0},
         {"B:",0,0,0,1,0},
+        /*{"s:",0,0,0,1,0},*/
         {"V",0,0,0,1,0},
         {"W:",0,0,0,1,0},
         {"M",0,0,0,1,0},
@@ -90,6 +90,16 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     double* v;
     size_t size=0;
+
+    /* For '-s' option
+    if (!options->skip) {
+        int err = 0;
+        if (options->set_values_count != 0)
+            err=grib_set_values(h,options->set_values,options->set_values_count);
+        if( err != GRIB_SUCCESS && options->fail) exit(err);
+    }
+    */
+
     if ( options->repack ) {
         GRIB_CHECK_NOLINE(grib_get_size(h,"values",&size),0);
 
@@ -131,7 +141,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     return 0;
 }
 
-int grib_no_handle_action(int err)
+int grib_no_handle_action(grib_runtime_options* options, int err)
 {
     fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
     return 0;

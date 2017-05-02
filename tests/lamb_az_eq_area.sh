@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -41,13 +41,13 @@ write "lamb_az_eq_area.grib2";
 EOF
 
 # Use this filter and the input GRIB to create a new GRIB
-${tools_dir}grib_filter $FILTER_FILE $GRIB_INFILE
+${tools_dir}/grib_filter $FILTER_FILE $GRIB_INFILE
 if [ ! -f "$GRIB_OUTFILE" ]; then
    echo Failed to create output GRIB from filter >&2
    exit 1
 fi
 # Now get the data from the newly created GRIB file
-${tools_dir}grib_get_data $GRIB_OUTFILE > $DATA_OUTFILE
+${tools_dir}/grib_get_data $GRIB_OUTFILE > $DATA_OUTFILE
 
 # Compare output with reference. If the diff fails, script will immediately exit with status 1
 diff $DATA_OUTFILE $REF_FILE

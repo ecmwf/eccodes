@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -31,13 +31,15 @@ else
     export ECCODES_DEFINITION_PATH
     ECCODES_SAMPLES_PATH=$cpath/samples
     export ECCODES_SAMPLES_PATH
-    tools_dir=$cpath/tools/
-    examples_dir=$cpath/examples/F90/
+    tools_dir=$cpath/tools
+    examples_dir=$cpath/examples/F90
     data_dir=$cpath/data
     samples_dir=$cpath/samples
 
-#tools_dir="valgrind --error-exitcode=1 -q $cpath/tools/"
-#examples_dir="valgrind --error-exitcode=1 -q $cpath/examples/F90/"
+    if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
+      tools_dir="valgrind --error-exitcode=1 -q $cpath/tools"
+      examples_dir="valgrind --error-exitcode=1 -q $cpath/examples/F90"
+    fi
 
   else
     echo "Skipping test $0"

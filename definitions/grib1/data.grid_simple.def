@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -34,6 +34,7 @@ if( bitmapPresent || !GDSPresent ) {
      referenceValue,
      binaryScaleFactor,
      decimalScaleFactor,
+     optimizeScaleFactor,
   #g1simple_packing args
      halfByte,
      packingType,
@@ -58,6 +59,7 @@ if( bitmapPresent || !GDSPresent ) {
       referenceValue,
       binaryScaleFactor,
       decimalScaleFactor,
+      optimizeScaleFactor,
       halfByte,
       packingType,
       grid_ieee,precision

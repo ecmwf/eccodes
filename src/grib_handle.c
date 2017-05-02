@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -145,7 +145,8 @@ int grib_handle_delete ( grib_handle* h )
         grib_dependency *d = h->dependencies;
         grib_dependency *n;
 
-        Assert ( h->kid == NULL );
+        if ( h->kid != NULL )
+            return GRIB_INTERNAL_ERROR;
 
         while ( d )
         {
@@ -316,7 +317,9 @@ int grib_write_message(grib_handle* h,const char* file,const char* mode)
 
 grib_handle* grib_handle_clone ( grib_handle* h )
 {
-    return grib_handle_new_from_message_copy ( h->context, h->buffer->data, h->buffer->ulength );
+    grib_handle* result = grib_handle_new_from_message_copy ( h->context, h->buffer->data, h->buffer->ulength );
+    result->product_kind = h->product_kind;
+    return result;
 }
 
 grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind product, int* error)
@@ -351,6 +354,24 @@ grib_handle* codes_metar_handle_new_from_file(grib_context* c, FILE* f, int* err
 grib_handle* codes_gts_handle_new_from_file(grib_context* c, FILE* f, int* error)
 {
     return gts_new_from_file(c, f, error);
+}
+
+static int determine_product_kind(grib_handle* h, ProductKind* prod_kind)
+{
+    int err = 0;
+    size_t len = 0;
+    char prod_kind_str[256]={0,};
+    err = grib_get_length(h, "kindOfProduct", &len);
+    if (!err) {
+        err = grib_get_string(h, "kindOfProduct", prod_kind_str, &len);
+        if      (strcmp(prod_kind_str, "GRIB")==0)  *prod_kind = PRODUCT_GRIB;
+        else if (strcmp(prod_kind_str, "BUFR")==0)  *prod_kind = PRODUCT_BUFR;
+        else if (strcmp(prod_kind_str, "METAR")==0) *prod_kind = PRODUCT_METAR;
+        else if (strcmp(prod_kind_str, "GTS")==0)   *prod_kind = PRODUCT_GTS;
+        else if (strcmp(prod_kind_str, "TAF")==0)   *prod_kind = PRODUCT_TAF;
+        else *prod_kind = PRODUCT_ANY;
+    }
+    return err;
 }
 
 grib_handle* grib_handle_new_from_message_copy ( grib_context* c, const void* data, size_t size )
@@ -393,7 +414,7 @@ grib_handle* grib_handle_new_from_partial_message_copy ( grib_context* c, const 
     return g;
 }
 
-grib_handle* grib_handle_new_from_partial_message ( grib_context* c,void* data, size_t buflen )
+grib_handle* grib_handle_new_from_partial_message ( grib_context* c, const void* data, size_t buflen )
 {
     grib_handle  *gl = NULL;
     if ( c == NULL ) c = grib_context_get_default();
@@ -408,9 +429,15 @@ grib_handle* grib_handle_new_from_message ( grib_context* c, const void* data, s
 {
     grib_handle  *gl = NULL;
     grib_handle  *h = NULL;
+    ProductKind product_kind = PRODUCT_ANY;
     if ( c == NULL ) c = grib_context_get_default();
     gl = grib_new_handle ( c );
     h=grib_handle_create ( gl,  c, data,  buflen );
+
+    /* See ECC-448 */
+    if (determine_product_kind(h, &product_kind) == GRIB_SUCCESS) {
+        h->product_kind = product_kind;
+    }
     return h;
 }
 
@@ -797,6 +824,7 @@ grib_handle* gts_new_from_file( grib_context* c, FILE* f,int *error )
     gl->product_kind = PRODUCT_GTS;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
+    if (gl->offset == 0) grib_context_set_handle_file_count(c,1);
 
     return gl;
 }
@@ -835,6 +863,7 @@ grib_handle* taf_new_from_file( grib_context* c, FILE* f,int *error )
     gl->product_kind = PRODUCT_TAF;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
+    if (gl->offset == 0) grib_context_set_handle_file_count(c,1);
 
     return gl;
 }
@@ -873,6 +902,7 @@ grib_handle* metar_new_from_file( grib_context* c, FILE* f,int *error )
     gl->product_kind = PRODUCT_METAR;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
+    if (gl->offset == 0) grib_context_set_handle_file_count(c,1);
 
     return gl;
 }
@@ -911,6 +941,7 @@ grib_handle* bufr_new_from_file( grib_context* c, FILE* f,int *error )
     gl->product_kind = PRODUCT_BUFR;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
+    if (gl->offset == 0) grib_context_set_handle_file_count(c,1);
 
     return gl;
 }
@@ -949,6 +980,7 @@ grib_handle* any_new_from_file( grib_context* c, FILE* f,int *error )
     gl->product_kind = PRODUCT_ANY;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
+    if (gl->offset == 0) grib_context_set_handle_file_count(c,1);
 
     return gl;
 }

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -68,6 +68,6 @@ v.grib2
 
 for file in $files; do
    if [ -f ${data_dir}/$file ]; then
-      ${tools_dir}grib_dump -O ${data_dir}/$file 2> $REDIRECT > $REDIRECT
+      ${tools_dir}/grib_dump -O ${data_dir}/$file 2> $REDIRECT > $REDIRECT
    fi
 done

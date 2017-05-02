@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -375,40 +375,50 @@ static int unpack_string_array(grib_accessor*a , char**  v, size_t *len)
 static int pack_expression(grib_accessor* a, grib_expression *e)
 {
     size_t len = 1;
-    long   lval;
-    double   dval;
-    const char    *cval;
+    long   lval=0;
+    double dval=0;
+    const char *cval=NULL;
     int ret=0;
-    char tmp[1024];
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     switch(grib_accessor_get_native_type(a))
     {
-    case GRIB_TYPE_LONG:
-        len = 1;
-        ret = grib_expression_evaluate_long(grib_handle_of_accessor(a),e,&lval);
-        if (ret != GRIB_SUCCESS) {
-            grib_context_log(a->context,GRIB_LOG_ERROR,"unable to set %s as long",a->name);
-            return ret;
+        case GRIB_TYPE_LONG: {
+            len = 1;
+            ret = grib_expression_evaluate_long(hand,e,&lval);
+            if (ret != GRIB_SUCCESS) {
+                grib_context_log(a->context,GRIB_LOG_ERROR,"unable to set %s as long",a->name);
+                return ret;
+            }
+            /*if (hand->context->debug)
+                printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %ld\n", a->name,lval);*/
+            return grib_pack_long(a,&lval,&len);
+            break;
         }
-        return grib_pack_long(a,&lval,&len);
-        break;
 
-    case GRIB_TYPE_DOUBLE:
-        len = 1;
-        ret = grib_expression_evaluate_double(grib_handle_of_accessor(a),e,&dval);
-        return grib_pack_double(a,&dval,&len);
-        break;
-
-    case GRIB_TYPE_STRING:
-        len = sizeof(tmp);
-        cval = grib_expression_evaluate_string(grib_handle_of_accessor(a),e,tmp,&len,&ret);
-        if (ret != GRIB_SUCCESS) {
-            grib_context_log(a->context,GRIB_LOG_ERROR,"unable to set %s as string",a->name);
-            return ret;
+        case GRIB_TYPE_DOUBLE: {
+            len = 1;
+            ret = grib_expression_evaluate_double(hand,e,&dval);
+            /*if (hand->context->debug)
+                printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %g\n", a->name, dval);*/
+            return grib_pack_double(a,&dval,&len);
+            break;
         }
-        len = strlen(cval);
-        return grib_pack_string(a,cval,&len);
-        break;
+
+        case GRIB_TYPE_STRING: {
+            char tmp[1024];
+            len = sizeof(tmp);
+            cval = grib_expression_evaluate_string(hand,e,tmp,&len,&ret);
+            if (ret != GRIB_SUCCESS) {
+                grib_context_log(a->context,GRIB_LOG_ERROR,"unable to set %s as string",a->name);
+                return ret;
+            }
+            len = strlen(cval);
+            /*if (hand->context->debug)
+                printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %s\n", a->name, cval);*/
+            return grib_pack_string(a,cval,&len);
+            break;
+        }
     }
 
     return GRIB_NOT_IMPLEMENTED;

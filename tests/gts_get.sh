@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -19,11 +19,9 @@ label="gts_get_test"
 #Create log file
 fLog=${label}".log"
 rm -f $fLog
-touch $fLog
 
 #Define tmp file
 fTmp=${label}".tmp.txt"
-rm -f $fTmp
 
 #----------------------------------------------
 # Test "-p" switch
@@ -31,5 +29,4 @@ rm -f $fTmp
 gts_file=EGRR20150317121020_00493212.DAT
 ${tools_dir}/gts_get -p TT,AA,II,CCCC,YY,GG,gg,BBB $gts_file >/dev/null
 
-rm -f $fLog $res_ls 
-
+rm -f $fLog

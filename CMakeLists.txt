@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -24,7 +24,7 @@ set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} 
 
 include( ecbuild_system NO_POLICY_SCOPE )
 
-ecbuild_requires_macro_version( 1.9 )
+ecbuild_requires_macro_version( 2.6 )
 
 ###############################################################################
 # local project
@@ -61,6 +61,7 @@ ecbuild_add_option( FEATURE NETCDF
     DESCRIPTION "support for GRIB to NetCDF conversion"
     DEFAULT ON
     REQUIRED_PACKAGES NetCDF
+    NO_TPL
 )
 
 ecbuild_add_option( FEATURE AEC
@@ -135,11 +136,11 @@ if( ENABLE_JPG )
     #       which can affect future package discovery if not undone by the caller.
     #       The current CMAKE_PREFIX_PATH is backed up as _CMAKE_PREFIX_PATH
     #
-    set(ECBUILD_NO_DEPRECATIONS ON)  # Suppress deprecation message
+    set(CMAKE_WARN_DEPRECATED OFF) # Suppress deprecation message
     ecbuild_add_extra_search_paths( jasper )
     find_package( Jasper )
     set(CMAKE_PREFIX_PATH ${_CMAKE_PREFIX_PATH})    # Restore CMAKE_PREFIX_PATH
-    set(ECBUILD_NO_DEPRECATIONS OFF) # Remove suppression
+    set(CMAKE_WARN_DEPRECATED ON)  # Remove suppression
 
     find_package( OpenJPEG )
 
@@ -147,6 +148,8 @@ if( ENABLE_JPG )
         list( APPEND ECCODES_TPLS Jasper )
         set( HAVE_JPEG 1 )
         set( HAVE_LIBJASPER 1 )
+        # Extract Jasper's major version number to enable conditional code. See ECC-396
+        string(REGEX REPLACE "^([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1" JASPER_VERSION_MAJOR "${JASPER_VERSION_STRING}")
     endif()
 
     if( OPENJPEG_FOUND )
@@ -161,7 +164,7 @@ endif()
 ###############################################################################
 # other options
 
-if( GRIB_TIMER )
+if( HAVE_GRIB_TIMER )
     set( GRIB_TIMER 1 )
 else()
     set( GRIB_TIMER 0 )
@@ -236,13 +239,13 @@ else()
 endif()
 
 if( NOT DEFINED ECCODES_DEFINITION_SUFF )
-  set( ECCODES_DEFINITION_SUFF  share/eccodes/definitions )
+  set( ECCODES_DEFINITION_SUFF  ${INSTALL_DATA_DIR}/definitions )
 endif()
 if( NOT DEFINED ECCODES_SAMPLES_SUFF )
-  set( ECCODES_SAMPLES_SUFF     share/eccodes/samples )
+  set( ECCODES_SAMPLES_SUFF     ${INSTALL_DATA_DIR}/samples )
 endif()
 if( NOT DEFINED ECCODES_IFS_SAMPLES_SUFF )
-  set( ECCODES_IFS_SAMPLES_SUFF share/eccodes/ifs_samples )
+  set( ECCODES_IFS_SAMPLES_SUFF ${INSTALL_DATA_DIR}/ifs_samples )
 endif()
 
 set( ECCODES_DEFINITION_PATH  ${the_default_data_prefix}/${ECCODES_DEFINITION_SUFF} )
@@ -302,10 +305,9 @@ add_subdirectory( ifs_samples ) # must come after samples
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
 ecbuild_dont_pack( DIRS
      concepts tests.ecmwf doxygen confluence examples.dev templates parameters java
-     gaussian_experimental gribex examples/F77
-     examples/extra bamboo fortran/fortranCtypes tigge/tools share/eccodes
-     src/.deps tests/.deps tools/.deps tigge/.deps examples/C/.deps examples/python/.deps
-     python/.deps fortran/.deps
+     perl config m4 rpms gaussian_experimental gribex examples/F77
+     examples/extra examples/deprecated bamboo fortran/fortranCtypes tigge/tools
+     share/eccodes  .settings
 )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
@@ -341,7 +343,8 @@ ecbuild_pkgconfig(
   URL            "https://software.ecmwf.int/wiki/display/ECC/"
   DESCRIPTION    "The ecCodes library"
   LIBRARIES      eccodes
-  VARIABLES      HAVE_JPG HAVE_LIBJASPER HAVE_LIBOPENJPEG
+  IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
+  VARIABLES      HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                  HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
                  HAVE_NETCDF HAVE_PYTHON HAVE_FORTRAN HAVE_PNG HAVE_AEC
 )
@@ -352,7 +355,8 @@ if( EC_HAVE_FORTRAN )
     LIBRARIES           eccodes_f90 eccodes
     DESCRIPTION         "The ecCodes library for Fortran 90"
     IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
-    VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_LIBOPENJPEG
+                        ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
+    VARIABLES           HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                         HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
                         HAVE_NETCDF HAVE_PYTHON HAVE_PNG HAVE_AEC
   )
@@ -366,11 +370,7 @@ ecbuild_install_project( NAME ${CMAKE_PROJECT_NAME} )
 ecbuild_print_summary()
 
 ecbuild_info("")
-ecbuild_info("   +---------------------------+")
-ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}    |")
-ecbuild_info("   |  Configuration completed  |")
-ecbuild_info("   +---------------------------+")
-ecbuild_info("")
-ecbuild_info("   You can now do 'make' to compile the package, 'ctest' to test it and 'make install' to install it afterwards.")
-ecbuild_info("")
+ecbuild_info("   +--------------------------+")
+ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}   |")
+ecbuild_info("   +--------------------------+")
 ecbuild_info("")

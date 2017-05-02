@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -17,26 +17,20 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
     return (*a==0 && *b==0) ? 0 : 1;
 }
 
-struct grib_keys_iterator{
-    grib_handle   *handle;
-    unsigned long filter_flags;     /** flags to filter out accessors */
-    unsigned long accessor_flags;     /** flags to filter out accessors */
-    grib_accessor *current;
-    char    *name_space;
-    int            at_start;
-    int            match;
-    grib_trie     *seen;
-};
-
 grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space)
 {
     grib_keys_iterator* ki=NULL;
 
     if (!h) return NULL;
 
+    /*if (h->product_kind == PRODUCT_BUFR) {
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "Invalid keys iterator for BUFR message: please use codes_bufr_keys_iterator_new");
+        return NULL;
+    }*/
+
     ki= (grib_keys_iterator*)grib_context_malloc_clear(h->context,sizeof(grib_keys_iterator));
     if (!ki) return NULL;
-    Assert(ki->accessor_flags == 0);
 
     ki->filter_flags = filter_flags;
     ki->handle       = h;
@@ -70,13 +64,13 @@ int grib_keys_iterator_set_flags(grib_keys_iterator* ki,unsigned long flags)
     if(flags & GRIB_KEYS_ITERATOR_SKIP_CODED)    ki->filter_flags |= GRIB_KEYS_ITERATOR_SKIP_CODED;
 
     if(flags & GRIB_KEYS_ITERATOR_SKIP_FUNCTION)
-        ki->accessor_flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
+        ki->accessor_flags_skip |= GRIB_ACCESSOR_FLAG_FUNCTION;
 
     if(flags & GRIB_KEYS_ITERATOR_SKIP_READ_ONLY)
-        ki->accessor_flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+        ki->accessor_flags_skip |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 
     if(flags & GRIB_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC)
-        ki->accessor_flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
+        ki->accessor_flags_skip |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 
     return ret;
 }
@@ -111,7 +105,7 @@ static int skip(grib_keys_iterator* kiter)
     if(kiter->current->flags & GRIB_ACCESSOR_FLAG_HIDDEN)
         return 1;
 
-    if(kiter->current->flags &  kiter->accessor_flags)
+    if(kiter->current->flags &  kiter->accessor_flags_skip)
         return 1;
 
     if((kiter->filter_flags & GRIB_KEYS_ITERATOR_SKIP_COMPUTED) && kiter->current->length == 0)

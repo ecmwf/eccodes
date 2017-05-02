@@ -29,6 +29,7 @@ in <a href="https://en.wikipedia.org/wiki/JSON">JSON</a> format which can be use
 
 Migration from GRIB-API to %ecCodes is expected to be transparent for current GRIB-API users. The GRIB-API library is fully available in the %ecCodes library.
 Users are encouraged to test their GRIB-API applications by linking with the %ecCodes library and to provide feedback of any problems encountered.
+For further details see <a href="https://software.ecmwf.int/wiki/display/ECC/GRIB-API+migration">here</a>.
 
 \warning Name clashes prevent a simultaneous use of the GRIB-API and %ecCodes libraries. For this reason, and to simplify the software maintenance,
 it is planned to replace GRIB-API by %ecCodes.\n The functions with the "grib_" prefix will, however, be maintained in %ecCodes.

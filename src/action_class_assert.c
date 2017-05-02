@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -68,7 +68,6 @@ static grib_action_class _grib_action_class_assert = {
     &notify_change,                            /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */
-    0,                            /* compile */
 };
 
 grib_action_class* grib_action_class_assert = &_grib_action_class_assert;
@@ -102,7 +101,7 @@ static int create_accessor(grib_section* p, grib_action* act,grib_loader *h)
 
   grib_push_accessor(as,p->block);
 
-  
+
   return GRIB_SUCCESS;
 }
 

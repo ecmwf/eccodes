@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -124,7 +124,7 @@ grib_option grib_options[]={
     {"E:","end","Last field to be processed.\n",0,1,0},
     {"a",0,"-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n"
             ,0,1,0},
-    {"H",0,"Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},
+    {"H",0,"Compare only message headers (everything except data and bitmap). Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},
     {"R:",0,0,0,1,0},
     {"A:",0,0,0,1,0},
     {"P",0,"Compare data values using the packing error as tolerance.\n",0,1,0},
@@ -818,10 +818,20 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
         }
 
         if (!compareAbsolute) {
+            int all_specified = 0; /* =1 if relative comparison with "all" specified */
             for (i=0;i<options->tolerance_count;i++) {
-                if (!strcmp((options->tolerance[i]).name,name)) {
+                if (!strcmp((options->tolerance[i]).name, "all")) {
+                    all_specified = 1;
                     value_tolerance=(options->tolerance[i]).double_value;
                     break;
+                }
+            }
+            if (!all_specified) {
+                for (i=0;i<options->tolerance_count;i++) {
+                    if (!strcmp((options->tolerance[i]).name,name)) {
+                        value_tolerance=(options->tolerance[i]).double_value;
+                        break;
+                    }
                 }
             }
         }
@@ -1024,8 +1034,8 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
             return 0;
 
         err=0;
-        h11=grib_handle_new_from_partial_message(h1->context,(void*)msg1,size1);
-        h22=grib_handle_new_from_partial_message(h1->context,(void*)msg2,size2);
+        h11=grib_handle_new_from_partial_message(h1->context,msg1,size1);
+        h22=grib_handle_new_from_partial_message(h1->context,msg2,size2);
 
         iter=grib_keys_iterator_new(h11, GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
 
@@ -1126,7 +1136,7 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
     return err;
 }
 
-int grib_no_handle_action(int err)
+int grib_no_handle_action(grib_runtime_options* options, int err)
 {
     fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
     return 0;

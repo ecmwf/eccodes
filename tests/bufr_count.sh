@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,7 +16,7 @@
 cd ${data_dir}/bufr
 
 # counting messages
-count=`${tools_dir}bufr_count syno_multi.bufr`
+count=`${tools_dir}/bufr_count syno_multi.bufr`
 #[ "$count" = "3" ]
-count=`${tools_dir}codes_count syno_multi.bufr`
+count=`${tools_dir}/codes_count syno_multi.bufr`
 [ "$count" = "3" ]

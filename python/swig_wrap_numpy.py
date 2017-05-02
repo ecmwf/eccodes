@@ -330,6 +330,10 @@ def grib_c_keys_iterator_new(*args):
   return _gribapi_swig.grib_c_keys_iterator_new(*args)
 grib_c_keys_iterator_new = _gribapi_swig.grib_c_keys_iterator_new
 
+def codes_c_bufr_keys_iterator_new(*args):
+  return _gribapi_swig.codes_c_bufr_keys_iterator_new(*args)
+codes_c_bufr_keys_iterator_new = _gribapi_swig.codes_c_bufr_keys_iterator_new
+
 def grib_c_grib_new_from_samples(*args):
   return _gribapi_swig.grib_c_grib_new_from_samples(*args)
 grib_c_grib_new_from_samples = _gribapi_swig.grib_c_grib_new_from_samples
@@ -438,9 +442,17 @@ def grib_c_keys_iterator_next(*args):
   return _gribapi_swig.grib_c_keys_iterator_next(*args)
 grib_c_keys_iterator_next = _gribapi_swig.grib_c_keys_iterator_next
 
+def codes_c_bufr_keys_iterator_next(*args):
+  return _gribapi_swig.codes_c_bufr_keys_iterator_next(*args)
+codes_c_bufr_keys_iterator_next = _gribapi_swig.codes_c_bufr_keys_iterator_next
+
 def grib_c_keys_iterator_delete(*args):
   return _gribapi_swig.grib_c_keys_iterator_delete(*args)
 grib_c_keys_iterator_delete = _gribapi_swig.grib_c_keys_iterator_delete
+
+def codes_c_bufr_keys_iterator_delete(*args):
+  return _gribapi_swig.codes_c_bufr_keys_iterator_delete(*args)
+codes_c_bufr_keys_iterator_delete = _gribapi_swig.codes_c_bufr_keys_iterator_delete
 
 def grib_c_skip_computed(*args):
   return _gribapi_swig.grib_c_skip_computed(*args)
@@ -470,9 +482,21 @@ def grib_c_keys_iterator_rewind(*args):
   return _gribapi_swig.grib_c_keys_iterator_rewind(*args)
 grib_c_keys_iterator_rewind = _gribapi_swig.grib_c_keys_iterator_rewind
 
+def codes_c_bufr_keys_iterator_rewind(*args):
+  return _gribapi_swig.codes_c_bufr_keys_iterator_rewind(*args)
+codes_c_bufr_keys_iterator_rewind = _gribapi_swig.codes_c_bufr_keys_iterator_rewind
+
+def grib_c_bufr_copy_data(*args):
+  return _gribapi_swig.grib_c_bufr_copy_data(*args)
+grib_c_bufr_copy_data = _gribapi_swig.grib_c_bufr_copy_data
+
 def grib_c_keys_iterator_get_name(*args):
   return _gribapi_swig.grib_c_keys_iterator_get_name(*args)
 grib_c_keys_iterator_get_name = _gribapi_swig.grib_c_keys_iterator_get_name
+
+def codes_c_bufr_keys_iterator_get_name(*args):
+  return _gribapi_swig.codes_c_bufr_keys_iterator_get_name(*args)
+codes_c_bufr_keys_iterator_get_name = _gribapi_swig.codes_c_bufr_keys_iterator_get_name
 
 def grib_c_index_get_size_long(*args):
   return _gribapi_swig.grib_c_index_get_size_long(*args)

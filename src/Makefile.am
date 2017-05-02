@@ -33,7 +33,7 @@ libeccodes_la_prototypes= \
 	action_class_trigger.c \
 	action_class_when.c \
 	action_class_concept.c \
-    action_class_hash_array.c \
+	action_class_hash_array.c \
 	action_class_set.c \
 	action_class_set_darray.c \
 	action_class_set_iarray.c \
@@ -265,6 +265,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_unsigned_bits.c \
 	grib_accessor_class_raw.c \
 	grib_accessor_class_bufr_extract_subsets.c \
+	grib_accessor_class_bufr_simple_thinning.c \
 	grib_accessor_class_spd.c \
 	grib_accessor_class_sum.c \
 	grib_accessor_class_to_integer.c \
@@ -289,12 +290,16 @@ libeccodes_la_prototypes= \
 	grib_dumper_class_debug.c \
 	grib_dumper_class_default.c \
 	grib_dumper_class_keys.c \
-	grib_dumper_class_filter.c \
-	grib_dumper_class_fortran.c \
-	grib_dumper_class_python.c \
+	grib_dumper_class_bufr_encode_C.c \
+	grib_dumper_class_bufr_encode_filter.c \
+	grib_dumper_class_bufr_encode_fortran.c \
+	grib_dumper_class_bufr_encode_python.c \
+	grib_dumper_class_bufr_decode_C.c \
+	grib_dumper_class_bufr_decode_filter.c \
+	grib_dumper_class_bufr_decode_fortran.c \
+	grib_dumper_class_bufr_decode_python.c \
 	grib_dumper_class_json.c \
-	grib_dumper_class_xml.c \
-	grib_dumper_class_c_code.c \
+	grib_dumper_class_grib_encode_C.c \
 	grib_dumper_class_wmo.c \
 	grib_dumper_class.c \
 	grib_context.c \
@@ -310,6 +315,7 @@ libeccodes_la_prototypes= \
 	grib_itrie.c \
 	grib_rules.c \
 	grib_keys_iterator.c \
+	bufr_keys_iterator.c \
 	grib_parse_utils.c \
 	grib_query.c \
 	grib_scaling.c \
@@ -355,11 +361,14 @@ libeccodes_la_prototypes= \
 	grib_iterator_class_gen.c \
 	grib_iterator_class_latlon.c \
 	grib_iterator_class_regular.c \
+	grib_iterator_class_space_view.c \
 	grib_expression.c \
 	grib_util.c \
-	compile.c \
+	bufr_util.c \
+	string_util.c \
 	functions.c \
 	codes_memfs.c \
+	grib_optimize_decimal_factor.c \
 	grib_api_version.c
 
 libeccodes_extra_prototypes = grib_bits_any_endian.c grib_bits_any_endian_simple.c

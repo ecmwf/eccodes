@@ -12,8 +12,10 @@ src/config.h
 src/eccodes_version.h
 src/grib_api.h.new
 src/grib_api_constants.h.new
+src/eccodes_constants.h.new
 src/grib_errors.c.new
 src/grib_errors.h.new
+src/errors.py.new
 config/test-driver
 autom4te.cache/
 config.log
@@ -57,6 +59,9 @@ tools/grib_get_data
 tools/grib_histogram
 tools/grib_index_build
 tools/gts_copy
+tools/gts_compare
+tools/gts_get
+tools/metar_compare
 tools/gts_dump
 tools/gts_filter
 tools/gts_ls
@@ -83,6 +88,7 @@ tools/metar_dump
 tools/metar_filter
 tools/metar_get
 tools/metar_ls
+tools/metar_copy
 tools/taf_dump
 tools/taf_filter
 tools/taf_get
@@ -145,13 +151,14 @@ examples/F90/eccodes_f_bufr_read_header
 examples/F90/eccodes_f_bufr_read_scatterometer
 examples/F90/eccodes_f_bufr_read_tropical_cyclone
 examples/F90/eccodes_f_grib_clone
+examples/F90/eccodes_f_grib_copy_namespace
 examples/F90/eccodes_f_grib_count_messages
 examples/F90/eccodes_f_grib_count_messages_multi
-examples/F90/eccodes_f_copy_message
+examples/F90/eccodes_f_grib_copy_message
 examples/F90/eccodes_f_copy_namespace
 examples/F90/eccodes_f_count_messages
 examples/F90/eccodes_f_grib_get_keys
-examples/F90/eccodes_f_get_data
+examples/F90/eccodes_f_grib_get_data
 examples/F90/eccodes_f_get_product_kind
 examples/F90/eccodes_f_get_pl
 examples/F90/eccodes_f_get_pv
@@ -167,11 +174,11 @@ examples/F90/eccodes_f_grib_print_data
 examples/F90/eccodes_f_grib_print_data_static
 examples/F90/eccodes_f_read_from_file
 examples/F90/eccodes_f_read_message
-examples/F90/eccodes_f_samples
+examples/F90/eccodes_f_grib_samples
 examples/F90/eccodes_f_grib_set_keys
 examples/F90/eccodes_f_grib_set_bitmap
 examples/F90/eccodes_f_grib_set_gvc
-examples/F90/eccodes_f_set_missing
+examples/F90/eccodes_f_grib_set_missing
 examples/F90/eccodes_f_grib_set_pv
 examples/F90/*.sh.log
 examples/F90/*.sh.trs
@@ -221,7 +228,7 @@ tests/read_any
 tests/read_index
 tests/so_perf
 tests/unit_tests
-tests/ccsds_perf
+tests/grib_ccsds_perf
 tests/grib_util_set_spec
 tigge/.libs/
 tigge/tigge_accumulations
@@ -308,4 +315,7 @@ data/bufr/*test
 
 *.sublime-workspace
 *.old
+.idea
 
+build/
+*.back

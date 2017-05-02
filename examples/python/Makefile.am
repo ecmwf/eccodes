@@ -10,9 +10,9 @@ TESTS = grib_clone.sh \
         grib_multi_write.sh \
         grib_nearest.sh \
         grib_print_data.sh \
-        samples.sh \
+        grib_samples.sh \
         grib_set_keys.sh \
-        set_missing.sh \
+        grib_set_missing.sh \
         binary_message.sh \
         grib_set_bitmap.sh \
         bufr_read_header.sh \
@@ -51,9 +51,9 @@ EXTRA_DIST = $(TESTS) include.sh CMakeLists.txt include.ctest.sh.in \
              grib_multi_write.py \
              grib_nearest.py \
              grib_print_data.py \
-             samples.py \
+             grib_samples.py \
              grib_set_keys.py \
-             set_missing.py \
+             grib_set_missing.py \
              binary_message.py \
              grib_set_pv.py \
              grib_set_bitmap.py \

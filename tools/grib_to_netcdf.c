@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -1641,7 +1641,7 @@ static hypercube *new_hypercube(const request *r)
     int total = 0, count = 0;
     int n = 0;
     const char *val = 0;
-
+    Assert(h);
     h->r = clone_one_request(r);
     h->cube = empty_request("CUBE");
 
@@ -1746,8 +1746,10 @@ static hypercube *new_hypercube_from_mars_request(const request *r)
     }
 
     n = count_values(s.c->cube, "axis");
-    if(n)
+    if(n) {
         s.c->compare = (namecmp*)calloc(sizeof(namecmp), n);
+        Assert(s.c->compare);
+    }
 
     for(i = 0; i < n; i++)
         s.c->compare[i] = comparator(get_value(s.c->cube, "axis", i));
@@ -1771,8 +1773,10 @@ static hypercube *new_simple_hypercube_from_mars_request(const request *r)
 
     free_one_request(s.r);
     n = count_values(s.c->cube, "axis");
-    if(n)
+    if(n) {
         s.c->compare = (namecmp*)calloc(sizeof(namecmp), n);
+        Assert(s.c->compare);
+    }
 
     for(i = 0; i < n; i++)
         s.c->compare[i] = comparator(get_value(s.c->cube, "axis", i));
@@ -4243,7 +4247,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     return 0;
 }
 
-int grib_no_handle_action(int err)
+int grib_no_handle_action(grib_runtime_options* options, int err)
 {
     fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
     return 0;

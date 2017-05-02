@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -114,13 +114,13 @@ int grib_create_accessor(grib_section* p, grib_action* a,  grib_loader* h)
     while(c)
     {
         if(c->create_accessor) {
-			int ret;
-			GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
-			GRIB_MUTEX_LOCK(&mutex1);
+            int ret;
+            GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
+            GRIB_MUTEX_LOCK(&mutex1);
             ret=c->create_accessor(p, a, h);
-			GRIB_MUTEX_UNLOCK(&mutex1);
+            GRIB_MUTEX_UNLOCK(&mutex1);
             return ret;
-		}
+        }
         c = c->super ? *(c->super) : NULL;
     }
     fprintf(stderr,"Cannot create accessor %s %s\n",a->name,a->cclass->name);
@@ -132,8 +132,8 @@ int grib_action_notify_change( grib_action* a, grib_accessor *observer, grib_acc
 {
     grib_action_class *c = a->cclass;
 
-    GRIB_MUTEX_INIT_ONCE(&once,&init_mutex)
-    GRIB_MUTEX_LOCK(&mutex1)
+    GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
+    GRIB_MUTEX_LOCK(&mutex1);
 
     init(c);
     while(c)
@@ -201,16 +201,3 @@ void grib_xref_action_branch(FILE* out,grib_action* a,const char* path)
     }
 }
 
-void grib_compile(grib_action* a, grib_compiler* compiler)
-{
-    grib_action_class *c = a->cclass;
-    init(c);
-    if(c->compile) {
-        c->compile(a,compiler);
-    }
-    else 
-    {
-        fprintf(stderr, "NO COMPILE METHOD '%s'\n", c->name);
-        Assert(0);
-    }
-}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -49,6 +49,7 @@ int grib_f_iterator_next(int *iterid, double *lat, double *lon, double *value);
 int grib_f_iterator_delete_(int *iterid);
 int grib_f_iterator_delete__(int *iterid);
 int grib_f_iterator_delete(int *iterid);
+
 int grib_f_keys_iterator_new_(int *gid, int *iterid, char *name_space, int len);
 int grib_f_keys_iterator_new__(int *gid, int *iterid, char *name_space, int len);
 int grib_f_keys_iterator_new(int *gid, int *iterid, char *name_space, int len);
@@ -58,6 +59,24 @@ int grib_f_keys_iterator_next(int *iterid);
 int grib_f_keys_iterator_delete_(int *iterid);
 int grib_f_keys_iterator_delete__(int *iterid);
 int grib_f_keys_iterator_delete(int *iterid);
+
+/*BUFR keys iterator*/
+int codes_f_bufr_keys_iterator_new_(int *gid, int *iterid);
+int codes_f_bufr_keys_iterator_new__(int *gid, int *iterid);
+int codes_f_bufr_keys_iterator_new(int *gid, int *iterid);
+int codes_f_bufr_keys_iterator_next_(int *iterid);
+int codes_f_bufr_keys_iterator_next__(int *iterid);
+int codes_f_bufr_keys_iterator_next(int *iterid);
+int codes_f_bufr_keys_iterator_get_name_(int *iterid, char *name, int len);
+int codes_f_bufr_keys_iterator_get_name__(int *kiter, char *name, int len);
+int codes_f_bufr_keys_iterator_get_name(int *kiter, char *name, int len);
+int codes_f_bufr_keys_iterator_rewind_(int *kiter);
+int codes_f_bufr_keys_iterator_rewind__(int *kiter);
+int codes_f_bufr_keys_iterator_rewind(int *kiter);
+int codes_f_bufr_keys_iterator_delete_(int *iterid);
+int codes_f_bufr_keys_iterator_delete__(int *iterid);
+int codes_f_bufr_keys_iterator_delete(int *iterid);
+
 int grib_f_gribex_mode_on_(void);
 int grib_f_gribex_mode_on__(void);
 int grib_f_gribex_mode_on(void);
@@ -109,6 +128,11 @@ int grib_f_util_sections_copy(int *gidfrom, int *gidto, int *what, int *gidout);
 int grib_f_copy_namespace_(int *gidsrc, char *name, int *giddest, int len);
 int grib_f_copy_namespace__(int *gidsrc, char *name, int *giddest, int len);
 int grib_f_copy_namespace(int *gidsrc, char *name, int *giddest, int len);
+
+int grib_f_copy_key_ (int *gidsrc, char *name, int *giddest, int len);
+int grib_f_copy_key__(int *gidsrc, char *name, int *giddest, int len);
+int grib_f_copy_key  (int *gidsrc, char *name, int *giddest, int len);
+
 int grib_f_count_in_file(int *fid, int *n);
 int grib_f_count_in_file_(int *fid, int *n);
 int grib_f_count_in_file__(int *fid, int *n);

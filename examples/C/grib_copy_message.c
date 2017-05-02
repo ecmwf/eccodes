@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -48,13 +48,13 @@ int main(int argc, char *argv[])
         const void* buffer = NULL;
         codes_handle* new_handle = NULL;
 
-        CODES_CHECK(grib_get_message_size(source_handle,&totalLength),0);
+        CODES_CHECK(codes_get_message_size(source_handle,&totalLength),0);
         buffer=(unsigned char*)malloc(totalLength*sizeof(char));
 
         CODES_CHECK(codes_get_message(source_handle, &buffer, &size),0);
         assert(size == totalLength);
 
-        new_handle = grib_handle_new_from_message(0, buffer, totalLength);
+        new_handle = codes_handle_new_from_message(0, buffer, totalLength);
 
         if (new_handle == NULL) {
             perror("ERROR: could not create GRIB handle from message");

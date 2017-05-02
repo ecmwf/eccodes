@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -29,8 +29,8 @@ grib_options_help grib_options_help_list[] ={
      "\n\t\tAll the keys in this list are skipped in the comparison. Bit-by-bit compare on.\n"},
   {"B:","order by directive",
      "\n\t\tOrder by. The output will be ordered according to the order by directive."
-     "\n\t\tOrder by example: \"step asc, centre desc\" (step ascending and centre descending)\n"},
-  {"c:","key[:i/d/s/n],key[:i/d/s/n],...",
+     "\n\t\tOrder by example: \"step:i asc, centre desc\" (step numeric ascending and centre descending)\n"},
+     {"c:","key[:i|d|s|n],key[:i|d|s|n],...",
    "\n\t\tOnly the listed keys or namespaces (:n) are compared. The optional letter after the colon is used "
    "\n\t\tto force the type in the comparison: i->integer, d->float, s->string, n->namespace."
    "\n\t\tSee -a option. Incompatible with -H option.\n"},
@@ -58,7 +58,7 @@ grib_options_help grib_options_help_list[] ={
    "\n\t\tOutput is written to output_file."
    "\n\t\tIf an output file is required and -o is not used, the"
    " output is written to filter.out\n"},
-  {"p:","key[:{s/d/i}],key[:{s/d/i}],...",
+  {"p:","key[:{s|d|i}],key[:{s|d|i}],...",
    "\n\t\tDeclaration of keys to print."
    "\n\t\tFor each key a string (key:s), a double (key:d) or an integer (key:i)"
    "\n\t\ttype can be requested. Default type is string.\n"},
@@ -66,19 +66,20 @@ grib_options_help grib_options_help_list[] ={
   {"r",0,"Repack data. Sometimes after setting some keys involving properties"
          "\n\t\tof the packing algorithm a repacking of data is needed."
          "\n\t\tThis repacking is performed setting this -r option.\n"},
-  {"s:","key[:{s/d/i}]=value,key[:{s/d/i}]=value,...",
+  {"s:","key[:{s|d|i}]=value,key[:{s|d|i}]=value,...",
    "\n\t\tKey/values to set."
    "\n\t\tFor each key a string (key:s), a double (key:d) or an integer (key:i)"
    "\n\t\ttype can be defined. By default the native type is set.\n"},
   {"t",0,"Print type information.\n"},
-  {"w:","key[:{s/d/i}]{=/!=}value,key[:{s/d/i}]{=/!=}value,...",
+  {"w:","key[:{s|d|i}]{=|!=}value,key[:{s|d|i}]{=|!=}value,...",
    "\n\t\tWhere clause."
    "\n\t\tMessages are processed only if they match all the"
    " key/value constraints."
    "\n\t\tA valid constraint is of type key=value or key!=value."
    "\n\t\tFor each key a string (key:s), a double (key:d) or"
    " an integer (key:i)\n\t\ttype can be specified. Default type is string."
-   "\n\t\tIn the value you can also use the forward-slash character '/' to specify an OR condition (i.e. a logical disjunction)\n"
+   "\n\t\tIn the value you can also use the forward-slash character '/' to specify an OR condition (i.e. a logical disjunction)"
+   "\n\t\tNote: only one -w clause is allowed.\n"
   },
   {"v",0,"Verbose.\n"},
   {"7",0,"Does not fail when the message has wrong length\n"},
@@ -89,13 +90,13 @@ grib_options_help grib_options_help_list[] ={
   {"H",0,"Print octet content in hexadecimal format.\n"},
   {"M",0,"Multi-field support off. Turn off support for multiple fields in single grib message.\n"},
   {"O",0,"Octet mode. WMO documentation style dump.\n"},
-  {"P:","key[:{s/d/i}],key[:{s/d/i}],...",
+  {"P:","key[:{s|d|i}],key[:{s|d|i}],...",
    "\n\t\tAs -p adding the declared keys to the default list.\n"},
   {"R:","key1=relative_error1,key2=relative_error2,...\n",
    "\tCompare floating point values using the relative error as tolerance."
 "\n\t\tkey1=relative_error will compare key1 using relative_error1."
 "\n\t\tall=relative_error will compare all the floating point keys using relative_error. Default all=0.\n"},
-  {"S",0,"Strict. Only grib messages matching all the constraints are copied to"
+  {"S",0,"Strict. Only messages matching all the constraints are copied to"
    "\n\t\tthe output file\n"},
   {"T:","T | B | M | A","Message type. T->GTS, B->BUFR, M->METAR (Experimental),A->Any (Experimental).\n\t\t\tThe input file is interpreted according to the message type.\n"},
   {"V",0,"Version.\n"},

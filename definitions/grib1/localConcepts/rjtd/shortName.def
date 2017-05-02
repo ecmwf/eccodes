@@ -19,6 +19,16 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 32 ;
 	}
+#Sea-ice cover
+'ci' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 91 ;
+	}
+#Montgomery potential
+'mont' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 37 ;
+	}
 #Pressure
 'pres' = {
 	 table2Version = 200 ;
@@ -28,6 +38,16 @@
 'pv' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 4 ;
+	}
+#Total column cloud liquid water
+'tclw' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 227 ;
+	}
+#Total column cloud ice water
+'tciw' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 58 ;
 	}
 #Geopotential
 'z' = {
@@ -54,10 +74,21 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 51 ;
 	}
+#Surface pressure
+'sp' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 1 ;
+	 indicatorOfTypeOfLevel = 1 ;
+	}
 #Vertical velocity
 'w' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 39 ;
+	}
+#Total column water vapour
+'tcwv' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 54 ;
 	}
 #Vorticity (relative)
 'vo' = {
@@ -83,6 +114,27 @@
 'r' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 52 ;
+	}
+#10 metre U wind component
+'10u' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 33 ;
+	 indicatorOfTypeOfLevel = 105 ;
+	 level = 10 ;
+	}
+#10 metre V wind component
+'10v' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 34 ;
+	 indicatorOfTypeOfLevel = 105 ;
+	 topLevel = 10 ;
+	}
+#2 metre temperature
+'2t' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 11 ;
+	 indicatorOfTypeOfLevel = 105 ;
+	 level = 2 ;
 	}
 #Land-sea mask
 'lsm' = {
@@ -149,6 +201,13 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 123 ;
 	}
+#2 metre specific humidity
+'2sh' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 51 ;
+	 indicatorOfTypeOfLevel = 105 ;
+	 level = 2 ;
+	}
 #Convective snow
 'snoc' = {
 	 table2Version = 200 ;
@@ -179,11 +238,6 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 212 ;
 	}
-#Cloud Ice
-'cice' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 58 ;
-	}
 #Cloud water
 'cwat' = {
 	 table2Version = 200 ;
@@ -194,8 +248,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Total ozone
-'tozne' = {
+#Total column integrated ozone
+'tcioz' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 10 ;
 	}
@@ -203,6 +257,13 @@
 'gflux' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 155 ;
+	}
+#2 metre relative humidity
+'2r' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 52 ;
+	 indicatorOfTypeOfLevel = 105 ;
+	 level = 2 ;
 	}
 #Clear Sky Downward Solar Flux
 'csdsf' = {
@@ -229,32 +290,32 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 84 ;
 	}
-#Evaporation
+#Mean evaporation
 'evpsfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Total precipitation
+#Mean total precipitation
 'tpratsfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 61 ;
 	}
-#Large scale precipitation
+#Mean large scale precipitation
 'lpratsfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 62 ;
 	}
-#Convective precipitation
+#Mean convective precipitation
 'cpratsfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 63 ;
 	}
-#Snowfall rate water equivalent
+#Mean snowfall rate water equivalent
 'srweqsfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 64 ;
 	}
-#Water run-off
+#Mean surface water runoff
 'rofsfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 90 ;
@@ -269,27 +330,22 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 151 ;
 	}
-#Meridional water vapour flux
-'vwvclm' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 152 ;
-	}
 #Adiabatic meridional acceleration
 'advaprs' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 165 ;
 	}
-#Frequency of deep convection
+#Mean frequency of deep convection
 'frcvsfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 170 ;
 	}
-#Frequency of shallow convection
+#Mean frequency of shallow convection
 'frcvssfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 171 ;
 	}
-#Frequency of stratocumulus parameterisation
+#Mean frequency of stratocumulus parameterisation
 'frscsfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 172 ;
@@ -304,7 +360,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Evapotranspiration
+#Mean evapotranspiration
 'ltrssfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 202 ;
@@ -328,11 +384,6 @@
 'smcugl' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 226 ;
-	}
-#Cloud liquid water
-'cwclm' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 227 ;
 	}
 #Upward mass flux at cloud base
 'mflxbhbl' = {
@@ -359,35 +410,25 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 239 ;
 	}
-#Zonal momentum flux by long gravity wave
+#Mean zonal momentum flux by long gravity wave
 'fglusfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Meridional momentum flux by long gravity wave
+#Mean meridional momentum flux by long gravity wave
 'fglvsfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 148 ;
 	}
-#Meridional momentum flux by short gravity wave
+#Mean meridional momentum flux by short gravity wave
 'fgsvsfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Zonal momentum flux by short gravity wave
+#Mean zonal momentum flux by short gravity wave
 'fgsusfc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 159 ;
-	}
-#Zonal thermal energy flux
-'utheclm' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 190 ;
-	}
-#Meridional thermal energy flux
-'vtheclm' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 191 ;
 	}
 #Convective meridional acceleration
 'cnvvahbl' = {
@@ -589,11 +630,6 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 31 ;
 	}
-#Montgomery stream Function
-'mntsf' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 37 ;
-	}
 #Sigma coordinate vertical velocity
 'sgcvv' = {
 	 table2Version = 200 ;
@@ -643,11 +679,6 @@
 'mixr' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 53 ;
-	}
-#Precipitable water
-'pwat' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 54 ;
 	}
 #Vapour pressure
 'vp' = {
@@ -718,11 +749,6 @@
 'den' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 89 ;
-	}
-#Ice cover (1=ice, 0=no ice)
-'icec' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 91 ;
 	}
 #Ice thickness
 'icetk' = {
@@ -894,10 +920,25 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 87 ;
 	}
+#Vertical integral of eastward heat flux
+'vithee' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 190 ;
+	}
+#Vertical integral of northward heat flux
+'vithen' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 191 ;
+	}
 #Vertical integral of eastward water vapour flux
 'viwve' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 157 ;
+	}
+#Vertical integral of northward water vapour flux
+'viwvn' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 152 ;
 	}
 #specific cloud water content
 'qc' = {
@@ -909,8 +950,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 85 ;
 	}
-#Snow Fall water equivalent
-'sf' = {
+#Snow depth water equivalent
+'sd' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 65 ;
 	}

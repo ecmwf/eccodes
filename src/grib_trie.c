@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -47,7 +47,7 @@ static int mapping[] = {
 0, /* 20 */
 0, /* 21 */
 0, /* 22 */
-0, /* 23 */
+38, /* # */
 0, /* 24 */
 0, /* 25 */
 0, /* 26 */
@@ -270,7 +270,20 @@ static int mapping[] = {
 0, /* ff */
 };
 
-#define SIZE 38
+/* ECC-388 */
+#ifdef DEBUG
+ static const size_t NUM_MAPPINGS = sizeof(mapping)/sizeof(mapping[0]);
+
+ #define DebugCheckBounds(index, value) \
+   do { \
+    if (!((index) >= 0 && (index) < NUM_MAPPINGS) ) {printf("ERROR: string='%s' index=%ld @ %s +%d \n", value, (long)index, __FILE__, __LINE__); abort();} \
+   } while(0)
+#else
+ #define DebugCheckBounds(index, value)
+#endif
+
+
+#define SIZE 39
 
 #if GRIB_PTHREADS
 static pthread_once_t once  = PTHREAD_ONCE_INIT;
@@ -301,128 +314,158 @@ static void init()
 #endif
 
 struct grib_trie {
-  grib_trie* next[SIZE];
-  grib_context *context;
-  int first;
-  int last;
-  void* data;
+    grib_trie* next[SIZE];
+    grib_context *context;
+    int first;
+    int last;
+    void* data;
 };
 
-grib_trie *grib_trie_new(grib_context* c) {
+grib_trie *grib_trie_new(grib_context* c)
+{
 #ifdef RECYCLE_TRIE
-  grib_trie* t = grib_context_malloc_clear_persistent(c,sizeof(grib_trie));
+    grib_trie* t = grib_context_malloc_clear_persistent(c,sizeof(grib_trie));
 #else
-  grib_trie* t = (grib_trie*)grib_context_malloc_clear(c,sizeof(grib_trie));
+    grib_trie* t = (grib_trie*)grib_context_malloc_clear(c,sizeof(grib_trie));
 #endif
-  t->context = c;
-  t->first=SIZE;
-  t->last=-1;
-  return t;
+    t->context = c;
+    t->first=SIZE;
+    t->last=-1;
+    return t;
 }
 
-void grib_trie_delete(grib_trie *t) {
-  GRIB_MUTEX_INIT_ONCE(&once,&init)
-  GRIB_MUTEX_LOCK(&mutex)
-  if(t)  {
-    int i;
-    for(i = t->first; i <= t->last; i++)
-      if (t->next[i]) {
-        grib_context_free( t->context, t->next[i]->data );
-        grib_trie_delete(t->next[i]);
-      }
+void grib_trie_delete_container(grib_trie *t)
+{
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex);
+    if(t)  {
+        int i;
+        for(i = t->first; i <= t->last; i++)
+            if (t->next[i]) {
+                grib_trie_delete_container(t->next[i]);
+            }
 #ifdef RECYCLE_TRIE
-    grib_context_free_persistent(t->context,t);
+        grib_context_free_persistent(t->context,t);
 #else
-    grib_context_free(t->context,t);
+        grib_context_free(t->context,t);
 #endif
-  }
-  GRIB_MUTEX_UNLOCK(&mutex)
+    }
+    GRIB_MUTEX_UNLOCK(&mutex);
 }
 
-void grib_trie_clear(grib_trie *t) {
-  if(t)  {
-    int i;
-    t->data=NULL;
-    for(i = t->first; i <= t->last; i++)
-      if (t->next[i])
-        grib_trie_clear(t->next[i]);
-  }
+void grib_trie_delete(grib_trie *t)
+{
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex);
+    if(t)  {
+        int i;
+        for(i = t->first; i <= t->last; i++)
+            if (t->next[i]) {
+                grib_context_free( t->context, t->next[i]->data );
+                grib_trie_delete(t->next[i]);
+            }
+#ifdef RECYCLE_TRIE
+        grib_context_free_persistent(t->context,t);
+#else
+        grib_context_free(t->context,t);
+#endif
+    }
+    GRIB_MUTEX_UNLOCK(&mutex);
+}
+
+void grib_trie_clear(grib_trie *t)
+{
+    if(t)  {
+        int i;
+        t->data=NULL;
+        for(i = t->first; i <= t->last; i++)
+            if (t->next[i])
+                grib_trie_clear(t->next[i]);
+    }
 }
 
 void* grib_trie_insert(grib_trie* t,const char* key,void* data)
 {
-  grib_trie *last = t;
-  const char *k = key;
-  void* old = NULL;
+    grib_trie *last = t;
+    const char *k = key;
+    void* old = NULL;
 
-  GRIB_MUTEX_INIT_ONCE(&once,&init)
-  GRIB_MUTEX_LOCK(&mutex)
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex);
 
-  while(*k && t) {
-    last = t;
-    t = t->next[mapping[(int)*k]];
-    if(t) k++;
-  }
-
-  if(*k == 0) {
-	old = t->data;
-    t->data=data;
-  } else {
-    t = last;
-    while(*k) {
-      int j = mapping[(int)*k++];
-      if(j < t->first) t->first = j;
-      if(j > t->last)  t->last = j;
-      t = t->next[j] =grib_trie_new(t->context);
+    while(*k && t) {
+        last = t;
+        DebugCheckBounds((int)*k, key);
+        t = t->next[mapping[(int)*k]];
+        if(t) k++;
     }
-	old = t->data;
-    t->data=data;
-  }
-  GRIB_MUTEX_UNLOCK(&mutex)
-  return data == old ? NULL : old;
+
+    if(*k == 0) {
+        old = t->data;
+        t->data=data;
+    } else {
+        t = last;
+        while(*k) {
+            int j = 0;
+            DebugCheckBounds((int)*k, key);
+            j = mapping[(int)*k++];
+            if(j < t->first) t->first = j;
+            if(j > t->last)  t->last = j;
+            t = t->next[j] =grib_trie_new(t->context);
+        }
+        old = t->data;
+        t->data=data;
+    }
+    GRIB_MUTEX_UNLOCK(&mutex);
+    return data == old ? NULL : old;
 }
 
 void* grib_trie_insert_no_replace(grib_trie* t,const char* key,void* data)
 {
-	grib_trie *last = t;
-	const char *k = key;
+    grib_trie *last = t;
+    const char *k = key;
 
-	while(*k && t) {
-		last = t;
-		t = t->next[mapping[(int)*k]];
-		if(t) k++;
-	}
+    while(*k && t) {
+        last = t;
+        DebugCheckBounds((int)*k, key);
+        t = t->next[mapping[(int)*k]];
+        if(t) k++;
+    }
 
-	if(*k != 0) { 
-		t = last;
-		while(*k) {
-			int j = mapping[(int)*k++];
-			if(j < t->first) t->first = j;
-			if(j > t->last)  t->last = j;
-			t = t->next[j] =grib_trie_new(t->context);
-		}
-	}
-	
-	if (!t->data) t->data=data;
-	
-	return t->data;
+    if(*k != 0) {
+        t = last;
+        while(*k) {
+            int j = 0;
+            DebugCheckBounds((int)*k, key);
+            j = mapping[(int)*k++];
+            if(j < t->first) t->first = j;
+            if(j > t->last)  t->last = j;
+            t = t->next[j] =grib_trie_new(t->context);
+        }
+    }
+
+    if (!t->data) t->data=data;
+
+    return t->data;
 }
 
 void *grib_trie_get(grib_trie* t,const char* key)
 {
-  const char *k = key;
-  GRIB_MUTEX_INIT_ONCE(&once,&init)
-  GRIB_MUTEX_LOCK(&mutex)
+    const char *k = key;
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex);
 
-  while(*k && t)
-    t = t->next[mapping[(int)*k++]];
+    while(*k && t) {
+        DebugCheckBounds((int)*k, key);
+        t = t->next[mapping[(int)*k++]];
+    }
 
-  if(*k == 0 && t != NULL && t->data!=NULL) {
-    GRIB_MUTEX_UNLOCK(&mutex)
-    return t->data;
-  }
-  GRIB_MUTEX_UNLOCK(&mutex)
-  return NULL;
+    if(*k == 0 && t != NULL && t->data!=NULL) {
+        GRIB_MUTEX_UNLOCK(&mutex);
+        return t->data;
+    }
+    GRIB_MUTEX_UNLOCK(&mutex);
+    return NULL;
 }
 
 /*
@@ -444,4 +487,3 @@ void grib_trie_remove(grib_trie* trie,const char* key)
 
 }
 */
-

@@ -19,49 +19,44 @@ attdict = dict(sources=['@CMAKE_CURRENT_SOURCE_DIR@/swig_wrap_numpy.c',
                              '@CMAKE_CURRENT_SOURCE_DIR@/../src',
                              numpy_include],
                library_dirs=['@CMAKE_BINARY_DIR@/lib'],
+               runtime_library_dirs=[],
                libraries=['eccodes'],
-               extra_objects=[],
-               extra_link_args=['-Wl,-rpath,@CMAKE_INSTALL_PREFIX@/lib'])
-
-add_attribute = lambda **args: [list.append(attdict[key], value)
-                                for key, value in args.items()]
-
-with_jasper = @HAVE_LIBJASPER@
-if with_jasper:
-    jasper_dir = '@JASPER_DIR@'
-    if jasper_dir and jasper_dir != 'system':
-        add_attribute(include_dirs=os.path.join(jasper_dir, 'include'),
-                      library_dirs=os.path.join(jasper_dir, 'lib'),
-                      extra_link_args='-Wl,-rpath,' + os.path.join(jasper_dir, 'lib'))
-    add_attribute(libraries='jasper')
+               extra_objects=[])
 
 shared_libs='@BUILD_SHARED_LIBS@'
 if shared_libs == 'OFF':
-    with_openjpeg = @HAVE_LIBOPENJPEG@
-    if with_openjpeg:
+
+    add_attribute = lambda **args: [list.append(attdict[key], value)
+                                    for key, value in args.items()]
+
+    if @HAVE_LIBJASPER@:
+        jasper_dir = '@JASPER_DIR@'
+        if jasper_dir and jasper_dir != 'system':
+            add_attribute(library_dirs=os.path.join(jasper_dir, 'lib'),
+                          runtime_library_dirs=os.path.join(jasper_dir, 'lib'))
+        add_attribute(libraries='jasper')
+
+    if @HAVE_LIBOPENJPEG@:
         openjpeg_lib_dir = '@OPENJPEG_LIB_DIR@'
-        openjpeg_inc_dir = '@OPENJPEG_INCLUDE_DIR@'
-        if openjpeg_lib_dir and openjpeg_inc_dir:
-            add_attribute(include_dirs=openjpeg_inc_dir,
-                          library_dirs=openjpeg_lib_dir,
-                          extra_link_args='-Wl,-rpath,' + openjpeg_lib_dir)
-        add_attribute(libraries='openjp2')
+        openjpeg_libname = '@OJ_WITHOUT_LIB@'
+        if openjpeg_lib_dir:
+            add_attribute(library_dirs=openjpeg_lib_dir,
+                          runtime_library_dirs=openjpeg_lib_dir)
+        add_attribute(libraries=openjpeg_libname)
 
+    # assumes png is supplied by system paths -- may not be true
+    if @HAVE_LIBPNG@:
+        add_attribute(libraries='png')
 
-# assumes png is supplied by system paths -- may not be true
-png = @HAVE_LIBPNG@
-if png:
-    add_attribute(libraries='png')
+    if @HAVE_MEMFS@:
+        add_attribute(libraries='eccodes_memfs')
 
-
-with_aec = @HAVE_AEC@
-if with_aec:
-    aec_dir = '@AEC_DIR@'
-    if aec_dir and aec_dir != 'system':
-        add_attribute(include_dirs=os.path.join(aec_dir, 'include'),
-                      library_dirs=os.path.join(aec_dir, 'lib'),
-                      extra_link_args='-Wl,-rpath,' + os.path.join(aec_dir, 'lib'))
-    add_attribute(libraries='aec')
+    if @HAVE_AEC@:
+        aec_dir = '@AEC_DIR@'
+        if aec_dir and aec_dir != 'system':
+            add_attribute(library_dirs=os.path.join(aec_dir, 'lib'),
+                          runtime_library_dirs=os.path.join(aec_dir, 'lib'))
+        add_attribute(libraries='aec')
 
 
 setup(name='eccodes',
@@ -73,4 +68,4 @@ setup(name='eccodes',
       url='https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home',
       download_url='https://software.ecmwf.int/wiki/display/ECC/Releases',
       ext_modules=[Extension('gribapi._gribapi_swig', **attdict)],
-      packages=['eccodes', 'gribapi'])
+      packages=['eccodes', 'eccodes.high_level', 'gribapi'])

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -31,7 +31,7 @@ fRules=${label}.filter
 # Test: Area extraction
 #-----------------------------------------------------------
 cat > $fRules <<EOF
- transient originalNumberOfSubsets=numberOfSubsets;
+ transient originalNumberOfSubsets = numberOfSubsets;
  set extractAreaNorthLatitude=52.5;
  set extractAreaSouthLatitude=51.1;
  set extractAreaWestLongitude=155.2;
@@ -40,6 +40,7 @@ cat > $fRules <<EOF
  set doExtractArea=1;
  write;
  print "extracted [numberOfSubsets] of [originalNumberOfSubsets] subsets";
+ assert(numberOfSubsets == extractedAreaNumberOfSubsets);
 EOF
 
 inputBufr="amsa_55.bufr"
@@ -51,7 +52,7 @@ rm -f $outputFilt
 echo "Test: Area extraction" >> $fLog
 echo "file: $outputBufr" >> $fLog
 
-${tools_dir}bufr_filter -o $outputBufr $fRules $inputBufr > $outputFilt
+${tools_dir}/bufr_filter -o $outputBufr $fRules $inputBufr > $outputFilt
 [ -f $outputBufr ]
 
 cat > $fRules <<EOF
@@ -67,7 +68,7 @@ print "===========";
 print "fieldOfViewNumber=[fieldOfViewNumber!15]";
 print "===========";
 EOF
-${tools_dir}bufr_filter $fRules $inputBufr $outputBufr  >> $outputFilt
+${tools_dir}/bufr_filter $fRules $inputBufr $outputBufr  >> $outputFilt
 
 cat > $outputRef <<EOF
 extracted 14 of 128 subsets

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -402,20 +402,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->number_of_data_points,&number_of_data_points)) != GRIB_SUCCESS)
         return err;
 
-
-
-
     d = grib_power(decimal_scale_factor,10) ;
-
 
     max = val[0];
     min = max;
     for(i=1;i< n_vals;i++)
     {
-        if (val[i] > max )
-            max = val[i];
-        if (val[i] < min )
-            min = val[i];
+        if      (val[i] > max) max = val[i];
+        else if (val[i] < min) min = val[i];
     }
     min *= d;
     max *= d;
@@ -469,7 +463,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         err = GRIB_OUT_OF_MEMORY;
         goto cleanup;
     }
-
 
     if((err = grib_set_double_internal(grib_handle_of_accessor(a),self->reference_value, reference_value)) != GRIB_SUCCESS)
         return err;

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,7 +9,7 @@
 
 . ./include.sh
 
-numberOfValues=`${examples_dir}c_grib_print_data ../../data/constant_field.grib1 | grep values | awk '{print $1}'`
+numberOfValues=`${examples_dir}/c_grib_print_data ../../data/constant_field.grib1 | grep values | awk '{print $1}'`
 
 if [ $numberOfValues -ne 99200 ]
 then

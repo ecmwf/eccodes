@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -8,7 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 #include "grib_api_internal.h"
-#include <assert.h>
 
 /*
  * C Implementation: gaussian_reduced
@@ -87,7 +86,7 @@ void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoi
       }
     }
 
-    assert(*npoints==irange);
+    Assert(*npoints==irange);
 #if EFDEBUG
 	printf("--  pl=%ld npoints=%ld range=%.10e ilon_first=%ld ilon_last=%ld irange=%ld\n",
 		   pl,*npoints,range,*ilon_first,*ilon_last,irange);

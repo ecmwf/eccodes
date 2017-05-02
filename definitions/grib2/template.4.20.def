@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -26,7 +26,9 @@ unsigned[1] numberOfRadarSitesUsed  : dump;
 
 #  Indicator of unit of time range
 codetable[1] indicatorOfUnitOfTimeRange ('4.4.table',masterDir,localDir)  : dump;
-codetable[1] stepUnits 'stepUnits.table' = 1 : transient,dump,no_copy;
+alias defaultStepUnits = one; # 1 means Hour. See code table 4.4
+template_nofail default_step_units "grib2/localConcepts/[centre:s]/default_step_units.def";
+codetable[1] stepUnits 'stepUnits.table' = defaultStepUnits : transient,dump,no_copy;
 
 #  Site latitude
 # (in 10-6 degree)

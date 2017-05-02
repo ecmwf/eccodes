@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -18,7 +18,7 @@
 #include "omp.h"
 #endif
 
-#define mask1(i)    (1u << i)
+#define mask1(i)    (1UL << i)
 #define test(n,i)    !!((n) & mask1(i))
 
 long GRIB_MASK = -1;       /* Mask of sword bits */

@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -53,7 +53,7 @@ alias referenceDate = dateOfForecastRun;
 unsigned[1] numberOfModels :dump;
 pad padding_local1_31(42);
 listOfModelIdentifiers list (numberOfModels) {
-  codetable[2] modelIdentifier 'grib1/0.table' :dump;
+  codetable[2] modelIdentifier 'common/c-1.table' :dump;
 }
 padto padding_sec1_loc(offsetSection1 + 240 );
 

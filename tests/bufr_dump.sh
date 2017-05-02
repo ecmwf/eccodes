@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -29,7 +29,7 @@ REDIRECT=/dev/null
 
 for file in ${bufr_files}
 do
-  ${tools_dir}bufr_dump -O ${data_dir}/bufr/$file >/dev/null
+  ${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file >/dev/null
 done
 
 #==============================================
@@ -39,11 +39,11 @@ file="aaen_55.bufr"
 export ECCODES_DEBUG=1
 
 # By default debug output goes to stderr
-${tools_dir}bufr_dump -O ${data_dir}/bufr/$file 2>&1 | grep -q "BUFR data .*ing"
+${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file 2>&1 | grep -q "BUFR data .*ing"
 
 # Redirect it to stdout
 export ECCODES_LOG_STREAM=stdout
-${tools_dir}bufr_dump -O ${data_dir}/bufr/$file | grep -q "BUFR data .*ing"
+${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file | grep -q "BUFR data .*ing"
 
 unset ECCODES_DEBUG
 unset ECCODES_LOG_STREAM
@@ -62,7 +62,7 @@ unset ECCODES_LOG_STREAM
 # In v0.16.0 we changed the shortNames so we use a newer ref file
 #fJsonRef=${data_dir}/bufr/"bad.bufr.json.v0.16.0.ref"
 
-#${tools_dir}bufr_dump -js $fBufr > $fJsonTmp
+#${tools_dir}/bufr_dump -js $fBufr > $fJsonTmp
 
 #diff $fJsonTmp $fJsonRef
 
@@ -77,7 +77,7 @@ unset ECCODES_LOG_STREAM
 #fBufr=${data_dir}/bufr/"207003.bufr"
 #fJsonRef=${data_dir}/bufr/"207003.bufr.json.ref"
 #
-#${tools_dir}bufr_dump -ja $fBufr > $fJsonTmp
+#${tools_dir}/bufr_dump -ja $fBufr > $fJsonTmp
 #
 #diff $fJsonTmp $fJsonRef
 #

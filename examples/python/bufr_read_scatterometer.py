@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -39,15 +39,15 @@ def example():
     # loop for the messages in the file
     while 1:
         # get handle for message
-        gid = codes_bufr_new_from_file(f)
-        if gid is None:
+        bufr = codes_bufr_new_from_file(f)
+        if bufr is None:
             break
 
         print "message: %s" % cnt
 
-        # we need to instruct ecCodes to expand all the descriptors
+        # We need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(gid, 'unpack', 1)
+        codes_set(bufr, 'unpack', 1)
 
         # The BUFR file contains a single message with 2016 subsets in a
         # compressed form. It means each subset has exactly the same structure:
@@ -58,19 +58,19 @@ def example():
         # subsets we will simply access the key by condition (see below)
 
         # Get the total number of subsets.
-        numObs = codes_get(gid, "numberOfSubsets")
+        numObs = codes_get(bufr, "numberOfSubsets")
 
         print '  Number of values: %ld' % (numObs)
 
         # Get latitude (for all the subsets)
-        lat = codes_get_array(gid, "latitude")
+        lat = codes_get_array(bufr, "latitude")
 
         # Get longitude (for all the subsets)
-        lon = codes_get_array(gid, "longitude")
+        lon = codes_get_array(bufr, "longitude")
 
         # Get backScatter for beam two. We use an access by condition for this
         # key (for all the subsets).
-        bscat = codes_get_array(gid, "/beamIdentifier=2/backscatter")
+        bscat = codes_get_array(bufr, "/beamIdentifier=2/backscatter")
 
         # Check that all arrays are same size
         if len(lat) != numObs or len(lon) != numObs or len(bscat) != numObs:
@@ -86,10 +86,10 @@ def example():
 
         cnt += 1
 
-        # delete handle
-        codes_release(gid)
+        # Release handle
+        codes_release(bufr)
 
-    # close the file
+    # Close the file
     f.close()
 
 

@@ -1,5 +1,5 @@
 set -ea
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -32,11 +32,13 @@ else
     export ECCODES_DEFINITION_PATH
     ECCODES_SAMPLES_PATH=$cpath/samples
     export ECCODES_SAMPLES_PATH
-    tools_dir=$cpath/tools/
-    examples_dir=$cpath/examples/C/
+    tools_dir=$cpath/tools
+    examples_dir=$cpath/examples/C
 
-#tools_dir="valgrind --error-exitcode=1 -q $cpath/tools/"
-#examples_dir="valgrind --error-exitcode=1 -q $cpath/examples/C/"
+    if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
+      tools_dir="valgrind --error-exitcode=1 -q $cpath/tools"
+      examples_dir="valgrind --error-exitcode=1 -q $cpath/examples/C"
+    fi
 
     data_dir=$cpath/data
   else
@@ -59,6 +61,6 @@ else
   # Download the data needed for tests
   ${data_dir}/download.sh "${data_dir}"
 
-  #${tools_dir}codes_info
+  #${tools_dir}/codes_info
   set -u
 fi

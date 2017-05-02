@@ -17,10 +17,15 @@ list( APPEND test_bins
       multi_from_message
       read_index
       unit_tests
+      bufr_keys_iter
       gauss_sub
       grib_util_set_spec
       local_MeteoFrance
       grib_2nd_order_numValues
+      optimize_scaling
+      optimize_scaling_sh
+      ecc-386
+      bufr_get_element
 )
 
 foreach( tool ${test_bins} )
@@ -34,18 +39,22 @@ endforeach()
 
 # Now add each test (shell scripts)
 #################################################
-list( APPEND tests1
+# These tests do not require any data downloads
+list( APPEND tests_no_data_reqd
     definitions
     calendar
     unit_tests
     md5
     uerra
     grib_2nd_order_numValues
+    julian
 )
-list( APPEND tests2
+# These tests do require data downloads
+list( APPEND tests_data_reqd
     grib_double_cmp
     bufr_dump
-    bufr_dump_filter
+    bufr_dump_decode_filter
+    bufr_dump_encode_filter
     bufrdc_desc_ref
     bufrdc_ref
     bufr_compare
@@ -58,9 +67,13 @@ list( APPEND tests2
     bufr_json
     bufr_ls
     bufr_change_edition
+    bufr_keys_iter
+    bufr_get_element
     ecc-197
     ecc-286
     ecc-288
+    ecc-379
+    ecc-393
     gts_get
     gts_ls
     gts_compare
@@ -70,51 +83,57 @@ list( APPEND tests2
     metar_compare
     bufr_set
     ieee
+    optimize_scaling
+    optimize_scaling_sh
     grib1to2
     grib2to1
     badgrib
-    ls
-    filter
-    multi
+    grib_ls
+    grib_filter
+    grib_multi
     budg
     gridType
-    octahedral
-    global
-    concept
+    grib_octahedral
+    grib_global
+    grib_concept
     decimalPrecision
-    bitsPerValue
+    grib_bitsPerValue
     get_fail
     missing
-    local
-    step
-    set
-    iterator
+    grib_local
+    grib_step
+    grib_set
+    grib_iterator
     grib_compare
-    level
+    grib_level
     index
-    bitmap
+    grib_bitmap
     list
-    second_order
+    grib_second_order
     multi_from_message
-    change_scanning
-    julian
-    statistics
+    grib_change_scanning
+    grib_statistics
     tigge
     tigge_conversions
     read_any
-    padding
+    grib_padding
     grib_dump
     grib_dump_debug
     grib_util_set_spec
     local_MeteoFrance
-    neg_fctime
+    grib_neg_fctime
 )
 if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
-    list(APPEND tests2 bufr_dump_fortran)
+    list(APPEND tests_data_reqd bufr_dump_encode_fortran)
+    list(APPEND tests_data_reqd bufr_dump_decode_fortran)
+endif()
+if( ENABLE_EXTRA_TESTS )
+    list(APPEND tests_data_reqd bufr_dump_encode_C)
+    list(APPEND tests_data_reqd bufr_dump_decode_C)
 endif()
 
 # These tests do not require any data downloads
-foreach( test ${tests1} )
+foreach( test ${tests_no_data_reqd} )
     ecbuild_add_test( TARGET eccodes_t_${test}
                       TYPE SCRIPT
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
@@ -130,7 +149,7 @@ ecbuild_add_test( TARGET eccodes_t_check_gaussian_grids
 # Note: making the test dependent on the grib files (with DEPENDS)
 #       means they will be downloaded at "make" time
 #       rather than when you do "ctest". Use TEST_DEPENDS instead
-foreach( test ${tests2} )
+foreach( test ${tests_data_reqd} )
     ecbuild_add_test( TARGET eccodes_t_${test}
                   TYPE SCRIPT
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
@@ -141,18 +160,23 @@ foreach( test ${tests2} )
 endforeach()
 
 if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
-    set_tests_properties ( eccodes_t_bufr_dump_fortran PROPERTIES TIMEOUT 2500)
+    set_tests_properties ( eccodes_t_bufr_dump_encode_fortran PROPERTIES TIMEOUT 2500)
+endif()
+if( ENABLE_EXTRA_TESTS )
+    set_tests_properties ( eccodes_t_bufr_dump_encode_C PROPERTIES TIMEOUT 2500)
 endif()
 
 
 if( HAVE_PYTHON AND ENABLE_EXTRA_TESTS )
-    set(test bufr_dump_python)
-    ecbuild_add_test( TARGET eccodes_t_${test}
-                      TYPE SCRIPT
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                      ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE} PYTHONPATH=@PROJECT_BINARY_DIR@/python
-                      TEST_DEPENDS eccodes_download_bufrs
-    )
+    list( APPEND ptests bufr_dump_encode_python bufr_dump_decode_python )
+    foreach( test ${ptests} )
+        ecbuild_add_test( TARGET eccodes_t_${test}
+                          TYPE SCRIPT
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                          ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE} PYTHONPATH=${PROJECT_BINARY_DIR}/python
+                          TEST_DEPENDS eccodes_download_bufrs
+        )
+    endforeach()
 endif()
 
 ###########################################
@@ -173,10 +197,10 @@ ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
                   TEST_DEPENDS eccodes_download_gribs
 )
 
-ecbuild_add_test( TARGET eccodes_t_jpeg
+ecbuild_add_test( TARGET eccodes_t_grib_jpeg
                   TYPE SCRIPT
                   CONDITION HAVE_JPEG
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/jpeg.sh
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_jpeg.sh
                   TEST_DEPENDS eccodes_download_gribs
 )
 
@@ -187,10 +211,10 @@ ecbuild_add_test( TARGET eccodes_t_grib_png
                   TEST_DEPENDS eccodes_download_gribs
 )
 
-ecbuild_add_test( TARGET eccodes_t_ccsds
+ecbuild_add_test( TARGET eccodes_t_grib_ccsds
                   TYPE SCRIPT
                   CONDITION HAVE_AEC
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ccsds.sh
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds.sh
                   TEST_DEPENDS eccodes_download_gribs
 )
 
@@ -199,4 +223,10 @@ ecbuild_add_test( TARGET eccodes_t_grib_check_param_concepts
                   CONDITION ENABLE_EXTRA_TESTS
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_param_concepts.sh
 )
-
+# Performance test. Must have -DENABLE_GRIB_TIMER=ON
+ecbuild_add_test( TARGET eccodes_t_ecc-386
+                  TYPE SCRIPT
+                  CONDITION ENABLE_EXTRA_TESTS AND ENABLE_GRIB_TIMER
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ecc-386.sh
+                  TEST_DEPENDS eccodes_download_gribs
+)

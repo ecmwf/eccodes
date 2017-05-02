@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,7 +14,7 @@ import sys
 from eccodes import *
 
 VERBOSE = 1  # verbose error reporting
-
+missingValue = 1e+20 # A value out of range
 
 def example(INPUT):
     f = open(INPUT)
@@ -24,9 +24,11 @@ def example(INPUT):
         if gid is None:
             break
 
-        iterid = codes_grib_iterator_new(gid, 0)
+        # Set the value representing the missing value in the field.
+        # Choose a missingValue that does not correspond to any real value in the data array
+        codes_set(gid, "missingValue", missingValue)
 
-        missingValue = codes_get_double(gid, "missingValue")
+        iterid = codes_grib_iterator_new(gid, 0)
 
         i = 0
         while 1:

@@ -421,11 +421,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\codes_memfs.c"
+				RelativePath="..\..\..\src\bufr_keys_iterator.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\compile.c"
+				RelativePath="..\..\..\src\bufr_util.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\codes_memfs.c"
 				>
 			</File>
 			<File
@@ -521,6 +525,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_accessor_class_bufr_extract_datetime_subsets.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_bufr_extract_subsets.c"
 				>
 			</File>
@@ -530,6 +538,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_accessor_class_bufr_has_delayed_replication.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_accessor_class_bufr_simple_thinning.c"
 				>
 			</File>
 			<File
@@ -960,7 +972,7 @@
 				RelativePath="..\..\..\src\grib_accessor_class_int8.c"
 				>
 			</File>
-            <File
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_iterator.c"
 				>
 			</File>
@@ -1385,7 +1397,35 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\grib_dumper_class_c_code.c"
+				RelativePath="..\..\..\src\grib_dumper_class_bufr_decode_C.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_dumper_class_bufr_decode_filter.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_dumper_class_bufr_decode_fortran.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_dumper_class_bufr_decode_python.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_dumper_class_bufr_encode_C.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_dumper_class_bufr_encode_filter.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_dumper_class_bufr_encode_fortran.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_dumper_class_bufr_encode_python.c"
 				>
 			</File>
 			<File
@@ -1397,11 +1437,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\grib_dumper_class_filter.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\grib_dumper_class_fortran.c"
+				RelativePath="..\..\..\src\grib_dumper_class_grib_encode_C.c"
 				>
 			</File>
 			<File
@@ -1413,19 +1449,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\grib_dumper_class_python.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\grib_dumper_class_serialize.c"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_dumper_class_wmo.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\grib_dumper_class_xml.c"
 				>
 			</File>
 			<File
@@ -1589,6 +1617,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_iterator_class_space_view.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_itrie.c"
 				>
 			</File>
@@ -1646,6 +1678,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_openjpeg_encoding.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_optimize_decimal_factor.c"
 				>
 			</File>
 			<File
@@ -1714,6 +1750,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\md5.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\string_util.c"
 				>
 			</File>
 			<File

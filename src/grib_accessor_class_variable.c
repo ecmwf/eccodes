@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -410,6 +410,7 @@ static grib_accessor* make_clone(grib_accessor* a,grib_section* s,int* err)
   the_clone=grib_accessor_factory(s, &creator, 0, NULL);
   the_clone->parent=NULL;
   the_clone->h=s->h;
+  the_clone->flags=a->flags;
   variableAccessor=(grib_accessor_variable*)the_clone;
 
   *err=0;

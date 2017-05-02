@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -78,6 +78,7 @@ int grib_is_missing_internal(grib_accessor* a)
     Assert(0);
     return 0;
 }
+
 int grib_pack_double(grib_accessor* a, const double* v, size_t *len )
 {
     grib_accessor_class *c = a->cclass;
@@ -502,6 +503,7 @@ void grib_accessor_delete(grib_context *ct, grib_accessor* a)
         }
         c = s;
     }
+    /*printf("Debug: grib_accessor_delete a=%p (%s)\n", (void*)a, a->name);*/
     grib_context_free(ct,a);
 }
 
@@ -662,7 +664,7 @@ int grib_accessor_clear_attributes(grib_accessor* a)
     }
     return 0;
 }
-*/
+ */
 
 int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr,int nest_if_clash)
 {
@@ -674,8 +676,8 @@ int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr,int nest_if
     same=_grib_accessor_get_attribute(a,attr->name,&id);
 
     if (same) {
-      if (nest_if_clash==0) return GRIB_ATTRIBUTE_CLASH;
-      aloc=same;
+        if (nest_if_clash==0) return GRIB_ATTRIBUTE_CLASH;
+        aloc=same;
     }
 
     for (id=0;id<MAX_ACCESSOR_ATTRIBUTES;id++) {
@@ -778,7 +780,7 @@ grib_accessors_list* grib_accessors_list_create(grib_context* c)
     return (grib_accessors_list*)grib_context_malloc_clear(c,sizeof(grib_accessors_list));
 }
 
-void grib_accessors_list_push(grib_accessors_list* al,grib_accessor* a)
+void grib_accessors_list_push(grib_accessors_list* al,grib_accessor* a,int rank)
 {
     grib_accessors_list* last;
     grib_context* c=a->context;
@@ -788,9 +790,11 @@ void grib_accessors_list_push(grib_accessors_list* al,grib_accessor* a)
         last->next=(grib_accessors_list*)grib_context_malloc_clear(c,sizeof(grib_accessors_list));
         last->next->accessor=a;
         last->next->prev=last;
+        last->next->rank=rank;
         al->last=last->next;
     } else {
         al->accessor=a;
+        al->rank=rank;
         al->last=al;
     }
 }
@@ -805,7 +809,7 @@ grib_accessors_list* grib_accessors_list_last(grib_accessors_list* al)
       last=next;
       next=last->next;
     }
-    */
+     */
     return al->last;
 }
 
@@ -829,8 +833,8 @@ void grib_accessors_list_delete(grib_context* c,grib_accessors_list* al)
 
     while (al) {
         tmp=al->next;
+        /*grib_accessor_delete(c, al->accessor);*/
         grib_context_free(c,al);
         al=tmp;
     }
-
 }

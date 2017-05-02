@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -40,7 +40,7 @@ MY_DEFS=`pwd`/$TEMP_DIR/definitions
 export ECCODES_DEFINITION_PATH=$MY_DEFS:$ECCODES_DEFINITION_PATH
 
 # Now decode
-${tools_dir}bufr_dump $input > $TEMP
+${tools_dir}/bufr_dump $input > $TEMP
 # Ensure output JSON has all the expected contents
 # After calling 'wc' and 'set', $1 will be the line count
 set `wc -l $TEMP`

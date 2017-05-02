@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -114,4 +114,31 @@ int grib_get_gaussian_latitudes(long trunc, double *lats)
 	if( nlat != (trunc*2) )
 		lats[trunc + 1] = 0.0;
 	return GRIB_SUCCESS;
+}
+
+/* Boolean return type: 1 if the reduced gaussian field is global, 0 for sub area */
+int is_gaussian_global(
+        double lat1, double lat2, double lon1, double lon2,/* bounding box*/
+        long num_points_equator, /* num points on latitude at equator */
+        const double* latitudes, /* array of Gaussian latitudes (size 2*N) */
+        double angular_precision /* tolerance for angle comparison */
+)
+{
+    int global = 1;
+    const double d = fabs(latitudes[0] - latitudes[1]);
+    /* Compute the expected last longitude for a global field */
+    const double lon2_global = 360.0 - 360.0/num_points_equator;
+    /* Compute difference between expected longitude and actual one */
+    const double lon2_diff = fabs( lon2  - lon2_global ) - 360.0/num_points_equator;
+
+    /* Note: final gaussian latitude = -first latitude */
+    if ( (fabs(lat1 - latitudes[0]) >= d ) ||
+         (fabs(lat2 + latitudes[0]) >= d ) ||
+         lon1 != 0                         ||
+         lon2_diff > angular_precision
+    )
+    {
+        global = 0; /* sub area */
+    }
+    return global;
 }

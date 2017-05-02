@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2017 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -269,6 +269,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
         }
         break;
 
+    case 5: /* Forecast probability data */
     case 7:  /* Sensitivity data */
     case 9:  /* Singular vectors and ensemble perturbations */
     case 11: /* Supplementary data used by the analysis */
