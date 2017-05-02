@@ -187,6 +187,7 @@ class TestGribFile(unittest.TestCase):
             for i in range(len(grib_file)):
                 msg = GribMessage(grib_file)
                 self.assertEqual(msg["shortName"], "msl")
+                self.assertEqual(msg['count'], i+1)
             self.assertEqual(len(grib_file.open_messages), 5)
         self.assertEqual(len(grib_file.open_messages), 0)
 
@@ -248,6 +249,17 @@ class TestGribMessage(unittest.TestCase):
             msg = GribMessage(grib_file)
             msg["scaleFactorOfSecondFixedSurface"] = 5
             msg["values"] = [1, 2, 3]
+            self.assertEqual( msg['scaleFactorOfSecondFixedSurface'], 5 )
+
+    def test_multi_value_setting(self):
+        """Multiple keys/values can be set properly."""
+        with GribFile(TESTGRIB) as grib_file:
+            msg = GribMessage(grib_file)
+            msg[ 'setLocalDefinition', 'localDefinitionNumber' ] = 1,25
+            msg[ 'typeOfFirstFixedSurface', 'typeOfSecondFixedSurface' ] = 1, 8
+            msg[ ('typeOfFirstFixedSurface','typeOfSecondFixedSurface') ] = (1, 8) #Also works
+            self.assertEqual( msg['localDefinitionNumber'], 25 )
+            self.assertEqual( msg['typeOfLevel'], 'entireAtmosphere' )
 
     def test_serialize(self):
         """Message can be serialized to file."""
@@ -310,6 +322,7 @@ class TestBufrFile(unittest.TestCase):
             for i in range(len(bufr_file)):
                 msg = BufrMessage(bufr_file)
                 self.assertEqual(msg["bufrHeaderCentre"], 98)
+                self.assertEqual(msg['count'], i+1)
             self.assertEqual(len(bufr_file.open_messages), 3)
         self.assertEquals(len(bufr_file.open_messages), 0)
 
