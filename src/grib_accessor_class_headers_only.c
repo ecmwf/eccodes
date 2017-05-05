@@ -128,19 +128,19 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  a->flags  |= GRIB_ACCESSOR_FLAG_HIDDEN;
-  a->length=0;
+    a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->flags  |= GRIB_ACCESSOR_FLAG_HIDDEN;
+    a->length=0;
 }
 
 static int  unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  *val = grib_handle_of_accessor(a)->partial;
-  *len =1;
-  return 0;
+    *val = grib_handle_of_accessor(a)->partial;
+    *len =1;
+    return 0;
 }
 
-static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_LONG;
+static int  get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_LONG;
 }
-
