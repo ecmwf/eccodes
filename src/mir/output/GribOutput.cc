@@ -21,6 +21,7 @@
 #include "eckit/log/Plural.h"
 #include "eckit/thread/AutoLock.h"
 #include "eckit/thread/Mutex.h"
+#include "eckit/config/Resource.h"
 
 #include "mir/action/context/Context.h"
 #include "mir/config/LibMir.h"
@@ -30,6 +31,8 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Representation.h"
 #include "mir/util/Grib.h"
+#include "mir/util/BoundingBox.h"
+#include "mir/input/GribMemoryInput.h"
 
 
 namespace mir {
@@ -384,6 +387,8 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
         }
 
 
+
+
         GRIB_CALL(err);
 
         const void *message;
@@ -399,12 +404,41 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
         out(message, size, true);
         total += size;
 
+
+        static bool checkArea = eckit::Resource<bool>("$MIR_CHECK_AREA", false);
+        if (checkArea) {
+            std::vector<double> v;
+            if (parametrisation.get("user.area", v) && v.size() == 4) {
+
+                util::BoundingBox user(v[0], v[1], v[2], v[3]);
+
+                util::BoundingBox before(info.grid.latitudeOfFirstGridPointInDegrees,
+                                         info.grid.longitudeOfFirstGridPointInDegrees,
+                                         info.grid.latitudeOfLastGridPointInDegrees,
+                                         info.grid.longitudeOfLastGridPointInDegrees
+                                        );
+
+                input::GribMemoryInput g(message, size);
+                util::BoundingBox after(g);
+
+                if (user != before || user != after || before != after) {
+                    eckit::Log::info() << "MIR_CHECK_AREA:"
+                                       << " request=" << user
+                                       << " result=" << before
+                                       << " grib=" << after
+                                       << std::endl;
+                }
+
+            }
+        }
+
+
     }
 
     return total;
 }
 
-void GribOutput::fill(grib_handle* handle, grib_info& info) const {
+void GribOutput::fill(grib_handle * handle, grib_info & info) const {
 
 }
 
