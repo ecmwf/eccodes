@@ -418,14 +418,14 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
                                          info.grid.longitudeOfLastGridPointInDegrees
                                         );
 
-                input::GribMemoryInput g(message, size);
-                util::BoundingBox after(g);
+                // input::GribMemoryInput g(message, size);
+                // util::BoundingBox after(g);
 
-                if (user != before || user != after /*|| before != after*/) {
+                if (user != before /*|| user != after || before != after*/) {
                     eckit::Log::info() << "MIR_CHECK_AREA:"
                                        << " request=" << user
                                        << " result=" << before
-                                       << " grib=" << after
+                                       // << " grib=" << after
                                        << std::endl;
                 }
 
