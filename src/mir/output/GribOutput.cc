@@ -421,7 +421,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
                 input::GribMemoryInput g(message, size);
                 util::BoundingBox after(g);
 
-                if (user != before || user != after || before != after) {
+                if (user != before || user != after /*|| before != after*/) {
                     eckit::Log::info() << "MIR_CHECK_AREA:"
                                        << " request=" << user
                                        << " result=" << before
