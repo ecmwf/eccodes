@@ -13,7 +13,7 @@ meta section1Pointer section_pointer(offsetSection1,section1Length,1);
 
 unsigned[1] numberOfSection = 1 :read_only;
 
-codetable[2] centre  'grib2/centre.table' : dump,string_type;
+codetable[2] centre  'common/c-11.table' : dump,string_type;
 alias identificationOfOriginatingGeneratingCentre=centre;
 meta centreDescription codetable_title(centre);
 
@@ -29,8 +29,15 @@ _if (subCentre==98 ) {
   alias centreForLocal=centre;
 }
 
-codetable[1] tablesVersion 'grib3/tables/1.0.table' = 1 : edition_specific;
-alias gribMasterTablesVersionNumber=tablesVersion;
+#codetable[1] tablesVersion 'grib3/tables/1.0.table' = 1 : edition_specific;
+#alias gribMasterTablesVersionNumber=tablesVersion;
+
+codetable[1] localTablesVersion 'grib3/tables/[tablesVersion]/1.0.table' ;
+alias versionNumberOfGribLocalTables=localTablesVersion;
+transient localDir="";
+if (localTablesVersion != 0) {
+  transient localDir="grib3/tables/local/[centre]/[localTablesVersion]";
+}
 
 transient masterDir="grib3/tables/[tablesVersion]";
 when (tablesVersion!=255) {
@@ -41,12 +48,6 @@ when (tablesVersion!=255) {
 
 codetable[1] identificationOfProject 'grib3/tables/[tablesVersion]/1.1.table' ;
 
-#codetable[1] localTablesVersion 'grib3/tables/[tablesVersion]/1.1.table' ;
-#alias versionNumberOfGribLocalTables=localTablesVersion;
-#transient localDir="";
-#if (localTablesVersion != 0) {
-#  transient localDir="grib3/tables/local/[centre]/[localTablesVersion]";
-#}
 
 #  Production status of processed data in this GRIB message
 codetable[1] productionStatusOfProcessedData ('1.2.table',masterDir,localDir) : dump;
@@ -58,12 +59,12 @@ concept is_uerra(zero) {
 
 unsigned[2] originatorLocalTemplateNumber = missing() : dump,edition_specific,can_be_missing;
 unsigned[2] lengthOfOriginatorLocalTemplate = 0: dump,edition_specific;
-template_nofail originatorLocalTemplate "grib3/template.1.originator.[originatorLocalTemplateNumber:l].def";
+template_nofail originatorLocalTemplate "grib3/template.1.originator.[originatorLocalTemplateNumber:i].def";
 
 
 unsigned[2] projectLocalTemplateNumber = missing() : dump,edition_specific,can_be_missing;
 unsigned[2] lengthOfProjectLocalTemplate = 0: dump,edition_specific;
-template_nofail projectLocalTemplate "grib3/template.1.project.[projectLocalTemplateNumber:l].def";
+template_nofail projectLocalTemplate "grib3/template.1.project.[projectLocalTemplateNumber:i].def";
 
 #  Type of processed data in this GRIB message
 #codetable[1] typeOfProcessedData ('1.4.table',masterDir,localDir) = 255  : dump,string_type,no_fail;
@@ -71,24 +72,24 @@ template_nofail projectLocalTemplate "grib3/template.1.project.[projectLocalTemp
 
 meta md5Section1 md5(offsetSection1,section1Length);
 
-meta selectStepTemplateInterval select_step_template(productDefinitionTemplateNumber,0); # 0 -> not instant
-meta selectStepTemplateInstant  select_step_template(productDefinitionTemplateNumber,1); # 1 -> instant
+#meta selectStepTemplateInterval select_step_template(productDefinitionTemplateNumber,0); # 0 -> not instant
+#meta selectStepTemplateInstant  select_step_template(productDefinitionTemplateNumber,1); # 1 -> instant
 
-transient stepTypeInternal="instant" : hidden,no_copy;
+#transient stepTypeInternal="instant" : hidden,no_copy;
 
-concept stepType {
-    "instant" = {selectStepTemplateInstant=1; stepTypeInternal="instant";}
-    "avg"     = {selectStepTemplateInterval=1; stepTypeInternal="avg";}
-    "avgd"    = {selectStepTemplateInterval=1; stepTypeInternal="avgd";}
-    "accum"   = {selectStepTemplateInterval=1; stepTypeInternal="accum";}
-    "max"     = {selectStepTemplateInterval=1; stepTypeInternal="max";}
-    "min"     = {selectStepTemplateInterval=1; stepTypeInternal="min";}
-    "diff"    = {selectStepTemplateInterval=1; stepTypeInternal="diff";}
-    "rms"     = {selectStepTemplateInterval=1; stepTypeInternal="rms";}
-    "sd"      = {selectStepTemplateInterval=1; stepTypeInternal="sd";}
-    "cov"     = {selectStepTemplateInterval=1; stepTypeInternal="cov";}
-    "ratio"   = {selectStepTemplateInterval=1; stepTypeInternal="ratio";}
-}
+#concept stepType {
+#    "instant" = {selectStepTemplateInstant=1; stepTypeInternal="instant";}
+#    "avg"     = {selectStepTemplateInterval=1; stepTypeInternal="avg";}
+#    "avgd"    = {selectStepTemplateInterval=1; stepTypeInternal="avgd";}
+#    "accum"   = {selectStepTemplateInterval=1; stepTypeInternal="accum";}
+#    "max"     = {selectStepTemplateInterval=1; stepTypeInternal="max";}
+#    "min"     = {selectStepTemplateInterval=1; stepTypeInternal="min";}
+#    "diff"    = {selectStepTemplateInterval=1; stepTypeInternal="diff";}
+#    "rms"     = {selectStepTemplateInterval=1; stepTypeInternal="rms";}
+#    "sd"      = {selectStepTemplateInterval=1; stepTypeInternal="sd";}
+#    "cov"     = {selectStepTemplateInterval=1; stepTypeInternal="cov";}
+#    "ratio"   = {selectStepTemplateInterval=1; stepTypeInternal="ratio";}
+#}
 
 #transient setCalendarId = 0 ;
 #transient deleteCalendarId = 0 ;
@@ -96,6 +97,5 @@ concept stepType {
 #if ( ((section1Length > 21) or setCalendarId > 0) and deleteCalendarId == 0) {
 #  alias calendarIdPresent = present;
 #  codetable[2] calendarIdentificationTemplateNumber ('1.5.table',masterDir,localDir) : dump,string_type,no_fail;
-#  template calendarIdentification "grib3/template.1.[calendarIdentificationTemplateNumber:l].def";
+#  template calendarIdentification "grib3/template.1.[calendarIdentificationTemplateNumber:i].def";
 #}
-

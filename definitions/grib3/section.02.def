@@ -24,19 +24,19 @@ unsigned[2] totalNumberOfRepetitions = 1 : dump;
 # in it or refer to another section of the same section number. In the latter case, it will be made
 # only of 7 bytes comprising section length (4 bytes), number of section (1 byte) and
 # Section Unique Identifier - SUI (2 bytes)
-unsigned[2] numberOfDistinctSections3s = 1: dump;
-unsigned[2] numberOfDistinctSections4s = 1: dump;
-unsigned[2] numberOfDistinctSections5s = 1: dump;
-unsigned[2] numberOfDistinctSections6s = 1: dump;
-unsigned[2] numberOfDistinctSections7s = 1: dump;
-unsigned[2] numberOfDistinctSections8s = 1: dump;
-unsigned[2] numberOfDistinctSections9s = 1: dump;
+unsigned[2] numberOfDistinctSection3s = 1: dump;
+unsigned[2] numberOfDistinctSection4s = 1: dump;
+unsigned[2] numberOfDistinctSection5s = 1: dump;
+unsigned[2] numberOfDistinctSection6s = 1: dump;
+unsigned[2] numberOfDistinctSection7s = 1: dump;
+unsigned[2] numberOfDistinctSection8s = 1: dump;
+unsigned[2] numberOfDistinctSection9s = 1: dump;
 
 # Note 3: The inclusion of an Index template is optional. If index template is not present,
 # the index template number shall be set to missing and the length of index template shall be set to 0
 unsigned[2] indexTemplateNumber = missing() : dump,can_be_missing;
 unsigned[4] lengthOfIndexTemplate = 0: dump,edition_specific;
-template_nofail indexTemplate "grib3/template.2.[indexTemplateNumber:l].def";
+template_nofail indexTemplate "grib3/template.2.[indexTemplateNumber:i].def";
 
 
 #if ( addEmptySection2 == 0 ) {

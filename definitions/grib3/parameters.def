@@ -8,9 +8,9 @@
 #
 
 transient dummyc=0: hidden;
-constant conceptsMasterDir="grib2" : hidden;
-constant conceptsLocalDirAll="grib2/localConcepts/[centre:s]" : hidden;
-constant conceptsLocalDirECMF="grib2/localConcepts/ecmf" : hidden;
+constant conceptsMasterDir="grib3" : hidden;
+constant conceptsLocalDirAll="grib3/localConcepts/[centre:s]" : hidden;
+constant conceptsLocalDirECMF="grib3/localConcepts/ecmf" : hidden;
 
 concept paramIdECMF (defaultParameter,"paramId.def",conceptsMasterDir,conceptsLocalDirECMF): long_type,no_copy;
 concept paramId (paramIdECMF,"paramId.def",conceptsMasterDir,conceptsLocalDirAll): long_type;
@@ -33,6 +33,6 @@ concept cfVarName (cfVarNameECMF,"cfVarName.def",conceptsMasterDir,conceptsLocal
 # modelName: Contribution from Daniel Lee @ DWD
 concept modelName (defaultName,"modelName.def",conceptsMasterDir,conceptsLocalDirAll): no_copy,dump,read_only;
 
-template_nofail names "grib2/products_[productionStatusOfProcessedData].def";
+template_nofail names "grib3/products_[productionStatusOfProcessedData].def";
 
 meta ifsParam ifs_param(paramId,type);
