@@ -7,6 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
+# Section 0 - Indicator Section
 position     offsetSection0;
 constant     section0Length = 16;
 ascii[4]     identifier = "GRIB"     : read_only;
@@ -22,4 +23,3 @@ section_length[8]  totalLength;
 position startOfHeaders; # See later for endOfHeadersMarker
 
 meta section0Pointer section_pointer(offsetSection0,section0Length,0);
-

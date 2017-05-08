@@ -6,7 +6,8 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
-# Originator Section
+
+# Section 1 - Originator Section
 position offsetSection1;
 section_length[4] section1Length ;
 meta section1Pointer section_pointer(offsetSection1,section1Length,1);

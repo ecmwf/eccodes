@@ -15,13 +15,13 @@ unsigned[1] numberOfSection = 3 :read_only;
 
 unsigned[2] section3UniqueIdentifier; # SUI
 
-codetable[1] significanceOfReferenceTime ('3.0.table',masterDir,localDir) = 1 : dump;
+codetable[1] significanceOfReferenceDateAndTime ('3.0.table',masterDir,localDir) = 1 : dump;
 
 # The type of calendar used applies to the entire section including the Time Domain Template
 codetable[1] typeOfCalendar ('3.1.table',masterDir,localDir) = 255 : dump,no_copy,edition_specific;
 
 # Year, month, day etc form the Reference date and time
-signed[4] year ; # signed integer according to Reg. 92.1.5
+signed[4]   year ; # signed integer according to Reg. 92.1.5
 unsigned[1] month ;
 unsigned[1] day ;
 unsigned[1] hour ;
