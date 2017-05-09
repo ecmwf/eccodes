@@ -1,4 +1,4 @@
-# Data Representation Section Template Component 8.4 - Grid point data - IEEE floating point data
+# Data Representation Template Component 8.1 - Grid point data - IEEE floating point data
 
 transient bitsPerValue=0 : hidden;
 transient referenceValue=0  : hidden;

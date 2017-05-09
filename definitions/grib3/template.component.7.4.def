@@ -1,4 +1,4 @@
-# Observable Property Section Template Component 7.4 - Radiation wavelength interval
+# Observable Property Template Component 7.4 - Radiation wavelength interval
 
 codetable[1] typeOfWavelengthInterval ('7.4.table',masterDir,localDir) : dump;
 alias typeOfIntervalForFirstAndSecondWavelength=typeOfWavelengthInterval;

@@ -10,6 +10,8 @@
 # Section 9 - Overlay Section
 
 position offsetSection9;
+position offsetBSection9;
+
 section_length[4] section9Length;
 meta section9Pointer section_pointer(offsetSection9,section9Length,9);
 unsigned[1] numberOfSection = 9: read_only;

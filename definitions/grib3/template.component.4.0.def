@@ -1,4 +1,4 @@
-# Horizontal Domain Section Template Component 4.0 - Ellipsoid of revolution defined with axis lengths
+# Horizontal Domain Template Component 4.0 - Ellipsoid of revolution defined with axis lengths
 
 # Scale factor of length of semi-major axis
 unsigned[1] scaleFactorOfLengthOfSemiMajorAxis = missing() : can_be_missing, edition_specific;

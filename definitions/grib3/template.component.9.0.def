@@ -1,4 +1,6 @@
-# Overlay Section Template Component 9.0 - Bitmap
+# Overlay Template Component 9.0 - Bitmap
+
+# TODO: Is there a Bit-map indicator???
 
 
 #  Bit-map indicator
@@ -15,16 +17,16 @@ if(bitMapIndicator == 0)
     {
       meta primaryBitmap g2bitmap( tableReference,
           missingValue,
-          offsetBSection6,
-          section6Length,
+          offsetBSection9,
+          section9Length,
           numberOfDataMatrices) : read_only;
     }
     else
     {
       meta geography.bitmap g2bitmap( tableReference,
           missingValue,
-          offsetBSection6,
-          section6Length,
+          offsetBSection9,
+          section9Length,
           numberOfDataPoints) : read_only;
     }
   }
@@ -32,8 +34,8 @@ if(bitMapIndicator == 0)
   {
     meta geography.bitmap g2bitmap( tableReference,
         missingValue,
-        offsetBSection6,
-        section6Length,
+        offsetBSection9,
+        section9Length,
         numberOfDataPoints) : read_only;
   }
 }

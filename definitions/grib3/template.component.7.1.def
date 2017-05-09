@@ -1,4 +1,4 @@
-# Observable Property Section Template Component 7.1 - Units conversion
+# Observable Property Template Component 7.1 - Units conversion
 
 ieeefloat unitsConversionScaleFactor : dump, edition_specific,no_copy;
 ieeefloat unitsConversionOffset : dump, edition_specific,no_copy;

@@ -1,4 +1,4 @@
-# Time Domain Section Template Component 3.0 - Forecast point in time
+# Time Domain Template Component 3.0 - Forecast point in time
 
 # Hours of observational data cut-off after reference time
 # Note: Hours greater than 65534 will be coded as 65534

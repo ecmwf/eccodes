@@ -1,4 +1,4 @@
-# Horizontal Domain Section Template Component 4.2 - Rotation of latitude/longitude coordinates system
+# Horizontal Domain Template Component 4.2 - Rotation of latitude/longitude coordinates system
 
 # Latitude of the southern pole of projection
 signed[4] latitudeOfSouthernPole : no_copy;

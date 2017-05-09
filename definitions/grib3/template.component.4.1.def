@@ -1,4 +1,4 @@
-# Horizontal Domain Section Template Component 4.1 - Latitude/longitude regular grid
+# Horizontal Domain Template Component 4.1 - Latitude/longitude regular grid
 
 # Ni - number of points along a parallel
 unsigned[4] Ni : dump; # Note: This is for a REGULAR GRID so Ni cannot be missing
