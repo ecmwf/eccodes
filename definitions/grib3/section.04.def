@@ -8,7 +8,6 @@
 #
 
 # Section 4 - Horizontal Domain Section
-#transient timeRangeIndicator=0 : no_copy,hidden;
 
 position offsetSection4;
 section_length[4] section4Length ;
@@ -22,8 +21,7 @@ alias numberOfPoints=numberOfPointsInDomain;
 alias numberOfDataPoints=numberOfPointsInDomain;
 
 codetable[2] horizontalDomainTemplateNumber ('4.0.table',masterDir,localDir) =0 : dump,edition_specific;
-template horizontalDomainTemplate "grib3/template.4.[horizontalDomainTemplateNumber:l].def";
-
+template horizontalDomainTemplate "grib3/template.4.[horizontalDomainTemplateNumber:i].def";
 
 
 ###########################

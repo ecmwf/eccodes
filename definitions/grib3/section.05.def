@@ -8,7 +8,6 @@
 #
 
 # Section 5 - Vertical Domain Section
-#transient timeRangeIndicator=0 : no_copy,hidden;
 
 position offsetSection5;
 section_length[4] section5Length;
@@ -18,6 +17,6 @@ unsigned[1] numberOfSection = 5: read_only;
 unsigned[2] section5UniqueIdentifier; # SUI
 
 codetable[2] verticalDomainTemplateNumber ('5.0.table',masterDir,localDir) =0 : dump,edition_specific;
-template verticalDomainTemplate "grib3/template.5.[verticalDomainTemplateNumber:l].def";
+template verticalDomainTemplate "grib3/template.5.[verticalDomainTemplateNumber:i].def";
 
 meta md5Section5 md5(offsetSection5, section5Length);

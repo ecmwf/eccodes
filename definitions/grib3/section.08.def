@@ -21,8 +21,7 @@ unsigned[4] numberOfValues : dump;
 alias numberOfCodedValues=numberOfValues;
 alias numberOfEffectiveValues=numberOfValues;
 
-
 codetable[2] dataRepresentationTemplateNumber ('8.0.table',masterDir,localDir) =0 : dump,edition_specific;
-template dataRepresentationTemplate "grib3/template.8.[dataRepresentationTemplateNumber:l].def";
+template dataRepresentationTemplate "grib3/template.8.[dataRepresentationTemplateNumber:i].def";
 
 meta md5Section8 md5(offsetSection8, section8Length);

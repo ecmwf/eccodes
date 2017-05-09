@@ -1,4 +1,4 @@
-# Vertical Coordinate Section Template Component 5.0 - Vertical level
+# Vertical Coordinate Template Component 5.0 - Vertical level
 
 #  Type of first fixed surface
 codetable[1] typeOfFirstFixedSurface ('5.1.table',masterDir,localDir) : dump,no_copy,edition_specific,string_type;

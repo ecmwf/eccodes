@@ -8,6 +8,7 @@
 #
 
 # Section 3 - Time Domain Section
+
 position offsetSection3;
 section_length[4] section3Length ;
 meta section3Pointer section_pointer(offsetSection3,section3Length,3);
@@ -21,7 +22,9 @@ codetable[1] significanceOfReferenceDateAndTime ('3.0.table',masterDir,localDir)
 codetable[1] typeOfCalendar ('3.1.table',masterDir,localDir) = 255 : dump,no_copy,edition_specific;
 
 # Year, month, day etc form the Reference date and time
-signed[4]   year ; # signed integer according to Reg. 92.1.5
+# Note: year is SIGNED integer (according to Reg. 92.1.5) to represent large negative dates (BC).
+#       This was a requirement for the climate.
+signed[4]   year ;
 unsigned[1] month ;
 unsigned[1] day ;
 unsigned[1] hour ;

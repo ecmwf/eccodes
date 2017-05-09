@@ -1,4 +1,4 @@
-# Vertical Coordinate Section Template Component 5.1 - Vertical layer
+# Vertical Coordinate Template Component 5.1 - Vertical layer
 
 #  Type of first fixed surface
 codetable[1] typeOfFirstFixedSurface ('5.1.table',masterDir,localDir) : dump,no_copy,edition_specific,string_type;
@@ -21,4 +21,3 @@ signed[1] scaleFactorOfSecondFixedSurface = missing() : can_be_missing,dump,no_c
 
 #  Scaled value of second fixed surface
 unsigned[4] scaledValueOfSecondFixedSurface = missing() : can_be_missing,dump,no_copy,edition_specific;
-
