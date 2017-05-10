@@ -790,6 +790,7 @@ struct bufr_descriptor {
   double factor;
   double reference;
   long width;
+  int nokey;
   grib_accessor* a;
 } ;
 
