@@ -1,0 +1,11 @@
+#code|abbreviation|type|name|unit|scale|reference|width|crex_unit|crex_scale|crex_width
+010200|meanDynamicTopographyAccuracy|double|MEAN DYNAMIC TOPOGRAPHY ACCURACY|m|3|-131072|18|m|3|6
+021192|cloudRadarReflectivity|double|Cloud Radar reflectivity|dbZ|2|-9000|15|NA|0|0
+021193|cloudRadarReflectivityUncertainty|double|Cloud Radar Reflectivity Uncertainty|dbZ|2|-9000|15|NA|0|0
+021194|dataClassificationType|table|Radar Data Classification Type|Code Table|0|0|4|Code Table|0|2
+025192|pressureCode|table|Pressure Code|CODE TABLE|0|0|2|
+025200|bandSpecificOceanQualityFlag|flag|BAND SPECIFIC OCEAN QUALITY FLAG|Flag table|0|0|9|Flag table|0|3
+025201|altimeterEchoProcessingMode|table|Altimeter Echo Processing Mode|Code Table|0|0|8|Code Table|0|3
+025202|altimeterTrackingMode|table|Altimeter Tracking Mode|Code Table|0|0|8|Code Table|0|3
+025203|seaIceFreeboard|double|Sea Ice Freeboard|m|3|-131072|18|m|3|6
+033192|psBiasCorrection|double|Surface Pressure Bias Correction|Numeric|2|-300000|19
