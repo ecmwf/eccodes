@@ -790,7 +790,7 @@ struct bufr_descriptor {
   double factor;
   double reference;
   long width;
-  int nokey;
+  int nokey; /* set if descriptor does not have an associated key */
   grib_accessor* a;
 } ;
 

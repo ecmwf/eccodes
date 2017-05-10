@@ -884,7 +884,6 @@ static double decode_double_value(grib_context* c,unsigned char* data,long* pos,
     int modifiedWidth,modifiedReference;
     double modifiedFactor;
     double dval=0;
-    double new_ref_val = 0; /*Operator 203*/
 
     *err=0;
 
@@ -918,16 +917,16 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
     bufr_descriptor* bd = descriptor==NULL ? self->expanded->v[i] : descriptor ;
 
     if (self->change_ref_value_operand > 0 && self->change_ref_value_operand != 255) {
-      /* Operator 203YYY: Change Reference Values: Definition phase */
-      const int number_of_bits = self->change_ref_value_operand;
-      double new_ref_val = (double)grib_decode_signed_longb(data, pos, number_of_bits);
-      grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -**- \tcode=203YYY width=%ld pos=%ld -> %ld",
-            number_of_bits,(long)*pos,(long)(*pos-a->offset*8));
-      grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: Store %ld = %g", bd->code, new_ref_val);
-      tableB_override_store_ref_val(c, self, bd->code, new_ref_val);
-      bd->nokey=1;
-      err=check_end_data(c, self, number_of_bits); /*advance bitsToEnd*/
-      return err;
+        /* Operator 203YYY: Change Reference Values: Definition phase */
+        const int number_of_bits = self->change_ref_value_operand;
+        double new_ref_val = (double)grib_decode_signed_longb(data, pos, number_of_bits);
+        grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -**- \tcode=203YYY width=%ld pos=%ld -> %ld",
+                number_of_bits,(long)*pos,(long)(*pos-a->offset*8));
+        grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: Store %ld = %g", bd->code, new_ref_val);
+        tableB_override_store_ref_val(c, self, bd->code, new_ref_val);
+        bd->nokey=1;
+        err=check_end_data(c, self, number_of_bits); /*advance bitsToEnd*/
+        return err;
     }
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -%ld- \tcode=%6.6ld width=%ld pos=%ld -> %ld",
             i,bd->code,bd->width,(long)*pos,(long)(*pos-a->offset*8));
@@ -958,21 +957,21 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
             grib_darray_push(c,dval,cdval);
         }
     } else {
-      /* numeric or codetable or flagtable */
-      /* Operator 203: Check if we have changed ref value for this element. If so use it */
-      if (self->change_ref_value_operand!=0 && tableB_override_get_ref_val(self, bd->code, &(bd->reference)) == GRIB_SUCCESS) {
-        grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Changed ref val: %g\n", bd->reference);
-      }
+        /* numeric or codetable or flagtable */
+        /* Operator 203: Check if we have changed ref value for this element. If so modify bd->reference */
+        if (self->change_ref_value_operand!=0 && tableB_override_get_ref_val(self, bd->code, &(bd->reference)) == GRIB_SUCCESS) {
+            grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Changed ref val: %g\n", bd->reference);
+        }
 
         if (self->compressedData) {
             dar=decode_double_array(c,data,pos,bd,self->canBeMissing[i],self,&err);
             grib_vdarray_push(c,self->numericValues,dar);
         } else {
-          /* Uncompressed */
-          cdval=decode_double_value(c,data,pos,bd,self->canBeMissing[i],self,&err);
-          grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \t %s = %g",
-              bd->shortName,cdval);
-          grib_darray_push(c,dval,cdval);
+            /* Uncompressed */
+            cdval=decode_double_value(c,data,pos,bd,self->canBeMissing[i],self,&err);
+            grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \t %s = %g",
+                    bd->shortName,cdval);
+            grib_darray_push(c,dval,cdval);
         }
     }
     return err;
@@ -2021,7 +2020,9 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                     self->elementsDescriptorsIndex->v[iss]->v[ide] ;
 
             descriptor=self->expanded->v[idx];
-            if (descriptor->nokey==1) continue;
+            if (descriptor->nokey==1) {
+                continue;  /* Descriptor does not have an associated key e.g. inside op 203YYY */
+            }
             elementFromBitmap=NULL;
             if (descriptor->F==0 && IS_QUALIFIER(descriptor->X)
             && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
