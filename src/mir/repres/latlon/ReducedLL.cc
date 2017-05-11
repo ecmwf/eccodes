@@ -70,7 +70,6 @@ void ReducedLL::cropToDomain(const param::MIRParametrisation &parametrisation, c
     }
 }
 
-
 atlas::grid::Grid *ReducedLL::atlasGrid() const {
     util::Domain dom = domain();
     atlas::grid::Domain atlasDomain(dom.north(), dom.west(), dom.south(), dom.east());

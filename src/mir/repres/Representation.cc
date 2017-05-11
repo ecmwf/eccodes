@@ -23,6 +23,10 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Domain.h"
 
+#include "mir/namedgrids/NamedGrid.h"
+#include "mir/repres/other/UnstructuredGrid.h"
+#include "mir/repres/Iterator.h"
+#include "mir/data/MIRField.h"
 
 namespace mir {
 namespace repres {
@@ -163,6 +167,11 @@ size_t Representation::pentagonalResolutionTs() const {
     throw eckit::SeriousBug(os.str());
 }
 
+size_t Representation::numberOfPoints() const {
+    std::ostringstream os;
+    os << "Representation::numberOfPoints() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
 
 void Representation::comparison(std::string&) const {
     // do nothing
@@ -175,13 +184,8 @@ size_t Representation::frame(std::vector<double> &values, size_t size, double mi
     throw eckit::SeriousBug(os.str());
 }
 
-Representation* Representation::globalise(data::MIRField& field) const {
-    std::ostringstream os;
-    os << "Representation::globalise() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
-}
 
-Representation* Representation::subset(data::MIRField& field,
+const Representation* Representation::subset(data::MIRField& field,
                                        const util::Increments& increments) const {
     std::ostringstream os;
     os << "Representation::subset() not implemented for " << *this;
@@ -214,6 +218,73 @@ Iterator *Representation::rotatedIterator() const {
     os << "Representation::rotatedIterator() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
+
+
+//=========================================================================
+
+const Representation* Representation::globalise(data::MIRField& field) const {
+    const util::Domain dom = domain();
+
+    if (dom.isGlobal()) {
+        return 0;
+    }
+
+    // TODO: cache me
+
+    RepresentationHandle octahedral(namedgrids::NamedGrid::lookup("O320").representation());
+    size_t size = octahedral->numberOfPoints() + numberOfPoints();
+
+    std::vector<double> latitudes;  latitudes.resize(size);
+    std::vector<double> longitudes; longitudes.resize(size);
+
+    eckit::ScopedPtr<repres::Iterator> iter(octahedral->unrotatedIterator());
+
+    double lat;
+    double lon;
+
+
+    iter.reset(unrotatedIterator());
+    while (iter->next(lat, lon)) {
+        latitudes.push_back(lat);
+        longitudes.push_back(lon);
+    }
+
+    size_t extra = 0;
+    while (iter->next(lat, lon)) {
+        if (!dom.contains(lat, lon)) {
+            latitudes.push_back(lat);
+            longitudes.push_back(lon);
+            extra++;
+        }
+    }
+
+    if(extra == 0) {
+        return 0;
+    }
+
+
+    double missingValue = field.missingValue();
+    size = latitudes.size();
+
+    for (size_t i = 0; i < field.dimensions(); i++ ) {
+        std::vector<double> newvalues(size, missingValue);
+        const std::vector<double> &values = field.direct(i);
+        ASSERT(values.size() < size);
+
+        for (size_t j = 0 ; j < values.size(); ++j) {
+            newvalues[j] = values[j];
+        }
+
+        field.update(newvalues, i);
+    }
+
+    field.hasMissing(true);
+
+
+    return new other::UnstructuredGrid(latitudes, longitudes);
+}
+
+//=========================================================================
 
 
 RepresentationFactory::RepresentationFactory(const std::string &name):
