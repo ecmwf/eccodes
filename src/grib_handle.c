@@ -576,6 +576,11 @@ static grib_handle* grib_handle_new_multi ( grib_context* c,unsigned char** data
         }
 
     }
+    else if (edition == 3)
+    {
+        *error = GRIB_UNSUPPORTED_EDITION;
+        return NULL;
+    }
     else
     {
         gm->message_length=0;
@@ -732,6 +737,11 @@ static grib_handle* grib_handle_new_from_file_multi ( grib_context* c, FILE* f,i
             }
         }
 
+    }
+    else if (edition == 3)
+    {
+        *error = GRIB_UNSUPPORTED_EDITION;
+        return NULL;
     }
     else
     {
