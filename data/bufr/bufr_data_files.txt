@@ -138,3 +138,5 @@ metar_with_2_bias.bufr
 temp-land-with-substituted-values.bufr
 imssnow.bufr
 sentinel1.bufr
+srals3_ecmwf4.bufr
+srals3_eumetsat.bufr
