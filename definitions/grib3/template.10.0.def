@@ -12,9 +12,9 @@
 # (scaled)
 
 meta codedValues data_g2simple_packing(
-      section7Length,
+      section10Length,
       offsetBeforeData,
-      offsetSection7,
+      offsetSection10,
       unitsFactor,
       unitsBias,
       changingPrecision,
