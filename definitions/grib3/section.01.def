@@ -48,7 +48,7 @@ when (tablesVersion!=255) {
   set masterDir="grib3/tables/1";
 }
 
-codetable[1] identificationOfProject 'grib3/tables/[tablesVersion]/1.1.table' ;
+codetable[1] identificationOfProject 'grib3/tables/[tablesVersion]/1.1.table' = 255 : dump;
 
 
 #  Production status of processed data in this GRIB message
