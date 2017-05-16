@@ -1,7 +1,4 @@
-# Code Table 1.0: GRIB Master Tables Version Number
-0 0 Experimental
-1 1 Initial operational version number
-2 2 Previous operational version number
-3 3 Current operational version number implemented on 2 November 2005
-# 4-254 Future operational version numbers
-255 255 Master tables not used. Local table entries and local templates may use the entire range of the table, not just those sections marked Reserved for local used.
+# Code table 1.0 - GRIB local tables version number
+0 0 Local tables not used. Only table entries and templates from the current master table are valid 
+# 1-254 Number of local tables version used 
+255 255 Missing 

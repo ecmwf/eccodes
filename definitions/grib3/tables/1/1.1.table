@@ -1,5 +1,7 @@
-# Code Table 1.1 GRIB Local Tables Version Number
-0 0	Local tables not used 
-# . Only table entries and templates from the current Master table are valid.
-# 1-254		Number of local tables version used
+# Code Table 1.1 - International Projects
+0 0	Reserved
+1 1 THORPEX Interactive Grand Global Ensemble (TIGGE)
+2 2 Subseasonal-to-Seasonal prediction (S2S)
+# 3-191	Reserved
+# 192-254 Reserved for local use
 255 255	Missing
