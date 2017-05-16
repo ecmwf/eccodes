@@ -1,5 +1,5 @@
-#Discipline 0: Meteorological products
-#Category Description
+# CODE TABLE 7.2 - Parameter category by discipline
+# Discipline 0: Meteorological products
 0 0 Temperature
 1 1 Moisture
 2 2 Momentum
@@ -26,5 +26,3 @@
 191 191 Miscellaneous
 #192-254 Reserved for local use
 255 255 Missing
-
-
