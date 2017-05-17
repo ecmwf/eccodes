@@ -62,6 +62,19 @@ concept marsType {
      typeOfProcessedData = 0;
    }
 
+   # See ECC-456. Special rule for Swedish data
+   # oi is Optimal Interpolation
+   oi = {
+     centre = 82;
+     typeOfGeneratingProcess = 0;
+     generatingProcessIdentifier = 50;
+   }
+   "4" = {
+     centre = 82;
+     typeOfGeneratingProcess = 0;
+     generatingProcessIdentifier = 50;
+   }
+
    "default" = {
      dummyc = 0;
    }

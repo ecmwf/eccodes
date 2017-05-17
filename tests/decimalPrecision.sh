@@ -16,7 +16,6 @@ files="regular_latlon_surface.grib2 \
        regular_latlon_surface.grib1"
 
 for file in $files; do
-
   infile=${data_dir}/$file
   outfile1=${infile}_decimalPrecision_1
   outfile2=${infile}_decimalPrecision_2
@@ -26,5 +25,15 @@ for file in $files; do
   ${tools_dir}/grib_set -s changeDecimalPrecision=1 $infile $outfile2
   ${tools_dir}/grib_compare -P -c data:n $infile $outfile2 > $REDIRECT
   ${tools_dir}/grib_compare $outfile1 $outfile2
-  rm -f $outfile1 $outfile2 || true
+  rm -f $outfile1 $outfile2
 done
+
+# ECC-458: spectral_complex packing
+temp=temp.grib_decimalPrecision.grib
+infile=${data_dir}/spectral_complex.grib1
+# Catch errors re negative values
+export ECCODES_FAIL_IF_LOG_MESSAGE=1
+${tools_dir}/grib_set -r -s decimalScaleFactor=0 $infile $temp
+${tools_dir}/grib_set -r -s decimalScaleFactor=1 $infile $temp
+
+rm -f $temp

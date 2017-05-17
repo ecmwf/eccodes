@@ -9,10 +9,10 @@
  */
 
 #include "md5.h"
+#include "grib_api_internal.h"
 
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
 
 /* On CRAY, disable all automatic optimisations for this module */
 #if _CRAYC
@@ -215,7 +215,7 @@ static void grib_md5_flush(grib_md5_state* s)
 
 void grib_md5_init(grib_md5_state* s)
 {
-	assert( sizeof(UnsignedInt64) == 8 );
+	Assert( sizeof(UnsignedInt64) == 8 );
 	memset(s,0,sizeof(grib_md5_state));
 	s->h0 = 0x67452301;
 	s->h1 = 0xefcdab89;

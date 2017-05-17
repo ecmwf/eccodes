@@ -382,26 +382,34 @@ static void check_validity_datetime(grib_handle* h)
 
 static void check_range(grib_handle* h,const parameter* p,double min,double max)
 {
+    double missing = 0;
     if(!valueflg)
         return;
 
-    if(min < p->min1 || min > p->min2)
-    {
-        printf("warning: %s, field %d [%s]: %s minimum value %g is not in [%g,%g]\n",file,field,param,
-                p->name,
-                min,p->min1,p->min2);
-        printf("  => [%g,%g]\n",min < p->min1 ? min : p->min1, min > p->min2 ? min : p->min2);
+    missing = dget(h,"missingValue");
 
-        warning++;
-    }
+    /* See ECC-437 */
+    if(!(get(h,"bitMapIndicator") == 0 && min == missing && max == missing)){
 
-    if(max < p->max1 || max > p->max2 )
-    {
-        printf("warning: %s, field %d [%s]: %s maximum value %g is not in [%g,%g]\n",file,field,param,
-                p->name,
-                max,p->max1,p->max2);
-        printf("  => [%g,%g]\n",max < p->max1 ? max : p->max1, max > p->max2 ? max : p->max2);
-        warning++;
+        if(min < p->min1 || min > p->min2)
+        {
+            printf("warning: %s, field %d [%s]: %s minimum value %g is not in [%g,%g]\n",file,field,param,
+                    p->name,
+                    min,p->min1,p->min2);
+            printf("  => [%g,%g]\n",min < p->min1 ? min : p->min1, min > p->min2 ? min : p->min2);
+
+            warning++;
+        }
+
+        if(max < p->max1 || max > p->max2 )
+        {
+            printf("warning: %s, field %d [%s]: %s maximum value %g is not in [%g,%g]\n",file,field,param,
+                    p->name,
+                    max,p->max1,p->max2);
+            printf("  => [%g,%g]\n",max < p->max1 ? max : p->max1, max > p->max2 ? max : p->max2);
+            warning++;
+        }
+
     }
 }
 

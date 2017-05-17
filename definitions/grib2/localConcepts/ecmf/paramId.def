@@ -9467,6 +9467,30 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 94 ;
 	}
+#Evaporation from the top of canopy
+'228100' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 100 ;
+	}
+#Evaporation from bare soil
+'228101' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 101 ;
+	}
+#Evaporation from open water surfaces excluding oceans
+'228102' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 102 ;
+	}
+#Evaporation from vegetation transpiration
+'228103' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 103 ;
+	}
 #Surface solar radiation downward clear-sky
 '228129' = {
 	 discipline = 192 ;

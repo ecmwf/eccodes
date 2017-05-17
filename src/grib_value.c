@@ -796,6 +796,11 @@ static int _grib_set_long_array(grib_handle* h, const char* name, const long* va
     int err =0;
 
     if (!a) return GRIB_NOT_FOUND ;
+
+    if (h->context->debug) {
+        printf("ECCODES DEBUG _grib_set_long_array key=%s %ld values\n",name,(long)length);
+    }
+
     if (name[0]=='/' || name[0]=='#' ) {
         if(check && (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY))
             return GRIB_READ_ONLY;

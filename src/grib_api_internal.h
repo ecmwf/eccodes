@@ -22,7 +22,7 @@ extern "C" {
 #endif
 
 /* cmake config header */
-#ifdef HAVE_ECCODES_CONFIG_H 
+#ifdef HAVE_ECCODES_CONFIG_H
 #include "eccodes_config.h"
 #endif
 
@@ -125,11 +125,11 @@ extern "C" {
 #if GRIB_PTHREADS
  #include <pthread.h>
  #define GRIB_MUTEX_INIT_ONCE(a,b) pthread_once(a,b);
- #define GRIB_MUTEX_LOCK(a) pthread_mutex_lock(a); 
+ #define GRIB_MUTEX_LOCK(a) pthread_mutex_lock(a);
  #define GRIB_MUTEX_UNLOCK(a) pthread_mutex_unlock(a);
  /*
  #define GRIB_MUTEX_LOCK(a) {pthread_mutex_lock(a); printf("MUTEX LOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);}
- #define GRIB_MUTEX_UNLOCK(a) {pthread_mutex_unlock(a);printf("MUTEX UNLOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);} 
+ #define GRIB_MUTEX_UNLOCK(a) {pthread_mutex_unlock(a);printf("MUTEX UNLOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);}
  */
 #elif GRIB_OMP_THREADS
  #include <omp.h>
@@ -162,14 +162,7 @@ extern "C" {
 #define ftello ftell
 #endif
 
-#define Assert(a) {if(!(a)) grib_fail(#a,__FILE__,__LINE__,0);}
-#define AssertSilent(a) {if(!(a)) grib_fail(#a,__FILE__,__LINE__,1);}
-
-#ifndef NDEBUG
- #define DebugAssert(a) Assert(a)
-#else
- #define DebugAssert(a)
-#endif
+#define Assert(a) do { if(!(a)) codes_assertion_failed(#a, __FILE__, __LINE__); } while(0)
 
 #ifdef __gnu_hurd__
  #define COMPILE_TIME_ASSERT(condition) \
@@ -182,12 +175,14 @@ extern "C" {
       } while (0)
 #endif
 
-#ifndef NDEBUG
+#ifdef DEBUG
+ #define DebugAssert(a) Assert(a)
  #define DebugAssertAccess(array, index, size) \
    do { \
     if (!((index) >= 0 && (index) < (size)) ) {printf("ARRAY ACCESS ERROR: array=%s idx=%ld size=%ld @ %s +%d \n", #array, index, size, __FILE__, __LINE__); abort();} \
    } while(0)
 #else
+ #define DebugAssert(a)
  #define DebugAssertAccess(array, index, size)
 #endif
 
@@ -504,9 +499,9 @@ struct grib_buffer
 typedef struct grib_virtual_value grib_virtual_value;
 
 struct grib_virtual_value {
-  long     lval;       
-  double   dval;  
-  char*    cval; 
+  long     lval;
+  double   dval;
+  char*    cval;
   int      missing;
   int      length;
   int      type;
@@ -814,6 +809,9 @@ struct codes_condition {
   double rightDouble;
 };
 
+
+void codes_assertion_failed(const char* message, const char* file, int line);
+
 #define MAX_SET_VALUES      10
 #define MAX_ACCESSOR_CACHE  100
 
@@ -1037,7 +1035,6 @@ struct grib_context
     grib_trie*                      def_files;
     grib_string_list*               blacklist;
     int                             ieee_packing;
-    int                             unpack;
     int                             bufrdc_mode;
     int                             bufr_set_to_missing_if_out_of_range;
     FILE*                           log_stream;

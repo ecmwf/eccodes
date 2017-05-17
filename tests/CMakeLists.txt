@@ -88,40 +88,40 @@ list( APPEND tests_data_reqd
     grib1to2
     grib2to1
     badgrib
-    ls
+    grib_ls
     grib_filter
-    multi
+    grib_multi
     budg
     gridType
-    octahedral
-    global
-    concept
+    grib_octahedral
+    grib_global
+    grib_concept
     decimalPrecision
-    bitsPerValue
+    grib_bitsPerValue
     get_fail
     missing
-    local
-    step
-    set
-    iterator
+    grib_local
+    grib_step
+    grib_set
+    grib_iterator
     grib_compare
-    level
+    grib_level
     index
-    bitmap
+    grib_bitmap
     list
-    second_order
+    grib_second_order
     multi_from_message
-    change_scanning
-    statistics
+    grib_change_scanning
+    grib_statistics
     tigge
     tigge_conversions
     read_any
-    padding
+    grib_padding
     grib_dump
     grib_dump_debug
     grib_util_set_spec
     local_MeteoFrance
-    neg_fctime
+    grib_neg_fctime
 )
 if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
     list(APPEND tests_data_reqd bufr_dump_encode_fortran)
@@ -197,10 +197,10 @@ ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
                   TEST_DEPENDS eccodes_download_gribs
 )
 
-ecbuild_add_test( TARGET eccodes_t_jpeg
+ecbuild_add_test( TARGET eccodes_t_grib_jpeg
                   TYPE SCRIPT
                   CONDITION HAVE_JPEG
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/jpeg.sh
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_jpeg.sh
                   TEST_DEPENDS eccodes_download_gribs
 )
 
@@ -211,10 +211,10 @@ ecbuild_add_test( TARGET eccodes_t_grib_png
                   TEST_DEPENDS eccodes_download_gribs
 )
 
-ecbuild_add_test( TARGET eccodes_t_ccsds
+ecbuild_add_test( TARGET eccodes_t_grib_ccsds
                   TYPE SCRIPT
                   CONDITION HAVE_AEC
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ccsds.sh
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds.sh
                   TEST_DEPENDS eccodes_download_gribs
 )
 

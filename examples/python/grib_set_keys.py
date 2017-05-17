@@ -12,6 +12,7 @@ import sys
 
 from eccodes import *
 from datetime import date
+from collections import OrderedDict
 
 INPUT = '../../data/regular_latlon_surface_constant.grib1'
 OUTPUT = 'out.set.grib'
@@ -39,15 +40,23 @@ def example():
     print 'get date as a string - date = %s' % dateStrVal[0]
 
     # Now do the same but using set_key_vals, setting keys all at once
-    codes_set_key_vals(gid, 'level=1,centre=98')  # with a String
+    print 'set keys using one long comma-separated string...'
+    codes_set_key_vals(gid, 'level=1,centre=98')
     assert(codes_get(gid, 'centre', str) == 'ecmf')
     assert(codes_get(gid, 'level', int) == 1)
 
-    codes_set_key_vals(gid, ['level=2', 'centre=kwbc'])  # with a Tuple
+    print 'set keys using a list of strings...'
+    codes_set_key_vals(gid, ['level=2', 'centre=kwbc'])
     assert(codes_get(gid, 'centre', int) == 7)
     assert(codes_get(gid, 'level', int) == 2)
 
-    codes_set_key_vals(gid, {'level': 3, 'centre': 84})  # with a Dictionary
+    print 'set keys using a dictionary (order not as specified!)...'
+    codes_set_key_vals(gid, {'level': 3, 'centre': 84})
+    assert(codes_get(gid, 'centre', str) == 'lfpw')
+    assert(codes_get(gid, 'level', int) == 3)
+
+    print 'set keys using an ordered dictionary...'
+    codes_set_key_vals(gid, OrderedDict( [('level', 3), ('centre', 84)] ))
     assert(codes_get(gid, 'centre', str) == 'lfpw')
     assert(codes_get(gid, 'level', int) == 3)
 

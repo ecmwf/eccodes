@@ -22,45 +22,45 @@ TESTS = definitions.sh \
         unit_tests.sh \
         grib2to1.sh \
         badgrib.sh \
-        ls.sh \
+        grib_ls.sh \
         grib_filter.sh  \
-        multi.sh \
+        grib_multi.sh \
         budg.sh \
         gridType.sh \
-        octahedral.sh \
-        global.sh \
-        concept.sh \
+        grib_octahedral.sh \
+        grib_global.sh \
+        grib_concept.sh \
         decimalPrecision.sh \
-        bitsPerValue.sh \
+        grib_bitsPerValue.sh \
         get_fail.sh \
         missing.sh \
-        local.sh \
-        step.sh \
-        set.sh \
-        iterator.sh \
+        grib_local.sh \
+        grib_step.sh \
+        grib_set.sh \
+        grib_iterator.sh \
         grib_compare.sh \
-        level.sh \
+        grib_level.sh \
         index.sh \
-        bitmap.sh \
+        grib_bitmap.sh \
         list.sh \
-        second_order.sh \
+        grib_second_order.sh \
         multi_from_message.sh \
-        change_scanning.sh \
+        grib_change_scanning.sh \
         julian.sh \
-        statistics.sh \
+        grib_statistics.sh \
         tigge.sh \
         uerra.sh \
         tigge_conversions.sh \
         read_any.sh \
-        padding.sh \
+        grib_padding.sh \
         lamb_az_eq_area.sh \
         grib_to_netcdf.sh \
         grib_dump_debug.sh \
-        jpeg.sh \
-        ccsds.sh \
+        grib_jpeg.sh \
+        grib_ccsds.sh \
         md5.sh \
         grib_util_set_spec.sh \
-        neg_fctime.sh \
+        grib_neg_fctime.sh \
         ecc-197.sh \
         ecc-286.sh \
         ecc-288.sh
@@ -73,7 +73,7 @@ download_data:
 
 noinst_PROGRAMS = packing_check gauss_sub read_any grib_double_cmp packing pack_unpack \
                   multi_from_message julian read_index index gribex_perf\
-                  jpeg_perf ccsds_perf so_perf png_perf bpv_limit laplacian \
+                  jpeg_perf grib_ccsds_perf so_perf png_perf bpv_limit laplacian \
                   unit_tests grib_util_set_spec
 
 multi_from_message_SOURCES = multi_from_message.c
@@ -90,7 +90,7 @@ read_index_SOURCES = read_index.c
 jpeg_perf_SOURCES = jpeg_perf.c
 so_perf_SOURCES = so_perf.c
 png_perf_SOURCES = png_perf.c
-ccsds_perf_SOURCES  = ccsds_perf.c
+grib_ccsds_perf_SOURCES  = grib_ccsds_perf.c
 gribex_perf_SOURCES = gribex_perf.c
 gauss_sub_SOURCES = gauss_sub.c
 grib_util_set_spec_SOURCES = grib_util_set_spec.c

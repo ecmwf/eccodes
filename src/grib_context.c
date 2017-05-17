@@ -343,7 +343,6 @@ static grib_context default_grib_context = {
         0,                            /* def_files                  */
         0,                            /* blacklist                  */
         0,                            /* ieee_packing               */
-        0,                            /* unpack                     */
         0,                            /* bufrdc_mode                */
         0,                            /* bufr_set_to_missing_if_out_of_range */
         0,                            /* log_stream                 */
@@ -381,7 +380,6 @@ grib_context* grib_context_get_default()
         const char* keep_matrix = NULL;
         const char* bufrdc_mode = NULL;
         const char* bufr_set_to_missing_if_out_of_range = NULL;
-        const char* nounpack = NULL;
 
         write_on_fail = codes_getenv("ECCODES_GRIB_WRITE_ON_FAIL");
         bufrdc_mode = codes_getenv("ECCODES_BUFRDC_MODE_ON");
@@ -396,7 +394,6 @@ grib_context* grib_context_get_default()
         no_big_group_split = codes_getenv("ECCODES_GRIB_NO_BIG_GROUP_SPLIT");
         no_spd = codes_getenv("ECCODES_GRIB_NO_SPD");
         keep_matrix = codes_getenv("ECCODES_GRIB_KEEP_MATRIX");
-        nounpack = codes_getenv("ECCODES_NO_UNPACK");
 
         /* On UNIX, when we read from a file we get exactly what is in the file on disk.
          * But on Windows a file can be opened in binary or text mode. In binary mode the system behaves exactly as in UNIX.
@@ -410,7 +407,6 @@ grib_context* grib_context_get_default()
         default_grib_context.no_big_group_split = no_big_group_split ? atoi(no_big_group_split) : 0;
         default_grib_context.no_spd = no_spd ? atoi(no_spd) : 0;
         default_grib_context.keep_matrix = keep_matrix ? atoi(keep_matrix) : 1;
-        default_grib_context.unpack = nounpack ? 0 : 1;
         default_grib_context.write_on_fail  = write_on_fail ? atoi(write_on_fail) : 0;
         default_grib_context.no_abort  = no_abort ? atoi(no_abort) : 0;
         default_grib_context.debug  = debug ? atoi(debug) : 0;
@@ -982,3 +978,24 @@ void grib_context_increment_handle_total_count(grib_context *c)
     GRIB_MUTEX_UNLOCK(&mutex_c);
 }
 
+static codes_assertion_failed_proc assertion = NULL;
+
+void codes_set_codes_assertion_failed_proc(codes_assertion_failed_proc proc)
+{
+    assertion = proc;
+}
+
+void codes_assertion_failed(const char* message, const char* file, int line)
+{
+    /* Default behaviour is to abort
+     * unless user has supplied his own assertion routine */
+    if (assertion == NULL) {
+        fprintf(stderr, "ecCodes assertion failed: `%s' in %s:%d\n", message, file, line);
+        abort();
+    }
+    else {
+        char buffer[10240];
+        sprintf(buffer, "ecCodes assertion failed: `%s' in %s:%d", message, file, line);
+        assertion(buffer);
+    }
+}

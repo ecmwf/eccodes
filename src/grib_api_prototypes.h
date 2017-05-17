@@ -1271,7 +1271,6 @@ int codes_copy_key(grib_handle *h1, grib_handle *h2, const char *key, int type);
 /* grib_errors.c */
 const char *grib_get_error_message(int code);
 void grib_check(const char *call, const char *file, int line, int e, const char *msg);
-void grib_fail(const char *expr, const char *file, int line, int silent);
 
 /* grib_expression_class_binop.c */
 grib_expression *new_binop_expression(grib_context *c, grib_binop_long_proc long_func, grib_binop_double_proc double_func, grib_expression *left, grib_expression *right);

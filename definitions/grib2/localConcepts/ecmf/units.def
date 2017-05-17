@@ -9467,6 +9467,30 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 94 ;
 	}
+#Evaporation from the top of canopy
+'m of water equivalent' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 100 ;
+	}
+#Evaporation from bare soil
+'m of water equivalent' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 101 ;
+	}
+#Evaporation from open water surfaces excluding oceans
+'m of water equivalent' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 102 ;
+	}
+#Evaporation from vegetation transpiration
+'m of water equivalent' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 103 ;
+	}
 #Surface solar radiation downward clear-sky
 'J m**-2' = {
 	 discipline = 192 ;

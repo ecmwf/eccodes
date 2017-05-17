@@ -109,8 +109,15 @@ class CodesMessage(object):
 
         Iterables and scalars are handled intelligently.
         """
-        # Passed value is iterable and not string
-        if hasattr(value, "__iter__"):
+        # Passed key is iterable. Value has to be iterable too
+        if hasattr(key, "__iter__"):
+            if type(key) != type(value):
+                raise TypeError('Key must have same type as value')
+            if len(key) != len(value):
+                raise ValueError('Key array must have same size as value array')
+            eccodes.codes_set_key_vals(self.codes_id,",".join([str(key[i])+"="+str(value[i]) for i in range(len(key))]))
+        elif hasattr(value, "__iter__"):
+            # Passed value is iterable and not string
             eccodes.codes_set_array(self.codes_id, key, value)
         else:
             eccodes.codes_set(self.codes_id, key, value)

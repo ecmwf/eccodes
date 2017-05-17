@@ -610,7 +610,9 @@ static void grib_split_long_groups(grib_handle* hand, grib_context* c,long* numb
     grib_context_free(c,localFirstOrderValues);
 }
 
-static int pack_double_standard(grib_accessor* a, const double* val, size_t *len)
+#if 0
+/* Old implementation. Now superseded. See ECC-441 and ECC-261 */
+static int pack_double_old(grib_accessor* a, const double* val, size_t *len)
 {
     grib_accessor_data_g1second_order_general_extended_packing* self =  (grib_accessor_data_g1second_order_general_extended_packing*)a;
     int ret=0;
@@ -1213,8 +1215,9 @@ static int pack_double_standard(grib_accessor* a, const double* val, size_t *len
 
     return ret;
 }
+#endif
 
-static int pack_double_optimised(grib_accessor* a, const double* val, size_t *len)
+static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
     grib_accessor_data_g1second_order_general_extended_packing* self =  (grib_accessor_data_g1second_order_general_extended_packing*)a;
     int ret=0;
@@ -1258,8 +1261,6 @@ static int pack_double_optimised(grib_accessor* a, const double* val, size_t *le
     long decimal_scale_factor;
     grib_handle* handle = grib_handle_of_accessor(a);
     long optimize_scaling_factor = 0;
-    grib_context* c=handle->context;
-    int compat_gribex = c->gribex_mode_on && self->edition==1;
 
     self->dirty=1;
 
@@ -1271,19 +1272,30 @@ static int pack_double_optimised(grib_accessor* a, const double* val, size_t *le
         if (val[i] < min ) min = val[i];
     }
 
-    if((ret=grib_get_long_internal(handle,self->bits_per_value,&bits_per_value)) != GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(handle,self->bits_per_value,&bits_per_value)) != GRIB_SUCCESS)
         return ret;
 
-    if((ret = grib_get_long_internal(handle,self->optimize_scaling_factor, &optimize_scaling_factor))
+    if ((ret = grib_get_long_internal(handle,self->optimize_scaling_factor, &optimize_scaling_factor))
             != GRIB_SUCCESS)
         return ret;
 
     if (optimize_scaling_factor)
     {
+        const int compat_gribex = handle->context->gribex_mode_on && self->edition==1;
+        const int compat_32bit = 1;
         if((ret=grib_optimize_decimal_factor (a, self->reference_value,
                 max, min, bits_per_value,
-                compat_gribex, 1,
+                compat_gribex, compat_32bit,
                 &decimal_scale_factor, &binary_scale_factor, &reference_value)) != GRIB_SUCCESS)
+            return ret;
+
+        decimal = grib_power(decimal_scale_factor,10);
+        divisor = grib_power(-binary_scale_factor,2);
+        min = min * decimal;
+        max = max * decimal;
+
+        if((ret = grib_set_long_internal(handle,self->decimal_scale_factor, decimal_scale_factor)) !=
+                GRIB_SUCCESS)
             return ret;
     }
     else
@@ -1292,32 +1304,25 @@ static int pack_double_optimised(grib_accessor* a, const double* val, size_t *le
         if (min==max) {
             grib_set_long_internal(handle,self->decimal_scale_factor, 0);
         }
+
         if((ret = grib_get_long_internal(handle,self->decimal_scale_factor, &decimal_scale_factor))
                 != GRIB_SUCCESS)
             return ret;
 
+        decimal = grib_power(decimal_scale_factor,10);
+        min = min * decimal;
+        max = max * decimal;
+
         if (grib_get_nearest_smaller_value(handle,self->reference_value,min,&reference_value)
                 !=GRIB_SUCCESS) {
-            grib_context_log(handle->context,GRIB_LOG_ERROR,
+            grib_context_log(a->context,GRIB_LOG_ERROR,
                     "unable to find nearest_smaller_value of %g for %s",min,self->reference_value);
-            exit(GRIB_INTERNAL_ERROR);
+            return GRIB_INTERNAL_ERROR;
         }
         binary_scale_factor = grib_get_binary_scale_fact(max,reference_value,bits_per_value,&ret);
 
-        if((ret = grib_set_long_internal(handle,self->binary_scale_factor, binary_scale_factor)) !=
-                GRIB_SUCCESS)
-            return ret;
+        divisor = grib_power(-binary_scale_factor,2);
     }
-
-    decimal = grib_power(decimal_scale_factor,10);
-    divisor = grib_power(-binary_scale_factor,2);
-
-    min = min * decimal;
-    max = max * decimal;
-
-    if((ret = grib_set_long_internal(handle,self->decimal_scale_factor, decimal_scale_factor)) !=
-            GRIB_SUCCESS)
-        return ret;
 
     if((ret = grib_set_long_internal(handle,self->binary_scale_factor, binary_scale_factor)) !=
             GRIB_SUCCESS)
@@ -1840,24 +1845,6 @@ static int pack_double_optimised(grib_accessor* a, const double* val, size_t *le
     grib_context_free(a->context,firstOrderValues);
 
     return ret;
-}
-
-/* The driver pack routine.  See ECC-261 */
-static int pack_double(grib_accessor* a, const double* val, size_t *len)
-{
-    grib_accessor_data_g1second_order_general_extended_packing* self =  (grib_accessor_data_g1second_order_general_extended_packing*)a;
-    int ret = GRIB_SUCCESS;
-    grib_handle* handle = grib_handle_of_accessor(a);
-    long optimize_scaling_factor = 0;
-
-    if((ret = grib_get_long_internal(handle,self->optimize_scaling_factor, &optimize_scaling_factor)) != GRIB_SUCCESS)
-        return ret;
-
-    if (optimize_scaling_factor) {
-        return pack_double_optimised(a,val,len);
-    } else {
-        return pack_double_standard(a,val,len);
-    }
 }
 
 static void destroy(grib_context* context,grib_accessor* a)

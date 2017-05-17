@@ -1,18 +1,41 @@
 {
-    "folders": [
-        {
-            "path": ".", 
-            "follow_symlinks": true
-        }
-    ], 
-    "build_systems": [
-        {
-            "working_dir": "${project_path}/../../build/eccodes", 
-            "cmd": [
-                "make"
-            ], 
-            "file_regex": "([/\\w\\-\\.]+):(\\d+):(\\d+:)?", 
-            "name": "ecbuild"
-        }
-    ]
+	"build_systems":
+	[
+		{
+			"file_regex": "([/\\w\\-\\.]+):(\\d+):(\\d+:)?",
+			"name": "eccodes",
+			"shell_cmd": "make",
+			"syntax": "Packages/CMakeBuilder/Syntax/Make.sublime-syntax",
+			"variants":
+			[
+				{
+					"name": "clean",
+					"shell_cmd": "make clean"
+				},
+			],
+			"working_dir": "${project_path}/../../build/eccodes"
+		},
+		{
+			"file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+			"name": "Anaconda Python Builder",
+			"selector": "source.python",
+			"shell_cmd": "\"python\" -u \"$file\""
+		}
+	],
+	"cmake":
+	{
+		"build_folder": "${project_path}/../../build/eccodes",
+		"command_line_overrides":
+		{
+			"DEVELOPER_MODE": 1,
+			"ENABLE_MEMFS": 1
+		}
+	},
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": "."
+		}
+	]
 }

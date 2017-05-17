@@ -29,7 +29,8 @@ static void usage(const char* prog) {
 int main(int argc, char** argv) {
 	FILE* in = NULL;
 	int err = 0;
-	double lat,lon,value,missingValue=0;
+	double lat,lon,value;
+    double missingValue = 1e+20; /* A value out of range */
 	int n=0;
 	char* filename = NULL;
 
@@ -53,8 +54,9 @@ int main(int argc, char** argv) {
 		/* Check of errors after reading a message. */
 		if (err != GRIB_SUCCESS) GRIB_CHECK(err,0);
 
-		/* Get the double representing the missing value in the field. */
-		GRIB_CHECK(grib_get_double(h,"missingValue",&missingValue),0);
+		/* Set the double representing the missing value in the field. */
+        /* Choose a missingValue that does not correspond to any real value in the data array */
+		GRIB_CHECK(grib_set_double(h, "missingValue", missingValue),0);
 
 		/* A new iterator on lat/lon/values is created from the message handle h. */
 		iter=grib_iterator_new(h,0,&err);

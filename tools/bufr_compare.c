@@ -1169,12 +1169,14 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
 
     /* mask only if no -c option or headerMode (-H)*/
     if (blacklist && ( !listFromCommandLine || headerMode )) {
+        /* See ECC-245, GRIB-573, GRIB-915: Do not change handles in memory */
+        /*
         grib_string_list* nextb=blacklist;
         while (nextb) {
             grib_clear(handle1,nextb->value);
             grib_clear(handle2,nextb->value);
             nextb=nextb->next;
-        }
+        }*/
     }
 
     if ( listFromCommandLine && onlyListed ) {

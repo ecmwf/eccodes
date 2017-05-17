@@ -292,7 +292,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
             
             Sd = height * cos_x * cos_y;
             Sd = Sd * Sd - tmp1*factor_1;
-            if (Sd <= 0.0) {    // outside of view
+            if (Sd <= 0.0) {    /* outside of view */
                 lats[i] = lons[i] = 0; /* TODO: error? */
             }
             else {

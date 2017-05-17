@@ -1536,6 +1536,9 @@ grib_handle *grib_util_set_spec2(grib_handle *h,
 /* --------------------------------------- */
 
 
+typedef void (*codes_assertion_failed_proc)(const char* message);
+void codes_set_codes_assertion_failed_proc(codes_assertion_failed_proc proc);
+
 #ifdef __cplusplus
 }
 #endif

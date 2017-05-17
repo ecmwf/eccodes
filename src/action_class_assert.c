@@ -101,7 +101,7 @@ static int create_accessor(grib_section* p, grib_action* act,grib_loader *h)
 
   grib_push_accessor(as,p->block);
 
-  
+
   return GRIB_SUCCESS;
 }
 
