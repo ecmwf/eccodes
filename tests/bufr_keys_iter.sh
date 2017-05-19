@@ -36,7 +36,7 @@ typicalHour
 typicalMinute
 typicalSecond
 rdbType
-rdbSubtype
+oldSubtype
 rdbtimeDay
 rdbtimeHour
 rdbtimeMinute
@@ -54,6 +54,7 @@ correction3Part
 correction4
 correction4Part
 qualityControl
+newSubtype
 numberOfSubsets
 localLongitude1
 localLatitude1
