@@ -135,7 +135,7 @@ KNOWN_GRIB_KEYS = ['7777', 'EPS information', 'GRIBEditionNumber', 'N', 'NV',
 KNOWN_BUFR_KEYS = ['edition', 'masterTableNumber', 'bufrHeaderSubCentre', 'bufrHeaderCentre',
                    'updateSequenceNumber', 'dataCategory', 'dataSubCategory', 'masterTablesVersionNumber',
                    'localTablesVersionNumber', 'typicalYearOfCentury', 'typicalMonth', 'typicalDay',
-                   'typicalHour', 'typicalMinute', 'rdbType', 'rdbSubtype', 'rdbtimeDay', 'rdbtimeHour',
+                   'typicalHour', 'typicalMinute', 'rdbType', 'newSubtype', 'rdbtimeDay', 'rdbtimeHour',
                    'rdbtimeMinute', 'rdbtimeSecond', 'rectimeDay', 'rectimeHour', 'rectimeMinute', 'rectimeSecond',
                    'correction1', 'correction1Part', 'correction2', 'correction2Part', 'correction3', 'correction3Part',
                    'correction4', 'correction4Part', 'qualityControl', 'numberOfSubsets', 'localLatitude', 'localLongitude',
@@ -230,6 +230,7 @@ class TestGribMessage(unittest.TestCase):
             msg_keys = msg.keys()
             for key in KNOWN_GRIB_KEYS:
                 assert key in msg_keys
+            # Size of message in bytes
             self.assertEqual(msg.size(), 160219)
             self.assertEqual(len(msg.keys()), len(msg))
 
@@ -368,8 +369,10 @@ class TestBufrMessage(unittest.TestCase):
             msg = BufrMessage(bufr_file)
             msg.unpack()
             msg_keys = msg.keys()
+            self.assertEqual(len(msg_keys), 140)
             for key in KNOWN_BUFR_KEYS:
                 assert key in msg_keys
+            # Size of message in bytes
             self.assertEqual(msg.size(), 220)
             self.assertEqual(len(msg.keys()), len(msg))
 
