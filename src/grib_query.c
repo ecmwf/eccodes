@@ -408,7 +408,7 @@ static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name)
     while ( *p != '.' && *p != '\0' ) p++;
     if ( *p == '.' ) {
         int i=0,len=0;
-        char name_space[1024];
+        char name_space[128];
         char* basename=NULL;
         basename=p+1;
         p--;
@@ -502,7 +502,7 @@ grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name)
     while ( *p != '.' && *p != '\0' ) p++;
     if ( *p == '.' ) {
         int i=0,len=0;
-        char name_space[1024];
+        char name_space[128];
         p--;
         i=0;
         len=p-name+1;
