@@ -83,7 +83,10 @@ static void* default_long_lasting_malloc(const grib_context* c, size_t size)
     cntp++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
-    Assert(ret);
+    if (!ret) {
+        grib_context_log(c,GRIB_LOG_FATAL,"default_malloc: error allocating %lu bytes",(unsigned long)size);
+        Assert(0);
+    }
     return ret;
 }
 
@@ -104,7 +107,10 @@ static void* default_buffer_malloc(const grib_context* c, size_t size)
     cntp++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
-    Assert(ret);
+    if (!ret) {
+        grib_context_log(c,GRIB_LOG_FATAL,"default_buffer_malloc: error allocating %lu bytes",(unsigned long)size);
+        Assert(0);
+    }
     return ret;
 }
 
@@ -112,7 +118,10 @@ static void* default_buffer_realloc(const grib_context* c, void* p, size_t size)
 {
     void* ret;
     ret=realloc(p,size);
-    Assert(ret);
+    if (!ret) {
+        grib_context_log(c,GRIB_LOG_FATAL,"default_buffer_realloc: error allocating %lu bytes",(unsigned long)size);
+        Assert(0);
+    }
     return ret;
 }
 
@@ -133,7 +142,10 @@ static void* default_malloc(const grib_context* c, size_t size)
     cnt++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
-    Assert(ret);
+    if (!ret) {
+        grib_context_log(c,GRIB_LOG_FATAL,"default_malloc: error allocating %lu bytes",(unsigned long)size);
+        Assert(0);
+    }
     return ret;
 }
 
@@ -141,7 +153,10 @@ static void* default_realloc(const grib_context* c, void* p, size_t size)
 {
     void* ret;
     ret=realloc(p,size);
-    Assert(ret);
+    if (!ret) {
+        grib_context_log(c,GRIB_LOG_FATAL,"default_realloc: error allocating %lu bytes",(unsigned long)size);
+        Assert(0);
+    }
     return ret;
 }
 #endif
@@ -767,7 +782,8 @@ void* grib_context_malloc_persistent(const grib_context* c, size_t size)
 {
     void* p =  c->alloc_persistent_mem(c,size);
     if(!p) {
-        grib_context_log(c,GRIB_LOG_FATAL,"grib_context_malloc: error allocating %lu bytes",(unsigned long)size);
+        grib_context_log(c,GRIB_LOG_FATAL,
+                "grib_context_malloc_persistent: error allocating %lu bytes",(unsigned long)size);
         Assert(0);
     }
     return p;
