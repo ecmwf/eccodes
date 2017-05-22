@@ -72,6 +72,7 @@ list( APPEND tests_data_reqd
     ecc-197
     ecc-286
     ecc-288
+    ecc-313
     ecc-379
     ecc-393
     gts_get
