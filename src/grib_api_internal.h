@@ -203,6 +203,7 @@ extern "C" {
 #define MAX_NUM_HASH_ARRAY 2000
 
 #define GRIB_NAMESPACE      10
+#define MAX_NAMESPACE_LEN   128
 
 #define GRIB_MY_BUFFER      0
 #define GRIB_USER_BUFFER    1

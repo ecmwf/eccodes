@@ -98,12 +98,13 @@ grib_section* grib_create_root_section(const grib_context *context, grib_handle 
 static GRIB_INLINE grib_accessor_class* get_class(grib_context* c,char* type)
 {
     int i;
+    const int table_count = NUMBER(table);
     grib_accessor_class** the_class=NULL;
 
     if ( (the_class=(grib_accessor_class**)grib_trie_get(c->classes,type))!=NULL)
         return *(the_class);
 
-    for(i = 0; i < NUMBER(table) ; i++) {
+    for(i = 0; i < table_count ; i++) {
         if( grib_inline_strcmp(type,table[i].type) == 0 )
         {
             grib_trie_insert(c->classes,type,table[i].cclass);
