@@ -21,12 +21,18 @@ unsigned[2] messageLength;
 alias rdb.messageLength=messageLength;
 
 byte[3] rdbtime;
-alias ls.rdbtimeYear = localYear;
-alias ls.rdbtimeMonth = localMonth;
 meta rdbtimeDay     bits(rdbtime,0,6) : dump,long_type,no_copy;
 meta rdbtimeHour    bits(rdbtime,6,5) : dump,long_type,no_copy;
 meta rdbtimeMinute  bits(rdbtime,11,6) : dump,long_type,no_copy;
 meta rdbtimeSecond  bits(rdbtime,17,6) : dump,long_type,no_copy;
+
+meta rdbtimeYear rdbtime_guess_date(typicalYear,typicalMonth,typicalDay,rdbtimeDay,1);
+meta rdbtimeMonth rdbtime_guess_date(typicalYear,typicalMonth,typicalDay,rdbtimeDay,2);
+
+meta ls.rdbtimeDate sprintf("%.4d%.2d%.2d",rdbtimeYear,rdbtimeMonth,rdbtimeDay) : no_copy,read_only;
+meta ls.rdbtimeTime sprintf("%.2d%.2d%.2d",rdbtimeHour,rdbtimeMinute,rdbtimeSecond) :dump,no_copy,read_only;
+
+meta rdbtimeJulianDate julian_date(rdbtimeYear,rdbtimeMonth,rdbtimeDay,rdbtimeHour,rdbtimeMinute,rdbtimeSecond) : no_copy;
 
 byte[3] rectime;
 meta rectimeDay     bits(rectime,0,6) : dump,long_type,no_copy;

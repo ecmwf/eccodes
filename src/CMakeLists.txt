@@ -131,6 +131,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_gts_header.c
     grib_accessor_class_ifs_param.c
     grib_accessor_class_julian_day.c
+    grib_accessor_class_julian_date.c
     grib_accessor_class_latlonvalues.c
     grib_accessor_class_latitudes.c
     grib_accessor_class_longitudes.c
@@ -172,6 +173,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_g1_message_length.c
     grib_accessor_class_g1_section4_length.c
     grib_accessor_class_size.c
+    grib_accessor_class_rdbtime_guess_date.c
     grib_accessor_class_scale_values.c
     grib_accessor_class_offset_values.c
     grib_accessor_class_sprintf.c

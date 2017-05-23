@@ -139,6 +139,7 @@ int64, &grib_accessor_class_int64
 int64_little_endian, &grib_accessor_class_int64_little_endian
 int8, &grib_accessor_class_int8
 iterator, &grib_accessor_class_iterator
+julian_date, &grib_accessor_class_julian_date
 julian_day, &grib_accessor_class_julian_day
 ksec1expver, &grib_accessor_class_ksec1expver
 label, &grib_accessor_class_label
@@ -177,6 +178,7 @@ padtoeven, &grib_accessor_class_padtoeven
 padtomultiple, &grib_accessor_class_padtomultiple
 position, &grib_accessor_class_position
 raw, &grib_accessor_class_raw
+rdbtime_guess_date, &grib_accessor_class_rdbtime_guess_date
 reference_value_error, &grib_accessor_class_reference_value_error
 round, &grib_accessor_class_round
 scale, &grib_accessor_class_scale

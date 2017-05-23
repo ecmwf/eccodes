@@ -147,6 +147,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_uint8.c \
 	grib_accessor_class_blob.c \
 	grib_accessor_class_julian_day.c \
+	grib_accessor_class_julian_date.c \
 	grib_accessor_class_latlonvalues.c \
 	grib_accessor_class_latitudes.c \
 	grib_accessor_class_longitudes.c \
@@ -154,6 +155,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_octahedral_gaussian.c \
 	grib_accessor_class_offset_file.c \
 	grib_accessor_class_scale.c \
+	grib_accessor_class_rdbtime_guess_date.c \
 	grib_accessor_class_from_scale_factor_scaled_value.c \
 	grib_accessor_class_times.c \
 	grib_accessor_class_forward.c \
