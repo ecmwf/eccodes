@@ -15,13 +15,12 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 
-#if 0
-GRIB_INLINE static int strcmp(const char* a,const char* b) {
+/* This is a lot faster than the standard strcmp */
+GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
     if (*a != *b) return 1;
     while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
     return (*a==0 && *b==0) ? 0 : 1;
 }
-#endif
 
 static int matching(grib_accessor* a,const char* name,const char* name_space)
 {
@@ -30,9 +29,9 @@ static int matching(grib_accessor* a,const char* name,const char* name_space)
     {
         if(a->all_names[i] == 0) return 0;
 
-        if((strcmp(name,a->all_names[i]) == 0) &&
+        if((grib_inline_strcmp(name,a->all_names[i]) == 0) &&
                 ((name_space == NULL) || (a->all_name_spaces[i] != NULL &&
-                        strcmp(a->all_name_spaces[i],name_space) == 0))
+                        grib_inline_strcmp(a->all_name_spaces[i],name_space) == 0))
         )
             return 1;
         i++;
@@ -215,7 +214,7 @@ static grib_accessor* _search_by_rank(grib_accessor* a,const char* name,long ran
     grib_accessors_list* al=accessor_bufr_data_array_get_dataAccessors(a);
 
     while (al) {
-        if (!strcmp(al->accessor->name,name)) {
+        if (!grib_inline_strcmp(al->accessor->name,name)) {
             if (r==rank) return al->accessor;
             r++;
         }
@@ -273,7 +272,7 @@ static void search_from_accessors_list(grib_accessors_list* al,grib_accessors_li
     accessor_name=grib_split_name_attribute(al->accessor->context,name,attribute_name);
 
     while (al && al!=end && al->accessor) {
-        if (strcmp(al->accessor->name,accessor_name)==0) {
+        if (grib_inline_strcmp(al->accessor->name,accessor_name)==0) {
             if (attribute_name[0]) {
                 accessor_result=grib_accessor_get_attribute(al->accessor,attribute_name);
             } else {
@@ -286,7 +285,7 @@ static void search_from_accessors_list(grib_accessors_list* al,grib_accessors_li
         al=al->next;
     }
     if (al==end && al->accessor) {
-        if (strcmp(al->accessor->name,accessor_name)==0) {
+        if (grib_inline_strcmp(al->accessor->name,accessor_name)==0) {
             if (attribute_name[0]) {
                 accessor_result=grib_accessor_get_attribute(al->accessor,attribute_name);
             } else {
@@ -306,7 +305,7 @@ static void search_accessors_list_by_condition(grib_accessors_list* al,const cha
     grib_accessors_list* end=NULL;
 
     while (al) {
-        if (!strcmp(al->accessor->name,condition->left)) {
+        if (!grib_inline_strcmp(al->accessor->name,condition->left)) {
             if (start==NULL && condition_true(al->accessor,condition)) start=al;
             if (start && !condition_true(al->accessor,condition)) end=al;
         }
