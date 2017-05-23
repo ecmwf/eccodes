@@ -154,246 +154,243 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_julian_date* self = (grib_accessor_julian_date*)a;
-  int n=0;
-  grib_handle* h=grib_handle_of_accessor(a);
+    grib_accessor_julian_date* self = (grib_accessor_julian_date*)a;
+    int n=0;
+    grib_handle* h=grib_handle_of_accessor(a);
 
-  self->year = grib_arguments_get_name(h,c,n++);
-  self->month = grib_arguments_get_name(h,c,n++);
+    self->year = grib_arguments_get_name(h,c,n++);
+    self->month = grib_arguments_get_name(h,c,n++);
 
-  self->day = grib_arguments_get_name(h,c,n++);
-  if (self->day ==NULL) {
-    self->hour = 0;
-    self->minute = 0;
-    self->second = 0;
-    self->ymd=self->year;
-    self->hms=self->month;
-    self->year=0;
-    self->month=0;
-  } else {
-    self->ymd=0;
-    self->hms=0;
-    self->hour = grib_arguments_get_name(h,c,n++);
-    self->minute = grib_arguments_get_name(h,c,n++);
-    self->second = grib_arguments_get_name(h,c,n++);
-  }
-  self->sep[0]=' ';
-  self->sep[1]=0;
-  self->sep[2]=0;
-  self->sep[3]=0;
-  self->sep[4]=0;
+    self->day = grib_arguments_get_name(h,c,n++);
+    if (self->day ==NULL) {
+        self->hour = 0;
+        self->minute = 0;
+        self->second = 0;
+        self->ymd=self->year;
+        self->hms=self->month;
+        self->year=0;
+        self->month=0;
+    } else {
+        self->ymd=0;
+        self->hms=0;
+        self->hour = grib_arguments_get_name(h,c,n++);
+        self->minute = grib_arguments_get_name(h,c,n++);
+        self->second = grib_arguments_get_name(h,c,n++);
+    }
+    self->sep[0]=' ';
+    self->sep[1]=0;
+    self->sep[2]=0;
+    self->sep[3]=0;
+    self->sep[4]=0;
 
-  a->length=0;
+    a->length=0;
 }
-
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_string(dumper,a,NULL);
+    grib_dump_string(dumper,a,NULL);
 }
 
-
-static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-  int ret=0;
-  long date,hour,minute,second;
-  long year,month,day,ymd,hms;
-  grib_handle* h=grib_handle_of_accessor(a);
-  grib_accessor_julian_date* self = (grib_accessor_julian_date*)a;
+    int ret=0;
+    long hour,minute,second;
+    long year,month,day,ymd,hms;
+    grib_handle* h=grib_handle_of_accessor(a);
+    grib_accessor_julian_date* self = (grib_accessor_julian_date*)a;
 
-  if (self->ymd==NULL) {
-    ret=grib_get_long(h,self->year,&year);
-    if (ret!=GRIB_SUCCESS) return ret;
-    ret=grib_get_long(h,self->month,&month);
-    if (ret!=GRIB_SUCCESS) return ret;
-    ret=grib_get_long(h,self->day,&day);
-    if (ret!=GRIB_SUCCESS) return ret;
+    if (self->ymd==NULL) {
+        ret=grib_get_long(h,self->year,&year);
+        if (ret!=GRIB_SUCCESS) return ret;
+        ret=grib_get_long(h,self->month,&month);
+        if (ret!=GRIB_SUCCESS) return ret;
+        ret=grib_get_long(h,self->day,&day);
+        if (ret!=GRIB_SUCCESS) return ret;
 
-    ret=grib_get_long(h,self->hour,&hour);
-    if (ret!=GRIB_SUCCESS) return ret;
-    ret=grib_get_long(h,self->minute,&minute);
-    if (ret!=GRIB_SUCCESS) return ret;
-    ret=grib_get_long(h,self->second,&second);
-    if (ret!=GRIB_SUCCESS) return ret;
-  } else {
-    ret=grib_get_long(h,self->ymd,&ymd);
-    if (ret!=GRIB_SUCCESS) return ret;
-    year = ymd / 10000;
-    ymd %= 10000;
-    month  = ymd / 100;
-    ymd %= 100;
-    day = ymd;
+        ret=grib_get_long(h,self->hour,&hour);
+        if (ret!=GRIB_SUCCESS) return ret;
+        ret=grib_get_long(h,self->minute,&minute);
+        if (ret!=GRIB_SUCCESS) return ret;
+        ret=grib_get_long(h,self->second,&second);
+        if (ret!=GRIB_SUCCESS) return ret;
+    } else {
+        ret=grib_get_long(h,self->ymd,&ymd);
+        if (ret!=GRIB_SUCCESS) return ret;
+        year = ymd / 10000;
+        ymd %= 10000;
+        month  = ymd / 100;
+        ymd %= 100;
+        day = ymd;
 
-    ret=grib_get_long(h,self->hms,&hms);
-    if (ret!=GRIB_SUCCESS) return ret;
-    hour = hms / 10000;
-    hms %= 10000;
-    minute  = hms / 100;
-    hms %= 100;
-    second = hms;
-  }
+        ret=grib_get_long(h,self->hms,&hms);
+        if (ret!=GRIB_SUCCESS) return ret;
+        hour = hms / 10000;
+        hms %= 10000;
+        minute  = hms / 100;
+        hms %= 100;
+        second = hms;
+    }
 
-  ret=grib_datetime_to_julian(year,month,day,hour,minute,second,val);
+    ret=grib_datetime_to_julian(year,month,day,hour,minute,second,val);
 
-  return ret;
+    return ret;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-  grib_accessor_julian_date* self = (grib_accessor_julian_date*)a;
-  int ret=0;
-  long hour=0;
-  long minute=0;
-  long second=0;
-  long ymd=0,hms=0;
-  long year,month,day;
-  grib_handle* h=grib_handle_of_accessor(a);
+    grib_accessor_julian_date* self = (grib_accessor_julian_date*)a;
+    int ret=0;
+    long hour=0;
+    long minute=0;
+    long second=0;
+    long ymd=0,hms=0;
+    long year,month,day;
+    grib_handle* h=grib_handle_of_accessor(a);
 
-  ret=grib_julian_to_datetime(*val,&year,&month,&day,&hour,&minute,&second);
-  if (ret!=0) return ret;
-
-  if (self->ymd==NULL) {
-    ret=grib_set_long(h,self->year,year);
-    if (ret!=0) return ret;
-    ret=grib_set_long(h,self->month,month);
-    if (ret!=0) return ret;
-    ret=grib_set_long(h,self->day,day);
-    if (ret!=0) return ret;
-    ret=grib_set_long(h,self->hour,hour);
-    if (ret!=0) return ret;
-    ret=grib_set_long(h,self->minute,minute);
-    if (ret!=0) return ret;
-    ret=grib_set_long(h,self->second,second);
-    if (ret!=0) return ret;
-  } else {
-    ymd=year * 10000 + month * 100 + day;
-    ret=grib_set_long(h,self->ymd,ymd);
+    ret=grib_julian_to_datetime(*val,&year,&month,&day,&hour,&minute,&second);
     if (ret!=0) return ret;
 
-    hms=hour * 10000 + minute * 100 + second;
-    ret=grib_set_long(h,self->hms,hms);
-    if (ret!=0) return ret;
-  }
+    if (self->ymd==NULL) {
+        ret=grib_set_long(h,self->year,year);
+        if (ret!=0) return ret;
+        ret=grib_set_long(h,self->month,month);
+        if (ret!=0) return ret;
+        ret=grib_set_long(h,self->day,day);
+        if (ret!=0) return ret;
+        ret=grib_set_long(h,self->hour,hour);
+        if (ret!=0) return ret;
+        ret=grib_set_long(h,self->minute,minute);
+        if (ret!=0) return ret;
+        ret=grib_set_long(h,self->second,second);
+        if (ret!=0) return ret;
+    } else {
+        ymd=year * 10000 + month * 100 + day;
+        ret=grib_set_long(h,self->ymd,ymd);
+        if (ret!=0) return ret;
 
-  return ret;
+        hms=hour * 10000 + minute * 100 + second;
+        ret=grib_set_long(h,self->hms,hms);
+        if (ret!=0) return ret;
+    }
+
+    return ret;
 }
-
 
 static int unpack_string(grib_accessor* a, char* val, size_t *len)
 {
-  int ret=0;
-  long date,hour,minute,second;
-  long year,month,day,ymd,hms;
-  grib_accessor_julian_date* self = (grib_accessor_julian_date*)a;
-  char* sep=self->sep;
-  grib_handle* h=grib_handle_of_accessor(a);
+    int ret=0;
+    long hour,minute,second;
+    long year,month,day,ymd,hms;
+    grib_accessor_julian_date* self = (grib_accessor_julian_date*)a;
+    char* sep=self->sep;
+    grib_handle* h=grib_handle_of_accessor(a);
 
-  if (*len <  15) return GRIB_ARRAY_TOO_SMALL;
+    if (*len <  15) return GRIB_ARRAY_TOO_SMALL;
 
-  if (self->ymd==NULL) {
-    ret=grib_get_long(h,self->year,&year);
-    if (ret!=GRIB_SUCCESS) return ret;
-    ret=grib_get_long(h,self->month,&month);
-    if (ret!=GRIB_SUCCESS) return ret;
-    ret=grib_get_long(h,self->day,&day);
-    if (ret!=GRIB_SUCCESS) return ret;
+    if (self->ymd==NULL) {
+        ret=grib_get_long(h,self->year,&year);
+        if (ret!=GRIB_SUCCESS) return ret;
+        ret=grib_get_long(h,self->month,&month);
+        if (ret!=GRIB_SUCCESS) return ret;
+        ret=grib_get_long(h,self->day,&day);
+        if (ret!=GRIB_SUCCESS) return ret;
 
-    ret=grib_get_long(h,self->hour,&hour);
-    if (ret!=GRIB_SUCCESS) return ret;
-    ret=grib_get_long(h,self->minute,&minute);
-    if (ret!=GRIB_SUCCESS) return ret;
-    ret=grib_get_long(h,self->second,&second);
-    if (ret!=GRIB_SUCCESS) return ret;
-  } else {
-    ret=grib_get_long(h,self->ymd,&ymd);
-    if (ret!=GRIB_SUCCESS) return ret;
-    year = ymd / 10000;
-    ymd %= 10000;
-    month  = ymd / 100;
-    ymd %= 100;
-    day = ymd;
+        ret=grib_get_long(h,self->hour,&hour);
+        if (ret!=GRIB_SUCCESS) return ret;
+        ret=grib_get_long(h,self->minute,&minute);
+        if (ret!=GRIB_SUCCESS) return ret;
+        ret=grib_get_long(h,self->second,&second);
+        if (ret!=GRIB_SUCCESS) return ret;
+    } else {
+        ret=grib_get_long(h,self->ymd,&ymd);
+        if (ret!=GRIB_SUCCESS) return ret;
+        year = ymd / 10000;
+        ymd %= 10000;
+        month  = ymd / 100;
+        ymd %= 100;
+        day = ymd;
 
-    ret=grib_get_long(h,self->hms,&hms);
-    if (ret!=GRIB_SUCCESS) return ret;
-    hour = hms / 10000;
-    hms %= 10000;
-    minute  = hms / 100;
-    hms %= 100;
-    second = hms;
-  }
+        ret=grib_get_long(h,self->hms,&hms);
+        if (ret!=GRIB_SUCCESS) return ret;
+        hour = hms / 10000;
+        hms %= 10000;
+        minute  = hms / 100;
+        hms %= 100;
+        second = hms;
+    }
 
-  if (sep[1]!=0 && sep[2]!=0 && sep[3]!=0 && sep[4]!=0) {
-    sprintf(val,"%04ld%c%02ld%c%02ld%c%02ld%c%02ld%c%02ld",year,sep[0],month,sep[1],day,sep[2],hour,sep[3],minute,sep[4],second);
-  } else if (sep[0]!=0) {
-    sprintf(val,"%04ld%02ld%02ld%c%02ld%02ld%02ld",year,month,day,sep[0],hour,minute,second);
-  } else {
-    sprintf(val,"%04ld%02ld%02ld%02ld%02ld%02ld",year,month,day,hour,minute,second);
-  }
-  return ret;
+    if (sep[1]!=0 && sep[2]!=0 && sep[3]!=0 && sep[4]!=0) {
+        sprintf(val,"%04ld%c%02ld%c%02ld%c%02ld%c%02ld%c%02ld",year,sep[0],month,sep[1],day,sep[2],hour,sep[3],minute,sep[4],second);
+    } else if (sep[0]!=0) {
+        sprintf(val,"%04ld%02ld%02ld%c%02ld%02ld%02ld",year,month,day,sep[0],hour,minute,second);
+    } else {
+        sprintf(val,"%04ld%02ld%02ld%02ld%02ld%02ld",year,month,day,hour,minute,second);
+    }
+    return ret;
 }
 
 static int pack_string(grib_accessor* a, const char* val, size_t *len)
 {
-  int ret=0;
-  long date,hour,minute,second;
-  long year,month,day,ymd,hms;
-  grib_accessor_julian_date* self = (grib_accessor_julian_date*)a;
-  char* sep=self->sep;
-  grib_handle* h=grib_handle_of_accessor(a);
+    int ret=0;
+    long hour,minute,second;
+    long year,month,day,ymd,hms;
+    grib_accessor_julian_date* self = (grib_accessor_julian_date*)a;
+    char* sep=self->sep;
+    grib_handle* h=grib_handle_of_accessor(a);
 
-  ret=sscanf(val,"%04ld%c%02ld%c%02ld%c%02ld%c%02ld%c%02ld",&year,&sep[0],&month,&sep[1],&day,&sep[2],&hour,&sep[3],&minute,&sep[4],&second);
-  if (ret!=11) {
-    if (strlen(val)==15) {
-      ret=sscanf(val,"%04ld%02ld%02ld%c%02ld%02ld%02ld",&year,&month,&day,&sep[0],&hour,&minute,&second);
-      if (ret!=7) {
-        grib_context_log(h->context,GRIB_LOG_ERROR," Wrong date time format. Please use \"YYYY-MM-DD hh:mm:ss\"");
-        return GRIB_INVALID_KEY_VALUE;
-      }
-      sep[1]=0;
-      sep[2]=0;
-      sep[3]=0;
-      sep[4]=0;
-    } else {
-      ret=sscanf(val,"%04ld%02ld%02ld%02ld%02ld%02ld",&year,&month,&day,&hour,&minute,&second);
-      if (ret!=6) {
-        grib_context_log(h->context,GRIB_LOG_ERROR," Wrong date time format. Please use \"YYYY-MM-DD hh:mm:ss\"");
-        return GRIB_INVALID_KEY_VALUE;
-      }
-      sep[0]=0;
-      sep[1]=0;
-      sep[2]=0;
-      sep[3]=0;
-      sep[4]=0;
+    ret=sscanf(val,"%04ld%c%02ld%c%02ld%c%02ld%c%02ld%c%02ld",&year,&sep[0],&month,&sep[1],&day,&sep[2],&hour,&sep[3],&minute,&sep[4],&second);
+    if (ret!=11) {
+        if (strlen(val)==15) {
+            ret=sscanf(val,"%04ld%02ld%02ld%c%02ld%02ld%02ld",&year,&month,&day,&sep[0],&hour,&minute,&second);
+            if (ret!=7) {
+                grib_context_log(h->context,GRIB_LOG_ERROR," Wrong date time format. Please use \"YYYY-MM-DD hh:mm:ss\"");
+                return GRIB_INVALID_KEY_VALUE;
+            }
+            sep[1]=0;
+            sep[2]=0;
+            sep[3]=0;
+            sep[4]=0;
+        } else {
+            ret=sscanf(val,"%04ld%02ld%02ld%02ld%02ld%02ld",&year,&month,&day,&hour,&minute,&second);
+            if (ret!=6) {
+                grib_context_log(h->context,GRIB_LOG_ERROR," Wrong date time format. Please use \"YYYY-MM-DD hh:mm:ss\"");
+                return GRIB_INVALID_KEY_VALUE;
+            }
+            sep[0]=0;
+            sep[1]=0;
+            sep[2]=0;
+            sep[3]=0;
+            sep[4]=0;
+        }
     }
-  }
 
-  if (self->ymd==NULL) {
-    ret=grib_set_long(h,self->year,year);
-    if (ret!=0) return ret;
-    ret=grib_set_long(h,self->month,month);
-    if (ret!=0) return ret;
-    ret=grib_set_long(h,self->day,day);
-    if (ret!=0) return ret;
-    ret=grib_set_long(h,self->hour,hour);
-    if (ret!=0) return ret;
-    ret=grib_set_long(h,self->minute,minute);
-    if (ret!=0) return ret;
-    ret=grib_set_long(h,self->second,second);
-    if (ret!=0) return ret;
-  } else {
-    ymd=year * 10000 + month * 100 + day;
-    ret=grib_set_long(h,self->ymd,ymd);
-    if (ret!=0) return ret;
+    if (self->ymd==NULL) {
+        ret=grib_set_long(h,self->year,year);
+        if (ret!=0) return ret;
+        ret=grib_set_long(h,self->month,month);
+        if (ret!=0) return ret;
+        ret=grib_set_long(h,self->day,day);
+        if (ret!=0) return ret;
+        ret=grib_set_long(h,self->hour,hour);
+        if (ret!=0) return ret;
+        ret=grib_set_long(h,self->minute,minute);
+        if (ret!=0) return ret;
+        ret=grib_set_long(h,self->second,second);
+        if (ret!=0) return ret;
+    } else {
+        ymd=year * 10000 + month * 100 + day;
+        ret=grib_set_long(h,self->ymd,ymd);
+        if (ret!=0) return ret;
 
-    hms=hour * 10000 + minute * 100 + second;
-    ret=grib_set_long(h,self->hms,hms);
-    if (ret!=0) return ret;
-  }
+        hms=hour * 10000 + minute * 100 + second;
+        ret=grib_set_long(h,self->hms,hms);
+        if (ret!=0) return ret;
+    }
 
-  return ret;
+    return ret;
 }
 
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_context_log(a->context,GRIB_LOG_ERROR, " Cannot unpack %s as long", a->name);
     return GRIB_NOT_IMPLEMENTED;
@@ -413,8 +410,7 @@ static int pack_expression(grib_accessor* a, grib_expression *e)
     int ret=0;
     grib_handle* hand = grib_handle_of_accessor(a);
 
-    switch(grib_expression_native_type(hand,e))
-    {
+    switch(grib_expression_native_type(hand,e)) {
         case GRIB_TYPE_LONG: {
             len = 1;
             ret = grib_expression_evaluate_long(hand,e,&lval);
@@ -423,7 +419,7 @@ static int pack_expression(grib_accessor* a, grib_expression *e)
                 return ret;
             }
             /*if (hand->context->debug)
-                printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %ld\n", a->name,lval);*/
+                    printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %ld\n", a->name,lval);*/
             return grib_pack_long(a,&lval,&len);
             break;
         }
@@ -432,7 +428,7 @@ static int pack_expression(grib_accessor* a, grib_expression *e)
             len = 1;
             ret = grib_expression_evaluate_double(hand,e,&dval);
             /*if (hand->context->debug)
-                printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %g\n", a->name, dval);*/
+                    printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %g\n", a->name, dval);*/
             return grib_pack_double(a,&dval,&len);
             break;
         }
@@ -447,7 +443,7 @@ static int pack_expression(grib_accessor* a, grib_expression *e)
             }
             len = strlen(cval);
             /*if (hand->context->debug)
-                printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %s\n", a->name, cval);*/
+                    printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %s\n", a->name, cval);*/
             return grib_pack_string(a,cval,&len);
             break;
         }
@@ -455,4 +451,3 @@ static int pack_expression(grib_accessor* a, grib_expression *e)
 
     return GRIB_NOT_IMPLEMENTED;
 }
-

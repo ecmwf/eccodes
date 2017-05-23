@@ -209,8 +209,7 @@ dist_definitionsbufr_tables_0_local_4_98_0_DATA = \
 
 definitionsbufr_tables_0_local_4_98_0_codetablesdir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/local/4/98/0/codetables
 dist_definitionsbufr_tables_0_local_4_98_0_codetables_DATA = \
-	bufr/tables/0/local/4/98/0/codetables/25192.table\
-	bufr/tables/0/local/4/98/0/codetables/40192.table
+	bufr/tables/0/local/4/98/0/codetables/25192.table
 
 definitionsbufr_tables_0_wmo_10dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/wmo/10
 dist_definitionsbufr_tables_0_wmo_10_DATA = \

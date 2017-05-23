@@ -163,7 +163,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     grib_accessor_rdbtime_guess_date* self = (grib_accessor_rdbtime_guess_date*)a;
     grib_handle* h=grib_handle_of_accessor(a);
     int ret=0;
-    long typicalYear,typicalMonth,typicalDay,rdbDay,yearOrMonth;
+    long typicalYear,typicalMonth,typicalDay,rdbDay;
     long rdbYear,rdbMonth;
 
     ret=grib_get_long(h,self->typicalYear,&typicalYear);
@@ -176,13 +176,13 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     if (ret) return ret;
 
     if (rdbDay < typicalDay) {
-      if (typicalDay == 31 && typicalMonth==12) {
-        rdbYear=typicalYear+1;
-        rdbMonth=1;
-      } else {
-        rdbYear=typicalYear;
-        rdbMonth=typicalMonth+1;
-      }
+        if (typicalDay == 31 && typicalMonth==12) {
+            rdbYear=typicalYear+1;
+            rdbMonth=1;
+        } else {
+            rdbYear=typicalYear;
+            rdbMonth=typicalMonth+1;
+        }
     } else {
         rdbYear=typicalYear;
         rdbMonth=typicalMonth;
@@ -196,7 +196,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
 static int pack_long(grib_accessor* a, const long*  v, size_t *len)
 {
-  /* do nothing*/
-  return GRIB_SUCCESS;
+    /* do nothing*/
+    return GRIB_SUCCESS;
 }
-
