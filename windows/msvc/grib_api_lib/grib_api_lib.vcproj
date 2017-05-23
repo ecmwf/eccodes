@@ -977,6 +977,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_accessor_class_julian_date.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_julian_day.c"
 				>
 			</File>
@@ -1126,6 +1130,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_accessor_class_raw.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_accessor_class_rdbtime_guess_date.c"
 				>
 			</File>
 			<File
