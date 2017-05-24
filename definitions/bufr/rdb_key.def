@@ -11,7 +11,7 @@ meta localMinute bits(keyData,27,6) : long_type,no_copy;
 meta localSecond bits(keyData,33,6) : long_type,no_copy;
 meta spare  bits(keyData,39,1) : no_copy; # 40 bits = 5 bytes
 
-meta localJulianDate julian_date(localYear,localMonth,localDay,localHour,localMinute,localSecond) : no_copy;
+meta localDateTime julian_date(localYear,localMonth,localDay,localHour,localMinute,localSecond) : no_copy;
 
 # isSatellite and other stuff moved to section 3
 ascii[8]    keyMore : hidden; 
@@ -33,7 +33,7 @@ meta rdbtimeMonth rdbtime_guess_date(typicalYear,typicalMonth,typicalDay,rdbtime
 meta ls.rdbtimeDate sprintf("%.4d%.2d%.2d",rdbtimeYear,rdbtimeMonth,rdbtimeDay) : no_copy,read_only;
 meta ls.rdbtimeTime sprintf("%.2d%.2d%.2d",rdbtimeHour,rdbtimeMinute,rdbtimeSecond) :dump,no_copy,read_only;
 
-meta rdbtimeJulianDate julian_date(rdbtimeYear,rdbtimeMonth,rdbtimeDay,rdbtimeHour,rdbtimeMinute,rdbtimeSecond) : no_copy;
+meta rdbDateTime julian_date(rdbtimeYear,rdbtimeMonth,rdbtimeDay,rdbtimeHour,rdbtimeMinute,rdbtimeSecond) : no_copy;
 
 byte[3] rectime;
 meta rectimeDay     bits(rectime,0,6) : dump,long_type,no_copy;
@@ -41,7 +41,7 @@ meta rectimeHour    bits(rectime,6,5) : dump,long_type,no_copy;
 meta rectimeMinute  bits(rectime,11,6) : dump,long_type,no_copy;
 meta rectimeSecond  bits(rectime,17,6) : dump,long_type,no_copy;
 
-meta rectimeJulianDate julian_date(rdbtimeYear,rdbtimeMonth,rectimeDay,rectimeHour,rectimeMinute,rectimeSecond) : no_copy;
+meta recDateTime julian_date(rdbtimeYear,rdbtimeMonth,rectimeDay,rectimeHour,rectimeMinute,rectimeSecond) : no_copy;
 
 byte[1] corr1Data;
 meta correction1     bits(corr1Data,0,6) : dump,long_type,no_copy;
