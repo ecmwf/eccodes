@@ -75,7 +75,7 @@ void RotatedLL::fill(api::MIRJob &job) const  {
 }
 
 
-atlas::grid::Grid RotatedLL::atlasGrid() const {
+atlas::Grid RotatedLL::atlasGrid() const {
     return rotation_.rotate(RegularLL::atlasGrid());;
 }
 

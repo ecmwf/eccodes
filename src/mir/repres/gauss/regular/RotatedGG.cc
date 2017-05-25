@@ -69,7 +69,7 @@ Iterator* RotatedGG::rotatedIterator() const {
 }
 
 
-atlas::grid::Grid RotatedGG::atlasGrid() const {
+atlas::Grid RotatedGG::atlasGrid() const {
     return rotation_.rotate(Regular::atlasGrid());
 }
 

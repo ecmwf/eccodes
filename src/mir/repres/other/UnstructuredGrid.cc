@@ -90,7 +90,7 @@ util::Domain UnstructuredGrid::domain(const util::BoundingBox&) const {
 }
 
 
-atlas::grid::Grid UnstructuredGrid::atlasGrid() const {
+atlas::Grid UnstructuredGrid::atlasGrid() const {
     ASSERT(latitudes_.size() == longitudes_.size());
 
     std::vector<atlas::PointXY> *pts = new std::vector<atlas::PointXY>();

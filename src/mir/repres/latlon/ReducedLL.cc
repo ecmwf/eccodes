@@ -71,7 +71,7 @@ void ReducedLL::cropToDomain(const param::MIRParametrisation &parametrisation, c
 }
 
 
-atlas::grid::Grid ReducedLL::atlasGrid() const {
+atlas::Grid ReducedLL::atlasGrid() const {
     util::Domain dom = domain();
 
     using atlas::grid::StructuredGrid;

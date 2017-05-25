@@ -98,7 +98,7 @@ class RotatedLLShift : public RegularLLShift {
     virtual void fill(grib_info &) const;
     virtual void fill(api::MIRJob &) const;
 
-    virtual atlas::grid::Grid atlasGrid() const;
+    virtual atlas::Grid atlasGrid() const;
     virtual Iterator* rotatedIterator() const; // Before rotation
 
     // From RegularLL

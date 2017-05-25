@@ -59,11 +59,11 @@ void FromPL::fill(api::MIRJob &job) const  {
 }
 
 
-atlas::grid::Grid FromPL::atlasGrid() const {
+atlas::Grid FromPL::atlasGrid() const {
     ASSERT(pl_.size());
 
     util::Domain dom = domain();
-    atlas::grid::RectangularDomain atlasDomain({dom.west(), dom.east()}, {dom.south(), dom.north()});
+    atlas::RectangularDomain atlasDomain({dom.west(), dom.east()}, {dom.south(), dom.north()});
 
     return atlas::grid::ReducedGaussianGrid(pl_, atlasDomain);
 }

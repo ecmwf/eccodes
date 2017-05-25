@@ -55,9 +55,9 @@ void Octahedral::fill(api::MIRJob &job) const  {
 }
 
 
-atlas::grid::Grid Octahedral::atlasGrid() const {
+atlas::Grid Octahedral::atlasGrid() const {
     util::Domain dom = domain();
-    atlas::grid::RectangularDomain atlasDomain({dom.west(), dom.east()}, {dom.south(), dom.north()});
+    atlas::RectangularDomain atlasDomain({dom.west(), dom.east()}, {dom.south(), dom.north()});
 
     return atlas::grid::ReducedGaussianGrid("O" + std::to_string(N_), atlasDomain);
 }
@@ -66,7 +66,7 @@ atlas::grid::Grid Octahedral::atlasGrid() const {
 const std::vector<long>& Octahedral::pls() const {
     if (pl_.size() == 0) {
 
-        atlas::grid::Grid::Config config;
+        atlas::Grid::Config config;
         config.set("name", "O" + std::to_string(N_));
         atlas::grid::ReducedGaussianGrid grid(config);
         ASSERT(grid);

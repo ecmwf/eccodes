@@ -63,7 +63,7 @@ Iterator* RotatedClassic::rotatedIterator() const {
 }
 
 
-atlas::grid::Grid RotatedClassic::atlasGrid() const {
+atlas::Grid RotatedClassic::atlasGrid() const {
     return rotation_.rotate(Classic::atlasGrid());
 }
 

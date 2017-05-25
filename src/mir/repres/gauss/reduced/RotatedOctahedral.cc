@@ -63,7 +63,7 @@ Iterator* RotatedOctahedral::rotatedIterator() const {
 }
 
 
-atlas::grid::Grid RotatedOctahedral::atlasGrid() const {
+atlas::Grid RotatedOctahedral::atlasGrid() const {
     return rotation_.rotate(Octahedral::atlasGrid());
 }
 

@@ -21,7 +21,7 @@
 #include "eckit/types/Fraction.h"
 #include "eckit/types/FloatCompare.h"
 #include "atlas/grid.h"
-#include "atlas/grid/detail/domain/RectangularDomain.h"
+#include "atlas/domain/detail/RectangularDomain.h"
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
@@ -97,9 +97,9 @@ void Regular::fill(api::MIRJob &job) const  {
 }
 
 
-atlas::grid::Grid Regular::atlasGrid() const {
+atlas::Grid Regular::atlasGrid() const {
     util::Domain dom = domain();
-    atlas::grid::RectangularDomain atlasDomain({dom.west(), dom.east()}, {dom.south(), dom.north()});
+    atlas::RectangularDomain atlasDomain({dom.west(), dom.east()}, {dom.south(), dom.north()});
 
     return atlas::grid::RegularGaussianGrid("F" + std::to_string(N_), atlasDomain);
 }
