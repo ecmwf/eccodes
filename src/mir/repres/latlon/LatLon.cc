@@ -67,18 +67,24 @@ void LatLon::setNiNj() {
 }
 
 
-bool LatLon::shifted(const util::BoundingBox& bbox, const util::Increments& inc, bool check_lon, bool check_lat) {
-    ASSERT(check_lon || check_lat);
+bool LatLon::shiftedLon(const util::BoundingBox& bbox, const util::Increments& inc) {
+
+    // FIXME get precision from GRIB (angularPrecision)
+    double eps = 0.001;
+    double we = inc.west_east();
+
+    return eckit::types::is_approximately_equal(bbox.west(), we/2., eps);
+}
+
+
+bool LatLon::shiftedLat(const util::BoundingBox& bbox, const util::Increments& inc) {
 
     // FIXME get precision from GRIB (angularPrecision)
     double eps = 0.001;
     double sn = inc.south_north();
-    double we = inc.west_east();
 
-    bool shifted_lon = (!check_lon) ||  eckit::types::is_approximately_equal(bbox.west(), we/2., eps);
-    bool shifted_lat = (!check_lat) || (eckit::types::is_approximately_equal(bbox.north(),  90. - sn/2., eps)
-                                    &&  eckit::types::is_approximately_equal(bbox.south(), -90. + sn/2., eps));
-    return shifted_lon && shifted_lat;
+    return    (eckit::types::is_approximately_equal(bbox.north(),  90. - sn/2., eps)
+            && eckit::types::is_approximately_equal(bbox.south(), -90. + sn/2., eps));
 }
 
 
@@ -316,7 +322,7 @@ util::Domain LatLon::domain(const util::BoundingBox& bbox) const {
 
 
     // correct if grid range is pole-to-pole, or is shifted South-North
-    if (eckit::types::is_approximately_equal(north - south, 180., eps) || shifted(bbox_, increments_, false, true)) {
+    if (eckit::types::is_approximately_equal(north - south, 180., eps) || shiftedLat(bbox, increments_)) {
         north =  90;
         south = -90;
     }
