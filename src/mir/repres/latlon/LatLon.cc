@@ -308,28 +308,22 @@ util::Domain LatLon::domain() const {
 util::Domain LatLon::domain(const util::BoundingBox& bbox) const {
     using eckit::Fraction;
 
-    double sn(increments_.south_north());
-    double we(increments_.west_east());
+    Fraction sn(increments_.south_north());
+    Fraction we(increments_.west_east());
 
-
-    double north = long(bbox.north() / sn) * sn;
-    double south = long(bbox.south() / sn) * sn;
-    double east = bbox.east();
-    double west = bbox.west();
-
-    // FIXME get precision from GRIB (angularPrecision)
-    double eps = 0.001;
-
+    Fraction north = bbox.north();
+    Fraction south = bbox.south();
+    Fraction east = bbox.east();
+    Fraction west = bbox.west();
 
     // correct if grid range is pole-to-pole, or is shifted South-North
-    if (eckit::types::is_approximately_equal(north - south, 180., eps) || shiftedLat(bbox, increments_)) {
+    if ((north - south == 180) || shiftedLat(bbox, increments_)) {
         north =  90;
         south = -90;
     }
 
-
-    // correct if grid is range 360
-    if (eckit::types::is_approximately_equal(east - west + we, 360., eps) ) {
+    // correct if grid is periodic
+    if (east - west + we == 360) {
         east = west + 360;
     }
 
