@@ -67,24 +67,22 @@ void LatLon::setNiNj() {
 }
 
 
-bool LatLon::shiftedLon(const util::BoundingBox& bbox, const util::Increments& inc) {
+bool LatLon::shiftedLon(const double& west, const double& we) {
 
     // FIXME get precision from GRIB (angularPrecision)
     double eps = 0.001;
-    double we = inc.west_east();
 
-    return eckit::types::is_approximately_equal(bbox.west(), we/2., eps);
+    return eckit::types::is_approximately_equal(west, we/2., eps);
 }
 
 
-bool LatLon::shiftedLat(const util::BoundingBox& bbox, const util::Increments& inc) {
+bool LatLon::shiftedLat(const double& south, const double& north, const double& sn) {
 
     // FIXME get precision from GRIB (angularPrecision)
     double eps = 0.001;
-    double sn = inc.south_north();
 
-    return    (eckit::types::is_approximately_equal(bbox.north(),  90. - sn/2., eps)
-            && eckit::types::is_approximately_equal(bbox.south(), -90. + sn/2., eps));
+    return    (eckit::types::is_approximately_equal(north,  90. - sn/2., eps)
+            && eckit::types::is_approximately_equal(south, -90. + sn/2., eps));
 }
 
 
@@ -317,7 +315,7 @@ util::Domain LatLon::domain(const util::BoundingBox& bbox) const {
     Fraction west = bbox.west();
 
     // correct if grid range is pole-to-pole, or is shifted South-North
-    if ((north - south == 180) || shiftedLat(bbox, increments_)) {
+    if ((north - south == 180) || shiftedLat(south, north, sn)) {
         north =  90;
         south = -90;
     }
