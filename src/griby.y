@@ -821,7 +821,7 @@ conjonction : conjonction AND condition { $$ = new_logical_and_expression(grib_p
             | condition
             ;
 
-disjonction    : disjonction OR conjonction { $$ = new_binop_expression(grib_parser_context,&grib_op_or,NULL,$1,$3);}
+disjonction    : disjonction OR conjonction { $$ = new_logical_or_expression(grib_parser_context,$1,$3);}
             | conjonction
             ;
 

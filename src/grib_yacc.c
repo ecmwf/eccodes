@@ -3917,7 +3917,7 @@ grib_yyreduce:
   case 254:
 /* Line 1792 of yacc.c  */
 #line 824 "griby.y"
-    { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_or,NULL,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp));}
+    { (grib_yyval.exp) = new_logical_or_expression(grib_parser_context,(grib_yyvsp[(1) - (3)].exp),(grib_yyvsp[(3) - (3)].exp));}
     break;
 
   case 259:

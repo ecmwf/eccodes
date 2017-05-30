@@ -1278,6 +1278,9 @@ grib_expression *new_binop_expression(grib_context *c, grib_binop_long_proc long
 /* grib_expression_class_logical_and.c */
 grib_expression *new_logical_and_expression(grib_context *c, grib_expression *left, grib_expression *right);
 
+/* grib_expression_class_logical_or.c */
+grib_expression *new_logical_or_expression(grib_context *c, grib_expression *left, grib_expression *right);
+
 /* grib_expression_class_is_in_dict.c */
 grib_expression *new_is_in_dict_expression(grib_context *c, const char *name, const char *list);
 

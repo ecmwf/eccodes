@@ -10,6 +10,7 @@
 { "is_integer", &grib_expression_class_is_integer, },
 { "length", &grib_expression_class_length, },
 { "logical_and", &grib_expression_class_logical_and, },
+{ "logical_or", &grib_expression_class_logical_or, },
 { "long", &grib_expression_class_long, },
 { "string", &grib_expression_class_string, },
 { "string_compare", &grib_expression_class_string_compare, },
