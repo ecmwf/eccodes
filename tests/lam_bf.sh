@@ -10,5 +10,5 @@
 
 . ./include.sh
 
-exec $test_dir/lam_bf
+ exec $test_dir/lam_bf
 #xterm -e gdb $test_dir/lam_bf
