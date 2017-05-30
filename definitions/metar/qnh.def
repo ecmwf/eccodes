@@ -5,7 +5,7 @@ if ( ! qfePresent && substr(g,0,3) is "QFE" ) {
 		group g : dump; non_alpha na;
 		alias qfePresent=one;
 }
-if (! qnhPresent && substr(g,0,1) is "Q" ) {
+if ( ! qnhPresent && substr(g,0,1) is "Q" ) {
 		rename(g,qnhInHectoPascal);
 		if (is_integer(qnhInHectoPascal,1,4)) {
 				qnh=to_string(qnhInHectoPascal,1,4) : dump;

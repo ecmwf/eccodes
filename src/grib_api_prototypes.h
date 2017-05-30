@@ -1275,6 +1275,9 @@ void grib_check(const char *call, const char *file, int line, int e, const char 
 /* grib_expression_class_binop.c */
 grib_expression *new_binop_expression(grib_context *c, grib_binop_long_proc long_func, grib_binop_double_proc double_func, grib_expression *left, grib_expression *right);
 
+/* grib_expression_class_logical_and.c */
+grib_expression *new_logical_and_expression(grib_context *c, grib_expression *left, grib_expression *right);
+
 /* grib_expression_class_is_in_dict.c */
 grib_expression *new_is_in_dict_expression(grib_context *c, const char *name, const char *list);
 
