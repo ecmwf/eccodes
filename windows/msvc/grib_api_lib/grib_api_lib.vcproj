@@ -1505,6 +1505,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_expression_class_logical_and.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_expression_class_logical_or.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_expression_class_long.c"
 				>
 			</File>
