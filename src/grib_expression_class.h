@@ -9,6 +9,8 @@ extern grib_expression_class* grib_expression_class_is_in_dict;
 extern grib_expression_class* grib_expression_class_is_in_list;
 extern grib_expression_class* grib_expression_class_is_integer;
 extern grib_expression_class* grib_expression_class_length;
+extern grib_expression_class* grib_expression_class_logical_and;
+extern grib_expression_class* grib_expression_class_logical_or;
 extern grib_expression_class* grib_expression_class_long;
 extern grib_expression_class* grib_expression_class_string;
 extern grib_expression_class* grib_expression_class_string_compare;

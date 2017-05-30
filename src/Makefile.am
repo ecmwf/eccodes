@@ -326,6 +326,8 @@ libeccodes_la_prototypes= \
 	grib_value.c \
 	grib_errors.c \
 	grib_expression_class_binop.c \
+	grib_expression_class_logical_and.c \
+	grib_expression_class_logical_or.c \
 	grib_expression_class_is_in_dict.c \
 	grib_expression_class_true.c \
 	grib_expression_class_string_compare.c \
