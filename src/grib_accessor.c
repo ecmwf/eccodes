@@ -463,11 +463,6 @@ static void init_accessor(grib_accessor_class* c,grib_accessor* a, const long le
 {
     if(c) {
         grib_accessor_class *s = c->super ? *(c->super) : NULL;
-        if(!c->inited)
-        {
-            if(c->init_class) c->init_class(c);
-            c->inited = 1;
-        }
         init_accessor(s,a,len,args);
         if(c->init) c->init(a,len, args);
     }

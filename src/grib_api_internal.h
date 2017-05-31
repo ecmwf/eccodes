@@ -713,11 +713,21 @@ struct grib_block_of_accessors
 
 
 typedef struct grib_trie grib_trie;
+typedef struct grib_trie_with_rank_list grib_trie_with_rank_list;
+typedef struct grib_trie_with_rank grib_trie_with_rank;
 typedef struct grib_itrie grib_itrie;
 
 
 struct grib_sarray {
   char**        v;
+  size_t        size;
+  size_t        n;
+  size_t        incsize;
+  grib_context* context;
+} ;
+
+struct grib_oarray {
+  void**        v;
   size_t        size;
   size_t        n;
   size_t        incsize;
@@ -803,6 +813,12 @@ struct bufr_descriptors_array {
   grib_context* context;
 } ;
 
+struct bufr_descriptors_map_list {
+  bufr_descriptors_array* unexpanded;
+  bufr_descriptors_array* expanded;
+  bufr_descriptors_map_list* next;
+};
+
 /* BUFR: operator 203: Table B changed reference values */
 typedef struct bufr_tableb_override bufr_tableb_override;
 struct bufr_tableb_override {
@@ -857,6 +873,7 @@ struct grib_handle
     long missingValueLong;
     double missingValueDouble;
     ProductKind product_kind;
+    grib_trie* bufr_elements_table;
 };
 
 struct grib_multi_handle {
@@ -1050,6 +1067,7 @@ struct grib_context
     FILE*                           log_stream;
     grib_trie*                      classes;
     grib_trie*                      lists;
+    grib_trie*                      expanded_descriptors;
 #if GRIB_PTHREADS
     pthread_mutex_t                 mutex;
 #elif GRIB_OMP_THREADS

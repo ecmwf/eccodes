@@ -8,15 +8,19 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 
-/*
+/*************************************
+ * Enrico Fucile
+ **************************************/
+
+#include "grib_api_internal.h"
+/* 
    This is used by make_class.pl
 
    START_CLASS_DEF
    CLASS      = accessor
-   SUPER      = grib_accessor_class_variable
-   IMPLEMENTS = dump;next
+   SUPER      = grib_accessor_class_gen
+   IMPLEMENTS = pack_long; get_native_type
    END_CLASS_DEF
 
  */
@@ -31,42 +35,38 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
-static void dump(grib_accessor*, grib_dumper*);
+static int  get_native_type(grib_accessor*);
+static int pack_long(grib_accessor*, const long* val,size_t *len);
 static void init_class(grib_accessor_class*);
-static grib_accessor* next(grib_accessor*, int);
 
-typedef struct grib_accessor_bufr_group {
+typedef struct grib_accessor_bufr_clear_tables {
     grib_accessor          att;
 /* Members defined in gen */
-/* Members defined in variable */
-	double dval;
-	char*  cval;
-	int    type;
-/* Members defined in bufr_group */
-} grib_accessor_bufr_group;
+/* Members defined in bufr_clear_tables */
+} grib_accessor_bufr_clear_tables;
 
-extern grib_accessor_class* grib_accessor_class_variable;
+extern grib_accessor_class* grib_accessor_class_gen;
 
-static grib_accessor_class _grib_accessor_class_bufr_group = {
-    &grib_accessor_class_variable,                      /* super                     */
-    "bufr_group",                      /* name                      */
-    sizeof(grib_accessor_bufr_group),  /* size                      */
+static grib_accessor_class _grib_accessor_class_bufr_clear_tables = {
+    &grib_accessor_class_gen,                      /* super                     */
+    "bufr_clear_tables",                      /* name                      */
+    sizeof(grib_accessor_bufr_clear_tables),  /* size                      */
     0,                           /* inited */
     &init_class,                 /* init_class */
     0,                       /* init                      */
     0,                  /* post_init                      */
     0,                    /* free mem                       */
-    &dump,                       /* describes himself         */
+    0,                       /* describes himself         */
     0,                /* get length of section     */
     0,              /* get length of string      */
     0,                /* get number of values      */
     0,                 /* get number of bytes      */
     0,                /* get offset to bytes           */
-    0,            /* get native type               */
+    &get_native_type,            /* get native type               */
     0,                /* get sub_section                */
     0,               /* grib_pack procedures long      */
     0,                 /* grib_pack procedures long      */
-    0,                  /* grib_pack procedures long      */
+    &pack_long,                  /* grib_pack procedures long      */
     0,                /* grib_unpack procedures long    */
     0,                /* grib_pack procedures double    */
     0,              /* grib_unpack procedures double  */
@@ -82,7 +82,7 @@ static grib_accessor_class _grib_accessor_class_bufr_group = {
     0,            /* preferred_size   */
     0,                    /* resize   */
     0,      /* nearest_smaller_value */
-    &next,                       /* next accessor    */
+    0,                       /* next accessor    */
     0,                    /* compare vs. another accessor   */
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
@@ -91,21 +91,20 @@ static grib_accessor_class _grib_accessor_class_bufr_group = {
 };
 
 
-grib_accessor_class* grib_accessor_class_bufr_group = &_grib_accessor_class_bufr_group;
+grib_accessor_class* grib_accessor_class_bufr_clear_tables = &_grib_accessor_class_bufr_clear_tables;
 
 
 static void init_class(grib_accessor_class* c)
 {
+	c->dump	=	(*(c->super))->dump;
 	c->next_offset	=	(*(c->super))->next_offset;
 	c->string_length	=	(*(c->super))->string_length;
 	c->value_count	=	(*(c->super))->value_count;
 	c->byte_count	=	(*(c->super))->byte_count;
 	c->byte_offset	=	(*(c->super))->byte_offset;
-	c->get_native_type	=	(*(c->super))->get_native_type;
 	c->sub_section	=	(*(c->super))->sub_section;
 	c->pack_missing	=	(*(c->super))->pack_missing;
 	c->is_missing	=	(*(c->super))->is_missing;
-	c->pack_long	=	(*(c->super))->pack_long;
 	c->unpack_long	=	(*(c->super))->unpack_long;
 	c->pack_double	=	(*(c->super))->pack_double;
 	c->unpack_double	=	(*(c->super))->unpack_double;
@@ -121,6 +120,7 @@ static void init_class(grib_accessor_class* c)
 	c->preferred_size	=	(*(c->super))->preferred_size;
 	c->resize	=	(*(c->super))->resize;
 	c->nearest_smaller_value	=	(*(c->super))->nearest_smaller_value;
+	c->next	=	(*(c->super))->next;
 	c->compare	=	(*(c->super))->compare;
 	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
@@ -130,23 +130,14 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-static void dump(grib_accessor* a, grib_dumper* dumper)
+static int pack_long(grib_accessor* a, const long* val,size_t *len)
 {
-    grib_dump_section(dumper,a,a->sub_section->block);
+    grib_handle* h=grib_handle_of_accessor(a);
+    h->bufr_elements_table=NULL;
+    return GRIB_SUCCESS;
 }
 
-static grib_accessor* next(grib_accessor* a,int explore)
+static int  get_native_type(grib_accessor* a)
 {
-    grib_accessor* next=NULL;
-    if (explore) {
-        next=a->sub_section->block->first;
-        if (!next) next=a->next;
-    } else {
-        next=a->next;
-    }
-    if (!next) {
-        if (a->parent->owner)
-            next=a->parent->owner->cclass->next(a->parent->owner,0);
-    }
-    return next;
+    return GRIB_TYPE_UNDEFINED;
 }

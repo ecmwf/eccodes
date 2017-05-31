@@ -15,7 +15,6 @@
 
    START_CLASS_DEF
    CLASS      = expression
-   IMPLEMENTS = init_class
    IMPLEMENTS = native_type
    IMPLEMENTS = destroy
    IMPLEMENTS = evaluate_string

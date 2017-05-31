@@ -12,6 +12,11 @@ constant tablesMasterDir="bufr/tables/[masterTableNumber]/wmo/[masterTablesVersi
 constant tablesLocalDir="bufr/tables/[masterTableNumber]/local/[localTablesVersionNumber]/[bufrHeaderCentre:l]/[bufrHeaderSubCentre]" : hidden;
 constant rootTablesDir="bufr/tables" : hidden;
 
+meta clearTables bufr_clear_tables() = 0 : hidden,no_copy;
+
+when (changed(tablesMasterDir)) { set clearTables=1;}
+when (changed(tablesLocalDir)) { set clearTables=1;}
+
 # we should implement some table version dependency
 #constant templatesMasterDir="bufr/templates/[masterTableNumber]/[masterTablesVersionNumber]";
 #constant templatesLocalDir="bufr/templates/local/[masterTableNumber]/[bufrHeaderCentre:l]/[localTablesVersionNumber]";

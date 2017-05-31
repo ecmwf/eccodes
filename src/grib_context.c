@@ -362,7 +362,8 @@ static grib_context default_grib_context = {
         0,                            /* bufr_set_to_missing_if_out_of_range */
         0,                            /* log_stream                 */
         0,                            /* classes                    */
-        0                             /* lists                      */
+        0,                            /* lists                      */
+        0                             /* expanded_descriptors       */
 #if GRIB_PTHREADS
         ,PTHREAD_MUTEX_INITIALIZER    /* mutex                      */
 #endif

@@ -200,11 +200,11 @@ static char* get_condition(const char* name,codes_condition* condition)
     return str;
 }
 
-static grib_accessor* _search_by_rank(grib_accessor* a,const char* name) {
+static grib_accessor* _search_by_rank(grib_accessor* a,const char* name,int rank) {
     grib_accessor* ret=NULL;
-    grib_trie* t=accessor_bufr_data_array_get_dataAccessorsTrie(a);
+    grib_trie_with_rank* t=accessor_bufr_data_array_get_dataAccessorsTrie(a);
 
-    ret=(grib_accessor*)grib_trie_get(t,name);
+    ret=(grib_accessor*)grib_trie_with_rank_get(t,name,rank);
     return ret;
 }
 
@@ -225,11 +225,11 @@ static grib_accessor* _search_by_rank(grib_accessor* a,const char* name,long ran
 }
 */
 
-static grib_accessor* search_by_rank(grib_handle* h, const char* name,const char *the_namespace)
+static grib_accessor* search_by_rank(grib_handle* h, const char* name,int rank,const char *the_namespace)
 {
     grib_accessor* data=search_and_cache(h,"dataAccessors",the_namespace);
     if (data) {
-        return _search_by_rank(data,name);
+        return _search_by_rank(data,name,rank);
     } else {
         grib_accessor* ret=NULL;
         int rank;
@@ -390,7 +390,9 @@ static grib_accessor* search_and_cache(grib_handle* h, const char* name,const ch
     grib_accessor* a=NULL;
 
     if (name[0]=='#') {
-        a=search_by_rank(h,name,the_namespace);
+        int rank=-1;
+        char* basename=get_rank(name,&rank);
+        a=search_by_rank(h,basename,rank,the_namespace);
     } else {
         a=_search_and_cache(h,name,the_namespace);
     }

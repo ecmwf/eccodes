@@ -217,6 +217,7 @@ typedef struct grib_order_by grib_order_by;
 typedef struct grib_where grib_where;
 
 typedef struct grib_sarray grib_sarray;
+typedef struct grib_oarray grib_oarray;
 typedef struct grib_darray grib_darray;
 typedef struct grib_iarray grib_iarray;
 typedef struct grib_vdarray grib_vdarray;
@@ -224,6 +225,7 @@ typedef struct grib_vsarray grib_vsarray;
 typedef struct grib_viarray grib_viarray;
 typedef struct bufr_descriptor bufr_descriptor;
 typedef struct bufr_descriptors_array bufr_descriptors_array;
+typedef struct bufr_descriptors_map_list bufr_descriptors_map_list;
 
 grib_fieldset *grib_fieldset_new_from_files(grib_context *c, char *filenames[], int nfiles, char **keys, int nkeys, const char *where_string, const char *order_by_string, int *err);
 void grib_fieldset_delete(grib_fieldset* set);

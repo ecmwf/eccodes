@@ -16,7 +16,7 @@
    START_CLASS_DEF
    SUPER= grib_accessor_class_gen
    CLASS      = accessor
-   IMPLEMENTS = init;dump
+   IMPLEMENTS = dump
    END_CLASS_DEF
 
  */
@@ -32,7 +32,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static void dump(grib_accessor*, grib_dumper*);
-static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_forward {
@@ -49,7 +48,7 @@ static grib_accessor_class _grib_accessor_class_forward = {
     sizeof(grib_accessor_forward),  /* size                      */
     0,                           /* inited */
     &init_class,                 /* init_class */
-    &init,                       /* init                      */
+    0,                       /* init                      */
     0,                  /* post_init                      */
     0,                    /* free mem                       */
     &dump,                       /* describes himself         */
@@ -126,11 +125,6 @@ static void init_class(grib_accessor_class* c)
 }
 
 /* END_CLASS_IMP */
-
-static void init(grib_accessor* a,const long l, grib_arguments* c)
-{
-	/* a->alias = grib_arguments_get_name(grib_handle_of_accessor(a),c,0); */
-}
 
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
