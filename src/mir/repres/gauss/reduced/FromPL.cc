@@ -17,6 +17,7 @@
 
 #include "eckit/exception/Exceptions.h"
 #include "atlas/grid.h"
+#include "mir/action/misc/AreaCropper.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
@@ -34,6 +35,14 @@ FromPL::FromPL(const param::MIRParametrisation &parametrisation) : Reduced(param
 
 
 FromPL::~FromPL() {
+}
+
+
+void FromPL::cropToDomain(const param::MIRParametrisation& param, context::Context& ctx) const {
+    if (!domain().isGlobal()) {
+        action::AreaCropper cropper(param, bbox_);
+        cropper.execute(ctx);
+    }
 }
 
 
