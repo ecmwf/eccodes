@@ -63,9 +63,24 @@ atlas::Grid FromPL::atlasGrid() const {
     ASSERT(pl_.size());
 
     util::Domain dom = domain();
-    atlas::RectangularDomain atlasDomain({dom.west(), dom.east()}, {dom.south(), dom.north()});
+    if (dom.isGlobal()) {
+        return atlas::grid::ReducedGaussianGrid(pl_);
+    }
 
-    return atlas::grid::ReducedGaussianGrid(pl_, atlasDomain);
+    const size_t Nj = 2 * N_;
+    atlas::grid::GaussianSpacing gauss(Nj);
+
+    // NOTE: append zeros to clipped pl array, probably not the correct approach
+    ASSERT(pl_.size() <= Nj);
+    std::vector<long> pl(pl_);
+    pl.resize(Nj, 0);
+
+    using atlas::grid::StructuredGrid;
+    return StructuredGrid(
+                StructuredGrid::XSpace({0, 360}, pl, false),
+                StructuredGrid::YSpace(gauss),
+                StructuredGrid::Projection(),
+                atlas::RectangularDomain({dom.west(), dom.east()}, {dom.north(), dom.south()}) );
 }
 
 
