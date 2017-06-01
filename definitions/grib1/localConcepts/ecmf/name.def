@@ -9889,6 +9889,11 @@
 	 table2Version = 235 ;
 	 indicatorOfParameter = 70 ;
 	}
+#Total precipitation rate
+'Total precipitation rate' = {
+	 table2Version = 254 ;
+	 indicatorOfParameter = 48 ;
+	}
 #Ceiling
 'Ceiling' = {
 	 table2Version = 228 ;
