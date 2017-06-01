@@ -242,6 +242,15 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#2 metre relative humidity with respect to water
+'2 metre relative humidity with respect to water' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 93 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	}
 #Height of convective cloud top
 'Height of convective cloud top' = {
 	 discipline = 0 ;

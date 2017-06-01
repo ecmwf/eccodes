@@ -242,6 +242,15 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 lengthOfTimeRange = 6 ;
 	}
+#2 metre relative humidity with respect to water
+'2rhw' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 93 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	}
 #Height of convective cloud top
 'hcct' = {
 	 discipline = 0 ;

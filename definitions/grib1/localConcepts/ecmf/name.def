@@ -9279,6 +9279,11 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 29 ;
 	}
+#2 metre relative humidity with respect to water
+'2 metre relative humidity with respect to water' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 37 ;
+	}
 #Soil wetness index in layer 1
 'Soil wetness index in layer 1' = {
 	 table2Version = 228 ;
