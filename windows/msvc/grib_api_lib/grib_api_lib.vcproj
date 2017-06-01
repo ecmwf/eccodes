@@ -505,6 +505,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_accessor_class_bufr_clear_tables.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_bufr_data.c"
 				>
 			</File>
@@ -1693,6 +1697,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_oarray.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_openjpeg_encoding.c"
 				>
 			</File>
@@ -1738,6 +1746,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_trie.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_trie_with_rank.c"
 				>
 			</File>
 			<File
