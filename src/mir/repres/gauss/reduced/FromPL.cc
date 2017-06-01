@@ -60,7 +60,7 @@ void FromPL::fill(api::MIRJob &job) const  {
 
 
 atlas::Grid FromPL::atlasGrid() const {
-    ASSERT(pl_.size());
+    ASSERT (pl_.size());
 
     util::Domain dom = domain();
     if (dom.isGlobal()) {
@@ -75,12 +75,8 @@ atlas::Grid FromPL::atlasGrid() const {
     std::vector<long> pl(pl_);
     pl.resize(Nj, 0);
 
-    using atlas::grid::StructuredGrid;
-    return StructuredGrid(
-                StructuredGrid::XSpace({0, 360}, pl, false),
-                StructuredGrid::YSpace(gauss),
-                StructuredGrid::Projection(),
-                atlas::RectangularDomain({dom.west(), dom.east()}, {dom.north(), dom.south()}) );
+    const atlas::RectangularDomain rectangle({dom.west(), dom.east()}, {dom.north(), dom.south()});
+    return atlas::grid::ReducedGaussianGrid(pl, rectangle);
 }
 
 
