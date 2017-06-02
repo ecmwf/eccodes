@@ -30,7 +30,7 @@ bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d) {
   cd->F=d->F;
   cd->X=d->X;
   cd->Y=d->Y;
-  cd->name=grib_context_strdup(d->context,d->name);
+  /* cd->name=grib_context_strdup(d->context,d->name); See ECC-489 */
   cd->shortName=grib_context_strdup(d->context,d->shortName);
   cd->units=grib_context_strdup(d->context,d->units);
   cd->scale=d->scale;
@@ -63,8 +63,8 @@ int grib_bufr_descriptor_set_code(grib_accessor* tables_accessor,int code,bufr_d
     v->F=d->F;
     v->X=d->X;
     v->Y=d->Y;
-    grib_context_free(c,v->name);
-    v->name=grib_context_strdup(c,d->name);
+    /* grib_context_free(c,v->name); See ECC-489 */
+    /* v->name=grib_context_strdup(c,d->name); See ECC-489 */
     grib_context_free(c,v->shortName);
     v->shortName=grib_context_strdup(c,d->shortName);
     grib_context_free(c,v->units);
@@ -108,7 +108,7 @@ void grib_bufr_descriptor_delete(bufr_descriptor* v) {
   if (!v) return;
   c=v->context;
 
-  grib_context_free(c,v->name);
+  /* grib_context_free(c,v->name); See ECC-489 */
   grib_context_free(c,v->shortName);
   grib_context_free(c,v->units);
   grib_context_free(c,v);

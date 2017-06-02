@@ -356,7 +356,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             au->width=ccp->associatedFieldWidth;
             grib_bufr_descriptor_set_scale(au,0);
             au->shortName=grib_context_strdup(c,"associatedField");
-            au->name=grib_context_strdup(c,"associated field");
+            /* au->name=grib_context_strdup(c,"associated field");  See ECC-489 */
             au->units=grib_context_strdup(c,"associated units");
 #if MYDEBUG
             for (idepth=0;idepth<global_depth;idepth++) printf("\t");

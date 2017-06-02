@@ -321,7 +321,7 @@ static int bufr_get_from_table(grib_accessor* a,bufr_descriptor* v)
 
     v->shortName=grib_context_strdup(c,list[1]);
     v->type=convert_type(list[2]);
-    v->name=grib_context_strdup(c,list[3]);
+    /* v->name=grib_context_strdup(c,list[3]);  See ECC-489 */
     v->units=grib_context_strdup(c,list[4]);
     str=grib_context_strdup(c,list[5]);
     v->scale=atol(str);

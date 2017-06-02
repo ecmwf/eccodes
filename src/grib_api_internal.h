@@ -793,7 +793,7 @@ struct bufr_descriptor {
   int X;
   int Y;
   int type;
-  char* name;
+  /*char* name;   Not needed: All usage commented out. See ECC-489 */
   char* shortName;
   char* units;
   long scale;
