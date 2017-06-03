@@ -150,6 +150,7 @@ class ReducedLLIterator: public Iterator {
     size_t p_;
 
     size_t count_;
+    bool periodic_;
 
     virtual void print(std::ostream &out) const {
         out << "ReducedLLIterator["
@@ -186,7 +187,8 @@ class ReducedLLIterator: public Iterator {
                 if (j_ < nj_) {
                     ASSERT(p_ < pl_.size());
                     ni_ = pl_[p_++];
-                    inc_west_east_ = ew_ / ni_;
+                    ASSERT(ni_ > 1);
+                    inc_west_east_ = ew_ / (ni_ - (periodic_? 0:1));
                 }
 
             }
@@ -217,10 +219,12 @@ public:
         i_(0),
         j_(0),
         p_(0),
-        count_(0) {
+        count_(0),
+        periodic_(dom.isPeriodicEastWest()) {
 
         ni_ = pl_[p_++];
-        inc_west_east_ = ew_ / ni_;
+        ASSERT(ni_ > 1);
+        inc_west_east_ = ew_ / (ni_ - (periodic_? 0:1));
 
         // eckit::Log::debug<LibMir>() << *this << std::endl;
     }
