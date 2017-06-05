@@ -67,12 +67,13 @@ void LatLon::setNiNj() {
 }
 
 
-bool LatLon::shiftedLon(const double& west, const double& we) {
+bool LatLon::shiftedLon(const double& west, const double& east, const double& we) {
 
     // FIXME get precision from GRIB (angularPrecision)
     double eps = 0.001;
 
-    return eckit::types::is_approximately_equal(west, we/2., eps);
+    return    (eckit::types::is_approximately_equal(west, we/2., eps)
+            && eckit::types::is_approximately_equal(east, 360 - we/2., eps));
 }
 
 
@@ -320,8 +321,8 @@ util::Domain LatLon::domain(const util::BoundingBox& bbox) const {
         south = -90;
     }
 
-    // correct if grid is periodic
-    if (east - west + we == 360) {
+    // correct if grid is periodic, or is shifted West-East
+    if (east - west + we == 360 || shiftedLon(west, east, we)) {
         east = west + 360;
     }
 
