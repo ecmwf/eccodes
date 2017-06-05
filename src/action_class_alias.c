@@ -203,11 +203,12 @@ static int create_accessor( grib_section* p, grib_action* act,grib_loader *h)
     }
 
     if (grib_handle_of_accessor(x)->use_trie) {
+        grib_handle* hand = grib_handle_of_accessor(x);
         id=grib_hash_keys_get_id(x->context->keys,act->name);
 
-        if (grib_handle_of_accessor(x)->accessors[id] != x) {
-            /*x->same=grib_handle_of_accessor(x)->accessors[id];*/
-            grib_handle_of_accessor(x)->accessors[id]=x;
+        if (hand->accessors[id] != x) {
+            /*x->same=hand->accessors[id];*/
+            hand->accessors[id]=x;
         }
     }
 

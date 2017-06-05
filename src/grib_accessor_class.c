@@ -215,6 +215,7 @@ static void link_same_attributes(grib_accessor* a,grib_accessor* b)
 void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
 {
     int id;
+    grib_handle* hand = grib_handle_of_accessor(a);
     if (!l->first)
         l->first = l->last = a;
     else{
@@ -223,15 +224,15 @@ void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
     }
     l->last = a;
 
-    if (grib_handle_of_accessor(a)->use_trie) {
+    if (hand->use_trie) {
         if (*(a->all_names[0]) != '_') {
             id=grib_hash_keys_get_id(a->context->keys,a->all_names[0]);
-#ifdef DEBUG
-            Assert(id >=0 && id < ACCESSORS_ARRAY_SIZE);
-#endif
-            a->same=grib_handle_of_accessor(a)->accessors[id];
+
+            DebugAssert(id >=0 && id < ACCESSORS_ARRAY_SIZE);
+
+            a->same=hand->accessors[id];
             link_same_attributes(a,a->same);
-            grib_handle_of_accessor(a)->accessors[id]=a;
+            hand->accessors[id]=a;
 
             if(a->same == a) {
                 fprintf(stderr,"---> %s\n",a->name);

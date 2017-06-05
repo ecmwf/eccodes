@@ -236,34 +236,35 @@ int grib_g1_step_get_steps(grib_accessor* a,long* start,long* theEnd)
     long newstart,newend;
     int factor=1;
     long u2sf,u2sf_step_unit;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     if (self->step_unit != NULL)
-        grib_get_long_internal(grib_handle_of_accessor(a),self->step_unit,&step_unit);
+        grib_get_long_internal(hand,self->step_unit,&step_unit);
 
     if (err!=GRIB_SUCCESS) return err;
 
-    err = grib_get_long_internal(grib_handle_of_accessor(a),self->unit,&unit);
+    err = grib_get_long_internal(hand,self->unit,&unit);
     if(err)           return err;
     if (unit == 254) {
         unit = 15; /* See ECC-316: WMO says 254 is for 'seconds' but we use 15! */
     }
 
-    err = grib_get_long_internal(grib_handle_of_accessor(a),self->p1,&p1);
+    err = grib_get_long_internal(hand,self->p1,&p1);
     if(err)               return err;
 
-    err = grib_get_long_internal(grib_handle_of_accessor(a),self->p2,&p2);
+    err = grib_get_long_internal(hand,self->p2,&p2);
     if(err)               return err;
 
-    err = grib_get_long_internal(grib_handle_of_accessor(a),self->timeRangeIndicator,&timeRangeIndicator);
+    err = grib_get_long_internal(hand,self->timeRangeIndicator,&timeRangeIndicator);
     if(err)  return err;
 
     /* TODO move to the def file */
-    err = grib_get_long(grib_handle_of_accessor(a),"timeRangeIndicatorFromStepRange",&timeRangeIndicatorFromStepRange);
+    err = grib_get_long(hand,"timeRangeIndicatorFromStepRange",&timeRangeIndicatorFromStepRange);
 
     if (timeRangeIndicatorFromStepRange==10) timeRangeIndicator=timeRangeIndicatorFromStepRange;
 
     if (self->stepType) {
-        err = grib_get_string_internal(grib_handle_of_accessor(a),self->stepType,stepType,&stepTypeLen);
+        err = grib_get_string_internal(hand,self->stepType,stepType,&stepTypeLen);
         if(err)  return err;
     } else sprintf(stepType,"unknown");
 
@@ -312,22 +313,23 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
     int err=0;
     char stepType[20]={0,};
     size_t stepTypeLen=20;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     if ((err=grib_g1_step_get_steps(a,&start,&theEnd))!=GRIB_SUCCESS) {
         size_t step_unit_string_len=10;
         char step_unit_string[10];
 
         if (self->step_unit != NULL)
-            grib_get_string(grib_handle_of_accessor(a),self->step_unit,step_unit_string,&step_unit_string_len);
+            grib_get_string(hand,self->step_unit,step_unit_string,&step_unit_string_len);
         else
             sprintf(step_unit_string,"h");
 
         if (error_on_units) {
-            grib_get_long_internal(grib_handle_of_accessor(a),self->unit,&unit);
+            grib_get_long_internal(hand,self->unit,&unit);
             if (unit==254) {
                 unit=15; /* See ECC-316 */
             }
-            grib_set_long_internal(grib_handle_of_accessor(a),self->step_unit,unit);
+            grib_set_long_internal(hand,self->step_unit,unit);
             grib_context_log(a->context,GRIB_LOG_ERROR,
                     "unable to represent the step in %s\n                    Hint: try changing the step units",
                     step_unit_string);
@@ -335,11 +337,11 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
         return err;
     }
 
-    err = grib_get_long_internal(grib_handle_of_accessor(a),self->timeRangeIndicator,&timeRangeIndicator);
+    err = grib_get_long_internal(hand,self->timeRangeIndicator,&timeRangeIndicator);
     if(err)  return err;
 
     if (self->stepType) {
-        err = grib_get_string_internal(grib_handle_of_accessor(a),self->stepType,stepType,&stepTypeLen);
+        err = grib_get_string_internal(hand,self->stepType,stepType,&stepTypeLen);
         if(err)  return err;
     } else sprintf(stepType,"unknown");
 
