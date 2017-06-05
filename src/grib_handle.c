@@ -213,14 +213,14 @@ static grib_handle* grib_handle_create ( grib_handle  *gl, grib_context* c, cons
 
     if ( !gl->root )
     {
-        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_message: cannot create root section" );
+        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_create: cannot create root section" );
         grib_handle_delete ( gl );
         return NULL;
     }
 
     if ( !gl->context->grib_reader || !gl->context->grib_reader->first )
     {
-        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_message: cannot create handle, no definitions found" );
+        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_create: cannot create handle, no definitions found" );
         grib_handle_delete ( gl );
         return NULL;
     }
@@ -1283,14 +1283,14 @@ grib_handle *grib_handle_new ( grib_context* c )
 
     if ( !h->root )
     {
-        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_message: cannot create root section" );
+        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new: cannot create root section" );
         grib_handle_delete ( h );
         return NULL;
     }
 
     if ( !h->context->grib_reader || !h->context->grib_reader->first )
     {
-        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new_from_message: cannot create handle, no definitions found" );
+        grib_context_log ( c, GRIB_LOG_ERROR, "grib_handle_new: cannot create handle, no definitions found" );
         grib_handle_delete ( h );
         return NULL;
     }
