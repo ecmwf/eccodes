@@ -55,6 +55,13 @@ static grib_multi_support* grib_get_multi_support ( grib_context* c, FILE* f );
 static grib_multi_support* grib_multi_support_new ( grib_context* c );
 static grib_handle* grib_handle_new_multi ( grib_context* c,unsigned char** idata, size_t *buflen,int* error );
 
+static GRIB_INLINE int grib_inline_strcmp(const char* a,const char* b)
+{
+    if (*a != *b) return 1;
+    while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
+    return (*a==0 && *b==0) ? 0 : 1;
+}
+
 grib_section* grib_section_create ( grib_handle* h,grib_accessor* owner )
 {
     grib_section* s = ( grib_section* ) grib_context_malloc_clear ( h->context,sizeof ( grib_section ) );
@@ -364,11 +371,11 @@ static int determine_product_kind(grib_handle* h, ProductKind* prod_kind)
     err = grib_get_length(h, "kindOfProduct", &len);
     if (!err) {
         err = grib_get_string(h, "kindOfProduct", prod_kind_str, &len);
-        if      (strcmp(prod_kind_str, "GRIB")==0)  *prod_kind = PRODUCT_GRIB;
-        else if (strcmp(prod_kind_str, "BUFR")==0)  *prod_kind = PRODUCT_BUFR;
-        else if (strcmp(prod_kind_str, "METAR")==0) *prod_kind = PRODUCT_METAR;
-        else if (strcmp(prod_kind_str, "GTS")==0)   *prod_kind = PRODUCT_GTS;
-        else if (strcmp(prod_kind_str, "TAF")==0)   *prod_kind = PRODUCT_TAF;
+        if      (grib_inline_strcmp(prod_kind_str, "GRIB")==0)  *prod_kind = PRODUCT_GRIB;
+        else if (grib_inline_strcmp(prod_kind_str, "BUFR")==0)  *prod_kind = PRODUCT_BUFR;
+        else if (grib_inline_strcmp(prod_kind_str, "METAR")==0) *prod_kind = PRODUCT_METAR;
+        else if (grib_inline_strcmp(prod_kind_str, "GTS")==0)   *prod_kind = PRODUCT_GTS;
+        else if (grib_inline_strcmp(prod_kind_str, "TAF")==0)   *prod_kind = PRODUCT_TAF;
         else *prod_kind = PRODUCT_ANY;
     }
     return err;
