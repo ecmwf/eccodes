@@ -16,6 +16,7 @@
 #include "mir/repres/gauss/regular/RotatedGG.h"
 
 #include <iostream>
+#include "atlas/grid.h"
 #include "mir/util/Grib.h"
 #include "mir/util/RotatedIterator.h"
 
