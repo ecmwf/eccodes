@@ -57,9 +57,9 @@ void Classic::fill(api::MIRJob &job) const  {
 
 atlas::Grid Classic::atlasGrid() const {
     util::Domain dom = domain();
-    atlas::RectangularDomain atlasDomain({dom.west(), dom.east()}, {dom.south(), dom.north()});
+    atlas::RectangularDomain rectangle({dom.west(), dom.east()}, {dom.south(), dom.north()});
 
-    return atlas::grid::ReducedGaussianGrid("N" + std::to_string(N_), atlasDomain);
+    return atlas::grid::ReducedGaussianGrid("N" + std::to_string(N_), rectangle);
 }
 
 

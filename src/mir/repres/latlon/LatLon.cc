@@ -70,20 +70,20 @@ void LatLon::setNiNj() {
 bool LatLon::shiftedLon(const double& west, const double& east, const double& we) {
 
     // FIXME get precision from GRIB (angularPrecision)
-    double eps = 0.001;
+    const double epsilon_grib1 = 1.0 / 1000.0;
 
-    return    (eckit::types::is_approximately_equal(west, we/2., eps)
-            && eckit::types::is_approximately_equal(east, 360 - we/2., eps));
+    return    (eckit::types::is_approximately_equal(west, we/2., epsilon_grib1)
+            && eckit::types::is_approximately_equal(east, 360 - we/2., epsilon_grib1));
 }
 
 
 bool LatLon::shiftedLat(const double& south, const double& north, const double& sn) {
 
     // FIXME get precision from GRIB (angularPrecision)
-    double eps = 0.001;
+    const double epsilon_grib1 = 1.0 / 1000.0;
 
-    return    (eckit::types::is_approximately_equal(north,  90. - sn/2., eps)
-            && eckit::types::is_approximately_equal(south, -90. + sn/2., eps));
+    return    (eckit::types::is_approximately_equal(north,  90. - sn/2., epsilon_grib1)
+            && eckit::types::is_approximately_equal(south, -90. + sn/2., epsilon_grib1));
 }
 
 

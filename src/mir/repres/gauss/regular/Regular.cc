@@ -15,13 +15,14 @@
 
 #include "mir/repres/gauss/regular/Regular.h"
 
+#include <cmath>
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Plural.h"
 #include "eckit/memory/ScopedPtr.h"
-#include "eckit/types/Fraction.h"
 #include "eckit/types/FloatCompare.h"
-#include "atlas/grid.h"
+#include "eckit/types/Fraction.h"
 #include "atlas/domain/detail/RectangularDomain.h"
+#include "atlas/grid.h"
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
@@ -99,9 +100,9 @@ void Regular::fill(api::MIRJob &job) const  {
 
 atlas::Grid Regular::atlasGrid() const {
     util::Domain dom = domain();
-    atlas::RectangularDomain atlasDomain({dom.west(), dom.east()}, {dom.south(), dom.north()});
+    atlas::RectangularDomain rectangle({dom.west(), dom.east()}, {dom.south(), dom.north()});
 
-    return atlas::grid::RegularGaussianGrid("F" + std::to_string(N_), atlasDomain);
+    return atlas::grid::RegularGaussianGrid("F" + std::to_string(N_), rectangle);
 }
 
 
@@ -115,53 +116,56 @@ util::Domain Regular::domain(const util::BoundingBox& bbox) const {
     const std::vector<double> &lats = latitudes();
     ASSERT(lats.size() >= 2);
 
-    const double ew = bbox.east() - bbox.west();
-    const double N = static_cast<double>(N_);
 
-    // adjust bounding box on GRIB precision
-    // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree
-    // Use the precision given by GRIB in this check
+    // West-East domain limits
+    // FIXME get precision from GRIB (angularPrecision)
+    // GRIB=1 is in millidegree, GRIB-2 in in micro-degree. Use the precision given by GRIB in this check
+    // The dissemination will put in the GRIB header what is specified by the user
+    // so, for example if the user specify 359.999999 as the eastern longitude, this
+    // value will end up in the header
+    const double we = bbox.east() - bbox.west();
+    eckit::Fraction inc_we(90, N_);
+
     const double epsilon_grib1 = 1.0 / 1000.0;
     eckit::types::CompareApproximatelyEqual<double> cmp_eps(epsilon_grib1);
 
-    double adjust_north = bbox.north();
-    double adjust_south = bbox.south();
+    double west = bbox.west();
+    double east = bbox.east();
 
-    for (std::vector<double>::const_iterator lat = lats.begin(); lat != lats.end(); ++lat) {
-        if (cmp_eps(adjust_north, *lat)) {
-            adjust_north = std::max(adjust_north, *lat);
-        }
-        if (cmp_eps(adjust_south, *lat)) {
-            adjust_south = std::min(adjust_south, *lat);
-        }
+    const bool isPeriodicEastWest = cmp_eps(360., we + inc_we) || (we + inc_we > 360.);
+    if (!isPeriodicEastWest) {
+
+        long n = long(std::floor(west / double(inc_we)));
+        west = cmp_eps(west, inc_we * n)?     inc_we * n
+             : cmp_eps(west, inc_we * (n+1))? inc_we * (n+1)
+             : throw eckit::SeriousBug("Regular::domain: cannot match bounding box West " + std::to_string(west) + " given increment " + std::to_string(double(inc_we)));
+
+        n = long(std::floor(east / double(inc_we)));
+        east = cmp_eps(east, inc_we * n)?     inc_we * n
+             : cmp_eps(east, inc_we * (n+1))? inc_we * (n+1)
+             : throw eckit::SeriousBug("Regular::domain: cannot match bounding box East " + std::to_string(east) + " given increment " + std::to_string(double(inc_we)));
+
+    } else {
+        east = west + 360.;
     }
 
-    double adjust_west  = bbox.west();
-    double adjust_east  = bbox.east();
 
-    for (size_t i = 0; i < 4 * N_; ++i) {
-
-        const double lon1 = bbox.west() + double(i * 90.0) / N;
-        const double lon2 = bbox.east() - double(i * 90.0) / N;
-
-        if (cmp_eps(adjust_east, lon1) || cmp_eps(adjust_east, lon2)) {
-            adjust_east = std::max(adjust_east, std::max(lon1, lon2));
-        }
-        if (cmp_eps(adjust_west, lon1) || cmp_eps(adjust_west, lon2)) {
-            adjust_west = std::min(adjust_west, std::min(lon1, lon2));
-        }
+    // North-South domain limits
+    // assumes latitudes are sorted North-to-South
+    double north = bbox.north();
+    double south = bbox.south();
+    for (const double& lat: lats) {
+        if (cmp_eps(north, lat)) { north = lat; }
+        if (cmp_eps(south, lat)) { south = lat; }
     }
 
-    const bool
-    isPeriodicEastWest = cmp_eps(ew + 90.0 / N, 360.0),
-    includesPoleNorth  = cmp_eps(adjust_north, lats.front()),
-    includesPoleSouth  = cmp_eps(adjust_south, lats.back());
-
-    const double
-    north = includesPoleNorth ?  90 : adjust_north,
-    south = includesPoleSouth ? -90 : adjust_south,
-    west = adjust_west,
-    east = isPeriodicEastWest ? adjust_west + 360 : adjust_east;
+    double inc_sn = 0;
+    for (size_t j = 1; j < lats.size(); ++j) {
+        inc_sn = std::max(inc_sn, lats[j - 1] - lats[j]);
+    }
+    ASSERT(eckit::types::is_strictly_greater(inc_sn, 0.));
+    if (eckit::types::is_approximately_equal(north, lats.front(), inc_sn)) { north =  90; }
+    if (eckit::types::is_approximately_equal(south, lats.back(),  inc_sn)) { south = -90; }
 
     return util::Domain(north, west, south, east);
 }
@@ -191,14 +195,15 @@ void Regular::validate(const std::vector<double>& values) const {
 
 void Regular::setNiNj() {
     const util::Domain dom = domain();
-    const double lon_middle = (dom.west() + dom.east()) / 2.;
-    const double lat_middle = (dom.north() + dom.south()) / 2.;
 
     Ni_ = N_ * 4;
     if (!dom.isPeriodicEastWest()) {
+        const double lat_middle = (dom.north() + dom.south()) / 2.;
+        const eckit::Fraction inc(90, N_);
+
         Ni_ = 0;
         for (size_t i = 0; i < N_ * 4; ++i) {
-            const double lon = dom.west() + (i * 90.0) / N_;
+            const eckit::Fraction lon = dom.west() + i * inc;
             if (dom.contains(lat_middle, lon)) {
                 ++Ni_;
             }
@@ -208,10 +213,11 @@ void Regular::setNiNj() {
 
     Nj_ = N_ * 2;
     if (!dom.includesPoleNorth() || !dom.includesPoleSouth()) {
+        const double lon_middle = (dom.west() + dom.east()) / 2.;
+
         Nj_ = 0;
-        const std::vector<double>& lats = latitudes();
-        for (std::vector<double>::const_iterator lat = lats.begin(); lat != lats.end(); ++lat) {
-            if (dom.contains(*lat, lon_middle)) {
+        for (const double& lat: latitudes()) {
+            if (dom.contains(lat, lon_middle)) {
                 ++Nj_;
             }
         }

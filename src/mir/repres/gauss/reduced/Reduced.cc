@@ -230,52 +230,52 @@ util::Domain Reduced::domain() const {
 
 util::Domain Reduced::domain(const util::BoundingBox& bbox) const {
 
-
-    // calculate EW and NS increments
     const std::vector<long>& pl = pls();
     const std::vector<double>& lats = latitudes();
     ASSERT(pl.size());
-    ASSERT(lats.size());
+    ASSERT(lats.size() >= 2);
 
-    long max_pl = pl[0];
-    for (size_t i = 0; i < pl.size(); i++) {
-        max_pl = std::max(max_pl, pl[i]);
-    }
 
+    // West-East domain limits
+    // FIXME get precision from GRIB (angularPrecision)
+    // GRIB=1 is in millidegree, GRIB-2 in in micro-degree. Use the precision given by GRIB in this check
+    // The dissemination will put in the GRIB header what is specified by the user
+    // so, for example if the user specify 359.999999 as the eastern longitude, this
+    // value will end up in the header
+    const long max_pl = *std::max_element(pl.begin(), pl.end());
+    ASSERT(max_pl >= 2);
+    const double ew = bbox.east() - bbox.west();
+    const double inc_west_east = max_pl ? 360. / double(max_pl) : 0.;
+
+    const double epsilon_grib1 = 1.0 / 1000.0;
+    const bool isPeriodicEastWest =
+           eckit::types::is_approximately_equal(360., ew + inc_west_east)
+        || eckit::types::is_approximately_equal(360., ew + inc_west_east, epsilon_grib1 )
+        || (ew + inc_west_east > 360.);
+
+
+    // North-South domain limits
+    // assumes latitudes are sorted North-to-South
     double max_inc_north_south = std::numeric_limits<double>::epsilon();
     for (size_t j = 1; j < lats.size(); ++j) {
         max_inc_north_south = std::max(max_inc_north_south, lats[j - 1] - lats[j]);
     }
     ASSERT(eckit::types::is_strictly_greater(max_inc_north_south, 0.));
-
-    const double ew = bbox.east() - bbox.west();
-    const double inc_west_east = max_pl ? 360. / double(max_pl) : 0.;
-
-    // confirm domain limits
-    const double epsilon_grib1 = 1.0 / 1000.0;
-
-    const bool isPeriodicEastWest =
-        eckit::types::is_approximately_equal(360., ew + inc_west_east)
-
-        // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree. Use the precision given by GRIB in this check
-        || eckit::types::is_approximately_equal(360., ew + inc_west_east, epsilon_grib1 )
-
-        // The dissemination will put in the GRIB header what is specified by the user
-        // so, for example if the user specify 359.999999 as the eastern longitude, this
-        // value will end up in the header
-        || (ew + inc_west_east > 360.);
+    eckit::types::CompareApproximatelyEqual<double> cmp_eps(max_inc_north_south);
 
     const bool
-    includesPoleNorth = eckit::types::is_approximately_equal(bbox.north(),  90., max_inc_north_south),
-    includesPoleSouth = eckit::types::is_approximately_equal(bbox.south(), -90., max_inc_north_south),
-    isNorthAtEquator  = eckit::types::is_approximately_equal(bbox.north(),   0., max_inc_north_south),
-    isSouthAtEquator  = eckit::types::is_approximately_equal(bbox.south(),   0., max_inc_north_south);
+    includesPoleNorth = cmp_eps(bbox.north(),  90),
+    includesPoleSouth = cmp_eps(bbox.south(), -90),
+    isNorthAtEquator  = cmp_eps(bbox.north(),   0),
+    isSouthAtEquator  = cmp_eps(bbox.south(),   0);
+
 
     const double
     north = includesPoleNorth ?   90 : isNorthAtEquator ? 0 : bbox.north(),
     south = includesPoleSouth ?  -90 : isSouthAtEquator ? 0 : bbox.south(),
     west = bbox.west(),
     east = isPeriodicEastWest ? bbox.west() + 360 : bbox.east();
+
     return util::Domain(north, west, south, east);
 }
 
