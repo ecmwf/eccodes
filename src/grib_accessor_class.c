@@ -51,6 +51,8 @@ struct table_entry
     grib_accessor_class   **cclass;
 };
 
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
 static GRIB_INLINE int grib_inline_strcmp(const char* a,const char* b)
 {
     if (*a != *b) return 1;
