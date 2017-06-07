@@ -123,30 +123,25 @@ util::Domain Regular::domain(const util::BoundingBox& bbox) const {
     // The dissemination will put in the GRIB header what is specified by the user
     // so, for example if the user specify 359.999999 as the eastern longitude, this
     // value will end up in the header
-    const double we = bbox.east() - bbox.west();
-    eckit::Fraction inc_we(90, N_);
-
     const double epsilon_grib1 = 1.0 / 1000.0;
     eckit::types::CompareApproximatelyEqual<double> cmp_eps(epsilon_grib1);
 
+    const eckit::Fraction inc(90, long(N_));
+
     double west = bbox.west();
     double east = bbox.east();
-
-    const bool isPeriodicEastWest = cmp_eps(360., we + inc_we) || (we + inc_we > 360.);
-    if (!isPeriodicEastWest) {
-
-        long n = long(std::floor(west / double(inc_we)));
-        west = cmp_eps(west, inc_we * n)?     inc_we * n
-             : cmp_eps(west, inc_we * (n+1))? inc_we * (n+1)
-             : throw eckit::SeriousBug("Regular::domain: cannot match bounding box West " + std::to_string(west) + " given increment " + std::to_string(double(inc_we)));
-
-        n = long(std::floor(east / double(inc_we)));
-        east = cmp_eps(east, inc_we * n)?     inc_we * n
-             : cmp_eps(east, inc_we * (n+1))? inc_we * (n+1)
-             : throw eckit::SeriousBug("Regular::domain: cannot match bounding box East " + std::to_string(east) + " given increment " + std::to_string(double(inc_we)));
-
-    } else {
+    if (eckit::types::is_approximately_greater_or_equal<double>(bbox.east() - bbox.west() + inc, 360., epsilon_grib1)) {
         east = west + 360.;
+    } else {
+        long n = long(std::floor(west / double(inc)));
+        west = cmp_eps(west, inc * n)?     inc * n
+             : cmp_eps(west, inc * (n+1))? inc * (n+1)
+             : throw eckit::SeriousBug("Regular::domain: cannot match bounding box West " + std::to_string(west) + " given increment " + std::to_string(double(inc)));
+
+        n = long(std::floor(east / double(inc)));
+        east = cmp_eps(east, inc * n)?     inc * n
+             : cmp_eps(east, inc * (n+1))? inc * (n+1)
+             : throw eckit::SeriousBug("Regular::domain: cannot match bounding box East " + std::to_string(east) + " given increment " + std::to_string(double(inc)));
     }
 
 
@@ -159,13 +154,8 @@ util::Domain Regular::domain(const util::BoundingBox& bbox) const {
         if (cmp_eps(south, lat)) { south = lat; }
     }
 
-    double inc_sn = 0;
-    for (size_t j = 1; j < lats.size(); ++j) {
-        inc_sn = std::max(inc_sn, lats[j - 1] - lats[j]);
-    }
-    ASSERT(eckit::types::is_strictly_greater(inc_sn, 0.));
-    if (eckit::types::is_approximately_equal(north, lats.front(), inc_sn)) { north =  90; }
-    if (eckit::types::is_approximately_equal(south, lats.back(),  inc_sn)) { south = -90; }
+    if (eckit::types::is_approximately_equal(north, lats.front())) { north =  90; }
+    if (eckit::types::is_approximately_equal(south, lats.back()))  { south = -90; }
 
     return util::Domain(north, west, south, east);
 }
