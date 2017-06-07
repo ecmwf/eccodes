@@ -143,7 +143,8 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a, const long length , grib_arguments* args )
 {
     grib_accessor_variable* self = (grib_accessor_variable*)a;
-    grib_expression *expression = grib_arguments_get_expression(grib_handle_of_accessor(a),args,0);
+    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_expression *expression = grib_arguments_get_expression(hand,args,0);
     const char* p = 0;
     size_t len = 1;
     long l;
@@ -153,23 +154,23 @@ static void init(grib_accessor* a, const long length , grib_arguments* args )
 
     a->length = 0;
     if (self->type==GRIB_TYPE_UNDEFINED && expression) {
-    self->type = grib_expression_native_type(grib_handle_of_accessor(a),expression);
+    self->type = grib_expression_native_type(hand,expression);
 
     switch(self->type)
     {
     case GRIB_TYPE_DOUBLE:
-        grib_expression_evaluate_double(grib_handle_of_accessor(a),expression,&d);
+        grib_expression_evaluate_double(hand,expression,&d);
         pack_double(a,&d,&len);
         break;
 
     case GRIB_TYPE_LONG:
-        grib_expression_evaluate_long(grib_handle_of_accessor(a),expression,&l);
+        grib_expression_evaluate_long(hand,expression,&l);
         pack_long(a,&l,&len);
         break;
 
     default:
         len = sizeof(tmp);
-        p = grib_expression_evaluate_string(grib_handle_of_accessor(a),expression,tmp,&len,&ret);
+        p = grib_expression_evaluate_string(hand,expression,tmp,&len,&ret);
         if (ret != GRIB_SUCCESS) {
             grib_context_log(a->context,GRIB_LOG_ERROR,"unable to evaluate %s as string",a->name);
             Assert(0);
