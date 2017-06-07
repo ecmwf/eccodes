@@ -439,6 +439,7 @@ grib_handle* grib_handle_new_from_message ( grib_context* c, const void* data, s
     ProductKind product_kind = PRODUCT_ANY;
     if ( c == NULL ) c = grib_context_get_default();
     gl = grib_new_handle ( c );
+    gl->product_kind = PRODUCT_GRIB; /* See ECC-480 */
     h=grib_handle_create ( gl,  c, data,  buflen );
 
     /* See ECC-448 */
