@@ -51,6 +51,8 @@ struct table_entry
     grib_accessor_class   **cclass;
 };
 
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
 static GRIB_INLINE int grib_inline_strcmp(const char* a,const char* b)
 {
     if (*a != *b) return 1;
@@ -125,8 +127,9 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     size_t size=0;
 
     c = get_class(p->h->context,creator->op);
-    /* c=*((grib_accessor_classes_hash(creator->op,strlen(creator->op)))->cclass); */
-
+#ifdef USE_GPERF_HASHING
+    c=*((grib_accessor_classes_hash(creator->op,strlen(creator->op)))->cclass);
+#endif
     a = (grib_accessor*) grib_context_malloc_clear(p->h->context,c->size);
 
     a->name                = creator->name;

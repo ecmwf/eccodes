@@ -734,7 +734,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     int err=0;
     unsigned long i = 0;
     long pos = a->offset*8;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_handle* hand = NULL;
 
     err=grib_value_count(a,&rlen);
     if (err) return err;
@@ -754,6 +754,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
         return GRIB_SUCCESS;
     }
 
+    hand = grib_handle_of_accessor(a);
     for(i=0; i< rlen;i++){
         val[i] = (long)grib_decode_unsigned_long(hand->buffer->data , &pos, self->nbytes*8);
     }

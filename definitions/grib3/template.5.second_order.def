@@ -1,0 +1,30 @@
+# Copyright 2005-2017 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+# 
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
+
+codetable[1] groupSplitting ('5.4.table',masterDir,localDir) = 1 ; #default general
+
+codetable[1] missingValueManagement ('5.5.table',masterDir,localDir) = 0; #default as grib1
+
+unsigned[4] primaryMissingValue ;
+
+unsigned[4] secondaryMissingValue ;
+
+unsigned[4] numberOfGroups ;
+alias NG  = numberOfGroups;
+
+unsigned[1] referenceOfWidths ;
+unsigned[1] widthOfWidths ;
+
+unsigned[4] referenceOfLengths ;
+unsigned[1] incrementOfLengths ;
+
+unsigned[4] trueLengthOfLastGroup ;
+unsigned[1] widthOfLengths ;
+

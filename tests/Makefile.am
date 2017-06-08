@@ -19,8 +19,10 @@ TESTS = definitions.sh \
         metar_dump.sh \
         ieee.sh \
         grib1to2.sh \
+        grib1to3.sh \
         unit_tests.sh \
         grib2to1.sh \
+        grib2to3.sh \
         badgrib.sh \
         grib_ls.sh \
         grib_filter.sh  \

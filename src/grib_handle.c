@@ -55,6 +55,8 @@ static grib_multi_support* grib_get_multi_support ( grib_context* c, FILE* f );
 static grib_multi_support* grib_multi_support_new ( grib_context* c );
 static grib_handle* grib_handle_new_multi ( grib_context* c,unsigned char** idata, size_t *buflen,int* error );
 
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
 static GRIB_INLINE int grib_inline_strcmp(const char* a,const char* b)
 {
     if (*a != *b) return 1;
@@ -439,6 +441,7 @@ grib_handle* grib_handle_new_from_message ( grib_context* c, const void* data, s
     ProductKind product_kind = PRODUCT_ANY;
     if ( c == NULL ) c = grib_context_get_default();
     gl = grib_new_handle ( c );
+    gl->product_kind = PRODUCT_GRIB; /* See ECC-480 */
     h=grib_handle_create ( gl,  c, data,  buflen );
 
     /* See ECC-448 */
@@ -582,6 +585,11 @@ static grib_handle* grib_handle_new_multi ( grib_context* c,unsigned char** data
             }
         }
 
+    }
+    else if (edition == 3)
+    {
+        *error = GRIB_UNSUPPORTED_EDITION;
+        return NULL;
     }
     else
     {
@@ -739,6 +747,13 @@ static grib_handle* grib_handle_new_from_file_multi ( grib_context* c, FILE* f,i
             }
         }
 
+    }
+    else if (edition == 3)
+    {
+        /* GRIB3: Multi-field mode not yet supported */
+        printf("WARNING: %s\n", "grib_handle_new_from_file_multi: GRIB3 multi-field mode not yet implemented! Reverting to single-field mode");
+        gm->message_length=0;
+        gm->message=NULL;
     }
     else
     {

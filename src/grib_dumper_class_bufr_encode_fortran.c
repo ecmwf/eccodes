@@ -95,6 +95,8 @@ grib_dumper_class* grib_dumper_class_bufr_encode_fortran = &_grib_dumper_class_b
 /* END_CLASS_IMP */
 static void dump_attributes(grib_dumper* d, grib_accessor* a, const char* prefix);
 
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
 GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 {
     if (*a != *b) return 1;

@@ -112,6 +112,7 @@ static int create_accessor( grib_section* p, grib_action* act,grib_loader *h)
     grib_action_alias* self = (grib_action_alias*)act;
     grib_accessor *x=NULL ;
     grib_accessor *y=NULL ;
+    grib_handle* hand = NULL;
 
     /*if alias and target have the same name add only the namespace */
     if (self->target && !strcmp(act->name,self->target) && act->name_space!=NULL) {
@@ -202,8 +203,8 @@ static int create_accessor( grib_section* p, grib_action* act,grib_loader *h)
         return GRIB_SUCCESS;
     }
 
-    if (grib_handle_of_accessor(x)->use_trie) {
-        grib_handle* hand = grib_handle_of_accessor(x);
+    hand = grib_handle_of_accessor(x);
+    if (hand->use_trie) {
         id=grib_hash_keys_get_id(x->context->keys,act->name);
 
         if (hand->accessors[id] != x) {

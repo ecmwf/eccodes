@@ -88,6 +88,8 @@ list( APPEND tests_data_reqd
     optimize_scaling_sh
     grib1to2
     grib2to1
+    grib1to3
+    grib2to3
     badgrib
     grib_ls
     grib_filter

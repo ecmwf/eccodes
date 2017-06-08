@@ -211,7 +211,7 @@ extern "C" {
 #define GRIB_REAL_MODE4    4
 #define GRIB_REAL_MODE8    8
 
-#define MAX_NUM_SECTIONS  9
+#define MAX_NUM_SECTIONS  12
 
 #define GRIB_DISPOSABLE_MEMORY      0
 #define GRIB_LONG_LASTING_MEMORY    1
