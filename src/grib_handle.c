@@ -586,6 +586,11 @@ static grib_handle* grib_handle_new_multi ( grib_context* c,unsigned char** data
         }
 
     }
+    else if (edition == 3)
+    {
+        *error = GRIB_UNSUPPORTED_EDITION;
+        return NULL;
+    }
     else
     {
         gm->message_length=0;
@@ -742,6 +747,13 @@ static grib_handle* grib_handle_new_from_file_multi ( grib_context* c, FILE* f,i
             }
         }
 
+    }
+    else if (edition == 3)
+    {
+        /* GRIB3: Multi-field mode not yet supported */
+        printf("WARNING: %s\n", "grib_handle_new_from_file_multi: GRIB3 multi-field mode not yet implemented! Reverting to single-field mode");
+        gm->message_length=0;
+        gm->message=NULL;
     }
     else
     {
