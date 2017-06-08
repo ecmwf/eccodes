@@ -15,7 +15,6 @@
 
 #include "mir/repres/latlon/LatLon.h"
 
-#include <cmath>
 #include <iostream>
 #include "eckit/exception/Exceptions.h"
 #include "eckit/types/FloatCompare.h"
@@ -64,26 +63,6 @@ void LatLon::cropToDomain(const param::MIRParametrisation &parametrisation, cont
 void LatLon::setNiNj() {
     ni_ = bbox_.computeNi(increments_);
     nj_ = bbox_.computeNj(increments_);
-}
-
-
-bool LatLon::shiftedLon(const double& west, const double& east, const double& we) {
-
-    // FIXME get precision from GRIB (angularPrecision)
-    const double epsilon_grib1 = 1.0 / 1000.0;
-
-    return    (eckit::types::is_approximately_equal(west, we/2., epsilon_grib1)
-            && eckit::types::is_approximately_equal(east, 360 - we/2., epsilon_grib1));
-}
-
-
-bool LatLon::shiftedLat(const double& south, const double& north, const double& sn) {
-
-    // FIXME get precision from GRIB (angularPrecision)
-    const double epsilon_grib1 = 1.0 / 1000.0;
-
-    return    (eckit::types::is_approximately_equal(north,  90. - sn/2., epsilon_grib1)
-            && eckit::types::is_approximately_equal(south, -90. + sn/2., epsilon_grib1));
 }
 
 
@@ -305,25 +284,28 @@ util::Domain LatLon::domain() const {
 
 
 util::Domain LatLon::domain(const util::BoundingBox& bbox) const {
-    using eckit::Fraction;
 
-    Fraction sn(increments_.south_north());
-    Fraction we(increments_.west_east());
+    // FIXME get precision from GRIB (angularPrecision)
+    const double epsilon_grib1 = 1.0 / 1000.0;
+    eckit::types::CompareApproximatelyEqual<double> cmp(epsilon_grib1);
 
-    Fraction north = bbox.north();
-    Fraction south = bbox.south();
-    Fraction east = bbox.east();
-    Fraction west = bbox.west();
+    double sn(increments_.south_north());
+    double we(increments_.west_east());
+
+    double north = bbox.north();
+    double south = bbox.south();
+    double east = bbox.east();
+    double west = bbox.west();
 
     // correct if grid range is pole-to-pole, or is shifted South-North
-    if ((north - south == 180) || shiftedLat(south, north, sn)) {
-        north =  90;
-        south = -90;
+    if (cmp(north - south, 180.) || (cmp(north,  90. - sn/2.) && cmp(south, -90. + sn/2.))) {
+        north =  90.;
+        south = -90.;
     }
 
     // correct if grid is periodic, or is shifted West-East
-    if (east - west + we == 360 || shiftedLon(west, east, we)) {
-        east = west + 360;
+    if (cmp(east - west + we, 360.) || (cmp(west, we/2.) && cmp(east, 360. - we/2.))) {
+        east = west + 360.;
     }
 
     return util::Domain(north, west, south, east);
