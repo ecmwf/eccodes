@@ -75,21 +75,22 @@ void RegularLL::fill(api::MIRJob &job) const  {
 
 
 atlas::Grid RegularLL::atlasGrid() const {
-    const util::Domain dom = domain();
 
     // use bounding box for non-shifted/shifted grid (it is the best we have)
-    bool isPeriodicEastWest = dom.isPeriodicEastWest();
+    const util::Domain dom = domain();
+    const bool isPeriodicEastWest = dom.isPeriodicEastWest();
+
     double north = bbox_.north();
     double south = bbox_.south();
     double west = bbox_.west();
-    double east = isPeriodicEastWest? west + 360 : bbox_.east();
+    double east = isPeriodicEastWest? west + 360. : bbox_.east();
 
     using atlas::grid::StructuredGrid;
     using atlas::grid::LinearSpacing;
     StructuredGrid::XSpace xspace( LinearSpacing( west,  east,  long(ni_), !isPeriodicEastWest ));
     StructuredGrid::YSpace yspace( LinearSpacing( north, south, long(nj_) ));
 
-    atlas::RectangularDomain rectangle({ dom.west(), dom.east() }, { dom.south(), dom.north() });
+    atlas::RectangularDomain rectangle({dom.west(), dom.east()}, {dom.south(), dom.north()});
     return StructuredGrid(xspace, yspace, StructuredGrid::Projection(), rectangle);
 }
 
