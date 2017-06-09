@@ -23,6 +23,7 @@
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Domain.h"
+#include "mir/method/MIRGrid.h"
 
 #include "mir/namedgrids/NamedGrid.h"
 #include "mir/repres/other/UnstructuredGrid.h"
@@ -133,6 +134,10 @@ const Representation *Representation::truncate(size_t truncation,
     throw eckit::SeriousBug(os.str());
 }
 
+
+method::MIRGrid Representation::grid() const {
+    return method::MIRGrid(atlasGrid(), domain());
+}
 
 atlas::Grid Representation::atlasGrid() const {
     std::ostringstream os;
