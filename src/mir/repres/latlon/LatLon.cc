@@ -279,11 +279,6 @@ void LatLon::shape(size_t &ni, size_t &nj) const {
 
 
 util::Domain LatLon::domain() const {
-    return domain(bbox_);
-}
-
-
-util::Domain LatLon::domain(const util::BoundingBox& bbox) const {
 
     // FIXME get precision from GRIB (angularPrecision)
     const double epsilon_grib1 = 1.0 / 1000.0;
@@ -292,10 +287,10 @@ util::Domain LatLon::domain(const util::BoundingBox& bbox) const {
     double sn(increments_.south_north());
     double we(increments_.west_east());
 
-    double north = bbox.north();
-    double south = bbox.south();
-    double east = bbox.east();
-    double west = bbox.west();
+    double north = bbox_.north();
+    double south = bbox_.south();
+    double east = bbox_.east();
+    double west = bbox_.west();
 
     // correct if grid range is pole-to-pole, or is shifted South-North
     if (cmp(north - south, 180.) || (cmp(north,  90. - sn/2.) && cmp(south, -90. + sn/2.))) {

@@ -152,14 +152,6 @@ util::Domain Representation::domain() const {
     throw eckit::SeriousBug(os.str());
 }
 
-
-util::Domain Representation::domain(const util::BoundingBox&) const {
-    std::ostringstream os;
-    os << "Representation::domain(BoundingBox) not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
-}
-
-
 size_t Representation::truncation() const {
     std::ostringstream os;
     os << "Representation::truncation() not implemented for " << *this;

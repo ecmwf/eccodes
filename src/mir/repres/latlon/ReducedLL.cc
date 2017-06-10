@@ -83,11 +83,7 @@ atlas::Grid ReducedLL::atlasGrid() const {
 
 
 util::Domain ReducedLL::domain() const {
-    return domain(bbox_);
-}
 
-
-util::Domain ReducedLL::domain(const util::BoundingBox& bbox) const {
     ASSERT(pl_.size());
 
     long maxpl = pl_[0];
@@ -95,7 +91,7 @@ util::Domain ReducedLL::domain(const util::BoundingBox& bbox) const {
         maxpl = std::max(maxpl, pl_[i]);
     }
 
-    const double ew = bbox.east() - bbox.west();
+    const double ew = bbox_.east() - bbox_.west();
 
     // confirm domain limits
     const double epsilon_grib1 = 1.0 / 1000.0;
@@ -105,14 +101,14 @@ util::Domain ReducedLL::domain(const util::BoundingBox& bbox) const {
 
         // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree. Use the precision given by GRIB in this check
         || eckit::types::is_approximately_equal((360. - ew) * maxpl, 360., epsilon_grib1);
-    const bool includesPoleNorth  = eckit::types::is_approximately_equal(bbox.north(),  90.);
-    const bool includesPoleSouth  = eckit::types::is_approximately_equal(bbox.south(), -90.);
+    const bool includesPoleNorth  = eckit::types::is_approximately_equal(bbox_.north(),  90.);
+    const bool includesPoleSouth  = eckit::types::is_approximately_equal(bbox_.south(), -90.);
 
     const double
-    north = includesPoleNorth ?   90 : bbox.north(),
-    south = includesPoleSouth ?  -90 : bbox.south(),
-    west = bbox.west(),
-    east = isPeriodicEastWest ? bbox.west() + 360 : bbox.east();
+    north = includesPoleNorth ?   90 : bbox_.north(),
+    south = includesPoleSouth ?  -90 : bbox_.south(),
+    west = bbox_.west(),
+    east = isPeriodicEastWest ? bbox_.west() + 360 : bbox_.east();
     return util::Domain(north, west, south, east);
 }
 

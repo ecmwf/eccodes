@@ -83,13 +83,6 @@ util::Domain UnstructuredGrid::domain() const {
     return util::Domain::makeGlobal();
 }
 
-
-util::Domain UnstructuredGrid::domain(const util::BoundingBox&) const {
-    eckit::Log::warning() << "UnstructuredGrid::domain(BoundingBox): assuming grid is global" << std::endl;
-    return util::Domain::makeGlobal();
-}
-
-
 atlas::Grid UnstructuredGrid::atlasGrid() const {
     ASSERT(latitudes_.size() == longitudes_.size());
 

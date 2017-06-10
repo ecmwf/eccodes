@@ -107,11 +107,6 @@ atlas::Grid Regular::atlasGrid() const {
 
 
 util::Domain Regular::domain() const {
-    return domain(bbox_);
-}
-
-
-util::Domain Regular::domain(const util::BoundingBox& bbox) const {
 
     const std::vector<double> &lats = latitudes();
     ASSERT(lats.size() >= 2);
@@ -128,9 +123,9 @@ util::Domain Regular::domain(const util::BoundingBox& bbox) const {
 
     const eckit::Fraction inc(90, long(N_));
 
-    double west = bbox.west();
-    double east = bbox.east();
-    if (eckit::types::is_approximately_greater_or_equal<double>(bbox.east() - bbox.west() + inc, 360., epsilon_grib1)) {
+    double west = bbox_.west();
+    double east = bbox_.east();
+    if (eckit::types::is_approximately_greater_or_equal<double>(bbox_.east() - bbox_.west() + inc, 360., epsilon_grib1)) {
         east = west + 360.;
     } else {
         long n = long(std::floor(west / double(inc)));
@@ -147,8 +142,8 @@ util::Domain Regular::domain(const util::BoundingBox& bbox) const {
 
     // North-South domain limits
     // assumes latitudes are sorted North-to-South
-    double north = bbox.north();
-    double south = bbox.south();
+    double north = bbox_.north();
+    double south = bbox_.south();
     for (const double& lat: lats) {
         if (cmp_eps(north, lat)) { north = lat; }
         if (cmp_eps(south, lat)) { south = lat; }

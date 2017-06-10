@@ -224,11 +224,6 @@ public:
 
 
 util::Domain Reduced::domain() const {
-    return domain(bbox_);
-}
-
-
-util::Domain Reduced::domain(const util::BoundingBox& bbox) const {
 
     const std::vector<long>& pl = pls();
     const std::vector<double>& lats = latitudes();
@@ -244,7 +239,7 @@ util::Domain Reduced::domain(const util::BoundingBox& bbox) const {
     // value will end up in the header
     const long max_pl = *std::max_element(pl.begin(), pl.end());
     ASSERT(max_pl >= 2);
-    const double ew = bbox.east() - bbox.west();
+    const double ew = bbox_.east() - bbox_.west();
     const double inc_west_east = max_pl ? 360. / double(max_pl) : 0.;
 
     const double epsilon_grib1 = 1.0 / 1000.0;
@@ -264,17 +259,17 @@ util::Domain Reduced::domain(const util::BoundingBox& bbox) const {
     eckit::types::CompareApproximatelyEqual<double> cmp_eps(max_inc_north_south);
 
     const bool
-    includesPoleNorth = cmp_eps(bbox.north(),  90),
-    includesPoleSouth = cmp_eps(bbox.south(), -90),
-    isNorthAtEquator  = cmp_eps(bbox.north(),   0),
-    isSouthAtEquator  = cmp_eps(bbox.south(),   0);
+    includesPoleNorth = cmp_eps(bbox_.north(),  90),
+    includesPoleSouth = cmp_eps(bbox_.south(), -90),
+    isNorthAtEquator  = cmp_eps(bbox_.north(),   0),
+    isSouthAtEquator  = cmp_eps(bbox_.south(),   0);
 
 
     const double
-    north = includesPoleNorth ?   90 : isNorthAtEquator ? 0 : bbox.north(),
-    south = includesPoleSouth ?  -90 : isSouthAtEquator ? 0 : bbox.south(),
-    west = bbox.west(),
-    east = isPeriodicEastWest ? bbox.west() + 360 : bbox.east();
+    north = includesPoleNorth ?   90 : isNorthAtEquator ? 0 : bbox_.north(),
+    south = includesPoleSouth ?  -90 : isSouthAtEquator ? 0 : bbox_.south(),
+    west = bbox_.west(),
+    east = isPeriodicEastWest ? bbox_.west() + 360 : bbox_.east();
 
     return util::Domain(north, west, south, east);
 }
