@@ -46,8 +46,15 @@ void RotatedLLShift::print(std::ostream &out) const {
 }
 
 
-void RotatedLLShift::makeName(std::ostream& out) const { NOTIMP; }
-bool RotatedLLShift::sameAs(const Representation& other) const { NOTIMP; }
+void RotatedLLShift::makeName(std::ostream& out) const {
+    RegularLLShift::makeName(out);
+    rotation_.makeName(out);
+}
+
+bool RotatedLLShift::sameAs(const Representation& other) const {
+    const RotatedLLShift* o = dynamic_cast<const RotatedLLShift*>(&other);
+    return o && RegularLLShift::sameAs(other) && (rotation_ == o->rotation_);
+}
 
 
 // Called by RotatedLLShift::crop()

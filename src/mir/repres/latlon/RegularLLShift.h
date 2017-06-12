@@ -69,7 +69,8 @@ class RegularLLShift : public RegularLL {
     // -- Methods
 
     void print(std::ostream &) const; // Change to virtual if base class
-
+    virtual void makeName(std::ostream&) const;
+    virtual bool sameAs(const Representation& other) const;
     // -- Overridden methods
     // None
 
@@ -100,8 +101,7 @@ class RegularLLShift : public RegularLL {
 
     // From RegularLL
     virtual const RegularLLShift *cropped(const util::BoundingBox &bbox) const;
-    virtual void makeName(std::ostream&) const;
-    virtual bool sameAs(const Representation& other) const;
+
 
     // -- Class members
     // None

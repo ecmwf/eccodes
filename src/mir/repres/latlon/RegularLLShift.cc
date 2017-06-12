@@ -52,7 +52,10 @@ void RegularLLShift::makeName(std::ostream& out) const {
     shift_.makeName(out);
 }
 
-bool RegularLLShift::sameAs(const Representation& other) const { NOTIMP; }
+bool RegularLLShift::sameAs(const Representation& other) const {
+    const RegularLLShift* o = dynamic_cast<const RegularLLShift*>(&other);
+    return o && RegularLL::sameAs(other) && (shift_ == o->shift_);
+}
 
 
 // Called by RegularLL::crop()
