@@ -24,6 +24,7 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
+#include "eckit/utils/MD5.h"
 
 
 namespace mir {
@@ -68,9 +69,25 @@ void UnstructuredGrid::print(std::ostream &out) const {
 }
 
 
-void UnstructuredGrid::makeName(std::ostream& out) const { NOTIMP; }
-bool UnstructuredGrid::sameAs(const Representation& other) const { NOTIMP; }
+void UnstructuredGrid::makeName(std::ostream& out) const {
 
+    out << "unstructured-" <<latitudes_.size() << "-";
+
+    eckit::MD5 md5;
+    for (auto j = latitudes_.begin(); j != latitudes_.end(); ++j) {
+        md5 << *j;
+    }
+
+    for (auto j = longitudes_.begin(); j != longitudes_.end(); ++j) {
+        md5 << *j;
+    }
+    out << std::string(md5);
+}
+
+bool UnstructuredGrid::sameAs(const Representation& other) const {
+    const UnstructuredGrid* o = dynamic_cast<const UnstructuredGrid*>(&other);
+    return o && (latitudes_ == o->latitudes_) && (longitudes_ == o->longitudes_);
+}
 
 void UnstructuredGrid::fill(grib_info &info) const  {
     NOTIMP;
@@ -136,7 +153,7 @@ class UnstructuredGridIterator: public Iterator {
         return i_++ < size_;
     }
 
-  public:
+public:
 
     // TODO: Consider keeping a reference on the latitudes and bbox, to avoid copying
 
