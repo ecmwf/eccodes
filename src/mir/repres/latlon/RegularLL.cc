@@ -59,6 +59,17 @@ void RegularLL::print(std::ostream &out) const {
 }
 
 
+void RegularLL::makeName(std::ostream& out) const {
+    LatLon::makeName(out);
+}
+
+
+bool RegularLL::sameAs(const Representation& other) const {
+    const RegularLL* o = dynamic_cast<const RegularLL*>(&other);
+    return o && LatLon::sameAs(other);
+ }
+
+
 void RegularLL::fill(grib_info &info) const  {
     // See copy_spec_from_ksec.c in libemos for info
     // Warning: scanning mode not considered
@@ -83,7 +94,7 @@ atlas::Grid RegularLL::atlasGrid() const {
     double north = bbox_.north();
     double south = bbox_.south();
     double west = bbox_.west();
-    double east = isPeriodicEastWest? west + 360. : bbox_.east();
+    double east = isPeriodicEastWest ? west + 360. : bbox_.east();
 
     using atlas::grid::StructuredGrid;
     using atlas::grid::LinearSpacing;
@@ -167,7 +178,7 @@ Representation* RegularLL::subset(data::MIRField& field,
         for (size_t j = 0; j < nj_; j += skipJ) {
             for (size_t i = 0; i < ni_; i += skipI) {
                 ASSERT(k < newn);
-                ASSERT(j*ni_ +i < n);
+                ASSERT(j * ni_ + i < n);
                 newvalues[k++] = values[j * ni_ + i];
             }
         }

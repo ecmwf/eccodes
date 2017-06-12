@@ -100,6 +100,8 @@ class RegularLLShift : public RegularLL {
 
     // From RegularLL
     virtual const RegularLLShift *cropped(const util::BoundingBox &bbox) const;
+    virtual void makeName(std::ostream&) const;
+    virtual bool sameAs(const Representation& other) const;
 
     // -- Class members
     // None

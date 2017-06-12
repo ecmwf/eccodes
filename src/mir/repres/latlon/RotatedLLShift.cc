@@ -46,6 +46,10 @@ void RotatedLLShift::print(std::ostream &out) const {
 }
 
 
+void RotatedLLShift::makeName(std::ostream& out) const { NOTIMP; }
+bool RotatedLLShift::sameAs(const Representation& other) const { NOTIMP; }
+
+
 // Called by RotatedLLShift::crop()
 const RotatedLLShift *RotatedLLShift::cropped(const util::BoundingBox &bbox) const {
     eckit::Log::debug<LibMir>() << "Create cropped copy as RotatedLLShift bbox=" << bbox << std::endl;

@@ -146,6 +146,17 @@ void LatLon::fill(api::MIRJob &job) const  {
     bbox_.fill(job);
 }
 
+void LatLon::makeName(std::ostream& out) const {
+    out << "LL" << increments_.west_east() << "x" << increments_.south_north();
+    bbox_.makeName(out);
+}
+
+
+bool LatLon::sameAs(const Representation& other) const {
+    const LatLon* o = dynamic_cast<const LatLon*>(&other);
+    return o && (bbox_ == o->bbox_) && (increments_ == o->increments_);
+ }
+
 
 class LatLonIterator : public Iterator {
 

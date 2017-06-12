@@ -43,6 +43,11 @@ void RotatedOctahedral::print(std::ostream &out) const {
 }
 
 
+void RotatedOctahedral::makeName(std::ostream& out) const { NOTIMP; }
+bool RotatedOctahedral::sameAs(const Representation& other) const { NOTIMP; }
+
+
+
 void RotatedOctahedral::fill(grib_info &info) const  {
 #ifdef GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG
     Octahedral::fill(info);

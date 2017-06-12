@@ -51,6 +51,20 @@ void RotatedLL::print(std::ostream &out) const {
 }
 
 
+void RotatedLL::makeName(std::ostream& out) const {
+    RegularLL::makeName(out);
+    rotation_.makeName(out);
+}
+
+bool RotatedLL::sameAs(const Representation& other) const {
+
+    const RotatedLL* o = dynamic_cast<const RotatedLL*>(&other);
+    return o && (rotation_ == o->rotation_) && RegularLL::sameAs(other);
+
+}
+
+
+
 // Called by RegularLL::crop()
 const RotatedLL *RotatedLL::cropped(const util::BoundingBox &bbox) const {
     eckit::Log::debug<LibMir>() << "Create cropped copy as RotatedLL bbox=" << bbox << std::endl;

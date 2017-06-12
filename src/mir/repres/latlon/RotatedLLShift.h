@@ -103,6 +103,8 @@ class RotatedLLShift : public RegularLLShift {
 
     // From RegularLL
     virtual const RotatedLLShift *cropped(const util::BoundingBox &bbox) const;
+    virtual void makeName(std::ostream&) const;
+    virtual bool sameAs(const Representation& other) const;
 
     // -- Class members
     // None

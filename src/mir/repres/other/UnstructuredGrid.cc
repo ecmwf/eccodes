@@ -68,6 +68,10 @@ void UnstructuredGrid::print(std::ostream &out) const {
 }
 
 
+void UnstructuredGrid::makeName(std::ostream& out) const { NOTIMP; }
+bool UnstructuredGrid::sameAs(const Representation& other) const { NOTIMP; }
+
+
 void UnstructuredGrid::fill(grib_info &info) const  {
     NOTIMP;
 }

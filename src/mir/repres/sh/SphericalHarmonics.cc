@@ -48,6 +48,12 @@ void SphericalHarmonics::print(std::ostream &out) const {
         << "]";
 }
 
+void SphericalHarmonics::makeName(std::ostream& out) const {
+    out << "T" << truncation_;
+}
+
+bool SphericalHarmonics::sameAs(const Representation& other) const { NOTIMP; }
+
 
 void SphericalHarmonics::fill(grib_info &info) const  {
     // See copy_spec_from_ksec.c in libemos for info
@@ -84,10 +90,10 @@ void SphericalHarmonics::comparison(std::string& comparator) const {
 
 
 void SphericalHarmonics::truncate(
-        size_t truncation_from,
-        size_t truncation_to,
-        const std::vector<double>& in,
-        std::vector<double>& out ) {
+    size_t truncation_from,
+    size_t truncation_to,
+    const std::vector<double>& in,
+    std::vector<double>& out ) {
 
     ASSERT(truncation_to != truncation_from);
 

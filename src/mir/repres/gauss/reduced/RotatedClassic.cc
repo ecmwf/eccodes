@@ -43,6 +43,10 @@ void RotatedClassic::print(std::ostream &out) const {
 }
 
 
+void RotatedClassic::makeName(std::ostream& out) const { NOTIMP; }
+bool RotatedClassic::sameAs(const Representation& other) const { NOTIMP; }
+
+
 void RotatedClassic::fill(grib_info &info) const  {
 #ifdef GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG
     Classic::fill(info);

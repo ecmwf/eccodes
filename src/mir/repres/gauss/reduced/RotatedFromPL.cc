@@ -79,6 +79,11 @@ Iterator* RotatedFromPL::rotatedIterator() const {
 }
 
 
+void RotatedFromPL::makeName(std::ostream& out) const { NOTIMP; }
+bool RotatedFromPL::sameAs(const Representation& other) const { NOTIMP; }
+
+
+
 namespace {
 static RepresentationBuilder<RotatedFromPL> rotatedGG("reduced_rotated_gg"); // Name is what is returned by grib_api
 }

@@ -20,6 +20,7 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
+#include "eckit/utils/MD5.h"
 
 
 namespace mir {
@@ -46,6 +47,24 @@ FromPL::FromPL(size_t N, const std::vector<long> &pl, const util::BoundingBox &b
 FromPL::FromPL(const std::vector<long> &pl):
     Reduced(pl.size()/2),
     pl_(pl) {
+}
+
+
+void FromPL::makeName(std::ostream& out) const {
+    out << "R" << N_ << "-";
+
+    eckit::MD5 md5;
+    for(auto j = pl_.begin(); j != pl_.end(); ++j) {
+        md5 << *j;
+    }
+
+    out << std::string(md5);
+    bbox_.makeName(out);
+}
+
+bool FromPL::sameAs(const Representation& other) const {
+    const FromPL* o = dynamic_cast<const FromPL*>(&other);
+    return o && (pl_ == o->pl_) && Reduced::sameAs(other);
 }
 
 

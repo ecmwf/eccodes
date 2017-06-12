@@ -50,6 +50,10 @@ void ReducedLL::print(std::ostream &out) const {
 }
 
 
+void ReducedLL::makeName(std::ostream& out) const { NOTIMP; }
+bool ReducedLL::sameAs(const Representation& other) const { NOTIMP; }
+
+
 void ReducedLL::fill(grib_info &info) const  {
     NOTIMP;
 }

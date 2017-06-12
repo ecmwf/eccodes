@@ -47,6 +47,10 @@ void RegularLLShift::print(std::ostream &out) const {
 }
 
 
+void RegularLLShift::makeName(std::ostream& out) const { NOTIMP; }
+bool RegularLLShift::sameAs(const Representation& other) const { NOTIMP; }
+
+
 // Called by RegularLL::crop()
 const RegularLLShift *RegularLLShift::cropped(const util::BoundingBox &bbox) const {
     eckit::Log::debug<LibMir>() << "Create cropped copy as RegularLLShift bbox=" << bbox << std::endl;

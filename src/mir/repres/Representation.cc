@@ -134,6 +134,26 @@ const Representation *Representation::truncate(size_t truncation,
     throw eckit::SeriousBug(os.str());
 }
 
+const std::string& Representation::uniqueName() const {
+    if(uniqueName_.empty()) {
+        std::ostringstream os;
+        makeName(os);
+        uniqueName_ = os.str();
+    }
+    return uniqueName_;
+}
+
+void Representation::makeName(std::ostream& out) const {
+    std::ostringstream os;
+    os << "Representation::makeName(std::ostream& out) not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+bool Representation::sameAs(const Representation& other) const {
+    std::ostringstream os;
+    os << "Representation::sameAs() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
 
 method::MIRGrid Representation::grid() const {
     return method::MIRGrid(atlasGrid(), domain());
@@ -184,7 +204,7 @@ size_t Representation::frame(std::vector<double> &values, size_t size, double mi
 
 
 const Representation* Representation::subset(data::MIRField& field,
-                                       const util::Increments& increments) const {
+        const util::Increments& increments) const {
     std::ostringstream os;
     os << "Representation::subset() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
@@ -256,7 +276,7 @@ const Representation* Representation::globalise(data::MIRField& field) const {
         }
     }
 
-    if(extra == 0) {
+    if (extra == 0) {
         return 0;
     }
 

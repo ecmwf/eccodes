@@ -29,6 +29,7 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
+#include "eckit/utils/MD5.h"
 
 
 namespace mir {
@@ -98,6 +99,18 @@ void Regular::fill(api::MIRJob &job) const  {
 }
 
 
+void Regular::makeName(std::ostream& out) const {
+    out << "F" << N_;
+    bbox_.makeName(out);
+}
+
+bool Regular::sameAs(const Representation& other) const {
+    const Regular* o = dynamic_cast<const Regular*>(&other);
+    return o && (N_ == o->N_) && (bbox_ == o->bbox_);
+}
+
+
+
 atlas::Grid Regular::atlasGrid() const {
     util::Domain dom = domain();
     atlas::RectangularDomain rectangle({dom.west(), dom.east()}, {dom.south(), dom.north()});
@@ -129,14 +142,14 @@ util::Domain Regular::domain() const {
         east = west + 360.;
     } else {
         long n = long(std::floor(west / double(inc)));
-        west = cmp_eps(west, inc * n)?     inc * n
-             : cmp_eps(west, inc * (n+1))? inc * (n+1)
-             : throw eckit::SeriousBug("Regular::domain: cannot match bounding box West " + std::to_string(west) + " given increment " + std::to_string(double(inc)));
+        west = cmp_eps(west, inc * n) ?     inc * n
+               : cmp_eps(west, inc * (n + 1)) ? inc * (n + 1)
+               : throw eckit::SeriousBug("Regular::domain: cannot match bounding box West " + std::to_string(west) + " given increment " + std::to_string(double(inc)));
 
         n = long(std::floor(east / double(inc)));
-        east = cmp_eps(east, inc * n)?     inc * n
-             : cmp_eps(east, inc * (n+1))? inc * (n+1)
-             : throw eckit::SeriousBug("Regular::domain: cannot match bounding box East " + std::to_string(east) + " given increment " + std::to_string(double(inc)));
+        east = cmp_eps(east, inc * n) ?     inc * n
+               : cmp_eps(east, inc * (n + 1)) ? inc * (n + 1)
+               : throw eckit::SeriousBug("Regular::domain: cannot match bounding box East " + std::to_string(east) + " given increment " + std::to_string(double(inc)));
     }
 
 
@@ -144,7 +157,7 @@ util::Domain Regular::domain() const {
     // assumes latitudes are sorted North-to-South
     double north = bbox_.north();
     double south = bbox_.south();
-    for (const double& lat: lats) {
+    for (const double& lat : lats) {
         if (cmp_eps(north, lat)) { north = lat; }
         if (cmp_eps(south, lat)) { south = lat; }
     }
@@ -201,7 +214,7 @@ void Regular::setNiNj() {
         const double lon_middle = (dom.west() + dom.east()) / 2.;
 
         Nj_ = 0;
-        for (const double& lat: latitudes()) {
+        for (const double& lat : latitudes()) {
             if (dom.contains(lat, lon_middle)) {
                 ++Nj_;
             }

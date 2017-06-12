@@ -52,6 +52,9 @@ void RotatedGG::print(std::ostream &out) const {
 }
 
 
+void RotatedGG::makeName(std::ostream& out) const { NOTIMP; }
+bool RotatedGG::sameAs(const Representation& other) const { NOTIMP; }
+
 void RotatedGG::fill(grib_info &info) const  {
     Regular::fill(info);
     rotation_.fill(info);

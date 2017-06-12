@@ -56,6 +56,12 @@ Reduced::~Reduced() {
 }
 
 
+bool Reduced::sameAs(const Representation& other) const {
+    const Reduced* o = dynamic_cast<const Reduced*>(&other);
+    return o && Gaussian::sameAs(other);
+}
+
+
 void Reduced::fill(grib_info &info) const  {
 
     // See copy_spec_from_ksec.c in libemos for info
