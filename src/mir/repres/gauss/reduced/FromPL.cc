@@ -79,23 +79,10 @@ void FromPL::fill(api::MIRJob &job) const  {
 
 
 atlas::Grid FromPL::atlasGrid() const {
-    ASSERT (pl_.size());
-
     util::Domain dom = domain();
-    if (dom.isGlobal()) {
-        return atlas::grid::ReducedGaussianGrid(pl_);
-    }
+    atlas::RectangularDomain rectangle({dom.west(), dom.east()}, {dom.south(), dom.north()});
 
-    const size_t Nj = 2 * N_;
-    atlas::grid::GaussianSpacing gauss(Nj);
-
-    // NOTE: append zeros to clipped pl array, probably not the correct approach
-    ASSERT(pl_.size() <= Nj);
-    std::vector<long> pl(pl_);
-    pl.resize(Nj, 0);
-
-    const atlas::RectangularDomain rectangle({dom.west(), dom.east()}, {dom.north(), dom.south()});
-    return atlas::grid::ReducedGaussianGrid(pl, rectangle);
+    return atlas::grid::ReducedGaussianGrid(pl_, rectangle);
 }
 
 
