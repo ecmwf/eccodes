@@ -47,7 +47,11 @@ void RegularLLShift::print(std::ostream &out) const {
 }
 
 
-void RegularLLShift::makeName(std::ostream& out) const { NOTIMP; }
+void RegularLLShift::makeName(std::ostream& out) const {
+    RegularLL::makeName(out);
+    shift_.makeName(out);
+}
+
 bool RegularLLShift::sameAs(const Representation& other) const { NOTIMP; }
 
 

@@ -147,7 +147,8 @@ void LatLon::fill(api::MIRJob &job) const  {
 }
 
 void LatLon::makeName(std::ostream& out) const {
-    out << "LL" << increments_.west_east() << "x" << increments_.south_north();
+    out << "LL";
+    increments_.makeName(out);
     bbox_.makeName(out);
 }
 
