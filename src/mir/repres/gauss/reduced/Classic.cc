@@ -46,12 +46,21 @@ void Classic::fill(grib_info &info) const  {
 // NOTE: We assume that grib_api will put the proper PL
 }
 
-
 void Classic::fill(api::MIRJob &job) const  {
     Reduced::fill(job);
     std::stringstream os;
     os << "N" << N_;
     job.set("gridname", os.str());
+}
+
+void Classic::makeName(std::ostream& out) const {
+    out << "N" << N_;
+    bbox_.makeName(out);
+}
+
+bool Classic::sameAs(const Representation& other) const {
+    const Classic* o = dynamic_cast<const Classic*>(&other);
+    return o && Reduced::sameAs(other);
 }
 
 
