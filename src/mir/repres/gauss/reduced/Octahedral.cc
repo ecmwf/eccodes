@@ -46,6 +46,15 @@ void Octahedral::fill(grib_info &info) const  {
     Reduced::fill(info);
 }
 
+void Octahedral::makeName(std::ostream& out) const {
+    out << "O" << N_;
+    bbox_.makeName(out);
+}
+
+bool Octahedral::sameAs(const Representation& other) const {
+    const Octahedral* o = dynamic_cast<const Octahedral*>(&other);
+    return o && Reduced::sameAs(other);
+}
 
 void Octahedral::fill(api::MIRJob &job) const  {
     Reduced::fill(job);
