@@ -24,6 +24,7 @@
 #include "mir/util/Compare.h"
 #include "mir/util/Domain.h"
 #include "eckit/types/Fraction.h"
+#include "eckit/utils/MD5.h"
 
 
 
@@ -50,9 +51,22 @@ void ReducedLL::print(std::ostream &out) const {
 }
 
 
-void ReducedLL::makeName(std::ostream& out) const { NOTIMP; }
-bool ReducedLL::sameAs(const Representation& other) const { NOTIMP; }
+void ReducedLL::makeName(std::ostream& out) const {
+    out << "RLL" << Nj_ << "-";
 
+    eckit::MD5 md5;
+    for(auto j = pl_.begin(); j != pl_.end(); ++j) {
+        md5 << *j;
+    }
+
+    out << std::string(md5);
+    bbox_.makeName(out);
+}
+
+bool ReducedLL::sameAs(const Representation& other) const {
+    const ReducedLL* o = dynamic_cast<const ReducedLL*>(&other);
+    return o && (Nj_ == o->Nj_) && (bbox_ == o->bbox_) && (pl_ == o->pl_);
+}
 
 void ReducedLL::fill(grib_info &info) const  {
     NOTIMP;
