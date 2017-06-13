@@ -12,7 +12,8 @@
 
 REDIRECT=/dev/null
 
-temp=temp.grib2to3.grib3
+label="grib2to3"
+temp=temp.$label.grib3
 sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_set -s editionNumber=3 $sample_g2 $temp
 ${tools_dir}/grib_dump -O -M $temp
@@ -39,7 +40,7 @@ files="constant_field\
 for f in $files
 do
   file=${data_dir}/$f
-  output=${file}.grib3_
+  output=${file}.temp.$label.grib3_
   rm -f ${output}
   ${tools_dir}/grib_set -s editionNumber=3 ${file}.grib1 ${output}
 
