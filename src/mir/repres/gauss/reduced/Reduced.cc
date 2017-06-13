@@ -141,7 +141,7 @@ class GaussianIterator : public Iterator {
             << "]";
     }
 
-    virtual bool next(double &lat, double &lon) {
+    virtual bool next(repres::Iterator::value_type &lat, repres::Iterator::value_type &lon) {
         while (j_ < nj_ && i_ < ni_) {
 
             ASSERT(j_ + k_ < latitudes_.size());
@@ -303,8 +303,8 @@ size_t Reduced::frame(std::vector<double> &values, size_t size, double missingVa
     double prev_lat = std::numeric_limits<double>::max();
     double prev_lon = -std::numeric_limits<double>::max();
 
-    double lat;
-    double lon;
+    repres::Iterator::value_type lat;
+    repres::Iterator::value_type lon;
 
     size_t rows = 0;
 
@@ -362,8 +362,8 @@ void Reduced::validate(const std::vector<double>& values) const {
         }
     } else {
         eckit::ScopedPtr<Iterator> it(unrotatedIterator());
-        double lat;
-        double lon;
+        repres::Iterator::value_type lat;
+        repres::Iterator::value_type lon;
         while (it->next(lat, lon)) {
             ++count;
         }

@@ -177,8 +177,8 @@ void Regular::validate(const std::vector<double>& values) const {
         count = (N_ * 2) * (N_ * 4);
     } else {
         eckit::ScopedPtr<Iterator> it(unrotatedIterator());
-        double lat;
-        double lon;
+        repres::Iterator::value_type lat;
+        repres::Iterator::value_type lon;
         while (it->next(lat, lon)) {
             if (dom.contains(lat, lon)) {
                 ++count;
@@ -278,7 +278,7 @@ class RegularIterator : public Iterator {
             << "]";
     }
 
-    virtual bool next(double &lat, double &lon) {
+    virtual bool next(repres::Iterator::value_type &lat, repres::Iterator::value_type &lon) {
         while (j_ < Nj_ && i_ < Ni_) {
 
             ASSERT(j_ + k_ < latitudes_.size());

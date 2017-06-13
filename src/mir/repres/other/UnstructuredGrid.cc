@@ -147,7 +147,7 @@ class UnstructuredGridIterator: public Iterator {
         out << "UnstructuredGridIterator[]";
     }
 
-    virtual bool next(double &lat, double &lon) {
+    virtual bool next(repres::Iterator::value_type &lat, repres::Iterator::value_type &lon) {
         lat = latitudes_[i_];
         lon = longitudes_[i_];
         return i_++ < size_;

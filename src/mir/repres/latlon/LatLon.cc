@@ -191,7 +191,7 @@ class LatLonIterator : public Iterator {
             << "]";
     }
 
-    virtual bool next(double &lat, double &lon) {
+    virtual bool next(repres::Iterator::value_type &lat, repres::Iterator::value_type &lon) {
         if (j_ < nj_) {
             if (i_ < ni_) {
                 lat = lat_;
