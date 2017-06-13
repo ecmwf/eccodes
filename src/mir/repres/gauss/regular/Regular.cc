@@ -110,63 +110,21 @@ bool Regular::sameAs(const Representation& other) const {
 }
 
 
+bool Regular::isPeriodicWestEast() const {
+
+    const double GRIB1EPSILON = 0.001;
+    eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
+
+    const util::BoundingBox::value_type inc = eckit::Fraction(90, long(N_));
+    return  cmp(bbox_.east() - bbox_.west() + inc, 360);
+}
+
 
 atlas::Grid Regular::atlasGrid() const {
     util::Domain dom = domain();
     atlas::RectangularDomain rectangle({dom.west(), dom.east()}, {dom.south(), dom.north()});
 
     return atlas::grid::RegularGaussianGrid("F" + std::to_string(N_), rectangle);
-}
-
-
-util::Domain Regular::domain() const {
-    using value_t = util::BoundingBox::value_type;
-
-    const std::vector<double> &lats = latitudes();
-    ASSERT(lats.size() >= 2);
-
-
-    // West-East domain limits
-    // FIXME get precision from GRIB (angularPrecision)
-    // GRIB=1 is in millidegree, GRIB-2 in in micro-degree. Use the precision given by GRIB in this check
-    // The dissemination will put in the GRIB header what is specified by the user
-    // so, for example if the user specify 359.999999 as the eastern longitude, this
-    // value will end up in the header
-    const double GRIB1EPSILON = 0.001;
-    eckit::types::CompareApproximatelyEqual<double> cmp_eps(GRIB1EPSILON);
-
-    const value_t inc = eckit::Fraction(90, long(N_));
-
-    value_t west = bbox_.west();
-    value_t east = bbox_.east();
-    if (eckit::types::is_approximately_greater_or_equal<double>(bbox_.east() - bbox_.west() + inc, 360., GRIB1EPSILON)) {
-        east = west + util::BoundingBox::THREE_SIXTY;
-    } else {
-        long n = long(std::floor(double(west / inc)));
-        west = cmp_eps(west, inc * n) ?     inc * n
-               : cmp_eps(west, inc * (n + 1)) ? inc * (n + 1)
-               : throw eckit::SeriousBug("Regular::domain: cannot match bounding box West " + std::to_string(double(west)) + " given increment " + std::to_string(double(inc)));
-
-        n = long(std::floor(double(east / inc)));
-        east = cmp_eps(east, inc * n) ?     inc * n
-               : cmp_eps(east, inc * (n + 1)) ? inc * (n + 1)
-               : throw eckit::SeriousBug("Regular::domain: cannot match bounding box East " + std::to_string(double(east)) + " given increment " + std::to_string(double(inc)));
-    }
-
-
-    // North-South domain limits
-    // assumes latitudes are sorted North-to-South
-    value_t north = bbox_.north();
-    value_t south = bbox_.south();
-    for (const double& lat : lats) {
-        if (cmp_eps(north, lat)) { north = lat; }
-        if (cmp_eps(south, lat)) { south = lat; }
-    }
-
-    if (eckit::types::is_approximately_equal(north, lats.front())) { north = util::BoundingBox::NORTH_POLE; }
-    if (eckit::types::is_approximately_equal(south, lats.back()))  { south = util::BoundingBox::SOUTH_POLE; }
-
-    return util::Domain(north, west, south, east);
 }
 
 

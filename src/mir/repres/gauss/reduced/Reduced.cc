@@ -63,6 +63,20 @@ bool Reduced::sameAs(const Representation& other) const {
 }
 
 
+bool Reduced::isPeriodicWestEast() const {
+    const std::vector<long>& pl = pls();
+    ASSERT(pl.size());
+    const long maxpl = *std::max_element(pl.begin(), pl.end());
+
+    const double GRIB1EPSILON = 0.001;
+    eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
+
+    const util::BoundingBox::value_type we = bbox_.east() - bbox_.west();
+    const util::BoundingBox::value_type inc = eckit::Fraction(360, maxpl);
+    return cmp(we + inc, util::BoundingBox::THREE_SIXTY);
+}
+
+
 void Reduced::fill(grib_info &info) const  {
 
     // See copy_spec_from_ksec.c in libemos for info
@@ -228,54 +242,6 @@ public:
 
 
 };
-
-
-util::Domain Reduced::domain() const {
-    using value_t = util::BoundingBox::value_type;
-
-    const std::vector<long>& pl = pls();
-    const std::vector<double>& lats = latitudes();
-
-    ASSERT(pl.size());
-    ASSERT(lats.size() >= 2);
-
-    // West-East domain limits
-    // FIXME get precision from GRIB (angularPrecision)
-    // GRIB=1 is in millidegree, GRIB-2 in in micro-degree. Use the precision given by GRIB in this check
-    // The dissemination will put in the GRIB header what is specified by the user
-    // so, for example if the user specify 359.999999 as the eastern longitude, this
-    // value will end up in the header
-    const long max_pl = *std::max_element(pl.begin(), pl.end());
-    ASSERT(max_pl >= 2);
-
-    const value_t ew = bbox_.east() - bbox_.west();
-    const value_t inc_west_east = eckit::Fraction(360, max_pl);
-
-    const double GRIB1EPSILON = 0.001;
-    const bool isPeriodicEastWest = std::abs(double(ew + inc_west_east - util::BoundingBox::THREE_SIXTY)) < GRIB1EPSILON;
-
-    // North-South domain limits
-    // assumes latitudes are sorted North-to-South
-    double max_inc_north_south = 0;
-
-    for (size_t j = 1; j < lats.size(); ++j) {
-        max_inc_north_south = std::max(max_inc_north_south, lats[j - 1] - lats[j]);
-    }
-
-    ASSERT(eckit::types::is_strictly_greater(max_inc_north_south, 0.));
-
-    const bool includesPoleNorth = (bbox_.north() + max_inc_north_south >= util::BoundingBox::NORTH_POLE);
-    const bool includesPoleSouth = (bbox_.south() - max_inc_north_south <= util::BoundingBox::SOUTH_POLE);
-
-    const value_t north = includesPoleNorth ? util::BoundingBox::NORTH_POLE : bbox_.north();
-    const value_t south = includesPoleSouth ? util::BoundingBox::SOUTH_POLE : bbox_.south();
-    const value_t west = bbox_.west();
-    const value_t east = isPeriodicEastWest ? bbox_.west() + util::BoundingBox::THREE_SIXTY : bbox_.east();
-
-//    std::cout << "BBOX " << bbox_ << " " <<  util::Domain(north, west, south, east) << std::endl;
-
-    return util::Domain(north, west, south, east);
-}
 
 
 Iterator *Reduced::unrotatedIterator() const {

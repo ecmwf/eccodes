@@ -92,6 +92,34 @@ void Representation::setGivenPacking(grib_info &) const {
 }
 
 
+bool Representation::isGlobal() const {
+    return isPeriodicWestEast() &&
+            includesNorthPole() &&
+            includesSouthPole();
+}
+
+
+bool Representation::isPeriodicWestEast() const {
+    std::ostringstream os;
+    os << "Representation::isPeriodicWestEast() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+
+bool Representation::includesNorthPole() const {
+    std::ostringstream os;
+    os << "Representation::includesNorthPole() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+
+bool Representation::includesSouthPole() const {
+    std::ostringstream os;
+    os << "Representation::includesSouthPole() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+
 void Representation::validate(const std::vector<double> &) const {
     std::ostringstream os;
     os << "Representation::validate() not implemented for " << *this;

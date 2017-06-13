@@ -15,6 +15,7 @@
 
 #include "mir/repres/latlon/ReducedLL.h"
 
+#include <algorithm>
 #include <iostream>
 #include "atlas/grid.h"
 #include "mir/action/misc/AreaCropper.h"
@@ -33,8 +34,8 @@ namespace repres {
 namespace latlon {
 
 
-ReducedLL::ReducedLL(const param::MIRParametrisation &parametrisation):
-    bbox_(parametrisation) {
+ReducedLL::ReducedLL(const param::MIRParametrisation &parametrisation) :
+    Gridded(parametrisation) {
     ASSERT(parametrisation.get("pl", pl_));
     ASSERT(parametrisation.get("Nj", Nj_));
     ASSERT(Nj_);
@@ -93,41 +94,33 @@ atlas::Grid ReducedLL::atlasGrid() const {
     util::Domain dom = domain();
 
     using atlas::grid::StructuredGrid;
-    StructuredGrid::XSpace xspace({ dom.west(), dom.east() }, pl_, !dom.isPeriodicEastWest());
+    StructuredGrid::XSpace xspace({ dom.west(), dom.east() }, pl_, !isPeriodicWestEast());
     StructuredGrid::YSpace yspace( atlas::grid::LinearSpacing( { dom.north(), dom.south() }, pl_.size()));
 
     return atlas::grid::StructuredGrid(xspace, yspace);
 }
 
 
-util::Domain ReducedLL::domain() const {
-
+bool ReducedLL::isPeriodicWestEast() const {
     ASSERT(pl_.size());
+    const long maxpl = *std::max_element(pl_.begin(), pl_.end());
 
-    long maxpl = pl_[0];
-    for (size_t i = 1; i < pl_.size(); ++i) {
-        maxpl = std::max(maxpl, pl_[i]);
-    }
+    const double GRIB1EPSILON = 0.001;
+    eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
 
-    const double ew = bbox_.east() - bbox_.west();
+    const util::BoundingBox::value_type we = bbox_.east() - bbox_.west();
+    const util::BoundingBox::value_type inc = 360 - we;
+    return cmp(inc * maxpl, util::BoundingBox::THREE_SIXTY);
+}
 
-    // confirm domain limits
-    const double epsilon_grib1 = 1.0 / 1000.0;
 
-    const bool isPeriodicEastWest =
-        eckit::types::is_approximately_equal((360. - ew) * maxpl, 360.)
+bool ReducedLL::includesNorthPole() const {
+    return eckit::types::is_approximately_equal<double>(bbox_.north(),  util::BoundingBox::NORTH_POLE);
+}
 
-        // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree. Use the precision given by GRIB in this check
-        || eckit::types::is_approximately_equal((360. - ew) * maxpl, 360., epsilon_grib1);
-    const bool includesPoleNorth  = eckit::types::is_approximately_equal(double(bbox_.north()),  90.);
-    const bool includesPoleSouth  = eckit::types::is_approximately_equal(double(bbox_.south()), -90.);
 
-    const double
-    north = includesPoleNorth ?   90 : double(bbox_.north()),
-    south = includesPoleSouth ?  -90 : double(bbox_.south()),
-    west = bbox_.west(),
-    east = isPeriodicEastWest ? double(bbox_.west()) + 360 : double(bbox_.east());
-    return util::Domain(north, west, south, east);
+bool ReducedLL::includesSouthPole() const {
+    return eckit::types::is_approximately_equal<double>(bbox_.north(),  util::BoundingBox::SOUTH_POLE);
 }
 
 
