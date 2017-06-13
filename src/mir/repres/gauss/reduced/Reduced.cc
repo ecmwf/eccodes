@@ -271,6 +271,8 @@ util::Domain Reduced::domain() const {
     const eckit::Fraction west = bbox_.west();
     const eckit::Fraction east = isPeriodicEastWest ? bbox_.west() + util::BoundingBox::THREE_SIXTY : bbox_.east();
 
+    std::cout << "BBOX " << bbox_ << " " <<  util::Domain(north, west, south, east) << std::endl;
+
     return util::Domain(north, west, south, east);
 }
 
@@ -350,6 +352,8 @@ size_t Reduced::frame(std::vector<double> &values, size_t size, double missingVa
 void Reduced::validate(const std::vector<double>& values) const {
     const util::Domain dom = domain();
     long long count = 0;
+
+    std::cout << "Reduced " << dom << std::endl;
 
     if (dom.isGlobal()) {
         const std::vector<long>& pl = pls();
