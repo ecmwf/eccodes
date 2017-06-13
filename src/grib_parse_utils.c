@@ -87,11 +87,13 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
     long lval=0;
     int type=GRIB_TYPE_STRING;
     size_t replen = 0;
-    const size_t uname_len = strlen(uname);
+    /* const size_t uname_len = strlen(uname); */
 
     loc[0] = 0 ;
     fname[0] = 0 ;
-    for(i=0; i<uname_len; i++)
+    /* for(i=0; i<uname_len; i++) */
+    i=0;
+    while (uname[i]!='\0')
     {
         if(mode > -1)
         {
@@ -161,7 +163,7 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
             /* sprintf(fname,"%s%c",fname, uname[i]); */
             type=GRIB_TYPE_STRING;
         }
-
+        i++;
     }
     /*fprintf(stdout,"parsed > %s\n",fname);*/
     return GRIB_SUCCESS;
