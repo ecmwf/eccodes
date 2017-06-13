@@ -272,10 +272,10 @@ util::Domain Reduced::domain() const {
 
 
     const double
-    north = includesPoleNorth ?   90 : isNorthAtEquator ? 0 : bbox_.north(),
-    south = includesPoleSouth ?  -90 : isSouthAtEquator ? 0 : bbox_.south(),
+    north = includesPoleNorth ?   90 : isNorthAtEquator ? 0 : double(bbox_.north()),
+    south = includesPoleSouth ?  -90 : isSouthAtEquator ? 0 : double(bbox_.south()),
     west = bbox_.west(),
-    east = isPeriodicEastWest ? bbox_.west() + 360 : bbox_.east();
+    east = isPeriodicEastWest ? double(bbox_.west()) + 360 : double(bbox_.east());
 
     return util::Domain(north, west, south, east);
 }

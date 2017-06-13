@@ -119,14 +119,14 @@ util::Domain ReducedLL::domain() const {
 
         // FIXME: GRIB=1 is in millidegree, GRIB-2 in in micro-degree. Use the precision given by GRIB in this check
         || eckit::types::is_approximately_equal((360. - ew) * maxpl, 360., epsilon_grib1);
-    const bool includesPoleNorth  = eckit::types::is_approximately_equal(bbox_.north(),  90.);
-    const bool includesPoleSouth  = eckit::types::is_approximately_equal(bbox_.south(), -90.);
+    const bool includesPoleNorth  = eckit::types::is_approximately_equal(double(bbox_.north()),  90.);
+    const bool includesPoleSouth  = eckit::types::is_approximately_equal(double(bbox_.south()), -90.);
 
     const double
-    north = includesPoleNorth ?   90 : bbox_.north(),
-    south = includesPoleSouth ?  -90 : bbox_.south(),
+    north = includesPoleNorth ?   90 : double(bbox_.north()),
+    south = includesPoleSouth ?  -90 : double(bbox_.south()),
     west = bbox_.west(),
-    east = isPeriodicEastWest ? bbox_.west() + 360 : bbox_.east();
+    east = isPeriodicEastWest ? double(bbox_.west()) + 360 : double(bbox_.east());
     return util::Domain(north, west, south, east);
 }
 

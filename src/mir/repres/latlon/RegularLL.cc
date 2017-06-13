@@ -94,7 +94,7 @@ atlas::Grid RegularLL::atlasGrid() const {
     double north = bbox_.north();
     double south = bbox_.south();
     double west = bbox_.west();
-    double east = isPeriodicEastWest ? west + 360. : bbox_.east();
+    double east = isPeriodicEastWest ? west + 360. : double(bbox_.east());
 
     using atlas::grid::StructuredGrid;
     using atlas::grid::LinearSpacing;
