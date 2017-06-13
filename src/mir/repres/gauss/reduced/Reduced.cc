@@ -231,6 +231,7 @@ public:
 
 
 util::Domain Reduced::domain() const {
+    using value_t = util::BoundingBox::value_type;
 
     const std::vector<long>& pl = pls();
     const std::vector<double>& lats = latitudes();
@@ -247,8 +248,8 @@ util::Domain Reduced::domain() const {
     const long max_pl = *std::max_element(pl.begin(), pl.end());
     ASSERT(max_pl >= 2);
 
-    const eckit::Fraction ew = bbox_.east() - bbox_.west();
-    const eckit::Fraction inc_west_east(360, max_pl);
+    const value_t ew = bbox_.east() - bbox_.west();
+    const value_t inc_west_east = eckit::Fraction(360, max_pl);
 
     const double GRIB1EPSILON = 0.001;
     const bool isPeriodicEastWest = std::abs(double(ew + inc_west_east - util::BoundingBox::THREE_SIXTY)) < GRIB1EPSILON;
@@ -266,12 +267,12 @@ util::Domain Reduced::domain() const {
     const bool includesPoleNorth = (bbox_.north() + max_inc_north_south >= util::BoundingBox::NORTH_POLE);
     const bool includesPoleSouth = (bbox_.south() - max_inc_north_south <= util::BoundingBox::SOUTH_POLE);
 
-    const eckit::Fraction north = includesPoleNorth ? util::BoundingBox::NORTH_POLE : bbox_.north();
-    const eckit::Fraction south = includesPoleSouth ? util::BoundingBox::SOUTH_POLE : bbox_.south();
-    const eckit::Fraction west = bbox_.west();
-    const eckit::Fraction east = isPeriodicEastWest ? bbox_.west() + util::BoundingBox::THREE_SIXTY : bbox_.east();
+    const value_t north = includesPoleNorth ? util::BoundingBox::NORTH_POLE : bbox_.north();
+    const value_t south = includesPoleSouth ? util::BoundingBox::SOUTH_POLE : bbox_.south();
+    const value_t west = bbox_.west();
+    const value_t east = isPeriodicEastWest ? bbox_.west() + util::BoundingBox::THREE_SIXTY : bbox_.east();
 
-    std::cout << "BBOX " << bbox_ << " " <<  util::Domain(north, west, south, east) << std::endl;
+//    std::cout << "BBOX " << bbox_ << " " <<  util::Domain(north, west, south, east) << std::endl;
 
     return util::Domain(north, west, south, east);
 }
