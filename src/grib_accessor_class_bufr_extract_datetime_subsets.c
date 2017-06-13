@@ -344,8 +344,10 @@ static int select_datetime(grib_accessor* a)
         }
 
         for (i=0;i<numberOfSubsets;i++) {
-            sprintf( datetime_str, "%04ld/%02ld/%02ld %02ld:%02ld:%02ld",year[i],month[i],day[i],hour[i],minute[i], (long)round(second[i]) );
-            julianDT = date_to_julian( year[i],month[i],day[i],hour[i],minute[i],(long)round(second[i]) );
+            long rounded_second=(long)round(second[i]);
+            if (rounded_second==60) { rounded_second=59;}
+            sprintf( datetime_str, "%04ld/%02ld/%02ld %02ld:%02ld:%02ld",year[i],month[i],day[i],hour[i],minute[i], rounded_second );
+            julianDT = date_to_julian( year[i],month[i],day[i],hour[i],minute[i],rounded_second );
             if (julianDT == -1) {
                 grib_context_log(c,GRIB_LOG_ERROR,"Invalid date/time: %s", datetime_str);
                 return GRIB_INTERNAL_ERROR;
