@@ -29,6 +29,7 @@
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "eckit/types/Fraction.h"
+#include "mir/util/BoundingBox.h"
 
 
 namespace mir {
@@ -233,9 +234,9 @@ util::Domain Reduced::domain() const {
 
     const std::vector<long>& pl = pls();
     const std::vector<double>& lats = latitudes();
+
     ASSERT(pl.size());
     ASSERT(lats.size() >= 2);
-
 
     // West-East domain limits
     // FIXME get precision from GRIB (angularPrecision)
@@ -245,37 +246,30 @@ util::Domain Reduced::domain() const {
     // value will end up in the header
     const long max_pl = *std::max_element(pl.begin(), pl.end());
     ASSERT(max_pl >= 2);
-    const double ew = bbox_.east() - bbox_.west();
-    const double inc_west_east = max_pl ? 360. / double(max_pl) : 0.;
 
-    const double epsilon_grib1 = 1.0 / 1000.0;
-    const bool isPeriodicEastWest =
-           eckit::types::is_approximately_equal(360., ew + inc_west_east)
-        || eckit::types::is_approximately_equal(360., ew + inc_west_east, epsilon_grib1 )
-        || (ew + inc_west_east > 360.);
+    const eckit::Fraction ew = bbox_.east() - bbox_.west();
+    const eckit::Fraction inc_west_east(360, max_pl);
 
+    const double GRIB1EPSILON = 0.001;
+    const bool isPeriodicEastWest = std::abs(double(ew + inc_west_east - util::BoundingBox::THREE_SIXTY)) < GRIB1EPSILON;
 
     // North-South domain limits
     // assumes latitudes are sorted North-to-South
-    double max_inc_north_south = std::numeric_limits<double>::epsilon();
+    double max_inc_north_south = 0;
+
     for (size_t j = 1; j < lats.size(); ++j) {
         max_inc_north_south = std::max(max_inc_north_south, lats[j - 1] - lats[j]);
     }
+
     ASSERT(eckit::types::is_strictly_greater(max_inc_north_south, 0.));
-    eckit::types::CompareApproximatelyEqual<double> cmp_eps(max_inc_north_south);
 
-    const bool
-    includesPoleNorth = cmp_eps(bbox_.north(),  90),
-    includesPoleSouth = cmp_eps(bbox_.south(), -90),
-    isNorthAtEquator  = cmp_eps(bbox_.north(),   0),
-    isSouthAtEquator  = cmp_eps(bbox_.south(),   0);
+    const bool includesPoleNorth = (bbox_.north() + max_inc_north_south >= util::BoundingBox::NORTH_POLE);
+    const bool includesPoleSouth = (bbox_.south() - max_inc_north_south <= util::BoundingBox::SOUTH_POLE);
 
-
-    const double
-    north = includesPoleNorth ?   90 : isNorthAtEquator ? 0 : double(bbox_.north()),
-    south = includesPoleSouth ?  -90 : isSouthAtEquator ? 0 : double(bbox_.south()),
-    west = bbox_.west(),
-    east = isPeriodicEastWest ? double(bbox_.west()) + 360 : double(bbox_.east());
+    const eckit::Fraction north = includesPoleNorth ? util::BoundingBox::NORTH_POLE : bbox_.north();
+    const eckit::Fraction south = includesPoleSouth ? util::BoundingBox::SOUTH_POLE : bbox_.south();
+    const eckit::Fraction west = bbox_.west();
+    const eckit::Fraction east = isPeriodicEastWest ? bbox_.west() + util::BoundingBox::THREE_SIXTY : bbox_.east();
 
     return util::Domain(north, west, south, east);
 }
@@ -371,7 +365,13 @@ void Reduced::validate(const std::vector<double>& values) const {
         }
     }
 
-    eckit::Log::debug<LibMir>() << "Reduced::validate checked " << eckit::Plural(values.size(), "value") << ", within domain: " << eckit::BigNum(count) << "." << std::endl;
+    eckit::Log::debug<LibMir>() << "Reduced::validate checked "
+                                << eckit::Plural(values.size(), "value")
+                                << ", within domain: "
+                                << eckit::BigNum(count)
+                                << "."
+                                << std::endl;
+
     ASSERT(values.size() == size_t(count));
 }
 
