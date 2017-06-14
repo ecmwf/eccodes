@@ -87,8 +87,8 @@ void RegularLL::fill(api::MIRJob &job) const  {
 
 atlas::Grid RegularLL::atlasGrid() const {
 
-    // yspace uses bounding box for non-shifted/shifted grid
-    // (works together with the Atlas RectangularDomain cropping)
+    // NOTE: for non-shifted/shifted grid, yspace uses bounding box
+    // (this works together with the Atlas RectangularDomain cropping)
     const util::Domain dom = domain();
 
     using atlas::grid::StructuredGrid;
@@ -96,8 +96,7 @@ atlas::Grid RegularLL::atlasGrid() const {
     StructuredGrid::XSpace xspace( LinearSpacing( dom.west().value(),  dom.east().value(),  long(ni_), !dom.isPeriodicEastWest() ));
     StructuredGrid::YSpace yspace( LinearSpacing( bbox_.north().value(), bbox_.south().value(), long(nj_) ));
 
-    atlas::RectangularDomain rectangle({{dom.west().value(), dom.east().value()}}, {{dom.south().value(), dom.north().value()}});
-    return StructuredGrid(xspace, yspace, StructuredGrid::Projection(), rectangle);
+    return StructuredGrid(xspace, yspace, StructuredGrid::Projection(), domain());
 }
 
 

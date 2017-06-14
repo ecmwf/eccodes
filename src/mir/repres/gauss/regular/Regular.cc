@@ -21,7 +21,6 @@
 #include "eckit/memory/ScopedPtr.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
-#include "atlas/domain/detail/RectangularDomain.h"
 #include "atlas/grid.h"
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
@@ -110,20 +109,13 @@ bool Regular::sameAs(const Representation& other) const {
 
 
 bool Regular::isPeriodicWestEast() const {
-
-    const double GRIB1EPSILON = 0.001;
-    eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
-
     const Longitude inc = Longitude(eckit::Fraction(90, N_));
-    return  cmp((bbox_.east() - bbox_.west() + inc).value(), 360.0);
+    return (bbox_.east() - bbox_.west() + inc).sameWithGrib1Accuracy(360.0);
 }
 
 
 atlas::Grid Regular::atlasGrid() const {
-    util::Domain dom = domain();
-    atlas::RectangularDomain rectangle({{dom.west().value(), dom.east().value()}}, {{dom.south().value(), dom.north().value()}});
-
-    return atlas::grid::RegularGaussianGrid("F" + std::to_string(N_), rectangle);
+    return atlas::grid::RegularGaussianGrid("F" + std::to_string(N_), domain());
 }
 
 

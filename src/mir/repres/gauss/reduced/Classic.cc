@@ -65,12 +65,8 @@ bool Classic::sameAs(const Representation& other) const {
 
 
 atlas::Grid Classic::atlasGrid() const {
-    util::Domain dom = domain();
-    atlas::RectangularDomain rectangle({{dom.west().value(), dom.east().value()}}, {{dom.south().value(), dom.north().value()}});
-
-    return atlas::grid::ReducedGaussianGrid("N" + std::to_string(N_), rectangle);
+    return atlas::grid::ReducedGaussianGrid("N" + std::to_string(N_), domain());
 }
-
 
 const std::vector<long>& Classic::pls() const {
     if (pl_.size() == 0) {

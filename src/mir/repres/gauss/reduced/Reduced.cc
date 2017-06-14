@@ -73,15 +73,10 @@ bool Reduced::isPeriodicWestEast() const {
     ASSERT(pl.size());
     const long maxpl = *std::max_element(pl.begin(), pl.end());
 
-    const double GRIB1EPSILON = 0.001;
-    eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
-
     const Longitude we = bbox_.east() - bbox_.west();
     const Longitude inc = eckit::Fraction(360, maxpl);
 
-    // (we + inc).caompareGRIOBPrecision(Longitude::GLOBE;
-
-    return cmp((we + inc).value(), Longitude::GLOBE.value());
+    return (we + inc).sameWithGrib1Accuracy(Longitude::GLOBE.value());
 }
 
 
