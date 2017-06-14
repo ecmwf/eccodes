@@ -7,6 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-label "Empty file";
+label "_Empty file";
 
 #meta    area    g1area(latitudeOfFirstGridPoint,longitudeOfFirstGridPoint,latitudeOfLastGridPoint,longitudeOfLastGridPoint,angleMultiplier,angleDivisor);

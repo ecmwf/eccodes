@@ -1,4 +1,3 @@
-label "JMA - extension";
 # Japanese Meteorological Agency
 codetable[1] localDefinitionNumber 'grib1/localDefinitionNumber.34.table' = 1 : dump;
 template  localDefinition  "grib1/local.34.[localDefinitionNumber:l].def";

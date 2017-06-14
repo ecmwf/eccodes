@@ -7,7 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-label "grib 2 Section 5 DATA REPRESENTATION SECTION";
 position offsetBSection5;
 
 # START grib2::section
