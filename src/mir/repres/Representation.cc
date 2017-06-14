@@ -257,8 +257,8 @@ const Representation* Representation::globalise(data::MIRField& field) const {
 
     eckit::ScopedPtr<repres::Iterator> iter(octahedral->unrotatedIterator());
 
-    repres::Iterator::value_type lat;
-    repres::Iterator::value_type lon;
+    Latitude lat;
+    Longitude lon;
 
 
     iter.reset(unrotatedIterator());

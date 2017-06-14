@@ -141,7 +141,7 @@ class GaussianIterator : public Iterator {
             << "]";
     }
 
-    virtual bool next(repres::Iterator::value_type &lat, repres::Iterator::value_type &lon) {
+    virtual bool next(Latitude &lat, Longitude &lon) {
         while (j_ < nj_ && i_ < ni_) {
 
             ASSERT(j_ + k_ < latitudes_.size());
@@ -192,7 +192,8 @@ public:
 
         // position to first latitude and first/last longitude
 
-        while (k_ < latitudes_.size() && domain_.north() < latitudes_[k_]) {
+        while (k_ < latitudes_.size() &&
+            eckit::types::is_strictly_greater(latitudes_[k_], domain_.north())) {
             k_++;
         }
         ASSERT(k_ < latitudes_.size());
@@ -303,8 +304,8 @@ size_t Reduced::frame(std::vector<double> &values, size_t size, double missingVa
     double prev_lat = std::numeric_limits<double>::max();
     double prev_lon = -std::numeric_limits<double>::max();
 
-    repres::Iterator::value_type lat;
-    repres::Iterator::value_type lon;
+    Latitude lat;
+    Longitude lon;
 
     size_t rows = 0;
 
@@ -362,8 +363,8 @@ void Reduced::validate(const std::vector<double>& values) const {
         }
     } else {
         eckit::ScopedPtr<Iterator> it(unrotatedIterator());
-        repres::Iterator::value_type lat;
-        repres::Iterator::value_type lon;
+        Latitude lat;
+        Longitude lon;
         while (it->next(lat, lon)) {
             ++count;
         }

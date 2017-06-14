@@ -178,7 +178,7 @@ class ReducedLLIterator: public Iterator {
             << "]";
     }
 
-    virtual bool next(repres::Iterator::value_type &lat, repres::Iterator::value_type &lon) {
+    virtual bool next(Latitude &lat, Longitude &lon) {
 
 
         while (j_ < nj_ && i_ < ni_) {
