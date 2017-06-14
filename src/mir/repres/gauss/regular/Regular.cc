@@ -110,12 +110,8 @@ bool Regular::sameAs(const Representation& other) const {
 
 
 bool Regular::isPeriodicWestEast() const {
-
-    const double GRIB1EPSILON = 0.001;
-    eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
-
     const Longitude inc = Longitude(eckit::Fraction(90, N_));
-    return  cmp((bbox_.east() - bbox_.west() + inc).value(), 360.0);
+    return (bbox_.east() - bbox_.west() + inc).sameWithGrib1Accuracy(360.0);
 }
 
 
