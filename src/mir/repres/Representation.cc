@@ -291,15 +291,15 @@ const Representation* Representation::globalise(data::MIRField& field) const {
 
     iter.reset(unrotatedIterator());
     while (iter->next(lat, lon)) {
-        latitudes.push_back(lat);
-        longitudes.push_back(lon);
+        latitudes.push_back(lat.value());
+        longitudes.push_back(lon.value());
     }
 
     size_t extra = 0;
     while (iter->next(lat, lon)) {
         if (!dom.contains(lat, lon)) {
-            latitudes.push_back(lat);
-            longitudes.push_back(lon);
+            latitudes.push_back(lat.value());
+            longitudes.push_back(lon.value());
             extra++;
         }
     }

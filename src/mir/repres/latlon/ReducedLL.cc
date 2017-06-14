@@ -97,8 +97,8 @@ atlas::Grid ReducedLL::atlasGrid() const {
 
     using atlas::grid::StructuredGrid;
     using atlas::grid::LinearSpacing;
-    StructuredGrid::XSpace xspace({ dom.west(), dom.east() }, pl_, !dom.isPeriodicEastWest() );
-    StructuredGrid::YSpace yspace( LinearSpacing( { dom.north(), dom.south() }, pl_.size()));
+    StructuredGrid::XSpace xspace({ dom.west().value(), dom.east().value() }, pl_, !dom.isPeriodicEastWest() );
+    StructuredGrid::YSpace yspace( LinearSpacing( { dom.north().value(), dom.south().value() }, pl_.size()));
 
     return atlas::grid::StructuredGrid(xspace, yspace);
 }
@@ -108,12 +108,9 @@ bool ReducedLL::isPeriodicWestEast() const {
     ASSERT(pl_.size());
     const long maxpl = *std::max_element(pl_.begin(), pl_.end());
 
-    const double GRIB1EPSILON = 0.001;
-    eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
-
     const Longitude we = bbox_.east() - bbox_.west();
     const Longitude inc = Longitude::GLOBE - we;
-    return cmp(inc * maxpl, Longitude::GLOBE);
+    return (inc * maxpl).sameWithGrib1Accuracy(Longitude::GLOBE);
 }
 
 
@@ -218,13 +215,13 @@ public:
         domain_(dom),
         nj_(nj),
 
-        west_(domain_.west()),
+        west_(domain_.west().fraction()),
 
-        ew_(domain_.east() - domain_.west()),
+        ew_((domain_.east() - domain_.west()).fraction()),
 
-        inc_north_south_(eckit::Fraction(domain_.north() - domain_.south()) / (nj_ - 1)),
+        inc_north_south_( (domain_.north() - domain_.south()).fraction() / eckit::Fraction(nj_ - 1) ),
 
-        lat_(domain_.north()),
+        lat_(domain_.north().fraction()),
         lon_(west_),
         i_(0),
         j_(0),

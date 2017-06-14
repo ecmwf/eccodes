@@ -73,7 +73,10 @@ bool Reduced::isPeriodicWestEast() const {
 
     const Longitude we = bbox_.east() - bbox_.west();
     const Longitude inc = eckit::Fraction(360, maxpl);
-    return cmp(we + inc, Longitude::GLOBE);
+
+    // (we + inc).caompareGRIOBPrecision(Longitude::GLOBE;
+
+    return cmp((we + inc).value(), Longitude::GLOBE.value());
 }
 
 
@@ -170,7 +173,7 @@ class GaussianIterator : public Iterator {
                 if (j_ < nj_) {
                     ASSERT(p_ < pl_.size());
                     ni_ = size_t(pl_[p_++]);
-                    lon_ = 0;
+                    lon_ = eckit::Fraction(0.0);
                     inc_ = eckit::Fraction(360, ni_);
                     i_ = 0;
 
@@ -212,7 +215,7 @@ public:
 
         ni_ = size_t(pl_[p_++]);
         inc_ = eckit::Fraction(360, ni_);
-        lon_ = 0;
+        lon_ = eckit::Fraction(0.0);
 
     }
 
@@ -243,8 +246,8 @@ size_t Reduced::frame(std::vector<double> &values, size_t size, double missingVa
     // Iterator is 'unrotated'
     eckit::ScopedPtr<Iterator> iter(unrotatedIterator());
 
-    double prev_lat = std::numeric_limits<double>::max();
-    double prev_lon = -std::numeric_limits<double>::max();
+    Latitude prev_lat = std::numeric_limits<double>::max();
+    Longitude prev_lon = -std::numeric_limits<double>::max();
 
     Latitude lat;
     Longitude lon;
@@ -328,13 +331,14 @@ const Reduced *Reduced::cropped(const util::BoundingBox &bbox) const  {
     newpl.reserve(pl.size());
 
     const std::vector<double> &lats = latitudes();
-    double north = bbox.north();
-    double south = bbox.south();
+    Latitude north = bbox.north();
+    Latitude south = bbox.south();
 
     ASSERT(lats.size() == pl.size());
 
     for (size_t i = 0; i < lats.size(); i++) {
-        if ((lats[i] >= south) && (lats[i] <= north)) {
+        Latitude ll(lats[i]);
+        if ((ll >= south) && (ll <= north)) {
             newpl.push_back(pl[i]);
         }
     }

@@ -93,10 +93,10 @@ atlas::Grid RegularLL::atlasGrid() const {
 
     using atlas::grid::StructuredGrid;
     using atlas::grid::LinearSpacing;
-    StructuredGrid::XSpace xspace( LinearSpacing( dom.west(),  dom.east(),  long(ni_), !dom.isPeriodicEastWest() ));
-    StructuredGrid::YSpace yspace( LinearSpacing( bbox_.north(), bbox_.south(), long(nj_) ));
+    StructuredGrid::XSpace xspace( LinearSpacing( dom.west().value(),  dom.east().value(),  long(ni_), !dom.isPeriodicEastWest() ));
+    StructuredGrid::YSpace yspace( LinearSpacing( bbox_.north().value(), bbox_.south().value(), long(nj_) ));
 
-    atlas::RectangularDomain rectangle({dom.west(), dom.east()}, {dom.south(), dom.north()});
+    atlas::RectangularDomain rectangle({dom.west().value(), dom.east().value()}, {dom.south().value(), dom.north().value()});
     return StructuredGrid(xspace, yspace, StructuredGrid::Projection(), rectangle);
 }
 
@@ -109,9 +109,9 @@ Representation* RegularLL::globalise(data::MIRField& field) const {
     }
 
     // For now, we only use that function for the LAW model, so we only grow by the end (south pole)
-    ASSERT(eckit::Fraction(bbox_.north()) == 90);
-    ASSERT(eckit::Fraction(bbox_.west()) == 0);
-    ASSERT(eckit::Fraction(bbox_.east()) + eckit::Fraction(increments_.west_east()) == 360);
+    ASSERT(bbox_.north() == Latitude::NORTH_POLE);
+    ASSERT(bbox_.west() == Longitude::GREENWICH);
+    ASSERT(bbox_.east() + increments_.west_east() == Longitude::GLOBE);
 
     util::BoundingBox newbbox(bbox_.north(), bbox_.west(), -90, bbox_.east());
 

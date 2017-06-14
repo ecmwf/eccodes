@@ -160,46 +160,47 @@ bool LatLon::sameAs(const Representation& other) const {
 
 bool LatLon::isPeriodicWestEast() const {
 
-    // FIXME get precision from GRIB (angularPrecision)
-    const double GRIB1EPSILON = 0.001;
-    eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
-
     Longitude we(increments_.west_east());
     Longitude east = bbox_.east();
     Longitude west = bbox_.west();
 
     // correct if grid is periodic, or is shifted West-East
-    return cmp(east - west + we, 360.) || (cmp(west, we / 2.) && cmp(east, 360. - we / 2.));
+
+    return (east - west + we).sameWithGrib1Accuracy(180)
+           || (
+               west.sameWithGrib1Accuracy(we / 2.)
+               &&
+               east.sameWithGrib1Accuracy(360. - we / 2.)
+           );
 }
 
 
 bool LatLon::includesNorthPole() const {
 
-    // FIXME get precision from GRIB (angularPrecision)
-    const double GRIB1EPSILON = 0.001;
-    eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
 
     Latitude north = bbox_.north();
     Latitude south = bbox_.south();
     Latitude sn(increments_.south_north());
 
     // includes, if grid range is pole-to-pole, or is shifted South-North
-    return cmp(north - south, 180) || cmp(north, 90) || cmp(north,  90. - sn / 2.);
+    return (north - south).sameWithGrib1Accuracy(180)
+           || north.sameWithGrib1Accuracy(Latitude::NORTH_POLE)
+           || north.sameWithGrib1Accuracy(90. - sn / 2.);
 }
 
 
 bool LatLon::includesSouthPole() const {
 
-    // FIXME get precision from GRIB (angularPrecision)
-    const double GRIB1EPSILON = 0.001;
-    eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
 
     Latitude north = bbox_.north();
     Latitude south = bbox_.south();
     Latitude sn(increments_.south_north());
-
     // includes, if grid range is pole-to-pole, or is shifted South-North
-    return cmp(north - south, 180) || cmp(south, -90) || cmp(south, -90 + sn / 2);
+
+    return (north - south).sameWithGrib1Accuracy(180)
+           || north.sameWithGrib1Accuracy(Latitude::SOUTH_POLE)
+           || north.sameWithGrib1Accuracy(-90. + sn / 2.);
+
 }
 
 
@@ -286,8 +287,8 @@ public:
 Iterator *LatLon::unrotatedIterator() const {
     return new LatLonIterator(ni_,
                               nj_,
-                              bbox_.north(),
-                              bbox_.west(),
+                              bbox_.north().value(),
+                              bbox_.west().value(),
                               increments_.west_east(),
                               increments_.south_north());
 }

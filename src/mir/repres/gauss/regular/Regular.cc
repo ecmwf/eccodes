@@ -115,13 +115,13 @@ bool Regular::isPeriodicWestEast() const {
     eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
 
     const Longitude inc = Longitude(eckit::Fraction(90, N_));
-    return  cmp(bbox_.east() - bbox_.west() + inc, 360);
+    return  cmp((bbox_.east() - bbox_.west() + inc).value(), 360.0);
 }
 
 
 atlas::Grid Regular::atlasGrid() const {
     util::Domain dom = domain();
-    atlas::RectangularDomain rectangle({dom.west(), dom.east()}, {dom.south(), dom.north()});
+    atlas::RectangularDomain rectangle({dom.west().value(), dom.east().value()}, {dom.south().value(), dom.north().value()});
 
     return atlas::grid::RegularGaussianGrid("F" + std::to_string(N_), rectangle);
 }
@@ -154,12 +154,13 @@ void Regular::setNiNj() {
 
     Ni_ = N_ * 4;
     if (!dom.isPeriodicEastWest()) {
-        const double lat_middle = (dom.north() + dom.south()) / 2.;
+        const Latitude lat_middle = (dom.north() + dom.south()) / 2.;
         const eckit::Fraction inc(90, N_);
 
         Ni_ = 0;
+        const eckit::Fraction west = dom.west().fraction();
         for (size_t i = 0; i < N_ * 4; ++i) {
-            const eckit::Fraction lon = dom.west() + i * inc;
+            const eckit::Fraction lon = west + i * inc;
             if (dom.contains(lat_middle, lon)) {
                 ++Ni_;
             }
@@ -169,7 +170,7 @@ void Regular::setNiNj() {
 
     Nj_ = N_ * 2;
     if (!dom.includesPoleNorth() || !dom.includesPoleSouth()) {
-        const double lon_middle = (dom.west() + dom.east()) / 2.;
+        const Longitude lon_middle = (dom.west() + dom.east()) / 2.;
 
         Nj_ = 0;
         for (const double& lat : latitudes()) {
@@ -208,7 +209,7 @@ size_t Regular::frame(std::vector<double>& values, size_t size, double missingVa
 class RegularIterator : public Iterator {
 
     std::vector<double> latitudes_;
-    const double west_;
+    const eckit::Fraction west_;
 
     const size_t N_;
     const size_t Ni_;
@@ -225,7 +226,7 @@ class RegularIterator : public Iterator {
 
     virtual void print(std::ostream &out) const {
         out << "RegularIterator["
-            <<  "west="  << west_
+            <<  "west="  << double(west_)
             << ",N="     << N_
             << ",Ni="    << Ni_
             << ",Nj="    << Nj_
@@ -267,7 +268,7 @@ public:
 
     RegularIterator(const std::vector<double>& latitudes, size_t N, size_t Ni, size_t Nj, const util::Domain& dom) :
         latitudes_(latitudes),
-        west_(dom.west()),
+        west_(dom.west().fraction()),
         N_(N),
         Ni_(Ni),
         Nj_(Nj),
