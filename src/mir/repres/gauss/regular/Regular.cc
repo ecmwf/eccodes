@@ -21,7 +21,6 @@
 #include "eckit/memory/ScopedPtr.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
-#include "atlas/domain/detail/RectangularDomain.h"
 #include "atlas/grid.h"
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
@@ -116,10 +115,7 @@ bool Regular::isPeriodicWestEast() const {
 
 
 atlas::Grid Regular::atlasGrid() const {
-    util::Domain dom = domain();
-    atlas::RectangularDomain rectangle({dom.west().value(), dom.east().value()}, {dom.south().value(), dom.north().value()});
-
-    return atlas::grid::RegularGaussianGrid("F" + std::to_string(N_), rectangle);
+    return atlas::grid::RegularGaussianGrid("F" + std::to_string(N_), domain());
 }
 
 
