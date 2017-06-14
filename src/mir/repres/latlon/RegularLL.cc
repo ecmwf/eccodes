@@ -87,19 +87,14 @@ void RegularLL::fill(api::MIRJob &job) const  {
 
 atlas::Grid RegularLL::atlasGrid() const {
 
-    // use bounding box for non-shifted/shifted grid (it is the best we have)
+    // yspace uses bounding box for non-shifted/shifted grid
+    // (works together with the Atlas RectangularDomain cropping)
     const util::Domain dom = domain();
-    const bool isPeriodicEastWest = dom.isPeriodicEastWest();
-
-    double north = bbox_.north();
-    double south = bbox_.south();
-    double west = bbox_.west();
-    double east = isPeriodicEastWest ? west + 360. : double(bbox_.east());
 
     using atlas::grid::StructuredGrid;
     using atlas::grid::LinearSpacing;
-    StructuredGrid::XSpace xspace( LinearSpacing( west,  east,  long(ni_), !isPeriodicEastWest ));
-    StructuredGrid::YSpace yspace( LinearSpacing( north, south, long(nj_) ));
+    StructuredGrid::XSpace xspace( LinearSpacing( dom.west(),  dom.east(),  long(ni_), !dom.isPeriodicEastWest() ));
+    StructuredGrid::YSpace yspace( LinearSpacing( bbox_.north(), bbox_.south(), long(nj_) ));
 
     atlas::RectangularDomain rectangle({dom.west(), dom.east()}, {dom.south(), dom.north()});
     return StructuredGrid(xspace, yspace, StructuredGrid::Projection(), rectangle);
@@ -109,7 +104,7 @@ atlas::Grid RegularLL::atlasGrid() const {
 Representation* RegularLL::globalise(data::MIRField& field) const {
     ASSERT(field.representation() == this);
 
-    if (domain().isGlobal()) {
+    if (isGlobal()) {
         return 0;
     }
 

@@ -82,13 +82,12 @@ void Regular::fill(grib_info &info) const  {
     */
 
     // for GRIB, a global field is also aligned with Greenwich
-    bool global = domain().isGlobal();
     bool westAtGreenwich = eckit::types::is_approximately_equal<double>(0, bbox_.west());
 
     long j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
     info.packing.extra_settings[j].name = "global";
-    info.packing.extra_settings[j].long_value = global && westAtGreenwich ? 1 : 0;
+    info.packing.extra_settings[j].long_value = domain().isGlobal() && westAtGreenwich ? 1 : 0;
 }
 
 

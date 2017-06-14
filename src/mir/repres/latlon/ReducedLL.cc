@@ -64,10 +64,12 @@ void ReducedLL::makeName(std::ostream& out) const {
     bbox_.makeName(out);
 }
 
+
 bool ReducedLL::sameAs(const Representation& other) const {
     const ReducedLL* o = dynamic_cast<const ReducedLL*>(&other);
     return o && (Nj_ == o->Nj_) && (bbox_ == o->bbox_) && (pl_ == o->pl_);
 }
+
 
 void ReducedLL::fill(grib_info &info) const  {
     NOTIMP;
@@ -91,11 +93,12 @@ void ReducedLL::cropToDomain(const param::MIRParametrisation &parametrisation, c
 
 
 atlas::Grid ReducedLL::atlasGrid() const {
-    util::Domain dom = domain();
+    const util::Domain dom = domain();
 
     using atlas::grid::StructuredGrid;
-    StructuredGrid::XSpace xspace({ dom.west(), dom.east() }, pl_, !isPeriodicWestEast());
-    StructuredGrid::YSpace yspace( atlas::grid::LinearSpacing( { dom.north(), dom.south() }, pl_.size()));
+    using atlas::grid::LinearSpacing;
+    StructuredGrid::XSpace xspace({ dom.west(), dom.east() }, pl_, !dom.isPeriodicEastWest() );
+    StructuredGrid::YSpace yspace( LinearSpacing( { dom.north(), dom.south() }, pl_.size()));
 
     return atlas::grid::StructuredGrid(xspace, yspace);
 }
