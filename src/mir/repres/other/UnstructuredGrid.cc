@@ -39,6 +39,7 @@ UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation &parametrisat
     ASSERT(longitudes_.size() > 0);
 }
 
+
 UnstructuredGrid::UnstructuredGrid(const eckit::PathName &path) {
     std::ifstream in(path.asString().c_str());
     if (!in) {
@@ -52,12 +53,13 @@ UnstructuredGrid::UnstructuredGrid(const eckit::PathName &path) {
     }
 }
 
-// Take ownership of vectors
+
 UnstructuredGrid::UnstructuredGrid(std::vector<double>& latitudes, std::vector<double>& longitudes) {
     std::swap(latitudes_, latitudes);
     std::swap(longitudes_, longitudes);
     ASSERT(latitudes_.size() == longitudes_.size());
 }
+
 
 UnstructuredGrid::~UnstructuredGrid() {
 }
@@ -74,20 +76,17 @@ void UnstructuredGrid::makeName(std::ostream& out) const {
     out << "unstructured-" <<latitudes_.size() << "-";
 
     eckit::MD5 md5;
-    for (auto j = latitudes_.begin(); j != latitudes_.end(); ++j) {
-        md5 << *j;
-    }
-
-    for (auto j = longitudes_.begin(); j != longitudes_.end(); ++j) {
-        md5 << *j;
-    }
+    for (auto j: latitudes_)  { md5 << j; }
+    for (auto j: longitudes_) { md5 << j; }
     out << std::string(md5);
 }
+
 
 bool UnstructuredGrid::sameAs(const Representation& other) const {
     const UnstructuredGrid* o = dynamic_cast<const UnstructuredGrid*>(&other);
     return o && (latitudes_ == o->latitudes_) && (longitudes_ == o->longitudes_);
 }
+
 
 void UnstructuredGrid::fill(grib_info &info) const  {
     NOTIMP;
@@ -127,6 +126,7 @@ void UnstructuredGrid::validate(const std::vector<double> &values) const {
     ASSERT(values.size() == latitudes_.size());
     ASSERT(values.size() == longitudes_.size());
 }
+
 
 double UnstructuredGrid::increment() const {
     // double inc = 360.0;
@@ -179,6 +179,24 @@ Iterator *UnstructuredGrid::unrotatedIterator() const {
 
 Iterator* UnstructuredGrid::rotatedIterator() const {
     return unrotatedIterator();
+}
+
+
+bool UnstructuredGrid::isPeriodicWestEast() const {
+    // TODO:
+    return true;
+}
+
+
+bool UnstructuredGrid::includesNorthPole() const {
+    // TODO:
+    return true;
+}
+
+
+bool UnstructuredGrid::includesSouthPole() const {
+    // TODO:
+    return true;
 }
 
 
