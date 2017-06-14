@@ -171,7 +171,7 @@ bool LatLon::isPeriodicWestEast() const {
 
     // correct if grid is periodic, or is shifted West-East
 
-    return (east - west + we).sameWithGrib1Accuracy(180)
+    return (east - west + we).sameWithGrib1Accuracy(360)
            || (
                west.sameWithGrib1Accuracy(we / 2.)
                &&
