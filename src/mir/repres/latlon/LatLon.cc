@@ -32,17 +32,16 @@ namespace repres {
 namespace latlon {
 
 
-
-LatLon::LatLon(const param::MIRParametrisation &parametrisation) :
-    bbox_(parametrisation),
+LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
+    Gridded(parametrisation),
     increments_(parametrisation) {
     ASSERT(parametrisation.get("Ni", ni_));
     ASSERT(parametrisation.get("Nj", nj_));
 }
 
 
-LatLon::LatLon(const util::BoundingBox &bbox, const util::Increments &increments) :
-    bbox_(bbox),
+LatLon::LatLon(const util::BoundingBox& bbox, const util::Increments& increments) :
+    Gridded(bbox),
     increments_(increments) {
     setNiNj();
 }
@@ -156,7 +155,55 @@ void LatLon::makeName(std::ostream& out) const {
 bool LatLon::sameAs(const Representation& other) const {
     const LatLon* o = dynamic_cast<const LatLon*>(&other);
     return o && (bbox_ == o->bbox_) && (increments_ == o->increments_);
- }
+}
+
+
+bool LatLon::isPeriodicWestEast() const {
+
+    // FIXME get precision from GRIB (angularPrecision)
+    const double GRIB1EPSILON = 0.001;
+    eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
+
+    util::BoundingBox::value_type
+            we(increments_.west_east()),
+            east = bbox_.east(),
+            west = bbox_.west();
+
+    // correct if grid is periodic, or is shifted West-East
+    return cmp(east - west + we, 360.) || (cmp(west, we/2.) && cmp(east, 360. - we/2.));
+}
+
+
+bool LatLon::includesNorthPole() const {
+
+    // FIXME get precision from GRIB (angularPrecision)
+    const double GRIB1EPSILON = 0.001;
+    eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
+
+    util::BoundingBox::value_type
+            north = bbox_.north(),
+            south = bbox_.south(),
+            sn(increments_.south_north());
+
+    // includes, if grid range is pole-to-pole, or is shifted South-North
+    return cmp(north - south, 180) || cmp(north, 90) || cmp(north,  90. - sn/2.);
+}
+
+
+bool LatLon::includesSouthPole() const {
+
+    // FIXME get precision from GRIB (angularPrecision)
+    const double GRIB1EPSILON = 0.001;
+    eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
+
+    util::BoundingBox::value_type
+            north = bbox_.north(),
+            south = bbox_.south(),
+            sn(increments_.south_north());
+
+    // includes, if grid range is pole-to-pole, or is shifted South-North
+    return cmp(north - south, 180) || cmp(south, -90) || cmp(south, -90 + sn/2);
+}
 
 
 class LatLonIterator : public Iterator {
@@ -287,35 +334,6 @@ void LatLon::validate(const std::vector<double> &values) const {
 void LatLon::shape(size_t &ni, size_t &nj) const {
     ni = ni_;
     nj = nj_;
-}
-
-
-util::Domain LatLon::domain() const {
-
-    // FIXME get precision from GRIB (angularPrecision)
-    const double epsilon_grib1 = 1.0 / 1000.0;
-    eckit::types::CompareApproximatelyEqual<double> cmp(epsilon_grib1);
-
-    double sn(increments_.south_north());
-    double we(increments_.west_east());
-
-    double north = bbox_.north();
-    double south = bbox_.south();
-    double east = bbox_.east();
-    double west = bbox_.west();
-
-    // correct if grid range is pole-to-pole, or is shifted South-North
-    if (cmp(north - south, 180.) || (cmp(north,  90. - sn/2.) && cmp(south, -90. + sn/2.))) {
-        north =  90.;
-        south = -90.;
-    }
-
-    // correct if grid is periodic, or is shifted West-East
-    if (cmp(east - west + we, 360.) || (cmp(west, we/2.) && cmp(east, 360. - we/2.))) {
-        east = west + 360.;
-    }
-
-    return util::Domain(north, west, south, east);
 }
 
 
