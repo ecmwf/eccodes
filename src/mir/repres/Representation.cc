@@ -94,8 +94,8 @@ void Representation::setGivenPacking(grib_info &) const {
 
 bool Representation::isGlobal() const {
     return isPeriodicWestEast() &&
-            includesNorthPole() &&
-            includesSouthPole();
+           includesNorthPole() &&
+           includesSouthPole();
 }
 
 
@@ -163,7 +163,7 @@ const Representation *Representation::truncate(size_t truncation,
 }
 
 const std::string& Representation::uniqueName() const {
-    if(uniqueName_.empty()) {
+    if (uniqueName_.empty()) {
         std::ostringstream os;
         makeName(os);
         uniqueName_ = os.str();
@@ -216,6 +216,12 @@ size_t Representation::pentagonalResolutionTs() const {
 size_t Representation::numberOfPoints() const {
     std::ostringstream os;
     os << "Representation::numberOfPoints() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+void Representation::initTrans(Trans_t&) const {
+    std::ostringstream os;
+    os << "Representation::initTrans() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 

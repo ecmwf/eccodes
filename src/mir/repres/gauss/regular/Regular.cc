@@ -121,7 +121,7 @@ bool Regular::isPeriodicWestEast() const {
 
 atlas::Grid Regular::atlasGrid() const {
     util::Domain dom = domain();
-    atlas::RectangularDomain rectangle({dom.west().value(), dom.east().value()}, {dom.south().value(), dom.north().value()});
+    atlas::RectangularDomain rectangle({{dom.west().value(), dom.east().value()}}, {{dom.south().value(), dom.north().value()}});
 
     return atlas::grid::RegularGaussianGrid("F" + std::to_string(N_), rectangle);
 }

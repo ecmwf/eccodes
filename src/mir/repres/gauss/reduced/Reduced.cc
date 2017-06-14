@@ -31,6 +31,11 @@
 #include "eckit/types/Fraction.h"
 #include "mir/util/BoundingBox.h"
 
+#include "atlas/library/config.h"
+
+#ifdef ATLAS_HAVE_TRANS
+#include "transi/trans.h"
+#endif
 
 namespace mir {
 namespace repres {
@@ -352,6 +357,30 @@ const Reduced *Reduced::cropped(const util::BoundingBox&, const std::vector<long
     os << "Reduced::cropped() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
+
+
+void Reduced::initTrans(Trans_t& trans) const {
+#ifdef ATLAS_HAVE_TRANS
+
+
+    const std::vector<long>& pl = pls();
+    ASSERT(pl.size());
+
+    std::vector<int> pli(pl.size());
+    ASSERT(pl.size() == pli.size());
+
+    for (size_t i = 0; i < pl.size(); ++i) {
+        pli[i] = pl[i];
+    }
+
+    ASSERT(trans_set_resol(&trans, pli.size(), &pli[0]) == 0);
+
+#else
+    NOTIMP;
+#endif
+}
+
+
 
 
 }  // namespace reduced

@@ -97,8 +97,8 @@ atlas::Grid ReducedLL::atlasGrid() const {
 
     using atlas::grid::StructuredGrid;
     using atlas::grid::LinearSpacing;
-    StructuredGrid::XSpace xspace({ dom.west().value(), dom.east().value() }, pl_, !dom.isPeriodicEastWest() );
-    StructuredGrid::YSpace yspace( LinearSpacing( { dom.north().value(), dom.south().value() }, pl_.size()));
+    StructuredGrid::XSpace xspace({ {dom.west().value(), dom.east().value()} }, pl_, !dom.isPeriodicEastWest() );
+    StructuredGrid::YSpace yspace( LinearSpacing( { {dom.north().value(), dom.south().value()} }, pl_.size()));
 
     return atlas::grid::StructuredGrid(xspace, yspace);
 }

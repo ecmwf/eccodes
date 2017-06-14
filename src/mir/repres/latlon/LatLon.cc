@@ -26,6 +26,11 @@
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 
+#include "atlas/library/config.h"
+
+#ifdef ATLAS_HAVE_TRANS
+#include "transi/trans.h"
+#endif
 
 namespace mir {
 namespace repres {
@@ -333,6 +338,16 @@ void LatLon::shape(size_t &ni, size_t &nj) const {
     ni = ni_;
     nj = nj_;
 }
+
+
+void LatLon::initTrans(Trans_t& trans) const {
+#ifdef ATLAS_HAVE_TRANS
+    ASSERT(trans_set_resol_lonlat(&trans, ni_, nj_) == 0);
+#else
+    NOTIMP;
+#endif
+}
+
 
 
 }  // namespace latlon
