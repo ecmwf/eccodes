@@ -82,7 +82,7 @@ void Regular::fill(grib_info &info) const  {
     */
 
     // for GRIB, a global field is also aligned with Greenwich
-    bool westAtGreenwich = eckit::types::is_approximately_equal<double>(0, bbox_.west());
+    bool westAtGreenwich = bbox_.west() == Longitude::GREENWICH;
 
     long j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
@@ -114,7 +114,7 @@ bool Regular::isPeriodicWestEast() const {
     const double GRIB1EPSILON = 0.001;
     eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
 
-    const Longitude inc = Longitude(90, long(N_));
+    const Longitude inc = Longitude(eckit::Fraction(90, N_));
     return  cmp(bbox_.east() - bbox_.west() + inc, 360);
 }
 

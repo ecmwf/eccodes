@@ -73,7 +73,7 @@ bool Reduced::isPeriodicWestEast() const {
 
     const Longitude we = bbox_.east() - bbox_.west();
     const Longitude inc = eckit::Fraction(360, maxpl);
-    return cmp(we + inc, util::BoundingBox::THREE_SIXTY);
+    return cmp(we + inc, Longitude::GLOBE);
 }
 
 
@@ -107,7 +107,7 @@ void Reduced::fill(grib_info &info) const  {
     */
 
     // for GRIB, a global field is also aligned with Greenwich
-    bool westAtGreenwich = eckit::types::is_approximately_equal<double>(0, bbox_.west());
+    bool westAtGreenwich = bbox_.west() == Longitude::GREENWICH;;
 
     long j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
@@ -205,8 +205,7 @@ public:
 
         // position to first latitude and first/last longitude
 
-        while (k_ < latitudes_.size() &&
-            eckit::types::is_strictly_greater(latitudes_[k_], domain_.north())) {
+        while (k_ < latitudes_.size() && domain_.north() < latitudes_[k_]) {
             k_++;
         }
         ASSERT(k_ < latitudes_.size());
@@ -215,30 +214,7 @@ public:
         inc_ = eckit::Fraction(360, ni_);
         lon_ = 0;
 
-
-        // eckit::Log::debug<LibMir>() << *this << std::endl;
     }
-
-    // static void repositionToFirstLongitudeIndex(size_t& imin, size_t& imax, const util::Domain& dom, const size_t& n) {
-
-    //     const double west_positive = dom.west() + (eckit::types::is_strictly_greater(0., dom.west()) ? 360. : 0.);
-    //     const double east_positive = dom.east() + (eckit::types::is_strictly_greater(0., dom.west()) ? 360. : 0.);
-    //     ASSERT(eckit::types::is_approximately_greater_or_equal(360., east_positive - west_positive));
-
-    //     ASSERT(n);
-
-    //     // assuming n>0, returned range satisfies: 0 <= imin < imax; and imax - imin <= n
-    //     imin = 0;
-    //     while (imin < n && eckit::types::is_strictly_greater(west_positive, (imin * 360.) / n)) {
-    //         ++imin;
-    //     }
-    //     imin = imin % n;
-    //     imax = imin;
-    //     while (imax - imin < n && eckit::types::is_approximately_greater_or_equal(east_positive, (imax * 360.) / n)) {
-    //         ++imax;
-    //     }
-    //     ASSERT(imax > imin);
-    // }
 
 
 };

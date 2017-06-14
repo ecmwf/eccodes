@@ -112,18 +112,18 @@ bool ReducedLL::isPeriodicWestEast() const {
     eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
 
     const Longitude we = bbox_.east() - bbox_.west();
-    const Longitude inc = 360 - we;
-    return cmp(inc * maxpl, util::BoundingBox::THREE_SIXTY);
+    const Longitude inc = Longitude::GLOBE - we;
+    return cmp(inc * maxpl, Longitude::GLOBE);
 }
 
 
 bool ReducedLL::includesNorthPole() const {
-    return eckit::types::is_approximately_equal<double>(bbox_.north(),  util::BoundingBox::NORTH_POLE);
+    return bbox_.north() == Latitude::NORTH_POLE;
 }
 
 
 bool ReducedLL::includesSouthPole() const {
-    return eckit::types::is_approximately_equal<double>(bbox_.north(),  util::BoundingBox::SOUTH_POLE);
+    return bbox_.north() == Latitude::SOUTH_POLE;
 }
 
 
