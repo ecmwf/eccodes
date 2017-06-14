@@ -7,7 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# label    Grib_section_2;
 # START grib1::section
 # SECTION 2, Grid description section
 #  Length of section

@@ -9,9 +9,6 @@
 
 # GRIB-530: This template is to be used by template.4.44.def ONLY
 
-
-label "Parameter information";
-
 #  Parameter category
 codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir) : dump;
 

@@ -7,8 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-label "Parameter information";
-
 #  Parameter category
 codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir) : dump;
 

@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-label "grib 2 Section 6 BIT-MAP SECTION";
+
 # START grib2::section
 # SECTION 6, BIT-MAP SECTION
 #  Length of section in octets

@@ -7,8 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-label "Rectangular cluster";
-
 #  Cluster identifier
 unsigned[1] clusterIdentifier : dump ;
 alias number=clusterIdentifier;

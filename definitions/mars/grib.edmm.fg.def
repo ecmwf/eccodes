@@ -7,6 +7,5 @@
 #alias mars.step = startStep;
 #}
 
-label "x";
 alias mars.number=perturbationNumber;
 

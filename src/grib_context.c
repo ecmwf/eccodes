@@ -909,46 +909,49 @@ void grib_context_set_data_accessing_proc(grib_context* c, grib_data_read_proc r
     c->tell  = tell;
 }
 
-/*              logging procedure                    */
+/* Logging procedure */
 void grib_context_log(const grib_context *c,int level, const char* fmt, ...)
 {
-    char msg[1024];
-    va_list list;
-
     /* Save some CPU */
     if( (level == GRIB_LOG_DEBUG && c->debug<1) ||
             (level == GRIB_LOG_WARNING && c->debug<2) )
-        return;
-
-    va_start(list,fmt);
-    vsprintf(msg, fmt, list);
-    va_end(list);
-
-    if(level & GRIB_LOG_PERROR)
     {
-        level = level & ~GRIB_LOG_PERROR;
-
-        /* #if HAS_STRERROR */
-#if 1
-        strcat(msg," (");
-        strcat(msg,strerror(errno));
-        strcat(msg,")");
-#else
-        if(errno > 0 && errno < sys_nerr)
-        {
-            strcat(msg," (");
-            strcat(msg,sys_errlist[errno]);
-            strcat(msg," )");
-        }
-#endif
+        return;
     }
+    else
+    {
+        char msg[1024];
+        va_list list;
 
+        va_start(list,fmt);
+        vsprintf(msg, fmt, list);
+        va_end(list);
 
-    if(c->output_log)
-        c->output_log(c,level,msg);
+        if(level & GRIB_LOG_PERROR)
+        {
+            level = level & ~GRIB_LOG_PERROR;
+
+            /* #if HAS_STRERROR */
+#if 1
+            strcat(msg," (");
+            strcat(msg,strerror(errno));
+            strcat(msg,")");
+#else
+            if(errno > 0 && errno < sys_nerr)
+            {
+                strcat(msg," (");
+                strcat(msg,sys_errlist[errno]);
+                strcat(msg," )");
+            }
+#endif
+        }
+
+        if(c->output_log)
+            c->output_log(c,level,msg);
+    }
 }
 
-/*              logging procedure                    */
+/* Logging procedure */
 void grib_context_print(const grib_context *c, void* descriptor,const char* fmt, ...)
 {
     char msg[1024];

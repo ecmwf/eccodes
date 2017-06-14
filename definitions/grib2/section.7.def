@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-label "grib 2 Section 7 data";
+
 # START grib2::section
 # SECTION 7, DATA SECTION
 #  Length of section in octets
