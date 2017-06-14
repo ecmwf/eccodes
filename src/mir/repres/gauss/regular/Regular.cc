@@ -115,7 +115,7 @@ bool Regular::isPeriodicWestEast() const {
     const double GRIB1EPSILON = 0.001;
     eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
 
-    const util::BoundingBox::value_type inc = eckit::Fraction(90, long(N_));
+    const Longitude inc = Longitude(90, long(N_));
     return  cmp(bbox_.east() - bbox_.west() + inc, 360);
 }
 

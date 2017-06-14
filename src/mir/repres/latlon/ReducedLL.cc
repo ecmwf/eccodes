@@ -108,8 +108,8 @@ bool ReducedLL::isPeriodicWestEast() const {
     const double GRIB1EPSILON = 0.001;
     eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
 
-    const util::BoundingBox::value_type we = bbox_.east() - bbox_.west();
-    const util::BoundingBox::value_type inc = 360 - we;
+    const Longitude we = bbox_.east() - bbox_.west();
+    const Longitude inc = 360 - we;
     return cmp(inc * maxpl, util::BoundingBox::THREE_SIXTY);
 }
 

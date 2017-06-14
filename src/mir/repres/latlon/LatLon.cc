@@ -164,13 +164,12 @@ bool LatLon::isPeriodicWestEast() const {
     const double GRIB1EPSILON = 0.001;
     eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
 
-    util::BoundingBox::value_type
-            we(increments_.west_east()),
-            east = bbox_.east(),
-            west = bbox_.west();
+    Longitude we(increments_.west_east());
+    Longitude east = bbox_.east();
+    Longitude west = bbox_.west();
 
     // correct if grid is periodic, or is shifted West-East
-    return cmp(east - west + we, 360.) || (cmp(west, we/2.) && cmp(east, 360. - we/2.));
+    return cmp(east - west + we, 360.) || (cmp(west, we / 2.) && cmp(east, 360. - we / 2.));
 }
 
 
@@ -180,13 +179,12 @@ bool LatLon::includesNorthPole() const {
     const double GRIB1EPSILON = 0.001;
     eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
 
-    util::BoundingBox::value_type
-            north = bbox_.north(),
-            south = bbox_.south(),
-            sn(increments_.south_north());
+    Latitude north = bbox_.north();
+    Latitude south = bbox_.south();
+    Latitude sn(increments_.south_north());
 
     // includes, if grid range is pole-to-pole, or is shifted South-North
-    return cmp(north - south, 180) || cmp(north, 90) || cmp(north,  90. - sn/2.);
+    return cmp(north - south, 180) || cmp(north, 90) || cmp(north,  90. - sn / 2.);
 }
 
 
@@ -196,13 +194,12 @@ bool LatLon::includesSouthPole() const {
     const double GRIB1EPSILON = 0.001;
     eckit::types::CompareApproximatelyEqual<double> cmp(GRIB1EPSILON);
 
-    util::BoundingBox::value_type
-            north = bbox_.north(),
-            south = bbox_.south(),
-            sn(increments_.south_north());
+    Latitude north = bbox_.north();
+    Latitude south = bbox_.south();
+    Latitude sn(increments_.south_north());
 
     // includes, if grid range is pole-to-pole, or is shifted South-North
-    return cmp(north - south, 180) || cmp(south, -90) || cmp(south, -90 + sn/2);
+    return cmp(north - south, 180) || cmp(south, -90) || cmp(south, -90 + sn / 2);
 }
 
 
