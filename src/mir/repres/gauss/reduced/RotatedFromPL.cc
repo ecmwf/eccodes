@@ -79,9 +79,16 @@ Iterator* RotatedFromPL::rotatedIterator() const {
 }
 
 
-void RotatedFromPL::makeName(std::ostream& out) const { NOTIMP; }
-bool RotatedFromPL::sameAs(const Representation& other) const { NOTIMP; }
+void RotatedFromPL::makeName(std::ostream& out) const {
+    FromPL::makeName(out);
+    rotation_.makeName(out);
+}
 
+
+bool RotatedFromPL::sameAs(const Representation& other) const {
+    const RotatedFromPL* o = dynamic_cast<const RotatedFromPL*>(&other);
+    return o && (rotation_ == o->rotation_) && FromPL::sameAs(other);
+}
 
 
 namespace {
