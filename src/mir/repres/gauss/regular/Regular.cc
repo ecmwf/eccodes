@@ -48,7 +48,7 @@ void adjustEastWest(size_t N, util::BoundingBox& bbox) {
     bool adjustedWest = false;
 
     const long range = 4 * long(N);
-    for (long i = -range; i < range; ++i) {
+    for (long i = -range; i <= range; ++i) {
         const Longitude l = i * inc;
         if (!adjustedEast && (e.value() != l.value()) && bbox.east().sameWithGrib1Accuracy(l)) {
             adjustedEast = true;
