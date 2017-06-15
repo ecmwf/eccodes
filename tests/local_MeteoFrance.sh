@@ -10,4 +10,5 @@
 
 . ./include.sh
 
-exec ${test_dir}/local_MeteoFrance
+${test_dir}/local_MeteoFrance
+rm -f output.local_MeteoFrance.grib
