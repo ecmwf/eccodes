@@ -52,8 +52,17 @@ void RotatedGG::print(std::ostream &out) const {
 }
 
 
-void RotatedGG::makeName(std::ostream& out) const { NOTIMP; }
-bool RotatedGG::sameAs(const Representation& other) const { NOTIMP; }
+void RotatedGG::makeName(std::ostream& out) const {
+    Regular::makeName(out);
+    rotation_.makeName(out);
+}
+
+
+bool RotatedGG::sameAs(const Representation& other) const {
+    const RotatedGG* o = dynamic_cast<const RotatedGG*>(&other);
+    return o && (rotation_ == o->rotation_) && RotatedGG::sameAs(other);
+}
+
 
 void RotatedGG::fill(grib_info &info) const  {
     Regular::fill(info);
