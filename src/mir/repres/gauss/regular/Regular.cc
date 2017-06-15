@@ -36,20 +36,56 @@ namespace repres {
 namespace regular {
 
 
+namespace {
+void adjustEastWest(size_t N, util::BoundingBox& bbox) {
+    ASSERT(N);
+
+    Longitude e = bbox.east();
+    Longitude w = bbox.west();
+    const eckit::Fraction inc(90, N);
+
+    bool adjustedEast = false;
+    bool adjustedWest = false;
+
+    const Longitude west = bbox.west();
+    for (size_t i = 0; i < N * 4; ++i) {
+        const Longitude l = bbox.normalise(west + i * inc);
+        if (!adjustedEast && (e.value() != l.value()) && bbox.east().sameWithGrib1Accuracy(l)) {
+            adjustedEast = true;
+            e = l;
+        }
+        if (!adjustedWest && (w.value() != l.value()) && bbox.west().sameWithGrib1Accuracy(l)) {
+            adjustedWest = true;
+            w = l;
+        }
+        if (adjustedEast && adjustedWest) {
+            break;
+        }
+    }
+    if (adjustedEast || adjustedWest) {
+        bbox = util::BoundingBox(bbox.north(), w, bbox.south(), e);
+    }
+}
+}  // (anonymous namespace)
+
+
 Regular::Regular(const param::MIRParametrisation &parametrisation):
     Gaussian(parametrisation) {
+    adjustEastWest(N_, bbox_);
     setNiNj();
 }
 
 
 Regular::Regular(size_t N):
     Gaussian(N) {
+    adjustEastWest(N_, bbox_);
     setNiNj();
 }
 
 
 Regular::Regular(size_t N, const util::BoundingBox &bbox):
     Gaussian(N, bbox) {
+    adjustEastWest(N_, bbox_);
     setNiNj();
 }
 
