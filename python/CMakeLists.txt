@@ -55,7 +55,9 @@ if( HAVE_PYTHON )
     configure_file( swig_wrap_numpy.py gribapi/gribapi_swig.py COPYONLY )
 
     # Build the extension module for use in install tree with RPATH pointing to install tree
-    install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} setup.py build_ext --rpath ${CMAKE_INSTALL_PREFIX}/${INSTALL_LIB_DIR}
+    install(CODE "message(\"Building Python extension modules:
+${PYTHON_EXECUTABLE} setup.py build_ext --rpath ${CMAKE_INSTALL_PREFIX}/${INSTALL_LIB_DIR}\")
+                  execute_process(COMMAND ${PYTHON_EXECUTABLE} setup.py build_ext --rpath ${CMAKE_INSTALL_PREFIX}/${INSTALL_LIB_DIR}
                                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})")
 
     # Library installation directory override
@@ -69,6 +71,11 @@ if( HAVE_PYTHON )
     install(CODE "if( NOT \$ENV{DESTDIR} STREQUAL \"\" )
                     set( __root \"--root=\$ENV{DESTDIR}\" )
                   endif()
+                  message(\"Installing Python modules:
+${PYTHON_EXECUTABLE} setup.py install \${__root}
+                                      ${__install_lib}
+                                      --prefix=${CMAKE_INSTALL_PREFIX}
+                                      --record=${CMAKE_BINARY_DIR}/extra_install.txt\")
                   execute_process(COMMAND ${PYTHON_EXECUTABLE} setup.py install
                                             \${__root}
                                             --prefix=${CMAKE_INSTALL_PREFIX}
