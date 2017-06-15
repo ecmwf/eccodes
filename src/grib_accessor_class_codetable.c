@@ -736,8 +736,12 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     long pos = a->offset*8;
     grib_handle* hand = NULL;
 
+#ifdef DEBUG
     err=grib_value_count(a,&rlen);
-    if (err) return err;
+    Assert(!err);
+    Assert(rlen == 1);
+#endif
+    rlen = 1; /* ECC-480 Performance: avoid func call overhead of grib_value_count */
 
     if(!self->table) self->table = load_table(self);
 
@@ -754,7 +758,10 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
         return GRIB_SUCCESS;
     }
 
-    hand = grib_handle_of_accessor(a);
+    /* ECC-480 Performance: inline the grib_handle_of_accessor here to reduce func call overhead */
+    if (a->parent==NULL) hand = a->h;
+    else                 hand = a->parent->h;
+
     for(i=0; i< rlen;i++){
         val[i] = (long)grib_decode_unsigned_long(hand->buffer->data , &pos, self->nbytes*8);
     }
