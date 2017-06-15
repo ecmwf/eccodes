@@ -271,8 +271,5 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     err=select_area(a);
     if (err) return err;
 
-    err=grib_set_long(a->parent->h,self->doExtractSubsets,1);
-    if (err) return err;
-
     return err;
 }
