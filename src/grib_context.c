@@ -84,7 +84,7 @@ static void* default_long_lasting_malloc(const grib_context* c, size_t size)
     GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
     if (!ret) {
-        grib_context_log(c,GRIB_LOG_FATAL,"default_malloc: error allocating %lu bytes",(unsigned long)size);
+        grib_context_log(c,GRIB_LOG_FATAL,"default_long_lasting_malloc: error allocating %lu bytes",(unsigned long)size);
         Assert(0);
     }
     return ret;
