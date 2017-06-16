@@ -141,26 +141,26 @@ void Representation::fill(api::MIRJob&) const {
 }
 
 
-void Representation::shape(size_t &ni, size_t &nj) const {
+void Representation::shape(size_t&, size_t&) const {
     std::ostringstream os;
     os << "Representation::shape() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 
-const Representation *Representation::cropped(const util::BoundingBox &bbox) const {
+const Representation *Representation::cropped(const util::BoundingBox&) const {
     std::ostringstream os;
     os << "Representation::cropped() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 
-const Representation *Representation::truncate(size_t truncation,
-        const std::vector<double> &, std::vector<double> &) const {
+const Representation *Representation::truncate(size_t, const std::vector<double>&, std::vector<double>&) const {
     std::ostringstream os;
     os << "Representation::truncate() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
+
 
 const std::string& Representation::uniqueName() const {
     if (uniqueName_.empty()) {
@@ -171,21 +171,25 @@ const std::string& Representation::uniqueName() const {
     return uniqueName_;
 }
 
-void Representation::makeName(std::ostream& out) const {
+
+void Representation::makeName(std::ostream&) const {
     std::ostringstream os;
     os << "Representation::makeName(std::ostream& out) not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
-bool Representation::sameAs(const Representation& other) const {
+
+bool Representation::sameAs(const Representation&) const {
     std::ostringstream os;
     os << "Representation::sameAs() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
+
 util::MIRGrid Representation::grid() const {
     return util::MIRGrid(atlasGrid(), domain());
 }
+
 
 atlas::Grid Representation::atlasGrid() const {
     std::ostringstream os;
@@ -200,6 +204,7 @@ util::Domain Representation::domain() const {
     throw eckit::SeriousBug(os.str());
 }
 
+
 size_t Representation::truncation() const {
     std::ostringstream os;
     os << "Representation::truncation() not implemented for " << *this;
@@ -213,11 +218,13 @@ size_t Representation::pentagonalResolutionTs() const {
     throw eckit::SeriousBug(os.str());
 }
 
+
 size_t Representation::numberOfPoints() const {
     std::ostringstream os;
     os << "Representation::numberOfPoints() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
+
 
 void Representation::initTrans(Trans_t&) const {
     std::ostringstream os;
@@ -225,33 +232,34 @@ void Representation::initTrans(Trans_t&) const {
     throw eckit::SeriousBug(os.str());
 }
 
+
 void Representation::comparison(std::string&) const {
     // do nothing
 }
 
 
-size_t Representation::frame(std::vector<double> &values, size_t size, double missingValue) const {
+size_t Representation::frame(std::vector<double>&, size_t, double) const {
     std::ostringstream os;
     os << "Representation::frame() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 
-const Representation* Representation::subset(data::MIRField& field,
-        const util::Increments& increments) const {
+const Representation* Representation::subset(data::MIRField&, const util::Increments&) const {
     std::ostringstream os;
     os << "Representation::subset() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
-void Representation::reorder(long scanningMode, std::vector<double> &values) const {
+
+void Representation::reorder(long, std::vector<double>&) const {
     std::ostringstream os;
     os << "Representation::reorder() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 
-void Representation::cropToDomain(const param::MIRParametrisation &parametrisation, context::Context & ctx) const {
+void Representation::crop(const param::MIRParametrisation&, context::Context&) const {
     std::ostringstream os;
     os << "Representation::cropToDomain() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());

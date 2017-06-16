@@ -84,14 +84,6 @@ void ReducedLL::fill(api::MIRJob &job) const  {
 }
 
 
-void ReducedLL::cropToDomain(const param::MIRParametrisation &parametrisation, context::Context & ctx) const {
-    if (!domain().isGlobal()) {
-        action::AreaCropper cropper(parametrisation, bbox_);
-        cropper.execute(ctx);
-    }
-}
-
-
 atlas::Grid ReducedLL::atlasGrid() const {
     const util::Domain dom = domain();
 

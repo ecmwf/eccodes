@@ -56,14 +56,6 @@ LatLon::~LatLon() {
 }
 
 
-void LatLon::cropToDomain(const param::MIRParametrisation &parametrisation, context::Context & ctx) const {
-    if (!domain().isGlobal()) {
-        action::AreaCropper cropper(parametrisation, bbox_);
-        cropper.execute(ctx);
-    }
-}
-
-
 void LatLon::setNiNj() {
     ni_ = bbox_.computeNi(increments_);
     nj_ = bbox_.computeNj(increments_);
