@@ -484,12 +484,20 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
     return ret;
 }
 
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
+GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
+    if (*a != *b) return 1;
+    while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
+    return (*a==0 && *b==0) ? 0 : 1;
+}
+
 grib_action_file* grib_find_action_file(const char* fname , grib_action_file_list* afl)
 {
     grib_action_file* act = afl->first;
     while(act)
     {
-        if(strcmp(act->filename,fname)==0)
+        if(grib_inline_strcmp(act->filename,fname)==0)
             return act;
         act = act->next;
     }
