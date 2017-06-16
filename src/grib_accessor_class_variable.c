@@ -150,41 +150,42 @@ static void init(grib_accessor* a, const long length , grib_arguments* args )
     long l;
     int ret=0;
     double d;
-    char tmp[1024];
 
     a->length = 0;
     if (self->type==GRIB_TYPE_UNDEFINED && expression) {
-    self->type = grib_expression_native_type(hand,expression);
+        self->type = grib_expression_native_type(hand,expression);
 
-    switch(self->type)
-    {
-    case GRIB_TYPE_DOUBLE:
-        grib_expression_evaluate_double(hand,expression,&d);
-        pack_double(a,&d,&len);
-        break;
+        switch(self->type)
+        {
+            case GRIB_TYPE_DOUBLE:
+                grib_expression_evaluate_double(hand,expression,&d);
+                pack_double(a,&d,&len);
+                break;
 
-    case GRIB_TYPE_LONG:
-        grib_expression_evaluate_long(hand,expression,&l);
-        pack_long(a,&l,&len);
-        break;
+            case GRIB_TYPE_LONG:
+                grib_expression_evaluate_long(hand,expression,&l);
+                pack_long(a,&l,&len);
+                break;
 
-    default:
-        len = sizeof(tmp);
-        p = grib_expression_evaluate_string(hand,expression,tmp,&len,&ret);
-        if (ret != GRIB_SUCCESS) {
-            grib_context_log(a->context,GRIB_LOG_ERROR,"unable to evaluate %s as string",a->name);
-            Assert(0);
+            default: {
+                char tmp[1024];
+                len = sizeof(tmp);
+                p = grib_expression_evaluate_string(hand,expression,tmp,&len,&ret);
+                if (ret != GRIB_SUCCESS) {
+                    grib_context_log(a->context,GRIB_LOG_ERROR,"unable to evaluate %s as string",a->name);
+                    Assert(0);
+                }
+                len = strlen(p)+1;
+                pack_string(a,p,&len);
+                break;
+            }
         }
-        len = strlen(p)+1;
-        pack_string(a,p,&len);
-        break;
     }
-  }
 }
 
 void accessor_variable_set_type(grib_accessor* a,int type) {
     grib_accessor_variable *self = (grib_accessor_variable*)a;
-	self->type=type;
+    self->type=type;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -399,29 +400,28 @@ static int compare(grib_accessor* a, grib_accessor* b) {
 
 static grib_accessor* make_clone(grib_accessor* a,grib_section* s,int* err)
 {
-  grib_accessor* the_clone=NULL;
-  grib_accessor_variable *self = (grib_accessor_variable*)a;
-  grib_accessor_variable* variableAccessor=NULL;
-  grib_action creator = {0, };
-  creator.op         = "variable";
-  creator.name_space = "";
-  creator.set        = 0;
+    grib_accessor* the_clone=NULL;
+    grib_accessor_variable *self = (grib_accessor_variable*)a;
+    grib_accessor_variable* variableAccessor=NULL;
+    grib_action creator = {0, };
+    creator.op         = "variable";
+    creator.name_space = "";
+    creator.set        = 0;
 
-  creator.name=grib_context_strdup(a->context,a->name);
-  the_clone=grib_accessor_factory(s, &creator, 0, NULL);
-  the_clone->parent=NULL;
-  the_clone->h=s->h;
-  the_clone->flags=a->flags;
-  variableAccessor=(grib_accessor_variable*)the_clone;
+    creator.name=grib_context_strdup(a->context,a->name);
+    the_clone=grib_accessor_factory(s, &creator, 0, NULL);
+    the_clone->parent=NULL;
+    the_clone->h=s->h;
+    the_clone->flags=a->flags;
+    variableAccessor=(grib_accessor_variable*)the_clone;
 
-  *err=0;
-  variableAccessor->type=self->type;
-  if(self->type == GRIB_TYPE_STRING && self->cval!=NULL) {
-    variableAccessor->cval=grib_context_strdup(a->context,self->cval);
-  } else {
-    variableAccessor->dval=self->dval;
-  }
+    *err=0;
+    variableAccessor->type=self->type;
+    if(self->type == GRIB_TYPE_STRING && self->cval!=NULL) {
+        variableAccessor->cval=grib_context_strdup(a->context,self->cval);
+    } else {
+        variableAccessor->dval=self->dval;
+    }
 
-  return the_clone;
+    return the_clone;
 }
-
