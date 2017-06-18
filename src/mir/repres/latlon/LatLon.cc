@@ -159,6 +159,7 @@ void LatLon::makeName(std::ostream& out) const {
     out << "LL";
     increments_.makeName(out);
     bbox_.makeName(out);
+    shift_.makeName(out);
 }
 
 
