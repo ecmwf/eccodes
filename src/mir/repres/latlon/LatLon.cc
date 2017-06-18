@@ -25,6 +25,7 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
+#include "mir/util/ShiftIterator.h"
 
 #include "atlas/library/config.h"
 
@@ -39,15 +40,22 @@ namespace latlon {
 
 LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
     Gridded(parametrisation),
-    increments_(parametrisation) {
+    increments_(parametrisation),
+    shift_(parametrisation) {
     ASSERT(parametrisation.get("Ni", ni_));
     ASSERT(parametrisation.get("Nj", nj_));
+
+    if(shift_) {
+        std::cout << "@@@@@@@ input field shifted: " << shift_ << std::endl;
+        ASSERT(!shift_);
+    }
 }
 
 
-LatLon::LatLon(const util::BoundingBox& bbox, const util::Increments& increments) :
+LatLon::LatLon(const util::BoundingBox& bbox, const util::Increments& increments, const util::Shift& shift) :
     Gridded(bbox),
-    increments_(increments) {
+    increments_(increments),
+    shift_(shift) {
     setNiNj();
 }
 
@@ -116,8 +124,13 @@ void LatLon::reorder(long scanningMode, std::vector<double> &values) const {
 
 void LatLon::print(std::ostream &out) const {
     out << "bbox=" << bbox_
-        << ",increments=" << increments_
-        << ",ni=" << ni_
+        << ",increments=" << increments_;
+
+    if (shift_) {
+        out << ",shift" << shift_;
+    }
+
+    out << ",ni=" << ni_
         << ",nj=" << nj_
         ;
 }
@@ -151,11 +164,13 @@ void LatLon::makeName(std::ostream& out) const {
 
 bool LatLon::sameAs(const Representation& other) const {
     const LatLon* o = dynamic_cast<const LatLon*>(&other);
-    return o && (bbox_ == o->bbox_) && (increments_ == o->increments_);
+    return o && (bbox_ == o->bbox_) && (increments_ == o->increments_) && (shift_ == o->shift_);
 }
 
 
 bool LatLon::isPeriodicWestEast() const {
+
+    ASSERT(!shift_);
 
     Longitude we(increments_.west_east());
     Longitude east = bbox_.east();
@@ -174,6 +189,7 @@ bool LatLon::isPeriodicWestEast() const {
 
 bool LatLon::includesNorthPole() const {
 
+    ASSERT(!shift_);
 
     Latitude north = bbox_.north();
     Latitude south = bbox_.south();
@@ -187,7 +203,7 @@ bool LatLon::includesNorthPole() const {
 
 
 bool LatLon::includesSouthPole() const {
-
+    ASSERT(!shift_);
 
     Latitude north = bbox_.north();
     Latitude south = bbox_.south();
@@ -282,12 +298,18 @@ public:
 
 
 Iterator *LatLon::unrotatedIterator() const {
-    return new LatLonIterator(ni_,
-                              nj_,
-                              bbox_.north().value(),
-                              bbox_.west().value(),
-                              increments_.west_east(),
-                              increments_.south_north());
+    Iterator* result = new LatLonIterator(ni_,
+                                          nj_,
+                                          bbox_.north().value(),
+                                          bbox_.west().value(),
+                                          increments_.west_east(),
+                                          increments_.south_north());
+
+    if (shift_) {
+        result = new util::ShiftIterator(result, shift_);
+    }
+
+    return result;
 }
 
 
@@ -333,6 +355,7 @@ void LatLon::shape(size_t &ni, size_t &nj) const {
 
 
 void LatLon::initTrans(Trans_t& trans) const {
+    ASSERT(!shift_);
 #ifdef ATLAS_HAVE_TRANS
     ASSERT(trans_set_resol_lonlat(&trans, ni_, nj_) == 0);
 #else

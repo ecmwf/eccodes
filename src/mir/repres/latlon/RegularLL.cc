@@ -36,8 +36,9 @@ RegularLL::RegularLL(const param::MIRParametrisation &parametrisation):
 
 
 RegularLL::RegularLL(const util::BoundingBox &bbox,
-                     const util::Increments &increments) :
-    LatLon(bbox, increments) {
+                     const util::Increments &increments,
+                     const util::Shift& shift) :
+    LatLon(bbox, increments, shift) {
 }
 
 
@@ -48,7 +49,7 @@ RegularLL::~RegularLL() {
 // Called by RegularLL::crop()
 const RegularLL *RegularLL::cropped(const util::BoundingBox &bbox) const {
     // eckit::Log::debug<LibMir>() << "Create cropped copy as RegularLL bbox=" << bbox << std::endl;
-    return new RegularLL(bbox, increments_);
+    return new RegularLL(bbox, increments_, shift_);
 }
 
 
@@ -114,7 +115,7 @@ Representation* RegularLL::globalise(data::MIRField& field) const {
 
     util::BoundingBox newbbox(bbox_.north(), bbox_.west(), -90, bbox_.east());
 
-    eckit::ScopedPtr<RegularLL> newll(new RegularLL(newbbox, increments_));
+    eckit::ScopedPtr<RegularLL> newll(new RegularLL(newbbox, increments_, util::Shift(0, 0)));
 
     ASSERT(newll->nj_ > nj_);
     ASSERT(newll->ni_ == ni_);
@@ -137,49 +138,6 @@ Representation* RegularLL::globalise(data::MIRField& field) const {
 
     field.hasMissing(true);
 
-    return newll.release();
-}
-
-Representation* RegularLL::subset(data::MIRField& field,
-                                  const util::Increments& increments) const {
-
-    ASSERT(field.representation() == this);
-
-    // Increments must match
-
-    if (!increments.multipleOf(increments_)) {
-        std::ostringstream oss;
-        oss << "RegularLL::subset " << increments << " is not a multiple  of " << increments_;
-        throw eckit::UserError(oss.str());
-    }
-
-
-    size_t skipI = 0;
-    size_t skipJ = 0;
-    increments.ratio(increments_, skipI, skipJ);
-
-    eckit::ScopedPtr<RegularLL> newll(new RegularLL(bbox_, increments));
-
-    size_t n = ni_ * nj_;
-    size_t newn = newll->ni_ * newll->nj_;
-
-    for (size_t f = 0; f < field.dimensions(); f++ ) {
-        std::vector<double> newvalues(newn);
-        const std::vector<double> &values = field.direct(f);
-        ASSERT(values.size() == n);
-
-        size_t k = 0;
-        for (size_t j = 0; j < nj_; j += skipJ) {
-            for (size_t i = 0; i < ni_; i += skipI) {
-                ASSERT(k < newn);
-                ASSERT(j * ni_ + i < n);
-                newvalues[k++] = values[j * ni_ + i];
-            }
-        }
-
-        ASSERT(k == newvalues.size());
-        field.update(newvalues, f);
-    }
     return newll.release();
 }
 

@@ -245,13 +245,6 @@ size_t Representation::frame(std::vector<double>&, size_t, double) const {
 }
 
 
-const Representation* Representation::subset(data::MIRField&, const util::Increments&) const {
-    std::ostringstream os;
-    os << "Representation::subset() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
-}
-
-
 void Representation::reorder(long, std::vector<double>&) const {
     std::ostringstream os;
     os << "Representation::reorder() not implemented for " << *this;
