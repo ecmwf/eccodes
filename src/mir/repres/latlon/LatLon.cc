@@ -19,19 +19,17 @@
 #include "eckit/exception/Exceptions.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
+#include "atlas/library/config.h"
+#ifdef ATLAS_HAVE_TRANS
+#include "transi/trans.h"
+#endif
 #include "mir/action/misc/AreaCropper.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
-#include "mir/util/ShiftIterator.h"
 
-#include "atlas/library/config.h"
-
-#ifdef ATLAS_HAVE_TRANS
-#include "transi/trans.h"
-#endif
 
 namespace mir {
 namespace repres {
@@ -223,11 +221,8 @@ class LatLonIterator : public Iterator {
     size_t ni_;
     size_t nj_;
 
-    eckit::Fraction north_;
-    eckit::Fraction west_;
-    eckit::Fraction lat_;
-    eckit::Fraction lon_;
-
+    Latitude north_;
+    Longitude west_;
     eckit::Fraction we_;
     eckit::Fraction ns_;
 
@@ -235,6 +230,9 @@ class LatLonIterator : public Iterator {
     size_t j_;
 
     size_t count_;
+
+    Latitude lat_;
+    Longitude lon_;
 
     virtual void print(std::ostream &out) const {
         out << "LatLonIterator["
@@ -259,8 +257,8 @@ class LatLonIterator : public Iterator {
                 i_++;
                 if (i_ == ni_) {
                     j_++;
-                    lat_ -= ns_;
                     i_ = 0;
+                    lat_ -= ns_;
                     lon_ = west_;
                 }
                 count_++;
@@ -271,24 +269,18 @@ class LatLonIterator : public Iterator {
     }
 
 public:
-    LatLonIterator(size_t ni,
-                   size_t nj,
-                   double north,
-                   double west,
-                   double we,
-                   double ns):
+    LatLonIterator(size_t ni, size_t nj, Latitude north, Longitude west, double we, double ns) :
         ni_(ni),
         nj_(nj),
         north_(north),
         west_(west),
-        lat_(north),
-        lon_(west_),
         we_(we),
         ns_(ns),
         i_(0),
         j_(0),
         count_(0) {
-
+        lat_ = north;
+        lon_ = west_;
     }
 
     ~LatLonIterator() {
@@ -299,18 +291,12 @@ public:
 
 
 Iterator *LatLon::unrotatedIterator() const {
-    Iterator* result = new LatLonIterator(ni_,
-                                          nj_,
-                                          bbox_.north().value(),
-                                          bbox_.west().value(),
-                                          increments_.west_east(),
-                                          increments_.south_north());
-
-    if (shift_) {
-        result = new util::ShiftIterator(result, shift_);
-    }
-
-    return result;
+    return new LatLonIterator(ni_,
+                              nj_,
+                              bbox_.north(),
+                              bbox_.west(),
+                              increments_.west_east(),
+                              increments_.south_north());
 }
 
 

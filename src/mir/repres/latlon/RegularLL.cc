@@ -68,7 +68,7 @@ void RegularLL::makeName(std::ostream& out) const {
 bool RegularLL::sameAs(const Representation& other) const {
     const RegularLL* o = dynamic_cast<const RegularLL*>(&other);
     return o && LatLon::sameAs(other);
- }
+}
 
 
 void RegularLL::fill(grib_info &info) const  {
@@ -77,7 +77,6 @@ void RegularLL::fill(grib_info &info) const  {
 
     LatLon::fill(info);
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_LL;
-
 }
 
 
@@ -144,6 +143,7 @@ Representation* RegularLL::globalise(data::MIRField& field) const {
 
     return newll.release();
 }
+
 
 namespace {
 static RepresentationBuilder<RegularLL> regularLL("regular_ll"); // Name is what is returned by grib_api
