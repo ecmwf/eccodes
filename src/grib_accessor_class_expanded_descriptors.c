@@ -631,23 +631,25 @@ static int expand(grib_accessor* a)
 
     unexpanded=grib_bufr_descriptors_array_new(c,unexpandedSize,100);
     unexpanded_copy=grib_bufr_descriptors_array_new(c,unexpandedSize,100);
+    operator206yyy_width = 0;
     for (i=0;i<unexpandedSize;i++) {
-        bufr_descriptor* aDescriptor = grib_bufr_descriptor_new(self->tablesAccessor, u[i], &err);
+        bufr_descriptor* aDescriptor1 = grib_bufr_descriptor_new(self->tablesAccessor, u[i], &err);
+        bufr_descriptor* aDescriptor2 = grib_bufr_descriptor_new(self->tablesAccessor, u[i], &err);
+
         /* ECC-433: Operator 206YYY */
-        if (aDescriptor->F == 2 && aDescriptor->X == 6) {
-            Assert(aDescriptor->type == BUFR_DESCRIPTOR_TYPE_OPERATOR);
-            operator206yyy_width = aDescriptor->Y; /* Store the width for the following descriptor */
+        if (aDescriptor1->F == 2 && aDescriptor1->X == 6) {
+            Assert(aDescriptor1->type == BUFR_DESCRIPTOR_TYPE_OPERATOR);
+            operator206yyy_width = aDescriptor1->Y; /* Store the width for the following descriptor */
         }
-        else if (operator206yyy_width>0 && aDescriptor->type == BUFR_DESCRIPTOR_TYPE_UNKNOWN && aDescriptor->width == 0) {
-            Assert(err); /* There must have been an error processing the unknown descriptor */
-            err = 0;     /* Clear the error because we have the width from Op206YYY */
-            aDescriptor->width = operator206yyy_width;
-            aDescriptor->nokey = 1;   /* Do not show this descriptor in dump */
+        else if (operator206yyy_width>0) {
+            err = 0;     /* Clear any error generated due to local descriptor */
+            aDescriptor1->width = aDescriptor2->width = operator206yyy_width;
+            aDescriptor1->nokey = aDescriptor2->nokey = 1;   /* Do not show this descriptor in dump */
             operator206yyy_width = 0; /* Restore. Operator no longer in scope */
         }
 
-        grib_bufr_descriptors_array_push(unexpanded,      aDescriptor);
-        grib_bufr_descriptors_array_push(unexpanded_copy, aDescriptor);
+        grib_bufr_descriptors_array_push(unexpanded,      aDescriptor1);
+        grib_bufr_descriptors_array_push(unexpanded_copy, aDescriptor2);
     }
 
     grib_context_free(c,u);
