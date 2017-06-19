@@ -69,7 +69,7 @@ void LatLon::setNiNj() {
 }
 
 
-void LatLon::reorder(long scanningMode, std::vector<double> &values) const {
+void LatLon::reorder(long scanningMode, std::vector<double>& values) const {
     // Code from ecRegrid, UNTESTED!!!
 
     eckit::Log::debug<LibMir>() << "WARNING: UNTESTED!!! ";
@@ -121,7 +121,7 @@ void LatLon::reorder(long scanningMode, std::vector<double> &values) const {
 }
 
 
-void LatLon::print(std::ostream &out) const {
+void LatLon::print(std::ostream& out) const {
     out << "LatLon["
         <<  "bbox=" << bbox_
         << ",increments=" << increments_
@@ -132,7 +132,7 @@ void LatLon::print(std::ostream &out) const {
 }
 
 
-void LatLon::fill(grib_info &info) const {
+void LatLon::fill(grib_info& info) const {
     // See copy_spec_from_ksec.c in libemos for info
     // Warning: scanning mode not considered
 
@@ -146,7 +146,7 @@ void LatLon::fill(grib_info &info) const {
 }
 
 
-void LatLon::fill(api::MIRJob &job) const {
+void LatLon::fill(api::MIRJob& job) const {
     increments_.fill(job);
     bbox_.fill(job);
 }
@@ -202,8 +202,8 @@ class LatLonIterator : public Iterator {
     size_t ni_;
     size_t nj_;
 
-    Latitude north_;
-    Longitude west_;
+    eckit::Fraction north_;
+    eckit::Fraction west_;
     eckit::Fraction we_;
     eckit::Fraction ns_;
 
@@ -212,10 +212,10 @@ class LatLonIterator : public Iterator {
 
     size_t count_;
 
-    Latitude lat_;
-    Longitude lon_;
+    eckit::Fraction lat_;
+    eckit::Fraction lon_;
 
-    virtual void print(std::ostream &out) const {
+    virtual void print(std::ostream& out) const {
         out << "LatLonIterator["
             <<  "ni="     << ni_
             << ",nj="     << nj_
@@ -229,7 +229,7 @@ class LatLonIterator : public Iterator {
             << "]";
     }
 
-    virtual bool next(Latitude &lat, Longitude &lon) {
+    virtual bool next(Latitude& lat, Longitude& lon) {
         if (j_ < nj_) {
             if (i_ < ni_) {
                 lat = lat_;
@@ -253,14 +253,14 @@ public:
     LatLonIterator(size_t ni, size_t nj, Latitude north, Longitude west, double we, double ns) :
         ni_(ni),
         nj_(nj),
-        north_(north),
-        west_(west),
+        north_(north.fraction()),
+        west_(west.fraction()),
         we_(we),
         ns_(ns),
         i_(0),
         j_(0),
         count_(0) {
-        lat_ = north;
+        lat_ = north_;
         lon_ = west_;
     }
 
@@ -286,7 +286,7 @@ Iterator* LatLon::rotatedIterator() const {
 }
 
 
-size_t LatLon::frame(std::vector<double> &values, size_t size, double missingValue) const {
+size_t LatLon::frame(std::vector<double>& values, size_t size, double missingValue) const {
 
     // Could be done better, just a demo
     validate(values);
@@ -310,13 +310,13 @@ size_t LatLon::frame(std::vector<double> &values, size_t size, double missingVal
 }
 
 
-void LatLon::validate(const std::vector<double> &values) const {
+void LatLon::validate(const std::vector<double>& values) const {
     eckit::Log::debug<LibMir>() << "LatLon::validate " << values.size() << " ni*nj " << ni_ * nj_ << std::endl;
     ASSERT(values.size() == ni_ * nj_);
 }
 
 
-void LatLon::shape(size_t &ni, size_t &nj) const {
+void LatLon::shape(size_t& ni, size_t& nj) const {
     ni = ni_;
     nj = nj_;
 }
