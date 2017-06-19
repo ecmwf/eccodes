@@ -127,7 +127,7 @@ void LatLon::print(std::ostream &out) const {
         << ",increments=" << increments_;
 
     if (shift_) {
-        out << ",shift" << shift_;
+        out << ",shift=" << shift_;
     }
 
     out << ",ni=" << ni_
