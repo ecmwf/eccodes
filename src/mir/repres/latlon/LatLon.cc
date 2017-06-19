@@ -15,6 +15,7 @@
 
 #include "mir/repres/latlon/LatLon.h"
 
+#include <algorithm>
 #include <iostream>
 #include "eckit/exception/Exceptions.h"
 #include "eckit/types/FloatCompare.h"
@@ -167,50 +168,32 @@ bool LatLon::sameAs(const Representation& other) const {
 
 bool LatLon::isPeriodicWestEast() const {
 
-    ASSERT(!shift_);
+    // if longitude range spans the globe
+    const Longitude range = bbox_.east() - bbox_.west() + increments_.west_east();
 
-    Longitude we(increments_.west_east());
-    Longitude east = bbox_.east();
-    Longitude west = bbox_.west();
-
-    // correct if grid is periodic, or is shifted West-East
-
-    return (east - west + we).sameWithGrib1Accuracy(360)
-           || (
-               west.sameWithGrib1Accuracy(we / 2.)
-               &&
-               east.sameWithGrib1Accuracy(360. - we / 2.)
-           );
+    return range.sameWithGrib1Accuracy(Longitude::GLOBE);
 }
 
 
 bool LatLon::includesNorthPole() const {
 
-    ASSERT(!shift_);
+    // if latitude range spans the globe, or within one increment from bounding box North
+    const Latitude range = bbox_.north() - bbox_.south();
+    const Latitude reach = std::min(bbox_.north() + increments_.south_north(), Latitude::NORTH_POLE);
 
-    Latitude north = bbox_.north();
-    Latitude south = bbox_.south();
-    Latitude sn(increments_.south_north());
-
-    // includes, if grid range is pole-to-pole, or is shifted South-North
-    return (north - south).sameWithGrib1Accuracy(180)
-           || north.sameWithGrib1Accuracy(Latitude::NORTH_POLE)
-           || north.sameWithGrib1Accuracy(90. - sn / 2.);
+    return  range.sameWithGrib1Accuracy(Latitude::GLOBE) ||
+            reach.sameWithGrib1Accuracy(Latitude::NORTH_POLE);
 }
 
 
 bool LatLon::includesSouthPole() const {
-    ASSERT(!shift_);
 
-    Latitude north = bbox_.north();
-    Latitude south = bbox_.south();
-    Latitude sn(increments_.south_north());
-    // includes, if grid range is pole-to-pole, or is shifted South-North
+    // if latitude range spans the globe, or within one increment from bounding box South
+    const Latitude range = bbox_.north() - bbox_.south();
+    const Latitude reach = std::max(bbox_.south() - increments_.south_north(), Latitude::SOUTH_POLE);
 
-    return (north - south).sameWithGrib1Accuracy(180)
-           || north.sameWithGrib1Accuracy(Latitude::SOUTH_POLE)
-           || north.sameWithGrib1Accuracy(-90. + sn / 2.);
-
+    return  range.sameWithGrib1Accuracy(Latitude::GLOBE) ||
+            reach.sameWithGrib1Accuracy(Latitude::SOUTH_POLE);
 }
 
 
