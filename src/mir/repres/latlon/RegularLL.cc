@@ -110,6 +110,8 @@ Representation* RegularLL::globalise(data::MIRField& field) const {
         return 0;
     }
 
+    ASSERT(!shift_);
+
     // For now, we only use that function for the LAW model, so we only grow by the end (south pole)
     ASSERT(bbox_.north() == Latitude::NORTH_POLE);
     ASSERT(bbox_.west() == Longitude::GREENWICH);
