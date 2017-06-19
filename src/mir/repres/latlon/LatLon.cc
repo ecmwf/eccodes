@@ -63,8 +63,8 @@ LatLon::~LatLon() {
 
 
 void LatLon::setNiNj() {
-    ni_ = bbox_.computeNi(increments_);
-    nj_ = bbox_.computeNj(increments_);
+    ni_ = increments_.computeNi(bbox_);
+    nj_ = increments_.computeNj(bbox_);
 }
 
 
@@ -121,20 +121,17 @@ void LatLon::reorder(long scanningMode, std::vector<double> &values) const {
 
 
 void LatLon::print(std::ostream &out) const {
-    out << "bbox=" << bbox_
-        << ",increments=" << increments_;
-
-    if (shift_) {
-        out << ",shift=" << shift_;
-    }
-
-    out << ",ni=" << ni_
+    out << "LatLon["
+        <<  "bbox=" << bbox_
+        << ",increments=" << increments_
+        << ",shift=" << shift_
+        << ",ni=" << ni_
         << ",nj=" << nj_
-        ;
+        << "]";
 }
 
 
-void LatLon::fill(grib_info &info) const  {
+void LatLon::fill(grib_info &info) const {
     // See copy_spec_from_ksec.c in libemos for info
     // Warning: scanning mode not considered
 
@@ -148,10 +145,11 @@ void LatLon::fill(grib_info &info) const  {
 }
 
 
-void LatLon::fill(api::MIRJob &job) const  {
+void LatLon::fill(api::MIRJob &job) const {
     increments_.fill(job);
     bbox_.fill(job);
 }
+
 
 void LatLon::makeName(std::ostream& out) const {
     out << "LL";
@@ -349,7 +347,6 @@ void LatLon::initTrans(Trans_t& trans) const {
     NOTIMP;
 #endif
 }
-
 
 
 }  // namespace latlon
