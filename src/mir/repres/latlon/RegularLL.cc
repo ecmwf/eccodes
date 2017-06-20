@@ -87,8 +87,6 @@ void RegularLL::fill(api::MIRJob &job) const  {
 
 atlas::Grid RegularLL::atlasGrid() const {
 
-    ASSERT(!shift_);
-
     // NOTE: for non-shifted/shifted grid, yspace uses bounding box
     // (this works together with the Atlas RectangularDomain cropping)
     const util::Domain dom = domain();

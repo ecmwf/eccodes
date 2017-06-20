@@ -43,11 +43,6 @@ LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
     shift_(parametrisation) {
     ASSERT(parametrisation.get("Ni", ni_));
     ASSERT(parametrisation.get("Nj", nj_));
-
-    if(shift_) {
-        std::cout << "@@@@@@@ input field shifted: " << shift_ << std::endl;
-        ASSERT(!shift_);
-    }
 }
 
 
