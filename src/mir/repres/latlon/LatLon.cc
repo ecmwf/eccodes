@@ -342,11 +342,35 @@ static eckit::Fraction adjust(eckit::Fraction lat, const eckit::Fraction& sn) {
 
 util::BoundingBox LatLon::globalBoundingBox(const util::Increments &increments,
         const util::Shift& shift) {
-    eckit::Fraction north = adjust(NORTH_POLE + shift.south_north(), increments.south_north());
-    eckit::Fraction south = adjust(SOUTH_POLE + shift.south_north(), increments.south_north());
 
-    eckit::Fraction west = ZERO + shift.west_east();
-    eckit::Fraction east = THREE_SIXTY + shift.west_east() - increments.west_east();
+    eckit::Fraction north(NORTH_POLE);
+    eckit::Fraction south(SOUTH_POLE);
+    eckit::Fraction west(ZERO);
+    eckit::Fraction east(THREE_SIXTY - increments.west_east());
+
+    // First take care off grid that do no divide the globe
+
+    eckit::Fraction width = ((east - west) / increments.west_east()).integralPart() * increments.west_east();
+    east = west + width;
+
+    //
+    north = (north / increments.south_north()).integralPart() * increments.south_north();
+    south = (south / increments.south_north()).integralPart() * increments.south_north();
+
+    // Then apply shift
+    north = adjust(north + shift.south_north(), increments.south_north());
+    south = adjust(south + shift.south_north(), increments.south_north());
+
+    west += shift.west_east();
+    east += shift.west_east();
+
+    std::cout << "globalBoundingBox "
+              << increments
+              << " "
+              << shift
+              << " "
+              << util::BoundingBox(north, west, south, east)
+              << std::endl;
 
     return util::BoundingBox(north, west, south, east);
 }
