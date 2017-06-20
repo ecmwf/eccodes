@@ -40,6 +40,7 @@ bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d)
     cd->width=d->width;
     cd->reference=d->reference;
     cd->type=d->type;
+    cd->nokey=d->nokey;
 
     return cd;
 }
@@ -77,6 +78,7 @@ int grib_bufr_descriptor_set_code(grib_accessor* tables_accessor,int code,bufr_d
         v->width=d->width;
         v->reference=d->reference;
         v->type=d->type;
+        v->nokey=d->nokey;
         grib_bufr_descriptor_delete(d);
     }
     return err;
