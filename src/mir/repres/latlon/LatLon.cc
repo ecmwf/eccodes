@@ -50,13 +50,17 @@ LatLon::LatLon(const util::BoundingBox& bbox, const util::Increments& increments
     Gridded(bbox),
     increments_(increments),
     shift_(shift) {
-
-    ni_ = increments_.computeNi(bbox_);
-    nj_ = increments_.computeNj(bbox_);
+    setNiNj();
 }
 
 
 LatLon::~LatLon() {
+}
+
+
+void LatLon::setNiNj() {
+    ni_ = increments_.computeNi(bbox_);
+    nj_ = increments_.computeNj(bbox_);
 }
 
 
