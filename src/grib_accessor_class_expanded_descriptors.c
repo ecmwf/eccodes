@@ -642,9 +642,11 @@ static int expand(grib_accessor* a)
             operator206yyy_width = aDescriptor1->Y; /* Store the width for the following descriptor */
         }
         else if (operator206yyy_width>0) {
-            err = 0;     /* Clear any error generated due to local descriptor */
+            if (err == GRIB_NOT_FOUND) {
+                err = 0;     /* Clear any error generated due to local descriptor */
+                aDescriptor1->nokey = aDescriptor2->nokey = 1;   /* Do not show this descriptor in dump */
+            }
             aDescriptor1->width = aDescriptor2->width = operator206yyy_width;
-            aDescriptor1->nokey = aDescriptor2->nokey = 1;   /* Do not show this descriptor in dump */
             operator206yyy_width = 0; /* Restore. Operator no longer in scope */
         }
 
