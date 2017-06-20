@@ -327,6 +327,32 @@ void LatLon::initTrans(Trans_t& trans) const {
 }
 
 
+
+static eckit::Fraction NORTH_POLE(90);
+static eckit::Fraction SOUTH_POLE(-90);
+static eckit::Fraction ZERO(0);
+static eckit::Fraction THREE_SIXTY(360);
+
+static eckit::Fraction adjust(eckit::Fraction lat, const eckit::Fraction& sn) {
+    while (lat > NORTH_POLE) { lat -= sn; }
+    while (lat < SOUTH_POLE) { lat += sn; }
+    return lat;
+}
+
+
+util::BoundingBox LatLon::globalBoundingBox(const util::Increments &increments,
+        const util::Shift& shift) {
+    eckit::Fraction north = adjust(NORTH_POLE + shift.south_north(), increments.south_north());
+    eckit::Fraction south = adjust(SOUTH_POLE + shift.south_north(), increments.south_north());
+
+    eckit::Fraction west = ZERO + shift.west_east();
+    eckit::Fraction east = THREE_SIXTY + shift.west_east() - increments.west_east();
+
+    return util::BoundingBox(north, west, south, east);
+}
+
+
+
 }  // namespace latlon
 }  // namespace repres
 }  // namespace mir
