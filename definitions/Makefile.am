@@ -14845,11 +14845,6 @@ dist_definitionsgrib3_tables_1_DATA = \
 	grib3/tables/1/3.8.table\
 	grib3/tables/1/3.9.table\
 	grib3/tables/1/4.0.table\
-	grib3/tables/1/4.1.0.table\
-	grib3/tables/1/4.1.1.table\
-	grib3/tables/1/4.1.10.table\
-	grib3/tables/1/4.1.2.table\
-	grib3/tables/1/4.1.3.table\
 	grib3/tables/1/4.1.table\
 	grib3/tables/1/4.10.table\
 	grib3/tables/1/4.11.table\
@@ -14858,10 +14853,6 @@ dist_definitionsgrib3_tables_1_DATA = \
 	grib3/tables/1/4.14.table\
 	grib3/tables/1/4.15.table\
 	grib3/tables/1/4.151.table\
-	grib3/tables/1/4.2.0.0.table\
-	grib3/tables/1/4.2.0.1.table\
-	grib3/tables/1/4.2.0.13.table\
-	grib3/tables/1/4.2.0.14.table\
 	grib3/tables/1/4.2.0.15.table\
 	grib3/tables/1/4.2.0.18.table\
 	grib3/tables/1/4.2.0.19.table\
@@ -14874,8 +14865,6 @@ dist_definitionsgrib3_tables_1_DATA = \
 	grib3/tables/1/4.2.0.5.table\
 	grib3/tables/1/4.2.0.6.table\
 	grib3/tables/1/4.2.0.7.table\
-	grib3/tables/1/4.2.1.0.table\
-	grib3/tables/1/4.2.1.1.table\
 	grib3/tables/1/4.2.10.0.table\
 	grib3/tables/1/4.2.10.1.table\
 	grib3/tables/1/4.2.10.2.table\
@@ -14926,6 +14915,35 @@ dist_definitionsgrib3_tables_1_DATA = \
 	grib3/tables/1/5.8.table\
 	grib3/tables/1/5.9.table\
 	grib3/tables/1/6.0.table\
+	grib3/tables/1/6.1.table\
+	grib3/tables/1/6.2.table\
+	grib3/tables/1/6.3.table\
+	grib3/tables/1/7.0.table\
+	grib3/tables/1/7.1.table\
+	grib3/tables/1/7.2.0.table\
+	grib3/tables/1/7.2.1.table\
+	grib3/tables/1/7.2.10.table\
+	grib3/tables/1/7.2.2.table\
+	grib3/tables/1/7.2.3.table\
+	grib3/tables/1/7.3.0.0.table\
+	grib3/tables/1/7.3.0.1.table\
+	grib3/tables/1/7.3.0.13.table\
+	grib3/tables/1/7.3.0.14.table\
+	grib3/tables/1/7.3.0.15.table\
+	grib3/tables/1/7.3.0.16.table\
+	grib3/tables/1/7.3.0.17.table\
+	grib3/tables/1/7.3.0.18.table\
+	grib3/tables/1/7.3.0.19.table\
+	grib3/tables/1/7.3.0.2.table\
+	grib3/tables/1/7.3.0.20.table\
+	grib3/tables/1/7.3.0.3.table\
+	grib3/tables/1/7.3.0.4.table\
+	grib3/tables/1/7.3.0.5.table\
+	grib3/tables/1/7.3.0.6.table\
+	grib3/tables/1/7.3.0.7.table\
+	grib3/tables/1/7.3.1.0.table\
+	grib3/tables/1/7.3.1.1.table\
+	grib3/tables/1/7.3.1.2.table\
 	grib3/tables/1/stepType.table
 
 definitionsgrib3_tables_local_ecmfdir = @ECCODES_DEFINITION_PATH@/grib3/tables/local/ecmf
