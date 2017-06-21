@@ -640,12 +640,15 @@ static int expand(grib_accessor* a)
         if (aDescriptor1->F == 2 && aDescriptor1->X == 6) {
             Assert(aDescriptor1->type == BUFR_DESCRIPTOR_TYPE_OPERATOR);
             operator206yyy_width = aDescriptor1->Y; /* Store the width for the following descriptor */
+            DebugAssert(operator206yyy_width > 0);
         }
         else if (operator206yyy_width>0) {
             if (err == GRIB_NOT_FOUND) {
+                DebugAssert( aDescriptor1->type == BUFR_DESCRIPTOR_TYPE_UNKNOWN );
                 err = 0;     /* Clear any error generated due to local descriptor */
                 aDescriptor1->nokey = aDescriptor2->nokey = 1;   /* Do not show this descriptor in dump */
             }
+            /* The width specified by operator takes precedence over element's own width */
             aDescriptor1->width = aDescriptor2->width = operator206yyy_width;
             operator206yyy_width = 0; /* Restore. Operator no longer in scope */
         }
