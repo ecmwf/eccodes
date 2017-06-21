@@ -9329,7 +9329,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Averaged total lightning density
+#Averaged total lightning density since previous post-processing
 'flashes km**-2 day**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 51 ;
@@ -9339,7 +9339,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 52 ;
 	}
-#Averaged cloud-to-ground lightning density
+#Averaged cloud-to-ground lightning density since previous post-processing
 'flashes km**-2 day**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 53 ;
