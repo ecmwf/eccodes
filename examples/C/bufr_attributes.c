@@ -32,7 +32,7 @@ int main(int argc,char* argv[])
     size_t len=0;
     int err=0;
     int cnt=0;
-    char* infile = "../../data/bufr/syno_multi.bufr";
+    const char* infile = "../../data/bufr/syno_multi.bufr";
 
     in=fopen(infile,"r");
     if (!in) {

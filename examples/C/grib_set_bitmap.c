@@ -27,9 +27,9 @@ int main(int argc, char** argv)
     size_t size=0;
 
     FILE* in = NULL;
-    char* infile = "../../data/regular_latlon_surface.grib1";
+    const char* infile = "../../data/regular_latlon_surface.grib1";
     FILE* out = NULL;
-    char* outfile = "out.set_bitmap_c.grib";
+    const char* outfile = "out.set_bitmap_c.grib";
     codes_handle *h = NULL;
     const void* buffer = NULL;
     size_t values_len;

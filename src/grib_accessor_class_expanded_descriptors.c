@@ -528,7 +528,7 @@ static bufr_descriptors_array* expanded_descriptors_list_get(grib_context* c,con
     c->expanded_descriptors=(grib_trie*)grib_trie_new(c);
     return NULL;
   }
-  expandedUnexpandedMapList=grib_trie_get(c->expanded_descriptors,key);
+  expandedUnexpandedMapList=(bufr_descriptors_map_list*)grib_trie_get(c->expanded_descriptors,key);
   found=0;
   while (expandedUnexpandedMapList) {
     if (expandedUnexpandedMapList->unexpanded->n==size) {
@@ -556,7 +556,7 @@ static void expanded_descriptor_list_push(grib_context* c,grib_trie* expanded_de
   newdescriptorsList->expanded=expanded;
   newdescriptorsList->unexpanded=unexpanded;
 
-  descriptorsList=grib_trie_get(expanded_descriptors,key);
+  descriptorsList=(bufr_descriptors_map_list*)grib_trie_get(expanded_descriptors,key);
   if (descriptorsList) {
     next=descriptorsList;
     while(next->next) {

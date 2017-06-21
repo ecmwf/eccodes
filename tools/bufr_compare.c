@@ -73,7 +73,7 @@ static int write_error=0;
 static void new_keys_list()
 {
     grib_context* c = grib_context_get_default();
-    keys_list=grib_context_malloc_clear(c, sizeof(grib_string_list));
+    keys_list=(grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
     if (!keys_list) {
         fprintf(stderr, "Failed to allocate memory for keys list");
         exit(1);
@@ -586,7 +586,7 @@ static void save_error(grib_context* c,const char* key)
 
 static char* double_as_string(grib_context* c, double v)
 {
-    char* sval=grib_context_malloc_clear(c, sizeof(char)*40);
+    char* sval=(char*)grib_context_malloc_clear(c, sizeof(char)*40);
     if (v == GRIB_MISSING_DOUBLE) sprintf(sval,"MISSING");
     else                          sprintf(sval,"%.20e",v);
     return sval;
@@ -1069,7 +1069,7 @@ static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_ru
 {
     int ret = 0;
     grib_context* c = handle1->context;
-    char* fullname = grib_context_malloc_clear( c, sizeof(char)*(strlen(a->name)+strlen(prefix)+5) );
+    char* fullname = (char*)grib_context_malloc_clear( c, sizeof(char)*(strlen(a->name)+strlen(prefix)+5) );
     sprintf(fullname, "%s->%s", prefix, a->name);
     if (compare_values(options, handle1, handle2, fullname, GRIB_TYPE_UNDEFINED)) {
         err++;
@@ -1132,7 +1132,7 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
         /* Get full name of key, e.g. '#2#windSpeed' or 'blockNumber' */
         rank = compute_bufr_key_rank(handle1, keys_list, xa->name);
         if (rank != 0) {
-            prefix=grib_context_malloc_clear(context,sizeof(char)*(strlen(xa->name)+10));
+            prefix=(char*)grib_context_malloc_clear(context,sizeof(char)*(strlen(xa->name)+10));
             dofree = 1;
             sprintf(prefix,"#%d#%s", rank, xa->name);
         } else {

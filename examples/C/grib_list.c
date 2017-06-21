@@ -33,7 +33,7 @@ int main(int argc, char** argv)
     long new_values[1024];
 
     FILE* in = NULL;
-    char* filename = "../../data/satellite.grib";
+    const char* filename = "../../data/satellite.grib";
     codes_handle *h = NULL;
 
     in = fopen(filename,"r");

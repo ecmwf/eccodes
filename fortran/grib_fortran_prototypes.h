@@ -309,6 +309,14 @@ int grib_f_set_real8_array(int *gid, char *key, double *val, int *size, int len)
 int grib_f_set_force_real8_array_(int *gid, char *key, double *val, int *size, int len);
 int grib_f_set_force_real8_array__(int *gid, char *key, double *val, int *size, int len);
 int grib_f_set_force_real8_array(int *gid, char *key, double *val, int *size, int len);
+
+int grib_f_get_string_array(int* gid, char* key, char* val,int* nvals,int* slen,int len);
+int grib_f_get_string_array_(int* gid, char* key, char* val,int* nvals,int* slen,int len);
+int grib_f_get_string_array__(int* gid, char* key, char* val,int* nvals,int* slen,int len);
+int grib_f_set_string_array(int* gid, char* key, char* val,int* nvals,int* slen, int len);
+int grib_f_set_string_array_(int* gid, char* key, char* val,int* nvals,int* slen, int len);
+int grib_f_set_string_array__(int* gid, char* key, char* val,int* nvals,int* slen, int len);
+
 int grib_f_get_string_(int *gid, char *key, char *val, int len, int len2);
 int grib_f_get_string__(int *gid, char *key, char *val, int len, int len2);
 int grib_f_get_string(int *gid, char *key, char *val, int len, int len2);
@@ -340,12 +348,24 @@ int grib_f_multi_append_(int *ingid, int *sec, int *mgid);
 int grib_f_multi_append(int *ingid, int *sec, int *mgid);
 int grib_f_multi_append__(int *ingid, int *sec, int *mgid);
 
+int codes_f_bufr_copy_data(int* gid1,int* gid2);
+int codes_f_bufr_copy_data_(int* gid1,int* gid2);
+int codes_f_bufr_copy_data__(int* gid1,int* gid2);
+
 int grib_f_set_definitions_path_(char *path, int len);
 int grib_f_set_definitions_path__(char *path, int len);
 int grib_f_set_definitions_path(char *path, int len);
 int grib_f_set_samples_path_(char *path, int len);
 int grib_f_set_samples_path__(char *path, int len);
 int grib_f_set_samples_path(char *path, int len);
+
+int grib_f_julian_to_datetime(double* jd,long* year,long* month,long* day,long *hour,long *minute,long *second);
+int grib_f_julian_to_datetime_(double* jd,long* year,long* month,long* day,long *hour,long *minute,long *second);
+int grib_f_julian_to_datetime__(double* jd,long* year,long* month,long* day,long *hour,long *minute,long *second);
+
+int grib_f_datetime_to_julian(long* year,long* month,long* day, long* hour,long* minute,long* second,double* jd);
+int grib_f_datetime_to_julian_(long* year,long* month,long* day, long* hour,long* minute,long* second,double* jd);
+int grib_f_datetime_to_julian__(long* year,long* month,long* day, long* hour,long* minute,long* second,double* jd);
 
 #ifdef __cplusplus
 }

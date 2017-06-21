@@ -27,7 +27,7 @@ int main(int argc, char** argv)
     int err = 0;
     long parameterCategory=0,parameterNumber=0,discipline=0;
     FILE* in = NULL;
-    char* filename = "../../data/multi.grib2";
+    const char* filename = "../../data/multi.grib2";
     codes_handle *h = NULL;
 
     /* turn on support for multi fields messages */
