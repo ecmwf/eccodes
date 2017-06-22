@@ -63,7 +63,7 @@ static grib_file_pool file_pool= {
         0,                    /* grib_file* current; */
         0,                    /* size_t size;*/
         0,                    /* int number_of_opened_files;*/
-        GRIB_MAX_OPENED_FILES            /* int max_opened_files; */
+        GRIB_MAX_OPENED_FILES /* int max_opened_files; */
 };
 
 void grib_file_pool_clean()
@@ -290,14 +290,16 @@ void grib_file_pool_delete_file(grib_file* file) {
 void grib_file_close(const char* filename, int force, int* err)
 {
     grib_file* file=NULL;
+    grib_context* context = grib_context_get_default();
 
     /* Performance: keep the files open to avoid opening and closing files when writing the output. */
-    /* So only call fclose() when too many files are open */
-    int do_close = (file_pool.number_of_opened_files > GRIB_MAX_OPENED_FILES);
+    /* So only call fclose() when too many files are open. */
+    /* Also see ECC-411 */
+    int do_close = (file_pool.number_of_opened_files > context->file_pool_max_opened_files);
     if (force == 1) do_close=1; /* Can be overridden with the force argument */
 
     if ( do_close ) {
-        /*printf("++ closing file %s\n",filename);*/
+        /*printf("+++++++++++++ closing file %s (n=%d)\n",filename, file_pool.number_of_opened_files);*/
         GRIB_MUTEX_INIT_ONCE(&once,&init);
         GRIB_MUTEX_LOCK(&mutex1);
         file=grib_get_file(filename,err);

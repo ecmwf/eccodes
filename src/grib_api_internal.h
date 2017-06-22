@@ -1068,6 +1068,7 @@ struct grib_context
     grib_trie*                      classes;
     grib_trie*                      lists;
     grib_trie*                      expanded_descriptors;
+    int                             file_pool_max_opened_files;
 #if GRIB_PTHREADS
     pthread_mutex_t                 mutex;
 #elif GRIB_OMP_THREADS
