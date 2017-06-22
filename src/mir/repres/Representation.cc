@@ -21,14 +21,13 @@
 #include "eckit/thread/Once.h"
 #include "atlas/grid.h"
 #include "mir/config/LibMir.h"
-#include "mir/param/MIRParametrisation.h"
-#include "mir/util/Domain.h"
-#include "mir/util/MIRGrid.h"
-
-#include "mir/namedgrids/NamedGrid.h"
-#include "mir/repres/other/UnstructuredGrid.h"
-#include "mir/repres/Iterator.h"
 #include "mir/data/MIRField.h"
+#include "mir/namedgrids/NamedGrid.h"
+#include "mir/param/MIRParametrisation.h"
+#include "mir/repres/Iterator.h"
+#include "mir/repres/other/UnstructuredGrid.h"
+#include "mir/util/Domain.h"
+
 
 namespace mir {
 namespace repres {
@@ -186,8 +185,8 @@ bool Representation::sameAs(const Representation&) const {
 }
 
 
-util::MIRGrid Representation::grid() const {
-    return util::MIRGrid(atlasGrid(), domain());
+util::MIRGrid Representation::grid(const util::MIRGrid::MeshGenParams& meshGenParams) const {
+    return util::MIRGrid(atlasGrid(), domain(), meshGenParams);
 }
 
 
