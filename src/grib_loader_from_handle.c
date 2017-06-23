@@ -174,8 +174,8 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
     {
     case GRIB_TYPE_STRING:
 
-        /* len = len > 1024 ? len : 1024; */
-        _grib_get_string_length(ga,&len);
+        grib_get_string_length(h,name,&len);
+        /*_grib_get_string_length(ga,&len);*/
         sval = (char*)grib_context_malloc(h->context,len);
         ret = grib_get_string_internal(h,name,sval,&len);
         if(ret == GRIB_SUCCESS)
