@@ -12,7 +12,7 @@ install( FILES ${definition_files} ${table_files} ${text_files}
 install( FILES installDefinitions.sh
          DESTINATION ${ECCODES_DEFINITION_SUFF})
 
-install(  DIRECTORY budg bufr cdf common grib1 grib2 gts mars metar tide hdf5 wrap
+install(  DIRECTORY budg bufr cdf common grib1 grib2 grib3 gts mars metar tide hdf5 wrap
           DESTINATION ${ECCODES_DEFINITION_SUFF}
           FILES_MATCHING 
           PATTERN "*.def"
@@ -33,7 +33,7 @@ endif()
 # copy the definitions to the build directory
 #file(    COPY ${definition_files} ${table_files} ${text_files}
 #         DESTINATION ${CMAKE_BINARY_DIR}/${ECCODES_DEFINITION_SUFF} )
-#file(     COPY budg bufr cdf common grib1 grib2 gts mars metar tide hdf5 wrap
+#file(     COPY budg bufr cdf common grib1 grib2 grib3 gts mars metar tide hdf5 wrap
 #          DESTINATION ${CMAKE_BINARY_DIR}/${ECCODES_DEFINITION_SUFF}
 #          FILES_MATCHING
 #          PATTERN "*.def"
