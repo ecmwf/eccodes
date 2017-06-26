@@ -158,17 +158,18 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
     grib_accessor_g2_mars_labeling* self = (grib_accessor_g2_mars_labeling*)a;
     int n = 0;
+    grib_handle* hand=grib_handle_of_accessor(a);
 
-    self->index = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
-    self->the_class = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->type = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->stream = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->expver = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->typeOfProcessedData = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->productDefinitionTemplateNumber = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->stepType = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->derivedForecast = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->typeOfGeneratingProcess = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->index = grib_arguments_get_long(hand,c,n++);
+    self->the_class = grib_arguments_get_name(hand,c,n++);
+    self->type = grib_arguments_get_name(hand,c,n++);
+    self->stream = grib_arguments_get_name(hand,c,n++);
+    self->expver = grib_arguments_get_name(hand,c,n++);
+    self->typeOfProcessedData = grib_arguments_get_name(hand,c,n++);
+    self->productDefinitionTemplateNumber = grib_arguments_get_name(hand,c,n++);
+    self->stepType = grib_arguments_get_name(hand,c,n++);
+    self->derivedForecast = grib_arguments_get_name(hand,c,n++);
+    self->typeOfGeneratingProcess = grib_arguments_get_name(hand,c,n++);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)

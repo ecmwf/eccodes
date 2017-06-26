@@ -848,9 +848,11 @@ int main (int argc, char * argv[])
     grib_handle* h = NULL;
     size_t len = 0;
 
-    GRIB_CHECK (((h = grib_handle_new_from_samples (NULL, "reduced_gg_ml_grib2")) == NULL), 0);
+    GRIB_CHECK (((h = grib_handle_new_from_samples (NULL, "regular_ll_pl_grib2")) == NULL), 0);
+    /*GRIB_CHECK (((h = grib_handle_new_from_samples (NULL, "reduced_gg_ml_grib2")) == NULL), 0);*/
     len = strlen ("lambert");
     GRIB_CHECK (grib_set_string (h, "gridType", "lambert", &len), 0);
+    
     GRIB_CHECK (grib_set_long (h, "centre", 85), 0);
 
     GRIB_CHECK (grib_set_long (h, "grib2LocalSectionPresent", 1), 0);
@@ -884,6 +886,9 @@ int main (int argc, char * argv[])
     GRIB_CHECK (grib_set_long (h, "second", 0), 0);
     len = strlen ("s");
     GRIB_CHECK (grib_set_string (h, "indicatorOfUnitOfTimeRange", "s", &len), 0);
+    
+    GRIB_CHECK (grib_set_long (h, "scaledValueOfFirstFixedSurface", 0), 0);
+
     len = strlen ("s");
     GRIB_CHECK (grib_set_string (h, "stepUnits", "s", &len), 0);
     GRIB_CHECK (grib_set_long (h, "endStep", 3600), 0);
@@ -900,7 +905,7 @@ int main (int argc, char * argv[])
     GRIB_CHECK (grib_set_long (h, "LLCOSP", 0), 0);
     GRIB_CHECK (grib_set_long (h, "INBITS", 16), 0);
 
-    /*GRIB_CHECK(grib_write_message(h, "output.meteoFrance.grib", "w"), 0);*/
+    GRIB_CHECK(grib_write_message(h, "output.local_MeteoFrance.grib", "w"), 0);
 
     GRIB_CHECK (grib_handle_delete (h), 0);
 

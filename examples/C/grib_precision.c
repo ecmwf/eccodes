@@ -31,9 +31,9 @@ int main(int argc, char** argv)
     size_t size=0;
 
     FILE* in = NULL;
-    char* infile = "../../data/regular_latlon_surface.grib1";
+    const char* infile = "../../data/regular_latlon_surface.grib1";
     FILE* out = NULL;
-    char* outfile = "out.precision.grib1";
+    const char* outfile = "out.precision.grib1";
     codes_handle *h = NULL;
     const void* buffer = NULL;
     double* values1=NULL;

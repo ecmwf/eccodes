@@ -505,6 +505,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_accessor_class_bufr_clear_tables.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_bufr_data.c"
 				>
 			</File>
@@ -977,6 +981,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_accessor_class_julian_date.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_julian_day.c"
 				>
 			</File>
@@ -1126,6 +1134,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_accessor_class_raw.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_accessor_class_rdbtime_guess_date.c"
 				>
 			</File>
 			<File
@@ -1497,6 +1509,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_expression_class_logical_and.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_expression_class_logical_or.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_expression_class_long.c"
 				>
 			</File>
@@ -1677,6 +1697,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_oarray.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_openjpeg_encoding.c"
 				>
 			</File>
@@ -1722,6 +1746,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_trie.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_trie_with_rank.c"
 				>
 			</File>
 			<File

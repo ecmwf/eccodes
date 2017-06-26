@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
                                               CODES_KEYS_ITERATOR_SKIP_DUPLICATES;
 
     /* Choose a namespace. E.g. "ls", "time", "parameter", "geography", "statistics" */
-    char* name_space="ls";
+    const char* name_space="ls";
 
     /* name_space=NULL to get all the keys */
     /* char* name_space=0; */

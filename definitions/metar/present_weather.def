@@ -20,19 +20,25 @@ if (substr(g,0,1) is "-" || substr(g,0,1) is "+" || substr(g,0,2) is "FZ" || g i
     rename(g,wrongPresentWeather);
     group g : dump; non_alpha na;
 }
-if (! presentWeather1Present && is_in_list(g,"metar/present_weather.list")) {
+if (! presentWeather1Present ) {
+  if (is_in_list(g,"metar/present_weather.list")) {
     rename(g,presentWeather1);
     group g : dump; non_alpha na;
-		alias presentWeather1Present=one;
+    alias presentWeather1Present=one;
+  }
 }
-if (!presentWeather2Present && is_in_list(g,"metar/present_weather.list")) {
-				rename(g,presentWeather2);
-				group g : dump; non_alpha na;
-				alias presentWeather2Present=one;
+if (! presentWeather2Present ) {
+  if ( is_in_list(g,"metar/present_weather.list")) {
+    rename(g,presentWeather2);
+    group g : dump; non_alpha na;
+    alias presentWeather2Present=one;
+  }
 }
-if (!presentWeather3Present && is_in_list(g,"metar/present_weather.list")) {
-				rename(g,presentWeather3);
-				group g : dump; non_alpha na;
-				alias presentWeather3Present=one;
+if (! presentWeather3Present ) {
+  if (is_in_list(g,"metar/present_weather.list")) {
+    rename(g,presentWeather3);
+    group g : dump; non_alpha na;
+    alias presentWeather3Present=one;
+  }
 }
 

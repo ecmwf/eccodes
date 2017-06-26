@@ -344,8 +344,10 @@ static int select_datetime(grib_accessor* a)
         }
 
         for (i=0;i<numberOfSubsets;i++) {
-            sprintf( datetime_str, "%04ld/%02ld/%02ld %02ld:%02ld:%02ld",year[i],month[i],day[i],hour[i],minute[i], (long)round(second[i]) );
-            julianDT = date_to_julian( year[i],month[i],day[i],hour[i],minute[i],(long)round(second[i]) );
+            long rounded_second=(long)round(second[i]);
+            if (rounded_second==60) { rounded_second=59;}
+            sprintf( datetime_str, "%04ld/%02ld/%02ld %02ld:%02ld:%02ld",year[i],month[i],day[i],hour[i],minute[i], rounded_second );
+            julianDT = date_to_julian( year[i],month[i],day[i],hour[i],minute[i],rounded_second );
             if (julianDT == -1) {
                 grib_context_log(c,GRIB_LOG_ERROR,"Invalid date/time: %s", datetime_str);
                 return GRIB_INTERNAL_ERROR;
@@ -389,13 +391,10 @@ static int select_datetime(grib_accessor* a)
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
     int err=0;
-    grib_accessor_bufr_extract_datetime_subsets *self =(grib_accessor_bufr_extract_datetime_subsets*)a;
+    /*grib_accessor_bufr_extract_datetime_subsets *self =(grib_accessor_bufr_extract_datetime_subsets*)a;*/
 
     if (*len==0) return GRIB_SUCCESS;
     err=select_datetime(a);
-    if (err) return err;
-
-    err=grib_set_long(a->parent->h,self->doExtractSubsets,1);
     if (err) return err;
 
     return err;

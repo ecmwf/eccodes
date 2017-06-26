@@ -1632,7 +1632,7 @@ end subroutine codes_get_real8
   !>
   !> @param msgid       id of the message loaded in memory
   !> @param key         key name
-  !> @param value       the real(8) value
+  !> @param value       the character value
   !> @param status      CODES_SUCCESS if OK, integer value on error
 subroutine codes_get_string ( msgid, key, value, status )
     integer(kind=kindOfInt),          intent(in)  :: msgid

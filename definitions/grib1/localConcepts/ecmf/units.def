@@ -3674,6 +3674,16 @@
 	 table2Version = 171 ;
 	 indicatorOfParameter = 7 ;
 	}
+#Lake mix-layer temperature anomaly
+'K' = {
+	 table2Version = 171 ;
+	 indicatorOfParameter = 24 ;
+	}
+#Lake ice depth anomaly
+'m' = {
+	 table2Version = 171 ;
+	 indicatorOfParameter = 25 ;
+	}
 #Maximum temperature at 2 metres in the last 6 hours anomaly
 'K' = {
 	 table2Version = 171 ;
@@ -9279,6 +9289,11 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 29 ;
 	}
+#2 metre relative humidity with respect to water
+'%' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 37 ;
+	}
 #Soil wetness index in layer 1
 'dimensionless' = {
 	 table2Version = 228 ;
@@ -9324,7 +9339,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Averaged total lightning density
+#Averaged total lightning density since previous post-processing
 'flashes km**-2 day**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 51 ;
@@ -9334,7 +9349,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 52 ;
 	}
-#Averaged cloud-to-ground lightning density
+#Averaged cloud-to-ground lightning density since previous post-processing
 'flashes km**-2 day**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 53 ;
@@ -9883,6 +9898,11 @@
 'kg m**-2 s**-1' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 70 ;
+	}
+#Total precipitation rate
+'kg m**-2 s**-1' = {
+	 table2Version = 254 ;
+	 indicatorOfParameter = 48 ;
 	}
 #Ceiling
 'm' = {

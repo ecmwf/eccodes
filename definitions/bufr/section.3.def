@@ -9,8 +9,17 @@
 
 constant defaultSequence=0;
 constant tablesMasterDir="bufr/tables/[masterTableNumber]/wmo/[masterTablesVersionNumber]" : hidden;
-constant tablesLocalDir="bufr/tables/[masterTableNumber]/local/[localTablesVersionNumber]/[bufrHeaderCentre:l]/[bufrHeaderSubCentre]" : hidden;
+if (masterTablesVersionNumber==19) {
+  constant tablesLocalDir="bufr/tables/[masterTableNumber]/local/[masterTablesVersionNumber]-[localTablesVersionNumber]/[bufrHeaderCentre:l]/[bufrHeaderSubCentre]" : hidden;
+} else {
+  constant tablesLocalDir="bufr/tables/[masterTableNumber]/local/[localTablesVersionNumber]/[bufrHeaderCentre:l]/[bufrHeaderSubCentre]" : hidden;
+}
 constant rootTablesDir="bufr/tables" : hidden;
+
+meta clearTables bufr_clear_tables() = 0 : hidden,no_copy;
+
+when (changed(tablesMasterDir)) { set clearTables=1;}
+when (changed(tablesLocalDir)) { set clearTables=1;}
 
 # we should implement some table version dependency
 #constant templatesMasterDir="bufr/templates/[masterTableNumber]/[masterTablesVersionNumber]";
@@ -51,7 +60,7 @@ if (section2Present && bufrHeaderCentre==98 && section2Length==52) {
         meta localLongitude2 bits(keyMore,0,26,-18000000,100000) : dump,no_copy;
         meta localLatitude2 bits(keyMore,32,25,-9000000,100000) : dump,no_copy;
 
-				if (numberOfSubsets>255 || 
+				if (rdbSubtype > 255 || numberOfSubsets>255 || 
 						( rdbSubtype>=121 && rdbSubtype <=130 ) || 
 						rdbSubtype==31) {
 						meta ls.localNumberOfObservations bits(keySat,0,16) : dump,long_type,no_copy;

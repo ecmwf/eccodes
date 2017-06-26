@@ -355,9 +355,11 @@ static int unpack_string (grib_accessor* a, char* val, size_t *len)
 
     if (self->compressedData) {
         idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
+        if (idx < 0) return GRIB_INTERNAL_ERROR;
         str=grib_context_strdup(c,self->stringValues->v[idx]->v[0]);
     } else {
         idx=(int)self->numericValues->v[self->subsetNumber]->v[self->index]/1000-1;
+        if (idx < 0) return GRIB_INTERNAL_ERROR;
         str=grib_context_strdup(c,self->stringValues->v[idx]->v[0]);
     }
 

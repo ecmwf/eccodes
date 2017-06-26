@@ -15,13 +15,13 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 
-#if 0
-GRIB_INLINE static int strcmp(const char* a,const char* b) {
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
+GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
     if (*a != *b) return 1;
     while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
     return (*a==0 && *b==0) ? 0 : 1;
 }
-#endif
 
 static int matching(grib_accessor* a,const char* name,const char* name_space)
 {
@@ -30,9 +30,9 @@ static int matching(grib_accessor* a,const char* name,const char* name_space)
     {
         if(a->all_names[i] == 0) return 0;
 
-        if((strcmp(name,a->all_names[i]) == 0) &&
+        if((grib_inline_strcmp(name,a->all_names[i]) == 0) &&
                 ((name_space == NULL) || (a->all_name_spaces[i] != NULL &&
-                        strcmp(a->all_name_spaces[i],name_space) == 0))
+                        grib_inline_strcmp(a->all_name_spaces[i],name_space) == 0))
         )
             return 1;
         i++;
@@ -75,16 +75,17 @@ static void rebuild_hash_keys (grib_handle* h,grib_section* s)
         int i=0;
         int id=-1;
         const char *p;
-        Assert(h == grib_handle_of_accessor(a));
+        DebugAssert(h == grib_handle_of_accessor(a));
 
         while(i<MAX_ACCESSOR_NAMES && ((p = a->all_names[i]) != NULL)) {
             if(*p != '_')   {
                 id=grib_hash_keys_get_id(a->context->keys,p);
 
                 if (a->same != a && i==0) {
-                    a->same=grib_handle_of_accessor(a)->accessors[id];
-                    grib_handle_of_accessor(a)->accessors[id]=a;
-                    Assert(a->same != a);
+                    grib_handle* hand = grib_handle_of_accessor(a);
+                    a->same=hand->accessors[id];
+                    hand->accessors[id]=a;
+                    DebugAssert(a->same != a);
                 }
 
             }
@@ -201,11 +202,11 @@ static char* get_condition(const char* name,codes_condition* condition)
     return str;
 }
 
-static grib_accessor* _search_by_rank(grib_accessor* a,const char* name) {
+static grib_accessor* _search_by_rank(grib_accessor* a,const char* name,int rank) {
     grib_accessor* ret=NULL;
-    grib_trie* t=accessor_bufr_data_array_get_dataAccessorsTrie(a);
+    grib_trie_with_rank* t=accessor_bufr_data_array_get_dataAccessorsTrie(a);
 
-    ret=(grib_accessor*)grib_trie_get(t,name);
+    ret=(grib_accessor*)grib_trie_with_rank_get(t,name,rank);
     return ret;
 }
 
@@ -215,7 +216,7 @@ static grib_accessor* _search_by_rank(grib_accessor* a,const char* name,long ran
     grib_accessors_list* al=accessor_bufr_data_array_get_dataAccessors(a);
 
     while (al) {
-        if (!strcmp(al->accessor->name,name)) {
+        if (!grib_inline_strcmp(al->accessor->name,name)) {
             if (r==rank) return al->accessor;
             r++;
         }
@@ -226,11 +227,11 @@ static grib_accessor* _search_by_rank(grib_accessor* a,const char* name,long ran
 }
 */
 
-static grib_accessor* search_by_rank(grib_handle* h, const char* name,const char *the_namespace)
+static grib_accessor* search_by_rank(grib_handle* h, const char* name,int rank,const char *the_namespace)
 {
     grib_accessor* data=search_and_cache(h,"dataAccessors",the_namespace);
     if (data) {
-        return _search_by_rank(data,name);
+        return _search_by_rank(data,name,rank);
     } else {
         grib_accessor* ret=NULL;
         int rank;
@@ -273,7 +274,7 @@ static void search_from_accessors_list(grib_accessors_list* al,grib_accessors_li
     accessor_name=grib_split_name_attribute(al->accessor->context,name,attribute_name);
 
     while (al && al!=end && al->accessor) {
-        if (strcmp(al->accessor->name,accessor_name)==0) {
+        if (grib_inline_strcmp(al->accessor->name,accessor_name)==0) {
             if (attribute_name[0]) {
                 accessor_result=grib_accessor_get_attribute(al->accessor,attribute_name);
             } else {
@@ -286,7 +287,7 @@ static void search_from_accessors_list(grib_accessors_list* al,grib_accessors_li
         al=al->next;
     }
     if (al==end && al->accessor) {
-        if (strcmp(al->accessor->name,accessor_name)==0) {
+        if (grib_inline_strcmp(al->accessor->name,accessor_name)==0) {
             if (attribute_name[0]) {
                 accessor_result=grib_accessor_get_attribute(al->accessor,attribute_name);
             } else {
@@ -306,7 +307,7 @@ static void search_accessors_list_by_condition(grib_accessors_list* al,const cha
     grib_accessors_list* end=NULL;
 
     while (al) {
-        if (!strcmp(al->accessor->name,condition->left)) {
+        if (!grib_inline_strcmp(al->accessor->name,condition->left)) {
             if (start==NULL && condition_true(al->accessor,condition)) start=al;
             if (start && !condition_true(al->accessor,condition)) end=al;
         }
@@ -391,7 +392,9 @@ static grib_accessor* search_and_cache(grib_handle* h, const char* name,const ch
     grib_accessor* a=NULL;
 
     if (name[0]=='#') {
-        a=search_by_rank(h,name,the_namespace);
+        int rank=-1;
+        char* basename=get_rank(name,&rank);
+        a=search_by_rank(h,basename,rank,the_namespace);
     } else {
         a=_search_and_cache(h,name,the_namespace);
     }
@@ -408,7 +411,7 @@ static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name)
     while ( *p != '.' && *p != '\0' ) p++;
     if ( *p == '.' ) {
         int i=0,len=0;
-        char name_space[1024];
+        char name_space[MAX_NAMESPACE_LEN];
         char* basename=NULL;
         basename=p+1;
         p--;
@@ -502,7 +505,7 @@ grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name)
     while ( *p != '.' && *p != '\0' ) p++;
     if ( *p == '.' ) {
         int i=0,len=0;
-        char name_space[1024];
+        char name_space[MAX_NAMESPACE_LEN];
         p--;
         i=0;
         len=p-name+1;

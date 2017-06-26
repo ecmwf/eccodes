@@ -170,6 +170,7 @@ typedef struct grib_fieldset          codes_fieldset;
 typedef struct grib_order_by          codes_order_by;
 typedef struct grib_where             codes_where;
 typedef struct grib_sarray            codes_sarray;
+typedef struct grib_oarray            codes_oarray;
 typedef struct grib_darray            codes_darray;
 typedef struct grib_iarray            codes_iarray;
 typedef struct grib_vdarray           codes_vdarray;

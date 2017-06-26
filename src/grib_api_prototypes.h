@@ -214,6 +214,16 @@ void grib_sarray_delete_content(grib_context *c, grib_sarray *v);
 char **grib_sarray_get_array(grib_context *c, grib_sarray *v);
 size_t grib_sarray_used_size(grib_sarray *v);
 
+/* grib_oarray.c */
+grib_oarray *grib_oarray_new(grib_context *c, size_t size, size_t incsize);
+grib_oarray *grib_oarray_resize(grib_context *c, grib_oarray *v);
+grib_oarray *grib_oarray_push(grib_context *c, grib_oarray *v, void *val);
+void grib_oarray_delete(grib_context *c, grib_oarray *v);
+void grib_oarray_delete_content(grib_context *c, grib_oarray *v);
+void** grib_oarray_get_array(grib_context *c, grib_oarray *v);
+size_t grib_oarray_used_size(grib_oarray *v);
+void* grib_oarray_get(grib_oarray* v,int i);
+
 /* grib_iarray.c */
 grib_iarray *grib_iarray_new_from_array(grib_context *c, long *a, size_t size);
 grib_iarray *grib_iarray_new(grib_context *c, size_t size, size_t incsize);
@@ -280,7 +290,7 @@ int accessor_bufr_data_array_create_keys(grib_accessor *a, long onlySubset, long
 int accessor_bufr_data_array_process_elements(grib_accessor *a, int flag, long onlySubset, long startSubset, long endSubset);
 grib_vsarray *accessor_bufr_data_array_get_stringValues(grib_accessor *a);
 grib_accessors_list *accessor_bufr_data_array_get_dataAccessors(grib_accessor *a);
-grib_trie *accessor_bufr_data_array_get_dataAccessorsTrie(grib_accessor *a);
+grib_trie_with_rank *accessor_bufr_data_array_get_dataAccessorsTrie(grib_accessor *a);
 void accessor_bufr_data_array_set_unpackMode(grib_accessor *a, int unpackMode);
 
 /* grib_accessor_class_bufr_data_element.c */
@@ -1118,6 +1128,15 @@ void *grib_trie_insert(grib_trie *t, const char *key, void *data);
 void *grib_trie_insert_no_replace(grib_trie *t, const char *key, void *data);
 void *grib_trie_get(grib_trie *t, const char *key);
 
+/* grib_trie_with_rank.c */
+grib_trie_with_rank *grib_trie_with_rank_new(grib_context *c);
+void grib_trie_with_rank_delete_container(grib_trie_with_rank *t);
+void grib_trie_with_rank_delete(grib_trie_with_rank *t);
+void grib_trie_with_rank_clear(grib_trie_with_rank *t);
+int grib_trie_with_rank_insert(grib_trie_with_rank *t, const char *key, void *data);
+void *grib_trie_with_rank_get(grib_trie_with_rank *t, const char *key,int rank);
+void *grib_trie_with_rank_get_from_list(grib_trie_with_rank_list* list,int rank);
+
 /* grib_itrie.c */
 grib_itrie *grib_itrie_new(grib_context *c, int *count);
 void grib_itrie_delete(grib_itrie *t);
@@ -1274,6 +1293,12 @@ void grib_check(const char *call, const char *file, int line, int e, const char 
 
 /* grib_expression_class_binop.c */
 grib_expression *new_binop_expression(grib_context *c, grib_binop_long_proc long_func, grib_binop_double_proc double_func, grib_expression *left, grib_expression *right);
+
+/* grib_expression_class_logical_and.c */
+grib_expression *new_logical_and_expression(grib_context *c, grib_expression *left, grib_expression *right);
+
+/* grib_expression_class_logical_or.c */
+grib_expression *new_logical_or_expression(grib_context *c, grib_expression *left, grib_expression *right);
 
 /* grib_expression_class_is_in_dict.c */
 grib_expression *new_is_in_dict_expression(grib_context *c, const char *name, const char *list);

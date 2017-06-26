@@ -51,6 +51,8 @@ struct table_entry
     grib_accessor_class   **cclass;
 };
 
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
 static GRIB_INLINE int grib_inline_strcmp(const char* a,const char* b)
 {
     if (*a != *b) return 1;
@@ -98,12 +100,13 @@ grib_section* grib_create_root_section(const grib_context *context, grib_handle 
 static GRIB_INLINE grib_accessor_class* get_class(grib_context* c,char* type)
 {
     int i;
+    const int table_count = NUMBER(table);
     grib_accessor_class** the_class=NULL;
 
     if ( (the_class=(grib_accessor_class**)grib_trie_get(c->classes,type))!=NULL)
         return *(the_class);
 
-    for(i = 0; i < NUMBER(table) ; i++) {
+    for(i = 0; i < table_count ; i++) {
         if( grib_inline_strcmp(type,table[i].type) == 0 )
         {
             grib_trie_insert(c->classes,type,table[i].cclass);
@@ -124,8 +127,9 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     size_t size=0;
 
     c = get_class(p->h->context,creator->op);
-    /* c=*((grib_accessor_classes_hash(creator->op,strlen(creator->op)))->cclass); */
-
+#ifdef USE_GPERF_HASHING
+    c=*((grib_accessor_classes_hash(creator->op,strlen(creator->op)))->cclass);
+#endif
     a = (grib_accessor*) grib_context_malloc_clear(p->h->context,c->size);
 
     a->name                = creator->name;
@@ -214,6 +218,7 @@ static void link_same_attributes(grib_accessor* a,grib_accessor* b)
 void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
 {
     int id;
+    grib_handle* hand = grib_handle_of_accessor(a);
     if (!l->first)
         l->first = l->last = a;
     else{
@@ -222,15 +227,15 @@ void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
     }
     l->last = a;
 
-    if (grib_handle_of_accessor(a)->use_trie) {
+    if (hand->use_trie) {
         if (*(a->all_names[0]) != '_') {
             id=grib_hash_keys_get_id(a->context->keys,a->all_names[0]);
-#ifdef DEBUG
-            Assert(id >=0 && id < ACCESSORS_ARRAY_SIZE);
-#endif
-            a->same=grib_handle_of_accessor(a)->accessors[id];
+
+            DebugAssert(id >=0 && id < ACCESSORS_ARRAY_SIZE);
+
+            a->same=hand->accessors[id];
             link_same_attributes(a,a->same);
-            grib_handle_of_accessor(a)->accessors[id]=a;
+            hand->accessors[id]=a;
 
             if(a->same == a) {
                 fprintf(stderr,"---> %s\n",a->name);

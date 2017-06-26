@@ -7,8 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-label "Categorical Forecast";
-
 #  Total number of forecast probabilities
 unsigned[1] numberOfCategories  : dump;
 

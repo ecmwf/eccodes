@@ -1,3 +1,2 @@
-label "x";
 alias mars.anoffset=offsetToEndOf4DvarWindow;
 

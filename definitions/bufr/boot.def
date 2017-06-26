@@ -45,6 +45,8 @@ transient extractDateTimeDayStart=1 : hidden;
 transient extractDateTimeHourStart=1 : hidden;
 transient extractDateTimeMinuteStart=1 : hidden;
 transient extractDateTimeSecondStart=1 : hidden;
+meta extractDateTimeStart julian_date(extractDateTimeYearStart,extractDateTimeMonthStart,extractDateTimeDayStart,
+                                        extractDateTimeHourStart,extractDateTimeMinuteStart,extractDateTimeSecondStart) : hidden;
 
 transient extractDateTimeYearEnd=2016 : hidden;
 transient extractDateTimeMonthEnd=1 : hidden;
@@ -52,6 +54,8 @@ transient extractDateTimeDayEnd=1 : hidden;
 transient extractDateTimeHourEnd=1 : hidden;
 transient extractDateTimeMinuteEnd=1 : hidden;
 transient extractDateTimeSecondEnd=1 : hidden;
+meta extractDateTimeEnd julian_date(extractDateTimeYearEnd,extractDateTimeMonthEnd,extractDateTimeDayEnd,
+                                        extractDateTimeHourEnd,extractDateTimeMinuteEnd,extractDateTimeSecondEnd) : hidden;
 
 transient extractDateTimeYearRank=1 : hidden;
 transient extractDateTimeMonthRank=1 : hidden;
@@ -67,6 +71,14 @@ transient simpleThinningStart=1 : hidden;
 transient simpleThinningMissingRadius=0 : hidden;
 transient simpleThinningSkip=1 : hidden;
 meta doSimpleThinning bufr_simple_thinning(doExtractSubsets,numberOfSubsets,extractSubsetList,simpleThinningStart,simpleThinningMissingRadius,simpleThinningSkip)=0 : hidden;
+
+transient userDateStart = 0 : hidden;
+transient userTimeStart = 0 : hidden;
+meta userDateTimeStart julian_date(userDateStart,userTimeStart) : hidden;
+
+transient userDateEnd = 0 : hidden;
+transient userTimeEnd = 0 : hidden;
+meta userDateTimeEnd julian_date(userDateEnd,userTimeEnd) : hidden;
 
 template boot_edition "bufr/boot_edition_[ed:l].def";
 

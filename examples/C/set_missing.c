@@ -24,9 +24,9 @@ int main(int argc, char** argv)
     int err = 0, is_missing = 0;
 
     FILE* in = NULL;
-    char* infile = "../../data/reduced_gaussian_pressure_level.grib2";
+    const char* infile = "../../data/reduced_gaussian_pressure_level.grib2";
     FILE* out = NULL;
-    char* outfile = "out_surface_level.grib2";
+    const char* outfile = "out_surface_level.grib2";
     codes_handle *h = NULL;
     const void* buffer = NULL;
     size_t size=0;

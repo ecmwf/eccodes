@@ -97,6 +97,7 @@ if ( g is "NIL" ) {
 
         include "metar/missing_field.def";
         include "metar/temperature.def";
+
         include "metar/qnh.def";
         include "metar/colour.def";
         include "metar/recent_weather.def";

@@ -1,4 +1,3 @@
-label "model errors";
 #alias mars.number=perturbationNumber;
 alias mars.anoffset=offsetToEndOf4DvarWindow;
 

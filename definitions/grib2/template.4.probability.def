@@ -7,8 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-label "Forecast probability";
-
 #  Forecast probability number
 unsigned[1] forecastProbabilityNumber  : dump;
 

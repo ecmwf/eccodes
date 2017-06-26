@@ -83,7 +83,10 @@ static void* default_long_lasting_malloc(const grib_context* c, size_t size)
     cntp++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
-    Assert(ret);
+    if (!ret) {
+        grib_context_log(c,GRIB_LOG_FATAL,"default_long_lasting_malloc: error allocating %lu bytes",(unsigned long)size);
+        Assert(0);
+    }
     return ret;
 }
 
@@ -104,7 +107,10 @@ static void* default_buffer_malloc(const grib_context* c, size_t size)
     cntp++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
-    Assert(ret);
+    if (!ret) {
+        grib_context_log(c,GRIB_LOG_FATAL,"default_buffer_malloc: error allocating %lu bytes",(unsigned long)size);
+        Assert(0);
+    }
     return ret;
 }
 
@@ -112,7 +118,10 @@ static void* default_buffer_realloc(const grib_context* c, void* p, size_t size)
 {
     void* ret;
     ret=realloc(p,size);
-    Assert(ret);
+    if (!ret) {
+        grib_context_log(c,GRIB_LOG_FATAL,"default_buffer_realloc: error allocating %lu bytes",(unsigned long)size);
+        Assert(0);
+    }
     return ret;
 }
 
@@ -133,7 +142,10 @@ static void* default_malloc(const grib_context* c, size_t size)
     cnt++;
     GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
-    Assert(ret);
+    if (!ret) {
+        grib_context_log(c,GRIB_LOG_FATAL,"default_malloc: error allocating %lu bytes",(unsigned long)size);
+        Assert(0);
+    }
     return ret;
 }
 
@@ -141,7 +153,10 @@ static void* default_realloc(const grib_context* c, void* p, size_t size)
 {
     void* ret;
     ret=realloc(p,size);
-    Assert(ret);
+    if (!ret) {
+        grib_context_log(c,GRIB_LOG_FATAL,"default_realloc: error allocating %lu bytes",(unsigned long)size);
+        Assert(0);
+    }
     return ret;
 }
 #endif
@@ -269,6 +284,8 @@ const char* grib_get_package_name()
     return "ecCodes";
 }
 
+#define DEFAULT_FILE_POOL_MAX_OPENED_FILES 200
+
 static grib_context default_grib_context = {
         0,                            /* inited                     */
         0,                            /* debug                      */
@@ -347,7 +364,9 @@ static grib_context default_grib_context = {
         0,                            /* bufr_set_to_missing_if_out_of_range */
         0,                            /* log_stream                 */
         0,                            /* classes                    */
-        0                             /* lists                      */
+        0,                            /* lists                      */
+        0,                            /* expanded_descriptors       */
+        DEFAULT_FILE_POOL_MAX_OPENED_FILES /* file_pool_max_opened_files */
 #if GRIB_PTHREADS
         ,PTHREAD_MUTEX_INITIALIZER    /* mutex                      */
 #endif
@@ -380,6 +399,7 @@ grib_context* grib_context_get_default()
         const char* keep_matrix = NULL;
         const char* bufrdc_mode = NULL;
         const char* bufr_set_to_missing_if_out_of_range = NULL;
+        const char* file_pool_max_opened_files = NULL;
 
         write_on_fail = codes_getenv("ECCODES_GRIB_WRITE_ON_FAIL");
         bufrdc_mode = codes_getenv("ECCODES_BUFRDC_MODE_ON");
@@ -394,6 +414,7 @@ grib_context* grib_context_get_default()
         no_big_group_split = codes_getenv("ECCODES_GRIB_NO_BIG_GROUP_SPLIT");
         no_spd = codes_getenv("ECCODES_GRIB_NO_SPD");
         keep_matrix = codes_getenv("ECCODES_GRIB_KEEP_MATRIX");
+        file_pool_max_opened_files = codes_getenv("ECCODES_FILE_POOL_MAX_OPENED_FILES");
 
         /* On UNIX, when we read from a file we get exactly what is in the file on disk.
          * But on Windows a file can be opened in binary or text mode. In binary mode the system behaves exactly as in UNIX.
@@ -477,7 +498,10 @@ grib_context* grib_context_get_default()
         default_grib_context.lists=grib_trie_new(&(default_grib_context));
         default_grib_context.classes=grib_trie_new(&(default_grib_context));
         default_grib_context.bufrdc_mode = bufrdc_mode ? atoi(bufrdc_mode) : 0;
-        default_grib_context.bufr_set_to_missing_if_out_of_range = bufr_set_to_missing_if_out_of_range ? atoi(bufr_set_to_missing_if_out_of_range) : 0;
+        default_grib_context.bufr_set_to_missing_if_out_of_range = bufr_set_to_missing_if_out_of_range ?
+                atoi(bufr_set_to_missing_if_out_of_range) : 0;
+        default_grib_context.file_pool_max_opened_files = file_pool_max_opened_files ?
+                atoi(file_pool_max_opened_files) : DEFAULT_FILE_POOL_MAX_OPENED_FILES;
     }
 
     GRIB_MUTEX_UNLOCK(&mutex_c);
@@ -767,7 +791,8 @@ void* grib_context_malloc_persistent(const grib_context* c, size_t size)
 {
     void* p =  c->alloc_persistent_mem(c,size);
     if(!p) {
-        grib_context_log(c,GRIB_LOG_FATAL,"grib_context_malloc: error allocating %lu bytes",(unsigned long)size);
+        grib_context_log(c,GRIB_LOG_FATAL,
+                "grib_context_malloc_persistent: error allocating %lu bytes",(unsigned long)size);
         Assert(0);
     }
     return p;
@@ -892,46 +917,49 @@ void grib_context_set_data_accessing_proc(grib_context* c, grib_data_read_proc r
     c->tell  = tell;
 }
 
-/*              logging procedure                    */
+/* Logging procedure */
 void grib_context_log(const grib_context *c,int level, const char* fmt, ...)
 {
-    char msg[1024];
-    va_list list;
-
     /* Save some CPU */
     if( (level == GRIB_LOG_DEBUG && c->debug<1) ||
             (level == GRIB_LOG_WARNING && c->debug<2) )
-        return;
-
-    va_start(list,fmt);
-    vsprintf(msg, fmt, list);
-    va_end(list);
-
-    if(level & GRIB_LOG_PERROR)
     {
-        level = level & ~GRIB_LOG_PERROR;
-
-        /* #if HAS_STRERROR */
-#if 1
-        strcat(msg," (");
-        strcat(msg,strerror(errno));
-        strcat(msg,")");
-#else
-        if(errno > 0 && errno < sys_nerr)
-        {
-            strcat(msg," (");
-            strcat(msg,sys_errlist[errno]);
-            strcat(msg," )");
-        }
-#endif
+        return;
     }
+    else
+    {
+        char msg[1024];
+        va_list list;
 
+        va_start(list,fmt);
+        vsprintf(msg, fmt, list);
+        va_end(list);
 
-    if(c->output_log)
-        c->output_log(c,level,msg);
+        if(level & GRIB_LOG_PERROR)
+        {
+            level = level & ~GRIB_LOG_PERROR;
+
+            /* #if HAS_STRERROR */
+#if 1
+            strcat(msg," (");
+            strcat(msg,strerror(errno));
+            strcat(msg,")");
+#else
+            if(errno > 0 && errno < sys_nerr)
+            {
+                strcat(msg," (");
+                strcat(msg,sys_errlist[errno]);
+                strcat(msg," )");
+            }
+#endif
+        }
+
+        if(c->output_log)
+            c->output_log(c,level,msg);
+    }
 }
 
-/*              logging procedure                    */
+/* Logging procedure */
 void grib_context_print(const grib_context *c, void* descriptor,const char* fmt, ...)
 {
     char msg[1024];

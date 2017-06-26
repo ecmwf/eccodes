@@ -649,7 +649,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     {
         if ( val[i] > max )
             max = val[i];
-        if ( val[i] < min )
+        else if ( val[i] < min )
             min = val[i];
     }
     min *= d;
@@ -770,8 +770,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     min = max;
     for(i=0;i< n_vals;i++)
     {
-        if ( val[i] > max ) max = val[i];
-        if ( val[i] < min ) min = val[i];
+        if      ( val[i] > max ) max = val[i];
+        else if ( val[i] < min ) min = val[i];
     }
     min *= d;
     max *= d;

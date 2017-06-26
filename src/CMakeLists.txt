@@ -51,6 +51,7 @@ list( APPEND grib_api_srcs
     grib_bufr_descriptors_array.c
     grib_darray.c
     grib_sarray.c
+    grib_oarray.c
     grib_vdarray.c
     grib_vsarray.c
     grib_iarray.c
@@ -63,6 +64,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_bitmap.c
     grib_accessor_class_bits.c
     grib_accessor_class_bits_per_value.c
+    grib_accessor_class_bufr_clear_tables.c
     grib_accessor_class_bufr_data.c
     grib_accessor_class_bufr_elements_table.c
     grib_accessor_class_bufr_data_array.c
@@ -131,6 +133,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_gts_header.c
     grib_accessor_class_ifs_param.c
     grib_accessor_class_julian_day.c
+    grib_accessor_class_julian_date.c
     grib_accessor_class_latlonvalues.c
     grib_accessor_class_latitudes.c
     grib_accessor_class_longitudes.c
@@ -172,6 +175,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_g1_message_length.c
     grib_accessor_class_g1_section4_length.c
     grib_accessor_class_size.c
+    grib_accessor_class_rdbtime_guess_date.c
     grib_accessor_class_scale_values.c
     grib_accessor_class_offset_values.c
     grib_accessor_class_sprintf.c
@@ -297,6 +301,7 @@ list( APPEND grib_api_srcs
     grib_hash_keys.c
     grib_io.c
     grib_trie.c
+    grib_trie_with_rank.c
     grib_itrie.c
     grib_rules.c
     grib_keys_iterator.c
@@ -309,6 +314,8 @@ list( APPEND grib_api_srcs
     grib_value.c
     grib_errors.c
     grib_expression_class_binop.c
+    grib_expression_class_logical_and.c
+    grib_expression_class_logical_or.c
     grib_expression_class_is_in_dict.c
     grib_expression_class_true.c
     grib_expression_class_string_compare.c

@@ -7,8 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-label "Stretching information";
-
 #  Latitude of the pole of stretching
 signed[4] latitudeOfThePoleOfStretching  : edition_specific,no_copy;
 

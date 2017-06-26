@@ -3674,6 +3674,16 @@
 	 table2Version = 171 ;
 	 indicatorOfParameter = 7 ;
 	}
+#Lake mix-layer temperature anomaly
+'Lake mix-layer temperature anomaly' = {
+	 table2Version = 171 ;
+	 indicatorOfParameter = 24 ;
+	}
+#Lake ice depth anomaly
+'Lake ice depth anomaly' = {
+	 table2Version = 171 ;
+	 indicatorOfParameter = 25 ;
+	}
 #Maximum temperature at 2 metres in the last 6 hours anomaly
 'Maximum temperature at 2 metres in the last 6 hours anomaly' = {
 	 table2Version = 171 ;
@@ -9279,6 +9289,11 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 29 ;
 	}
+#2 metre relative humidity with respect to water
+'2 metre relative humidity with respect to water' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 37 ;
+	}
 #Soil wetness index in layer 1
 'Soil wetness index in layer 1' = {
 	 table2Version = 228 ;
@@ -9324,8 +9339,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Averaged total lightning density
-'Averaged total lightning density' = {
+#Averaged total lightning density since previous post-processing
+'Averaged total lightning density since previous post-processing' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 51 ;
 	}
@@ -9334,8 +9349,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 52 ;
 	}
-#Averaged cloud-to-ground lightning density
-'Averaged cloud-to-ground lightning density' = {
+#Averaged cloud-to-ground lightning density since previous post-processing
+'Averaged cloud-to-ground lightning density since previous post-processing' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 53 ;
 	}
@@ -9883,6 +9898,11 @@
 'Mean potential evaporation rate' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 70 ;
+	}
+#Total precipitation rate
+'Total precipitation rate' = {
+	 table2Version = 254 ;
+	 indicatorOfParameter = 48 ;
 	}
 #Ceiling
 'Ceiling' = {

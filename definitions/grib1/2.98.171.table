@@ -11,6 +11,8 @@
 21 21 - Unbalanced component of temperature anomaly (K)
 22 22 - Unbalanced component of logarithm of surface pressure anomaly
 23 23 - Unbalanced component of divergence anomaly (s**-1)
+24 24 - Lake mix-layer temperature anomaly (K)
+25 25 - Lake ice depth anomaly (m)
 26 26 - Lake cover anomaly (0 - 1)
 27 27 - Low vegetation cover anomaly (0 - 1)
 28 28 - High vegetation cover anomaly (0 - 1)

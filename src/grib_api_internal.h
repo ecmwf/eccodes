@@ -203,6 +203,7 @@ extern "C" {
 #define MAX_NUM_HASH_ARRAY 2000
 
 #define GRIB_NAMESPACE      10
+#define MAX_NAMESPACE_LEN   64
 
 #define GRIB_MY_BUFFER      0
 #define GRIB_USER_BUFFER    1
@@ -210,7 +211,7 @@ extern "C" {
 #define GRIB_REAL_MODE4    4
 #define GRIB_REAL_MODE8    8
 
-#define MAX_NUM_SECTIONS  9
+#define MAX_NUM_SECTIONS  12
 
 #define GRIB_DISPOSABLE_MEMORY      0
 #define GRIB_LONG_LASTING_MEMORY    1
@@ -712,11 +713,21 @@ struct grib_block_of_accessors
 
 
 typedef struct grib_trie grib_trie;
+typedef struct grib_trie_with_rank_list grib_trie_with_rank_list;
+typedef struct grib_trie_with_rank grib_trie_with_rank;
 typedef struct grib_itrie grib_itrie;
 
 
 struct grib_sarray {
   char**        v;
+  size_t        size;
+  size_t        n;
+  size_t        incsize;
+  grib_context* context;
+} ;
+
+struct grib_oarray {
+  void**        v;
   size_t        size;
   size_t        n;
   size_t        incsize;
@@ -782,13 +793,14 @@ struct bufr_descriptor {
   int X;
   int Y;
   int type;
-  char* name;
+  /*char* name;   Not needed: All usage commented out. See ECC-489 */
   char* shortName;
   char* units;
   long scale;
   double factor;
   double reference;
   long width;
+  int nokey; /* set if descriptor does not have an associated key */
   grib_accessor* a;
 } ;
 
@@ -800,6 +812,20 @@ struct bufr_descriptors_array {
   size_t number_of_pop_front;
   grib_context* context;
 } ;
+
+struct bufr_descriptors_map_list {
+  bufr_descriptors_array* unexpanded;
+  bufr_descriptors_array* expanded;
+  bufr_descriptors_map_list* next;
+};
+
+/* BUFR: operator 203: Table B changed reference values */
+typedef struct bufr_tableb_override bufr_tableb_override;
+struct bufr_tableb_override {
+  bufr_tableb_override* next;
+  int                   code;
+  double                new_ref_val;
+};
 
 struct codes_condition {
   char*  left;
@@ -847,6 +873,7 @@ struct grib_handle
     long missingValueLong;
     double missingValueDouble;
     ProductKind product_kind;
+    grib_trie* bufr_elements_table;
 };
 
 struct grib_multi_handle {
@@ -1040,6 +1067,8 @@ struct grib_context
     FILE*                           log_stream;
     grib_trie*                      classes;
     grib_trie*                      lists;
+    grib_trie*                      expanded_descriptors;
+    int                             file_pool_max_opened_files;
 #if GRIB_PTHREADS
     pthread_mutex_t                 mutex;
 #elif GRIB_OMP_THREADS
@@ -1440,6 +1469,7 @@ struct grib_smart_table {
   size_t            numberOfEntries;
   grib_smart_table_entry* entries;
 };
+
 
 #if GRIB_TIMER
 typedef struct grib_timer {

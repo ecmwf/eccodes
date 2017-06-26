@@ -2953,7 +2953,7 @@ int grib_f_set_real8_array(int* gid, char* key, double *val, int* size, int len)
 }
 
 /*****************************************************************************/
-int grib_f_get_string_array_(int* gid, char* key, char* val,int* nvals,int* slen,int len)
+int grib_f_get_string_array_(int* gid, char* key, char* val,int* nvals,int* slen, int len)
 {
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
@@ -3012,7 +3012,7 @@ int codes_f_bufr_copy_data(int* gid1,int* gid2){
 
 
 /*****************************************************************************/
-int grib_f_set_string_array_(int* gid, char* key, char* val,int* nvals,int* slen,int len)
+int grib_f_set_string_array_(int* gid, char* key, char* val,int* nvals,int* slen, int len)
 {
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
@@ -3027,7 +3027,7 @@ int grib_f_set_string_array_(int* gid, char* key, char* val,int* nvals,int* slen
 
     cval=(char**)grib_context_malloc_clear(h->context,sizeof(char*)*lsize);
     for (i=0;i<lsize;i++) {
-        cval[i]=grib_context_malloc_clear(c,sizeof(char)* (*slen+1));
+        cval[i]=(char*)grib_context_malloc_clear(c,sizeof(char)* (*slen+1));
         cast_char_no_cut(cval[i],p,*slen);
         rtrim( cval[i] ); /* trim spaces at end of string */
         p+= *slen;

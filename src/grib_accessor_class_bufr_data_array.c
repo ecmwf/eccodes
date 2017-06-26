@@ -62,9 +62,10 @@
    MEMBERS    = int nInputShortReplications
    MEMBERS    = int iInputShortReplications
    MEMBERS    = grib_iarray* iss_list
-   MEMBERS    = grib_trie* dataAccessorsTrie
-   MEMBERS    = grib_trie* dataAccessorsRank
+   MEMBERS    = grib_trie_with_rank* dataAccessorsTrie
    MEMBERS    = grib_sarray* tempStrings
+   MEMBERS    = int change_ref_value_operand
+   MEMBERS    = bufr_tableb_override* tableb_override
 
    END_CLASS_DEF
 
@@ -136,9 +137,10 @@ typedef struct grib_accessor_bufr_data_array {
 	int nInputShortReplications;
 	int iInputShortReplications;
 	grib_iarray* iss_list;
-	grib_trie* dataAccessorsTrie;
-	grib_trie* dataAccessorsRank;
+	grib_trie_with_rank* dataAccessorsTrie;
 	grib_sarray* tempStrings;
+	int change_ref_value_operand;
+	bufr_tableb_override* tableb_override;
 } grib_accessor_bufr_data_array;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -269,6 +271,46 @@ static size_t get_length(grib_accessor* a)
     return len;
 }
 
+/* Operator 203YYY: Store the TableB code and changed reference value in linked list */
+static void tableB_override_store_ref_val(grib_context* c, grib_accessor_bufr_data_array *self, int code, double new_ref_val)
+{
+    bufr_tableb_override* tb=(bufr_tableb_override*)grib_context_malloc_clear(c, sizeof(bufr_tableb_override));
+    tb->code = code;
+    tb->new_ref_val = new_ref_val;
+    if (!self->tableb_override) {
+        self->tableb_override = tb;
+    } else {
+        /*Add to end of linked list*/
+        bufr_tableb_override* q = self->tableb_override;
+        while(q->next) q=q->next;
+        q->next = tb;
+    }
+}
+/* Operator 203YYY: Retrieve changed reference value from linked list */
+static int tableB_override_get_ref_val(grib_accessor_bufr_data_array *self, int code, double* out_ref_val)
+{
+    bufr_tableb_override* p = self->tableb_override;
+    while (p) {
+        if (p->code == code) {
+            *out_ref_val = p->new_ref_val;
+            return GRIB_SUCCESS;
+        }
+        p = p->next;
+    }
+    return GRIB_NOT_FOUND;
+}
+/* Operator 203YYY: Clear and free linked list */
+static void tableB_override_clear(grib_context* c, grib_accessor_bufr_data_array *self)
+{
+    bufr_tableb_override* tb = self->tableb_override;
+    while(tb) {
+        bufr_tableb_override* n = tb->next;
+        grib_context_free(c,tb);
+        tb = n;
+    }
+    self->tableb_override=NULL;
+}
+
 static void init(grib_accessor* a,const long v, grib_arguments* params)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
@@ -294,7 +336,8 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
     self->expanded=0;
     self->expandedAccessor=0;
     self->dataAccessorsTrie=0;
-    self->dataAccessorsRank=0;
+    self->change_ref_value_operand=0; /* 0, 255 or YYY */
+    self->tableb_override = NULL;
 
     a->length=0;
     self->bitsToEndData=get_length(a)*8;
@@ -338,6 +381,8 @@ static void self_clear(grib_context* c,grib_accessor_bufr_data_array* self)
     if (self->inputReplications) grib_context_free(c,self->inputReplications);
     if (self->inputExtendedReplications) grib_context_free(c,self->inputExtendedReplications);
     if (self->inputShortReplications) grib_context_free(c,self->inputShortReplications);
+    self->change_ref_value_operand = 0;
+    tableB_override_clear(c, self);
 }
 
 static int  get_native_type(grib_accessor* a)
@@ -394,7 +439,7 @@ grib_accessors_list* accessor_bufr_data_array_get_dataAccessors(grib_accessor* a
     return self->dataAccessors;
 }
 
-grib_trie* accessor_bufr_data_array_get_dataAccessorsTrie(grib_accessor* a)
+grib_trie_with_rank* accessor_bufr_data_array_get_dataAccessorsTrie(grib_accessor* a)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     return self->dataAccessorsTrie;
@@ -868,6 +913,18 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
     int err=0;
     bufr_descriptor* bd = descriptor==NULL ? self->expanded->v[i] : descriptor ;
 
+    if (self->change_ref_value_operand > 0 && self->change_ref_value_operand != 255) {
+        /* Operator 203YYY: Change Reference Values: Definition phase */
+        const int number_of_bits = self->change_ref_value_operand;
+        double new_ref_val = (double)grib_decode_signed_longb(data, pos, number_of_bits);
+        grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -**- \tcode=203YYY width=%ld pos=%ld -> %ld",
+                number_of_bits,(long)*pos,(long)(*pos-a->offset*8));
+        grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: Store %ld = %g", bd->code, new_ref_val);
+        tableB_override_store_ref_val(c, self, bd->code, new_ref_val);
+        bd->nokey=1;
+        err=check_end_data(c, self, number_of_bits); /*advance bitsToEnd*/
+        return err;
+    }
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -%ld- \tcode=%6.6ld width=%ld pos=%ld -> %ld",
             i,bd->code,bd->width,(long)*pos,(long)(*pos-a->offset*8));
     if (bd->type==BUFR_DESCRIPTOR_TYPE_STRING) {
@@ -898,10 +955,16 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         }
     } else {
         /* numeric or codetable or flagtable */
+        /* Operator 203: Check if we have changed ref value for this element. If so modify bd->reference */
+        if (self->change_ref_value_operand!=0 && tableB_override_get_ref_val(self, bd->code, &(bd->reference)) == GRIB_SUCCESS) {
+            grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Changed ref val: %g\n", bd->reference);
+        }
+
         if (self->compressedData) {
             dar=decode_double_array(c,data,pos,bd,self->canBeMissing[i],self,&err);
             grib_vdarray_push(c,self->numericValues,dar);
         } else {
+            /* Uncompressed */
             cdval=decode_double_value(c,data,pos,bd,self->canBeMissing[i],self,&err);
             grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \t %s = %g",
                     bd->shortName,cdval);
@@ -1350,7 +1413,6 @@ static int get_next_bitmap_descriptor_index(grib_accessor_bufr_data_array *self,
 {
     int i;
     bufr_descriptor** descriptors=self->expanded->v;
-
 
     if (self->compressedData) {
         if (self->numericValues->n==0)
@@ -1834,7 +1896,7 @@ static grib_accessor* accessor_or_attribute_with_same_name(grib_accessor* a,cons
         return ok;
     }
 }
-
+#if 0
 static int get_key_rank(grib_trie* accessorsRank,grib_accessor* a)
 {
     int* r=(int*)grib_trie_get(accessorsRank,a->name);
@@ -1847,13 +1909,10 @@ static int get_key_rank(grib_trie* accessorsRank,grib_accessor* a)
     }
     return *r;
 }
-
-static void grib_data_accessors_trie_push(grib_trie* accessorsTrie, grib_accessor* a, int r)
+#endif
+static int grib_data_accessors_trie_push(grib_trie_with_rank* accessorsTrie, grib_accessor* a)
 {
-    char* name=(char*)grib_context_malloc_clear(a->context, strlen(a->name)+20);
-    sprintf(name,"#%d#%s", r, a->name);
-    grib_trie_insert(accessorsTrie, name, a);
-    grib_context_free(a->context, name);
+    return grib_trie_with_rank_insert(accessorsTrie, a->name, a);
 }
 
 static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset)
@@ -1908,14 +1967,9 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
     self->dataAccessors=grib_accessors_list_create(c);
 
     if (self->dataAccessorsTrie) {
-        grib_trie_delete(self->dataAccessorsTrie);
+        grib_trie_with_rank_delete(self->dataAccessorsTrie);
     }
-    self->dataAccessorsTrie=grib_trie_new(c);
-
-    if (self->dataAccessorsRank) {
-        grib_trie_delete(self->dataAccessorsRank);
-    }
-    self->dataAccessorsRank=grib_trie_new(c);
+    self->dataAccessorsTrie=grib_trie_with_rank_new(c);
 
     if (self->tempStrings) {
         grib_sarray_delete_content(c, self->tempStrings);
@@ -1955,6 +2009,9 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                     self->elementsDescriptorsIndex->v[iss]->v[ide] ;
 
             descriptor=self->expanded->v[idx];
+            if (descriptor->nokey==1) {
+                continue;  /* Descriptor does not have an associated key e.g. inside op 203YYY */
+            }
             elementFromBitmap=NULL;
             if (descriptor->F==0 && IS_QUALIFIER(descriptor->X)
             && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
@@ -2073,9 +2130,8 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 grib_pack_long(asn,&subsetNumber,&len);
 
                 grib_push_accessor(asn,section->block);
-                rank=get_key_rank(self->dataAccessorsRank,asn);
+                rank=grib_data_accessors_trie_push(self->dataAccessorsTrie,asn);
                 grib_accessors_list_push(self->dataAccessors,asn,rank);
-                grib_data_accessors_trie_push(self->dataAccessorsTrie,asn,rank);
             }
             count++;
             elementAccessor=create_accessor_from_descriptor(a,associatedFieldAccessor,section,ide,iss,dump,count);
@@ -2090,9 +2146,8 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                     newAccessor->parent=groupSection;
                     newAccessor->name=grib_context_strdup(c,elementFromBitmap->name);
                     grib_push_accessor(newAccessor,groupSection->block);
-                    rank=get_key_rank(self->dataAccessorsRank,newAccessor);
+                    rank=grib_data_accessors_trie_push(self->dataAccessorsTrie,newAccessor);
                     grib_accessors_list_push(self->dataAccessors,newAccessor,rank);
-                    grib_data_accessors_trie_push(self->dataAccessorsTrie,newAccessor,rank);
                 }
 
                 err=grib_accessor_add_attribute(accessor_or_attribute_with_same_name(elementFromBitmap,elementAccessor->name),elementAccessor,1);
@@ -2118,10 +2173,9 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                     break;
                 default:
                     grib_push_accessor(elementAccessor,section->block);
-                    rank=get_key_rank(self->dataAccessorsRank,elementAccessor);
+                    rank=grib_data_accessors_trie_push(self->dataAccessorsTrie,elementAccessor);
                     grib_accessors_list_push(self->dataAccessors,elementAccessor,rank);
                     lastAccessorInList=grib_accessors_list_last(self->dataAccessors);
-                    grib_data_accessors_trie_push(self->dataAccessorsTrie,elementAccessor,rank);
                 }
             }
         }
@@ -2373,10 +2427,29 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
             case 2:
                 /* Operator */
                 switch(descriptors[i]->X) {
+
                 case 3:
-                    grib_context_log(c,GRIB_LOG_ERROR,"process_elements: operator %d not yet implemented\n",descriptors[i]->X);
-                    return GRIB_NOT_IMPLEMENTED;
-                case 5:
+                    /* Change reference values */
+                    if (flag != PROCESS_DECODE) {
+                        grib_context_log(c,GRIB_LOG_ERROR,"process_elements: operator %d supported for decoding only",descriptors[i]->X);
+                        return GRIB_INTERNAL_ERROR;
+                    }
+                    if (descriptors[i]->Y == 255) {
+                        grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Termination");
+                        self->change_ref_value_operand = 255;
+                    } else if (descriptors[i]->Y == 0) {
+                        grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Clearing override of table B");
+                        tableB_override_clear(c, self);
+                        self->change_ref_value_operand = 0;
+                    } else {
+                        grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Definition: Num bits=%d",descriptors[i]->Y);
+                        self->change_ref_value_operand = descriptors[i]->Y;
+                    }
+                    /*grib_iarray_push(elementsDescriptorsIndex,i);*/
+                    if (decoding) push_zero_element(self,dval);
+                    break;
+
+                case 5: /* Signify character */
                     descriptors[i]->width=descriptors[i]->Y*8;
                     descriptors[i]->type=BUFR_DESCRIPTOR_TYPE_STRING;
                     err=codec_element(c,self,iss,buffer,data,&pos,i,0,elementIndex,dval,sval);
@@ -2384,7 +2457,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                     if (flag!=PROCESS_ENCODE) grib_iarray_push(elementsDescriptorsIndex,i);
                     elementIndex++;
                     break;
-                case 22:
+                case 22: /* Quality information follows */
                     if (descriptors[i]->Y==0)  {
                         if (flag==PROCESS_DECODE) {
                             grib_iarray_push(elementsDescriptorsIndex,i);
@@ -2517,7 +2590,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                 default :
                     grib_context_log(c,GRIB_LOG_ERROR,"process_elements: unsupported operator %d\n",descriptors[i]->X);
                     return GRIB_INTERNAL_ERROR;
-                }
+                } /* F == 2 */
                 break;
                 case 9:
                     /* associated field */
@@ -2533,7 +2606,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                 default:
                     err=GRIB_INTERNAL_ERROR;
                     return err;
-            }
+            } /* switch F */
 
             /* delayed repetition check */
             innr=numberOfNestedRepetitions-1;
@@ -2565,7 +2638,6 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                     }
                 }
             }
-
         }
         if (flag!=PROCESS_ENCODE) grib_viarray_push(c,self->elementsDescriptorsIndex,elementsDescriptorsIndex);
         if (decoding && !self->compressedData) {
@@ -2663,8 +2735,7 @@ static void destroy(grib_context* c,grib_accessor* a)
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     self_clear(c,self);
     if (self->dataAccessors) grib_accessors_list_delete(c,self->dataAccessors);
-    if (self->dataAccessorsTrie) grib_trie_delete_container(self->dataAccessorsTrie);
-    if (self->dataAccessorsRank) grib_trie_delete(self->dataAccessorsRank);
+    if (self->dataAccessorsTrie) grib_trie_with_rank_delete_container(self->dataAccessorsTrie);
     if (self->tempStrings) {
         grib_sarray_delete_content(c, self->tempStrings);
         grib_sarray_delete        (c, self->tempStrings);

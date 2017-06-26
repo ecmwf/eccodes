@@ -87,11 +87,14 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
     long lval=0;
     int type=GRIB_TYPE_STRING;
     size_t replen = 0;
-    const size_t uname_len = strlen(uname);
+    char* ptrEnd_fname = NULL; /* Maintain ptr to end of fname string */
 
     loc[0] = 0 ;
     fname[0] = 0 ;
-    for(i=0; i<uname_len; i++)
+    ptrEnd_fname = fname;
+
+    /* uname is a string like "grib[GRIBEditionNumber:l]/boot.def". The result fname will be grib2/boot.def */
+    while (uname[i]!='\0')
     {
         if(mode > -1)
         {
@@ -143,11 +146,10 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
                     char* pc=fname;
                     while (*pc != '\0') pc++;
                     strcpy(pc,val);
+                    ptrEnd_fname = pc + strlen(val); /* Update ptr to end of fname */
                 }
-                /* sprintf(fname,"%s%s",fname,val); */
 
                 loc[0] = 0 ;
-
             }
             else
                 loc[mode++]=uname[i];
@@ -155,13 +157,18 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
         else if(uname[i]=='[')
             mode = 0;
         else {
-            int llen=strlen(fname);
+#if 0
+            int llen=strlen(fname);  // The strlen cost is too high
             fname[llen]=uname[i];
             fname[llen+1]='\0';
-            /* sprintf(fname,"%s%c",fname, uname[i]); */
+#else
+            /* Performance: faster to avoid call to strlen. Append to end */
+            *ptrEnd_fname++ = uname[i];
+            *ptrEnd_fname = '\0';
+#endif
             type=GRIB_TYPE_STRING;
         }
-
+        i++;
     }
     /*fprintf(stdout,"parsed > %s\n",fname);*/
     return GRIB_SUCCESS;
@@ -477,12 +484,20 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
     return ret;
 }
 
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
+GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
+    if (*a != *b) return 1;
+    while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
+    return (*a==0 && *b==0) ? 0 : 1;
+}
+
 grib_action_file* grib_find_action_file(const char* fname , grib_action_file_list* afl)
 {
     grib_action_file* act = afl->first;
     while(act)
     {
-        if(strcmp(act->filename,fname)==0)
+        if(grib_inline_strcmp(act->filename,fname)==0)
             return act;
         act = act->next;
     }

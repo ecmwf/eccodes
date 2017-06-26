@@ -37,7 +37,7 @@ int main(int argc,char* argv[])
     char stringVal[100]={0,};
     int i,err=0;
     int cnt=0;
-    char* infile = "../../data/bufr/synop_multi_subset.bufr";
+    const char* infile = "../../data/bufr/synop_multi_subset.bufr";
 
     in=fopen(infile,"r");
     if (!in) {

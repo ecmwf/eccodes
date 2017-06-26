@@ -40,6 +40,8 @@ transient typicalSecond=0;
 meta ls.typicalDate sprintf("%.4d%.2d%.2d",typicalYear,typicalMonth,typicalDay) : dump,no_copy,read_only;
 meta ls.typicalTime sprintf("%.2d%.2d%.2d",typicalHour,typicalMinute,typicalSecond) :dump,no_copy,read_only;
 
+meta typicalDateTime julian_date(typicalYear,typicalMonth,typicalDay,typicalHour,typicalMinute,typicalSecond) ;
+
 
 alias ls.centre=bufrHeaderCentre;
 alias ls.masterTablesVersionNumber=masterTablesVersionNumber;

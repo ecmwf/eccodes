@@ -58,7 +58,7 @@ GRIB_MISSING_LONG = 2147483647
 
 # GRIB-51 Skip function arguments type checking if the
 # environment variable is defined
-no_type_checks = os.environ.get('GRIB_API_PYTHON_NO_TYPE_CHECKS') is not None
+no_type_checks = os.environ.get('ECCODES_PYTHON_NO_TYPE_CHECKS') is not None
 
 
 # Function-arguments type-checking decorator

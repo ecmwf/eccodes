@@ -7,7 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-label "Spherical harmonics";
 constant sphericalHarmonics=1;
 
 # constant dataRepresentationType  = 50;

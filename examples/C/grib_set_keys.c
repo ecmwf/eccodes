@@ -29,9 +29,9 @@ int main(int argc, char** argv)
     size_t size=0;
 
     FILE* in = NULL;
-    char* infile = "../../data/regular_latlon_surface.grib1";
+    const char* infile = "../../data/regular_latlon_surface.grib1";
     FILE* out = NULL;
-    char* outfile = "out.set.grib1";
+    const char* outfile = "out.set.grib1";
     codes_handle *h = NULL;
     const void* buffer = NULL;
     size_t str_len = 0; /* See the call to codes_set_string later */

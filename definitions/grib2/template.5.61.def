@@ -7,7 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-label "grib 2 Section 5 template 5.61";
 # START 2/template.5.61 ----------------------------------------------------------------------
 # Grid point data - Simple packing with logarithmic preprocessing
 constant typeOfPreProcessing=1;

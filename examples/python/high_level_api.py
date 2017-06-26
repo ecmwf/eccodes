@@ -28,9 +28,9 @@ for i1 in range(len(TEST_KEYS)):
 TEST_INDEX_OUTPUT = TESTGRIB
 TEST_STEPRANGE = ('0', '12', '18', '24', '6')
 # These keys should be available even if new keys are defined
-KNOWN_GRIB_KEYS = ['7777', 'EPS information', 'GRIBEditionNumber', 'N', 'NV',
+KNOWN_GRIB_KEYS = ['7777', 'GRIBEditionNumber', 'N', 'NV',
                    'Ni', 'Nj', 'PLPresent', 'PVPresent',
-                   'Parameter information', 'addEmptySection2',
+                   'addEmptySection2',
                    'addExtraLocalSection', 'alternativeRowScanning',
                    'angleDivisor', 'angleMultiplier', 'angularPrecision',
                    'average', 'backgroundProcess',
@@ -49,8 +49,6 @@ KNOWN_GRIB_KEYS = ['7777', 'EPS information', 'GRIBEditionNumber', 'N', 'NV',
                    'forecastTime', 'g2grid', 'gaussianGridName',
                    'genVertHeightCoords', 'generatingProcessIdentifier',
                    'getNumberOfValues', 'global', 'globalDomain',
-                   'grib 2 Section 5 DATA REPRESENTATION SECTION',
-                   'grib 2 Section 6 BIT-MAP SECTION', 'grib 2 Section 7 data',
                    'grib2LocalSectionNumber', 'grib2LocalSectionPresent',
                    'grib2divider', 'gridDefinitionDescription',
                    'gridDefinitionTemplateNumber',
@@ -131,11 +129,11 @@ KNOWN_GRIB_KEYS = ['7777', 'EPS information', 'GRIBEditionNumber', 'N', 'NV',
                    'unitsECMF', 'unitsOfFirstFixedSurface',
                    'unitsOfSecondFixedSurface', 'unpackedError',
                    'uvRelativeToGrid', 'validityDate', 'validityTime',
-                   'values', 'x', 'year']
+                   'values', 'year']
 KNOWN_BUFR_KEYS = ['edition', 'masterTableNumber', 'bufrHeaderSubCentre', 'bufrHeaderCentre',
                    'updateSequenceNumber', 'dataCategory', 'dataSubCategory', 'masterTablesVersionNumber',
                    'localTablesVersionNumber', 'typicalYearOfCentury', 'typicalMonth', 'typicalDay',
-                   'typicalHour', 'typicalMinute', 'rdbType', 'rdbSubtype', 'rdbtimeDay', 'rdbtimeHour',
+                   'typicalHour', 'typicalMinute', 'rdbType', 'newSubtype', 'rdbtimeDay', 'rdbtimeHour',
                    'rdbtimeMinute', 'rdbtimeSecond', 'rectimeDay', 'rectimeHour', 'rectimeMinute', 'rectimeSecond',
                    'correction1', 'correction1Part', 'correction2', 'correction2Part', 'correction3', 'correction3Part',
                    'correction4', 'correction4Part', 'qualityControl', 'numberOfSubsets', 'localLatitude', 'localLongitude',
@@ -229,7 +227,8 @@ class TestGribMessage(unittest.TestCase):
             msg = GribMessage(grib_file)
             msg_keys = msg.keys()
             for key in KNOWN_GRIB_KEYS:
-                assert key in msg_keys
+                assert key in msg_keys, "key '%s' not found" % key
+            # Size of message in bytes
             self.assertEqual(msg.size(), 160219)
             self.assertEqual(len(msg.keys()), len(msg))
 
@@ -368,8 +367,10 @@ class TestBufrMessage(unittest.TestCase):
             msg = BufrMessage(bufr_file)
             msg.unpack()
             msg_keys = msg.keys()
+            self.assertEqual(len(msg_keys), 140)
             for key in KNOWN_BUFR_KEYS:
                 assert key in msg_keys
+            # Size of message in bytes
             self.assertEqual(msg.size(), 220)
             self.assertEqual(len(msg.keys()), len(msg))
 

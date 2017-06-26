@@ -1,5 +1,5 @@
 #!/usr/bin/ksh
-set -x
+set -xe
 
 cd ../tests
 

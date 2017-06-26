@@ -22,6 +22,8 @@
 #define GRIB_ORDER_BY_ASC    1
 #define GRIB_ORDER_BY_DESC   -1
 
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
 GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
   if (*a != *b) return 1;
   while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}

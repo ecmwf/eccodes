@@ -663,8 +663,8 @@ static int pack_double_old(grib_accessor* a, const double* val, size_t *len)
     max = val[0];
     min = max;
     for(i=1;i< numberOfValues;i++) {
-        if (val[i] > max ) max = val[i];
-        if (val[i] < min ) min = val[i];
+        if      (val[i] > max ) max = val[i];
+        else if (val[i] < min ) min = val[i];
     }
 
     /* For constant fields set decimal scale factor to 0 (See GRIB-165) */
@@ -1268,8 +1268,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     min = max = val[0];
     for(i=1;i< numberOfValues;i++) {
-        if (val[i] > max ) max = val[i];
-        if (val[i] < min ) min = val[i];
+        if      (val[i] > max ) max = val[i];
+        else if (val[i] < min ) min = val[i];
     }
 
     if ((ret=grib_get_long_internal(handle,self->bits_per_value,&bits_per_value)) != GRIB_SUCCESS)

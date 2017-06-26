@@ -15,7 +15,6 @@
 
    START_CLASS_DEF
    CLASS      = expression
-   IMPLEMENTS = init_class
    IMPLEMENTS = native_type
    IMPLEMENTS = add_dependency
    IMPLEMENTS = get_name
@@ -233,13 +232,7 @@ grib_expression* new_is_in_dict_expression(grib_context* c,const char* name,cons
 
 static int native_type(grib_expression* g,grib_handle *h)
 {
-  grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
-  int type = 0;
-  int err;
-  if((err=grib_get_native_type(h,e->key,&type)) != GRIB_SUCCESS)
-    grib_context_log(h->context, GRIB_LOG_ERROR,
-    "Error in native_type %s : %s", e->key,grib_get_error_message(err));
-  return type;
+  return GRIB_TYPE_LONG;
 }
 
 static void  add_dependency(grib_expression* g, grib_accessor* observer){
