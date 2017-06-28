@@ -209,7 +209,7 @@ static void link_same_attributes(grib_accessor* a,grib_accessor* b)
     int idx=0;
     grib_accessor* bAttribute=NULL;
     if (a==NULL || b==NULL) return;
-    while (a->attributes[i] && i<MAX_ACCESSOR_ATTRIBUTES) {
+    while (i<MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
         bAttribute=_grib_accessor_get_attribute(b,a->attributes[i]->name,&idx);
         if (bAttribute) a->attributes[i]->same=bAttribute;
         i++;
