@@ -19,7 +19,6 @@
 #include "atlas/grid.h"
 #include "mir/repres/gauss/reduced/RotatedFromPL.h"
 #include "mir/util/Grib.h"
-#include "mir/util/RotatedIterator.h"
 
 
 namespace mir {
@@ -63,8 +62,8 @@ void RotatedClassic::fill(api::MIRJob &job) const  {
 }
 
 
-Iterator* RotatedClassic::rotatedIterator() const {
-    return new util::RotatedIterator(Classic::unrotatedIterator(), rotation_);
+Iterator* RotatedClassic::iterator() const {
+    return new Classic::iterator(rotation_);
 }
 
 

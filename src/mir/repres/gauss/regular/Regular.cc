@@ -162,11 +162,9 @@ void Regular::validate(const std::vector<double>& values) const {
     if (dom.isGlobal()) {
         count = (N_ * 2) * (N_ * 4);
     } else {
-        eckit::ScopedPtr<Iterator> it(unrotatedIterator());
-        Latitude lat;
-        Longitude lon;
-        while (it->next(lat, lon)) {
-            if (dom.contains(lat, lon)) {
+        eckit::ScopedPtr<Iterator> it(iterator());
+        while (it->next()) {
+            if (dom.contains(it->pointUnrotated())) {
                 ++count;
             }
         }
@@ -295,6 +293,7 @@ public:
     // TODO: Consider keeping a reference on the latitudes, to avoid copying
 
     RegularIterator(const std::vector<double>& latitudes, size_t N, size_t Ni, size_t Nj, const util::Domain& dom) :
+        Iterator(),
         latitudes_(latitudes),
         west_(dom.west().fraction()),
         N_(N),
@@ -320,16 +319,6 @@ public:
     }
 
 };
-
-
-Iterator *Regular::unrotatedIterator() const {
-    return new RegularIterator(latitudes(), N_, Ni_, Nj_, domain());
-}
-
-
-Iterator* Regular::rotatedIterator() const {
-    return unrotatedIterator();
-}
 
 
 void Regular::shape(size_t &ni, size_t &nj) const {

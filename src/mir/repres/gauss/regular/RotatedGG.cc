@@ -18,7 +18,6 @@
 #include <iostream>
 #include "atlas/grid.h"
 #include "mir/util/Grib.h"
-#include "mir/util/RotatedIterator.h"
 
 
 namespace mir {
@@ -77,8 +76,8 @@ void RotatedGG::fill(api::MIRJob &job) const  {
 }
 
 
-Iterator* RotatedGG::rotatedIterator() const {
-    return new util::RotatedIterator(Regular::unrotatedIterator(), rotation_);
+Iterator* RotatedGG::iterator() const {
+    return new Regular::iterator(rotation_);
 }
 
 

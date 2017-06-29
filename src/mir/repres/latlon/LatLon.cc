@@ -266,18 +266,13 @@ public:
 };
 
 
-Iterator *LatLon::unrotatedIterator() const {
+Iterator *LatLon::iterator() const {
     return new LatLonIterator(ni_,
                               nj_,
                               bbox_.north(),
                               bbox_.west(),
                               increments_.west_east(),
                               increments_.south_north());
-}
-
-
-Iterator* LatLon::rotatedIterator() const {
-    return unrotatedIterator();
 }
 
 

@@ -172,13 +172,8 @@ public:
 };
 
 
-Iterator *UnstructuredGrid::unrotatedIterator() const {
+Iterator *UnstructuredGrid::iterator() const {
     return new UnstructuredGridIterator(latitudes_, longitudes_);
-}
-
-
-Iterator* UnstructuredGrid::rotatedIterator() const {
-    return unrotatedIterator();
 }
 
 

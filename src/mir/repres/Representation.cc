@@ -263,16 +263,9 @@ void Representation::crop(const param::MIRParametrisation&, context::Context&) c
 }
 
 
-Iterator *Representation::unrotatedIterator() const {
+Iterator *Representation::iterator() const {
     std::ostringstream os;
-    os << "Representation::unrotatedIterator() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
-}
-
-
-Iterator *Representation::rotatedIterator() const {
-    std::ostringstream os;
-    os << "Representation::rotatedIterator() not implemented for " << *this;
+    os << "Representation::iterator() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
@@ -294,23 +287,19 @@ const Representation* Representation::globalise(data::MIRField& field) const {
     std::vector<double> latitudes;  latitudes.resize(size);
     std::vector<double> longitudes; longitudes.resize(size);
 
-    eckit::ScopedPtr<repres::Iterator> iter(octahedral->unrotatedIterator());
-
-    Latitude lat;
-    Longitude lon;
-
-
-    iter.reset(unrotatedIterator());
-    while (iter->next(lat, lon)) {
-        latitudes.push_back(lat.value());
-        longitudes.push_back(lon.value());
+    eckit::ScopedPtr<repres::Iterator> it(octahedral->iterator());
+    while (it->next()) {
+        const Iterator::point_ll_t& p = it->pointUnrotated();
+        latitudes.push_back(p.lat.value());
+        longitudes.push_back(p.lon.value());
     }
 
     size_t extra = 0;
-    while (iter->next(lat, lon)) {
-        if (!dom.contains(lat, lon)) {
-            latitudes.push_back(lat.value());
-            longitudes.push_back(lon.value());
+    while (it->next()) {
+        const Iterator::point_ll_t& p = it->pointUnrotated();
+        if (!dom.contains(p.lat, p.lon)) {
+            latitudes.push_back(p.lat.value());
+            longitudes.push_back(p.lon.value());
             extra++;
         }
     }

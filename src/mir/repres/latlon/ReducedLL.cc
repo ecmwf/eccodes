@@ -231,13 +231,8 @@ public:
 };
 
 
-Iterator *ReducedLL::unrotatedIterator() const {
+Iterator *ReducedLL::iterator() const {
     return new ReducedLLIterator(Nj_, pl_, domain());
-}
-
-
-Iterator* ReducedLL::rotatedIterator() const {
-    return unrotatedIterator();
 }
 
 

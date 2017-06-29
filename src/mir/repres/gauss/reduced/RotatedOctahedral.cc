@@ -19,7 +19,6 @@
 #include "atlas/grid.h"
 #include "mir/repres/gauss/reduced/RotatedFromPL.h"
 #include "mir/util/Grib.h"
-#include "mir/util/RotatedIterator.h"
 
 
 namespace mir {
@@ -64,8 +63,8 @@ void RotatedOctahedral::fill(api::MIRJob &job) const  {
 }
 
 
-Iterator* RotatedOctahedral::rotatedIterator() const {
-    return new util::RotatedIterator(Octahedral::unrotatedIterator(), rotation_);
+Iterator* RotatedOctahedral::iterator() const {
+    return new Octahedral::iterator(rotation_);
 }
 
 

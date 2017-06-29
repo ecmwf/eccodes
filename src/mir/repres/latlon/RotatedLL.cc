@@ -19,7 +19,6 @@
 #include "eckit/exception/Exceptions.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
-#include "mir/util/RotatedIterator.h"
 
 
 namespace mir {
@@ -75,8 +74,8 @@ const RotatedLL *RotatedLL::cropped(const util::BoundingBox &bbox) const {
 }
 
 
-Iterator *RotatedLL::rotatedIterator() const {
-    return new util::RotatedIterator(RegularLL::unrotatedIterator(), rotation_);
+Iterator *RotatedLL::iterator() const {
+    return new RegularLL::iterator(rotation_);
 }
 
 

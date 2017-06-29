@@ -223,13 +223,8 @@ public:
 };
 
 
-Iterator *Reduced::unrotatedIterator() const {
+Iterator* Reduced::iterator() const {
     return new GaussianIterator(latitudes(), pls(), domain());
-}
-
-
-Iterator* Reduced::rotatedIterator() const {
-    return unrotatedIterator();
 }
 
 
@@ -243,17 +238,10 @@ size_t Reduced::frame(std::vector<double> &values, size_t size, double missingVa
 
     std::map<size_t, size_t> shape;
 
-    // Iterator is 'unrotated'
-    eckit::ScopedPtr<Iterator> iter(unrotatedIterator());
-
     Latitude prev_lat = std::numeric_limits<double>::max();
     Longitude prev_lon = -std::numeric_limits<double>::max();
 
-    Latitude lat;
-    Longitude lon;
-
     size_t rows = 0;
-
     size_t dummy = 0; // Used to keep static analyser quiet
     size_t *col = &dummy;
 
@@ -262,19 +250,22 @@ size_t Reduced::frame(std::vector<double> &values, size_t size, double missingVa
     // but this code could also be used for all grids
     // and even be cached (md5 of iterators)
 
-    while (iter->next(lat, lon)) {
+    // Iterator is 'unrotated'
+    eckit::ScopedPtr<Iterator> it(iterator());
+    while (it->next()) {
+        const Iterator::point_ll_t& p = it->pointUnrotated();
 
-        if (lat != prev_lat ) {
-            ASSERT(lat < prev_lat); // Assumes scanning mode
-            prev_lat = lat;
+        if (p.lat != prev_lat ) {
+            ASSERT(p.lat < prev_lat); // Assumes scanning mode
+            prev_lat = p.lat;
             prev_lon = -std::numeric_limits<double>::max();
 
             col = &shape[rows++];
             (*col) = 0;
         }
 
-        ASSERT(lon > prev_lon); // Assumes scanning mode
-        prev_lon = lon;
+        ASSERT(p.lon > prev_lon); // Assumes scanning mode
+        prev_lon = p.lon;
         (*col) ++;
     }
 
@@ -306,10 +297,8 @@ void Reduced::validate(const std::vector<double>& values) const {
             count += pl[i];
         }
     } else {
-        eckit::ScopedPtr<Iterator> it(unrotatedIterator());
-        Latitude lat;
-        Longitude lon;
-        while (it->next(lat, lon)) {
+        eckit::ScopedPtr<Iterator> it(iterator());
+        while (it->next()) {
             ++count;
         }
     }

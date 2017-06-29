@@ -18,7 +18,6 @@
 #include <iostream>
 #include "atlas/grid.h"
 #include "mir/util/Grib.h"
-#include "mir/util/RotatedIterator.h"
 
 
 namespace mir {
@@ -74,8 +73,8 @@ const Reduced* RotatedFromPL::cropped(const util::BoundingBox &bbox, const std::
 }
 
 
-Iterator* RotatedFromPL::rotatedIterator() const {
-    return new util::RotatedIterator(FromPL::unrotatedIterator(), rotation_);
+Iterator* RotatedFromPL::iterator() const {
+    return new FromPL::iterator(rotation_);
 }
 
 
