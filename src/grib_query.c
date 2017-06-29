@@ -405,11 +405,11 @@ static grib_accessor* search_and_cache(grib_handle* h, const char* name,const ch
 static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name)
 {
     grib_accessor* a = NULL;
-    char* p = (char*)name;
+    char* p = NULL;
     DebugAssert(name);
 
-    while ( *p != '.' && *p != '\0' ) p++;
-    if ( *p == '.' ) {
+    p = strchr(name, '.');
+    if ( p ) {
         int i=0,len=0;
         char name_space[MAX_NAMESPACE_LEN];
         char* basename=NULL;
