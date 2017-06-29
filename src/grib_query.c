@@ -500,10 +500,11 @@ grib_accessor* grib_find_attribute(grib_handle* h, const char* name,const char* 
 grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name)
 {
     grib_accessor* a = NULL;
-    char* p = (char*)name;
+    char* p = NULL;
+    DebugAssert(name);
 
-    while ( *p != '.' && *p != '\0' ) p++;
-    if ( *p == '.' ) {
+    p = strchr(name, '.');
+    if ( p ) {
         int i=0,len=0;
         char name_space[MAX_NAMESPACE_LEN];
         p--;
