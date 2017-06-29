@@ -1118,6 +1118,7 @@ int grib_read_any_from_file(grib_context *ctx, FILE *f, void *buffer, size_t *le
 int grib_read_any_from_memory_alloc(grib_context *ctx, unsigned char **data, size_t *data_length, void **buffer, size_t *length);
 int grib_read_any_from_memory(grib_context *ctx, unsigned char **data, size_t *data_length, void *buffer, size_t *len);
 int grib_count_in_file(grib_context *c, FILE *f, int *n);
+int grib_count_in_filename(grib_context* c, const char* filename, int* n);
 
 /* grib_trie.c */
 grib_trie *grib_trie_new(grib_context *c);

@@ -1528,5 +1528,19 @@ int grib_count_in_file(grib_context* c, FILE* f,int* n)
     rewind(f);
 
     return err==GRIB_END_OF_FILE ? 0 : err;
+}
 
+int grib_count_in_filename(grib_context* c, const char* filename, int* n)
+{
+    int err=0;
+    if (!c) c=grib_context_get_default();
+    FILE* fp = fopen(filename, "r");
+    if (!fp) {
+        grib_context_log(c, GRIB_LOG_ERROR,"grib_count_in_filename: Unable to read file \"%s\"", filename);
+        perror(filename);
+        return GRIB_IO_PROBLEM;
+    }
+    err = grib_count_in_file(c, fp, n);
+    fclose(fp);
+    return err;
 }

@@ -40,6 +40,11 @@ int codes_count_in_file(grib_context* c, FILE* f,int* n)
 {
     return grib_count_in_file(c,f,n);
 }
+int codes_count_in_filename(grib_context* c, const char* filename, int* n)
+{
+    return grib_count_in_filename(c, filename, n);
+}
+
 grib_context* codes_context_get_default(void)
 {
     return grib_context_get_default();

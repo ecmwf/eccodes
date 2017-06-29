@@ -356,6 +356,15 @@ The codes_handle is the structure giving access to parsed message values by keys
 */
 int codes_count_in_file(codes_context* c, FILE* f,int* n);
 
+/**
+*  Counts the messages contained in a file.
+*
+* @param c           : the context from which the handle will be created (NULL for default context)
+* @param filename    : the path to the file
+* @param n           : the number of messages in the file
+* @return            0 if OK, integer value on error
+*/
+int codes_count_in_filename(codes_context* c, const char* filename, int* n);
 
 /**
 *  Create a handle from a file resource.
