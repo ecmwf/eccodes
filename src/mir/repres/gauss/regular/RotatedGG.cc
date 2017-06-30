@@ -47,7 +47,11 @@ const Gridded *RotatedGG::cropped(const util::BoundingBox& bbox) const {
 
 
 void RotatedGG::print(std::ostream& out) const {
-    out << "RotatedGG[N" << N_ << ",bbox=" << bbox_ << ",rotation" << rotation_ << "]";
+    out << "RotatedGG["
+        <<  "N" << N_
+        << ",bbox=" << bbox_
+        << ",rotation=" << rotation_
+        << "]";
 }
 
 
