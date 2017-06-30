@@ -66,7 +66,6 @@ bool RotatedLL::sameAs(const Representation& other) const {
 }
 
 
-
 // Called by RegularLL::crop()
 const RotatedLL *RotatedLL::cropped(const util::BoundingBox &bbox) const {
     eckit::Log::debug<LibMir>() << "Create cropped copy as RotatedLL bbox=" << bbox << std::endl;
@@ -75,7 +74,26 @@ const RotatedLL *RotatedLL::cropped(const util::BoundingBox &bbox) const {
 
 
 Iterator *RotatedLL::iterator() const {
-    return new RegularLL::iterator(rotation_);
+
+    class RotatedLLIterator : protected LatLonIterator, public Iterator {
+        void print(std::ostream& out) const {
+            out << "RotatedLLIterator[";
+            Iterator::print(out);
+            out << ",";
+            LatLonIterator::print(out);
+            out << "]";
+        }
+        bool next(Latitude& lat, Longitude& lon) {
+            return LatLonIterator::next(lat, lon);
+        }
+    public:
+        RotatedLLIterator(size_t ni, size_t nj, Latitude north, Longitude west, double we, double ns, const util::Rotation& rotation) :
+            LatLonIterator(ni, nj, north, west, we, ns),
+            Iterator(rotation) {
+        }
+    };
+
+    return new RotatedLLIterator(ni_, nj_, bbox_.north(), bbox_.west(), increments_.west_east(), increments_.south_north(), rotation_);
 }
 
 

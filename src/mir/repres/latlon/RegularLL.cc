@@ -46,6 +46,29 @@ RegularLL::~RegularLL() {
 }
 
 
+Iterator* RegularLL::iterator() const {
+
+    class RegularLLIterator : protected LatLonIterator, public Iterator {
+        void print(std::ostream& out) const {
+            out << "RegularLLIterator[";
+            Iterator::print(out);
+            out << ",";
+            LatLonIterator::print(out);
+            out << "]";
+        }
+        bool next(Latitude& lat, Longitude& lon) {
+            return LatLonIterator::next(lat, lon);
+        }
+    public:
+        RegularLLIterator(size_t ni, size_t nj, Latitude north, Longitude west, double we, double ns) :
+            LatLonIterator(ni, nj, north, west, we, ns) {
+        }
+    };
+
+    return new RegularLLIterator(ni_, nj_, bbox_.north(), bbox_.west(), increments_.west_east(), increments_.south_north());
+}
+
+
 // Called by RegularLL::crop()
 const RegularLL *RegularLL::cropped(const util::BoundingBox &bbox) const {
     // eckit::Log::debug<LibMir>() << "Create cropped copy as RegularLL bbox=" << bbox << std::endl;

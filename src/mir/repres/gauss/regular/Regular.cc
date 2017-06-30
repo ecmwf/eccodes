@@ -69,7 +69,7 @@ void adjustEastWest(size_t N, util::BoundingBox& bbox) {
 }  // (anonymous namespace)
 
 
-Regular::Regular(const param::MIRParametrisation &parametrisation):
+Regular::Regular(const param::MIRParametrisation& parametrisation):
     Gaussian(parametrisation) {
     adjustEastWest(N_, bbox_);
     setNiNj();
@@ -83,7 +83,7 @@ Regular::Regular(size_t N):
 }
 
 
-Regular::Regular(size_t N, const util::BoundingBox &bbox):
+Regular::Regular(size_t N, const util::BoundingBox& bbox):
     Gaussian(N, bbox) {
     adjustEastWest(N_, bbox_);
     setNiNj();
@@ -94,7 +94,7 @@ Regular::~Regular() {
 }
 
 
-void Regular::fill(grib_info &info) const  {
+void Regular::fill(grib_info& info) const  {
 
     // See copy_spec_from_ksec.c in libemos for info
 
@@ -126,7 +126,7 @@ void Regular::fill(grib_info &info) const  {
 }
 
 
-void Regular::fill(api::MIRJob &job) const  {
+void Regular::fill(api::MIRJob& job) const  {
     std::stringstream os;
     os << "F" << N_;
     job.set("gridname", os.str());
@@ -232,98 +232,76 @@ size_t Regular::frame(std::vector<double>& values, size_t size, double missingVa
 }
 
 
-class RegularIterator : public Iterator {
-
-    std::vector<double> latitudes_;
-    const eckit::Fraction west_;
-
-    const size_t N_;
-    const size_t Ni_;
-    const size_t Nj_;
-
-    eckit::Fraction lon_;
-    const eckit::Fraction inc_;
-
-    size_t i_;
-    size_t j_;
-    size_t k_;
-
-    size_t count_;
-
-    virtual void print(std::ostream &out) const {
-        out << "RegularIterator["
-            <<  "west="  << double(west_)
-            << ",N="     << N_
-            << ",Ni="    << Ni_
-            << ",Nj="    << Nj_
-            << ",i="     << i_
-            << ",j="     << j_
-            << ",k="     << k_
-            << ",count=" << count_
-            << "]";
-    }
-
-    virtual bool next(Latitude &lat, Longitude &lon) {
-        while (j_ < Nj_ && i_ < Ni_) {
-
-            ASSERT(j_ + k_ < latitudes_.size());
-            lat = latitudes_[j_ + k_];
-            lon = lon_;
-
-            i_++;
-            lon_ += inc_;
-
-            if (i_ == Ni_) {
-                j_++;
-                i_ = 0;
-                lon_ = west_;
-            }
-            count_++;
-            return true;
-        }
-        return false;
-    }
-
-    ~RegularIterator() {
-        ASSERT(count_ == Ni_ * Nj_);
-    }
-
-public:
-
-    // TODO: Consider keeping a reference on the latitudes, to avoid copying
-
-    RegularIterator(const std::vector<double>& latitudes, size_t N, size_t Ni, size_t Nj, const util::Domain& dom) :
-        Iterator(),
-        latitudes_(latitudes),
-        west_(dom.west().fraction()),
-        N_(N),
-        Ni_(Ni),
-        Nj_(Nj),
-        lon_(west_),
-        inc_(90, N_),
-        i_(0),
-        j_(0),
-        k_(0),
-        count_(0) {
-
-        // latitudes_ covers the whole globe, but (Ni_,Nj_) cover only the domain
-        ASSERT(latitudes_.size() == N * 2);
-        ASSERT(2 <= Ni_ && Ni_ <= N * 4);
-        ASSERT(2 <= Nj_ && Nj_ <= N * 2);
-
-        // Position to first latitude
-        while (k_ < latitudes_.size() && dom.north() < latitudes_[k_]) {
-            k_++;
-        }
-
-    }
-
-};
-
-
-void Regular::shape(size_t &ni, size_t &nj) const {
+void Regular::shape(size_t& ni, size_t& nj) const {
     ni = Ni_;
     nj = Nj_;
+}
+
+
+Regular::RegularIterator::RegularIterator(const std::vector<double>& latitudes, size_t N, size_t Ni, size_t Nj, const util::Domain& dom) :
+    latitudes_(latitudes),
+    west_(dom.west().fraction()),
+    N_(N),
+    Ni_(Ni),
+    Nj_(Nj),
+    lon_(west_),
+    inc_(90, static_cast<long long>(N_)),
+    i_(0),
+    j_(0),
+    k_(0),
+    count_(0) {
+
+    // latitudes_ covers the whole globe, but (Ni_,Nj_) cover only the domain
+    ASSERT(latitudes_.size() == N * 2);
+    ASSERT(2 <= Ni_ && Ni_ <= N * 4);
+    ASSERT(2 <= Nj_ && Nj_ <= N * 2);
+
+    // Position to first latitude
+    while (k_ < latitudes_.size() && dom.north() < latitudes_[k_]) {
+        k_++;
+    }
+
+}
+
+
+Regular::RegularIterator::~RegularIterator() {
+    ASSERT(count_ == Ni_ * Nj_);
+}
+
+
+void Regular::RegularIterator::print(std::ostream& out) const {
+    out << "RegularIterator["
+        <<  "west="  << west_
+         << ",N="     << N_
+         << ",Ni="    << Ni_
+         << ",Nj="    << Nj_
+         << ",i="     << i_
+         << ",j="     << j_
+         << ",k="     << k_
+         << ",count=" << count_
+         << "]";
+}
+
+
+bool Regular::RegularIterator::next(Latitude& lat, Longitude& lon) {
+    while (j_ < Nj_ && i_ < Ni_) {
+
+        ASSERT(j_ + k_ < latitudes_.size());
+        lat = latitudes_[j_ + k_];
+        lon = lon_;
+
+        i_++;
+        lon_ += inc_;
+
+        if (i_ == Ni_) {
+            j_++;
+            i_ = 0;
+            lon_ = west_;
+        }
+        count_++;
+        return true;
+    }
+    return false;
 }
 
 

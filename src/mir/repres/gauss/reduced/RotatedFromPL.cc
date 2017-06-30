@@ -16,7 +16,6 @@
 #include "mir/repres/gauss/reduced/RotatedFromPL.h"
 
 #include <iostream>
-#include "atlas/grid.h"
 #include "mir/util/Grib.h"
 
 
@@ -47,6 +46,11 @@ void RotatedFromPL::print(std::ostream &out) const {
 }
 
 
+Iterator* RotatedFromPL::iterator() const {
+    return rotatedIterator(rotation_);
+}
+
+
 void RotatedFromPL::fill(grib_info &info) const  {
 #ifdef GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG
     FromPL::fill(info);
@@ -70,11 +74,6 @@ atlas::Grid RotatedFromPL::atlasGrid() const {
 
 const Reduced* RotatedFromPL::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
     return new RotatedFromPL(N_, pl, bbox, rotation_);
-}
-
-
-Iterator* RotatedFromPL::iterator() const {
-    return new FromPL::iterator(rotation_);
 }
 
 

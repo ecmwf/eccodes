@@ -43,11 +43,17 @@ void RotatedOctahedral::print(std::ostream &out) const {
 
 
 void RotatedOctahedral::makeName(std::ostream& out) const { NOTIMP; }
+
+
 bool RotatedOctahedral::sameAs(const Representation& other) const { NOTIMP; }
 
 
+Iterator* RotatedOctahedral::iterator() const {
+    return rotatedIterator(rotation_);
+}
 
-void RotatedOctahedral::fill(grib_info &info) const  {
+
+void RotatedOctahedral::fill(grib_info& info) const  {
 #ifdef GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG
     Octahedral::fill(info);
     rotation_.fill(info);
@@ -58,13 +64,8 @@ void RotatedOctahedral::fill(grib_info &info) const  {
 }
 
 
-void RotatedOctahedral::fill(api::MIRJob &job) const  {
+void RotatedOctahedral::fill(api::MIRJob&) const  {
     NOTIMP;
-}
-
-
-Iterator* RotatedOctahedral::iterator() const {
-    return new Octahedral::iterator(rotation_);
 }
 
 

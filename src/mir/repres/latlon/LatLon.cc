@@ -192,90 +192,6 @@ bool LatLon::includesSouthPole() const {
 }
 
 
-class LatLonIterator : public Iterator {
-
-    size_t ni_;
-    size_t nj_;
-
-    eckit::Fraction north_;
-    eckit::Fraction west_;
-    eckit::Fraction we_;
-    eckit::Fraction ns_;
-
-    size_t i_;
-    size_t j_;
-
-    size_t count_;
-
-    eckit::Fraction lat_;
-    eckit::Fraction lon_;
-
-    virtual void print(std::ostream& out) const {
-        out << "LatLonIterator["
-            <<  "ni="     << ni_
-            << ",nj="     << nj_
-            << ",north="  << north_
-            << ",west="   << west_
-            << ",we="     << we_
-            << ",ns="     << ns_
-            << ",i="      << i_
-            << ",j="      << j_
-            << ",count="  << count_
-            << "]";
-    }
-
-    virtual bool next(Latitude& lat, Longitude& lon) {
-        if (j_ < nj_) {
-            if (i_ < ni_) {
-                lat = lat_;
-                lon = lon_;
-                lon_ += we_;
-                i_++;
-                if (i_ == ni_) {
-                    j_++;
-                    i_ = 0;
-                    lat_ -= ns_;
-                    lon_ = west_;
-                }
-                count_++;
-                return true;
-            }
-        }
-        return false;
-    }
-
-public:
-    LatLonIterator(size_t ni, size_t nj, Latitude north, Longitude west, double we, double ns) :
-        ni_(ni),
-        nj_(nj),
-        north_(north.fraction()),
-        west_(west.fraction()),
-        we_(we),
-        ns_(ns),
-        i_(0),
-        j_(0),
-        count_(0) {
-        lat_ = north_;
-        lon_ = west_;
-    }
-
-    ~LatLonIterator() {
-        ASSERT(count_ == ni_ * nj_);
-    }
-
-};
-
-
-Iterator *LatLon::iterator() const {
-    return new LatLonIterator(ni_,
-                              nj_,
-                              bbox_.north(),
-                              bbox_.west(),
-                              increments_.west_east(),
-                              increments_.south_north());
-}
-
-
 size_t LatLon::frame(std::vector<double>& values, size_t size, double missingValue) const {
 
     // Could be done better, just a demo
@@ -368,6 +284,61 @@ util::BoundingBox LatLon::globalBoundingBox(const util::Increments& increments,
     return util::BoundingBox(north, west, south, east);
 }
 
+
+LatLon::LatLonIterator::LatLonIterator(size_t ni, size_t nj, Latitude north, Longitude west, double we, double ns) :
+    ni_(ni),
+    nj_(nj),
+    north_(north.fraction()),
+    west_(west.fraction()),
+    we_(we),
+    ns_(ns),
+    i_(0),
+    j_(0),
+    count_(0) {
+    lat_ = north_;
+    lon_ = west_;
+}
+
+
+LatLon::LatLonIterator::~LatLonIterator() {
+    ASSERT(count_ == ni_ * nj_);
+}
+
+
+void LatLon::LatLonIterator::print(std::ostream& out) const {
+    out << "LatLonIterator["
+        <<  "ni="     << ni_
+        << ",nj="     << nj_
+        << ",north="  << north_
+        << ",west="   << west_
+        << ",we="     << we_
+        << ",ns="     << ns_
+        << ",i="      << i_
+        << ",j="      << j_
+        << ",count="  << count_
+        << "]";
+}
+
+
+bool LatLon::LatLonIterator::next(Latitude& lat, Longitude& lon) {
+    if (j_ < nj_) {
+        if (i_ < ni_) {
+            lat = lat_;
+            lon = lon_;
+            lon_ += we_;
+            i_++;
+            if (i_ == ni_) {
+                j_++;
+                i_ = 0;
+                lat_ -= ns_;
+                lon_ = west_;
+            }
+            count_++;
+            return true;
+        }
+    }
+    return false;
+}
 
 
 }  // namespace latlon
