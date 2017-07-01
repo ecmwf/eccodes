@@ -65,6 +65,15 @@ void ReducedLL::makeName(std::ostream& out) const {
 }
 
 
+size_t ReducedLL::numberOfPoints() const {
+    size_t total = 0;
+    for (auto j = pl_.begin(); j != pl_.end(); ++j) {
+        total += *j;
+    }
+    return total;
+}
+
+
 bool ReducedLL::sameAs(const Representation& other) const {
     const ReducedLL* o = dynamic_cast<const ReducedLL*>(&other);
     return o && (Nj_ == o->Nj_) && (bbox_ == o->bbox_) && (pl_ == o->pl_);

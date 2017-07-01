@@ -128,6 +128,10 @@ void UnstructuredGrid::validate(const std::vector<double> &values) const {
 }
 
 
+size_t UnstructuredGrid::numberOfPoints() const {
+    return latitudes_.size();
+}
+
 double UnstructuredGrid::increment() const {
     // double inc = 360.0;
     // TODO:
