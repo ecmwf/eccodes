@@ -83,6 +83,11 @@ void RegularLL::print(std::ostream &out) const {
 }
 
 
+size_t RegularLL::numberOfPoints() const {
+    return ni_ * nj_;
+}
+
+
 void RegularLL::makeName(std::ostream& out) const {
     LatLon::makeName(out);
 }
