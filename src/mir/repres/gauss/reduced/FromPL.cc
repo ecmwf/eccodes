@@ -62,15 +62,6 @@ void FromPL::makeName(std::ostream& out) const {
     bbox_.makeName(out);
 }
 
-size_t FromPL::numberOfPoints() const {
-    size_t total = 0;
-    for (auto j = pl_.begin(); j != pl_.end(); ++j) {
-        total += *j;
-    }
-    return total;
-}
-
-
 bool FromPL::sameAs(const Representation& other) const {
     const FromPL* o = dynamic_cast<const FromPL*>(&other);
     return o && (pl_ == o->pl_) && Reduced::sameAs(other);

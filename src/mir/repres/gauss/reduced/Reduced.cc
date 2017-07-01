@@ -390,6 +390,17 @@ bool Reduced::ReducedIterator::next(Latitude& lat, Longitude& lon) {
 }
 
 
+size_t Reduced::numberOfPoints() const {
+    size_t total = 0;
+    const std::vector<long>& pl = pls();
+    for (auto j = pl.begin(); j != pl.end(); ++j) {
+        total += *j;
+    }
+    return total;
+}
+
+
+
 }  // namespace reduced
 }  // namespace gauss
 }  // namespace repres
