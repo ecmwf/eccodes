@@ -122,7 +122,7 @@ void Regular::fill(grib_info& info) const  {
     long j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
     info.packing.extra_settings[j].name = "global";
-    info.packing.extra_settings[j].long_value = global() && westAtGreenwich ? 1 : 0;
+    info.packing.extra_settings[j].long_value = isGlobal() && westAtGreenwich ? 1 : 0;
 }
 
 

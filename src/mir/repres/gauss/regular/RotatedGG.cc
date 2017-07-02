@@ -106,7 +106,7 @@ Iterator* RotatedGG::iterator() const {
 
 
 size_t RotatedGG::numberOfPoints() const {
-    ASSERT(global());
+    ASSERT(isGlobal());
     return Ni_ * Nj_;
 }
 
