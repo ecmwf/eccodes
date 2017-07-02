@@ -163,12 +163,12 @@ void Reduced::fill(grib_info& info) const  {
     long j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
     info.packing.extra_settings[j].name = "global";
-    info.packing.extra_settings[j].long_value = domain().isGlobal() && westAtGreenwich ? 1 : 0;
+    info.packing.extra_settings[j].long_value = global() && westAtGreenwich ? 1 : 0;
 }
 
 
 void Reduced::fill(api::MIRJob& job) const  {
-    ASSERT(domain().isGlobal());
+    ASSERT(global());
     job.set("pl", pls());
 }
 
@@ -236,7 +236,7 @@ void Reduced::validate(const std::vector<double>& values) const {
 //    std::cout << "Reduced " << domain() << std::endl;
 
     long long count = 0;
-    if (domain().isGlobal()) {
+    if (global()) {
         const std::vector<long>& pl = pls();
         for (size_t i = 0; i < pl.size(); i++) {
             count += pl[i];
@@ -391,7 +391,7 @@ bool Reduced::ReducedIterator::next(Latitude& lat, Longitude& lon) {
 
 
 size_t Reduced::numberOfPoints() const {
-    ASSERT(domain().isGlobal());
+    ASSERT(global());
 
     size_t total = 0;
     const std::vector<long>& pl = pls();

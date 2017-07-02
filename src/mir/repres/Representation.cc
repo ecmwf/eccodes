@@ -189,6 +189,10 @@ util::MIRGrid Representation::grid() const {
     return util::MIRGrid(atlasGrid(), domain());
 }
 
+bool Representation::global() const {
+    return domain().isGlobal();
+}
+
 
 util::MIRGrid Representation::grid(util::MIRStatistics& statistics, const util::MIRGrid::MeshGenParams& meshGenParams) const {
     return util::MIRGrid(atlasGrid(), domain(), statistics, meshGenParams);
