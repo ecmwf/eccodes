@@ -42,7 +42,11 @@ void RotatedClassic::print(std::ostream &out) const {
 }
 
 
-void RotatedClassic::makeName(std::ostream& out) const { NOTIMP; }
+void RotatedClassic::makeName(std::ostream& out) const {
+    Classic::makeName(out);
+    rotation_.makeName(out);
+}
+
 bool RotatedClassic::sameAs(const Representation& other) const { NOTIMP; }
 
 
