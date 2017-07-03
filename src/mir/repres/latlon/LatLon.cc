@@ -30,6 +30,7 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
+#include "mir/data/MIRField.h"
 
 
 namespace mir {
@@ -128,8 +129,6 @@ void LatLon::fill(grib_info& info) const {
     // See copy_spec_from_ksec.c in libemos for info
     // Warning: scanning mode not considered
 
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_LL;
-
     info.grid.Ni = ni_;
     info.grid.Nj = nj_;
 
@@ -185,6 +184,56 @@ bool LatLon::includesSouthPole() const {
 
     return  range.sameWithGrib1Accuracy(Latitude::GLOBE) ||
             reach.sameWithGrib1Accuracy(Latitude::SOUTH_POLE);
+}
+
+
+size_t LatLon::numberOfPoints() const {
+    ASSERT(ni_);
+    ASSERT(nj_);
+    return ni_ * nj_;
+}
+
+
+Representation* LatLon::globalise(data::MIRField& field) const {
+    ASSERT(field.representation() == this);
+
+    if (isGlobal()) {
+        return 0;
+    }
+
+    ASSERT(!shift_);
+
+    // For now, we only use that function for the LAW model, so we only grow by the end (south pole)
+    ASSERT(bbox_.north() == Latitude::NORTH_POLE);
+    ASSERT(bbox_.west() == Longitude::GREENWICH);
+    ASSERT(bbox_.east() + increments_.west_east() == Longitude::GLOBE);
+
+    util::BoundingBox newbbox(bbox_.north(), bbox_.west(), Latitude::SOUTH_POLE, bbox_.east());
+
+    eckit::ScopedPtr<LatLon> newll(new LatLon(newbbox, increments_, util::Shift(0, 0)));
+
+    ASSERT(newll->nj_ > nj_);
+    ASSERT(newll->ni_ == ni_);
+
+    size_t n = ni_ * nj_;
+    size_t newn = newll->ni_ * newll->nj_;
+    double missingValue = field.missingValue();
+
+    for (size_t i = 0; i < field.dimensions(); i++ ) {
+        std::vector<double> newvalues(newn, missingValue);
+        const std::vector<double> &values = field.direct(i);
+        ASSERT(values.size() == n);
+
+        for (size_t j = 0 ; j < n; ++j) {
+            newvalues[j] = values[j];
+        }
+
+        field.update(newvalues, i);
+    }
+
+    field.hasMissing(true);
+
+    return newll.release();
 }
 
 

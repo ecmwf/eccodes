@@ -19,6 +19,7 @@
 #include "eckit/exception/Exceptions.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
+#include "mir/util/Grib.h"
 
 
 namespace mir {
@@ -26,49 +27,22 @@ namespace repres {
 namespace latlon {
 
 
-RotatedLL::RotatedLL(const param::MIRParametrisation &parametrisation):
-    RegularLL(parametrisation),
+RotatedLL::RotatedLL(const param::MIRParametrisation& parametrisation) :
+    LatLon(parametrisation),
     rotation_(parametrisation) {
 }
 
 
-RotatedLL::RotatedLL(const util::BoundingBox &bbox,
-    const util::Increments &increments,
-    const util::Rotation &rotation):
-    RegularLL(bbox, increments),
+RotatedLL::RotatedLL(
+        const util::BoundingBox& bbox,
+        const util::Increments& increments,
+        const util::Rotation& rotation ) :
+    LatLon(bbox, increments),
     rotation_(rotation) {
 }
 
 
 RotatedLL::~RotatedLL() {
-}
-
-
-void RotatedLL::print(std::ostream &out) const {
-    out << "RotatedLL[";
-    RegularLL::print(out);
-    out << ",rotation=" << rotation_
-        << "]";
-}
-
-
-void RotatedLL::makeName(std::ostream& out) const {
-    RegularLL::makeName(out);
-    rotation_.makeName(out);
-}
-
-bool RotatedLL::sameAs(const Representation& other) const {
-
-    const RotatedLL* o = dynamic_cast<const RotatedLL*>(&other);
-    return o && (rotation_ == o->rotation_) && RegularLL::sameAs(other);
-
-}
-
-
-// Called by RegularLL::crop()
-const RotatedLL *RotatedLL::cropped(const util::BoundingBox &bbox) const {
-    eckit::Log::debug<LibMir>() << "Create cropped copy as RotatedLL bbox=" << bbox << std::endl;
-    return new RotatedLL(bbox, increments_, rotation_);
 }
 
 
@@ -96,20 +70,59 @@ Iterator *RotatedLL::iterator() const {
 }
 
 
-void RotatedLL::fill(grib_info &info) const  {
-    RegularLL::fill(info);
-    rotation_.fill(info);
-}
-
-
-void RotatedLL::fill(api::MIRJob &job) const  {
-    RegularLL::fill(job);
-    rotation_.fill(job);
+void RotatedLL::print(std::ostream& out) const {
+    out << "RotatedLL[";
+    LatLon::print(out);
+    out << ",rotation=" << rotation_
+        << "]";
 }
 
 
 atlas::Grid RotatedLL::atlasGrid() const {
-    return rotation_.rotate(RegularLL::atlasGrid());;
+
+    // NOTE: for non-shifted/shifted grid, yspace uses bounding box
+    // (this works together with the Atlas RectangularDomain cropping)
+    const util::Domain dom = domain();
+
+    using atlas::grid::StructuredGrid;
+    using atlas::grid::LinearSpacing;
+    StructuredGrid::XSpace xspace( LinearSpacing( dom.west().value(),  dom.east().value(),  long(ni_), !dom.isPeriodicEastWest() ));
+    StructuredGrid::YSpace yspace( LinearSpacing( bbox_.north().value(), bbox_.south().value(), long(nj_) ));
+
+    StructuredGrid unrotatedGrid(xspace, yspace, StructuredGrid::Projection(), domain());
+    return rotation_.rotate(unrotatedGrid);
+}
+
+
+void RotatedLL::fill(grib_info& info) const  {
+    LatLon::fill(info);
+
+    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_LL;
+    rotation_.fill(info);
+}
+
+
+void RotatedLL::fill(api::MIRJob& job) const  {
+    LatLon::fill(job);
+    rotation_.fill(job);
+}
+
+
+void RotatedLL::makeName(std::ostream& out) const {
+    LatLon::makeName(out);
+    rotation_.makeName(out);
+}
+
+bool RotatedLL::sameAs(const Representation& other) const {
+
+    const RotatedLL* o = dynamic_cast<const RotatedLL*>(&other);
+    return o && (rotation_ == o->rotation_) && LatLon::sameAs(other);
+}
+
+
+const RotatedLL *RotatedLL::cropped(const util::BoundingBox& bbox) const {
+    // Called by AreaCropper::execute
+    return new RotatedLL(bbox, increments_, shift_, rotation_);
 }
 
 
