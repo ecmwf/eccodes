@@ -391,12 +391,20 @@ bool Reduced::ReducedIterator::next(Latitude& lat, Longitude& lon) {
 
 
 size_t Reduced::numberOfPoints() const {
-    ASSERT(isGlobal());
-
     size_t total = 0;
-    const std::vector<long>& pl = pls();
-    for (auto j = pl.begin(); j != pl.end(); ++j) {
-        total += *j;
+
+    if (isGlobal()) {
+
+        const std::vector<long>& pl = pls();
+        for (auto j = pl.begin(); j != pl.end(); ++j) {
+            total += *j;
+        }
+    }
+    else {
+        eckit::ScopedPtr<repres::Iterator> iter(iterator());
+        while (iter->next()) {
+            total++;
+        }
     }
     return total;
 }
