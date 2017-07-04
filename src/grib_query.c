@@ -436,12 +436,10 @@ static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name)
 char* grib_split_name_attribute(grib_context* c,const char* name,char* attribute_name)
 {
     /*returns accessor name and attribute*/
-    char* p=0;
     size_t size=0;
     char* accessor_name=NULL;
-    p=(char*)name;
-    while ( *(p+1) != '\0' && ( *p != '-' || *(p+1)!= '>' ) ) p++;
-    if (*(p+1) == '\0') {
+    char* p = strstr(name, "->");
+    if (!p) {
         *attribute_name=0;
         return (char*)name;
     }
