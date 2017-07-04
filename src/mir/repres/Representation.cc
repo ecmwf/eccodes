@@ -186,11 +186,7 @@ bool Representation::sameAs(const Representation&) const {
 
 
 util::MIRGrid Representation::grid() const {
-    return util::MIRGrid(atlasGrid(), domain());
-}
-
-util::MIRGrid Representation::grid(util::MIRStatistics& statistics, const util::MIRGrid::MeshGenParams& meshGenParams) const {
-    return util::MIRGrid(atlasGrid(), domain(), statistics, meshGenParams);
+    return util::MIRGrid(atlasGrid());
 }
 
 
