@@ -55,6 +55,7 @@ static void thread_init()
    MEMBERS    =  const char* masterDir
    MEMBERS    =  const char* localDir
    MEMBERS    =  grib_codetable* table
+   MEMBERS    =  int table_loaded
    END_CLASS_DEF
 
  */
@@ -92,6 +93,7 @@ typedef struct grib_accessor_codetable {
 	const char* masterDir;
 	const char* localDir;
 	grib_codetable* table;
+	int table_loaded;
 } grib_accessor_codetable;
 
 extern grib_accessor_class* grib_accessor_class_unsigned;
@@ -297,7 +299,11 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
     GRIB_MUTEX_INIT_ONCE(&once,&thread_init);
     GRIB_MUTEX_LOCK(&mutex1); /* GRIB-930 */
 
-    /*printf("%s: Looking in cache: f=%s lf=%s\n", self->att.name, filename, localFilename);*/
+    /*printf("DBG %s: Look in cache: f=%s lf=%s (recomposed=%s)\n", self->att.name, filename, localFilename,recomposed);*/
+    if (filename == NULL && localFilename == NULL) {
+        t = NULL;
+        goto the_end;
+    }
     next=c->codetable;
     while(next) {
         if ((filename && next->filename[0] && strcmp(filename,next->filename[0]) == 0) &&
@@ -502,7 +508,10 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
     size_t llen = 1;
     long value;
 
-    if(!self->table) self->table = load_table(self);
+    if (!self->table_loaded) {
+        self->table = load_table(self); /* may return NULL */
+        self->table_loaded = 1;
+    }
     table=self->table;
 
     grib_unpack_long(a, &value,&llen);
@@ -569,7 +578,10 @@ static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
     if( (err = grib_unpack_long(a,&value,&size)) != GRIB_SUCCESS)
         return err;
 
-    if(!self->table) self->table = load_table(self);
+    if (!self->table_loaded) {
+        self->table = load_table(self); /* may return NULL */
+        self->table_loaded=1;
+    }
     table=self->table;
 
     if(table && (value >= 0) && (value < table->size) && table->entries[value].abbreviation)
@@ -622,7 +634,10 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t *len)
     cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? stricmp : strcmp;
 #endif
 
-    if(!self->table) self->table = load_table(self);
+    if (!self->table_loaded) {
+        self->table = load_table(self); /* may return NULL */
+        self->table_loaded=1;
+    }
     table=self->table;
 
     if(!table)
@@ -743,7 +758,10 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 #endif
     rlen = 1; /* ECC-480 Performance: avoid func call overhead of grib_value_count */
 
-    if(!self->table) self->table = load_table(self);
+    if (!self->table_loaded) {
+        self->table = load_table(self); /* may return NULL */
+        self->table_loaded=1;
+    }
 
     if(*len < rlen)
     {
