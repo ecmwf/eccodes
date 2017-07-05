@@ -235,9 +235,17 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
     }
 }
 
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
+GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
+    if (*a != *b) return 1;
+    while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
+    return (*a==0 && *b==0) ? 0 : 1;
+}
+
 static int str_eq(const char* a, const char* b)
 {
-    if ( a && b && (strcmp(a,b)==0) )
+    if ( a && b && (grib_inline_strcmp(a,b)==0) )
         return 1;
     return 0;
 }
@@ -306,10 +314,10 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
     }
     next=c->codetable;
     while(next) {
-        if ((filename && next->filename[0] && strcmp(filename,next->filename[0]) == 0) &&
+        if ((filename && next->filename[0] && grib_inline_strcmp(filename,next->filename[0]) == 0) &&
                 ((localFilename==0 && next->filename[1]==NULL) ||
                         ((localFilename!=0 && next->filename[1]!=NULL)
-                                && strcmp(localFilename,next->filename[1]) ==0)) )
+                                && grib_inline_strcmp(localFilename,next->filename[1]) ==0)) )
         {
             t = next;
             goto the_end;
@@ -534,7 +542,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
             else
                 sprintf(comment,"%s", table->entries[value].title);
 
-            if (table->entries[value].units!=NULL && strcmp(table->entries[value].units,"unknown")) {
+            if (table->entries[value].units!=NULL && grib_inline_strcmp(table->entries[value].units,"unknown")) {
                 strcat(comment," (");
                 strcat(comment,table->entries[value].units);
                 strcat(comment,") ");
