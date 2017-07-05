@@ -238,53 +238,6 @@ void LatLon::initTrans(Trans_t& trans) const {
 }
 
 
-
-static eckit::Fraction NORTH_POLE(90);
-static eckit::Fraction SOUTH_POLE(-90);
-static eckit::Fraction ZERO(0);
-static eckit::Fraction THREE_SIXTY(360);
-static eckit::Fraction DATE_LINE_MINUS(-180);
-static eckit::Fraction DATE_LINE_PLUS(180);
-
-static eckit::Fraction adjust(const eckit::Fraction& target, bool up, const eckit::Fraction& increment, const eckit::Fraction& shift) {
-    eckit::Fraction r = (target - shift) / increment;
-
-    eckit::Fraction::value_type n = r.integralPart();
-    if (!r.integer() && (r > 0) == up) {
-        n += (up ? 1 : -1);
-    }
-
-    return n * increment + shift;
-}
-
-
-util::BoundingBox LatLon::globalBoundingBox(const util::Increments& increments,
-        const util::Shift& shift) {
-
-    const eckit::Fraction& sn = increments.south_north();
-    const eckit::Fraction& we = increments.west_east();
-    ASSERT(sn > 0);
-    ASSERT(we > 0);
-
-    eckit::Fraction north = adjust(NORTH_POLE, false, sn, shift.south_north());
-    eckit::Fraction south = adjust(SOUTH_POLE, true, sn, shift.south_north());
-
-    eckit::Fraction west;
-    eckit::Fraction east;
-    if ((THREE_SIXTY / we).integer()) {
-        // - periodic grids have East-most longitude at 360 - increment
-        west = adjust(ZERO, true, we, shift.west_east());
-        east = THREE_SIXTY + west - we;
-    } else {
-        // non-periodic grids do not include the date line (e.g. 1.1)
-        west = adjust(DATE_LINE_MINUS, true, we, shift.west_east());
-        east = adjust(DATE_LINE_PLUS, false, we, shift.west_east());
-    }
-
-    return util::BoundingBox(north, west, south, east);
-}
-
-
 LatLon::LatLonIterator::LatLonIterator(size_t ni, size_t nj, Latitude north, Longitude west, double we, double ns) :
     ni_(ni),
     nj_(nj),
