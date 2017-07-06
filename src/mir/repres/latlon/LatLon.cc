@@ -39,17 +39,15 @@ namespace latlon {
 
 LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
     Gridded(parametrisation),
-    increments_(parametrisation),
-    shift_(parametrisation) {
+    increments_(parametrisation) {
     ASSERT(parametrisation.get("Ni", ni_));
     ASSERT(parametrisation.get("Nj", nj_));
 }
 
 
-LatLon::LatLon(const util::BoundingBox& bbox, const util::Increments& increments, const util::Shift& shift) :
+LatLon::LatLon(const util::BoundingBox& bbox, const util::Increments& increments) :
     Gridded(bbox),
-    increments_(increments),
-    shift_(shift) {
+    increments_(increments){
     setNiNj();
 }
 
@@ -120,7 +118,6 @@ void LatLon::print(std::ostream& out) const {
     out << "LatLon["
         <<  "bbox=" << bbox_
         << ",increments=" << increments_
-        << ",shift=" << shift_
         << ",ni=" << ni_
         << ",nj=" << nj_
         << "]";
@@ -151,13 +148,12 @@ void LatLon::makeName(std::ostream& out) const {
     out << "LL";
     increments_.makeName(out);
     bbox_.makeName(out);
-    shift_.makeName(out);
 }
 
 
 bool LatLon::sameAs(const Representation& other) const {
     const LatLon* o = dynamic_cast<const LatLon*>(&other);
-    return o && (bbox_ == o->bbox_) && (increments_ == o->increments_) && (shift_ == o->shift_);
+    return o && (bbox_ == o->bbox_) && (increments_ == o->increments_);
 }
 
 
@@ -229,7 +225,7 @@ void LatLon::shape(size_t& ni, size_t& nj) const {
 
 
 void LatLon::initTrans(Trans_t& trans) const {
-    ASSERT(!shift_);
+    ASSERT(!increments_.isShifted(bbox_));
 #ifdef ATLAS_HAVE_TRANS
     ASSERT(trans_set_resol_lonlat(&trans, ni_, nj_) == 0);
 #else

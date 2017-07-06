@@ -34,9 +34,8 @@ RotatedLL::RotatedLL(const param::MIRParametrisation &parametrisation):
 
 RotatedLL::RotatedLL(const util::BoundingBox &bbox,
     const util::Increments &increments,
-    const util::Shift &shift,
     const util::Rotation &rotation):
-    RegularLL(bbox, increments, shift),
+    RegularLL(bbox, increments),
     rotation_(rotation) {
 }
 
@@ -69,7 +68,7 @@ bool RotatedLL::sameAs(const Representation& other) const {
 // Called by RegularLL::crop()
 const RotatedLL *RotatedLL::cropped(const util::BoundingBox &bbox) const {
     eckit::Log::debug<LibMir>() << "Create cropped copy as RotatedLL bbox=" << bbox << std::endl;
-    return new RotatedLL(bbox, increments_, shift_, rotation_);
+    return new RotatedLL(bbox, increments_, rotation_);
 }
 
 

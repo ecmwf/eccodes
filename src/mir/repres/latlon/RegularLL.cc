@@ -35,10 +35,9 @@ RegularLL::RegularLL(const param::MIRParametrisation &parametrisation):
     LatLon(parametrisation) {}
 
 
-RegularLL::RegularLL(const util::BoundingBox &bbox,
-                     const util::Increments &increments,
-                     const util::Shift& shift) :
-    LatLon(bbox, increments, shift) {
+RegularLL::RegularLL(const util::BoundingBox& bbox,
+                     const util::Increments& increments) :
+    LatLon(bbox, increments) {
 }
 
 
@@ -70,9 +69,9 @@ Iterator* RegularLL::iterator() const {
 
 
 // Called by RegularLL::crop()
-const RegularLL *RegularLL::cropped(const util::BoundingBox &bbox) const {
+const RegularLL *RegularLL::cropped(const util::BoundingBox& bbox) const {
     // eckit::Log::debug<LibMir>() << "Create cropped copy as RegularLL bbox=" << bbox << std::endl;
-    return new RegularLL(bbox, increments_, shift_);
+    return new RegularLL(bbox, increments_);
 }
 
 
@@ -135,7 +134,7 @@ Representation* RegularLL::globalise(data::MIRField& field) const {
         return 0;
     }
 
-    ASSERT(!shift_);
+    ASSERT(!increments_.isShifted(bbox_));
 
     // For now, we only use that function for the LAW model, so we only grow by the end (south pole)
     ASSERT(bbox_.north() == Latitude::NORTH_POLE);
@@ -144,7 +143,7 @@ Representation* RegularLL::globalise(data::MIRField& field) const {
 
     util::BoundingBox newbbox(bbox_.north(), bbox_.west(), -90, bbox_.east());
 
-    eckit::ScopedPtr<RegularLL> newll(new RegularLL(newbbox, increments_, util::Shift(0, 0)));
+    eckit::ScopedPtr<RegularLL> newll(new RegularLL(newbbox, increments_));
 
     ASSERT(newll->nj_ > nj_);
     ASSERT(newll->ni_ == ni_);
