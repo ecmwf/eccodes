@@ -153,9 +153,6 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     self->pl           = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
-/* For an Octahedral grid, this is the number of points on the top-most latitude (near pole) */
-#define NUM_POINTS_ON_LAT_NEAR_POLE 20
-
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_octahedral_gaussian* self = (grib_accessor_octahedral_gaussian*)a;
@@ -163,7 +160,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     long N,Ni;
     long plpresent=0;
     long* pl=NULL; /* pl array */
-    size_t plsize=0, i=0, mid=0;
+    size_t plsize=0, i=0;
 
     grib_context* c=a->context;
 
@@ -189,27 +186,21 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
     if((ret = grib_get_size(grib_handle_of_accessor(a),self->pl,&plsize)) != GRIB_SUCCESS)
         return ret;
-    Assert(plsize);
-    if (plsize != 2*N) {
-        *val=0; /* Not octahedral */
-        return GRIB_SUCCESS;
-    }
+    Assert(plsize); /* pl array must have at least one element */
+
     pl=(long*)grib_context_malloc_clear(c,sizeof(long)*plsize);
     if (!pl) {
         return GRIB_OUT_OF_MEMORY;
     }
     if ((ret = grib_get_long_array_internal(grib_handle_of_accessor(a),self->pl,pl, &plsize)) != GRIB_SUCCESS)
         return ret;
-    if (pl[0] != NUM_POINTS_ON_LAT_NEAR_POLE) {
-        *val=0; /* Not octahedral */
-        grib_context_free(c, pl);
-        return GRIB_SUCCESS;
-    }
-    mid = plsize/2;
-    /* Check pl values and symmetry */
-    for(i=0; i<mid; ++i) {
-        const long expected = 4*(i+1) + 16; /* Octahedral rule */
-        if ( pl[i] != expected || (pl[i] != pl[plsize-1-i]) ) {
+
+    /* pl[0] is guaranteed to exist. Have already asserted previously */
+    for(i=1; i<plsize; ++i) {
+        const long diff = abs(pl[i] - pl[i-1]);
+        /* There are two values at the equator which are equal. */
+        /* So diff is either 4 or 0 */
+        if (diff != 4 && diff != 0) {
             *val = 0; /* Not octahedral */
             grib_context_free(c, pl);
             return GRIB_SUCCESS;
