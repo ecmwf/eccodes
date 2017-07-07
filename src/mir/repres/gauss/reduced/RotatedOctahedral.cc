@@ -42,7 +42,10 @@ void RotatedOctahedral::print(std::ostream &out) const {
 }
 
 
-void RotatedOctahedral::makeName(std::ostream& out) const { NOTIMP; }
+void RotatedOctahedral::makeName(std::ostream& out) const {
+    Octahedral::makeName(out);
+    rotation_.makeName(out);
+}
 
 
 bool RotatedOctahedral::sameAs(const Representation& other) const { NOTIMP; }
