@@ -36,56 +36,23 @@ namespace repres {
 namespace regular {
 
 
-namespace {
-void adjustEastWest(size_t N, util::BoundingBox& bbox) {
-    ASSERT(N);
-
-    Longitude e = bbox.east();
-    Longitude w = bbox.west();
-    const eckit::Fraction inc(90, N);
-
-    bool adjustedEast = false;
-    bool adjustedWest = false;
-
-    const long range = 4 * long(N);
-    for (long i = -range; i <= range; ++i) {
-        const Longitude l = i * inc;
-        if (!adjustedEast && (e.value() != l.value()) && bbox.east().sameWithGrib1Accuracy(l)) {
-            adjustedEast = true;
-            e = l;
-        }
-        if (!adjustedWest && (w.value() != l.value()) && bbox.west().sameWithGrib1Accuracy(l)) {
-            adjustedWest = true;
-            w = l;
-        }
-        if (adjustedEast && adjustedWest) {
-            break;
-        }
-    }
-    if (adjustedEast || adjustedWest) {
-        bbox = util::BoundingBox(bbox.north(), w, bbox.south(), e);
-    }
-}
-}  // (anonymous namespace)
-
-
 Regular::Regular(const param::MIRParametrisation& parametrisation):
     Gaussian(parametrisation) {
-    adjustEastWest(N_, bbox_);
+    adjustBoundingBoxEastWest(bbox_);
     setNiNj();
 }
 
 
 Regular::Regular(size_t N):
     Gaussian(N) {
-    adjustEastWest(N_, bbox_);
+    adjustBoundingBoxEastWest(bbox_);
     setNiNj();
 }
 
 
 Regular::Regular(size_t N, const util::BoundingBox& bbox):
     Gaussian(N, bbox) {
-    adjustEastWest(N_, bbox_);
+    adjustBoundingBoxEastWest(bbox_);
     setNiNj();
 }
 
@@ -138,9 +105,49 @@ void Regular::makeName(std::ostream& out) const {
     bbox_.makeName(out);
 }
 
+
 bool Regular::sameAs(const Representation& other) const {
     const Regular* o = dynamic_cast<const Regular*>(&other);
     return o && (N_ == o->N_) && (bbox_ == o->bbox_);
+}
+
+
+eckit::Fraction Regular::getSmallestIncrement() const {
+    ASSERT(N_);
+    return eckit::Fraction(90, N_);
+}
+
+
+void Regular::adjustBoundingBoxEastWest(util::BoundingBox& bbox) {
+    Longitude e = bbox.east();
+    Longitude w = bbox.west();
+
+    bool adjustedEast = false;
+    bool adjustedWest = false;
+
+    eckit::Fraction inc = getSmallestIncrement();
+    if (e - w > Longitude::GLOBE - inc) {
+        adjustedEast = true;
+        e = w + Longitude::GLOBE - inc;
+    }
+
+    const long range = 4 * long(N_);
+    for (long i = -range; i <= range; ++i) {
+        const Longitude l = w - i * inc;
+        if (!adjustedEast && bbox.east().sameWithGrib1Accuracy(l)) {
+            adjustedEast = true;
+            e = l;
+        }
+        if (!adjustedWest && bbox.west().sameWithGrib1Accuracy(l)) {
+            adjustedWest = true;
+            w = l;
+        }
+        if (adjustedEast && adjustedWest) {
+            break;
+        }
+    }
+
+    bbox = util::BoundingBox(bbox.north(), w, bbox.south(), e);
 }
 
 
