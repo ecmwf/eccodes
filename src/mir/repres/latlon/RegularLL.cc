@@ -16,8 +16,6 @@
 #include "mir/repres/latlon/RegularLL.h"
 
 #include <iostream>
-#include "eckit/types/FloatCompare.h"
-#include "eckit/types/Fraction.h"
 #include "atlas/grid.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
@@ -68,13 +66,6 @@ Iterator* RegularLL::iterator() const {
 }
 
 
-// Called by RegularLL::crop()
-const RegularLL *RegularLL::cropped(const util::BoundingBox& bbox) const {
-    // eckit::Log::debug<LibMir>() << "Create cropped copy as RegularLL bbox=" << bbox << std::endl;
-    return new RegularLL(bbox, increments_);
-}
-
-
 void RegularLL::print(std::ostream &out) const {
     out << "RegularLL[";
     LatLon::print(out);
@@ -122,9 +113,9 @@ bool RegularLL::sameAs(const Representation& other) const {
 }
 
 
-const RegularLL *RegularLL::cropped(const util::BoundingBox& bbox) const {
+const RegularLL* RegularLL::cropped(const util::BoundingBox& bbox) const {
     // Called by AreaCropper::execute
-    return new RegularLL(bbox, increments_, shift_);
+    return new RegularLL(bbox, increments_);
 }
 
 

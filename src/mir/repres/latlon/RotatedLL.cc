@@ -16,9 +16,10 @@
 #include "mir/repres/latlon/RotatedLL.h"
 
 #include <iostream>
-#include "eckit/exception/Exceptions.h"
+#include "atlas/grid.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
+#include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 
 
@@ -120,9 +121,9 @@ bool RotatedLL::sameAs(const Representation& other) const {
 }
 
 
-const RotatedLL *RotatedLL::cropped(const util::BoundingBox& bbox) const {
+const RotatedLL* RotatedLL::cropped(const util::BoundingBox& bbox) const {
     // Called by AreaCropper::execute
-    return new RotatedLL(bbox, increments_, shift_, rotation_);
+    return new RotatedLL(bbox, increments_, rotation_);
 }
 
 

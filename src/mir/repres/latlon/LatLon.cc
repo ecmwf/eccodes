@@ -201,7 +201,7 @@ Representation* LatLon::globalise(data::MIRField& field) const {
         return 0;
     }
 
-    ASSERT(!shift_);
+    ASSERT(!increments_.isShifted(bbox_));
 
     // For now, we only use that function for the LAW model, so we only grow by the end (south pole)
     ASSERT(bbox_.north() == Latitude::NORTH_POLE);
@@ -210,7 +210,7 @@ Representation* LatLon::globalise(data::MIRField& field) const {
 
     util::BoundingBox newbbox(bbox_.north(), bbox_.west(), Latitude::SOUTH_POLE, bbox_.east());
 
-    eckit::ScopedPtr<LatLon> newll(new LatLon(newbbox, increments_, util::Shift(0, 0)));
+    eckit::ScopedPtr<LatLon> newll(new LatLon(newbbox, increments_));
 
     ASSERT(newll->nj_ > nj_);
     ASSERT(newll->ni_ == ni_);
