@@ -121,7 +121,7 @@ bool ReducedLL::includesNorthPole() const {
 
 
 bool ReducedLL::includesSouthPole() const {
-    return bbox_.north() == Latitude::SOUTH_POLE;
+    return bbox_.south() == Latitude::SOUTH_POLE;
 }
 
 
