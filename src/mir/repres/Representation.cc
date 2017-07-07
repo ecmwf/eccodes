@@ -92,9 +92,12 @@ void Representation::setGivenPacking(grib_info &) const {
 
 
 bool Representation::isGlobal() const {
-    return isPeriodicWestEast() &&
-           includesNorthPole() &&
-           includesSouthPole();
+    bool global = isPeriodicWestEast() &&
+                  includesNorthPole() &&
+                  includesSouthPole();
+
+    ASSERT(global == domain().isGlobal());
+    return global;
 }
 
 
