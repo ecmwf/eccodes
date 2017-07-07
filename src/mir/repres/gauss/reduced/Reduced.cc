@@ -77,7 +77,8 @@ bool Reduced::isPeriodicWestEast() const {
     const Longitude we = bbox_.east() - bbox_.west();
     const Longitude inc = eckit::Fraction(360, maxpl);
 
-    return (we + inc).sameWithGrib1Accuracy(Longitude::GLOBE.value());
+    return (we + inc).sameWithGrib1Accuracy(Longitude::GLOBE.value())
+        || (we + inc >= Longitude::GLOBE.value());
 }
 
 
