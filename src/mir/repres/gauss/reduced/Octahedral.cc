@@ -29,7 +29,7 @@ namespace reduced {
 
 Octahedral::Octahedral(size_t N):
     Reduced(N) {
-
+    adjustBoundingBoxEastWest(bbox_);
 }
 
 
@@ -39,6 +39,7 @@ Octahedral::~Octahedral() {
 
 Octahedral::Octahedral(long N, const util::BoundingBox &bbox) :
     Reduced(N, bbox) {
+    adjustBoundingBoxEastWest(bbox_);
 }
 
 
@@ -46,15 +47,18 @@ void Octahedral::fill(grib_info &info) const  {
     Reduced::fill(info);
 }
 
+
 void Octahedral::makeName(std::ostream& out) const {
     out << "O" << N_;
     bbox_.makeName(out);
 }
 
+
 bool Octahedral::sameAs(const Representation& other) const {
     const Octahedral* o = dynamic_cast<const Octahedral*>(&other);
     return o && Reduced::sameAs(other);
 }
+
 
 void Octahedral::fill(api::MIRJob &job) const  {
     Reduced::fill(job);

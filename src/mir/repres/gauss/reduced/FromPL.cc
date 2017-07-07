@@ -31,6 +31,7 @@ namespace reduced {
 
 FromPL::FromPL(const param::MIRParametrisation &parametrisation) : Reduced(parametrisation) {
     ASSERT(parametrisation.get("pl", pl_));
+    adjustBoundingBoxEastWest(bbox_);
 }
 
 
@@ -41,12 +42,14 @@ FromPL::~FromPL() {
 FromPL::FromPL(size_t N, const std::vector<long> &pl, const util::BoundingBox &bbox) :
     Reduced(N, bbox),
     pl_(pl) {
+    adjustBoundingBoxEastWest(bbox_);
 }
 
 
 FromPL::FromPL(const std::vector<long> &pl):
     Reduced(pl.size() / 2),
     pl_(pl) {
+    adjustBoundingBoxEastWest(bbox_);
 }
 
 
@@ -61,6 +64,7 @@ void FromPL::makeName(std::ostream& out) const {
     out << std::string(md5);
     bbox_.makeName(out);
 }
+
 
 bool FromPL::sameAs(const Representation& other) const {
     const FromPL* o = dynamic_cast<const FromPL*>(&other);

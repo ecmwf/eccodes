@@ -44,6 +44,11 @@ namespace gauss {
 namespace reduced {
 
 
+Reduced::Reduced(const param::MIRParametrisation& parametrisation):
+    Gaussian(parametrisation) {
+}
+
+
 Reduced::Reduced(size_t N):
     Gaussian(N) {
 }
@@ -54,11 +59,6 @@ Reduced::Reduced(size_t N, const util::BoundingBox& bbox):
 }
 
 
-Reduced::Reduced(const param::MIRParametrisation& parametrisation):
-    Gaussian(parametrisation) {
-}
-
-
 Reduced::~Reduced() {
 }
 
@@ -66,6 +66,33 @@ Reduced::~Reduced() {
 bool Reduced::sameAs(const Representation& other) const {
     const Reduced* o = dynamic_cast<const Reduced*>(&other);
     return o && Gaussian::sameAs(other);
+}
+
+
+eckit::Fraction Reduced::getSmallestIncrement() const {
+    ASSERT(N_);
+    const std::vector<long>& pl = pls();
+    const long maxpl = *std::max_element(pl.begin(), pl.end());
+    ASSERT(maxpl);
+
+    return eckit::Fraction(360, maxpl);
+}
+
+
+void Reduced::adjustBoundingBoxEastWest(util::BoundingBox& bbox) {
+    const eckit::Fraction inc = getSmallestIncrement();
+
+    Longitude e = bbox.east();
+    Longitude w = bbox.west();
+    bool adjustedEast = false;
+//    bool adjustedWest = false;
+
+    if (e - w > Longitude::GLOBE - inc) {
+        adjustedEast = true;
+        e = w + Longitude::GLOBE - inc;
+    }
+
+    bbox = util::BoundingBox(bbox.north(), w, bbox.south(), e);
 }
 
 

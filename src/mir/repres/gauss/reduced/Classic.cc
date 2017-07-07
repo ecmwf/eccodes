@@ -29,6 +29,7 @@ namespace reduced {
 
 Classic::Classic(size_t N):
     Reduced(N) {
+    adjustBoundingBoxEastWest(bbox_);
 }
 
 
@@ -38,6 +39,7 @@ Classic::~Classic() {
 
 Classic::Classic(size_t N, const util::BoundingBox &bbox):
     Reduced(N, bbox) {
+    adjustBoundingBoxEastWest(bbox_);
 }
 
 
