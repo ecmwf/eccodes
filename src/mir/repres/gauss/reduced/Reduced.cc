@@ -233,22 +233,7 @@ size_t Reduced::frame(std::vector<double>& values, size_t size, double missingVa
 
 
 void Reduced::validate(const std::vector<double>& values) const {
-
-//    std::cout << "Reduced " << domain() << std::endl;
-
-    long long count = 0;
-    if (isGlobal()) {
-        const std::vector<long>& pl = pls();
-        for (size_t i = 0; i < pl.size(); i++) {
-            count += pl[i];
-        }
-    } else {
-        eckit::ScopedPtr<Iterator> it(iterator());
-        while (it->next()) {
-            ++count;
-        }
-    }
-
+    size_t count = numberOfPoints();
     eckit::Log::debug<LibMir>() << "Reduced::validate checked "
                                 << eckit::Plural(values.size(), "value")
                                 << ", within domain: "
