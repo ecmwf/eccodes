@@ -688,11 +688,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     }
 
     if (packing_spec->deleteLocalDefinition) {
-        /* TODO: We need two calls because of grib1/grib2 issues re removing local defs! */
-        if (editionNumber==1){
-            SET_LONG_VALUE("deleteLocalDefinition",1);
-        }
-        SET_LONG_VALUE("setLocalDefinition", 0);
+        SET_LONG_VALUE("deleteLocalDefinition",1);
     }
 
     len=100;
@@ -1313,8 +1309,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     }
 
     if (packing_spec->deleteLocalDefinition) {
-        /* TODO: We need two calls because of grib1/grib2 issues re removing local defs! */
-        grib_set_long(outh,"setLocalDefinition", 0);
         grib_set_long(outh,"deleteLocalDefinition", 1);
     }
 
