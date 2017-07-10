@@ -114,7 +114,7 @@ bool RegularLL::sameAs(const Representation& other) const {
 
 
 const RegularLL* RegularLL::cropped(const util::BoundingBox& bbox) const {
-    // Called by AreaCropper::execute
+    // Called by AreaCropper::execute and GlobaliseFilter::execute
     return new RegularLL(bbox, increments_);
 }
 

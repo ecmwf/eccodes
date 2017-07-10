@@ -210,7 +210,7 @@ Representation* LatLon::globalise(data::MIRField& field) const {
 
     util::BoundingBox newbbox(bbox_.north(), bbox_.west(), Latitude::SOUTH_POLE, bbox_.east());
 
-    eckit::ScopedPtr<LatLon> newll(new LatLon(newbbox, increments_));
+    eckit::ScopedPtr<LatLon> newll(const_cast<LatLon*>(cropped(newbbox)));
 
     ASSERT(newll->nj_ > nj_);
     ASSERT(newll->ni_ == ni_);
@@ -234,6 +234,13 @@ Representation* LatLon::globalise(data::MIRField& field) const {
     field.hasMissing(true);
 
     return newll.release();
+}
+
+
+const LatLon* LatLon::cropped(const util::BoundingBox&) const {
+    std::ostringstream os;
+    os << "LatLon::cropped() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
 }
 
 
