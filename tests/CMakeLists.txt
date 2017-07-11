@@ -76,6 +76,7 @@ list( APPEND tests_data_reqd
     ecc-379
     ecc-393
     ecc-433
+    ecc-490
     gts_get
     gts_ls
     gts_compare
