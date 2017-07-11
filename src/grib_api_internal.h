@@ -18,42 +18,40 @@
 
 
 #ifdef __cplusplus
-extern "C" {
+ extern "C" {
 #endif
 
 /* cmake config header */
 #ifdef HAVE_ECCODES_CONFIG_H
-#include "eccodes_config.h"
+ #include "eccodes_config.h"
 #endif
 
 /* autoconf config header */
 #ifdef HAVE_CONFIG_H
-#include "config.h"
-#ifdef _LARGE_FILES
-#undef _LARGE_FILE_API
-#endif
+ #include "config.h"
+ #ifdef _LARGE_FILES
+  #undef _LARGE_FILE_API
+ #endif
 #endif
 
 #ifndef GRIB_INLINE
-#define GRIB_INLINE
+ #define GRIB_INLINE
 #endif
 
 #if IS_BIG_ENDIAN
-
-#if GRIB_MEM_ALIGN
-#define FAST_BIG_ENDIAN 0
-#else
-#define FAST_BIG_ENDIAN 1
-#endif
-
+ #if GRIB_MEM_ALIGN
+  #define FAST_BIG_ENDIAN 0
+ #else
+  #define FAST_BIG_ENDIAN 1
+ #endif
 #endif
 
 #if IEEE_BE
-#define IEEE
+ #define IEEE
 #else
-#if IEEE_LE
-#define IEEE
-#endif
+ #if IEEE_LE
+  #define IEEE
+ #endif
 #endif
 
 #include <stdio.h>
@@ -113,9 +111,9 @@ extern "C" {
 
 
 #ifdef  HAVE_STRING_H
-#include <string.h>
+ #include <string.h>
 #else
-#include <strings.h>
+ #include <strings.h>
 #endif
 
 #if GRIB_LINUX_PTHREADS
@@ -158,8 +156,8 @@ extern "C" {
 
 
 #ifndef HAVE_FSEEKO
-#define fseeko fseek
-#define ftello ftell
+ #define fseeko fseek
+ #define ftello ftell
 #endif
 
 #define Assert(a) do { if(!(a)) codes_assertion_failed(#a, __FILE__, __LINE__); } while(0)
