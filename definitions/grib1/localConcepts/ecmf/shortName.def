@@ -3694,6 +3694,26 @@
 	 table2Version = 171 ;
 	 indicatorOfParameter = 122 ;
 	}
+#Mean surface runoff rate
+'msror' = {
+	 table2Version = 172 ;
+	 indicatorOfParameter = 8 ;
+	}
+#Mean sub-surface runoff rate
+'mssror' = {
+	 table2Version = 172 ;
+	 indicatorOfParameter = 9 ;
+	}
+#Mean surface runoff rate anomaly
+'msrora' = {
+	 table2Version = 173 ;
+	 indicatorOfParameter = 8 ;
+	}
+#Mean sub-surface runoff rate anomaly
+'mssrora' = {
+	 table2Version = 173 ;
+	 indicatorOfParameter = 9 ;
+	}
 #Clear-sky (II) down surface sw flux
 'sswcsdown' = {
 	 table2Version = 174 ;
