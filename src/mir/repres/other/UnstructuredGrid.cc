@@ -152,9 +152,13 @@ class UnstructuredGridIterator: public Iterator {
     }
 
     virtual bool next(Latitude &lat, Longitude &lon) {
-        lat = latitudes_[i_];
-        lon = longitudes_[i_];
-        return i_++ < size_;
+	    if(i < size_) {
+			lat = latitudes_[i_];
+			lon = longitudes_[i_];
+			i_++;
+			return true;
+		}
+        return false;
     }
 
 public:
