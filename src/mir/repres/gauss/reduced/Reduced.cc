@@ -84,12 +84,9 @@ void Reduced::adjustBoundingBoxEastWest(util::BoundingBox& bbox) {
 
     Longitude e = bbox.east();
     Longitude w = bbox.west();
-    bool adjustedEast = false;
-//    bool adjustedWest = false;
 
     if ((e - w + inc).sameWithGrib1Accuracy(Longitude::GLOBE.value())
      || (e - w + inc > Longitude::GLOBE )) {
-        adjustedEast = true;
         e = w + Longitude::GLOBE - inc;
     }
 
