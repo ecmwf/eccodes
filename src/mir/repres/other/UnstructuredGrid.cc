@@ -54,9 +54,10 @@ UnstructuredGrid::UnstructuredGrid(const eckit::PathName &path) {
 }
 
 
-UnstructuredGrid::UnstructuredGrid(std::vector<double>& latitudes, std::vector<double>& longitudes) {
-    std::swap(latitudes_, latitudes);
-    std::swap(longitudes_, longitudes);
+UnstructuredGrid::UnstructuredGrid(const std::vector<double>& latitudes,
+                                   const std::vector<double>& longitudes):
+    latitudes_(latitudes),
+    longitudes_(longitudes) {
     ASSERT(latitudes_.size() == longitudes_.size());
 }
 
@@ -73,11 +74,11 @@ void UnstructuredGrid::print(std::ostream &out) const {
 
 void UnstructuredGrid::makeName(std::ostream& out) const {
 
-    out << "unstructured-" <<latitudes_.size() << "-";
+    out << "unstructured-" << latitudes_.size() << "-";
 
     eckit::MD5 md5;
-    for (auto j: latitudes_)  { md5 << j; }
-    for (auto j: longitudes_) { md5 << j; }
+    for (auto j : latitudes_)  { md5 << j; }
+    for (auto j : longitudes_) { md5 << j; }
     out << std::string(md5);
 }
 
@@ -152,12 +153,12 @@ class UnstructuredGridIterator: public Iterator {
     }
 
     virtual bool next(Latitude &lat, Longitude &lon) {
-	    if(i_ < size_) {
-			lat = latitudes_[i_];
-			lon = longitudes_[i_];
-			i_++;
-			return true;
-		}
+        if (i_ < size_) {
+            lat = latitudes_[i_];
+            lon = longitudes_[i_];
+            i_++;
+            return true;
+        }
         return false;
     }
 
