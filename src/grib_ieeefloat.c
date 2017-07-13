@@ -206,6 +206,12 @@ double grib_long_to_ieee(unsigned long x)
 
     double val;
 
+#ifdef DEBUG
+    if ( x > 0 && x < 0x800000 ) {
+        fprintf(stderr, "grib_long_to_ieee: Invalid input %ld\n", x);
+        Assert(0);
+    }
+#endif
     init_table_if_needed();
 
     if (c == 0 && m==0) return 0;
