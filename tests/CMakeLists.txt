@@ -26,6 +26,7 @@ list( APPEND test_bins
       optimize_scaling_sh
       ecc-386
       bufr_get_element
+      ieee
 )
 
 foreach( tool ${test_bins} )
