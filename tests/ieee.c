@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <float.h>
 
 #include "grib_api_internal.h"
 
@@ -48,11 +49,58 @@ double p(double ref1,double ref2)
 }
 #endif
 
+/* generate a random floating point number from min to max */
+double randfrom(double min, double max)
+{
+    double range = (max - min);
+    double div = RAND_MAX / range;
+    return min + (rand() / div);
+}
+void test_doubles(ieee_to_long_proc ieee_to_long, long_to_ieee_proc long_to_ieee)
+{
+    const double tolerance = 1e-7;
+    const double increment = 1;
+    const double max_value = 10 * 1000 * 1000;
+    const double min_value = -max_value;
+    double d = max_value;
+    int num_errors = 0;
+    int num_trials = 0;
+    double max_reldiff = -DBL_MAX;
+
+    while (d > min_value) {
+        double start    = randfrom(0.7,1) * d;
+        unsigned long a = ieee_to_long(start);
+        double end      = long_to_ieee(a);
+        num_trials++;
+        if (start != 0.0) {
+            double reldiff = fabs(end - start)/start;
+            if (reldiff > tolerance) {
+                printf("Error: %.10f (diff=%.10f)\n", start, reldiff);
+                num_errors ++;
+            } else {
+                printf("Success: %.10f (diff=%.10f)\n", start, reldiff);
+            }
+            if (reldiff > max_reldiff) max_reldiff = reldiff;
+        }
+        d -= increment;
+    }
+    printf("trials = %d, errors = %d\n", num_trials,num_errors);
+    printf("max reldiff = %g\n", max_reldiff);
+}
+
 int main(int argc, char *argv[])
 {
 #if 1
 	unsigned long i = 0;
+	//printf("Test doubles with grib_ieee_to_long/grib_long_to_ieee...\n");
+	//test_doubles(grib_ieee_to_long, grib_long_to_ieee);
 
+	printf("Test doubles with grib_ieee64_to_long/grib_long_to_ieee64...\n");
+	test_doubles(grib_ieee64_to_long, grib_long_to_ieee64);
+
+	printf("Test doubles. Done\n");
+	return 0;
+///////////////////////
 	test(3242539564, grib_ieee_to_long, grib_long_to_ieee);
 	assert(grib_ieee_to_long(grib_long_to_ieee(i)) == i);
 
