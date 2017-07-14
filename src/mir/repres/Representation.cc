@@ -19,7 +19,7 @@
 #include "eckit/thread/AutoLock.h"
 #include "eckit/thread/Mutex.h"
 #include "eckit/thread/Once.h"
-#include "atlas/grid.h"
+
 #include "mir/config/LibMir.h"
 #include "mir/data/MIRField.h"
 #include "mir/namedgrids/NamedGrid.h"
@@ -187,18 +187,17 @@ bool Representation::sameAs(const Representation&) const {
     throw eckit::SeriousBug(os.str());
 }
 
-
+#ifdef HAVE_ATLAS
 util::MIRGrid Representation::grid() const {
     return util::MIRGrid(atlasGrid());
 }
-
 
 atlas::Grid Representation::atlasGrid() const {
     std::ostringstream os;
     os << "Representation::atlasGrid() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
-
+#endif
 
 util::Domain Representation::domain() const {
     std::ostringstream os;

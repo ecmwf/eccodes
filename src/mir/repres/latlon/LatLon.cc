@@ -17,13 +17,16 @@
 
 #include <algorithm>
 #include <iostream>
-#include "eckit/exception/Exceptions.h"
-#include "eckit/types/FloatCompare.h"
-#include "eckit/types/Fraction.h"
-#include "atlas/library/config.h"
+
+#include "mir/api/mir_config.h"
 #ifdef ATLAS_HAVE_TRANS
 #include "transi/trans.h"
 #endif
+
+#include "eckit/exception/Exceptions.h"
+#include "eckit/types/FloatCompare.h"
+#include "eckit/types/Fraction.h"
+
 #include "mir/action/misc/AreaCropper.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"

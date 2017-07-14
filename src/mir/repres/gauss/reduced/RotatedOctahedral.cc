@@ -16,7 +16,7 @@
 #include "mir/repres/gauss/reduced/RotatedOctahedral.h"
 
 #include <iostream>
-#include "atlas/grid.h"
+
 #include "mir/repres/gauss/reduced/RotatedFromPL.h"
 #include "mir/util/Grib.h"
 
@@ -71,10 +71,11 @@ void RotatedOctahedral::fill(api::MIRJob&) const  {
     NOTIMP;
 }
 
-
+#ifdef HAVE_ATLAS
 atlas::Grid RotatedOctahedral::atlasGrid() const {
     return rotation_.rotate(Octahedral::atlasGrid());
 }
+#endif
 
 
 const Reduced *RotatedOctahedral::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {

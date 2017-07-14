@@ -16,7 +16,7 @@
 #include "mir/repres/gauss/reduced/RotatedClassic.h"
 
 #include <iostream>
-#include "atlas/grid.h"
+
 #include "mir/repres/gauss/reduced/RotatedFromPL.h"
 #include "mir/util/Grib.h"
 
@@ -70,11 +70,11 @@ void RotatedClassic::fill(api::MIRJob &job) const  {
     NOTIMP;
 }
 
-
+#ifdef HAVE_ATLAS
 atlas::Grid RotatedClassic::atlasGrid() const {
     return rotation_.rotate(Classic::atlasGrid());
 }
-
+#endif
 
 const Reduced *RotatedClassic::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
     // We lose the RotatedClassic nature of the grid

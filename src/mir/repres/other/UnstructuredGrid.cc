@@ -17,14 +17,15 @@
 
 #include <iostream>
 #include <fstream>
+
 #include "eckit/exception/Exceptions.h"
 #include "eckit/filesystem/PathName.h"
-#include "atlas/grid.h"
+#include "eckit/utils/MD5.h"
+
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
-#include "eckit/utils/MD5.h"
 
 
 namespace mir {
@@ -105,6 +106,7 @@ util::Domain UnstructuredGrid::domain() const {
 }
 
 atlas::Grid UnstructuredGrid::atlasGrid() const {
+#ifdef HAVE_ATLAS
     ASSERT(latitudes_.size() == longitudes_.size());
 
     std::vector<atlas::PointXY> *pts = new std::vector<atlas::PointXY>();
@@ -118,6 +120,9 @@ atlas::Grid UnstructuredGrid::atlasGrid() const {
     }
 
     return atlas::grid::UnstructuredGrid(pts);
+#else
+    NOTIMP;
+#endif
 
     // so constructor takes a vector<Point> (where point is LLPoint2)
 }

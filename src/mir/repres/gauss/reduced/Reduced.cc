@@ -18,11 +18,13 @@
 #include <cmath>
 #include <limits>
 #include <sstream>
+
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Plural.h"
 #include "eckit/memory/ScopedPtr.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
+
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
@@ -31,8 +33,7 @@
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 
-#include "atlas/library/config.h"
-
+#include "mir/api/mir_config.h"
 #ifdef ATLAS_HAVE_TRANS
 #include "transi/trans.h"
 #endif
@@ -86,7 +87,7 @@ void Reduced::adjustBoundingBoxEastWest(util::BoundingBox& bbox) {
     Longitude w = bbox.west();
 
     if ((e - w + inc).sameWithGrib1Accuracy(Longitude::GLOBE.value())
-     || (e - w + inc > Longitude::GLOBE )) {
+            || (e - w + inc > Longitude::GLOBE )) {
         e = w + Longitude::GLOBE - inc;
     }
 
@@ -103,7 +104,110 @@ bool Reduced::isPeriodicWestEast() const {
     const Longitude inc = eckit::Fraction(360, maxpl);
 
     return (we + inc).sameWithGrib1Accuracy(Longitude::GLOBE.value())
-        || (we + inc >= Longitude::GLOBE.value());
+           || (we + inc >= Longitude::GLOBE.value());
+}
+
+
+class ReducedIterator {
+    const std::vector<double>& latitudes_;
+    const std::vector<long>& pl_;
+    const util::Domain domain_;
+    size_t ni_;
+    const size_t nj_;
+    eckit::Fraction lon_;
+    eckit::Fraction inc_;
+    size_t i_;
+    size_t j_;
+    size_t k_;
+    size_t p_;
+    size_t count_;
+protected:
+    ~ReducedIterator();
+    void print(std::ostream&) const;
+    bool next(Latitude&, Longitude&);
+public:
+    ReducedIterator(const std::vector<double>& latitudes, const std::vector<long>& pl, const util::Domain&);
+};
+
+
+
+ReducedIterator::ReducedIterator(const std::vector<double>& latitudes, const std::vector<long>& pl, const util::Domain& dom) :
+    latitudes_(latitudes),
+    pl_(pl),
+    domain_(dom),
+    nj_(pl_.size()),
+    i_(0),
+    j_(0),
+    k_(0),
+    p_(0),
+    count_(0) {
+
+    // latitudes_/pl_ cover the whole globe
+    ASSERT(pl_.size() <= latitudes_.size());
+    ASSERT(pl_.size() >= 2);
+
+    // position to first latitude and first/last longitude
+
+    while (k_ < latitudes_.size() && domain_.north() < latitudes_[k_]) {
+        k_++;
+    }
+    ASSERT(k_ < latitudes_.size());
+
+    ni_ = size_t(pl_[p_++]);
+    inc_ = eckit::Fraction(360, ni_);
+    lon_ = eckit::Fraction(0.0);
+
+}
+
+
+ReducedIterator::~ReducedIterator() {
+}
+
+
+void ReducedIterator::print(std::ostream& out) const {
+    out << "ReducedIterator["
+        <<  "domain=" << domain_
+        << ",ni="     << ni_
+        << ",nj="     << nj_
+        << ",i="      << i_
+        << ",j="      << j_
+        << ",k="      << k_
+        << ",p="      << p_
+        << ",count="  << count_
+        << "]";
+}
+
+
+bool ReducedIterator::next(Latitude& lat, Longitude& lon) {
+    while (j_ < nj_ && i_ < ni_) {
+
+        ASSERT(j_ + k_ < latitudes_.size());
+
+        lat = latitudes_[j_ + k_];
+        lon = lon_;
+
+        i_++;
+        lon_ += inc_;
+
+        if (i_ == ni_) {
+            j_++;
+            if (j_ < nj_) {
+                ASSERT(p_ < pl_.size());
+                ni_ = size_t(pl_[p_++]);
+                lon_ = eckit::Fraction(0.0);
+                inc_ = eckit::Fraction(360, ni_);
+                i_ = 0;
+
+
+            }
+        }
+
+        if (domain_.contains(lat, lon)) {
+            count_++;
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -319,87 +423,6 @@ void Reduced::initTrans(Trans_t& trans) const {
     NOTIMP;
 #endif
 }
-
-
-Reduced::ReducedIterator::ReducedIterator(const std::vector<double>& latitudes, const std::vector<long>& pl, const util::Domain& dom) :
-    latitudes_(latitudes),
-    pl_(pl),
-    domain_(dom),
-    nj_(pl_.size()),
-    i_(0),
-    j_(0),
-    k_(0),
-    p_(0),
-    count_(0) {
-
-    // latitudes_/pl_ cover the whole globe
-    ASSERT(pl_.size() <= latitudes_.size());
-    ASSERT(pl_.size() >= 2);
-
-    // position to first latitude and first/last longitude
-
-    while (k_ < latitudes_.size() && domain_.north() < latitudes_[k_]) {
-        k_++;
-    }
-    ASSERT(k_ < latitudes_.size());
-
-    ni_ = size_t(pl_[p_++]);
-    inc_ = eckit::Fraction(360, ni_);
-    lon_ = eckit::Fraction(0.0);
-
-}
-
-
-Reduced::ReducedIterator::~ReducedIterator() {
-}
-
-
-void Reduced::ReducedIterator::print(std::ostream& out) const {
-    out << "ReducedIterator["
-        <<  "domain=" << domain_
-        << ",ni="     << ni_
-        << ",nj="     << nj_
-        << ",i="      << i_
-        << ",j="      << j_
-        << ",k="      << k_
-        << ",p="      << p_
-        << ",count="  << count_
-        << "]";
-}
-
-
-bool Reduced::ReducedIterator::next(Latitude& lat, Longitude& lon) {
-    while (j_ < nj_ && i_ < ni_) {
-
-        ASSERT(j_ + k_ < latitudes_.size());
-
-        lat = latitudes_[j_ + k_];
-        lon = lon_;
-
-        i_++;
-        lon_ += inc_;
-
-        if (i_ == ni_) {
-            j_++;
-            if (j_ < nj_) {
-                ASSERT(p_ < pl_.size());
-                ni_ = size_t(pl_[p_++]);
-                lon_ = eckit::Fraction(0.0);
-                inc_ = eckit::Fraction(360, ni_);
-                i_ = 0;
-
-
-            }
-        }
-
-        if (domain_.contains(lat, lon)) {
-            count_++;
-            return true;
-        }
-    }
-    return false;
-}
-
 
 size_t Reduced::numberOfPoints() const {
     size_t total = 0;

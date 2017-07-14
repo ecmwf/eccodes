@@ -66,11 +66,11 @@ void RotatedFromPL::fill(api::MIRJob &job) const  {
     NOTIMP;
 }
 
-
+#ifdef HAVE_ATLAS
 atlas::Grid RotatedFromPL::atlasGrid() const {
     return rotation_.rotate(FromPL::atlasGrid());
 }
-
+#endif
 
 const Reduced* RotatedFromPL::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
     return new RotatedFromPL(N_, pl, bbox, rotation_);

@@ -17,7 +17,7 @@
 
 #include <algorithm>
 #include <iostream>
-#include "atlas/grid.h"
+
 #include "mir/action/misc/AreaCropper.h"
 #include "mir/api/MIRJob.h"
 #include "mir/param/MIRParametrisation.h"
@@ -93,6 +93,7 @@ void ReducedLL::fill(api::MIRJob &job) const  {
 }
 
 
+#ifdef HAVE_ATLAS
 atlas::Grid ReducedLL::atlasGrid() const {
     const util::Domain dom = domain();
 
@@ -103,7 +104,7 @@ atlas::Grid ReducedLL::atlasGrid() const {
 
     return atlas::grid::StructuredGrid(xspace, yspace);
 }
-
+#endif
 
 bool ReducedLL::isPeriodicWestEast() const {
     ASSERT(pl_.size());
