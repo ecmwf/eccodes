@@ -56,7 +56,8 @@ double randfrom(double min, double max)
     double div = RAND_MAX / range;
     return min + (rand() / div);
 }
-void test_doubles(ieee_to_long_proc ieee_to_long, long_to_ieee_proc long_to_ieee)
+/* Return 1 on success, 0 on failure */
+int test_doubles(ieee_to_long_proc ieee_to_long, long_to_ieee_proc long_to_ieee)
 {
     const double tolerance = 1e-7;
     const double increment = 1;
@@ -86,6 +87,7 @@ void test_doubles(ieee_to_long_proc ieee_to_long, long_to_ieee_proc long_to_ieee
     }
     printf("trials = %d, errors = %d\n", num_trials,num_errors);
     printf("max reldiff = %g\n", max_reldiff);
+    return num_errors==0 ? 1 : 0;
 }
 
 int main(int argc, char *argv[])
@@ -93,15 +95,13 @@ int main(int argc, char *argv[])
 #if 1
 	unsigned long i = 0;
 	printf("Test doubles with grib_ieee_to_long/grib_long_to_ieee...\n");
-	test_doubles(grib_ieee_to_long, grib_long_to_ieee);
+	assert( test_doubles(grib_ieee_to_long, grib_long_to_ieee)==1 );
 
 	printf("Test doubles with grib_ieee64_to_long/grib_long_to_ieee64...\n");
-	test_doubles(grib_ieee64_to_long, grib_long_to_ieee64);
+	assert( test_doubles(grib_ieee64_to_long, grib_long_to_ieee64)==1 );
 
-	printf("Test doubles. Done\n");
-	return 0;
-///////////////////////
-	test(3242539564, grib_ieee_to_long, grib_long_to_ieee);
+    printf("Test integers...\n");
+	// test(3242539564, grib_ieee_to_long, grib_long_to_ieee); // This fails!
 	assert(grib_ieee_to_long(grib_long_to_ieee(i)) == i);
 
 	/* The minimum value for which we can convert a long to ieee and back is 0x800000 */
@@ -114,14 +114,15 @@ int main(int argc, char *argv[])
 		{
 			printf("i=%ld i=%lx e=%g x=%lx\n",i,i,grib_long_to_ieee(i),grib_ieee_to_long(grib_long_to_ieee(i)));
 			/*assert(grib_ieee_to_long(grib_long_to_ieee(i)) == i);*/
+			assert(0);
 		}
 		/*if(grib_ieee_to_long(grib_long_to_ieee(j)) != j)
 		{
 		    printf("j=%ld i=%lx e=%g x=%lx\n",j,j,grib_long_to_ieee(j),grib_ieee_to_long(grib_long_to_ieee(j)));
 		}
-		*/
-		/*if((i%10000000) == 0)
-			printf("i = %08lx(%ld) %08lx(%ld) %g %g\n", i,i,j,j,grib_long_to_ieee(i),grib_long_to_ieee(j));*/
+		if ((i%1000000) == 0) {
+			printf("i = %08lx(%ld) %08lx(%ld) %g %g\n", i,i,j,j,grib_long_to_ieee(i),grib_long_to_ieee(j));
+		}*/
 	}
 
 #else

@@ -26,6 +26,7 @@ list( APPEND test_bins
       optimize_scaling_sh
       ecc-386
       bufr_get_element
+      sh_ieee64
       ieee
 )
 
@@ -87,6 +88,7 @@ list( APPEND tests_data_reqd
     metar_compare
     bufr_set
     ieee
+    sh_ieee64
     optimize_scaling
     optimize_scaling_sh
     grib1to2
