@@ -16,8 +16,9 @@
 #include "mir/repres/gauss/regular/RotatedGG.h"
 
 #include <iostream>
-#include "atlas/grid.h"
+
 #include "mir/util/Grib.h"
+#include "mir/util/Domain.h"
 
 
 namespace mir {
@@ -110,10 +111,11 @@ size_t RotatedGG::numberOfPoints() const {
     return Ni_ * Nj_;
 }
 
-
+#ifdef HAVE_ATLAS
 atlas::Grid RotatedGG::atlasGrid() const {
     return rotation_.rotate(Regular::atlasGrid());
 }
+#endif
 
 
 namespace {

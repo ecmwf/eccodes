@@ -16,7 +16,7 @@
 #include "mir/repres/gauss/reduced/FromPL.h"
 
 #include "eckit/exception/Exceptions.h"
-#include "atlas/grid.h"
+
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
@@ -81,11 +81,11 @@ void FromPL::fill(api::MIRJob &job) const  {
     Reduced::fill(job);
 }
 
-
+#ifdef HAVE_ATLAS
 atlas::Grid FromPL::atlasGrid() const {
     return atlas::grid::ReducedGaussianGrid(pl_, domain());
 }
-
+#endif
 
 const std::vector<long> &FromPL::pls() const {
     return pl_;

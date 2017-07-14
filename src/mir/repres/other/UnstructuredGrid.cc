@@ -17,14 +17,15 @@
 
 #include <iostream>
 #include <fstream>
+
 #include "eckit/exception/Exceptions.h"
 #include "eckit/filesystem/PathName.h"
-#include "atlas/grid.h"
+#include "eckit/utils/MD5.h"
+
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
-#include "eckit/utils/MD5.h"
 
 
 namespace mir {
@@ -104,6 +105,7 @@ util::Domain UnstructuredGrid::domain() const {
     return util::Domain::makeGlobal();
 }
 
+#ifdef HAVE_ATLAS
 atlas::Grid UnstructuredGrid::atlasGrid() const {
     ASSERT(latitudes_.size() == longitudes_.size());
 
@@ -113,15 +115,17 @@ atlas::Grid UnstructuredGrid::atlasGrid() const {
     for (size_t i = 0; i < latitudes_.size(); i++) {
         pts->push_back(atlas::PointXY(longitudes_[i], latitudes_[i]));
         if (i < 10) {
-            eckit::Log::debug<LibMir>() << "UnstructuredGrid::atlasGrid lon=" << longitudes_[i] << ", lat=" << latitudes_[i] << std::endl;
+            eckit::Log::debug<LibMir>() << "UnstructuredGrid::atlasGrid lon="
+                                        << longitudes_[i]
+                                        << ", lat="
+                                        << latitudes_[i]
+                                        << std::endl;
         }
     }
 
     return atlas::grid::UnstructuredGrid(pts);
-
-    // so constructor takes a vector<Point> (where point is LLPoint2)
 }
-
+#endif
 
 void UnstructuredGrid::validate(const std::vector<double> &values) const {
     ASSERT(values.size() == latitudes_.size());

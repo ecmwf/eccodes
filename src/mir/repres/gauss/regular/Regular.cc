@@ -21,7 +21,7 @@
 #include "eckit/memory/ScopedPtr.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
-#include "atlas/grid.h"
+
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
@@ -156,10 +156,11 @@ bool Regular::isPeriodicWestEast() const {
     return (bbox_.east() - bbox_.west() + inc).sameWithGrib1Accuracy(360.0);
 }
 
-
+#ifdef HAVE_ATLAS
 atlas::Grid Regular::atlasGrid() const {
     return atlas::grid::RegularGaussianGrid("F" + std::to_string(N_), domain());
 }
+#endif
 
 
 void Regular::validate(const std::vector<double>& values) const {

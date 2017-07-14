@@ -16,7 +16,7 @@
 #include "mir/repres/latlon/RegularLL.h"
 
 #include <iostream>
-#include "atlas/grid.h"
+
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Domain.h"
@@ -73,6 +73,7 @@ void RegularLL::print(std::ostream &out) const {
 }
 
 
+#ifdef HAVE_ATLAS
 atlas::Grid RegularLL::atlasGrid() const {
 
     // NOTE: for non-shifted/shifted grid, yspace uses bounding box
@@ -86,7 +87,7 @@ atlas::Grid RegularLL::atlasGrid() const {
 
     return StructuredGrid(xspace, yspace, StructuredGrid::Projection(), domain());
 }
-
+#endif
 
 void RegularLL::fill(grib_info& info) const  {
     LatLon::fill(info);

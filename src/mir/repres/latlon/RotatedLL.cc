@@ -16,7 +16,7 @@
 #include "mir/repres/latlon/RotatedLL.h"
 
 #include <iostream>
-#include "atlas/grid.h"
+
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Domain.h"
@@ -78,7 +78,7 @@ void RotatedLL::print(std::ostream& out) const {
         << "]";
 }
 
-
+#ifdef HAVE_ATLAS
 atlas::Grid RotatedLL::atlasGrid() const {
 
     // NOTE: for non-shifted/shifted grid, yspace uses bounding box
@@ -93,7 +93,7 @@ atlas::Grid RotatedLL::atlasGrid() const {
     StructuredGrid unrotatedGrid(xspace, yspace, StructuredGrid::Projection(), domain());
     return rotation_.rotate(unrotatedGrid);
 }
-
+#endif
 
 void RotatedLL::fill(grib_info& info) const  {
     LatLon::fill(info);
