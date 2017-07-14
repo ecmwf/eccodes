@@ -78,7 +78,7 @@ void test_doubles(ieee_to_long_proc ieee_to_long, long_to_ieee_proc long_to_ieee
                 printf("Error: %.10f (diff=%.10f)\n", start, reldiff);
                 num_errors ++;
             } else {
-                printf("Success: %.10f (diff=%.10f)\n", start, reldiff);
+                //printf("Success: %.10f (diff=%.10f)\n", start, reldiff);
             }
             if (reldiff > max_reldiff) max_reldiff = reldiff;
         }
@@ -92,8 +92,8 @@ int main(int argc, char *argv[])
 {
 #if 1
 	unsigned long i = 0;
-	//printf("Test doubles with grib_ieee_to_long/grib_long_to_ieee...\n");
-	//test_doubles(grib_ieee_to_long, grib_long_to_ieee);
+	printf("Test doubles with grib_ieee_to_long/grib_long_to_ieee...\n");
+	test_doubles(grib_ieee_to_long, grib_long_to_ieee);
 
 	printf("Test doubles with grib_ieee64_to_long/grib_long_to_ieee64...\n");
 	test_doubles(grib_ieee64_to_long, grib_long_to_ieee64);
