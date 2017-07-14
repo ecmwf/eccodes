@@ -105,8 +105,8 @@ util::Domain UnstructuredGrid::domain() const {
     return util::Domain::makeGlobal();
 }
 
-atlas::Grid UnstructuredGrid::atlasGrid() const {
 #ifdef HAVE_ATLAS
+atlas::Grid UnstructuredGrid::atlasGrid() const {
     ASSERT(latitudes_.size() == longitudes_.size());
 
     std::vector<atlas::PointXY> *pts = new std::vector<atlas::PointXY>();
@@ -115,18 +115,17 @@ atlas::Grid UnstructuredGrid::atlasGrid() const {
     for (size_t i = 0; i < latitudes_.size(); i++) {
         pts->push_back(atlas::PointXY(longitudes_[i], latitudes_[i]));
         if (i < 10) {
-            eckit::Log::debug<LibMir>() << "UnstructuredGrid::atlasGrid lon=" << longitudes_[i] << ", lat=" << latitudes_[i] << std::endl;
+            eckit::Log::debug<LibMir>() << "UnstructuredGrid::atlasGrid lon="
+                                        << longitudes_[i]
+                                        << ", lat="
+                                        << latitudes_[i]
+                                        << std::endl;
         }
     }
 
     return atlas::grid::UnstructuredGrid(pts);
-#else
-    NOTIMP;
-#endif
-
-    // so constructor takes a vector<Point> (where point is LLPoint2)
 }
-
+#endif
 
 void UnstructuredGrid::validate(const std::vector<double> &values) const {
     ASSERT(values.size() == latitudes_.size());
