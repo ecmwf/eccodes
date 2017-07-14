@@ -28,6 +28,9 @@
 #include "mir/repres/other/UnstructuredGrid.h"
 #include "mir/util/Domain.h"
 
+#ifdef HAVE_ATLAS
+#include "mir/util/MIRGrid.h"
+#endif
 
 namespace mir {
 namespace repres {
