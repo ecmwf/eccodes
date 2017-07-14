@@ -29,7 +29,7 @@
 #include "mir/util/Domain.h"
 
 #ifdef HAVE_ATLAS
-#include "mir/util/MIRGrid.h"
+
 #endif
 
 namespace mir {
@@ -191,10 +191,6 @@ bool Representation::sameAs(const Representation&) const {
 }
 
 #ifdef HAVE_ATLAS
-util::MIRGrid Representation::grid() const {
-    return util::MIRGrid(atlasGrid());
-}
-
 atlas::Grid Representation::atlasGrid() const {
     std::ostringstream os;
     os << "Representation::atlasGrid() not implemented for " << *this;
