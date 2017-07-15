@@ -93,18 +93,16 @@ void ReducedLL::fill(api::MIRJob &job) const  {
 }
 
 
-#ifdef HAVE_ATLAS
+
 atlas::Grid ReducedLL::atlasGrid() const {
     const util::Domain dom = domain();
 
-    using atlas::grid::StructuredGrid;
-    using atlas::grid::LinearSpacing;
-    StructuredGrid::XSpace xspace({ {dom.west().value(), dom.east().value()} }, pl_, !dom.isPeriodicEastWest() );
-    StructuredGrid::YSpace yspace( LinearSpacing( { {dom.north().value(), dom.south().value()} }, pl_.size()));
+    atlas::grid::StructuredGrid::XSpace xspace({ {dom.west().value(), dom.east().value()} }, pl_, !dom.isPeriodicEastWest() );
+    atlas::grid::StructuredGrid::YSpace yspace( atlas::grid::LinearSpacing( { {dom.north().value(), dom.south().value()} }, pl_.size()));
 
     return atlas::grid::StructuredGrid(xspace, yspace);
 }
-#endif
+
 
 bool ReducedLL::isPeriodicWestEast() const {
     ASSERT(pl_.size());

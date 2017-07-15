@@ -28,9 +28,9 @@
 #include "mir/repres/other/UnstructuredGrid.h"
 #include "mir/util/Domain.h"
 
-#ifdef HAVE_ATLAS
 
-#endif
+
+
 
 namespace mir {
 namespace repres {
@@ -190,13 +190,11 @@ bool Representation::sameAs(const Representation&) const {
     throw eckit::SeriousBug(os.str());
 }
 
-#ifdef HAVE_ATLAS
 atlas::Grid Representation::atlasGrid() const {
     std::ostringstream os;
     os << "Representation::atlasGrid() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
-#endif
 
 util::Domain Representation::domain() const {
     std::ostringstream os;

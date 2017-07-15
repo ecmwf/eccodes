@@ -111,11 +111,11 @@ size_t RotatedGG::numberOfPoints() const {
     return Ni_ * Nj_;
 }
 
-#ifdef HAVE_ATLAS
+
 atlas::Grid RotatedGG::atlasGrid() const {
     return rotation_.rotate(Regular::atlasGrid());
 }
-#endif
+
 
 
 namespace {

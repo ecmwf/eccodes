@@ -33,10 +33,7 @@
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 
-#include "mir/api/mir_config.h"
-#ifdef ATLAS_HAVE_TRANS
-#include "transi/trans.h"
-#endif
+#include "mir/api/Atlas.h"
 
 
 namespace mir {
@@ -404,7 +401,6 @@ const Reduced *Reduced::cropped(const util::BoundingBox&, const std::vector<long
 
 
 void Reduced::initTrans(Trans_t& trans) const {
-#ifdef ATLAS_HAVE_TRANS
 
 
     const std::vector<long>& pl = pls();
@@ -419,9 +415,6 @@ void Reduced::initTrans(Trans_t& trans) const {
 
     ASSERT(trans_set_resol(&trans, pli.size(), &pli[0]) == 0);
 
-#else
-    NOTIMP;
-#endif
 }
 
 size_t Reduced::numberOfPoints() const {

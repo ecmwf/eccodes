@@ -81,11 +81,11 @@ void FromPL::fill(api::MIRJob &job) const  {
     Reduced::fill(job);
 }
 
-#ifdef HAVE_ATLAS
+
 atlas::Grid FromPL::atlasGrid() const {
     return atlas::grid::ReducedGaussianGrid(pl_, domain());
 }
-#endif
+
 
 const std::vector<long> &FromPL::pls() const {
     return pl_;

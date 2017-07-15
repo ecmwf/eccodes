@@ -18,10 +18,9 @@
 #include <algorithm>
 #include <iostream>
 
-#include "mir/api/mir_config.h"
-#ifdef ATLAS_HAVE_TRANS
-#include "transi/trans.h"
-#endif
+
+#include "mir/api/Atlas.h"
+
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/types/FloatCompare.h"
@@ -285,11 +284,7 @@ void LatLon::shape(size_t& ni, size_t& nj) const {
 
 void LatLon::initTrans(Trans_t& trans) const {
     ASSERT(!increments_.isShifted(bbox_));
-#ifdef ATLAS_HAVE_TRANS
     ASSERT(trans_set_resol_lonlat(&trans, ni_, nj_) == 0);
-#else
-    NOTIMP;
-#endif
 }
 
 

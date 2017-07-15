@@ -52,13 +52,9 @@ Iterator* RotatedFromPL::iterator() const {
 
 
 void RotatedFromPL::fill(grib_info &info) const  {
-#ifdef GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG
     FromPL::fill(info);
     rotation_.fill(info);
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG;
-#else
-    NOTIMP;
-#endif
 }
 
 
@@ -66,11 +62,11 @@ void RotatedFromPL::fill(api::MIRJob &job) const  {
     NOTIMP;
 }
 
-#ifdef HAVE_ATLAS
+
 atlas::Grid RotatedFromPL::atlasGrid() const {
     return rotation_.rotate(FromPL::atlasGrid());
 }
-#endif
+
 
 const Reduced* RotatedFromPL::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
     return new RotatedFromPL(N_, pl, bbox, rotation_);

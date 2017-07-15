@@ -65,17 +65,17 @@ bool Classic::sameAs(const Representation& other) const {
     return o && Reduced::sameAs(other);
 }
 
-#ifdef HAVE_ATLAS
+
 atlas::Grid Classic::atlasGrid() const {
     return atlas::grid::ReducedGaussianGrid("N" + std::to_string(N_), domain());
 }
-#endif
+
 
 const std::vector<long>& Classic::pls() const {
-#ifdef HAVE_ATLAS
+
     if (pl_.size() == 0) {
 
-        atlas::Grid::Config config;
+        atlas::util::Config config;
         config.set("name", "N" + std::to_string(N_));
         atlas::grid::ReducedGaussianGrid grid(config);
         ASSERT(grid);
@@ -89,9 +89,7 @@ const std::vector<long>& Classic::pls() const {
         pl_ = pl;
     }
     return pl_;
-#else
-    NOTIMP;
-#endif
+
 }
 
 

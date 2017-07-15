@@ -105,7 +105,7 @@ util::Domain UnstructuredGrid::domain() const {
     return util::Domain::makeGlobal();
 }
 
-#ifdef HAVE_ATLAS
+
 atlas::Grid UnstructuredGrid::atlasGrid() const {
     ASSERT(latitudes_.size() == longitudes_.size());
 
@@ -125,7 +125,7 @@ atlas::Grid UnstructuredGrid::atlasGrid() const {
 
     return atlas::grid::UnstructuredGrid(pts);
 }
-#endif
+
 
 void UnstructuredGrid::validate(const std::vector<double> &values) const {
     ASSERT(values.size() == latitudes_.size());

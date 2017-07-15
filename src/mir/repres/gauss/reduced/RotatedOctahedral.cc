@@ -57,13 +57,9 @@ Iterator* RotatedOctahedral::iterator() const {
 
 
 void RotatedOctahedral::fill(grib_info& info) const  {
-#ifdef GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG
     Octahedral::fill(info);
     rotation_.fill(info);
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG;
-#else
-    NOTIMP;
-#endif
 }
 
 
@@ -71,11 +67,11 @@ void RotatedOctahedral::fill(api::MIRJob&) const  {
     NOTIMP;
 }
 
-#ifdef HAVE_ATLAS
+
 atlas::Grid RotatedOctahedral::atlasGrid() const {
     return rotation_.rotate(Octahedral::atlasGrid());
 }
-#endif
+
 
 
 const Reduced *RotatedOctahedral::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {

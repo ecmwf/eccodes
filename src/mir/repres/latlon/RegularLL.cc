@@ -73,7 +73,7 @@ void RegularLL::print(std::ostream &out) const {
 }
 
 
-#ifdef HAVE_ATLAS
+
 atlas::Grid RegularLL::atlasGrid() const {
 
     // NOTE: for non-shifted/shifted grid, yspace uses bounding box
@@ -87,7 +87,7 @@ atlas::Grid RegularLL::atlasGrid() const {
 
     return StructuredGrid(xspace, yspace, StructuredGrid::Projection(), domain());
 }
-#endif
+
 
 void RegularLL::fill(grib_info& info) const  {
     LatLon::fill(info);

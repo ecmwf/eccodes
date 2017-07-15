@@ -56,13 +56,9 @@ Iterator* RotatedClassic::iterator() const {
 
 
 void RotatedClassic::fill(grib_info &info) const  {
-#ifdef GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG
     Classic::fill(info);
     rotation_.fill(info);
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG;
-#else
-    NOTIMP;
-#endif
 }
 
 
@@ -70,11 +66,11 @@ void RotatedClassic::fill(api::MIRJob &job) const  {
     NOTIMP;
 }
 
-#ifdef HAVE_ATLAS
+
 atlas::Grid RotatedClassic::atlasGrid() const {
     return rotation_.rotate(Classic::atlasGrid());
 }
-#endif
+
 
 const Reduced *RotatedClassic::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
     // We lose the RotatedClassic nature of the grid

@@ -67,17 +67,17 @@ void Octahedral::fill(api::MIRJob &job) const  {
     job.set("gridname", os.str());
 }
 
-#ifdef HAVE_ATLAS
+
 atlas::Grid Octahedral::atlasGrid() const {
     return atlas::grid::ReducedGaussianGrid("O" + std::to_string(N_), domain());
 }
-#endif
+
 
 const std::vector<long>& Octahedral::pls() const {
-#ifdef HAVE_ATLAS
+
     if (pl_.size() == 0) {
 
-        atlas::Grid::Config config;
+        atlas::util::Config config;
         config.set("name", "O" + std::to_string(N_));
         atlas::grid::ReducedGaussianGrid grid(config);
         ASSERT(grid);
@@ -91,9 +91,7 @@ const std::vector<long>& Octahedral::pls() const {
         pl_ = pl;
     }
     return pl_;
-#else
-    NOTIMP;
-#endif
+
 }
 
 
