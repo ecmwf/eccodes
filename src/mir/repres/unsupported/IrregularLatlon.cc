@@ -25,10 +25,36 @@
 namespace mir {
 namespace repres {
 
+static void range(const std::vector<double>& v,
+                  double& mn,
+                  double& mx,
+                  double& dmax) {
+
+    ASSERT(v.size() >= 2);
+
+    dmax = 0;
+    mx = v[0];
+    mn = v[0];
+
+    for (size_t i = 1; i < v.size(); ++i) {
+        double d = std::abs(v[i] - v[i - 1]);
+        dmax = std::max(d, dmax);
+        mx = std::max(v[i], mx);
+        mn = std::min(v[i], mn);
+    }
+}
+
 
 IrregularLatlon::IrregularLatlon(const param::MIRParametrisation &parametrisation) {
+
     ASSERT(parametrisation.get("latitudes", latitudes_));
+    range(latitudes_, south_, north_, south_north_);
+
+
+
     ASSERT(parametrisation.get("longitudes", longitudes_));
+    range(longitudes_, west_, east_, west_east_);
+
 }
 
 
@@ -73,7 +99,12 @@ void IrregularLatlon::fill(grib_info &info) const  {
     NOTIMP;
 }
 
-util::Domain IrregularLatlon::domain() const { NOTIMP; }
+util::Domain IrregularLatlon::domain() const {
+    return util::Domain(includesNorthPole() ? 90 : north_,
+                        west_,
+                        includesSouthPole() ? -90 : south_,
+                        isPeriodicWestEast() ? west_ + 360 : east_);
+}
 
 class IrregularLatlonIterator: public Iterator {
 
@@ -133,10 +164,17 @@ Iterator* IrregularLatlon::iterator() const {
     return new IrregularLatlonIterator(latitudes_, longitudes_);
 }
 
-bool IrregularLatlon::isPeriodicWestEast() const { NOTIMP; }
-bool IrregularLatlon::includesNorthPole() const { NOTIMP; }
-bool IrregularLatlon::includesSouthPole() const { NOTIMP; }
+bool IrregularLatlon::isPeriodicWestEast() const {
+    return (east_ - west_) + west_east_ >= 360;
+}
 
+bool IrregularLatlon::includesNorthPole() const {
+    return north_ + south_north_ >= 90;
+}
+
+bool IrregularLatlon::includesSouthPole() const {
+    return south_ - south_north_ <= -90;
+}
 
 
 atlas::Grid IrregularLatlon::atlasGrid() const {
