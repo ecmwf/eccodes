@@ -19,6 +19,7 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/unsupported/IrregularLatlon.h"
 #include "eckit/utils/MD5.h"
+#include "mir/util/Domain.h"
 
 
 namespace mir {
@@ -72,6 +73,70 @@ void IrregularLatlon::fill(grib_info &info) const  {
     NOTIMP;
 }
 
+util::Domain IrregularLatlon::domain() const { NOTIMP; }
+
+class IrregularLatlonIterator: public Iterator {
+
+    size_t count_;
+    size_t i_;
+    size_t ni_;
+    size_t j_;
+    size_t nj_;
+
+    const std::vector<double> &latitudes_;
+    const std::vector<double> &longitudes_;
+
+    virtual void print(std::ostream &out) const {
+        out << "IrregularLatlonIterator[]";
+    }
+
+    virtual bool next(Latitude &lat, Longitude &lon) {
+        if (j_ < nj_) {
+            if (i_ < ni_) {
+                lat = latitudes_[i_];
+                lon = latitudes_[j_];
+                i_++;
+                if (i_ == ni_) {
+                    j_++;
+                    i_ = 0;
+                }
+                count_++;
+                return true;
+            }
+        }
+        return false;
+    }
+
+public:
+
+    // TODO: Consider keeping a reference on the latitudes and bbox, to avoid copying
+
+    IrregularLatlonIterator(const std::vector<double> &latitudes, const std::vector<double> &longitudes):
+        i_(0),
+        ni_(longitudes.size()),
+        j_(0),
+        nj_(latitudes.size()),
+        latitudes_(latitudes),
+        longitudes_(longitudes),
+        count_(0) {
+    }
+
+    ~IrregularLatlonIterator() {
+        ASSERT(count_ == ni_ * nj_);
+    }
+
+};
+
+
+
+Iterator* IrregularLatlon::iterator() const {
+    return new IrregularLatlonIterator(latitudes_, longitudes_);
+}
+
+bool IrregularLatlon::isPeriodicWestEast() const { NOTIMP; }
+bool IrregularLatlon::includesNorthPole() const { NOTIMP; }
+bool IrregularLatlon::includesSouthPole() const { NOTIMP; }
+
 
 
 atlas::Grid IrregularLatlon::atlasGrid() const {
@@ -79,9 +144,9 @@ atlas::Grid IrregularLatlon::atlasGrid() const {
     std::vector<atlas::PointXY> *pts = new std::vector<atlas::PointXY>();
     pts->reserve(latitudes_.size() * longitudes_.size());
 
-    for(double lat: latitudes_) {
-        for(double lon: longitudes_) {
-             pts->push_back(atlas::PointXY(lon, lat));
+    for (double lat : latitudes_) {
+        for (double lon : longitudes_) {
+            pts->push_back(atlas::PointXY(lon, lat));
         }
     }
 
