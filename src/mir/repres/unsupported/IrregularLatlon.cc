@@ -200,7 +200,8 @@ atlas::Grid IrregularLatlon::atlasGrid() const {
 
 
 std::string IrregularLatlon::atlasMeshGenerator() const {
-    return "structured";
+    return "delaunay";
+//FIXME    return "structured";
 }
 
 
