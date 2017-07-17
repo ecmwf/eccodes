@@ -127,6 +127,11 @@ atlas::Grid UnstructuredGrid::atlasGrid() const {
 }
 
 
+std::string UnstructuredGrid::atlasMeshGenerator() const {
+    return "delaunay";
+}
+
+
 void UnstructuredGrid::validate(const std::vector<double> &values) const {
     ASSERT(values.size() == latitudes_.size());
     ASSERT(values.size() == longitudes_.size());

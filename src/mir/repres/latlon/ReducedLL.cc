@@ -104,6 +104,11 @@ atlas::Grid ReducedLL::atlasGrid() const {
 }
 
 
+std::string ReducedLL::atlasMeshGenerator() const {
+    return "structured";
+}
+
+
 bool ReducedLL::isPeriodicWestEast() const {
     ASSERT(pl_.size());
     const long maxpl = *std::max_element(pl_.begin(), pl_.end());

@@ -196,6 +196,13 @@ atlas::Grid Representation::atlasGrid() const {
     throw eckit::SeriousBug(os.str());
 }
 
+
+std::string Representation::atlasMeshGenerator() const {
+    std::ostringstream os;
+    os << "Representation::atlasMeshGenerator() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
 util::Domain Representation::domain() const {
     std::ostringstream os;
     os << "Representation::domain() not implemented for " << *this;

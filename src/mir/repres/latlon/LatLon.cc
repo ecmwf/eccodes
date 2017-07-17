@@ -239,6 +239,11 @@ Representation* LatLon::globalise(data::MIRField& field) const {
 }
 
 
+std::string LatLon::atlasMeshGenerator() const {
+    return "structured";
+}
+
+
 const LatLon* LatLon::cropped(const util::BoundingBox&) const {
     std::ostringstream os;
     os << "LatLon::cropped() not implemented for " << *this;

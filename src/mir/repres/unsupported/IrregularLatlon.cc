@@ -13,17 +13,18 @@
 /// @date Apr 2015
 
 
-#include <iostream>
-
-#include "eckit/exception/Exceptions.h"
-#include "mir/param/MIRParametrisation.h"
 #include "mir/repres/unsupported/IrregularLatlon.h"
+
+#include <iostream>
+#include "eckit/exception/Exceptions.h"
 #include "eckit/utils/MD5.h"
+#include "mir/param/MIRParametrisation.h"
 #include "mir/util/Domain.h"
 
 
 namespace mir {
 namespace repres {
+
 
 static void range(const std::vector<double>& v,
                   double& mn,
@@ -65,6 +66,7 @@ IrregularLatlon::IrregularLatlon() {
 IrregularLatlon::~IrregularLatlon() {
 }
 
+
 size_t IrregularLatlon::numberOfPoints() const {
     return latitudes_.size() * longitudes_.size();
 }
@@ -75,6 +77,7 @@ void IrregularLatlon::print(std::ostream &out) const {
         << ",longitudes=" << longitudes_.size()
         << "]";
 }
+
 
 void IrregularLatlon::makeName(std::ostream& out) const {
     out << "irregular-latlon-" << latitudes_.size() << "-" << longitudes_.size() << "-";
@@ -98,6 +101,7 @@ bool IrregularLatlon::sameAs(const Representation& other) const {
 void IrregularLatlon::fill(grib_info &info) const  {
     NOTIMP;
 }
+
 
 util::Domain IrregularLatlon::domain() const {
     return util::Domain(includesNorthPole() ? 90 : north_,
@@ -164,13 +168,16 @@ Iterator* IrregularLatlon::iterator() const {
     return new IrregularLatlonIterator(latitudes_, longitudes_);
 }
 
+
 bool IrregularLatlon::isPeriodicWestEast() const {
     return (east_ - west_) + west_east_ >= 360;
 }
 
+
 bool IrregularLatlon::includesNorthPole() const {
     return north_ + south_north_ >= 90;
 }
+
 
 bool IrregularLatlon::includesSouthPole() const {
     return south_ - south_north_ <= -90;
@@ -190,6 +197,12 @@ atlas::Grid IrregularLatlon::atlasGrid() const {
 
     return atlas::grid::UnstructuredGrid(pts);
 }
+
+
+std::string IrregularLatlon::atlasMeshGenerator() const {
+    return "structured";
+}
+
 
 namespace {
 static RepresentationBuilder<IrregularLatlon> irregularLatlon("irregular_latlon"); // Name is what is returned by grib_api
