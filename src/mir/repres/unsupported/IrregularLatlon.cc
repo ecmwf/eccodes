@@ -124,8 +124,8 @@ class IrregularLatlonIterator: public Iterator {
     virtual bool next(Latitude &lat, Longitude &lon) {
         if (j_ < nj_) {
             if (i_ < ni_) {
-                lat = latitudes_[i_];
-                lon = latitudes_[j_];
+                lat = latitudes_[j_];
+                lon = longitudes_[i_];
                 i_++;
                 if (i_ == ni_) {
                     j_++;
