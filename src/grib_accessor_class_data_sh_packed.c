@@ -266,7 +266,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     long   pen_m= 0;
 
     double operat= 0;
-    int bytes=4;
+    int bytes;
     int err=0;
 
     decode_float_proc decode_float = NULL;
@@ -348,7 +348,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     hres = buf;
     lres = buf;
 
-    packed_offset = offsetdata + bytes*(sub_k+1)*(sub_k+2);
+    packed_offset = offsetdata +  bytes*(sub_k+1)*(sub_k+2);
 
     lpos = 8*(packed_offset-offsetdata);
 
@@ -377,8 +377,8 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
         {
             for(hcount=0;hcount<sub_k+1;hcount++)
             {
-                dummy =  decode_float(grib_decode_unsigned_long(hres,&hpos,8*bytes))*d;
-                dummy =  decode_float(grib_decode_unsigned_long(hres,&hpos,8*bytes))*d;
+                dummy =  decode_float(grib_decode_unsigned_long(hres,&hpos,8*bytes));
+                dummy =  decode_float(grib_decode_unsigned_long(hres,&hpos,8*bytes));
 
                 lup++;
             }
@@ -388,9 +388,9 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
         /* pscals=scals+lup; */
         for(lcount=hcount; lcount < maxv ; lcount++)
         {
-            val[i++] =  (double) ((grib_decode_unsigned_long(lres, &lpos,
+            val[i++] = d * (double) ((grib_decode_unsigned_long(lres, &lpos,
                     bits_per_value)*s)+reference_value);
-            val[i++] =  (double) ((grib_decode_unsigned_long(lres, &lpos,
+            val[i++] = d * (double) ((grib_decode_unsigned_long(lres, &lpos,
                     bits_per_value)*s)+reference_value);
             lup++;
         }
@@ -403,10 +403,6 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     Assert(*len >= i);
     *len = n_vals;
 
-    if(d != 1) {
-        for(i=0;i<*len;i++)
-            val[i++] *= d;
-    }
 
     (void)dummy; /* suppress gcc warning */
     grib_context_free(a->context,scals);
