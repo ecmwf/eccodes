@@ -110,7 +110,7 @@ util::Domain IrregularLatlon::domain() const {
                         isPeriodicWestEast() ? west_ + 360 : east_);
 }
 
-class IrregularLatlonIterator: public UnrotatedIterator {
+class IrregularLatlonIterator: public Iterator {
 
     size_t count_;
     size_t i_;

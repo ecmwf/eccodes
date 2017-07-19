@@ -83,10 +83,10 @@ void RotatedGG::fill(api::MIRJob& job) const  {
 
 Iterator* RotatedGG::iterator() const {
 
-    class RotatedGGIterator : protected RegularIterator, public RotatedIterator {
+    class RotatedGGIterator : protected RegularIterator, public Iterator {
         void print(std::ostream& out) const {
             out << "RotatedGGIterator[";
-            RotatedIterator::print(out);
+            Iterator::print(out);
             out << ",";
             RegularIterator::print(out);
             out << "]";
@@ -97,7 +97,7 @@ Iterator* RotatedGG::iterator() const {
     public:
         RotatedGGIterator(const std::vector<double>& latitudes, size_t N, size_t Ni, size_t Nj, const util::Domain& dom, const util::Rotation& rotation) :
             RegularIterator(latitudes, N, Ni, Nj, dom),
-            RotatedIterator(rotation) {
+            Iterator(rotation) {
         }
     };
 

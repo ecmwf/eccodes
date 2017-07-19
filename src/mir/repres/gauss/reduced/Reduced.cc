@@ -210,10 +210,10 @@ bool ReducedIterator::next(Latitude& lat, Longitude& lon) {
 
 Iterator* Reduced::unrotatedIterator() const {
 
-    class ReducedUnrotatedGGIterator : protected ReducedIterator, public UnrotatedIterator {
+    class ReducedUnrotatedGGIterator : protected ReducedIterator, public Iterator {
         void print(std::ostream& out) const {
             out << "RegularGGIterator[";
-            UnrotatedIterator::print(out);
+            Iterator::print(out);
             out << ",";
             ReducedIterator::print(out);
             out << "]";
@@ -233,10 +233,10 @@ Iterator* Reduced::unrotatedIterator() const {
 
 Iterator *Reduced::rotatedIterator(const util::Rotation& rotation) const {
 
-    class ReducedRotatedGGIterator : protected ReducedIterator, public RotatedIterator {
+    class ReducedRotatedGGIterator : protected ReducedIterator, public Iterator {
         void print(std::ostream& out) const {
             out << "RegularGGIterator[";
-            RotatedIterator::print(out);
+            Iterator::print(out);
             out << ",";
             ReducedIterator::print(out);
             out << "]";
@@ -247,7 +247,7 @@ Iterator *Reduced::rotatedIterator(const util::Rotation& rotation) const {
     public:
         ReducedRotatedGGIterator(const std::vector<double>& latitudes, const std::vector<long>& pl, const util::Domain& dom, const util::Rotation& rotation) :
             ReducedIterator(latitudes, pl, dom),
-            RotatedIterator(rotation) {
+            Iterator(rotation) {
         }
     };
 
