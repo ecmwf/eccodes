@@ -49,10 +49,10 @@ RotatedLL::~RotatedLL() {
 
 Iterator *RotatedLL::iterator() const {
 
-    class RotatedLLIterator : protected LatLonIterator, public Iterator {
+    class RotatedLLIterator : protected LatLonIterator, public RotatedIterator {
         void print(std::ostream& out) const {
             out << "RotatedLLIterator[";
-            Iterator::print(out);
+            RotatedIterator::print(out);
             out << ",";
             LatLonIterator::print(out);
             out << "]";
@@ -63,7 +63,7 @@ Iterator *RotatedLL::iterator() const {
     public:
         RotatedLLIterator(size_t ni, size_t nj, Latitude north, Longitude west, double we, double ns, const util::Rotation& rotation) :
             LatLonIterator(ni, nj, north, west, we, ns),
-            Iterator(rotation) {
+            RotatedIterator(rotation) {
         }
     };
 

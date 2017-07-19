@@ -45,10 +45,10 @@ RegularLL::~RegularLL() {
 
 Iterator* RegularLL::iterator() const {
 
-    class RegularLLIterator : protected LatLonIterator, public Iterator {
+    class RegularLLIterator : protected LatLonIterator, public UnrotatedIterator {
         void print(std::ostream& out) const {
             out << "RegularLLIterator[";
-            Iterator::print(out);
+            UnrotatedIterator::print(out);
             out << ",";
             LatLonIterator::print(out);
             out << "]";

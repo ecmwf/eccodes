@@ -149,7 +149,7 @@ double UnstructuredGrid::increment() const {
 }
 
 
-class UnstructuredGridIterator: public Iterator {
+class UnstructuredGridIterator: public UnrotatedIterator {
 
     size_t i_;
     size_t size_;
