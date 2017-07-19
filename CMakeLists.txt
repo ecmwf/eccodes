@@ -39,11 +39,13 @@ ecbuild_add_option( FEATURE EXAMPLES
     DEFAULT ON
 )
 
+# controls installation of files in definitions/ -- note that it still crate the symlinks in the build dir
 ecbuild_add_option( FEATURE INSTALL_ECCODES_DEFINITIONS
     DESCRIPTION "Install the eccodes definitions"
     DEFAULT ON
 )
 
+# controls installation of files in samples/ and ifs_samples/ -- note that it still crate the symlinks in the build dir
 ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
     DESCRIPTION "Install the eccodes samples, including IFS samples"
     DEFAULT ON
