@@ -13,11 +13,12 @@ print(dirs)
 FILES = {}
 NAMES = []
 
+# Binary to ASCII function. Different in Python 2 and 3
 try:
-    str("",'ascii')
-    ascii = lambda x: str(x, 'ascii')
+    str(b'\x23\x20','ascii')
+    ascii = lambda x: str(x, 'ascii')  # Python 3
 except:
-    ascii = lambda x: str(x)
+    ascii = lambda x: str(x)           # Python 2
 
 
 # The last argument is the generated C file
@@ -37,7 +38,7 @@ for directory in dirs:
                 continue
 
             fname = full[full.find("/%s/" % (dname,)):]
-            print("MEMFS add", fname)
+            #print("MEMFS add", fname)
             name = re.sub(r'\W', '_', fname)
 
             assert name not in FILES
