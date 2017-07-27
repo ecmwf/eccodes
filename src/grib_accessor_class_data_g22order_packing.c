@@ -578,6 +578,33 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
                 }
             }
         }
+        else if (missingValueManagementUsed == 2)
+        {
+            /* Primary and secondary missing values included within data values */
+            long maxn = (1 << bits_per_value) - 1;
+            long maxn2 = maxn - 1;
+            for (j=0; j < nvals_per_group;j++) {
+                if (nbits_per_group_val == 0) {
+                    maxn2 = maxn - 1;
+                    if (group_ref_val == maxn || group_ref_val == maxn2) {
+                        sec_val[vcount+j] = ULONG_MAX; /* missing value */
+                    } else {
+                        long temp = grib_decode_unsigned_long(buf_vals,  &vals_p, nbits_per_group_val);
+                        sec_val[vcount+j] = group_ref_val + temp;
+                    }
+                }
+                else {
+                    long temp = grib_decode_unsigned_long(buf_vals,  &vals_p, nbits_per_group_val);
+                    maxn = (1 << nbits_per_group_val) - 1;
+                    maxn2 = maxn - 1;
+                    if (temp == maxn || temp == maxn2) {
+                        sec_val[vcount+j] = ULONG_MAX; /* missing value */
+                    } else {
+                        sec_val[vcount+j] = group_ref_val + temp;
+                    }
+                }
+            }
+        }
 
         vcount += nvals_per_group;
     }
@@ -601,7 +628,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
         bias  =  grib_decode_signed_longb(buf_ref, &ref_p, numberOfOctetsExtraDescriptors*8);
 
         post_process(a->context, sec_val, n_vals, orderOfSpatialDifferencing, bias, extras);
-        //de_spatial_difference (a->context, sec_val, n_vals, orderOfSpatialDifferencing, bias);
+        /*de_spatial_difference (a->context, sec_val, n_vals, orderOfSpatialDifferencing, bias);*/
     }
 
     binary_s  = grib_power(binary_scale_factor,2);
