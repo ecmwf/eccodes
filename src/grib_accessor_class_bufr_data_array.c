@@ -995,6 +995,7 @@ static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
           grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication localWidth width=6");
           width=grib_decode_unsigned_long(data,pos,6);
           if (width) {
+              grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication is NOT constant for compressed data!");
             /* delayed replication number is not constant. NOT IMPLEMENTED */
             return GRIB_NOT_IMPLEMENTED;
           } else {
