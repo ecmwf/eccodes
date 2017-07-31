@@ -240,12 +240,15 @@ static int      reverse_rows (unsigned long* data, long  len, long number_along_
 }
 #endif
 
-static unsigned long calc_pow_2(unsigned long op){
+static unsigned long calc_pow_2(unsigned long op)
+{
     unsigned long a = 1;
     while(op--) a*=2;
     return a;
 }
-static int calc_bits_needed(unsigned long spread){
+
+static int calc_bits_needed(unsigned long spread)
+{
     int nbit = 0;
     if (spread == 0) return nbit;
     while (spread>0){
@@ -254,14 +257,15 @@ static int calc_bits_needed(unsigned long spread){
     }
     return nbit;
 }
-static int find_next_group(const unsigned long* vals, size_t len, unsigned long w, unsigned long l,long* nbits, long* groupsize, long* r_val){
+
+static int find_next_group(const unsigned long* vals, size_t len, unsigned long w, unsigned long l,long* nbits, long* groupsize, long* r_val)
+{
     unsigned long lmin = 0;
     unsigned long lmax = 0;
 
     size_t i = 0;
 
-
-    if  (len <=0 ) return GRIB_ARRAY_TOO_SMALL;
+    if  (len == 0) return GRIB_ARRAY_TOO_SMALL;
     lmin = vals[0];
     lmax = lmin;
 
@@ -334,8 +338,59 @@ static int spatial_difference (grib_context *c, unsigned long* vals, long  len, 
 }
 #endif
 
-static int de_spatial_difference (grib_context *c, unsigned long* vals, long  len, long order, long bias){
+static int post_process(grib_context *c, long* vals, long  len, long order, long bias, unsigned long extras[2])
+{
+    unsigned long last, penultimate, j=0;
+    Assert(order > 0);
+    Assert(order <= 3);
 
+    if (order == 1) {
+        last = extras[0];
+        while (j < len) {
+            if (vals[j] == LONG_MAX) j++;
+            else {
+                vals[j++] = extras[0]; break;
+            }
+        }
+        while (j < len) {
+            if (vals[j] == LONG_MAX) j++;
+            else {
+                vals[j] += last + bias;
+                last = vals[j++];
+            }
+        }
+    }
+    else if (order == 2) {
+        penultimate = extras[0];
+        last = extras[1];
+        while (j < len) {
+            if (vals[j] == LONG_MAX) j++;
+            else {
+                vals[j++] = extras[0];
+                break;
+            }
+        }
+        while (j < len) {
+            if (vals[j] == LONG_MAX) j++;
+            else {
+                vals[j++] = extras[1];
+                break;
+            }
+        }
+        for (; j < len; j++) {
+            if (vals[j] != LONG_MAX) {
+                vals[j] = vals[j] + bias + last + last - penultimate;
+                penultimate = last;
+                last = vals[j];
+            }
+        }
+    }
+    return GRIB_SUCCESS;
+}
+
+#if 0
+static int de_spatial_difference (grib_context *c, unsigned long* vals, long  len, long order, long bias)
+{
     long j = 0;
 
     long i_origin = 0;
@@ -375,6 +430,7 @@ static int de_spatial_difference (grib_context *c, unsigned long* vals, long  le
     }
     return 0;
 }
+#endif
 
 static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
@@ -386,7 +442,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     long     vcount = 0;
     int      err = GRIB_SUCCESS;
 
-    unsigned long*  sec_val    = NULL;
+    long* sec_val = NULL;
     grib_handle* gh = grib_handle_of_accessor(a);
 
     unsigned char*  buf = (unsigned char*)gh->buffer->data;
@@ -425,6 +481,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     long numberOfBitsUsedForTheScaledGroupLengths;
     long orderOfSpatialDifferencing;
     long numberOfOctetsExtraDescriptors;
+    double missingValue=0;
 
     err=grib_value_count(a,&n_vals);
     if (err) return err;
@@ -448,34 +505,12 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     if((err = grib_get_long_internal(gh,self->numberOfBitsUsedForTheScaledGroupLengths,&numberOfBitsUsedForTheScaledGroupLengths )) != GRIB_SUCCESS)  return err;
     if((err = grib_get_long_internal(gh,self->orderOfSpatialDifferencing,&orderOfSpatialDifferencing )) != GRIB_SUCCESS)  return err;
     if((err = grib_get_long_internal(gh,self->numberOfOctetsExtraDescriptors,&numberOfOctetsExtraDescriptors )) != GRIB_SUCCESS)  return err;
+    if((err = grib_get_double_internal(gh,"missingValue", &missingValue)) != GRIB_SUCCESS) return err;
 
     self->dirty=0;
 
-    /* I have everything now start decoding     */
-    /*
-     fprintf(stdout,"\n****************************************\n");
-     fprintf(stdout," bits_per_value = %d\n", bits_per_value);
-     fprintf(stdout," reference_value = %g\n", reference_value);
-     fprintf(stdout," binary_scale_factor = %d\n", binary_scale_factor);
-     fprintf(stdout," decimal_scale_factor = %d\n", decimal_scale_factor);
-     fprintf(stdout," typeOfOriginalFieldValues = %d\n", typeOfOriginalFieldValues);
-     fprintf(stdout," groupSplittingMethodUsed = %d\n", groupSplittingMethodUsed);
-     fprintf(stdout," missingValueManagementUsed = %d\n", missingValueManagementUsed);
-     fprintf(stdout," primaryMissingValueSubstitute = %d\n", primaryMissingValueSubstitute);
-     fprintf(stdout," secondaryMissingValueSubstitute = %d\n", secondaryMissingValueSubstitute);
-     fprintf(stdout," numberOfGroupsOfDataValues = %d\n", numberOfGroupsOfDataValues);
-     fprintf(stdout," referenceForGroupWidths = %d\n", referenceForGroupWidths);
-     fprintf(stdout," numberOfBitsUsedForTheGroupWidths = %d\n", numberOfBitsUsedForTheGroupWidths);
-     fprintf(stdout," referenceForGroupLengths = %d\n", referenceForGroupLengths);
-     fprintf(stdout," lengthIncrementForTheGroupLengths = %d\n", lengthIncrementForTheGroupLengths);
-     fprintf(stdout," trueLengthOfLastGroup = %d\n", trueLengthOfLastGroup);
-     fprintf(stdout," numberOfBitsUsedForTheScaledGroupLengths = %d\n", numberOfBitsUsedForTheScaledGroupLengths);
-     fprintf(stdout," numberOfOctetsExtraDescriptors = %d\n", numberOfOctetsExtraDescriptors);
-     fprintf(stdout," orderOfSpatialDifferencing = %d\n", orderOfSpatialDifferencing);
-     fprintf(stdout,"\n****************************************\n");
-     */
-    sec_val     =   (unsigned long*)grib_context_malloc(a->context,(n_vals)*sizeof(unsigned long));
-    if (sec_val) memset(sec_val, 0, (n_vals)*sizeof(unsigned long)); /* See SUP-718 */
+    sec_val = (long*)grib_context_malloc(a->context,(n_vals)*sizeof(long));
+    if (sec_val) memset(sec_val, 0, (n_vals)*sizeof(long)); /* See SUP-718 */
 
     buf_ref     =   buf + a->offset ;
 
@@ -483,13 +518,13 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
     if(orderOfSpatialDifferencing)  ref_p += (1+orderOfSpatialDifferencing)*(numberOfOctetsExtraDescriptors*8);
 
-    buf_width   =  buf_ref + (ref_p/8)      + (ref_p%8?1:0);
+    buf_width   =  buf_ref + (ref_p/8) + ((ref_p%8) ? 1 : 0);
 
     width_p     =  (numberOfGroupsOfDataValues*numberOfBitsUsedForTheGroupWidths);
-    buf_length  =  buf_width + (width_p/8)   + (width_p%8?1:0);
+    buf_length  =  buf_width + (width_p/8) + ((width_p%8) ? 1 : 0);
 
     length_p    =  (numberOfGroupsOfDataValues*numberOfBitsUsedForTheScaledGroupLengths);
-    buf_vals    =  buf_length + (length_p/8) + (length_p%8?1:0);
+    buf_vals    =  buf_length + (length_p/8) + ((length_p%8) ? 1 : 0);
 
     length_p = 0;
     ref_p    = orderOfSpatialDifferencing?(orderOfSpatialDifferencing+1)*(numberOfOctetsExtraDescriptors*8):0;
@@ -497,7 +532,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     vals_p   = 0;
     vcount   = 0;
 
-    for(i=0;i < numberOfGroupsOfDataValues;i++){
+    for (i=0;i < numberOfGroupsOfDataValues;i++) {
         group_ref_val        =  grib_decode_unsigned_long(buf_ref,&ref_p, bits_per_value);
         nvals_per_group      =  grib_decode_unsigned_long(buf_length, &length_p,numberOfBitsUsedForTheScaledGroupLengths);
         nbits_per_group_val  =  grib_decode_unsigned_long(buf_width,  &width_p,   numberOfBitsUsedForTheGroupWidths);
@@ -511,31 +546,103 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
         /*grib_decode_long_array(buf_vals, &vals_p, nbits_per_group_val, nvals_per_group,
                                &sec_val[vcount]); */
-        for(j=0; j < nvals_per_group;j++){
-            sec_val[vcount+j] = group_ref_val + grib_decode_unsigned_long(buf_vals,  &vals_p, nbits_per_group_val);
-            /* sec_val[vcount+j] += group_ref_val; */
+        if (missingValueManagementUsed == 0)
+        {
+            /* No explicit missing values included within data values */
+            for(j=0; j < nvals_per_group;j++) {
+                DebugAssertAccess(sec_val, (long)(vcount+j), n_vals);
+                sec_val[vcount+j] = group_ref_val + grib_decode_unsigned_long(buf_vals,  &vals_p, nbits_per_group_val);
+                /*printf("sec_val[%ld]=%ld\n", vcount+j, sec_val[vcount+j]);*/
+            }
+        }
+        else if (missingValueManagementUsed == 1)
+        {
+            /* Primary missing values included within data values */
+            long maxn = (1 << bits_per_value) - 1;
+            for (j=0; j < nvals_per_group;j++) {
+                if (nbits_per_group_val == 0) {
+                    maxn = (1 << bits_per_value) - 1;
+                    if (group_ref_val == maxn) {
+                        sec_val[vcount+j] = LONG_MAX; /* missing value */
+                    } else {
+                        long temp = grib_decode_unsigned_long(buf_vals,  &vals_p, nbits_per_group_val);
+                        sec_val[vcount+j] = group_ref_val + temp;
+                    }
+                }
+                else {
+                    long temp = grib_decode_unsigned_long(buf_vals,  &vals_p, nbits_per_group_val);
+                    maxn = (1 << nbits_per_group_val) - 1;
+                    if (temp == maxn) {
+                        sec_val[vcount+j] = LONG_MAX; /* missing value */
+                    } else {
+                        sec_val[vcount+j] = group_ref_val + temp;
+                    }
+                }
+            }
+        }
+        else if (missingValueManagementUsed == 2)
+        {
+            /* Primary and secondary missing values included within data values */
+            long maxn = (1 << bits_per_value) - 1;
+            long maxn2 = maxn - 1;
+            for (j=0; j < nvals_per_group;j++) {
+                if (nbits_per_group_val == 0) {
+                    maxn2 = maxn - 1;
+                    if (group_ref_val == maxn || group_ref_val == maxn2) {
+                        sec_val[vcount+j] = LONG_MAX; /* missing value */
+                    } else {
+                        long temp = grib_decode_unsigned_long(buf_vals,  &vals_p, nbits_per_group_val);
+                        sec_val[vcount+j] = group_ref_val + temp;
+                    }
+                }
+                else {
+                    long temp = grib_decode_unsigned_long(buf_vals,  &vals_p, nbits_per_group_val);
+                    maxn = (1 << nbits_per_group_val) - 1;
+                    maxn2 = maxn - 1;
+                    if (temp == maxn || temp == maxn2) {
+                        sec_val[vcount+j] = LONG_MAX; /* missing value */
+                    } else {
+                        sec_val[vcount+j] = group_ref_val + temp;
+                    }
+                }
+            }
         }
 
         vcount += nvals_per_group;
     }
 
-    if(orderOfSpatialDifferencing){
+    if (orderOfSpatialDifferencing) {
         long bias = 0;
-        ref_p    = 0;
+        ref_p     = 0;
+        unsigned long extras[2] = {0,};
 
-        for(i=0;i < orderOfSpatialDifferencing;i++)
-            sec_val[i]     =  grib_decode_unsigned_long(buf_ref, &ref_p, numberOfOctetsExtraDescriptors*8);
+        /* For Complex packing, order == 0 */
+        /* For Complex packing and spatial differencing, order == 1 or 2 (code table 5.6) */
+        if (orderOfSpatialDifferencing != 1 && orderOfSpatialDifferencing != 2) {
+            grib_context_log(a->context,GRIB_LOG_ERROR, "Unsupported order of spatial differencing %ld", orderOfSpatialDifferencing);
+            return GRIB_INTERNAL_ERROR;
+        }
+
+        for(i=0;i < orderOfSpatialDifferencing;i++) {
+            extras[i] = grib_decode_unsigned_long(buf_ref, &ref_p, numberOfOctetsExtraDescriptors*8);
+        }
 
         bias  =  grib_decode_signed_longb(buf_ref, &ref_p, numberOfOctetsExtraDescriptors*8);
 
-        de_spatial_difference (a->context, sec_val, n_vals, orderOfSpatialDifferencing, bias);
+        post_process(a->context, sec_val, n_vals, orderOfSpatialDifferencing, bias, extras);
+        /*de_spatial_difference (a->context, sec_val, n_vals, orderOfSpatialDifferencing, bias);*/
     }
 
     binary_s  = grib_power(binary_scale_factor,2);
     decimal_s = grib_power(-decimal_scale_factor,10) ;
 
-    for(i=0;i < n_vals;i++)
-        val[i] = (double) ((((double)sec_val[i])*binary_s)+reference_value)*decimal_s;
+    for (i=0; i < n_vals; i++) {
+        if (sec_val[i] == LONG_MAX) {
+            val[i] = missingValue;
+        } else {
+            val[i] = (double) ((((double)sec_val[i])*binary_s)+reference_value)*decimal_s;
+        }
+    }
 
     grib_context_free(a->context,sec_val);
     return err;
@@ -622,7 +729,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     numberOfBitsUsedForTheScaledGroupLengths = 10;
 
     /*     calculation of integer array   */
-    sec_val  = NULL;
     sec_val  = (unsigned long*)grib_context_malloc(a->context,(n_vals)*sizeof(long));
     if(!sec_val) return GRIB_OUT_OF_MEMORY;
 
@@ -652,8 +758,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     for(i=0;i< n_vals;i++)
         sec_val[i] = (unsigned long)((((val[i]*d)-reference_value)*divisor)+0.5);
 
-    numberOfGroupsOfDataValues = 0;
-    nv = n_vals;
     group_val = sec_val;
 
     maxgrw = calc_pow_2(numberOfBitsUsedForTheGroupWidths);
@@ -661,7 +765,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     numberOfGroupsOfDataValues = 0;
     nv = n_vals;
-    group_val = sec_val;
     vals_p=0;
 
     while(find_next_group(group_val,nv,maxgrw,maxgrl,&nbits_per_group_val,&nvals_per_group,&group_ref_val)==GRIB_SUCCESS){
@@ -677,7 +780,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     buf_size  += (7+(numberOfGroupsOfDataValues*numberOfBitsUsedForTheGroupWidths))/8;
     buf_size  += (7+(numberOfGroupsOfDataValues*numberOfBitsUsedForTheScaledGroupLengths))/8;
 
-    buf_size  +=  (vals_p/8)  + (vals_p%8?1:0);
+    buf_size  +=  (vals_p/8) + ((vals_p%8) ? 1 : 0);
 
     buf = (unsigned char*)grib_context_malloc_clear(a->context,buf_size);
 
