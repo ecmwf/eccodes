@@ -48,9 +48,9 @@ int main(int argc, const char *argv[])
 
         while( (h = grib_handle_new_from_file(NULL,in,&e)) != NULL )
         {
-            long bitmap;
+            long missingValuesPresent;
             double delta;
-            GRIB_CHECK(grib_get_long(h,"bitMapIndicator",&bitmap),argv[i]);
+            GRIB_CHECK(grib_get_long(h,"missingValuesPresent",&missingValuesPresent),argv[i]);
 
             GRIB_CHECK(grib_get_size(h,"values",&size),argv[i]);
 
@@ -60,7 +60,7 @@ int main(int argc, const char *argv[])
                 values = (double*)malloc(size*sizeof(double));
                 last_size = size;
                 if (!values) {
-                    fprintf(stderr, "Failed to allocate memory for values (size=%ld)\n", size);
+                    fprintf(stderr, "Failed to allocate memory for values (%ld bytes)\n", size*sizeof(double));
                     exit(1);
                 }
             }
@@ -70,7 +70,7 @@ int main(int argc, const char *argv[])
             for(j = 0; j < count; j++)
                 intervals[j] = 0;
 
-            if(bitmap != 255)
+            if(missingValuesPresent)
             {
                 double missing;
                 GRIB_CHECK(grib_get_double(h,"missingValue",&missing),argv[i]);
