@@ -1,4 +1,5 @@
 0 0 Unknown
+1021 land Atmospheric deterministic standalone land
 1022 fsob Forecast sensitivity to observations
 1023 fsow Forecast sensitivity to observations wave
 1024 dahc Daily archive hindcast
@@ -8,6 +9,7 @@
 1028 dcda Atmospheric model (delayed cutoff)
 1029 dcwv Wave model (delayed cutoff)
 1030 enda Ensemble data assimilation
+1031 leda Land ensemble data assimilation
 1032 efho Ensemble forecast hindcast overlap
 1033 enfh Ensemble forecast hindcasts
 1034 efov Ensemble forecast overlap
