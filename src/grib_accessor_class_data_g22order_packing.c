@@ -338,7 +338,7 @@ static int spatial_difference (grib_context *c, unsigned long* vals, long  len, 
 }
 #endif
 
-static int post_process(grib_context *c, unsigned long* vals, long  len, long order, long bias, unsigned long extras[2])
+static int post_process(grib_context *c, long* vals, long  len, long order, long bias, unsigned long extras[2])
 {
     unsigned long last, penultimate, j=0;
     Assert(order > 0);
@@ -347,13 +347,13 @@ static int post_process(grib_context *c, unsigned long* vals, long  len, long or
     if (order == 1) {
         last = extras[0];
         while (j < len) {
-            if (vals[j] == ULONG_MAX) j++;
+            if (vals[j] == LONG_MAX) j++;
             else {
                 vals[j++] = extras[0]; break;
             }
         }
         while (j < len) {
-            if (vals[j] == ULONG_MAX) j++;
+            if (vals[j] == LONG_MAX) j++;
             else {
                 vals[j] += last + bias;
                 last = vals[j++];
@@ -364,21 +364,21 @@ static int post_process(grib_context *c, unsigned long* vals, long  len, long or
         penultimate = extras[0];
         last = extras[1];
         while (j < len) {
-            if (vals[j] == ULONG_MAX) j++;
+            if (vals[j] == LONG_MAX) j++;
             else {
                 vals[j++] = extras[0];
                 break;
             }
         }
         while (j < len) {
-            if (vals[j] == ULONG_MAX) j++;
+            if (vals[j] == LONG_MAX) j++;
             else {
                 vals[j++] = extras[1];
                 break;
             }
         }
         for (; j < len; j++) {
-            if (vals[j] != ULONG_MAX) {
+            if (vals[j] != LONG_MAX) {
                 vals[j] = vals[j] + bias + last + last - penultimate;
                 penultimate = last;
                 last = vals[j];
@@ -431,6 +431,7 @@ static int de_spatial_difference (grib_context *c, unsigned long* vals, long  le
     return 0;
 }
 #endif
+
 static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
     grib_accessor_data_g22order_packing* self =  (grib_accessor_data_g22order_packing*)a;
@@ -441,7 +442,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     long     vcount = 0;
     int      err = GRIB_SUCCESS;
 
-    unsigned long*  sec_val    = NULL;
+    long* sec_val = NULL;
     grib_handle* gh = grib_handle_of_accessor(a);
 
     unsigned char*  buf = (unsigned char*)gh->buffer->data;
@@ -508,8 +509,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
     self->dirty=0;
 
-    sec_val     =   (unsigned long*)grib_context_malloc(a->context,(n_vals)*sizeof(unsigned long));
-    if (sec_val) memset(sec_val, 0, (n_vals)*sizeof(unsigned long)); /* See SUP-718 */
+    sec_val = (long*)grib_context_malloc(a->context,(n_vals)*sizeof(long));
+    if (sec_val) memset(sec_val, 0, (n_vals)*sizeof(long)); /* See SUP-718 */
 
     buf_ref     =   buf + a->offset ;
 
@@ -517,13 +518,13 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
     if(orderOfSpatialDifferencing)  ref_p += (1+orderOfSpatialDifferencing)*(numberOfOctetsExtraDescriptors*8);
 
-    buf_width   =  buf_ref + (ref_p/8)      + (ref_p%8?1:0);
+    buf_width   =  buf_ref + (ref_p/8) + ((ref_p%8) ? 1 : 0);
 
     width_p     =  (numberOfGroupsOfDataValues*numberOfBitsUsedForTheGroupWidths);
-    buf_length  =  buf_width + (width_p/8)   + (width_p%8?1:0);
+    buf_length  =  buf_width + (width_p/8) + ((width_p%8) ? 1 : 0);
 
     length_p    =  (numberOfGroupsOfDataValues*numberOfBitsUsedForTheScaledGroupLengths);
-    buf_vals    =  buf_length + (length_p/8) + (length_p%8?1:0);
+    buf_vals    =  buf_length + (length_p/8) + ((length_p%8) ? 1 : 0);
 
     length_p = 0;
     ref_p    = orderOfSpatialDifferencing?(orderOfSpatialDifferencing+1)*(numberOfOctetsExtraDescriptors*8):0;
@@ -551,6 +552,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
             for(j=0; j < nvals_per_group;j++) {
                 DebugAssertAccess(sec_val, (long)(vcount+j), n_vals);
                 sec_val[vcount+j] = group_ref_val + grib_decode_unsigned_long(buf_vals,  &vals_p, nbits_per_group_val);
+                /*printf("sec_val[%ld]=%ld\n", vcount+j, sec_val[vcount+j]);*/
             }
         }
         else if (missingValueManagementUsed == 1)
@@ -561,7 +563,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
                 if (nbits_per_group_val == 0) {
                     maxn = (1 << bits_per_value) - 1;
                     if (group_ref_val == maxn) {
-                        sec_val[vcount+j] = ULONG_MAX; /* missing value */
+                        sec_val[vcount+j] = LONG_MAX; /* missing value */
                     } else {
                         long temp = grib_decode_unsigned_long(buf_vals,  &vals_p, nbits_per_group_val);
                         sec_val[vcount+j] = group_ref_val + temp;
@@ -571,7 +573,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
                     long temp = grib_decode_unsigned_long(buf_vals,  &vals_p, nbits_per_group_val);
                     maxn = (1 << nbits_per_group_val) - 1;
                     if (temp == maxn) {
-                        sec_val[vcount+j] = ULONG_MAX; /* missing value */
+                        sec_val[vcount+j] = LONG_MAX; /* missing value */
                     } else {
                         sec_val[vcount+j] = group_ref_val + temp;
                     }
@@ -587,7 +589,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
                 if (nbits_per_group_val == 0) {
                     maxn2 = maxn - 1;
                     if (group_ref_val == maxn || group_ref_val == maxn2) {
-                        sec_val[vcount+j] = ULONG_MAX; /* missing value */
+                        sec_val[vcount+j] = LONG_MAX; /* missing value */
                     } else {
                         long temp = grib_decode_unsigned_long(buf_vals,  &vals_p, nbits_per_group_val);
                         sec_val[vcount+j] = group_ref_val + temp;
@@ -598,7 +600,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
                     maxn = (1 << nbits_per_group_val) - 1;
                     maxn2 = maxn - 1;
                     if (temp == maxn || temp == maxn2) {
-                        sec_val[vcount+j] = ULONG_MAX; /* missing value */
+                        sec_val[vcount+j] = LONG_MAX; /* missing value */
                     } else {
                         sec_val[vcount+j] = group_ref_val + temp;
                     }
@@ -635,7 +637,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     decimal_s = grib_power(-decimal_scale_factor,10) ;
 
     for (i=0; i < n_vals; i++) {
-        if (sec_val[i] == ULONG_MAX) {
+        if (sec_val[i] == LONG_MAX) {
             val[i] = missingValue;
         } else {
             val[i] = (double) ((((double)sec_val[i])*binary_s)+reference_value)*decimal_s;
@@ -778,7 +780,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     buf_size  += (7+(numberOfGroupsOfDataValues*numberOfBitsUsedForTheGroupWidths))/8;
     buf_size  += (7+(numberOfGroupsOfDataValues*numberOfBitsUsedForTheScaledGroupLengths))/8;
 
-    buf_size  +=  (vals_p/8)  + (vals_p%8?1:0);
+    buf_size  +=  (vals_p/8) + ((vals_p%8) ? 1 : 0);
 
     buf = (unsigned char*)grib_context_malloc_clear(a->context,buf_size);
 
