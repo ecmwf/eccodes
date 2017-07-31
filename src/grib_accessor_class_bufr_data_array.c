@@ -919,7 +919,7 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         double new_ref_val = (double)grib_decode_signed_longb(data, pos, number_of_bits);
         grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -**- \tcode=203YYY width=%ld pos=%ld -> %ld",
                 number_of_bits,(long)*pos,(long)(*pos-a->offset*8));
-        grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: Store %ld = %g", bd->code, new_ref_val);
+        grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: Store for code %6.6ld => new ref val %g", bd->code, new_ref_val);
         tableB_override_store_ref_val(c, self, bd->code, new_ref_val);
         bd->nokey=1;
         err=check_end_data(c, self, number_of_bits); /*advance bitsToEnd*/
@@ -957,7 +957,7 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         /* numeric or codetable or flagtable */
         /* Operator 203: Check if we have changed ref value for this element. If so modify bd->reference */
         if (self->change_ref_value_operand!=0 && tableB_override_get_ref_val(self, bd->code, &(bd->reference)) == GRIB_SUCCESS) {
-            grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Changed ref val: %g\n", bd->reference);
+            grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: For code %6.6ld, changed ref val: %g", bd->code, bd->reference);
         }
 
         if (self->compressedData) {
@@ -995,6 +995,7 @@ static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
           grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication localWidth width=6");
           width=grib_decode_unsigned_long(data,pos,6);
           if (width) {
+              grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication is NOT constant for compressed data!");
             /* delayed replication number is not constant. NOT IMPLEMENTED */
             return GRIB_NOT_IMPLEMENTED;
           } else {
