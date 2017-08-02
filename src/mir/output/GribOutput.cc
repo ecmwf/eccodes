@@ -201,12 +201,11 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 
         grib_info info = {{0},};
 
-        /* bitmap */
+        // missing values
         info.grid.bitmapPresent = field.hasMissing() ? 1 : 0;
         info.grid.missingValue = field.missingValue();
 
-        /* Packing options */
-
+        // Packing
         info.packing.packing = GRIB_UTIL_PACKING_SAME_AS_INPUT;
         info.packing.accuracy = GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT;
 
@@ -224,22 +223,14 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
         // Ask representation to update info
         field.representation()->fill(info);
 
-        // long paramId = field.paramId(i);
-        // if (paramId) {
-        //     long j = info.packing.extra_settings_count++;
-        //     info.packing.extra_settings[j].name = "paramId";
-        //     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
-        //     info.packing.extra_settings[j].long_value = paramId;
-        // }
-
-        // The paramId will now come from here
-        auto md = field.metadata(i);
-        for (auto k = md.begin(); k != md.end(); ++k) {
+        // Extra settings (paramId comes from here)
+        for (auto k : field.metadata(i)) {
             long j = info.packing.extra_settings_count++;
             ASSERT(j < long(sizeof(info.packing.extra_settings) / sizeof(info.packing.extra_settings[0])));
-            info.packing.extra_settings[j].name = (*k).first.c_str();
+
+            info.packing.extra_settings[j].name = k.first.c_str();
             info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
-            info.packing.extra_settings[j].long_value = (*k).second;
+            info.packing.extra_settings[j].long_value = k.second;
         }
 
         std::string packing;
