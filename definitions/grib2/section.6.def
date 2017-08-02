@@ -27,7 +27,7 @@ codetable[1] bitMapIndicator ('6.0.table',masterDir,localDir) = 255 : dump;
 
 #transient bitmapPresent=1;
 meta geography.bitmapPresent g2bitmap_present(bitMapIndicator): dump;
-transient missingValuesPresent = bitmapPresent : hidden;
+transient missingValuesPresent = bitmapPresent : hidden, read_only;
 
 # Bitmap...
 if(bitMapIndicator == 0)
@@ -65,7 +65,7 @@ if(bitMapIndicator == 255)
 {
   # No bitmap is used but some complex packing schemes embed the missing values in the data section
   if (dataRepresentationTemplateNumber == 2 || dataRepresentationTemplateNumber == 3) {
-    transient missingValuesPresent = (missingValueManagementUsed != 0);
+    transient missingValuesPresent = (missingValueManagementUsed != 0) : read_only;
   }
 }
 
