@@ -186,6 +186,93 @@ void test_regular_ll(int remove_local_def, int edition, const char* packingType,
     fclose(out);
 }
 
+void test_grid_complex_spatial_differencing(int remove_local_def, int edition, const char* packingType,
+                     const char* input_filename, const char* output_filename)
+{
+    /* based on copy_spec_from_ksec */
+    int err = 0;
+    size_t slen = 34, inlen = 0, outlen = 0;
+    size_t size=0;
+    int set_spec_flags=0;
+    double* values = NULL;
+    FILE* in = NULL;
+    FILE* out = NULL;
+    const void* buffer = NULL;
+    char gridType[128] = {0,};
+    double theMax,theMin,theAverage;
+
+    codes_handle *handle = 0;
+    codes_handle *finalh = 0;
+    grib_util_grid_spec spec={0,};
+    grib_util_packing_spec packing_spec={0,};
+
+    in = fopen(input_filename,"r");     assert(in);
+    handle = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);    assert(handle);
+
+    CODES_CHECK(grib_get_string(handle, "packingType", gridType, &slen),0);
+    if (!STR_EQUAL(gridType, "grid_complex_spatial_differencing")) {
+        grib_handle_delete(handle);
+        return;
+    }
+    out = fopen(output_filename,"w");   assert(out);
+
+    CODES_CHECK(codes_get_size(handle,"values",&inlen), 0);
+    values = (double*)malloc(sizeof(double)*inlen);
+    CODES_CHECK(codes_get_double_array(handle, "values", values,&inlen), 0);
+    
+    
+    CODES_CHECK(codes_get_double(handle, "max",    &theMax),0);
+    CODES_CHECK(codes_get_double(handle, "min",    &theMin),0);
+    CODES_CHECK(codes_get_double(handle, "average",&theAverage),0);
+    printf("inlen=%ld \t max=%g \t min=%g \t avg=%g\n", inlen, theMax, theMin, theAverage);
+
+    spec.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_LL;
+    spec.Nj = 721;
+    spec.Ni = 1440;
+    outlen = spec.Nj * spec.Ni;
+    spec.iDirectionIncrementInDegrees = 0.25;
+    spec.jDirectionIncrementInDegrees = 0.25;
+    spec.latitudeOfFirstGridPointInDegrees  = 90.0;
+    spec.longitudeOfFirstGridPointInDegrees = 0.0;
+    spec.latitudeOfLastGridPointInDegrees   = -90.0;
+    spec.longitudeOfLastGridPointInDegrees  = 359.75;
+    spec.bitmapPresent = 1; /* there are missing values inside the data section! */
+    spec.missingValue = 9999;
+
+    packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE; //Convert to Grid Simple Packing
+    packing_spec.bitsPerValue = 11;
+    packing_spec.accuracy=GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
+    //packing_spec.packing=GRIB_UTIL_PACKING_USE_PROVIDED;
+
+    if (edition != 0) {
+        packing_spec.editionNumber = edition;
+    }
+    if (remove_local_def) {
+        packing_spec.deleteLocalDefinition = 1;
+    }
+
+    finalh = codes_grib_util_set_spec(
+            handle,
+            &spec,
+            &packing_spec,
+            set_spec_flags,
+            values,
+            outlen,
+            &err);
+    assert(finalh);
+    assert(err == 0);
+
+    /* Write out the message to the output file */
+    CODES_CHECK(codes_get_message(finalh, &buffer, &size),0);
+    if(fwrite(buffer,1,size,out) != size) {
+        assert(0);
+    }
+    codes_handle_delete(handle);
+    codes_handle_delete(finalh);
+    fclose(in);
+    fclose(out);
+}
+
 void usage(const char *prog)
 {
     fprintf(stderr, "%s: [-p packingType] [-r] [-e edition] in.grib out.grib\n", prog);
@@ -233,6 +320,7 @@ int main(int argc, char *argv[])
 
     test_regular_ll(remove_local_def, edition, packingType, infile_name, outfile_name);
     test_reduced_gg(remove_local_def, edition, packingType, infile_name, outfile_name);
+    //test_grid_complex_spatial_differencing(remove_local_def, edition, packingType, infile_name, outfile_name);
 
     return 0;
 }
