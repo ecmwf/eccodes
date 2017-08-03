@@ -263,17 +263,22 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
         fill(h, info);
 
         // Round bounding box to GRIB accuracy (should work with ANY edition)
-        long angularPrecision = (info.packing.editionNumber == 1 ? 1000 : 0);
-        if (!angularPrecision) {
+        long angularPrecision = 0;
+        if (info.packing.editionNumber == 0) {
             GRIB_CALL(grib_get_long(h, "angularPrecision", &angularPrecision));
+            ASSERT(angularPrecision > 0);
+        } else if (info.packing.editionNumber == 1) {
+            angularPrecision = 1000;
+        } else {
+            angularPrecision = 1000000;
         }
-        ASSERT(angularPrecision > 0);
+        double angularPrecisionDouble = double(angularPrecision);
 
-        round_ne(info.grid.latitudeOfFirstGridPointInDegrees, angularPrecision);
-        round_sw(info.grid.longitudeOfFirstGridPointInDegrees, angularPrecision);
+        round_ne(info.grid.latitudeOfFirstGridPointInDegrees, angularPrecisionDouble);
+        round_sw(info.grid.longitudeOfFirstGridPointInDegrees, angularPrecisionDouble);
 
-        round_sw(info.grid.latitudeOfLastGridPointInDegrees, angularPrecision);
-        round_ne(info.grid.longitudeOfLastGridPointInDegrees, angularPrecision);
+        round_sw(info.grid.latitudeOfLastGridPointInDegrees, angularPrecisionDouble);
+        round_ne(info.grid.longitudeOfLastGridPointInDegrees, angularPrecisionDouble);
 
         if (eckit::Log::debug<LibMir>()) {
             X(info.grid.grid_type);
