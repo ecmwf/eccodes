@@ -44,7 +44,7 @@ int grib_is_all_bits_one(long val, long nbits)
     return bits_all_one.v[nbits]==val;
 }
 
-int grib_encode_string(const unsigned char* bitStream, long *bitOffset, size_t numberOfCharacters,char* string)
+int grib_encode_string(unsigned char *bitStream, long *bitOffset, size_t numberOfCharacters, const char *string)
 {
     size_t i;
     int err=0;
@@ -282,15 +282,9 @@ int grib_encode_unsigned_longb(unsigned char* p, unsigned long val ,long *bitp, 
 }
 
 #if OMP_PACKING
-
-#include "grib_bits_any_endian_omp.c"
-
+ #include "grib_bits_any_endian_omp.c"
 #elif VECTOR
-
-#include "grib_bits_any_endian_vector.c"
-
+ #include "grib_bits_any_endian_vector.c"
 #else
-
-#include "grib_bits_any_endian_simple.c"
-
+ #include "grib_bits_any_endian_simple.c"
 #endif
