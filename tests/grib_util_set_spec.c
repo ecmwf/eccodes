@@ -239,10 +239,10 @@ void test_grid_complex_spatial_differencing(int remove_local_def, int edition, c
     spec.bitmapPresent = 1; /* there are missing values inside the data section! */
     spec.missingValue = 9999;
 
-    packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE; //Convert to Grid Simple Packing
+    packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE; /*Convert to Grid Simple Packing*/
     packing_spec.bitsPerValue = 11;
     packing_spec.accuracy=GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
-    //packing_spec.packing=GRIB_UTIL_PACKING_USE_PROVIDED;
+    /*packing_spec.packing=GRIB_UTIL_PACKING_USE_PROVIDED;*/
 
     if (edition != 0) {
         packing_spec.editionNumber = edition;
@@ -320,7 +320,7 @@ int main(int argc, char *argv[])
 
     test_regular_ll(remove_local_def, edition, packingType, infile_name, outfile_name);
     test_reduced_gg(remove_local_def, edition, packingType, infile_name, outfile_name);
-    //test_grid_complex_spatial_differencing(remove_local_def, edition, packingType, infile_name, outfile_name);
+    /*test_grid_complex_spatial_differencing(remove_local_def, edition, packingType, infile_name, outfile_name);*/
 
     return 0;
 }
