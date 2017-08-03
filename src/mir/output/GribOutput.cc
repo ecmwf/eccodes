@@ -98,9 +98,6 @@ static double round_ne(double x, double scale) {
     return ceil(x * scale - 0.1) / scale;
 }
 
-#define FIX_SW(x) x=round_sw(x, scale)
-#define FIX_NE(x) x=round_ne(x, scale)
-
 bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParametrisation &param) const {
     bool ok = false;
 
@@ -265,23 +262,18 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
         // Give a chance to a sub-class to modify info
         fill(h, info);
 
-
-        edition = info.packing.editionNumber;
-        if (!edition) {
-            GRIB_CALL(grib_get_long(h, "editionNumber", &edition));
+        // Round bounding box to GRIB accuracy (should work with ANY edition)
+        long angularPrecision = (info.packing.editionNumber == 1 ? 1000 : 0);
+        if (!angularPrecision) {
+            GRIB_CALL(grib_get_long(h, "angularPrecision", &angularPrecision));
         }
+        ASSERT(angularPrecision > 0);
 
-        double scale = edition == 1 ? 1000 : 1000000;
+        round_ne(info.grid.latitudeOfFirstGridPointInDegrees, angularPrecision);
+        round_sw(info.grid.longitudeOfFirstGridPointInDegrees, angularPrecision);
 
-        FIX_NE(info.grid.latitudeOfFirstGridPointInDegrees);
-        FIX_SW(info.grid.longitudeOfFirstGridPointInDegrees);
-
-        FIX_SW(info.grid.latitudeOfLastGridPointInDegrees);
-        FIX_NE(info.grid.longitudeOfLastGridPointInDegrees);
-
-
-// FIX(info.grid.iDirectionIncrementInDegrees);
-//             FIX(info.grid.jDirectionIncrementInDegrees);
+        round_sw(info.grid.latitudeOfLastGridPointInDegrees, angularPrecision);
+        round_ne(info.grid.longitudeOfLastGridPointInDegrees, angularPrecision);
 
         if (eckit::Log::debug<LibMir>()) {
             X(info.grid.grid_type);
