@@ -107,14 +107,15 @@ static int read_GRIB(reader* r)
     size_t sec3len = 0;
     size_t sec4len = 0;
     unsigned long flags;
-    size_t buflen=16368;
+    size_t buflen=32768;   /* See ECC-515: was 16368 */
     grib_context* c;
     grib_buffer* buf;
 
     /*TODO proper context*/
     c=grib_context_get_default();
     tmp=(unsigned char*)malloc(buflen);
-    Assert(tmp);
+    if (!tmp)
+        return GRIB_OUT_OF_MEMORY;
     buf=grib_new_buffer(c,tmp,buflen);
     buf->property = GRIB_MY_BUFFER;
 
@@ -592,7 +593,8 @@ static int read_BUFR(reader *r)
     /*TODO proper context*/
     c=grib_context_get_default();
     tmp=(unsigned char*)malloc(buflen);
-    Assert(tmp);
+    if (!tmp)
+        return GRIB_OUT_OF_MEMORY;
     buf=grib_new_buffer(c,tmp,buflen);
     buf->property = GRIB_MY_BUFFER;
     r->offset=r->tell(r->read_data)-4;
