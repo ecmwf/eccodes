@@ -432,9 +432,8 @@ ecbuild_add_library(TARGET    eccodes
                               # griby.c gribl.c
                              ${grib_api_srcs}
                     GENERATED grib_api_version.c
-                    LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}
-                    TEMPLATES ${grib_api_extra_srcs}
-                    ${CMATH_LIBRARIES}  )
+                    LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
+                    TEMPLATES ${grib_api_extra_srcs})
 
 
 install( FILES grib_api.h eccodes.h eccodes_windef.h DESTINATION ${INSTALL_INCLUDE_DIR} )
