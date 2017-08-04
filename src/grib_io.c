@@ -107,7 +107,7 @@ static int read_GRIB(reader* r)
     size_t sec3len = 0;
     size_t sec4len = 0;
     unsigned long flags;
-    size_t buflen=32768;   /* See ECC-515: was 16368 */
+    size_t buflen = 32768;   /* See ECC-515: was 16368 */
     grib_context* c;
     grib_buffer* buf;
 
@@ -268,6 +268,7 @@ static int read_GRIB(reader* r)
                     i++;
                 }
                 /* Read section 2 */
+                GROW_BUF_IF_REQUIRED(i+sec2len);
                 if((r->read(r->read_data,tmp+i,sec2len-3,&err) != sec2len-3) || err)
                     return err;
                 i += sec2len-3;
