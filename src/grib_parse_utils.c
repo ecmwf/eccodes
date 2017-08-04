@@ -158,7 +158,7 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
             mode = 0;
         else {
 #if 0
-            int llen=strlen(fname);  // The strlen cost is too high
+            int llen=strlen(fname);  /* The strlen cost is too high */
             fname[llen]=uname[i];
             fname[llen+1]='\0';
 #else
