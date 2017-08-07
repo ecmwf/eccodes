@@ -7,6 +7,7 @@
 codetable[1] bitMapIndicator ('6.0.table',masterDir,localDir) = 255 : dump;
 
 meta geography.bitmapPresent g2bitmap_present(bitMapIndicator): dump;
+transient missingValuesPresent = bitmapPresent : hidden;
 
 # Bitmap...
 if(bitMapIndicator == 0)

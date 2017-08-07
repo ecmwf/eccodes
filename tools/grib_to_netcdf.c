@@ -1089,16 +1089,16 @@ static err to_expand_mem(field *g)
         g->values = (double*) grib_context_malloc(ctx, sizeof(double) * g->value_count);
         if((e = grib_get_double_array(g->handle, "values", g->values, &count)))
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get decode values %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot decode values %s", grib_get_error_message(e));
             return e;
         }
 
         if(count != g->value_count)
             grib_context_log(ctx, GRIB_LOG_FATAL, "ecCodes: value count mismatch %d %d", count, g->value_count);
 
-        if((e = grib_get_long(g->handle, "bitmapPresent", &bitmap)))
+        if((e = grib_get_long(g->handle, "missingValuesPresent", &bitmap)))
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get bitmapPresent %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get missingValuesPresent %s", grib_get_error_message(e));
             return e;
         }
 
