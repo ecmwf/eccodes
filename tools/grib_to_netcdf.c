@@ -2862,24 +2862,18 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
     int var_id = 0; /* Variable ID */
     int dims[1024];
 
-    size_t count[NC_MAX_DIMS];
+    size_t chunks[NC_MAX_DIMS] = {0,}; /* For chunking */
     err e = 0;
     
     long ni;
     long nj;
     
     field *f = get_field(fs, 0, expand_mem);
-
-    
-    /* Define longitude */
-    if((e = grib_get_long(f->handle, "Ni", &ni)) != GRIB_SUCCESS)
-    {
+    if((e = grib_get_long(f->handle, "Ni", &ni)) != GRIB_SUCCESS) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni %s", grib_get_error_message(e));
         return e;
     }
-    /* Define latitude */
-    if((e = grib_get_long(f->handle, "Nj", &nj)) != GRIB_SUCCESS)
-    {
+    if ((e = grib_get_long(f->handle, "Nj", &nj)) != GRIB_SUCCESS) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj %s", grib_get_error_message(e));
         return e;
     }
@@ -2887,10 +2881,10 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
 
     /* Count dimensions per axis */
     for(i = 0; i < naxis; ++i)
-        count[naxis - i - 1] = 1;
+        chunks[naxis - i - 1] = 1;
 
-    count[naxis] = nj; /* latitude */
-    count[naxis + 1] = ni; /* longitude */
+    chunks[naxis] = nj; /* latitude */
+    chunks[naxis + 1] = ni; /* longitude */
 
     /* START DEFINITIONS */
 
@@ -3040,17 +3034,17 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
 
     for(i = 0; i < subsetcnt; ++i)
     {
-
         printf("%s: Defining variable '%s'.\n", grib_tool_name, subsets[i].att.name);
 
         stat = nc_def_var(ncid, subsets[i].att.name, subsets[i].att.nctype, n, dims, &var_id);
         check_err(stat, __LINE__, __FILE__);
 
-        if (setup.deflate>-1)
+        if (setup.deflate > -1)
         {
-            stat = nc_def_var_chunking(ncid, var_id, NC_CHUNKED, count);
+            stat = nc_def_var_chunking(ncid, var_id, NC_CHUNKED, chunks);
             check_err(stat, __LINE__, __FILE__);
 
+            /* Set compression settings for a variable */
             stat = nc_def_var_deflate(ncid, var_id, setup.shuffle, 1, setup.deflate);
             check_err(stat, __LINE__, __FILE__);
         }
