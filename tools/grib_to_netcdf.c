@@ -3879,10 +3879,10 @@ grib_option grib_options[] = {
                 "\n\t\t3 -> netCDF-4 file format"
                 "\n\t\t4 -> netCDF-4 classic model file format\n"
                 , 0, 1, "2" },
-        { "d:", "level",          "\n\t\tDeflate data. Only for netCDF-4 kind output format."
+        { "d:", "level",          "\n\t\tDeflate data (compression level). Only for netCDF-4 output format."
                 "\n\t\tPossible values [0,9]. Default None." 
                 "\n\t\tChunking strategy based on GRIB message.\n", 0, 1, "6" },
-        { "s", 0, "Shuffle data before deflate.\n", 0, 1, 0 },
+        { "s", 0, "Shuffle data before deflation compression.\n", 0, 1, 0 },
         { "u:", "dimension",  "\n\t\tSet dimension to be an unlimited dimension.\n", 0, 1, "time" }
 };
 
@@ -4027,20 +4027,19 @@ int grib_tool_init(grib_runtime_options* options)
         }
     }
 
-    if(grib_options_on("d:"))
+    if (grib_options_on("d:"))
     {
-        if(option_kind == 3 || option_kind == 4)
-        {
+        if (option_kind == 3 || option_kind == 4) { /* netCDF-4 */
             char* theArg = grib_options_get_option("d:");
             if (!is_number(theArg) || atol(theArg)<0 || atol(theArg)>9 ) {
-                fprintf(stderr, "Invalid deflate option: %s\n", theArg);
+                fprintf(stderr, "Invalid deflate option: %s (must be 0 to 9)\n", theArg);
                 usage();
                 exit(1);
             }
             set_value(user_r, "deflate", theArg);
             deflate_option=1;
-        }else{
-            fprintf(stderr, "Invalid deflate option for non netCDF-4 kind output formats\n");
+        } else {
+            fprintf(stderr, "Invalid deflate option for non netCDF-4 output formats\n");
             usage();
             exit(1);
         }
