@@ -15,7 +15,6 @@ from eccodes import GribIndex
 from eccodes import GribMessage
 from eccodes.high_level.gribmessage import IndexNotSelectedError
 from eccodes import BufrFile, BufrMessage
-from six.moves import range
 
 TESTGRIB = "../../data/high_level_api.grib2"
 TESTBUFR = "../../data/bufr/syno_multi.bufr"

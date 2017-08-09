@@ -14,7 +14,6 @@ import traceback
 import sys
 
 from eccodes import *
-from six.moves import range
 
 INPUT = '../../data/regular_latlon_surface.grib1'
 VERBOSE = 1  # verbose error reporting

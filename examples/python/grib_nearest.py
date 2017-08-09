@@ -14,7 +14,6 @@ import traceback
 import sys
 
 from eccodes import *
-from six.moves import range
 
 INPUT = '../../data/reduced_gaussian_lsm.grib1'
 VERBOSE = 1  # verbose error reporting

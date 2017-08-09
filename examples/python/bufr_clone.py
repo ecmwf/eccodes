@@ -20,7 +20,6 @@ import traceback
 import sys
 
 from eccodes import *
-from six.moves import range
 
 INPUT = '../../data/bufr/syno_1.bufr'
 OUTPUT = 'bufr_clone_test_p.clone.bufr'

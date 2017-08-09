@@ -19,7 +19,6 @@ import traceback
 import sys
 
 from eccodes import *
-from six.moves import range
 
 INPUT = '../../data/bufr/synop_multi_subset.bufr'
 VERBOSE = 1  # verbose error reporting

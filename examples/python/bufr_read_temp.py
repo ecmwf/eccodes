@@ -23,7 +23,6 @@ from __future__ import print_function
 import traceback
 import sys
 from eccodes import *
-from six.moves import range
 
 INPUT = '../../data/bufr/PraticaTemp.bufr'
 VERBOSE = 1  # verbose error reporting

@@ -10,7 +10,6 @@ from __future__ import print_function
 import traceback
 import sys
 from eccodes import *
-from six.moves import range
 
 INPUT = '../../data/regular_latlon_surface.grib1'
 OUTPUT = 'out.set_bitmap_p.grib'

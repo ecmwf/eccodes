@@ -18,8 +18,6 @@ import sys
 import os
 
 from eccodes import *
-from six.moves import map
-from six.moves import range
 
 INPUT = '../../data/index.grib'
 VERBOSE = 1  # verbose error reporting

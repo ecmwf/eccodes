@@ -13,7 +13,6 @@ import traceback
 import sys
 
 from eccodes import *
-from six.moves import range
 
 INPUT = '../../data/sample.grib2'
 OUTPUT = 'out.mw.grib'

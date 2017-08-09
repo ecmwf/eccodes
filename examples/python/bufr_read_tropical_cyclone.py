@@ -17,7 +17,6 @@ import sys
 import collections
 
 from eccodes import *
-from six.moves import range
 
 INPUT = '../../data/bufr/tropical_cyclone.bufr'
 VERBOSE = 1  # verbose error reporting
