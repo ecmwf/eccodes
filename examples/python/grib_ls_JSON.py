@@ -18,8 +18,9 @@ import os
 import getopt
 from eccodes import *
 
-VERBOSE=1 # verbose error reporting
-default_namespace='ls'
+VERBOSE = 1  # verbose error reporting
+default_namespace = 'ls'
+
 
 def do_print(namespace, INPUT):
     f = open(INPUT)
@@ -43,13 +44,13 @@ def do_print(namespace, INPUT):
         f1 = True
         while codes_keys_iterator_next(iterid):
             keyname = codes_keys_iterator_get_name(iterid)
-            keyval = codes_get_string(iterid,keyname)
+            keyval = codes_get_string(iterid, keyname)
             if not f1:
                 print(',')
             else:
                 print('')
                 f1 = False
-            print("         \"%s\" : \"%s\"" % (keyname,keyval), end=' ')
+            print("         \"%s\" : \"%s\"" % (keyname, keyval), end=' ')
 
         print('')
         print('      }')
@@ -60,6 +61,7 @@ def do_print(namespace, INPUT):
     print('}')
     f.close()
 
+
 def usage():
     progname = os.path.basename(sys.argv[0])
     print("Usage: ", progname, "[options] grib_file1 grib_file2 ...")
@@ -68,6 +70,7 @@ def usage():
     print('\t\tAll the keys belonging to namespace are printed.')
     print('\t-m Mars keys are printed.')
     print('')
+
 
 def main():
     if len(sys.argv) < 2:
@@ -92,7 +95,7 @@ def main():
         for arg in args:
             do_print(namespace, arg)
     except getopt.GetoptError as err:
-        print('Error: ',err)
+        print('Error: ', err)
         usage()
         return 1
     except GribInternalError as err:
@@ -102,6 +105,7 @@ def main():
             print(err.msg, file=sys.stderr)
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

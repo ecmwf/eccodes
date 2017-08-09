@@ -20,8 +20,8 @@ from eccodes import *
 
 VERBOSE = 1  # verbose error reporting
 
-def example(csvfile, input_filename, output_filename):
 
+def example(csvfile, input_filename, output_filename):
     fbufrin = open(input_filename, 'rb')
     fbufrout = open(output_filename, 'wb')
 
@@ -63,10 +63,10 @@ def example(csvfile, input_filename, output_filename):
     # unexpandedDescriptors and BufrTemplate can be set alternatively
     # to choose the template for the BUFR message
 
-    #unexpandedDescriptors = [301051,4006,7002,10004,12001,11001,11002,11031,11032,11033,20041]
-    #codes_set_array(bufr, 'unexpandedDescriptors', unexpandedDescriptors)
+    # unexpandedDescriptors = [301051,4006,7002,10004,12001,11001,11002,11031,11032,11033,20041]
+    # codes_set_array(bufr, 'unexpandedDescriptors', unexpandedDescriptors)
 
-    codes_set(bufr,'BufrTemplate','aircraftReportWithSecondsAndPressure')
+    codes_set(bufr, 'BufrTemplate', 'aircraftReportWithSecondsAndPressure')
 
     codes_set_array(bufr, 'year', years)
     codes_set_array(bufr, 'month', months)
@@ -106,6 +106,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

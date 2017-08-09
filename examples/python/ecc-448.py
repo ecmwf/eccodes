@@ -18,7 +18,6 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-
     # open bufr file
     f = open(INPUT)
 
@@ -32,20 +31,19 @@ def example():
             break
 
         print("message: %s" % cnt)
-        
+
         # ECC-448: create a new BUFR handle from the message
         #          of the original
         the_message = codes_get_message(bufr)
         newbufr = codes_new_from_message(the_message)
 
-        codes_set(newbufr,'unpack',1)
+        codes_set(newbufr, 'unpack', 1)
 
         # get BUFR key iterator
         iterid = codes_bufr_keys_iterator_new(newbufr)
 
         # loop over the keys
         while codes_bufr_keys_iterator_next(iterid):
-
             # print key name
             keyname = codes_bufr_keys_iterator_get_name(iterid)
             print("  %s" % keyname)
@@ -72,6 +70,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

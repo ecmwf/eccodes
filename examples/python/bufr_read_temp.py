@@ -28,6 +28,7 @@ from six.moves import range
 INPUT = '../../data/bufr/PraticaTemp.bufr'
 VERBOSE = 1  # verbose error reporting
 
+
 def example():
     # open bufr file
     f = open(INPUT)
@@ -55,15 +56,18 @@ def example():
         windSpeed = codes_get_array(bufr, "windSpeed")
         blockNumber = codes_get(bufr, "blockNumber")
         stationNumber = codes_get(bufr, "stationNumber")
-        print('station %d%d' % (blockNumber,stationNumber))
-        print('timePeriod pressure geopotentialHeight latitudeDisplacement longitudeDisplacement airTemperature windDirection windSpeed significance')
-        for i in range(0,len(windSpeed)-1):
-            print(timePeriod[i],pressure[i],geopotentialHeight[i],latitudeDisplacement[i],longitudeDisplacement[i],airTemperature[i],windDirection[i],windSpeed[i],extendedVerticalSoundingSignificance[i])
+        print('station %d%d' % (blockNumber, stationNumber))
+        print(
+            'timePeriod pressure geopotentialHeight latitudeDisplacement longitudeDisplacement airTemperature windDirection windSpeed significance')
+        for i in range(0, len(windSpeed) - 1):
+            print(timePeriod[i], pressure[i], geopotentialHeight[i], latitudeDisplacement[i], longitudeDisplacement[i],
+                  airTemperature[i], windDirection[i], windSpeed[i], extendedVerticalSoundingSignificance[i])
         cnt += 1
         # delete handle
         codes_release(bufr)
     # close the file
     f.close()
+
 
 def main():
     try:
@@ -74,6 +78,7 @@ def main():
         else:
             sys.stderr.write(err.msg + '\n')
         return 1
+
+
 if __name__ == "__main__":
     sys.exit(main())
-

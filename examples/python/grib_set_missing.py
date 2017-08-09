@@ -28,7 +28,7 @@ def example():
     codes_set_long(gid, "scaledValueOfFirstFixedSurface", 15)
     codes_set_long(gid, "scaleFactorOfFirstFixedSurface", 1)
     level = codes_get_double(gid, "level")
-    assert(level == 1.5)
+    assert (level == 1.5)
 
     # set type of level to surface
     codes_set(gid, 'typeOfFirstFixedSurface', 'sfc')
@@ -52,6 +52,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

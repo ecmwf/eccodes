@@ -25,7 +25,6 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-
     # open metar file
     f = open(INPUT)
 
@@ -71,6 +70,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

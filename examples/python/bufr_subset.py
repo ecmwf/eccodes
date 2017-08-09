@@ -26,7 +26,6 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-
     # open bufr file
     f = open(INPUT)
 
@@ -52,7 +51,6 @@ def example():
 
         # loop over the subsets
         for i in range(1, numberOfSubsets + 1):
-
             # read and print some data values
 
             key = '/subsetNumber=%d/blockNumber' % i
@@ -83,6 +81,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

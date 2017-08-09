@@ -15,7 +15,8 @@ import sys
 from eccodes import *
 
 VERBOSE = 1  # verbose error reporting
-missingValue = 1e+20 # A value out of range
+missingValue = 1e+20  # A value out of range
+
 
 def example(INPUT):
     f = open(INPUT)
@@ -64,6 +65,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

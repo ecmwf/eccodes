@@ -26,7 +26,6 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-
     # open bufr file
     f = open(INPUT)
 
@@ -43,14 +42,13 @@ def example():
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(bufr,'unpack',1)
+        codes_set(bufr, 'unpack', 1)
 
         # get BUFR key iterator
         iterid = codes_bufr_keys_iterator_new(bufr)
 
         # loop over the keys
         while codes_bufr_keys_iterator_next(iterid):
-
             # print key name
             keyname = codes_bufr_keys_iterator_get_name(iterid)
             print("  %s" % keyname)
@@ -77,6 +75,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

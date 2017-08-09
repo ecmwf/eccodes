@@ -26,8 +26,8 @@ INPUT = '../../data/bufr/syno_1.bufr'
 OUTPUT = 'bufr_clone_test_p.clone.bufr'
 VERBOSE = 1  # verbose error reporting
 
-def example():
 
+def example():
     # open BUFR file
     fin = open(INPUT)
 
@@ -40,7 +40,6 @@ def example():
     # create several clones of this message and alter them
     # in different ways
     for centre in range(0, 3):
-
         # clone the message
         clone_id = codes_clone(bufr)
 
@@ -70,6 +69,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())
