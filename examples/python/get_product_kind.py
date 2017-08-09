@@ -29,13 +29,13 @@ def example():
 
     f = open(sys.argv[1])
     while 1:
-        id = codes_new_from_file(f, CODES_PRODUCT_ANY)
-        if id is None:
+        ident = codes_new_from_file(f, CODES_PRODUCT_ANY)
+        if ident is None:
             break
 
-        print('product: ', codes_get(id, 'kindOfProduct', str))
+        print('product: ', codes_get(ident, 'kindOfProduct', str))
 
-        codes_release(id)
+        codes_release(ident)
 
     f.close()
 

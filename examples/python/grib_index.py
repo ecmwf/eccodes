@@ -42,7 +42,7 @@ def example():
 
     iid = None
 
-    if (os.path.exists(index_file)):
+    if os.path.exists(index_file):
         iid = codes_index_read(index_file)
     else:
         iid = codes_index_new_from_file(INPUT, index_keys)

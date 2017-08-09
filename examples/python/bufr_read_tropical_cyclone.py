@@ -121,7 +121,7 @@ def example():
             rank1 = i * 2 + 2
             rank3 = i * 2 + 3
 
-            ivalues = codes_get_array(bufr, "#%d#timePeriod" % (i))
+            ivalues = codes_get_array(bufr, "#%d#timePeriod" % i)
 
             if len(ivalues) == 1:
                 timePeriod[i] = ivalues[0]
@@ -176,7 +176,7 @@ def example():
             print("step  latitude  longitude   pressure  latitude   longitude    wind")
             for s in range(len(timePeriod)):
                 if data[m][s][0] != CODES_MISSING_DOUBLE and data[m][s][1] != CODES_MISSING_DOUBLE:
-                    print(" {:>3d}{}{:>6.1f}{}{:>6.1f}{}{:>8.1f}{}{:>6.1f}{}{:>6.1f}{}{:>6.1f}".format( \
+                    print(" {:>3d}{}{:>6.1f}{}{:>6.1f}{}{:>8.1f}{}{:>6.1f}{}{:>6.1f}{}{:>6.1f}".format(
                         timePeriod[s], '  ', data[m][s][0], '     ', data[m][s][1], '     ', data[m][s][2], '  ',
                         data[m][s][3], '     ', data[m][s][4], '     ', data[m][s][5]))
 

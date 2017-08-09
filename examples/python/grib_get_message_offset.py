@@ -29,13 +29,13 @@ def example():
 
     f = open(sys.argv[1])
     while 1:
-        id = codes_grib_new_from_file(f)
-        if id is None:
+        ident = codes_grib_new_from_file(f)
+        if ident is None:
             break
 
-        print(codes_get_message_offset(id))
+        print(codes_get_message_offset(ident))
 
-        codes_release(id)
+        codes_release(ident)
 
     f.close()
 

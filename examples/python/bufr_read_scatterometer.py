@@ -60,7 +60,7 @@ def example():
         # Get the total number of subsets.
         numObs = codes_get(bufr, "numberOfSubsets")
 
-        print('  Number of values: %ld' % (numObs))
+        print('  Number of values: %ld' % numObs)
 
         # Get latitude (for all the subsets)
         lat = codes_get_array(bufr, "latitude")

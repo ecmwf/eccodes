@@ -29,7 +29,7 @@ def example():
     for lat, lon in points:
         nearest = codes_grib_find_nearest(gid, lat, lon)[0]
         print(lat, lon)
-        print(nearest.lat, nearest.lon, nearest.value, nearest.distance, \
+        print(nearest.lat, nearest.lon, nearest.value, nearest.distance,
               nearest.index)
 
         four = codes_grib_find_nearest(gid, lat, lon, is_lsm=False, npoints=4)
