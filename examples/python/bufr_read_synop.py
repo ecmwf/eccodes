@@ -18,6 +18,7 @@
 # messages than the one used in the example. It is advised to use bufr_dump to
 # understand the structure of the messages.
 
+from __future__ import print_function
 import traceback
 import sys
 
@@ -67,7 +68,7 @@ def example():
         if bufr is None:
             break
 
-        print "message: %s" % cnt
+        print("message: %s" % cnt)
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
@@ -76,9 +77,9 @@ def example():
         # print the values for the selected keys from the message
         for key in keys:
             try:
-                print '  %s: %s' % (key, codes_get(bufr, key))
+                print('  %s: %s' % (key, codes_get(bufr, key)))
             except CodesInternalError as err:
-                print 'Error with key="%s" : %s' % (key, err.msg)
+                print('Error with key="%s" : %s' % (key, err.msg))
 
         cnt += 1
 

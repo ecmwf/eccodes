@@ -11,11 +11,13 @@
 # Description: how to read data of the ECMWF EPS tropical cyclone tracks encoded in BUFR format.
 #
 
+from __future__ import print_function
 import traceback
 import sys
 import collections
 
 from eccodes import *
+from six.moves import range
 
 INPUT = '../../data/bufr/tropical_cyclone.bufr'
 VERBOSE = 1  # verbose error reporting
@@ -38,7 +40,7 @@ def example():
         if bufr is None:
             break
 
-        print '**************** MESSAGE: ',cnt+1,'  *****************'
+        print('**************** MESSAGE: ',cnt+1,'  *****************')
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
@@ -51,10 +53,10 @@ def example():
         hour  = codes_get(bufr, "hour")
         minute= codes_get(bufr, "minute")
 
-        print 'Date and time: ',  day,'.',month,'.',year,'  ',hour,':',minute
+        print('Date and time: ',  day,'.',month,'.',year,'  ',hour,':',minute)
 
         stormIdentifier =  codes_get(bufr,"stormIdentifier")
-        print  'Storm identifier: ', stormIdentifier
+        print('Storm identifier: ', stormIdentifier)
 
         # How many different timePeriod in the data structure?
         numberOfPeriods=0
@@ -76,19 +78,19 @@ def example():
         longitudeCentre = codes_get(bufr,'#1#longitude')
 
         if significance!=1:
-            print 'ERROR: unexpected #1#meteorologicalAttributeSignificance'
+            print('ERROR: unexpected #1#meteorologicalAttributeSignificance')
             return 1
 
         if (latitudeCentre==CODES_MISSING_DOUBLE) and (longitudeCentre==CODES_MISSING_DOUBLE):
-            print 'Observed storm centre position missing'
+            print('Observed storm centre position missing')
         else:
-            print 'Observed storm centre: latitude=',latitudeCentre,' longitude=',longitudeCentre
+            print('Observed storm centre: latitude=',latitudeCentre,' longitude=',longitudeCentre)
 
         # Location of storm in perturbed analysis
         significance = codes_get(bufr,'#2#meteorologicalAttributeSignificance')
 
         if significance!=4:
-            print 'ERROR: unexpected #2#meteorologicalAttributeSignificance'
+            print('ERROR: unexpected #2#meteorologicalAttributeSignificance')
             return 1
 
         latitudeAnalysis = codes_get_array(bufr,'#2#latitude')
@@ -99,7 +101,7 @@ def example():
         significance=codes_get(bufr,'#3#meteorologicalAttributeSignificance')
 
         if significance!=3:
-            print 'ERROR: unexpected #3#meteorologicalAttributeSignificance=', significance
+            print('ERROR: unexpected #3#meteorologicalAttributeSignificance=', significance)
             return 1
 
         latitudeMaxWind0=codes_get_array(bufr,'#3#latitude')
@@ -145,7 +147,7 @@ def example():
                 lon = codes_get_array(bufr, "#%d#longitude" % rank1)
                 press = codes_get_array(bufr, "#%d#pressureReducedToMeanSeaLevel" % (i + 1))
             else:
-                print 'ERROR: unexpected meteorologicalAttributeSignificance=',significance
+                print('ERROR: unexpected meteorologicalAttributeSignificance=',significance)
 
             # Location of maximum wind
             values = codes_get_array(bufr, "#%d#meteorologicalAttributeSignificance" % rank3)
@@ -162,7 +164,7 @@ def example():
                 lonWind = codes_get_array(bufr, "#%d#longitude" % rank3)
                 wind10m = codes_get_array(bufr, "#%d#windSpeedAt10M" % (i + 1))
             else:
-                print 'ERROR: unexpected meteorologicalAttributeSignificance=',significanceWind
+                print('ERROR: unexpected meteorologicalAttributeSignificance=',significanceWind)
 
             for k in range(len(memberNumber)):
                 data[k][i]=[lat[k],lon[k],press[k],latWind[k],lonWind[k],wind10m[k]]
@@ -171,13 +173,13 @@ def example():
 # ---------------------------------------- Print the values -------------
 
         for m in range(len(memberNumber)):
-            print "== Member  %d" %memberNumber[m]
-            print "step  latitude  longitude   pressure  latitude   longitude    wind"
+            print("== Member  %d" %memberNumber[m])
+            print("step  latitude  longitude   pressure  latitude   longitude    wind")
             for s in range(len(timePeriod)):
                 if data[m][s][0]!=CODES_MISSING_DOUBLE and data[m][s][1]!=CODES_MISSING_DOUBLE:
-                    print " {:>3d}{}{:>6.1f}{}{:>6.1f}{}{:>8.1f}{}{:>6.1f}{}{:>6.1f}{}{:>6.1f}".format(\
+                    print(" {:>3d}{}{:>6.1f}{}{:>6.1f}{}{:>8.1f}{}{:>6.1f}{}{:>6.1f}{}{:>6.1f}".format(\
                           timePeriod[s],'  ',data[m][s][0],'     ',data[m][s][1],'     ',data[m][s][2],'  ',
-                          data[m][s][3],'     ',data[m][s][4],'     ',data[m][s][5])
+                          data[m][s][3],'     ',data[m][s][4],'     ',data[m][s][5]))
 
 # -----------------------------------------------------------------------
         cnt += 1

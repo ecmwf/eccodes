@@ -6,9 +6,11 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
+from __future__ import print_function
 import traceback
 import sys
 from eccodes import *
+from six.moves import range
 
 INPUT = '../../data/regular_latlon_surface.grib1'
 OUTPUT = 'out.set_bitmap_p.grib'
@@ -61,7 +63,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >> sys.stderr, err.msg
+            print(err.msg, file=sys.stderr)
 
         return 1
 

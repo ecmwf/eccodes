@@ -14,10 +14,12 @@
 #
 #
 
+from __future__ import print_function
 import traceback
 import sys
 
 from eccodes import *
+from six.moves import range
 
 INPUT = '../../data/bufr/synop_multi_subset.bufr'
 VERBOSE = 1  # verbose error reporting
@@ -37,7 +39,7 @@ def example():
         if bufr is None:
             break
 
-        print "message: %s" % cnt
+        print("message: %s" % cnt)
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
@@ -46,7 +48,7 @@ def example():
         # find out the number of subsets
         key = 'numberOfSubsets'
         numberOfSubsets = codes_get(bufr, 'numberOfSubsets')
-        print ' %s: %d' % (key, numberOfSubsets)
+        print(' %s: %d' % (key, numberOfSubsets))
 
         # loop over the subsets
         for i in range(1, numberOfSubsets + 1):
@@ -54,13 +56,13 @@ def example():
             # read and print some data values
 
             key = '/subsetNumber=%d/blockNumber' % i
-            print key
+            print(key)
             val = codes_get_long(bufr, key)
-            print '  %s= %d' % (key, val)
+            print('  %s= %d' % (key, val))
 
             key = '/subsetNumber=%d/stationNumber' % i
             val = codes_get_long(bufr, key)
-            print '  %s: %d' % (key, val)
+            print('  %s: %d' % (key, val))
 
         cnt += 1
 

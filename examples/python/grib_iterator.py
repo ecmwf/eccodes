@@ -8,6 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
+from __future__ import print_function
 import traceback
 import sys
 
@@ -41,9 +42,9 @@ def example(INPUT):
             sys.stdout.write("- %d - lat=%.6e lon=%.6e value=" % (i, lat, lon))
 
             if value == missingValue:
-                print "missing"
+                print("missing")
             else:
-                print "%.6f" % value
+                print("%.6f" % value)
 
             i += 1
 

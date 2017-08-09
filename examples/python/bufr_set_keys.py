@@ -14,6 +14,7 @@
 #
 #
 
+from __future__ import print_function
 import traceback
 import sys
 
@@ -42,7 +43,7 @@ def example():
         if bufr is None:
             break
 
-        print "message: %s" % cnt
+        print("message: %s" % cnt)
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
@@ -53,16 +54,16 @@ def example():
 
         # set centre
         val = 222
-        print '  set bufrHeaderCentre to: %d' % val
+        print('  set bufrHeaderCentre to: %d' % val)
 
         key = 'bufrHeaderCentre'
         try:
-            print '  %s: %s' % (key, codes_set(bufr, key, val))
+            print('  %s: %s' % (key, codes_set(bufr, key, val)))
         except CodesInternalError as err:
-            print 'Error with key="%s" : %s' % (key, err.msg)
+            print('Error with key="%s" : %s' % (key, err.msg))
 
         # check bufrHeaderCentre's value
-        print '  %s''s new value is: %d' % (key, codes_get(bufr, key))
+        print('  %s''s new value is: %d' % (key, codes_get(bufr, key)))
 
         # write modified message to output
         codes_write(bufr, fout)

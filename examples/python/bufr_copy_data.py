@@ -13,6 +13,7 @@
 # Description: How to copy all the values in the data section that are present in the same
 #              position in the data tree and with the same number of values to the output handle
 #
+from __future__ import print_function
 import traceback
 import sys
 from eccodes import *
@@ -67,7 +68,7 @@ def example(input_filename, output_filename):
 
 def main():
     if len(sys.argv) < 3:
-        print >>sys.stderr, 'Usage: ', sys.argv[0], ' bufr_in bufr_out'
+        print('Usage: ', sys.argv[0], ' bufr_in bufr_out', file=sys.stderr)
         sys.exit(1)
 
     input_filename = sys.argv[1]

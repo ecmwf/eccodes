@@ -15,6 +15,7 @@ from eccodes import GribIndex
 from eccodes import GribMessage
 from eccodes.high_level.gribmessage import IndexNotSelectedError
 from eccodes import BufrFile, BufrMessage
+from six.moves import range
 
 TESTGRIB = "../../data/high_level_api.grib2"
 TESTBUFR = "../../data/bufr/syno_multi.bufr"
@@ -225,12 +226,12 @@ class TestGribMessage(unittest.TestCase):
         """Metadata is read correctly from GribMessage."""
         with GribFile(TESTGRIB) as grib_file:
             msg = GribMessage(grib_file)
-            msg_keys = msg.keys()
+            msg_keys = list(msg.keys())
             for key in KNOWN_GRIB_KEYS:
                 assert key in msg_keys, "key '%s' not found" % key
             # Size of message in bytes
             self.assertEqual(msg.size(), 160219)
-            self.assertEqual(len(msg.keys()), len(msg))
+            self.assertEqual(len(list(msg.keys())), len(msg))
 
     def test_missing_message_behaviour(self):
         """Key with MISSING value."""
@@ -277,7 +278,7 @@ class TestGribMessage(unittest.TestCase):
         with GribFile(TESTGRIB) as grib_file:
             msg = GribMessage(grib_file)
             msg2 = GribMessage(clone=msg)
-            self.assertSequenceEqual(msg.keys(), msg2.keys())
+            self.assertSequenceEqual(list(msg.keys()), list(msg2.keys()))
 
 
 class TestGribIndex(unittest.TestCase):
@@ -366,13 +367,13 @@ class TestBufrMessage(unittest.TestCase):
         with BufrFile(TESTBUFR) as bufr_file:
             msg = BufrMessage(bufr_file)
             msg.unpack()
-            msg_keys = msg.keys()
+            msg_keys = list(msg.keys())
             self.assertEqual(len(msg_keys), 140)
             for key in KNOWN_BUFR_KEYS:
                 assert key in msg_keys
             # Size of message in bytes
             self.assertEqual(msg.size(), 220)
-            self.assertEqual(len(msg.keys()), len(msg))
+            self.assertEqual(len(list(msg.keys())), len(msg))
 
     def test_content(self):
         """Data values are read correctly from BufrMessage."""
@@ -404,7 +405,7 @@ class TestBufrMessage(unittest.TestCase):
         with BufrFile(TESTBUFR) as bufr_file:
             msg = BufrMessage(bufr_file)
             msg2 = BufrMessage(clone=msg)
-            self.assertSequenceEqual(msg.keys(), msg2.keys())
+            self.assertSequenceEqual(list(msg.keys()), list(msg2.keys()))
 
     def test_copy_data(self):
         """Can copy data section from one message to another"""

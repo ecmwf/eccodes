@@ -7,6 +7,7 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
+from __future__ import print_function
 import traceback
 import sys
 
@@ -35,16 +36,16 @@ def example():
 
         for key in keys:
             try:
-                print '  %s: %s' % (key, codes_get(gid, key))
+                print('  %s: %s' % (key, codes_get(gid, key)))
             except CodesInternalError as err:
-                print 'Error with key="%s" : %s' % (key, err.msg)
+                print('Error with key="%s" : %s' % (key, err.msg))
 
-        print 'There are %d values, average is %f, min is %f, max is %f' % (
+        print('There are %d values, average is %f, min is %f, max is %f' % (
             codes_get_size(gid, 'values'),
             codes_get(gid, 'average'),
             codes_get(gid, 'min'),
             codes_get(gid, 'max')
-        )
+        ))
 
         codes_release(gid)
 

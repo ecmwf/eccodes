@@ -12,6 +12,7 @@
 #              for missing values
 #              (rather than compare each value with the missingValue key)
 #
+from __future__ import print_function
 import traceback
 import sys
 
@@ -50,9 +51,9 @@ def example(INPUT):
 
             # Consult bitmap to see if the i'th value is missing
             if bitmapPresent and bitmap[i] == 0:
-                print "missing"
+                print("missing")
             else:
-                print "%.6f" % value
+                print("%.6f" % value)
 
             i += 1
 

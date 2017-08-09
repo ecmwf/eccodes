@@ -14,6 +14,7 @@
 #
 #
 
+from __future__ import print_function
 import traceback
 import sys
 
@@ -37,7 +38,7 @@ def example():
         if gid is None:
             break
 
-        print "message: %s" % cnt
+        print("message: %s" % cnt)
 
         # ---------------------------------------------
         # get values for keys holding a single value
@@ -46,9 +47,9 @@ def example():
 
         for key in keys:
             try:
-                print '  %s: %s' % (key, codes_get(gid, key))
+                print('  %s: %s' % (key, codes_get(gid, key)))
             except CodesInternalError as err:
-                print 'Error with key="%s" : %s' % (key, err.msg)
+                print('Error with key="%s" : %s' % (key, err.msg))
 
         cnt += 1
 

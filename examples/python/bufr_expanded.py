@@ -14,10 +14,13 @@
 #
 #
 
+from __future__ import absolute_import
+from __future__ import print_function
 import traceback
 import sys
 
 from eccodes import *
+from six.moves import range
 
 INPUT = '../../data/bufr/syno_1.bufr'
 VERBOSE = 1  # verbose error reporting
@@ -37,7 +40,7 @@ def example():
         if bufr is None:
             break
 
-        print "message: %s" % cnt
+        print("message: %s" % cnt)
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
@@ -50,12 +53,12 @@ def example():
 
         # get size
         num = codes_get_size(bufr, key)
-        print '  size of %s is: %s' % (key, num)
+        print('  size of %s is: %s' % (key, num))
 
         # get values
         values = codes_get_array(bufr, key)
-        for i in xrange(len(values)):
-            print "   %d %.10e" % (i + 1, values[i])
+        for i in range(len(values)):
+            print("   %d %.10e" % (i + 1, values[i]))
 
         cnt += 1
 

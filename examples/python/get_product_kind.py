@@ -14,7 +14,7 @@
 # Description: how to process a file containing a mix of messages
 #              and print the kind of product (e.g. GRIB, BUFR etc)
 
-
+from __future__ import print_function
 import traceback
 import sys
 from eccodes import *
@@ -24,7 +24,7 @@ VERBOSE = 1  # verbose error reporting
 
 def example():
     if len(sys.argv) < 2:
-        print >>sys.stderr, 'Usage: ', sys.argv[0], ' file'
+        print('Usage: ', sys.argv[0], ' file', file=sys.stderr)
         sys.exit(1)
 
     f = open(sys.argv[1])
@@ -33,7 +33,7 @@ def example():
         if id is None:
             break
 
-        print 'product: ', codes_get(id, 'kindOfProduct', str)
+        print('product: ', codes_get(id, 'kindOfProduct', str))
 
         codes_release(id)
 

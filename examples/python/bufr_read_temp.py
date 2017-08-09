@@ -19,9 +19,11 @@
 # messages than the one used in the example. It is advised to use bufr_dump to
 # understand the structure of the messages.
 #
+from __future__ import print_function
 import traceback
 import sys
 from eccodes import *
+from six.moves import range
 
 INPUT = '../../data/bufr/PraticaTemp.bufr'
 VERBOSE = 1  # verbose error reporting
@@ -36,7 +38,7 @@ def example():
         bufr = codes_bufr_new_from_file(f)
         if bufr is None:
             break
-        print "message: %s" % cnt
+        print("message: %s" % cnt)
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data section
         codes_set(bufr, 'unpack', 1)
@@ -53,10 +55,10 @@ def example():
         windSpeed = codes_get_array(bufr, "windSpeed")
         blockNumber = codes_get(bufr, "blockNumber")
         stationNumber = codes_get(bufr, "stationNumber")
-        print 'station %d%d' % (blockNumber,stationNumber)
-        print 'timePeriod pressure geopotentialHeight latitudeDisplacement longitudeDisplacement airTemperature windDirection windSpeed significance'
+        print('station %d%d' % (blockNumber,stationNumber))
+        print('timePeriod pressure geopotentialHeight latitudeDisplacement longitudeDisplacement airTemperature windDirection windSpeed significance')
         for i in range(0,len(windSpeed)-1):
-            print timePeriod[i],pressure[i],geopotentialHeight[i],latitudeDisplacement[i],longitudeDisplacement[i],airTemperature[i],windDirection[i],windSpeed[i],extendedVerticalSoundingSignificance[i]
+            print(timePeriod[i],pressure[i],geopotentialHeight[i],latitudeDisplacement[i],longitudeDisplacement[i],airTemperature[i],windDirection[i],windSpeed[i],extendedVerticalSoundingSignificance[i])
         cnt += 1
         # delete handle
         codes_release(bufr)

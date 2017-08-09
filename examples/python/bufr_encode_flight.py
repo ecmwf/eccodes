@@ -10,6 +10,7 @@
 
 # Description: how to encode flight dataset into BUFR
 
+from __future__ import print_function
 from datetime import datetime
 import traceback
 import numpy as np
@@ -24,10 +25,10 @@ def example(csvfile, input_filename, output_filename):
     fbufrin = open(input_filename, 'rb')
     fbufrout = open(output_filename, 'wb')
 
-    print 'Using ecCodes version: ', codes_get_api_version()
+    print('Using ecCodes version: ', codes_get_api_version())
 
     # The first line in the CSV has the column names
-    print 'Reading input CSV file: ', csvfile
+    print('Reading input CSV file: ', csvfile)
     parse_date = lambda x: datetime.strptime(x, '%Y%m%d')
     parse_time = lambda x: datetime.strptime(x, '%H:%M:%S')
     data = np.genfromtxt(csvfile, delimiter=',', dtype=None, names=True,
@@ -51,7 +52,7 @@ def example(csvfile, input_filename, output_filename):
     windDirections = data['windDirection']
     temperatures = data['temperature']
 
-    print 'Reading input BUFR file: ', input_filename
+    print('Reading input BUFR file: ', input_filename)
     bufr = codes_bufr_new_from_file(fbufrin)
 
     codes_set(bufr, 'masterTablesVersionNumber', 24)
@@ -84,12 +85,12 @@ def example(csvfile, input_filename, output_filename):
     codes_set(bufr, 'pack', 1)
 
     codes_write(bufr, fbufrout)
-    print 'Created output BUFR file: ', output_filename
+    print('Created output BUFR file: ', output_filename)
 
 
 def main():
     if len(sys.argv) < 4:
-        print >>sys.stderr, 'Usage: ', sys.argv[0], ' csv bufr_in bufr_out'
+        print('Usage: ', sys.argv[0], ' csv bufr_in bufr_out', file=sys.stderr)
         sys.exit(1)
 
     csv_filename = sys.argv[1]

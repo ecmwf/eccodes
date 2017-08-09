@@ -9,10 +9,12 @@
 # nor does it submit to any jurisdiction.
 #
 
+from __future__ import print_function
 import traceback
 import sys
 
 from eccodes import *
+from six.moves import range
 
 INPUT = '../../data/reduced_gaussian_lsm.grib1'
 VERBOSE = 1  # verbose error reporting
@@ -26,16 +28,16 @@ def example():
 
     for lat, lon in points:
         nearest = codes_grib_find_nearest(gid, lat, lon)[0]
-        print lat, lon
-        print nearest.lat, nearest.lon, nearest.value, nearest.distance, \
-            nearest.index
+        print(lat, lon)
+        print(nearest.lat, nearest.lon, nearest.value, nearest.distance, \
+            nearest.index)
 
         four = codes_grib_find_nearest(gid, lat, lon, is_lsm=False, npoints=4)
         for i in range(len(four)):
-            print "- %d -" % i
-            print four[i]
+            print("- %d -" % i)
+            print(four[i])
 
-        print "-" * 100
+        print("-" * 100)
 
     codes_release(gid)
     f.close()

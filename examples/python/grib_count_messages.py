@@ -9,10 +9,12 @@
 # nor does it submit to any jurisdiction.
 #
 
+from __future__ import print_function
 import traceback
 import sys
 
 from eccodes import *
+from six.moves import range
 
 INPUT = '../../data/tigge_pf_ecmwf.grib2'
 VERBOSE = 1  # verbose error reporting
@@ -40,19 +42,19 @@ def example():
     for i in range(mcount):
         gid = gid_list[i]
 
-        print "processing message number", i + 1
+        print("processing message number", i + 1)
 
         for key in keys:
-            print '%s=%g' % (key, codes_get(gid, key))
+            print('%s=%g' % (key, codes_get(gid, key)))
 
-        print 'There are %d, average is %g, min is %g, max is %g' % (
+        print('There are %d, average is %g, min is %g, max is %g' % (
             codes_get_size(gid, 'values'),
             codes_get(gid, 'average'),
             codes_get(gid, 'min'),
             codes_get(gid, 'max')
-        )
+        ))
 
-        print '-' * 100
+        print('-' * 100)
 
         codes_release(gid)
 

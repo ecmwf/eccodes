@@ -9,10 +9,12 @@
 # nor does it submit to any jurisdiction.
 #
 
+from __future__ import print_function
 import traceback
 import sys
 
 from eccodes import *
+from six.moves import range
 
 INPUT = '../../data/regular_latlon_surface.grib1'
 VERBOSE = 1  # verbose error reporting
@@ -23,13 +25,13 @@ def example():
     gid = codes_grib_new_from_file(f)
 
     values = codes_get_values(gid)
-    for i in xrange(len(values)):
-        print "%d %.10e" % (i + 1, values[i])
+    for i in range(len(values)):
+        print("%d %.10e" % (i + 1, values[i]))
 
-    print '%d values found in %s' % (len(values), INPUT)
+    print('%d values found in %s' % (len(values), INPUT))
 
     for key in ('max', 'min', 'average'):
-        print '%s=%.10e' % (key, codes_get(gid, key))
+        print('%s=%.10e' % (key, codes_get(gid, key)))
 
     codes_release(gid)
     f.close()

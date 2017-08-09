@@ -12,11 +12,14 @@
 # Description: How to create and use an index to access GRIB messages from
 # a file
 
+from __future__ import print_function
 import traceback
 import sys
 import os
 
 from eccodes import *
+from six.moves import map
+from six.moves import range
 
 INPUT = '../../data/index.grib'
 VERBOSE = 1  # verbose error reporting
@@ -25,7 +28,7 @@ VERBOSE = 1  # verbose error reporting
 def product(*args, **kwds):
     # product('ABCD', 'xy') --> Ax Ay Bx By Cx Cy Dx Dy
     # product(range(2), repeat=3) --> 000 001 010 011 100 101 110 111
-    pools = map(tuple, args) * kwds.get('repeat', 1)
+    pools = list(map(tuple, args)) * kwds.get('repeat', 1)
     result = [[]]
     for pool in pools:
         result = [x + [y] for x in result for y in pool]
@@ -52,13 +55,13 @@ def example():
     index_vals = []
 
     for key in index_keys:
-        print "%sSize=%d" % (
+        print("%sSize=%d" % (
             key,
             codes_index_get_size(iid, key)
-        )
+        ))
 
         key_vals = codes_index_get(iid, key)
-        print " ".join(key_vals)
+        print(" ".join(key_vals))
 
         index_vals.append(key_vals)
 
@@ -70,8 +73,8 @@ def example():
             gid = codes_new_from_index(iid)
             if gid is None:
                 break
-            print " ".join(["%s=%s" % (key, codes_get(gid, key))
-                            for key in index_keys])
+            print(" ".join(["%s=%s" % (key, codes_get(gid, key))
+                            for key in index_keys]))
             codes_release(gid)
 
     codes_index_release(iid)

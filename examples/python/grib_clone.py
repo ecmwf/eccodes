@@ -14,6 +14,7 @@ import sys
 import random
 
 from eccodes import *
+from six.moves import range
 
 INPUT = '../../data/constant_field.grib1'
 OUTPUT = 'out.clone.grib'

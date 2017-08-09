@@ -15,6 +15,7 @@
 #           keys in a BUFR message.
 
 
+from __future__ import print_function
 import traceback
 import sys
 
@@ -38,7 +39,7 @@ def example():
         if bufr is None:
             break
 
-        print "message: %s" % cnt
+        print("message: %s" % cnt)
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
@@ -52,7 +53,7 @@ def example():
 
             # print key name
             keyname = codes_bufr_keys_iterator_get_name(iterid)
-            print "  %s" % keyname
+            print("  %s" % keyname)
 
         # delete the key iterator
         codes_bufr_keys_iterator_delete(iterid)

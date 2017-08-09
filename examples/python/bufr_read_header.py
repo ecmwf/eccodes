@@ -15,6 +15,7 @@
 #
 #
 
+from __future__ import print_function
 import traceback
 import sys
 
@@ -50,14 +51,14 @@ def example():
         if bufr is None:
             break
 
-        print "message: %s" % cnt
+        print("message: %s" % cnt)
 
         # print the values for the selected keys from the message
         for key in keys:
             try:
-                print '  %s: %s' % (key, codes_get(bufr, key))
+                print('  %s: %s' % (key, codes_get(bufr, key)))
             except CodesInternalError as err:
-                print 'Error with key="%s" : %s' % (key, err.msg)
+                print('Error with key="%s" : %s' % (key, err.msg))
 
         cnt += 1
 

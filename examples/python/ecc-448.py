@@ -7,6 +7,7 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
+from __future__ import print_function
 import traceback
 import sys
 
@@ -30,7 +31,7 @@ def example():
         if bufr is None:
             break
 
-        print "message: %s" % cnt
+        print("message: %s" % cnt)
         
         # ECC-448: create a new BUFR handle from the message
         #          of the original
@@ -47,7 +48,7 @@ def example():
 
             # print key name
             keyname = codes_bufr_keys_iterator_get_name(iterid)
-            print "  %s" % keyname
+            print("  %s" % keyname)
 
         # delete the key iterator
         codes_bufr_keys_iterator_delete(iterid)

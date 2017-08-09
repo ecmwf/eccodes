@@ -9,6 +9,7 @@
 # nor does it submit to any jurisdiction.
 #
 
+from __future__ import print_function
 import traceback
 import sys
 
@@ -39,7 +40,7 @@ def example():
         while codes_keys_iterator_next(iterid):
             keyname = codes_keys_iterator_get_name(iterid)
             keyval = codes_get_string(iterid, keyname)
-            print "%s = %s" % (keyname, keyval)
+            print("%s = %s" % (keyname, keyval))
 
         codes_keys_iterator_delete(iterid)
         codes_release(gid)
