@@ -15,6 +15,7 @@
 
 #include "mir/repres/gauss/reduced/Reduced.h"
 
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <sstream>
@@ -31,6 +32,7 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/BoundingBox.h"
 #include "mir/util/Domain.h"
+#include "mir/util/GreatCircle.h"
 #include "mir/util/Grib.h"
 
 #include "mir/api/Atlas.h"
@@ -410,12 +412,13 @@ void Reduced::initTrans(Trans_t& trans) const {
     ASSERT(pl.size() == pli.size());
 
     for (size_t i = 0; i < pl.size(); ++i) {
-        pli[i] = pl[i];
+        pli[i] = int(pl[i]);
     }
 
-    ASSERT(trans_set_resol(&trans, pli.size(), &pli[0]) == 0);
+    ASSERT(trans_set_resol(&trans, int(pli.size()), &pli[0]) == 0);
 
 }
+
 
 size_t Reduced::numberOfPoints() const {
     size_t total = 0;
@@ -436,6 +439,37 @@ size_t Reduced::numberOfPoints() const {
     return total;
 }
 
+
+double Reduced::longestElementDiagonal() const {
+
+    // Look for a majorant of all element diagonals, using the difference of
+    // latitudes closest/furthest from equator and longitude furthest from
+    // Greenwich
+
+    const std::vector<double>& lats = latitudes();
+    const std::vector<long>& pl = pls();
+    ASSERT(pl.size() == lats.size());
+    ASSERT(pl.size() == N_ * 2);
+
+    double d = 0.;
+    Latitude l1(Latitude::NORTH_POLE);
+    Latitude l2(lats[0]);
+
+    for (size_t j = 1; j < N_ * 2; ++j, l1 = l2, l2 = lats[j]) {
+
+        const eckit::Fraction we = Longitude::GLOBE.fraction() / (std::min(pl[j - 1], pl[j]));
+        const Latitude&
+                latAwayFromEquator(std::abs(l1.value()) > std::abs(l2.value())? l1 : l2),
+                latCloserToEquator(std::abs(l1.value()) > std::abs(l2.value())? l2 : l1);
+
+        d = std::max(d, util::GreatCircle::distanceInMeters(
+                         Iterator::point_ll_t(latCloserToEquator, 0),
+                         Iterator::point_ll_t(latAwayFromEquator, we) ));
+    }
+
+    ASSERT(d > 0.);
+    return d;
+}
 
 
 }  // namespace reduced
