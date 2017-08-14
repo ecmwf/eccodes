@@ -231,6 +231,13 @@ size_t Representation::numberOfPoints() const {
 }
 
 
+double Representation::longestElementDiagonal() const {
+    std::ostringstream os;
+    os << "Representation::longestElementDiagonal() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+
 void Representation::initTrans(Trans_t&) const {
     std::ostringstream os;
     os << "Representation::initTrans() not implemented for " << *this;
