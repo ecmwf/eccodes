@@ -105,17 +105,9 @@ Iterator* RotatedGG::iterator() const {
 }
 
 
-
-size_t RotatedGG::numberOfPoints() const {
-    ASSERT(isGlobal());
-    return Ni_ * Nj_;
-}
-
-
 atlas::Grid RotatedGG::atlasGrid() const {
     return rotation_.rotate(Regular::atlasGrid());
 }
-
 
 
 namespace {

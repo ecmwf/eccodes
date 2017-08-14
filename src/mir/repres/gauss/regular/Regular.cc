@@ -19,8 +19,7 @@
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Plural.h"
 #include "eckit/memory/ScopedPtr.h"
-#include "eckit/types/FloatCompare.h"
-#include "eckit/types/Fraction.h"
+#include "eckit/utils/MD5.h"
 
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
@@ -28,7 +27,6 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
-#include "eckit/utils/MD5.h"
 
 
 namespace mir {
@@ -157,25 +155,30 @@ bool Regular::isPeriodicWestEast() const {
 }
 
 
+size_t Regular::numberOfPoints() const {
+    if (isGlobal()) {
+        ASSERT(Nj_ == N_ * 2);
+        ASSERT(Ni_ == N_ * 4);
+        return Ni_ * Nj_;
+    }
+    else {
+        size_t total = 0;
+        eckit::ScopedPtr<repres::Iterator> iter(iterator());
+        while (iter->next()) {
+            total++;
+        }
+        return total;
+    }
+}
+
+
 atlas::Grid Regular::atlasGrid() const {
     return atlas::grid::RegularGaussianGrid("F" + std::to_string(N_), domain());
 }
 
 
 void Regular::validate(const std::vector<double>& values) const {
-    const util::Domain dom = domain();
-    long long count = 0;
-
-    if (dom.isGlobal()) {
-        count = (N_ * 2) * (N_ * 4);
-    } else {
-        eckit::ScopedPtr<Iterator> it(iterator());
-        while (it->next()) {
-            if (dom.contains(it->pointUnrotated())) {
-                ++count;
-            }
-        }
-    }
+    const size_t count = numberOfPoints();
 
     eckit::Log::debug<LibMir>() << "Regular::validate checked " << eckit::Plural(values.size(), "value") << ", within domain: " << eckit::BigNum(count) << "." << std::endl;
     ASSERT(values.size() == size_t(count));
