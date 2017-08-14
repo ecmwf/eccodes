@@ -146,7 +146,7 @@ static int transform_data(grib_handle* h, double* data,
         /* Already +i and +j. No need to change */
         return GRIB_SUCCESS;
     }
-#if 0
+
     if ( !iScansNegatively && !jScansPositively && !jPointsAreConsecutive && !alternativeRowScanning &&
          nx > 0 && ny > 0)
     {
@@ -165,7 +165,7 @@ static int transform_data(grib_handle* h, double* data,
         grib_context_free(h->context, data2);
         return GRIB_SUCCESS;
     }
-#endif
+
     if (nx < 1 || ny < 1) {
         grib_context_log(h->context,GRIB_LOG_ERROR, "Invalid values for Nx and/or Ny");
         return GRIB_GEOCALCULUS_PROBLEM;
@@ -334,16 +334,11 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
 
     iter->e = -1;
 
-    if (alternativeRowScanning || jPointsAreConsecutive) {
-        /* TODO: Test this thoroughly for all scanning modes.
-         * For now we transform the data array only for the specific
-         * cases of alternativeRowScanning or jPointsAreConsecutive
-         */
-        err = transform_data(h, iter->data,
-                iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning,
-                iter->nv, nx, ny);
-        if (err) return err;
-    }
+    err = transform_data(h, iter->data,
+            iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning,
+            iter->nv, nx, ny);
+    if (err) return err;
+
     return err;
 }
 
