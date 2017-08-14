@@ -32,6 +32,7 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
+#include "mir/util/GreatCircle.h"
 #include "mir/data/MIRField.h"
 
 
@@ -193,6 +194,16 @@ size_t LatLon::numberOfPoints() const {
     ASSERT(ni_);
     ASSERT(nj_);
     return ni_ * nj_;
+}
+
+
+double LatLon::longestElementDiagonal() const {
+    const eckit::Fraction& sn = increments_.south_north();
+    const eckit::Fraction& we = increments_.west_east();
+
+    return util::GreatCircle::distanceInMeters(
+                Iterator::point_ll_t(0, 0),
+                Iterator::point_ll_t(sn, we) );
 }
 
 
