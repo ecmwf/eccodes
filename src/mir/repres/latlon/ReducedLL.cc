@@ -23,6 +23,7 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
+#include "mir/util/GreatCircle.h"
 
 
 namespace mir {
@@ -70,10 +71,47 @@ void ReducedLL::makeName(std::ostream& out) const {
 
 size_t ReducedLL::numberOfPoints() const {
     size_t total = 0;
-    for (auto j = pl_.begin(); j != pl_.end(); ++j) {
-        total += *j;
+    for (auto j : pl_) {
+        total += size_t(j);
     }
     return total;
+}
+
+
+double ReducedLL::longestElementDiagonal() const {
+
+    // Look for a majorant of all element diagonals, using the difference of
+    // latitudes closest/furthest from equator and longitude furthest from
+    // Greenwich
+
+    const util::Domain dom = domain();
+    const bool periodic = dom.isPeriodicEastWest();
+
+    const size_t Dj(Nj_ - 1);
+    ASSERT(Dj > 0);
+    const eckit::Fraction sn(((dom.north() - dom.south()).fraction()) / Dj);
+
+    double d = 0.;
+    Latitude lat1(dom.north());
+    Latitude lat2(dom.north() - sn);
+
+    for (size_t j = 1; j < Nj_; ++j, lat1 = lat2, lat2 -= sn) {
+
+        const long Di(std::min(pl_[j - 1], pl_[j]) - (periodic? 0:1));
+        ASSERT(Di > 0);
+        const eckit::Fraction we((dom.east() - dom.west()).fraction() / Di);
+
+        const Latitude&
+                latAwayFromEquator(std::abs(lat1.value()) > std::abs(lat2.value())? lat1 : lat2),
+                latCloserToEquator(std::abs(lat1.value()) > std::abs(lat2.value())? lat2 : lat1);
+
+        std::max(d, util::GreatCircle::distanceInMeters(
+                     Iterator::point_ll_t(latCloserToEquator, 0),
+                     Iterator::point_ll_t(latAwayFromEquator, we) ));
+    }
+
+    ASSERT(d > 0.);
+    return d;
 }
 
 
