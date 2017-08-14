@@ -83,17 +83,17 @@ static void init_class(grib_iterator_class* c)
 
 static int next(grib_iterator* i, double *lat, double *lon, double *val)
 {
-	grib_iterator_lambert_conformal* self = (grib_iterator_lambert_conformal*)i;
+    grib_iterator_lambert_conformal* self = (grib_iterator_lambert_conformal*)i;
 
-	if((long)i->e >= (long)(i->nv-1))
-		return 0;
-	i->e++;
+    if((long)i->e >= (long)(i->nv-1))
+        return 0;
+    i->e++;
 
-	*lat = self->lats[i->e];
-	*lon = self->lons[i->e];
-	*val = i->data[i->e];
+    *lat = self->lats[i->e];
+    *lon = self->lons[i->e];
+    *val = i->data[i->e];
 
-	return 1;
+    return 1;
 }
 
 #ifndef M_PI
@@ -111,9 +111,90 @@ static int next(grib_iterator* i, double *lat, double *lon, double *val)
 #define RAD2DEG   57.29577951308232087684  /* 180 over pi */
 #define DEG2RAD   0.01745329251994329576   /* pi over 180 */
 
+/*
+ * Return pointer to data at (i,j) (Fortran convention)
+ */
+static double* pointer_to_data(unsigned int i, unsigned int j,
+        long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning,
+        unsigned int nx, unsigned int ny, double *data)
+{
+    /* Regular grid */
+    if (nx > 0 && ny > 0) {
+        if (i >= nx || j >= ny) return NULL;
+        j = (jScansPositively) ? j : ny - 1 - j;
+        i = ((alternativeRowScanning) && (j % 2 == 1)) ?  nx - 1 - i : i;
+        i = (iScansNegatively) ? nx - 1 - i : i;
+
+        return (jPointsAreConsecutive) ?  data + j + i*ny : data + i + nx*j;
+    }
+
+    /* Reduced or other data not on a grid */
+    Assert(0);
+    return NULL;
+}
+
+static int transform_data(grib_handle* h, double* data,
+        long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning,
+        size_t numPoints, long nx, long ny)
+{
+    double* data2;
+    double *pData0, *pData1, *pData2;
+    unsigned long ix, iy;
+
+    if ( !iScansNegatively && jScansPositively && !jPointsAreConsecutive && !alternativeRowScanning )
+    {
+        /* Already +i and +j. No need to change */
+        return GRIB_SUCCESS;
+    }
+#if 0
+    if ( !iScansNegatively && !jScansPositively && !jPointsAreConsecutive && !alternativeRowScanning &&
+         nx > 0 && ny > 0)
+    {
+        /* regular grid +i -j: convert from we:ns to we:sn */
+        size_t row_size = ((size_t) nx) * sizeof(double);
+        data2 = (double*)grib_context_malloc(h->context, row_size);
+        if (!data2) {
+            grib_context_log(h->context,GRIB_LOG_ERROR, "unable to allocate %ld bytes", row_size);
+            return GRIB_OUT_OF_MEMORY;
+        }
+        for (iy = 0; iy < ny/2; iy++) {
+            memcpy(data2, data + ((size_t) iy) * nx, row_size);
+            memcpy(data + iy*nx, data + (ny-1-iy) * ((size_t) nx), row_size);
+            memcpy(data + (ny-1-iy) * ((size_t) nx), data2, row_size);
+        }
+        grib_context_free(h->context, data2);
+        return GRIB_SUCCESS;
+    }
+#endif
+    if (nx < 1 || ny < 1) {
+        grib_context_log(h->context,GRIB_LOG_ERROR, "Invalid values for Nx and/or Ny");
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
+    data2 = (double*)grib_context_malloc(h->context, numPoints*sizeof(double));
+    if (!data2) {
+        grib_context_log(h->context,GRIB_LOG_ERROR, "unable to allocate %ld bytes",numPoints*sizeof(double));
+        return GRIB_OUT_OF_MEMORY;
+    }
+    pData0 = data2;
+    for (iy = 0; iy < ny; iy++) {
+        long deltaX = 0;
+        pData1 = pointer_to_data(0, iy, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning, nx,ny, data);
+        pData2 = pointer_to_data(1, iy, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning, nx,ny, data);
+        deltaX = pData2 - pData1;
+        for (ix = 0; ix < nx; ix++) {
+            *pData0++ = *pData1;
+            pData1 += deltaX;
+        }
+    }
+    memcpy(data, data2, ((size_t)numPoints) * sizeof(double));
+    grib_context_free(h->context, data2);
+
+    return GRIB_SUCCESS;
+}
+
 static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
 {
-    int i, j, ret=0;
+    int i, j, err=0;
     double *lats, *lons; /* the lat/lon arrays to be populated */
     long nx,ny,iScansNegatively,jScansPositively,jPointsAreConsecutive,alternativeRowScanning;
     double LoVInDegrees,LaDInDegrees,Latin1InDegrees,Latin2InDegrees,latFirstInDegrees,
@@ -141,41 +222,41 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     const char* sjPointsAreConsecutive   = grib_arguments_get_name(h,args,self->carg++);
     const char* salternativeRowScanning  = grib_arguments_get_name(h,args,self->carg++);
 
-    if((ret = grib_get_long_internal(h, snx,&nx)) != GRIB_SUCCESS)
-        return ret;
-    if((ret = grib_get_long_internal(h, sny,&ny)) != GRIB_SUCCESS)
-        return ret;
+    if((err = grib_get_long_internal(h, snx,&nx)) != GRIB_SUCCESS)
+        return err;
+    if((err = grib_get_long_internal(h, sny,&ny)) != GRIB_SUCCESS)
+        return err;
 
     if (iter->nv!=nx*ny) {
         grib_context_log(h->context,GRIB_LOG_ERROR,"Wrong number of points (%ld!=%ldx%ld)",iter->nv,nx,ny);
         return GRIB_WRONG_GRID;
     }
-    if((ret = grib_get_double_internal(h, sradius,&radius)) != GRIB_SUCCESS)
-        return ret;
-    if((ret = grib_get_double_internal(h, sLoVInDegrees, &LoVInDegrees))!=GRIB_SUCCESS)
-        return ret;
-    if((ret = grib_get_double_internal(h, sLaDInDegrees, &LaDInDegrees))!=GRIB_SUCCESS)
-        return ret;
-    if((ret = grib_get_double_internal(h, sLatin1InDegrees, &Latin1InDegrees))!=GRIB_SUCCESS)
-        return ret;
-    if((ret = grib_get_double_internal(h, sLatin2InDegrees, &Latin2InDegrees))!=GRIB_SUCCESS)
-        return ret;
-    if((ret = grib_get_double_internal(h, slatFirstInDegrees,&latFirstInDegrees)) !=GRIB_SUCCESS)
-        return ret;
-    if((ret = grib_get_double_internal(h, slonFirstInDegrees,&lonFirstInDegrees)) !=GRIB_SUCCESS)
-        return ret;
-    if((ret = grib_get_double_internal(h, sDx,&Dx)) !=GRIB_SUCCESS)
-        return ret;
-    if((ret = grib_get_double_internal(h, sDy,&Dy)) !=GRIB_SUCCESS)
-        return ret;
-    if((ret = grib_get_long_internal(h, sjPointsAreConsecutive,&jPointsAreConsecutive)) !=GRIB_SUCCESS)
-        return ret;
-    if((ret = grib_get_long_internal(h, sjScansPositively,&jScansPositively)) !=GRIB_SUCCESS)
-        return ret;
-    if((ret = grib_get_long_internal(h, siScansNegatively,&iScansNegatively)) !=GRIB_SUCCESS)
-        return ret;
-    if((ret = grib_get_long_internal(h, salternativeRowScanning,&alternativeRowScanning)) !=GRIB_SUCCESS)
-        return ret;
+    if((err = grib_get_double_internal(h, sradius,&radius)) != GRIB_SUCCESS)
+        return err;
+    if((err = grib_get_double_internal(h, sLoVInDegrees, &LoVInDegrees))!=GRIB_SUCCESS)
+        return err;
+    if((err = grib_get_double_internal(h, sLaDInDegrees, &LaDInDegrees))!=GRIB_SUCCESS)
+        return err;
+    if((err = grib_get_double_internal(h, sLatin1InDegrees, &Latin1InDegrees))!=GRIB_SUCCESS)
+        return err;
+    if((err = grib_get_double_internal(h, sLatin2InDegrees, &Latin2InDegrees))!=GRIB_SUCCESS)
+        return err;
+    if((err = grib_get_double_internal(h, slatFirstInDegrees,&latFirstInDegrees)) !=GRIB_SUCCESS)
+        return err;
+    if((err = grib_get_double_internal(h, slonFirstInDegrees,&lonFirstInDegrees)) !=GRIB_SUCCESS)
+        return err;
+    if((err = grib_get_double_internal(h, sDx,&Dx)) !=GRIB_SUCCESS)
+        return err;
+    if((err = grib_get_double_internal(h, sDy,&Dy)) !=GRIB_SUCCESS)
+        return err;
+    if((err = grib_get_long_internal(h, sjPointsAreConsecutive,&jPointsAreConsecutive)) !=GRIB_SUCCESS)
+        return err;
+    if((err = grib_get_long_internal(h, sjScansPositively,&jScansPositively)) !=GRIB_SUCCESS)
+        return err;
+    if((err = grib_get_long_internal(h, siScansNegatively,&iScansNegatively)) !=GRIB_SUCCESS)
+        return err;
+    if((err = grib_get_long_internal(h, salternativeRowScanning,&alternativeRowScanning)) !=GRIB_SUCCESS)
+        return err;
 
     /* See Wolfram MathWorld: http://mathworld.wolfram.com/LambertConformalConicProjection.html */
     latFirstInRadians = latFirstInDegrees * DEG2RAD;
@@ -206,25 +287,19 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     angle = n * lonDiff;
     x0 = rho * sin(angle);
     y0 = rho0 - rho * cos(angle);
-    Dx = iScansNegatively == 0 ? Dx : -Dx;
+    /*Dx = iScansNegatively == 0 ? Dx : -Dx;*/
     /* GRIB-405: Don't change sign of Dy. Latitudes ALWAYS increase from latitudeOfFirstGridPoint */
     /*Dy = jScansPositively == 1 ? Dy : -Dy;*/
-
-    /* No support (yet) for jPointsAreConsecutive */
-    if (jPointsAreConsecutive) {
-        grib_context_log(h->context,GRIB_LOG_ERROR,"No support for: 'Adjacent points in j (y) direction being consecutive'");
-        Assert(0);
-    }
 
     /* Allocate latitude and longitude arrays */
     self->lats = (double*)grib_context_malloc(h->context,iter->nv*sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context,GRIB_LOG_ERROR,	"unable to allocate %ld bytes",iter->nv*sizeof(double));
+        grib_context_log(h->context,GRIB_LOG_ERROR, "unable to allocate %ld bytes",iter->nv*sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     self->lons = (double*)grib_context_malloc(h->context,iter->nv*sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context,GRIB_LOG_ERROR,	"unable to allocate %ld bytes",iter->nv*sizeof(double));
+        grib_context_log(h->context,GRIB_LOG_ERROR, "unable to allocate %ld bytes",iter->nv*sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     lats=self->lats;
@@ -259,7 +334,17 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
 
     iter->e = -1;
 
-    return ret;
+    if (alternativeRowScanning || jPointsAreConsecutive) {
+        /* TODO: Test this thoroughly for all scanning modes.
+         * For now we transform the data array only for the specific
+         * cases of alternativeRowScanning or jPointsAreConsecutive
+         */
+        err = transform_data(h, iter->data,
+                iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning,
+                iter->nv, nx, ny);
+        if (err) return err;
+    }
+    return err;
 }
 
 static int destroy(grib_iterator* i)
