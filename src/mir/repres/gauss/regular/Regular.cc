@@ -26,6 +26,7 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
+#include "mir/util/GreatCircle.h"
 #include "mir/util/Grib.h"
 
 
@@ -169,6 +170,38 @@ size_t Regular::numberOfPoints() const {
         }
         return total;
     }
+}
+
+
+double Regular::longestElementDiagonal() const {
+
+    // Look for a majorant of all element diagonals, using the difference of
+    // latitudes closest/furthest from equator and longitude furthest from
+    // Greenwich
+
+    const std::vector<double>& lats = latitudes();
+    ASSERT(N_ * 2 == lats.size());
+    ASSERT(N_);
+
+    double d = 0.;
+    Latitude l1(Latitude::NORTH_POLE);
+    Latitude l2(lats[0]);
+
+    for (size_t j = 1; j < 2 * N_; ++j, l1 = l2, l2 = lats[j]) {
+
+        const eckit::Fraction we = Longitude::GLOBE.fraction() / N_ * 4;
+        const Latitude&
+                latAwayFromEquator(std::abs(l1.value()) > std::abs(l2.value())? l1 : l2),
+                latCloserToEquator(std::abs(l1.value()) > std::abs(l2.value())? l2 : l1);
+
+        d = std::max(d, util::GreatCircle::distanceInMeters(
+                         Iterator::point_ll_t(latCloserToEquator, 0),
+                         Iterator::point_ll_t(latAwayFromEquator, we) ));
+    }
+
+    ASSERT(d > 0.);
+    return d;
+
 }
 
 
