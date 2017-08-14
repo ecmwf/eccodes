@@ -37,14 +37,22 @@ Octahedral::~Octahedral() {
 }
 
 
-Octahedral::Octahedral(long N, const util::BoundingBox &bbox) :
+Octahedral::Octahedral(long N, const util::BoundingBox& bbox) :
     Reduced(N, bbox) {
     adjustBoundingBoxEastWest(bbox_);
 }
 
 
-void Octahedral::fill(grib_info &info) const  {
+void Octahedral::fill(grib_info& info) const  {
     Reduced::fill(info);
+}
+
+
+void Octahedral::fill(api::MIRJob& job) const  {
+    Reduced::fill(job);
+    std::stringstream os;
+    os << "O" << N_;
+    job.set("gridname", os.str());
 }
 
 
@@ -57,14 +65,6 @@ void Octahedral::makeName(std::ostream& out) const {
 bool Octahedral::sameAs(const Representation& other) const {
     const Octahedral* o = dynamic_cast<const Octahedral*>(&other);
     return o && Reduced::sameAs(other);
-}
-
-
-void Octahedral::fill(api::MIRJob &job) const  {
-    Reduced::fill(job);
-    std::stringstream os;
-    os << "O" << N_;
-    job.set("gridname", os.str());
 }
 
 
@@ -84,9 +84,7 @@ const std::vector<long>& Octahedral::pls() const {
 
         const std::vector<long>& pl = grid.nx();
         ASSERT(pl.size() == N_ * 2);
-        for (size_t i = 0; i < pl.size(); i++) {
-            ASSERT(pl[i] > 0);
-        }
+        ASSERT(*std::min_element(pl.begin(), pl.end()) >= 2);
 
         pl_ = pl;
     }

@@ -37,28 +37,30 @@ Classic::~Classic() {
 }
 
 
-Classic::Classic(size_t N, const util::BoundingBox &bbox):
+Classic::Classic(size_t N, const util::BoundingBox& bbox):
     Reduced(N, bbox) {
     adjustBoundingBoxEastWest(bbox_);
 }
 
 
-void Classic::fill(grib_info &info) const  {
+void Classic::fill(grib_info& info) const  {
     Reduced::fill(info);
-// NOTE: We assume that grib_api will put the proper PL
 }
 
-void Classic::fill(api::MIRJob &job) const  {
+
+void Classic::fill(api::MIRJob& job) const  {
     Reduced::fill(job);
     std::stringstream os;
     os << "N" << N_;
     job.set("gridname", os.str());
 }
 
+
 void Classic::makeName(std::ostream& out) const {
     out << "N" << N_;
     bbox_.makeName(out);
 }
+
 
 bool Classic::sameAs(const Representation& other) const {
     const Classic* o = dynamic_cast<const Classic*>(&other);
@@ -82,9 +84,7 @@ const std::vector<long>& Classic::pls() const {
 
         const std::vector<long>& pl = grid.nx();
         ASSERT(pl.size() == N_ * 2);
-        for (size_t i = 0; i < pl.size(); i++) {
-            ASSERT(pl[i] > 0);
-        }
+        ASSERT(*std::min_element(pl.begin(), pl.end()) >= 2);
 
         pl_ = pl;
     }

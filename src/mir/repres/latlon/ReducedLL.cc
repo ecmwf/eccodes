@@ -30,12 +30,19 @@ namespace repres {
 namespace latlon {
 
 
+static bool checkPl(const std::vector<long>& pl) {
+    return *std::min_element(pl.begin(), pl.end()) >= 2;
+}
+
+
 ReducedLL::ReducedLL(const param::MIRParametrisation &parametrisation) :
     Gridded(parametrisation) {
-    ASSERT(parametrisation.get("pl", pl_));
     ASSERT(parametrisation.get("Nj", Nj_));
-    ASSERT(Nj_);
+    ASSERT(Nj_ > 1);
+
+    ASSERT(parametrisation.get("pl", pl_));
     ASSERT(pl_.size() == Nj_);
+    checkPl(pl_);
 }
 
 
