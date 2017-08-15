@@ -34,8 +34,8 @@ or edit "iterator.class" and rerun ./make_class.pl
 
 static void init_class              (grib_iterator_class*);
 
-static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
-static int next               (grib_iterator* i, double *lat, double *lon, double *val);
+static int init               (grib_iterator* iter,grib_handle*,grib_arguments*);
+static int next               (grib_iterator* iter, double *lat, double *lon, double *val);
 
 
 typedef struct grib_iterator_latlon{
@@ -142,25 +142,25 @@ void unrotate(grib_handle* h,
     *outlon = ret_lon;
 }
 
-static int next(grib_iterator* i, double *lat, double *lon, double *val)
+static int next(grib_iterator* iter, double *lat, double *lon, double *val)
 {
     /* GRIB-238: Support rotated lat/lon grids */
 
     double ret_lat, ret_lon, ret_val;
-    grib_iterator_latlon* self = (grib_iterator_latlon*)i;
+    grib_iterator_latlon* self = (grib_iterator_latlon*)iter;
 
-    if((long)i->e >= (long)(i->nv-1))  return 0;
+    if((long)iter->e >= (long)(iter->nv-1))  return 0;
 
-    i->e++;
+    iter->e++;
 
-    ret_lat = self->las[(long)floor(i->e/self->nap)];
-    ret_lon = self->los[(long)i->e%self->nap];
-    ret_val = i->data[i->e];
+    ret_lat = self->las[(long)floor(iter->e/self->nap)];
+    ret_lon = self->los[(long)iter->e%self->nap];
+    ret_val = iter->data[iter->e];
 
     if (self->isRotated)
     {
         double new_lat = 0, new_lon = 0;
-        unrotate(i->h, ret_lat, ret_lon,
+        unrotate(iter->h, ret_lat, ret_lon,
                 self->angleOfRotation, self->southPoleLat, self->southPoleLon,
                 &new_lat, &new_lon);
         ret_lat = new_lat;
@@ -173,18 +173,18 @@ static int next(grib_iterator* i, double *lat, double *lon, double *val)
     return 1;
 }
 
-static int init(grib_iterator* i,grib_handle* h,grib_arguments* args)
+static int init(grib_iterator* iter, grib_handle* h,grib_arguments* args)
 {
-    grib_iterator_latlon* self = (grib_iterator_latlon*)i;
+    grib_iterator_latlon* self = (grib_iterator_latlon*)iter;
     int ret = GRIB_SUCCESS;
     double jdir;
-    double laf;
+    double lat1;
     long jScansPositively;
     long lai;
 
-    const char* latofirst   = grib_arguments_get_name(h,args,self->carg++);
-    const char* jdirec      = grib_arguments_get_name(h,args,self->carg++);
-    const char* s_jScansPositively   = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_lat1   = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_jdir   = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_jScansPositively = grib_arguments_get_name(h,args,self->carg++);
     self->angleOfRotation = 0;
     self->isRotated = 0;
     self->southPoleLat = 0;
@@ -197,18 +197,18 @@ static int init(grib_iterator* i,grib_handle* h,grib_arguments* args)
         if ((ret = grib_get_double_internal(h,"longitudeOfSouthernPoleInDegrees", &self->southPoleLon))) return ret;
     }
 
-    if((ret = grib_get_double_internal(h,latofirst,     &laf))) return ret;
-    if((ret = grib_get_double_internal(h,jdirec,        &jdir))) return ret;
+    if((ret = grib_get_double_internal(h,s_lat1,     &lat1))) return ret;
+    if((ret = grib_get_double_internal(h,s_jdir,        &jdir))) return ret;
     if((ret = grib_get_long_internal(h,s_jScansPositively,&jScansPositively)))
         return ret;
 
     if (jScansPositively) jdir=-jdir;
 
     for( lai = 0; lai <  self->nam; lai++ )  {
-        self->las[lai] = laf;
-        laf -= jdir ;
+        self->las[lai] = lat1;
+        lat1 -= jdir ;
     }
 
-    i->e = -1;
+    iter->e = -1;
     return ret;
 }
