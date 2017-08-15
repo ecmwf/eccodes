@@ -19,15 +19,16 @@
    SUPER      = grib_iterator_class_gen
    IMPLEMENTS = previous;next
    IMPLEMENTS = init;destroy
-   MEMBERS    =  double   *las
-   MEMBERS    =  double   *los
-   MEMBERS    =  long      nap
-   MEMBERS    =  long      nam
-   MEMBERS    =  long iScansNegatively
+   MEMBERS    = double   *las
+   MEMBERS    = double   *los
+   MEMBERS    = long      nap
+   MEMBERS    = long      nam
+   MEMBERS    = long iScansNegatively
    MEMBERS    = long isRotated
    MEMBERS    = double angleOfRotation
    MEMBERS    = double southPoleLat
    MEMBERS    = double southPoleLon
+   MEMBERS    = long jPointsAreConsecutive
    END_CLASS_DEF
 
  */
@@ -61,11 +62,12 @@ typedef struct grib_iterator_regular{
 	double   *los;
 	long      nap;
 	long      nam;
-	long iScansNegatively;
-	long isRotated;
+	long   iScansNegatively;
+	long   isRotated;
 	double angleOfRotation;
 	double southPoleLat;
 	double southPoleLon;
+	long   jPointsAreConsecutive;
 } grib_iterator_regular;
 
 extern grib_iterator_class* grib_iterator_class_gen;

@@ -48,11 +48,12 @@ typedef struct grib_iterator_latlon{
 	double   *los;
 	long      nap;
 	long      nam;
-	long iScansNegatively;
-	long isRotated;
-	double angleOfRotation;
-	double southPoleLat;
-	double southPoleLon;
+	long      iScansNegatively;
+	long      isRotated;
+	double    angleOfRotation;
+	double    southPoleLat;
+	double    southPoleLon;
+	long      jPointsAreConsecutive;
 /* Members defined in latlon */
 } grib_iterator_latlon;
 
@@ -145,7 +146,6 @@ void unrotate(grib_handle* h,
 static int next(grib_iterator* iter, double *lat, double *lon, double *val)
 {
     /* GRIB-238: Support rotated lat/lon grids */
-
     double ret_lat, ret_lon, ret_val;
     grib_iterator_latlon* self = (grib_iterator_latlon*)iter;
 
@@ -153,9 +153,20 @@ static int next(grib_iterator* iter, double *lat, double *lon, double *val)
 
     iter->e++;
 
-    ret_lat = self->las[(long)floor(iter->e/self->nap)];
-    ret_lon = self->los[(long)iter->e%self->nap];
-    ret_val = iter->data[iter->e];
+    /* Assumptions:
+     *   All rows scan in the same direction (alternativeRowScanning==0)
+     */
+    if (!self->jPointsAreConsecutive) {
+        /* Adjacent points in i (x) direction are consecutive */
+        ret_lat = self->las[(long)floor(iter->e/self->nap)];
+        ret_lon = self->los[(long)iter->e%self->nap];
+        ret_val = iter->data[iter->e];
+    } else {
+        /* Adjacent points in j (y) direction is consecutive */
+        ret_lon = self->los[(long)iter->e/self->nam];
+        ret_lat = self->las[(long)floor(iter->e%self->nam)];
+        ret_val = iter->data[iter->e];
+    }
 
     if (self->isRotated)
     {
@@ -185,6 +196,7 @@ static int init(grib_iterator* iter, grib_handle* h,grib_arguments* args)
     const char* s_lat1      = grib_arguments_get_name(h,args,self->carg++);
     const char* s_jdir      = grib_arguments_get_name(h,args,self->carg++);
     const char* s_jScansPos = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_jPtsConsec = grib_arguments_get_name(h,args,self->carg++);
     self->angleOfRotation = 0;
     self->isRotated = 0;
     self->southPoleLat = 0;
@@ -197,9 +209,10 @@ static int init(grib_iterator* iter, grib_handle* h,grib_arguments* args)
         if ((err = grib_get_double_internal(h,"longitudeOfSouthernPoleInDegrees", &self->southPoleLon))) return err;
     }
 
-    if((err = grib_get_double_internal(h,s_lat1,    &lat1))) return err;
-    if((err = grib_get_double_internal(h,s_jdir,    &jdir))) return err;
-    if((err = grib_get_long_internal(h,s_jScansPos, &jScansPositively))) return err;
+    if((err = grib_get_double_internal(h, s_lat1,  &lat1))) return err;
+    if((err = grib_get_double_internal(h, s_jdir,  &jdir))) return err;
+    if((err = grib_get_long_internal(h, s_jScansPos,  &jScansPositively))) return err;
+    if((err = grib_get_long_internal(h, s_jPtsConsec, &self->jPointsAreConsecutive))) return err;
 
     if (jScansPositively) jdir=-jdir;
 
