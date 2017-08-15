@@ -95,7 +95,8 @@ double ReducedLL::longestElementDiagonal() const {
     Latitude lat1(dom.north());
     Latitude lat2(dom.north() - sn);
 
-    for (size_t j = 1; j < Nj_; ++j, lat1 = lat2, lat2 -= sn) {
+    ASSERT(Nj_ == pl_.size());
+    for (size_t j = 1; j < pl_.size(); ++j, lat1 = lat2, lat2 -= sn) {
 
         const long Di(std::min(pl_[j - 1], pl_[j]) - (periodic? 0:1));
         ASSERT(Di > 0);

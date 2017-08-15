@@ -455,7 +455,7 @@ double Reduced::longestElementDiagonal() const {
     Latitude l1(Latitude::NORTH_POLE);
     Latitude l2(lats[0]);
 
-    for (size_t j = 1; j < N_ * 2; ++j, l1 = l2, l2 = lats[j]) {
+    for (size_t j = 1; j < lats.size(); ++j, l1 = l2, l2 = lats[j]) {
 
         const eckit::Fraction we = Longitude::GLOBE.fraction() / (std::min(pl[j - 1], pl[j]));
         const Latitude&

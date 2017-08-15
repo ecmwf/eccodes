@@ -187,9 +187,9 @@ double Regular::longestElementDiagonal() const {
     Latitude l1(Latitude::NORTH_POLE);
     Latitude l2(lats[0]);
 
-    for (size_t j = 1; j < 2 * N_; ++j, l1 = l2, l2 = lats[j]) {
+    for (size_t j = 1; j < lats.size(); ++j, l1 = l2, l2 = lats[j]) {
 
-        const eckit::Fraction we = Longitude::GLOBE.fraction() / N_ * 4;
+        const eckit::Fraction we = Longitude::GLOBE.fraction() / (N_ * 4);
         const Latitude&
                 latAwayFromEquator(std::abs(l1.value()) > std::abs(l2.value())? l1 : l2),
                 latCloserToEquator(std::abs(l1.value()) > std::abs(l2.value())? l2 : l1);
