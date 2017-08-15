@@ -25,7 +25,6 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
-#include "mir/util/GreatCircle.h"
 #include "mir/util/Grib.h"
 
 
@@ -194,9 +193,9 @@ double Regular::longestElementDiagonal() const {
                 latAwayFromEquator(std::abs(l1.value()) > std::abs(l2.value())? l1 : l2),
                 latCloserToEquator(std::abs(l1.value()) > std::abs(l2.value())? l2 : l1);
 
-        d = std::max(d, util::GreatCircle::distanceInMeters(
-                         Iterator::point_ll_t(latCloserToEquator, 0),
-                         Iterator::point_ll_t(latAwayFromEquator, we) ));
+        d = std::max(d, atlas::util::Earth::distanceInMeters(
+                         atlas::PointLonLat(0., latCloserToEquator.value()),
+                         atlas::PointLonLat(we, latAwayFromEquator.value()) ));
     }
 
     ASSERT(d > 0.);

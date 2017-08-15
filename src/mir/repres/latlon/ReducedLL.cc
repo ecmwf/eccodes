@@ -19,11 +19,11 @@
 #include <iostream>
 #include "eckit/types/Fraction.h"
 #include "eckit/utils/MD5.h"
+#include "mir/api/Atlas.h"
 #include "mir/api/MIRJob.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
-#include "mir/util/GreatCircle.h"
 
 
 namespace mir {
@@ -106,9 +106,9 @@ double ReducedLL::longestElementDiagonal() const {
                 latAwayFromEquator(std::abs(lat1.value()) > std::abs(lat2.value())? lat1 : lat2),
                 latCloserToEquator(std::abs(lat1.value()) > std::abs(lat2.value())? lat2 : lat1);
 
-        std::max(d, util::GreatCircle::distanceInMeters(
-                     Iterator::point_ll_t(latCloserToEquator, 0),
-                     Iterator::point_ll_t(latAwayFromEquator, we) ));
+        d = std::max(d, atlas::util::Earth::distanceInMeters(
+                         atlas::PointLonLat(0., latCloserToEquator.value()),
+                         atlas::PointLonLat(we, latAwayFromEquator.value()) ));
     }
 
     ASSERT(d > 0.);

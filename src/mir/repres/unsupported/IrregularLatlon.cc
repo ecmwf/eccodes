@@ -18,9 +18,9 @@
 #include <iostream>
 #include "eckit/exception/Exceptions.h"
 #include "eckit/utils/MD5.h"
+#include "mir/api/Atlas.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Domain.h"
-#include "mir/util/GreatCircle.h"
 
 
 namespace mir {
@@ -94,9 +94,9 @@ double IrregularLatlon::longestElementDiagonal() const {
                 latAwayFromEquator(latitudes_[ away? j - 1 : j ]),
                 latCloserToEquator(latitudes_[ away? j : j - 1 ]);
 
-        d = std::max(d, util::GreatCircle::distanceInMeters(
-                         Iterator::point_ll_t(latCloserToEquator, 0),
-                         Iterator::point_ll_t(latAwayFromEquator, we) ));
+        d = std::max(d, atlas::util::Earth::distanceInMeters(
+                         atlas::PointLonLat(0., latCloserToEquator),
+                         atlas::PointLonLat(we, latAwayFromEquator) ));
     }
 
     ASSERT(d > 0.);

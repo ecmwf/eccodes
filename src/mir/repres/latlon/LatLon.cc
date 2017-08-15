@@ -17,23 +17,17 @@
 
 #include <algorithm>
 #include <iostream>
-
-
-#include "mir/api/Atlas.h"
-
-
 #include "eckit/exception/Exceptions.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
-
 #include "mir/action/misc/AreaCropper.h"
+#include "mir/api/Atlas.h"
 #include "mir/config/LibMir.h"
+#include "mir/data/MIRField.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
-#include "mir/util/GreatCircle.h"
-#include "mir/data/MIRField.h"
 
 
 namespace mir {
@@ -201,9 +195,9 @@ double LatLon::longestElementDiagonal() const {
     const eckit::Fraction& sn = increments_.south_north();
     const eckit::Fraction& we = increments_.west_east();
 
-    return util::GreatCircle::distanceInMeters(
-                Iterator::point_ll_t(0, 0),
-                Iterator::point_ll_t(sn, we) );
+    return atlas::util::Earth::distanceInMeters(
+                atlas::PointLonLat(0., 0.),
+                atlas::PointLonLat(we, sn) );
 }
 
 
