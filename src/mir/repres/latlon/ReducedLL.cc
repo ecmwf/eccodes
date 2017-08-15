@@ -78,7 +78,7 @@ size_t ReducedLL::numberOfPoints() const {
 }
 
 
-double ReducedLL::longestElementDiagonal() const {
+bool ReducedLL::getLongestElementDiagonal(double& d) const {
 
     // Look for a majorant of all element diagonals, using the difference of
     // latitudes closest/furthest from equator and longitude furthest from
@@ -91,7 +91,7 @@ double ReducedLL::longestElementDiagonal() const {
     ASSERT(Dj > 0);
     const eckit::Fraction sn(((dom.north() - dom.south()).fraction()) / Dj);
 
-    double d = 0.;
+    d = 0.;
     Latitude lat1(dom.north());
     Latitude lat2(dom.north() - sn);
 
@@ -112,7 +112,7 @@ double ReducedLL::longestElementDiagonal() const {
     }
 
     ASSERT(d > 0.);
-    return d;
+    return true;
 }
 
 

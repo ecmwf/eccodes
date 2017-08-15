@@ -73,7 +73,7 @@ size_t IrregularLatlon::numberOfPoints() const {
 }
 
 
-double IrregularLatlon::longestElementDiagonal() const {
+bool IrregularLatlon::getLongestElementDiagonal(double& d) const {
 
     // Look for a majorant of all element diagonals, using the difference of
     // latitudes closest/furthest from equator and largest longitude difference
@@ -87,7 +87,7 @@ double IrregularLatlon::longestElementDiagonal() const {
     double we;
     range(longitudes_, lonMin, lonMax, we);
 
-    double d = 0.;
+    d = 0.;
     for (size_t j = 1; j < latitudes_.size(); ++j) {
         const bool away(std::abs(latitudes_[j - 1]) > std::abs(latitudes_[j]));
         const double&
@@ -100,7 +100,7 @@ double IrregularLatlon::longestElementDiagonal() const {
     }
 
     ASSERT(d > 0.);
-    return d;
+    return true;
 }
 
 

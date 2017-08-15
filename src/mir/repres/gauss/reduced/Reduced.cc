@@ -435,7 +435,7 @@ size_t Reduced::numberOfPoints() const {
 }
 
 
-double Reduced::longestElementDiagonal() const {
+bool Reduced::getLongestElementDiagonal(double& d) const {
 
     // Look for a majorant of all element diagonals, using the difference of
     // latitudes closest/furthest from equator and longitude furthest from
@@ -446,7 +446,7 @@ double Reduced::longestElementDiagonal() const {
     ASSERT(pl.size() == lats.size());
     ASSERT(pl.size() == N_ * 2);
 
-    double d = 0.;
+    d = 0.;
     Latitude l1(Latitude::NORTH_POLE);
     Latitude l2(lats[0]);
 
@@ -463,7 +463,7 @@ double Reduced::longestElementDiagonal() const {
     }
 
     ASSERT(d > 0.);
-    return d;
+    return true;
 }
 
 

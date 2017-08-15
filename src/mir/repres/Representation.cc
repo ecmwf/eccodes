@@ -73,21 +73,21 @@ RepresentationHandle::~RepresentationHandle() {
 }
 
 
-void Representation::setComplexPacking(grib_info &) const {
+void Representation::setComplexPacking(grib_info&) const {
     std::ostringstream os;
     os << "Representation::setComplexPacking() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 
-void Representation::setSimplePacking(grib_info &) const {
+void Representation::setSimplePacking(grib_info&) const {
     std::ostringstream os;
     os << "Representation::setSimplePacking() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 
-void Representation::setGivenPacking(grib_info &) const {
+void Representation::setGivenPacking(grib_info&) const {
     std::ostringstream os;
     os << "Representation::setGivenPacking() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
@@ -125,7 +125,7 @@ bool Representation::includesSouthPole() const {
 }
 
 
-void Representation::validate(const std::vector<double> &) const {
+void Representation::validate(const std::vector<double>&) const {
     std::ostringstream os;
     os << "Representation::validate() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
@@ -231,9 +231,9 @@ size_t Representation::numberOfPoints() const {
 }
 
 
-double Representation::longestElementDiagonal() const {
+bool Representation::getLongestElementDiagonal(double&) const {
     std::ostringstream os;
-    os << "Representation::longestElementDiagonal() not implemented for " << *this;
+    os << "Representation::getLongestElementDiagonal() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
@@ -322,7 +322,7 @@ const Representation* Representation::globalise(data::MIRField& field) const {
 
     for (size_t i = 0; i < field.dimensions(); i++ ) {
         std::vector<double> newvalues(size, missingValue);
-        const std::vector<double> &values = field.direct(i);
+        const std::vector<double>& values = field.direct(i);
         ASSERT(values.size() < size);
 
         for (size_t j = 0 ; j < values.size(); ++j) {
@@ -341,7 +341,7 @@ const Representation* Representation::globalise(data::MIRField& field) const {
 //=========================================================================
 
 
-RepresentationFactory::RepresentationFactory(const std::string &name):
+RepresentationFactory::RepresentationFactory(const std::string& name):
     name_(name) {
 
     pthread_once(&once, init);
@@ -359,7 +359,7 @@ RepresentationFactory::~RepresentationFactory() {
 }
 
 
-const Representation *RepresentationFactory::build(const param::MIRParametrisation &params) {
+const Representation* RepresentationFactory::build(const param::MIRParametrisation& params) {
 
     pthread_once(&once, init);
 
