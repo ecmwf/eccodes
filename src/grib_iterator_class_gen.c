@@ -38,10 +38,10 @@ or edit "iterator.class" and rerun ./make_class.pl
 
 static void init_class              (grib_iterator_class*);
 
-static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
+static int init               (grib_iterator* iter,grib_handle*,grib_arguments*);
 static int destroy            (grib_iterator* i);
-static int reset              (grib_iterator* i);
-static long has_next          (grib_iterator* i);
+static int reset              (grib_iterator* iter);
+static long has_next          (grib_iterator* iter);
 
 
 typedef struct grib_iterator_gen{
@@ -158,59 +158,59 @@ int transform_iterator_data(grib_handle* h, double* data,
     return GRIB_SUCCESS;
 }
 
-static int init(grib_iterator* i,grib_handle *h, grib_arguments* args)
+static int init(grib_iterator* iter, grib_handle *h, grib_arguments* args)
 {
-    grib_iterator_gen* self = (grib_iterator_gen*) i;
+    grib_iterator_gen* self = (grib_iterator_gen*) iter;
     size_t dli=0;
-    int ret = GRIB_SUCCESS;
-    const char* rawdat  = NULL;
-    const char* snumberOfPoints=NULL;
+    int err = GRIB_SUCCESS;
+    const char* s_rawData  = NULL;
+    const char* s_numPoints=NULL;
     long numberOfPoints=0;
     self->carg = 1;
 
-    snumberOfPoints = grib_arguments_get_name(h,args,self->carg++);
+    s_numPoints = grib_arguments_get_name(h,args,self->carg++);
     self->missingValue  = grib_arguments_get_name(h,args,self->carg++);
-    rawdat      = grib_arguments_get_name(h,args,self->carg++);
+    s_rawData      = grib_arguments_get_name(h,args,self->carg++);
 
-    i->h    = h; /* We may not need to keep them */
-    i->args = args;
-    if( (ret =  grib_get_size(h,rawdat,&dli))!= GRIB_SUCCESS) return ret;
+    iter->h    = h; /* We may not need to keep them */
+    iter->args = args;
+    if( (err =  grib_get_size(h,s_rawData,&dli))!= GRIB_SUCCESS) return err;
 
-    if( (ret =  grib_get_long_internal(h,snumberOfPoints,&numberOfPoints))
+    if( (err =  grib_get_long_internal(h,s_numPoints,&numberOfPoints))
             != GRIB_SUCCESS)
-        return ret;
+        return err;
 
     if (numberOfPoints!=dli) {
         grib_context_log(h->context,GRIB_LOG_ERROR,"%s != size(%s) (%ld!=%ld)",
-                snumberOfPoints,rawdat,numberOfPoints,dli);
+                s_numPoints,s_rawData,numberOfPoints,dli);
         return GRIB_WRONG_GRID;
     }
-    i->nv = dli;
-    i->data = (double*)grib_context_malloc(h->context,(i->nv)*sizeof(double));
+    iter->nv = dli;
+    iter->data = (double*)grib_context_malloc(h->context,(iter->nv)*sizeof(double));
 
-    if( (ret = grib_get_double_array_internal(h,rawdat,i->data ,&(i->nv))))
-        return ret;
+    if( (err = grib_get_double_array_internal(h,s_rawData,iter->data ,&(iter->nv))))
+        return err;
 
-    i->e = -1;
+    iter->e = -1;
 
-    return ret;
+    return err;
 }
 
-static int reset(grib_iterator* i)
+static int reset(grib_iterator* iter)
 {
-    i->e = -1;
+    iter->e = -1;
     return 0;
 }
 
-static int destroy(grib_iterator* ei)
+static int destroy(grib_iterator* iter)
 {
-    const grib_context *c = ei->h->context;
-    grib_context_free(c,ei->data);
+    const grib_context *c = iter->h->context;
+    grib_context_free(c, iter->data);
     return 1;
 }
 
-static long has_next(grib_iterator* i)
+static long has_next(grib_iterator* iter)
 {
-    if(i->data == NULL) return 0;
-    return   i->nv - i->e;
+    if(iter->data == NULL) return 0;
+    return   iter->nv - iter->e;
 }
