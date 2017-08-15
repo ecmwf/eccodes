@@ -20,6 +20,7 @@
 #include "eckit/utils/MD5.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Domain.h"
+#include "mir/util/GreatCircle.h"
 
 
 namespace mir {
@@ -69,6 +70,37 @@ IrregularLatlon::~IrregularLatlon() {
 
 size_t IrregularLatlon::numberOfPoints() const {
     return latitudes_.size() * longitudes_.size();
+}
+
+
+double IrregularLatlon::longestElementDiagonal() const {
+
+    // Look for a majorant of all element diagonals, using the difference of
+    // latitudes closest/furthest from equator and largest longitude difference
+
+    ASSERT(latitudes_.size() >= 2);
+    ASSERT(longitudes_.size() >= 2);
+
+    // largest longitude difference
+    double lonMin;
+    double lonMax;
+    double we;
+    range(longitudes_, lonMin, lonMax, we);
+
+    double d = 0.;
+    for (size_t j = 1; j < latitudes_.size(); ++j) {
+        const bool away(std::abs(latitudes_[j - 1]) > std::abs(latitudes_[j]));
+        const double&
+                latAwayFromEquator(latitudes_[ away? j - 1 : j ]),
+                latCloserToEquator(latitudes_[ away? j : j - 1 ]);
+
+        d = std::max(d, util::GreatCircle::distanceInMeters(
+                         Iterator::point_ll_t(latCloserToEquator, 0),
+                         Iterator::point_ll_t(latAwayFromEquator, we) ));
+    }
+
+    ASSERT(d > 0.);
+    return d;
 }
 
 
