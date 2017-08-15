@@ -129,7 +129,6 @@ static double* pointer_to_data(unsigned int i, unsigned int j,
     }
 
     /* Reduced or other data not on a grid */
-    Assert(0);
     return NULL;
 }
 
@@ -154,7 +153,7 @@ static int transform_data(grib_handle* h, double* data,
         size_t row_size = ((size_t) nx) * sizeof(double);
         data2 = (double*)grib_context_malloc(h->context, row_size);
         if (!data2) {
-            grib_context_log(h->context,GRIB_LOG_ERROR, "unable to allocate %ld bytes", row_size);
+            grib_context_log(h->context,GRIB_LOG_ERROR, "Unable to allocate %ld bytes", row_size);
             return GRIB_OUT_OF_MEMORY;
         }
         for (iy = 0; iy < ny/2; iy++) {
@@ -172,14 +171,16 @@ static int transform_data(grib_handle* h, double* data,
     }
     data2 = (double*)grib_context_malloc(h->context, numPoints*sizeof(double));
     if (!data2) {
-        grib_context_log(h->context,GRIB_LOG_ERROR, "unable to allocate %ld bytes",numPoints*sizeof(double));
+        grib_context_log(h->context,GRIB_LOG_ERROR, "Unable to allocate %ld bytes",numPoints*sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     pData0 = data2;
     for (iy = 0; iy < ny; iy++) {
         long deltaX = 0;
         pData1 = pointer_to_data(0, iy, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning, nx,ny, data);
+        if (!pData1) return GRIB_GEOCALCULUS_PROBLEM;
         pData2 = pointer_to_data(1, iy, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning, nx,ny, data);
+        if (!pData2) return GRIB_GEOCALCULUS_PROBLEM;
         deltaX = pData2 - pData1;
         for (ix = 0; ix < nx; ix++) {
             *pData0++ = *pData1;
@@ -294,12 +295,12 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     /* Allocate latitude and longitude arrays */
     self->lats = (double*)grib_context_malloc(h->context,iter->nv*sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context,GRIB_LOG_ERROR, "unable to allocate %ld bytes",iter->nv*sizeof(double));
+        grib_context_log(h->context,GRIB_LOG_ERROR, "Unable to allocate %ld bytes",iter->nv*sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     self->lons = (double*)grib_context_malloc(h->context,iter->nv*sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context,GRIB_LOG_ERROR, "unable to allocate %ld bytes",iter->nv*sizeof(double));
+        grib_context_log(h->context,GRIB_LOG_ERROR, "Unable to allocate %ld bytes",iter->nv*sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     lats=self->lats;
@@ -334,6 +335,7 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
 
     iter->e = -1;
 
+    /* Apply the scanning mode flags which may require data array to be transformed */
     err = transform_data(h, iter->data,
             iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning,
             iter->nv, nx, ny);
