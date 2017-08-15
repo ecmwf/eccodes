@@ -176,31 +176,30 @@ static int next(grib_iterator* iter, double *lat, double *lon, double *val)
 static int init(grib_iterator* iter, grib_handle* h,grib_arguments* args)
 {
     grib_iterator_latlon* self = (grib_iterator_latlon*)iter;
-    int ret = GRIB_SUCCESS;
+    int err = 0;
     double jdir;
     double lat1;
     long jScansPositively;
     long lai;
 
-    const char* s_lat1   = grib_arguments_get_name(h,args,self->carg++);
-    const char* s_jdir   = grib_arguments_get_name(h,args,self->carg++);
-    const char* s_jScansPositively = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_lat1      = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_jdir      = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_jScansPos = grib_arguments_get_name(h,args,self->carg++);
     self->angleOfRotation = 0;
     self->isRotated = 0;
     self->southPoleLat = 0;
     self->southPoleLon = 0;
 
-    if ((ret = grib_get_long(h, "is_rotated_grid", &self->isRotated))) return ret;
+    if ((err = grib_get_long(h, "is_rotated_grid", &self->isRotated))) return err;
     if (self->isRotated) {
-        if ((ret = grib_get_double_internal(h,"angleOfRotation",                  &self->angleOfRotation))) return ret;
-        if ((ret = grib_get_double_internal(h,"latitudeOfSouthernPoleInDegrees",  &self->southPoleLat))) return ret;
-        if ((ret = grib_get_double_internal(h,"longitudeOfSouthernPoleInDegrees", &self->southPoleLon))) return ret;
+        if ((err = grib_get_double_internal(h,"angleOfRotation",                  &self->angleOfRotation))) return err;
+        if ((err = grib_get_double_internal(h,"latitudeOfSouthernPoleInDegrees",  &self->southPoleLat))) return err;
+        if ((err = grib_get_double_internal(h,"longitudeOfSouthernPoleInDegrees", &self->southPoleLon))) return err;
     }
 
-    if((ret = grib_get_double_internal(h,s_lat1,     &lat1))) return ret;
-    if((ret = grib_get_double_internal(h,s_jdir,        &jdir))) return ret;
-    if((ret = grib_get_long_internal(h,s_jScansPositively,&jScansPositively)))
-        return ret;
+    if((err = grib_get_double_internal(h,s_lat1,    &lat1))) return err;
+    if((err = grib_get_double_internal(h,s_jdir,    &jdir))) return err;
+    if((err = grib_get_long_internal(h,s_jScansPos, &jScansPositively))) return err;
 
     if (jScansPositively) jdir=-jdir;
 
@@ -210,5 +209,5 @@ static int init(grib_iterator* iter, grib_handle* h,grib_arguments* args)
     }
 
     iter->e = -1;
-    return ret;
+    return err;
 }
