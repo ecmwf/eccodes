@@ -20,7 +20,6 @@
 #include "eckit/log/Plural.h"
 #include "eckit/memory/ScopedPtr.h"
 #include "eckit/utils/MD5.h"
-
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
@@ -32,6 +31,7 @@
 
 namespace mir {
 namespace repres {
+namespace gauss {
 namespace regular {
 
 
@@ -349,6 +349,7 @@ bool Regular::RegularIterator::next(Latitude& lat, Longitude& lon) {
 
 
 }  // namespace regular
+}  // namespace gauss
 }  // namespace repres
 }  // namespace mir
 

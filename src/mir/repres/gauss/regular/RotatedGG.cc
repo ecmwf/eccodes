@@ -16,13 +16,13 @@
 #include "mir/repres/gauss/regular/RotatedGG.h"
 
 #include <iostream>
-
-#include "mir/util/Grib.h"
 #include "mir/util/Domain.h"
+#include "mir/util/Grib.h"
 
 
 namespace mir {
 namespace repres {
+namespace gauss {
 namespace regular {
 
 
@@ -116,6 +116,7 @@ static RepresentationBuilder<RotatedGG> rotatedGG("rotated_gg"); // Name is what
 
 
 }  // namespace reduced
+}  // namespace gauss
 }  // namespace repres
 }  // namespace mir
 
