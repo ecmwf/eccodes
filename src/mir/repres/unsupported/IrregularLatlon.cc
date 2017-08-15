@@ -104,10 +104,10 @@ void IrregularLatlon::fill(grib_info &info) const  {
 
 
 util::Domain IrregularLatlon::domain() const {
-    return util::Domain(includesNorthPole() ? 90 : north_,
+    return util::Domain(includesNorthPole() ? Latitude::NORTH_POLE.value() : north_,
                         west_,
-                        includesSouthPole() ? -90 : south_,
-                        isPeriodicWestEast() ? west_ + 360 : east_);
+                        includesSouthPole() ? Latitude::SOUTH_POLE.value() : south_,
+                        isPeriodicWestEast() ? west_ + Longitude::GLOBE.value() : east_);
 }
 
 class IrregularLatlonIterator: public Iterator {
@@ -170,17 +170,17 @@ Iterator* IrregularLatlon::iterator() const {
 
 
 bool IrregularLatlon::isPeriodicWestEast() const {
-    return (east_ - west_) + west_east_ >= 360;
+    return (east_ - west_) + west_east_ >= Longitude::GLOBE.value();
 }
 
 
 bool IrregularLatlon::includesNorthPole() const {
-    return north_ + south_north_ >= 90;
+    return north_ + south_north_ >= Latitude::NORTH_POLE.value();
 }
 
 
 bool IrregularLatlon::includesSouthPole() const {
-    return south_ - south_north_ <= -90;
+    return south_ - south_north_ <= Latitude::SOUTH_POLE.value();
 }
 
 
