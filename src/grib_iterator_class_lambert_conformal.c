@@ -239,7 +239,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
                 x = -x;
             }
 
-            angle = atan(x / tmp);
+            angle = atan2(x, tmp); /* See ECC-524 */
             rho = sqrt(x*x + tmp2);
             if (n <= 0) rho = -rho;
             lonDeg = LoVInDegrees + (angle/n) * RAD2DEG;
@@ -248,6 +248,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
             while ( lonDeg < 0.0)    lonDeg += 360.0;
             lons[index] = lonDeg;
             lats[index] = latDeg;
+            /*printf("DBK: llat[%d] = %g \t llon[%d] = %g\n", index,lats[index], index,lons[index]);*/
         }
     }
 
