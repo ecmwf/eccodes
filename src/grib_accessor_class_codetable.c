@@ -182,13 +182,14 @@ static int grib_load_codetable(grib_context* c,const char* filename,
 static void init(grib_accessor* a, const long len, grib_arguments* params)
 {
     int n=0;
-    long new_len = 0;
+    long new_len = len;
     grib_handle* hand = grib_handle_of_accessor(a);
     grib_accessor_codetable* self  = (grib_accessor_codetable*)a;
     grib_action* act=(grib_action*)(a->creator);
+    DebugAssert(len == self->nbytes);
 
-    if (len == 0) {
-        /* ECC-485: When the codetable len is 0, it means we are passing
+    if (new_len == 0) {
+        /* ECC-485: When the codetable length is 0, it means we are passing
          * its length as an identifier not an integer. This identifier is
          * added to the argument list (at the beginning)
          */
@@ -196,7 +197,9 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
         if ( new_len <= 0 ) {
             grib_context_log(a->context,GRIB_LOG_FATAL,"%s: codetable length must be a positive integer",a->name);
         }
+        self->nbytes = new_len;
     }
+
     self->tablename = grib_arguments_get_string(hand,params,n++);
     if (self->tablename == NULL) {
         grib_context_log(a->context,GRIB_LOG_FATAL,"%s: codetable table is invalid",a->name);
@@ -212,7 +215,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
         if (!a->vvalue)
             a->vvalue = (grib_virtual_value*)grib_context_malloc_clear(a->context,sizeof(grib_virtual_value));
         a->vvalue->type=grib_accessor_get_native_type(a);
-        a->vvalue->length = (len ? len : new_len);
+        a->vvalue->length = new_len;
         if (act->default_value!=NULL) {
             const char* p = 0;
             size_t s_len = 1;
@@ -246,7 +249,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
             }
         }
     } else {
-        a->length = (len ? len : new_len);
+        a->length = new_len;
     }
 }
 
