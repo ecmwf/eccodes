@@ -104,7 +104,7 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     int ret=0;
     double *lats,*lons;
     double lonFirstInDegrees,latFirstInDegrees,lonFirst,latFirst,radius=0;
-    long nx,ny,standardParallel,centralLongitude;
+    long nx,ny,standardParallel,centralLongitude,centralLatitude;
     double lambda0,xFirst,yFirst,x,y,Dx,Dy;
     double k,sinphi1,cosphi1;
     long alternativeRowScanning,iScansNegatively;
@@ -122,6 +122,7 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     const char* slonFirstInDegrees      = grib_arguments_get_name(h,args,self->carg++);
     const char* ssouthPoleOnPlane       = grib_arguments_get_name(h,args,self->carg++);
     const char* scentralLongitude       = grib_arguments_get_name(h,args,self->carg++);
+    const char* scentralLatitude        = grib_arguments_get_name(h,args,self->carg++);
     const char* sDx                     = grib_arguments_get_name(h,args,self->carg++);
     const char* sDy                     = grib_arguments_get_name(h,args,self->carg++);
     const char* siScansNegatively       = grib_arguments_get_name(h,args,self->carg++);
@@ -150,6 +151,8 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
         return ret;
     if((ret = grib_get_long_internal(h, scentralLongitude,&centralLongitude)) != GRIB_SUCCESS)
         return ret;
+    if((ret = grib_get_long_internal(h, scentralLatitude,&centralLatitude)) != GRIB_SUCCESS)
+        return ret;
     if((ret = grib_get_double_internal(h, sDx,&Dx)) != GRIB_SUCCESS)
         return ret;
     if((ret = grib_get_double_internal(h, sDy,&Dy)) != GRIB_SUCCESS)
@@ -163,7 +166,8 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     if((ret = grib_get_long_internal(h, salternativeRowScanning,&alternativeRowScanning)) != GRIB_SUCCESS)
         return ret;
 
-    standardParallel = (southPoleOnPlane == 1) ? -90 : +90;
+    /*standardParallel = (southPoleOnPlane == 1) ? -90 : +90;*/
+    standardParallel = centralLatitude;
     sinphi1 = sin(standardParallel*DEG2RAD);
     cosphi1 = cos(standardParallel*DEG2RAD);
     lambda0 = centralLongitude*DEG2RAD;
@@ -191,9 +195,9 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     cosdlambda=cos(lonFirst-lambda0);
     sindlambda=sin(lonFirst-lambda0);
 
-    k = 2.0 * radius / ( 1 + sinphi1*sinphi + cosphi1*cosphi*cosdlambda );
-    xFirst = k * cosphi * sindlambda;
-    yFirst = k * (cosphi1*sinphi - sinphi1*cosphi*cosdlambda);
+    k = 2.0 / ( 1 + sinphi1*sinphi + cosphi1*cosphi*cosdlambda );
+    xFirst = k * radius * cosphi * sindlambda;
+    yFirst = k * radius * (cosphi1*sinphi - sinphi1*cosphi*cosdlambda);
 
     /*kp=radius*2.0*tan(pi4-phi/2);
     xFirst=kp*cosphi*sindlambda;
@@ -234,6 +238,7 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
         for (j=0;j<ny;j++) {
             x=xFirst;
             for (i=0;i<nx;i++) {
+                /* int index =i+j*nx; */
                 rho=sqrt(x*x+y*y);
                 if (rho == 0) {
                     /* indeterminate case */
@@ -249,6 +254,7 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
                 }
                 while (*lons<0)   *lons += 360;
                 while (*lons>360) *lons -= 360;
+                /* printf("DBK: llat[%d] = %g \t llon[%d] = %g\n", index,*lats, index,*lons); */
                 lons++;
                 lats++;
 
