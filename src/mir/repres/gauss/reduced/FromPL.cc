@@ -34,7 +34,8 @@ static bool checkPl(const std::vector<long>& pl) {
 }
 
 
-FromPL::FromPL(const param::MIRParametrisation &parametrisation) : Reduced(parametrisation) {
+FromPL::FromPL(const param::MIRParametrisation& parametrisation) :
+    Reduced(parametrisation) {
     ASSERT(parametrisation.get("pl", pl_));
     checkPl(pl_);
     adjustBoundingBoxEastWest(bbox_);
@@ -45,7 +46,7 @@ FromPL::~FromPL() {
 }
 
 
-FromPL::FromPL(size_t N, const std::vector<long> &pl, const util::BoundingBox &bbox) :
+FromPL::FromPL(size_t N, const std::vector<long>& pl, const util::BoundingBox& bbox) :
     Reduced(N, bbox),
     pl_(pl) {
     checkPl(pl_);
@@ -53,7 +54,7 @@ FromPL::FromPL(size_t N, const std::vector<long> &pl, const util::BoundingBox &b
 }
 
 
-FromPL::FromPL(const std::vector<long> &pl):
+FromPL::FromPL(const std::vector<long>& pl):
     Reduced(pl.size() / 2),
     pl_(pl) {
     checkPl(pl_);
@@ -80,12 +81,12 @@ bool FromPL::sameAs(const Representation& other) const {
 }
 
 
-void FromPL::fill(grib_info &info) const  {
+void FromPL::fill(grib_info& info) const  {
     Reduced::fill(info);
 }
 
 
-void FromPL::fill(api::MIRJob &job) const  {
+void FromPL::fill(api::MIRJob& job) const  {
     Reduced::fill(job);
 }
 
@@ -95,7 +96,7 @@ atlas::Grid FromPL::atlasGrid() const {
 }
 
 
-const std::vector<long> &FromPL::pls() const {
+const std::vector<long>& FromPL::pls() const {
     return pl_;
 }
 

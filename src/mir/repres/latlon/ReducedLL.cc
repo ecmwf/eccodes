@@ -32,18 +32,19 @@ namespace latlon {
 
 
 static bool checkPl(const std::vector<long>& pl) {
+    ASSERT(pl.size() >= 2);
     return *std::min_element(pl.begin(), pl.end()) >= 2;
 }
 
 
-ReducedLL::ReducedLL(const param::MIRParametrisation &parametrisation) :
+ReducedLL::ReducedLL(const param::MIRParametrisation& parametrisation) :
     Gridded(parametrisation) {
-    ASSERT(parametrisation.get("Nj", Nj_));
-    ASSERT(Nj_ > 1);
-
     ASSERT(parametrisation.get("pl", pl_));
-    ASSERT(pl_.size() == Nj_);
     checkPl(pl_);
+
+    size_t Nj = 0;
+    ASSERT(parametrisation.get("Nj", Nj));
+    ASSERT(Nj == pl_.size());
 }
 
 
@@ -51,13 +52,13 @@ ReducedLL::~ReducedLL() {
 }
 
 
-void ReducedLL::print(std::ostream &out) const {
+void ReducedLL::print(std::ostream& out) const {
     out << "ReducedLL[bbox=" << bbox_ << "]";
 }
 
 
 void ReducedLL::makeName(std::ostream& out) const {
-    out << "RLL" << Nj_ << "-";
+    out << "RLL" << pl_.size() << "-";
 
     eckit::MD5 md5;
     for(auto j = pl_.begin(); j != pl_.end(); ++j) {
@@ -87,7 +88,8 @@ bool ReducedLL::getLongestElementDiagonal(double& d) const {
     const util::Domain dom = domain();
     const bool periodic = dom.isPeriodicEastWest();
 
-    const size_t Dj(Nj_ - 1);
+    ASSERT(pl_.size() >= 2);
+    const size_t Dj(pl_.size() - 1);
     ASSERT(Dj > 0);
     const eckit::Fraction sn(((dom.north() - dom.south()).fraction()) / Dj);
 
@@ -95,7 +97,6 @@ bool ReducedLL::getLongestElementDiagonal(double& d) const {
     Latitude lat1(dom.north());
     Latitude lat2(dom.north() - sn);
 
-    ASSERT(Nj_ == pl_.size());
     for (size_t j = 1; j < pl_.size(); ++j, lat1 = lat2, lat2 -= sn) {
 
         const long Di(std::min(pl_[j - 1], pl_[j]) - (periodic? 0:1));
@@ -118,22 +119,21 @@ bool ReducedLL::getLongestElementDiagonal(double& d) const {
 
 bool ReducedLL::sameAs(const Representation& other) const {
     const ReducedLL* o = dynamic_cast<const ReducedLL*>(&other);
-    return o && (Nj_ == o->Nj_) && (bbox_ == o->bbox_) && (pl_ == o->pl_);
+    return o && (bbox_ == o->bbox_) && (pl_ == o->pl_);
 }
 
 
-void ReducedLL::fill(grib_info &info) const  {
+void ReducedLL::fill(grib_info& info) const  {
     NOTIMP;
 }
 
 
-void ReducedLL::fill(api::MIRJob &job) const  {
+void ReducedLL::fill(api::MIRJob& job) const  {
     bbox_.fill(job);
     job.set("pl", pl_);
-    job.set("Nj", Nj_);
+    job.set("Nj", pl_.size());
     NOTIMP;
 }
-
 
 
 atlas::Grid ReducedLL::atlasGrid() const {
@@ -171,7 +171,7 @@ bool ReducedLL::includesSouthPole() const {
 }
 
 
-void ReducedLL::validate(const std::vector<double> &values) const {
+void ReducedLL::validate(const std::vector<double>& values) const {
     size_t count = 0;
     for (size_t i = 0; i < pl_.size(); i++) {
         count += pl_[i];
@@ -183,10 +183,10 @@ void ReducedLL::validate(const std::vector<double> &values) const {
 class ReducedLLIterator: public Iterator {
 
     const std::vector<long>& pl_;
-    const util::Domain domain_;
-
-    size_t ni_;
     const size_t nj_;
+    size_t ni_;
+
+    const util::Domain domain_;
 
     const eckit::Fraction west_;
 
@@ -206,7 +206,7 @@ class ReducedLLIterator: public Iterator {
     size_t count_;
     bool periodic_;
 
-    virtual void print(std::ostream &out) const {
+    virtual void print(std::ostream& out) const {
         out << "ReducedLLIterator["
             <<  "domain=" << domain_
             << ",ni="     << ni_
@@ -218,7 +218,7 @@ class ReducedLLIterator: public Iterator {
             << "]";
     }
 
-    virtual bool next(Latitude &lat, Longitude &lon) {
+    virtual bool next(Latitude& lat, Longitude& lon) {
 
 
         while (j_ < nj_ && i_ < ni_) {
@@ -257,10 +257,10 @@ class ReducedLLIterator: public Iterator {
 
 public:
 
-    ReducedLLIterator(size_t nj, const std::vector<long>& pl, const util::Domain& dom) :
+    ReducedLLIterator(const std::vector<long>& pl, const util::Domain& dom) :
         pl_(pl),
+        nj_(pl.size()),
         domain_(dom),
-        nj_(nj),
 
         west_(domain_.west().fraction()),
 
@@ -276,6 +276,8 @@ public:
         count_(0),
         periodic_(dom.isPeriodicEastWest()) {
 
+        ASSERT(nj_ > 1);
+
         ni_ = pl_[p_++];
         ASSERT(ni_ > 1);
         inc_west_east_ = ew_ / (ni_ - (periodic_? 0:1));
@@ -287,7 +289,7 @@ public:
 
 
 Iterator *ReducedLL::iterator() const {
-    return new ReducedLLIterator(Nj_, pl_, domain());
+    return new ReducedLLIterator(pl_, domain());
 }
 
 
