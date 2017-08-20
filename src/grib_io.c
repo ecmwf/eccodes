@@ -1213,6 +1213,7 @@ int wmo_read_any_from_stream(void* stream_data,long (*stream_proc)(void*,void* b
 void* wmo_read_any_from_stream_malloc(void* stream_data,long (*stream_proc)(void*,void* buffer,long len) ,size_t *size, int* err)
 {
     alloc_buffer u;
+    u.buffer = NULL;
 
     stream_struct s;
     reader        r;
