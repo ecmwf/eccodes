@@ -485,14 +485,14 @@ grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data
 
 
 /**
- *  Create a handle from a message contained in a samples directory.
+ *  Create a handle from a GRIB message contained in the samples directory.
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
- * @param res_name    : the resource name
+ * @param sample_name : the name of the sample file (without the .tmpl extension)
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
-grib_handle* grib_handle_new_from_samples (grib_context* c, const char* res_name)  ;
+grib_handle* grib_handle_new_from_samples (grib_context* c, const char* sample_name);
 
 
 
