@@ -22,24 +22,31 @@ void usage(const char* prog)
 
 int main(int argc,char* argv[])
 {
-    int err = 0;
+    int err = 0, opt = 0;
     codes_handle* h = NULL;
     codes_bufr_keys_iterator* kiter = NULL;
     char* input_filename = NULL;
+    const char* prog = argv[0];
     FILE* f = NULL;
     int iterator_mode = ITER_ALL_KEYS;
-    /*grib_context* c = grib_context_get_default();*/
     
-    if (argc!=3) usage(argv[0]);
-    if (strcmp(argv[1], "-a")==0) {
-        iterator_mode = ITER_ALL_KEYS;
-    } else if (strcmp(argv[1], "-d")==0) {
-        iterator_mode = ITER_DATA_KEYS;
-    } else {
-        assert(!"Invalid mode");
+    while ((opt = getopt(argc, argv, "ad")) != -1) {
+        switch (opt) {
+            case 'a':
+                iterator_mode = ITER_ALL_KEYS;
+                break;
+            case 'd':
+                iterator_mode = ITER_DATA_KEYS;
+                break;
+            default:
+                usage(prog);
+                break;
+        }
     }
-    
-    input_filename = argv[2];
+    /* After option processing expect just 1 file */
+    if (argc-optind != 1) usage(prog);
+
+    input_filename = argv[argc-1];
     f = fopen(input_filename, "r");
     assert(f);
     h = codes_handle_new_from_file(NULL, f, PRODUCT_BUFR, &err);
@@ -52,6 +59,7 @@ int main(int argc,char* argv[])
         kiter = codes_bufr_keys_iterator_new(h, 0);
     } else {
         /*printf("Dumping only DATA SECTION keys\n");*/
+        assert(iterator_mode == ITER_DATA_KEYS);
         kiter=codes_bufr_data_section_keys_iterator_new(h);
     }
 
