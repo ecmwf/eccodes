@@ -1167,6 +1167,19 @@ static size_t stream_read(void* data,void* buffer,size_t len,int* err)
     return n;
 }
 
+/*================== */
+
+
+static void* allocate_buffer(void *data,size_t* length,int *err)
+{
+    alloc_buffer *u  = (alloc_buffer*)data;
+    u->buffer = malloc(*length);
+    u->size=*length;
+    if(u->buffer == NULL)
+        *err = GRIB_OUT_OF_MEMORY; /* Cannot allocate buffer */
+    return u->buffer;
+}
+
 int wmo_read_any_from_stream(void* stream_data,long (*stream_proc)(void*,void* buffer,long len) ,void* buffer,size_t* len)
 {
     int           err;
@@ -1181,6 +1194,7 @@ int wmo_read_any_from_stream(void* stream_data,long (*stream_proc)(void*,void* b
     u.buffer_size  = *len;
 
     r.message_size    = 0;
+    r.offset          = 0;
     r.read_data       = &s;
     r.read            = &stream_read;
     r.seek            = &stream_seek;
@@ -1196,17 +1210,36 @@ int wmo_read_any_from_stream(void* stream_data,long (*stream_proc)(void*,void* b
     return err;
 }
 
+void* wmo_read_any_from_stream_malloc(void* stream_data,long (*stream_proc)(void*,void* buffer,long len) ,size_t *size, int* err)
+{
+    alloc_buffer u;
+    u.buffer = NULL;
+
+    stream_struct s;
+    reader        r;
+
+    s.stream_data = stream_data;
+    s.stream_proc = stream_proc;
+
+    r.message_size    = 0;
+    r.offset          = 0;
+    r.read_data       = &s;
+    r.read            = &stream_read;
+    r.seek            = &stream_seek;
+    r.seek_from_start = &stream_seek;
+    r.tell            = &stream_tell;
+    r.alloc_data      = &u;
+    r.alloc           = &allocate_buffer;
+    r.headers_only    = 0;
+
+    *err           = read_any(&r, 1, 1, 1, 1);
+    *size          = r.message_size;
+
+    return u.buffer;
+}
+
 /*================== */
 
-static void* allocate_buffer(void *data,size_t* length,int *err)
-{
-    alloc_buffer *u  = (alloc_buffer*)data;
-    u->buffer = malloc(*length);
-    u->size=*length;
-    if(u->buffer == NULL)
-        *err = GRIB_OUT_OF_MEMORY; /* Cannot allocate buffer */
-    return u->buffer;
-}
 
 void *wmo_read_gts_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err)
 {
