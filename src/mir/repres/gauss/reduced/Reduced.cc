@@ -70,7 +70,7 @@ eckit::Fraction Reduced::getSmallestIncrement() const {
     const long maxpl = *std::max_element(pl.begin(), pl.end());
     ASSERT(maxpl);
 
-    return eckit::Fraction(360, maxpl);
+    return Longitude::GLOBE.fraction() / maxpl;
 }
 
 
@@ -80,8 +80,8 @@ void Reduced::adjustBoundingBoxEastWest(util::BoundingBox& bbox) {
     Longitude e = bbox.east();
     Longitude w = bbox.west();
 
-    if ((e - w + inc).sameWithGrib1Accuracy(Longitude::GLOBE.value())
-            || (e - w + inc > Longitude::GLOBE )) {
+    if ((e - w + inc).sameWithGrib1Accuracy(Longitude::GLOBE) ||
+        (e - w + inc > Longitude::GLOBE )) {
         e = w + Longitude::GLOBE - inc;
     }
 
@@ -90,15 +90,11 @@ void Reduced::adjustBoundingBoxEastWest(util::BoundingBox& bbox) {
 
 
 bool Reduced::isPeriodicWestEast() const {
-    const std::vector<long>& pl = pls();
-    ASSERT(pl.size());
-    const long maxpl = *std::max_element(pl.begin(), pl.end());
-
     const Longitude we = bbox_.east() - bbox_.west();
-    const Longitude inc = eckit::Fraction(360, maxpl);
+    const Longitude inc = getSmallestIncrement();
 
-    return (we + inc).sameWithGrib1Accuracy(Longitude::GLOBE.value())
-           || (we + inc >= Longitude::GLOBE.value());
+    return  (we + inc).sameWithGrib1Accuracy(Longitude::GLOBE) ||
+            (we + inc >= Longitude::GLOBE);
 }
 
 
@@ -188,8 +184,9 @@ bool ReducedIterator::next(Latitude& lat, Longitude& lon) {
             if (j_ < nj_) {
                 ASSERT(p_ < pl_.size());
                 ni_ = size_t(pl_[p_++]);
-                lon_ = eckit::Fraction(0.0);
-                inc_ = eckit::Fraction(360, ni_);
+                ASSERT(ni_);
+                lon_ = eckit::Fraction(0);
+                inc_ = Longitude::GLOBE.fraction() / ni_;
                 i_ = 0;
 
 

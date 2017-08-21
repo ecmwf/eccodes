@@ -151,7 +151,7 @@ void Regular::adjustBoundingBoxEastWest(util::BoundingBox& bbox) {
 
 bool Regular::isPeriodicWestEast() const {
     const Longitude inc = Longitude(eckit::Fraction(90, N_));
-    return (bbox_.east() - bbox_.west() + inc).sameWithGrib1Accuracy(360.0);
+    return (bbox_.east() - bbox_.west() + inc).sameWithGrib1Accuracy(Longitude::GLOBE);
 }
 
 
