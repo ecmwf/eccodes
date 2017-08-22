@@ -8,8 +8,6 @@
 !
 !
 !
-!
-!
 program new_from_file
 use eccodes
   implicit none
@@ -17,15 +15,14 @@ use eccodes
   integer           :: iret
   integer           :: count1=0
 
-!     Message identifier.
+  ! Message identifier.
   integer            :: igrib
 
   ifile=5
 
   call codes_open_file(ifile,'../../data/collection.grib1','r')
 
-! Loop on all the messages in a file.
-
+  ! Loop on all the messages in a file.
   call codes_grib_new_from_file(ifile,igrib, iret)
 
   do while (iret==CODES_SUCCESS)
