@@ -29,26 +29,8 @@
 #include "mir/util/Domain.h"
 
 
-
-
-
 namespace mir {
 namespace repres {
-namespace {
-
-
-static eckit::Mutex *local_mutex = 0;
-static std::map<std::string, RepresentationFactory *> *m = 0;
-
-static pthread_once_t once = PTHREAD_ONCE_INIT;
-
-static void init() {
-    local_mutex = new eckit::Mutex();
-    m = new std::map<std::string, RepresentationFactory *>();
-}
-
-
-}  // (anonymous namespace)
 
 
 Representation::Representation() {
@@ -278,8 +260,6 @@ Iterator *Representation::iterator() const {
 }
 
 
-//=========================================================================
-
 const Representation* Representation::globalise(data::MIRField& field) const {
     const util::Domain dom = domain();
 
@@ -338,15 +318,29 @@ const Representation* Representation::globalise(data::MIRField& field) const {
     return new other::UnstructuredGrid(latitudes, longitudes);
 }
 
+
 //=========================================================================
+
+
+namespace {
+static pthread_once_t once = PTHREAD_ONCE_INIT;
+static eckit::Mutex* local_mutex = 0;
+static std::map< std::string, RepresentationFactory* >* m = 0;
+static void init() {
+    local_mutex = new eckit::Mutex();
+    m = new std::map< std::string, RepresentationFactory* >();
+}
+}  // (anonymous namespace)
 
 
 RepresentationFactory::RepresentationFactory(const std::string& name):
     name_(name) {
-
     pthread_once(&once, init);
-
     eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+
+    if (m->find(name) != m->end()) {
+        throw eckit::SeriousBug("RepresentationFactory: duplicate '" + name + "'");
+    }
 
     ASSERT(m->find(name) == m->end());
     (*m)[name] = this;
@@ -355,35 +349,41 @@ RepresentationFactory::RepresentationFactory(const std::string& name):
 
 RepresentationFactory::~RepresentationFactory() {
     eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+
     m->erase(name_);
 }
 
 
 const Representation* RepresentationFactory::build(const param::MIRParametrisation& params) {
-
     pthread_once(&once, init);
-
+    eckit::AutoLock<eckit::Mutex> lock(local_mutex);
 
     std::string name;
-
     if (!params.get("gridType", name)) {
-        throw eckit::SeriousBug("RepresentationFactory cannot get gridType");
+        throw eckit::SeriousBug("RepresentationFactory: cannot get 'gridType'");
     }
 
-    eckit::AutoLock<eckit::Mutex> lock(local_mutex);
-    std::map<std::string, RepresentationFactory *>::const_iterator j = m->find(name);
+    eckit::Log::debug<LibMir>() << "RepresentationFactory: looking for '" << name << "'" << std::endl;
 
-    // eckit::Log::debug<LibMir>() << "Looking for RepresentationFactory [" << name << "]" << std::endl;
-
+    auto j = m->find(name);
     if (j == m->end()) {
-        eckit::Log::error() << "No RepresentationFactory for [" << name << "]" << std::endl;
-        eckit::Log::error() << "RepresentationFactories are:" << std::endl;
-        for (j = m->begin() ; j != m->end() ; ++j)
-            eckit::Log::error() << "   " << (*j).first << std::endl;
-        throw eckit::SeriousBug(std::string("No RepresentationFactory called ") + name);
+        list(eckit::Log::error() << "RepresentationFactory: unknown '" << name << "', choices are: ");
+        throw eckit::SeriousBug("RepresentationFactory: unknown '" + name + "'");
     }
 
     return (*j).second->make(params);
+}
+
+
+void RepresentationFactory::list(std::ostream& out) {
+    pthread_once(&once, init);
+    eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+
+    const char* sep = "";
+    for (auto j : *m) {
+        out << sep << j.first;
+        sep = ", ";
+    }
 }
 
 
