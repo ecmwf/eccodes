@@ -145,18 +145,18 @@ static int destroy(grib_dumper* d)
 static void dump_values(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_bufr_decode_filter *self = (grib_dumper_bufr_decode_filter*)d;
-    double value; size_t size = 0;
+    double value=0; size_t size = 0;
     int err = 0;
     int r;
     long count=0;
     grib_context* c=a->context;
     grib_handle* h=grib_handle_of_accessor(a);
 
-    grib_value_count(a,&count);
-    size=count;
-
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) !=0)
         return;
+
+    grib_value_count(a,&count);
+    size=count;
 
     if (size<=1) {
         err=grib_unpack_double(a,&value,&size);
@@ -203,16 +203,16 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 static void dump_values_attribute(grib_dumper* d,grib_accessor* a, const char* prefix)
 {
     grib_dumper_bufr_decode_filter *self = (grib_dumper_bufr_decode_filter*)d;
-    double value; size_t size = 0;
+    double value=0; size_t size = 0;
     int err = 0;
     long count=0;
     grib_context* c=a->context;
 
-    grib_value_count(a,&count);
-    size=count;
-
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) !=0)
         return;
+
+    grib_value_count(a,&count);
+    size=count;
 
     if (size<=1) {
         err=grib_unpack_double(a,&value,&size);
@@ -251,10 +251,10 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     grib_context* c=a->context;
     grib_handle* h=grib_handle_of_accessor(a);
 
+    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0  ) return;
+
     grib_value_count(a,&count);
     size=count;
-
-    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0  ) return;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0) {
         if (self->isLeaf==0) {
@@ -346,15 +346,15 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
 static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_decode_filter *self = (grib_dumper_bufr_decode_filter*)d;
-    double value; size_t size = 1;
+    double value=0; size_t size = 1;
     int r;
     grib_handle* h=grib_handle_of_accessor(a);
     grib_context* c=h->context;
 
-    grib_unpack_double(a,&value,&size);
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
 
+    grib_unpack_double(a,&value,&size);
     self->begin=0;
     self->empty=0;
 
